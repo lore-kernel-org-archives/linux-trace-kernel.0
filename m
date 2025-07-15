@@ -1,63 +1,65 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E0F8275113
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 15 Jul 2025 07:16:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68DC126FA6E
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 15 Jul 2025 07:16:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752563774; cv=none; b=GvVTEd9g5fk1sVUGMJ65jPOskLNLgHLZ9KbJxjjEP3R4hHBpTEU9cp7I6eXgNDTmBBtaO968/5Ws0Q89sv8PFHhYhLh1t2LzBzxLLVsGR+z4sYaT845GsZNgJfBPahN10x1XTLupXCHJ02zGCUfkRIFt/oV4+/LQ8nloiLzkccY=
+	t=1752563783; cv=none; b=pdNcL8dCPcwhbZ/B+i7WjWyJcbD1DpqLEhpknS0OnAueMqLUNiw8hbk8gFyM54AI2C1Zzhv0DokbNTdr5WAjQ5DDQ8huWq7QTRjhS9dn6DYn8QX+rxVmA0Bp/q1QLs3YRfm1eKosmFng5rf+6/t8UxiddVakd87+OzateUCeMLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752563774; c=relaxed/simple;
-	bh=wFdF7EpXBYFWK9Jbm8c0lN86C3/98hbYMMGEfzZbW9s=;
+	s=arc-20240116; t=1752563783; c=relaxed/simple;
+	bh=oKCxdtiHaXrLusltoZ/no3IOGFVOIaODLMIw1eJKc5k=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ujoUwRr4w3pGF5YrfakgEhqu7NS/o58jlfWOqSQjTJr5M3aw07tjZVtA1oEdCGPvHGoX8/x0m3cBe7+iAVFvafQo2PW2EV6gR2immAUTermOAQqBxJObzkVKbtb5CvG++x175IE4tn/X7abCyMne5ch8kI01GY/JsVL0JynTGwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HzFwtBpk; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=fQJPEnGcYjt/lbszSQCrXwgXQyhpKX1nAHShoqImm7O82C3e8G4/iVkwLgLw74wuVeIhbw37yVHOfOh3faggzoqMjLQFyCPOFeePfgcgdHrZsCck/VaG3PPgPunj7KBVuzomZGMl4KHbRdoXiO3pRIBRal7bzlAmRhPyTTYmKVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=V6EEERe2; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HzFwtBpk"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V6EEERe2"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1752563771;
+	s=mimecast20190719; t=1752563780;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=PYlgmcKzwEhoS0a9BGFylsAetkBhqQKG1+nbvaKZxSA=;
-	b=HzFwtBpkvTzJUqg46xQhzz75e//4cwnytRYETs3SIRyoa8tWEsuqrst4wQXogO2Y9W9Kpy
-	gule+onylE3vL3Ewml0u3i+qp/Yq9jWNQ9SsHmAfoXRdquRU+j7NW1AOGJ/sBwXevBneBQ
-	dX2GxsT6eYJTf0rcwfHUtFTxLHwWNDM=
+	bh=voQS/lp53ISUhbNDO53K37fCMrXCmD3XHPGgWIewhl0=;
+	b=V6EEERe21YbKvlXLJUmYrHoovBFZ+1COmEnZtFPmYDejXJ9Tqkiz98JbREcV5jBA6r3bn1
+	z94awhBrDGlLM2DA9h66JKDcqpbN4Sjcf4ZHQVGFhffZyiDJiXhzSKk44H89YA+a4PGSLk
+	UCHJH7F4yp8c5e82SpnNM7jS+vpKlJ8=
 Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-641-MvhcTSVKNjKHJXiaq0bkJQ-1; Tue,
- 15 Jul 2025 03:16:08 -0400
-X-MC-Unique: MvhcTSVKNjKHJXiaq0bkJQ-1
-X-Mimecast-MFC-AGG-ID: MvhcTSVKNjKHJXiaq0bkJQ_1752563767
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-343-BLjZ0EkBMAWKpN_3HYsVig-1; Tue,
+ 15 Jul 2025 03:16:16 -0400
+X-MC-Unique: BLjZ0EkBMAWKpN_3HYsVig-1
+X-Mimecast-MFC-AGG-ID: BLjZ0EkBMAWKpN_3HYsVig_1752563773
 Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EA9C11801210;
-	Tue, 15 Jul 2025 07:16:06 +0000 (UTC)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 97C231800289;
+	Tue, 15 Jul 2025 07:16:13 +0000 (UTC)
 Received: from gmonaco-thinkpadt14gen3.rmtit.com (unknown [10.45.224.115])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id AF544180045B;
-	Tue, 15 Jul 2025 07:16:01 +0000 (UTC)
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 43CA8180035E;
+	Tue, 15 Jul 2025 07:16:07 +0000 (UTC)
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: linux-kernel@vger.kernel.org,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Cc: Gabriele Monaco <gmonaco@redhat.com>,
 	Ingo Molnar <mingo@redhat.com>,
 	Peter Zijlstra <peterz@infradead.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-trace-kernel@vger.kernel.org
-Cc: Gabriele Monaco <gmonaco@redhat.com>,
 	Nam Cao <namcao@linutronix.de>,
 	Tomas Glozar <tglozar@redhat.com>,
 	Juri Lelli <jlelli@redhat.com>,
 	Clark Williams <williams@redhat.com>,
 	John Kacur <jkacur@redhat.com>
-Subject: [PATCH v3 12/17] sched: Adapt sched tracepoints for RV task model
-Date: Tue, 15 Jul 2025 09:14:29 +0200
-Message-ID: <20250715071434.22508-13-gmonaco@redhat.com>
+Subject: [PATCH v3 13/17] rv: Adapt the sco monitor to the new set_state
+Date: Tue, 15 Jul 2025 09:14:30 +0200
+Message-ID: <20250715071434.22508-14-gmonaco@redhat.com>
 In-Reply-To: <20250715071434.22508-1-gmonaco@redhat.com>
 References: <20250715071434.22508-1-gmonaco@redhat.com>
 Precedence: bulk
@@ -69,183 +71,131 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-Add the following tracepoints:
-* sched_set_need_resched(tsk, cpu, tif)
-    Called when a task is set the need resched [lazy] flag
-* sched_switch_vain(preempt, tsk, tsk_state)
-    Called when a task is selected again during __schedule
-    i.e. prev == next == tsk : no real context switch
+The sched_set_state tracepoint changed prototype adding a new argument,
+this argument can differentiate between an explicit set_state called by
+a task and a set state to runnable by the scheduler due to a pending
+signal.
 
-Add new parameter to sched_set_state to identify whether the state
-change was due to an explicit call or a signal pending while scheduling.
-We now also trace from try_to_block_task in case a signal was pending
-and the task is set to runnable.
-
-Also adapt all monitors using sched_set_state to avoid breaking build.
-
-These tracepoints are useful to describe the Linux task model and are
-adapted from the patches by Daniel Bristot de Oliveira
-(https://bristot.me/linux-task-model/).
+Expand the model to handle the new set_state flavour, the monitor was
+making sure set state happens only outside of the scheduler, if the
+event occurs with the new argument (from_signal) set to true, we instead
+expect it to be inside the scheduler.
 
 Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 ---
- include/linux/sched.h                  |  7 ++++++-
- include/trace/events/sched.h           | 17 +++++++++++++++--
- kernel/sched/core.c                    | 10 +++++++++-
- kernel/trace/rv/monitors/sco/sco.c     |  3 ++-
- kernel/trace/rv/monitors/sleep/sleep.c |  3 ++-
- kernel/trace/rv/monitors/snroc/snroc.c |  3 ++-
- 6 files changed, 36 insertions(+), 7 deletions(-)
+ Documentation/trace/rv/monitor_sched.rst | 35 +++++++++++++-----------
+ kernel/trace/rv/monitors/sco/sco.c       |  5 +++-
+ kernel/trace/rv/monitors/sco/sco.h       |  4 +++
+ tools/verification/models/sched/sco.dot  |  1 +
+ 4 files changed, 28 insertions(+), 17 deletions(-)
 
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 7bce4c7ae3b4f..19ab4597c97d3 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -339,9 +339,11 @@ extern void io_schedule_finish(int token);
- extern long io_schedule_timeout(long timeout);
- extern void io_schedule(void);
+diff --git a/Documentation/trace/rv/monitor_sched.rst b/Documentation/trace/rv/monitor_sched.rst
+index 24b2c62a3bc26..6f76bba94d9fb 100644
+--- a/Documentation/trace/rv/monitor_sched.rst
++++ b/Documentation/trace/rv/monitor_sched.rst
+@@ -64,22 +64,25 @@ Monitor sco
+ ~~~~~~~~~~~
  
--/* wrapper function to trace from this header file */
-+/* wrapper functions to trace from this header file */
- DECLARE_TRACEPOINT(sched_set_state_tp);
- extern void __trace_set_current_state(int state_value);
-+DECLARE_TRACEPOINT(sched_set_need_resched_tp);
-+extern void __trace_set_need_resched(struct task_struct *curr, int tif);
- 
- /**
-  * struct prev_cputime - snapshot of system and user cputime
-@@ -2059,6 +2061,9 @@ static inline int test_tsk_thread_flag(struct task_struct *tsk, int flag)
- 
- static inline void set_tsk_need_resched(struct task_struct *tsk)
- {
-+	if (tracepoint_enabled(sched_set_need_resched_tp) &&
-+	    !test_tsk_thread_flag(tsk, TIF_NEED_RESCHED))
-+		__trace_set_need_resched(tsk, TIF_NEED_RESCHED);
- 	set_tsk_thread_flag(tsk,TIF_NEED_RESCHED);
- }
- 
-diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
-index 4e6b2910cec3f..c9dec6d38ad2d 100644
---- a/include/trace/events/sched.h
-+++ b/include/trace/events/sched.h
-@@ -889,11 +889,24 @@ DECLARE_TRACE(sched_exit,
- 	TP_PROTO(bool is_switch, unsigned long ip),
- 	TP_ARGS(is_switch, ip));
- 
-+/*
-+ * Tracepoint called when setting the state of a task;
-+ * this tracepoint is guaranteed to be called from the waking context of the
-+ * task setting the state.
-+ */
- DECLARE_TRACE_CONDITION(sched_set_state,
--	TP_PROTO(struct task_struct *tsk, int state),
--	TP_ARGS(tsk, state),
-+	TP_PROTO(struct task_struct *tsk, int state, bool from_signal),
-+	TP_ARGS(tsk, state, from_signal),
- 	TP_CONDITION(!!(tsk->__state) != !!state));
- 
-+DECLARE_TRACE(sched_set_need_resched,
-+	TP_PROTO(struct task_struct *tsk, int cpu, int tif),
-+	TP_ARGS(tsk, cpu, tif));
+ The scheduling context operations (sco) monitor ensures changes in a task state
+-happen only in thread context::
+-
+-
+-                        |
+-                        |
+-                        v
+-    sched_set_state   +------------------+
+-  +------------------ |                  |
+-  |                   |  thread_context  |
+-  +-----------------> |                  | <+
+-                      +------------------+  |
+-                        |                   |
+-                        | schedule_entry    | schedule_exit
+-                        v                   |
+-                                            |
+-                       scheduling_context  -+
++happen only in thread context, the only exception is a special kind of set
++state that occurs if a task about to sleep has a pending signal. This set state
++is not called by the thread but by the scheduler itself::
 +
-+DECLARE_TRACE(sched_switch_vain,
-+	TP_PROTO(bool preempt, struct task_struct *tsk, unsigned int prev_state),
-+	TP_ARGS(preempt, tsk, prev_state));
-+
- #endif /* _TRACE_SCHED_H */
++                                        |
++                                        |
++                                        v
++    sched_set_state                   +------------------+
++  +---------------------------------- |                  |
++  |                                   |  thread_context  |
++  +---------------------------------> |                  | <+
++                                      +------------------+  |
++                                        |                   |
++                                        | schedule_entry    | schedule_exit
++                                        v                   |
++    sched_set_state_runnable_signal                         |
++  +----------------------------------                       |
++  |                                    scheduling_context   |
++  +--------------------------------->                      -+
  
- /* This part must be outside protection */
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 81c6df746df17..6cb70e6f7fa17 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -495,7 +495,7 @@ EXPORT_TRACEPOINT_SYMBOL(sched_set_state_tp);
- /* Call via the helper macro trace_set_current_state. */
- void __trace_set_current_state(int state_value)
- {
--	trace_sched_set_state_tp(current, state_value);
-+	trace_sched_set_state_tp(current, state_value, false);
- }
- EXPORT_SYMBOL(__trace_set_current_state);
- 
-@@ -1110,6 +1110,7 @@ static void __resched_curr(struct rq *rq, int tif)
- 
- 	cpu = cpu_of(rq);
- 
-+	trace_sched_set_need_resched_tp(curr, cpu, tif);
- 	if (cpu == smp_processor_id()) {
- 		set_ti_thread_flag(cti, tif);
- 		if (tif == TIF_NEED_RESCHED)
-@@ -1125,6 +1126,11 @@ static void __resched_curr(struct rq *rq, int tif)
- 	}
- }
- 
-+void __trace_set_need_resched(struct task_struct *curr, int tif)
-+{
-+	trace_sched_set_need_resched_tp(curr, smp_processor_id(), tif);
-+}
-+
- void resched_curr(struct rq *rq)
- {
- 	__resched_curr(rq, TIF_NEED_RESCHED);
-@@ -6592,6 +6598,7 @@ static bool try_to_block_task(struct rq *rq, struct task_struct *p,
- 	int flags = DEQUEUE_NOCLOCK;
- 
- 	if (signal_pending_state(task_state, p)) {
-+		trace_sched_set_state_tp(p, TASK_RUNNING, true);
- 		WRITE_ONCE(p->__state, TASK_RUNNING);
- 		*task_state_p = TASK_RUNNING;
- 		return false;
-@@ -6786,6 +6793,7 @@ static void __sched notrace __schedule(int sched_mode)
- 		rq = context_switch(rq, prev, next, &rf);
- 	} else {
- 		rq_unpin_lock(rq, &rf);
-+		trace_sched_switch_vain_tp(preempt, prev, prev_state);
- 		__balance_callbacks(rq);
- 		raw_spin_rq_unlock_irq(rq);
- 	}
+ Monitor snroc
+ ~~~~~~~~~~~~~
 diff --git a/kernel/trace/rv/monitors/sco/sco.c b/kernel/trace/rv/monitors/sco/sco.c
-index 66f4639d46ac4..c9206aa12c319 100644
+index c9206aa12c319..6457ff2469d08 100644
 --- a/kernel/trace/rv/monitors/sco/sco.c
 +++ b/kernel/trace/rv/monitors/sco/sco.c
-@@ -19,7 +19,8 @@
- static struct rv_monitor rv_sco;
- DECLARE_DA_MON_PER_CPU(sco, unsigned char);
- 
--static void handle_sched_set_state(void *data, struct task_struct *tsk, int state)
-+static void handle_sched_set_state(void *data, struct task_struct *tsk,
-+				   int state, bool from_signal)
+@@ -22,7 +22,10 @@ DECLARE_DA_MON_PER_CPU(sco, unsigned char);
+ static void handle_sched_set_state(void *data, struct task_struct *tsk,
+ 				   int state, bool from_signal)
  {
- 	da_handle_start_event_sco(sched_set_state_sco);
- }
-diff --git a/kernel/trace/rv/monitors/sleep/sleep.c b/kernel/trace/rv/monitors/sleep/sleep.c
-index eea447b069071..5103a98818c53 100644
---- a/kernel/trace/rv/monitors/sleep/sleep.c
-+++ b/kernel/trace/rv/monitors/sleep/sleep.c
-@@ -82,7 +82,8 @@ static void ltl_atoms_init(struct task_struct *task, struct ltl_monitor *mon, bo
- 
+-	da_handle_start_event_sco(sched_set_state_sco);
++	if (from_signal)
++		da_handle_event_sco(sched_set_state_runnable_signal_sco);
++	else
++		da_handle_start_event_sco(sched_set_state_sco);
  }
  
--static void handle_sched_set_state(void *data, struct task_struct *task, int state)
-+static void handle_sched_set_state(void *data, struct task_struct *task,
-+				   int state, bool from_signal)
- {
- 	if (state & TASK_INTERRUPTIBLE)
- 		ltl_atom_pulse(task, LTL_SLEEP, true);
-diff --git a/kernel/trace/rv/monitors/snroc/snroc.c b/kernel/trace/rv/monitors/snroc/snroc.c
-index 540e686e699f4..2651f589d1554 100644
---- a/kernel/trace/rv/monitors/snroc/snroc.c
-+++ b/kernel/trace/rv/monitors/snroc/snroc.c
-@@ -19,7 +19,8 @@
- static struct rv_monitor rv_snroc;
- DECLARE_DA_MON_PER_TASK(snroc, unsigned char);
+ static void handle_schedule_entry(void *data, bool preempt, unsigned long ip)
+diff --git a/kernel/trace/rv/monitors/sco/sco.h b/kernel/trace/rv/monitors/sco/sco.h
+index 83ca9a03331af..2d05ab882b2a6 100644
+--- a/kernel/trace/rv/monitors/sco/sco.h
++++ b/kernel/trace/rv/monitors/sco/sco.h
+@@ -15,6 +15,7 @@ enum states_sco {
  
--static void handle_sched_set_state(void *data, struct task_struct *tsk, int state)
-+static void handle_sched_set_state(void *data, struct task_struct *tsk,
-+				   int state, bool from_signal)
- {
- 	da_handle_event_snroc(tsk, sched_set_state_snroc);
- }
+ enum events_sco {
+ 	sched_set_state_sco = 0,
++	sched_set_state_runnable_signal_sco,
+ 	schedule_entry_sco,
+ 	schedule_exit_sco,
+ 	event_max_sco
+@@ -35,17 +36,20 @@ static const struct automaton_sco automaton_sco = {
+ 	},
+ 	.event_names = {
+ 		"sched_set_state",
++		"sched_set_state_runnable_signal",
+ 		"schedule_entry",
+ 		"schedule_exit"
+ 	},
+ 	.function = {
+ 		{
+ 			thread_context_sco,
++			INVALID_STATE,
+ 			scheduling_context_sco,
+ 			INVALID_STATE
+ 		},
+ 		{
+ 			INVALID_STATE,
++			scheduling_context_sco,
+ 			INVALID_STATE,
+ 			thread_context_sco
+ 		},
+diff --git a/tools/verification/models/sched/sco.dot b/tools/verification/models/sched/sco.dot
+index 20b0e3b449a6b..4e44ed58c62a3 100644
+--- a/tools/verification/models/sched/sco.dot
++++ b/tools/verification/models/sched/sco.dot
+@@ -7,6 +7,7 @@ digraph state_automaton {
+ 	{node [shape = plaintext] "thread_context"};
+ 	"__init_thread_context" -> "thread_context";
+ 	"scheduling_context" [label = "scheduling_context"];
++	"scheduling_context" -> "scheduling_context" [ label = "sched_set_state_runnable_signal" ];
+ 	"scheduling_context" -> "thread_context" [ label = "schedule_exit" ];
+ 	"thread_context" [label = "thread_context", color = green3];
+ 	"thread_context" -> "scheduling_context" [ label = "schedule_entry" ];
 -- 
 2.50.1
 
