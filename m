@@ -1,363 +1,83 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1B532BE643
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 15 Jul 2025 18:33:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEF6284D08;
+	Tue, 15 Jul 2025 19:02:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752604420; cv=none; b=I4ub1ARgOuBEsoipG+roB0ZzPjBYkfay3sEZ9iqLJNiRdWKKaJLmSVx48iQs2b+eV6rvSfuUUOA5kJsRSR2KTSJx4rKWujysKu1VXullIdmaz005I+qdezHU1vvSd3FWeFjI9EDbdZo2H61vVhz/Kt+0qHJjZrfzWbBt0885J8A=
+	t=1752606124; cv=none; b=AUv/Vx0Rbv+kfdBY0tUl32Ch2qKHSgJKYuJoli4gd61MR+Odx+eCrRCTmpDnZr9WgweKV6oivsyfz7lOIbRf9cHjtMGb4FjGcjVdsmywtx6QZQrv2pfW9X/0eMkZN3Gidot4G5DcTcGLmS6Ko9sQIm5quqjuZ/eJ1sIKMsQVaLg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752604420; c=relaxed/simple;
-	bh=328y1TQY/XyNQ2QUxViMn2c9bSvqxtxLtcqnJhlEogk=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=nFqAthcelQ217dvNopgPBZP17evUUhdqEe8ip3V5KIfscPljtb+Wzle7aENRO2pPrc/JSjjmi3qbmd3rz7Fn1K5eSV2x77S2Fms3fwQgCvSXXtUpMSydh1za7RVIRtEb3z/FAuoyCc/E3r23WKVbQscWDNPt5dYRpP/xDPakFeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--kuniyu.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sF38hkaN; arc=none smtp.client-ip=209.85.210.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--kuniyu.bounces.google.com
+	s=arc-20240116; t=1752606124; c=relaxed/simple;
+	bh=+sAh1If8BjuK0pvB9U7uBcJ5tysPZ7oRAhi8SvIJA+M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dQT+A7kOp5373U8kPC3cfTtOfA4CfwLUp/Qm76NRxPPPtvUFcXFvza/VSh3pTEUQa8Y12pgu84ygAoAx2/jxFatH782fHFsuvifF2NFMj/4MS5Yrarw/s3qZ168ayJSt5WcYjjFfNPS3B44EAxWEkMFL61v08E+mQYSJofJIcD0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=eVY+z1bm; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sF38hkaN"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-74928291bc3so4954986b3a.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 15 Jul 2025 11:33:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1752604417; x=1753209217; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=w2qhbCThZ+vfJ1RXTOol1H2AbCQCcGQa73t5kZCRKuw=;
-        b=sF38hkaNxyTyZ1vMpqbKXrJfs/TgJGqdle3VAbuCJzhQdZtXegjv/SrtYSBPn0dVSu
-         s04rUOfC9Tq0z5hkI2C9bZn22jc2g6i64I7rACG5HNp8NrLHelW70aVaDcCu5inHhNS+
-         PQQ0W2VjZmPVofIu/C9GkuUnro0nrRTI/slo0l/gW84YO70aucgep7NyBdHsFXUTuULG
-         Tv+2i9rdFQM8rHhe1jkRr8gUYO2CP9H89MUCIifvBukigT37Nkrbp3aWSH25kJ02bYlu
-         sKk9l3qeTA9Z0+l8/2ye4HThXGf4KsCz3vOkjZmS09ooQRrVzsFr2KoSNbR2Py2fQJ0q
-         gtJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752604417; x=1753209217;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=w2qhbCThZ+vfJ1RXTOol1H2AbCQCcGQa73t5kZCRKuw=;
-        b=Y8g8wAYcAnGAtJlVoGHg56k6Ezt9VhIa691mqulGG1KSkV/BZrTVqS9zyj2H6DU8rp
-         4MEprup8Oj9tSM47dSnpVopfuV/cJCjy8Pyy1IJNRDK6bsX5IJ88Gb5k7dg42nTxF6lx
-         B7yYAWAayVbJsjor7vw5BHWlP5+e2hWhFkfNbYhyJ960XVSkUiXlEySJFrq+OttwP3bF
-         wzgOixy6CSA3Ngee2Vy6jzno3MbbPiibgb5AcPlG3oJKYtYpaIch/7PwvEFcJx32gNhp
-         zY7CESTZ3WfFAFV+BgVUcxd70t6SEKyIL9fJgQUEHTRpBN4eY8f+VmoNnfyYUzCoLM5Z
-         osnw==
-X-Forwarded-Encrypted: i=1; AJvYcCUujUhMisrcHx7tGMU8AL0bnmmR24cmw1R0XdxQlYY+ds5Z0TGPZcd867nxdjkng7DnmV47RkcN/WsCCZf6B2Z3k5A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxWIrFkdlK6afdxMj6poBuj98E+gMPPKWJA39Xf+K9SGFiUddiT
-	2LKJcZQmlibsrVoxZehLjWaLvFahzh03zacpo16IiDQ/DmtyInu45oZN9O4zsrYIhpPd+144L43
-	umdfTmw==
-X-Google-Smtp-Source: AGHT+IEsVfRQMdCVpBLSOylQ5bxNScfSOlPvB0bHjl0jDvjk1xyJt/54mvHecndKhgBQZLCTTBnFBhX4nmE=
-X-Received: from pgbca21.prod.google.com ([2002:a05:6a02:695:b0:b2d:249f:ea07])
- (user=kuniyu job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:e8c:b0:232:cc63:45d8
- with SMTP id adf61e73a8af0-237d701a5a0mr589228637.20.1752604416983; Tue, 15
- Jul 2025 11:33:36 -0700 (PDT)
-Date: Tue, 15 Jul 2025 18:33:12 +0000
-In-Reply-To: <20250715235249811YJbb1y6_zOrLbsh6PTlXv@zte.com.cn>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eVY+z1bm"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=vfvPe4HP02bQoj3HUfT9H152gPlNxmP69GglcQVHFyM=; b=eVY+z1bmlvCZqlVTJDwrLbv/8K
+	K8zWTx0JwsToQZm4D2uDxJrqKdRYAKr8AAAefEzi+EdCMQXZqW/W+EHXf3uRNJIMMIexEpeTSZ910
+	4qETpdv9vkBB3lyU51GWIkeeCQPZHgtXcHrTfSJuFTkSM443ytFn4p1EpVpy6PDrwSAOpsbaBXLSK
+	lPBly1xAefeYOFWz7Ldg965PZ0LxaxIJ5KlZrqMNzsmV5pzlIFU/Ae4NCfSfmrcR05S8eqHzQNuRx
+	x9md/BT9ZEj6PL6/GcfNYYBzFbi2zhilf1KFaT3Nl2w9D323ctnaDyO+yVLMv9Ovngdcrqro7qqjz
+	czuAshjw==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1ubkuN-00000009vEi-0K7n;
+	Tue, 15 Jul 2025 19:01:44 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id E3D623001AA; Tue, 15 Jul 2025 21:01:41 +0200 (CEST)
+Date: Tue, 15 Jul 2025 21:01:41 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Steven Rostedt <rostedt@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	x86@kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Indu Bhagat <indu.bhagat@oracle.com>,
+	"Jose E. Marchesi" <jemarch@gnu.org>,
+	Beau Belgrave <beaub@linux.microsoft.com>,
+	Jens Remus <jremus@linux.ibm.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jens Axboe <axboe@kernel.dk>, Florian Weimer <fweimer@redhat.com>,
+	Sam James <sam@gentoo.org>
+Subject: Re: [PATCH v13 10/14] unwind: Clear unwind_mask on exit back to user
+ space
+Message-ID: <20250715190141.GF4105545@noisy.programming.kicks-ass.net>
+References: <20250708012239.268642741@kernel.org>
+ <20250708012359.345060579@kernel.org>
+ <20250715102912.GQ1613200@noisy.programming.kicks-ass.net>
+ <20250715084932.0563f532@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250715235249811YJbb1y6_zOrLbsh6PTlXv@zte.com.cn>
-X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
-Message-ID: <20250715183335.860529-1-kuniyu@google.com>
-Subject: Re: [PATCH net-next v5] tcp: trace retransmit failures in tcp_retransmit_skb
-From: Kuniyuki Iwashima <kuniyu@google.com>
-To: fan.yu9@zte.com.cn
-Cc: davem@davemloft.net, dsahern@kernel.org, edumazet@google.com, 
-	he.peilin@zte.com.cn, horms@kernel.org, jiang.kun2@zte.com.cn, 
-	kuba@kernel.org, kuniyu@google.com, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, ncardwell@google.com, 
-	netdev@vger.kernel.org, pabeni@redhat.com, qiu.yutan@zte.com.cn, 
-	tu.qiang35@zte.com.cn, wang.yaxin@zte.com.cn, xu.xin16@zte.com.cn, 
-	yang.yang29@zte.com.cn
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250715084932.0563f532@gandalf.local.home>
 
-[ updated my email address, please use this one for v6+ ]
+On Tue, Jul 15, 2025 at 08:49:32AM -0400, Steven Rostedt wrote:
+> > The below is the last four patches rolled into one. Not been near a
+> > compiler.
+> 
+> Are you recommending that I fold those patches into one?
 
-From: <fan.yu9@zte.com.cn>
-Date: Tue, 15 Jul 2025 23:52:49 +0800 (CST)
-> From: Fan Yu <fan.yu9@zte.com.cn>
-> 
-> Background
-> ==========
-> When TCP retransmits a packet due to missing ACKs, the
-> retransmission may fail for various reasons (e.g., packets
-> stuck in driver queues, receiver zero windows, or routing issues).
-> 
-> The original tcp_retransmit_skb tracepoint:
-> &apos;commit e086101b150a ("tcp: add a tracepoint for tcp retransmission")&apos;
+Not particularly; but given the terrible back and forth, the only sane
+way to 'show' my changes it from patch 6 onwards folded. If I were to
+diff against patch 9 it'd be a shitshow.
 
-Looks like your email client converts "'" into "&apos;" and
-corrupts the diff, see below.
-
-
-> lacks visibility into these failure causes, making production
-> diagnostics difficult.
-> 
-> Solution
-> ========
-> Adds the retval("err") to the tcp_retransmit_skb tracepoint.
-> Enables users to know why some tcp retransmission failed and
-> users can filter retransmission failures by retval.
-> 
-> Compatibility description
-> =========================
-> This patch extends the tcp_retransmit_skb tracepoint
-> by adding a new "err" field at the end of its
-> existing structure (within TP_STRUCT__entry). The
-> compatibility implications are detailed as follows:
-> 
-> 1) Structural compatibility for legacy user-space tools
-> 
-> Legacy tools/BPF programs accessing existing fields
-> (by offset or name) can still work without modification
-> or recompilation.The new field is appended to the end,
-> preserving original memory layout.
-> 
-> 2) Note: semantic changes
-> 
-> The original tracepoint primarily only focused on
-> successfully retransmitted packets. With this patch,
-> the tracepoint now can figure out packets that may
-> terminate early due to specific reasons. For accurate
-> statistics, users should filter using "err" to
-> distinguish outcomes.
-> 
-> Before patched:
-> # cat /sys/kernel/debug/tracing/events/tcp/tcp_retransmit_skb/format
-> field:const void * skbaddr; offset:8; size:8; signed:0;
-> field:const void * skaddr; offset:16; size:8; signed:0;
-> field:int state; offset:24; size:4; signed:1;
-> field:__u16 sport; offset:28; size:2; signed:0;
-> field:__u16 dport; offset:30; size:2; signed:0;
-> field:__u16 family; offset:32; size:2; signed:0;
-> field:__u8 saddr[4]; offset:34; size:4; signed:0;
-> field:__u8 daddr[4]; offset:38; size:4; signed:0;
-> field:__u8 saddr_v6[16]; offset:42; size:16; signed:0;
-> field:__u8 daddr_v6[16]; offset:58; size:16; signed:0;
-> 
-> print fmt: "skbaddr=%p skaddr=%p family=%s sport=%hu dport=%hu saddr=%pI4 daddr=%pI4 saddrv6=%pI6c daddrv6=%pI6c state=%s"
-> 
-> After patched:
-> # cat /sys/kernel/debug/tracing/events/tcp/tcp_retransmit_skb/format
-> field:const void * skbaddr; offset:8; size:8; signed:0;
-> field:const void * skaddr; offset:16; size:8; signed:0;
-> field:int state; offset:24; size:4; signed:1;
-> field:__u16 sport; offset:28; size:2; signed:0;
-> field:__u16 dport; offset:30; size:2; signed:0;
-> field:__u16 family; offset:32; size:2; signed:0;
-> field:__u8 saddr[4]; offset:34; size:4; signed:0;
-> field:__u8 daddr[4]; offset:38; size:4; signed:0;
-> field:__u8 saddr_v6[16]; offset:42; size:16; signed:0;
-> field:__u8 daddr_v6[16]; offset:58; size:16; signed:0;
-> field:int err;  offset:76;      size:4; signed:1;
-> 
-> print fmt: "skbaddr=%p skaddr=%p family=%s sport=%hu dport=%hu saddr=%pI4 daddr=%pI4 saddrv6=%pI6c daddrv6=%pI6c state=%s err=%d"
-> 
-> Change Log
-> =========
-> v4->v5:
-> Some fixes according to
-> https://lore.kernel.org/all/20250715072058.12f343bb@kernel.org/
-> 1. Instead of introducing new TCP_RETRANS_* enums, directly
-> passing the retval to the tracepoint.
-> 
-> v3->v4:
-> Some fixes according to
-> https://lore.kernel.org/all/CANn89i+JGSt=_CtWfhDXypWW-34a6SoP3RAzWQ9B9VL4+PHjDw@mail.gmail.com/
-> 1. Consolidate ENOMEMs into a unified TCP_RETRANS_NOMEM.
-> 
-> v2->v3:
-> Some fixes according to
-> https://lore.kernel.org/all/CANn89iJvyYjiweCESQL8E-Si7M=gosYvh1BAVWwAWycXW8GSdg@mail.gmail.com/
-> 1. Rename "quit_reason" to "result". Also, keep "key=val" format concise(no space in vals).
-> 
-> v1->v2:
-> Some fixes according to
-> https://lore.kernel.org/all/CANn89iK-6kT-ZUpNRMjPY9_TkQj-dLuKrDQtvO1140q4EUsjFg@mail.gmail.com/
-> 1.Rename TCP_RETRANS_QUIT_UNDEFINED to TCP_RETRANS_ERR_DEFAULT.
-> 2.Added detailed compatibility consequences section.
-> 
-> Suggested-by: Jakub Kicinski <kuba@kernel.org>
-> Suggested-by: Eric Dumazet <edumazet@google.com>
-> Co-developed-by: xu xin <xu.xin16@zte.com.cn>
-> Signed-off-by: xu xin <xu.xin16@zte.com.cn>
-> Signed-off-by: Fan Yu <fan.yu9@zte.com.cn>
-> ---
-
-Please add changelog here so it will disappear when the patch is merged.
-
-
-> include/trace/events/tcp.h | 27 ++++++++--------------
-> net/ipv4/tcp_output.c      | 46 ++++++++++++++++++++++++--------------
-> 2 files changed, 38 insertions(+), 35 deletions(-)
-> 
-> diff --git a/include/trace/events/tcp.h b/include/trace/events/tcp.h
-> index 54e60c6009e3..9d2c36c6a0ed 100644
-> --- a/include/trace/events/tcp.h
-> +++ b/include/trace/events/tcp.h
-> @@ -13,17 +13,11 @@
-> #include <linux/sock_diag.h>
-> #include <net/rstreason.h>
-> 
-> -/*
-> - * tcp event with arguments sk and skb
-> - *
-> - * Note: this class requires a valid sk pointer; while skb pointer could
-> - *       be NULL.
-> - */
-> -DECLARE_EVENT_CLASS(tcp_event_sk_skb,
-> +TRACE_EVENT(tcp_retransmit_skb,
-> 
-> -	TP_PROTO(const struct sock *sk, const struct sk_buff *skb),
-> +	TP_PROTO(const struct sock *sk, const struct sk_buff *skb, int err),
-> 
-> -	TP_ARGS(sk, skb),
-> +	TP_ARGS(sk, skb, err),
-> 
->  	TP_STRUCT__entry(
->  		__field(const void *, skbaddr)
-> @@ -36,6 +30,7 @@ DECLARE_EVENT_CLASS(tcp_event_sk_skb,
->  		__array(__u8, daddr, 4)
->  		__array(__u8, saddr_v6, 16)
->  		__array(__u8, daddr_v6, 16)
-> +		__field(int, err)
->  	),
-> 
->  	TP_fast_assign(
-> @@ -58,21 +53,17 @@ DECLARE_EVENT_CLASS(tcp_event_sk_skb,
-> 
->  		TP_STORE_ADDRS(__entry, inet->inet_saddr, inet->inet_daddr,
->  			sk->sk_v6_rcv_saddr, sk->sk_v6_daddr);
-> +
-> +		__entry->err = err;
->  	),
-> 
-> -	TP_printk("skbaddr=%p skaddr=%p family=%s sport=%hu dport=%hu saddr=%pI4 daddr=%pI4 saddrv6=%pI6c daddrv6=%pI6c state=%s",
-> +	TP_printk("skbaddr=%p skaddr=%p family=%s sport=%hu dport=%hu saddr=%pI4 daddr=%pI4 saddrv6=%pI6c daddrv6=%pI6c state=%s err=%d",
->  		__entry->skbaddr, __entry->skaddr,
->  		show_family_name(__entry->family),
->  		__entry->sport, __entry->dport, __entry->saddr, __entry->daddr,
->  		__entry->saddr_v6, __entry->daddr_v6,
-> -		  show_tcp_state_name(__entry->state))
-> -);
-> -
-> -DEFINE_EVENT(tcp_event_sk_skb, tcp_retransmit_skb,
-> -
-> -	TP_PROTO(const struct sock *sk, const struct sk_buff *skb),
-> -
-> -	TP_ARGS(sk, skb)
-> +		  show_tcp_state_name(__entry->state),
-> +		  __entry->err)
-> );
-> 
-> #undef FN
-> diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-> index b616776e3354..c31e164693d5 100644
-> --- a/net/ipv4/tcp_output.c
-> +++ b/net/ipv4/tcp_output.c
-> @@ -3330,8 +3330,10 @@ int __tcp_retransmit_skb(struct sock *sk, struct sk_buff *skb, int segs)
->  	if (icsk->icsk_mtup.probe_size)
->  		icsk->icsk_mtup.probe_size = 0;
-> 
-> -	if (skb_still_in_host_queue(sk, skb))
-> -		return -EBUSY;
-> +	if (skb_still_in_host_queue(sk, skb)) {
-> +		err = -EBUSY;
-> +		goto out;
-> +	}
-> 
-> start:
->  	if (before(TCP_SKB_CB(skb)->seq, tp->snd_una)) {
-> @@ -3342,14 +3344,19 @@ int __tcp_retransmit_skb(struct sock *sk, struct sk_buff *skb, int segs)
->  		}
->  		if (unlikely(before(TCP_SKB_CB(skb)->end_seq, tp->snd_una))) {
->  			WARN_ON_ONCE(1);
-> -			return -EINVAL;
-> +			err = -EINVAL;
-> +			goto out;
-> +		}
-> +		if (tcp_trim_head(sk, skb, tp->snd_una - TCP_SKB_CB(skb)->seq)) {
-> +			err = -ENOMEM;
-> +			goto out;
->  		}
-> -		if (tcp_trim_head(sk, skb, tp->snd_una - TCP_SKB_CB(skb)->seq))
-> -			return -ENOMEM;
->  	}
-> 
-> -	if (inet_csk(sk)->icsk_af_ops->rebuild_header(sk))
-> -		return -EHOSTUNREACH; /* Routing failure or similar. */
-> +	if (inet_csk(sk)->icsk_af_ops->rebuild_header(sk)) {
-> +		err = -EHOSTUNREACH; /* Routing failure or similar. */
-> +		goto out;
-> +	}
-> 
->  	cur_mss = tcp_current_mss(sk);
->  	avail_wnd = tcp_wnd_end(tp) - TCP_SKB_CB(skb)->seq;
-> @@ -3360,8 +3367,10 @@ int __tcp_retransmit_skb(struct sock *sk, struct sk_buff *skb, int segs)
->  	* our retransmit of one segment serves as a zero window probe.
->  	*/
->  	if (avail_wnd <= 0) {
-> -		if (TCP_SKB_CB(skb)->seq != tp->snd_una)
-> -			return -EAGAIN;
-> +		if (TCP_SKB_CB(skb)->seq != tp->snd_una) {
-> +			err = -EAGAIN;
-> +			goto out;
-> +		}
->  		avail_wnd = cur_mss;
->  	}
-> 
-> @@ -3373,11 +3382,15 @@ int __tcp_retransmit_skb(struct sock *sk, struct sk_buff *skb, int segs)
->  	}
->  	if (skb->len > len) {
->  		if (tcp_fragment(sk, TCP_FRAG_IN_RTX_QUEUE, skb, len,
-> -				 cur_mss, GFP_ATOMIC))
-> -			return -ENOMEM; /* We&apos;ll try again later. */
-> +				 cur_mss, GFP_ATOMIC)) {
-> +			err = -ENOMEM;  /* We&apos;ll try again later. */
-
-This chunk is corrupted by "'" conversion.
-Please check your email client config.
-
-
-
-> +			goto out;
-> +		}
->  	} else {
-> -		if (skb_unclone_keeptruesize(skb, GFP_ATOMIC))
-> -			return -ENOMEM;
-> +		if (skb_unclone_keeptruesize(skb, GFP_ATOMIC)) {
-> +			err = -ENOMEM;
-> +			goto out;
-> +		}
-> 
->  		diff = tcp_skb_pcount(skb);
->  		tcp_set_skb_tso_segs(skb, cur_mss);
-> @@ -3431,17 +3444,16 @@ int __tcp_retransmit_skb(struct sock *sk, struct sk_buff *skb, int segs)
->  		tcp_call_bpf_3arg(sk, BPF_SOCK_OPS_RETRANS_CB,
->  				TCP_SKB_CB(skb)->seq, segs, err);
-> 
-> -	if (likely(!err)) {
-> -		trace_tcp_retransmit_skb(sk, skb);
-> -	} else if (err != -EBUSY) {
-> +	if (err != -EBUSY)
->  		NET_ADD_STATS(sock_net(sk), LINUX_MIB_TCPRETRANSFAIL, segs);
-
-Now this is counted when !err.
-
-
-> -	}
-> 
->  	/* To avoid taking spuriously low RTT samples based on a timestamp
->  	* for a transmit that never happened, always mark EVER_RETRANS
->  	*/
->  	TCP_SKB_CB(skb)->sacked |= TCPCB_EVER_RETRANS;
-> 
-> +out:
-> +	trace_tcp_retransmit_skb(sk, skb, err);
->  	return err;
-> }
-> 
-> --
-> 2.25.1
-> 
+At the very least the SRCU thing ought to be broken back out. Not sure
+how many pieces it can reasonably be broken into, see what works.
