@@ -1,56 +1,55 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 706F71531E8;
-	Tue, 15 Jul 2025 14:49:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 658DA1E9919;
+	Tue, 15 Jul 2025 15:01:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752590946; cv=none; b=ZcKnSwes8brwyFSlfMD6aFZ8sYDTf2lBxgxchb7Aw0PmEJcx/Jzf7MyucjkB+0grSg7yU83BdkWK9ss6B38QGXF4gHNYA0w1OzK4yQ/2vOGPzm368x/l+IZiCRjA/40BbfRCzoJsScZt60XF9+rhRK2sNtLsAnS6SGn0M3XA7Qc=
+	t=1752591721; cv=none; b=Fq2e9TZABd7VYIASh6fVWUfR4mZ0mh0a99R94LNY5eVT/AYEZSAiBBPyUGGPXtyx1zn3WDsJtcilALjQTpqy9/JsS1OJwq6KWgQ8CmAbebN52WQqpAYONJujUObSi3ZXPdv1BrFmaTcpkJN2pdFOrdz7twWNDSRiUkeOuETno+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752590946; c=relaxed/simple;
-	bh=/i8hp2A63xErh+VqtEwyoNTl9Erl2EmboCvW+eFlchM=;
+	s=arc-20240116; t=1752591721; c=relaxed/simple;
+	bh=PRvkD8XVZv1RvZqERZNXA2sjtIt0PfIn1JIiotXt9JI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Wkqo6g+QBXTj9qS8hhHiSn5JDhtoNT/Z9zXdr84RgJYgUWmbbqir0zQrJ/5X9IjQTWCnVVxaAaBeIF20tYSoeUtmb2eM8+YMGAn0mLHarz4Vd/4TaJAcmJlgRKB6JzimJlJGd2HDy9FlhxUrmrmpmE+eYvrTa4GzQvXdBJmdQeI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jc1ulnuX; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=7iP4mBwN; arc=none smtp.client-ip=193.142.43.55
+	 Content-Type:Content-Disposition:In-Reply-To; b=CWjHLur3iqhrIdPj21JcTPOL3wtjjLSYdIQKkFI9GWWFZbeiPIO6rRm99/eUaepKmY0mWzyCMM3WTThfsJCFpfl5U55CNGcOl9tUuohdtiveUI3wS28araDlp8UsaCHmOShXQ+ygNDJvZ0+o8+oo7Wv+hKC8KIT6sWVoR/t9BAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bpLD4pJf; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=tBZ9aDzi; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jc1ulnuX";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="7iP4mBwN"
-Date: Tue, 15 Jul 2025 16:48:58 +0200
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bpLD4pJf";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tBZ9aDzi"
+Date: Tue, 15 Jul 2025 17:01:56 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1752590939;
+	s=2020; t=1752591717;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Hhs4oDExnFBWWlX2efUPYBaJUeuHGbsczHs2gZahTWI=;
-	b=jc1ulnuXEK8hy0xZsHSzFdlEOEitDkQIMyTjMoaGh4gMZPJGGCpE1NXrtF+LpkuDfMBKX3
-	t25X99oWc9MseXo7eDwem/HAkdeF2xmnpSehth1P5GR55fP9eGqdrAnE5DF6JYED478HJm
-	UCeW5q2ydHaz9NT1e8hHR4tlmP5SpyEPKqSNTMIh8P+UwZjRQ9PmDVQSNT8rP12lUYHhek
-	GYt8gYZVmofeJH28CkgcKAUuVbEBf1s4t4Y0+kR4yjOAT5T+kWSSoLxskna4Oce9/66WMp
-	X/GvuWCFY0E7ThyRB8BfagOv1RYgGGfYsh4WeyGxfJSLK4/pluTh3p010A5i4w==
+	bh=wRUwhx3/O+f9RFnLnKg1E1i1cjkfzjTWs1h01zmf0fo=;
+	b=bpLD4pJfc5EQiK9rQ0hId+EfUWeAR8TSXkTmwWrZNaoR0IfKEQOzAUQuTDZ2Ixt/RzqDDM
+	5lNWTvKrIhTb0WM3J1ql9i7LMT+NMVyIe6NrqU69V8uSmiicqHqn7OaC7k59bBBNfnxA94
+	C3geNwX6xQxnaGlG/BL+LWeP2jmAtivaxoVdJKTXHd6FjWLn/MleZjvDI9MqOlAC7Yh2X9
+	PbaU56Eg0qHZ2Ub+0BVhMjf+vwkBM0n5nPs/hkugP2JKboHNfpxnQHqkchuyZ+oTPok34J
+	2HhWrqv2uYhyUHavjUay4DKrQuBwYcmBNAomF0wKgI5UONmZxZym98ZhpKm2yA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1752590939;
+	s=2020e; t=1752591717;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Hhs4oDExnFBWWlX2efUPYBaJUeuHGbsczHs2gZahTWI=;
-	b=7iP4mBwNsSBmpNYNxkqe6QMfm4fPpKoTCrgT1eP346KNtXS2kUbEg3ugCwMYBCnhjOn41p
-	AynfNmlSmcf4EwCw==
+	bh=wRUwhx3/O+f9RFnLnKg1E1i1cjkfzjTWs1h01zmf0fo=;
+	b=tBZ9aDzilEg1BSc7YzrTjS16MgykLcAud6I6R5cIihhZVN73cBJm69EotHnN9zjQjOpELE
+	auTSrfZP6p0jBZCQ==
 From: Nam Cao <namcao@linutronix.de>
 To: Gabriele Monaco <gmonaco@redhat.com>
 Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
 	linux-trace-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Tomas Glozar <tglozar@redhat.com>, Juri Lelli <jlelli@redhat.com>,
 	Clark Williams <williams@redhat.com>,
 	John Kacur <jkacur@redhat.com>
-Subject: Re: [PATCH v3 08/17] verification/rvgen: Organise Kconfig entries
- for nested monitors
-Message-ID: <20250715144858.ZS4_m8Qm@linutronix.de>
+Subject: Re: [PATCH v3 09/17] tools/dot2c: Fix generated files going over 100
+ column limit
+Message-ID: <20250715150156.QXAD4dZl@linutronix.de>
 References: <20250715071434.22508-1-gmonaco@redhat.com>
- <20250715071434.22508-9-gmonaco@redhat.com>
+ <20250715071434.22508-10-gmonaco@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -59,143 +58,56 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250715071434.22508-9-gmonaco@redhat.com>
+In-Reply-To: <20250715071434.22508-10-gmonaco@redhat.com>
 
-On Tue, Jul 15, 2025 at 09:14:25AM +0200, Gabriele Monaco wrote:
-> The current behaviour of rvgen when running with the -a option is to
-> append the necessary lines at the end of the configuration for Kconfig,
-> Makefile and tracepoints.
-> This is not always the desired behaviour in case of nested monitors:
-> while tracepoints are not affected by nesting and the Makefile's only
-> requirement is that the parent monitor is built before its children, in
-> the Kconfig it is better to have children defined right after their
-> parent, otherwise the result has wrong indentation:
+On Tue, Jul 15, 2025 at 09:14:26AM +0200, Gabriele Monaco wrote:
+> From: Nam Cao <namcao@linutronix.de>
+
+You seem to take a slightly different solution. Feel free to take my name
+off the author field, Co-developed-by: or Suggested-by: would be fine. It's
+up to you, doesn't really matter to me.
+
+> The dot2c.py script generates all states in a single line. This breaks the
+> 100 column limit when the state machines are non-trivial.
 > 
-> [*]   foo_parent monitor
-> [*]     foo_child1 monitor
-> [*]     foo_child2 monitor
-> [*]   bar_parent monitor
-> [*]     bar_child1 monitor
-> [*]     bar_child2 monitor
-> [*]   foo_child3 monitor
-> [*]   foo_child4 monitor
+> Change dot2c.py to generate the states in separate lines in case the
+> generated line is going to be too long.
 > 
-> Adapt rvgen to look for a different marker for nested monitors in the
-> Kconfig file and append the line right after the last sibling, instead
-> of the last monitor.
-> Also add the marker when creating a new parent monitor.
-> 
+> Co-authored-by: Gabriele Monaco <gmonaco@redhat.com>
+> Signed-off-by: Nam Cao <namcao@linutronix.de>
 > Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 > ---
->  kernel/trace/rv/Kconfig                     |  5 +++++
->  tools/verification/rvgen/rvgen/container.py | 13 +++++++++++++
->  tools/verification/rvgen/rvgen/generator.py | 13 ++++++++-----
->  3 files changed, 26 insertions(+), 5 deletions(-)
+>  tools/verification/rvgen/rvgen/dot2c.py | 19 ++++++++++---------
+>  1 file changed, 10 insertions(+), 9 deletions(-)
 > 
-> diff --git a/kernel/trace/rv/Kconfig b/kernel/trace/rv/Kconfig
-> index c11bf7e61ebf0..26017378f79b8 100644
-> --- a/kernel/trace/rv/Kconfig
-> +++ b/kernel/trace/rv/Kconfig
-> @@ -43,6 +43,7 @@ config RV_PER_TASK_MONITORS
+> diff --git a/tools/verification/rvgen/rvgen/dot2c.py b/tools/verification/rvgen/rvgen/dot2c.py
+> index 6009caf568d92..5216d98ae21c8 100644
+> --- a/tools/verification/rvgen/rvgen/dot2c.py
+> +++ b/tools/verification/rvgen/rvgen/dot2c.py
+> @@ -152,28 +152,29 @@ class Dot2c(Automata):
+>          max_state_name = max(self.states, key = len).__len__()
+>          return max(max_state_name, self.invalid_state_str.__len__())
 >  
->  source "kernel/trace/rv/monitors/wip/Kconfig"
->  source "kernel/trace/rv/monitors/wwnr/Kconfig"
-> +
->  source "kernel/trace/rv/monitors/sched/Kconfig"
->  source "kernel/trace/rv/monitors/tss/Kconfig"
->  source "kernel/trace/rv/monitors/sco/Kconfig"
-> @@ -50,9 +51,13 @@ source "kernel/trace/rv/monitors/snroc/Kconfig"
->  source "kernel/trace/rv/monitors/scpd/Kconfig"
->  source "kernel/trace/rv/monitors/snep/Kconfig"
->  source "kernel/trace/rv/monitors/sncid/Kconfig"
-> +# Add new sched monitors here
-> +
->  source "kernel/trace/rv/monitors/rtapp/Kconfig"
->  source "kernel/trace/rv/monitors/pagefault/Kconfig"
->  source "kernel/trace/rv/monitors/sleep/Kconfig"
-> +# Add new rtapp monitors here
-> +
->  # Add new monitors here
+> -    def __get_state_string_length(self):
+> -        maxlen = self.__get_max_strlen_of_states() + self.enum_suffix.__len__()
+> -        return "%" + str(maxlen) + "s"
+> -
+>      def get_aut_init_function(self):
+>          nr_states = self.states.__len__()
+>          nr_events = self.events.__len__()
+>          buff = []
 >  
->  config RV_REACTORS
-> diff --git a/tools/verification/rvgen/rvgen/container.py b/tools/verification/rvgen/rvgen/container.py
-> index 47d8ab2ad3ec4..fee493f89fde6 100644
-> --- a/tools/verification/rvgen/rvgen/container.py
-> +++ b/tools/verification/rvgen/rvgen/container.py
-> @@ -20,3 +20,16 @@ class Container(generator.RVGenerator):
->          main_h = self.main_h
->          main_h = main_h.replace("%%MODEL_NAME%%", self.name)
->          return main_h
-> +
-> +    def fill_kconfig_tooltip(self):
-> +        """Override to produce a marker for this container in the Kconfig"""
-> +        container_marker = f"# Add new {self.name} monitors here\n"
-> +        if self.auto_patch:
-> +            self._patch_file("Kconfig",
-> +                            "# Add new monitors here", "")
+> -        strformat = self.__get_state_string_length()
+> -
+> +        maxlen = self.__get_max_strlen_of_states() + len(self.enum_suffix)
+> +        # account for tabs and spaces/punctuation for each event
+> +        linetoolong = 16 + (maxlen + 3) * nr_events >= self.line_length
 
-Isn't this one excessive? I gave it a try, but I had double blank line:
+I managed to figure out 16 is the indentation. But I failed to understand
+where is this '3' from.
 
-python3 tools/verification/rvgen -a container -n hello
+Can you please add some comments for these magic numbers? Or better, assign
+them to variables with self-explanatory names.
 
-   61 source "kernel/trace/rv/monitors/sleep/Kconfig"
-   62 # Add new rtapp monitors here
-   63 
-+  64 
-+  65 source "kernel/trace/rv/monitors/hello/Kconfig"
-+  66 # Add new hello monitors here
-+  67 
-   68 # Add new monitors here
-   69 
-   70 config RV_REACTORS
-
-> +        result = super().fill_kconfig_tooltip()
-> +        if self.auto_patch:
-> +            self._patch_file("Kconfig",
-> +                            "# Add new monitors here", container_marker)
-> +            return result
-> +        return result + container_marker
-> diff --git a/tools/verification/rvgen/rvgen/generator.py b/tools/verification/rvgen/rvgen/generator.py
-> index 19d0078a38032..ac97c4505ff00 100644
-> --- a/tools/verification/rvgen/rvgen/generator.py
-> +++ b/tools/verification/rvgen/rvgen/generator.py
-> @@ -137,7 +137,8 @@ class RVGenerator:
->          kconfig = kconfig.replace("%%MONITOR_DEPS%%", monitor_deps)
->          return kconfig
->  
-> -    def __patch_file(self, file, marker, line):
-> +    def _patch_file(self, file, marker, line):
-> +        assert(self.auto_patch)
->          file_to_patch = os.path.join(self.rv_dir, file)
->          content = self._read_file(file_to_patch)
->          content = content.replace(marker, line + "\n" + marker)
-> @@ -146,7 +147,7 @@ class RVGenerator:
->      def fill_tracepoint_tooltip(self):
->          monitor_class_type = self.fill_monitor_class_type()
->          if self.auto_patch:
-> -            self.__patch_file("rv_trace.h",
-> +            self._patch_file("rv_trace.h",
->                              "// Add new monitors based on CONFIG_%s here" % monitor_class_type,
->                              "#include <monitors/%s/%s_trace.h>" % (self.name, self.name))
->              return "  - Patching %s/rv_trace.h, double check the result" % self.rv_dir
-> @@ -158,8 +159,10 @@ Add this line where other tracepoints are included and %s is defined:
->  
->      def fill_kconfig_tooltip(self):
->          if self.auto_patch:
-> -            self.__patch_file("Kconfig",
-> -                            "# Add new monitors here",
-> +            # monitors with a container should stay together in the Kconfig
-> +            self._patch_file("Kconfig",
-> +                            "# Add new %smonitors here" %
-> +                              (self.parent + " " if self.parent else ""),
-
-This one must be kept in sync with container_marker in
-Container.fill_kconfig_tooltip(). I think this is hard to maintain later
-on.
-
-How about we keep in centralized with a helper function, something like:
-
-def container_marker(container: str) -> str:
-    return f"# Add new {container} monitors here\n"
-
+Best regards,
 Nam
