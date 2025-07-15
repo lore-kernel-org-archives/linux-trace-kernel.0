@@ -1,38 +1,38 @@
 Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2B0C29E117;
-	Tue, 15 Jul 2025 19:05:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12B6822127C;
+	Tue, 15 Jul 2025 19:07:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752606302; cv=none; b=Jm91whS2ojz1VZWQeZhcrME4UlRPEdCT3VRVuDwxd+ms/Oh7TR2UEtKlEKJEx6loCwnuB/Glabq++bOTSD7t5CzbbnM30zTUnfz00j3p8PkwJ6ssQS43tRXtVmbG0vcWyGA4OGY31PAYXW7A0VeR9DfVWVIDEtAGf0uJttzjKTo=
+	t=1752606452; cv=none; b=FgwWprGbzjhfOiH6eoH5pXDGxxrTTAi+Wzr972m9/HsS56SxPEXrYliqBQ6Z9nkNUnnCEb7EmGROkudwtesw5sO2ieyapNyMZZ7yuqOcO41gkXYtf4eGRRwhUYevAXg1XvasYeftNo6LDYk8Y7Nlsa2lHpZNRnjsAzAm6bGfh+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752606302; c=relaxed/simple;
-	bh=oh1WiQHU+OESyTvxNEBn2VoQ7xQAzNKKIYjLsgFQQDU=;
+	s=arc-20240116; t=1752606452; c=relaxed/simple;
+	bh=pGSsRkZlxFE4/rDI5BTTMbWX+r1CfkdOa/U2M96EyA0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AZrG69xk61kzNMdy3AursDVtfnAD6pIFMv90XmoWVK2ZudvK4OKB1P2d/uT4fuw5eCM7yoSewljW/9sLKmpzajT2IfQV1knUyO+vLvLOesIWJfkjfaO67+83/xsjBub+G0obBzNWl5+J5FdH0w2oO47YTxjZMlBViFYgue7/DRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=mWO1O5FI; arc=none smtp.client-ip=90.155.50.34
+	 Content-Type:Content-Disposition:In-Reply-To; b=q3KO0lfOux3rDjhCfect6HzrgNoQHIYJofkiW3k4ppmV+bh7mNQOtgUi0gh945QQOdU24A2+3+oEGKw6sKmmrvoGXfLnU4mXqDZuzTDxJhBVfTwDDjh7dcRDBTGAuxZjpBCZZZyExe2osisVoAt9Gvvet8bJ771xiTqttDtTFNw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=vWC/ojFp; arc=none smtp.client-ip=90.155.50.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mWO1O5FI"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vWC/ojFp"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
 	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=GyoqrrjfwZIc2bgIVXvyQBYuaCWu28O+RO4kH1BswgU=; b=mWO1O5FIauCk7o5Rn1QyTfx3+W
-	weV2av1fhnvImLWnM7FGCbqJIRkC+5zWnnTogRwQTkbvZu3DYplR6qzkZ/huZrvpFNhum5YVBOgg+
-	1qeOvzKmNKpBnms2WBQZ/heXIYVk89yvXtIJP80ZjgKyD+Nvb7Xgy7t2yq9yDqy+EfKm38T4qe9ch
-	tuzjSFfwliroH9vyikOvfADqsmMlNhkD5RC6Xmovk7+NpMBLIMg7+EAVvkRh8tqZWsmfHrBY9GNMK
-	wA2iE2uWHR2eoW7ZFgyiHzgXyr9ntF1ufb1f2ysyGlsb+92rAjBKrky74lVdF7yK+KrNZogQxEGL5
-	DC52nLQA==;
+	bh=BT3B1DtxJah2Y+P2ydapGunbjX2yfyQbDYuMIQAZfck=; b=vWC/ojFpmd+xp5mEgWTFMQ8TMr
+	jk+JjiXjRkFD3XHRA1ShZhl3aZ+7PhpQm4LP8XBSDHGyo7qeUetQw1sbg7eI4DgZne7aXR2e68C7L
+	bJV0BptTyHhLRjNVXGtFc7uPx9RM1VCBsZJNXnLialsiJWNVYcBAhrUJprWzH4e1JRjV+UuvSc5/W
+	N55Jzjf1RVn2BDVDuzyEuDakucvHkggNawl6kcMfQy+qUz7LQbPV5X9y7kdjLzi5LoFbY/UObXNJW
+	DTg1aLnM1vfw4o/G9ZghOBkBIpgFs10JjprJA4iClXLSvjE/aD0dA/uDyh+S3iPdsCnkz1iUdXdDy
+	q6JqM6mw==;
 Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
 	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1ubkxK-0000000DV2q-1fxc;
-	Tue, 15 Jul 2025 19:04:46 +0000
+	id 1ubkzr-0000000DVTi-0ZXY;
+	Tue, 15 Jul 2025 19:07:23 +0000
 Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 2EFEE300230; Tue, 15 Jul 2025 21:04:45 +0200 (CEST)
-Date: Tue, 15 Jul 2025 21:04:45 +0200
+	id B58A83001AA; Tue, 15 Jul 2025 21:07:22 +0200 (CEST)
+Date: Tue, 15 Jul 2025 21:07:22 +0200
 From: Peter Zijlstra <peterz@infradead.org>
 To: Steven Rostedt <rostedt@goodmis.org>
 Cc: Steven Rostedt <rostedt@kernel.org>, linux-kernel@vger.kernel.org,
@@ -54,12 +54,11 @@ Cc: Steven Rostedt <rostedt@kernel.org>, linux-kernel@vger.kernel.org,
 	Sam James <sam@gentoo.org>
 Subject: Re: [PATCH v13 10/14] unwind: Clear unwind_mask on exit back to user
  space
-Message-ID: <20250715190445.GG4105545@noisy.programming.kicks-ass.net>
+Message-ID: <20250715190722.GH4105545@noisy.programming.kicks-ass.net>
 References: <20250708012239.268642741@kernel.org>
  <20250708012359.345060579@kernel.org>
  <20250715102912.GQ1613200@noisy.programming.kicks-ass.net>
- <20250715084932.0563f532@gandalf.local.home>
- <20250715140650.19c0a8ed@batman.local.home>
+ <20250715132016.409b1082@batman.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -68,62 +67,41 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250715140650.19c0a8ed@batman.local.home>
+In-Reply-To: <20250715132016.409b1082@batman.local.home>
 
-On Tue, Jul 15, 2025 at 02:06:50PM -0400, Steven Rostedt wrote:
-> On Tue, 15 Jul 2025 08:49:32 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
+On Tue, Jul 15, 2025 at 01:20:16PM -0400, Steven Rostedt wrote:
+> On Tue, 15 Jul 2025 12:29:12 +0200
+> Peter Zijlstra <peterz@infradead.org> wrote:
 > 
-> > > >   *
-> > > > - * Return: 1 if the the callback was already queued.
-> > > > - *         0 if the callback successfully was queued.
-> > > > + * Return: 0 if the callback successfully was queued.
-> > > > + *         UNWIND_ALREADY_PENDING if the the callback was already queued.
-> > > > + *         UNWIND_ALREADY_EXECUTED if the callback was already called
-> > > > + *                (and will not be called again)
-> > > >   *         Negative if there's an error.
-> > > >   *         @cookie holds the cookie of the first request by any user
-> > > >   */    
-> > > 
-> > > Lots of babbling in the Changelog, but no real elucidation as to why you
-> > > need this second return value.
-> > > 
-> > > AFAICT it serves no real purpose; the users of this function should not
-> > > care. The only difference is that the unwind reference (your cookie)
-> > > becomes a backward reference instead of a forward reference. But why
-> > > would anybody care?  
-> > 
-> > Older versions of the code required it. I think I can remove it now.
+> > @@ -170,41 +193,62 @@ static void unwind_deferred_task_work(st
+> >  int unwind_deferred_request(struct unwind_work *work, u64 *cookie)
+> >  {
+> >  	struct unwind_task_info *info = &current->unwind_info;
+> > -	int ret;
+> > +	unsigned long bits, mask;
+> > +	int bit, ret;
+> >  
+> >  	*cookie = 0;
+> >  
+> > -	if (WARN_ON_ONCE(in_nmi()))
+> > -		return -EINVAL;
+> > -
+> >  	if ((current->flags & (PF_KTHREAD | PF_EXITING)) ||
+> >  	    !user_mode(task_pt_regs(current)))
+> >  		return -EINVAL;
+> >  
+> > +	/* NMI requires having safe cmpxchg operations */
+> > +	if (WARN_ON_ONCE(!UNWIND_NMI_SAFE && in_nmi()))
+> > +		return -EINVAL;
 > 
-> Ah it is still used in the perf code:
-> 
-> perf_callchain() has:
-> 
->         if (defer_user) {
->                 int ret = deferred_request(event);
->                 if (!ret)
->                         local_inc(&event->ctx->nr_no_switch_fast);
->                 else if (ret < 0)
->                         defer_user = false;
->         }
-> 
-> Where deferred_requests() is as static function that returns the result
-> of the unwind request. If it is zero, it means the callback will be
-> called, if it is greater than zero it means it has already been called,
-> and negative is an error (and use the old method).
-> 
-> It looks like when the callback is called it expects nr_no_switch_fast
-> to be incremented and it will decrement it. This is directly from
-> Josh's patch and I don't know perf well enough to know if that update
-> to nr_no_switch_fast is needed.
-> 
-> If it's not needed, we can just return 0 on success and negative on
-> failure. What do you think?
+> I don't think we want to have a WARN_ON() here as the perf series tries
+> to first do the deferred unwinding and if that fails, it will go back
+> to it's old method.
 
-I'm yet again confused. I don't see this code differentiate between 1
-and 2 return values (those PENDING and EXECUTED).
+The thing is, I don't think we have an architecture that supports NMIs
+and does not have NMI safe cmpxchg. And if we do have one such -- I
+don't think it has perf; perf very much assumes cmpxchg is NMI safe.
 
-Anyway, fundamentally I don't think there is a problem with backward
-references as opposed to the normal forward references.
-
-So leave it out for now.
+Calling this from NMI context and not having an NMI safe cmpxchg is very
+much a dodgy use case. Please leave the WARN, if it ever triggers, we'll
+look at who manages and deal with it then.
