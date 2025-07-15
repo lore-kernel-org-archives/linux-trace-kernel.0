@@ -1,126 +1,318 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [160.30.148.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C277F22DFB5
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 15 Jul 2025 15:39:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 804F4257452;
+	Tue, 15 Jul 2025 15:52:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=160.30.148.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752593954; cv=none; b=q2jCNdXovFy4YIFLDFtRLWGucBtWyxvg4pUsa27c/BfdYyM4apELgm/gdOEN6G2MxxwW0TRETlUlcdyLXOL0qU3wk6RwGqrV6hCljQfnR10FwFt83z/o1Hj8+N+78PsVJyIcVcdUQJbwC/WIfFJGffQAgXZRLkk/hddG+cF/exY=
+	t=1752594783; cv=none; b=pq9JiQBo/osGk73pXLw7mAPzueVgk89cf04Fp8m9rbB0Mrw4IjPtRkrvr9v6b42jupZuXiy9i31e1HWLRNhnG/GlOMMs4teGS8pBeE41Kvji0v55dUkBMzdrFSV2oRCSQUo6Z7khuqWPc72F9/Ew61IW/q7M02mXO6+U390ZQJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752593954; c=relaxed/simple;
-	bh=dTz/J9wlC+nywxQTpGo4UF/Z0sNT7Lcm+tM61+gHrNY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lzCGanDMZvD/kHWsX9M6G4im7RslJ0Y5efSDh5p5XZq7F2bk9eBQic0trtN654pVUC6Ae9XEAJ7Am2SJkCQaGThBILBNZXTfurvG0vSzWrwgl8u+yJHB1CDRUt0eQa0IAY233b2fGTh2JpTSz4zrwhA1Do6UXSar+UvYBjhth5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Mf+4EU1y; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Mf+4EU1y"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1752593951;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UHM4gZNCeGPf0Dq25GgumpITXaeUKp0zRvBNhoIXd98=;
-	b=Mf+4EU1ylWMaOu2sjZpP9WBuDOXofTRBvj0nfBSZt0d0nwO6D7MpbKc2eG9h9BEaN9TUe7
-	KRGn7yKOnghnJZ9WElG0ebqE3x0NJJmCkQn0pv8dym5vfYRapfx2Y52uItF9gOt+ALVUlx
-	nRCDeNEWKvDcZswUzhrn0h6BIBALHDw=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-187-GqN6ik_-OW-K6UHeMRK-IA-1; Tue, 15 Jul 2025 11:39:10 -0400
-X-MC-Unique: GqN6ik_-OW-K6UHeMRK-IA-1
-X-Mimecast-MFC-AGG-ID: GqN6ik_-OW-K6UHeMRK-IA_1752593949
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a4f85f31d9so2221497f8f.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 15 Jul 2025 08:39:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752593949; x=1753198749;
-        h=content-transfer-encoding:in-reply-to:organization:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=UHM4gZNCeGPf0Dq25GgumpITXaeUKp0zRvBNhoIXd98=;
-        b=Pn1AaBz+u7mwiccPffb1o5M+wCf5uRE1OUpz1TJl99UmJSr65YQE0WFx6oMKMLyyvp
-         jYUlRwwMzE01lk8iwAm2ER4Q37t5fluuu4f6Zv21/eqigWjO87JZLyyWnU+lmXNs0ad1
-         t6Rcy3XlV+FmicgaPd0nma+fbs3kW7l/UYXBuDWqWD6nBeOXG7IxtIRHxENQMW/W4A/p
-         O3jnBmxnrXAJRs4jpTp6LTq16XXZpWeMAKE6oJAf/q+uiFh/XEFVdbjaXoS+d5CaJkoY
-         Hvfq+qw1HUY7fsAcUOB3aFtbwb3PwZz4RNrlFooIp2PqD3enxO9rPlgR/a3It20hfE09
-         2tHA==
-X-Forwarded-Encrypted: i=1; AJvYcCX1AdQRjF8bI67qZm7h0p19FStfTFd0uv8UebshYH26WNNOQt3kPubwFHt6N3gNMhIeLTZoUxzFvF3pZnmB4UBPnbU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwWaKfkspO5hLxXdwXr8gz08oEo4ZqVBBD7OF8L5VPZcAlvg8Xf
-	VGfKAmjjl/HwFLRDqYon4gbwUqOsZtZx4DOkYs6Bhgz3yxVW+t/p6QIqLonMi6+Lmjnmui2jbaV
-	8a6emNfnRWbaAbU78jNzhBOTS5f1kH0HdUh5BFCxNKDeA0+t25wBrVQQJiXZGkVIp+ZhpOwRMjg
-	==
-X-Gm-Gg: ASbGnct9sbqp1nkfRm+qIgQcXPTCjO76yJSqDcV8pw5O1GuumDsaqZ8J5oOpaFx/KIc
-	6SlpQsOspezoWwRJHeTFVIvXk+iQxnPh9nE0wTRbPpG3zgWbM7KVTMajtnYUv4mx4qsxgrqMXPl
-	IgE3tVnX+vVVK0OlWHbgtqc2ZyoNMADl9pP8UM6Iao/gM6Id6mZ1ndI8cWWMvtadecfZ/k1P1ND
-	xAdXCXOhGaEMqP/Xut0UxA+8naL/kXaTwfXQH9OwmC9DVF7i50l6WZqGdO/2ZymFFTQ0tZLBd2+
-	98zC+r/G+e1YsX8+RTE0zKLlLXENl9ohxGovRlGjVXdhT7B5pcRZF3akPWQLvucVFCy5bfukp8C
-	sa/3+/AL1SuVSU9W8l3W4jvr3vqfcqtS2c0G0g7k6QAA+JIIBXC9EOtlS9fMxP5/72ys=
-X-Received: by 2002:a5d:54c1:0:b0:3b5:def6:4e4 with SMTP id ffacd0b85a97d-3b5f18dc957mr12722515f8f.46.1752593949283;
-        Tue, 15 Jul 2025 08:39:09 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFtrPZ5XjleiUjEdSdNotNWI9zAnnUxsYftwPbMASEv5sC7k861KNZN1awNoAXfH+5ERC81DA==
-X-Received: by 2002:a5d:54c1:0:b0:3b5:def6:4e4 with SMTP id ffacd0b85a97d-3b5f18dc957mr12722472f8f.46.1752593948800;
-        Tue, 15 Jul 2025 08:39:08 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f28:4900:2c24:4e20:1f21:9fbd? (p200300d82f2849002c244e201f219fbd.dip0.t-ipconnect.de. [2003:d8:2f28:4900:2c24:4e20:1f21:9fbd])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b5e8bd1792sm15715844f8f.13.2025.07.15.08.39.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Jul 2025 08:39:08 -0700 (PDT)
-Message-ID: <f51d923e-da89-46d7-8e3c-702f055b78ca@redhat.com>
-Date: Tue, 15 Jul 2025 17:39:05 +0200
+	s=arc-20240116; t=1752594783; c=relaxed/simple;
+	bh=hpah6/rE5DqZh8G1bxYLjWz7PdoI4oZdrcR4eeIx4Mc=;
+	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=X+8Nk/0P/UsXXG3rFxpUgu8vyzgYTRWTZN5l6WY5iOd38jgd+5hGB/VOqEx6u+oWJ7SKr47j0MCiSw6/xQthilg/v+jt+FmPktzAAP28SHHGimqI9D1n+DPjBEEH2glSRExryG5DjSEzaX+HjNDs+/IPJe1XBlWzMjcUajD/YwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=160.30.148.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
+Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4bhNxc62Kbz8R048;
+	Tue, 15 Jul 2025 23:52:52 +0800 (CST)
+Received: from xaxapp04.zte.com.cn ([10.99.98.157])
+	by mse-fl1.zte.com.cn with SMTP id 56FFqkdV061208;
+	Tue, 15 Jul 2025 23:52:46 +0800 (+08)
+	(envelope-from fan.yu9@zte.com.cn)
+Received: from mapi (xaxapp02[null])
+	by mapi (Zmail) with MAPI id mid32;
+	Tue, 15 Jul 2025 23:52:49 +0800 (CST)
+Date: Tue, 15 Jul 2025 23:52:49 +0800 (CST)
+X-Zmail-TransId: 2afa68767951ffffffff8b8-f3315
+X-Mailer: Zmail v1.0
+Message-ID: <20250715235249811YJbb1y6_zOrLbsh6PTlXv@zte.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 01/14] khugepaged: rename hpage_collapse_* to
- collapse_*
-To: Nico Pache <npache@redhat.com>, linux-mm@kvack.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: ziy@nvidia.com, baolin.wang@linux.alibaba.com,
- lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, ryan.roberts@arm.com,
- dev.jain@arm.com, corbet@lwn.net, rostedt@goodmis.org, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, akpm@linux-foundation.org,
- baohua@kernel.org, willy@infradead.org, peterx@redhat.com,
- wangkefeng.wang@huawei.com, usamaarif642@gmail.com, sunnanyong@huawei.com,
- vishal.moola@gmail.com, thomas.hellstrom@linux.intel.com,
- yang@os.amperecomputing.com, kirill.shutemov@linux.intel.com,
- aarcange@redhat.com, raquini@redhat.com, anshuman.khandual@arm.com,
- catalin.marinas@arm.com, tiwai@suse.de, will@kernel.org,
- dave.hansen@linux.intel.com, jack@suse.cz, cl@gentwo.org,
- jglisse@google.com, surenb@google.com, zokeefe@google.com,
- hannes@cmpxchg.org, rientjes@google.com, mhocko@suse.com,
- rdunlap@infradead.org, hughd@google.com
-References: <20250714003207.113275-1-npache@redhat.com>
- <20250714003207.113275-2-npache@redhat.com>
-From: David Hildenbrand <david@redhat.com>
-Organization: Red Hat
-In-Reply-To: <20250714003207.113275-2-npache@redhat.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: OlPk1rklwlquU4U9o1XpIsoC6tibHIU9NxI8KEhj6u0_1752593949
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+From: <fan.yu9@zte.com.cn>
+To: <kuba@kernel.org>, <edumazet@google.com>, <kuniyu@amazon.com>,
+        <ncardwell@google.com>, <davem@davemloft.net>, <dsahern@kernel.org>,
+        <pabeni@redhat.com>, <horms@kernel.org>
+Cc: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>, <yang.yang29@zte.com.cn>,
+        <xu.xin16@zte.com.cn>, <tu.qiang35@zte.com.cn>,
+        <jiang.kun2@zte.com.cn>, <qiu.yutan@zte.com.cn>,
+        <wang.yaxin@zte.com.cn>, <he.peilin@zte.com.cn>
+Subject: =?UTF-8?B?W1BBVENIIG5ldC1uZXh0IHY1XSB0Y3A6IHRyYWNlIHJldHJhbnNtaXQgZmFpbHVyZXMgaW4gdGNwX3JldHJhbnNtaXRfc2ti?=
+Content-Type: text/plain;
+	charset="UTF-8"
+X-MAIL:mse-fl1.zte.com.cn 56FFqkdV061208
+X-Fangmail-Anti-Spam-Filtered: true
+X-Fangmail-MID-QID: 68767954.001/4bhNxc62Kbz8R048
 
-On 14.07.25 02:31, Nico Pache wrote:
-> The hpage_collapse functions describe functions used by madvise_collapse
-> and khugepaged. remove the unnecessary hpage prefix to shorten the
-> function name.
-> 
-> Reviewed-by: Zi Yan <ziy@nvidia.com>
-> Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-> Signed-off-by: Nico Pache <npache@redhat.com>
-> ---
+From: Fan Yu <fan.yu9@zte.com.cn>
 
-Acked-by: David Hildenbrand <david@redhat.com>
+Background
+==========
+When TCP retransmits a packet due to missing ACKs, the
+retransmission may fail for various reasons (e.g., packets
+stuck in driver queues, receiver zero windows, or routing issues).
 
--- 
-Cheers,
+The original tcp_retransmit_skb tracepoint:
+&apos;commit e086101b150a ("tcp: add a tracepoint for tcp retransmission")&apos;
+lacks visibility into these failure causes, making production
+diagnostics difficult.
 
-David / dhildenb
+Solution
+========
+Adds the retval("err") to the tcp_retransmit_skb tracepoint.
+Enables users to know why some tcp retransmission failed and
+users can filter retransmission failures by retval.
 
+Compatibility description
+=========================
+This patch extends the tcp_retransmit_skb tracepoint
+by adding a new "err" field at the end of its
+existing structure (within TP_STRUCT__entry). The
+compatibility implications are detailed as follows:
+
+1) Structural compatibility for legacy user-space tools
+
+Legacy tools/BPF programs accessing existing fields
+(by offset or name) can still work without modification
+or recompilation.The new field is appended to the end,
+preserving original memory layout.
+
+2) Note: semantic changes
+
+The original tracepoint primarily only focused on
+successfully retransmitted packets. With this patch,
+the tracepoint now can figure out packets that may
+terminate early due to specific reasons. For accurate
+statistics, users should filter using "err" to
+distinguish outcomes.
+
+Before patched:
+# cat /sys/kernel/debug/tracing/events/tcp/tcp_retransmit_skb/format
+field:const void * skbaddr; offset:8; size:8; signed:0;
+field:const void * skaddr; offset:16; size:8; signed:0;
+field:int state; offset:24; size:4; signed:1;
+field:__u16 sport; offset:28; size:2; signed:0;
+field:__u16 dport; offset:30; size:2; signed:0;
+field:__u16 family; offset:32; size:2; signed:0;
+field:__u8 saddr[4]; offset:34; size:4; signed:0;
+field:__u8 daddr[4]; offset:38; size:4; signed:0;
+field:__u8 saddr_v6[16]; offset:42; size:16; signed:0;
+field:__u8 daddr_v6[16]; offset:58; size:16; signed:0;
+
+print fmt: "skbaddr=%p skaddr=%p family=%s sport=%hu dport=%hu saddr=%pI4 daddr=%pI4 saddrv6=%pI6c daddrv6=%pI6c state=%s"
+
+After patched:
+# cat /sys/kernel/debug/tracing/events/tcp/tcp_retransmit_skb/format
+field:const void * skbaddr; offset:8; size:8; signed:0;
+field:const void * skaddr; offset:16; size:8; signed:0;
+field:int state; offset:24; size:4; signed:1;
+field:__u16 sport; offset:28; size:2; signed:0;
+field:__u16 dport; offset:30; size:2; signed:0;
+field:__u16 family; offset:32; size:2; signed:0;
+field:__u8 saddr[4]; offset:34; size:4; signed:0;
+field:__u8 daddr[4]; offset:38; size:4; signed:0;
+field:__u8 saddr_v6[16]; offset:42; size:16; signed:0;
+field:__u8 daddr_v6[16]; offset:58; size:16; signed:0;
+field:int err;  offset:76;      size:4; signed:1;
+
+print fmt: "skbaddr=%p skaddr=%p family=%s sport=%hu dport=%hu saddr=%pI4 daddr=%pI4 saddrv6=%pI6c daddrv6=%pI6c state=%s err=%d"
+
+Change Log
+=========
+v4->v5:
+Some fixes according to
+https://lore.kernel.org/all/20250715072058.12f343bb@kernel.org/
+1. Instead of introducing new TCP_RETRANS_* enums, directly
+passing the retval to the tracepoint.
+
+v3->v4:
+Some fixes according to
+https://lore.kernel.org/all/CANn89i+JGSt=_CtWfhDXypWW-34a6SoP3RAzWQ9B9VL4+PHjDw@mail.gmail.com/
+1. Consolidate ENOMEMs into a unified TCP_RETRANS_NOMEM.
+
+v2->v3:
+Some fixes according to
+https://lore.kernel.org/all/CANn89iJvyYjiweCESQL8E-Si7M=gosYvh1BAVWwAWycXW8GSdg@mail.gmail.com/
+1. Rename "quit_reason" to "result". Also, keep "key=val" format concise(no space in vals).
+
+v1->v2:
+Some fixes according to
+https://lore.kernel.org/all/CANn89iK-6kT-ZUpNRMjPY9_TkQj-dLuKrDQtvO1140q4EUsjFg@mail.gmail.com/
+1.Rename TCP_RETRANS_QUIT_UNDEFINED to TCP_RETRANS_ERR_DEFAULT.
+2.Added detailed compatibility consequences section.
+
+Suggested-by: Jakub Kicinski <kuba@kernel.org>
+Suggested-by: Eric Dumazet <edumazet@google.com>
+Co-developed-by: xu xin <xu.xin16@zte.com.cn>
+Signed-off-by: xu xin <xu.xin16@zte.com.cn>
+Signed-off-by: Fan Yu <fan.yu9@zte.com.cn>
+---
+include/trace/events/tcp.h | 27 ++++++++--------------
+net/ipv4/tcp_output.c      | 46 ++++++++++++++++++++++++--------------
+2 files changed, 38 insertions(+), 35 deletions(-)
+
+diff --git a/include/trace/events/tcp.h b/include/trace/events/tcp.h
+index 54e60c6009e3..9d2c36c6a0ed 100644
+--- a/include/trace/events/tcp.h
++++ b/include/trace/events/tcp.h
+@@ -13,17 +13,11 @@
+#include <linux/sock_diag.h>
+#include <net/rstreason.h>
+
+-/*
+- * tcp event with arguments sk and skb
+- *
+- * Note: this class requires a valid sk pointer; while skb pointer could
+- *       be NULL.
+- */
+-DECLARE_EVENT_CLASS(tcp_event_sk_skb,
++TRACE_EVENT(tcp_retransmit_skb,
+
+-	TP_PROTO(const struct sock *sk, const struct sk_buff *skb),
++	TP_PROTO(const struct sock *sk, const struct sk_buff *skb, int err),
+
+-	TP_ARGS(sk, skb),
++	TP_ARGS(sk, skb, err),
+
+ 	TP_STRUCT__entry(
+ 		__field(const void *, skbaddr)
+@@ -36,6 +30,7 @@ DECLARE_EVENT_CLASS(tcp_event_sk_skb,
+ 		__array(__u8, daddr, 4)
+ 		__array(__u8, saddr_v6, 16)
+ 		__array(__u8, daddr_v6, 16)
++		__field(int, err)
+ 	),
+
+ 	TP_fast_assign(
+@@ -58,21 +53,17 @@ DECLARE_EVENT_CLASS(tcp_event_sk_skb,
+
+ 		TP_STORE_ADDRS(__entry, inet->inet_saddr, inet->inet_daddr,
+ 			sk->sk_v6_rcv_saddr, sk->sk_v6_daddr);
++
++		__entry->err = err;
+ 	),
+
+-	TP_printk("skbaddr=%p skaddr=%p family=%s sport=%hu dport=%hu saddr=%pI4 daddr=%pI4 saddrv6=%pI6c daddrv6=%pI6c state=%s",
++	TP_printk("skbaddr=%p skaddr=%p family=%s sport=%hu dport=%hu saddr=%pI4 daddr=%pI4 saddrv6=%pI6c daddrv6=%pI6c state=%s err=%d",
+ 		__entry->skbaddr, __entry->skaddr,
+ 		show_family_name(__entry->family),
+ 		__entry->sport, __entry->dport, __entry->saddr, __entry->daddr,
+ 		__entry->saddr_v6, __entry->daddr_v6,
+-		  show_tcp_state_name(__entry->state))
+-);
+-
+-DEFINE_EVENT(tcp_event_sk_skb, tcp_retransmit_skb,
+-
+-	TP_PROTO(const struct sock *sk, const struct sk_buff *skb),
+-
+-	TP_ARGS(sk, skb)
++		  show_tcp_state_name(__entry->state),
++		  __entry->err)
+);
+
+#undef FN
+diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
+index b616776e3354..c31e164693d5 100644
+--- a/net/ipv4/tcp_output.c
++++ b/net/ipv4/tcp_output.c
+@@ -3330,8 +3330,10 @@ int __tcp_retransmit_skb(struct sock *sk, struct sk_buff *skb, int segs)
+ 	if (icsk->icsk_mtup.probe_size)
+ 		icsk->icsk_mtup.probe_size = 0;
+
+-	if (skb_still_in_host_queue(sk, skb))
+-		return -EBUSY;
++	if (skb_still_in_host_queue(sk, skb)) {
++		err = -EBUSY;
++		goto out;
++	}
+
+start:
+ 	if (before(TCP_SKB_CB(skb)->seq, tp->snd_una)) {
+@@ -3342,14 +3344,19 @@ int __tcp_retransmit_skb(struct sock *sk, struct sk_buff *skb, int segs)
+ 		}
+ 		if (unlikely(before(TCP_SKB_CB(skb)->end_seq, tp->snd_una))) {
+ 			WARN_ON_ONCE(1);
+-			return -EINVAL;
++			err = -EINVAL;
++			goto out;
++		}
++		if (tcp_trim_head(sk, skb, tp->snd_una - TCP_SKB_CB(skb)->seq)) {
++			err = -ENOMEM;
++			goto out;
+ 		}
+-		if (tcp_trim_head(sk, skb, tp->snd_una - TCP_SKB_CB(skb)->seq))
+-			return -ENOMEM;
+ 	}
+
+-	if (inet_csk(sk)->icsk_af_ops->rebuild_header(sk))
+-		return -EHOSTUNREACH; /* Routing failure or similar. */
++	if (inet_csk(sk)->icsk_af_ops->rebuild_header(sk)) {
++		err = -EHOSTUNREACH; /* Routing failure or similar. */
++		goto out;
++	}
+
+ 	cur_mss = tcp_current_mss(sk);
+ 	avail_wnd = tcp_wnd_end(tp) - TCP_SKB_CB(skb)->seq;
+@@ -3360,8 +3367,10 @@ int __tcp_retransmit_skb(struct sock *sk, struct sk_buff *skb, int segs)
+ 	* our retransmit of one segment serves as a zero window probe.
+ 	*/
+ 	if (avail_wnd <= 0) {
+-		if (TCP_SKB_CB(skb)->seq != tp->snd_una)
+-			return -EAGAIN;
++		if (TCP_SKB_CB(skb)->seq != tp->snd_una) {
++			err = -EAGAIN;
++			goto out;
++		}
+ 		avail_wnd = cur_mss;
+ 	}
+
+@@ -3373,11 +3382,15 @@ int __tcp_retransmit_skb(struct sock *sk, struct sk_buff *skb, int segs)
+ 	}
+ 	if (skb->len > len) {
+ 		if (tcp_fragment(sk, TCP_FRAG_IN_RTX_QUEUE, skb, len,
+-				 cur_mss, GFP_ATOMIC))
+-			return -ENOMEM; /* We&apos;ll try again later. */
++				 cur_mss, GFP_ATOMIC)) {
++			err = -ENOMEM;  /* We&apos;ll try again later. */
++			goto out;
++		}
+ 	} else {
+-		if (skb_unclone_keeptruesize(skb, GFP_ATOMIC))
+-			return -ENOMEM;
++		if (skb_unclone_keeptruesize(skb, GFP_ATOMIC)) {
++			err = -ENOMEM;
++			goto out;
++		}
+
+ 		diff = tcp_skb_pcount(skb);
+ 		tcp_set_skb_tso_segs(skb, cur_mss);
+@@ -3431,17 +3444,16 @@ int __tcp_retransmit_skb(struct sock *sk, struct sk_buff *skb, int segs)
+ 		tcp_call_bpf_3arg(sk, BPF_SOCK_OPS_RETRANS_CB,
+ 				TCP_SKB_CB(skb)->seq, segs, err);
+
+-	if (likely(!err)) {
+-		trace_tcp_retransmit_skb(sk, skb);
+-	} else if (err != -EBUSY) {
++	if (err != -EBUSY)
+ 		NET_ADD_STATS(sock_net(sk), LINUX_MIB_TCPRETRANSFAIL, segs);
+-	}
+
+ 	/* To avoid taking spuriously low RTT samples based on a timestamp
+ 	* for a transmit that never happened, always mark EVER_RETRANS
+ 	*/
+ 	TCP_SKB_CB(skb)->sacked |= TCPCB_EVER_RETRANS;
+
++out:
++	trace_tcp_retransmit_skb(sk, skb, err);
+ 	return err;
+}
+
+--
+2.25.1
