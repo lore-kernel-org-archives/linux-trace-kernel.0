@@ -1,84 +1,87 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 914AC23643E
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 16 Jul 2025 08:30:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3FC62EE977
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 16 Jul 2025 08:38:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752654636; cv=none; b=aYC15ahFhCNb7qfm3QdWZkPx2gUwpK7yMBEn8p0w1XOurGaG65VORU+m1WHyBLAYGxQO8eWTAtmDA1h2XlkNPvbvpMIpUUcwPS5koMd1+UB6AzWrZhDGSUzrB9MI6QivDjbubpMCkvYtMI++JtvU78g7sg5tqzLMXUK9SXHyMws=
+	t=1752655101; cv=none; b=GR9KtgOM7w+mXp7yyw1IgFEX+Om/lJFE4uIYADVsGtORIhtGV3KdzixC5VEK030HOv6l4w7pJUG/fsyvlSi7OF5Cwd8z4Q96N7BMljzbXqMBJ8OLoHnRFGjq90tkjzZmFWfJl5u/rtNqk7wnQu5TeF3Z7qvn73f2oDFf6CFKP5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752654636; c=relaxed/simple;
-	bh=9LzaigoLl4b2p/ALb/kqMnj7SvMdKnIsLF2Wd7Z3hNc=;
+	s=arc-20240116; t=1752655101; c=relaxed/simple;
+	bh=QQq8vBZfSk2P43wHNlFThQAoMuJo81QL4o6cGnRFKfw=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NAXPLxoEYwW7oeBPuR2fmU3gVQHUiFGsJMA67BNdKZoZg5ZHXBOnqjPsfQu84fUbMcUue0FHB0RP9/AgSJvtABNNSCuOa6o0NoiTOQRg0lz+6svIZrPAZZpiqqRl9An8WyPlUm6qlV6sugInP/KSVoSH0f511hR72fnUelAAlug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BNja/b0H; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:Content-Type; b=pzpJctpAHLdflz4UhxfhJfDVvorzJJipeX4f7zMhT45sPkDGDEr2tqxVcoS+eIdFhTTbs8171/bmde9s2ivai31aybzpMhI2pQ8QY7cCFskFU8wBjBlJLZA326vAuB+MZeJCU+U7chaNOg6iLpSYY1pRVJZByUJCxN69PTh2MGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CVCZ3ALq; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BNja/b0H"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CVCZ3ALq"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1752654633;
+	s=mimecast20190719; t=1752655098;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=9LzaigoLl4b2p/ALb/kqMnj7SvMdKnIsLF2Wd7Z3hNc=;
-	b=BNja/b0HbYX1gna8Oqys1Ns7/sEAkFn1VxZJoxpbcCYM38BPQPDbCUmgc7fr2I1DFfXEFZ
-	2eQ5kMAVcDGvQma5XPIgA4zeZBNXJ0mYGnhxOL3EqeFIEF2l+eMoXeXYlrGP6IIR1Xtgqm
-	uQc+WADJ+RIgjyC7y5xDiNXq7l86QNs=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=QQq8vBZfSk2P43wHNlFThQAoMuJo81QL4o6cGnRFKfw=;
+	b=CVCZ3ALqNmgB4vX4NVcqPS9+ay+MehuoAxZHDjovnnMBeA5erZU7XcajZChutbz/ZMOUig
+	+ZiIelcIMG1EFySAC5IUGhI3c8/v3NB77yrIvGXIiNqzo7hfOaS/iIZJSx013yjLW0CTyx
+	d2cyJL0fOxByrQU997caDY6QxzfRYrs=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-167-vkR8aFFkOeeqfm6UXChJ2w-1; Wed, 16 Jul 2025 04:30:32 -0400
-X-MC-Unique: vkR8aFFkOeeqfm6UXChJ2w-1
-X-Mimecast-MFC-AGG-ID: vkR8aFFkOeeqfm6UXChJ2w_1752654631
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4560b81ff9eso24973265e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 16 Jul 2025 01:30:31 -0700 (PDT)
+ us-mta-364-UfVm3PSJMM29Vq_KHtFiYg-1; Wed, 16 Jul 2025 04:38:15 -0400
+X-MC-Unique: UfVm3PSJMM29Vq_KHtFiYg-1
+X-Mimecast-MFC-AGG-ID: UfVm3PSJMM29Vq_KHtFiYg_1752655094
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-455eda09c57so33614665e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 16 Jul 2025 01:38:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752654631; x=1753259431;
+        d=1e100.net; s=20230601; t=1752655094; x=1753259894;
         h=mime-version:user-agent:content-transfer-encoding:autocrypt
          :references:in-reply-to:date:cc:to:from:subject:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9LzaigoLl4b2p/ALb/kqMnj7SvMdKnIsLF2Wd7Z3hNc=;
-        b=bg/BYHJFZzRWOKi0KQOsw5elyQSdmvYMtiXZyrBWplNblHo/IIFzjOV0oiICB4XVs5
-         O+iPQ2PO8gN7BcUjCbt4lIqMdwXnfdSk0ejP2rMKRXSrLA9CIiInHLtcg9cVoA0XA+Yp
-         l3Om/EK0OiZcbr2r7sxn2VpicT5kFT/kP5N0qJuubgz9ixeOmaT50K7PEZKPualbfzBk
-         REVSf06d+AVCYwKWWj2ZU3aeasvcsjBmfJH/WSILjPzWvOIxw615sSj9x6dw2fAj1mX3
-         BxeH265fRiJBmAoBhY0HitljlLOrY95E7RhDjn5U0FJG4wpccekbxaa9VAgkchmEKGS0
-         DJGw==
-X-Forwarded-Encrypted: i=1; AJvYcCWSQHpopwkAmdPMUpOifN+HXqOaxsq3tv3sErcSXqpoyhXDqwWfxXQwuqeW5Mt/kIQf5Uy+mPZRVlI9aEfNOMAK/ZY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz9QoIeobrtEWfwgX/owM7f48a0Yd+bGuKAJKUeqfHMZrEFdZvJ
-	NH9UtcieMirDx8Q1h2wgMh5JlUMcLW+aRXfmxiFiF6lQuWaWZL6tCYJsf7jIDuuYKV0hlrsC5M6
-	QgwKegzPCSK2MjlSIZBsgbmR/ToRqyNzdMZdIKR+H+2CtjCInmCx218Vu2JAgAVzUtsVXagNJLw
+        bh=QQq8vBZfSk2P43wHNlFThQAoMuJo81QL4o6cGnRFKfw=;
+        b=EdsMdNB362AEIeefSqOAWywG/L66d2M0T48Zmg0gEOHAOU4CIZk/WCOFV8tZRMiOA7
+         owhB7YOjYgG6Z+5MXcriPSBcV3rxiejmbPgAxTrgk+KfBF+MBmr3/O+SGB3v+KdCTES3
+         ajVPwUpJAyxjCb552rGPhjnXB4KTjK2UTmyTqdGcyfAI/GNtXwfXowC/UKYMauAkIvu+
+         uM6as82L0vAgOW/a/FIP0K3sMQGE34P8UFFgzMOb3lNDVchN+V8HQDBiJnJbvvXHE8Xo
+         wfaY1eKZTVutiQ2L3udo/rSWJGKbYNJ9f/YOlCqj/Z//Qx1lWFC4P9Db7MkV2Kk022d0
+         7Gfw==
+X-Forwarded-Encrypted: i=1; AJvYcCVe+bZb0+Xf4yhypwzIc9WaY1OM5F9a/WmBMIodpCQ2YvFh3WE9GNTeZirnoyZv4TFEL1U93fGvAUwhXkYti8ifP+Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxBKLQPtKF+2WxIz6PfxOd3ULsORf8jJfxRYHt+kimj6wpX+0UO
+	zo6xkCuq3b7fGlrx6AiYtxCIwXe/PTqfQuzr0ZEg/awQ8lsV5lWVoWq1SdR5z0M8XX1jwL7rbmc
+	8K/AAHlqgRFpJYdP6pa7xBDysDa952JuscYFtQZOHKk+qiN1pqkJoAGFh3wae/u9oBoIZWE5tvw
 	==
-X-Gm-Gg: ASbGncsinjjT9DKkWCZd31hOr/72oyIeWnsRdKzUZyVNw+OK9Cqboj3FwOGLdaXeszn
-	di9QWktZhuqgBnOhxCd3OD/TwhqRxaVWXdmSLEUOl/osVkALKO88cDVe0F+YMj+fuCyosbp0CJ2
-	l1HTJct68FNTBkbKEcrU3pK7XI4hnipziNqmteQxXLh/FtJsQr8AVJm3z720HdMn+25xMoPX2aK
-	TtMIJFUq0uivRYleM4Rdq0huEnWHMVEBAvU9qjArjXF1iAKF6LD00J5vxGeD4Eu5GNfFMOQ5efR
-	UsS46TFLPBH2t9BCPabDk69OiN//vHkS0SvCelcjjbwCHPTgprbRrZ3TirkqmMhFFA==
-X-Received: by 2002:a05:600c:6745:b0:456:1514:5b04 with SMTP id 5b1f17b1804b1-4562e02c811mr16898265e9.21.1752654630731;
-        Wed, 16 Jul 2025 01:30:30 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGUIwx7H1nxEf1vHGpk4PDRMhHAle6zi/pzxcdnKbjne9zRXLYDRUQxx4T3mN/pgqucWdBIZw==
-X-Received: by 2002:a05:600c:6745:b0:456:1514:5b04 with SMTP id 5b1f17b1804b1-4562e02c811mr16897925e9.21.1752654630361;
-        Wed, 16 Jul 2025 01:30:30 -0700 (PDT)
+X-Gm-Gg: ASbGncsXnz5jUxw/bZogTCbxJ7FK668JuMOTW5MyFjjjsJWWxq/t+lsFXMThhLOHxmj
+	M/zlKjKgkGwfW0I3PRcCn2jRheURVmAa0WkutzZryiXtFRl3G14H/cKBr5YVtI/WwyBhU+4NAo0
+	lybM/w87UFL9eMcQNn4g5RTvWb3q+7DC6RzaMc1KdtkBOFnud7qWuTP0Loo3fAHotuzOGwDxpDp
+	kyJAeo2aMk8ivVmB3TYTA4wPV+WsIAoFzwLWvaexMvyKqHAJERUqYO61g+JbIBcis/ebxpODEc8
+	4cXxQpZj5OYVQwD3QDy/0GEkq/haXuEBp4yBQWaJWVS/y0ttx0Kd5pcxQfSZ+b2KGg==
+X-Received: by 2002:a05:600c:64cc:b0:453:66f:b96e with SMTP id 5b1f17b1804b1-4562e3548acmr19340905e9.11.1752655094320;
+        Wed, 16 Jul 2025 01:38:14 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG+/nnuhW+F2Hws04Pmk8/5vN80FGzipbhCV9r67JREdN9AMG3evNFkRpoGcxhrIiM9lirDhA==
+X-Received: by 2002:a05:600c:64cc:b0:453:66f:b96e with SMTP id 5b1f17b1804b1-4562e3548acmr19340525e9.11.1752655093847;
+        Wed, 16 Jul 2025 01:38:13 -0700 (PDT)
 Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.40])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4562e886113sm13651125e9.23.2025.07.16.01.30.29
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4562e886113sm13876205e9.23.2025.07.16.01.38.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Jul 2025 01:30:30 -0700 (PDT)
-Message-ID: <41906b93f031015729d969f03987ca87f22c3cf0.camel@redhat.com>
-Subject: Re: [PATCH v3 07/17] rv: Adjust monitor dependencies
+        Wed, 16 Jul 2025 01:38:13 -0700 (PDT)
+Message-ID: <f7028488e9d820848955de87ead3ec619fe5dbec.camel@redhat.com>
+Subject: Re: [PATCH v3 11/17] rv: Retry when da monitor detects race
+ conditions
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: Nam Cao <namcao@linutronix.de>
 Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, linux-trace-kernel@vger.kernel.org,
- Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- Tomas Glozar <tglozar@redhat.com>, Juri Lelli <jlelli@redhat.com>,  Clark
- Williams <williams@redhat.com>, John Kacur <jkacur@redhat.com>
-Date: Wed, 16 Jul 2025 10:30:28 +0200
-In-Reply-To: <20250716081948.gpIAM97C@linutronix.de>
+	linux-trace-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Peter
+ Zijlstra <peterz@infradead.org>, Tomas Glozar <tglozar@redhat.com>, Juri
+ Lelli <jlelli@redhat.com>,  Clark Williams <williams@redhat.com>, John
+ Kacur <jkacur@redhat.com>
+Date: Wed, 16 Jul 2025 10:38:11 +0200
+In-Reply-To: <20250716082712.L9z_ptHK@linutronix.de>
 References: <20250715071434.22508-1-gmonaco@redhat.com>
-	 <20250715071434.22508-8-gmonaco@redhat.com>
-	 <20250716081948.gpIAM97C@linutronix.de>
+	 <20250715071434.22508-12-gmonaco@redhat.com>
+	 <20250715152322.Os4lDq_B@linutronix.de>
+	 <e2f4f8d372612cd61689b91562e73677599d08de.camel@redhat.com>
+	 <20250716082712.L9z_ptHK@linutronix.de>
 Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
  keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
  1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
@@ -93,56 +96,90 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: f2QRgyz5rxUNonEVlv3IgsIDnD2r1WhRkFhGS7STGz8_1752654631
+X-Mimecast-MFC-PROC-ID: 90j5QQ3hHTef7XydRdwe3Ap9KNvRNPE_yO4xdvTi07o_1752655094
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 
 
-On Wed, 2025-07-16 at 10:19 +0200, Nam Cao wrote:
-> On Tue, Jul 15, 2025 at 09:14:24AM +0200, Gabriele Monaco wrote:
-> > RV monitors relying on the preemptirqs tracepoints are set as
-> > dependent
-> > on PREEMPT_TRACER and IRQSOFF_TRACER. In fact, those configurations
-> > do
-> > enable the tracepoints but are not the minimal configurations
-> > enabling
-> > them, which are TRACE_PREEMPT_TOGGLE and TRACE_IRQFLAGS (not
-> > selectable
-> > manually).
+On Wed, 2025-07-16 at 10:27 +0200, Nam Cao wrote:
+> On Wed, Jul 16, 2025 at 10:20:39AM +0200, Gabriele Monaco wrote:
+> > On Tue, 2025-07-15 at 17:23 +0200, Nam Cao wrote:
+> > > If I understand correctly, if after 3 tries and we still fail to
+> > > change the
+> > > state, we will invoke the reactor and trace_error? Doesn't that
+> > > cause
+> > > a
+> > > false positive? Because it is not a violation of the model, it is
+> > > just a
+> > > race making us fail to change the state.
+> > >=20
 > >=20
-> > Set TRACE_PREEMPT_TOGGLE and TRACE_IRQFLAGS as dependencies for
-> > monitors.
-> >=20
-> > Fixes: fbe6c09b7eb4 ("rv: Add scpd, snep and sncid per-cpu
-> > monitors")
-> > Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
+> > Yes, that's correct.
+> > My rationale was that, at that point, the monitor is likely no
+> > longer
+> > in sync, so silently ignoring the situation is not really an
+> > option.
+> > In this case, the reaction includes an invalid current state
+> > (because
+> > in fact we don't know what the current state is) and tools may be
+> > able
+> > to understand that.
 >=20
-> I still dislike this. TRACE_PREEMPT_TOGGLE and TRACE_IRQFLAGS are not
-> selectable manually, making it hard to enable the monitors. You would
-> need
-> to manually enable PREEMPT_TRACER and IRQSOFF_TRACER.
+> Can't you bring the monitor back to the init state, and start over
+> again?
+>=20
+> I think "da_mon->monitoring =3D 0;" does the trick?
 >=20
 
-Right, they cannot but they are sufficient. For instance the debug
-version of several distribution kernels has PROVE_LOCKING enabled but
-not TRACE_PREEMPT_TOGGLE. Both of them set TRACE_IRQFLAGS, so the
-monitor should be available on those builds.
+Yes you can, but I wouldn't do so silently.
+I'd say the cleanest approach without reaction is to still return false
+for the system to do all the cleanup but trace the event or, at the
+very least, print a warning.
 
-> I prefer "select" instead.
->=20
-> But well, if you insist on doing it this way. It is not broken, it is
-> just
-> inconvenient to configure.
-
-We had an internal discussion and my approach seems still better from a
-distro maintainer/reviewer perspective.
-Anyway, let's agree to disagree :)
-
->=20
-> Acked-by: Nam Cao <namcao@linutronix.de>
+But you're right, this is more relevant for who develops the monitor
+rather than for the user, so should probably be tracked separately.
 
 Thanks,
 Gabriele
+
+> > I know you wouldn't be able to do that in LTL..=C2=A0 By the way, LTL
+> > uses
+> > multiple statuses, so this lockless approach may not really work.
+>=20
+> Let's worry about one thing at a time ;)
+>=20
+> > I don't see this situation happening often: I only ever observed 2
+> > events able to race, 4 happening at the same time is wild, but of
+> > course cannot be excluded in principle for any possible monitor.
+> > Yet, I have the feeling a monitor where this can happen is not well
+> > designed and RV should point that out.
+> > Do you have ideas of potential monitors where more than 3 events
+> > can
+> > race?
+> >=20
+> > Perhaps a full blown reaction is a bit aggressive in this
+> > situation, as
+> > the /fault/ may not be necessarily in the monitor.
+> > We could think of a special tracepoint or just printing.
+> >=20
+> > > Same below.
+> > >=20
+> > > Also, I wouldn't use goto unless necessary. Perhaps it is better
+> > > to
+> > > put the
+> > > code at "out_react:" and "out_success:" into the loop. But that's
+> > > just my
+> > > personal preference, up to you.
+> >=20
+> > That could be done if we do a whole different thing when retries
+> > run
+> > out, instead of defaulting to out_react.
+> > I liked to avoid excessive indentation with those goto as well but
+> > yeah, it may not be quite necessary.
+>=20
+> Sure, as I said before, "just my personal preference, up to you."
+>=20
+> Nam
 
