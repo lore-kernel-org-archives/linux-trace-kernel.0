@@ -1,171 +1,227 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D0C22F5319
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 16 Jul 2025 16:14:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9956428FA93;
+	Wed, 16 Jul 2025 18:10:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752682491; cv=none; b=YMIQ4h0BRK4OHpFVddSBmfH7+HUo59Ff1iO/5xh2qRjKIZmNZNdbnqgFzaAq4JObV5v+JITlNx1wLlcXN+k41ZaS3GhXbMaE8aJU7awIGcRbWKzVPCxtyANkfk3jOLTp+B4V6chbwWCSU3OnAljGx5o5SX5s3dBxJ+k2rOQYJ6k=
+	t=1752689448; cv=none; b=Cf184Ir90WIbiQeXc09aOD9qd6QTkwvp6FionILcwUnBcStjG7LAAyd2dOm7oAqrkiQK5VxZ+GJYWdXFo6hHKQEuelaRqfIVVitCgvJvY3Xi9V3i7y2eu5R/kaxZli5/f7P9JfoM88gQMDaNKlH3ZAjuvZ16LXvHBB2S3eEqQl0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752682491; c=relaxed/simple;
-	bh=caPQsxMaBKfuAJUhMxcZI02W5/m/8IxsrRwhRieczQY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BeengKRRA8uEZcxqV6wvfnTOtf7znOVdqwJRCBmELFZr2W63IZIKZHKEE9Z5xtW4AFR6ObSIxQ+naVSkd2MP3frsgZ3iFDQjTftjdnitrN2aM4ZpcmZjhEj5yQy78EYVqR0xmR4e7MeW1KTfvcU59xUXLHouy5L0cPhrTESmAr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=J9F9kubb; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1752689448; c=relaxed/simple;
+	bh=PAXQZ4RAY5sxHa0qn+/IPFA/Kj1m4XLj8ZNFqYjocbQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JfBjpq42mvDC7/T3OBqGir8NJilCyexz8i4g9M+prSCDm0/7jOBVqZvOKouwzqkrLN2lfF0f+jaUHuo46Rgep0SONcPwpsoEzmpHY4PDq4e0eJrZDoagPb/K82xJMqEsFmg9xLKPJhSOtobTBRZdV1zthUnJprK62IPUNUFIrcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MJFiJm8I; arc=none smtp.client-ip=209.85.216.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J9F9kubb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1752682488;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=caPQsxMaBKfuAJUhMxcZI02W5/m/8IxsrRwhRieczQY=;
-	b=J9F9kubb/GA+6Lse7JqI6j/5WCP9zWuJ8COCImZDytFyCWvTH6h0DlYPhKLQvLaoUGwY+k
-	CA/z6reEgy31Bj4TSI2zbP3T2AMj2pCIacshUZSM4jasbWV1JwMlB1yh5D4nN5R/eumrJZ
-	2dqgM1eSYkSe9c0brbNML0EC6hUHUrA=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-157-9lqwS6dsO-WqcJqWtxuwjw-1; Wed, 16 Jul 2025 12:14:45 -0400
-X-MC-Unique: 9lqwS6dsO-WqcJqWtxuwjw-1
-X-Mimecast-MFC-AGG-ID: 9lqwS6dsO-WqcJqWtxuwjw_1752682484
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a503f28b09so53475f8f.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 16 Jul 2025 09:14:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MJFiJm8I"
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-31329098ae8so186156a91.1;
+        Wed, 16 Jul 2025 11:10:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1752689446; x=1753294246; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/nPLDzt8OaNCeZXVo+jqqenY1sk4GVXTkfMw9ymIdMY=;
+        b=MJFiJm8IFWv42xgZRlrVsXrr7OWhzKiyJPPURKQMtRXQpN+i2K0vRqz2oyJmqlUBsk
+         jsIdpaoHBir3hEygYmdWhk2v/hqc1BoL+QSUMlaerh90nrjRzWvOab8dl5FFxcolMvft
+         j8/d5NVKLk7RW+yX+P2pTy9qGqYwxVTm/Iu5CkBch04aXKZi+SIOg4hDSR7sUcXfrFnT
+         4yv5rGWlJarh3CYGM70+IKhdAnGzf+so9MAjngSqJ2/dtgAMDmou3zQqsIbyzqPSv4iA
+         pVltpXwOJppz/7/qF4L0FTiOyhVbGcAK8mAPiGfn9rORb9PMV2utNvFVkSC3bwcd1ipR
+         Pgiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752682484; x=1753287284;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=caPQsxMaBKfuAJUhMxcZI02W5/m/8IxsrRwhRieczQY=;
-        b=kQbAnxtQqIulIFwV9VasWv1aKCNEBEvZJcMAJHVdRrYptK6zfC3kwnydSvwydPZV0h
-         otNbQCWbDIICOeBgcFXD99qAQ25FajNkytvifVHNRAEfouqbYZ7aJDqduNsoIo8t/VOr
-         FN+mC6uuI3MhGgZSokZdXTI0S9iLLZEp6LHPV4Wx0XoxmAJ9YzjculkJxIAHYRzLLirC
-         ixLZzFNSB0K8PF3oJA5h9PLYPhOShTocklVp/Ws1syls3CEBGqwFClL7H5PNzqRFqWi5
-         Q468l73svQ9ssssn0H+g4ObwJTbdz9pzN1uaChwdAmlzZuihetG2BGqMPp1MvhCZgi/Z
-         wukw==
-X-Forwarded-Encrypted: i=1; AJvYcCVS26UcS6LywDsIuz56Dk9FFyWNEnYzBNAY5xeEesw/yZBNEbNzaRGO0lF+OmBujmmi4MIf5MuK2TWBC0oapEkq2Fo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwrNDwr/cxSnOee+FAA6t6gpRwZXcz+WkQuxUGmKjB/grSih14T
-	Ul0xviFBjU7GmR28gyVi1TV7SnfR/2jJEWesJEldntns38LUoT6dUzJs/WsUrVEUbbZhN9pXdjp
-	3zbR0TJeXuEgM+7ZibSO9a+tYFEtJ4G/YcvqCnu89vXmWJgxI3ekxHo/0VVx4S0mCtNOgC2usEQ
-	==
-X-Gm-Gg: ASbGncuiFo9zIlzsvsJG2XfM+dQSmW0sTO7qlG0Uj/j1ZBnkSg3TBWo4UmntqzgLtOK
-	24wWHa3w2Ita2h2SB75Hz5WpZfG341KXIgiqLPIGzpHumPDYY1XXPATmVAC/7LcEiDe1uWyCI4X
-	oGukkK4sUg+4xz2MTgJVlpoTmzmVNLU0qFZoNba+0I9/xgtemhQFFyZXc+PD5r2Y7+HM6tmUmUH
-	ACrpHxaE5qplYrcd3UZssIKzPbP7ymaKb3W2Yh1F8AVdGnpoOZEddgWJIbBzDoawuDXGXUApJMh
-	UMTfKdWFx9dDRWHtHDnIUTCTO0yTv7DN4Ko19yMvPktirsH56fSGsZFM7MWwlWAvxw==
-X-Received: by 2002:a5d:61c9:0:b0:3b5:e077:af52 with SMTP id ffacd0b85a97d-3b613a23674mr20543f8f.25.1752682483842;
-        Wed, 16 Jul 2025 09:14:43 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEBt7nrUXuBFgPX3anXe0tcehLEJl16049ahtmmdy0QKOqK7pYfXdmuoS7eEKIXQnFLYIFwag==
-X-Received: by 2002:a5d:61c9:0:b0:3b5:e077:af52 with SMTP id ffacd0b85a97d-3b613a23674mr20511f8f.25.1752682483409;
-        Wed, 16 Jul 2025 09:14:43 -0700 (PDT)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.42])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b5e8dc2464sm18650429f8f.38.2025.07.16.09.14.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Jul 2025 09:14:43 -0700 (PDT)
-Message-ID: <1da3336a234fddcea9dc91f5ef9943e7ccecc07e.camel@redhat.com>
-Subject: Re: [PATCH v3 12/17] sched: Adapt sched tracepoints for RV task
- model
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Steven
- Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	linux-trace-kernel@vger.kernel.org, Nam Cao <namcao@linutronix.de>, Tomas
- Glozar	 <tglozar@redhat.com>, Juri Lelli <jlelli@redhat.com>, Clark
- Williams	 <williams@redhat.com>, John Kacur <jkacur@redhat.com>
-Date: Wed, 16 Jul 2025 18:14:40 +0200
-In-Reply-To: <20250716153144.GY1613200@noisy.programming.kicks-ass.net>
-References: <20250715071434.22508-1-gmonaco@redhat.com>
-	 <20250715071434.22508-13-gmonaco@redhat.com>
-	 <20250716123832.GW1613200@noisy.programming.kicks-ass.net>
-	 <122cfd4ba6b0805e91ff09526d5d159ff3871964.camel@redhat.com>
-	 <20250716134513.GB905792@noisy.programming.kicks-ass.net>
-	 <fe38ba0b9da0209bcc97c2f348f5a6b266991073.camel@redhat.com>
-	 <20250716141958.GC905792@noisy.programming.kicks-ass.net>
-	 <be966ed3d4a7ace6aa430bbc5c16ecbff3118426.camel@redhat.com>
-	 <20250716153144.GY1613200@noisy.programming.kicks-ass.net>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
- xyhmqeUWOzFx5P43S1E1dhsrLWgP
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42)
+        d=1e100.net; s=20230601; t=1752689446; x=1753294246;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/nPLDzt8OaNCeZXVo+jqqenY1sk4GVXTkfMw9ymIdMY=;
+        b=FubksUT17daCHLHwIXXtaw1ncvJpnDTXRnubt2f4Ze3uga5JF5CseobH8IBHKmLRww
+         tx40wreXvMkU0v0rcu4YIIIP9tuE95RhHNBpTwiZy+psjIkajxJW37zrelB+Tg6Rj6q6
+         ey1ApSN6nSjKleIVYYWQcS4qidAbnKxQTCI9cUR5mD38T7QLsh7N8ZreRStMPMYLipo9
+         LTE06D8qHWSO4KZaUxvj35iZPSpuujWANA4IYS4U5Nci1qDqIJxPeg3AeuIHITK7xmd0
+         ErF3k7Wxlz9CdJnmE9+xkYu5PJ3ecZ1Lg96HWjcuHsvlTtCxvZQlo6S/zWnohADmfQp6
+         vy2w==
+X-Forwarded-Encrypted: i=1; AJvYcCWPTa9nMHydTK24xx9ZLU6NSzJZKQ7/V8AO2b6CdKwDP3WIcs7euFuRSmruzdoEbzDscdPduDS2uPCB1l5xh8IKyA==@vger.kernel.org, AJvYcCWoBQCpUcCtXkdoxZxPnsjjLfk1dlCQ5Imvye9sk4fR1wBLaImCjUp+0/aYwUy1LCF0posakSFBBiPXsZwQbzw0n+gX@vger.kernel.org, AJvYcCX9dXv2oyo9H1FHHLYtr94db932msFePf2QJKzPSG8Rz/QHam7lUZXvJ7PLKhl6F+GR43lXBYl3PV63QIqn@vger.kernel.org, AJvYcCXUxjNCRUCgreBIQkCsa+4MGNlS1j1MpYgeeTJStRRsb9Wz6JoLi9/yZunGwltgd54feF0=@vger.kernel.org, AJvYcCXgulG4zyHOzxboGncngH68Mxlzo1oO44ww0KtRuwOVAcXl7LtT6s4RsFm6mZv/ocU//UatNolaPWaSzkEcjw==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/iDa8YdSyiRgyqW1Tj09nCGijEHSbbXEdc2AovWBe4qj3z23/
+	tA0UG1QFw+17hF4kxNvqKOe9xCPch3gZVxWbfhkuVu3Pi7HMgQaibB5+u5P2LDagVeUQMradK1I
+	prFpNPtIXRu/PNIzoqNGBoLhGdA8+TwM=
+X-Gm-Gg: ASbGncv6oYV0O44is0EFF80XJzBzk2urYYhuYmUlz42WrIFGwwTdQ7kMpuIROXd+4s9
+	sLT8Y53qmoJLNukBvYJHl2m6IFKla0TJPlHU4fBS8VxK0M9tVmlTpz4k/r27pCsZYcBwr02X3db
+	Lqj7WYb1z29dIKF2ajY6n5y/dUIRvNJ36FHYx7xe750scjWj6d4upeIXZm7ej+6cJdg9xp3hGwJ
+	WFGLg==
+X-Google-Smtp-Source: AGHT+IHJlbpu3WRcygpiaRDlDw/e+VIPCJBjgw4iqNxFgRP6FRabw5/rvWyqRZpyKT6y3Ac9F3Ie0dVmp6jE5D45Muw=
+X-Received: by 2002:a17:90b:4f4d:b0:31a:8dc4:b5bf with SMTP id
+ 98e67ed59e1d1-31caea3feaamr467632a91.17.1752689445698; Wed, 16 Jul 2025
+ 11:10:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: ffg2zDv2rP-dvN5HIAaCwBGDFayX6nCS8hqUPAI2qpY_1752682484
-X-Mimecast-Originator: redhat.com
+References: <20250716123916.511889-1-bhupesh@igalia.com> <20250716123916.511889-4-bhupesh@igalia.com>
+In-Reply-To: <20250716123916.511889-4-bhupesh@igalia.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Wed, 16 Jul 2025 11:10:33 -0700
+X-Gm-Features: Ac12FXxkQF7EcMzWycD-nloRUfOkqsw4tlKLzrY1mRXYqv2TM-LS0bucIaJdoMY
+Message-ID: <CAEf4BzaGRz6A1wzBa2ZyQWY_4AvUHvLgBF36iCxc9wJJ1ppH0g@mail.gmail.com>
+Subject: Re: [PATCH v5 3/3] treewide: Switch from tsk->comm to tsk->comm_str
+ which is 64 bytes long
+To: Bhupesh <bhupesh@igalia.com>
+Cc: akpm@linux-foundation.org, kernel-dev@igalia.com, 
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-mm@kvack.org, oliver.sang@intel.com, lkp@intel.com, 
+	laoar.shao@gmail.com, pmladek@suse.com, rostedt@goodmis.org, 
+	mathieu.desnoyers@efficios.com, arnaldo.melo@gmail.com, 
+	alexei.starovoitov@gmail.com, mirq-linux@rere.qmqm.pl, peterz@infradead.org, 
+	willy@infradead.org, david@redhat.com, viro@zeniv.linux.org.uk, 
+	keescook@chromium.org, ebiederm@xmission.com, brauner@kernel.org, 
+	jack@suse.cz, mingo@redhat.com, juri.lelli@redhat.com, bsegall@google.com, 
+	mgorman@suse.de, vschneid@redhat.com, linux-trace-kernel@vger.kernel.org, 
+	kees@kernel.org, torvalds@linux-foundation.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2025-07-16 at 17:31 +0200, Peter Zijlstra wrote:
-> On Wed, Jul 16, 2025 at 04:38:36PM +0200, Gabriele Monaco wrote:
->=20
-> > So as you said, we can still reconstruct what happened from the
-> > trace, but the model suddenly needs more states and more events.
->=20
-> So given a sequence like:
->=20
-> =C2=A0 trace_sched_enter_tp();
-> =C2=A0 { trace_irq_disable();
-> =C2=A0=C2=A0=C2=A0 **irq_entry();**
-> =C2=A0=C2=A0=C2=A0 **irq_exit();**
-> =C2=A0=C2=A0=C2=A0 trace_irq_enable(); } * Ni
-> =C2=A0 trace_irq_disable();
-> =C2=A0 { trace_sched_switch(); } * Nj
-> =C2=A0 trace_irq_enable();
-> =C2=A0 { trace_irq_disable();
-> =C2=A0=C2=A0=C2=A0 **irq_entry();**
-> =C2=A0=C2=A0=C2=A0 **irq_exit();**
-> =C2=A0=C2=A0=C2=A0 trace_irq_enable(); } * Nk
-> =C2=A0 trace_sched_exit_tp();
->=20
-> It becomes somewhat hard to figure out which exact IRQ disabled
-> section
-> the switch did not happen in (Nj =3D=3D 0).
->=20
-> > If we could directly tell whether interrupts were disabled manually
-> > or from an actual interrupt, that wouldn't be necessary, for
-> > instance (as in the original model by Daniel).
->=20
-> Hmm.. we do indeed appear to trace the IRQ state before adding
-> HARDIRQ_OFFSET to preempt_count(). Yes, that complicates things a
-> little.
->=20
-> So... it *might* be possible to lift lockdep_hardirq_enter() to
-> before we start tracing. But then you're stuck to running with
-> lockdep enabled -- I'm thinking that's not ideal, given those other
-> patches you sent.
->=20
-> I'm going to go on holidays soon, but I've made a note to see if we
-> can lift setting HARDIRQ_OFFSET before we start tracing. IIRC the
-> current order is because setting HARDIRQ_OFFSET is using
-> preempt_count_add() which can be instrumented itself.
->=20
+On Wed, Jul 16, 2025 at 5:40=E2=80=AFAM Bhupesh <bhupesh@igalia.com> wrote:
+>
+> Historically due to the 16-byte length of TASK_COMM_LEN, the
+> users of 'tsk->comm' are restricted to use a fixed-size target
+> buffer also of TASK_COMM_LEN for 'memcpy()' like use-cases.
+>
+> To fix the same, Kees suggested in [1] that we can replace tsk->comm,
+> with tsk->comm_str, inside 'task_struct':
+>        union {
+>                char    comm_str[TASK_COMM_EXT_LEN];
+>        };
+>
+> where TASK_COMM_EXT_LEN is 64-bytes.
 
-Yeah I wondered if that was something perhaps required by RCU or
-something else (some calls are in the way). NMIs have it set during the
-tracepoints, for instance.
+Do we absolutely have to rename task->comm field? I understand as an
+intermediate step to not miss any existing users in the kernel
+sources, but once that all is done, we can rename that back to comm,
+right?
 
-Thanks again and enjoy your holiday!
+The reason I'm asking is because accessing task->comm is *very common*
+with all sorts of BPF programs and scripts. Yes, we have way to deal
+with that with BPF CO-RE, but every single use case would need to be
+updated now to work both with task->comm name on old kernels and
+task->comm_str on new kernels (because BPF programs are written in
+more or less kernel version agnostic way, so they have to handle many
+kernel releases).
 
-Gabriele
+So, unless absolutely necessary, can we please keep the field name the
+same? Changing the size of that field is not really a problem for BPF,
+so no objections against that.
 
-> But we could use __preempt_count_add() instead, then we loose the
-> tracing from setting HARDIRQ_OFFSET, but I don't think that is a
-> problem. We already get the latency from the IRQ tracepoints after
-> all.
->=20
-> > I get your point why we don't really need the additional
-> > tracepoint, but some
-> > arguments giving more context come almost for free.
->=20
-> Right. So please always try and justify adding tracepoints.
+>
+> And then modify 'get_task_comm()' to pass 'tsk->comm_str'
+> to the existing users.
+>
+> This would mean that ABI is maintained while ensuring that:
+>
+> - Existing users of 'get_task_comm'/ 'set_task_comm' will get 'tsk->comm_=
+str'
+>   truncated to a maximum of 'TASK_COMM_LEN' (16-bytes) to maintain ABI,
+> - New / Modified users of 'get_task_comm'/ 'set_task_comm' will get
+>  'tsk->comm_str' supported for a maximum of 'TASK_COMM_EXTLEN' (64-bytes)=
+.
+>
+> Note, that the existing users have not been modified to migrate to
+> 'TASK_COMM_EXT_LEN', in case they have hard-coded expectations of
+> dealing with only a 'TASK_COMM_LEN' long 'tsk->comm_str'.
+>
+> [1]. https://lore.kernel.org/all/202505231346.52F291C54@keescook/
+>
+> Signed-off-by: Bhupesh <bhupesh@igalia.com>
+> ---
+>  arch/arm64/kernel/traps.c        |  2 +-
+>  arch/arm64/kvm/mmu.c             |  2 +-
+>  block/blk-core.c                 |  2 +-
+>  block/bsg.c                      |  2 +-
+>  drivers/char/random.c            |  2 +-
+>  drivers/hid/hid-core.c           |  6 +++---
+>  drivers/mmc/host/tmio_mmc_core.c |  6 +++---
+>  drivers/pci/pci-sysfs.c          |  2 +-
+>  drivers/scsi/scsi_ioctl.c        |  2 +-
+>  drivers/tty/serial/serial_core.c |  2 +-
+>  drivers/tty/tty_io.c             |  8 ++++----
+>  drivers/usb/core/devio.c         | 16 ++++++++--------
+>  drivers/usb/core/message.c       |  2 +-
+>  drivers/vfio/group.c             |  2 +-
+>  drivers/vfio/vfio_iommu_type1.c  |  2 +-
+>  drivers/vfio/vfio_main.c         |  2 +-
+>  drivers/xen/evtchn.c             |  2 +-
+>  drivers/xen/grant-table.c        |  2 +-
+>  fs/binfmt_elf.c                  |  2 +-
+>  fs/coredump.c                    |  4 ++--
+>  fs/drop_caches.c                 |  2 +-
+>  fs/exec.c                        |  8 ++++----
+>  fs/ext4/dir.c                    |  2 +-
+>  fs/ext4/inode.c                  |  2 +-
+>  fs/ext4/namei.c                  |  2 +-
+>  fs/ext4/super.c                  | 12 ++++++------
+>  fs/hugetlbfs/inode.c             |  2 +-
+>  fs/ioctl.c                       |  2 +-
+>  fs/iomap/direct-io.c             |  2 +-
+>  fs/jbd2/transaction.c            |  2 +-
+>  fs/locks.c                       |  2 +-
+>  fs/netfs/internal.h              |  2 +-
+>  fs/proc/base.c                   |  2 +-
+>  fs/read_write.c                  |  2 +-
+>  fs/splice.c                      |  2 +-
+>  include/linux/coredump.h         |  2 +-
+>  include/linux/filter.h           |  2 +-
+>  include/linux/ratelimit.h        |  2 +-
+>  include/linux/sched.h            | 11 ++++++++---
+>  init/init_task.c                 |  2 +-
+>  ipc/sem.c                        |  2 +-
+>  kernel/acct.c                    |  2 +-
+>  kernel/audit.c                   |  4 ++--
+>  kernel/auditsc.c                 | 10 +++++-----
+>  kernel/bpf/helpers.c             |  2 +-
+>  kernel/capability.c              |  4 ++--
+>  kernel/cgroup/cgroup-v1.c        |  2 +-
+>  kernel/cred.c                    |  4 ++--
+>  kernel/events/core.c             |  2 +-
+>  kernel/exit.c                    |  6 +++---
+>  kernel/fork.c                    |  9 +++++++--
+>  kernel/freezer.c                 |  4 ++--
+>  kernel/futex/waitwake.c          |  2 +-
+>  kernel/hung_task.c               | 10 +++++-----
+>  kernel/irq/manage.c              |  2 +-
+>  kernel/kthread.c                 |  2 +-
+>  kernel/locking/rtmutex.c         |  2 +-
+>  kernel/printk/printk.c           |  2 +-
+>  kernel/sched/core.c              | 22 +++++++++++-----------
+>  kernel/sched/debug.c             |  4 ++--
+>  kernel/signal.c                  |  6 +++---
+>  kernel/sys.c                     |  6 +++---
+>  kernel/sysctl.c                  |  2 +-
+>  kernel/time/itimer.c             |  4 ++--
+>  kernel/time/posix-cpu-timers.c   |  2 +-
+>  kernel/tsacct.c                  |  2 +-
+>  kernel/workqueue.c               |  6 +++---
+>  lib/dump_stack.c                 |  2 +-
+>  lib/nlattr.c                     |  6 +++---
+>  mm/compaction.c                  |  2 +-
+>  mm/filemap.c                     |  4 ++--
+>  mm/gup.c                         |  2 +-
+>  mm/memfd.c                       |  2 +-
+>  mm/memory-failure.c              | 10 +++++-----
+>  mm/memory.c                      |  2 +-
+>  mm/mmap.c                        |  4 ++--
+>  mm/oom_kill.c                    | 18 +++++++++---------
+>  mm/page_alloc.c                  |  4 ++--
+>  mm/util.c                        |  2 +-
+>  net/core/sock.c                  |  2 +-
+>  net/dns_resolver/internal.h      |  2 +-
+>  net/ipv4/raw.c                   |  2 +-
+>  net/ipv4/tcp.c                   |  2 +-
+>  net/socket.c                     |  2 +-
+>  security/lsm_audit.c             |  4 ++--
+>  85 files changed, 171 insertions(+), 161 deletions(-)
+>
 
+[...]
