@@ -1,343 +1,92 @@
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43C8528CF40;
-	Wed, 16 Jul 2025 11:07:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB2E61953BB;
+	Wed, 16 Jul 2025 11:50:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752664039; cv=none; b=O7r9xTPPiIxENZTnG1jLdNAhR4Gv0tDDw4gdJLIz9PFKPDQGaV87bnykTJ7p6Ek7OJeiT0J4tL1L++pwMG59iCcWAk28+VEg81QszExd5DDENdiWIPYCYXClS1jxZLhZnw+EYeo7/XqJSlmK7vu2nle3hg8+du59n6QtJ9s5AlQ=
+	t=1752666634; cv=none; b=VgAhm7oxzYgOdj2w15aAH0aK0CZBT5KFc3v4TUpLnqIxPyOz22vY0IOgTMbBKSoJ9uSdfNlQJN7yCzVOmj5sMFIsIpMWljF+F2KWzpAkfUqO3HeC9ecvAfpaCFZVj/LAvwuXd86nsMuiZIaoOc/gERd7scFoj+ivKEm44DKScKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752664039; c=relaxed/simple;
-	bh=xxdQaCvdFzZMi2aAVuq9ShLHF7QdeF81xhd+C1YZzqc=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=OCY0h8eOtrBU3DaruViAv5tC+b0z8PwjKnxB8fGILlVX/HuFNrrw8uiAsnGzyWlDWVrKPnFnts71Vm++FirWQiEP7r8LEYELdh2chOXjVP8GIha8BY6v918ugNkzYk2O56AG98uygNEO54BKMk1J+VjIrbMiW0di/nPGNloxoqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id A2C9F43924;
-	Wed, 16 Jul 2025 11:07:08 +0000 (UTC)
-Message-ID: <14f483f1-0533-41b9-b991-f035d91064ef@ghiti.fr>
-Date: Wed, 16 Jul 2025 13:07:08 +0200
+	s=arc-20240116; t=1752666634; c=relaxed/simple;
+	bh=b+QdQ5SK2xW2CtWZsAAc1a1FORR2+a3qO5TLAGltyp8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BzKhFRnRnHeQ7zPK4nJcQFDn4iVLaOrrkGx3flzTN55F9qnF+em90nax6j/wzG6KBbJRnZ/xes1lQ4aDaL8g/46a1SS60EHY5/vu8IZCfF6nSnuJhr1YvkNIAcrCRgsmEO+mxTlqc63bqG8ZiOWiH83Y++FwboR3f9NH7+W5Pgo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=RoXKe4Yh; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RoXKe4Yh"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=l48/StNB/4Lsn/VT95PigzRA39+WnL2ci89FjY7vSZ0=; b=RoXKe4YhwxF9cuYtHiZXMFrVDc
+	me/Jcoo18NjDSvxtCD5wlUaDdOfFW7Cgx6u8XXPwPEArN8DLo7dNOLsL8okHkWNk2QawETxR5Hufp
+	H+VW/phZlDwc4IPHynECmesGb0DQFmJ/DTGyQABgj6/Ls5QFWKZEzMm4S6tf1vc5wZSD8neSArqMw
+	8dJ8hONCAUgOq+x+NGf818ukAAgkIH4Ndm8TA0TvjNJBs9lzxQMnrO8C18/twd9n+0EUT+euvrwyD
+	UpUtxp2SUMM5LvRA6799mzpTEJ+DXN4ppjv/ND82sKh9hz5EWcmjQqRZnGmmdzXxR3P+8yc++YUQ0
+	PEH+FDYQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uc0ea-0000000GRIG-1gsv;
+	Wed, 16 Jul 2025 11:50:28 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id D9DC6300186; Wed, 16 Jul 2025 13:50:27 +0200 (CEST)
+Date: Wed, 16 Jul 2025 13:50:27 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Gabriele Monaco <gmonaco@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+	linux-trace-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+	Nam Cao <namcao@linutronix.de>, Tomas Glozar <tglozar@redhat.com>,
+	Juri Lelli <jlelli@redhat.com>,
+	Clark Williams <williams@redhat.com>,
+	John Kacur <jkacur@redhat.com>
+Subject: Re: [PATCH v3 01/17] tools/rv: Do not skip idle in trace
+Message-ID: <20250716115027.GV1613200@noisy.programming.kicks-ass.net>
+References: <20250715071434.22508-1-gmonaco@redhat.com>
+ <20250715071434.22508-2-gmonaco@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2] riscv: ftrace: Fix the logic issue in DYNAMIC_FTRACE
- selection
-From: Alexandre Ghiti <alex@ghiti.fr>
-To: ChenMiao <chenmiao.ku@gmail.com>,
- Linux RISCV <linux-riscv@lists.infradead.org>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Heiko Carstens <hca@linux.ibm.com>, Pu Lehui <pulehui@huawei.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-References: <20250706151830.25091-1-chenmiao.ku@gmail.com>
- <a2976179-c279-48bf-9fdd-24844ba7d562@ghiti.fr>
-Content-Language: en-US
-In-Reply-To: <a2976179-c279-48bf-9fdd-24844ba7d562@ghiti.fr>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdehjeehhecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffhvfevfhgjtgfgsehtkeertddtvdejnecuhfhrohhmpeetlhgvgigrnhgurhgvucfihhhithhiuceorghlvgigsehghhhithhirdhfrheqnecuggftrfgrthhtvghrnhepfeduiedujeffjeeiheejveejgfdvteefvdfgjedvfeelledvheehheelffffkeevnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpghhithhhuhgsrdgtohhmpdhmtghouhhnthdrshgspdhinhhfrhgruggvrggurdhorhhgnecukfhppedvtddtudemkeeiudemfeefkedvmegvfheltdemleehtdgumehftgegieemjeejlegvmedvfhgvfeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvtddtudemkeeiudemfeefkedvmegvfheltdemleehtdgumehftgegieemjeejlegvmedvfhgvfedphhgvlhhopeglkffrggeimedvtddtudemkeeiudemfeefkedvmegvfheltdemleehtdgumehftgegieemjeejlegvmedvfhgvfegnpdhmrghilhhfrhhomheprghlvgigsehghhhithhirdhfrhdpnhgspghrtghpthhtohepudefpdhrtghpthhtoheptghhvghnmhhirghordhkuhesghhmrghilhdrtghomhdprhgtp
- hhtthhopehlihhnuhigqdhrihhstghvsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepphgruhhlrdifrghlmhhslhgvhiesshhifhhivhgvrdgtohhmpdhrtghpthhtohepphgrlhhmvghrsegurggssggvlhhtrdgtohhmpdhrtghpthhtoheprghouhesvggvtghsrdgsvghrkhgvlhgvhidrvgguuhdprhgtphhtthhopehrohhsthgvughtsehgohhoughmihhsrdhorhhgpdhrtghpthhtohepmhhhihhrrghmrghtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmrghrkhdrrhhuthhlrghnugesrghrmhdrtghomh
-X-GND-Sasl: alex@ghiti.fr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250715071434.22508-2-gmonaco@redhat.com>
 
-On 7/15/25 14:17, Alexandre Ghiti wrote:
-> On 7/6/25 17:18, ChenMiao wrote:
->> From: chenmiao <chenmiao.ku@gmail.com>
->>
->> V1: The first version mainly involves modifications to the
->> configuration of the dynamic ftracer.
->>
->> Link 
->> https://lore.kernel.org/all/f7e12c6d-892e-4ca3-9ef0-fbb524d04a48@ghiti.fr/
->>
->> V2: After a series of discussions, Steven concluded that only
->> supporting the dynamic ftracer would suffice. Alex also pointed
->> out that if only the dynamic ftracer needs to be supported, the
->> code related to the static ftracer would become obsolete and
->> turn into dead code. He had already done some preliminary work on this.
->>
->> Based on this, the modifications to the configuration were made,
->> and the dead code generated by the ftracer
->> (originally related to the static ftracer) was also removed.
->>
->> Link 
->> https://lore.kernel.org/all/20250703115222.2d7c8cd5@batman.local.home/
->> Link 
->> https://github.com/linux-riscv/linux/pull/556/commits/0481092a5bec3818658981c11f629e06e66382b3
->>
->> Signed-off-by: chenmiao <chenmiao.ku@gmail.com>
->> ---
->>   arch/riscv/Kconfig              |  3 +-
->>   arch/riscv/include/asm/ftrace.h |  3 --
->>   arch/riscv/kernel/ftrace.c      | 11 +-----
->>   arch/riscv/kernel/mcount.S      | 64 ---------------------------------
->>   kernel/trace/Kconfig            |  2 +-
->>   5 files changed, 4 insertions(+), 79 deletions(-)
->>
->> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
->> index 36061f4732b7..95d24b19c466 100644
->> --- a/arch/riscv/Kconfig
->> +++ b/arch/riscv/Kconfig
->> @@ -97,8 +97,9 @@ config RISCV
->>       select CLONE_BACKWARDS
->>       select COMMON_CLK
->>       select CPU_PM if CPU_IDLE || HIBERNATION || SUSPEND
->> +    select DYNAMIC_FTRACE if FUNCTION_TRACER
->>       select EDAC_SUPPORT
->> -    select FRAME_POINTER if PERF_EVENTS || (FUNCTION_TRACER && 
->> !DYNAMIC_FTRACE)
->> +    select FRAME_POINTER if PERF_EVENTS
->>       select FTRACE_MCOUNT_USE_PATCHABLE_FUNCTION_ENTRY if 
->> DYNAMIC_FTRACE
->>       select FUNCTION_ALIGNMENT_8B if DYNAMIC_FTRACE_WITH_CALL_OPS
->>       select GENERIC_ARCH_TOPOLOGY
->> diff --git a/arch/riscv/include/asm/ftrace.h 
->> b/arch/riscv/include/asm/ftrace.h
->> index 22ebea3c2b26..77ddb6dce0a8 100644
->> --- a/arch/riscv/include/asm/ftrace.h
->> +++ b/arch/riscv/include/asm/ftrace.h
->> @@ -49,7 +49,6 @@ struct dyn_arch_ftrace {
->>   };
->>   #endif
->>   -#ifdef CONFIG_DYNAMIC_FTRACE
->>   /*
->>    * A general call in RISC-V is a pair of insts:
->>    * 1) auipc: setting high-20 pc-related bits to ra register
->> @@ -237,6 +236,4 @@ static inline void 
->> arch_ftrace_set_direct_caller(struct ftrace_regs *fregs, unsi
->>     #endif /* __ASSEMBLY__ */
->>   -#endif /* CONFIG_DYNAMIC_FTRACE */
->> -
->>   #endif /* _ASM_RISCV_FTRACE_H */
->> diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
->> index 4c6c24380cfd..93bad646d233 100644
->> --- a/arch/riscv/kernel/ftrace.c
->> +++ b/arch/riscv/kernel/ftrace.c
->> @@ -13,7 +13,6 @@
->>   #include <asm/cacheflush.h>
->>   #include <asm/text-patching.h>
->>   -#ifdef CONFIG_DYNAMIC_FTRACE
->>   unsigned long ftrace_call_adjust(unsigned long addr)
->>   {
->>       if (IS_ENABLED(CONFIG_DYNAMIC_FTRACE_WITH_CALL_OPS))
->> @@ -191,13 +190,6 @@ int ftrace_update_ftrace_func(ftrace_func_t func)
->>       return 0;
->>   }
->>   -#else /* CONFIG_DYNAMIC_FTRACE */
->> -unsigned long ftrace_call_adjust(unsigned long addr)
->> -{
->> -    return addr;
->> -}
->> -#endif /* CONFIG_DYNAMIC_FTRACE */
->> -
->>   #ifdef CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
->>   int ftrace_modify_call(struct dyn_ftrace *rec, unsigned long old_addr,
->>                  unsigned long addr)
->> @@ -236,7 +228,6 @@ void prepare_ftrace_return(unsigned long *parent, 
->> unsigned long self_addr,
->>           *parent = return_hooker;
->>   }
->>   -#ifdef CONFIG_DYNAMIC_FTRACE
->>   void ftrace_graph_func(unsigned long ip, unsigned long parent_ip,
->>                  struct ftrace_ops *op, struct ftrace_regs *fregs)
->>   {
->> @@ -257,5 +248,5 @@ void ftrace_graph_func(unsigned long ip, unsigned 
->> long parent_ip,
->>       if (!function_graph_enter_regs(old, ip, frame_pointer, parent, 
->> fregs))
->>           *parent = return_hooker;
->>   }
->> -#endif /* CONFIG_DYNAMIC_FTRACE */
->> +
->>   #endif /* CONFIG_FUNCTION_GRAPH_TRACER */
->> diff --git a/arch/riscv/kernel/mcount.S b/arch/riscv/kernel/mcount.S
->> index da4a4000e57e..bb550c15f1c9 100644
->> --- a/arch/riscv/kernel/mcount.S
->> +++ b/arch/riscv/kernel/mcount.S
->> @@ -14,13 +14,6 @@
->>         .text
->>   -    .macro SAVE_ABI_STATE
->> -    addi    sp, sp, -16
->> -    REG_S    s0, 0*SZREG(sp)
->> -    REG_S    ra, 1*SZREG(sp)
->> -    addi    s0, sp, 16
->> -    .endm
->> -
->>       /*
->>        * The call to ftrace_return_to_handler would overwrite the return
->>        * register if a0 was not saved.
->> @@ -34,12 +27,6 @@
->>       addi    s0, sp, FREGS_SIZE_ON_STACK
->>       .endm
->>   -    .macro RESTORE_ABI_STATE
->> -    REG_L    ra, 1*SZREG(sp)
->> -    REG_L    s0, 0*SZREG(sp)
->> -    addi    sp, sp, 16
->> -    .endm
->> -
->>       .macro RESTORE_RET_ABI_STATE
->>       REG_L    ra, FREGS_RA(sp)
->>       REG_L    s0, FREGS_S0(sp)
->> @@ -49,10 +36,8 @@
->>       .endm
->>     SYM_TYPED_FUNC_START(ftrace_stub)
->> -#ifdef CONFIG_DYNAMIC_FTRACE
->>          .global _mcount
->>          .set    _mcount, ftrace_stub
->> -#endif
->>       ret
->>   SYM_FUNC_END(ftrace_stub)
->>   @@ -79,53 +64,4 @@ SYM_FUNC_START(return_to_handler)
->>   SYM_FUNC_END(return_to_handler)
->>   #endif
->>   -#ifndef CONFIG_DYNAMIC_FTRACE
->> -SYM_FUNC_START(_mcount)
->> -    la    t4, ftrace_stub
->> -#ifdef CONFIG_FUNCTION_GRAPH_TRACER
->> -    la    t0, ftrace_graph_return
->> -    REG_L    t1, 0(t0)
->> -    bne    t1, t4, .Ldo_ftrace_graph_caller
->> -
->> -    la    t3, ftrace_graph_entry
->> -    REG_L    t2, 0(t3)
->> -    la    t6, ftrace_graph_entry_stub
->> -    bne    t2, t6, .Ldo_ftrace_graph_caller
->> -#endif
->> -    la    t3, ftrace_trace_function
->> -    REG_L    t5, 0(t3)
->> -    bne    t5, t4, .Ldo_trace
->> -    ret
->> -
->> -#ifdef CONFIG_FUNCTION_GRAPH_TRACER
->> -/*
->> - * A pseudo representation for the function graph tracer:
->> - * prepare_to_return(&ra_to_caller_of_caller, ra_to_caller)
->> - */
->> -.Ldo_ftrace_graph_caller:
->> -    addi    a0, s0, -SZREG
->> -    mv    a1, ra
->> -#ifdef HAVE_FUNCTION_GRAPH_FP_TEST
->> -    REG_L    a2, -2*SZREG(s0)
->> -#endif
->> -    SAVE_ABI_STATE
->> -    call    prepare_ftrace_return
->> -    RESTORE_ABI_STATE
->> -    ret
->> -#endif
->> -
->> -/*
->> - * A pseudo representation for the function tracer:
->> - * (*ftrace_trace_function)(ra_to_caller, ra_to_caller_of_caller)
->> - */
->> -.Ldo_trace:
->> -    REG_L    a1, -SZREG(s0)
->> -    mv    a0, ra
->> -
->> -    SAVE_ABI_STATE
->> -    jalr    t5
->> -    RESTORE_ABI_STATE
->> -    ret
->> -SYM_FUNC_END(_mcount)
->> -#endif
->>   EXPORT_SYMBOL(_mcount)
->> diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
->> index a3f35c7d83b6..28afc6941e7a 100644
->> --- a/kernel/trace/Kconfig
->> +++ b/kernel/trace/Kconfig
->> @@ -275,7 +275,7 @@ config FUNCTION_TRACE_ARGS
->>         funcgraph-args (for the function graph tracer)
->>     config DYNAMIC_FTRACE
->> -    bool "enable/disable function tracing dynamically"
->> +    bool
->>       depends on FUNCTION_TRACER
->>       depends on HAVE_DYNAMIC_FTRACE
->>       default y
->>
->> base-commit: fda589c286040d9ba2d72a0eaf0a13945fc48026
->
->
-> I have just given it a try but I'm getting the following errors:
->
-> ../arch/riscv/kernel/ftrace.c: In function 'arch_ftrace_update_code':
-> ../arch/riscv/kernel/ftrace.c:44:9: error: implicit declaration of 
-> function 'ftrace_modify_all_code' [-Werror=implicit-function-declaration]
->    44 |         ftrace_modify_all_code(command);
->       |         ^~~~~~~~~~~~~~~~~~~~~~
-> ../arch/riscv/kernel/ftrace.c: At top level:
-> ../arch/riscv/kernel/ftrace.c:116:5: warning: no previous prototype 
-> for 'ftrace_make_call' [-Wmissing-prototypes]
->   116 | int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
->       |     ^~~~~~~~~~~~~~~~
-> ../arch/riscv/kernel/ftrace.c: In function 'ftrace_make_call':
-> ../arch/riscv/kernel/ftrace.c:118:52: error: invalid use of undefined 
-> type 'struct dyn_ftrace'
->   118 |         unsigned long distance, orig_addr, pc = rec->ip - 
-> MCOUNT_AUIPC_SIZE;
->       |                                                    ^~
-> ../arch/riscv/kernel/ftrace.c:125:37: error: 'ftrace_caller' 
-> undeclared (first use in this function); did you mean 'ftrace_kill'?
->   125 |         orig_addr = (unsigned long)&ftrace_caller;
->       |                                     ^~~~~~~~~~~~~
->       |                                     ftrace_kill
-> ../arch/riscv/kernel/ftrace.c:125:37: note: each undeclared identifier 
-> is reported only once for each function it appears in
-> ../arch/riscv/kernel/ftrace.c:128:24: error: 'FTRACE_ADDR' undeclared 
-> (first use in this function)
->   128 |                 addr = FTRACE_ADDR;
->       |                        ^~~~~~~~~~~
-> ../arch/riscv/kernel/ftrace.c: At top level:
-> ../arch/riscv/kernel/ftrace.c:133:5: warning: no previous prototype 
-> for 'ftrace_make_nop' [-Wmissing-prototypes]
->   133 | int ftrace_make_nop(struct module *mod, struct dyn_ftrace 
-> *rec, unsigned long addr)
->       |     ^~~~~~~~~~~~~~~
-> ../arch/riscv/kernel/ftrace.c: In function 'ftrace_make_nop':
-> ../arch/riscv/kernel/ftrace.c:142:41: error: invalid use of undefined 
-> type 'struct dyn_ftrace'
->   142 |         if (patch_insn_write((void *)rec->ip, &nop4, 
-> MCOUNT_NOP4_SIZE))
->       |                                         ^~
-> ../arch/riscv/kernel/ftrace.c: In function 'ftrace_init_nop':
-> ../arch/riscv/kernel/ftrace.c:157:31: error: invalid use of undefined 
-> type 'struct dyn_ftrace'
->   157 |         unsigned long pc = rec->ip - MCOUNT_AUIPC_SIZE;
->       |                               ^~
->   CC      drivers/nvme/target/io-cmd-bdev.o
-> ../arch/riscv/kernel/ftrace.c:167:35: error: 'ftrace_caller' 
-> undeclared (first use in this function); did you mean 'ftrace_kill'?
->   167 |         offset = (unsigned long) &ftrace_caller - pc;
->       |                                   ^~~~~~~~~~~~~
->       |                                   ftrace_kill
-> ../arch/riscv/kernel/ftrace.c: At top level:
-> ../arch/riscv/kernel/ftrace.c:177:5: warning: no previous prototype 
-> for 'ftrace_update_ftrace_func' [-Wmissing-prototypes]
->   177 | int ftrace_update_ftrace_func(ftrace_func_t func)
+On Tue, Jul 15, 2025 at 09:14:18AM +0200, Gabriele Monaco wrote:
+> Currently, the userspace RV tool skips trace events triggered by the RV
+> tool itself, this can be changed by passing the parameter -s, which sets
+> the variable config_my_pid to 0 (instead of the tool's PID).
+> The current condition for per-task monitors (config_has_id) does not
+> check that config_my_pid isn't 0 to skip. In case we pass -s, we show
+> events triggered by RV but don't show those triggered by idle (PID 0).
+> 
+> Fix the condition to account this scenario.
 
+The distinction between !my_pid and has_id is that you can in fact trace
+pid-0 if you want?
 
-I'll send a simple version this afternoon to fix the build error so that 
-we can merge it in 6.16. That will be a simple version that does not 
-remove the dead code.
-
-I'll add your SoB, let me know if you want to work on removing the dead 
-code in a follow-up patch targeting 6.17.
-
-Thanks,
-
-Alex
-
-
->
->
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+> Fixes: 6d60f89691fc ("tools/rv: Add in-kernel monitor interface")
+> Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
+> ---
+>  tools/verification/rv/src/in_kernel.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/verification/rv/src/in_kernel.c b/tools/verification/rv/src/in_kernel.c
+> index c0dcee795c0de..72b03bae021cd 100644
+> --- a/tools/verification/rv/src/in_kernel.c
+> +++ b/tools/verification/rv/src/in_kernel.c
+> @@ -429,7 +429,7 @@ ikm_event_handler(struct trace_seq *s, struct tep_record *record,
+>  
+>  	tep_get_common_field_val(s, trace_event, "common_pid", record, &pid, 1);
+>  
+> -	if (config_has_id && (config_my_pid == id))
+> +	if (config_my_pid && config_has_id && (config_my_pid == id))
+>  		return 0;
+>  	else if (config_my_pid && (config_my_pid == pid))
+>  		return 0;
+> -- 
+> 2.50.1
+> 
