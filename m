@@ -1,88 +1,126 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C23262EBB95;
-	Wed, 16 Jul 2025 21:32:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B9A12857F1;
+	Wed, 16 Jul 2025 22:25:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752701544; cv=none; b=UzNvqhMmh0CYW0AybRbXRx/Lbej+3HfvUmFtU/2i6Wb07+/bLM79JsBqiejfJ+v9y7hS10IuQplRYf0DOqQPH7F1l3MfG3SbF5UHdPAMlXMPdLnGRDGa3JsZPNGJKjcFa/dsFBgzPFdA2xNBKNjFng9ztBFEqvzC+v9SRI8BzvY=
+	t=1752704735; cv=none; b=Vi89Ek+nkTPfUhjQbLe/KuoTavxJXjnunF5nfEe9WFVOgygqz3LQi8fCDJLrULMwW0Mh777eHRA7dihE44KB8N50sAUmwDj6w5rD/rs4xDaKDk9UKI3bjbKKziy0FzFgAYG5cxojlFzzmFC1b2NQH7Z0KeEARV/ZB1fOKz5fqsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752701544; c=relaxed/simple;
-	bh=RcJyvGAOYpJenAb2/Ce7hOXw7Nx71fjCzp0c1g1mHhQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C41cqA5Tx3OFy0Ju7A2Ivv5s35LQOuVl0rOmVLkSkhfJEtf3gb/WMK8UBmsu1d8JTFYIUG9FV7gefxCZ+QCQZ/wzQVwfVUCCJjqo25SOKzpjI1ERrSZzMkQFErE4VIosT7R3z+JWB9SDMaa+WOelF/sbJZcE9efTJkkLqs8GsrQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FmScn7AR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1752704735; c=relaxed/simple;
+	bh=b8p1yGebBghXJBd69Xqts/21wlzTMjRSUIp9WAfmGtg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=jyYVPHWL89PwecH6K91LowoTOM8EodJqf4Q7P7uV2jtadSDRhsNy1xn1Lbzu7zNuQaLX5eLKm4fpYsetOqr2S/fE0xuSxYda8MyXzYeFIHCAYxEWyBoswSUkmzXb1Axl9Pc4DjfP+dDrHGYXo4++Sgb0dHmuPlppXOEZGpGRdBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bLa6uDZJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FmScn7AR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD9EBC4CEE7;
-	Wed, 16 Jul 2025 21:32:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bLa6uDZJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 950FDC4CEE7;
+	Wed, 16 Jul 2025 22:25:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752701544;
-	bh=RcJyvGAOYpJenAb2/Ce7hOXw7Nx71fjCzp0c1g1mHhQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FmScn7ARSIYqiNmzF+rn6FPk0ApXOqD5XWmA1IyOxXBP9+ppw/H4KAOq6Kjoc+s0+
-	 idi8lHv7rzfwBehXnK/a7gCf1qne5NXHKAJwIw+z6Qu10DZWpjd+LznayCsReVUH5Y
-	 agIyoR524SbkUq7rG2vNfM4MVkHKag/fpwXse/f4fk0DpleuMJlchesk68RgYMaILa
-	 /31s80fEietrfCSKVsz0lhKknnyl8pTxT+de4h9v+yGkRfgRrIDAzqixyTGaK/kwQU
-	 4+P2ydTeGaKKQuRtq20vT8anHAPeKyb6gMXGyP5pQKzqF3mlceWZ8YIC8NaZbgH08l
-	 EgHmVWSkXQ1iA==
-Date: Wed, 16 Jul 2025 14:32:21 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Jens Remus <jremus@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org, x86@kernel.org, Steven Rostedt <rostedt@kernel.org>, 
-	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Ilya Leoshkevich <iii@linux.ibm.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, 
-	Indu Bhagat <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>, 
-	Beau Belgrave <beaub@linux.microsoft.com>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Jens Axboe <axboe@kernel.dk>, 
-	Florian Weimer <fweimer@redhat.com>, Sam James <sam@gentoo.org>
-Subject: Re: [RFC PATCH v1 06/16] unwind_user: Enable archs that define CFA =
- SP_callsite + offset
-Message-ID: <qoiocmdhuuaox5v5ig2ui67qbuxkvzl4z3ft4gdp7p3c4b4zfq@trjthmmculkf>
-References: <20250710163522.3195293-1-jremus@linux.ibm.com>
- <20250710163522.3195293-7-jremus@linux.ibm.com>
+	s=k20201202; t=1752704734;
+	bh=b8p1yGebBghXJBd69Xqts/21wlzTMjRSUIp9WAfmGtg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=bLa6uDZJw2dw2YRoHZuZEC1yP+RL5rzv8+TnUCg2Uh21tacQ6b1HvrQEUhwOjYwgg
+	 mC624E72HRNtB8vQGOzncBEK0d0FVrGUC4b2eYeUXLZOSD5SX1uRSD+7riCQ6FiAtw
+	 FmSAsFiqCecAH6Cb9qmsQKas/w+wM+eFAvvhYZpOzieQQDLCupaowiwQrTkeqO02bg
+	 jd0FqxrHvZk1gyMncqry/8hYSseU9OQviSsPPzbVJRFT5ZmOkZ8z+wcZd+4OlW+pHM
+	 aqBt9yJ/vMXLCDUWFWfLQce9U466WyajVpKhsKTCr6g9iBrB3KNDwwFgq6b69JpuVe
+	 YVNmiRkjioaPw==
+Date: Wed, 16 Jul 2025 17:25:33 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Shuai Xue <xueshuai@linux.alibaba.com>
+Cc: rostedt@goodmis.org, lukas@wunner.de, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, bhelgaas@google.com,
+	tony.luck@intel.com, bp@alien8.de, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, oleg@redhat.com, naveen@kernel.org,
+	davem@davemloft.net, anil.s.keshavamurthy@intel.com,
+	mark.rutland@arm.com, peterz@infradead.org,
+	tianruidong@linux.alibaba.com,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH v8] PCI: hotplug: Add a generic RAS tracepoint for
+ hotplug event
+Message-ID: <20250716222533.GA2559636@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250710163522.3195293-7-jremus@linux.ibm.com>
+In-Reply-To: <20250512013839.45960-1-xueshuai@linux.alibaba.com>
 
-On Thu, Jul 10, 2025 at 06:35:12PM +0200, Jens Remus wrote:
-> Most architectures define their CFA as the value of the stack pointer
-> (SP) at the call site in the previous frame, as suggested by the DWARF
-> standard:
+[+cc Ilpo, Jonathan (should have been included since the patch has his
+Reviewed-by)]
+
+Thanks for the ping; I noticed quite a bit of discussion but didn't
+follow it myself, so didn't know it was basically all resolved.
+
+On Mon, May 12, 2025 at 09:38:39AM +0800, Shuai Xue wrote:
+> Hotplug events are critical indicators for analyzing hardware health,
+> particularly in AI supercomputers where surprise link downs can
+> significantly impact system performance and reliability.
+
+I dropped the "particularly in AI supercomputers" part because I think
+this is relevant in general.
+
+> To this end, define a new TRACING_SYSTEM named pci, add a generic RAS
+> tracepoint for hotplug event to help healthy check, and generate
+> tracepoints for pcie hotplug event.
+
+I'm not quite clear on the difference between "add generic RAS
+tracepoint for hotplug event" and "generate tracepoints for pcie
+hotplug event."  Are these two different things?
+
+I see the new TRACE_EVENT(pci_hp_event, ...) definition.  Is that what
+you mean by the "generic RAS tracepoint"?
+
+And the five new trace_pci_hp_event() calls that use the TRACE_EVENT
+are the "tracepoints for PCIe hotplug event"?
+
+> Add enum pci_hotplug_event in
+> include/uapi/linux/pci.h so applications like rasdaemon can register
+> tracepoint event handlers for it.
 > 
->   CFA = <SP at call site>
+> The output like below:
 > 
-> Enable unwinding of user space for architectures, such as s390, which
-> define their CFA as the value of the SP at the call site in the previous
-> frame with an offset:
+> $ echo 1 > /sys/kernel/debug/tracing/events/pci/pci_hp_event/enable
+> $ cat /sys/kernel/debug/tracing/trace_pipe
+>     <...>-206     [001] .....    40.373870: pci_hp_event: 0000:00:02.0 slot:10, event:Link Down
 > 
->   CFA = <SP at call site> + offset
+>     <...>-206     [001] .....    40.374871: pci_hp_event: 0000:00:02.0 slot:10, event:Card not present
 
-This is a bit confusing, as the comment and code define it as
+> +#define PCI_HOTPLUG_EVENT					\
+> +	EM(PCI_HOTPLUG_LINK_UP,			"Link Up")	\
+> +	EM(PCI_HOTPLUG_LINK_DOWN,		"Link Down")	\
+> +	EM(PCI_HOTPLUG_CARD_PRESENT,		"Card present")	\
+> +	EMe(PCI_HOTPLUG_CARD_NOT_PRESENT,	"Card not present")
 
-    SP = CFA + offset
+Running this:
 
-Should the commit log be updated to match that?
+  $ git grep -E "\<(EM|EMe)\("
 
-> +++ b/arch/x86/include/asm/unwind_user.h
-> @@ -8,6 +8,7 @@
->  	.cfa_off	= (s32)sizeof(long) *  2,				\
->  	.ra_off		= (s32)sizeof(long) * -1,				\
->  	.fp_off		= (s32)sizeof(long) * -2,				\
-> +	.sp_val_off	= (s32)0,						\
+I notice that these new events don't look like the others, which
+mostly look like "word" or "event-type" or "VERB object".
 
-IIUC, this is similar to ra_off and fp_off in that its an offset from
-the CFA.  Can we call it "sp_off"?
+I'm OK with this, but just giving you a chance to consider what will
+be the least surprise to users and easiest for grep and shell
+scripting.
 
--- 
-Josh
+I also noticed capitalization of "Up" and "Down", but not "present"
+and "not present".
+
+"Card" is only used occasionally and informally in the PCIe spec, and
+not at all in the context of hotplug of Slot Status (Presence Detect
+State refers to "adapter in the slot"), but it does match the pciehp
+dmesg text, so it probably makes sense to use that.
+
+Anyway, I applied this on pci/trace for v6.17.  If there's anything
+you want to tweak in the commit log or event text, we can still do
+that.
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?h=trace
+
+Bjorn
