@@ -1,324 +1,167 @@
-Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [160.30.148.35])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F4EE1581EE;
-	Wed, 16 Jul 2025 02:00:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=160.30.148.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 947A820E704;
+	Wed, 16 Jul 2025 02:39:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752631226; cv=none; b=dPs9+gMcJbQQqGkS/YX30WNajD2CAZWKDBvNRXi6wxIED7RsVHbUztQNypWrRMb9mcrK5vUEXdLyQLTy3l0H8G2GwSjDVC8Vxa4nVTFAEpBz2eortNnQmslZBn/A7uQyAwqBNs8pQaa5QMtAhWxH6s/i6iFBEUm/iADgeHTbAU8=
+	t=1752633580; cv=none; b=NWx+hr2teMLsNIQ7a8YwB2CQ1ie/mARJ6B1TCba7c429drlEy9d9xpjyF6+AkBRuIv01s6n1zotVHh5qFRNH7F/M7cervu/S+VICXO7Y5ezhho+ywxN/0jZbGE7HqI93lr4WQn0aroE5m8NIMb0aQKG0EctfW5kMBsAY96ud3eM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752631226; c=relaxed/simple;
-	bh=UTPMJMXu3gVXw7OpSH5sp6TL7U+GSM+lvDW6DuVq6n0=;
-	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=acy3FZB5OKRSvrQua7id4STAdTKVTsflnwH3+SmIG7AhAj1kB7gxHStEhZaEn1ceJN8BnwgxkqCHFsbnuOIe00mckCYcxYL68WRjnw2RLa8g6OyaWZEYKabB3zqqmgyKAxBsGCYb2STUE6Wc9+Kh/a0broMOSRjqSLCsPr8PKs0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=160.30.148.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4bhfQT5tphz8R03y;
-	Wed, 16 Jul 2025 10:00:17 +0800 (CST)
-Received: from xaxapp02.zte.com.cn ([10.88.97.241])
-	by mse-fl1.zte.com.cn with SMTP id 56G205DB001099;
-	Wed, 16 Jul 2025 10:00:05 +0800 (+08)
-	(envelope-from fan.yu9@zte.com.cn)
-Received: from mapi (xaxapp05[null])
-	by mapi (Zmail) with MAPI id mid32;
-	Wed, 16 Jul 2025 10:00:06 +0800 (CST)
-Date: Wed, 16 Jul 2025 10:00:06 +0800 (CST)
-X-Zmail-TransId: 2afc687707a628c-d7b06
-X-Mailer: Zmail v1.0
-Message-ID: <20250716100006458kPWBPIJB6IdzWuUKlv4tF@zte.com.cn>
+	s=arc-20240116; t=1752633580; c=relaxed/simple;
+	bh=AJAN0XknSeZv8NdQ/g7V1Wjyjj+exrMZPi6CbZvy2lM=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=psWQG2tqGkwXX5IyGVWgdk7friTEUBphnbk9hUjjSo3jv8x7bOFlPXqbhxEQGH6AVJ45+XV0cl43IcX0Dn7tYxs/fVLIU8eiA960wdK17r/n99p8JN38X1sRJeW0OJ3zmfjNcH7m1MZEDQiequnhP6ev6gSsxawuoCcjFIau/S8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fOa7Ree5; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fOa7Ree5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE85CC4CEE3;
+	Wed, 16 Jul 2025 02:39:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752633580;
+	bh=AJAN0XknSeZv8NdQ/g7V1Wjyjj+exrMZPi6CbZvy2lM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=fOa7Ree5wNbmTQO7JZ7GMMeHWS/IYshHjW7mqZhqd69VUZh884ITrQx34asmL5kLz
+	 tVmrmIc7rQl0Vx79RYIMmUsc3R+yxoyV/HPo2NSsPrBY0VaX3qPLdjWQtiJAljAYUJ
+	 aFkSWzSDqiIh6RTTbFDbi2/yaCGsmdKvrONNUqRExNm6g8LjsmzYZcspSjMnEgw6Md
+	 7P+xN7QrmQv0DgzYe9hkN5gQUZdCeNjPq1TN4li5MPYk9tMeEQur8FIJK4gnVUPL4X
+	 kU9S6BFlM4kblGCAQV0WouxN068oKgK40h0zLeQOr1T2jk2SK4YkMnsAdIrcyFrd3H
+	 tIQScbO+01HZg==
+Date: Wed, 16 Jul 2025 11:39:36 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Oleg Nesterov <oleg@redhat.com>,
+ Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ x86@kernel.org, Song Liu <songliubraving@fb.com>, Yonghong Song
+ <yhs@fb.com>, John Fastabend <john.fastabend@gmail.com>, Hao Luo
+ <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>, Alan Maguire
+ <alan.maguire@oracle.com>, David Laight <David.Laight@aculab.com>, Thomas
+ =?UTF-8?B?V2Vpw59zY2h1aA==?= <thomas@t-8ch.de>, Ingo Molnar
+ <mingo@kernel.org>
+Subject: Re: [PATCHv5 perf/core 09/22] uprobes/x86: Add uprobe syscall to
+ speed up uprobe
+Message-Id: <20250716113936.c5b94cc3f0ae1f4f578cdaba@kernel.org>
+In-Reply-To: <aHZGofDkcJDCx3wY@krava>
+References: <20250711082931.3398027-1-jolsa@kernel.org>
+	<20250711082931.3398027-10-jolsa@kernel.org>
+	<20250714173915.b9edd474742de46bcbe9c617@kernel.org>
+	<20250714093903.GP905792@noisy.programming.kicks-ass.net>
+	<20250714191935.577ec7df5ae8a73282cddce7@kernel.org>
+	<aHV2mrao8EMOTz8S@krava>
+	<20250715085451.6a871a3b40c5ff19d3568956@kernel.org>
+	<aHZGofDkcJDCx3wY@krava>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-From: <fan.yu9@zte.com.cn>
-To: <kuba@kernel.org>, <edumazet@google.com>, <ncardwell@google.com>,
-        <davem@davemloft.net>, <dsahern@kernel.org>, <pabeni@redhat.com>,
-        <horms@kernel.org>, <kuniyu@google.com>
-Cc: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>, <yang.yang29@zte.com.cn>,
-        <xu.xin16@zte.com.cn>, <tu.qiang35@zte.com.cn>,
-        <jiang.kun2@zte.com.cn>, <qiu.yutan@zte.com.cn>,
-        <wang.yaxin@zte.com.cn>, <he.peilin@zte.com.cn>
-Subject: =?UTF-8?B?W1BBVENIIG5ldC1uZXh0IHY2XSB0Y3A6IHRyYWNlIHJldHJhbnNtaXQgZmFpbHVyZXMgaW4gdGNwX3JldHJhbnNtaXRfc2ti?=
-Content-Type: text/plain;
-	charset="UTF-8"
-X-MAIL:mse-fl1.zte.com.cn 56G205DB001099
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 687707B1.001/4bhfQT5tphz8R03y
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Fan Yu <fan.yu9@zte.com.cn>
+On Tue, 15 Jul 2025 14:16:33 +0200
+Jiri Olsa <olsajiri@gmail.com> wrote:
 
-Background
-==========
-When TCP retransmits a packet due to missing ACKs, the
-retransmission may fail for various reasons (e.g., packets
-stuck in driver queues, receiver zero windows, or routing issues).
+> On Tue, Jul 15, 2025 at 08:54:51AM +0900, Masami Hiramatsu wrote:
+> > On Mon, 14 Jul 2025 23:28:58 +0200
+> > Jiri Olsa <olsajiri@gmail.com> wrote:
+> > 
+> > > On Mon, Jul 14, 2025 at 07:19:35PM +0900, Masami Hiramatsu wrote:
+> > > > On Mon, 14 Jul 2025 11:39:03 +0200
+> > > > Peter Zijlstra <peterz@infradead.org> wrote:
+> > > > 
+> > > > > On Mon, Jul 14, 2025 at 05:39:15PM +0900, Masami Hiramatsu wrote:
+> > > > > 
+> > > > > > > +	/*
+> > > > > > > +	 * Some of the uprobe consumers has changed sp, we can do nothing,
+> > > > > > > +	 * just return via iret.
+> > > > > > > +	 */
+> > > > > > 
+> > > > > > Do we allow consumers to change the `sp`? It seems dangerous
+> > > > > > because consumer needs to know whether it is called from
+> > > > > > breakpoint or syscall. Note that it has to set up ax, r11
+> > > > > > and cx on the stack correctly only if it is called from syscall,
+> > > > > > that is not compatible with breakpoint mode.
+> > > > > > 
+> > > > > > > +	if (regs->sp != sp)
+> > > > > > > +		return regs->ax;
+> > > > > > 
+> > > > > > Shouldn't we recover regs->ip? Or in this case does consumer has
+> > > > > > to change ip (== return address from trampline) too?
+> > > > > > 
+> > > > > > IMHO, it should not allow to change the `sp` and `ip` directly
+> > > > > > in syscall mode. In case of kprobes, kprobe jump optimization
+> > > > > > must be disabled explicitly (e.g. setting dummy post_handler)
+> > > > > > if the handler changes `ip`.
+> > > > > > 
+> > > > > > Or, even if allowing to modify `sp` and `ip`, it should be helped
+> > > > > > by this function, e.g. stack up the dummy regs->ax/r11/cx on the
+> > > > > > new stack at the new `regs->sp`. This will allow modifying those
+> > > > > > registries transparently as same as breakpoint mode.
+> > > > > > In this case, I think we just need to remove above 2 lines.
+> > > > > 
+> > > > > There are two syscall return paths; the 'normal' is sysret and for that
+> > > > > you need to undo all things just right.
+> > > > > 
+> > > > > The other is IRET. At which point we can have whatever state we want,
+> > > > > including modified SP.
+> > > > > 
+> > > > > See arch/x86/entry/syscall_64.c:do_syscall_64() and
+> > > > > arch/x86/entry/entry_64.S:entry_SYSCALL_64
+> > > > > 
+> > > > > The IRET path should return pt_regs as is from an interrupt/exception
+> > > > > very much like INT3.
+> > > > 
+> > > > OK, so SYSRET case, we need to follow;
+> > > > 
+> > > > sys_uprobe -> do_syscall_64 -> entry_SYSCALL_64 -> trampoline -> retaddr
+> > > > 
+> > > > But using IRET to return, we can skip returning to trampoline,
+> > > > 
+> > > > sys_uprobe -> do_syscall_64 -> entry_SYSCALL_64 -> regs->ip
+> > > 
+> > > the handler gets the original breakpoint address, it's set in:
+> > > 
+> > >         regs->ip  = ax_r11_cx_ip[3] - 5;
+> > > 
+> > > and at the point we do:
+> > > 
+> > >         /*
+> > >          * Some of the uprobe consumers has changed sp, we can do nothing,
+> > >          * just return via iret.
+> > >          */
+> > >         if (regs->sp != sp)
+> > >                 return regs->ax;
+> > > 
+> > > 
+> > > .. regs->ip value wasn't restored for the trampoline's return address,
+> > > so iret will skip the trampoline
+> > 
+> > Ah, OK. So unless we restore regs->cx = regs->ip and 
+> > regs->r11 = regs->flags, it automatically use IRET. Got it.
+> > 
+> > > 
+> > > but perhaps we could do the extra check below to land on the next instruction?
+> > 
+> > Hmm, can you clarify the required condition of changing regs
+> > in the consumers? regs->sp change need to be handled by the
+> > IRET, but other changes can be handled by trampoline. Is that
+> > correct?
+> 
+> yes,
+> if handler changes regs->sp we return through iret
+> if handler changes regs->ip (the only other tricky one IIUC), we return through
+> the trampoline and jump to regs->ip via trampoline's 'ret' instruction
 
-The original tcp_retransmit_skb tracepoint:
 
-'commit e086101b150a ("tcp: add a tracepoint for tcp retransmission")'
+Got it. Thanks for confirming it.
 
-lacks visibility into these failure causes, making production
-diagnostics difficult.
+Thank you,
 
-Solution
-========
-Adds the retval("err") to the tcp_retransmit_skb tracepoint.
-Enables users to know why some tcp retransmission failed and
-users can filter retransmission failures by retval.
+> 
+> jirka
 
-Compatibility description
-=========================
-This patch extends the tcp_retransmit_skb tracepoint
-by adding a new "err" field at the end of its
-existing structure (within TP_STRUCT__entry). The
-compatibility implications are detailed as follows:
-
-1) Structural compatibility for legacy user-space tools
-Legacy tools/BPF programs accessing existing fields
-(by offset or name) can still work without modification
-or recompilation.The new field is appended to the end,
-preserving original memory layout.
-
-2) Note: semantic changes
-The original tracepoint primarily only focused on
-successfully retransmitted packets. With this patch,
-the tracepoint now can figure out packets that may
-terminate early due to specific reasons. For accurate
-statistics, users should filter using "err" to
-distinguish outcomes.
-
-Before patched:
-# cat /sys/kernel/debug/tracing/events/tcp/tcp_retransmit_skb/format
-field:const void * skbaddr; offset:8; size:8; signed:0;
-field:const void * skaddr; offset:16; size:8; signed:0;
-field:int state; offset:24; size:4; signed:1;
-field:__u16 sport; offset:28; size:2; signed:0;
-field:__u16 dport; offset:30; size:2; signed:0;
-field:__u16 family; offset:32; size:2; signed:0;
-field:__u8 saddr[4]; offset:34; size:4; signed:0;
-field:__u8 daddr[4]; offset:38; size:4; signed:0;
-field:__u8 saddr_v6[16]; offset:42; size:16; signed:0;
-field:__u8 daddr_v6[16]; offset:58; size:16; signed:0;
-
-print fmt: "skbaddr=%p skaddr=%p family=%s sport=%hu dport=%hu saddr=%pI4 daddr=%pI4 saddrv6=%pI6c daddrv6=%pI6c state=%s"
-
-After patched:
-# cat /sys/kernel/debug/tracing/events/tcp/tcp_retransmit_skb/format
-field:const void * skbaddr; offset:8; size:8; signed:0;
-field:const void * skaddr; offset:16; size:8; signed:0;
-field:int state; offset:24; size:4; signed:1;
-field:__u16 sport; offset:28; size:2; signed:0;
-field:__u16 dport; offset:30; size:2; signed:0;
-field:__u16 family; offset:32; size:2; signed:0;
-field:__u8 saddr[4]; offset:34; size:4; signed:0;
-field:__u8 daddr[4]; offset:38; size:4; signed:0;
-field:__u8 saddr_v6[16]; offset:42; size:16; signed:0;
-field:__u8 daddr_v6[16]; offset:58; size:16; signed:0;
-field:int err; offset:76; size:4; signed:1;
-
-print fmt: "skbaddr=%p skaddr=%p family=%s sport=%hu dport=%hu saddr=%pI4 daddr=%pI4 saddrv6=%pI6c daddrv6=%pI6c state=%s err=%d"
-
-Suggested-by: KuniyukiIwashima <kuniyu@google.com>
-Suggested-by: Jakub Kicinski <kuba@kernel.org>
-Suggested-by: Eric Dumazet <edumazet@google.com>
-Co-developed-by: xu xin <xu.xin16@zte.com.cn>
-Signed-off-by: xu xin <xu.xin16@zte.com.cn>
-Signed-off-by: Fan Yu <fan.yu9@zte.com.cn>
----
-Change Log
-=========
-v5->v6:
-Some fixes according to
-https://lore.kernel.org/all/20250715183335.860529-1-kuniyu@google.com/
-1. fixed HTML entity conversion in email and adjusted error counting logic.
-
-v4->v5:
-Some fixes according to
-https://lore.kernel.org/all/20250715072058.12f343bb@kernel.org/
-1. Instead of introducing new TCP_RETRANS_* enums, directly
-passing the retval to the tracepoint.
-
-v3->v4:
-Some fixes according to
-https://lore.kernel.org/all/CANn89i+JGSt=_CtWfhDXypWW-34a6SoP3RAzWQ9B9VL4+PHjDw@mail.gmail.com/
-1. Consolidate ENOMEMs into a unified TCP_RETRANS_NOMEM.
-
-v2->v3:
-Some fixes according to
-https://lore.kernel.org/all/CANn89iJvyYjiweCESQL8E-Si7M=gosYvh1BAVWwAWycXW8GSdg@mail.gmail.com/
-1. Rename "quit_reason" to "result". Also, keep "key=val" format concise(no space in vals).
-
-v1->v2:
-Some fixes according to
-https://lore.kernel.org/all/CANn89iK-6kT-ZUpNRMjPY9_TkQj-dLuKrDQtvO1140q4EUsjFg@mail.gmail.com/
-1.Rename TCP_RETRANS_QUIT_UNDEFINED to TCP_RETRANS_ERR_DEFAULT.
-2.Added detailed compatibility consequences section.
-
- include/trace/events/tcp.h | 27 ++++++++--------------
- net/ipv4/tcp_output.c      | 46 ++++++++++++++++++++++++--------------
- 2 files changed, 38 insertions(+), 35 deletions(-)
-
-diff --git a/include/trace/events/tcp.h b/include/trace/events/tcp.h
-index 54e60c6009e3..9d2c36c6a0ed 100644
---- a/include/trace/events/tcp.h
-+++ b/include/trace/events/tcp.h
-@@ -13,17 +13,11 @@
- #include <linux/sock_diag.h>
- #include <net/rstreason.h>
-
--/*
-- * tcp event with arguments sk and skb
-- *
-- * Note: this class requires a valid sk pointer; while skb pointer could
-- *       be NULL.
-- */
--DECLARE_EVENT_CLASS(tcp_event_sk_skb,
-+TRACE_EVENT(tcp_retransmit_skb,
-
--	TP_PROTO(const struct sock *sk, const struct sk_buff *skb),
-+	TP_PROTO(const struct sock *sk, const struct sk_buff *skb, int err),
-
--	TP_ARGS(sk, skb),
-+	TP_ARGS(sk, skb, err),
-
- 	TP_STRUCT__entry(
- 		__field(const void *, skbaddr)
-@@ -36,6 +30,7 @@ DECLARE_EVENT_CLASS(tcp_event_sk_skb,
- 		__array(__u8, daddr, 4)
- 		__array(__u8, saddr_v6, 16)
- 		__array(__u8, daddr_v6, 16)
-+		__field(int, err)
- 	),
-
- 	TP_fast_assign(
-@@ -58,21 +53,17 @@ DECLARE_EVENT_CLASS(tcp_event_sk_skb,
-
- 		TP_STORE_ADDRS(__entry, inet->inet_saddr, inet->inet_daddr,
- 			      sk->sk_v6_rcv_saddr, sk->sk_v6_daddr);
-+
-+		__entry->err = err;
- 	),
-
--	TP_printk("skbaddr=%p skaddr=%p family=%s sport=%hu dport=%hu saddr=%pI4 daddr=%pI4 saddrv6=%pI6c daddrv6=%pI6c state=%s",
-+	TP_printk("skbaddr=%p skaddr=%p family=%s sport=%hu dport=%hu saddr=%pI4 daddr=%pI4 saddrv6=%pI6c daddrv6=%pI6c state=%s err=%d",
- 		  __entry->skbaddr, __entry->skaddr,
- 		  show_family_name(__entry->family),
- 		  __entry->sport, __entry->dport, __entry->saddr, __entry->daddr,
- 		  __entry->saddr_v6, __entry->daddr_v6,
--		  show_tcp_state_name(__entry->state))
--);
--
--DEFINE_EVENT(tcp_event_sk_skb, tcp_retransmit_skb,
--
--	TP_PROTO(const struct sock *sk, const struct sk_buff *skb),
--
--	TP_ARGS(sk, skb)
-+		  show_tcp_state_name(__entry->state),
-+		  __entry->err)
- );
-
- #undef FN
-diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-index b616776e3354..caf11920a878 100644
---- a/net/ipv4/tcp_output.c
-+++ b/net/ipv4/tcp_output.c
-@@ -3330,8 +3330,10 @@ int __tcp_retransmit_skb(struct sock *sk, struct sk_buff *skb, int segs)
- 	if (icsk->icsk_mtup.probe_size)
- 		icsk->icsk_mtup.probe_size = 0;
-
--	if (skb_still_in_host_queue(sk, skb))
--		return -EBUSY;
-+	if (skb_still_in_host_queue(sk, skb)) {
-+		err = -EBUSY;
-+		goto out;
-+	}
-
- start:
- 	if (before(TCP_SKB_CB(skb)->seq, tp->snd_una)) {
-@@ -3342,14 +3344,19 @@ int __tcp_retransmit_skb(struct sock *sk, struct sk_buff *skb, int segs)
- 		}
- 		if (unlikely(before(TCP_SKB_CB(skb)->end_seq, tp->snd_una))) {
- 			WARN_ON_ONCE(1);
--			return -EINVAL;
-+			err = -EINVAL;
-+			goto out;
-+		}
-+		if (tcp_trim_head(sk, skb, tp->snd_una - TCP_SKB_CB(skb)->seq)) {
-+			err = -ENOMEM;
-+			goto out;
- 		}
--		if (tcp_trim_head(sk, skb, tp->snd_una - TCP_SKB_CB(skb)->seq))
--			return -ENOMEM;
- 	}
-
--	if (inet_csk(sk)->icsk_af_ops->rebuild_header(sk))
--		return -EHOSTUNREACH; /* Routing failure or similar. */
-+	if (inet_csk(sk)->icsk_af_ops->rebuild_header(sk)) {
-+		err = -EHOSTUNREACH; /* Routing failure or similar. */
-+		goto out;
-+	}
-
- 	cur_mss = tcp_current_mss(sk);
- 	avail_wnd = tcp_wnd_end(tp) - TCP_SKB_CB(skb)->seq;
-@@ -3360,8 +3367,10 @@ int __tcp_retransmit_skb(struct sock *sk, struct sk_buff *skb, int segs)
- 	 * our retransmit of one segment serves as a zero window probe.
- 	 */
- 	if (avail_wnd <= 0) {
--		if (TCP_SKB_CB(skb)->seq != tp->snd_una)
--			return -EAGAIN;
-+		if (TCP_SKB_CB(skb)->seq != tp->snd_una) {
-+			err = -EAGAIN;
-+			goto out;
-+		}
- 		avail_wnd = cur_mss;
- 	}
-
-@@ -3373,11 +3382,15 @@ int __tcp_retransmit_skb(struct sock *sk, struct sk_buff *skb, int segs)
- 	}
- 	if (skb->len > len) {
- 		if (tcp_fragment(sk, TCP_FRAG_IN_RTX_QUEUE, skb, len,
--				 cur_mss, GFP_ATOMIC))
--			return -ENOMEM; /* We'll try again later. */
-+				 cur_mss, GFP_ATOMIC)) {
-+			err = -ENOMEM;  /* We'll try again later. */
-+			goto out;
-+		}
- 	} else {
--		if (skb_unclone_keeptruesize(skb, GFP_ATOMIC))
--			return -ENOMEM;
-+		if (skb_unclone_keeptruesize(skb, GFP_ATOMIC)) {
-+			err = -ENOMEM;
-+			goto out;
-+		}
-
- 		diff = tcp_skb_pcount(skb);
- 		tcp_set_skb_tso_segs(skb, cur_mss);
-@@ -3431,17 +3444,16 @@ int __tcp_retransmit_skb(struct sock *sk, struct sk_buff *skb, int segs)
- 		tcp_call_bpf_3arg(sk, BPF_SOCK_OPS_RETRANS_CB,
- 				  TCP_SKB_CB(skb)->seq, segs, err);
-
--	if (likely(!err)) {
--		trace_tcp_retransmit_skb(sk, skb);
--	} else if (err != -EBUSY) {
-+	if (unlikely(err) && err != -EBUSY)
- 		NET_ADD_STATS(sock_net(sk), LINUX_MIB_TCPRETRANSFAIL, segs);
--	}
-
- 	/* To avoid taking spuriously low RTT samples based on a timestamp
- 	 * for a transmit that never happened, always mark EVER_RETRANS
- 	 */
- 	TCP_SKB_CB(skb)->sacked |= TCPCB_EVER_RETRANS;
-
-+out:
-+	trace_tcp_retransmit_skb(sk, skb, err);
- 	return err;
- }
 
 -- 
-2.25.1
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
