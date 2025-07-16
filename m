@@ -1,167 +1,102 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 947A820E704;
-	Wed, 16 Jul 2025 02:39:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E319F405F7;
+	Wed, 16 Jul 2025 03:19:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752633580; cv=none; b=NWx+hr2teMLsNIQ7a8YwB2CQ1ie/mARJ6B1TCba7c429drlEy9d9xpjyF6+AkBRuIv01s6n1zotVHh5qFRNH7F/M7cervu/S+VICXO7Y5ezhho+ywxN/0jZbGE7HqI93lr4WQn0aroE5m8NIMb0aQKG0EctfW5kMBsAY96ud3eM=
+	t=1752635990; cv=none; b=nC/TZ1Tdwau41gWqJl1zUsNxMcVviONMyUdM3M3sl4U1Ss/6gZQg7Ut0EXPJaH/A1PnsVMSk7xH4inT+qvDD9fTnCdWOSzKvJdxQ4QNvGtAayqmUs94oUyqJNI5PXIWtHtZwAfzdHLlnvsdw8LOKoi2vbmNyRpqelZrE/GyFMrc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752633580; c=relaxed/simple;
-	bh=AJAN0XknSeZv8NdQ/g7V1Wjyjj+exrMZPi6CbZvy2lM=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=psWQG2tqGkwXX5IyGVWgdk7friTEUBphnbk9hUjjSo3jv8x7bOFlPXqbhxEQGH6AVJ45+XV0cl43IcX0Dn7tYxs/fVLIU8eiA960wdK17r/n99p8JN38X1sRJeW0OJ3zmfjNcH7m1MZEDQiequnhP6ev6gSsxawuoCcjFIau/S8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fOa7Ree5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1752635990; c=relaxed/simple;
+	bh=z3+q/jd0pMC0eYsWmeJoczn7uJmKr6jtay+VZgTgrq8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=CaNKlu2VPgjBBTV82tLRbUuqFJWFEfjCA39EfPubFogs/KucZDnSGGxqvH68B8jdfI1puxWp0s97wntaNiASiLmsPr8y4t9wevbAeThUb/icovzf4Bs+ya5glfZCKENP4KpcpuX3waHn5qDAg6+h5YkucZqwpSFIwHDBQpGjfIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dXwWm7pK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fOa7Ree5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE85CC4CEE3;
-	Wed, 16 Jul 2025 02:39:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dXwWm7pK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE5A5C4CEF0;
+	Wed, 16 Jul 2025 03:19:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752633580;
-	bh=AJAN0XknSeZv8NdQ/g7V1Wjyjj+exrMZPi6CbZvy2lM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=fOa7Ree5wNbmTQO7JZ7GMMeHWS/IYshHjW7mqZhqd69VUZh884ITrQx34asmL5kLz
-	 tVmrmIc7rQl0Vx79RYIMmUsc3R+yxoyV/HPo2NSsPrBY0VaX3qPLdjWQtiJAljAYUJ
-	 aFkSWzSDqiIh6RTTbFDbi2/yaCGsmdKvrONNUqRExNm6g8LjsmzYZcspSjMnEgw6Md
-	 7P+xN7QrmQv0DgzYe9hkN5gQUZdCeNjPq1TN4li5MPYk9tMeEQur8FIJK4gnVUPL4X
-	 kU9S6BFlM4kblGCAQV0WouxN068oKgK40h0zLeQOr1T2jk2SK4YkMnsAdIrcyFrd3H
-	 tIQScbO+01HZg==
-Date: Wed, 16 Jul 2025 11:39:36 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Oleg Nesterov <oleg@redhat.com>,
- Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- x86@kernel.org, Song Liu <songliubraving@fb.com>, Yonghong Song
- <yhs@fb.com>, John Fastabend <john.fastabend@gmail.com>, Hao Luo
- <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>, Alan Maguire
- <alan.maguire@oracle.com>, David Laight <David.Laight@aculab.com>, Thomas
- =?UTF-8?B?V2Vpw59zY2h1aA==?= <thomas@t-8ch.de>, Ingo Molnar
- <mingo@kernel.org>
-Subject: Re: [PATCHv5 perf/core 09/22] uprobes/x86: Add uprobe syscall to
- speed up uprobe
-Message-Id: <20250716113936.c5b94cc3f0ae1f4f578cdaba@kernel.org>
-In-Reply-To: <aHZGofDkcJDCx3wY@krava>
-References: <20250711082931.3398027-1-jolsa@kernel.org>
-	<20250711082931.3398027-10-jolsa@kernel.org>
-	<20250714173915.b9edd474742de46bcbe9c617@kernel.org>
-	<20250714093903.GP905792@noisy.programming.kicks-ass.net>
-	<20250714191935.577ec7df5ae8a73282cddce7@kernel.org>
-	<aHV2mrao8EMOTz8S@krava>
-	<20250715085451.6a871a3b40c5ff19d3568956@kernel.org>
-	<aHZGofDkcJDCx3wY@krava>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=k20201202; t=1752635989;
+	bh=z3+q/jd0pMC0eYsWmeJoczn7uJmKr6jtay+VZgTgrq8=;
+	h=From:Date:Subject:To:Cc:From;
+	b=dXwWm7pKM9QMX+g1Qpsmd5GS+EIDH6gnf9hhdhVi7D7nbPCC0cMFnTxL4GaN7xmVZ
+	 JduPmgbS5ckAuLmaDftz4++yNyL53RvmxrmkRenPJkvyWw96K4VVZ4KMIPlYIFTLcg
+	 4CiIDdPAYQppVc/nCC4lqN/h/IWZYe5YuHiuO6/znquNsdEVCs2loxfzVsdaSIzf2N
+	 4XDZKR7FS5JQV99pWJI90GFn5spDPuPrUjnMhu5TRj7cgqeFSOScK2fWTdyGiiHUxT
+	 M8a9P/QtyfzKe4+pBT/diVzmXKooDPpG5AMuogPZccLW1/lXOc8Y5jQ3WeSbXAV/CR
+	 Ygr9nPg0hItFg==
+From: Nathan Chancellor <nathan@kernel.org>
+Date: Tue, 15 Jul 2025 20:19:44 -0700
+Subject: [PATCH] tracing/probes: Avoid using params uninitialized in
+ parse_btf_arg()
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20250715-trace_probe-fix-const-uninit-warning-v1-1-98960f91dd04@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAE8ad2gC/x2NywqDQAxFf0WybmBURNpfKVLGmNpsMpIZHyD+u
+ 6G7c+Bw7wmZTTjDqzrBeJMsSV3qRwX0izozyuQOTWi60NcdFovEn8XSyPiVAylpLriqqBTcozn
+ M2E/URiLiZ2jBpxZjb/837+G6bp4jlY12AAAA
+X-Change-ID: 20250715-trace_probe-fix-const-uninit-warning-7dc3accce903
+To: Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+ llvm@lists.linux.dev, stable@vger.kernel.org, 
+ Nathan Chancellor <nathan@kernel.org>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1557; i=nathan@kernel.org;
+ h=from:subject:message-id; bh=z3+q/jd0pMC0eYsWmeJoczn7uJmKr6jtay+VZgTgrq8=;
+ b=owGbwMvMwCUmm602sfCA1DTG02pJDBnlUsFTm838lK8sa2Q+YfPZnT3/XGJN1WNO4dPHC16wG
+ /2f7vKho5SFQYyLQVZMkaX6sepxQ8M5ZxlvnJoEM4eVCWQIAxenAEzk8zWG/+U+2to1RzocipU3
+ JJXbB73PPhTiWLYw9sUktbpNFzhOSDH8j/7x/Ef4Sj3375ti5FVmsH3896PO7MfqR++qb2b84VF
+ 8xggA
+X-Developer-Key: i=nathan@kernel.org; a=openpgp;
+ fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
 
-On Tue, 15 Jul 2025 14:16:33 +0200
-Jiri Olsa <olsajiri@gmail.com> wrote:
+After a recent change in clang to strengthen uninitialized warnings [1],
+it points out that in one of the error paths in parse_btf_arg(), params
+is used uninitialized:
 
-> On Tue, Jul 15, 2025 at 08:54:51AM +0900, Masami Hiramatsu wrote:
-> > On Mon, 14 Jul 2025 23:28:58 +0200
-> > Jiri Olsa <olsajiri@gmail.com> wrote:
-> > 
-> > > On Mon, Jul 14, 2025 at 07:19:35PM +0900, Masami Hiramatsu wrote:
-> > > > On Mon, 14 Jul 2025 11:39:03 +0200
-> > > > Peter Zijlstra <peterz@infradead.org> wrote:
-> > > > 
-> > > > > On Mon, Jul 14, 2025 at 05:39:15PM +0900, Masami Hiramatsu wrote:
-> > > > > 
-> > > > > > > +	/*
-> > > > > > > +	 * Some of the uprobe consumers has changed sp, we can do nothing,
-> > > > > > > +	 * just return via iret.
-> > > > > > > +	 */
-> > > > > > 
-> > > > > > Do we allow consumers to change the `sp`? It seems dangerous
-> > > > > > because consumer needs to know whether it is called from
-> > > > > > breakpoint or syscall. Note that it has to set up ax, r11
-> > > > > > and cx on the stack correctly only if it is called from syscall,
-> > > > > > that is not compatible with breakpoint mode.
-> > > > > > 
-> > > > > > > +	if (regs->sp != sp)
-> > > > > > > +		return regs->ax;
-> > > > > > 
-> > > > > > Shouldn't we recover regs->ip? Or in this case does consumer has
-> > > > > > to change ip (== return address from trampline) too?
-> > > > > > 
-> > > > > > IMHO, it should not allow to change the `sp` and `ip` directly
-> > > > > > in syscall mode. In case of kprobes, kprobe jump optimization
-> > > > > > must be disabled explicitly (e.g. setting dummy post_handler)
-> > > > > > if the handler changes `ip`.
-> > > > > > 
-> > > > > > Or, even if allowing to modify `sp` and `ip`, it should be helped
-> > > > > > by this function, e.g. stack up the dummy regs->ax/r11/cx on the
-> > > > > > new stack at the new `regs->sp`. This will allow modifying those
-> > > > > > registries transparently as same as breakpoint mode.
-> > > > > > In this case, I think we just need to remove above 2 lines.
-> > > > > 
-> > > > > There are two syscall return paths; the 'normal' is sysret and for that
-> > > > > you need to undo all things just right.
-> > > > > 
-> > > > > The other is IRET. At which point we can have whatever state we want,
-> > > > > including modified SP.
-> > > > > 
-> > > > > See arch/x86/entry/syscall_64.c:do_syscall_64() and
-> > > > > arch/x86/entry/entry_64.S:entry_SYSCALL_64
-> > > > > 
-> > > > > The IRET path should return pt_regs as is from an interrupt/exception
-> > > > > very much like INT3.
-> > > > 
-> > > > OK, so SYSRET case, we need to follow;
-> > > > 
-> > > > sys_uprobe -> do_syscall_64 -> entry_SYSCALL_64 -> trampoline -> retaddr
-> > > > 
-> > > > But using IRET to return, we can skip returning to trampoline,
-> > > > 
-> > > > sys_uprobe -> do_syscall_64 -> entry_SYSCALL_64 -> regs->ip
-> > > 
-> > > the handler gets the original breakpoint address, it's set in:
-> > > 
-> > >         regs->ip  = ax_r11_cx_ip[3] - 5;
-> > > 
-> > > and at the point we do:
-> > > 
-> > >         /*
-> > >          * Some of the uprobe consumers has changed sp, we can do nothing,
-> > >          * just return via iret.
-> > >          */
-> > >         if (regs->sp != sp)
-> > >                 return regs->ax;
-> > > 
-> > > 
-> > > .. regs->ip value wasn't restored for the trampoline's return address,
-> > > so iret will skip the trampoline
-> > 
-> > Ah, OK. So unless we restore regs->cx = regs->ip and 
-> > regs->r11 = regs->flags, it automatically use IRET. Got it.
-> > 
-> > > 
-> > > but perhaps we could do the extra check below to land on the next instruction?
-> > 
-> > Hmm, can you clarify the required condition of changing regs
-> > in the consumers? regs->sp change need to be handled by the
-> > IRET, but other changes can be handled by trampoline. Is that
-> > correct?
-> 
-> yes,
-> if handler changes regs->sp we return through iret
-> if handler changes regs->ip (the only other tricky one IIUC), we return through
-> the trampoline and jump to regs->ip via trampoline's 'ret' instruction
+  kernel/trace/trace_probe.c:660:19: warning: variable 'params' is uninitialized when used here [-Wuninitialized]
+    660 |                         return PTR_ERR(params);
+        |                                        ^~~~~~
 
+Match many other NO_BTF_ENTRY error cases and return -ENOENT, clearing
+up the warning.
 
-Got it. Thanks for confirming it.
+Cc: stable@vger.kernel.org
+Closes: https://github.com/ClangBuiltLinux/linux/issues/2110
+Fixes: d157d7694460 ("tracing/probes: Support BTF field access from $retval")
+Link: https://github.com/llvm/llvm-project/commit/2464313eef01c5b1edf0eccf57a32cdee01472c7 [1]
+Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+---
+ kernel/trace/trace_probe.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thank you,
+diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+index 424751cdf31f..40830a3ecd96 100644
+--- a/kernel/trace/trace_probe.c
++++ b/kernel/trace/trace_probe.c
+@@ -657,7 +657,7 @@ static int parse_btf_arg(char *varname,
+ 		ret = query_btf_context(ctx);
+ 		if (ret < 0 || ctx->nr_params == 0) {
+ 			trace_probe_log_err(ctx->offset, NO_BTF_ENTRY);
+-			return PTR_ERR(params);
++			return -ENOENT;
+ 		}
+ 	}
+ 	params = ctx->params;
 
-> 
-> jirka
+---
+base-commit: 6921d1e07cb5eddec830801087b419194fde0803
+change-id: 20250715-trace_probe-fix-const-uninit-warning-7dc3accce903
 
+Best regards,
+--  
+Nathan Chancellor <nathan@kernel.org>
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
