@@ -1,91 +1,260 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C51EA2F49F2;
-	Wed, 16 Jul 2025 12:38:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18D2A19CC37;
+	Wed, 16 Jul 2025 12:39:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752669521; cv=none; b=KJXlEmdHRU+kh3OBLzqYv7WoGYeLdD0dnyajTXbiP23p/JxpbGCkwWHiaz8BmKAB0eX24ncEBDOnLTAdchgiurfW3+CMxBSTRTHSBTdhm6dq7gOn71YErCh2aPPz9R3fthlfs6PX9+J20FxJfu1PQhKjRVfdJxcwjvnCfe9NsBk=
+	t=1752669597; cv=none; b=lNkD8lHUpNi47qRo0c8ZFeqg/3iPBVuDF5hs6+1m+C06wKbzqNskDPHyfb/xkUFXpyeNJAx7vlXbiM1pYR5DUP8JqBykV/RVmqFmz5ogwBbmK8Ttmpj3u9z6hgFBTeUQhuTAsr1SZDnAI+JveL0tXRk784+n3AYKR+dos5mfZp0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752669521; c=relaxed/simple;
-	bh=pJGLGknho+j+d6pWO0haLRIvL9BBaXCyJHMvVYM3sfU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gHqwr6r8Etd0tR5V48gjXfHNyNBUeug+7PaddgFiO+CUDjjZji1mLa+fNRaW8RXnH4RgowIBvVIgz3QjFBhOH1P7Atuu1+TcXkjy2a/5YYdcx00iN9cg2caY+zYrxRFgXt0uPHfV+bd0EfjMMGeD35KZbzzRTTWsROevswr8Tck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=WhCaRL7G; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1752669597; c=relaxed/simple;
+	bh=ciov7ehAjBjREuTpZUcsqXWJtPxPQ5hAirxi/yh5GH0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=N9FrZM26m8QaTIS8kRmu/gt15RElOemH4HOrabyd75Eq0Sm360782u7dydtOpw5BZq/KJdZdJzA8R4dozmaJiw7iUBSHUNnme2DqLs3tFsFZ6t2wTrJshMlocPH/54Ea3s8INHYUnp+3TskxiGsY1H4MY9DGoATUpr3I5BCAt9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=Dc82ryHz; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WhCaRL7G"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=YJ31wuGAs8TcqXb+Gxge288ftyQZu98ZA6TQhn6DLtw=; b=WhCaRL7GpAM1Spp5z2W/JtPBhQ
-	vzBV6v0C3Jt8uI84bVQMaH93KB62qA+nYfM1akEGORcJW5whoWqT0x+VE/F5HSIF3WeHq1JlRpgpa
-	IjthFASYbTN5R2LcX2mcI4mKNY+3n4/r/wUFqR8ly4hsXgIOIuhfcYLRdfOh7o+uXvwhonxWJxhrz
-	2lVdU2/YvKo5h9OaBa+TdEl5Lr4MiWPIeuuicu0MWPBFGSS3nzkKEV4MltQ3VBDHPU4hoQkk1G46E
-	CXbITtD67km8Z4IJ8F8izWgqCtl69z3s7cUF4gB7iorNr9/45N0+S01+Al3Z6FEnt3/yrXnrMyqYt
-	I+9xgPVw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uc1P7-0000000GYu5-0Uwa;
-	Wed, 16 Jul 2025 12:38:33 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 124D5300186; Wed, 16 Jul 2025 14:38:32 +0200 (CEST)
-Date: Wed, 16 Jul 2025 14:38:32 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-trace-kernel@vger.kernel.org, Nam Cao <namcao@linutronix.de>,
-	Tomas Glozar <tglozar@redhat.com>, Juri Lelli <jlelli@redhat.com>,
-	Clark Williams <williams@redhat.com>,
-	John Kacur <jkacur@redhat.com>
-Subject: Re: [PATCH v3 12/17] sched: Adapt sched tracepoints for RV task model
-Message-ID: <20250716123832.GW1613200@noisy.programming.kicks-ass.net>
-References: <20250715071434.22508-1-gmonaco@redhat.com>
- <20250715071434.22508-13-gmonaco@redhat.com>
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="Dc82ryHz"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Subject:
+	Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=WxtQsAj1GDvGzyz67FLJJ/sJh6tOfzGHe6iz6EfWQaQ=; b=Dc82ryHz4DrgMI1c7c5pAHLF2e
+	0UZJw7dqr96ryh4mY4vD50skzSL5q6YCve8aVi+QN1n2TxoChUl32+Rx3E9mlleAlNbKte0ElyEH2
+	1vToEsK1Qb+QLlAIlXkiSC0rNNNgJ/vM+lXxgKIrnRfNK5XVz6Hi3Xor1OVuVTWEA87VlcCy4rSiZ
+	oY4Elw4TV9wCI+Q1ODazw1rqfuIgghImjpv4DvTX5kyxu4v1yq0Q5uAcL5PGvyCRqLxj+ViE1PDyl
+	acHQyWD5QN9bdOW6idXoqgZcFiHcBKUod2DTDilljCy1tQDmJMSjg8jAzCev2dEHdonQoq/egkzs1
+	o50Jj01w==;
+Received: from [223.233.66.171] (helo=localhost.localdomain)
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1uc1QB-00HJWV-Q0; Wed, 16 Jul 2025 14:39:40 +0200
+From: Bhupesh <bhupesh@igalia.com>
+To: akpm@linux-foundation.org
+Cc: bhupesh@igalia.com,
+	kernel-dev@igalia.com,
+	linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org,
+	oliver.sang@intel.com,
+	lkp@intel.com,
+	laoar.shao@gmail.com,
+	pmladek@suse.com,
+	rostedt@goodmis.org,
+	mathieu.desnoyers@efficios.com,
+	arnaldo.melo@gmail.com,
+	alexei.starovoitov@gmail.com,
+	andrii.nakryiko@gmail.com,
+	mirq-linux@rere.qmqm.pl,
+	peterz@infradead.org,
+	willy@infradead.org,
+	david@redhat.com,
+	viro@zeniv.linux.org.uk,
+	keescook@chromium.org,
+	ebiederm@xmission.com,
+	brauner@kernel.org,
+	jack@suse.cz,
+	mingo@redhat.com,
+	juri.lelli@redhat.com,
+	bsegall@google.com,
+	mgorman@suse.de,
+	vschneid@redhat.com,
+	linux-trace-kernel@vger.kernel.org,
+	kees@kernel.org,
+	torvalds@linux-foundation.org
+Subject: [PATCH v5 0/3] Add support for long task name
+Date: Wed, 16 Jul 2025 18:09:13 +0530
+Message-Id: <20250716123916.511889-1-bhupesh@igalia.com>
+X-Mailer: git-send-email 2.38.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250715071434.22508-13-gmonaco@redhat.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jul 15, 2025 at 09:14:29AM +0200, Gabriele Monaco wrote:
-> Add the following tracepoints:
-> * sched_set_need_resched(tsk, cpu, tif)
->     Called when a task is set the need resched [lazy] flag
-> * sched_switch_vain(preempt, tsk, tsk_state)
->     Called when a task is selected again during __schedule
->     i.e. prev == next == tsk : no real context switch
+Changes since v4:
+================
+- v4 can be seen here: https://lore.kernel.org/lkml/20250507110444.963779-1-bhupesh@igalia.com/
+- As suggested by Kees, replaced tsk->comm with tsk->comm_str, inside 'task_struct'
+  where TASK_COMM_EXT_LEN is 64-bytes.
 
-> @@ -6592,6 +6598,7 @@ static bool try_to_block_task(struct rq *rq, struct task_struct *p,
->  	int flags = DEQUEUE_NOCLOCK;
->  
->  	if (signal_pending_state(task_state, p)) {
-> +		trace_sched_set_state_tp(p, TASK_RUNNING, true);
->  		WRITE_ONCE(p->__state, TASK_RUNNING);
->  		*task_state_p = TASK_RUNNING;
->  		return false;
+Changes since v3:
+================
+- v3 can be seen here: https://lore.kernel.org/lkml/20250507110444.963779-1-bhupesh@igalia.com/
+- As suggested by Petr and Steven, used 'comm_ext' name instead of
+  'real_comm'. Correspondingly the macro name is changed to 'TASK_COMM_EXT_LEN'
+  for the 64-byte extended comm.
+- Rebased this patchset on linux-next/master, which contain the following patch from
+  Steven now:
+       155fd6c3e2f0 ("tracing/sched: Use __string() instead of fixed lengths for task->comm")
+- Accordingly, v4 drops the changes done for 'trace/sched' events in v3,
+  but retains the 'safe' memcpy' changes for other kernel trace users.
 
-I'm confused on the purpose of this. How does this relate to say the
-wakeup in signal_wake_up_state() ?
+Changes since v2:
+================
+- v2 can be seen here: https://lore.kernel.org/lkml/20250331121820.455916-1-bhupesh@igalia.com/
+- As suggested by Yafang and Kees, picked Linus' suggested approach for
+  this version (see: <https://lore.kernel.org/all/CAHk-=wjAmmHUg6vho1KjzQi2=psR30+CogFd4aXrThr2gsiS4g@mail.gmail.com/>).
+- Dropped kthreads patch from this version. It would be sent out
+  separately, if we have a consensus on this approach.
 
-> @@ -6786,6 +6793,7 @@ static void __sched notrace __schedule(int sched_mode)
->  		rq = context_switch(rq, prev, next, &rf);
->  	} else {
->  		rq_unpin_lock(rq, &rf);
-> +		trace_sched_switch_vain_tp(preempt, prev, prev_state);
->  		__balance_callbacks(rq);
->  		raw_spin_rq_unlock_irq(rq);
->  	}
+Changes since v1:
+================
+- v1 can be seen here: https://lore.kernel.org/lkml/20250314052715.610377-1-bhupesh@igalia.com/
+- As suggested by Kees, added [PATCH 3/3] to have a consistent
+  'full_name' entry inside 'task_struct' which both tasks and
+  kthreads can use.
+- Fixed the commit message to indicate that the existing ABI
+  '/proc/$pid/task/$tid/comm' remains untouched and a parallel
+  '/proc/$pid/task/$tid/full_name' ABI for new (interested) users.
 
-Hurmph... don't you already have this covered by: trace_sched_exit_tp() ?
+While working with user-space debugging tools which work especially
+on linux gaming platforms, I found that the task name is truncated due
+to the limitation of TASK_COMM_LEN.
 
-Specifically, the only case where is_switch := false, is this case.
+Now, during debug tracing, seeing truncated names is not very useful,
+especially on gaming platforms where the number of tasks running can
+be very high.
+
+This patchset does not touch 'TASK_COMM_LEN' at all, i.e.
+'TASK_COMM_LEN' and the 16-byte design remains untouched.
+
+Via this patchset, as Kees suggested 'tsk->comm' is replaced
+with 'tsk->comm_str', inside 'task_struct':
+       union {
+               char    comm_str[TASK_COMM_EXT_LEN];
+       };
+
+where TASK_COMM_EXT_LEN is 64-bytes.
+
+And then 'get_task_comm()' to pass 'tsk->comm_str'
+to the existing users.
+
+This would mean that ABI is maintained while ensuring that:
+
+- Existing users of 'get_task_comm'/ 'set_task_comm' will get 'tsk->comm_str'
+  truncated to a maximum of 'TASK_COMM_LEN' (16-bytes) to maintain ABI,
+- New / Modified users of 'get_task_comm'/ 'set_task_comm' will get
+ 'tsk->comm_str' supported for a maximum of 'TASK_COMM_EXTLEN' (64-bytes).
+
+Note, that the existing users have not been modified to migrate to
+'TASK_COMM_EXT_LEN', in case they have hard-coded expectations of
+dealing with only a 'TASK_COMM_LEN' long 'tsk->comm_str'.
+
+After this change, gdb is able to show full name of the task, using a
+simple app which generates threads with long names [see 1]:
+  # gdb ./threadnames -ex "run info thread" -ex "detach" -ex "quit" > log
+  # cat log
+
+  NameThatIsTooLongForComm[4662]
+
+[1]. https://github.com/lostgoat/tasknames
+
+Bhupesh (3):
+  exec: Remove obsolete comments
+  treewide: Switch memcpy() users of 'task->comm' to a more safer
+    implementation
+  treewide: Switch from tsk->comm to tsk->comm_str which is 64 bytes
+    long
+
+ arch/arm64/kernel/traps.c        |  2 +-
+ arch/arm64/kvm/mmu.c             |  2 +-
+ block/blk-core.c                 |  2 +-
+ block/bsg.c                      |  2 +-
+ drivers/char/random.c            |  2 +-
+ drivers/hid/hid-core.c           |  6 +++---
+ drivers/mmc/host/tmio_mmc_core.c |  6 +++---
+ drivers/pci/pci-sysfs.c          |  2 +-
+ drivers/scsi/scsi_ioctl.c        |  2 +-
+ drivers/tty/serial/serial_core.c |  2 +-
+ drivers/tty/tty_io.c             |  8 ++++----
+ drivers/usb/core/devio.c         | 16 ++++++++--------
+ drivers/usb/core/message.c       |  2 +-
+ drivers/vfio/group.c             |  2 +-
+ drivers/vfio/vfio_iommu_type1.c  |  2 +-
+ drivers/vfio/vfio_main.c         |  2 +-
+ drivers/xen/evtchn.c             |  2 +-
+ drivers/xen/grant-table.c        |  2 +-
+ fs/binfmt_elf.c                  |  2 +-
+ fs/coredump.c                    |  4 ++--
+ fs/drop_caches.c                 |  2 +-
+ fs/exec.c                        |  8 ++++----
+ fs/ext4/dir.c                    |  2 +-
+ fs/ext4/inode.c                  |  2 +-
+ fs/ext4/namei.c                  |  2 +-
+ fs/ext4/super.c                  | 12 ++++++------
+ fs/hugetlbfs/inode.c             |  2 +-
+ fs/ioctl.c                       |  2 +-
+ fs/iomap/direct-io.c             |  2 +-
+ fs/jbd2/transaction.c            |  2 +-
+ fs/locks.c                       |  2 +-
+ fs/netfs/internal.h              |  2 +-
+ fs/proc/base.c                   |  2 +-
+ fs/read_write.c                  |  2 +-
+ fs/splice.c                      |  2 +-
+ include/linux/coredump.h         |  3 ++-
+ include/linux/filter.h           |  2 +-
+ include/linux/ratelimit.h        |  2 +-
+ include/linux/sched.h            | 17 ++++++++++-------
+ include/trace/events/block.h     |  5 +++++
+ include/trace/events/oom.h       |  1 +
+ include/trace/events/osnoise.h   |  1 +
+ include/trace/events/signal.h    |  1 +
+ include/trace/events/task.h      |  2 ++
+ init/init_task.c                 |  2 +-
+ ipc/sem.c                        |  2 +-
+ kernel/acct.c                    |  2 +-
+ kernel/audit.c                   |  4 ++--
+ kernel/auditsc.c                 | 10 +++++-----
+ kernel/bpf/helpers.c             |  2 +-
+ kernel/capability.c              |  4 ++--
+ kernel/cgroup/cgroup-v1.c        |  2 +-
+ kernel/cred.c                    |  4 ++--
+ kernel/events/core.c             |  2 +-
+ kernel/exit.c                    |  6 +++---
+ kernel/fork.c                    |  9 +++++++--
+ kernel/freezer.c                 |  4 ++--
+ kernel/futex/waitwake.c          |  2 +-
+ kernel/hung_task.c               | 10 +++++-----
+ kernel/irq/manage.c              |  2 +-
+ kernel/kthread.c                 |  2 +-
+ kernel/locking/rtmutex.c         |  2 +-
+ kernel/printk/printk.c           |  2 +-
+ kernel/sched/core.c              | 22 +++++++++++-----------
+ kernel/sched/debug.c             |  4 ++--
+ kernel/signal.c                  |  6 +++---
+ kernel/sys.c                     |  6 +++---
+ kernel/sysctl.c                  |  2 +-
+ kernel/time/itimer.c             |  4 ++--
+ kernel/time/posix-cpu-timers.c   |  2 +-
+ kernel/tsacct.c                  |  2 +-
+ kernel/workqueue.c               |  6 +++---
+ lib/dump_stack.c                 |  2 +-
+ lib/nlattr.c                     |  6 +++---
+ mm/compaction.c                  |  2 +-
+ mm/filemap.c                     |  4 ++--
+ mm/gup.c                         |  2 +-
+ mm/memfd.c                       |  2 +-
+ mm/memory-failure.c              | 10 +++++-----
+ mm/memory.c                      |  2 +-
+ mm/mmap.c                        |  4 ++--
+ mm/oom_kill.c                    | 18 +++++++++---------
+ mm/page_alloc.c                  |  4 ++--
+ mm/util.c                        |  2 +-
+ net/core/sock.c                  |  2 +-
+ net/dns_resolver/internal.h      |  2 +-
+ net/ipv4/raw.c                   |  2 +-
+ net/ipv4/tcp.c                   |  2 +-
+ net/socket.c                     |  2 +-
+ security/lsm_audit.c             |  4 ++--
+ 90 files changed, 184 insertions(+), 165 deletions(-)
+
+-- 
+2.38.1
 
