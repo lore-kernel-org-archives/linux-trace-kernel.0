@@ -1,227 +1,217 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9956428FA93;
-	Wed, 16 Jul 2025 18:10:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E0C8299AB1;
+	Wed, 16 Jul 2025 18:26:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752689448; cv=none; b=Cf184Ir90WIbiQeXc09aOD9qd6QTkwvp6FionILcwUnBcStjG7LAAyd2dOm7oAqrkiQK5VxZ+GJYWdXFo6hHKQEuelaRqfIVVitCgvJvY3Xi9V3i7y2eu5R/kaxZli5/f7P9JfoM88gQMDaNKlH3ZAjuvZ16LXvHBB2S3eEqQl0=
+	t=1752690383; cv=none; b=qj77B8WQFaJsqzviNUO3cNGa68ttJUOe9QVcs/5Tn0yOFnUOHFWjgZRWJxpwP0Er6YtMQSq0f32RpJoVSIV++I0vr3JDdmXyfUCKo+aMvDiPWXU3lrcNMb8hL3ituB8QMkvZAb3jQTVAJkzVhLfdLj5fowqxAzcRTVOz/IW1ZUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752689448; c=relaxed/simple;
-	bh=PAXQZ4RAY5sxHa0qn+/IPFA/Kj1m4XLj8ZNFqYjocbQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JfBjpq42mvDC7/T3OBqGir8NJilCyexz8i4g9M+prSCDm0/7jOBVqZvOKouwzqkrLN2lfF0f+jaUHuo46Rgep0SONcPwpsoEzmpHY4PDq4e0eJrZDoagPb/K82xJMqEsFmg9xLKPJhSOtobTBRZdV1zthUnJprK62IPUNUFIrcw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MJFiJm8I; arc=none smtp.client-ip=209.85.216.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MJFiJm8I"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-31329098ae8so186156a91.1;
-        Wed, 16 Jul 2025 11:10:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1752689446; x=1753294246; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/nPLDzt8OaNCeZXVo+jqqenY1sk4GVXTkfMw9ymIdMY=;
-        b=MJFiJm8IFWv42xgZRlrVsXrr7OWhzKiyJPPURKQMtRXQpN+i2K0vRqz2oyJmqlUBsk
-         jsIdpaoHBir3hEygYmdWhk2v/hqc1BoL+QSUMlaerh90nrjRzWvOab8dl5FFxcolMvft
-         j8/d5NVKLk7RW+yX+P2pTy9qGqYwxVTm/Iu5CkBch04aXKZi+SIOg4hDSR7sUcXfrFnT
-         4yv5rGWlJarh3CYGM70+IKhdAnGzf+so9MAjngSqJ2/dtgAMDmou3zQqsIbyzqPSv4iA
-         pVltpXwOJppz/7/qF4L0FTiOyhVbGcAK8mAPiGfn9rORb9PMV2utNvFVkSC3bwcd1ipR
-         Pgiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752689446; x=1753294246;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/nPLDzt8OaNCeZXVo+jqqenY1sk4GVXTkfMw9ymIdMY=;
-        b=FubksUT17daCHLHwIXXtaw1ncvJpnDTXRnubt2f4Ze3uga5JF5CseobH8IBHKmLRww
-         tx40wreXvMkU0v0rcu4YIIIP9tuE95RhHNBpTwiZy+psjIkajxJW37zrelB+Tg6Rj6q6
-         ey1ApSN6nSjKleIVYYWQcS4qidAbnKxQTCI9cUR5mD38T7QLsh7N8ZreRStMPMYLipo9
-         LTE06D8qHWSO4KZaUxvj35iZPSpuujWANA4IYS4U5Nci1qDqIJxPeg3AeuIHITK7xmd0
-         ErF3k7Wxlz9CdJnmE9+xkYu5PJ3ecZ1Lg96HWjcuHsvlTtCxvZQlo6S/zWnohADmfQp6
-         vy2w==
-X-Forwarded-Encrypted: i=1; AJvYcCWPTa9nMHydTK24xx9ZLU6NSzJZKQ7/V8AO2b6CdKwDP3WIcs7euFuRSmruzdoEbzDscdPduDS2uPCB1l5xh8IKyA==@vger.kernel.org, AJvYcCWoBQCpUcCtXkdoxZxPnsjjLfk1dlCQ5Imvye9sk4fR1wBLaImCjUp+0/aYwUy1LCF0posakSFBBiPXsZwQbzw0n+gX@vger.kernel.org, AJvYcCX9dXv2oyo9H1FHHLYtr94db932msFePf2QJKzPSG8Rz/QHam7lUZXvJ7PLKhl6F+GR43lXBYl3PV63QIqn@vger.kernel.org, AJvYcCXUxjNCRUCgreBIQkCsa+4MGNlS1j1MpYgeeTJStRRsb9Wz6JoLi9/yZunGwltgd54feF0=@vger.kernel.org, AJvYcCXgulG4zyHOzxboGncngH68Mxlzo1oO44ww0KtRuwOVAcXl7LtT6s4RsFm6mZv/ocU//UatNolaPWaSzkEcjw==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx/iDa8YdSyiRgyqW1Tj09nCGijEHSbbXEdc2AovWBe4qj3z23/
-	tA0UG1QFw+17hF4kxNvqKOe9xCPch3gZVxWbfhkuVu3Pi7HMgQaibB5+u5P2LDagVeUQMradK1I
-	prFpNPtIXRu/PNIzoqNGBoLhGdA8+TwM=
-X-Gm-Gg: ASbGncv6oYV0O44is0EFF80XJzBzk2urYYhuYmUlz42WrIFGwwTdQ7kMpuIROXd+4s9
-	sLT8Y53qmoJLNukBvYJHl2m6IFKla0TJPlHU4fBS8VxK0M9tVmlTpz4k/r27pCsZYcBwr02X3db
-	Lqj7WYb1z29dIKF2ajY6n5y/dUIRvNJ36FHYx7xe750scjWj6d4upeIXZm7ej+6cJdg9xp3hGwJ
-	WFGLg==
-X-Google-Smtp-Source: AGHT+IHJlbpu3WRcygpiaRDlDw/e+VIPCJBjgw4iqNxFgRP6FRabw5/rvWyqRZpyKT6y3Ac9F3Ie0dVmp6jE5D45Muw=
-X-Received: by 2002:a17:90b:4f4d:b0:31a:8dc4:b5bf with SMTP id
- 98e67ed59e1d1-31caea3feaamr467632a91.17.1752689445698; Wed, 16 Jul 2025
- 11:10:45 -0700 (PDT)
+	s=arc-20240116; t=1752690383; c=relaxed/simple;
+	bh=XzpgU7jl/zpAfUMEFHo0K1KXG3Oiqgp651zOZTVwv/Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LkHElJ5NmrJxtpEML29W8ClFAEZp4OAK2vFfscqctFlxsK9iPANa3xCrlzPel4O1VIoykCBnHmmb6d4v6Vlv+8nC0LR3SNFHIlDb8oOtMbZA5jZtgIy6dfMqEOQSv1GbhpDK51oqYlZ+YlQJ04L/43y1tEHNzHb9yN4R0jR4Q7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf15.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay06.hostedemail.com (Postfix) with ESMTP id 5AB6210FCB2;
+	Wed, 16 Jul 2025 18:26:15 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf15.hostedemail.com (Postfix) with ESMTPA id AAE451C;
+	Wed, 16 Jul 2025 18:26:10 +0000 (UTC)
+Date: Wed, 16 Jul 2025 14:26:09 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Steven Rostedt <rostedt@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, x86@kernel.org,
+ Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
+ Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim
+ <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Andrii
+ Nakryiko <andrii@kernel.org>, Indu Bhagat <indu.bhagat@oracle.com>, "Jose
+ E. Marchesi" <jemarch@gnu.org>, Beau Belgrave <beaub@linux.microsoft.com>,
+ Jens Remus <jremus@linux.ibm.com>, Linus Torvalds
+ <torvalds@linux-foundation.org>, Andrew Morton <akpm@linux-foundation.org>,
+ Jens Axboe <axboe@kernel.dk>, Florian Weimer <fweimer@redhat.com>, Sam
+ James <sam@gentoo.org>
+Subject: Re: [PATCH v13 10/14] unwind: Clear unwind_mask on exit back to
+ user space
+Message-ID: <20250716142609.47f0e4a5@batman.local.home>
+In-Reply-To: <20250715102912.GQ1613200@noisy.programming.kicks-ass.net>
+References: <20250708012239.268642741@kernel.org>
+	<20250708012359.345060579@kernel.org>
+	<20250715102912.GQ1613200@noisy.programming.kicks-ass.net>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250716123916.511889-1-bhupesh@igalia.com> <20250716123916.511889-4-bhupesh@igalia.com>
-In-Reply-To: <20250716123916.511889-4-bhupesh@igalia.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Wed, 16 Jul 2025 11:10:33 -0700
-X-Gm-Features: Ac12FXxkQF7EcMzWycD-nloRUfOkqsw4tlKLzrY1mRXYqv2TM-LS0bucIaJdoMY
-Message-ID: <CAEf4BzaGRz6A1wzBa2ZyQWY_4AvUHvLgBF36iCxc9wJJ1ppH0g@mail.gmail.com>
-Subject: Re: [PATCH v5 3/3] treewide: Switch from tsk->comm to tsk->comm_str
- which is 64 bytes long
-To: Bhupesh <bhupesh@igalia.com>
-Cc: akpm@linux-foundation.org, kernel-dev@igalia.com, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-mm@kvack.org, oliver.sang@intel.com, lkp@intel.com, 
-	laoar.shao@gmail.com, pmladek@suse.com, rostedt@goodmis.org, 
-	mathieu.desnoyers@efficios.com, arnaldo.melo@gmail.com, 
-	alexei.starovoitov@gmail.com, mirq-linux@rere.qmqm.pl, peterz@infradead.org, 
-	willy@infradead.org, david@redhat.com, viro@zeniv.linux.org.uk, 
-	keescook@chromium.org, ebiederm@xmission.com, brauner@kernel.org, 
-	jack@suse.cz, mingo@redhat.com, juri.lelli@redhat.com, bsegall@google.com, 
-	mgorman@suse.de, vschneid@redhat.com, linux-trace-kernel@vger.kernel.org, 
-	kees@kernel.org, torvalds@linux-foundation.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout04
+X-Rspamd-Queue-Id: AAE451C
+X-Stat-Signature: axpt9nptznm8di1wxstaxcbqkwqzigw1
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/PWOeFhq+1iBqv5Jz8IESvBHKT5u4Gdmk=
+X-HE-Tag: 1752690370-713770
+X-HE-Meta: U2FsdGVkX19X2p8S26zainYyCRQRlNq+Gt0Aaey/HsEXn6oTubLKF+mNLCQCZAojQyy2k04Y6mlvkfQAzwlN72jOd7BvBd2Y1A6+zsKysDZGIRqumosaUARILqOjTPxj7z0XWwoPpJD+Wg70Xhy3yEIKNzCTHrq2Xiqmn+AelJsE1mW3zHRpx1VV71DCQdewNYZ+so3zSElenfRjRDqxN9KTbMDfUus17kTdz9V9LuuSdFhvdBopjuvz8szljVzSM3eBgcJwr8s515D2Gaj/NFsfObE3NGr0oBpWMcE9+AoiG97g1T3JQxH8NyeY+D/ZGHDZIe5J4Ry8Y28fQzTJ7bKp18fq0x77Ajqy/YELaQ0dYunIIBveKVg4kvwMuJyb
 
-On Wed, Jul 16, 2025 at 5:40=E2=80=AFAM Bhupesh <bhupesh@igalia.com> wrote:
->
-> Historically due to the 16-byte length of TASK_COMM_LEN, the
-> users of 'tsk->comm' are restricted to use a fixed-size target
-> buffer also of TASK_COMM_LEN for 'memcpy()' like use-cases.
->
-> To fix the same, Kees suggested in [1] that we can replace tsk->comm,
-> with tsk->comm_str, inside 'task_struct':
->        union {
->                char    comm_str[TASK_COMM_EXT_LEN];
->        };
->
-> where TASK_COMM_EXT_LEN is 64-bytes.
+On Tue, 15 Jul 2025 12:29:12 +0200
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-Do we absolutely have to rename task->comm field? I understand as an
-intermediate step to not miss any existing users in the kernel
-sources, but once that all is done, we can rename that back to comm,
-right?
+> On Mon, Jul 07, 2025 at 09:22:49PM -0400, Steven Rostedt wrote:
+> >  
+> > +	/*
+> > +	 * This is the first to enable another task_work for this task since
+> > +	 * the task entered the kernel, or had already called the callbacks.
+> > +	 * Set only the bit for this work and clear all others as they have
+> > +	 * already had their callbacks called, and do not need to call them
+> > +	 * again because of this work.
+> > +	 */
+> > +	bits = UNWIND_PENDING | BIT(bit);
+> > +
+> > +	/*
+> > +	 * If the cmpxchg() fails, it means that an NMI came in and set
+> > +	 * the pending bit as well as cleared the other bits. Just
+> > +	 * jump to setting the bit for this work.
+> > +	 */
+> >  	if (CAN_USE_IN_NMI) {
+> > -		/* Claim the work unless an NMI just now swooped in to do so. */
+> > -		if (!local_try_cmpxchg(&info->pending, &pending, 1))
+> > +		if (!try_cmpxchg(&info->unwind_mask, &old, bits))
+> >  			goto out;
+> >  	} else {
+> > -		local_set(&info->pending, 1);
+> > +		info->unwind_mask = bits;
+> >  	}
+> >  
+> >  	/* The work has been claimed, now schedule it. */
+> >  	ret = task_work_add(current, &info->work, TWA_RESUME);
+> > -	if (WARN_ON_ONCE(ret)) {
+> > -		local_set(&info->pending, 0);
+> > -		return ret;
+> > -	}
+> >  
+> > +	if (WARN_ON_ONCE(ret))
+> > +		WRITE_ONCE(info->unwind_mask, 0);
+> > +
+> > +	return ret;
+> >   out:
+> > -	return test_and_set_bit(bit, &info->unwind_mask);
+> > +	return test_and_set_bit(bit, &info->unwind_mask) ?
+> > +		UNWIND_ALREADY_PENDING : 0;
+> >  }  
+> 
+> This is some of the most horrifyingly confused code I've seen in a
+> while.
+> 
+> Please just slow down and think for a minute.
+> 
+> The below is the last four patches rolled into one. Not been near a
+> compiler.
 
-The reason I'm asking is because accessing task->comm is *very common*
-with all sorts of BPF programs and scripts. Yes, we have way to deal
-with that with BPF CO-RE, but every single use case would need to be
-updated now to work both with task->comm name on old kernels and
-task->comm_str on new kernels (because BPF programs are written in
-more or less kernel version agnostic way, so they have to handle many
-kernel releases).
+The above is still needed as is (explained below).
 
-So, unless absolutely necessary, can we please keep the field name the
-same? Changing the size of that field is not really a problem for BPF,
-so no objections against that.
 
->
-> And then modify 'get_task_comm()' to pass 'tsk->comm_str'
-> to the existing users.
->
-> This would mean that ABI is maintained while ensuring that:
->
-> - Existing users of 'get_task_comm'/ 'set_task_comm' will get 'tsk->comm_=
-str'
->   truncated to a maximum of 'TASK_COMM_LEN' (16-bytes) to maintain ABI,
-> - New / Modified users of 'get_task_comm'/ 'set_task_comm' will get
->  'tsk->comm_str' supported for a maximum of 'TASK_COMM_EXTLEN' (64-bytes)=
-.
->
-> Note, that the existing users have not been modified to migrate to
-> 'TASK_COMM_EXT_LEN', in case they have hard-coded expectations of
-> dealing with only a 'TASK_COMM_LEN' long 'tsk->comm_str'.
->
-> [1]. https://lore.kernel.org/all/202505231346.52F291C54@keescook/
->
-> Signed-off-by: Bhupesh <bhupesh@igalia.com>
-> ---
->  arch/arm64/kernel/traps.c        |  2 +-
->  arch/arm64/kvm/mmu.c             |  2 +-
->  block/blk-core.c                 |  2 +-
->  block/bsg.c                      |  2 +-
->  drivers/char/random.c            |  2 +-
->  drivers/hid/hid-core.c           |  6 +++---
->  drivers/mmc/host/tmio_mmc_core.c |  6 +++---
->  drivers/pci/pci-sysfs.c          |  2 +-
->  drivers/scsi/scsi_ioctl.c        |  2 +-
->  drivers/tty/serial/serial_core.c |  2 +-
->  drivers/tty/tty_io.c             |  8 ++++----
->  drivers/usb/core/devio.c         | 16 ++++++++--------
->  drivers/usb/core/message.c       |  2 +-
->  drivers/vfio/group.c             |  2 +-
->  drivers/vfio/vfio_iommu_type1.c  |  2 +-
->  drivers/vfio/vfio_main.c         |  2 +-
->  drivers/xen/evtchn.c             |  2 +-
->  drivers/xen/grant-table.c        |  2 +-
->  fs/binfmt_elf.c                  |  2 +-
->  fs/coredump.c                    |  4 ++--
->  fs/drop_caches.c                 |  2 +-
->  fs/exec.c                        |  8 ++++----
->  fs/ext4/dir.c                    |  2 +-
->  fs/ext4/inode.c                  |  2 +-
->  fs/ext4/namei.c                  |  2 +-
->  fs/ext4/super.c                  | 12 ++++++------
->  fs/hugetlbfs/inode.c             |  2 +-
->  fs/ioctl.c                       |  2 +-
->  fs/iomap/direct-io.c             |  2 +-
->  fs/jbd2/transaction.c            |  2 +-
->  fs/locks.c                       |  2 +-
->  fs/netfs/internal.h              |  2 +-
->  fs/proc/base.c                   |  2 +-
->  fs/read_write.c                  |  2 +-
->  fs/splice.c                      |  2 +-
->  include/linux/coredump.h         |  2 +-
->  include/linux/filter.h           |  2 +-
->  include/linux/ratelimit.h        |  2 +-
->  include/linux/sched.h            | 11 ++++++++---
->  init/init_task.c                 |  2 +-
->  ipc/sem.c                        |  2 +-
->  kernel/acct.c                    |  2 +-
->  kernel/audit.c                   |  4 ++--
->  kernel/auditsc.c                 | 10 +++++-----
->  kernel/bpf/helpers.c             |  2 +-
->  kernel/capability.c              |  4 ++--
->  kernel/cgroup/cgroup-v1.c        |  2 +-
->  kernel/cred.c                    |  4 ++--
->  kernel/events/core.c             |  2 +-
->  kernel/exit.c                    |  6 +++---
->  kernel/fork.c                    |  9 +++++++--
->  kernel/freezer.c                 |  4 ++--
->  kernel/futex/waitwake.c          |  2 +-
->  kernel/hung_task.c               | 10 +++++-----
->  kernel/irq/manage.c              |  2 +-
->  kernel/kthread.c                 |  2 +-
->  kernel/locking/rtmutex.c         |  2 +-
->  kernel/printk/printk.c           |  2 +-
->  kernel/sched/core.c              | 22 +++++++++++-----------
->  kernel/sched/debug.c             |  4 ++--
->  kernel/signal.c                  |  6 +++---
->  kernel/sys.c                     |  6 +++---
->  kernel/sysctl.c                  |  2 +-
->  kernel/time/itimer.c             |  4 ++--
->  kernel/time/posix-cpu-timers.c   |  2 +-
->  kernel/tsacct.c                  |  2 +-
->  kernel/workqueue.c               |  6 +++---
->  lib/dump_stack.c                 |  2 +-
->  lib/nlattr.c                     |  6 +++---
->  mm/compaction.c                  |  2 +-
->  mm/filemap.c                     |  4 ++--
->  mm/gup.c                         |  2 +-
->  mm/memfd.c                       |  2 +-
->  mm/memory-failure.c              | 10 +++++-----
->  mm/memory.c                      |  2 +-
->  mm/mmap.c                        |  4 ++--
->  mm/oom_kill.c                    | 18 +++++++++---------
->  mm/page_alloc.c                  |  4 ++--
->  mm/util.c                        |  2 +-
->  net/core/sock.c                  |  2 +-
->  net/dns_resolver/internal.h      |  2 +-
->  net/ipv4/raw.c                   |  2 +-
->  net/ipv4/tcp.c                   |  2 +-
->  net/socket.c                     |  2 +-
->  security/lsm_audit.c             |  4 ++--
->  85 files changed, 171 insertions(+), 161 deletions(-)
->
+> @@ -170,41 +193,62 @@ static void unwind_deferred_task_work(st
+>  int unwind_deferred_request(struct unwind_work *work, u64 *cookie)
+>  {
+>  	struct unwind_task_info *info = &current->unwind_info;
+> -	int ret;
+> +	unsigned long bits, mask;
+> +	int bit, ret;
+>  
+>  	*cookie = 0;
+>  
+> -	if (WARN_ON_ONCE(in_nmi()))
+> -		return -EINVAL;
+> -
+>  	if ((current->flags & (PF_KTHREAD | PF_EXITING)) ||
+>  	    !user_mode(task_pt_regs(current)))
+>  		return -EINVAL;
+>  
+> +	/* NMI requires having safe cmpxchg operations */
+> +	if (WARN_ON_ONCE(!UNWIND_NMI_SAFE && in_nmi()))
+> +		return -EINVAL;
+> +
+> +	/* Do not allow cancelled works to request again */
+> +	bit = READ_ONCE(work->bit);
+> +	if (WARN_ON_ONCE(bit < 0))
+> +		return -EINVAL;
+> +
+>  	guard(irqsave)();
+>  
+>  	*cookie = get_cookie(info);
+>  
+> -	/* callback already pending? */
+> -	if (info->pending)
+> +	bits = UNWIND_PENDING | BIT(bit);
+> +	mask = atomic_long_fetch_or(bits, &info->unwind_mask);
+> +	if (mask & bits)
+>  		return 1;
 
-[...]
+
+So the fetch_or() isn't good enough for what needs to be done, and why
+the code above is the way it is.
+
+We have this scenario:
+
+
+  perf and ftrace are both tracing the same task. perf with bit 1 and
+  ftrace with bit 2. Let's say there's even another perf program
+  running and registered bit 3.
+
+
+  perf requests a deferred callback, and info->unwind_mask gets bit 1
+  and the pending bit set.
+
+  The task is exiting to user space and calls perf's callback and
+  clears the pending bit but keeps perf's bit set as it was already
+  called, and doesn't need to be called again even if perf requests a
+  new stacktrace before the task gets back to user space.
+
+  Now before the task gets back to user space, ftrace requests the
+  deferred trace. To do so, it must set the pending bit and its bit,
+  but it must also clear the perf bit as it should not call perf's
+  callback again.
+
+The atomic_long_fetch_or() above will set ftrace's bit but not clear
+perf's bits and the perf callback will get called a second time even
+though perf never requested another callback.
+
+This is why the code at the top has:
+
+	bits = UNWIND_PENDING | BIT(bit);
+
+	/*
+	 * If the cmpxchg() fails, it means that an NMI came in and set
+	 * the pending bit as well as cleared the other bits. Just
+	 * jump to setting the bit for this work.
+	 */
+	if (CAN_USE_IN_NMI) {
+		/* Claim the work unless an NMI just now swooped in to do so. */
+		if (!local_try_cmpxchg(&info->pending, &pending, 1))
+		if (!try_cmpxchg(&info->unwind_mask, &old, bits))
+			goto out;
+
+That cmpxchg() clears out any of the old bits if pending isn't set. Now
+if an NMI came in and the other perf process requested a callback, it
+would set its own bit plus the pending bit and then ftrace only needs
+to jump to the end and do the test_and_set on its bit.
+
+-- Steve
+
+
+>  
+>  	/* The work has been claimed, now schedule it. */
+>  	ret = task_work_add(current, &info->work, TWA_RESUME);
+>  	if (WARN_ON_ONCE(ret))
+> -		return ret;
+> -
+> -	info->pending = 1;
+> -	return 0;
+> +		atomic_long_set(0, &info->unwind_mask);
+>  }
+>  
