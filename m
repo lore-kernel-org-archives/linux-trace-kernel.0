@@ -1,25 +1,25 @@
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D16F77346F;
-	Wed, 16 Jul 2025 18:34:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F29BB13D503;
+	Wed, 16 Jul 2025 19:25:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752690849; cv=none; b=W7wm/Jmg9JXmZvR3kxJKG988F4MB85fOXKfPs0G96oPcYt5am9SQSKajB1Qzl5pS4U4al0RaRZ6E1RqOdePmt31BP1BkbNJR6YxNvI38hTbJGFQjeHvYklk0zWCQDzxoDEfyNTV3dFswLIzj8LWs56ijGofkKGEI6rIqV6KLo+s=
+	t=1752693932; cv=none; b=b/pThbYU4Ub4WeZcmgykN7XQFNLHwUYaTwZknFEaZ9V1+ZoI4gyobS34AiOkfDb8HpWvogAsR3VIQT6rmMtYSvgM7iCh60vsuWe7aKkxPHsFj1D08cP85kp3sr+uN5hvhXI5L+Fh0SUVSfSI7qWbHGfL2VY2W/EaiWEVY9rXAYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752690849; c=relaxed/simple;
-	bh=WdQf7QM2FMWgObuR3BeGiZlslFvfe2bArXxWlOl3Ahs=;
+	s=arc-20240116; t=1752693932; c=relaxed/simple;
+	bh=Hv63yMay8mbhFM4zLLO5m/N2tIfthDwtdzQ7Esa2S80=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cZSo81iHAjcI76ZyuwEJcpN/d6fwT1z8v10K5tBivyb4cce+vX93zbD8Si1A8AXqAd9Ma895grYnOvexCBEZewR+f7UREQBAJtE51uD6bZ+DZvHFkJH9ABJIxXWYXcvbQNeT5Fa3nFZpa4vV6NHY0qBX0TIZZ7Mp59a/XKUSZh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
+	 MIME-Version:Content-Type; b=ky1/6eCEnuns+Jd0U6kZJ/oTgEpl79HUuWOX3Jcr7oRHLHyvQ+i3EoWIkDAdr4GwMbkK0bZkYBN5mi4zJIHDMyglL0D9xqAIEqQ0o5A+zdkzCClgE4RnRCh9YZH1ZV0+jLgzKafPFyMuNZm95T/tAREla0MgYiUgekHP7NLBZzs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf16.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay01.hostedemail.com (Postfix) with ESMTP id 273881DA3C3;
-	Wed, 16 Jul 2025 18:33:58 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf16.hostedemail.com (Postfix) with ESMTPA id 5E6392000E;
-	Wed, 16 Jul 2025 18:33:53 +0000 (UTC)
-Date: Wed, 16 Jul 2025 14:33:52 -0400
+Received: from omf09.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay08.hostedemail.com (Postfix) with ESMTP id 8201114051A;
+	Wed, 16 Jul 2025 19:25:21 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf09.hostedemail.com (Postfix) with ESMTPA id CE1E920025;
+	Wed, 16 Jul 2025 19:25:16 +0000 (UTC)
+Date: Wed, 16 Jul 2025 15:25:15 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: Peter Zijlstra <peterz@infradead.org>
 Cc: Steven Rostedt <rostedt@kernel.org>, linux-kernel@vger.kernel.org,
@@ -36,12 +36,13 @@ Cc: Steven Rostedt <rostedt@kernel.org>, linux-kernel@vger.kernel.org,
  James <sam@gentoo.org>
 Subject: Re: [PATCH v13 10/14] unwind: Clear unwind_mask on exit back to
  user space
-Message-ID: <20250716143352.54d9d965@batman.local.home>
-In-Reply-To: <20250716142609.47f0e4a5@batman.local.home>
+Message-ID: <20250716152515.20699c64@batman.local.home>
+In-Reply-To: <20250716143352.54d9d965@batman.local.home>
 References: <20250708012239.268642741@kernel.org>
 	<20250708012359.345060579@kernel.org>
 	<20250715102912.GQ1613200@noisy.programming.kicks-ass.net>
 	<20250716142609.47f0e4a5@batman.local.home>
+	<20250716143352.54d9d965@batman.local.home>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -51,55 +52,93 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: k87dtutxg3xtrhr3rxxzxshw6n6xgjny
+X-Stat-Signature: yqzgk9yxdrffy97jtommr38674rsztpz
 X-Rspamd-Server: rspamout07
-X-Rspamd-Queue-Id: 5E6392000E
+X-Rspamd-Queue-Id: CE1E920025
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19/Dj5b1QVktjigvgyada44QrXAilyj1Hs=
-X-HE-Tag: 1752690833-772434
-X-HE-Meta: U2FsdGVkX18FrHndPEjUFj1CfoQitzzoGUMNTNyoctTd5ezvWX3PJlLfEoug0XRDb9bQZTdFvdu08S+8VstOOuT9tzUatP8mo66+uw/tl0h86bMa6zCKhp7Wk8XZy+3yeaB9nkP1+nz5NwVUYyiWTgc3U/NX0Fqjj1hXkQ9d7mSBPTUfT0N+jKT07L9c1kj/uK209soZT2d/jRXswh7vZQAdePaD/nzN2U8U07zxawaLEyd2MOfuRkHy7C7zcNJprsAreePSO+K/3AiruCxH3UKKy1mXYueC/BBmslb5iMT5kgVHa9w02+Y+xZJ5J7Y7ZOqraOn8Odk7jrwIETAFdojllxdZ1aHK5eUl1pocRzS282cgF2blyHlhDwfAZEb2
+X-Session-ID: U2FsdGVkX1++iWTZbjkHMBToQzNUvwO99krfymIct90=
+X-HE-Tag: 1752693916-499051
+X-HE-Meta: U2FsdGVkX1/+uRuX2HxufIA1KYgJgnoqc5TCl/FWSkKdz8KThzUUeGFW3dCnqRBdDkJX7qOICyzu7TKJJXgqieZ3HscvgW+0Z4D7q5xXB1naLq0n/YNYZrULMskuZPHNKNjOC3jeo6WobKCiZfhB7Ks9VatY5T/0aNOhL/IOe4Fb7RskgwcSBCPlX6sqvpTGQdNSGbu2FLKbO9GWPmSp2CDzJLYu3Hv7ZD350/I8RyhKugeiNIT+eDKMrEnb7LL1LmUQU32ry+hdx1c/3TF/mj+fM6+hN39d7EVcw5XKxpUTDArpAaQ0VVLv1VT0vd6CCTSzQyLIVOgkeSK9i6UPmraFuCeBDsvGAQew+1ATPrZUQM0hN4xkGqK+uPLZ3Ii9
 
-On Wed, 16 Jul 2025 14:26:09 -0400
+On Wed, 16 Jul 2025 14:33:52 -0400
 Steven Rostedt <rostedt@goodmis.org> wrote:
 
->   Now before the task gets back to user space, ftrace requests the
->   deferred trace. To do so, it must set the pending bit and its bit,
->   but it must also clear the perf bit as it should not call perf's
->   callback again.
+> [Task enters kernel]
+>   request -> add cookie
+>   request -> add cookie
+>   [..]
+>   callback -> add trace + cookie
+>  [ftrace clears bits]
+>   callback -> add trace + cookie
+> [Task exits back to user space]
 
-After ftrace clears the bits, it is possible that the first perf
-program will request again and this time it will get another callback
-with the same cookie. But at least it has a request between the last
-callback and the next one.
+Another solution could be to add another unwind mask of completed
+callbacks. Then we could use the fetch_or(). I guess that could look
+like this:
 
-That is, it would have:
+diff --git a/include/linux/unwind_deferred.h b/include/linux/unwind_deferred.h
+index 15045999c5e2..0124865aaab4 100644
+--- a/include/linux/unwind_deferred.h
++++ b/include/linux/unwind_deferred.h
+@@ -61,8 +61,10 @@ static __always_inline void unwind_reset_info(void)
+ 		} while (!try_cmpxchg(&info->unwind_mask, &bits, 0UL));
+ 		current->unwind_info.id.id = 0;
+ 
+-		if (unlikely(info->cache))
++		if (unlikely(info->cache)) {
+ 			info->cache->nr_entries = 0;
++			info->cache->unwind_completed = 0;
++		}
+ 	}
+ }
+ 
+diff --git a/include/linux/unwind_deferred_types.h b/include/linux/unwind_deferred_types.h
+index 5dc9cda141ff..33b62ac25c86 100644
+--- a/include/linux/unwind_deferred_types.h
++++ b/include/linux/unwind_deferred_types.h
+@@ -3,6 +3,7 @@
+ #define _LINUX_UNWIND_USER_DEFERRED_TYPES_H
+ 
+ struct unwind_cache {
++	unsigned long		unwind_completed;
+ 	unsigned int		nr_entries;
+ 	unsigned long		entries[];
+ };
+diff --git a/kernel/unwind/deferred.c b/kernel/unwind/deferred.c
+index 60cc71062f86..9a3e06ee9d63 100644
+--- a/kernel/unwind/deferred.c
++++ b/kernel/unwind/deferred.c
+@@ -170,13 +170,19 @@ static void process_unwind_deferred(struct task_struct *task)
+ 
+ 	unwind_user_faultable(&trace);
+ 
++	if (info->cache)
++		bits &= ~(info->cache->unwind_completed);
++
+ 	cookie = info->id.id;
+ 
+ 	guard(srcu_lite)(&unwind_srcu);
+ 	list_for_each_entry_srcu(work, &callbacks, list,
+ 				 srcu_read_lock_held(&unwind_srcu)) {
+-		if (test_bit(work->bit, &bits))
++		if (test_bit(work->bit, &bits)) {
+ 			work->func(work, &trace, cookie);
++			if (info->cache)
++				info->cache->unwind_completed |= BIT(work->bit);
++		}
+ 	}
+ }
+ 
+Instead of adding another long word in the tasks struct, I just use the
+unwind_cache that gets allocated on the first use.
 
-[Task enters kernel]
-  request -> add cookie
-  request -> add cookie
-  [..]
-  callback -> add trace + cookie
- [ftrace clears bits]
-  request -> add cookie
-  callback -> add trace + cookie
-[Task exits back to user space]
+I think this can work. I'll switch it over to this and then I can use
+the fetch_or() and there should be no extra callbacks, even if an
+already called callback is requested again after another callback was
+requested which would trigger another task work.
 
-Which shouldn't be too confusing. But if we just do the fetch_or and it
-didn't request a new trace, it would have:
-
-[Task enters kernel]
-  request -> add cookie
-  request -> add cookie
-  [..]
-  callback -> add trace + cookie
- [ftrace clears bits]
-  callback -> add trace + cookie
-[Task exits back to user space]
-
-Where there's two callbacks written to the perf buffer for the same
-request.
-
-Maybe this isn't a problem, but I was trying to avoid adding multiple
-requests due to other tracers affecting the state.
+I'll update this patch (and fold it into the bitmask patch) with the
+fetch_or() and create this patch as a separate patch that just gets rid
+of spurious callbacks.
 
 -- Steve
