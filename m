@@ -1,551 +1,324 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [160.30.148.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A35D433AC;
-	Wed, 16 Jul 2025 00:42:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F4EE1581EE;
+	Wed, 16 Jul 2025 02:00:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=160.30.148.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752626527; cv=none; b=h06FrlyjZAgs4V4jVgs56rUGe41usjVqCkzW8AnyV25z+WFmNm6kyPA8XMbh1+B5celnG6AiaUhhPWsrmwsoZ+NqSoV3pHmnyG+AK0zZcsVd9fL4deuijJgWfTvyDMabT8+VwKHP/md+nmdfgV+iumSbbaxnlsIVkmysZjnyrDE=
+	t=1752631226; cv=none; b=dPs9+gMcJbQQqGkS/YX30WNajD2CAZWKDBvNRXi6wxIED7RsVHbUztQNypWrRMb9mcrK5vUEXdLyQLTy3l0H8G2GwSjDVC8Vxa4nVTFAEpBz2eortNnQmslZBn/A7uQyAwqBNs8pQaa5QMtAhWxH6s/i6iFBEUm/iADgeHTbAU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752626527; c=relaxed/simple;
-	bh=FPw29N+czaIMsz9qfpoxf1jc3x2jzM/XQugMbs6Ihkk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hfPOmNTEMyOMoTjr8ZcoXDZ/1zZBwtl8gX/W9zIWrI8NDe2z/P7m1WBQKJkb24K5LmWqaBGSb1yJ8NWbYo5suw3IxJVgSTP6f+Q1m9Ut8IMWRb5j0y2VleRMuSCLM5lHZH5EsuPFR1UwZEZ+LOhCJZ2rqF3V46Prpg86UW55I4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fW/5IJhq; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fW/5IJhq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E28FC4CEE3;
-	Wed, 16 Jul 2025 00:42:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752626526;
-	bh=FPw29N+czaIMsz9qfpoxf1jc3x2jzM/XQugMbs6Ihkk=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=fW/5IJhqjIMShWey7CLQn1u0EkHK3hTSGTDyWoMP2jF5fLtdJSXuWZYp5pXBjq5zo
-	 bHlH2LokDslCP5mB+pPepgd1bnCq8guhQl2cSDTvKg/+wdUog4x/i4HvfQMlF9Dube
-	 n+T2A6VrAQoqcCCbxLYKW83Bwxmz8FtpyXssZerUKtLvoNkJSQId9McHSi3Bkgj6TH
-	 44qJy+b06fsLxh534f2XtpfenDKhjFGR64DV+ijpvSkruZG5kYDsXCtVPE46NgHbQP
-	 YOzx+kLNp7jqcZqA1TvrTUpHrdF3ouc74o/N7lPO3MazKolCZTdBukTTBsPwR/3yqO
-	 OvB0BFMyKjC8Q==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 3FE94CE0990; Tue, 15 Jul 2025 17:42:06 -0700 (PDT)
-Date: Tue, 15 Jul 2025 17:42:06 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Boqun Feng <boqun.feng@gmail.com>, linux-rt-devel@lists.linux.dev,
-	rcu@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Uladzislau Rezki <urezki@gmail.com>, Zqiang <qiang.zhang@linux.dev>
-Subject: Re: [RFC PATCH 1/2] rcu: Add rcu_read_lock_notrace()
-Message-ID: <5dc271c7-e5f8-470e-93e6-47fe02a53ed4@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <03083dee-6668-44bb-9299-20eb68fd00b8@paulmck-laptop>
- <fa80f087-d4ff-4499-aec9-157edafb85eb@paulmck-laptop>
- <29b5c215-7006-4b27-ae12-c983657465e1@efficios.com>
- <acb07426-db2f-4268-97e2-a9588c921366@paulmck-laptop>
- <ba0743dc-8644-4355-862b-d38a7791da4c@efficios.com>
- <512331d8-fdb4-4dc1-8d9b-34cc35ba48a5@paulmck-laptop>
- <bbe08cca-72c4-4bd2-a894-97227edcd1ad@efficios.com>
- <16dd7f3c-1c0f-4dfd-bfee-4c07ec844b72@paulmck-laptop>
- <2bc2c9cd-f1bf-4c9a-b722-256561082854@efficios.com>
- <b1b5d560-7c9b-4098-bb0f-469dcea4d8d6@paulmck-laptop>
+	s=arc-20240116; t=1752631226; c=relaxed/simple;
+	bh=UTPMJMXu3gVXw7OpSH5sp6TL7U+GSM+lvDW6DuVq6n0=;
+	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=acy3FZB5OKRSvrQua7id4STAdTKVTsflnwH3+SmIG7AhAj1kB7gxHStEhZaEn1ceJN8BnwgxkqCHFsbnuOIe00mckCYcxYL68WRjnw2RLa8g6OyaWZEYKabB3zqqmgyKAxBsGCYb2STUE6Wc9+Kh/a0broMOSRjqSLCsPr8PKs0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=160.30.148.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
+Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4bhfQT5tphz8R03y;
+	Wed, 16 Jul 2025 10:00:17 +0800 (CST)
+Received: from xaxapp02.zte.com.cn ([10.88.97.241])
+	by mse-fl1.zte.com.cn with SMTP id 56G205DB001099;
+	Wed, 16 Jul 2025 10:00:05 +0800 (+08)
+	(envelope-from fan.yu9@zte.com.cn)
+Received: from mapi (xaxapp05[null])
+	by mapi (Zmail) with MAPI id mid32;
+	Wed, 16 Jul 2025 10:00:06 +0800 (CST)
+Date: Wed, 16 Jul 2025 10:00:06 +0800 (CST)
+X-Zmail-TransId: 2afc687707a628c-d7b06
+X-Mailer: Zmail v1.0
+Message-ID: <20250716100006458kPWBPIJB6IdzWuUKlv4tF@zte.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b1b5d560-7c9b-4098-bb0f-469dcea4d8d6@paulmck-laptop>
+Mime-Version: 1.0
+From: <fan.yu9@zte.com.cn>
+To: <kuba@kernel.org>, <edumazet@google.com>, <ncardwell@google.com>,
+        <davem@davemloft.net>, <dsahern@kernel.org>, <pabeni@redhat.com>,
+        <horms@kernel.org>, <kuniyu@google.com>
+Cc: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>, <yang.yang29@zte.com.cn>,
+        <xu.xin16@zte.com.cn>, <tu.qiang35@zte.com.cn>,
+        <jiang.kun2@zte.com.cn>, <qiu.yutan@zte.com.cn>,
+        <wang.yaxin@zte.com.cn>, <he.peilin@zte.com.cn>
+Subject: =?UTF-8?B?W1BBVENIIG5ldC1uZXh0IHY2XSB0Y3A6IHRyYWNlIHJldHJhbnNtaXQgZmFpbHVyZXMgaW4gdGNwX3JldHJhbnNtaXRfc2ti?=
+Content-Type: text/plain;
+	charset="UTF-8"
+X-MAIL:mse-fl1.zte.com.cn 56G205DB001099
+X-Fangmail-Anti-Spam-Filtered: true
+X-Fangmail-MID-QID: 687707B1.001/4bhfQT5tphz8R03y
 
-On Tue, Jul 15, 2025 at 04:18:45PM -0700, Paul E. McKenney wrote:
-> On Tue, Jul 15, 2025 at 03:54:02PM -0400, Mathieu Desnoyers wrote:
-> > On 2025-07-11 13:05, Paul E. McKenney wrote:
-> > > On Fri, Jul 11, 2025 at 09:46:25AM -0400, Mathieu Desnoyers wrote:
-> > > > On 2025-07-09 14:33, Paul E. McKenney wrote:
-> > > > > On Wed, Jul 09, 2025 at 10:31:14AM -0400, Mathieu Desnoyers wrote:
-> 
-> First, do we have a well-defined repeat-by to reproduce this issue?
-> 
-> Failing that, do we have a well-defined problem statement?  This is
-> all I have thus far:
-> 
-> o	Disabling preemption at tracepoints causes problems for BPF.
-> 	(I have not yet checked this with the BFP folks, but last I knew
-> 	it was OK to attach BPF programs to preempt-disabled regions
-> 	of code, but perhaps this issue is specific to PREEMPT_RT.
-> 	Perhaps involving memory allocation.)
+From: Fan Yu <fan.yu9@zte.com.cn>
 
-However, I did run the following BPF program on an ARM server:
+Background
+==========
+When TCP retransmits a packet due to missing ACKs, the
+retransmission may fail for various reasons (e.g., packets
+stuck in driver queues, receiver zero windows, or routing issues).
 
-	bpftrace -e 'kfunc:rcu_note_context_switch { @func = count(); }'
+The original tcp_retransmit_skb tracepoint:
 
-This worked just fine, despite the fact that rcu_note_context_switch()
-is invoked not just with preemption disabled, but also with interrupts
-disabled.  This is admittedly not a CONFIG_PREEMPT_RT=y kernel, but it
-certainly supports my belief that BPF programs are intended to be able
-to be attached to preempt-disabled code.
+'commit e086101b150a ("tcp: add a tracepoint for tcp retransmission")'
 
-So please help me out here.  Exactly what breaks due to that
-guard(preempt_notrace)() in __DECLARE_TRACE()?
+lacks visibility into these failure causes, making production
+diagnostics difficult.
 
-(My guess?  BPF programs are required to be preemptible in kernels built
-with CONFIG_PREEMPT_RT(), and the bit about attaching BPF programs to
-non-preemptible code didn't come up.  Hey, it sounds like something
-I might do...)
+Solution
+========
+Adds the retval("err") to the tcp_retransmit_skb tracepoint.
+Enables users to know why some tcp retransmission failed and
+users can filter retransmission failures by retval.
 
-							Thanx, Paul
+Compatibility description
+=========================
+This patch extends the tcp_retransmit_skb tracepoint
+by adding a new "err" field at the end of its
+existing structure (within TP_STRUCT__entry). The
+compatibility implications are detailed as follows:
 
-> o	Thus, there is a desire to move tracepoints from using
-> 	preempt_disable_notrace() to a new rcu_read_lock_notrace()
-> 	whose required semantics I do not yet understand.  However,
-> 	from a first-principles RCU perspective, it must not unduly
-> 	delay expedited grace periods and RCU priority deboosting.
-> 	It also must not starve normal grace periods.
-> 
-> o	We clearly need to avoid destructive recursion in both tracepoints
-> 	and in BPF.
-> 
-> o	Apparently, the interval across which tracepoint/BPF recursion is
-> 	destructive extends beyond the proposed rcu_read_lock_notrace()
-> 	critical section.  (If so, how far beyond, and can the RCU reader
-> 	be extended to cover the full extent?  If not, why do we have
-> 	a problem?)
-> 
-> 	The definition of __DECLARE_TRACE looks to me like the RCU
-> 	reader does in fact cover the full extent of the region in
-> 	which (finite) recursion is destructive, at least given
-> 	Joel's aforementioned IRQ-work patch:
-> 
-> 	2e154d164418 ("rcu: Fix rcu_read_unlock() deadloop due to IRQ work")
-> 
-> 	Without that patch, yes, life is recursively hard.  So recursively
-> 	hard, in fact, that the recursion itself kills you before you
-> 	have a chance to die.
-> 
-> 	Except that, assuming that I understand this (ha!), we also need
-> 	to prevent rcu_read_unlock_special() from directly invoking
-> 	rcu_preempt_deferred_qs_irqrestore().  The usual PREEMPT_RT
-> 	configuration won't ever invoke raise_softirq_irqoff(), but
-> 	maybe other configurations will.  But there are similar issues
-> 	with irq_work_queue_on().
-> 
-> We have some non-problems:
-> 
-> o	If rcu_read_unlock() or one of its friends is invoked with a
-> 	scheduler lock held, then interrupts will be disabled, which
-> 	will cause rcu_read_unlock_special() to defer its calls into
-> 	the scheduler, for example, via IRQ work.
-> 
-> o	NMI safety is already provided.
-> 
-> Have you guys been working with anyone on the BPF team?  If so, I should
-> reach out to that person, if not, I should find someone in BPF-land to
-> reach out to.  They might have some useful feedback.
-> 
-> > [...]
-> > > > > 
-> > > > > Joel's patch, which is currently slated for the upcoming merge window,
-> > > > > should take care of the endless-IRQ-work recursion problem.  So the
-> > > > > main remaining issue is how rcu_read_unlock_special() should go about
-> > > > > safely invoking raise_softirq_irqoff() and irq_work_queue_on() when in
-> > > > > notrace mode.
-> > > > 
-> > > > Are those two functions only needed from the outermost rcu_read_unlock
-> > > > within a thread ? If yes, then keeping track of nesting level and
-> > > > preventing those calls in nested contexts (per thread) should work.
-> > > 
-> > > You lost me on this one.
-> > > 
-> > > Yes, these are invoked only by the outermost rcu_read_unlock{,_notrace}().
-> > > And we already have a nexting counter, current->rcu_read_lock_nesting.
-> > 
-> > But AFAIU those are invoked after decrementing the nesting counter,
-> > right ? So any instrumentation call done within those functions may
-> > end up doing a read-side critical section again.
-> 
-> They are indeed invoked after decrementing ->rcu_read_lock_nesting.
-> 
-> > > However...
-> > > 
-> > > If the tracing invokes an outermost rcu_read_unlock{,_notrace}(), then in
-> > > some contexts we absolutely need to invoke the raise_softirq_irqoff()
-> > > and irq_work_queue_on() functions, both of which are notrace functions.
-> > 
-> > I guess you mean "both of which are non-notrace functions", otherwise
-> > we would not be having this discussion.
-> > 
-> > > 
-> > > Or are you telling me that it is OK for a rcu_read_unlock_notrace()
-> > > to directly call these non-notrace functions?
-> > 
-> > What I am getting at is that it may be OK for the outermost nesting
-> > level of rcu_read_unlock_notrace() to call those non-notrace functions,
-> > but only if we manage to keep track of that nesting level while those
-> > non-notrace functions are called.
-> > 
-> > So AFAIU one issue here is that when the non-notrace functions are
-> > called, the nesting level is back to 0 already.
-> 
-> So you are worried about something like this?
-> 
-> 	rcu_read_unlock() -> rcu_read_unlock_special() ->
-> 	rcu_preempt_deferred_qs_irqrestore() -> *tracepoint* ->
-> 	rcu_read_unlock() -> rcu_read_unlock_special() ->
-> 	rcu_preempt_deferred_qs_irqrestore() -> *tracepoint* ->
-> 	rcu_read_unlock() -> rcu_read_unlock_special() ->
-> 	rcu_preempt_deferred_qs_irqrestore() -> *tracepoint* ->
-> 	rcu_read_unlock() -> rcu_read_unlock_special() ->
-> 	rcu_preempt_deferred_qs_irqrestore() -> *tracepoint* ->
-> 
-> And so on forever?
-> 
-> Ditto for irq_work_queue_on()?
-> 
-> > > > > > > > - Keep some nesting count in the task struct to prevent calling the
-> > > > > > > >      instrumentation when nested in notrace,
-> > > > > > > 
-> > > > > > > OK, for this one, is the idea to invoke some TBD RCU API the tracing
-> > > > > > > exits the notrace region?  I could see that working.  But there would
-> > > > > > > need to be a guarantee that if the notrace API was invoked, a call to
-> > > > > > > this TBD RCU API would follow in short order.  And I suspect that
-> > > > > > > preemption (and probably also interrupts) would need to be disabled
-> > > > > > > across this region.
-> > > > > > 
-> > > > > > No quite.
-> > > > > > 
-> > > > > > What I have in mind is to try to find the most elegant way to prevent
-> > > > > > endless recursion of the irq work issued immediately on
-> > > > > > rcu_read_unlock_notrace without slowing down most fast paths, and
-> > > > > > ideally without too much code duplication.
-> > > > > > 
-> > > > > > I'm not entirely sure what would be the best approach though.
-> > > > > 
-> > > > > Joel's patch adjusts use of the rcu_data structure's ->defer_qs_iw_pending
-> > > > > flag, so that it is cleared not in the IRQ-work handler, but
-> > > > > instead in rcu_preempt_deferred_qs_irqrestore().  That prevents
-> > > > > rcu_read_unlock_special() from requeueing the IRQ-work handler until
-> > > > > after the previous request for a quiescent state has been satisfied.
-> > > > > 
-> > > > > So my main concern is again safely invoking raise_softirq_irqoff()
-> > > > > and irq_work_queue_on() when in notrace mode.
-> > > > 
-> > > > Would the nesting counter (per thread) approach suffice for your use
-> > > > case ?
-> > > 
-> > > Over and above the t->rcu_read_lock_nesting that we already use?
-> > > As in only the outermost rcu_read_unlock{,_notrace}() will invoke
-> > > rcu_read_unlock_special().
-> > > 
-> > > OK, let's look at a couple of scenarios.
-> > > 
-> > > First, suppose that we apply Joel's patch above, and someone sets a trace
-> > > point in task context outside of any RCU read-side critical section.
-> > > Suppose further that this task is preempted in the tracepoint's RCU
-> > > read-side critical section, and that RCU priority boosting is applied.
-> > > 
-> > > This trace point will invoke rcu_read_unlock{,_notrace}(), which
-> > > will in turn invoke rcu_read_unlock_special(), which will in turn
-> > > will note that preemption, interrupts, and softirqs are all enabled.
-> > > It will therefore directly invoke rcu_preempt_deferred_qs_irqrestore(),
-> > > a non-notrace function, which can in turn invoke all sorts of interesting
-> > > functions involving locking, the scheduler, ...
-> > > 
-> > > Is this OK, or should I set some sort of tracepoint recursion flag?
-> > 
-> > Or somehow modify the semantic of t->rcu_read_lock_nesting if at all
-> > possible. Rather than decrementing it first and then if 0 invoke
-> > a rcu_read_unlock_special, it could perhaps invoke
-> > rcu_read_unlock_special if the nesting counter is _about to be
-> > decremented from 1 to 0_, and then decrement to 0. This would
-> > hopefully prevent recursion.
-> > 
-> > But I may be entirely misunderstanding the whole problem. If so,
-> > please let me know!
-> > 
-> > And if for some reason is really needs to be decremented before
-> > calling rcu_read_unlock_special, then we can have the following:
-> > when exiting the outermost critical section, it could be decremented
-> > from 2 to 1, then call rcu_read_unlock_special, after which it's
-> > decremented to 0. The outermost read lock increment would have to
-> > be adapted accordingly. But this would add overhead on the fast-paths,
-> > which may be frowned upon.
-> > 
-> > The idea here is to keep tracking the fact that we are within the
-> > execution of rcu_read_unlock_special, so it does not call it again
-> > recursively, even though we are technically not nested within a
-> > read-side critical section anymore.
-> 
-> Heh!  Some years back, rcu_read_unlock() used to do exactly that.
-> This changed in 2020 with this commit:
-> 
-> 5f5fa7ea89dc ("rcu: Don't use negative nesting depth in __rcu_read_unlock()")
-> 
-> Quoting the commit log: "it is no longer necessary for __rcu_read_unlock()
-> to set the nesting level negative."
-> 
-> No longer necessary until now, perhaps?
-> 
-> How to revert this puppy?  Let's see...
-> 
-> The addition of "depth" to rcu_exp_handler() can stay, but that last hunk
-> needs to be restored.  And the rcu_data structure's ->exp_deferred_qs
-> might need to come back.  Ah, but it is now ->cpu_no_qs.b.exp in that
-> same structure.  So should be fine.  (Famous last words.)
-> 
-> And rcu_dynticks_curr_cpu_in_eqs() is no longer with us.  I believe that
-> it is now named !rcu_is_watching_curr_cpu(), but Frederic would know best.
-> 
-> On to kernel/rcu/tree_plugin.h...
-> 
-> We need RCU_NEST_BIAS and RCU_NEST_NMAX back.  Do we want to revert
-> the change to __rcu_read_unlock() or just leave it alone (for the
-> performance benefit, miniscule though it might be) and create an
-> __rcu_read_unlock_notrace()?  The former is simpler, especially
-> from an rcutorture testing viewpoint.  So the former it is, unless
-> and until someone like Lai Jiangshan (already CCed) can show a
-> strong need.  This would require an rcu_read_unlock_notrace() and an
-> __rcu_read_unlock_notrace(), with near-duplicate code.  Not a disaster,
-> but let's do it only if we really need it.
-> 
-> So put rcu_preempt_read_exit() back the way it was, and ditto for
-> __rcu_read_unlock(), rcu_preempt_need_deferred_qs(), and
-> rcu_flavor_sched_clock_irq().
-> 
-> Note that RCU_NEST_PMAX stayed and is still checked in __rcu_read_lock(),
-> so that part remained.
-> 
-> Give or take the inevitable bugs.  Initial testing is in progress.
-> 
-> The initial patch may be found at the end of this email, but it should
-> be used for entertainment purposes only.
-> 
-> > > Second, suppose that we apply Joel's patch above, and someone sets a trace
-> > > point in task context outside of an RCU read-side critical section, but in
-> > > an preemption-disabled region of code.  Suppose further that this code is
-> > > delayed, perhaps due to a flurry of interrupts, so that a scheduling-clock
-> > > interrupt sets t->rcu_read_unlock_special.b.need_qs to true.
-> > > 
-> > > This trace point will invoke rcu_read_unlock{,_notrace}(), which will
-> > > note that preemption is disabled.  If rcutree.use_softirq is set and
-> > > this task is blocking an expedited RCU grace period, it will directly
-> > > invoke the non-notrace function raise_softirq_irqoff().  Otherwise,
-> > > it will directly invoke the non-notrace function irq_work_queue_on().
-> > > 
-> > > Is this OK, or should I set some sort of tracepoint recursion flag?
-> > 
-> > Invoking instrumentation from the implementation of instrumentation
-> > is a good recipe for endless recursion, so we'd need to check for
-> > recursion somehow there as well AFAIU.
-> 
-> Agreed, it could get ugly.
-> 
-> > > There are other scenarios, but they require interrupts to be disabled
-> > > across the rcu_read_unlock{,_notrace}(), but to have been enabled somewhere
-> > > in the just-ended RCU read-side critical section.  It does not look to
-> > > me like tracing does this.  But I might be missing something.  If so,
-> > > we have more scenarios to think through.  ;-)
-> > 
-> > I don't see a good use-case for that kind of scenario though. But I may
-> > simply be lacking imagination.
-> 
-> There was a time when there was an explicit rule against it, so yes,
-> they have existed in the past.  If they exist now, that is OK.
-> 
-> > > > > > > > There are probably other possible approaches I am missing, each with
-> > > > > > > > their respective trade offs.
-> > > > > > > 
-> > > > > > > I am pretty sure that we also have some ways to go before we have the
-> > > > > > > requirements fully laid out, for that matter.  ;-)
-> > > > > > > 
-> > > > > > > Could you please tell me where in the current tracing code these
-> > > > > > > rcu_read_lock_notrace()/rcu_read_unlock_notrace() calls would be placed?
-> > > > > > 
-> > > > > > AFAIU here:
-> > > > > > 
-> > > > > > include/linux/tracepoint.h:
-> > > > > > 
-> > > > > > #define __DECLARE_TRACE(name, proto, args, cond, data_proto) [...]
-> > > > > > 
-> > > > > >           static inline void __do_trace_##name(proto)                     \
-> > > > > >           {                                                               \
-> > > > > >                   if (cond) {                                             \
-> > > > > >                           guard(preempt_notrace)();                       \
-> > > > > >                           __DO_TRACE_CALL(name, TP_ARGS(args));           \
-> > > > > >                   }                                                       \
-> > > > > >           }                                                               \
-> > > > > >           static inline void trace_##name(proto)                          \
-> > > > > >           {                                                               \
-> > > > > >                   if (static_branch_unlikely(&__tracepoint_##name.key))   \
-> > > > > >                           __do_trace_##name(args);                        \
-> > > > > >                   if (IS_ENABLED(CONFIG_LOCKDEP) && (cond)) {             \
-> > > > > >                           WARN_ONCE(!rcu_is_watching(),                   \
-> > > > > >                                     "RCU not watching for tracepoint");   \
-> > > > > >                   }                                                       \
-> > > > > >           }
-> > > > > > 
-> > > > > > and
-> > > > > > 
-> > > > > > #define __DECLARE_TRACE_SYSCALL(name, proto, args, data_proto) [...]
-> > > > > > 
-> > > > > >           static inline void __do_trace_##name(proto)                     \
-> > > > > >           {                                                               \
-> > > > > >                   guard(rcu_tasks_trace)();                               \
-> > > > > >                   __DO_TRACE_CALL(name, TP_ARGS(args));                   \
-> > > > > >           }                                                               \
-> > > > > >           static inline void trace_##name(proto)                          \
-> > > > > >           {                                                               \
-> > > > > >                   might_fault();                                          \
-> > > > > >                   if (static_branch_unlikely(&__tracepoint_##name.key))   \
-> > > > > >                           __do_trace_##name(args);                        \
-> > > > > >                   if (IS_ENABLED(CONFIG_LOCKDEP)) {                       \
-> > > > > >                           WARN_ONCE(!rcu_is_watching(),                   \
-> > > > > >                                     "RCU not watching for tracepoint");   \
-> > > > > >                   }                                                       \
-> > > > > >           }
-> > > > > 
-> > > > > I am not seeing a guard(rcu)() in here, only guard(preempt_notrace)()
-> > > > > and guard(rcu_tasks_trace)().  Or is the idea to move the first to
-> > > > > guard(rcu_notrace)() in order to improve PREEMPT_RT latency?
-> > > > 
-> > > > AFAIU the goal here is to turn the guard(preempt_notrace)() into a
-> > > > guard(rcu_notrace)() because the preempt-off critical sections don't
-> > > > agree with BPF.
-> > > 
-> > > OK, got it, thank you!
-> > > 
-> > > The combination of BPF and CONFIG_PREEMPT_RT certainly has provided at
-> > > least its share of entertainment, that is for sure.  ;-)
-> > 
-> > There is indeed no shortage of entertainment when combining those rather
-> > distinct sets of requirements. :)
-> 
-> I am sure that Mr. Murphy has more entertainment in store for all of us.
-> 
-> 							Thanx, Paul
-> 
-> ------------------------------------------------------------------------
-> 
-> diff --git a/kernel/rcu/tree_exp.h b/kernel/rcu/tree_exp.h
-> index 076ad61e42f4a..33bed40f2b024 100644
-> --- a/kernel/rcu/tree_exp.h
-> +++ b/kernel/rcu/tree_exp.h
-> @@ -805,8 +805,32 @@ static void rcu_exp_handler(void *unused)
->  		return;
->  	}
->  
-> -	// Fourth and finally, negative nesting depth should not happen.
-> -	WARN_ON_ONCE(1);
-> +	/*
-> +	 * The final and least likely case is where the interrupted
-> +	 * code was just about to or just finished exiting the
-> +	 * RCU-preempt read-side critical section when using
-> +	 * rcu_read_unlock_notrace(), and no, we can't tell which.
-> +	 * So either way, set ->cpu_no_qs.b.exp to flag later code that
-> +	 * a quiescent state is required.
-> +	 *
-> +	 * If the CPU has preemption and softirq enabled (or if some
-> +	 * buggy no-trace RCU-preempt read-side critical section is
-> +	 * being used from idle), just invoke rcu_preempt_deferred_qs()
-> +	 * to immediately report the quiescent state.  We cannot use
-> +	 * rcu_read_unlock_special() because we are in an interrupt handler,
-> +	 * which will cause that function to take an early exit without
-> +	 * doing anything.
-> +	 *
-> +	 * Otherwise, force a context switch after the CPU enables everything.
-> +	 */
-> +	rdp->cpu_no_qs.b.exp = true;
-> +	if (!(preempt_count() & (PREEMPT_MASK | SOFTIRQ_MASK)) ||
-> +	    WARN_ON_ONCE(!rcu_is_watching_curr_cpu())) {
-> +		rcu_preempt_deferred_qs(t);
-> +	} else {
-> +		set_tsk_need_resched(t);
-> +		set_preempt_need_resched();
-> +	}
->  }
->  
->  /*
-> diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-> index 1ee0d34ec333a..4becfe51e0e14 100644
-> --- a/kernel/rcu/tree_plugin.h
-> +++ b/kernel/rcu/tree_plugin.h
-> @@ -383,6 +383,9 @@ static int rcu_preempt_blocked_readers_cgp(struct rcu_node *rnp)
->  	return READ_ONCE(rnp->gp_tasks) != NULL;
->  }
->  
-> +/* Bias and limit values for ->rcu_read_lock_nesting. */
-> +#define RCU_NEST_BIAS INT_MAX
-> +#define RCU_NEST_NMAX (-INT_MAX / 2)
->  /* limit value for ->rcu_read_lock_nesting. */
->  #define RCU_NEST_PMAX (INT_MAX / 2)
->  
-> @@ -391,12 +394,10 @@ static void rcu_preempt_read_enter(void)
->  	WRITE_ONCE(current->rcu_read_lock_nesting, READ_ONCE(current->rcu_read_lock_nesting) + 1);
->  }
->  
-> -static int rcu_preempt_read_exit(void)
-> +static void rcu_preempt_read_exit(void)
->  {
-> -	int ret = READ_ONCE(current->rcu_read_lock_nesting) - 1;
->  
-> -	WRITE_ONCE(current->rcu_read_lock_nesting, ret);
-> -	return ret;
-> +	WRITE_ONCE(current->rcu_read_lock_nesting, READ_ONCE(current->rcu_read_lock_nesting) - 1);
->  }
->  
->  static void rcu_preempt_depth_set(int val)
-> @@ -431,16 +432,22 @@ void __rcu_read_unlock(void)
->  {
->  	struct task_struct *t = current;
->  
-> -	barrier();  // critical section before exit code.
-> -	if (rcu_preempt_read_exit() == 0) {
-> -		barrier();  // critical-section exit before .s check.
-> +	if (rcu_preempt_depth() != 1) {
-> +		rcu_preempt_read_exit();
-> +	} else {
-> +		barrier();  // critical section before exit code.
-> +		rcu_preempt_depth_set(-RCU_NEST_BIAS);
-> +		barrier();  // critical section before ->rcu_read_unlock_special load
->  		if (unlikely(READ_ONCE(t->rcu_read_unlock_special.s)))
->  			rcu_read_unlock_special(t);
-> +		barrier();  // ->rcu_read_unlock_special load before assignment
-> +		rcu_preempt_depth_set(0);
->  	}
->  	if (IS_ENABLED(CONFIG_PROVE_LOCKING)) {
->  		int rrln = rcu_preempt_depth();
->  
-> -		WARN_ON_ONCE(rrln < 0 || rrln > RCU_NEST_PMAX);
-> +		WARN_ON_ONCE(rrln < 0 && rrln > RCU_NEST_NMAX);
-> +		WARN_ON_ONCE(rrln > RCU_NEST_PMAX);
->  	}
->  }
->  EXPORT_SYMBOL_GPL(__rcu_read_unlock);
-> @@ -601,7 +608,7 @@ static notrace bool rcu_preempt_need_deferred_qs(struct task_struct *t)
->  {
->  	return (__this_cpu_read(rcu_data.cpu_no_qs.b.exp) ||
->  		READ_ONCE(t->rcu_read_unlock_special.s)) &&
-> -	       rcu_preempt_depth() == 0;
-> +	       rcu_preempt_depth() <= 0;
->  }
->  
->  /*
-> @@ -755,8 +762,8 @@ static void rcu_flavor_sched_clock_irq(int user)
->  	} else if (rcu_preempt_need_deferred_qs(t)) {
->  		rcu_preempt_deferred_qs(t); /* Report deferred QS. */
->  		return;
-> -	} else if (!WARN_ON_ONCE(rcu_preempt_depth())) {
-> -		rcu_qs(); /* Report immediate QS. */
-> +	} else if (!rcu_preempt_depth()) {
-> +		rcu_qs(); /* On our way out anyway, so report immediate QS. */
->  		return;
->  	}
->  
+1) Structural compatibility for legacy user-space tools
+Legacy tools/BPF programs accessing existing fields
+(by offset or name) can still work without modification
+or recompilation.The new field is appended to the end,
+preserving original memory layout.
+
+2) Note: semantic changes
+The original tracepoint primarily only focused on
+successfully retransmitted packets. With this patch,
+the tracepoint now can figure out packets that may
+terminate early due to specific reasons. For accurate
+statistics, users should filter using "err" to
+distinguish outcomes.
+
+Before patched:
+# cat /sys/kernel/debug/tracing/events/tcp/tcp_retransmit_skb/format
+field:const void * skbaddr; offset:8; size:8; signed:0;
+field:const void * skaddr; offset:16; size:8; signed:0;
+field:int state; offset:24; size:4; signed:1;
+field:__u16 sport; offset:28; size:2; signed:0;
+field:__u16 dport; offset:30; size:2; signed:0;
+field:__u16 family; offset:32; size:2; signed:0;
+field:__u8 saddr[4]; offset:34; size:4; signed:0;
+field:__u8 daddr[4]; offset:38; size:4; signed:0;
+field:__u8 saddr_v6[16]; offset:42; size:16; signed:0;
+field:__u8 daddr_v6[16]; offset:58; size:16; signed:0;
+
+print fmt: "skbaddr=%p skaddr=%p family=%s sport=%hu dport=%hu saddr=%pI4 daddr=%pI4 saddrv6=%pI6c daddrv6=%pI6c state=%s"
+
+After patched:
+# cat /sys/kernel/debug/tracing/events/tcp/tcp_retransmit_skb/format
+field:const void * skbaddr; offset:8; size:8; signed:0;
+field:const void * skaddr; offset:16; size:8; signed:0;
+field:int state; offset:24; size:4; signed:1;
+field:__u16 sport; offset:28; size:2; signed:0;
+field:__u16 dport; offset:30; size:2; signed:0;
+field:__u16 family; offset:32; size:2; signed:0;
+field:__u8 saddr[4]; offset:34; size:4; signed:0;
+field:__u8 daddr[4]; offset:38; size:4; signed:0;
+field:__u8 saddr_v6[16]; offset:42; size:16; signed:0;
+field:__u8 daddr_v6[16]; offset:58; size:16; signed:0;
+field:int err; offset:76; size:4; signed:1;
+
+print fmt: "skbaddr=%p skaddr=%p family=%s sport=%hu dport=%hu saddr=%pI4 daddr=%pI4 saddrv6=%pI6c daddrv6=%pI6c state=%s err=%d"
+
+Suggested-by: KuniyukiIwashima <kuniyu@google.com>
+Suggested-by: Jakub Kicinski <kuba@kernel.org>
+Suggested-by: Eric Dumazet <edumazet@google.com>
+Co-developed-by: xu xin <xu.xin16@zte.com.cn>
+Signed-off-by: xu xin <xu.xin16@zte.com.cn>
+Signed-off-by: Fan Yu <fan.yu9@zte.com.cn>
+---
+Change Log
+=========
+v5->v6:
+Some fixes according to
+https://lore.kernel.org/all/20250715183335.860529-1-kuniyu@google.com/
+1. fixed HTML entity conversion in email and adjusted error counting logic.
+
+v4->v5:
+Some fixes according to
+https://lore.kernel.org/all/20250715072058.12f343bb@kernel.org/
+1. Instead of introducing new TCP_RETRANS_* enums, directly
+passing the retval to the tracepoint.
+
+v3->v4:
+Some fixes according to
+https://lore.kernel.org/all/CANn89i+JGSt=_CtWfhDXypWW-34a6SoP3RAzWQ9B9VL4+PHjDw@mail.gmail.com/
+1. Consolidate ENOMEMs into a unified TCP_RETRANS_NOMEM.
+
+v2->v3:
+Some fixes according to
+https://lore.kernel.org/all/CANn89iJvyYjiweCESQL8E-Si7M=gosYvh1BAVWwAWycXW8GSdg@mail.gmail.com/
+1. Rename "quit_reason" to "result". Also, keep "key=val" format concise(no space in vals).
+
+v1->v2:
+Some fixes according to
+https://lore.kernel.org/all/CANn89iK-6kT-ZUpNRMjPY9_TkQj-dLuKrDQtvO1140q4EUsjFg@mail.gmail.com/
+1.Rename TCP_RETRANS_QUIT_UNDEFINED to TCP_RETRANS_ERR_DEFAULT.
+2.Added detailed compatibility consequences section.
+
+ include/trace/events/tcp.h | 27 ++++++++--------------
+ net/ipv4/tcp_output.c      | 46 ++++++++++++++++++++++++--------------
+ 2 files changed, 38 insertions(+), 35 deletions(-)
+
+diff --git a/include/trace/events/tcp.h b/include/trace/events/tcp.h
+index 54e60c6009e3..9d2c36c6a0ed 100644
+--- a/include/trace/events/tcp.h
++++ b/include/trace/events/tcp.h
+@@ -13,17 +13,11 @@
+ #include <linux/sock_diag.h>
+ #include <net/rstreason.h>
+
+-/*
+- * tcp event with arguments sk and skb
+- *
+- * Note: this class requires a valid sk pointer; while skb pointer could
+- *       be NULL.
+- */
+-DECLARE_EVENT_CLASS(tcp_event_sk_skb,
++TRACE_EVENT(tcp_retransmit_skb,
+
+-	TP_PROTO(const struct sock *sk, const struct sk_buff *skb),
++	TP_PROTO(const struct sock *sk, const struct sk_buff *skb, int err),
+
+-	TP_ARGS(sk, skb),
++	TP_ARGS(sk, skb, err),
+
+ 	TP_STRUCT__entry(
+ 		__field(const void *, skbaddr)
+@@ -36,6 +30,7 @@ DECLARE_EVENT_CLASS(tcp_event_sk_skb,
+ 		__array(__u8, daddr, 4)
+ 		__array(__u8, saddr_v6, 16)
+ 		__array(__u8, daddr_v6, 16)
++		__field(int, err)
+ 	),
+
+ 	TP_fast_assign(
+@@ -58,21 +53,17 @@ DECLARE_EVENT_CLASS(tcp_event_sk_skb,
+
+ 		TP_STORE_ADDRS(__entry, inet->inet_saddr, inet->inet_daddr,
+ 			      sk->sk_v6_rcv_saddr, sk->sk_v6_daddr);
++
++		__entry->err = err;
+ 	),
+
+-	TP_printk("skbaddr=%p skaddr=%p family=%s sport=%hu dport=%hu saddr=%pI4 daddr=%pI4 saddrv6=%pI6c daddrv6=%pI6c state=%s",
++	TP_printk("skbaddr=%p skaddr=%p family=%s sport=%hu dport=%hu saddr=%pI4 daddr=%pI4 saddrv6=%pI6c daddrv6=%pI6c state=%s err=%d",
+ 		  __entry->skbaddr, __entry->skaddr,
+ 		  show_family_name(__entry->family),
+ 		  __entry->sport, __entry->dport, __entry->saddr, __entry->daddr,
+ 		  __entry->saddr_v6, __entry->daddr_v6,
+-		  show_tcp_state_name(__entry->state))
+-);
+-
+-DEFINE_EVENT(tcp_event_sk_skb, tcp_retransmit_skb,
+-
+-	TP_PROTO(const struct sock *sk, const struct sk_buff *skb),
+-
+-	TP_ARGS(sk, skb)
++		  show_tcp_state_name(__entry->state),
++		  __entry->err)
+ );
+
+ #undef FN
+diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
+index b616776e3354..caf11920a878 100644
+--- a/net/ipv4/tcp_output.c
++++ b/net/ipv4/tcp_output.c
+@@ -3330,8 +3330,10 @@ int __tcp_retransmit_skb(struct sock *sk, struct sk_buff *skb, int segs)
+ 	if (icsk->icsk_mtup.probe_size)
+ 		icsk->icsk_mtup.probe_size = 0;
+
+-	if (skb_still_in_host_queue(sk, skb))
+-		return -EBUSY;
++	if (skb_still_in_host_queue(sk, skb)) {
++		err = -EBUSY;
++		goto out;
++	}
+
+ start:
+ 	if (before(TCP_SKB_CB(skb)->seq, tp->snd_una)) {
+@@ -3342,14 +3344,19 @@ int __tcp_retransmit_skb(struct sock *sk, struct sk_buff *skb, int segs)
+ 		}
+ 		if (unlikely(before(TCP_SKB_CB(skb)->end_seq, tp->snd_una))) {
+ 			WARN_ON_ONCE(1);
+-			return -EINVAL;
++			err = -EINVAL;
++			goto out;
++		}
++		if (tcp_trim_head(sk, skb, tp->snd_una - TCP_SKB_CB(skb)->seq)) {
++			err = -ENOMEM;
++			goto out;
+ 		}
+-		if (tcp_trim_head(sk, skb, tp->snd_una - TCP_SKB_CB(skb)->seq))
+-			return -ENOMEM;
+ 	}
+
+-	if (inet_csk(sk)->icsk_af_ops->rebuild_header(sk))
+-		return -EHOSTUNREACH; /* Routing failure or similar. */
++	if (inet_csk(sk)->icsk_af_ops->rebuild_header(sk)) {
++		err = -EHOSTUNREACH; /* Routing failure or similar. */
++		goto out;
++	}
+
+ 	cur_mss = tcp_current_mss(sk);
+ 	avail_wnd = tcp_wnd_end(tp) - TCP_SKB_CB(skb)->seq;
+@@ -3360,8 +3367,10 @@ int __tcp_retransmit_skb(struct sock *sk, struct sk_buff *skb, int segs)
+ 	 * our retransmit of one segment serves as a zero window probe.
+ 	 */
+ 	if (avail_wnd <= 0) {
+-		if (TCP_SKB_CB(skb)->seq != tp->snd_una)
+-			return -EAGAIN;
++		if (TCP_SKB_CB(skb)->seq != tp->snd_una) {
++			err = -EAGAIN;
++			goto out;
++		}
+ 		avail_wnd = cur_mss;
+ 	}
+
+@@ -3373,11 +3382,15 @@ int __tcp_retransmit_skb(struct sock *sk, struct sk_buff *skb, int segs)
+ 	}
+ 	if (skb->len > len) {
+ 		if (tcp_fragment(sk, TCP_FRAG_IN_RTX_QUEUE, skb, len,
+-				 cur_mss, GFP_ATOMIC))
+-			return -ENOMEM; /* We'll try again later. */
++				 cur_mss, GFP_ATOMIC)) {
++			err = -ENOMEM;  /* We'll try again later. */
++			goto out;
++		}
+ 	} else {
+-		if (skb_unclone_keeptruesize(skb, GFP_ATOMIC))
+-			return -ENOMEM;
++		if (skb_unclone_keeptruesize(skb, GFP_ATOMIC)) {
++			err = -ENOMEM;
++			goto out;
++		}
+
+ 		diff = tcp_skb_pcount(skb);
+ 		tcp_set_skb_tso_segs(skb, cur_mss);
+@@ -3431,17 +3444,16 @@ int __tcp_retransmit_skb(struct sock *sk, struct sk_buff *skb, int segs)
+ 		tcp_call_bpf_3arg(sk, BPF_SOCK_OPS_RETRANS_CB,
+ 				  TCP_SKB_CB(skb)->seq, segs, err);
+
+-	if (likely(!err)) {
+-		trace_tcp_retransmit_skb(sk, skb);
+-	} else if (err != -EBUSY) {
++	if (unlikely(err) && err != -EBUSY)
+ 		NET_ADD_STATS(sock_net(sk), LINUX_MIB_TCPRETRANSFAIL, segs);
+-	}
+
+ 	/* To avoid taking spuriously low RTT samples based on a timestamp
+ 	 * for a transmit that never happened, always mark EVER_RETRANS
+ 	 */
+ 	TCP_SKB_CB(skb)->sacked |= TCPCB_EVER_RETRANS;
+
++out:
++	trace_tcp_retransmit_skb(sk, skb, err);
+ 	return err;
+ }
+
+-- 
+2.25.1
