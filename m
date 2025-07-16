@@ -1,47 +1,62 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B9A12857F1;
-	Wed, 16 Jul 2025 22:25:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A6842ECD20;
+	Wed, 16 Jul 2025 22:54:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752704735; cv=none; b=Vi89Ek+nkTPfUhjQbLe/KuoTavxJXjnunF5nfEe9WFVOgygqz3LQi8fCDJLrULMwW0Mh777eHRA7dihE44KB8N50sAUmwDj6w5rD/rs4xDaKDk9UKI3bjbKKziy0FzFgAYG5cxojlFzzmFC1b2NQH7Z0KeEARV/ZB1fOKz5fqsI=
+	t=1752706450; cv=none; b=nFVVGl79jZZ8DUrLS+trOw6THdjOzWwUS1u0OUMtx7Ua9vTHKM6g/aFgjoyJXBdo34KwVmUmUhHAKNNeKP+hNWt3a5Yt5nUpLuEE+3kAl6e0EKRqZu4aYpV0YH/VqR61LTan6AYUMjgLgQDA2mwAJnBrJ43qf9NgCeFtpztHW1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752704735; c=relaxed/simple;
-	bh=b8p1yGebBghXJBd69Xqts/21wlzTMjRSUIp9WAfmGtg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=jyYVPHWL89PwecH6K91LowoTOM8EodJqf4Q7P7uV2jtadSDRhsNy1xn1Lbzu7zNuQaLX5eLKm4fpYsetOqr2S/fE0xuSxYda8MyXzYeFIHCAYxEWyBoswSUkmzXb1Axl9Pc4DjfP+dDrHGYXo4++Sgb0dHmuPlppXOEZGpGRdBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bLa6uDZJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1752706450; c=relaxed/simple;
+	bh=yfzNXSLEet/ozAka1MegbatwkYG8Gl2CaQVRC9/ion4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GjO6AgC1nGgsWEmoZhPc7kZQMWm0Fnzl8GYTd5kHAks3gUHypc9cALYiaDS9Cah7cxJMKISVnPrSdv0O4kY0DJS/Vu2LqDPURuGtkhPUS/OoDQjr6qEVeu+sQhpvYc/yFDwpM2iwet2wMxQQfz1Wh0YVFuQscMrEjMXrS0pDq7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SaDvWYKN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bLa6uDZJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 950FDC4CEE7;
-	Wed, 16 Jul 2025 22:25:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SaDvWYKN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E67A9C4CEE7;
+	Wed, 16 Jul 2025 22:54:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752704734;
-	bh=b8p1yGebBghXJBd69Xqts/21wlzTMjRSUIp9WAfmGtg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=bLa6uDZJw2dw2YRoHZuZEC1yP+RL5rzv8+TnUCg2Uh21tacQ6b1HvrQEUhwOjYwgg
-	 mC624E72HRNtB8vQGOzncBEK0d0FVrGUC4b2eYeUXLZOSD5SX1uRSD+7riCQ6FiAtw
-	 FmSAsFiqCecAH6Cb9qmsQKas/w+wM+eFAvvhYZpOzieQQDLCupaowiwQrTkeqO02bg
-	 jd0FqxrHvZk1gyMncqry/8hYSseU9OQviSsPPzbVJRFT5ZmOkZ8z+wcZd+4OlW+pHM
-	 aqBt9yJ/vMXLCDUWFWfLQce9U466WyajVpKhsKTCr6g9iBrB3KNDwwFgq6b69JpuVe
-	 YVNmiRkjioaPw==
-Date: Wed, 16 Jul 2025 17:25:33 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Shuai Xue <xueshuai@linux.alibaba.com>
-Cc: rostedt@goodmis.org, lukas@wunner.de, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, bhelgaas@google.com,
-	tony.luck@intel.com, bp@alien8.de, mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com, oleg@redhat.com, naveen@kernel.org,
-	davem@davemloft.net, anil.s.keshavamurthy@intel.com,
-	mark.rutland@arm.com, peterz@infradead.org,
-	tianruidong@linux.alibaba.com,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCH v8] PCI: hotplug: Add a generic RAS tracepoint for
- hotplug event
-Message-ID: <20250716222533.GA2559636@bhelgaas>
+	s=k20201202; t=1752706450;
+	bh=yfzNXSLEet/ozAka1MegbatwkYG8Gl2CaQVRC9/ion4=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=SaDvWYKN+Tggn7QKHU7+7Rb9XP2vc6meb0REu0tbfX/FU/Iz/6fndqLBO2FYJebiW
+	 SuEyAX+GIIzLHr4u7Wkbt0xkdadaUMkOUW7f4TEKC7iKoq3VsXwYG21/6Xo+RqOajm
+	 LQ6sWSjo3+moww+RU99FX5E+hKoq0g31/2fLrKXe8zZLal635N3H5Jm6iFvTNLb1j+
+	 q+Knp8C8/h+q78Nxfppp7BEWE+/7fHTOOPyWb3xBVZPj6jECMWfTW+LjnFYSTTR8u3
+	 sTFy4+AZUp+yynjp4KhzZyPoPq9rGtLdN8me2BtdiXEAUFMG8sqK0YYkpkN0mpdhHi
+	 SevoeX0oRDkDg==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 88B97CE09C2; Wed, 16 Jul 2025 15:54:09 -0700 (PDT)
+Date: Wed, 16 Jul 2025 15:54:09 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Boqun Feng <boqun.feng@gmail.com>, linux-rt-devel@lists.linux.dev,
+	rcu@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Uladzislau Rezki <urezki@gmail.com>, Zqiang <qiang.zhang@linux.dev>,
+	bpf@vger.kernel.org
+Subject: Re: [RFC PATCH 1/2] rcu: Add rcu_read_lock_notrace()
+Message-ID: <bb20a575-235b-499e-aa1d-70fe9e2c7617@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <03083dee-6668-44bb-9299-20eb68fd00b8@paulmck-laptop>
+ <fa80f087-d4ff-4499-aec9-157edafb85eb@paulmck-laptop>
+ <29b5c215-7006-4b27-ae12-c983657465e1@efficios.com>
+ <acb07426-db2f-4268-97e2-a9588c921366@paulmck-laptop>
+ <ba0743dc-8644-4355-862b-d38a7791da4c@efficios.com>
+ <512331d8-fdb4-4dc1-8d9b-34cc35ba48a5@paulmck-laptop>
+ <bbe08cca-72c4-4bd2-a894-97227edcd1ad@efficios.com>
+ <16dd7f3c-1c0f-4dfd-bfee-4c07ec844b72@paulmck-laptop>
+ <20250716110922.0dadc4ec@batman.local.home>
+ <895b48bd-d51e-4439-b5e0-0cddcc17a142@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -50,77 +65,91 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250512013839.45960-1-xueshuai@linux.alibaba.com>
+In-Reply-To: <895b48bd-d51e-4439-b5e0-0cddcc17a142@paulmck-laptop>
 
-[+cc Ilpo, Jonathan (should have been included since the patch has his
-Reviewed-by)]
-
-Thanks for the ping; I noticed quite a bit of discussion but didn't
-follow it myself, so didn't know it was basically all resolved.
-
-On Mon, May 12, 2025 at 09:38:39AM +0800, Shuai Xue wrote:
-> Hotplug events are critical indicators for analyzing hardware health,
-> particularly in AI supercomputers where surprise link downs can
-> significantly impact system performance and reliability.
-
-I dropped the "particularly in AI supercomputers" part because I think
-this is relevant in general.
-
-> To this end, define a new TRACING_SYSTEM named pci, add a generic RAS
-> tracepoint for hotplug event to help healthy check, and generate
-> tracepoints for pcie hotplug event.
-
-I'm not quite clear on the difference between "add generic RAS
-tracepoint for hotplug event" and "generate tracepoints for pcie
-hotplug event."  Are these two different things?
-
-I see the new TRACE_EVENT(pci_hp_event, ...) definition.  Is that what
-you mean by the "generic RAS tracepoint"?
-
-And the five new trace_pci_hp_event() calls that use the TRACE_EVENT
-are the "tracepoints for PCIe hotplug event"?
-
-> Add enum pci_hotplug_event in
-> include/uapi/linux/pci.h so applications like rasdaemon can register
-> tracepoint event handlers for it.
+On Wed, Jul 16, 2025 at 01:35:48PM -0700, Paul E. McKenney wrote:
+> On Wed, Jul 16, 2025 at 11:09:22AM -0400, Steven Rostedt wrote:
+> > On Fri, 11 Jul 2025 10:05:26 -0700
+> > "Paul E. McKenney" <paulmck@kernel.org> wrote:
+> > 
+> > > This trace point will invoke rcu_read_unlock{,_notrace}(), which will
+> > > note that preemption is disabled.  If rcutree.use_softirq is set and
+> > > this task is blocking an expedited RCU grace period, it will directly
+> > > invoke the non-notrace function raise_softirq_irqoff().  Otherwise,
+> > > it will directly invoke the non-notrace function irq_work_queue_on().
+> > 
+> > Just to clarify some things; A function annotated by "notrace" simply
+> > will not have the ftrace hook to that function, but that function may
+> > very well have tracing triggered inside of it.
+> > 
+> > Functions with "_notrace" in its name (like preempt_disable_notrace())
+> > should not have any tracing instrumentation (as Mathieu stated)
+> > inside of it, so that it can be used in the tracing infrastructure.
+> > 
+> > raise_softirq_irqoff() has a tracepoint inside of it. If we have the
+> > tracing infrastructure call that, and we happen to enable that
+> > tracepoint, we will have:
+> > 
+> >   raise_softirq_irqoff()
+> >      trace_softirq_raise()
+> >        [..]
+> >          raise_softirq_irqoff()
+> >             trace_softirq_raise()
+> >                [..]
+> >                  Ad infinitum!
+> > 
+> > I'm not sure if that's what is being proposed or not, but I just wanted
+> > to make sure everyone is aware of the above.
 > 
-> The output like below:
+> OK, I *think* I might actually understand the problem.  Maybe.
 > 
-> $ echo 1 > /sys/kernel/debug/tracing/events/pci/pci_hp_event/enable
-> $ cat /sys/kernel/debug/tracing/trace_pipe
->     <...>-206     [001] .....    40.373870: pci_hp_event: 0000:00:02.0 slot:10, event:Link Down
+> I am sure that the usual suspects will not be shy about correcting any
+> misapprehensions in the following.  ;-)
 > 
->     <...>-206     [001] .....    40.374871: pci_hp_event: 0000:00:02.0 slot:10, event:Card not present
+> My guess is that some users of real-time Linux would like to use BPF
+> programs while still getting decent latencies out of their systems.
+> (Not something I would have predicted, but then again, I was surprised
+> some years back to see people with a 4096-CPU system complaining about
+> 200-microsecond latency blows from RCU.)  And the BPF guys (now CCed)
+> made some changes some years back to support this, perhaps most notably
+> replacing some uses of preempt_disable() with migrate_disable().
+> 
+> Except that the current __DECLARE_TRACE() macro defeats this work
+> for tracepoints by disabling preemption across the tracepoint call,
+> which might well be a BPF program.  So we need to do something to
+> __DECLARE_TRACE() to get the right sort of protection while still leaving
+> preemption enabled.
+> 
+> One way of attacking this problem is to use preemptible RCU.  The problem
+> with this is that although one could construct a trace-safe version
+> of rcu_read_unlock(), these would negate some optimizations that Lai
+> Jiangshan worked so hard to put in place.  Plus those optimizations
+> also simplified the code quite a bit.  Which is why I was pushing back
+> so hard, especially given that I did not realize that real-time systems
+> would be running BPF programs concurrently with real-time applications.
+> This meant that I was looking for a functional problem with the current
+> disabling of preemption, and not finding it.
+> 
+> So another way of dealing with this is to use SRCU-fast, which is
+> like SRCU, but dispenses with the smp_mb() calls and the redundant
+> read-side array indexing.  Plus it is easy to make _notrace variants
+> srcu_read_lock_fast_notrace() and srcu_read_unlock_fast_notrace(),
+> along with the requisite guards.
+> 
+> Re-introducing SRCU requires reverting most of e53244e2c893 ("tracepoint:
+> Remove SRCU protection"), and I have hacked together this and the
+> prerequisites mentioned in the previous paragraph.
+> 
+> These are passing ridiculously light testing, but probably have at
+> least their share of bugs.
+> 
+> But first, do I actually finally understand the problem?
 
-> +#define PCI_HOTPLUG_EVENT					\
-> +	EM(PCI_HOTPLUG_LINK_UP,			"Link Up")	\
-> +	EM(PCI_HOTPLUG_LINK_DOWN,		"Link Down")	\
-> +	EM(PCI_HOTPLUG_CARD_PRESENT,		"Card present")	\
-> +	EMe(PCI_HOTPLUG_CARD_NOT_PRESENT,	"Card not present")
+OK, they pass somewhat less ridiculously moderate testing, though I have
+not yet hit them over the head with the ftrace selftests.
 
-Running this:
+So might as well post them.
 
-  $ git grep -E "\<(EM|EMe)\("
+Thoughts?
 
-I notice that these new events don't look like the others, which
-mostly look like "word" or "event-type" or "VERB object".
-
-I'm OK with this, but just giving you a chance to consider what will
-be the least surprise to users and easiest for grep and shell
-scripting.
-
-I also noticed capitalization of "Up" and "Down", but not "present"
-and "not present".
-
-"Card" is only used occasionally and informally in the PCIe spec, and
-not at all in the context of hotplug of Slot Status (Presence Detect
-State refers to "adapter in the slot"), but it does match the pciehp
-dmesg text, so it probably makes sense to use that.
-
-Anyway, I applied this on pci/trace for v6.17.  If there's anything
-you want to tweak in the commit log or event text, we can still do
-that.
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?h=trace
-
-Bjorn
+							Thanx, Paul
