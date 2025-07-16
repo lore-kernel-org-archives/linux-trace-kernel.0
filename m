@@ -1,171 +1,127 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47B6922D7B6
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 16 Jul 2025 14:38:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ACD7263F5F
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 16 Jul 2025 14:38:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752676724; cv=none; b=SCr7jTdXRjBANKkAwGcX3XpwboRqlt5OX/aDSglwBQS+0zYGQK6uWGzkZqUV6+CuvFxWLRXxDeEFLd+I2KdYxU74J907ml9P13r8Kly7iGan6JelvAQxwja+/ZEnQn1owZlRXwMK20fTy1lC0ATqv/YchS/rqgvJf5q2kH3T4YY=
+	t=1752676727; cv=none; b=hNvyHgqGUVjYXkQwlDtCjyNVb2eJPEqRcSgMLUKMdxoCgdyLzrUvhqx0ckupymH0JP/QbFG0O12NYqwMH33plbGI/ODf47ihDgHrItOBKV49HFhMmBIUSloqqQ38pPVlHOKB46Ul0YVpfY6ftUtOFjrwIDQ47xQXvK3lQy6wy3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752676724; c=relaxed/simple;
-	bh=pootL239b8vihYx7ghu2E071YuSYjSAykBGJJk4PkvM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fKcCZmDfqgfhT28+OL5YvkrsallDQoyhyuI2JiyfkLrSZV7sySI1bco9t+TnWHUMWpjamFoc12MuFnCOxIIoUguq8AdsU4+N0FeO7vheEmDaISk1FVxeW635ggBB3i4iYUlOkJxuBZOFGDDX8H1E2V29k8Oa36jjWjaC14UvVC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TctwJdec; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1752676727; c=relaxed/simple;
+	bh=oWT4UhuprBU4uzVFD1aAq+uce9GMDclGkVsEh4frCuM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=STzCFtWjJqwfoZzsXIsrsxe86crd3MQu3w97sI9gnBh1nlgMghsJYqgKWFJoJkTElxaexj3niPp+gsE9ezFFSghXobh9YEfn1RK5+VWKPd53/IXtEqzK/n9IBBmEaRB51T07Kr/LvLESPfSlQXOnmPSvR2YqtqpKWnY1VHcBv/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YsSVcm5K; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TctwJdec"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YsSVcm5K"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1752676722;
+	s=mimecast20190719; t=1752676725;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=pootL239b8vihYx7ghu2E071YuSYjSAykBGJJk4PkvM=;
-	b=TctwJdec+rU5yDFT+RzcDjngZ4y3IsNcq0lgeUOPOF9hhlNbG2itaxzYJwEebRmuUq69Yz
-	bHIo/q/E3UzgZeO3+kZU8D/mEQZ9yxe+r+JFjGJF0ZGmwmDPD2g+tFx5QK8sGVLJOU/p+j
-	tMs7/4uqRFTdmcivC5/BZEAzd2ILN44=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-255-Un9QssLMPkaVY19TmxUlqg-1; Wed, 16 Jul 2025 10:38:41 -0400
-X-MC-Unique: Un9QssLMPkaVY19TmxUlqg-1
-X-Mimecast-MFC-AGG-ID: Un9QssLMPkaVY19TmxUlqg_1752676719
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3a4f8fd1847so2653281f8f.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 16 Jul 2025 07:38:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752676719; x=1753281519;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pootL239b8vihYx7ghu2E071YuSYjSAykBGJJk4PkvM=;
-        b=IntOPyO2LLkd85IihXwMRGVbeOz0/1lkPfHOnN6cwX7BOlU0XS+0gVhdrEWEOLNs8o
-         QqG6BGR2o7BoLT578+pDhWY/0WfEMbfTQXx4GMeb95zhtuYXPpweQr2gEnemnb4XHNrn
-         LnlW6fcO4WC0ynuKQUas9b2o1xFXybTwAYonRsAsvmNt6sXQOGv4QfOQjujsg/QhpdcS
-         O3MpK/7lWCjBcK4Qvjw5cN1EQEiNZH7Za/IJLSHuH4oo7V8jCRfs4M5eKlyN4lsYQd2x
-         6FwN9K49F9BsK6dN04Mc9x+fTeZH7z1ZBQ0gqgduumsBYzV2vJE0sgIahRD7FjBoWOc+
-         KK1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUNp4wM7rDdu+ldzo3oG+0JgsSRK1OQapLnvpXN3/l9GehUZK/0/uG8kdplpbxZUK1VQXuYDPIHG1yVqjTCdcnCOYQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwgRmbBiv1AD95YRF2Dp4CLFTMHfHpVu215pocQ8Tw+9WAxYb97
-	mATjVC5xCwznxuJnvBfK98rRP7V4PyHiRCbk/DnYAV1ETskYLKVpIuUfUtCR7bdNYNCJeY/aTI7
-	3pnQ52MwNU2XF9KTL2wFbTokaGkcsi0Y9oAdlqQRJuNg4q56YTnKHCOGAZHXKRTKbu3ycm07t6g
-	==
-X-Gm-Gg: ASbGncuMkWn+Jpa1mTal7ECcV3fSRdQc2Rv75RJTftlk9qreg9svfr0mfxrRsVk3Bp4
-	0zGvL73h2YiAW8q2z3+gnzLBUaocOxrru4l/OM97MaIjR/m0mMrnfx8XXlbekJ2quDqhSlA7Flp
-	znvu89p/i84pJKg0hGdifoyiuVlA4IlrPNdWJ4S7lSGFyevCJN3TeouiDXEB7uCkJrvPgtY0Q1S
-	woI5XbkQlNIbvd+IGYDPFzhQedDUUTxq7pguHltCO4g3Pg3aD3oYWksWRkjSV17+7rk5/yOh4Lu
-	TPmaVV3klWh/edHCFtek4hF4MjEGJoM2Xcr+vjsusMvUZ0s3Ju9TRNyemCURzGo+iQ==
-X-Received: by 2002:a5d:5f50:0:b0:3a4:d53d:be20 with SMTP id ffacd0b85a97d-3b60dd54803mr2670865f8f.18.1752676719004;
-        Wed, 16 Jul 2025 07:38:39 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFptKKgabK4YSBzr4A23TCNpKLWSztNfIHJhjjgHgXZXCD1z41s30Edp5+SqPDwLIWCpRXH1g==
-X-Received: by 2002:a5d:5f50:0:b0:3a4:d53d:be20 with SMTP id ffacd0b85a97d-3b60dd54803mr2670833f8f.18.1752676718428;
-        Wed, 16 Jul 2025 07:38:38 -0700 (PDT)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.42])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b5f16a6016sm16163068f8f.69.2025.07.16.07.38.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Jul 2025 07:38:38 -0700 (PDT)
-Message-ID: <be966ed3d4a7ace6aa430bbc5c16ecbff3118426.camel@redhat.com>
-Subject: Re: [PATCH v3 12/17] sched: Adapt sched tracepoints for RV task
- model
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Steven
- Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	linux-trace-kernel@vger.kernel.org, Nam Cao <namcao@linutronix.de>, Tomas
- Glozar	 <tglozar@redhat.com>, Juri Lelli <jlelli@redhat.com>, Clark
- Williams	 <williams@redhat.com>, John Kacur <jkacur@redhat.com>
-Date: Wed, 16 Jul 2025 16:38:36 +0200
-In-Reply-To: <20250716141958.GC905792@noisy.programming.kicks-ass.net>
-References: <20250715071434.22508-1-gmonaco@redhat.com>
-	 <20250715071434.22508-13-gmonaco@redhat.com>
-	 <20250716123832.GW1613200@noisy.programming.kicks-ass.net>
-	 <122cfd4ba6b0805e91ff09526d5d159ff3871964.camel@redhat.com>
-	 <20250716134513.GB905792@noisy.programming.kicks-ass.net>
-	 <fe38ba0b9da0209bcc97c2f348f5a6b266991073.camel@redhat.com>
-	 <20250716141958.GC905792@noisy.programming.kicks-ass.net>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
- xyhmqeUWOzFx5P43S1E1dhsrLWgP
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42)
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=ajHJ2tQ5qM4LcKhMqVWF3mLSk9Qiueaa/5Dboted428=;
+	b=YsSVcm5Kl9L3YM8zCi9x5bKzHo4V9PPocqUssq1cun7F74OeLD6YWpxWpI5T9olotWUYiw
+	aDMt7RrNf+AeJ0XbqjepTpcdxVxLx6QhA5SnG2Ix1Gsv36bjXfsUbPN9F/eBPBoShhnKvl
+	AVxmVXK7jOsQO6ZvWcHpCu50T/KEj14=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-183-OGphlmYKOEqL5iCXAj5I7A-1; Wed,
+ 16 Jul 2025 10:38:38 -0400
+X-MC-Unique: OGphlmYKOEqL5iCXAj5I7A-1
+X-Mimecast-MFC-AGG-ID: OGphlmYKOEqL5iCXAj5I7A_1752676718
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C518D195608B;
+	Wed, 16 Jul 2025 14:38:37 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.45.224.115])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 2759419560AB;
+	Wed, 16 Jul 2025 14:38:34 +0000 (UTC)
+From: Tomas Glozar <tglozar@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	John Kacur <jkacur@redhat.com>,
+	Luis Goncalves <lgoncalv@redhat.com>,
+	Attila Fazekas <afazekas@redhat.com>,
+	Tomas Glozar <tglozar@redhat.com>
+Subject: [PATCH] tracing/osnoise: Fix crash in timerlat_dump_stack()
+Date: Wed, 16 Jul 2025 16:36:01 +0200
+Message-ID: <20250716143601.7313-1-tglozar@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: fADkNjfWJoHtEJbGjYOBNXlFHR0xatRAAqtMiGhTjdk_1752676719
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On Wed, 2025-07-16 at 16:19 +0200, Peter Zijlstra wrote:
-> So in general I'm a minimalist; less is more etc.
->
-> Even if you care about latencies, I don't see what that tracepoint adds. =
-In
-> fact, I don't even see the point of the .is_switch argument to
-> trace_sched_exit_tp(). That state can be fully reconstructed from having =
-seen
-> trace_sched_switch() between trace_sched_{enter,exit}_tp().
->
-> As for the IRQ state, if you see:
->
-> =C2=A0trace_sched_enter_tp();
-> =C2=A0trace_irq_disable();
-> =C2=A0trace_irq_enable();
->
-> You already know all you need to know; there was no switch, otherwise
-> it would'be been:
->
-> =C2=A0trace_sched_enter_tp();
-> =C2=A0trace_irq_disable();
-> =C2=A0trace_sched_switch();
-> =C2=A0trace_irq_enable();
->
+We have observed kernel panics when using timerlat with stack saving,
+with the following dmesg output:
 
-Or you could see:
+memcpy: detected buffer overflow: 88 byte write of buffer size 0
+WARNING: CPU: 2 PID: 8153 at lib/string_helpers.c:1032 __fortify_report+0x55/0xa0
+CPU: 2 UID: 0 PID: 8153 Comm: timerlatu/2 Kdump: loaded Not tainted 6.15.3-200.fc42.x86_64 #1 PREEMPT(lazy)
+Call Trace:
+ <TASK>
+ ? trace_buffer_lock_reserve+0x2a/0x60
+ __fortify_panic+0xd/0xf
+ __timerlat_dump_stack.cold+0xd/0xd
+ timerlat_dump_stack.part.0+0x47/0x80
+ timerlat_fd_read+0x36d/0x390
+ vfs_read+0xe2/0x390
+ ? syscall_exit_to_user_mode+0x1d5/0x210
+ ksys_read+0x73/0xe0
+ do_syscall_64+0x7b/0x160
+ ? exc_page_fault+0x7e/0x1a0
+ entry_SYSCALL_64_after_hwframe+0x76/0x7e
 
- trace_sched_enter_tp();
- trace_irq_disable();
- trace_irq_enable();
- trace_irq_disable();
- trace_sched_switch();
- trace_irq_enable();
+__timerlat_dump_stack() constructs the ftrace stack entry like this:
 
-Where in fact there /was/ a switch, that trace was actually something
-like:
+struct stack_entry *entry;
+...
+memcpy(&entry->caller, fstack->calls, size);
+entry->size = fstack->nr_entries;
 
- trace_sched_enter_tp();
- trace_irq_disable();
- **irq_entry();**
- **irq_exit();**
- trace_irq_enable();
- trace_irq_disable();
- trace_sched_switch();
- trace_irq_enable();
+Since commit e7186af7fb26 ("tracing: Add back FORTIFY_SOURCE logic to
+kernel_stack event structure"), struct stack_entry marks its caller
+field with __counted_by(size). At the time of the memcpy, entry->size
+contains garbage from the ringbuffer, which under some circumstances is
+zero, triggering a kernel panic by buffer overflow.
 
-So as you said, we can still reconstruct what happened from the trace, but =
-the
-model suddenly needs more states and more events.
-If we could directly tell whether interrupts were disabled manually or from=
- an
-actual interrupt, that wouldn't be necessary, for instance (as in the origi=
-nal
-model by Daniel).
+Populate the size field before the memcpy so that the out-of-bounds
+check knows the correct size. This is analogous to
+__ftrace_trace_stack().
 
-I get your point why we don't really need the additional tracepoint, but so=
-me
-arguments giving more context come almost for free.
+Cc: stable@vger.kernel.org
+Fixes: e7186af7fb26 ("tracing: Add back FORTIFY_SOURCE logic to kernel_stack event structure")
+Signed-off-by: Tomas Glozar <tglozar@redhat.com>
+---
+ kernel/trace/trace_osnoise.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> Also, can we get rid of that CALLER_ADDR0 argument as well?
+Note: This has been so far only reproduced on laptops (three different
+machines). Not sure what the reason for that is, but it is clearly
+a bug.
 
-Yeah good point, this might have been be useful to understand some things
-(__schedule called from preempt_irq for instance) but it's a pain to make s=
-ense
-out of it.
+diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
+index 6819b93309ce..fd259da0aa64 100644
+--- a/kernel/trace/trace_osnoise.c
++++ b/kernel/trace/trace_osnoise.c
+@@ -637,8 +637,8 @@ __timerlat_dump_stack(struct trace_buffer *buffer, struct trace_stack *fstack, u
+ 
+ 	entry = ring_buffer_event_data(event);
+ 
+-	memcpy(&entry->caller, fstack->calls, size);
+ 	entry->size = fstack->nr_entries;
++	memcpy(&entry->caller, fstack->calls, size);
+ 
+ 	trace_buffer_unlock_commit_nostack(buffer, event);
+ }
+-- 
+2.47.1
 
