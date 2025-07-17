@@ -1,123 +1,140 @@
-Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [160.30.148.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 195E3155A59;
-	Thu, 17 Jul 2025 02:13:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=160.30.148.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99A461C5D72;
+	Thu, 17 Jul 2025 02:50:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752718384; cv=none; b=AdtGn4+MIeK5ZFm7q5K6EwxmhUOz5JRA1u7RVq9VG0PzkkIMV2SQzPdNw2CVmLaus8WCYdFauNUvs1+4hHlErAEiQA4zHe/NRLWTjrthvpU9nrXlvzQrDxi7u4YfXrJqOYrFtZISrVl4wh2CgjMQ65DHGjbQrndNIiWUt46BHdY=
+	t=1752720652; cv=none; b=qpGImts2mO4jRU15DZ9tdk9q+wKQxB96AtrtaGO1unhykIOLunQz0LkNvtZcm8XfrcQ5vSKy7fatiJE9ffFV7GuFoiiAZyR+P7SMJg+ac8drTqWqknlKwojb1/u4hZpDlY8pEGMXV4NrtjTO/I6Nd2mVBSWWyx+wucwFQp0swKs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752718384; c=relaxed/simple;
-	bh=9NhBKwyrzpmtVxgSk23CnQtxjPIyKvPPzUT0pV/3PCE=;
-	h=Date:Message-ID:In-Reply-To:References:Mime-Version:From:To:Cc:
-	 Subject:Content-Type; b=Vpuiofq04j3QUfSVLWXanAbYAdRwNqByffC3lv+ZmBALiHXxuJSrwZHb8m+L8Dx/o9enZtv9pdmvyWx+mHqj7A7Plp5pOt+60v13D75zR1eUIarAZysJhyd65tfnvvbDkPB5QURey1hauVMYlX73nVhBjBUHtlEe2/vQdPuqeVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=160.30.148.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4bjGfX523rz6Fy5l;
-	Thu, 17 Jul 2025 10:12:52 +0800 (CST)
-Received: from xaxapp01.zte.com.cn ([10.88.99.176])
-	by mse-fl2.zte.com.cn with SMTP id 56H2CeDM090833;
-	Thu, 17 Jul 2025 10:12:40 +0800 (+08)
-	(envelope-from fan.yu9@zte.com.cn)
-Received: from mapi (xaxapp02[null])
-	by mapi (Zmail) with MAPI id mid32;
-	Thu, 17 Jul 2025 10:12:41 +0800 (CST)
-Date: Thu, 17 Jul 2025 10:12:41 +0800 (CST)
-X-Zmail-TransId: 2afa68785c19ffffffffe26-47038
-X-Mailer: Zmail v1.0
-Message-ID: <20250717101241665SpBGi_zaErkDSM2Rgmx3o@zte.com.cn>
-In-Reply-To: <CAAVpQUCDJOnwRhjcwFke2vTZQ8rymopC3hpyPteLA3cRgXFz9Q@mail.gmail.com>
-References: 20250716100006458kPWBPIJB6IdzWuUKlv4tF@zte.com.cn,CAAVpQUCDJOnwRhjcwFke2vTZQ8rymopC3hpyPteLA3cRgXFz9Q@mail.gmail.com
+	s=arc-20240116; t=1752720652; c=relaxed/simple;
+	bh=rVW7x1cWdtS/+/SD3/qe8rX3MeF4ZR7nrYkxM81heB8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=D/i3kVijrFOWg30UwbfW1cMiCVkgci3pnQox8EDVQVUJLk7DAqHaSFYW7aMumbV7O9o6yCdnXc2ogzn/407nwqR1OfBLfUHGBzp9RTB9gJD6nO6cWq1I+JbUHKcJwqrCXO+BjsGC+qTYJLtA67Z3Zh9buUFmCOZyDlhYPleIzDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gt/XfUAL; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gt/XfUAL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BB7EC4CEE7;
+	Thu, 17 Jul 2025 02:50:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752720652;
+	bh=rVW7x1cWdtS/+/SD3/qe8rX3MeF4ZR7nrYkxM81heB8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Gt/XfUALD6phvu3PhD4sn3bhFzRUDMN41ZizMV1/fxQYrgO9wDV2v4QbhN5V9QEvm
+	 Vhc+k+oGh4hFmz1mUKhqIBCTOi0ZWb6YzrTXGWyM9UgVm9zAkYIzVuvk3x3ZZiOtGN
+	 7+0FKJ+5HK/weLKGAsLuRB0MSEJZ3U5QSge2Qfq2KCuJQge5+ZSgKZgJD9m5OIPVd2
+	 aeMygstZ/rE/0famjY3rrz6zo3Mn3nZW45FLXVN0O7Tt2LwnGcVgRUM1ahDSjduKZP
+	 FnpiA0vN5ZchF2xhc2sarOQierrru+TGxft98hnrjjYngCRoXCUoAfdYIMnxGCsVoj
+	 +rhVql9u3xnFg==
+Date: Wed, 16 Jul 2025 19:50:48 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Jens Remus <jremus@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org, x86@kernel.org, Steven Rostedt <rostedt@kernel.org>, 
+	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Ilya Leoshkevich <iii@linux.ibm.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, 
+	Indu Bhagat <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>, 
+	Beau Belgrave <beaub@linux.microsoft.com>, Linus Torvalds <torvalds@linux-foundation.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Jens Axboe <axboe@kernel.dk>, 
+	Florian Weimer <fweimer@redhat.com>, Sam James <sam@gentoo.org>
+Subject: Re: [RFC PATCH v1 08/16] unwind_user: Enable archs that save RA/FP
+ in other registers
+Message-ID: <3he7rlcdchkwjtpbdt5khqflg4dipuvkneydhju2jjgs2ujqoh@2rpb6dutdogx>
+References: <20250710163522.3195293-1-jremus@linux.ibm.com>
+ <20250710163522.3195293-9-jremus@linux.ibm.com>
+ <oasyyga72yuiad7y2nzh7wcd7t7wmxnsbo2kuvsn5xsnuypewd@ukxxgdjbvegz>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <fan.yu9@zte.com.cn>
-To: <kuniyu@google.com>
-Cc: <kuba@kernel.org>, <edumazet@google.com>, <ncardwell@google.com>,
-        <davem@davemloft.net>, <dsahern@kernel.org>, <pabeni@redhat.com>,
-        <horms@kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-        <yang.yang29@zte.com.cn>, <xu.xin16@zte.com.cn>,
-        <tu.qiang35@zte.com.cn>, <jiang.kun2@zte.com.cn>,
-        <qiu.yutan@zte.com.cn>, <wang.yaxin@zte.com.cn>,
-        <he.peilin@zte.com.cn>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSCBuZXQtbmV4dCB2Nl0gdGNwOiB0cmFjZSByZXRyYW5zbWl0IGZhaWx1cmVzIGluIHRjcF9yZXRyYW5zbWl0X3NrYg==?=
-Content-Type: multipart/mixed;
-	boundary="=====_001_next====="
-X-MAIL:mse-fl2.zte.com.cn 56H2CeDM090833
-X-TLS: YES
-X-SPF-DOMAIN: zte.com.cn
-X-ENVELOPE-SENDER: fan.yu9@zte.com.cn
-X-SPF: None
-X-SOURCE-IP: 10.5.228.133 unknown Thu, 17 Jul 2025 10:12:52 +0800
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 68785C24.001/4bjGfX523rz6Fy5l
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <oasyyga72yuiad7y2nzh7wcd7t7wmxnsbo2kuvsn5xsnuypewd@ukxxgdjbvegz>
 
+On Wed, Jul 16, 2025 at 07:01:09PM -0700, Josh Poimboeuf wrote:
+> >  	state->ip = ra;
+> >  	state->sp = sp;
+> > -	if (frame->fp_off)
+> > +	if (frame->fp.loc != UNWIND_USER_LOC_NONE)
+> >  		state->fp = fp;
+> 
+> Instead of the extra conditional here, can fp be initialized to zero?
+> Either at the top of the function or in the RA switch statement?
 
+So it's been a while since I looked at the original code, but I actually
+think there's a bug here.
 
---=====_001_next=====
-Content-Type: multipart/related;
-	boundary="=====_002_next====="
+There's a subtlety in the original code:
 
+	if (frame->fp_off && unwind_get_user_long(fp, cfa + frame->fp_off, state))
+		goto done;
 
---=====_002_next=====
-Content-Type: multipart/alternative;
-	boundary="=====_003_next====="
+	state->ip = ra;
+	state->sp = cfa;
+	if (frame->fp_off)
+		state->fp = fp;
 
+	arch_unwind_user_next(state);
 
---=====_003_next=====
-Content-Type: text/plain;
-	charset="UTF-8"
-Content-Transfer-Encoding: base64
+Note that unlike !frame->ra_off, !frame->fp_off does NOT end the unwind.
+That only means the FP offset is unknown for the current frame.  Which
+is a perfectly valid condition, e.g. if the function doesn't have frame
+pointers or if it's before the prologue.
 
-PiA+IHByaW50IGZtdDogInNrYmFkZHI9JXAgc2thZGRyPSVwIGZhbWlseT0lcyBzcG9ydD0laHUg
-ZHBvcnQ9JWh1IHNhZGRyPSVwSTQgZGFkZHI9JXBJNCBzYWRkcnY2PSVwSTZjIGRhZGRydjY9JXBJ
-NmMgc3RhdGU9JXMgZXJyPSVkIg0KPiA+DQo+ID4gU3VnZ2VzdGVkLWJ5OiBLdW5peXVraUl3YXNo
-aW1hIDxrdW5peXVAZ29vZ2xlLmNvbT4NCj4gDQo+IEkgZG9uJ3QgZGVzZXJ2ZSB0aGlzIHRhZy4g
-IChBbHNvLCBhIHNwYWNlIGJldHdlZW4gZmlyc3QvbGFzdCBuYW1lIGlzIG1pc3NpbmcuKQ0KPiAN
-Cj4gU3VnZ2VzdGVkLWJ5IGNhbiBiZSB1c2VkIHdoZW4gdGhlIGNvcmUgaWRlYSBpcyBwcm92aWRl
-ZCBieSBzb21lb25lLA0KPiBidXQgbm90IHdoZW4gc29tZW9uZSBqdXN0IHJldmlld3MgdGhlIHBh
-dGNoIGFuZCBwb2ludHMgb3V0IHNvbWV0aGluZw0KPiB3cm9uZy4NCj4gDQo+IEJ1dCBjb2RlLXdp
-c2UsIHRoZSBjaGFuZ2UgbG9va3MgZ29vZCB0byBtZS4NCj4gDQo+IFJldmlld2VkLWJ5OiBLdW5p
-eXVraSBJd2FzaGltYSA8a3VuaXl1QGdvb2dsZS5jb20+DQpIaSBLdW5peXVraSwNCg0KVGhhbmsg
-eW91IGZvciB5b3VyIHRob3JvdWdoIHJldmlldyBhbmQgZ3VpZGFuY2UgLSBpdCdzIGdyZWF0bHkg
-YXBwcmVjaWF0ZWQuDQpJJ2xsIHN1Ym1pdCB2NyB3aXRoIGNvcnJlY3RlZCB0YWdzIDopLg==
+In that case, the unwind should continue, and state->fp's existing value
+should be preserved, as it might already have a valid value from a
+previous frame.
 
+So the following is wrong:
 
---=====_003_next=====
-Content-Type: text/html ;
-	charset="UTF-8"
-Content-Transfer-Encoding: base64
+	case UNWIND_USER_LOC_STACK:
+		if (!frame->fp.frame_off)
+			goto done;
+		if (unwind_get_user_long(fp, cfa + frame->fp.frame_off, state))
+			goto done;
+		break;
 
-PGRpdiBjbGFzcz0iemNvbnRlbnRSb3ciPjxwPiZndDsgJmd0OyBwcmludCBmbXQ6ICJza2JhZGRy
-PSVwIHNrYWRkcj0lcCBmYW1pbHk9JXMgc3BvcnQ9JWh1IGRwb3J0PSVodSBzYWRkcj0lcEk0IGRh
-ZGRyPSVwSTQgc2FkZHJ2Nj0lcEk2YyBkYWRkcnY2PSVwSTZjIHN0YXRlPSVzIGVycj0lZCI8L3A+
-PHA+Jmd0OyAmZ3Q7PC9wPjxwPiZndDsgJmd0OyBTdWdnZXN0ZWQtYnk6IEt1bml5dWtpSXdhc2hp
-bWEgJmx0O2t1bml5dUBnb29nbGUuY29tJmd0OzwvcD48cD4mZ3Q7Jm5ic3A7PC9wPjxwPiZndDsg
-SSBkb24ndCBkZXNlcnZlIHRoaXMgdGFnLiZuYnNwOyAoQWxzbywgYSBzcGFjZSBiZXR3ZWVuIGZp
-cnN0L2xhc3QgbmFtZSBpcyBtaXNzaW5nLik8L3A+PHA+Jmd0OyZuYnNwOzwvcD48cD4mZ3Q7IFN1
-Z2dlc3RlZC1ieSBjYW4gYmUgdXNlZCB3aGVuIHRoZSBjb3JlIGlkZWEgaXMgcHJvdmlkZWQgYnkg
-c29tZW9uZSw8L3A+PHA+Jmd0OyBidXQgbm90IHdoZW4gc29tZW9uZSBqdXN0IHJldmlld3MgdGhl
-IHBhdGNoIGFuZCBwb2ludHMgb3V0IHNvbWV0aGluZzwvcD48cD4mZ3Q7IHdyb25nLjwvcD48cD4m
-Z3Q7Jm5ic3A7PC9wPjxwPiZndDsgQnV0IGNvZGUtd2lzZSwgdGhlIGNoYW5nZSBsb29rcyBnb29k
-IHRvIG1lLjwvcD48cD4mZ3Q7Jm5ic3A7PC9wPjxwPiZndDsgUmV2aWV3ZWQtYnk6IEt1bml5dWtp
-IEl3YXNoaW1hICZsdDtrdW5peXVAZ29vZ2xlLmNvbSZndDs8L3A+PHA+SGkgS3VuaXl1a2ksPC9w
-PjxwPjxicj48L3A+PHA+VGhhbmsgeW91IGZvciB5b3VyIHRob3JvdWdoIHJldmlldyBhbmQgZ3Vp
-ZGFuY2UgLSBpdCdzIGdyZWF0bHkgYXBwcmVjaWF0ZWQuPC9wPjxwPkknbGwgc3VibWl0IHY3IHdp
-dGggY29ycmVjdGVkIHRhZ3MgOikuPGJyPjwvcD48L2Rpdj4=
+Instead of having !fp.frame_off stopping the unwind, it should just
+break out of the switch statement and keep going.
 
+And that means the following is also wrong:
 
---=====_003_next=====--
+	state->ip = ra;
+	state->sp = sp;
+	if (frame->fp.loc != UNWIND_USER_LOC_NONE)
+		state->fp = fp;
 
---=====_002_next=====--
+because state->fp needs to preserved for the STACK+!fp.frame_off case.
 
---=====_001_next=====--
+So, something like this?
 
+	bool preserve_fp = false;
+	...
+
+	/* Get the Frame Pointer (FP) */
+	switch (frame->fp.loc) {
+	case UNWIND_USER_LOC_NONE:
+		preserve_fp = true;
+		break;
+	case UNWIND_USER_LOC_STACK:
+		if (!frame->fp.frame_off) {
+			preserve_fp = true;
+			break;
+		}
+	...
+
+	state->ip = ra;
+	state->sp = sp;
+	if (!preserve_fp)
+		state->fp = fp;
+
+BTW, I would suggest renaming "frame_off" to "offset",
+"frame->fp.offset" reads better and is more compact.
+
+-- 
+Josh
