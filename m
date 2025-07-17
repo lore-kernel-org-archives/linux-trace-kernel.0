@@ -1,141 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E92A20459A;
-	Thu, 17 Jul 2025 01:29:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEB5C1EE02F;
+	Thu, 17 Jul 2025 01:40:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752715757; cv=none; b=TvDzPj2C5Mf2HeGIbeVtomIwpFKZnBOsXS4Jxh+P0Ku2nHAxm27qfmdJoh0J4xsafM2e8a8ywz9yjRMLPhINauEIU+qd9FhScaVO25Ztjnu/DMzkb266NE1AQodmGpRR47pRZObObxFh+2oDYB7Y21VaWxJE6wfsHauKAgkQq2w=
+	t=1752716403; cv=none; b=VOu/H2x7jnBQ71DjULMjDa5PGLpK5/kDFxvdSElFgeW45ZSjjFS4VlTBxY60tDWMnMsgX6xKBoROSn6IK7oh+PH6/JtXjM8m5grtLR6V70oIGe6tgaxXfbHKOyw9qkkKxTBL/i1o6wdMN7Hi9Aq1qUPIIlZ2jJy1H2JD/Yefbzc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752715757; c=relaxed/simple;
-	bh=/FbdkqgsRHQT3grN+rP3vo0JEynwNZBN/vKs+JQRgx0=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=fOdpzyBCIZrRVA/wZlm2IJHOI36LvpD34+b5NWNb2snaHVEEt56jaLVjB98f6A+Vxj4yvEx0wpawxiU3kr3ZvhG81kw0wDtYCXMueKwnirwOO2+qfXBhqf3azuyGSOnWOWQQS0LzMo9ILu3DfLIJAjwE6l7m4bLRGwjK69lI/E0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IKVQNl7W; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1752716403; c=relaxed/simple;
+	bh=eWAwC1GBJWP4MMsdwqJNitn5FU+zU5RAmgOfK+oLt6U=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=Gx/sk7NtgjWQTQsp1fn58cIYyNQUe3vD1JtuYt2mj7IqL8oBj600D42g4w4iX1H5y0BxLjd+9vCcJKKOBj4mK954uuPiPWrre2BrAUO7HzGrgmYGBNnr9woJ9gZfkT5+rZWSK1hRUsoFQjb1iLPrkFsNBBjnLFgJlbfXt9HuA6M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OtQ2rWi2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IKVQNl7W"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E0E7C4AF0C;
-	Thu, 17 Jul 2025 01:29:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OtQ2rWi2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A8B7C4CEF0;
+	Thu, 17 Jul 2025 01:40:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752715757;
-	bh=/FbdkqgsRHQT3grN+rP3vo0JEynwNZBN/vKs+JQRgx0=;
-	h=Date:From:To:Cc:Subject:References:From;
-	b=IKVQNl7WkjtS6jt+CzQKZazYWBiNNVxZhwxxEEkdtw7H0HGd8DcGEZndNdM3sDIx6
-	 vb8oQOtUCLGsH1+h/Rtr7+5hDTR9KQj+pvdCIHnfCd82IzFG4K7QUcVodahpV3+l+A
-	 AGfCbJdu6t/6rHQT7ca/v0Sc9dQNfhQ3pnlYb3+vsN8hENruCcP7V89dLmiseUYMTe
-	 /nbhwfu3dHF7cyjSvmrk2a6Zw+RMSowB75lhqFxx6Dox2gDUWs0GgrNHh8F3hOzt1A
-	 1WwGgHkZ+B9PAN75PeXiSggVsurxctnyW1gR3ZlOBs/IgRt++nvMp2lbKYEDbvSMHO
-	 6nM+VLCpXPAxA==
-Received: from rostedt by gandalf with local (Exim 4.98.2)
-	(envelope-from <rostedt@kernel.org>)
-	id 1ucDRJ-000000068zj-2b76;
-	Wed, 16 Jul 2025 21:29:37 -0400
-Message-ID: <20250717012937.469785338@kernel.org>
-User-Agent: quilt/0.68
-Date: Wed, 16 Jul 2025 21:28:59 -0400
-From: Steven Rostedt <rostedt@kernel.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org,
- x86@kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Josh Poimboeuf <jpoimboe@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@kernel.org>,
- Jiri Olsa <jolsa@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>,
- Andrii Nakryiko <andrii@kernel.org>,
- Indu Bhagat <indu.bhagat@oracle.com>,
- "Jose E. Marchesi" <jemarch@gnu.org>,
- Beau Belgrave <beaub@linux.microsoft.com>,
- Jens Remus <jremus@linux.ibm.com>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Jens Axboe <axboe@kernel.dk>,
- Florian Weimer <fweimer@redhat.com>,
- Sam James <sam@gentoo.org>
-Subject: [PATCH v9 11/11] [DO NOT APPLY] unwind_user/sframe: Add prctl() interface for
- registering .sframe sections
-References: <20250717012848.927473176@kernel.org>
+	s=k20201202; t=1752716403;
+	bh=eWAwC1GBJWP4MMsdwqJNitn5FU+zU5RAmgOfK+oLt6U=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=OtQ2rWi2AD19Sxm7KcYKZFZWeKSQ1W5wme+BgWW9eF8Yn4jhJQtmlnQa7H5vH5WV9
+	 R1F9oqLeHiG1uYeGU41To4wozRBRXUs7Dc8+mmyfJH8kSwh+GQYb+8Fv8BGb7aVdBj
+	 uMIx/ywBAl1ENrJTrRALWEWjH6GgB8p/aC9VZzSNN3TVA+jgstYgK6kvlJLAh8hdSr
+	 WKu3ald6c4vwduyJQvc4msVUM1g8OvYGuQ7n3yRQW4+RScotFsdrWcP8NfTjmyB1MN
+	 x9ZTFK9fbTVm4S/EqbajhZd8Wr5YEcmDFoVe/AyXDl972If3hPWjDYrhakkPoy/UrV
+	 xgPgUxC1P+Vtg==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADC62383BA38;
+	Thu, 17 Jul 2025 01:40:24 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v2 bpf-next] bpf: Clean up individual BTF_ID code
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <175271642326.1391969.12291957818977082467.git-patchwork-notify@kernel.org>
+Date: Thu, 17 Jul 2025 01:40:23 +0000
+References: <20250710055419.70544-1-yangfeng59949@163.com>
+In-Reply-To: <20250710055419.70544-1-yangfeng59949@163.com>
+To: Feng Yang <yangfeng59949@163.com>
+Cc: martin.lau@linux.dev, ast@kernel.org, daniel@iogearbox.net,
+ andrii@kernel.org, eddyz87@gmail.com, song@kernel.org,
+ yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org,
+ sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org,
+ mattbobrowski@google.com, rostedt@goodmis.org, mhiramat@kernel.org,
+ olsajiri@gmail.com, bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@kernel.org>
+Hello:
 
-The kernel doesn't have direct visibility to the ELF contents of shared
-libraries.  Add some prctl() interfaces which allow glibc to tell the
-kernel where to find .sframe sections.
+This patch was applied to bpf/bpf-next.git (master)
+by Alexei Starovoitov <ast@kernel.org>:
 
-[
-  This adds an interface for prctl() for testing loading of sframes for
-  libraries. But this interface should really be a system call. This patch
-  is for testing purposes only and should not be applied to mainline.
-]
+On Thu, 10 Jul 2025 13:54:19 +0800 you wrote:
+> From: Feng Yang <yangfeng@kylinos.cn>
+> 
+> Use BTF_ID_LIST_SINGLE(a, b, c) instead of
+> BTF_ID_LIST(a)
+> BTF_ID(b, c)
+> 
+> Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
+> 
+> [...]
 
-Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- include/uapi/linux/prctl.h | 6 +++++-
- kernel/sys.c               | 9 +++++++++
- 2 files changed, 14 insertions(+), 1 deletion(-)
+Here is the summary with links:
+  - [v2,bpf-next] bpf: Clean up individual BTF_ID code
+    https://git.kernel.org/bpf/bpf-next/c/62ef449b8d8e
 
-diff --git a/include/uapi/linux/prctl.h b/include/uapi/linux/prctl.h
-index 43dec6eed559..c575cf7151b1 100644
---- a/include/uapi/linux/prctl.h
-+++ b/include/uapi/linux/prctl.h
-@@ -351,7 +351,7 @@ struct prctl_mm_map {
-  * configuration.  All bits may be locked via this call, including
-  * undefined bits.
-  */
--#define PR_LOCK_SHADOW_STACK_STATUS      76
-+#define PR_LOCK_SHADOW_STACK_STATUS	76
- 
- /*
-  * Controls the mode of timer_create() for CRIU restore operations.
-@@ -371,4 +371,8 @@ struct prctl_mm_map {
- # define PR_FUTEX_HASH_GET_SLOTS	2
- # define PR_FUTEX_HASH_GET_IMMUTABLE	3
- 
-+/* SFRAME management */
-+#define PR_ADD_SFRAME			79
-+#define PR_REMOVE_SFRAME		80
-+
- #endif /* _LINUX_PRCTL_H */
-diff --git a/kernel/sys.c b/kernel/sys.c
-index adc0de0aa364..cf788e66dc86 100644
---- a/kernel/sys.c
-+++ b/kernel/sys.c
-@@ -65,6 +65,7 @@
- #include <linux/rcupdate.h>
- #include <linux/uidgid.h>
- #include <linux/cred.h>
-+#include <linux/sframe.h>
- 
- #include <linux/nospec.h>
- 
-@@ -2824,6 +2825,14 @@ SYSCALL_DEFINE5(prctl, int, option, unsigned long, arg2, unsigned long, arg3,
- 	case PR_FUTEX_HASH:
- 		error = futex_hash_prctl(arg2, arg3, arg4);
- 		break;
-+	case PR_ADD_SFRAME:
-+		error = sframe_add_section(arg2, arg3, arg4, arg5);
-+		break;
-+	case PR_REMOVE_SFRAME:
-+		if (arg3 || arg4 || arg5)
-+			return -EINVAL;
-+		error = sframe_remove_section(arg2);
-+		break;
- 	default:
- 		trace_task_prctl_unknown(option, arg2, arg3, arg4, arg5);
- 		error = -EINVAL;
+You are awesome, thank you!
 -- 
-2.47.2
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
