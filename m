@@ -1,60 +1,60 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ABDC2F850;
-	Thu, 17 Jul 2025 09:29:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40864262FC2;
+	Thu, 17 Jul 2025 11:10:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752744558; cv=none; b=dYLjZk1TJQwbD/KFL3YvOQADUBWexxP2YYzlCTXWt5A3Jgp2NA8stLNk2CU/Zqsm50VJC0avUnSOhWaUvhSKL5/OFiFQKv4xnLLyGuk0xbygfUs5fs6HFY2bb/rhwusp0Ipa2PkApSSkXDgQxoIxVB9lGjKwVfqwe6iqgFGDFG0=
+	t=1752750641; cv=none; b=D0hBoYMbqR/6qsDAmvoyDMCWXD7qau9xiNW2r7pA1i05Taqhyg3JKZjAUny6ec/bazKztuFjWyW4TKUXptZ+n0UlV30feP2Y/KAWFoCN7qYdeydXbWM7lMqqv/nofdHkVbA9YGK0kXj3JdcoT50cZ0pUC1roJL9C2i4Hy+olFRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752744558; c=relaxed/simple;
-	bh=mH+YbEAXlJWH++eCVNxLYsOB6N+PZNhGYfFFQiF6ApQ=;
+	s=arc-20240116; t=1752750641; c=relaxed/simple;
+	bh=EWFl6shmU2zXxv7iAdUpoBEoZHn97NDn8y/skqYlOGs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JZrT5nAcaL2ZSShRN/HXVAAzsfox6DJx2rLYZXvKlDAlGcy6YI59doOLlSYJhHs4NwRbex9MH2lxlYZPmEfyoaPxaObcS8CcgzM0fV7bJrc7dBCMXvACqUlgYg1zYPY7D0TyDFg8CZrMQGEB7D6FUKLdUWyO6/3b4fuzqZ+PN4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=TzSnh1CD; arc=none smtp.client-ip=148.163.156.1
+	 In-Reply-To:Content-Type; b=NIUAgWXqjGnjQJ97EWN8KRUB2b77Vtfnlj4lvbkbFB34Ns5g+6M+CSXdDgOtDSLSqcaneSQg5AcJY6axENOStN9JHzkmJjvWPvhPCCZ+GG9jBpKj9+RZSGCxIwZXwsz95pf6vnX/RVNy8/pdHmsTcopDh3dE5+jYU2dCpkqJPwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Zl5vFhZX; arc=none smtp.client-ip=148.163.158.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="TzSnh1CD"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56GNPV9v017572;
-	Thu, 17 Jul 2025 09:27:51 GMT
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Zl5vFhZX"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56H8ShWI004602;
+	Thu, 17 Jul 2025 11:09:53 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=rVXK4n
-	jLLzFaBFUpR2DnrCCgtkl777amkMgNdy1I+X8=; b=TzSnh1CDfxpUyn7niuL0kC
-	EAe8Yf1AioeVZg/z7AgxUjU+PpEaupV8mJ1gijnVJlTUxVSTifuIF1soAekTWOwP
-	qzapAK3Y2tFu3b2H1PsS7RKV9GEZ+Wy028lHJCadERruYP7Iz5sKAC8u9XaThLjB
-	7QOaOofM9yE3hLXTzSNh1Hs0bO3hEWivP659NPTcGioIBdHaas4l3Ttv5ZjDY1XY
-	aEZ6Ry8UAaOiocuw+rYHX1hNOLiffXArkQmTRaA0srIb7YtXPWncSqWrT56/ojTy
-	GjK/m+dzUud6fWHEWTaKX1JIsr6PIP/4B92axHDSMiny9pVwJGvdyRAHQki4GKww
+	:message-id:mime-version:references:subject:to; s=pp1; bh=2CzZTk
+	QfcLO+g8E9ozYuUqDsF0V+r5NipF1gMiNv1zE=; b=Zl5vFhZXfpGTkZaFj1mcSP
+	Xa5AcqP444y819/uasfzbe+bijSWDMBfszHjB17fxzY1NCjFwY98soGG41aBIROG
+	GzZFdyb2U2x/YmrjGiLI3HZPggT4YPvQDtoDqnBOSHhj/z0S88cWUihqFWUGT+xy
+	J1r7+7KqEBvf+JRqeetZnD9d5Zn5MtE8il6nnsIOsmoHFDitZdebX7qAPNebYtmo
+	cC3xzGvsLf2+vUD9+Tx3rl4W+g0X1CSn4E9o0Lv2Dma21WOgrocNlkmGWYPANQQv
+	45hP1O11wbbhHHeISzsH7+Ic4Z5+L/oPapKBTlrHqlRLC45KpfICOXvCyQmcDgEg
 	==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47xh9036bc-1
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47ufc7a8ne-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 17 Jul 2025 09:27:50 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 56H5o3HJ032738;
-	Thu, 17 Jul 2025 09:27:49 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 47v48mb8gc-1
+	Thu, 17 Jul 2025 11:09:52 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 56HAU0wZ021890;
+	Thu, 17 Jul 2025 11:09:51 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 47v4r3bhk4-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 17 Jul 2025 09:27:49 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 56H9RjBJ51970528
+	Thu, 17 Jul 2025 11:09:51 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 56HB9ldt32834162
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 17 Jul 2025 09:27:45 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C24022004B;
-	Thu, 17 Jul 2025 09:27:45 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 66F1720043;
-	Thu, 17 Jul 2025 09:27:45 +0000 (GMT)
+	Thu, 17 Jul 2025 11:09:47 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A0E272004E;
+	Thu, 17 Jul 2025 11:09:47 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4424B2004B;
+	Thu, 17 Jul 2025 11:09:47 +0000 (GMT)
 Received: from [9.152.222.105] (unknown [9.152.222.105])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 17 Jul 2025 09:27:45 +0000 (GMT)
-Message-ID: <ae46c02a-d871-4b26-97f4-bd82361ab8bc@linux.ibm.com>
-Date: Thu, 17 Jul 2025 11:27:45 +0200
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 17 Jul 2025 11:09:47 +0000 (GMT)
+Message-ID: <b5121d71-f916-45ea-9e6c-b74a27f90dcd@linux.ibm.com>
+Date: Thu, 17 Jul 2025 13:09:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -62,8 +62,8 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v1 06/16] unwind_user: Enable archs that define CFA =
- SP_callsite + offset
+Subject: Re: [RFC PATCH v1 07/16] unwind_user: Enable archs that do not
+ necessarily save RA
 To: Josh Poimboeuf <jpoimboe@kernel.org>
 Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
         bpf@vger.kernel.org, x86@kernel.org,
@@ -85,95 +85,137 @@ Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
         Jens Axboe <axboe@kernel.dk>, Florian Weimer <fweimer@redhat.com>,
         Sam James <sam@gentoo.org>
 References: <20250710163522.3195293-1-jremus@linux.ibm.com>
- <20250710163522.3195293-7-jremus@linux.ibm.com>
- <qoiocmdhuuaox5v5ig2ui67qbuxkvzl4z3ft4gdp7p3c4b4zfq@trjthmmculkf>
+ <20250710163522.3195293-8-jremus@linux.ibm.com>
+ <xgbpe46th7rbpslybo5xdt57ushlgwr5xyrq4epuft5nfrqms3@izeojto3wzu4>
 Content-Language: en-US
 From: Jens Remus <jremus@linux.ibm.com>
 Organization: IBM Deutschland Research & Development GmbH
-In-Reply-To: <qoiocmdhuuaox5v5ig2ui67qbuxkvzl4z3ft4gdp7p3c4b4zfq@trjthmmculkf>
+In-Reply-To: <xgbpe46th7rbpslybo5xdt57ushlgwr5xyrq4epuft5nfrqms3@izeojto3wzu4>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: wI6VvsJ2a1WoW6x-eSHjn4DVuGGhuHDT
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzE3MDA4MSBTYWx0ZWRfX2N4VbSkkUJ+I 9cJVvw34fHHv54+bWz4zYmKeqIZcvd9/SNPFA81lvMJSVkgKu414+bQPjp/CmWO/Cu6DU6A2gLv OJTDTwuM7asaj2e17olpfwqnOnaL32q26Mg68t9WGlTOlqsbYVRSwrmVPhQ8/1ZBNoB3zA/X3bu
- 95m98IXpxEh//nrPV9walN6zrqVdUMvfa/OkGixU3ikn5k1+FbkERHn3uIJ1diNEZwUSWNxRyMO tta/GFjbXz4mX/v3ZkpuYq2cZU7OM/bsYWtP6nFUHdEBGfDtYds3QhEFmbl9sc/RBkuQ0TZvyNU BaG1AaC/AuRv/wAmPjqU3aoZmHmtoh/qMth/W1kyfE9xAsFRj/DzE3tjhQQ0BvRy6lgzmJ3S6Xe
- 1QjNcRXC7LJ4bLWidPzMQ3TlwtdLfaneHCG0YeFFJ7cPggJ38pZbr4PuhBVZJV3jzcQC5fTx
-X-Proofpoint-GUID: wI6VvsJ2a1WoW6x-eSHjn4DVuGGhuHDT
-X-Authority-Analysis: v=2.4 cv=C43pyRP+ c=1 sm=1 tr=0 ts=6878c216 cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=VnNF1IyMAAAA:8 a=rJ7-DNekCqM9-0Bz_MUA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Authority-Analysis: v=2.4 cv=Je68rVKV c=1 sm=1 tr=0 ts=6878da00 cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=VnNF1IyMAAAA:8 a=Tut4zIY26HbeGpenRGoA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzE3MDA5NSBTYWx0ZWRfX9EsHMfQaa05K SSF51bv8yBrxeU38D+wK6AOmryBinIF5ONZirCqa/gNYLPuco+DTrWgKswI6evnqONxMSiNcFj9 Aq8NzBmIexei13+uvLKO7sn8rfiT3whVzrMY6b0KsQqW2akwDWHyuKjRXhzumhSuNlpBNWfOHqb
+ re6wWBbnzzmIARgVsC3r1UwPqEVKDsSzKFoJAMNFJLwfNcGkj3qYunmlYtX1gVznqcVC/hUVpZv wJyRxV/oyDvi0TI624dc4QHWEEC6WjDD9IuDw6aXb6KdL/VXkz5tjHYldq3k8VfNLgxVlwj6iCP 8pNeCHwZvAd3Su2aIWNPyqHPny8lb1jfpBbHGCvuPPwc3qxdlwiZaV78G4VHkrsW2UhptYMYDXf
+ +wp/SGs3geOCZ55bbLPabITJ8wlGJJjW8ZdPRcuBxfIJ1+nBrNgu6I7ooML+syzGVS4OHjK4
+X-Proofpoint-GUID: fRg2GABNH87s1fipgqSKkT5r6ME2NxOt
+X-Proofpoint-ORIG-GUID: fRg2GABNH87s1fipgqSKkT5r6ME2NxOt
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
  definitions=2025-07-17_01,2025-07-16_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
- impostorscore=0 malwarescore=0 mlxlogscore=757 mlxscore=0
- priorityscore=1501 clxscore=1015 lowpriorityscore=0 bulkscore=0
- adultscore=0 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ malwarescore=0 lowpriorityscore=0 suspectscore=0 adultscore=0
+ priorityscore=1501 clxscore=1015 bulkscore=0 phishscore=0 spamscore=0
+ mlxlogscore=999 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
  route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2507170081
+ definitions=main-2507170095
 
-On 16.07.2025 23:32, Josh Poimboeuf wrote:
-> On Thu, Jul 10, 2025 at 06:35:12PM +0200, Jens Remus wrote:
->> Most architectures define their CFA as the value of the stack pointer
->> (SP) at the call site in the previous frame, as suggested by the DWARF
->> standard:
->>
->>   CFA = <SP at call site>
->>
->> Enable unwinding of user space for architectures, such as s390, which
->> define their CFA as the value of the SP at the call site in the previous
->> frame with an offset:
->>
->>   CFA = <SP at call site> + offset
+On 17.07.2025 01:01, Josh Poimboeuf wrote:
+> On Thu, Jul 10, 2025 at 06:35:13PM +0200, Jens Remus wrote:
+>> +++ b/arch/Kconfig
+>> @@ -450,6 +450,11 @@ config HAVE_UNWIND_USER_SFRAME
+>>  	bool
+>>  	select UNWIND_USER
+>>  
+>> +config HAVE_USER_RA_REG
+>> +	bool
+>> +	help
+>> +	  The arch passes the return address (RA) in user space in a register.
 > 
-> This is a bit confusing, as the comment and code define it as
+> How about "HAVE_UNWIND_USER_RA_REG" so it matches the existing
+> namespace?
+
+Ok.  I am open to any improvements.
+
+>> @@ -310,6 +307,12 @@ static __always_inline int __find_fre(struct sframe_section *sec,
+>>  		return -EINVAL;
+>>  	fre = prev_fre;
+>>  
+>> +	if ((!IS_ENABLED(CONFIG_HAVE_USER_RA_REG) || !topmost) && !fre->ra_off) {
+>> +		dbg_sec_uaccess("fde addr 0x%x: zero ra_off\n",
+>> +				fde->start_addr);
+>> +		return -EINVAL;
+>> +	}
 > 
->     SP = CFA + offset
+> The topmost frame doesn't necessarily (or even likely) come from before
+> the prologue, or from a leaf function, so this check would miss the case
+> where a non-leaf function wrongly has !ra_off after its prologue.
+>
+> Which in reality is probably fine, as there are other guardrails in
+> place to catch such bad sframe data.
+
+On s390 the compiler may intermingle prologue instructions with function
+body instructions.  As a result !ra_off is valid as long as the RA
+register value from function entry has not been destroyed.  Furthermore
+the compiler may decide to save RA only if it is actually about to
+destroy the RA register value (e.g. due to a function call).
+
+Note that it is valid to restore the RA register value anywhere in a
+function and represent that in SFrame.  Following is an example from
+Glibc libc.so psignal() on s390x.  The RA rule changes back to "u"
+(= undefined; !ra_off) multiple times, whenever the RA register has
+its value from function entry again.
+
+  func idx [589]: pc = 0x6c530, size = 250 bytes <psignal>
+  STARTPC         CFA       FP        RA
+  000000000006c530  sp+160    u         u
+  000000000006c536  sp+160    c-72      c-48
+  000000000006c53c  sp+328    c-72      c-48
+  000000000006c5b4  sp+160    u         u
+  000000000006c5b6  sp+328    c-72      c-48
+  000000000006c60c  sp+160    u         u
+  000000000006c60e  sp+328    c-72      c-48
+
+> But then do we think the !ra_off check is still worth the effort?  It
+> would be simpler to just always assume !ra_off is valid for the
+> CONFIG_HAVE_USER_RA_REG case.
+
+It is only valid in the topmost frame.  Otherwise something is wrong.
+
+> I think I prefer the simplicity of removing the check, as the error
+> would be rare, and corrupt sframe would be caught in other ways.
+
+But I am fine with removing it in user unwind sframe (above), as
+user unwind performs the same check (see below).
+
+>> @@ -86,18 +88,28 @@ static int unwind_user_next(struct unwind_user_state *state)
+>>  
+>>  	/* Get the Stack Pointer (SP) */
+>>  	sp = cfa + frame->sp_val_off;
+>> -	/* Make sure that stack is not going in wrong direction */
+>> -	if (sp <= state->sp)
+>> +	/*
+>> +	 * Make sure that stack is not going in wrong direction.  Allow SP
+>> +	 * to be unchanged for the topmost frame, by subtracting topmost,
+>> +	 * which is either 0 or 1.
+>> +	 */
+>> +	if (sp <= state->sp - topmost)
+>>  		goto done;
+>>  
+>> -	/* Make sure that the address is word aligned */
+>> -	shift = sizeof(long) == 4 || compat_fp_state(state) ? 2 : 3;
+>> -	if ((cfa + frame->ra_off) & ((1 << shift) - 1))
+>> -		goto done;
+>>  
+>>  	/* Get the Return Address (RA) */
+>> -	if (unwind_get_user_long(ra, cfa + frame->ra_off, state))
+>> -		goto done;
+>> +	if (frame->ra_off) {
+>> +		/* Make sure that the address is word aligned */
+>> +		shift = sizeof(long) == 4 || compat_fp_state(state) ? 2 : 3;
+>> +		if ((cfa + frame->ra_off) & ((1 << shift) - 1))
+>> +			goto done;
+>> +		if (unwind_get_user_long(ra, cfa + frame->ra_off, state))
+>> +			goto done;
+>> +	} else {
+>> +		if (!IS_ENABLED(CONFIG_HAVE_USER_RA_REG) || !topmost)
+>> +			goto done;
 > 
-> Should the commit log be updated to match that?
+> I think this check is redundant with the one in __find_fre()?
 
-I agree that the commit message is confusing. Would it help if I replace
-it with the following:
-
-Most architectures define their CFA as the value of the stack pointer
-(SP) at the call site in the previous frame, as suggested by the DWARF
-standard.  Therefore the SP at call site can be unwound using an
-implicitly assumed value offset from CFA rule with an offset of zero:
-
-  .cfi_val_offset <SP>, 0
-
-As a result the SP at call site computes as follows:
-
-  SP = CFA
-
-Enable unwinding of user space for architectures, such as s390, which
-define their CFA as the value of the SP at the call site in the previous
-frame with an offset.  Do so by enabling architectures to override the
-default SP value offset from CFA of zero with an architecture-specific
-one:
-
-  .cfi_val_offset <SP>, offset
-  
-So that the SP at call site computes as follows:
-
-  SP = CFA + offset
-
->> +++ b/arch/x86/include/asm/unwind_user.h
->> @@ -8,6 +8,7 @@
->>  	.cfa_off	= (s32)sizeof(long) *  2,				\
->>  	.ra_off		= (s32)sizeof(long) * -1,				\
->>  	.fp_off		= (s32)sizeof(long) * -2,				\
->> +	.sp_val_off	= (s32)0,						\
-> 
-> IIUC, this is similar to ra_off and fp_off in that its an offset from
-> the CFA.  Can we call it "sp_off"?
-
-My intent was to use the terminology from DWARF CFI (i.e. "offset(N)"
-and "val_offset(N)") and the related assembler CFI directives:
-
-  .cfi_offset register, offset:  Previous value of register is saved at
-                                 offset from CFA.
-
-  .cfi_val_offset register, offset:  Previous value of register is
-                                     CFA + offset. 
+Correct.  This one needs to stay, as it is at the topmost level (user
+unwind checks the unwind info obtained from user unwind sframe or any
+other method).
 
 Regards,
 Jens
