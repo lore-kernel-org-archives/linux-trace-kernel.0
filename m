@@ -1,575 +1,210 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DA992F8C24;
-	Thu, 17 Jul 2025 15:29:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E45F2F7D18;
+	Thu, 17 Jul 2025 15:30:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752766201; cv=none; b=GvZq99IZGFGMUt8WvNafQvkLAfLEN62OYLyIIk5CB9+7UliW+fV2Yk7qLJRK5Yh6oyzozrMJ1kY48WRLRCnsvgRlWdjuoSE2g6E4No6XsMSDUSQehjVivtIB/uGjKEPrjNcuaTWG9nIGbGI8tKgRPCG2paD/iph98gheVSaY6kE=
+	t=1752766219; cv=none; b=HwG96j47bkihNmputQPU2P9tsfbd1ncp5ppVsL9Cp5JpMcWcxEWOt+KScvwaOhgWLgp/RNx4/2h9sVo9T4gKorSDk9qNlq2NHOc52xGSARP77vrpF8/hP6WjYD5ViddeACfN0z4pEQ6AHT3FpUy+umofGymRXq/6nn/KG0518Hs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752766201; c=relaxed/simple;
-	bh=zsRvh33Hfe4ha6Y47+FeKskdt2kc8iwrWtoda/9Y9OQ=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sc6QR3VEZiyXK3s89x/jvUaOvsoh9KmUmKMKY39UX+dD5P5kQpHb4TN+4EaDdqz6qCwMGibkfrBvg49vEzrUUgUTtktu+N7DU6ouMoINx6mT99dJ9AxRrtQn1JtPZnpFrpy67/ScTuAfKGszj7iEocB2jfpITs3JH3amnri1Hpg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GqmaGhu5; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1752766219; c=relaxed/simple;
+	bh=+Uo5z3GI60wRQMyDig+cCLdS1x45i/ACASbRLV6ML6g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tEmFwPf9+k5/aVY2jKL7J2jMSeIrbi6OuRiuPFhVbGxoBpk9AY/2qBIlTOriaZ0JMiru5wkLu+JcYcFRCLwZRZCuc/9w35WjfFZg2NxNhZoSI9BcZvyDwNzx+ScpdmFSGJxhjS9dHHDlbPZ+ceylT4Ga55tQovAt488dqJFTLLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JfItBHQi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GqmaGhu5"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-6097d144923so2503336a12.1;
-        Thu, 17 Jul 2025 08:29:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1752766198; x=1753370998; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Xvkwjk21IxR9ZhjZd7V8IXd6x48w85oxTVIXyT3Yl+A=;
-        b=GqmaGhu5a9dcDUIgK32JcdZkJ9Vo8scATl1uTurf1LEiLBF2f7MZFg3+VJHL+xg23J
-         2x+KJssISpiCEEVLpyNPOwVHhxogO4TFLOaYJgcWj6lsLu4FuhuCcI+UokY9143rVDOk
-         V4v3INvrpoYmF0W5L3qS3Znw/HmT26zlbSInapiYP9zyTYqW30WnGrQKKUjbpOx9ejBA
-         T54BkAjoKkbB00/+xmphGJd7JunefAALVEyqDeeDpZFXHF0mrNXhj5CdFtXKo3iqSNLc
-         EFGw77mg/P00cedO8FQMmOaQK05ZNaCtehRmuQ1h3Y6Xh+yQ7Dms/Sf4XK+WF3LklR3B
-         R/tA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752766198; x=1753370998;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Xvkwjk21IxR9ZhjZd7V8IXd6x48w85oxTVIXyT3Yl+A=;
-        b=W8So8J9PxvXyVAlwyoQyP3/orwWEMhS6513B+jKmXbSBv4jEmgWVI3tNfz+YxNlm8m
-         3a8qqQxInjKNpRy+EQkJ3VLKCVnLRXmTBHoOPjhOi3M6SuFCiqaEI9FAMVHkOyQfWp02
-         0499Yz/MK6f+uMijhO4UK1lbygbuWWGzhIaePP9fTi84FRtCmGl69pTydF0nKW1DzzQy
-         BvPdaYOMYzycKCwNS3JSU7GjMozRwm2+XdYefoXxeTmXKZMNnawDda3DBZQu1neeD+Lq
-         6yJv1UOq3OI4xx18XTYEG63zkhp0bJQrRg260qnvTqPmcumWb8u/18WzoDOVggC6rNo4
-         e6UA==
-X-Forwarded-Encrypted: i=1; AJvYcCV0Z7/IvFcX5/9irQbhOZC49AVSfGDxoEQBHuKZg32uE3xBTlpVLEg+h7GAHekS7+jyDtW+r0Gh3Myji+xwpyRy/JXu@vger.kernel.org, AJvYcCVMAAkn+rMUY6C24YzJpvZzDHhFN13A80yT03MKAdbAhu/Db5NgXepvU3x0u5SxoHz6pfKd2emthdO1tnhp@vger.kernel.org, AJvYcCVdvphefFwyAkN91Pz0gybTXSH5ni584H9cAioE0Pkbd/Fj4Yu2YKHtCEuR1Njfh5DurAA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXwmNSUjjorMEiiRT3dKQXbfeIVTbfj8/Fse1UTsuznsn1z04m
-	WWSdTGa5poCXopN08PKUH6EphyIdoaMe80NYYZ0twgKsnJalKic2JciR
-X-Gm-Gg: ASbGnctvWPWrdhB+0Uktl6TB6qY9lDUQC3HLig4eJgNf1DN8cu52HYj6aATFEx6vEok
-	AsG3DSv28PDGedh0ABCD4C4cTs1eRrcIsdJOlY/E0BE27yuI6wYzaaZgv2aeZzN3zK31SpCWXFk
-	LSEmvQYoT9KjP9J6CqV7ksamBNbBy9K8VlCPxsEx7eq/qDeKd6hDlmVbTGqM40YphtLB1RV1a1d
-	wwSc2+4ZKACtHrgj38XA6oOxnOyjB1bNAs17vyQ4ari3kVUCNPWGC2iM9wjvQEEV0nEbj9zMvcY
-	aAhoc1IUE0pgwsRRSDdwBPBFNvd0YS8hzt8SEXpJ2QDeH95Mdgevt+XHTLHhAe9dsEqIQZ2rouh
-	nhOy9QLzBFQ==
-X-Google-Smtp-Source: AGHT+IGbpik+tV6J9EpxwfWrwQ8tluBYo7OLDW8ZnSAErkQCO+bg7efOvwYdJ0rXX4WCCJnR5Ij4Ow==
-X-Received: by 2002:aa7:d3d5:0:b0:601:d0ec:fea0 with SMTP id 4fb4d7f45d1cf-612a327f45dmr2544831a12.5.1752766197444;
-        Thu, 17 Jul 2025 08:29:57 -0700 (PDT)
-Received: from krava ([176.74.159.170])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-612aa5e5e62sm949129a12.69.2025.07.17.08.29.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Jul 2025 08:29:56 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Thu, 17 Jul 2025 17:29:54 +0200
-To: Jiri Olsa <olsajiri@gmail.com>, Peter Zijlstra <peterz@infradead.org>
-Cc: Oleg Nesterov <oleg@redhat.com>, Andrii Nakryiko <andrii@kernel.org>,
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, x86@kernel.org,
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JfItBHQi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA556C4CEE3;
+	Thu, 17 Jul 2025 15:30:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752766218;
+	bh=+Uo5z3GI60wRQMyDig+cCLdS1x45i/ACASbRLV6ML6g=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=JfItBHQiONOKrUQC2r7MQ3GFE58hCt+o+WQvoYaojVC8sKM8CP0rxpQBSCsiba8An
+	 AN8ML3Qx+mj6dOVW1ykSYUEaf9w7uqEkwZ9X4j/DhB0Ycnobbme0dwQ+ZyWkJOx0sY
+	 0EqjVkQs6R5WbzPI8Tv8WUhYEROeTuqWTu1036KfI0FwmnmBt//zZspiGF0fzqqfc8
+	 hXiKQRseXLkXAlMStdj834YvbYqib/fG1U8rnz7OuoRiBls6fckl6EiAKdSEN6/mHp
+	 hT1seecD8ZJpx6+PxDcdTxM8YOPFA2wBie/n7TehLcwWuLDNeoctGSb/RXsYZh2WsB
+	 Cz3D8K5f06w4w==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 383CFCE09F5; Thu, 17 Jul 2025 08:30:13 -0700 (PDT)
+Date: Thu, 17 Jul 2025 08:30:13 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Boqun Feng <boqun.feng@gmail.com>, linux-rt-devel@lists.linux.dev,
+	rcu@vger.kernel.org,
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	David Laight <David.Laight@aculab.com>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@t-8ch.de>,
-	Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCHv5 perf/core 10/22] uprobes/x86: Add support to optimize
- uprobes
-Message-ID: <aHkW8gS1eOTfGFA1@krava>
-References: <20250711082931.3398027-1-jolsa@kernel.org>
- <20250711082931.3398027-11-jolsa@kernel.org>
- <20250714094824.GQ905792@noisy.programming.kicks-ass.net>
- <aHV2o4SXbnRZdQSu@krava>
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Uladzislau Rezki <urezki@gmail.com>, Zqiang <qiang.zhang@linux.dev>,
+	bpf <bpf@vger.kernel.org>
+Subject: Re: [RFC PATCH 1/2] rcu: Add rcu_read_lock_notrace()
+Message-ID: <f8baf05d-2472-4184-a154-805b0a818531@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <acb07426-db2f-4268-97e2-a9588c921366@paulmck-laptop>
+ <ba0743dc-8644-4355-862b-d38a7791da4c@efficios.com>
+ <512331d8-fdb4-4dc1-8d9b-34cc35ba48a5@paulmck-laptop>
+ <bbe08cca-72c4-4bd2-a894-97227edcd1ad@efficios.com>
+ <16dd7f3c-1c0f-4dfd-bfee-4c07ec844b72@paulmck-laptop>
+ <20250716110922.0dadc4ec@batman.local.home>
+ <895b48bd-d51e-4439-b5e0-0cddcc17a142@paulmck-laptop>
+ <bb20a575-235b-499e-aa1d-70fe9e2c7617@paulmck-laptop>
+ <e8f7829c-51c9-494a-827a-ee471b2e17cd@efficios.com>
+ <CAADnVQL7gz3OwUVCzt7dbJHvZzOK1zC4AOgMDu5mg6ssKuYU6Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <aHV2o4SXbnRZdQSu@krava>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAADnVQL7gz3OwUVCzt7dbJHvZzOK1zC4AOgMDu5mg6ssKuYU6Q@mail.gmail.com>
 
-On Mon, Jul 14, 2025 at 11:29:07PM +0200, Jiri Olsa wrote:
-
-SNIP
-
-> > > +static int swbp_unoptimize(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
-> > > +			   unsigned long vaddr)
-> > > +{
-> > > +	uprobe_opcode_t int3 = UPROBE_SWBP_INSN;
-> > > +	struct write_opcode_ctx ctx = {
-> > > +		.base = vaddr,
-> > > +	};
-> > > +	int err;
-> > > +
-> > > +	/*
-> > > +	 * We need to overwrite call instruction into nop5 instruction with
-> > > +	 * breakpoint (int3) installed on top of its first byte. We will:
-> > > +	 *
-> > > +	 * - overwrite call opcode with breakpoint (int3)
-> > > +	 * - sync cores
-> > > +	 * - write last 4 bytes of the nop5 instruction
-> > > +	 * - sync cores
-> > > +	 */
-> > > +
-> > > +	ctx.update = UNOPT_INT3;
-> > > +	err = write_insn(auprobe, vma, vaddr, &int3, 1, &ctx);
-> > > +	if (err)
-> > > +		return err;
-> > > +
-> > > +	smp_text_poke_sync_each_cpu();
-> > > +
-> > > +	ctx.update = UNOPT_PART;
-> > > +	err = write_insn(auprobe, vma, vaddr + 1, (uprobe_opcode_t *) auprobe->insn + 1, 4, &ctx);
-> > > +
-> > > +	smp_text_poke_sync_each_cpu();
-> > > +	return err;
-> > > +}
-> > 
-> > Please unify these two functions; it makes absolutely no sense to have
-> > two copies of this logic around.
+On Thu, Jul 17, 2025 at 07:57:27AM -0700, Alexei Starovoitov wrote:
+> On Thu, Jul 17, 2025 at 6:14 AM Mathieu Desnoyers
+> <mathieu.desnoyers@efficios.com> wrote:
+> >
+> > On 2025-07-16 18:54, Paul E. McKenney wrote:
+> > > On Wed, Jul 16, 2025 at 01:35:48PM -0700, Paul E. McKenney wrote:
+> > >> On Wed, Jul 16, 2025 at 11:09:22AM -0400, Steven Rostedt wrote:
+> > >>> On Fri, 11 Jul 2025 10:05:26 -0700
+> > >>> "Paul E. McKenney" <paulmck@kernel.org> wrote:
+> > >>>
+> > >>>> This trace point will invoke rcu_read_unlock{,_notrace}(), which will
+> > >>>> note that preemption is disabled.  If rcutree.use_softirq is set and
+> > >>>> this task is blocking an expedited RCU grace period, it will directly
+> > >>>> invoke the non-notrace function raise_softirq_irqoff().  Otherwise,
+> > >>>> it will directly invoke the non-notrace function irq_work_queue_on().
+> > >>>
+> > >>> Just to clarify some things; A function annotated by "notrace" simply
+> > >>> will not have the ftrace hook to that function, but that function may
+> > >>> very well have tracing triggered inside of it.
+> > >>>
+> > >>> Functions with "_notrace" in its name (like preempt_disable_notrace())
+> > >>> should not have any tracing instrumentation (as Mathieu stated)
+> > >>> inside of it, so that it can be used in the tracing infrastructure.
+> > >>>
+> > >>> raise_softirq_irqoff() has a tracepoint inside of it. If we have the
+> > >>> tracing infrastructure call that, and we happen to enable that
+> > >>> tracepoint, we will have:
+> > >>>
+> > >>>    raise_softirq_irqoff()
+> > >>>       trace_softirq_raise()
+> > >>>         [..]
+> > >>>           raise_softirq_irqoff()
+> > >>>              trace_softirq_raise()
+> > >>>                 [..]
+> > >>>                   Ad infinitum!
+> > >>>
+> > >>> I'm not sure if that's what is being proposed or not, but I just wanted
+> > >>> to make sure everyone is aware of the above.
+> > >>
+> > >> OK, I *think* I might actually understand the problem.  Maybe.
+> > >>
+> > >> I am sure that the usual suspects will not be shy about correcting any
+> > >> misapprehensions in the following.  ;-)
+> > >>
+> > >> My guess is that some users of real-time Linux would like to use BPF
+> > >> programs while still getting decent latencies out of their systems.
+> > >> (Not something I would have predicted, but then again, I was surprised
+> > >> some years back to see people with a 4096-CPU system complaining about
+> > >> 200-microsecond latency blows from RCU.)  And the BPF guys (now CCed)
+> > >> made some changes some years back to support this, perhaps most notably
+> > >> replacing some uses of preempt_disable() with migrate_disable().
+> > >>
+> > >> Except that the current __DECLARE_TRACE() macro defeats this work
+> > >> for tracepoints by disabling preemption across the tracepoint call,
+> > >> which might well be a BPF program.  So we need to do something to
+> > >> __DECLARE_TRACE() to get the right sort of protection while still leaving
+> > >> preemption enabled.
+> > >>
+> > >> One way of attacking this problem is to use preemptible RCU.  The problem
+> > >> with this is that although one could construct a trace-safe version
+> > >> of rcu_read_unlock(), these would negate some optimizations that Lai
+> > >> Jiangshan worked so hard to put in place.  Plus those optimizations
+> > >> also simplified the code quite a bit.  Which is why I was pushing back
+> > >> so hard, especially given that I did not realize that real-time systems
+> > >> would be running BPF programs concurrently with real-time applications.
+> > >> This meant that I was looking for a functional problem with the current
+> > >> disabling of preemption, and not finding it.
+> > >>
+> > >> So another way of dealing with this is to use SRCU-fast, which is
+> > >> like SRCU, but dispenses with the smp_mb() calls and the redundant
+> > >> read-side array indexing.  Plus it is easy to make _notrace variants
+> > >> srcu_read_lock_fast_notrace() and srcu_read_unlock_fast_notrace(),
+> > >> along with the requisite guards.
+> > >>
+> > >> Re-introducing SRCU requires reverting most of e53244e2c893 ("tracepoint:
+> > >> Remove SRCU protection"), and I have hacked together this and the
+> > >> prerequisites mentioned in the previous paragraph.
+> > >>
+> > >> These are passing ridiculously light testing, but probably have at
+> > >> least their share of bugs.
+> > >>
+> > >> But first, do I actually finally understand the problem?
+> > >
+> > > OK, they pass somewhat less ridiculously moderate testing, though I have
+> > > not yet hit them over the head with the ftrace selftests.
+> > >
+> > > So might as well post them.
+> > >
+> > > Thoughts?
+> >
+> > Your explanation of the problem context fits my understanding.
+> >
+> > Note that I've mostly been pulled into this by Sebastian who wanted
+> > to understand better the how we could make the tracepoint
+> > instrumentation work with bpf probes that need to sleep due to
+> > locking. Hence my original somewhat high-level desiderata.
 > 
-> will try to come up with something
-> 
+> I still don't understand what problem is being solved.
+> As current tracepoint code stands there is no issue with it at all
+> on PREEMPT_RT from bpf pov.
+> bpf progs that attach to tracepoints are not sleepable.
+> They don't call rt_spinlock either.
+> Recognizing tracepoints that can sleep/fault and allow
+> sleepable bpf progs there is on our to do list,
+> but afaik it doesn't need any changes to tracepoint infra.
+> There is no need to replace existing preempt_disable wrappers
+> with sleepable srcu_fast or anything else.
 
-would the change below be ok? int3_update function
+As I understand it, functionally there is no problem.
 
-thanks,
-jirka
+And if the BPF program has been attached to preemption-disabled code,
+there is also no unnecessary damage to real-time latency.  Preemption is
+presumably disabled for a reason, and that reason must be respected.
+Presumably, people using BPF in real-time systems are careful to either
+avoid attaching BPF programs to non-preemptible code on the one hand or
+carefully limit the runtime of those BPF programs.
 
+But if the BPF program has been attached to code having preemption
+enabled, then the current call to guard(preempt_notrace)() within
+__DECLARE_TRACE() means that the entire BPF program is running with
+preemption disabled, and for no good reason.
 
----
-diff --git a/arch/x86/include/asm/uprobes.h b/arch/x86/include/asm/uprobes.h
-index 678fb546f0a7..1ee2e5115955 100644
---- a/arch/x86/include/asm/uprobes.h
-+++ b/arch/x86/include/asm/uprobes.h
-@@ -20,6 +20,11 @@ typedef u8 uprobe_opcode_t;
- #define UPROBE_SWBP_INSN		0xcc
- #define UPROBE_SWBP_INSN_SIZE		   1
- 
-+enum {
-+	ARCH_UPROBE_FLAG_CAN_OPTIMIZE   = 0,
-+	ARCH_UPROBE_FLAG_OPTIMIZE_FAIL  = 1,
-+};
-+
- struct uprobe_xol_ops;
- 
- struct arch_uprobe {
-@@ -45,6 +50,8 @@ struct arch_uprobe {
- 			u8	ilen;
- 		}			push;
- 	};
-+
-+	unsigned long flags;
- };
- 
- struct arch_uprobe_task {
-diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
-index d18e1ae59901..9baf42723ec6 100644
---- a/arch/x86/kernel/uprobes.c
-+++ b/arch/x86/kernel/uprobes.c
-@@ -18,6 +18,7 @@
- #include <asm/processor.h>
- #include <asm/insn.h>
- #include <asm/mmu_context.h>
-+#include <asm/nops.h>
- 
- /* Post-execution fixups. */
- 
-@@ -702,7 +703,6 @@ static struct uprobe_trampoline *create_uprobe_trampoline(unsigned long vaddr)
- 	return tramp;
- }
- 
--__maybe_unused
- static struct uprobe_trampoline *get_uprobe_trampoline(unsigned long vaddr, bool *new)
- {
- 	struct uprobes_state *state = &current->mm->uprobes_state;
-@@ -891,6 +891,277 @@ static int __init arch_uprobes_init(void)
- 
- late_initcall(arch_uprobes_init);
- 
-+enum {
-+	EXPECT_SWBP,
-+	EXPECT_CALL,
-+};
-+
-+struct write_opcode_ctx {
-+	unsigned long base;
-+	int expect;
-+};
-+
-+static int is_call_insn(uprobe_opcode_t *insn)
-+{
-+	return *insn == CALL_INSN_OPCODE;
-+}
-+
-+static int verify_insn(struct page *page, unsigned long vaddr, uprobe_opcode_t *new_opcode,
-+		       int nbytes, void *data)
-+{
-+	struct write_opcode_ctx *ctx = data;
-+	uprobe_opcode_t old_opcode[5];
-+
-+	uprobe_copy_from_page(page, ctx->base, (uprobe_opcode_t *) &old_opcode, 5);
-+
-+	switch (ctx->expect) {
-+	case EXPECT_SWBP:
-+		if (is_swbp_insn(&old_opcode[0]))
-+			return 1;
-+		break;
-+	case EXPECT_CALL:
-+		if (is_call_insn(&old_opcode[0]))
-+			return 1;
-+		break;
-+	}
-+
-+	return -1;
-+}
-+
-+/*
-+ * Stolen comment from smp_text_poke_batch_finish.
-+ *
-+ * Modify multi-byte instructions by using INT3 breakpoints on SMP.
-+ * We completely avoid using stop_machine() here, and achieve the
-+ * synchronization using INT3 breakpoints and SMP cross-calls.
-+ *
-+ * The way it is done:
-+ *   - Add an INT3 trap to the address that will be patched
-+ *   - SMP sync all CPUs
-+ *   - Update all but the first byte of the patched range
-+ *   - SMP sync all CPUs
-+ *   - Replace the first byte (INT3) by the first byte of the replacing opcode
-+ *   - SMP sync all CPUs
-+ */
-+static int int3_update(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
-+		       unsigned long vaddr, char *insn, bool optimize)
-+{
-+	uprobe_opcode_t int3 = UPROBE_SWBP_INSN;
-+	struct write_opcode_ctx ctx = {
-+		.base = vaddr,
-+	};
-+	int err;
-+
-+	/*
-+	 * Write int3 trap.
-+	 *
-+	 * The swbp_optimize path comes with breakpoint already installed,
-+	 * so we can skip this step for optimize == true.
-+	 */
-+	if (!optimize) {
-+		ctx.expect = EXPECT_CALL;
-+		err = uprobe_write(auprobe, vma, vaddr, &int3, 1, verify_insn,
-+				   true /* is_register */, false /* do_update_ref_ctr */,
-+				   &ctx);
-+		if (err)
-+			return err;
-+	}
-+
-+	smp_text_poke_sync_each_cpu();
-+
-+	/* Write all but the first byte of the patched range. */
-+	ctx.expect = EXPECT_SWBP;
-+	err = uprobe_write(auprobe, vma, vaddr + 1, insn + 1, 4, verify_insn,
-+			   true /* is_register */, false /* do_update_ref_ctr */,
-+			   &ctx);
-+	if (err)
-+		return err;
-+
-+	smp_text_poke_sync_each_cpu();
-+
-+	/*
-+	 * Write first byte.
-+	 *
-+	 * The swbp_unoptimize needs to finish uprobe removal together
-+	 * with ref_ctr update, using uprobe_write with proper flags.
-+	 */
-+	err = uprobe_write(auprobe, vma, vaddr, insn, 1, verify_insn,
-+			   optimize /* is_register */, !optimize /* do_update_ref_ctr */,
-+			   &ctx);
-+	if (err)
-+		return err;
-+
-+	smp_text_poke_sync_each_cpu();
-+	return 0;
-+}
-+
-+static int swbp_optimize(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
-+			 unsigned long vaddr, unsigned long tramp)
-+{
-+	u8 call[5];
-+
-+	__text_gen_insn(call, CALL_INSN_OPCODE, (const void *) vaddr,
-+			(const void *) tramp, CALL_INSN_SIZE);
-+	return int3_update(auprobe, vma, vaddr, call, true /* optimize */);
-+}
-+
-+static int swbp_unoptimize(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
-+			   unsigned long vaddr)
-+{
-+	return int3_update(auprobe, vma, vaddr, auprobe->insn, false /* optimize */);
-+}
-+
-+static int copy_from_vaddr(struct mm_struct *mm, unsigned long vaddr, void *dst, int len)
-+{
-+	unsigned int gup_flags = FOLL_FORCE|FOLL_SPLIT_PMD;
-+	struct vm_area_struct *vma;
-+	struct page *page;
-+
-+	page = get_user_page_vma_remote(mm, vaddr, gup_flags, &vma);
-+	if (IS_ERR(page))
-+		return PTR_ERR(page);
-+	uprobe_copy_from_page(page, vaddr, dst, len);
-+	put_page(page);
-+	return 0;
-+}
-+
-+static bool __is_optimized(uprobe_opcode_t *insn, unsigned long vaddr)
-+{
-+	struct __packed __arch_relative_insn {
-+		u8 op;
-+		s32 raddr;
-+	} *call = (struct __arch_relative_insn *) insn;
-+
-+	if (!is_call_insn(insn))
-+		return false;
-+	return __in_uprobe_trampoline(vaddr + 5 + call->raddr);
-+}
-+
-+static int is_optimized(struct mm_struct *mm, unsigned long vaddr, bool *optimized)
-+{
-+	uprobe_opcode_t insn[5];
-+	int err;
-+
-+	err = copy_from_vaddr(mm, vaddr, &insn, 5);
-+	if (err)
-+		return err;
-+	*optimized = __is_optimized((uprobe_opcode_t *)&insn, vaddr);
-+	return 0;
-+}
-+
-+static bool should_optimize(struct arch_uprobe *auprobe)
-+{
-+	return !test_bit(ARCH_UPROBE_FLAG_OPTIMIZE_FAIL, &auprobe->flags) &&
-+		test_bit(ARCH_UPROBE_FLAG_CAN_OPTIMIZE, &auprobe->flags);
-+}
-+
-+int set_swbp(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
-+	     unsigned long vaddr)
-+{
-+	if (should_optimize(auprobe)) {
-+		bool optimized = false;
-+		int err;
-+
-+		/*
-+		 * We could race with another thread that already optimized the probe,
-+		 * so let's not overwrite it with int3 again in this case.
-+		 */
-+		err = is_optimized(vma->vm_mm, vaddr, &optimized);
-+		if (err)
-+			return err;
-+		if (optimized)
-+			return 0;
-+	}
-+	return uprobe_write_opcode(auprobe, vma, vaddr, UPROBE_SWBP_INSN,
-+				   true /* is_register */);
-+}
-+
-+int set_orig_insn(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
-+		  unsigned long vaddr)
-+{
-+	if (test_bit(ARCH_UPROBE_FLAG_CAN_OPTIMIZE, &auprobe->flags)) {
-+		struct mm_struct *mm = vma->vm_mm;
-+		bool optimized = false;
-+		int err;
-+
-+		err = is_optimized(mm, vaddr, &optimized);
-+		if (err)
-+			return err;
-+		if (optimized) {
-+			err = swbp_unoptimize(auprobe, vma, vaddr);
-+			WARN_ON_ONCE(err);
-+			return err;
-+		}
-+	}
-+	return uprobe_write_opcode(auprobe, vma, vaddr, *(uprobe_opcode_t *)&auprobe->insn,
-+				   false /* is_register */);
-+}
-+
-+static int __arch_uprobe_optimize(struct arch_uprobe *auprobe, struct mm_struct *mm,
-+				  unsigned long vaddr)
-+{
-+	struct uprobe_trampoline *tramp;
-+	struct vm_area_struct *vma;
-+	bool new = false;
-+	int err = 0;
-+
-+	vma = find_vma(mm, vaddr);
-+	if (!vma)
-+		return -EINVAL;
-+	tramp = get_uprobe_trampoline(vaddr, &new);
-+	if (!tramp)
-+		return -EINVAL;
-+	err = swbp_optimize(auprobe, vma, vaddr, tramp->vaddr);
-+	if (WARN_ON_ONCE(err) && new)
-+		destroy_uprobe_trampoline(tramp);
-+	return err;
-+}
-+
-+void arch_uprobe_optimize(struct arch_uprobe *auprobe, unsigned long vaddr)
-+{
-+	struct mm_struct *mm = current->mm;
-+	uprobe_opcode_t insn[5];
-+
-+	/*
-+	 * Do not optimize if shadow stack is enabled, the return address hijack
-+	 * code in arch_uretprobe_hijack_return_addr updates wrong frame when
-+	 * the entry uprobe is optimized and the shadow stack crashes the app.
-+	 */
-+	if (shstk_is_enabled())
-+		return;
-+
-+	if (!should_optimize(auprobe))
-+		return;
-+
-+	mmap_write_lock(mm);
-+
-+	/*
-+	 * Check if some other thread already optimized the uprobe for us,
-+	 * if it's the case just go away silently.
-+	 */
-+	if (copy_from_vaddr(mm, vaddr, &insn, 5))
-+		goto unlock;
-+	if (!is_swbp_insn((uprobe_opcode_t*) &insn))
-+		goto unlock;
-+
-+	/*
-+	 * If we fail to optimize the uprobe we set the fail bit so the
-+	 * above should_optimize will fail from now on.
-+	 */
-+	if (__arch_uprobe_optimize(auprobe, mm, vaddr))
-+		set_bit(ARCH_UPROBE_FLAG_OPTIMIZE_FAIL, &auprobe->flags);
-+
-+unlock:
-+	mmap_write_unlock(mm);
-+}
-+
-+static bool can_optimize(struct arch_uprobe *auprobe, unsigned long vaddr)
-+{
-+	if (memcmp(&auprobe->insn, x86_nops[5], 5))
-+		return false;
-+	/* We can't do cross page atomic writes yet. */
-+	return PAGE_SIZE - (vaddr & ~PAGE_MASK) >= 5;
-+}
- #else /* 32-bit: */
- /*
-  * No RIP-relative addressing on 32-bit
-@@ -904,6 +1175,10 @@ static void riprel_pre_xol(struct arch_uprobe *auprobe, struct pt_regs *regs)
- static void riprel_post_xol(struct arch_uprobe *auprobe, struct pt_regs *regs)
- {
- }
-+static bool can_optimize(struct arch_uprobe *auprobe, unsigned long vaddr)
-+{
-+	return false;
-+}
- #endif /* CONFIG_X86_64 */
- 
- struct uprobe_xol_ops {
-@@ -1270,6 +1545,9 @@ int arch_uprobe_analyze_insn(struct arch_uprobe *auprobe, struct mm_struct *mm,
- 	if (ret)
- 		return ret;
- 
-+	if (can_optimize(auprobe, addr))
-+		set_bit(ARCH_UPROBE_FLAG_CAN_OPTIMIZE, &auprobe->flags);
-+
- 	ret = branch_setup_xol_ops(auprobe, &insn);
- 	if (ret != -ENOSYS)
- 		return ret;
-diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
-index b6b077cc7d0f..08ef78439d0d 100644
---- a/include/linux/uprobes.h
-+++ b/include/linux/uprobes.h
-@@ -192,7 +192,7 @@ struct uprobes_state {
- };
- 
- typedef int (*uprobe_write_verify_t)(struct page *page, unsigned long vaddr,
--				     uprobe_opcode_t *insn, int nbytes);
-+				     uprobe_opcode_t *insn, int nbytes, void *data);
- 
- extern void __init uprobes_init(void);
- extern int set_swbp(struct arch_uprobe *aup, struct vm_area_struct *vma, unsigned long vaddr);
-@@ -204,7 +204,8 @@ extern unsigned long uprobe_get_trap_addr(struct pt_regs *regs);
- extern int uprobe_write_opcode(struct arch_uprobe *auprobe, struct vm_area_struct *vma, unsigned long vaddr, uprobe_opcode_t,
- 			       bool is_register);
- extern int uprobe_write(struct arch_uprobe *auprobe, struct vm_area_struct *vma, const unsigned long opcode_vaddr,
--			uprobe_opcode_t *insn, int nbytes, uprobe_write_verify_t verify, bool is_register, bool do_update_ref_ctr);
-+			uprobe_opcode_t *insn, int nbytes, uprobe_write_verify_t verify, bool is_register, bool do_update_ref_ctr,
-+			void *data);
- extern struct uprobe *uprobe_register(struct inode *inode, loff_t offset, loff_t ref_ctr_offset, struct uprobe_consumer *uc);
- extern int uprobe_apply(struct uprobe *uprobe, struct uprobe_consumer *uc, bool);
- extern void uprobe_unregister_nosync(struct uprobe *uprobe, struct uprobe_consumer *uc);
-@@ -240,6 +241,7 @@ extern void uprobe_copy_from_page(struct page *page, unsigned long vaddr, void *
- extern void arch_uprobe_clear_state(struct mm_struct *mm);
- extern void arch_uprobe_init_state(struct mm_struct *mm);
- extern void handle_syscall_uprobe(struct pt_regs *regs, unsigned long bp_vaddr);
-+extern void arch_uprobe_optimize(struct arch_uprobe *auprobe, unsigned long vaddr);
- #else /* !CONFIG_UPROBES */
- struct uprobes_state {
- };
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index cbba31c0495f..e54081beeab9 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -192,7 +192,7 @@ static void copy_to_page(struct page *page, unsigned long vaddr, const void *src
- }
- 
- static int verify_opcode(struct page *page, unsigned long vaddr, uprobe_opcode_t *insn,
--			 int nbytes)
-+			 int nbytes, void *data)
- {
- 	uprobe_opcode_t old_opcode;
- 	bool is_swbp;
-@@ -492,12 +492,13 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
- 		bool is_register)
- {
- 	return uprobe_write(auprobe, vma, opcode_vaddr, &opcode, UPROBE_SWBP_INSN_SIZE,
--			    verify_opcode, is_register, true /* do_update_ref_ctr */);
-+			    verify_opcode, is_register, true /* do_update_ref_ctr */, NULL);
- }
- 
- int uprobe_write(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
- 		 const unsigned long insn_vaddr, uprobe_opcode_t *insn, int nbytes,
--		 uprobe_write_verify_t verify, bool is_register, bool do_update_ref_ctr)
-+		 uprobe_write_verify_t verify, bool is_register, bool do_update_ref_ctr,
-+		 void *data)
- {
- 	const unsigned long vaddr = insn_vaddr & PAGE_MASK;
- 	struct mm_struct *mm = vma->vm_mm;
-@@ -531,7 +532,7 @@ int uprobe_write(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
- 		goto out;
- 	folio = page_folio(page);
- 
--	ret = verify(page, insn_vaddr, insn, nbytes);
-+	ret = verify(page, insn_vaddr, insn, nbytes, data);
- 	if (ret <= 0) {
- 		folio_put(folio);
- 		goto out;
-@@ -2697,6 +2698,10 @@ bool __weak arch_uretprobe_is_alive(struct return_instance *ret, enum rp_check c
- 	return true;
- }
- 
-+void __weak arch_uprobe_optimize(struct arch_uprobe *auprobe, unsigned long vaddr)
-+{
-+}
-+
- /*
-  * Run handler and ask thread to singlestep.
-  * Ensure all non-fatal signals cannot interrupt thread while it singlesteps.
-@@ -2761,6 +2766,9 @@ static void handle_swbp(struct pt_regs *regs)
- 
- 	handler_chain(uprobe, regs);
- 
-+	/* Try to optimize after first hit. */
-+	arch_uprobe_optimize(&uprobe->arch, bp_vaddr);
-+
- 	if (arch_uprobe_skip_sstep(&uprobe->arch, regs))
- 		goto out;
- 
+Although this is not a functional issue, it is a first-class bug in
+terms of needlessly degrading real-time latency.
+
+And even though it isn't what Sebastian originally asked Mathieu for
+help with, it still needs to be fixed.
+
+My current offer is replacing that guard(preempt_notrace)() with its
+SRCU-fast counterpart of guard(srcu_fast_notrace)(&tracepoint_srcu).
+
+Light testing is going well thus far, though I clearly need the real-time
+guys to both review and test.
+
+I am sure that Mathieu, Sebastian, and the rest won't be shy about
+correcting any confusion on my part.  ;-)
+
+							Thanx, Paul
