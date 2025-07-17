@@ -1,82 +1,78 @@
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAD941F95C;
-	Thu, 17 Jul 2025 19:56:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 859F82B2D7;
+	Thu, 17 Jul 2025 20:23:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752782209; cv=none; b=Xy0G1hX6q0jPq69iEZol/iU5uK7iWBuhZWdfmiQLgv8XwXx3wNXHa8CAZIxh66MxI3HJxBy5Ha0yZIgXsP/m8dcBXZA05D3Xf48Mw1Pj/sV5MOd9KKLF3D7y99vv7kPsCr+Kn7cg/e+z7v7HJsENWL5LxwYLcJTp3KXKMXLxqq0=
+	t=1752783802; cv=none; b=VB0iMO90Kwo/9pEOT6s4AqxweSSBdg/KvYSxQCtW05cbnR5zxjoM9huaZSWqVIkuMEvu3h/AzgIfLcQ6qwP1O1Rzua4NLRm8K3FZDr1ucFqm0JTA/hEwHdtdptSEzPjIiheO0vWk1p2gIJPZhPy7/KmQnhIhF86ftlNHOI+YVMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752782209; c=relaxed/simple;
-	bh=I8eSrBKt326m+9P+PY4C4XiY4LCX892lLorjoTKNHq8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ELuk8tRXGvQCVEEbzdcaioScWNnOeOKkQAGq/VXBUtV11fSi+MBJGIUX1Rx2jpGFbBswE868y1weFBSEa6cGVp9jMN1FI4ggZph76Es7Zm/Yymx7xdSoTUfcrusFuX21NEpEzbGZLy3ogNqYGaVZeznilm3vqYSKS0xkz7C8nzE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf09.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay01.hostedemail.com (Postfix) with ESMTP id 1C4BD1D8B2E;
-	Thu, 17 Jul 2025 19:56:45 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf09.hostedemail.com (Postfix) with ESMTPA id 7636720025;
-	Thu, 17 Jul 2025 19:56:41 +0000 (UTC)
-Date: Thu, 17 Jul 2025 15:56:38 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Sebastian Andrzej
- Siewior <bigeasy@linutronix.de>, Boqun Feng <boqun.feng@gmail.com>,
- linux-rt-devel@lists.linux.dev, rcu@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Frederic Weisbecker
- <frederic@kernel.org>, Joel Fernandes <joelagnelf@nvidia.com>, Josh
- Triplett <josh@joshtriplett.org>, Lai Jiangshan <jiangshanlai@gmail.com>,
- Masami Hiramatsu <mhiramat@kernel.org>, Neeraj Upadhyay
- <neeraj.upadhyay@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Uladzislau Rezki <urezki@gmail.com>, Zqiang <qiang.zhang@linux.dev>,
- bpf@vger.kernel.org
-Subject: Re: [PATCH RFC 6/4] srcu: Add guards for SRCU-fast readers
-Message-ID: <20250717155638.63c4f58d@batman.local.home>
-In-Reply-To: <af022343-1719-4882-bf86-ec49e59f77c3@paulmck-laptop>
-References: <acb07426-db2f-4268-97e2-a9588c921366@paulmck-laptop>
-	<ba0743dc-8644-4355-862b-d38a7791da4c@efficios.com>
-	<512331d8-fdb4-4dc1-8d9b-34cc35ba48a5@paulmck-laptop>
-	<bbe08cca-72c4-4bd2-a894-97227edcd1ad@efficios.com>
-	<16dd7f3c-1c0f-4dfd-bfee-4c07ec844b72@paulmck-laptop>
-	<20250716110922.0dadc4ec@batman.local.home>
-	<895b48bd-d51e-4439-b5e0-0cddcc17a142@paulmck-laptop>
-	<bb20a575-235b-499e-aa1d-70fe9e2c7617@paulmck-laptop>
-	<58866d6b-f4d9-4aaf-abce-10ddf526c3ad@paulmck-laptop>
-	<20250717151934.282d8310@batman.local.home>
-	<af022343-1719-4882-bf86-ec49e59f77c3@paulmck-laptop>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1752783802; c=relaxed/simple;
+	bh=XqY5p7zDA5kravuWtxORVPxfgTEVUyJsSIe9PVxcZso=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rP+xsJncSYoqvvdr5QKRMAL+QJAmMgLsEI/Muawo5yJ7OoEx58Jy9YL1QrzGUUhz5TNfkfmo7eslv2hlQ84myGbQnNaA4gWOZxMsyfqvjDDmveruE3lhkxmc76Sr1SCYaKZsXXdUqv6/dsY7IIhvOWgsRtvtvCk1O4OHxVpHuoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id A990D2C0646D;
+	Thu, 17 Jul 2025 22:23:17 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 70A2444C264; Thu, 17 Jul 2025 22:23:17 +0200 (CEST)
+Date: Thu, 17 Jul 2025 22:23:17 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Matthew W Carlis <mattc@purestorage.com>, xueshuai@linux.alibaba.com,
+	anil.s.keshavamurthy@intel.com, bhelgaas@google.com, bp@alien8.de,
+	davem@davemloft.net, linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, mark.rutland@arm.com,
+	mathieu.desnoyers@efficios.com, mhiramat@kernel.org,
+	naveen@kernel.org, oleg@redhat.com, peterz@infradead.org,
+	rostedt@goodmis.org, tianruidong@linux.alibaba.com,
+	tony.luck@intel.com,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH v8] PCI: hotplug: Add a generic RAS tracepoint for
+ hotplug event
+Message-ID: <aHlbtTxO7mR9XfGX@wunner.de>
+References: <20250717172826.22120-1-mattc@purestorage.com>
+ <20250717190750.GA2592519@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: cicr4697j8g1qtjxa9hwuygj9mi3hg99
-X-Rspamd-Server: rspamout08
-X-Rspamd-Queue-Id: 7636720025
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19JduZW30vm/goGxt8d4wvYnbavzn2et1Y=
-X-HE-Tag: 1752782201-661520
-X-HE-Meta: U2FsdGVkX18fBDw8T8RnJurhGLzaWeEq/lPcgAdqC4oZ8R00PQCoJqebIBTvlGw/55ILxNuOeGvUkeXQmuO+rUp7gxVpZ+4dj/hDiqK6CJektI9tV9e2YQc6x7OgFqNmEtC9SzYRWwtkcx3B5UVcWMbU2uNcpmSgcnInvruH74QXVjlmcB9O+prPpMnqUlwv+UtrJvChfHm1TNr/s5EzlPeXQX0hgUAYQTTxHa/JxxojgNPszjQ8SqRmNiFsJNfS0oGzKSOH/AM4OA5Qqt4LG/B8da5JYkE0dyordnnG5SnJJzmBAZBdA8lIQVif+M5OgT+0YhG98n+c3UZ16O2PraymV7XHDd6w
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250717190750.GA2592519@bhelgaas>
 
-On Thu, 17 Jul 2025 12:51:29 -0700
-"Paul E. McKenney" <paulmck@kernel.org> wrote:
-
-> Thank you!  I will apply this on my next rebase.
+On Thu, Jul 17, 2025 at 02:07:50PM -0500, Bjorn Helgaas wrote:
+> and IIUC, it would be helpful for you to add:
 > 
-> The normal process puts this into the v6.18 merge window, that it, the
-> merge window after the upcoming one.  If you need it sooner, please let
-> us know.
+>   - DSP Vendor/Device ID (the Root Port or Switch Downstream Port,
+>     which is relatively static, so seems less useful to me than the
+>     USP/EP would be)
 
-I'd suggest 6.17. I can understand the delay for updates to the RCU
-logic for how subtle it can be, where more testing is required. But
-adding a guard() helper is pretty trivial and useful to have. I
-wouldn't delay it.
+Right, this is already logged in dmesg upon enumeration of the hotplug port,
+as well as available via lspci.
+
+>   - USP/EP Vendor/Device ID
+
+There's no 1:1 relation between link or presence events on the one hand,
+and enumeration of hotplugged components on the other hand:  The link
+may go up but the kernel may fail to enumerate the component, e.g. because
+it was yanked before it could be enumerated, or because the kernel has run
+out of MMIO space or bus numbers.
+
+Hence this would have to be logged through a separate tracepoint in
+pciehp_configure_device(), not by changing the tracepoints added here.
 
 Thanks,
 
--- Steve
+Lukas
