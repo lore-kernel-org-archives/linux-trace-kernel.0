@@ -1,88 +1,88 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBFFB2192EA
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 17 Jul 2025 07:22:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6DCE21A447
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 17 Jul 2025 07:22:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752736928; cv=none; b=n9XGCjxKzjEDaxc3Ip3ZXQIRDZqNgL5qIxeo1K8zFvUCfbi0o5VyciozBedRDeKZFZIhHJMBMlVhD212UAsc4fRadZALIVxvlv7Q6zGcIJtTCtKXi429o+u34w7JjniWUVFZYJTELpnZi+RufhJzh2PmSG9TGIxfHlvZUg6tV8Q=
+	t=1752736975; cv=none; b=U1mYwrp8Nl/ubw1M+8S9oKJ++6hV2o9qbQhmMUCfcU+t4wFdFbIHp8rN28+9zspQ5umvLjL0f0Yc6qfX53POa/cidMu/GT8b7mczsuzZ6AizcB0Q3D/bIiGPplOq9ZJAm19UBODXS3vKXkCViIDr9X2LoSnEdSmcuM2We1lybkg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752736928; c=relaxed/simple;
-	bh=tWDmCspVYb9wK2NOfdDGtxHX3NGRXaIDB6oxJ+Ggx2w=;
+	s=arc-20240116; t=1752736975; c=relaxed/simple;
+	bh=z9j/kRp2E8OBtyHpf3bE3Bgh0h7FB7kKCT1IIylTnNI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=N49GciB0TED4uwgBphlBW9kpurjuFTC4uoxAITYxJiysHy/MQDEVYv3FbOztgoilHqy8srQrkjy7yq+BfGW5APSCPavha/xM6pe3QeFDD5Tn3mByWYf2TCjx0iJGSPs4PR1twRy2BcKoicPKxlHV3ppSHc/dN2xv6ZK1YYFwXOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VcoO2U6n; arc=none smtp.client-ip=170.10.133.124
+	 To:Cc:Content-Type; b=DWAe9j7ZDaZnNmDgzYODfOUQ6CM1Hh//q7IMo0H9OPzjQMVOiQU+ruPKlfFBHZgakmN3wBMKRktFMFDlwTgqCQqMb1cgZElS9/ZtqNFWFK3gl4cgt0KLeG3U0WcZwmZygZyJiL21vkwcwbEwqCCYqFsblKhzIdVyvvhgpsscebM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fNGXiXW2; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VcoO2U6n"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fNGXiXW2"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1752736925;
+	s=mimecast20190719; t=1752736972;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=XQ39Fnx/vbGSljAimxTrmnp3D5hf3R4yTB7vGUtkUcY=;
-	b=VcoO2U6nrbF3P6BwrQivz/l+yjiYZJ7Y8AX71XgXSshcSK4CQNKK6yT3jSqC29e29ZG1K/
-	804YPCpvbNQ1IxW4DRDzN+ZWomXMrCEsyewG/bzZWPOrC5uVkx4HpEFui4h7L4NjWog/0x
-	rrJf72WVSwUIW/bC1biSyT2XUZ9bEQQ=
-Received: from mail-yw1-f200.google.com (mail-yw1-f200.google.com
- [209.85.128.200]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=JFbE7+bxkztH8ht0A9j4wnG3HbzAi42oef01y44iq/o=;
+	b=fNGXiXW2wGSrttvSWaAPoZiYG9SV1oKczlwOQPqnyBerpRGiG8VcdTPE3R6lvMoXt98Xzp
+	DFEd1morXDUf+dyvk5RGmzjRB+rsjE5aA7UZunPIoL5OIb5G5suV1t5RpVJm+8OPaCEtWV
+	Tp0MkHpOJaYLXQwcHWFvqnV2yvw8Eb0=
+Received: from mail-yw1-f198.google.com (mail-yw1-f198.google.com
+ [209.85.128.198]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-304-V9MSlrQIPV2lii0GuOKxig-1; Thu, 17 Jul 2025 03:22:04 -0400
-X-MC-Unique: V9MSlrQIPV2lii0GuOKxig-1
-X-Mimecast-MFC-AGG-ID: V9MSlrQIPV2lii0GuOKxig_1752736924
-Received: by mail-yw1-f200.google.com with SMTP id 00721157ae682-7183dc67fc4so9638417b3.3
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 17 Jul 2025 00:22:04 -0700 (PDT)
+ us-mta-617-rBNb5ILBMSyVd0meZUh17A-1; Thu, 17 Jul 2025 03:22:51 -0400
+X-MC-Unique: rBNb5ILBMSyVd0meZUh17A-1
+X-Mimecast-MFC-AGG-ID: rBNb5ILBMSyVd0meZUh17A_1752736970
+Received: by mail-yw1-f198.google.com with SMTP id 00721157ae682-7111ff9c057so9050687b3.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 17 Jul 2025 00:22:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752736924; x=1753341724;
-        h=content-transfer-encoding:to:subject:message-id:date:from
+        d=1e100.net; s=20230601; t=1752736970; x=1753341770;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=XQ39Fnx/vbGSljAimxTrmnp3D5hf3R4yTB7vGUtkUcY=;
-        b=AjJB1raNodGdXW0j4OR4enFeBZOv6eO/F/G1yD23H2BFSz75IFM0jZdoTC6gi70ZvY
-         PjTNPGHFXXvCD3QRdsRfq0Z0upNoNmxTaKegLkJZv6+6Mc/gx61A9HQbhy5BiIP2CABy
-         dwIQQYPAKdw81idpyHz4XQKwS0TcJMxDicfs49pV+IeMCFu38i8SxF5hkXPV5jB0BnD7
-         KaV7mULjyKMJhQkKIyzy2aMDNAxNthgYDtTej8pBOHzRIjNhDYom4vF99DhaB+fEdK3m
-         TLITnhzQWf9kWi1IOT321mBWL4xJLcwxuWVwrSdjnjO2jziHz2MC1jmCcZfny+AwihOr
-         ycKw==
-X-Forwarded-Encrypted: i=1; AJvYcCXVjVuxKN0EDc9Z1VqxQi4+K33zPSf5DspLDgVtdyOO4jOlfGYHEr4vnYDf/iHOi2NfnsBQ0fP8TxhuQrNdUTjDX7Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxiwu3bGz6ulg1WibCfQaKPyRNWQ+EOZdCd7gxV0jFYgc2NANnb
-	JHv6cxFyXjkDv3h3Xr3CbyNt6uFnHdzhPIndFITeSfl6d1Tff/GvpwIpkBPi0Gk02/UI6QGTSZa
-	hoji0KOgV/KtW/Jpx39wWoKjTbm/vJAI2ZR5stfv2ljk/foSBvOLiwCTAAbEa6ioXeYbWOJF630
-	lxZ7OOF/7XWxoLLkH/XmJlXHW7tKov1gf3fvyFoXR+oNnpY0Cd
-X-Gm-Gg: ASbGnct3V5to+5WLZTmHPaO4ZWuIJw+uVhtcEU/j0oFZxLNUcYmZOLB4aCVqSV1Gb+s
-	ok2lVz0UKt3UG9kesG7bldUWjYVwIfkA/OcGrqw0XseLuil+WKLrcByewu+YCqSNTZs0c4PnWUQ
-	iURUeZ5UpMta7qEmntKaM8nsU=
-X-Received: by 2002:a05:690c:7006:b0:70e:82d6:9af2 with SMTP id 00721157ae682-7183519693bmr85546927b3.34.1752736923772;
-        Thu, 17 Jul 2025 00:22:03 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFulp94zzqufWxgbn/qqUK0u8D80QwhjnNGORTCxK8HgNdkob8Z42M9OX9p9UcMtp5qaidEXGBGcHvo62zvmAU=
-X-Received: by 2002:a05:690c:7006:b0:70e:82d6:9af2 with SMTP id
- 00721157ae682-7183519693bmr85546287b3.34.1752736923365; Thu, 17 Jul 2025
- 00:22:03 -0700 (PDT)
+        bh=JFbE7+bxkztH8ht0A9j4wnG3HbzAi42oef01y44iq/o=;
+        b=w00q2YCOtzSDBaYxM8449qZ2UJuOo3tLmp7aCt4j9wU1MAsrKzBA0VKt9RBHtVvwYf
+         rYn0q9iVU+IeDw+EDTKrSCpQ+tkpOVCSbrpzxBcxLAqDiVR22UfMitLlcQim2Q/R0zLv
+         Sd86u/1Nhs7Zlkg9izZdCXtfkiYaJ4RLKi7U9H6v1O4hBJ0U+u1GENGnSGyO88qZ/tXb
+         8orHpfZwP03O8cKe6DT/wSSPC1UgMxLxl5FxQWT0odZH5neeydvy2g+WfKC1SHGFb2Dw
+         fzAftUyviqsiFovw71+LdNP13I1Zn8r3mVvvwBxjupfmbptXYRXoEIqxTpKbi7DjYF+s
+         WG/w==
+X-Forwarded-Encrypted: i=1; AJvYcCXAGmpYI0BX20Ft+Hul22BS0/jWw4yFmprWXmYf/0FbmuG9OScLb6BlBS3wE05wq4RzToEI0/V3Y2sT6lVf3akYXS0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+5AAFwXB66hRNGy5ZiEShmznMfGJ5x8qSk8ekF25PFemRTVUe
+	tBLN/i6NYLHeG+6QkmJTdUN+rrKb4IDaDckQlOVLdp1U/JRt8cfc1Et+j6BxkxpgNWVFOmcDFRq
+	9QcB7RqfwyqzLRYb4CiIgciPOpUxEvP/YK3pBs1i9g0kx8VEXYrE6CVtzj/ERbLPCc3+K/kKz5A
+	1qn3yW7A0dJ1zquHL4cXhKiLxQ2c2qcbObGkIV3YS1cyDURA0E
+X-Gm-Gg: ASbGncvpc4zi4hG/hW/eilrygeGsIFmzDWE9r9eDso4KJtfQ1R7Ase5JM/Ho0UkZm46
+	omGyFqsM8WLqpMKeMQDdcquy9txHtZQw5KKHPXPIPVFcyL7mSEBUXoGrwc94qgF50TX3U+D10Xy
+	Y29ehUIwBD7HIWMRkkBTvetxE=
+X-Received: by 2002:a05:690c:350d:b0:718:2154:62df with SMTP id 00721157ae682-71837469c95mr83297757b3.35.1752736970283;
+        Thu, 17 Jul 2025 00:22:50 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHTEQOqXObebRqrlKJLemLbpJQWqKxX4FiFWdy7vlPZ029cLEq4+lOCKX4kkTmc9Zh7ynQj/lyoUlwrfL87Fyg=
+X-Received: by 2002:a05:690c:350d:b0:718:2154:62df with SMTP id
+ 00721157ae682-71837469c95mr83295897b3.35.1752736967211; Thu, 17 Jul 2025
+ 00:22:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250714003207.113275-1-npache@redhat.com> <20250714003207.113275-2-npache@redhat.com>
- <qgcvsfhoq3pnvxhdn73dopbtvi75oghbaydg27atqfp556u6sa@ixwdwi73lgkl>
-In-Reply-To: <qgcvsfhoq3pnvxhdn73dopbtvi75oghbaydg27atqfp556u6sa@ixwdwi73lgkl>
+References: <20250714003207.113275-1-npache@redhat.com> <20250714003207.113275-5-npache@redhat.com>
+ <a337c251-c152-4f57-8ead-6e4419e49f0c@redhat.com>
+In-Reply-To: <a337c251-c152-4f57-8ead-6e4419e49f0c@redhat.com>
 From: Nico Pache <npache@redhat.com>
-Date: Thu, 17 Jul 2025 01:21:37 -0600
-X-Gm-Features: Ac12FXxi7mHJAWB-d7W3oMKlvMwZbeUXqKMgcsTZqrDy3LQaENgncw19n5KwkQU
-Message-ID: <CAA1CXcAmkembYSSYwRq6avfQN6TJnp8=f99MDv1kkEaL-huczA@mail.gmail.com>
-Subject: Re: [PATCH v9 01/14] khugepaged: rename hpage_collapse_* to collapse_*
-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, Nico Pache <npache@redhat.com>, linux-mm@kvack.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, david@redhat.com, ziy@nvidia.com, 
-	baolin.wang@linux.alibaba.com, lorenzo.stoakes@oracle.com, 
-	ryan.roberts@arm.com, dev.jain@arm.com, corbet@lwn.net, rostedt@goodmis.org, 
-	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
-	akpm@linux-foundation.org, baohua@kernel.org, willy@infradead.org, 
-	peterx@redhat.com, wangkefeng.wang@huawei.com, usamaarif642@gmail.com, 
-	sunnanyong@huawei.com, vishal.moola@gmail.com, 
+Date: Thu, 17 Jul 2025 01:22:21 -0600
+X-Gm-Features: Ac12FXzL2cbWnmcpfj5Yy4cS_OOfF-n9brr7FXMARu3knPEuWSWCEGWa47WO3XM
+Message-ID: <CAA1CXcDmoJqt7BAnQv=AcJatZ9cvSL-=zuEppLBpYJE_rMNDdQ@mail.gmail.com>
+Subject: Re: [PATCH v9 04/14] khugepaged: generalize alloc_charge_folio()
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-mm@kvack.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	ziy@nvidia.com, baolin.wang@linux.alibaba.com, lorenzo.stoakes@oracle.com, 
+	Liam.Howlett@oracle.com, ryan.roberts@arm.com, dev.jain@arm.com, 
+	corbet@lwn.net, rostedt@goodmis.org, mhiramat@kernel.org, 
+	mathieu.desnoyers@efficios.com, akpm@linux-foundation.org, baohua@kernel.org, 
+	willy@infradead.org, peterx@redhat.com, wangkefeng.wang@huawei.com, 
+	usamaarif642@gmail.com, sunnanyong@huawei.com, vishal.moola@gmail.com, 
 	thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com, 
 	kirill.shutemov@linux.intel.com, aarcange@redhat.com, raquini@redhat.com, 
 	anshuman.khandual@arm.com, catalin.marinas@arm.com, tiwai@suse.de, 
@@ -90,88 +90,124 @@ To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, Nico Pache <npache@redhat.com>,
 	jglisse@google.com, surenb@google.com, zokeefe@google.com, hannes@cmpxchg.org, 
 	rientjes@google.com, mhocko@suse.com, rdunlap@infradead.org, hughd@google.com
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: g4Jl0QL2KLEHv0DOF8ZJ7xD3KtyRHdWr7m_rMH4_qqA_1752736924
+X-Mimecast-MFC-PROC-ID: aQzVfaVrPsiI21UP7R8EEF_df2qr9yPSaoHTkXqg5dU_1752736970
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 16, 2025 at 8:30=E2=80=AFAM Liam R. Howlett <Liam.Howlett@oracl=
-e.com> wrote:
+On Wed, Jul 16, 2025 at 7:46=E2=80=AFAM David Hildenbrand <david@redhat.com=
+> wrote:
 >
-> * Nico Pache <npache@redhat.com> [250713 20:33]:
-> > The hpage_collapse functions describe functions used by madvise_collaps=
-e
-> > and khugepaged. remove the unnecessary hpage prefix to shorten the
-> > function name.
+> On 14.07.25 02:31, Nico Pache wrote:
+> > From: Dev Jain <dev.jain@arm.com>
 > >
-> > Reviewed-by: Zi Yan <ziy@nvidia.com>
+> > Pass order to alloc_charge_folio() and update mTHP statistics.
+> >
 > > Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+> > Co-developed-by: Nico Pache <npache@redhat.com>
 > > Signed-off-by: Nico Pache <npache@redhat.com>
->
->
-> This is funny.  I suggested this sort of thing in v7 but you said that
-> David H. said what to do, but then in v8 there was a discussion where
-> David said differently..
-Haha yes I'm sorry, I honestly misunderstood your request to mean
-"drop hpage_collapse" not just "hpage". In a meeting with David early
-on in this work he recommended renaming these. Dev made a good point
-that renaming these to khugepaged is a revert of previous commit.
->
-> Yes, I much prefer dropping the prefix that is already implied by the
-> file for static inline functions than anything else from the names.
->
-> Thanks, this looks nicer.
-I agree, thanks!
->
->
+> > Signed-off-by: Dev Jain <dev.jain@arm.com>
 > > ---
-> >  mm/khugepaged.c | 46 +++++++++++++++++++++++-----------------------
-> >  1 file changed, 23 insertions(+), 23 deletions(-)
+> >   Documentation/admin-guide/mm/transhuge.rst |  8 ++++++++
+> >   include/linux/huge_mm.h                    |  2 ++
+> >   mm/huge_memory.c                           |  4 ++++
+> >   mm/khugepaged.c                            | 17 +++++++++++------
+> >   4 files changed, 25 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/Documentation/admin-guide/mm/transhuge.rst b/Documentation=
+/admin-guide/mm/transhuge.rst
+> > index dff8d5985f0f..2c523dce6bc7 100644
+> > --- a/Documentation/admin-guide/mm/transhuge.rst
+> > +++ b/Documentation/admin-guide/mm/transhuge.rst
+> > @@ -583,6 +583,14 @@ anon_fault_fallback_charge
+> >       instead falls back to using huge pages with lower orders or
+> >       small pages even though the allocation was successful.
+> >
+> > +collapse_alloc
+> > +     is incremented every time a huge page is successfully allocated f=
+or a
+> > +     khugepaged collapse.
+> > +
+> > +collapse_alloc_failed
+> > +     is incremented every time a huge page allocation fails during a
+> > +     khugepaged collapse.
+> > +
+> >   zswpout
+> >       is incremented every time a huge page is swapped out to zswap in =
+one
+> >       piece without splitting.
+> > diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+> > index 7748489fde1b..4042078e8cc9 100644
+> > --- a/include/linux/huge_mm.h
+> > +++ b/include/linux/huge_mm.h
+> > @@ -125,6 +125,8 @@ enum mthp_stat_item {
+> >       MTHP_STAT_ANON_FAULT_ALLOC,
+> >       MTHP_STAT_ANON_FAULT_FALLBACK,
+> >       MTHP_STAT_ANON_FAULT_FALLBACK_CHARGE,
+> > +     MTHP_STAT_COLLAPSE_ALLOC,
+> > +     MTHP_STAT_COLLAPSE_ALLOC_FAILED,
+> >       MTHP_STAT_ZSWPOUT,
+> >       MTHP_STAT_SWPIN,
+> >       MTHP_STAT_SWPIN_FALLBACK,
+> > diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> > index bd7a623d7ef8..e2ed9493df77 100644
+> > --- a/mm/huge_memory.c
+> > +++ b/mm/huge_memory.c
+> > @@ -614,6 +614,8 @@ static struct kobj_attribute _name##_attr =3D __ATT=
+R_RO(_name)
+> >   DEFINE_MTHP_STAT_ATTR(anon_fault_alloc, MTHP_STAT_ANON_FAULT_ALLOC);
+> >   DEFINE_MTHP_STAT_ATTR(anon_fault_fallback, MTHP_STAT_ANON_FAULT_FALLB=
+ACK);
+> >   DEFINE_MTHP_STAT_ATTR(anon_fault_fallback_charge, MTHP_STAT_ANON_FAUL=
+T_FALLBACK_CHARGE);
+> > +DEFINE_MTHP_STAT_ATTR(collapse_alloc, MTHP_STAT_COLLAPSE_ALLOC);
+> > +DEFINE_MTHP_STAT_ATTR(collapse_alloc_failed, MTHP_STAT_COLLAPSE_ALLOC_=
+FAILED);
+> >   DEFINE_MTHP_STAT_ATTR(zswpout, MTHP_STAT_ZSWPOUT);
+> >   DEFINE_MTHP_STAT_ATTR(swpin, MTHP_STAT_SWPIN);
+> >   DEFINE_MTHP_STAT_ATTR(swpin_fallback, MTHP_STAT_SWPIN_FALLBACK);
+> > @@ -679,6 +681,8 @@ static struct attribute *any_stats_attrs[] =3D {
+> >   #endif
+> >       &split_attr.attr,
+> >       &split_failed_attr.attr,
+> > +     &collapse_alloc_attr.attr,
+> > +     &collapse_alloc_failed_attr.attr,
+> >       NULL,
+> >   };
 > >
 > > diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> > index a55fb1dcd224..eb0babb51868 100644
+> > index fa0642e66790..cc9a35185604 100644
 > > --- a/mm/khugepaged.c
 > > +++ b/mm/khugepaged.c
-> > @@ -402,14 +402,14 @@ void __init khugepaged_destroy(void)
-> >       kmem_cache_destroy(mm_slot_cache);
-> >  }
+> > @@ -1068,21 +1068,26 @@ static int __collapse_huge_page_swapin(struct m=
+m_struct *mm,
+> >   }
 > >
-> > -static inline int hpage_collapse_test_exit(struct mm_struct *mm)
-> > +static inline int collapse_test_exit(struct mm_struct *mm)
-> >  {
-> >       return atomic_read(&mm->mm_users) =3D=3D 0;
-> >  }
+> >   static int alloc_charge_folio(struct folio **foliop, struct mm_struct=
+ *mm,
+> > -                           struct collapse_control *cc)
+> > +                           struct collapse_control *cc, u8 order)
 >
-> ...
+> u8, really? :)
+At the time I knew I was going to use u8's at the bitmap level so I
+thought I should have them here too. But you are right I went through
+and cleaned up all the u8 usage with the exception of the actual
+bitmap storage.
 >
-> > -static int hpage_collapse_scan_pmd(struct mm_struct *mm,
-> > +static int collapse_scan_pmd(struct mm_struct *mm,
-> >                                  struct vm_area_struct *vma,
-> >                                  unsigned long address, bool *mmap_lock=
-ed,
-> >                                  struct collapse_control *cc)
+> Just use an "unsigned int" like folio_order() would or what
+> __folio_alloc() consumes.
 >
-> One thing I noticed here.
 >
-> Usually we try to do two tab indents on arguments because it allows for
-> less lines and less churn on argument list edits.
 >
-> That is, if you have two tabs then it does not line up with the code
-> below and allows more arguments on the same line.
+> Apart from that
 >
-> It also means that if the name changes, then you don't have to change
-> the white space of the argument list.
+> Acked-by: David Hildenbrand <david@redhat.com>
+Thank you!
+
 >
-> On that note, the spacing is now off where the names changed, but this
-> isn't a huge deal and I suspect it changes later anyways?  Anyways, this
-> is more of a nit than anything.. The example above looks like it didn't
-> line up to begin with.
-I went through and cleaned these up, both on this patch and future
-patches that had similar indentation issues.
+> --
+> Cheers,
 >
-> ...
->
-> Reviewed-by: Liam R. Howlett <Liam.Howlett@oracle.com>
-Thanks for your review!
+> David / dhildenb
 >
 
