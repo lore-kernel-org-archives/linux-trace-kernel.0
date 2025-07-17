@@ -1,186 +1,190 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E691221FF40
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 17 Jul 2025 07:26:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ABDC2F850;
+	Thu, 17 Jul 2025 09:29:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752737168; cv=none; b=c0HRWjnK5YcqFc6G4L9pSoATvHVH/Pa8k2cvwaQthcQCvpBMc1bB6i1X5Epfgnz8yQhQt+TSVc7lVWH9cN8nFrIU5JDT6h8LGG6YBmuWUJOsS1hk1qLp3ZggW6ozMohXZf7qsLWX+54+GwbezUsvhU+h0DMD+QfvtyL42jiurJw=
+	t=1752744558; cv=none; b=dYLjZk1TJQwbD/KFL3YvOQADUBWexxP2YYzlCTXWt5A3Jgp2NA8stLNk2CU/Zqsm50VJC0avUnSOhWaUvhSKL5/OFiFQKv4xnLLyGuk0xbygfUs5fs6HFY2bb/rhwusp0Ipa2PkApSSkXDgQxoIxVB9lGjKwVfqwe6iqgFGDFG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752737168; c=relaxed/simple;
-	bh=NOwIEeREB/ym9iFgMkdDeunubZxi6LNAtRLm2rvSy6k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=adyY5fasTVviMjqsf6DjH3whTwN57v0Wh4YoL5C1XJJ3kvPmE91JQiaWXMtTTV6b29N0YU4nk5B/eWDmxq5DogdZqbmz5VIAwPmvF3guoYUVW3lxeghUTCzBeN0hNJaLXZ0xFUcCGfvdmF3Ga99tidjxnMDTIqEdqgAmrnp5D1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ByLpXDJS; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1752744558; c=relaxed/simple;
+	bh=mH+YbEAXlJWH++eCVNxLYsOB6N+PZNhGYfFFQiF6ApQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JZrT5nAcaL2ZSShRN/HXVAAzsfox6DJx2rLYZXvKlDAlGcy6YI59doOLlSYJhHs4NwRbex9MH2lxlYZPmEfyoaPxaObcS8CcgzM0fV7bJrc7dBCMXvACqUlgYg1zYPY7D0TyDFg8CZrMQGEB7D6FUKLdUWyO6/3b4fuzqZ+PN4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=TzSnh1CD; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ByLpXDJS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1752737165;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vo8FQNXlen0UXALTqIXl1cj0LOauGoMS19U6EAESdmQ=;
-	b=ByLpXDJSmDn5XmlWc6h6F0jsDX8VPHK/BBwl6Zf3Uky6Eomlt+v8E5D0139qFplvV38+Qj
-	mWNbr0vVKsmZuEF0yBLrj6C358ZYydVnwLF6MHk0bYJLB9GhOFjrmTovpOALwxyUpC6OR+
-	cFVg7v/3qR51yFCqjIGegQ3oa1AVLIk=
-Received: from mail-yw1-f197.google.com (mail-yw1-f197.google.com
- [209.85.128.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-444-HzzBVFqVMxm0fWZIVO_pRA-1; Thu, 17 Jul 2025 03:26:04 -0400
-X-MC-Unique: HzzBVFqVMxm0fWZIVO_pRA-1
-X-Mimecast-MFC-AGG-ID: HzzBVFqVMxm0fWZIVO_pRA_1752737164
-Received: by mail-yw1-f197.google.com with SMTP id 00721157ae682-7183dc67fc4so9682687b3.3
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 17 Jul 2025 00:26:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752737164; x=1753341964;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vo8FQNXlen0UXALTqIXl1cj0LOauGoMS19U6EAESdmQ=;
-        b=eSY7Z1jj0VIdJMlLSlDIUe5jZc2fuPlyc20QzZSLDo9LqoRRC9hBxfSnVEoeJHah22
-         cVDXYCuL7jgVVHoTVQ6pNXTi5o4Oah6l24orUfrMeiFqxRescTViLMBlQJiNiEtcPtlz
-         sf9j0j5rDROk7MIp9AQg56ZO6zJWpMS/n8Hx+kxYMT1cFWdAZ+IlvkXHEBG6+e8IeZ0Z
-         hodBZ8EAOkIkdF8lFVkdYfbdL81x08unC+ebNg/kG5AE+LS7bCIaTSZUAb+sYIJr4L47
-         LTXfJzgn/QrKk/6tSzxOg7AG8bccLE5ko8a6SxndTKYr/eGJxdfz3ViDS+L111OQnSXZ
-         jEvA==
-X-Forwarded-Encrypted: i=1; AJvYcCWaznBzz4AIGF4zQli7DOAClPp6c4vZm6UV18ib0/QygJX6Vc6aqh3lTmKG0LLbW5X7B9kVPctIRNUjE6DeRaPft/0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwEFQZSOgQduS92UD6qsmKPq1ZyzTcBBUHeYxLb+26WmARogh20
-	FPA7S5k6VezcWtHEICINSHF7WWiv0YfBfWTHEHETSza25+ukuU/JtPePZJRiaQy1ULCKfhmyB/V
-	vezxjE1d6c3mR1Az/g7Uv9cCB7X8t3G7bWPR6ZWkdSRYXDXXecvtcFKxbEk+GpGMEa1kJ21sJco
-	k2N/jDLXMkXeLubHg44UjrhIHNAqYYPoDsmFBOIS7EuZ0uw2HC3w0qpdO3ngc=
-X-Gm-Gg: ASbGnctNK6c+hhjsb4fvu0UnkT1RQwrc8aUPEVZWLlHsJTZtYbHLhExLcyroKRkchqZ
-	oE91Ii4ACNU3feofEXgITX4gqMS0ti9IgT4FlTwjks7uI876hoZ2ZgZ9C6BXSLvMUJM8ua2OHeG
-	2ea/pUqT1N/x/VXTtfHiotxVk=
-X-Received: by 2002:a05:690c:6993:b0:70a:192d:122 with SMTP id 00721157ae682-71835178d52mr82694427b3.30.1752737164058;
-        Thu, 17 Jul 2025 00:26:04 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEMubBvQQAjL8j5OHlbNU/B1QBy1oxiKdyesMx8UucD2RpbZUXxzqn8VGYgbNvQhuy4s6xzfb4MYtoJBUi03NM=
-X-Received: by 2002:a05:690c:6993:b0:70a:192d:122 with SMTP id
- 00721157ae682-71835178d52mr82693867b3.30.1752737163491; Thu, 17 Jul 2025
- 00:26:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="TzSnh1CD"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56GNPV9v017572;
+	Thu, 17 Jul 2025 09:27:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=rVXK4n
+	jLLzFaBFUpR2DnrCCgtkl777amkMgNdy1I+X8=; b=TzSnh1CDfxpUyn7niuL0kC
+	EAe8Yf1AioeVZg/z7AgxUjU+PpEaupV8mJ1gijnVJlTUxVSTifuIF1soAekTWOwP
+	qzapAK3Y2tFu3b2H1PsS7RKV9GEZ+Wy028lHJCadERruYP7Iz5sKAC8u9XaThLjB
+	7QOaOofM9yE3hLXTzSNh1Hs0bO3hEWivP659NPTcGioIBdHaas4l3Ttv5ZjDY1XY
+	aEZ6Ry8UAaOiocuw+rYHX1hNOLiffXArkQmTRaA0srIb7YtXPWncSqWrT56/ojTy
+	GjK/m+dzUud6fWHEWTaKX1JIsr6PIP/4B92axHDSMiny9pVwJGvdyRAHQki4GKww
+	==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47xh9036bc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 17 Jul 2025 09:27:50 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 56H5o3HJ032738;
+	Thu, 17 Jul 2025 09:27:49 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 47v48mb8gc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 17 Jul 2025 09:27:49 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 56H9RjBJ51970528
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 17 Jul 2025 09:27:45 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C24022004B;
+	Thu, 17 Jul 2025 09:27:45 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 66F1720043;
+	Thu, 17 Jul 2025 09:27:45 +0000 (GMT)
+Received: from [9.152.222.105] (unknown [9.152.222.105])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 17 Jul 2025 09:27:45 +0000 (GMT)
+Message-ID: <ae46c02a-d871-4b26-97f4-bd82361ab8bc@linux.ibm.com>
+Date: Thu, 17 Jul 2025 11:27:45 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250714003207.113275-1-npache@redhat.com> <20250714003207.113275-11-npache@redhat.com>
- <3b8d32dd-9d40-44b1-a0ab-8185073b9072@redhat.com>
-In-Reply-To: <3b8d32dd-9d40-44b1-a0ab-8185073b9072@redhat.com>
-From: Nico Pache <npache@redhat.com>
-Date: Thu, 17 Jul 2025 01:25:37 -0600
-X-Gm-Features: Ac12FXzO2MpdN8Y0fWlVobBSI1-4HfFow54FOutJLg2yUFGIlRLNPwUMo-JRrD0
-Message-ID: <CAA1CXcD2KphY8PEHyjQuYhZJf_oiNz-8UN1m9AtPF7j9O7U2sw@mail.gmail.com>
-Subject: Re: [PATCH v9 10/14] khugepaged: allow khugepaged to check all
- anonymous mTHP orders
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-mm@kvack.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	ziy@nvidia.com, baolin.wang@linux.alibaba.com, lorenzo.stoakes@oracle.com, 
-	Liam.Howlett@oracle.com, ryan.roberts@arm.com, dev.jain@arm.com, 
-	corbet@lwn.net, rostedt@goodmis.org, mhiramat@kernel.org, 
-	mathieu.desnoyers@efficios.com, akpm@linux-foundation.org, baohua@kernel.org, 
-	willy@infradead.org, peterx@redhat.com, wangkefeng.wang@huawei.com, 
-	usamaarif642@gmail.com, sunnanyong@huawei.com, vishal.moola@gmail.com, 
-	thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com, 
-	kirill.shutemov@linux.intel.com, aarcange@redhat.com, raquini@redhat.com, 
-	anshuman.khandual@arm.com, catalin.marinas@arm.com, tiwai@suse.de, 
-	will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz, cl@gentwo.org, 
-	jglisse@google.com, surenb@google.com, zokeefe@google.com, hannes@cmpxchg.org, 
-	rientjes@google.com, mhocko@suse.com, rdunlap@infradead.org, hughd@google.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: QN0O2mt2G36ukZqc8KT8WKenv-IqvVmLxIx1ywc6Hz8_1752737164
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v1 06/16] unwind_user: Enable archs that define CFA =
+ SP_callsite + offset
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, x86@kernel.org,
+        Steven Rostedt <rostedt@kernel.org>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Ilya Leoshkevich <iii@linux.ibm.com>,
+        Masami Hiramatsu
+ <mhiramat@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Indu Bhagat <indu.bhagat@oracle.com>,
+        "Jose E. Marchesi" <jemarch@gnu.org>,
+        Beau Belgrave <beaub@linux.microsoft.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jens Axboe <axboe@kernel.dk>, Florian Weimer <fweimer@redhat.com>,
+        Sam James <sam@gentoo.org>
+References: <20250710163522.3195293-1-jremus@linux.ibm.com>
+ <20250710163522.3195293-7-jremus@linux.ibm.com>
+ <qoiocmdhuuaox5v5ig2ui67qbuxkvzl4z3ft4gdp7p3c4b4zfq@trjthmmculkf>
+Content-Language: en-US
+From: Jens Remus <jremus@linux.ibm.com>
+Organization: IBM Deutschland Research & Development GmbH
+In-Reply-To: <qoiocmdhuuaox5v5ig2ui67qbuxkvzl4z3ft4gdp7p3c4b4zfq@trjthmmculkf>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: wI6VvsJ2a1WoW6x-eSHjn4DVuGGhuHDT
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzE3MDA4MSBTYWx0ZWRfX2N4VbSkkUJ+I 9cJVvw34fHHv54+bWz4zYmKeqIZcvd9/SNPFA81lvMJSVkgKu414+bQPjp/CmWO/Cu6DU6A2gLv OJTDTwuM7asaj2e17olpfwqnOnaL32q26Mg68t9WGlTOlqsbYVRSwrmVPhQ8/1ZBNoB3zA/X3bu
+ 95m98IXpxEh//nrPV9walN6zrqVdUMvfa/OkGixU3ikn5k1+FbkERHn3uIJ1diNEZwUSWNxRyMO tta/GFjbXz4mX/v3ZkpuYq2cZU7OM/bsYWtP6nFUHdEBGfDtYds3QhEFmbl9sc/RBkuQ0TZvyNU BaG1AaC/AuRv/wAmPjqU3aoZmHmtoh/qMth/W1kyfE9xAsFRj/DzE3tjhQQ0BvRy6lgzmJ3S6Xe
+ 1QjNcRXC7LJ4bLWidPzMQ3TlwtdLfaneHCG0YeFFJ7cPggJ38pZbr4PuhBVZJV3jzcQC5fTx
+X-Proofpoint-GUID: wI6VvsJ2a1WoW6x-eSHjn4DVuGGhuHDT
+X-Authority-Analysis: v=2.4 cv=C43pyRP+ c=1 sm=1 tr=0 ts=6878c216 cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=VnNF1IyMAAAA:8 a=rJ7-DNekCqM9-0Bz_MUA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-07-17_01,2025-07-16_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
+ impostorscore=0 malwarescore=0 mlxlogscore=757 mlxscore=0
+ priorityscore=1501 clxscore=1015 lowpriorityscore=0 bulkscore=0
+ adultscore=0 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507170081
 
-On Wed, Jul 16, 2025 at 9:28=E2=80=AFAM David Hildenbrand <david@redhat.com=
-> wrote:
->
-> On 14.07.25 02:32, Nico Pache wrote:
-> > From: Baolin Wang <baolin.wang@linux.alibaba.com>
->
-> Should the subject better be
->
-> "mm/khugepaged: enable collapsing mTHPs even when PMD THPs are disabled"
-Thank does read better.
->
-> (in general, I assume all subjects should be prefixed by "mm/khugepaged:"=
-)
-ehhh, seems like there's a mix of "mm/khugepaged", "khugepaged", and
-"mm: khugepaged:" being used in other commits. I prefer using
-khugepaged as it leaves me more space for the commit title
->
-> >
-> > We have now allowed mTHP collapse, but thp_vma_allowable_order() still =
-only
-> > checks if the PMD-sized mTHP is allowed to collapse. This prevents scan=
-ning
-> > and collapsing of 64K mTHP when only 64K mTHP is enabled. Thus, we shou=
-ld
-> > modify the checks to allow all large orders of anonymous mTHP.
-> >
-> > Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-> > Signed-off-by: Nico Pache <npache@redhat.com>
-> > ---
-> >   mm/khugepaged.c | 13 +++++++++----
-> >   1 file changed, 9 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> > index 7a9c4edf0e23..3772dc0d78ea 100644
-> > --- a/mm/khugepaged.c
-> > +++ b/mm/khugepaged.c
-> > @@ -491,8 +491,11 @@ void khugepaged_enter_vma(struct vm_area_struct *v=
-ma,
-> >   {
-> >       if (!test_bit(MMF_VM_HUGEPAGE, &vma->vm_mm->flags) &&
-> >           hugepage_pmd_enabled()) {
-> > -             if (thp_vma_allowable_order(vma, vm_flags, TVA_ENFORCE_SY=
-SFS,
-> > -                                         PMD_ORDER))
-> > +             unsigned long orders =3D vma_is_anonymous(vma) ?
-> > +                                     THP_ORDERS_ALL_ANON : BIT(PMD_ORD=
-ER);
-> > +
-> > +             if (thp_vma_allowable_orders(vma, vm_flags, TVA_ENFORCE_S=
-YSFS,
-> > +                                         orders))
-> >                       __khugepaged_enter(vma->vm_mm);
-> >       }
-> >   }
-> > @@ -2624,6 +2627,8 @@ static unsigned int collapse_scan_mm_slot(unsigne=
-d int pages, int *result,
-> >
-> >       vma_iter_init(&vmi, mm, khugepaged_scan.address);
-> >       for_each_vma(vmi, vma) {
-> > +             unsigned long orders =3D vma_is_anonymous(vma) ?
-> > +                                     THP_ORDERS_ALL_ANON : BIT(PMD_ORD=
-ER);
-> >               unsigned long hstart, hend;
-> >
-> >               cond_resched();
-> > @@ -2631,8 +2636,8 @@ static unsigned int collapse_scan_mm_slot(unsigne=
-d int pages, int *result,
-> >                       progress++;
-> >                       break;
-> >               }
-> > -             if (!thp_vma_allowable_order(vma, vma->vm_flags,
-> > -                                     TVA_ENFORCE_SYSFS, PMD_ORDER)) {
-> > +             if (!thp_vma_allowable_orders(vma, vma->vm_flags,
-> > +                     TVA_ENFORCE_SYSFS, orders)) {
-> >   skip:
-> >                       progress++;
-> >                       continue;
->
-> Acked-by: David Hildenbrand <david@redhat.com>
-Thank you for your review :)
+On 16.07.2025 23:32, Josh Poimboeuf wrote:
+> On Thu, Jul 10, 2025 at 06:35:12PM +0200, Jens Remus wrote:
+>> Most architectures define their CFA as the value of the stack pointer
+>> (SP) at the call site in the previous frame, as suggested by the DWARF
+>> standard:
+>>
+>>   CFA = <SP at call site>
+>>
+>> Enable unwinding of user space for architectures, such as s390, which
+>> define their CFA as the value of the SP at the call site in the previous
+>> frame with an offset:
+>>
+>>   CFA = <SP at call site> + offset
+> 
+> This is a bit confusing, as the comment and code define it as
+> 
+>     SP = CFA + offset
+> 
+> Should the commit log be updated to match that?
 
->
-> --
-> Cheers,
->
-> David / dhildenb
->
+I agree that the commit message is confusing. Would it help if I replace
+it with the following:
+
+Most architectures define their CFA as the value of the stack pointer
+(SP) at the call site in the previous frame, as suggested by the DWARF
+standard.  Therefore the SP at call site can be unwound using an
+implicitly assumed value offset from CFA rule with an offset of zero:
+
+  .cfi_val_offset <SP>, 0
+
+As a result the SP at call site computes as follows:
+
+  SP = CFA
+
+Enable unwinding of user space for architectures, such as s390, which
+define their CFA as the value of the SP at the call site in the previous
+frame with an offset.  Do so by enabling architectures to override the
+default SP value offset from CFA of zero with an architecture-specific
+one:
+
+  .cfi_val_offset <SP>, offset
+  
+So that the SP at call site computes as follows:
+
+  SP = CFA + offset
+
+>> +++ b/arch/x86/include/asm/unwind_user.h
+>> @@ -8,6 +8,7 @@
+>>  	.cfa_off	= (s32)sizeof(long) *  2,				\
+>>  	.ra_off		= (s32)sizeof(long) * -1,				\
+>>  	.fp_off		= (s32)sizeof(long) * -2,				\
+>> +	.sp_val_off	= (s32)0,						\
+> 
+> IIUC, this is similar to ra_off and fp_off in that its an offset from
+> the CFA.  Can we call it "sp_off"?
+
+My intent was to use the terminology from DWARF CFI (i.e. "offset(N)"
+and "val_offset(N)") and the related assembler CFI directives:
+
+  .cfi_offset register, offset:  Previous value of register is saved at
+                                 offset from CFA.
+
+  .cfi_val_offset register, offset:  Previous value of register is
+                                     CFA + offset. 
+
+Regards,
+Jens
+-- 
+Jens Remus
+Linux on Z Development (D3303)
++49-7031-16-1128 Office
+jremus@de.ibm.com
+
+IBM
+
+IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Böblingen; Registergericht: Amtsgericht Stuttgart, HRB 243294
+IBM Data Privacy Statement: https://www.ibm.com/privacy/
 
