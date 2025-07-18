@@ -1,35 +1,35 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FA28156678;
-	Fri, 18 Jul 2025 17:39:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD3B017A2F5;
+	Fri, 18 Jul 2025 17:46:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752860354; cv=none; b=WsZQgv0yCTf9q6h+UXRkS1ZR5kj6LiOkLTNFmA430/NJI9TC4ZW+qXdjSq0nSQO9cybLbLmZCCj0t0QO0BmYFHD39lbk8+YGutzY33qe0uTT87IffAWzReiTPHjX+nQ2AcCV6UzxxQJ8PtaZO2O9N07uXxMUHd52JeYTXDS7oNg=
+	t=1752860799; cv=none; b=dxqUsU1Mx9RbQBzGMpUm4rqqYHp1U43yo1OhEuzThSiyrbYRvhIwnXP95dCJUm5Uy+74Nlu9bxAqb5YAsjBD59B5Bf/AA4Q8+oW53tqOeBEN7ZFV75FGzH3XSEX+LLc+7R8Nj572D2c1YnGqsPVQ/xPY83BXE7f2WcTBy+tRGZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752860354; c=relaxed/simple;
-	bh=5Rk/G7wsR0SP1jYxjf6PluXIyHe7/NFMk+1LySyLWSM=;
+	s=arc-20240116; t=1752860799; c=relaxed/simple;
+	bh=oBz/Fp1EodKwOhBcnhDmslhGP47e5o6kukJjwTdnwmk=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MIpzY7IySin0H5JH+D7v01Ihj3DwEcRpc81s9YJw+hZOa3bbcDEWUtjq2xyydVDyjH4AI6w6pSdvWniFCqyhGr4nEKBwz6FNNc1IrE6zsVwUac2dIOdjlVx/Spc8o1xfpru9QZWk2meL9+1Z4mnoojJj5um7pqP6dDXxZ3wweGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
+	 MIME-Version:Content-Type; b=TSFukugVH8oGmycVvoiyWoh+opvCtkQKqyrdEcJTBWAS6QExRIYrePIxJL3mflSPruTkY3Bp9V1GlXZDni66kcd0k8ixwZ4s8wlrwz2JtCAKS6lR6p0u3aAVU5R9IGzNbk9Zo4m3Ai2MNmesNMI0OixStAtMT3uA6nUwFzUheOY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf01.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay10.hostedemail.com (Postfix) with ESMTP id E3703C016F;
-	Fri, 18 Jul 2025 17:39:09 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf01.hostedemail.com (Postfix) with ESMTPA id 4002C6000F;
-	Fri, 18 Jul 2025 17:39:08 +0000 (UTC)
-Date: Fri, 18 Jul 2025 13:39:07 -0400
+Received: from omf04.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id 29497B6582;
+	Fri, 18 Jul 2025 17:46:30 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf04.hostedemail.com (Postfix) with ESMTPA id 799EF2002B;
+	Fri, 18 Jul 2025 17:46:28 +0000 (UTC)
+Date: Fri, 18 Jul 2025 13:46:27 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/5] tracing: fprobe-event: Allocate string buffers from
+Subject: Re: [PATCH 3/5] tracing: kprobe-event: Allocate string buffers from
  heap
-Message-ID: <20250718133907.6e56a3fa@batman.local.home>
-In-Reply-To: <175283845881.343578.10010946807218897188.stgit@devnote2>
+Message-ID: <20250718134627.5d483ca4@batman.local.home>
+In-Reply-To: <175283846936.343578.3747359008449354291.stgit@devnote2>
 References: <175283843771.343578.8524137568048302760.stgit@devnote2>
-	<175283845881.343578.10010946807218897188.stgit@devnote2>
+	<175283846936.343578.3747359008449354291.stgit@devnote2>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -39,61 +39,83 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 4002C6000F
-X-Stat-Signature: pqz9gbzk837n1g88pn1xbtzzf6kkkzm3
+X-Rspamd-Queue-Id: 799EF2002B
+X-Stat-Signature: pjxx5y3m8aq9wx17o1mkubzcpyzcshwa
 X-Rspamd-Server: rspamout06
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19Oaf5WJqTst86BCkvqjzIGjaQw+0fUXAw=
-X-HE-Tag: 1752860348-939073
-X-HE-Meta: U2FsdGVkX1/c/3+Ayp0hT81n12/xrsmZzRdOGAxjRULOdE2aRkfXQMZCWe5aqOdSHM7RTFmxgahPAbiMO4VPVVDVseffe4rSRQNULKBXrOy7CjQgzzM7QiqLhHZ9Izw1wYDOxWixL6T4IV0IK639xa/sB3Xwx3StXpN4p0mLn4D9H9ouhwU8siNZpU9bavK9uA739nGXhdsaIMOKquIMZHe3qDpphEvnTTbZP/VQmL3SlJhMLuIzJwBKHAbhFkW1aFbCxwhhGPx7JwjoDkfKP/ZJhYO8i8EHfJg4t573iuX3APyGzyCthqGX9czORRhgg12+VB59RND5p7v0/a5E53kXPObQI0G5eU0XQqIOD+pgSl7Je+GVpw==
+X-Session-ID: U2FsdGVkX18zFTNJoWRCnrYe1mzILyAs45AHpmpIQJM=
+X-HE-Tag: 1752860788-768703
+X-HE-Meta: U2FsdGVkX1983FXNaEcUe10BALS9kFAXrTbh2q/p/7XpZPwlKHaAButfT8iJhMWfJJcBwTo6L0gpfT54as+VIVNglLtiQ3twha0cJtGStmBhj956TZ/vmKp9pneeqj3gzmEbb1oJtMGN8l5UrZfB1wgzDdSp5Usv8ONuIuqTWAYnfpGa9atRlU0dMRsz2krTUtnB6lrq/cOaj8MqcX64x/NQUKDmIzZmQ+p40w/hnu7U9r5Td8EotEVKc6G7wLmx6TUSQIaPOY0VPmGO54XMUUteDEhjOhdZ2geqXG9/rRhBGKf40gOjLy1+6lrOqjDaFEIbLAPOqKM9akCePkBHC4d1ttQwWgsyNgA7nie9jO67X9HK/32VzC7i0ZLQp/psHqNns//CDX8iCp1Qp/MHcw==
 
-On Fri, 18 Jul 2025 20:34:19 +0900
+On Fri, 18 Jul 2025 20:34:29 +0900
 "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
 > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > 
-> Allocate temporary string buffers for fprobe-event from heap
-> instead of stack. This fixes the stack frame exceed limit error.
+> Allocate temporary string buffers for parsing kprobe-events
+> from heap instead of stack.
 > 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202506240416.nZIhDXoO-lkp@intel.com/
 > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > ---
->  kernel/trace/trace_fprobe.c |   39 ++++++++++++++++++++++++++-------------
->  1 file changed, 26 insertions(+), 13 deletions(-)
+>  kernel/trace/trace_kprobe.c |   39 +++++++++++++++++++++++++--------------
+>  1 file changed, 25 insertions(+), 14 deletions(-)
 > 
-> diff --git a/kernel/trace/trace_fprobe.c b/kernel/trace/trace_fprobe.c
-> index 264cf7fc9a1d..fd1036e27309 100644
-> --- a/kernel/trace/trace_fprobe.c
-> +++ b/kernel/trace/trace_fprobe.c
-> @@ -1234,18 +1234,18 @@ static int trace_fprobe_create_internal(int argc, const char *argv[],
+> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+> index 15d7a381a128..793af6000f16 100644
+> --- a/kernel/trace/trace_kprobe.c
+> +++ b/kernel/trace/trace_kprobe.c
+> @@ -861,20 +861,20 @@ static int trace_kprobe_create_internal(int argc, const char *argv[],
 >  	 *  FETCHARG:TYPE : use TYPE instead of unsigned long.
 >  	 */
->  	struct trace_fprobe *tf __free(free_trace_fprobe) = NULL;
-> -	struct module *mod __free(module_put) = NULL;
-> -	int i, new_argc = 0, ret = 0;
+>  	struct trace_kprobe *tk __free(free_trace_kprobe) = NULL;
+> +	const char *event = NULL, *group = KPROBE_EVENT_SYSTEM;
+> +	const char **new_argv __free(kfree) = NULL;
+>  	int i, len, new_argc = 0, ret = 0;
 > -	bool is_return = false;
-> -	char *symbol __free(kfree) = NULL;
->  	const char *event = NULL, *group = FPROBE_EVENT_SYSTEM;
-> +	struct module *mod __free(module_put) = NULL;
->  	const char **new_argv __free(kfree) = NULL;
-> -	char buf[MAX_EVENT_NAME_LEN];
-> -	char gbuf[MAX_EVENT_NAME_LEN];
-> -	char sbuf[KSYM_NAME_LEN];
-> -	char abuf[MAX_BTF_ARGS_LEN];
-> +	char *symbol __free(kfree) = NULL;
+>  	char *symbol __free(kfree) = NULL;
+> -	char *tmp = NULL;
+> -	const char **new_argv __free(kfree) = NULL;
+> -	const char *event = NULL, *group = KPROBE_EVENT_SYSTEM;
 > +	char *ebuf __free(kfree) = NULL;
 > +	char *gbuf __free(kfree) = NULL;
-> +	char *sbuf __free(kfree) = NULL;
 > +	char *abuf __free(kfree) = NULL;
->  	char *dbuf __free(kfree) = NULL;
-> +	int i, new_argc = 0, ret = 0;
->  	bool is_tracepoint = false;
+> +	char *dbuf __free(kfree) = NULL;
+>  	enum probe_print_type ptype;
 > +	bool is_return = false;
+>  	int maxactive = 0;
+> -	long offset = 0;
+>  	void *addr = NULL;
+> -	char buf[MAX_EVENT_NAME_LEN];
+> -	char gbuf[MAX_EVENT_NAME_LEN];
+> -	char abuf[MAX_BTF_ARGS_LEN];
+> -	char *dbuf __free(kfree) = NULL;
+> +	char *tmp = NULL;
+> +	long offset = 0;
 >  
->  	if ((argv[0][0] != 'f' && argv[0][0] != 't') || argc < 2)
->  		return -ECANCELED;
-> @@ -1273,6 +1273,9 @@ static int trace_fprobe_create_internal(int argc, const char *argv[],
+>  	switch (argv[0][0]) {
+>  	case 'r':
+> @@ -893,6 +893,8 @@ static int trace_kprobe_create_internal(int argc, const char *argv[],
+>  		event++;
+>  
+>  	if (isdigit(argv[0][1])) {
+> +		char *buf __free(kfree) = NULL;
+
+So this gets freed when this if block ends, right?
+
+> +
+>  		if (!is_return) {
+>  			trace_probe_log_err(1, BAD_MAXACT_TYPE);
+>  			return -EINVAL;
+> @@ -905,7 +907,7 @@ static int trace_kprobe_create_internal(int argc, const char *argv[],
+>  			trace_probe_log_err(1, BAD_MAXACT);
+>  			return -EINVAL;
+>  		}
+> -		memcpy(buf, &argv[0][1], len);
+> +		buf = kmemdup(&argv[0][1], len + 1, GFP_KERNEL);
+>  		buf[len] = '\0';
+>  		ret = kstrtouint(buf, 0, &maxactive);
+>  		if (ret || !maxactive) {
+> @@ -973,6 +975,9 @@ static int trace_kprobe_create_internal(int argc, const char *argv[],
 >  
 >  	trace_probe_log_set_index(0);
 >  	if (event) {
@@ -102,73 +124,47 @@ On Fri, 18 Jul 2025 20:34:19 +0900
 > +			return -ENOMEM;
 >  		ret = traceprobe_parse_event_name(&event, &group, gbuf,
 >  						  event - argv[0]);
->  		if (ret)
-> @@ -1280,15 +1283,18 @@ static int trace_fprobe_create_internal(int argc, const char *argv[],
->  	}
->  
->  	if (!event) {
-> +		ebuf = kmalloc(MAX_EVENT_NAME_LEN, GFP_KERNEL);
 
-ebuf and gbuf are used with the same length. Why not just keep them
-using the same buffer? It worked before this patch, it should work
-after too.
+And you can't use the same trick here because
+traceprobe_parse_event_name() assigns "group" to gbuf and is used
+outside this if block.
 
-	buf = kmalloc(MAX_EVENT_NAME_LEN, GFP_KERNEL);
-	if (!buf)
-		return -ENOMEM;
+I notice there's no comment that states this. At the very minimum,
+traceprobe_parse_event_name() should have a kerneldoc comment above its
+definition and state this. But that's not an issue with this patch
+series. Just an observation. Thus...
 
-	if (event) {
-		[..]
-	}
-
-	if (!event) {
-		[..]
-	}
-
-And not require two different variables that will add two exit codes
-when one would do.
+Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
 -- Steve
 
 
+>  		if (ret)
+> @@ -981,16 +986,22 @@ static int trace_kprobe_create_internal(int argc, const char *argv[],
+>  
+>  	if (!event) {
+>  		/* Make a new event name */
+> +		ebuf = kmalloc(MAX_EVENT_NAME_LEN, GFP_KERNEL);
 > +		if (!ebuf)
 > +			return -ENOMEM;
->  		/* Make a new event name */
->  		if (is_tracepoint)
-> -			snprintf(buf, MAX_EVENT_NAME_LEN, "%s%s",
-> +			snprintf(ebuf, MAX_EVENT_NAME_LEN, "%s%s",
->  				 isdigit(*symbol) ? "_" : "", symbol);
+>  		if (symbol)
+> -			snprintf(buf, MAX_EVENT_NAME_LEN, "%c_%s_%ld",
+> +			snprintf(ebuf, MAX_EVENT_NAME_LEN, "%c_%s_%ld",
+>  				 is_return ? 'r' : 'p', symbol, offset);
 >  		else
-> -			snprintf(buf, MAX_EVENT_NAME_LEN, "%s__%s", symbol,
-> +			snprintf(ebuf, MAX_EVENT_NAME_LEN, "%s__%s", symbol,
->  				 is_return ? "exit" : "entry");
+> -			snprintf(buf, MAX_EVENT_NAME_LEN, "%c_0x%p",
+> +			snprintf(ebuf, MAX_EVENT_NAME_LEN, "%c_0x%p",
+>  				 is_return ? 'r' : 'p', addr);
 > -		sanitize_event_name(buf);
 > -		event = buf;
 > +		sanitize_event_name(ebuf);
 > +		event = ebuf;
 >  	}
 >  
->  	if (is_return)
-> @@ -1304,13 +1310,20 @@ static int trace_fprobe_create_internal(int argc, const char *argv[],
->  		ctx->flags |= TPARG_FL_TPOINT;
->  		mod = NULL;
->  		tpoint = find_tracepoint(symbol, &mod);
-> -		if (tpoint)
-> +		if (tpoint) {
-> +			sbuf = kmalloc(KSYM_NAME_LEN, GFP_KERNEL);
-> +			if (!sbuf)
-> +				return -ENOMEM;
->  			ctx->funcname = kallsyms_lookup((unsigned long)tpoint->probestub,
->  							NULL, NULL, NULL, sbuf);
-> +		}
->  	}
->  	if (!ctx->funcname)
->  		ctx->funcname = symbol;
->  
 > +	abuf = kmalloc(MAX_BTF_ARGS_LEN, GFP_KERNEL);
 > +	if (!abuf)
 > +		return -ENOMEM;
 >  	argc -= 2; argv += 2;
+>  	ctx->funcname = symbol;
 >  	new_argv = traceprobe_expand_meta_args(argc, argv, &new_argc,
->  					       abuf, MAX_BTF_ARGS_LEN, ctx);
 
