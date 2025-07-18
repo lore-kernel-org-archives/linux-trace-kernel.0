@@ -1,112 +1,175 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0794621ABDB;
-	Fri, 18 Jul 2025 21:24:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33D7A21FF28
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 18 Jul 2025 22:35:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752873893; cv=none; b=YSz1vBaUmR44utFjOFv7Erw8Plqa2eO3WXnacKyaasY8F3HyW2+7FsHR/Mohw8Vfqi9q4tEG226Aj3+czXx5+Avz3XWjMO0HqUdaYaryi/VEBqBTG64snzoo+4JtpS3/Tlxbhwd1AOPmrYR88lchkRJnXzLpYR7dLs6/2uVaNg8=
+	t=1752878112; cv=none; b=f4//hs0GyiDGZ9BLtDPX51spfqg4oY9tH+4goOFs96gS3LozyLHdARo41NHnjOLINQSJVqyiUgYDjMsBuGGf6RZ+k+whvTlQCdGRK0a4y39ZGzCtSdWW89/fXwIkCKmRnYjIwHoGOZO5lPtl2ERJaU/7prP08ZmZPdOrC6+2hs4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752873893; c=relaxed/simple;
-	bh=im0LTQLxPAOeG/77Xo+4Zf+M8+BWkj92FwbmNijiq08=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IliCpP/RRBDRqmHy5bEzfLt+XHCXQjONU7XPQAhFlkGF5SKxEC9uCCqM2TNTLRM0Pa5rOpdYKzUC5PxqLPduKRtLGUOfpOl4wpnAmyJhEUNb5KraO0SeEnlKHwxD8tERznP4nopsLdwKYXruhrZK1VwGmXLFKyi7N5a/ONbiVkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XlSLolAD; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1752878112; c=relaxed/simple;
+	bh=tkPTSQAd9h2DNl7pRHlG+8OmpNzmu5y8PbLNUmZaSpk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QWQT4P7CAOYv78di8iA8hJ3T8HsTU9nIUeGqPdScFsY9mLrb71k7y9lQ80S/VSOk9oR3umPwALmsm4GW+89piostTVu8lYVsapVNf19qrNfe2/4ECzFHhYccpq+WURHfS6Omi8mBdPVDQjtWgIHbuI8reAglgt0bsjndUih+34E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HUGBRMlC; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XlSLolAD"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a4f379662cso1863132f8f.0;
-        Fri, 18 Jul 2025 14:24:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1752873890; x=1753478690; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=t7hWuC5RvJazo5XlM0dlOAfjH8Jrh55sZo4UkN4XHdM=;
-        b=XlSLolAD/CfbcXSIDd01xnSLNjupCjJUOaKh40sqFmQNm4ChOkgZuSrF1iq2a0qpMr
-         vD778I1MzufPlWz9y8sZW7ZtM1G1ipYdQZQyRfus5rfVaC7pZCvVFxYgRB6g43+OgvTl
-         ToS9GyFLknEFkmkPXKyXubNNiTfG5fVVLQ5BPxu3uEnXEu/nGMttmwflvZalCFwL2fYJ
-         dP4dge3f2kIsC+F9G7SRmpB71PS82USUR1YwaavavhHO4GM1KK2EtYwo0bicJA3sYqmF
-         x/hzxStKeW/0IqIF9GYTZyHFfda6FHHiJgVrzOMjOEWN6MwMzphbiFGigyVLRt7yo+tu
-         tm6Q==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HUGBRMlC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1752878108;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MeNgxF5UCBfEjQZZt/3dunIhv4OxleQp/vJtVa2lu7w=;
+	b=HUGBRMlCCvBJy//AKU6OvHH23iZ9rOFU3ndmrSw/LJR9Jghz0ao+f8CLqeVvgOOGjkSm1Q
+	krfCrMmzbbj0fsyj6Ekl30gGJ38wTw2vJfoYDyLSs5/zWvjWTpXOzfL2xqn1Md0xHlagMn
+	mQEp3yhNpdv0mSNCbRNxO50OOaps1o0=
+Received: from mail-yw1-f200.google.com (mail-yw1-f200.google.com
+ [209.85.128.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-322-ZQ5gQ1S3PzeWf-CF6jrG3A-1; Fri, 18 Jul 2025 18:35:07 -0400
+X-MC-Unique: ZQ5gQ1S3PzeWf-CF6jrG3A-1
+X-Mimecast-MFC-AGG-ID: ZQ5gQ1S3PzeWf-CF6jrG3A_1752878106
+Received: by mail-yw1-f200.google.com with SMTP id 00721157ae682-711a46ce053so33547757b3.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 18 Jul 2025 15:35:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752873890; x=1753478690;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1752878106; x=1753482906;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=t7hWuC5RvJazo5XlM0dlOAfjH8Jrh55sZo4UkN4XHdM=;
-        b=eFkgUZzuXrILZdSrkYBS/ACxPOsajUacAVzF2EXLlpRAFx5BUNtL9lqCtsFuvOERWK
-         b77dtI8mm+g/1IMrJCcZfj/NDYNLXDnr2D8GNJS4HZo0D+pDWZyJ3dcPArqa111M2ygc
-         ogRXzeZ8M7sihFJV+zKNxQ02+URajqTX6MoKabERJs/rlSWHHKzhyqzuRf+P/jDIZB//
-         NfF7yytiZohF9h41VSa70ZK5cYf4k/1EzpORVHMC8uFrppdg8Dw2Nk/+45Gp3KjyRNhv
-         fPAh6dvUAXLN72uLKaNmmoI86xH3DUUD5ihoK+lHyEKH8+3zrptrEy/12S+AnMrepZEd
-         HgoA==
-X-Forwarded-Encrypted: i=1; AJvYcCUacKEdYLhFX709QVcdLyFD51AbnUxFIKByGfFlbsAOzwr1j5VJTy3p5Qyz0kEsuOaHGO6MQf6CEwwnIa5ROJM=@vger.kernel.org, AJvYcCWNbwC6HMldE5ozx+02HjgpZGICNXyRCVb6mJk7RdTLz3lekiKdopuA6exZX3I4rZUxHcpCggpHhJzEg9ZaI0QgsYwa@vger.kernel.org, AJvYcCWzScDZo3PM6x6KOFBNRSj6748qikWX7gnd4u9avhzL5v0XEfDzPdv7MfyShk5TwU4H5BjymscIdSqw+F2Q@vger.kernel.org
-X-Gm-Message-State: AOJu0YxDZI0cgw8Qp6yZK1Z1bxgT7ze/6eq2maStGqRk10rVlwY2ScGK
-	NBfpneIXddYWwDs35xR7K8nEAFi0+As8C3MEdQpjtYqVfpeLn3VnL2tL
-X-Gm-Gg: ASbGncuYdHQbwKdTT/lWPF/z9kLrwbxdZzCMl1W5rsX4IhUClv6UOmoRoYZLKGVbMcX
-	r+p/DKXswha3MBgeRlVjP2CJRp14cGNMBQ/208t83vOS7ygQSq4/lUi53JywmH/Ej82uipmCO+H
-	AD+0traRGxoPREhtmJOmMpHXvWi6UyCwlLayOID2i+K//pAcchQ9JvVcrfSyNaXyJgXrDqCXxP9
-	OvZOpqDK5CIcSH/fkdAdXBq9sB+mWmzhLKhzT0btWeFXr3jDq/FO7538B2RXUWQ/v3RUIu89EqZ
-	cb2xgTzv/9y/wiy1YRBqbOkS46bPAq25ZH9sdLM/1YL5UfTuvGuPYW/1dcc0lmVpDjQBAx34qp0
-	aoOXvA0ICdDWr6A0oLq1dgc9iSl7k1Z2AuCmtyAr+PY33zpP7mFDr9s158/a9
-X-Google-Smtp-Source: AGHT+IEmq7tvpzQGV1xWuIhLQqWelIwDGHeGg+CQxLmril0favWmgaefoWQjbU1qA85RWMATzxD8Bg==
-X-Received: by 2002:a05:6000:2285:b0:3a4:f7ae:77ca with SMTP id ffacd0b85a97d-3b60e4b8585mr10851424f8f.3.1752873889957;
-        Fri, 18 Jul 2025 14:24:49 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b61ca4d786sm2928732f8f.72.2025.07.18.14.24.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Jul 2025 14:24:49 -0700 (PDT)
-Date: Fri, 18 Jul 2025 22:24:48 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Colin Ian King <colin.i.king@gmail.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-trace-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ring-buffer: make the const read-only 'type' static
-Message-ID: <20250718222448.13162080@pumpkin>
-In-Reply-To: <20250714160858.1234719-1-colin.i.king@gmail.com>
-References: <20250714160858.1234719-1-colin.i.king@gmail.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+        bh=MeNgxF5UCBfEjQZZt/3dunIhv4OxleQp/vJtVa2lu7w=;
+        b=wXaNoSwbrDcq/gmye7VKwSLK7ABW4JnfBhyaXf9ybjOrbzivlXuabMZl1isWE6bWRM
+         pVcBFDBKSHBY4ARp2YYaTJ4jZeLtHbLbjgDRd0wFc6sYyBzXKmfWd1D9MAUf0LiAhAtT
+         ju8P/cpGKPwilN3FzV9hCCWmcJSFWY+pNZx7Ikp4t7WQBNJHsTMXnbZIMjLDz1MbGneP
+         DS7fCToVFIuNMcpS/gJpU/sOe+uKpTLI1Z9JafsWNijetxZA5mVtdOCQHAE3DeNQS9/G
+         DDlOhHR1NnBDC3kHL0Wm9X9lZiDnsqdbLamt0o3LSoLXWALMG54uj2uDuGZVRlB+3fAk
+         D0JA==
+X-Forwarded-Encrypted: i=1; AJvYcCWBRmGU97fNvGsHaBVxKFrJiWs+7bEJMSl+pfIEKJOuEVkozSC0r6xpnsiv+l7Ip2LylnspZaOZH/lzHFr6oW+ZyCI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+NUkP6JQYyy276pfRX7X+JebSIWVgzo792532JZUqxuwtu6w/
+	aay0fnL3y6laFloSQbT7+CSTULOp0krH0wF9vbmUAKmpSM3ZjNxU574mnCsb64NgSxLmSfm/YE7
+	ogJo3r1DjLi488o4KbIpbXATJLJxadJNEuHEKrKdZZmJQgmSCFX6llL4VFgZAWxwERn/mBXAl9U
+	RBjgs2QBBuvndkFgdvbaIOdGZd5a/ytpFAy2SFgfWnOgM7buo0
+X-Gm-Gg: ASbGnctQYHRwHIyxt6ilhDzpBzpWevwsKUjL0QIg0Af4TU74NnYq7xJ04cOi6PZudEj
+	jtDUdaexSTz6Veq0KPqVfNQ3Ju0/yjhC+lt8DCD+3XrT4V3J2TYJi0cfrDewJcAn3jJBY7nSRfg
+	eXzGZUjt2kpeXR1V8snY3oXMk=
+X-Received: by 2002:a05:690c:3381:b0:710:f39f:4d43 with SMTP id 00721157ae682-718370eebf5mr151640877b3.7.1752878106348;
+        Fri, 18 Jul 2025 15:35:06 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFtDqNhAwLC/pZ0SZYm/yFdraL0W/1wyk988LFZ3cFbmaM2zMi6HIsy7NS2kuQoOaJh3+sk3INvjvbsCfYcvCw=
+X-Received: by 2002:a05:690c:3381:b0:710:f39f:4d43 with SMTP id
+ 00721157ae682-718370eebf5mr151640437b3.7.1752878105985; Fri, 18 Jul 2025
+ 15:35:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20250714003207.113275-1-npache@redhat.com> <20250714003207.113275-10-npache@redhat.com>
+ <85b2cfd8-4aeb-4e98-8065-b6594783de62@linux.alibaba.com>
+In-Reply-To: <85b2cfd8-4aeb-4e98-8065-b6594783de62@linux.alibaba.com>
+From: Nico Pache <npache@redhat.com>
+Date: Fri, 18 Jul 2025 16:34:40 -0600
+X-Gm-Features: Ac12FXxkomg9g29JxE95wSIPOgeRNYVw8gHZYEJGmZnbAnxw2JgSYGWV08AFQqU
+Message-ID: <CAA1CXcCk5VTTs+cYtWSo_UC4eDBuUCa_2wrkiexDAS6HvvXiuA@mail.gmail.com>
+Subject: Re: [PATCH v9 09/14] khugepaged: avoid unnecessary mTHP collapse attempts
+To: Baolin Wang <baolin.wang@linux.alibaba.com>
+Cc: linux-mm@kvack.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	david@redhat.com, ziy@nvidia.com, lorenzo.stoakes@oracle.com, 
+	Liam.Howlett@oracle.com, ryan.roberts@arm.com, dev.jain@arm.com, 
+	corbet@lwn.net, rostedt@goodmis.org, mhiramat@kernel.org, 
+	mathieu.desnoyers@efficios.com, akpm@linux-foundation.org, baohua@kernel.org, 
+	willy@infradead.org, peterx@redhat.com, wangkefeng.wang@huawei.com, 
+	usamaarif642@gmail.com, sunnanyong@huawei.com, vishal.moola@gmail.com, 
+	thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com, 
+	kirill.shutemov@linux.intel.com, aarcange@redhat.com, raquini@redhat.com, 
+	anshuman.khandual@arm.com, catalin.marinas@arm.com, tiwai@suse.de, 
+	will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz, cl@gentwo.org, 
+	jglisse@google.com, surenb@google.com, zokeefe@google.com, hannes@cmpxchg.org, 
+	rientjes@google.com, mhocko@suse.com, rdunlap@infradead.org, hughd@google.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: sYYb8c_1Xtf4YWBpdH_i5L0C85yZRel_TDe882Ia30s_1752878106
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 14 Jul 2025 17:08:58 +0100
-Colin Ian King <colin.i.king@gmail.com> wrote:
+On Thu, Jul 17, 2025 at 8:15=E2=80=AFPM Baolin Wang
+<baolin.wang@linux.alibaba.com> wrote:
+>
+>
+>
+> On 2025/7/14 08:32, Nico Pache wrote:
+> > There are cases where, if an attempted collapse fails, all subsequent
+> > orders are guaranteed to also fail. Avoid these collapse attempts by
+> > bailing out early.
+> >
+> > Signed-off-by: Nico Pache <npache@redhat.com>
+> > ---
+> >   mm/khugepaged.c | 17 +++++++++++++++++
+> >   1 file changed, 17 insertions(+)
+> >
+> > diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+> > index a701d9f0f158..7a9c4edf0e23 100644
+> > --- a/mm/khugepaged.c
+> > +++ b/mm/khugepaged.c
+> > @@ -1367,6 +1367,23 @@ static int collapse_scan_bitmap(struct mm_struct=
+ *mm, unsigned long address,
+> >                               collapsed +=3D (1 << order);
+> >                               continue;
+> >                       }
+>
+> After doing more testing, I think you need to add the following changes
+> after patch 8.
+>
+> Because when collapsing mTHP, if we encounter a PTE-mapped large folio
+> within the PMD range, we should continue scanning to complete that PMD,
+> in case there is another mTHP that can be collapsed within that PMD range=
+.
+>
+> +                       if (ret =3D=3D SCAN_PTE_MAPPED_HUGEPAGE)
+> +                               continue;
+Ah good call, this patch is meant to be an optimization to the formal
+approach-- meaning there are cases where trying ('goto next') to
+collapse to lower orders is pointless, but I didn't fully consider the
+cases where trying the other items (sections of the PMD) in the stack
+are viable (ie continue). I'm going to spend some time confirming all
+the potential return values that can come from collapse_huge_page, and
+which ones belong in each group (goto next, continue, break). This
+will probably be turned into a switch statement.
+>
+> > +                     /*
+> > +                      * Some ret values indicate all lower order will =
+also
+> > +                      * fail, dont trying to collapse smaller orders
+> > +                      */
+After reading this comment again, i realized it's rather confusing...
+it makes it seem like these ret values are the ones that indicate that
+we should not keep trying to collapse to smaller orders. I'll clean up
+that comment too.
+> > +                     if (ret =3D=3D SCAN_EXCEED_NONE_PTE ||
+> > +                             ret =3D=3D SCAN_EXCEED_SWAP_PTE ||
+> > +                             ret =3D=3D SCAN_EXCEED_SHARED_PTE ||
+> > +                             ret =3D=3D SCAN_PTE_NON_PRESENT ||
+> > +                             ret =3D=3D SCAN_PTE_UFFD_WP ||
+> > +                             ret =3D=3D SCAN_ALLOC_HUGE_PAGE_FAIL ||
+> > +                             ret =3D=3D SCAN_CGROUP_CHARGE_FAIL ||
+> > +                             ret =3D=3D SCAN_COPY_MC ||
+> > +                             ret =3D=3D SCAN_PAGE_LOCK ||
+> > +                             ret =3D=3D SCAN_PAGE_COUNT)
+> > +                             goto next;
+> > +                     else
+>
+> Nit: the 'else' statement can be dropped.
+>
+> > +                             break;
+> >               }
+> >
+> >   next:
+While i'm at it i'll change this to next_order to be more clear.
 
-> Don't populate the read-only 'type' on the stack at run time,
-> instead make it static.
-> 
-> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
-> ---
->  kernel/trace/ring_buffer.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index 00fc38d70e86..39aa1f50274f 100644
-> --- a/kernel/trace/ring_buffer.c
-> +++ b/kernel/trace/ring_buffer.c
-> @@ -4118,7 +4118,7 @@ EXPORT_SYMBOL_GPL(ring_buffer_unlock_commit);
->  
->  static const char *show_irq_str(int bits)
->  {
-> -	const char *type[] = {
-> +	static const char * type[] = {
-
-Better would be:
-	static const char type[][4] = {
-
-  David
-
->  		".",	// 0
->  		"s",	// 1
->  		"h",	// 2
+Thank you !!
+-- Nico
+>
 
