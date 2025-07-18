@@ -1,97 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E56CB10E3;
-	Fri, 18 Jul 2025 05:19:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C5882E3701;
+	Fri, 18 Jul 2025 05:29:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752815998; cv=none; b=LS+eWUJDqCALw4yc3l9RyKptPns24inK2h9BWh1WKKQYQNma1zVPKAVHB5BT8sZ/uBwZFrwYXARxAMRPsT7xjMX/p0ZUu0VexbN+3VhP9FILIMrAHV/xwKG9zx2DV3gNxEKPM1yGXTTsYkKqSmhKRPX7AYZM4AezeCwt6p8IugM=
+	t=1752816573; cv=none; b=SZTwxaddmKnn9TsNcgPenzZiRZphY/8k6H/nBYDuYrb/vfQ1qkmAn6R8cN5XBSzotUErZ3e5yBbaYcVscBeI42DaY7bO5EWiyOjtKO/lwnzHJ3z1La+eUHv3sJg/U7wx94XqNNph9inML5MK6kc7YVkP8TtzDqzbtis8QQT51mw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752815998; c=relaxed/simple;
-	bh=H14cqUUN7unSm20jVmVhYHtI/P1gCTCcPHJlABdL4d8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HVcpfPtXC6OlDP6whMV57DxBMbGdBEtEm/eX6zBiOfnplion+AVFjSavqfC0nNgBLz5XxofD/RSn5840J6qTOA/pzOPLU/wkxXv3dacb09mhLnECAj5oAFjVE2Wa3WvKl9XDvwUMeTcIfqeSKwwarX6O4UaWRjMU8VG3nWXlPsI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=txoeRoOT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1752816573; c=relaxed/simple;
+	bh=m2miZFl5NgGe92LTcMBCK2TMuOH0GrVO+wRE0y1hl6c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=S9VsfHwNOtpB2rc2Dnqxetwt/qhvxjn+6RXQb3AEl8kcqCdJvzxgLkv5YWnwr6pSLtwn8c1+4vppfp7lxS8hkghVQB3q8rUu7rWR4i56Z2wHZRLcJ8C/M1iwBfVaDNV2a+kHz7ZT7uwtgKYlNODXdpjyeDDYT/t4bEJnjzzucz0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=W46kVCg0; arc=none smtp.client-ip=115.124.30.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="txoeRoOT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EAD4C4CEED;
-	Fri, 18 Jul 2025 05:19:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752815997;
-	bh=H14cqUUN7unSm20jVmVhYHtI/P1gCTCcPHJlABdL4d8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=txoeRoOTONFieFEUh6BVw8ZZYgIIS58fsNCROBBgTXvWeq7ijEOwbLNVrK6mzI5nT
-	 x5AU8tG9FI/Mv8Rjaja4T6virr5QoJk22dEWClO8NpdcHkGT+VTwXPs8CcmIn5MO4J
-	 k7jhGoU7Rbn9sIK+XCRS9Ejx09Bmw3CAYBBL3aD7zY+aCu1sfptTlFk9OOrpG46HMl
-	 2pZtreoCS317iVHidBmtxjZaNgK91Ew+CLku42Nl+Mt7dLQFSGhY3y84I0z+TsHFeY
-	 +PrexBv6faHkfWdQNAYJW8L/Ra/vd5YnN31b99TZXqKhh5K/08srSBUeHVstlpQh+K
-	 d9kgHxUpET9mw==
-Date: Thu, 17 Jul 2025 22:19:54 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Jens Remus <jremus@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org, x86@kernel.org, Steven Rostedt <rostedt@kernel.org>, 
-	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Ilya Leoshkevich <iii@linux.ibm.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, 
-	Indu Bhagat <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>, 
-	Beau Belgrave <beaub@linux.microsoft.com>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Jens Axboe <axboe@kernel.dk>, 
-	Florian Weimer <fweimer@redhat.com>, Sam James <sam@gentoo.org>
-Subject: Re: [RFC PATCH v1 12/16] unwind_user/backchain: Introduce back chain
- user space unwinding
-Message-ID: <ddwondzj74rr3fgvsdnkch7trrcwltasb236hvvx5tnywf2lhu@vo47rcoyu2nc>
-References: <20250710163522.3195293-1-jremus@linux.ibm.com>
- <20250710163522.3195293-13-jremus@linux.ibm.com>
- <a4dd5okskro2h45zmqgg3etj6uwici2hoop2uaf6iqrlaej7yh@xlduwjqke4ec>
- <63665c54-db44-452f-b321-1162ff6c3fe4@linux.ibm.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="W46kVCg0"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1752816561; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=zqVP7ZJu/yyqnzJzHTqxeHX8EL7nFVPdLIswEFCIT7k=;
+	b=W46kVCg0VGYhkosD+BO6CLUHv3WWgUbg7XlIyVW76x7qBzmdGBtOyzaFKNwwB7Z4baooZgaNwNrEln/Ghvuj+B4Sd/ffJeNw49sOyn7/lI69k4lP11c/166RArmH3gQhDnQ53enOymSH46B7ZJqmeDL+v3bQ7Q166T87xfXwgRI=
+Received: from 30.246.162.71(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WjBAWRW_1752816558 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 18 Jul 2025 13:29:20 +0800
+Message-ID: <e92f8d1f-457c-4248-8397-81b0e20ff4af@linux.alibaba.com>
+Date: Fri, 18 Jul 2025 13:29:18 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <63665c54-db44-452f-b321-1162ff6c3fe4@linux.ibm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8] PCI: hotplug: Add a generic RAS tracepoint for hotplug
+ event
+To: Matthew W Carlis <mattc@purestorage.com>, helgaas@kernel.org,
+ lukas@wunner.de, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>
+Cc: anil.s.keshavamurthy@intel.com, bhelgaas@google.com, bp@alien8.de,
+ davem@davemloft.net, ilpo.jarvinen@linux.intel.com,
+ linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ lukas@wunner.de, mark.rutland@arm.com, mathieu.desnoyers@efficios.com,
+ mhiramat@kernel.org, naveen@kernel.org, oleg@redhat.com,
+ peterz@infradead.org, rostedt@goodmis.org, tianruidong@linux.alibaba.com,
+ tony.luck@intel.com
+References: <20250717235055.GA2664149@bhelgaas>
+ <20250718034616.26250-1-mattc@purestorage.com>
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <20250718034616.26250-1-mattc@purestorage.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jul 17, 2025 at 02:20:12PM +0200, Jens Remus wrote:
-> >> +done_backchain:
-> >>  	state->topmost = false;
-> >>  	return 0;
-> > 
-> > This feels very grafted on, is there not some way to make it more
-> > generic, i.e., to just work with CONFIG_HAVE_UNWIND_USER_FP?
+
+
+在 2025/7/18 11:46, Matthew W Carlis 写道:
+> On Thu, Jul 17, 2025 Bjorn Helgaas wrote
+>> So I think your idea of adding current link speed/width to the "Link
+>> Up" event is still on the table, and that does sound useful to me.
 > 
-> I agree.  It could probably be made to compute the cfa_off and ra.offset
-> or ra.regnum.  Let me explore that, provided there would be any acceptance
-> for unwind user backchain at all. Note that Power is using backchain as
-> well, so they may want to build on that as well.
+> We're already reading the link status register here to check DLLA so
+> it would be nice. I guess if everything is healthy we're probably already
+> at the maximum speed by this point.
 > 
-> > Also, if distros aren't even compiling with -mbackchain, I wonder if we
-> > can just not do this altogether :-)
+>> In the future we might add another tracepoint when we enumerate the
+>> device and know the Vendor/Device ID.
 > 
-> My original intent was to use unwind user's for_each_user_frame() to
-> replace the exiting stack tracing logic in arch_stack_walk_user_common()
-> in arch/s390/kernel/stacktrace.c, which currently supports backchain.
-> Given that for_each_user_frame() was made private in the latest unwind
-> user series version hinders me.  The use was also low, because the
-> currentl arch_stack_walk_user_common() implementation does not support
-> page faults, so that the attempt to use unwind user sframe would always
-> fail and fallback to unwind user backchain.  My hope was that somebody
-> with more Kernel skills could give me a few hints at how it could be
-> made to support deferred unwind. :-)
+> I think we might have someone who would be interested in doing it.
 
-I believe stack_trace_save_user() is only used by ftrace, and that will
-no longer be needed once ftrace starts using unwind_user.
 
-Maybe Heiko knows if that backchain user stacktrace code has any users?
+Hi, all,
 
-If distros aren't building with -mbackchain, maybe backchain support can
-be considered obsoleted by sframe, and we can get away with not
-implementing it.
+IIUC, the current hotplug event (or presence event) is enough for Matthew.
+and we would like a new tracepoing for link speed change which reports
+speeds.
 
--- 
-Josh
+For hotplug event, I plan to send a new version to
+
+1. address Bjorn' concerns about event strings by removing its spaces.
+
+#define PCI_HOTPLUG_EVENT							\
+	EM(PCI_HOTPLUG_LINK_UP,			"PCI_HOTPLUG_LINK_UP")		\
+	EM(PCI_HOTPLUG_LINK_DOWN,		"PCI_HOTPLUG_LINK_DOWN")	\
+	EM(PCI_HOTPLUG_CARD_PRESENT,		"PCI_HOTPLUG_CARD_PRESENT")	\
+	EMe(PCI_HOTPLUG_CARD_NOT_PRESENT,	"PCI_HOTPLUG_CARD_NOT_PRESENT")
+
+2. address Ilpo comments by moving pci_hp_event to a common place
+(include/trace/events/pci.h) so that the new comming can also use it.
+
+For link speed change event (perhaps named as pci_link_event),
+I plan to send a seperate patch, which provides:
+
+	TP_STRUCT__entry(
+		__string(	port_name,	port_name	)
+		__field(	unsigned char,	cur_bus_speed	)
+		__field(	unsigned char,	max_bus_speed	)
+  		__field(	unsigned char,	width		)
+  		__field(	unsigned int,	flit_mode	)
+		__field(	unsigned char,	reason		)
+		),
+
+The reason field is from Lukas ideas which indicates why the link speed
+changed, e.g. "hotplug", "autonomous", "thermal", "retrain", etc.
+
+Are you happy with above changes?
+
+Thanks.
+Shuai
