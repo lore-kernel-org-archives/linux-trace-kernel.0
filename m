@@ -1,109 +1,142 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6DDA35898
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 18 Jul 2025 03:46:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7081317BBF;
+	Fri, 18 Jul 2025 04:51:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752810415; cv=none; b=b3zpwYvajVYROOq5IkIsnDAsZQtEqNW+2uy+KEJIkzqvnfMZTyYiD/uRlOktfTdS9PwTUWtZB4qck4Le7yHuRAfYjZWYTQBkj62OxdWi6Kk9L7cM53mlRZQedYaFOraMSQszHd0EF/pv8C/QTaJgSMA5N24HUZF91GyJjlsorkY=
+	t=1752814265; cv=none; b=bCVRQ+sY/KN34EqsQ0hOSNm9P+GJxih4iRLEC4aiKlz9ndpGyTt+wrplJhn0Dtvrl/G5xJS6U9j1whYMLq0fXX5EvFbXMH4sSWrSDBhMncCSUxWYs6X2+LQxsHY8H5+/ms1RJeN2QX/h322CsDB8ZtE7cOSsV8iyt0FBBzvkXDk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752810415; c=relaxed/simple;
-	bh=Mf9215EGCTrmzHCEhlJE5KvEgKqe2O87UjIpxFAjudo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KCo7ecQmtFu9V3OX961WEhVGgKgOaG4vVOEiN3eqweHkKg00IBaRa/Syn47Mqzf7o6fYXYmcfDA4UuoefM0WqJX2i+xOL3nieKPqPS4jn3YuXhfyCa/zsFt5lOeE1MdfTmegXvBW8HsPWr2Iej4H0iI2wEkXw+xBy1gzAZcMDm8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=SCU5+M4o; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+	s=arc-20240116; t=1752814265; c=relaxed/simple;
+	bh=WvOO/fsDfLtx7+vDyzxC+q0rPMbrzC09rOCjnUbd6gw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=InXufYlpdqX7v71C/YUYoL6Qqb4bEUh8mw1uAxBDaGSS5LsT7FzDqr2vTwn54ojwwohxOnQlJnyjAUXwRxcJvslCUK79aRM/QsH8ialBGqcsoE3RxDuDd7xlw9B0HAtj9jTf3EXUQjNT42+Cjn0z8LC0WuPV6SaOuVp/1+Mzy4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UhGOvFzb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="SCU5+M4o"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-7490cb9a892so1155841b3a.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 17 Jul 2025 20:46:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1752810413; x=1753415213; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Mf9215EGCTrmzHCEhlJE5KvEgKqe2O87UjIpxFAjudo=;
-        b=SCU5+M4owUAq67eGL2xlpSBkeKyUhA8Kq6XFmjO1BLZfka8BYKq+K2rc3Bo9ToKIwY
-         rXa23Ds4JToursaj7bEhWeibslzDKQNPDMK9HM55mwP52A+LNWvPuhu52cS+KJm7pnCw
-         Y+pN3TUF31U/sgTLEBooIErRvCdG6EXB1KlyT3JZZkBwIyXw0y/HkjBkUlRDj48MFEjZ
-         g9hJxDdDlA695w7GTsRlviDeMJzVfasC4u48WhwQ/I1JCI4ZkvuV8ozlFgJh8fl1j2NA
-         Ku2F66+xxyXEupdjqYNtkdqa3JMYqYPyA38a5sEuX32XOVMl5ZJi01rjj8Bo3ruXNfbA
-         6s4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752810413; x=1753415213;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Mf9215EGCTrmzHCEhlJE5KvEgKqe2O87UjIpxFAjudo=;
-        b=ISf/b/Yk9ZFhQxjJ0cagTI9q8PeDpgFAdZPu6g7lfLguUtAdbNF+k227uO5sFRvKYv
-         W7OmGsRC5kV0kvRjw23vqXlajW3xoFas68oM0Q/z9WLZEiz7THx3LlJ1ZLqpllzLmu5j
-         +NaFE/jWonUsDY6MeREm/v2UzHl7L2tJOvKLKb0pwTFbaLY9xLztlWlTcO2JaoOr/b8g
-         3Jn6UcJTW0/hPXJtB4DW0uwY1sMj49birYOzachtmiFksBb/tjLinX+Ea9HKc3H2KiSb
-         zNBztJ4O4+tYz8BSZCqtDr2RjVmnhYG4pxze2x+tRW6JYPAxn9x8XLMbXadozR0EVYwU
-         yYZw==
-X-Forwarded-Encrypted: i=1; AJvYcCWqAB1sTaQ62uGKqqrYzGIxK28CLiOTzh5LyOs34eVnOxeK24FbgxZxS5R8PVlpWozYMb4IAUAcKccfonxKIbbLZso=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy0TPtKMEbu4RPQes3ClEZ9W5gkL1nmfJ2fO/NGodrstyCve3Yt
-	y1aq2XszYxWjC4rqpELH0KKKn4cDArAOtxv5LOKI9heLlZHvaCKOq9ygY+Z/WeeMj/U=
-X-Gm-Gg: ASbGnctC5M47lry3qd5wy0iCJYGA+eCbxb5VnBlHo3YTpPxh1Kgi1RDsASa0D6VkkNK
-	GrQJL7JQ6v+dU7ce09ohC2NTr+70sFkk1AZB2DC8DV7jl1vJ+GRSYSlrL8KmPg0CHGlsDH16vSL
-	X/nr+wMde3flINpZvj3qVFzwoRole59N5B+f2zTWqpXg3ar6QSgOsK3KCIeBvKwKaTzYUTjaKdb
-	7HkkNUEPf28w6qh0L+nfKNV8K9UDYMOTwBtnTEgyMFzRDomUmv7APjL1SkEwDKjXbNAq+PQJ87M
-	zPX67ggo8x/svsoVdGoDp4EtJ5CtSEU9Ib5C6VDNOdVHVWTjjXRXS1JlJsHNLGxhh+/WP4o4Ho9
-	HqBYeNoWGskvJp8vKJrIvzUgPi+LYt2AdMiNekxkS4aQXXAas
-X-Google-Smtp-Source: AGHT+IFNa+EcH83FNXnjEm3C0F6TihGjOc1OMxlRUqkqp/V85onlhfwD3tW3WOOTiHm6RK2tC/cZPA==
-X-Received: by 2002:a05:6a00:2189:b0:746:27fc:fea9 with SMTP id d2e1a72fcca58-759ad4002fdmr1963419b3a.11.1752810412983;
-        Thu, 17 Jul 2025 20:46:52 -0700 (PDT)
-Received: from dev-mattc2.dev.purestorage.com ([208.88.159.128])
-        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-759cb678d8dsm310811b3a.110.2025.07.17.20.46.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Jul 2025 20:46:33 -0700 (PDT)
-From: Matthew W Carlis <mattc@purestorage.com>
-To: helgaas@kernel.org
-Cc: anil.s.keshavamurthy@intel.com,
-	bhelgaas@google.com,
-	bp@alien8.de,
-	davem@davemloft.net,
-	ilpo.jarvinen@linux.intel.com,
-	linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	lukas@wunner.de,
-	mark.rutland@arm.com,
-	mathieu.desnoyers@efficios.com,
-	mattc@purestorage.com,
-	mhiramat@kernel.org,
-	naveen@kernel.org,
-	oleg@redhat.com,
-	peterz@infradead.org,
-	rostedt@goodmis.org,
-	tianruidong@linux.alibaba.com,
-	tony.luck@intel.com,
-	xueshuai@linux.alibaba.com
-Subject: Re: [PATCH v8] PCI: hotplug: Add a generic RAS tracepoint for hotplug event
-Date: Thu, 17 Jul 2025 21:46:16 -0600
-Message-ID: <20250718034616.26250-1-mattc@purestorage.com>
-X-Mailer: git-send-email 2.46.0
-In-Reply-To: <20250717235055.GA2664149@bhelgaas>
-References: <20250717235055.GA2664149@bhelgaas>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UhGOvFzb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30FADC4CEED;
+	Fri, 18 Jul 2025 04:51:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752814264;
+	bh=WvOO/fsDfLtx7+vDyzxC+q0rPMbrzC09rOCjnUbd6gw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UhGOvFzbr5xEoM+yH1C3g5f6bSiZthJtVwSfnqmbdxldgbmqMrG3XyYjbszvjEDQ3
+	 NczbV8Zy3/PPSw76+zeKhK4TbK82UeMbg+hMBMTfimLavxUW148bvwtwJxZTzYk28e
+	 if2ms+e61O0t9hXd9wozYhsVmgY1mY2RzH5EvRaoZiRoDMOXyuTPnz4hF/EmEvg/Ue
+	 kv+ibgb4hU0w7obxZ6MJNMVqZZ/eC+NaVcezGR8ImMrvwlv+G+BrQEGrpT+zVOz+bQ
+	 aco28xSgELEu5GDQlj6y+26TWjb5qD9T1jvFSQPoAxho+kwqb4Zj/oyfJD9QZNe+tX
+	 StXhonthzV7yw==
+Date: Thu, 17 Jul 2025 21:51:01 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Jens Remus <jremus@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org, x86@kernel.org, Steven Rostedt <rostedt@kernel.org>, 
+	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Ilya Leoshkevich <iii@linux.ibm.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, 
+	Indu Bhagat <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>, 
+	Beau Belgrave <beaub@linux.microsoft.com>, Linus Torvalds <torvalds@linux-foundation.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Jens Axboe <axboe@kernel.dk>, 
+	Florian Weimer <fweimer@redhat.com>, Sam James <sam@gentoo.org>
+Subject: Re: [RFC PATCH v1 06/16] unwind_user: Enable archs that define CFA =
+ SP_callsite + offset
+Message-ID: <sotffno5desd3ajyjd42rq52yrtztddwjbbh3xpa6v7fb63v36@bwoq4s7j5why>
+References: <20250710163522.3195293-1-jremus@linux.ibm.com>
+ <20250710163522.3195293-7-jremus@linux.ibm.com>
+ <qoiocmdhuuaox5v5ig2ui67qbuxkvzl4z3ft4gdp7p3c4b4zfq@trjthmmculkf>
+ <ae46c02a-d871-4b26-97f4-bd82361ab8bc@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ae46c02a-d871-4b26-97f4-bd82361ab8bc@linux.ibm.com>
 
-On Thu, Jul 17, 2025 Bjorn Helgaas wrote
-> So I think your idea of adding current link speed/width to the "Link
-> Up" event is still on the table, and that does sound useful to me.
+On Thu, Jul 17, 2025 at 11:27:45AM +0200, Jens Remus wrote:
+> On 16.07.2025 23:32, Josh Poimboeuf wrote:
+> > On Thu, Jul 10, 2025 at 06:35:12PM +0200, Jens Remus wrote:
+> >> Most architectures define their CFA as the value of the stack pointer
+> >> (SP) at the call site in the previous frame, as suggested by the DWARF
+> >> standard:
+> >>
+> >>   CFA = <SP at call site>
+> >>
+> >> Enable unwinding of user space for architectures, such as s390, which
+> >> define their CFA as the value of the SP at the call site in the previous
+> >> frame with an offset:
+> >>
+> >>   CFA = <SP at call site> + offset
+> > 
+> > This is a bit confusing, as the comment and code define it as
+> > 
+> >     SP = CFA + offset
+> > 
+> > Should the commit log be updated to match that?
+> 
+> I agree that the commit message is confusing. Would it help if I replace
+> it with the following:
+> 
+> Most architectures define their CFA as the value of the stack pointer
+> (SP) at the call site in the previous frame, as suggested by the DWARF
+> standard.  Therefore the SP at call site can be unwound using an
+> implicitly assumed value offset from CFA rule with an offset of zero:
+> 
+>   .cfi_val_offset <SP>, 0
+> 
+> As a result the SP at call site computes as follows:
+> 
+>   SP = CFA
+> 
+> Enable unwinding of user space for architectures, such as s390, which
+> define their CFA as the value of the SP at the call site in the previous
+> frame with an offset.  Do so by enabling architectures to override the
+> default SP value offset from CFA of zero with an architecture-specific
+> one:
+> 
+>   .cfi_val_offset <SP>, offset
+>   
+> So that the SP at call site computes as follows:
+> 
+>   SP = CFA + offset
 
-We're already reading the link status register here to check DLLA so
-it would be nice. I guess if everything is healthy we're probably already
-at the maximum speed by this point.
+Looks good to me, thanks!
 
-> In the future we might add another tracepoint when we enumerate the
-> device and know the Vendor/Device ID.
+> >> +++ b/arch/x86/include/asm/unwind_user.h
+> >> @@ -8,6 +8,7 @@
+> >>  	.cfa_off	= (s32)sizeof(long) *  2,				\
+> >>  	.ra_off		= (s32)sizeof(long) * -1,				\
+> >>  	.fp_off		= (s32)sizeof(long) * -2,				\
+> >> +	.sp_val_off	= (s32)0,						\
+> > 
+> > IIUC, this is similar to ra_off and fp_off in that its an offset from
+> > the CFA.  Can we call it "sp_off"?
+> 
+> My intent was to use the terminology from DWARF CFI (i.e. "offset(N)"
+> and "val_offset(N)") and the related assembler CFI directives:
+> 
+>   .cfi_offset register, offset:  Previous value of register is saved at
+>                                  offset from CFA.
+> 
+>   .cfi_val_offset register, offset:  Previous value of register is
+>                                      CFA + offset. 
 
-I think we might have someone who would be interested in doing it.
+The distinction between "cfi_offset" and "cfi_val_offset" is confusing,
+unless one already happens to know CFI syntax (not likely for us kernel
+developers).
+
+We don't need to match the DWARF CFI directive naming.  Let's instead
+optimize for readability.
+
+I think "sp_off" is fine here, its semantics are similar to the existing
+cfa_off field.
+
+The semantics of ra_off and fp_off are different, but those are getting
+removed in favor of nested structs in a later patch anyway.
+
+-- 
+Josh
