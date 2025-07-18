@@ -1,145 +1,140 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2651186284;
-	Fri, 18 Jul 2025 14:58:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 674D02E54BD;
+	Fri, 18 Jul 2025 15:26:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752850701; cv=none; b=KXugm9Li6kvy1Evmf9M0mS3TY438QsUO9GaZXu1LLBl7oDzAjcsBNOUYFfU2lCIlDhHQbxbKNlaMXcigE6MVgXKQ9xjFRyOnxBgBxWBBPdpPnqxQN/Da/Wioni2LJ1TysCBIZe1nEytDqz+GmDJwn5a1UcWrywXG/niyEVvd9c8=
+	t=1752852363; cv=none; b=O+dq2LXpCCwYK2ER0TB1rQgo0BMedwJ4JzFLkZJfASV0LNaXCWFrDo0Qwlv/OmH3kODR8FFKkzRX08q0vnlSKXou34X9SGF3gk+iXg+EPT8iu6cj9tfkGcV9xkR+XI5LZm6nk+cONSCphUvsQyMDwSJcn9xl343wpr9pearrFig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752850701; c=relaxed/simple;
-	bh=xVMfBgl1l3GHsKKQVU8yKnQCBPFluy2E1a7pDYpZ2ok=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=KQQ3GjsO23OzwcUudAPxwFer/mAxBdWXCSyEKovINXaeZtgudG1CrSdhpBc94//MtIJIQpa0oEhtaKnlpGTC6etPANFli8qU1MsphaM94XCdOiMeDq2fMwvg6AeNQE+FVZkAIWa4KwuOJcFes0Jn4+sLRA1Dp8aW3X+j3gDUkzY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=P5M6zAxh; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=V7rfwEYr; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="P5M6zAxh";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="V7rfwEYr"
-From: Nam Cao <namcao@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1752850698;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OYKTQi7OGOSXX22a4In+1PmPa1DfLGyOjSg+4bTlG50=;
-	b=P5M6zAxhLcfQMlUW3I05OZ+NvjToiLLyfeSlKCsY4Gr4KPOHr6zJzK0wktDKpVjJ67//ns
-	+9MuFPOU/oZhpbNSaEHbQ4Yg/9jJYGmqWM9/KdA/avDNTInn6U2FAXjK5MWukksPA7q5gv
-	gNBJDFp9L1LAO9MT4NtS87KfrrqPsnMMGetsdkYiAra6zTl6UOdrqn+kok/p88NZFWH4l5
-	uptjOJcvbUqGM0mvMjU35ge+ry7CY83uOjzvLtwyInpk8kbjfoP0F8w82FbPP0pzkhvdRJ
-	jc+/1i65b0ijqhgdnqv1oEFU7vkhFUHAxE5pvRxWtcMx2tkTMfmy3LgX/uy4tQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1752850698;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OYKTQi7OGOSXX22a4In+1PmPa1DfLGyOjSg+4bTlG50=;
-	b=V7rfwEYreWuuiv1/eKSw45w4yn+UKBjxr36pto18piKULXM7ErzkFmZfHvUgxocW7MUEFZ
-	e0BRu5heCfvyJyCg==
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Nam Cao <namcao@linutronix.de>
-Subject: [PATCH 2/2] verification/rvgen: Do not generate unused variables
-Date: Fri, 18 Jul 2025 16:58:11 +0200
-Message-Id: <636b2b2d99a9bd46a9f77a078d44ebd7ffc7508c.1752850449.git.namcao@linutronix.de>
-In-Reply-To: <cover.1752850449.git.namcao@linutronix.de>
-References: <cover.1752850449.git.namcao@linutronix.de>
+	s=arc-20240116; t=1752852363; c=relaxed/simple;
+	bh=L/zjElicyBquY6FNje7j0/5XPOZRjJinzZxw5ZTiPLw=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=pr35+V0qxlVeeubb9+T7696H9qKTXKM3znfquVoG2khrRg8bEm4AJ+MJ3UWil13infZQD2+JWuWzyuMu5LGmzaTljINp/LaJDAAvHBHcrxM9b25Zjbl21SnY6/dHOoXrmhXXUZVtoqCq3GBkmI/cqna9zXNgogO3UBjLCj5FJJA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8039C16A3;
+	Fri, 18 Jul 2025 08:25:53 -0700 (PDT)
+Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C02823F6A8;
+	Fri, 18 Jul 2025 08:25:56 -0700 (PDT)
+From: Leo Yan <leo.yan@arm.com>
+Subject: [PATCH v2 0/6] perf auxtrace: Support AUX pause and resume with
+ BPF
+Date: Fri, 18 Jul 2025 16:25:34 +0100
+Message-Id: <20250718-perf_aux_pause_resume_bpf_rebase-v2-0-992557b8fb16@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAG5nemgC/x2NsQrCMBBAfyXcbCANlqCbuDg6uJUS7upFb7CGH
+ CmF0n83uL23vLeBchFWOJsNCi+i8p2b+IOB6Y3zi608m4N3vnehCzZzSRHrGjNW5VhY64cj5dS
+ QUNl24TiFEzlC6qFlcuEk638xwP3yuN7M4mHc9x/zaua2fAAAAA==
+X-Change-ID: 20250717-perf_aux_pause_resume_bpf_rebase-174c79b0bab5
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+ KP Singh <kpsingh@kernel.org>, Matt Bobrowski <mattbobrowski@google.com>, 
+ Song Liu <song@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+ Martin KaFai Lau <martin.lau@linux.dev>, 
+ Eduard Zingerman <eddyz87@gmail.com>, 
+ Yonghong Song <yonghong.song@linux.dev>, 
+ John Fastabend <john.fastabend@gmail.com>, 
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+ Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ James Clark <james.clark@linaro.org>, 
+ Suzuki K Poulose <suzuki.poulose@arm.com>, 
+ Mike Leach <mike.leach@linaro.org>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+ Leo Yan <leo.yan@arm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1752852356; l=3313;
+ i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
+ bh=L/zjElicyBquY6FNje7j0/5XPOZRjJinzZxw5ZTiPLw=;
+ b=nYbD7ZpIfxhu4FTCNxB0+kCewOUWhgYrUmxGvY03Rg/CeHbAPDZojVmLoLhTgh5tWOXagx5wp
+ nvzi7Oim5A5DbMYOf9xwxJIoRJ49PgIG3WY4g6AyQ/VDB/iavw/Zq8Z
+X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
+ pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-ltl2k generates all variable definition in both ltl_start() and
-ltl_possible_next_states(). However, these two functions may not use all
-the variables, causing "unused variable" compiler warning.
+This series extends Perf for fine-grained tracing by using BPF program
+to pause and resume AUX tracing. The BPF program can be attached to
+tracepoints (including ftrace tracepoints and dynamic tracepoints, like
+kprobe, kretprobe, uprobe and uretprobe).
 
-Change the script to only generate used variables.
+The first two patches are changes in kernel - it adds a bpf kfunc which
+can be invoked from BPF program.
 
-Signed-off-by: Nam Cao <namcao@linutronix.de>
+The Perf tool implements BPF skeleton program, hooks BPF program into a
+perf record session. This is finished by patches 03 ~ 05.
+
+The patch 06 updates documentation for usage of the new introduced
+option '--bpf-aux-pause'.
+
+This series has been tested on Hikey960 platform with commands:
+
+  perf record -e cs_etm/aux-action=start-paused/ \
+    --bpf-aux-pause="kretprobe:p:__arm64_sys_openat,kprobe:r:__arm64_sys_openat,tp:r:sched:sched_switch" \
+    -a -- ls
+
+  perf record -e cs_etm/aux-action=start-paused/ \
+    --bpf-aux-pause="kretprobe:p:__arm64_sys_openat,kprobe:r:__arm64_sys_openat,tp:r:sched:sched_switch" \
+    -i -- ls
+
+  perf record -e cs_etm/aux-action=start-paused/ \
+    --bpf-aux-pause="uretprobe:p:/mnt/sort:bubble_sort,uprobe:r:/mnt/sort:bubble_sort" \
+    --per-thread -- /mnt/sort
+
+Note, as the AUX pause operation cannot be inherited by child tasks, it
+requires to specify the '-i' option for default mode. Otherwise, the
+tool reports an error to remind user to disable inherited mode:
+
+  Failed to update BPF map for auxtrace: Operation not supported.
+    Try to disable inherit mode with option '-i'.
+
+Changes in v2:
+- Changed to use BPF kfunc and dropped uAPI (Yonghong).
+- Added support uprobe/uretprobe.
+- Refined the syntax for trigger points (mainly for trigger action {p:r}).
+- Fixed a bug in the BPF program with passing wrong flag.
+- Rebased on bpf-next branch.
+- Link to v1: https://lore.kernel.org/linux-perf-users/20241215193436.275278-1-leo.yan@arm.com/T/#m10ea3e66bca7418db07c141a14217934f36e3bc8
+
+Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- tools/verification/rvgen/rvgen/ltl2k.py | 25 +++++++++++++++++++++----
- 1 file changed, 21 insertions(+), 4 deletions(-)
+Leo Yan (6):
+      perf/core: Make perf_event_aux_pause() as external function
+      bpf: Add bpf_perf_event_aux_pause kfunc
+      perf: auxtrace: Control AUX pause and resume with BPF
+      perf: auxtrace: Add BPF userspace program for AUX pause and resume
+      perf record: Support AUX pause and resume with BPF
+      perf docs: Document AUX pause and resume with BPF
 
-diff --git a/tools/verification/rvgen/rvgen/ltl2k.py b/tools/verification/r=
-vgen/rvgen/ltl2k.py
-index 59da351792ec..b075f98d50c4 100644
---- a/tools/verification/rvgen/rvgen/ltl2k.py
-+++ b/tools/verification/rvgen/rvgen/ltl2k.py
-@@ -106,20 +106,25 @@ class ltl2k(generator.Monitor):
-         ])
-         return buf
-=20
--    def _fill_atom_values(self):
-+    def _fill_atom_values(self, required_values):
-         buf =3D []
-         for node in self.ltl:
--            if node.op.is_temporal():
-+            if str(node) not in required_values:
-                 continue
-=20
-             if isinstance(node.op, ltl2ba.AndOp):
-                 buf.append("\tbool %s =3D %s && %s;" % (node, node.op.left=
-, node.op.right))
-+                required_values |=3D {str(node.op.left), str(node.op.right=
-)}
-             elif isinstance(node.op, ltl2ba.OrOp):
-                 buf.append("\tbool %s =3D %s || %s;" % (node, node.op.left=
-, node.op.right))
-+                required_values |=3D {str(node.op.left), str(node.op.right=
-)}
-             elif isinstance(node.op, ltl2ba.NotOp):
-                 buf.append("\tbool %s =3D !%s;" % (node, node.op.child))
-+                required_values.add(str(node.op.child))
-=20
-         for atom in self.atoms:
-+            if atom.lower() not in required_values:
-+                continue
-             buf.append("\tbool %s =3D test_bit(LTL_%s, mon->atoms);" % (at=
-om.lower(), atom))
-=20
-         buf.reverse()
-@@ -135,7 +140,13 @@ class ltl2k(generator.Monitor):
-             "ltl_possible_next_states(struct ltl_monitor *mon, unsigned in=
-t state, unsigned long *next)",
-             "{"
-         ]
--        buf.extend(self._fill_atom_values())
-+
-+        required_values =3D set()
-+        for node in self.ba:
-+            for o in sorted(node.outgoing):
-+                required_values |=3D o.labels
-+
-+        buf.extend(self._fill_atom_values(required_values))
-         buf.extend([
-             "",
-             "\tswitch (state) {"
-@@ -166,7 +177,13 @@ class ltl2k(generator.Monitor):
-             "static void ltl_start(struct task_struct *task, struct ltl_mo=
-nitor *mon)",
-             "{"
-         ]
--        buf.extend(self._fill_atom_values())
-+
-+        required_values =3D set()
-+        for node in self.ba:
-+            if node.init:
-+                required_values |=3D node.labels
-+
-+        buf.extend(self._fill_atom_values(required_values))
-         buf.append("")
-=20
-         for node in self.ba:
---=20
-2.39.5
+ include/linux/perf_event.h                    |   1 +
+ kernel/events/core.c                          |   2 +-
+ kernel/trace/bpf_trace.c                      |  60 ++++
+ tools/perf/Documentation/perf-record.txt      |  51 ++++
+ tools/perf/Makefile.perf                      |   1 +
+ tools/perf/builtin-record.c                   |  20 +-
+ tools/perf/util/Build                         |   4 +
+ tools/perf/util/auxtrace.h                    |  43 +++
+ tools/perf/util/bpf_auxtrace_pause.c          | 408 ++++++++++++++++++++++++++
+ tools/perf/util/bpf_skel/auxtrace_pause.bpf.c | 156 ++++++++++
+ tools/perf/util/evsel.c                       |   6 +
+ tools/perf/util/record.h                      |   1 +
+ 12 files changed, 751 insertions(+), 2 deletions(-)
+---
+base-commit: 0768e980feb5cffe63920d375bebef3bb4654961
+change-id: 20250717-perf_aux_pause_resume_bpf_rebase-174c79b0bab5
+
+Best regards,
+-- 
+Leo Yan <leo.yan@arm.com>
 
