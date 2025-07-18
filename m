@@ -1,110 +1,170 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD5192E6D3F;
-	Fri, 18 Jul 2025 16:35:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FAF7EEDE;
+	Fri, 18 Jul 2025 16:42:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752856535; cv=none; b=GIdD7KOWWcTHTz44KJYhzqcupVhDN5uJDnEb0BhQXPs4Wq9hYhTpIHjDELW7DCvWvSjI+fLMq2ZQMK/IdlykXCK5fCnLdI8Qpr2PJOzS8v8JB8t8gdbvxu9Zjvp8esvL3nGfZ2AL2FrnCGIWCqcEbCknMsZBfBE+Xm5zKJXOsTg=
+	t=1752856980; cv=none; b=V7J1/1nK9MwJH9WdKilYlKk+hfL2fYbVDw9OXtqIBcWtGoSuIr0WNK+tgxHYxBLcN4g6l1anBjybky3tPT9Lrs5/tttoiytqZPMkbXkwZ4/B3QbwgYi14BuKAOeNIrk4kci3mud9FhlRwyOWH/rVFUQJzHrGeSb8G+uKMj8IIGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752856535; c=relaxed/simple;
-	bh=11X9Sef1jq1w/S7oQRlR3n+bOEuUkdDS7reE/5JQmv8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=b59ae1v8nynItRizvbLM7ateLPrSda7Bic3yeS+Jx5tWZb7VVMMl2GxCpRkm7eHNfmfN7RzgI8rRuhhH0UOAiV9XgruxcgttrAAuJwURVRn45xDHPjonwjIZg0G0JrsQnS/PhR0TFeyAgw+9t9kJ1bNa6Qk8t79i8kp5DBTMgCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M292Sus/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1752856980; c=relaxed/simple;
+	bh=PlMed3FiOV4T6l6o16L8MmIemjqgKth6Lso3Lz/CSCM=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=avU8gkV2JRaNgC9MmJ3wecgQ6oWz2c+bCMQGTbgaW/mvJo1rNsEcGXe0QI9R6QGI9Q3RNu7QjikjKv96JWWzw3EEnrZA8ZN+0y/Q1JXwfwKfQGkbyj0kX7cSab8aR8zG2Ur7+5PJlgSePD6eR4AVnOL8KYjStIXHGFdF7t2Yu9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kpPeK7JH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M292Sus/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C048AC4CEED;
-	Fri, 18 Jul 2025 16:35:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kpPeK7JH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95476C4CEED;
+	Fri, 18 Jul 2025 16:42:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752856535;
-	bh=11X9Sef1jq1w/S7oQRlR3n+bOEuUkdDS7reE/5JQmv8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=M292Sus/VG02eGqA4KLBWSOMFPlC+C1kaajwzs311j55gIiMMIfr+1ahlMd2QFimz
-	 41uZzOvhSzU2mQXBDxwlvJIPmKPx5cKYaVfZtbpiFJ4ud6YVFiiQzjgU19cx6Io699
-	 5i1FTWcc74I/x6DBCOjl/80yhKwE/CQqoQiIrHZsr6M0wtDva0TH0x7jPyUQqFR22d
-	 mUjDVm9C03HqNDVrYHSlb6OiDnb3FuNJGVy8Ub3AJwqLo1/uf/U5BDYp69Ifu6I0wg
-	 BnWXS9h2FIJDYGsFAvy5fIB0zqLAFAQtWdbNaV7ZcQGBnd4+ZntxsH5nW2bfAlQniN
-	 vu5aue6rWXutA==
-Date: Fri, 18 Jul 2025 11:35:32 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Shuai Xue <xueshuai@linux.alibaba.com>
-Cc: Matthew W Carlis <mattc@purestorage.com>, lukas@wunner.de,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	anil.s.keshavamurthy@intel.com, bhelgaas@google.com, bp@alien8.de,
-	davem@davemloft.net, linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, mark.rutland@arm.com,
-	mathieu.desnoyers@efficios.com, mhiramat@kernel.org,
-	naveen@kernel.org, oleg@redhat.com, peterz@infradead.org,
-	rostedt@goodmis.org, tianruidong@linux.alibaba.com,
-	tony.luck@intel.com
-Subject: Re: [PATCH v8] PCI: hotplug: Add a generic RAS tracepoint for
- hotplug event
-Message-ID: <20250718163532.GA2700834@bhelgaas>
+	s=k20201202; t=1752856979;
+	bh=PlMed3FiOV4T6l6o16L8MmIemjqgKth6Lso3Lz/CSCM=;
+	h=Date:From:To:Cc:Subject:References:From;
+	b=kpPeK7JHJMkrK6cUZEgcxnAVqey9jEpYFdvgjwwMHRBKLzOljCgXPfKAEnkvZNhpM
+	 Mm8+2src/Zd8uKJT2p6vxmTUJC6zfj6ChjNbRsoK4bZ8Y6gHwq+gzs3ds3ooep/sn2
+	 t6BCzEylWnibAsZQ0Kplc5GYcbWeYyt5Q2dbniabtAhJlUmgCHTY/lXCYw63UkKxiX
+	 b1+t6twac9ysuSrhHaRGxw6p11p0QiwK5ND9F5cEZvbmchLH2gyF8/ycu7MMhZANPe
+	 mc0i7JtKMoO5WEIzdGHKww45Rr64Zuk8sVE417Cj8tueC2Fu1nUZorPqGwZyQ9zVOr
+	 xJQkVpVaERyZw==
+Received: from rostedt by gandalf with local (Exim 4.98.2)
+	(envelope-from <rostedt@kernel.org>)
+	id 1ucoB9-00000007JWK-1asR;
+	Fri, 18 Jul 2025 12:43:23 -0400
+Message-ID: <20250718164323.229516800@kernel.org>
+User-Agent: quilt/0.68
+Date: Fri, 18 Jul 2025 12:41:20 -0400
+From: Steven Rostedt <rostedt@kernel.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org,
+ x86@kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Josh Poimboeuf <jpoimboe@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@kernel.org>,
+ Jiri Olsa <jolsa@kernel.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Andrii Nakryiko <andrii@kernel.org>,
+ Indu Bhagat <indu.bhagat@oracle.com>,
+ "Jose E. Marchesi" <jemarch@gnu.org>,
+ Beau Belgrave <beaub@linux.microsoft.com>,
+ Jens Remus <jremus@linux.ibm.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Jens Axboe <axboe@kernel.dk>,
+ Florian Weimer <fweimer@redhat.com>,
+ Sam James <sam@gentoo.org>,
+ Namhyung Kim <Namhyung@kernel.org>,
+ Alexei Starovoitov <ast@kernel.org>
+Subject: [PATCH v14 01/11] perf: Remove get_perf_callchain() init_nr argument
+References: <20250718164119.089692174@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e92f8d1f-457c-4248-8397-81b0e20ff4af@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8
 
-On Fri, Jul 18, 2025 at 01:29:18PM +0800, Shuai Xue wrote:
-> 在 2025/7/18 11:46, Matthew W Carlis 写道:
-> > On Thu, Jul 17, 2025 Bjorn Helgaas wrote
-> > > So I think your idea of adding current link speed/width to the "Link
-> > > Up" event is still on the table, and that does sound useful to me.
-> > 
-> > We're already reading the link status register here to check DLLA so
-> > it would be nice. I guess if everything is healthy we're probably already
-> > at the maximum speed by this point.
-> > 
-> > > In the future we might add another tracepoint when we enumerate the
-> > > device and know the Vendor/Device ID.
-> > 
-> > I think we might have someone who would be interested in doing it.
-> 
-> IIUC, the current hotplug event (or presence event) is enough for Matthew.
-> and we would like a new tracepoing for link speed change which reports
-> speeds.
-> 
-> For hotplug event, I plan to send a new version to
-> 
-> 1. address Bjorn' concerns about event strings by removing its spaces.
-> 
-> #define PCI_HOTPLUG_EVENT							\
-> 	EM(PCI_HOTPLUG_LINK_UP,			"PCI_HOTPLUG_LINK_UP")		\
-> 	EM(PCI_HOTPLUG_LINK_DOWN,		"PCI_HOTPLUG_LINK_DOWN")	\
-> 	EM(PCI_HOTPLUG_CARD_PRESENT,		"PCI_HOTPLUG_CARD_PRESENT")	\
-> 	EMe(PCI_HOTPLUG_CARD_NOT_PRESENT,	"PCI_HOTPLUG_CARD_NOT_PRESENT")
-> 
-> 2. address Ilpo comments by moving pci_hp_event to a common place
-> (include/trace/events/pci.h) so that the new comming can also use it.
-> 
-> For link speed change event (perhaps named as pci_link_event),
-> I plan to send a seperate patch, which provides:
-> 
-> 	TP_STRUCT__entry(
-> 		__string(	port_name,	port_name	)
-> 		__field(	unsigned char,	cur_bus_speed	)
-> 		__field(	unsigned char,	max_bus_speed	)
->  		__field(	unsigned char,	width		)
->  		__field(	unsigned int,	flit_mode	)
-> 		__field(	unsigned char,	reason		)
-> 		),
-> 
-> The reason field is from Lukas ideas which indicates why the link speed
-> changed, e.g. "hotplug", "autonomous", "thermal", "retrain", etc.
-> 
-> Are you happy with above changes?
+From: Josh Poimboeuf <jpoimboe@kernel.org>
 
-Seems good to me.
+The 'init_nr' argument has double duty: it's used to initialize both the
+number of contexts and the number of stack entries.  That's confusing
+and the callers always pass zero anyway.  Hard code the zero.
 
-What do you plan for PCI_HOTPLUG_LINK_UP?  It would be nice to have
-the link info there since that's sort of a link speed change itself.
+Acked-by: Namhyung Kim <Namhyung@kernel.org>
+Acked-by: Alexei Starovoitov <ast@kernel.org>
+Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ include/linux/perf_event.h |  2 +-
+ kernel/bpf/stackmap.c      |  4 ++--
+ kernel/events/callchain.c  | 12 ++++++------
+ kernel/events/core.c       |  2 +-
+ 4 files changed, 10 insertions(+), 10 deletions(-)
 
-Bjorn
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index ec9d96025683..54e0d31afcad 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -1719,7 +1719,7 @@ DECLARE_PER_CPU(struct perf_callchain_entry, perf_callchain_entry);
+ extern void perf_callchain_user(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs);
+ extern void perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs);
+ extern struct perf_callchain_entry *
+-get_perf_callchain(struct pt_regs *regs, u32 init_nr, bool kernel, bool user,
++get_perf_callchain(struct pt_regs *regs, bool kernel, bool user,
+ 		   u32 max_stack, bool crosstask, bool add_mark);
+ extern int get_callchain_buffers(int max_stack);
+ extern void put_callchain_buffers(void);
+diff --git a/kernel/bpf/stackmap.c b/kernel/bpf/stackmap.c
+index 3615c06b7dfa..ec3a57a5fba1 100644
+--- a/kernel/bpf/stackmap.c
++++ b/kernel/bpf/stackmap.c
+@@ -314,7 +314,7 @@ BPF_CALL_3(bpf_get_stackid, struct pt_regs *, regs, struct bpf_map *, map,
+ 	if (max_depth > sysctl_perf_event_max_stack)
+ 		max_depth = sysctl_perf_event_max_stack;
+ 
+-	trace = get_perf_callchain(regs, 0, kernel, user, max_depth,
++	trace = get_perf_callchain(regs, kernel, user, max_depth,
+ 				   false, false);
+ 
+ 	if (unlikely(!trace))
+@@ -451,7 +451,7 @@ static long __bpf_get_stack(struct pt_regs *regs, struct task_struct *task,
+ 	else if (kernel && task)
+ 		trace = get_callchain_entry_for_task(task, max_depth);
+ 	else
+-		trace = get_perf_callchain(regs, 0, kernel, user, max_depth,
++		trace = get_perf_callchain(regs, kernel, user, max_depth,
+ 					   crosstask, false);
+ 
+ 	if (unlikely(!trace) || trace->nr < skip) {
+diff --git a/kernel/events/callchain.c b/kernel/events/callchain.c
+index 6c83ad674d01..b0f5bd228cd8 100644
+--- a/kernel/events/callchain.c
++++ b/kernel/events/callchain.c
+@@ -217,7 +217,7 @@ static void fixup_uretprobe_trampoline_entries(struct perf_callchain_entry *entr
+ }
+ 
+ struct perf_callchain_entry *
+-get_perf_callchain(struct pt_regs *regs, u32 init_nr, bool kernel, bool user,
++get_perf_callchain(struct pt_regs *regs, bool kernel, bool user,
+ 		   u32 max_stack, bool crosstask, bool add_mark)
+ {
+ 	struct perf_callchain_entry *entry;
+@@ -228,11 +228,11 @@ get_perf_callchain(struct pt_regs *regs, u32 init_nr, bool kernel, bool user,
+ 	if (!entry)
+ 		return NULL;
+ 
+-	ctx.entry     = entry;
+-	ctx.max_stack = max_stack;
+-	ctx.nr	      = entry->nr = init_nr;
+-	ctx.contexts       = 0;
+-	ctx.contexts_maxed = false;
++	ctx.entry		= entry;
++	ctx.max_stack		= max_stack;
++	ctx.nr			= entry->nr = 0;
++	ctx.contexts		= 0;
++	ctx.contexts_maxed	= false;
+ 
+ 	if (kernel && !user_mode(regs)) {
+ 		if (add_mark)
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 0db36b2b2448..b2a53cabcb17 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -8178,7 +8178,7 @@ perf_callchain(struct perf_event *event, struct pt_regs *regs)
+ 	if (!kernel && !user)
+ 		return &__empty_callchain;
+ 
+-	callchain = get_perf_callchain(regs, 0, kernel, user,
++	callchain = get_perf_callchain(regs, kernel, user,
+ 				       max_stack, crosstask, true);
+ 	return callchain ?: &__empty_callchain;
+ }
+-- 
+2.47.2
+
+
