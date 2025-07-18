@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DC722D8387;
-	Fri, 18 Jul 2025 11:34:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AF492D9498;
+	Fri, 18 Jul 2025 11:34:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752838475; cv=none; b=PIQrlrqNADdQOMJEf9wTIT7WoSnk1WZ0bGHlD2DxTX0mD9osUOlxqAniZLr9nT3hLzvwC7H2apQAvyuZ5THlYUnVuv/FEJLpQmrJUp+G6ao1cNIZeGi6yxfxsnaYyEflkSSIaOQNTlzoXDiGsSDzXN2CywRhi4xCxSSrFcKab6U=
+	t=1752838486; cv=none; b=T2ZydgKyfEsfHtTHCw7ULE5npvDBx8ow24velizykJ1A7X9d9XJYczpKEJuiZyezWhnfQb1IgWdMuBuSpsg3UPWO5pYfsbtXNxaopHnB63PtfDwLvVCa1kZhlG1qDcNSUw5sGGzkmR6uz5LR8Xmns6Tmoixf/0GfQ6StxL0zCxg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752838475; c=relaxed/simple;
-	bh=E2lm3aHfVHYQJcOBR7OBP3UW7aulka1N/K5QYP8yvDg=;
+	s=arc-20240116; t=1752838486; c=relaxed/simple;
+	bh=Lzo7hIsuSu19X6bNrAGPaKlHyr6A69CrRZrO8+MMXHM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nADgAqwhXDDYlppCm1EYduCAbpCkKR7/44nPZsTn89z/YMPQ/F5hLqxGN9yhUciuL4+gdxY6pTTPPyy82ab6QqcK7uulOVXnh20lCm9CknK8c4/TUPBkGZ66sNRdZcAXrP0RMQqKxvCVczfUEcTntJlWgvXOZxl/CXve6lmGgn4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xr+jbLBZ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=gLCkSulhqn28J+q0z91PILRvJiwfgUXZOUsn4vHvA3xXne4cV7kL4G+2OJ0q99JdJs3FCzN5j+/VFWFHafu9Pe9Go3YKHwTk2ZMpVgcQ03amUgJAxrPbx4KoSbb8U2+ii81PmaYbzdlADx2n+N/TWOtzAHwQd+e2sCiN0j2v+A4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VPFHZRAl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xr+jbLBZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A445C4CEEB;
-	Fri, 18 Jul 2025 11:34:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VPFHZRAl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 363DEC4CEEB;
+	Fri, 18 Jul 2025 11:34:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752838475;
-	bh=E2lm3aHfVHYQJcOBR7OBP3UW7aulka1N/K5QYP8yvDg=;
+	s=k20201202; t=1752838485;
+	bh=Lzo7hIsuSu19X6bNrAGPaKlHyr6A69CrRZrO8+MMXHM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Xr+jbLBZhIRHDzUJi3m/Vt8b39qxBCbbTcWpAwiKboRfAVbVg//fKETig0wCRnzCL
-	 9mYCxj45jIDICgtliairx7wijvyI2iGtZJYWzb+J3tyyVvYiBRCGkvMPvsfwL3cGS4
-	 CAf8B9YsJP8+rex6xhmIRdJKWWfXQJdfTgKgBC0stzusmcjiKyfNFzOAy30K99ci00
-	 9BXdkZtf+KIHdaB2suancU3FX6uqZFHXwXkkBPV+BoXj4WwRwExjgJML7WQIgdpTg6
-	 mYd1AS/Hw4BOgs11RGkemX4bIKnEgWmNmqX6zKwZz9WcEag8tw1r+F6kRei1hEnd3s
-	 XhRa6nPWrdz2w==
+	b=VPFHZRAlotkz8dgLtt3vUreQNWVCwAq1o8cfMggsbp5ccF2d3Ez6h1yj8GzuXdMph
+	 DNFFzCyI/1O/7C0Fyk3UZ7Yo3phzVmkHZBu4LqMtPmbDx0ijC2mo65QBMFHNCUO9x7
+	 jYXrCO78kk5vPDasboEd+WKv4LwY9AFp+K7Vg59Gc0EMtp+7F5MZeTAc275CiqVSt0
+	 Gemv7+bkJd3sS9VT/VMMSscj3dzEO5mzfcVeCvFRl3SKX6EQX5FNkRGZvWCa8/0kzu
+	 2kTfkJn2lDv4iiWTJhkPO9qr692PZfpr3XQZg0pfTy2JR2tuqtkuCLTcoy5s2QPkip
+	 Dm4wO6asLOHCw==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH 3/5] tracing: kprobe-event: Allocate string buffers from heap
-Date: Fri, 18 Jul 2025 20:34:29 +0900
-Message-ID: <175283846936.343578.3747359008449354291.stgit@devnote2>
+Subject: [PATCH 4/5] tracing: eprobe-event: Allocate string buffers from heap
+Date: Fri, 18 Jul 2025 20:34:40 +0900
+Message-ID: <175283848063.343578.12113784863348416166.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <175283843771.343578.8524137568048302760.stgit@devnote2>
 References: <175283843771.343578.8524137568048302760.stgit@devnote2>
@@ -50,101 +50,76 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Allocate temporary string buffers for parsing kprobe-events
+Allocate temporary string buffers for parsing eprobe-events
 from heap instead of stack.
 
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- kernel/trace/trace_kprobe.c |   39 +++++++++++++++++++++++++--------------
- 1 file changed, 25 insertions(+), 14 deletions(-)
+ kernel/trace/trace_eprobe.c |   24 ++++++++++++++++++++----
+ 1 file changed, 20 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-index 15d7a381a128..793af6000f16 100644
---- a/kernel/trace/trace_kprobe.c
-+++ b/kernel/trace/trace_kprobe.c
-@@ -861,20 +861,20 @@ static int trace_kprobe_create_internal(int argc, const char *argv[],
- 	 *  FETCHARG:TYPE : use TYPE instead of unsigned long.
- 	 */
- 	struct trace_kprobe *tk __free(free_trace_kprobe) = NULL;
-+	const char *event = NULL, *group = KPROBE_EVENT_SYSTEM;
-+	const char **new_argv __free(kfree) = NULL;
- 	int i, len, new_argc = 0, ret = 0;
--	bool is_return = false;
- 	char *symbol __free(kfree) = NULL;
--	char *tmp = NULL;
--	const char **new_argv __free(kfree) = NULL;
--	const char *event = NULL, *group = KPROBE_EVENT_SYSTEM;
-+	char *ebuf __free(kfree) = NULL;
+diff --git a/kernel/trace/trace_eprobe.c b/kernel/trace/trace_eprobe.c
+index 1e18a8619b40..75d8208cd859 100644
+--- a/kernel/trace/trace_eprobe.c
++++ b/kernel/trace/trace_eprobe.c
+@@ -9,6 +9,7 @@
+  * Copyright (C) 2021, VMware Inc, Tzvetomir Stoyanov tz.stoyanov@gmail.com>
+  *
+  */
++#include <linux/cleanup.h>
+ #include <linux/module.h>
+ #include <linux/mutex.h>
+ #include <linux/ftrace.h>
+@@ -871,10 +872,10 @@ static int __trace_eprobe_create(int argc, const char *argv[])
+ 	const char *event = NULL, *group = EPROBE_EVENT_SYSTEM;
+ 	const char *sys_event = NULL, *sys_name = NULL;
+ 	struct trace_event_call *event_call;
++	char *buf1 __free(kfree) = NULL;
++	char *buf2 __free(kfree) = NULL;
 +	char *gbuf __free(kfree) = NULL;
-+	char *abuf __free(kfree) = NULL;
-+	char *dbuf __free(kfree) = NULL;
- 	enum probe_print_type ptype;
-+	bool is_return = false;
- 	int maxactive = 0;
--	long offset = 0;
- 	void *addr = NULL;
--	char buf[MAX_EVENT_NAME_LEN];
+ 	struct trace_eprobe *ep = NULL;
+-	char buf1[MAX_EVENT_NAME_LEN];
+-	char buf2[MAX_EVENT_NAME_LEN];
 -	char gbuf[MAX_EVENT_NAME_LEN];
--	char abuf[MAX_BTF_ARGS_LEN];
--	char *dbuf __free(kfree) = NULL;
-+	char *tmp = NULL;
-+	long offset = 0;
+ 	int ret = 0, filter_idx = 0;
+ 	int i, filter_cnt;
  
- 	switch (argv[0][0]) {
- 	case 'r':
-@@ -893,6 +893,8 @@ static int trace_kprobe_create_internal(int argc, const char *argv[],
- 		event++;
+@@ -885,6 +886,11 @@ static int __trace_eprobe_create(int argc, const char *argv[])
  
- 	if (isdigit(argv[0][1])) {
-+		char *buf __free(kfree) = NULL;
-+
- 		if (!is_return) {
- 			trace_probe_log_err(1, BAD_MAXACT_TYPE);
- 			return -EINVAL;
-@@ -905,7 +907,7 @@ static int trace_kprobe_create_internal(int argc, const char *argv[],
- 			trace_probe_log_err(1, BAD_MAXACT);
- 			return -EINVAL;
- 		}
--		memcpy(buf, &argv[0][1], len);
-+		buf = kmemdup(&argv[0][1], len + 1, GFP_KERNEL);
- 		buf[len] = '\0';
- 		ret = kstrtouint(buf, 0, &maxactive);
- 		if (ret || !maxactive) {
-@@ -973,6 +975,9 @@ static int trace_kprobe_create_internal(int argc, const char *argv[],
- 
- 	trace_probe_log_set_index(0);
+ 	event = strchr(&argv[0][1], ':');
  	if (event) {
 +		gbuf = kmalloc(MAX_EVENT_NAME_LEN, GFP_KERNEL);
-+		if (!gbuf)
-+			return -ENOMEM;
++		if (!gbuf) {
++			ret = -ENOMEM;
++			goto parse_error;
++		}
+ 		event++;
  		ret = traceprobe_parse_event_name(&event, &group, gbuf,
  						  event - argv[0]);
- 		if (ret)
-@@ -981,16 +986,22 @@ static int trace_kprobe_create_internal(int argc, const char *argv[],
+@@ -894,6 +900,12 @@ static int __trace_eprobe_create(int argc, const char *argv[])
  
- 	if (!event) {
- 		/* Make a new event name */
-+		ebuf = kmalloc(MAX_EVENT_NAME_LEN, GFP_KERNEL);
-+		if (!ebuf)
-+			return -ENOMEM;
- 		if (symbol)
--			snprintf(buf, MAX_EVENT_NAME_LEN, "%c_%s_%ld",
-+			snprintf(ebuf, MAX_EVENT_NAME_LEN, "%c_%s_%ld",
- 				 is_return ? 'r' : 'p', symbol, offset);
- 		else
--			snprintf(buf, MAX_EVENT_NAME_LEN, "%c_0x%p",
-+			snprintf(ebuf, MAX_EVENT_NAME_LEN, "%c_0x%p",
- 				 is_return ? 'r' : 'p', addr);
--		sanitize_event_name(buf);
--		event = buf;
-+		sanitize_event_name(ebuf);
-+		event = ebuf;
+ 	trace_probe_log_set_index(1);
+ 	sys_event = argv[1];
++
++	buf2 = kmalloc(MAX_EVENT_NAME_LEN, GFP_KERNEL);
++	if (!buf2) {
++		ret = -ENOMEM;
++		goto parse_error;
++	}
+ 	ret = traceprobe_parse_event_name(&sys_event, &sys_name, buf2, 0);
+ 	if (ret || !sys_event || !sys_name) {
+ 		trace_probe_log_err(0, NO_EVENT_INFO);
+@@ -901,7 +913,11 @@ static int __trace_eprobe_create(int argc, const char *argv[])
  	}
  
-+	abuf = kmalloc(MAX_BTF_ARGS_LEN, GFP_KERNEL);
-+	if (!abuf)
-+		return -ENOMEM;
- 	argc -= 2; argv += 2;
- 	ctx->funcname = symbol;
- 	new_argv = traceprobe_expand_meta_args(argc, argv, &new_argc,
+ 	if (!event) {
+-		strscpy(buf1, sys_event, MAX_EVENT_NAME_LEN);
++		buf1 = kstrdup(sys_event, GFP_KERNEL);
++		if (!buf1) {
++			ret = -ENOMEM;
++			goto error;
++		}
+ 		event = buf1;
+ 	}
+ 
 
