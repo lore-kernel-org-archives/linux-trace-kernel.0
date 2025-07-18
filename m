@@ -1,31 +1,44 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84DEFBA27;
-	Fri, 18 Jul 2025 10:27:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D01629B218;
+	Fri, 18 Jul 2025 10:40:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752834438; cv=none; b=TuWrMAg3zYReAxUtB0hFnWgrz0wcslUcUOTLcTWLU9Gy/FC5OpartMiGf2f9IgkC9h7gkjSzC13o8ftB5E6zDeYwav2K0J3harvZ7GbIpGUkGYJJ64FBt06EUbhwb0Pql29Rn597OTPPE+fp/ATbE7n7j2zmWhTy0XWAcSgX0wI=
+	t=1752835224; cv=none; b=VvKjXI2BVsBWJZ780zgpD76QdrR4zygWtxddUHtPCFRviNeh4Bi9AwI/Z8X8hsRZz++690nADntCSrpKYsK+RQ7LXgn9pF9EGitZ9FVtjfRzFODwjqhcFVLBEFcY4zgfo101NOiwTiu7hpdv9U98pnPCbaffDCqV+ITXaDu6g98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752834438; c=relaxed/simple;
-	bh=RSLPZfhWxQYnSXaCJXfPgeIgZNT7vJZLbF48MWYtaNU=;
+	s=arc-20240116; t=1752835224; c=relaxed/simple;
+	bh=EfctGBqA+tFsqy1MQgf/QW8ed9cdtao3pVhWdvVteAg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MTHPS0Oq8e+mHDLuuAzQ11N+WLTyi5N5dMZBYBtbh6AmGNBtiiuZOIlbRUR22ic0+Po341TJ2EKtz4H4xiunMFOQiB9wCNhGyYedkaCYkPDyXW2uXYShEFg1FTT87FEkxsoRNAgjCP9CscQRFZRyRTe1PVpPrQm70s9v2Vx+CmA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=LDTUrCz5; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=tMRDlLI5B0C43//a6l2WcQv4i47FxQAiDocEBJe+WAm40OrRh2F3aCemhzRWS8gxGrHBJejb+eN97pceBrUoR/6r5TQdPTWeHiB3YNebRm3rsa8H+ACEetE4ylS+nI496Ar7rz7F+WBkURM9qVh0AtXd2o71qKQ7xoYmMstaGHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ySj7+q5o; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ikBbKC7O; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="LDTUrCz5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAE4FC4CEEB;
-	Fri, 18 Jul 2025 10:27:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1752834438;
-	bh=RSLPZfhWxQYnSXaCJXfPgeIgZNT7vJZLbF48MWYtaNU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LDTUrCz5NxGOn4y5Ve3I/7yNBxscqW5Lgjiypa0IeUjDjyXq14HMmTry8p3Auu5E7
-	 ZMeX0Lt/jCbdrN28fAj5RQcU+Ntwcku1HpPblnXgC8gC/wvGK6WjkwVc5Ljbx84+iv
-	 icW4Wr9FHXSEneCTD86/B69kZT4Zne8q03jdyu3g=
-Date: Fri, 18 Jul 2025 12:27:14 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Nam Cao <namcao@linutronix.de>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ySj7+q5o";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ikBbKC7O"
+Date: Fri, 18 Jul 2025 12:40:18 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1752835219;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PDMVrdweoF/EUIrbyPjq3jBCHKVn3HSx2l+SgvFzmxQ=;
+	b=ySj7+q5ow5+w92BYYOB2ovSU4z0PU2DZ20fHF1fAgSnBLoj7qbPWlWXo8/O/QoKrPaEJdj
+	NjRYz1nat+RUFP6Cj1wDKO9LHzeusqkqmh0jrQMso4PI95dwonefBsDOF20+ni3wShxLgg
+	Z5FdOdjSdj2U8+d5BtfYQUxjYLwLQZRQeGDfMShbnQbkIxpz8v6NWWIWMxIX+RH73/7qhf
+	CMXDUnQtj0KJsCXpeZ+Qrq5bJHyfH+5vUunJUctYSUmm+Cgv10hvpbIDSJHOznRPlCQg/F
+	4cjwv0qpEwe/KfXwdl8BLtcoKXN+mjt+D9ddaYRGvid7y3D+AuY/zNw2MUXIxw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1752835219;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PDMVrdweoF/EUIrbyPjq3jBCHKVn3HSx2l+SgvFzmxQ=;
+	b=ikBbKC7OOeVaD8woVi3vZXQH7tbu4GqgUCWyWXVQF05wLLF1e9ujZB1g/AZfF2OLWbUPNZ
+	jY/lWNj6vio0XwBw==
+From: Nam Cao <namcao@linutronix.de>
+To: Greg KH <gregkh@linuxfoundation.org>
 Cc: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
@@ -33,8 +46,9 @@ Cc: Steven Rostedt <rostedt@goodmis.org>,
 	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
 Subject: Re: [PATCH] rv: Ensure containers are registered first
-Message-ID: <2025071835-enjoying-darn-f5d8@gregkh>
+Message-ID: <20250718104018.lyupqBnR@linutronix.de>
 References: <20250718091850.2057864-1-namcao@linutronix.de>
+ <2025071835-enjoying-darn-f5d8@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -43,50 +57,23 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250718091850.2057864-1-namcao@linutronix.de>
+In-Reply-To: <2025071835-enjoying-darn-f5d8@gregkh>
 
-On Fri, Jul 18, 2025 at 11:18:50AM +0200, Nam Cao wrote:
-> If rv_register_monitor() is called with a non-NULL parent pointer (i.e. by
-> monitors inside a container), it is expected that the parent (a.k.a
-> container) is already registered.
+On Fri, Jul 18, 2025 at 12:27:14PM +0200, Greg KH wrote:
+> On Fri, Jul 18, 2025 at 11:18:50AM +0200, Nam Cao wrote:
+> > If rv_register_monitor() is called with a non-NULL parent pointer (i.e. by
+> > monitors inside a container), it is expected that the parent (a.k.a
+> > container) is already registered.
+> > 
+> > The containers seem to always be registered first. I suspect because of the
+> > order in Makefile. But nothing guarantees this.
 > 
-> The containers seem to always be registered first. I suspect because of the
-> order in Makefile. But nothing guarantees this.
+> Yes, linking order matters, and it does guarantee this.  We rely on
+> linking order in the kernel in many places.
 
-Yes, linking order matters, and it does guarantee this.  We rely on
-linking order in the kernel in many places.
+Hmm, I thought this is just how the linker happens to behave, but not a
+guarantee.
 
-> If this registering order is changed, "strange" things happen. For example,
-> if the container is registered last, rv_is_container_monitor() incorrectly
-> says this is NOT a container. .enable() is then called, which is NULL for
-> container, thus we have a NULL pointer deref crash.
-> 
-> Guarantee that containers are registered first.
-> 
-> Fixes: cb85c660fcd4 ("rv: Add option for nested monitors and include sched")
-> Signed-off-by: Nam Cao <namcao@linutronix.de>
-> Cc: stable@vger.kernel.org
-> ---
->  include/linux/rv.h                                        | 5 +++++
->  kernel/trace/rv/monitors/pagefault/pagefault.c            | 4 ++--
->  kernel/trace/rv/monitors/rtapp/rtapp.c                    | 4 ++--
->  kernel/trace/rv/monitors/sched/sched.c                    | 4 ++--
->  kernel/trace/rv/monitors/sco/sco.c                        | 4 ++--
->  kernel/trace/rv/monitors/scpd/scpd.c                      | 4 ++--
->  kernel/trace/rv/monitors/sleep/sleep.c                    | 4 ++--
->  kernel/trace/rv/monitors/sncid/sncid.c                    | 4 ++--
->  kernel/trace/rv/monitors/snep/snep.c                      | 4 ++--
->  kernel/trace/rv/monitors/snroc/snroc.c                    | 4 ++--
->  kernel/trace/rv/monitors/tss/tss.c                        | 4 ++--
->  kernel/trace/rv/monitors/wip/wip.c                        | 4 ++--
->  kernel/trace/rv/monitors/wwnr/wwnr.c                      | 4 ++--
->  tools/verification/rvgen/rvgen/templates/container/main.c | 4 ++--
->  tools/verification/rvgen/rvgen/templates/dot2k/main.c     | 4 ++--
->  tools/verification/rvgen/rvgen/templates/ltl2k/main.c     | 4 ++--
->  16 files changed, 35 insertions(+), 30 deletions(-)
+Let's discard this patch then.
 
-As there is no bug now, why is this a cc: stable patch?
-
-thanks,
-
-greg k-h
+Nam
