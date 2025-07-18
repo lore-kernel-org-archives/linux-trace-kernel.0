@@ -1,31 +1,60 @@
-Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C5882E3701;
-	Fri, 18 Jul 2025 05:29:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE5432253A1;
+	Fri, 18 Jul 2025 08:29:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752816573; cv=none; b=SZTwxaddmKnn9TsNcgPenzZiRZphY/8k6H/nBYDuYrb/vfQ1qkmAn6R8cN5XBSzotUErZ3e5yBbaYcVscBeI42DaY7bO5EWiyOjtKO/lwnzHJ3z1La+eUHv3sJg/U7wx94XqNNph9inML5MK6kc7YVkP8TtzDqzbtis8QQT51mw=
+	t=1752827342; cv=none; b=XjzyHfpCqy07RjU0/tfydaZq3QpAzTOlI1kXEfQzZ077hdsWNIImxzj2fPvyHfnu+FVu4dr1v1Btq+My218IMuivdZT62COtrfY1im6tQ2xK8WLyY5yHlLAdNXcNAnnuGFN6EhBSoDPZ8PUNb6NkQDfR1t6OVcBk3EbrfxEer2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752816573; c=relaxed/simple;
-	bh=m2miZFl5NgGe92LTcMBCK2TMuOH0GrVO+wRE0y1hl6c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=S9VsfHwNOtpB2rc2Dnqxetwt/qhvxjn+6RXQb3AEl8kcqCdJvzxgLkv5YWnwr6pSLtwn8c1+4vppfp7lxS8hkghVQB3q8rUu7rWR4i56Z2wHZRLcJ8C/M1iwBfVaDNV2a+kHz7ZT7uwtgKYlNODXdpjyeDDYT/t4bEJnjzzucz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=W46kVCg0; arc=none smtp.client-ip=115.124.30.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1752827342; c=relaxed/simple;
+	bh=An+QLoB26vrwmylv7R5nbNxLfWknzHLJzo8x0RFfRj0=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=tfKsoEtIyZ6r6hAzTdKaMa4NdkyhyT0AnlXM7hSW37iylamVYfBFsVYbp7PL8Ah/EdCSFI78mae+bqL9D+Z04kqD+QNlBBUJfZMbh0QH3D3RzOoP/7gUQ+4kXSIjF8iCSJaa0peK6wtwgBAqVT6hppezmRNjwWCTRwutqaVUMug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=GVpca6Hp; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="W46kVCg0"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1752816561; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=zqVP7ZJu/yyqnzJzHTqxeHX8EL7nFVPdLIswEFCIT7k=;
-	b=W46kVCg0VGYhkosD+BO6CLUHv3WWgUbg7XlIyVW76x7qBzmdGBtOyzaFKNwwB7Z4baooZgaNwNrEln/Ghvuj+B4Sd/ffJeNw49sOyn7/lI69k4lP11c/166RArmH3gQhDnQ53enOymSH46B7ZJqmeDL+v3bQ7Q166T87xfXwgRI=
-Received: from 30.246.162.71(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WjBAWRW_1752816558 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Fri, 18 Jul 2025 13:29:20 +0800
-Message-ID: <e92f8d1f-457c-4248-8397-81b0e20ff4af@linux.alibaba.com>
-Date: Fri, 18 Jul 2025 13:29:18 +0800
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="GVpca6Hp"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56I7AXiX016701;
+	Fri, 18 Jul 2025 08:28:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=P7zv2f
+	2/pQ2JjPIX25pzVf7Fi9ExE+OaUp8IOBF1wYk=; b=GVpca6HpyCTHbO5QzbbcH1
+	Hza8zv+C6i44zb0E3HS4ZVHe+QAjdM75aBs9kMvmA7Ka7NgzX7jgiUus4GTFMYH7
+	SUsmdiodPaV2QS+YXVzhoJD6mkK5dCXeAxF6yH0I0m8zGGbmcRhqPOemSbpMI3zb
+	gDGQY7OQNlwFcubh5Qdpfvwdj1t7Z68bbcUj6nBqv+zA2cfQR52QQavkUNmNbGPY
+	qg84iZ9/4LvunHQTZjAOP+Qws/SCCxo3En/6+MF+TvlZYyM8RZjLt9UTTsQlkP3K
+	9IqdnndnjrXWGLWRPdClZlq9kPoEvTfh1rRWDjqWXS1aiZ/osNy9ndSDupu8nP9Q
+	==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47vamub9nj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 18 Jul 2025 08:28:38 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 56I4kGYP008154;
+	Fri, 18 Jul 2025 08:28:38 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 47v2e10hfy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 18 Jul 2025 08:28:38 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 56I8SYGI52232472
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 18 Jul 2025 08:28:34 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E58B32004D;
+	Fri, 18 Jul 2025 08:28:33 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A44F620040;
+	Fri, 18 Jul 2025 08:28:32 +0000 (GMT)
+Received: from [9.111.132.145] (unknown [9.111.132.145])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 18 Jul 2025 08:28:32 +0000 (GMT)
+Message-ID: <fb9ee560-d449-4d46-9fb1-19780ff28e65@linux.ibm.com>
+Date: Fri, 18 Jul 2025 10:28:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -33,78 +62,97 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8] PCI: hotplug: Add a generic RAS tracepoint for hotplug
- event
-To: Matthew W Carlis <mattc@purestorage.com>, helgaas@kernel.org,
- lukas@wunner.de, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>
-Cc: anil.s.keshavamurthy@intel.com, bhelgaas@google.com, bp@alien8.de,
- davem@davemloft.net, ilpo.jarvinen@linux.intel.com,
- linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- lukas@wunner.de, mark.rutland@arm.com, mathieu.desnoyers@efficios.com,
- mhiramat@kernel.org, naveen@kernel.org, oleg@redhat.com,
- peterz@infradead.org, rostedt@goodmis.org, tianruidong@linux.alibaba.com,
- tony.luck@intel.com
-References: <20250717235055.GA2664149@bhelgaas>
- <20250718034616.26250-1-mattc@purestorage.com>
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <20250718034616.26250-1-mattc@purestorage.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: [RFC PATCH v1 07/16] unwind_user: Enable archs that do not
+ necessarily save RA
+From: Jens Remus <jremus@linux.ibm.com>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, x86@kernel.org,
+        Steven Rostedt <rostedt@kernel.org>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Ilya Leoshkevich <iii@linux.ibm.com>,
+        Masami Hiramatsu
+ <mhiramat@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Indu Bhagat <indu.bhagat@oracle.com>,
+        "Jose E. Marchesi" <jemarch@gnu.org>,
+        Beau Belgrave <beaub@linux.microsoft.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jens Axboe <axboe@kernel.dk>, Florian Weimer <fweimer@redhat.com>,
+        Sam James <sam@gentoo.org>
+References: <20250710163522.3195293-1-jremus@linux.ibm.com>
+ <20250710163522.3195293-8-jremus@linux.ibm.com>
+ <xgbpe46th7rbpslybo5xdt57ushlgwr5xyrq4epuft5nfrqms3@izeojto3wzu4>
+ <b5121d71-f916-45ea-9e6c-b74a27f90dcd@linux.ibm.com>
+Content-Language: en-US
+Organization: IBM Deutschland Research & Development GmbH
+In-Reply-To: <b5121d71-f916-45ea-9e6c-b74a27f90dcd@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: lyAFuwjgrMh-HnhCNOaWMxfetyzxvEaR
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzE4MDA2NCBTYWx0ZWRfX4VemN82g5i3Q 6Si28PDiYEycUkdY/Ocy02ALDx2nMJRqExPdL+wYLjxTVRCZIxU6wrJmfS+gRHHCNy/J7m0M5hP C8ot0n6ST50PUHYFYkOiYBK6VYmHajP5+rPCD5gq0YcCmDxmWwmAWgvETgVbBUvm2l/foWLIcWG
+ r/jDHcjgtSr85ROj3GfUFCo6GFpF8b0h+lsQYYFS6/1+lhbiNW+mQeFgDhbY76G/iuEKmfjSBVS 03S8+2b71+o7gP8AftOJ1Qf9bnxObS61VrUJiokLdxyldD/ZLezU1pXs/A4Bi8V6u3He8vK31th 36iyzY56tQ3IHkCKTV2yDDC1bQ/081XwBwl4RUaoQE5qCPtSvOzm2xAp8P7g7b/qPgz7aGFDWM3
+ lQxqseKFSVXGvJvHJyVIPSfy84Ik4b94Ch0enLMAYjvCYlzaFMehWp0Wd2w9qJx9QEPs1q2P
+X-Proofpoint-ORIG-GUID: lyAFuwjgrMh-HnhCNOaWMxfetyzxvEaR
+X-Authority-Analysis: v=2.4 cv=dNSmmPZb c=1 sm=1 tr=0 ts=687a05b7 cx=c_pps a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=VnNF1IyMAAAA:8 a=edDyEtEh5DHdOHvQ2iMA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-07-18_01,2025-07-17_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ mlxlogscore=999 bulkscore=0 lowpriorityscore=0 suspectscore=0 spamscore=0
+ clxscore=1015 phishscore=0 malwarescore=0 mlxscore=0 adultscore=0
+ impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507180064
 
-
-
-在 2025/7/18 11:46, Matthew W Carlis 写道:
-> On Thu, Jul 17, 2025 Bjorn Helgaas wrote
->> So I think your idea of adding current link speed/width to the "Link
->> Up" event is still on the table, and that does sound useful to me.
+On 17.07.2025 13:09, Jens Remus wrote:
+> On 17.07.2025 01:01, Josh Poimboeuf wrote:
+>> On Thu, Jul 10, 2025 at 06:35:13PM +0200, Jens Remus wrote:
+>>> +++ b/arch/Kconfig
+>>> @@ -450,6 +450,11 @@ config HAVE_UNWIND_USER_SFRAME
+>>>  	bool
+>>>  	select UNWIND_USER
+>>>  
+>>> +config HAVE_USER_RA_REG
+>>> +	bool
+>>> +	help
+>>> +	  The arch passes the return address (RA) in user space in a register.
+>>
+>> How about "HAVE_UNWIND_USER_RA_REG" so it matches the existing
+>> namespace?
 > 
-> We're already reading the link status register here to check DLLA so
-> it would be nice. I guess if everything is healthy we're probably already
-> at the maximum speed by this point.
-> 
->> In the future we might add another tracepoint when we enumerate the
->> device and know the Vendor/Device ID.
-> 
-> I think we might have someone who would be interested in doing it.
+> Ok.  I am open to any improvements.
 
+Thinking about this again I realized that the config option actually
+serves two purposes:
 
-Hi, all,
+1. Enable code (e.g. unwind user) to determine the presence of the new
+   user_return_address().  That is where I derived the name from.
+2. Enable unwind user (sframe) to behave differently, if an architecture
+   has/uses a RA register (unlike x86, which solely uses the stack).
 
-IIUC, the current hotplug event (or presence event) is enough for Matthew.
-and we would like a new tracepoing for link speed change which reports
-speeds.
+I think the primary notion is that an architecture has/uses a register
+for the return address and thus provides user_return_address().  What
+consumers such as unwind user do with that info is secondary.
 
-For hotplug event, I plan to send a new version to
+Thoughts?
 
-1. address Bjorn' concerns about event strings by removing its spaces.
+Thanks and regards,
+Jens
+-- 
+Jens Remus
+Linux on Z Development (D3303)
++49-7031-16-1128 Office
+jremus@de.ibm.com
 
-#define PCI_HOTPLUG_EVENT							\
-	EM(PCI_HOTPLUG_LINK_UP,			"PCI_HOTPLUG_LINK_UP")		\
-	EM(PCI_HOTPLUG_LINK_DOWN,		"PCI_HOTPLUG_LINK_DOWN")	\
-	EM(PCI_HOTPLUG_CARD_PRESENT,		"PCI_HOTPLUG_CARD_PRESENT")	\
-	EMe(PCI_HOTPLUG_CARD_NOT_PRESENT,	"PCI_HOTPLUG_CARD_NOT_PRESENT")
+IBM
 
-2. address Ilpo comments by moving pci_hp_event to a common place
-(include/trace/events/pci.h) so that the new comming can also use it.
+IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Böblingen; Registergericht: Amtsgericht Stuttgart, HRB 243294
+IBM Data Privacy Statement: https://www.ibm.com/privacy/
 
-For link speed change event (perhaps named as pci_link_event),
-I plan to send a seperate patch, which provides:
-
-	TP_STRUCT__entry(
-		__string(	port_name,	port_name	)
-		__field(	unsigned char,	cur_bus_speed	)
-		__field(	unsigned char,	max_bus_speed	)
-  		__field(	unsigned char,	width		)
-  		__field(	unsigned int,	flit_mode	)
-		__field(	unsigned char,	reason		)
-		),
-
-The reason field is from Lukas ideas which indicates why the link speed
-changed, e.g. "hotplug", "autonomous", "thermal", "retrain", etc.
-
-Are you happy with above changes?
-
-Thanks.
-Shuai
