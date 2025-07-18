@@ -1,140 +1,151 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01A561C862C;
-	Fri, 18 Jul 2025 16:58:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EB042E6D0C;
+	Fri, 18 Jul 2025 17:00:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752857912; cv=none; b=rS45cv5iJF009mSGykTO2aGzl3LTg1iOe5sNmnTH/NSrls0KVEAKbRU05bSclTjtus4nVKLCz/bJTFyBBnD0UQnwyXijTjsQvuAgn9E7/ygMCz6WzZVm9O/RBBuUrUkctbQcImG3510RmYysSzBqLKggaJREvjqCJDEWeiW3zDo=
+	t=1752858003; cv=none; b=DF3woJ6mIphPxRG1go2X7eW2X2zKlPYcUI+MyYfKLrOPtKEGydDKrtabP3/SUW1FiZOciQY7Igk1ysqf4YsqYNbeA025JxvRtgrKfMOyz206NS/V6MewpA2iXY3QvOA6/eVoCT6QIDaGxYMr2tVxDxEaCPC6kits5ykXQkwgTz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752857912; c=relaxed/simple;
-	bh=0CzCSY33oaNk+GLhEcS7DTvGRo9zr83z7R/QoPUgD3I=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VFh4m7uRiTUV6HJR1kzZgjBgpHqaPepoYNyG5IL2aGJ/LjlCEz+Td8jd0rIoffTujMNhxXpyLGEl/9IopY8xdwokMx7dg5pRcILzSou48elUBiFAsyNmVe0Otq5r5c+4uLn+EbwcesKlmrQCaCv4jpm0n6tp+cWTYxmU4XxNBl0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf08.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay08.hostedemail.com (Postfix) with ESMTP id 749C9140153;
-	Fri, 18 Jul 2025 16:58:23 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id CE2B220027;
-	Fri, 18 Jul 2025 16:58:21 +0000 (UTC)
-Date: Fri, 18 Jul 2025 12:58:20 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/5] tracing: probe: Allocate traceprobe_parse_context
- from heap
-Message-ID: <20250718125820.0d0ae198@batman.local.home>
-In-Reply-To: <175283844827.343578.10408845752163723065.stgit@devnote2>
-References: <175283843771.343578.8524137568048302760.stgit@devnote2>
-	<175283844827.343578.10408845752163723065.stgit@devnote2>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1752858003; c=relaxed/simple;
+	bh=W8t2koyJaLZ0JVX3vE0SM1n+BlRW5WXxbRMRDeUKeho=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mnBr5giqlFNla9STzXeQ6fGrP3GRTZAf+MWIrgYtDRpDnT8NOhpNkWJqeEhL2ebnzEfe6XQDQxfKeXZ1jsJRRVMn7LMAsE+ujbHQz8QTkl9HdixBbHXU0/Zfz4bqPpATI/t7SO+BW7gGGb9TBb4t2xPoX7DbYx9q3UYAMKCLa6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nyjyMO/U; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nyjyMO/U"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DAAEC4CEEB;
+	Fri, 18 Jul 2025 17:00:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752858003;
+	bh=W8t2koyJaLZ0JVX3vE0SM1n+BlRW5WXxbRMRDeUKeho=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nyjyMO/U4AOcZ5FiPo2kAvehkOrhceb+dLNPToeAHAtFe+iWzwTApDQs+rMZYLlwt
+	 YulTf7jRbvvH/SloIfDPEyzq9xidtthHrwngAZWUzKqZMut9rslgyZohR1OEfV7Ru9
+	 OirTfvVGP9FY/b4iGd96Me65dtz2huk0t+3dGW09oLgZ2EyrVsV1EUh8e72AA2kOy7
+	 YuerM2aadCH4ms8HYKmqWPoVLwoJXS+mtdyki/s3YRn4z1OG2W9NAtUXup6A2O5W/m
+	 XEIKLoSfUPQxY18ygr3FpHdq6YtdbrJHkQFfKi10rGUtYCPGDer6rK2TxfAL84Xkdj
+	 tDg6FIppgcy8g==
+Date: Fri, 18 Jul 2025 09:59:59 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Jens Remus <jremus@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org, x86@kernel.org, Steven Rostedt <rostedt@kernel.org>, 
+	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Ilya Leoshkevich <iii@linux.ibm.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, 
+	Indu Bhagat <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>, 
+	Beau Belgrave <beaub@linux.microsoft.com>, Linus Torvalds <torvalds@linux-foundation.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Jens Axboe <axboe@kernel.dk>, 
+	Florian Weimer <fweimer@redhat.com>, Sam James <sam@gentoo.org>
+Subject: Re: [RFC PATCH v1 07/16] unwind_user: Enable archs that do not
+ necessarily save RA
+Message-ID: <v6gwx63cd5divimoadofeuz2vn72uw7zrlcjacufaedeuxbvjc@qmobatrxo66u>
+References: <20250710163522.3195293-1-jremus@linux.ibm.com>
+ <20250710163522.3195293-8-jremus@linux.ibm.com>
+ <xgbpe46th7rbpslybo5xdt57ushlgwr5xyrq4epuft5nfrqms3@izeojto3wzu4>
+ <b5121d71-f916-45ea-9e6c-b74a27f90dcd@linux.ibm.com>
+ <fb9ee560-d449-4d46-9fb1-19780ff28e65@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: mrhbyjtgw7fhpnq51dbmwu8ph7rr8uz3
-X-Rspamd-Server: rspamout05
-X-Rspamd-Queue-Id: CE2B220027
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18tdA0PzEE4imGFZXZbmXbx7Dk2dPM2Aqg=
-X-HE-Tag: 1752857901-942319
-X-HE-Meta: U2FsdGVkX19gc8p0G2ARNLs8R5kTfwvUFLGlpdCYRRivM+8FBwVAnke86Cz3rnRbXFXBD0MQ5fT5DqJnjLYs3UNctn1ffra5bALQFodgTdcy+QiY0JkPZQyl0BMb9xYEkTTYqY0nNfxUIw83RF7BN+OYb1b1/7KXWk8Qk2pmdiW8VqnKaO+X1uLGamDPzmW+ZTtKyFDfVNTOvxCFjb8XY6Wu5BB5uGgTkUKjN06QVPjfRadu9ndQVZkvtEnfgrWejL1JvqSAKoz8Zg2lHPYpPUfPPLMUaEHAKtolEOhypYmNtiByGHuxF+6g81Tzx7oimzK+xvWhkx9YJkd2bx8yjCgQ89S+5aSDPgyjP+GPoiQb8ofEyzx9rKsweNyl6vYh
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <fb9ee560-d449-4d46-9fb1-19780ff28e65@linux.ibm.com>
 
-On Fri, 18 Jul 2025 20:34:08 +0900
-"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+On Fri, Jul 18, 2025 at 10:28:32AM +0200, Jens Remus wrote:
+> On 17.07.2025 13:09, Jens Remus wrote:
+> > On 17.07.2025 01:01, Josh Poimboeuf wrote:
+> >> On Thu, Jul 10, 2025 at 06:35:13PM +0200, Jens Remus wrote:
+> >>> +++ b/arch/Kconfig
+> >>> @@ -450,6 +450,11 @@ config HAVE_UNWIND_USER_SFRAME
+> >>>  	bool
+> >>>  	select UNWIND_USER
+> >>>  
+> >>> +config HAVE_USER_RA_REG
+> >>> +	bool
+> >>> +	help
+> >>> +	  The arch passes the return address (RA) in user space in a register.
+> >>
+> >> How about "HAVE_UNWIND_USER_RA_REG" so it matches the existing
+> >> namespace?
+> > 
+> > Ok.  I am open to any improvements.
+> 
+> Thinking about this again I realized that the config option actually
+> serves two purposes:
+> 
+> 1. Enable code (e.g. unwind user) to determine the presence of the new
+>    user_return_address().  That is where I derived the name from.
+> 2. Enable unwind user (sframe) to behave differently, if an architecture
+>    has/uses a RA register (unlike x86, which solely uses the stack).
 
-> diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
-> index 854e5668f5ee..7bc4c84464e4 100644
-> --- a/kernel/trace/trace_probe.h
-> +++ b/kernel/trace/trace_probe.h
-> @@ -10,6 +10,7 @@
->   * Author:     Srikar Dronamraju
->   */
->  
-> +#include <linux/cleanup.h>
->  #include <linux/seq_file.h>
->  #include <linux/slab.h>
->  #include <linux/smp.h>
+The sframe CONFIG_HAVE_USER_RA_REG check is redundant with the
+unwind_user one, no?  I'm thinking it's better for sframe to just decode
+the entry as it is, and then let unwind_user validate things.
 
-Nit, but let's keep the "upside-down x-mas tree" format:
+> I think the primary notion is that an architecture has/uses a register
+> for the return address and thus provides user_return_address().  What
+> consumers such as unwind user do with that info is secondary.
+> 
+> Thoughts?
 
-#include <linux/seq_file.h>
-#include <linux/cleanup.h>
-#include <linux/slab.h>
-#include <linux/smp.h>
+user_return_address() only has the single user, and is not all that
+generically useful anyway (e.g., it warns on x86), so let's keep it
+encapsulated in include/linux/unwind_user.h and give it the
+"unwind_user" prefix.
 
+Also, "RA_REG" is a bit ambiguous, it sounds almost like that other
+option which spills RA to another register.  Conceptually, it's a link
+register, so can we rename that to CONFIG_HAVE_UNWIND_USER_LINK_REG and
+unwind_user_get_link_reg() or so?
 
-> @@ -438,6 +439,14 @@ extern void traceprobe_free_probe_arg(struct probe_arg *arg);
->   * this MUST be called for clean up the context and return a resource.
->   */
->  void traceprobe_finish_parse(struct traceprobe_parse_context *ctx);
-> +static inline void traceprobe_free_parse_ctx(struct traceprobe_parse_context *ctx)
-> +{
-> +	traceprobe_finish_parse(ctx);
-> +	kfree(ctx);
-> +}
-> +
-> +DEFINE_FREE(traceprobe_parse_context, struct traceprobe_parse_context *,
-> +		if (!IS_ERR_OR_NULL(_T)) traceprobe_free_parse_ctx(_T))
+Similarly, CONFIG_HAVE_UNWIND_USER_LOC_REG isn't that descriptive, how
+about CONFIG_HAVE_UNWIND_USER_LINK_REG_SPILL?
 
-ctx will either be allocated or NULL, I think the above could be:
+Also we can get rid of the '#define func_name func_name' things and just
+guard those functions with their corresponding CONFIG options in
+inclide/linux/unwind_user.h.
 
-		if (_T) traceprobe_free_parse_ctx(_T))
+Also those two functions should have similar naming and prototypes.
 
+For example, in include/linux/unwind_user.h:
 
->  
->  extern int traceprobe_split_symbol_offset(char *symbol, long *offset);
->  int traceprobe_parse_event_name(const char **pevent, const char **pgroup,
-> diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
-> index f95a2c3d5b1b..1fd479718d03 100644
-> --- a/kernel/trace/trace_uprobe.c
-> +++ b/kernel/trace/trace_uprobe.c
-> @@ -537,6 +537,7 @@ static int register_trace_uprobe(struct trace_uprobe *tu)
->   */
->  static int __trace_uprobe_create(int argc, const char **argv)
->  {
-> +	struct traceprobe_parse_context *ctx __free(traceprobe_parse_context) = NULL;
->  	struct trace_uprobe *tu;
->  	const char *event = NULL, *group = UPROBE_EVENT_SYSTEM;
->  	char *arg, *filename, *rctr, *rctr_end, *tmp;
-> @@ -693,15 +694,17 @@ static int __trace_uprobe_create(int argc, const char **argv)
->  	tu->path = path;
->  	tu->filename = filename;
->  
-> +	ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
-> +	if (!ctx) {
-> +		ret = -ENOMEM;
-> +		goto error;
-> +	}
-> +	ctx->flags = (is_return ? TPARG_FL_RETURN : 0) | TPARG_FL_USER;
-> +
->  	/* parse arguments */
->  	for (i = 0; i < argc; i++) {
-> -		struct traceprobe_parse_context ctx = {
-> -			.flags = (is_return ? TPARG_FL_RETURN : 0) | TPARG_FL_USER,
-> -		};
-> -
->  		trace_probe_log_set_index(i + 2);
-> -		ret = traceprobe_parse_probe_arg(&tu->tp, i, argv[i], &ctx);
-> -		traceprobe_finish_parse(&ctx);
-> +		ret = traceprobe_parse_probe_arg(&tu->tp, i, argv[i], ctx);
+#ifndef CONFIG_HAVE_UNWIND_USER_LINK_REG
+int unwind_user_get_link_reg(unsigned long *val)
+{
+	WARN_ON_ONCE(1);
+	return -EINVAL;
+}
+#endif
 
-Doesn't this change the semantics a bit?
+#ifndef CONFIG_HAVE_UNWIND_USER_LINK_REG_SPILL
+int unwind_user_get_reg(unsigned long *val, unsigned int regnum)
+{
+	WARN_ON_ONCE(1);
+	return -EINVAL;
+}
+#endif
 
-Before this change, traceprobe_finish_parse(&ctx) is called for every
-iteration of the loop. Now we only do it when it exits the function.
+Then the code can be simplified (assuming no topmost checks):
 
--- Steve
+	/* Get the Return Address (RA) */
+	switch (frame->ra.loc) {
+	case UNWIND_USER_LOC_NONE:
+		if (unwind_user_get_link_reg(&ra))
+			goto done;
+		break;
+	...
+	case UNWIND_USER_LOC_REG:
+		if (unwind_user_get_reg(&ra, frame->ra.regnum))
+			goto done;
+		break;
+	...
 
-
->  		if (ret)
->  			goto error;
->  	}
-
+-- 
+Josh
