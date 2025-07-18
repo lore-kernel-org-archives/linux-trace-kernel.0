@@ -1,151 +1,174 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EB042E6D0C;
-	Fri, 18 Jul 2025 17:00:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FA28156678;
+	Fri, 18 Jul 2025 17:39:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752858003; cv=none; b=DF3woJ6mIphPxRG1go2X7eW2X2zKlPYcUI+MyYfKLrOPtKEGydDKrtabP3/SUW1FiZOciQY7Igk1ysqf4YsqYNbeA025JxvRtgrKfMOyz206NS/V6MewpA2iXY3QvOA6/eVoCT6QIDaGxYMr2tVxDxEaCPC6kits5ykXQkwgTz4=
+	t=1752860354; cv=none; b=WsZQgv0yCTf9q6h+UXRkS1ZR5kj6LiOkLTNFmA430/NJI9TC4ZW+qXdjSq0nSQO9cybLbLmZCCj0t0QO0BmYFHD39lbk8+YGutzY33qe0uTT87IffAWzReiTPHjX+nQ2AcCV6UzxxQJ8PtaZO2O9N07uXxMUHd52JeYTXDS7oNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752858003; c=relaxed/simple;
-	bh=W8t2koyJaLZ0JVX3vE0SM1n+BlRW5WXxbRMRDeUKeho=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mnBr5giqlFNla9STzXeQ6fGrP3GRTZAf+MWIrgYtDRpDnT8NOhpNkWJqeEhL2ebnzEfe6XQDQxfKeXZ1jsJRRVMn7LMAsE+ujbHQz8QTkl9HdixBbHXU0/Zfz4bqPpATI/t7SO+BW7gGGb9TBb4t2xPoX7DbYx9q3UYAMKCLa6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nyjyMO/U; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nyjyMO/U"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DAAEC4CEEB;
-	Fri, 18 Jul 2025 17:00:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752858003;
-	bh=W8t2koyJaLZ0JVX3vE0SM1n+BlRW5WXxbRMRDeUKeho=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nyjyMO/U4AOcZ5FiPo2kAvehkOrhceb+dLNPToeAHAtFe+iWzwTApDQs+rMZYLlwt
-	 YulTf7jRbvvH/SloIfDPEyzq9xidtthHrwngAZWUzKqZMut9rslgyZohR1OEfV7Ru9
-	 OirTfvVGP9FY/b4iGd96Me65dtz2huk0t+3dGW09oLgZ2EyrVsV1EUh8e72AA2kOy7
-	 YuerM2aadCH4ms8HYKmqWPoVLwoJXS+mtdyki/s3YRn4z1OG2W9NAtUXup6A2O5W/m
-	 XEIKLoSfUPQxY18ygr3FpHdq6YtdbrJHkQFfKi10rGUtYCPGDer6rK2TxfAL84Xkdj
-	 tDg6FIppgcy8g==
-Date: Fri, 18 Jul 2025 09:59:59 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Jens Remus <jremus@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org, x86@kernel.org, Steven Rostedt <rostedt@kernel.org>, 
-	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Ilya Leoshkevich <iii@linux.ibm.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, 
-	Indu Bhagat <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>, 
-	Beau Belgrave <beaub@linux.microsoft.com>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Jens Axboe <axboe@kernel.dk>, 
-	Florian Weimer <fweimer@redhat.com>, Sam James <sam@gentoo.org>
-Subject: Re: [RFC PATCH v1 07/16] unwind_user: Enable archs that do not
- necessarily save RA
-Message-ID: <v6gwx63cd5divimoadofeuz2vn72uw7zrlcjacufaedeuxbvjc@qmobatrxo66u>
-References: <20250710163522.3195293-1-jremus@linux.ibm.com>
- <20250710163522.3195293-8-jremus@linux.ibm.com>
- <xgbpe46th7rbpslybo5xdt57ushlgwr5xyrq4epuft5nfrqms3@izeojto3wzu4>
- <b5121d71-f916-45ea-9e6c-b74a27f90dcd@linux.ibm.com>
- <fb9ee560-d449-4d46-9fb1-19780ff28e65@linux.ibm.com>
+	s=arc-20240116; t=1752860354; c=relaxed/simple;
+	bh=5Rk/G7wsR0SP1jYxjf6PluXIyHe7/NFMk+1LySyLWSM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MIpzY7IySin0H5JH+D7v01Ihj3DwEcRpc81s9YJw+hZOa3bbcDEWUtjq2xyydVDyjH4AI6w6pSdvWniFCqyhGr4nEKBwz6FNNc1IrE6zsVwUac2dIOdjlVx/Spc8o1xfpru9QZWk2meL9+1Z4mnoojJj5um7pqP6dDXxZ3wweGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf01.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay10.hostedemail.com (Postfix) with ESMTP id E3703C016F;
+	Fri, 18 Jul 2025 17:39:09 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf01.hostedemail.com (Postfix) with ESMTPA id 4002C6000F;
+	Fri, 18 Jul 2025 17:39:08 +0000 (UTC)
+Date: Fri, 18 Jul 2025 13:39:07 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/5] tracing: fprobe-event: Allocate string buffers from
+ heap
+Message-ID: <20250718133907.6e56a3fa@batman.local.home>
+In-Reply-To: <175283845881.343578.10010946807218897188.stgit@devnote2>
+References: <175283843771.343578.8524137568048302760.stgit@devnote2>
+	<175283845881.343578.10010946807218897188.stgit@devnote2>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <fb9ee560-d449-4d46-9fb1-19780ff28e65@linux.ibm.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 4002C6000F
+X-Stat-Signature: pqz9gbzk837n1g88pn1xbtzzf6kkkzm3
+X-Rspamd-Server: rspamout06
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19Oaf5WJqTst86BCkvqjzIGjaQw+0fUXAw=
+X-HE-Tag: 1752860348-939073
+X-HE-Meta: U2FsdGVkX1/c/3+Ayp0hT81n12/xrsmZzRdOGAxjRULOdE2aRkfXQMZCWe5aqOdSHM7RTFmxgahPAbiMO4VPVVDVseffe4rSRQNULKBXrOy7CjQgzzM7QiqLhHZ9Izw1wYDOxWixL6T4IV0IK639xa/sB3Xwx3StXpN4p0mLn4D9H9ouhwU8siNZpU9bavK9uA739nGXhdsaIMOKquIMZHe3qDpphEvnTTbZP/VQmL3SlJhMLuIzJwBKHAbhFkW1aFbCxwhhGPx7JwjoDkfKP/ZJhYO8i8EHfJg4t573iuX3APyGzyCthqGX9czORRhgg12+VB59RND5p7v0/a5E53kXPObQI0G5eU0XQqIOD+pgSl7Je+GVpw==
 
-On Fri, Jul 18, 2025 at 10:28:32AM +0200, Jens Remus wrote:
-> On 17.07.2025 13:09, Jens Remus wrote:
-> > On 17.07.2025 01:01, Josh Poimboeuf wrote:
-> >> On Thu, Jul 10, 2025 at 06:35:13PM +0200, Jens Remus wrote:
-> >>> +++ b/arch/Kconfig
-> >>> @@ -450,6 +450,11 @@ config HAVE_UNWIND_USER_SFRAME
-> >>>  	bool
-> >>>  	select UNWIND_USER
-> >>>  
-> >>> +config HAVE_USER_RA_REG
-> >>> +	bool
-> >>> +	help
-> >>> +	  The arch passes the return address (RA) in user space in a register.
-> >>
-> >> How about "HAVE_UNWIND_USER_RA_REG" so it matches the existing
-> >> namespace?
-> > 
-> > Ok.  I am open to any improvements.
+On Fri, 18 Jul 2025 20:34:19 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > 
-> Thinking about this again I realized that the config option actually
-> serves two purposes:
+> Allocate temporary string buffers for fprobe-event from heap
+> instead of stack. This fixes the stack frame exceed limit error.
 > 
-> 1. Enable code (e.g. unwind user) to determine the presence of the new
->    user_return_address().  That is where I derived the name from.
-> 2. Enable unwind user (sframe) to behave differently, if an architecture
->    has/uses a RA register (unlike x86, which solely uses the stack).
-
-The sframe CONFIG_HAVE_USER_RA_REG check is redundant with the
-unwind_user one, no?  I'm thinking it's better for sframe to just decode
-the entry as it is, and then let unwind_user validate things.
-
-> I think the primary notion is that an architecture has/uses a register
-> for the return address and thus provides user_return_address().  What
-> consumers such as unwind user do with that info is secondary.
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202506240416.nZIhDXoO-lkp@intel.com/
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> ---
+>  kernel/trace/trace_fprobe.c |   39 ++++++++++++++++++++++++++-------------
+>  1 file changed, 26 insertions(+), 13 deletions(-)
 > 
-> Thoughts?
+> diff --git a/kernel/trace/trace_fprobe.c b/kernel/trace/trace_fprobe.c
+> index 264cf7fc9a1d..fd1036e27309 100644
+> --- a/kernel/trace/trace_fprobe.c
+> +++ b/kernel/trace/trace_fprobe.c
+> @@ -1234,18 +1234,18 @@ static int trace_fprobe_create_internal(int argc, const char *argv[],
+>  	 *  FETCHARG:TYPE : use TYPE instead of unsigned long.
+>  	 */
+>  	struct trace_fprobe *tf __free(free_trace_fprobe) = NULL;
+> -	struct module *mod __free(module_put) = NULL;
+> -	int i, new_argc = 0, ret = 0;
+> -	bool is_return = false;
+> -	char *symbol __free(kfree) = NULL;
+>  	const char *event = NULL, *group = FPROBE_EVENT_SYSTEM;
+> +	struct module *mod __free(module_put) = NULL;
+>  	const char **new_argv __free(kfree) = NULL;
+> -	char buf[MAX_EVENT_NAME_LEN];
+> -	char gbuf[MAX_EVENT_NAME_LEN];
+> -	char sbuf[KSYM_NAME_LEN];
+> -	char abuf[MAX_BTF_ARGS_LEN];
+> +	char *symbol __free(kfree) = NULL;
+> +	char *ebuf __free(kfree) = NULL;
+> +	char *gbuf __free(kfree) = NULL;
+> +	char *sbuf __free(kfree) = NULL;
+> +	char *abuf __free(kfree) = NULL;
+>  	char *dbuf __free(kfree) = NULL;
+> +	int i, new_argc = 0, ret = 0;
+>  	bool is_tracepoint = false;
+> +	bool is_return = false;
+>  
+>  	if ((argv[0][0] != 'f' && argv[0][0] != 't') || argc < 2)
+>  		return -ECANCELED;
+> @@ -1273,6 +1273,9 @@ static int trace_fprobe_create_internal(int argc, const char *argv[],
+>  
+>  	trace_probe_log_set_index(0);
+>  	if (event) {
+> +		gbuf = kmalloc(MAX_EVENT_NAME_LEN, GFP_KERNEL);
+> +		if (!gbuf)
+> +			return -ENOMEM;
+>  		ret = traceprobe_parse_event_name(&event, &group, gbuf,
+>  						  event - argv[0]);
+>  		if (ret)
+> @@ -1280,15 +1283,18 @@ static int trace_fprobe_create_internal(int argc, const char *argv[],
+>  	}
+>  
+>  	if (!event) {
+> +		ebuf = kmalloc(MAX_EVENT_NAME_LEN, GFP_KERNEL);
 
-user_return_address() only has the single user, and is not all that
-generically useful anyway (e.g., it warns on x86), so let's keep it
-encapsulated in include/linux/unwind_user.h and give it the
-"unwind_user" prefix.
+ebuf and gbuf are used with the same length. Why not just keep them
+using the same buffer? It worked before this patch, it should work
+after too.
 
-Also, "RA_REG" is a bit ambiguous, it sounds almost like that other
-option which spills RA to another register.  Conceptually, it's a link
-register, so can we rename that to CONFIG_HAVE_UNWIND_USER_LINK_REG and
-unwind_user_get_link_reg() or so?
+	buf = kmalloc(MAX_EVENT_NAME_LEN, GFP_KERNEL);
+	if (!buf)
+		return -ENOMEM;
 
-Similarly, CONFIG_HAVE_UNWIND_USER_LOC_REG isn't that descriptive, how
-about CONFIG_HAVE_UNWIND_USER_LINK_REG_SPILL?
+	if (event) {
+		[..]
+	}
 
-Also we can get rid of the '#define func_name func_name' things and just
-guard those functions with their corresponding CONFIG options in
-inclide/linux/unwind_user.h.
+	if (!event) {
+		[..]
+	}
 
-Also those two functions should have similar naming and prototypes.
+And not require two different variables that will add two exit codes
+when one would do.
 
-For example, in include/linux/unwind_user.h:
+-- Steve
 
-#ifndef CONFIG_HAVE_UNWIND_USER_LINK_REG
-int unwind_user_get_link_reg(unsigned long *val)
-{
-	WARN_ON_ONCE(1);
-	return -EINVAL;
-}
-#endif
 
-#ifndef CONFIG_HAVE_UNWIND_USER_LINK_REG_SPILL
-int unwind_user_get_reg(unsigned long *val, unsigned int regnum)
-{
-	WARN_ON_ONCE(1);
-	return -EINVAL;
-}
-#endif
+> +		if (!ebuf)
+> +			return -ENOMEM;
+>  		/* Make a new event name */
+>  		if (is_tracepoint)
+> -			snprintf(buf, MAX_EVENT_NAME_LEN, "%s%s",
+> +			snprintf(ebuf, MAX_EVENT_NAME_LEN, "%s%s",
+>  				 isdigit(*symbol) ? "_" : "", symbol);
+>  		else
+> -			snprintf(buf, MAX_EVENT_NAME_LEN, "%s__%s", symbol,
+> +			snprintf(ebuf, MAX_EVENT_NAME_LEN, "%s__%s", symbol,
+>  				 is_return ? "exit" : "entry");
+> -		sanitize_event_name(buf);
+> -		event = buf;
+> +		sanitize_event_name(ebuf);
+> +		event = ebuf;
+>  	}
+>  
+>  	if (is_return)
+> @@ -1304,13 +1310,20 @@ static int trace_fprobe_create_internal(int argc, const char *argv[],
+>  		ctx->flags |= TPARG_FL_TPOINT;
+>  		mod = NULL;
+>  		tpoint = find_tracepoint(symbol, &mod);
+> -		if (tpoint)
+> +		if (tpoint) {
+> +			sbuf = kmalloc(KSYM_NAME_LEN, GFP_KERNEL);
+> +			if (!sbuf)
+> +				return -ENOMEM;
+>  			ctx->funcname = kallsyms_lookup((unsigned long)tpoint->probestub,
+>  							NULL, NULL, NULL, sbuf);
+> +		}
+>  	}
+>  	if (!ctx->funcname)
+>  		ctx->funcname = symbol;
+>  
+> +	abuf = kmalloc(MAX_BTF_ARGS_LEN, GFP_KERNEL);
+> +	if (!abuf)
+> +		return -ENOMEM;
+>  	argc -= 2; argv += 2;
+>  	new_argv = traceprobe_expand_meta_args(argc, argv, &new_argc,
+>  					       abuf, MAX_BTF_ARGS_LEN, ctx);
 
-Then the code can be simplified (assuming no topmost checks):
-
-	/* Get the Return Address (RA) */
-	switch (frame->ra.loc) {
-	case UNWIND_USER_LOC_NONE:
-		if (unwind_user_get_link_reg(&ra))
-			goto done;
-		break;
-	...
-	case UNWIND_USER_LOC_REG:
-		if (unwind_user_get_reg(&ra, frame->ra.regnum))
-			goto done;
-		break;
-	...
-
--- 
-Josh
