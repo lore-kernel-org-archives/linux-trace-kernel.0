@@ -1,79 +1,73 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D01629B218;
-	Fri, 18 Jul 2025 10:40:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34EA9221F04;
+	Fri, 18 Jul 2025 11:34:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752835224; cv=none; b=VvKjXI2BVsBWJZ780zgpD76QdrR4zygWtxddUHtPCFRviNeh4Bi9AwI/Z8X8hsRZz++690nADntCSrpKYsK+RQ7LXgn9pF9EGitZ9FVtjfRzFODwjqhcFVLBEFcY4zgfo101NOiwTiu7hpdv9U98pnPCbaffDCqV+ITXaDu6g98=
+	t=1752838443; cv=none; b=h4pm1mAQUoomABLY6AFxfW9YvV7WByczcNX+aSHyVsG1h5X4JMAfkQ238GQWsBWO3MYcHpYYATFbzyKk0+HZIkZGxnF9kCqIyMoBr+BM4XZjwWcT1IR247zOIBDuIE43rkNkS4qXItERcb0Lk+E95eskLdlKb1WKkPHznYtwlV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752835224; c=relaxed/simple;
-	bh=EfctGBqA+tFsqy1MQgf/QW8ed9cdtao3pVhWdvVteAg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tMRDlLI5B0C43//a6l2WcQv4i47FxQAiDocEBJe+WAm40OrRh2F3aCemhzRWS8gxGrHBJejb+eN97pceBrUoR/6r5TQdPTWeHiB3YNebRm3rsa8H+ACEetE4ylS+nI496Ar7rz7F+WBkURM9qVh0AtXd2o71qKQ7xoYmMstaGHs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ySj7+q5o; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ikBbKC7O; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1752838443; c=relaxed/simple;
+	bh=boqzQKn0ZqaignEmEkb4dvZ1Eebu9Sj8pshbaOChEYE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=b5yhA5YrBdludaCHsouaVS1g9ZkPqq2DrkWBG54ROlqnT6rNNYiRFvs7Ibh3woJ6Acp6z4+HUVvjS8+kHNkjA1gF9LEmyJbolt9Hf+Qto6xsjlZHrP/5SMbqgjjxTYYvsQ07ggmjsAK/xGVoxfVbOjJJKO8Lcj1CldqAzzxeic8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BiCvAMDw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ySj7+q5o";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ikBbKC7O"
-Date: Fri, 18 Jul 2025 12:40:18 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1752835219;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PDMVrdweoF/EUIrbyPjq3jBCHKVn3HSx2l+SgvFzmxQ=;
-	b=ySj7+q5ow5+w92BYYOB2ovSU4z0PU2DZ20fHF1fAgSnBLoj7qbPWlWXo8/O/QoKrPaEJdj
-	NjRYz1nat+RUFP6Cj1wDKO9LHzeusqkqmh0jrQMso4PI95dwonefBsDOF20+ni3wShxLgg
-	Z5FdOdjSdj2U8+d5BtfYQUxjYLwLQZRQeGDfMShbnQbkIxpz8v6NWWIWMxIX+RH73/7qhf
-	CMXDUnQtj0KJsCXpeZ+Qrq5bJHyfH+5vUunJUctYSUmm+Cgv10hvpbIDSJHOznRPlCQg/F
-	4cjwv0qpEwe/KfXwdl8BLtcoKXN+mjt+D9ddaYRGvid7y3D+AuY/zNw2MUXIxw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1752835219;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PDMVrdweoF/EUIrbyPjq3jBCHKVn3HSx2l+SgvFzmxQ=;
-	b=ikBbKC7OOeVaD8woVi3vZXQH7tbu4GqgUCWyWXVQF05wLLF1e9ujZB1g/AZfF2OLWbUPNZ
-	jY/lWNj6vio0XwBw==
-From: Nam Cao <namcao@linutronix.de>
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] rv: Ensure containers are registered first
-Message-ID: <20250718104018.lyupqBnR@linutronix.de>
-References: <20250718091850.2057864-1-namcao@linutronix.de>
- <2025071835-enjoying-darn-f5d8@gregkh>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BiCvAMDw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DFE9C4CEEB;
+	Fri, 18 Jul 2025 11:34:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752838442;
+	bh=boqzQKn0ZqaignEmEkb4dvZ1Eebu9Sj8pshbaOChEYE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=BiCvAMDw8gJt6iK+hc2o2I6o3SKTHpMhDN1pgKY6OL4wBc8EJ+oxFHEAkeVUBQDQ5
+	 ivUynDc1U+kwOK80dRLxrycp1tDvZpMyLMfDwDxUp5RhF5G1NCkI9MFtZVYywL3PiU
+	 I1oCQ2bqqdIgnAj0dyAGgzg5b1NwkrorawjswE3pepEk2R5xiSMwqsclZX1XZeFQB+
+	 w3V7MGTlrijOz9MIOAMK1ofSMR2cneeIeG2kXKygqvSPBmyTj+M6p31X36kFckqFtY
+	 tExWJ4z08o7o6Yg4PQ2qhM4/v0ojELCeey/y1Egx+d9D2Zr+OznZseWEuDTDxU0NSQ
+	 U1+t11gjzHXEA==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH 0/5] tracing: probes: Use heap instead of stack for temporary buffers
+Date: Fri, 18 Jul 2025 20:33:58 +0900
+Message-ID: <175283843771.343578.8524137568048302760.stgit@devnote2>
+X-Mailer: git-send-email 2.43.0
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2025071835-enjoying-darn-f5d8@gregkh>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jul 18, 2025 at 12:27:14PM +0200, Greg KH wrote:
-> On Fri, Jul 18, 2025 at 11:18:50AM +0200, Nam Cao wrote:
-> > If rv_register_monitor() is called with a non-NULL parent pointer (i.e. by
-> > monitors inside a container), it is expected that the parent (a.k.a
-> > container) is already registered.
-> > 
-> > The containers seem to always be registered first. I suspect because of the
-> > order in Makefile. But nothing guarantees this.
-> 
-> Yes, linking order matters, and it does guarantee this.  We rely on
-> linking order in the kernel in many places.
+Hi,
 
-Hmm, I thought this is just how the linker happens to behave, but not a
-guarantee.
+Here is a series of cleanup patches which allocate temporary buffers
+and objects on heap (slab) instead of the stack. This reduces a
+possibility of stack overflow. This may reduce the performance but
+the modified path is not a hot path.
 
-Let's discard this patch then.
+---
 
-Nam
+Masami Hiramatsu (Google) (5):
+      tracing: probe: Allocate traceprobe_parse_context from heap
+      tracing: fprobe-event: Allocate string buffers from heap
+      tracing: kprobe-event: Allocate string buffers from heap
+      tracing: eprobe-event: Allocate string buffers from heap
+      tracing: uprobe-event: Allocate string buffers from heap
+
+
+ kernel/trace/trace_eprobe.c |   38 +++++++++++++++++++++++--------
+ kernel/trace/trace_fprobe.c |   52 ++++++++++++++++++++++++++++---------------
+ kernel/trace/trace_kprobe.c |   49 ++++++++++++++++++++++++++---------------
+ kernel/trace/trace_probe.h  |    9 +++++++
+ kernel/trace/trace_uprobe.c |   37 ++++++++++++++++++++++---------
+ 5 files changed, 129 insertions(+), 56 deletions(-)
+
+--
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
