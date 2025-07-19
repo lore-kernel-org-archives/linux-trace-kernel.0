@@ -1,87 +1,97 @@
-Received: from smtp.smtpout.orange.fr (smtp-74.smtpout.orange.fr [80.12.242.74])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C172C222577;
-	Sat, 19 Jul 2025 06:41:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0A631EB3D;
+	Sat, 19 Jul 2025 07:11:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752907285; cv=none; b=a8NmaAHQlyvoxOhZc+MFIkRCk9NsFgZfCumF3RVf+uEr+eqBhE467zvDwnF3FrjRZxMJkg9bBIQ5ca4Zlc+ANjB4PltPHGVWw7Lk0R6Xa6qiYy1Hsm+Rf52t7QEd7Wc8XarwP4fyDvKntNpTi313J8zs47zON2J1A0EiH410mEg=
+	t=1752909095; cv=none; b=lxfM6tRHWjLWoXeWSupvn3q4c97OJK+v2tIJcSV/JA7krEk/OmGXji55Ie6vYbau4vwAblviEzJ4Uunj4Yz5SUzAQdd1SRq5uCU2WGQ9eUJ5Ln3M0aRR34E46g+oi+THYxos+QzW/bY6QyAuZGEMzT28tHE0XX3hcjrP/mGFESE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752907285; c=relaxed/simple;
-	bh=EmgutOIrazSy9MKspNhrUXhh1pDRYo7vKPSgKaMsDW4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dH3V8VxxgFRwOnTFWpaopDW4lBnzvfELRYuZsy1poyCMNY4ih+8f2v+6xzxy34CNoqLAFdWY2hGq4l4z3KXRuv4T6MLNlDHpXsTZP+SesiyCSUlm0YNAUzBNLJAxIDQWyQxE2pL5g1fGtO8hWnmAuaCHMWLRng7z+cODk+OcwZw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=lMAs4Ikk; arc=none smtp.client-ip=80.12.242.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="lMAs4Ikk"
-Received: from [IPV6:2a01:cb10:785:b00:8347:f260:7456:7662]
- ([IPv6:2a01:cb10:785:b00:8347:f260:7456:7662])
-	by smtp.orange.fr with ESMTPA
-	id d174uK4kHQ4Mmd174uBTbN; Sat, 19 Jul 2025 08:32:04 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1752906724;
-	bh=wT3d0Bk2O+o+XayP9x++VQxDYkqNyteMXScMP/f2Qok=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=lMAs4IkkO3iYnSa4DZfaacXlYXSCBgUo2row+vlEHmSYR1cfJsXxpc+0brdCVnI8g
-	 uKvgTSYqhRlHM6z5u7iPZCVOz8c9M7yFO4alJkH/3PfPtpC0jPYyplI2Vg0FqQL2Sn
-	 xgBaB842sMK8040bbLqssruU+N+pAqEJWQCKdYDlEv4FwoH4vCyPfw51lZ3BMLjFpU
-	 Nmx0NKPebEZXgrvh65cDIKQKabzm/GZCfwYS1VoqAmdc+0Y5gIqTulJ3DVJVEInaMH
-	 gpP1+Oz162YRV7ZkH1QB2Jq14koayO/eUUzTq7YFGoQQUipjrnsDxxEKhRs7luaDN5
-	 vfCYPHKb+gE6g==
-X-ME-Helo: [IPV6:2a01:cb10:785:b00:8347:f260:7456:7662]
-X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
-X-ME-Date: Sat, 19 Jul 2025 08:32:04 +0200
-X-ME-IP: 2a01:cb10:785:b00:8347:f260:7456:7662
-Message-ID: <fab51e17-c1be-494d-8591-3eaf63e3e489@wanadoo.fr>
-Date: Sat, 19 Jul 2025 08:32:02 +0200
+	s=arc-20240116; t=1752909095; c=relaxed/simple;
+	bh=6YgL7snu0W4hOdOcQqIYhKMjSngfymntUynFt4Pl4gQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iehsUpkbNoZaExlD8xZuny7lsYcFLGonD4xNi31fTa907yNIBB9Aff5BRnvy4nPkTh0Uh9XR0PSfstkaAFdXZVTdox2dqNmIvHZDqWQFWGgOTSvOa400q6wXRTLAQinxMR85iST9uOOKVosvNffwtBl8mdyT1EbD44uqO0ADyXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 9CDA62C1997E;
+	Sat, 19 Jul 2025 09:11:23 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 70E6640DB9; Sat, 19 Jul 2025 09:11:23 +0200 (CEST)
+Date: Sat, 19 Jul 2025 09:11:23 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Shuai Xue <xueshuai@linux.alibaba.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>,
+	Matthew W Carlis <mattc@purestorage.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	anil.s.keshavamurthy@intel.com, bhelgaas@google.com, bp@alien8.de,
+	davem@davemloft.net, linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, mark.rutland@arm.com,
+	mathieu.desnoyers@efficios.com, mhiramat@kernel.org,
+	naveen@kernel.org, oleg@redhat.com, peterz@infradead.org,
+	rostedt@goodmis.org, tianruidong@linux.alibaba.com,
+	tony.luck@intel.com
+Subject: Re: [PATCH v8] PCI: hotplug: Add a generic RAS tracepoint for
+ hotplug event
+Message-ID: <aHtFG3QsdohG466k@wunner.de>
+References: <20250718163532.GA2700834@bhelgaas>
+ <fc0ded97-8643-4faa-a606-732bcd4ce4a1@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ring-buffer: make the const read-only 'type' static
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-trace-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
- linux-kernel@vger.kernel.org, Colin Ian King <colin.i.king@gmail.com>
-References: <20250714160858.1234719-1-colin.i.king@gmail.com>
- <20250714121554.1365c93a@batman.local.home>
-Content-Language: en-US, fr-FR
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <20250714121554.1365c93a@batman.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fc0ded97-8643-4faa-a606-732bcd4ce4a1@linux.alibaba.com>
 
-Le 14/07/2025 à 18:15, Steven Rostedt a écrit :
-> On Mon, 14 Jul 2025 17:08:58 +0100
-> Colin Ian King <colin.i.king@gmail.com> wrote:
-> 
->> Don't populate the read-only 'type' on the stack at run time,
->> instead make it static.
-> 
-> Hmm, why not?
-> 
-> -- Steve
-> 
-> 
+On Sat, Jul 19, 2025 at 01:23:28PM +0800, Shuai Xue wrote:
+>            <...>-120     [002] .....   104.864051: pci_hp_event: 0000:00:03.0 slot:30, event:PCI_HOTPLUG_CARD_PRESENT
+>            <...>-120     [002] .....   104.864081: pci_hp_event: 0000:00:03.0 slot:30, event:PCI_HOTPLUG_LINK_UP
 
-This is more efficient because there is no need to copy things on the 
-stack at run-time.
+Somehow I liked the simple "Link Up" and "Card present" strings more
+than this. :)
 
-It also makes binary slightly smaller.
+The PCI_HOTPLUG substring repeats what pci_hp_event already betrays,
+that this is a hotplug event.
 
-On my x86_64, with allmodconfig:
-Before:
-======
-  229194	 924492	  35104	1188790	 1223b6	kernel/trace/ring_buffer.o
+>    irq/57-pciehp-120     [002] .....   104.990434: pci_link_event: 0000:00:03.0 cur_bus_speed:20, max_bus_speed:23, width:1, flit_mode:0, reason:5
+>    irq/57-pciehp-120     [002] .....   104.992377: pci_link_event: 0000:00:03.0 cur_bus_speed:20, max_bus_speed:23, width:1, flit_mode:0, reason:0
 
-After:
-=====
-  228873	 924268	  35040	1188181	 122155	kernel/trace/ring_buffer.o
+This contains a lot of terminology specific to PCI *Express*
+(versus Conventional PCI or PCI-X).  Either it needs to be
+"pcie_link_event" or we need to come up with a structure that
+works for non-PCIe as well.
 
-CJ
+PCI links can be tunneled over Thunderbolt, in this case the
+link speed is fixed to 2.5 GT/s (USB4 v1.0 sec 11.2.1), but
+in reality is governed by the speed of the Thunderbolt fabric
+(which can even be asymmetric).  Do we want to report the
+virtual 2.5 GT/s in this case or the actual Thunderbolt speed?
+Or do we want a separate trace event for Thunderbolt?
+
+For Root and Downstream Ports, the physical "port" points "downstream",
+whereas for Upstream Ports and Endpoints, the physical "port" points
+"upstream".  Software interpreting the trace event may want to know
+the direction (or whatever one wants to call it) because it cannot
+tell from the address 0000:00:03.0 what the PCIe type is.  Having to
+look this up in lspci seems cumbersome.  So it may be worthwhile to
+include either the port's direction or the device's PCIe type in the
+trace event.
+
+Of course, hotplug only exists at Root or Downstream Ports, so any
+trace event generated from the PCIe hotplug driver will pertain to
+a downstream-facing port.  But the bandwidth controller also binds
+to Upstream Ports and its trace events may thus pertain to link speed
+changes at an upstream-facing port.
+
+Thanks,
+
+Lukas
