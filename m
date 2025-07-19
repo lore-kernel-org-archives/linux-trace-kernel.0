@@ -1,122 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63699846C;
-	Sat, 19 Jul 2025 04:36:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8FC02846C;
+	Sat, 19 Jul 2025 04:37:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752899800; cv=none; b=C184XZMJNCzdE9c7L6l2D3GAY0yCPu4JVHqstjhaPN18YKbQiXFj0mb+vLHJ4RxigmgRMJo3JHjPnmOtvjflajpsKbCA9OocJuu1+cHlIvpiOEXoqW93FTFqCxYbDyOKamTNndKmO6KGUK+MSQEZTBaTDspJt/H/5a2Bb/RSWrU=
+	t=1752899873; cv=none; b=tumypD4CiVXY5JuynRT0kmMQw6gZcLmOyx7qslsCA8uWYyf5mzTw2aud4iifViSmQRUmKLz3Udc7CjMhT3xaFxo9GWXAXar+Rgk4ZQiOutjuDsBi1iMb/8YS7jQVGnBOthwSXfNaJC/UqW2Y/AXLwEmbW5EVGeZA+9ZEZ5fEW3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752899800; c=relaxed/simple;
-	bh=ZWaiKcmdhVFNtI6FfH/pEyyxUfHDmIpPNCFdDbTmGmk=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=ixVfRWzhGIxeT3JqXJglX4V7utjtUFoM2kIMTxJdx+EmbBfYJAjphdBaxY5PqyJXN6bigae0ENEjKXZs2SRNG62ygCVh9GlW36f7y1YF8GgkEVztNHRLtTpaCoSUIHfQooYLJybfBkAX8jYEva31SC1YEiYoxRtXowmsaXZrFHg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BIAkSlHu; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BIAkSlHu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D695C4CEE3;
-	Sat, 19 Jul 2025 04:36:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752899799;
-	bh=ZWaiKcmdhVFNtI6FfH/pEyyxUfHDmIpPNCFdDbTmGmk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=BIAkSlHu90P9OkR8TbeMWIJafVzrASm6ixeuHgrEBSLLflppoYMr7mAP+KPiFl8nA
-	 DHl9lIY57G3g+Dv3cBgZIXdiuwDUsjaC3LTuAIyRc8HXYRiM8B/wih6RlqmWUGGdgk
-	 82iFp5U9/l7LtRlJjTRdUX5rq9Cg6oAqKUEm5CGpgGxOoXgMajTY40wsDInrHKbTwh
-	 T2h7dwCtXoiG9vVIrojDogIPWicCSTZGj6Bm53GHp7LblflOtTG2muig6jUZfLJfQB
-	 r2TUXfsD49MFt6323Pswdx2PekefBt6ammewLmgrY8QhvA4X8M0qxiHSJvGKosmt9l
-	 i5VmeBv9TrC8Q==
-Date: Sat, 19 Jul 2025 13:36:34 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- =?UTF-8?B?IkZ1c2hlbmcgSHVhbmcoIOm7hOWvjOeUnykgIg==?=
- <Fusheng.Huang@luxshare-ict.com>
-Subject: Re: [PATCH v2] tracing: Add down_write(trace_event_sem) when adding
- trace event
-Message-Id: <20250719133634.f424cba37241e73b0f774a7f@kernel.org>
-In-Reply-To: <20250718223158.799bfc0c@batman.local.home>
-References: <20250718223158.799bfc0c@batman.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1752899873; c=relaxed/simple;
+	bh=X+TT9aybAKf1KyXat7OzN3LsxjTZSZXNkkhdWc2m45Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cHkD71ZZJpmtTRHetWDspmNG0pA8WJf34fmbb19hhaXfUD7I68M3tXHvisiAyMQpVd6yC+AUacO5UZQQYGc456ICnm34SROQd4YcShOdU5qAZ334VM3BDyE3eOW3hwD1NjsCmes5CHBIdPVyB6jWCQpeVY1ncjFgf8pOez+AymM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B0B3A1596;
+	Fri, 18 Jul 2025 21:37:43 -0700 (PDT)
+Received: from u200865.usa.arm.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 961423F66E;
+	Fri, 18 Jul 2025 21:37:49 -0700 (PDT)
+From: Jeremy Linton <jeremy.linton@arm.com>
+To: linux-trace-kernel@vger.kernel.org
+Cc: linux-perf-users@vger.kernel.org,
+	mhiramat@kernel.org,
+	oleg@redhat.com,
+	peterz@infradead.org,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	thiago.bauermann@linaro.org,
+	broonie@kernel.org,
+	yury.khrustalev@arm.com,
+	kristina.martsenko@arm.com,
+	liaochang1@huawei.com,
+	catalin.marinas@arm.com,
+	will@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Jeremy Linton <jeremy.linton@arm.com>
+Subject: [PATCH v4 0/8] arm64: Enable UPROBES with GCS
+Date: Fri, 18 Jul 2025 23:37:32 -0500
+Message-ID: <20250719043740.4548-1-jeremy.linton@arm.com>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On Fri, 18 Jul 2025 22:31:58 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+Currently uprobes and the Arm Guarded Control Stack (GCS) feature are
+exclusive of each other. This restriction needs to be lifted in order
+to utilize GCS for generic Linux distro images where the expectation
+is that core debugging features like uprobes work.
 
-> From: Steven Rostedt <rostedt@goodmis.org>
-> 
-> When a module is loaded, it adds trace events defined by the module. It
-> may also need to modify the modules trace printk formats to replace enum
-> names with their values.
-> 
-> If two modules are loaded at the same time, the adding of the event to the
-> ftrace_events list can corrupt the walking of the list in the code that is
-> modifying the printk format strings and crash the kernel.
-> 
-> The addition of the event should take the trace_event_sem for write while
-> it adds the new event.
-> 
-> Also add a lockdep_assert_held() on that semaphore in
-> __trace_add_event_dirs() as it iterates the list.
+This series adds some user accessors to read/push/pop the userspace
+shadow stack. It then utilizes those functions in the uprobe paths as
+needed to synchronize GCS with the changes in control flow at probe
+locations.
 
-Looks good to me.
+The KCONFIG restriction is then dropped.
 
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+v3->v4: Much delayed v4 rebased to 6.16
+	Move existing gcs accessors to gcs.h and then add the new
+	     ones. This fixes some of the forward reference issues,
+	     the build break and keeps them all together.
 
-Thanks!
+v2->v3: Cleanup RET logic to alwaays use LR, and not update IP on aborts
+	Correct generic uprobe_warn bug even though we aren't using it
 
-> 
-> Cc: stable@vger.kernel.org
-> Reported-by: Fusheng Huang(黄富生)  <Fusheng.Huang@luxshare-ict.com>
-> Closes: https://lore.kernel.org/all/20250717105007.46ccd18f@batman.local.home/
-> Fixes: 110bf2b764eb6 ("tracing: add protection around module events unload")
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
-> Changes since v1: https://lore.kernel.org/20250717131204.74559b88@batman.local.home
-> 
-> - Replace lockdep_assert_held_read() with lockdep_assert_held() as it is
->   actually held with down_write() when it is called.
-> 
->  kernel/trace/trace_events.c | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-> index 120531268abf..d01e5c910ce1 100644
-> --- a/kernel/trace/trace_events.c
-> +++ b/kernel/trace/trace_events.c
-> @@ -3136,7 +3136,10 @@ __register_event(struct trace_event_call *call, struct module *mod)
->  	if (ret < 0)
->  		return ret;
->  
-> +	down_write(&trace_event_sem);
->  	list_add(&call->list, &ftrace_events);
-> +	up_write(&trace_event_sem);
-> +
->  	if (call->flags & TRACE_EVENT_FL_DYNAMIC)
->  		atomic_set(&call->refcnt, 0);
->  	else
-> @@ -3750,6 +3753,8 @@ __trace_add_event_dirs(struct trace_array *tr)
->  	struct trace_event_call *call;
->  	int ret;
->  
-> +	lockdep_assert_held(&trace_event_sem);
-> +
->  	list_for_each_entry(call, &ftrace_events, list) {
->  		ret = __trace_add_new_event(call, tr);
->  		if (ret < 0)
-> -- 
-> 2.47.2
-> 
+v1->v2:
+	Drop uprobe_warn() patch
+	Fix copy_thread_gcs() bug created by fixing task_gcs_el0_enabled()
+	Comments, now describe issues with reading userspace GCS pages
+	Rebased to 6.15
 
+Jeremy Linton (8):
+  arm64/gcs: task_gcs_el0_enable() should use passed task
+  arm64: probes: Break ret out from bl/blr
+  arm64: uaccess: Move existing GCS accessors definitions to gcs.h
+  arm64: uaccess: Add additional userspace GCS accessors
+  arm64: probes: Add GCS support to bl/blr/ret
+  arm64: uprobes: Add GCS support to uretprobes
+  arm64: Kconfig: Remove GCS restrictions on UPROBES
+  uprobes: uprobe_warn should use passed task
+
+ arch/arm64/Kconfig                       |  1 -
+ arch/arm64/include/asm/gcs.h             | 89 +++++++++++++++++++++++-
+ arch/arm64/include/asm/uaccess.h         | 40 -----------
+ arch/arm64/kernel/probes/decode-insn.c   |  7 +-
+ arch/arm64/kernel/probes/simulate-insn.c | 41 +++++++++--
+ arch/arm64/kernel/probes/simulate-insn.h |  3 +-
+ arch/arm64/kernel/probes/uprobes.c       | 31 +++++++++
+ arch/arm64/kernel/process.c              |  6 +-
+ kernel/events/uprobes.c                  |  2 +-
+ 9 files changed, 165 insertions(+), 55 deletions(-)
 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.50.1
+
