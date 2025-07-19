@@ -1,106 +1,176 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E726B2110;
-	Sat, 19 Jul 2025 00:28:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 751DC23CE;
+	Sat, 19 Jul 2025 00:33:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752884882; cv=none; b=BIkY2cQdughOch89ZDUv0NnYveS7o8wmJ1vnfHnaePEH95KyXrcsrepsX+Mc/L9CWp7zKgyBJj9cyEPF33vBxFnIeFoFObwxpJd4CW1bsm6og186Qt+bzQIfHqpr2ljJMDp72ThF7smvdCTxn/aL1J8xjNFrn8RAXHpst81nl0c=
+	t=1752885198; cv=none; b=oArtf+JaD2JA7Dfqn6uHtu1STSh2RxWCI0AZtreXufQpl16BG4epMe+V+5Rt77mEmcP0Ux3PH3p+0dA5/e85wYMgnt5PqHNjSzRacyrellJwLdnig+jJzCX0P6Zz7txtbGaT9xWkx4GM1fOlmrIWXalP67g51XVA6pSXdSpt0h0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752884882; c=relaxed/simple;
-	bh=peO+H93Yb/AoZJd5yCIfu7Ot2DeGqz3/MglVOEZqKMM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d4AMoRLkiyzin+7PA7wnzZWLvWAi9t65W+pm7UrIJWx1EvSmB0xiNxoZGuJrUeVV1O26ykgPuQjXh5Q8Hg4nZvJEbYZuieKqaG9oxoCkmqITzAt+e6CqS23llxxl6B+YpARt9rqNeuaRr0nIOTupfuQ0K47U0d7s6mJqGSYWBmw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sKL3fdR1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1752885198; c=relaxed/simple;
+	bh=IKdWOuH1Cz2/le0dawobJNZYJuvUACKwnfdlhD9hMJk=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=J4ex0t1NNJQB1eLGVIDzebBdvmiyn3dkqg6ErJijWFENMA55lUJtDp6Zzohv7CwbsgRJPQ76qPe+JoUjHJvFiZjMX0cejksoFYfptorGQ7luP7pJRhzXHo7sxCMSwnJSq5OpN+259YrTCshsBLO+zAWvLtur6xykgyUlD4Dsn5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=niuhIcbP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sKL3fdR1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FE9EC4CEEB;
-	Sat, 19 Jul 2025 00:28:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="niuhIcbP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03688C4CEEB;
+	Sat, 19 Jul 2025 00:33:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752884881;
-	bh=peO+H93Yb/AoZJd5yCIfu7Ot2DeGqz3/MglVOEZqKMM=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=sKL3fdR1R4cmxwCN00/UVjbPE4Cl3Z8LKwDFzJ8tnymTVkonASALvc57OyLC1mrDc
-	 5E5VE0zfvDzrF3sO5o3T0Xs0zuFacGgVv9liHmWh8lWDGKhTuzM0ccleODxk7wOTmS
-	 uelwupa6Ow/D9XguTIC999WFeF5uU7NZ6OD5cIzLU6EVZC0JXUSva2zbMH29Tk8UVU
-	 RcNBktos6AEgOIskgM+/ACqu4K1QHmE32b70pGYZcfWbiAJYzcl+Zp2/lSduNg/zd8
-	 glM+zEBFOz/C1cIcbHV2LOpvSwcUkxF+zsUcMLQpffuBYyGlyXWYi7reja9Vw+2p/i
-	 5LXZBhTCQhx5g==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id EB72ECE0D3A; Fri, 18 Jul 2025 17:28:00 -0700 (PDT)
-Date: Fri, 18 Jul 2025 17:28:00 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
+	s=k20201202; t=1752885198;
+	bh=IKdWOuH1Cz2/le0dawobJNZYJuvUACKwnfdlhD9hMJk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=niuhIcbPQc73G8/rbUlX9L+9eJLujz23MdY1XD/zZuKOX1BlflcHFDz6sLNRY9w/f
+	 KnsT7VtCDARC8UmoizkvebsHot2mP8JZ62r1dM+HvGbL75LYuwCTrto7MPvSBO3YIU
+	 zXw9t0CtTX7LjsxJsfUGtUb5lN+09RTqK+jCaIrGMjhMunu//wTr5vJu0zv9EFIrQ2
+	 YdYUtbmjoTv+aNo0UU4mD1ar3XJEWauifolpl0HlCxnxMM1Q5rjhbsafp0JBi94rDj
+	 00J/KqjtI1+eU1S6Raigmwgun1cQBkZWEwBub+YZtFVuhuNAV0LVRZ3KgNVy5zyX16
+	 /x4R7kWd+W27Q==
+Date: Sat, 19 Jul 2025 09:33:14 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Boqun Feng <boqun.feng@gmail.com>, linux-rt-devel@lists.linux.dev,
-	rcu@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Uladzislau Rezki <urezki@gmail.com>, Zqiang <qiang.zhang@linux.dev>,
-	bpf@vger.kernel.org
-Subject: Re: [RFC PATCH 1/2] rcu: Add rcu_read_lock_notrace()
-Message-ID: <3cecf6c9-b2ee-4f34-9d1b-ca4cfb8e56a7@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <fa80f087-d4ff-4499-aec9-157edafb85eb@paulmck-laptop>
- <29b5c215-7006-4b27-ae12-c983657465e1@efficios.com>
- <acb07426-db2f-4268-97e2-a9588c921366@paulmck-laptop>
- <ba0743dc-8644-4355-862b-d38a7791da4c@efficios.com>
- <512331d8-fdb4-4dc1-8d9b-34cc35ba48a5@paulmck-laptop>
- <bbe08cca-72c4-4bd2-a894-97227edcd1ad@efficios.com>
- <16dd7f3c-1c0f-4dfd-bfee-4c07ec844b72@paulmck-laptop>
- <20250716110922.0dadc4ec@batman.local.home>
- <895b48bd-d51e-4439-b5e0-0cddcc17a142@paulmck-laptop>
- <bb20a575-235b-499e-aa1d-70fe9e2c7617@paulmck-laptop>
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/5] tracing: probe: Allocate traceprobe_parse_context
+ from heap
+Message-Id: <20250719093314.053bae15fe65df0484c312a5@kernel.org>
+In-Reply-To: <20250718125820.0d0ae198@batman.local.home>
+References: <175283843771.343578.8524137568048302760.stgit@devnote2>
+	<175283844827.343578.10408845752163723065.stgit@devnote2>
+	<20250718125820.0d0ae198@batman.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bb20a575-235b-499e-aa1d-70fe9e2c7617@paulmck-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello!
+On Fri, 18 Jul 2025 12:58:20 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-This is version 2 of a patch series introducing SRCU-fast to the
-__DECLARE_TRACE() in place of the current preemption disabling.
-This change enable preemption of BPF programs attached to tracepoints
-in in, as is required for runtime use of BPF in real-time systems.
+> On Fri, 18 Jul 2025 20:34:08 +0900
+> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+> 
+> > diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
+> > index 854e5668f5ee..7bc4c84464e4 100644
+> > --- a/kernel/trace/trace_probe.h
+> > +++ b/kernel/trace/trace_probe.h
+> > @@ -10,6 +10,7 @@
+> >   * Author:     Srikar Dronamraju
+> >   */
+> >  
+> > +#include <linux/cleanup.h>
+> >  #include <linux/seq_file.h>
+> >  #include <linux/slab.h>
+> >  #include <linux/smp.h>
+> 
+> Nit, but let's keep the "upside-down x-mas tree" format:
+> 
+> #include <linux/seq_file.h>
+> #include <linux/cleanup.h>
+> #include <linux/slab.h>
+> #include <linux/smp.h>
 
-The patches are as follows:
+Isn't it for variable rules?
+I saw some examples of sorting headers by A-Z.
 
-1.	Move rcu_is_watching() checks to srcu_read_{,un}lock_fast().
+> 
+> 
+> > @@ -438,6 +439,14 @@ extern void traceprobe_free_probe_arg(struct probe_arg *arg);
+> >   * this MUST be called for clean up the context and return a resource.
+> >   */
+> >  void traceprobe_finish_parse(struct traceprobe_parse_context *ctx);
+> > +static inline void traceprobe_free_parse_ctx(struct traceprobe_parse_context *ctx)
+> > +{
+> > +	traceprobe_finish_parse(ctx);
+> > +	kfree(ctx);
+> > +}
+> > +
+> > +DEFINE_FREE(traceprobe_parse_context, struct traceprobe_parse_context *,
+> > +		if (!IS_ERR_OR_NULL(_T)) traceprobe_free_parse_ctx(_T))
+> 
+> ctx will either be allocated or NULL, I think the above could be:
+> 
+> 		if (_T) traceprobe_free_parse_ctx(_T))
 
-2.	Add srcu_read_lock_fast_notrace() and
-	srcu_read_unlock_fast_notrace().
+OK.
 
-3.	Add guards for notrace variants of SRCU-fast readers.
+> 
+> 
+> >  
+> >  extern int traceprobe_split_symbol_offset(char *symbol, long *offset);
+> >  int traceprobe_parse_event_name(const char **pevent, const char **pgroup,
+> > diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
+> > index f95a2c3d5b1b..1fd479718d03 100644
+> > --- a/kernel/trace/trace_uprobe.c
+> > +++ b/kernel/trace/trace_uprobe.c
+> > @@ -537,6 +537,7 @@ static int register_trace_uprobe(struct trace_uprobe *tu)
+> >   */
+> >  static int __trace_uprobe_create(int argc, const char **argv)
+> >  {
+> > +	struct traceprobe_parse_context *ctx __free(traceprobe_parse_context) = NULL;
+> >  	struct trace_uprobe *tu;
+> >  	const char *event = NULL, *group = UPROBE_EVENT_SYSTEM;
+> >  	char *arg, *filename, *rctr, *rctr_end, *tmp;
+> > @@ -693,15 +694,17 @@ static int __trace_uprobe_create(int argc, const char **argv)
+> >  	tu->path = path;
+> >  	tu->filename = filename;
+> >  
+> > +	ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
+> > +	if (!ctx) {
+> > +		ret = -ENOMEM;
+> > +		goto error;
+> > +	}
+> > +	ctx->flags = (is_return ? TPARG_FL_RETURN : 0) | TPARG_FL_USER;
+> > +
+> >  	/* parse arguments */
+> >  	for (i = 0; i < argc; i++) {
+> > -		struct traceprobe_parse_context ctx = {
+> > -			.flags = (is_return ? TPARG_FL_RETURN : 0) | TPARG_FL_USER,
+> > -		};
+> > -
+> >  		trace_probe_log_set_index(i + 2);
+> > -		ret = traceprobe_parse_probe_arg(&tu->tp, i, argv[i], &ctx);
+> > -		traceprobe_finish_parse(&ctx);
+> > +		ret = traceprobe_parse_probe_arg(&tu->tp, i, argv[i], ctx);
+> 
+> Doesn't this change the semantics a bit?
 
-4.	Guard __DECLARE_TRACE() use of __DO_TRACE_CALL() with SRCU-fast.
+Yes, and we don't need to allocate ctx each time because probe target
+point is always same (not different for each field). In this case,
+we don't need to allocate/free each time.
 
-Changes since RFC version:
+> 
+> Before this change, traceprobe_finish_parse(&ctx) is called for every
+> iteration of the loop. Now we only do it when it exits the function.
 
-o	RFC patch 6/4 has been pulled into the shared RCU tree:
-	e88c632a8698 ("srcu: Add guards for SRCU-fast readers")
+Yes, but that is not a good way to use the ctx. As same as kprobe and
+fprobe events, it is designed to be the same through parsing one probe,
+not each field.
 
-o	RFC patch 5/4 (which removed the now-unnecessary special boot-time
-	avoidance of SRCU) has been folded into patch 4/4 shown above,
-	as suggested by Steven Rostedt.
+For the uprobe case, this is just passing ctx->flags, others are mostly
+unused or temporarily used in field parsing. So allocating from stack
+frame, it is OK. But allocating from heap, it involves slab allocation
+and free each time. I think it is just inefficient. 
 
-						Thanx, Paul
+Hmm, but eprobe seems doing the same mistake. Let me split that part
+to fix to keep using the same ctx through parsing one probe.
 
-------------------------------------------------------------------------
 
- b/include/linux/srcu.h       |    4 ++++
- b/include/linux/srcutree.h   |    2 --
- b/include/linux/tracepoint.h |    6 ++++--
- b/kernel/tracepoint.c        |   21 ++++++++++++++++++++-
- include/linux/srcu.h         |   30 ++++++++++++++++++++++++++++++
- 5 files changed, 58 insertions(+), 5 deletions(-)
+Thank you,
+
+> 
+> -- Steve
+> 
+> 
+> >  		if (ret)
+> >  			goto error;
+> >  	}
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
