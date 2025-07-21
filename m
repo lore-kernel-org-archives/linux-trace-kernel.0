@@ -1,53 +1,53 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E03BE25760;
-	Mon, 21 Jul 2025 14:04:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C74182DA775;
+	Mon, 21 Jul 2025 14:10:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753106670; cv=none; b=FV8pajR2A45ioZjfuBIWkmLTmggTEqorFjr5cIKPgLIjpBTKNY1Ou3EVTqqPndOjBGUIB1E7259DkOwlPGndC4DpQ6dd46oZ10nRypFgmf2+xQQNbB1eLM/71jHPC7b1BLoMrSPYJHDk6w9Twi7LE5eZ07IHjOVp4p6MVZdeo9E=
+	t=1753107055; cv=none; b=ri6UuUHZAcpzS31azn2+8rDD24TbRs+69VJxw/wde57BFjUq23fBRXYe4IUXaGOw4rG0xbTUSH1QnobOwKsKqoZenLQWvSUsZg8mYaLgE/bcO3PbA8yzg7R+v785liM698yiRPNuTrwZrTrSwC0lJC0qY1wwQVC6Sw9NJppBwhI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753106670; c=relaxed/simple;
-	bh=Bb9NdE0r8eglpW35emb984Wyuq/QD3HMTal5YQtSUMs=;
+	s=arc-20240116; t=1753107055; c=relaxed/simple;
+	bh=70yFJi1mfoZnJc6voh4zfMggd8lCh8C9yeiLMJqM22s=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uiHtdqZNFDDa8FBz2jFT33MsHHw39a23FxQnzDx1pycNWKz7JsyeqAdzbbSviNlm9QsrkbI1C4wwZK+FLIXE6jBJa7IUfPFXsYkazSW73kMmP2K/S61hu/72+1JXYhD0Op/HNpMGkyACFkPLKLofxUnsG82xXBMpcfqXZ3CnqE0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=v0VrMFtb; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=wpGL+B61; arc=none smtp.client-ip=193.142.43.55
+	 Content-Type:Content-Disposition:In-Reply-To; b=UthKPVtKW6VV+zahUZsEMZYII0oA1o3KKWC3plLt7HaRkCycPqHacYrISg7g+N6n/5IE5WkgL6Rnjcm0fKdFXQag403gITJuIZLB/uJZ+F1QPxraTWRNgfSlWBfNv9Oo4N0rsmjIpEeWxVbI0GQ5rZSiq+x3QK+DNlVCgBJ/b5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4b1QHR3O; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=VTDPibE5; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="v0VrMFtb";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wpGL+B61"
-Date: Mon, 21 Jul 2025 16:04:25 +0200
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4b1QHR3O";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VTDPibE5"
+Date: Mon, 21 Jul 2025 16:10:50 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1753106666;
+	s=2020; t=1753107051;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=l9atouwKJiTcwQJic35rzDybT90GnqB7oVE//fxkKSc=;
-	b=v0VrMFtbYmxlVJhZuSWolwNNp6dYi3HJvfWo4kjSAGb6SPwVX1aIgcNhhKkcQiYB2hyRrw
-	fUeEhG06vCUgZs0oYkWtBv2xeZv9Ry95dVSXYMmTEPA4kYV/tk6w9lb47U7uN7WM4v1MC3
-	J5fI1SKJorj7zSLyAW1xTWNYF3K+1vamtEtT9cf6BIcpmIAIDkaY2bZq8getNLwvnCDgqb
-	VZkjUPYl0NCh//k/4nHTWRgs9lbV8dMh0KofEDNxHyZ2ccrefBv+DZ4PNU6EdE26jP7txt
-	UJ1enG/EmKgJNw6wYvJOMmwX6sO75mWLfhGhrdJ1T0etslK8evxJGTZs6uefxA==
+	bh=VFLTPOt8EYhXgl11BLktas1qh/5JZA8mOSDVcQCX6TQ=;
+	b=4b1QHR3OusogzrkZD61N7d+Jkd4FI4wY6BKjuMjfNwXTTjiNwdOQyVbsTTBq8jU356+VwW
+	MD9Wd9C3nNlek+Dfm6XcQHjjpXsT7hln1iz4zNrJqrLOYgUndJqLXjEIOD4O6+H0Q7NedU
+	8IzHB0EdksKixlpg6pn+ScikwVGQuRJCZ7Jy6uEX28DmFYyMyThjbpJwKMx31Ue0gBLZA3
+	S4wL7Mb2gey7fAgLr+PKX1//viwDiuG4ERCszPuZjCEqahnOnFMH8mKvhGtg20LU4mqwUv
+	RWmqdJ6T9gunw5Pu5rjlM5QcZ0vV2/AX6zF9KvcW+Bp3urRBEixXiu7MGEmBvQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1753106666;
+	s=2020e; t=1753107051;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=l9atouwKJiTcwQJic35rzDybT90GnqB7oVE//fxkKSc=;
-	b=wpGL+B61eXH9DMdK2JrKRicUe6NNwwZUqXhqdLVNa8H54A7t60abeRXqYZiWlucuyxAuQx
-	l7TVRES8XcHjXVBQ==
+	bh=VFLTPOt8EYhXgl11BLktas1qh/5JZA8mOSDVcQCX6TQ=;
+	b=VTDPibE5ruppfMtnbaMtjS/cpDfXdm96A+xs2IyqiFov3eHTDE+mD53xz3aFo2OCxKcrQX
+	6/9PRvFCNpD4sFBg==
 From: Nam Cao <namcao@linutronix.de>
 To: Gabriele Monaco <gmonaco@redhat.com>
 Cc: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/6] rv: Remove rv_reactor's reference counter
-Message-ID: <20250721140425.OeD16I4D@linutronix.de>
+Subject: Re: [PATCH 5/6] rv: Remove the nop reactor
+Message-ID: <20250721141050.E-MjrEbf@linutronix.de>
 References: <cover.1753091084.git.namcao@linutronix.de>
- <4ebe4d49e07890eadae41da233e111f8723fba12.1753091084.git.namcao@linutronix.de>
- <2de814842fbbeee888e076db2f80bf2028fdbb0d.camel@redhat.com>
+ <21a530ffb705887d7aed18255572521e5b880bc0.1753091084.git.namcao@linutronix.de>
+ <feae7a189afa69091816074dcf66a496b11bdd38.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -56,33 +56,48 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2de814842fbbeee888e076db2f80bf2028fdbb0d.camel@redhat.com>
+In-Reply-To: <feae7a189afa69091816074dcf66a496b11bdd38.camel@redhat.com>
 
-On Mon, Jul 21, 2025 at 03:20:44PM +0200, Gabriele Monaco wrote:
-> Mmh, I'm not understanding how, let's assume I create a custom reactor
-> as a kernel module and I want to use it on existing models (built in or
-> modules themselves), I'd do.
+On Mon, Jul 21, 2025 at 12:29:24PM +0200, Gabriele Monaco wrote:
+> On Mon, 2025-07-21 at 11:47 +0200, Nam Cao wrote:
+> > As suggested by the name, the nop reactor does not do anything. It is
+> > the
+> > default reactor when nothing else is selected.
+> > 
+> > However, the monitors already null-check the reactor function
+> > pointers.
+> > Thus, instead of a nop reactor, just set the react function pointer
+> > to
+> > NULL. The nop reactor can then be removed.
+> > 
+> > Signed-off-by: Nam Cao <namcao@linutronix.de>
 > 
->  insmod myreactor
->  echo myreactor > mymodel/reactors
->  rmmod myreactor
->  ## I want this one to fail because the reactor is in use
+> Thanks for the patch, I'd need to go through this a bit more in detail.
 > 
->  echo nop > mymodel/reactors
->  rmmod myreactor
->  # now it can succeed
+> As far as I remember, the only way to disable reaction is to set it to
+> the nop reactor.
+> With your patch the behaviour changes and, to disable the reactor, you
+> now need to write an empty string, this should be documented somewhere,
+> at the very least. Perhaps userspace tools (tools/verification/rv)
+> might break and would need adaptation.
 > 
-> How is MODULE_SOFTDEP helping in this scenario?
-> Am I missing something here?
+> We could still remove the kernel side implementation, but from
+> userspace (tracefs) we might want to keep the nop reactor available,
+> setting it would set the reactor to NULL under the hood.
+> 
+> If you really want to change also the user space interface, we might
+> want to imitate other tracefs features and use something like printk /
+> !printk to enable/disable a reactor.
+> 
+> What do you think? Did I miss anything here?
 
-You are right, MODULE_SOFTDEP does not help this use case.
+You didn't miss anything, I miss that this "nop" interface is inspired by
+tracefs.
 
-I did a quick search, it seems try_module_get() and module_put() are what
-we need for this. Let me amend the commit message.
+Although I prefer writing empty string, compared to writing "nop"; it is
+better to be consistent with tracefs.
 
-But my essential point in this patch is that, the current ref count
-implementation does not work. Furthermore, we should use the centralized
-kernel module's facilities, not implementing our own custom logic.
+Let me drop this patch.
 
 Best regards,
 Nam
