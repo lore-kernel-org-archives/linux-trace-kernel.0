@@ -1,150 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9E424502F;
-	Mon, 21 Jul 2025 12:48:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85A622D8383
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 21 Jul 2025 13:02:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753102089; cv=none; b=E8jZoPuVMg3Fp8eB1JExRdlxpUXTxuyaHxIVIDqfiW1CnTqRG7QkKUnTN7AwmtWQTfvIh3DHlGy0G/ojCya/Yc2/lTCjfQgahjwWT41RMTZNNiR5xC9xuOpyFcKRS4dnHEf72GjmTsfDQcK6QtLQCxnW1/FEfqH3Ns72O2GwfWc=
+	t=1753102927; cv=none; b=I5VXfvxM6bPoP4Lhgyd68jYKXSkwGRLkfffwo8yv0HRYjDb1U5nAGqT+emy4qsNmqfalazO53OGy0hbnj1j69joFSZxHS52dfTg0t1uJJHmLeImrUhN06Uugfm1G7Q4ULFLgSFuTlg9HRnfAUtN3Um6+MigQ9oilcW17AR2aHFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753102089; c=relaxed/simple;
-	bh=fhUrUAac/iSii6E8bCY5/2OzAP/25KtTiniEKeJQXGA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PdSKdNjtBboMgd832HDbP+uXPaRLqk5gH43+jq8vlM1Hc4dWSbJ50xkdj0WNZbdnrejhlZFh0alyVYXwTE1HxqaXdlipy/qcX255Zo/Sd8XhRxZIm5OMID6J0an5xZ63VZTx10Wb++nILTSxyC0qtE01UAmwtUiiRLoJ/+c1UNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R8evXuR+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1753102927; c=relaxed/simple;
+	bh=q5+0AJhrVXdKoYldfzZDifsC9giSHKKjvZEHmyGc5uY=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XybI72utqWZQ7iaCa8SUz1q7bbxV9NlQHUyDGRvcU4m3KSyf19LHX8uNWecXrrF/YWXkkZVsR8sR7zAeosdHJWi2qYHU96e6h9gKy8ohIlrV8meXJdxnbnTG+dBW8BDo/661+hwm8XP64359fVz/BYzjreGlwX/5iSvI6zykhpE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=W/ucI4yB; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R8evXuR+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2550C4CEED;
-	Mon, 21 Jul 2025 12:47:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753102088;
-	bh=fhUrUAac/iSii6E8bCY5/2OzAP/25KtTiniEKeJQXGA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=R8evXuR+wAan3GKqOPc31OKb0HXwT1fcr9RAvjn3iXq9AafrC9dr+uhqKKHXhydc/
-	 ommMgMhlPSa10h8tXea70KugAvoZCogNM+Xt21kS9UmsttjWDnOELNHjux+Ju59MNY
-	 /URVoorMncYyCzvX9VeofQFk7WldoN/Ri5qk6rB1XFXfi+hA14lKHW1R2sRPlxfo/E
-	 LGLDW2D8KsMU/Gla3tq/bXrtgsgK9NPEPhMAYMtEgjB4rEKVqgNW9ZLANwHmFPzbv2
-	 KyzNMpjT5XzFw+NFZx3vex8f/0R9leYdi3PuQeMO27/gBBOFaJYqsNHIsKj7h+b3pJ
-	 6c41KggZR4CKg==
-Date: Mon, 21 Jul 2025 13:47:55 +0100
-From: Will Deacon <will@kernel.org>
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Kees Cook <kees@kernel.org>, Mike Rapoport <rppt@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>,
-	Michal Wilczynski <michal.wilczynski@intel.com>,
-	Juergen Gross <jgross@suse.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Roger Pau Monne <roger.pau@citrix.com>,
-	David Woodhouse <dwmw@amazon.co.uk>,
-	Usama Arif <usama.arif@bytedance.com>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	Thomas Huth <thuth@redhat.com>, Brian Gerst <brgerst@gmail.com>,
-	kvm@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net,
-	platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
-	linux-mm@kvack.org, Ingo Molnar <mingo@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Christoph Hellwig <hch@lst.de>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas.schier@linux.dev>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org,
-	kasan-dev@googlegroups.com, linux-doc@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, sparclinux@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: Re: [PATCH v3 04/13] x86: Handle KCOV __init vs inline mismatches
-Message-ID: <aH42--h-ARsvX5Wk@willie-the-truck>
-References: <20250717231756.make.423-kees@kernel.org>
- <20250717232519.2984886-4-kees@kernel.org>
- <aHoHkDvvp4AHIzU1@kernel.org>
- <202507181541.B8CFAC7E@keescook>
- <CAMj1kXGAwjChyFvjQcTbL8dFXkFWnn9n47bkN7FP=+EsLNsJdg@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W/ucI4yB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1753102924;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=q5+0AJhrVXdKoYldfzZDifsC9giSHKKjvZEHmyGc5uY=;
+	b=W/ucI4yBATLKDwAGL8FyUiAdWg4BscEljiX9Rhk1dDFI4HQ4wkvckdom23KI0oT2rLWPs7
+	EBoqDEAHJvcZKOu71DqukThPyEIxYO1NtfVy0HexbENxVjU01rCr1785TUlP3CFsbHLNz4
+	/sa0yhR0KLm6BO0vTb9ZOM2lXN8PKAM=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-616-zS4NkrjEN22XngiRe5zdcg-1; Mon, 21 Jul 2025 09:02:01 -0400
+X-MC-Unique: zS4NkrjEN22XngiRe5zdcg-1
+X-Mimecast-MFC-AGG-ID: zS4NkrjEN22XngiRe5zdcg_1753102921
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-45624f0be48so24280285e9.3
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 21 Jul 2025 06:02:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753102920; x=1753707720;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jD+wnTaKP0Y8e6Enf/no2sGgqHNYlggzCKTqQZCB61Y=;
+        b=NcIRI4u3QC8F2NyxhbYfLYOxcn7aHbzq8an8JGqw/ias488hnafPeE7y+cwtBbusX/
+         3k9hScir7QkV5dfjNiQIuLt0JqXHk43zSBz+9qV+zy0WboI9hv6cIuKvaXV6sivI0vX/
+         s29sNTB3c055DvRhEYOzg7HExZ4NW6jDkkwUqh6ZhFkwSbwa61rMQHA3DaSwf+sg3wm0
+         uHpTJvNggvGPvHpPKg13PHY3cDkMUN0sLb4RpmjV8nZnPVPLLssPukO+LYnGtMK0Rub1
+         9UQMEPigqgoHXr9fsgqdQzz2TtJU4cNIqJ2/bV2ewSYgfQe8j37WSPYDUs4g6vz2bAoW
+         98xQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXGPgH3p9hZrLQXyZZgJfRpenCsy98bm5qj4JCz4BXURKXO/vAZSVfyV34lfS1+1Q7nYuzHEbQZGEeD8nai0sN7boA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBpfmy9fk90wCjipANf/Rc61dSaokQi+JXO4jebE3laRb2X+cK
+	TFwPX0O2Jpz2t1Yi5BY/WWl1QxM/T5kECfiABRhGjJpgYVJFjNq06jT+9ddZJHEiAcrAc0xv9bO
+	7zDgEOUZ2+riVVWW/IID/DTPEjr1zu5RvxA7fbOhu0T4gTVg8rDVu2A8X8VL4E/SzyjbC9RfMcA
+	==
+X-Gm-Gg: ASbGnctEcnjTYsKBBel8APw9UYX1LCTPhaXqEnmtFJx6PmBxwvgHVu5CB6YY82EY9JN
+	NnSV6IGa2adZIPkupSLLHMuA7GEIbF/sLm2AyAx+FfmVnwyvTJNFQTadV2KN1ffUXJnDAg8Q+2q
+	STjPi8ttXMFlSCzbe+huSi9oQXFbJh8v9hkC9iTBjxrooaOgxIqu4w3eK3K91CUsA+XADQS8M2t
+	8eC3B6sBA48nDH+KpoR3RU/cdSHnoXboRW8AV4HSDMlUMEtf2UmK3+R20zzZ+9dItjwfMV1GSJb
+	YCNGzgXMCoH3a+Nw9l8cCYAd9o/5B2J857f/AeumQIz3KKrC+EO7GV4sCkB8AnImjQ==
+X-Received: by 2002:a05:600c:310d:b0:456:13b6:4b18 with SMTP id 5b1f17b1804b1-4562e2a59a6mr217518645e9.31.1753102918091;
+        Mon, 21 Jul 2025 06:01:58 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHz92oHW6cf5bePbFRUQ/bTAGdOdmnzzYqC+rPHlpMjNIHtv87b65EeqIpUOgFuaRe0qdZRrg==
+X-Received: by 2002:a05:600c:310d:b0:456:13b6:4b18 with SMTP id 5b1f17b1804b1-4562e2a59a6mr217517285e9.31.1753102917018;
+        Mon, 21 Jul 2025 06:01:57 -0700 (PDT)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.42])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4562e886286sm163348015e9.26.2025.07.21.06.01.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Jul 2025 06:01:56 -0700 (PDT)
+Message-ID: <ea84a5ea39092432804bc7c63596892fb9fdf511.camel@redhat.com>
+Subject: Re: [PATCH 1/6] rv: Remove unused field in struct rv_monitor_def
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: Nam Cao <namcao@linutronix.de>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>,  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Mon, 21 Jul 2025 15:01:54 +0200
+In-Reply-To: <68e223323b11aad9934344ec1764337b2f18c080.1753091084.git.namcao@linutronix.de>
+References: <cover.1753091084.git.namcao@linutronix.de>
+	 <68e223323b11aad9934344ec1764337b2f18c080.1753091084.git.namcao@linutronix.de>
+Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
+ keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
+ 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
+ Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
+ xyhmqeUWOzFx5P43S1E1dhsrLWgP
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMj1kXGAwjChyFvjQcTbL8dFXkFWnn9n47bkN7FP=+EsLNsJdg@mail.gmail.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: _q9rbPFl-Zwk5qD22Ivqk57VxAZznCPKaUOkRPu-h6w_1753102921
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Jul 20, 2025 at 04:10:01PM +1000, Ard Biesheuvel wrote:
-> On Sat, 19 Jul 2025 at 08:51, Kees Cook <kees@kernel.org> wrote:
-> > On Fri, Jul 18, 2025 at 11:36:32AM +0300, Mike Rapoport wrote:
-> > > On Thu, Jul 17, 2025 at 04:25:09PM -0700, Kees Cook wrote:
-> > > > When KCOV is enabled all functions get instrumented, unless the
-> > > > __no_sanitize_coverage attribute is used. To prepare for
-> > > > __no_sanitize_coverage being applied to __init functions, we have to
-> > > > handle differences in how GCC's inline optimizations get resolved. For
-> > > > x86 this means forcing several functions to be inline with
-> > > > __always_inline.
-> > > >
-> > > > Signed-off-by: Kees Cook <kees@kernel.org>
-> > >
-> > > ...
-> > >
-> > > > diff --git a/include/linux/memblock.h b/include/linux/memblock.h
-> > > > index bb19a2534224..b96746376e17 100644
-> > > > --- a/include/linux/memblock.h
-> > > > +++ b/include/linux/memblock.h
-> > > > @@ -463,7 +463,7 @@ static inline void *memblock_alloc_raw(phys_addr_t size,
-> > > >                                       NUMA_NO_NODE);
-> > > >  }
-> > > >
-> > > > -static inline void *memblock_alloc_from(phys_addr_t size,
-> > > > +static __always_inline void *memblock_alloc_from(phys_addr_t size,
-> > > >                                             phys_addr_t align,
-> > > >                                             phys_addr_t min_addr)
-> > >
-> > > I'm curious why from all memblock_alloc* wrappers this is the only one that
-> > > needs to be __always_inline?
-> >
-> > Thread-merge[1], adding Will Deacon, who was kind of asking the same
-> > question.
-> >
-> > Based on what I can tell, GCC has kind of fragile inlining logic, in the
-> > sense that it can change whether or not it inlines something based on
-> > optimizations. It looks like the kcov instrumentation being added (or in
-> > this case, removed) from a function changes the optimization results,
-> > and some functions marked "inline" are _not_ inlined. In that case, we end up
-> > with __init code calling a function not marked __init, and we get the
-> > build warnings I'm trying to eliminate.
+On Mon, 2025-07-21 at 11:47 +0200, Nam Cao wrote:
+> rv_monitor_def::task_monitor is not used. Delete it.
+>=20
+> Signed-off-by: Nam Cao <namcao@linutronix.de>
 
-Got it, thanks for the explanation!
+Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
 
-> > So, to Will's comment, yes, the problem is somewhat fragile (though
-> > using either __always_inline or __init will deterministically solve it).
-> > We've tripped over this before with GCC and the solution has usually
-> > been to just use __always_inline and move on.
-> >
-> 
-> Given that 'inline' is already a macro in the kernel, could we just
-> add __attribute__((__always_inline__)) to it when KCOV is enabled?
+Thanks,
+Gabriele
 
-That sounds like a more robust approach and, by the sounds of it, we
-could predicate it on GCC too. That would also provide a neat place for
-a comment describing the problem.
+> ---
+> =C2=A0kernel/trace/rv/rv.h | 1 -
+> =C2=A01 file changed, 1 deletion(-)
+>=20
+> diff --git a/kernel/trace/rv/rv.h b/kernel/trace/rv/rv.h
+> index 98fca0a1adbc..873364094402 100644
+> --- a/kernel/trace/rv/rv.h
+> +++ b/kernel/trace/rv/rv.h
+> @@ -41,7 +41,6 @@ struct rv_monitor_def {
+> =C2=A0=09struct rv_reactor_def=09*rdef;
+> =C2=A0=09bool=09=09=09reacting;
+> =C2=A0#endif
+> -=09bool=09=09=09task_monitor;
+> =C2=A0};
+> =C2=A0
+> =C2=A0struct dentry *get_monitors_root(void);
 
-Kees, would that work for you?
-
-Will
