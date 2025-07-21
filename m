@@ -1,63 +1,63 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40B582877FF
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 21 Jul 2025 08:24:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0117E28851F
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 21 Jul 2025 08:24:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753086265; cv=none; b=ZgzyhYl3saupasnVxKXgLDvxD7X+DTVcKuvDNKcPZcKdUjSYI6gJdbysfbSXWXkicZS594Flpn15PqZSPOXckafhhFCb+LfnrXeyx3qxLQwxOFL4UINNfILbsTiqcy7fY9C5S25jkhX/NhH+MtiLj/owk9Nx8Dz9zT8KztCoPRM=
+	t=1753086272; cv=none; b=U9bYMCtreBVs9IvBxU40cYM//vUG2z4KEDtGVeXSSl7zca3kb+kUcZBYMPE1wUrn+5DryQGi1isJCmjWl17PWbOD95rQxnYQc4Aq0N93Wn1LKCsJ0LgQWgeUj2xHBKg90POO55F7Rq9kPhEJtMRv3Di1AJhWbY8kveiNvHypThs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753086265; c=relaxed/simple;
-	bh=M+y3pBr0UsIod4QGP8Rv5hbi6Nazsb1V6KCV1wl+Pt4=;
+	s=arc-20240116; t=1753086272; c=relaxed/simple;
+	bh=y4TgCp34WY+f/i8jMEMw3OkzjLL8LNPtpzX2tJK6wW4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CWErgrKdL42TQ0td7VOIUX3JVpzt2ykopnUoh3MFngbEoLR80OzWZhT2zIZPWU/nMX8S4UH+GAxi4efFgW+16kV8UkeBikKcsG+JiEHIqfq+FEDm3YPJR8BclSTPAncyWHw6vpwykbvlq8QABl9iA4wFsVvteGX1hELOV1X01C0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=a/3FHgBb; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=mJ15TmgELytCzaps1GMTLlXfKodZBra9f8Pbt9KaYDeRBiajPL+Yo7YK+iYWZpLQwXGoLfZVhkj2+MSE3/ssTguDO5FckiYmeoNa52hMSQxXidiZopGv2Y/kzBi+dCJMxY1YdQgHZNaJViDk/kv2uZrz6d6St2kC4XloRfnzSBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fjdUrp1O; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a/3FHgBb"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fjdUrp1O"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1753086262;
+	s=mimecast20190719; t=1753086269;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=WEJt9rPLoQKyg8KyKPWzidpDphcL36KOyx3923B9ch8=;
-	b=a/3FHgBbCkSpFYFklgYq3P4qoS0Jz82dOz1AhqHRDD/RPfdUzE4w7F7Azz3Bu6MEy5d8xv
-	aQpnrkuBDzZqjJQI0nBumwBAH1wG3/voNzzULzsseOjYpBe9brMimpbrQlZzpz/ZnOvaGz
-	JrnfAY7LtIx6xZ65ZIX8JHPLMUOVI1A=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	bh=SCCNZS0XFGLYyALmbzWdTfN//HN2C0O2fWy84mR83pU=;
+	b=fjdUrp1OqxDBjQ963UiM8VWYRo310qTAMchBcYLuw56EEWHoCHo6SM7hNwjTLyF3Pwly+s
+	3cu2rZB1rjW+cER62DliKKwJcHxMOyNV/UVV4eXYHmAKhbKorNnWcv3tJObsXQV4+dbjUd
+	/cIBLq86B4CfaZknTtLGj2VdxkjMilk=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-362-Lo0Kl1dDN2O9pN3XP5Fxqg-1; Mon,
- 21 Jul 2025 04:24:20 -0400
-X-MC-Unique: Lo0Kl1dDN2O9pN3XP5Fxqg-1
-X-Mimecast-MFC-AGG-ID: Lo0Kl1dDN2O9pN3XP5Fxqg_1753086259
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-177-ZCEGr_PSPWKWJnLZHTBTlg-1; Mon,
+ 21 Jul 2025 04:24:25 -0400
+X-MC-Unique: ZCEGr_PSPWKWJnLZHTBTlg-1
+X-Mimecast-MFC-AGG-ID: ZCEGr_PSPWKWJnLZHTBTlg_1753086264
 Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3E74F195608B;
-	Mon, 21 Jul 2025 08:24:18 +0000 (UTC)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D951318001C6;
+	Mon, 21 Jul 2025 08:24:23 +0000 (UTC)
 Received: from gmonaco-thinkpadt14gen3.rmtit.com (unknown [10.44.32.136])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id BF3581956050;
-	Mon, 21 Jul 2025 08:24:13 +0000 (UTC)
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 7019D195608D;
+	Mon, 21 Jul 2025 08:24:19 +0000 (UTC)
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
+	Gabriele Monaco <gmonaco@redhat.com>,
 	linux-trace-kernel@vger.kernel.org
-Cc: Gabriele Monaco <gmonaco@redhat.com>,
-	Nam Cao <namcao@linutronix.de>,
+Cc: Nam Cao <namcao@linutronix.de>,
 	Ingo Molnar <mingo@redhat.com>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Tomas Glozar <tglozar@redhat.com>,
 	Juri Lelli <jlelli@redhat.com>,
 	Clark Williams <williams@redhat.com>,
 	John Kacur <jkacur@redhat.com>
-Subject: [PATCH v4 06/14] rv: Use strings in da monitors tracepoints
-Date: Mon, 21 Jul 2025 10:23:16 +0200
-Message-ID: <20250721082325.71554-7-gmonaco@redhat.com>
+Subject: [PATCH v4 07/14] rv: Adjust monitor dependencies
+Date: Mon, 21 Jul 2025 10:23:17 +0200
+Message-ID: <20250721082325.71554-8-gmonaco@redhat.com>
 In-Reply-To: <20250721082325.71554-1-gmonaco@redhat.com>
 References: <20250721082325.71554-1-gmonaco@redhat.com>
 Precedence: bulk
@@ -69,173 +69,77 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-Using DA monitors tracepoints with KASAN enabled triggers the following
-warning:
+RV monitors relying on the preemptirqs tracepoints are set as dependent
+on PREEMPT_TRACER and IRQSOFF_TRACER. In fact, those configurations do
+enable the tracepoints but are not the minimal configurations enabling
+them, which are TRACE_PREEMPT_TOGGLE and TRACE_IRQFLAGS (not selectable
+manually).
 
- BUG: KASAN: global-out-of-bounds in do_trace_event_raw_event_event_da_monitor+0xd6/0x1a0
- Read of size 32 at addr ffffffffaada8980 by task ...
- Call Trace:
-  <TASK>
- [...]
-  do_trace_event_raw_event_event_da_monitor+0xd6/0x1a0
-  ? __pfx_do_trace_event_raw_event_event_da_monitor+0x10/0x10
-  ? trace_event_sncid+0x83/0x200
-  trace_event_sncid+0x163/0x200
- [...]
- The buggy address belongs to the variable:
-  automaton_snep+0x4e0/0x5e0
+Set TRACE_PREEMPT_TOGGLE and TRACE_IRQFLAGS as dependencies for
+monitors.
 
-This is caused by the tracepoints reading 32 bytes __array instead of
-__string from the automata definition. Such strings are literals and
-reading 32 bytes ends up in out of bound memory accesses (e.g. the next
-automaton's data in this case).
-The error is harmless as, while printing the string, we stop at the null
-terminator, but it should still be fixed.
-
-Use the __string facilities while defining the tracepoints to avoid
-reading out of bound memory.
-
-Fixes: 792575348ff7 ("rv/include: Add deterministic automata monitor definition via C macros")
-Reviewed-by: Nam Cao <namcao@linutronix.de>
+Fixes: fbe6c09b7eb4 ("rv: Add scpd, snep and sncid per-cpu monitors")
+Acked-by: Nam Cao <namcao@linutronix.de>
 Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 ---
- kernel/trace/rv/rv_trace.h | 76 +++++++++++++++++++-------------------
- 1 file changed, 38 insertions(+), 38 deletions(-)
+ kernel/trace/rv/monitors/scpd/Kconfig  | 2 +-
+ kernel/trace/rv/monitors/sncid/Kconfig | 2 +-
+ kernel/trace/rv/monitors/snep/Kconfig  | 2 +-
+ kernel/trace/rv/monitors/wip/Kconfig   | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/trace/rv/rv_trace.h b/kernel/trace/rv/rv_trace.h
-index 17ba07329b670..d38e0d3abdfde 100644
---- a/kernel/trace/rv/rv_trace.h
-+++ b/kernel/trace/rv/rv_trace.h
-@@ -16,23 +16,23 @@ DECLARE_EVENT_CLASS(event_da_monitor,
- 	TP_ARGS(state, event, next_state, final_state),
- 
- 	TP_STRUCT__entry(
--		__array(	char,	state,		MAX_DA_NAME_LEN	)
--		__array(	char,	event,		MAX_DA_NAME_LEN	)
--		__array(	char,	next_state,	MAX_DA_NAME_LEN	)
--		__field(	bool,	final_state			)
-+		__string(	state,		state		)
-+		__string(	event,		event		)
-+		__string(	next_state,	next_state	)
-+		__field(	bool,		final_state	)
- 	),
- 
- 	TP_fast_assign(
--		memcpy(__entry->state,		state,		MAX_DA_NAME_LEN);
--		memcpy(__entry->event,		event,		MAX_DA_NAME_LEN);
--		memcpy(__entry->next_state,	next_state,	MAX_DA_NAME_LEN);
--		__entry->final_state		= final_state;
-+		__assign_str(state);
-+		__assign_str(event);
-+		__assign_str(next_state);
-+		__entry->final_state = final_state;
- 	),
- 
- 	TP_printk("%s x %s -> %s%s",
--		__entry->state,
--		__entry->event,
--		__entry->next_state,
-+		__get_str(state),
-+		__get_str(event),
-+		__get_str(next_state),
- 		__entry->final_state ? " (final)" : "")
- );
- 
-@@ -43,18 +43,18 @@ DECLARE_EVENT_CLASS(error_da_monitor,
- 	TP_ARGS(state, event),
- 
- 	TP_STRUCT__entry(
--		__array(	char,	state,		MAX_DA_NAME_LEN	)
--		__array(	char,	event,		MAX_DA_NAME_LEN	)
-+		__string(	state,	state	)
-+		__string(	event,	event	)
- 	),
- 
- 	TP_fast_assign(
--		memcpy(__entry->state,		state,		MAX_DA_NAME_LEN);
--		memcpy(__entry->event,		event,		MAX_DA_NAME_LEN);
-+		__assign_str(state);
-+		__assign_str(event);
- 	),
- 
- 	TP_printk("event %s not expected in the state %s",
--		__entry->event,
--		__entry->state)
-+		__get_str(event),
-+		__get_str(state))
- );
- 
- #include <monitors/wip/wip_trace.h>
-@@ -75,26 +75,26 @@ DECLARE_EVENT_CLASS(event_da_monitor_id,
- 	TP_ARGS(id, state, event, next_state, final_state),
- 
- 	TP_STRUCT__entry(
--		__field(	int,	id				)
--		__array(	char,	state,		MAX_DA_NAME_LEN	)
--		__array(	char,	event,		MAX_DA_NAME_LEN	)
--		__array(	char,	next_state,	MAX_DA_NAME_LEN	)
--		__field(	bool,	final_state			)
-+		__field(	int,		id		)
-+		__string(	state,		state		)
-+		__string(	event,		event		)
-+		__string(	next_state,	next_state	)
-+		__field(	bool,		final_state	)
- 	),
- 
- 	TP_fast_assign(
--		memcpy(__entry->state,		state,		MAX_DA_NAME_LEN);
--		memcpy(__entry->event,		event,		MAX_DA_NAME_LEN);
--		memcpy(__entry->next_state,	next_state,	MAX_DA_NAME_LEN);
--		__entry->id			= id;
--		__entry->final_state		= final_state;
-+		__assign_str(state);
-+		__assign_str(event);
-+		__assign_str(next_state);
-+		__entry->id		= id;
-+		__entry->final_state	= final_state;
- 	),
- 
- 	TP_printk("%d: %s x %s -> %s%s",
- 		__entry->id,
--		__entry->state,
--		__entry->event,
--		__entry->next_state,
-+		__get_str(state),
-+		__get_str(event),
-+		__get_str(next_state),
- 		__entry->final_state ? " (final)" : "")
- );
- 
-@@ -105,21 +105,21 @@ DECLARE_EVENT_CLASS(error_da_monitor_id,
- 	TP_ARGS(id, state, event),
- 
- 	TP_STRUCT__entry(
--		__field(	int,	id				)
--		__array(	char,	state,		MAX_DA_NAME_LEN	)
--		__array(	char,	event,		MAX_DA_NAME_LEN	)
-+		__field(	int,	id	)
-+		__string(	state,	state	)
-+		__string(	event,	event	)
- 	),
- 
- 	TP_fast_assign(
--		memcpy(__entry->state,		state,		MAX_DA_NAME_LEN);
--		memcpy(__entry->event,		event,		MAX_DA_NAME_LEN);
--		__entry->id			= id;
-+		__assign_str(state);
-+		__assign_str(event);
-+		__entry->id	= id;
- 	),
- 
- 	TP_printk("%d: event %s not expected in the state %s",
- 		__entry->id,
--		__entry->event,
--		__entry->state)
-+		__get_str(event),
-+		__get_str(state))
- );
- 
- #include <monitors/wwnr/wwnr_trace.h>
+diff --git a/kernel/trace/rv/monitors/scpd/Kconfig b/kernel/trace/rv/monitors/scpd/Kconfig
+index b9114fbf680f9..682d0416188b3 100644
+--- a/kernel/trace/rv/monitors/scpd/Kconfig
++++ b/kernel/trace/rv/monitors/scpd/Kconfig
+@@ -2,7 +2,7 @@
+ #
+ config RV_MON_SCPD
+ 	depends on RV
+-	depends on PREEMPT_TRACER
++	depends on TRACE_PREEMPT_TOGGLE
+ 	depends on RV_MON_SCHED
+ 	default y
+ 	select DA_MON_EVENTS_IMPLICIT
+diff --git a/kernel/trace/rv/monitors/sncid/Kconfig b/kernel/trace/rv/monitors/sncid/Kconfig
+index 76bcfef4fd103..3a5639feaaaf6 100644
+--- a/kernel/trace/rv/monitors/sncid/Kconfig
++++ b/kernel/trace/rv/monitors/sncid/Kconfig
+@@ -2,7 +2,7 @@
+ #
+ config RV_MON_SNCID
+ 	depends on RV
+-	depends on IRQSOFF_TRACER
++	depends on TRACE_IRQFLAGS
+ 	depends on RV_MON_SCHED
+ 	default y
+ 	select DA_MON_EVENTS_IMPLICIT
+diff --git a/kernel/trace/rv/monitors/snep/Kconfig b/kernel/trace/rv/monitors/snep/Kconfig
+index 77527f9712325..7dd54f434ff75 100644
+--- a/kernel/trace/rv/monitors/snep/Kconfig
++++ b/kernel/trace/rv/monitors/snep/Kconfig
+@@ -2,7 +2,7 @@
+ #
+ config RV_MON_SNEP
+ 	depends on RV
+-	depends on PREEMPT_TRACER
++	depends on TRACE_PREEMPT_TOGGLE
+ 	depends on RV_MON_SCHED
+ 	default y
+ 	select DA_MON_EVENTS_IMPLICIT
+diff --git a/kernel/trace/rv/monitors/wip/Kconfig b/kernel/trace/rv/monitors/wip/Kconfig
+index e464b9294865b..87a26195792b4 100644
+--- a/kernel/trace/rv/monitors/wip/Kconfig
++++ b/kernel/trace/rv/monitors/wip/Kconfig
+@@ -2,7 +2,7 @@
+ #
+ config RV_MON_WIP
+ 	depends on RV
+-	depends on PREEMPT_TRACER
++	depends on TRACE_PREEMPT_TOGGLE
+ 	select DA_MON_EVENTS_IMPLICIT
+ 	bool "wip monitor"
+ 	help
 -- 
 2.50.1
 
