@@ -1,41 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3473028467C;
-	Mon, 21 Jul 2025 09:47:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43F62283FC3;
+	Mon, 21 Jul 2025 09:47:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753091252; cv=none; b=ZLHIeJBQxD5Af4lJSUSAPdJWgr44xNfVh/DbcsxBsDQ9880DejzOz23p0ZkXwggRsgkt58hSvfs+zsOin501cyDoKlUfsCkIZvgevsRJB67r3546zUv/Xnw1xnrnErYuWoJ7IUUkcYSydv9Kqmt/7rqo2akd1rs6eI1ZFeA8skk=
+	t=1753091252; cv=none; b=OG7bK9osogJsJnvPw4eP7Jr5KlRTUgtb13JfaQtygNihRGfsUH0kh810RV3WujoSkF2XNFlcLFdfd18NTc/pLhSYJ34kLqi085rFLGvk2ViGk6moAlbT4SOJZa1as0dsd1aO0HGnfuAw9o6HZVRm+pmVHjyQbSZHEMLb8idAs6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1753091252; c=relaxed/simple;
-	bh=alEaX+RCVci7hUWxprHCHOy7fFTQhRBHImcI1C41/x0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cKgNlDOICB1OcJJ4mbHxouI2/kSbnFppz0HymOwJE1Fn/wYXDgQSySWB2StsB40nTW+S2iej/huFy7znXOGVw9ed4cVXVD1OCqcvC7KYMy2QTBp58b1RSN8AMa4/22kTwAfMNJ6yxehJhXynRLYeC1MGTeZy5g71s5BlXHOnVUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=SlNYkm6r; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Jo88pU0p; arc=none smtp.client-ip=193.142.43.55
+	bh=7X+JDKnS/okCWrUZLdeZVOV5eH+Kwj8gqSMwhjegf40=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=p14/jVbNGV7JTnRFtlwx2AZfaR6jQ6A5345amYSN8EfThhjdnfg0e5+5t8ogrq+tjT2owbdvu/cjW+WA8TLqgCX1eHJIMR4icVbgl087x7njm8eEoENKmBQTV7DCWMCG2PBdYLD3ElpdwidDXU6ZNRS2/k0JHHkvqe/u4stb7l0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Hkmqurj/; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=s/1jfdqY; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SlNYkm6r";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Jo88pU0p"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Hkmqurj/";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="s/1jfdqY"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1753091248;
+	s=2020; t=1753091249;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=9vOqUJ+7zWlhDCALBcxwXCtMOa5SQ7PxhbTqHYBjdkg=;
-	b=SlNYkm6rRij/gN2RE6EdhfpAhjos7O90GY7yOrij1ejS9c2WN/5/60gbPAr7srwPc7cOYV
-	W+w46lGO7dv1F264tP+zABc4xrB7M2kd0gG9cGYF5Uc07o8olmOI+nL2bSrS32DyraBnDz
-	tqDX0aa8Vt8g1WsvfdXGMA6nyYCiLHo0iunOIhUiwHjQBYs8NiT5M6YJ49IN2S1CjCqbmw
-	6B2FAl7hIeqEB4RBEI6xTuVsId+8emu0ZqR1aa7mTgRfS/XGYONjWOKZhrrhbniIoUg0oD
-	ev8KESb5URWT7pi5Vp/0Ldi1wvj8Us9jXkgKAsAhpe3idwehBtGbzoK21kDvXw==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=exDP0K2ghmuDZQrav3SKlw4J85LtRUfXjBEkd5gZGXs=;
+	b=Hkmqurj/8XaaFA4GVK+P6Vj/fvn4JP1y/GgDBfUidgSnRPVPrqjxBT8fmF0ap/URQhaN8d
+	AfrrRKmBi+ioqB9A4Qddtr/OtwnaQDofPdSorwopNt0P/nTw16cw8u2PzFBsx9xPYYtgaf
+	QVTwRMMRjXcjYEg2VMmDqO9mj6nmo9p2rnbTbqYtRvbXk9JwmFoK0BcGKKqWCCMWpIXbUb
+	TS55xNS+jZqpYSET5Ia5DCKj22UAuHMrOtSRsj81LNgcuIuIzovyr2XXl6K2Kh6n4MBnQv
+	6Ye+lYdJ7Uxqy/QrcAlJhtn6L8C5PeBWgk14uOrsA6zA/mTismOXAvmBEYm8KA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1753091248;
+	s=2020e; t=1753091249;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=9vOqUJ+7zWlhDCALBcxwXCtMOa5SQ7PxhbTqHYBjdkg=;
-	b=Jo88pU0poqKLtqlBADI+aX6AX6Hb4QYDOpXUmTxG2MunlttHAVZx+BKT9G95h7A24MpXrm
-	cGrTu+0aC970EPCg==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=exDP0K2ghmuDZQrav3SKlw4J85LtRUfXjBEkd5gZGXs=;
+	b=s/1jfdqYZnh+UHZdamqK2+7g1nFYmEzx4oR0XScQLhMgYac7nZTe7JpwFi1QdUH4JHMKBe
+	W+22ndRxgn0hItDQ==
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
@@ -43,9 +46,11 @@ To: Steven Rostedt <rostedt@goodmis.org>,
 	linux-kernel@vger.kernel.org,
 	Gabriele Monaco <gmonaco@redhat.com>
 Cc: Nam Cao <namcao@linutronix.de>
-Subject: [PATCH 0/6] rv: Clean up & simplify
-Date: Mon, 21 Jul 2025 11:47:07 +0200
-Message-Id: <cover.1753091084.git.namcao@linutronix.de>
+Subject: [PATCH 1/6] rv: Remove unused field in struct rv_monitor_def
+Date: Mon, 21 Jul 2025 11:47:08 +0200
+Message-Id: <68e223323b11aad9934344ec1764337b2f18c080.1753091084.git.namcao@linutronix.de>
+In-Reply-To: <cover.1753091084.git.namcao@linutronix.de>
+References: <cover.1753091084.git.namcao@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -54,24 +59,25 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+rv_monitor_def::task_monitor is not used. Delete it.
 
-This series removes some redundant code and simply RV.
+Signed-off-by: Nam Cao <namcao@linutronix.de>
+---
+ kernel/trace/rv/rv.h | 1 -
+ 1 file changed, 1 deletion(-)
 
-Nam Cao (6):
-  rv: Remove unused field in struct rv_monitor_def
-  rv: Merge struct rv_monitor_def into struct rv_monitor
-  rv: Merge struct rv_reactor_def into struct rv_reactor
-  rv: Remove rv_reactor's reference counter
-  rv: Remove the nop reactor
-  rv: Remove struct rv_monitor::reacting
-
- include/linux/rv.h            |   8 ++
- kernel/trace/rv/rv.c          | 210 +++++++++++++++-------------------
- kernel/trace/rv/rv.h          |  39 +------
- kernel/trace/rv/rv_reactors.c | 178 ++++++++--------------------
- 4 files changed, 152 insertions(+), 283 deletions(-)
-
+diff --git a/kernel/trace/rv/rv.h b/kernel/trace/rv/rv.h
+index 98fca0a1adbc..873364094402 100644
+--- a/kernel/trace/rv/rv.h
++++ b/kernel/trace/rv/rv.h
+@@ -41,7 +41,6 @@ struct rv_monitor_def {
+ 	struct rv_reactor_def	*rdef;
+ 	bool			reacting;
+ #endif
+-	bool			task_monitor;
+ };
+=20
+ struct dentry *get_monitors_root(void);
 --=20
 2.39.5
 
