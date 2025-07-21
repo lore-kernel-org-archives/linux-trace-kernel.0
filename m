@@ -1,124 +1,121 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85A622D8383
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 21 Jul 2025 13:02:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 601C029E109;
+	Mon, 21 Jul 2025 13:18:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.110
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753102927; cv=none; b=I5VXfvxM6bPoP4Lhgyd68jYKXSkwGRLkfffwo8yv0HRYjDb1U5nAGqT+emy4qsNmqfalazO53OGy0hbnj1j69joFSZxHS52dfTg0t1uJJHmLeImrUhN06Uugfm1G7Q4ULFLgSFuTlg9HRnfAUtN3Um6+MigQ9oilcW17AR2aHFc=
+	t=1753103886; cv=none; b=MLzAocQB7z0iKMgwmwN0zPC1dKsrDnKlUhKyhvSfpkersoymfZynTRibIbUvYZPxdFrz0deeIL2jby4FhR6V8iX49v2w6y6kblZ9wIuMWXhO44xtD94qV5gDI2DB4iOowD0gWLT+6IRv97cq9Dr/vGtsx3xN0vUah26dCUKnV4A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753102927; c=relaxed/simple;
-	bh=q5+0AJhrVXdKoYldfzZDifsC9giSHKKjvZEHmyGc5uY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XybI72utqWZQ7iaCa8SUz1q7bbxV9NlQHUyDGRvcU4m3KSyf19LHX8uNWecXrrF/YWXkkZVsR8sR7zAeosdHJWi2qYHU96e6h9gKy8ohIlrV8meXJdxnbnTG+dBW8BDo/661+hwm8XP64359fVz/BYzjreGlwX/5iSvI6zykhpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=W/ucI4yB; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1753103886; c=relaxed/simple;
+	bh=dGm4NQ+3hGK/6za3afP2H7y1+PzpmhYcTH4ocGmLxsM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZBbUNXR8PEfoh0O5hVRhGzq4BVVPw6N1//V2AnIuWfs0rAiqkdG8LYJKk0S2KWYsOpKDaxG5ybuMPiIUOqBFs12qRapGRdlVSGdCadHA4h+BFjNy8mzT0u9n8Nv3lOOvLSfHd301GoWxyLdQqBOjfNmVPqX/gl9IuAUnznK+0YU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=rkcVs88b; arc=none smtp.client-ip=115.124.30.110
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W/ucI4yB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1753102924;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=q5+0AJhrVXdKoYldfzZDifsC9giSHKKjvZEHmyGc5uY=;
-	b=W/ucI4yBATLKDwAGL8FyUiAdWg4BscEljiX9Rhk1dDFI4HQ4wkvckdom23KI0oT2rLWPs7
-	EBoqDEAHJvcZKOu71DqukThPyEIxYO1NtfVy0HexbENxVjU01rCr1785TUlP3CFsbHLNz4
-	/sa0yhR0KLm6BO0vTb9ZOM2lXN8PKAM=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-616-zS4NkrjEN22XngiRe5zdcg-1; Mon, 21 Jul 2025 09:02:01 -0400
-X-MC-Unique: zS4NkrjEN22XngiRe5zdcg-1
-X-Mimecast-MFC-AGG-ID: zS4NkrjEN22XngiRe5zdcg_1753102921
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-45624f0be48so24280285e9.3
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 21 Jul 2025 06:02:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753102920; x=1753707720;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jD+wnTaKP0Y8e6Enf/no2sGgqHNYlggzCKTqQZCB61Y=;
-        b=NcIRI4u3QC8F2NyxhbYfLYOxcn7aHbzq8an8JGqw/ias488hnafPeE7y+cwtBbusX/
-         3k9hScir7QkV5dfjNiQIuLt0JqXHk43zSBz+9qV+zy0WboI9hv6cIuKvaXV6sivI0vX/
-         s29sNTB3c055DvRhEYOzg7HExZ4NW6jDkkwUqh6ZhFkwSbwa61rMQHA3DaSwf+sg3wm0
-         uHpTJvNggvGPvHpPKg13PHY3cDkMUN0sLb4RpmjV8nZnPVPLLssPukO+LYnGtMK0Rub1
-         9UQMEPigqgoHXr9fsgqdQzz2TtJU4cNIqJ2/bV2ewSYgfQe8j37WSPYDUs4g6vz2bAoW
-         98xQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXGPgH3p9hZrLQXyZZgJfRpenCsy98bm5qj4JCz4BXURKXO/vAZSVfyV34lfS1+1Q7nYuzHEbQZGEeD8nai0sN7boA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzBpfmy9fk90wCjipANf/Rc61dSaokQi+JXO4jebE3laRb2X+cK
-	TFwPX0O2Jpz2t1Yi5BY/WWl1QxM/T5kECfiABRhGjJpgYVJFjNq06jT+9ddZJHEiAcrAc0xv9bO
-	7zDgEOUZ2+riVVWW/IID/DTPEjr1zu5RvxA7fbOhu0T4gTVg8rDVu2A8X8VL4E/SzyjbC9RfMcA
-	==
-X-Gm-Gg: ASbGnctEcnjTYsKBBel8APw9UYX1LCTPhaXqEnmtFJx6PmBxwvgHVu5CB6YY82EY9JN
-	NnSV6IGa2adZIPkupSLLHMuA7GEIbF/sLm2AyAx+FfmVnwyvTJNFQTadV2KN1ffUXJnDAg8Q+2q
-	STjPi8ttXMFlSCzbe+huSi9oQXFbJh8v9hkC9iTBjxrooaOgxIqu4w3eK3K91CUsA+XADQS8M2t
-	8eC3B6sBA48nDH+KpoR3RU/cdSHnoXboRW8AV4HSDMlUMEtf2UmK3+R20zzZ+9dItjwfMV1GSJb
-	YCNGzgXMCoH3a+Nw9l8cCYAd9o/5B2J857f/AeumQIz3KKrC+EO7GV4sCkB8AnImjQ==
-X-Received: by 2002:a05:600c:310d:b0:456:13b6:4b18 with SMTP id 5b1f17b1804b1-4562e2a59a6mr217518645e9.31.1753102918091;
-        Mon, 21 Jul 2025 06:01:58 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHz92oHW6cf5bePbFRUQ/bTAGdOdmnzzYqC+rPHlpMjNIHtv87b65EeqIpUOgFuaRe0qdZRrg==
-X-Received: by 2002:a05:600c:310d:b0:456:13b6:4b18 with SMTP id 5b1f17b1804b1-4562e2a59a6mr217517285e9.31.1753102917018;
-        Mon, 21 Jul 2025 06:01:57 -0700 (PDT)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.42])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4562e886286sm163348015e9.26.2025.07.21.06.01.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Jul 2025 06:01:56 -0700 (PDT)
-Message-ID: <ea84a5ea39092432804bc7c63596892fb9fdf511.camel@redhat.com>
-Subject: Re: [PATCH 1/6] rv: Remove unused field in struct rv_monitor_def
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Nam Cao <namcao@linutronix.de>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>,  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Mon, 21 Jul 2025 15:01:54 +0200
-In-Reply-To: <68e223323b11aad9934344ec1764337b2f18c080.1753091084.git.namcao@linutronix.de>
-References: <cover.1753091084.git.namcao@linutronix.de>
-	 <68e223323b11aad9934344ec1764337b2f18c080.1753091084.git.namcao@linutronix.de>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
- xyhmqeUWOzFx5P43S1E1dhsrLWgP
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42)
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="rkcVs88b"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1753103879; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=WnaoPqjkhqlDN6kTZRO3wpxLenliqy2lR/lm2VYfgC4=;
+	b=rkcVs88b+dc96OwGR3/nv1/xcBNjVE4AdaMd3WgC/jITbpvCs91H7w88KkzESvU8sV9NCCL03G0Fr+F+rOTEGHwL5XkWziy+DnIfer/04VLaxrXy+GE20FRqmmKgfByucn1x5JWCPNq1M81DWbKeigyNBoZXEiTYlZNMNw6BIaQ=
+Received: from 30.246.160.95(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WjPkmgl_1753103876 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 21 Jul 2025 21:17:57 +0800
+Message-ID: <25285fbd-ffab-49e5-a8be-e3a1c8e70d3c@linux.alibaba.com>
+Date: Mon, 21 Jul 2025 21:17:55 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: _q9rbPFl-Zwk5qD22Ivqk57VxAZznCPKaUOkRPu-h6w_1753102921
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8] PCI: hotplug: Add a generic RAS tracepoint for hotplug
+ event
+To: Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <helgaas@kernel.org>,
+ Matthew W Carlis <mattc@purestorage.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: anil.s.keshavamurthy@intel.com, bhelgaas@google.com, bp@alien8.de,
+ davem@davemloft.net, linux-edac@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, mark.rutland@arm.com,
+ mathieu.desnoyers@efficios.com, mhiramat@kernel.org, naveen@kernel.org,
+ oleg@redhat.com, peterz@infradead.org, rostedt@goodmis.org,
+ tianruidong@linux.alibaba.com, tony.luck@intel.com
+References: <20250718163532.GA2700834@bhelgaas>
+ <fc0ded97-8643-4faa-a606-732bcd4ce4a1@linux.alibaba.com>
+ <aHtFG3QsdohG466k@wunner.de>
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <aHtFG3QsdohG466k@wunner.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, 2025-07-21 at 11:47 +0200, Nam Cao wrote:
-> rv_monitor_def::task_monitor is not used. Delete it.
->=20
-> Signed-off-by: Nam Cao <namcao@linutronix.de>
 
-Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
 
-Thanks,
-Gabriele
+在 2025/7/19 15:11, Lukas Wunner 写道:
+> On Sat, Jul 19, 2025 at 01:23:28PM +0800, Shuai Xue wrote:
+>>             <...>-120     [002] .....   104.864051: pci_hp_event: 0000:00:03.0 slot:30, event:PCI_HOTPLUG_CARD_PRESENT
+>>             <...>-120     [002] .....   104.864081: pci_hp_event: 0000:00:03.0 slot:30, event:PCI_HOTPLUG_LINK_UP
+> 
+> Somehow I liked the simple "Link Up" and "Card present" strings more
+> than this. :)
+> 
+> The PCI_HOTPLUG substring repeats what pci_hp_event already betrays,
+> that this is a hotplug event.
 
-> ---
-> =C2=A0kernel/trace/rv/rv.h | 1 -
-> =C2=A01 file changed, 1 deletion(-)
->=20
-> diff --git a/kernel/trace/rv/rv.h b/kernel/trace/rv/rv.h
-> index 98fca0a1adbc..873364094402 100644
-> --- a/kernel/trace/rv/rv.h
-> +++ b/kernel/trace/rv/rv.h
-> @@ -41,7 +41,6 @@ struct rv_monitor_def {
-> =C2=A0=09struct rv_reactor_def=09*rdef;
-> =C2=A0=09bool=09=09=09reacting;
-> =C2=A0#endif
-> -=09bool=09=09=09task_monitor;
-> =C2=A0};
-> =C2=A0
-> =C2=A0struct dentry *get_monitors_root(void);
+I think Bjorn's concern is mainly about parsing issues when strings
+contain spaces.
 
+So, how about using "Link_UP" and "Card_Present" instead?
+
+> 
+>>     irq/57-pciehp-120     [002] .....   104.990434: pci_link_event: 0000:00:03.0 cur_bus_speed:20, max_bus_speed:23, width:1, flit_mode:0, reason:5
+>>     irq/57-pciehp-120     [002] .....   104.992377: pci_link_event: 0000:00:03.0 cur_bus_speed:20, max_bus_speed:23, width:1, flit_mode:0, reason:0
+> 
+> This contains a lot of terminology specific to PCI *Express*
+> (versus Conventional PCI or PCI-X).  Either it needs to be
+> "pcie_link_event" or we need to come up with a structure that
+> works for non-PCIe as well.
+> 
+
+I see, I will rename it to pcie_link_event.
+
+> PCI links can be tunneled over Thunderbolt, in this case the
+> link speed is fixed to 2.5 GT/s (USB4 v1.0 sec 11.2.1), but
+> in reality is governed by the speed of the Thunderbolt fabric
+> (which can even be asymmetric).  Do we want to report the
+> virtual 2.5 GT/s in this case or the actual Thunderbolt speed?
+> Or do we want a separate trace event for Thunderbolt?
+
+I'm not a user of Thunderbolt, which way do you prefer?
+
+> 
+> For Root and Downstream Ports, the physical "port" points "downstream",
+> whereas for Upstream Ports and Endpoints, the physical "port" points
+> "upstream".  Software interpreting the trace event may want to know
+> the direction (or whatever one wants to call it) because it cannot
+> tell from the address 0000:00:03.0 what the PCIe type is.  Having to
+> look this up in lspci seems cumbersome.  So it may be worthwhile to
+> include either the port's direction or the device's PCIe type in the
+> trace event.
+> 
+> Of course, hotplug only exists at Root or Downstream Ports, so any
+> trace event generated from the PCIe hotplug driver will pertain to
+> a downstream-facing port.  But the bandwidth controller also binds
+> to Upstream Ports and its trace events may thus pertain to link speed
+> changes at an upstream-facing port.
+
+Got it, i will device's PCIe type,
+
+> 
+> Thanks,
+> 
+> Lukas
+
+Thanks for valuable comments.
+
+Best Regards,
+Shuai
