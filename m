@@ -1,211 +1,154 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ED5F28D8EB;
-	Mon, 21 Jul 2025 09:47:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1904228C2D7;
+	Mon, 21 Jul 2025 10:18:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753091255; cv=none; b=DbZoNMcNk6e5gqPhf0VN475uhe1iwYnAu0ZXdGHDotlRD8W0BlORPPb5cb+2lfrERwHgY3NC7m4gPUcn9lMB7aSuWwij1Zsdg1klQ+Kb2SsV9gwUV3S34jRl9k1ryl9L4qBsorADiDxrMy8R89NbpYLa5HKWunuG8ONXYivDQ34=
+	t=1753093123; cv=none; b=O3sk1SOJ7t6QwpiKJvXlxOoVyKq3Yo8Ol1rvdIFhMOKoZyJsmAlc6eTYBCj/UNH2u6QP3bXO5i97cnT1lrHOXoKQcizFsmkVKwSemIl9AFy+8Toof97AXJzwTL2o7HW+VP5em/jQVKXZnoxmzmxyrOWoAO+f75mI3Y70gSwyCOQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753091255; c=relaxed/simple;
-	bh=KmaBjIMBz488nseXbo641XAkic/t7NfHwWGp0q0tZ3M=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=MPN/90fjLaIP7uoP6s3kjEN+/ZwaJSMvjAWyB0abWev40WhbdzjLfSTtYTp01+NWpzoFkn0xbPFF17O6KVWUykBGy2xdZMi1UWhxvP0Tze/p2YhQSqDkwud1JVUMKP4i3qpND316isbjHLdM4qcxIGaqza3+DVc5/SSboONfEXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=OANk9jPd; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sASKuOjg; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1753093123; c=relaxed/simple;
+	bh=ciYWhHQQLN6I4PF+Dk1IcyISwuZNzYfEcdeXkbEPPuY=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=aWQmwSPDXtID5F523XYbb6E+nunmGIYMCRIBHn/djx9ZDyrBDjt1frndmQfGnJ+lzv2lk02dWuQ6z/+9aDRufBVHuf3GrHbAWEpftQYZLBP+GvtbLrfX6+Vr59ClqXjY9EivvGTQoiRRvjZnXDtQr1lY/JQ/GPql7oI6ooFvt6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UsEiCfeS; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OANk9jPd";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sASKuOjg"
-From: Nam Cao <namcao@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1753091251;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ob3X3Y1byqxwIhz+EUdnbey/6ypvamIibzX5fTu/udI=;
-	b=OANk9jPdPVavx631ovV8haa6+cQwClI3Pesj2zgpUyFFidTKuLz2xZ9cCFJKLCpqIT5gSj
-	V6hCuJoBVBMP4iIADPqhf5bf7IJTiodvXyZd4WZPrHXE11EcY/FyTU1AYsZfPYXNqYrozy
-	ga2GJiemLYgH+vjS0ELUEeyGAHVz3GIvapwq1YEOgfM6NE0fj9zGGLQejgROPMP5NWS34k
-	r/ZHASpCEsoO2ovQFhY9cA42SlnvqyFk7Mofl60+l5+QcukHbZ7zwR8l1O8aihmwzxdvrJ
-	VNd5ajKLYpkdRSZUZ4M0zYZ5iFTpy3f8JaO1RXWO5oiLCqKFJi4ZGpJcqXKqAQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1753091251;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ob3X3Y1byqxwIhz+EUdnbey/6ypvamIibzX5fTu/udI=;
-	b=sASKuOjgn6rB483okr1a+TQw3BeYNgt79o/IRVfJRXs+BOBoQ/1eh1GZzRth/Gu0ekyuRI
-	UWrB1qNMWuUD+NCg==
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Gabriele Monaco <gmonaco@redhat.com>
-Cc: Nam Cao <namcao@linutronix.de>
-Subject: [PATCH 5/6] rv: Remove the nop reactor
-Date: Mon, 21 Jul 2025 11:47:12 +0200
-Message-Id: <21a530ffb705887d7aed18255572521e5b880bc0.1753091084.git.namcao@linutronix.de>
-In-Reply-To: <cover.1753091084.git.namcao@linutronix.de>
-References: <cover.1753091084.git.namcao@linutronix.de>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UsEiCfeS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1753093123; x=1784629123;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=ciYWhHQQLN6I4PF+Dk1IcyISwuZNzYfEcdeXkbEPPuY=;
+  b=UsEiCfeSchAriD8yqHxaVVoLlp/JDuSOEJYMMbnRj8EdryylMrkOgFoX
+   t15F3Og3fVVj7hXRF5zm8mqC18T28y8HA3TXNIao1invLYhwyzuh+qA5I
+   0CfnuzOiICHjq6ddBSek66jKbG+vTYIGIsSDmIojGIKh3d9PwCqJ9UmHh
+   KmQbkSLSopO9sk8TBaHCwzpCg3Kk+veUlVo1d/8OJrFoM2IfuRtiFv3KX
+   1l+34fespywboidw0SjPeZmNAkBnu9GXE+0hAxhCxlWrcsblCBv7lMjI3
+   1b9JeUcXrl+fnD1cXjGvlT/d0h3MoGuWmRG7VTm/+STkGGVWXll83PVrJ
+   g==;
+X-CSE-ConnectionGUID: sMkZWdDPSKyQ4Es1JgNkKw==
+X-CSE-MsgGUID: xc1bF4zrRdeKpMFsvFJkZw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11498"; a="66743638"
+X-IronPort-AV: E=Sophos;i="6.16,328,1744095600"; 
+   d="scan'208";a="66743638"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2025 03:18:42 -0700
+X-CSE-ConnectionGUID: t54MNEhvQoWpJxIe/wpvCw==
+X-CSE-MsgGUID: XVmkOGjnQIegha1m1KPu9A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,328,1744095600"; 
+   d="scan'208";a="158459692"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.225])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2025 03:18:35 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 21 Jul 2025 13:18:32 +0300 (EEST)
+To: Shuai Xue <xueshuai@linux.alibaba.com>
+cc: Matthew W Carlis <mattc@purestorage.com>, helgaas@kernel.org, 
+    Lukas Wunner <lukas@wunner.de>, anil.s.keshavamurthy@intel.com, 
+    bhelgaas@google.com, bp@alien8.de, davem@davemloft.net, 
+    linux-edac@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    linux-pci@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+    mark.rutland@arm.com, mathieu.desnoyers@efficios.com, mhiramat@kernel.org, 
+    naveen@kernel.org, oleg@redhat.com, peterz@infradead.org, 
+    rostedt@goodmis.org, tianruidong@linux.alibaba.com, tony.luck@intel.com
+Subject: Re: [PATCH v8] PCI: hotplug: Add a generic RAS tracepoint for hotplug
+ event
+In-Reply-To: <e92f8d1f-457c-4248-8397-81b0e20ff4af@linux.alibaba.com>
+Message-ID: <11119800-3b6a-a683-3500-115a057c2826@linux.intel.com>
+References: <20250717235055.GA2664149@bhelgaas> <20250718034616.26250-1-mattc@purestorage.com> <e92f8d1f-457c-4248-8397-81b0e20ff4af@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/mixed; boundary="8323328-483332610-1753093112=:945"
 
-As suggested by the name, the nop reactor does not do anything. It is the
-default reactor when nothing else is selected.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-However, the monitors already null-check the reactor function pointers.
-Thus, instead of a nop reactor, just set the react function pointer to
-NULL. The nop reactor can then be removed.
+--8323328-483332610-1753093112=:945
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Signed-off-by: Nam Cao <namcao@linutronix.de>
----
- kernel/trace/rv/rv_reactors.c | 63 ++++++-----------------------------
- 1 file changed, 11 insertions(+), 52 deletions(-)
+On Fri, 18 Jul 2025, Shuai Xue wrote:
+> =E5=9C=A8 2025/7/18 11:46, Matthew W Carlis =E5=86=99=E9=81=93:
+> > On Thu, Jul 17, 2025 Bjorn Helgaas wrote
+> > > So I think your idea of adding current link speed/width to the "Link
+> > > Up" event is still on the table, and that does sound useful to me.
+> >=20
+> > We're already reading the link status register here to check DLLA so
+> > it would be nice. I guess if everything is healthy we're probably alrea=
+dy
+> > at the maximum speed by this point.
+> >=20
+> > > In the future we might add another tracepoint when we enumerate the
+> > > device and know the Vendor/Device ID.
+> >=20
+> > I think we might have someone who would be interested in doing it.
+>=20
+>=20
+> Hi, all,
+>=20
+> IIUC, the current hotplug event (or presence event) is enough for Matthew=
+=2E
+> and we would like a new tracepoing for link speed change which reports
+> speeds.
+>=20
+> For hotplug event, I plan to send a new version to
+>=20
+> 1. address Bjorn' concerns about event strings by removing its spaces.
+>=20
+> #define PCI_HOTPLUG_EVENT
+> \
+> =09EM(PCI_HOTPLUG_LINK_UP,=09=09=09"PCI_HOTPLUG_LINK_UP")
+> \
+> =09EM(PCI_HOTPLUG_LINK_DOWN,=09=09"PCI_HOTPLUG_LINK_DOWN")
+> \
+> =09EM(PCI_HOTPLUG_CARD_PRESENT,=09=09"PCI_HOTPLUG_CARD_PRESENT")
+> \
+> =09EMe(PCI_HOTPLUG_CARD_NOT_PRESENT,
+> "PCI_HOTPLUG_CARD_NOT_PRESENT")
+>=20
+> 2. address Ilpo comments by moving pci_hp_event to a common place
+> (include/trace/events/pci.h) so that the new comming can also use it.
 
-diff --git a/kernel/trace/rv/rv_reactors.c b/kernel/trace/rv/rv_reactors.c
-index a8e849e6cd85..aee622e4b833 100644
---- a/kernel/trace/rv/rv_reactors.c
-+++ b/kernel/trace/rv/rv_reactors.c
-@@ -70,17 +70,6 @@
-  */
- static LIST_HEAD(rv_reactors_list);
+Ah, I only now noticed you've decided to re-place them. Please disregard=20
+my other comment about this being still open/undecided item.
+
+> For link speed change event (perhaps named as pci_link_event),
+> I plan to send a seperate patch, which provides:
+>=20
+> =09TP_STRUCT__entry(
+> =09=09__string(=09port_name,=09port_name=09)
+> =09=09__field(=09unsigned char,=09cur_bus_speed=09)
+> =09=09__field(=09unsigned char,=09max_bus_speed=09)
+>  =09=09__field(=09unsigned char,=09width=09=09)
+>  =09=09__field(=09unsigned int,=09flit_mode=09)
+> =09=09__field(=09unsigned char,=09reason=09=09)
+> =09=09),
+>=20
+> The reason field is from Lukas ideas which indicates why the link speed
+> changed, e.g. "hotplug", "autonomous", "thermal", "retrain", etc.
+>=20
+> Are you happy with above changes?
+
+Since you're probably quite far with the pcie link event patch too given=20
+above, could you take a look at the LNKSTA flags representation in my=20
+patch and incorporate those as well as there seems to always lot of=20
+uncertainty about those flags when investigating the LBMS/bwctrl related=20
+issues so it seems prudent to explicitly include them into the traceevent=
 =20
--static struct rv_reactor *get_reactor_rdef_by_name(char *name)
--{
--	struct rv_reactor *r;
--
--	list_for_each_entry(r, &rv_reactors_list, list) {
--		if (strcmp(name, r->name) =3D=3D 0)
--			return r;
--	}
--	return NULL;
--}
--
- /*
-  * Available reactors seq functions.
-  */
-@@ -174,7 +163,7 @@ static void monitor_swap_reactors_single(struct rv_moni=
-tor *mon,
-=20
- 	mon->reactor =3D reactor;
- 	mon->reacting =3D reacting;
--	mon->react =3D reactor->react;
-+	mon->react =3D reactor ? reactor->react : NULL;
-=20
- 	/* enable only once if iterating through a container */
- 	if (monitor_enabled && !nested)
-@@ -210,10 +199,15 @@ monitor_reactors_write(struct file *file, const char =
-__user *user_buf,
- 	struct rv_reactor *reactor;
- 	struct seq_file *seq_f;
- 	int retval =3D -EINVAL;
--	bool enable;
- 	char *ptr;
- 	int len;
-=20
-+	/*
-+	 * See monitor_reactors_open()
-+	 */
-+	seq_f =3D file->private_data;
-+	mon =3D seq_f->private;
-+
- 	if (count < 1 || count > MAX_RV_REACTOR_NAME_SIZE + 1)
- 		return -EINVAL;
-=20
-@@ -226,14 +220,10 @@ monitor_reactors_write(struct file *file, const char =
-__user *user_buf,
- 	ptr =3D strim(buff);
-=20
- 	len =3D strlen(ptr);
--	if (!len)
-+	if (!len) {
-+		monitor_swap_reactors(mon, NULL, false);
- 		return count;
--
--	/*
--	 * See monitor_reactors_open()
--	 */
--	seq_f =3D file->private_data;
--	mon =3D seq_f->private;
-+	}
-=20
- 	mutex_lock(&rv_interface_lock);
-=20
-@@ -243,12 +233,7 @@ monitor_reactors_write(struct file *file, const char _=
-_user *user_buf,
- 		if (strcmp(ptr, reactor->name) !=3D 0)
- 			continue;
-=20
--		if (strcmp(reactor->name, "nop"))
--			enable =3D false;
--		else
--			enable =3D true;
--
--		monitor_swap_reactors(mon, reactor, enable);
-+		monitor_swap_reactors(mon, reactor, true);
-=20
- 		retval =3D count;
- 		break;
-@@ -435,32 +420,12 @@ int reactor_populate_monitor(struct rv_monitor *mon)
- 	if (!tmp)
- 		return -ENOMEM;
-=20
--	/*
--	 * Configure as the rv_nop reactor.
--	 */
--	mon->reactor =3D get_reactor_rdef_by_name("nop");
--	mon->reacting =3D false;
--
- 	return 0;
- }
-=20
--/*
-- * Nop reactor register
-- */
--__printf(1, 2) static void rv_nop_reaction(const char *msg, ...)
--{
--}
--
--static struct rv_reactor rv_nop =3D {
--	.name =3D "nop",
--	.description =3D "no-operation reactor: do nothing.",
--	.react =3D rv_nop_reaction
--};
--
- int init_rv_reactors(struct dentry *root_dir)
- {
- 	struct dentry *available, *reacting;
--	int retval;
-=20
- 	available =3D rv_create_file("available_reactors", RV_MODE_READ, root_dir=
-, NULL,
- 				   &available_reactors_ops);
-@@ -471,16 +436,10 @@ int init_rv_reactors(struct dentry *root_dir)
- 	if (!reacting)
- 		goto rm_available;
-=20
--	retval =3D __rv_register_reactor(&rv_nop);
--	if (retval)
--		goto rm_reacting;
--
- 	turn_reacting_on();
-=20
- 	return 0;
-=20
--rm_reacting:
--	rv_remove(reacting);
- rm_available:
- 	rv_remove(available);
- out_err:
+output:
+
+https://lore.kernel.org/linux-pci/7c289bba-3133-0989-6333-41fc41fe3504@linu=
+x.intel.com/
+
+
 --=20
-2.39.5
+ i.
 
+--8323328-483332610-1753093112=:945--
