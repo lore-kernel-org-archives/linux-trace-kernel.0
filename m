@@ -1,35 +1,35 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 196C110F2;
-	Tue, 22 Jul 2025 22:38:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 700C627FB30;
+	Tue, 22 Jul 2025 22:41:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753223900; cv=none; b=aBn6PYjW2U2W+i7tn0MaW+dymc046bw2IRxbbUg123VcXPeOMWj1/u4ie+SWT/Msw7VLZpeEwL8GzCsO0H9RdwvhbaZsLM6ZFZ+/UkdzjJqwCd+z6P3CWrOs1O0Ztj2fc9I/SnBD3U9vILeKqI+dtOuglqabRWEx94DSpKyPOLA=
+	t=1753224064; cv=none; b=ohiMu9kuBwyRuxVZ/teYIoVAv11BKaPH4qGwfhGpKQapV9xvs1XKhz8OcKXW2pH0ueyESIpcqVZUdu0oHvGRVM4qxQcghO9uLi1Vw1vOwd8D1LwA+HYXY4CrTVDUO5jU4op8SW732vtxZa4pvvR1QSYYSoj3AAkC+OfHR7hGgCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753223900; c=relaxed/simple;
-	bh=O4lTGhJPt0Y+JJtY/1ypIqNNSxQvZLpaqQoEtc6MRhA=;
+	s=arc-20240116; t=1753224064; c=relaxed/simple;
+	bh=Kl0KaWnOkDC2kpqnsSiUcTzjOm/zArpv4TYVzuI4zkU=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SD40syBP4MHQaZtJ55oiwGhwdlNhpLvw6AfGYbXR2EaFrsD32xOuuh/luLRoVTJfCuphVTJ0QXGxkoUaLYo187gjkHhqOWzgXhL5FyRiDz4Kf6fYaEXV5hp8vmHdWQOcK6Tgto0SbyZ2avMqYhguIlGQn3C2vPAccfzCZAIGT7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
+	 MIME-Version:Content-Type; b=U3wxNjdElyuFrmRFUbtMpy33ZurtjBL0UKTdNg5g7YXwIXSQ25Jb1oJBfXp8dhO/WDhfleP/6qRQbu3b+WEWmxphv0GGDiGIUn0Ed73KINsMoDznYEosOcEy++gz63CxRJvAMhQmwOTWQQ0BRDE/RX6iviaw6hxZ5qoJJfd/wHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf03.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id DC58C59353;
-	Tue, 22 Jul 2025 22:38:15 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf03.hostedemail.com (Postfix) with ESMTPA id 34AF46000C;
-	Tue, 22 Jul 2025 22:38:14 +0000 (UTC)
-Date: Tue, 22 Jul 2025 18:38:13 -0400
+Received: from omf20.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay04.hostedemail.com (Postfix) with ESMTP id 40B4C1A0509;
+	Tue, 22 Jul 2025 22:41:01 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf20.hostedemail.com (Postfix) with ESMTPA id 9432F2002E;
+	Tue, 22 Jul 2025 22:40:59 +0000 (UTC)
+Date: Tue, 22 Jul 2025 18:40:58 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/7] tracing: probe: Allocate
- traceprobe_parse_context from heap
-Message-ID: <20250722183813.74dd1386@gandalf.local.home>
-In-Reply-To: <175322170601.44400.16839124706616607558.stgit@devnote2>
+Subject: Re: [PATCH v3 3/7] tracing: fprobe-event: Allocate string buffers
+ from heap
+Message-ID: <20250722184058.2f4e575d@gandalf.local.home>
+In-Reply-To: <175322171522.44400.1130912986696109830.stgit@devnote2>
 References: <175322168606.44400.9155291012158349647.stgit@devnote2>
-	<175322170601.44400.16839124706616607558.stgit@devnote2>
+	<175322171522.44400.1130912986696109830.stgit@devnote2>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -39,25 +39,21 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: ahe595rfxbyrusj76d6eqfdxag4nf7cn
-X-Rspamd-Server: rspamout01
-X-Rspamd-Queue-Id: 34AF46000C
+X-Rspamd-Queue-Id: 9432F2002E
+X-Stat-Signature: wx8yh7z3ayur7m1moknhotoffx5xenip
+X-Rspamd-Server: rspamout06
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+YE4SSP3kdxcYZkd1J/kCI3qbFgQxVdxQ=
-X-HE-Tag: 1753223894-968788
-X-HE-Meta: U2FsdGVkX1/+IKfaPGRmCn402R3POCQxNFAgY7fI0DncJyo/8AXG3pNvxqIudi2XcUD/k4Pct5/agBODstVyfou682GQDb5w4eaHXGYYq4/LQB7H3ajdsqTfz7mbKdkzrKlk0D6KN8i17rKqoCMg1cZQg6D6u/kVYDVlQsNzCQbjPFr9tIV61yyfmp1Efn61kTif/lnJll1N8l3v/BOh08YJyXnDRMlnC2GtYL1yqH9ha7en0gFg/CRyMAbuv0g08c3h/NQ51mv3OZrfns2+ePVhBS7SVCaFEzNRdI1lwAhKB0l18q2NyTOmDP18QOBSfaa5HCbOCwkDGY5Jw8eMPxu0/Qfr9lOOzs5ofvOlFFnZOuh5Wk6JzRZV5IabUm4IROMBTU/otKzZoQfWKWWrBCM007GRid5xmVzSm34fHOk=
+X-Session-ID: U2FsdGVkX18JdkWLVOK+2yoQuTsG9sZv0qd2q3R9nzM=
+X-HE-Tag: 1753224059-936280
+X-HE-Meta: U2FsdGVkX1/ucKUXeUv1exd7+cNJ9lC59gTb0E6kJjV9HHlxc/fAv4LZ0vgihrOCiVCG2wzO1aTzsltJDqOCHil6OTEh4INfzQgFebixmrvqiGv+u16VU6XIXBCGZUn+L45U5RPBMons5PWOjJpVGOl+bG3VMpaoeFcDqhSBqp1qp4XFiEoYG6NzOVZic7HnhBiaNuoQm0ZmhTh7SbdBip5xdaZ01G/NuZSQQzlb3k5xZU1O4X6fpKq6tcaKqfDtZLGkkEfhHr2KqEsOi7lfJ74jLQZASTOcq70aJpX7Xj2hnQoFmwPimiWWnWcI7gkzyBtgWry/7/nVt0K4ZyIhbJ8BZksdT4gIP1B1JHpj2GA53hviyb10GEHv4fTneuaGn+bWVM6VFrnncqDRA0VY0dNzF+Vt9rUV0/14KhRzsHE=
 
-On Wed, 23 Jul 2025 07:01:46 +0900
+On Wed, 23 Jul 2025 07:01:55 +0900
 "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
 > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > 
-> Instead of allocating traceprobe_parse_context on stack, allocate it
-> dynamically from heap (slab).
-> 
-> This change is likely intended to prevent potential stack overflow
-> issues, which can be a concern in the kernel environment where stack
-> space is limited.
+> Allocate temporary string buffers for fprobe-event from heap
+> instead of stack. This fixes the stack frame exceed limit error.
 > 
 > Reported-by: kernel test robot <lkp@intel.com>
 > Closes: https://lore.kernel.org/oe-kbuild-all/202506240416.nZIhDXoO-lkp@intel.com/
