@@ -1,198 +1,258 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from eggs.gnu.org (eggs.gnu.org [209.51.188.92])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B72B284B29;
-	Tue, 22 Jul 2025 18:52:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47C5D21516E;
+	Tue, 22 Jul 2025 18:57:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.51.188.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753210363; cv=none; b=ElulJ1azfoQu6+sFLPPs1nQfQGX6p3pRZgSZnW26F5lDxB3Mv1CVseQnUTayH9M0/b3ENOfJvMjXMdACWmlZjG8htndeZ8tIZdrHZQc/j7gFNTE/s7sEsYNUzZo6XrIKCxZQif09whqLRhN1PpPxC3v2WJGvZ0LbbHWedZ0y/PA=
+	t=1753210630; cv=none; b=X78Aze0SaUQkEWt1k5TViQ7DeiRqGbMtWqgRUXDl2G0xMphuwF+4BZGGujaTlrJO0HjQi0/aVTtNbnEe8yaOGb+DEYJVhAQWsbTlm2pDPe33ugXQYO72Y32X1cZzWKlSjGUaXefj4C6K4Wo8x/KaJqQhr2Hmi4QcB8ylQmENQD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753210363; c=relaxed/simple;
-	bh=iYBw4xhCGRCvfAF5MhNNiyX1HVH5Ue5u6Xd0TVVd7Yc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=O/hwRK28pe0sqrWzI7tOkTpNYDV1o6Mu2zyQW/EYTTqqreezV8xMlN+Q/2uexnGDWe1mBDYxv94tAcm7Ex/j1XYcI7vrNUurbz4AmmcniEMcwB9OMEqVbpvgENjngXbvx2r0Sqku9lwkPYoyVtMXIHKwsYlkBXcK57wcPFACjOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=chi3x1FG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1753210630; c=relaxed/simple;
+	bh=y06okttLR5j4WdfvEBAadxdMbLH1n0jASr+C+48ORkc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=njlugQKDTSlfleaP1O2qtoW+m2T9nd3cONbaRGF95eXBwJeoIdGZDVkPf5ARPESPasNExHLdWTvPZff3XqwOFsx/vHcwtH04m/gH3/OrY3LtdY3i4nbIXba61Yg/07NZ/n5R18zgayYDlj6vNARvgdMRhsmXSXoaEO2YGeiwYzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gnu.org; spf=pass smtp.mailfrom=gnu.org; dkim=pass (2048-bit key) header.d=gnu.org header.i=@gnu.org header.b=VmxvRIhG; arc=none smtp.client-ip=209.51.188.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gnu.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gnu.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="chi3x1FG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B2FBC4CEF6;
-	Tue, 22 Jul 2025 18:52:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753210363;
-	bh=iYBw4xhCGRCvfAF5MhNNiyX1HVH5Ue5u6Xd0TVVd7Yc=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=chi3x1FGBfA1OeZG+zcjT9/+5HlFk5TvmI3otGjcymBEksXGDCC5xfWQdmbCaEtW/
-	 oYECfWACgWyorQOn5mJy5fpkuCqjvLgWVr6AEx4y5vrbivaA7mCTkoYrPJe5wmmOyv
-	 Vm7e2jkRa7UgyLyIwUIdnkW7W1C0fB0XQ/0E5ZPvwIfRRj6WEQzQUhXD7NIUW3FLZT
-	 Sil5rE4eWIfxX+VYEfxaU32Pfy0jueE4hUlqteQLlnU4xfjGZO+n35kFhwz6/JjcR8
-	 4UMFeFUQTovVYHel4MjqYpd9W7svy2SrebS68ULTt8mYxLxF86xqH30SMOPDA1hFb4
-	 C7UCPPOQIq+Og==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Tue, 22 Jul 2025 14:52:28 -0400
-Subject: [PATCH 2/2] vfs: fix delegated timestamp handling in
- setattr_copy()
+	dkim=pass (2048-bit key) header.d=gnu.org header.i=@gnu.org header.b="VmxvRIhG"
+Received: from fencepost.gnu.org ([2001:470:142:3::e])
+	by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.90_1)
+	(envelope-from <jemarch@gnu.org>)
+	id 1ueIAa-00062W-7M; Tue, 22 Jul 2025 14:56:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gnu.org;
+	s=fencepost-gnu-org; h=MIME-Version:Date:References:In-Reply-To:Subject:To:
+	From; bh=aAAwLyaVcwXH/duwwsN0rNSdcbswQHnMOC5LpUD0RKM=; b=VmxvRIhG8+X4kqRfyqyl
+	M0c1M/ZEVKcp9xG5P/2iRn3jj+jSni3gsR/NFukWDLdcCDzXUQKJwQtqMrr59Y0gzgYGKRORcix8n
+	eWxJVvm8OLSRfIXLZDEnLl+VixK7ltblZM7+w0d98FXWgvE6IXwGd1h+MNmYhHMswLaACPSsKVOj9
+	0veTPm2ZSLOJ0q+vy/B1nrpQuWhb143Dbn7fwmuwXyGfBDFo7waAK2otW/hsQjE0hNAbATe0ja0iu
+	IOSUJusnFwvMITP6ExBjB6encV0SKpH31DWjawkuRlLyIQ3BZqX15VwExxUGqA+C58u8g8O+J8HgZ
+	Xs1xpVdZXhKpng==;
+From: "Jose E. Marchesi" <jemarch@gnu.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+  linux-kernel@vger.kernel.org,  linux-trace-kernel@vger.kernel.org,
+  bpf@vger.kernel.org,  x86@kernel.org,  Masami Hiramatsu
+ <mhiramat@kernel.org>,  Josh Poimboeuf <jpoimboe@kernel.org>,  Peter
+ Zijlstra <peterz@infradead.org>,  Ingo Molnar <mingo@kernel.org>,  Jiri
+ Olsa <jolsa@kernel.org>,  Namhyung Kim <namhyung@kernel.org>,  Thomas
+ Gleixner <tglx@linutronix.de>,  Andrii Nakryiko <andrii@kernel.org>,  Indu
+ Bhagat <indu.bhagat@oracle.com>,  Beau Belgrave
+ <beaub@linux.microsoft.com>,  Jens Remus <jremus@linux.ibm.com>,  Linus
+ Torvalds <torvalds@linux-foundation.org>,  Andrew Morton
+ <akpm@linux-foundation.org>,  Jens Axboe <axboe@kernel.dk>,  Florian
+ Weimer <fweimer@redhat.com>,  Sam James <sam@gentoo.org>,  Brian Robbins
+ <brianrob@microsoft.com>,  Elena Zannoni <elena.zannoni@oracle.com>
+Subject: Re: [RFC] New codectl(2) system call for sframe registration
+In-Reply-To: <20250722122538.6ce25ca2@batman.local.home>
+References: <2fa31347-3021-4604-bec3-e5a2d57b77b5@efficios.com>
+	<20250721145343.5d9b0f80@gandalf.local.home>
+	<e7926bca-318b-40a0-a586-83516302e8c1@efficios.com>
+	<20250721171559.53ea892f@gandalf.local.home>
+	<1c00790c-66c4-4bce-bd5f-7c67a3a121be@efficios.com>
+	<20250722122538.6ce25ca2@batman.local.home>
+Date: Tue, 22 Jul 2025 20:56:47 +0200
+Message-ID: <87jz40hx5c.fsf@gnu.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250722-nfsd-testing-v1-2-31321c7fc97f@kernel.org>
-References: <20250722-nfsd-testing-v1-0-31321c7fc97f@kernel.org>
-In-Reply-To: <20250722-nfsd-testing-v1-0-31321c7fc97f@kernel.org>
-To: Alexander Viro <viro@zeniv.linux.org.uk>, 
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
- Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
- Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, 
- Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
- Tom Talpey <tom@talpey.com>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-trace-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, 
- Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4536; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=iYBw4xhCGRCvfAF5MhNNiyX1HVH5Ue5u6Xd0TVVd7Yc=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBof933jwSVWVC4Wssc+UXoCLXpXXdOe6OBGByDN
- FfNnqfKaKKJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaH/d9wAKCRAADmhBGVaC
- FaJqD/9VKfJEvpwwpjcl+kilKWRcwygCTf3opH97hbOIq0FSw/ENAU394+huxg23jAZr4dfY5LE
- EmWcdMcxZC4lpnL5YlRyXDQoVjxVX6I5x3MJWHqBx80X27QWeKjrRdEMPWe1d8V5mxLpeRvBdJj
- wwijWMD+W+CmQ2+6wa/r3i+oVWy8lJ03QGarpEfGG9Y8Hn7SuyurBnS5AA2Wiz2XRcqJndCncDa
- +v82IsVJa6qB2jK52HQ46GBzalRL3NjkVI532lHqz6vTFsWVupRNJ6tzkKYKGHmGP9cAF/PqaKQ
- lH4kxNYYqWNY8lKwvgzA+2C5a1g4Y79EejnQLJednWJqI2Vz6VDbq7ARVH1qEYMXweVCLRsX2w3
- ZOhhI740oirzbGxlQTSvwPy/JxlOc6deByEsd1e0owEQ7WGmMNxnbwgNHZgbK7ijhdRK7DriP69
- FNG9QsZXoJ79QJkgPKJOb2A3wmqo3GYq6qF/X1T3zF5l90q6k8OgroFC9O9IC3IVTznMOa4cvfd
- ksrrujp8QXosxmUWT0VK2uRR49Xnnn9B2SEYwqQ2WS5eUAm+nJMl9RB6jnvkitIDhnKcZx4u+oq
- YBXBK9f1fIzV36vycwqws3aTMVZIQvGCafsgTYIjzUn6yyyxgWXoY3HkbOa7e6HsjM7qFGI+I+1
- Dny5qYhaSRi9Skw==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
+Content-Type: text/plain
 
-There are a couple of problems with delegated timestamp updates via
-setattr:
 
-1/ the ia_ctime is always clobbered by notify_change(), so setting the
-ia_ctime to the same value as the ia_mtime in nfsd4_decode_fattr4()
-doesn't work.
+> On Tue, 22 Jul 2025 09:51:22 -0400
+> Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
+>
+>> > Here's a hypothetical, what if for some reason (say having the sframe
+>> > sections outside of the elf file) that the linker shares that?  
+>> 
+>> So your hypothetical scenario is having sframe provided as a separate
+>> file. This sframe file (or part of it) would still describe how to
+>> unwind a given elf file text range. So I would argue that this would
+>
+> No. It should describe how to get access to an sframe section for some
+> text that has already been loaded in memory.
+>
+> I'm looking for a mapping between already loaded text memory to how to
+> unwind it that will be in an sframe format somewhere on disk.
+>
+>> still fit into the model of CODE_REGISTER_ELF, it's just that the
+>> address range from sframe_start to sframe_end would be mapped from
+>> a different file. This is entirely up to the dynamic loader and should
+>> not impact the kernel ABI.
+>> 
+>> AFAIK the a.out binary support was deprecated in Linux kernel v5.1. So
+>> being elf specific is not an issue.
+>
+> Yes, but we are not registering ELF. We are registering how to unwind
+> something with sframes. If it's not sframes we are registering, what is
+> it?
+>
+>> 
+>> And if for some reason we end up inventing a new model to hand over the
+>> sframe information in the future, for instance if we choose not to map
+>> the sframe information in userspace and hand over a sframe-file pathname
+>> and offset instead, we'll just extend the code_opt enum with a new
+>> label.
+>
+> This is not a new model. We could likely do it today without much
+> effort. We are handing over sframe data regardless if it's in an ELF
+> file or not.
+>
+> The systemcall is to let the dynamic linker know where the kernel can
+> find the sframes for newly loaded text.
+>
+>> 
+>> > 
+>> > For instance, if the sframe sections are downloaded separately as a
+>> > separate package for a given executable (to make it not mandatory for an
+>> > install), the linker could be smart enough to see that they exist in some
+>> > special location and then pass that to the kernel. In other words, this is
+>> > option is specific for sframe and not ELF. I rather call it by that.  
+>> 
+>> As I explained above, if the dynamic loader populates the sframe section
+>> in userspace memory, this fits within the CODE_REGISTER_ELF ABI. If we
+>
+> But this isn't about ELF! It's about sframes! Why not name it that?
+>
+>> eventually choose not to map the sframe section into userspace memory
+>> (even though this is not an envisioned use-case at the moment), we can
+>> just extend enum code_opt with a new label.
+>
+> Why call this at all if you don't plan on mapping sframes?
+>
+>> 
+>> >   
+>> >>
+>> >> If there are other file types in the future that happen to contain an
+>> >> sframe section (but are not ELF), then we can simply add a new label to
+>> >> enum code_opt.
+>> >>  
+>> >>>      
+>> >>>>
+>> >>>> sys_codectl(2)
+>> >>>> =================
+>> >>>>
+>> >>>> * arg0: unsigned int @option:
+>> >>>>
+>> >>>> /* Additional labels can be added to enum code_opt, for extensibility. */
+>> >>>>
+>> >>>> enum code_opt {
+>> >>>>        CODE_REGISTER_ELF,  
+>> >>>
+>> >>> Perhaps the above should be: CODE_REGISTER_SFRAME,
+>> >>>
+>> >>> as currently SFrame is read only via files.  
+>> >>
+>> >> As I pointed out above, on GNU/Linux, sframe is always an allocated,loaded
+>> >> ELF section. AFAIU, your comment implies that we'd want to support other scenarios
+>> >> where the sframe is in files outside of elf binary sframe sections. Can you
+>> >> expand on the use-case you have for this, or is it just for future-proofing ?  
+>> > 
+>> > Heh, I just did above (before reading this). But yeah, it could be. As I
+>> > mentioned above, this is not about ELF files. Sframes just happen to be in
+>> > an ELF file. CODE_REGISTER_ELF sounds like this is for doing special
+>> > actions to an ELF file, when in reality it is doing special actions to tell
+>> > the kernel this is an sframe table. It just happens that sframes are in
+>> > ELF. Let's call it for what it is used for.  
+>> 
+>> I see sframe as one "aspect" of an ELF file. Sure, we could do one
+>> system call for every aspect of an ELF file that we want to register,
+>> but that would require many round trips from userspace to the kernel
+>> every time a library is loaded. In my opinion it makes sense to combine
+>> all aspects of an elf file that we want the kernel to know about into
+>> one registration system call. In that sense, we're not registering just
+>> sframe, but the various aspects of an ELF file, which include sframe.
+>
+> So you are making this a generic ELF function?  What other functions do
+> you plan to do with this system call?
+>
+>> 
+>> By the way, the sframe section is optional as well. If we allow
+>> sframe_start and sframe_end to be NULL, this would let libc register
+>> an sframe-less ELF file with its pathname, build-id, and debug info
+>> to the kernel. This would be immediately useful on its own for
+>> distributions that have frame pointers enabled even without sframe
+>> section.
+>
+> The above is called mission creep. Looks to me that you are using this
+> as a way to have LTTng get easier access to build ids and such. We can
+> add *that* later if needed, as a separate option. This has nothing to
+> do with the current requirements.
 
-2/ while it does test the ctime's validity vs. the existing ctime and
-current_time(), the same is not done for the atime or mtime. The spec
-requires this.
+I also think that involving ELF in the interface at this point without
+having a good reason for doing so is probably not a good idea.  Linked
+and loaded SFrame data is pretty much self-contained and can be used as
+such, but only if it gets loaded along with the text segments it referts
+to.  See below...
 
-Add a new setattr_copy_delegts() function that handles updating the
-timestamps whenever ATTR_DELEG is set. For both atime and mtime,
-validate and clamp the value to current_time(), and then set it. If the
-mtime gets updated, also update the ctime.
+>
+>> >>>
+>> >>> And call it "struct code_sframe_info"
+>> >>>      
+>> >>>>        __u64 text_start;
+>> >>>>        __u64 text_end;  
+>> >>>      
+>> >>>>        __u64 sframe_start;
+>> >>>>        __u64 sframe_end;  
+>> >>>
+>> >>> What is the above "sframe" for?  
+>> > 
+>> > Still wondering what the above is for.  
+>> 
+>> Well we have an sframe section which is mapped into userspace memory
+>> from sframe_start to sframe_end, which contains the unwind information
+>> that covers the code from text_start to text_end.
+>
+> Actually, the sframe section shouldn't be mapped into user space
+> memory. The kernel will be doing that, not the linker. I would say that
+> the system call can give a hint of where it would like it mapped, but
+> it should allow the kernel to decide where to map it as the user space
+> code doesn't care where it gets mapped.
 
-Fixes: 7f2c86cba3c5 ("fs: handle delegated timestamps in setattr_copy_mgtime")
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- fs/attr.c         | 52 ++++++++++++++++++++++++++++++++++++++--------------
- fs/nfsd/nfs4xdr.c |  4 +---
- 2 files changed, 39 insertions(+), 17 deletions(-)
+The SFrame data actually lives in a loadable segment in the ELF file
+(and actually not alone, it has flatmates).  This is important. The FDEs
+in the SFrame section refer to the start of the functions they apply to.
+These references take the form of an offset between the VM address where
+the FDE itself gets loaded and the VM address of the beginning of the
+function, which are also valid as file offsets, since all segments get
+loaded together always keeping the same order.  That's how dynamic
+relocs are avoided.
 
-diff --git a/fs/attr.c b/fs/attr.c
-index 9caf63d20d03e86c535e9c8c91d49c2a34d34b7a..3e636943d26a36aeeed0ff8b428b6dd3e63f8dde 100644
---- a/fs/attr.c
-+++ b/fs/attr.c
-@@ -287,14 +287,7 @@ static void setattr_copy_mgtime(struct inode *inode, const struct iattr *attr)
- 	struct timespec64 now;
- 
- 	if (ia_valid & ATTR_CTIME) {
--		/*
--		 * In the case of an update for a write delegation, we must respect
--		 * the value in ia_ctime and not use the current time.
--		 */
--		if (ia_valid & ATTR_DELEG)
--			now = inode_set_ctime_deleg(inode, attr->ia_ctime);
--		else
--			now = inode_set_ctime_current(inode);
-+		now = inode_set_ctime_current(inode);
- 	} else {
- 		/* If ATTR_CTIME isn't set, then ATTR_MTIME shouldn't be either. */
- 		WARN_ON_ONCE(ia_valid & ATTR_MTIME);
-@@ -312,6 +305,39 @@ static void setattr_copy_mgtime(struct inode *inode, const struct iattr *attr)
- 		inode_set_mtime_to_ts(inode, now);
- }
- 
-+/*
-+ * Skip update if new value is older than existing time. Clamp
-+ * to current_time() if it's in the future.
-+ */
-+static void setattr_copy_delegts(struct inode *inode, const struct iattr *attr)
-+{
-+	struct timespec64 now = current_time(inode);
-+	unsigned int ia_valid = attr->ia_valid;
-+
-+	if (ia_valid & ATTR_MTIME) {
-+		struct timespec64 cur = inode_get_mtime(inode);
-+
-+		if (timespec64_compare(&attr->ia_mtime, &cur) > 0) {
-+			if (timespec64_compare(&attr->ia_mtime, &now) > 0)
-+				inode_set_mtime_to_ts(inode, now);
-+			else
-+				inode_set_mtime_to_ts(inode, attr->ia_mtime);
-+			inode_set_ctime_deleg(inode, attr->ia_mtime);
-+		}
-+	}
-+
-+	if (ia_valid & ATTR_ATIME) {
-+		struct timespec64 cur = inode_get_atime(inode);
-+
-+		if (timespec64_compare(&attr->ia_atime, &cur) > 0) {
-+			if (timespec64_compare(&attr->ia_atime, &now) > 0)
-+				inode_set_atime_to_ts(inode, now);
-+			else
-+				inode_set_atime_to_ts(inode, attr->ia_atime);
-+		}
-+	}
-+}
-+
- /**
-  * setattr_copy - copy simple metadata updates into the generic inode
-  * @idmap:	idmap of the mount the inode was found from
-@@ -352,6 +378,8 @@ void setattr_copy(struct mnt_idmap *idmap, struct inode *inode,
- 		inode->i_mode = mode;
- 	}
- 
-+	if (ia_valid & ATTR_DELEG)
-+		return setattr_copy_delegts(inode, attr);
- 	if (is_mgtime(inode))
- 		return setattr_copy_mgtime(inode, attr);
- 
-@@ -359,12 +387,8 @@ void setattr_copy(struct mnt_idmap *idmap, struct inode *inode,
- 		inode_set_atime_to_ts(inode, attr->ia_atime);
- 	if (ia_valid & ATTR_MTIME)
- 		inode_set_mtime_to_ts(inode, attr->ia_mtime);
--	if (ia_valid & ATTR_CTIME) {
--		if (ia_valid & ATTR_DELEG)
--			inode_set_ctime_deleg(inode, attr->ia_ctime);
--		else
--			inode_set_ctime_to_ts(inode, attr->ia_ctime);
--	}
-+	if (ia_valid & ATTR_CTIME)
-+		inode_set_ctime_to_ts(inode, attr->ia_ctime);
- }
- EXPORT_SYMBOL(setattr_copy);
- 
-diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index 8b68f74a8cf08c6aa1305a2a3093467656085e4a..e6899a3502332d686138abee2284c87fc7fbc0ae 100644
---- a/fs/nfsd/nfs4xdr.c
-+++ b/fs/nfsd/nfs4xdr.c
-@@ -537,9 +537,7 @@ nfsd4_decode_fattr4(struct nfsd4_compoundargs *argp, u32 *bmval, u32 bmlen,
- 			return nfserr_bad_xdr;
- 		iattr->ia_mtime.tv_sec = modify.seconds;
- 		iattr->ia_mtime.tv_nsec = modify.nseconds;
--		iattr->ia_ctime.tv_sec = modify.seconds;
--		iattr->ia_ctime.tv_nsec = modify.seconds;
--		iattr->ia_valid |= ATTR_CTIME | ATTR_MTIME | ATTR_MTIME_SET | ATTR_DELEG;
-+		iattr->ia_valid |= ATTR_MTIME | ATTR_MTIME_SET | ATTR_DELEG;
- 	}
- 
- 	/* request sanity: did attrlist4 contain the expected number of words? */
+This makes SFrame pretty self-contained, provided it gets loaded/mapped
+along with the other loadable segments in the ELF file it comes from.
+The loader will assure that.
 
--- 
-2.50.1
+I think glibc could "register" loaded SFrame data by just pointing the
+kernel to the VM address where it got loaded, "you got some SFrame
+there".  Starting from that address it is then possible to find the
+referred code locations just by applying the offsets, without needing
+any additional information nor ELF foobar...
 
+Or thats how I understand it.  Indu will undoubtly correct me if I am
+wrong 8-)
+
+> In the future, if we wants to compress the sframe section, it will not
+> even be a loadable ELF section. But the system call can tell the
+> kernel: "there's a sframe compressed section at this offset/size in
+> this file" for this text address range and then the kernel will do the
+> rest.
+
+I think supporting compressed SFrame will probably require to do some
+sort of relocation of the offsets in the uncompressed data, depending on
+where the uncompressed data will get eventually loaded.
+
+>> 
+>> Am I unknowingly adding some kind of redundancy here ?
+>> 
+>
+> Maybe. This systemcall was to add unwinding information for the kernel.
+> It looks like you are having it be much more than that. I'm not against
+> that, but that should only be for extensions, and currently, this is
+> supposed to only make sframes work.
+>
+> -- Steve
