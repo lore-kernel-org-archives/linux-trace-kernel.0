@@ -1,103 +1,77 @@
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A979228153A;
-	Tue, 22 Jul 2025 23:00:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34DB628B7ED;
+	Tue, 22 Jul 2025 23:28:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753225225; cv=none; b=gbnxl62YrERIXYKL3zVl3YN5wYsGdH6faqZuhROxpJwfES997cSzNjnAKbWZKcJ/rWiPI8nDjRbKCADpmZFdWERuEkG3BSlpLYIQOyfAPqCaiz8nAnq2Uq2+SOIfTbz+0BeB17uT7OMlaDSmUuWGfJQJEunVxaX1Zkn9YIe/BQk=
+	t=1753226923; cv=none; b=k1eNfIo9l6CnMozznoq7eYzS8Ll5R7pW0dlP60amacu13l9KsPMHR0fdBwnCdcDI0ce4LP9mPT8eyxPRB3eHzNeoHxY545eQdAH+c91/HyYRqC86NGbmXeU9XYz+RG84eDgiclryswBbfgFGkf/eDVfQlz8EJnvm+9vEAfRQ4FA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753225225; c=relaxed/simple;
-	bh=CRFhfV141swPD8l+LLZFt1GQAYLI8Qvph8qAL0gbGBM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=e+2n400P6oKsMSOB6kQgvxl++9HISHHkfypevAJOsnkUSl8ZKnYj2E665f/bxQkpWTaQX5XDXc53FAj9mNLTNe/lZxteoU1zo4GEh73Ruaq57h+RRqp0Z3wVH9Zs3IPbRCAr6nriYGAQd/ZMI6FZRZyT12TEw45wsmH+qzIfxis=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf08.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id AA82C58AC7;
-	Tue, 22 Jul 2025 23:00:19 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id 64B6520025;
-	Tue, 22 Jul 2025 23:00:17 +0000 (UTC)
-Date: Tue, 22 Jul 2025 19:00:16 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Ingo Molnar <mingo@kernel.org>, Peter
- Zijlstra <peterz@infradead.org>, Vincent Guittot
- <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>
-Subject: Re: [PATCH] tracing: sched: Hide numa balancing trace events
-Message-ID: <20250722190016.7c462d56@gandalf.local.home>
-In-Reply-To: <20250722104820.6c629734@batman.local.home>
-References: <20250722104820.6c629734@batman.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1753226923; c=relaxed/simple;
+	bh=NfWlAbo8emHsOzVdyWi3yZFqexjd4Z9Fxp5x8vVpAuM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hmfUyFkhf8a+XQ2eTC1aoiGOiJ51lkilujkBbJ/qZR539A+WjNoBMOVj2z/W4PuWhR6HU6kFJTrFHVaFZcnj4kZOaJYxIRdAihqyhtO4HfBlpoQUlDuvWYoRuNA+8Gbeognr89OQKXVtw6YVA3qLRRbg5h0ZsDviZjhYhaGiDCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZqaMGFLw; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZqaMGFLw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5AA9C4CEEB;
+	Tue, 22 Jul 2025 23:28:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753226922;
+	bh=NfWlAbo8emHsOzVdyWi3yZFqexjd4Z9Fxp5x8vVpAuM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZqaMGFLw1bXSMKkvYCa20hzuYvhFicL5Loq5D6fdDI/yC2XNXbOREA55DpucN3eVG
+	 f0raIK7PUdJfif+3n2UlEDrzw97PvHkwSmQQQuH8eLeRq/nE2xWG5qou5wa2hYJxHp
+	 1Y4grPXgP0rFzZa9VzT4IBTSSAaxouwtwomfn2QDtFcskGGYsCgGpJs2D7+XTXvLAx
+	 ucyCmfZjXFiollw91AT0kqwatlmOiV2uj2DXrpaIRS/k9OeS8HHNE2rKGKZkRY7vWg
+	 BjvU2GfzqKlc1mPdAxFsTIED6m7+uhXwajeAPZNsuua0mnthVwqQ5WWgY0FuGcRN0K
+	 lSmetWC0Dk6ug==
+Date: Tue, 22 Jul 2025 16:28:42 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Steven Rostedt <rostedt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-xfs@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Carlos Maiolino <cem@kernel.org>, Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH 0/4] xfs: more unused events from linux-next
+Message-ID: <20250722232842.GV2672049@frogsfrogsfrogs>
+References: <20250722201907.886429445@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: zt6hqkzrthfmtqkjg7fydzzmpgc5n9ta
-X-Rspamd-Server: rspamout01
-X-Rspamd-Queue-Id: 64B6520025
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19WiFuqgyxBH6LA4hu1ZcV8o+KAAXzu0MU=
-X-HE-Tag: 1753225217-5500
-X-HE-Meta: U2FsdGVkX18s6pmuHFRVWSSP+I+IAIBmqBIFxzZ7ayy/uOXZi+SvTZnWwmi9kKP9ikqVWO9wX/VXbKS6DNpuwu5iTxjbeM4waKKbbH+3zyhYNHNN72ADzfe/WVKXJ+D7aaiLxjDKg9OJRvsi6Qcz6Sd86F6BHvjOD3HPXwXxwdu6EVniFzvH+4HtpPTUjSsLE6jg17Ef4Jhm3sJ8Ee+mwqxOJLHqmPpo2gfy1dKBx3tuLCPg/i91tem0n59uOda34crVgosOhQ9+O+7RxVuhI9PjE8Gw+sigoCIafx70N29hOWi7kTlAYxE9g/oI1SRqXL4aMRDrnXvx/lJnkTVMlBpLQPQUezWZFZu+9BErahGoEFGp8hkwGZM2sjHG5QlaKWBZEGtyUtE2GZZ3zZ99nA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250722201907.886429445@kernel.org>
 
-On Tue, 22 Jul 2025 10:48:20 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> From: Steven Rostedt <rostedt@goodmis.org>
+On Tue, Jul 22, 2025 at 04:19:07PM -0400, Steven Rostedt wrote:
 > 
-> The trace events sched_move_numa, sched_swap_numa and sched_stick_numa are
-> only used when CONFIG_NUMA_BALANCING is enabled. Put an #ifdef guard
-> around the definitions of these trace events so they are not defined when
-> numa balancing is not enabled, otherwise they waste a bit of memory being
-> unused.
+> I reran the unused tracepoint code on the latest linux-next and found more
+> xfs trace events. One was recently added but the rest were there before. Not
+> sure how I missed them.
 > 
-
-I just noticed that I already sent out a version of this patch here:
-
-  https://lore.kernel.org/linux-trace-kernel/20250612100552.39672cf9@batman.local.home/
-
-Which is a better version than this one.
-
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->  include/trace/events/sched.h | 2 ++
->  1 file changed, 2 insertions(+)
+> But anyway, here's a few more patches to remove unused xfs trace events.
 > 
-> diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
-> index 4e6b2910cec3..51776b45549a 100644
-> --- a/include/trace/events/sched.h
-> +++ b/include/trace/events/sched.h
-> @@ -628,6 +628,7 @@ TRACE_EVENT(sched_process_hang,
->  );
->  #endif /* CONFIG_DETECT_HUNG_TASK */
->  
-> +#ifdef CONFIG_NUMA_BALANCING
->  /*
->   * Tracks migration of tasks from one runqueue to another. Can be used to
->   * detect if automatic NUMA balancing is bouncing between nodes.
-> @@ -719,6 +720,7 @@ DEFINE_EVENT(sched_numa_pair_template, sched_swap_numa,
->  
->  	TP_ARGS(src_tsk, src_cpu, dst_tsk, dst_cpu)
->  );
-> +#endif /* CONFIG_NUMA_BALANCING */
->  
->  #ifdef CONFIG_NUMA_BALANCING
+> Steven Rostedt (4):
+>       xfs: remove unused trace event xfs_dqreclaim_dirty
+>       xfs: remove unused trace event xfs_log_cil_return
+>       xfs: remove unused trace event xfs_discard_rtrelax
+>       xfs: remove unused trace event xfs_reflink_cow_enospc
 
-Because You can just remove the above two CPP directives.
+I can directly take responsibility for 1, 3, and 4 -- those aren't going
+to come back.  Patch 2 looks like an accidental add, and if anyone wants
+it they can always add it back.
 
-So please ignore this one.
+Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
 
--- Steve
+--D
 
-
->  #define NUMAB_SKIP_REASON					\
-
+> 
+> ----
+>  fs/xfs/xfs_trace.h | 4 ----
+>  1 file changed, 4 deletions(-)
+> 
