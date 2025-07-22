@@ -1,237 +1,177 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 884782E9733;
-	Tue, 22 Jul 2025 12:29:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AC5C2D3EFB;
+	Tue, 22 Jul 2025 13:29:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753187374; cv=none; b=ccDtKE3rdU60cgOm/mtSbgT7kHcSgSJkbFFpttS+/RdNkn+YmFAVF+vSxYlliFg9yMwzGENbWQ2f882d7HIwO181NYr02ZXvgq8PsNxrbR3Oz7qfkiO7pQbDMnrYQiSJx6Ul04vvoFY/L+joJkBcisj18briw2FTF2OGaM/rx8U=
+	t=1753190973; cv=none; b=jUbfq6LzYuDe8e2xZhmDFylAk82T8N+MMEYIKpBxojGEidYm6Vylg0yaPAmkkshn63vdVSCUD90HSWt9MO0R3nd1J32RRgIX4mb0D6rlNoWgRNSg1PxGtO5l89YlRRw1xld2RfKsd6w/+ImvwDJYoACPN0XaAhdiTKSZlVwGOhI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753187374; c=relaxed/simple;
-	bh=ugYgb0RNPFqmdXsGr0G/GGIYY2Anwmf6OjdxW7Uub6E=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=JZvL/DM7R1gH+RS4DbsZbLqZuiY5h1r9V/VxbTjLSRjb1V3sCe56XA+D950txCKwCnPcJd3urijRnm30zC9NHP5IWErO223ICElLWR6D4gi0BWGSRnlEpATdcQNsh4/enon7DofVAhrOOiZ3LpMuonFhTS77MPAYoqV6hFfMNQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZE+SifE+; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1753190973; c=relaxed/simple;
+	bh=v5BLSIwd7srHi/OWA5ndIBkdalmEzmLEQmrp+RewTTQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IGItBp7f0LJtFN0uHXVdSHBZ7Iu7ohLohoEN0sVtiLa0UUj8G20bvsqoZjSP4BErfMdtD4RlWkyaRGSWt6bsjq7zMwMV4jXbODJdDpGEMpH1y8lqKrHlolk0AgMXEnqGIcwunW3BYJWaZpefdQsci7y5deQ/aHn4RQNvfZPCnrU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=icCzbYE3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZE+SifE+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1753187373; x=1784723373;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=ugYgb0RNPFqmdXsGr0G/GGIYY2Anwmf6OjdxW7Uub6E=;
-  b=ZE+SifE+0EJ9uS04jZVCTZqBTsG+9lFb/GWt7Aw/JP/cCoF1MaS94pM6
-   JxDlUzJ0ARzoDdSahyHYHyHfIBb9ggbXHr/2EY92eQm362CXW7x26BLWt
-   egeNZ9Bnmb/lcxOKv2iCKLPfJmfCdRivRbItnoASkVrNSAHsRUrYalGa4
-   9QcJ2Sv3GMOb+gec3BOpU7OdgVMDfSKkuL0GA6FfQwrWaXhNPnlhtlv7a
-   JH/xpKzhHIIf6p+IHEaJU+xK5ynGZufcCJIRxgfe7UCKM+QM0HClDg3qc
-   3ErQwgeoDsm0+pukde8kqUv7W7ix4iuhEOlIci4Jsu3PJCXC0wuNBpq4N
-   Q==;
-X-CSE-ConnectionGUID: EBs+HQPoQT6/qN8fsRFiWg==
-X-CSE-MsgGUID: OWEPZKTGRviNmDuLUMS6fA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11500"; a="55376698"
-X-IronPort-AV: E=Sophos;i="6.16,331,1744095600"; 
-   d="scan'208";a="55376698"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2025 05:29:31 -0700
-X-CSE-ConnectionGUID: tfh2GasuSKmcPJKOS2cYAg==
-X-CSE-MsgGUID: 4/tBAQZUT3elnO5/NEQTaQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,331,1744095600"; 
-   d="scan'208";a="158446969"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.254])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2025 05:29:23 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 22 Jul 2025 15:29:20 +0300 (EEST)
-To: Shuai Xue <xueshuai@linux.alibaba.com>
-cc: Matthew W Carlis <mattc@purestorage.com>, helgaas@kernel.org, 
-    Lukas Wunner <lukas@wunner.de>, anil.s.keshavamurthy@intel.com, 
-    bhelgaas@google.com, bp@alien8.de, davem@davemloft.net, 
-    linux-edac@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    linux-pci@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-    mark.rutland@arm.com, mathieu.desnoyers@efficios.com, mhiramat@kernel.org, 
-    naveen@kernel.org, oleg@redhat.com, peterz@infradead.org, 
-    rostedt@goodmis.org, tianruidong@linux.alibaba.com, tony.luck@intel.com
-Subject: Re: [PATCH v8] PCI: hotplug: Add a generic RAS tracepoinggt for
- hotplug event
-In-Reply-To: <fcfc51c0-6a1f-435b-844b-4daba132f7b6@linux.alibaba.com>
-Message-ID: <d3de8888-5ba8-c27c-2a6a-eecf3cc284da@linux.intel.com>
-References: <20250717235055.GA2664149@bhelgaas> <20250718034616.26250-1-mattc@purestorage.com> <e92f8d1f-457c-4248-8397-81b0e20ff4af@linux.alibaba.com> <11119800-3b6a-a683-3500-115a057c2826@linux.intel.com>
- <fcfc51c0-6a1f-435b-844b-4daba132f7b6@linux.alibaba.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="icCzbYE3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B00BC4CEEB;
+	Tue, 22 Jul 2025 13:29:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753190972;
+	bh=v5BLSIwd7srHi/OWA5ndIBkdalmEzmLEQmrp+RewTTQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=icCzbYE3Gw4FMkjzZQGdd5PRl3DLgwJi4XEJMOcR2bhXW2g1yFhd+T0X/aqMi3/BP
+	 CibFuID4nbj6OAYkc1NMOYpqf8N3QkVei13FupO8PIGWwd7LMLFew2Gjxu4KdVUg1O
+	 DkTKaYgXxxbbsiX0+w7BLz0w/qJZtmL94y+JVE7CzC9ZZx6kQNyfp3ET4nPZ9scvga
+	 Dn2CpPG5UqY1IGli6LRySAYz4YmMRdxPp1TJllyeOcCWdL2WRYt94l/h9D04DE4+Uc
+	 MGgZG1jWvtMVVXZVVriPuhmhhcn2IesGNkPl/Ho6XBcy/wvha6uvWcQ0AKEDdQ4Ukm
+	 HjjZtlQLlu8FQ==
+Date: Tue, 22 Jul 2025 14:29:19 +0100
+From: Will Deacon <will@kernel.org>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Kees Cook <kees@kernel.org>, Mike Rapoport <rppt@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>, Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+	Michal Wilczynski <michal.wilczynski@intel.com>,
+	Juergen Gross <jgross@suse.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	Roger Pau Monne <roger.pau@citrix.com>,
+	David Woodhouse <dwmw@amazon.co.uk>,
+	Usama Arif <usama.arif@bytedance.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	Thomas Huth <thuth@redhat.com>, Brian Gerst <brgerst@gmail.com>,
+	kvm@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net,
+	platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
+	linux-mm@kvack.org, Ingo Molnar <mingo@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Christoph Hellwig <hch@lst.de>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas.schier@linux.dev>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org,
+	kasan-dev@googlegroups.com, linux-doc@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, sparclinux@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: Re: [PATCH v3 04/13] x86: Handle KCOV __init vs inline mismatches
+Message-ID: <aH-SL2V2bSPkJ18o@willie-the-truck>
+References: <20250717231756.make.423-kees@kernel.org>
+ <20250717232519.2984886-4-kees@kernel.org>
+ <aHoHkDvvp4AHIzU1@kernel.org>
+ <202507181541.B8CFAC7E@keescook>
+ <CAMj1kXGAwjChyFvjQcTbL8dFXkFWnn9n47bkN7FP=+EsLNsJdg@mail.gmail.com>
+ <aH42--h-ARsvX5Wk@willie-the-truck>
+ <202507211311.8DAC4C7@keescook>
+ <202507211349.D93679FB25@keescook>
+ <CAMj1kXGoy7D+_hKyQrT_uXdjuFMYGUEMDYdRf6mx69PLeuBQQg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-198401369-1753187360=:920"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXGoy7D+_hKyQrT_uXdjuFMYGUEMDYdRf6mx69PLeuBQQg@mail.gmail.com>
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Tue, Jul 22, 2025 at 04:55:47PM +1000, Ard Biesheuvel wrote:
+> On Tue, 22 Jul 2025 at 06:49, Kees Cook <kees@kernel.org> wrote:
+> >
+> > On Mon, Jul 21, 2025 at 01:14:36PM -0700, Kees Cook wrote:
+> > > On Mon, Jul 21, 2025 at 01:47:55PM +0100, Will Deacon wrote:
+> > > > On Sun, Jul 20, 2025 at 04:10:01PM +1000, Ard Biesheuvel wrote:
+> > > > > On Sat, 19 Jul 2025 at 08:51, Kees Cook <kees@kernel.org> wrote:
+> > > > > > On Fri, Jul 18, 2025 at 11:36:32AM +0300, Mike Rapoport wrote:
+> > > > > > > On Thu, Jul 17, 2025 at 04:25:09PM -0700, Kees Cook wrote:
+> > > > > > > > When KCOV is enabled all functions get instrumented, unless the
+> > > > > > > > __no_sanitize_coverage attribute is used. To prepare for
+> > > > > > > > __no_sanitize_coverage being applied to __init functions, we have to
+> > > > > > > > handle differences in how GCC's inline optimizations get resolved. For
+> > > > > > > > x86 this means forcing several functions to be inline with
+> > > > > > > > __always_inline.
+> > > > > > > >
+> > > > > > > > Signed-off-by: Kees Cook <kees@kernel.org>
+> > > > > > >
+> > > > > > > ...
+> > > > > > >
+> > > > > > > > diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+> > > > > > > > index bb19a2534224..b96746376e17 100644
+> > > > > > > > --- a/include/linux/memblock.h
+> > > > > > > > +++ b/include/linux/memblock.h
+> > > > > > > > @@ -463,7 +463,7 @@ static inline void *memblock_alloc_raw(phys_addr_t size,
+> > > > > > > >                                       NUMA_NO_NODE);
+> > > > > > > >  }
+> > > > > > > >
+> > > > > > > > -static inline void *memblock_alloc_from(phys_addr_t size,
+> > > > > > > > +static __always_inline void *memblock_alloc_from(phys_addr_t size,
+> > > > > > > >                                             phys_addr_t align,
+> > > > > > > >                                             phys_addr_t min_addr)
+> > > > > > >
+> > > > > > > I'm curious why from all memblock_alloc* wrappers this is the only one that
+> > > > > > > needs to be __always_inline?
+> > > > > >
+> > > > > > Thread-merge[1], adding Will Deacon, who was kind of asking the same
+> > > > > > question.
+> > > > > >
+> > > > > > Based on what I can tell, GCC has kind of fragile inlining logic, in the
+> > > > > > sense that it can change whether or not it inlines something based on
+> > > > > > optimizations. It looks like the kcov instrumentation being added (or in
+> > > > > > this case, removed) from a function changes the optimization results,
+> > > > > > and some functions marked "inline" are _not_ inlined. In that case, we end up
+> > > > > > with __init code calling a function not marked __init, and we get the
+> > > > > > build warnings I'm trying to eliminate.
+> > > >
+> > > > Got it, thanks for the explanation!
+> > > >
+> > > > > > So, to Will's comment, yes, the problem is somewhat fragile (though
+> > > > > > using either __always_inline or __init will deterministically solve it).
+> > > > > > We've tripped over this before with GCC and the solution has usually
+> > > > > > been to just use __always_inline and move on.
+> > > > > >
+> > > > >
+> > > > > Given that 'inline' is already a macro in the kernel, could we just
+> > > > > add __attribute__((__always_inline__)) to it when KCOV is enabled?
+> > > >
+> > > > That sounds like a more robust approach and, by the sounds of it, we
+> > > > could predicate it on GCC too. That would also provide a neat place for
+> > > > a comment describing the problem.
+> > > >
+> > > > Kees, would that work for you?
+> > >
+> > > That seems like an extremely large hammer for this problem, IMO. It
+> > > feels like it could cause new strange corner cases. I'd much prefer the
+> > > small fixes I've currently got since it keeps it focused. KCOV is
+> > > already enabled for "allmodconfig", so any new instances would be found
+> > > very quickly, etc. (And GCC's fragility in this regard has already been
+> > > exposed to these cases -- it's just that I changed one of the
+> > > combinations of __init vs inline vs instrumentation.
+> > >
+> > > I could give it a try, if you really prefer the big hammer approach...
+> >
+> > I gave it a try -- it fails spectacularly. ;) Let's stick to my small
+> > fixes instead?
+> >
+> 
+> Fair enough :-)
 
---8323328-198401369-1753187360=:920
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+(but please add the helpful explanation you provided to the commit message!)
 
-On Tue, 22 Jul 2025, Shuai Xue wrote:
-> =E5=9C=A8 2025/7/21 18:18, Ilpo J=C3=A4rvinen =E5=86=99=E9=81=93:
-> > On Fri, 18 Jul 2025, Shuai Xue wrote:
-> > > =E5=9C=A8 2025/7/18 11:46, Matthew W Carlis =E5=86=99=E9=81=93:
-> > > > On Thu, Jul 17, 2025 Bjorn Helgaas wrote
-> > > > > So I think your idea of adding current link speed/width to the "L=
-ink
-> > > > > Up" event is still on the table, and that does sound useful to me=
-=2E
-> > > >=20
-> > > > We're already reading the link status register here to check DLLA s=
-o
-> > > > it would be nice. I guess if everything is healthy we're probably
-> > > > already
-> > > > at the maximum speed by this point.
-> > > >=20
-> > > > > In the future we might add another tracepoint when we enumerate t=
-he
-> > > > > device and know the Vendor/Device ID.
-> > > >=20
-> > > > I think we might have someone who would be interested in doing it.
-> > >=20
-> > >=20
-> > > Hi, all,
-> > >=20
-> > > IIUC, the current hotplug event (or presence event) is enough for Mat=
-thew.
-> > > and we would like a new tracepoing for link speed change which report=
-s
-> > > speeds.
-> > >=20
-> > > For hotplug event, I plan to send a new version to
-> > >=20
-> > > 1. address Bjorn' concerns about event strings by removing its spaces=
-=2E
-> > >=20
-> > > #define PCI_HOTPLUG_EVENT
-> > > \
-> > > =09EM(PCI_HOTPLUG_LINK_UP,=09=09=09"PCI_HOTPLUG_LINK_UP")
-> > > \
-> > > =09EM(PCI_HOTPLUG_LINK_DOWN,=09=09"PCI_HOTPLUG_LINK_DOWN")
-> > > \
-> > > =09EM(PCI_HOTPLUG_CARD_PRESENT,=09=09"PCI_HOTPLUG_CARD_PRESENT")
-> > > \
-> > > =09EMe(PCI_HOTPLUG_CARD_NOT_PRESENT,
-> > > "PCI_HOTPLUG_CARD_NOT_PRESENT")
-> > >=20
-> > > 2. address Ilpo comments by moving pci_hp_event to a common place
-> > > (include/trace/events/pci.h) so that the new comming can also use it.
-> >=20
-> > Ah, I only now noticed you've decided to re-place them. Please disregar=
-d
-> > my other comment about this being still open/undecided item.
-> >=20
-> > > For link speed change event (perhaps named as pci_link_event),
-> > > I plan to send a seperate patch, which provides:
-> > >=20
-> > > =09TP_STRUCT__entry(
-> > > =09=09__string(=09port_name,=09port_name=09)
-> > > =09=09__field(=09unsigned char,=09cur_bus_speed=09)
-> > > =09=09__field(=09unsigned char,=09max_bus_speed=09)
-> > >   =09=09__field(=09unsigned char,=09width=09=09)
-> > >   =09=09__field(=09unsigned int,=09flit_mode=09)
-> > > =09=09__field(=09unsigned char,=09reason=09=09)
-> > > =09=09),
-> > >=20
-> > > The reason field is from Lukas ideas which indicates why the link spe=
-ed
-> > > changed, e.g. "hotplug", "autonomous", "thermal", "retrain", etc.
-> > >=20
-> > > Are you happy with above changes?
-> >=20
-> > Since you're probably quite far with the pcie link event patch too give=
-n
-> > above, could you take a look at the LNKSTA flags representation in my
-> > patch and incorporate those as well as there seems to always lot of
-> > uncertainty about those flags when investigating the LBMS/bwctrl relate=
-d
-> > issues so it seems prudent to explicitly include them into the traceeve=
-nt
-> > output:
-> >=20
-> > https://lore.kernel.org/linux-pci/7c289bba-3133-0989-6333-41fc41fe3504@=
-linux.intel.com/
-> >=20
-> >=20
->=20
-> Sure, Thank you for the feedback.
->=20
-> I like the LNKSTA flags, LNKSTA flags provides better genericity
-> compared to the custom reason field I initially proposed. But it may
-> cause confusion when used in pcie_retrain_link(). However, I've
-> identified a potential issue when this approach is applied in
-> pcie_retrain_link() scenarios.
-
-I was trying to say the flags should be in addition to the other=20
-information, not replace reason.
-
-> Consider the following trace output when a device hotpluged:
->=20
-> $ cat /sys/kernel/debug/tracing/trace_pipe
-> $ cat /sys/kernel/debug/tracing/trace_pipe
->            <...>-118     [002] .....    28.414220: pci_hp_event: 0000:00:=
-03.0
-> slot:30, event:PCI_HOTPLUG_CARD_PRESENT
->=20
->            <...>-118     [002] .....    28.414273: pci_hp_event: 0000:00:=
-03.0
-> slot:30, event:PCI_HOTPLUG_LINK_UP
->=20
->    irq/57-pciehp-118     [002] .....    28.540189: pcie_link_event:
-> 0000:00:03.0 type:4, cur_bus_speed:2.5 GT/s PCIe, max_bus_speed:16.0 GT/s
-> PCIe, width:1, flit_mode:0, status:DLLLA
->=20
->    irq/57-pciehp-118     [002] .....    28.544999: pcie_link_event:
-> 0000:00:03.0 type:4, cur_bus_speed:2.5 GT/s PCIe, max_bus_speed:16.0 GT/s
-> PCIe, width:1, flit_mode:0, status:DLLLA
->=20
-> The problem is that both trace events show status:DLLLA (Data Link Layer
-> Link Active), which is the direct reading from PCI_EXP_LNKSTA. However,
-> this doesn't accurately reflect the underlying context:
->=20
-> - First DLLLA: Triggered by board_added() - link establishment after
->   card insertion
-> - Second DLLLA: Triggered by pcie_retrain_link() - link retraining
->   completion
->=20
-> ( I trace the events in pcie_update_link_speed() )
->=20
-> In the second case, the more relevant status would be PCI_EXP_LNKSTA_LT
-> (Link Training) to indicate that link retraining was performed, even
-> though the final register state shows DLLLA.
->=20
-> Question: Should we explicitly report the contextual status (e.g.,
-> PCI_EXP_LNKSTA_LT for retraining scenarios) rather than always reading
-> the current register field? This would provide more meaningful trace
-> information for debugging link state transitions.
-
-I'd prefer it coming from the LNKSTA register (TBH, I don't see much value=
-=20
-in synthetizing it at all). If we start to synthetize them, it will=20
-potentially hide hw issues. I see on some platforms two LBMS assertions=20
-per bwctrl speed change (which is done by retraining the link), one with=20
-LT=3D1 and the second with LT=3D0.
-
-=2E..But I never meant to replace "reason" with "flags".
-
-> Additionally, I'd appreciate your thoughts on the overall tracepoint
-> format shown above. Does this structure provide sufficient information
-> for hotplug and link analysis while maintaining readability?
-
-I don't have ideas how it could be improved beyond having those 4 flags=20
-available. I suspect noone does as we've not had ability to collect this=20
-information before when investigating issues so we're yet to understand=20
-all its potential.
-
---=20
- i.
-
---8323328-198401369-1753187360=:920--
+Will
