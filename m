@@ -1,121 +1,112 @@
-Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [160.30.148.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 110C01CF7AF;
-	Tue, 22 Jul 2025 06:10:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=160.30.148.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9EFA157A67
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 22 Jul 2025 06:42:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753164628; cv=none; b=jvQykfDaId5L+e+AejgEu/Ru9YFC1rsH3gv4u/T0HO2lFEOPEiGOS6N3qmmkb/iUcrAIHannmbEye1qfbzzPAyRJzGdsElbieyeZwd/DxncNCMthsyr6kd5mU5T3ibM+ZVN/ruPEAG1LgpC2jxxqS0+o2HyGUlqsauE05N88VkY=
+	t=1753166562; cv=none; b=QUx9vzfmKreWqy/vqqXdlOCkc28yGrf0REZ4PSAgHouJIQyAMrf/KkBmSd3ivAR+/ZZBYB5Lw2XEdh/uUSQyQvvA61y7IkDDKLcmuVws+LlcrIWDTwDoOud+IbpheCgb93gEy/yztPpyjsbVK5OouXnYkWUGpWftpM7GGvtW1Ks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753164628; c=relaxed/simple;
-	bh=X3m0bEDpzyejvM3oMqRL6s6ZB4rqOd4i/z4KryWrKS4=;
-	h=Date:Message-ID:In-Reply-To:References:Mime-Version:From:To:Cc:
-	 Subject:Content-Type; b=pzc9ruLSgKcFu8BL1mhAM58Dry9kGLFJHYQwrRqY7LXE5ryxbQVGFnFz2vwf9lFUsflpqsy0yMkzpdvy4+ziY8t0Zx4HRGm/cjPMso7PP3nXmKhAJ3J3SKuwgOaewb2nq0pRt2NZK7bZl+L0AHi6gCo3Y8bLhM393EwotOoKOBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=160.30.148.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4bmRh63sV3z6FyBr;
-	Tue, 22 Jul 2025 14:10:14 +0800 (CST)
-Received: from xaxapp04.zte.com.cn ([10.99.98.157])
-	by mse-fl2.zte.com.cn with SMTP id 56M6A2Th040888;
-	Tue, 22 Jul 2025 14:10:02 +0800 (+08)
-	(envelope-from fan.yu9@zte.com.cn)
-Received: from mapi (xaxapp01[null])
-	by mapi (Zmail) with MAPI id mid32;
-	Tue, 22 Jul 2025 14:10:04 +0800 (CST)
-Date: Tue, 22 Jul 2025 14:10:04 +0800 (CST)
-X-Zmail-TransId: 2af9687f2b3c7ca-68dd4
-X-Mailer: Zmail v1.0
-Message-ID: <20250722141004103ZDPniL4wEAkAUVVhyyQMW@zte.com.cn>
-In-Reply-To: <CAAVpQUDaSccbmOC0sgihBYPTdtSE2OsFOJXC6s58QS81a+8nkA@mail.gmail.com>
-References: 20250721171333.6caced4f@kernel.org,20250722094808945ENOLvzY108YsJFz4CqbaI@zte.com.cn,CAAVpQUDaSccbmOC0sgihBYPTdtSE2OsFOJXC6s58QS81a+8nkA@mail.gmail.com
+	s=arc-20240116; t=1753166562; c=relaxed/simple;
+	bh=NA36uYIdstJH2uG8YyMNqBz92Za5P96z2ySsI/waiio=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Asr90yu7bkvp+C86BhMK/YcbH8n332YNMh4wpvtp8ApMXJ4g+m7kwqdYgQvjz8rNHknZs/NtGGoya25KURV/dI24/4glGAE9n5nABuyL7e188EY/ATEg0vo5HkpvWwDbLyRQDZJKanA2NUUBIz/xLGDPsldXg/9CT+mPVRyASGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Mq0rGbOd; arc=none smtp.client-ip=209.85.160.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Mq0rGbOd"
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-4ab9ba884c6so65412751cf.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 21 Jul 2025 23:42:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1753166559; x=1753771359; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=B6h6Sd7T3RH+CtFzxBNwU/jmY2fsZCbhu4Ru+TS9LQU=;
+        b=Mq0rGbOddATFeDVt307i6mnV9+enmyRYIjBG5zBCwgcKLzZg1HkHWmOib3Hp+rNYhE
+         O+uxTDhwKi2aEAzVfz1ohFJ0BpKLqkkJbhSpbojcexnPN3qxWIaddYeASJBc/Teg3exX
+         hsOXJiyUaN7V7v6EWOCl3+KbsMCPykTEIL0e70lHrBfyD8xNhMWBw+wWEtzQOeJPEy1f
+         vv32XBsRj9NA0JO/yMhS+4K42w5mp6Irl/73k5+8wB53bzNvw1BbnAwXWsap2ouxnQ+A
+         qDXNBGKfSuXDNEAoRCHe0NeCexaHhLKM4Lcx61jOwUR6k9oiQz22vNMyULmouX17PL7R
+         Q1Qg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753166559; x=1753771359;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=B6h6Sd7T3RH+CtFzxBNwU/jmY2fsZCbhu4Ru+TS9LQU=;
+        b=QlEQO8juH5q1bywLCktv+90t0vMMbLeZTHJ99WBeLqKtB3fEQqJ9CC6TrrAGwjmy/f
+         VzEXIHiQ0sHVLzVbd7fX0XkQWHeb/6ekTRD1E71rmNaqw8wKV9cQj1uANE00oOIJ6mWF
+         RFPB8lb7Ta+2fsmv3nvopPsDqF7qfyhybX+ltwKAAVnwlcF2fxBkm1C6nxoaqdxmjekz
+         N0MHc3ZZEPQUaymKzNMCxXGWvq4SjBbniYUqk4acJL3QWhicUyJq8YKjA4ryhFV8AeCJ
+         VnW4OfjSkUHN1kY1CnHgEutZdaUeCeq2FdlXQF5e/4CHkCCK+gvkhCMPN1wJE8aJ7R9h
+         bJHA==
+X-Forwarded-Encrypted: i=1; AJvYcCV7Tugpzsenq+DsSb+Tfi0SGJdq62OzPI6kegOY07v3wAtGfFLePUTKceK4czCO0+yJIO3AofDJCkIxtjqJ9iZTvFI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzyJ+lC3BZ8yGbezBkWbdCNZgJZkDpvj1Mvcho6Zr+O/ZbU5J/d
+	+5gJXi8V++5G8xmdMRvaEBsdRn86ob8hmNhegIEvUbtukt74sToD5Jlre/EToDBcFyj2xb6sjHM
+	Sn4RdYy4ruAIFdoRWv6GK6k1FfpzneeNYEgvSjdU1
+X-Gm-Gg: ASbGncvHwsh86SbfkX8PuEu/fizGwdFB60Hwnr6TGwb8eG0OiBT2Je7ix9vn3I9ZZf3
+	tby4Uhdo4Jx+MlDJ8KwM+4nSCN8mGAni6yU+/FPopGgvhY+WD6YzsGWuY3zNErsgZVW3fHx6YNV
+	ajNNuXTOEDlWnMwPz55RZSN1p7FgYOurRzWcm42O0TzCoLZWZsOT7wbMsCbry4X5T69MX6vDZAb
+	eV8Tw==
+X-Google-Smtp-Source: AGHT+IFE18i3ZNkbmsrw1BuD3fHiD6gRMvLpTbu/niAOFe34mLrrmfHvaIzaR08VQ8lZs6la4mlmVt+dTDNJFyAXP1Y=
+X-Received: by 2002:a05:622a:4acb:b0:4ab:41a7:18da with SMTP id
+ d75a77b69052e-4ae5b99f102mr36129921cf.26.1753166559335; Mon, 21 Jul 2025
+ 23:42:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <fan.yu9@zte.com.cn>
-To: <kuniyu@google.com>
-Cc: <kuba@kernel.org>, <edumazet@google.com>, <ncardwell@google.com>,
-        <davem@davemloft.net>, <dsahern@kernel.org>, <pabeni@redhat.com>,
-        <horms@kernel.org>, <rostedt@goodmis.org>, <mhiramat@kernel.org>,
-        <mathieu.desnoyers@efficios.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-        <yang.yang29@zte.com.cn>, <xu.xin16@zte.com.cn>,
-        <tu.qiang35@zte.com.cn>, <jiang.kun2@zte.com.cn>,
-        <qiu.yutan@zte.com.cn>, <wang.yaxin@zte.com.cn>,
-        <he.peilin@zte.com.cn>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSCBuZXQtbmV4dCB2NyBSRVNFTkRdIHRjcDogdHJhY2UgcmV0cmFuc21pdCBmYWlsdXJlcyBpbiB0Y3BfcmV0cmFuc21pdF9za2I=?=
-Content-Type: multipart/mixed;
-	boundary="=====_001_next====="
-X-MAIL:mse-fl2.zte.com.cn 56M6A2Th040888
-X-TLS: YES
-X-SPF-DOMAIN: zte.com.cn
-X-ENVELOPE-SENDER: fan.yu9@zte.com.cn
-X-SPF: None
-X-SOURCE-IP: 10.5.228.133 unknown Tue, 22 Jul 2025 14:10:14 +0800
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 687F2B46.001/4bmRh63sV3z6FyBr
+MIME-Version: 1.0
+References: <20250721111607626_BDnIJB0ywk6FghN63bor@zte.com.cn>
+In-Reply-To: <20250721111607626_BDnIJB0ywk6FghN63bor@zte.com.cn>
+From: Eric Dumazet <edumazet@google.com>
+Date: Mon, 21 Jul 2025 23:42:27 -0700
+X-Gm-Features: Ac12FXywVAz49IpEFRm5TGn9QbbuypsOmwnVNfzN6cH9wGhw3rlyrS0T17qYW08
+Message-ID: <CANn89iJiLC6ZRXqJU82vsH0Lu+-o-GP_1WAK=2bcfdGmu7nKrg@mail.gmail.com>
+Subject: Re: [PATCH net-next v7 RESEND] tcp: trace retransmit failures in tcp_retransmit_skb
+To: fan.yu9@zte.com.cn
+Cc: kuba@kernel.org, ncardwell@google.com, davem@davemloft.net, 
+	dsahern@kernel.org, pabeni@redhat.com, horms@kernel.org, kuniyu@google.com, 
+	rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, yang.yang29@zte.com.cn, 
+	xu.xin16@zte.com.cn, tu.qiang35@zte.com.cn, jiang.kun2@zte.com.cn, 
+	qiu.yutan@zte.com.cn, wang.yaxin@zte.com.cn, he.peilin@zte.com.cn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Sun, Jul 20, 2025 at 8:16=E2=80=AFPM <fan.yu9@zte.com.cn> wrote:
+>
+> From: Fan Yu <fan.yu9@zte.com.cn>
+>
+> Background
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> When TCP retransmits a packet due to missing ACKs, the
+> retransmission may fail for various reasons (e.g., packets
+> stuck in driver queues, receiver zero windows, or routing issues).
+>
+> The original tcp_retransmit_skb tracepoint:
+>
+>   'commit e086101b150a ("tcp: add a tracepoint for tcp retransmission")'
+>
+> lacks visibility into these failure causes, making production
+> diagnostics difficult.
+>
+>
 
+> Suggested-by: Jakub Kicinski <kuba@kernel.org>
+> Suggested-by: Eric Dumazet <edumazet@google.com>
+> Co-developed-by: xu xin <xu.xin16@zte.com.cn>
+> Signed-off-by: xu xin <xu.xin16@zte.com.cn>
+> Signed-off-by: Fan Yu <fan.yu9@zte.com.cn>
+> Reviewed-by: Kuniyuki Iwashima <kuniyu@google.com>
 
---=====_001_next=====
-Content-Type: multipart/related;
-	boundary="=====_002_next====="
+Please do not add a Suggested-by tag when the original idea did not
+come from someone else.
 
+I only made suggestions to make your patch better.
 
---=====_002_next=====
-Content-Type: multipart/alternative;
-	boundary="=====_003_next====="
-
-
---=====_003_next=====
-Content-Type: text/plain;
-	charset="UTF-8"
-Content-Transfer-Encoding: base64
-
-PiA+IFRoYW5rcyBmb3IgY2hlY2tpbmchIEkganVzdCB3YW50ZWQgdG8gZW5zdXJlIHRoZSB2NyBw
-YXRjaCB3YXNu4oCZdCBtaXNzZWQg4oCUIGl04oCZcyBpZGVudGljYWwgdG8gdGhlIG9yaWdpbmFs
-Lg0KPiANCj4gWW91IGNhbiBjaGVjayB0aGUgcGF0Y2ggc3RhdHVzIGluIHBhdGNod29yaywgYW5k
-IGFjdHVhbGx5IHRoaXMgdjcNCj4gbWFya2VkIHRoZSBwcmV2aW91cyB2NyBhcyBTdXBlcnNlZGVk
-LCBzbyB5b3UgZGlkbid0IG5lZWQgdG8gcmVzZW5kIDopDQo+IA0KPiBodHRwczovL3BhdGNod29y
-ay5rZXJuZWwub3JnL3Byb2plY3QvbmV0ZGV2YnBmL2xpc3QvP3N1Ym1pdHRlcj0yMTc1NDkmc3Rh
-dGU9Kg0KDQpIaSBLdW5peXVraSwNCg0KVGhhbmtzIGZvciB0aGUgY2xhcmlmaWNhdGlvbiEgSeKA
-mXZlIGNoZWNrZWQgdGhlIFBhdGNod29yayBsaW5rIGFuZCBub3cNCnNlZSB0aGUgdjcgc3RhdHVz
-KCJOZXciKS4gTXkgYXBvbG9naWVzIGZvciB0aGUgcmVkdW5kYW50IHJlc2VuZCDigJQgSeKAmWxs
-DQphdm9pZCB0aGlzIGluIHRoZSBmdXR1cmUuDQoNCkFwcHJlY2lhdGUgeW91ciBwYXRpZW5jZSBh
-bmQgZ3VpZGFuY2UhDQoNCkJlc3QgcmVnYXJkcywNCkZhbiBZdQ==
-
-
---=====_003_next=====
-Content-Type: text/html ;
-	charset="UTF-8"
-Content-Transfer-Encoding: base64
-
-PGRpdiBjbGFzcz0iemNvbnRlbnRSb3ciPjxwPiZndDsgJmd0OyBUaGFua3MgZm9yIGNoZWNraW5n
-ISBJIGp1c3Qgd2FudGVkIHRvIGVuc3VyZSB0aGUgdjcgcGF0Y2ggd2FzbuKAmXQgbWlzc2VkIOKA
-lCBpdOKAmXMgaWRlbnRpY2FsIHRvIHRoZSBvcmlnaW5hbC48L3A+PHA+Jmd0OyZuYnNwOzwvcD48
-cD4mZ3Q7IFlvdSBjYW4gY2hlY2sgdGhlIHBhdGNoIHN0YXR1cyBpbiBwYXRjaHdvcmssIGFuZCBh
-Y3R1YWxseSB0aGlzIHY3PC9wPjxwPiZndDsgbWFya2VkIHRoZSBwcmV2aW91cyB2NyBhcyBTdXBl
-cnNlZGVkLCBzbyB5b3UgZGlkbid0IG5lZWQgdG8gcmVzZW5kIDopPC9wPjxwPiZndDsmbmJzcDs8
-L3A+PHA+Jmd0OyBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3Byb2plY3QvbmV0ZGV2YnBm
-L2xpc3QvP3N1Ym1pdHRlcj0yMTc1NDkmYW1wO3N0YXRlPSo8L3A+PHA+PGJyPjwvcD48cD5IaSBL
-dW5peXVraSw8L3A+PHA+PGJyPjwvcD48cD5UaGFua3MgZm9yIHRoZSBjbGFyaWZpY2F0aW9uISBJ
-4oCZdmUgY2hlY2tlZCB0aGUgUGF0Y2h3b3JrIGxpbmsgYW5kIG5vdzwvcD48cD5zZWUgdGhlIHY3
-IHN0YXR1cygiTmV3IikuIE15IGFwb2xvZ2llcyBmb3IgdGhlIHJlZHVuZGFudCByZXNlbmQg4oCU
-IEnigJlsbDwvcD48cD5hdm9pZCB0aGlzIGluIHRoZSBmdXR1cmUuPC9wPjxwPjxicj48L3A+PHA+
-QXBwcmVjaWF0ZSB5b3VyIHBhdGllbmNlIGFuZCBndWlkYW5jZSE8L3A+PHA+PGJyPjwvcD48cD5C
-ZXN0IHJlZ2FyZHMsPC9wPjxwPkZhbiBZdTwvcD48L2Rpdj4=
-
-
---=====_003_next=====--
-
---=====_002_next=====--
-
---=====_001_next=====--
-
+Reviewed-by: Eric Dumazet <edumazet@google.com>
