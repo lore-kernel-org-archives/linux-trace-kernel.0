@@ -1,84 +1,129 @@
-Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8CB428B519;
-	Tue, 22 Jul 2025 14:48:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B60E25B1C4;
+	Tue, 22 Jul 2025 15:21:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753195713; cv=none; b=qYJqRLz6u3YW8DriPq23TyEV8HrSKRE44jzX/SJjY56S0UoCYIjv0l4BwWv6BT474b7FdXK3woVlkAgiwA55mhq4ostv3ELfP39+P5zcJbk/DxJ+Rbq0/TNog5jnqI6ZEhx/I4sRW9AqYg/45GGCmdTOnZVf1OMIKqALT84qzMg=
+	t=1753197685; cv=none; b=sY0wdhFe7JVhDemzSFX96mploN3f3tEduNoF/7DKOyEbJqNJq8SFEhriochaQFvGLIgQqyJB0zL6N2zXBdwYNAwtipMmC5ZJqtHG4OMi+xfWC0fJd9oRvj6S2swLpjFHTrl1c21i3KkdFswIpUGaVlHLAf/j3v/VP8GWDqcPB4A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753195713; c=relaxed/simple;
-	bh=ik0LwPPBChYMFbJvzVNvj+UKK1VK9GaCVSwA3ajzh2k=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=RRViLtHSNp8RPBEreDzbHYNuFHh7BJfBx7iAh9/vL/5jWQi+sdD18SfkT2Uwf126qubyYma9Cmx0cOh+dNnooP6ILgPApYWScy8+8WuEDyalFdzz8/v9V4xn2qWdIE+nF0Fz8l5idgtq2lQBA9qK2xdnNgXf/1G3aS3bFrQPTXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf16.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id A6B911313C0;
-	Tue, 22 Jul 2025 14:48:23 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf16.hostedemail.com (Postfix) with ESMTPA id 6F4902001C;
-	Tue, 22 Jul 2025 14:48:21 +0000 (UTC)
-Date: Tue, 22 Jul 2025 10:48:20 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Ingo Molnar <mingo@kernel.org>, Peter
- Zijlstra <peterz@infradead.org>, Vincent Guittot
- <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>
-Subject: [PATCH] tracing: sched: Hide numa balancing trace events
-Message-ID: <20250722104820.6c629734@batman.local.home>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1753197685; c=relaxed/simple;
+	bh=gOCuZvkmjwwVrNCSUeQSPcF994zEyy2TkJIMewgYLQc=;
+	h=Message-ID:Date:From:To:Cc:Subject; b=Hvjn5RS1iDI6m4ZZRX5KIUHV7HGPhDWIzRC8LYtMRhRD/aXUzI6AwhQnkCQypeD1MvJakYwgagdcXK3Bv/nvlnoYvrzUIO+9YduJG5fIuYgbt+O6l/t8InBKVqV+Dv+FwtLNYnkcqSB64CwcxmNRIGT1ic7PDLyvdaUJjzvsS7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=utueuAUP; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="utueuAUP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D160C4CEF1;
+	Tue, 22 Jul 2025 15:21:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753197685;
+	bh=gOCuZvkmjwwVrNCSUeQSPcF994zEyy2TkJIMewgYLQc=;
+	h=Date:From:To:Cc:Subject:From;
+	b=utueuAUPwZ9GZM3TGpEKRZKwfGCnI/a4v4upmUdDWVN+v8/xb7O9JQAvnKwjRi5TX
+	 C2gqV00L3ZchlLoMJJTUvTf+EPLz9V7IHnw4E2OSiZl+HHnD8TkKodNcVUUGHP+baJ
+	 6j5EmA/GwiFilD7qFoZKrVIaRxqgEUkLaHy4CLYNBnCZUNwzJh3DtGS3Nmo9s5BPP3
+	 wvSE5qj64sIJyiyOgg3xeIW/FCqKi1r8db050Nhd2bbI0I2e6QGB0fwvV5oNODdBV7
+	 6qjXJWAt7Kv+3MIkLArKud/gHw3eWY/FkRpkpwZULN0tU4iahzhYtdZvHX8lFAJTcJ
+	 lpGMurVhBKhWw==
+Received: from rostedt by gandalf with local (Exim 4.98.2)
+	(envelope-from <rostedt@kernel.org>)
+	id 1ueEoX-0000000AYxs-2fFC;
+	Tue, 22 Jul 2025 11:21:57 -0400
+Message-ID: <20250722152053.343028095@kernel.org>
+User-Agent: quilt/0.68
+Date: Tue, 22 Jul 2025 11:20:53 -0400
+From: Steven Rostedt <rostedt@kernel.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org,
+ linux-kbuild@vger.kernel.org,
+ llvm@lists.linux.dev
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Arnd Bergmann <arnd@arndb.de>,
+ Masahiro Yamada <masahiroy@kernel.org>,
+ Nathan Chancellor <nathan@kernel.org>,
+ Nicolas Schier <nicolas.schier@linux.dev>,
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+ Catalin Marinas <catalin.marinas@arm.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH v3 0/5] tracepoints: Add warnings for unused tracepoints and trace events
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 6F4902001C
-X-Stat-Signature: fwniytg46qo6tpj7343k6q7z37zn1h5n
-X-Rspamd-Server: rspamout06
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19deXbdr2jf++Lj2CTNE9ICkeETqJpM14w=
-X-HE-Tag: 1753195701-141249
-X-HE-Meta: U2FsdGVkX18UINabZgWQ5bRdL1G8W9KSlZizNcUi1ky6a/CmyeLvztJwousOBhLgIBNmh1dRL1LSOqoySYCvXjLZz7+1vOTyH+zLahLTcz4bRTGpmiX6jnW3U1ytkHhAmtj2bB8w2RPJKy2qpscj+IVvWXIOwatFWJMvVAn7N+A+cjDHr7QRLJLlVl9Z0cAb/3vNA5Hg8897sYsjp8Kq5YeDD+gCTilZqcrfJbQFkH3cppn0Enz8OxMeJ/mhwxSqez/hr0/NGPVVxJ27kzeZL8GxoSKmPIaQNfrcMBxQm4HJYiRkVMhImF2pBkI7GcnBMKcyqApIlSGI9oW9tON484+xnpfa8pPAdcZXZ3dyfnl3vEFaOK4Z6BUwuKJgFUtN
 
-From: Steven Rostedt <rostedt@goodmis.org>
+Every trace event can take up to 5K of memory in text and metadata regardless
+if they are used or not. Trace events should not be created if they are not
+used.  Currently there's over a hundred events in the kernel that are defined
+but unused, either because their callers were removed without removing the
+trace event with it, or a config hides the trace event caller but not the
+trace event itself. And in some cases, trace events were simply added but were
+never called for whatever reason. The number of unused trace events continues
+to grow.
 
-The trace events sched_move_numa, sched_swap_numa and sched_stick_numa are
-only used when CONFIG_NUMA_BALANCING is enabled. Put an #ifdef guard
-around the definitions of these trace events so they are not defined when
-numa balancing is not enabled, otherwise they waste a bit of memory being
-unused.
+This patch series aims to fix this.
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- include/trace/events/sched.h | 2 ++
- 1 file changed, 2 insertions(+)
+The first patch creates a new section called __tracepoint_check, where all
+callers of a tracepoint creates a variable that is placed in this section with
+a pointer to the tracepoint they use. Then on boot up, it iterates this
+section and will modify the tracepoint's "func" field to a value of 1 (all
+tracepoints "func" fields are initialized to NULL and is only set when they
+are registered). This takes place before any tracepoint can be registered.
 
-diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
-index 4e6b2910cec3..51776b45549a 100644
---- a/include/trace/events/sched.h
-+++ b/include/trace/events/sched.h
-@@ -628,6 +628,7 @@ TRACE_EVENT(sched_process_hang,
- );
- #endif /* CONFIG_DETECT_HUNG_TASK */
- 
-+#ifdef CONFIG_NUMA_BALANCING
- /*
-  * Tracks migration of tasks from one runqueue to another. Can be used to
-  * detect if automatic NUMA balancing is bouncing between nodes.
-@@ -719,6 +720,7 @@ DEFINE_EVENT(sched_numa_pair_template, sched_swap_numa,
- 
- 	TP_ARGS(src_tsk, src_cpu, dst_tsk, dst_cpu)
- );
-+#endif /* CONFIG_NUMA_BALANCING */
- 
- #ifdef CONFIG_NUMA_BALANCING
- #define NUMAB_SKIP_REASON					\
--- 
-2.47.2
+Then each tracepoint is iterated on and if any tracepoint does not have its
+"func" field set to 1 a warning is triggered and every tracepoint that doesn't
+have that field set is printed. The "func" field is then reset back to NULL.
 
+The second patch modifies scripts/sorttable.c to read the __tracepoint_check
+section. It sorts it, and then reads the __tracepoint_ptr section that has all
+compiled in tracepoints. It makes sure that every tracepoint is found in the
+check section and if not, it prints a warning message about it. This lists the
+missing tracepoints at build time.
+
+The third patch updates sorttable to work for arm64 when compiled with gcc. As
+gcc's arm64 build doesn't put addresses in their section but saves them off in
+the RELA sections. This mostly takes the work done that was needed to do the
+mcount sorting at boot up on arm64.
+
+The fourth patch adds EXPORT_TRACEPOINT() to the __tracepoint_check section as
+well. There was several locations that adds tracepoints in the kernel proper
+that are only used in modules. It was getting quite complex trying to move
+things around that I just decided to make any tracepoint in a
+EXPORT_TRACEPOINT "used". I'm using the analogy of static and global
+functions. An unused static function gets a warning but an unused global one
+does not.
+
+The last patch updates the trace_ftrace_test_filter boot up self test. That
+selftest creates a trace event to run a bunch of filter tests on it without
+actually calling the tracepoint. To quiet the warning, the selftest tracepoint
+is called within a if (!trace_<event>_enabled()) section, where it will not be
+optimized out, nor will it be called.
+
+Changes since v2: https://lore.kernel.org/all/20250612235827.011358765@goodmis.org/
+
+- Fixed some typos in the above change log, and in comments within patches.
+
+- Have the build warning on unused events be default off. There is still too
+  many events that are unused to make a warning a default. But after all
+  current offenders are fixed, I plan on making it default enabled to prevent
+  new trace events from being added when they are unused.
+
+Steven Rostedt (5):
+      tracepoints: Add verifier that makes sure all defined tracepoints are used
+      tracing: sorttable: Add a tracepoint verification check at build time
+      tracing: sorttable: Find unused tracepoints for arm64 that uses reloc for address
+      tracepoint: Do not warn for unused event that is exported
+      tracing: Call trace_ftrace_test_filter() for the event
+
+----
+ include/asm-generic/vmlinux.lds.h  |   1 +
+ include/linux/tracepoint.h         |  13 ++
+ kernel/trace/Kconfig               |  30 +++
+ kernel/trace/trace_events_filter.c |   4 +
+ kernel/tracepoint.c                |  26 +++
+ scripts/Makefile                   |   4 +
+ scripts/sorttable.c                | 444 ++++++++++++++++++++++++++++++-------
+ 7 files changed, 436 insertions(+), 86 deletions(-)
