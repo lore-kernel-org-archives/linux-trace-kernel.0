@@ -1,175 +1,112 @@
-Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5AFF1DE8A0;
-	Tue, 22 Jul 2025 02:43:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.118
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 324E61E32C6
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 22 Jul 2025 03:51:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753152220; cv=none; b=h41xPanxPaGh7agLrpDjh5Gx8SxYKTB1xoWrwYLA63fwLJQYOWUIFUIKJtaSBtJakB3eUpYJ8IH8mjc3Gf3aK4ovvoP5MNJh4qbkIysIFmyq4HT+X9kFqAGIegVIYctC9d/miMGi5IUrfUoL4Rr3X7Rg0JgI2cIymr0qIrDmmDY=
+	t=1753156272; cv=none; b=l72iqPk8zF2KH969CcPMUTTlNpvmWgChkfqBqbIvcHJNE0NRAEghaKTmgRo/lAHjITIic1WBA0WYvyAPwCcN1WMOeKM1Zm3GCnIplO/EOh7nIoSQ/yRI7+7JH8WPVonhuID+BpP0RH9EQ/spoG+1fitdg/ANOXDLMHn6jiRYYTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753152220; c=relaxed/simple;
-	bh=TpfBpPjtQ1TIVKcfvIOgBenSM0Z5cK8+wHNXEIxdfG8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VTU7wVOK0ZBYCkxvUsSPUVfxZC3nVvKYm3pli8TJ5MLfxJIebCSQecq9GtZ7/ui+zkiQZdhyKEZr+4JfywucinUILgxevEg+zb8rdCotnhYw69DXDcCn1jWrRcCu00Da3wappoLfuSylPpbxfS1j5OQWseeiUalxJlqNVncV4r0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=V/UTAvpF; arc=none smtp.client-ip=115.124.30.118
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1753156272; c=relaxed/simple;
+	bh=lJDeYXSX/bvDetfHjkTeV2ORKfWv7rgs+Q7ECkeHLK0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=f6ttiq+CBfpS4i4vNHoYkM4eBiQY1w+8qXvnMnqnlO9liQiXNcVUWgyJtf72dKJ0pcj6GCKBor62mLbbrdYMo890XkQ71VAhoWdnxUQoxQ5jY34RBCVr2ZRZ4GnqFcjKTgzH9hh7+aD7PTWq+/EyWmUsddQZwXGhivVHld+gYto=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Je266k/F; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="V/UTAvpF"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1753152212; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=PSvOwAd8F8NSw1DU5J+G8+UcmSTgRBwFglVhweOlEgw=;
-	b=V/UTAvpFe22i21zs9tTZmyYoSpShw+oar2ObjnVEodRkRiyZZnYn7OWtw1wBXQIm/kM4punfgLSInLhEs/S6eHeZdNCA/6ZdPP3pzLGMWHsp6nhR50nVkkdH516xfrBZNjtduW/vU99xpADxSKGgzFW+CjhVYa79SeUb9eK9+uI=
-Received: from 30.246.160.95(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WjTqfLr_1753152209 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 22 Jul 2025 10:43:30 +0800
-Message-ID: <fcfc51c0-6a1f-435b-844b-4daba132f7b6@linux.alibaba.com>
-Date: Tue, 22 Jul 2025 10:43:29 +0800
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Je266k/F"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-3135f3511bcso4144789a91.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 21 Jul 2025 20:51:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1753156270; x=1753761070; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lJDeYXSX/bvDetfHjkTeV2ORKfWv7rgs+Q7ECkeHLK0=;
+        b=Je266k/F/o/W4OSEELSDKY9x8+y7O2WK1BEfFnA3WRHBkpb1FSv+T5VehlPm/GysCK
+         VRqxjO1O8u5y4RsFdExyjT3AvRuyyiEJsP8yrDZuzG+ezMubS2qRATWZ9/EVRwNsSz7S
+         F0u9O3AFs0Xd9+wtKmYjMt5YOt5xitThgZj3qpGBmZ2CNpnfGqgokHkOg/JCkUDSoc7Y
+         wW15tpUsF76us7oVA64S/44+JS9mfqCJvOrPgqrcLfl9W2p5eSZQsz7wLzAzN448tOnk
+         4TOyMwbWYeFCw/0qtKTk8mTqjOCjq6inmw/Oh/QqDP5kg09eoQEAYL5bxT5cOp9FM8aI
+         jpNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753156270; x=1753761070;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lJDeYXSX/bvDetfHjkTeV2ORKfWv7rgs+Q7ECkeHLK0=;
+        b=f+W77ObfFDp+va1pYxI/Az42LIqCu8mKlAbARiURu01SVCS+xrUPbl300sTAuc2Ho5
+         hJzvEpXNB602zOFJVssT+ZDeOkzFo+3i04ddhbuAuTroEaIV01Jxf5PbEFJDRmU5NAuC
+         cWEFWpbpFwItKMMRRZ6Bsz/4dcI/Gf5KsUXeujSYunfJxIcePcVWAvG40ZgNZZ0VTEwA
+         OtEosD1nvZDntWqvgmxZFfeYS+XC/FP+/ttc84vQ0DgNhj6uDg0qoDgrZad9DytdpHQy
+         PY/H1cTVtry5I5IRieT4W8SrEz4pxLjkEHrqnt7bSxhSKFv9rcZZcA0M53dP5Kp+ZSQA
+         zURQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUpMU7wBN0hzsx3SW8/WEs0EEBdfftKTvxVfetbW4OakiAky07LLlJladOWbrt4vbfnS2krWfAc06e0K99r4syWoss=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzRnEJaDJ5iL8sGEktBmBLXonNaus/8Dd7oBgNx8ROMQaEOF6Ii
+	tPCL/OFoQR4XNt2g+55mS8xDCoyk/Hiykdr+2SuQqcM6RAOvgmaxuI0MEQ2I0ARyiryQD2wq9oW
+	hpkRM34+hkwPTqLrneR7hB2YbNlsmFiPA4oPAsmtq
+X-Gm-Gg: ASbGncswdLUGX1TeejIi6wNPe07kfq8mXWaY2qt2A9bzb97tIy8DdUfnVZEfpdQgtyP
+	gYbUjbFsKDyQc8k6JG4eQtB1qNqfkyGi/Fbpl9zvfHAB8RhD3YC0dnbUlILYfc4UTmkQa9fd6n0
+	M+YXifIE7uvxDCuSzACIWTZYm//niIEUX1pmGupsRTKzDRV7lnWvBwfw2TnVje1PIVqM2VwoA95
+	bT06eYbY35PFGxqeMka983xa6BS2uqDQc0wynyR
+X-Google-Smtp-Source: AGHT+IHtpgoTus5lwayXM01SpaU4GwH90Y2FHf3kxlp2FjqLuyW/RgCCnGVdY5X+U0jWSMGmt4T9U/mpCcao819S7/E=
+X-Received: by 2002:a17:90b:35c7:b0:311:fde5:c4b6 with SMTP id
+ 98e67ed59e1d1-31c9f3efe45mr33017966a91.6.1753156270321; Mon, 21 Jul 2025
+ 20:51:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8] PCI: hotplug: Add a generic RAS tracepoinggt for
- hotplug event
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Matthew W Carlis <mattc@purestorage.com>, helgaas@kernel.org,
- Lukas Wunner <lukas@wunner.de>, anil.s.keshavamurthy@intel.com,
- bhelgaas@google.com, bp@alien8.de, davem@davemloft.net,
- linux-edac@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- linux-pci@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- mark.rutland@arm.com, mathieu.desnoyers@efficios.com, mhiramat@kernel.org,
- naveen@kernel.org, oleg@redhat.com, peterz@infradead.org,
- rostedt@goodmis.org, tianruidong@linux.alibaba.com, tony.luck@intel.com
-References: <20250717235055.GA2664149@bhelgaas>
- <20250718034616.26250-1-mattc@purestorage.com>
- <e92f8d1f-457c-4248-8397-81b0e20ff4af@linux.alibaba.com>
- <11119800-3b6a-a683-3500-115a057c2826@linux.intel.com>
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <11119800-3b6a-a683-3500-115a057c2826@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20250721171333.6caced4f@kernel.org> <20250722094808945ENOLvzY108YsJFz4CqbaI@zte.com.cn>
+In-Reply-To: <20250722094808945ENOLvzY108YsJFz4CqbaI@zte.com.cn>
+From: Kuniyuki Iwashima <kuniyu@google.com>
+Date: Mon, 21 Jul 2025 20:50:57 -0700
+X-Gm-Features: Ac12FXy9v416hau5beJ-VqKZOCQ6TgCXB1FDXzhWQtKR1uiwNtaKySQQ5qbKjRo
+Message-ID: <CAAVpQUDaSccbmOC0sgihBYPTdtSE2OsFOJXC6s58QS81a+8nkA@mail.gmail.com>
+Subject: Re: [PATCH net-next v7 RESEND] tcp: trace retransmit failures in tcp_retransmit_skb
+To: fan.yu9@zte.com.cn
+Cc: kuba@kernel.org, edumazet@google.com, ncardwell@google.com, 
+	davem@davemloft.net, dsahern@kernel.org, pabeni@redhat.com, horms@kernel.org, 
+	rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, yang.yang29@zte.com.cn, 
+	xu.xin16@zte.com.cn, tu.qiang35@zte.com.cn, jiang.kun2@zte.com.cn, 
+	qiu.yutan@zte.com.cn, wang.yaxin@zte.com.cn, he.peilin@zte.com.cn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Jul 21, 2025 at 6:48=E2=80=AFPM <fan.yu9@zte.com.cn> wrote:
+>
+> > On Mon, 21 Jul 2025 11:16:07 +0800 (CST) fan.yu9@zte.com.cn wrote:
+>
+> > > Subject: [PATCH net-next v7 RESEND] tcp: trace retransmit failures in=
+ tcp_retransmit_skb
+>
+> >
+>
+> > Why did you resend this??
+>
+>
+> Hi Jakub,
+>
+>
+> Thanks for checking! I just wanted to ensure the v7 patch wasn=E2=80=99t =
+missed =E2=80=94 it=E2=80=99s identical to the original.
+
+You can check the patch status in patchwork, and actually this v7
+marked the previous v7 as Superseded, so you didn't need to resend :)
+
+https://patchwork.kernel.org/project/netdevbpf/list/?submitter=3D217549&sta=
+te=3D*
 
 
-
-在 2025/7/21 18:18, Ilpo Järvinen 写道:
-> On Fri, 18 Jul 2025, Shuai Xue wrote:
->> 在 2025/7/18 11:46, Matthew W Carlis 写道:
->>> On Thu, Jul 17, 2025 Bjorn Helgaas wrote
->>>> So I think your idea of adding current link speed/width to the "Link
->>>> Up" event is still on the table, and that does sound useful to me.
->>>
->>> We're already reading the link status register here to check DLLA so
->>> it would be nice. I guess if everything is healthy we're probably already
->>> at the maximum speed by this point.
->>>
->>>> In the future we might add another tracepoint when we enumerate the
->>>> device and know the Vendor/Device ID.
->>>
->>> I think we might have someone who would be interested in doing it.
->>
->>
->> Hi, all,
->>
->> IIUC, the current hotplug event (or presence event) is enough for Matthew.
->> and we would like a new tracepoing for link speed change which reports
->> speeds.
->>
->> For hotplug event, I plan to send a new version to
->>
->> 1. address Bjorn' concerns about event strings by removing its spaces.
->>
->> #define PCI_HOTPLUG_EVENT
->> \
->> 	EM(PCI_HOTPLUG_LINK_UP,			"PCI_HOTPLUG_LINK_UP")
->> \
->> 	EM(PCI_HOTPLUG_LINK_DOWN,		"PCI_HOTPLUG_LINK_DOWN")
->> \
->> 	EM(PCI_HOTPLUG_CARD_PRESENT,		"PCI_HOTPLUG_CARD_PRESENT")
->> \
->> 	EMe(PCI_HOTPLUG_CARD_NOT_PRESENT,
->> "PCI_HOTPLUG_CARD_NOT_PRESENT")
->>
->> 2. address Ilpo comments by moving pci_hp_event to a common place
->> (include/trace/events/pci.h) so that the new comming can also use it.
-> 
-> Ah, I only now noticed you've decided to re-place them. Please disregard
-> my other comment about this being still open/undecided item.
-> 
->> For link speed change event (perhaps named as pci_link_event),
->> I plan to send a seperate patch, which provides:
->>
->> 	TP_STRUCT__entry(
->> 		__string(	port_name,	port_name	)
->> 		__field(	unsigned char,	cur_bus_speed	)
->> 		__field(	unsigned char,	max_bus_speed	)
->>   		__field(	unsigned char,	width		)
->>   		__field(	unsigned int,	flit_mode	)
->> 		__field(	unsigned char,	reason		)
->> 		),
->>
->> The reason field is from Lukas ideas which indicates why the link speed
->> changed, e.g. "hotplug", "autonomous", "thermal", "retrain", etc.
->>
->> Are you happy with above changes?
-> 
-> Since you're probably quite far with the pcie link event patch too given
-> above, could you take a look at the LNKSTA flags representation in my
-> patch and incorporate those as well as there seems to always lot of
-> uncertainty about those flags when investigating the LBMS/bwctrl related
-> issues so it seems prudent to explicitly include them into the traceevent
-> output:
-> 
-> https://lore.kernel.org/linux-pci/7c289bba-3133-0989-6333-41fc41fe3504@linux.intel.com/
-> 
-> 
-
-Sure, Thank you for the feedback.
-
-I like the LNKSTA flags, LNKSTA flags provides better genericity
-compared to the custom reason field I initially proposed. But it may
-cause confusion when used in pcie_retrain_link(). However, I've
-identified a potential issue when this approach is applied in
-pcie_retrain_link() scenarios.
-
-Consider the following trace output when a device hotpluged:
-
-$ cat /sys/kernel/debug/tracing/trace_pipe
-$ cat /sys/kernel/debug/tracing/trace_pipe
-            <...>-118     [002] .....    28.414220: pci_hp_event: 0000:00:03.0 slot:30, event:PCI_HOTPLUG_CARD_PRESENT
-
-            <...>-118     [002] .....    28.414273: pci_hp_event: 0000:00:03.0 slot:30, event:PCI_HOTPLUG_LINK_UP
-
-    irq/57-pciehp-118     [002] .....    28.540189: pcie_link_event: 0000:00:03.0 type:4, cur_bus_speed:2.5 GT/s PCIe, max_bus_speed:16.0 GT/s PCIe, width:1, flit_mode:0, status:DLLLA
-
-    irq/57-pciehp-118     [002] .....    28.544999: pcie_link_event: 0000:00:03.0 type:4, cur_bus_speed:2.5 GT/s PCIe, max_bus_speed:16.0 GT/s PCIe, width:1, flit_mode:0, status:DLLLA
-
-The problem is that both trace events show status:DLLLA (Data Link Layer
-Link Active), which is the direct reading from PCI_EXP_LNKSTA. However,
-this doesn't accurately reflect the underlying context:
-
-- First DLLLA: Triggered by board_added() - link establishment after
-   card insertion
-- Second DLLLA: Triggered by pcie_retrain_link() - link retraining
-   completion
-
-( I trace the events in pcie_update_link_speed() )
-
-In the second case, the more relevant status would be PCI_EXP_LNKSTA_LT
-(Link Training) to indicate that link retraining was performed, even
-though the final register state shows DLLLA.
-
-Question: Should we explicitly report the contextual status (e.g.,
-PCI_EXP_LNKSTA_LT for retraining scenarios) rather than always reading
-the current register field? This would provide more meaningful trace
-information for debugging link state transitions.
-
-Additionally, I'd appreciate your thoughts on the overall tracepoint
-format shown above. Does this structure provide sufficient information
-for hotplug and link analysis while maintaining readability?
-
-Thanks.
-Shuai
+>
+> Please let me know if any updates are needed. Appreciate your time!
+>
+>
+> Best regards,
+>
+> Fan Yu
