@@ -1,108 +1,94 @@
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E32A6288C96;
-	Tue, 22 Jul 2025 22:44:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A000287260;
+	Tue, 22 Jul 2025 22:56:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753224271; cv=none; b=msNe4pqxXEjaOA2+FJv/EkX5IQNrZBiKP/Kb/ACXClahcHsIl0OGwGltMMfWdo4S9vtHbzzUqf9Wea33e7RKoufEmg9qBRcW+zU6g59eDlaDxr+nd1D92OK7E2L6zZ7OaRwwiXCxmD2f5QwlsimgajEel4kVG4Bl/MBYq5nudiQ=
+	t=1753224979; cv=none; b=nfc0LnFNIMNB0g0+CdK3kqHsDRoVF8nTsNCmoxoCChgalJ5DMHHYqmy6Etfn+lw1fm8dHVoBMLYJGTUnCw9qZCtR1pf+RHFuxTqXBlEclN7elTG3dNLOsmM9sJjaU7wMk07UhzhPMYaDxCcKWgi0jv7FmV/qpEatHZwwRcnnMhc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753224271; c=relaxed/simple;
-	bh=Jda7N7pg0x484gJe9XR+a8dHcBcsTAb24iz27ImCYzc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pN9lP66+Tx1C7p5XZzGNi1hiJje+Dc5oEVXRdnyUJSJofu3qnEpB8eis5I+ZnoDHMDtTBvhxWoiYHBi+9agWF7LC8mzBQjvWJAmR0n7nJ8Az7LR8o9FQA/0/NWMOXzVzjWgq9f4p0g7vdTsvwWOPb+uEaX9UDJOJPcUOzhlVhT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf20.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay06.hostedemail.com (Postfix) with ESMTP id DC190112D67;
-	Tue, 22 Jul 2025 22:44:22 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf20.hostedemail.com (Postfix) with ESMTPA id 4828020025;
-	Tue, 22 Jul 2025 22:44:21 +0000 (UTC)
-Date: Tue, 22 Jul 2025 18:44:20 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 7/7] tracing: probes: Add a kerneldoc for
- traceprobe_parse_event_name()
-Message-ID: <20250722184420.24a9239e@gandalf.local.home>
-In-Reply-To: <175322175536.44400.179953626110801411.stgit@devnote2>
-References: <175322168606.44400.9155291012158349647.stgit@devnote2>
-	<175322175536.44400.179953626110801411.stgit@devnote2>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1753224979; c=relaxed/simple;
+	bh=gNnQ1ATC0LNWz/PO6c/hPn5m51igMSNYoD56Er7ePB0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=M1uXoXEAHi2hdwNu72cYjDKm/VFoGN6EjTXHTY3JvRL/D3buCIJiBtt4y+PzT5XqHNR/BHOO3S33b53pWPXyeyz3kt2OymxTjL1hRq6h3Q4lE/eCYqs3VAgh5Ovx0RU9+uqR6M1cQxRkGFd3/b+7Olk8odIhGu0o4v8f780riu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q/fHiLtB; arc=none smtp.client-ip=209.85.160.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q/fHiLtB"
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-4ab644b8dc1so66069051cf.1;
+        Tue, 22 Jul 2025 15:56:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1753224975; x=1753829775; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=gNnQ1ATC0LNWz/PO6c/hPn5m51igMSNYoD56Er7ePB0=;
+        b=Q/fHiLtBob9ECXXsd1Nt+lPU35StblMgdBHL/u04StZOA+3RZ9QqvcuB6eHVoUAG56
+         Tv+iKkxv1yFXtjQALNBLcallWFmMCXIZRoAXMsYKgIQS3jKHDXOQ4a79ty+4SFC8Brn/
+         avFBavt+QNHgregd/qibWc7TrJl5dN8Zz5ZJoGDVPam7YXFQH54pvSje48+rRGrdtEL0
+         ORW1rXgqjm9je8oabCjJ7wqvS+OHnrBS3+HYww7znxxCAwBQ6Y1Mpfa3Ic9yT9Gc1C6S
+         JSeg10EHkytrqLBg6JsIUBOT1MEP1x7Oa40LR7zYmXHP2BbYMIP6P5bg3iQiiH7StMEC
+         9C2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753224975; x=1753829775;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gNnQ1ATC0LNWz/PO6c/hPn5m51igMSNYoD56Er7ePB0=;
+        b=A+pv5aHti2P5+qw2bSNdWzcKq8zrJd0u4h8ffunqGKjBDfwkqxnKw0Otn4zU6IwVZX
+         Vr1xXqKiX2bdZYVLNWdwf3q54t9LU3Tp4mGV77AVkgi97OULu1Zk8Il+gsJsn25/P/Az
+         +0Qn4PnU1QLHwjSX0LFGj0d77T/DA0DND/mP+zJmg76WYc/1jPllSRuq02ObeEPqcyH1
+         607eB9NJGW7VOcXZwovbGRFe0nJRaeNFdPNbqPg/btK1oUIcYNQaZvKTCXjW7t2tKv1e
+         SH3SJFL7SjQqoaydVr2VKW6y89vKb+JskKKka/Y8GgOYubFfXqtGz93uw+aeLjXpVRaT
+         +bxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUk0yC9HYChrbK+ol4y32/JsJ9s9Bu32IdLqYUuL2wmnQdRMuhjMQ7xUoGZcW2G2CVfqoccy+D7ITupF6E=@vger.kernel.org, AJvYcCWUoFy1vwxuz+AyDsHMd9zyEHwiSQ8FktH9/DtDnXmhPm4+OSNHumvAgmyt13uVqsnKk5bh/gefMiFXQlukIBxKMxvN@vger.kernel.org
+X-Gm-Message-State: AOJu0YzEg6UhJAvResBi2w+kZlRfQY2PWutH/4UYCzUmgyxZ7LHten1x
+	dq09aU04nQmUtkMMwSiwNY/17JZNEgk4Ek67RXVE93CqNZdr+berszuF
+X-Gm-Gg: ASbGnculSHdIb9O8AviNlcOcRkiRyVz2p4gNikbid0x2JHsq6+J50V0BW0hNfajNvnn
+	+ejmEACgHGJcvKFxuaT0AaRqYoDMXT/6dQ9n4I+oXMigvbPYeAf7RmUkwfCqw7Nx2Wxc4NcCfhy
+	naMjRNvuWIB+oF5gVlbKX6LITGlnzosfXf/IF5z4fodIF5CPfVKgZquhnvXTUdkYOt8I51KN4+d
+	alwNNuYmLbNqW5AF+Ms65bF7RiLrLth080m5zskuaIWRu2n516/wjI8CtqdX7xBi9e16wm+jjZZ
+	muxDSxDeiLjHmd6iqRE/5ZMFmlSYiFGZBP8aPZ1GQTtsF1liqdtXy7A3w9J36xlLy17nrJL4Dd9
+	CPxq5xadscT75qgtYEBZI66mY904pxvSMZqbLCuSdiA==
+X-Google-Smtp-Source: AGHT+IGdtjTqUjhEz+qfyyJ+EWxXpOukye+UPJUMV4qHgq7s5J6B0IZ7q049Z30GCAoVqvuIyz5mFg==
+X-Received: by 2002:a05:622a:1818:b0:4a9:ace0:b24e with SMTP id d75a77b69052e-4ae6df7643emr11579601cf.37.1753224975382;
+        Tue, 22 Jul 2025 15:56:15 -0700 (PDT)
+Received: from Gentoo.localdomain ([37.19.198.68])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4abb4b4a544sm58875901cf.70.2025.07.22.15.56.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Jul 2025 15:56:14 -0700 (PDT)
+From: Bhaskar Chowdhury <unixbhaskar@gmail.com>
+To: mhiramat@kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: Bhaskar Chowdhury <unixbhaskar@gmail.com>
+Subject: [PATCH] tools:bootconfig:scripts This file was missing the shebang line, so added it
+Date: Wed, 23 Jul 2025 04:23:01 +0530
+Message-ID: <20250722225351.8811-1-unixbhaskar@gmail.com>
+X-Mailer: git-send-email 2.49.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout04
-X-Rspamd-Queue-Id: 4828020025
-X-Stat-Signature: 9bs4wqefw6prs5peyt317rkth7ezyp5d
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+2/30nACxrOvxzsGMn+IGSEJkL/A/T/l0=
-X-HE-Tag: 1753224261-402744
-X-HE-Meta: U2FsdGVkX1/ASRQsQ1xsuJ6AtY6bZmgIcO9jsPSg6fWCN8/qgTtClk6jS0vxSVRj0mHutwz1qOsnluHQ8s/1G3MUgANE5DyF2+XUNN/k4cxv6jW1EEbX5MhlRNxnPS9VjtBgqKkr7ZatS+ORZWo3OJhZnt6rLcSfhn6/UsxcP+g8axTvwZMbDpNSh9c2kjwIKBeYkgS0tL1z1yT4qgli4nqvkut63uVtP7YjhqfDyS6N8rMnqk6uHWBhl6CnZyW1QqN8OpFeJArq2b6R+rCqC2MpqIVP6ysTqT2QT8bfJpWz7fgvV0Qa+a59UpsZ7F8n/4ov7InI5xBFC1OhZRHJidebJiO2mB1tQwBNPzc+ZkHMtOmjzQ2gNXyLzjln8W4RnMXm9tqDDQTR0rXAWVZD0A==
+Content-Transfer-Encoding: 8bit
 
-On Wed, 23 Jul 2025 07:02:35 +0900
-"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+This file was missing the shebang line, so added it.
 
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> Since traceprobe_parse_event_name() is a bit complicated, add a
-> kerneldoc for explaining the behavior.
-> 
-> Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> ---
->  kernel/trace/trace_probe.c |   17 ++++++++++++++++-
->  1 file changed, 16 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-> index 9d26d901c9e5..7dcc4a548c69 100644
-> --- a/kernel/trace/trace_probe.c
-> +++ b/kernel/trace/trace_probe.c
-> @@ -247,7 +247,22 @@ int traceprobe_split_symbol_offset(char *symbol, long *offset)
->  	return 0;
->  }
->  
-> -/* @buf must has MAX_EVENT_NAME_LEN size */
-> +/**
-> + * traceprobe_parse_event_name - Parse a string into group and event names
-> + * @pevent: A pointer to the string to be parsed. On return, this is updated
-> + *          to point to the event name part of the string.
+Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
+---
+ tools/bootconfig/scripts/ftrace.sh | 1 +
+ 1 file changed, 1 insertion(+)
 
-I believe, these are supposed to be single lines. What it has on return
-should be in the "Return" section below.
+diff --git a/tools/bootconfig/scripts/ftrace.sh b/tools/bootconfig/scripts/ftrace.sh
+index 186eed923041..cc5250c64699 100644
+--- a/tools/bootconfig/scripts/ftrace.sh
++++ b/tools/bootconfig/scripts/ftrace.sh
+@@ -1,3 +1,4 @@
++#!/bin/sh
+ # SPDX-License-Identifier: GPL-2.0-only
 
-> + * @pgroup: A pointer to the group name. This is updated to point to the parsed
-> + *          group name, which is stored in @buf.
-> + * @buf:    A buffer to store the parsed group name.
-> + * @offset: The offset of the string in the original user command, for logging.
-> + *
-> + * Description: This parses a string with the format `[GROUP/][EVENT]` or
-> + *          `[GROUP.][EVENT]` (either GROUP or EVENT or both must be specified).
-> + *          The parsed group name is stored in @buf.
-> + *          The caller must ensure @buf is at least MAX_EVENT_NAME_LEN bytes.
-> + *
-> + * Return: 0 on success, or -EINVAL on failure.
-
-So the Return section here should state what is returned in the parameters too.
-Like:
-
- *    @pgroup is updated to point to the parsed group which is stored in @buf.
-
-etc.
-
--- Steve
-
-
-
-> + */
->  int traceprobe_parse_event_name(const char **pevent, const char **pgroup,
->  				char *buf, int offset)
->  {
+ clear_trace() { # reset trace output
+--
+2.49.1
 
