@@ -1,164 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B986288531;
-	Tue, 22 Jul 2025 06:56:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CB5E1581F8
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 22 Jul 2025 07:03:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753167361; cv=none; b=eiblMF0NaWZeKcDKG3HuFak0dGEIvvCBC+0Bt8yAM4gxP7GBhsxU8UJliQnKT0CqE+1yl2XZOTfwsqe+gVU8o81Y9pojwDCMkGpX3WlaM7nDhVToa7uyQHBh+mTrINmoprr7O5aavvbnJCd46PpYC/6n2R5i72IW+RLL2xXLRhA=
+	t=1753167822; cv=none; b=YS7nn385bw4DSJ2hl9cUFB/l//G6vyxxiXWQJbscpTuxIjsGuXb1VvaDgr4u4J/Ae/cw8OwG+m7l2WpTmF1lSn4Gm86Hf/YpfnH8CO7SnD4AkQXCtYVFJhPX0wAslBwd1FeeKNHhfuU2oxK3DCAG0rEWSjWbVZ2HoWIffU3XGhA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753167361; c=relaxed/simple;
-	bh=DqE2r+jnLUTL7QjlcN7tboq45VqA22jH4eIVD8o4Gmo=;
+	s=arc-20240116; t=1753167822; c=relaxed/simple;
+	bh=94YH95Kqg56L0NGAhzRVzTprjMBr1gaZFjXLE1bEm7Y=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QAJgP20a1duVeppOqeal2e+DlUQ49vNLLuIzhW2wJ9VfGd9Q9ReBA3bS2yIttHRwmIO+oXx5OM3w8k/iMi3VkJ/trhvV8btukQ4rk1T3l5v8yBDll3Vqy3dEgR00YTrNKG/tdXfZhM0zyOjt8wiHo6H9Od/YA+MuTwcte1dhiFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CpfcgUnu; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=k5zQIbuzXjukf2RIU8obMAb3TE/+pZh93bhA03zZjFayyNa1JZNLcN/9Yn6QB83Brnx5aeBirG/ZHgxR5nnwsiVbEo2hpGpbLS9R14Z2YOn3Rp4TdTVEsCId7oeyAB295j4PRqrxDC39AAZdFZkEAwkTzjADR/J/9I1nvJ65iWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Af9HBqiN; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CpfcgUnu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB071C19421;
-	Tue, 22 Jul 2025 06:56:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753167360;
-	bh=DqE2r+jnLUTL7QjlcN7tboq45VqA22jH4eIVD8o4Gmo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=CpfcgUnuDL0Vl921O+6i/yShR++00pNLOKABN64TGoQv08s4JWDaq5R787TzRwPYd
-	 SOxP3mvcTg3o5UodLqlybzcfO2KW0UIPKod6tyjXn4Q6f0Jg20Bo4EcbVyst6PFIeD
-	 9wwLag5HZhkuEkGdG4rGL0/xDa1dd1XF4wE0tl/b+CrzT64kGYr4RZg1sRlNLV6OW9
-	 D1EcUuEM2t8ys5AutC5biwDJeSbkbVn8adA+/943wMPAxGJivryo7aGbp+SI8Q2V02
-	 kg6rNPNzOZNNl41J5VZzJI8EAO2Ut8rnz8gAHCFuXdd0jodm+XgB+V+DD74LOgNTj5
-	 FmJF7Vu5xhdxg==
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-32b7f41d3e6so48641711fa.1;
-        Mon, 21 Jul 2025 23:56:00 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUX5wKbZm2IOtUum/OGqvpO4z6HuCoB1LDU2yLwkY/f5Plsi8y4zE7js47QLNR0MkFLXMM=@vger.kernel.org, AJvYcCVDFvz1UDnN4bfMZaZgoSiBU61uNCyrxz+1ErMzitvXnzAlZWI9i5+nvxqxh5s7fy2Laa8PrZJbca+7@vger.kernel.org, AJvYcCVXWLC8kFscT4NpsDZZFxDbZ1pu5IWgbTG27fSBGPQgOFAhz6tYiTgQZGgiFozgYMae+vl17pTXVFmX2O5WaB9jXRhz/g==@vger.kernel.org, AJvYcCVfWZPG7npEyTbMf5CuHA0vK3Bh81fIGfE5oziQZ9WMjmNkuKAYdW+D81lLZlHoZy6rErgEY+L/QCHc@vger.kernel.org, AJvYcCVj6WVTPqRmsxR9US0Joe4xnrPVkYsbsYT++zuIpmTRkEHX9xvIqIZ7MyFjVPnW3CqfuvbKMr5vEoLa6A==@vger.kernel.org, AJvYcCWIhHeca4enoslA8mdW5sv2IpglC0O/kcNO1B+dftXygCOgwvIKyfDo3YJI5TkOiCO80vNC+35WXCRown6gjbS4SyGc@vger.kernel.org, AJvYcCWKpdWnXbrCDuydrQBZwMHAUbEn6sGmeLTp+AYxZyVQ+HylMHErW7RpIkJHS8eog07E4je8+5aK+LCcalpzfDgM@vger.kernel.org, AJvYcCWWRMDezKzELWTei7j8lwehVzYU2wXXzGpbEo9LsULQJqvW/sAJPS8rUcyMNoX/SLuhruyJ0kaXOfp1Q1wH@vger.kernel.org, AJvYcCWaFIstkBLEsbsyiPCjVFAr09vbqxYy8dhM+o9xHEbwxdiirKcP4bmleBRy7fZerOWHI+VknG0EVklZ07EU@vger.kernel.org, AJvYcCWwTRRT6vJOEDwauzGDPFuIsF6zvAqUmVu976G21HrW9NMF8co5qYnVLJeRX66VOCgFq0Bw717UdQRQGTUdWBC64c/Try4J@vger.kernel.org, AJvYcCWyes6iceGphS7jGv/ls1AtiWGzyXRtfigL4fqxx/xrf/Sw+WaanLwDyp+k2kIwaF7mtt845IqkLVHm8g==@vger.kernel.org, AJvYcCX8rIOD/qSM4PM4IVveozDj2YjXy0m4kU8jyFdGCHpBY4yFfq0NewdYaQIULZezfmeXafsp/IRUX1DL1wmGhiVp@vger.kernel.org, AJvYcCXcRc3v6VqLNOTSPnRuq5qB7YOR3ONHs/zUFF1SQ6LHMLYPwCyGFQ+xAzBHWMT73HhYpC4LGQp8KHP/Vg==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx3Cy5HykqPvtQ5L4xKmkwIDzkKvL6nHs1mHEJ4eifUwYsfa/DJ
-	C+/llk2ypanRlVGw/69/D1y6SVgb4NgL6jYrUBzsTgVraZGV964/HhlSXLoWc2zuCuVkXbH2viD
-	CPk7MY3bCa8axRF4IL3qKDHpWaHWCJ3s=
-X-Google-Smtp-Source: AGHT+IHafl72rt/goLHslFsPSeMLrUwjaR0SoHeFAxURGVfbf4gcV3AlCo9M3FCJzrvPSuMBFqrA7K/+xkn2H/6KxwI=
-X-Received: by 2002:a05:651c:b11:b0:32b:952f:3e0 with SMTP id
- 38308e7fff4ca-330d25506d3mr8241951fa.7.1753167358762; Mon, 21 Jul 2025
- 23:55:58 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Af9HBqiN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1753167819;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=94YH95Kqg56L0NGAhzRVzTprjMBr1gaZFjXLE1bEm7Y=;
+	b=Af9HBqiN7Gb29VlD8LpiwphXIZ91zAHX05f7cPANINO3cCc+TifQ0ezWCrPhij1q+ajAcJ
+	IVL4Q4B/sDaUdOV1LfPVcb0OIvdACjvOYqTYleHoh4QY9Mu1RhX8GwhyutukPLfXcU+vKQ
+	grsuWhwRtDM5dAk493pHjq5dtNp++M4=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-381-FMufTfkwN6u9NRY0BVBXJQ-1; Tue, 22 Jul 2025 03:03:38 -0400
+X-MC-Unique: FMufTfkwN6u9NRY0BVBXJQ-1
+X-Mimecast-MFC-AGG-ID: FMufTfkwN6u9NRY0BVBXJQ_1753167817
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-ae1c79fb8a9so527384266b.0
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 22 Jul 2025 00:03:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753167817; x=1753772617;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=94YH95Kqg56L0NGAhzRVzTprjMBr1gaZFjXLE1bEm7Y=;
+        b=p+ReuUZEzBlZruWyKPt2lBC98fUA8H8Nlj+eVrgEw6W3sIO7jd2Vgh4WI8+MLqiqME
+         YiSIWj5K1yNy5hA/W2Up/CE9D0zAfVPqsm7FmqTSMGVFvMQkk79JMH72kWKZGd7yQG01
+         BW7eK77DTFo86eaBe0+j6Xua343F3WFiMvVNafHWIy7WcMjFQJQApkZs3gPJ57Dmvlrl
+         OLxtHrM4MJFLTsoncERg4Hc5VV57Xeptv5iUeQ5xCWC8te438kp0iOfrOZ3xnNzg4I7b
+         AE59jdZapRafBr4f3NucNaWodQpRY2HdRjyHWHzhA0W1HlBiBQnd3tZVLoQL8yNntIGd
+         pIqg==
+X-Gm-Message-State: AOJu0YyDuMcTCnDCHfX2uYB34jPd3bpG5/gUTbdlYlnQTDxyIPfOytCP
+	eiZUZAlkA9KmFnFCbn0rF6Tgi3xnnjqpXXcbchMHBuzMfaQoPN1VXuVt/KFMaFxjvOdGhvIWIel
+	k7rGA9kuNBmSFKsm9B2rOIqx4JHeyVkDY+6t/qJaXl9PoyyC3hNUurzYI3TzxswHG5bmK+WBpM+
+	5qhZTP/5OzplzgR5yj1LroHvL9ab3feDGl1zL6Az83//zohhN9
+X-Gm-Gg: ASbGnctywktwWCpenBun3Bc49Rq8J1qtf9mrscAYEL5wzCA8h+hVWBd9ypZGOvHM/qo
+	EO406dZNCDkTir+dwZ11gvMAwL1WUtw1fWHkspOaHb3UJvwqZtMsYuVeDHJDq6LWgwkCQtwGQPT
+	V9soZqdtdjMMNgNiFia8k=
+X-Received: by 2002:a17:907:724c:b0:ae3:6744:3677 with SMTP id a640c23a62f3a-aec6a5fa9f8mr1431815166b.32.1753167816583;
+        Tue, 22 Jul 2025 00:03:36 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHUS1C4M+sqJMBlVVOE3zFSmnosEzS/DCoJtMWBdNIwIY9r/Y+OIaF5oI+nbiWF7pf7JaO7/YLTOiG/Al9Kfl0=
+X-Received: by 2002:a17:907:724c:b0:ae3:6744:3677 with SMTP id
+ a640c23a62f3a-aec6a5fa9f8mr1431810666b.32.1753167816060; Tue, 22 Jul 2025
+ 00:03:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250717231756.make.423-kees@kernel.org> <20250717232519.2984886-4-kees@kernel.org>
- <aHoHkDvvp4AHIzU1@kernel.org> <202507181541.B8CFAC7E@keescook>
- <CAMj1kXGAwjChyFvjQcTbL8dFXkFWnn9n47bkN7FP=+EsLNsJdg@mail.gmail.com>
- <aH42--h-ARsvX5Wk@willie-the-truck> <202507211311.8DAC4C7@keescook> <202507211349.D93679FB25@keescook>
-In-Reply-To: <202507211349.D93679FB25@keescook>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Tue, 22 Jul 2025 16:55:47 +1000
-X-Gmail-Original-Message-ID: <CAMj1kXGoy7D+_hKyQrT_uXdjuFMYGUEMDYdRf6mx69PLeuBQQg@mail.gmail.com>
-X-Gm-Features: Ac12FXxN7NYW1J5gsbL-uJ8eWKShqoH6QBvGfux9lCX9EcW_ZhNmDxq92IzpXG0
-Message-ID: <CAMj1kXGoy7D+_hKyQrT_uXdjuFMYGUEMDYdRf6mx69PLeuBQQg@mail.gmail.com>
-Subject: Re: [PATCH v3 04/13] x86: Handle KCOV __init vs inline mismatches
-To: Kees Cook <kees@kernel.org>
-Cc: Will Deacon <will@kernel.org>, Mike Rapoport <rppt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Vitaly Kuznetsov <vkuznets@redhat.com>, Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
-	Hans de Goede <hdegoede@redhat.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Michal Wilczynski <michal.wilczynski@intel.com>, 
-	Juergen Gross <jgross@suse.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Roger Pau Monne <roger.pau@citrix.com>, 
-	David Woodhouse <dwmw@amazon.co.uk>, Usama Arif <usama.arif@bytedance.com>, 
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>, Thomas Huth <thuth@redhat.com>, Brian Gerst <brgerst@gmail.com>, 
-	kvm@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, 
-	platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-efi@vger.kernel.org, 
-	linux-mm@kvack.org, Ingo Molnar <mingo@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Christoph Hellwig <hch@lst.de>, 
-	Andrey Konovalov <andreyknvl@gmail.com>, Andrey Ryabinin <ryabinin.a.a@gmail.com>, 
-	Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nicolas Schier <nicolas.schier@linux.dev>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org, 
-	kasan-dev@googlegroups.com, linux-doc@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	sparclinux@vger.kernel.org, llvm@lists.linux.dev
+References: <20250626123405.1496931-1-tglozar@redhat.com> <20250626123405.1496931-10-tglozar@redhat.com>
+ <20250721183606.0489b1cd@gandalf.local.home>
+In-Reply-To: <20250721183606.0489b1cd@gandalf.local.home>
+From: Tomas Glozar <tglozar@redhat.com>
+Date: Tue, 22 Jul 2025 09:03:24 +0200
+X-Gm-Features: Ac12FXwIQm1h_qa8RXimPv2lpTVEqVoAuExH-2hEnAe5PwJDJ8uOLrUDIYGzoxI
+Message-ID: <CAP4=nvQWCWAOefHAqA82-VDb-00_y1-0fPOPBEyETJ2Q1EWEwg@mail.gmail.com>
+Subject: Re: [PATCH v2 9/9] Documentation/rtla: Add actions feature
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	John Kacur <jkacur@redhat.com>, Luis Goncalves <lgoncalv@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Chang Yin <cyin@redhat.com>, 
+	Costa Shulyupin <costa.shul@redhat.com>, Crystal Wood <crwood@redhat.com>, 
+	Gabriele Monaco <gmonaco@redhat.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: 38zZbf9WSwkqfFABmn5JkNK-zNtZU5jYgLUDambfO5g_1753167817
+X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 22 Jul 2025 at 06:49, Kees Cook <kees@kernel.org> wrote:
+=C3=BAt 22. 7. 2025 v 0:35 odes=C3=ADlatel Steven Rostedt <rostedt@goodmis.=
+org> napsal:
 >
-> On Mon, Jul 21, 2025 at 01:14:36PM -0700, Kees Cook wrote:
-> > On Mon, Jul 21, 2025 at 01:47:55PM +0100, Will Deacon wrote:
-> > > On Sun, Jul 20, 2025 at 04:10:01PM +1000, Ard Biesheuvel wrote:
-> > > > On Sat, 19 Jul 2025 at 08:51, Kees Cook <kees@kernel.org> wrote:
-> > > > > On Fri, Jul 18, 2025 at 11:36:32AM +0300, Mike Rapoport wrote:
-> > > > > > On Thu, Jul 17, 2025 at 04:25:09PM -0700, Kees Cook wrote:
-> > > > > > > When KCOV is enabled all functions get instrumented, unless the
-> > > > > > > __no_sanitize_coverage attribute is used. To prepare for
-> > > > > > > __no_sanitize_coverage being applied to __init functions, we have to
-> > > > > > > handle differences in how GCC's inline optimizations get resolved. For
-> > > > > > > x86 this means forcing several functions to be inline with
-> > > > > > > __always_inline.
-> > > > > > >
-> > > > > > > Signed-off-by: Kees Cook <kees@kernel.org>
-> > > > > >
-> > > > > > ...
-> > > > > >
-> > > > > > > diff --git a/include/linux/memblock.h b/include/linux/memblock.h
-> > > > > > > index bb19a2534224..b96746376e17 100644
-> > > > > > > --- a/include/linux/memblock.h
-> > > > > > > +++ b/include/linux/memblock.h
-> > > > > > > @@ -463,7 +463,7 @@ static inline void *memblock_alloc_raw(phys_addr_t size,
-> > > > > > >                                       NUMA_NO_NODE);
-> > > > > > >  }
-> > > > > > >
-> > > > > > > -static inline void *memblock_alloc_from(phys_addr_t size,
-> > > > > > > +static __always_inline void *memblock_alloc_from(phys_addr_t size,
-> > > > > > >                                             phys_addr_t align,
-> > > > > > >                                             phys_addr_t min_addr)
-> > > > > >
-> > > > > > I'm curious why from all memblock_alloc* wrappers this is the only one that
-> > > > > > needs to be __always_inline?
-> > > > >
-> > > > > Thread-merge[1], adding Will Deacon, who was kind of asking the same
-> > > > > question.
-> > > > >
-> > > > > Based on what I can tell, GCC has kind of fragile inlining logic, in the
-> > > > > sense that it can change whether or not it inlines something based on
-> > > > > optimizations. It looks like the kcov instrumentation being added (or in
-> > > > > this case, removed) from a function changes the optimization results,
-> > > > > and some functions marked "inline" are _not_ inlined. In that case, we end up
-> > > > > with __init code calling a function not marked __init, and we get the
-> > > > > build warnings I'm trying to eliminate.
-> > >
-> > > Got it, thanks for the explanation!
-> > >
-> > > > > So, to Will's comment, yes, the problem is somewhat fragile (though
-> > > > > using either __always_inline or __init will deterministically solve it).
-> > > > > We've tripped over this before with GCC and the solution has usually
-> > > > > been to just use __always_inline and move on.
-> > > > >
-> > > >
-> > > > Given that 'inline' is already a macro in the kernel, could we just
-> > > > add __attribute__((__always_inline__)) to it when KCOV is enabled?
-> > >
-> > > That sounds like a more robust approach and, by the sounds of it, we
-> > > could predicate it on GCC too. That would also provide a neat place for
-> > > a comment describing the problem.
-> > >
-> > > Kees, would that work for you?
-> >
-> > That seems like an extremely large hammer for this problem, IMO. It
-> > feels like it could cause new strange corner cases. I'd much prefer the
-> > small fixes I've currently got since it keeps it focused. KCOV is
-> > already enabled for "allmodconfig", so any new instances would be found
-> > very quickly, etc. (And GCC's fragility in this regard has already been
-> > exposed to these cases -- it's just that I changed one of the
-> > combinations of __init vs inline vs instrumentation.
-> >
-> > I could give it a try, if you really prefer the big hammer approach...
->
-> I gave it a try -- it fails spectacularly. ;) Let's stick to my small
-> fixes instead?
+> I'm curious to what is looked for for triggering an action. We can poll o=
+n
+> events and get woken when they are triggered. It may be possible to add
+> even more ways to wake a task waiting for something to happen.
 >
 
-Fair enough :-)
+Threshold actions are triggered immediately after a sample over the
+set threshold is detected by rtla. For BPF mode, this happens almost
+right after the sample is processed in the BPF program and the
+scheduler gets to waking up rtla following a BPF ringbuffer write.
+There is only a short delay (up to tens of microseconds) because the
+BPF helper defers the wake-up into irq_work.
+
+For non-BPF mode, rtla periodically pulls samples from tracefs, when
+it does that, it also checks whether tracing has been turned off. If
+yes, that means there was a threshold overflow, and actions are
+triggered. Since the period for that is currently set to 1 second, the
+action might be delayed up to one second from the threshold occurring,
+That delay might be a problem if you need to collect a lot of data
+from a ringbuffer in the action, e.g. global Intel PT data collection
+for precise troubleshooting of difficult latencies.
+
+Of course, this is just an implementational limitation of the timerlat
+tracer. If timerlat had an event (like osnoise's "sample_threshold")
+triggered on threshold overflow and if it is possible to wait on it
+even without BPF, rtla could wait on that for both BPF and non-BPF
+mode instead of what it is currently doing.
+
+Tomas
+
