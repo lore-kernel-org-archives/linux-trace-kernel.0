@@ -1,94 +1,103 @@
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A000287260;
-	Tue, 22 Jul 2025 22:56:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A979228153A;
+	Tue, 22 Jul 2025 23:00:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753224979; cv=none; b=nfc0LnFNIMNB0g0+CdK3kqHsDRoVF8nTsNCmoxoCChgalJ5DMHHYqmy6Etfn+lw1fm8dHVoBMLYJGTUnCw9qZCtR1pf+RHFuxTqXBlEclN7elTG3dNLOsmM9sJjaU7wMk07UhzhPMYaDxCcKWgi0jv7FmV/qpEatHZwwRcnnMhc=
+	t=1753225225; cv=none; b=gbnxl62YrERIXYKL3zVl3YN5wYsGdH6faqZuhROxpJwfES997cSzNjnAKbWZKcJ/rWiPI8nDjRbKCADpmZFdWERuEkG3BSlpLYIQOyfAPqCaiz8nAnq2Uq2+SOIfTbz+0BeB17uT7OMlaDSmUuWGfJQJEunVxaX1Zkn9YIe/BQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753224979; c=relaxed/simple;
-	bh=gNnQ1ATC0LNWz/PO6c/hPn5m51igMSNYoD56Er7ePB0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=M1uXoXEAHi2hdwNu72cYjDKm/VFoGN6EjTXHTY3JvRL/D3buCIJiBtt4y+PzT5XqHNR/BHOO3S33b53pWPXyeyz3kt2OymxTjL1hRq6h3Q4lE/eCYqs3VAgh5Ovx0RU9+uqR6M1cQxRkGFd3/b+7Olk8odIhGu0o4v8f780riu0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q/fHiLtB; arc=none smtp.client-ip=209.85.160.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q/fHiLtB"
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-4ab644b8dc1so66069051cf.1;
-        Tue, 22 Jul 2025 15:56:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1753224975; x=1753829775; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=gNnQ1ATC0LNWz/PO6c/hPn5m51igMSNYoD56Er7ePB0=;
-        b=Q/fHiLtBob9ECXXsd1Nt+lPU35StblMgdBHL/u04StZOA+3RZ9QqvcuB6eHVoUAG56
-         Tv+iKkxv1yFXtjQALNBLcallWFmMCXIZRoAXMsYKgIQS3jKHDXOQ4a79ty+4SFC8Brn/
-         avFBavt+QNHgregd/qibWc7TrJl5dN8Zz5ZJoGDVPam7YXFQH54pvSje48+rRGrdtEL0
-         ORW1rXgqjm9je8oabCjJ7wqvS+OHnrBS3+HYww7znxxCAwBQ6Y1Mpfa3Ic9yT9Gc1C6S
-         JSeg10EHkytrqLBg6JsIUBOT1MEP1x7Oa40LR7zYmXHP2BbYMIP6P5bg3iQiiH7StMEC
-         9C2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753224975; x=1753829775;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=gNnQ1ATC0LNWz/PO6c/hPn5m51igMSNYoD56Er7ePB0=;
-        b=A+pv5aHti2P5+qw2bSNdWzcKq8zrJd0u4h8ffunqGKjBDfwkqxnKw0Otn4zU6IwVZX
-         Vr1xXqKiX2bdZYVLNWdwf3q54t9LU3Tp4mGV77AVkgi97OULu1Zk8Il+gsJsn25/P/Az
-         +0Qn4PnU1QLHwjSX0LFGj0d77T/DA0DND/mP+zJmg76WYc/1jPllSRuq02ObeEPqcyH1
-         607eB9NJGW7VOcXZwovbGRFe0nJRaeNFdPNbqPg/btK1oUIcYNQaZvKTCXjW7t2tKv1e
-         SH3SJFL7SjQqoaydVr2VKW6y89vKb+JskKKka/Y8GgOYubFfXqtGz93uw+aeLjXpVRaT
-         +bxQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUk0yC9HYChrbK+ol4y32/JsJ9s9Bu32IdLqYUuL2wmnQdRMuhjMQ7xUoGZcW2G2CVfqoccy+D7ITupF6E=@vger.kernel.org, AJvYcCWUoFy1vwxuz+AyDsHMd9zyEHwiSQ8FktH9/DtDnXmhPm4+OSNHumvAgmyt13uVqsnKk5bh/gefMiFXQlukIBxKMxvN@vger.kernel.org
-X-Gm-Message-State: AOJu0YzEg6UhJAvResBi2w+kZlRfQY2PWutH/4UYCzUmgyxZ7LHten1x
-	dq09aU04nQmUtkMMwSiwNY/17JZNEgk4Ek67RXVE93CqNZdr+berszuF
-X-Gm-Gg: ASbGnculSHdIb9O8AviNlcOcRkiRyVz2p4gNikbid0x2JHsq6+J50V0BW0hNfajNvnn
-	+ejmEACgHGJcvKFxuaT0AaRqYoDMXT/6dQ9n4I+oXMigvbPYeAf7RmUkwfCqw7Nx2Wxc4NcCfhy
-	naMjRNvuWIB+oF5gVlbKX6LITGlnzosfXf/IF5z4fodIF5CPfVKgZquhnvXTUdkYOt8I51KN4+d
-	alwNNuYmLbNqW5AF+Ms65bF7RiLrLth080m5zskuaIWRu2n516/wjI8CtqdX7xBi9e16wm+jjZZ
-	muxDSxDeiLjHmd6iqRE/5ZMFmlSYiFGZBP8aPZ1GQTtsF1liqdtXy7A3w9J36xlLy17nrJL4Dd9
-	CPxq5xadscT75qgtYEBZI66mY904pxvSMZqbLCuSdiA==
-X-Google-Smtp-Source: AGHT+IGdtjTqUjhEz+qfyyJ+EWxXpOukye+UPJUMV4qHgq7s5J6B0IZ7q049Z30GCAoVqvuIyz5mFg==
-X-Received: by 2002:a05:622a:1818:b0:4a9:ace0:b24e with SMTP id d75a77b69052e-4ae6df7643emr11579601cf.37.1753224975382;
-        Tue, 22 Jul 2025 15:56:15 -0700 (PDT)
-Received: from Gentoo.localdomain ([37.19.198.68])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4abb4b4a544sm58875901cf.70.2025.07.22.15.56.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Jul 2025 15:56:14 -0700 (PDT)
-From: Bhaskar Chowdhury <unixbhaskar@gmail.com>
-To: mhiramat@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: Bhaskar Chowdhury <unixbhaskar@gmail.com>
-Subject: [PATCH] tools:bootconfig:scripts This file was missing the shebang line, so added it
-Date: Wed, 23 Jul 2025 04:23:01 +0530
-Message-ID: <20250722225351.8811-1-unixbhaskar@gmail.com>
-X-Mailer: git-send-email 2.49.1
+	s=arc-20240116; t=1753225225; c=relaxed/simple;
+	bh=CRFhfV141swPD8l+LLZFt1GQAYLI8Qvph8qAL0gbGBM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=e+2n400P6oKsMSOB6kQgvxl++9HISHHkfypevAJOsnkUSl8ZKnYj2E665f/bxQkpWTaQX5XDXc53FAj9mNLTNe/lZxteoU1zo4GEh73Ruaq57h+RRqp0Z3wVH9Zs3IPbRCAr6nriYGAQd/ZMI6FZRZyT12TEw45wsmH+qzIfxis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf08.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay05.hostedemail.com (Postfix) with ESMTP id AA82C58AC7;
+	Tue, 22 Jul 2025 23:00:19 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id 64B6520025;
+	Tue, 22 Jul 2025 23:00:17 +0000 (UTC)
+Date: Tue, 22 Jul 2025 19:00:16 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Ingo Molnar <mingo@kernel.org>, Peter
+ Zijlstra <peterz@infradead.org>, Vincent Guittot
+ <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>
+Subject: Re: [PATCH] tracing: sched: Hide numa balancing trace events
+Message-ID: <20250722190016.7c462d56@gandalf.local.home>
+In-Reply-To: <20250722104820.6c629734@batman.local.home>
+References: <20250722104820.6c629734@batman.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: zt6hqkzrthfmtqkjg7fydzzmpgc5n9ta
+X-Rspamd-Server: rspamout01
+X-Rspamd-Queue-Id: 64B6520025
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19WiFuqgyxBH6LA4hu1ZcV8o+KAAXzu0MU=
+X-HE-Tag: 1753225217-5500
+X-HE-Meta: U2FsdGVkX18s6pmuHFRVWSSP+I+IAIBmqBIFxzZ7ayy/uOXZi+SvTZnWwmi9kKP9ikqVWO9wX/VXbKS6DNpuwu5iTxjbeM4waKKbbH+3zyhYNHNN72ADzfe/WVKXJ+D7aaiLxjDKg9OJRvsi6Qcz6Sd86F6BHvjOD3HPXwXxwdu6EVniFzvH+4HtpPTUjSsLE6jg17Ef4Jhm3sJ8Ee+mwqxOJLHqmPpo2gfy1dKBx3tuLCPg/i91tem0n59uOda34crVgosOhQ9+O+7RxVuhI9PjE8Gw+sigoCIafx70N29hOWi7kTlAYxE9g/oI1SRqXL4aMRDrnXvx/lJnkTVMlBpLQPQUezWZFZu+9BErahGoEFGp8hkwGZM2sjHG5QlaKWBZEGtyUtE2GZZ3zZ99nA==
 
-This file was missing the shebang line, so added it.
+On Tue, 22 Jul 2025 10:48:20 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
----
- tools/bootconfig/scripts/ftrace.sh | 1 +
- 1 file changed, 1 insertion(+)
+> From: Steven Rostedt <rostedt@goodmis.org>
+> 
+> The trace events sched_move_numa, sched_swap_numa and sched_stick_numa are
+> only used when CONFIG_NUMA_BALANCING is enabled. Put an #ifdef guard
+> around the definitions of these trace events so they are not defined when
+> numa balancing is not enabled, otherwise they waste a bit of memory being
+> unused.
+> 
 
-diff --git a/tools/bootconfig/scripts/ftrace.sh b/tools/bootconfig/scripts/ftrace.sh
-index 186eed923041..cc5250c64699 100644
---- a/tools/bootconfig/scripts/ftrace.sh
-+++ b/tools/bootconfig/scripts/ftrace.sh
-@@ -1,3 +1,4 @@
-+#!/bin/sh
- # SPDX-License-Identifier: GPL-2.0-only
+I just noticed that I already sent out a version of this patch here:
 
- clear_trace() { # reset trace output
---
-2.49.1
+  https://lore.kernel.org/linux-trace-kernel/20250612100552.39672cf9@batman.local.home/
+
+Which is a better version than this one.
+
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+>  include/trace/events/sched.h | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
+> index 4e6b2910cec3..51776b45549a 100644
+> --- a/include/trace/events/sched.h
+> +++ b/include/trace/events/sched.h
+> @@ -628,6 +628,7 @@ TRACE_EVENT(sched_process_hang,
+>  );
+>  #endif /* CONFIG_DETECT_HUNG_TASK */
+>  
+> +#ifdef CONFIG_NUMA_BALANCING
+>  /*
+>   * Tracks migration of tasks from one runqueue to another. Can be used to
+>   * detect if automatic NUMA balancing is bouncing between nodes.
+> @@ -719,6 +720,7 @@ DEFINE_EVENT(sched_numa_pair_template, sched_swap_numa,
+>  
+>  	TP_ARGS(src_tsk, src_cpu, dst_tsk, dst_cpu)
+>  );
+> +#endif /* CONFIG_NUMA_BALANCING */
+>  
+>  #ifdef CONFIG_NUMA_BALANCING
+
+Because You can just remove the above two CPP directives.
+
+So please ignore this one.
+
+-- Steve
+
+
+>  #define NUMAB_SKIP_REASON					\
 
