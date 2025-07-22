@@ -1,162 +1,237 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02A5E2DA751;
-	Tue, 22 Jul 2025 08:57:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 884782E9733;
+	Tue, 22 Jul 2025 12:29:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753174645; cv=none; b=qdPzaNslKi6g1lELj/oi95IQJHLEMXbwY7hnJx1ifcqzMvXDDWlx7PSMu0KOdaNJWdVVQCcZZkunzKEuqJU6+L6wvt0MdfioedmqLX+RxZ5NxcYeA9lQoy9qs5qbccYIy/yaUNYC2eWFcWluetPzz/hECFAFjId5zCQRkawK5ac=
+	t=1753187374; cv=none; b=ccDtKE3rdU60cgOm/mtSbgT7kHcSgSJkbFFpttS+/RdNkn+YmFAVF+vSxYlliFg9yMwzGENbWQ2f882d7HIwO181NYr02ZXvgq8PsNxrbR3Oz7qfkiO7pQbDMnrYQiSJx6Ul04vvoFY/L+joJkBcisj18briw2FTF2OGaM/rx8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753174645; c=relaxed/simple;
-	bh=lARdiQiADgYgkEt5lX0u1z/fVTK6JG75XBExtSpj7e8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=skV/4rj2kDw5AX68UygqHS6sOtUVWDNBju9+aKwWzLF/hP20f6D5IMZ57cUCOj3qtb4PnJRs19/wGN/dQ2NWb46ypOjh2nc5FlCHHG+yA70BOCkoovEiM4FKdpfq6otu/TyE/FN6D+o6SCGop4TmHZfO7kgvgl4C/AfAgRqN1m0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=lsUkL/un; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1753187374; c=relaxed/simple;
+	bh=ugYgb0RNPFqmdXsGr0G/GGIYY2Anwmf6OjdxW7Uub6E=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=JZvL/DM7R1gH+RS4DbsZbLqZuiY5h1r9V/VxbTjLSRjb1V3sCe56XA+D950txCKwCnPcJd3urijRnm30zC9NHP5IWErO223ICElLWR6D4gi0BWGSRnlEpATdcQNsh4/enon7DofVAhrOOiZ3LpMuonFhTS77MPAYoqV6hFfMNQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZE+SifE+; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="lsUkL/un"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56M7oMTp029365;
-	Tue, 22 Jul 2025 08:57:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=vmhU+FR2k26av2hIZ
-	iV+NNFmRQFDTiIkuVxAjb0IsSQ=; b=lsUkL/uny4vFkT0POwiMUtBkRrEKiAMlN
-	a5Twk1p+hI/kGsSrsmdp4ZL0EOXNEtcBqGZqxFMKldJ3SGnGaixdWzMIYUjFHqrR
-	2Ldpl8lJaB7CpD5DheGxadISS5c4cZGFhkPaVPI4EM1qGEWXp6E1Pqri7b6a1gs7
-	yW3mVnXimgXf1EOxvlL8f/LdnQ0I8ORxbeSPGyU+8vbdnH0S//b2eLeAIr6GTgZI
-	YdaxaVIvKjfOcoIYpvafwojNq5jUJ07ynajNXS/VcuixmxppVzBLWCzZbJ85d1px
-	PlQ9Uk3kganrJto3PU27oaULMCsuF9kKc8KkBYhv2JEFwj4CWnMNg==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4805ut58aw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 22 Jul 2025 08:57:07 +0000 (GMT)
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 56M8nhKw006671;
-	Tue, 22 Jul 2025 08:57:07 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4805ut58at-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 22 Jul 2025 08:57:07 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 56M6bOO3014356;
-	Tue, 22 Jul 2025 08:57:06 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 480ppp23kf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 22 Jul 2025 08:57:06 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 56M8v2GM37159328
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 22 Jul 2025 08:57:02 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id ADB8620043;
-	Tue, 22 Jul 2025 08:57:02 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 55EAE20040;
-	Tue, 22 Jul 2025 08:57:00 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.109.199.41])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 22 Jul 2025 08:57:00 +0000 (GMT)
-From: Aditya Bodkhe <adityab1@linux.ibm.com>
-To: linuxppc-dev@lists.ozlabs.org
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com,
-        christophe.leroy@csgroup.eu, rostedt@goodmis.org, mhiramat@kernel.org,
-        mark.rutland@arm.com, venkat88@linux.ibm.com,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Aditya Bodkhe <adityab1@linux.ibm.com>
-Subject: [PATCH v2 2/2] powerpc/fprobe: fix updated fprobe for function-graph tracer
-Date: Tue, 22 Jul 2025 14:26:48 +0530
-Message-ID: <20250722085648.1640-2-adityab1@linux.ibm.com>
-X-Mailer: git-send-email 2.50.0
-In-Reply-To: <20250722085648.1640-1-adityab1@linux.ibm.com>
-References: <20250722085648.1640-1-adityab1@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZE+SifE+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1753187373; x=1784723373;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=ugYgb0RNPFqmdXsGr0G/GGIYY2Anwmf6OjdxW7Uub6E=;
+  b=ZE+SifE+0EJ9uS04jZVCTZqBTsG+9lFb/GWt7Aw/JP/cCoF1MaS94pM6
+   JxDlUzJ0ARzoDdSahyHYHyHfIBb9ggbXHr/2EY92eQm362CXW7x26BLWt
+   egeNZ9Bnmb/lcxOKv2iCKLPfJmfCdRivRbItnoASkVrNSAHsRUrYalGa4
+   9QcJ2Sv3GMOb+gec3BOpU7OdgVMDfSKkuL0GA6FfQwrWaXhNPnlhtlv7a
+   JH/xpKzhHIIf6p+IHEaJU+xK5ynGZufcCJIRxgfe7UCKM+QM0HClDg3qc
+   3ErQwgeoDsm0+pukde8kqUv7W7ix4iuhEOlIci4Jsu3PJCXC0wuNBpq4N
+   Q==;
+X-CSE-ConnectionGUID: EBs+HQPoQT6/qN8fsRFiWg==
+X-CSE-MsgGUID: OWEPZKTGRviNmDuLUMS6fA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11500"; a="55376698"
+X-IronPort-AV: E=Sophos;i="6.16,331,1744095600"; 
+   d="scan'208";a="55376698"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2025 05:29:31 -0700
+X-CSE-ConnectionGUID: tfh2GasuSKmcPJKOS2cYAg==
+X-CSE-MsgGUID: 4/tBAQZUT3elnO5/NEQTaQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,331,1744095600"; 
+   d="scan'208";a="158446969"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.254])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2025 05:29:23 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 22 Jul 2025 15:29:20 +0300 (EEST)
+To: Shuai Xue <xueshuai@linux.alibaba.com>
+cc: Matthew W Carlis <mattc@purestorage.com>, helgaas@kernel.org, 
+    Lukas Wunner <lukas@wunner.de>, anil.s.keshavamurthy@intel.com, 
+    bhelgaas@google.com, bp@alien8.de, davem@davemloft.net, 
+    linux-edac@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    linux-pci@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+    mark.rutland@arm.com, mathieu.desnoyers@efficios.com, mhiramat@kernel.org, 
+    naveen@kernel.org, oleg@redhat.com, peterz@infradead.org, 
+    rostedt@goodmis.org, tianruidong@linux.alibaba.com, tony.luck@intel.com
+Subject: Re: [PATCH v8] PCI: hotplug: Add a generic RAS tracepoinggt for
+ hotplug event
+In-Reply-To: <fcfc51c0-6a1f-435b-844b-4daba132f7b6@linux.alibaba.com>
+Message-ID: <d3de8888-5ba8-c27c-2a6a-eecf3cc284da@linux.intel.com>
+References: <20250717235055.GA2664149@bhelgaas> <20250718034616.26250-1-mattc@purestorage.com> <e92f8d1f-457c-4248-8397-81b0e20ff4af@linux.alibaba.com> <11119800-3b6a-a683-3500-115a057c2826@linux.intel.com>
+ <fcfc51c0-6a1f-435b-844b-4daba132f7b6@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzIyMDA3MSBTYWx0ZWRfX+j3SfIQTa1HU
- dyh+hlxgIT1HFy4bkK9Jm6O8wQjES4X2iM6ZRjdVCKsS2CiGO6Yk+FeQ2c0X0X2AsNVSddBj8aq
- rFTDSkHpXcHOYE4nUMFis2viuoCLu2LxDwkDfptGF5y1HSnb4BALLea0shm3xjMVw2BtB3Drqg+
- e8wyftxHKddariMVxfe/xps8fXCn10/W7q+D5QkakJQe14n6c2IbpXJeSEBtd781ipBkwV3eYO3
- 1t189Wh3Jew7AyF5WiAbjj4yaXTWk3mFvPkb0Y8WCngr0NnNcgUObyVTq/YYvX/4JEfy4Pkw0ze
- EtgHUL9vmQcvsTJ/6BkP0m4zl7pfrTVl2ZH/8g9PQEp64oRsKoRzyd5lF/DJCUVUy7u/aVTB6P0
- +B/wYqcn1dtrvSIsGG+0sOyXGP+4N8XNejhpEr+dABIaqXmFDAVrngMZREE6CMlstGEqYK3a
-X-Proofpoint-ORIG-GUID: k5Pq5Gutfr422_L3YlQ_jpgECrKiYigz
-X-Authority-Analysis: v=2.4 cv=cIDgskeN c=1 sm=1 tr=0 ts=687f5263 cx=c_pps
- a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
- a=Wb1JkmetP80A:10 a=VnNF1IyMAAAA:8 a=eJdZZeSqwtc_5qrUTOUA:9
-X-Proofpoint-GUID: 0h7k1LtYsY36usoiqbCTrOIEOf02aPNa
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-07-22_01,2025-07-21_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 mlxlogscore=633 mlxscore=0 spamscore=0 suspectscore=0
- adultscore=0 phishscore=0 impostorscore=0 bulkscore=0 lowpriorityscore=0
- priorityscore=1501 clxscore=1015 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2507220071
+Content-Type: multipart/mixed; boundary="8323328-198401369-1753187360=:920"
 
-From: Hari Bathini <hbathini@linux.ibm.com>
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Since commit 4346ba160409 ("fprobe: Rewrite fprobe on function-graph
-tracer"), FPROBE depends on HAVE_FUNCTION_GRAPH_FREGS. With previous
-patch adding HAVE_FUNCTION_GRAPH_FREGS for powerpc, FPROBE can be
-enabled on powerpc. But with the commit b5fa903b7f7c ("fprobe: Add
-fprobe_header encoding feature"), asm/fprobe.h header is needed to
-define arch dependent encode/decode macros. The fprobe header MSB
-pattern on powerpc is not 0xf. So, define FPROBE_HEADER_MSB_PATTERN
-expected on powerpc.
+--8323328-198401369-1753187360=:920
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Also, commit 762abbc0d09f ("fprobe: Use ftrace_regs in fprobe exit
-handler") introduced HAVE_FTRACE_REGS_HAVING_PT_REGS for archs that
-have pt_regs in ftrace_regs. Advertise that on powerpc to reuse
-common definitions like ftrace_partial_regs().
+On Tue, 22 Jul 2025, Shuai Xue wrote:
+> =E5=9C=A8 2025/7/21 18:18, Ilpo J=C3=A4rvinen =E5=86=99=E9=81=93:
+> > On Fri, 18 Jul 2025, Shuai Xue wrote:
+> > > =E5=9C=A8 2025/7/18 11:46, Matthew W Carlis =E5=86=99=E9=81=93:
+> > > > On Thu, Jul 17, 2025 Bjorn Helgaas wrote
+> > > > > So I think your idea of adding current link speed/width to the "L=
+ink
+> > > > > Up" event is still on the table, and that does sound useful to me=
+=2E
+> > > >=20
+> > > > We're already reading the link status register here to check DLLA s=
+o
+> > > > it would be nice. I guess if everything is healthy we're probably
+> > > > already
+> > > > at the maximum speed by this point.
+> > > >=20
+> > > > > In the future we might add another tracepoint when we enumerate t=
+he
+> > > > > device and know the Vendor/Device ID.
+> > > >=20
+> > > > I think we might have someone who would be interested in doing it.
+> > >=20
+> > >=20
+> > > Hi, all,
+> > >=20
+> > > IIUC, the current hotplug event (or presence event) is enough for Mat=
+thew.
+> > > and we would like a new tracepoing for link speed change which report=
+s
+> > > speeds.
+> > >=20
+> > > For hotplug event, I plan to send a new version to
+> > >=20
+> > > 1. address Bjorn' concerns about event strings by removing its spaces=
+=2E
+> > >=20
+> > > #define PCI_HOTPLUG_EVENT
+> > > \
+> > > =09EM(PCI_HOTPLUG_LINK_UP,=09=09=09"PCI_HOTPLUG_LINK_UP")
+> > > \
+> > > =09EM(PCI_HOTPLUG_LINK_DOWN,=09=09"PCI_HOTPLUG_LINK_DOWN")
+> > > \
+> > > =09EM(PCI_HOTPLUG_CARD_PRESENT,=09=09"PCI_HOTPLUG_CARD_PRESENT")
+> > > \
+> > > =09EMe(PCI_HOTPLUG_CARD_NOT_PRESENT,
+> > > "PCI_HOTPLUG_CARD_NOT_PRESENT")
+> > >=20
+> > > 2. address Ilpo comments by moving pci_hp_event to a common place
+> > > (include/trace/events/pci.h) so that the new comming can also use it.
+> >=20
+> > Ah, I only now noticed you've decided to re-place them. Please disregar=
+d
+> > my other comment about this being still open/undecided item.
+> >=20
+> > > For link speed change event (perhaps named as pci_link_event),
+> > > I plan to send a seperate patch, which provides:
+> > >=20
+> > > =09TP_STRUCT__entry(
+> > > =09=09__string(=09port_name,=09port_name=09)
+> > > =09=09__field(=09unsigned char,=09cur_bus_speed=09)
+> > > =09=09__field(=09unsigned char,=09max_bus_speed=09)
+> > >   =09=09__field(=09unsigned char,=09width=09=09)
+> > >   =09=09__field(=09unsigned int,=09flit_mode=09)
+> > > =09=09__field(=09unsigned char,=09reason=09=09)
+> > > =09=09),
+> > >=20
+> > > The reason field is from Lukas ideas which indicates why the link spe=
+ed
+> > > changed, e.g. "hotplug", "autonomous", "thermal", "retrain", etc.
+> > >=20
+> > > Are you happy with above changes?
+> >=20
+> > Since you're probably quite far with the pcie link event patch too give=
+n
+> > above, could you take a look at the LNKSTA flags representation in my
+> > patch and incorporate those as well as there seems to always lot of
+> > uncertainty about those flags when investigating the LBMS/bwctrl relate=
+d
+> > issues so it seems prudent to explicitly include them into the traceeve=
+nt
+> > output:
+> >=20
+> > https://lore.kernel.org/linux-pci/7c289bba-3133-0989-6333-41fc41fe3504@=
+linux.intel.com/
+> >=20
+> >=20
+>=20
+> Sure, Thank you for the feedback.
+>=20
+> I like the LNKSTA flags, LNKSTA flags provides better genericity
+> compared to the custom reason field I initially proposed. But it may
+> cause confusion when used in pcie_retrain_link(). However, I've
+> identified a potential issue when this approach is applied in
+> pcie_retrain_link() scenarios.
 
-Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
-Signed-off-by: Aditya Bodkhe <adityab1@linux.ibm.com>
----
- arch/powerpc/Kconfig              |  1 +
- arch/powerpc/include/asm/fprobe.h | 12 ++++++++++++
- 2 files changed, 13 insertions(+)
- create mode 100644 arch/powerpc/include/asm/fprobe.h
+I was trying to say the flags should be in addition to the other=20
+information, not replace reason.
 
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 9163521bc4b9..2203e4fb64c1 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -246,6 +246,7 @@ config PPC
- 	select HAVE_EFFICIENT_UNALIGNED_ACCESS
- 	select HAVE_GUP_FAST
- 	select HAVE_FTRACE_GRAPH_FUNC
-+	select HAVE_FTRACE_REGS_HAVING_PT_REGS
- 	select HAVE_FTRACE_MCOUNT_RECORD
- 	select HAVE_FUNCTION_ARG_ACCESS_API
- 	select HAVE_FUNCTION_DESCRIPTORS	if PPC64_ELF_ABI_V1
-diff --git a/arch/powerpc/include/asm/fprobe.h b/arch/powerpc/include/asm/fprobe.h
-new file mode 100644
-index 000000000000..d64bc28fb3d3
---- /dev/null
-+++ b/arch/powerpc/include/asm/fprobe.h
-@@ -0,0 +1,12 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _ASM_PPC_FPROBE_H
-+#define _ASM_PPC_FPROBE_H
-+
-+#include <asm-generic/fprobe.h>
-+
-+#ifdef CONFIG_64BIT
-+#undef FPROBE_HEADER_MSB_PATTERN
-+#define FPROBE_HEADER_MSB_PATTERN	(PAGE_OFFSET & ~FPROBE_HEADER_MSB_MASK)
-+#endif
-+
-+#endif /* _ASM_PPC_FPROBE_H */
--- 
-2.50.0
+> Consider the following trace output when a device hotpluged:
+>=20
+> $ cat /sys/kernel/debug/tracing/trace_pipe
+> $ cat /sys/kernel/debug/tracing/trace_pipe
+>            <...>-118     [002] .....    28.414220: pci_hp_event: 0000:00:=
+03.0
+> slot:30, event:PCI_HOTPLUG_CARD_PRESENT
+>=20
+>            <...>-118     [002] .....    28.414273: pci_hp_event: 0000:00:=
+03.0
+> slot:30, event:PCI_HOTPLUG_LINK_UP
+>=20
+>    irq/57-pciehp-118     [002] .....    28.540189: pcie_link_event:
+> 0000:00:03.0 type:4, cur_bus_speed:2.5 GT/s PCIe, max_bus_speed:16.0 GT/s
+> PCIe, width:1, flit_mode:0, status:DLLLA
+>=20
+>    irq/57-pciehp-118     [002] .....    28.544999: pcie_link_event:
+> 0000:00:03.0 type:4, cur_bus_speed:2.5 GT/s PCIe, max_bus_speed:16.0 GT/s
+> PCIe, width:1, flit_mode:0, status:DLLLA
+>=20
+> The problem is that both trace events show status:DLLLA (Data Link Layer
+> Link Active), which is the direct reading from PCI_EXP_LNKSTA. However,
+> this doesn't accurately reflect the underlying context:
+>=20
+> - First DLLLA: Triggered by board_added() - link establishment after
+>   card insertion
+> - Second DLLLA: Triggered by pcie_retrain_link() - link retraining
+>   completion
+>=20
+> ( I trace the events in pcie_update_link_speed() )
+>=20
+> In the second case, the more relevant status would be PCI_EXP_LNKSTA_LT
+> (Link Training) to indicate that link retraining was performed, even
+> though the final register state shows DLLLA.
+>=20
+> Question: Should we explicitly report the contextual status (e.g.,
+> PCI_EXP_LNKSTA_LT for retraining scenarios) rather than always reading
+> the current register field? This would provide more meaningful trace
+> information for debugging link state transitions.
 
+I'd prefer it coming from the LNKSTA register (TBH, I don't see much value=
+=20
+in synthetizing it at all). If we start to synthetize them, it will=20
+potentially hide hw issues. I see on some platforms two LBMS assertions=20
+per bwctrl speed change (which is done by retraining the link), one with=20
+LT=3D1 and the second with LT=3D0.
+
+=2E..But I never meant to replace "reason" with "flags".
+
+> Additionally, I'd appreciate your thoughts on the overall tracepoint
+> format shown above. Does this structure provide sufficient information
+> for hotplug and link analysis while maintaining readability?
+
+I don't have ideas how it could be improved beyond having those 4 flags=20
+available. I suspect noone does as we've not had ability to collect this=20
+information before when investigating issues so we're yet to understand=20
+all its potential.
+
+--=20
+ i.
+
+--8323328-198401369-1753187360=:920--
