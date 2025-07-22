@@ -1,114 +1,175 @@
-Received: from mxct.zte.com.cn (mxct.zte.com.cn [183.62.165.209])
+Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6354A191493;
-	Tue, 22 Jul 2025 01:48:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=183.62.165.209
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5AFF1DE8A0;
+	Tue, 22 Jul 2025 02:43:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.118
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753148904; cv=none; b=elOlVFHBHl+g1Qp4C+EBxZ88fydh+0ll+ecEAUwiAN2yUMcooS3Vggkgqy6J4JixRbvHDFQt/9Gwun9B8TReYddOvWPPZl+hVBwY1WOthxLZp6CBrYI1IrRkDlL03YJvB6aP307zZBhXy5UiLRV3RlZtHfD/mqhrrBzUTOaGDvY=
+	t=1753152220; cv=none; b=h41xPanxPaGh7agLrpDjh5Gx8SxYKTB1xoWrwYLA63fwLJQYOWUIFUIKJtaSBtJakB3eUpYJ8IH8mjc3Gf3aK4ovvoP5MNJh4qbkIysIFmyq4HT+X9kFqAGIegVIYctC9d/miMGi5IUrfUoL4Rr3X7Rg0JgI2cIymr0qIrDmmDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753148904; c=relaxed/simple;
-	bh=bA+R9DffdAGIkPh6d0LbRL52OwjbyFaPjg4ZD3/c4z8=;
-	h=Date:Message-ID:In-Reply-To:References:Mime-Version:From:To:Cc:
-	 Subject:Content-Type; b=ZVys1zmIL5igJEiytTyXaiI9oheapP+Kt7mw6h14sKxceGIxCRxAGUbKzSz1EiKhgjprdXIHoW36suqweTX/20om5j/QbgTsW1epzzLfJAfe+9fgbKIAq/KiX9RN8g3gWaMZZwG/YfJ1fNjojHvZAbV5FpcxUXvaqrYcl2p5VkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=183.62.165.209
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mxct.zte.com.cn (FangMail) with ESMTPS id 4bmKsr2h3rz59ys5;
-	Tue, 22 Jul 2025 09:48:16 +0800 (CST)
-Received: from xaxapp05.zte.com.cn ([10.99.98.109])
-	by mse-fl1.zte.com.cn with SMTP id 56M1m88x055895;
-	Tue, 22 Jul 2025 09:48:08 +0800 (+08)
-	(envelope-from fan.yu9@zte.com.cn)
-Received: from mapi (xaxapp01[null])
-	by mapi (Zmail) with MAPI id mid32;
-	Tue, 22 Jul 2025 09:48:08 +0800 (CST)
-Date: Tue, 22 Jul 2025 09:48:08 +0800 (CST)
-X-Zmail-TransId: 2af9687eedd8ffffffff9a6-f911e
-X-Mailer: Zmail v1.0
-Message-ID: <20250722094808945ENOLvzY108YsJFz4CqbaI@zte.com.cn>
-In-Reply-To: <20250721171333.6caced4f@kernel.org>
-References: 20250721111607626_BDnIJB0ywk6FghN63bor@zte.com.cn,20250721171333.6caced4f@kernel.org
+	s=arc-20240116; t=1753152220; c=relaxed/simple;
+	bh=TpfBpPjtQ1TIVKcfvIOgBenSM0Z5cK8+wHNXEIxdfG8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VTU7wVOK0ZBYCkxvUsSPUVfxZC3nVvKYm3pli8TJ5MLfxJIebCSQecq9GtZ7/ui+zkiQZdhyKEZr+4JfywucinUILgxevEg+zb8rdCotnhYw69DXDcCn1jWrRcCu00Da3wappoLfuSylPpbxfS1j5OQWseeiUalxJlqNVncV4r0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=V/UTAvpF; arc=none smtp.client-ip=115.124.30.118
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="V/UTAvpF"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1753152212; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=PSvOwAd8F8NSw1DU5J+G8+UcmSTgRBwFglVhweOlEgw=;
+	b=V/UTAvpFe22i21zs9tTZmyYoSpShw+oar2ObjnVEodRkRiyZZnYn7OWtw1wBXQIm/kM4punfgLSInLhEs/S6eHeZdNCA/6ZdPP3pzLGMWHsp6nhR50nVkkdH516xfrBZNjtduW/vU99xpADxSKGgzFW+CjhVYa79SeUb9eK9+uI=
+Received: from 30.246.160.95(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WjTqfLr_1753152209 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 22 Jul 2025 10:43:30 +0800
+Message-ID: <fcfc51c0-6a1f-435b-844b-4daba132f7b6@linux.alibaba.com>
+Date: Tue, 22 Jul 2025 10:43:29 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <fan.yu9@zte.com.cn>
-To: <kuba@kernel.org>
-Cc: <edumazet@google.com>, <ncardwell@google.com>, <davem@davemloft.net>,
-        <dsahern@kernel.org>, <pabeni@redhat.com>, <horms@kernel.org>,
-        <kuniyu@google.com>, <rostedt@goodmis.org>, <mhiramat@kernel.org>,
-        <mathieu.desnoyers@efficios.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-        <yang.yang29@zte.com.cn>, <xu.xin16@zte.com.cn>,
-        <tu.qiang35@zte.com.cn>, <jiang.kun2@zte.com.cn>,
-        <qiu.yutan@zte.com.cn>, <wang.yaxin@zte.com.cn>,
-        <he.peilin@zte.com.cn>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSCBuZXQtbmV4dCB2NyBSRVNFTkRdIHRjcDogdHJhY2UgcmV0cmFuc21pdCBmYWlsdXJlcyBpbiB0Y3BfcmV0cmFuc21pdF9za2I=?=
-Content-Type: multipart/mixed;
-	boundary="=====_001_next====="
-X-MAIL:mse-fl1.zte.com.cn 56M1m88x055895
-X-TLS: YES
-X-SPF-DOMAIN: zte.com.cn
-X-ENVELOPE-SENDER: fan.yu9@zte.com.cn
-X-SPF: None
-X-SOURCE-IP: 10.5.228.132 unknown Tue, 22 Jul 2025 09:48:16 +0800
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 687EEDE0.001/4bmKsr2h3rz59ys5
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8] PCI: hotplug: Add a generic RAS tracepoinggt for
+ hotplug event
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Matthew W Carlis <mattc@purestorage.com>, helgaas@kernel.org,
+ Lukas Wunner <lukas@wunner.de>, anil.s.keshavamurthy@intel.com,
+ bhelgaas@google.com, bp@alien8.de, davem@davemloft.net,
+ linux-edac@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ linux-pci@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ mark.rutland@arm.com, mathieu.desnoyers@efficios.com, mhiramat@kernel.org,
+ naveen@kernel.org, oleg@redhat.com, peterz@infradead.org,
+ rostedt@goodmis.org, tianruidong@linux.alibaba.com, tony.luck@intel.com
+References: <20250717235055.GA2664149@bhelgaas>
+ <20250718034616.26250-1-mattc@purestorage.com>
+ <e92f8d1f-457c-4248-8397-81b0e20ff4af@linux.alibaba.com>
+ <11119800-3b6a-a683-3500-115a057c2826@linux.intel.com>
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <11119800-3b6a-a683-3500-115a057c2826@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
 
---=====_001_next=====
-Content-Type: multipart/related;
-	boundary="=====_002_next====="
+在 2025/7/21 18:18, Ilpo Järvinen 写道:
+> On Fri, 18 Jul 2025, Shuai Xue wrote:
+>> 在 2025/7/18 11:46, Matthew W Carlis 写道:
+>>> On Thu, Jul 17, 2025 Bjorn Helgaas wrote
+>>>> So I think your idea of adding current link speed/width to the "Link
+>>>> Up" event is still on the table, and that does sound useful to me.
+>>>
+>>> We're already reading the link status register here to check DLLA so
+>>> it would be nice. I guess if everything is healthy we're probably already
+>>> at the maximum speed by this point.
+>>>
+>>>> In the future we might add another tracepoint when we enumerate the
+>>>> device and know the Vendor/Device ID.
+>>>
+>>> I think we might have someone who would be interested in doing it.
+>>
+>>
+>> Hi, all,
+>>
+>> IIUC, the current hotplug event (or presence event) is enough for Matthew.
+>> and we would like a new tracepoing for link speed change which reports
+>> speeds.
+>>
+>> For hotplug event, I plan to send a new version to
+>>
+>> 1. address Bjorn' concerns about event strings by removing its spaces.
+>>
+>> #define PCI_HOTPLUG_EVENT
+>> \
+>> 	EM(PCI_HOTPLUG_LINK_UP,			"PCI_HOTPLUG_LINK_UP")
+>> \
+>> 	EM(PCI_HOTPLUG_LINK_DOWN,		"PCI_HOTPLUG_LINK_DOWN")
+>> \
+>> 	EM(PCI_HOTPLUG_CARD_PRESENT,		"PCI_HOTPLUG_CARD_PRESENT")
+>> \
+>> 	EMe(PCI_HOTPLUG_CARD_NOT_PRESENT,
+>> "PCI_HOTPLUG_CARD_NOT_PRESENT")
+>>
+>> 2. address Ilpo comments by moving pci_hp_event to a common place
+>> (include/trace/events/pci.h) so that the new comming can also use it.
+> 
+> Ah, I only now noticed you've decided to re-place them. Please disregard
+> my other comment about this being still open/undecided item.
+> 
+>> For link speed change event (perhaps named as pci_link_event),
+>> I plan to send a seperate patch, which provides:
+>>
+>> 	TP_STRUCT__entry(
+>> 		__string(	port_name,	port_name	)
+>> 		__field(	unsigned char,	cur_bus_speed	)
+>> 		__field(	unsigned char,	max_bus_speed	)
+>>   		__field(	unsigned char,	width		)
+>>   		__field(	unsigned int,	flit_mode	)
+>> 		__field(	unsigned char,	reason		)
+>> 		),
+>>
+>> The reason field is from Lukas ideas which indicates why the link speed
+>> changed, e.g. "hotplug", "autonomous", "thermal", "retrain", etc.
+>>
+>> Are you happy with above changes?
+> 
+> Since you're probably quite far with the pcie link event patch too given
+> above, could you take a look at the LNKSTA flags representation in my
+> patch and incorporate those as well as there seems to always lot of
+> uncertainty about those flags when investigating the LBMS/bwctrl related
+> issues so it seems prudent to explicitly include them into the traceevent
+> output:
+> 
+> https://lore.kernel.org/linux-pci/7c289bba-3133-0989-6333-41fc41fe3504@linux.intel.com/
+> 
+> 
 
+Sure, Thank you for the feedback.
 
---=====_002_next=====
-Content-Type: multipart/alternative;
-	boundary="=====_003_next====="
+I like the LNKSTA flags, LNKSTA flags provides better genericity
+compared to the custom reason field I initially proposed. But it may
+cause confusion when used in pcie_retrain_link(). However, I've
+identified a potential issue when this approach is applied in
+pcie_retrain_link() scenarios.
 
+Consider the following trace output when a device hotpluged:
 
---=====_003_next=====
-Content-Type: text/plain;
-	charset="UTF-8"
-Content-Transfer-Encoding: base64
+$ cat /sys/kernel/debug/tracing/trace_pipe
+$ cat /sys/kernel/debug/tracing/trace_pipe
+            <...>-118     [002] .....    28.414220: pci_hp_event: 0000:00:03.0 slot:30, event:PCI_HOTPLUG_CARD_PRESENT
 
-PiBPbiBNb24sIDIxIEp1bCAyMDI1IDExOjE2OjA3ICswODAwIChDU1QpIGZhbi55dTlAenRlLmNv
-bS5jbiB3cm90ZToNCj4gPiBTdWJqZWN0OiBbUEFUQ0ggbmV0LW5leHQgdjcgUkVTRU5EXSB0Y3A6
-IHRyYWNlIHJldHJhbnNtaXQgZmFpbHVyZXMgaW4gdGNwX3JldHJhbnNtaXRfc2tiDQo+IA0KPiBX
-aHkgZGlkIHlvdSByZXNlbmQgdGhpcz8/DQoNCkhpIEpha3ViLA0KDQpUaGFua3MgZm9yIGNoZWNr
-aW5nISBJIGp1c3Qgd2FudGVkIHRvIGVuc3VyZSB0aGUgdjcgcGF0Y2ggd2FzbuKAmXQgbWlzc2Vk
-IOKAlCBpdOKAmXMgaWRlbnRpY2FsIHRvIHRoZSBvcmlnaW5hbC4NClBsZWFzZSBsZXQgbWUga25v
-dyBpZiBhbnkgdXBkYXRlcyBhcmUgbmVlZGVkLiBBcHByZWNpYXRlIHlvdXIgdGltZSENCg0KQmVz
-dCByZWdhcmRzLA0KRmFuIFl1
+            <...>-118     [002] .....    28.414273: pci_hp_event: 0000:00:03.0 slot:30, event:PCI_HOTPLUG_LINK_UP
 
+    irq/57-pciehp-118     [002] .....    28.540189: pcie_link_event: 0000:00:03.0 type:4, cur_bus_speed:2.5 GT/s PCIe, max_bus_speed:16.0 GT/s PCIe, width:1, flit_mode:0, status:DLLLA
 
---=====_003_next=====
-Content-Type: text/html ;
-	charset="UTF-8"
-Content-Transfer-Encoding: base64
+    irq/57-pciehp-118     [002] .....    28.544999: pcie_link_event: 0000:00:03.0 type:4, cur_bus_speed:2.5 GT/s PCIe, max_bus_speed:16.0 GT/s PCIe, width:1, flit_mode:0, status:DLLLA
 
-PGRpdiBjbGFzcz0iemNvbnRlbnRSb3ciPjxwPiZndDsgT24gTW9uLCAyMSBKdWwgMjAyNSAxMTox
-NjowNyArMDgwMCAoQ1NUKSBmYW4ueXU5QHp0ZS5jb20uY24gd3JvdGU6PC9wPjxwPiZndDsgJmd0
-OyBTdWJqZWN0OiBbUEFUQ0ggbmV0LW5leHQgdjcgUkVTRU5EXSB0Y3A6IHRyYWNlIHJldHJhbnNt
-aXQgZmFpbHVyZXMgaW4gdGNwX3JldHJhbnNtaXRfc2tiPC9wPjxwPiZndDsmbmJzcDs8L3A+PHA+
-Jmd0OyBXaHkgZGlkIHlvdSByZXNlbmQgdGhpcz8/PC9wPjxwPjxicj48L3A+PHA+SGkgSmFrdWIs
-PC9wPjxwPjxicj48L3A+PHA+VGhhbmtzIGZvciBjaGVja2luZyEgSSBqdXN0IHdhbnRlZCB0byBl
-bnN1cmUgdGhlIHY3IHBhdGNoIHdhc27igJl0IG1pc3NlZCDigJQgaXTigJlzIGlkZW50aWNhbCB0
-byB0aGUgb3JpZ2luYWwuPC9wPjxwPlBsZWFzZSBsZXQgbWUga25vdyBpZiBhbnkgdXBkYXRlcyBh
-cmUgbmVlZGVkLiBBcHByZWNpYXRlIHlvdXIgdGltZSE8L3A+PHA+PGJyPjwvcD48cD5CZXN0IHJl
-Z2FyZHMsPC9wPjxwPkZhbiBZdTwvcD48L2Rpdj4=
+The problem is that both trace events show status:DLLLA (Data Link Layer
+Link Active), which is the direct reading from PCI_EXP_LNKSTA. However,
+this doesn't accurately reflect the underlying context:
 
+- First DLLLA: Triggered by board_added() - link establishment after
+   card insertion
+- Second DLLLA: Triggered by pcie_retrain_link() - link retraining
+   completion
 
---=====_003_next=====--
+( I trace the events in pcie_update_link_speed() )
 
---=====_002_next=====--
+In the second case, the more relevant status would be PCI_EXP_LNKSTA_LT
+(Link Training) to indicate that link retraining was performed, even
+though the final register state shows DLLLA.
 
---=====_001_next=====--
+Question: Should we explicitly report the contextual status (e.g.,
+PCI_EXP_LNKSTA_LT for retraining scenarios) rather than always reading
+the current register field? This would provide more meaningful trace
+information for debugging link state transitions.
 
+Additionally, I'd appreciate your thoughts on the overall tracepoint
+format shown above. Does this structure provide sufficient information
+for hotplug and link analysis while maintaining readability?
+
+Thanks.
+Shuai
