@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0A69263F54;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0AE4263F5B;
 	Tue, 22 Jul 2025 15:21:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753197685; cv=none; b=sgxS/PoBsnef1FhMg/sZVPE6pp4XzXjkb1fBaMt3huYuTuBWzQIsBzXrfE45qZ2S/1plV9KZj6GGm2R5N0H4v5b6iEz/O0UvSr7XdLVZ3YzBLjchDrmWk8MC1ql72Blyj3Gm/ULB1DVCaIBjhnwTg3o5asqYhVGjgf/AJtqOoFU=
+	t=1753197685; cv=none; b=jowcn+bnY1DyFzqFYKHh5fbKvUVNIO0WgvIAHEgY0fyphT/3aKlbtK1OBUOFjBmz4unpl8muqurwhIum6VI9n9rnp832fvhGNm59ABXorszQeyHG4b6IYymz10IaHlSlnmNnex6lC+MqJXNBxabrDRv0M/v5zPHvTzSSbLw954E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1753197685; c=relaxed/simple;
-	bh=lMArP3/0P1egQIWQhDgZmdaOZFB+rB/I87vjb1AhjnQ=;
+	bh=8DgMDOVyi1UQysuCYqsGqAUmquXWykBR0aOhtrr7Gzk=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=lL+33GwfKrvoBF4ceN6c4AoLejo5CBn9xrcNmLYl/PP1s6jjJHtz9aWU1kP9W9FYvwVtP6PHpzzv5HnIkSF2rfWQZEPNfIawxSNmjSFGIci/bt0LmwJ6YICcfgLoSYHf/I2y7zk/A3m7zfI4n9RRnq4f1i0g1uXEoZr5r7KV+lE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SCJtdXfS; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type; b=fTOubSAMz0DG9tUR4BJruvDyHxk6Vbii47Ej6VLjkRKQ8VCIg/X0NbFrlrf51b/D27M/XS1t2ZUB0yHE63lIGOK6bMS4W9u0CJahQH4vLd/AF7+v62gZuzBRvmQ3UZ4g3OCfakzPnuBH00VwikauRDnCfzLMT6xMP1i7cvrWnWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cMVqPpwD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SCJtdXfS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 472ACC4CEF8;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cMVqPpwD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F107C4CEF7;
 	Tue, 22 Jul 2025 15:21:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1753197685;
-	bh=lMArP3/0P1egQIWQhDgZmdaOZFB+rB/I87vjb1AhjnQ=;
+	bh=8DgMDOVyi1UQysuCYqsGqAUmquXWykBR0aOhtrr7Gzk=;
 	h=Date:From:To:Cc:Subject:References:From;
-	b=SCJtdXfS54tMYuHhCZzxYIzxEUAiKeeTQYCjiVvVNUcQez2TwKrGeCxTh3SPMaorO
-	 WEIIjBRNBVUTffvKGql0BIqoiYNIclgoR24JwrSXy1gq8aG6/xtbGHJ99I/FNkrIMa
-	 aBiVwLdZBje6t/EiopYXFP3Hhm9Y5Y90aic0dkAwgtuyXiO1crcZuj9Fs8bzolvwET
-	 WrZW5PGFyGcNnzlh6P45JNtIZMSq5zBNe+I4MUf2Aglk3fBGTCw0Lp8kao8SbE4Zet
-	 ORJv8AyOjX8Olwh2PlSRq6oSzsuIwq0yqM22WdIAwIveV5K2UocIW4rlM/o178q2BS
-	 ft+SXNFbokAzQ==
+	b=cMVqPpwD6CUxA//YsB4wWzvJgiE5LHObwoguRyA2Z519cVFA274MUKPeOb8SoC3iZ
+	 6op5BLpPw5pvzyxWVtLY4+1Y2ptlVR/XJ3sQ9rHQo4oxQqjfgPn3CNp0dkCHet1pMH
+	 s9wcFh3u3rbosRkeqBT1bOLkT+GsLc0aDLqS1TJE6hRqpDFmeEha8+wXmso70pOdN5
+	 UbNnvDv/rLn0s1EsaSxUkOKlLKbTp5dBDWrBfH5614bUAz7rpH4YnUbF4OBf5hwFWZ
+	 oqgJIl7obLfIdzcW8UPHKbpIW0HlC6WQBPbngjq+gp0jnGZ7oEiaLznJSVX+wPHFyq
+	 85uzNC/Ghzy7Q==
 Received: from rostedt by gandalf with local (Exim 4.98.2)
 	(envelope-from <rostedt@kernel.org>)
-	id 1ueEoX-0000000AYyt-482c;
-	Tue, 22 Jul 2025 11:21:57 -0400
-Message-ID: <20250722152157.839415861@kernel.org>
+	id 1ueEoY-0000000AYzr-1Ji9;
+	Tue, 22 Jul 2025 11:21:58 -0400
+Message-ID: <20250722152158.166727806@kernel.org>
 User-Agent: quilt/0.68
-Date: Tue, 22 Jul 2025 11:20:55 -0400
+Date: Tue, 22 Jul 2025 11:20:57 -0400
 From: Steven Rostedt <rostedt@kernel.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org,
@@ -49,7 +49,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
  Catalin Marinas <catalin.marinas@arm.com>,
  Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH v3 2/5] tracing: sorttable: Add a tracepoint verification check at build time
+Subject: [PATCH v3 4/5] tracepoint: Do not warn for unused event that is exported
 References: <20250722152053.343028095@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -61,422 +61,43 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-Update the sorttable code to check the tracepoint_check and tracepoint_ptr
-sections to see what trace events have been created but not used. Trace
-events can take up approximately 5K of memory each regardless if they are
-called or not.
-
-List the tracepoints that are not used at build time. Note, this currently
-only handles tracepoints that are builtin and not in modules.
+There are a few generic events that may only be used by modules. They are
+defined and then set with EXPORT_TRACEPOINT*(). Mark events that are
+exported as being used, even though they still waste memory in the kernel
+proper.
 
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
-Changes since v2: https://lore.kernel.org/20250613000328.791312828@goodmis.org
+ include/linux/tracepoint.h | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-- Make default n for now. As there are still tracepoints in the kernel
-  that can be defined but not used, its best to not warn about them until
-  they are fixed.
-
- kernel/trace/Kconfig |  11 ++
- scripts/Makefile     |   4 +
- scripts/sorttable.c  | 268 +++++++++++++++++++++++++++++++++++++++----
- 3 files changed, 260 insertions(+), 23 deletions(-)
-
-diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-index e676b802b721..bf964983d9e2 100644
---- a/kernel/trace/Kconfig
-+++ b/kernel/trace/Kconfig
-@@ -1063,6 +1063,17 @@ config TRACEPOINT_WARN_ON_UNUSED
- 	  A warning will be triggered if a tracepoint is found and
- 	  not used at bootup.
+diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
+index 2b96c7e94c52..8026a0659580 100644
+--- a/include/linux/tracepoint.h
++++ b/include/linux/tracepoint.h
+@@ -223,7 +223,8 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
  
-+config TRACEPOINT_WARN_ON_UNUSED_BUILD
-+	bool "Warn on build if a tracepoint is defined but not used"
-+	depends on TRACEPOINTS
-+	select TRACEPOINT_VERIFY_USED
-+	help
-+	  This option checks if every builtin defined tracepoint is
-+	  used in the code. If a tracepoint is defined but not used,
-+	  it will waste memory as its metadata is still created.
-+	  This will cause a warning at build time if the architecture
-+	  supports it.
-+
- config FTRACE_SELFTEST
- 	bool
+ #ifdef CONFIG_TRACEPOINT_VERIFY_USED
+ # define TRACEPOINT_CHECK(name)						\
+-	static void __used __section("__tracepoint_check") *__trace_check = \
++	static void __used __section("__tracepoint_check") *		\
++	__trace_check_##name =						\
+ 		&__tracepoint_##name;
+ #else
+ # define TRACEPOINT_CHECK(name)
+@@ -381,10 +382,12 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
+ 	__DEFINE_TRACE_EXT(_name, NULL, PARAMS(_proto), PARAMS(_args));
  
-diff --git a/scripts/Makefile b/scripts/Makefile
-index 46f860529df5..f81947ec9486 100644
---- a/scripts/Makefile
-+++ b/scripts/Makefile
-@@ -42,6 +42,10 @@ HOSTCFLAGS_sorttable.o += -I$(srctree)/tools/arch/$(SRCARCH)/include
- HOSTCFLAGS_sorttable.o += -DUNWINDER_ORC_ENABLED
- endif
- 
-+ifdef CONFIG_HAVE_ARCH_PREL32_RELOCATIONS
-+HOSTCFLAGS_sorttable.o += -DPREL32_RELOCATIONS
-+endif
-+
- ifdef CONFIG_BUILDTIME_MCOUNT_SORT
- HOSTCFLAGS_sorttable.o += -DMCOUNT_SORT_ENABLED
- endif
-diff --git a/scripts/sorttable.c b/scripts/sorttable.c
-index deed676bfe38..ddcbec22ca96 100644
---- a/scripts/sorttable.c
-+++ b/scripts/sorttable.c
-@@ -92,6 +92,12 @@ static void (*w)(uint32_t, uint32_t *);
- static void (*w8)(uint64_t, uint64_t *);
- typedef void (*table_sort_t)(char *, int);
- 
-+static Elf_Shdr *init_data_sec;
-+static Elf_Shdr *ro_data_sec;
-+static Elf_Shdr *data_data_sec;
-+
-+static void *file_map_end;
-+
- static struct elf_funcs {
- 	int (*compare_extable)(const void *a, const void *b);
- 	uint64_t (*ehdr_shoff)(Elf_Ehdr *ehdr);
-@@ -550,8 +556,6 @@ static void *sort_orctable(void *arg)
- }
- #endif
- 
--#ifdef MCOUNT_SORT_ENABLED
--
- static int compare_values_64(const void *a, const void *b)
- {
- 	uint64_t av = *(uint64_t *)a;
-@@ -574,6 +578,22 @@ static int compare_values_32(const void *a, const void *b)
- 
- static int (*compare_values)(const void *a, const void *b);
- 
-+static int fill_addrs(void *ptr, uint64_t size, void *addrs)
-+{
-+	void *end = ptr + size;
-+	int count = 0;
-+
-+	for (; ptr < end; ptr += long_size, addrs += long_size, count++) {
-+		if (long_size == 4)
-+			*(uint32_t *)ptr = r(addrs);
-+		else
-+			*(uint64_t *)ptr = r8(addrs);
-+	}
-+	return count;
-+}
-+
-+#ifdef MCOUNT_SORT_ENABLED
-+
- /* Only used for sorting mcount table */
- static void rela_write_addend(Elf_Rela *rela, uint64_t val)
- {
-@@ -684,7 +704,6 @@ static char m_err[ERRSTR_MAXSZ];
- 
- struct elf_mcount_loc {
- 	Elf_Ehdr *ehdr;
--	Elf_Shdr *init_data_sec;
- 	uint64_t start_mcount_loc;
- 	uint64_t stop_mcount_loc;
- };
-@@ -785,20 +804,6 @@ static void replace_relocs(void *ptr, uint64_t size, Elf_Ehdr *ehdr, uint64_t st
- 	}
- }
- 
--static int fill_addrs(void *ptr, uint64_t size, void *addrs)
--{
--	void *end = ptr + size;
--	int count = 0;
--
--	for (; ptr < end; ptr += long_size, addrs += long_size, count++) {
--		if (long_size == 4)
--			*(uint32_t *)ptr = r(addrs);
--		else
--			*(uint64_t *)ptr = r8(addrs);
--	}
--	return count;
--}
--
- static void replace_addrs(void *ptr, uint64_t size, void *addrs)
- {
- 	void *end = ptr + size;
-@@ -815,8 +820,8 @@ static void replace_addrs(void *ptr, uint64_t size, void *addrs)
- static void *sort_mcount_loc(void *arg)
- {
- 	struct elf_mcount_loc *emloc = (struct elf_mcount_loc *)arg;
--	uint64_t offset = emloc->start_mcount_loc - shdr_addr(emloc->init_data_sec)
--					+ shdr_offset(emloc->init_data_sec);
-+	uint64_t offset = emloc->start_mcount_loc - shdr_addr(init_data_sec)
-+					+ shdr_offset(init_data_sec);
- 	uint64_t size = emloc->stop_mcount_loc - emloc->start_mcount_loc;
- 	unsigned char *start_loc = (void *)emloc->ehdr + offset;
- 	Elf_Ehdr *ehdr = emloc->ehdr;
-@@ -920,6 +925,211 @@ static void get_mcount_loc(struct elf_mcount_loc *emloc, Elf_Shdr *symtab_sec,
- static inline int parse_symbols(const char *fname) { return 0; }
- #endif
- 
-+struct elf_tracepoint {
-+	Elf_Ehdr *ehdr;
-+	uint64_t start_tracepoint_check;
-+	uint64_t stop_tracepoint_check;
-+	uint64_t start_tracepoint;
-+	uint64_t stop_tracepoint;
-+	uint64_t *array;
-+	int count;
-+};
-+
-+static void make_trace_array(struct elf_tracepoint *etrace)
-+{
-+	uint64_t offset = etrace->start_tracepoint_check - shdr_addr(init_data_sec)
-+					+ shdr_offset(init_data_sec);
-+	uint64_t size = etrace->stop_tracepoint_check - etrace->start_tracepoint_check;
-+	Elf_Ehdr *ehdr = etrace->ehdr;
-+	void *start = (void *)ehdr + offset;
-+	int count = 0;
-+	void *vals;
-+
-+	etrace->array = NULL;
-+
-+	/* If CONFIG_TRACEPOINT_VERIFY_USED is not set, there's nothing to do */
-+	if (!size)
-+		return;
-+
-+	vals = malloc(long_size * size);
-+	if (!vals) {
-+		fprintf(stderr, "Failed to allocate tracepoint check array");
-+		return;
-+	}
-+
-+	count = fill_addrs(vals, size, start);
-+
-+	compare_values = long_size == 4 ? compare_values_32 : compare_values_64;
-+	qsort(vals, count, long_size, compare_values);
-+
-+	etrace->array = vals;
-+	etrace->count = count;
-+}
-+
-+static int cmp_addr_64(const void *K, const void *A)
-+{
-+	uint64_t key = *(const uint64_t *)K;
-+	const uint64_t *a = A;
-+
-+	if (key < *a)
-+		return -1;
-+	return key > *a;
-+}
-+
-+static int cmp_addr_32(const void *K, const void *A)
-+{
-+	uint32_t key = *(const uint32_t *)K;
-+	const uint32_t *a = A;
-+
-+	if (key < *a)
-+		return -1;
-+	return key > *a;
-+}
-+
-+static int find_event(void *array, size_t size, uint64_t key)
-+{
-+	uint32_t val_32;
-+	uint64_t val_64;
-+	void *val;
-+	int (*cmp_func)(const void *A, const void *B);
-+
-+	if (long_size == 4) {
-+		val_32 = key;
-+		val = &val_32;
-+		cmp_func = cmp_addr_32;
-+	} else {
-+		val_64 = key;
-+		val = &val_64;
-+		cmp_func = cmp_addr_64;
-+	}
-+	return bsearch(val, array, size, long_size, cmp_func) != NULL;
-+}
-+
-+static int failed_event(struct elf_tracepoint *etrace, uint64_t addr)
-+{
-+	uint64_t sec_addr = shdr_addr(data_data_sec);
-+	uint64_t sec_offset = shdr_offset(data_data_sec);
-+	uint64_t offset = addr - sec_addr + sec_offset;
-+	Elf_Ehdr *ehdr = etrace->ehdr;
-+	void *name_ptr = (void *)ehdr + offset;
-+	char *name;
-+
-+	if (name_ptr > file_map_end)
-+		goto bad_addr;
-+
-+	if (long_size == 4)
-+		addr = r(name_ptr);
-+	else
-+		addr = r8(name_ptr);
-+
-+	sec_addr = shdr_addr(ro_data_sec);
-+	sec_offset = shdr_offset(ro_data_sec);
-+	offset = addr - sec_addr + sec_offset;
-+	name = (char *)ehdr + offset;
-+	if ((void *)name > file_map_end)
-+		goto bad_addr;
-+
-+	fprintf(stderr, "warning: tracepoint '%s' is unused.\n", name);
-+	return 0;
-+bad_addr:
-+	fprintf(stderr, "warning: Failed to verify unused trace events.\n");
-+	return -1;
-+}
-+
-+static void check_tracepoints(struct elf_tracepoint *etrace)
-+{
-+	uint64_t sec_addr = shdr_addr(ro_data_sec);
-+	uint64_t sec_offset = shdr_offset(ro_data_sec);
-+	uint64_t offset = etrace->start_tracepoint - sec_addr + sec_offset;
-+	uint64_t size = etrace->stop_tracepoint - etrace->start_tracepoint;
-+	Elf_Ehdr *ehdr = etrace->ehdr;
-+	void *start = (void *)ehdr + offset;
-+	void *end = start + size;
-+	void *addrs;
-+	int inc = long_size;
-+
-+	if (!etrace->array)
-+		return;
-+
-+	if (!size)
-+		return;
-+
-+#ifdef PREL32_RELOCATIONS
-+	inc = 4;
-+#endif
-+
-+	sec_offset = sec_offset + (uint64_t)ehdr;
-+	for (addrs = start; addrs < end; addrs += inc) {
-+		uint64_t val;
-+
-+#ifdef PREL32_RELOCATIONS
-+		val = r(addrs);
-+		val += sec_addr + ((uint64_t)addrs - sec_offset);
-+#else
-+		val = long_size == 4 ? r(addrs) : r8(addrs);
-+#endif
-+		if (!find_event(etrace->array, etrace->count, val)) {
-+			if (failed_event(etrace, val))
-+				return;
-+		}
-+	}
-+	free(etrace->array);
-+}
-+
-+static void *tracepoint_check(struct elf_tracepoint *etrace, Elf_Shdr *symtab_sec,
-+			      const char *strtab)
-+{
-+	Elf_Sym *sym, *end_sym;
-+	int symentsize = shdr_entsize(symtab_sec);
-+	int found = 0;
-+
-+	sym = (void *)etrace->ehdr + shdr_offset(symtab_sec);
-+	end_sym = (void *)sym + shdr_size(symtab_sec);
-+
-+	while (sym < end_sym) {
-+		if (!strcmp(strtab + sym_name(sym), "__start___tracepoint_check")) {
-+			etrace->start_tracepoint_check = sym_value(sym);
-+			if (++found == 4)
-+				break;
-+		} else if (!strcmp(strtab + sym_name(sym), "__stop___tracepoint_check")) {
-+			etrace->stop_tracepoint_check = sym_value(sym);
-+			if (++found == 4)
-+				break;
-+		} else if (!strcmp(strtab + sym_name(sym), "__start___tracepoints_ptrs")) {
-+			etrace->start_tracepoint = sym_value(sym);
-+			if (++found == 4)
-+				break;
-+		} else if (!strcmp(strtab + sym_name(sym), "__stop___tracepoints_ptrs")) {
-+			etrace->stop_tracepoint = sym_value(sym);
-+			if (++found == 4)
-+				break;
-+		}
-+		sym = (void *)sym + symentsize;
-+	}
-+
-+	if (!etrace->start_tracepoint_check) {
-+		fprintf(stderr, "warning: get start_tracepoint_check error!\n");
-+		return NULL;
-+	}
-+	if (!etrace->stop_tracepoint_check) {
-+		fprintf(stderr, "warning: get stop_tracepoint_check error!\n");
-+		return NULL;
-+	}
-+	if (!etrace->start_tracepoint) {
-+		fprintf(stderr, "warning: get start_tracepoint error!\n");
-+		return NULL;
-+	}
-+	if (!etrace->stop_tracepoint) {
-+		fprintf(stderr, "warning: get start_tracepoint error!\n");
-+		return NULL;
-+	}
-+
-+	make_trace_array(etrace);
-+	check_tracepoints(etrace);
-+
-+	return NULL;
-+}
-+
- static int do_sort(Elf_Ehdr *ehdr,
- 		   char const *const fname,
- 		   table_sort_t custom_sort)
-@@ -948,6 +1158,7 @@ static int do_sort(Elf_Ehdr *ehdr,
- 	int i;
- 	unsigned int shnum;
- 	unsigned int shstrndx;
-+	struct elf_tracepoint tstruct = {0};
- #ifdef MCOUNT_SORT_ENABLED
- 	struct elf_mcount_loc mstruct = {0};
- #endif
-@@ -985,11 +1196,17 @@ static int do_sort(Elf_Ehdr *ehdr,
- 			symtab_shndx = (Elf32_Word *)((const char *)ehdr +
- 						      shdr_offset(shdr));
- 
--#ifdef MCOUNT_SORT_ENABLED
- 		/* locate the .init.data section in vmlinux */
- 		if (!strcmp(secstrings + idx, ".init.data"))
--			mstruct.init_data_sec = shdr;
--#endif
-+			init_data_sec = shdr;
-+
-+		/* locate the .ro.data section in vmlinux */
-+		if (!strcmp(secstrings + idx, ".rodata"))
-+			ro_data_sec = shdr;
-+
-+		/* locate the .data section in vmlinux */
-+		if (!strcmp(secstrings + idx, ".data"))
-+			data_data_sec = shdr;
- 
- #ifdef UNWINDER_ORC_ENABLED
- 		/* locate the ORC unwind tables */
-@@ -1055,7 +1272,7 @@ static int do_sort(Elf_Ehdr *ehdr,
- 	mstruct.ehdr = ehdr;
- 	get_mcount_loc(&mstruct, symtab_sec, strtab);
- 
--	if (!mstruct.init_data_sec || !mstruct.start_mcount_loc || !mstruct.stop_mcount_loc) {
-+	if (!init_data_sec || !mstruct.start_mcount_loc || !mstruct.stop_mcount_loc) {
- 		fprintf(stderr,
- 			"incomplete mcount's sort in file: %s\n",
- 			fname);
-@@ -1071,6 +1288,9 @@ static int do_sort(Elf_Ehdr *ehdr,
- 	}
- #endif
- 
-+	tstruct.ehdr = ehdr;
-+	tracepoint_check(&tstruct, symtab_sec, strtab);
-+
- 	if (custom_sort) {
- 		custom_sort(extab_image, shdr_size(extab_sec));
- 	} else {
-@@ -1404,6 +1624,8 @@ int main(int argc, char *argv[])
- 			continue;
- 		}
- 
-+		file_map_end = addr + size;
-+
- 		if (do_file(argv[i], addr))
- 			++n_error;
- 
+ #define EXPORT_TRACEPOINT_SYMBOL_GPL(name)				\
++	TRACEPOINT_CHECK(name)						\
+ 	EXPORT_SYMBOL_GPL(__tracepoint_##name);				\
+ 	EXPORT_SYMBOL_GPL(__traceiter_##name);				\
+ 	EXPORT_STATIC_CALL_GPL(tp_func_##name)
+ #define EXPORT_TRACEPOINT_SYMBOL(name)					\
++	TRACEPOINT_CHECK(name)						\
+ 	EXPORT_SYMBOL(__tracepoint_##name);				\
+ 	EXPORT_SYMBOL(__traceiter_##name);				\
+ 	EXPORT_STATIC_CALL(tp_func_##name)
 -- 
 2.47.2
 
