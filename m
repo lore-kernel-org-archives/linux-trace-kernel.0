@@ -1,72 +1,114 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+Received: from mxct.zte.com.cn (mxct.zte.com.cn [183.62.165.209])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8848D2F50;
-	Tue, 22 Jul 2025 00:49:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6354A191493;
+	Tue, 22 Jul 2025 01:48:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=183.62.165.209
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753145354; cv=none; b=TDN/rL13cVtigDqIexZbW1PrLeqqUaB9HxTsRszImj8JJ/KShC+sv/BBw4PRp8Xtyf71ZFv6DAfmgrxQS1nzYLnMu5DGvNntHa0zV80UqOpQRCRN0nhg3wjyTu9r4YjApYsUw/ZQVwIEPZVqVGeZSClo3e6B0jONOMbqhN96H+E=
+	t=1753148904; cv=none; b=elOlVFHBHl+g1Qp4C+EBxZ88fydh+0ll+ecEAUwiAN2yUMcooS3Vggkgqy6J4JixRbvHDFQt/9Gwun9B8TReYddOvWPPZl+hVBwY1WOthxLZp6CBrYI1IrRkDlL03YJvB6aP307zZBhXy5UiLRV3RlZtHfD/mqhrrBzUTOaGDvY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753145354; c=relaxed/simple;
-	bh=KVI9k7s/L4Ayeqhq7kJYG7hPHnV7SbdabPHTTfX+jr8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gNOr2CGLc9AF3bFen0N1r72txnHYtmn/qVgyogGiIK/+8M7hs8BujVwKUi7Rv26mBqJGRUizRB4VJhYNGXpBZuEyPiEPFkaCiyYjKW9Oyyckf1WWESnodCxu+GE26QK/QEtpJ31m8HiPlL3BclTE7vLGJuAHcHNstlrVbsGL/OU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf16.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay09.hostedemail.com (Postfix) with ESMTP id 6DD3C80220;
-	Tue, 22 Jul 2025 00:49:03 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf16.hostedemail.com (Postfix) with ESMTPA id 880462000D;
-	Tue, 22 Jul 2025 00:49:01 +0000 (UTC)
-Date: Mon, 21 Jul 2025 20:49:32 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Nam Cao <namcao@linutronix.de>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org, Gabriele Monaco <gmonaco@redhat.com>,
- john.ogness@linutronix.de
-Subject: Re: [PATCH] tracing: Remove pointless memory barriers
-Message-ID: <20250721204932.306da76c@gandalf.local.home>
-In-Reply-To: <20250626160459.soHxOROG@linutronix.de>
-References: <20250626151940.1756398-1-namcao@linutronix.de>
-	<20250626113520.315db641@gandalf.local.home>
-	<20250626160459.soHxOROG@linutronix.de>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1753148904; c=relaxed/simple;
+	bh=bA+R9DffdAGIkPh6d0LbRL52OwjbyFaPjg4ZD3/c4z8=;
+	h=Date:Message-ID:In-Reply-To:References:Mime-Version:From:To:Cc:
+	 Subject:Content-Type; b=ZVys1zmIL5igJEiytTyXaiI9oheapP+Kt7mw6h14sKxceGIxCRxAGUbKzSz1EiKhgjprdXIHoW36suqweTX/20om5j/QbgTsW1epzzLfJAfe+9fgbKIAq/KiX9RN8g3gWaMZZwG/YfJ1fNjojHvZAbV5FpcxUXvaqrYcl2p5VkI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=183.62.165.209
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
+Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mxct.zte.com.cn (FangMail) with ESMTPS id 4bmKsr2h3rz59ys5;
+	Tue, 22 Jul 2025 09:48:16 +0800 (CST)
+Received: from xaxapp05.zte.com.cn ([10.99.98.109])
+	by mse-fl1.zte.com.cn with SMTP id 56M1m88x055895;
+	Tue, 22 Jul 2025 09:48:08 +0800 (+08)
+	(envelope-from fan.yu9@zte.com.cn)
+Received: from mapi (xaxapp01[null])
+	by mapi (Zmail) with MAPI id mid32;
+	Tue, 22 Jul 2025 09:48:08 +0800 (CST)
+Date: Tue, 22 Jul 2025 09:48:08 +0800 (CST)
+X-Zmail-TransId: 2af9687eedd8ffffffff9a6-f911e
+X-Mailer: Zmail v1.0
+Message-ID: <20250722094808945ENOLvzY108YsJFz4CqbaI@zte.com.cn>
+In-Reply-To: <20250721171333.6caced4f@kernel.org>
+References: 20250721111607626_BDnIJB0ywk6FghN63bor@zte.com.cn,20250721171333.6caced4f@kernel.org
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: 6n9ez7isuyrhxjostx31dwy4reqs3m16
-X-Rspamd-Server: rspamout07
-X-Rspamd-Queue-Id: 880462000D
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19Y0Rjjwhtck8BgjauIYgM8gaipfMNLK88=
-X-HE-Tag: 1753145341-930020
-X-HE-Meta: U2FsdGVkX19QYcHnL34WLPTvZXgaVWQno+rmFQQzkd7ot3CDZMVSpZXlBzuFS6XetEN13QEJBOkDhhtC8DHeyVrZEYwDHQqANz1/pKsryPLTX2QbHr2vv8dq+Di+nS1kEZVeVGA7UPtKGic6Harcx7ME1wZYbjl1rkf7F2AzhveqjSo3iBDtaAhZ1qB4n14wGLgLHjh7TMw0hOo225+Iv57bzYz5Dx+495LQyktAM4+JWlAFH6i3pS355uhQdIYEs8eRbSlcrXMOjPayJV/XF3ICrCXwp6CLIvBvzq/K8nJSYjlSTGUY00IZE3RTbbnD
+Mime-Version: 1.0
+From: <fan.yu9@zte.com.cn>
+To: <kuba@kernel.org>
+Cc: <edumazet@google.com>, <ncardwell@google.com>, <davem@davemloft.net>,
+        <dsahern@kernel.org>, <pabeni@redhat.com>, <horms@kernel.org>,
+        <kuniyu@google.com>, <rostedt@goodmis.org>, <mhiramat@kernel.org>,
+        <mathieu.desnoyers@efficios.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+        <yang.yang29@zte.com.cn>, <xu.xin16@zte.com.cn>,
+        <tu.qiang35@zte.com.cn>, <jiang.kun2@zte.com.cn>,
+        <qiu.yutan@zte.com.cn>, <wang.yaxin@zte.com.cn>,
+        <he.peilin@zte.com.cn>
+Subject: =?UTF-8?B?UmU6IFtQQVRDSCBuZXQtbmV4dCB2NyBSRVNFTkRdIHRjcDogdHJhY2UgcmV0cmFuc21pdCBmYWlsdXJlcyBpbiB0Y3BfcmV0cmFuc21pdF9za2I=?=
+Content-Type: multipart/mixed;
+	boundary="=====_001_next====="
+X-MAIL:mse-fl1.zte.com.cn 56M1m88x055895
+X-TLS: YES
+X-SPF-DOMAIN: zte.com.cn
+X-ENVELOPE-SENDER: fan.yu9@zte.com.cn
+X-SPF: None
+X-SOURCE-IP: 10.5.228.132 unknown Tue, 22 Jul 2025 09:48:16 +0800
+X-Fangmail-Anti-Spam-Filtered: true
+X-Fangmail-MID-QID: 687EEDE0.001/4bmKsr2h3rz59ys5
 
-On Thu, 26 Jun 2025 18:04:59 +0200
-Nam Cao <namcao@linutronix.de> wrote:
 
-> > The above three interact with each other. Without the barriers, the
-> > tr->buffer_disabled = 0, can be set on one CPU, and the other CPU can think
-> > the buffer is still enabled and do work that will end up doing nothing. Or
-> > it can be set to 1, and the other CPU still sees it disabled and will not
-> > do work when it can.  
-> 
-> (I'm not that experienced with memory barrier, so I may be writing nonsense
-> here)
 
-So I did some git archeology and realized that the buffer_disabled is just
-a cache to make irqsoff tracing faster. The commit even said it's not going
-to be accurate.
+--=====_001_next=====
+Content-Type: multipart/related;
+	boundary="=====_002_next====="
 
-OK, I'll just take this patch.
 
-Thanks,
+--=====_002_next=====
+Content-Type: multipart/alternative;
+	boundary="=====_003_next====="
 
--- Steve
+
+--=====_003_next=====
+Content-Type: text/plain;
+	charset="UTF-8"
+Content-Transfer-Encoding: base64
+
+PiBPbiBNb24sIDIxIEp1bCAyMDI1IDExOjE2OjA3ICswODAwIChDU1QpIGZhbi55dTlAenRlLmNv
+bS5jbiB3cm90ZToNCj4gPiBTdWJqZWN0OiBbUEFUQ0ggbmV0LW5leHQgdjcgUkVTRU5EXSB0Y3A6
+IHRyYWNlIHJldHJhbnNtaXQgZmFpbHVyZXMgaW4gdGNwX3JldHJhbnNtaXRfc2tiDQo+IA0KPiBX
+aHkgZGlkIHlvdSByZXNlbmQgdGhpcz8/DQoNCkhpIEpha3ViLA0KDQpUaGFua3MgZm9yIGNoZWNr
+aW5nISBJIGp1c3Qgd2FudGVkIHRvIGVuc3VyZSB0aGUgdjcgcGF0Y2ggd2FzbuKAmXQgbWlzc2Vk
+IOKAlCBpdOKAmXMgaWRlbnRpY2FsIHRvIHRoZSBvcmlnaW5hbC4NClBsZWFzZSBsZXQgbWUga25v
+dyBpZiBhbnkgdXBkYXRlcyBhcmUgbmVlZGVkLiBBcHByZWNpYXRlIHlvdXIgdGltZSENCg0KQmVz
+dCByZWdhcmRzLA0KRmFuIFl1
+
+
+--=====_003_next=====
+Content-Type: text/html ;
+	charset="UTF-8"
+Content-Transfer-Encoding: base64
+
+PGRpdiBjbGFzcz0iemNvbnRlbnRSb3ciPjxwPiZndDsgT24gTW9uLCAyMSBKdWwgMjAyNSAxMTox
+NjowNyArMDgwMCAoQ1NUKSBmYW4ueXU5QHp0ZS5jb20uY24gd3JvdGU6PC9wPjxwPiZndDsgJmd0
+OyBTdWJqZWN0OiBbUEFUQ0ggbmV0LW5leHQgdjcgUkVTRU5EXSB0Y3A6IHRyYWNlIHJldHJhbnNt
+aXQgZmFpbHVyZXMgaW4gdGNwX3JldHJhbnNtaXRfc2tiPC9wPjxwPiZndDsmbmJzcDs8L3A+PHA+
+Jmd0OyBXaHkgZGlkIHlvdSByZXNlbmQgdGhpcz8/PC9wPjxwPjxicj48L3A+PHA+SGkgSmFrdWIs
+PC9wPjxwPjxicj48L3A+PHA+VGhhbmtzIGZvciBjaGVja2luZyEgSSBqdXN0IHdhbnRlZCB0byBl
+bnN1cmUgdGhlIHY3IHBhdGNoIHdhc27igJl0IG1pc3NlZCDigJQgaXTigJlzIGlkZW50aWNhbCB0
+byB0aGUgb3JpZ2luYWwuPC9wPjxwPlBsZWFzZSBsZXQgbWUga25vdyBpZiBhbnkgdXBkYXRlcyBh
+cmUgbmVlZGVkLiBBcHByZWNpYXRlIHlvdXIgdGltZSE8L3A+PHA+PGJyPjwvcD48cD5CZXN0IHJl
+Z2FyZHMsPC9wPjxwPkZhbiBZdTwvcD48L2Rpdj4=
+
+
+--=====_003_next=====--
+
+--=====_002_next=====--
+
+--=====_001_next=====--
+
