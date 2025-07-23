@@ -1,75 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6477825776;
-	Wed, 23 Jul 2025 16:03:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D09AB1E32C3
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 23 Jul 2025 16:13:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753286621; cv=none; b=YdF4rcxFJVOMZvnu1tFoX9vLtNrbLvuFers7h+EcgFfdS4cBbD1yz78wUr3i96NAq+MhxcKTXTLX7+80o7p1gZmK9IFBD7NLGSDqzW8DwF77uGzq70eMCCjta8zYGlbf22QCsJCR+SGu/ji7M2OOfMNyRPi0TGhcWW/t6tloIvw=
+	t=1753287186; cv=none; b=VFNbnhqA/6LiV1tblOvoHv5WXSEGrBy+Qa2h/rytrZYNYIvmEFhSNhBABx1AU8smtgEjV+K5oSABe1PhJc9kTNpCX4p6m5zDhG/D/hNeeMRQHu1hhY5moxv/YjmekCbwXhPHVNl6epxfClUmLI9XD7pTuyFlwDYPNQLv3CymrHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753286621; c=relaxed/simple;
-	bh=FZ9wivqmwRBlfq4CK8MqFw5NJFQTIcmu3nm4tm3DyqM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=H/XlRjawTamae2lj4m5v3Xp2SZI1hV96rkRA6ybXk5YsysYy1i6hDJNDv8Usp8Hi4khn/l4sMfSPfxHY7F3XCZU4MEOuj3vqOVGnUzXqZmomvISM74AK4CO0MUV5HfLZ+1w7plJbPxDOascA64se/xTmun8y1SKM/YQeCrRkpcA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EFB9C4CEE7;
-	Wed, 23 Jul 2025 16:03:36 +0000 (UTC)
-From: Catalin Marinas <catalin.marinas@arm.com>
-To: linux-trace-kernel@vger.kernel.org,
-	Jeremy Linton <jeremy.linton@arm.com>
-Cc: Will Deacon <will@kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	mhiramat@kernel.org,
-	oleg@redhat.com,
-	peterz@infradead.org,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	kan.liang@linux.intel.com,
-	thiago.bauermann@linaro.org,
-	broonie@kernel.org,
-	yury.khrustalev@arm.com,
-	kristina.martsenko@arm.com,
-	liaochang1@huawei.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: (subset) [PATCH v4 0/8] arm64: Enable UPROBES with GCS
-Date: Wed, 23 Jul 2025 17:03:34 +0100
-Message-Id: <175328660445.3870926.2919716092405832672.b4-ty@arm.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250719043740.4548-1-jeremy.linton@arm.com>
-References: <20250719043740.4548-1-jeremy.linton@arm.com>
+	s=arc-20240116; t=1753287186; c=relaxed/simple;
+	bh=JSsX/bPADyns/ee35USI4lxKFOWp4V1IMj9DJEUZ9+E=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Qg4n6UlNzySNRPrvRi53y/ilRu2ldS+0aO9R3yYfcr/opSODDSi0/tznTCHN3nooJ3s0TfnNCXMO9RG5dz7OQwXFh9achn9DxLbesZa+iUJvcfwoI+JfOJ+QsM0/UswbNAbP9IjPVCKC8y3VXqDU+X/lyAuQ5CVEchroP2/xnaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RMURFuRR; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RMURFuRR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1753287183;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=K+oLnUkud2e/nXL96cPo5783kvC+G1k6dOgTZxPhWmg=;
+	b=RMURFuRRxcmVfuouJ/DQHQiKekwXYTHNO9dSN9XumTnRIokm8mM/o+SU3iG+M2TqIUU/5v
+	01IVDhu+TWW1G5uwkgJvZqdwWj4PwPnR34SafmhE+/UM5wkbjPmbn/r8u3sbUP45/Md91T
+	ymU5mybrzeO+RellS06EvWRA6WIDUL4=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-584-hzoZhXW6MSu0edWTrLOI8Q-1; Wed,
+ 23 Jul 2025 12:13:02 -0400
+X-MC-Unique: hzoZhXW6MSu0edWTrLOI8Q-1
+X-Mimecast-MFC-AGG-ID: hzoZhXW6MSu0edWTrLOI8Q_1753287181
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 170A81800C31;
+	Wed, 23 Jul 2025 16:13:01 +0000 (UTC)
+Received: from gmonaco-thinkpadt14gen3.rmtit.com (unknown [10.44.32.162])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 1E3B3180A302;
+	Wed, 23 Jul 2025 16:12:56 +0000 (UTC)
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: linux-kernel@vger.kernel.org,
+	Steven Rostedt <rostedt@goodmis.org>,
+	linux-trace-kernel@vger.kernel.org
+Cc: Gabriele Monaco <gmonaco@redhat.com>,
+	Nam Cao <namcao@linutronix.de>,
+	Tomas Glozar <tglozar@redhat.com>,
+	Juri Lelli <jlelli@redhat.com>,
+	Clark Williams <williams@redhat.com>,
+	John Kacur <jkacur@redhat.com>
+Subject: [PATCH 1/5] tools/rv: Do not skip idle in trace
+Date: Wed, 23 Jul 2025 18:12:36 +0200
+Message-ID: <20250723161240.194860-2-gmonaco@redhat.com>
+In-Reply-To: <20250723161240.194860-1-gmonaco@redhat.com>
+References: <20250723161240.194860-1-gmonaco@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-On Fri, 18 Jul 2025 23:37:32 -0500, Jeremy Linton wrote:
-> Currently uprobes and the Arm Guarded Control Stack (GCS) feature are
-> exclusive of each other. This restriction needs to be lifted in order
-> to utilize GCS for generic Linux distro images where the expectation
-> is that core debugging features like uprobes work.
-> 
-> This series adds some user accessors to read/push/pop the userspace
-> shadow stack. It then utilizes those functions in the uprobe paths as
-> needed to synchronize GCS with the changes in control flow at probe
-> locations.
-> 
-> [...]
+Currently, the userspace RV tool skips trace events triggered by the RV
+tool itself, this can be changed by passing the parameter -s, which sets
+the variable config_my_pid to 0 (instead of the tool's PID).
+This has the side effect of skipping events generated by idle (PID 0).
 
-Applied to arm64 (for-next/misc), thanks!
+Set config_my_pid to -1 (an invalid pid) to avoid skipping idle.
 
-[1/8] arm64/gcs: task_gcs_el0_enable() should use passed task
-      https://git.kernel.org/arm64/c/cbbcfb94c55c
+Fixes: 6d60f89691fc ("tools/rv: Add in-kernel monitor interface")
+Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
+---
+ tools/verification/rv/src/in_kernel.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/tools/verification/rv/src/in_kernel.c b/tools/verification/rv/src/in_kernel.c
+index c0dcee795c0d..4bb746ea6e17 100644
+--- a/tools/verification/rv/src/in_kernel.c
++++ b/tools/verification/rv/src/in_kernel.c
+@@ -431,7 +431,7 @@ ikm_event_handler(struct trace_seq *s, struct tep_record *record,
+ 
+ 	if (config_has_id && (config_my_pid == id))
+ 		return 0;
+-	else if (config_my_pid && (config_my_pid == pid))
++	else if (config_my_pid == pid)
+ 		return 0;
+ 
+ 	tep_print_event(trace_event->tep, s, record, "%16s-%-8d [%.3d] ",
+@@ -734,7 +734,7 @@ static int parse_arguments(char *monitor_name, int argc, char **argv)
+ 			config_reactor = optarg;
+ 			break;
+ 		case 's':
+-			config_my_pid = 0;
++			config_my_pid = -1;
+ 			break;
+ 		case 't':
+ 			config_trace = 1;
 -- 
-Catalin
+2.50.1
 
