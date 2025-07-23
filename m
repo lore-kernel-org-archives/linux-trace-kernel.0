@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 411AA1D63F0;
-	Wed, 23 Jul 2025 01:31:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60BE618A6A7;
+	Wed, 23 Jul 2025 01:31:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753234261; cv=none; b=LKqS8sfu+NPbXls1F8L+V4lT4mBOvE591V337c0i8oogw0R+8sdsWjgSzorxCbbwW37UR2X27QfBa3vewxKtWEHvxWOtxlIRbaeSHzC1MN6b26U0wiejhrT3JB4sTRXwrmSVmLWXx0wlLxS+NIzZTYc7dLDbYxLDAc/wlo/WGqI=
+	t=1753234271; cv=none; b=m7urqKf3FaPeMpeC5VCs+FZFqIzR8wXq7/al7tW7q5bpz9P4x1O+F9MHjl0AiT6Jty8RKfmtm82B5mdLBGQ3D2Iy8m9iQUgHs5eLAqwP459YTGY6fU0NfBTTSFbgC3gditmQYXKXTKunSS41i6RCUYCWUcEqyRRQhK0ERDXFFGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753234261; c=relaxed/simple;
-	bh=VtZlCmcOqkyOJN941BewJUMCtimGRtGIU3j97zXjTm8=;
+	s=arc-20240116; t=1753234271; c=relaxed/simple;
+	bh=oCXlNSKRLrIZUtDs78uGqslRmQt0ZVedRl6AtLEJ8L0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ua7R8NpYYjo55w3sMtFNJ7Sk4Nn9hZGmBStR3o95q1z101MLRxEk9LXndY3BtYDManF1Rm6QGB6zcSyB1Lamnvo7tQPFHLQxDQVw66iLeuLjuyKsRSEusi9TwcvZcQHG2yakcL+YT8DV6pINYi5OyJ4Q7QTHZozwQXeNiff6IQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X3XV0szR; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=lx54/syKIkCpUx1fbnFl1DoJ/zKoR+v1ebDmm72YVs9FNuKnsmvOZ3QsQIKFTlHH3XNg9+IMqjPL8P4dFD7iARSVFyICgepqg1FWAxN1IZE81tgriBJ0Iqyc8n0ckIte3whdw0BOgxeKHHke/+yqQxn+Jlw1PTkDZ41xJmSgy34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i7YpgvmZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X3XV0szR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EB43C4CEEB;
-	Wed, 23 Jul 2025 01:30:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i7YpgvmZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 754C1C4CEEB;
+	Wed, 23 Jul 2025 01:31:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753234260;
-	bh=VtZlCmcOqkyOJN941BewJUMCtimGRtGIU3j97zXjTm8=;
+	s=k20201202; t=1753234270;
+	bh=oCXlNSKRLrIZUtDs78uGqslRmQt0ZVedRl6AtLEJ8L0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=X3XV0szRb+xtV9QlC7zu8jrMwd7x4ikJafwW4Qu2c6TaOS+Iu8Vv+DWMuGAanZIaj
-	 /I2/Tx7KWeAq+m983LS7Qa7EWoaSRAhHBrGPQaATd9KcIJWCv6BTLmp/Vxh3PJ4Ynf
-	 if3VVRoTyhJjI+Qs4OzEZvTf5/6Wwv4LrEuzveF8v7MPd8PO2cIgTE5Rhq5PUqcPb/
-	 +6fzTiDxiEIMVt5oAGwDFYuryKieIlqfybfqC0DqECZjVWgTuAmDJ/Be1ogab/NRk2
-	 R1m/ri4hNkTvpzo3DzIjr5PeH03XukuIJgWciX3h4u9zJ6gNPHACqL+I9n1NxGzQfw
-	 VD8leDqPNUigA==
+	b=i7YpgvmZJJoPddQGsFacMSUhwcOuQvHj1FNawNA4a3i579xkx2PF5hdaCqu64WBvD
+	 5RoOV6GG9VYPOjyj0JWmH90MzJfPjZgEbsCyQFQsuQe7Wl+OZIFJDy1LONaiigZ5xE
+	 ghwWdDGwvq7FOOEyogNfZfScKAAAxyhtbAKgLpPHRKH9Gsx0+dk39U1RfbNj8yjLcg
+	 39TD9ySy5zhm75SHxFlSvTppGKYj4uc5cBu202BZrgSThVEgKZUN7Q4/0cmaMQ2vhg
+	 QdWeHCKObqsHR9hHbpg0sCMPZY4WdkXj4T6bWWhV/uXRUe+/U0Fv+ARjuXBMWhVBXZ
+	 UdxMsFybOKWBw==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v4 2/7] tracing: probe: Allocate traceprobe_parse_context from heap
-Date: Wed, 23 Jul 2025 10:30:56 +0900
-Message-ID: <175323425650.57270.280750740753792504.stgit@devnote2>
+Subject: [PATCH v4 3/7] tracing: fprobe-event: Allocate string buffers from heap
+Date: Wed, 23 Jul 2025 10:31:06 +0900
+Message-ID: <175323426643.57270.6657152008331160704.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <175323423662.57270.14650807176845939538.stgit@devnote2>
 References: <175323423662.57270.14650807176845939538.stgit@devnote2>
@@ -50,168 +50,101 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Instead of allocating traceprobe_parse_context on stack, allocate it
-dynamically from heap (slab).
-
-This change is likely intended to prevent potential stack overflow
-issues, which can be a concern in the kernel environment where stack
-space is limited.
+Allocate temporary string buffers for fprobe-event from heap
+instead of stack. This fixes the stack frame exceed limit error.
 
 Reported-by: kernel test robot <lkp@intel.com>
 Closes: https://lore.kernel.org/oe-kbuild-all/202506240416.nZIhDXoO-lkp@intel.com/
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- Changes in v3:
-  - Split #include sorting.
- Changes in v2:
-  - Sort #include alphabetically.
-  - Just NULL check for freeing traceprobe_parse_context.
-  - Do not change the semantics of traceprobe_parse_context for uprobe
-    event. (alloc/free in loop)
----
- kernel/trace/trace_eprobe.c |   14 ++++++++------
- kernel/trace/trace_fprobe.c |   13 ++++++++-----
- kernel/trace/trace_kprobe.c |   10 +++++++---
- kernel/trace/trace_probe.h  |    9 +++++++++
- kernel/trace/trace_uprobe.c |   13 ++++++++-----
- 5 files changed, 40 insertions(+), 19 deletions(-)
+ kernel/trace/trace_fprobe.c |   39 ++++++++++++++++++++++++++-------------
+ 1 file changed, 26 insertions(+), 13 deletions(-)
 
-diff --git a/kernel/trace/trace_eprobe.c b/kernel/trace/trace_eprobe.c
-index 23e06712bead..7ba3a18be4c5 100644
---- a/kernel/trace/trace_eprobe.c
-+++ b/kernel/trace/trace_eprobe.c
-@@ -797,18 +797,20 @@ find_and_get_event(const char *system, const char *event_name)
- 
- static int trace_eprobe_tp_update_arg(struct trace_eprobe *ep, const char *argv[], int i)
- {
--	struct traceprobe_parse_context ctx = {
--		.event = ep->event,
--		.flags = TPARG_FL_KERNEL | TPARG_FL_TEVENT,
--	};
-+	struct traceprobe_parse_context *ctx __free(traceprobe_parse_context) = NULL;
- 	int ret;
- 
--	ret = traceprobe_parse_probe_arg(&ep->tp, i, argv[i], &ctx);
-+	ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
-+	if (!ctx)
-+		return -ENOMEM;
-+	ctx->event = ep->event;
-+	ctx->flags = TPARG_FL_KERNEL | TPARG_FL_TEVENT;
-+
-+	ret = traceprobe_parse_probe_arg(&ep->tp, i, argv[i], ctx);
- 	/* Handle symbols "@" */
- 	if (!ret)
- 		ret = traceprobe_update_arg(&ep->tp.args[i]);
- 
--	traceprobe_finish_parse(&ctx);
- 	return ret;
- }
- 
 diff --git a/kernel/trace/trace_fprobe.c b/kernel/trace/trace_fprobe.c
-index add08ffb04d7..610f8d53be8a 100644
+index 610f8d53be8a..9d14a910fbf7 100644
 --- a/kernel/trace/trace_fprobe.c
 +++ b/kernel/trace/trace_fprobe.c
-@@ -1384,14 +1384,17 @@ static int trace_fprobe_create_internal(int argc, const char *argv[],
+@@ -1235,18 +1235,18 @@ static int trace_fprobe_create_internal(int argc, const char *argv[],
+ 	 *  FETCHARG:TYPE : use TYPE instead of unsigned long.
+ 	 */
+ 	struct trace_fprobe *tf __free(free_trace_fprobe) = NULL;
+-	struct module *mod __free(module_put) = NULL;
+-	int i, new_argc = 0, ret = 0;
+-	bool is_return = false;
+-	char *symbol __free(kfree) = NULL;
+ 	const char *event = NULL, *group = FPROBE_EVENT_SYSTEM;
++	struct module *mod __free(module_put) = NULL;
+ 	const char **new_argv __free(kfree) = NULL;
+-	char buf[MAX_EVENT_NAME_LEN];
+-	char gbuf[MAX_EVENT_NAME_LEN];
+-	char sbuf[KSYM_NAME_LEN];
+-	char abuf[MAX_BTF_ARGS_LEN];
++	char *symbol __free(kfree) = NULL;
++	char *ebuf __free(kfree) = NULL;
++	char *gbuf __free(kfree) = NULL;
++	char *sbuf __free(kfree) = NULL;
++	char *abuf __free(kfree) = NULL;
+ 	char *dbuf __free(kfree) = NULL;
++	int i, new_argc = 0, ret = 0;
+ 	bool is_tracepoint = false;
++	bool is_return = false;
  
- static int trace_fprobe_create_cb(int argc, const char *argv[])
- {
--	struct traceprobe_parse_context ctx = {
--		.flags = TPARG_FL_KERNEL | TPARG_FL_FPROBE,
--	};
-+	struct traceprobe_parse_context *ctx __free(traceprobe_parse_context) = NULL;
- 	int ret;
+ 	if ((argv[0][0] != 'f' && argv[0][0] != 't') || argc < 2)
+ 		return -ECANCELED;
+@@ -1274,6 +1274,9 @@ static int trace_fprobe_create_internal(int argc, const char *argv[],
  
-+	ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
-+	if (!ctx)
-+		return -ENOMEM;
-+
-+	ctx->flags = TPARG_FL_KERNEL | TPARG_FL_FPROBE,
-+
- 	trace_probe_log_init("trace_fprobe", argc, argv);
--	ret = trace_fprobe_create_internal(argc, argv, &ctx);
--	traceprobe_finish_parse(&ctx);
-+	ret = trace_fprobe_create_internal(argc, argv, ctx);
- 	trace_probe_log_clear();
- 	return ret;
- }
-diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-index cac128a5f7e0..d14b33e205f7 100644
---- a/kernel/trace/trace_kprobe.c
-+++ b/kernel/trace/trace_kprobe.c
-@@ -1065,14 +1065,18 @@ static int trace_kprobe_create_internal(int argc, const char *argv[],
- 
- static int trace_kprobe_create_cb(int argc, const char *argv[])
- {
--	struct traceprobe_parse_context ctx = { .flags = TPARG_FL_KERNEL };
-+	struct traceprobe_parse_context *ctx __free(traceprobe_parse_context) = NULL;
- 	int ret;
- 
-+	ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
-+	if (!ctx)
-+		return -ENOMEM;
-+	ctx->flags = TPARG_FL_KERNEL;
-+
- 	trace_probe_log_init("trace_kprobe", argc, argv);
- 
--	ret = trace_kprobe_create_internal(argc, argv, &ctx);
-+	ret = trace_kprobe_create_internal(argc, argv, ctx);
- 
--	traceprobe_finish_parse(&ctx);
- 	trace_probe_log_clear();
- 	return ret;
- }
-diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
-index 719604855279..842383fbc03b 100644
---- a/kernel/trace/trace_probe.h
-+++ b/kernel/trace/trace_probe.h
-@@ -12,6 +12,7 @@
- 
- #include <linux/bitops.h>
- #include <linux/btf.h>
-+#include <linux/cleanup.h>
- #include <linux/kprobes.h>
- #include <linux/limits.h>
- #include <linux/perf_event.h>
-@@ -439,6 +440,14 @@ extern void traceprobe_free_probe_arg(struct probe_arg *arg);
-  * this MUST be called for clean up the context and return a resource.
-  */
- void traceprobe_finish_parse(struct traceprobe_parse_context *ctx);
-+static inline void traceprobe_free_parse_ctx(struct traceprobe_parse_context *ctx)
-+{
-+	traceprobe_finish_parse(ctx);
-+	kfree(ctx);
-+}
-+
-+DEFINE_FREE(traceprobe_parse_context, struct traceprobe_parse_context *,
-+	if (_T) traceprobe_free_parse_ctx(_T))
- 
- extern int traceprobe_split_symbol_offset(char *symbol, long *offset);
- int traceprobe_parse_event_name(const char **pevent, const char **pgroup,
-diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
-index 3cc3404b09f0..872dce092e46 100644
---- a/kernel/trace/trace_uprobe.c
-+++ b/kernel/trace/trace_uprobe.c
-@@ -695,13 +695,16 @@ static int __trace_uprobe_create(int argc, const char **argv)
- 
- 	/* parse arguments */
- 	for (i = 0; i < argc; i++) {
--		struct traceprobe_parse_context ctx = {
--			.flags = (is_return ? TPARG_FL_RETURN : 0) | TPARG_FL_USER,
--		};
-+		struct traceprobe_parse_context *ctx __free(traceprobe_parse_context)
-+			= kzalloc(sizeof(*ctx), GFP_KERNEL);
- 
-+		if (!ctx) {
-+			ret = -ENOMEM;
-+			goto error;
-+		}
-+		ctx->flags = (is_return ? TPARG_FL_RETURN : 0) | TPARG_FL_USER;
- 		trace_probe_log_set_index(i + 2);
--		ret = traceprobe_parse_probe_arg(&tu->tp, i, argv[i], &ctx);
--		traceprobe_finish_parse(&ctx);
-+		ret = traceprobe_parse_probe_arg(&tu->tp, i, argv[i], ctx);
+ 	trace_probe_log_set_index(0);
+ 	if (event) {
++		gbuf = kmalloc(MAX_EVENT_NAME_LEN, GFP_KERNEL);
++		if (!gbuf)
++			return -ENOMEM;
+ 		ret = traceprobe_parse_event_name(&event, &group, gbuf,
+ 						  event - argv[0]);
  		if (ret)
- 			goto error;
+@@ -1281,15 +1284,18 @@ static int trace_fprobe_create_internal(int argc, const char *argv[],
  	}
+ 
+ 	if (!event) {
++		ebuf = kmalloc(MAX_EVENT_NAME_LEN, GFP_KERNEL);
++		if (!ebuf)
++			return -ENOMEM;
+ 		/* Make a new event name */
+ 		if (is_tracepoint)
+-			snprintf(buf, MAX_EVENT_NAME_LEN, "%s%s",
++			snprintf(ebuf, MAX_EVENT_NAME_LEN, "%s%s",
+ 				 isdigit(*symbol) ? "_" : "", symbol);
+ 		else
+-			snprintf(buf, MAX_EVENT_NAME_LEN, "%s__%s", symbol,
++			snprintf(ebuf, MAX_EVENT_NAME_LEN, "%s__%s", symbol,
+ 				 is_return ? "exit" : "entry");
+-		sanitize_event_name(buf);
+-		event = buf;
++		sanitize_event_name(ebuf);
++		event = ebuf;
+ 	}
+ 
+ 	if (is_return)
+@@ -1305,13 +1311,20 @@ static int trace_fprobe_create_internal(int argc, const char *argv[],
+ 		ctx->flags |= TPARG_FL_TPOINT;
+ 		mod = NULL;
+ 		tpoint = find_tracepoint(symbol, &mod);
+-		if (tpoint)
++		if (tpoint) {
++			sbuf = kmalloc(KSYM_NAME_LEN, GFP_KERNEL);
++			if (!sbuf)
++				return -ENOMEM;
+ 			ctx->funcname = kallsyms_lookup((unsigned long)tpoint->probestub,
+ 							NULL, NULL, NULL, sbuf);
++		}
+ 	}
+ 	if (!ctx->funcname)
+ 		ctx->funcname = symbol;
+ 
++	abuf = kmalloc(MAX_BTF_ARGS_LEN, GFP_KERNEL);
++	if (!abuf)
++		return -ENOMEM;
+ 	argc -= 2; argv += 2;
+ 	new_argv = traceprobe_expand_meta_args(argc, argv, &new_argc,
+ 					       abuf, MAX_BTF_ARGS_LEN, ctx);
 
