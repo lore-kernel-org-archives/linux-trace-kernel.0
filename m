@@ -1,38 +1,37 @@
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06D042E371F;
-	Tue, 22 Jul 2025 23:57:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 092DF184;
+	Wed, 23 Jul 2025 00:04:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753228657; cv=none; b=mZ9NwizOCnOpryAVSX8HY5mPfeaBqlVnAUw2coNCpvfRDdEEbK0/c8DecxAaXplFHz1I/o+O+lQQee7btiQC+TsLquA8hyMWxuwx7mQZp5lCvzGLqbfIC9awExqHbpWz72DhhOTUEiRTDxIZaV2wJHqV10xW3DgSdvmawJ0PcWc=
+	t=1753229060; cv=none; b=l8TL3NSINgkdw1d6KwS9yAMO2KK2E/yyaCbWq4XZFMcppvWzvi2cW0ugG6YKR+YtXIRzKfUs/eUJgXqqaJaRiZxLjGxNQ63C0dXSbufSRPVtBs+3mqjsxuyKlH+jBAvj/b/N8jnV/Gn56LEu/N2UU1Rr3Onr2Ds+6BtFqk8Jp4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753228657; c=relaxed/simple;
-	bh=gdc9Pj3O0TVNUwzks1regqOQ1nAm4fPNuiICCyNuErw=;
+	s=arc-20240116; t=1753229060; c=relaxed/simple;
+	bh=zvxTzCeRO9oJWT1wPdAA781sDAx6+luKMQxGe/Qy99A=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rrN+df1zivVeXBtGG9VgMbIDdTpCVsestVkcGNLy0Zb1gnsqn6HqNlg4ejVhcrTfB4cIIiMsxyJED7z3eWi37VJfZCLWj0siYc/DihHx+yjnBLTpauh0tY7fVibcg2lpr2bs/oIjOzhpsu41PXGODcptam7dO8kLWi5IUMc4hrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
+	 MIME-Version:Content-Type; b=RmS8nD5r/wN6fOMYOdcKSRS4K+N4//Tf/9fjPniZPvAh85UmRxCeif57/2SxPYZDobEUk+DhCTpoda/FWdNie77TcCL7qc8x/rwCxwIR2EQxwmbJ/M6HlvkjYnv7Gg7eNx9USBHRyX4H72aWj3RXUXHEFmVWCSXjHPe/cLhJr7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf08.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay03.hostedemail.com (Postfix) with ESMTP id 42E58B9A60;
-	Tue, 22 Jul 2025 23:57:33 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id 043BF20026;
-	Tue, 22 Jul 2025 23:57:30 +0000 (UTC)
-Date: Tue, 22 Jul 2025 19:57:30 -0400
+Received: from omf02.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay02.hostedemail.com (Postfix) with ESMTP id 4FC5F132BF7;
+	Wed, 23 Jul 2025 00:04:16 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf02.hostedemail.com (Postfix) with ESMTPA id 0229B8000F;
+	Wed, 23 Jul 2025 00:04:13 +0000 (UTC)
+Date: Tue, 22 Jul 2025 20:04:13 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: Steven Rostedt <rostedt@kernel.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-xfs@vger.kernel.org, Masami
- Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, Carlos Maiolino <cem@kernel.org>, Christoph
- Hellwig <hch@lst.de>
-Subject: Re: [PATCH 0/4] xfs: more unused events from linux-next
-Message-ID: <20250722195730.7eb30450@gandalf.local.home>
-In-Reply-To: <20250722232842.GV2672049@frogsfrogsfrogs>
-References: <20250722201907.886429445@kernel.org>
- <20250722232842.GV2672049@frogsfrogsfrogs>
+To: Costa Shulyupin <costa.shul@redhat.com>
+Cc: Tomas Glozar <tglozar@redhat.com>, John Kacur <jkacur@redhat.com>, Eder
+ Zulian <ezulian@redhat.com>, Dan Carpenter <dan.carpenter@linaro.org>,
+ Gabriele Monaco <gmonaco@redhat.com>, Jan Stancek <jstancek@redhat.com>,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ bpf@vger.kernel.org
+Subject: Re: [PATCH v1] tools/rtla: Consolidate common parameters into
+ shared structure
+Message-ID: <20250722200413.4a3b3777@gandalf.local.home>
+In-Reply-To: <20250701060337.648475-1-costa.shul@redhat.com>
+References: <20250701060337.648475-1-costa.shul@redhat.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -42,37 +41,43 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: 311zefzwtnjtgff3zrpkcozbuexepcgo
-X-Rspamd-Server: rspamout08
-X-Rspamd-Queue-Id: 043BF20026
+X-Rspamd-Queue-Id: 0229B8000F
+X-Stat-Signature: r8oqwtdgrf5jjr1j8ijn7iukmsneamyg
+X-Rspamd-Server: rspamout02
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+piuJg9NgEvYhDBbotTcMmneiGZTH64vI=
-X-HE-Tag: 1753228650-382034
-X-HE-Meta: U2FsdGVkX1+JVXZJMOllzESOVmMVKNAo4z6kHJCIBFe+EdBWTgAjj6EZyz2CO1I74RFYjHDhUXXKnEugpRrHqomd3XPaGYp62MyYv2cvtusxxPZFu/u+r+9e6sDuhYar/LepdJMIwlA7zMi52xOasA7Lr4vaaKFKBIqq1BV+6PCk4guFw1Dnvgtaf7wk6YXgyLqPg4Ye60dCfahfSfYEottbi3ICnY4aVF5JDx5BsF/yoHt6ffdj+/dI1d0wREX5dhBRBq8yqBf/H0UgbNX+VoTRQlVlCMOSPXzkp6907TAgTdAI8tfvaMNH2edzDULYSGJ+DoHpwnyJTgFOdsp6qdM6EKfvc5vL
+X-Session-ID: U2FsdGVkX18aoILLA/5Z71EuoA872FLboiUcOjUo/0U=
+X-HE-Tag: 1753229053-332301
+X-HE-Meta: U2FsdGVkX1+n95+cqcJqYJt+KVhQRkttmDltb3nGvZXVl2u6Zx/w8I99T0e+xccKmiMSyTWZMLDknjTjGLUBrW5l81JKKWMzA1LftUK3Cme7SjRDxSjWxx6CzGf8U/yDNj3y8enkY1042o+cDnqjaWxoeQ6EgcXvVtvw+GGIaw8ymS45SC+nS8tJmtLDWGFEb1fJeRXftv1gsnOLaMLXUm8PrTO0R3SkEKZUYcNVKbV2Se1shNFYMuv2VqXuyXnentOZOvmH9jWL6Zl/HtyJf3IVN0wqCXRhZyXMcA8acI8Ok4k9U54Qwm1P2S2vBpJ+Wcunif+Xpbz52j90m46KWinvJZKeZlkU
 
-On Tue, 22 Jul 2025 16:28:42 -0700
-"Darrick J. Wong" <djwong@kernel.org> wrote:
+On Tue,  1 Jul 2025 09:03:14 +0300
+Costa Shulyupin <costa.shul@redhat.com> wrote:
 
-> On Tue, Jul 22, 2025 at 04:19:07PM -0400, Steven Rostedt wrote:
-> > 
-> > I reran the unused tracepoint code on the latest linux-next and found more
-> > xfs trace events. One was recently added but the rest were there before. Not
-> > sure how I missed them.
-> > 
-> > But anyway, here's a few more patches to remove unused xfs trace events.
-> > 
-> > Steven Rostedt (4):
-> >       xfs: remove unused trace event xfs_dqreclaim_dirty
-> >       xfs: remove unused trace event xfs_log_cil_return
-> >       xfs: remove unused trace event xfs_discard_rtrelax
-> >       xfs: remove unused trace event xfs_reflink_cow_enospc  
+> timerlat_params and osnoise_params structures contain 17 identical
+> fields.
 > 
-> I can directly take responsibility for 1, 3, and 4 -- those aren't going
-> to come back.  Patch 2 looks like an accidental add, and if anyone wants
-> it they can always add it back.
-> 
-> Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
+> Introduce a common_params structure and move those fields into it to
+> eliminate the code duplication and improve maintainability.
 
-Thanks. I'm guessing this will also go through the xfs tree?
+I have no preference about this patch, but would like an acked-by or
+reviewed-by from Tomas and/or Gabriele.
+
+Thanks,
 
 -- Steve
+
+
+> 
+> Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
+> ---
+>  tools/tracing/rtla/src/osnoise.c       |  24 ++---
+>  tools/tracing/rtla/src/osnoise.h       |  19 +---
+>  tools/tracing/rtla/src/osnoise_hist.c  | 112 ++++++++++-----------
+>  tools/tracing/rtla/src/osnoise_top.c   | 102 +++++++++----------
+>  tools/tracing/rtla/src/timerlat.c      |  24 ++---
+>  tools/tracing/rtla/src/timerlat.h      |  19 +---
+>  tools/tracing/rtla/src/timerlat_bpf.c  |   4 +-
+>  tools/tracing/rtla/src/timerlat_hist.c | 129 +++++++++++++------------
+>  tools/tracing/rtla/src/timerlat_top.c  | 121 +++++++++++------------
+>  tools/tracing/rtla/src/utils.h         |  31 ++++++
+>  10 files changed, 292 insertions(+), 293 deletions(-)
+> 
