@@ -1,106 +1,75 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 785A3210F59;
-	Wed, 23 Jul 2025 17:14:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45ECD2E36EB
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 23 Jul 2025 17:46:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753290861; cv=none; b=ZZLE1voUQdXiBXUxUKWCF+nvyt4yyMSb5Cv4tUWOUL7nplJMLf7LoxP4qvTdvTEGysvjgv7QeUG6MWBwO6oXn4GTajwqMCz9H2fjOHINbwraiZbnl2aXQ30ZHLjXh1xsPQZQlCt47hRcUCS4tvX1DILmGq2lJNKaRiNhrZt5Hrg=
+	t=1753292802; cv=none; b=kA4QGV8mPBypsnYPhRQZFGaR//nXNA1SIrCYtpddn22UIziFhuzrPJSmUJz78luv7NZVvtgeuU51OZVPrjTYzwTs09ugzDhz/9RVNA7UUTyrmzboKnJxp4V4w3uYGMORBLpTJHCN7DOPCKdhLmgfPB1D66r0sHjudzxOguBmMK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753290861; c=relaxed/simple;
-	bh=QEhVG7UaEQoCsOv4KhYFV0ONxI+PWKVznJXkzpHUNlc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PkKShNvqLlAR3pwz7guMb7Yw9M0tEAQazsNNamjpTefIChY0hWb5HWTZ1MoLdqeP3TQIHFTHy1gWXphnYoE3WSV4k3s8RwBiJkvBE7P+mru9g3bi8EKaaCamlMYN0BC9/MCmtvkLe8vt9d8189Gf4QG0KZRpneYgGKKu9Goexpg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 45DEA22C7;
-	Wed, 23 Jul 2025 10:14:12 -0700 (PDT)
-Received: from [192.168.20.57] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AD85D3F66E;
-	Wed, 23 Jul 2025 10:14:17 -0700 (PDT)
-Message-ID: <2a6e1c4b-e8b0-49e2-896c-65c55103b017@arm.com>
-Date: Wed, 23 Jul 2025 12:14:17 -0500
+	s=arc-20240116; t=1753292802; c=relaxed/simple;
+	bh=lYnN/1pWgCDFqesfgHtQyFbqwYH5n9urVKcNuI5vi2U=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=cOIr4EZ7yUOyHQAxNLkSTv1elCoB36JpRYP0dc/nSk8uudlfuV5g5Yjjgcc8VkBj3T+P+MfNb/o3oa44horbWyo5Z0edhjE0Vb/bWhyocvaYXz5bcYy4tZ+EhTYBJwisWP+vqMd+Aw9BkINYWwCCaukuB9n2N2czIrT2sdcbRW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=LUt56hqD; arc=none smtp.client-ip=91.218.175.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="LUt56hqD"
+Content-Type: text/plain;
+	charset=us-ascii
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1753292788;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Ug2rfeed2cWn/I2/5Z5uz7sqeV+pd/xv4VUaRzto6qs=;
+	b=LUt56hqD5CCboMBaMivITHWY7Oc2uO6Si5y3LPXwB5Xc9XMSAE47X3dVjalNudEy07lIny
+	4E9d9p1dWJ84BmnT2uNOdBpR9+/DoBpn4o8f5CIUsSzDq7xu3D8YcW0SIAchLEf6Hn9FRB
+	hjVpu54skIoUfoPzX7e13KLNRx4Z8rA=
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 4/8] arm64: uaccess: Add additional userspace GCS
- accessors
-To: Catalin Marinas <catalin.marinas@arm.com>
-Cc: linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- mhiramat@kernel.org, oleg@redhat.com, peterz@infradead.org, acme@kernel.org,
- namhyung@kernel.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
- adrian.hunter@intel.com, kan.liang@linux.intel.com,
- thiago.bauermann@linaro.org, broonie@kernel.org, yury.khrustalev@arm.com,
- kristina.martsenko@arm.com, liaochang1@huawei.com, will@kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250719043740.4548-1-jeremy.linton@arm.com>
- <20250719043740.4548-5-jeremy.linton@arm.com> <aICwaQZxK5Spjj8G@arm.com>
-Content-Language: en-US
-From: Jeremy Linton <jeremy.linton@arm.com>
-In-Reply-To: <aICwaQZxK5Spjj8G@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
+Subject: Re: [PATCH net-next] tracing: ipv6: Replace deprecated strcpy() with
+ strscpy()
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Thorsten Blum <thorsten.blum@linux.dev>
+In-Reply-To: <20250714123825.6f0485c9@batman.local.home>
+Date: Wed, 23 Jul 2025 10:46:12 -0700
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Guillaume Nault <gnault@redhat.com>,
+ Paolo Abeni <pabeni@redhat.com>,
+ Ido Schimmel <idosch@nvidia.com>,
+ Petr Machata <petrm@nvidia.com>,
+ linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
 Content-Transfer-Encoding: 7bit
+Message-Id: <F998F71D-1244-4154-BC5F-19201C23BDBE@linux.dev>
+References: <20250714075436.226197-2-thorsten.blum@linux.dev>
+ <20250714123825.6f0485c9@batman.local.home>
+To: Steven Rostedt <rostedt@goodmis.org>
+X-Migadu-Flow: FLOW_OUT
 
-Hi,
+Hi Steve,
 
-
-Thanks for looking at this.
-
-On 7/23/25 4:50 AM, Catalin Marinas wrote:
-> On Fri, Jul 18, 2025 at 11:37:36PM -0500, Jeremy Linton wrote:
->> +/*
->> + * Unlike put_user_gcs() above, the use of copy_from_user() may provide
->> + * an opening for non GCS pages to be used to source data. Therefore this
->> + * should only be used in contexts where that is acceptable.
->> + */
+On 14. Jul 2025, at 09:38, Steven Rostedt wrote:
 > 
-> Even in user space, the GCS pages can be read with normal loads, so
-> already usable as a data source if one wants to (not that it's of much
-> use). So not sure the comment here is needed.
+> Hmm, why is that string hard coded to 16 bytes and doesn't use the
+> dynamic string facility? Perhaps something like this?
 
-Right, but userspace isn't using it in a privileged context to emulate 
-operations that have a permission check performed as part of the read 
-when performed by the HW.
+Your commit fca8300f68fe3 changed it from __dynamic_array() to __array()
+and __string() seems to be just a special version of __dynamic_array()
+with a length of -1.
 
-This comment was added in V2 following a number of conversations about 
-whether this was an actual risk or something that is only a problem if a 
-long set of pre-conditions hold true. Conditions which can be summarized 
-as "it is too late anyway".
+In the commit description you wrote: "Since the size of the name is at
+most 16 bytes (defined by IFNAMSIZ), it is not worth spending the effort
+to determine the size of the string."
 
-Hence the comment to remind people that this routine isn't assuring the 
-page is correctly marked.
-
-I will reword it a bit if that is ok.
-
-
-> 
->> +static inline u64 load_user_gcs(unsigned long __user *addr, int *err)
-> 
-> Nitpick: name this get_user_gcs() for symmetry with put_user_gcs().
-> 
->> +{
->> +	unsigned long ret;
->> +	u64 load = 0;
->> +
->> +	gcsb_dsync();
-> 
-> Might be worth a comment here, see the one in gcs_restore_signal().
-
-Sure,
-
-> 
->> +	ret = copy_from_user(&load, addr, sizeof(load));
->> +	if (ret != 0)
->> +		*err = ret;
->> +	return load;
->> +}
-> 
-> Otherwise the patch looks fine:
-> 
-> Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+Thanks,
+Thorsten
 
