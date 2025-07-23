@@ -1,36 +1,37 @@
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B66A918D;
-	Wed, 23 Jul 2025 00:09:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 382F4139E;
+	Wed, 23 Jul 2025 00:25:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753229391; cv=none; b=dC7QOq/NNjuGS8zT44bQRzGv/VQRXV1rbaBTy6tJcVTNrk9ZULOU/b9KlNM4FUwvIZ/5p5M9grsbNMXu6rNlUMnj8nHldVCHHKIhgyRhuPSifOECLkSxVysBMI/tRtNZmFiGgnIBZEUUNqhgVmhqt7IQeF7ILHvwxjTiE8CY93Q=
+	t=1753230358; cv=none; b=ncy8xOBOXGyoAlOH4/x4TKIaGEw3KfEKPj6qX8LWt/tSGP2w2S6Zw4FN/9vTn3+QuYFcyK/YXthObkQoU/XBV+/ARb/TzmnkBf5P6JxrAUfQKCxeptGtu56SxFq3cU6nBf0RvAYqbFL57zSUVwfhLovuKU6yvjVxmS1/ar7qo7o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753229391; c=relaxed/simple;
-	bh=qqQcKk+7DKh3CF35H8xBy5D29BPNoW21fuLytiPMA+8=;
+	s=arc-20240116; t=1753230358; c=relaxed/simple;
+	bh=hul9bcAAdEwyaiKKCTx2o+tVzV4pehmPablumkZG3Y8=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DROjymt+l9SzdNAHIAxkWODPUhvH12b8ndwuNKGOvTKQpGa1DUI9dEFaf1h8bCPXNqTDBpO1z2sYN2NdVg9jnyFwL+ZhZ03O4KXEGEkNUq/gSDigmHhKpUD5PDKAdFKG1ohjKFsxG3Q5PvISAyHP6yYRT9YV0pFVUyzWzEbLPTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
+	 MIME-Version:Content-Type; b=D6AzORpyf7ffMz4TzMHGpH42TFuRBotvnmfSkRCuNstPX3LSwl6+jAjRGfT6Iz6SltXrle4aX0QyTfSSeycZFcrW9OpI3e9fP5yGAP8tBKyOkC5HOdn1+1mR3ZTQxuAnE6IlaHaWtFv/6NN1+7vvH8bB4E9DJfEayxpzzSoej9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf18.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay04.hostedemail.com (Postfix) with ESMTP id 977091A053E;
-	Wed, 23 Jul 2025 00:09:48 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf18.hostedemail.com (Postfix) with ESMTPA id F27142F;
-	Wed, 23 Jul 2025 00:09:46 +0000 (UTC)
-Date: Tue, 22 Jul 2025 20:09:46 -0400
+Received: from omf04.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay02.hostedemail.com (Postfix) with ESMTP id 60783132168;
+	Wed, 23 Jul 2025 00:25:54 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf04.hostedemail.com (Postfix) with ESMTPA id E63B920023;
+	Wed, 23 Jul 2025 00:25:51 +0000 (UTC)
+Date: Tue, 22 Jul 2025 20:25:51 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Gabriele Paoloni <gpaoloni@redhat.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH] tracing: Remove EVENT_FILE_FL_SOFT_MODE flag
-Message-ID: <20250722200946.12840659@gandalf.local.home>
-In-Reply-To: <CA+wEVJbwPPJ6_DOXChTCQygQrraK785WCu97jdVpdUqJ483mdA@mail.gmail.com>
-References: <20250702143657.18dd1882@batman.local.home>
-	<CA+wEVJYeDACQTO8g2L9_ZAM0mC2JwBm_pDahiGVmfc=c43caAA@mail.gmail.com>
-	<CA+wEVJbwPPJ6_DOXChTCQygQrraK785WCu97jdVpdUqJ483mdA@mail.gmail.com>
+To: WangYuli <wangyuli@uniontech.com>
+Cc: dmitry.torokhov@gmail.com, guanwentao@uniontech.com,
+ linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
+ mhiramat@kernel.org, niecheng1@uniontech.com, wangyuli@deepin.org,
+ zhanjun@uniontech.com, Winston Wen <wentao@uniontech.com>
+Subject: Re: [PATCH 1/2] input: Add tracepoint support
+Message-ID: <20250722202551.1614f59a@gandalf.local.home>
+In-Reply-To: <C1C54D7FA3DF3958+20250710073148.3994900-1-wangyuli@uniontech.com>
+References: <19571F312EE197A5+20250710072634.3992019-1-wangyuli@uniontech.com>
+	<C1C54D7FA3DF3958+20250710073148.3994900-1-wangyuli@uniontech.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -40,21 +41,262 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: m8yam4og8nwo64b49q9f8joemq4jw6jr
-X-Rspamd-Server: rspamout03
-X-Rspamd-Queue-Id: F27142F
+X-Stat-Signature: baeic9fzi43tc78qgo3kei49w1y5cezr
+X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: E63B920023
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/iRUVqFSbmNbP2/FRlJWUGOEvK2kQZ/Vc=
-X-HE-Tag: 1753229386-441961
-X-HE-Meta: U2FsdGVkX1/GAdpwlwivK2pYshBSFtap+X6mpNRrBw8lb1XcsHSEeVOtSsVMtXnP4aZLrSdKZ7E4FG1wdz/GG9h92t8+THYC/uw5I0LmT3vZSEVrzzR2vNIcZ6gnUovfVxN58biVGR2O11618hRGh3RD2iQQxxVyBYwsa/XDTc7dM6BCuhm1Gmq/qflul7s8aaWn94q6uPhev50ZAbwrrRZPqiTf+7GM4uEC5sD18aOnzKKnb2W0nSEkuxq2SoB7t3UhXFSc5w8l4PwQf+25l+Oi0rKUNGdTGpd/L484oNPTAitm1gKeg3WqxiIcJQIba/zK2Jm2zKI93OLgU0g36DS3emIUl/NTB8kJCEop7QojG/uOs+6f46HC1IUBEu/G3Wmjtj/82x4=
+X-Session-ID: U2FsdGVkX193A/s2WGqzx4pBRRNDJ1gOIKL8W9+9Jf0=
+X-HE-Tag: 1753230351-603085
+X-HE-Meta: U2FsdGVkX19GNv9QaZQuPy7p4ue5inL2b1yJ9jONT6HKBRFgQczDarm1qZ6KNCZvYsTT8GPK8uvLjgkbdAH+g+YYlt7F3eFqqYlIbB/crZ/VDJtczMSgxWbOaD5GvlS1Eq+lk8o2meGwMvya755aaiRatrtwarFPrKFklaD8KEmufIkm9T5DXov45Di5n78dks1b4sQZUctnDFhWUWTFRT7UfQq8QWjE28GkXDPNfI9VRpw8G1dDvg2W1REluc2SRAcLxbnRq372J82mpnLZDS+KVUOLQYMwVdnAPTzgtQQWnfxAxZA/mwRq+YJimlIUqB6PHOT+nxT9wNQul1KqMya3lTKSeO2kwSMtIS04RCPhxDx8Ee8nAyRkyfrLi6+I4HBgzn93IBBbs6dexRFFm/i5DT0O0Wh4
 
-On Thu, 3 Jul 2025 18:39:18 +0200
-Gabriele Paoloni <gpaoloni@redhat.com> wrote:
+On Thu, 10 Jul 2025 15:31:38 +0800
+WangYuli <wangyuli@uniontech.com> wrote:
 
-> Sorry I had a better look at the code and event_mutex is locked/unlocked
-> also outside of trace_events.c so the modification below is not needed.
-> However I think we could still replace the atomic counter.
+> diff --git a/include/trace/events/input.h b/include/trace/events/input.h
+> new file mode 100644
+> index 000000000000..3c5ffcfb7c8d
+> --- /dev/null
+> +++ b/include/trace/events/input.h
+> @@ -0,0 +1,251 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/* input tracepoints
+> + *
+> + * Copyright (C) 2025 WangYuli <wangyuli@uniontech.com>
+> + */
+> +#undef TRACE_SYSTEM
+> +#define TRACE_SYSTEM input
+> +
+> +#if !defined(_TRACE_INPUT_H) || defined(TRACE_HEADER_MULTI_READ)
+> +#define _TRACE_INPUT_H
+> +
+> +#include <linux/tracepoint.h>
+> +#include <linux/input.h>
+> +
+> +/**
+> + * input_event - called when an input event is processed
+> + * @dev: input device that generated the event
+> + * @type: event type (EV_KEY, EV_REL, EV_ABS, etc.)
+> + * @code: event code within the type
+> + * @value: event value
+> + *
+> + * This tracepoint fires for every input event processed by the input core.
+> + * It can be used to monitor input device activity and debug input issues.
+> + */
+> +TRACE_EVENT(
+> +	input_event,
+> +
+> +	TP_PROTO(struct input_dev *dev, unsigned int type, unsigned int code,
+> +		 int value),
+> +
+> +	TP_ARGS(dev, type, code, value),
+> +
+> +	TP_STRUCT__entry(__string(name, dev->name ?: "unknown") __field(
+> +		unsigned int, type) __field(unsigned int, code)
+> +				 __field(int, value) __field(u16, bustype)
+> +					 __field(u16, vendor)
+> +						 __field(u16, product)),
+> +
 
-Maybe, but that's unrelated to the current patch. I'm going to take this as is.
+The contents of the tracepoints in the subsystems are determined by the
+subsystem maintainers, but please follow the tracepoint formatting. The
+above is horrible. It should look like a structure layout. One wouldn't
+write:
+
+struct entry { char *name;
+		unsigned int type; unsigned int code;
+			int value; u16 bustype;
+				u16 vendor;
+					u16 product; };
+
+That's what the above looks like. It should be instead:
+
+	TP_STRUCT__entry(
+		__string(	name,		dev->name ?: "unknown"	)
+		__field(	unsigned int,	type			)
+		__field(	unsigned int,	code			)
+		__field(	int,		value			)
+		__field(	u16,		bustype			)
+		__field(	u16,		vendor			)
+		__field(	u16,		product			)
+	),
+
+So the fields can be easily visible and easily reviewed.
+
+
+> +	TP_fast_assign(__assign_str(name); __entry->type = type;
+> +		       __entry->code = code; __entry->value = value;
+> +		       __entry->bustype = dev->id.bustype;
+> +		       __entry->vendor = dev->id.vendor;
+> +		       __entry->product = dev->id.product;),
+> +
+> +	TP_printk(
+> +		"dev=%s type=%u code=%u value=%d bus=%04x vendor=%04x product=%04x",
+> +		__get_str(name), __entry->type, __entry->code, __entry->value,
+> +		__entry->bustype, __entry->vendor, __entry->product));
+> +
+> +/**
+> + * input_device_register - called when an input device is registered
+> + * @dev: input device being registered
+> + *
+> + * This tracepoint fires when a new input device is registered with the
+> + * input subsystem. Useful for monitoring device hotplug events.
+> + */
+> +TRACE_EVENT(
+> +	input_device_register,
+> +
+> +	TP_PROTO(struct input_dev *dev),
+> +
+> +	TP_ARGS(dev),
+> +
+> +	TP_STRUCT__entry(__string(name, dev->name ?: "unknown") __string(
+> +		phys, dev->phys ?: "") __field(u16, bustype)
+> +				 __field(u16, vendor) __field(u16, product)
+> +					 __field(u16, version)),
+
+Same here.
+
+> +
+> +	TP_fast_assign(__assign_str(name); __assign_str(phys);
+> +		       __entry->bustype = dev->id.bustype;
+> +		       __entry->vendor = dev->id.vendor;
+> +		       __entry->product = dev->id.product;
+> +		       __entry->version = dev->id.version;),
+> +
+> +	TP_printk(
+> +		"dev=%s phys=%s bus=%04x vendor=%04x product=%04x version=%04x",
+> +		__get_str(name), __get_str(phys), __entry->bustype,
+> +		__entry->vendor, __entry->product, __entry->version));
+> +
+> +/**
+> + * input_device_unregister - called when an input device is unregistered
+> + * @dev: input device being unregistered
+> + *
+> + * This tracepoint fires when an input device is unregistered from the
+> + * input subsystem. Useful for monitoring device hotplug events.
+> + */
+> +TRACE_EVENT(input_device_unregister,
+> +
+> +	    TP_PROTO(struct input_dev *dev),
+> +
+> +	    TP_ARGS(dev),
+> +
+> +	    TP_STRUCT__entry(__string(name, dev->name ?: "unknown") __string(
+> +		    phys, dev->phys ?: "") __field(u16, bustype)
+> +				     __field(u16, vendor)
+> +					     __field(u16, product)),
+
+ditto.
+
+> +
+> +	    TP_fast_assign(__assign_str(name); __assign_str(phys);
+> +			   __entry->bustype = dev->id.bustype;
+> +			   __entry->vendor = dev->id.vendor;
+> +			   __entry->product = dev->id.product;),
+> +
+> +	    TP_printk("dev=%s phys=%s bus=%04x vendor=%04x product=%04x",
+> +		      __get_str(name), __get_str(phys), __entry->bustype,
+> +		      __entry->vendor, __entry->product));
+> +
+> +/**
+> + * input_handler_connect - called when an input handler connects to a device
+> + * @handler: input handler
+> + * @dev: input device
+> + * @minor: assigned minor number (if applicable)
+> + *
+> + * This tracepoint fires when an input handler (like evdev, mousedev) connects
+> + * to an input device, creating a new input handle.
+> + */
+> +TRACE_EVENT(input_handler_connect,
+> +
+> +	    TP_PROTO(struct input_handler *handler, struct input_dev *dev,
+> +		     int minor),
+> +
+> +	    TP_ARGS(handler, dev, minor),
+> +
+> +	    TP_STRUCT__entry(__string(handler_name, handler->name)
+> +				     __string(dev_name, dev->name ?: "unknown")
+> +					     __field(int, minor)),
+
+ditto.
+
+> +
+> +	    TP_fast_assign(__assign_str(handler_name); __assign_str(dev_name);
+> +			   __entry->minor = minor;),
+> +
+> +	    TP_printk("handler=%s dev=%s minor=%d", __get_str(handler_name),
+> +		      __get_str(dev_name), __entry->minor));
+> +
+> +/**
+> + * input_grab_device - called when a device is grabbed by a handler
+> + * @dev: input device being grabbed
+> + * @handle: input handle doing the grab
+> + *
+> + * This tracepoint fires when an input device is grabbed exclusively
+> + * by an input handler, typically for security or special processing.
+> + */
+> +TRACE_EVENT(input_grab_device,
+> +
+> +	    TP_PROTO(struct input_dev *dev, struct input_handle *handle),
+> +
+> +	    TP_ARGS(dev, handle),
+> +
+> +	    TP_STRUCT__entry(__string(dev_name, dev->name ?: "unknown")
+> +				     __string(handler_name,
+> +					      handle->handler->name)),
+
+ditto.
+
+> +
+> +	    TP_fast_assign(__assign_str(dev_name); __assign_str(handler_name);),
+> +
+> +	    TP_printk("dev=%s grabbed_by=%s", __get_str(dev_name),
+> +		      __get_str(handler_name)));
+> +
+> +/**
+> + * input_release_device - called when a grabbed device is released
+> + * @dev: input device being released
+> + * @handle: input handle releasing the grab
+> + *
+> + * This tracepoint fires when an input device grab is released.
+> + */
+> +TRACE_EVENT(input_release_device,
+> +
+> +	    TP_PROTO(struct input_dev *dev, struct input_handle *handle),
+> +
+> +	    TP_ARGS(dev, handle),
+> +
+> +	    TP_STRUCT__entry(__string(dev_name, dev->name ?: "unknown")
+> +				     __string(handler_name,
+> +					      handle->handler->name)),
+
+ditto.
+
+> +
+> +	    TP_fast_assign(__assign_str(dev_name); __assign_str(handler_name);),
+> +
+> +	    TP_printk("dev=%s released_by=%s", __get_str(dev_name),
+> +		      __get_str(handler_name)));
+> +
+> +DECLARE_EVENT_CLASS(input_device_state,
+> +
+> +		    TP_PROTO(struct input_dev *dev),
+> +
+> +		    TP_ARGS(dev),
+> +
+> +		    TP_STRUCT__entry(__string(name, dev->name ?: "unknown")
+> +					     __field(unsigned int, users)
+> +						     __field(bool, inhibited)),
+
+ditto.
 
 -- Steve
+
+> +
+> +		    TP_fast_assign(__assign_str(name);
+> +				   __entry->users = dev->users;
+> +				   __entry->inhibited = dev->inhibited;),
+> +
+> +		    TP_printk("dev=%s users=%u inhibited=%s", __get_str(name),
+> +			      __entry->users,
+> +			      __entry->inhibited ? "true" : "false"));
+> +
