@@ -1,94 +1,80 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72A092F5085;
-	Wed, 23 Jul 2025 15:19:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA6AF2F5323;
+	Wed, 23 Jul 2025 15:23:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753283962; cv=none; b=HTD+Kovw4rmKw+dJWdXwjDpV+Be++DTMSKh/L+Ivv2dYAxl/FMHRZ93XIxj4UlPruzTcznqz9kk0CjRhT7Hyh+gOVtJ37Ccplqi3JUGSGKqwEgaaKzqE7w5J5ODxrLrRlEExIU5XnvxEtTLDN999NRwwe23nllgUjACCJ4y87qE=
+	t=1753284217; cv=none; b=LlWWfQf0+z+WtMSqbMcM9yHZGEYsrDhgvk3FKMCFw+c1xiQXr/i8T1Ic8vkQWLs730bNGmC7i6L5LgFWgS78JsRMNDQbUF08NhWrWEYaMyIiz1+SxpXsTeZexSD0I81CSUr7uVxAZMjwta5iggWazX3uCEptvJ6lLvfqxT4mG4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753283962; c=relaxed/simple;
-	bh=8UN6DASqeD8gpngnMjYkM6uwfRkgPxDPQgRstexiqRY=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=iAE34kLNFoWmLQGW7lR8OjEGkDEf2r7fSnblhR/MkMi1cSvkn6H0JGVatUBmpdBO2Ifv5PCibjmSOrGA5LxwtMgJLRIiWKpghKMEqeOtWR8EQqhhU7fQOWRFfFxTT3jUVWlE4CziLodwXQoq7+AgQFMVMbidIZAegjOBJ+IynEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mC2UrbcP; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mC2UrbcP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92C61C4CEEF;
-	Wed, 23 Jul 2025 15:19:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753283962;
-	bh=8UN6DASqeD8gpngnMjYkM6uwfRkgPxDPQgRstexiqRY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=mC2UrbcPXgsO28Slg8j29/SR4gAPvr7WDyy+5p38ld6llFXr8TefdNm9i0EEMsYQ1
-	 xpY6dlJDANhnC3adx0TVH9ThJOGflvHiRMHKnTcL60xKschM3cudaL27pMayQ683xU
-	 HCezYKq2nngahhMMbeZGWMWxde+TO5XgZKMTOgttDlH0iRVjI1GIgMFZ0wkzkE6+VE
-	 teq7UEdOR0B1Xm0i8XJq4HrhIa244oFP2qntshzKaEtePxSwqLHVbvDOABYQP34l3K
-	 mS1MPn8fnyousj9W3tYeBKLgAFyizhO3wYgKFWE2DxjaRr6rDX01xP4IdbGKCdYgdK
-	 Vg/Z5e65zb0mg==
-Date: Thu, 24 Jul 2025 00:19:18 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
+	s=arc-20240116; t=1753284217; c=relaxed/simple;
+	bh=LwRy8YHlN9niE233iOsNmeUz194hkTApdjgryRMtGXs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=cc1zWBYEfYKScvJsUtZjfUW6gUuIRaxUbcKp91pFk4xgsh5GvXIhIasvfWizZRKdXz9t9TGhYYCSasCaSQE7VwgNJxfU/Fdyp/gDJ69bKgowBue86XBa03AMhEXM3QKfoXj9Uv8VnUxVSwt02siQ5ASK7v3wkVn5TWBoMnUyTkw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf02.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id AF4DAB08DE;
+	Wed, 23 Jul 2025 15:23:32 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf02.hostedemail.com (Postfix) with ESMTPA id E6CE68000F;
+	Wed, 23 Jul 2025 15:23:30 +0000 (UTC)
+Date: Wed, 23 Jul 2025 11:23:29 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 7/7] tracing: probes: Add a kerneldoc for
- traceprobe_parse_event_name()
-Message-Id: <20250724001918.9dac6c9e5e36d7536fcd1eb1@kernel.org>
-In-Reply-To: <20250723100049.46e8ec7c@batman.local.home>
-References: <175323423662.57270.14650807176845939538.stgit@devnote2>
-	<175323430565.57270.2602609519355112748.stgit@devnote2>
-	<20250723100049.46e8ec7c@batman.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Subject: Re: [PATCH v3 1/1] tracing: Remove "__attribute__()" from the type
+ field of event format
+Message-ID: <20250723112329.691ed421@batman.local.home>
+In-Reply-To: <20250724001806.2dfd6baf4990f952ee77b6c6@kernel.org>
+References: <175257695307.1655692.4466186614215884669.stgit@mhiramat.tok.corp.google.com>
+	<175257696222.1655692.4019049819386139160.stgit@mhiramat.tok.corp.google.com>
+	<20250723104030.6ec24dfd@batman.local.home>
+	<20250724001806.2dfd6baf4990f952ee77b6c6@kernel.org>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: E6CE68000F
+X-Stat-Signature: suyfsgcjsbt8iey6tt35pakoy44q18tw
+X-Rspamd-Server: rspamout06
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19Bltuk7gnJM5d727eNPSwnwxZWxE3hvTo=
+X-HE-Tag: 1753284210-568204
+X-HE-Meta: U2FsdGVkX1+V2u5m9hssQjBQzhAGKQeNe2x0a8VEDhXrT3mmIPSLLv1vi6lig2PuTrImB4i0h1IyDEeYQulDD9gViZEdEXuwn3c8PzPsxWy2YffJ4pfMCCkZJQFba4AfYgoKX5Ilq8iuH+++iP01Tf/6tqj30wPwNbPfdja7dqvfGw7zOkg9PkwjbostEClRYsQQJstaxZngk84+Ys8UtPbcWGConmLMBtU12vypFlnraDAfV0TJZk73Qx5ubUimCXFYvAYY7DilCyIUmsZKKu6QurFg2chJcKP/7MX+3ukhjM+221JWNPu3zIqxzTQvjtvwrhX01+l+iJOSfqI2nsqo6mi+Yxav
 
-On Wed, 23 Jul 2025 10:00:49 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Thu, 24 Jul 2025 00:18:06 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-> On Wed, 23 Jul 2025 10:31:45 +0900
-> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+> > So this will add more work during boot up as it is processed on every
+> > event regardless if it has an eval map or not. But this is only needed
+> > if CONFIG_DEBUG_INFO_BTF=y and PAHOLE_HAS_BTF_TAG=y is enabled.  
 > 
-> > -/* @buf must has MAX_EVENT_NAME_LEN size */
-> > +/**
-> > + * traceprobe_parse_event_name() - Parse a string into group and event names
-> > + * @pevent: A pointer to the string to be parsed.
-> > + * @pgroup: A pointer to the group name.
-> > + * @buf:    A buffer to store the parsed group name.
-> > + * @offset: The offset of the string in the original user command, for logging.
-> > + *
-> > + * This parses a string with the format `[GROUP/][EVENT]` or `[GROUP.][EVENT]`
-> > + * (either GROUP or EVENT or both must be specified).
-> > + * Since the parsed group name is stored in @buf, the caller must ensure @buf
-> > + * is at least MAX_EVENT_NAME_LEN bytes.
-> > + *
-> > + * Return: 0 on success, or -EINVAL on failure.
-> > + *
-> > + * If success, *@pevent is updated to point to the event name part of the
-> > + * original string, or NULL if there is no event name.
-> > + * Also, *@pgroup is updated to point to the parsed group which is stored
-> > + * in @buf, or NULL if there is no group name.
-> > + */
-> >  int traceprobe_parse_event_name(const char **pevent, const char **pgroup,
-> >  				char *buf, int offset)
-> >  {
-> 
-> Much better.
-> 
-> Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> Hmm, In this case can we check it in trace_event_update_all()?
+> If we need to sanitize more word, it is easier to add a condition
+> there.
 
-Thank you! Let me pick the series in probes/for-next.
-
+If we need to sanitize more words later, then we can open it up to
+more. But why do this work when it's not needed. We are going from
+calling this function a 100 times to calling it a 1000 times. That's an
+order of magnitude, and I'm not sure we want to do that if it's not
+needed.
 
 > 
-> -- Steve
-> 
+> Or, maybe we can sanitize it while building the kernel as a part
+> of post build process.
+
+Ideally, that would be best, but parsing the elf file isn't trivial.
+
+I would say let's just add this conditional for now, and then we can
+start working on a way to parse all of this at build time.
+
+-- Steve
 
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
