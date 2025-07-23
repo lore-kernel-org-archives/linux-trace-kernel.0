@@ -1,22 +1,22 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCF3D26F476;
-	Wed, 23 Jul 2025 06:44:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CA9E26F463;
+	Wed, 23 Jul 2025 06:44:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753253080; cv=none; b=gOUWhbmL9W9GOap4yt85QOUwMU4r0tJxFH60C9YiwPX1owEnhg7Ul+ysi92wP125AV2UP87/F2x3fHnWSqFaDvir/v2Opv48ialGDjoocGs8G1MX9J4iwXM/ACus4pcFGY8VugZK3cZ44YfnUGjzvWF/jhiqkGDE1mlhChtzELU=
+	t=1753253080; cv=none; b=rO1H3lbmOQP4fiY6tik+g3pHGt/O25i5bUJXQ90YTAtpFgplzZIFUaRdOqIVpimUm0HEk+cSFu9lUN/6YSK8BlwgVy62mx09KyvLFt/RHTB2UYdkMwSNG64MepSsdQnG99TUfhM/4CciL2xHjjeJroblyf/blBY19fEvUBejutE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1753253080; c=relaxed/simple;
-	bh=OlENKELlhCsYFBHgGT5n2CoS2ZsubPdtXmwZRmv1cBg=;
+	bh=USx5NKsflIxM3SaPbXE+gJBLbbHpds2LQ5EaNRGvHTQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GJi/KocM8e9UcSJ6f8xX6umPMiSYUIB/bIOp6Djcu1t4lgG91CijtEoM+jWUBhE30daoAqzJvp2l6WCf5vE1MsShq2E4spUnPcrIeLmVUfAOlXgVHcMBkKmu0EiQmGJPnn/eLdsMGg2WGuMbpQV2FdkY1AJxZSbsfouLenKX9Hs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Tmvezn5a; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=OmADadfI; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=lHbPa+HXWeODu1WFW+lndIXcFEuS7VIT1O7MzFVG2jymxs6gDNOR4omc9sBSwJMb0Oer1/dF9si9m938yB09WblJx/HwD1zhUGTUOvMuAK5RBLGJTXnG0GnPV6tCyVaRZ60BiT7SUV+W1hcgmc5BIcoC2ACn+46ROCJkqEw2MWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=UPB9tPyX; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=XtOizicC; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Tmvezn5a";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OmADadfI"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UPB9tPyX";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="XtOizicC"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1753253070;
@@ -24,21 +24,21 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=gaUVl9EiSjsWXJ4wNEZqji2xYT9DqbN/5/pvLazRNog=;
-	b=Tmvezn5ai3gQxDmeUaeg4WRahSm5xTPdzwwb+I3oBW41n3+5+HSmxmioEg0RC6IkZ3x94D
-	SY89R9Jj0iUvZ8Pe/GaN/BQDkiyi0202q9yk/ce8vbBYPGeTJ13nXm/jj+XIle3aj34vX5
-	TPuGFKPausz1AIXkA76JNwylvE5MW8yuzRUg66tvmr9OQkhDInr72vTXtYibjWLa6PuajG
-	RX4DFLL79Nxk4nkkRrMjmhJ+JdrZHY3FpsxOo1WsWzBo94RVzE6s+BJIRqHP2EGcl//uOE
-	4paVA29Xxgzcrsn7CtuT2axrq7Lgh8/c58TQc2xBaU+lPUZaFiJoHEVquKiCSg==
+	bh=2sbRYsXpNG5ZjXONmRclZGrm/qmskgyivkyJG5KlPIM=;
+	b=UPB9tPyXJ1PPJ0vJqGvOXoZklQ7Y5s43qzTc5ow1bjW37Kr9AqehajJTXhaIq3qDp7JEKd
+	Wvfpensd3SvtQEbr0MpA3AIBZOxbzP7BVqQoy6wYG5deE2qHRIF58g8i6vkgM0XRCgKYzd
+	NYD1JBKYlbEZFSgoIv7MIUQpdZ7z69bEhA7fS8ts1KJBVbqgPNrSdCuctjRTgJNR07a4e6
+	1rtJLyznChO80JEaDIOAj9YBBTedHCGPKxB1+uRF+vu1mpswkof2oN6czybXNtpOQ1aOET
+	mRLxZbHlTe6UeEfgAUIimJkxZC9CuoOBspUi+UUDxUP7JyTm80h0Cdho4LIXRQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1753253070;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=gaUVl9EiSjsWXJ4wNEZqji2xYT9DqbN/5/pvLazRNog=;
-	b=OmADadfIW3S1tx8d1be/1UsRLrIEO4Gsij0orCmJ0Lg3TL0WW7gdvpxq+6P3cIaoKWKF9H
-	oGa/tdHP991DMoAQ==
+	bh=2sbRYsXpNG5ZjXONmRclZGrm/qmskgyivkyJG5KlPIM=;
+	b=XtOizicCU7WoKVy+rUsSsW9YBJXRo8/Acvuje0nUTkRYDWN78a1XNCLx2yqOwJfkhVUL+L
+	4gRpdrQ2bF9dS1Dw==
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
@@ -46,9 +46,9 @@ To: Steven Rostedt <rostedt@goodmis.org>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Nam Cao <namcao@linutronix.de>
-Subject: [PATCH v2 2/5] rv: Merge struct rv_monitor_def into struct rv_monitor
-Date: Wed, 23 Jul 2025 08:44:20 +0200
-Message-Id: <e02be1dfbc87f52d447b96471edba1d1be09d041.1753252872.git.namcao@linutronix.de>
+Subject: [PATCH v2 3/5] rv: Merge struct rv_reactor_def into struct rv_reactor
+Date: Wed, 23 Jul 2025 08:44:21 +0200
+Message-Id: <b3df0ac1ac6e4c39a8662f807f2bc77d6813b230.1753252872.git.namcao@linutronix.de>
 In-Reply-To: <cover.1753252872.git.namcao@linutronix.de>
 References: <cover.1753252872.git.namcao@linutronix.de>
 Precedence: bulk
@@ -59,819 +59,304 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Each struct rv_monitor has a unique struct rv_monitor_def associated with
-it. struct rv_monitor is statically allocated, while struct rv_monitor_def
+Each struct rv_reactor has a unique struct rv_reactor_def associated with
+it. struct rv_reactor is statically allocated, while struct rv_reactor_def
 is dynamically allocated.
 
 This makes the code more complicated than it should be:
 
-  - Lookup is required to get the associated rv_monitor_def from rv_monitor
+  - Lookup is required to get the associated rv_reactor_def from rv_reactor
 
-  - Dynamic memory allocation is required for rv_monitor_def. This is
+  - Dynamic memory allocation is required for rv_reactor_def. This is
     harder to get right compared to static memory. For instance, there is
-    an existing mistake: rv_unregister_monitor() does not free the memory
-    allocated by rv_register_monitor(). This is fortunately not a real
-    memory leak problem, as rv_unregister_monitor() is never called.
+    an existing mistake: rv_unregister_reactor() does not free the memory
+    allocated by rv_register_reactor(). This is fortunately not a real
+    memory leak problem as rv_unregister_reactor() is never called.
 
-Simplify and merge rv_monitor_def into rv_monitor.
+Simplify and merge rv_reactor_def into rv_reactor.
 
 Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
 Signed-off-by: Nam Cao <namcao@linutronix.de>
 ---
- include/linux/rv.h            |   8 ++
- kernel/trace/rv/rv.c          | 211 +++++++++++++++-------------------
- kernel/trace/rv/rv.h          |  27 ++---
- kernel/trace/rv/rv_reactors.c |  62 +++++-----
- 4 files changed, 140 insertions(+), 168 deletions(-)
+ include/linux/rv.h            |  5 +-
+ kernel/trace/rv/rv.h          |  9 ----
+ kernel/trace/rv/rv_reactors.c | 92 +++++++++++++++--------------------
+ 3 files changed, 43 insertions(+), 63 deletions(-)
 
 diff --git a/include/linux/rv.h b/include/linux/rv.h
-index 97baf58d88b2..dba53aecdfab 100644
+index dba53aecdfab..c22c9b8c1567 100644
 --- a/include/linux/rv.h
 +++ b/include/linux/rv.h
-@@ -7,6 +7,9 @@
- #ifndef _LINUX_RV_H
- #define _LINUX_RV_H
+@@ -90,6 +90,9 @@ struct rv_reactor {
+ 	const char		*name;
+ 	const char		*description;
+ 	__printf(1, 2) void	(*react)(const char *msg, ...);
++	struct list_head	list;
++	/* protected by the monitor interface lock */
++	int			counter;
+ };
+ #endif
 =20
-+#include <linux/types.h>
-+#include <linux/list.h>
-+
- #define MAX_DA_NAME_LEN	32
-=20
- #ifdef CONFIG_RV
-@@ -98,8 +101,13 @@ struct rv_monitor {
+@@ -101,7 +104,7 @@ struct rv_monitor {
  	void			(*disable)(void);
  	void			(*reset)(void);
  #ifdef CONFIG_RV_REACTORS
-+	struct rv_reactor_def	*rdef;
+-	struct rv_reactor_def	*rdef;
++	struct rv_reactor	*reactor;
  	__printf(1, 2) void	(*react)(const char *msg, ...);
-+	bool			reacting;
+ 	bool			reacting;
  #endif
-+	struct list_head	list;
-+	struct rv_monitor	*parent;
-+	struct dentry		*root_d;
- };
-=20
- bool rv_monitoring_on(void);
-diff --git a/kernel/trace/rv/rv.c b/kernel/trace/rv/rv.c
-index 108429d16ec1..6c0be2fdc52d 100644
---- a/kernel/trace/rv/rv.c
-+++ b/kernel/trace/rv/rv.c
-@@ -210,9 +210,9 @@ void rv_put_task_monitor_slot(int slot)
-  * Monitors with a parent are nested,
-  * Monitors without a parent could be standalone or containers.
-  */
--bool rv_is_nested_monitor(struct rv_monitor_def *mdef)
-+bool rv_is_nested_monitor(struct rv_monitor *mon)
- {
--	return mdef->parent !=3D NULL;
-+	return mon->parent !=3D NULL;
- }
-=20
- /*
-@@ -223,16 +223,16 @@ bool rv_is_nested_monitor(struct rv_monitor_def *mdef)
-  * for enable()/disable(). Use this condition to find empty containers.
-  * Keep both conditions in case we have some non-compliant containers.
-  */
--bool rv_is_container_monitor(struct rv_monitor_def *mdef)
-+bool rv_is_container_monitor(struct rv_monitor *mon)
- {
--	struct rv_monitor_def *next;
-+	struct rv_monitor *next;
-=20
--	if (list_is_last(&mdef->list, &rv_monitors_list))
-+	if (list_is_last(&mon->list, &rv_monitors_list))
- 		return false;
-=20
--	next =3D list_next_entry(mdef, list);
-+	next =3D list_next_entry(mon, list);
-=20
--	return next->parent =3D=3D mdef->monitor || !mdef->monitor->enable;
-+	return next->parent =3D=3D mon || !mon->enable;
- }
-=20
- /*
-@@ -241,10 +241,10 @@ bool rv_is_container_monitor(struct rv_monitor_def *m=
-def)
- static ssize_t monitor_enable_read_data(struct file *filp, char __user *us=
-er_buf, size_t count,
- 					loff_t *ppos)
- {
--	struct rv_monitor_def *mdef =3D filp->private_data;
-+	struct rv_monitor *mon =3D filp->private_data;
- 	const char *buff;
-=20
--	buff =3D mdef->monitor->enabled ? "1\n" : "0\n";
-+	buff =3D mon->enabled ? "1\n" : "0\n";
-=20
- 	return simple_read_from_buffer(user_buf, count, ppos, buff, strlen(buff)+=
-1);
- }
-@@ -252,14 +252,14 @@ static ssize_t monitor_enable_read_data(struct file *=
-filp, char __user *user_buf
- /*
-  * __rv_disable_monitor - disabled an enabled monitor
-  */
--static int __rv_disable_monitor(struct rv_monitor_def *mdef, bool sync)
-+static int __rv_disable_monitor(struct rv_monitor *mon, bool sync)
- {
- 	lockdep_assert_held(&rv_interface_lock);
-=20
--	if (mdef->monitor->enabled) {
--		mdef->monitor->enabled =3D 0;
--		if (mdef->monitor->disable)
--			mdef->monitor->disable();
-+	if (mon->enabled) {
-+		mon->enabled =3D 0;
-+		if (mon->disable)
-+			mon->disable();
-=20
- 		/*
- 		 * Wait for the execution of all events to finish.
-@@ -273,90 +273,90 @@ static int __rv_disable_monitor(struct rv_monitor_def=
- *mdef, bool sync)
- 	return 0;
- }
-=20
--static void rv_disable_single(struct rv_monitor_def *mdef)
-+static void rv_disable_single(struct rv_monitor *mon)
- {
--	__rv_disable_monitor(mdef, true);
-+	__rv_disable_monitor(mon, true);
- }
-=20
--static int rv_enable_single(struct rv_monitor_def *mdef)
-+static int rv_enable_single(struct rv_monitor *mon)
- {
- 	int retval;
-=20
- 	lockdep_assert_held(&rv_interface_lock);
-=20
--	if (mdef->monitor->enabled)
-+	if (mon->enabled)
- 		return 0;
-=20
--	retval =3D mdef->monitor->enable();
-+	retval =3D mon->enable();
-=20
- 	if (!retval)
--		mdef->monitor->enabled =3D 1;
-+		mon->enabled =3D 1;
-=20
- 	return retval;
- }
-=20
--static void rv_disable_container(struct rv_monitor_def *mdef)
-+static void rv_disable_container(struct rv_monitor *mon)
- {
--	struct rv_monitor_def *p =3D mdef;
-+	struct rv_monitor *p =3D mon;
- 	int enabled =3D 0;
-=20
- 	list_for_each_entry_continue(p, &rv_monitors_list, list) {
--		if (p->parent !=3D mdef->monitor)
-+		if (p->parent !=3D mon)
- 			break;
- 		enabled +=3D __rv_disable_monitor(p, false);
- 	}
- 	if (enabled)
- 		tracepoint_synchronize_unregister();
--	mdef->monitor->enabled =3D 0;
-+	mon->enabled =3D 0;
- }
-=20
--static int rv_enable_container(struct rv_monitor_def *mdef)
-+static int rv_enable_container(struct rv_monitor *mon)
- {
--	struct rv_monitor_def *p =3D mdef;
-+	struct rv_monitor *p =3D mon;
- 	int retval =3D 0;
-=20
- 	list_for_each_entry_continue(p, &rv_monitors_list, list) {
--		if (retval || p->parent !=3D mdef->monitor)
-+		if (retval || p->parent !=3D mon)
- 			break;
- 		retval =3D rv_enable_single(p);
- 	}
- 	if (retval)
--		rv_disable_container(mdef);
-+		rv_disable_container(mon);
- 	else
--		mdef->monitor->enabled =3D 1;
-+		mon->enabled =3D 1;
- 	return retval;
- }
-=20
- /**
-  * rv_disable_monitor - disable a given runtime monitor
-- * @mdef: Pointer to the monitor definition structure.
-+ * @mon: Pointer to the monitor definition structure.
-  *
-  * Returns 0 on success.
-  */
--int rv_disable_monitor(struct rv_monitor_def *mdef)
-+int rv_disable_monitor(struct rv_monitor *mon)
- {
--	if (rv_is_container_monitor(mdef))
--		rv_disable_container(mdef);
-+	if (rv_is_container_monitor(mon))
-+		rv_disable_container(mon);
- 	else
--		rv_disable_single(mdef);
-+		rv_disable_single(mon);
-=20
- 	return 0;
- }
-=20
- /**
-  * rv_enable_monitor - enable a given runtime monitor
-- * @mdef: Pointer to the monitor definition structure.
-+ * @mon: Pointer to the monitor definition structure.
-  *
-  * Returns 0 on success, error otherwise.
-  */
--int rv_enable_monitor(struct rv_monitor_def *mdef)
-+int rv_enable_monitor(struct rv_monitor *mon)
- {
- 	int retval;
-=20
--	if (rv_is_container_monitor(mdef))
--		retval =3D rv_enable_container(mdef);
-+	if (rv_is_container_monitor(mon))
-+		retval =3D rv_enable_container(mon);
- 	else
--		retval =3D rv_enable_single(mdef);
-+		retval =3D rv_enable_single(mon);
-=20
- 	return retval;
- }
-@@ -367,7 +367,7 @@ int rv_enable_monitor(struct rv_monitor_def *mdef)
- static ssize_t monitor_enable_write_data(struct file *filp, const char __u=
-ser *user_buf,
- 					 size_t count, loff_t *ppos)
- {
--	struct rv_monitor_def *mdef =3D filp->private_data;
-+	struct rv_monitor *mon =3D filp->private_data;
- 	int retval;
- 	bool val;
-=20
-@@ -378,9 +378,9 @@ static ssize_t monitor_enable_write_data(struct file *f=
-ilp, const char __user *u
- 	mutex_lock(&rv_interface_lock);
-=20
- 	if (val)
--		retval =3D rv_enable_monitor(mdef);
-+		retval =3D rv_enable_monitor(mon);
- 	else
--		retval =3D rv_disable_monitor(mdef);
-+		retval =3D rv_disable_monitor(mon);
-=20
- 	mutex_unlock(&rv_interface_lock);
-=20
-@@ -399,12 +399,12 @@ static const struct file_operations interface_enable_=
-fops =3D {
- static ssize_t monitor_desc_read_data(struct file *filp, char __user *user=
-_buf, size_t count,
- 				      loff_t *ppos)
- {
--	struct rv_monitor_def *mdef =3D filp->private_data;
-+	struct rv_monitor *mon =3D filp->private_data;
- 	char buff[256];
-=20
- 	memset(buff, 0, sizeof(buff));
-=20
--	snprintf(buff, sizeof(buff), "%s\n", mdef->monitor->description);
-+	snprintf(buff, sizeof(buff), "%s\n", mon->description);
-=20
- 	return simple_read_from_buffer(user_buf, count, ppos, buff, strlen(buff) =
-+ 1);
- }
-@@ -419,37 +419,37 @@ static const struct file_operations interface_desc_fo=
-ps =3D {
-  * the monitor dir, where the specific options of the monitor
-  * are exposed.
-  */
--static int create_monitor_dir(struct rv_monitor_def *mdef, struct rv_monit=
-or_def *parent)
-+static int create_monitor_dir(struct rv_monitor *mon, struct rv_monitor *p=
-arent)
- {
- 	struct dentry *root =3D parent ? parent->root_d : get_monitors_root();
--	const char *name =3D mdef->monitor->name;
-+	const char *name =3D mon->name;
- 	struct dentry *tmp;
- 	int retval;
-=20
--	mdef->root_d =3D rv_create_dir(name, root);
--	if (!mdef->root_d)
-+	mon->root_d =3D rv_create_dir(name, root);
-+	if (!mon->root_d)
- 		return -ENOMEM;
-=20
--	tmp =3D rv_create_file("enable", RV_MODE_WRITE, mdef->root_d, mdef, &inte=
-rface_enable_fops);
-+	tmp =3D rv_create_file("enable", RV_MODE_WRITE, mon->root_d, mon, &interf=
-ace_enable_fops);
- 	if (!tmp) {
- 		retval =3D -ENOMEM;
- 		goto out_remove_root;
- 	}
-=20
--	tmp =3D rv_create_file("desc", RV_MODE_READ, mdef->root_d, mdef, &interfa=
-ce_desc_fops);
-+	tmp =3D rv_create_file("desc", RV_MODE_READ, mon->root_d, mon, &interface=
-_desc_fops);
- 	if (!tmp) {
- 		retval =3D -ENOMEM;
- 		goto out_remove_root;
- 	}
-=20
--	retval =3D reactor_populate_monitor(mdef);
-+	retval =3D reactor_populate_monitor(mon);
- 	if (retval)
- 		goto out_remove_root;
-=20
- 	return 0;
-=20
- out_remove_root:
--	rv_remove(mdef->root_d);
-+	rv_remove(mon->root_d);
- 	return retval;
- }
-=20
-@@ -458,13 +458,12 @@ static int create_monitor_dir(struct rv_monitor_def *=
-mdef, struct rv_monitor_def
-  */
- static int monitors_show(struct seq_file *m, void *p)
- {
--	struct rv_monitor_def *mon_def =3D p;
-+	struct rv_monitor *mon =3D p;
-=20
--	if (mon_def->parent)
--		seq_printf(m, "%s:%s\n", mon_def->parent->name,
--			   mon_def->monitor->name);
-+	if (mon->parent)
-+		seq_printf(m, "%s:%s\n", mon->parent->name, mon->name);
- 	else
--		seq_printf(m, "%s\n", mon_def->monitor->name);
-+		seq_printf(m, "%s\n", mon->name);
- 	return 0;
- }
-=20
-@@ -496,13 +495,13 @@ static void *available_monitors_next(struct seq_file =
-*m, void *p, loff_t *pos)
-  */
- static void *enabled_monitors_next(struct seq_file *m, void *p, loff_t *po=
-s)
- {
--	struct rv_monitor_def *m_def =3D p;
-+	struct rv_monitor *mon =3D p;
-=20
- 	(*pos)++;
-=20
--	list_for_each_entry_continue(m_def, &rv_monitors_list, list) {
--		if (m_def->monitor->enabled)
--			return m_def;
-+	list_for_each_entry_continue(mon, &rv_monitors_list, list) {
-+		if (mon->enabled)
-+			return mon;
- 	}
-=20
- 	return NULL;
-@@ -510,7 +509,7 @@ static void *enabled_monitors_next(struct seq_file *m, =
-void *p, loff_t *pos)
-=20
- static void *enabled_monitors_start(struct seq_file *m, loff_t *pos)
- {
--	struct rv_monitor_def *m_def;
-+	struct rv_monitor *mon;
- 	loff_t l;
-=20
- 	mutex_lock(&rv_interface_lock);
-@@ -518,15 +517,15 @@ static void *enabled_monitors_start(struct seq_file *=
-m, loff_t *pos)
- 	if (list_empty(&rv_monitors_list))
- 		return NULL;
-=20
--	m_def =3D list_entry(&rv_monitors_list, struct rv_monitor_def, list);
-+	mon =3D list_entry(&rv_monitors_list, struct rv_monitor, list);
-=20
- 	for (l =3D 0; l <=3D *pos; ) {
--		m_def =3D enabled_monitors_next(m, m_def, &l);
--		if (!m_def)
-+		mon =3D enabled_monitors_next(m, mon, &l);
-+		if (!mon)
- 			break;
- 	}
-=20
--	return m_def;
-+	return mon;
- }
-=20
- /*
-@@ -566,13 +565,13 @@ static const struct file_operations available_monitor=
-s_ops =3D {
-  */
- static void disable_all_monitors(void)
- {
--	struct rv_monitor_def *mdef;
-+	struct rv_monitor *mon;
- 	int enabled =3D 0;
-=20
- 	mutex_lock(&rv_interface_lock);
-=20
--	list_for_each_entry(mdef, &rv_monitors_list, list)
--		enabled +=3D __rv_disable_monitor(mdef, false);
-+	list_for_each_entry(mon, &rv_monitors_list, list)
-+		enabled +=3D __rv_disable_monitor(mon, false);
-=20
- 	if (enabled) {
- 		/*
-@@ -598,7 +597,7 @@ static ssize_t enabled_monitors_write(struct file *filp=
-, const char __user *user
- 				      size_t count, loff_t *ppos)
- {
- 	char buff[MAX_RV_MONITOR_NAME_SIZE + 2];
--	struct rv_monitor_def *mdef;
-+	struct rv_monitor *mon;
- 	int retval =3D -EINVAL;
- 	bool enable =3D true;
- 	char *ptr, *tmp;
-@@ -633,17 +632,17 @@ static ssize_t enabled_monitors_write(struct file *fi=
-lp, const char __user *user
- 	if (tmp)
- 		ptr =3D tmp+1;
-=20
--	list_for_each_entry(mdef, &rv_monitors_list, list) {
--		if (strcmp(ptr, mdef->monitor->name) !=3D 0)
-+	list_for_each_entry(mon, &rv_monitors_list, list) {
-+		if (strcmp(ptr, mon->name) !=3D 0)
- 			continue;
-=20
- 		/*
- 		 * Monitor found!
- 		 */
- 		if (enable)
--			retval =3D rv_enable_monitor(mdef);
-+			retval =3D rv_enable_monitor(mon);
- 		else
--			retval =3D rv_disable_monitor(mdef);
-+			retval =3D rv_disable_monitor(mon);
-=20
- 		if (!retval)
- 			retval =3D count;
-@@ -702,11 +701,11 @@ static void turn_monitoring_off(void)
-=20
- static void reset_all_monitors(void)
- {
--	struct rv_monitor_def *mdef;
-+	struct rv_monitor *mon;
-=20
--	list_for_each_entry(mdef, &rv_monitors_list, list) {
--		if (mdef->monitor->enabled && mdef->monitor->reset)
--			mdef->monitor->reset();
-+	list_for_each_entry(mon, &rv_monitors_list, list) {
-+		if (mon->enabled && mon->reset)
-+			mon->reset();
- 	}
- }
-=20
-@@ -768,10 +767,10 @@ static const struct file_operations monitoring_on_fop=
-s =3D {
- 	.read   =3D monitoring_on_read_data,
- };
-=20
--static void destroy_monitor_dir(struct rv_monitor_def *mdef)
-+static void destroy_monitor_dir(struct rv_monitor *mon)
- {
--	reactor_cleanup_monitor(mdef);
--	rv_remove(mdef->root_d);
-+	reactor_cleanup_monitor(mon);
-+	rv_remove(mon->root_d);
- }
-=20
- /**
-@@ -783,7 +782,7 @@ static void destroy_monitor_dir(struct rv_monitor_def *=
-mdef)
-  */
- int rv_register_monitor(struct rv_monitor *monitor, struct rv_monitor *par=
-ent)
- {
--	struct rv_monitor_def *r, *p =3D NULL;
-+	struct rv_monitor *r;
- 	int retval =3D 0;
-=20
- 	if (strlen(monitor->name) >=3D MAX_RV_MONITOR_NAME_SIZE) {
-@@ -795,49 +794,31 @@ int rv_register_monitor(struct rv_monitor *monitor, s=
-truct rv_monitor *parent)
- 	mutex_lock(&rv_interface_lock);
-=20
- 	list_for_each_entry(r, &rv_monitors_list, list) {
--		if (strcmp(monitor->name, r->monitor->name) =3D=3D 0) {
-+		if (strcmp(monitor->name, r->name) =3D=3D 0) {
- 			pr_info("Monitor %s is already registered\n", monitor->name);
- 			retval =3D -EEXIST;
- 			goto out_unlock;
- 		}
- 	}
-=20
--	if (parent) {
--		list_for_each_entry(r, &rv_monitors_list, list) {
--			if (strcmp(parent->name, r->monitor->name) =3D=3D 0) {
--				p =3D r;
--				break;
--			}
--		}
--	}
--
--	if (p && rv_is_nested_monitor(p)) {
-+	if (parent && rv_is_nested_monitor(parent)) {
- 		pr_info("Parent monitor %s is already nested, cannot nest further\n",
- 			parent->name);
- 		retval =3D -EINVAL;
- 		goto out_unlock;
- 	}
-=20
--	r =3D kzalloc(sizeof(struct rv_monitor_def), GFP_KERNEL);
--	if (!r) {
--		retval =3D -ENOMEM;
--		goto out_unlock;
--	}
--
--	r->monitor =3D monitor;
--	r->parent =3D parent;
-+	monitor->parent =3D parent;
-=20
--	retval =3D create_monitor_dir(r, p);
--	if (retval) {
--		kfree(r);
--		goto out_unlock;
--	}
-+	retval =3D create_monitor_dir(monitor, parent);
-+	if (retval)
-+		return retval;
-=20
- 	/* keep children close to the parent for easier visualisation */
--	if (p)
--		list_add(&r->list, &p->list);
-+	if (parent)
-+		list_add(&monitor->list, &parent->list);
- 	else
--		list_add_tail(&r->list, &rv_monitors_list);
-+		list_add_tail(&monitor->list, &rv_monitors_list);
-=20
- out_unlock:
- 	mutex_unlock(&rv_interface_lock);
-@@ -852,17 +833,11 @@ int rv_register_monitor(struct rv_monitor *monitor, s=
-truct rv_monitor *parent)
-  */
- int rv_unregister_monitor(struct rv_monitor *monitor)
- {
--	struct rv_monitor_def *ptr, *next;
--
- 	mutex_lock(&rv_interface_lock);
-=20
--	list_for_each_entry_safe(ptr, next, &rv_monitors_list, list) {
--		if (strcmp(monitor->name, ptr->monitor->name) =3D=3D 0) {
--			rv_disable_monitor(ptr);
--			list_del(&ptr->list);
--			destroy_monitor_dir(ptr);
--		}
--	}
-+	rv_disable_monitor(monitor);
-+	list_del(&monitor->list);
-+	destroy_monitor_dir(monitor);
-=20
- 	mutex_unlock(&rv_interface_lock);
- 	return 0;
 diff --git a/kernel/trace/rv/rv.h b/kernel/trace/rv/rv.h
-index 873364094402..f039ec1c9156 100644
+index f039ec1c9156..8c38f9dd41bc 100644
 --- a/kernel/trace/rv/rv.h
 +++ b/kernel/trace/rv/rv.h
-@@ -32,34 +32,23 @@ struct rv_reactor_def {
- };
- #endif
+@@ -23,15 +23,6 @@ struct rv_interface {
+ extern struct mutex rv_interface_lock;
+ extern struct list_head rv_monitors_list;
 =20
--struct rv_monitor_def {
--	struct list_head	list;
--	struct rv_monitor	*monitor;
--	struct rv_monitor	*parent;
--	struct dentry		*root_d;
 -#ifdef CONFIG_RV_REACTORS
--	struct rv_reactor_def	*rdef;
--	bool			reacting;
--#endif
+-struct rv_reactor_def {
+-	struct list_head	list;
+-	struct rv_reactor	*reactor;
+-	/* protected by the monitor interface lock */
+-	int			counter;
 -};
+-#endif
 -
  struct dentry *get_monitors_root(void);
--int rv_disable_monitor(struct rv_monitor_def *mdef);
--int rv_enable_monitor(struct rv_monitor_def *mdef);
--bool rv_is_container_monitor(struct rv_monitor_def *mdef);
--bool rv_is_nested_monitor(struct rv_monitor_def *mdef);
-+int rv_disable_monitor(struct rv_monitor *mon);
-+int rv_enable_monitor(struct rv_monitor *mon);
-+bool rv_is_container_monitor(struct rv_monitor *mon);
-+bool rv_is_nested_monitor(struct rv_monitor *mon);
+ int rv_disable_monitor(struct rv_monitor *mon);
+ int rv_enable_monitor(struct rv_monitor *mon);
+diff --git a/kernel/trace/rv/rv_reactors.c b/kernel/trace/rv/rv_reactors.c
+index 7cc620a1be1a..2c7909e6d0e7 100644
+--- a/kernel/trace/rv/rv_reactors.c
++++ b/kernel/trace/rv/rv_reactors.c
+@@ -70,12 +70,12 @@
+  */
+ static LIST_HEAD(rv_reactors_list);
 =20
- #ifdef CONFIG_RV_REACTORS
--int reactor_populate_monitor(struct rv_monitor_def *mdef);
--void reactor_cleanup_monitor(struct rv_monitor_def *mdef);
-+int reactor_populate_monitor(struct rv_monitor *mon);
-+void reactor_cleanup_monitor(struct rv_monitor *mon);
- int init_rv_reactors(struct dentry *root_dir);
- #else
--static inline int reactor_populate_monitor(struct rv_monitor_def *mdef)
-+static inline int reactor_populate_monitor(struct rv_monitor *mon)
+-static struct rv_reactor_def *get_reactor_rdef_by_name(char *name)
++static struct rv_reactor *get_reactor_rdef_by_name(char *name)
  {
+-	struct rv_reactor_def *r;
++	struct rv_reactor *r;
+=20
+ 	list_for_each_entry(r, &rv_reactors_list, list) {
+-		if (strcmp(name, r->reactor->name) =3D=3D 0)
++		if (strcmp(name, r->name) =3D=3D 0)
+ 			return r;
+ 	}
+ 	return NULL;
+@@ -86,9 +86,9 @@ static struct rv_reactor_def *get_reactor_rdef_by_name(ch=
+ar *name)
+  */
+ static int reactors_show(struct seq_file *m, void *p)
+ {
+-	struct rv_reactor_def *rea_def =3D p;
++	struct rv_reactor *reactor =3D p;
+=20
+-	seq_printf(m, "%s\n", rea_def->reactor->name);
++	seq_printf(m, "%s\n", reactor->name);
  	return 0;
  }
 =20
--static inline void reactor_cleanup_monitor(struct rv_monitor_def *mdef)
-+static inline void reactor_cleanup_monitor(struct rv_monitor *mon)
- {
- 	return;
- }
-diff --git a/kernel/trace/rv/rv_reactors.c b/kernel/trace/rv/rv_reactors.c
-index 740603670dd1..7cc620a1be1a 100644
---- a/kernel/trace/rv/rv_reactors.c
-+++ b/kernel/trace/rv/rv_reactors.c
-@@ -138,10 +138,10 @@ static const struct file_operations available_reactor=
+@@ -139,12 +139,12 @@ static const struct file_operations available_reactor=
 s_ops =3D {
-  */
  static int monitor_reactor_show(struct seq_file *m, void *p)
  {
--	struct rv_monitor_def *mdef =3D m->private;
-+	struct rv_monitor *mon =3D m->private;
- 	struct rv_reactor_def *rdef =3D p;
+ 	struct rv_monitor *mon =3D m->private;
+-	struct rv_reactor_def *rdef =3D p;
++	struct rv_reactor *reactor =3D p;
 =20
--	if (mdef->rdef =3D=3D rdef)
-+	if (mon->rdef =3D=3D rdef)
- 		seq_printf(m, "[%s]\n", rdef->reactor->name);
+-	if (mon->rdef =3D=3D rdef)
+-		seq_printf(m, "[%s]\n", rdef->reactor->name);
++	if (mon->reactor =3D=3D reactor)
++		seq_printf(m, "[%s]\n", reactor->name);
  	else
- 		seq_printf(m, "%s\n", rdef->reactor->name);
-@@ -158,41 +158,41 @@ static const struct seq_operations monitor_reactors_s=
+-		seq_printf(m, "%s\n", rdef->reactor->name);
++		seq_printf(m, "%s\n", reactor->name);
+ 	return 0;
+ }
+=20
+@@ -159,13 +159,13 @@ static const struct seq_operations monitor_reactors_s=
 eq_ops =3D {
- 	.show	=3D monitor_reactor_show
  };
 =20
--static void monitor_swap_reactors_single(struct rv_monitor_def *mdef,
-+static void monitor_swap_reactors_single(struct rv_monitor *mon,
- 					 struct rv_reactor_def *rdef,
+ static void monitor_swap_reactors_single(struct rv_monitor *mon,
+-					 struct rv_reactor_def *rdef,
++					 struct rv_reactor *reactor,
  					 bool reacting, bool nested)
  {
  	bool monitor_enabled;
 =20
  	/* nothing to do */
--	if (mdef->rdef =3D=3D rdef)
-+	if (mon->rdef =3D=3D rdef)
+-	if (mon->rdef =3D=3D rdef)
++	if (mon->reactor =3D=3D reactor)
  		return;
 =20
--	monitor_enabled =3D mdef->monitor->enabled;
-+	monitor_enabled =3D mon->enabled;
- 	if (monitor_enabled)
--		rv_disable_monitor(mdef);
-+		rv_disable_monitor(mon);
+ 	monitor_enabled =3D mon->enabled;
+@@ -173,12 +173,12 @@ static void monitor_swap_reactors_single(struct rv_mo=
+nitor *mon,
+ 		rv_disable_monitor(mon);
 =20
  	/* swap reactor's usage */
--	mdef->rdef->counter--;
-+	mon->rdef->counter--;
- 	rdef->counter++;
+-	mon->rdef->counter--;
+-	rdef->counter++;
++	mon->reactor->counter--;
++	reactor->counter++;
 =20
--	mdef->rdef =3D rdef;
--	mdef->reacting =3D reacting;
--	mdef->monitor->react =3D rdef->reactor->react;
-+	mon->rdef =3D rdef;
-+	mon->reacting =3D reacting;
-+	mon->react =3D rdef->reactor->react;
+-	mon->rdef =3D rdef;
++	mon->reactor =3D reactor;
+ 	mon->reacting =3D reacting;
+-	mon->react =3D rdef->reactor->react;
++	mon->react =3D reactor->react;
 =20
  	/* enable only once if iterating through a container */
  	if (monitor_enabled && !nested)
--		rv_enable_monitor(mdef);
-+		rv_enable_monitor(mon);
+@@ -186,7 +186,7 @@ static void monitor_swap_reactors_single(struct rv_moni=
+tor *mon,
  }
 =20
--static void monitor_swap_reactors(struct rv_monitor_def *mdef,
-+static void monitor_swap_reactors(struct rv_monitor *mon,
- 				  struct rv_reactor_def *rdef, bool reacting)
+ static void monitor_swap_reactors(struct rv_monitor *mon,
+-				  struct rv_reactor_def *rdef, bool reacting)
++				  struct rv_reactor *reactor, bool reacting)
  {
--	struct rv_monitor_def *p =3D mdef;
-+	struct rv_monitor *p =3D mon;
+ 	struct rv_monitor *p =3D mon;
 =20
--	if (rv_is_container_monitor(mdef))
-+	if (rv_is_container_monitor(mon))
+@@ -194,7 +194,7 @@ static void monitor_swap_reactors(struct rv_monitor *mo=
+n,
  		list_for_each_entry_continue(p, &rv_monitors_list, list) {
--			if (p->parent !=3D mdef->monitor)
-+			if (p->parent !=3D mon)
+ 			if (p->parent !=3D mon)
  				break;
- 			monitor_swap_reactors_single(p, rdef, reacting, true);
+-			monitor_swap_reactors_single(p, rdef, reacting, true);
++			monitor_swap_reactors_single(p, reactor, reacting, true);
  		}
-@@ -202,7 +202,7 @@ static void monitor_swap_reactors(struct rv_monitor_def=
- *mdef,
+ 	/*
+ 	 * This call enables and disables the monitor if they were active.
+@@ -202,7 +202,7 @@ static void monitor_swap_reactors(struct rv_monitor *mo=
+n,
  	 * All nested monitors are enabled also if they were off, we may refine
  	 * this logic in the future.
  	 */
--	monitor_swap_reactors_single(mdef, rdef, reacting, false);
-+	monitor_swap_reactors_single(mon, rdef, reacting, false);
+-	monitor_swap_reactors_single(mon, rdef, reacting, false);
++	monitor_swap_reactors_single(mon, reactor, reacting, false);
  }
 =20
  static ssize_t
-@@ -210,7 +210,7 @@ monitor_reactors_write(struct file *file, const char __=
+@@ -211,7 +211,7 @@ monitor_reactors_write(struct file *file, const char __=
 user *user_buf,
- 		      size_t count, loff_t *ppos)
  {
  	char buff[MAX_RV_REACTOR_NAME_SIZE + 2];
--	struct rv_monitor_def *mdef;
-+	struct rv_monitor *mon;
- 	struct rv_reactor_def *rdef;
+ 	struct rv_monitor *mon;
+-	struct rv_reactor_def *rdef;
++	struct rv_reactor *reactor;
  	struct seq_file *seq_f;
  	int retval =3D -EINVAL;
-@@ -237,7 +237,7 @@ monitor_reactors_write(struct file *file, const char __=
-user *user_buf,
- 	 * See monitor_reactors_open()
- 	 */
- 	seq_f =3D file->private_data;
--	mdef =3D seq_f->private;
-+	mon =3D seq_f->private;
+ 	bool enable;
+@@ -243,16 +243,16 @@ monitor_reactors_write(struct file *file, const char =
+__user *user_buf,
 =20
- 	mutex_lock(&rv_interface_lock);
+ 	retval =3D -EINVAL;
 =20
-@@ -252,7 +252,7 @@ monitor_reactors_write(struct file *file, const char __=
-user *user_buf,
+-	list_for_each_entry(rdef, &rv_reactors_list, list) {
+-		if (strcmp(ptr, rdef->reactor->name) !=3D 0)
++	list_for_each_entry(reactor, &rv_reactors_list, list) {
++		if (strcmp(ptr, reactor->name) !=3D 0)
+ 			continue;
+=20
+-		if (rdef =3D=3D get_reactor_rdef_by_name("nop"))
++		if (strcmp(reactor->name, "nop"))
+ 			enable =3D false;
  		else
  			enable =3D true;
 =20
--		monitor_swap_reactors(mdef, rdef, enable);
-+		monitor_swap_reactors(mon, rdef, enable);
+-		monitor_swap_reactors(mon, rdef, enable);
++		monitor_swap_reactors(mon, reactor, enable);
 =20
  		retval =3D count;
  		break;
-@@ -268,7 +268,7 @@ monitor_reactors_write(struct file *file, const char __=
-user *user_buf,
-  */
- static int monitor_reactors_open(struct inode *inode, struct file *file)
+@@ -299,23 +299,16 @@ static const struct file_operations monitor_reactors_=
+ops =3D {
+=20
+ static int __rv_register_reactor(struct rv_reactor *reactor)
  {
--	struct rv_monitor_def *mdef =3D inode->i_private;
-+	struct rv_monitor *mon =3D inode->i_private;
- 	struct seq_file *seq_f;
- 	int ret;
+-	struct rv_reactor_def *r;
++	struct rv_reactor *r;
 =20
-@@ -284,7 +284,7 @@ static int monitor_reactors_open(struct inode *inode, s=
-truct file *file)
- 	/*
- 	 * Copy the create file "private" data to the seq_file private data.
- 	 */
--	seq_f->private =3D mdef;
-+	seq_f->private =3D mon;
+ 	list_for_each_entry(r, &rv_reactors_list, list) {
+-		if (strcmp(reactor->name, r->reactor->name) =3D=3D 0) {
++		if (strcmp(reactor->name, r->name) =3D=3D 0) {
+ 			pr_info("Reactor %s is already registered\n", reactor->name);
+ 			return -EINVAL;
+ 		}
+ 	}
 =20
- 	return 0;
- };
-@@ -454,37 +454,37 @@ static const struct file_operations reacting_on_fops =
-=3D {
-=20
- /**
-  * reactor_populate_monitor - creates per monitor reactors file
-- * @mdef:	monitor's definition.
-+ * @mon:	The monitor.
-  *
-  * Returns 0 if successful, error otherwise.
-  */
--int reactor_populate_monitor(struct rv_monitor_def *mdef)
-+int reactor_populate_monitor(struct rv_monitor *mon)
- {
- 	struct dentry *tmp;
-=20
--	tmp =3D rv_create_file("reactors", RV_MODE_WRITE, mdef->root_d, mdef, &mo=
-nitor_reactors_ops);
-+	tmp =3D rv_create_file("reactors", RV_MODE_WRITE, mon->root_d, mon, &moni=
-tor_reactors_ops);
- 	if (!tmp)
- 		return -ENOMEM;
-=20
- 	/*
- 	 * Configure as the rv_nop reactor.
- 	 */
--	mdef->rdef =3D get_reactor_rdef_by_name("nop");
--	mdef->rdef->counter++;
--	mdef->reacting =3D false;
-+	mon->rdef =3D get_reactor_rdef_by_name("nop");
-+	mon->rdef->counter++;
-+	mon->reacting =3D false;
+-	r =3D kzalloc(sizeof(struct rv_reactor_def), GFP_KERNEL);
+-	if (!r)
+-		return -ENOMEM;
+-
+-	r->reactor =3D reactor;
+-	r->counter =3D 0;
+-
+-	list_add_tail(&r->list, &rv_reactors_list);
++	list_add_tail(&reactor->list, &rv_reactors_list);
 =20
  	return 0;
  }
-=20
- /**
-  * reactor_cleanup_monitor - cleanup a monitor reference
-- * @mdef:       monitor's definition.
-+ * @mon:       the monitor.
+@@ -350,26 +343,19 @@ int rv_register_reactor(struct rv_reactor *reactor)
   */
--void reactor_cleanup_monitor(struct rv_monitor_def *mdef)
-+void reactor_cleanup_monitor(struct rv_monitor *mon)
+ int rv_unregister_reactor(struct rv_reactor *reactor)
+ {
+-	struct rv_reactor_def *ptr, *next;
+ 	int ret =3D 0;
+=20
+ 	mutex_lock(&rv_interface_lock);
+=20
+-	list_for_each_entry_safe(ptr, next, &rv_reactors_list, list) {
+-		if (strcmp(reactor->name, ptr->reactor->name) =3D=3D 0) {
+-
+-			if (!ptr->counter) {
+-				list_del(&ptr->list);
+-			} else {
+-				printk(KERN_WARNING
+-				       "rv: the rv_reactor %s is in use by %d monitor(s)\n",
+-				       ptr->reactor->name, ptr->counter);
+-				printk(KERN_WARNING "rv: the rv_reactor %s cannot be removed\n",
+-				       ptr->reactor->name);
+-				ret =3D -EBUSY;
+-				break;
+-			}
+-		}
++	if (!reactor->counter) {
++		list_del(&reactor->list);
++	} else {
++		printk(KERN_WARNING
++		       "rv: the rv_reactor %s is in use by %d monitor(s)\n",
++		       reactor->name, reactor->counter);
++		printk(KERN_WARNING "rv: the rv_reactor %s cannot be removed\n",
++		       reactor->name);
++		ret =3D -EBUSY;
+ 	}
+=20
+ 	mutex_unlock(&rv_interface_lock);
+@@ -469,8 +455,8 @@ int reactor_populate_monitor(struct rv_monitor *mon)
+ 	/*
+ 	 * Configure as the rv_nop reactor.
+ 	 */
+-	mon->rdef =3D get_reactor_rdef_by_name("nop");
+-	mon->rdef->counter++;
++	mon->reactor =3D get_reactor_rdef_by_name("nop");
++	mon->reactor->counter++;
+ 	mon->reacting =3D false;
+=20
+ 	return 0;
+@@ -483,8 +469,8 @@ int reactor_populate_monitor(struct rv_monitor *mon)
+ void reactor_cleanup_monitor(struct rv_monitor *mon)
  {
  	lockdep_assert_held(&rv_interface_lock);
--	mdef->rdef->counter--;
--	WARN_ON_ONCE(mdef->rdef->counter < 0);
-+	mon->rdef->counter--;
-+	WARN_ON_ONCE(mon->rdef->counter < 0);
+-	mon->rdef->counter--;
+-	WARN_ON_ONCE(mon->rdef->counter < 0);
++	mon->reactor->counter--;
++	WARN_ON_ONCE(mon->reactor->counter < 0);
  }
 =20
  /*
