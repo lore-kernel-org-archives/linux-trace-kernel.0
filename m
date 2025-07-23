@@ -1,113 +1,189 @@
-Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BFB1153BE9;
-	Wed, 23 Jul 2025 20:34:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 060C2258CD8
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 23 Jul 2025 21:15:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753302858; cv=none; b=QpotMVEqw6O3LvgmgopMaRgrLU0fxRocExF7gHRBUUY5xbNmOTKoYWtYvhW5AIU7Stouz65fg6pWNAjc7XSdMhbSOmwZs/A5PUT0l68v9uW9epkVh+iksI4QptcrV6CsYLV4X5Tm9DBWSXkNCTz30mqR+3BgkEUudGxFT1isRLs=
+	t=1753305312; cv=none; b=QeuDVO4c7RWVfCKtEbe2WWkXfR0xzdgHX6wMTMbI+oIizXdGQGvXPgMmxhu+fvpOhfVrqrKJahuGO+9jDmzPUiGZRed5nlST2XWWzZnYWiHP1j5o/q+XyJugbZaRzEWTmVPffT2JylPq6q9v2GZjhONCuNk6gAngUAS1rKRjGhs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753302858; c=relaxed/simple;
-	bh=Fa1TydQmcbEplUN9Ue2WFSBPuMVdPsBHqy8CCEXazHo=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Qgap9RNNGqDWn07O+JiqTxLfouAFx40bo18DL2wBsveKQdelqg4IDcXYsJmFjxKyJCKEON0KGt3Xy29T7TPBb2kmet+ZtEuk9LOin3gXk9Wujj8eSLAMjckq+E7rZ+QAkrfGHWGHaIilaKzEIl3CF5x7ZF6e+lsqIxt8G4Evczw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=HuBK411J; arc=none smtp.client-ip=82.195.75.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
+	s=arc-20240116; t=1753305312; c=relaxed/simple;
+	bh=qbkCdF7EWwl/tqL5TKoBNdBvNskXvLKwwBDNfbuDA+k=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=nlWycWac7cnbvdXC+ex+CDJhS1Q7K+hkJv9QI9t8s7jOuIf48O18jc7qJxnXck8FaBb21Q/hlKjwHPr83RvzseApiwjwljbNJBl+6uNULlXxrNDJ9wQ1caGJUDpo/XCTJwYScV3TTQlJyXT7VYkqixHrczF4mKWoq6t8J2dkz5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=xZHfY5r+; arc=none smtp.client-ip=91.218.175.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="HuBK411J"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:MIME-Version:Content-Type:References:
-	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=K7ENK4quCFj4h2rmsOlNkdpHTFmDs5XQg7NJ8SZ+eWQ=; b=HuBK411JOPmQNqWylZweNV02J8
-	gUmB34tsL0OGwCzn2qqufwboHewOtdA2DXBh/Idbx9CQbcmv9gT95MK6NVBktrYT/DhR29mw0SLa8
-	/CUyu77dveWnhJN5J3eZVcOASTcEWrQjIYvTFWu/z/s24PlxnZK/XUlG5X3qF2yY3S84N23AQJKEL
-	g/mKeHamUN/Jc9WJC13uWlsVEqXGwhOG42akUhpBHtIzxWQ+PYbAC0iZl1jQX1fPi91RWx7jECcz5
-	QCDI1mhEhCyHUhRKigi5OP8n9OynbJrKpvjAs7vYvHcYJpVqRHlUm3fSiQNUkD898c7113Zog/A/h
-	C0tSOL9Q==;
-Received: from authenticated user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.94.2)
-	(envelope-from <benh@debian.org>)
-	id 1uefxC-008oPr-I9; Wed, 23 Jul 2025 20:20:42 +0000
-Message-ID: <59abcb9262e97b76bfdf18d6de71c15eb2af8a6e.camel@debian.org>
-Subject: Re: [PATCH] bootconfig: Fix unaligned access when building footer
-From: Ben Hutchings <benh@debian.org>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Date: Wed, 23 Jul 2025 22:20:35 +0200
-In-Reply-To: <20250724003747.be2a733e2e7fcf8a9e263cc4@kernel.org>
-References: <aIC-NTw-cdm9ZGFw@decadent.org.uk>
-	 <20250724003747.be2a733e2e7fcf8a9e263cc4@kernel.org>
-Organization: Debian
-Content-Type: multipart/signed; micalg="pgp-sha512";
-	protocol="application/pgp-signature"; boundary="=-CHm9RwRlU5x4w+5IhN7/"
-User-Agent: Evolution 3.56.1-1 
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="xZHfY5r+"
+Content-Type: text/plain;
+	charset=us-ascii
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1753305308;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=K9I+CLZgNY4gnwsc75t+pkIuW17N0SFWdzhX6a32934=;
+	b=xZHfY5r+QbNzSQe7zq8+lBpixZY+b/xtIOYktc8ga1VO1k9l0RZmK1KDuKLsE4LdX2LdzN
+	eA5XyIhCPWrvgudpuWsDjoGrtxI8rcivshs/RwKGTMTZcAmUjttFSIjlckEbcdS/s8t00t
+	jnOaGjvoPkrIi4jvitskDhMpSD80edM=
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Debian-User: benh
-
-
---=-CHm9RwRlU5x4w+5IhN7/
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
+Subject: Re: [PATCH net-next] tracing: ipv6: Replace deprecated strcpy() with
+ strscpy()
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Thorsten Blum <thorsten.blum@linux.dev>
+In-Reply-To: <20250723143625.79ab2c16@batman.local.home>
+Date: Wed, 23 Jul 2025 14:15:02 -0700
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Guillaume Nault <gnault@redhat.com>,
+ Paolo Abeni <pabeni@redhat.com>,
+ Ido Schimmel <idosch@nvidia.com>,
+ Petr Machata <petrm@nvidia.com>,
+ linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
 Content-Transfer-Encoding: quoted-printable
+Message-Id: <AE36F453-DEAE-432C-9CDA-0D2DA875CDA2@linux.dev>
+References: <20250714075436.226197-2-thorsten.blum@linux.dev>
+ <20250714123825.6f0485c9@batman.local.home>
+ <F998F71D-1244-4154-BC5F-19201C23BDBE@linux.dev>
+ <20250723143625.79ab2c16@batman.local.home>
+To: Steven Rostedt <rostedt@goodmis.org>
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, 2025-07-24 at 00:37 +0900, Masami Hiramatsu wrote:
-> On Wed, 23 Jul 2025 12:49:25 +0200
-> Ben Hutchings <benh@debian.org> wrote:
-[...]
-> >  static int apply_xbc(const char *path, const char *xbc_path)
-> >  {
-> > -	char *buf, *data, *p;
-> > +	struct {
-> > +		uint32_t size;
-> > +		uint32_t csum;
-> > +		char magic[BOOTCONFIG_MAGIC_LEN];
-> > +	} footer;
+On 23. Jul 2025, at 11:36, Steven Rostedt wrote:
+> On Wed, 23 Jul 2025 10:46:12 -0700 Thorsten Blum wrote:
 >=20
-> Don't we need __attribute__((__packed__)) for the footer?
+>> Your commit fca8300f68fe3 changed it from __dynamic_array() to =
+__array()
+>> and __string() seems to be just a special version of =
+__dynamic_array()
+>> with a length of -1.
+>>=20
+>> In the commit description you wrote: "Since the size of the name is =
+at
+>> most 16 bytes (defined by IFNAMSIZ), it is not worth spending the =
+effort
+>> to determine the size of the string."
+>=20
+> So the original had:
+>=20
+> 	__dynamic_array(char,  name,   IFNAMSIZ )
+>=20
+> Which is not dynamic at all. A dynamic_array (like __string) saves the
+> size in meta data within the event. So basically the above is wasting
+> bytes to save a fixed size. If you are going to use a dynamic array,
+> might as well make it dynamic!
+>=20
+> I was doing various clean ups back then so I didn't look too deeply
+> into this event when I made that change. I just saw the obvious waste
+> of space in the ring buffer.
+>=20
+> Just to explain it in more detail. A dynamic_array has in the ring =
+buffer:
+>=20
+> 	short offset;
+> 	short len;
+> 	[..]
+> 	char  name[len];
+>=20
+> That is, 4 bytes are used to know the size of the array and where in
+> the event it is located. Thus the __dynamic_array() usage basically =
+had:
+>=20
+> 	short offset;
+> 	short len =3D IFNAMSIZ;
+> 	[..]
+> 	char name[IFNAMSIZ];
+>=20
+> Why have the offset and length? with just __array(char, name, =
+IFNAMSIZ}
+> it would be just:
+>=20
+> 	char name[IFNAMSIZ];
+>=20
+> See why I changed it?
+>=20
+> Now, the change I'm suggesting now would make the __string() be =
+dynamic!
+>=20
+> 	short offset;
+> 	short len =3D strlen(res->nh && res->nh->fib_nh_dev ? =
+res->nh->fib_nh_dev->name : "-") + 1;
+> 	[..]
+> 	char name[len];
+>=20
+> As IFNAMSIZ is 16, and the above adds 4 bytes to the name, if the name
+> is less than 7 bytes or less, you save memory on the ring buffer.
+>=20
+> 	2 bytes: offset
+> 	2 bytes: len;
+> 	7 bytes + '\0'
+>=20
+> total: 12 bytes
+>=20
+> Note, if there's only one dynamic value, it is always at least 4 bytes =
+aligned.
 
-I don't see any reason for there to be padding in this structure, since
-it has an alignment of 4 and the size of each member is a multiple of 4.
+Thanks for the detailed explanation.
 
-I included an assertion that there is no padding:
+I think the better change would be this then:
 
-[...]
-> > +	memcpy(footer.magic, BOOTCONFIG_MAGIC, BOOTCONFIG_MAGIC_LEN);
-> > +	static_assert(sizeof(footer) =3D=3D BOOTCONFIG_FOOTER_SIZE);
-> > +	memcpy(data + size, &footer, BOOTCONFIG_FOOTER_SIZE);
-[...]
+diff --git a/include/trace/events/fib6.h b/include/trace/events/fib6.h
+index 8d22b2e98d48..3f95df1fd155 100644
+--- a/include/trace/events/fib6.h
++++ b/include/trace/events/fib6.h
+@@ -32,8 +32,9 @@ TRACE_EVENT(fib6_table_lookup,
+		__field(        u16,	dport		)
+		__field(        u8,	proto		)
+		__field(        u8,	rt_type		)
+-		__array(		char,	name,	IFNAMSIZ )
+-		__array(		__u8,	gw,	16	 )
++		__string(	name,	res->nh && res->nh->fib_nh_dev ?
++					res->nh->fib_nh_dev->name : "-"	=
+)
++		__array(	__u8,	gw,	16	)
+	),
 
-Ben.
+	TP_fast_assign(
+@@ -64,11 +65,8 @@ TRACE_EVENT(fib6_table_lookup,
+			__entry->dport =3D 0;
+		}
 
---=20
-Ben Hutchings - Debian developer, member of kernel, installer and LTS
-teams
+-		if (res->nh && res->nh->fib_nh_dev) {
+-			strscpy(__entry->name, =
+res->nh->fib_nh_dev->name, IFNAMSIZ);
+-		} else {
+-			strcpy(__entry->name, "-");
+-		}
++		__assign_str(name);
++
+		if (res->f6i =3D=3D net->ipv6.fib6_null_entry) {
+			in6 =3D (struct in6_addr *)__entry->gw;
+			*in6 =3D in6addr_any;
+@@ -82,7 +80,7 @@ TRACE_EVENT(fib6_table_lookup,
+		  __entry->tb_id, __entry->oif, __entry->iif, =
+__entry->proto,
+		  __entry->src, __entry->sport, __entry->dst, =
+__entry->dport,
+		  __entry->flowlabel, __entry->tos, __entry->scope,
+-		  __entry->flags, __entry->name, __entry->gw, =
+__entry->err)
++		  __entry->flags, __get_str(name), __entry->gw, =
+__entry->err)
+);
 
---=-CHm9RwRlU5x4w+5IhN7/
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
+#endif /* _TRACE_FIB6_H */
 
------BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAmiBRBQACgkQ57/I7JWG
-EQkKXA/8DGUMoUCzq6YYLQb5vNJK+a3hjeIlTY4ZncEBbzAejjN6OVBQWo+SvGIM
-KDwcdIiKh2GIghM4fD42lFizqPFJEMi5CIjkzztxZhSj0CAvlxvekxUerGhcanEL
-kNmvirp+4HW2d85IG5YI3qEYxx2203x0ev4KRkNtDpy/QWNfLbgvl6C+clR+k/ph
-Zxc9Ml042Y4kWC8lcoPJkAObDnSixgMF2klUvwLWyX1Wcwv9hlgStsieHEI6BOZy
-Xmo4OpmRXjlQ0Y3FCrJeRNzNdJ02PoPQbSXZ7npNyvCo4QTzJLgIFxVEfPJbxPIV
-+MjHO+VLCs9iuFpMl8wlA1ezVb3QYOKVWxoZp/rjndKW7kknbTAJ1PYjfE+tV5nM
-W8eC9XKOYGHKRTZcN5GrTg8fbQUhuzi8fHR5/OctHF8BM9gGbiuQ9/2CwXKyo92T
-IF9tMAqEMBuXQ2pes8NywMPfBrk4TC/UuHc4+o+bARlS0Ru52Kre/m1Phy5QqG4l
-SLucV2dxsBNYv7gDX7AfqPRxo1RmmxINUQxUY8z6zdc3VGEEqXztfDzIvT/T9AvM
-QtCjbVw+xIoILU8a7Km8eChgNTQx/N95OB0hUYxdW+/O+AzGauCpEuXisnKh//lD
-+/FZ2TI/q03waWrLtTRHbGwyr52phYg8/HLS3dNayacjwyYN5Mk=
-=UQao
------END PGP SIGNATURE-----
+I'll submit a v2 if you agree that this is correct.
 
---=-CHm9RwRlU5x4w+5IhN7/--
+Thanks,
+Thorsten
+
