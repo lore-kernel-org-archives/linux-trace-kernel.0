@@ -1,47 +1,47 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D09AB1E32C3
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 23 Jul 2025 16:13:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55D8D1F4CBD
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 23 Jul 2025 16:13:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753287186; cv=none; b=VFNbnhqA/6LiV1tblOvoHv5WXSEGrBy+Qa2h/rytrZYNYIvmEFhSNhBABx1AU8smtgEjV+K5oSABe1PhJc9kTNpCX4p6m5zDhG/D/hNeeMRQHu1hhY5moxv/YjmekCbwXhPHVNl6epxfClUmLI9XD7pTuyFlwDYPNQLv3CymrHY=
+	t=1753287191; cv=none; b=l3hnq3yY1ED6Eh0UuBQqJpfH2B1NOA3DaKsJ2rDZBgcikgNgiVXHRfZiYRja2+jwSJkLwAvwmAYUfgPI1e4IWElmSGmwtma4yfRi0bOR1ZkOuaBk1JZDpXkUn367xl2XdPFzQEY4PIsX+FyvWTjBfb3MwowLR4fqKekT1A5qj1g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753287186; c=relaxed/simple;
-	bh=JSsX/bPADyns/ee35USI4lxKFOWp4V1IMj9DJEUZ9+E=;
+	s=arc-20240116; t=1753287191; c=relaxed/simple;
+	bh=9bMPEH+CSGM+b1HURrAy2s7BMz76ePSwUnHXJJpRgvE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Qg4n6UlNzySNRPrvRi53y/ilRu2ldS+0aO9R3yYfcr/opSODDSi0/tznTCHN3nooJ3s0TfnNCXMO9RG5dz7OQwXFh9achn9DxLbesZa+iUJvcfwoI+JfOJ+QsM0/UswbNAbP9IjPVCKC8y3VXqDU+X/lyAuQ5CVEchroP2/xnaM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RMURFuRR; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=M542UljIRmdygTuPzImIUpLXAAU5DShi0/x0Mu8gmv0GQywx86Z84V4Nog0ywgjp9hIIuurRHs31L9cfvy9JjeUFMk+ihOP6FTHv/QVJp3H575gnvCq+DsMPfpg9M2yyLNBxUyS1ZQZdbGQsl9nSi1HJNj4gEi2bkrUAfFayX5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XWULYbN5; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RMURFuRR"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XWULYbN5"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1753287183;
+	s=mimecast20190719; t=1753287188;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=K+oLnUkud2e/nXL96cPo5783kvC+G1k6dOgTZxPhWmg=;
-	b=RMURFuRRxcmVfuouJ/DQHQiKekwXYTHNO9dSN9XumTnRIokm8mM/o+SU3iG+M2TqIUU/5v
-	01IVDhu+TWW1G5uwkgJvZqdwWj4PwPnR34SafmhE+/UM5wkbjPmbn/r8u3sbUP45/Md91T
-	ymU5mybrzeO+RellS06EvWRA6WIDUL4=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	bh=igsw0VdVF7/BMQjp7XcACw/pYler/j7EPJfE3OztJGg=;
+	b=XWULYbN5c6bZTgXiAFXchnRCps5/S9drJAcDawjAA39Us1ztuZhbMKm04WNOuak7QTro8O
+	1DkPyRSdHTYDBAYUjbVs7wuTuC1fMNazLjPWDBNXW3rkd1rchQzjwgdPqF58s8uNxpSOMc
+	RvWDev4M5GV4BFjTKrFXRMKy2HHxx2s=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-584-hzoZhXW6MSu0edWTrLOI8Q-1; Wed,
- 23 Jul 2025 12:13:02 -0400
-X-MC-Unique: hzoZhXW6MSu0edWTrLOI8Q-1
-X-Mimecast-MFC-AGG-ID: hzoZhXW6MSu0edWTrLOI8Q_1753287181
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-349-Jdz73VhsMV-nU4EsebtypQ-1; Wed,
+ 23 Jul 2025 12:13:07 -0400
+X-MC-Unique: Jdz73VhsMV-nU4EsebtypQ-1
+X-Mimecast-MFC-AGG-ID: Jdz73VhsMV-nU4EsebtypQ_1753287186
 Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 170A81800C31;
-	Wed, 23 Jul 2025 16:13:01 +0000 (UTC)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E364919560AD;
+	Wed, 23 Jul 2025 16:13:05 +0000 (UTC)
 Received: from gmonaco-thinkpadt14gen3.rmtit.com (unknown [10.44.32.162])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 1E3B3180A302;
-	Wed, 23 Jul 2025 16:12:56 +0000 (UTC)
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 30EBA1801723;
+	Wed, 23 Jul 2025 16:13:01 +0000 (UTC)
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	Steven Rostedt <rostedt@goodmis.org>,
@@ -52,9 +52,9 @@ Cc: Gabriele Monaco <gmonaco@redhat.com>,
 	Juri Lelli <jlelli@redhat.com>,
 	Clark Williams <williams@redhat.com>,
 	John Kacur <jkacur@redhat.com>
-Subject: [PATCH 1/5] tools/rv: Do not skip idle in trace
-Date: Wed, 23 Jul 2025 18:12:36 +0200
-Message-ID: <20250723161240.194860-2-gmonaco@redhat.com>
+Subject: [PATCH 2/5] tools/rv: Stop gracefully also on SIGTERM
+Date: Wed, 23 Jul 2025 18:12:37 +0200
+Message-ID: <20250723161240.194860-3-gmonaco@redhat.com>
 In-Reply-To: <20250723161240.194860-1-gmonaco@redhat.com>
 References: <20250723161240.194860-1-gmonaco@redhat.com>
 Precedence: bulk
@@ -66,41 +66,36 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-Currently, the userspace RV tool skips trace events triggered by the RV
-tool itself, this can be changed by passing the parameter -s, which sets
-the variable config_my_pid to 0 (instead of the tool's PID).
-This has the side effect of skipping events generated by idle (PID 0).
+Currently the userspace RV tool starts a monitor and waits for the user
+to press Ctrl-C (SIGINT) to terminate and stop the monitor.
+This doesn't account for a scenario where a user starts RV in background
+and simply kills it (SIGTERM unless the user specifies differently).
+E.g.:
+ # rv mon wip &
+ # kill %
 
-Set config_my_pid to -1 (an invalid pid) to avoid skipping idle.
+Would terminate RV without stopping the monitor and next RV executions
+won't start correctly.
 
-Fixes: 6d60f89691fc ("tools/rv: Add in-kernel monitor interface")
+Register the signal handler used for SIGINT also to SIGTERM.
+
 Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 ---
- tools/verification/rv/src/in_kernel.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/verification/rv/src/rv.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/verification/rv/src/in_kernel.c b/tools/verification/rv/src/in_kernel.c
-index c0dcee795c0d..4bb746ea6e17 100644
---- a/tools/verification/rv/src/in_kernel.c
-+++ b/tools/verification/rv/src/in_kernel.c
-@@ -431,7 +431,7 @@ ikm_event_handler(struct trace_seq *s, struct tep_record *record,
+diff --git a/tools/verification/rv/src/rv.c b/tools/verification/rv/src/rv.c
+index 239de054d1e0..b8fe24a87d97 100644
+--- a/tools/verification/rv/src/rv.c
++++ b/tools/verification/rv/src/rv.c
+@@ -191,6 +191,7 @@ int main(int argc, char **argv)
+ 		 * and exit.
+ 		 */
+ 		signal(SIGINT, stop_rv);
++		signal(SIGTERM, stop_rv);
  
- 	if (config_has_id && (config_my_pid == id))
- 		return 0;
--	else if (config_my_pid && (config_my_pid == pid))
-+	else if (config_my_pid == pid)
- 		return 0;
- 
- 	tep_print_event(trace_event->tep, s, record, "%16s-%-8d [%.3d] ",
-@@ -734,7 +734,7 @@ static int parse_arguments(char *monitor_name, int argc, char **argv)
- 			config_reactor = optarg;
- 			break;
- 		case 's':
--			config_my_pid = 0;
-+			config_my_pid = -1;
- 			break;
- 		case 't':
- 			config_trace = 1;
+ 		rv_mon(argc - 1, &argv[1]);
+ 	}
 -- 
 2.50.1
 
