@@ -1,35 +1,51 @@
-Received: from maynard.decadent.org.uk (maynard.decadent.org.uk [65.21.191.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 677C0279327;
-	Wed, 23 Jul 2025 10:49:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.21.191.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C548818EB0;
+	Wed, 23 Jul 2025 11:01:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753267780; cv=none; b=nPNdLpazDy550mUZfbHNhi/wLZ23Xx/aNbR6LSc9girRdXe8jb2gV6xNMdr48UF1DO1ErnGg9cS7OlWAYZRRfuoqSu/3tLvCcVf86FFRR/AJxhuPE2NdgVKTmNLVSvqfQxQt4VlfE0+Iu2JkENyg0KA6oQ+MJUtsvUmWhBmlTL4=
+	t=1753268476; cv=none; b=RDFJHE7vNhQHxqm0Q7wpaigJjmIkubFzFskaAWPXj0E64YngShgXK7aEKuo/bWxA9LLG5oqFxJVCyMk/k/h7qaPjBr48YKhIoeJ3sTBN9Bn4PG6XpnRVLfQYQQdRkC0ByWPOTRmJNjXFH64vOLg0bWaqruTC2xn8dWyfvz6QK4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753267780; c=relaxed/simple;
-	bh=7VwzKE9sGWkcmfi4Xv4/MJNzUZAlBn6TWR8UA8pEC2g=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=lLbqSEynVoFbEw/fz0G3CElhVgClLLz4NfBJLHb0iHzdS7ADKwJOmKlwYqU9ReSMz+LyG4DiImQ0vMQNNQqAjVnNpy+522HMNgR3RyA5B2IUFnM6SKcPm0RV+15S1i3iEhD4xV5cqneWLoysx2V2iDH088TMeto+hayO6yb5t8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=decadent.org.uk; arc=none smtp.client-ip=65.21.191.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=decadent.org.uk
-Received: from [2a02:578:851f:1502:391e:c5f5:10e2:b9a3] (helo=deadeye)
-	by maynard with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <ben@decadent.org.uk>)
-	id 1ueX2N-006tEP-0v;
-	Wed, 23 Jul 2025 10:49:27 +0000
-Received: from ben by deadeye with local (Exim 4.98.2)
-	(envelope-from <ben@decadent.org.uk>)
-	id 1ueX2L-000000011VE-2oF5;
-	Wed, 23 Jul 2025 12:49:25 +0200
-Date: Wed, 23 Jul 2025 12:49:25 +0200
-From: Ben Hutchings <benh@debian.org>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: [PATCH] bootconfig: Fix unaligned access when building footer
-Message-ID: <aIC-NTw-cdm9ZGFw@decadent.org.uk>
+	s=arc-20240116; t=1753268476; c=relaxed/simple;
+	bh=KKajWv6iXD2DJpbp036dw7aZbKM62MvOz8OdjwDW124=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jLq8nLUCW80rqiqv6hC8Kz8dNOpP7PGRUS0CH9YQSThUl+S3PM4nYfA2KDC/ER4V9yT9oVtij+FkBKor8QuK7x1AzVZQhtrmd2Vqekyhq4IMAFX/eBnS3bRNQhS7qIdViAyq1Zy28VMaWbxDRI/uQJ8Bz1bjDE15orH842GXIKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s7WqLMq1; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s7WqLMq1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 944C9C4CEE7;
+	Wed, 23 Jul 2025 11:01:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753268475;
+	bh=KKajWv6iXD2DJpbp036dw7aZbKM62MvOz8OdjwDW124=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=s7WqLMq1gn6eEdTj3TMTutLL3KlZCoLBMjOI/EgQYTXCGlZq28Z4K6pLpJU2Qz1YY
+	 Gh0CgCymRDVvjRrezkt4AdoMTM3tdUCA7mtRcTVJsD0K/6An6QRzxiNGC85SKmg4Q6
+	 QghHba9i5AD6EbfhZVnJK/dVInLRJ/PNY/rPXXntKEc5YJEvfIUP2hIp+4wEiQH5cj
+	 5+BwuYPkmNtrIP9lXHDg/VkMqDeR65oWkfjNalenSPudGEeELE4pSE01RdvrNQ2/qu
+	 kYbjM6aFejmagJMp51vOcP8IBlusSTFRVCp3T0+2zoT/h7oxXpuzJvvV+h6k6LMxJh
+	 BO2miA8JpLqvA==
+Date: Wed, 23 Jul 2025 12:01:07 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Jeremy Linton <jeremy.linton@arm.com>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, mhiramat@kernel.org,
+	oleg@redhat.com, peterz@infradead.org, acme@kernel.org,
+	namhyung@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, thiago.bauermann@linaro.org,
+	yury.khrustalev@arm.com, kristina.martsenko@arm.com,
+	liaochang1@huawei.com, will@kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 4/8] arm64: uaccess: Add additional userspace GCS
+ accessors
+Message-ID: <6e4cf749-d146-4f41-afec-6c07b025be93@sirena.org.uk>
+References: <20250719043740.4548-1-jeremy.linton@arm.com>
+ <20250719043740.4548-5-jeremy.linton@arm.com>
+ <aICwaQZxK5Spjj8G@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -37,107 +53,48 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="OD0zKPxJnQpOSJxd"
+	protocol="application/pgp-signature"; boundary="pfS6fkSTDr7lad3R"
 Content-Disposition: inline
-X-SA-Exim-Connect-IP: 2a02:578:851f:1502:391e:c5f5:10e2:b9a3
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on maynard); SAEximRunCond expanded to false
+In-Reply-To: <aICwaQZxK5Spjj8G@arm.com>
+X-Cookie: List was current at time of printing.
 
 
---OD0zKPxJnQpOSJxd
+--pfS6fkSTDr7lad3R
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Currently we add padding between the bootconfig text and footer to
-ensure that the footer is aligned within the initramfs image.
-However, because only the bootconfig data is held in memory, not the
-full initramfs image, the footer may not be naturally aligned in
-memory.
+On Wed, Jul 23, 2025 at 10:50:33AM +0100, Catalin Marinas wrote:
+> On Fri, Jul 18, 2025 at 11:37:36PM -0500, Jeremy Linton wrote:
+> > +/*
+> > + * Unlike put_user_gcs() above, the use of copy_from_user() may provide
+> > + * an opening for non GCS pages to be used to source data. Therefore this
+> > + * should only be used in contexts where that is acceptable.
+> > + */
 
-This can result in an alignment fault (SIGBUS) when writing the footer
-on some architectures, such as sparc.
+> Even in user space, the GCS pages can be read with normal loads, so
+> already usable as a data source if one wants to (not that it's of much
+> use). So not sure the comment here is needed.
 
-Build the footer in a struct on the stack before adding it to the
-buffer.
+The comment should probably be clarified to mention that the specific
+issue is the lack of an operation that does a load with GCS permission
+check to match what we have for stores, it'd be a bit of a landmine to
+have the operation available without anything that flags that it didn't
+validate the permissions (even assuming people read the comments in the
+header...).
 
-References: https://buildd.debian.org/status/fetch.php?pkg=3Dlinux&arch=3Ds=
-parc64&ver=3D6.16%7Erc7-1%7Eexp1&stamp=3D1753209801&raw=3D0
-Signed-off-by: Ben Hutchings <benh@debian.org>
----
- tools/bootconfig/main.c | 24 +++++++++++++-----------
- 1 file changed, 13 insertions(+), 11 deletions(-)
-
-diff --git a/tools/bootconfig/main.c b/tools/bootconfig/main.c
-index 4988e23a1422..57c669d2aa90 100644
---- a/tools/bootconfig/main.c
-+++ b/tools/bootconfig/main.c
-@@ -11,6 +11,7 @@
- #include <string.h>
- #include <errno.h>
- #include <endian.h>
-+#include <assert.h>
-=20
- #include <linux/bootconfig.h>
-=20
-@@ -363,7 +364,12 @@ static int delete_xbc(const char *path)
-=20
- static int apply_xbc(const char *path, const char *xbc_path)
- {
--	char *buf, *data, *p;
-+	struct {
-+		uint32_t size;
-+		uint32_t csum;
-+		char magic[BOOTCONFIG_MAGIC_LEN];
-+	} footer;
-+	char *buf, *data;
- 	size_t total_size;
- 	struct stat stat;
- 	const char *msg;
-@@ -433,17 +439,13 @@ static int apply_xbc(const char *path, const char *xb=
-c_path)
- 	size +=3D pad;
-=20
- 	/* Add a footer */
--	p =3D data + size;
--	*(uint32_t *)p =3D htole32(size);
--	p +=3D sizeof(uint32_t);
-+	footer.size =3D htole32(size);
-+	footer.csum =3D htole32(csum);
-+	memcpy(footer.magic, BOOTCONFIG_MAGIC, BOOTCONFIG_MAGIC_LEN);
-+	static_assert(sizeof(footer) =3D=3D BOOTCONFIG_FOOTER_SIZE);
-+	memcpy(data + size, &footer, BOOTCONFIG_FOOTER_SIZE);
-=20
--	*(uint32_t *)p =3D htole32(csum);
--	p +=3D sizeof(uint32_t);
--
--	memcpy(p, BOOTCONFIG_MAGIC, BOOTCONFIG_MAGIC_LEN);
--	p +=3D BOOTCONFIG_MAGIC_LEN;
--
--	total_size =3D p - data;
-+	total_size =3D size + BOOTCONFIG_FOOTER_SIZE;
-=20
- 	ret =3D write(fd, data, total_size);
- 	if (ret < total_size) {
-
---OD0zKPxJnQpOSJxd
+--pfS6fkSTDr7lad3R
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAmiAvjEACgkQ57/I7JWG
-EQmT3xAAjxwbyp2rkqMdSaqNM+rAJUX2uBn1L4jY0Ti1f1CZrGleZ6PjKoPFhntY
-Ep+pTr3LpGuMCWRB+dHVB+aldO7HUtTc/dvn4oTQCwC8RfLquElWpiLLpKURb9wy
-wHh3DSFZ9Wtk7jIBew16Vx8zE79Crb6DGl0Y4MF8gCR69W9MbYc7R13A2fH8WF5P
-IbmfxH2A1qXAghJ+Kmn36cl2v2SOp2SWRdEF6mQi62mh9mr0R1tjRwI4cf6RcM/m
-NGCPN3Dx1BRZyV60AnyZU803wxmjS3VH07L7+904eJ4o7z72dS/b3QATaCSXVZga
-88ysg1kDPVyHzGGlIn/CmGwxtGYdaUwv+hoM2BIY4b+S19veHCGmslzpD8fJxV99
-r5Yd31EppVXOra5TOdTUu2Ewic76UsczbyQt8vB7DDYwvwkNgwVp0VeIvTdP+Q94
-CemJANlwR1LX08FF60e0CYVZmoCLhA3RPZz0Os5XLkV0tfYOfLNSS+jzldee3Tpz
-Kl3iA5olDRd/+xyLb713Hg1Q83IAjvdYVF9Tq2GPShaPhEunlTMuYP1FK6dc1H2n
-rx4AxWfSJCxa1G75dGbYEBtMdBqmhSXXjkgUmqcx20xG9sZ/+yxTpkJ7KHmK+OaV
-hzlws1qVI9e5uZLz/FMEeIFq4B8283WCeyNQgSsi9hqJMuTg9Fw=
-=fRVy
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmiAwPIACgkQJNaLcl1U
+h9C1HQf/SesyTkkHOj8BBOtDMpXqeILfxSDN+1YY9sPtQnVWuBzz/BNXvVGV8hKN
+WowF+nRWnOeP6E9pP9l3iApYCIMK5dYebcLOVVipocUI0q25/gy+HRLs6cyLKT07
+NYwlIXJyw09hqYru40+rmqtvXn1vAYiulM+H76WUOjTfhrqUHceh4ZjYx0pVzcHe
+2SDiw7M3K6m8VlWHuhIMx30P+82hAet2hhdxPXC1ry8tFx2Zm00KGl1Nl1KJ3ps8
+CICn1km24uu2V3zU2siImytm+2ICHBZsHM1lasvSrCT8yo+bQX8h0zleTnda+xYc
+OFPi+6eatJNwJXE4rZXOejC7vw75WQ==
+=F1EQ
 -----END PGP SIGNATURE-----
 
---OD0zKPxJnQpOSJxd--
+--pfS6fkSTDr7lad3R--
