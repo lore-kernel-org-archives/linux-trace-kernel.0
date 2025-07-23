@@ -1,104 +1,140 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD0992D3731;
-	Wed, 23 Jul 2025 11:13:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 949B62AD3E
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 23 Jul 2025 11:18:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753269207; cv=none; b=W0gISWEdmwEI6vM7EPis8ZgtPb2D98TEgmrddM5Bl1Zr0mWqM8eZOkvb3xrGmtiVM1MCT2aqUNBSUwVAttAq78EVB2EcIkpk+W4fdtHgtsnzZGbjLpj0D1B8XeZLGXq60F7g92XREJgd6SuP9iviQ9doeGdW8696MlN9XjBDY/I=
+	t=1753269510; cv=none; b=H/hvgV4newG9N/zMf1CUebs9cWIByyVHYPD2O9nfLbtcjJbwCX/a6Xf3WEM/JK3KEKP9IH0FW2Im5LaNt4th5YttVzSm8TvfSsQ9Joz8NrI2R/8o5Nd5h8neRTXQv33aL2BBIU1s0h6OYRzcsesD1S1hLaobOScW3Ni3cDoj4OA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753269207; c=relaxed/simple;
-	bh=QS54HACGbgdMRs0EaSON+Zv0IttzLgk3Dxvba53hmEA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W6wtHKltfcrQl6Je2yggkGsDmVUKIPD4awkGmPfNswLYlDqd5dC/2+b0nHR/VkkGkRajXXzHVJtUQXcw0GcTWCMivWuN5XzjSglUnET6gMgxW2hPams+gVPM4pm/brYeo6o+zGoyYZ+T3Lsi3H5PJzL6P8lOGghoCd2gCTiTYHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VveC0p42; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1753269510; c=relaxed/simple;
+	bh=NCsjaUI2FgWzArbYhZfq+jli7Z84VPLHoBN6tS76E3s=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KH6wv+4Af+NgOOzf+6qXpvbH7NUOX2xyoASq5Nc1Z92FtFhR9QR9/wmXJjsUCpGUPvsUJlSj1+M3bidoyhypF+Rzl/VIzd/V1nVGprkPNESzrQs1hzXY6K593ykM0q5880EWZdFa+tc6j4e+0i8SQz+GyVRJOQnUxzIhG1WH81M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=g8tKKvsf; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VveC0p42"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D80DC4CEE7;
-	Wed, 23 Jul 2025 11:13:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753269207;
-	bh=QS54HACGbgdMRs0EaSON+Zv0IttzLgk3Dxvba53hmEA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VveC0p42ztQD01MnFfZlI0VMLsO/8qZp7VAoH72GvyCT1o3tfOA0XyRIjPFW5lYAi
-	 k/cIVCxaOvcMxuF8JK4oly+Gb+x9y18pTR8ZJEjd8EVkpIBuCRWDBWQUpbwfP4Q2eq
-	 +lPnxlk9lnVBTy4tpisJi/Tfy/ztJCXogsJqF913H6al3HBi7BHxRzVLX1pvKOUDSD
-	 u4nKNy3+XCK+OZZ12lH1OFoU2zW/+/VApEeCOQFhw2tJeQc8mtur2z1ClR3ALgloY8
-	 Ux9hfdhPXUvJYr0p5pe8eLDh/7We5RJ84askLuSNAHurpDXmcxDapbMFTnS9hOs+mi
-	 r4bOPw4jHoiAw==
-Date: Wed, 23 Jul 2025 12:13:20 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Jeremy Linton <jeremy.linton@arm.com>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, mhiramat@kernel.org,
-	oleg@redhat.com, peterz@infradead.org, acme@kernel.org,
-	namhyung@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, thiago.bauermann@linaro.org,
-	yury.khrustalev@arm.com, kristina.martsenko@arm.com,
-	liaochang1@huawei.com, will@kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 5/8] arm64: probes: Add GCS support to bl/blr/ret
-Message-ID: <75faf0ec-79ee-4631-91d0-535c81c1bc85@sirena.org.uk>
-References: <20250719043740.4548-1-jeremy.linton@arm.com>
- <20250719043740.4548-6-jeremy.linton@arm.com>
- <aICywZ55EKfSYSIY@arm.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g8tKKvsf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1753269506;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=NCsjaUI2FgWzArbYhZfq+jli7Z84VPLHoBN6tS76E3s=;
+	b=g8tKKvsfhM9C+pNay108G1RzAwlHCRywIbmgXnjvdqxhPsGbUqOYZCDwEIEaw7BnlQE7A5
+	+RC2asafdLfhdP7mok5fqaw+pquPV6TDA/Lj64ga1vG/kfKTttYeD2VU/b29gPV2kEMtpD
+	ETNAUV8Iz6zFduHxEYDOf2eF4uduEcE=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-636-DUoyh_MvNQiA7PCdpWEWDw-1; Wed, 23 Jul 2025 07:18:25 -0400
+X-MC-Unique: DUoyh_MvNQiA7PCdpWEWDw-1
+X-Mimecast-MFC-AGG-ID: DUoyh_MvNQiA7PCdpWEWDw_1753269504
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-45624f0be48so37458525e9.3
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 23 Jul 2025 04:18:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753269504; x=1753874304;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=NCsjaUI2FgWzArbYhZfq+jli7Z84VPLHoBN6tS76E3s=;
+        b=DEYnsibE9KGtwun1c3lHUaEXDvARwv1ZLcFVEi+/dO2skOMefDqaCKz37p/7zAAXkT
+         VKY3JkTFV4z0C0fGbrTuI/kP2RbJWcJM+ZL3FEX4JybfsPcPXTODnzrQgVsHmMLFk601
+         3uOmI3TRkupjmAFJPDY8kniCAT5SroIlnZoR2sdu+g0KODByQpY4h/88zIfcK9ouvV6r
+         5gwtyoT64RYP0fUKZ4qCKdYbx5qeVg7EVNKcrzt+rZ4Cbr+FItPjxq1KVp9j3dwNsqh/
+         jjrDxXC+/H/w+l3FAQzhJAAhExl8EoaVZuQ+SYR1LyKB1/eqEv0PWorbRkFM6o2n8dQG
+         P+cw==
+X-Forwarded-Encrypted: i=1; AJvYcCWty03yQey+SG/ZKivne0ylWA7j5ZDkckSis/i3AoGFmjysEYTwGoBqhJNOUJpyeZNNoDWUEB7pl31/RaElBnQA0BE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwTaR9SG8m+WX8sgp6AphiUX5MlnOOQITWD64nOzE5iFmrH0rJY
+	MN4veXVuy/yP18P4T3E+5eWr0Gf1tELgju8+Tuwa58oEjX+DZigk1PlrzKD/n4wYcAXXeVzpjID
+	QbDoJDWC/flaVS24R+rAA+7Dhgoh8ZYtLA/2O/NqRTJMiTLJADQVaZbjbKYLiFq10ndNLpumeew
+	==
+X-Gm-Gg: ASbGncvpb4B6vwKPtGnSKj+sTX5G4nwX+U79ovHldWe8IaQC8z6ohBPQK2y27tgPbQ6
+	Dm157At+dHLCKvhnHW9SV4Wbt40UaKFgvzOgd+TV7dAYFS8rpJj7FJrW+FSy/9b5Pt/fZODmHtw
+	CFxzuHOBX0rNihHclfdE297hfOedgRacLB/TagsWoZJ86COxxAgHl5euSHmHFl44Q3z3c5DjzBh
+	WKmlnwh8WMMneNl2bPOx/uJ7nj35WoCfXMlBwJDpSfZ4rNgwdsHTTAC+FRDWi988J6J95yXqtVW
+	tSRvY/DiCUQTQyd2JsUB1j2exQxwEspCb8qz8SMk08nMSsHG6Rg20E5Y6v3Qh7GBAw==
+X-Received: by 2002:a05:600c:3f07:b0:456:1d61:b0f2 with SMTP id 5b1f17b1804b1-45868d80dd4mr24977915e9.30.1753269503736;
+        Wed, 23 Jul 2025 04:18:23 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGy5TCWxQoAdDPCS7gnjL4Nc9CVcn2kV1G0g/sNAUjUbZay7cLSZYcSITz14tFnwyBCBiPeDw==
+X-Received: by 2002:a05:600c:3f07:b0:456:1d61:b0f2 with SMTP id 5b1f17b1804b1-45868d80dd4mr24977445e9.30.1753269503141;
+        Wed, 23 Jul 2025 04:18:23 -0700 (PDT)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.35])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4586918c6c4sm19870955e9.11.2025.07.23.04.18.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Jul 2025 04:18:22 -0700 (PDT)
+Message-ID: <d6d432828fb542903cf87e1c0be57812cda92b0a.camel@redhat.com>
+Subject: Re: [PATCH v4 09/14] tools/dot2c: Fix generated files going over
+ 100 column limit
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: Nam Cao <namcao@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, 
+ linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, Tomas Glozar
+ <tglozar@redhat.com>, Juri Lelli <jlelli@redhat.com>,  Clark Williams
+ <williams@redhat.com>, John Kacur <jkacur@redhat.com>
+Date: Wed, 23 Jul 2025 13:18:21 +0200
+In-Reply-To: <20250721145254.WPp6FNzS@linutronix.de>
+References: <20250721082325.71554-1-gmonaco@redhat.com>
+	 <20250721082325.71554-10-gmonaco@redhat.com>
+	 <20250721145254.WPp6FNzS@linutronix.de>
+Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
+ keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
+ 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
+ Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
+ xyhmqeUWOzFx5P43S1E1dhsrLWgP
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="LlK8+g0AOOO1HzK1"
-Content-Disposition: inline
-In-Reply-To: <aICywZ55EKfSYSIY@arm.com>
-X-Cookie: List was current at time of printing.
-
-
---LlK8+g0AOOO1HzK1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: r4AiPSABfxgn-m-knWBiL9NThOezdpHE9H6cjFyxn_c_1753269504
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 23, 2025 at 11:00:33AM +0100, Catalin Marinas wrote:
-> On Fri, Jul 18, 2025 at 11:37:37PM -0500, Jeremy Linton wrote:
+On Mon, 2025-07-21 at 16:52 +0200, Nam Cao wrote:
+> On Mon, Jul 21, 2025 at 10:23:19AM +0200, Gabriele Monaco wrote:
+> > The dot2c.py script generates all states in a single line. This
+> > breaks the
+> > 100 column limit when the state machines are non-trivial.
+> >=20
+> > Change dot2c.py to generate the states in separate lines in case
+> > the
+> > generated line is going to be too long.
+> >=20
+> > Also adapt existing monitors with line length over the limit.
+> >=20
+> > Suggested-by: Nam Cao <namcao@linutronix.de>
+> > Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
+> > ---
+> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 strformat =3D self.__get_st=
+ate_string_length()
+> > -
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 maxlen =3D self.__get_max_s=
+trlen_of_states() +
+> > len(self.enum_suffix)
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tab_braces =3D 2 * 8 + 2 + =
+1 # "\t\t{ " ... "}"
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 comma_space =3D 2 # ", " co=
+unt last comma here
+>=20
+> PEP8 prefers two spaces before the comments.
+>=20
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 linetoolong =3D tab_braces =
++ (maxlen + comma_space) *
+> > nr_events >=3D self.line_length
+>=20
+> Shouldn't this be '>' instead of '>=3D'? 100 columns are still within
+> the limit.
 
-> > @@ -133,17 +147,26 @@ simulate_br_blr(u32 opcode, long addr, struct pt_=
-regs *regs)
-> >  	/* update pc first in case we're doing a "blr lr" */
-> >  	instruction_pointer_set(regs, get_x_reg(regs, xn));
-> > =20
-> > -	/* Link register is x30 */
-> >  	if (((opcode >> 21) & 0x3) =3D=3D 1)
-> > -		set_x_reg(regs, 30, addr + 4);
-> > +		update_lr(regs, addr);
-> >  }
+Right, will do.
 
-> I can see why this function was originally updating PC (in case of a blr
-> lr) but updating the LR was not supposed to fail. With GCS, I think we
-> should follow similar logic to simulate_b_bl() and skip updating PC/LR
-> if the write to the GCS failed (assuming that's what the hardware does,
-> I haven't checked the spec).
+Thanks,
+Gabriele
 
-Yes, the pseudocode does the GCS validation before it starts updating
-BTYPE or any of the registers.
-
---LlK8+g0AOOO1HzK1
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmiAw88ACgkQJNaLcl1U
-h9DmBQf+NT0Xig5/CJmpAvlNNkwAL72NZQH1v7bPz2tbKiHVjN1NwtBf/kvxhpEJ
-RMMUpmeXdnzJLb5ivMwiO+8bgLYvs+ac79pa1VQYELxVclezQ/cjk4wH0S4PH+gN
-neW8Elmceqi2i9Qdf5Bsk1bBwytFluoTnYxoivJsYUCkOR+Fd4ERBYdixoqjJ0iK
-+aORZ60biBcK47nd+hg41RbXRPovvPqiaSlwQFZaG+xaujmlKiFVA9raaxu6s/J8
-4etrlu666ZIaJpv0Dt559+M04Qi3MOld4/oJZcDMPUWyTxCpHV8Di6eEOAKTnRSn
-W8tJ7fswvUHErMIkOyCePEMdE1dAHw==
-=mw2L
------END PGP SIGNATURE-----
-
---LlK8+g0AOOO1HzK1--
