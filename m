@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CF891607AC;
-	Wed, 23 Jul 2025 01:31:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A3CF1D5CE5;
+	Wed, 23 Jul 2025 01:31:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753234300; cv=none; b=hROWDD2Fz1v0wb5hBlFVQ+ScvDJc7auVCdw1rDyYkj7Wd2C9Ui8Sq8G1H5PJHfSDliCRry2L5iF4EE2++bv4NDuS8PfAU+RZ8VTD/KbgqMtw05fijf9tAYbh2mVem3JQ19lEXXC4xYNnMAywV+gHIoED1gQuM+z6HFMfb0+86Qw=
+	t=1753234310; cv=none; b=hmXrStma4e2E85pA3exvajdBg0Wcuv4mXOuVwdyUXpgt+nMGEL6tAuZJ13U53OU/hk25YpEqSlG/ma8JhxyhTQvayU/c28cwVcLctPI4f8bok0bTF25Hmybs+kwL7qLba6qweg4cDh46X6e4q2DRgLVh1BXTFWqGEXMKmJI2uUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753234300; c=relaxed/simple;
-	bh=/MpxVUrHL2vIkvTz1clrqlGGpKYcjUtDZCwlt5gwSF8=;
+	s=arc-20240116; t=1753234310; c=relaxed/simple;
+	bh=0o/Q+PhjU0nIVPGyd9F9Kvrv+SnISOZztWOthtpvPKs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Lpc53Gy5P+cuQViZNJcjpPXoQTgsyDFSCWPs8ePZZo2CQeTq8ZdbP5VdpSv5VRYcRXXpadgQLeaARdT7G+1q09nOfAah+OqxjGh8kV7CzhkO+RAKRGkEz7fSnsYAdxzTJjjY/U74/R9+ALyZtgKm9TsJHLjaRfcrT4uLTULiF8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ej/aWAAx; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=HSNrjj3Gkvd+EwwfYbI8gBV3QSgdiYcJlCAPJx5PFEHDRSZ+A5s4/LZtCXuUtovaeQwte8Mt4Lm8R+/OrQOkuGmrnAOztyJ2AAA0Css/4ecpsUW/utw2kr2OpWRWw3igm8GKporO1pCiuGlStskpQA07imidVpE2JlaKDzLQGLQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mTf8CxtS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ej/aWAAx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04899C4CEEB;
-	Wed, 23 Jul 2025 01:31:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mTf8CxtS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92291C4CEEB;
+	Wed, 23 Jul 2025 01:31:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753234300;
-	bh=/MpxVUrHL2vIkvTz1clrqlGGpKYcjUtDZCwlt5gwSF8=;
+	s=k20201202; t=1753234309;
+	bh=0o/Q+PhjU0nIVPGyd9F9Kvrv+SnISOZztWOthtpvPKs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ej/aWAAxXencFbNlHIqCDwVhKaUJP8uwJ5O0r8V6P9vM9+RvE+dn5SWbK02nDx/Qm
-	 iymrdTxDSYwZ8E3YKJMcdEd6efwbuP7wHpVmTNUpeMqFGWFVrl0W8Xm+ba8vMpDPyD
-	 iCOJN2uW6NjmRNLFWhksurkH1f1iC8WwLueUIkCZdRuWZUbaFao88OiHX77BzcGJcV
-	 b38mynI2E/VEhKHtKWRq2ZBgOPn+O2naluOfJwCGdeR/HMBqedNc3frFbnr6UTZdIW
-	 egoUd4qtrxzrYaXsC2dqAjmWV0rEaYJ8XJsMl/+m4LJomXr4bJPVAkbviWeRblVzlQ
-	 ix56PshnR8FJg==
+	b=mTf8CxtS47okcbY/yLD9+wNh8Z1ckezFsqxYXoAl+KVL+PRTPx5qnnFyFc1Biv0JA
+	 2Rg6MUGgEkQdMG197e8wf1fRM9RSmZRNV6gQxA2whhB/GvUW+PWeFZifp0612MQgl/
+	 CLlVEYjVz99YciI6YvPUnobJ3DyMkvE/JABa8Za2r7yt5OduPioKveKdzNrrEFxVqY
+	 GE2DxXLTnY94yDQzZto3u0r53f8BexsPaV+KrFp8I1XGZ5jZNgApE0PLHMGhPOuAfV
+	 lBJEvUb3kGb3ng1uGJKJKKC2Cxa5bspDG9a3eJ9xLfX1FhtUwLN9nI4jTmVTSVRdhf
+	 mKN4hHEyq2b9w==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v4 6/7] tracing: uprobe-event: Allocate string buffers from heap
-Date: Wed, 23 Jul 2025 10:31:36 +0900
-Message-ID: <175323429593.57270.12369235525923902341.stgit@devnote2>
+Subject: [PATCH v4 7/7] tracing: probes: Add a kerneldoc for traceprobe_parse_event_name()
+Date: Wed, 23 Jul 2025 10:31:45 +0900
+Message-ID: <175323430565.57270.2602609519355112748.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <175323423662.57270.14650807176845939538.stgit@devnote2>
 References: <175323423662.57270.14650807176845939538.stgit@devnote2>
@@ -50,102 +50,49 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Allocate temporary string buffers for parsing uprobe-events
-from heap instead of stack.
+Since traceprobe_parse_event_name() is a bit complicated, add a
+kerneldoc for explaining the behavior.
 
+Suggested-by: Steven Rostedt <rostedt@goodmis.org>
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- Changes in v3:
-  - Split #include sorting.
- Changes in v2:
-  - Sort #include alphabetically.
-  - Add fail_mem label for handling ENOMEM error.
+ Changes in v4:
+  - Move longer parameter description into Return section.
+  - Rewrite the style according to
+    Documentation/doc-guide/kernel-doc.rst
 ---
- kernel/trace/trace_uprobe.c |   28 +++++++++++++++++++---------
- 1 file changed, 19 insertions(+), 9 deletions(-)
+ kernel/trace/trace_probe.c |   20 +++++++++++++++++++-
+ 1 file changed, 19 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
-index 872dce092e46..8b0bcc0d8f41 100644
---- a/kernel/trace/trace_uprobe.c
-+++ b/kernel/trace/trace_uprobe.c
-@@ -8,6 +8,7 @@
- #define pr_fmt(fmt)	"trace_uprobe: " fmt
+diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+index 9d26d901c9e5..4fb3d98e38ea 100644
+--- a/kernel/trace/trace_probe.c
++++ b/kernel/trace/trace_probe.c
+@@ -247,7 +247,25 @@ int traceprobe_split_symbol_offset(char *symbol, long *offset)
+ 	return 0;
+ }
  
- #include <linux/bpf-cgroup.h>
-+#include <linux/cleanup.h>
- #include <linux/ctype.h>
- #include <linux/filter.h>
- #include <linux/module.h>
-@@ -19,6 +20,7 @@
- #include <linux/uaccess.h>
- #include <linux/uprobes.h>
- 
-+#include "trace.h"
- #include "trace_dynevent.h"
- #include "trace_probe.h"
- #include "trace_probe_tmpl.h"
-@@ -537,15 +539,15 @@ static int register_trace_uprobe(struct trace_uprobe *tu)
-  */
- static int __trace_uprobe_create(int argc, const char **argv)
+-/* @buf must has MAX_EVENT_NAME_LEN size */
++/**
++ * traceprobe_parse_event_name() - Parse a string into group and event names
++ * @pevent: A pointer to the string to be parsed.
++ * @pgroup: A pointer to the group name.
++ * @buf:    A buffer to store the parsed group name.
++ * @offset: The offset of the string in the original user command, for logging.
++ *
++ * This parses a string with the format `[GROUP/][EVENT]` or `[GROUP.][EVENT]`
++ * (either GROUP or EVENT or both must be specified).
++ * Since the parsed group name is stored in @buf, the caller must ensure @buf
++ * is at least MAX_EVENT_NAME_LEN bytes.
++ *
++ * Return: 0 on success, or -EINVAL on failure.
++ *
++ * If success, *@pevent is updated to point to the event name part of the
++ * original string, or NULL if there is no event name.
++ * Also, *@pgroup is updated to point to the parsed group which is stored
++ * in @buf, or NULL if there is no group name.
++ */
+ int traceprobe_parse_event_name(const char **pevent, const char **pgroup,
+ 				char *buf, int offset)
  {
--	struct trace_uprobe *tu;
- 	const char *event = NULL, *group = UPROBE_EVENT_SYSTEM;
- 	char *arg, *filename, *rctr, *rctr_end, *tmp;
--	char buf[MAX_EVENT_NAME_LEN];
--	char gbuf[MAX_EVENT_NAME_LEN];
--	enum probe_print_type ptype;
--	struct path path;
- 	unsigned long offset, ref_ctr_offset;
-+	char *gbuf __free(kfree) = NULL;
-+	char *buf __free(kfree) = NULL;
-+	enum probe_print_type ptype;
-+	struct trace_uprobe *tu;
- 	bool is_return = false;
-+	struct path path;
- 	int i, ret;
- 
- 	ref_ctr_offset = 0;
-@@ -653,6 +655,10 @@ static int __trace_uprobe_create(int argc, const char **argv)
- 	/* setup a probe */
- 	trace_probe_log_set_index(0);
- 	if (event) {
-+		gbuf = kmalloc(MAX_EVENT_NAME_LEN, GFP_KERNEL);
-+		if (!gbuf)
-+			goto fail_mem;
-+
- 		ret = traceprobe_parse_event_name(&event, &group, gbuf,
- 						  event - argv[0]);
- 		if (ret)
-@@ -664,15 +670,16 @@ static int __trace_uprobe_create(int argc, const char **argv)
- 		char *ptr;
- 
- 		tail = kstrdup(kbasename(filename), GFP_KERNEL);
--		if (!tail) {
--			ret = -ENOMEM;
--			goto fail_address_parse;
--		}
-+		if (!tail)
-+			goto fail_mem;
- 
- 		ptr = strpbrk(tail, ".-_");
- 		if (ptr)
- 			*ptr = '\0';
- 
-+		buf = kmalloc(MAX_EVENT_NAME_LEN, GFP_KERNEL);
-+		if (!buf)
-+			goto fail_mem;
- 		snprintf(buf, MAX_EVENT_NAME_LEN, "%c_%s_0x%lx", 'p', tail, offset);
- 		event = buf;
- 		kfree(tail);
-@@ -724,6 +731,9 @@ static int __trace_uprobe_create(int argc, const char **argv)
- 	trace_probe_log_clear();
- 	return ret;
- 
-+fail_mem:
-+	ret = -ENOMEM;
-+
- fail_address_parse:
- 	trace_probe_log_clear();
- 	path_put(&path);
 
