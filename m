@@ -1,108 +1,69 @@
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 348B826CE0A;
-	Wed, 23 Jul 2025 21:21:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1902026D4FC
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 23 Jul 2025 21:30:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753305685; cv=none; b=FzeG9xh0Pk1a5rwwOdTp0OXKY1rZzzqegnn/r/BfhD1Xn5knR1KX7NSGof09IjiqQGvmnH0WGbgUFo3UnBpNcwx68DM3lGpMJEwo7IhuuThWOoH+EFwHlcSIdYg1fWFirKoMc0TM2r5nN5WBf6QRXoBk9ha/vIGTyPJowAkMJ00=
+	t=1753306223; cv=none; b=QEJv2SbWpPOakz9M5ItXHezw0CiwWOFvYttBw4aYbIuIJklqdqQlV7byOtco7pkRdeBmMlHHzpDVLzfuKB9HJJbMdLbEa8ejOdCXcjiViKAHRgoIkqlfBCmHPceGKJtyy44QKiKDL9/ZauIMhSUa25Mh8Xsfy19M09k985VUvmA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753305685; c=relaxed/simple;
-	bh=VPXYxYVtd6s3/QwcATqT8F0pmv/ZiyMRk5nynEKSGFc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BlXsOnG59/TqgouMna+6az05t0DzcqRhnASAo1KkmRwFv6lUvgReqq27pYa7CGHuSk0aWgP4CQXSRY2EYeFfKNHlJKN0p1dFrbpLEYAkoCbKBfG3tEp9zgTg6koy9UDvSNbF2f9YmjQ23471Yyk2gRsLyPzfec1V0QqhtYklwGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf16.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id 8028712EE3F;
-	Wed, 23 Jul 2025 21:21:15 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf16.hostedemail.com (Postfix) with ESMTPA id 432ED2000E;
-	Wed, 23 Jul 2025 21:21:13 +0000 (UTC)
-Date: Wed, 23 Jul 2025 17:21:14 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Guillaume Nault <gnault@redhat.com>,
- Paolo Abeni <pabeni@redhat.com>, Ido Schimmel <idosch@nvidia.com>, Petr
- Machata <petrm@nvidia.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next] tracing: ipv6: Replace deprecated strcpy()
- with strscpy()
-Message-ID: <20250723172114.061cc226@gandalf.local.home>
-In-Reply-To: <AE36F453-DEAE-432C-9CDA-0D2DA875CDA2@linux.dev>
-References: <20250714075436.226197-2-thorsten.blum@linux.dev>
-	<20250714123825.6f0485c9@batman.local.home>
-	<F998F71D-1244-4154-BC5F-19201C23BDBE@linux.dev>
-	<20250723143625.79ab2c16@batman.local.home>
-	<AE36F453-DEAE-432C-9CDA-0D2DA875CDA2@linux.dev>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1753306223; c=relaxed/simple;
+	bh=yjRMt+arSlSCtRI6oS1L9afVVTF7+GzuoCmwkUVVLaE=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=IVEM7xcyoCiNJ20vlPDQjI0GNaHjJraCrZ5hdvxi6nOG5DWEg5VdrwFB6VQV6m1auSyhCTCA2Wi/VJXtUeepdr5Zsa+ximO85DnTJbr/pbG53v9zrYbL4Qejdx8zlZeVQjm5UrY3cc8L8w9n8ludI2Zs0t4p5oDWhUE7Fnrp2Oc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=vxmjvvWZ; arc=none smtp.client-ip=95.215.58.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="vxmjvvWZ"
+Content-Type: text/plain;
+	charset=us-ascii
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1753306209;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yjRMt+arSlSCtRI6oS1L9afVVTF7+GzuoCmwkUVVLaE=;
+	b=vxmjvvWZ/xQfWRmnYd6/ZsdTOFJHl9v3zM/yLmVDe1fySZMFNVRZOo+GTqrP4a9HsYj62q
+	D7WXcYGZKymNrLPUNZnmLAan+sYtQaDCLMT1Okw0jpBiZxzgi0eaBsUg8uwOtg5IHh7iXd
+	b2ynl9COlPcdTS9zz2dE5L2IY4wkKcU=
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
+Subject: Re: [PATCH net-next] tracing: ipv6: Replace deprecated strcpy() with
+ strscpy()
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Thorsten Blum <thorsten.blum@linux.dev>
+In-Reply-To: <20250723172114.061cc226@gandalf.local.home>
+Date: Wed, 23 Jul 2025 14:30:02 -0700
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Guillaume Nault <gnault@redhat.com>,
+ Paolo Abeni <pabeni@redhat.com>,
+ Ido Schimmel <idosch@nvidia.com>,
+ Petr Machata <petrm@nvidia.com>,
+ linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 432ED2000E
-X-Stat-Signature: kegzwk6g57adhy3wkto5u1nsueku345w
-X-Rspamd-Server: rspamout02
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+IsVoACPy2Z+7qVEXdlgVce576+oGEJ38=
-X-HE-Tag: 1753305673-867281
-X-HE-Meta: U2FsdGVkX19MUNA+JVSepE1HTC98wpo7HgiqisHjDzAD26LTzKZW3A58hsm/f3dphPQ/1p+gORdAqxdT+378F+hqf+91FZF2xDQW/DBNSHbeQbSrzCHCm2TJgYG+SKzB7ne8iLEG82vb1syDG6Cct06CZuKPUbjPY2x7IjbBxMe6VZ+ZHobF1Af4nSBSEYzxJFfbWdQAr/540miYGq/bvsp+zJTX0D+b/EkuogIPqqhSdCHq+zm/AaQcfNzqp8UdKBEyFNATaP4eGQ3iOadAweNvQwung3XpVdHWoyooyT8//lVTa2FFTMIj8Sdzhf1M
+Message-Id: <FB903426-ADD0-46EA-ACE8-96A3C15B434B@linux.dev>
+References: <20250714075436.226197-2-thorsten.blum@linux.dev>
+ <20250714123825.6f0485c9@batman.local.home>
+ <F998F71D-1244-4154-BC5F-19201C23BDBE@linux.dev>
+ <20250723143625.79ab2c16@batman.local.home>
+ <AE36F453-DEAE-432C-9CDA-0D2DA875CDA2@linux.dev>
+ <20250723172114.061cc226@gandalf.local.home>
+To: Steven Rostedt <rostedt@goodmis.org>
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, 23 Jul 2025 14:15:02 -0700
-Thorsten Blum <thorsten.blum@linux.dev> wrote:
+On 23. Jul 2025, at 14:21, Steven Rostedt wrote:
+> Isn't the above pretty much what I suggested?
 
-> Thanks for the detailed explanation.
-> 
-> I think the better change would be this then:
-> 
-> diff --git a/include/trace/events/fib6.h b/include/trace/events/fib6.h
-> index 8d22b2e98d48..3f95df1fd155 100644
-> --- a/include/trace/events/fib6.h
-> +++ b/include/trace/events/fib6.h
-> @@ -32,8 +32,9 @@ TRACE_EVENT(fib6_table_lookup,
-> 		__field(        u16,	dport		)
-> 		__field(        u8,	proto		)
-> 		__field(        u8,	rt_type		)
-> -		__array(		char,	name,	IFNAMSIZ )
-> -		__array(		__u8,	gw,	16	 )
-> +		__string(	name,	res->nh && res->nh->fib_nh_dev ?
-> +					res->nh->fib_nh_dev->name : "-"	)
-> +		__array(	__u8,	gw,	16	)
-> 	),
-> 
-> 	TP_fast_assign(
-> @@ -64,11 +65,8 @@ TRACE_EVENT(fib6_table_lookup,
-> 			__entry->dport = 0;
-> 		}
-> 
-> -		if (res->nh && res->nh->fib_nh_dev) {
-> -			strscpy(__entry->name, res->nh->fib_nh_dev->name, IFNAMSIZ);
-> -		} else {
-> -			strcpy(__entry->name, "-");
-> -		}
-> +		__assign_str(name);
-> +
-> 		if (res->f6i == net->ipv6.fib6_null_entry) {
-> 			in6 = (struct in6_addr *)__entry->gw;
-> 			*in6 = in6addr_any;
-> @@ -82,7 +80,7 @@ TRACE_EVENT(fib6_table_lookup,
-> 		  __entry->tb_id, __entry->oif, __entry->iif, __entry->proto,
-> 		  __entry->src, __entry->sport, __entry->dst, __entry->dport,
-> 		  __entry->flowlabel, __entry->tos, __entry->scope,
-> -		  __entry->flags, __entry->name, __entry->gw, __entry->err)
-> +		  __entry->flags, __get_str(name), __entry->gw, __entry->err)
-> );
-> 
-> #endif /* _TRACE_FIB6_H */
-> 
-> 
-> I'll submit a v2 if you agree that this is correct.
+Ah sorry, yes it's the same. I'll blame the jet lag from traveling :)
 
-Isn't the above pretty much what I suggested?
+Thanks,
+Thorsten
 
--- Steve
