@@ -1,61 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D14BEEDE;
-	Wed, 23 Jul 2025 11:52:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4458A2F2362;
+	Wed, 23 Jul 2025 14:00:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753271528; cv=none; b=mt/R2Bd+/vs1YW4ZDMh2/sOsB4QeNKac767IOXfsrF3UKFratmu+l1jd/k9fuEfq7Z8LDumqYTpRN4JRbJHPG/9YQjiIcgQqOJuyVRoC94iEUnZXLB9Riil6l78tft9tyf1FKzJsFL6gdgDYKCHCnQf5celpr+FNpS+tiEFvpDA=
+	t=1753279254; cv=none; b=AaZYtCCrAU62lwsTUlk3gjXL984rN9wvI3+M3S3MtYK47pGMBPc8T8LZptphrm4NiVg9g/+oQZQBsghgZ05l9Tf8EgP8vdcJwepY6A+8ohfpOc/UoWExYXE2VpOwbjhXOkK4dhls0eEnE8DHv82oxMBFgNK4gUSey3dgKOEPWUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753271528; c=relaxed/simple;
-	bh=O7/ckzQ9g2gjIzBpwJR7Jp6tkNdCV/dJsJTjbGShgiw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mcza78ZF9a6IDoBDPXWRZeB12sfaN21zXNMw4LAA/CC+XOhVx5Bt5n1CdXbki7Mspm+CCtp6phn9Ecid/uakpN7FwPiMfomE/ya4o0uLiG9VcVWvC92KiV7tkEXI+XxXoYJYatECvYj7EF3WJBVS6cbGZyMMH5e7HQYUItaOHTQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j5bjfTlw; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j5bjfTlw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30133C4CEE7;
-	Wed, 23 Jul 2025 11:52:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753271525;
-	bh=O7/ckzQ9g2gjIzBpwJR7Jp6tkNdCV/dJsJTjbGShgiw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=j5bjfTlwEtBMo82Pt2dNQB/AP5xZAtqeAbaY/EL7MiRp9HosH70tJTTIeNIjBa21p
-	 yImNDgSoOn24N/OWetneE6JCNHSnPTi3HdQFUPeU+mEe8pX90btZMxvH+bsgCk5ISn
-	 G9VtTXpLH8N9I859yYqrLBicsbkaqA/qI3pkBiLyuAie4Z4fli9SwKWV5YdN5H3L/i
-	 3xSXUjyyrZNHWyigML7Evx4QirGCbmneGdhHLMWI6twb1phUFf3WE3DkzJA/sjOcHk
-	 cReFjx0655YHag2Yk1U08xO1sd1ZZOVSeujJArSHnnQkJF9UDbMM8st2xKL7Yu9Duw
-	 vuM2ZeRy2vQwQ==
-Date: Wed, 23 Jul 2025 13:51:59 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Chuck Lever <chuck.lever@oracle.com>, 
-	NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>, 
-	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH 2/2] vfs: fix delegated timestamp handling in
- setattr_copy()
-Message-ID: <20250723-belegen-alteingesessen-a33f060146f4@brauner>
-References: <20250722-nfsd-testing-v1-0-31321c7fc97f@kernel.org>
- <20250722-nfsd-testing-v1-2-31321c7fc97f@kernel.org>
- <e28297a2abe8253c0aa590831b3857432bef60f7.camel@kernel.org>
+	s=arc-20240116; t=1753279254; c=relaxed/simple;
+	bh=nMncE97U/Ipqmpmk7mC2eWQvqR4lqGJam9I+INPmniM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QPzj1bqZSM6I3MHlNYI+v5jIHJIiDCRPgjopFsa8bz86lAJH/SVK85G+QqfSJAMGMU3xnBL/NOx5Kj6p0G9i34fuUnVSZNTpLYY+am/blTHe1J06K1ZOYCKS39n6T83Ae/fToOUvLLD14ceaHk0iwOYkx9UdZSNCjtWBkPns4rg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf18.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay09.hostedemail.com (Postfix) with ESMTP id ED66E806F4;
+	Wed, 23 Jul 2025 14:00:49 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf18.hostedemail.com (Postfix) with ESMTPA id 2D64930;
+	Wed, 23 Jul 2025 14:00:48 +0000 (UTC)
+Date: Wed, 23 Jul 2025 10:00:49 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 7/7] tracing: probes: Add a kerneldoc for
+ traceprobe_parse_event_name()
+Message-ID: <20250723100049.46e8ec7c@batman.local.home>
+In-Reply-To: <175323430565.57270.2602609519355112748.stgit@devnote2>
+References: <175323423662.57270.14650807176845939538.stgit@devnote2>
+	<175323430565.57270.2602609519355112748.stgit@devnote2>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <e28297a2abe8253c0aa590831b3857432bef60f7.camel@kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: ck4g5e88xgtt5tzg1czg8zt8g63hmhgw
+X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: 2D64930
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+KlQ1W+17VzVmvSHIC/a1RVGNS2p6REX4=
+X-HE-Tag: 1753279248-335724
+X-HE-Meta: U2FsdGVkX18SHHCl1w3YRptYk+NS9Mnf/UYbZl5cSp9m3fobh61D8AZjgaIq/HJH7oshE0/JE+e6/ntWrBSlZAllV4PjUqHxVa0q1pNs3Crhq1lppq9+gh0Jq9kXSRidGhTql2R+mVbP5L8glVEQydOnZSA29UWHD2dFPmkcPGGHhehkuWDrGHqHWZV5crZLzSIbXbnK6M9F7JhOk+lyWdSCHvySWvpLFOWPj2JQ7BcASXN8NJ1HLIjTpiCeoBDUxh46wf/UrJSbOgLvLhO9ObD3nIWggYPxVzOSPJezDND4TKe5yzPLxLVJQuQM5GCvveksr1KDbNTcjNp8lLWuOUkI01yYMJRuZnnEQbI1RJaBjmgX+KiwgnkGd0XsON0Uv3bAYbQYaHdfR6QQ2get6w==
 
-> Based on Trond's comments in this thread, I think I'm going to have to
-> respin this:
-> 
-> https://lore.kernel.org/linux-nfs/bfa20f4a81e0c2d5df8525476fb29af156f4f5f1.camel@kernel.org/
-> 
-> I'll post a v2 in the near future.
+On Wed, 23 Jul 2025 10:31:45 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-It's v6.8 material anyway so no rush. :)
+> -/* @buf must has MAX_EVENT_NAME_LEN size */
+> +/**
+> + * traceprobe_parse_event_name() - Parse a string into group and event names
+> + * @pevent: A pointer to the string to be parsed.
+> + * @pgroup: A pointer to the group name.
+> + * @buf:    A buffer to store the parsed group name.
+> + * @offset: The offset of the string in the original user command, for logging.
+> + *
+> + * This parses a string with the format `[GROUP/][EVENT]` or `[GROUP.][EVENT]`
+> + * (either GROUP or EVENT or both must be specified).
+> + * Since the parsed group name is stored in @buf, the caller must ensure @buf
+> + * is at least MAX_EVENT_NAME_LEN bytes.
+> + *
+> + * Return: 0 on success, or -EINVAL on failure.
+> + *
+> + * If success, *@pevent is updated to point to the event name part of the
+> + * original string, or NULL if there is no event name.
+> + * Also, *@pgroup is updated to point to the parsed group which is stored
+> + * in @buf, or NULL if there is no group name.
+> + */
+>  int traceprobe_parse_event_name(const char **pevent, const char **pgroup,
+>  				char *buf, int offset)
+>  {
+
+Much better.
+
+Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+
+-- Steve
