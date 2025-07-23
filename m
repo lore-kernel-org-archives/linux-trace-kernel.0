@@ -1,37 +1,45 @@
 Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A6351D54D8;
-	Wed, 23 Jul 2025 22:35:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F2F8238C23;
+	Wed, 23 Jul 2025 22:47:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753310141; cv=none; b=D0uhE6T/k4YX6O7e9QEehOA3qv3Ml8yP9SWkVBlx3UABIHnBCkm8FGjIKt2pxKFnJ8ExzYa4u6etVDGratsmKphjLSG48Dgm1FGYR4vwjHCKNwvvXI9ACSRLzoBRiT+2lyMX4nuYxq8NoYO/0UXHOqBvWFY+AuTfcnbNtntesoI=
+	t=1753310866; cv=none; b=ALgAUIgLJaJfb7rZ3h5jLDqYENwXzaR+7GQstFFNwzqhtID/ED7s3zOFIi3vUhpD9aNoTFPsQ9nbL3mzC3M585jytdMa0BmuPf5ApX5aqZd0395GucPoCVz8P9tRIe8Id5tdpuhcPO23Yrc8kiWYnGHlK0+B0THWKlB6CLHtVBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753310141; c=relaxed/simple;
-	bh=LG4/ggTmI7fOvQIVDlFfdloWY7zoYkd2hwnlAwEe1So=;
+	s=arc-20240116; t=1753310866; c=relaxed/simple;
+	bh=DLuyI7z9GPxvLZ5rhlSBjNWOITr/CXFaVzLBHXWo3UM=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lNeMquiXsMPhgT3HGJtYH4BVPOMQ7kTkFyQOke/ioi/5bu+ZrdLPRdTZVqJG8oiGLHToaLSXetp2NnJxluIE05ZoQIKOH5o/kp7KU/nnOhdMG+RsYuHbqqnaz3dAQqcFinqygIuurMOOX05UT7EqoJi4HG1ZH1mJkyyKkFU70so=
+	 MIME-Version:Content-Type; b=G3CoySPRQjA6veWmwVQzR9o1dX6yF3jJHwFe+ixGb7lW7KduUbU2hbdu+h1hzHu7U2dGGSXnZ2+3I7rP9/+qWd74zDFbwu4S8HIQSKsXPq9nmchcHPbYYtyt7mngyVOVfQecq6L/OyzV7dwKCp+BipwQjeqDtd97mjJx69l2DKQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf05.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay03.hostedemail.com (Postfix) with ESMTP id CD55EB6011;
-	Wed, 23 Jul 2025 22:35:31 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf05.hostedemail.com (Postfix) with ESMTPA id A6CCF2000E;
-	Wed, 23 Jul 2025 22:35:29 +0000 (UTC)
-Date: Wed, 23 Jul 2025 18:35:31 -0400
+Received: from omf15.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id 82454B741D;
+	Wed, 23 Jul 2025 22:47:42 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf15.hostedemail.com (Postfix) with ESMTPA id 6FCB017;
+	Wed, 23 Jul 2025 22:47:39 +0000 (UTC)
+Date: Wed, 23 Jul 2025 18:47:40 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-xfs@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, Carlos Maiolino <cem@kernel.org>, Christoph
- Hellwig <hch@lst.de>
-Subject: Re: [PATCH 00/14] xfs: Remove unused trace events
-Message-ID: <20250723183531.1c96dcc3@gandalf.local.home>
-In-Reply-To: <20250613150855.GQ6156@frogsfrogsfrogs>
-References: <20250612212405.877692069@goodmis.org>
-	<20250613150855.GQ6156@frogsfrogsfrogs>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Steven Rostedt <rostedt@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+ llvm@lists.linux.dev, Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>,
+ Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor
+ <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>, Nick
+ Desaulniers <nick.desaulniers+lkml@gmail.com>, Catalin Marinas
+ <catalin.marinas@arm.com>
+Subject: Re: [PATCH v4 1/4] tracing: sorttable: Add a tracepoint
+ verification check at build time
+Message-ID: <20250723184740.6dd2b2fc@gandalf.local.home>
+In-Reply-To: <CAHk-=wgQA+kGVKaUqSGenXVZHaPFkuojb7MgJKVetsXZnLMFuQ@mail.gmail.com>
+References: <20250723194141.617125835@kernel.org>
+	<20250723194211.768813368@kernel.org>
+	<CAHk-=wgbAruRX=xFVGevggtRpHNYyMVwgNYYJgYg5hMuU6ASGQ@mail.gmail.com>
+	<20250723182701.195a5ddf@gandalf.local.home>
+	<CAHk-=wgQA+kGVKaUqSGenXVZHaPFkuojb7MgJKVetsXZnLMFuQ@mail.gmail.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -41,27 +49,47 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: 5rxr7kzwg8ed4siy7rgyzxd77teafota
-X-Rspamd-Server: rspamout08
-X-Rspamd-Queue-Id: A6CCF2000E
+X-Stat-Signature: bnw9etasmxcye7fh1qrojxwdaupn1m98
+X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: 6FCB017
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19VzsPzmz2ncop7NkHspHlB8DAHBbg5Cys=
-X-HE-Tag: 1753310129-692861
-X-HE-Meta: U2FsdGVkX1+81ZKtnH4qsxk4m5OWqqjMEyV/2SlolLYr9g7s0pmBPPLxRSamkKZCZ/ORyeOiiRXlqwMjaGjw8ZW51OptEW7/IPUfSkFPdE26lpDKO/W5yrUafBOUC3Jn6aQxb914V3g0FUe8jGWqMqt+Bk1eYiiaD44J7H705FjwI0PsRxXMcmf5nplgaExqoJaFVk2wF7xTbsnceqcTV1rwAF2iq/3eomTN4kB4IqT9VHgJhlXyaP0+sS5vYJ5rkjKAT63ml16gXYj5Jq0R+6Vqq7IPQ08q8CVnYeaLci8uR6BHZPPHW+FoXXHVw591q1Kx3ghbj7wyx6ZWyr8WP7kBC7zrQgn8
+X-Session-ID: U2FsdGVkX19vHSXX1osOSuRrLzj2GLEfvW1P+MPxBN8=
+X-HE-Tag: 1753310859-874152
+X-HE-Meta: U2FsdGVkX1+Zvm1/6+mrnOpyExfgSSxSK99vfhZ3bq6ubZwnbghb7azWv31T50KQ3Axas0ZOY8RBFUCF72ROz306V7jtpGGwj2W0axLTe7yayT19S8MUp2fV1xjJwcF0VonvQH0RT/Nm/8B99YsayOKpdGEEP8NqNXIZCcbyBbOPwzVOYs0yFVYNWqvrY7zWBouoNp+55QTZqHDZzR/ueotmrBfAI4/6iWlErOqTgdFYMmHSm9WEKaxks2JC2LouT1WRXFOw2ZAa2iGN9g76OLHDWFgTnWlDPwPtfffM+PcsB3cI1ReYzVtb3Ze2BndmOVUajWp/lHnPFUlQE2+sa2QbHIF3AO5bBzSzZWjdKhKweOkSfUt+WlftJAc4cQnP
 
-On Fri, 13 Jun 2025 08:08:55 -0700
-"Darrick J. Wong" <djwong@kernel.org> wrote:
+On Wed, 23 Jul 2025 15:33:16 -0700
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-> > Each patch is a stand alone patch. If you ack them, I can take them in my
-> > tree, or if you want, you can take them. I may be adding the warning code to
-> > linux-next near the end of the cycle, so it would be good to have this cleaned
-> > up before hand. As this is removing dead code, it may be even OK to send them
-> > to Linus as a fix.  
+> > I could probably take some of the sorttable.c elf parsing and move that
+> > into a header that would share the code.  
 > 
-> ...oh, you /do/ have a program and it's coming down the pipeline.
-> Excellent <tents fingers>. :)
+> Hmm. Why not just make sorttable then use vmlinux.o?
+> 
+> No need to do it twice. Can't you just work on the original object
+> file before re-linking?
 
-Well, Linus didn't like its current implementation, so it may be a release
-or two or three before that program gets upstream :-/
+I believe the sorttable code needs vmlinux to be finished linked, otherwise
+it needs to handle all the relocations in vmlinux.o
+
+  $ readelf -r vmlinux
+
+  There are no relocations in this file.
+
+Compared to:
+
+   $ readelf -r vmlinux.o| wc -l
+   22449337
+
+But we are looking at moving the fix-ups of the event format files from
+boot time into build time. That is, currently at boot, the enum strings
+are converted to their numbers and some expanded tags from PAHOLE_TAG gets
+removed from the format files to not confuse the parsers.
+
+The sorttable.c should be just that, code to sort Linux tables. I think
+adding the tracepoint check to it was a bit of a hack. Perhaps it should
+have its own program that focuses on tracepoint changes.
+
+Thus it could find unused trace points and fix up the format strings. I'm
+not sure how bad the relocations not being resolved will affect that though.
 
 -- Steve
