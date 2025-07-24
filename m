@@ -1,25 +1,63 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A09142EB5D8;
-	Thu, 24 Jul 2025 20:41:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-oo1-f42.google.com (mail-oo1-f42.google.com [209.85.161.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4812239E77
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 24 Jul 2025 21:53:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753389671; cv=none; b=sbQML6wBWsv/dexQIAISSyvTwNIaglJ7XGyqlcgiOq/31M9L2vi9b5eeASDQkkKvmNZbSjUNDs5PzkpmBU5beDUm7FYWJ5bhWTLg3NKIIEOCSRFC6XX8H2X+7eZ30SbTx4f4UP5rJR0SDL8Kj3MNOJUQ3F7Tu7zMV/ZBhlybz4s=
+	t=1753394039; cv=none; b=VbYaTC/FPueo+howWwnXyqLSGMhvXew2KugQAuZUHJU2QanI+ft/lMJdFfF72UctlMWIxM9PyVx8oDO9sxvnEZVfdIPd1vDlCQSmK5OUpwmt7w3pLbhFLjMYpbYYRqH5Dai0oLASwXG8Twsn9ICUBDLvoBx7ve3bOTjtCzZhD6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753389671; c=relaxed/simple;
-	bh=KV8Aom+xCAJKe5yKH2ON+CSmCTJK6vJRTJvOK8/Ai1g=;
+	s=arc-20240116; t=1753394039; c=relaxed/simple;
+	bh=cONpRMMRR0j8+5IMSCW+w3Dv5UbjFMlpzxjvfBz12sE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hvqNEPfP4vYaZ7U53n5MypzhhsVgqkEltH3B6pTzpSGBvB511fMcA4BhusBAqEDeVySY6TGSwzADcuo020Z8jzdcltdAuKK1e7EDwhqeaPDg9cyM755FNP6fXoOGhL6JdwN3ZVtFCHeGrhGh4qT/dXEQFgSO3hrHxy1Kl3B9V6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0F5F6168F;
-	Thu, 24 Jul 2025 13:41:01 -0700 (PDT)
-Received: from [172.27.42.155] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 311083F66E;
-	Thu, 24 Jul 2025 13:41:07 -0700 (PDT)
-Message-ID: <89f67ab9-f8ea-488a-a94b-4a0f32e41bc5@arm.com>
-Date: Thu, 24 Jul 2025 15:41:06 -0500
+	 In-Reply-To:Content-Type; b=jq5qZ2a/bwsSJWPPcpXFunJJOjOujP1JpW/E5bFY24qPxY+DuGzgVK/Rsm7rhwVa7XJwA9/P2GZH68maTJiISJGXQh993datPubTZu5DH8onC9dexKQqugaAc1TTnXS9rmFff/Up2cNqsj+SbvtpT4fclhd8RmOz+x7A6bm3FXA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=WqAYOTFG; arc=none smtp.client-ip=209.85.161.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="WqAYOTFG"
+Received: by mail-oo1-f42.google.com with SMTP id 006d021491bc7-6159e23a6dbso336339eaf.3
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 24 Jul 2025 14:53:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1753394037; x=1753998837; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Ec+I/bNfYceVzsyoj94ElkmRmpTwfXXUO1soT24vA9Y=;
+        b=WqAYOTFG5W0pBbtUTx1mY5uINZDOF3UvPO27BIGeBgYRA1RzZMeHHCsX+4BGWhWnKi
+         ZDTt7FYgHtI1sCw9Lwl5SfsPwRjTV16l/2vXS4FJAj/Apoy0XiJLKr4xHsTdIUJ+a8we
+         wUNBYdkI0c7BOjn3NoIko9W0ws5jxZTjr6Z3Q=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753394037; x=1753998837;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ec+I/bNfYceVzsyoj94ElkmRmpTwfXXUO1soT24vA9Y=;
+        b=HfM6Nq5VwaxUT/BIZwSNPthocDNuqZixsHaLPena6mDfMtAx0OP82E6mRm6dFmqlS/
+         +5nTqAij9J1NKJLBcdlfCKS9L6P2n5SwJn39B36sBT2Usy1jx/79qL9fRL5XbAYyeetQ
+         Ps5UfJLZbiIs7v4L6JxW7QjM6qMw604Wv8NCK3timO+vJ7YHov7kfhRTy2sWp14rklwh
+         KvKgUeEVlDClGR0mCD6D3wMQ3/5UGQ4HNWNfyLvoUq1NZnK3WIBmSIH8bho7VZFruDmf
+         IHndm2y2RU+7ZY8NS4Rk6C9PaNf5Lg7ERse8nCwnrTzucs++X7+R5AFota1r1H2reJ+z
+         1ijA==
+X-Forwarded-Encrypted: i=1; AJvYcCW/estdA+HtqsOEzQe6BlOT2lG0Z5XELTCrE88r66ncVHTfsxHqUpmEj+L99T9SihkvMn3nUzIO9ihJYZbf9vAvN6c=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywx6jBhg8oYJ4GYxc7ifhBGHQAbL+bTTHGH31SQuofmNd8thzaw
+	WA2LzFF0lmZobxsbVcW8fkOcdxCXNVWMazZFQCaPAt1Oyrmpt6tI8ZrPUJuIu9e/3HrHHt0Kxmc
+	8vBW4
+X-Gm-Gg: ASbGncsrhtt1k16sYhZFNYDOkFGX3DLBGf2ik2PUxsbIYurJPCJUISTOZxz5VOtr4Bp
+	NRgrcGxr9Vc/Fbynoov2VGwuLxpw1/GTvO862eiPG0C7rsTBNHf2kogj5wWRTnL9m8HoX3Nhswp
+	s2nhxuUm8G07qFJQySG1RyMUiTYMUB0Uv5eU/jQSgoP4waKrKU3jip43wJ2UIgWhwQhKHRoUW7E
+	gnoiH6cAtJy5XjC2v62Lp6rtgZCUFL2yiPjxnq39ZxvpG43u6p+yGjRirzG88hxYownWzIXVClL
+	BRsxc8iCJQX8wrOFVTvK1wV/f2nW8fbuDgrYGm2k6AlbR6OdjvArpSYcnzbfwg1KIRCMSMPJwkT
+	uRm8hEG9UpCqVa9S/SAfHgr0HPV2lidMnzA==
+X-Google-Smtp-Source: AGHT+IEjVIBgoKwU7JAUm1idxYByEHXiDmed8r9RKzj3gIzufCwMdyKungjHAWAI3Qak8OLj+PIjsA==
+X-Received: by 2002:a05:6870:a550:b0:2e8:7953:ece7 with SMTP id 586e51a60fabf-306c72032afmr5665997fac.24.1753394036875;
+        Thu, 24 Jul 2025 14:53:56 -0700 (PDT)
+Received: from [192.168.1.14] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7412cf44fa9sm424813a34.0.2025.07.24.14.53.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 24 Jul 2025 14:53:56 -0700 (PDT)
+Message-ID: <94813f6a-e789-460c-a898-7c7fdfdfad2f@linuxfoundation.org>
+Date: Thu, 24 Jul 2025 15:53:55 -0600
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -27,122 +65,42 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 6/8] arm64: uprobes: Add GCS support to uretprobes
-To: Catalin Marinas <catalin.marinas@arm.com>
-Cc: linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- mhiramat@kernel.org, oleg@redhat.com, peterz@infradead.org, acme@kernel.org,
- namhyung@kernel.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
- adrian.hunter@intel.com, kan.liang@linux.intel.com,
- thiago.bauermann@linaro.org, broonie@kernel.org, yury.khrustalev@arm.com,
- kristina.martsenko@arm.com, liaochang1@huawei.com, will@kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- Steve Capper <steve.capper@arm.com>
-References: <20250719043740.4548-1-jeremy.linton@arm.com>
- <20250719043740.4548-7-jeremy.linton@arm.com> <aIC06oEF5FV99ukl@arm.com>
+Subject: Re: [PATCH] selftests/tracing: Fix false failure of subsystem event
+ test
+To: Steven Rostedt <rostedt@goodmis.org>, LKML
+ <linux-kernel@vger.kernel.org>,
+ Linux trace kernel <linux-trace-kernel@vger.kernel.org>,
+ linux-kselftest@vger.kernel.org, Shuah Khan <shuahkhan@gmail.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Tengda Wu <wutengda@huaweicloud.com>, Shuah Khan <skhan@linuxfoundation.org>
+References: <20250721134212.53c3e140@batman.local.home>
+ <20250724095309.480882c8@batman.local.home>
 Content-Language: en-US
-From: Jeremy Linton <jeremy.linton@arm.com>
-In-Reply-To: <aIC06oEF5FV99ukl@arm.com>
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20250724095309.480882c8@batman.local.home>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-Hi,
-
-On 7/23/25 5:09 AM, Catalin Marinas wrote:
-> On Fri, Jul 18, 2025 at 11:37:38PM -0500, Jeremy Linton wrote:
->> @@ -159,11 +160,41 @@ arch_uretprobe_hijack_return_addr(unsigned long trampoline_vaddr,
->>   				  struct pt_regs *regs)
->>   {
->>   	unsigned long orig_ret_vaddr;
->> +	unsigned long gcs_ret_vaddr;
->> +	int err = 0;
->> +	u64 gcspr;
->>   
->>   	orig_ret_vaddr = procedure_link_pointer(regs);
->> +
->> +	if (task_gcs_el0_enabled(current)) {
->> +		gcspr = read_sysreg_s(SYS_GCSPR_EL0);
->> +		gcs_ret_vaddr = load_user_gcs((unsigned long __user *)gcspr, &err);
->> +		if (err) {
->> +			force_sig(SIGSEGV);
->> +			goto out;
->> +		}
+On 7/24/25 07:53, Steven Rostedt wrote:
+> Shuah,
 > 
-> Nit: add an empty line here, I find it easier to read.
-> 
->> +		/*
->> +		 * If the LR and GCS entry don't match, then some kind of PAC/control
->> +		 * flow happened. Likely because the user is attempting to retprobe
-> 
-> I don't full get the first sentence.
+> Can you take this patch?
 
-I'm trying to succinctly warn people about some non-obvious behavior 
-that is being maintained.
-
-Really long version:
-
-So a Retprobe is intended to catch the function returning and run the 
-user specified probe logic. But the breakpoint itself isn't placed at 
-the 'ret' because there may be multiple 'ret's. Rather its intended to 
-be placed at the function entry point. When the breakpoint fires, it 
-runs this code to hijack the LR and point it at the actual probe 
-routine. Except, ha!, the breakpoint for the ret routine may not be at 
-the beginning of the function. Which is perfectly ok, even in some cases 
-desirable.
-
-But, if the user say places it after LR has been spilled to the stack, 
-the hijack will be discarded when LR is restored and the probe will 
-silently fail to run. The user will then eventually figure out that they 
-are dropping a retprobe in a location where its basically a NOP. PAC 
-messes with this behavior in an inconsistent manner. Is the target 
-function's just signing the LR, or is its signing and spilling it. In 
-the latter case the probe is again just a NOP, otherwise PAC fault.
-
-But then GCS comes along, and it needs to also update the GCS region. 
-but if we update it, and the LR gets restored its going to result in a 
-GCS exception where previously the behavior was just the probe being 
-NOPed. Now though, we have the advantage that for the most part anyplace 
-that GCS is enabled, we are also going to have PAC signing the LR. So 
-checking for LR != GCS value acts as both a sanity check and a bit of 
-safety that we aren't inside a sign/authenticate block, or that the LR 
-hasn't been tampered with via a blr/etc and we will restore a LR from 
-the stack that won't match the now updated GCS region.
-
-Hence the comment.
-
-:)
-
-
-
+Done.
 
 > 
->> +		 * on something that isn't a function boundary or inside a leaf
->> +		 * function. Explicitly abort this retprobe because it will generate
->> +		 * a GCS exception.
->> +		 */
->> +		if (gcs_ret_vaddr != orig_ret_vaddr)	{
->> +			orig_ret_vaddr = -1;
->> +			goto out;
->> +		}
+> Thanks,
 > 
-> Nit: another empty line here.
+> -- Steve
 > 
->> +		put_user_gcs(trampoline_vaddr, (unsigned long __user *) gcspr, &err);
 > 
-> Nit: (... *)gcspr (no space after cast).
+> On Mon, 21 Jul 2025 13:42:12 -0400
+> Steven Rostedt <rostedt@goodmis.org> wrote:
 > 
->> +		if (err) {
->> +			force_sig(SIGSEGV);
->> +			goto out;
->> +		}
->> +	}
->> +
->>   	/* Replace the return addr with trampoline addr */
->>   	procedure_link_pointer_set(regs, trampoline_vaddr);
->>   
->> +out:
->>   	return orig_ret_vaddr;
->>   }
-> 
-> Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+>> From: Steven Rostedt <rostedt@goodmis.org>
 
+Applied to linux-kselftext next for Linux 6.17-rc1.
+
+thanks,
+-- Shuah
