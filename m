@@ -1,172 +1,148 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0787A2ECD23;
-	Thu, 24 Jul 2025 17:33:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A09142EB5D8;
+	Thu, 24 Jul 2025 20:41:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753378427; cv=none; b=AHzI58evfKTo9FAu2ZK2+wVLCWqo5FojZziTyF8QPFDgHImF3x9IIbDftVHHwcFgf2dmf952ELiNjJ7YEGsRGBCsv5/4dhfoalM8xxS+J+P3wo/hFhUWOJdZm+bc451+TuBgxMVtAlnCgIF6+uzicdwBvo0gMRXaFta338y0vfQ=
+	t=1753389671; cv=none; b=sbQML6wBWsv/dexQIAISSyvTwNIaglJ7XGyqlcgiOq/31M9L2vi9b5eeASDQkkKvmNZbSjUNDs5PzkpmBU5beDUm7FYWJ5bhWTLg3NKIIEOCSRFC6XX8H2X+7eZ30SbTx4f4UP5rJR0SDL8Kj3MNOJUQ3F7Tu7zMV/ZBhlybz4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753378427; c=relaxed/simple;
-	bh=fP5avm7xzAqqGo4XnEJHq7hCYGbG9fC5uQHA6BI2dlg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=XcUay8XA9xTdLtA5Ai4AlAAkLxn9ch3wmXjOHXJFM7fdQSs+HG4Ki5NybmC+JZHhGEqp2XsgusV+cGvWO+MjBrIIISK6kB6SKsg1XDkoB/JH8JoQd46jVLGyaQuWNH3sfufFqGlvUbotgs/SkD+UUSZNX2iqYJiLokrZJl2c0vo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=D6oahllJ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=va0Pnudz; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="D6oahllJ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="va0Pnudz"
-From: Nam Cao <namcao@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1753378422;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6QfvL53dE2Amlb8t0pQ4UVtNU6qhDm01tFHkqVVPuo4=;
-	b=D6oahllJQDz516puMwl3kkmnGKz/VxJMFJPRMNSHvKxC7KVt+KgwDHGnVOSFV81NIkRVs0
-	Vfn8T+xboXp9QM39+PmOHy6O77umAOhcqrCgOTtfFXv7gq/jd+FzprRqLSIwBrISwMnqjR
-	Hbgec0CR2Q1356MoT/QmjoTlaS26mHfS3K4M9Y8uEk6h9HWlTCMuIYSeURDRThwLgxbZsI
-	mbTYa3tuOVY8/4vFZdu6k5P4jHjnh6ouxy4sMslTwFdBrTxedW3KCH8hesUVxyd71UCW+m
-	uLYDLDPo8O1NXCDMQzur6zn41qcBKM6cZCiU5IEeGU6NGj68sFDSWc+gRfZxkA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1753378422;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6QfvL53dE2Amlb8t0pQ4UVtNU6qhDm01tFHkqVVPuo4=;
-	b=va0PnudzrU9oZ5HKh0FQiiw6cnzlcfSnsd5DTtctiCxBdogTGeavnuM2SXhnn/REpYazA9
-	U+n49vxmRYDXFgAw==
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Nam Cao <namcao@linutronix.de>
-Subject: [PATCH v3 5/5] rv: Remove struct rv_monitor::reacting
-Date: Thu, 24 Jul 2025 19:33:30 +0200
-Message-Id: <a6c16f845d2f1a09c4d0934ab83f3cb14478a71d.1753378331.git.namcao@linutronix.de>
-In-Reply-To: <cover.1753378331.git.namcao@linutronix.de>
-References: <cover.1753378331.git.namcao@linutronix.de>
+	s=arc-20240116; t=1753389671; c=relaxed/simple;
+	bh=KV8Aom+xCAJKe5yKH2ON+CSmCTJK6vJRTJvOK8/Ai1g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hvqNEPfP4vYaZ7U53n5MypzhhsVgqkEltH3B6pTzpSGBvB511fMcA4BhusBAqEDeVySY6TGSwzADcuo020Z8jzdcltdAuKK1e7EDwhqeaPDg9cyM755FNP6fXoOGhL6JdwN3ZVtFCHeGrhGh4qT/dXEQFgSO3hrHxy1Kl3B9V6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0F5F6168F;
+	Thu, 24 Jul 2025 13:41:01 -0700 (PDT)
+Received: from [172.27.42.155] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 311083F66E;
+	Thu, 24 Jul 2025 13:41:07 -0700 (PDT)
+Message-ID: <89f67ab9-f8ea-488a-a94b-4a0f32e41bc5@arm.com>
+Date: Thu, 24 Jul 2025 15:41:06 -0500
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 6/8] arm64: uprobes: Add GCS support to uretprobes
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ mhiramat@kernel.org, oleg@redhat.com, peterz@infradead.org, acme@kernel.org,
+ namhyung@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, kan.liang@linux.intel.com,
+ thiago.bauermann@linaro.org, broonie@kernel.org, yury.khrustalev@arm.com,
+ kristina.martsenko@arm.com, liaochang1@huawei.com, will@kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Steve Capper <steve.capper@arm.com>
+References: <20250719043740.4548-1-jeremy.linton@arm.com>
+ <20250719043740.4548-7-jeremy.linton@arm.com> <aIC06oEF5FV99ukl@arm.com>
+Content-Language: en-US
+From: Jeremy Linton <jeremy.linton@arm.com>
+In-Reply-To: <aIC06oEF5FV99ukl@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The field 'reacting' in struct rv_monitor is set but never used. Delete it.
+Hi,
 
-Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
-Signed-off-by: Nam Cao <namcao@linutronix.de>
----
- include/linux/rv.h            |  1 -
- kernel/trace/rv/rv_reactors.c | 19 +++++--------------
- 2 files changed, 5 insertions(+), 15 deletions(-)
+On 7/23/25 5:09 AM, Catalin Marinas wrote:
+> On Fri, Jul 18, 2025 at 11:37:38PM -0500, Jeremy Linton wrote:
+>> @@ -159,11 +160,41 @@ arch_uretprobe_hijack_return_addr(unsigned long trampoline_vaddr,
+>>   				  struct pt_regs *regs)
+>>   {
+>>   	unsigned long orig_ret_vaddr;
+>> +	unsigned long gcs_ret_vaddr;
+>> +	int err = 0;
+>> +	u64 gcspr;
+>>   
+>>   	orig_ret_vaddr = procedure_link_pointer(regs);
+>> +
+>> +	if (task_gcs_el0_enabled(current)) {
+>> +		gcspr = read_sysreg_s(SYS_GCSPR_EL0);
+>> +		gcs_ret_vaddr = load_user_gcs((unsigned long __user *)gcspr, &err);
+>> +		if (err) {
+>> +			force_sig(SIGSEGV);
+>> +			goto out;
+>> +		}
+> 
+> Nit: add an empty line here, I find it easier to read.
+> 
+>> +		/*
+>> +		 * If the LR and GCS entry don't match, then some kind of PAC/control
+>> +		 * flow happened. Likely because the user is attempting to retprobe
+> 
+> I don't full get the first sentence.
 
-diff --git a/include/linux/rv.h b/include/linux/rv.h
-index 2f867d6f72ba..80731242fe60 100644
---- a/include/linux/rv.h
-+++ b/include/linux/rv.h
-@@ -104,7 +104,6 @@ struct rv_monitor {
- #ifdef CONFIG_RV_REACTORS
- 	struct rv_reactor	*reactor;
- 	__printf(1, 2) void	(*react)(const char *msg, ...);
--	bool			reacting;
- #endif
- 	struct list_head	list;
- 	struct rv_monitor	*parent;
-diff --git a/kernel/trace/rv/rv_reactors.c b/kernel/trace/rv/rv_reactors.c
-index a8e849e6cd85..106f2c4740f2 100644
---- a/kernel/trace/rv/rv_reactors.c
-+++ b/kernel/trace/rv/rv_reactors.c
-@@ -160,7 +160,7 @@ static const struct seq_operations monitor_reactors_seq=
-_ops =3D {
-=20
- static void monitor_swap_reactors_single(struct rv_monitor *mon,
- 					 struct rv_reactor *reactor,
--					 bool reacting, bool nested)
-+					 bool nested)
- {
- 	bool monitor_enabled;
-=20
-@@ -173,7 +173,6 @@ static void monitor_swap_reactors_single(struct rv_moni=
-tor *mon,
- 		rv_disable_monitor(mon);
-=20
- 	mon->reactor =3D reactor;
--	mon->reacting =3D reacting;
- 	mon->react =3D reactor->react;
-=20
- 	/* enable only once if iterating through a container */
-@@ -181,8 +180,7 @@ static void monitor_swap_reactors_single(struct rv_moni=
-tor *mon,
- 		rv_enable_monitor(mon);
- }
-=20
--static void monitor_swap_reactors(struct rv_monitor *mon,
--				  struct rv_reactor *reactor, bool reacting)
-+static void monitor_swap_reactors(struct rv_monitor *mon, struct rv_reacto=
-r *reactor)
- {
- 	struct rv_monitor *p =3D mon;
-=20
-@@ -190,7 +188,7 @@ static void monitor_swap_reactors(struct rv_monitor *mo=
-n,
- 		list_for_each_entry_continue(p, &rv_monitors_list, list) {
- 			if (p->parent !=3D mon)
- 				break;
--			monitor_swap_reactors_single(p, reactor, reacting, true);
-+			monitor_swap_reactors_single(p, reactor, true);
- 		}
- 	/*
- 	 * This call enables and disables the monitor if they were active.
-@@ -198,7 +196,7 @@ static void monitor_swap_reactors(struct rv_monitor *mo=
-n,
- 	 * All nested monitors are enabled also if they were off, we may refine
- 	 * this logic in the future.
- 	 */
--	monitor_swap_reactors_single(mon, reactor, reacting, false);
-+	monitor_swap_reactors_single(mon, reactor, false);
- }
-=20
- static ssize_t
-@@ -210,7 +208,6 @@ monitor_reactors_write(struct file *file, const char __=
-user *user_buf,
- 	struct rv_reactor *reactor;
- 	struct seq_file *seq_f;
- 	int retval =3D -EINVAL;
--	bool enable;
- 	char *ptr;
- 	int len;
-=20
-@@ -243,12 +240,7 @@ monitor_reactors_write(struct file *file, const char _=
-_user *user_buf,
- 		if (strcmp(ptr, reactor->name) !=3D 0)
- 			continue;
-=20
--		if (strcmp(reactor->name, "nop"))
--			enable =3D false;
--		else
--			enable =3D true;
--
--		monitor_swap_reactors(mon, reactor, enable);
-+		monitor_swap_reactors(mon, reactor);
-=20
- 		retval =3D count;
- 		break;
-@@ -439,7 +431,6 @@ int reactor_populate_monitor(struct rv_monitor *mon)
- 	 * Configure as the rv_nop reactor.
- 	 */
- 	mon->reactor =3D get_reactor_rdef_by_name("nop");
--	mon->reacting =3D false;
-=20
- 	return 0;
- }
---=20
-2.39.5
+I'm trying to succinctly warn people about some non-obvious behavior 
+that is being maintained.
+
+Really long version:
+
+So a Retprobe is intended to catch the function returning and run the 
+user specified probe logic. But the breakpoint itself isn't placed at 
+the 'ret' because there may be multiple 'ret's. Rather its intended to 
+be placed at the function entry point. When the breakpoint fires, it 
+runs this code to hijack the LR and point it at the actual probe 
+routine. Except, ha!, the breakpoint for the ret routine may not be at 
+the beginning of the function. Which is perfectly ok, even in some cases 
+desirable.
+
+But, if the user say places it after LR has been spilled to the stack, 
+the hijack will be discarded when LR is restored and the probe will 
+silently fail to run. The user will then eventually figure out that they 
+are dropping a retprobe in a location where its basically a NOP. PAC 
+messes with this behavior in an inconsistent manner. Is the target 
+function's just signing the LR, or is its signing and spilling it. In 
+the latter case the probe is again just a NOP, otherwise PAC fault.
+
+But then GCS comes along, and it needs to also update the GCS region. 
+but if we update it, and the LR gets restored its going to result in a 
+GCS exception where previously the behavior was just the probe being 
+NOPed. Now though, we have the advantage that for the most part anyplace 
+that GCS is enabled, we are also going to have PAC signing the LR. So 
+checking for LR != GCS value acts as both a sanity check and a bit of 
+safety that we aren't inside a sign/authenticate block, or that the LR 
+hasn't been tampered with via a blr/etc and we will restore a LR from 
+the stack that won't match the now updated GCS region.
+
+Hence the comment.
+
+:)
+
+
+
+
+> 
+>> +		 * on something that isn't a function boundary or inside a leaf
+>> +		 * function. Explicitly abort this retprobe because it will generate
+>> +		 * a GCS exception.
+>> +		 */
+>> +		if (gcs_ret_vaddr != orig_ret_vaddr)	{
+>> +			orig_ret_vaddr = -1;
+>> +			goto out;
+>> +		}
+> 
+> Nit: another empty line here.
+> 
+>> +		put_user_gcs(trampoline_vaddr, (unsigned long __user *) gcspr, &err);
+> 
+> Nit: (... *)gcspr (no space after cast).
+> 
+>> +		if (err) {
+>> +			force_sig(SIGSEGV);
+>> +			goto out;
+>> +		}
+>> +	}
+>> +
+>>   	/* Replace the return addr with trampoline addr */
+>>   	procedure_link_pointer_set(regs, trampoline_vaddr);
+>>   
+>> +out:
+>>   	return orig_ret_vaddr;
+>>   }
+> 
+> Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
 
