@@ -1,93 +1,167 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C430B4A28;
-	Thu, 24 Jul 2025 01:51:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E67E13A41F;
+	Thu, 24 Jul 2025 02:40:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753321908; cv=none; b=ucwApIg8bIeXO2WU6X9q3rNv+fB0yv05NMtMq6UnSDFQGBKmI0ffaDsFuw4HjdFZxpsyL629mUkWd9ZZZt2vIWuhoty1ogXU2He/pSQdQXutABT9M4Eb83ky4meD7TiTmru6EezZJgbo4zJKo0t1zNGXsUc8kfZKcotaP6vKiQM=
+	t=1753324823; cv=none; b=AWO9eu/5eXuLcIT2Hp0chRtb31pEVzpysnzfHf+QKz1Dp5ZZvoHzAAtT8LZWZI0yAG8WUFmIgvkpE6LuExNEOofuZkz9YeZEAv/PL5t0TmT6ynlAnOZ+IYVv2c64TfpbeIqGZL6mMZ+gfs3WdHSnv5Caj1F9bL+P43IP6JxdPGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753321908; c=relaxed/simple;
-	bh=5gFsPbAXW59mepTuWRnPPsjYPaC7EOK30HvNtYThJGM=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=KvDzN6I3tA/BYily+mNDzHsJHUIfnYsiNlixZYCQIdGXUFbGGfRpwJqWe5B162mVVBUJtbQuRc7xk0epy8YAPPePwKHnT1s0Su7+qRxYKn1K8PdAqunUfmYGgeMH5WgwjjT3ryBJKp+BZF6Q38ijo9AYa/2pNOpNhWlHk/ElHx0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8CxG6yukYFoZMwwAQ--.58090S3;
-	Thu, 24 Jul 2025 09:51:42 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowJBxzsGrkYFoSQkkAA--.28881S3;
-	Thu, 24 Jul 2025 09:51:41 +0800 (CST)
-Subject: Re: [PATCH] LoongArch: KVM: Move kvm_iocsr tracepoint out of generic
- code
-To: Steven Rostedt <rostedt@goodmis.org>, Huacai Chen <chenhuacai@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
- kvm@vger.kernel.org, loongarch@lists.linux.dev,
- Tianrui Zhao <zhaotianrui@loongson.cn>, Paolo Bonzini <pbonzini@redhat.com>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-References: <20250722094734.4920545b@gandalf.local.home>
- <2c2f5036-c3ae-3904-e940-8a8b71a65957@loongson.cn>
- <20250723214659.064b5d4a@gandalf.local.home>
-From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <15e46f69-f270-0520-1ad4-874448439d2b@loongson.cn>
-Date: Thu, 24 Jul 2025 09:49:59 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1753324823; c=relaxed/simple;
+	bh=e1IWKLfwf+Gm+vS9RnjIYq35KCV+QHS/5qqAru5oyLM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YMawFMCVI8D+veaK4WJP2X+I9awM6MgHQZIWe2jLhqyWPmw9sehhIqqjC9OlTSVwJ8aXqL1GB4klm9UaqFjVhVvpSqbk2fl9EADkKqcpcp+XxrE4W0mnBhzUTO4XISv/NBD26Sl2fM4WWC32Is1wHcUiAHlscT1ngEpvZhGWyS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Kig69IgF; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Kig69IgF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1753324821; x=1784860821;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=e1IWKLfwf+Gm+vS9RnjIYq35KCV+QHS/5qqAru5oyLM=;
+  b=Kig69IgF1FyvyLZ0VQmgrC2bcMsyI1jQWj00jx38hothNyGrUswMKM7/
+   BgSIDcUaUdGDktDdxACwynNe1pQlbdBAibUy6p8BEwlFDWRdWDTwOrU6l
+   VgRValcEezVHgc2zfOEcrwkZY/t748nZRMqD0SR74balh/Ss1xQ5pMj7I
+   sLpIENtsHLozcf7F+aTrj0GCthliGcaQPOJKtFGEyHSHI3sZId8ms7V/y
+   HJPlGU7WkQ2E0wEe1qJ5sj3UvBHrP94G7kk23ICd8LBJuCYVSPFRK6yTm
+   C5aWlqjLV90wNriP2Zu5p+WPr/623/p4RXAsxcsn4BZzkZ8q1/C4BfHQY
+   g==;
+X-CSE-ConnectionGUID: ROcsxAKfSoK4IsdBSLgCKw==
+X-CSE-MsgGUID: 9R46eQ4qTRG5yygGaFIGPw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11501"; a="59280766"
+X-IronPort-AV: E=Sophos;i="6.16,336,1744095600"; 
+   d="scan'208";a="59280766"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2025 19:40:21 -0700
+X-CSE-ConnectionGUID: K5b91yXgSJm5kM4pKUbkdw==
+X-CSE-MsgGUID: /7sTt8BpTLi1waAcTH2B2w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,336,1744095600"; 
+   d="scan'208";a="159647355"
+Received: from lkp-server01.sh.intel.com (HELO 9ee84586c615) ([10.239.97.150])
+  by orviesa009.jf.intel.com with ESMTP; 23 Jul 2025 19:40:19 -0700
+Received: from kbuild by 9ee84586c615 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uelsW-000K15-2k;
+	Thu, 24 Jul 2025 02:40:16 +0000
+Date: Thu, 24 Jul 2025 10:39:38 +0800
+From: kernel test robot <lkp@intel.com>
+To: Nam Cao <namcao@linutronix.de>, Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Gabriele Monaco <gmonaco@redhat.com>,
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, Nam Cao <namcao@linutronix.de>
+Subject: Re: [PATCH v2 5/5] rv: Remove struct rv_monitor::reacting
+Message-ID: <202507241015.Qun68uPH-lkp@intel.com>
+References: <58c63faec76ffb36552fcd1fdcc4b9dd841efd94.1753252872.git.namcao@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20250723214659.064b5d4a@gandalf.local.home>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBxzsGrkYFoSQkkAA--.28881S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
-	BjDU0xBIdaVrnRJUUUmYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
-	xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
-	j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxV
-	AFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x02
-	67AKxVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
-	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E
-	87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0V
-	AS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCF54CYxVAaw2AFwI0_Jrv_JF1l4c8EcI0E
-	c7CjxVAaw2AFwI0_JF0_Jw1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jw
-	0_GFylx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY
-	17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lIxAIcV
-	C0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY
-	6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa
-	73UjIFyTuYvjxUcCD7UUUUU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <58c63faec76ffb36552fcd1fdcc4b9dd841efd94.1753252872.git.namcao@linutronix.de>
+
+Hi Nam,
+
+kernel test robot noticed the following build warnings:
+
+[auto build test WARNING on trace/for-next]
+[also build test WARNING on next-20250723]
+[cannot apply to linus/master v6.16-rc7]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Nam-Cao/rv-Remove-unused-field-in-struct-rv_monitor_def/20250723-144825
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace for-next
+patch link:    https://lore.kernel.org/r/58c63faec76ffb36552fcd1fdcc4b9dd841efd94.1753252872.git.namcao%40linutronix.de
+patch subject: [PATCH v2 5/5] rv: Remove struct rv_monitor::reacting
+config: arc-randconfig-002-20250724 (https://download.01.org/0day-ci/archive/20250724/202507241015.Qun68uPH-lkp@intel.com/config)
+compiler: arc-linux-gcc (GCC) 15.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250724/202507241015.Qun68uPH-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202507241015.Qun68uPH-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   kernel/trace/rv/rv_reactors.c: In function 'monitor_reactors_write':
+>> kernel/trace/rv/rv_reactors.c:211:14: warning: variable 'enable' set but not used [-Wunused-but-set-variable]
+     211 |         bool enable;
+         |              ^~~~~~
 
 
+vim +/enable +211 kernel/trace/rv/rv_reactors.c
 
-On 2025/7/24 上午9:46, Steven Rostedt wrote:
-> On Thu, 24 Jul 2025 09:39:40 +0800
-> Bibo Mao <maobibo@loongson.cn> wrote:
-> 
->>>    #define kvm_fpu_load_symbol	\
->>>    	{0, "unload"},		\
->>>    	{1, "load"}
->>>    
->> Reviewed-by: Bibo Mao <maobibo@loongson.cn>
-> 
-> Thanks,
-> 
-> Should this go through the loongarch tree or should I take it?
-Huacai,
+cb85c660fcd4b3a Gabriele Monaco            2025-03-05  201  
+04acadcb4453cf8 Daniel Bristot de Oliveira 2022-07-29  202  static ssize_t
+04acadcb4453cf8 Daniel Bristot de Oliveira 2022-07-29  203  monitor_reactors_write(struct file *file, const char __user *user_buf,
+04acadcb4453cf8 Daniel Bristot de Oliveira 2022-07-29  204  		      size_t count, loff_t *ppos)
+04acadcb4453cf8 Daniel Bristot de Oliveira 2022-07-29  205  {
+04acadcb4453cf8 Daniel Bristot de Oliveira 2022-07-29  206  	char buff[MAX_RV_REACTOR_NAME_SIZE + 2];
+98b2531fbe93031 Nam Cao                    2025-07-23  207  	struct rv_monitor *mon;
+aef8790cfb7b07f Nam Cao                    2025-07-23  208  	struct rv_reactor *reactor;
+04acadcb4453cf8 Daniel Bristot de Oliveira 2022-07-29  209  	struct seq_file *seq_f;
+04acadcb4453cf8 Daniel Bristot de Oliveira 2022-07-29  210  	int retval = -EINVAL;
+04acadcb4453cf8 Daniel Bristot de Oliveira 2022-07-29 @211  	bool enable;
+04acadcb4453cf8 Daniel Bristot de Oliveira 2022-07-29  212  	char *ptr;
+04acadcb4453cf8 Daniel Bristot de Oliveira 2022-07-29  213  	int len;
+04acadcb4453cf8 Daniel Bristot de Oliveira 2022-07-29  214  
+04acadcb4453cf8 Daniel Bristot de Oliveira 2022-07-29  215  	if (count < 1 || count > MAX_RV_REACTOR_NAME_SIZE + 1)
+04acadcb4453cf8 Daniel Bristot de Oliveira 2022-07-29  216  		return -EINVAL;
+04acadcb4453cf8 Daniel Bristot de Oliveira 2022-07-29  217  
+04acadcb4453cf8 Daniel Bristot de Oliveira 2022-07-29  218  	memset(buff, 0, sizeof(buff));
+04acadcb4453cf8 Daniel Bristot de Oliveira 2022-07-29  219  
+04acadcb4453cf8 Daniel Bristot de Oliveira 2022-07-29  220  	retval = simple_write_to_buffer(buff, sizeof(buff) - 1, ppos, user_buf, count);
+04acadcb4453cf8 Daniel Bristot de Oliveira 2022-07-29  221  	if (retval < 0)
+04acadcb4453cf8 Daniel Bristot de Oliveira 2022-07-29  222  		return -EFAULT;
+04acadcb4453cf8 Daniel Bristot de Oliveira 2022-07-29  223  
+04acadcb4453cf8 Daniel Bristot de Oliveira 2022-07-29  224  	ptr = strim(buff);
+04acadcb4453cf8 Daniel Bristot de Oliveira 2022-07-29  225  
+04acadcb4453cf8 Daniel Bristot de Oliveira 2022-07-29  226  	len = strlen(ptr);
+04acadcb4453cf8 Daniel Bristot de Oliveira 2022-07-29  227  	if (!len)
+04acadcb4453cf8 Daniel Bristot de Oliveira 2022-07-29  228  		return count;
+04acadcb4453cf8 Daniel Bristot de Oliveira 2022-07-29  229  
+04acadcb4453cf8 Daniel Bristot de Oliveira 2022-07-29  230  	/*
+04acadcb4453cf8 Daniel Bristot de Oliveira 2022-07-29  231  	 * See monitor_reactors_open()
+04acadcb4453cf8 Daniel Bristot de Oliveira 2022-07-29  232  	 */
+04acadcb4453cf8 Daniel Bristot de Oliveira 2022-07-29  233  	seq_f = file->private_data;
+98b2531fbe93031 Nam Cao                    2025-07-23  234  	mon = seq_f->private;
+04acadcb4453cf8 Daniel Bristot de Oliveira 2022-07-29  235  
+04acadcb4453cf8 Daniel Bristot de Oliveira 2022-07-29  236  	mutex_lock(&rv_interface_lock);
+04acadcb4453cf8 Daniel Bristot de Oliveira 2022-07-29  237  
+04acadcb4453cf8 Daniel Bristot de Oliveira 2022-07-29  238  	retval = -EINVAL;
+04acadcb4453cf8 Daniel Bristot de Oliveira 2022-07-29  239  
+aef8790cfb7b07f Nam Cao                    2025-07-23  240  	list_for_each_entry(reactor, &rv_reactors_list, list) {
+aef8790cfb7b07f Nam Cao                    2025-07-23  241  		if (strcmp(ptr, reactor->name) != 0)
+04acadcb4453cf8 Daniel Bristot de Oliveira 2022-07-29  242  			continue;
+04acadcb4453cf8 Daniel Bristot de Oliveira 2022-07-29  243  
+aef8790cfb7b07f Nam Cao                    2025-07-23  244  		if (strcmp(reactor->name, "nop"))
+04acadcb4453cf8 Daniel Bristot de Oliveira 2022-07-29  245  			enable = false;
+04acadcb4453cf8 Daniel Bristot de Oliveira 2022-07-29  246  		else
+04acadcb4453cf8 Daniel Bristot de Oliveira 2022-07-29  247  			enable = true;
+04acadcb4453cf8 Daniel Bristot de Oliveira 2022-07-29  248  
+a96356e99938184 Nam Cao                    2025-07-23  249  		monitor_swap_reactors(mon, reactor);
+04acadcb4453cf8 Daniel Bristot de Oliveira 2022-07-29  250  
+04acadcb4453cf8 Daniel Bristot de Oliveira 2022-07-29  251  		retval = count;
+04acadcb4453cf8 Daniel Bristot de Oliveira 2022-07-29  252  		break;
+04acadcb4453cf8 Daniel Bristot de Oliveira 2022-07-29  253  	}
+04acadcb4453cf8 Daniel Bristot de Oliveira 2022-07-29  254  
+04acadcb4453cf8 Daniel Bristot de Oliveira 2022-07-29  255  	mutex_unlock(&rv_interface_lock);
+04acadcb4453cf8 Daniel Bristot de Oliveira 2022-07-29  256  
+04acadcb4453cf8 Daniel Bristot de Oliveira 2022-07-29  257  	return retval;
+04acadcb4453cf8 Daniel Bristot de Oliveira 2022-07-29  258  }
+04acadcb4453cf8 Daniel Bristot de Oliveira 2022-07-29  259  
 
-What is your point about this?
-
-Regards
-Bibo Mao
-> 
-> Either way works for me.
-> 
-> -- Steve
-> 
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
