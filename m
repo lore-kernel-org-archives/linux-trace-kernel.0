@@ -1,34 +1,42 @@
 Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC5492E5B18;
-	Thu, 24 Jul 2025 13:56:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E8DD4685;
+	Thu, 24 Jul 2025 14:07:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753365397; cv=none; b=tZSYtUmpOpFA2HVArxak1ZU6PoHtVfEl6bOjnssRoyEMkps2DEIvvTO1Tl9/Cq2o5PGklUo5FJxpbkn6ALj7F/56edfYtGEVUpdhCVLVVRpUk1qb6jEw/ukhn3AbSxQEc3akzZCDHNRRE3DJaBbME7Ww7CWfU7Sb36RBMe8JLZI=
+	t=1753366031; cv=none; b=kMyp0YOiRLKztxkdaggpSc00x0xJH0d0fco1iyEproIjlpOchEg/xdq689vlRzWnatD1q8/4CJDwB3kg1RjKBHdSQ8t2r6KOyXTZo6eMaV/L5WysnY9IADZmXAjcIlowJeYICcU5uVPgl4VpOaAp+LZDrD7PxuebDQdiEae1lUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753365397; c=relaxed/simple;
-	bh=zXgA8lHW0hAXguf0NySAm846eipCgZK0RLnszlxmNEg=;
+	s=arc-20240116; t=1753366031; c=relaxed/simple;
+	bh=OkQND1FA8Zgiq+fCIXVzxfpptSSlpHzvRjGUS3FX33M=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jh2v5LoNjAY9EFXr+aQi/nKSIZyV3hE7CgbFI0ptAJPEvYRg8e/BLvDql+MNNeWrK5nGjxrxveDmwKJdCk76YLQ5Axcr8NDP2fwU6lrOiXcG1PTseTkTmfwQkYccWe4qYOLu+w+LIZLar1Gl9FKTfmchzZ4wIA/ZLemCVdwwfVA=
+	 MIME-Version:Content-Type; b=qo7Zq+SAedgxTywFipNDCpkeoDBGjVOV2kmeYSik/8PMqoSifut1ZoSiAGybmUJBFdIr+9BAY8ruN9xiD19KAug+qFQRu48pgy/tjZKqj29PPk21s4sYLcoqi7tVzpUMrKX4NLSYQtw/SKb8Xl4/mWb487i9AitOxMi0RKkZaqg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf05.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay06.hostedemail.com (Postfix) with ESMTP id 2F6A8112CE8;
-	Thu, 24 Jul 2025 13:56:33 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf05.hostedemail.com (Postfix) with ESMTPA id 7E2EF20016;
-	Thu, 24 Jul 2025 13:56:30 +0000 (UTC)
-Date: Thu, 24 Jul 2025 09:56:27 -0400
+Received: from omf19.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay01.hostedemail.com (Postfix) with ESMTP id C93A61DA939;
+	Thu, 24 Jul 2025 14:07:05 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf19.hostedemail.com (Postfix) with ESMTPA id DE9FD20031;
+	Thu, 24 Jul 2025 14:07:00 +0000 (UTC)
+Date: Thu, 24 Jul 2025 10:06:59 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Ivan Pravdin <ipravdin.official@gmail.com>
-Cc: bristot@kernel.org, corbet@lwn.net, linux-trace-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rtla: clarify trace option syntax in documentation and
- usage help
-Message-ID: <20250724095627.572c1cff@batman.local.home>
-In-Reply-To: <20250723015233.173630-1-ipravdin.official@gmail.com>
-References: <20250723015233.173630-1-ipravdin.official@gmail.com>
+To: kernel test robot <lkp@intel.com>
+Cc: Shuai Xue <xueshuai@linux.alibaba.com>, lukas@wunner.de,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-edac@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ helgaas@kernel.org, ilpo.jarvinen@linux.intel.com, mattc@purestorage.com,
+ Jonathan.Cameron@huawei.com, oe-kbuild-all@lists.linux.dev,
+ bhelgaas@google.com, tony.luck@intel.com, bp@alien8.de,
+ mhiramat@kernel.org, mathieu.desnoyers@efficios.com, oleg@redhat.com,
+ naveen@kernel.org, davem@davemloft.net, anil.s.keshavamurthy@intel.com,
+ mark.rutland@arm.com, peterz@infradead.org, tianruidong@linux.alibaba.com
+Subject: Re: [PATCH v9 2/2] PCI: trace: Add a RAS tracepoint to monitor link
+ speed changes
+Message-ID: <20250724100659.697b5972@batman.local.home>
+In-Reply-To: <202507240322.nJGdyXsy-lkp@intel.com>
+References: <20250723033108.61587-3-xueshuai@linux.alibaba.com>
+	<202507240322.nJGdyXsy-lkp@intel.com>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -38,38 +46,48 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 7E2EF20016
-X-Stat-Signature: u1x4nsdsrq3sbbrj159i8ikb6kk7wp3r
-X-Rspamd-Server: rspamout06
+X-Stat-Signature: sj9jeatpcmgk3dhhg1j4rmu7omcno6er
+X-Rspamd-Server: rspamout03
+X-Rspamd-Queue-Id: DE9FD20031
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1979Ti/pUfl2nQHOueWSP8llgjuM4vcdOE=
-X-HE-Tag: 1753365390-589962
-X-HE-Meta: U2FsdGVkX18VDHmHgh2esz13Ti8MTfMv6D4JNqbRv25UTYFowtc6dFfbfrHP4Iwa56telsCl/iB6Lk5iwhMleJHRH3ajowTqROyWuWQIgL08mkXGS0AF7ZCupd+Miv6Gy2SjuUepWrgTAYiH7+Dn++JMiBvClCop4lxt9x6zOJB5gM+xNaucHtmBFGopl6dQpIXx1iyLuwD3nEfqpT6LqLX0bV83G87iMuNS9NujPHPO0zRKomUAbkis3Z/rVJUthExUoKLOBNfFl4EBAWpcPk/IYyeuzCdqHuUZEUB876YH4zzEvaX6EhLRXJV776LnyHf1y2GNnbysbhgH09bZfcLNlV2IrjDw
+X-Session-ID: U2FsdGVkX19yykztU+ewahSgXtlShevzjICByiY4Pc0=
+X-HE-Tag: 1753366020-125808
+X-HE-Meta: U2FsdGVkX1+TEXuVgYhshrbY4gdIu46q7I1W9e0mKfeNI4eMYQUVJZpoHvrdSo361H5fZTwriFyQm9cGE275G//RCB7TOVItLCTRulhEsmdN7+LyWt6m5pwcSy6OnZXg3zHNWwKc/9Fb2DgNjW3uizrNmcCJ9AH2ZVRJLHmHMtCFECwCKURhar6iqTUabZCYm2MqOJysS+9ckxENYuxHxICNHsZd3zOsbqYsxF72SfWePz5NTMKiukyzLPbFBKd4COZbrBeTsg4hzVM8bRiB261Ip+XuIxyWFX/svazljEli/DuBbFmukYshzY0skaoB9agmZtxki2a4QPYF6Ty+escxqP/FJ4n57uGO7z9h4FeaTRgKEARY5QIrJK9dtsGyCG8FJ8GzVSsLsxG/hhL5NFJZRwXJFHdxL6DmA9egTDjGNkBCg2YqrFzsKdv10imfDJZRMaytYkpBcl+VQJRbK2y/4R0/yvDD
 
-On Tue, 22 Jul 2025 21:52:33 -0400
-Ivan Pravdin <ipravdin.official@gmail.com> wrote:
+On Thu, 24 Jul 2025 03:30:17 +0800
+kernel test robot <lkp@intel.com> wrote:
 
-> When using `rtla timerlat {top,hist}`, the `-t/--trace` option is
-> optional. However, when providing a filename, the long option requires
-> an equal sign (`=`), i.e., `--trace=<file>`. This is because the
-> command-line parser treats `--trace` without `=` as a flag with no
-> value, leading to unexpected behavior.
+> url:    https://github.com/intel-lab-lkp/linux/commits/Shuai-Xue/PCI-trace-Add-a-generic-RAS-tracepoint-for-hotplug-event/20250723-113454
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git for-linus
+> patch link:    https://lore.kernel.org/r/20250723033108.61587-3-xueshuai%40linux.alibaba.com
+> patch subject: [PATCH v9 2/2] PCI: trace: Add a RAS tracepoint to monitor link speed changes
+> config: sparc-sparc64_defconfig (https://download.01.org/0day-ci/archive/20250724/202507240322.nJGdyXsy-lkp@intel.com/config)
+> compiler: sparc64-linux-gcc (GCC) 15.1.0
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250724/202507240322.nJGdyXsy-lkp@intel.com/reproduce)
 > 
-> Valid usage:
->     - `-t[file]`
->     - `-t=[file]`
->     - `--trace=[file]`
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202507240322.nJGdyXsy-lkp@intel.com/
 > 
-> Invalid usage:
->     - `-t [file]`
->     - `--trace [file]`
+> All errors (new ones prefixed by >>):
+> 
+>    sparc64-linux-ld: drivers/pci/probe.o: in function `pcie_update_link_speed':
+> >> probe.c:(.text+0x370): undefined reference to `__tracepoint_pcie_link_event'
+> >> sparc64-linux-ld: probe.c:(.text+0x37c): undefined reference to `__tracepoint_pcie_link_event'
+> >> sparc64-linux-ld: probe.c:(.text+0x3dc): undefined reference to `__traceiter_pcie_link_event'  
 
-I wonder if the better fix would be to make the above valid?
+The config has:
+
+# CONFIG_CPU_HOTPLUG_STATE_CONTROL is not set
+
+Which looks to me from the first patch, would enable the code that
+defines the trace events via the:
+
++#define CREATE_TRACE_POINTS
++#include <trace/events/pci.h>
+
+Thus, without compiling that file, the tracepoints would not be created
+and you would get the above errors.
 
 -- Steve
-
-
-> 
-> Clarify valid usage in documentation and help message.
-> 
-> Signed-off-by: Ivan Pravdin <ipravdin.official@gmail.com>
