@@ -1,93 +1,65 @@
-Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
+Received: from lamorak.hansenpartnership.com (lamorak.hansenpartnership.com [198.37.111.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E8DD4685;
-	Thu, 24 Jul 2025 14:07:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6CA0299A94;
+	Thu, 24 Jul 2025 14:34:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.37.111.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753366031; cv=none; b=kMyp0YOiRLKztxkdaggpSc00x0xJH0d0fco1iyEproIjlpOchEg/xdq689vlRzWnatD1q8/4CJDwB3kg1RjKBHdSQ8t2r6KOyXTZo6eMaV/L5WysnY9IADZmXAjcIlowJeYICcU5uVPgl4VpOaAp+LZDrD7PxuebDQdiEae1lUs=
+	t=1753367680; cv=none; b=nPp+R22x4O+jR8wBqwgXUbtZ2hrActLSO3GjEdj1j/mcA9XSRK1aQtHNy1nmmLj5hp19iORVqxS+iymdp+Nie5EWEYOSEgc/GUNM9ZW+vZHEKDx0K+KyLpDBC/LLI1MOQTthNEix8CVQdHdyoZ6WRM601aW6uU2gqqaW1i0MRKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753366031; c=relaxed/simple;
-	bh=OkQND1FA8Zgiq+fCIXVzxfpptSSlpHzvRjGUS3FX33M=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qo7Zq+SAedgxTywFipNDCpkeoDBGjVOV2kmeYSik/8PMqoSifut1ZoSiAGybmUJBFdIr+9BAY8ruN9xiD19KAug+qFQRu48pgy/tjZKqj29PPk21s4sYLcoqi7tVzpUMrKX4NLSYQtw/SKb8Xl4/mWb487i9AitOxMi0RKkZaqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf19.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay01.hostedemail.com (Postfix) with ESMTP id C93A61DA939;
-	Thu, 24 Jul 2025 14:07:05 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf19.hostedemail.com (Postfix) with ESMTPA id DE9FD20031;
-	Thu, 24 Jul 2025 14:07:00 +0000 (UTC)
-Date: Thu, 24 Jul 2025 10:06:59 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: kernel test robot <lkp@intel.com>
-Cc: Shuai Xue <xueshuai@linux.alibaba.com>, lukas@wunner.de,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-edac@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- helgaas@kernel.org, ilpo.jarvinen@linux.intel.com, mattc@purestorage.com,
- Jonathan.Cameron@huawei.com, oe-kbuild-all@lists.linux.dev,
- bhelgaas@google.com, tony.luck@intel.com, bp@alien8.de,
- mhiramat@kernel.org, mathieu.desnoyers@efficios.com, oleg@redhat.com,
- naveen@kernel.org, davem@davemloft.net, anil.s.keshavamurthy@intel.com,
- mark.rutland@arm.com, peterz@infradead.org, tianruidong@linux.alibaba.com
-Subject: Re: [PATCH v9 2/2] PCI: trace: Add a RAS tracepoint to monitor link
- speed changes
-Message-ID: <20250724100659.697b5972@batman.local.home>
-In-Reply-To: <202507240322.nJGdyXsy-lkp@intel.com>
-References: <20250723033108.61587-3-xueshuai@linux.alibaba.com>
-	<202507240322.nJGdyXsy-lkp@intel.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1753367680; c=relaxed/simple;
+	bh=UbD94arm8FPyd5udKXxyFoh4IJLtMxH9ZBjyzqIlNx4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uU5ejFn+utyAXku1kp2og3VvlEMq19QMDtYzh2DWquC+xeBhNKYKgN1ORZIGnOb4Tn3lUebqvWsCjn3p7Us6tWsb9S5avmPiJrm1q7MNL8ZTaBj/qWIV2SagTo7OTfMUXHkBu1W/D81YXCYobvy6LOqfenrliEU0ixnVhNDN8D4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=rVK6m6am; arc=none smtp.client-ip=198.37.111.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="rVK6m6am"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=hansenpartnership.com; s=20151216; t=1753367674;
+	bh=UbD94arm8FPyd5udKXxyFoh4IJLtMxH9ZBjyzqIlNx4=;
+	h=From:To:Subject:Date:Message-ID:From;
+	b=rVK6m6amV+ndJlusROW2MCwFEF6tvvr0jaOARNdz/axW++QDM66jAddeMrNozQ7b5
+	 LUuBWF0bPzPM2R++qb+iwYuSnsusK540g5SM6Ksl3k7rrAhIYisMugkvG97VuwT8Gm
+	 LFE05miUCeO8Y987oiiB8aTMVHKBNx3CdhpFq53E=
+Received: from lingrow.int.hansenpartnership.com (unknown [153.66.160.227])
+	by lamorak.hansenpartnership.com (Postfix) with ESMTP id 696E91C0353;
+	Thu, 24 Jul 2025 10:34:34 -0400 (EDT)
+From: James Bottomley <James.Bottomley@HansenPartnership.com>
+To: bpf@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: Roberto Sassu <roberto.sassu@huawei.com>
+Subject: [PATCH 0/3] bpf: tidy up internals of bpf key handling
+Date: Thu, 24 Jul 2025 10:34:25 -0400
+Message-ID: <20250724143428.4416-1-James.Bottomley@HansenPartnership.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: sj9jeatpcmgk3dhhg1j4rmu7omcno6er
-X-Rspamd-Server: rspamout03
-X-Rspamd-Queue-Id: DE9FD20031
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19yykztU+ewahSgXtlShevzjICByiY4Pc0=
-X-HE-Tag: 1753366020-125808
-X-HE-Meta: U2FsdGVkX1+TEXuVgYhshrbY4gdIu46q7I1W9e0mKfeNI4eMYQUVJZpoHvrdSo361H5fZTwriFyQm9cGE275G//RCB7TOVItLCTRulhEsmdN7+LyWt6m5pwcSy6OnZXg3zHNWwKc/9Fb2DgNjW3uizrNmcCJ9AH2ZVRJLHmHMtCFECwCKURhar6iqTUabZCYm2MqOJysS+9ckxENYuxHxICNHsZd3zOsbqYsxF72SfWePz5NTMKiukyzLPbFBKd4COZbrBeTsg4hzVM8bRiB261Ip+XuIxyWFX/svazljEli/DuBbFmukYshzY0skaoB9agmZtxki2a4QPYF6Ty+escxqP/FJ4n57uGO7z9h4FeaTRgKEARY5QIrJK9dtsGyCG8FJ8GzVSsLsxG/hhL5NFJZRwXJFHdxL6DmA9egTDjGNkBCg2YqrFzsKdv10imfDJZRMaytYkpBcl+VQJRbK2y/4R0/yvDD
+Content-Transfer-Encoding: 8bit
 
-On Thu, 24 Jul 2025 03:30:17 +0800
-kernel test robot <lkp@intel.com> wrote:
+This patch series reduces the size of the implementing code and
+eliminates allocations on the bpf_key_lookup paths.  There is no
+externally visible change to the BPF API.
 
-> url:    https://github.com/intel-lab-lkp/linux/commits/Shuai-Xue/PCI-trace-Add-a-generic-RAS-tracepoint-for-hotplug-event/20250723-113454
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git for-linus
-> patch link:    https://lore.kernel.org/r/20250723033108.61587-3-xueshuai%40linux.alibaba.com
-> patch subject: [PATCH v9 2/2] PCI: trace: Add a RAS tracepoint to monitor link speed changes
-> config: sparc-sparc64_defconfig (https://download.01.org/0day-ci/archive/20250724/202507240322.nJGdyXsy-lkp@intel.com/config)
-> compiler: sparc64-linux-gcc (GCC) 15.1.0
-> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250724/202507240322.nJGdyXsy-lkp@intel.com/reproduce)
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202507240322.nJGdyXsy-lkp@intel.com/
-> 
-> All errors (new ones prefixed by >>):
-> 
->    sparc64-linux-ld: drivers/pci/probe.o: in function `pcie_update_link_speed':
-> >> probe.c:(.text+0x370): undefined reference to `__tracepoint_pcie_link_event'
-> >> sparc64-linux-ld: probe.c:(.text+0x37c): undefined reference to `__tracepoint_pcie_link_event'
-> >> sparc64-linux-ld: probe.c:(.text+0x3dc): undefined reference to `__traceiter_pcie_link_event'  
+Regards,
 
-The config has:
+James
 
-# CONFIG_CPU_HOTPLUG_STATE_CONTROL is not set
+---
 
-Which looks to me from the first patch, would enable the code that
-defines the trace events via the:
+James Bottomley (3):
+  bpf: make bpf_key an opaque type
+  bpf: remove bpf_key reference
+  bpf: eliminate the allocation of an intermediate struct bpf_key
 
-+#define CREATE_TRACE_POINTS
-+#include <trace/events/pci.h>
+ include/linux/bpf.h      |  5 +----
+ kernel/trace/bpf_trace.c | 37 +++++++++----------------------------
+ 2 files changed, 10 insertions(+), 32 deletions(-)
 
-Thus, without compiling that file, the tracepoints would not be created
-and you would get the above errors.
+-- 
+2.43.0
 
--- Steve
