@@ -1,96 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.avm.de (mail.avm.de [212.42.244.120])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36F8123D287;
-	Thu, 24 Jul 2025 13:14:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B023F2D6405;
+	Thu, 24 Jul 2025 13:15:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.42.244.120
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753362888; cv=none; b=clZDWv+wUUTO1dJ3NtMP8MGRdLr96DbjCoHU26C1Cx7PwZvqu2htwryyk+CnX+7ajTsyknTFAR/ZOA+a4Z3J0CEgFcUUqQn02E7CU11eeB+7Qz72c/XbBM/3g6WmkyrWQogl1MFoa5HuRJKdm6k9VVYpie5QtjZTAbJ5I7+LaWw=
+	t=1753362905; cv=none; b=m+YonTJQF6SKGC2g2mPgI99apzgt7GFTiJvPhKwCmReqcTtl0z3384umuhtup3aa8w/2qgT9ZYEjd9D/+3MIyDaGQpEGe9O+2Nb0bUUIxSwy40z7EjkcGtc44yA0m8/5s1gjKOoOoAxSTDVIiAgS04vcJk1nrZ7ReJMf2uZ8tOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753362888; c=relaxed/simple;
-	bh=AGeksOmyi1eAe26xCazCrUSZ/VFJkDTsgpgfMRQyYok=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=P2ocJWT9K0HfN09KMRyYaaHSmTUzYwLGJ8ih6bRR4fI9Au3UV5fvga06lBh7c8a6mzQ4UOC89XAT3TUkVfsCRJ5tuZj64DHeI/WdDTE5Lvwim6d//PCIHoc8Fkxez+jhffoa1OnXddFuoCMpRorOYfeTUbpj+cyl7MwIJ6PdRL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P2gc4jBO; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P2gc4jBO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 720B5C4CEED;
-	Thu, 24 Jul 2025 13:14:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753362887;
-	bh=AGeksOmyi1eAe26xCazCrUSZ/VFJkDTsgpgfMRQyYok=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=P2gc4jBODFrJVo2+ELoGX1eK3v2kdfZUIiI1glGeEEyy+zT6F0Z0ppQCykf7LMl+p
-	 jf1RkcHHlO5nZtytD3/gL0ybWOiiNv+o00rch7Maf0cmnUEWUb5b4AJ0NBK5GsNixp
-	 VAFOAv71xCIVHWv0KRyJxJqCZxI04T4HqQUHlZeSs6rEDofO/s5Y77e/xjf1OHZltt
-	 uOC0FWg+kqKjFuc7i6pT/LUO6Y9ZJok7QB4GH+8P7hA/t9RQ0bhLr2j+qKVKbXjeko
-	 konfW7X8/Tr44rBvCVemCK3Levay1RgtJ8xSI/F1/f+ZbtKw01Fd/Jc1uEM59GBGdH
-	 xv+Yg/z1rUQnQ==
-Date: Thu, 24 Jul 2025 22:14:44 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Cc: Bhaskar Chowdhury <unixbhaskar@gmail.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] tools:bootconfig:scripts This file was missing the
- shebang line, so added it
-Message-Id: <20250724221444.e59014b3cb0ab0123d6393d6@kernel.org>
-In-Reply-To: <20250723235855.7e84eb3b5ed67975e1d16ca3@kernel.org>
-References: <20250722225351.8811-1-unixbhaskar@gmail.com>
-	<20250723235855.7e84eb3b5ed67975e1d16ca3@kernel.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1753362905; c=relaxed/simple;
+	bh=ne/XcgrgO/KJ5Vpn5Kmd1KTfFMh8OZxebN5iFuDYEM8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RP9xDJCNfzdKSa+xNXYbL10zkz9slWLyA2dey0l9rXBb/aqlE6ZEYH5om7t7Nv/7iGGu8qEt/ByUAPKDTsNABCACWOgtuiSuiDHAl/8k6r4BrYS34zejdW1xkUpWBdsHM+dmDP2NtGku1lMTe7XMUL/ldH56HDj2YpS9c3wquCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=avm.de; arc=none smtp.client-ip=212.42.244.120
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=avm.de
+Received: from [212.42.244.71] (helo=mail.avm.de)
+	by mail.avm.de with ESMTP (eXpurgate 4.53.4)
+	(envelope-from <n.schier@avm.de>)
+	id 6882306d-0380-7f0000032729-7f000001eb7c-1
+	for <multiple-recipients>; Thu, 24 Jul 2025 15:09:01 +0200
+Received: from mail-auth.avm.de (dovecot-mx-01.avm.de [212.42.244.71])
+	by mail.avm.de (Postfix) with ESMTPS;
+	Thu, 24 Jul 2025 15:09:01 +0200 (CEST)
+Received: from buildd.core.avm.de (buildd-sv-01.avm.de [172.16.0.225])
+	by mail-auth.avm.de (Postfix) with ESMTPA id 09A4980AA3;
+	Thu, 24 Jul 2025 15:09:02 +0200 (CEST)
+Received: from l-nschier-aarch64.ads.avm.de (unknown [IPv6:fde4:4c1b:acd5:6472::1])
+	by buildd.core.avm.de (Postfix) with ESMTPS id 6DAEF184464;
+	Thu, 24 Jul 2025 15:09:00 +0200 (CEST)
+Date: Thu, 24 Jul 2025 15:08:58 +0200
+From: Nicolas Schier <nicolas.schier@linux.dev>
+To: Kees Cook <kees@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Marco Elver <elver@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-kbuild@vger.kernel.org, kasan-dev@googlegroups.com,
+	linux-hardening@vger.kernel.org, Will Deacon <will@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Gavin Shan <gshan@redhat.com>,
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+	James Morse <james.morse@arm.com>,
+	Oza Pawandeep <quic_poza@quicinc.com>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+	Hans de Goede <hansg@kernel.org>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+	Michal Wilczynski <michal.wilczynski@intel.com>,
+	Juergen Gross <jgross@suse.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	"Kirill A. Shutemov" <kas@kernel.org>,
+	Roger Pau Monne <roger.pau@citrix.com>,
+	David Woodhouse <dwmw@amazon.co.uk>,
+	Usama Arif <usama.arif@bytedance.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	Thomas Huth <thuth@redhat.com>, Brian Gerst <brgerst@gmail.com>,
+	Hou Wenlong <houwenlong.hwl@antgroup.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Andy Lutomirski <luto@kernel.org>, Baoquan He <bhe@redhat.com>,
+	Alexander Graf <graf@amazon.com>,
+	Changyuan Lyu <changyuanl@google.com>,
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Jan Beulich <jbeulich@suse.com>, Boqun Feng <boqun.feng@gmail.com>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Bibo Mao <maobibo@loongson.cn>, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, x86@kernel.org,
+	kvm@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net,
+	platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
+	linux-mm@kvack.org, kexec@lists.infradead.org,
+	linux-security-module@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH v4 4/4] kstack_erase: Support Clang stack depth tracking
+Message-ID: <20250724-optimistic-armadillo-of-joviality-e59222@l-nschier-aarch64>
+References: <20250724054419.it.405-kees@kernel.org>
+ <20250724055029.3623499-4-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250724055029.3623499-4-kees@kernel.org>
+Organization: AVM GmbH
+X-purgate-ID: 149429::1753362541-3C575E1C-2FB622E2/0/0
+X-purgate-type: clean
+X-purgate-size: 870
+X-purgate-Ad: Categorized by eleven eXpurgate (R) https://www.eleven.de
+X-purgate: This mail is considered clean (visit https://www.eleven.de for further information)
+X-purgate: clean
 
-On Wed, 23 Jul 2025 23:58:55 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+On Wed, Jul 23, 2025 at 10:50:28PM -0700, Kees Cook wrote:
+> Wire up CONFIG_KSTACK_ERASE to Clang 21's new stack depth tracking
+> callback[1] option.
+>=20
+> Link: https://clang.llvm.org/docs/SanitizerCoverage.html#tracing-stack-de=
+pth [1]
+> Signed-off-by: Kees Cook <kees@kernel.org>
+> ---
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Masahiro Yamada <masahiroy@kernel.org>
+> Cc: Nathan Chancellor <nathan@kernel.org>
+> Cc: Nicolas Schier <nicolas.schier@linux.dev>
+> Cc: Marco Elver <elver@google.com>
+> Cc: Andrey Konovalov <andreyknvl@gmail.com>
+> Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>
+> Cc: Ard Biesheuvel <ardb@kernel.org>
+> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+> Cc: <linux-kbuild@vger.kernel.org>
+> Cc: <kasan-dev@googlegroups.com>
+> Cc: <linux-hardening@vger.kernel.org>
+> ---
 
-> On Wed, 23 Jul 2025 04:23:01 +0530
-> Bhaskar Chowdhury <unixbhaskar@gmail.com> wrote:
-> 
-> > This file was missing the shebang line, so added it.
-
-BTW, I will change the title as
-
-tools/bootconfig: scripts/ftrace.sh was missing the shebang line, so added it
-
-Thanks,
-
-> > 
-> 
-> Good catch :) 
-> 
-> Let me pick this.
-> 
-> Thanks!
-> 
-> > Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
-> > ---
-> >  tools/bootconfig/scripts/ftrace.sh | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/tools/bootconfig/scripts/ftrace.sh b/tools/bootconfig/scripts/ftrace.sh
-> > index 186eed923041..cc5250c64699 100644
-> > --- a/tools/bootconfig/scripts/ftrace.sh
-> > +++ b/tools/bootconfig/scripts/ftrace.sh
-> > @@ -1,3 +1,4 @@
-> > +#!/bin/sh
-> >  # SPDX-License-Identifier: GPL-2.0-only
-> > 
-> >  clear_trace() { # reset trace output
-> > --
-> > 2.49.1
-> > 
-> 
-> 
-> -- 
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Acked-by: Nicolas Schier <n.schier@avm.de>
