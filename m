@@ -1,93 +1,178 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 893292C86D;
-	Thu, 24 Jul 2025 01:10:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D27D156661;
+	Thu, 24 Jul 2025 01:41:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753319447; cv=none; b=QUglOJgJc4bAahlB5jrhA02GzqTQATR+tKC4FKEjlzARgjiwswXylyUUWWG7xqGqX/+Mu5/7YK2S+8qEVt3g6WXLufGKpl1ZjTPAcuLAgq35aAqWPOF4STtL9OI889rEP27Lb6uQ1t7yglpIV5YYvJgtq1iwfDlJbrsfLcf8gkA=
+	t=1753321290; cv=none; b=sk29Ue0d45VHRfpCLMN0f2ABoQNCbIMbfTeqdnzPQIjzCR1NYAKN5Jl49Qac98t8SmD7IY6S2j4h93wHYsBASq69e8FzAz7g9LdFQQufEftL5qsnReTuHenFTJHHf8lzXYptH6I48W0PNGLyHUuO9a0ljLDr91+QyFuyWu/9QFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753319447; c=relaxed/simple;
-	bh=W4m2ckVc6I3FFkqRkMIqKr81SWJ6nZa/RedrKf6ZJLo=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=gKIb5IgVJam8XGKmcqNGlpfTTflZe86ptclx20ucKKo09pHifLKKcVfPfRiCjmWPVF1+yK5wajNrQlwxR31oi/b8BFHE6UdP3rgNZDrx64v9SysluYr1lKJs/QH8Qrt5GYS8LJNuyOuL18j/BAUTouQhPzRZJnAflsKxHaYBC1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WsBHUVh7; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WsBHUVh7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E1FDC4CEE7;
-	Thu, 24 Jul 2025 01:10:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753319447;
-	bh=W4m2ckVc6I3FFkqRkMIqKr81SWJ6nZa/RedrKf6ZJLo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=WsBHUVh7Y8u5OneqaAcptfPxGb0lLxxw3025Dwcn6sfjNfRRJIw6YmSJEhUQuw3US
-	 N4vKJOXmjIUrTLe5RdZl1pSL9ObJWgHHizcHqnyRt4/lRXO2QabtSu7Oju+y8lLOML
-	 qxnsluCAVPnAS3OPotJH92FnO+B2n+Ku8uXdE8LCPA9ko0dEV+bTJCwo1X4ce997FA
-	 eLCpesy/UTkotmhC1ZIX2RT1nWiADX9b9LWx8YlEwRumHx5qqLMDBXwgkM+FuZ27OW
-	 fvzPmM140Io5dzX5RBdd3kJF+hP8Ngzd02iKGR8etE9Un/ylao19zYXsHfHjT/6esK
-	 5+6/Jja7bSTDQ==
-Date: Thu, 24 Jul 2025 10:10:44 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Ben Hutchings <benh@debian.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] bootconfig: Fix unaligned access when building footer
-Message-Id: <20250724101044.d32c46958f6605ae22016851@kernel.org>
-In-Reply-To: <59abcb9262e97b76bfdf18d6de71c15eb2af8a6e.camel@debian.org>
-References: <aIC-NTw-cdm9ZGFw@decadent.org.uk>
-	<20250724003747.be2a733e2e7fcf8a9e263cc4@kernel.org>
-	<59abcb9262e97b76bfdf18d6de71c15eb2af8a6e.camel@debian.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1753321290; c=relaxed/simple;
+	bh=1BXpZI4scZTyVma5PgiR4xOt+Q2ng527W4S4xuCME2Y=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=PVdjCbnTLKx4GvJ1C3Wkx2VmSDdurms7cqmeIczb6JxvW86RdEhmCQMf1gcEIw+YOC2uoj3RKPcT2eziRbrBPZFvMbNKc8pCv0NRzjU+3iA5CCkrI9IG0ytWiQjt/trqcehfUGFASdu618dT2LLI8yNjTK44JhfMv5tycoA4AT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8BxPOJEj4FoG8swAQ--.57961S3;
+	Thu, 24 Jul 2025 09:41:24 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowJCxocJAj4FotAYkAA--.53925S3;
+	Thu, 24 Jul 2025 09:41:22 +0800 (CST)
+Subject: Re: [PATCH] LoongArch: KVM: Move kvm_iocsr tracepoint out of generic
+ code
+To: Steven Rostedt <rostedt@goodmis.org>, LKML
+ <linux-kernel@vger.kernel.org>,
+ Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+ kvm@vger.kernel.org, loongarch@lists.linux.dev
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>,
+ Huacai Chen <chenhuacai@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+References: <20250722094734.4920545b@gandalf.local.home>
+From: Bibo Mao <maobibo@loongson.cn>
+Message-ID: <2c2f5036-c3ae-3904-e940-8a8b71a65957@loongson.cn>
+Date: Thu, 24 Jul 2025 09:39:40 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+In-Reply-To: <20250722094734.4920545b@gandalf.local.home>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJCxocJAj4FotAYkAA--.53925S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxAr43urW3Kr17Cr4Uuw4xXwc_yoW5uF4kpF
+	17ArZIgr4xKrs7A34fZwn5Krsxu3s5uFy7t3srWrWkCF48Ar4rGr1qvrWkt3sIy3sYka4x
+	tF1vvryUGayUZ3XCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUPIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	AVWUtwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vI
+	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67
+	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIY
+	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
+	v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8
+	JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jOiSdUUU
+	UU=
 
-On Wed, 23 Jul 2025 22:20:35 +0200
-Ben Hutchings <benh@debian.org> wrote:
 
-> On Thu, 2025-07-24 at 00:37 +0900, Masami Hiramatsu wrote:
-> > On Wed, 23 Jul 2025 12:49:25 +0200
-> > Ben Hutchings <benh@debian.org> wrote:
-> [...]
-> > >  static int apply_xbc(const char *path, const char *xbc_path)
-> > >  {
-> > > -	char *buf, *data, *p;
-> > > +	struct {
-> > > +		uint32_t size;
-> > > +		uint32_t csum;
-> > > +		char magic[BOOTCONFIG_MAGIC_LEN];
-> > > +	} footer;
-> > 
-> > Don't we need __attribute__((__packed__)) for the footer?
+
+On 2025/7/22 下午9:47, Steven Rostedt wrote:
+> From: Steven Rostedt <rostedt@goodmis.org>
 > 
-> I don't see any reason for there to be padding in this structure, since
-> it has an alignment of 4 and the size of each member is a multiple of 4.
+> The tracepoint kvm_iocsr is only used by the loongarch architecture. As
+> trace events can take up to 5K of memory, move this tracepoint into the
+> loongarch specific tracing file so that it doesn't waste memory for all
+> other architectures.
 > 
-> I included an assertion that there is no padding:
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+>   arch/loongarch/kvm/trace.h | 35 +++++++++++++++++++++++++++++++++++
+>   include/trace/events/kvm.h | 35 -----------------------------------
+>   2 files changed, 35 insertions(+), 35 deletions(-)
 > 
-> [...]
-> > > +	memcpy(footer.magic, BOOTCONFIG_MAGIC, BOOTCONFIG_MAGIC_LEN);
-> > > +	static_assert(sizeof(footer) == BOOTCONFIG_FOOTER_SIZE);
-> > > +	memcpy(data + size, &footer, BOOTCONFIG_FOOTER_SIZE);
-> [...]
-
-OK, if we saw the assertion error, we'll add packed attribute.
-Let me pick it as it is.
-
-Thank you!
-
-
+> diff --git a/arch/loongarch/kvm/trace.h b/arch/loongarch/kvm/trace.h
+> index 145514dab6d5..d73dea8afb74 100644
+> --- a/arch/loongarch/kvm/trace.h
+> +++ b/arch/loongarch/kvm/trace.h
+> @@ -115,6 +115,41 @@ TRACE_EVENT(kvm_exit_gspr,
+>   			__entry->inst_word)
+>   );
+>   
+> +#define KVM_TRACE_IOCSR_READ_UNSATISFIED 0
+> +#define KVM_TRACE_IOCSR_READ 1
+> +#define KVM_TRACE_IOCSR_WRITE 2
+> +
+> +#define kvm_trace_symbol_iocsr \
+> +	{ KVM_TRACE_IOCSR_READ_UNSATISFIED, "unsatisfied-read" }, \
+> +	{ KVM_TRACE_IOCSR_READ, "read" }, \
+> +	{ KVM_TRACE_IOCSR_WRITE, "write" }
+> +
+> +TRACE_EVENT(kvm_iocsr,
+> +	TP_PROTO(int type, int len, u64 gpa, void *val),
+> +	TP_ARGS(type, len, gpa, val),
+> +
+> +	TP_STRUCT__entry(
+> +		__field(	u32,	type	)
+> +		__field(	u32,	len	)
+> +		__field(	u64,	gpa	)
+> +		__field(	u64,	val	)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__entry->type		= type;
+> +		__entry->len		= len;
+> +		__entry->gpa		= gpa;
+> +		__entry->val		= 0;
+> +		if (val)
+> +			memcpy(&__entry->val, val,
+> +			       min_t(u32, sizeof(__entry->val), len));
+> +	),
+> +
+> +	TP_printk("iocsr %s len %u gpa 0x%llx val 0x%llx",
+> +		  __print_symbolic(__entry->type, kvm_trace_symbol_iocsr),
+> +		  __entry->len, __entry->gpa, __entry->val)
+> +);
+> +
+>   #define KVM_TRACE_AUX_SAVE		0
+>   #define KVM_TRACE_AUX_RESTORE		1
+>   #define KVM_TRACE_AUX_ENABLE		2
+> diff --git a/include/trace/events/kvm.h b/include/trace/events/kvm.h
+> index 8b7252b8d751..b282e3a86769 100644
+> --- a/include/trace/events/kvm.h
+> +++ b/include/trace/events/kvm.h
+> @@ -156,41 +156,6 @@ TRACE_EVENT(kvm_mmio,
+>   		  __entry->len, __entry->gpa, __entry->val)
+>   );
+>   
+> -#define KVM_TRACE_IOCSR_READ_UNSATISFIED 0
+> -#define KVM_TRACE_IOCSR_READ 1
+> -#define KVM_TRACE_IOCSR_WRITE 2
+> -
+> -#define kvm_trace_symbol_iocsr \
+> -	{ KVM_TRACE_IOCSR_READ_UNSATISFIED, "unsatisfied-read" }, \
+> -	{ KVM_TRACE_IOCSR_READ, "read" }, \
+> -	{ KVM_TRACE_IOCSR_WRITE, "write" }
+> -
+> -TRACE_EVENT(kvm_iocsr,
+> -	TP_PROTO(int type, int len, u64 gpa, void *val),
+> -	TP_ARGS(type, len, gpa, val),
+> -
+> -	TP_STRUCT__entry(
+> -		__field(	u32,	type	)
+> -		__field(	u32,	len	)
+> -		__field(	u64,	gpa	)
+> -		__field(	u64,	val	)
+> -	),
+> -
+> -	TP_fast_assign(
+> -		__entry->type		= type;
+> -		__entry->len		= len;
+> -		__entry->gpa		= gpa;
+> -		__entry->val		= 0;
+> -		if (val)
+> -			memcpy(&__entry->val, val,
+> -			       min_t(u32, sizeof(__entry->val), len));
+> -	),
+> -
+> -	TP_printk("iocsr %s len %u gpa 0x%llx val 0x%llx",
+> -		  __print_symbolic(__entry->type, kvm_trace_symbol_iocsr),
+> -		  __entry->len, __entry->gpa, __entry->val)
+> -);
+> -
+>   #define kvm_fpu_load_symbol	\
+>   	{0, "unload"},		\
+>   	{1, "load"}
 > 
-> Ben.
-> 
-> -- 
-> Ben Hutchings - Debian developer, member of kernel, installer and LTS
-> teams
+Reviewed-by: Bibo Mao <maobibo@loongson.cn>
 
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
