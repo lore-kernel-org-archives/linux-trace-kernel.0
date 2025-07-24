@@ -1,95 +1,93 @@
-Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F2F8238C23;
-	Wed, 23 Jul 2025 22:47:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 893292C86D;
+	Thu, 24 Jul 2025 01:10:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753310866; cv=none; b=ALgAUIgLJaJfb7rZ3h5jLDqYENwXzaR+7GQstFFNwzqhtID/ED7s3zOFIi3vUhpD9aNoTFPsQ9nbL3mzC3M585jytdMa0BmuPf5ApX5aqZd0395GucPoCVz8P9tRIe8Id5tdpuhcPO23Yrc8kiWYnGHlK0+B0THWKlB6CLHtVBI=
+	t=1753319447; cv=none; b=QUglOJgJc4bAahlB5jrhA02GzqTQATR+tKC4FKEjlzARgjiwswXylyUUWWG7xqGqX/+Mu5/7YK2S+8qEVt3g6WXLufGKpl1ZjTPAcuLAgq35aAqWPOF4STtL9OI889rEP27Lb6uQ1t7yglpIV5YYvJgtq1iwfDlJbrsfLcf8gkA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753310866; c=relaxed/simple;
-	bh=DLuyI7z9GPxvLZ5rhlSBjNWOITr/CXFaVzLBHXWo3UM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=G3CoySPRQjA6veWmwVQzR9o1dX6yF3jJHwFe+ixGb7lW7KduUbU2hbdu+h1hzHu7U2dGGSXnZ2+3I7rP9/+qWd74zDFbwu4S8HIQSKsXPq9nmchcHPbYYtyt7mngyVOVfQecq6L/OyzV7dwKCp+BipwQjeqDtd97mjJx69l2DKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf15.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay03.hostedemail.com (Postfix) with ESMTP id 82454B741D;
-	Wed, 23 Jul 2025 22:47:42 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf15.hostedemail.com (Postfix) with ESMTPA id 6FCB017;
-	Wed, 23 Jul 2025 22:47:39 +0000 (UTC)
-Date: Wed, 23 Jul 2025 18:47:40 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Steven Rostedt <rostedt@kernel.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
- llvm@lists.linux.dev, Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>,
- Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor
- <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>, Nick
- Desaulniers <nick.desaulniers+lkml@gmail.com>, Catalin Marinas
- <catalin.marinas@arm.com>
-Subject: Re: [PATCH v4 1/4] tracing: sorttable: Add a tracepoint
- verification check at build time
-Message-ID: <20250723184740.6dd2b2fc@gandalf.local.home>
-In-Reply-To: <CAHk-=wgQA+kGVKaUqSGenXVZHaPFkuojb7MgJKVetsXZnLMFuQ@mail.gmail.com>
-References: <20250723194141.617125835@kernel.org>
-	<20250723194211.768813368@kernel.org>
-	<CAHk-=wgbAruRX=xFVGevggtRpHNYyMVwgNYYJgYg5hMuU6ASGQ@mail.gmail.com>
-	<20250723182701.195a5ddf@gandalf.local.home>
-	<CAHk-=wgQA+kGVKaUqSGenXVZHaPFkuojb7MgJKVetsXZnLMFuQ@mail.gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1753319447; c=relaxed/simple;
+	bh=W4m2ckVc6I3FFkqRkMIqKr81SWJ6nZa/RedrKf6ZJLo=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=gKIb5IgVJam8XGKmcqNGlpfTTflZe86ptclx20ucKKo09pHifLKKcVfPfRiCjmWPVF1+yK5wajNrQlwxR31oi/b8BFHE6UdP3rgNZDrx64v9SysluYr1lKJs/QH8Qrt5GYS8LJNuyOuL18j/BAUTouQhPzRZJnAflsKxHaYBC1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WsBHUVh7; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WsBHUVh7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E1FDC4CEE7;
+	Thu, 24 Jul 2025 01:10:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753319447;
+	bh=W4m2ckVc6I3FFkqRkMIqKr81SWJ6nZa/RedrKf6ZJLo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=WsBHUVh7Y8u5OneqaAcptfPxGb0lLxxw3025Dwcn6sfjNfRRJIw6YmSJEhUQuw3US
+	 N4vKJOXmjIUrTLe5RdZl1pSL9ObJWgHHizcHqnyRt4/lRXO2QabtSu7Oju+y8lLOML
+	 qxnsluCAVPnAS3OPotJH92FnO+B2n+Ku8uXdE8LCPA9ko0dEV+bTJCwo1X4ce997FA
+	 eLCpesy/UTkotmhC1ZIX2RT1nWiADX9b9LWx8YlEwRumHx5qqLMDBXwgkM+FuZ27OW
+	 fvzPmM140Io5dzX5RBdd3kJF+hP8Ngzd02iKGR8etE9Un/ylao19zYXsHfHjT/6esK
+	 5+6/Jja7bSTDQ==
+Date: Thu, 24 Jul 2025 10:10:44 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Ben Hutchings <benh@debian.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] bootconfig: Fix unaligned access when building footer
+Message-Id: <20250724101044.d32c46958f6605ae22016851@kernel.org>
+In-Reply-To: <59abcb9262e97b76bfdf18d6de71c15eb2af8a6e.camel@debian.org>
+References: <aIC-NTw-cdm9ZGFw@decadent.org.uk>
+	<20250724003747.be2a733e2e7fcf8a9e263cc4@kernel.org>
+	<59abcb9262e97b76bfdf18d6de71c15eb2af8a6e.camel@debian.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: bnw9etasmxcye7fh1qrojxwdaupn1m98
-X-Rspamd-Server: rspamout05
-X-Rspamd-Queue-Id: 6FCB017
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19vHSXX1osOSuRrLzj2GLEfvW1P+MPxBN8=
-X-HE-Tag: 1753310859-874152
-X-HE-Meta: U2FsdGVkX1+Zvm1/6+mrnOpyExfgSSxSK99vfhZ3bq6ubZwnbghb7azWv31T50KQ3Axas0ZOY8RBFUCF72ROz306V7jtpGGwj2W0axLTe7yayT19S8MUp2fV1xjJwcF0VonvQH0RT/Nm/8B99YsayOKpdGEEP8NqNXIZCcbyBbOPwzVOYs0yFVYNWqvrY7zWBouoNp+55QTZqHDZzR/ueotmrBfAI4/6iWlErOqTgdFYMmHSm9WEKaxks2JC2LouT1WRXFOw2ZAa2iGN9g76OLHDWFgTnWlDPwPtfffM+PcsB3cI1ReYzVtb3Ze2BndmOVUajWp/lHnPFUlQE2+sa2QbHIF3AO5bBzSzZWjdKhKweOkSfUt+WlftJAc4cQnP
 
-On Wed, 23 Jul 2025 15:33:16 -0700
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+On Wed, 23 Jul 2025 22:20:35 +0200
+Ben Hutchings <benh@debian.org> wrote:
 
-> > I could probably take some of the sorttable.c elf parsing and move that
-> > into a header that would share the code.  
+> On Thu, 2025-07-24 at 00:37 +0900, Masami Hiramatsu wrote:
+> > On Wed, 23 Jul 2025 12:49:25 +0200
+> > Ben Hutchings <benh@debian.org> wrote:
+> [...]
+> > >  static int apply_xbc(const char *path, const char *xbc_path)
+> > >  {
+> > > -	char *buf, *data, *p;
+> > > +	struct {
+> > > +		uint32_t size;
+> > > +		uint32_t csum;
+> > > +		char magic[BOOTCONFIG_MAGIC_LEN];
+> > > +	} footer;
+> > 
+> > Don't we need __attribute__((__packed__)) for the footer?
 > 
-> Hmm. Why not just make sorttable then use vmlinux.o?
+> I don't see any reason for there to be padding in this structure, since
+> it has an alignment of 4 and the size of each member is a multiple of 4.
 > 
-> No need to do it twice. Can't you just work on the original object
-> file before re-linking?
+> I included an assertion that there is no padding:
+> 
+> [...]
+> > > +	memcpy(footer.magic, BOOTCONFIG_MAGIC, BOOTCONFIG_MAGIC_LEN);
+> > > +	static_assert(sizeof(footer) == BOOTCONFIG_FOOTER_SIZE);
+> > > +	memcpy(data + size, &footer, BOOTCONFIG_FOOTER_SIZE);
+> [...]
 
-I believe the sorttable code needs vmlinux to be finished linked, otherwise
-it needs to handle all the relocations in vmlinux.o
+OK, if we saw the assertion error, we'll add packed attribute.
+Let me pick it as it is.
 
-  $ readelf -r vmlinux
+Thank you!
 
-  There are no relocations in this file.
 
-Compared to:
+> 
+> Ben.
+> 
+> -- 
+> Ben Hutchings - Debian developer, member of kernel, installer and LTS
+> teams
 
-   $ readelf -r vmlinux.o| wc -l
-   22449337
 
-But we are looking at moving the fix-ups of the event format files from
-boot time into build time. That is, currently at boot, the enum strings
-are converted to their numbers and some expanded tags from PAHOLE_TAG gets
-removed from the format files to not confuse the parsers.
-
-The sorttable.c should be just that, code to sort Linux tables. I think
-adding the tracepoint check to it was a bit of a hack. Perhaps it should
-have its own program that focuses on tracepoint changes.
-
-Thus it could find unused trace points and fix up the format strings. I'm
-not sure how bad the relocations not being resolved will affect that though.
-
--- Steve
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
