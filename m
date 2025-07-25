@@ -1,139 +1,329 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82B652EBDE5;
-	Fri, 25 Jul 2025 10:08:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 461D02E543E;
+	Fri, 25 Jul 2025 10:11:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753438135; cv=none; b=NY0psA7UZ7Kl49WYu6NxiCkHCnxqVYr6OETe2Qy0vf8ry+9WC+34Jq/uvSylqU7JkuNjs3ledQw/9ZJ5B8ngGg6DA1k1vSxTlf6sd6c/R0vcqckc/+xc7QspAICoBoBPJkvEfZYKoS/at8V0r4UQf74WB64sZp9PWJHyrI6es7A=
+	t=1753438310; cv=none; b=tCw8fEvTBOummEQyGdWbhGwZL7OHCzM/lF4gcRT+/UncMhavZy4J3D6evJjnHOtKYtpdojd9YpCvK149e0StbuvM3gl/JcEOb+YNDnT1RhQQrfg0qXpywTGrDnfg2ALx/U/p7VuZZ9hkxhkREIw+9wPedaXNwk8j54wwItAoO+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753438135; c=relaxed/simple;
-	bh=+3gjGeeKe7DyZ3/goDLLn+ZLf1jbvy7KWHPofuCLFbE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=SvggCN3j4h/mCve4/VnwZ8UadKnibgfdhB4Q2rsWTLIzothetg3ysL/TJPRxw3LrjX2KAVAOVC/Ya2o8MU1y7GfvNxf4BHi48XXEKj2EudIFlrFboTh628+XJGaC+FCeZmqpy9E5cQplbUMADiOI9t8v62GiZMtzL4qoGfFr7ns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 187C8176C;
-	Fri, 25 Jul 2025 03:08:46 -0700 (PDT)
-Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D64E03F5A1;
-	Fri, 25 Jul 2025 03:08:48 -0700 (PDT)
-From: Leo Yan <leo.yan@arm.com>
-Date: Fri, 25 Jul 2025 11:08:16 +0100
-Subject: [PATCH RESEND v3 6/6] perf docs: Document AUX pause and resume
- with BPF
+	s=arc-20240116; t=1753438310; c=relaxed/simple;
+	bh=aQi8U07nJiWlsTT5drTwPLEyTiRfoLQE1Ei661AEFGg=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=lGmFzkSoel3ji9RB9FOLVRpHFQ8McZswd9h6ENTfGCoK2c72D9WyD+5pWsgoYFvgX6nIITUXBsoKEqjoJaFGyvcD+X/Yz5dH8IZ93SqF/oA/UC/v9h+h6LanNNYY/3qnxj00vrWQkeyHT8CfvKYnprtQrkSvlgeNqB+4Hbshok0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BsyH1QmA; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BsyH1QmA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7759CC4CEEF;
+	Fri, 25 Jul 2025 10:11:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753438310;
+	bh=aQi8U07nJiWlsTT5drTwPLEyTiRfoLQE1Ei661AEFGg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=BsyH1QmAEBaDpMXgiYVtkjMpPj6V3kdLijfyR9LCzGs54en6ZqJOZYtrpi0+yt/2r
+	 myuxb5HZpN0baWKw1JbQDQN04E0jM1uhDgpD7S2xCj0cC72/gN2EsjiR/oFr8O5ZVo
+	 iP4xsUyaC3NMWnsGETUdTMjJYIx8qLEJQTH2g5KYE2NgRztVfrSojIMt+CVTnfoF9c
+	 EsbY7fbhIJFf8DpUyqOawdvOSAAfc9d2I67P9Be1NqZ8wWdw6p210IHTOV47n0/EOo
+	 WtGUI5J8hQXn4O8HoAIrgepshehOLCKYg9kSW0S4Z1ByVJixrrFbpnzBWwE/YOGLxh
+	 t5MbMJZiUHw3g==
+Date: Fri, 25 Jul 2025 19:11:43 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ x86@kernel.org, Song Liu <songliubraving@fb.com>, Yonghong Song
+ <yhs@fb.com>, John Fastabend <john.fastabend@gmail.com>, Hao Luo
+ <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Alan Maguire <alan.maguire@oracle.com>, David Laight
+ <David.Laight@ACULAB.COM>, Thomas =?UTF-8?B?V2Vpw59zY2h1aA==?=
+ <thomas@t-8ch.de>, Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCHv6 perf/core 09/22] uprobes/x86: Add uprobe syscall to
+ speed up uprobe
+Message-Id: <20250725191143.fabe4f33abf0856780ec1f0e@kernel.org>
+In-Reply-To: <20250720112133.244369-10-jolsa@kernel.org>
+References: <20250720112133.244369-1-jolsa@kernel.org>
+	<20250720112133.244369-10-jolsa@kernel.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250725-perf_aux_pause_resume_bpf_rebase-v3-6-ae21deb49d1a@arm.com>
-References: <20250725-perf_aux_pause_resume_bpf_rebase-v3-0-ae21deb49d1a@arm.com>
-In-Reply-To: <20250725-perf_aux_pause_resume_bpf_rebase-v3-0-ae21deb49d1a@arm.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
- Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
- KP Singh <kpsingh@kernel.org>, Matt Bobrowski <mattbobrowski@google.com>, 
- Song Liu <song@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
- Martin KaFai Lau <martin.lau@linux.dev>, 
- Eduard Zingerman <eddyz87@gmail.com>, 
- Yonghong Song <yonghong.song@linux.dev>, 
- John Fastabend <john.fastabend@gmail.com>, 
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
- Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
- James Clark <james.clark@linaro.org>, 
- Suzuki K Poulose <suzuki.poulose@arm.com>, 
- Mike Leach <mike.leach@linaro.org>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
- bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
- Leo Yan <leo.yan@arm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1753438103; l=3165;
- i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=+3gjGeeKe7DyZ3/goDLLn+ZLf1jbvy7KWHPofuCLFbE=;
- b=ZHE4FA41woUg35swf1zGO1DfYw6G1BriPf/uj6IYI7C//DMngby8Kr9fu8gtJjKssd1UjRItX
- +n+fuanhJHoDixS9Q+H4a+W0T9jcO4FShVZwkr4pBdfoDFUyiFwzY+c
-X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
- pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-Documents the usage of the --bpf-aux-pause option and provides
-examples.
+On Sun, 20 Jul 2025 13:21:19 +0200
+Jiri Olsa <jolsa@kernel.org> wrote:
 
-Signed-off-by: Leo Yan <leo.yan@arm.com>
----
- tools/perf/Documentation/perf-record.txt | 51 ++++++++++++++++++++++++++++++++
- 1 file changed, 51 insertions(+)
+> Adding new uprobe syscall that calls uprobe handlers for given
+> 'breakpoint' address.
+> 
+> The idea is that the 'breakpoint' address calls the user space
+> trampoline which executes the uprobe syscall.
+> 
+> The syscall handler reads the return address of the initial call
+> to retrieve the original 'breakpoint' address. With this address
+> we find the related uprobe object and call its consumers.
+> 
+> Adding the arch_uprobe_trampoline_mapping function that provides
+> uprobe trampoline mapping. This mapping is backed with one global
+> page initialized at __init time and shared by the all the mapping
+> instances.
+> 
+> We do not allow to execute uprobe syscall if the caller is not
+> from uprobe trampoline mapping.
+> 
+> The uprobe syscall ensures the consumer (bpf program) sees registers
+> values in the state before the trampoline was called.
+> 
 
-diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-index 612612fa2d8041b94860035ed9cb01557a20b6b7..5aee20bfd03bda72bddabf42005b9678309414ad 100644
---- a/tools/perf/Documentation/perf-record.txt
-+++ b/tools/perf/Documentation/perf-record.txt
-@@ -544,6 +544,57 @@ must be an AUX area event. Samples on other events will be created containing
- data from the AUX area. Optionally sample size may be specified, otherwise it
- defaults to 4KiB.
- 
-+--bpf-aux-pause=[=OPTIONS]::
-+Specify trace events for triggering AUX pause with a BPF program. A trace event
-+can be static ftrace tracepoint, or dynamic tracepoint by using kprobe,
-+kretprobe, uprobe or uretprobe. This option must be enabled in combination with
-+the "aux-action=start-paused" configuration in an AUX event.
-+
-+For attaching a kprobe or kretprobe event, the format is:
-+
-+  {kprobe|kretprobe}:{p|r}:function_name
-+
-+The format for attaching a uprobe or uretprobe event is:
-+
-+  {uprobe|uretprobe}:{p|r}:executable:function_name
-+
-+The format for attaching a tracepoint is:
-+
-+  {tp|tracepoint}:{p|r}:category:tracepint
-+
-+The first field is for the trace event type. It supports five types: kprobe,
-+kretprobe, uprobe, uretprobe, and tracepoint ('tp' is also supported as an
-+abbreviation for "tracepoint"). The second field specifies whether the action is
-+pause ("p") or resume ("r").
-+
-+For probes, the "function_name" field is used to specify a function name. In
-+particular, for a uprobe or uretprobe, an executable path must also be provided.
-+In the case of a ftrace tracepoint, the "category" and "tracepoint" fields are
-+used together to provide complete tracepoint information.
-+
-+The '--bpf-aux-pause' option does not support inherit mode.  In the default
-+trace mode, it needs to be combined with the '-i' or '--no-inherit' option to
-+disable inherit mode.
-+
-+The syntax supports multiple trace events, with each separated by a comma (,).
-+For example, users can set up AUX pause on a kernel function with kretprobe and
-+AUX resume on a tracepoint with the syntax below:
-+
-+  For default trace mode (with inherit mode disabled):
-+  perf record -e cs_etm/aux-action=start-paused/ \
-+    --bpf-aux-pause="kretprobe:p:__arm64_sys_openat,tp:r:sched:sched_switch" \
-+    -i ...
-+
-+  For system wide trace mode:
-+  perf record -e cs_etm/aux-action=start-paused/ \
-+    --bpf-aux-pause="kretprobe:p:__arm64_sys_openat,tp:r:sched:sched_switch" \
-+    -a ...
-+
-+  For trace with uprobe and uretprobe:
-+  perf record -e cs_etm/aux-action=start-paused/ \
-+    --bpf-aux-pause="uretprobe:p:~/sort:bubble_sort,uprobe:r:~/sort:bubble_sort" \
-+    -i --per-thread -- ~/sort
-+
- --proc-map-timeout::
- When processing pre-existing threads /proc/XXX/mmap, it may take a long time,
- because the file may be huge. A time out is needed in such cases.
+Looks good to me.
+
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+Thanks!
+
+> Acked-by: Andrii Nakryiko <andrii@kernel.org>
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+>  arch/x86/entry/syscalls/syscall_64.tbl |   1 +
+>  arch/x86/kernel/uprobes.c              | 139 +++++++++++++++++++++++++
+>  include/linux/syscalls.h               |   2 +
+>  include/linux/uprobes.h                |   1 +
+>  kernel/events/uprobes.c                |  17 +++
+>  kernel/sys_ni.c                        |   1 +
+>  6 files changed, 161 insertions(+)
+> 
+> diff --git a/arch/x86/entry/syscalls/syscall_64.tbl b/arch/x86/entry/syscalls/syscall_64.tbl
+> index cfb5ca41e30d..9fd1291e7bdf 100644
+> --- a/arch/x86/entry/syscalls/syscall_64.tbl
+> +++ b/arch/x86/entry/syscalls/syscall_64.tbl
+> @@ -345,6 +345,7 @@
+>  333	common	io_pgetevents		sys_io_pgetevents
+>  334	common	rseq			sys_rseq
+>  335	common	uretprobe		sys_uretprobe
+> +336	common	uprobe			sys_uprobe
+>  # don't use numbers 387 through 423, add new calls after the last
+>  # 'common' entry
+>  424	common	pidfd_send_signal	sys_pidfd_send_signal
+> diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
+> index 6c4dcbdd0c3c..d18e1ae59901 100644
+> --- a/arch/x86/kernel/uprobes.c
+> +++ b/arch/x86/kernel/uprobes.c
+> @@ -752,6 +752,145 @@ void arch_uprobe_clear_state(struct mm_struct *mm)
+>  	hlist_for_each_entry_safe(tramp, n, &state->head_tramps, node)
+>  		destroy_uprobe_trampoline(tramp);
+>  }
+> +
+> +static bool __in_uprobe_trampoline(unsigned long ip)
+> +{
+> +	struct vm_area_struct *vma = vma_lookup(current->mm, ip);
+> +
+> +	return vma && vma_is_special_mapping(vma, &tramp_mapping);
+> +}
+> +
+> +static bool in_uprobe_trampoline(unsigned long ip)
+> +{
+> +	struct mm_struct *mm = current->mm;
+> +	bool found, retry = true;
+> +	unsigned int seq;
+> +
+> +	rcu_read_lock();
+> +	if (mmap_lock_speculate_try_begin(mm, &seq)) {
+> +		found = __in_uprobe_trampoline(ip);
+> +		retry = mmap_lock_speculate_retry(mm, seq);
+> +	}
+> +	rcu_read_unlock();
+> +
+> +	if (retry) {
+> +		mmap_read_lock(mm);
+> +		found = __in_uprobe_trampoline(ip);
+> +		mmap_read_unlock(mm);
+> +	}
+> +	return found;
+> +}
+> +
+> +/*
+> + * See uprobe syscall trampoline; the call to the trampoline will push
+> + * the return address on the stack, the trampoline itself then pushes
+> + * cx, r11 and ax.
+> + */
+> +struct uprobe_syscall_args {
+> +	unsigned long ax;
+> +	unsigned long r11;
+> +	unsigned long cx;
+> +	unsigned long retaddr;
+> +};
+> +
+> +SYSCALL_DEFINE0(uprobe)
+> +{
+> +	struct pt_regs *regs = task_pt_regs(current);
+> +	struct uprobe_syscall_args args;
+> +	unsigned long ip, sp;
+> +	int err;
+> +
+> +	/* Allow execution only from uprobe trampolines. */
+> +	if (!in_uprobe_trampoline(regs->ip))
+> +		goto sigill;
+> +
+> +	err = copy_from_user(&args, (void __user *)regs->sp, sizeof(args));
+> +	if (err)
+> +		goto sigill;
+> +
+> +	ip = regs->ip;
+> +
+> +	/*
+> +	 * expose the "right" values of ax/r11/cx/ip/sp to uprobe_consumer/s, plus:
+> +	 * - adjust ip to the probe address, call saved next instruction address
+> +	 * - adjust sp to the probe's stack frame (check trampoline code)
+> +	 */
+> +	regs->ax  = args.ax;
+> +	regs->r11 = args.r11;
+> +	regs->cx  = args.cx;
+> +	regs->ip  = args.retaddr - 5;
+> +	regs->sp += sizeof(args);
+> +	regs->orig_ax = -1;
+> +
+> +	sp = regs->sp;
+> +
+> +	handle_syscall_uprobe(regs, regs->ip);
+> +
+> +	/*
+> +	 * Some of the uprobe consumers has changed sp, we can do nothing,
+> +	 * just return via iret.
+> +	 */
+> +	if (regs->sp != sp) {
+> +		/* skip the trampoline call */
+> +		if (args.retaddr - 5 == regs->ip)
+> +			regs->ip += 5;
+> +		return regs->ax;
+> +	}
+> +
+> +	regs->sp -= sizeof(args);
+> +
+> +	/* for the case uprobe_consumer has changed ax/r11/cx */
+> +	args.ax  = regs->ax;
+> +	args.r11 = regs->r11;
+> +	args.cx  = regs->cx;
+> +
+> +	/* keep return address unless we are instructed otherwise */
+> +	if (args.retaddr - 5 != regs->ip)
+> +		args.retaddr = regs->ip;
+> +
+> +	regs->ip = ip;
+> +
+> +	err = copy_to_user((void __user *)regs->sp, &args, sizeof(args));
+> +	if (err)
+> +		goto sigill;
+> +
+> +	/* ensure sysret, see do_syscall_64() */
+> +	regs->r11 = regs->flags;
+> +	regs->cx  = regs->ip;
+> +	return 0;
+> +
+> +sigill:
+> +	force_sig(SIGILL);
+> +	return -1;
+> +}
+> +
+> +asm (
+> +	".pushsection .rodata\n"
+> +	".balign " __stringify(PAGE_SIZE) "\n"
+> +	"uprobe_trampoline_entry:\n"
+> +	"push %rcx\n"
+> +	"push %r11\n"
+> +	"push %rax\n"
+> +	"movq $" __stringify(__NR_uprobe) ", %rax\n"
+> +	"syscall\n"
+> +	"pop %rax\n"
+> +	"pop %r11\n"
+> +	"pop %rcx\n"
+> +	"ret\n"
+> +	".balign " __stringify(PAGE_SIZE) "\n"
+> +	".popsection\n"
+> +);
+> +
+> +extern u8 uprobe_trampoline_entry[];
+> +
+> +static int __init arch_uprobes_init(void)
+> +{
+> +	tramp_mapping_pages[0] = virt_to_page(uprobe_trampoline_entry);
+> +	return 0;
+> +}
+> +
+> +late_initcall(arch_uprobes_init);
+> +
+>  #else /* 32-bit: */
+>  /*
+>   * No RIP-relative addressing on 32-bit
+> diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
+> index e5603cc91963..b0cc60f1c458 100644
+> --- a/include/linux/syscalls.h
+> +++ b/include/linux/syscalls.h
+> @@ -998,6 +998,8 @@ asmlinkage long sys_ioperm(unsigned long from, unsigned long num, int on);
+>  
+>  asmlinkage long sys_uretprobe(void);
+>  
+> +asmlinkage long sys_uprobe(void);
+> +
+>  /* pciconfig: alpha, arm, arm64, ia64, sparc */
+>  asmlinkage long sys_pciconfig_read(unsigned long bus, unsigned long dfn,
+>  				unsigned long off, unsigned long len,
+> diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
+> index b40d33aae016..b6b077cc7d0f 100644
+> --- a/include/linux/uprobes.h
+> +++ b/include/linux/uprobes.h
+> @@ -239,6 +239,7 @@ extern unsigned long uprobe_get_trampoline_vaddr(void);
+>  extern void uprobe_copy_from_page(struct page *page, unsigned long vaddr, void *dst, int len);
+>  extern void arch_uprobe_clear_state(struct mm_struct *mm);
+>  extern void arch_uprobe_init_state(struct mm_struct *mm);
+> +extern void handle_syscall_uprobe(struct pt_regs *regs, unsigned long bp_vaddr);
+>  #else /* !CONFIG_UPROBES */
+>  struct uprobes_state {
+>  };
+> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> index acec91a676b7..cbba31c0495f 100644
+> --- a/kernel/events/uprobes.c
+> +++ b/kernel/events/uprobes.c
+> @@ -2772,6 +2772,23 @@ static void handle_swbp(struct pt_regs *regs)
+>  	rcu_read_unlock_trace();
+>  }
+>  
+> +void handle_syscall_uprobe(struct pt_regs *regs, unsigned long bp_vaddr)
+> +{
+> +	struct uprobe *uprobe;
+> +	int is_swbp;
+> +
+> +	guard(rcu_tasks_trace)();
+> +
+> +	uprobe = find_active_uprobe_rcu(bp_vaddr, &is_swbp);
+> +	if (!uprobe)
+> +		return;
+> +	if (!get_utask())
+> +		return;
+> +	if (arch_uprobe_ignore(&uprobe->arch, regs))
+> +		return;
+> +	handler_chain(uprobe, regs);
+> +}
+> +
+>  /*
+>   * Perform required fix-ups and disable singlestep.
+>   * Allow pending signals to take effect.
+> diff --git a/kernel/sys_ni.c b/kernel/sys_ni.c
+> index c00a86931f8c..bf5d05c635ff 100644
+> --- a/kernel/sys_ni.c
+> +++ b/kernel/sys_ni.c
+> @@ -392,3 +392,4 @@ COND_SYSCALL(setuid16);
+>  COND_SYSCALL(rseq);
+>  
+>  COND_SYSCALL(uretprobe);
+> +COND_SYSCALL(uprobe);
+> -- 
+> 2.50.1
+> 
+
 
 -- 
-2.34.1
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
