@@ -1,227 +1,397 @@
-Received: from CAN01-YQB-obe.outbound.protection.outlook.com (mail-yqbcan01on2139.outbound.protection.outlook.com [40.107.116.139])
+Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAD9423E335;
-	Fri, 25 Jul 2025 13:15:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.116.139
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753449342; cv=fail; b=p+XrJyM6dzXYcE1UMaGiAQJykSaz67zrg1uQTjPqv9FibH7oZmeRhCsSxPSPAXdEjJEZxRr69gsnwYezzQJGsKFHHgvuAKRzbPeBcjNDdf9QgEaQWNlMkCaYgEwL2HikNo0wy9m5nBL5hduDsaP9oeS9Uh6imDlUGsN7Cp++BY8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753449342; c=relaxed/simple;
-	bh=7uyTfhqAYDF4ObjF75+sUIE3RSPXMsUZx+iSRRqB2K0=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=I8EmmHG7xBLHw8Ha7u+znzz8Msxm8T5oVsQy2AnV1Rcg4VFwNXtAZ0eoAueaCdpx3MtZzFAfi6YTqr3jMCzxBn2DKLM1xEb1WReb04kFHbFxeLwNd5aPkyWYrzGbEJZChR6UUbjWcFq6rCkS3FQJ65D0d0zss+Xv72QfYbjWhgQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=VhnbYj2a; arc=fail smtp.client-ip=40.107.116.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="VhnbYj2a"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=oJjbsktf00Mr3RbKjZbldNRUnp6P74MLbblkd/QPaHhAYBZluLJTDkQreMa1HB12zrDpG4Lahijh45LfU8U+gPlSt2RGmYnv2xiZ03kQ64XRT9srSsc3F0QzYhZWVl/rQzf/8pxhZ17G5RbXSWgY01doV2Ui6xZpPUjf73ZCiJz6z/BuI6ShQoGgWTPHjby5nx0AlSjtSQFHyHpT1ybXgKuGToArkfXFg/92B9bdoqLltceU/6EaRqZSi7Km43jxCNVl6xt9qwptS85/RzPxmBGf3FwYdVmgwE240JvjteRr3EPRT/m0EPguFvm73UJYK969i6w1ngwrxMzHLWXDvA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=MWwkZnZ3bfDYstg2FqYAk6KkxLAjiYrBRKjU0dEAyG8=;
- b=OJcSDIEhKx+uaLGUWaxLLG3hA5dNsxRkH/vUlN9xxgPUqkYry4dcp6GZKIHnfpZqVX4khFANTD8Nud30vWlVIIm8qZelSZGvzv96rM+KK53ls9nqWhInPqtoL10kYfMcaM+bRcWK3mt8322I5r9Ri0y4yPqrfj6skFXT8SwiMqNyU7TSJingbe/O/NL2JEikaSkaWEJkT4M+cPmFAFGndp52HR01zKOgHyiMHQUizmJ3+CkwIarawj3Eh0qtcLw/Y6kuaZC3Z614QQb/VrgCLSPWEACU6xM9ySIHmlrEwS2jfKieuVKPU54hOk714sCO3qPiGhwyn3bSw4cIYsmWXA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=efficios.com; dmarc=pass action=none header.from=efficios.com;
- dkim=pass header.d=efficios.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MWwkZnZ3bfDYstg2FqYAk6KkxLAjiYrBRKjU0dEAyG8=;
- b=VhnbYj2aCb862xjg9YfceOz2Af/P5Rb6gCOl2PUlfxHJkKf0mhkX0Shv2/RtEyf81X8SyOSqEMuzVNsW/Sid/kVNbgQol0dNZL086yDxvypU+FXDUBqOlfWO3gHh4USSFesolk7QOgM+vzjst8hdlsKDVm/J/4jDt9AydU9cwYa7OkwGWz6JE9gYNRReGX4OMdrWcRYyfgbWBh659gsnwh0sfj9fW7W/CYS+JF6XNX8lWGiV3YlxLFNL6gMp9SM7myEvGIlSikVTyu9BMGK/qa93XpbZmA892XAv3sac/q0vYjn/ii+5DYsp7vNwELFvfGCVGDmhmIeTiUBl0XexMQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=efficios.com;
-Received: from YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:be::5)
- by YT2PPF12FF28F4C.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b08::411) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8964.23; Fri, 25 Jul
- 2025 13:15:35 +0000
-Received: from YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
- ([fe80::50f1:2e3f:a5dd:5b4]) by YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
- ([fe80::50f1:2e3f:a5dd:5b4%3]) with mapi id 15.20.8964.023; Fri, 25 Jul 2025
- 13:15:35 +0000
-Message-ID: <a1f2f201-61f9-4564-b0c8-45c4d912bd00@efficios.com>
-Date: Fri, 25 Jul 2025 09:15:34 -0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/3] tracing: Add a tracepoint verification check at
- build time
-To: Steven Rostedt <rostedt@kernel.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
- llvm@lists.linux.dev
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>,
- Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor
- <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>,
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
- Catalin Marinas <catalin.marinas@arm.com>,
- Linus Torvalds <torvalds@linux-foundation.org>
-References: <20250725025149.726267838@kernel.org>
- <20250725025213.342188378@kernel.org>
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Content-Language: en-US
-In-Reply-To: <20250725025213.342188378@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: QB1P288CA0031.CANP288.PROD.OUTLOOK.COM
- (2603:10b6:c00:2d::44) To YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:be::5)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1521246780;
+	Fri, 25 Jul 2025 13:21:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1753449689; cv=none; b=pKsVIsunkaaq52J+hwYjy/neSX9cbiYgVk4GDWkuEzmXgMVs2bYU4isCIyQJOnPmF+1Dqi/v5W3R5nRnuDNtH5lqAtQoYWIhL/IUVWh9A2c3cDmpfzyJHK9D6F3gL4tFbSC6DQJbsATzlKLgiLnAx5MoMbUY+qG2hZhvN+PHKKU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1753449689; c=relaxed/simple;
+	bh=1MGKZ+QXqS6uZzSzRApOKmGmRcscRN4yJjylkQk/TRc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oXbPK9q1Ojc3Xf4IiXEGzNo52RmjZuO699qp/9LXVrLqH9VnKKBclwaW1UxcNZC7Sk22fFBg8Edl5V6lt1X+JCYMkcN5Yx2HkcU/O3zfAl4xZjeAhhaJb16qe+sFH0l0OdNE5woR6L+VP4DIA9KKDa8mh2HpkUISrESoCAsIeek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf12.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay04.hostedemail.com (Postfix) with ESMTP id 69B8C1A073E;
+	Fri, 25 Jul 2025 13:21:25 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf12.hostedemail.com (Postfix) with ESMTPA id B7DE418;
+	Fri, 25 Jul 2025 13:21:23 +0000 (UTC)
+Date: Fri, 25 Jul 2025 09:21:28 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/1] tracing: Remove "__attribute__()" from the type
+ field of event format
+Message-ID: <20250725092128.6ebd7422@gandalf.local.home>
+In-Reply-To: <175333239565.2267214.13923288877217326467.stgit@mhiramat.tok.corp.google.com>
+References: <175333238644.2267214.1835493691667067597.stgit@mhiramat.tok.corp.google.com>
+	<175333239565.2267214.13923288877217326467.stgit@mhiramat.tok.corp.google.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: YT2PR01MB9175:EE_|YT2PPF12FF28F4C:EE_
-X-MS-Office365-Filtering-Correlation-Id: ea2e8a80-ba85-443f-a0d6-08ddcb7d5761
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|10070799003|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?OVRNRWpzbUtBM2ZNU05TSlpLdTYxaFgxc1JoK3NaQ1lOci8zaHNGZ2RUbW1z?=
- =?utf-8?B?MEExVG1WT2F3SnovRWVHV0NpanR3c05tVnludDIyOUZubEU3eEllbjNWQTkv?=
- =?utf-8?B?WFN4Nzl2NmF3R21DS3d6RlhPWVBtdktRSnJGM2wxZUdIbHZNNk5LMzA2cnJ1?=
- =?utf-8?B?N3BhSnJPd2ZrRTkyTnNpSGdSVEVUV2d2OFIxQkovVkZJMWVaM29PSlB0L1N2?=
- =?utf-8?B?ZEQ2T1FNL0RCWkNaUXczTTFFeHBVcWNrcFhFUnAyMXE4N3ptMjZFaEt5Y2VH?=
- =?utf-8?B?bVJhTUQ3OGRZby9VOGs0eXlrOVk1YmFvOWFUMFFOQnJlTWRuamZ4VE5WL0Ri?=
- =?utf-8?B?aGhEV2tFMml0Tk92RERHV1l3bG1XTThkQ1B0NjBiWEp1bGh5Y3k0dWIwanEy?=
- =?utf-8?B?czV5QkczNUFhai9GWGQrQ2pqSkMvQ0lyclJOem1FRkYyQ0tUc1dqQkJzZmJt?=
- =?utf-8?B?NWlhaEh6R3VDa2Qzalo0RG4vVm0vM2ZUYXdiL044Uk54Z0RvSjZKeitySWdy?=
- =?utf-8?B?WFI1aUxVdjNnV3A4T0l2SEtXaXRoVTFRVlNOcUt6TG51QkUyNWRmbndxVG9r?=
- =?utf-8?B?WXVNK2VnbEJ0MlE0MkJyNU9JcUhzdUhTeEJwUkxBQ1ZsT2kxaDFsUHRWUWpk?=
- =?utf-8?B?dS9ET3VjOGtQZmxsais2ZGJLQUcvTXRJeG5pWVowVTB5RFlYY2czSmk4RXdB?=
- =?utf-8?B?UnpVTFRPVUtHc3JlVnFhZzMwamdBZmJvRGVTSEJVaks5YWxzdWpqekhrTTBS?=
- =?utf-8?B?RjJ6WXIwWUdGYy85TU05eHRkelljUCs0OS8xaTR6WDQ3UUdJbnFxR2JRaVdG?=
- =?utf-8?B?NElVY3l2aDlTRVF0a0xDY0wxZFBocUZKY3lxU3NBYUhvUE9GWm9BbDBsL0Y1?=
- =?utf-8?B?UUxyRytHdUg5c0RxU1BMT05pZEhxdWJWdlE2eEhleGw4S3F5VGVwenJiV1Rv?=
- =?utf-8?B?QlRFYlA2ZWszYlBwOFZpWndOdkVYU0wvVTRLY0x5eEptL1U1QnRhZGtvbE1X?=
- =?utf-8?B?NjNqVWNmTGk3VVdIb2pCUGY2YmtRcDZTN1NuME9IWkl4WlhSemlMQlFCV2Vr?=
- =?utf-8?B?eDNhSEkxaUovOE9rVHlUWXJSNEhaUWFVWTBJekJBeHIwZ1ljUk5udWlVaUpw?=
- =?utf-8?B?S3JickRXUzhzQ2lNL1gySXowV3ZHQm9zL1dVQ2UyR0FRSmxnTHdveVpWc1BK?=
- =?utf-8?B?Y2Zhb2pUMkR3S056MGlmMWpoVnA2Ui9VVDBCSUdJalJLdXRlWTBXUytOSzB1?=
- =?utf-8?B?a283dkM1cnlGTnROV0J5VXEvR2oreko1djYvaWhFSk9wT0VCRGJNM3NWN2xC?=
- =?utf-8?B?UWRqOFgyb09GQTBCMUFmRFMyL281SHNUa0thOEd0UW51TyswOTcvNlNxNTg3?=
- =?utf-8?B?S3U5c0Vhd1lTR0JPMlgzTVdPbnpNcjFyNFd3eE5sRHJQQ1VlWm1kdDE0dmZN?=
- =?utf-8?B?bmtWYlRKN1A0S1FBNW5Na0NORFB0c2lOVmpqODhXWFJBT240bTZDdS8xVXVz?=
- =?utf-8?B?KzVHanpIOEJJUzZrT1dlaEVybk1oQ2dNK1Zwa1cvUXlaRVRPNWZTV0lyNjlK?=
- =?utf-8?B?dHczMXptcHdMYmFpeklocXB3cFhZOUJTT2UzVWtmT2FrMnR4OHdOVkt5eXc3?=
- =?utf-8?B?dzNTMkRTZ1dCSURrd29vampVZmlBbFJNMmpoSEhSZ1d3UFBldnQrcTNLeHRl?=
- =?utf-8?B?YmtwRExhUXV2dTlva0hqSm5JOHBWWHdSUENxc2dDMWNWbGxoZk1ZUDBXZmpX?=
- =?utf-8?B?U2tQSEtJVkJCOVdvT3JJQWNZU3F4bi9ubDZtTXovSG1VNU52R096S2lWd3B4?=
- =?utf-8?Q?bcd+vr5FGkeZbB25iCr74Fua54FocdRQ7Db+w=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(10070799003)(1800799024)(366016);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?UDhMTG80ZDBINXMzcFZaUVp1Z3lBQVU3dHFuZDJzbTl0akpNS1Z0aStGd0FU?=
- =?utf-8?B?Y2oxS04zTXFET0lPd21nOEpHbXl0MTJyM3I5YVJzc0FzMEx1VDAySnI5dU53?=
- =?utf-8?B?SWIvODRKZ2ZFSjNXQ29kRFpIMGxpTit5ZXc4blNSODltNGdPL1lnRlZuRkZP?=
- =?utf-8?B?eUcvRUJOMENFWGM0U2pHTi8wTjdSYmh6bDg4T0NFNXdGeTZsbm1qd1ZFdDdp?=
- =?utf-8?B?QWRXZVJ1b3duN2ZHOGtZbU5id1hNU2JkT2hYVHpoRVNVWTJyV1NXY0ZqTjdF?=
- =?utf-8?B?TDRqamxoU1NkWmk1SXZmazE4cWxUUUlKUzBJKzJHMTI3cHJpWWF1TzQ5YmhE?=
- =?utf-8?B?b1pQY3JKK1R4OWNsa3lQdVRmR2tyaVlJVFV6NnJIYVpxc3dUN2xwNWFBMVln?=
- =?utf-8?B?K0JpSitMU0xSSzZqNDFHM1YwWXlxV3dCTy9yR0xYeENnUmRwcUpBSFFZS2lH?=
- =?utf-8?B?WGRWajJSemtVa2tBenRWMitQSEdSdGprRlNwbEE2YUszTXY1Wm5aRWtjbFFR?=
- =?utf-8?B?Z1FITVRubnBMb3lBWGd4Y1JvUitPYjFhMmk2dE5pbmRlSTNrcGo5WExjc2hl?=
- =?utf-8?B?cVl0QUZUZGMxTnhkWXRyalcwWEJNSnoyMG1weC9xRi9meVpiK0hjdmZ6MWJk?=
- =?utf-8?B?L09QemtYNW5FaWZHV0crM1VOTnpKK00yTzRCT1p4TXY5M3ptdjY3eVVJUkQ2?=
- =?utf-8?B?RHBITzdPdDFydWpqR2dqYmlrWW5NRk9tRE84UlNKZURYbEcveGozdzhqUnQ5?=
- =?utf-8?B?NURNbG1wcU5jYTZlbW5LVGJwQ3lBbHY1YWtQRmNmZ1l2K01nbTdxczE1Qk0v?=
- =?utf-8?B?S29KS2wwQmREeUlFU1IrK3NOaVp0ZVorbnphWTRmQ0FPQ3MyN09xL1pJRnhU?=
- =?utf-8?B?bDhhclphRStBbHlUNithVUx3NXExNWRzT1RQVHA2YURpbHFaQkpaOEIyQTJU?=
- =?utf-8?B?eVJ0dXg3L3ZPYkRyUTNXTW5SRzdZYlk0L3BQcnVBSE44SHJBYXhUZlA0RjZO?=
- =?utf-8?B?RDg5T1pCbmxSaGh4WERubFh4eHBwTGRpN05yQld0di9pVys4T2NqUjJURG9Q?=
- =?utf-8?B?amtlRW9WOFFlQ2VrUzg3aWFYYnJqcDZidUFEamJLMHhRUFRVczA2YkNpeGRZ?=
- =?utf-8?B?OXFXQThxTDNDNEJtLzFkSDZGdzN0NnlvcGNrN1h1Y1lFWDV1M0NWQWd1Qjlx?=
- =?utf-8?B?VklCdTBPd2ZEZXlSZHNsMzgzRmpBQXJ5QzJhakdtR2lkSTcwZUt3TnhTWTBJ?=
- =?utf-8?B?bjlzQVNUY1pBd2pWd1BpbWtROWNyVXhDczlUMmNLazk4eFBHUUZXdnJxSGhG?=
- =?utf-8?B?UkVqSWxhTG1pKzVxdnZtdTQ0OTFhTEN2cTJWbHkvNlZzRXZUWFJ3ZlNMeGpP?=
- =?utf-8?B?V2J5VTZnZ3VTWTFrSVMrbE5HVnpLNGZ5TGt4ZnhFenI0WnpUdUVFblNNbUxN?=
- =?utf-8?B?ZW9yYVEzQnI3dVk4QTlIb0s0cXJDc0xHWVNRTmJ0VXZ2Ky9wQUpkV3BscmhB?=
- =?utf-8?B?WStUaW1oS1c1SjZESy9mb3hIcWJ1YVJwano4N1FBRm5xSEJkeFdOM25vLzBu?=
- =?utf-8?B?YzQyOVM4eDk2NGJ3ZmE3NThML3lvVk9pcnFUb0ZlNGRkenZYM2VEWmZhOTRo?=
- =?utf-8?B?emU2cmNIOHhML01TemRpekFCdnFtTXZ3UWFreWJURThheEVBOEUzM0d4b2RC?=
- =?utf-8?B?cmRBeDJWQUJzc1I2ZlVpZkpVSi9uMkFGVzdmd0dtN3FhclZRTUtwZUlGbllp?=
- =?utf-8?B?Z2V0empGbjNlWEs4aFdBSVhQVFJrMGR5a05WSEdhZ1o4SExJNWQ2NmUrVmpT?=
- =?utf-8?B?NWhFYWNDODdWakRiZGU0QmQ1eUc5UW8yMFNJSHovOVZVUnVkT0pKMDdqeGFU?=
- =?utf-8?B?R1YyNW1lVkhxMTEzNDB2YmxaNkJOWXpQdTlMQ1NLOGV5ZWdMa3VkQzlYNUZO?=
- =?utf-8?B?YmMxSUl4YzNhY0tkVUkwWi9TSzhmWndUTjVURExmSEFwM0NiMzlBVEljaEI0?=
- =?utf-8?B?M2YzQUJFODVpTFA5L1Bza2xrb0E4dmRPdHZoWFhTZG43V2FyRTRma0xwZ1Nu?=
- =?utf-8?B?SXpMMFVGTEV0bERyalQ4a3Fhd2E1R044amkyS0NnWW11Mm5Gd05EZndOVlhi?=
- =?utf-8?B?N2x4U3dMVUpUMzh5RENUTU43TjY1ekkySmVyQUl2U2M1b2JtcXdoWGhadEtV?=
- =?utf-8?B?VTdYRHFlRlljbExSTWJ6ZWErRVkvaTRCZkFGbEtEZUw2UWkyaWQzYWM3YUky?=
- =?utf-8?Q?wemP4zF8ydXQKbZUOt27Psin7R3/R1ehDoWmaBNijc=3D?=
-X-OriginatorOrg: efficios.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ea2e8a80-ba85-443f-a0d6-08ddcb7d5761
-X-MS-Exchange-CrossTenant-AuthSource: YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jul 2025 13:15:35.5446
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4f278736-4ab6-415c-957e-1f55336bd31e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 8bJJ6Jp/cSlDCamK7CDmVSpEg0zZzVCt49L2oIvamchHKg2rzV405VQQnRNnGjKog0aFZ+2ovD1dYyV81vhgcu/Myd2lcqQG107+e828sh8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: YT2PPF12FF28F4C
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: kbc5npgwmuxgjbo8bn7dj1aahepp9emi
+X-Rspamd-Server: rspamout01
+X-Rspamd-Queue-Id: B7DE418
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/rYuzcO53HV/k/sFg0ej8lxIWmj+4nzLQ=
+X-HE-Tag: 1753449683-921948
+X-HE-Meta: U2FsdGVkX18ZCgt8bcLHfNQw/alvGodNchbvbuXEAjV3vQRG6XKrJQ20RroP3jeBtuBbKteTe8B39IdRr+w6FblG+TSv6TsfEf/0RJeY4bplpyKZGcYhsh2XrFMuimM5cKl9Sgny0UQ8TD+00lTpxzKm7usPr/fdcN5I8eEj9alWuHLUUxdpymblahaV41DcEyHRhvFiVNDPrFWlnLoz91SSa9xWzbG6ropySmIOfBQnUNg4y0dq1bXARWWwolqGUbNvIbVlA4tDDx1n/WiWWoJ4C+gBuWt/PNjF30ZBR0aHAllJDoPuR76Dy3HJ317ptwePE2XO1CfNg2ltl1a4T6Cm1txPiijq
 
-On 2025-07-24 22:51, Steven Rostedt wrote:
-> From: Steven Rostedt <rostedt@goodmis.org>
+On Thu, 24 Jul 2025 13:46:35 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > 
-> If a tracepoint is defined via DECLARE_TRACE() or TRACE_EVENT() but never
-> called (via the trace_<tracepoint>() function), its metadata is still
-> around in memory and not discarded.
+> With CONFIG_DEBUG_INFO_BTF=y and PAHOLE_HAS_BTF_TAG=y, `__user` is
+> converted to `__attribute__((btf_type_tag("user")))`. In this case,
+> some syscall events have it for __user data, like below;
 > 
-> When created via TRACE_EVENT() the situation is worse because the
-> TRACE_EVENT() creates metadata that can be around 5k per trace event.
-> Having unused trace events causes several thousand of wasted bytes.
+> /sys/kernel/tracing # cat events/syscalls/sys_enter_openat/format
+> name: sys_enter_openat
+> ID: 720
+> format:
+>         field:unsigned short common_type;       offset:0;       size:2; signed:0;
+>         field:unsigned char common_flags;       offset:2;       size:1; signed:0;
+>         field:unsigned char common_preempt_count;       offset:3;       size:1; signed:0;
+>         field:int common_pid;   offset:4;       size:4; signed:1;
 > 
-> Add a verifier that injects a string of the name of the tracepoint it
-> calls that is added to the discarded section "__tracepoint_check".
-> For every builtin tracepoint, it's 
+>         field:int __syscall_nr; offset:8;       size:4; signed:1;
+>         field:int dfd;  offset:16;      size:8; signed:0;
+>         field:const char __attribute__((btf_type_tag("user"))) * filename;      offset:24;      size:8; signed:0;
+>         field:int flags;        offset:32;      size:8; signed:0;
+>         field:umode_t mode;     offset:40;      size:8; signed:0;
+> 
+> 
+> Then the trace event filter fails to set the string acceptable flag
+> (FILTER_PTR_STRING) to the field and rejects setting string filter;
+> 
+>  # echo 'filename.ustring ~ "*ftracetest-dir.wbx24v*"' \
+>     >> events/syscalls/sys_enter_openat/filter
+>  sh: write error: Invalid argument
+>  # cat error_log
+>  [  723.743637] event filter parse error: error: Expecting numeric field
+>    Command: filename.ustring ~ "*ftracetest-dir.wbx24v*"
+> 
+> Since this __attribute__ makes format parsing complicated and not
+> needed, remove the __attribute__(.*) from the type string.
+> 
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> ---
+> Changes in v4:
+>  - Run sanitizer only if btf_type_tag() attribute is defined.
+> Changes in v3:
+>  - Sanitize field in update_event_field() to avoid boottime performance
+>    overhead.
+>  - Change the function names because those are not always require eval
+>    maps.
+>  - Remove unneeded alloc_type flag.
+> Changes in v2:
+>  - Add memory allocation check flag.
+>  - Check the flag in update_event_fields() to avoid memory leak.
+>  - Fix 'static const int ... strlen()' issue.
+>  - Fix to find 2nd __attribute__ correctly. (adjust next after strcpy)
+> ---
+>  kernel/trace/trace.c        |   25 ++++++---
+>  kernel/trace/trace.h        |    4 +
+>  kernel/trace/trace_events.c |  115 +++++++++++++++++++++++++++++++++++++------
+>  3 files changed, 116 insertions(+), 28 deletions(-)
+> 
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index 95ae7c4e5835..b62528c42e26 100644
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+> @@ -5937,17 +5937,26 @@ static inline void trace_insert_eval_map_file(struct module *mod,
+>  			      struct trace_eval_map **start, int len) { }
+>  #endif /* !CONFIG_TRACE_EVAL_MAP_FILE */
+>  
+> -static void trace_insert_eval_map(struct module *mod,
+> -				  struct trace_eval_map **start, int len)
+> +static void
+> +trace_event_update_with_eval_map(struct module *mod,
+> +				 struct trace_eval_map **start,
+> +				 int len)
+>  {
+>  	struct trace_eval_map **map;
+>  
+> -	if (len <= 0)
+> +	/* Always run sanitizer only if btf_type_tag attr exists. */
+> +	if (!(IS_ENABLED(CONFIG_DEBUG_INFO_BTF) &&
+> +	      IS_ENABLED(CONFIG_PAHOLE_HAS_BTF_TAG) &&
+> +	      __has_attribute(btf_type_tag)) &&
+> +	    len <= 0)
+>  		return;
 
-its
+The above is quite messy and hard to read. Can you change it to:
 
-[...]
+	if (len <= 0) {
+		/* If bpf_type_tag attr is used, still need to sanitize */
+		if (!(IS_ENABLED(CONFIG_DEBUG_INFO_BTF) &&
+		      IS_ENABLED(CONFIG_PAHOLE_HAS_BTF_TAG) &&
+		      __has_attribute(btf_type_tag))
+			return;
+	}
 
+Not much better, but a little easier to read.
+		
+>  
+>  	map = start;
+>  
+> -	trace_event_eval_update(map, len);
+> +	trace_event_update_all(map, len);
 > +
-> +#define for_each_shdr_str(len, ehdr, sec)	\
-> +	for (const char *str = (void *)(ehdr) + shdr_offset(sec),	\
-> +	                *end = (str) + shdr_size(sec);			\
-> +	     len = strlen(str), (str) < end;				\
-> +	     str += (len) + 1, len = strlen(str))
+> +	if (len <= 0)
+> +		return;
+>  
+>  	trace_insert_eval_map_file(mod, start, len);
+>  }
+> @@ -10335,7 +10344,7 @@ static void __init eval_map_work_func(struct work_struct *work)
+>  	int len;
+>  
+>  	len = __stop_ftrace_eval_maps - __start_ftrace_eval_maps;
+> -	trace_insert_eval_map(NULL, __start_ftrace_eval_maps, len);
+> +	trace_event_update_with_eval_map(NULL, __start_ftrace_eval_maps, len);
+>  }
+>  
+>  static int __init trace_eval_init(void)
+> @@ -10388,9 +10397,6 @@ bool module_exists(const char *module)
+>  
+>  static void trace_module_add_evals(struct module *mod)
+>  {
+> -	if (!mod->num_trace_evals)
+> -		return;
+> -
+>  	/*
+>  	 * Modules with bad taint do not have events created, do
+>  	 * not bother with enums either.
+> @@ -10398,7 +10404,8 @@ static void trace_module_add_evals(struct module *mod)
+>  	if (trace_module_has_bad_taint(mod))
+>  		return;
+>  
+> -	trace_insert_eval_map(mod, mod->trace_evals, mod->num_trace_evals);
+> +	/* Even if no trace_evals, this need to sanitize field types. */
+> +	trace_event_update_with_eval_map(mod, mod->trace_evals, mod->num_trace_evals);
+>  }
+>  
+>  #ifdef CONFIG_TRACE_EVAL_MAP_FILE
+> diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+> index bd084953a98b..1dbf1d3cf2f1 100644
+> --- a/kernel/trace/trace.h
+> +++ b/kernel/trace/trace.h
+> @@ -2125,13 +2125,13 @@ static inline const char *get_syscall_name(int syscall)
+>  
+>  #ifdef CONFIG_EVENT_TRACING
+>  void trace_event_init(void);
+> -void trace_event_eval_update(struct trace_eval_map **map, int len);
+> +void trace_event_update_all(struct trace_eval_map **map, int len);
+>  /* Used from boot time tracer */
+>  extern int ftrace_set_clr_event(struct trace_array *tr, char *buf, int set);
+>  extern int trigger_process_regex(struct trace_event_file *file, char *buff);
+>  #else
+>  static inline void __init trace_event_init(void) { }
+> -static inline void trace_event_eval_update(struct trace_eval_map **map, int len) { }
+> +static inline void trace_event_update_all(struct trace_eval_map **map, int len) { }
+>  #endif
+>  
+>  #ifdef CONFIG_TRACER_SNAPSHOT
+> diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+> index 120531268abf..5289e2032678 100644
+> --- a/kernel/trace/trace_events.c
+> +++ b/kernel/trace/trace_events.c
+> @@ -3264,41 +3264,115 @@ static void add_str_to_module(struct module *module, char *str)
+>  	list_add(&modstr->next, &module_strings);
+>  }
+>  
+> +#define ATTRIBUTE_STR "__attribute__"
+
+If you are going to test for the '(' right after, why not add it to the
+strstr test?
+
+> +#define ATTRIBUTE_STR_LEN (sizeof(ATTRIBUTE_STR) - 1)
 > +
-> +static void make_trace_array(struct elf_tracepoint *etrace)
+> +/* Remove all __attribute__() from type */
+> +static void sanitize_field_type(char *type)
 > +{
-> +	Elf_Ehdr *ehdr = etrace->ehdr;
-> +	const char **vals = NULL;
-> +	int count = 0;
-> +	int len;
+> +	char *attr, *tmp, *next;
+> +	int depth;
 > +
-> +	etrace->array = NULL;
+> +	next = type;
+> +	while ((attr = strstr(next, ATTRIBUTE_STR))) {
+> +		next = attr + ATTRIBUTE_STR_LEN;
 > +
-> +	/*
-> +	 * The __tracepoint_check section is filled with strings of the
-> +	 * names of tracepoints (in tracepoint_strings). Create an array
-> +	 * that points to each string and then sort the array.
-> +	 */
-> +	for_each_shdr_str(len, ehdr, check_data_sec) {
-> +		if (!len)
+> +		/* Retry if __attribute__ is a part of type name. */
+> +		if ((attr != type && !isspace(attr[-1])) ||
+> +		    *next != '(')
+
+Now you wouldn't need the *next != '(' here.
+
 > +			continue;
+> +
+> +		depth = 0;
 
-The len==0 case would be when this skips section alignment padding when
-the linker decides to align the beginning of each .o sections, which
-ends up appearing as zeroed padding within the resulting vmlinux.o
-section after the individual sections have been stitched together, am I
-correct ?
+		/* the ATTRIBUTE_STR already has the first '(' */
+		depth = 1;
 
-Thanks,
+> +		while ((tmp = strpbrk(next, "()"))) {
+> +			if (*tmp == '(')
+> +				depth++;
+> +			else
+> +				depth--;
+> +			next = tmp + 1;
+> +			if (depth == 0)
+> +				break;
+> +		}
+> +		next = skip_spaces(next);
+> +		strcpy(attr, next);
+> +		next = attr;
+> +	}
+> +}
+> +
+> +static bool need_sanitize_field_type(const char *type)
+> +{
+> +	return !!strstr(type, ATTRIBUTE_STR);
+> +}
+> +
+> +static char *find_replacable_eval(const char *type, const char *eval_string,
+> +				  int len)
+> +{
+> +	char *ptr;
+> +
+> +	if (!eval_string)
+> +		return NULL;
+> +
+> +	ptr = strchr(type, '[');
+> +	if (!ptr)
+> +		return NULL;
+> +	ptr++;
+> +
+> +	if (!isalpha(*ptr) && *ptr != '_')
+> +		return NULL;
+> +
+> +	if (strncmp(eval_string, ptr, len) != 0)
+> +		return NULL;
+> +
+> +	return ptr;
+> +}
+> +
+>  static void update_event_fields(struct trace_event_call *call,
+>  				struct trace_eval_map *map)
+>  {
+>  	struct ftrace_event_field *field;
+> +	const char *eval_string = NULL;
+>  	struct list_head *head;
+> +	bool need_sanitize;
+> +	int len = 0;
+>  	char *ptr;
+>  	char *str;
+> -	int len = strlen(map->eval_string);
+>  
+>  	/* Dynamic events should never have field maps */
+> -	if (WARN_ON_ONCE(call->flags & TRACE_EVENT_FL_DYNAMIC))
+> +	if (call->flags & TRACE_EVENT_FL_DYNAMIC)
+>  		return;
+>  
+> +	if (map) {
+> +		eval_string = map->eval_string;
+> +		len = strlen(map->eval_string);
+> +	}
+> +
+>  	head = trace_get_fields(call);
+>  	list_for_each_entry(field, head, link) {
+> -		ptr = strchr(field->type, '[');
+> -		if (!ptr)
+> -			continue;
+> -		ptr++;
+>  
+> -		if (!isalpha(*ptr) && *ptr != '_')
+> -			continue;
+> -
+> -		if (strncmp(map->eval_string, ptr, len) != 0)
+> +		/* Check the field has bad string or eval. */
+> +		need_sanitize = need_sanitize_field_type(field->type);
 
-Mathieu
+Is there a reason you can't call the sanitize first?
 
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-https://www.efficios.com
+Then you wouldn't need to do the strstr(ATTRIBUTE_STR) twice.
+
+-- Steve
+
+
+> +		ptr = find_replacable_eval(field->type, eval_string, len);
+> +		if (likely(!need_sanitize && !ptr))
+>  			continue;
+>  
+>  		str = kstrdup(field->type, GFP_KERNEL);
+>  		if (WARN_ON_ONCE(!str))
+>  			return;
+> -		ptr = str + (ptr - field->type);
+> -		ptr = eval_replace(ptr, map, len);
+> -		/* enum/sizeof string smaller than value */
+> -		if (WARN_ON_ONCE(!ptr)) {
+> -			kfree(str);
+> -			continue;
+> +
+> +		if (ptr) {
+> +			ptr = str + (ptr - field->type);
+> +
+> +			ptr = eval_replace(ptr, map, len);
+> +			/* enum/sizeof string smaller than value */
+> +			if (WARN_ON_ONCE(!ptr) && !need_sanitize) {
+> +				kfree(str);
+> +				continue;
+> +			}
+> +		}
+> +		if (need_sanitize) {
+> +			sanitize_field_type(str);
+> +			/* Update field type */
+> +			if (field->filter_type == FILTER_OTHER)
+> +				field->filter_type = filter_assign_type(str);
+>  		}
+>  
+>  		/*
+> @@ -3313,11 +3387,13 @@ static void update_event_fields(struct trace_event_call *call,
+>  	}
+>  }
+>  
+> -void trace_event_eval_update(struct trace_eval_map **map, int len)
+> +/* Update all events for replacing eval and sanitizing */
+> +void trace_event_update_all(struct trace_eval_map **map, int len)
+>  {
+>  	struct trace_event_call *call, *p;
+>  	const char *last_system = NULL;
+>  	bool first = false;
+> +	bool updated;
+>  	int last_i;
+>  	int i;
+>  
+> @@ -3330,6 +3406,7 @@ void trace_event_eval_update(struct trace_eval_map **map, int len)
+>  			last_system = call->class->system;
+>  		}
+>  
+> +		updated = false;
+>  		/*
+>  		 * Since calls are grouped by systems, the likelihood that the
+>  		 * next call in the iteration belongs to the same system as the
+> @@ -3349,8 +3426,12 @@ void trace_event_eval_update(struct trace_eval_map **map, int len)
+>  				}
+>  				update_event_printk(call, map[i]);
+>  				update_event_fields(call, map[i]);
+> +				updated = true;
+>  			}
+>  		}
+> +		/* If not updated yet, update field for sanitizing. */
+> +		if (!updated)
+> +			update_event_fields(call, NULL);
+>  		cond_resched();
+>  	}
+>  	up_write(&trace_event_sem);
+
