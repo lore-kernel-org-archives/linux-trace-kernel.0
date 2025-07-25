@@ -1,139 +1,74 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E51FD3F9C5
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 25 Jul 2025 12:02:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C98368635D;
+	Fri, 25 Jul 2025 13:00:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753444977; cv=none; b=dHnGPmpiUiUXkkJxZiviyHyh7vwvokphXcv9lJUXr1PXv3g71d5sq2YydY52ozIKbKqcdLZMjRlWuSBQ1Krb3/WaSzzsueiqtW01Yd6hfwbhWE7WxGe8yz3tu0dy+GJ5Gb745wlDo2Zhl8XsdgeGyDkH+LUNekjnO2KlcYzX/PY=
+	t=1753448431; cv=none; b=RkTgZSpqLwgohhgMpcMopHXzCPQ6gqIUWgyRsSFIqGaHAfJb/yreV+QcX8UCbBBF61kGlRrsGBGGQ0hjoFfZ4bY+jVOvhSiauM1sreF4E27b2ZEnDAEs5zzHHylkwBigKxTABLToN06c4YrhycjdhcAwaIHKwQ0UIYhSwj1334U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753444977; c=relaxed/simple;
-	bh=fqZHebi6Bkb5eNifT3yZFGVku7zV66aFMdE+I3t/4aM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=izUyRCUP4jWM697lkKeYdqTR2WPsqaZ97/qOqMEmVuHKMqupw8LOvYRjg2/NneQ1/fQxPE9YSsKDghXucWQM/lHOjNfqerSXQFYTe4ezx23K5ejoTxu+MrYHr6deyZCO1WhgzZ07YftFoOx7uYph+WAgP1kNtZYII0G9k0/96E0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=L4HzcPLa; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L4HzcPLa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1753444973;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DbQ/CoKfRcOyF5XiIEBvtnbaZCP8pb630WPcqbF6yL0=;
-	b=L4HzcPLaXVETLVdu5Q1GBPjyLXP9NDB0FfTQvi61YI6CHXPLbldl8vXQq/YnOnQlJCTRGn
-	phat4HHJJMJ9wbEwVWVf/m6xsBmHe4kHyJNzs/G+jhBDNS/rhnbOOmCBN5iLSQDwbXlVv2
-	oUXUJMHJO658vhF3YTRBIQ5pNkDjXls=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-539-0zi3K2wQMzWYcW9nK5a7vQ-1; Fri, 25 Jul 2025 08:02:52 -0400
-X-MC-Unique: 0zi3K2wQMzWYcW9nK5a7vQ-1
-X-Mimecast-MFC-AGG-ID: 0zi3K2wQMzWYcW9nK5a7vQ_1753444971
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-ae0cd07eeb2so216083666b.3
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 25 Jul 2025 05:02:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753444971; x=1754049771;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DbQ/CoKfRcOyF5XiIEBvtnbaZCP8pb630WPcqbF6yL0=;
-        b=afMMFrpNVqeakO19AUBbIkuoUYxtHTV3cEDdDxXPNo5Hr8BaE1E18uC5SPG3aKx2PE
-         vgn3HuEzYmvq/D7U3cbSpT5Ti5dLVYeQGS1rjwMvDOJj7HKnDsrK3gRsAh0vcqykDzKD
-         CChk5zxIlwWj3gbmeF2zOtVqYSgfDyUbKbt2iNKk61HxmMevNQzbKw/zJeMSWm+H8p7m
-         9P0ljcFrxLJKAgCPVKtCPkzLwh3jvFqeGnjx7vejHf9GFBcMvPhiuuNwqqrModEo2nq6
-         e4+QghGu7FH6zovgRNBWO8BsGFLLLqdnX+JtM9mVP/CwhWU1qo5uzcxuk6sRwn1tl7r9
-         qm5w==
-X-Forwarded-Encrypted: i=1; AJvYcCXiwbJJy7nLYgWH6NNBrZQF98XqTpUCgvyiUSy7kHQslZItM3aklLHKG6mJPxEn+CL9ywG28lO6SzT04C41XOwOnsY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxwJlyNCGNkbPAwNonAoUU6W/nZVWSr4u+L00lZjapgXIkgujOL
-	jogGZhq9vjbSZa2hdZBQOT2mnRcezHy1Rne5KWVKPs1NylwhKIjNPPn9bS9uJ+tZy5t8isPSjwf
-	OUQcODfiMnao2kEUQvAALZqYq+Zsl77NSiE7aeuWSz1/YRgWKbxmqsRzjfc2KvWUvGFMmPb3lTR
-	L1Yc1J4PG60XJdyLTrgkTmN8wORL7JeTn16wROE1RZHa7TsHSR
-X-Gm-Gg: ASbGncsKeHcKoQYkVOrwF6/xQwcmLOJw7yW30bhEf7LVT1/8g2qtH+XKiJrHVZszMxq
-	glLB4jpjkAMJ+p6mJ1u+2huwFKur7PMW+MUEkBNMz3hB1wvjLyQZoyzYaCJBBQMUx+W9YsJScHs
-	fr2Mbqfl5lD23JK3vwMcrL6Aq/dM4n02ymrmo4aJihhg/d6pMQBLk=
-X-Received: by 2002:a17:906:9fcf:b0:ae4:1149:2cbc with SMTP id a640c23a62f3a-af6191fff1bmr211864366b.46.1753444971186;
-        Fri, 25 Jul 2025 05:02:51 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGa3CxGIXlbxFP3lOtiuZkdJlIwaUJx81JfXJ3+HOkhXlu3QfRGy7bD/MWcI9pNg2Pb+acrpaFHuNWexg0NHk0=
-X-Received: by 2002:a17:906:9fcf:b0:ae4:1149:2cbc with SMTP id
- a640c23a62f3a-af6191fff1bmr211838966b.46.1753444969189; Fri, 25 Jul 2025
- 05:02:49 -0700 (PDT)
+	s=arc-20240116; t=1753448431; c=relaxed/simple;
+	bh=knUYahf+MguxiIDnk05qiukxSE9mY7K8IL5uVUew2mk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=cOHnR0zJqluEmi8j5KQ8MZMpoYZFby0Nf7SZyUAVRmZOeJzka0BchrRRB8QszxCKc4M0QtcEPcnd+WzrkH5m/+wSQKlX4tc+1gc3h+wCGfDHJqFa9+z6cJdv+62L/SP6C4eTq0F939Y54dR45VBRuqV95G+dUD3kPfy6cKtSfN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf19.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay08.hostedemail.com (Postfix) with ESMTP id 196D2140764;
+	Fri, 25 Jul 2025 13:00:21 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf19.hostedemail.com (Postfix) with ESMTPA id 28C6F2002B;
+	Fri, 25 Jul 2025 13:00:19 +0000 (UTC)
+Date: Fri, 25 Jul 2025 09:00:24 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Shrikanth Hegde <sshegde@linux.ibm.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>,
+ LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>
+Subject: Re: [PATCH] tracing: sched: Hide numa events under
+ CONFIG_NUMA_BALANCING
+Message-ID: <20250725090024.64157cd6@gandalf.local.home>
+In-Reply-To: <708b26cc-e888-44d1-a7eb-ba37dea23a89@linux.ibm.com>
+References: <20250612100552.39672cf9@batman.local.home>
+	<708b26cc-e888-44d1-a7eb-ba37dea23a89@linux.ibm.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250701060337.648475-1-costa.shul@redhat.com>
-In-Reply-To: <20250701060337.648475-1-costa.shul@redhat.com>
-From: Tomas Glozar <tglozar@redhat.com>
-Date: Fri, 25 Jul 2025 14:02:37 +0200
-X-Gm-Features: Ac12FXwuR1pQjDETnTbqboRWzFRIjKwg3JsbDbHR5v4frWCm-lEfoXogMPmmqq8
-Message-ID: <CAP4=nvQMyBMay9unMuz0TmkF7pSmHV39iwinSnc3UbuLvOVa=Q@mail.gmail.com>
-Subject: Re: [PATCH v1] tools/rtla: Consolidate common parameters into shared structure
-To: Costa Shulyupin <costa.shul@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, John Kacur <jkacur@redhat.com>, 
-	Eder Zulian <ezulian@redhat.com>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	Gabriele Monaco <gmonaco@redhat.com>, Jan Stancek <jstancek@redhat.com>, 
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: c0rjzSnegIxzcT5c1nrr1WnHEngCvseDLIxaCpAM4YU_1753444971
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: ynguarhiuu4jshf7curd3p3yp6bttj1r
+X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: 28C6F2002B
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/EJ+fNlUCAt/6QpuJy6Yd+7NGpHqGTenY=
+X-HE-Tag: 1753448419-174715
+X-HE-Meta: U2FsdGVkX1/tb8rOoL9JOd1AL8EEuTRS+UHfk5GH0RZ9SGSV51slbU/88pPYv8YyqbPeN2LaxNy1IvnUzcRJCMH0rrkVtVlarAn2UKS6w+XGY9WzWK1BfSkxWAxqoCJWYtGjLsQC7GEW+17T79Y6NecFEvlYTIiz1/b2UNV2YnfxzBuH82jYxOnietieRw9tNn6dnlzYUHDIgFCMo632QALV+9y0dgIL2j8xXtRJEkHGLL6YRfKLys6FWH5qcs07jksM13IpSzMOAk25oGgtoULX4wZ+XEf4irpHJkTX0Dhz5YYayF7Cln6HQd0D3i2r6aV7Zo4ZAKadyGGeBFl2vtfeDYpQq4x2W5xED4N19htE0g+kC6ejK5oC1UBdXbWhDuiqNYGK0b12eQJB8oSFIA==
 
-=C3=BAt 1. 7. 2025 v 8:04 odes=C3=ADlatel Costa Shulyupin <costa.shul@redha=
-t.com> napsal:
->
-> timerlat_params and osnoise_params structures contain 17 identical
-> fields.
->
-> Introduce a common_params structure and move those fields into it to
-> eliminate the code duplication and improve maintainability.
->
-> Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
-> ---
+On Wed, 23 Jul 2025 15:14:26 +0530
+Shrikanth Hegde <sshegde@linux.ibm.com> wrote:
 
-Thank you for the patch.
+> On 6/12/25 19:35, Steven Rostedt wrote:
+> > From: Steven Rostedt <rostedt@goodmis.org>
+> > 
+> > The events sched_move_numa, sched_stick_numa and sched_swap_numa are only
+> > called when CONFIG_NUMA_BALANCING is configured. As each event can take up
+> > to 5K of memory in text and meta data regardless if they are used or not,
+> > they should not be defined when used.  
+> 
+> they should be defined when used?
 
-> +struct common_params {
-> +       /* trace configuration */
-> +       char                    *cpus;
-> +       cpu_set_t               monitored_cpus;
-> +       struct trace_events     *events;
-> +       int                     buffer_size;
-> +       char                    *trace_output;
-> +
-> +       /* Timing parameters */
-> +       int                     warmup;
-> +       unsigned long long      runtime;
-> +       long long               stop_us;
-> +       long long               stop_total_us;
-> +       int                     sleep_time;
-> +       int                     duration;
-> +
-> +       /* Scheduling parameters */
-> +       int                     set_sched;
-> +       struct sched_attr       sched_param;
-> +       int                     cgroup;
-> +       char                    *cgroup_name;
-> +       int                     hk_cpus;
-> +       cpu_set_t               hk_cpu_set;
-> +};
+That was supposed to be: "they should not be defined when unused."
 
-Some of these could be cleaned up further. E.g. "runtime" is actually
-only used by osnoise, even though it is declared in timerlat, too, and
-"period" is also used by timerlat, but it's called
-"timerlat_period_us" there.
+Thanks for pointing it out.
 
-Nevertheless, that is directly not related to this patch, and tests
-pass. We can fix that later.
+> 
+> Reviewed-by: Shrikanth Hegde <sshegde@linux.ibm.com>
 
-Reviewed-by: Tomas Glozar <tglozar@redhat.com>
+Thanks!
 
-
-Tomas
-
+-- Steve
