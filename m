@@ -1,47 +1,47 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51E571A705C
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 25 Jul 2025 13:38:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FCE9246779
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 25 Jul 2025 13:38:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753450722; cv=none; b=AmP5agugy7B6NvtFil1/QzXwy959aJb0LFbFnuTWt2JBisPn02A1kbkjKQzCf/EQjuV/aZUCL1C48U9nrIhIlyBvayXy9kpqSs4CGEDrpePU0Q1coGZwinUrjaAp1/9dN9NCLUKPTattBs9tEf+4CvNG71wcWIJQ3oqptv01iXY=
+	t=1753450726; cv=none; b=Vkz50r86ExJ1r+wB3oXFkG+Wuebu1+2dQDPk7RgsMUAHCMuJeNYAz1G2ZclZi0c2Zmvs3iEVGnHJoH3VN2VlvjvI70p21Sz9OADTiAv/zkTpdlwj0H4MTc8f90mBlLDGUhBB+4TEyn36qr0xMxlgQav6vHA8hYCwBSIyvI1jIiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753450722; c=relaxed/simple;
-	bh=r6fWaNqe+ruV7yA5A+LeYbU+3WnqfAaRoph3jlWDLJ0=;
+	s=arc-20240116; t=1753450726; c=relaxed/simple;
+	bh=o/h5xdUlELYwu+ivu3UhGxbnjsxwTaAr0jIo6FCyuLA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=k60Hlh93xsoUcndNVnOQqpzYkyOs+l30rmfGt9gHy4NkzWrO8F98L3NpO5wf9jTu4dE6FHLYYO5xVm/i/ykOTRUAGwXC8b4P23m2YPfkd4YKGlO8qCUaw96gQ0yJTF2qIfmBqMCqo8DoHou15x2YYX7gltc5vjGpNenHhGLtcrI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=N8X880o6; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=SgKH0iHMdRsd+7nDjPnv3u31eDl7A4MzKS8fsqu6asK4S6nVBwM3nINVQI+D0nO9cXuu4jVtHZNeQlx7WpvTu5KyjBBnm8WJKiK2NSGQhfTWUSKwU3ASTkkif4PrFqYS858JmYmuN/OKCTZXoWM7kqVQNgiyVQXqZXZx3C9eKzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=W9BrdHXo; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N8X880o6"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W9BrdHXo"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1753450719;
+	s=mimecast20190719; t=1753450723;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=1mFHHmts8S1WbDwfmJJhgycHjqnLAs3OvIn97hWel7E=;
-	b=N8X880o6KlA8g12Qz5jIKRVxM+xwulz1zu6+pOzr0zwemlanlfDtzrCbdjUnZfCM22VngP
-	Co5X3aDEMqBpTofN4tPayQP9MVSzZm8qBEX1nMzjTAi9npQVEgHGboet2ZHRhgWVi5z0cD
-	zI1wFEp5olexVNA6dGf2cV2Ywed6tZU=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	bh=ah1neRedaqT5NMnqo2wenopaUT/ePL4TlLD55zdFBXA=;
+	b=W9BrdHXoWDA7Qh17E4DUYVlgZI5Yjot9mTv2m06R3LGhI5ONC/jKJP4c4CF9Gel3XQdxMb
+	vLCYERu7yllAyNr+pRFeCpwHqRdUniH8QuXbadClbDciy5qgsG0hXfOxjM09ExM79iL5P2
+	NfqsqEN5PGurAAqwYzA2Gh5RVOAg1Is=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-689-NuclpY3zO3SiAWio1b8CRg-1; Fri,
- 25 Jul 2025 09:38:37 -0400
-X-MC-Unique: NuclpY3zO3SiAWio1b8CRg-1
-X-Mimecast-MFC-AGG-ID: NuclpY3zO3SiAWio1b8CRg_1753450715
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-99-rtSNbs1KMzmw0SqciNIjhg-1; Fri,
+ 25 Jul 2025 09:38:39 -0400
+X-MC-Unique: rtSNbs1KMzmw0SqciNIjhg-1
+X-Mimecast-MFC-AGG-ID: rtSNbs1KMzmw0SqciNIjhg_1753450718
 Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6BB8918009B6;
-	Fri, 25 Jul 2025 13:38:35 +0000 (UTC)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 96FE81955EE8;
+	Fri, 25 Jul 2025 13:38:38 +0000 (UTC)
 Received: from fedora.redhat.com (unknown [10.45.225.89])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 8D92619560AA;
-	Fri, 25 Jul 2025 13:38:32 +0000 (UTC)
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 154991966673;
+	Fri, 25 Jul 2025 13:38:35 +0000 (UTC)
 From: Tomas Glozar <tglozar@redhat.com>
 To: Steven Rostedt <rostedt@goodmis.org>
 Cc: LKML <linux-kernel@vger.kernel.org>,
@@ -51,9 +51,9 @@ Cc: LKML <linux-kernel@vger.kernel.org>,
 	Chang Yin <cyin@redhat.com>,
 	Costa Shulyupin <costa.shul@redhat.com>,
 	Tomas Glozar <tglozar@redhat.com>
-Subject: [PATCH 1/2] rtla/tests: Add grep checks for base test cases
-Date: Fri, 25 Jul 2025 15:38:16 +0200
-Message-ID: <20250725133817.59237-2-tglozar@redhat.com>
+Subject: [PATCH 2/2] rtla/tests: Test timerlat -P option using actions
+Date: Fri, 25 Jul 2025 15:38:17 +0200
+Message-ID: <20250725133817.59237-3-tglozar@redhat.com>
 In-Reply-To: <20250725133817.59237-1-tglozar@redhat.com>
 References: <20250725133817.59237-1-tglozar@redhat.com>
 Precedence: bulk
@@ -65,102 +65,64 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-Checking for patterns in rtla output with grep was added to test rtla
-actions. Add grep checks also for base tests where applicable.
+The -P option is used to set priority of osnoise and timerlat threads.
 
-Also fix trace event histogram trigger check to use the correct syntax
-for the command-line option so that the test passes with the grep check.
+Extend the test for -P with --on-threshold calling a script that looks
+for running timerlat threads and checks if their priority is set
+correctly.
+
+As --on-threshold is only supported by timerlat at the moment, this is
+only implemented there so far.
 
 Signed-off-by: Tomas Glozar <tglozar@redhat.com>
 ---
- tools/tracing/rtla/tests/hwnoise.t  | 11 ++++++-----
- tools/tracing/rtla/tests/osnoise.t  |  6 +++---
- tools/tracing/rtla/tests/timerlat.t | 12 +++++++-----
- 3 files changed, 16 insertions(+), 13 deletions(-)
+ tools/tracing/rtla/tests/engine.sh                 | 2 +-
+ tools/tracing/rtla/tests/scripts/check-priority.sh | 8 ++++++++
+ tools/tracing/rtla/tests/timerlat.t                | 3 ++-
+ 3 files changed, 11 insertions(+), 2 deletions(-)
+ create mode 100755 tools/tracing/rtla/tests/scripts/check-priority.sh
 
-diff --git a/tools/tracing/rtla/tests/hwnoise.t b/tools/tracing/rtla/tests/hwnoise.t
-index 448877564b8d..23ce250a6852 100644
---- a/tools/tracing/rtla/tests/hwnoise.t
-+++ b/tools/tracing/rtla/tests/hwnoise.t
-@@ -6,16 +6,17 @@ test_begin
- set_timeout 2m
- 
- check "verify help page" \
--	"hwnoise --help"
-+	"hwnoise --help" 0 "summary of hardware-related noise"
- check "detect noise higher than one microsecond" \
--	"hwnoise -c 0 -T 1 -d 5s -q"
-+	"hwnoise -c 0 -T 1 -d 5s -q" 0
- check "set the automatic trace mode" \
--	"hwnoise -a 5 -d 10s" 2
-+	"hwnoise -a 5 -d 10s" 2 "osnoise hit stop tracing"
- check "set scheduling param to the osnoise tracer threads" \
- 	"hwnoise -P F:1 -c 0 -r 900000 -d 10s -q"
- check "stop the trace if a single sample is higher than 1 us" \
--	"hwnoise -s 1 -T 1 -t -d 10s" 2
-+	"hwnoise -s 1 -T 1 -t -d 10s" 2 "Saving trace to osnoise_trace.txt"
- check "enable a trace event trigger" \
--	"hwnoise -t -e osnoise:irq_noise trigger=\"hist:key=desc,duration:sort=desc,duration:vals=hitcount\" -d 10s"
-+	"hwnoise -t -e osnoise:irq_noise --trigger=\"hist:key=desc,duration:sort=desc,duration:vals=hitcount\" -d 10s" \
-+	0 "Saving event osnoise:irq_noise hist to osnoise_irq_noise_hist.txt"
- 
- test_end
-diff --git a/tools/tracing/rtla/tests/osnoise.t b/tools/tracing/rtla/tests/osnoise.t
-index 6a4dfa31dc55..7574ec6a5a53 100644
---- a/tools/tracing/rtla/tests/osnoise.t
-+++ b/tools/tracing/rtla/tests/osnoise.t
-@@ -6,13 +6,13 @@ test_begin
- set_timeout 2m
- 
- check "verify help page" \
--	"osnoise --help"
-+	"osnoise --help" 0 "osnoise version"
- check "verify the --priority/-P param" \
- 	"osnoise top -P F:1 -c 0 -r 900000 -d 10s -q"
- check "verify the --stop/-s param" \
--	"osnoise top -s 30 -T 1 -t" 2
-+	"osnoise top -s 30 -T 1" 2 "osnoise hit stop tracing"
- check "verify the  --trace param" \
--	"osnoise hist -s 30 -T 1 -t" 2
-+	"osnoise hist -s 30 -T 1 -t" 2 "Saving trace to osnoise_trace.txt"
- check "verify the --entries/-E param" \
- 	"osnoise hist -P F:1 -c 0 -r 900000 -d 10s -b 10 -E 25"
- 
+diff --git a/tools/tracing/rtla/tests/engine.sh b/tools/tracing/rtla/tests/engine.sh
+index 64c5be4313de..a97d644ead99 100644
+--- a/tools/tracing/rtla/tests/engine.sh
++++ b/tools/tracing/rtla/tests/engine.sh
+@@ -69,7 +69,7 @@ check() {
+ 			# Add rtla output and exit code as comments in case of failure
+ 			echo "$result" | col -b | while read line; do echo "# $line"; done
+ 			printf "#\n# exit code %s\n" $exitcode
+-			[ -n "$expected_output" ] && \
++			[ -n "$expected_output" ] && [ $grep_result -ne 0 ] && \
+ 				printf "# Output match failed: \"%s\"\n" "$expected_output"
+ 		fi
+ 	fi
+diff --git a/tools/tracing/rtla/tests/scripts/check-priority.sh b/tools/tracing/rtla/tests/scripts/check-priority.sh
+new file mode 100755
+index 000000000000..79b702a34a96
+--- /dev/null
++++ b/tools/tracing/rtla/tests/scripts/check-priority.sh
+@@ -0,0 +1,8 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0
++pids="$(pgrep ^$1)" || exit 1
++for pid in $pids
++do
++  chrt -p $pid | cut -d ':' -f 2 | head -n1 | grep "^ $2\$" >/dev/null
++  chrt -p $pid | cut -d ':' -f 2 | tail -n1 | grep "^ $3\$" >/dev/null
++done && echo "Priorities are set correctly"
 diff --git a/tools/tracing/rtla/tests/timerlat.t b/tools/tracing/rtla/tests/timerlat.t
-index 2d59ee199c4d..db263dc90a2d 100644
+index db263dc90a2d..c71aed5534bf 100644
 --- a/tools/tracing/rtla/tests/timerlat.t
 +++ b/tools/tracing/rtla/tests/timerlat.t
-@@ -21,15 +21,17 @@ export RTLA_NO_BPF=$option
- 
- # Basic tests
- check "verify help page" \
--	"timerlat --help"
-+	"timerlat --help" 0 "timerlat version"
+@@ -25,7 +25,8 @@ check "verify help page" \
  check "verify -s/--stack" \
--	"timerlat top -s 3 -T 10 -t" 2
-+	"timerlat top -s 3 -T 10 -t" 2 "Blocking thread stack trace"
+ 	"timerlat top -s 3 -T 10 -t" 2 "Blocking thread stack trace"
  check "verify -P/--priority" \
- 	"timerlat top -P F:1 -c 0 -d 10s -q"
+-	"timerlat top -P F:1 -c 0 -d 10s -q"
++	"timerlat top -P F:1 -c 0 -d 10s -q -T 1 --on-threshold shell,command=\"tests/scripts/check-priority.sh timerlatu/ SCHED_FIFO 1\"" \
++	2 "Priorities are set correctly"
  check "test in nanoseconds" \
--	"timerlat top -i 2 -c 0 -n -d 10s" 2
-+	"timerlat top -i 2 -c 0 -n -d 10s" 2 "ns"
+ 	"timerlat top -i 2 -c 0 -n -d 10s" 2 "ns"
  check "set the automatic trace mode" \
--	"timerlat top -a 5 --dump-tasks" 2
-+	"timerlat top -a 5" 2 "analyzing it"
-+check "dump tasks" \
-+	"timerlat top -a 5 --dump-tasks" 2 "Printing CPU tasks"
- check "print the auto-analysis if hits the stop tracing condition" \
- 	"timerlat top --aa-only 5" 2
- check "disable auto-analysis" \
-@@ -37,7 +39,7 @@ check "disable auto-analysis" \
- check "verify -c/--cpus" \
- 	"timerlat hist -c 0 -d 10s"
- check "hist test in nanoseconds" \
--	"timerlat hist -i 2 -c 0 -n -d 10s" 2
-+	"timerlat hist -i 2 -c 0 -n -d 10s" 2 "ns"
- 
- # Actions tests
- check "trace output through -t" \
 -- 
 2.49.0
 
