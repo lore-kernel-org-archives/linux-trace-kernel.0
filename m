@@ -1,466 +1,271 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7A378633F;
-	Fri, 25 Jul 2025 16:44:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753461860; cv=fail; b=PQyDS4shKIFeKGneeyGW5+GqiV4usFCwwUqE7lAELA6+6vF7cR/Qd09ml1KhrOFlvcbqgBzZvEnS+EoS5ZcyfD78QaNBxtUbztO0H3C3rw/ZtLkHn1Wlg7BRG9N3HHsNJKGy1xyaDkRlGY+DTGQRiA8QMJYJIkYFmMTmzZ4VfC0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753461860; c=relaxed/simple;
-	bh=TI2a0EiI4gsrLz+WoJLxGTe5FhOFrGRu3cEnvGT7wXQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=rHDZwfPt8WodaCTd9dpULHmMLtwgDdcMW6NGarXiMu0IBhCE+7/0veteK1U0u/IynECI7YSUsI05TDA49qmcDHABX3oKBiJIO/vHUP3CuvyD5SlggTmLEeAHBsgyCxVHTWrtu826DKYIJDBiY5rClWXfXU1vNWG+XmF9MUoVMfI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=hFBSH23w; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=q3SGdZH2; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB9F8155C97;
+	Fri, 25 Jul 2025 18:57:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1753469854; cv=none; b=BbcrgZvpnzVnIyWQWGfwk7kyji60Usi9KZ1o8eIi7OTxNC50KuITmzJNDLycG08apjfkBc5Nq5VZDFRu/q3CpZZTqkkJIrWsLeop8WLhGNtUWz+JcdVxivxt6DwPbp1q2y3dwmV1Ny6DI7+v++ixwrLXvDFC4M9/vaKz89pcyGM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1753469854; c=relaxed/simple;
+	bh=D6WzydJYTzpIkcTqf6Eb08Cdq6+JZu7JrzcdUkXXQ6w=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=avaUoG3TEIoXLC8bQaNwfZJ783z8M8R4Ryfc10QzyhlLqri1GocqDXfELX61frkbvpxas04MShWiyLuUo8QCaniyHVpjOirAWQpVKycb6JpZLQf/Z6DgTSTWi/b3x1MR0Sa3yb/imO36NtWFCPYw5VoZ7sMcNVqIld0/uI97Efg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QHyjmwds; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="hFBSH23w";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="q3SGdZH2"
-Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56PGCCsB026400;
-	Fri, 25 Jul 2025 16:43:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2025-04-25; bh=wluxZ+Wc3j8pBlMB4MfSBhNdnJXRGdVzSAAau1BBwRY=; b=
-	hFBSH23w/tZTqXj1ZzSVWXGMK8CO7zDY8Tx4f63sJ97CZM8WJDk3+VfUwWa1l/gM
-	+GufC9NweJPK83MiOytdNq561nZu0bPwoOnn+1WM5HlZsnN02+2/ZmXMB9NFTQq6
-	Wp6x5kQr5uy/ritZCEZUOWHw2goIv2mERte0w19C2htESv5Tbi0Fj/KG3RHBJj/b
-	hwI2AUimBehSoACq38tatKpvqeKizlMLhU92cHTQpkXP6Ejd+wIafZccdMqfXWmw
-	CH8/cE9w7bvpDfy14q2+YQoAflFzrD/zMvuwibV2ihwHYzgYXAVQpZK4vRkeyHND
-	0p3UG6G9w3YK20xyeyG9xA==
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 483w1jhe6j-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 25 Jul 2025 16:43:32 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 56PGWEEh037732;
-	Fri, 25 Jul 2025 16:43:31 GMT
-Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10on2089.outbound.protection.outlook.com [40.107.92.89])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 4801tdb255-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 25 Jul 2025 16:43:30 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=pF5qVuACBi6iuhxLimt9KWsBlgrWg6im2lSFPY8ZsFyMbDx6gTsWc0ViC68puiB25JuCGFCyzjG28VBUMt25hHJPJyIdbqTIh7xd4DGAI+0+V6jjVXzAhv9+FZz9/AB3jwrbu1T2zNpuOie8ZcP9xMU6HX0Ub26+OzV3CjZJivGYPf3A25w4B/QAQauBG0lUEyiXUmq8aqOo83GnUXn7acZPPKwjjznw1oJUDoM+6x8O/nyBlk0pBJIbWwuSjrB0Wn1+/oJ5AHCP306mlqHtOs6lcVKhxUjNHR8B5qZapvBt8YDdHAi2PU54WMd3B6dZd6PVLoj8rg9g/xWG4rg+JQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wluxZ+Wc3j8pBlMB4MfSBhNdnJXRGdVzSAAau1BBwRY=;
- b=yCX8JJ4N+uqNQmR5JM9D0H0zwiPx8u2cFavHYRWFPs9lftIZk3MX12z6xrj50/mb03qwMEaGtBcQXV78geatFyyGt4+2pGNnPWr9l35jbr1Zp+9XwhlsGh3EJBDPQLW6UP3zUh9U+Msuoa1lZFr0k1HVVD80p0twESYKE0ue79YkpvrIRACS+/YVXbr4Wer8rPTderCiqm/GTLU3iriSRuYm8Od6oPT6rQ1DYafpS29WR2pcB/1/goCVsUSNeDu83FEiAbOeXRPYucMbL48WdE2eXDMdHYC1hnEZNjTn0sABlP7wMkHyVIIBasr/DxywJBhNsORs5akHom0P0V+1Yw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wluxZ+Wc3j8pBlMB4MfSBhNdnJXRGdVzSAAau1BBwRY=;
- b=q3SGdZH23nwLGT4kGQyimiyd6q/VYf3j7dRiVO4gne6p7IgKXxFLeE7uCHxavVQT5qk+puDau2hMGy0uWoAv283iyxcnl35yoz5SvwnWRrwtjILpV22uw8+pB6iMa9ytH7eFYVDGdd5bSURHpH3AfpuURD1ybK3SCd3/XscOXTA=
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
- by LV3PR10MB7915.namprd10.prod.outlook.com (2603:10b6:408:21a::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8964.23; Fri, 25 Jul
- 2025 16:43:28 +0000
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2%5]) with mapi id 15.20.8964.023; Fri, 25 Jul 2025
- 16:43:28 +0000
-Date: Fri, 25 Jul 2025 17:43:24 +0100
-From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-To: Nico Pache <npache@redhat.com>
-Cc: linux-mm@kvack.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        david@redhat.com, ziy@nvidia.com, baolin.wang@linux.alibaba.com,
-        Liam.Howlett@oracle.com, ryan.roberts@arm.com, dev.jain@arm.com,
-        corbet@lwn.net, rostedt@goodmis.org, mhiramat@kernel.org,
-        mathieu.desnoyers@efficios.com, akpm@linux-foundation.org,
-        baohua@kernel.org, willy@infradead.org, peterx@redhat.com,
-        wangkefeng.wang@huawei.com, usamaarif642@gmail.com,
-        sunnanyong@huawei.com, vishal.moola@gmail.com,
-        thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com,
-        kirill.shutemov@linux.intel.com, aarcange@redhat.com,
-        raquini@redhat.com, anshuman.khandual@arm.com, catalin.marinas@arm.com,
-        tiwai@suse.de, will@kernel.org, dave.hansen@linux.intel.com,
-        jack@suse.cz, cl@gentwo.org, jglisse@google.com, surenb@google.com,
-        zokeefe@google.com, hannes@cmpxchg.org, rientjes@google.com,
-        mhocko@suse.com, rdunlap@infradead.org, hughd@google.com
-Subject: Re: [PATCH v9 01/14] khugepaged: rename hpage_collapse_* to
- collapse_*
-Message-ID: <02aa93fa-b179-48b9-a319-264be0e027a0@lucifer.local>
-References: <20250714003207.113275-1-npache@redhat.com>
- <20250714003207.113275-2-npache@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250714003207.113275-2-npache@redhat.com>
-X-ClientProxiedBy: LO2P265CA0209.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:9e::29) To DM4PR10MB8218.namprd10.prod.outlook.com
- (2603:10b6:8:1cc::16)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QHyjmwds"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B041C4CEFA;
+	Fri, 25 Jul 2025 18:57:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753469853;
+	bh=D6WzydJYTzpIkcTqf6Eb08Cdq6+JZu7JrzcdUkXXQ6w=;
+	h=Date:From:To:Cc:Subject:References:From;
+	b=QHyjmwdsc5PQouUrn1cN6CqEVKnd8hwCpBRcvcoXcKRd3sYUT0T0OkxmucI73sNJP
+	 qFY0jipgokP+qx2Gxx3OhrVlc2fJGYyFZoi8db7CQ4rtlHlRlQfo4Bz7uSBsAutLGl
+	 qEGNsITHc1lkg8LsumO12/yfr+2loyQQY/+y+KNxSkNLgz2RlEBrWgEaNeCZRGFyVB
+	 UeFqIFCtcH0VzR/1jk2W67UhSJSseYdJcdRJmbRW1DS5GXviQ8oxcW0GEndCIijZtE
+	 Vzd1zZIX/fL4EzG2s0YL7ddEXyH+JU7tH1vhKtffUum8AsRlg23aHR7TFUUzu9hhJU
+	 Q0kbez3eGi/9Q==
+Received: from rostedt by gandalf with local (Exim 4.98.2)
+	(envelope-from <rostedt@kernel.org>)
+	id 1ufNbv-00000001N40-2JNF;
+	Fri, 25 Jul 2025 14:57:39 -0400
+Message-ID: <20250725185739.399622407@kernel.org>
+User-Agent: quilt/0.68
+Date: Fri, 25 Jul 2025 14:55:14 -0400
+From: Steven Rostedt <rostedt@kernel.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org,
+ x86@kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Josh Poimboeuf <jpoimboe@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@kernel.org>,
+ Jiri Olsa <jolsa@kernel.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Andrii Nakryiko <andrii@kernel.org>,
+ Indu Bhagat <indu.bhagat@oracle.com>,
+ "Jose E. Marchesi" <jemarch@gnu.org>,
+ Beau Belgrave <beaub@linux.microsoft.com>,
+ Jens Remus <jremus@linux.ibm.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Jens Axboe <axboe@kernel.dk>,
+ Florian Weimer <fweimer@redhat.com>,
+ Sam James <sam@gentoo.org>
+Subject: [PATCH v15 02/10] unwind_user/deferred: Add unwind_user_faultable()
+References: <20250725185512.673587297@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|LV3PR10MB7915:EE_
-X-MS-Office365-Filtering-Correlation-Id: c6f0a4cd-bb6b-4a86-7860-08ddcb9a61d6
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|376014|7416014|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?NlpHY3g2VWp4eVJ1MDdOK2NkaTRiMEl6cGNyOUp5bFRJc0FFaEs1K0lPb3g1?=
- =?utf-8?B?T1V4ZzIvMXQyZXp5MEM0ZlYzRDlkZ2hJdFladk9FMlppRTVFRGZkeENiZUUv?=
- =?utf-8?B?b0ZFWGNMZVRSYU42KzI1V0dtRjdZUTl1K0pjclE1MmpyYjg4TXhqeno5dnh4?=
- =?utf-8?B?RE83MkVyWkdQbkxRVnJOSmlDQVV4TC9oNWlqVHJCRjgrTTdYNTZkcnhvV3pl?=
- =?utf-8?B?emZlRTU3aFlFRGNadjFiR2tzMlZKYzBYWERGOXFLTjVpL29IaTg4MWNXS0RW?=
- =?utf-8?B?V0xJN0d0RGJZWXB0My9NUDZTQUJHZEdhRnU2U0VEdlZqSXJiVnZhazBLSnBx?=
- =?utf-8?B?VHRGKytpTDNndjVhekYzNGpvanFFS2dMS1kzcWhoU2d1dENGYURGWnZieFBK?=
- =?utf-8?B?TXNDQS8xaGlmVStvVWozTUJ2SENRa0pkTzN5U2ZJb2hYdVdwNVVpdWJaUGkw?=
- =?utf-8?B?N2FnWWpORW9LaWRwSTdyb2MrK0FDYUpZa0tHczNoUXZMcEhhaW9ZME1FOEJK?=
- =?utf-8?B?cmdVcVBOektJNzF3blRuanUvSHBQSDV0NXdyZU5DcVdLY0JSVklHWllTOGR0?=
- =?utf-8?B?VUpFNFdUemlHdS9NZWRQN1NOZ0RxNlc2U01JUklMUEsvMjhVc3JmOG9PTmND?=
- =?utf-8?B?dWg1SXZqeDZTMHpIUTNqVEI1RHQ1VUF3WjJFa0xCQThwWW5tYTI1SEVPbHhY?=
- =?utf-8?B?YWtXTU9QZEVEbE9KQmprdk82eXdpbGV1cEVDSXpvVks4NXBzVXgzWUFLRmM2?=
- =?utf-8?B?OWRFc1ZaWlZDNEJBQzh5VXMrNFVZUEpBK2FQMG9ZamM1UFQyMWRWRDJKaXJC?=
- =?utf-8?B?cnVGaXd6cFdmNGhCMmUxZUVPQ3hxUmVrdmdNUERRZ0ZPZlBjTC9NSDJ1djhT?=
- =?utf-8?B?dHlQOUQzT2tsbHJhVFJWS2phWGswbWtWMXpPNHpIQVoxbjRrWks3cHRHVGZZ?=
- =?utf-8?B?RFhkUk83VHlmMUdLeXo3TmsxTzFzZzFHb3NOM05PTldNcElSQVpyM2V3clBG?=
- =?utf-8?B?b2FlVStJTE1MeWZpR1poRXh6NjRzZVZtb2kzK0paNmlEaG9aNFJLZVVsbTlG?=
- =?utf-8?B?eDBPVHpGVVJrbXRENG1VY0JQNVpPZTZYaTM0MFozMWNpeE1mL2ova0t5SlFO?=
- =?utf-8?B?UzdTVXZHT2pYamJ2a2R3d3BwN3N0STNZZWtTWklIYURZanN4Y0ptTklTNG0v?=
- =?utf-8?B?R1Q3czhoMnd1Q1FnWVhLYW96V0R5V1BqT2ZzWWIrMEpWQTI0cXRsTkdMcHpC?=
- =?utf-8?B?MlBGMEhvL21tTmxacldrSjhUcm5sTlp0N293L3pXZnJXcVZpM2tFWW4rT2hq?=
- =?utf-8?B?SURKdGw0UVhpdXBTVzl3TmlZWGFZMkJQMTJiS1FhMXlkd0xkM2QwQ0kwcUQ3?=
- =?utf-8?B?TyszRnF4MUx1Y0Z5RXJpUHJSTURlUTdnMDErL2UwNXY1RkNkdW5QMytDcjA1?=
- =?utf-8?B?L3dvVkx2a1cwSU41M0dsZHRLOVVvS1Nzd3llWUl1a0dhQ2pldHhHbXZ3UnJ0?=
- =?utf-8?B?UVFjMUlKaDl3SHczdWZCWVQ0WVo1Z2YxcUZNaW9YNXpmR3hyYmJZRFNWOWxy?=
- =?utf-8?B?djdWWTBoelYrZ1pOeHBlb29GVUtGUEQwTEdMTmlWcXFvRERuWERqc3hkbEJ3?=
- =?utf-8?B?WURVT29tWjY1cXhRSzdzYnNvM1JJbEsxSTM3RE4rcTVWNWJ2ZUk1WWRvSlUv?=
- =?utf-8?B?RXhtREZCblhkVWpxZ0JIL284TGFJbVRWNi9vSVNtcFUyVXRGNXFYOU0vOFQv?=
- =?utf-8?B?OUEzK0tndHpIb3FLWkRBRVJKQlV2a2hEcC8rM21CbzNTRVA3dEUwWUFVK1lD?=
- =?utf-8?B?WmlIVFNzb3lqYzVGQ1U5VWl1VmJaM1o3T25aR09GYUxnWTZSNzBSa09wZW5l?=
- =?utf-8?B?ZUJQenpPbC9VaTQrNFovOWlNUWYvUVJNbklvaktvOEhENnRhaDJEN1JyR0dO?=
- =?utf-8?Q?5wEANeoVCaU=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?UFNMeXFnUW9zVkMvQlJlZWgzZjBTTG9jRzltSXBPTkJIU29ZcTlQelVFbHNE?=
- =?utf-8?B?R1F5RGJtNFliaWVwUnEvNE4vR2RvWFZ0cEpydDFiaVdHTURVbHhaU3FGRW9m?=
- =?utf-8?B?eXZpc2MvbCtZUnVuZXpsZGdWeTRnNHU1SzdtZDF1bGxsM096Zk9rbE9YWnBL?=
- =?utf-8?B?NEVTTlBMSk5UU0QvQTU5L2ZDNlNUUjR4REVlUVFsbnZVK2c1Vk9hVlhOWHNU?=
- =?utf-8?B?UU5xak9NZmVKOENQSlc0eExnRzAxOFhZK0lUb2UxWlpDWmxnY1RXTXZseWF1?=
- =?utf-8?B?bTNGSlM3ZGVLcm9QbnZlai96ZkF6cjB2ZUJYOWxzc25nWVBhYjVjazRoUzNu?=
- =?utf-8?B?eENKQlNEa0lkNkxFcHNPTXRLMTdRZTkxWFdyL250b3dQaS9wMnhTSWcxMVlH?=
- =?utf-8?B?a0VzKy9OUG1sSE9LbVZkaEh5NGJrNzlXaVZ0RVRLM0pEUkRUV2Y2K0JaLy9U?=
- =?utf-8?B?ZlZQbzhzVmxyMG50dEYvTUVDYVBJMWl6MEJlMWRrbjJRVnByQmdMNVcvOEQ3?=
- =?utf-8?B?bXBxQndWZGpDK2FiMVh2bTFZOXpYUWI5WU9Od2h0bzlnZlZVMGNCK01nOGVG?=
- =?utf-8?B?NStOcks0U3JXTDNrV3RuWWV2SmZFUkwyWnFkVjJBejVyRFpHQzhTcWRlbUdR?=
- =?utf-8?B?SU0xRENZNXVJRWd1OU9yRXNLNzJPTnU4Mk0yYzV6Y0lMa0JTcGFHMWVlM0oy?=
- =?utf-8?B?bnF3dnJqVlFHNS9RaUh3RTFMY1JvcU9XRWRUL01kVkNCb2g0NURrejYwbTNi?=
- =?utf-8?B?SjN0YWVMU0xaRkprc2NyZG9ja3VSMmVvWXZIQWlweVJtQ2paMnM4VHRUQ3Av?=
- =?utf-8?B?c1Frb3VuSWRhYndtRzlzdjk3b0lCRkdVOEluVzkraE5CT1MvbG1JUThyN3BE?=
- =?utf-8?B?cm1ucU5CTmFrOFdHNHlKRzZ1OWdwZzd4Lzhiek5POGdLVHR0KzRWckd0dmxC?=
- =?utf-8?B?VGcrQVhBdlg2bUhmYUZtQjM3V0dOdDNlU2dvaEdzdmo5d0tld3daRUU3ZG1G?=
- =?utf-8?B?RzF2emlyekJFSG82VjBEN1FnUW5UeWpWM3I2MXFQL3QrT0svSlFxc2dJN0pr?=
- =?utf-8?B?VzhIOENxUTZSV0ZHMzlhbG1PS210WHppZTlSLzdqeGhSalJyOG9qOGRlTmlm?=
- =?utf-8?B?ZVozSE1NYTJhbnVHT1R3b20yd0pkWkFlTlRVV0pnNU1kZWxCcFJscWk3alpS?=
- =?utf-8?B?QWZTNHRqdkpsZmsrNXdPWUkzdllpYjQwMkFUQW9iT2dqTXZ1STcrS3JaNFVO?=
- =?utf-8?B?L2d4Uis4L2hKTUM1Q0ZCWWV5YWo5L2duejJIYkt0UmxMREFUVVFrWWJjUUxr?=
- =?utf-8?B?c2xFc3lOdlFLNkRvR2xrUEJnd0JMalB2WDQ1N1N6N2FrUnFabkpHMHJhZm9I?=
- =?utf-8?B?akYzMUo0RlRibEpldittbHM3blEyY1pKWnYvYjA4bG1ISEJSdG4ycGZDYmxJ?=
- =?utf-8?B?M1VvTDhxallqWGFNYXNtazZEeCtrajJtRUdqcGZYTWJUczYrL3ZGejhIbHhL?=
- =?utf-8?B?RGxEL25BNDEydGF0VjdWYW1RZS9Dek1Xc2c3OS9qT01FdkZINWNIN3F0Ynph?=
- =?utf-8?B?Rk1OZXJpTG4zR2Z6QVNyK3NzYWRPcnV2K2t2eXYzRmhzVHdUYVBPd2I2MDJi?=
- =?utf-8?B?SUJEQXNwMWY0bGRkVFNqRmZBNzdFbmVRT1B1RlRkMW5kRUYxSnd4ODF1U1hT?=
- =?utf-8?B?eVNNV0VvSFNJWDlJaEoxT1U1U2VsL1F5T1VLcmdORlBLZmFndG9QQkdRbDBl?=
- =?utf-8?B?am1rY1RoZzF3cjFDOVN0RHNHMTFJODZCN3N0VEZxQWovaXBOeUQzUlVXclJz?=
- =?utf-8?B?SFpTVEVGR0JZYllKOGFkU2pMdVh5QU9TNk9GcHdaeURmWTFJZkUrU1IzQjNw?=
- =?utf-8?B?VmNvNk9kL0hkMEF2UThRcUZBSjZaZmRlZitVUFBDdjdzamdmMTBkalNueGtG?=
- =?utf-8?B?OWZONXE3QUFxRDNMMy9OUlNFRWZvbEFMazNuK0RBa01tcVAzclVYbklhT0NM?=
- =?utf-8?B?NkppbEZJaHhiQVNDb1BWMGNlSGM0MXBXSEJ0NmpVc21COGZXNlF4WjhxcFla?=
- =?utf-8?B?ZVliMTlENlpYSzJLRStBRHl4YWFYelUwS3YxRHZrSitZQmxadjZUZ0p4Tk45?=
- =?utf-8?B?dys3bjNCY1ExWkxlTmMxUXFUdkZ2aWVUSnl3NUh6Q3FpMlVjQWJkeUc2S0xP?=
- =?utf-8?B?YWc9PQ==?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	wNFU1ZWury3wKy2h6dnFoifQIr7KQP48Qx4fn8Gh9YXPdql8CNFqgp0EH+sqVExCoQE9AvUXx0l3p5NIUvRIDX/A2lNJ08E2CuQw4JuVGVN3faiNhUz1isKjveVMqkHECC5V9qtDe2gz2a0jE1y5a36HqCYkeGwIoLzt7UCv1jVNIQg2CgG446NrNfLdxngU0ogTlEn6iO8FLJe0bcoHNDonppIGdraoFrNdlZXjyzemsuSOrqD0BDkDbRQDk5H6HCN6teSk2DdsyaeWFSzSmjVoIut4/0lZ8DUnbjQ5znC61DiQdEgOkQ5aoMGJ+cp+Q+BVOubVCGOBpp+IrkH8EoBM+EinPa/MfAoIq3IeKKjd7fudK1AZft3WWZIAqrVcN2Kyc0+7xSvgyO9/n6DI50drMpvp/QBDVthPPuoXt0vvQAd3dNWoo5z3rX1gZ3FxL/yO6+wIvQhtryW8iNQKKqwTJ2F8AlzFYRsBMVqkY2gDDJCyPJHxhgRIMFCCNrJdzLxG4wlZxL9SIJ/2w+Vya612A6M5whiik3sjWotnk6ro8ABf9ayqt6EH7zlPNk2QFWQ/2AlYtFYjoJgS2OlNHUq1ckiP3u9GjlXOXe04voI=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c6f0a4cd-bb6b-4a86-7860-08ddcb9a61d6
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jul 2025 16:43:28.5050
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ts3B+uq6hoZ5ixdK0JbzewhkAQLGdWQifUlVG9gx4xIgf4GxwxYst8qbMkoph96ptNIiFNyKEYfJPTwtIeKpoFhK+24KjjA2ok3XHbdeJPM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR10MB7915
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-07-25_04,2025-07-24_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxscore=0 suspectscore=0
- bulkscore=0 malwarescore=0 adultscore=0 spamscore=0 mlxlogscore=833
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
- definitions=main-2507250143
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzI1MDE0MyBTYWx0ZWRfX86arKi5mkkZr
- Ymr+Mv7TLMzcYisByAm+oKWgFbqMB/SQ7xUQcUa1Jq5JHVFwWQULFEDnlbGVozzazPkrwCvrJEN
- M/6+Nh4ABhuCphrpWLLFce7iotG88LHfxFX01rv3K4lmrdc8iJ9kHEW1I1jqZsJPS4u7g5ugd8G
- XsplSqedB9OUltAR3V2It55osPUw2VzGqWxWuijiAWCJz0x8Q6J13H2V9eruWte/6xqa+AOn0Oj
- KV81B8g1D2VlQBcBHc+DMdiPfE+ohm4jsa950dz6Np/5gaquwBcH2FI3P5cgWWEFLP63Uyr1Qa2
- Alp250eOtMXxsReY/Lzv5rxn3IKxX9zCk9wJB2ztLRQ1HEriUivt+5i5IvcU4fTL87/VVx9G3lq
- elNuuk2aOnLNsQaFpzJw+Q9afi9AjBggLXVbUcDad/Fay6vNowRL5GBhC6sjASt8i2X5lZ6B
-X-Authority-Analysis: v=2.4 cv=W+s4VQWk c=1 sm=1 tr=0 ts=6883b434 b=1 cx=c_pps
- a=qoll8+KPOyaMroiJ2sR5sw==:117 a=qoll8+KPOyaMroiJ2sR5sw==:17
- a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19
- a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19
- a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=GoEa3M9JfhUA:10
- a=Ikd4Dj_1AAAA:8 a=SRrdq9N9AAAA:8 a=20KFwNOVAAAA:8 a=LW_1up3cSLnti_pvJ_0A:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 cc=ntf awl=host:12062
-X-Proofpoint-ORIG-GUID: urkWo9Cud6Fc4hHLBS__yspshwMFLDBx
-X-Proofpoint-GUID: urkWo9Cud6Fc4hHLBS__yspshwMFLDBx
+Content-Type: text/plain; charset=UTF-8
 
-Hm it seems you missed some places:
+From: Steven Rostedt <rostedt@goodmis.org>
 
-mm/khugepaged.c: In function ‘collapse_scan_mm_slot’:
-mm/khugepaged.c:2466:43: error: implicit declaration of function ‘hpage_collapse_scan_file’; did you mean ‘collapse_scan_file’? [-Wimplicit-function-declaration]
- 2466 |                                 *result = hpage_collapse_scan_file(mm,
-      |                                           ^~~~~~~~~~~~~~~~~~~~~~~~
-      |                                           collapse_scan_file
-mm/khugepaged.c:2471:45: error: implicit declaration of function ‘hpage_collapse_test_exit_or_disable’; did you mean ‘collapse_test_exit_or_disable’? [-Wimplicit-function-declaration]
- 2471 |                                         if (hpage_collapse_test_exit_or_disable(mm))
-      |                                             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      |                                             collapse_test_exit_or_disable
-mm/khugepaged.c:2480:43: error: implicit declaration of function ‘hpage_collapse_scan_pmd’; did you mean ‘collapse_scan_pmd’? [-Wimplicit-function-declaration]
- 2480 |                                 *result = hpage_collapse_scan_pmd(mm, vma,
-      |                                           ^~~~~~~~~~~~~~~~~~~~~~~
-      |                                           collapse_scan_pmd
-mm/khugepaged.c: At top level:
-mm/khugepaged.c:2278:12: error: ‘collapse_scan_file’ defined but not used [-Werror=unused-function]
- 2278 | static int collapse_scan_file(struct mm_struct *mm, unsigned long addr,
-      |            ^~~~~~~~~~~~~~~~~~
-mm/khugepaged.c:1271:12: error: ‘collapse_scan_pmd’ defined but not used [-Werror=unused-function]
- 1271 | static int collapse_scan_pmd(struct mm_struct *mm,
-      |            ^~~~~~~~~~~~~~~~~
+Add a new API to retrieve a user space callstack called
+unwind_user_faultable(). The difference between this user space stack
+tracer from the current user space stack tracer is that this must be
+called from faultable context as it may use routines to access user space
+data that needs to be faulted in.
 
-Other than this it LGTM, so once you fix this stuff up you can get a tag :)
+It can be safely called from entering or exiting a system call as the code
+can still be faulted in there.
 
-On Sun, Jul 13, 2025 at 06:31:54PM -0600, Nico Pache wrote:
-> The hpage_collapse functions describe functions used by madvise_collapse
-> and khugepaged. remove the unnecessary hpage prefix to shorten the
-> function name.
->
-> Reviewed-by: Zi Yan <ziy@nvidia.com>
-> Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-> Signed-off-by: Nico Pache <npache@redhat.com>
-> ---
->  mm/khugepaged.c | 46 +++++++++++++++++++++++-----------------------
->  1 file changed, 23 insertions(+), 23 deletions(-)
->
-> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> index a55fb1dcd224..eb0babb51868 100644
-> --- a/mm/khugepaged.c
-> +++ b/mm/khugepaged.c
-> @@ -402,14 +402,14 @@ void __init khugepaged_destroy(void)
->  	kmem_cache_destroy(mm_slot_cache);
->  }
->
-> -static inline int hpage_collapse_test_exit(struct mm_struct *mm)
-> +static inline int collapse_test_exit(struct mm_struct *mm)
->  {
->  	return atomic_read(&mm->mm_users) == 0;
->  }
->
-> -static inline int hpage_collapse_test_exit_or_disable(struct mm_struct *mm)
-> +static inline int collapse_test_exit_or_disable(struct mm_struct *mm)
->  {
-> -	return hpage_collapse_test_exit(mm) ||
-> +	return collapse_test_exit(mm) ||
->  	       test_bit(MMF_DISABLE_THP, &mm->flags);
->  }
->
-> @@ -444,7 +444,7 @@ void __khugepaged_enter(struct mm_struct *mm)
->  	int wakeup;
->
->  	/* __khugepaged_exit() must not run from under us */
-> -	VM_BUG_ON_MM(hpage_collapse_test_exit(mm), mm);
-> +	VM_BUG_ON_MM(collapse_test_exit(mm), mm);
->  	if (unlikely(test_and_set_bit(MMF_VM_HUGEPAGE, &mm->flags)))
->  		return;
->
-> @@ -503,7 +503,7 @@ void __khugepaged_exit(struct mm_struct *mm)
->  	} else if (mm_slot) {
->  		/*
->  		 * This is required to serialize against
-> -		 * hpage_collapse_test_exit() (which is guaranteed to run
-> +		 * collapse_test_exit() (which is guaranteed to run
->  		 * under mmap sem read mode). Stop here (after we return all
->  		 * pagetables will be destroyed) until khugepaged has finished
->  		 * working on the pagetables under the mmap_lock.
-> @@ -838,7 +838,7 @@ struct collapse_control khugepaged_collapse_control = {
->  	.is_khugepaged = true,
->  };
->
-> -static bool hpage_collapse_scan_abort(int nid, struct collapse_control *cc)
-> +static bool collapse_scan_abort(int nid, struct collapse_control *cc)
->  {
->  	int i;
->
-> @@ -873,7 +873,7 @@ static inline gfp_t alloc_hugepage_khugepaged_gfpmask(void)
->  }
->
->  #ifdef CONFIG_NUMA
-> -static int hpage_collapse_find_target_node(struct collapse_control *cc)
-> +static int collapse_find_target_node(struct collapse_control *cc)
->  {
->  	int nid, target_node = 0, max_value = 0;
->
-> @@ -892,7 +892,7 @@ static int hpage_collapse_find_target_node(struct collapse_control *cc)
->  	return target_node;
->  }
->  #else
-> -static int hpage_collapse_find_target_node(struct collapse_control *cc)
-> +static int collapse_find_target_node(struct collapse_control *cc)
->  {
->  	return 0;
->  }
-> @@ -912,7 +912,7 @@ static int hugepage_vma_revalidate(struct mm_struct *mm, unsigned long address,
->  	struct vm_area_struct *vma;
->  	unsigned long tva_flags = cc->is_khugepaged ? TVA_ENFORCE_SYSFS : 0;
->
-> -	if (unlikely(hpage_collapse_test_exit_or_disable(mm)))
-> +	if (unlikely(collapse_test_exit_or_disable(mm)))
->  		return SCAN_ANY_PROCESS;
->
->  	*vmap = vma = find_vma(mm, address);
-> @@ -985,7 +985,7 @@ static int check_pmd_still_valid(struct mm_struct *mm,
->
->  /*
->   * Bring missing pages in from swap, to complete THP collapse.
-> - * Only done if hpage_collapse_scan_pmd believes it is worthwhile.
-> + * Only done if khugepaged_scan_pmd believes it is worthwhile.
->   *
->   * Called and returns without pte mapped or spinlocks held.
->   * Returns result: if not SCAN_SUCCEED, mmap_lock has been released.
-> @@ -1071,7 +1071,7 @@ static int alloc_charge_folio(struct folio **foliop, struct mm_struct *mm,
->  {
->  	gfp_t gfp = (cc->is_khugepaged ? alloc_hugepage_khugepaged_gfpmask() :
->  		     GFP_TRANSHUGE);
-> -	int node = hpage_collapse_find_target_node(cc);
-> +	int node = collapse_find_target_node(cc);
->  	struct folio *folio;
->
->  	folio = __folio_alloc(gfp, HPAGE_PMD_ORDER, node, &cc->alloc_nmask);
-> @@ -1257,7 +1257,7 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
->  	return result;
->  }
->
-> -static int hpage_collapse_scan_pmd(struct mm_struct *mm,
-> +static int collapse_scan_pmd(struct mm_struct *mm,
->  				   struct vm_area_struct *vma,
->  				   unsigned long address, bool *mmap_locked,
->  				   struct collapse_control *cc)
-> @@ -1371,7 +1371,7 @@ static int hpage_collapse_scan_pmd(struct mm_struct *mm,
->  		 * hit record.
->  		 */
->  		node = folio_nid(folio);
-> -		if (hpage_collapse_scan_abort(node, cc)) {
-> +		if (collapse_scan_abort(node, cc)) {
->  			result = SCAN_SCAN_ABORT;
->  			goto out_unmap;
->  		}
-> @@ -1440,7 +1440,7 @@ static void collect_mm_slot(struct khugepaged_mm_slot *mm_slot)
->
->  	lockdep_assert_held(&khugepaged_mm_lock);
->
-> -	if (hpage_collapse_test_exit(mm)) {
-> +	if (collapse_test_exit(mm)) {
->  		/* free mm_slot */
->  		hash_del(&slot->hash);
->  		list_del(&slot->mm_node);
-> @@ -1733,7 +1733,7 @@ static void retract_page_tables(struct address_space *mapping, pgoff_t pgoff)
->  		if (find_pmd_or_thp_or_none(mm, addr, &pmd) != SCAN_SUCCEED)
->  			continue;
->
-> -		if (hpage_collapse_test_exit(mm))
-> +		if (collapse_test_exit(mm))
->  			continue;
->  		/*
->  		 * When a vma is registered with uffd-wp, we cannot recycle
-> @@ -2255,7 +2255,7 @@ static int collapse_file(struct mm_struct *mm, unsigned long addr,
->  	return result;
->  }
->
-> -static int hpage_collapse_scan_file(struct mm_struct *mm, unsigned long addr,
-> +static int collapse_scan_file(struct mm_struct *mm, unsigned long addr,
->  				    struct file *file, pgoff_t start,
->  				    struct collapse_control *cc)
->  {
-> @@ -2312,7 +2312,7 @@ static int hpage_collapse_scan_file(struct mm_struct *mm, unsigned long addr,
->  		}
->
->  		node = folio_nid(folio);
-> -		if (hpage_collapse_scan_abort(node, cc)) {
-> +		if (collapse_scan_abort(node, cc)) {
->  			result = SCAN_SCAN_ABORT;
->  			folio_put(folio);
->  			break;
-> @@ -2362,7 +2362,7 @@ static int hpage_collapse_scan_file(struct mm_struct *mm, unsigned long addr,
->  	return result;
->  }
->
-> -static unsigned int khugepaged_scan_mm_slot(unsigned int pages, int *result,
-> +static unsigned int collapse_scan_mm_slot(unsigned int pages, int *result,
->  					    struct collapse_control *cc)
->  	__releases(&khugepaged_mm_lock)
->  	__acquires(&khugepaged_mm_lock)
-> @@ -2400,7 +2400,7 @@ static unsigned int khugepaged_scan_mm_slot(unsigned int pages, int *result,
->  		goto breakouterloop_mmap_lock;
->
->  	progress++;
-> -	if (unlikely(hpage_collapse_test_exit_or_disable(mm)))
-> +	if (unlikely(collapse_test_exit_or_disable(mm)))
->  		goto breakouterloop;
->
->  	vma_iter_init(&vmi, mm, khugepaged_scan.address);
-> @@ -2408,7 +2408,7 @@ static unsigned int khugepaged_scan_mm_slot(unsigned int pages, int *result,
->  		unsigned long hstart, hend;
->
->  		cond_resched();
-> -		if (unlikely(hpage_collapse_test_exit_or_disable(mm))) {
-> +		if (unlikely(collapse_test_exit_or_disable(mm))) {
->  			progress++;
->  			break;
->  		}
-> @@ -2430,7 +2430,7 @@ static unsigned int khugepaged_scan_mm_slot(unsigned int pages, int *result,
->  			bool mmap_locked = true;
->
->  			cond_resched();
-> -			if (unlikely(hpage_collapse_test_exit_or_disable(mm)))
-> +			if (unlikely(collapse_test_exit_or_disable(mm)))
->  				goto breakouterloop;
->
->  			VM_BUG_ON(khugepaged_scan.address < hstart ||
-> @@ -2490,7 +2490,7 @@ static unsigned int khugepaged_scan_mm_slot(unsigned int pages, int *result,
->  	 * Release the current mm_slot if this mm is about to die, or
->  	 * if we scanned all vmas of this mm.
->  	 */
-> -	if (hpage_collapse_test_exit(mm) || !vma) {
-> +	if (collapse_test_exit(mm) || !vma) {
->  		/*
->  		 * Make sure that if mm_users is reaching zero while
->  		 * khugepaged runs here, khugepaged_exit will find
-> @@ -2544,7 +2544,7 @@ static void khugepaged_do_scan(struct collapse_control *cc)
->  			pass_through_head++;
->  		if (khugepaged_has_work() &&
->  		    pass_through_head < 2)
-> -			progress += khugepaged_scan_mm_slot(pages - progress,
-> +			progress += collapse_scan_mm_slot(pages - progress,
->  							    &result, cc);
->  		else
->  			progress = pages;
-> --
-> 2.50.0
->
+This code is based on work by Josh Poimboeuf's deferred unwinding code:
+
+Link: https://lore.kernel.org/all/6052e8487746603bdb29b65f4033e739092d9925.1737511963.git.jpoimboe@kernel.org/
+
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ include/linux/sched.h                 |  5 +++
+ include/linux/unwind_deferred.h       | 24 +++++++++++
+ include/linux/unwind_deferred_types.h |  9 ++++
+ kernel/fork.c                         |  4 ++
+ kernel/unwind/Makefile                |  2 +-
+ kernel/unwind/deferred.c              | 60 +++++++++++++++++++++++++++
+ 6 files changed, 103 insertions(+), 1 deletion(-)
+ create mode 100644 include/linux/unwind_deferred.h
+ create mode 100644 include/linux/unwind_deferred_types.h
+ create mode 100644 kernel/unwind/deferred.c
+
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 4f78a64beb52..59fdf7d9bb1e 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -46,6 +46,7 @@
+ #include <linux/rv.h>
+ #include <linux/uidgid_types.h>
+ #include <linux/tracepoint-defs.h>
++#include <linux/unwind_deferred_types.h>
+ #include <asm/kmap_size.h>
+ 
+ /* task_struct member predeclarations (sorted alphabetically): */
+@@ -1654,6 +1655,10 @@ struct task_struct {
+ 	struct user_event_mm		*user_event_mm;
+ #endif
+ 
++#ifdef CONFIG_UNWIND_USER
++	struct unwind_task_info		unwind_info;
++#endif
++
+ 	/* CPU-specific state of this task: */
+ 	struct thread_struct		thread;
+ 
+diff --git a/include/linux/unwind_deferred.h b/include/linux/unwind_deferred.h
+new file mode 100644
+index 000000000000..a5f6e8f8a1a2
+--- /dev/null
++++ b/include/linux/unwind_deferred.h
+@@ -0,0 +1,24 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _LINUX_UNWIND_USER_DEFERRED_H
++#define _LINUX_UNWIND_USER_DEFERRED_H
++
++#include <linux/unwind_user.h>
++#include <linux/unwind_deferred_types.h>
++
++#ifdef CONFIG_UNWIND_USER
++
++void unwind_task_init(struct task_struct *task);
++void unwind_task_free(struct task_struct *task);
++
++int unwind_user_faultable(struct unwind_stacktrace *trace);
++
++#else /* !CONFIG_UNWIND_USER */
++
++static inline void unwind_task_init(struct task_struct *task) {}
++static inline void unwind_task_free(struct task_struct *task) {}
++
++static inline int unwind_user_faultable(struct unwind_stacktrace *trace) { return -ENOSYS; }
++
++#endif /* !CONFIG_UNWIND_USER */
++
++#endif /* _LINUX_UNWIND_USER_DEFERRED_H */
+diff --git a/include/linux/unwind_deferred_types.h b/include/linux/unwind_deferred_types.h
+new file mode 100644
+index 000000000000..aa32db574e43
+--- /dev/null
++++ b/include/linux/unwind_deferred_types.h
+@@ -0,0 +1,9 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _LINUX_UNWIND_USER_DEFERRED_TYPES_H
++#define _LINUX_UNWIND_USER_DEFERRED_TYPES_H
++
++struct unwind_task_info {
++	unsigned long		*entries;
++};
++
++#endif /* _LINUX_UNWIND_USER_DEFERRED_TYPES_H */
+diff --git a/kernel/fork.c b/kernel/fork.c
+index 1ee8eb11f38b..3341d50c61f2 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -105,6 +105,7 @@
+ #include <uapi/linux/pidfd.h>
+ #include <linux/pidfs.h>
+ #include <linux/tick.h>
++#include <linux/unwind_deferred.h>
+ 
+ #include <asm/pgalloc.h>
+ #include <linux/uaccess.h>
+@@ -732,6 +733,7 @@ void __put_task_struct(struct task_struct *tsk)
+ 	WARN_ON(refcount_read(&tsk->usage));
+ 	WARN_ON(tsk == current);
+ 
++	unwind_task_free(tsk);
+ 	sched_ext_free(tsk);
+ 	io_uring_free(tsk);
+ 	cgroup_free(tsk);
+@@ -2135,6 +2137,8 @@ __latent_entropy struct task_struct *copy_process(
+ 	p->bpf_ctx = NULL;
+ #endif
+ 
++	unwind_task_init(p);
++
+ 	/* Perform scheduler related setup. Assign this task to a CPU. */
+ 	retval = sched_fork(clone_flags, p);
+ 	if (retval)
+diff --git a/kernel/unwind/Makefile b/kernel/unwind/Makefile
+index 349ce3677526..eae37bea54fd 100644
+--- a/kernel/unwind/Makefile
++++ b/kernel/unwind/Makefile
+@@ -1 +1 @@
+- obj-$(CONFIG_UNWIND_USER) += user.o
++ obj-$(CONFIG_UNWIND_USER)	+= user.o deferred.o
+diff --git a/kernel/unwind/deferred.c b/kernel/unwind/deferred.c
+new file mode 100644
+index 000000000000..a0badbeb3cc1
+--- /dev/null
++++ b/kernel/unwind/deferred.c
+@@ -0,0 +1,60 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Deferred user space unwinding
++ */
++#include <linux/kernel.h>
++#include <linux/sched.h>
++#include <linux/slab.h>
++#include <linux/unwind_deferred.h>
++
++#define UNWIND_MAX_ENTRIES 512
++
++/**
++ * unwind_user_faultable - Produce a user stacktrace in faultable context
++ * @trace: The descriptor that will store the user stacktrace
++ *
++ * This must be called in a known faultable context (usually when entering
++ * or exiting user space). Depending on the available implementations
++ * the @trace will be loaded with the addresses of the user space stacktrace
++ * if it can be found.
++ *
++ * Return: 0 on success and negative on error
++ *         On success @trace will contain the user space stacktrace
++ */
++int unwind_user_faultable(struct unwind_stacktrace *trace)
++{
++	struct unwind_task_info *info = &current->unwind_info;
++
++	/* Should always be called from faultable context */
++	might_fault();
++
++	if (current->flags & PF_EXITING)
++		return -EINVAL;
++
++	if (!info->entries) {
++		info->entries = kmalloc_array(UNWIND_MAX_ENTRIES, sizeof(long),
++					      GFP_KERNEL);
++		if (!info->entries)
++			return -ENOMEM;
++	}
++
++	trace->nr = 0;
++	trace->entries = info->entries;
++	unwind_user(trace, UNWIND_MAX_ENTRIES);
++
++	return 0;
++}
++
++void unwind_task_init(struct task_struct *task)
++{
++	struct unwind_task_info *info = &task->unwind_info;
++
++	memset(info, 0, sizeof(*info));
++}
++
++void unwind_task_free(struct task_struct *task)
++{
++	struct unwind_task_info *info = &task->unwind_info;
++
++	kfree(info->entries);
++}
+-- 
+2.47.2
+
+
