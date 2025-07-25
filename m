@@ -1,130 +1,401 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80AD925CC75;
-	Fri, 25 Jul 2025 21:09:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1737C19D06B
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 25 Jul 2025 22:36:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753477763; cv=none; b=Dt2ywL8rSEG7QCLw6QJIyb5Bqwa4GfzMBU2Zd7LIei7sd5yYoIkuN3cxvmHTevstyv+2k+P6w4buvMbykQEIldjEnQ2FbpKZaNs5D9dJH2u/qsQAmqseqtjd6SmaN8UeVWafDjFCA33JDjRMSpzGCr5zebeBnSpZqNOb0ecE8/I=
+	t=1753482972; cv=none; b=TkGCHDOguv33v1qIMxOBeMFywaKcl5pOB9Qeiwru3kNeejrEEBM4YRMRnONYp4BWzCh4GoA6fzHeGhsJDuDUNZfme/4WFpox4lG7BSWjjCXCiJNCwsg1ZfNdCsXICAeuFiHCGd4murIDtfLhPsR9UWyMD7DN4MJJe8uZSc7tP4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753477763; c=relaxed/simple;
-	bh=sKZPH5aGqoMpNfxgwrfhIX0s6sqAPGYcI0cyVH7GSeU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=sBcUwOLMmoonzyhIFv7iQH0eds1AN07CLZEcK2owTEyJEGUYSGiMKE1sU231HFgJrPdNcHWRRzmQObOk3U4cMsAqXD3glI40zNYvr4BkL51ojuq0Kj8318Ox2a224tTk4iWArMMc7F7rMP7mPqrQTIRqJrIrFOx4xAzypfRprX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UeXGADP4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1753482972; c=relaxed/simple;
+	bh=mm+eWX66NCSma7+1pbQITTRUhZ910X1BziV/UlSEaHw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gAHfixml9ifvFm7qp1zofr28Yxb/8w95mVB8ZSBOAfu4KzA3cyUmhKHQkzH6Wuu9DvuhkteO5BeZVQVJO7lfrPF4DhC+pRriGJZ/us/QubZeJtU6DyrVrN2a4FRGe6EZoLUnt7QNYWI1/8pEHBpO9iil2Hkc6s4U+HBUfXmaYSo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=geXk94jT; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UeXGADP4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF9B7C4CEE7;
-	Fri, 25 Jul 2025 21:09:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753477763;
-	bh=sKZPH5aGqoMpNfxgwrfhIX0s6sqAPGYcI0cyVH7GSeU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=UeXGADP4I3UDVgDL6nXtFYDXECgC6KSMcjKec5PIjsOq3OgF+gpP+c/BRZ0Uujq+m
-	 lpWOEqHqzDTh6vEDAzHAfaA+KnS/WZ/9AhacYNGkmi4ILau+Mjqhu4p6f1P+3osQHu
-	 mfYfNL67QwCX9PaPRn2Q5Ootac+8ve8BhWxgdn7ZAs1vynrEoPiF1G6XzCNAeUkUXj
-	 TK0PHhyQ2zOlWzofx/4GEpxXgQzJu+cvQ3pTk/YYlGU9JWQejlpEv+1d0enEvQQeHQ
-	 gcY4R3E/0jANufYCoczZa+96ktJja3fjVnrKCrXBKOy6CLXgwJ5GC8b7NeOwJkH8pz
-	 lZB3TlQr2a8Bg==
-Date: Fri, 25 Jul 2025 16:09:21 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Shuai Xue <xueshuai@linux.alibaba.com>
-Cc: rostedt@goodmis.org, lukas@wunner.de, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, ilpo.jarvinen@linux.intel.com,
-	mattc@purestorage.com, Jonathan.Cameron@huawei.com,
-	bhelgaas@google.com, tony.luck@intel.com, bp@alien8.de,
-	mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
-	oleg@redhat.com, naveen@kernel.org, davem@davemloft.net,
-	anil.s.keshavamurthy@intel.com, mark.rutland@arm.com,
-	peterz@infradead.org, tianruidong@linux.alibaba.com
-Subject: Re: [PATCH v9 2/2] PCI: trace: Add a RAS tracepoint to monitor link
- speed changes
-Message-ID: <20250725210921.GA3131414@bhelgaas>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="geXk94jT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1753482969;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=a9d5B9fr4Nfm+zF43cKINLpDPc+Ji1sf50+7PmWlTvU=;
+	b=geXk94jT1qLx3GlMVVZgf/mFvEaT8NrA1HCyUWwLfPcjNBgcU2llOQjeJXpNlAPat6EJa6
+	evIIOk3lNgiS8XqszxhShQUzjRN3Ir0gwe+vHKyOPFmO1hm20f9lf6CZyi2KE19qWcZFlA
+	Svshf8BOiQw3GoJT9ziRyQaFlnbYXAs=
+Received: from mail-yw1-f199.google.com (mail-yw1-f199.google.com
+ [209.85.128.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-297-4GZdnQZEMPm44kOdYIoe0g-1; Fri, 25 Jul 2025 18:36:07 -0400
+X-MC-Unique: 4GZdnQZEMPm44kOdYIoe0g-1
+X-Mimecast-MFC-AGG-ID: 4GZdnQZEMPm44kOdYIoe0g_1753482967
+Received: by mail-yw1-f199.google.com with SMTP id 00721157ae682-70e4bd6510eso38657767b3.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 25 Jul 2025 15:36:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753482967; x=1754087767;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=a9d5B9fr4Nfm+zF43cKINLpDPc+Ji1sf50+7PmWlTvU=;
+        b=aKyptSRLaLAAdL8t8svmvVctaONc56SuqvClLzfh2beuk9cpw9+dENzQilEGaDSorP
+         dByD+V9jZpELnGXxED8n7zrwIikjrQqJctMYmhmjoCRBySDCUUOgCwd8fMUGbJDKt9bv
+         EfGBuRkkNrn23d0ZSvTE13+Ahqy/8iBoahqqHKHU2/GrOptIIMXv3DMc7aqAmX2pfxYp
+         Ln4m7O+ql3u2u5UfU9LqHCF+43ZFvNOU2XNjdmBFVwpCS/7YGaH33B/PQ4I4+dMktomA
+         r+siz9cVXQkVxCntb+Fd7VF9fO9pGJ9gZq7D9kovl3ujZ8r8sgEnu/44ge3bFSYoC4oJ
+         FPVg==
+X-Forwarded-Encrypted: i=1; AJvYcCUlbYBQQ9I50E/09lL/Gs91rphZfpIcBvrGJ2qObZf8c6hGDAMoWaVYaEDvy+9bFcMgZpnM6qUgfbq0SwZ+IyyBMT4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyBmLX0cPHDV6N+C4EP8aOlycj+ThD502Tcq5IDcE5wY2LDcIHc
+	GU0e8RcXNbWQmnFmOZmF7ThTwKqwJriS5kZT1f9KE603BO/ttLvoDre+Yai4mEe59NoXBvkJuw8
+	rQwscT9QEWMYA4Kr7cS/7iBzkHH8F05hExDEqusgopb9NaHFT8mhQY53+CEbPVabC0WxLdHGNc2
+	q76s8LAkAnWw9/ZgValwWzvwO267k+DPwaCOC/bPrLXSkS57uU
+X-Gm-Gg: ASbGnctqG/gX574Bf6mDJX26z8RneoUdKSMHplegY6yA1C3C4fQwLqid3UkPxqe4bax
+	y5pT7NtrIwDCcp8xhj9yNT06WF3kN7sPnhGa5lss9+JsjGZ4FkSETp8kQJEWm4p+ZLLvtVItDTc
+	W8dOBqHQc0rnwhlmHGlmr42h4=
+X-Received: by 2002:a05:690c:d90:b0:714:268:a9f8 with SMTP id 00721157ae682-719e341e6a9mr44682257b3.27.1753482966553;
+        Fri, 25 Jul 2025 15:36:06 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEpjppnEr5ljWGh9tArrsIJ5IRH6CVauDHUkUdyxGIimReaTFjjdrsPrpmlcjRIbGNsIDizaerPjiiSlgiVQZ4=
+X-Received: by 2002:a05:690c:d90:b0:714:268:a9f8 with SMTP id
+ 00721157ae682-719e341e6a9mr44681987b3.27.1753482965992; Fri, 25 Jul 2025
+ 15:36:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250723033108.61587-3-xueshuai@linux.alibaba.com>
+References: <20250714003207.113275-1-npache@redhat.com> <20250714003207.113275-2-npache@redhat.com>
+ <02aa93fa-b179-48b9-a319-264be0e027a0@lucifer.local>
+In-Reply-To: <02aa93fa-b179-48b9-a319-264be0e027a0@lucifer.local>
+From: Nico Pache <npache@redhat.com>
+Date: Fri, 25 Jul 2025 16:35:39 -0600
+X-Gm-Features: Ac12FXy8rwzZlL0SK2QdvPBGS9FXasbUCB1K3oRqNSBr9kuXSbYU0DuDKRZp-pg
+Message-ID: <CAA1CXcAv=zSRwos-j7VeYuJRXRqUPy3VUZ06HuQ5u+6krG8woA@mail.gmail.com>
+Subject: Re: [PATCH v9 01/14] khugepaged: rename hpage_collapse_* to collapse_*
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: linux-mm@kvack.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	david@redhat.com, ziy@nvidia.com, baolin.wang@linux.alibaba.com, 
+	Liam.Howlett@oracle.com, ryan.roberts@arm.com, dev.jain@arm.com, 
+	corbet@lwn.net, rostedt@goodmis.org, mhiramat@kernel.org, 
+	mathieu.desnoyers@efficios.com, akpm@linux-foundation.org, baohua@kernel.org, 
+	willy@infradead.org, peterx@redhat.com, wangkefeng.wang@huawei.com, 
+	usamaarif642@gmail.com, sunnanyong@huawei.com, vishal.moola@gmail.com, 
+	thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com, 
+	kirill.shutemov@linux.intel.com, aarcange@redhat.com, raquini@redhat.com, 
+	anshuman.khandual@arm.com, catalin.marinas@arm.com, tiwai@suse.de, 
+	will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz, cl@gentwo.org, 
+	jglisse@google.com, surenb@google.com, zokeefe@google.com, hannes@cmpxchg.org, 
+	rientjes@google.com, mhocko@suse.com, rdunlap@infradead.org, hughd@google.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: dy-DiX3hJjG0c6eibTGxUQw4TdyPdpnywRBYZ1WbCQo_1753482967
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 23, 2025 at 11:31:08AM +0800, Shuai Xue wrote:
-> PCIe link speed degradation directly impacts system performance and
-> often indicates hardware issues such as faulty devices, physical layer
-> problems, or configuration errors.
-> 
-> To this end, add a RAS tracepoint to monitor link speed changes,
-> enabling proactive health checks and diagnostic analysis.
-> 
-> The output is like below:
-> 
-> $ echo 1 > /sys/kernel/debug/tracing/events/pci/pci_link_event/enable
-> $ cat /sys/kernel/debug/tracing/trace_pipe
-> cat /sys/kernel/debug/tracing/trace_pipe
->            <...>-119     [002] .....   125.776171: pci_hp_event: 0000:00:03.0 slot:30, event:CARD_PRESENT
-> 
->            <...>-119     [002] .....   125.776197: pci_hp_event: 0000:00:03.0 slot:30, event:LINK_UP
-> 
->    irq/57-pciehp-119     [002] .....   125.904335: pcie_link_event: 0000:00:03.0 type:4, reason:4, cur_bus_speed:2.5 GT/s PCIe, max_bus_speed:16.0 GT/s PCIe, width:1, flit_mode:0, status:DLLLA
-> 
->    irq/57-pciehp-119     [002] .....   125.907051: pcie_link_event: 0000:00:03.0 type:4, reason:0, cur_bus_speed:2.5 GT/s PCIe, max_bus_speed:16.0 GT/s PCIe, width:1, flit_mode:0, status:DLLLA
+On Fri, Jul 25, 2025 at 10:44=E2=80=AFAM Lorenzo Stoakes
+<lorenzo.stoakes@oracle.com> wrote:
+>
+> Hm it seems you missed some places:
+Hehe I did notice that after running the git rebase --exec script
+David showed me. Already fixed, it will be in the V10!
+>
+> mm/khugepaged.c: In function =E2=80=98collapse_scan_mm_slot=E2=80=99:
+> mm/khugepaged.c:2466:43: error: implicit declaration of function =E2=80=
+=98hpage_collapse_scan_file=E2=80=99; did you mean =E2=80=98collapse_scan_f=
+ile=E2=80=99? [-Wimplicit-function-declaration]
+>  2466 |                                 *result =3D hpage_collapse_scan_f=
+ile(mm,
+>       |                                           ^~~~~~~~~~~~~~~~~~~~~~~=
+~
+>       |                                           collapse_scan_file
+> mm/khugepaged.c:2471:45: error: implicit declaration of function =E2=80=
+=98hpage_collapse_test_exit_or_disable=E2=80=99; did you mean =E2=80=98coll=
+apse_test_exit_or_disable=E2=80=99? [-Wimplicit-function-declaration]
+>  2471 |                                         if (hpage_collapse_test_e=
+xit_or_disable(mm))
+>       |                                             ^~~~~~~~~~~~~~~~~~~~~=
+~~~~~~~~~~~~~~
+>       |                                             collapse_test_exit_or=
+_disable
+> mm/khugepaged.c:2480:43: error: implicit declaration of function =E2=80=
+=98hpage_collapse_scan_pmd=E2=80=99; did you mean =E2=80=98collapse_scan_pm=
+d=E2=80=99? [-Wimplicit-function-declaration]
+>  2480 |                                 *result =3D hpage_collapse_scan_p=
+md(mm, vma,
+>       |                                           ^~~~~~~~~~~~~~~~~~~~~~~
+>       |                                           collapse_scan_pmd
+> mm/khugepaged.c: At top level:
+> mm/khugepaged.c:2278:12: error: =E2=80=98collapse_scan_file=E2=80=99 defi=
+ned but not used [-Werror=3Dunused-function]
+>  2278 | static int collapse_scan_file(struct mm_struct *mm, unsigned long=
+ addr,
+>       |            ^~~~~~~~~~~~~~~~~~
+> mm/khugepaged.c:1271:12: error: =E2=80=98collapse_scan_pmd=E2=80=99 defin=
+ed but not used [-Werror=3Dunused-function]
+>  1271 | static int collapse_scan_pmd(struct mm_struct *mm,
+>       |            ^~~~~~~~~~~~~~~~~
+>
+> Other than this it LGTM, so once you fix this stuff up you can get a tag =
+:)
+Awesome Thanks!
+>
+> On Sun, Jul 13, 2025 at 06:31:54PM -0600, Nico Pache wrote:
+> > The hpage_collapse functions describe functions used by madvise_collaps=
+e
+> > and khugepaged. remove the unnecessary hpage prefix to shorten the
+> > function name.
+> >
+> > Reviewed-by: Zi Yan <ziy@nvidia.com>
+> > Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+> > Signed-off-by: Nico Pache <npache@redhat.com>
+> > ---
+> >  mm/khugepaged.c | 46 +++++++++++++++++++++++-----------------------
+> >  1 file changed, 23 insertions(+), 23 deletions(-)
+> >
+> > diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+> > index a55fb1dcd224..eb0babb51868 100644
+> > --- a/mm/khugepaged.c
+> > +++ b/mm/khugepaged.c
+> > @@ -402,14 +402,14 @@ void __init khugepaged_destroy(void)
+> >       kmem_cache_destroy(mm_slot_cache);
+> >  }
+> >
+> > -static inline int hpage_collapse_test_exit(struct mm_struct *mm)
+> > +static inline int collapse_test_exit(struct mm_struct *mm)
+> >  {
+> >       return atomic_read(&mm->mm_users) =3D=3D 0;
+> >  }
+> >
+> > -static inline int hpage_collapse_test_exit_or_disable(struct mm_struct=
+ *mm)
+> > +static inline int collapse_test_exit_or_disable(struct mm_struct *mm)
+> >  {
+> > -     return hpage_collapse_test_exit(mm) ||
+> > +     return collapse_test_exit(mm) ||
+> >              test_bit(MMF_DISABLE_THP, &mm->flags);
+> >  }
+> >
+> > @@ -444,7 +444,7 @@ void __khugepaged_enter(struct mm_struct *mm)
+> >       int wakeup;
+> >
+> >       /* __khugepaged_exit() must not run from under us */
+> > -     VM_BUG_ON_MM(hpage_collapse_test_exit(mm), mm);
+> > +     VM_BUG_ON_MM(collapse_test_exit(mm), mm);
+> >       if (unlikely(test_and_set_bit(MMF_VM_HUGEPAGE, &mm->flags)))
+> >               return;
+> >
+> > @@ -503,7 +503,7 @@ void __khugepaged_exit(struct mm_struct *mm)
+> >       } else if (mm_slot) {
+> >               /*
+> >                * This is required to serialize against
+> > -              * hpage_collapse_test_exit() (which is guaranteed to run
+> > +              * collapse_test_exit() (which is guaranteed to run
+> >                * under mmap sem read mode). Stop here (after we return =
+all
+> >                * pagetables will be destroyed) until khugepaged has fin=
+ished
+> >                * working on the pagetables under the mmap_lock.
+> > @@ -838,7 +838,7 @@ struct collapse_control khugepaged_collapse_control=
+ =3D {
+> >       .is_khugepaged =3D true,
+> >  };
+> >
+> > -static bool hpage_collapse_scan_abort(int nid, struct collapse_control=
+ *cc)
+> > +static bool collapse_scan_abort(int nid, struct collapse_control *cc)
+> >  {
+> >       int i;
+> >
+> > @@ -873,7 +873,7 @@ static inline gfp_t alloc_hugepage_khugepaged_gfpma=
+sk(void)
+> >  }
+> >
+> >  #ifdef CONFIG_NUMA
+> > -static int hpage_collapse_find_target_node(struct collapse_control *cc=
+)
+> > +static int collapse_find_target_node(struct collapse_control *cc)
+> >  {
+> >       int nid, target_node =3D 0, max_value =3D 0;
+> >
+> > @@ -892,7 +892,7 @@ static int hpage_collapse_find_target_node(struct c=
+ollapse_control *cc)
+> >       return target_node;
+> >  }
+> >  #else
+> > -static int hpage_collapse_find_target_node(struct collapse_control *cc=
+)
+> > +static int collapse_find_target_node(struct collapse_control *cc)
+> >  {
+> >       return 0;
+> >  }
+> > @@ -912,7 +912,7 @@ static int hugepage_vma_revalidate(struct mm_struct=
+ *mm, unsigned long address,
+> >       struct vm_area_struct *vma;
+> >       unsigned long tva_flags =3D cc->is_khugepaged ? TVA_ENFORCE_SYSFS=
+ : 0;
+> >
+> > -     if (unlikely(hpage_collapse_test_exit_or_disable(mm)))
+> > +     if (unlikely(collapse_test_exit_or_disable(mm)))
+> >               return SCAN_ANY_PROCESS;
+> >
+> >       *vmap =3D vma =3D find_vma(mm, address);
+> > @@ -985,7 +985,7 @@ static int check_pmd_still_valid(struct mm_struct *=
+mm,
+> >
+> >  /*
+> >   * Bring missing pages in from swap, to complete THP collapse.
+> > - * Only done if hpage_collapse_scan_pmd believes it is worthwhile.
+> > + * Only done if khugepaged_scan_pmd believes it is worthwhile.
+> >   *
+> >   * Called and returns without pte mapped or spinlocks held.
+> >   * Returns result: if not SCAN_SUCCEED, mmap_lock has been released.
+> > @@ -1071,7 +1071,7 @@ static int alloc_charge_folio(struct folio **foli=
+op, struct mm_struct *mm,
+> >  {
+> >       gfp_t gfp =3D (cc->is_khugepaged ? alloc_hugepage_khugepaged_gfpm=
+ask() :
+> >                    GFP_TRANSHUGE);
+> > -     int node =3D hpage_collapse_find_target_node(cc);
+> > +     int node =3D collapse_find_target_node(cc);
+> >       struct folio *folio;
+> >
+> >       folio =3D __folio_alloc(gfp, HPAGE_PMD_ORDER, node, &cc->alloc_nm=
+ask);
+> > @@ -1257,7 +1257,7 @@ static int collapse_huge_page(struct mm_struct *m=
+m, unsigned long address,
+> >       return result;
+> >  }
+> >
+> > -static int hpage_collapse_scan_pmd(struct mm_struct *mm,
+> > +static int collapse_scan_pmd(struct mm_struct *mm,
+> >                                  struct vm_area_struct *vma,
+> >                                  unsigned long address, bool *mmap_lock=
+ed,
+> >                                  struct collapse_control *cc)
+> > @@ -1371,7 +1371,7 @@ static int hpage_collapse_scan_pmd(struct mm_stru=
+ct *mm,
+> >                * hit record.
+> >                */
+> >               node =3D folio_nid(folio);
+> > -             if (hpage_collapse_scan_abort(node, cc)) {
+> > +             if (collapse_scan_abort(node, cc)) {
+> >                       result =3D SCAN_SCAN_ABORT;
+> >                       goto out_unmap;
+> >               }
+> > @@ -1440,7 +1440,7 @@ static void collect_mm_slot(struct khugepaged_mm_=
+slot *mm_slot)
+> >
+> >       lockdep_assert_held(&khugepaged_mm_lock);
+> >
+> > -     if (hpage_collapse_test_exit(mm)) {
+> > +     if (collapse_test_exit(mm)) {
+> >               /* free mm_slot */
+> >               hash_del(&slot->hash);
+> >               list_del(&slot->mm_node);
+> > @@ -1733,7 +1733,7 @@ static void retract_page_tables(struct address_sp=
+ace *mapping, pgoff_t pgoff)
+> >               if (find_pmd_or_thp_or_none(mm, addr, &pmd) !=3D SCAN_SUC=
+CEED)
+> >                       continue;
+> >
+> > -             if (hpage_collapse_test_exit(mm))
+> > +             if (collapse_test_exit(mm))
+> >                       continue;
+> >               /*
+> >                * When a vma is registered with uffd-wp, we cannot recyc=
+le
+> > @@ -2255,7 +2255,7 @@ static int collapse_file(struct mm_struct *mm, un=
+signed long addr,
+> >       return result;
+> >  }
+> >
+> > -static int hpage_collapse_scan_file(struct mm_struct *mm, unsigned lon=
+g addr,
+> > +static int collapse_scan_file(struct mm_struct *mm, unsigned long addr=
+,
+> >                                   struct file *file, pgoff_t start,
+> >                                   struct collapse_control *cc)
+> >  {
+> > @@ -2312,7 +2312,7 @@ static int hpage_collapse_scan_file(struct mm_str=
+uct *mm, unsigned long addr,
+> >               }
+> >
+> >               node =3D folio_nid(folio);
+> > -             if (hpage_collapse_scan_abort(node, cc)) {
+> > +             if (collapse_scan_abort(node, cc)) {
+> >                       result =3D SCAN_SCAN_ABORT;
+> >                       folio_put(folio);
+> >                       break;
+> > @@ -2362,7 +2362,7 @@ static int hpage_collapse_scan_file(struct mm_str=
+uct *mm, unsigned long addr,
+> >       return result;
+> >  }
+> >
+> > -static unsigned int khugepaged_scan_mm_slot(unsigned int pages, int *r=
+esult,
+> > +static unsigned int collapse_scan_mm_slot(unsigned int pages, int *res=
+ult,
+> >                                           struct collapse_control *cc)
+> >       __releases(&khugepaged_mm_lock)
+> >       __acquires(&khugepaged_mm_lock)
+> > @@ -2400,7 +2400,7 @@ static unsigned int khugepaged_scan_mm_slot(unsig=
+ned int pages, int *result,
+> >               goto breakouterloop_mmap_lock;
+> >
+> >       progress++;
+> > -     if (unlikely(hpage_collapse_test_exit_or_disable(mm)))
+> > +     if (unlikely(collapse_test_exit_or_disable(mm)))
+> >               goto breakouterloop;
+> >
+> >       vma_iter_init(&vmi, mm, khugepaged_scan.address);
+> > @@ -2408,7 +2408,7 @@ static unsigned int khugepaged_scan_mm_slot(unsig=
+ned int pages, int *result,
+> >               unsigned long hstart, hend;
+> >
+> >               cond_resched();
+> > -             if (unlikely(hpage_collapse_test_exit_or_disable(mm))) {
+> > +             if (unlikely(collapse_test_exit_or_disable(mm))) {
+> >                       progress++;
+> >                       break;
+> >               }
+> > @@ -2430,7 +2430,7 @@ static unsigned int khugepaged_scan_mm_slot(unsig=
+ned int pages, int *result,
+> >                       bool mmap_locked =3D true;
+> >
+> >                       cond_resched();
+> > -                     if (unlikely(hpage_collapse_test_exit_or_disable(=
+mm)))
+> > +                     if (unlikely(collapse_test_exit_or_disable(mm)))
+> >                               goto breakouterloop;
+> >
+> >                       VM_BUG_ON(khugepaged_scan.address < hstart ||
+> > @@ -2490,7 +2490,7 @@ static unsigned int khugepaged_scan_mm_slot(unsig=
+ned int pages, int *result,
+> >        * Release the current mm_slot if this mm is about to die, or
+> >        * if we scanned all vmas of this mm.
+> >        */
+> > -     if (hpage_collapse_test_exit(mm) || !vma) {
+> > +     if (collapse_test_exit(mm) || !vma) {
+> >               /*
+> >                * Make sure that if mm_users is reaching zero while
+> >                * khugepaged runs here, khugepaged_exit will find
+> > @@ -2544,7 +2544,7 @@ static void khugepaged_do_scan(struct collapse_co=
+ntrol *cc)
+> >                       pass_through_head++;
+> >               if (khugepaged_has_work() &&
+> >                   pass_through_head < 2)
+> > -                     progress +=3D khugepaged_scan_mm_slot(pages - pro=
+gress,
+> > +                     progress +=3D collapse_scan_mm_slot(pages - progr=
+ess,
+> >                                                           &result, cc);
+> >               else
+> >                       progress =3D pages;
+> > --
+> > 2.50.0
+> >
+>
 
-I guess this example would actually require both of these enables, right?
-
-  echo 1 > /sys/kernel/debug/tracing/events/pci/pci_hp_event/enable
-  echo 1 > /sys/kernel/debug/tracing/events/pci/pci_link_event/enable
-
-> Suggested-by: Bjorn Helgaas <helgaas@kernel.org>
-
-I don't think I've suggested anything that really warrants this ;)
-
-> ...
-> @@ -292,7 +292,7 @@ int pciehp_check_link_status(struct controller *ctrl)
->  {
->  	struct pci_dev *pdev = ctrl_dev(ctrl);
->  	bool found;
-> -	u16 lnk_status, linksta2;
-> +	u16 lnk_status;
->  
->  	if (!pcie_wait_for_link(pdev, true)) {
->  		ctrl_info(ctrl, "Slot(%s): No link\n", slot_name(ctrl));
-> @@ -319,8 +319,7 @@ int pciehp_check_link_status(struct controller *ctrl)
->  		return -1;
->  	}
->  
-> -	pcie_capability_read_word(pdev, PCI_EXP_LNKSTA2, &linksta2);
-> -	__pcie_update_link_speed(ctrl->pcie->port->subordinate, lnk_status, linksta2);
-> +	pcie_update_link_speed(ctrl->pcie->port->subordinate, PCIE_HOTPLUG);
-
-It kind of bugs me that the hot-add flow reads LNKSTA three times and
-generates both pci_hp_event LINK_UP and link_event tracepoints:
-
-  pciehp_handle_presence_or_link_change
-    link_active = pciehp_check_link_active()
-      pcie_capability_read_word(PCI_EXP_LNKSTA)
-    if (link_active)
-      ctrl_info(ctrl, "Slot(%s): Link Up\n")
-      trace_pci_hp_event(PCI_HOTPLUG_LINK_UP)
-      pciehp_enable_slot
-        __pciehp_enable_slot
-          board_added
-            pciehp_check_link_status
-              pcie_capability_read_word(PCI_EXP_LNKSTA)
-              pcie_update_link_speed
-                pcie_capability_read_word(PCI_EXP_LNKSTA)
-                pcie_capability_read_word(PCI_EXP_LNKSTA2)
-                trace_pcie_link_event(<REASON>)
-
-Maybe there are good reasons for reading LNKSTA three times, but it
-does make me raise my eyebrows.  Not that this is a performance path,
-but it just offends my sense of propriety.
-
-And maybe we need both a bare LINK_UP event and a link_event with all
-the details, but again it seems a little weird to me that there are
-two tracepoints when there's really only one event and we know all the
-link_event information from the very first LNKSTA read.
-
-Bjorn
