@@ -1,37 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 621BF2E371C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65B7639FD9;
 	Fri, 25 Jul 2025 02:52:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753411929; cv=none; b=Ks8XdSYEhMnhylrSvUttYwS/8qNXfxwDgzZW8+bTCzMS48lBxxJBQQxHghEF0/KAlgh3Tz0FsAJ9zxhZINsCNgNlvAQUWikzXFa/p+N2JMJSjeQGYuu6dpnOUrYjaT/uU9NT6q0bOSRIPba3sDuk81Ktc9qFgHxdyAevbQpm6+I=
+	t=1753411929; cv=none; b=SSx3LRFH5alTALKH2kigFLAtBhqoQ4LrnHF34Q7yxVkpHxATt4XPkrG9Ms8bao7FqnjpHP41pp1YKo3jRd7m0+luWQDcxJmzGKCdCO7M7Jf/d7HHXY054pUgU3VngFYfedpZsjHoQUJRdMINjOlBBgdiDcQ5rvphwR8ttBMFIqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1753411929; c=relaxed/simple;
-	bh=R0Vf0/62xTyA9egbPRVH/2L8oOUFCF5pph8LJHWXu9o=;
-	h=Message-ID:Date:From:To:Cc:Subject; b=WOGQmLWnaS89K0Zi3ZEDPJ+4L4LMEp26GLC7WyGcQyKRJUgZNC668npO9JMnalzfNbGI2TM7mAQYAjFO356eHD/J4ri/PXUIQX6O13cc0e+iGTi/7/u7VN1p6keFiyD6z2ly6m50DX0PlR63jPwajiQ9xrA8VNmqkG3/QsmJ9NA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=axrZpQ0u; arc=none smtp.client-ip=10.30.226.201
+	bh=W8XstG0jag+oNtZKPzFav967dXWnZ4npIsUdDTB34mo=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=a5oUGr+PFOn447d9UWo0s/E58QX+vbeyn4TWz5YW8pVw3k1z0GeR2i9SjTSyndmF4MR7l62gpwyIVmd78Uuv2hskJ56PDjQW0VkOGlf3rRb6KZU7mBdyZhj+kcZnDAyjIJktn/DhEDWlj7FTVsQMaqreYjAxWPAZvLT/6fLSIrw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lPO2EzUC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="axrZpQ0u"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D95C9C4CEED;
-	Fri, 25 Jul 2025 02:52:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lPO2EzUC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DB5AC4CEEF;
+	Fri, 25 Jul 2025 02:52:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753411928;
-	bh=R0Vf0/62xTyA9egbPRVH/2L8oOUFCF5pph8LJHWXu9o=;
-	h=Date:From:To:Cc:Subject:From;
-	b=axrZpQ0uHLxDpAF+6IhpbsFBvd3QuDlDOtFwZuEjMv5jCzX0Trt2NJ7nqY+fe47Aq
-	 GLfuDb7k3MRWK6sIptP2u7HFCQUTgB1S6Byi0A9DIA6I6XL8y0qMvYdXVn5IgRpeRi
-	 rF8+oN2OIY5oFdrSCToJD/Uvnyo3ZLCu212bpuLfb0zypU9ueLe1qYhNUAqUl4YDve
-	 JMfp1+peOkHvJONGKx1v9WoS3eBSUKd0TAXolMoPoexPEjetMhRaLSe5pA8KSjRzy4
-	 DpIuFnVJJefEg9k3lQeCZp2myZXifFsXfnb0TENC/bqeXbZC+VooYJOMK3Sfike2k3
-	 MpHUAteCREb1g==
+	s=k20201202; t=1753411929;
+	bh=W8XstG0jag+oNtZKPzFav967dXWnZ4npIsUdDTB34mo=;
+	h=Date:From:To:Cc:Subject:References:From;
+	b=lPO2EzUCp6TGitOy/ExRRcZgyNFCHbqvWXh2VJ2+ndGMZiNYZ3pjC1yJcejvN2bZY
+	 8k3VA9oNZJxfWlGiN4Wg5K90UFph/cRKTKitvzldGvCz9VMhDx3GvabIoixtUIOUe9
+	 8fU+TKCvSdgCa+mI2urzKaojIn1tsEmjyuC9o4Dn84pW63+1+ij5SGWOZQxnW4UR5B
+	 Svm8XVtNjlvMrGRcdOPIUoAQyJfhkKtmrerfEi4s2VADkO26HYpxHnafW3wG/ZROPV
+	 z3LTwfiI93sPYxCSkt7RgOcmGiSO6FZKPCldCjItSRMHBI0Psz39ca42W6bxj8Ry/G
+	 0mHmOITt/fhhg==
 Received: from rostedt by gandalf with local (Exim 4.98.2)
 	(envelope-from <rostedt@kernel.org>)
-	id 1uf8Xd-000000010nu-0auA;
+	id 1uf8Xd-000000010pQ-2lsJ;
 	Thu, 24 Jul 2025 22:52:13 -0400
-Message-ID: <20250725025149.726267838@kernel.org>
+Message-ID: <20250725025213.514260220@kernel.org>
 User-Agent: quilt/0.68
-Date: Thu, 24 Jul 2025 22:51:49 -0400
+Date: Thu, 24 Jul 2025 22:51:52 -0400
 From: Steven Rostedt <rostedt@kernel.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org,
@@ -48,84 +49,57 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
  Catalin Marinas <catalin.marinas@arm.com>,
  Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH v5 0/3] tracepoints: Add warnings for unused tracepoints and trace events
+Subject: [PATCH v5 3/3] tracepoint: Do not warn for unused event that is exported
+References: <20250725025149.726267838@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 
-Every trace event can take up to 5K of memory in text and metadata regardless
-if they are used or not. Trace events should not be created if they are not
-used.  Currently there's over a hundred events in the kernel that are defined
-but unused, either because their callers were removed without removing the
-trace event with it, or a config hides the trace event caller but not the
-trace event itself. And in some cases, trace events were simply added but were
-never called for whatever reason. The number of unused trace events continues
-to grow.
+From: Steven Rostedt <rostedt@goodmis.org>
 
-This patch series aims to fix this.
+There are a few generic events that may only be used by modules. They are
+defined and then set with EXPORT_TRACEPOINT*(). Mark events that are
+exported as being used, even though they still waste memory in the kernel
+proper.
 
-The first patch moves the elf parsing out of sorttable.c so that it can be
-used by other tooling.
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ include/linux/tracepoint.h | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-The second patch creates a new program to run during build called
-tracepoint-update (note this may be extended to do other tracepoint
-modifications in the future). It also creates a new section called
-__tracepoint_check, where all callers of a tracepoint creates a variable
-that is placed in this section with the name of the tracepoint they use.
-The scripts/tracepoint-update.c is used to find tracepoints that are defined
-but not used which would mean they would not be in the __tracepoint_check
-section. It sorts it, and then reads the __tracepoint_strings section that
-has all compiled in tracepoint names. It makes sure that every tracepoint is
-found in the check section and if not, it prints a warning message about it.
-This lists the missing tracepoints at build time.
-
-The third patch adds EXPORT_TRACEPOINT() to the __tracepoint_check section as
-well. There was several locations that adds tracepoints in the kernel proper
-that are only used in modules. It was getting quite complex trying to move
-things around that I just decided to make any tracepoint in a
-EXPORT_TRACEPOINT "used". I'm using the analogy of static and global
-functions. An unused static function gets a warning but an unused global one
-does not.
-
-Changes since v4: https://lore.kernel.org/linux-trace-kernel/20250723194141.617125835@kernel.org/
-
-- Took out the last patch that updated trace_ftrace_test_filter boot up self
-  test as it was agnostic to the rest of the patches. I just queued it up by
-  itself.
-
-- Added elf-parse.c that takes the elf parsing code out of sorttable.c so
-  that it can be used with tracepoint-update.c.
-
-- Use the tracepoint name instead of the pointer to map the checks to the
-  tracepoints (Mathieu Desnoyers)
-
-- Create a new tool "tracepoint-update" instead of hacking sorttable
-
-- Move the __tracepoint_check into the discard section so it is never
-  loaded into memory. (Linus Torvalds)
-
-- Parse the vmlinux.o instead of vmlinux as the discard section is removed
-  between those two steps.
+diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
+index 71d2e085c49e..ec6827d00d79 100644
+--- a/include/linux/tracepoint.h
++++ b/include/linux/tracepoint.h
+@@ -223,8 +223,8 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
+ 
+ #ifdef CONFIG_TRACEPOINT_WARN_ON_UNUSED
+ # define TRACEPOINT_CHECK(name)						\
+-	static const char __used __section("__tracepoint_check") __trace_check[] = \
+-		#name;
++	static const char __used __section("__tracepoint_check")	\
++	__trace_check_##name[] = #name;
+ #else
+ # define TRACEPOINT_CHECK(tname)
+ #endif
+@@ -381,10 +381,12 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
+ 	__DEFINE_TRACE_EXT(_name, NULL, PARAMS(_proto), PARAMS(_args));
+ 
+ #define EXPORT_TRACEPOINT_SYMBOL_GPL(name)				\
++	TRACEPOINT_CHECK(name)						\
+ 	EXPORT_SYMBOL_GPL(__tracepoint_##name);				\
+ 	EXPORT_SYMBOL_GPL(__traceiter_##name);				\
+ 	EXPORT_STATIC_CALL_GPL(tp_func_##name)
+ #define EXPORT_TRACEPOINT_SYMBOL(name)					\
++	TRACEPOINT_CHECK(name)						\
+ 	EXPORT_SYMBOL(__tracepoint_##name);				\
+ 	EXPORT_SYMBOL(__traceiter_##name);				\
+ 	EXPORT_STATIC_CALL(tp_func_##name)
+-- 
+2.47.2
 
 
-Steven Rostedt (3):
-      sorttable: Move ELF parsing into scripts/elf-parse.[ch]
-      tracing: Add a tracepoint verification check at build time
-      tracepoint: Do not warn for unused event that is exported
-
-----
- include/asm-generic/vmlinux.lds.h |   1 +
- include/linux/tracepoint.h        |  12 +
- kernel/trace/Kconfig              |  10 +
- scripts/Makefile                  |   6 +
- scripts/elf-parse.c               | 198 ++++++++++++++++
- scripts/elf-parse.h               | 306 ++++++++++++++++++++++++
- scripts/link-vmlinux.sh           |   4 +
- scripts/sorttable.c               | 477 +++-----------------------------------
- scripts/tracepoint-update.c       | 217 +++++++++++++++++
- 9 files changed, 788 insertions(+), 443 deletions(-)
- create mode 100644 scripts/elf-parse.c
- create mode 100644 scripts/elf-parse.h
- create mode 100644 scripts/tracepoint-update.c
