@@ -1,139 +1,131 @@
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D75ED846F;
-	Fri, 25 Jul 2025 02:31:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 621BF2E371C;
+	Fri, 25 Jul 2025 02:52:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753410719; cv=none; b=i1m10wQvvJedinCKpwpXrGprB2HU2XtW9uc65Gtnk9lqxn380aIEB0ICzq0A8v/+g0TwxUeNOSwe987Hgolg5/lbs8dIYLftBq1EVu159YeZWMTgBV7XU6X9Yt95XsKSPamnPd3lZ2WznHu863zXJ1RRlvLUMt8xgZYZd818ABM=
+	t=1753411929; cv=none; b=Ks8XdSYEhMnhylrSvUttYwS/8qNXfxwDgzZW8+bTCzMS48lBxxJBQQxHghEF0/KAlgh3Tz0FsAJ9zxhZINsCNgNlvAQUWikzXFa/p+N2JMJSjeQGYuu6dpnOUrYjaT/uU9NT6q0bOSRIPba3sDuk81Ktc9qFgHxdyAevbQpm6+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753410719; c=relaxed/simple;
-	bh=qw22ZWveSnNXYOvVUnPPp98LlSg6iUvGggEgz0HG03Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kckv0zxYxXHrW7VVOx0ZU+tnTL9dWsa5hiBGZT8ZqvrHt6pdIqtkdWvp+Rcm0SIf7IvvA2RFlYx8IPO7K4fqyZB5H3Bs9FeBXKaOlJ4eUdE8xHYpl22Bnr9j/9GtRm5na4VX9kVZDxxYLF0tZM0w449lHVFCJxZXn42/X4m50dM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=cBMlU+YI; arc=none smtp.client-ip=115.124.30.99
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1753411929; c=relaxed/simple;
+	bh=R0Vf0/62xTyA9egbPRVH/2L8oOUFCF5pph8LJHWXu9o=;
+	h=Message-ID:Date:From:To:Cc:Subject; b=WOGQmLWnaS89K0Zi3ZEDPJ+4L4LMEp26GLC7WyGcQyKRJUgZNC668npO9JMnalzfNbGI2TM7mAQYAjFO356eHD/J4ri/PXUIQX6O13cc0e+iGTi/7/u7VN1p6keFiyD6z2ly6m50DX0PlR63jPwajiQ9xrA8VNmqkG3/QsmJ9NA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=axrZpQ0u; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="cBMlU+YI"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1753410709; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=btxZweO/rGd+0DSVVWK88KFtafqY/KJF2asyq9ovbKU=;
-	b=cBMlU+YImIMUMoTyGIMGUFdjRDGGTrSXDcADa/GpI89BuiXGSZaibZC6GXuFrKP4A1mg5GBwI6N1wQkiMbxMN5nMym1kyXjW19KrMGg0L5NAfcR+0dsqPOsGJPvwWZK+o0cIg80zZVr59K9rACVvi2MC6Erwcq6lkukJgQJlBYc=
-Received: from 30.246.181.19(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WjuqHYV_1753410706 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Fri, 25 Jul 2025 10:31:47 +0800
-Message-ID: <4b41e3e2-ebac-48c3-b1a3-ce24a5bed475@linux.alibaba.com>
-Date: Fri, 25 Jul 2025 10:31:45 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="axrZpQ0u"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D95C9C4CEED;
+	Fri, 25 Jul 2025 02:52:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753411928;
+	bh=R0Vf0/62xTyA9egbPRVH/2L8oOUFCF5pph8LJHWXu9o=;
+	h=Date:From:To:Cc:Subject:From;
+	b=axrZpQ0uHLxDpAF+6IhpbsFBvd3QuDlDOtFwZuEjMv5jCzX0Trt2NJ7nqY+fe47Aq
+	 GLfuDb7k3MRWK6sIptP2u7HFCQUTgB1S6Byi0A9DIA6I6XL8y0qMvYdXVn5IgRpeRi
+	 rF8+oN2OIY5oFdrSCToJD/Uvnyo3ZLCu212bpuLfb0zypU9ueLe1qYhNUAqUl4YDve
+	 JMfp1+peOkHvJONGKx1v9WoS3eBSUKd0TAXolMoPoexPEjetMhRaLSe5pA8KSjRzy4
+	 DpIuFnVJJefEg9k3lQeCZp2myZXifFsXfnb0TENC/bqeXbZC+VooYJOMK3Sfike2k3
+	 MpHUAteCREb1g==
+Received: from rostedt by gandalf with local (Exim 4.98.2)
+	(envelope-from <rostedt@kernel.org>)
+	id 1uf8Xd-000000010nu-0auA;
+	Thu, 24 Jul 2025 22:52:13 -0400
+Message-ID: <20250725025149.726267838@kernel.org>
+User-Agent: quilt/0.68
+Date: Thu, 24 Jul 2025 22:51:49 -0400
+From: Steven Rostedt <rostedt@kernel.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org,
+ linux-kbuild@vger.kernel.org,
+ llvm@lists.linux.dev
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Arnd Bergmann <arnd@arndb.de>,
+ Masahiro Yamada <masahiroy@kernel.org>,
+ Nathan Chancellor <nathan@kernel.org>,
+ Nicolas Schier <nicolas.schier@linux.dev>,
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+ Catalin Marinas <catalin.marinas@arm.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH v5 0/3] tracepoints: Add warnings for unused tracepoints and trace events
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 2/2] PCI: trace: Add a RAS tracepoint to monitor link
- speed changes
-To: Steven Rostedt <rostedt@goodmis.org>, kernel test robot <lkp@intel.com>,
- Bjorn Helgaas <bhelgaas@google.com>
-Cc: lukas@wunner.de, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-edac@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- helgaas@kernel.org, ilpo.jarvinen@linux.intel.com, mattc@purestorage.com,
- Jonathan.Cameron@huawei.com, oe-kbuild-all@lists.linux.dev,
- tony.luck@intel.com, bp@alien8.de, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, oleg@redhat.com, naveen@kernel.org,
- davem@davemloft.net, anil.s.keshavamurthy@intel.com, mark.rutland@arm.com,
- peterz@infradead.org, tianruidong@linux.alibaba.com
-References: <20250723033108.61587-3-xueshuai@linux.alibaba.com>
- <202507240322.nJGdyXsy-lkp@intel.com>
- <20250724100659.697b5972@batman.local.home>
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <20250724100659.697b5972@batman.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
 
-Hi, Steven,
+Every trace event can take up to 5K of memory in text and metadata regardless
+if they are used or not. Trace events should not be created if they are not
+used.  Currently there's over a hundred events in the kernel that are defined
+but unused, either because their callers were removed without removing the
+trace event with it, or a config hides the trace event caller but not the
+trace event itself. And in some cases, trace events were simply added but were
+never called for whatever reason. The number of unused trace events continues
+to grow.
 
-在 2025/7/24 22:06, Steven Rostedt 写道:
-> On Thu, 24 Jul 2025 03:30:17 +0800
-> kernel test robot <lkp@intel.com> wrote:
-> 
->> url:    https://github.com/intel-lab-lkp/linux/commits/Shuai-Xue/PCI-trace-Add-a-generic-RAS-tracepoint-for-hotplug-event/20250723-113454
->> base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git for-linus
->> patch link:    https://lore.kernel.org/r/20250723033108.61587-3-xueshuai%40linux.alibaba.com
->> patch subject: [PATCH v9 2/2] PCI: trace: Add a RAS tracepoint to monitor link speed changes
->> config: sparc-sparc64_defconfig (https://download.01.org/0day-ci/archive/20250724/202507240322.nJGdyXsy-lkp@intel.com/config)
->> compiler: sparc64-linux-gcc (GCC) 15.1.0
->> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250724/202507240322.nJGdyXsy-lkp@intel.com/reproduce)
->>
->> If you fix the issue in a separate patch/commit (i.e. not just a new version of
->> the same patch/commit), kindly add following tags
->> | Reported-by: kernel test robot <lkp@intel.com>
->> | Closes: https://lore.kernel.org/oe-kbuild-all/202507240322.nJGdyXsy-lkp@intel.com/
->>
->> All errors (new ones prefixed by >>):
->>
->>     sparc64-linux-ld: drivers/pci/probe.o: in function `pcie_update_link_speed':
->>>> probe.c:(.text+0x370): undefined reference to `__tracepoint_pcie_link_event'
->>>> sparc64-linux-ld: probe.c:(.text+0x37c): undefined reference to `__tracepoint_pcie_link_event'
->>>> sparc64-linux-ld: probe.c:(.text+0x3dc): undefined reference to `__traceiter_pcie_link_event'
-> 
-> The config has:
-> 
-> # CONFIG_CPU_HOTPLUG_STATE_CONTROL is not set
-> 
-> Which looks to me from the first patch, would enable the code that
-> defines the trace events via the:
-> 
-> +#define CREATE_TRACE_POINTS
-> +#include <trace/events/pci.h>
-> 
-> Thus, without compiling that file, the tracepoints would not be created
-> and you would get the above errors.
+This patch series aims to fix this.
 
-Thanks for the detailed analysis! You're absolutely right about the root
-cause.
+The first patch moves the elf parsing out of sorttable.c so that it can be
+used by other tooling.
 
-The issue is that I have the tracepoint usage in drivers/pci/probe.c
-(which is always compiled), but the tracepoint definition with:
+The second patch creates a new program to run during build called
+tracepoint-update (note this may be extended to do other tracepoint
+modifications in the future). It also creates a new section called
+__tracepoint_check, where all callers of a tracepoint creates a variable
+that is placed in this section with the name of the tracepoint they use.
+The scripts/tracepoint-update.c is used to find tracepoints that are defined
+but not used which would mean they would not be in the __tracepoint_check
+section. It sorts it, and then reads the __tracepoint_strings section that
+has all compiled in tracepoint names. It makes sure that every tracepoint is
+found in the check section and if not, it prints a warning message about it.
+This lists the missing tracepoints at build time.
 
-#define CREATE_TRACE_POINTS
-#include<trace/events/pci.h>
+The third patch adds EXPORT_TRACEPOINT() to the __tracepoint_check section as
+well. There was several locations that adds tracepoints in the kernel proper
+that are only used in modules. It was getting quite complex trying to move
+things around that I just decided to make any tracepoint in a
+EXPORT_TRACEPOINT "used". I'm using the analogy of static and global
+functions. An unused static function gets a warning but an unused global one
+does not.
 
-is in drivers/pci/hotplug/pciehp_ctrl.c that's conditionally compiled
-based on CONFIG_HOTPLUG_PCI_PCIE=y, creating the undefined reference
-when that config is not set.
+Changes since v4: https://lore.kernel.org/linux-trace-kernel/20250723194141.617125835@kernel.org/
 
-I can see a few ways to fix this:
+- Took out the last patch that updated trace_ftrace_test_filter boot up self
+  test as it was agnostic to the rest of the patches. I just queued it up by
+  itself.
 
-- Move tracepoint definition to always-compiled code - Create a dedicated drivers/pci/trace.c that always defines the PCI tracepoints
-- Make the tracepoint usage conditional - Wrap the trace calls with the same config dependency
-- Create a PCI-specific trace config - Add a CONFIG_PCI_TRACE option
+- Added elf-parse.c that takes the elf parsing code out of sorttable.c so
+  that it can be used with tracepoint-update.c.
 
-I'm leaning toward option 1 (dedicated trace.c file) as it's the
-cleanest approach and follows the pattern used in other subsystems. Does
-that sound reasonable to you?
+- Use the tracepoint name instead of the pointer to map the checks to the
+  tracepoints (Mathieu Desnoyers)
 
-> 
-> -- Steve
+- Create a new tool "tracepoint-update" instead of hacking sorttable
 
-Thanks for valuable feedback.
+- Move the __tracepoint_check into the discard section so it is never
+  loaded into memory. (Linus Torvalds)
 
-Best Regards,
-Shuai
+- Parse the vmlinux.o instead of vmlinux as the discard section is removed
+  between those two steps.
 
 
+Steven Rostedt (3):
+      sorttable: Move ELF parsing into scripts/elf-parse.[ch]
+      tracing: Add a tracepoint verification check at build time
+      tracepoint: Do not warn for unused event that is exported
 
-
-
-
-
-
-
-
-
-
-
-
-
+----
+ include/asm-generic/vmlinux.lds.h |   1 +
+ include/linux/tracepoint.h        |  12 +
+ kernel/trace/Kconfig              |  10 +
+ scripts/Makefile                  |   6 +
+ scripts/elf-parse.c               | 198 ++++++++++++++++
+ scripts/elf-parse.h               | 306 ++++++++++++++++++++++++
+ scripts/link-vmlinux.sh           |   4 +
+ scripts/sorttable.c               | 477 +++-----------------------------------
+ scripts/tracepoint-update.c       | 217 +++++++++++++++++
+ 9 files changed, 788 insertions(+), 443 deletions(-)
+ create mode 100644 scripts/elf-parse.c
+ create mode 100644 scripts/elf-parse.h
+ create mode 100644 scripts/tracepoint-update.c
