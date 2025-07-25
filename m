@@ -1,181 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14A4D25B305;
-	Fri, 25 Jul 2025 18:57:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 649E32517A5;
+	Fri, 25 Jul 2025 20:04:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753469855; cv=none; b=oyv85wQSH6rxizb0X2xbfSBHQMATwba0hJfMekazPRO6qEGnO/m7uSyDdyKHo94v9/Izx0IY//ZgpStdfOohLgJk7HNps9kz0wzhgraIZ8+37k9M69ZXiMpcwAXD3m9bjGPYURPokNn26wPsSAAoPdEve8W9LgKalrkYDi/HWkk=
+	t=1753473902; cv=none; b=fAnStYIsQotAQDZay/rQUO+LMYfitS8NJBye+ebnGlpHP4fazLxfwMFF6Y9G/DgXhyr8QZKGUvqtP6GS3agi6SVblOuSJ8StpNtjPu2wdneJ1EvFBhJNnuAG/gsAX7GMyI0miRdfuIv9iZ7YspWyDh6ilmyyy4h9Cery0rWfCjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753469855; c=relaxed/simple;
-	bh=SlunTMynvCXTvjDf/X2VPHqD6dfEMvytmKxKKnIYpHk=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=ekasy9mQbzcoQbUdYB7Gn5Ry4rB1LwWl7otmP9FRWvbjZ989xfjF6P83/tmkEBDlnLqsV76b7PZ4xlUTcveyMY7Sk3u4J0tNB3Jl1F7zKFmON+sDf75VyEMF0qJebe4X46xe1T0KTiZ3xGuHLe1K8wvuoY00KwS/DLeE5rO/bDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p9vgtE0X; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p9vgtE0X"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4736C4CEF9;
-	Fri, 25 Jul 2025 18:57:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753469855;
-	bh=SlunTMynvCXTvjDf/X2VPHqD6dfEMvytmKxKKnIYpHk=;
-	h=Date:From:To:Cc:Subject:References:From;
-	b=p9vgtE0XjqOERWZAY+A7yGhrUg5aGIESjUlGKJ0qtXUz5+Ed9cPCPaintMbDAULiH
-	 KRS/lK1crLni2oqaMC9KejP4ZIrZ0ttMs1P83FV3l8xjtakboJ4Dr9hWUsXypWbKGw
-	 PfkLBpTlyJMW+bSG9NWmVjMc+8pUny/fdW0jkIdWTLiX5zW5SduzP1UTNolXxr3oTt
-	 rWS/HM2WnEc0R8lLT+ZD9qkQsGFRYvC0oBt9QG2sfp6U7VhCf1O8ylz11WuImm8QAP
-	 A4IQp8JQFuzA82PHJovnzI+pE2O2ju2IS2W9AsWTUjmUpSnkDFsMmq1vLmVl+E31/c
-	 r1o83jNbThddw==
-Received: from rostedt by gandalf with local (Exim 4.98.2)
-	(envelope-from <rostedt@kernel.org>)
-	id 1ufNbw-00000001N7w-3kf8;
-	Fri, 25 Jul 2025 14:57:40 -0400
-Message-ID: <20250725185740.748555530@kernel.org>
-User-Agent: quilt/0.68
-Date: Fri, 25 Jul 2025 14:55:22 -0400
-From: Steven Rostedt <rostedt@kernel.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org,
- x86@kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Josh Poimboeuf <jpoimboe@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@kernel.org>,
- Jiri Olsa <jolsa@kernel.org>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>,
- Andrii Nakryiko <andrii@kernel.org>,
- Indu Bhagat <indu.bhagat@oracle.com>,
- "Jose E. Marchesi" <jemarch@gnu.org>,
- Beau Belgrave <beaub@linux.microsoft.com>,
- Jens Remus <jremus@linux.ibm.com>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Jens Axboe <axboe@kernel.dk>,
- Florian Weimer <fweimer@redhat.com>,
- Sam James <sam@gentoo.org>
-Subject: [PATCH v15 10/10] unwind: Finish up unwind when a task exits
-References: <20250725185512.673587297@kernel.org>
+	s=arc-20240116; t=1753473902; c=relaxed/simple;
+	bh=8+OH0jpnYCxLHJivUXbltpTlvIRJChdCd+Jh3a0RZJA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sHOUCpOo9WPF/HbKlJCxU6O58ubw1bo6u/eVbbc68JLiqCX6bBBtyPntLRGzmuJDir8unMFdvboKe34nSW1eCl3jGTKgbf4becPY8rfMY5RVdBPmcXXdm+cHi6MWE+FBri+dnkpybeFCY+gWmMLMzz6L28DUEfANnO+ljmHn6o4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8E344176C;
+	Fri, 25 Jul 2025 13:04:51 -0700 (PDT)
+Received: from [10.57.4.83] (unknown [10.57.4.83])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 167FB3F6A8;
+	Fri, 25 Jul 2025 13:04:52 -0700 (PDT)
+Message-ID: <02240cf7-c4d4-4296-9b1e-87b4231874a1@arm.com>
+Date: Fri, 25 Jul 2025 21:04:50 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6/8] dma-mapping: fail early if physical address is mapped
+ through platform callback
+To: Leon Romanovsky <leon@kernel.org>,
+ Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: Leon Romanovsky <leonro@nvidia.com>, Christoph Hellwig <hch@lst.de>,
+ Jonathan Corbet <corbet@lwn.net>, Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+ "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
+ Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
+ <eperezma@redhat.com>, Alexander Potapenko <glider@google.com>,
+ Marco Elver <elver@google.com>, Dmitry Vyukov <dvyukov@google.com>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ iommu@lists.linux.dev, virtualization@lists.linux.dev,
+ kasan-dev@googlegroups.com, linux-trace-kernel@vger.kernel.org,
+ linux-mm@kvack.org
+References: <cover.1750854543.git.leon@kernel.org>
+ <5fc1f0ca52a85834b3e978c5d6a3171d7dd3c194.1750854543.git.leon@kernel.org>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <5fc1f0ca52a85834b3e978c5d6a3171d7dd3c194.1750854543.git.leon@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On 2025-06-25 2:19 pm, Leon Romanovsky wrote:
+> From: Leon Romanovsky <leonro@nvidia.com>
+> 
+> All platforms which implement map_page interface don't support physical
+> addresses without real struct page. Add condition to check it.
 
-On do_exit() when a task is exiting, if a unwind is requested and the
-deferred user stacktrace is deferred via the task_work, the task_work
-callback is called after exit_mm() is called in do_exit(). This means that
-the user stack trace will not be retrieved and an empty stack is created.
+As-is, the condition also needs to cover iommu-dma, because that also 
+still doesn't support non-page-backed addresses. You can't just do a 
+simple s/page/phys/ rename and hope it's OK because you happen to get 
+away with it for coherent, 64-bit, trusted devices.
 
-Instead, add a function unwind_deferred_task_exit() and call it just
-before exit_mm() so that the unwinder can call the requested callbacks
-with the user space stack.
+Thanks,
+Robin.
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- include/linux/unwind_deferred.h |  3 +++
- kernel/exit.c                   |  2 ++
- kernel/unwind/deferred.c        | 23 ++++++++++++++++++++---
- 3 files changed, 25 insertions(+), 3 deletions(-)
-
-diff --git a/include/linux/unwind_deferred.h b/include/linux/unwind_deferred.h
-index 2efbda01e959..26122d00708a 100644
---- a/include/linux/unwind_deferred.h
-+++ b/include/linux/unwind_deferred.h
-@@ -39,6 +39,8 @@ int unwind_deferred_init(struct unwind_work *work, unwind_callback_t func);
- int unwind_deferred_request(struct unwind_work *work, u64 *cookie);
- void unwind_deferred_cancel(struct unwind_work *work);
- 
-+void unwind_deferred_task_exit(struct task_struct *task);
-+
- static __always_inline void unwind_reset_info(void)
- {
- 	struct unwind_task_info *info = &current->unwind_info;
-@@ -71,6 +73,7 @@ static inline int unwind_deferred_init(struct unwind_work *work, unwind_callback
- static inline int unwind_deferred_request(struct unwind_work *work, u64 *timestamp) { return -ENOSYS; }
- static inline void unwind_deferred_cancel(struct unwind_work *work) {}
- 
-+static inline void unwind_deferred_task_exit(struct task_struct *task) {}
- static inline void unwind_reset_info(void) {}
- 
- #endif /* !CONFIG_UNWIND_USER */
-diff --git a/kernel/exit.c b/kernel/exit.c
-index bb184a67ac73..1d8c8ac33c4f 100644
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -68,6 +68,7 @@
- #include <linux/rethook.h>
- #include <linux/sysfs.h>
- #include <linux/user_events.h>
-+#include <linux/unwind_deferred.h>
- #include <linux/uaccess.h>
- #include <linux/pidfs.h>
- 
-@@ -938,6 +939,7 @@ void __noreturn do_exit(long code)
- 
- 	tsk->exit_code = code;
- 	taskstats_exit(tsk, group_dead);
-+	unwind_deferred_task_exit(tsk);
- 	trace_sched_process_exit(tsk, group_dead);
- 
- 	/*
-diff --git a/kernel/unwind/deferred.c b/kernel/unwind/deferred.c
-index a5ef1c1f915e..dc6040aae3ee 100644
---- a/kernel/unwind/deferred.c
-+++ b/kernel/unwind/deferred.c
-@@ -114,7 +114,7 @@ int unwind_user_faultable(struct unwind_stacktrace *trace)
- 	/* Should always be called from faultable context */
- 	might_fault();
- 
--	if (current->flags & PF_EXITING)
-+	if (!current->mm)
- 		return -EINVAL;
- 
- 	if (!info->cache) {
-@@ -147,9 +147,9 @@ int unwind_user_faultable(struct unwind_stacktrace *trace)
- 	return 0;
- }
- 
--static void unwind_deferred_task_work(struct callback_head *head)
-+static void process_unwind_deferred(struct task_struct *task)
- {
--	struct unwind_task_info *info = container_of(head, struct unwind_task_info, work);
-+	struct unwind_task_info *info = &task->unwind_info;
- 	struct unwind_stacktrace trace;
- 	struct unwind_work *work;
- 	unsigned long bits;
-@@ -186,6 +186,23 @@ static void unwind_deferred_task_work(struct callback_head *head)
- 	}
- }
- 
-+static void unwind_deferred_task_work(struct callback_head *head)
-+{
-+	process_unwind_deferred(current);
-+}
-+
-+void unwind_deferred_task_exit(struct task_struct *task)
-+{
-+	struct unwind_task_info *info = &current->unwind_info;
-+
-+	if (!unwind_pending(info))
-+		return;
-+
-+	process_unwind_deferred(task);
-+
-+	task_work_cancel(task, &info->work);
-+}
-+
- /**
-  * unwind_deferred_request - Request a user stacktrace on task kernel exit
-  * @work: Unwind descriptor requesting the trace
--- 
-2.47.2
-
+> Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+> ---
+>   kernel/dma/mapping.c | 15 ++++++++++++++-
+>   1 file changed, 14 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/dma/mapping.c b/kernel/dma/mapping.c
+> index 709405d46b2b..74efb6909103 100644
+> --- a/kernel/dma/mapping.c
+> +++ b/kernel/dma/mapping.c
+> @@ -158,6 +158,7 @@ dma_addr_t dma_map_page_attrs(struct device *dev, struct page *page,
+>   {
+>   	const struct dma_map_ops *ops = get_dma_ops(dev);
+>   	phys_addr_t phys = page_to_phys(page) + offset;
+> +	bool is_pfn_valid = true;
+>   	dma_addr_t addr;
+>   
+>   	BUG_ON(!valid_dma_direction(dir));
+> @@ -170,8 +171,20 @@ dma_addr_t dma_map_page_attrs(struct device *dev, struct page *page,
+>   		addr = dma_direct_map_phys(dev, phys, size, dir, attrs);
+>   	else if (use_dma_iommu(dev))
+>   		addr = iommu_dma_map_phys(dev, phys, size, dir, attrs);
+> -	else
+> +	else {
+> +		if (IS_ENABLED(CONFIG_DMA_API_DEBUG))
+> +			is_pfn_valid = pfn_valid(PHYS_PFN(phys));
+> +
+> +		if (unlikely(!is_pfn_valid))
+> +			return DMA_MAPPING_ERROR;
+> +
+> +		/*
+> +		 * All platforms which implement .map_page() don't support
+> +		 * non-struct page backed addresses.
+> +		 */
+>   		addr = ops->map_page(dev, page, offset, size, dir, attrs);
+> +	}
+> +
+>   	kmsan_handle_dma(phys, size, dir);
+>   	trace_dma_map_phys(dev, phys, addr, size, dir, attrs);
+>   	debug_dma_map_phys(dev, phys, size, dir, addr, attrs);
 
