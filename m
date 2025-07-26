@@ -1,143 +1,85 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8450323F417;
-	Sat, 26 Jul 2025 10:37:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D28BE55A;
+	Sat, 26 Jul 2025 11:01:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753526254; cv=none; b=TtzmnrpUOSBPrnxB0jWALM68FJiWJFzyGb+TvHf0kOIX5hL6/ME8zp46v++vXT8DYXeAw1IijugQRPwHzbdTF9g43FQyyScVM7zREg3stRXMAt61sys459vA3ei4/qO81SQ9X+jjLOIBwqASjMf+t03XhGdE/pUyQaDkfxH2CbQ=
+	t=1753527673; cv=none; b=g1o779WI3mKrB9Z9AiYVGcLSy1WbjpRzA/0jaW5eJ/HVCyeVkH8bGBg5eG8a+snrJnNDcr6zSt7zlE5haYZsw7LvEC5ck7cYry1cWpW21nTTYfoQPG+qLWo31fVgfAlh+nL2ast9ashDIKXuXnGfmGgNvP7jLKI2gHoCfziO0Pk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753526254; c=relaxed/simple;
-	bh=vo5MJkjAfYI/OCY1QVvQzWRjvyqTgOOz6i7fhoJvwB8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XAlmXfWuKVjQk6mMNPvvW1pzmfcRpf2jIG/8dtGGNTuybWWue7NrwltH25oEDMidVUWsOe631hA7QOZAcQXpQIhcfTauwbvKDRSukrXLWV+McLNk1SZzvlUfU54dHWhvTRBcvzpcuyIt0rKV13aJRiJPcrJjY7PMZIpwpcl31vU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SCqPe9SH; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SCqPe9SH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1753526253; x=1785062253;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=vo5MJkjAfYI/OCY1QVvQzWRjvyqTgOOz6i7fhoJvwB8=;
-  b=SCqPe9SH3m2I38LKLqotDY04cUz2YF1uCvBZbQitU46nvUDfZo+Pb9MO
-   Rz3A/xjl+fnF1/pTCEdKbxeMPOKUasfPWSBl5rOAvfw/Y74ZQmO/KSPdH
-   mZ4z8gniUjqid1M1Cq0AB1w3KGLdYYhRKEG43SJhdIoeIs9yoEsM05/kN
-   chjsiH5exsAB9NfRHcII0IsVUvltXlbc+tbS+nXK6gK9d7eAj7V6x/ZTF
-   kDGea9yLkxSrgrN6TKL9Wj8K1dTd6LXcMVG1r6dZyaEhuUDBDLZA0IF7P
-   NdA26Iy2EjHT+wtbmQFkLuGhwGluDQMotfJq2i4IYCm4MySaaQORqfEyN
-   A==;
-X-CSE-ConnectionGUID: 9ctrnIN8Sv+l0libsN7Ziw==
-X-CSE-MsgGUID: nuy2cMQBS4u7RdbKW//LLQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11503"; a="55704398"
-X-IronPort-AV: E=Sophos;i="6.16,339,1744095600"; 
-   d="scan'208";a="55704398"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jul 2025 03:37:31 -0700
-X-CSE-ConnectionGUID: ncmExNasR5e06hxL51eTVw==
-X-CSE-MsgGUID: qct0OuocQruFVFyGmStVVw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,339,1744095600"; 
-   d="scan'208";a="161413943"
-Received: from lkp-server01.sh.intel.com (HELO 9ee84586c615) ([10.239.97.150])
-  by fmviesa006.fm.intel.com with ESMTP; 26 Jul 2025 03:37:27 -0700
-Received: from kbuild by 9ee84586c615 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1ufcHM-000Lsr-31;
-	Sat, 26 Jul 2025 10:37:24 +0000
-Date: Sat, 26 Jul 2025 18:36:58 +0800
-From: kernel test robot <lkp@intel.com>
-To: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-	llvm@lists.linux.dev
-Cc: oe-kbuild-all@lists.linux.dev, Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas.schier@linux.dev>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH v5 2/3] tracing: Add a tracepoint verification check at
- build time
-Message-ID: <202507261823.mtwUpXNM-lkp@intel.com>
-References: <20250725025213.342188378@kernel.org>
+	s=arc-20240116; t=1753527673; c=relaxed/simple;
+	bh=fl/PV+ZyQsIPcnTVHtSrC4wfylDUmx6XAB53C7LWOqU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CMhSOG7tbJo0kR3z+XynBl9zD7cJ8POTh4gJGWtPcZCS/vgzbpYaX7mguBeuciLAWy/xf0RyO5u2FZbDnMGDOyaAlOpXtth+QOc8aUVYbN1Ig6FFUvt7U+O1Es5l0rdtEEGbE/7LVJuD3ceHTodVNDO2suZ+lvkkM9UUIz6YTDc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bq1xq70PgzYQtrN;
+	Sat, 26 Jul 2025 19:01:03 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id A98531A151A;
+	Sat, 26 Jul 2025 19:01:02 +0800 (CST)
+Received: from [10.67.110.36] (unknown [10.67.110.36])
+	by APP4 (Coremail) with SMTP id gCh0CgC3MhNttYRoOzkwBg--.1541S2;
+	Sat, 26 Jul 2025 19:01:02 +0800 (CST)
+Message-ID: <3140a3ba-6db0-45d7-bbd5-707fc8bf1dcc@huaweicloud.com>
+Date: Sat, 26 Jul 2025 19:01:01 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250725025213.342188378@kernel.org>
-
-Hi Steven,
-
-kernel test robot noticed the following build warnings:
-
-[auto build test WARNING on masahiroy-kbuild/for-next]
-[also build test WARNING on masahiroy-kbuild/fixes trace/for-next arnd-asm-generic/master linus/master v6.16-rc7 next-20250725]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Steven-Rostedt/sorttable-Move-ELF-parsing-into-scripts-elf-parse-ch/20250725-105526
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git for-next
-patch link:    https://lore.kernel.org/r/20250725025213.342188378%40kernel.org
-patch subject: [PATCH v5 2/3] tracing: Add a tracepoint verification check at build time
-config: x86_64-allyesconfig (https://download.01.org/0day-ci/archive/20250726/202507261823.mtwUpXNM-lkp@intel.com/config)
-compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250726/202507261823.mtwUpXNM-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202507261823.mtwUpXNM-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> scripts/tracepoint-update.c:106:6: warning: variable 'count' set but not used [-Wunused-but-set-variable]
-     106 |         int count = 0;
-         |             ^
-   1 warning generated.
---
->> scripts/tracepoint-update.c:106:6: warning: variable 'count' set but not used [-Wunused-but-set-variable]
-     106 |         int count = 0;
-         |             ^
-   1 warning generated.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH -next] selftests/ftrace: Prevent potential failure in
+ subsystem-enable test case
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Shuah Khan <shuah@kernel.org>, Yuanhe Shu <xiangzao@linux.alibaba.com>,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org
+References: <20250710130134.591066-1-wutengda@huaweicloud.com>
+ <20250710153409.3135fb17@batman.local.home>
+ <88286bd2-a833-47e3-a0f0-896fbdd3fcbb@huaweicloud.com>
+ <20250721132957.5184cd68@batman.local.home>
+Content-Language: en-US
+From: Tengda Wu <wutengda@huaweicloud.com>
+In-Reply-To: <20250721132957.5184cd68@batman.local.home>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:gCh0CgC3MhNttYRoOzkwBg--.1541S2
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYU7kC6x804xWl14x267AKxVW8JVW5JwAF
+	c2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII
+	0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xv
+	wVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7
+	xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40E
+	FcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr
+	0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxAIw28IcxkI7VAKI48JMxAq
+	zxv26xkF7I0En4kS14v26r126r1DMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrV
+	AFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCI
+	c40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267
+	AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_
+	Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUrR6zUU
+	UUU
+X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
 
-vim +/count +106 scripts/tracepoint-update.c
 
-   102	
-   103	static void check_tracepoints(struct elf_tracepoint *etrace)
-   104	{
-   105		Elf_Ehdr *ehdr = etrace->ehdr;
- > 106		int count = 0;
-   107		int len;
-   108	
-   109		if (!etrace->array)
-   110			return;
-   111	
-   112		for_each_shdr_str(len, ehdr, tracepoint_data_sec) {
-   113			if (!len)
-   114				continue;
-   115			if (!find_event(str, etrace->array, etrace->count)) {
-   116				fprintf(stderr, "warning: tracepoint '%s' is unused.\n", str);
-   117			}
-   118			count++;
-   119		}
-   120	
-   121		free(etrace->array);
-   122	}
-   123	
+On 2025/7/22 1:29, Steven Rostedt wrote:
+> On Mon, 21 Jul 2025 09:54:22 +0800
+> Tengda Wu <wutengda@huaweicloud.com> wrote:
+> 
+>> I noticed this patch hasn't been merged yet. Do you plan to merge it soon?
+>> If you're too busy, would you like me to help submit it instead?
+> 
+> Nah, I simply forgot about it. Let me go write up a patch and send it
+> out.
+> 
+> -- Steve
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Just got the patch application notice, thanks.
+-- Tengda
+
