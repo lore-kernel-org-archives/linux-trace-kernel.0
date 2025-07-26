@@ -1,227 +1,180 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BB1C28936F;
-	Sat, 26 Jul 2025 14:32:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A4262877D2
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 26 Jul 2025 17:51:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753540333; cv=none; b=Wyodpvx0trmnTSkgltkO23Gnh7vVbgi9KextIQX+/xxqgzcVhxgqhKdMxWa/Q6kUm6wLssJblqbzTKuFUokJsW6j9AZGS3tQaU4TODfR61AemoZ3DIGs8stVKdmIk/7QR48eavTUmPPIFAbvFy/SdI2oq55iFGMJ4hl4LPYBwtg=
+	t=1753552279; cv=none; b=MdSoG3zxK6ubqOEHhf8Ej+j1IcvxPys3Ha58x+ki/8fprtMuiKU2iF3shd2SdDP5B7IY7somjf7DshKfDKV6jQLVZJfYOkh6GWHLJ1BB7L886643sy5U1kHmjkkjIuEOjudrqfphv69aidxYwdIziLAPiUqlv0W4r3bJUpHSOkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753540333; c=relaxed/simple;
-	bh=NtCz+vb0FJ2RTT3UYGTBXP803cbE2/PCFHkn1707tww=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=A6CXd5h0ruZIMEkCI/13r+g9tUbHJlWLoljgTXDHyEK76srnN6ZS4P1aqOUV8AHz+ENX0JTHuao28nLwxJgmgnFoTL96kl6IuoGcS/DDw7BzJOSHIgJtNg1JoD4Yh1JrBQuDIfY0Pv6u9OlBzmb0ulmoPA/bHeQqr6PH2KwfvqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iHbAY46e; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1753552279; c=relaxed/simple;
+	bh=DooFKyvtMrhcGsvS73nOYMGBp2dUDW7K3Uj8YSGtKyo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LHARFb4Uv5zjKGuhqLc/Dr8k6J0JaJXsORyccL/N8+7ALnJmr0iwapVpnZ6AoYQxRLDdIlV1VqryaYkhhwM1ihaMt/fmh5vLARL1RCZFI+X+kjk/SGh214CllaHT304WWJO+DIa9AV6d4iRwO/as60rJaWe9ODA7G68eEfpynps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=grzsw++Z; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iHbAY46e"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EB26C4CEED;
-	Sat, 26 Jul 2025 14:32:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753540332;
-	bh=NtCz+vb0FJ2RTT3UYGTBXP803cbE2/PCFHkn1707tww=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=iHbAY46eB77ibHvlOxhtGzmUE1sb1iFmTO63dvTqcMnmlJQwUzKz0BC/lQ0Z4QQdk
-	 aKIQRRtMn5D7Hf+ol/ujlcfxUbdSkRMJw7bHJUOcBi7JlAlyOy348FrXwj5EQVYmMD
-	 CUt/ErbZle8WvrmsP031QpxojFFrn3JgcUbCNrziVp56TphPY44XM/OYxv1h64rdsC
-	 mTsl9OAKR0quCyG/C8ncrtnCxUeh8c0i71Rki+0toE4gLD24K5peRPXwt4P2hhBlVa
-	 LlcWvU1zlulgGb8gGz3/m97bte57iVgf/xLfnguqo7IlqOhUe6TWmgZ+dH5gI4Xy1b
-	 TLmqX4+/YEbww==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Sat, 26 Jul 2025 10:32:01 -0400
-Subject: [PATCH v2 7/7] vfs: remove inode_set_ctime_deleg()
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="grzsw++Z"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-af2a2a54a95so488000366b.0
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 26 Jul 2025 10:51:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1753552276; x=1754157076; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=HSxbEUJxkP0g7ZjvYqH7NhSZ9AP/JqKw188Y1XM8KDw=;
+        b=grzsw++ZdsWZTi+kVX7Al6ZceOKRv5ZhNtWoJHi+ee21FFW+0areV6qpyfkHVyOdqI
+         FAgrnKlH/HKP1RPkDpxQCJ2N4e9LUzJUOH7euDITekZY0bhPdymnkRvwRM10jBKDVAXS
+         wgl49iSxvyHNk1VI6CjF8uQQVp2dZV4FlghoQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753552276; x=1754157076;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HSxbEUJxkP0g7ZjvYqH7NhSZ9AP/JqKw188Y1XM8KDw=;
+        b=trf9btl8mwV1/Ey6vjraqqAlF4VPR3g/SCL5chz1o9kbs3oxXAVg2EWrd75DfKudPx
+         J6fT5ezlDZNg35q7UXvdl89VNb128tNn/3pjyc3BhjHsbrX7dEQhFsRRkFhuZvNE4vMV
+         Lya4oD+m6Eq061vPEParEmplzjQGqh3H2iwtAgwIkhklyUnUI0+fRXhuksMT49fJDIP2
+         wgjq7wHSfWFGIKtAw9MTkVE3VVakX3eulAm590spfulgKNehQTjckcjByr5PdaQZVlSE
+         +jwBztdkbBYdQ8hiObDsWI95mvrK8nvRUcomWt0sCr6WX5nN/NhK1kUs0Et3RzSh5eoS
+         y7WA==
+X-Forwarded-Encrypted: i=1; AJvYcCUkzC4phcQSER+HGxzAER6sCzXNjuZUrVh6d38AZWSOKKak5Os//yJXKI+GSdGUaOY5ogv+xLhiwHTBLUGrmERXRM4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxbBZwrkONW7qxSuwQOrbLkvjqh6rfJZT5qHWNILbC+O4RKqrgK
+	YyZ/gaQ/WmfGrHhL6xbhlLCgpwEAeQQS5Jx3kC2pI0x3n+fO5wRANM85MZqcVxyJ0IaeU1mKT2w
+	5A735gUQ=
+X-Gm-Gg: ASbGncvx7IfbLfP4DqUjYPrk4nnAF5u3pmPj0pcf2Z8MZTHV8uUageXM42/jsDTrKlA
+	afNU6PWQx55EEOnf0pAZIepNHVr7wKbbY057v2Qu+yag9twU4l7NiDZVxo7ZeD5T89pYXxwG91l
+	7z6TXuUiG1xM51xtvEPMyyGbD7hYxgDjpdguF7uKyLiN9oohQg9Gm1jXmCkzSJZUgkJR1SykyVI
+	9yk126yC1m9rgnvIzEelz2RrIMUV8KdyTDSGSS6AkkTYm3xTtcsSwdeYm9BMOmS03ZiQotSK2DY
+	+KJAfGowQs0yMfiRVvMUsFhW8t52B8zey4yCjJJyBQHTzR9YjI04jD5RGXlr0cEj1PCx/FFLkQp
+	pmvYWIV11Fr3cAITMA0zPIocJxb5hBS7JOlJZsNPOR12t2nA51zVOtf2/y6MmF/K14P9VP5Q/
+X-Google-Smtp-Source: AGHT+IGOyKlaUlM9p/10WBKqWLH1kAL+nD44hK1wqYFWziJy9+J39xBk7vREEpjEd+kDQ1YpWVSXtw==
+X-Received: by 2002:a17:907:3d0d:b0:ae3:a717:e90c with SMTP id a640c23a62f3a-af61c8a54afmr659385566b.23.1753552275576;
+        Sat, 26 Jul 2025 10:51:15 -0700 (PDT)
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com. [209.85.208.47])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-af635a61103sm167867466b.70.2025.07.26.10.51.12
+        for <linux-trace-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 26 Jul 2025 10:51:14 -0700 (PDT)
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-6077dea37easo5632560a12.3
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 26 Jul 2025 10:51:12 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWXD19nTaTIXpnurFW+2H9jVZG9Y5F5tgEeSGHGiBMvIldQOUnDU6N+BIqYTlcZ/3SnkQPgsxZGxJhMulgauPnN+Lo=@vger.kernel.org
+X-Received: by 2002:a05:6402:14d:b0:611:d10e:ebd7 with SMTP id
+ 4fb4d7f45d1cf-614f1da658amr5711204a12.19.1753552272125; Sat, 26 Jul 2025
+ 10:51:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250726-nfsd-testing-v2-7-f45923db2fbb@kernel.org>
-References: <20250726-nfsd-testing-v2-0-f45923db2fbb@kernel.org>
-In-Reply-To: <20250726-nfsd-testing-v2-0-f45923db2fbb@kernel.org>
-To: Alexander Viro <viro@zeniv.linux.org.uk>, 
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
- Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
- Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, 
- Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
- Tom Talpey <tom@talpey.com>
-Cc: Trond Myklebust <trondmy@hammerspace.com>, 
- Anna Schumaker <anna@kernel.org>, linux-fsdevel@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
- linux-nfs@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5364; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=NtCz+vb0FJ2RTT3UYGTBXP803cbE2/PCFHkn1707tww=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBohObfe2BC+vdrfTiozPM03vDHTOGmPGlfSvgEP
- FnJ33MaV3iJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaITm3wAKCRAADmhBGVaC
- FRlMD/9CXJXXovQtZBYhhN0mZIjmM2OgSM/Qn1wsOwJygUX2FkKQuQKm78o8x71HdKYq0YJgyBX
- vUmxutDHxFHyo/EtVIftLtmSYFSqZWNm5L9NmeSG6Rr4TDIbRCDDgBcaMqwDelSjnaNmRFMkSXp
- OW0oIjbl4MjG2u388ktJtp8Bpw9Xb6LZW8876aNBBfyxu57EAxGjE5qs8TUMj+z3xiejJtTX5uQ
- CJOMR3AzqPHRcv7uoXusmVQ3v+yuWRXgoM7PMCEXLW/xwWGm4QfFvJxB/JEHw1fdKILHNQLjelx
- 5+bEJ7Y8WtNTiqQIHjaNWwIaTY2441Pic0N4Y0KzV360bec3o8fFkZl09gzEvAfwMA4Dt8SQEKo
- ULTIT56TjQnQDJffjwrDnqDy1deFe5VkdIViIGXTegxYUnzkp1G2w1TIXhrLeQl/RxEmzNbxfkc
- RRZdUsOJlFGsEIjZdHMXIjas7zOurEwkhbQx11y4z9PFDOof5P18oglPNTP2Tywp+uE9366S03m
- J70xF0FI9UWi2P6Ah0AZ6NITqr9gH2mb1efquuNHMSj9BSH9r3V9wEMFukBcXDGb8ny2MieSMcj
- wMp8fJPYhOJ6v3NQgkcX56f+j+wl7bHQtmthiUbD1Yd2YP5s0qvW07SeasopAtS3qpNmN29diOS
- cV/EMgqPxed7ulw==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
+References: <20250724123612.206110-1-bhupesh@igalia.com> <20250724123612.206110-3-bhupesh@igalia.com>
+ <202507241640.572BF86C70@keescook>
+In-Reply-To: <202507241640.572BF86C70@keescook>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Sat, 26 Jul 2025 10:50:55 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wi5c=_-FBGo_88CowJd_F-Gi6Ud9d=TALm65ReN7YjrMw@mail.gmail.com>
+X-Gm-Features: Ac12FXwUXdIlVLvMNocbefDF6HEUwlAESHc5g0TBeq7Fw2jKEkXsJpBWks3U_Dc
+Message-ID: <CAHk-=wi5c=_-FBGo_88CowJd_F-Gi6Ud9d=TALm65ReN7YjrMw@mail.gmail.com>
+Subject: Re: [PATCH v6 2/3] treewide: Switch memcpy() users of 'task->comm' to
+ a more safer implementation
+To: Kees Cook <kees@kernel.org>
+Cc: Bhupesh <bhupesh@igalia.com>, akpm@linux-foundation.org, kernel-dev@igalia.com, 
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-mm@kvack.org, oliver.sang@intel.com, lkp@intel.com, 
+	laoar.shao@gmail.com, pmladek@suse.com, rostedt@goodmis.org, 
+	mathieu.desnoyers@efficios.com, arnaldo.melo@gmail.com, 
+	alexei.starovoitov@gmail.com, andrii.nakryiko@gmail.com, 
+	mirq-linux@rere.qmqm.pl, peterz@infradead.org, willy@infradead.org, 
+	david@redhat.com, viro@zeniv.linux.org.uk, ebiederm@xmission.com, 
+	brauner@kernel.org, jack@suse.cz, mingo@redhat.com, juri.lelli@redhat.com, 
+	bsegall@google.com, mgorman@suse.de, vschneid@redhat.com, 
+	linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Now that nfsd is vetting the timestamps internally, there is no need for
-this function. If ATTR_DELEG is set, then skip the multigrain update and
-set what was requested.
+, but
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- fs/attr.c          | 19 +++-----------
- fs/inode.c         | 73 ------------------------------------------------------
- include/linux/fs.h |  2 --
- 3 files changed, 4 insertions(+), 90 deletions(-)
+On Thu, 24 Jul 2025 at 16:49, Kees Cook <kees@kernel.org> wrote:
+>
+> Why not switch all of these to get_task_comm()? It will correctly handle
+> the size check and NUL termination.
 
-diff --git a/fs/attr.c b/fs/attr.c
-index f0dabd2985989d283a931536a5fc53eda366b373..e75f06b760015640bafd596457cd14c746c7e272 100644
---- a/fs/attr.c
-+++ b/fs/attr.c
-@@ -287,14 +287,7 @@ static void setattr_copy_mgtime(struct inode *inode, const struct iattr *attr)
- 	struct timespec64 now;
- 
- 	if (ia_valid & ATTR_CTIME) {
--		/*
--		 * In the case of an update for a write delegation, we must respect
--		 * the value in ia_ctime and not use the current time.
--		 */
--		if (ia_valid & ATTR_DELEG)
--			now = inode_set_ctime_deleg(inode, attr->ia_ctime);
--		else
--			now = inode_set_ctime_current(inode);
-+		now = inode_set_ctime_current(inode);
- 	} else {
- 		/* If ATTR_CTIME isn't set, then ATTR_MTIME shouldn't be either. */
- 		WARN_ON_ONCE(ia_valid & ATTR_MTIME);
-@@ -352,19 +345,15 @@ void setattr_copy(struct mnt_idmap *idmap, struct inode *inode,
- 		inode->i_mode = mode;
- 	}
- 
--	if (is_mgtime(inode))
-+	if (!(ia_valid & ATTR_DELEG) && is_mgtime(inode))
- 		return setattr_copy_mgtime(inode, attr);
- 
- 	if (ia_valid & ATTR_ATIME)
- 		inode_set_atime_to_ts(inode, attr->ia_atime);
- 	if (ia_valid & ATTR_MTIME)
- 		inode_set_mtime_to_ts(inode, attr->ia_mtime);
--	if (ia_valid & ATTR_CTIME) {
--		if (ia_valid & ATTR_DELEG)
--			inode_set_ctime_deleg(inode, attr->ia_ctime);
--		else
--			inode_set_ctime_to_ts(inode, attr->ia_ctime);
--	}
-+	if (ia_valid & ATTR_CTIME)
-+		inode_set_ctime_to_ts(inode, attr->ia_ctime);
- }
- EXPORT_SYMBOL(setattr_copy);
- 
-diff --git a/fs/inode.c b/fs/inode.c
-index 99318b157a9a13b3dd8dad0f5f90951f08ef64de..f45054fe48b8a0339e60fd2aa17daaad5a7957e7 100644
---- a/fs/inode.c
-+++ b/fs/inode.c
-@@ -2783,79 +2783,6 @@ struct timespec64 inode_set_ctime_current(struct inode *inode)
- }
- EXPORT_SYMBOL(inode_set_ctime_current);
- 
--/**
-- * inode_set_ctime_deleg - try to update the ctime on a delegated inode
-- * @inode: inode to update
-- * @update: timespec64 to set the ctime
-- *
-- * Attempt to atomically update the ctime on behalf of a delegation holder.
-- *
-- * The nfs server can call back the holder of a delegation to get updated
-- * inode attributes, including the mtime. When updating the mtime, update
-- * the ctime to a value at least equal to that.
-- *
-- * This can race with concurrent updates to the inode, in which
-- * case the update is skipped.
-- *
-- * Note that this works even when multigrain timestamps are not enabled,
-- * so it is used in either case.
-- */
--struct timespec64 inode_set_ctime_deleg(struct inode *inode, struct timespec64 update)
--{
--	struct timespec64 now, cur_ts;
--	u32 cur, old;
--
--	/* pairs with try_cmpxchg below */
--	cur = smp_load_acquire(&inode->i_ctime_nsec);
--	cur_ts.tv_nsec = cur & ~I_CTIME_QUERIED;
--	cur_ts.tv_sec = inode->i_ctime_sec;
--
--	/* If the update is older than the existing value, skip it. */
--	if (timespec64_compare(&update, &cur_ts) <= 0)
--		return cur_ts;
--
--	ktime_get_coarse_real_ts64_mg(&now);
--
--	/* Clamp the update to "now" if it's in the future */
--	if (timespec64_compare(&update, &now) > 0)
--		update = now;
--
--	update = timestamp_truncate(update, inode);
--
--	/* No need to update if the values are already the same */
--	if (timespec64_equal(&update, &cur_ts))
--		return cur_ts;
--
--	/*
--	 * Try to swap the nsec value into place. If it fails, that means
--	 * it raced with an update due to a write or similar activity. That
--	 * stamp takes precedence, so just skip the update.
--	 */
--retry:
--	old = cur;
--	if (try_cmpxchg(&inode->i_ctime_nsec, &cur, update.tv_nsec)) {
--		inode->i_ctime_sec = update.tv_sec;
--		mgtime_counter_inc(mg_ctime_swaps);
--		return update;
--	}
--
--	/*
--	 * Was the change due to another task marking the old ctime QUERIED?
--	 *
--	 * If so, then retry the swap. This can only happen once since
--	 * the only way to clear I_CTIME_QUERIED is to stamp the inode
--	 * with a new ctime.
--	 */
--	if (!(old & I_CTIME_QUERIED) && (cur == (old | I_CTIME_QUERIED)))
--		goto retry;
--
--	/* Otherwise, it was a new timestamp. */
--	cur_ts.tv_sec = inode->i_ctime_sec;
--	cur_ts.tv_nsec = cur & ~I_CTIME_QUERIED;
--	return cur_ts;
--}
--EXPORT_SYMBOL(inode_set_ctime_deleg);
--
- /**
-  * in_group_or_capable - check whether caller is CAP_FSETID privileged
-  * @idmap:	idmap of the mount @inode was found from
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index f18f45e88545c39716b917b1378fb7248367b41d..08f2d813dd40b5dd4fe07d9636e94252915d6235 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -1657,8 +1657,6 @@ static inline bool fsuidgid_has_mapping(struct super_block *sb,
- 
- struct timespec64 current_time(struct inode *inode);
- struct timespec64 inode_set_ctime_current(struct inode *inode);
--struct timespec64 inode_set_ctime_deleg(struct inode *inode,
--					struct timespec64 update);
- 
- static inline time64_t inode_get_atime_sec(const struct inode *inode)
- {
+I'd rather aim to get rid of get_task_comm() entirely.
 
--- 
-2.50.1
+I don't think it has ever made much sense, except in the "guarantee
+NUL termination" sense, but since we have basically agreed to always
+guarantee that natively in ->comm[] itself (by *never* writing non-NUL
+characters to the last byte, rather than "write something, then
+overwrite it") the whole concept is broken.
 
+The alleged other reason for get_task_comm() is to get a stable
+result, but since the source can be modified by users, there's no
+"stable". If you get some half-way state, that *could* have been a
+user just writing odd names.
+
+So the other reason to use get_task_comm() is pretty much pointless too.
+
+And several of the existing users are just pointless overhead, copying
+the comm[] to a local copy only to print it out, and making it much
+more complex than just using "%s" with tsk->comm.
+
+End result: all get_task_comm() does now is to verify the size of the
+result buffer, and that is *BAD*. We shouldn't care. If the result
+buffer is smaller than the string, we should just have truncated it.
+And if the buffer is bigger, we should zero-pad or not depending on
+the use case.
+
+And guess what? We *have* that function. It's called "strscpy()". It
+already does the right thing, including passing in the size of a fixed
+array and just dealing with it the RightWay(tm). Add '_pad()' if that
+is the behavior you want, and now you *document* the fact that the
+result is padded.
+
+So I claim that get_task_comm() is bad, and we should feel bad about
+ever having introduced it.
+
+Now, the tracing code may actually care about *performance*, and what
+it probably wants is that "just copy things and NUL-terminate it", but
+I don't think we should use get_task_comm() for that because of all
+the horrid bad history it has.
+
+In other words, if "strscpy()" is too expensive (because it's being
+careful and returns the size), I think we should look at maybe
+optimizing strscpy() further. It already does word-at-a-time stuff,
+but what strscpy() does *not* do is the "inline at call site for small
+constant sizes".
+
+We could inline sized_strscpy() for small constant sizes, but the real
+problem is that it returns the length, and there's no way to do
+"inline for small constant sizes when nobody cares about the result"
+that I can think of. You can use _Generic() on the arguments, but not
+on the "people don't look at the return value".
+
+So we do probably want something for that "just copy comm to a
+constant-sized array" case if people care about performance for it
+(and tracing probably does), but I still think get_task_comm() has too
+much baggage (and takes a size that it shouldn't take).
+
+"get_task_array()" might be more palatable, and is certainly simple to
+implement using something like
+
+   static __always_inline void
+       __cstr_array_copy(char *dst,
+            const char *src, __kernel_size_t size)
+   {
+        memcpy(dst, src, size);
+        dst[size] = 0;
+   }
+
+   #define get_task_array(a,b) \
+      __cstr_array_copy(dst, src, __must_be_array(dst))
+
+(Entirely untested, hasn't seen a compiler, is written for email, you
+get the idea..).
+
+But I think that should be a separate thing (and it should be
+documented to be data-racy in the destination and *not* be the kind of
+"stable NUL at the end" that strscpy and friends are.
+
+               Linus
