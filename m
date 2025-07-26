@@ -1,85 +1,128 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D28BE55A;
-	Sat, 26 Jul 2025 11:01:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76AFC244690;
+	Sat, 26 Jul 2025 12:06:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753527673; cv=none; b=g1o779WI3mKrB9Z9AiYVGcLSy1WbjpRzA/0jaW5eJ/HVCyeVkH8bGBg5eG8a+snrJnNDcr6zSt7zlE5haYZsw7LvEC5ck7cYry1cWpW21nTTYfoQPG+qLWo31fVgfAlh+nL2ast9ashDIKXuXnGfmGgNvP7jLKI2gHoCfziO0Pk=
+	t=1753531601; cv=none; b=hCKtjLXfGOSeK/EY1B7igfSiGScDnqo+ICWit5t6K0i+Pt+UA2uberwSDw5/9e4Y+RhiIWRrfeIGDYB3MxCfTy6p4Kdjm//UJRSdSpX3IhkOauZuLPFB1Nyf5xfmM1U/UWVacOco1q4bHmthwhbuYYUKb0b83j+p59HiaXBYCk8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753527673; c=relaxed/simple;
-	bh=fl/PV+ZyQsIPcnTVHtSrC4wfylDUmx6XAB53C7LWOqU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CMhSOG7tbJo0kR3z+XynBl9zD7cJ8POTh4gJGWtPcZCS/vgzbpYaX7mguBeuciLAWy/xf0RyO5u2FZbDnMGDOyaAlOpXtth+QOc8aUVYbN1Ig6FFUvt7U+O1Es5l0rdtEEGbE/7LVJuD3ceHTodVNDO2suZ+lvkkM9UUIz6YTDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bq1xq70PgzYQtrN;
-	Sat, 26 Jul 2025 19:01:03 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id A98531A151A;
-	Sat, 26 Jul 2025 19:01:02 +0800 (CST)
-Received: from [10.67.110.36] (unknown [10.67.110.36])
-	by APP4 (Coremail) with SMTP id gCh0CgC3MhNttYRoOzkwBg--.1541S2;
-	Sat, 26 Jul 2025 19:01:02 +0800 (CST)
-Message-ID: <3140a3ba-6db0-45d7-bbd5-707fc8bf1dcc@huaweicloud.com>
-Date: Sat, 26 Jul 2025 19:01:01 +0800
+	s=arc-20240116; t=1753531601; c=relaxed/simple;
+	bh=KeZHG/hprp0Bsq1uf1r+YqWVMWzeAJK4jTUPizApUhs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QG9nQxuwbX5YfkJpUUvtwtXG7NruhL1nB0K6QzIGGp41+Q9tBwJEe1vQ/5/l6gInHVQ7SibBk7yvEbpMtqfitp/7U4CblZTG+nHHMVK09iIdbzJRcxXrdAMy9VttzWjFDIYuFjstfMOF0M14zJkYEoPciWLn8LsG7M/EihpVOWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mK5UswoX; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mK5UswoX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1753531600; x=1785067600;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=KeZHG/hprp0Bsq1uf1r+YqWVMWzeAJK4jTUPizApUhs=;
+  b=mK5UswoXOIOkPUU9SsytjlNvAOx4nIhMzxqDmgOa5Hh5vo9IWIWgi1Ev
+   fYcJPEEUo0bxfOtlA3eMmFyDlujDg0zFJHxOqJfzc/UxK3FlmK4J8Vp/z
+   PxH9fL/NsjpBycQx4Y1OkPga51P+NG3u5w6Bt48cjalsgKskAFDp83d/F
+   DsS2p4i0apxjhAB2Pp/wRdpR1/b2QLqvIecVnZfKzD+BJMbq7pySaiqmY
+   BkVyVbGYnPsn89HkcfmPqWrOcYiEvmeqhUvj3Rzr+hcSQPI6phLNYaxHO
+   SV7PQnugrcZv16LPHXUPvM73mftZv5d74V/UkmXctduMmtLXfRM1KnHvQ
+   A==;
+X-CSE-ConnectionGUID: Y8WJfnBlQNaUaveWmM1CpA==
+X-CSE-MsgGUID: +Kx1Hh4UTM+zvZiT4aJSZA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11503"; a="55996490"
+X-IronPort-AV: E=Sophos;i="6.16,339,1744095600"; 
+   d="scan'208";a="55996490"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jul 2025 05:06:39 -0700
+X-CSE-ConnectionGUID: RECxPv7sRR6OJ6zQV6942w==
+X-CSE-MsgGUID: /hvYLPQeQJS0pTzYjN6FiQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,339,1744095600"; 
+   d="scan'208";a="161139361"
+Received: from lkp-server01.sh.intel.com (HELO 9ee84586c615) ([10.239.97.150])
+  by fmviesa007.fm.intel.com with ESMTP; 26 Jul 2025 05:06:37 -0700
+Received: from kbuild by 9ee84586c615 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1ufdff-000Lxx-01;
+	Sat, 26 Jul 2025 12:06:35 +0000
+Date: Sat, 26 Jul 2025 20:06:09 +0800
+From: kernel test robot <lkp@intel.com>
+To: James Bottomley <James.Bottomley@hansenpartnership.com>,
+	bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, Roberto Sassu <roberto.sassu@huawei.com>
+Subject: Re: [PATCH 2/3] bpf: remove bpf_key reference
+Message-ID: <202507261944.7ub6moae-lkp@intel.com>
+References: <20250724143428.4416-3-James.Bottomley@HansenPartnership.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH -next] selftests/ftrace: Prevent potential failure in
- subsystem-enable test case
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Shuah Khan <shuah@kernel.org>, Yuanhe Shu <xiangzao@linux.alibaba.com>,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org
-References: <20250710130134.591066-1-wutengda@huaweicloud.com>
- <20250710153409.3135fb17@batman.local.home>
- <88286bd2-a833-47e3-a0f0-896fbdd3fcbb@huaweicloud.com>
- <20250721132957.5184cd68@batman.local.home>
-Content-Language: en-US
-From: Tengda Wu <wutengda@huaweicloud.com>
-In-Reply-To: <20250721132957.5184cd68@batman.local.home>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:gCh0CgC3MhNttYRoOzkwBg--.1541S2
-X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYU7kC6x804xWl14x267AKxVW8JVW5JwAF
-	c2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII
-	0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xv
-	wVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7
-	xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40E
-	FcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr
-	0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxAIw28IcxkI7VAKI48JMxAq
-	zxv26xkF7I0En4kS14v26r126r1DMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrV
-	AFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCI
-	c40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267
-	AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_
-	Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUrR6zUU
-	UUU
-X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250724143428.4416-3-James.Bottomley@HansenPartnership.com>
 
+Hi James,
 
+kernel test robot noticed the following build warnings:
 
-On 2025/7/22 1:29, Steven Rostedt wrote:
-> On Mon, 21 Jul 2025 09:54:22 +0800
-> Tengda Wu <wutengda@huaweicloud.com> wrote:
-> 
->> I noticed this patch hasn't been merged yet. Do you plan to merge it soon?
->> If you're too busy, would you like me to help submit it instead?
-> 
-> Nah, I simply forgot about it. Let me go write up a patch and send it
-> out.
-> 
-> -- Steve
+[auto build test WARNING on bpf-next/master]
+[also build test WARNING on bpf/master linus/master v6.16-rc7 next-20250725]
+[cannot apply to bpf-next/net]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Just got the patch application notice, thanks.
--- Tengda
+url:    https://github.com/intel-lab-lkp/linux/commits/James-Bottomley/bpf-make-bpf_key-an-opaque-type/20250724-224304
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git master
+patch link:    https://lore.kernel.org/r/20250724143428.4416-3-James.Bottomley%40HansenPartnership.com
+patch subject: [PATCH 2/3] bpf: remove bpf_key reference
+config: i386-randconfig-063-20250725 (https://download.01.org/0day-ci/archive/20250726/202507261944.7ub6moae-lkp@intel.com/config)
+compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250726/202507261944.7ub6moae-lkp@intel.com/reproduce)
 
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202507261944.7ub6moae-lkp@intel.com/
+
+sparse warnings: (new ones prefixed by >>)
+   kernel/trace/bpf_trace.c:834:41: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected void [noderef] __user *[addressable] [assigned] [usertype] sival_ptr @@     got void * @@
+   kernel/trace/bpf_trace.c:834:41: sparse:     expected void [noderef] __user *[addressable] [assigned] [usertype] sival_ptr
+   kernel/trace/bpf_trace.c:834:41: sparse:     got void *
+   kernel/trace/bpf_trace.c:3695:52: sparse: sparse: cast removes address space '__user' of expression
+   kernel/trace/bpf_trace.c:3709:56: sparse: sparse: cast removes address space '__user' of expression
+   kernel/trace/bpf_trace.c:3723:52: sparse: sparse: cast removes address space '__user' of expression
+   kernel/trace/bpf_trace.c:3730:56: sparse: sparse: cast removes address space '__user' of expression
+   kernel/trace/bpf_trace.c:3738:52: sparse: sparse: cast removes address space '__user' of expression
+   kernel/trace/bpf_trace.c:3746:56: sparse: sparse: cast removes address space '__user' of expression
+>> kernel/trace/bpf_trace.c:1349:42: sparse: sparse: non size-preserving pointer to integer cast
+   kernel/trace/bpf_trace.c:1377:42: sparse: sparse: non size-preserving pointer to integer cast
+   kernel/trace/bpf_trace.c: note: in included file (through include/linux/rbtree.h, include/linux/mm_types.h, include/linux/mmzone.h, ...):
+   include/linux/rcupdate.h:871:25: sparse: sparse: context imbalance in 'uprobe_prog_run' - unexpected unlock
+
+vim +1349 kernel/trace/bpf_trace.c
+
+  1339	
+  1340	/**
+  1341	 * bpf_key_put - decrement key reference count if key is valid and free bpf_key
+  1342	 * @bkey: bpf_key structure
+  1343	 *
+  1344	 * Decrement the reference count of the key inside *bkey*, if the pointer
+  1345	 * is valid, and free *bkey*.
+  1346	 */
+  1347	__bpf_kfunc void bpf_key_put(struct bpf_key *bkey)
+  1348	{
+> 1349		if (system_keyring_id_check((u64)bkey->key) < 0)
+  1350			key_put(bkey->key);
+  1351	
+  1352		kfree(bkey);
+  1353	}
+  1354	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
