@@ -1,107 +1,122 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C184B1D7995;
-	Sun, 27 Jul 2025 17:31:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2FF62E36E6;
+	Sun, 27 Jul 2025 18:36:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753637485; cv=none; b=BTCFZsVlA+0F5u2Us1uOk3dpd+isPD5dpKurVvBgoSAMZlYFBC4sgW1NdaBtougkG5Kh16tzXOv61zYsq6WzjhTC72x4XxhLuq6UKXH6sCD0h5z7wI7LpYqni88JKRJ+6Zv0f6CzsNz7YvuGPJrklUjBAdFg71mI7zYMcE6l/20=
+	t=1753641384; cv=none; b=e4cOHl3JbHVdhKOOsze+h/UEEnTinerQkUi/FhY99n/Jgc09zdoATAAjglRqx1P+IBcbSxTIhISF0w1IFAQvQIeth0hqPxMOGmz82APhl7V5Y0pAorBga4BbOLbjC6nlvtmE2xbH63hIdKeKW/dmOXmCJ8mKHqoDOYvVZ6Jpr+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753637485; c=relaxed/simple;
-	bh=k2xccX0Y8Ao1H0mbk1zEZnxQmtGY599vzJY7tf0+/LU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=CD5sPo6Km6rQt2oiJx++5cFzWqd0lkbzz1W6OojGhznFMGJzcPvzRZUBpAi+qWShlc4SemfFgVfuF55KKnJmxHnYItVxMHPQzzishMPAbhniQAglXVVQrQXyi77yFvFUsd2xTVkvrh4ckhsxypIn0VWpvx7/2mSn/JeWbG5nVl0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FN1wojhf; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=C9jDvbti; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1753641384; c=relaxed/simple;
+	bh=WuGgJeU+Prm+ZC3/MNeq9ugNEFgkJMfPiPWsKJAQOMs=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=DJAJmshxIWCz0y042sSuO3mPzLD4K9ZKbIwouESr8VEeF0hr1ybyyyZrv71C8j/oE1RiAdQIjZ465jRT8XT8vqV3CXM/9vtr5s3l6ksC7oXHc5JIZoL6NaWl4WKGVnLIjm8AfiXzp8dyyfurD4tLjCUovtP6a9rz/RiCddQGR/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wq8RgquJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FN1wojhf";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="C9jDvbti"
-From: Nam Cao <namcao@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1753637481;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nBNpckoxR68awXvvXJgFQ3zYPo4X0L8GySiPwun3zDI=;
-	b=FN1wojhfJ5KZ9yghnPmv4BkeilGfH7cdPGdsIwDyjhfVbR/cB3kJ3ozkUV+wra69e75zek
-	IMmG8gYeGzjlbfqjZ/HxdxQfcq1vgVExXu7lEG6USgzUCrrPFHlUPf1SigKSUZr9LXsA06
-	GIi6CivIfr1ebBML6a0vuA0GzYjvdR1/mozD4uDpqBOfxNZQ48nypAh2DK1mPxcLMaDIBx
-	YGjuzpBsDamNo3U13spMkl+tJXnUW5n3LYucwwfcIqmsIPBo6xumjFCM1r1w/eFGeOifGM
-	V8iZZCxYojnQqDHBKYiyWm6KaoYe241d6onkZBpOOkee6qMZ9g2Cflns6RKkow==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1753637481;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nBNpckoxR68awXvvXJgFQ3zYPo4X0L8GySiPwun3zDI=;
-	b=C9jDvbtiDPAis3wm41nHXaMS0QFU/YufOCj80SKmj2AOcHjbB1xSZiMnlatoqE0jk0OdSx
-	Yu5QVRRiokexcjCA==
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Nam Cao <namcao@linutronix.de>
-Subject: [PATCH 2/2] rv: Fix wrong type cast in reactors_show() and monitor_reactor_show()
-Date: Sun, 27 Jul 2025 19:31:13 +0200
-Message-Id: <b4febbd6844311209e4c8768b65d508b81bd8c9b.1753625621.git.namcao@linutronix.de>
-In-Reply-To: <cover.1753625621.git.namcao@linutronix.de>
-References: <cover.1753625621.git.namcao@linutronix.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wq8RgquJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5B9DC4CEEB;
+	Sun, 27 Jul 2025 18:36:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753641384;
+	bh=WuGgJeU+Prm+ZC3/MNeq9ugNEFgkJMfPiPWsKJAQOMs=;
+	h=From:Subject:Date:To:Cc:From;
+	b=Wq8RgquJMjspQzQfdZcoc3HCtsCq/d93WCkCjnOF4zlXrifncb+dwT4q3Rr4tDPk+
+	 +sOPWLph5bKp6NcyzPUSkJBBl60JV/7oCU43GSIvRVZr5BPQCTBg1FxDwIDRn5/fnT
+	 RMQhlNB9pI7LtPW7YpDqXtjyPb/+H/XbhR1YDzMEB1WIcFsRmJW1diZR1WwCtKgd5t
+	 UCv2syrmk74/B4Gj/iNe/2ai8mLLdSaUr0d2RXS+OwjhPruJf2yyZB8s5tR56R2ZQ4
+	 k7l1POU5IEj66cpsLSSGErqIungkmqPnNfez3XvfXY/CYCbHqPIPknLJdCGmKRs6kz
+	 f148yH6/6IpLw==
+From: Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH v3 0/8] nfsd/vfs: fix handling of delegated timestamp
+ updates
+Date: Sun, 27 Jul 2025 14:36:10 -0400
+Message-Id: <20250727-nfsd-testing-v3-0-8dc2aafb166d@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAJpxhmgC/3XMQQ6CMBCF4auQrq1ppwLiynsYF1BmYKJpTUsaD
+ eHuFlZq4vK95PtnETEwRnEqZhEwcWTv8jC7QtixdQNK7vMWoKBUNYB0FHs5YZzYDbLEY6VbY8m
+ 0SmTyCEj83HKXa94jx8mH11ZPen3/hJKWShptQNuabFPT+YbB4X3vwyDWUoJPXf1oyJoOZQOm7
+ 4C67ksvy/IGYe37QecAAAA=
+X-Change-ID: 20250722-nfsd-testing-5e861a3cf3a0
+To: Alexander Viro <viro@zeniv.linux.org.uk>, 
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+ Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, 
+ Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+ Tom Talpey <tom@talpey.com>
+Cc: Trond Myklebust <trondmy@hammerspace.com>, 
+ Anna Schumaker <anna@kernel.org>, linux-fsdevel@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+ linux-nfs@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1799; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=WuGgJeU+Prm+ZC3/MNeq9ugNEFgkJMfPiPWsKJAQOMs=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBohnGhpUWRYry3ddZksYTq/rwet7Iuo/jOMYXCB
+ pLJBCMfsz2JAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaIZxoQAKCRAADmhBGVaC
+ FbcqD/93n3K3cHZj9ahOiyE/ao6v8Y+FWTWLhERquoOcX+4cdZ/k/69lH9ymXBXvQNbn4ftukut
+ C2rP+XwNmm5WMRDNn64/6k1VQQHUrSxdimfa+qOC3tdkCGFE0UnqzpDAgFdB2rcvgjFcOGvm88L
+ 6YlBi3FOxtXxhLYM/fad1ht2S8ihnIluBtqJIfxgPljNsQ3RdKQysrnnioTgCB1FU1B9jm9ya01
+ FhUqgDzhHHWyjgl/hvR1WnTvYapPU/mssYzEWOhcLyITl6uCFtcfZGPC5EJVwHIDfGEHCKN5xVS
+ HqpUpdMvXAWADSxJVoitsqH5c55NE4gZh1dnsARhEws6Y+/I/hhTOZ8+ExVh1HEFc2n6Ck4ChmZ
+ 8aG2bDKJxcdlq8MJ/iJvY5HJ5Ud6/9hFIA1cYujZOz9BMZ4APOX7HJPyl0iDFpRZuGWiNNifBSg
+ BNNGUc73yBiyY+kD3VKDNOReISNnfySJaQ/GZkhKkt9upfYFnH/24pdz/AUFOCp7a2f0y4ol6A0
+ xM6r1XC7TGktWK7cAxOQi33mTAYGzIczeQbxTNtFNZZTajBrcQqpiFWvi6fYPpcWDAlt4t7ZCFx
+ grxsqmQkyTv45kRNgsNrlmWjHbPcAdNPrr4cXn50+BMdzkXlMgbMXlliY++R4kvkK4t/T/tQPzt
+ NVjvJXVYcV9wF6A==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-Argument 'p' of reactors_show() and monitor_reactor_show() is not a pointer
-to struct rv_reactor, it is actually a pointer to the list_head inside
-struct rv_reactor. Therefore it's wrong to cast 'p' to struct rv_reactor *.
+This patchset fixes the handling of delegated timestamps in nfsd.
 
-This wrong type cast has been there since the beginning. But it still
-worked because the list_head was the first field in struct rv_reactor_def.
-This is no longer true since commit 3d3c376118b5 ("rv: Merge struct
-rv_reactor_def into struct rv_reactor") moved the list_head, and this wrong
-type cast became a functional problem.
+This posting is basically identical to the last, aside from
+splitting out one fix into a separate patch, and the addition of some
+Fixes: tags.
 
-Properly use container_of() instead.
-
-Fixes: 3d3c376118b5 ("rv: Merge struct rv_reactor_def into struct rv_reacto=
-r")
-Signed-off-by: Nam Cao <namcao@linutronix.de>
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- kernel/trace/rv/rv_reactors.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Changes in v3:
+- split out decoder fix into separate patch
+- add Fixes: tags
+- Link to v2: https://lore.kernel.org/r/20250726-nfsd-testing-v2-0-f45923db2fbb@kernel.org
 
-diff --git a/kernel/trace/rv/rv_reactors.c b/kernel/trace/rv/rv_reactors.c
-index 106f2c4740f2..d32859fec238 100644
---- a/kernel/trace/rv/rv_reactors.c
-+++ b/kernel/trace/rv/rv_reactors.c
-@@ -86,7 +86,7 @@ static struct rv_reactor *get_reactor_rdef_by_name(char *=
-name)
-  */
- static int reactors_show(struct seq_file *m, void *p)
- {
--	struct rv_reactor *reactor =3D p;
-+	struct rv_reactor *reactor =3D container_of(p, struct rv_reactor, list);
-=20
- 	seq_printf(m, "%s\n", reactor->name);
- 	return 0;
-@@ -139,7 +139,7 @@ static const struct file_operations available_reactors_=
-ops =3D {
- static int monitor_reactor_show(struct seq_file *m, void *p)
- {
- 	struct rv_monitor *mon =3D m->private;
--	struct rv_reactor *reactor =3D p;
-+	struct rv_reactor *reactor =3D container_of(p, struct rv_reactor, list);
-=20
- 	if (mon->reactor =3D=3D reactor)
- 		seq_printf(m, "[%s]\n", reactor->name);
---=20
-2.39.5
+Changes in v2:
+- add ATTR_CTIME_SET and remove inode_set_ctime_deleg()
+- track original timestamps in struct nfs4_delegation
+- fix delegated timestamp updates to respect saved timestamps
+- Link to v1: https://lore.kernel.org/r/20250722-nfsd-testing-v1-0-31321c7fc97f@kernel.org
+
+---
+Jeff Layton (8):
+      nfsd: fix assignment of ia_ctime.tv_nsec on delegated mtime update
+      nfsd: ignore ATTR_DELEG when checking ia_valid before notify_change()
+      vfs: add ATTR_CTIME_SET flag
+      nfsd: use ATTR_CTIME_SET for delegated ctime updates
+      nfsd: track original timestamps in nfs4_delegation
+      nfsd: fix SETATTR updates for delegated timestamps
+      nfsd: fix timestamp updates in CB_GETATTR
+      vfs: remove inode_set_ctime_deleg()
+
+ fs/attr.c           | 34 ++++++++++---------------
+ fs/inode.c          | 73 -----------------------------------------------------
+ fs/nfsd/nfs4proc.c  | 31 ++++++++++++++++++++++-
+ fs/nfsd/nfs4state.c | 44 +++++++++++++++++---------------
+ fs/nfsd/nfs4xdr.c   |  5 ++--
+ fs/nfsd/state.h     |  8 ++++++
+ fs/nfsd/vfs.c       |  2 +-
+ include/linux/fs.h  |  3 +--
+ 8 files changed, 79 insertions(+), 121 deletions(-)
+---
+base-commit: b05f077b59098b4760e3f675b00a4e6a1ad4b0ad
+change-id: 20250722-nfsd-testing-5e861a3cf3a0
+
+Best regards,
+-- 
+Jeff Layton <jlayton@kernel.org>
 
