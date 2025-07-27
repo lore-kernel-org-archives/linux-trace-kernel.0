@@ -1,22 +1,22 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 639D91865FA;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C184B1D7995;
 	Sun, 27 Jul 2025 17:31:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753637484; cv=none; b=S/BjhOzB7AJX4BN0xvJloTFpP+YvkdzST3qU0eBQHXzjNP5ebolwiuHKj0AxX6Hf69H3vBWWfKe/LTT0WtacmWE6ozxXmk1ysg7KnrtL/7kqViUbpITRkNiq5liYOMbLtLKBkuRjIjGQhcRmlcvns0tUwldrqY//jmqaTaKTPNc=
+	t=1753637485; cv=none; b=BTCFZsVlA+0F5u2Us1uOk3dpd+isPD5dpKurVvBgoSAMZlYFBC4sgW1NdaBtougkG5Kh16tzXOv61zYsq6WzjhTC72x4XxhLuq6UKXH6sCD0h5z7wI7LpYqni88JKRJ+6Zv0f6CzsNz7YvuGPJrklUjBAdFg71mI7zYMcE6l/20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753637484; c=relaxed/simple;
-	bh=/cjBrV9XX6aheBgnSXdb2dlIEWOdCP4YiAwEzH2kDQU=;
+	s=arc-20240116; t=1753637485; c=relaxed/simple;
+	bh=k2xccX0Y8Ao1H0mbk1zEZnxQmtGY599vzJY7tf0+/LU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=rLAcMidhG88Z9Nj5SuAI+LHGpqcaY5911kTA5JnO42p3D34vqUBoLjC7MDtuFjXH9bkraNe1Q61N9OCku2BbecW7K2ZFj9vIDWy+kfAk3mPM1XcYg0APMDi2Lj59K32HI9OsuOP/zhfz08GSrQo0C2oIWf8pysEefgH9aHtub6c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=hxN/1DjN; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dGGhLxBj; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=CD5sPo6Km6rQt2oiJx++5cFzWqd0lkbzz1W6OojGhznFMGJzcPvzRZUBpAi+qWShlc4SemfFgVfuF55KKnJmxHnYItVxMHPQzzishMPAbhniQAglXVVQrQXyi77yFvFUsd2xTVkvrh4ckhsxypIn0VWpvx7/2mSn/JeWbG5nVl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FN1wojhf; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=C9jDvbti; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hxN/1DjN";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dGGhLxBj"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FN1wojhf";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="C9jDvbti"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1753637481;
@@ -24,21 +24,21 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Q0LdXBryZW5wmd0Uo5zcrklSnbN6Ze5FvNPihrNQlxg=;
-	b=hxN/1DjNHPwzfwv7/fXE3zZX/Zg1w/UIZta0pyWkUGSrrI9ic+TRn67YuO9L7NUt2yvDYo
-	Vu5om1XWkDa3hDdCYQlDp8pHiZjnxmra7/GjqDXDsgX9Ydoq8KvpsIx1H36Uuwgr9bFIQS
-	W2oDT3WlkeozgoIQc4+aO0T5m4wfRL/Cm+jPmrcQ8OfJPP5tSu36hYkUY9G6WRuB2j6zbM
-	+FwDT9ONaXIliqa7S2jkd2kjBK9lKKGzG6ohzCBoZrqMROe/pTws6awj59CvjSdgodffcq
-	OqrsSKBPA7H14bwwpLON1b5O39+F3ZrQ0SXTLx+VdQRTjv1kVnocu8VVUuZRgw==
+	bh=nBNpckoxR68awXvvXJgFQ3zYPo4X0L8GySiPwun3zDI=;
+	b=FN1wojhfJ5KZ9yghnPmv4BkeilGfH7cdPGdsIwDyjhfVbR/cB3kJ3ozkUV+wra69e75zek
+	IMmG8gYeGzjlbfqjZ/HxdxQfcq1vgVExXu7lEG6USgzUCrrPFHlUPf1SigKSUZr9LXsA06
+	GIi6CivIfr1ebBML6a0vuA0GzYjvdR1/mozD4uDpqBOfxNZQ48nypAh2DK1mPxcLMaDIBx
+	YGjuzpBsDamNo3U13spMkl+tJXnUW5n3LYucwwfcIqmsIPBo6xumjFCM1r1w/eFGeOifGM
+	V8iZZCxYojnQqDHBKYiyWm6KaoYe241d6onkZBpOOkee6qMZ9g2Cflns6RKkow==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1753637481;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Q0LdXBryZW5wmd0Uo5zcrklSnbN6Ze5FvNPihrNQlxg=;
-	b=dGGhLxBj2cdEpezP/ztuu8a90g8TLcRlbq1w2r5SdiNbmzCDVctiY5nuXl9Tp5GJneQQPg
-	lDBJ/TUO57EIjyDA==
+	bh=nBNpckoxR68awXvvXJgFQ3zYPo4X0L8GySiPwun3zDI=;
+	b=C9jDvbtiDPAis3wm41nHXaMS0QFU/YufOCj80SKmj2AOcHjbB1xSZiMnlatoqE0jk0OdSx
+	Yu5QVRRiokexcjCA==
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
@@ -46,9 +46,9 @@ To: Steven Rostedt <rostedt@goodmis.org>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Nam Cao <namcao@linutronix.de>
-Subject: [PATCH 1/2] rv: Fix wrong type cast in monitors_show()
-Date: Sun, 27 Jul 2025 19:31:12 +0200
-Message-Id: <35e49e97696007919ceacf73796487a2e15a3d02.1753625621.git.namcao@linutronix.de>
+Subject: [PATCH 2/2] rv: Fix wrong type cast in reactors_show() and monitor_reactor_show()
+Date: Sun, 27 Jul 2025 19:31:13 +0200
+Message-Id: <b4febbd6844311209e4c8768b65d508b81bd8c9b.1753625621.git.namcao@linutronix.de>
 In-Reply-To: <cover.1753625621.git.namcao@linutronix.de>
 References: <cover.1753625621.git.namcao@linutronix.de>
 Precedence: bulk
@@ -59,39 +59,49 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Argument 'p' of monitors_show() is not a pointer to struct rv_monitor, it
-is actually a pointer to the list_head inside struct rv_monitor. Therefore
-it is wrong to cast 'p' to struct rv_monitor *.
+Argument 'p' of reactors_show() and monitor_reactor_show() is not a pointer
+to struct rv_reactor, it is actually a pointer to the list_head inside
+struct rv_reactor. Therefore it's wrong to cast 'p' to struct rv_reactor *.
 
 This wrong type cast has been there since the beginning. But it still
-worked because the list_head was the first field in struct rv_monitor_def.
-This is no longer true since commit 24cbfe18d55a ("rv: Merge struct
-rv_monitor_def into struct rv_monitor") moved the list_head, and this wrong
+worked because the list_head was the first field in struct rv_reactor_def.
+This is no longer true since commit 3d3c376118b5 ("rv: Merge struct
+rv_reactor_def into struct rv_reactor") moved the list_head, and this wrong
 type cast became a functional problem.
 
 Properly use container_of() instead.
 
-Fixes: 24cbfe18d55a ("rv: Merge struct rv_monitor_def into struct rv_monito=
+Fixes: 3d3c376118b5 ("rv: Merge struct rv_reactor_def into struct rv_reacto=
 r")
 Signed-off-by: Nam Cao <namcao@linutronix.de>
 ---
- kernel/trace/rv/rv.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/trace/rv/rv_reactors.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/trace/rv/rv.c b/kernel/trace/rv/rv.c
-index 2ac0e8bf4e60..1482e91c39f4 100644
---- a/kernel/trace/rv/rv.c
-+++ b/kernel/trace/rv/rv.c
-@@ -458,7 +458,7 @@ static int create_monitor_dir(struct rv_monitor *mon, s=
-truct rv_monitor *parent)
+diff --git a/kernel/trace/rv/rv_reactors.c b/kernel/trace/rv/rv_reactors.c
+index 106f2c4740f2..d32859fec238 100644
+--- a/kernel/trace/rv/rv_reactors.c
++++ b/kernel/trace/rv/rv_reactors.c
+@@ -86,7 +86,7 @@ static struct rv_reactor *get_reactor_rdef_by_name(char *=
+name)
   */
- static int monitors_show(struct seq_file *m, void *p)
+ static int reactors_show(struct seq_file *m, void *p)
  {
--	struct rv_monitor *mon =3D p;
-+	struct rv_monitor *mon =3D container_of(p, struct rv_monitor, list);
+-	struct rv_reactor *reactor =3D p;
++	struct rv_reactor *reactor =3D container_of(p, struct rv_reactor, list);
 =20
- 	if (mon->parent)
- 		seq_printf(m, "%s:%s\n", mon->parent->name, mon->name);
+ 	seq_printf(m, "%s\n", reactor->name);
+ 	return 0;
+@@ -139,7 +139,7 @@ static const struct file_operations available_reactors_=
+ops =3D {
+ static int monitor_reactor_show(struct seq_file *m, void *p)
+ {
+ 	struct rv_monitor *mon =3D m->private;
+-	struct rv_reactor *reactor =3D p;
++	struct rv_reactor *reactor =3D container_of(p, struct rv_reactor, list);
+=20
+ 	if (mon->reactor =3D=3D reactor)
+ 		seq_printf(m, "[%s]\n", reactor->name);
 --=20
 2.39.5
 
