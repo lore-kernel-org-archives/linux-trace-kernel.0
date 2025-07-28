@@ -1,350 +1,199 @@
-Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CF3E2E3708;
-	Mon, 28 Jul 2025 21:16:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8347D235055;
+	Mon, 28 Jul 2025 21:35:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753737392; cv=none; b=j6hjZC/MA3LCSAPY4M8HXPnw6CjtSpvLDpFkjJcu3g7OLBGCGiqapDbQlphkguSg1MsbEJ2PhFPelyU/39ovdMiTJ3DnqxsWM23g+47Mq//719IXSP1OF1Qaj03gt2Rc5S8e6SkktEl8YK33KovDt1bd+isIiQSTKSvbLofZNUw=
+	t=1753738503; cv=none; b=n4ENnCt30ofv7YhXHOdmXdYQNWazVkrueTE8ZBDdWgCedgctri1ONXoR0/G9F9ImRnqqF79mKIPrLN40RH6bu3tvDsaAqF+M1LtGToyDn3RkKearsWkwt+Oz26RenZY4r5CGdo5ymEIlaYuXg+TKWdptyM65pcMhVCUVHZw3krg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753737392; c=relaxed/simple;
-	bh=HFTiZX4uOYzagrAujflQdzvNOpIe9PDy5otb3/CV2pQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=JvwnZftU4JJnfMwoZd6AQ+eZclT761XysWz2Di5OS5HmUrHfDkxuuau7tHwPhTyYosqgCn2JH8r/hCwXwggkM4XMwZTsomFG3UfmrOoYKwgtsrhS4/2eZAstuEjM1PWDer2e+IYC4t/ol30D/DeY+ZSvybc5s9hySkHiFxPnmIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf10.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id 64A8D133BE9;
-	Mon, 28 Jul 2025 21:16:22 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf10.hostedemail.com (Postfix) with ESMTPA id 10D943D;
-	Mon, 28 Jul 2025 21:16:19 +0000 (UTC)
-Date: Mon, 28 Jul 2025 17:15:22 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>, linux-doc@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Mark Rutland <mark.rutland@arm.com>,
- Andrew Morton <akpm@linux-foundation.org>, Namhyung Kim
- <namhyung@kernel.org>, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH] Documentation: tracing: Add documentation about eprobes
-Message-ID: <20250728171522.7d54e116@batman.local.home>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1753738503; c=relaxed/simple;
+	bh=SEhe9b0vm/AdOxyaJpILo6f605w6Ak2F8v9E8gDBsfU=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dIT+K88YDqXimj86vwtY7ywRVBu6DV7gtl69BPdNK8O3fMCUcYGRjei5LKvckOAm+RXF/j9E8eLACzDqxW9Bq672B+Lm/h0kkQaTiwVLC8WBgE7TuvIIgTwCSMiZlNLqmOU0FfiOUKgbovteoR0Ue+fDGfgvEhu8CFPiURWScNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B84l7tIG; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B84l7tIG"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3b7834f2e72so1400493f8f.2;
+        Mon, 28 Jul 2025 14:35:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1753738500; x=1754343300; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=ybZ2ooGUwXrsUwDkpZ5EZxx8GK7pJ4GgU7lFxlvYUwU=;
+        b=B84l7tIG7pBj/RidmIqakr4ZeBemS/kUNrr5tuvycMuWh0ARKONm69FZeQmNUnXR33
+         EevvWskM5EaNpeu/poHGj27kC7Mc/9gWVD8V5rnJipBKOtV4lO1ISWaaQjyBfDiSFXjJ
+         EmXkQwGJCuSHz0rPPlN/Idk0pU1TOEizujRBV1KOYFR4A53C2inkO1BmMM8QgF6JAN2d
+         ksX9bSMMPMesXkBO14ReaN8kWCP5VIgWXcpLtOG5NZY5ZSc0YT+ffk/QXP7ujOamlRip
+         GAoo0cJctztFNlWfF/ImtGPoJco6zZMQIboGxjjwzmKYN+QP3vMbcQH+k1VKSm/UhJEH
+         B0hQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753738500; x=1754343300;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ybZ2ooGUwXrsUwDkpZ5EZxx8GK7pJ4GgU7lFxlvYUwU=;
+        b=XG5FVmUfOpbSVuSwqaqYe8yv+XyGRYW4aKEBSOCyVOYuBZ/YNoImrM3t7N3V+onaae
+         GILxJhM+/JzTCs3sOjZjAjUDp1vcpf72ax/6UgoTvwztGF82JESD8cK/ZpJA7XZl7oYk
+         mgVrePfAZoXFjC84kPg/1TVFv7i/BPcflchCQLw2qAMc0WmYvw+knOwa7LsV1RIYPWIU
+         +n5tNok5TFOBgF2oc7m2NOnnVLbH3HjG0ZyiF4ko3CEZ/AKV7rGIKpJ2Vzi9TOjgvI0q
+         qbICe5LU88c4vOAEgFGQCLc1hR8wNztKCVOMa0wlQOjjnyyr48nJuHlzGxIolF2ttFN9
+         jgmQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUF1S3KThqyRikePO/iM6HvmWWqjHUQhqrk9kUlhWCPHxw+0lZwqABt2zHvkLge7c8lPPw=@vger.kernel.org, AJvYcCUH8tdm1oelYkxbf5QAMlCi9+x/w6omP9nI1f4fuimbTQl6Im90ZCqLCXYjYDJt8kA+Xayt8hZs+K6piKJG@vger.kernel.org, AJvYcCX+/t7sLLu8vG/snbLOgnOxcKVFuLC7wtj419s2pInC8/hbHA15GRNl835f/o3LE5eF4c8LRajYk4fHT1ohUArfPuXK@vger.kernel.org
+X-Gm-Message-State: AOJu0YxL7GPe8HePPvjPfNskLpybXUr+NfvpPoD4Au1Qw43mL2JovfDj
+	0jIyTTHA0ZbW551jNWTXeDNuCzoDzqJmoag3lwNOyuym/M/oKWjXRGR0
+X-Gm-Gg: ASbGncvhtKoMiDa7TnaF77rTAEThJcwOYmTw2juBAfYKpKhU3wCq1OV6ZqIYYNgnbHi
+	Q89iKcSWgFX1yqJGZjJob2BYT52X6Xb6cl88IXjB7ScJhoqq+bvHHh8y/7aBGuqaEyVtmhmM3R2
+	tEHpJ95MScrPHuMIWb6OxF7dIpRpTsCUnt4KUSFIsiR7ai58qBBEzS4aQMt/Clg7jlkBzKgYDiA
+	5I4BxacoTmpNXgT0WYd5AaN/AYNicU+XPz7E4OhgI36bMTn4771WU2CMNnC44LdARrULi/7xYlb
+	c3vmJ5Ec8CyPgLyN+6OFQEeLcwFIPAfQ5ceJHMA8koT7BVaeSVwUGiy/E4gBnNk7clcc1jFsCmp
+	n5LNRmvG6uGQVfQggfTuY
+X-Google-Smtp-Source: AGHT+IG/+3lZwfgWo9IUleQbr+IcSEKBYntBQmSRuyUuDrYluDZmYGcJO90j3Rvn6JA7IcpLOqQWiA==
+X-Received: by 2002:a05:6000:40c9:b0:3b7:879c:c15c with SMTP id ffacd0b85a97d-3b7879cca06mr4446572f8f.47.1753738499526;
+        Mon, 28 Jul 2025 14:34:59 -0700 (PDT)
+Received: from krava ([176.74.159.170])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-458705bccc5sm168755115e9.22.2025.07.28.14.34.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Jul 2025 14:34:59 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Mon, 28 Jul 2025 23:34:56 +0200
+To: Masami Hiramatsu <mhiramat@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>
+Cc: Oleg Nesterov <oleg@redhat.com>, Andrii Nakryiko <andrii@kernel.org>,
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, x86@kernel.org,
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	David Laight <David.Laight@aculab.com>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@t-8ch.de>,
+	Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCHv6 perf/core 10/22] uprobes/x86: Add support to optimize
+ uprobes
+Message-ID: <aIftAJg1hZGYp4NF@krava>
+References: <20250720112133.244369-1-jolsa@kernel.org>
+ <20250720112133.244369-11-jolsa@kernel.org>
+ <20250725191318.554f2f3afe27584e03a0eaa2@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 10D943D
-X-Stat-Signature: dcijht1rfbptnqhqc46txghp1upbddg7
-X-Rspamd-Server: rspamout06
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18moGIKDlH+ttBoBSMHyG23VNuu/EKAoZI=
-X-HE-Tag: 1753737379-61758
-X-HE-Meta: U2FsdGVkX19M4g31eFgM8oeMHXUdaUHokp4HhWGHwlUuzKbcoi2ynoY0z48T1xrOcBlbR+3wbSdyns28XpAesaKpVacYfIaZ62gO3HWJE58mDBlgSQtpRgHHtIWGgRuX6JhsFhu0j7T/FvO8jznoEjdAcfxaDQRDYtKuhX5UnTnVvQDQzT7LiTydvecMvisB4QJcwL0EQNaasSwGE3eD8h71jOSEl1Tw2euDhQ78KzQMnAREzpxGhGyzNeH9dB7Stj9RlC5dRefTbmJj08QzbLRlltkTscHsikeeyQzX0sFt2t9OhkBzSY3c45ID+/zlf2IQt0bx7aXp1cMArzebfvyk+RiVMllPdxrccyOI5mOpa5PSWh4y6qZc9fgeyZnq
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250725191318.554f2f3afe27584e03a0eaa2@kernel.org>
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Fri, Jul 25, 2025 at 07:13:18PM +0900, Masami Hiramatsu wrote:
+> On Sun, 20 Jul 2025 13:21:20 +0200
+> Jiri Olsa <jolsa@kernel.org> wrote:
+> 
+> > Putting together all the previously added pieces to support optimized
+> > uprobes on top of 5-byte nop instruction.
+> > 
+> > The current uprobe execution goes through following:
+> > 
+> >   - installs breakpoint instruction over original instruction
+> >   - exception handler hit and calls related uprobe consumers
+> >   - and either simulates original instruction or does out of line single step
+> >     execution of it
+> >   - returns to user space
+> > 
+> > The optimized uprobe path does following:
+> > 
+> >   - checks the original instruction is 5-byte nop (plus other checks)
+> >   - adds (or uses existing) user space trampoline with uprobe syscall
+> >   - overwrites original instruction (5-byte nop) with call to user space
+> >     trampoline
+> >   - the user space trampoline executes uprobe syscall that calls related uprobe
+> >     consumers
+> >   - trampoline returns back to next instruction
+> > 
+> > This approach won't speed up all uprobes as it's limited to using nop5 as
+> > original instruction, but we plan to use nop5 as USDT probe instruction
+> > (which currently uses single byte nop) and speed up the USDT probes.
+> > 
+> > The arch_uprobe_optimize triggers the uprobe optimization and is called after
+> > first uprobe hit. I originally had it called on uprobe installation but then
+> > it clashed with elf loader, because the user space trampoline was added in a
+> > place where loader might need to put elf segments, so I decided to do it after
+> > first uprobe hit when loading is done.
+> > 
+> > The uprobe is un-optimized in arch specific set_orig_insn call.
+> > 
+> > The instruction overwrite is x86 arch specific and needs to go through 3 updates:
+> > (on top of nop5 instruction)
+> > 
+> >   - write int3 into 1st byte
+> >   - write last 4 bytes of the call instruction
+> >   - update the call instruction opcode
+> > 
+> > And cleanup goes though similar reverse stages:
+> > 
+> >   - overwrite call opcode with breakpoint (int3)
+> >   - write last 4 bytes of the nop5 instruction
+> >   - write the nop5 first instruction byte
+> > 
+> > We do not unmap and release uprobe trampoline when it's no longer needed,
+> > because there's no easy way to make sure none of the threads is still
+> > inside the trampoline. But we do not waste memory, because there's just
+> > single page for all the uprobe trampoline mappings.
+> > 
+> > We do waste frame on page mapping for every 4GB by keeping the uprobe
+> > trampoline page mapped, but that seems ok.
+> > 
+> > We take the benefit from the fact that set_swbp and set_orig_insn are
+> > called under mmap_write_lock(mm), so we can use the current instruction
+> > as the state the uprobe is in - nop5/breakpoint/call trampoline -
+> > and decide the needed action (optimize/un-optimize) based on that.
+> > 
+> > Attaching the speed up from benchs/run_bench_uprobes.sh script:
+> > 
+> > current:
+> >         usermode-count :  152.604 ± 0.044M/s
+> >         syscall-count  :   13.359 ± 0.042M/s
+> > -->     uprobe-nop     :    3.229 ± 0.002M/s
+> >         uprobe-push    :    3.086 ± 0.004M/s
+> >         uprobe-ret     :    1.114 ± 0.004M/s
+> >         uprobe-nop5    :    1.121 ± 0.005M/s
+> >         uretprobe-nop  :    2.145 ± 0.002M/s
+> >         uretprobe-push :    2.070 ± 0.001M/s
+> >         uretprobe-ret  :    0.931 ± 0.001M/s
+> >         uretprobe-nop5 :    0.957 ± 0.001M/s
+> > 
+> > after the change:
+> >         usermode-count :  152.448 ± 0.244M/s
+> >         syscall-count  :   14.321 ± 0.059M/s
+> >         uprobe-nop     :    3.148 ± 0.007M/s
+> >         uprobe-push    :    2.976 ± 0.004M/s
+> >         uprobe-ret     :    1.068 ± 0.003M/s
+> > -->     uprobe-nop5    :    7.038 ± 0.007M/s
+> >         uretprobe-nop  :    2.109 ± 0.004M/s
+> >         uretprobe-push :    2.035 ± 0.001M/s
+> >         uretprobe-ret  :    0.908 ± 0.001M/s
+> >         uretprobe-nop5 :    3.377 ± 0.009M/s
+> > 
+> > I see bit more speed up on Intel (above) compared to AMD. The big nop5
+> > speed up is partly due to emulating nop5 and partly due to optimization.
+> > 
+> > The key speed up we do this for is the USDT switch from nop to nop5:
+> >         uprobe-nop     :    3.148 ± 0.007M/s
+> >         uprobe-nop5    :    7.038 ± 0.007M/s
+> > 
+> 
+> This also looks good to me.
+> 
+> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Eprobes was added back in 5.15, but was never documented. It became a
-"secret" interface even though it has been a topic of several
-presentations. For some reason, when eprobes was added, documenting it
-never became a priority, until now.
+thanks!
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- Documentation/trace/eprobes.rst | 268 ++++++++++++++++++++++++++++++++
- Documentation/trace/index.rst   |   1 +
- 2 files changed, 269 insertions(+)
- create mode 100644 Documentation/trace/eprobes.rst
+Peter, do you have more comments?
 
-diff --git a/Documentation/trace/eprobes.rst b/Documentation/trace/eprobes.rst
-new file mode 100644
-index 000000000000..c7aa7c867e9e
---- /dev/null
-+++ b/Documentation/trace/eprobes.rst
-@@ -0,0 +1,268 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+=====================
-+Eprobe - Event probes
-+=====================
-+
-+:Author: Steven Rostedt <rostedt@goodmis.org>
-+
-+- Written for v6.17
-+
-+Overview
-+========
-+
-+Eprobes are dynamic events that are placed on existing events to eiter
-+dereference a field that is a pointer, or simply to limit what fields get
-+recorded in the trace event.
-+
-+Eprobes depend on kprobe events so to enable this feature, build your kernel
-+with CONFIG_KPROBE_EVENTS=y.
-+
-+Eprobes are created via the /sys/kernel/tracing/dynamic_events file.
-+
-+Synopsis of eprobe_events
-+-------------------------
-+::
-+
-+  e[:[EGRP/][EEVENT]] GRP.EVENT [FETCHARGS]	: Set a probe
-+  -:[EGRP/][EEVENT]				: Clear a probe
-+
-+ EGRP		: Group name of the new event. If omitted, use "eprobes" for it.
-+ EEVENT		: Event name. If omitted, the event name is generated and will
-+		  be the same event name as the event it attached to.
-+ GRP		: Group name of the event to attach to.
-+ EVENT		: Event name of the event to attach to.
-+
-+ FETCHARGS	: Arguments. Each probe can have up to 128 args.
-+  $FIELD	: Fetch the value of the event field called FIELD.
-+  @ADDR		: Fetch memory at ADDR (ADDR should be in kernel)
-+  @SYM[+|-offs]	: Fetch memory at SYM +|- offs (SYM should be a data symbol)
-+  $comm		: Fetch current task comm.
-+  +|-[u]OFFS(FETCHARG) : Fetch memory at FETCHARG +|- OFFS address.(\*3)(\*4)
-+  \IMM		: Store an immediate value to the argument.
-+  NAME=FETCHARG : Set NAME as the argument name of FETCHARG.
-+  FETCHARG:TYPE : Set TYPE as the type of FETCHARG. Currently, basic types
-+		  (u8/u16/u32/u64/s8/s16/s32/s64), hexadecimal types
-+		  (x8/x16/x32/x64), VFS layer common type(%pd/%pD), "char",
-+                  "string", "ustring", "symbol", "symstr" and bitfield are
-+                  supported.
-+
-+Types
-+-----
-+The FETCHARGS above is very similar to the kprobe events as described in 
-+Documentation/trace/kprobetrace.rst.
-+
-+The difference between eprobes and kprobes FETCHARGS is that eprobes has a
-+$FIELD command that returns the content of the event field of the event
-+that is attached. Eprobes do not have access to registers, stacks and function
-+arguments that kprobes has.
-+
-+If a field argument is a pointer, it may be dereferenced just like a memory
-+address using the FETCHARGS syntax.
-+
-+
-+Attaching to dynamic events
-+---------------------------
-+
-+Note that eprobes may attach to dynamic events as well as to normal events. It
-+may attach to a kprobe event, a synthetic event or a fprobe event. This is
-+useful if the type of a field needs to be changed. See Example 2 below.
-+
-+Usage examples
-+==============
-+
-+Example 1
-+---------
-+
-+The basic usage of eprobes is to limit the data that is being recorded into
-+the tracing buffer. For example, a common event to trace is the sched_switch
-+trace event. That has a format of::
-+
-+	field:unsigned short common_type;	offset:0;	size:2;	signed:0;
-+	field:unsigned char common_flags;	offset:2;	size:1;	signed:0;
-+	field:unsigned char common_preempt_count;	offset:3;	size:1;	signed:0;
-+	field:int common_pid;	offset:4;	size:4;	signed:1;
-+
-+	field:char prev_comm[16];	offset:8;	size:16;	signed:0;
-+	field:pid_t prev_pid;	offset:24;	size:4;	signed:1;
-+	field:int prev_prio;	offset:28;	size:4;	signed:1;
-+	field:long prev_state;	offset:32;	size:8;	signed:1;
-+	field:char next_comm[16];	offset:40;	size:16;	signed:0;
-+	field:pid_t next_pid;	offset:56;	size:4;	signed:1;
-+	field:int next_prio;	offset:60;	size:4;	signed:1;
-+
-+The first four fields are common to all events and can not be limited. But the
-+rest of the event has 60 bytes of information. It records the names of the
-+previous and next tasks being scheduled out and in, as well as their pids and
-+priorities. It also records the state of the previous task. If only the pids
-+of the tasks are of interest, why waste the ring buffer with all the other
-+fields?
-+
-+An eprobe can limit what gets recorded. Note, it does not help in performance,
-+as all the fields are recorded in a temporary buffer to process the eprobe.
-+::
-+
-+ # echo 'e:sched/switch sched.sched_switch prev=$prev_pid:u32 next=$next_pid:u32' >> /sys/kernel/tracing/dynamic_events
-+ # echo 1 > /sys/kernel/tracing/events/sched/switch/enable
-+ # cat /sys/kernel/tracing/trace
-+
-+ # tracer: nop
-+ #
-+ # entries-in-buffer/entries-written: 2721/2721   #P:8
-+ #
-+ #                                _-----=> irqs-off/BH-disabled
-+ #                               / _----=> need-resched
-+ #                              | / _---=> hardirq/softirq
-+ #                              || / _--=> preempt-depth
-+ #                              ||| / _-=> migrate-disable
-+ #                              |||| /     delay
-+ #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
-+ #              | |         |   |||||     |         |
-+     sshd-session-1082    [004] d..4.  5041.239906: switch: (sched.sched_switch) prev=1082 next=0
-+             bash-1085    [001] d..4.  5041.240198: switch: (sched.sched_switch) prev=1085 next=141
-+    kworker/u34:5-141     [001] d..4.  5041.240259: switch: (sched.sched_switch) prev=141 next=1085
-+           <idle>-0       [004] d..4.  5041.240354: switch: (sched.sched_switch) prev=0 next=1082
-+             bash-1085    [001] d..4.  5041.240385: switch: (sched.sched_switch) prev=1085 next=141
-+    kworker/u34:5-141     [001] d..4.  5041.240410: switch: (sched.sched_switch) prev=141 next=1085
-+             bash-1085    [001] d..4.  5041.240478: switch: (sched.sched_switch) prev=1085 next=0
-+     sshd-session-1082    [004] d..4.  5041.240526: switch: (sched.sched_switch) prev=1082 next=0
-+           <idle>-0       [001] d..4.  5041.247524: switch: (sched.sched_switch) prev=0 next=90
-+           <idle>-0       [002] d..4.  5041.247545: switch: (sched.sched_switch) prev=0 next=16
-+      kworker/1:1-90      [001] d..4.  5041.247580: switch: (sched.sched_switch) prev=90 next=0
-+        rcu_sched-16      [002] d..4.  5041.247591: switch: (sched.sched_switch) prev=16 next=0
-+           <idle>-0       [002] d..4.  5041.257536: switch: (sched.sched_switch) prev=0 next=16
-+        rcu_sched-16      [002] d..4.  5041.257573: switch: (sched.sched_switch) prev=16 next=0
-+ 
-+Note, without adding the "u32" after the prev_pid and next_pid, the values
-+would default showing in hexadecimal.
-+
-+Example 2
-+---------
-+
-+If syscall events are not enabled but the raw syscall are (systemcall
-+events are not normal events, but are created from the raw_syscall events
-+within the kernel). In order to trace the openat system call, one can create
-+an event probe on top of the raw_syscall event:
-+::
-+
-+ # cd /sys/kernel/tracing
-+ # cat events/raw_syscalls/sys_enter/format
-+ name: sys_enter
-+ ID: 395
-+ format:
-+	field:unsigned short common_type;	offset:0;	size:2;	signed:0;
-+	field:unsigned char common_flags;	offset:2;	size:1;	signed:0;
-+	field:unsigned char common_preempt_count;	offset:3;	size:1;	signed:0;
-+	field:int common_pid;	offset:4;	size:4;	signed:1;
-+
-+	field:long id;	offset:8;	size:8;	signed:1;
-+	field:unsigned long args[6];	offset:16;	size:48;	signed:0;
-+
-+ print fmt: "NR %ld (%lx, %lx, %lx, %lx, %lx, %lx)", REC->id, REC->args[0], REC->args[1], REC->args[2], REC->args[3], REC->args[4], REC->args[5]
-+
-+From the source code, the sys_openat() has:
-+::
-+
-+ int sys_openat(int dirfd, const char *path, int flags, mode_t mode)
-+ {
-+	return my_syscall4(__NR_openat, dirfd, path, flags, mode);
-+ }
-+
-+The path is the second parameter, and that is what is wanted.
-+::
-+
-+ # echo 'e:openat raw_syscalls.sys_enter nr=$id filename=+8($args):ustring' >> dynamic_events
-+
-+This is being run on x86_64 where the word size is 8 bytes and the openat
-+systemcall __NR_openat is set at 257.
-+::
-+
-+ # echo 'nr == 257' > events/eprobes/openat/filter
-+
-+Now enable the event and look at the trace.
-+::
-+
-+ # echo 1 > events/eprobes/openat/enable
-+ # cat trace
-+
-+ # tracer: nop
-+ #
-+ # entries-in-buffer/entries-written: 4/4   #P:8
-+ #
-+ #                                _-----=> irqs-off/BH-disabled
-+ #                               / _----=> need-resched
-+ #                              | / _---=> hardirq/softirq
-+ #                              || / _--=> preempt-depth
-+ #                              ||| / _-=> migrate-disable
-+ #                              |||| /     delay
-+ #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
-+ #              | |         |   |||||     |         |
-+              cat-1298    [003] ...2.  2060.875970: openat: (raw_syscalls.sys_enter) nr=0x101 filename=(fault)
-+              cat-1298    [003] ...2.  2060.876197: openat: (raw_syscalls.sys_enter) nr=0x101 filename=(fault)
-+              cat-1298    [003] ...2.  2060.879126: openat: (raw_syscalls.sys_enter) nr=0x101 filename=(fault)
-+              cat-1298    [003] ...2.  2060.879639: openat: (raw_syscalls.sys_enter) nr=0x101 filename=(fault)
-+
-+The filename shows "(fault)". This is likely because the filename has not been
-+pulled into memory yet and currently trace events cannot fault in memory that
-+is not present. When a eprobe tries to read memory that has not been faulted
-+in yet, it will show the "(fault)" text.
-+
-+To get around this, as the kernel will likely pull in this filename and make
-+it present, attaching it to a synthetic event that can pass the address of the
-+filename from the entry of the event to the end of the event, this can be used
-+to show the filename when the system call returns.
-+
-+Remove the old eprobe::
-+
-+ # echo 1 > events/eprobes/openat/enable
-+ # echo '-:openat' >> dynamic_events
-+
-+This time make an eprobe where the address of the filename is saved::
-+
-+ # echo 'e:openat_start raw_syscalls.sys_enter nr=$id filename=+8($args):x64' >> dynamic_events
-+
-+Create a synthetic event that passes the address of the filename to the
-+end of the event::
-+
-+ # echo 's:filename u64 file' >> dynamic_events
-+ # echo 'hist:keys=common_pid:f=filename if nr == 257' > events/eprobes/openat_start/trigger
-+ # echo 'hist:keys=common_pid:file=$f:onmatch(eprobes.openat_start).trace(filename,$file) if id == 257' > events/raw_syscalls/sys_exit/trigger
-+
-+Now that the address of the filename has been passed to the end of the
-+systemcall, create another eprobe to attach to the exit event to show the
-+string::
-+
-+ # echo 'e:openat synthetic.filename filename=+0($file):ustring' >> dynamic_events
-+ # echo 1 > events/eprobes/openat/enable
-+ # cat trace
-+
-+ # tracer: nop
-+ #
-+ # entries-in-buffer/entries-written: 4/4   #P:8
-+ #
-+ #                                _-----=> irqs-off/BH-disabled
-+ #                               / _----=> need-resched
-+ #                              | / _---=> hardirq/softirq
-+ #                              || / _--=> preempt-depth
-+ #                              ||| / _-=> migrate-disable
-+ #                              |||| /     delay
-+ #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
-+ #              | |         |   |||||     |         |
-+              cat-1331    [001] ...5.  2944.787977: openat: (synthetic.filename) filename="/etc/ld.so.cache"
-+              cat-1331    [001] ...5.  2944.788480: openat: (synthetic.filename) filename="/lib/x86_64-linux-gnu/libc.so.6"
-+              cat-1331    [001] ...5.  2944.793426: openat: (synthetic.filename) filename="/usr/lib/locale/locale-archive"
-+              cat-1331    [001] ...5.  2944.831362: openat: (synthetic.filename) filename="trace"
-+
-+Example 3
-+---------
-+
-+If syscall trace events are available, the above would not need the first
-+eprobe, but it would still need the last one::
-+
-+ # echo 's:filename u64 file' >> dynamic_events
-+ # echo 'hist:keys=common_pid:f=filename' > events/syscalls/sys_enter_openat/trigger
-+ # echo 'hist:keys=common_pid:file=$f:onmatch(syscalls.sys_enter_openat).trace(filename,$file)' > events/syscalls/sys_exit_openat/trigger
-+ # echo 'e:openat synthetic.filename filename=+0($file):ustring' >> dynamic_events
-+ # echo 1 > events/eprobes/openat/enable
-+
-+And this would produce the same result as Example 2.
-diff --git a/Documentation/trace/index.rst b/Documentation/trace/index.rst
-index cc1dc5a087e8..812d9a46dd94 100644
---- a/Documentation/trace/index.rst
-+++ b/Documentation/trace/index.rst
-@@ -37,6 +37,7 @@ the Linux kernel.
-    kprobetrace
-    fprobetrace
-    fprobe
-+   eprobes
-    ring-buffer-design
- 
- Event Tracing and Analysis
--- 
-2.47.2
-
+thanks,
+jirka
