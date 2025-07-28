@@ -1,259 +1,164 @@
-Received: from CAN01-YT3-obe.outbound.protection.outlook.com (mail-yt3can01on2122.outbound.protection.outlook.com [40.107.115.122])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57BE126F44D;
-	Mon, 28 Jul 2025 13:53:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.115.122
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753710794; cv=fail; b=mHSAL4yrM+Kk1yi2J62MKQxQxvm9PAe74uH5xfnSqN1SgbrAvm6bGbfYBkxX0Btzl0nDclKq4ssNRznP6VSAhqDp2ct0gKMhvKcjpUlfFvEPuXr01kPDA4qVToLPyvKuOUwb4Lj6iiSVYaWbctjHeQGsHjqJLSBmp2dd9/c7gU4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753710794; c=relaxed/simple;
-	bh=QcjdfvnkJ14S5H2zuZ3YSrGdqjVb/zcXQsiMplcztQc=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=fz1ExEJ2OSARiIbYJZ24M9LQdO60go+/45zDQdcn/MQyFMpFZc4Y6v5wd4NlbbBJD3pcDQrmQT1j69NHqFqp/iVGCyFnLu0R28nlC9lHJ18zbJH3XcWuGfcGXBPkrddBk7auB6WtUbBLoP7AcfDzg+Yb5umMycbuj40y5tb+bhQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=omH3FL0X; arc=fail smtp.client-ip=40.107.115.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBAED27055A;
+	Mon, 28 Jul 2025 14:00:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1753711203; cv=none; b=o2cmsl7u1cdbb5OTxXYMHr4G0aQtfCwwnDmuQKflg4Pjr0BDe3z6Rew5AGP+sVO/iDHVXFcnH2OXCSP3Y9qWXbheGvHAsInyyXQ0jmZoj/KCqn4UCTCx5db12KTDTkWS3YDZTBYOZc/yCKDBNaLoDnr1OJyyoJ8hSd+z97bFRQo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1753711203; c=relaxed/simple;
+	bh=JbeopiAbZcPaAcCpKxOESHE/FDaZhg0e8FGhB3O3s6w=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JK1fes7EwlW0SeGTd/Vp1oNXEn6zM6RBATwVjmrJwXwBpeYApO55Xl+mUNwbVouZfSertPTBmTFXKR43jJu8bRhc9vzxDBrRCVao7k8GjpkCdA6bua1z5Xm9+xGennDQQGdcPCxpI+DMZB9ku5C0qcD63pXUtwqcOPQgQgby8iE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Vt2LJpxY; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="omH3FL0X"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=LqFuohGbyTJtPaiRIf5tK4HSgYK5HqJhWcRH02tdAnS9hrG9wrIeV2bBw2CmdzRlyxPTA8FHMHjo29tKx2M2rdYhMAec22D5IwHXlOwSWs20FkE7F8F/6LUC80FewzRRTy2eAr4czTZlxu92azvJVr4yj8YLpByJ4OE8B3a0i/EhchfZNoq3sA6Ttad9cIs77BSqORGxgiFS+OPuJX+geWjlr0QvmlaXrDJ3gF6zocO9/UMiZWo2iRDcEKI6HvlBrMB8wR3avFgJXzw5a6yVJ4uXH3WW3xe3UvAnpgBEevjgEiuLK9xariOnvNrtx4kc4XQZrUDElmaygycnlqzrFA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dgujitAGqVSBOzDqr/0dZFWaPO3qwulvfrXgf/ErmbI=;
- b=yRqJYVwpcRmssgxSpQDozA2j6LvGWnmrE8j06Jh+ZEYsYrGwK7ICKF4b5iPsrALfcNs99PiTWtdXwNaf7Pi16tBTdVWk/HtjIe2Z2+0yPBLRF05tKaqQb4OJLdnz+TexNf9esXEsf/5dKvIYbipIOt0O02jAJA0SqKnffSI0/ocx9cJu0QmDEe1VN0i6u4EdvjHfHH4tcNANTGU2ur7pJYszyDetkosYLdxPmmCDXOpKttMbpv2cUPB6chhk40m+010XyT7EHaomXiLISgR9iCfYc3uU9+pE5gqOyw/1e/wd1WRX8ASslb4PlpnuFV7CX1YrG0AoFasCB4aow3D96Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=efficios.com; dmarc=pass action=none header.from=efficios.com;
- dkim=pass header.d=efficios.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dgujitAGqVSBOzDqr/0dZFWaPO3qwulvfrXgf/ErmbI=;
- b=omH3FL0X1KoBq1Y7eZeJrESXUPBEIP7QjKsj9HAmjPFni0a7VBsWTXMsEI/kVMb/envfhASrQ185cdk7Viph0cpH8q77UUofVqxNqucv8rr0PGly3NaO9SZhCsbB7fCNCPoX4lle5iqh+E0LCfvxMGdHNQwGfFH+3PWc9LL+ijQjx818lZy9U1mhtDjMoq3EiU7PXOkzYicHsVtSNW02TWKYjJZvLjJ2Nqs8lDqi1+cNGqAlFkPKmpce5QvvZOmJ9tBDvholJUrIT6y9GNzsbHrTrz0sxj5RcJzGkfx521SojM+5hh1JMmPPQ5RJ5Zh3jFA8WwKRYdNYVaUuI5EqqQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=efficios.com;
-Received: from YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:be::5)
- by YQBPR0101MB9216.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:c01:60::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8964.27; Mon, 28 Jul
- 2025 13:53:07 +0000
-Received: from YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
- ([fe80::50f1:2e3f:a5dd:5b4]) by YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
- ([fe80::50f1:2e3f:a5dd:5b4%3]) with mapi id 15.20.8964.026; Mon, 28 Jul 2025
- 13:53:07 +0000
-Message-ID: <c6ee2dfd-3d10-4fa6-943f-9d7b1ddc231e@efficios.com>
-Date: Mon, 28 Jul 2025 09:53:05 -0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] input: Add tracepoint support
-To: WangYuli <wangyuli@uniontech.com>, Steven Rostedt <rostedt@goodmis.org>
-Cc: dmitry.torokhov@gmail.com, guanwentao@uniontech.com,
- linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, mhiramat@kernel.org,
- niecheng1@uniontech.com, wangyuli@deepin.org, zhanjun@uniontech.com,
- Winston Wen <wentao@uniontech.com>
-References: <19571F312EE197A5+20250710072634.3992019-1-wangyuli@uniontech.com>
- <C1C54D7FA3DF3958+20250710073148.3994900-1-wangyuli@uniontech.com>
- <20250722202551.1614f59a@gandalf.local.home>
- <2b31b238-667e-47b9-b61f-76832a1f77a7@efficios.com>
- <921F8D487468018A+141227fc-070d-4ed9-8828-d446236eccd2@uniontech.com>
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Content-Language: en-US
-In-Reply-To: <921F8D487468018A+141227fc-070d-4ed9-8828-d446236eccd2@uniontech.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: YQZPR01CA0074.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:c01:84::17) To YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:be::5)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vt2LJpxY"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ae0bde4d5c9so863619166b.3;
+        Mon, 28 Jul 2025 07:00:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1753711200; x=1754316000; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=vbKAM48vOaxD+dObHxjlFAKhkqjJBfV01Aey6Sw0Mms=;
+        b=Vt2LJpxYrw/ycC/ECUx189XSpG5xGqvp6ceRrvG2r0MzHJzSHruvSo5BjQTnIV44c/
+         30ct1VYsOtYGZ6ruuG2uqsSIKATMzw6opC0C+2Y96RFUkuv/ofcBIq+P9ooKPy4BV8lo
+         8z+thjFfxRwnJSWNgMGwb8MqqBPkJgk3aaixj4UPfqpo6pLZdXMUGotyDVrHYlyp/Cd4
+         rQDiTyCDFiJeTvyl+3jnSVaGbB4pKvaCy0LXEJ1R+3M23IwdmXYN4pEP+jzvTZ/XpH5s
+         V1rf5LTKRuWAdL7Qxlk8RngLKacJdUF+ImmwzE3LDhJVTltw4ZJHOL3uPOtZUIg3YIEF
+         HgKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753711200; x=1754316000;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vbKAM48vOaxD+dObHxjlFAKhkqjJBfV01Aey6Sw0Mms=;
+        b=QIcSYYUyQ4QMQLpbpD7EKcJeRIzA4lbbrWDPO7aOXYCdVdkVQ7wLw+GA/t1pstdkV6
+         H2A5K5C/PXBuSPC/FL99M8bZAKbF5iXKPPPArZiJY5eYSMRbLLOobOs6SLz+MNpEdvcK
+         49oDNAToUgxxcUM8nFQVaXBWEXJqdaOqqnt9ES3P9026y5Auxr+AGq+Qh5Ch3l+QAgzr
+         OODIJQtStwkyfpgCa5+u40+6C3Oy9jJndwzrvYPYiYT2wwQjZh4ZIdanApnw4hTFTWR7
+         JQ3xlJovP6Ntjx3JJGu2N3eHRgNfP1Qr8mDdqWnhlq3af4jDyCr3jIVGacWcsaTGThGY
+         1c7A==
+X-Forwarded-Encrypted: i=1; AJvYcCU/pinexkWvbT4/cOGXQUPJxqeVxCLnIHDKYdzRHGTXm4id/liPKJutCKL7Fi6w6TrfBfjj1jBUIvW8PUsh6ZjZ5/CH@vger.kernel.org, AJvYcCVVV84PJjvcDwG7ou2BJU3Qfpyy6j1UYFVr/X9GnWiTkw5wimmUps32FAxJNhnhK2zRvXs=@vger.kernel.org, AJvYcCWEVFqGMPE1Hu4mEbl/Cbrk8Kw/Snw3EmldF3u1FLJQ7gcPHmTwnI0nGIH75XrYr96IV4TMNCO2uULh5Sv0@vger.kernel.org
+X-Gm-Message-State: AOJu0YwovhKonTz8kUvw2k5CvgWKT9nw7I3Cx1TC6Oqw9+t/iW8RR3bg
+	RwYSP6y+4oZhhVHWx1waOqwHlHFBTVM7pWkJTerTmd6RNhMo0Rvpnv1N
+X-Gm-Gg: ASbGncsLrY5BfLVyFUW4W9AUv/Sd7J/VqtoS60ryZeMmeDPZTyDWYRWhrw5fMDZi6Cn
+	xc6t82lwogtowkNx/UQt9NwuH3dpjwOgcOYx3yxqbouFCcJ7j3lmBTtyOW5vKtY6RXY/APYQtNd
+	ceORk+Us2vC1g0u75I1y2VPXBeLRv1l+Rd9c5BEHU+2PeLINBM4Pai2NQCNcmo66DHKXCWez7uF
+	NRVIlF+iOUz8pcE6nWJYEDAFNdCSG9jcKo4XxmX1nKkB+4RKD0P5/w9bhw45NAUrJ6sCiSHoKJ8
+	uxmpF2WTx8wVxJGjfZ8MQurUr0HZwJdTa8Uieeki423aIaF2SRhqWb8JAitzFwkv/tEOOoOpJrp
+	tpJZuFmua
+X-Google-Smtp-Source: AGHT+IFVTL3fAEvq/jzmKu7AjMnnGytTquy+ggLQ1Z+9x0Rt3o7F2rrj+eJ3kjJ+wxDHUGg0gVpqRw==
+X-Received: by 2002:a17:907:1c11:b0:ae3:bb0a:1cc6 with SMTP id a640c23a62f3a-af617704cdfmr1388490666b.16.1753711198944;
+        Mon, 28 Jul 2025 06:59:58 -0700 (PDT)
+Received: from krava ([173.38.220.53])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-af635a62ab9sm430203666b.86.2025.07.28.06.59.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Jul 2025 06:59:58 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Mon, 28 Jul 2025 15:59:57 +0200
+To: Menglong Dong <menglong8.dong@gmail.com>
+Cc: alexei.starovoitov@gmail.com, mhiramat@kernel.org, rostedt@goodmis.org,
+	mathieu.desnoyers@efficios.com, hca@linux.ibm.com,
+	revest@chromium.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH RFC bpf-next v2 0/4] fprobe: use rhashtable for
+ fprobe_ip_table
+Message-ID: <aIeCXbpno1y3Aio1@krava>
+References: <20250728072637.1035818-1-dongml2@chinatelecom.cn>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: YT2PR01MB9175:EE_|YQBPR0101MB9216:EE_
-X-MS-Office365-Filtering-Correlation-Id: ff063860-e7e9-4681-62b4-08ddcdde148d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?MkVScTc3K2dpMWpaN3R5c0orbEd2djNOSkk5NVVCT1hHR3lCL0UrSWlnNlY4?=
- =?utf-8?B?WW5GRk9YZWtOK1VWMXZOa3hrYkt1UktvUGpSNDhoWWZXTzVjY0krT3NVMFFC?=
- =?utf-8?B?UFd6L08xR1IwOFVEZXZDaU9KcGZIemtuQ0toTWFEak1VSkx6WnpqWXB0MWNV?=
- =?utf-8?B?blFmVFdNYXQ3Z2VyeStad2hjc3BuclU4RFdwVnVGZjdzQVNnMTNkUTRDb2RL?=
- =?utf-8?B?RGFFUzF5TUJ6VWJPSGlRRDBEcTUzT0pUTlkxOWl0UXVWQWxqTnlwRGdIb1JS?=
- =?utf-8?B?UE9mYThnZ042SE80VEpFY0Y5UW5UVm9UUW5uZ2c1TjJRK2haaDh5MisxU2lr?=
- =?utf-8?B?WDY0dUtnQ0o2RVRmNmtLR3hHa1Y4ano1MGRTdmNGQWk1YXdwaVVHWmQyYllY?=
- =?utf-8?B?bHc3b2NWMmlyMnNJdkpLVkhxZFAwTkgvTzhaVm41Sml2ZGxvTllvZGZUajZI?=
- =?utf-8?B?Yi8raTQ2TUNFNzNlVkFDelZhR1lsS09NTW9jN01UQy85YVYySVJITm41bnZN?=
- =?utf-8?B?VnAzb3Vua2ZOK1N5akYrUUxRWHdRWWhrTGhscGkwaW1RUlgzdmxkQmxxcmd1?=
- =?utf-8?B?dkFpNDRMYmxiVmxNYTh6Ly9McktpZmgrYXBkS2FqZ2tPTEJiRDdPSjV5TzZ4?=
- =?utf-8?B?bk8zckhjM0s0WVZvalBzWEVvR1NVRHAydXBqYjh2eVJranJVRm4zc2g3NGJF?=
- =?utf-8?B?L3JJOHJQZU13RVhYajlLMEU0aHNuYktiV0RxMjNRZmxMcFRrVkh6OGUwenpq?=
- =?utf-8?B?Qm1aYTNKRGhIQktzRUlSVXN0N2xzb3N4R3Qrc1J6R3g2cUZQRHduOTJaSjlB?=
- =?utf-8?B?eUhHZzJYVjNkWXZRM29jUG53NlhLWXVjN1NxbDZqTU1GQ2o3SU90NWlpVVhj?=
- =?utf-8?B?VGYxZWdmL0dLeEJ0WFVjV3JuMzRjaUJLc2Iya01ubmtDSDFZNTMvTVFoU2I5?=
- =?utf-8?B?YkQ3Ti9OUDJBVTF6TWdjVjJ0b2NEb0hzZkpndTEvcDJOcDZMNktaOFJrbEtz?=
- =?utf-8?B?M0RtMnd5Nng2M1h5TngwZ3hiVmx6MnFvdm94N0swZGo3bERqRXJKQk1PTFpX?=
- =?utf-8?B?cXdFalcwbk9aamVnR2U1SnBZb0pkVHFxS2RkTThQTTU0ZlNXUWRLK3Vodjcx?=
- =?utf-8?B?TkRuM3NLdzFSZHJ1YzEzL3J3Z3lVQnNHS1hGWHJPOUhaYXVETFVqUkJKY1A2?=
- =?utf-8?B?UGJ2eTRESDZjcCs4VlRLQXVvcXJzZXJHL0d5U3c3aW5GZTVxN1Z4K0tzWVVy?=
- =?utf-8?B?dGw3SmwzTXFjcVhkTGVFMGJHcEVobUtKNVJPU3h6T0VmWm16QmhMNGRRRHRF?=
- =?utf-8?B?ajhNVWJVSnhDaUFDZ0FYSGJUOS9hS0FBbTFLM3c1K0V0ZCtWSURHdGdqeXRK?=
- =?utf-8?B?OHVPQ2FKRlllN0ZMY1Y5ZmJCdG0wOHJHUlNLZ1lGbjEwdHo1S2Vqdngwd2pS?=
- =?utf-8?B?OFRDNU9naHA2MTE0eVp6MVdBQkZqN1M1Q1BwOE80eDcxQ0Vyai9RSXgzUHNU?=
- =?utf-8?B?N25nV3Vqd1NYS0ZxTEFKcWlhcFdHZm80VUtXbVZGc3htUXc0NzFKdGk1elRh?=
- =?utf-8?B?Z0E1cFd1YU8rVEJzQVVGZjMyZDA3UGEvVERKZEZTRkw1RW84L2t3T0hmNnFo?=
- =?utf-8?B?Nm55S2kxeGJGWnF1cU9lOEpmZG5nT3dBV2YzRTJFbDVRZGhocXRxRnAxY0xp?=
- =?utf-8?B?dUZ1ZU9OTVNFUVpPS2lFLy9vVTJNcStOVVE1V2Vxb0V5Z2JiV1V5MjVmTFdF?=
- =?utf-8?B?cG1BRzFKYVIzNUVFZld0MHozYU40cVV0dlgvcVhlU0NLdFEwdWE2REJJZnd2?=
- =?utf-8?Q?g8ib3LJPVlA3PWDCLs4OHNaXG2LJCDPeNBRyw=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?RDR6Q3A1MmhDdFkwNFRWeEFTZVU5SmpqMG1tUHhYK3FpTDVpRDNSV1lwQzl5?=
- =?utf-8?B?M2FYT29SVUFyRzcvdEhORG9LV0laSzdjWFk0aWlDekVxYU5oT2RyL2hUTE1I?=
- =?utf-8?B?Q05JWERCZlVoNzEvS2lFYThDeXhQNUM4SHV6aXAwQkFhUmFDRGYvcm43aWNy?=
- =?utf-8?B?a1Q3djYxU3U0WGF5NDN6TFFCZ3Z1eFFJYUhlM2VMbXEvRUtYdTk2WlJrTm9s?=
- =?utf-8?B?WElzZEZvclgyRGJDcUZkcFhFZyt5UTRLUFNTVVRGelhpblU3S1NOc0paMWpq?=
- =?utf-8?B?TjVwcHM1aXl5Q0Q0dU1neDJnNTc4VDQyTWFjeC8vMWFiRlc5Y2pxQkFVRVJ1?=
- =?utf-8?B?bW9FS0F2QjZnZklpYVVLZ0xGU2tWMzJaWU5Qbm95UkRnanB3cFVkUGJNbzJ0?=
- =?utf-8?B?N0drbFY2NlZvSGpTSDhxOWl2cEZrb3c1ZW13NmJlc29kRnVjcHM1d1lsMXM1?=
- =?utf-8?B?amRYazV5THhOVWJqZGQyYnpKQnIydnp3dGJENU9WMGdoYzJlK1pNNHlZY2xP?=
- =?utf-8?B?U3Rxc252c2Nra3JzWXF6UktSSVE2VmlJaDJmcWtNdTRFcmkxS2lITzBEZjR2?=
- =?utf-8?B?WEJNMWs5QnhUOUIzV1l3QzRrMzU4bjU1MmpDWkpNUjNzWjhXYit2a2luVDlX?=
- =?utf-8?B?dnBZZkNCYXYvVnVjcnNodG9INUhyVW5hakxnVFBITnI2TzVaL1lyL3FjNkZG?=
- =?utf-8?B?SUlEL1p1aVdhWVlLWVVlY1lwREk1WUhFZGxUMVdkaWl3a0Y3c0dXcytNdWJ5?=
- =?utf-8?B?a21nUHRwY2JLZXhHY3F2eklTMU00WXErL2RJSiswcXFEUHN0dUswMVQ3VHpn?=
- =?utf-8?B?d1RGWkZ2RHlWLytmdVhjWk1ZdkYvYm13RzdOc0hSYjFsT1lkWEFyR0VFNFpH?=
- =?utf-8?B?QW9SaVlsbzlNZW8rMjV4bmRuTnZKaStBNnFDODlMTTZTN2RCUzhnYXZnRTZD?=
- =?utf-8?B?ZGpoT2lzNlNtbWgzeW9NaHRSOThmR0NYTm9NTytyajFMOVprdmcvTURvRklT?=
- =?utf-8?B?YUtRdFMrWWJORk5hN3IweEY2aG1CYmUwd0djRHd3dWdvKzZwOGJobFBEampt?=
- =?utf-8?B?bG5JZXJYbkNBZ293bmxRTTVkMm5oNG9HSms0anlnVDM1VWErZWRYdTZybFQ0?=
- =?utf-8?B?eExISXkrenltb0hRcW9wdmd1UGF3NHEvVVJHUzhuN2QwSDE5WCtYblBMYTF5?=
- =?utf-8?B?VWhjRG1wUVZQaW03V05va3Buc25Tc1RQNDhpVENBZGRFZU5jVGIxdzRYZTVi?=
- =?utf-8?B?YVpmd2F3VHdCdkhjQk1UQllLYWZId3N0clRZYklQSDhkb211OFJ4dGR4NmJ5?=
- =?utf-8?B?dU9mWmNHK2xPOUR1ak5vNHhBamNQSm56VHZFaTMvYUhZdjlZbmtDc3oraklR?=
- =?utf-8?B?N0F4UitqL0pnQXFaU0V5YXhJWXJpZ1IyenpiU1hLV3ZNOSt6TThuRzZDUTgy?=
- =?utf-8?B?RFZGT0JkZjJ6UGdkNWlNL2psQnV3YU11bVdDQXcwSXBBTWF6bUhzaDF4Q1Bq?=
- =?utf-8?B?QkdZSkxpeWpmZFRCZldoVXNncmFvb1RNTis1bFlPYldYdFpxTDZwY1JHUXh0?=
- =?utf-8?B?WGJOUlNSYXVCYXltOWlrMVVwSmNpdmlvVTlkcGRQQWVCTitobExaY1JhT0NM?=
- =?utf-8?B?eGVLam1nRHhVM3J5enI0NXRxWXd0emRsdVJhRTVzcHptUThXTTRGV2JnNWpa?=
- =?utf-8?B?dHREVEZzRFVKQVp2UmhyNHV2N2FTdTBvMWJXbGZOVnhZU2FHaThxSG1KVWM0?=
- =?utf-8?B?RFpTcHE1K3htdDZNSVBmajBRdHBKQ2dGUElCRlVJRzhkZDMxYi8vVy9MWEhI?=
- =?utf-8?B?dTM4NDlCSUt4V2FzYmxzWnRsSnM0bm1rbVVsQngwb2g2VGQ5Szd1QWsrRldQ?=
- =?utf-8?B?Vzh3TUdkd214K1hpanBHNStveTY1anFQQjBBV01VaTdYT3d2dHhoY21MOUow?=
- =?utf-8?B?bmdRRnVFUTNSNzdyaUM0b0JKUGZ2elNjc0FmMzBGbmdHcWk3NG1JUkU2Wi9k?=
- =?utf-8?B?TEkxVlNURGRwSjN6dlRUbncwc29DOUhla2FuV21oczl1YXdFSzVlY2tFb2Zj?=
- =?utf-8?B?TEp5d0kzUFk3Vm9EajlQU1VJdTdBZ3phRUFqeDIzUmVDaDBndWtUSGN1OFNr?=
- =?utf-8?B?dnI0K2dtY0hlcVdpbHVtWnpDQUNXU0lmRU0vWGt4Y3UzcGxsUFRoU3V5dmo5?=
- =?utf-8?Q?uDGUMDBqWzpWW1BeaiRbolw=3D?=
-X-OriginatorOrg: efficios.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ff063860-e7e9-4681-62b4-08ddcdde148d
-X-MS-Exchange-CrossTenant-AuthSource: YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jul 2025 13:53:06.9167
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4f278736-4ab6-415c-957e-1f55336bd31e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 5s+MSotZ00TKwrTNslHmj3idbVswabap80GIAhOH0fFbOn70B+R+l3GwnqRIUY71vXg+2A/jyUFS/9V5V1Q/pgCPQYE1R6M3JR7aG6GGHjI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: YQBPR0101MB9216
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250728072637.1035818-1-dongml2@chinatelecom.cn>
 
-On 2025-07-28 03:07, WangYuli wrote:
-> Hi Mathieu,
+On Mon, Jul 28, 2025 at 03:22:49PM +0800, Menglong Dong wrote:
+> For now, the budget of the hash table that is used for fprobe_ip_table is
+> fixed, which is 256, and can cause huge overhead when the hooked functions
+> is a huge quantity.
 > 
-> On 2025/7/23 09:24, Mathieu Desnoyers wrote:
->> I've always been worried about adding tracepoint instrumentation of the
->> input subsystem that includes the actual keystrokes into the event
->> payload. What I'm trying to avoid here is people leaking their password
->> by mistake just because they happened to record a trace while
->> typing on their keyboard.
->>
-> The evtest tool can also do this.
+> In this series, we use rhltable for fprobe_ip_table to reduce the
+> overhead.
 > 
-> However, it doesn't fully report all events from the input subsystem.
+> Meanwhile, we also add the benchmark testcase "kprobe-multi-all", which
+> will hook all the kernel functions during the testing. Before this series,
+> the performance is:
+>   usermode-count :  875.380 ± 0.366M/s 
+>   kernel-count   :  435.924 ± 0.461M/s 
+>   syscall-count  :   31.004 ± 0.017M/s 
+>   fentry         :  134.076 ± 1.752M/s 
+>   fexit          :   68.319 ± 0.055M/s 
+>   fmodret        :   71.530 ± 0.032M/s 
+>   rawtp          :  202.751 ± 0.138M/s 
+>   tp             :   79.562 ± 0.084M/s 
+>   kprobe         :   55.587 ± 0.028M/s 
+>   kprobe-multi   :   56.481 ± 0.043M/s 
+>   kprobe-multi-all:    6.283 ± 0.005M/s << look this
+>   kretprobe      :   22.378 ± 0.028M/s 
+>   kretprobe-multi:   28.205 ± 0.025M/s
 > 
->  From a debugging perspective, adding tracepoints to the input subsystem 
-> is still more convenient for debugging.
+> With this series, the performance is:
+>   usermode-count :  902.387 ± 0.762M/s 
+>   kernel-count   :  427.356 ± 0.368M/s 
+>   syscall-count  :   30.830 ± 0.016M/s 
+>   fentry         :  135.554 ± 0.064M/s 
+>   fexit          :   68.317 ± 0.218M/s 
+>   fmodret        :   70.633 ± 0.275M/s 
+>   rawtp          :  193.404 ± 0.346M/s 
+>   tp             :   80.236 ± 0.068M/s 
+>   kprobe         :   55.200 ± 0.359M/s 
+>   kprobe-multi   :   54.304 ± 0.092M/s 
+>   kprobe-multi-all:   54.487 ± 0.035M/s << look this
+
+I meassured bit less speed up, but still great
+
+kprobe-multi-all:    3.565 ± 0.047M/s
+kprobe-multi-all:   11.553 ± 0.458M/s
+
+could you add kretprobe-multi-all bench as well?
+
+thanks,
+jirka
+
+
+>   kretprobe      :   22.381 ± 0.075M/s 
+>   kretprobe-multi:   27.926 ± 0.034M/s
 > 
->> I don't mind if this gets enabled with a new kernel command line
->> options "tracing_leak_my_credentials=yes" or such, but I'd try to
->> avoid making it easy to enable by mistake unless this information
->> is specifically needed.
->>
-> I'm not sure if this is over-engineering...
+> The benchmark of "kprobe-multi-all" increase from 6.283M/s to 54.487M/s.
 > 
-> I feel that adding too many command-line parameters will increase the 
-> user's cognitive load.
+> The locking is not handled properly in the first patch. In the
+> fprobe_entry, we should use RCU when we access the rhlist_head. However,
+> we can't use RCU for __fprobe_handler, as it can sleep. In the origin
+> logic, it seems that the usage of hlist_for_each_entry_from_rcu() is not
+> protected by rcu_read_lock neither, isn't it? I don't know how to handle
+> this part ;(
 > 
-> However, the leakage of keyboard input records is indeed a very, very 
-> significant risk.
+> Menglong Dong (4):
+>   fprobe: use rhltable for fprobe_ip_table
+>   selftests/bpf: move get_ksyms and get_addrs to trace_helpers.c
+>   selftests/bpf: skip recursive functions for kprobe_multi
+>   selftests/bpf: add benchmark testing for kprobe-multi-all
 > 
-> As a compromise, would it be better if we added a separate Kconfig 
-> option specifically for the input subsystem's tracepoints to decide 
-> whether to enable them at compile time, and then documented the 
-> potential risks within that Kconfig's description?
-
-In term of mechanism to select keylogger enabling/disabling, I can
-think of the following options:
-
-- Kconfig option,
-- kernel command line parameter,
-- sysctl
-
-Here is a possibly incomplete list of desiderata for this:
-
-- Keylogger should be disabled by default.
-- System administrator should be able to enable keylogger at boot.
-- Users should be able to query the state of keylogger
-   (enabled/disabled) during kernel execution, and this should be
-   invariant until reboot,
-- Selecting whether this option is enabled or not should be decided
-   by the system administrator, not by the distribution vendors who
-   compile the distro kernels.
-- Prevent use of a kernel tracer as a keylogger by mistake without
-   having the system administrator explicitly enable keylogging.
-
-The most flexible approach would be a sysctl, because it would allow
-a system administrator to enable this while the system runs. But it
-is somewhat redundant with the fact that the tracers allow disabling
-specific events dynamically. Also I don't think we would want to allow
-changing this configuration after system boots, so users interacting
-with a production system can check whether this is enabled or not to
-learn whether they can trust that this keylogger feature is disabled.
-
-This leaves Kconfig option and kernel command line. The downside of the
-Kconfig option is that it requires to choose the configuration up
-front for a distro kernel, not allowing the system admin to select
-the behavior at boot time without recompiling a custom kernel.
-
-This leaves the kernel command line option, which I think is a
-good tradeoff. It allows sysadmins to enable keylogging at boot
-from a distro kernel without recompiling their own kernel. It
-also prevents enabling keylogging in a production system by
-mistake after bootup. It allows users to inspect the status of
-this knob by looking at the kernel command line to know whether
-they are interacting with a system that has this keylogging
-enabled.
-
-Thoughts ?
-
-Thanks,
-
-Mathieu
-
->> But maybe I'm being too careful and people should really learn not
->> to share kernel traces with others.
->>
->> Thoughts ?
->>
-> Thanks,
-
-
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-https://www.efficios.com
+>  include/linux/fprobe.h                        |   2 +-
+>  kernel/trace/fprobe.c                         | 141 ++++++-----
+>  tools/testing/selftests/bpf/bench.c           |   2 +
+>  .../selftests/bpf/benchs/bench_trigger.c      |  30 +++
+>  .../selftests/bpf/benchs/run_bench_trigger.sh |   2 +-
+>  .../bpf/prog_tests/kprobe_multi_test.c        | 220 +----------------
+>  tools/testing/selftests/bpf/trace_helpers.c   | 230 ++++++++++++++++++
+>  tools/testing/selftests/bpf/trace_helpers.h   |   3 +
+>  8 files changed, 348 insertions(+), 282 deletions(-)
+> 
+> -- 
+> 2.50.1
+> 
+> 
