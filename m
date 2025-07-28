@@ -1,181 +1,178 @@
-Received: from mail-pl1-f196.google.com (mail-pl1-f196.google.com [209.85.214.196])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpbg151.qq.com (smtpbg151.qq.com [18.169.211.239])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ACAB220F34;
-	Mon, 28 Jul 2025 04:13:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F0DD2C18A;
+	Mon, 28 Jul 2025 06:53:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.169.211.239
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753675995; cv=none; b=HAd7NNUhFNVz6Pp2u83LSseVNXSkFDX/UHFlhznP5A8U4jrNDC1DINbNhhrMNiTdk7jUX2xCa1Y1yxyUWSRYlws39M0b2+USvCmuHvDUzUl5g3pIsr2b1P+byRQbFCmlvKYuPjkXUoc5fd7aCcpgR2EnSdv8jn/n03fpe2H6WnA=
+	t=1753685614; cv=none; b=GkDIfjwyDH+Ld5aBVcyynOnpKDKztBPDvZ9asmIXq3l3c82K/3oVBg4bYTEfyLhNr+dJxxWtgEwo69FA0eIRkMClqRMS/P7PdFM0WjhuVAV4j/ZaxxjGQGb/RDw3qJeQp3FyixoOqYDgSfK5uPtmCc3sEInCg6rovNX7cS8c1jY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753675995; c=relaxed/simple;
-	bh=bRExeoONmR0WhrsbqFNroJ9+Vz1rBjIUMt3FwoFHMyQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XGyPmxDWkaqHwdw0+nvm7ptYnnKBHSTU/IF+FDPzNFWQaA5FW+Kx5dAS+G5kS/GPqgaqRhOGnzD+V7AFUCyEU84nLDUPtg52p3sFqk0onzYQkLvORODR9mVMgTZVe7s2/b4Iz2RGgfzNEOxGIihN4onY680G4Te/X5/YAIkf5GY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fK+gBeSX; arc=none smtp.client-ip=209.85.214.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1753685614; c=relaxed/simple;
+	bh=eUYKVwinVJqY8C1LMcp3ZJ7bcgPDh5ssYDRCuKGBoQA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=M86vFkAp9K+9gDvR6M45FKDb2k5nAwbO63/LoS09G8SLHVWRZDe1qn8abJsYC/0YGXhSBT5oU9CYo1nkdKnJGOrx09IUUGxW1kulxw7DrbihcPS2Bsn8uw3swAb/CuWknt/7C9RrZQFl2wxZYmP/HKfiP2TCEVY1RgHAR2ofzAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=BF4zk4m0; arc=none smtp.client-ip=18.169.211.239
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fK+gBeSX"
-Received: by mail-pl1-f196.google.com with SMTP id d9443c01a7336-23602481460so39620015ad.0;
-        Sun, 27 Jul 2025 21:13:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1753675993; x=1754280793; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AjeNP1ojEwSXm7x5F0g4swwiLUfc7kqWz38lpPc+Rx8=;
-        b=fK+gBeSX/zLgzQIWjLg5MsFYTWm+ernGTfh48OcfErjnfZT+paMLVH5PAxb4tw5CaM
-         U84qSUotMtrYmmsIe5uKaMSxD5CLY37o8kTvVVxyyaroiApv92PTwAwPyPq7JmCVZ0d3
-         Op2bZSeBRFRW/UiQ6E7vV9afNzaZnE6afh0GFo50W2c2LM4ig3iHhGStKQbAvn4HgtU1
-         7Bzs4d+qJ/OU5imjb7mpUD5/YAUxXY7uo1pcpV3CeWaHwuoffUB7n3auWtZDSU5py9jb
-         btZ1M1ZkINpni2arWmYoXV/Ly9SjYdj15ctqB+125bde17awZoXmZNwO7ztXycnP19qd
-         uzBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753675993; x=1754280793;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AjeNP1ojEwSXm7x5F0g4swwiLUfc7kqWz38lpPc+Rx8=;
-        b=M3aA8Yc26ZA9mXS1iLMgQ8VIgugQysmX91hAYxjV7beJBPXlpiNl0HnkKPvjk6QLkc
-         /bSobfX0u4I9M1AusMG5ieQhh7jVrkH7LoyV5vtLPbNvW4Zr+AM9zzLCTkaVvNS4q0sr
-         fBrix7M1oaQbZTyqJC09hwq7KbKHGjOK8Ll2bN65aWoYtZ2vJGWqlyabDSY+JitHDPTw
-         StLGoVP/R7WqTVcn8abz9Y0IJSGYkeUBm6JBiYV7M+v5zPjuq3phN7IBhnNSk1+2INPp
-         41OtayBqVhqP5qdkuaZEMHlvLy6BO2yz+b+WGCEt77RiGxGERQZ7neDk68T3MLFAS/VG
-         dvbw==
-X-Forwarded-Encrypted: i=1; AJvYcCUWoFKvckbHYbdnRybrr1uWdf+7cTD9TF70t+y9RRIQk1YoLFbpN4KBP1QFRnYQ+weJlnNr9Q7n5r+WrqLPfolkFxS4@vger.kernel.org, AJvYcCXCWj97iTtKxhgwhR9xEkygSUAH3CL72fJfgR0EVCqC3KyGTUvUUR/rQOIn2FSiWKhv72mzzsh97YBVCnOt@vger.kernel.org, AJvYcCXXsjNMRbyx1pTj1uVRdqZTmYU6hmV5LZGpzNVaEurYad7IIzQygj6cXMOBVS0GmFXb+VA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YytkzG/C1Uxvmj/xkfPzskngoIdZj365ZPnpysVFDtTmUZM4vjR
-	tdf9Y3KBGNqIv5cVkdqqZOt/dRppzXntBB4x6JsEJPO9K3p5NRKBNJ1O
-X-Gm-Gg: ASbGncv0ZetoHcaykpEpNnrbGb75ix1ebpwUJqxpW9y7dPSqIjCN5AQb3SQUC4MNO4N
-	YTIWCJl0HHTxZf2+9K2jubq7Apic+QE/rox+4npjLiJzr7XGysl6Mh7u+zh9ABVq92cZ0h8Yso7
-	wgd720ZV3BD7kTT7zVSz7W31zxGyPivHwwWF20xcvuhozILzcIq+9QEkOZWxDoWNrLDUbuf2/y5
-	fvJ1d+YKAVgNo5fQ/knSm8cwzP/sXmzRds0oXgXYElznKcw8ahFuXq8M3fcr17z80ILNTHgJ6w/
-	zA99LBMgun5TZd9dF5+z1nQdNeNpLVp98roQo6EU1jztk4e5NMb29hJYPeFJuWMRXC4keVxr2cO
-	NkubBBK6r/Dksfk40Zco=
-X-Google-Smtp-Source: AGHT+IF9kh81K3dC0j67xBO5/cmUYFztZWzS9P4O92aNSAOnGEzvIs2s4ZaQScwsDq0lt6VC2wP0aw==
-X-Received: by 2002:a17:903:4b50:b0:236:9726:7264 with SMTP id d9443c01a7336-23fb305083dmr171963755ad.5.1753675993352;
-        Sun, 27 Jul 2025 21:13:13 -0700 (PDT)
-Received: from 7950hx ([43.129.244.20])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-24008efc073sm20599175ad.58.2025.07.27.21.13.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Jul 2025 21:13:13 -0700 (PDT)
-From: Menglong Dong <menglong8.dong@gmail.com>
-X-Google-Original-From: Menglong Dong <dongml2@chinatelecom.cn>
-To: alexei.starovoitov@gmail.com,
-	mhiramat@kernel.org
-Cc: rostedt@goodmis.org,
-	mathieu.desnoyers@efficios.com,
-	hca@linux.ibm.com,
-	revest@chromium.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: [PATCH bpf-next 4/4] selftests/bpf: add benchmark testing for kprobe-multi-all
-Date: Mon, 28 Jul 2025 12:12:51 +0800
-Message-ID: <20250728041252.441040-5-dongml2@chinatelecom.cn>
-X-Mailer: git-send-email 2.50.1
-In-Reply-To: <20250728041252.441040-1-dongml2@chinatelecom.cn>
-References: <20250728041252.441040-1-dongml2@chinatelecom.cn>
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="BF4zk4m0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1753685560;
+	bh=eUYKVwinVJqY8C1LMcp3ZJ7bcgPDh5ssYDRCuKGBoQA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=BF4zk4m0Cfe0zCF3dE+Ven2KHXeMxa81g5hP5soNiJVn5nVgNj/E3Cp/jYdHpumm5
+	 +KyqnvUhulqkf2dJf1PTM3tJu//eb3Bnh7HiDQWp948ob69sNIMYiHfpNS6ca/jZkF
+	 RswWZFviHkvsXk1zl43NsQJ+gFgrHceWxgxdbqQQ=
+X-QQ-mid: zesmtpip2t1753685502td22cd6f0
+X-QQ-Originating-IP: nHBRBuTZQ1Wlyez3zPHVhNw9QiOisVVCyHKEyDssW+4=
+Received: from [IPV6:240e:668:120a::212:232] ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Mon, 28 Jul 2025 14:51:40 +0800 (CST)
+X-QQ-SSF: 0002000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 11660296550804502737
+EX-QQ-RecipientCnt: 12
+Message-ID: <CBABEDA11FA3B6EF+c3f78605-e0d3-4a4d-a268-4af81422c071@uniontech.com>
+Date: Mon, 28 Jul 2025 14:51:39 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] input: Add tracepoint support
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: dmitry.torokhov@gmail.com, guanwentao@uniontech.com,
+ linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
+ mhiramat@kernel.org, niecheng1@uniontech.com, wangyuli@deepin.org,
+ zhanjun@uniontech.com, Winston Wen <wentao@uniontech.com>
+References: <19571F312EE197A5+20250710072634.3992019-1-wangyuli@uniontech.com>
+ <C1C54D7FA3DF3958+20250710073148.3994900-1-wangyuli@uniontech.com>
+ <20250722202551.1614f59a@gandalf.local.home>
+Content-Language: en-US
+From: WangYuli <wangyuli@uniontech.com>
+Autocrypt: addr=wangyuli@uniontech.com; keydata=
+ xjMEZoEsiBYJKwYBBAHaRw8BAQdAyDPzcbPnchbIhweThfNK1tg1imM+5kgDBJSKP+nX39DN
+ IVdhbmdZdWxpIDx3YW5neXVsaUB1bmlvbnRlY2guY29tPsKJBBMWCAAxFiEEa1GMzYeuKPkg
+ qDuvxdofMEb0C+4FAmaBLIgCGwMECwkIBwUVCAkKCwUWAgMBAAAKCRDF2h8wRvQL7g0UAQCH
+ 3mrGM0HzOaARhBeA/Q3AIVfhS010a0MZmPTRGVfPbwD/SrncJwwPAL4GiLPEC4XssV6FPUAY
+ 0rA68eNNI9cJLArOOARmgSyJEgorBgEEAZdVAQUBAQdA88W4CTLDD9fKwW9PB5yurCNdWNS7
+ VTL0dvPDofBTjFYDAQgHwngEGBYIACAWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZoEsiQIb
+ DAAKCRDF2h8wRvQL7sKvAP4mBvm7Zn1OUjFViwkma8IGRGosXAvMUFyOHVcl1RTgFQEAuJkU
+ o9ERi7qS/hbUdUgtitI89efbY0TVetgDsyeQiwU=
+In-Reply-To: <20250722202551.1614f59a@gandalf.local.home>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------ZuqjbyJz8Op15mz2v1o3RySj"
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: MdnnQT6NjlK4C95FyCDbOZ6/R1lg5XqiHNpkrERsZpNbpzm821sD4+Og
+	Epf/PCSLJlDsD2VLELuS+HNnNoLkT6zkHBAuCuRnO536aFR0ag7qAa54KnO77EgBcsRGiGz
+	jjfyZFG8rJVLrJNaxJAw0iCRx2+7y+YL9hwl4KEx5T2ekLFWW2zvHpU9++XDZBdqCPGhQVF
+	ijAgxyhzelPawQvImiTvN8bLzREPbBgKOGuFhJmvJp/83oN6hgH7mAYAKcgnQmJeZmwbtB+
+	SsPTqNZfv0BeBNflrjnlAuV00UjFhLRdxgFpgJ62cio0czTpBoSdd1AwxtOxPHOWkyDGF7e
+	dj/aRzWLvxkxQEqLeVB+q3wULzdjMW8mOVOA7uzwcpIpqUNrW/MRoRCyQOfl60rWQ2W6/Ro
+	MfxsnkxVmrupc/MD02Z8GedC1+dS7GAqIrKuv+KcvBYnI8wB09VwoLQTDoE6C7Y4ZWLA3dk
+	asST6r52nO8OvNhXQYW0253OiRQFaJoudB7EARi9krukHq3dK+U9eyjEgsSQZ1tJcGfo55O
+	aDJ/oI2MpCtWK4xZ8OCDwqEcgTilOcP+hV5HhnV1qdM+QuM9pNAx0eDRP3qcYdhUYrZu0QT
+	rXfrAx8pGfrWLaxGz7aLgkHQBi3XUoUKoklh6n1/HTHAKq3tHJQ5nWiJ0eB//V+otg4q7dK
+	/VR66/JjGWfgp7cUaJqZlz6ZtHtNfOuAAebvR4uFt483/Ed0IpJWg271NqkQKhHXKPGve3N
+	4yCdiW6nki4hnk1OKbPVxUSfjc7zq1gHB+UxB4ttcD671HJqtoA92sVKYhdRLQMg21VKExl
+	h6Ma1EubjGvpNP5TGukY2cb5KsmK5Guqwsh4qNq5bmZ7bkXmG3uC0iuqJ5c41kuRUWRWUsa
+	m2u8ViC4lD9jN6sQWwHQsFEdKMq92a0RFgb9o8pFspD3ey90ofUVPa3ELu2RE5amrxTt8mf
+	1gsjEahN4mEftw5DQKrkkwqrX5aCRinZSuR9aWIUlF5GvXLDXzzDn3bqWi8+QcHzg2dVabD
+	3I/xMVfoUzk15bv8LnGhs5sUGqF+KAEGSwPL1E1zReIhF4q0iKoHQTwgi1amwrhHrlcLGCa
+	kJPgCFLOJfGtFHO0HvbCYo=
+X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
+X-QQ-RECHKSPAM: 0
 
-For now, the benchmark for kprobe-multi is single, which means there is
-only 1 function is hooked during testing. Add the testing
-"kprobe-multi-all", which will hook all the kernel functions during
-the benchmark.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------ZuqjbyJz8Op15mz2v1o3RySj
+Content-Type: multipart/mixed; boundary="------------Yr9mKkasfMZBBJ0f0HqT7M38";
+ protected-headers="v1"
+From: WangYuli <wangyuli@uniontech.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: dmitry.torokhov@gmail.com, guanwentao@uniontech.com,
+ linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
+ mhiramat@kernel.org, niecheng1@uniontech.com, wangyuli@deepin.org,
+ zhanjun@uniontech.com, Winston Wen <wentao@uniontech.com>
+Message-ID: <c3f78605-e0d3-4a4d-a268-4af81422c071@uniontech.com>
+Subject: Re: [PATCH 1/2] input: Add tracepoint support
+References: <19571F312EE197A5+20250710072634.3992019-1-wangyuli@uniontech.com>
+ <C1C54D7FA3DF3958+20250710073148.3994900-1-wangyuli@uniontech.com>
+ <20250722202551.1614f59a@gandalf.local.home>
+In-Reply-To: <20250722202551.1614f59a@gandalf.local.home>
 
-Signed-off-by: Menglong Dong <dongml2@chinatelecom.cn>
----
- tools/testing/selftests/bpf/bench.c           |  2 ++
- .../selftests/bpf/benchs/bench_trigger.c      | 30 +++++++++++++++++++
- .../selftests/bpf/benchs/run_bench_trigger.sh |  2 +-
- 3 files changed, 33 insertions(+), 1 deletion(-)
+--------------Yr9mKkasfMZBBJ0f0HqT7M38
+Content-Type: multipart/mixed; boundary="------------NU7AxYzXihR4tfopA6uPUmVj"
 
-diff --git a/tools/testing/selftests/bpf/bench.c b/tools/testing/selftests/bpf/bench.c
-index ddd73d06a1eb..da971d8c5ae5 100644
---- a/tools/testing/selftests/bpf/bench.c
-+++ b/tools/testing/selftests/bpf/bench.c
-@@ -510,6 +510,7 @@ extern const struct bench bench_trig_kretprobe;
- extern const struct bench bench_trig_kprobe_multi;
- extern const struct bench bench_trig_kretprobe_multi;
- extern const struct bench bench_trig_fentry;
-+extern const struct bench bench_trig_kprobe_multi_all;
- extern const struct bench bench_trig_fexit;
- extern const struct bench bench_trig_fmodret;
- extern const struct bench bench_trig_tp;
-@@ -578,6 +579,7 @@ static const struct bench *benchs[] = {
- 	&bench_trig_kprobe_multi,
- 	&bench_trig_kretprobe_multi,
- 	&bench_trig_fentry,
-+	&bench_trig_kprobe_multi_all,
- 	&bench_trig_fexit,
- 	&bench_trig_fmodret,
- 	&bench_trig_tp,
-diff --git a/tools/testing/selftests/bpf/benchs/bench_trigger.c b/tools/testing/selftests/bpf/benchs/bench_trigger.c
-index 82327657846e..be5fe88862a4 100644
---- a/tools/testing/selftests/bpf/benchs/bench_trigger.c
-+++ b/tools/testing/selftests/bpf/benchs/bench_trigger.c
-@@ -226,6 +226,35 @@ static void trigger_fentry_setup(void)
- 	attach_bpf(ctx.skel->progs.bench_trigger_fentry);
- }
- 
-+static void trigger_kprobe_multi_all_setup(void)
-+{
-+	LIBBPF_OPTS(bpf_kprobe_multi_opts, opts);
-+	struct bpf_program *prog;
-+	struct bpf_link *link;
-+	char **syms = NULL;
-+	size_t cnt = 0;
-+
-+	setup_ctx();
-+	prog = ctx.skel->progs.bench_trigger_kprobe_multi;
-+	bpf_program__set_autoload(prog, true);
-+	load_ctx();
-+
-+	if (bpf_get_ksyms(&syms, &cnt, true)) {
-+		printf("failed to get ksyms\n");
-+		exit(1);
-+	}
-+
-+	printf("found %zu ksyms\n", cnt);
-+	opts.syms = (const char **) syms;
-+	opts.cnt = cnt;
-+	link = bpf_program__attach_kprobe_multi_opts(prog, NULL, &opts);
-+	if (!link) {
-+		printf("failed to attach bpf_program__attach_kprobe_multi_opts to all\n");
-+		exit(1);
-+	}
-+	ctx.skel->links.bench_trigger_kprobe_multi = link;
-+}
-+
- static void trigger_fexit_setup(void)
- {
- 	setup_ctx();
-@@ -512,6 +541,7 @@ BENCH_TRIG_KERNEL(kretprobe, "kretprobe");
- BENCH_TRIG_KERNEL(kprobe_multi, "kprobe-multi");
- BENCH_TRIG_KERNEL(kretprobe_multi, "kretprobe-multi");
- BENCH_TRIG_KERNEL(fentry, "fentry");
-+BENCH_TRIG_KERNEL(kprobe_multi_all, "kprobe-multi-all");
- BENCH_TRIG_KERNEL(fexit, "fexit");
- BENCH_TRIG_KERNEL(fmodret, "fmodret");
- BENCH_TRIG_KERNEL(tp, "tp");
-diff --git a/tools/testing/selftests/bpf/benchs/run_bench_trigger.sh b/tools/testing/selftests/bpf/benchs/run_bench_trigger.sh
-index a690f5a68b6b..886b6ffc9742 100755
---- a/tools/testing/selftests/bpf/benchs/run_bench_trigger.sh
-+++ b/tools/testing/selftests/bpf/benchs/run_bench_trigger.sh
-@@ -6,7 +6,7 @@ def_tests=( \
- 	usermode-count kernel-count syscall-count \
- 	fentry fexit fmodret \
- 	rawtp tp \
--	kprobe kprobe-multi \
-+	kprobe kprobe-multi kprobe-multi-all \
- 	kretprobe kretprobe-multi \
- )
- 
--- 
-2.50.1
+--------------NU7AxYzXihR4tfopA6uPUmVj
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
+SGkgU3RldmUsDQoNCk9uIDIwMjUvNy8yMyAwODoyNSwgU3RldmVuIFJvc3RlZHQgd3JvdGU6
+DQo+PiArCVRQX1NUUlVDVF9fZW50cnkoX19zdHJpbmcobmFtZSwgZGV2LT5uYW1lID86ICJ1
+bmtub3duIikgX19maWVsZCgNCj4+ICsJCXVuc2lnbmVkIGludCwgdHlwZSkgX19maWVsZCh1
+bnNpZ25lZCBpbnQsIGNvZGUpDQo+PiArCQkJCSBfX2ZpZWxkKGludCwgdmFsdWUpIF9fZmll
+bGQodTE2LCBidXN0eXBlKQ0KPj4gKwkJCQkJIF9fZmllbGQodTE2LCB2ZW5kb3IpDQo+PiAr
+CQkJCQkJIF9fZmllbGQodTE2LCBwcm9kdWN0KSksDQo+PiArDQo+IFRoZSBjb250ZW50cyBv
+ZiB0aGUgdHJhY2Vwb2ludHMgaW4gdGhlIHN1YnN5c3RlbXMgYXJlIGRldGVybWluZWQgYnkg
+dGhlDQo+IHN1YnN5c3RlbSBtYWludGFpbmVycywgYnV0IHBsZWFzZSBmb2xsb3cgdGhlIHRy
+YWNlcG9pbnQgZm9ybWF0dGluZy4gVGhlDQo+IGFib3ZlIGlzIGhvcnJpYmxlLiBJdCBzaG91
+bGQgbG9vayBsaWtlIGEgc3RydWN0dXJlIGxheW91dC4gT25lIHdvdWxkbid0DQo+IHdyaXRl
+Og0KPg0KPiBzdHJ1Y3QgZW50cnkgeyBjaGFyICpuYW1lOw0KPiAJCXVuc2lnbmVkIGludCB0
+eXBlOyB1bnNpZ25lZCBpbnQgY29kZTsNCj4gCQkJaW50IHZhbHVlOyB1MTYgYnVzdHlwZTsN
+Cj4gCQkJCXUxNiB2ZW5kb3I7DQo+IAkJCQkJdTE2IHByb2R1Y3Q7IH07DQo+DQo+IFRoYXQn
+cyB3aGF0IHRoZSBhYm92ZSBsb29rcyBsaWtlLiBJdCBzaG91bGQgYmUgaW5zdGVhZDoNCj4N
+Cj4gCVRQX1NUUlVDVF9fZW50cnkoDQo+IAkJX19zdHJpbmcoCW5hbWUsCQlkZXYtPm5hbWUg
+PzogInVua25vd24iCSkNCj4gCQlfX2ZpZWxkKAl1bnNpZ25lZCBpbnQsCXR5cGUJCQkpDQo+
+IAkJX19maWVsZCgJdW5zaWduZWQgaW50LAljb2RlCQkJKQ0KPiAJCV9fZmllbGQoCWludCwJ
+CXZhbHVlCQkJKQ0KPiAJCV9fZmllbGQoCXUxNiwJCWJ1c3R5cGUJCQkpDQo+IAkJX19maWVs
+ZCgJdTE2LAkJdmVuZG9yCQkJKQ0KPiAJCV9fZmllbGQoCXUxNiwJCXByb2R1Y3QJCQkpDQo+
+IAkpLA0KPg0KPiBTbyB0aGUgZmllbGRzIGNhbiBiZSBlYXNpbHkgdmlzaWJsZSBhbmQgZWFz
+aWx5IHJldmlld2VkLg0KDQpNeSBhcG9sb2dpZXMuDQoNClNpbmNlIHRoaXMgd2FzIGEgbmV3
+IGZpbGUgSSBhZGRlZCwgSSBkaWRuJ3QgY2FyZWZ1bGx5IGNoZWNrIGl0IGFmdGVyIA0KYXBw
+bHlpbmcgY2xhbmctZm9ybWF0LCB3aGljaCBsZWQgdG8gdGhpcyBpc3N1ZS4NCg0KSSdsbCBm
+aXggdGhlIGNvZGUgZm9ybWF0dGluZyBhbmQgc2VuZCBhIHBhdGNoIHYyLg0KDQotLSANCldh
+bmdZdWxpKg0KKg0K
+--------------NU7AxYzXihR4tfopA6uPUmVj
+Content-Type: application/pgp-keys; name="OpenPGP_0xC5DA1F3046F40BEE.asc"
+Content-Disposition: attachment; filename="OpenPGP_0xC5DA1F3046F40BEE.asc"
+Content-Description: OpenPGP public key
+Content-Transfer-Encoding: quoted-printable
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+xjMEZoEsiBYJKwYBBAHaRw8BAQdAyDPzcbPnchbIhweThfNK1tg1imM+5kgDBJSK
+P+nX39DNIVdhbmdZdWxpIDx3YW5neXVsaUB1bmlvbnRlY2guY29tPsKJBBMWCAAx
+FiEEa1GMzYeuKPkgqDuvxdofMEb0C+4FAmaBLIgCGwMECwkIBwUVCAkKCwUWAgMB
+AAAKCRDF2h8wRvQL7g0UAQCH3mrGM0HzOaARhBeA/Q3AIVfhS010a0MZmPTRGVfP
+bwD/SrncJwwPAL4GiLPEC4XssV6FPUAY0rA68eNNI9cJLArOOARmgSyJEgorBgEE
+AZdVAQUBAQdA88W4CTLDD9fKwW9PB5yurCNdWNS7VTL0dvPDofBTjFYDAQgHwngE
+GBYIACAWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZoEsiQIbDAAKCRDF2h8wRvQL
+7sKvAP4mBvm7Zn1OUjFViwkma8IGRGosXAvMUFyOHVcl1RTgFQEAuJkUo9ERi7qS
+/hbUdUgtitI89efbY0TVetgDsyeQiwU=3D
+=3DBlkq
+-----END PGP PUBLIC KEY BLOCK-----
+
+--------------NU7AxYzXihR4tfopA6uPUmVj--
+
+--------------Yr9mKkasfMZBBJ0f0HqT7M38--
+
+--------------ZuqjbyJz8Op15mz2v1o3RySj
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+wnsEABYIACMWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCaIcd+wUDAAAAAAAKCRDF2h8wRvQL7sNx
+AP9NyWSiXMqwWmNPBy3hmq+3xypplYN3Emf8S86XxmyOsAD/VFnXQQi1Gl0fEkKI/EuvNjoUIFw7
+hddmbU1QkHp9pQ0=
+=jyK3
+-----END PGP SIGNATURE-----
+
+--------------ZuqjbyJz8Op15mz2v1o3RySj--
