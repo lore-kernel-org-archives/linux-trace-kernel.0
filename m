@@ -1,164 +1,93 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBAED27055A;
-	Mon, 28 Jul 2025 14:00:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37E63248F4B;
+	Mon, 28 Jul 2025 14:18:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753711203; cv=none; b=o2cmsl7u1cdbb5OTxXYMHr4G0aQtfCwwnDmuQKflg4Pjr0BDe3z6Rew5AGP+sVO/iDHVXFcnH2OXCSP3Y9qWXbheGvHAsInyyXQ0jmZoj/KCqn4UCTCx5db12KTDTkWS3YDZTBYOZc/yCKDBNaLoDnr1OJyyoJ8hSd+z97bFRQo=
+	t=1753712312; cv=none; b=tBqPOsTY6uuIC6Xv1kAzsB35VYwEQeh2X8PkDCXzPn/7iNNqF8GGmf1DMKpY+KxCS7rvvMcTeRSa5smPnW7x+H1+FD9OcOeSVrScuiToM8A6LJFCtO/YXXtaTsrUT1VeXDpYT7ZBJ0CfrI0ihzIU5I92sG4OWi9zPqj4k51aFMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753711203; c=relaxed/simple;
-	bh=JbeopiAbZcPaAcCpKxOESHE/FDaZhg0e8FGhB3O3s6w=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JK1fes7EwlW0SeGTd/Vp1oNXEn6zM6RBATwVjmrJwXwBpeYApO55Xl+mUNwbVouZfSertPTBmTFXKR43jJu8bRhc9vzxDBrRCVao7k8GjpkCdA6bua1z5Xm9+xGennDQQGdcPCxpI+DMZB9ku5C0qcD63pXUtwqcOPQgQgby8iE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Vt2LJpxY; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1753712312; c=relaxed/simple;
+	bh=ryovv6Yed9UbejW+3E0eLeMGIJ35qqrNA5wEFN5jXXA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kBXMaQpR18qmYqIXcWWykEVkAM6OxFaEm7y77VLnC+gG+1mew0zafhaEJPScBGqveMs/8RF+U9jNI2Fz9ZWfiimUFQIouQtv8YA3PvAtOJK9GkXLMIFGtpyEZyr6Syl471zCcGvqLVyFaSyumIYQeEOX6ZwH4B59Vu3C2gP7dJQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=w4FC25YE; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=6rOJRZBJ; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vt2LJpxY"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ae0bde4d5c9so863619166b.3;
-        Mon, 28 Jul 2025 07:00:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1753711200; x=1754316000; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=vbKAM48vOaxD+dObHxjlFAKhkqjJBfV01Aey6Sw0Mms=;
-        b=Vt2LJpxYrw/ycC/ECUx189XSpG5xGqvp6ceRrvG2r0MzHJzSHruvSo5BjQTnIV44c/
-         30ct1VYsOtYGZ6ruuG2uqsSIKATMzw6opC0C+2Y96RFUkuv/ofcBIq+P9ooKPy4BV8lo
-         8z+thjFfxRwnJSWNgMGwb8MqqBPkJgk3aaixj4UPfqpo6pLZdXMUGotyDVrHYlyp/Cd4
-         rQDiTyCDFiJeTvyl+3jnSVaGbB4pKvaCy0LXEJ1R+3M23IwdmXYN4pEP+jzvTZ/XpH5s
-         V1rf5LTKRuWAdL7Qxlk8RngLKacJdUF+ImmwzE3LDhJVTltw4ZJHOL3uPOtZUIg3YIEF
-         HgKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753711200; x=1754316000;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vbKAM48vOaxD+dObHxjlFAKhkqjJBfV01Aey6Sw0Mms=;
-        b=QIcSYYUyQ4QMQLpbpD7EKcJeRIzA4lbbrWDPO7aOXYCdVdkVQ7wLw+GA/t1pstdkV6
-         H2A5K5C/PXBuSPC/FL99M8bZAKbF5iXKPPPArZiJY5eYSMRbLLOobOs6SLz+MNpEdvcK
-         49oDNAToUgxxcUM8nFQVaXBWEXJqdaOqqnt9ES3P9026y5Auxr+AGq+Qh5Ch3l+QAgzr
-         OODIJQtStwkyfpgCa5+u40+6C3Oy9jJndwzrvYPYiYT2wwQjZh4ZIdanApnw4hTFTWR7
-         JQ3xlJovP6Ntjx3JJGu2N3eHRgNfP1Qr8mDdqWnhlq3af4jDyCr3jIVGacWcsaTGThGY
-         1c7A==
-X-Forwarded-Encrypted: i=1; AJvYcCU/pinexkWvbT4/cOGXQUPJxqeVxCLnIHDKYdzRHGTXm4id/liPKJutCKL7Fi6w6TrfBfjj1jBUIvW8PUsh6ZjZ5/CH@vger.kernel.org, AJvYcCVVV84PJjvcDwG7ou2BJU3Qfpyy6j1UYFVr/X9GnWiTkw5wimmUps32FAxJNhnhK2zRvXs=@vger.kernel.org, AJvYcCWEVFqGMPE1Hu4mEbl/Cbrk8Kw/Snw3EmldF3u1FLJQ7gcPHmTwnI0nGIH75XrYr96IV4TMNCO2uULh5Sv0@vger.kernel.org
-X-Gm-Message-State: AOJu0YwovhKonTz8kUvw2k5CvgWKT9nw7I3Cx1TC6Oqw9+t/iW8RR3bg
-	RwYSP6y+4oZhhVHWx1waOqwHlHFBTVM7pWkJTerTmd6RNhMo0Rvpnv1N
-X-Gm-Gg: ASbGncsLrY5BfLVyFUW4W9AUv/Sd7J/VqtoS60ryZeMmeDPZTyDWYRWhrw5fMDZi6Cn
-	xc6t82lwogtowkNx/UQt9NwuH3dpjwOgcOYx3yxqbouFCcJ7j3lmBTtyOW5vKtY6RXY/APYQtNd
-	ceORk+Us2vC1g0u75I1y2VPXBeLRv1l+Rd9c5BEHU+2PeLINBM4Pai2NQCNcmo66DHKXCWez7uF
-	NRVIlF+iOUz8pcE6nWJYEDAFNdCSG9jcKo4XxmX1nKkB+4RKD0P5/w9bhw45NAUrJ6sCiSHoKJ8
-	uxmpF2WTx8wVxJGjfZ8MQurUr0HZwJdTa8Uieeki423aIaF2SRhqWb8JAitzFwkv/tEOOoOpJrp
-	tpJZuFmua
-X-Google-Smtp-Source: AGHT+IFVTL3fAEvq/jzmKu7AjMnnGytTquy+ggLQ1Z+9x0Rt3o7F2rrj+eJ3kjJ+wxDHUGg0gVpqRw==
-X-Received: by 2002:a17:907:1c11:b0:ae3:bb0a:1cc6 with SMTP id a640c23a62f3a-af617704cdfmr1388490666b.16.1753711198944;
-        Mon, 28 Jul 2025 06:59:58 -0700 (PDT)
-Received: from krava ([173.38.220.53])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-af635a62ab9sm430203666b.86.2025.07.28.06.59.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Jul 2025 06:59:58 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Mon, 28 Jul 2025 15:59:57 +0200
-To: Menglong Dong <menglong8.dong@gmail.com>
-Cc: alexei.starovoitov@gmail.com, mhiramat@kernel.org, rostedt@goodmis.org,
-	mathieu.desnoyers@efficios.com, hca@linux.ibm.com,
-	revest@chromium.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH RFC bpf-next v2 0/4] fprobe: use rhashtable for
- fprobe_ip_table
-Message-ID: <aIeCXbpno1y3Aio1@krava>
-References: <20250728072637.1035818-1-dongml2@chinatelecom.cn>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="w4FC25YE";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="6rOJRZBJ"
+Date: Mon, 28 Jul 2025 16:18:28 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1753712309;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Ojfq/l+Y6sJ0dydzcKjQ7bgvQeTepM46LPXKEA0zZgs=;
+	b=w4FC25YEJZ/zBlZ4rzk1llHucrC6ptN2moSli3C3B9ppGseAVOuVKVtICb3UYSu9z55hjd
+	UlfQCKQxvV+ZT3jEcSMEqAjWoIUU3xXPmeja5jZXs7nQ0OAmKJQjNDtv0dUVzl/Vl+mgma
+	iJK49KA62BWKwQNB3r2XUVbMwCxszYPWNzL2PSIxVzJzFhEBbp2SZgkUtKnK6KXSIyVwuK
+	6Srg2uouQkbRCno8McoKk/tkyt5iXFL8p8ec2n7dkSaU64AM37qM+bndnO3U8u5fR1HC3s
+	CUJiZ4twCHAszMr05BH5d5GfDROPYIppeywDCbcbrRSQl5atWrUKY7JbYPky2A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1753712309;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Ojfq/l+Y6sJ0dydzcKjQ7bgvQeTepM46LPXKEA0zZgs=;
+	b=6rOJRZBJTGAnEcNaCTQutU0n66iJamovuIXtDsKjXgtjTcafNIwkd5A9Ao0wKM3X7I7SJQ
+	TJLPfwSfmqgiOOAw==
+From: Nam Cao <namcao@linutronix.de>
+To: Gabriele Monaco <gmonaco@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-trace-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Tomas Glozar <tglozar@redhat.com>, Juri Lelli <jlelli@redhat.com>,
+	Clark Williams <williams@redhat.com>,
+	John Kacur <jkacur@redhat.com>
+Subject: Re: [PATCH v5 5/9] rv: Retry when da monitor detects race conditions
+Message-ID: <20250728141828.5hnoS6n1@linutronix.de>
+References: <20250728135022.255578-1-gmonaco@redhat.com>
+ <20250728135022.255578-6-gmonaco@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250728072637.1035818-1-dongml2@chinatelecom.cn>
+In-Reply-To: <20250728135022.255578-6-gmonaco@redhat.com>
 
-On Mon, Jul 28, 2025 at 03:22:49PM +0800, Menglong Dong wrote:
-> For now, the budget of the hash table that is used for fprobe_ip_table is
-> fixed, which is 256, and can cause huge overhead when the hooked functions
-> is a huge quantity.
+On Mon, Jul 28, 2025 at 03:50:17PM +0200, Gabriele Monaco wrote:
+> DA monitor can be accessed from multiple cores simultaneously, this is
+> likely, for instance when dealing with per-task monitors reacting on
+> events that do not always occur on the CPU where the task is running.
+> This can cause race conditions where two events change the next state
+> and we see inconsistent values. E.g.:
 > 
-> In this series, we use rhltable for fprobe_ip_table to reduce the
-> overhead.
+>   [62] event_srs: 27: sleepable x sched_wakeup -> running (final)
+>   [63] event_srs: 27: sleepable x sched_set_state_sleepable -> sleepable
+>   [63] error_srs: 27: event sched_switch_suspend not expected in the state running
 > 
-> Meanwhile, we also add the benchmark testcase "kprobe-multi-all", which
-> will hook all the kernel functions during the testing. Before this series,
-> the performance is:
->   usermode-count :  875.380 ± 0.366M/s 
->   kernel-count   :  435.924 ± 0.461M/s 
->   syscall-count  :   31.004 ± 0.017M/s 
->   fentry         :  134.076 ± 1.752M/s 
->   fexit          :   68.319 ± 0.055M/s 
->   fmodret        :   71.530 ± 0.032M/s 
->   rawtp          :  202.751 ± 0.138M/s 
->   tp             :   79.562 ± 0.084M/s 
->   kprobe         :   55.587 ± 0.028M/s 
->   kprobe-multi   :   56.481 ± 0.043M/s 
->   kprobe-multi-all:    6.283 ± 0.005M/s << look this
->   kretprobe      :   22.378 ± 0.028M/s 
->   kretprobe-multi:   28.205 ± 0.025M/s
+> In this case the monitor fails because the event on CPU 62 wins against
+> the one on CPU 63, although the correct state should have been
+> sleepable, since the task get suspended.
 > 
-> With this series, the performance is:
->   usermode-count :  902.387 ± 0.762M/s 
->   kernel-count   :  427.356 ± 0.368M/s 
->   syscall-count  :   30.830 ± 0.016M/s 
->   fentry         :  135.554 ± 0.064M/s 
->   fexit          :   68.317 ± 0.218M/s 
->   fmodret        :   70.633 ± 0.275M/s 
->   rawtp          :  193.404 ± 0.346M/s 
->   tp             :   80.236 ± 0.068M/s 
->   kprobe         :   55.200 ± 0.359M/s 
->   kprobe-multi   :   54.304 ± 0.092M/s 
->   kprobe-multi-all:   54.487 ± 0.035M/s << look this
+> Detect if the current state was modified by using try_cmpxchg while
+> storing the next value. If it was, try again reading the current state.
+> After a maximum number of failed retries, react by calling a special
+> tracepoint, print on the console and reset the monitor.
+> 
+> Remove the functions da_monitor_curr_state() and da_monitor_set_state()
+> as they only hide the underlying implementation in this case.
+> 
+> Monitors where this type of condition can occur must be able to account
+> for racing events in any possible order, as we cannot know the winner.
+> 
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 
-I meassured bit less speed up, but still great
-
-kprobe-multi-all:    3.565 ± 0.047M/s
-kprobe-multi-all:   11.553 ± 0.458M/s
-
-could you add kretprobe-multi-all bench as well?
-
-thanks,
-jirka
-
-
->   kretprobe      :   22.381 ± 0.075M/s 
->   kretprobe-multi:   27.926 ± 0.034M/s
-> 
-> The benchmark of "kprobe-multi-all" increase from 6.283M/s to 54.487M/s.
-> 
-> The locking is not handled properly in the first patch. In the
-> fprobe_entry, we should use RCU when we access the rhlist_head. However,
-> we can't use RCU for __fprobe_handler, as it can sleep. In the origin
-> logic, it seems that the usage of hlist_for_each_entry_from_rcu() is not
-> protected by rcu_read_lock neither, isn't it? I don't know how to handle
-> this part ;(
-> 
-> Menglong Dong (4):
->   fprobe: use rhltable for fprobe_ip_table
->   selftests/bpf: move get_ksyms and get_addrs to trace_helpers.c
->   selftests/bpf: skip recursive functions for kprobe_multi
->   selftests/bpf: add benchmark testing for kprobe-multi-all
-> 
->  include/linux/fprobe.h                        |   2 +-
->  kernel/trace/fprobe.c                         | 141 ++++++-----
->  tools/testing/selftests/bpf/bench.c           |   2 +
->  .../selftests/bpf/benchs/bench_trigger.c      |  30 +++
->  .../selftests/bpf/benchs/run_bench_trigger.sh |   2 +-
->  .../bpf/prog_tests/kprobe_multi_test.c        | 220 +----------------
->  tools/testing/selftests/bpf/trace_helpers.c   | 230 ++++++++++++++++++
->  tools/testing/selftests/bpf/trace_helpers.h   |   3 +
->  8 files changed, 348 insertions(+), 282 deletions(-)
-> 
-> -- 
-> 2.50.1
-> 
-> 
+Reviewed-by: Nam Cao <namcao@linutronix.de>
