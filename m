@@ -1,139 +1,217 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9B33237163
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 28 Jul 2025 08:59:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FFA6199EAD;
+	Mon, 28 Jul 2025 09:05:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753693149; cv=none; b=OU8uySawiNUWDMkHNLqAJ5+S2hXPHX4UqBLDbDCWxg4iSKrq7Kj0ICKfPOEFZ8qOgY3AN/w9susHg/TYTFcf0Iv7rEHoTaTa0R/y3CDAFBrbfJqARCuua0QqsVb4VK2PoDy3qPpBrV1yEtxzHWRPtMJEU9xslBxu/BkQpyHX7LM=
+	t=1753693532; cv=none; b=OT10GTVvu4MmiYjumuoLMeotyOrGoAmzVKBVY1ztB3QRXlgnikFhzr89ndxkzdTLUrrKeNBbpZgRnO+2y/z+0IwGfAS8syAkQyM4tAiI/tEJgUnSmYHyi2EDBnfARBkm2BwV7BVNyNYyVqT3SUBryLDrjGDqhjABozZbrEywb7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753693149; c=relaxed/simple;
-	bh=BuyNmQaiHhB7QblmPXdj69bJYc3NIEYedjz2UyGC22U=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Zj5N+rYimJZ4txn7ARXszwAZ5v9K+cUrpA8JPR59dbo/gfRgf9rozFxGsAPi7eJJAiLxu0Lc1u8RmE32e3051SfeUopjQrXgdLqhJYX5ydp50fgw6CUlE5BZdkiVyXsaY0WqFwRe1LhSJvk7wVsOe2o5RWp/c72kMvJq69zCp1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=COPXc3Od; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1753693532; c=relaxed/simple;
+	bh=ZC1PBwzhgJuuOcx5rmgZcY9QFnKGOwDm6B46DS0dnFg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dHtil8Out6lZBtJAkzIzmO4g0F1gWS4ajYn2+1G0yrf4EkEuCTwbcjyJzSr+O5DbiGkH8XZBvBCK2eozE5eJAY34EakySm+mRgnib9l3V4kLTq/JNV0qzBMwbJWR+503fJNaDhnLJuvgZdqQP+rWbW9ycy9FsTHejEU/Qmmql5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=RNaYNqKU; arc=none smtp.client-ip=115.124.30.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="COPXc3Od"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1753693146;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=BuyNmQaiHhB7QblmPXdj69bJYc3NIEYedjz2UyGC22U=;
-	b=COPXc3OdBjqhwrPtaWBbnjCZPG3bJHbJJ0svkOcC5UZ7gmUsFXj1QnBEUP8C3yISxCM9W7
-	9ls4u2SaaxPMUY31DY1As3VaPvxFIDZaTBzTDrBVyu4eHlckJjeKGRNYE+l206tqgkQCms
-	sW32xzYeJC+tebIPoPlI+zu3b4A/0Qs=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-457-7I_rG9rRMSaI4lkoLowfhQ-1; Mon, 28 Jul 2025 04:59:05 -0400
-X-MC-Unique: 7I_rG9rRMSaI4lkoLowfhQ-1
-X-Mimecast-MFC-AGG-ID: 7I_rG9rRMSaI4lkoLowfhQ_1753693144
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4562985ac6aso29124655e9.3
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 28 Jul 2025 01:59:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753693144; x=1754297944;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yrr7x9fAxuAGHE+0RbZWBm6ofiZmwJUP/auBwMym0tU=;
-        b=tIYy10BGqFdx6LSda5DWI8KiKAnBqbQ8ytDD1YTIbOBk/HB31iC8xCb7+J5Bx7gN/8
-         4q9nnfFT7VQwBE89l/mEnO4ENqVbNQEuJNJrmkHow3sK4uDlSHw8s6xhPfK+gbH0aKH+
-         hAC70E/FniOC059EJWvZijA/EU4T9hDQOOOGKjfrcRUddR5ZGIR6nKHaHRvnUdsMailz
-         zUeYkAi9M/B/0ZPtVNdnHZobwwqbVMJPXW88D1FiqGNC+AYg2OMTx0iJEhyS+MYSQGDW
-         MskcSYIgJ6EfRs5RF3betsT6eqgX3pZwM8e79HrfociBpiPW7jPymGrxX/kFpHFJnAIZ
-         up2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXYc5QGYb5NU3DH0M2W39SaOKCsOGB6LMW/k8JRrHijIAT2vHja3N/SJsi+vESzlH8v1I2w64Hnc2ajaTx0/W8lt30=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyKGPv5WmLbx5BlZ5e+X5bvOpgXobd2SRTlwktY2awceZE3n/eZ
-	jJtHSIhYeaPPsRGek1giA3TyPbBY7tOuMUKfuPaMxWq+pheuYMkVHy2nBqyWdxQvRx654SYJqO9
-	hKyJbI+5h0qO6+lTtFyBUQWQKguukP3U0kNuTeiAlCpqngnh6YANXOoj25VbFPSEFvJXASSPz3A
-	==
-X-Gm-Gg: ASbGncvwOQAuJK+ufWyVvGZB66iJwQpy6feP3qeA/N/YDiQVnSDX37xg62ifnrIOcmA
-	I0XFBCWqkd88CjbddhoZzAzsc5YmzjddR0BSBUfzSw3v+BMUFlVTHrF6GEWHsPu6rdzbQDag2EC
-	IwImFoeX9e2XUyBvVKYBaV4SzUl7SG900oovmMIX/znmM0e4AHsKO5PH62A5VVrYG2nyW2Vdtpd
-	Yhs7IoiyRbtrzUmdAxsPqKShm9aPw6eF4pd4GQx+jIItRZxUI5qSAT8nTWjMq0Mj2IWOmIv27wc
-	O4XrvvuMB/jDXuUKv3UJ+3nmOaNMCF+R5vHxfSHsjECmhLS/Qc37iwGJaZIU/hi0aQ==
-X-Received: by 2002:a05:600c:3ace:b0:456:25aa:e9b0 with SMTP id 5b1f17b1804b1-4587654b626mr107756265e9.16.1753693143735;
-        Mon, 28 Jul 2025 01:59:03 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH6V4rBC01wlsEfxp2PWoqkhk1+LmJwURJ+0I/kuFMiJMXfQcv8SKtfyaP6HZn+rsWH0Gy7cA==
-X-Received: by 2002:a05:600c:3ace:b0:456:25aa:e9b0 with SMTP id 5b1f17b1804b1-4587654b626mr107755945e9.16.1753693143200;
-        Mon, 28 Jul 2025 01:59:03 -0700 (PDT)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.35])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b7811b82c6sm6553721f8f.49.2025.07.28.01.59.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Jul 2025 01:59:02 -0700 (PDT)
-Message-ID: <786688d8a5ab0d5228d271861416d49cc3a8ebc3.camel@redhat.com>
-Subject: Re: [PATCH 1/2] rv: Fix wrong type cast in monitors_show()
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Nam Cao <namcao@linutronix.de>, Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, 	linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Date: Mon, 28 Jul 2025 10:59:01 +0200
-In-Reply-To: <35e49e97696007919ceacf73796487a2e15a3d02.1753625621.git.namcao@linutronix.de>
-References: <cover.1753625621.git.namcao@linutronix.de>
-	 <35e49e97696007919ceacf73796487a2e15a3d02.1753625621.git.namcao@linutronix.de>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
- xyhmqeUWOzFx5P43S1E1dhsrLWgP
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42)
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="RNaYNqKU"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1753693526; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=T8LcCGaO+6i8uxsy1cdV0D7zwVU5uHMOV2qU0c01c9o=;
+	b=RNaYNqKUsi+4GmgioPacoK1ZdJp/0/JtntzhbCmCUYYK7DtR3X4rmxgm7iB/OtxCInbgIkmsHosYdoLt1Kqe7QaSoYQffrZAO6b/ovgmBztrOxsATI32rtDT5NRETsDDt6HQ5ZnIpziopF3BtSBEsWR6soUHASmVvD/eyr4bvsA=
+Received: from 30.246.181.19(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WkGahay_1753693523 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 28 Jul 2025 17:05:25 +0800
+Message-ID: <09cc9d71-5375-4e35-bbd9-5eec7930ddc7@linux.alibaba.com>
+Date: Mon, 28 Jul 2025 17:05:22 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: AzQ4jlfLmfuUqyW8JU-AiLkdZjx_mBPwIEIU4eOJi4k_1753693144
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 1/2] PCI: trace: Add a generic RAS tracepoint for
+ hotplug event
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: rostedt@goodmis.org, lukas@wunner.de, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, ilpo.jarvinen@linux.intel.com,
+ mattc@purestorage.com, Jonathan.Cameron@huawei.com, bhelgaas@google.com,
+ tony.luck@intel.com, bp@alien8.de, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, oleg@redhat.com, naveen@kernel.org,
+ davem@davemloft.net, anil.s.keshavamurthy@intel.com, mark.rutland@arm.com,
+ peterz@infradead.org, tianruidong@linux.alibaba.com
+References: <20250725210913.GA3130903@bhelgaas>
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <20250725210913.GA3130903@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Sun, 2025-07-27 at 19:31 +0200, Nam Cao wrote:
-> Argument 'p' of monitors_show() is not a pointer to struct
-> rv_monitor, it is actually a pointer to the list_head inside struct
-> rv_monitor. Therefore it is wrong to cast 'p' to struct rv_monitor *.
->=20
-> This wrong type cast has been there since the beginning. But it still
-> worked because the list_head was the first field in struct
-> rv_monitor_def. This is no longer true since commit 24cbfe18d55a
-> ("rv: Merge struct rv_monitor_def into struct rv_monitor") moved the
-> list_head, and this wrong type cast became a functional problem.
->=20
-> Properly use container_of() instead.
->=20
-> Fixes: 24cbfe18d55a ("rv: Merge struct rv_monitor_def into struct
-> rv_monitor")
-> Signed-off-by: Nam Cao <namcao@linutronix.de>
-> ---
-> =C2=A0kernel/trace/rv/rv.c | 2 +-
->=20
-> @@ -458,7 +458,7 @@ static int create_monitor_dir(struct rv_monitor
-> *mon, struct rv_monitor *parent)
-> =C2=A0 */
-> =C2=A0static int monitors_show(struct seq_file *m, void *p)
-> =C2=A0{
-> -=09struct rv_monitor *mon =3D p;
-> +=09struct rv_monitor *mon =3D container_of(p, struct rv_monitor,
-> list);
-> =C2=A0
+Hi, Bjorn,
 
-Good catch, thanks! The container_of is the way to go.
-Do you have valid reasons not to move the list_head to the top? It's
-not a big deal but it would save computing and summing the offset. It
-doesn't seem name (the current first element) really needs to stay
-there.
+在 2025/7/26 05:09, Bjorn Helgaas 写道:
+> On Wed, Jul 23, 2025 at 11:31:07AM +0800, Shuai Xue wrote:
+>> Hotplug events are critical indicators for analyzing hardware health,
+>> and surprise link downs can significantly impact system performance and
+>> reliability.
+>>
+>> Define a new TRACING_SYSTEM named "pci", add a generic RAS tracepoint
+>> for hotplug event to help health checks. Add enum pci_hotplug_event in
+>> include/uapi/linux/pci.h so applications like rasdaemon can register
+>> tracepoint event handlers for it.
+>>
+>> The output is like below:
+>>
+>> $ echo 1 > /sys/kernel/debug/tracing/events/pci/pci_hp_event/enable
+>> $ cat /sys/kernel/debug/tracing/trace_pipe
+>>      <...>-206     [001] .....    40.373870: pci_hp_event: 0000:00:02.0 slot:10, event:LINK_DOWN
+>>
+>>      <...>-206     [001] .....    40.374871: pci_hp_event: 0000:00:02.0 slot:10, event:CARD_NOT_PRESENT
+> 
+> I asked about documentation earlier [1], but didn't see any response.
+> I think these tracepoints are important and will be widely used, so it
+> seems like some kind of user guide would be helpful.
 
-Thanks,
-Gabriele
+Sorry for missing your earlier email about documentation.
 
-> =C2=A0=09if (mon->parent)
-> =C2=A0=09=09seq_printf(m, "%s:%s\n", mon->parent->name, mon-
-> >name);
+> Is there any convention for documenting tracepoints somewhere?  It
+> looks like there's some doc in Documentation/trace/?  Should we be
+> adding something there?
+
+Regarding tracepoint documentation conventions, you raise a good point.
+Looking at Documentation/trace/, most of the existing documentation
+focuses on the tracing infrastructure itself rather than individual
+tracepoint events.
+
+For tracepoint events like the ones I'm familiar with (aer_event,
+memory_failure_event, mce_event, mc_event), the typical approach has
+been:
+
+     - Self-documenting through code - The TRACE_EVENT() definitions in
+       include/trace/events/ serve as the primary specification
+     - UAPI headers - Enums and structures in include/uapi/ provide the
+       interface definitions
+     - Commit messages - Detailed explanations of when/why events are
+       generated
+
+However, there are some exceptions where specific events do have
+dedicated documentation:
+
+     - Documentation/trace/events-power.rst - Power management events
+     - Documentation/trace/events-kmem.rst - Kernel memory allocation events
+     - Documentation/trace/events-nmi.rst - NMI events
+     - Documentation/trace/events-msr.rst - MSR (Model Specific Register) events
+
+Given your point about these PCI tracepoints potentially being widely
+used, I think adding documentation would be valuable. Bellow is the RFC
+doc, are you happy with this?
+
+diff --git a/Documentation/trace/events-pci.rst b/Documentation/trace/events-pci.rst
+new file mode 100644
+index 000000000000..f2f7cacba862
+--- /dev/null
++++ b/Documentation/trace/events-pci.rst
+@@ -0,0 +1,72 @@
++===========================
++Subsystem Trace Points: PCI
++===========================
++
++Overview
++========
++The PCI tracing system provides tracepoints to monitor critical hardware events
++that can impact system performance and reliability. These events normally show
++up here:
++
++       /sys/kernel/tracing/events/pci
++
++Cf. include/trace/events/pci.h for the events definitions.
++
++Available Tracepoints
++=====================
++
++pci_hp_event
++------------
++
++Monitors PCI hotplug events including card insertion/removal and link
++state changes.
++::
++
++    pci_hp_event  "%s slot:%s, event:%s\n"
++
++**Event Types**:
++
++* ``LINK_UP`` - PCIe link established
++* ``LINK_DOWN`` - PCIe link lost
++* ``CARD_PRESENT`` - Card detected in slot
++* ``CARD_NOT_PRESENT`` - Card removed from slot
++
++**Example Usage**:
++
++    # Enable the tracepoint
++    echo 1> /sys/kernel/debug/tracing/events/pci/pci_hp_event/enable
++
++    # Monitor events
++    cat /sys/kernel/debug/tracing/trace_pipe
++    <...>-206     [001] .....    40.373870: pci_hp_event: 0000:00:02.0 slot:10, event:LINK_DOWN
++
++    <...>-206     [001] .....    40.374871: pci_hp_event: 0000:00:02.0 slot:10, event:CARD_NOT_PRESENT
++
++
++pcie_link_event
++---------------
++
++Monitors PCIe link speed changes and provides detailed link status information.
++::
++
++    pcie_link_event  "%s type:%d, reason:%d, cur_bus_speed:%s, max_bus_speed:%s, width:%u, flit_mode:%u, status:%s\n"
++
++**Parameters**:
++
++* ``type`` - PCIe device type (4=Root Port, etc.)
++* ``reason`` - Reason for link change:
++
++  - ``0`` - Link retrain
++  - ``1`` - Bus enumeration
++  - ``2`` - Bandwidth controller enable
++  - ``3`` - Bandwidth controller IRQ
++  - ``4`` - Hotplug event
++
++
++**Example Usage**::
++
++    # Enable the tracepoint
++    echo1 > /sys/kernel/debug/tracing/events/pci/pcie_link_event/enable
++
++    # Monitor link events
++    cat /sys/kernel/debug/tracing/trace_pipe
+
+
+> 
+>> Suggested-by: Lukas Wunner <lukas@wunner.de>
+>> Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+>> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+>> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> 
+> Nit: I assume this came from the patch I had applied to pci/trace, but
+> you shouldn't include any sign-offs from people to whom you send
+> patches [2].
+
+Yep, I copied the commit log from your applied patch in pci/trace. I
+will drop your sign-offs.
+
+> 
+> Bjorn
+> 
+> [1] https://lore.kernel.org/all/20250717192950.GA2594528@bhelgaas/#t
+> [2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?id=v6.13#n449
+
+
+Thanks for the guidance!
+
+Best regards,
+Shuai
+
 
