@@ -1,93 +1,176 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f194.google.com (mail-yb1-f194.google.com [209.85.219.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37E63248F4B;
-	Mon, 28 Jul 2025 14:18:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41D24212B3D;
+	Mon, 28 Jul 2025 14:26:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753712312; cv=none; b=tBqPOsTY6uuIC6Xv1kAzsB35VYwEQeh2X8PkDCXzPn/7iNNqF8GGmf1DMKpY+KxCS7rvvMcTeRSa5smPnW7x+H1+FD9OcOeSVrScuiToM8A6LJFCtO/YXXtaTsrUT1VeXDpYT7ZBJ0CfrI0ihzIU5I92sG4OWi9zPqj4k51aFMY=
+	t=1753712800; cv=none; b=DdZEEaSnDZcZROF201LX5PpdtK4v6vSo0QUeXDVZefZQpgKQBtkdms0Yu3j88NNuGvFARfQpXWiuKf876JobPfYEe7YSgw5WI1Yp0vWnakVvtONKk5ABSqZwQHyZ+GauqltO2hOAD2zK+cOuqiOe7mZLfcXPxKlzZWBRyIUCX2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753712312; c=relaxed/simple;
-	bh=ryovv6Yed9UbejW+3E0eLeMGIJ35qqrNA5wEFN5jXXA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kBXMaQpR18qmYqIXcWWykEVkAM6OxFaEm7y77VLnC+gG+1mew0zafhaEJPScBGqveMs/8RF+U9jNI2Fz9ZWfiimUFQIouQtv8YA3PvAtOJK9GkXLMIFGtpyEZyr6Syl471zCcGvqLVyFaSyumIYQeEOX6ZwH4B59Vu3C2gP7dJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=w4FC25YE; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=6rOJRZBJ; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1753712800; c=relaxed/simple;
+	bh=eyUD4zVX3UqOFr/Qm++GfTVu2nBcqq2i0qsiYTDDWAw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Cv3c+FtHAukzqjTzBKu1ebolh7qde5pfZSJ78AN0kcYbvD8r6yGdkG51EQvLfRemYuFRV+0MAfqpPJVQiQM+M9YQQL2cMbXAqa5bi7q0TvEJWK9VBor31xAGyKOGWy2USNYYrgzoTnyBPjAxv8x5CXvX9zmfcyzaFrGNSvrQSIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jd622B/o; arc=none smtp.client-ip=209.85.219.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="w4FC25YE";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="6rOJRZBJ"
-Date: Mon, 28 Jul 2025 16:18:28 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1753712309;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ojfq/l+Y6sJ0dydzcKjQ7bgvQeTepM46LPXKEA0zZgs=;
-	b=w4FC25YEJZ/zBlZ4rzk1llHucrC6ptN2moSli3C3B9ppGseAVOuVKVtICb3UYSu9z55hjd
-	UlfQCKQxvV+ZT3jEcSMEqAjWoIUU3xXPmeja5jZXs7nQ0OAmKJQjNDtv0dUVzl/Vl+mgma
-	iJK49KA62BWKwQNB3r2XUVbMwCxszYPWNzL2PSIxVzJzFhEBbp2SZgkUtKnK6KXSIyVwuK
-	6Srg2uouQkbRCno8McoKk/tkyt5iXFL8p8ec2n7dkSaU64AM37qM+bndnO3U8u5fR1HC3s
-	CUJiZ4twCHAszMr05BH5d5GfDROPYIppeywDCbcbrRSQl5atWrUKY7JbYPky2A==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1753712309;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ojfq/l+Y6sJ0dydzcKjQ7bgvQeTepM46LPXKEA0zZgs=;
-	b=6rOJRZBJTGAnEcNaCTQutU0n66iJamovuIXtDsKjXgtjTcafNIwkd5A9Ao0wKM3X7I7SJQ
-	TJLPfwSfmqgiOOAw==
-From: Nam Cao <namcao@linutronix.de>
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-trace-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Tomas Glozar <tglozar@redhat.com>, Juri Lelli <jlelli@redhat.com>,
-	Clark Williams <williams@redhat.com>,
-	John Kacur <jkacur@redhat.com>
-Subject: Re: [PATCH v5 5/9] rv: Retry when da monitor detects race conditions
-Message-ID: <20250728141828.5hnoS6n1@linutronix.de>
-References: <20250728135022.255578-1-gmonaco@redhat.com>
- <20250728135022.255578-6-gmonaco@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jd622B/o"
+Received: by mail-yb1-f194.google.com with SMTP id 3f1490d57ef6-e8bbb605530so4260314276.0;
+        Mon, 28 Jul 2025 07:26:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1753712798; x=1754317598; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LG4Q2CXpb5TPSjLW0g9Uo8USQ0VGQIBOukvZjuFnm+I=;
+        b=jd622B/oGnoDJSiInyMsbkg1ZZUbA8SBJs/P7KyVakYxu49noZOUQ4VNklGsxZKYE6
+         xMNVUxRm0XoRhcFV1Dtnrxv8Tm044rqihUZHpCo+pqroFYqoYKFyKNPmcbU9Ei20iW90
+         cjFoPRu+4oOjd+YJSiiTLuc0d+yUyB6nfILzfhqMofUL46uUBk4vPVeVeuBbJQ809c8v
+         pQ3ZzJZgFD9Gss+I9ZGykJj2eX84jcNG+PqFTPLf96DThXisNrNwZLH78k/lOTOznjfD
+         UnoRAkOFbL8IPrCoRrFjvsh83UDXC46yUr9HhtaArx4G/TD/LE0JtjSnJJEPGRd4hjXm
+         VWTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753712798; x=1754317598;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LG4Q2CXpb5TPSjLW0g9Uo8USQ0VGQIBOukvZjuFnm+I=;
+        b=wGue5b2+AlykGMVzJao3v7ghODuh6DAdoEAjmu2v6oCi63efOOkD50Vm1oaaEyN9G5
+         j/PrvVkd/r7+j3zcxYU4MHlUvkowVAd1jlpfOZTNWMiYT7TDmzcnaaP3Omn5wPMvcZEE
+         Aeebwrt82dCgE/cGwEtP9BGsSCZR9xNwTO/RR+4OIEQH6ykGuTpxNLGNrK66se0Dc2NI
+         6eWSYVxTEZNcsH1OKkgbKUllck4Nc7P4zV/FgjimqjkzlA55YMc18S8+Po+YlmHT40V4
+         C5KSNU1utGF3eBH7oqCWgKZ85Wozo0wN8RbAp85y0AmsFGXLHrmEcl+OqlBJ+6MqdYRN
+         zaJw==
+X-Forwarded-Encrypted: i=1; AJvYcCUdAJXQxHJic2pcotCyxSVbPunQh7kN5jweXeRJPy/XsefHUCrEqdl1EbLn73yQnLAmIH4=@vger.kernel.org, AJvYcCVfTxN2UokS3OmIB0JXa5OyYSOzFvpLCc6jHiWerOZEgrB9oiVSk7bQrvj94n3V1UjrRExS93lmI75KyjnK@vger.kernel.org, AJvYcCW7ayZt8kDiBhzczMidVj5bH+RSKkpV0OtukFkYoJnEx+GF3o524fS2PlsL2+XsrcUC4iIlYFLRuMLfvqKONsehSM7L@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQBSgbqGAq17aa62s0xcze/74pnRaERJb3aQ+TToJVQP7G+SJV
+	pLmWOmhzFu9geUO93mrMmYN+F+8lH6ddi8BrSt3qfBJKLkH6Bgp1WdVy7+2tw5GuoJNPmglnbEu
+	2XfXjuc1XmpQgKiNqwn0oZ+3VjXFUQyTwXO2KP/s=
+X-Gm-Gg: ASbGncvtWAJ29bmv7nK4h4YgT2hyJF5/Ykc0dYlSKRS2NoGMu9dTMYM1d6D30szWxn3
+	AK0BX/t6lWXv7l+vI453kp0wNTm0XCRs+xYMGXhqSc8sYwrqTATJLnaYchSNCOQaOX7ZSrTVbxI
+	uJEaZlKaXaAMmmY7cn/nJrpHGRkop+U/0IOn6VgISrnx0X6fR8Be8Bw2ITl1M/TXlyZfizvW0BC
+	+Dx80o=
+X-Google-Smtp-Source: AGHT+IF7oO3TKRzzMn/elYJeaf3mlB7NM77NoxnnINrb5WH9Df+24p7rSMGC4b1KHp+hZLSJDPdQOOITwpwGWQ1FN9g=
+X-Received: by 2002:a05:6902:160e:b0:e87:a1f2:5ccb with SMTP id
+ 3f1490d57ef6-e8de2113acemr17709352276.19.1753712798175; Mon, 28 Jul 2025
+ 07:26:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250728135022.255578-6-gmonaco@redhat.com>
+References: <20250728072637.1035818-1-dongml2@chinatelecom.cn> <20250728213502.df49c01629de5fe9b6f15632@kernel.org>
+In-Reply-To: <20250728213502.df49c01629de5fe9b6f15632@kernel.org>
+From: Menglong Dong <menglong8.dong@gmail.com>
+Date: Mon, 28 Jul 2025 22:26:27 +0800
+X-Gm-Features: Ac12FXzloI0foczJuPDfIn9760hHJBVVEX7jn-psOfa7NR9BMDir5SdN42uxhOU
+Message-ID: <CADxym3b=-tGOVqnoPeDb0q3EZZ-DMjkM0fiaSS6=Q+y07azYMg@mail.gmail.com>
+Subject: Re: [PATCH RFC bpf-next v2 0/4] fprobe: use rhashtable for fprobe_ip_table
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: alexei.starovoitov@gmail.com, rostedt@goodmis.org, 
+	mathieu.desnoyers@efficios.com, hca@linux.ibm.com, revest@chromium.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jul 28, 2025 at 03:50:17PM +0200, Gabriele Monaco wrote:
-> DA monitor can be accessed from multiple cores simultaneously, this is
-> likely, for instance when dealing with per-task monitors reacting on
-> events that do not always occur on the CPU where the task is running.
-> This can cause race conditions where two events change the next state
-> and we see inconsistent values. E.g.:
-> 
->   [62] event_srs: 27: sleepable x sched_wakeup -> running (final)
->   [63] event_srs: 27: sleepable x sched_set_state_sleepable -> sleepable
->   [63] error_srs: 27: event sched_switch_suspend not expected in the state running
-> 
-> In this case the monitor fails because the event on CPU 62 wins against
-> the one on CPU 63, although the correct state should have been
-> sleepable, since the task get suspended.
-> 
-> Detect if the current state was modified by using try_cmpxchg while
-> storing the next value. If it was, try again reading the current state.
-> After a maximum number of failed retries, react by calling a special
-> tracepoint, print on the console and reset the monitor.
-> 
-> Remove the functions da_monitor_curr_state() and da_monitor_set_state()
-> as they only hide the underlying implementation in this case.
-> 
-> Monitors where this type of condition can occur must be able to account
-> for racing events in any possible order, as we cannot know the winner.
-> 
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
+On Mon, Jul 28, 2025 at 8:35=E2=80=AFPM Masami Hiramatsu <mhiramat@kernel.o=
+rg> wrote:
+>
+> Hi Menglong,
+>
+> What are the updates from v1? Just adding RFC?
 
-Reviewed-by: Nam Cao <namcao@linutronix.de>
+No, the V1 uses rhashtable, which is wrong, and makes the
+function address unique in the hash table.
+
+And in the V2, I use rhltable instead, which supports duplicate
+keys.
+
+Sorry that I forgot to add the changelog :/
+
+>
+> Thanks,
+>
+> On Mon, 28 Jul 2025 15:22:49 +0800
+> Menglong Dong <menglong8.dong@gmail.com> wrote:
+>
+> > For now, the budget of the hash table that is used for fprobe_ip_table =
+is
+> > fixed, which is 256, and can cause huge overhead when the hooked functi=
+ons
+> > is a huge quantity.
+> >
+> > In this series, we use rhltable for fprobe_ip_table to reduce the
+> > overhead.
+> >
+> > Meanwhile, we also add the benchmark testcase "kprobe-multi-all", which
+> > will hook all the kernel functions during the testing. Before this seri=
+es,
+> > the performance is:
+> >   usermode-count :  875.380 =C2=B1 0.366M/s
+> >   kernel-count   :  435.924 =C2=B1 0.461M/s
+> >   syscall-count  :   31.004 =C2=B1 0.017M/s
+> >   fentry         :  134.076 =C2=B1 1.752M/s
+> >   fexit          :   68.319 =C2=B1 0.055M/s
+> >   fmodret        :   71.530 =C2=B1 0.032M/s
+> >   rawtp          :  202.751 =C2=B1 0.138M/s
+> >   tp             :   79.562 =C2=B1 0.084M/s
+> >   kprobe         :   55.587 =C2=B1 0.028M/s
+> >   kprobe-multi   :   56.481 =C2=B1 0.043M/s
+> >   kprobe-multi-all:    6.283 =C2=B1 0.005M/s << look this
+> >   kretprobe      :   22.378 =C2=B1 0.028M/s
+> >   kretprobe-multi:   28.205 =C2=B1 0.025M/s
+> >
+> > With this series, the performance is:
+> >   usermode-count :  902.387 =C2=B1 0.762M/s
+> >   kernel-count   :  427.356 =C2=B1 0.368M/s
+> >   syscall-count  :   30.830 =C2=B1 0.016M/s
+> >   fentry         :  135.554 =C2=B1 0.064M/s
+> >   fexit          :   68.317 =C2=B1 0.218M/s
+> >   fmodret        :   70.633 =C2=B1 0.275M/s
+> >   rawtp          :  193.404 =C2=B1 0.346M/s
+> >   tp             :   80.236 =C2=B1 0.068M/s
+> >   kprobe         :   55.200 =C2=B1 0.359M/s
+> >   kprobe-multi   :   54.304 =C2=B1 0.092M/s
+> >   kprobe-multi-all:   54.487 =C2=B1 0.035M/s << look this
+> >   kretprobe      :   22.381 =C2=B1 0.075M/s
+> >   kretprobe-multi:   27.926 =C2=B1 0.034M/s
+> >
+> > The benchmark of "kprobe-multi-all" increase from 6.283M/s to 54.487M/s=
+.
+> >
+> > The locking is not handled properly in the first patch. In the
+> > fprobe_entry, we should use RCU when we access the rhlist_head. However=
+,
+> > we can't use RCU for __fprobe_handler, as it can sleep. In the origin
+> > logic, it seems that the usage of hlist_for_each_entry_from_rcu() is no=
+t
+> > protected by rcu_read_lock neither, isn't it? I don't know how to handl=
+e
+> > this part ;(
+> >
+> > Menglong Dong (4):
+> >   fprobe: use rhltable for fprobe_ip_table
+> >   selftests/bpf: move get_ksyms and get_addrs to trace_helpers.c
+> >   selftests/bpf: skip recursive functions for kprobe_multi
+> >   selftests/bpf: add benchmark testing for kprobe-multi-all
+> >
+> >  include/linux/fprobe.h                        |   2 +-
+> >  kernel/trace/fprobe.c                         | 141 ++++++-----
+> >  tools/testing/selftests/bpf/bench.c           |   2 +
+> >  .../selftests/bpf/benchs/bench_trigger.c      |  30 +++
+> >  .../selftests/bpf/benchs/run_bench_trigger.sh |   2 +-
+> >  .../bpf/prog_tests/kprobe_multi_test.c        | 220 +----------------
+> >  tools/testing/selftests/bpf/trace_helpers.c   | 230 ++++++++++++++++++
+> >  tools/testing/selftests/bpf/trace_helpers.h   |   3 +
+> >  8 files changed, 348 insertions(+), 282 deletions(-)
+> >
+> > --
+> > 2.50.1
+> >
+>
+>
+> --
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
