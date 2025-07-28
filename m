@@ -1,63 +1,63 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37BE426D4C2
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 28 Jul 2025 13:51:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8327626FDA6
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 28 Jul 2025 13:51:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753710678; cv=none; b=pGWCtfklu7NiwPADosXKl4b5mr/YZQEZLn2Xz/rUwLl3owkaB6aTWCwOx/p5HHN2e7AiBH3t4rTNVDJVvfSxjuu5+yn7e62MVMj1jGvqAScZcL+GkCD+jkd22Wc19Umi0K2gesRes6O61hPUOOD+OIk23XG1NurH6Dih7KGilvE=
+	t=1753710686; cv=none; b=gACR8Ci8N2cCZ1gWsoRuK9b5r+lpMBAUdj31rFRxDHt/NhNV4IhNE1uVKyybmiXMI3v9unYD4pjLmmVtZwTzKx4gbOEjq/SPwxGMPD/z/uxuNm6bWg424r7M7Ao7libUypC0DKTD5A7XDLP3ewrh4UM075LTH2PX4CNmpfi4RsU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753710678; c=relaxed/simple;
-	bh=4cgXi5vF2RAYIfgs1sttb/VVvVJc3ENJyV25vFqL6Yk=;
+	s=arc-20240116; t=1753710686; c=relaxed/simple;
+	bh=tcYVGnTYebpVvmXlAixElDzsCTRgG95bJ+qn3o5rBa8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NtHDfg/Eev+5TlWK7fwu//b59ZcGGP0xjZIBrX9axr9KHNzAGY+A9UA6KnDrl0nBnTZdJM8deTH3DBI407oI6DSboxahJY1QdRVfTUz6Ca/K3M/9zvVv0LXpGqNgpauxQaMf4UK/N9Lyr6SBNuO3I3WrYONMJy+c96STEEJK9rM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NVhHNSlM; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=SAZScP8qLVkhIm9+ctPV/auRSjGfVjMIPG13Nv0V9XsjnQN613If8zN4XdQYPb4OOGcsOZ1AsQrUSsQZJQ+fMWAwSkwL+qTOOX9AJl8rxYhrNsSJRzyDCxDqnq0jNTmN0N/N2SfLCcMkjdzSzZb++P/98hiW5LNeIYi6ubZeuWk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZPfbUIbQ; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NVhHNSlM"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZPfbUIbQ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1753710675;
+	s=mimecast20190719; t=1753710683;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=2IlUE7d69t8RXx5BxMRoa9TPoYxmIPqvLtlKTQ9zDnE=;
-	b=NVhHNSlMe1lTASlKOZUyD9ZSLOEGvB+l/PfqGRSHakU2euOMwOTMX93LoDEP0uxjkAXa/N
-	RSojcZIAv14pIvTTJLH2bwBkpc5f22XJD7o+2vK9gRHi9x3Nbc7F9OwmorMpqjR6o1JmIZ
-	2wTyJ/vsSGs9C08CEsxR+oSIWMUp8y4=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	bh=8ggg1/uWpZjft1ps6zWyVGe0mNciy3CTx/9uje4r8LY=;
+	b=ZPfbUIbQlEY9ZBMzOOJqmDYt7CzePlsJ7L/J5ywUVuEKlG2Aapf+7ZJTz0b3Nw9nwFZTwk
+	JSuELRZdNsJpbBKLBDop8s2oOv51++awdFhjVxyYPPJiChO5H0inS/EZWawVGXyjPPViqP
+	fow91EneV1s5KMxOmVUHgKdeeOeVVjc=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-371-3gkc8b3zON23YeawdTA5-Q-1; Mon,
- 28 Jul 2025 09:51:13 -0400
-X-MC-Unique: 3gkc8b3zON23YeawdTA5-Q-1
-X-Mimecast-MFC-AGG-ID: 3gkc8b3zON23YeawdTA5-Q_1753710672
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-623-bz0JZUDPO_W2m1nQ2worCg-1; Mon,
+ 28 Jul 2025 09:51:20 -0400
+X-MC-Unique: bz0JZUDPO_W2m1nQ2worCg-1
+X-Mimecast-MFC-AGG-ID: bz0JZUDPO_W2m1nQ2worCg_1753710679
 Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F1B221800263;
-	Mon, 28 Jul 2025 13:51:11 +0000 (UTC)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 15B2419560AE;
+	Mon, 28 Jul 2025 13:51:19 +0000 (UTC)
 Received: from gmonaco-thinkpadt14gen3.rmtit.com (unknown [10.45.224.215])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 3199B18003FC;
-	Mon, 28 Jul 2025 13:51:05 +0000 (UTC)
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id CCFCC1800285;
+	Mon, 28 Jul 2025 13:51:13 +0000 (UTC)
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: linux-kernel@vger.kernel.org,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	linux-trace-kernel@vger.kernel.org
 Cc: Gabriele Monaco <gmonaco@redhat.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
 	Nam Cao <namcao@linutronix.de>,
 	Tomas Glozar <tglozar@redhat.com>,
 	Juri Lelli <jlelli@redhat.com>,
 	Clark Williams <williams@redhat.com>,
 	John Kacur <jkacur@redhat.com>
-Subject: [PATCH v5 5/9] rv: Retry when da monitor detects race conditions
-Date: Mon, 28 Jul 2025 15:50:17 +0200
-Message-ID: <20250728135022.255578-6-gmonaco@redhat.com>
+Subject: [PATCH v5 6/9] sched: Adapt sched tracepoints for RV task model
+Date: Mon, 28 Jul 2025 15:50:18 +0200
+Message-ID: <20250728135022.255578-7-gmonaco@redhat.com>
 In-Reply-To: <20250728135022.255578-1-gmonaco@redhat.com>
 References: <20250728135022.255578-1-gmonaco@redhat.com>
 Precedence: bulk
@@ -69,258 +69,237 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-DA monitor can be accessed from multiple cores simultaneously, this is
-likely, for instance when dealing with per-task monitors reacting on
-events that do not always occur on the CPU where the task is running.
-This can cause race conditions where two events change the next state
-and we see inconsistent values. E.g.:
+Add the following tracepoint:
+* sched_set_need_resched(tsk, cpu, tif)
+    Called when a task is set the need resched [lazy] flag
 
-  [62] event_srs: 27: sleepable x sched_wakeup -> running (final)
-  [63] event_srs: 27: sleepable x sched_set_state_sleepable -> sleepable
-  [63] error_srs: 27: event sched_switch_suspend not expected in the state running
+Remove the unused ip parameter from sched_entry and sched_exit and alter
+sched_entry to have a value of preempt consistent with the one used in
+sched_switch.
 
-In this case the monitor fails because the event on CPU 62 wins against
-the one on CPU 63, although the correct state should have been
-sleepable, since the task get suspended.
+Also adapt all monitors using sched_{entry,exit} to avoid breaking build.
 
-Detect if the current state was modified by using try_cmpxchg while
-storing the next value. If it was, try again reading the current state.
-After a maximum number of failed retries, react by calling a special
-tracepoint, print on the console and reset the monitor.
+These tracepoints are useful to describe the Linux task model and are
+adapted from the patches by Daniel Bristot de Oliveira
+(https://bristot.me/linux-task-model/).
 
-Remove the functions da_monitor_curr_state() and da_monitor_set_state()
-as they only hide the underlying implementation in this case.
-
-Monitors where this type of condition can occur must be able to account
-for racing events in any possible order, as we cannot know the winner.
-
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
 Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 ---
- include/linux/rv.h         |   3 +-
- include/rv/da_monitor.h    | 107 +++++++++++++++++++------------------
- kernel/trace/rv/Kconfig    |   5 ++
- kernel/trace/rv/rv_trace.h |  24 +++++++++
- 4 files changed, 85 insertions(+), 54 deletions(-)
+ include/linux/sched.h                  |  7 ++++++-
+ include/trace/events/sched.h           | 12 ++++++++----
+ kernel/sched/core.c                    | 13 ++++++++++---
+ kernel/trace/rv/monitors/sco/sco.c     |  4 ++--
+ kernel/trace/rv/monitors/scpd/scpd.c   |  4 ++--
+ kernel/trace/rv/monitors/sncid/sncid.c |  4 ++--
+ kernel/trace/rv/monitors/snep/snep.c   |  4 ++--
+ kernel/trace/rv/monitors/tss/tss.c     |  4 ++--
+ 8 files changed, 34 insertions(+), 18 deletions(-)
 
-diff --git a/include/linux/rv.h b/include/linux/rv.h
-index 80731242fe60..14410a42faef 100644
---- a/include/linux/rv.h
-+++ b/include/linux/rv.h
-@@ -10,7 +10,8 @@
- #include <linux/types.h>
- #include <linux/list.h>
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index fabd7fe1a07a..91d1fdbc2f56 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -339,9 +339,11 @@ extern void io_schedule_finish(int token);
+ extern long io_schedule_timeout(long timeout);
+ extern void io_schedule(void);
  
--#define MAX_DA_NAME_LEN	32
-+#define MAX_DA_NAME_LEN			32
-+#define MAX_DA_RETRY_RACING_EVENTS	3
+-/* wrapper function to trace from this header file */
++/* wrapper functions to trace from this header file */
+ DECLARE_TRACEPOINT(sched_set_state_tp);
+ extern void __trace_set_current_state(int state_value);
++DECLARE_TRACEPOINT(sched_set_need_resched_tp);
++extern void __trace_set_need_resched(struct task_struct *curr, int tif);
  
- #ifdef CONFIG_RV
- #include <linux/bitops.h>
-diff --git a/include/rv/da_monitor.h b/include/rv/da_monitor.h
-index ed3c34fe18d6..17fa4f6e5ea6 100644
---- a/include/rv/da_monitor.h
-+++ b/include/rv/da_monitor.h
-@@ -54,23 +54,6 @@ static inline void da_monitor_reset_##name(struct da_monitor *da_mon)				\
- 	da_mon->curr_state = model_get_initial_state_##name();					\
- }												\
- 												\
--/*												\
-- * da_monitor_curr_state_##name - return the current state					\
-- */												\
--static inline type da_monitor_curr_state_##name(struct da_monitor *da_mon)			\
--{												\
--	return da_mon->curr_state;								\
--}												\
--												\
--/*												\
-- * da_monitor_set_state_##name - set the new current state					\
-- */												\
--static inline void										\
--da_monitor_set_state_##name(struct da_monitor *da_mon, enum states_##name state)		\
--{												\
--	da_mon->curr_state = state;								\
--}												\
--												\
- /*												\
-  * da_monitor_start_##name - start monitoring							\
-  *												\
-@@ -127,63 +110,81 @@ static inline bool da_monitor_handling_event_##name(struct da_monitor *da_mon)
-  * Event handler for implicit monitors. Implicit monitor is the one which the
-  * handler does not need to specify which da_monitor to manipulate. Examples
-  * of implicit monitor are the per_cpu or the global ones.
-+ *
-+ * Retry in case there is a race between getting and setting the next state,
-+ * warn and reset the monitor if it runs out of retries. The monitor should be
-+ * able to handle various orders.
-  */
- #define DECLARE_DA_MON_MODEL_HANDLER_IMPLICIT(name, type)					\
- 												\
- static inline bool										\
- da_event_##name(struct da_monitor *da_mon, enum events_##name event)				\
- {												\
--	type curr_state = da_monitor_curr_state_##name(da_mon);					\
--	type next_state = model_get_next_state_##name(curr_state, event);			\
--												\
--	if (next_state != INVALID_STATE) {							\
--		da_monitor_set_state_##name(da_mon, next_state);				\
--												\
--		trace_event_##name(model_get_state_name_##name(curr_state),			\
--				   model_get_event_name_##name(event),				\
--				   model_get_state_name_##name(next_state),			\
--				   model_is_final_state_##name(next_state));			\
--												\
--		return true;									\
-+	enum states_##name curr_state, next_state;						\
-+												\
-+	curr_state = READ_ONCE(da_mon->curr_state);						\
-+	for (int i = 0; i < MAX_DA_RETRY_RACING_EVENTS; i++) {					\
-+		next_state = model_get_next_state_##name(curr_state, event);			\
-+		if (next_state == INVALID_STATE) {						\
-+			cond_react_##name(curr_state, event);					\
-+			trace_error_##name(model_get_state_name_##name(curr_state),		\
-+					   model_get_event_name_##name(event));			\
-+			return false;								\
-+		}										\
-+		if (likely(try_cmpxchg(&da_mon->curr_state, &curr_state, next_state))) {	\
-+			trace_event_##name(model_get_state_name_##name(curr_state),		\
-+					   model_get_event_name_##name(event),			\
-+					   model_get_state_name_##name(next_state),		\
-+					   model_is_final_state_##name(next_state));		\
-+			return true;								\
-+		}										\
- 	}											\
- 												\
--	cond_react_##name(curr_state, event);							\
--												\
--	trace_error_##name(model_get_state_name_##name(curr_state),				\
--			   model_get_event_name_##name(event));					\
--												\
-+	trace_rv_retries_error(#name, model_get_event_name_##name(event));			\
-+	pr_warn("rv: " __stringify(MAX_DA_RETRY_RACING_EVENTS)					\
-+		" retries reached for event %s, resetting monitor %s",				\
-+		model_get_event_name_##name(event), #name);					\
- 	return false;										\
- }												\
+ /**
+  * struct prev_cputime - snapshot of system and user cputime
+@@ -2063,6 +2065,9 @@ static inline int test_tsk_thread_flag(struct task_struct *tsk, int flag)
  
- /*
-  * Event handler for per_task monitors.
-+ *
-+ * Retry in case there is a race between getting and setting the next state,
-+ * warn and reset the monitor if it runs out of retries. The monitor should be
-+ * able to handle various orders.
-  */
- #define DECLARE_DA_MON_MODEL_HANDLER_PER_TASK(name, type)					\
- 												\
- static inline bool da_event_##name(struct da_monitor *da_mon, struct task_struct *tsk,		\
- 				   enum events_##name event)					\
- {												\
--	type curr_state = da_monitor_curr_state_##name(da_mon);					\
--	type next_state = model_get_next_state_##name(curr_state, event);			\
--												\
--	if (next_state != INVALID_STATE) {							\
--		da_monitor_set_state_##name(da_mon, next_state);				\
--												\
--		trace_event_##name(tsk->pid,							\
--				   model_get_state_name_##name(curr_state),			\
--				   model_get_event_name_##name(event),				\
--				   model_get_state_name_##name(next_state),			\
--				   model_is_final_state_##name(next_state));			\
--												\
--		return true;									\
-+	enum states_##name curr_state, next_state;						\
-+												\
-+	curr_state = READ_ONCE(da_mon->curr_state);						\
-+	for (int i = 0; i < MAX_DA_RETRY_RACING_EVENTS; i++) {					\
-+		next_state = model_get_next_state_##name(curr_state, event);			\
-+		if (next_state == INVALID_STATE) {						\
-+			cond_react_##name(curr_state, event);					\
-+			trace_error_##name(tsk->pid,						\
-+					   model_get_state_name_##name(curr_state),		\
-+					   model_get_event_name_##name(event));			\
-+			return false;								\
-+		}										\
-+		if (likely(try_cmpxchg(&da_mon->curr_state, &curr_state, next_state))) {	\
-+			trace_event_##name(tsk->pid,						\
-+					   model_get_state_name_##name(curr_state),		\
-+					   model_get_event_name_##name(event),			\
-+					   model_get_state_name_##name(next_state),		\
-+					   model_is_final_state_##name(next_state));		\
-+			return true;								\
-+		}										\
- 	}											\
- 												\
--	cond_react_##name(curr_state, event);							\
--												\
--	trace_error_##name(tsk->pid,								\
--			   model_get_state_name_##name(curr_state),				\
--			   model_get_event_name_##name(event));					\
--												\
-+	trace_rv_retries_error(#name, model_get_event_name_##name(event));			\
-+	pr_warn("rv: " __stringify(MAX_DA_RETRY_RACING_EVENTS)					\
-+		" retries reached for event %s, resetting monitor %s",				\
-+		model_get_event_name_##name(event), #name);					\
- 	return false;										\
+ static inline void set_tsk_need_resched(struct task_struct *tsk)
+ {
++	if (tracepoint_enabled(sched_set_need_resched_tp) &&
++	    !test_tsk_thread_flag(tsk, TIF_NEED_RESCHED))
++		__trace_set_need_resched(tsk, TIF_NEED_RESCHED);
+ 	set_tsk_thread_flag(tsk,TIF_NEED_RESCHED);
  }
  
-diff --git a/kernel/trace/rv/Kconfig b/kernel/trace/rv/Kconfig
-index 26017378f79b..34164eb4ec91 100644
---- a/kernel/trace/rv/Kconfig
-+++ b/kernel/trace/rv/Kconfig
-@@ -3,12 +3,17 @@
- config RV_MON_EVENTS
- 	bool
+diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
+index 4e6b2910cec3..c08893bde255 100644
+--- a/include/trace/events/sched.h
++++ b/include/trace/events/sched.h
+@@ -882,18 +882,22 @@ DECLARE_TRACE(sched_compute_energy,
+ 	TP_ARGS(p, dst_cpu, energy, max_util, busy_time));
  
-+config RV_MON_MAINTENANCE_EVENTS
-+	bool
-+
- config DA_MON_EVENTS_IMPLICIT
- 	select RV_MON_EVENTS
-+	select RV_MON_MAINTENANCE_EVENTS
- 	bool
+ DECLARE_TRACE(sched_entry,
+-	TP_PROTO(bool preempt, unsigned long ip),
+-	TP_ARGS(preempt, ip));
++	TP_PROTO(bool preempt),
++	TP_ARGS(preempt));
  
- config DA_MON_EVENTS_ID
- 	select RV_MON_EVENTS
-+	select RV_MON_MAINTENANCE_EVENTS
- 	bool
+ DECLARE_TRACE(sched_exit,
+-	TP_PROTO(bool is_switch, unsigned long ip),
+-	TP_ARGS(is_switch, ip));
++	TP_PROTO(bool is_switch),
++	TP_ARGS(is_switch));
  
- config LTL_MON_EVENTS_ID
-diff --git a/kernel/trace/rv/rv_trace.h b/kernel/trace/rv/rv_trace.h
-index d38e0d3abdfd..3af46cd185b3 100644
---- a/kernel/trace/rv/rv_trace.h
-+++ b/kernel/trace/rv/rv_trace.h
-@@ -176,6 +176,30 @@ DECLARE_EVENT_CLASS(error_ltl_monitor_id,
- #include <monitors/sleep/sleep_trace.h>
- // Add new monitors based on CONFIG_LTL_MON_EVENTS_ID here
- #endif /* CONFIG_LTL_MON_EVENTS_ID */
+ DECLARE_TRACE_CONDITION(sched_set_state,
+ 	TP_PROTO(struct task_struct *tsk, int state),
+ 	TP_ARGS(tsk, state),
+ 	TP_CONDITION(!!(tsk->__state) != !!state));
+ 
++DECLARE_TRACE(sched_set_need_resched,
++	TP_PROTO(struct task_struct *tsk, int cpu, int tif),
++	TP_ARGS(tsk, cpu, tif));
 +
-+#ifdef CONFIG_RV_MON_MAINTENANCE_EVENTS
-+/* Tracepoint useful for monitors development, currenly only used in DA */
-+TRACE_EVENT(rv_retries_error,
-+
-+	TP_PROTO(char *name, char *event),
-+
-+	TP_ARGS(name, event),
-+
-+	TP_STRUCT__entry(
-+		__string(	name,	name	)
-+		__string(	event,	event	)
-+	),
-+
-+	TP_fast_assign(
-+		__assign_str(name);
-+		__assign_str(event);
-+	),
-+
-+	TP_printk(__stringify(MAX_DA_RETRY_RACING_EVENTS)
-+		" retries reached for event %s, resetting monitor %s",
-+		__get_str(event), __get_str(name))
-+);
-+#endif /* CONFIG_RV_MON_MAINTENANCE_EVENTS */
- #endif /* _TRACE_RV_H */
+ #endif /* _TRACE_SCHED_H */
  
  /* This part must be outside protection */
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index ec68fc686bd7..b485e0639616 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -1110,6 +1110,7 @@ static void __resched_curr(struct rq *rq, int tif)
+ 
+ 	cpu = cpu_of(rq);
+ 
++	trace_sched_set_need_resched_tp(curr, cpu, tif);
+ 	if (cpu == smp_processor_id()) {
+ 		set_ti_thread_flag(cti, tif);
+ 		if (tif == TIF_NEED_RESCHED)
+@@ -1125,6 +1126,11 @@ static void __resched_curr(struct rq *rq, int tif)
+ 	}
+ }
+ 
++void __trace_set_need_resched(struct task_struct *curr, int tif)
++{
++	trace_sched_set_need_resched_tp(curr, smp_processor_id(), tif);
++}
++
+ void resched_curr(struct rq *rq)
+ {
+ 	__resched_curr(rq, TIF_NEED_RESCHED);
+@@ -5329,7 +5335,7 @@ asmlinkage __visible void schedule_tail(struct task_struct *prev)
+ 	 * switched the context for the first time. It is returning from
+ 	 * schedule for the first time in this path.
+ 	 */
+-	trace_sched_exit_tp(true, CALLER_ADDR0);
++	trace_sched_exit_tp(true);
+ 	preempt_enable();
+ 
+ 	if (current->set_child_tid)
+@@ -6678,7 +6684,8 @@ static void __sched notrace __schedule(int sched_mode)
+ 	struct rq *rq;
+ 	int cpu;
+ 
+-	trace_sched_entry_tp(preempt, CALLER_ADDR0);
++	/* Trace preemptions consistently with task switches */
++	trace_sched_entry_tp(sched_mode == SM_PREEMPT);
+ 
+ 	cpu = smp_processor_id();
+ 	rq = cpu_rq(cpu);
+@@ -6793,7 +6800,7 @@ static void __sched notrace __schedule(int sched_mode)
+ 		__balance_callbacks(rq);
+ 		raw_spin_rq_unlock_irq(rq);
+ 	}
+-	trace_sched_exit_tp(is_switch, CALLER_ADDR0);
++	trace_sched_exit_tp(is_switch);
+ }
+ 
+ void __noreturn do_task_dead(void)
+diff --git a/kernel/trace/rv/monitors/sco/sco.c b/kernel/trace/rv/monitors/sco/sco.c
+index 66f4639d46ac..04c36405e2e3 100644
+--- a/kernel/trace/rv/monitors/sco/sco.c
++++ b/kernel/trace/rv/monitors/sco/sco.c
+@@ -24,12 +24,12 @@ static void handle_sched_set_state(void *data, struct task_struct *tsk, int stat
+ 	da_handle_start_event_sco(sched_set_state_sco);
+ }
+ 
+-static void handle_schedule_entry(void *data, bool preempt, unsigned long ip)
++static void handle_schedule_entry(void *data, bool preempt)
+ {
+ 	da_handle_event_sco(schedule_entry_sco);
+ }
+ 
+-static void handle_schedule_exit(void *data, bool is_switch, unsigned long ip)
++static void handle_schedule_exit(void *data, bool is_switch)
+ {
+ 	da_handle_start_event_sco(schedule_exit_sco);
+ }
+diff --git a/kernel/trace/rv/monitors/scpd/scpd.c b/kernel/trace/rv/monitors/scpd/scpd.c
+index 299703cd72b0..1e351ba52fee 100644
+--- a/kernel/trace/rv/monitors/scpd/scpd.c
++++ b/kernel/trace/rv/monitors/scpd/scpd.c
+@@ -30,12 +30,12 @@ static void handle_preempt_enable(void *data, unsigned long ip, unsigned long pa
+ 	da_handle_start_event_scpd(preempt_enable_scpd);
+ }
+ 
+-static void handle_schedule_entry(void *data, bool preempt, unsigned long ip)
++static void handle_schedule_entry(void *data, bool preempt)
+ {
+ 	da_handle_event_scpd(schedule_entry_scpd);
+ }
+ 
+-static void handle_schedule_exit(void *data, bool is_switch, unsigned long ip)
++static void handle_schedule_exit(void *data, bool is_switch)
+ {
+ 	da_handle_event_scpd(schedule_exit_scpd);
+ }
+diff --git a/kernel/trace/rv/monitors/sncid/sncid.c b/kernel/trace/rv/monitors/sncid/sncid.c
+index 3e1ee715a0fb..c8491f426365 100644
+--- a/kernel/trace/rv/monitors/sncid/sncid.c
++++ b/kernel/trace/rv/monitors/sncid/sncid.c
+@@ -30,12 +30,12 @@ static void handle_irq_enable(void *data, unsigned long ip, unsigned long parent
+ 	da_handle_start_event_sncid(irq_enable_sncid);
+ }
+ 
+-static void handle_schedule_entry(void *data, bool preempt, unsigned long ip)
++static void handle_schedule_entry(void *data, bool preempt)
+ {
+ 	da_handle_start_event_sncid(schedule_entry_sncid);
+ }
+ 
+-static void handle_schedule_exit(void *data, bool is_switch, unsigned long ip)
++static void handle_schedule_exit(void *data, bool is_switch)
+ {
+ 	da_handle_start_event_sncid(schedule_exit_sncid);
+ }
+diff --git a/kernel/trace/rv/monitors/snep/snep.c b/kernel/trace/rv/monitors/snep/snep.c
+index 2adc3108d60c..558950f524a5 100644
+--- a/kernel/trace/rv/monitors/snep/snep.c
++++ b/kernel/trace/rv/monitors/snep/snep.c
+@@ -30,12 +30,12 @@ static void handle_preempt_enable(void *data, unsigned long ip, unsigned long pa
+ 	da_handle_start_event_snep(preempt_enable_snep);
+ }
+ 
+-static void handle_schedule_entry(void *data, bool preempt, unsigned long ip)
++static void handle_schedule_entry(void *data, bool preempt)
+ {
+ 	da_handle_event_snep(schedule_entry_snep);
+ }
+ 
+-static void handle_schedule_exit(void *data, bool is_switch, unsigned long ip)
++static void handle_schedule_exit(void *data, bool is_switch)
+ {
+ 	da_handle_start_event_snep(schedule_exit_snep);
+ }
+diff --git a/kernel/trace/rv/monitors/tss/tss.c b/kernel/trace/rv/monitors/tss/tss.c
+index 0452fcd9edcf..95ebd15131f5 100644
+--- a/kernel/trace/rv/monitors/tss/tss.c
++++ b/kernel/trace/rv/monitors/tss/tss.c
+@@ -27,12 +27,12 @@ static void handle_sched_switch(void *data, bool preempt,
+ 	da_handle_event_tss(sched_switch_tss);
+ }
+ 
+-static void handle_schedule_entry(void *data, bool preempt, unsigned long ip)
++static void handle_schedule_entry(void *data, bool preempt)
+ {
+ 	da_handle_event_tss(schedule_entry_tss);
+ }
+ 
+-static void handle_schedule_exit(void *data, bool is_switch, unsigned long ip)
++static void handle_schedule_exit(void *data, bool is_switch)
+ {
+ 	da_handle_start_event_tss(schedule_exit_tss);
+ }
 -- 
 2.50.1
 
