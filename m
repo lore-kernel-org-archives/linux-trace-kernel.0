@@ -1,293 +1,350 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F1221EFFB7;
-	Mon, 28 Jul 2025 17:03:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753722211; cv=fail; b=u3sOAlHVuYp69GpL7uC6eqwviKwHLRZX2usJAV9IH62SgDvdWLmGrJ8VbWcsqrMhfVqWU/qgtLrxi3921Nh74af0prE2pYURGmwALp8JoVap9e5kcCrW0oaacVT82GqucKYKmLabTu3jbOhn+q0P2ke5p1ppUCmtW8ULwidtQy4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753722211; c=relaxed/simple;
-	bh=9g/arCZyjbxTxbkPhq6Xurz9tw2oHPdJrZc3nBoudzA=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=fTXEHIm1VRO93vJkt+BaWI1TvfgQXkMqjXRkaLh7cJ+Qz7g4gOBoW2UXXG90bVao9f1CjP7Ir6G9rR4IVvST8ELnx6Zgt3HLAzZVFMc7BsLB5rBoCJ0ZQWiP5iM+PDOCSW9B2w+uNsPpIIsyeBgVzH55lTzA+VfV/1sH2Xbg2uQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WFc3q7wd; arc=fail smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WFc3q7wd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1753722209; x=1785258209;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=9g/arCZyjbxTxbkPhq6Xurz9tw2oHPdJrZc3nBoudzA=;
-  b=WFc3q7wd6CkrakDHv9K9jZdjgVaHJWjkXIiJAnQRI391a8XdRfnbQdTU
-   /PVmAHEVCnTSX4GPa4H0XB94F4nPYlqkNdzYr5RqwQf5+4/lsyciKnYsi
-   TizqT86SfiK7zs/qMlIyInB+WSnfKpqv2Hb3F/69mD0gYsn0KzNPk8rmH
-   1t9aRCCD5NXvwlYw0DFSt4jpCBL5/7Z0wKes2m3d1K4ckQiU/Lz4vO5Ry
-   ENT11qWmTCx/Fv5n9WBZcqDlbBDkWcgMCehmGDlqVy0fMiu6RazzkiEDv
-   ZNk1ZCq8//DWggmwqipMyvvoNqt/NrMtcZLCHEFJd0OgrB6UsdTje4BZZ
-   g==;
-X-CSE-ConnectionGUID: VNVfLeAQQdWDfCve2Yy8WQ==
-X-CSE-MsgGUID: osiEL3vJShaV5qa8EHF0QQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11505"; a="59627136"
-X-IronPort-AV: E=Sophos;i="6.16,339,1744095600"; 
-   d="scan'208";a="59627136"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2025 10:03:23 -0700
-X-CSE-ConnectionGUID: a5KwmXkMT1aSTIW/6g56kg==
-X-CSE-MsgGUID: aSWMunEEQ0mkS+3HP7rosg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,339,1744095600"; 
-   d="scan'208";a="166953049"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2025 10:03:20 -0700
-Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.26; Mon, 28 Jul 2025 10:03:20 -0700
-Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.26 via Frontend Transport; Mon, 28 Jul 2025 10:03:20 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (40.107.223.67)
- by edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.26; Mon, 28 Jul 2025 10:03:20 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=bZRuPCB256wYMlG9FKcwKz1gTEVqJpVDf0r12MrjfweEOpgQHF6FJHm+PN6pdKcP3bQTKkf+qaKVVKeioB37oUcPovGKCfJM1hZwuh1GmGizWnOLNDj3DCoEnLNSKQp01d0oDFurfJ91tERPXNTQaxNcDNEl+ZOMWoLt81Q7si7zBEB3FtbfWszLX8cQW1YlzfqOhqzZn0WMkXAMznoo6OjzDoQIhC4/BWns2mi/9w8SNgZIPoMsMRyvteQuobHJimA7xrktg5bJJrbQXRSryrW4C8ohD7fyN9q/3GEWoAICtpOzuJRPRrDWiM+KQIRR/zrHLZfz98gNayixb2NLng==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xfeUUM0ninQ7HnxearednL75mb0ljwoTWUfaUgy3EzY=;
- b=A5GlJeFL0Rvtx7rHCDRTdjY0o0KwlD6IKyuDBX0zSuGhmSjsdoj9PkXanaaA/SDykm5sGHZYtw6kEVjLvk2KgaPAfoNnj/Pen0CxG7BYQze7sl3cA3uW/jYTivIwEFb+L0unOBs0H824TnQnXrb6GPDfAUEBC5FSurIMiW0IDmopvegOAmeG7DixS/CECQdQM88aIX11NJw5C+Q/Ak84H164X38sq9BVufxa7a7zUO4eaPnS0jwxVUizJgHWtGjWodQgJx9gOGQZ13JAiUTSV5MvxYV7RkmSIWnm6D9exk1RgHPCDncfWBcjvG/y0goH+UGOf+hp8COCDY+mwyBy0Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from IA1PR11MB7198.namprd11.prod.outlook.com (2603:10b6:208:419::15)
- by LV2PR11MB6024.namprd11.prod.outlook.com (2603:10b6:408:17a::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8964.25; Mon, 28 Jul
- 2025 17:03:01 +0000
-Received: from IA1PR11MB7198.namprd11.prod.outlook.com
- ([fe80::eeac:69b0:1990:4905]) by IA1PR11MB7198.namprd11.prod.outlook.com
- ([fe80::eeac:69b0:1990:4905%5]) with mapi id 15.20.8964.025; Mon, 28 Jul 2025
- 17:03:00 +0000
-Message-ID: <fd7c39d2-64b4-480e-8a29-abefcdc7d10a@intel.com>
-Date: Mon, 28 Jul 2025 20:02:51 +0300
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/6] perf auxtrace: Support AUX pause and resume with
- BPF
-To: Leo Yan <leo.yan@arm.com>, Peter Zijlstra <peterz@infradead.org>, "Ingo
- Molnar" <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Ian Rogers
-	<irogers@google.com>, KP Singh <kpsingh@kernel.org>, Matt Bobrowski
-	<mattbobrowski@google.com>, Song Liu <song@kernel.org>, Alexei Starovoitov
-	<ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko
-	<andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, "Eduard
- Zingerman" <eddyz87@gmail.com>, Yonghong Song <yonghong.song@linux.dev>,
-	"John Fastabend" <john.fastabend@gmail.com>, Stanislav Fomichev
-	<sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Steven Rostedt
-	<rostedt@goodmis.org>, "Masami Hiramatsu" <mhiramat@kernel.org>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, James Clark
-	<james.clark@linaro.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Mike
- Leach <mike.leach@linaro.org>
-CC: <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<bpf@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>
-References: <20250725-perf_aux_pause_resume_bpf_rebase-v3-0-9fc84c0f4b3a@arm.com>
-Content-Language: en-US
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: c/o Alberga Business Park,
- 6 krs, Bertel Jungin Aukio 5, 02600 Espoo, Business Identity Code: 0357606 -
- 4, Domiciled in Helsinki
-In-Reply-To: <20250725-perf_aux_pause_resume_bpf_rebase-v3-0-9fc84c0f4b3a@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: DB7PR03CA0101.eurprd03.prod.outlook.com
- (2603:10a6:10:72::42) To IA1PR11MB7198.namprd11.prod.outlook.com
- (2603:10b6:208:419::15)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CF3E2E3708;
+	Mon, 28 Jul 2025 21:16:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1753737392; cv=none; b=j6hjZC/MA3LCSAPY4M8HXPnw6CjtSpvLDpFkjJcu3g7OLBGCGiqapDbQlphkguSg1MsbEJ2PhFPelyU/39ovdMiTJ3DnqxsWM23g+47Mq//719IXSP1OF1Qaj03gt2Rc5S8e6SkktEl8YK33KovDt1bd+isIiQSTKSvbLofZNUw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1753737392; c=relaxed/simple;
+	bh=HFTiZX4uOYzagrAujflQdzvNOpIe9PDy5otb3/CV2pQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=JvwnZftU4JJnfMwoZd6AQ+eZclT761XysWz2Di5OS5HmUrHfDkxuuau7tHwPhTyYosqgCn2JH8r/hCwXwggkM4XMwZTsomFG3UfmrOoYKwgtsrhS4/2eZAstuEjM1PWDer2e+IYC4t/ol30D/DeY+ZSvybc5s9hySkHiFxPnmIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf10.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay02.hostedemail.com (Postfix) with ESMTP id 64A8D133BE9;
+	Mon, 28 Jul 2025 21:16:22 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf10.hostedemail.com (Postfix) with ESMTPA id 10D943D;
+	Mon, 28 Jul 2025 21:16:19 +0000 (UTC)
+Date: Mon, 28 Jul 2025 17:15:22 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>, linux-doc@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Mark Rutland <mark.rutland@arm.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Namhyung Kim
+ <namhyung@kernel.org>, Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH] Documentation: tracing: Add documentation about eprobes
+Message-ID: <20250728171522.7d54e116@batman.local.home>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA1PR11MB7198:EE_|LV2PR11MB6024:EE_
-X-MS-Office365-Filtering-Correlation-Id: 26d95155-7c39-44c8-0b2b-08ddcdf89af1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024|921020;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?dDA4Q1dtM0tQQzNNWjBISG9LR1NOVS9YWElQcTY2bGtTY1NxTTd1Y2ZzZHV6?=
- =?utf-8?B?QUpsVzkvTmNDTWJLUEpBYUlVZ1ZCYWE3aWhoOHF3NVpCM0szUCtISXdWRWJF?=
- =?utf-8?B?K3N1TVFZZUM0UG9yMlpaZHZKN1B1NTd3a0NiS1AzbTVnKzhYcThDZk9aMk5X?=
- =?utf-8?B?QjNzb0FuY3Ixa0lSYm1jRzdvR0FjQjUxSWtXT1BsZEg5V3kyRmJlSk5ZR1Uw?=
- =?utf-8?B?cUp0Vkx1RXdiczh4S2NYWUl0d2g0cUtVUFNOSE9mUEtVK0IvUzdjNEVKWWt0?=
- =?utf-8?B?Qi8yR09RWkI5YUZDS1NWMVZDYnZGYXpjbktzL1Q4TllmdmNBVlFnS0FPZElQ?=
- =?utf-8?B?RUd6TjdZZVkvVHIvUkQ2Wk55VzNENmp5TkF5SjRuMnRrcjFkUXM2WTJjNWtz?=
- =?utf-8?B?T2xnNnR6V3hwZ0xRLzROb3o0RzFucWJ6bE1uYWdZanpabzh5SFVpWjRBWEFl?=
- =?utf-8?B?Y1JQYnMxOG82bSt2eXpQWFV4eGZUUmMyamRNRXRMWXE4SzhzV0RTbHJMNFp6?=
- =?utf-8?B?MDdJZ1JzVGVPdmpyRGxuc1h2cVFRZ2lBSThwY3dUQWd1cGFTM2xPU3lPTGhL?=
- =?utf-8?B?SU0wdEhseFdBVkF0SUg4cmhXQmJSeHBTaVZ1TWt2WkRtR2pqMVBTM2VDL1JO?=
- =?utf-8?B?b0xxaUZlL1RINnRRVlFhM3FtQnlhS0h6ZG5HN0Z4MGdWNTgzRmp5Sk9JRmEy?=
- =?utf-8?B?anRnaUdNUXA2eUorR3JSWFRReVEvTVpyU1NoV2IyV0tUTDM4VW9vZUJ2NmVs?=
- =?utf-8?B?MlFCTU5ycHUvZE1rQ0lmU29MYkpVbGRIK3VCNFlzcDhBVnhsY1hLOHVOY1Rn?=
- =?utf-8?B?dlZzVnIwd1ZFZVhrM3p3QlJybEwxWm5RcWdZb0FjWUQ3QlJyKzFHS2p2Y1dB?=
- =?utf-8?B?M1NJejEzK25RRll1N0dIa2N3NUVmZENFREw3MGRxTlh3TWYveEJWaHpHUWg5?=
- =?utf-8?B?b1RabTlLTVIrSHllbzNpRFNiZE9ZcTZoNFZySnVmY3plY21JVTBGMUxBZXQx?=
- =?utf-8?B?SVQyRWI5M2N5K0pOdG5POG5sKzFaTmJpMXM4QnFmYi92NmpiaTA5dUNxektX?=
- =?utf-8?B?aWlLNlZUUUcvWWo5NnZhcjFKdklrYUVSc3JDeWdxd25tL2Z4RXZVUkk4QVpD?=
- =?utf-8?B?S0g1cWI4R0lzSFRUaTQ5L2luSkppU3BFczFuZ25STHo5TkQ1Y3Q3NHh0VWZH?=
- =?utf-8?B?dHJqbnJxWmJOSUlwT1JNWTRCVjV5ZkZyMGZaUzBkdjV2Sm1uOUY5YWxJakRY?=
- =?utf-8?B?M1hKRUplUTZ4RHVkTjBRQjQxRStmMFFmbDFCUmw5SGluM05IYkp3eW4veVp3?=
- =?utf-8?B?WjVqeVk4RDhTUkdSZ01yQmRSc1gwL2FVTXZyUDlyRVJxU1NLdFNTN25sb1ZB?=
- =?utf-8?B?c2JtbHlLb0ZweDNaSlZDY2hxQUNTeWpDNFh2SXVoaEIybC8xRytnUzRaVG1w?=
- =?utf-8?B?bE1KdlFhVHo2SmNqR0pGTnRaY2czUDJ6Y3lWcks0ZjZBNDNtWXdzb0ZkV1BW?=
- =?utf-8?B?TkY2RG4yM2JjbDd2WU5DUG9JYVYyNkFBUHhLUkZySDM3N1ZiRVAveTRrak5m?=
- =?utf-8?B?VHZrSW90WVVtRHFKUDVwRzlSN1lEN2k2ZWJvYXE2N0JXZnhPMmg0UzdPbnd0?=
- =?utf-8?B?Vk9wNGN0WnZDdGEyWHdKR1hmM2ExQ1JnZ3dpejVENGZBVnVQSEU2RjFTK0dS?=
- =?utf-8?B?TGhGd2p4Q0lQSmpBVTJKVnd1VmM0WFljbnl6N2dSM1piK3BpUU45amZiVWs2?=
- =?utf-8?B?SVlub01YK3h1ckdxS0FDMnB3N3RTeGJZMVRmYmttVHBaQjBOd3V0a3RYdHM3?=
- =?utf-8?B?YzZ5REtpUVNNN3MxL2E0OGsyWUNkNkxOcU45WjJCekdDeVZiR2gyenJQMXc1?=
- =?utf-8?B?YmF5RkFJTmI2dVVlaGF0Z0ZHUmkyT1l5blNaOHEvd3diZHBhdUs0dnFmUVVT?=
- =?utf-8?B?a3JUYWQ4d0pzbHFOQm5UN3M4blJZdFFZOGVhQTgrUlVyUndLWHByZE1WYi9r?=
- =?utf-8?B?aHhOcGZ2RC9RPT0=?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR11MB7198.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?NDB1Z0VVbW1PVlU4aVlxaGVPWVJvUUx6b09DNC9sM1hkT3FibW5UbXZzaWds?=
- =?utf-8?B?SGhFdHhubUNSNEloWkZ2ejZLbnQzSFdaRUZnT0JCUGpQeWJ0YXdTNStoR05F?=
- =?utf-8?B?cndvL1IrQW45NW1xOXdSanhYN2o5UFNGTGJ1ZkRjQzFnL2NkclBETnBQalU5?=
- =?utf-8?B?dllsTTk3dTdBanhhZUtKYXYxVFQwb21TWGpiRmE3MXl5YUhLejJwc1NzU0x0?=
- =?utf-8?B?WldWMTZvOElyMi9pc0R2NG50Y1BiMWNXdWg4azJ2QkZpNHAybElUOS95WlRz?=
- =?utf-8?B?SFJOSERxVjE3cHFibnFOUjB2OXlqY2xML29kVktiOU9vSnNiQkw4LythZ0sw?=
- =?utf-8?B?eFJuQTlsRFBOWVNuRmhBdmVqVFk5dmwyMjRqb1YvVVdYUCs1SFJwaE9XN0Ju?=
- =?utf-8?B?b0tQQytaQjJUUFYvZzdXaHcrT0owLzUzRzRBRlVrMnpQOGZsOFJ6SG15eDFL?=
- =?utf-8?B?WlNzMXowc0Y3UGFrVlljRmUrMjNnd242Ky9sV1R0TE5IOWpEM25oUnJVVWFP?=
- =?utf-8?B?M1lzUEgwV3pCTTR2S0Jxb0JCc0ZtMGRjQnFZV0lIWG8wb1BZT2FZVDhHeXNF?=
- =?utf-8?B?Vnl0OERmRms2aCtwQlB1U20xdXI5TkR6M3pLdnd2Rk9UcTdoSjhrQ21rY3Zh?=
- =?utf-8?B?Tnc4VVBHTEpYc2NLUkNzOGs3Q2dHdk9TN0NCd2MvdC91eFE5ckJhY0FRVlo5?=
- =?utf-8?B?ZmRCb0JrUXdtcWFSb3FwWU1EQjJVYmJ3M1JkZUo5T3FXZWRhOEo5WEhrWjRS?=
- =?utf-8?B?OFFYbGplT0twT2JGNDB5anNyYm1VYUM2NmhTZ3dEYXpUQ2FaZGxzL2YyMWl1?=
- =?utf-8?B?RGhmc0RkQmdMZlVNSSt4bGRvN2s3c0dlS1pzeWJ5dnlacFJXMFkzWE9GVUlJ?=
- =?utf-8?B?cTlQNGNpU1dYOGhOazZ0UGpqa1gwRmV3dkozeVRFU1M3ZFpFTmZJWGY0MENy?=
- =?utf-8?B?eFNFU0RINjFJbXh1bW1mbEszb2dlM2RWc3Z5NmZ5aUIzc010NzZ2VFF2c3Fx?=
- =?utf-8?B?czFPYXFuYXNmUklmQTNsWWVMRlBKM2VsdmN0OEFCcHVlWWtJckxaVXhMSi91?=
- =?utf-8?B?V1lSYzZxYlZOT2FDOXc1Nm9GQ1BnNGdseGlhU2FGVi9YaG5HWVlwRWQ2UGpw?=
- =?utf-8?B?dkRmT1JRM2I5aTA0M1dNYllydXlRRTFWb2piRTU4K3A0clA4bzM2VHA3RXNa?=
- =?utf-8?B?ZTFHSExDZUZ2T1hkcURVZkZsNGRNdm0zY3QxWjlQYnVnSVNvdnJsdzVVWUY0?=
- =?utf-8?B?WVhoVDc0a2ZwU2lnN2kzSEtYa0tSREdnY1lhTHRxOWhsYXVHNDROQWg1Vmht?=
- =?utf-8?B?S3NmbXpJVEwreHBMb3NjNGNpeG96RVpKUitSZjJSbkVPTkJtRUphSXdIT0x6?=
- =?utf-8?B?Nkg5aFBQQXZ6aEFzYlU4YXZJSVBxMGRCaGJUZE0wcWdVNit5cG04VlhRQi9m?=
- =?utf-8?B?RlFtbG1GUUp4UmJ4Smpvc3FUZ21SRng2K1IwS1BYVC8wbC85YVh1d2pQSS9n?=
- =?utf-8?B?bUFMUDFzQnhMOXo2WU9NOVVOeXo1ZXBWY3JVdngrejhRUGs2Qi92NHhoWTFU?=
- =?utf-8?B?b0hPTWJCUUNJSm01NWVjZzhIQ3YrVm5IQWsrelBwdXREMGFxZDBTYW9BRXNx?=
- =?utf-8?B?T200VURQdXJLZHhJU3RRd0tSdnRHZnN0VWVpR0ZEVHlqZStoTFJiRnZQWGFu?=
- =?utf-8?B?S3dzV3JZbFZIM1Y5aWxsdWE0SW9zWGMyTWtnY205T3F2eG42NHIxeWpremFa?=
- =?utf-8?B?OGFnVEJiazlaVzlYNXBXZ1VMSnhabmdTRnFNSmh4TmFNZDB0WmpaN0tyL1p6?=
- =?utf-8?B?WXRueHR3N1NZLy9ENGZYb3VUWjVHMEtGbDFxZjhINSttVGk4Tk1iOXFSbi8r?=
- =?utf-8?B?OVp2OGY4eFVrRkNPNTRzT3BySkE5OTcvYm5NaHFaTVE3MjE5YitDWDVkNWJC?=
- =?utf-8?B?TC9hclhZUVg1dDIrNmpNNW1KMlJHWVowbjZtUy9jakx6Q2pHSnRSYzM5NTcx?=
- =?utf-8?B?OUNic0VSQmJheG9oZEZjemg3a0F5NXhsN2dtRDBUaFpPR1lGQWFJMHJtRDZH?=
- =?utf-8?B?M3k2ZDNlN0FkYWxTUlgvN2RQaEVUTnl2c3kvZThVVkIySXMwbUt0bXJWRFpi?=
- =?utf-8?B?dWtMQkpqdDZmajdlRUdGR1JCK2pSNmMzSi9hQWZqZjhuVWZCSVpZOEFpVk1U?=
- =?utf-8?B?OFE9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 26d95155-7c39-44c8-0b2b-08ddcdf89af1
-X-MS-Exchange-CrossTenant-AuthSource: IA1PR11MB7198.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jul 2025 17:03:00.2300
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: OrywR6UuXs/wxez/wHO5HMiedIWq2H257/bCE5mtiCND+8PpQFzx3JKYlKWdTUa0clnxv7CR7llo7/OrY8aApg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR11MB6024
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 10D943D
+X-Stat-Signature: dcijht1rfbptnqhqc46txghp1upbddg7
+X-Rspamd-Server: rspamout06
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18moGIKDlH+ttBoBSMHyG23VNuu/EKAoZI=
+X-HE-Tag: 1753737379-61758
+X-HE-Meta: U2FsdGVkX19M4g31eFgM8oeMHXUdaUHokp4HhWGHwlUuzKbcoi2ynoY0z48T1xrOcBlbR+3wbSdyns28XpAesaKpVacYfIaZ62gO3HWJE58mDBlgSQtpRgHHtIWGgRuX6JhsFhu0j7T/FvO8jznoEjdAcfxaDQRDYtKuhX5UnTnVvQDQzT7LiTydvecMvisB4QJcwL0EQNaasSwGE3eD8h71jOSEl1Tw2euDhQ78KzQMnAREzpxGhGyzNeH9dB7Stj9RlC5dRefTbmJj08QzbLRlltkTscHsikeeyQzX0sFt2t9OhkBzSY3c45ID+/zlf2IQt0bx7aXp1cMArzebfvyk+RiVMllPdxrccyOI5mOpa5PSWh4y6qZc9fgeyZnq
 
-On 25/07/2025 12:59, Leo Yan wrote:
-> This series extends Perf for fine-grained tracing by using BPF program
-> to pause and resume AUX tracing. The BPF program can be attached to
-> tracepoints (including ftrace tracepoints and dynamic tracepoints, like
-> kprobe, kretprobe, uprobe and uretprobe).
+From: Steven Rostedt <rostedt@goodmis.org>
 
-Using eBPF to pause/resume AUX tracing seems like a great idea.
+Eprobes was added back in 5.15, but was never documented. It became a
+"secret" interface even though it has been a topic of several
+presentations. For some reason, when eprobes was added, documenting it
+never became a priority, until now.
 
-AFAICT with this patch set, there is just support for pause/resume
-much like what could be done directly without eBPF, so I wonder if you
-could share a bit more on how you see this evolving, and what your
-future plans are?
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ Documentation/trace/eprobes.rst | 268 ++++++++++++++++++++++++++++++++
+ Documentation/trace/index.rst   |   1 +
+ 2 files changed, 269 insertions(+)
+ create mode 100644 Documentation/trace/eprobes.rst
 
-> 
-> The first two patches are changes in kernel - it adds a bpf kfunc which
-> can be invoked from BPF program.
-> 
-> The Perf tool implements BPF skeleton program, hooks BPF program into a
-> perf record session. This is finished by patches 03 ~ 05.
-> 
-> The patch 06 updates documentation for usage of the new introduced
-> option '--bpf-aux-pause'.
-> 
-> This series has been tested on Hikey960 platform with commands:
-> 
->   perf record -e cs_etm/aux-action=start-paused/ \
->     --bpf-aux-pause="kretprobe:p:__arm64_sys_openat,kprobe:r:__arm64_sys_openat,tp:r:sched:sched_switch" \
->     -a -- ls
-> 
->   perf record -e cs_etm/aux-action=start-paused/ \
->     --bpf-aux-pause="kretprobe:p:__arm64_sys_openat,kprobe:r:__arm64_sys_openat,tp:r:sched:sched_switch" \
->     -i -- ls
-> 
->   perf record -e cs_etm/aux-action=start-paused/ \
->     --bpf-aux-pause="uretprobe:p:/mnt/sort:bubble_sort,uprobe:r:/mnt/sort:bubble_sort" \
->     --per-thread -- /mnt/sort
-> 
-> Note, as the AUX pause operation cannot be inherited by child tasks, it
-> requires to specify the '-i' option for default mode. Otherwise, the
-> tool reports an error to remind user to disable inherited mode:
-> 
->   Failed to update BPF map for auxtrace: Operation not supported.
->     Try to disable inherit mode with option '-i'.
-> 
-> Changes in v3:
-> - Added check "map->type" (Eduard)
-> - Fixed kfunc with guard(irqsave).
-> - Link to v2: https://lore.kernel.org/r/20250718-perf_aux_pause_resume_bpf_rebase-v2-0-992557b8fb16@arm.com
-> 
-> Changes in v2:
-> - Changed to use BPF kfunc and dropped uAPI (Yonghong).
-> - Added support uprobe/uretprobe.
-> - Refined the syntax for trigger points (mainly for trigger action {p:r}).
-> - Fixed a bug in the BPF program with passing wrong flag.
-> - Rebased on bpf-next branch.
-> - Link to v1: https://lore.kernel.org/linux-perf-users/20241215193436.275278-1-leo.yan@arm.com/T/#m10ea3e66bca7418db07c141a14217934f36e3bc8
-> 
-> ---
-> Leo Yan (6):
->       perf/core: Make perf_event_aux_pause() as external function
->       bpf: Add bpf_perf_event_aux_pause kfunc
->       perf: auxtrace: Control AUX pause and resume with BPF
->       perf: auxtrace: Add BPF userspace program for AUX pause and resume
->       perf record: Support AUX pause and resume with BPF
->       perf docs: Document AUX pause and resume with BPF
-> 
->  include/linux/perf_event.h                    |   1 +
->  kernel/events/core.c                          |   2 +-
->  kernel/trace/bpf_trace.c                      |  55 ++++
->  tools/perf/Documentation/perf-record.txt      |  51 ++++
->  tools/perf/Makefile.perf                      |   1 +
->  tools/perf/builtin-record.c                   |  20 +-
->  tools/perf/util/Build                         |   4 +
->  tools/perf/util/auxtrace.h                    |  43 +++
->  tools/perf/util/bpf_auxtrace_pause.c          | 408 ++++++++++++++++++++++++++
->  tools/perf/util/bpf_skel/auxtrace_pause.bpf.c | 156 ++++++++++
->  tools/perf/util/evsel.c                       |   6 +
->  tools/perf/util/record.h                      |   1 +
->  12 files changed, 746 insertions(+), 2 deletions(-)
-> ---
-> base-commit: 95993dc3039e29dabb9a50d074145d4cb757b08b
-> change-id: 20250717-perf_aux_pause_resume_bpf_rebase-174c79b0bab5
-> 
-> Best regards,
+diff --git a/Documentation/trace/eprobes.rst b/Documentation/trace/eprobes.rst
+new file mode 100644
+index 000000000000..c7aa7c867e9e
+--- /dev/null
++++ b/Documentation/trace/eprobes.rst
+@@ -0,0 +1,268 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++=====================
++Eprobe - Event probes
++=====================
++
++:Author: Steven Rostedt <rostedt@goodmis.org>
++
++- Written for v6.17
++
++Overview
++========
++
++Eprobes are dynamic events that are placed on existing events to eiter
++dereference a field that is a pointer, or simply to limit what fields get
++recorded in the trace event.
++
++Eprobes depend on kprobe events so to enable this feature, build your kernel
++with CONFIG_KPROBE_EVENTS=y.
++
++Eprobes are created via the /sys/kernel/tracing/dynamic_events file.
++
++Synopsis of eprobe_events
++-------------------------
++::
++
++  e[:[EGRP/][EEVENT]] GRP.EVENT [FETCHARGS]	: Set a probe
++  -:[EGRP/][EEVENT]				: Clear a probe
++
++ EGRP		: Group name of the new event. If omitted, use "eprobes" for it.
++ EEVENT		: Event name. If omitted, the event name is generated and will
++		  be the same event name as the event it attached to.
++ GRP		: Group name of the event to attach to.
++ EVENT		: Event name of the event to attach to.
++
++ FETCHARGS	: Arguments. Each probe can have up to 128 args.
++  $FIELD	: Fetch the value of the event field called FIELD.
++  @ADDR		: Fetch memory at ADDR (ADDR should be in kernel)
++  @SYM[+|-offs]	: Fetch memory at SYM +|- offs (SYM should be a data symbol)
++  $comm		: Fetch current task comm.
++  +|-[u]OFFS(FETCHARG) : Fetch memory at FETCHARG +|- OFFS address.(\*3)(\*4)
++  \IMM		: Store an immediate value to the argument.
++  NAME=FETCHARG : Set NAME as the argument name of FETCHARG.
++  FETCHARG:TYPE : Set TYPE as the type of FETCHARG. Currently, basic types
++		  (u8/u16/u32/u64/s8/s16/s32/s64), hexadecimal types
++		  (x8/x16/x32/x64), VFS layer common type(%pd/%pD), "char",
++                  "string", "ustring", "symbol", "symstr" and bitfield are
++                  supported.
++
++Types
++-----
++The FETCHARGS above is very similar to the kprobe events as described in 
++Documentation/trace/kprobetrace.rst.
++
++The difference between eprobes and kprobes FETCHARGS is that eprobes has a
++$FIELD command that returns the content of the event field of the event
++that is attached. Eprobes do not have access to registers, stacks and function
++arguments that kprobes has.
++
++If a field argument is a pointer, it may be dereferenced just like a memory
++address using the FETCHARGS syntax.
++
++
++Attaching to dynamic events
++---------------------------
++
++Note that eprobes may attach to dynamic events as well as to normal events. It
++may attach to a kprobe event, a synthetic event or a fprobe event. This is
++useful if the type of a field needs to be changed. See Example 2 below.
++
++Usage examples
++==============
++
++Example 1
++---------
++
++The basic usage of eprobes is to limit the data that is being recorded into
++the tracing buffer. For example, a common event to trace is the sched_switch
++trace event. That has a format of::
++
++	field:unsigned short common_type;	offset:0;	size:2;	signed:0;
++	field:unsigned char common_flags;	offset:2;	size:1;	signed:0;
++	field:unsigned char common_preempt_count;	offset:3;	size:1;	signed:0;
++	field:int common_pid;	offset:4;	size:4;	signed:1;
++
++	field:char prev_comm[16];	offset:8;	size:16;	signed:0;
++	field:pid_t prev_pid;	offset:24;	size:4;	signed:1;
++	field:int prev_prio;	offset:28;	size:4;	signed:1;
++	field:long prev_state;	offset:32;	size:8;	signed:1;
++	field:char next_comm[16];	offset:40;	size:16;	signed:0;
++	field:pid_t next_pid;	offset:56;	size:4;	signed:1;
++	field:int next_prio;	offset:60;	size:4;	signed:1;
++
++The first four fields are common to all events and can not be limited. But the
++rest of the event has 60 bytes of information. It records the names of the
++previous and next tasks being scheduled out and in, as well as their pids and
++priorities. It also records the state of the previous task. If only the pids
++of the tasks are of interest, why waste the ring buffer with all the other
++fields?
++
++An eprobe can limit what gets recorded. Note, it does not help in performance,
++as all the fields are recorded in a temporary buffer to process the eprobe.
++::
++
++ # echo 'e:sched/switch sched.sched_switch prev=$prev_pid:u32 next=$next_pid:u32' >> /sys/kernel/tracing/dynamic_events
++ # echo 1 > /sys/kernel/tracing/events/sched/switch/enable
++ # cat /sys/kernel/tracing/trace
++
++ # tracer: nop
++ #
++ # entries-in-buffer/entries-written: 2721/2721   #P:8
++ #
++ #                                _-----=> irqs-off/BH-disabled
++ #                               / _----=> need-resched
++ #                              | / _---=> hardirq/softirq
++ #                              || / _--=> preempt-depth
++ #                              ||| / _-=> migrate-disable
++ #                              |||| /     delay
++ #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
++ #              | |         |   |||||     |         |
++     sshd-session-1082    [004] d..4.  5041.239906: switch: (sched.sched_switch) prev=1082 next=0
++             bash-1085    [001] d..4.  5041.240198: switch: (sched.sched_switch) prev=1085 next=141
++    kworker/u34:5-141     [001] d..4.  5041.240259: switch: (sched.sched_switch) prev=141 next=1085
++           <idle>-0       [004] d..4.  5041.240354: switch: (sched.sched_switch) prev=0 next=1082
++             bash-1085    [001] d..4.  5041.240385: switch: (sched.sched_switch) prev=1085 next=141
++    kworker/u34:5-141     [001] d..4.  5041.240410: switch: (sched.sched_switch) prev=141 next=1085
++             bash-1085    [001] d..4.  5041.240478: switch: (sched.sched_switch) prev=1085 next=0
++     sshd-session-1082    [004] d..4.  5041.240526: switch: (sched.sched_switch) prev=1082 next=0
++           <idle>-0       [001] d..4.  5041.247524: switch: (sched.sched_switch) prev=0 next=90
++           <idle>-0       [002] d..4.  5041.247545: switch: (sched.sched_switch) prev=0 next=16
++      kworker/1:1-90      [001] d..4.  5041.247580: switch: (sched.sched_switch) prev=90 next=0
++        rcu_sched-16      [002] d..4.  5041.247591: switch: (sched.sched_switch) prev=16 next=0
++           <idle>-0       [002] d..4.  5041.257536: switch: (sched.sched_switch) prev=0 next=16
++        rcu_sched-16      [002] d..4.  5041.257573: switch: (sched.sched_switch) prev=16 next=0
++ 
++Note, without adding the "u32" after the prev_pid and next_pid, the values
++would default showing in hexadecimal.
++
++Example 2
++---------
++
++If syscall events are not enabled but the raw syscall are (systemcall
++events are not normal events, but are created from the raw_syscall events
++within the kernel). In order to trace the openat system call, one can create
++an event probe on top of the raw_syscall event:
++::
++
++ # cd /sys/kernel/tracing
++ # cat events/raw_syscalls/sys_enter/format
++ name: sys_enter
++ ID: 395
++ format:
++	field:unsigned short common_type;	offset:0;	size:2;	signed:0;
++	field:unsigned char common_flags;	offset:2;	size:1;	signed:0;
++	field:unsigned char common_preempt_count;	offset:3;	size:1;	signed:0;
++	field:int common_pid;	offset:4;	size:4;	signed:1;
++
++	field:long id;	offset:8;	size:8;	signed:1;
++	field:unsigned long args[6];	offset:16;	size:48;	signed:0;
++
++ print fmt: "NR %ld (%lx, %lx, %lx, %lx, %lx, %lx)", REC->id, REC->args[0], REC->args[1], REC->args[2], REC->args[3], REC->args[4], REC->args[5]
++
++From the source code, the sys_openat() has:
++::
++
++ int sys_openat(int dirfd, const char *path, int flags, mode_t mode)
++ {
++	return my_syscall4(__NR_openat, dirfd, path, flags, mode);
++ }
++
++The path is the second parameter, and that is what is wanted.
++::
++
++ # echo 'e:openat raw_syscalls.sys_enter nr=$id filename=+8($args):ustring' >> dynamic_events
++
++This is being run on x86_64 where the word size is 8 bytes and the openat
++systemcall __NR_openat is set at 257.
++::
++
++ # echo 'nr == 257' > events/eprobes/openat/filter
++
++Now enable the event and look at the trace.
++::
++
++ # echo 1 > events/eprobes/openat/enable
++ # cat trace
++
++ # tracer: nop
++ #
++ # entries-in-buffer/entries-written: 4/4   #P:8
++ #
++ #                                _-----=> irqs-off/BH-disabled
++ #                               / _----=> need-resched
++ #                              | / _---=> hardirq/softirq
++ #                              || / _--=> preempt-depth
++ #                              ||| / _-=> migrate-disable
++ #                              |||| /     delay
++ #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
++ #              | |         |   |||||     |         |
++              cat-1298    [003] ...2.  2060.875970: openat: (raw_syscalls.sys_enter) nr=0x101 filename=(fault)
++              cat-1298    [003] ...2.  2060.876197: openat: (raw_syscalls.sys_enter) nr=0x101 filename=(fault)
++              cat-1298    [003] ...2.  2060.879126: openat: (raw_syscalls.sys_enter) nr=0x101 filename=(fault)
++              cat-1298    [003] ...2.  2060.879639: openat: (raw_syscalls.sys_enter) nr=0x101 filename=(fault)
++
++The filename shows "(fault)". This is likely because the filename has not been
++pulled into memory yet and currently trace events cannot fault in memory that
++is not present. When a eprobe tries to read memory that has not been faulted
++in yet, it will show the "(fault)" text.
++
++To get around this, as the kernel will likely pull in this filename and make
++it present, attaching it to a synthetic event that can pass the address of the
++filename from the entry of the event to the end of the event, this can be used
++to show the filename when the system call returns.
++
++Remove the old eprobe::
++
++ # echo 1 > events/eprobes/openat/enable
++ # echo '-:openat' >> dynamic_events
++
++This time make an eprobe where the address of the filename is saved::
++
++ # echo 'e:openat_start raw_syscalls.sys_enter nr=$id filename=+8($args):x64' >> dynamic_events
++
++Create a synthetic event that passes the address of the filename to the
++end of the event::
++
++ # echo 's:filename u64 file' >> dynamic_events
++ # echo 'hist:keys=common_pid:f=filename if nr == 257' > events/eprobes/openat_start/trigger
++ # echo 'hist:keys=common_pid:file=$f:onmatch(eprobes.openat_start).trace(filename,$file) if id == 257' > events/raw_syscalls/sys_exit/trigger
++
++Now that the address of the filename has been passed to the end of the
++systemcall, create another eprobe to attach to the exit event to show the
++string::
++
++ # echo 'e:openat synthetic.filename filename=+0($file):ustring' >> dynamic_events
++ # echo 1 > events/eprobes/openat/enable
++ # cat trace
++
++ # tracer: nop
++ #
++ # entries-in-buffer/entries-written: 4/4   #P:8
++ #
++ #                                _-----=> irqs-off/BH-disabled
++ #                               / _----=> need-resched
++ #                              | / _---=> hardirq/softirq
++ #                              || / _--=> preempt-depth
++ #                              ||| / _-=> migrate-disable
++ #                              |||| /     delay
++ #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
++ #              | |         |   |||||     |         |
++              cat-1331    [001] ...5.  2944.787977: openat: (synthetic.filename) filename="/etc/ld.so.cache"
++              cat-1331    [001] ...5.  2944.788480: openat: (synthetic.filename) filename="/lib/x86_64-linux-gnu/libc.so.6"
++              cat-1331    [001] ...5.  2944.793426: openat: (synthetic.filename) filename="/usr/lib/locale/locale-archive"
++              cat-1331    [001] ...5.  2944.831362: openat: (synthetic.filename) filename="trace"
++
++Example 3
++---------
++
++If syscall trace events are available, the above would not need the first
++eprobe, but it would still need the last one::
++
++ # echo 's:filename u64 file' >> dynamic_events
++ # echo 'hist:keys=common_pid:f=filename' > events/syscalls/sys_enter_openat/trigger
++ # echo 'hist:keys=common_pid:file=$f:onmatch(syscalls.sys_enter_openat).trace(filename,$file)' > events/syscalls/sys_exit_openat/trigger
++ # echo 'e:openat synthetic.filename filename=+0($file):ustring' >> dynamic_events
++ # echo 1 > events/eprobes/openat/enable
++
++And this would produce the same result as Example 2.
+diff --git a/Documentation/trace/index.rst b/Documentation/trace/index.rst
+index cc1dc5a087e8..812d9a46dd94 100644
+--- a/Documentation/trace/index.rst
++++ b/Documentation/trace/index.rst
+@@ -37,6 +37,7 @@ the Linux kernel.
+    kprobetrace
+    fprobetrace
+    fprobe
++   eprobes
+    ring-buffer-design
+ 
+ Event Tracing and Analysis
+-- 
+2.47.2
 
