@@ -1,74 +1,145 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB80B223DEE;
-	Tue, 29 Jul 2025 16:33:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE1E3204863;
+	Tue, 29 Jul 2025 17:58:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753806836; cv=none; b=WEnWnP7v7CTaeEILyzWwDefOwETIt4BsED+MNb2hW05k+z0KtuKBp9kneasiyFf39a2YjzRdcPe+FKA0FQuvwOSgrA9dhWxr4AClPQRNDEmyi/J36cG/J+OkSErWmRYwFWQE4Z3LliNHArQNdCxuLEmDG8oaavmDJ/8iW5hsBL4=
+	t=1753811884; cv=none; b=clSY8IBpHcGKsBmNGtBqyfjxkxGGEwnDBCXUYXz0UOcIOxFqdhCflWNy1OpnQV2ijNRYhGspsBmB7zl/UmwxQUt7+ifZSagARXJlbSW5JGmg9VN6QxdKyIKZMAFNduL7R5MagYEVfn/fFwBZBLJa2+bMOg9wq19Besnv+/LBMhU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753806836; c=relaxed/simple;
-	bh=mlzm5Y/eIh/7WFIXyD4N3iWWQqDhGlzk+4BfEoIbVPk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=p1+MHqymea5hKLDNxs/iAa/rhxuseLvpzkOi9yL+IiZJHJesP1lqMU/VWEAKIiBGxOB8J4lH4uZ3cB2QptGzyZG+jbGM4FE5juIKH0op2ByaUFlhZDeH4+wBWkH9IUSCeTqzmBU5uXE3Hr4Ukjck6KQvSM31lTVndC9Yb2RyJkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf04.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay03.hostedemail.com (Postfix) with ESMTP id 79D80B6B4E;
-	Tue, 29 Jul 2025 16:33:52 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf04.hostedemail.com (Postfix) with ESMTPA id B5B4320023;
-	Tue, 29 Jul 2025 16:33:50 +0000 (UTC)
-Date: Tue, 29 Jul 2025 12:33:49 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 1/1] tracing: Remove "__attribute__()" from the type
- field of event format
-Message-ID: <20250729123349.61dbcc92@batman.local.home>
-In-Reply-To: <175376583493.1688759.12333973498014733551.stgit@mhiramat.tok.corp.google.com>
-References: <175376582586.1688759.2122686728240441891.stgit@mhiramat.tok.corp.google.com>
-	<175376583493.1688759.12333973498014733551.stgit@mhiramat.tok.corp.google.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1753811884; c=relaxed/simple;
+	bh=U/74mzNRUhQ2kOiWIB9iaSqV9T8z0T7jtPCPSrkVAsA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U7lpVe2l/DjMNXAilYUL1fAbYhV/47ys3mtVGyth5XbP/5WP/4zDmYNw5fP6dsmzJ+inhsXwGdi3rqVusoDVAmo+wFg1V7rECgjg6OM1c43hEf6PnXS6zQ5ZI/yHERNvNkSBDshOdp/kKRIXoRN57/7f3FtgDFOzN95JZKC/8hc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D24E61516;
+	Tue, 29 Jul 2025 10:57:52 -0700 (PDT)
+Received: from J2N7QTR9R3.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DA4C33F5A1;
+	Tue, 29 Jul 2025 10:57:57 -0700 (PDT)
+Date: Tue, 29 Jul 2025 18:57:40 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Steven Rostedt <rostedt@kernel.org>, Florent Revest <revest@google.com>,
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Menglong Dong <menglong8.dong@gmail.com>,
+	Naveen N Rao <naveen@kernel.org>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	=?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>,
+	Andy Chiu <andybnac@gmail.com>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>
+Subject: Re: [RFC 00/10] ftrace,bpf: Use single direct ops for bpf trampolines
+Message-ID: <aIkLlB7Z7V--BeGi@J2N7QTR9R3.cambridge.arm.com>
+References: <20250729102813.1531457-1-jolsa@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: 1dy7f35ey1dojcgccdeqd6hg964mmpo9
-X-Rspamd-Server: rspamout08
-X-Rspamd-Queue-Id: B5B4320023
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+uTausSgjw/iKLgAU9qyvMNBIHhGdGC78=
-X-HE-Tag: 1753806830-586467
-X-HE-Meta: U2FsdGVkX1+1G4IniNwjWEbNOpOemV0T+JBzFOid2YdBIPU2g37Hj3zXvR2WekyfmLzjilPGc/Ugohl/JFJMN5eNJ3ro8N7Eoemfo6FFDqUIulEE9CjK2AF3Bf4oFHKd3FeHxiR4e76q54MqOdBrGTd6cc/W1dNNnvWALiA6iwtTq6ziMsg5QRojxXAfFSZevBDjFWZm+p+jqIHWxP0mS6LqtJJO36sT7uiSE8VlqoaXDSEYY2c/7CB/3H4XnT8P8e5apmBTfjSVCqwt9ddTK1ww0jrWD2uKjJljWhEkYhcD/ap4DWeGGOq4HmTiXjJUfRwW4prBPdxOGxIe/NjHq2rFyM7DamGu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250729102813.1531457-1-jolsa@kernel.org>
 
-On Tue, 29 Jul 2025 14:10:35 +0900
-"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+Hi Jiri,
 
->  static void update_event_fields(struct trace_event_call *call,
->  				struct trace_eval_map *map)
->  {
->  	struct ftrace_event_field *field;
-> +	const char *eval_string = NULL;
->  	struct list_head *head;
-> +	int len = 0;
->  	char *ptr;
->  	char *str;
-> -	int len = strlen(map->eval_string);
->  
->  	/* Dynamic events should never have field maps */
-> -	if (WARN_ON_ONCE(call->flags & TRACE_EVENT_FL_DYNAMIC))
-> +	if (call->flags & TRACE_EVENT_FL_DYNAMIC)
->  		return;
+[adding some powerpc and riscv folk, see below]
 
-Is there a reason you removed the WARN_ON_ONCE()?
+On Tue, Jul 29, 2025 at 12:28:03PM +0200, Jiri Olsa wrote:
+> hi,
+> while poking the multi-tracing interface I ended up with just one
+> ftrace_ops object to attach all trampolines.
+> 
+> This change allows to use less direct API calls during the attachment
+> changes in the future code, so in effect speeding up the attachment.
 
-Even for the attribute, this shouldn't be called by dynamic events. Or
-do you know of a case?
+How important is that, and what sort of speedup does this result in? I
+ask due to potential performance hits noted below, and I'm lacking
+context as to why we want to do this in the first place -- what is this
+intended to enable/improve?
 
--- Steve
+> However having just single ftrace_ops object removes direct_call
+> field from direct_call, which is needed by arm, so I'm not sure
+> it's the right path forward.
+
+It's also needed by powerpc and riscv since commits:
+
+  a52f6043a2238d65 ("powerpc/ftrace: Add support for DYNAMIC_FTRACE_WITH_DIRECT_CALLS")
+  b21cdb9523e5561b ("riscv: ftrace: support direct call using call_ops")
+
+> Mark, Florent,
+> any idea how hard would it be to for arm to get rid of direct_call field?
+
+For architectures which follow the arm64 style of implementation, it's
+pretty hard to get rid of it without introducing a performance hit to
+the call and/or a hit to attachment/detachment/modification. It would
+also end up being a fair amount more complicated.
+
+There's some historical rationale at:
+
+  https://lore.kernel.org/lkml/ZfBbxPDd0rz6FN2T@FVFF77S0Q05N/
+
+... but the gist is that for several reasons we want the ops pointer in
+the callsite, and for atomic modification of this to switch everything
+dependent on that ops atomically, as this keeps the call logic and
+attachment/detachment/modification logic simple and pretty fast.
+
+If we remove the direct_call pointer from the ftrace_ops, then IIUC our
+options include:
+
+* Point the callsite pointer at some intermediate structure which points
+  to the ops (e.g. the dyn_ftrace for the callsite). That introduces an
+  additional dependent load per call that needs the ops, and introduces
+  potential incoherency with other fields in that structure, requiring
+  more synchronization overhead for attachment/detachment/modification.
+
+* Point the callsite pointer at a trampoline which can generate the ops
+  pointer. This requires that every ops has a trampoline even for
+  non-direct usage, which then requires more memory / I$, has more
+  potential failure points, and is generally more complicated. The
+  performance here will vary by architecture and platform, on some this
+  might be faster, on some it might be slower.
+
+  Note that we probably still need to bounce through an intermediary
+  trampoline here to actually load from the callsite pointer and
+  indirectly branch to it.
+
+... but I'm not really keen on either unless we really have to remove 
+the ftrace_ops::direct_call field, since they come with a substantial
+jump in complexity.
+
+Mark.
+
+
+> 
+> thougts? thanks,
+> jirka
+> 
+> 
+> ---
+> Jiri Olsa (10):
+>       ftrace: Make alloc_and_copy_ftrace_hash direct friendly
+>       ftrace: Add register_ftrace_direct_hash function
+>       ftrace: Add unregister_ftrace_direct_hash function
+>       ftrace: Add modify_ftrace_direct_hash function
+>       ftrace: Export some of hash related functions
+>       ftrace: Use direct hash interface in direct functions
+>       bpf: Add trampoline ip hash table
+>       ftrace: Factor ftrace_ops ops_func interface
+>       bpf: Remove ftrace_ops from bpf_trampoline object
+>       Revert "ftrace: Store direct called addresses in their ops"
+> 
+>  include/linux/bpf.h           |   8 +-
+>  include/linux/ftrace.h        |  51 ++++++++++---
+>  kernel/bpf/trampoline.c       |  94 +++++++++++++-----------
+>  kernel/trace/ftrace.c         | 481 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-----------------------------------------------
+>  kernel/trace/trace.h          |   8 --
+>  kernel/trace/trace_selftest.c |   5 +-
+>  6 files changed, 395 insertions(+), 252 deletions(-)
