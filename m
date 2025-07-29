@@ -1,143 +1,143 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5EE9230BCE;
-	Tue, 29 Jul 2025 08:28:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2F8B284B42
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 29 Jul 2025 08:47:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753777721; cv=none; b=V/oXYeX+UODDBjg0hWGXk4WbyBx0QO8I560iQZbTV+YJNSidaMEhnnGbQZ3nR6ks6ebRaqq1oHwRV1h8FxwiXdKi7qWgJhxOGiw513BIQ+uifXK63WY/rsj4VRDw42boqdLvpRXy461GssVtrFnqiCZ2o/RkFm6xS1FTre5YBg8=
+	t=1753778823; cv=none; b=ZStJPL/zmW6Z2KfEcpZfRQodN3y5G6Q5+LrB0sfp51s5rSLUVutPmU6C9m1qWExyDGViiiyCEDHiWHsp3fWWhFKJKqbmyHbhVZSlygqeYpXj2+lIS8i0EZX9E4ckuGa+AqxyhTmCD5iGX4nNiciDkS/QgrVVwXgDqnSs8F38eqg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753777721; c=relaxed/simple;
-	bh=P+RKJolWrlScvE03/wuLDUcQEOrpyiH5p1dHdVtXVqk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fnH78eB4TNnOJDUOwHBJvj/AS9LeB0mL9WzSW+3Mjcr4TiSFPmrLiifipz7mpgsGkkwmCOM5Hdl9ZYS7h7dxluPVqcZubrZ8OyjC4F8AAvBnL6VIlPdD/3Cwyow5wZK3H1aucGqonsUSjv4JOTKBF9O9ETpoGjgkkzMGpCnnObQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XKsDX+KR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1753778823; c=relaxed/simple;
+	bh=IeklVPatKGQJK226Ipf8izovC/a1rB5bC+YlMlow3Zk=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=P/7cxkGjHQpUHPxilcOq5mVoo8i3lT6KiQcIRrLq23eHaWVfpj1Eg+RZ6iqoInfrw6w1KeefJoJFd6QBna8+WPbnZaFZVb/J5t/UFq63Ore79rhyRIgebZWp0IpFkViYz/wICiSRebi/iL2ivsXO/TG447mQR+VMaSVXs/hA1hI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=c+UhqLXb; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XKsDX+KR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D23CC4CEEF;
-	Tue, 29 Jul 2025 08:28:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753777721;
-	bh=P+RKJolWrlScvE03/wuLDUcQEOrpyiH5p1dHdVtXVqk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XKsDX+KRLzAFuf1kLKdAmDj9dggFsRzjLIQ05RDsi+xPOxdHLALkhNkurvUosgFfb
-	 ftJlhmN/pjoAT4/au8qTUftIBkqDaJhrJ9SmRZi3Ve7JVy7Eg31DCCYSekcyfaaJNQ
-	 JbMb4DIBM9PPiwPI8OZcRcytRu3/nqoGHVDzvP77YimImLNlQUbkZujH5O0JN2T+nM
-	 BtsmRo4XDjlCw0KnWSDM6rk+MZk6QP0uSqf7QW3w7lmJVVGYAkgz4EWZXggXy7tATT
-	 HSfQX1ig9jgw3cwDIYjp+vOlzwygxMw47ojEswZF9ZVaUkapQqAqU4ht2sNRBTvD+l
-	 uIGHhOPpyE+nA==
-Date: Tue, 29 Jul 2025 11:28:14 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>,
-	Michal Wilczynski <michal.wilczynski@intel.com>,
-	Juergen Gross <jgross@suse.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Roger Pau Monne <roger.pau@citrix.com>,
-	David Woodhouse <dwmw@amazon.co.uk>,
-	Usama Arif <usama.arif@bytedance.com>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	Thomas Huth <thuth@redhat.com>, Brian Gerst <brgerst@gmail.com>,
-	kvm@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net,
-	platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
-	linux-mm@kvack.org, Will Deacon <will@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Gavin Shan <gshan@redhat.com>,
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-	James Morse <james.morse@arm.com>,
-	Oza Pawandeep <quic_poza@quicinc.com>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Hans de Goede <hansg@kernel.org>,
-	"Kirill A. Shutemov" <kas@kernel.org>,
-	Marco Elver <elver@google.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Hou Wenlong <houwenlong.hwl@antgroup.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas.schier@linux.dev>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Andy Lutomirski <luto@kernel.org>, Baoquan He <bhe@redhat.com>,
-	Alexander Graf <graf@amazon.com>,
-	Changyuan Lyu <changyuanl@google.com>,
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Jan Beulich <jbeulich@suse.com>, Boqun Feng <boqun.feng@gmail.com>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Bibo Mao <maobibo@loongson.cn>, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, kasan-dev@googlegroups.com,
-	linux-kbuild@vger.kernel.org, linux-hardening@vger.kernel.org,
-	kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: Re: [PATCH v4 2/4] x86: Handle KCOV __init vs inline mismatches
-Message-ID: <aIiGHmw8IJb9vsM5@kernel.org>
-References: <20250724054419.it.405-kees@kernel.org>
- <20250724055029.3623499-2-kees@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c+UhqLXb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1753778819;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=IeklVPatKGQJK226Ipf8izovC/a1rB5bC+YlMlow3Zk=;
+	b=c+UhqLXbo9/EwYeLSVZvdmizQK1WUnWy5ldLBD2uA6dQYvOxXWPUfVuM0eMyr6C2+SyQ9i
+	7wE1M1FiFD/OdE8f4WgbNRfWQtoYgiJ4d6/o6VpEwtc68OuNa1Ovng+xvJesXFUWeT2Zkk
+	7Dq0K5Z+K53tazh8QUCEC3zyll2G8UE=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-658-ToU2PewdOVOx2VGG8F3rtA-1; Tue, 29 Jul 2025 04:46:56 -0400
+X-MC-Unique: ToU2PewdOVOx2VGG8F3rtA-1
+X-Mimecast-MFC-AGG-ID: ToU2PewdOVOx2VGG8F3rtA_1753778815
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-4560b81ff9eso26754425e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 29 Jul 2025 01:46:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753778815; x=1754383615;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=IeklVPatKGQJK226Ipf8izovC/a1rB5bC+YlMlow3Zk=;
+        b=DX7jWjLcfa2R9xNEq0Ddd8dQEkPRea8dA6Am3x0m/J5BN2umzBESMfekkL0vO798wY
+         zqZT5kMeVf0ieT0o/Uuw7/7IK0kcCTZfegiR14mrFzs8V2H3YVhG6z4x2KOK4Ve2d/fa
+         q0+OoaLTOIhDzIPaGSj5yR/lxB1QcI0e67DQEIu93sa4lFoOkDBujP715rpCcFNvcRvy
+         PX2NNfJlhSIO/CfXQkiw0TEGSFFBCd8OU0NR8+IvNINSFA3U7H7Al5eKC5w2wtceBGHw
+         mgOsNn3t1XdNoakzZAJTpZRtDTZ4r7ixNfgZ0+6UbsYz1nax5NXmXNVG+KMKymc44L66
+         GPxg==
+X-Forwarded-Encrypted: i=1; AJvYcCXuP023czZZVu5jRQZoHy/RVUwEm5Pcgz/RcD5ZSe6rZ+sJ+DSkGGXX+euPsfkqX2mhjJIs+EuIRvJDZgDlgf15s5k=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw1LRTM7XNc7c2fXWau2NqJj0Ug5vhyEQ8V2quXwdU9EC0+oGke
+	+cpdds+HcbaxmtvzYcceao6ZvV1Vkday4vahdDLTB591CIGuK6/+2NEekKiyPvjfDIVTYnTQboa
+	7/IH0Mch/vdSOdl6YepB+TY1ZhvUmpy/NSzRBgV+jEHNLv7EumvBfjvNosHgM0A93c2UfIuUMtw
+	==
+X-Gm-Gg: ASbGnct8Yd4s1Ec2vmZAUXH4/42pjyLjMX2q9ODBo6pX0TZ3Yn1vw2mbw6QBOjKsLlF
+	VukTcCNfA2o9navVidxFkP2ihFcl789afmwcOPL3LM8pzjsfrEzkRJzA2Zsqm9BIYO7r/6XG0ig
+	PAd2yqw1hJ1UXp6cPJE7uTpPe/fVVtYiRiy4jZcXq8Fi1EKVWiMmjHxzohANw3qOzEOHQqs9vPw
+	5P3aeszX9DsAyR7uw/eKNzV19NTNm/qHOE91cWY/XuviyYCGRcqYLmsDRLin1YDvD1KuGPI8SnV
+	IjxFXfBJI53CqlH64mVaPQSeV2pPqC8Ra8T4Sa29qVu47ax6m/HUlXTEgK4D6NUF0A==
+X-Received: by 2002:a05:600c:a088:b0:456:1608:c807 with SMTP id 5b1f17b1804b1-4588adc3677mr39809885e9.26.1753778814855;
+        Tue, 29 Jul 2025 01:46:54 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IENm4rGB9QH5ZR2b+CQxX8IopxI/UqZi4w2Zrp9xW5q/tHuwjGtN0qFNHlnuI29FnnDzuK6cw==
+X-Received: by 2002:a05:600c:a088:b0:456:1608:c807 with SMTP id 5b1f17b1804b1-4588adc3677mr39809655e9.26.1753778814422;
+        Tue, 29 Jul 2025 01:46:54 -0700 (PDT)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.42])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b78dd6cb0fsm2299807f8f.29.2025.07.29.01.46.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Jul 2025 01:46:53 -0700 (PDT)
+Message-ID: <76d7e572aae2ccd1699a461aded7a6146f6d8215.camel@redhat.com>
+Subject: Re: [PATCH v5 7/9] rv: Replace tss and sncid monitors with more
+ complete sts
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: Nam Cao <namcao@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, 
+	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Ingo Molnar
+	 <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Tomas Glozar
+	 <tglozar@redhat.com>, Juri Lelli <jlelli@redhat.com>, Clark Williams
+	 <williams@redhat.com>, John Kacur <jkacur@redhat.com>
+Date: Tue, 29 Jul 2025 10:46:51 +0200
+In-Reply-To: <20250728155332.sbkepHj7@linutronix.de>
+References: <20250728135022.255578-1-gmonaco@redhat.com>
+	 <20250728135022.255578-8-gmonaco@redhat.com>
+	 <20250728155332.sbkepHj7@linutronix.de>
+Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
+ keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
+ 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
+ Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
+ xyhmqeUWOzFx5P43S1E1dhsrLWgP
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250724055029.3623499-2-kees@kernel.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: _Y8z_NMbGVhBrpgN_PAl4eUHloOy6TxdZMCBJnrlAMQ_1753778815
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 23, 2025 at 10:50:26PM -0700, Kees Cook wrote:
-> GCC appears to have kind of fragile inlining heuristics, in the
-> sense that it can change whether or not it inlines something based on
-> optimizations. It looks like the kcov instrumentation being added (or in
-> this case, removed) from a function changes the optimization results,
-> and some functions marked "inline" are _not_ inlined. In that case,
-> we end up with __init code calling a function not marked __init, and we
-> get the build warnings I'm trying to eliminate in the coming patch that
-> adds __no_sanitize_coverage to __init functions:
-> 
-> WARNING: modpost: vmlinux: section mismatch in reference: xbc_exit+0x8 (section: .text.unlikely) -> _xbc_exit (section: .init.text)
-> WARNING: modpost: vmlinux: section mismatch in reference: real_mode_size_needed+0x15 (section: .text.unlikely) -> real_mode_blob_end (section: .init.data)
-> WARNING: modpost: vmlinux: section mismatch in reference: __set_percpu_decrypted+0x16 (section: .text.unlikely) -> early_set_memory_decrypted (section: .init.text)
-> WARNING: modpost: vmlinux: section mismatch in reference: memblock_alloc_from+0x26 (section: .text.unlikely) -> memblock_alloc_try_nid (section: .init.text)
-> WARNING: modpost: vmlinux: section mismatch in reference: acpi_arch_set_root_pointer+0xc (section: .text.unlikely) -> x86_init (section: .init.data)
-> WARNING: modpost: vmlinux: section mismatch in reference: acpi_arch_get_root_pointer+0x8 (section: .text.unlikely) -> x86_init (section: .init.data)
-> WARNING: modpost: vmlinux: section mismatch in reference: efi_config_table_is_usable+0x16 (section: .text.unlikely) -> xen_efi_config_table_is_usable (section: .init.text)
-> 
-> This problem is somewhat fragile (though using either __always_inline
-> or __init will deterministically solve it), but we've tripped over
-> this before with GCC and the solution has usually been to just use
-> __always_inline and move on.
-> 
-> For x86 this means forcing several functions to be inline with
-> __always_inline.
-> 
-> Signed-off-by: Kees Cook <kees@kernel.org>
+On Mon, 2025-07-28 at 17:53 +0200, Nam Cao wrote:
+> I gave this a try on riscv64 and observed some errors:
+>=20
+> [=C2=A0 620.696055] rv: monitor sts does not allow event sched_switch on
+> state enable_to_exit
+> [=C2=A0 621.047705] rv: monitor sts does not allow event sched_switch on
+> state enable_to_exit
+> [=C2=A0 642.440209] rv: monitor sts does not allow event sched_switch on
+> state enable_to_exit
+>=20
+> I tested with two user programs:
+>=20
+> =C2=A0=C2=A0=C2=A0 int main() { asm ("unimp"); }
+> =C2=A0=C2=A0=C2=A0 int main() { asm ("ebreak"); }
+>=20
+> The two programs are repeatedly executed:
+>=20
+> =C2=A0=C2=A0=C2=A0 #!/bin/bash
+> =C2=A0=C2=A0=C2=A0 ./test1 &
+> =C2=A0=C2=A0=C2=A0 ./test2 &
+> =C2=A0=C2=A0=C2=A0 # ... repeat lots of time
+>=20
+> Any idea?
 
-For memblock bit:
+Mmh I see what you're doing here..
+Those instructions are supposed to raise some sort of exception in the
+CPU which apparently disables and enables interrupts without raising an
+interrupt handler tracepoint (the discriminator for this monitor).
+This lets the monitor believe we passed the time a switch is possible
+and complain when it actually sees one.
 
-Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+I still couldn't reproduce it on my VM, yet I find the timing a bit
+strange: it's alright we handle the illegal instruction like this, but
+do we really end up doing that while scheduling although it doesn't
+look like an interrupt?!
 
--- 
-Sincerely yours,
-Mike.
+Could you share a bit more about your riscv setup? It might some
+configuration/hardware specific thing.
+
+Thanks for finding this,
+Gabriele
+
