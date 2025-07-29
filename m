@@ -1,353 +1,392 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C941F382
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 29 Jul 2025 00:16:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753748203; cv=fail; b=RTJrCr0UaYthk7/D8Wh9o/MN/ntYG5T8XN7C4Ycj8vDsGX2udRDey2o++9teuFR+r96oJ2uQKly959dT6REY2z9RZYzNILkz7eRb9xvKFt5igpFy0moZCkxvPU7wkRR+0La3pdN62xfx+hXrud5EKVSeRTC3s8ByA+3Kp3NuFTo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753748203; c=relaxed/simple;
-	bh=U+UT+vfMhJ1kAVT3mv/iQf4p6KC5IaRp+OKSOk3gHDI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=IB0bj6c8D/uwPknH+uMMGRQy+UKfb5onp3KfkImAbkCM4JxTFZnZ/VumoFZNPZC+rtKVAApTDYf/K27cxJvsbSoNfL9iK+26FYz/9px1LeqkGi6MCRJl/e5oszjW/MHnhcaGVb1aoVdHgH3fBUHTL2RWbY2jgCz8M1cFULd0UG8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=lQYPTufT; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=GpqPgI6F; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89E198F54;
+	Tue, 29 Jul 2025 01:02:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1753750963; cv=none; b=B6Z1JqO6HfMV5287mft8Tyv7FsEZoGP6tHghW7lBpf8VXbirx0gjcIPWnQAIXzBGYqJXOwRmKH50W/s+Aajt2/vQHjwHuc6VEWhzLfHcZVK9w3AaxfR9gOVG+doNZxGybRwD61Onidt91VbDFpKUVX/SvRzWH/oT49KOya465KU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1753750963; c=relaxed/simple;
+	bh=TgEGiwf6rruNP3HGR3nvXfXCvQIv4ayNFx92So0hmC8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Y4yTrg6f01PaHZUaKhhimyj8yS3qOfi/op23exsaRAV/zG//FU3o0appE630gQuLIdIoGfQn9Vo3XubqrJR9ykFLt67bd3Q8GXXRe/oqn7U+rZv0nbaXWKij/VRKGEMqtBHmCUj/NqbLkO/+fzXMH3EBNBHu6EnCuS/ufWWEjpg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=J1JK/Edz; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="lQYPTufT";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="GpqPgI6F"
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56SLfqLS017992;
-	Tue, 29 Jul 2025 00:16:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2025-04-25; bh=EFUHkSlvXsrYzXvNSj
-	oGBk3BVmiDQU6GxvyNjvpsbk4=; b=lQYPTufTO6EElRnXlFdLJFYc1UUfDC7GLs
-	AKjgFGPpHepTgTEBdOzlaABhQ3BJbPfL9ii+R2t+cXgq2gb4sjrMhlrmiGzSt5Aj
-	dPplXEvzR7AAvReAJEXiZvBKSoU9LIRg0PB09vggwaELaMTh7eA13UvCwsTb8N5p
-	thGKfzc4OrmUBsWwZ+y9XHxF5o/C8/GICLQMnMQ0xQlEU6XhJ7C154EuOANwBQyM
-	YWiUv7sveWwvD5JJTIiPEVfxoLZnPjrjUPXBS6mY/u9ID/KbeJgHrXRn9fZfynVC
-	2LPAo61A8NYzjOUl1MBGFD7/dqbagIspibnXJpHcLkl5KkLO8YJQ==
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 484q4yej8s-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 29 Jul 2025 00:16:22 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 56SNdRLr010485;
-	Tue, 29 Jul 2025 00:16:21 GMT
-Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10on2055.outbound.protection.outlook.com [40.107.94.55])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 484nf92fgn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 29 Jul 2025 00:16:21 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=agtaWpUHhIrTA+2GY/DOuQn8gCvXDkZLckKl8huv/xVcu7Y9WENXcyoewANomRlNugAkOgr4wzpYErFGO2WQZaP7C2DHh6Qx4WzoYwblFYpcxaKjy25elr0ZtTzQ0x6L3me9e3Z6Dt5Rpz1o41Ek76o02ML27Gx9O9JZNNPSrXsRjTq3fTfB55oeJUf4aINgtRBB2HdOM0AM8jalIHc6CMr9PkkZMCXczqBYjuYLEHod9HU2D/CAw854t29GK8fjIfkzarmvTDooGRob1rmlAlQBo3CQuJOLfPzZOpJMuzh6kP6ucpMscPmm23Trr9agTwLSghGOGx0k+1U5hVZUXA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=EFUHkSlvXsrYzXvNSjoGBk3BVmiDQU6GxvyNjvpsbk4=;
- b=UXGt1GJh2huvWAAEOA3w6ni3fqlFRpOz9kMC57cRVCzlFeo5VYcwy4gJH8slhEKexhvAmvnInNryuAliWQsiHQ5Fvm9wheljEyOQD0553VZ7YHBiLUNowZeOh2R+aewtgTB4UwoKJo0jgQxlc25M7+4qcgOIpocKgI1ayo3A7GKmBdXmUp0NKcRIinfEI8xYhGV0N7Kjpxk7u+Ta41zHX7rjt5x94GF+/6QcIZmZqGC25niJPuU5mR2Ddyv6HX4QThTXcaSW7uNGyluZAqDMAxxISYhx/AYVQCUCHVPwd323LxtxseOedaF/nyW8WJfI/SDJsf6euacLBygBqCHbOw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EFUHkSlvXsrYzXvNSjoGBk3BVmiDQU6GxvyNjvpsbk4=;
- b=GpqPgI6Fw/U49WzUyboy7nRywIWiFbtCkQU2UpOQc5CVYaRVvWGDoj7srFrhdAkAXsix49rnZEtgrnxkzKDkFb1z5QIRTMvmkP7DpYoz6vkch8iJbzRCm2ufo/lVqfqQ+GvzYlGqhNPc5kVzFOmXUzeF3wc44FW1uV9PCfCuUN8=
-Received: from CH3PR10MB7329.namprd10.prod.outlook.com (2603:10b6:610:12c::16)
- by BLAPR10MB4947.namprd10.prod.outlook.com (2603:10b6:208:326::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8964.27; Tue, 29 Jul
- 2025 00:16:17 +0000
-Received: from CH3PR10MB7329.namprd10.prod.outlook.com
- ([fe80::f238:6143:104c:da23]) by CH3PR10MB7329.namprd10.prod.outlook.com
- ([fe80::f238:6143:104c:da23%7]) with mapi id 15.20.8964.026; Tue, 29 Jul 2025
- 00:16:16 +0000
-Date: Tue, 29 Jul 2025 09:15:51 +0900
-From: Harry Yoo <harry.yoo@oracle.com>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        "David S . Miller" <davem@davemloft.net>,
-        Andreas Larsson <andreas@gaisler.com>,
-        Jarkko Sakkinen <jarkko@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-        Kees Cook <kees@kernel.org>, Peter Xu <peterx@redhat.com>,
-        David Hildenbrand <david@redhat.com>, Zi Yan <ziy@nvidia.com>,
-        Baolin Wang <baolin.wang@linux.alibaba.com>,
-        "Liam R . Howlett" <Liam.Howlett@oracle.com>,
-        Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
-        Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
-        Xu Xin <xu.xin16@zte.com.cn>,
-        Chengming Zhou <chengming.zhou@linux.dev>,
-        Hugh Dickins <hughd@google.com>, Vlastimil Babka <vbabka@suse.cz>,
-        Mike Rapoport <rppt@kernel.org>,
-        Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
-        Rik van Riel <riel@surriel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
-        Muchun Song <muchun.song@linux.dev>,
-        Oscar Salvador <osalvador@suse.de>, Jann Horn <jannh@google.com>,
-        Pedro Falcato <pfalcato@suse.de>, Johannes Weiner <hannes@cmpxchg.org>,
-        Qi Zheng <zhengqi.arch@bytedance.com>,
-        Shakeel Butt <shakeel.butt@linux.dev>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-sgx@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        nvdimm@lists.linux.dev, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] mm: update core kernel code to use vm_flags_t
- consistently
-Message-ID: <aIgSpAnU8EaIcqd9@hyeyoo>
-References: <cover.1750274467.git.lorenzo.stoakes@oracle.com>
- <d1588e7bb96d1ea3fe7b9df2c699d5b4592d901d.1750274467.git.lorenzo.stoakes@oracle.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d1588e7bb96d1ea3fe7b9df2c699d5b4592d901d.1750274467.git.lorenzo.stoakes@oracle.com>
-X-ClientProxiedBy: SL2P216CA0125.KORP216.PROD.OUTLOOK.COM (2603:1096:101::22)
- To CH3PR10MB7329.namprd10.prod.outlook.com (2603:10b6:610:12c::16)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="J1JK/Edz"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=ghgay6/aPEBbQ06oHoX3n84kOJW4qgBGJMDtfOt2W8s=; b=J1JK/EdzifBtyPBQnXG54zO1SI
+	U3ekq9nhz3f3FG3zCPhULMtuIaFK6IMItw8d+H8T7BvfJ6X9+y1tL3F+rqSwpjIxIcqlMVf/zO6kO
+	/awhnY+TiFZLreHAIhgEIDtOzjPOKddq9D5YqY6ClA+DJk970Bdc4SCii8Abf+bPseV2zCUlenpjN
+	ylJBNGm7qRpSJp/ZP22Dj+v1d34jYPNkV9yVBxxMtoOnH+V2VWboX5tS8XtB/FZyF6xTWHLACGLyI
+	LZ9Yt3G+KbfX5TvYgmAIT2cgAlZmIwVThXuiwLKZi3QSgVXoBI4UoUU84B8wYv3c3H78nolx8yoMy
+	fOZ36R0g==;
+Received: from [50.53.25.54] (helo=[192.168.254.17])
+	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1ugYjm-0000000FfnB-3UqD;
+	Tue, 29 Jul 2025 01:02:38 +0000
+Message-ID: <f6cd51e6-c025-4182-8df8-a621379af6bf@infradead.org>
+Date: Mon, 28 Jul 2025 18:02:37 -0700
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR10MB7329:EE_|BLAPR10MB4947:EE_
-X-MS-Office365-Filtering-Correlation-Id: e142fa97-0acb-4184-459f-08ddce35226b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?Du7MGzMVwnIGpOA53teIT/Gehrmpj8NxLnAwptECrI7gE76mqeGOlmjoxsJ6?=
- =?us-ascii?Q?JWu/d6eF++8toBekKrkihX+LB5uEexUsDroGe0kysavKmxNqWNH87Oh72d9V?=
- =?us-ascii?Q?kqOl2QP99lUFNHa35550Z74ZHmkNLnQ9/jJPC002ZZOU2sAjeIoLXhA/l3KQ?=
- =?us-ascii?Q?qeH55x1DlkfolT6zbFbPkmfT5L52h+qMhhi8s890FQ0P+/Rr6Ww9Ro+DG9LB?=
- =?us-ascii?Q?gS2+7OVHAc0pBPL8shPaaE2IzMjU2PkkhoumwgjmWjmY3daQQ4mwq19ornG4?=
- =?us-ascii?Q?9Ktm9F7YvUfAzcijciq4dnSAvBYTKq55BT15u3xW5PYDDyylLZ30ZLq4H2IU?=
- =?us-ascii?Q?ZhjDMokLnPTNpcnkLihi4q0Rk/kgIi6JOLOD//ritJK4xs7uFGfm08MHURGq?=
- =?us-ascii?Q?GPnTXIS8n2mToBfq159uWXCHT7IXF9jz+fzmTST7JngInCoiJUUqM5Dcf/Gd?=
- =?us-ascii?Q?ZQgx5fWqavKRm6YvL2F994S9wkBBb8WzOF3ZuM1RTNpMBXpNtxokHR4whJJf?=
- =?us-ascii?Q?Gps8vuh5GYxrMKRD7eH94MEa0nkXR2YTCtg0bJ+tjFEnURtTa9yUWzplUKTw?=
- =?us-ascii?Q?QEJfo8fOI2LV1K9w5ytjVuy2AoVLgdugoU41nUx5zU9Q8JeOsUD+kQvnbeXi?=
- =?us-ascii?Q?HbB509YeVvIkFbDo6dIhPyypcBN1j9486FcDlMIT6nPZ2l9yfZ/UwwZfFJtb?=
- =?us-ascii?Q?UkND/n+4L6kWhqtLS8kVSbY84Si5svc6stBkqHJGicdwN/1jDexgupY3bSB0?=
- =?us-ascii?Q?bPi4c+2ItYQNHRsa5cWRXdwRC46R3ah53Sp4JU78IGra1eVlIdWmRMU3jgRv?=
- =?us-ascii?Q?PiGQMQAKqxPE8vX0UDtStXUrszYM9q/sGdOZMaE0shxsKMhTlBYvibRg9tKw?=
- =?us-ascii?Q?DgLxmbznSSTho49+tklw6bylx1Bp4YQqlAwdlUoFfTZLUYWBXtgebSurlPZ8?=
- =?us-ascii?Q?3fzeZpfsHhchGs8t68YSCHftwib3cDpXfdOkFi4W+wcPAXXs85i5RbshEXnv?=
- =?us-ascii?Q?mvB/N5GONyHIjQdfBK+HnZv9ifYeqAYsr/h4MlO7L9Hvdij+pT0tVwrDiqi4?=
- =?us-ascii?Q?pcitFIpvz30oQtPqzd80cZf9wxCvePSU0z9oXy09fINMKvdEusJtWddc0ejC?=
- =?us-ascii?Q?KFVd8sZdRYNvkH/sunxDCaB6UAmdHEJgq63CMlo2BPrOisksxnlOdHLWnAem?=
- =?us-ascii?Q?MMbz9tWZEr5rocOAVFuYugTEkH52qXq8W4CL2kMduzFg1Y29HlHsdBqli9kv?=
- =?us-ascii?Q?AosJjFAtzqa1jSs4Q4UmlFhvQs7Re/cst3ERfe0AbnonvcAljUCEZud7MPwS?=
- =?us-ascii?Q?j/BLPz8xPk9SMFjy+j58Q+OxOoB2gABMnuTsnOPGiGdC9IZX4+1EtnZo2tRb?=
- =?us-ascii?Q?vTynjUc61S5rGxNVb5HqH7tPSXZhp5fxzkTcXpHi1mblwcPy31AIiwdKoOmu?=
- =?us-ascii?Q?0j8PMXeB5n0=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR10MB7329.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?DedAmEmI8GnLrNgIu0+Qwtyd0EIQSrtvqw5/Ug9xYH89ncrTt1Vg5scMzIqy?=
- =?us-ascii?Q?EfBfDRhyBMkDRoyljLVXYIVuYUUSVRNp8Z+99/dzXW7/Jla+HgkGf0yUb8Ni?=
- =?us-ascii?Q?AtUIaTkTZFt0lLSQ9SnRhIl9In0KGZ4/vSfmRcYVNdbGUk4haODGhoUO1Hka?=
- =?us-ascii?Q?bSYNF8Tg/oKfIQkIwPysFw/AJmfflt0f6Z5PoMdv9Ln4vmlXPX5bWi1Midj/?=
- =?us-ascii?Q?gUpBbjpu26daycK3zZjBgaVnn9t8WXu0u++YcNCUsNFSkulNiiqJF3RNctaz?=
- =?us-ascii?Q?FU4Zf5Er0C8l8Sh7/ZlzeMcaZyV2kT1nu2eH7F3OOtHZgst54D03TVbh3EH8?=
- =?us-ascii?Q?/Mbj3mn9XaqizARY1OKBfLI4rh1PPQtQK+rYxYUI/CXokzDPEe6cF70BqBiw?=
- =?us-ascii?Q?hJmaGw4guTjUC9GgDypNCzQR3IVclQZ67TxQNxBougD7zNgxbQnWzR5chhZO?=
- =?us-ascii?Q?sWL30QZ7g90bwQoTG2GQvbJ1G2GuUzWsBoptyXEaDWOihKahSJuLgtEDL+6Y?=
- =?us-ascii?Q?9Q3xo6WeDRhqNAdYty37hSypiwjlTbxny7x3aF6fp/pAVr+e+YdmgOMRMfwz?=
- =?us-ascii?Q?PrTmpovmcXHnyXkaURQvzJj1fUBavp6GPOq0s581VoKJC2Vl5i2naQ3YCTMI?=
- =?us-ascii?Q?DVOSjhA9MSOtMKjdjmBQifwskxecTUgCjtwall9RUHLnOWC1zWdzdf1gjkWn?=
- =?us-ascii?Q?+vd8Xmryv3CxlRKQvoSbSW3iiYR2sEUPL87azFVoVBIB0TXKAdUZzv7AKPv+?=
- =?us-ascii?Q?fJEoNM1/eTEhnmG5KZdByZIMTX/ZaPKhUzBRZs5Tz2tykPLR0L1g1HYajyDD?=
- =?us-ascii?Q?8SzsT0o+f7AKvcKFAq/PUSlPQdp5CFDqdCUn/C6SZwD5rq2LqafU2tW0XXce?=
- =?us-ascii?Q?dBHQejYUuKh5jjfxrPv1lm8oxGq5a1DAHY+W1JjsqL4oU+fUL1jBbctrAJIn?=
- =?us-ascii?Q?SE8oaWXYxOoV5sZaukGTPVOAels4CUarzJED8LtWCwR2qkqLgyNwBj4wfuM9?=
- =?us-ascii?Q?qeANCy0LQ5I/K7GBJmZ3vDmWlD7jTSaZiaYEE0o5dNKtp2aFoVMk2YHFCLbq?=
- =?us-ascii?Q?+8MOZsUNlta49Xu5kRDL1cBPCq5+AnUcrVMlV56qxUGT7i33IwA/683OsT7A?=
- =?us-ascii?Q?ElEccjCQqBd3FcrY4eKnx1U3saVFLBx240eDtNHXU374Ax49hQJrvpRsOSS3?=
- =?us-ascii?Q?xRTxejKGZD6ZiCGc69JtlRw7YJSFAx6gIRAgdoGcqXqFlGRZwkKbwYNLP7af?=
- =?us-ascii?Q?9z4qghNpaPuwpZSjgnrWSpmyTd07cbNc0QUH9diNVcngInOLUbkwRk7UAxG4?=
- =?us-ascii?Q?gZ0sMkLXxGkG2/WRuBQ5o0FIqcgU792rrNaUxiheoaNUorW0DXjaWVSnQGgS?=
- =?us-ascii?Q?2NHkbUWVeds0dGVrYA9dxNKPs+Kw0ADJ+U4xW/hfOp8khbfLjDqoUBsmGMT6?=
- =?us-ascii?Q?9YIMSzY5jOLizlIIxfh2je5XkTi/RGK3VdJTG+lpg6m3midfo+NBMapx0OjP?=
- =?us-ascii?Q?t9/16rwprQ6/+2LWj/feSZkKXfC0ZjAknpU40hHYQAQoGwKLC8SDp5dfkg0S?=
- =?us-ascii?Q?vK0fN3go6/QD0xq8IXmM+IssJRBhNJk4fQC893t/?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	YQe21n/j+QHFOm9BrdLUZ2u/2pCaZxPEzH58gO4fNs9A5pcbV1GrpTHDnD27/GODRvLmKiCM5MMNSko6h7Dyxo7f2+w5HW8MLUGvsjV/EB4haxnqo0mm/scFp3i2agxQGXo7UwNhLMMoyrvFeFrNFuRyPhUpdd/J97GcI/zzyT7pFBwGZ6sH6AmnjAxr2yisnZXmkKyxzdAo4urGuwBQyt2cxh1zJNH8bkm7JsvAOQMVGaFYsB50HD8vu1XJ6bAlyB2FkZHXiLITtAGM9II2NuxDmKb1XEQYYH+zdyxohggt00XLy47M63u0EmXOe6l8TLYogFAl5HJrTMisymetHlda8CWcW7FGYBbiBkDfM3HIj62WpaSu6xYS55JtB5SuwZC8Bnq6wM45DYzPCWMGXQxFUT0DMkUuV5Gv6MrXYOcb8iRIIkqhkY/VshPrcU0Te9MjW6dJVgLN6HzQPlDuzv2xIXvz4XRDwpHJGFwopU2aJyuIL8HQxmV9FTC4Njm3z+zEm1/I5i97mg4FN6jbUMWIMmi5z0e9e/yZk2TuRHH41W6it3Hdy+yU0rrOCaiMOewF54mWk8c+0Io9Rzb1pFK9gfa0UEiE8gRXkqLVc2w=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e142fa97-0acb-4184-459f-08ddce35226b
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR10MB7329.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jul 2025 00:16:16.6079
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: GTJj1zA9f2rMCSbATjABS8wuYnpGHx/KJQsDWurxhE7FFLxfIDlQGYFm120gIZQDaUs4TBVVDOdNyAvJV6NC3w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BLAPR10MB4947
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-07-28_05,2025-07-28_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=999
- suspectscore=0 malwarescore=0 bulkscore=0 spamscore=0 mlxscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2505160000 definitions=main-2507290000
-X-Proofpoint-GUID: h8WK5edXueKMJJdLzIeZx4d3S04H_Zbu
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzI5MDAwMCBTYWx0ZWRfX/DcVuKkFbjsK
- x10JSbNxNKGmoXcEem/XcJe0JDOXJRcV08k5xwWc+Jt4B/KnnSD+46XVDTU19RICiIAgKEv/B/c
- bIu7Jxe+BdbkkHspbzErjPkqBMmLt7R3fhpUDx2U00fLAshy8Dv4mblczRAJ4a8AM5P4JWY6uC8
- K2hk3YQgHZZMAaS56aZIxuehhqav3eXU4kC/A791hGBSvXd9R25DdnCQz0YSBbOXx+Lwmb0zvhd
- 3sRGndcGsNWqszqfcgMfeo9yg3qIexnOgml1O3+YweM7gefE+zA3O7De546tMMyJsOUua7mUagD
- BQUvAIeyUpsGVjU2mL6ORISDLzGTNYqvpU7JDCVbUHoG5MNkSNnZTmtng1D2ok19Qe1dR2mQHE3
- NkC7eRO9q+rDRICLr8MJC6wCv1rbM+uZMGNPD9hgwno2pmM6r5DV1DPuFcbLcmBDIgzsJjIV
-X-Authority-Analysis: v=2.4 cv=ZMjXmW7b c=1 sm=1 tr=0 ts=688812d6 b=1 cx=c_pps
- a=e1sVV491RgrpLwSTMOnk8w==:117 a=e1sVV491RgrpLwSTMOnk8w==:17
- a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
- a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
- a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=Wb1JkmetP80A:10 a=GoEa3M9JfhUA:10 a=yPCof4ZbAAAA:8 a=Bd0Lw-J_z1rzUkiQq3QA:9
- a=CjuIK1q_8ugA:10 cc=ntf awl=host:13604
-X-Proofpoint-ORIG-GUID: h8WK5edXueKMJJdLzIeZx4d3S04H_Zbu
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] Documentation: tracing: Add documentation about eprobes
+To: Steven Rostedt <rostedt@goodmis.org>, LKML
+ <linux-kernel@vger.kernel.org>,
+ Linux trace kernel <linux-trace-kernel@vger.kernel.org>,
+ linux-doc@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Namhyung Kim
+ <namhyung@kernel.org>, Jonathan Corbet <corbet@lwn.net>
+References: <20250728171522.7d54e116@batman.local.home>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20250728171522.7d54e116@batman.local.home>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jun 18, 2025 at 08:42:53PM +0100, Lorenzo Stoakes wrote:
-> The core kernel code is currently very inconsistent in its use of
-> vm_flags_t vs. unsigned long. This prevents us from changing the type of
-> vm_flags_t in the future and is simply not correct, so correct this.
+
+
+On 7/28/25 2:15 PM, Steven Rostedt wrote:
+> From: Steven Rostedt <rostedt@goodmis.org>
 > 
-> While this results in rather a lot of churn, it is a critical pre-requisite
-> for a future planned change to VMA flag type.
+> Eprobes was added back in 5.15, but was never documented. It became a
+> "secret" interface even though it has been a topic of several
+> presentations. For some reason, when eprobes was added, documenting it
+> never became a priority, until now.
 > 
-> Additionally, update VMA userland tests to account for the changes.
-> 
-> To make review easier and to break things into smaller parts, driver and
-> architecture-specific changes is left for a subsequent commit.
-> 
-> The code has been adjusted to cascade the changes across all calling code
-> as far as is needed.
-> 
-> We will adjust architecture-specific and driver code in a subsequent patch.
-> 
-> Overall, this patch does not introduce any functional change.
-> 
-> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 > ---
+>  Documentation/trace/eprobes.rst | 268 ++++++++++++++++++++++++++++++++
+>  Documentation/trace/index.rst   |   1 +
+>  2 files changed, 269 insertions(+)
+>  create mode 100644 Documentation/trace/eprobes.rst
+> 
+> diff --git a/Documentation/trace/eprobes.rst b/Documentation/trace/eprobes.rst
+> new file mode 100644
+> index 000000000000..c7aa7c867e9e
+> --- /dev/null
+> +++ b/Documentation/trace/eprobes.rst
+> @@ -0,0 +1,268 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +=====================
+> +Eprobe - Event probes
+> +=====================
+> +
+> +:Author: Steven Rostedt <rostedt@goodmis.org>
+> +
+> +- Written for v6.17
+> +
+> +Overview
+> +========
+> +
+> +Eprobes are dynamic events that are placed on existing events to eiter
 
-[Adding Uladzislau to Cc]
+                                                                    either
 
-Hi Lorenzo, just wanted to clarify one thing.
+> +dereference a field that is a pointer, or simply to limit what fields get
 
-You know, many people acked and reviewed it, which makes me wonder if
-I'm misunderstanding something... but it wouldn't hurt to check, right? 
+                                                       (preference:)     are
 
-> diff --git a/mm/execmem.c b/mm/execmem.c
-> index 9720ac2dfa41..bd95ff6a1d03 100644
-> --- a/mm/execmem.c
-> +++ b/mm/execmem.c
-> @@ -26,7 +26,7 @@ static struct execmem_info default_execmem_info __ro_after_init;
->  
->  #ifdef CONFIG_MMU
->  static void *execmem_vmalloc(struct execmem_range *range, size_t size,
-> -			     pgprot_t pgprot, unsigned long vm_flags)
-> +			     pgprot_t pgprot, vm_flags_t vm_flags)
->  {
->  	bool kasan = range->flags & EXECMEM_KASAN_SHADOW;
->  	gfp_t gfp_flags = GFP_KERNEL | __GFP_NOWARN;
+> +recorded in the trace event.
+> +
+> +Eprobes depend on kprobe events so to enable this feature, build your kernel
 
-Is it intentional to use vm_flags_t for vm_struct flags, not vma flags?
+                                                         s/,/;/
 
-You didn't update the type of struct vm_struct.flags field and vm_flags
-parameter in __vmalloc_node_range_noprof() (of MMU version in mm/vmalloc.c)
-...which makes me suspect it's not intentional?
+> +with CONFIG_KPROBE_EVENTS=y.
+> +
+> +Eprobes are created via the /sys/kernel/tracing/dynamic_events file.
+> +
+> +Synopsis of eprobe_events
+> +-------------------------
+> +::
+> +
+> +  e[:[EGRP/][EEVENT]] GRP.EVENT [FETCHARGS]	: Set a probe
+> +  -:[EGRP/][EEVENT]				: Clear a probe
+> +
+> + EGRP		: Group name of the new event. If omitted, use "eprobes" for it.
+> + EEVENT		: Event name. If omitted, the event name is generated and will
+> +		  be the same event name as the event it attached to.
+> + GRP		: Group name of the event to attach to.
+> + EVENT		: Event name of the event to attach to.
+> +
+> + FETCHARGS	: Arguments. Each probe can have up to 128 args.
+> +  $FIELD	: Fetch the value of the event field called FIELD.
+> +  @ADDR		: Fetch memory at ADDR (ADDR should be in kernel)
+> +  @SYM[+|-offs]	: Fetch memory at SYM +|- offs (SYM should be a data symbol)
+> +  $comm		: Fetch current task comm.
+> +  +|-[u]OFFS(FETCHARG) : Fetch memory at FETCHARG +|- OFFS address.(\*3)(\*4)
+> +  \IMM		: Store an immediate value to the argument.
+> +  NAME=FETCHARG : Set NAME as the argument name of FETCHARG.
+> +  FETCHARG:TYPE : Set TYPE as the type of FETCHARG. Currently, basic types
+> +		  (u8/u16/u32/u64/s8/s16/s32/s64), hexadecimal types
+> +		  (x8/x16/x32/x64), VFS layer common type(%pd/%pD), "char",
+> +                  "string", "ustring", "symbol", "symstr" and bitfield are
 
-> @@ -82,7 +82,7 @@ struct vm_struct *execmem_vmap(size_t size)
->  }
->  #else
->  static void *execmem_vmalloc(struct execmem_range *range, size_t size,
-> -			     pgprot_t pgprot, unsigned long vm_flags)
-> +			     pgprot_t pgprot, vm_flags_t vm_flags)
->  {
->  	return vmalloc(size);
->  }
+		Should bitfield be quoted?
 
-ditto.
+> +                  supported.
+> +
+> +Types
+> +-----
+> +The FETCHARGS above is very similar to the kprobe events as described in 
+> +Documentation/trace/kprobetrace.rst.
+> +
+> +The difference between eprobes and kprobes FETCHARGS is that eprobes has a
+> +$FIELD command that returns the content of the event field of the event
+> +that is attached. Eprobes do not have access to registers, stacks and function
+> +arguments that kprobes has.
+> +
+> +If a field argument is a pointer, it may be dereferenced just like a memory
+> +address using the FETCHARGS syntax.
+> +
+> +
+> +Attaching to dynamic events
+> +---------------------------
+> +
+> +Note that eprobes may attach to dynamic events as well as to normal events. It
 
-> @@ -284,7 +284,7 @@ void execmem_cache_make_ro(void)
->  
->  static int execmem_cache_populate(struct execmem_range *range, size_t size)
->  {
-> -	unsigned long vm_flags = VM_ALLOW_HUGE_VMAP;
-> +	vm_flags_t vm_flags = VM_ALLOW_HUGE_VMAP;
->  	struct vm_struct *vm;
->  	size_t alloc_size;
->  	int err = -ENOMEM;
+Don't need "Note that".
 
-ditto.
+> +may attach to a kprobe event, a synthetic event or a fprobe event. This is
 
-> @@ -407,7 +407,7 @@ void *execmem_alloc(enum execmem_type type, size_t size)
->  {
->  	struct execmem_range *range = &execmem_info->ranges[type];
->  	bool use_cache = range->flags & EXECMEM_ROX_CACHE;
-> -	unsigned long vm_flags = VM_FLUSH_RESET_PERMS;
-> +	vm_flags_t vm_flags = VM_FLUSH_RESET_PERMS;
->  	pgprot_t pgprot = range->pgprot;
->  	void *p;
+                                      I would say:    an fprobe event.
 
-ditto.
-  
-> diff --git a/mm/internal.h b/mm/internal.h
-> index feda91c9b3f4..506c6fc8b6dc 100644
-> --- a/mm/internal.h
-> +++ b/mm/internal.h
-> @@ -1360,7 +1360,7 @@ int migrate_device_coherent_folio(struct folio *folio);
->  
->  struct vm_struct *__get_vm_area_node(unsigned long size,
->  				     unsigned long align, unsigned long shift,
-> -				     unsigned long flags, unsigned long start,
-> +				     vm_flags_t vm_flags, unsigned long start,
->  				     unsigned long end, int node, gfp_t gfp_mask,
->  				     const void *caller);
+> +useful if the type of a field needs to be changed. See Example 2 below.
+> +
+> +Usage examples
+> +==============
+> +
+> +Example 1
+> +---------
+> +
+> +The basic usage of eprobes is to limit the data that is being recorded into
+> +the tracing buffer. For example, a common event to trace is the sched_switch
+> +trace event. That has a format of::
+> +
+> +	field:unsigned short common_type;	offset:0;	size:2;	signed:0;
+> +	field:unsigned char common_flags;	offset:2;	size:1;	signed:0;
+> +	field:unsigned char common_preempt_count;	offset:3;	size:1;	signed:0;
+> +	field:int common_pid;	offset:4;	size:4;	signed:1;
+> +
+> +	field:char prev_comm[16];	offset:8;	size:16;	signed:0;
+> +	field:pid_t prev_pid;	offset:24;	size:4;	signed:1;
+> +	field:int prev_prio;	offset:28;	size:4;	signed:1;
+> +	field:long prev_state;	offset:32;	size:8;	signed:1;
+> +	field:char next_comm[16];	offset:40;	size:16;	signed:0;
+> +	field:pid_t next_pid;	offset:56;	size:4;	signed:1;
+> +	field:int next_prio;	offset:60;	size:4;	signed:1;
+> +
+> +The first four fields are common to all events and can not be limited. But the
+> +rest of the event has 60 bytes of information. It records the names of the
+> +previous and next tasks being scheduled out and in, as well as their pids and
+> +priorities. It also records the state of the previous task. If only the pids
+> +of the tasks are of interest, why waste the ring buffer with all the other
+> +fields?
+> +
+> +An eprobe can limit what gets recorded. Note, it does not help in performance,
+> +as all the fields are recorded in a temporary buffer to process the eprobe.
+> +::
+> +
+> + # echo 'e:sched/switch sched.sched_switch prev=$prev_pid:u32 next=$next_pid:u32' >> /sys/kernel/tracing/dynamic_events
+> + # echo 1 > /sys/kernel/tracing/events/sched/switch/enable
+> + # cat /sys/kernel/tracing/trace
+> +
+> + # tracer: nop
+> + #
+> + # entries-in-buffer/entries-written: 2721/2721   #P:8
+> + #
+> + #                                _-----=> irqs-off/BH-disabled
+> + #                               / _----=> need-resched
+> + #                              | / _---=> hardirq/softirq
+> + #                              || / _--=> preempt-depth
+> + #                              ||| / _-=> migrate-disable
+> + #                              |||| /     delay
+> + #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
+> + #              | |         |   |||||     |         |
+> +     sshd-session-1082    [004] d..4.  5041.239906: switch: (sched.sched_switch) prev=1082 next=0
+> +             bash-1085    [001] d..4.  5041.240198: switch: (sched.sched_switch) prev=1085 next=141
+> +    kworker/u34:5-141     [001] d..4.  5041.240259: switch: (sched.sched_switch) prev=141 next=1085
+> +           <idle>-0       [004] d..4.  5041.240354: switch: (sched.sched_switch) prev=0 next=1082
+> +             bash-1085    [001] d..4.  5041.240385: switch: (sched.sched_switch) prev=1085 next=141
+> +    kworker/u34:5-141     [001] d..4.  5041.240410: switch: (sched.sched_switch) prev=141 next=1085
+> +             bash-1085    [001] d..4.  5041.240478: switch: (sched.sched_switch) prev=1085 next=0
+> +     sshd-session-1082    [004] d..4.  5041.240526: switch: (sched.sched_switch) prev=1082 next=0
+> +           <idle>-0       [001] d..4.  5041.247524: switch: (sched.sched_switch) prev=0 next=90
+> +           <idle>-0       [002] d..4.  5041.247545: switch: (sched.sched_switch) prev=0 next=16
+> +      kworker/1:1-90      [001] d..4.  5041.247580: switch: (sched.sched_switch) prev=90 next=0
+> +        rcu_sched-16      [002] d..4.  5041.247591: switch: (sched.sched_switch) prev=16 next=0
+> +           <idle>-0       [002] d..4.  5041.257536: switch: (sched.sched_switch) prev=0 next=16
+> +        rcu_sched-16      [002] d..4.  5041.257573: switch: (sched.sched_switch) prev=16 next=0
+> + 
+> +Note, without adding the "u32" after the prev_pid and next_pid, the values
+> +would default showing in hexadecimal.
+> +
+> +Example 2
+> +---------
+> +
+> +If syscall events are not enabled but the raw syscall are (systemcall
 
-ditto.
+                                                 syscalls are (system call
 
-> diff --git a/mm/nommu.c b/mm/nommu.c
-> index b624acec6d2e..87e1acab0d64 100644
-> --- a/mm/nommu.c
-> +++ b/mm/nommu.c
-> @@ -126,7 +126,7 @@ void *vrealloc_noprof(const void *p, size_t size, gfp_t flags)
->  
->  void *__vmalloc_node_range_noprof(unsigned long size, unsigned long align,
->  		unsigned long start, unsigned long end, gfp_t gfp_mask,
-> -		pgprot_t prot, unsigned long vm_flags, int node,
-> +		pgprot_t prot, vm_flags_t vm_flags, int node,
->  		const void *caller)
->  {
+> +events are not normal events, but are created from the raw_syscall events
+> +within the kernel). In order to trace the openat system call, one can create
 
-ditto.
+                    ^^ not a complete sentence.
 
->  	return __vmalloc_noprof(size, gfp_mask);
+
+> +an event probe on top of the raw_syscall event:
+> +::
+> +
+> + # cd /sys/kernel/tracing
+> + # cat events/raw_syscalls/sys_enter/format
+> + name: sys_enter
+> + ID: 395
+> + format:
+> +	field:unsigned short common_type;	offset:0;	size:2;	signed:0;
+> +	field:unsigned char common_flags;	offset:2;	size:1;	signed:0;
+> +	field:unsigned char common_preempt_count;	offset:3;	size:1;	signed:0;
+> +	field:int common_pid;	offset:4;	size:4;	signed:1;
+> +
+> +	field:long id;	offset:8;	size:8;	signed:1;
+> +	field:unsigned long args[6];	offset:16;	size:48;	signed:0;
+> +
+> + print fmt: "NR %ld (%lx, %lx, %lx, %lx, %lx, %lx)", REC->id, REC->args[0], REC->args[1], REC->args[2], REC->args[3], REC->args[4], REC->args[5]
+> +
+> +From the source code, the sys_openat() has:
+> +::
+> +
+> + int sys_openat(int dirfd, const char *path, int flags, mode_t mode)
+> + {
+> +	return my_syscall4(__NR_openat, dirfd, path, flags, mode);
+> + }
+> +
+> +The path is the second parameter, and that is what is wanted.
+
+s/wanted/want/
+
+> +::
+> +
+> + # echo 'e:openat raw_syscalls.sys_enter nr=$id filename=+8($args):ustring' >> dynamic_events
+> +
+> +This is being run on x86_64 where the word size is 8 bytes and the openat
+> +systemcall __NR_openat is set at 257.
+
+   system call
+
+> +::
+> +
+> + # echo 'nr == 257' > events/eprobes/openat/filter
+> +
+> +Now enable the event and look at the trace.
+> +::
+> +
+> + # echo 1 > events/eprobes/openat/enable
+> + # cat trace
+> +
+> + # tracer: nop
+> + #
+> + # entries-in-buffer/entries-written: 4/4   #P:8
+> + #
+> + #                                _-----=> irqs-off/BH-disabled
+> + #                               / _----=> need-resched
+> + #                              | / _---=> hardirq/softirq
+> + #                              || / _--=> preempt-depth
+> + #                              ||| / _-=> migrate-disable
+> + #                              |||| /     delay
+> + #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
+> + #              | |         |   |||||     |         |
+> +              cat-1298    [003] ...2.  2060.875970: openat: (raw_syscalls.sys_enter) nr=0x101 filename=(fault)
+> +              cat-1298    [003] ...2.  2060.876197: openat: (raw_syscalls.sys_enter) nr=0x101 filename=(fault)
+> +              cat-1298    [003] ...2.  2060.879126: openat: (raw_syscalls.sys_enter) nr=0x101 filename=(fault)
+> +              cat-1298    [003] ...2.  2060.879639: openat: (raw_syscalls.sys_enter) nr=0x101 filename=(fault)
+> +
+> +The filename shows "(fault)". This is likely because the filename has not been
+> +pulled into memory yet and currently trace events cannot fault in memory that
+> +is not present. When a eprobe tries to read memory that has not been faulted
+
+                        an eprobe
+
+> +in yet, it will show the "(fault)" text.
+> +
+> +To get around this, as the kernel will likely pull in this filename and make
+> +it present, attaching it to a synthetic event that can pass the address of the
+> +filename from the entry of the event to the end of the event, this can be used
+> +to show the filename when the system call returns.
+> +
+> +Remove the old eprobe::
+> +
+> + # echo 1 > events/eprobes/openat/enable
+> + # echo '-:openat' >> dynamic_events
+> +
+> +This time make an eprobe where the address of the filename is saved::
+> +
+> + # echo 'e:openat_start raw_syscalls.sys_enter nr=$id filename=+8($args):x64' >> dynamic_events
+> +
+> +Create a synthetic event that passes the address of the filename to the
+> +end of the event::
+> +
+> + # echo 's:filename u64 file' >> dynamic_events
+> + # echo 'hist:keys=common_pid:f=filename if nr == 257' > events/eprobes/openat_start/trigger
+> + # echo 'hist:keys=common_pid:file=$f:onmatch(eprobes.openat_start).trace(filename,$file) if id == 257' > events/raw_syscalls/sys_exit/trigger
+> +
+> +Now that the address of the filename has been passed to the end of the
+> +systemcall, create another eprobe to attach to the exit event to show the
+
+   system call,
+
+> +string::
+> +
+> + # echo 'e:openat synthetic.filename filename=+0($file):ustring' >> dynamic_events
+> + # echo 1 > events/eprobes/openat/enable
+> + # cat trace
+> +
+> + # tracer: nop
+> + #
+> + # entries-in-buffer/entries-written: 4/4   #P:8
+> + #
+> + #                                _-----=> irqs-off/BH-disabled
+> + #                               / _----=> need-resched
+> + #                              | / _---=> hardirq/softirq
+> + #                              || / _--=> preempt-depth
+> + #                              ||| / _-=> migrate-disable
+> + #                              |||| /     delay
+> + #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
+> + #              | |         |   |||||     |         |
+> +              cat-1331    [001] ...5.  2944.787977: openat: (synthetic.filename) filename="/etc/ld.so.cache"
+> +              cat-1331    [001] ...5.  2944.788480: openat: (synthetic.filename) filename="/lib/x86_64-linux-gnu/libc.so.6"
+> +              cat-1331    [001] ...5.  2944.793426: openat: (synthetic.filename) filename="/usr/lib/locale/locale-archive"
+> +              cat-1331    [001] ...5.  2944.831362: openat: (synthetic.filename) filename="trace"
+> +
+> +Example 3
+> +---------
+> +
+> +If syscall trace events are available, the above would not need the first
+> +eprobe, but it would still need the last one::
+> +
+> + # echo 's:filename u64 file' >> dynamic_events
+> + # echo 'hist:keys=common_pid:f=filename' > events/syscalls/sys_enter_openat/trigger
+> + # echo 'hist:keys=common_pid:file=$f:onmatch(syscalls.sys_enter_openat).trace(filename,$file)' > events/syscalls/sys_exit_openat/trigger
+> + # echo 'e:openat synthetic.filename filename=+0($file):ustring' >> dynamic_events
+> + # echo 1 > events/eprobes/openat/enable
+> +
+> +And this would produce the same result as Example 2.
+
+Thanks for the new documentation.
 
 -- 
-Cheers,
-Harry / Hyeonggon
+~Randy
+
