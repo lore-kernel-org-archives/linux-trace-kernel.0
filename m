@@ -1,387 +1,266 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF0BA72634;
-	Tue, 29 Jul 2025 05:10:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753765838; cv=none; b=CQMivFns7bGQb0C9lmQAbESYkbRBFstkd0j9atfWaVnpcu5AVboWiBDymXLXvn0XJn062AJWSBhjfRINWKupIoKPJxMXyGiU8yGaiB1NOhaiwvAbXE2tx6K1Gj7fPVcMBOoxWgsuWaSRoXPR195HJLk6VlMD6ohGkqkb1jaym0o=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753765838; c=relaxed/simple;
-	bh=dLFCLzCQoLKMIXrIRtIQKOk27HbnKl9yUAAwBqKblyk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iZ0c0dsagfFf8KRTh/IZ32hcbsj8W7kgefKvb+/qHNuKCwjcfNtj4NIEbcS4984Q8L1bwNZjoCaJkvYe9h0tSETuk6roan8B7VlQf/MLNVES35roklsv/3eFNd41Eh/El5bH80/DdEZFvqpJQwEtLA8ZSc8S0h/D1jAegy+ZdBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YsXdrFEv; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B6312147E5
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 29 Jul 2025 05:26:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1753766781; cv=fail; b=YCIyOrd7UaXFpq4yDfe8vzIHhJhW2/sVaeNRBECYaT/AKY6dNliKj/4dHZVBzMSeXkwLD/h9rpnEQB2dvf4liVEDmKznjYslapDY7d//iKw7aq6RMqwTns1jmKbsR15xZ7Bhau+/hKg4/THGhdhoVAwLuuu89Am+zKA4WysxEEo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1753766781; c=relaxed/simple;
+	bh=WAUG8i3UCyGKQmDLoqcOx1KKhuTqbZ18W/JKQaM+5JA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=sAzejxaUjALpXeM47UA7dU7dGjsYJCW8Bvce/ziuaznys4xlTO6AQ2O4jxp937vYvC9ewkTeyeALTDmkRNnCjHaVNKUNm8BsfP7J97SdHg4InSReDoWAe7d3RLXxgAqRi6b/1eqGQGcjFccKpszX52mm96lK8XPPaWLwR35kRPU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=gUXpn/l1; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=QJDeA8Gw; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YsXdrFEv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A82DAC4CEEF;
-	Tue, 29 Jul 2025 05:10:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753765837;
-	bh=dLFCLzCQoLKMIXrIRtIQKOk27HbnKl9yUAAwBqKblyk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=YsXdrFEvvwq+K8KnE5PFUmwcd2x7kPysbmXmV2rcYAJ41pCHXisyAiNX47DIG4RNV
-	 LUElk3PAQkxdjXWLi8F4hSJGx1obcwKpgODVmJHsSzE43KloUGO/9emkvIsPqbULnI
-	 V2iB8PpOgcaB5BEM1VAm/13Hyfg8VQzWdPME+tLigbjiXciE24N3H3HEix6NXQV42t
-	 cxivFywwH4zdZhxrgRAixgO7YQSM0G/JvaNt6/ZMMSitZY5gxP+XANUUfdcDjkimvR
-	 YM2eRKoT234IFvekTBpu/mjDPHO/HLSGih4Zr21TqQ+MycJ91jDLgeqZpEbRuolsix
-	 SdjSmZwdXdLtA==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v5 1/1] tracing: Remove "__attribute__()" from the type field of event format
-Date: Tue, 29 Jul 2025 14:10:35 +0900
-Message-ID:  <175376583493.1688759.12333973498014733551.stgit@mhiramat.tok.corp.google.com>
-X-Mailer: git-send-email 2.50.1.552.g942d659e1b-goog
-In-Reply-To:  <175376582586.1688759.2122686728240441891.stgit@mhiramat.tok.corp.google.com>
-References:  <175376582586.1688759.2122686728240441891.stgit@mhiramat.tok.corp.google.com>
-User-Agent: StGit/0.19
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="gUXpn/l1";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="QJDeA8Gw"
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56SLftsa021036;
+	Tue, 29 Jul 2025 05:25:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=corp-2025-04-25; bh=WAUG8i3UCyGKQmDLoq
+	cOx1KKhuTqbZ18W/JKQaM+5JA=; b=gUXpn/l10hyEurvpEnVDZJL4aSyxspk9pN
+	ra3tYQWuKEStTSYxYHynLeuV/fZ6xbHE1rKOFUcivI8+GyKm7m5oJeuRuKKHWYeK
+	lCUbpoFNViYzj4BzuZAZnOQ75jAGZzK1JH/ZSr0C5BXqy0+JZGOZpb9YxG5cELy9
+	haeGeu0fqb9LlthxV/dtdGYTmB3FkETdA5aT3cZt3kbJl9Agy8KEv5D4DdjV46m7
+	YhQI9MvTE29z2hSyXuko5z74ppTggbtR6/Yydck7PgtyFScM7uqDhAODO9RytEGd
+	OcrETCa6o08SW4EGiEcz91KujSoyLJNuQQN6fXKSF4T0mJOB5s1g==
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 484q5wprh5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 29 Jul 2025 05:25:57 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 56T2Lpnh003459;
+	Tue, 29 Jul 2025 05:25:49 GMT
+Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12on2065.outbound.protection.outlook.com [40.107.243.65])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 484nf9fydd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 29 Jul 2025 05:25:48 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ozpLmqGHiKqXK0qGkj46LQerPZaPRZ8XV/ZJpQdnNbe5G7IxdpPm7Bu/FISF9tGZ+x6/idy66qq2jdwH+ezHlfUy14OzlpYFegyFbDZuhuVfQDe7aY58PDAIUIE6V+TE0W/IpeBIrV4sQSdUNSBqivGFlh9+AuNcYXrEgjdjZB+/6H4CCSdpWwLs18vKyEPTD3HFnjpF42SxoWCq7cWF6ezr8WmAPIYFwr4ya0W9MTd5knWhiG3OHlW5/0iMUJTzm/3zMuuBSDmRXYP4dkOUIk9rrWqfg24bAhOKI47PO1zRg++zA4gZw0EVJgLddN/p30T+3MS3BSeJNfljp/ggWQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=WAUG8i3UCyGKQmDLoqcOx1KKhuTqbZ18W/JKQaM+5JA=;
+ b=NXiNfCq5uRCMr8L8yqMuWaIS8M67IwUFKV24F3mRlGAliJcfYALjwoB4pFfzeE992GRjFDuo3y/M9eHg4FmzMImL7H5OOFw6VXGRb1M8sYMDTMXbLctS38EpBZ9dQ/LlVzCIXRBzkUFbtY6nQmn0K27Sx+6IVF+7eSxd0DAUPY7XbnSOASJHSWlb+om1djB9aoQIPhIOcLLUkxdOI0rwaCj1WDTJyir5F/E4bomq4p0RGm9EWwD3GSJZvxIgTH034RkCzZFtsfvY+otTTXzqwg/GFqDYjPV1Mp+7dsStRyptIbAtxEeTvelJ36t1nb/kNoGCmlPI5xgLbaUss9fWiA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WAUG8i3UCyGKQmDLoqcOx1KKhuTqbZ18W/JKQaM+5JA=;
+ b=QJDeA8GwfNuw9ayQXo5tItaXsYWEJ2hW47SpaLMNytBIOB5UYgU8lVjHMWaCsoqLfcCAAGvZC7St0EZzap5LHQPpdNAmlp52wU6tCrAXBel6nPSlxmj+y6q1y9/pngcYzZo1P4i1UBUVuD3YdSXot+rQnXRuqKSvXXXJ9NSla2A=
+Received: from BL4PR10MB8229.namprd10.prod.outlook.com (2603:10b6:208:4e6::14)
+ by DM6PR10MB4316.namprd10.prod.outlook.com (2603:10b6:5:21d::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8964.25; Tue, 29 Jul
+ 2025 05:25:45 +0000
+Received: from BL4PR10MB8229.namprd10.prod.outlook.com
+ ([fe80::552b:16d2:af:c582]) by BL4PR10MB8229.namprd10.prod.outlook.com
+ ([fe80::552b:16d2:af:c582%3]) with mapi id 15.20.8964.026; Tue, 29 Jul 2025
+ 05:25:45 +0000
+Date: Tue, 29 Jul 2025 06:25:39 +0100
+From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+To: Harry Yoo <harry.yoo@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        "David S . Miller" <davem@davemloft.net>,
+        Andreas Larsson <andreas@gaisler.com>,
+        Jarkko Sakkinen <jarkko@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+        Kees Cook <kees@kernel.org>, Peter Xu <peterx@redhat.com>,
+        David Hildenbrand <david@redhat.com>, Zi Yan <ziy@nvidia.com>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+        Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+        Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
+        Xu Xin <xu.xin16@zte.com.cn>,
+        Chengming Zhou <chengming.zhou@linux.dev>,
+        Hugh Dickins <hughd@google.com>, Vlastimil Babka <vbabka@suse.cz>,
+        Mike Rapoport <rppt@kernel.org>,
+        Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+        Rik van Riel <riel@surriel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
+        Muchun Song <muchun.song@linux.dev>,
+        Oscar Salvador <osalvador@suse.de>, Jann Horn <jannh@google.com>,
+        Pedro Falcato <pfalcato@suse.de>, Johannes Weiner <hannes@cmpxchg.org>,
+        Qi Zheng <zhengqi.arch@bytedance.com>,
+        Shakeel Butt <shakeel.butt@linux.dev>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-sgx@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        nvdimm@lists.linux.dev, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] mm: update core kernel code to use vm_flags_t
+ consistently
+Message-ID: <73764aaa-2186-4c8e-8523-55705018d842@lucifer.local>
+References: <cover.1750274467.git.lorenzo.stoakes@oracle.com>
+ <d1588e7bb96d1ea3fe7b9df2c699d5b4592d901d.1750274467.git.lorenzo.stoakes@oracle.com>
+ <aIgSpAnU8EaIcqd9@hyeyoo>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aIgSpAnU8EaIcqd9@hyeyoo>
+X-ClientProxiedBy: MM0P280CA0067.SWEP280.PROD.OUTLOOK.COM
+ (2603:10a6:190:8::34) To BL4PR10MB8229.namprd10.prod.outlook.com
+ (2603:10b6:208:4e6::14)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL4PR10MB8229:EE_|DM6PR10MB4316:EE_
+X-MS-Office365-Filtering-Correlation-Id: 71a6acab-8912-4f3f-b2c2-08ddce605e66
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?YSmR+bH71HgKgtUyRe3Dbrs80SB/7HnteEMPunUeRsp/fgjzbykZWee6xIUm?=
+ =?us-ascii?Q?Z3C+E94bsP0syk+gLC5RTabXMVeIWPvT3HwG45YCUOo/GgRrUq5dj+qU9FVn?=
+ =?us-ascii?Q?spvW6OxFEgpWbLbaVPGDUZ24GKDR43qzYBTku/vlwd2OyuK4oaZ1iAT1EdC7?=
+ =?us-ascii?Q?pBh1vy+CRCsXLkfwHO+HQdTPEvRIicf08eW0ssR9M31aUE19fXDVG3p2+NJy?=
+ =?us-ascii?Q?Jop8BQ0McqAmDemwKMwWUVRY0/NTwE4VMLxHM5ye5onA9qTRfi+WKHyp7893?=
+ =?us-ascii?Q?8aJ8g3jz6oGHc2+4boAKLQbl+7rQ4At5DPvrnsLz2j2ZyU3tcrBOKeBYGVRa?=
+ =?us-ascii?Q?frM/8cVzEHe0YiJ09P4fPUP3vMZnKk7jRanWLXSepInDRJ6eTu836gzQTtN3?=
+ =?us-ascii?Q?BPi+N/v6eODRKY+jhOofoHBubhU7DcHWMHByboU63gvR8crcbuHtcUJ6j6My?=
+ =?us-ascii?Q?QAa+yEG8Q5NcFrw3RF9QuK3OCyXlmzF/b5XLksdo+4niqcUkysgb5NYt5tBW?=
+ =?us-ascii?Q?qdXRZOV1x8UUNaRLa+FBfft2yP4vBzgQTDSEHm/YXMd9LmeMCUSm+ResuNVd?=
+ =?us-ascii?Q?NbdcaXrTUm4DKbNH8RH0L6wtUGRMWMAknJ02+4AiDMvFZChgG9isfEZCCPDr?=
+ =?us-ascii?Q?rUVpT5CQule2xLtKvgrTUrcNC/wZHqmBxsvrWnE1PiTohMOtmxAxnSUGRmRN?=
+ =?us-ascii?Q?26vJuMHcyc+/PcqrjGff1b7wf6YXF1UHpP2IwmcdcSgrlQFKTpRD7Me12whL?=
+ =?us-ascii?Q?16g3wvlULmfmdwjZviMhFYwRKEU3uEyBWzUZOdqLzOY9LOKZVEo9eGUt3oej?=
+ =?us-ascii?Q?IA0j+aUsmHMPxh7Hig6tNCISQ2yhjlCyx+SJkwbcktVp7g8zfeksPHwR3EkI?=
+ =?us-ascii?Q?u6XM1CzSefxiRxRfd3oCLF4jnSs3rqtNQ8v6UPkuUREWuOA2JOx4iumi+zlW?=
+ =?us-ascii?Q?0xTIEm/fwxXQa3laanG3Ez08AH9N84I6xjFTgFI7Rg5D0iGgwQQkiuc42cjz?=
+ =?us-ascii?Q?17PEaPp0Q4jzsZQ/DUJQMzk2ff7WA9PEpL8pZgtBg3W7UOw/oMgPIK3ime7Z?=
+ =?us-ascii?Q?tkWr/IeKR9AndCLjAiD9SUjS/QJEsC2SdrreGl5udk6Puv+PrFdK9lGD4UMU?=
+ =?us-ascii?Q?xiUkuY17atws189a/iqXWlB+PsU0vMWY8IsKFiytcC6MzkFgRAfuyv3cm9TN?=
+ =?us-ascii?Q?a8izFIUJkGkxm48X2E2WV9crv5zdM6qxuATX4fc+2O0H/+rk3m20lBCvapi0?=
+ =?us-ascii?Q?orn3dO8TohJ8O0co8GvLLQJDCQxpHBwzW8rf3jAE+yhnDUgw2wbW81hWsbXg?=
+ =?us-ascii?Q?MmP41qXmv3+W7jvuFsZ3oPC1UUQ5MgBSAzEmbYxuvHat+SnXOdEMKPKQDfXN?=
+ =?us-ascii?Q?vHTE6zMow24PApPGEiLnc0Fr6hxZ89jZIqINS7+9hNcti3DIuA=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL4PR10MB8229.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?EtBJMRh8a/6WVvIzIklelKEVxtXDSiymzANid0IfQLgbmCI9nfCtHPZbaUbE?=
+ =?us-ascii?Q?1i3YYWapO7Sg8lpoiHb4PprsDi/XbCZ8BtcyAMBWFm7EBV16rQRJYuP96YU1?=
+ =?us-ascii?Q?7il9gNg27LzFIL9GTHcvDK9KZY1zz4qJ1CeH0ABdckLNO22PU1MPsK8GL/SA?=
+ =?us-ascii?Q?I9Mgeltjrc33HddagpvQdwVloZeA6KZMueJXDD9qf5wztyWUjlvpot8Lkuv7?=
+ =?us-ascii?Q?ljkdc6e1e55fS5P0geXvfR4SvfFAdP2JllUXfJqTqD6gB3wmznGJLBRjSlcD?=
+ =?us-ascii?Q?hgK6hmoBTYFeegtRaUtrK35f6ptcvAz5FYpYF+Mtw3dyZX1alnHKqGaGJ31x?=
+ =?us-ascii?Q?E0OeUHvHsu77xdRbJqXG959RlQ+iBe2mw+AAdB0rSru0hLu8ZaIYelnpBh0B?=
+ =?us-ascii?Q?hu6XnDkRFAWFV52LHwZrDp0I0D1ewpffiX3CuTxM/9JyMpKY1YX6aX2OMYfi?=
+ =?us-ascii?Q?1acaUq+qlkaZLTwQgP3k73B/g6gQp3uIjG8fcsznQoXOaDmqrIte2oqmgd6R?=
+ =?us-ascii?Q?Ao00/RH0pc+UlG1JdlLcYD2BonVDH/X02wTvBJZRssmcVDf5lvmTGVdutBdX?=
+ =?us-ascii?Q?ouPmIIR0h8832bsn5vP/YTh+CFK/y9N+c0OaLXKtspkzjYX5YluZfRZQbwu/?=
+ =?us-ascii?Q?pJ5wqI7z92AVedp/A0RWdGjON+JmThOFStt4iAOfZ2LgG5faqtF9dqD6iADL?=
+ =?us-ascii?Q?BAT9QdU7y7WpSp/eFMcuOHf92UDd8OU2yeVMyzn5yf5j4uXjQypCEQGlplj8?=
+ =?us-ascii?Q?+dniiZu0XNSX57WQMMdcAcZVweiGILPk0wEHXiNerheb3R5jHJCO0RRY1rSB?=
+ =?us-ascii?Q?PV5GnL0oHbkqrV9MItGuctSpTfijw04+b+JcEBO9DaqEi4VJdxZW6XgtorHQ?=
+ =?us-ascii?Q?4m2NSPZoa8rMioFyAeKiayNgz6k7yXCCSCE8dW8ClX1n7SgUXQlqUMfN+/vQ?=
+ =?us-ascii?Q?ws8+cbb2EciZYItHDExFZr14FT/XQnDy3HaLnF6RFvCMhqlk9nWf4dv8nfLg?=
+ =?us-ascii?Q?EkYilFu9xX/0SKHJA/jcTEONxwleBVEk1faYQYqOgsMz4Wh59/oxl8BHadbg?=
+ =?us-ascii?Q?NRRzCZDU/09KbsESiQTr6TMSoSBb9431EExfuKMvy9kr8ZIfhH+NTP7fx1Y9?=
+ =?us-ascii?Q?me23WIiMm0gWA7vbirIK4WN5QIcbbsvPCLULVPlSIDF8vB6heqEv/qsFnRKK?=
+ =?us-ascii?Q?qJcaX7ZDxkBRz/Ddz1RzCIXczf0HL/L+lSuFdirFJV8bpZA3DwiRH0Y125OS?=
+ =?us-ascii?Q?JBTL1MAt+GnVBVotZOvMcBifrael/Yb75zrw0b/rYQb32J6J09aB0uQ5D1jY?=
+ =?us-ascii?Q?1nbPmQWQAzueYskiBOGNGHh/N6llIZlUOt7d/JanffBVzq5ooyefSrxGtpw4?=
+ =?us-ascii?Q?zB6MREoh6a9W5/WBdaJ1gzO1FD9cKM77Qg1pHaL8U5xtSe/wnkepCUGCqx5f?=
+ =?us-ascii?Q?e0gCRGgFT/taiPOQDOekWnhCqsduaSngXOXVc6uN3NCjKMVPcu5SSnvWo4rX?=
+ =?us-ascii?Q?b2+14Vd23G1xHPHXQ2K434C4gW8Oachh3Btw2XfFcZ7AT8QIj6PSVmlQQ9WE?=
+ =?us-ascii?Q?FGOEbVbq3fJK8wa0UATSEGj+fK7ecVarrN3KVdE9lkGawqQwpG5uY9bjsf9s?=
+ =?us-ascii?Q?IA=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	fNKzoO4EhxhLQr5J1OTL47g5Hqs9bKCPV2AR20GikhNfyXsZ6da/oi0IoGPOTITMBEdaI4mWiUs9XdS4X6NMKrhlBKSW9HNKkr/D1yUYKdYCksk1P+PtBZQaoqW/uped0p56r+vHhBJV49LLg/zWcPuN76Bg4FXZgCkzvebBG4xCTmuqFxXgZojL9QgwxnbsycHHuEfVyIdN9GwpQE1OJbcEQ4SxItEwOgSiSr6VH71dAJM4VG4WSrJRQUHT4sqM6S9YnaYtoVpZ+aSvPx5QoprEww+a35xA6jCtN8qKNB41jhBW5ea5wV78GipepUEJ3T1VskiJ6tS+k3ROnqeDB1O31drltZF71fmdLyootsQuXDmUFT8iEdhHg0e8P9wR8kmTKNWxKCpplAP2pws/2K8S/t9UJG9l53sASUFNyedTukTGPVrXAjcnsGbwdaD+0yG+XjH+yW7RSPw4VZOnF4r443PUII1FtGYbCT7rHgqS8W0j1zbf7QCQOCsSTtVMeUyTAGPBB5AehI8TL9Dkpreo9nvrdwlex59ydHW4nu7A/Ys0EJFPjGm1L8M6+eEhTAmpczPM/d+/LWx4K4M/5FOGTgLHxVc3+bpaNNoiZUs=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 71a6acab-8912-4f3f-b2c2-08ddce605e66
+X-MS-Exchange-CrossTenant-AuthSource: BL4PR10MB8229.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jul 2025 05:25:45.4553
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: PI0lplI6F1nrk1n71frnlwmFemPajYQLgRxCrt0LpeiARN5QCliNsqZFePW3R2k39KiIqmCFYHnAoek5kxrrZ6iZvQSFspc1Xc7xy1qlScg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR10MB4316
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-07-29_01,2025-07-28_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0 spamscore=0
+ mlxscore=0 phishscore=0 adultscore=0 suspectscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
+ definitions=main-2507290039
+X-Proofpoint-ORIG-GUID: qJRGlC7N8eZeg3_wwcxDlU-8bKL85Raq
+X-Authority-Analysis: v=2.4 cv=LdA86ifi c=1 sm=1 tr=0 ts=68885b65 cx=c_pps
+ a=XiAAW1AwiKB2Y8Wsi+sD2Q==:117 a=XiAAW1AwiKB2Y8Wsi+sD2Q==:17
+ a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
+ a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
+ a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=Wb1JkmetP80A:10 a=GoEa3M9JfhUA:10 a=crXGLkoKcYGB5ZtWUxQA:9
+ a=CjuIK1q_8ugA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzI5MDAzOSBTYWx0ZWRfX0CmGJ4oenxkM
+ uMC3mJiqVd/L7ZrwpAuFv9raLo4mbE/79a4TIK/Vv6i41aj5pFzKvPuz3jbqdYxWe1kj4J+073Y
+ JapLXBWBwWko2GoJrMr20jpZS1eYVoclAluYbgQLFo1ovcLOqYbUR9zJ5EfNFL4jU4l7xe+aGzF
+ x7aap593dwXbXAoW7T/PxZdYP4fh4uBz2wLBLDwJccQoF2fYAq7pF1mALU8+jgBtRcYcKQ201Ky
+ EwnZR2eOxJABt0utdKZOib69pkT9eXKqQ69/yRiFCahZoPlcbZX7+92PAQIk4BktIHIQeBIr7wI
+ ZI1x/qzXLoqy78J7a6flPqre3KZigAd6u/4iV4lLQJUlDQXYYxRF2lxG9PDYdLVpukBtS96MbJ1
+ DBQw1y1fgjr4MUALFHNJiliREazskdC5XfdCukUzqT58jPWk40JPKJ/Lml+t+xwdK8B1p5Me
+X-Proofpoint-GUID: qJRGlC7N8eZeg3_wwcxDlU-8bKL85Raq
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Andrew - FYI there's nothing to worry about here, the type remains
+precisely the same, and I'll send a patch to fix this trivial issue so when
+later this type changes vmalloc will be uaffected.
 
-With CONFIG_DEBUG_INFO_BTF=y and PAHOLE_HAS_BTF_TAG=y, `__user` is
-converted to `__attribute__((btf_type_tag("user")))`. In this case,
-some syscall events have it for __user data, like below;
+On Tue, Jul 29, 2025 at 09:15:51AM +0900, Harry Yoo wrote:
+> [Adding Uladzislau to Cc]
 
-/sys/kernel/tracing # cat events/syscalls/sys_enter_openat/format
-name: sys_enter_openat
-ID: 720
-format:
-        field:unsigned short common_type;       offset:0;       size:2; signed:0;
-        field:unsigned char common_flags;       offset:2;       size:1; signed:0;
-        field:unsigned char common_preempt_count;       offset:3;       size:1; signed:0;
-        field:int common_pid;   offset:4;       size:4; signed:1;
+Ulad - could we PLEASE get rid of 'vm_flags' in vmalloc? It's the precise
+same name and (currently) type as vma->vm_flags and is already the source
+of confusion.
 
-        field:int __syscall_nr; offset:8;       size:4; signed:1;
-        field:int dfd;  offset:16;      size:8; signed:0;
-        field:const char __attribute__((btf_type_tag("user"))) * filename;      offset:24;      size:8; signed:0;
-        field:int flags;        offset:32;      size:8; signed:0;
-        field:umode_t mode;     offset:40;      size:8; signed:0;
+>
+> Hi Lorenzo, just wanted to clarify one thing.
+>
+> You know, many people acked and reviewed it, which makes me wonder if
+> I'm misunderstanding something... but it wouldn't hurt to check, right?
 
+Thanks for report.
 
-Then the trace event filter fails to set the string acceptable flag
-(FILTER_PTR_STRING) to the field and rejects setting string filter;
+Yes this is a mistake, the naming caught my mechanical changes, I tried to
+check everything but given scope of the change and unfortunate vmalloc
+naming I made a mistake.
 
- # echo 'filename.ustring ~ "*ftracetest-dir.wbx24v*"' \
-    >> events/syscalls/sys_enter_openat/filter
- sh: write error: Invalid argument
- # cat error_log
- [  723.743637] event filter parse error: error: Expecting numeric field
-   Command: filename.ustring ~ "*ftracetest-dir.wbx24v*"
+Net result currently is _absolutely no delta_ due to vm_flags_t == unsigned
+long. So there's nothing urgent here. But will send a patch to fix so it
+doesn't get caught in the 'part 2' changes I plan for this in 6.18.
 
-Since this __attribute__ makes format parsing complicated and not
-needed, remove the __attribute__(.*) from the type string.
+Fact others didn't notice underlines the fact this naming needs fixing in
+vmalloc.
 
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
-Changes in v5:
- - Simplify the btf_type_tag check.
- - Include '(' to ATTRIBUTE_STR so that we can skip the first '('.
- - Run sanitize_field_type() first to avoid strstr() check and remove
-   need_sanitize flag.
- - Also, simplify error handling. If failed to allocate memory, return
-   immediately, but if there is any wrong string etc, it just skips the
-   field.
-Changes in v4:
- - Run sanitizer only if btf_type_tag() attribute is defined.
-Changes in v3:
- - Sanitize field in update_event_field() to avoid boottime performance
-   overhead.
- - Change the function names because those are not always require eval
-   maps.
- - Remove unneeded alloc_type flag.
-Changes in v2:
- - Add memory allocation check flag.
- - Check the flag in update_event_fields() to avoid memory leak.
- - Fix 'static const int ... strlen()' issue.
- - Fix to find 2nd __attribute__ correctly. (adjust next after strcpy)
----
- kernel/trace/trace.c        |   28 ++++++---
- kernel/trace/trace.h        |    4 +
- kernel/trace/trace_events.c |  128 ++++++++++++++++++++++++++++++++++++-------
- 3 files changed, 127 insertions(+), 33 deletions(-)
-
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 95ae7c4e5835..e992a9ba8281 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -5937,17 +5937,27 @@ static inline void trace_insert_eval_map_file(struct module *mod,
- 			      struct trace_eval_map **start, int len) { }
- #endif /* !CONFIG_TRACE_EVAL_MAP_FILE */
- 
--static void trace_insert_eval_map(struct module *mod,
--				  struct trace_eval_map **start, int len)
-+static void
-+trace_event_update_with_eval_map(struct module *mod,
-+				 struct trace_eval_map **start,
-+				 int len)
- {
- 	struct trace_eval_map **map;
- 
--	if (len <= 0)
--		return;
-+	/* Always run sanitizer only if btf_type_tag attr exists. */
-+	if (len <= 0) {
-+		if (!(IS_ENABLED(CONFIG_DEBUG_INFO_BTF) &&
-+		      IS_ENABLED(CONFIG_PAHOLE_HAS_BTF_TAG) &&
-+		      __has_attribute(btf_type_tag)))
-+			return;
-+	}
- 
- 	map = start;
- 
--	trace_event_eval_update(map, len);
-+	trace_event_update_all(map, len);
-+
-+	if (len <= 0)
-+		return;
- 
- 	trace_insert_eval_map_file(mod, start, len);
- }
-@@ -10335,7 +10345,7 @@ static void __init eval_map_work_func(struct work_struct *work)
- 	int len;
- 
- 	len = __stop_ftrace_eval_maps - __start_ftrace_eval_maps;
--	trace_insert_eval_map(NULL, __start_ftrace_eval_maps, len);
-+	trace_event_update_with_eval_map(NULL, __start_ftrace_eval_maps, len);
- }
- 
- static int __init trace_eval_init(void)
-@@ -10388,9 +10398,6 @@ bool module_exists(const char *module)
- 
- static void trace_module_add_evals(struct module *mod)
- {
--	if (!mod->num_trace_evals)
--		return;
--
- 	/*
- 	 * Modules with bad taint do not have events created, do
- 	 * not bother with enums either.
-@@ -10398,7 +10405,8 @@ static void trace_module_add_evals(struct module *mod)
- 	if (trace_module_has_bad_taint(mod))
- 		return;
- 
--	trace_insert_eval_map(mod, mod->trace_evals, mod->num_trace_evals);
-+	/* Even if no trace_evals, this need to sanitize field types. */
-+	trace_event_update_with_eval_map(mod, mod->trace_evals, mod->num_trace_evals);
- }
- 
- #ifdef CONFIG_TRACE_EVAL_MAP_FILE
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index bd084953a98b..1dbf1d3cf2f1 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -2125,13 +2125,13 @@ static inline const char *get_syscall_name(int syscall)
- 
- #ifdef CONFIG_EVENT_TRACING
- void trace_event_init(void);
--void trace_event_eval_update(struct trace_eval_map **map, int len);
-+void trace_event_update_all(struct trace_eval_map **map, int len);
- /* Used from boot time tracer */
- extern int ftrace_set_clr_event(struct trace_array *tr, char *buf, int set);
- extern int trigger_process_regex(struct trace_event_file *file, char *buff);
- #else
- static inline void __init trace_event_init(void) { }
--static inline void trace_event_eval_update(struct trace_eval_map **map, int len) { }
-+static inline void trace_event_update_all(struct trace_eval_map **map, int len) { }
- #endif
- 
- #ifdef CONFIG_TRACER_SNAPSHOT
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 120531268abf..a47869f8650e 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -3264,43 +3264,120 @@ static void add_str_to_module(struct module *module, char *str)
- 	list_add(&modstr->next, &module_strings);
- }
- 
-+#define ATTRIBUTE_STR "__attribute__("
-+#define ATTRIBUTE_STR_LEN (sizeof(ATTRIBUTE_STR) - 1)
-+
-+/* Remove all __attribute__() from @type. Return allocated string or @type. */
-+static char *sanitize_field_type(const char *type)
-+{
-+	char *attr, *tmp, *next, *ret = (char *)type;
-+	int depth;
-+
-+	next = (char *)type;
-+	while ((attr = strstr(next, ATTRIBUTE_STR))) {
-+		/* Retry if "__attribute__(" is a part of another word. */
-+		if (attr != next && !isspace(attr[-1])) {
-+			next = attr + ATTRIBUTE_STR_LEN;
-+			continue;
-+		}
-+
-+		if (ret == type) {
-+			ret = kstrdup(type, GFP_KERNEL);
-+			if (WARN_ON_ONCE(!ret))
-+				return NULL;
-+			attr = ret + (attr - type);
-+		}
-+
-+		/* the ATTRIBUTE_STR already has the first '(' */
-+		depth = 1;
-+		next = attr + ATTRIBUTE_STR_LEN;
-+		do {
-+			tmp = strpbrk(next, "()");
-+			/* There is unbalanced parentheses */
-+			if (WARN_ON_ONCE(!tmp)) {
-+				kfree(ret);
-+				return (char *)type;
-+			}
-+
-+			if (*tmp == '(')
-+				depth++;
-+			else
-+				depth--;
-+			next = tmp + 1;
-+		} while (depth > 0);
-+		next = skip_spaces(next);
-+		strcpy(attr, next);
-+		next = attr;
-+	}
-+	return ret;
-+}
-+
-+static char *find_replacable_eval(const char *type, const char *eval_string,
-+				  int len)
-+{
-+	char *ptr;
-+
-+	if (!eval_string)
-+		return NULL;
-+
-+	ptr = strchr(type, '[');
-+	if (!ptr)
-+		return NULL;
-+	ptr++;
-+
-+	if (!isalpha(*ptr) && *ptr != '_')
-+		return NULL;
-+
-+	if (strncmp(eval_string, ptr, len) != 0)
-+		return NULL;
-+
-+	return ptr;
-+}
-+
- static void update_event_fields(struct trace_event_call *call,
- 				struct trace_eval_map *map)
- {
- 	struct ftrace_event_field *field;
-+	const char *eval_string = NULL;
- 	struct list_head *head;
-+	int len = 0;
- 	char *ptr;
- 	char *str;
--	int len = strlen(map->eval_string);
- 
- 	/* Dynamic events should never have field maps */
--	if (WARN_ON_ONCE(call->flags & TRACE_EVENT_FL_DYNAMIC))
-+	if (call->flags & TRACE_EVENT_FL_DYNAMIC)
- 		return;
- 
-+	if (map) {
-+		eval_string = map->eval_string;
-+		len = strlen(map->eval_string);
-+	}
-+
- 	head = trace_get_fields(call);
- 	list_for_each_entry(field, head, link) {
--		ptr = strchr(field->type, '[');
--		if (!ptr)
--			continue;
--		ptr++;
--
--		if (!isalpha(*ptr) && *ptr != '_')
--			continue;
-+		str = sanitize_field_type(field->type);
-+		if (!str)
-+			return;
- 
--		if (strncmp(map->eval_string, ptr, len) != 0)
--			continue;
-+		ptr = find_replacable_eval(str, eval_string, len);
-+		if (ptr) {
-+			if (str == field->type) {
-+				str = kstrdup(field->type, GFP_KERNEL);
-+				if (WARN_ON_ONCE(!str))
-+					return;
-+				ptr = str + (ptr - field->type);
-+			}
- 
--		str = kstrdup(field->type, GFP_KERNEL);
--		if (WARN_ON_ONCE(!str))
--			return;
--		ptr = str + (ptr - field->type);
--		ptr = eval_replace(ptr, map, len);
--		/* enum/sizeof string smaller than value */
--		if (WARN_ON_ONCE(!ptr)) {
--			kfree(str);
--			continue;
-+			ptr = eval_replace(ptr, map, len);
-+			/* enum/sizeof string smaller than value */
-+			if (WARN_ON_ONCE(!ptr)) {
-+				kfree(str);
-+				continue;
-+			}
- 		}
- 
-+		if (str == field->type)
-+			continue;
- 		/*
- 		 * If the event is part of a module, then we need to free the string
- 		 * when the module is removed. Otherwise, it will stay allocated
-@@ -3310,14 +3387,18 @@ static void update_event_fields(struct trace_event_call *call,
- 			add_str_to_module(call->module, str);
- 
- 		field->type = str;
-+		if (field->filter_type == FILTER_OTHER)
-+			field->filter_type = filter_assign_type(field->type);
- 	}
- }
- 
--void trace_event_eval_update(struct trace_eval_map **map, int len)
-+/* Update all events for replacing eval and sanitizing */
-+void trace_event_update_all(struct trace_eval_map **map, int len)
- {
- 	struct trace_event_call *call, *p;
- 	const char *last_system = NULL;
- 	bool first = false;
-+	bool updated;
- 	int last_i;
- 	int i;
- 
-@@ -3330,6 +3411,7 @@ void trace_event_eval_update(struct trace_eval_map **map, int len)
- 			last_system = call->class->system;
- 		}
- 
-+		updated = false;
- 		/*
- 		 * Since calls are grouped by systems, the likelihood that the
- 		 * next call in the iteration belongs to the same system as the
-@@ -3349,8 +3431,12 @@ void trace_event_eval_update(struct trace_eval_map **map, int len)
- 				}
- 				update_event_printk(call, map[i]);
- 				update_event_fields(call, map[i]);
-+				updated = true;
- 			}
- 		}
-+		/* If not updated yet, update field for sanitizing. */
-+		if (!updated)
-+			update_event_fields(call, NULL);
- 		cond_resched();
- 	}
- 	up_write(&trace_event_sem);
-
+Thanks, Lorenzo
