@@ -1,111 +1,85 @@
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2523A287266;
-	Tue, 29 Jul 2025 15:54:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF30D1862A;
+	Tue, 29 Jul 2025 16:17:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753804493; cv=none; b=i/dNPv+eg0JGtUeMILZQx+Fkp/xxDBracOYIUXtmQCtkF5CjWNoioehKTWd943gh/S7t2C3ShHC5KVfoFywLaup+rtMXJOKeSu1mobWU7fhooqK4yvQxEq+MF8ICiCZwocHnPppmy9Wu7xM7t6/oMi81eGd4ozDDdAcrlTJHqT8=
+	t=1753805828; cv=none; b=JW+KKGCyreFbtWlqci2tCMXsj7dhAWPGrpd9eLMVXQyQSf3syPvW5X/rctoLLnNH0vhyNR/RRCPwsFbTFHtv8HHTVk63+QIS+LN1LIlSrshto70fLHfoOVVN77cQu1hoPkleTVrK8rRaQwuwJGYL3PYrBkYkNOPWWo4cDwNAwKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753804493; c=relaxed/simple;
-	bh=VzWYU+ByVgQ1LT0LRRQp9faaHAyx15cReublwXhGACw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZQxuiyFfaXTqT98NezCutp4UHGDZEQNSUIXeud6DEgOYdnZje5ia5DTeCehhOq8+qF34hxGLONFMamLNuA/F9xnb4a2FF/f04hrgjMJkCTQDWrYq74yuWE4Womj84JVMziDxe3hv4g576dzdNbZXsNlfZ7CjNVjLf5Q8zBWj2+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf10.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id 6AEE356364;
-	Tue, 29 Jul 2025 15:54:49 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf10.hostedemail.com (Postfix) with ESMTPA id 2B12A30;
-	Tue, 29 Jul 2025 15:54:47 +0000 (UTC)
-Date: Tue, 29 Jul 2025 11:54:46 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>, linux-doc@vger.kernel.org, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Mark Rutland
- <mark.rutland@arm.com>, Andrew Morton <akpm@linux-foundation.org>, Namhyung
- Kim <namhyung@kernel.org>, Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [PATCH] Documentation: tracing: Add documentation about eprobes
-Message-ID: <20250729115446.06aa72e4@batman.local.home>
-In-Reply-To: <20250729102636.b7cce553e7cc263722b12365@kernel.org>
-References: <20250728171522.7d54e116@batman.local.home>
-	<20250729102636.b7cce553e7cc263722b12365@kernel.org>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1753805828; c=relaxed/simple;
+	bh=v4tXSbGPU34ajbqF88SFay1xYtZbt8bLpQiIJMjph0w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QNoD5KWGfPF0UP1XYYzsWOu7iQBPZqND8MAcaAaegSWy+t8spdZ+5iydX5UBI7GOx95xN2Nq15slLArSW+PObZHouI1SsHUpzlLTeTfs2QivxUGYttcVJKmDM/huwhZqD/uWH+LqwNCWVbLp/0pbXnMcS3TmoaXybCVijYcTv/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=R+l+A/wx; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="R+l+A/wx"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=XK7nWoA8y2onrTMcVrnzuh8RM9CdfoCZ10jEp1+6cc0=; b=R+l+A/wxPUKElCxWSy8NEydiaS
+	2FR0OiUgW4jIfNgEfpbkBqAOwLIusLF0PfVOgrW76jbmOvaMGfuMJHcB64S5PTBOwQPg0+j1PNyrc
+	LLMaHYAgV/uIODIqvUTWgiNoMZfAJ3K9qui8pGz5jHF/CzqAea/yTFe522ss3MlvdCuHSLkniekqZ
+	hnEyDsXz9MESdMWGHiGvtmQebwyVkSr8CM8O72bjIWxoePrwJprwp2rm15zyutL1rIUArMG25QuHK
+	qMVdcrSbMHq6w5QcjncpNm9vNGgDedo5gA+aD5mYwyYkZKdYGqQyCCwxC72gH6N7Uumvf4BXtSMAM
+	NZlNzg2Q==;
+Received: from [50.53.25.54] (helo=[192.168.254.17])
+	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1ugn0g-0000000HFVG-0dD3;
+	Tue, 29 Jul 2025 16:17:02 +0000
+Message-ID: <aee17767-b8be-42ff-b00c-92f9aa46a521@infradead.org>
+Date: Tue, 29 Jul 2025 09:17:01 -0700
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] Documentation: tracing: Add documentation about eprobes
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Linux trace kernel <linux-trace-kernel@vger.kernel.org>,
+ linux-doc@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Namhyung Kim
+ <namhyung@kernel.org>, Jonathan Corbet <corbet@lwn.net>
+References: <20250728171522.7d54e116@batman.local.home>
+ <f6cd51e6-c025-4182-8df8-a621379af6bf@infradead.org>
+ <20250729115021.135bca64@batman.local.home>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20250729115021.135bca64@batman.local.home>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 2B12A30
-X-Stat-Signature: g98medgmg944wwns496mtu6cwxes6y9o
-X-Rspamd-Server: rspamout02
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18v9kyW3pn/R4pjNUE7UK8AZqyei/LPwUo=
-X-HE-Tag: 1753804487-96631
-X-HE-Meta: U2FsdGVkX195b9jnsLnPpRI91bN+toQccvf56IaqYRj54b2j/OazQrLhZppIt9WkQvN1b3TZoPzK3OAX0mGuUi7MsZEJmQarXs0QD1WhTkl6dBTE5LWwmvLgj8RR9bNhDrZY6Dk5k+UIZNvddBu9lqlUVyQyZ7/XuZ+SToxC8bWy0ayCLRtWr5Ru6A1Q3gGhqknlAI+XMb/cx1W5Yinszu1iMZ1TWUfOZObU8Y5vlyh1dfnMFHrbfeFuPC+9sq+kdm/L67W9c6JzPlOS7poB29wTiSy3su5rMb7iVZOkY4S83Pj+4xA0Kf0b7QsekFjZK8kOidz+zVu59wYEwEGpEQsvZVn+kxD7yEGCykVDV4aOPw+CztJnRy8a9wuSRGFfKEoSpWebXSAG/NkjjZmHwQ==
 
-On Tue, 29 Jul 2025 10:26:36 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+Hi,
 
-> > diff --git a/Documentation/trace/eprobes.rst b/Documentation/trace/eprobes.rst
-> > new file mode 100644
-> > index 000000000000..c7aa7c867e9e
-> > --- /dev/null
-> > +++ b/Documentation/trace/eprobes.rst  
+
+>>> +From the source code, the sys_openat() has:
+>>> +::
+>>> +
+>>> + int sys_openat(int dirfd, const char *path, int flags, mode_t mode)
+>>> + {
+>>> +	return my_syscall4(__NR_openat, dirfd, path, flags, mode);
+>>> + }
+>>> +
+>>> +The path is the second parameter, and that is what is wanted.  
+>>
+>> s/wanted/want/
 > 
-> BTW, can't you rename it as 'eprobetrace.rst' as same as others?
-> I usually name the doc of "a probe feature which provides only in-kernel
-> APIs" as '*probe.rst' and the doc of "a probe *event* feature which can
-> controlled via tracefs interface" as '*probetrace.rst'.
-
-Sure, no problem. Will update.
-
+> Really? That sounds funny to me:
 > 
-> > @@ -0,0 +1,268 @@
-> > +.. SPDX-License-Identifier: GPL-2.0
-> > +
-> > +=====================
-> > +Eprobe - Event probes  
+>    The path is the second parameter and that is what is want.
 > 
-> What about below title?
-> 
->  Eprobe - Event-based Probe Tracing
+> ??
 
-OK.
+Yeah, I don't know how I did that. Sorry.
 
-> 
-> > +=====================
-> > +
-> > +:Author: Steven Rostedt <rostedt@goodmis.org>
-> > +
-> > +- Written for v6.17
-> > +
-> > +Overview
-> > +========
-> > +
-> > +Eprobes are dynamic events that are placed on existing events to eiter
-> > +dereference a field that is a pointer, or simply to limit what fields get
-> > +recorded in the trace event.
-> > +
-> > +Eprobes depend on kprobe events so to enable this feature, build your kernel
-> > +with CONFIG_KPROBE_EVENTS=y.  
-> 
-> Is this correct? It seems that eprobe event only depends on event trigger
-> (by implementation. Actually we should fix the kernel/trace/Kconfig.)
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git/tree/kernel/trace/trace_eprobe.c?h=trace-v6.16-rc5#n576
-
-I noticed there was no config that selected it, and it only gets
-selected by CONFIG_PROBE_EVENTS which requires something else to select
-it. I guess adding an EPROBE config would be useful too. Let me do that
-too.
-
-Thanks for the review.
-
--- Steve
+-- 
+~Randy
 
