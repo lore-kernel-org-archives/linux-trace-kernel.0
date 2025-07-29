@@ -1,183 +1,174 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A098F2512FC;
-	Tue, 29 Jul 2025 18:39:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F4AB290F;
+	Tue, 29 Jul 2025 19:31:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753814350; cv=none; b=Ed+BaaqKX354sS7GTKESdpb6+Pew3IgXMlPhfTQEybQe78HzMGDiA0yy+Ck2v8pjPDmZeaC+1e09TfzF6m78NmWH96GeFSyw7OzdyHtN6c8kxAoohvdZGKQr06zX1w8ruhUIIGRMoJkrmFWVOzNx1jqiAhOC0rM1lmwJEoEpJcg=
+	t=1753817493; cv=none; b=sHH6fFL2EVvOnIVwF4ccF6ToMknK8Ad8y7ECB0Tba5XVWHlGUBRWDYbz/vGVYoXpSHyW82ubRwvt2HMagt/QcXu8pzGE2oci2fEYCSVLkpSnF5vGKM5q1GUnMTPpDEPKvUU/fQ8OHm2Z5hVzFgAkfvRPinJ9AOKQl56EuXYjVP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753814350; c=relaxed/simple;
-	bh=K0MGb4ayzYxYJZKg1HWu8KpfAsEMhfWFw3xLTjemhe4=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O0wxXbYPDf4qe3QnA7aZ37GmQ0TQy8ZitdH0gW2zxPt5KhR7kD/WqyGm59PRG68l89NixYmiWEzEjNldezOal7IR0+R1X2l590IabEksIYD+zmGX6PgG/fIay31CmHNAC1Gkjxd3vF8oEDfhw7jhq7kr4L+WdAxaBIr3fUBxq8I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NKD71RjS; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1753817493; c=relaxed/simple;
+	bh=lf6ecvMS5lLzD0DRcpsuhPk873JChd5ltyBTyFxKsro=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XoTZhM0v6Riv45tXyOncDN1gohE5LTHouP83Cy8gOZaJ54KpxcHhSWHBfVR/J5VaBrm73K1BLuk6aw42mgaDFVhyTMNEfJ2ZfeEPkDiW5l4aGepiPdxrb1QmIWpeF3WcRFNpBhD0QblmLkNiks5i+BGyWGCjrQid5ziDeKjbRFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Bxn7XCOv; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NKD71RjS"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-3321296ad03so14875391fa.3;
-        Tue, 29 Jul 2025 11:39:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1753814347; x=1754419147; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=GYRfCV3hbQi5DsgzlDild2w/1OeWF4e+oM87WSvfwwM=;
-        b=NKD71RjSND1rXmAnXQfIgEf/HiGuyRbmfQkAATxvz+XDc3wuAS4PYMTAnFTc+hOFBB
-         jFfTAut7lO3fvht+3On5gRaIfl+2JUu+C2CyqgxTS8W35LGqMXdhSUjejCV9hA/o8SY3
-         0PSeXZbieKdSiw5El+lB3jlElLjLihmZthWvrMhStg80B4X/+WwjaahcIn6GBi4Qcplc
-         7DOUDEExmM8rm8f+iQ5+1OL4gAnBtqzmlfM/R2yn2i3XNKsLWCbKBBoyp47IhnsZEusl
-         BN9pcQGornc7ZtX5pT62Tk+O+efm5f0pzlCljOdXohw3AYM1UNB3P3sLQR1I5+qIVlUx
-         Ejdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753814347; x=1754419147;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GYRfCV3hbQi5DsgzlDild2w/1OeWF4e+oM87WSvfwwM=;
-        b=ETVj2lztD/LuqAtTkiKADtNHw4Q05ZsmQHRw2PfE8PioK+rCQtRMNWSFrrfbJvYg7z
-         yXRmJVzVlryxeBfl9Wjy6LiSSBP2n1Y4jvtotrvRwkZBK/LmnuxPBfGYYgI1QzV3qSxO
-         uiw8sjGT7Wa/JBqentDjhBYcLWLHaY1zwuuh5Pzrropba0vzam+jLwaA3lRhEm71xBuu
-         /fyKJdilhXPNZFR4MG5sOuqa+BU19MuE737r5wI+vU5aezSKSJQ7Qwidf3KZcjZTAYhY
-         oXVtAZktdJmFMFdgqby9ZMTjlIs9tv5xAVBDXvKkutoouH/niCvCDm9s0opY2KOEYe5z
-         nUVA==
-X-Forwarded-Encrypted: i=1; AJvYcCUEeTIxbUN2CE4tUJnrmqEQFxQHf1uZauPv8SXH8X0ghrgmrLGHIla6QoShg0pXfvPfPgSFiNMD/c+fZadKdiRIMrr1@vger.kernel.org, AJvYcCUyamA+dDJFs+Gt5I97dmtdIlstFucMr54YDE5QByl7ACLKp0oBVJ19+nIrkXHiFQS5HbJEi5jd7xfE3w==@vger.kernel.org, AJvYcCWkT1IgC3VG91RjSdJMFzqqK4E8v4wvNmAROFhZrUxPH3v2UkelvSmGI4t9w342WTybEKnHTV8F/BxW@vger.kernel.org, AJvYcCWz/Wm1TtJzQejTERj4aS627Iv40fp656dSi4LyMJoYBbnv8bVVXTAB1OKQzsGzFl2/elUtClpXLwf6lthY@vger.kernel.org, AJvYcCX3uv/CC6AuisHfr0+afv3eMKAK3LKvGKei7ZJJLWYQTu6S9/zFG4MD8w2DWAaaZX8IN9I=@vger.kernel.org, AJvYcCXKzSDjDDuvTo97HgVYICke64JFan/hUVRZPFof1kgZ1jCIT4Wgz6+JqNHrz5wY3qR8mWmxzer23nM7QcRocA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyuTdNZwefZStZbNrgd3WMdamCOz2MJV+yvWB6mBvx6R0qaMmp6
-	9SqSXYLpmSA5xQ7xhuN1Ay4Qi3dRJU9Fw0OtWE/gMSugHzYXHIjbZ7AU
-X-Gm-Gg: ASbGncvgm47JZ0K/0uVnx0Ig1KIcA6t2OJx8xHF5d5Q5y34tQMfUUZ0+FxMDYKNZtzX
-	/JT1Z5/lfU0l0j1VePujvsEBkS+sNjTFsmqvAB5x7bvAYwQ+D2GQG5URpzdP3vv4jScz0DYmx6f
-	h650+jK1UQC3xPzgX7swzmOMB18Ssdbq+xu2Wc19pbWPJ31eFTIwrgo71iUOo0YlXWFQH939At1
-	8tuFtLoi4kVGhMJ7iGpHq4sa6frFdcWm3jKThEOoEWiCcfKS+QTOn75Komw4uGe157VIWOgbgMA
-	Y53AB8IqlGKk5cdwyYeHiVMV0soCfNfoXfP0r3gX/Crj8d3D2Hm18+LloVlJaaGw
-X-Google-Smtp-Source: AGHT+IF9yvJyPiTzwXfrNX8PT/G9myfdCCK3lbY+TklU3bxii0UFYjkiLDeONxAItTuHZBzIFqK+RA==
-X-Received: by 2002:a05:6512:3414:b0:553:241d:4e77 with SMTP id 2adb3069b0e04-55b7c011afdmr184040e87.22.1753814346295;
-        Tue, 29 Jul 2025 11:39:06 -0700 (PDT)
-Received: from pc636 ([2001:9b1:d5a0:a500::800])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-332219ce7aesm832441fa.34.2025.07.29.11.39.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Jul 2025 11:39:04 -0700 (PDT)
-From: Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date: Tue, 29 Jul 2025 20:39:01 +0200
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Harry Yoo <harry.yoo@oracle.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"David S . Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Kees Cook <kees@kernel.org>, Peter Xu <peterx@redhat.com>,
-	David Hildenbrand <david@redhat.com>, Zi Yan <ziy@nvidia.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
-	Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
-	Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
-	Xu Xin <xu.xin16@zte.com.cn>,
-	Chengming Zhou <chengming.zhou@linux.dev>,
-	Hugh Dickins <hughd@google.com>, Vlastimil Babka <vbabka@suse.cz>,
-	Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>, Rik van Riel <riel@surriel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
-	Muchun Song <muchun.song@linux.dev>,
-	Oscar Salvador <osalvador@suse.de>, Jann Horn <jannh@google.com>,
-	Pedro Falcato <pfalcato@suse.de>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Qi Zheng <zhengqi.arch@bytedance.com>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org,
-	sparclinux@vger.kernel.org, linux-sgx@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-	nvdimm@lists.linux.dev, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] mm: update core kernel code to use vm_flags_t
- consistently
-Message-ID: <aIkVRTouPqhcxOes@pc636>
-References: <cover.1750274467.git.lorenzo.stoakes@oracle.com>
- <d1588e7bb96d1ea3fe7b9df2c699d5b4592d901d.1750274467.git.lorenzo.stoakes@oracle.com>
- <aIgSpAnU8EaIcqd9@hyeyoo>
- <73764aaa-2186-4c8e-8523-55705018d842@lucifer.local>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Bxn7XCOv"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=8UtUbjq+gsXVwNRHEqmPskVJ8RBN/bsJxXpAuzkbI2o=; b=Bxn7XCOv7anPwOISWDwXK9AZvk
+	s6PmHPur67emnifPf5wGCBw80V8TwAiukXaw42qwHm9n+s4S024vJjgLCnTII2Y9ALe7KO4UGyVCD
+	6784V+tKf5Yv9n8el10fAX6wLvDgS9e6D5Z/j3dGuQuRbDIPHz4NRv03psVOzgU/ADwMW5lDqNGiQ
+	99WFvuYIb1N9Z5nGpSYbJHq+En/1suw3Dd4jOwMPUo0Lh8ZwNdkjzaAGkAGQq/4TbYrpQbKyzNh8S
+	pZI1a3l4Z/m7ANpVfUJLAgro22SQT1VuzH6L9lziSAnS0iqQWT34gbDyW57I0xcx5qk8N9Q+RHpue
+	AOLqM3pA==;
+Received: from [50.53.25.54] (helo=[192.168.254.17])
+	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1ugq2t-0000000HYfs-0e84;
+	Tue, 29 Jul 2025 19:31:31 +0000
+Message-ID: <3b0a2731-6072-467f-937b-4135f53b9031@infradead.org>
+Date: Tue, 29 Jul 2025 12:31:30 -0700
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <73764aaa-2186-4c8e-8523-55705018d842@lucifer.local>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] Documentation: tracing: Add documentation about
+ eprobes
+To: Steven Rostedt <rostedt@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Namhyung Kim
+ <namhyung@kernel.org>, Jonathan Corbet <corbet@lwn.net>
+References: <20250729161816.678462962@kernel.org>
+ <20250729161912.226505358@kernel.org>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20250729161912.226505358@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jul 29, 2025 at 06:25:39AM +0100, Lorenzo Stoakes wrote:
-> Andrew - FYI there's nothing to worry about here, the type remains
-> precisely the same, and I'll send a patch to fix this trivial issue so when
-> later this type changes vmalloc will be uaffected.
+Hi Steven,
+
+
+On 7/29/25 9:18 AM, Steven Rostedt wrote:
+> From: Steven Rostedt <rostedt@goodmis.org>
 > 
-> On Tue, Jul 29, 2025 at 09:15:51AM +0900, Harry Yoo wrote:
-> > [Adding Uladzislau to Cc]
+> Eprobes was added back in 5.15, but was never documented. It became a
+> "secret" interface even though it has been a topic of several
+> presentations. For some reason, when eprobes was added, documenting it
+> never became a priority, until now.
 > 
-> Ulad - could we PLEASE get rid of 'vm_flags' in vmalloc? It's the precise
-> same name and (currently) type as vma->vm_flags and is already the source
-> of confusion.
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+> Changes since v1: https://lore.kernel.org/20250728171522.7d54e116@batman.local.home
 > 
-You mean all "vm_flags" variable names? "vm_struct" has flags as a
-member. So you want:
+> - Renamed to eprobetrace.rst (Masami Hiramatsu)
+> 
+> - Fixed title of document (Masami Hiramatsu)
+> 
+> - Fixed grammar and spellings (Randy Dunlap)
+> 
+>  Documentation/trace/eprobetrace.rst | 269 ++++++++++++++++++++++++++++
+>  Documentation/trace/index.rst       |   1 +
+>  2 files changed, 270 insertions(+)
+>  create mode 100644 Documentation/trace/eprobetrace.rst
+> 
+> diff --git a/Documentation/trace/eprobetrace.rst b/Documentation/trace/eprobetrace.rst
+> new file mode 100644
+> index 000000000000..6d8946983466
+> --- /dev/null
+> +++ b/Documentation/trace/eprobetrace.rst
+> @@ -0,0 +1,269 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +==================================
+> +Eprobe - Event-based Probe Tracing
+> +==================================
+> +
+> +:Author: Steven Rostedt <rostedt@goodmis.org>
+> +
+> +- Written for v6.17
+> +
+> +Overview
+> +========
+> +
+> +Eprobes are dynamic events that are placed on existing events to either
+> +dereference a field that is a pointer, or simply to limit what fields are
+> +recorded in the trace event.
+> +
+> +Eprobes depend on kprobe events so to enable this feature; build your kernel
 
-urezki@pc638:~/data/backup/coding/linux-not-broken.git$ grep -rn vm_flags mm/execmem.c
-29:                          pgprot_t pgprot, unsigned long vm_flags)
-39:             vm_flags |= VM_DEFER_KMEMLEAK;
-41:     if (vm_flags & VM_ALLOW_HUGE_VMAP)
-45:                              pgprot, vm_flags, NUMA_NO_NODE,
-51:                                      pgprot, vm_flags, NUMA_NO_NODE,
-85:                          pgprot_t pgprot, unsigned long vm_flags)
-259:    unsigned long vm_flags = VM_ALLOW_HUGE_VMAP;
-266:    p = execmem_vmalloc(range, alloc_size, PAGE_KERNEL, vm_flags);
-376:    unsigned long vm_flags = VM_FLUSH_RESET_PERMS;
-385:            p = execmem_vmalloc(range, size, pgprot, vm_flags);
-urezki@pc638:~/data/backup/coding/linux-not-broken.git$ grep -rn vm_flags mm/vmalloc.c
-3853: * @vm_flags:                additional vm area flags (e.g. %VM_NO_GUARD)
-3875:                   pgprot_t prot, unsigned long vm_flags, int node,
-3894:   if (vmap_allow_huge && (vm_flags & VM_ALLOW_HUGE_VMAP)) {
-3912:                             VM_UNINITIALIZED | vm_flags, start, end, node,
-3977:   if (!(vm_flags & VM_DEFER_KMEMLEAK))
-4621:   vm_flags_set(vma, VM_DONTEXPAND | VM_DONTDUMP);
-urezki@pc638:~/data/backup/coding/linux-not-broken.git$ grep -rn vm_flags mm/execmem.c
-29:                          pgprot_t pgprot, unsigned long vm_flags)
-39:             vm_flags |= VM_DEFER_KMEMLEAK;
-41:     if (vm_flags & VM_ALLOW_HUGE_VMAP)
-45:                              pgprot, vm_flags, NUMA_NO_NODE,
-51:                                      pgprot, vm_flags, NUMA_NO_NODE,
-85:                          pgprot_t pgprot, unsigned long vm_flags)
-259:    unsigned long vm_flags = VM_ALLOW_HUGE_VMAP;
-266:    p = execmem_vmalloc(range, alloc_size, PAGE_KERNEL, vm_flags);
-376:    unsigned long vm_flags = VM_FLUSH_RESET_PERMS;
-385:            p = execmem_vmalloc(range, size, pgprot, vm_flags);
-urezki@pc638:~/data/backup/coding/linux-not-broken.git$ grep -rn vm_flags ./include/linux/vmalloc.h
-172:                    pgprot_t prot, unsigned long vm_flags, int node,
-urezki@pc638:~/data/backup/coding/linux-not-broken.git$
+I mucked that one up also. :(
+Please s/;/,/ above. Sorry.
 
-to rename all those "vm_flags" to something, for example, like "flags"?
 
-Thanks!
+> +with CONFIG_EPROBE_EVENTS=y.
+> +
+> +Eprobes are created via the /sys/kernel/tracing/dynamic_events file.
+> +
+> +Synopsis of eprobe_events
+> +-------------------------
+> +::
+> +
+> +  e[:[EGRP/][EEVENT]] GRP.EVENT [FETCHARGS]	: Set a probe
+> +  -:[EGRP/][EEVENT]				: Clear a probe
+> +
+> + EGRP		: Group name of the new event. If omitted, use "eprobes" for it.
+> + EEVENT		: Event name. If omitted, the event name is generated and will
+> +		  be the same event name as the event it attached to.
+> + GRP		: Group name of the event to attach to.
+> + EVENT		: Event name of the event to attach to.
+> +
+> + FETCHARGS	: Arguments. Each probe can have up to 128 args.
+> +  $FIELD	: Fetch the value of the event field called FIELD.
+> +  @ADDR		: Fetch memory at ADDR (ADDR should be in kernel)
+> +  @SYM[+|-offs]	: Fetch memory at SYM +|- offs (SYM should be a data symbol)
+> +  $comm		: Fetch current task comm.
+> +  +|-[u]OFFS(FETCHARG) : Fetch memory at FETCHARG +|- OFFS address.(\*3)(\*4)
+> +  \IMM		: Store an immediate value to the argument.
+> +  NAME=FETCHARG : Set NAME as the argument name of FETCHARG.
+> +  FETCHARG:TYPE : Set TYPE as the type of FETCHARG. Currently, basic types
+> +		  (u8/u16/u32/u64/s8/s16/s32/s64), hexadecimal types
+> +		  (x8/x16/x32/x64), VFS layer common type(%pd/%pD), "char",
+> +                  "string", "ustring", "symbol", "symstr" and "bitfield" are
+> +                  supported.
+> +
+> +Types
+> +-----
+> +The FETCHARGS above is very similar to the kprobe events as described in
+> +Documentation/trace/kprobetrace.rst.
+> +
+> +The difference between eprobes and kprobes FETCHARGS is that eprobes has a
+> +$FIELD command that returns the content of the event field of the event
+> +that is attached. Eprobes do not have access to registers, stacks and function
+> +arguments that kprobes has.
+> +
+> +If a field argument is a pointer, it may be dereferenced just like a memory
+> +address using the FETCHARGS syntax.
+> +
+> +
+> +Attaching to dynamic events
+> +---------------------------
+> +
+> +Eprobes may attach to dynamic events as well as to normal events. It may
+> +attach to a kprobe event, a synthetic event or a fprobe event. This is useful
 
---
-Uladzislau Rezki
+                                                  an fprobe event.
+
+> +if the type of a field needs to be changed. See Example 2 below.
+
+Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
+
+Thanks.
+
+-- 
+~Randy
