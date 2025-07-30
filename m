@@ -1,82 +1,142 @@
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAA6B141987;
-	Wed, 30 Jul 2025 13:17:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE1B6299A84;
+	Wed, 30 Jul 2025 13:24:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753881438; cv=none; b=IYk3Dcfu447OIzTFWhpd+U2q4NH3f1//aadrsee/5Btb1B5TkUi4+5LAzAEaBp4Ui+ORyq5LNMY/iqk7mXR/KJi+6r3LLfGQGDYuwKnOit1B6HV85o8heqz62vdu4L+wbC4WyqBG/0A+iRjjIdOO9IBavvVSMSftO8OtR0ypdqY=
+	t=1753881898; cv=none; b=RbBcujORmYOXIsCUWoXZiuzFxQ1KWu0ldzu1LIWiiDF9OwB2jveLBvcAup4F/HBpR+0e118QNkjydU2mUjRBnmFgUMHE5n0+a/k9HDVQK8xfewSG3rN15w1Je+Eb/0hdwB4nRgPrtwr955ooYJM4tRhIfN41HfuexS3tlF2X2WA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753881438; c=relaxed/simple;
-	bh=34EoyFPHssGlWKOPhqay4i9jGB2wFeTY2XUoW+cUFRs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Z4dtV0RATW7un1DpnlBu8siUAn/j8cCqc3bxG+ScCjyzmTmD36h36TK5HQi9LhmNld6JhCZoTz7h8DP3FF8wXiCt6aHbOiA/j0fgapsJN0qWjpQsqjuTtwbDxroVNNKg702wUP3zu/VUaFDhaXrpQDzYFmd3H/7ITO4ceeGvI3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf09.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay06.hostedemail.com (Postfix) with ESMTP id D242A113F8C;
-	Wed, 30 Jul 2025 13:17:13 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf09.hostedemail.com (Postfix) with ESMTPA id 3AD612002A;
-	Wed, 30 Jul 2025 13:17:11 +0000 (UTC)
-Date: Wed, 30 Jul 2025 09:17:27 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: kernel test robot <lkp@intel.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- oe-kbuild-all@lists.linux.dev, Mark Rutland <mark.rutland@arm.com>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, Linux Memory Management List
- <linux-mm@kvack.org>, Namhyung Kim <namhyung@kernel.org>, Jonathan Corbet
- <corbet@lwn.net>, Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH v2 1/2] tracing: Have eprobes have their own config
- option
-Message-ID: <20250730091727.7b3a8b96@gandalf.local.home>
-In-Reply-To: <20250730191101.7e6203f21b94c3f932fa8348@kernel.org>
-References: <20250729161912.056641407@kernel.org>
-	<202507301452.JPAcMvT0-lkp@intel.com>
-	<20250730191101.7e6203f21b94c3f932fa8348@kernel.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1753881898; c=relaxed/simple;
+	bh=pwzh++zHm4PBnw6/mF1yZymDUo3Db8nyIvIwSvR2yjM=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=faZCtfpa/M4kEa82eXByWE9aB7QisEvnilZddd2YOdOjPodzdwcfEtQrSKpbM3WVPximTu04iXXL+MzZ7a66Y/BDxq45pRn+RyBEAkz3pVZqVuG+oG7kiFP0h19qw0GiVARCpq6qpMBZgRBQsyTCHZ3zALwl9aSUcAq+D3E+dP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aLmPv3Po; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aLmPv3Po"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8858C4CEE7;
+	Wed, 30 Jul 2025 13:24:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753881898;
+	bh=pwzh++zHm4PBnw6/mF1yZymDUo3Db8nyIvIwSvR2yjM=;
+	h=From:Subject:Date:To:Cc:From;
+	b=aLmPv3PoP5MpqV3XzoV3iM9qyCvXFl/+PwWrQUNn3DtmblpzblnsHtaXPHNLHKvsQ
+	 qwBDe15sRvTbZatDWC2axLw+LFM+aJ5d+nZ695i72UiSlw+0e/j/yaZj95RK+5hsg+
+	 IC7o2dr3D8e/hth53e7fTc0KsODOxTVpq4r3VpmCl7ReEEOA1F5k6vbUMmM91mNAu9
+	 5ID6JY3CJk06UsxlZcLXBAY0WiaHjMDBEE66wf/yRbw3tHxkrSDLKJLlYnJtP2qM3k
+	 qqXIKihPT794nFTBk52DCNgbLBrAwLrd4Ot8mDyw3jjp636r6qFhQInZkapQg6Jvax
+	 WPyizy0K7fN3w==
+From: Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH v4 0/8] nfsd/vfs: fix handling of delegated timestamp
+ updates
+Date: Wed, 30 Jul 2025 09:24:29 -0400
+Message-Id: <20250730-nfsd-testing-v4-0-7f5730570a52@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 3AD612002A
-X-Stat-Signature: x5kmfoc9dirxwaqpen1a8dee8h1esq1n
-X-Rspamd-Server: rspamout02
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX182DQPiz/lC1rskcX/IUATdlgupZxnzmOs=
-X-HE-Tag: 1753881431-485616
-X-HE-Meta: U2FsdGVkX1/tPPiWpHI8TYw/1NhA5gPWAauOdQvPprILSBnwk+q/t5ftSbAYUXxv6duh04/2u8XgpwEVTm97EKr3RqK9rFetyzYWCLkx4MhSOL6CIrUsELFdMFCdO0ZmzZySUbgS1bUJM5/YYH5yVPJXkNz0FCcbgCLXNEADS/MzibX38qEYwIeE0zwYbz8Z+Zc7rotswMFhc6T/fcPlSS3AsgTrJvVouI775ZBdzGz4g12a5Ab4PxjVUe6NFoC+ui6wjNeKUgaXkcWUfbnc9dPNip2TuznSm6bi8LuLos7h029XFcsQ13ky572sJayDcI0+m2CczjshmB4SCeKwxz5IYfvGXHX4
+X-B4-Tracking: v=1; b=H4sIAA0dimgC/3XM0Q6CIBiG4VtxHEeTHwXrqPtoHSD8KKthA8dqz
+ nsPPTJbh9+3Pe9EIgaHkZyLiQRMLrrB51EdCqJ75TukzuRNoIS6lADU22joiHF0vqM1NoIpri1
+ XJcnkGdC615q73vLuXRyH8F7riS3vn1BitKSccWBaWn2S9nLH4PFxHEJHllKCrRY7DVnbqj4BN
+ y3Ytv3RfKvlTvOsG6NBKdsyIcyXnuf5AyG4AqglAQAA
+X-Change-ID: 20250722-nfsd-testing-5e861a3cf3a0
+To: Alexander Viro <viro@zeniv.linux.org.uk>, 
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+ Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, 
+ Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+ Tom Talpey <tom@talpey.com>
+Cc: Trond Myklebust <trondmy@hammerspace.com>, 
+ Anna Schumaker <anna@kernel.org>, linux-fsdevel@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+ linux-nfs@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2864; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=pwzh++zHm4PBnw6/mF1yZymDUo3Db8nyIvIwSvR2yjM=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBoih0bxAvobwuwik/ceoob714smm4CT5DeKE97J
+ IzDBjB73RSJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaIodGwAKCRAADmhBGVaC
+ FYL6EADQWXWv3x8UIcmxSna8hYxrbZ0VrPBfZBlAyWMJ/z2NzvQVsL4OTbyc96QnmCgnU8Sjd9H
+ ZMKcbhlTRTR6TcLE/acldMf5TYvvdYoT7APLYfbbGFkoPZ2tZvvAa4ZMceS+aVBC3scuPSUZJJe
+ nWn/f4h0tWWvcrcqf+M6Pjtj45sYgtAaeIZD3rDgd9x4lNWzo8cYfLlSrzpsuepQobSNxQpeWhr
+ uwLakkjv2M89TZG31RTgWnWo9nXtiRO5eawBOo8bxPrcbOP5YzWQodSmRWw7s8CDcacfWxDyhXu
+ yQMTQkHp8CrSRhPvpnhv0a1X/aFqzKJHdEVhZoFUjecBqJX+kfffCrdqlVJKkGuBINvDpaJH/oo
+ brc4x0kGaR+G2CRfCRkTSZWjpZ7fwEysqLAegOkjZfmtXQWaIfpHHJHAxIXVmMjhUwSSCwrO8Ht
+ o8nCzzXRw1O7Bxl9Ku749leourAWHhfcZGINqVu5Mw5q3kyyMqoFHJ0cGcWLzIOJGxVOm+786xO
+ fP0o1bDB5yWfCvajzfIGkOckVIrGbXOWH9pGlwhF0Cb84xau2rftvFM6pD112EwqYehlU1w1bpJ
+ S0g5WKQCvP1UBHenWgB8Db7IkEbwdRWCJVWi+czC0zmRNcryh40hMig+oMiHsBeU9k5ewCHryRL
+ ddC45dSpjAlA/Rw==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-On Wed, 30 Jul 2025 19:11:01 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+This patchset fixes the handling of delegated timestamps in nfsd. This
+one also adopts Neil's suggestopn to use FMODE_NOCMTIME to freeze
+timestamp updates while there is a WRITE_ATTRS delegation outstanding.
 
-> Interesting, this find another issue. Since this is provided by
-> CONFIG_PROBE_EVENTS, we need to fix CONFIG_PROBE_EVENTS depending
-> on HAVE_REGS_AND_STACK_ACCESS_API.
-> 
-> diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-> index a3f35c7d83b6..cd239240b0ef 100644
-> --- a/kernel/trace/Kconfig
-> +++ b/kernel/trace/Kconfig
-> @@ -792,6 +792,7 @@ config DYNAMIC_EVENTS
->         def_bool n
->  
->  config PROBE_EVENTS
-> +       depends on HAVE_REGS_AND_STACK_ACCESS_API
->         def_bool n
->  
->  config BPF_KPROBE_OVERRIDE
+Most of these patches are identical to the last set. I dropped the patch
+that removes inode_set_ctime_deleg(), and reworked the logic in
+setattr_copy() and friends to accomodate.
 
-OK, I'll send a v2.
+The last patch in the series is new. That one adds FMODE_NOCMTIME to the
+file while a WRITE_ATTRS delegation is in force, and adds a mechanism to
+ensure that the timestamps gets updated appropriately if the client
+never sends a SETATTR with updated timestamps in it. That should ensure
+that the ctime never rolls backward.
 
-Did you want to take this in the tracing pull request?
+This patchset also leaves inode_set_ctime_deleg() in place. That's
+probably overengineered if we don't need to worry about ctime updates
+from the client racing with ctime updates due to writes anymore, but we
+can simplify it later if so.
 
-I see you already did the probe pull request.
+The series passes the gitr testsuite in the "stress" configuration.
 
--- Steve
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+Changes in v4:
+- Use FMODE_NOCMTIME to freeze timestamp updates on write
+- drop patch that removes inode_set_ctime_deleg()
+- rework logic in setattr_copy()
+- Link to v3: https://lore.kernel.org/r/20250727-nfsd-testing-v3-0-8dc2aafb166d@kernel.org
+
+Changes in v3:
+- split out decoder fix into separate patch
+- add Fixes: tags
+- Link to v2: https://lore.kernel.org/r/20250726-nfsd-testing-v2-0-f45923db2fbb@kernel.org
+
+Changes in v2:
+- add ATTR_CTIME_SET and remove inode_set_ctime_deleg()
+- track original timestamps in struct nfs4_delegation
+- fix delegated timestamp updates to respect saved timestamps
+- Link to v1: https://lore.kernel.org/r/20250722-nfsd-testing-v1-0-31321c7fc97f@kernel.org
+
+---
+Jeff Layton (8):
+      nfsd: fix assignment of ia_ctime.tv_nsec on delegated mtime update
+      nfsd: ignore ATTR_DELEG when checking ia_valid before notify_change()
+      vfs: add ATTR_CTIME_SET flag
+      nfsd: use ATTR_CTIME_SET for delegated ctime updates
+      nfsd: track original timestamps in nfs4_delegation
+      nfsd: fix SETATTR updates for delegated timestamps
+      nfsd: fix timestamp updates in CB_GETATTR
+      nfsd: freeze c/mtime updates with outstanding WRITE_ATTRS delegation
+
+ fs/attr.c           | 44 ++++++++++++---------------
+ fs/nfsd/nfs4proc.c  | 55 ++++++++++++++++++++++++++++++++--
+ fs/nfsd/nfs4state.c | 86 ++++++++++++++++++++++++++++++++++++++++-------------
+ fs/nfsd/nfs4xdr.c   |  5 ++--
+ fs/nfsd/state.h     | 12 +++++++-
+ fs/nfsd/vfs.c       |  2 +-
+ include/linux/fs.h  |  1 +
+ 7 files changed, 153 insertions(+), 52 deletions(-)
+---
+base-commit: b05f077b59098b4760e3f675b00a4e6a1ad4b0ad
+change-id: 20250722-nfsd-testing-5e861a3cf3a0
+
+Best regards,
+-- 
+Jeff Layton <jlayton@kernel.org>
+
