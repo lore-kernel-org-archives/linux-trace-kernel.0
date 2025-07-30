@@ -1,185 +1,377 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46E8E2D879A
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 30 Jul 2025 13:53:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 426DC2D948C;
+	Wed, 30 Jul 2025 13:53:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753883604; cv=none; b=GDW6FVps0Myx/tZEJ7jJn/zkGPesnPjBCPFUSm8zo91saiMhkjM1xV42c993k2QB7TCwifqtf08zr+VtvRI5M3hB6T70kld5ISopNRNBxxA5uvBkshEQU4AItjU8MAfffzD2F1BZi3j8umo4wP2nJQ28fOLbHboUhgRMlUhm65U=
+	t=1753883626; cv=none; b=L+R2/GcDCNGKx7SZ9gZee6/sHj3tI7xV5fEXXwBwIw8qtHmxAUapMx9+k9O19ZDIJ+3RP7wBusj8CdDgY/oRt3+eBD8JIlkV6bGxuSn/UzaRv6TVK/tQt2wZBvSIYSR4jc+wIt91s81jnvz+5vE6rMVO4EnRJ4XRIFk6oo0wbyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753883604; c=relaxed/simple;
-	bh=wLwI8LqQkl0a8WpihQgf2W/kfgc7P0TfONGUqLvhwPs=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XvEnIr0ZQNsaD8BWh28D4p3VhT4wSdW2i6eQOQuTbzN/9g7sdSHOizr7C6rmGYMTjRDqSHJDtfEbagd+s48oF301Dt2JSSUqpDXTXbsxdNzAz/gs/oZ504fzwWI/VGpcXqKSxjk5njz1n+S3tTxY35L3d46VZQ9VELie3sOxiss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VZ+XYBkA; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1753883626; c=relaxed/simple;
+	bh=FrY1tORaOz9Dh269bjvURkmvNtbx8l98ZBz+dBh1xJ8=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=NKhRQkgt/Y46IzvHgtXIiLZlvpSx/EnRep3Q6wlv43los/BDafwQ+zb4t7YwrJBeF2IAAFKIIm0andz8ff/KZngDCZnKgRsobAkyo2+GjzOebWXgGGrk5wFbzSDfm6hN/L7RVsyhkzSf+biFvVzWkJNJmEVgeeEJ/1JXQOmp3+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kQhdQ2qO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VZ+XYBkA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1753883602;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=wLwI8LqQkl0a8WpihQgf2W/kfgc7P0TfONGUqLvhwPs=;
-	b=VZ+XYBkAZbq1GIHPCgYCs52LY7t1U6uoHo7gTpLdUaLNpfQYTHcqymjDR1xadcymahc616
-	/fcBGzypVUj3EIUet/deqBdnfAW4T+/rsMRg6JnH652IDsHkwnOypYu2i6sqplKZqjjNOw
-	NxYyGquyIOvi2m/+cD1bgODWHV9XWz4=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-403-dEhMvucvO2qoXzjmuxcxMg-1; Wed, 30 Jul 2025 09:53:18 -0400
-X-MC-Unique: dEhMvucvO2qoXzjmuxcxMg-1
-X-Mimecast-MFC-AGG-ID: dEhMvucvO2qoXzjmuxcxMg_1753883598
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3b783265641so3313218f8f.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 30 Jul 2025 06:53:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753883598; x=1754488398;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=s5VhBNCPpXfQ0FMhPUPtPbpUbYNgD0vDQAOO3ufsUTQ=;
-        b=ZV2juycjoDV7MQ/N7t7KCurtg/9pqQTdNoAqdhxK/10iHg5o7za9DHF1OKuGoqOv73
-         7a//5pgw55YzKXAU+IfkSYePuJ/crOdJsa/Lo6cKPaaRwlLvaqrAC8xrBjGJyIlECD9G
-         6BkaXZN7gqeeoo7vlw0kGB6foYELHjsvTLXYaiyVffL9YwdcDl926ErsckszWpQKcTcZ
-         hIuQTfQRvZt9FUjWvbBh+J79G4POseNMHSug9S/XcwaojVv13tuw81GkZg8+qzAieNZQ
-         BHQcrW1Zfx638QH0Q13EnGG39VfyHNS8qAxhMXDhu1Hjku/BRsKc0Q7LPu+1tb/0ZoMR
-         nFUw==
-X-Forwarded-Encrypted: i=1; AJvYcCUT83GwzfbhRNfsHxYCM6pI7gkSieqEip7KJvu8Ebi327ozQgW7XIHL5uLR4zWdXvFcB2bgApDY/lwWp/sWd4zFYsI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwyVv599g6DNizT/pEFpg5CLJV7d7R2VsGnXcGcT9VyhnpAMUVl
-	G2XpXO8q8jMgpQVsjTTYf7GKAq70kfLMFLawUHuCEk3Sl3k4+DApZlTcHfz5Lh3sc+kRFnkhTwO
-	coyzrSCFtMc6wHl9mVe+Ns0yWXQ8K2T1aLnnDvXt3oXPMmWwgHjLf63kYLTSnFdHtOQwnjPA4Ho
-	4y409ZvgkU
-X-Gm-Gg: ASbGncuA1Lz5BC9Bsv0In/nDs9bozHTyr3mfKMng7hgto5O3PlkrIPYsY7GiTEoYMj2
-	PCrmSE+0PIZxMUQNfrUUUC9pC6n7xAOLt00/lGyDR2Ks6H6eSSMurX04A2oNQXxLX9TX0SCsZdP
-	sdvD+Z4pv5vo1sqd43S8t7krM6ietJ9C8FcpRK0DGYH7avjXJNY+NZcHwAxB/DWbnYtP1ZzHeKs
-	Hd4F6TNcVwyuljPBFvNJnOJTyBpi6zhmzhSkkNYhWDYZjtRTBV1Gsj0tvU0mX+M3ucSSIC6s8ie
-	+5WIdP68/ZqOcoJgiB/femY4acq5cEDiahI2Tjlt7QT7rdB8LrJPxfmef2b4oT/S3A==
-X-Received: by 2002:adf:a297:0:b0:3b7:970d:a565 with SMTP id ffacd0b85a97d-3b7970da81bmr1347977f8f.46.1753883597563;
-        Wed, 30 Jul 2025 06:53:17 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGbFEhzWYMwwTRQo1bdOhOzFaDIgbxaeTPnywGw4nVO9bfEoPrUNrdganQQ/iWkVZcrnq5VNw==
-X-Received: by 2002:adf:a297:0:b0:3b7:970d:a565 with SMTP id ffacd0b85a97d-3b7970da81bmr1347953f8f.46.1753883597005;
-        Wed, 30 Jul 2025 06:53:17 -0700 (PDT)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.42])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b794a9d6a1sm3589006f8f.16.2025.07.30.06.53.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Jul 2025 06:53:16 -0700 (PDT)
-Message-ID: <767a9d59081220594d21856f329fb35988ef7925.camel@redhat.com>
-Subject: Re: [PATCH 4/5] sched: Add rt task enqueue/dequeue trace points
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Nam Cao <namcao@linutronix.de>, Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, 	linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
- Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot
- <vincent.guittot@linaro.org>, Dietmar Eggemann	 <dietmar.eggemann@arm.com>,
- Ben Segall <bsegall@google.com>, Mel Gorman	 <mgorman@suse.de>, Valentin
- Schneider <vschneid@redhat.com>
-Date: Wed, 30 Jul 2025 15:53:14 +0200
-In-Reply-To: <8f83869a5040bd7cd3096bd12090c1ab110ae5c4.1753879295.git.namcao@linutronix.de>
-References: <cover.1753879295.git.namcao@linutronix.de>
-	 <8f83869a5040bd7cd3096bd12090c1ab110ae5c4.1753879295.git.namcao@linutronix.de>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
- xyhmqeUWOzFx5P43S1E1dhsrLWgP
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kQhdQ2qO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B650DC4CEE7;
+	Wed, 30 Jul 2025 13:53:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753883626;
+	bh=FrY1tORaOz9Dh269bjvURkmvNtbx8l98ZBz+dBh1xJ8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=kQhdQ2qOBWXpkE1DrU/4qU/yR5lIzJ9aclPd5lCBmAQktWViebMW9IuzuE/gkD/pC
+	 6YoJrIWRVbbCc1OYox8y+/GKsMWNHSQ97CpTCHyHzAgFxteIafr5rVkamodRWV5Npt
+	 /cl/BY3jIZgZdtSbanADTKh6wAoCo8M+pCW26YlRaukJm1Lu2jdbeWMa17QwK9i5re
+	 qTREek1c7yVZTpxv7yW33j0WF/nUkHuEHIksQ7cHFNy7vVAPIZEQITRAupL8Jhrps4
+	 jSWhXeGogfSJvC4K9hvY7QE0zVH84b3uROEM3c7XkkbUCrq/eIuafl2Z+mvDR3ygaJ
+	 g5fb57FTkpb9g==
+Date: Wed, 30 Jul 2025 22:53:40 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>, bpf@vger.kernel.org, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>,
+ Namhyung Kim <namhyung@kernel.org>, Takaya Saeki <takayas@google.com>,
+ Douglas Raillard <douglas.raillard@arm.com>, Tom Zanussi
+ <zanussi@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Thomas
+ Gleixner <tglx@linutronix.de>, Ian Rogers <irogers@google.com>,
+ aahringo@redhat.com
+Subject: Re: [PATCH] tracing/probes: Allow use of BTF names to dereference
+ pointers
+Message-Id: <20250730225340.92ead36268880e0bc098f12e@kernel.org>
+In-Reply-To: <20250729113335.2e4f087d@batman.local.home>
+References: <20250729113335.2e4f087d@batman.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: mglIJ_anQjiqLtl5B8FfTU4lp9O8Jmi6DXsfYhFgRpI_1753883598
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, 2025-07-30 at 14:45 +0200, Nam Cao wrote:
-> Add trace points into enqueue_task_rt() and dequeue_task_rt(). They
-> are useful to implement RV monitor which validates RT scheduling.
->=20
+On Tue, 29 Jul 2025 11:33:35 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-I get it's much simpler this way, but is it that different to follow
-the task's existing tracepoints?
+> From: Steven Rostedt <rostedt@goodmis.org>
+> 
+> Add syntax to the FETCHARGS parsing of probes to allow the use of
+> structure and member names to get the offsets to dereference pointers.
+> 
+> Currently, a dereference must be a number, where the user has to figure
+> out manually the offset of a member of a structure that they want to
+> reference. For example, to get the size of a kmem_cache that was passed to
+> the function kmem_cache_alloc_noprof, one would need to do:
+> 
+>  # cd /sys/kernel/tracing
+>  # echo 'f:cache kmem_cache_alloc_noprof size=+0x18($arg1):u32' >> dynamic_events
+> 
+> This requires knowing that the offset of size is 0x18, which can be found
+> with gdb:
+> 
+>   (gdb) p &((struct kmem_cache *)0)->size
+>   $1 = (unsigned int *) 0x18
+> 
+> If BTF is in the kernel, it can be used to find this with names, where the
+> user doesn't need to find the actual offset:
+> 
+>  # echo 'f:cache kmem_cache_alloc_noprof size=+kmem_cache.size($arg1):u32' >> dynamic_events
 
-* task going to sleep (switch:prev_state !=3D RUNNING) is dequeued
-* task waking up is enqueued
-* changing the tasks's policy (setpolicy and setattr syscalls) should
-enqueue/dequeue as well
+Great! This is something like a evolution of assembler to "symbolic"
+assembler. ;)
 
-This is more thinking out loud, but I'm doing right now something
-rather similar with the deadline tasks and this seems reasonable, at
-least on paper.
+> 
+> Instead of the "+0x18", it would have "+kmem_cache.size" where the format is:
+> 
+>   +STRUCT.MEMBER[.MEMBER[..]]
 
-What do you think?
+Yeah, and using '.' delimiter looks nice to me.
 
-Thanks,
-Gabriele
+> 
+> The delimiter is '.' and the first item is the structure name. Then the
+> member of the structure to get the offset of. If that member is an
+> embedded structure, another '.MEMBER' may be added to get the offset of
+> its members with respect to the original value.
+> 
+>   "+kmem_cache.size($arg1)" is equivalent to:
+> 
+>   (*(struct kmem_cache *)$arg1).size
+> 
+> Anonymous structures are also handled:
+> 
+>   # echo 'e:xmit net.net_dev_xmit +net_device.name(+sk_buff.dev($skbaddr)):string' >> dynamic_events
 
-> Signed-off-by: Nam Cao <namcao@linutronix.de>
+So this only replaces the "offset" part. So we still need to use
++OFFS() syntax for dereferencing the pointer.
+
+> 
+> Where "+net_device.name(+sk_buff.dev($skbaddr))" is equivalent to:
+> 
+>   (*(struct net_device *)((*(struct sk_buff *)($skbaddr))->dev)->name)
+> 
+> Note that "dev" of struct sk_buff is inside an anonymous structure:
+> 
+> struct sk_buff {
+> 	union {
+> 		struct {
+> 			/* These two members must be first to match sk_buff_head. */
+> 			struct sk_buff		*next;
+> 			struct sk_buff		*prev;
+> 
+> 			union {
+> 				struct net_device	*dev;
+> 				[..]
+> 			};
+> 		};
+> 		[..]
+> 	};
+> 
+> This will allow up to three deep of anonymous structures before it will
+> fail to find a member.
+> 
+> The above produces:
+> 
+>     sshd-session-1080    [000] b..5.  1526.337161: xmit: (net.net_dev_xmit) arg1="enp7s0"
+> 
+> And nested structures can be found by adding more members to the arg:
+> 
+>   # echo 'f:read filemap_readahead.isra.0 file=+0(+dentry.d_name.name(+file.f_path.dentry($arg2))):string' >> dynamic_events
+> 
+> The above is equivalent to:
+> 
+>   *((*(struct dentry *)(*(struct file *)$arg2)->f_path.dentry)->d_name.name)
+> 
+> And produces:
+> 
+>        trace-cmd-1381    [002] ...1.  2082.676268: read: (filemap_readahead.isra.0+0x0/0x150) file="trace.dat"
+> 
+
+OK, the desgin looks good to me. I have some comments below.
+
+
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 > ---
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Juri Lelli <juri.lelli@redhat.com>
-> Cc: Vincent Guittot <vincent.guittot@linaro.org>
-> Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
-> Cc: Ben Segall <bsegall@google.com>
-> Cc: Mel Gorman <mgorman@suse.de>
-> Cc: Valentin Schneider <vschneid@redhat.com>
-> ---
-> =C2=A0include/trace/events/sched.h | 8 ++++++++
-> =C2=A0kernel/sched/rt.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 | 4 ++++
-> =C2=A02 files changed, 12 insertions(+)
->=20
-> diff --git a/include/trace/events/sched.h
-> b/include/trace/events/sched.h
-> index c08893bde255..c38f12f7f903 100644
-> --- a/include/trace/events/sched.h
-> +++ b/include/trace/events/sched.h
-> @@ -898,6 +898,14 @@ DECLARE_TRACE(sched_set_need_resched,
-> =C2=A0=09TP_PROTO(struct task_struct *tsk, int cpu, int tif),
-> =C2=A0=09TP_ARGS(tsk, cpu, tif));
-> =C2=A0
-> +DECLARE_TRACE(enqueue_task_rt,
-> +=09TP_PROTO(int cpu, struct task_struct *task),
-> +=09TP_ARGS(cpu, task));
+>  Documentation/trace/kprobetrace.rst |   3 +
+>  kernel/trace/trace_btf.c            | 106 ++++++++++++++++++++++++++++
+>  kernel/trace/trace_btf.h            |  10 +++
+>  kernel/trace/trace_probe.c          |   7 +-
+>  4 files changed, 124 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/trace/kprobetrace.rst b/Documentation/trace/kprobetrace.rst
+> index 3b6791c17e9b..00273157100c 100644
+> --- a/Documentation/trace/kprobetrace.rst
+> +++ b/Documentation/trace/kprobetrace.rst
+> @@ -54,6 +54,8 @@ Synopsis of kprobe_events
+>    $retval	: Fetch return value.(\*2)
+>    $comm		: Fetch current task comm.
+>    +|-[u]OFFS(FETCHARG) : Fetch memory at FETCHARG +|- OFFS address.(\*3)(\*4)
+> +  +STRUCT.MEMBER[.MEMBER[..]](FETCHARG) : If BTF is supported, Fetch memory
+> +		  at FETCHARG + the offset of MEMBER inside of STRUCT.(\*5)
+>    \IMM		: Store an immediate value to the argument.
+>    NAME=FETCHARG : Set NAME as the argument name of FETCHARG.
+>    FETCHARG:TYPE : Set TYPE as the type of FETCHARG. Currently, basic types
+> @@ -70,6 +72,7 @@ Synopsis of kprobe_events
+>          accesses one register.
+>    (\*3) this is useful for fetching a field of data structures.
+>    (\*4) "u" means user-space dereference. See :ref:`user_mem_access`.
+> +  (\*5) +STRUCT.MEMBER(FETCHARG) is equivalent to (*(struct STRUCT *)(FETCHARG)).MEMBER
+>  
+>  Function arguments at kretprobe
+>  -------------------------------
+> diff --git a/kernel/trace/trace_btf.c b/kernel/trace/trace_btf.c
+> index 5bbdbcbbde3c..b69404451410 100644
+> --- a/kernel/trace/trace_btf.c
+> +++ b/kernel/trace/trace_btf.c
+> @@ -120,3 +120,109 @@ const struct btf_member *btf_find_struct_member(struct btf *btf,
+>  	return member;
+>  }
+>  
+> +#define BITS_ROUNDDOWN_BYTES(bits) ((bits) >> 3)
 > +
-> +DECLARE_TRACE(dequeue_task_rt,
-> +=09TP_PROTO(int cpu, struct task_struct *task),
-> +=09TP_ARGS(cpu, task));
+> +static int find_member(const char *ptr, struct btf *btf,
+> +		       const struct btf_type **type, int level)
+> +{
+> +	const struct btf_member *member;
+> +	const struct btf_type *t = *type;
+> +	int i;
 > +
-> =C2=A0#endif /* _TRACE_SCHED_H */
-> =C2=A0
-> =C2=A0/* This part must be outside protection */
-> diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
-> index e40422c37033..f4d3f5e7fbec 100644
-> --- a/kernel/sched/rt.c
-> +++ b/kernel/sched/rt.c
-> @@ -1480,6 +1480,8 @@ enqueue_task_rt(struct rq *rq, struct
-> task_struct *p, int flags)
-> =C2=A0{
-> =C2=A0=09struct sched_rt_entity *rt_se =3D &p->rt;
-> =C2=A0
-> +=09trace_enqueue_task_rt_tp(rq->cpu, p);
-> +
-> =C2=A0=09if (flags & ENQUEUE_WAKEUP)
-> =C2=A0=09=09rt_se->timeout =3D 0;
-> =C2=A0
-> @@ -1501,6 +1503,8 @@ static bool dequeue_task_rt(struct rq *rq,
-> struct task_struct *p, int flags)
-> =C2=A0
-> =C2=A0=09dequeue_pushable_task(rq, p);
-> =C2=A0
-> +=09trace_dequeue_task_rt_tp(rq->cpu, p);
-> +
-> =C2=A0=09return true;
-> =C2=A0}
-> =C2=A0
+> +	/* Max of 3 depth of anonymous structures */
+> +	if (level > 3)
+> +		return -1;
 
+Please return an error code, maybe this is -E2BIG?
+
+> +
+> +	for_each_member(i, t, member) {
+> +		const char *tname = btf_name_by_offset(btf, member->name_off);
+> +
+> +		if (strcmp(ptr, tname) == 0) {
+> +			*type = btf_type_by_id(btf, member->type);
+> +			return BITS_ROUNDDOWN_BYTES(member->offset);
+> +		}
+> +
+> +		/* Handle anonymous structures */
+> +		if (strlen(tname))
+> +			continue;
+> +
+> +		*type = btf_type_by_id(btf, member->type);
+> +		if (btf_type_is_struct(*type)) {
+> +			int offset = find_member(ptr, btf, type, level + 1);
+> +
+> +			if (offset < 0)
+> +				continue;
+> +
+> +			return offset + BITS_ROUNDDOWN_BYTES(member->offset);
+> +		}
+> +	}
+> +
+> +	return -1;
+
+	return -ENOENT;
+
+> +}
+> +
+> +/**
+> + * btf_find_offset - Find an offset of a member for a structure
+> + * @arg: A structure name followed by one or more members
+> + * @offset_p: A pointer to where to store the offset
+> + *
+> + * Will parse @arg with the expected format of: struct.member[[.member]..]
+> + * It is delimited by '.'. The first item must be a structure type.
+> + * The next are its members. If the member is also of a structure type it
+> + * another member may follow ".member".
+> + *
+> + * Note, @arg is modified but will be put back to what it was on return.
+> + *
+> + * Returns: 0 on success and -EINVAL if no '.' is present
+> + *    or -ENXIO if the structure or member is not found.
+> + *    Returns -EINVAL if BTF is not defined.
+> + *  On success, @offset_p will contain the offset of the member specified
+> + *    by @arg.
+> + */
+> +int btf_find_offset(char *arg, long *offset_p)
+> +{
+> +	const struct btf_type *t;
+> +	struct btf *btf;
+> +	long offset = 0;
+> +	char *ptr;
+> +	int ret;
+> +	s32 id;
+> +
+> +	ptr = strchr(arg, '.');
+> +	if (!ptr)
+> +		return -EINVAL;
+
+Instead of just returning error, can't we log an error for helping user?
+
+trace_probe_log_err(BYTE_OFFSET, ERROR_CODE);
+
+The base offset is stored in ctx->offset, so you can use it.
+ERROR_CODE is defined in trace_probe.h. 
+
+Maybe you can add something like
+
+	C(BAD_STRUCT_FMT,		"Symbolic offset must be +STRUCT.MEMBER format"),\
+
+And for other cases, you can use
+
+	C(BAD_BTF_TID,		"Failed to get BTF type info."),\
+
+> +
+> +	*ptr = '\0';
+> +
+> +	id = bpf_find_btf_id(arg, BTF_KIND_STRUCT, &btf);
+> +	if (id < 0)
+> +		goto error;
+> +
+> +	/* Get BTF_KIND_FUNC type */
+> +	t = btf_type_by_id(btf, id);
+> +
+> +	/* May allow more than one member, as long as they are structures */
+> +	do {
+> +		if (!t || !btf_type_is_struct(t))
+> +			goto error;
+> +
+> +		*ptr++ = '.';
+> +		arg = ptr;
+> +		ptr = strchr(ptr, '.');
+> +		if (ptr)
+> +			*ptr = '\0';
+> +
+> +		ret = find_member(arg, btf, &t, 0);
+> +		if (ret < 0)
+> +			goto error;
+> +
+> +		offset += ret;
+> +
+> +	} while (ptr);
+> +
+> +	*offset_p = offset;
+> +	return 0;
+> +
+> +error:
+> +	if (ptr)
+> +		*ptr = '.';
+> +	return -ENXIO;
+> +}
+> diff --git a/kernel/trace/trace_btf.h b/kernel/trace/trace_btf.h
+> index 4bc44bc261e6..7b0797a6050b 100644
+> --- a/kernel/trace/trace_btf.h
+> +++ b/kernel/trace/trace_btf.h
+> @@ -9,3 +9,13 @@ const struct btf_member *btf_find_struct_member(struct btf *btf,
+>  						const struct btf_type *type,
+>  						const char *member_name,
+>  						u32 *anon_offset);
+> +
+> +#ifdef CONFIG_PROBE_EVENTS_BTF_ARGS
+> +/* Will modify arg, but will put it back before returning. */
+> +int btf_find_offset(char *arg, long *offset);
+> +#else
+> +static inline int btf_find_offset(char *arg, long *offset)
+> +{
+
+Here also should use 
+
+	C(NOSUP_BTFARG,		"BTF is not available or not supported"),	\
+
+
+Thank you,
+
+> +	return -EINVAL;
+> +}
+> +#endif
+> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+> index 424751cdf31f..4c13e51ea481 100644
+> --- a/kernel/trace/trace_probe.c
+> +++ b/kernel/trace/trace_probe.c
+> @@ -1137,7 +1137,7 @@ parse_probe_arg(char *arg, const struct fetch_type *type,
+>  
+>  	case '+':	/* deref memory */
+>  	case '-':
+> -		if (arg[1] == 'u') {
+> +		if (arg[1] == 'u' && isdigit(arg[2])) {
+>  			deref = FETCH_OP_UDEREF;
+>  			arg[1] = arg[0];
+>  			arg++;
+> @@ -1150,7 +1150,10 @@ parse_probe_arg(char *arg, const struct fetch_type *type,
+>  			return -EINVAL;
+>  		}
+>  		*tmp = '\0';
+> -		ret = kstrtol(arg, 0, &offset);
+> +		if (arg[0] != '-' && !isdigit(*arg))
+> +			ret = btf_find_offset(arg, &offset);
+> +		else
+> +			ret = kstrtol(arg, 0, &offset);
+>  		if (ret) {
+>  			trace_probe_log_err(ctx->offset, BAD_DEREF_OFFS);
+>  			break;
+> -- 
+> 2.47.2
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
