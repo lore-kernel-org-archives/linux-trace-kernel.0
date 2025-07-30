@@ -1,94 +1,97 @@
-Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29FF41E2848
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 30 Jul 2025 11:51:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBD2C39ACC;
+	Wed, 30 Jul 2025 12:45:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753876317; cv=none; b=QE+i4pHXTxtglVVSzj6tRKwJA+4Fev9TORDMCU6y0B+c8cdJiceKbbPx9BRb9ysWgZ6MMRkanuSe7a282ab1Z0AyF3p289L4mG9EJBj2TpsGsmnmMBnTKRGkb/NK0hN7HOhCVp0eiFfrHVIF/iLlc2TR5cL9hGpw2Hh1xYj+iyU=
+	t=1753879551; cv=none; b=Nh5deQwysu2Pdtfadmr5IVEinefep7i6zJmtETo0Ryynd1C2dTJbSxyXww4+zbcza/iVOKz0kkphFUdmGBYJ2itpBAwO7TZmwoNXQQMveIk7qmaVsjW16ypLccBcyUUTRfe3exKZMeZx6fP5fPXRPcohum+qX5Brovi2Kgdz0z8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753876317; c=relaxed/simple;
-	bh=jgREDXGePmQdfd2E7Vl8U2KGORUW/8wrdY5g6v1eY0Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tPEdUYb4TJXenmzkGQxtEIcDnNjsgAlsWo8La/G+IgL+hUEMsDiZOdiA2JkxkamdS6oeCNMvqe+0flQE1HIizEenqTSqi5P9HpmmzeUkCN7PLa3Eta/KNKEz7DQ4oN/0h74UF8hwaTonn2abTwr7i6eeprxbZr5ypxitGKnj4Dc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=k2DX2/ke; arc=none smtp.client-ip=91.218.175.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1753879551; c=relaxed/simple;
+	bh=S7X/BFf+hNgZZPjQGszpzY7Xu7SJAcMRtyRQC4tpn4k=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mjuk986eA8DuzF2H8s6LkCn/V5aXCZgAaAF5DF+SaBTyv7RpWydGxpIo1GPjPvPppnf3wNMUooalWpYDFX+Qw2xnCDYotyvcGBFOCj2C+vdXowGg/GaBi5EGZjxmL3rzJCHIj2aeEYBAfmpNYHny1Osh/qDKzsnnL4oLS8bYlOM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=c7faKPc6; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=wH4afjDn; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="k2DX2/ke"
-Message-ID: <7754e178-d8dd-4f11-a300-1fc964a5916f@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1753876302;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="c7faKPc6";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wH4afjDn"
+From: Nam Cao <namcao@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1753879547;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cofzKk3+SnpP5m/YhFynok1TZi2YE/wS6Sd7AtPq+HE=;
-	b=k2DX2/keevHls4RWwiShG9QTYYdPCBaBEnDitRcDbUIdV/Sf9k7fpwDfenlMoA4N4j3bWV
-	XjmnquGeZ5v3b+SPyOGcao0dSkA0F0ywg9ppoeBG4ENvYAKATfOaAncZkeSywfUN1YBRGH
-	BSgbX1yVSgL14a8i7ub+xecn0/53i8M=
-Date: Wed, 30 Jul 2025 19:51:29 +0800
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=v61WzzhbN7r8YwdelhEqsHQb/GjuYf39aJjvgZFaVg8=;
+	b=c7faKPc6yyPZDxeHi+Pp5uS8YwvKWqQ7VuRWcTQCbxf+5Y6rl5sE8cPE7tMNOP0Lxzd4LW
+	viUUVfgtvEn4rNBuU5JDZjQ6G5EQNZY2fTTGuf+Og/y8utYiTUBj+9jjRDzwQ+Tu3nKZhC
+	vNN9y0UiyJM6t8qe9SmW1lNbL7teTeavByYuXCT/dvxIx4kWhe8a3lrZFoH9z1BKhgwIUY
+	7jV9JZRGKWILeR6TUB5NJL103ZNOdz6P+VkfgLMehEaJnhknHTHZ9dh1dJRmXvgE1LVIHL
+	3ylDRmVJqnlZKHgGGF1kquCftJPZJorBNyHP12gnn0I4hH5/nBRJjGh5evA83w==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1753879547;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=v61WzzhbN7r8YwdelhEqsHQb/GjuYf39aJjvgZFaVg8=;
+	b=wH4afjDnxRPmQc0kChoAuO+xjPfphdMULC8d1QNIiK8wKyw85C42GapUPFqwJvWwJuIefK
+	/BcnNH0RTYqXYXDA==
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Gabriele Monaco <gmonaco@redhat.com>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Nam Cao <namcao@linutronix.de>
+Subject: [PATCH 0/5] rv: LTL per-cpu monitor type and real-time scheduling monitor
+Date: Wed, 30 Jul 2025 14:45:38 +0200
+Message-Id: <cover.1753879295.git.namcao@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH bpf-next 1/2] tools/latency-collector: Check pkg-config
- install
-To: rostedt@goodmis.org, bristot@kernel.org
-Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
- bpf@vger.kernel.org
-References: <20250730113028.1666038-1-chen.dylane@linux.dev>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Tao Chen <chen.dylane@linux.dev>
-In-Reply-To: <20250730113028.1666038-1-chen.dylane@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: quoted-printable
 
-在 2025/7/30 19:30, Tao Chen 写道:
+Hi,
 
-The branch tag is wrong, i have resent it, sorry for the noise.
+This series adds support for linear temporal logic per-cpu monitor type,
+analogous to deterministic automaton per-cpu monitor. Then a new per-cpu
+monitor is added which validates real-time scheduling.
 
-> The tool pkg-config used to check libtraceevent and libtracefs, if not
-> installed, it will report the libs not found, even though they have
-> already been installed.
-> 
-> Before:
-> libtraceevent is missing. Please install libtraceevent-dev/libtraceevent-devel
-> libtracefs is missing. Please install libtracefs-dev/libtracefs-devel
-> 
-> After:
-> Makefile.config:10: *** Error: pkg-config needed by libtraceevent/libtracefs is missing
-> on this system, please install it.
-> 
-> Fixes: 9d56c88e5225 ("tools/tracing: Use tools/build makefiles on latency-collector")
-> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
-> ---
->   tools/tracing/latency/Makefile.config | 8 ++++++++
->   1 file changed, 8 insertions(+)
-> 
-> diff --git a/tools/tracing/latency/Makefile.config b/tools/tracing/latency/Makefile.config
-> index 0fe6b50f029b..6efa13e3ca93 100644
-> --- a/tools/tracing/latency/Makefile.config
-> +++ b/tools/tracing/latency/Makefile.config
-> @@ -1,7 +1,15 @@
->   # SPDX-License-Identifier: GPL-2.0-only
->   
-> +include $(srctree)/tools/scripts/utilities.mak
-> +
->   STOP_ERROR :=
->   
-> +ifndef ($(NO_LIBTRACEEVENT),1)
-> +  ifeq ($(call get-executable,$(PKG_CONFIG)),)
-> +    $(error Error: $(PKG_CONFIG) needed by libtraceevent/libtracefs is missing on this system, please install it)
-> +  endif
-> +endif
-> +
->   define lib_setup
->     $(eval LIB_INCLUDES += $(shell sh -c "$(PKG_CONFIG) --cflags lib$(1)"))
->     $(eval LDFLAGS += $(shell sh -c "$(PKG_CONFIG) --libs-only-L lib$(1)"))
--- 
-Best Regards
-Tao Chen
+Nam Cao (5):
+  rv/ltl: Prepare for other monitor types
+  rv/ltl: Support per-cpu monitors
+  verification/rvgen/ltl: Support per-cpu monitor generation
+  sched: Add rt task enqueue/dequeue trace points
+  rv: Add rts monitor
+
+ Documentation/trace/rv/monitor_sched.rst      |  19 +++
+ include/linux/rv.h                            |   2 +
+ include/rv/ltl_monitor.h                      | 117 +++++++++++-----
+ include/trace/events/sched.h                  |   8 ++
+ kernel/sched/rt.c                             |   4 +
+ kernel/trace/rv/Kconfig                       |   5 +
+ kernel/trace/rv/Makefile                      |   1 +
+ .../trace/rv/monitors/pagefault/pagefault.h   |   2 +
+ kernel/trace/rv/monitors/rts/Kconfig          |  17 +++
+ kernel/trace/rv/monitors/rts/rts.c            | 131 ++++++++++++++++++
+ kernel/trace/rv/monitors/rts/rts.h            | 126 +++++++++++++++++
+ kernel/trace/rv/monitors/rts/rts_trace.h      |  15 ++
+ kernel/trace/rv/monitors/sleep/sleep.h        |   2 +
+ kernel/trace/rv/rv_trace.h                    |  47 +++++++
+ tools/verification/models/sched/rts.ltl       |   5 +
+ tools/verification/rvgen/rvgen/ltl2k.py       |  48 ++++++-
+ .../rvgen/rvgen/templates/ltl2k/main.c        |   9 +-
+ .../rvgen/rvgen/templates/ltl2k/trace.h       |   7 +-
+ 18 files changed, 516 insertions(+), 49 deletions(-)
+ create mode 100644 kernel/trace/rv/monitors/rts/Kconfig
+ create mode 100644 kernel/trace/rv/monitors/rts/rts.c
+ create mode 100644 kernel/trace/rv/monitors/rts/rts.h
+ create mode 100644 kernel/trace/rv/monitors/rts/rts_trace.h
+ create mode 100644 tools/verification/models/sched/rts.ltl
+
+--=20
+2.39.5
+
