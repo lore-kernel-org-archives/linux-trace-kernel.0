@@ -1,153 +1,147 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1905015199A
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 30 Jul 2025 16:18:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ECEB1DFD96;
+	Wed, 30 Jul 2025 16:29:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753892333; cv=none; b=b1sw+rOt72znCFc1BlvulhCqMUOLQZ+uKIgQIUZQpAxXziP/kYNpgqs2PNN3jvk0DCBKGD8ZnGWCOy5JbcuBCJOd6sCGPd92yEGC6uOuW3Qfje2d/gvT/YuB0XiAzT5EHBTa1r7U5Ggkf0ax1LYl7SdluAc6D7aFte8PU164c1I=
+	t=1753892946; cv=none; b=Qy8gnid6d7bLu1m9MSyOnQwJeHrXBuBSD1IWAFo8Pr2I0dJIxQ5GKBUTmjIc4+6q3DNR6a4DQ44r6xw4SM+ip+JasasRxqEqZAKCsu4cT3l6fkaPxQnElNTq1kwTbwv8qgu9kKGLxCAhmUkKGuQLY+jUFJybpGyDfx/yQDaBe6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753892333; c=relaxed/simple;
-	bh=hBc1ZB/zmldH2rmmcQDCS8rxOUPp2OqnGrZNEB/LC38=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=G1UwMyFHjqPBrX3qI8S/2Xs9sPuRm6Q3KH7qJEIADMvRHJAAqBDKGOe8ddlNMLgCPewfogMuXFE3nS/frREfpjIzFCcra3oRmwAT+9iJeMN9tmepbfHzfDyPeSZkVFEfSnkBhwPECqTYkFWgCARW+ichSR78cpK7vmY/saUr1kI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=io0iBbqq; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1753892946; c=relaxed/simple;
+	bh=jggiZaTVYbB4OEBA1i4DVSHo1/3uiB/LG8J/K0w9JWg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jLRNlIZHem8bQkN10YnPwptmHH+APv/U7DZ+jOipOwyUoF92cnGd7BWPdIvnjLnGyBFQUACel10zFRXKtUDcWyJEw5ndkiPkPSc9pzFmLNhjNeqVEKvx9FuXAclJnG0WBYvE7L2zdVmLUOIwzr5I3xa39M2r+OKDKi2CdESyJPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ww34yMAY; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=giTTeePb; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="io0iBbqq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1753892331;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ww34yMAY";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="giTTeePb"
+Date: Wed, 30 Jul 2025 18:28:55 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1753892937;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=hBc1ZB/zmldH2rmmcQDCS8rxOUPp2OqnGrZNEB/LC38=;
-	b=io0iBbqqT+1OAEzhVwCM3QqtXD4Fvjff/EjRh2oQQUKzyDqDFc+ctk5TKZdbSXJZIlPNlO
-	OQ0g1ISw2eijFOpKbHfAnXT82k503olv0D5xEEAt2eGyeIyVi3wPAXhRZpkEZyeH0kZHOo
-	ksEP4xuDZT1yAv/GHjD24ijey32rgpg=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-461-TcvqjGoNNzKC872c2lzQzQ-1; Wed, 30 Jul 2025 12:18:49 -0400
-X-MC-Unique: TcvqjGoNNzKC872c2lzQzQ-1
-X-Mimecast-MFC-AGG-ID: TcvqjGoNNzKC872c2lzQzQ_1753892329
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-456106b7c4aso4870125e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 30 Jul 2025 09:18:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753892328; x=1754497128;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hBc1ZB/zmldH2rmmcQDCS8rxOUPp2OqnGrZNEB/LC38=;
-        b=Lkj36vQNIBgEOGOLibJ8FsWJ5f7sNxTZV3MyFyYqZmJBxMSDofJDjZqttAf6NDq8oZ
-         FSk67P9/4SGzpeBGenAsSohLi7xKZW+OVk/7b3DUrjuRdXTkdCYYQvFaqF3gwptmhjBx
-         K28tPmJ91ASgfsNHlj6IPyX4lbFi6ptz5gE8qNNEUkrC46aVDoLKMH7sBdop8Oua/hm5
-         fxuoIr9Ivt29lm5WTEqrv+6ye5Pkd/DSO6vHWV9B4VOMz06cr7flpWh5XV9qgjnI7GIW
-         9Qi6aResg2RuG5vTNm3esixEDSZw1KogBfxI7QMmMJfm3CS4ES0+CVFHvmGxq/uYzOCb
-         JJZw==
-X-Forwarded-Encrypted: i=1; AJvYcCWhtgcxNHmCB0UjHwXKOAtrs6wypR/cYcNMCCCfi6m3QgwXmUmjl2dnPQIzAysYCeAhrb6RLkFzRSTlZ//Hf1k5H3I=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzr8eRz1QyREykZpWdNjy3cysk7yZyvwQWJsmLpuSfSPLCYytsA
-	4tfQY39opoDeH5INLEPzOxOPvXOnUI5KxdnO1cyhREmL8358vPuYCdqiKiyOU1cfzf70gOwDitp
-	r5XONYvor1BH2VdkOehgSGFcgUCyHDf8j7v8QJycnmOOdyigzNt4t3OOnA8Xuk8xqzZBJ4lNNWQ
-	==
-X-Gm-Gg: ASbGnctvgaMg9qGMyQIyIqoMglCoLqnogLPyjub5e9vsqX+MCzwsvjA87U1Oxch2XFc
-	cYJ5Wb8d1Cd3F7UAzP/D4TRccPBSlRwiNlVYPZS/OMLWhmmJCtjmhUa6XFT2p1POxC3vKfNaztN
-	t5PWWTkqmiLOi5PRG6LP6DV810ttV76R7Xu90yqnG+9ZYQmHBl+bBY6hsVA310R1AWdyEHRN1u9
-	1iCOi1+vh1PUFpDb2WfpsPxcqJAXyNnRHkWr6h/1K9GzJjKtS7qOYhEo2osYYGkvcjtZN6zNm9D
-	u4JS7W3gRuJkGb3LWdvv8CWr6L8rwSVN3SvM3T6BANqf9mGwwwym5BNAo7TZZ2xQ+Q==
-X-Received: by 2002:a05:600c:8712:b0:456:1157:59ac with SMTP id 5b1f17b1804b1-458930bd2d6mr37773875e9.7.1753892328542;
-        Wed, 30 Jul 2025 09:18:48 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFWP0J4/3OIJlr0Em11nduOnOIRc9DYOjF+jeF8inP3uDI7CaRSpI4pRD7sR0xiZ29IYul9Fw==
-X-Received: by 2002:a05:600c:8712:b0:456:1157:59ac with SMTP id 5b1f17b1804b1-458930bd2d6mr37773565e9.7.1753892328177;
-        Wed, 30 Jul 2025 09:18:48 -0700 (PDT)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.30])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-458953779aasm32083465e9.11.2025.07.30.09.18.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Jul 2025 09:18:47 -0700 (PDT)
-Message-ID: <5065c29035be39dee954f2b233a40ae15dcc5035.camel@redhat.com>
-Subject: Re: [PATCH 4/5] sched: Add rt task enqueue/dequeue trace points
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Nam Cao <namcao@linutronix.de>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>,  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,  Ingo
- Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Juri
- Lelli <juri.lelli@redhat.com>,  Vincent Guittot
- <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Ben Segall	 <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Valentin
- Schneider	 <vschneid@redhat.com>
-Date: Wed, 30 Jul 2025 18:18:45 +0200
-In-Reply-To: <20250730151818.7RemAREO@linutronix.de>
-References: <cover.1753879295.git.namcao@linutronix.de>
-	 <8f83869a5040bd7cd3096bd12090c1ab110ae5c4.1753879295.git.namcao@linutronix.de>
-	 <767a9d59081220594d21856f329fb35988ef7925.camel@redhat.com>
-	 <20250730151818.7RemAREO@linutronix.de>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
- xyhmqeUWOzFx5P43S1E1dhsrLWgP
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42)
+	 in-reply-to:in-reply-to:references:references;
+	bh=oMls9zKlB4XZnAdVDASSbYnpYBlk93kj5Bflf/duEjk=;
+	b=ww34yMAY9CrRdppEj76TRYVcQUqYM/SnWvDs91XUhROZ9U4KZQeHBLd7vwIQFim9TDreYb
+	jtsFzeCO8xdpZpHeeWOZVg1BMac05XmAh7Bdd8QUotF/c1c1KxxlelmWLwFJSm5zRKPin4
+	tErSO0QeBw+Ut/NES9KkTi/WL74xWJRY2kmQmSDCnt5P+KRmiQLr6tmZQgFJIfhhD4d41U
+	HlwCbMFg/fFrwxlESl/smaIfbe6mTbLTH8KbGnDWUR2Ey98aPyJTJNqN6GlA0XnWuSMRXd
+	/ooH3CqBmt126/opmZSmpvZmhIzti7DuMUmkgBpiusjH6haPk80cBsUU0LzcdQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1753892937;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oMls9zKlB4XZnAdVDASSbYnpYBlk93kj5Bflf/duEjk=;
+	b=giTTeePbCK3CFiqn6eneIPQ0Ma5dgnBSvYmpyWYR+YPHhLstrUWjCiSJ5HhL9adIttldll
+	wLMXhWmGyEKEjRDQ==
+From: Nam Cao <namcao@linutronix.de>
+To: Gabriele Monaco <gmonaco@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Tomas Glozar <tglozar@redhat.com>, Juri Lelli <jlelli@redhat.com>,
+	Clark Williams <williams@redhat.com>,
+	John Kacur <jkacur@redhat.com>
+Subject: Re: [PATCH v5 7/9] rv: Replace tss and sncid monitors with more
+ complete sts
+Message-ID: <20250730162855.U6IwNmsc@linutronix.de>
+References: <20250728135022.255578-1-gmonaco@redhat.com>
+ <20250728135022.255578-8-gmonaco@redhat.com>
+ <20250728155332.sbkepHj7@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: lUTJoJ7MXCEzmf9h8Gv-wIgUVaVGoGY-WHerpv8Qn2k_1753892329
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250728155332.sbkepHj7@linutronix.de>
 
-On Wed, 2025-07-30 at 17:18 +0200, Nam Cao wrote:
-> On Wed, Jul 30, 2025 at 03:53:14PM +0200, Gabriele Monaco wrote:
-> > On Wed, 2025-07-30 at 14:45 +0200, Nam Cao wrote:
-> > > Add trace points into enqueue_task_rt() and dequeue_task_rt().
-> > > They
-> > > are useful to implement RV monitor which validates RT scheduling.
-> > >=20
-> >=20
-> > I get it's much simpler this way, but is it that different to
-> > follow
-> > the task's existing tracepoints?
-> >=20
-> > * task going to sleep (switch:prev_state !=3D RUNNING) is dequeued
-> > * task waking up is enqueued
-> > * changing the tasks's policy (setpolicy and setattr syscalls)
-> > should
-> > enqueue/dequeue as well
-> >=20
-> > This is more thinking out loud, but I'm doing right now something
-> > rather similar with the deadline tasks and this seems reasonable,
-> > at
-> > least on paper.
-> >=20
-> > What do you think?
->=20
-> I think more or less the same. The fewer tracepoints, the better. But
-> the
-> monitor is way more obvious this way.
->=20
-> Let me see how hard it is to use the existing tracepoints...
+On Mon, Jul 28, 2025 at 05:53:34PM +0200, Nam Cao wrote:
+> On Mon, Jul 28, 2025 at 03:50:19PM +0200, Gabriele Monaco wrote:
+> > The tss monitor currently guarantees task switches can happen only while
+> > scheduling, whereas the sncid monitor enforces scheduling occurs with
+> > interrupt disabled.
+> > 
+> > Replace the monitors with a more comprehensive specification which
+> > implies both but also ensures that:
+> > * each scheduler call disable interrupts to switch
+> > * each task switch happens with interrupts disabled
+> > 
+> > Cc: Ingo Molnar <mingo@redhat.com>
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
+> 
+> I gave this a try on riscv64 and observed some errors:
+> 
+> [  620.696055] rv: monitor sts does not allow event sched_switch on state enable_to_exit
+> [  621.047705] rv: monitor sts does not allow event sched_switch on state enable_to_exit
+> [  642.440209] rv: monitor sts does not allow event sched_switch on state enable_to_exit
+> 
+> I tested with two user programs:
+> 
+>     int main() { asm ("unimp"); }
+>     int main() { asm ("ebreak"); }
+> 
+> The two programs are repeatedly executed:
+> 
+>     #!/bin/bash
+>     ./test1 &
+>     ./test2 &
+>     # ... repeat lots of time
 
-Well, thinking about it again, these tracepoints might simplify things
-considerably when tasks change policy..
+Okay, I think I know why..
 
-Syscalls may fail, for that you could register to sys_exit and check
-the return value, but at that point the policy changed already, so you
-cannot tell if it's a relevant event or not (e.g. same policy).
-Also sched_setscheduler_nocheck would be out of the picture here, not
-sure how recurrent that is though (and might not matter if you only
-focus on userspace tasks).
+It seems the monitor is in scheduling state. Then it sees a pair of
+irq_disable and irq_enable, and it mistakenly thinks that this is the
+is_switch==false case in __schedule. So it thinks it is at the end of
+__schedule(), and does not expect a switch_switch.
 
-If you go down the route of adding tracepoints, why not have other
-classes benefit too? I believe calling them from the enqueue_task /
-dequeue_task in sched/core.c would allow you to easily filter out by
-policy anyway (haven't tested).
+However, this is wrong. The irq_disable and irq_enable pair is not from
+__schedule(), it is from softirq (see below).
 
-Thanks,
-Gabriele
+In short, the monitor thinks it is at the end of __schedule(), but actually
+it is still at the beginning.
 
+That's just from my limited understanding of the model, so I may be wrong.
+What do you think?
+
+Nam
+
+             test-256     [002] dns..    63.070743: da_event_sts: scheduling x irq_disable -> disable_to_switch
+             test-256     [002] dns..    63.070748: <stack trace>
+  => trace_dump_stack
+  => da_event_sts
+  => handle_irq_disable
+  => trace_hardirqs_off.part.0
+  => trace_hardirqs_off
+  => note_gp_changes
+  => rcu_core
+  => rcu_core_si
+  => handle_softirqs
+  => __irq_exit_rcu
+  => irq_exit_rcu
+  => handle_riscv_irq
+  => call_on_irq_stack
+             test-256     [002] dns..    63.070755: da_event_sts: disable_to_switch x irq_enable -> enable_to_exit
+             test-256     [002] dns..    63.070760: <stack trace>
+  => trace_dump_stack
+  => da_event_sts
+  => handle_irq_enable
+  => trace_hardirqs_on
+  => note_gp_changes
+  => rcu_core
+  => rcu_core_si
+  => handle_softirqs
+  => __irq_exit_rcu
+  => irq_exit_rcu
+  => handle_riscv_irq
+  => call_on_irq_stack
+  => call_on_irq_stack
