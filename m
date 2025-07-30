@@ -1,106 +1,219 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB62619DF9A
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 30 Jul 2025 14:18:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C39572D948A
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 30 Jul 2025 14:28:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753885097; cv=none; b=f+n4Ec7s14mXSIAoIY+QR0PLj9vFIJ2rvcR6aZPbepudogm7b4607AgwNiY2uLNbUiNgNBqba4xlvwFhy+sR7pVXmHi16U8Yj9QimqpW9JGqxFUrXkWHPmXwsyPpTYkiB5Wdriz5of9uScq8eT0/dQAQ5HZ1keUvNpBz5nKTsCw=
+	t=1753885704; cv=none; b=ZnQt8AKnLIdFIVSpQxwiUQ14P8uWRmNJ8NXGZfha/hdr2IT4DOcRg/3DYvMUH2Ld3q++FqYOiDqyfIn2Iz+QB7zoVHgOmkZ63zaCHqyq59UEFqVzoWELCOIhHPMNi6U4PDh5oBbKVAbp7nLuASvCFDMYrxmjH1y4Fols88P1NO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753885097; c=relaxed/simple;
-	bh=t+XdUySbetWUIJJo0KSa7Zw1Ei6449339h1xdEc7AKk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=u69DVGp5bqDOsWx42MLGr63+sm+zYFjdIpWCBvdSFlWp+r+5+hW5a3th5rk6Fa8yd28iacYfF8YmvP5wx5uqKA+x0OUbn2G/brqR8J9gB6wmDK02+0ZzPBf8sunzi9YCyvqFDNstpPh4D0r2+W6G3jlQjuJ+OzrVfZFxa3vMLow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LTBTAClu; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1753885704; c=relaxed/simple;
+	bh=TDW5x6DvBZ7lvIDcVVcAKcADPgkzeitjKa0U8rd1OM0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T9G8FylD5Bi9JgHKT87/PJbYELDnkxrUSE/mOsI7YzQcXfWqX6N99Klzieop89y4FnpphjdRNcDnl6VdEYYAsWOwBS+tGQ3WwBlzpo94sc7G9YxkpJHsDu+onK391d7OgsGQNU5hOxayjY7E2WZwjCpPbZw06dCKgespwTf1FWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=PG57ZssR; arc=none smtp.client-ip=209.85.160.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LTBTAClu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1753885094;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=t+XdUySbetWUIJJo0KSa7Zw1Ei6449339h1xdEc7AKk=;
-	b=LTBTACluNUdKxhLxKVC8p6LQjySG8N7BO3IX0aDsI0m1sbuj/otGj8vFazcPDrGFfkGUy3
-	bEZdoOEbp5tS56EOnKdebbHjtCT1HCwbm0mJNlRQhGnB0mN0YtXU7Fc0z1/LV3TLwkMVxB
-	GxLxC7ZfHDOxviRvX96uzMC7BX2JvJM=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-522-oyhaRKnEPmqCt5Evx8vvNw-1; Wed, 30 Jul 2025 10:18:13 -0400
-X-MC-Unique: oyhaRKnEPmqCt5Evx8vvNw-1
-X-Mimecast-MFC-AGG-ID: oyhaRKnEPmqCt5Evx8vvNw_1753885092
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-ae0c11adcd2so470807066b.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 30 Jul 2025 07:18:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="PG57ZssR"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-4aaaf1a63c1so47428961cf.3
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 30 Jul 2025 07:28:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1753885701; x=1754490501; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=yXicpotvi3lyQ9AOXQWfwG3KeaAtrSGGP0WC4PeRJ0I=;
+        b=PG57ZssR8cQUccAuRytaUgKSAEssylQd59XzzV+sbjSosfPEHBBIphfgg4DDmUSzwE
+         cDmBxMCwHXpxtbQv0v1Bb8VZkWFtNsJ6JGZLN1ICU6sGIB7QT9LJ9w36BzEYIdf9pwkT
+         o6yRnqFRNEHszBOT+xrqmrhp9nGd9MhLgfwHruD011EZ1ET4yCG96SUfdO9+sv22+vep
+         j1UksT9oW+qK1zTtYXgmqybKRAtncfx5QyGwdi63fFGXSCV/QO2aY8e99M32XUDlQjxE
+         PwD3cXkAnkkE79Re9LXHLn0dkXZ50LxSZRjpXriQMSKCIGbgN205FfGtcihMg02Osw4J
+         19og==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753885092; x=1754489892;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=t+XdUySbetWUIJJo0KSa7Zw1Ei6449339h1xdEc7AKk=;
-        b=G9fagsvrmp//lwAacMQSUam9xsBITm0azqMQ929mHfkX+2bXFxo/RbNWTPU2wh8kAN
-         sD/A1DdgRQlc4boJIjVFthXh2jKtbmRFVsFb8XGZvUU5xXBA9S2CO7fmOfBngZC44PJX
-         +6UIVMnkUGtZLAi0qBD/GJ3vdedRoe/YSfoaMIgXoHZmpko+5tTmQKkGp0fUmaHrm5W/
-         WOXVIEayL1/kgVcgo+BopVSzUDWX1iEtKukvi5F7+xEaeiftVAYj2KmbHVR5mjynXn/D
-         k+GdMzwaIt1+ZMvvrS43OipCPUtJscslSvlGL8mAc3ca4rE5/RSNpln28Duyxuq7fOSO
-         H7lQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUxcI/9tkQs0khcEiX0q7ROUdkNtPpLJ5m3+xo2Z+PkCYRnbbzVgDm5wKAcBEm9VpGQ0wAta/efZHCmqvzD7NvTc1o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzopnLjLU0dUbb0HQwIE2zQJdJ6SLMFgXjrqF5n5Z9Rx1VmJx+d
-	btOyPWTCuMa3VUsmE9MH0tMlKUVrU4uyDh5QMd+Tc7rDsnr0nbN1zeOqJ9sg4T+9c15IUoDya/M
-	xbMXpLEQLEYULIoWdkC3Ki0IdoK0oLk+LjQJ42XHAauSFejheUPea3RVSyT0Qiu4ryqw/4qxzvu
-	6VP5YjK3Qy7hme3PEdJZ1TPIJozoF1gqapi7bfvnP5luSjrN4e
-X-Gm-Gg: ASbGncuAM88W0zIL/mAT95mCd8BqImFMe+kGIl3GzgvVMCdQM1JCMQNZKcacKdCMUCP
-	JUz/qlUT609RGRtVeJZKAP4swnrhi55exXlqqfmC0MbobOuomk/xzeg3u+ly522OLyTd3B1RV1J
-	IhtdLdL376VNOkKSe54dzNxAeo+m/iNxt9q85eRkgsTAFC3+rRK44=
-X-Received: by 2002:a17:907:d88:b0:ae0:1883:78ce with SMTP id a640c23a62f3a-af8fd9b15a2mr449199166b.47.1753885092394;
-        Wed, 30 Jul 2025 07:18:12 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFlSNefCMn8VL1asAYFBErw9EQVssdL+ytIqdvxN27jklDKwvouyVj4iHUy3iqQTvHr0jMpgoVmlIpd0cOzuIM=
-X-Received: by 2002:a17:907:d88:b0:ae0:1883:78ce with SMTP id
- a640c23a62f3a-af8fd9b15a2mr449195666b.47.1753885091955; Wed, 30 Jul 2025
- 07:18:11 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1753885701; x=1754490501;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yXicpotvi3lyQ9AOXQWfwG3KeaAtrSGGP0WC4PeRJ0I=;
+        b=CDUykfdZPm9vwq4rO9l748BXUW5Dk2DklADaDOvoeJEfUkgHtAX2mzpZ3NJSbFhZnO
+         24s7QR+wx2B86ZXVzr5RFQI8nzVuECBITJessoQLBPqPdKhDKUivl0O9X9FHuPja1yOv
+         oSH+4NJevA9Y7LO7HsdEeT7ik8sDPskbrHkbLe0YVFi3ofNyGVmz5vHBevvE5y/1brWA
+         14apkoVkRDQL+0Czay1jo0F8Ko1zhVfaXuivTlWBVU5Rv24rNIhX+g8v7todI1SXFrBh
+         Dl+NIC/VDbWqkxuZzAKdwRC7O6v26Jlkv+/SwC+H4QqUBcZ63skJ9/gCk897p5tUqXxu
+         T8UA==
+X-Forwarded-Encrypted: i=1; AJvYcCUmCrn1WGRtj5D6QbuUCL2yYATdM54Kg7NCJOeHdSoclP7KRL66gT/GgcKhlWYpzG2sFGy3Yt0jdUkUbYla0pQoT30=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz3Pr1eNPHEdXN9EjaheYz01N4aBAv8q42ipRLrecPoz7LwDnzy
+	IcZpVfa393NsGdL2/OWs65Slgqs6rx6z6MR3YrtAqXJoS/HNVF6WhaLpN0O3PGL9h24=
+X-Gm-Gg: ASbGnctMXy+J8UcTiF+2SO/csH9Kv1GxnX7CN44woQ4mkqv+Mc5V8TXgdrfDsqLCEGT
+	+4MOY7wkO9yHSOAPVE+CxFaovksV7+bHF3M/doRnnj1bsiwnqrxwI3BvpfR31fD0qvBznEtmpnK
+	JM6cy9DivZ/nKz+HaTNc3v0JAUpPEniQvboRfPRuHboTEw4tYEn9mvBCVOC3+tJ/54FFzuY35RL
+	3OYgzXI29uzmmxpqGlqb/tnqP5dpVGu6+YN8j7UZRvawbOdGk9QV/I1wKdAsh2uzWfANe+g3WKx
+	s1uEvjh1EbcCPEy1Bdlz0GYeOl+FAlo9CXyc/lnAqEnQxWwV5iom8gWm2yfWXZzJcmrqdAEpMfz
+	Zu0/oIpHq8/jQ7uCHFsh83iN13IEIEHFyWlHbsSi/WU0qOmrfGRovbBrDlQL859a+2+RV
+X-Google-Smtp-Source: AGHT+IHCzPfwaMM+aIDs6tu6c39/KdwhCla3PbAO01xs1vOnpsn8EpRRsdfpw4N6uvD5MCuSC49wxQ==
+X-Received: by 2002:a05:622a:48:b0:4a9:cff3:68a2 with SMTP id d75a77b69052e-4aedbc3c0dbmr55369321cf.37.1753885700213;
+        Wed, 30 Jul 2025 07:28:20 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-47-55-120-4.dhcp-dynamic.fibreop.ns.bellaliant.net. [47.55.120.4])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4ae9963b6f9sm67178931cf.35.2025.07.30.07.28.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Jul 2025 07:28:19 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1uh7n0-00000000RbZ-432A;
+	Wed, 30 Jul 2025 11:28:18 -0300
+Date: Wed, 30 Jul 2025 11:28:18 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Leon Romanovsky <leon@kernel.org>, Matthew Wilcox <willy@infradead.org>,
+	David Hildenbrand <david@redhat.com>
+Cc: Robin Murphy <robin.murphy@arm.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Christoph Hellwig <hch@lst.de>, Jonathan Corbet <corbet@lwn.net>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>,
+	Alexander Potapenko <glider@google.com>,
+	Marco Elver <elver@google.com>, Dmitry Vyukov <dvyukov@google.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	=?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, iommu@lists.linux.dev,
+	virtualization@lists.linux.dev, kasan-dev@googlegroups.com,
+	linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH 0/8] dma-mapping: migrate to physical address-based API
+Message-ID: <20250730142818.GL26511@ziepe.ca>
+References: <CGME20250625131920eucas1p271b196cde042bd39ac08fb12beff5baf@eucas1p2.samsung.com>
+ <cover.1750854543.git.leon@kernel.org>
+ <35df6f2a-0010-41fe-b490-f52693fe4778@samsung.com>
+ <20250627170213.GL17401@unreal>
+ <20250630133839.GA26981@lst.de>
+ <69b177dc-c149-40d3-bbde-3f6bad0efd0e@samsung.com>
+ <f912c446-1ae9-4390-9c11-00dce7bf0fd3@arm.com>
+ <20250730134026.GQ402218@unreal>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250726072455.289445-1-costa.shul@redhat.com>
-In-Reply-To: <20250726072455.289445-1-costa.shul@redhat.com>
-From: Tomas Glozar <tglozar@redhat.com>
-Date: Wed, 30 Jul 2025 16:18:00 +0200
-X-Gm-Features: Ac12FXx4xowUzfg1QpHqAj2vPs_ZSJpkqZBvPfLdbkfVkH-lOdJVad_fyktbcHo
-Message-ID: <CAP4=nvREsJ=y0F4UhwhvUvK4JUxCKAGXNmDmiDpPB4bdGTs78g@mail.gmail.com>
-Subject: Re: [PATCH v2] tools/rtla: Consolidate common parameters into shared structure
-To: Costa Shulyupin <costa.shul@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, John Kacur <jkacur@redhat.com>, 
-	Eder Zulian <ezulian@redhat.com>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	Jan Stancek <jstancek@redhat.com>, linux-trace-kernel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: hpL1jp08vKk-vQDesKt5sjoRpfttCOjdfUoXs9QPUFQ_1753885092
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250730134026.GQ402218@unreal>
 
-so 26. 7. 2025 v 9:25 odes=C3=ADlatel Costa Shulyupin <costa.shul@redhat.co=
-m> napsal:
-> ---
-> Changes since v1:
-> - Rebase on top of recent changes
-> - Address Tomas's comments
-> - Don't change already not common members: trace_output, runtime
->
+On Wed, Jul 30, 2025 at 04:40:26PM +0300, Leon Romanovsky wrote:
 
-Just a clarification: runtime was never a common parameter, it was
-just mistakenly added (but unused) in timerlat_params. On the other
-hand trace_output used to be common before the actions patchset, when
-it was moved to the actions structure for rtla-timerlat, but stayed
-separate for rtla-osnoise. If rtla-osnoise also adopt actions, it will
-go away there, too.
+> > The natural working unit for whatever replaces dma_map_page() will be
+> > whatever the replacement for alloc_pages() returns, and the replacement for
+> > kmap_atomic() operates on. Until that exists (and I simply cannot believe it
+> > would be an unadorned physical address) there cannot be any
+> > *meaningful*
 
-Reviewed-by: Tomas Glozar <tglozar@redhat.com>
+alloc_pages becomes legacy.
 
-Tomas
+There will be some new API 'memdesc alloc'. If I understand Matthew's
+plan properly - here is a sketch of changing iommu-pages:
 
+--- a/drivers/iommu/iommu-pages.c
++++ b/drivers/iommu/iommu-pages.c
+@@ -36,9 +36,10 @@ static_assert(sizeof(struct ioptdesc) <= sizeof(struct page));
+  */
+ void *iommu_alloc_pages_node_sz(int nid, gfp_t gfp, size_t size)
+ {
++       struct ioptdesc *desc;
+        unsigned long pgcnt;
+-       struct folio *folio;
+        unsigned int order;
++       void *addr;
+ 
+        /* This uses page_address() on the memory. */
+        if (WARN_ON(gfp & __GFP_HIGHMEM))
+@@ -56,8 +57,8 @@ void *iommu_alloc_pages_node_sz(int nid, gfp_t gfp, size_t size)
+        if (nid == NUMA_NO_NODE)
+                nid = numa_mem_id();
+ 
+-       folio = __folio_alloc_node(gfp | __GFP_ZERO, order, nid);
+-       if (unlikely(!folio))
++       addr = memdesc_alloc_pages(&desc, gfp | __GFP_ZERO, order, nid);
++       if (unlikely(!addr))
+                return NULL;
+ 
+        /*
+@@ -73,7 +74,7 @@ void *iommu_alloc_pages_node_sz(int nid, gfp_t gfp, size_t size)
+        mod_node_page_state(folio_pgdat(folio), NR_IOMMU_PAGES, pgcnt);
+        lruvec_stat_mod_folio(folio, NR_SECONDARY_PAGETABLE, pgcnt);
+ 
+-       return folio_address(folio);
++       return addr;
+ }
+
+Where the memdesc_alloc_pages() will kmalloc a 'struct ioptdesc' and
+some other change so that virt_to_ioptdesc() indirects through a new
+memdesc. See here:
+
+https://kernelnewbies.org/MatthewWilcox/Memdescs
+
+We don't end up with some kind of catch-all struct to mean 'cachable
+CPU memory' anymore because every user gets their own unique "struct
+XXXdesc". So the thinking has been that the phys_addr_t is the best
+option. I guess the alternative would be the memdesc as a handle, but
+I'm not sure that is such a good idea. 
+
+People still express a desire to be able to do IO to cachable memory
+that has a KVA through phys_to_virt but no memdesc/page allocation. I
+don't know if this will happen but it doesn't seem like a good idea to
+make it impossible by forcing memdesc types into low level APIs that
+don't use them.
+
+Also, the bio/scatterlist code between pin_user_pages() and DMA
+mapping is consolidating physical contiguity. This runs faster if you
+don't have to to page_to_phys() because everything is already
+phys_addr_t.
+
+> > progress made towards removing the struct page dependency from the DMA API.
+> > If there is also a goal to kill off highmem before then, then logically we
+> > should just wait for that to land, then revert back to dma_map_single()
+> > being the first-class interface, and dma_map_page() can turn into a trivial
+> > page_to_virt() wrapper for the long tail of caller conversions.
+
+As I said there are many many projects related here and we can
+meaningfully make progress in parts. It is not functionally harmful to
+do the phys to page conversion before calling the legacy
+dma_ops/SWIOTLB etc. This avoids creating patch dependencies with
+highmem removal and other projects.
+
+So long as the legacy things (highmem, dma_ops, etc) continue to work
+I think it is OK to accept some obfuscation to allow the modern things
+to work better. The majority flow - no highmem, no dma ops, no
+swiotlb, does not require struct page. Having to do
+
+  PTE -> phys -> page -> phys -> DMA
+
+Does have a cost.
+
+> The most reasonable way to prevent DMA_ATTR_SKIP_CPU_SYNC leakage is to
+> introduce new DMA attribute (let's call it DMA_ATTR_MMIO for now) and
+> pass it to both dma_map_phys() and dma_iova_link(). This flag will
+> indicate that p2p type is PCI_P2PDMA_MAP_THRU_HOST_BRIDGE and call to
+> right callbacks which will set IOMMU_MMIO flag and skip CPU sync,
+
+So the idea is if the memory is non-cachable, no-KVA you'd call
+dma_iova_link(phys_addr, DMA_ATTR_MMIO) and dma_map_phys(phys_addr,
+DMA_ATTR_MMIO) ?
+
+And then internally the dma_ops and dma_iommu would use the existing
+map_page/map_resource variations based on the flag, thus ensuring that
+MMIO is never kmap'd or cache flushed?
+
+dma_map_resource is really then just
+dma_map_phys(phys_addr, DMA_ATTR_MMIO)?
+
+I like this, I think it well addresses the concerns.
+
+Jason
