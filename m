@@ -1,153 +1,185 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99F8742A82;
-	Wed, 30 Jul 2025 13:40:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46E8E2D879A
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 30 Jul 2025 13:53:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753882833; cv=none; b=sjMom/Ses65ZqswGCo+rTTTEjKR180H66kpg5yJuOZNNpFiKvpjBJPTIN2MmtWkP4nJTaVR7F2vaMe7f/ebx9Wr0N4FgcNk2Utyn0QivH5qLomSOfDBT0CizU8MQEHnYrmk/9ogp7T7wfAu9T6dNRq0AuveE1w6sZ37JxPPfUzs=
+	t=1753883604; cv=none; b=GDW6FVps0Myx/tZEJ7jJn/zkGPesnPjBCPFUSm8zo91saiMhkjM1xV42c993k2QB7TCwifqtf08zr+VtvRI5M3hB6T70kld5ISopNRNBxxA5uvBkshEQU4AItjU8MAfffzD2F1BZi3j8umo4wP2nJQ28fOLbHboUhgRMlUhm65U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753882833; c=relaxed/simple;
-	bh=r3n99v7PlKiifLXLh9htJtFm2A7cf2OiYGh/qh9Hb1A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i2g2PBStIFes60RSYYWNYQIRmlywvYOTFAaW0xJmYLCN/jtBdVrjHf+lqGSBKwsilGslei7gcUb6iK86zKrnJMaKisaaSe1St9ENoxPL/ijGjcwW+zm0hb7TOJt/vHLYBq/Cjv11fmbaj5mL/c5w+45l8DMsdST8V/crwFejjEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m8TgLaML; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1753883604; c=relaxed/simple;
+	bh=wLwI8LqQkl0a8WpihQgf2W/kfgc7P0TfONGUqLvhwPs=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XvEnIr0ZQNsaD8BWh28D4p3VhT4wSdW2i6eQOQuTbzN/9g7sdSHOizr7C6rmGYMTjRDqSHJDtfEbagd+s48oF301Dt2JSSUqpDXTXbsxdNzAz/gs/oZ504fzwWI/VGpcXqKSxjk5njz1n+S3tTxY35L3d46VZQ9VELie3sOxiss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VZ+XYBkA; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m8TgLaML"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 640CCC4CEE7;
-	Wed, 30 Jul 2025 13:40:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753882833;
-	bh=r3n99v7PlKiifLXLh9htJtFm2A7cf2OiYGh/qh9Hb1A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=m8TgLaMLadOIyx04mZ9ZYnn4myaayZRK7kgYZVWg3h0VvggYJqipkE7m8kihbxwWL
-	 9jKp14tTw38zaqtxLOs4+wPXQpdk5H5YuytkfRtotal19ho19vtLcN8uhZvhuvLRPX
-	 42c7rY/aM1/egztvkzXplhf+9bGFcggtgtx61kTgzCaXar98rSFW3YWyXa/FQaWlYW
-	 McArBA1HJxfYyEE59+8qhXBclPjUsdyQKbgOD5cwFnbRV+ycZ6W1VlL0iyN2sxk4Qa
-	 lAa5NhJYsRATLyxRQb00fyrj5qoDoGRC6J9qWpf+W0rI4zJpZixNNNgOGnHgjjxYGp
-	 gwqKIvjy1EGBw==
-Date: Wed, 30 Jul 2025 16:40:26 +0300
-From: Leon Romanovsky <leon@kernel.org>
-To: Robin Murphy <robin.murphy@arm.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Christoph Hellwig <hch@lst.de>, Jonathan Corbet <corbet@lwn.net>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
-	Alexander Potapenko <glider@google.com>,
-	Marco Elver <elver@google.com>, Dmitry Vyukov <dvyukov@google.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, iommu@lists.linux.dev,
-	virtualization@lists.linux.dev, kasan-dev@googlegroups.com,
-	linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org,
-	Jason Gunthorpe <jgg@ziepe.ca>
-Subject: Re: [PATCH 0/8] dma-mapping: migrate to physical address-based API
-Message-ID: <20250730134026.GQ402218@unreal>
-References: <CGME20250625131920eucas1p271b196cde042bd39ac08fb12beff5baf@eucas1p2.samsung.com>
- <cover.1750854543.git.leon@kernel.org>
- <35df6f2a-0010-41fe-b490-f52693fe4778@samsung.com>
- <20250627170213.GL17401@unreal>
- <20250630133839.GA26981@lst.de>
- <69b177dc-c149-40d3-bbde-3f6bad0efd0e@samsung.com>
- <f912c446-1ae9-4390-9c11-00dce7bf0fd3@arm.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VZ+XYBkA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1753883602;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=wLwI8LqQkl0a8WpihQgf2W/kfgc7P0TfONGUqLvhwPs=;
+	b=VZ+XYBkAZbq1GIHPCgYCs52LY7t1U6uoHo7gTpLdUaLNpfQYTHcqymjDR1xadcymahc616
+	/fcBGzypVUj3EIUet/deqBdnfAW4T+/rsMRg6JnH652IDsHkwnOypYu2i6sqplKZqjjNOw
+	NxYyGquyIOvi2m/+cD1bgODWHV9XWz4=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-403-dEhMvucvO2qoXzjmuxcxMg-1; Wed, 30 Jul 2025 09:53:18 -0400
+X-MC-Unique: dEhMvucvO2qoXzjmuxcxMg-1
+X-Mimecast-MFC-AGG-ID: dEhMvucvO2qoXzjmuxcxMg_1753883598
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3b783265641so3313218f8f.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 30 Jul 2025 06:53:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753883598; x=1754488398;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=s5VhBNCPpXfQ0FMhPUPtPbpUbYNgD0vDQAOO3ufsUTQ=;
+        b=ZV2juycjoDV7MQ/N7t7KCurtg/9pqQTdNoAqdhxK/10iHg5o7za9DHF1OKuGoqOv73
+         7a//5pgw55YzKXAU+IfkSYePuJ/crOdJsa/Lo6cKPaaRwlLvaqrAC8xrBjGJyIlECD9G
+         6BkaXZN7gqeeoo7vlw0kGB6foYELHjsvTLXYaiyVffL9YwdcDl926ErsckszWpQKcTcZ
+         hIuQTfQRvZt9FUjWvbBh+J79G4POseNMHSug9S/XcwaojVv13tuw81GkZg8+qzAieNZQ
+         BHQcrW1Zfx638QH0Q13EnGG39VfyHNS8qAxhMXDhu1Hjku/BRsKc0Q7LPu+1tb/0ZoMR
+         nFUw==
+X-Forwarded-Encrypted: i=1; AJvYcCUT83GwzfbhRNfsHxYCM6pI7gkSieqEip7KJvu8Ebi327ozQgW7XIHL5uLR4zWdXvFcB2bgApDY/lwWp/sWd4zFYsI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwyVv599g6DNizT/pEFpg5CLJV7d7R2VsGnXcGcT9VyhnpAMUVl
+	G2XpXO8q8jMgpQVsjTTYf7GKAq70kfLMFLawUHuCEk3Sl3k4+DApZlTcHfz5Lh3sc+kRFnkhTwO
+	coyzrSCFtMc6wHl9mVe+Ns0yWXQ8K2T1aLnnDvXt3oXPMmWwgHjLf63kYLTSnFdHtOQwnjPA4Ho
+	4y409ZvgkU
+X-Gm-Gg: ASbGncuA1Lz5BC9Bsv0In/nDs9bozHTyr3mfKMng7hgto5O3PlkrIPYsY7GiTEoYMj2
+	PCrmSE+0PIZxMUQNfrUUUC9pC6n7xAOLt00/lGyDR2Ks6H6eSSMurX04A2oNQXxLX9TX0SCsZdP
+	sdvD+Z4pv5vo1sqd43S8t7krM6ietJ9C8FcpRK0DGYH7avjXJNY+NZcHwAxB/DWbnYtP1ZzHeKs
+	Hd4F6TNcVwyuljPBFvNJnOJTyBpi6zhmzhSkkNYhWDYZjtRTBV1Gsj0tvU0mX+M3ucSSIC6s8ie
+	+5WIdP68/ZqOcoJgiB/femY4acq5cEDiahI2Tjlt7QT7rdB8LrJPxfmef2b4oT/S3A==
+X-Received: by 2002:adf:a297:0:b0:3b7:970d:a565 with SMTP id ffacd0b85a97d-3b7970da81bmr1347977f8f.46.1753883597563;
+        Wed, 30 Jul 2025 06:53:17 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGbFEhzWYMwwTRQo1bdOhOzFaDIgbxaeTPnywGw4nVO9bfEoPrUNrdganQQ/iWkVZcrnq5VNw==
+X-Received: by 2002:adf:a297:0:b0:3b7:970d:a565 with SMTP id ffacd0b85a97d-3b7970da81bmr1347953f8f.46.1753883597005;
+        Wed, 30 Jul 2025 06:53:17 -0700 (PDT)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.42])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b794a9d6a1sm3589006f8f.16.2025.07.30.06.53.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Jul 2025 06:53:16 -0700 (PDT)
+Message-ID: <767a9d59081220594d21856f329fb35988ef7925.camel@redhat.com>
+Subject: Re: [PATCH 4/5] sched: Add rt task enqueue/dequeue trace points
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: Nam Cao <namcao@linutronix.de>, Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, 	linux-trace-kernel@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+ Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot
+ <vincent.guittot@linaro.org>, Dietmar Eggemann	 <dietmar.eggemann@arm.com>,
+ Ben Segall <bsegall@google.com>, Mel Gorman	 <mgorman@suse.de>, Valentin
+ Schneider <vschneid@redhat.com>
+Date: Wed, 30 Jul 2025 15:53:14 +0200
+In-Reply-To: <8f83869a5040bd7cd3096bd12090c1ab110ae5c4.1753879295.git.namcao@linutronix.de>
+References: <cover.1753879295.git.namcao@linutronix.de>
+	 <8f83869a5040bd7cd3096bd12090c1ab110ae5c4.1753879295.git.namcao@linutronix.de>
+Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
+ keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
+ 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
+ Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
+ xyhmqeUWOzFx5P43S1E1dhsrLWgP
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f912c446-1ae9-4390-9c11-00dce7bf0fd3@arm.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: mglIJ_anQjiqLtl5B8FfTU4lp9O8Jmi6DXsfYhFgRpI_1753883598
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 30, 2025 at 12:11:32PM +0100, Robin Murphy wrote:
-> On 2025-07-08 11:27 am, Marek Szyprowski wrote:
-> > On 30.06.2025 15:38, Christoph Hellwig wrote:
-> > > On Fri, Jun 27, 2025 at 08:02:13PM +0300, Leon Romanovsky wrote:
-> > > > > Thanks for this rework! I assume that the next step is to add map_phys
-> > > > > callback also to the dma_map_ops and teach various dma-mapping providers
-> > > > > to use it to avoid more phys-to-page-to-phys conversions.
-> > > > Probably Christoph will say yes, however I personally don't see any
-> > > > benefit in this. Maybe I wrong here, but all existing .map_page()
-> > > > implementation platforms don't support p2p anyway. They won't benefit
-> > > > from this such conversion.
-> > > I think that conversion should eventually happen, and rather sooner than
-> > > later.
-> > 
-> > Agreed.
-> > 
-> > Applied patches 1-7 to my dma-mapping-next branch. Let me know if one
-> > needs a stable branch with it.
-> 
-> As the maintainer of iommu-dma, please drop the iommu-dma patch because it
-> is broken. It does not in any way remove the struct page dependency from
-> iommu-dma, it merely hides it so things can crash more easily in
-> circumstances that clearly nobody's bothered to test.
-> 
-> > Leon, it would be great if You could also prepare an incremental patch
-> > adding map_phys callback to the dma_maps_ops, so the individual
-> > arch-specific dma-mapping providers can be then converted (or simplified
-> > in many cases) too.
-> 
-> Marek, I'm surprised that even you aren't seeing why that would at best be
-> pointless churn. The fundamental design of dma_map_page() operating on
-> struct page is that it sits in between alloc_pages() at the caller and
-> kmap_atomic() deep down in the DMA API implementation (which also subsumes
-> any dependencies on having a kernel virtual address at the implementation
-> end). The natural working unit for whatever replaces dma_map_page() will be
-> whatever the replacement for alloc_pages() returns, and the replacement for
-> kmap_atomic() operates on. Until that exists (and I simply cannot believe it
-> would be an unadorned physical address) there cannot be any *meaningful*
-> progress made towards removing the struct page dependency from the DMA API.
-> If there is also a goal to kill off highmem before then, then logically we
-> should just wait for that to land, then revert back to dma_map_single()
-> being the first-class interface, and dma_map_page() can turn into a trivial
-> page_to_virt() wrapper for the long tail of caller conversions.
-> 
-> Simply obfuscating the struct page dependency today by dressing it up as a
-> phys_addr_t with implicit baggage is not not in any way helpful. It only
-> makes the code harder to understand and more bug-prone. Despite the
-> disingenuous claims, it is quite blatantly the opposite of "efficient" for
-> callers to do extra work to throw away useful information with
-> page_to_phys(), and the implementation then have to re-derive that
-> information with pfn_valid()/phys_to_page().
-> 
-> And by "bug-prone" I also include greater distractions like this misguided
-> idea that the same API could somehow work for non-memory addresses too, so
-> then everyone can move on bikeshedding VFIO while overlooking the
-> fundamental flaws in the whole premise. I mean, besides all the issues I've
-> already pointed out in that regard, not least the glaring fact that it's
-> literally just a worse version of *an API we already have*, as DMA API
-> maintainer do you *really* approve of a design that depends on callers
-> abusing DMA_ATTR_SKIP_CPU_SYNC, yet will still readily blow up if they did
-> then call a dma_sync op?
+On Wed, 2025-07-30 at 14:45 +0200, Nam Cao wrote:
+> Add trace points into enqueue_task_rt() and dequeue_task_rt(). They
+> are useful to implement RV monitor which validates RT scheduling.
+>=20
 
-Robin, Marek
+I get it's much simpler this way, but is it that different to follow
+the task's existing tracepoints?
 
-I would like to ask you to do not drop this series and allow me to
-gradually change the code during my VFIO DMABUF adventure.
+* task going to sleep (switch:prev_state !=3D RUNNING) is dequeued
+* task waking up is enqueued
+* changing the tasks's policy (setpolicy and setattr syscalls) should
+enqueue/dequeue as well
 
-The most reasonable way to prevent DMA_ATTR_SKIP_CPU_SYNC leakage is to
-introduce new DMA attribute (let's call it DMA_ATTR_MMIO for now) and
-pass it to both dma_map_phys() and dma_iova_link(). This flag will
-indicate that p2p type is PCI_P2PDMA_MAP_THRU_HOST_BRIDGE and call to
-right callbacks which will set IOMMU_MMIO flag and skip CPU sync,
+This is more thinking out loud, but I'm doing right now something
+rather similar with the deadline tasks and this seems reasonable, at
+least on paper.
 
-dma_map_phys() isn't entirely wrong, it just needs an extra tweaks.
+What do you think?
 
-Thanks
+Thanks,
+Gabriele
 
-> 
-> Thanks,
-> Robin.
-> 
+> Signed-off-by: Nam Cao <namcao@linutronix.de>
+> ---
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Juri Lelli <juri.lelli@redhat.com>
+> Cc: Vincent Guittot <vincent.guittot@linaro.org>
+> Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
+> Cc: Ben Segall <bsegall@google.com>
+> Cc: Mel Gorman <mgorman@suse.de>
+> Cc: Valentin Schneider <vschneid@redhat.com>
+> ---
+> =C2=A0include/trace/events/sched.h | 8 ++++++++
+> =C2=A0kernel/sched/rt.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 | 4 ++++
+> =C2=A02 files changed, 12 insertions(+)
+>=20
+> diff --git a/include/trace/events/sched.h
+> b/include/trace/events/sched.h
+> index c08893bde255..c38f12f7f903 100644
+> --- a/include/trace/events/sched.h
+> +++ b/include/trace/events/sched.h
+> @@ -898,6 +898,14 @@ DECLARE_TRACE(sched_set_need_resched,
+> =C2=A0=09TP_PROTO(struct task_struct *tsk, int cpu, int tif),
+> =C2=A0=09TP_ARGS(tsk, cpu, tif));
+> =C2=A0
+> +DECLARE_TRACE(enqueue_task_rt,
+> +=09TP_PROTO(int cpu, struct task_struct *task),
+> +=09TP_ARGS(cpu, task));
+> +
+> +DECLARE_TRACE(dequeue_task_rt,
+> +=09TP_PROTO(int cpu, struct task_struct *task),
+> +=09TP_ARGS(cpu, task));
+> +
+> =C2=A0#endif /* _TRACE_SCHED_H */
+> =C2=A0
+> =C2=A0/* This part must be outside protection */
+> diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
+> index e40422c37033..f4d3f5e7fbec 100644
+> --- a/kernel/sched/rt.c
+> +++ b/kernel/sched/rt.c
+> @@ -1480,6 +1480,8 @@ enqueue_task_rt(struct rq *rq, struct
+> task_struct *p, int flags)
+> =C2=A0{
+> =C2=A0=09struct sched_rt_entity *rt_se =3D &p->rt;
+> =C2=A0
+> +=09trace_enqueue_task_rt_tp(rq->cpu, p);
+> +
+> =C2=A0=09if (flags & ENQUEUE_WAKEUP)
+> =C2=A0=09=09rt_se->timeout =3D 0;
+> =C2=A0
+> @@ -1501,6 +1503,8 @@ static bool dequeue_task_rt(struct rq *rq,
+> struct task_struct *p, int flags)
+> =C2=A0
+> =C2=A0=09dequeue_pushable_task(rq, p);
+> =C2=A0
+> +=09trace_dequeue_task_rt_tp(rq->cpu, p);
+> +
+> =C2=A0=09return true;
+> =C2=A0}
+> =C2=A0
+
