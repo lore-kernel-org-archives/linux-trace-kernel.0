@@ -1,98 +1,89 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 724DA1DE4E7;
-	Wed, 30 Jul 2025 18:26:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B96E2288F7;
+	Wed, 30 Jul 2025 22:08:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753899988; cv=none; b=APREyKftwbFZusF4MPHEomyqPRXOew2/egIl0fIbIB3miX88Kbhwd1c3hfN0HvcVx1cBLdk6I/bvSickiphlGjGzvG52y1FlXnvF70vxZM86SfHV8zpIFb63JjlSXFgWRMyl5R1MCeKuM2/hJzKtYigsnJ1QcKUXr6IyBMOdtKk=
+	t=1753913324; cv=none; b=Mmp6vCq6WfO4yBVvqCs2wZuqpvr4h+AwVbJQVd9kxQbPeC4AP4NdlEhVyrpYmUIAlZ90C/4XtI+h/AYn3z8ulc/9KvVxuCQdI4iv/cSPWLLO2DtPrXYi5xjlwnKZcyzDsCP1st5l17qmXednfMs8E8vVBpv/mjY3KF1r8q2ChIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753899988; c=relaxed/simple;
-	bh=I8VXE60ASwpxlj2aJHTunROXyMJlVkJgK2wvsHBAuaE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UFWLKPR0d2RQFOtNMUIYHhQozqehCnflb/nmJA6JrtvRypBMQ+qEtT3El206kb1+x0lQG5fjM7n6bQ/QNy4okq1+UG3YeLPlSQnyqh5rjlVibx8ov2kKv4mzDWGY73AfJdf8s6XXfTs9gnAoF4QLaRp3SZd10oSLQVDu8cmpt7U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BFEB51BF7;
-	Wed, 30 Jul 2025 11:26:17 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 58A3B3F66E;
-	Wed, 30 Jul 2025 11:26:25 -0700 (PDT)
-Date: Wed, 30 Jul 2025 19:26:23 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>, KP Singh <kpsingh@kernel.org>,
-	Matt Bobrowski <mattbobrowski@google.com>,
-	Song Liu <song@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	James Clark <james.clark@linaro.org>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@linaro.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/6] perf auxtrace: Support AUX pause and resume with
- BPF
-Message-ID: <20250730182623.GE143191@e132581.arm.com>
-References: <20250725-perf_aux_pause_resume_bpf_rebase-v3-0-9fc84c0f4b3a@arm.com>
- <fd7c39d2-64b4-480e-8a29-abefcdc7d10a@intel.com>
+	s=arc-20240116; t=1753913324; c=relaxed/simple;
+	bh=5DzTqdWYc14PEiKnsSSikRhRB45dtYdKZX03jUMGTgw=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=elVYT8/AZIMbRUDGN9wLrDF3kDsVCFZEmnUVIjfsrYHfS/z5iilMWJ6ucNl1d5XONpaQ9lZDPAhZDOY9KdJpUcTt/dlXu4jNnxRYROmzUqkxcA4bJNR1BJtbq5qNdUMEQGShKmB6jWJ5akGyfM0Wf+mpaxb2OQvG0uuYGxVgItc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N221wvIa; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N221wvIa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC94CC4CEE3;
+	Wed, 30 Jul 2025 22:08:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753913322;
+	bh=5DzTqdWYc14PEiKnsSSikRhRB45dtYdKZX03jUMGTgw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=N221wvIanmHlfTpJcA+rlcJpNPH8kjj3O44sk42ouZRnpMFr8DprkUAqN0EAQFlLc
+	 hEup3TP40bmw/eoSvLPUf58EE2tRdMLmBAJEsl1nBLKlsnKUoujL9a25mONcEGFxL0
+	 mvRLqv1pkIOHGNO2WPvt+XWI6FZshF5ysUad9nenV1gsZlw0bjqnUam5EzbObopD4F
+	 vyyehZwoeCmOehW55Qd9QtCqwft11PIS36V1ZgYYTrPQOJvRCxjoMvnZe0NjaIR5VM
+	 UzoTR91CQkwZtLPaKECJRtEMeNKAN2ImRKcFcPE4WTJjo2hw1WlJRhad1MAn5ZccVA
+	 HlZHxAKk4QgIw==
+Date: Thu, 31 Jul 2025 07:08:36 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: kernel test robot <lkp@intel.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ oe-kbuild-all@lists.linux.dev, Mark Rutland <mark.rutland@arm.com>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Linux Memory Management List
+ <linux-mm@kvack.org>, Namhyung Kim <namhyung@kernel.org>, Jonathan Corbet
+ <corbet@lwn.net>, Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH v2 1/2] tracing: Have eprobes have their own config
+ option
+Message-Id: <20250731070836.69c43401858db35dd3b43ff0@kernel.org>
+In-Reply-To: <20250730100155.268d2442@gandalf.local.home>
+References: <20250729161912.056641407@kernel.org>
+	<202507301452.JPAcMvT0-lkp@intel.com>
+	<20250730191101.7e6203f21b94c3f932fa8348@kernel.org>
+	<20250730091727.7b3a8b96@gandalf.local.home>
+	<20250730225722.c88d2dbd3dfa07310de7edd4@kernel.org>
+	<20250730100155.268d2442@gandalf.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fd7c39d2-64b4-480e-8a29-abefcdc7d10a@intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Adrian,
+On Wed, 30 Jul 2025 10:01:55 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-On Mon, Jul 28, 2025 at 08:02:51PM +0300, Adrian Hunter wrote:
-> On 25/07/2025 12:59, Leo Yan wrote:
-> > This series extends Perf for fine-grained tracing by using BPF program
-> > to pause and resume AUX tracing. The BPF program can be attached to
-> > tracepoints (including ftrace tracepoints and dynamic tracepoints, like
-> > kprobe, kretprobe, uprobe and uretprobe).
+> On Wed, 30 Jul 2025 22:57:22 +0900
+> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 > 
-> Using eBPF to pause/resume AUX tracing seems like a great idea.
+> > > I see you already did the probe pull request.  
+> > 
+> > Ah, I thought this was for the next one... (but I think it is a kind of bugfix?)
 > 
-> AFAICT with this patch set, there is just support for pause/resume
-> much like what could be done directly without eBPF, so I wonder if you
-> could share a bit more on how you see this evolving, and what your
-> future plans are?
+> Yeah, as its not adding eprobes, but just making it configurable.
+> 
+> But you haven't answered my question ;-)
+> 
+> Do you want to push it to Linus or should I?
+> 
+> I still have the trace/for-next to push (I've finished testing your last
+> "attribute" patch and now I'm just letting it simmer in linux-next before
+> doing the pull request). I can still add this to that one if you want.
+> 
 
-IIUC, here you mean the tool can use `perf probe` to firstly create
-probes, then enable tracepoints as PMU event for AUX pause and resume.
-
-I would say a benefit from this series is users can use a single
-command to create probes and bind eBPF program for AUX pause and
-resume in one go.
-
-To be honest, at current stage, I don't have clear idea for expanding
-this feature. But a clear requirement is: AUX trace data usually is
-quite huge, after initial analysis, developers might want to focus
-on specific function profiling (based on function entry and exit) or
-specific period (E.g., start tracing when hit a tracepoing and stop when
-hit another tracepoint).
-
-eBPF program is powerful. Basically, we can extend it in two different
-dimensions. One direction is we can easily attach the eBPF program to more
-kernel modules, like networking, storage, etc. Another direction is to
-improve the eBPF program itself as a filter for better fine-grained
-tracing, so far we only support limited filtering based on CPU ID or PID,
-we also can extend the filtering based on time, event types, etc.
+OK, could you push this to Linus?
 
 Thanks,
-Leo
+
+> -- Steve
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
