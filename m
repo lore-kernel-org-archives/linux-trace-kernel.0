@@ -1,165 +1,95 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ADBB29A9D3;
-	Wed, 30 Jul 2025 13:56:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D5882D9EF8;
+	Wed, 30 Jul 2025 13:57:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753883800; cv=none; b=UNc5O419biy1y/6RCWn53xYJAuDMRqIQLDseXUqsQaPrT5XQm/R1HyWlUsmWTK2DBW0Id6MSh86ZvQw9L8WsY6zCpGaSFwltv++tUI+8mmCq6SZucM4GaUuW36ECZwTClCUSW+0nRQ6DetXgLeZqW4oUa8qnRti40cQDAaQ7HTY=
+	t=1753883848; cv=none; b=YwgLO9CiyVl//n8ry9Yh5qcuv2O6rkEs+wC8jAY0lPC/jcVqYCiM1TR0mX2seXY7stUe8OShniQCYipljR3bRUhrLdAFMbbPinsQlLcdODLW9P2UkMB19y7+lMRBuBFu8f/iNUBf/4IFKHgDjucTv00WIT2BvVzV8DaUQ7cicjk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753883800; c=relaxed/simple;
-	bh=eOMWDKHUmy1gD0Z7poNwDp33IXetjz2L4RUzoqiHY7I=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Gu9lMPd4Z+IEHCKygHZdTC6vZ/ymtQ65q6Q3EoYxOg5sJl82gQrqrQzJN9XiJRCTG1D0/msnRdiCe8s1sRc5r9UT+lLynGgJXyPG8YETjrrxIEYBxzwJv0K5nwzaMAy//ZvlfP2OyEw2em1xokwH9reI0xmG4E7VWL2U3wZQxpQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf01.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay01.hostedemail.com (Postfix) with ESMTP id 5A0C41DA394;
-	Wed, 30 Jul 2025 13:56:29 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf01.hostedemail.com (Postfix) with ESMTPA id B003A6000C;
-	Wed, 30 Jul 2025 13:56:25 +0000 (UTC)
-Date: Wed, 30 Jul 2025 09:56:41 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Steven Rostedt
- <rostedt@kernel.org>, Florent Revest <revest@google.com>,
- bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
- <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, Menglong Dong
- <menglong8.dong@gmail.com>, Naveen N Rao <naveen@kernel.org>, Michael
- Ellerman <mpe@ellerman.id.au>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?=
- <bjorn@rivosinc.com>, Andy Chiu <andybnac@gmail.com>, Alexandre Ghiti
- <alexghiti@rivosinc.com>, Palmer Dabbelt <palmer@dabbelt.com>
-Subject: Re: [RFC 00/10] ftrace,bpf: Use single direct ops for bpf
- trampolines
-Message-ID: <20250730095641.660800b1@gandalf.local.home>
-In-Reply-To: <aIn_12KHz7ikF2t1@krava>
-References: <20250729102813.1531457-1-jolsa@kernel.org>
-	<aIkLlB7Z7V--BeGi@J2N7QTR9R3.cambridge.arm.com>
-	<aIn_12KHz7ikF2t1@krava>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1753883848; c=relaxed/simple;
+	bh=JA07ZI7KstV+Tv5KxzbLM2UL0i9UfNUTw3ZAdpaDeHE=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=Z2vYx12RtT/jSnGWzZI+xO5A+3lAEAZPnccCDmjbaPymaiNc91rPD9E36Z0dwlvOVvkNuGkaRl5Ofa9vK+mEzHGlQAb0gkuuZmRm+WGKgg+F+fQOyGkn6jHpBCeN+GvQEtBEizeKs6fpnh1VYnoC/ZJXXoSyDJEv9d5MbQahVJs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IlcCrv2I; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IlcCrv2I"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 680CAC4CEE3;
+	Wed, 30 Jul 2025 13:57:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753883848;
+	bh=JA07ZI7KstV+Tv5KxzbLM2UL0i9UfNUTw3ZAdpaDeHE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=IlcCrv2IwsieOCCkD0nyxBFZTqN8qBdFPnXa36F9WnZopnckl2WvGCoEiiDhS2ryY
+	 hYRyqomh352HnUtEUQsWSZI9YKJGw4xlR+q2NhzKU/0RWOUuMdllNjgK+3v6OtXVB4
+	 QQwYmLneRmQp/iionec/qXW6TFheSEA3S8YGlSE8vxG0kdLQeBHPE0icTmc+OHG3gJ
+	 vLwhMgQ2paCpyxbQ9bc5E2viSDAaRpbrm9NeB/hN0wHjgnqtwGmJeLtHDO9MczebED
+	 eA+r1/RJ1uGbGsm4tYR9f1VHAJ1HyOLTB3BHyQM+95bjEhCwTr1peZ0GrwLxUuOTnP
+	 VODxAkHvqe/Gg==
+Date: Wed, 30 Jul 2025 22:57:22 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: kernel test robot <lkp@intel.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ oe-kbuild-all@lists.linux.dev, Mark Rutland <mark.rutland@arm.com>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Linux Memory Management List
+ <linux-mm@kvack.org>, Namhyung Kim <namhyung@kernel.org>, Jonathan Corbet
+ <corbet@lwn.net>, Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH v2 1/2] tracing: Have eprobes have their own config
+ option
+Message-Id: <20250730225722.c88d2dbd3dfa07310de7edd4@kernel.org>
+In-Reply-To: <20250730091727.7b3a8b96@gandalf.local.home>
+References: <20250729161912.056641407@kernel.org>
+	<202507301452.JPAcMvT0-lkp@intel.com>
+	<20250730191101.7e6203f21b94c3f932fa8348@kernel.org>
+	<20250730091727.7b3a8b96@gandalf.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: B003A6000C
-X-Stat-Signature: 7a4jg1qcadtiqm5ucfmr9eog7prsws1c
-X-Rspamd-Server: rspamout02
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+GT+298XNw3sUtH/KUCJiMoJtrK0AAras=
-X-HE-Tag: 1753883785-400689
-X-HE-Meta: U2FsdGVkX18Y/wSr2PULlU+lJxRhXXAG/s/Ujl4zZXjBJpuMO1KJcwBl6CXFVM4KjGtjbyoRKGWOanlXAYGH35krn+qg641/t3dLIKJfubRLoHassBCAHH6NHSYjV/xU5DlgyPLzrruf7cTfAVQU9yhZdLOm/GBzFYd+mN3oTIa+0e7LTcEeMguNJfkLqAD2pGsjrgYJ3s851UwStnvdSsq4aYxwsejKlXtgRJJeRLAs7eeWOr/Tg2BKayY4NyeqP1CBq5OgEApEpQE0HhY/LrzaUzbgxIIpBzuhqDSUWNpJUT/neq02SIPkdVnRkvuWsVLeU+OMwlHlphB1TE8cvDSNbsG80ko4
 
-On Wed, 30 Jul 2025 13:19:51 +0200
-Jiri Olsa <olsajiri@gmail.com> wrote:
+On Wed, 30 Jul 2025 09:17:27 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> so it's all work on PoC stage, the idea is to be able to attach many
-> (like 20,30,40k) functions to their trampolines quickly, which at the
-> moment is slow because all the involved interfaces work with just single
-> function/tracempoline relation
-
-Sounds like you are reinventing the ftrace mechanism itself. Which I warned
-against when I first introduced direct trampolines, which were purposely
-designed to do a few functions, not thousands. But, oh well.
-
-
-> Steven, please correct me if/when I'm wrong ;-)
+> On Wed, 30 Jul 2025 19:11:01 +0900
+> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 > 
-> IIUC in x86_64, IF there's just single ftrace_ops defined for the function,
-> it will bypass ftrace trampoline and call directly the direct trampoline
-> for the function, like:
+> > Interesting, this find another issue. Since this is provided by
+> > CONFIG_PROBE_EVENTS, we need to fix CONFIG_PROBE_EVENTS depending
+> > on HAVE_REGS_AND_STACK_ACCESS_API.
+> > 
+> > diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+> > index a3f35c7d83b6..cd239240b0ef 100644
+> > --- a/kernel/trace/Kconfig
+> > +++ b/kernel/trace/Kconfig
+> > @@ -792,6 +792,7 @@ config DYNAMIC_EVENTS
+> >         def_bool n
+> >  
+> >  config PROBE_EVENTS
+> > +       depends on HAVE_REGS_AND_STACK_ACCESS_API
+> >         def_bool n
+> >  
+> >  config BPF_KPROBE_OVERRIDE
 > 
->    <foo>:
->      call direct_trampoline
->      ...
+> OK, I'll send a v2.
+> 
+> Did you want to take this in the tracing pull request?
+> 
+> I see you already did the probe pull request.
 
-Yes.
+Ah, I thought this was for the next one... (but I think it is a kind of bugfix?)
 
-And it will also do the same for normal ftrace functions. If you have:
-
-struct ftrace_ops {
-	.func = myfunc;
-};
-
-It will create a trampoline that has:
-
-      <tramp>
-	...
-	call myfunc
-	...
-	ret
-
-On x86, I believe the ftrace_ops for myfunc is added to the trampoline,
-where as in arm, it's part of the function header. To modify it, it
-requires converting to the list operation (which ignores the ops
-parameter), then the ops at the function gets changed before it goes to the
-new function.
-
-And if it is the only ops attached to a function foo, the function foo
-would have:
-
-      <foo>
-	call tramp
-	...
-
-But what's nice about this is that if you have 12 different ftrace_ops that
-each attach to a 1000 different functions, but no two ftrace_ops attach to
-the same function, they all do the above. No hash needed!
+Thank you,
 
 > 
-> IF there are other ftrace_ops 'users' on the same function, we execute
-> each of them like:
-> 
->   <foo>:
->     call ftrace_trampoline
->       call ftrace_ops_1->func
->       call ftrace_ops_2->func
->       ...
-> 
-> with our direct ftrace_ops->func currently using ftrace_ops->direct_call
-> to return direct trampoline for the function:
-> 
-> 	-static void call_direct_funcs(unsigned long ip, unsigned long pip,
-> 	-                             struct ftrace_ops *ops, struct ftrace_regs *fregs)
-> 	-{
-> 	-       unsigned long addr = READ_ONCE(ops->direct_call);
-> 	-
-> 	-       if (!addr)
-> 	-               return;
-> 	-
-> 	-       arch_ftrace_set_direct_caller(fregs, addr);
-> 	-}
-> 
-> in the new changes it will do hash lookup (based on ip) for the direct
-> trampoline we want to execute:
-> 
-> 	+static void call_direct_funcs_hash(unsigned long ip, unsigned long pip,
-> 	+                                  struct ftrace_ops *ops, struct ftrace_regs *fregs)
-> 	+{
-> 	+       unsigned long addr;
-> 	+
-> 	+       addr = ftrace_find_rec_direct(ip);
-> 	+       if (!addr)
-> 	+               return;
-> 	+
-> 	+       arch_ftrace_set_direct_caller(fregs, addr);
-> 	+}
+> -- Steve
 
-I think the above will work.
 
-> 
-> still this is the slow path for the case where multiple ftrace_ops objects use
-> same function.. for the fast path we have the direct attachment as described above
-> 
-> sorry I probably forgot/missed discussion on this, but doing the fast path like in
-> x86_64 is not an option in arm, right?
-
-That's a question for Mark, right?
-
--- Steve
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
