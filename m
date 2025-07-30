@@ -1,110 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3ECA1C861F;
-	Wed, 30 Jul 2025 10:11:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 790501E2848;
+	Wed, 30 Jul 2025 11:11:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753870267; cv=none; b=mxFwDqhPAVFICSw9NqB/H5AKwSlorW5sr98mXJxDRYAjblDwdv1ZzVb94ILLi8WCtWRF9+AhFgbRBHyT0UNhImA3pPrG+mqJStX7Jf9Wq3Ux+a2b0WTXCHrFHu50X1ks8dYMDd//42kZdAeA5pgMyV/mshLjl9MVJn0sdSgcwsA=
+	t=1753873901; cv=none; b=UJ3hi4dMFEjba4ANqOxFOa059n/1Hvxj52D0sOFin70f85zGbtQhfQAcvBxA6vPzY+qQLwTqUpF/ehAV5uQAs+U5jWprAfYmSj4i3r3xCAjHlqIs74l2Q7NdaV/DQlSmLEq7Qckzb9RvuY5ikbZtKdCdd/dYefW+se4gfXyeAo0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753870267; c=relaxed/simple;
-	bh=pnGxoS3OSecq/nhtm6H+J4Cjcuia3dKAU/NRqZLtAY0=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=T2QzSxD+KPdAPD7ukjEib0edqk4KayGsVoeJUKHaT5kNnag4rm17NQW+E3WiXWxgUnFriEvbsS4cPdK6jPOLHoH3E3Qpxe1pQj1peekklbkw4BBwvxp79w+VhFgqGED3F0vjLWuPVRtdbFWTU73ubXu1m92QBCbElKzFD/CxcAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DrE9nbyJ; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DrE9nbyJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 112E4C4CEE7;
-	Wed, 30 Jul 2025 10:11:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753870267;
-	bh=pnGxoS3OSecq/nhtm6H+J4Cjcuia3dKAU/NRqZLtAY0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=DrE9nbyJnXasszyzxe7vuARHwlZqRT4Egs8bU8yW7nxeMXKu+ofCfJWdWI9vY/1E2
-	 f+vKgHulgbDiHWElrxhi7ziGMvehBIoDHfaXNhciy32V1IrHXC7o7NfJqC6Qa1qhfG
-	 gVUuC5C5bZXcJFeK7Xunxz8EGdXxm0E3qJl118erF6tqja8IFneOstrFfOVPjqUSee
-	 64gg/x0fiBrFdMENMIWlxKzvhcLDG3E77FBMts9mXKcz4h7OcWY1rcs+qfBE6z37KW
-	 bMi2n1Rk1nSQI6WE8oz65iext9Ry6aWyphwXDVsoQJio8lnqnfii9n2bqk48yfMFt3
-	 nmekez5FtSNww==
-Date: Wed, 30 Jul 2025 19:11:01 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: kernel test robot <lkp@intel.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- oe-kbuild-all@lists.linux.dev, Masami Hiramatsu <mhiramat@kernel.org>, Mark
- Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, Linux Memory Management List
- <linux-mm@kvack.org>, Namhyung Kim <namhyung@kernel.org>, Jonathan Corbet
- <corbet@lwn.net>, Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH v2 1/2] tracing: Have eprobes have their own config
- option
-Message-Id: <20250730191101.7e6203f21b94c3f932fa8348@kernel.org>
-In-Reply-To: <202507301452.JPAcMvT0-lkp@intel.com>
-References: <20250729161912.056641407@kernel.org>
-	<202507301452.JPAcMvT0-lkp@intel.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1753873901; c=relaxed/simple;
+	bh=asevILIzuNSddmtdG/bl/3I8QPtBkx8UBm3bkjmoh2o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=da528wNR8mSEHp8E3aoEMCAqfxb1lnJW9W9KPtbke+Qv7EppGQuEDJ7FmWf2VZBDoDFdUoXWgWWp6hBi9AVPJpIP4M9vPwMXqi3Nt8KXFNKHdHcMBE5Kr509UWVFNcwbnxn+DAW5Kdib3fzYRhZdEm+iulTvsF3ZziaSjV5TMLM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E047C1E5E;
+	Wed, 30 Jul 2025 04:11:30 -0700 (PDT)
+Received: from [10.57.3.116] (unknown [10.57.3.116])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3E3A73F673;
+	Wed, 30 Jul 2025 04:11:34 -0700 (PDT)
+Message-ID: <f912c446-1ae9-4390-9c11-00dce7bf0fd3@arm.com>
+Date: Wed, 30 Jul 2025 12:11:32 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/8] dma-mapping: migrate to physical address-based API
+To: Marek Szyprowski <m.szyprowski@samsung.com>,
+ Christoph Hellwig <hch@lst.de>, Leon Romanovsky <leon@kernel.org>
+Cc: Jonathan Corbet <corbet@lwn.net>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+ "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
+ Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
+ <eperezma@redhat.com>, Alexander Potapenko <glider@google.com>,
+ Marco Elver <elver@google.com>, Dmitry Vyukov <dvyukov@google.com>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ iommu@lists.linux.dev, virtualization@lists.linux.dev,
+ kasan-dev@googlegroups.com, linux-trace-kernel@vger.kernel.org,
+ linux-mm@kvack.org, Jason Gunthorpe <jgg@ziepe.ca>
+References: <CGME20250625131920eucas1p271b196cde042bd39ac08fb12beff5baf@eucas1p2.samsung.com>
+ <cover.1750854543.git.leon@kernel.org>
+ <35df6f2a-0010-41fe-b490-f52693fe4778@samsung.com>
+ <20250627170213.GL17401@unreal> <20250630133839.GA26981@lst.de>
+ <69b177dc-c149-40d3-bbde-3f6bad0efd0e@samsung.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <69b177dc-c149-40d3-bbde-3f6bad0efd0e@samsung.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On Wed, 30 Jul 2025 14:27:08 +0800
-kernel test robot <lkp@intel.com> wrote:
+On 2025-07-08 11:27 am, Marek Szyprowski wrote:
+> On 30.06.2025 15:38, Christoph Hellwig wrote:
+>> On Fri, Jun 27, 2025 at 08:02:13PM +0300, Leon Romanovsky wrote:
+>>>> Thanks for this rework! I assume that the next step is to add map_phys
+>>>> callback also to the dma_map_ops and teach various dma-mapping providers
+>>>> to use it to avoid more phys-to-page-to-phys conversions.
+>>> Probably Christoph will say yes, however I personally don't see any
+>>> benefit in this. Maybe I wrong here, but all existing .map_page()
+>>> implementation platforms don't support p2p anyway. They won't benefit
+>>> from this such conversion.
+>> I think that conversion should eventually happen, and rather sooner than
+>> later.
+> 
+> Agreed.
+> 
+> Applied patches 1-7 to my dma-mapping-next branch. Let me know if one
+> needs a stable branch with it.
 
-> Hi Steven,
-> 
-> kernel test robot noticed the following build errors:
-> 
-> [auto build test ERROR on trace/for-next]
-> [also build test ERROR on lwn/docs-next akpm-mm/mm-everything linus/master v6.16 next-20250729]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch#_base_tree_information]
-> 
-> url:    https://github.com/intel-lab-lkp/linux/commits/Steven-Rostedt/tracing-Have-eprobes-have-their-own-config-option/20250730-001958
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace for-next
-> patch link:    https://lore.kernel.org/r/20250729161912.056641407%40kernel.org
-> patch subject: [PATCH v2 1/2] tracing: Have eprobes have their own config option
-> config: xtensa-randconfig-002-20250730 (https://download.01.org/0day-ci/archive/20250730/202507301452.JPAcMvT0-lkp@intel.com/config)
-> compiler: xtensa-linux-gcc (GCC) 12.5.0
-> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250730/202507301452.JPAcMvT0-lkp@intel.com/reproduce)
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202507301452.JPAcMvT0-lkp@intel.com/
-> 
-> All errors (new ones prefixed by >>):
-> 
->    kernel/trace/trace_probe.c: In function 'parse_probe_arg':
-> >> kernel/trace/trace_probe.c:1105:23: error: implicit declaration of function 'regs_query_register_offset'; did you mean 'ftrace_regs_query_register_offset'? [-Werror=implicit-function-declaration]
->     1105 |                 ret = regs_query_register_offset(arg + 1);
->          |                       ^~~~~~~~~~~~~~~~~~~~~~~~~~
->          |                       ftrace_regs_query_register_offset
->    cc1: some warnings being treated as errors
+As the maintainer of iommu-dma, please drop the iommu-dma patch because 
+it is broken. It does not in any way remove the struct page dependency 
+from iommu-dma, it merely hides it so things can crash more easily in 
+circumstances that clearly nobody's bothered to test.
 
+> Leon, it would be great if You could also prepare an incremental patch
+> adding map_phys callback to the dma_maps_ops, so the individual
+> arch-specific dma-mapping providers can be then converted (or simplified
+> in many cases) too.
 
-Interesting, this find another issue. Since this is provided by
-CONFIG_PROBE_EVENTS, we need to fix CONFIG_PROBE_EVENTS depending
-on HAVE_REGS_AND_STACK_ACCESS_API.
+Marek, I'm surprised that even you aren't seeing why that would at best 
+be pointless churn. The fundamental design of dma_map_page() operating 
+on struct page is that it sits in between alloc_pages() at the caller 
+and kmap_atomic() deep down in the DMA API implementation (which also 
+subsumes any dependencies on having a kernel virtual address at the 
+implementation end). The natural working unit for whatever replaces 
+dma_map_page() will be whatever the replacement for alloc_pages() 
+returns, and the replacement for kmap_atomic() operates on. Until that 
+exists (and I simply cannot believe it would be an unadorned physical 
+address) there cannot be any *meaningful* progress made towards removing 
+the struct page dependency from the DMA API. If there is also a goal to 
+kill off highmem before then, then logically we should just wait for 
+that to land, then revert back to dma_map_single() being the first-class 
+interface, and dma_map_page() can turn into a trivial page_to_virt() 
+wrapper for the long tail of caller conversions.
 
-diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-index a3f35c7d83b6..cd239240b0ef 100644
---- a/kernel/trace/Kconfig
-+++ b/kernel/trace/Kconfig
-@@ -792,6 +792,7 @@ config DYNAMIC_EVENTS
-        def_bool n
- 
- config PROBE_EVENTS
-+       depends on HAVE_REGS_AND_STACK_ACCESS_API
-        def_bool n
- 
- config BPF_KPROBE_OVERRIDE
+Simply obfuscating the struct page dependency today by dressing it up as 
+a phys_addr_t with implicit baggage is not not in any way helpful. It 
+only makes the code harder to understand and more bug-prone. Despite the 
+disingenuous claims, it is quite blatantly the opposite of "efficient" 
+for callers to do extra work to throw away useful information with 
+page_to_phys(), and the implementation then have to re-derive that 
+information with pfn_valid()/phys_to_page().
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+And by "bug-prone" I also include greater distractions like this 
+misguided idea that the same API could somehow work for non-memory 
+addresses too, so then everyone can move on bikeshedding VFIO while 
+overlooking the fundamental flaws in the whole premise. I mean, besides 
+all the issues I've already pointed out in that regard, not least the 
+glaring fact that it's literally just a worse version of *an API we 
+already have*, as DMA API maintainer do you *really* approve of a design 
+that depends on callers abusing DMA_ATTR_SKIP_CPU_SYNC, yet will still 
+readily blow up if they did then call a dma_sync op?
+
+Thanks,
+Robin.
