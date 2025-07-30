@@ -1,75 +1,72 @@
-Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E84C4A35;
-	Wed, 30 Jul 2025 14:01:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F88E277036;
+	Wed, 30 Jul 2025 14:09:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753884107; cv=none; b=NN/Tr71nMpExJ3atDQjhZRnAl8MTHZcZam1MB9/NlnnIL88MuheA/Up0JfU9f10W7qF+qd0ixhOvpBuk5AethWbEOjd6kJ98gEjlotQ6QtT7tPLG8uBdeVqHJQTcaAWvUy7NLU+Wh2fZvFbnIr3s2HFFmSmuPozGaC1jO6mokvg=
+	t=1753884569; cv=none; b=Xw88EG9laUjqAPUWtNPkGqGqdicCi2FVsor06TGrCYVLnq243j6t70dp9OAQQzEx2TmzI+cl1zmkfNRQT1aok9/VFYW94JUPIukslDH5YcbFB6UJK0mHd9wvOA2xQ52BsZpN7n8HOmZP7GDEcZs4jdYF67S+lTc47PWQvBQSEyU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753884107; c=relaxed/simple;
-	bh=7RnPBP22ydtmNfvMaNDWqH0JdrLnHI/M2PBXtkcuFxI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kpiwFgRx1T3tkdk/7wQ+3qa5XIVuO2kuWI6KGSuVA/H2M4XQ+suMbtryJBs+lyEnigDp7gJeLq0BNxwTWRhaxZwyiU9b6/Nbgwt+QY4i+FBczLaKBluXYE4F4DTLqRXSxHSPbECcW1S3V08KKpQxWm0ufaqBQRbcrvLIMEXfpMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf15.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay07.hostedemail.com (Postfix) with ESMTP id 58F1C160462;
-	Wed, 30 Jul 2025 14:01:42 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf15.hostedemail.com (Postfix) with ESMTPA id 917A41A;
-	Wed, 30 Jul 2025 14:01:39 +0000 (UTC)
-Date: Wed, 30 Jul 2025 10:01:55 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: kernel test robot <lkp@intel.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- oe-kbuild-all@lists.linux.dev, Mark Rutland <mark.rutland@arm.com>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, Linux Memory Management List
- <linux-mm@kvack.org>, Namhyung Kim <namhyung@kernel.org>, Jonathan Corbet
- <corbet@lwn.net>, Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH v2 1/2] tracing: Have eprobes have their own config
- option
-Message-ID: <20250730100155.268d2442@gandalf.local.home>
-In-Reply-To: <20250730225722.c88d2dbd3dfa07310de7edd4@kernel.org>
-References: <20250729161912.056641407@kernel.org>
-	<202507301452.JPAcMvT0-lkp@intel.com>
-	<20250730191101.7e6203f21b94c3f932fa8348@kernel.org>
-	<20250730091727.7b3a8b96@gandalf.local.home>
-	<20250730225722.c88d2dbd3dfa07310de7edd4@kernel.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1753884569; c=relaxed/simple;
+	bh=jlSU8x2HUw5hRxeBbQkJqx0lNZvwXdUdDdshjAaerDg=;
+	h=Message-ID:Date:From:To:Cc:Subject; b=W4e2MpO/C+yTwRuKLuzn7gj2236LNC/Yf0h1cg1Ow4TfvR2YdYB+MrrOktqV4+xJnbfEfmmPpyHu0Abjx1wBIbpLK4TEPIlsRL9pKAc7GKpTNgJSj+syluBFXf4Ah7xulngBqu5PUOxgJnkbBghQ4EXpNcc9wD1FFQppAySWJZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZEPmr2+P; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZEPmr2+P"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA114C4CEE3;
+	Wed, 30 Jul 2025 14:09:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753884568;
+	bh=jlSU8x2HUw5hRxeBbQkJqx0lNZvwXdUdDdshjAaerDg=;
+	h=Date:From:To:Cc:Subject:From;
+	b=ZEPmr2+P556zTytxnzgOEH7quSQEOMxbsblrK0qOcXMoaPqyf99ZDoswBDyimHHJ0
+	 TQtz2s2DnQMx3pylemWkeRmxv+tXvdUMOEde40gyv3RZyiehO6SvO2lvtrYv6kyAlr
+	 RHnWSvoAt3SOUF6hBkCtUGmsXSgh8TrG17+VEQo0Ap8/ozeM3wbJauQOo7PG2hE05p
+	 vxI5W3ZKwZw7RypvWKj6wC7HRyMfCXkGqSFCl/lKFa/mZGprU15qy2e6pRrw6F/zsi
+	 PSnyeZnFdDtP9DoGzDu69Xc9OtfEVqVoY70mJxre51i98p68zxatviQS13StvvUsZy
+	 fzpTuvRxR0hvA==
+Received: from rostedt by gandalf with local (Exim 4.98.2)
+	(envelope-from <rostedt@kernel.org>)
+	id 1uh7V3-00000005ydr-1OCf;
+	Wed, 30 Jul 2025 10:09:45 -0400
+Message-ID: <20250730140753.168615576@kernel.org>
+User-Agent: quilt/0.68
+Date: Wed, 30 Jul 2025 10:07:53 -0400
+From: Steven Rostedt <rostedt@kernel.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Namhyung Kim <namhyung@kernel.org>,
+ Jonathan Corbet <corbet@lwn.net>,
+ Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH v3 0/2] tracing: Documentation: Add missing config and document for eprobes
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: 8bdr1qaiuyiqeg9bhfbz1td1gb4gms7k
-X-Rspamd-Server: rspamout01
-X-Rspamd-Queue-Id: 917A41A
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+/YoaC5S0m6XgLEI0KXUlT7Ux5npWQxGs=
-X-HE-Tag: 1753884099-284807
-X-HE-Meta: U2FsdGVkX19fNWmLTzEFbGr2d8oyKHH1JxLjen/f4/Pq5ZFXK8n1OCSZYlWKoRxJjvbVP1eZx2Z+YU1Vpu+9GeZeuzlfTnEqu7ftGHkC+D5raU1QP/7i60awdafBIT+ByL2WPuB9n3BPwnn6m5KlvxrCTRoGpEbwYw3/2Ip/qhCOkYST0eKSpo7BkeHKSe9/peJwCwGlRYNyRg7WSL4AS2OEvyrVCwLgW2aOmRvz1eY9o5NzbRQKm8XH2ZvO+Pw65mDq8IMzB5m0PuoXE0uVRWKrqDrS7X+QWDcZWcT82Xk/VUhryK/7MRTKmZERDPdoB+94XmgxR+n9lYsrje3SIygbYUAJlwTo
 
-On Wed, 30 Jul 2025 22:57:22 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+Add missing eprobe config option and documentation which should have both been
+added back in 5.15.
 
-> > I see you already did the probe pull request.  
-> 
-> Ah, I thought this was for the next one... (but I think it is a kind of bugfix?)
+Changes since v2: https://lore.kernel.org/linux-trace-kernel/20250729161816.678462962@kernel.org/
 
-Yeah, as its not adding eprobes, but just making it configurable.
+- Added Kconfig dependency on HAVE_REGS_AND_STACK_ACCESS_API (Masami Hiramatsu)
 
-But you haven't answered my question ;-)
+- Put back s/;/,/ (Randy Dunlap)
 
-Do you want to push it to Linus or should I?
+Steven Rostedt (2):
+      tracing: Have eprobes have their own config option
+      Documentation: tracing: Add documentation about eprobes
 
-I still have the trace/for-next to push (I've finished testing your last
-"attribute" patch and now I'm just letting it simmer in linux-next before
-doing the pull request). I can still add this to that one if you want.
-
--- Steve
+----
+ Documentation/trace/eprobetrace.rst | 269 ++++++++++++++++++++++++++++++++++++
+ Documentation/trace/index.rst       |   1 +
+ kernel/trace/Kconfig                |  14 ++
+ kernel/trace/Makefile               |   2 +-
+ 4 files changed, 285 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/trace/eprobetrace.rst
