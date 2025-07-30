@@ -1,97 +1,165 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FFA82D837F;
-	Wed, 30 Jul 2025 13:54:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ADBB29A9D3;
+	Wed, 30 Jul 2025 13:56:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753883656; cv=none; b=u0WxvvDuX4aI3tseH7Ixdhk3SiB+o/s3mbse6LBPIRYUz2L8sNO3QNAYKhUvjy7x47dJo5kGPA9Xjib4KHL36skSKz0u/U4KY9/htm3e4m4/JQdrMKulaASJnvFdt+xyhM151XUwwdLvcCaTO7V8aLnpWXxYK7eorPdR26o+WTw=
+	t=1753883800; cv=none; b=UNc5O419biy1y/6RCWn53xYJAuDMRqIQLDseXUqsQaPrT5XQm/R1HyWlUsmWTK2DBW0Id6MSh86ZvQw9L8WsY6zCpGaSFwltv++tUI+8mmCq6SZucM4GaUuW36ECZwTClCUSW+0nRQ6DetXgLeZqW4oUa8qnRti40cQDAaQ7HTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753883656; c=relaxed/simple;
-	bh=nmt+hN9TOEJeE4um5/7l+RZD3WXERXwa4/JhfQBUngc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Sr3J+jd/IX4KW/iWT1hH011ez+0dgY2YjD06qH5iQUxXlIw0wt81CR3Dj5ufUpUR+eFutDWYBfxuCWXofHklrO33/7znVvN+hcK6WCNpdN+njOm9t+L5fDjjhV3rPcACr42IQG4i3yjxTZvPU+MNbI2FEeiPz67mndergauaiNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gYyVN/XG; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gYyVN/XG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5E0FC4CEE3;
-	Wed, 30 Jul 2025 13:54:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753883656;
-	bh=nmt+hN9TOEJeE4um5/7l+RZD3WXERXwa4/JhfQBUngc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gYyVN/XGm8G3BPv8aBwxXLnXm2fQQ07mU48tyk6KSHxjsyYR+yRaiYwcXVzmSc4zo
-	 Pn40dSla1VAi9WgCMWiVIv04M/i4H0xf27rX7jVX9k0mhng3HY8qKPGZFG/x/CkdZU
-	 /X71tv+zklpHX0D0a9pP3Ba9+ZOaS8n6eIoVFMiUX/Izn6ovimcpyWiMf48Hj2YaAd
-	 JcK5JkkTO8H44pbJOrquWC0mepfNPOXPVkFaSrxRYqRnb7c235/9DaHMIpHnRA3zKy
-	 6mVMmzbdgzOQWD8gzb4+LXgMUlqBnV1a5ZvCQr9Ls5CvJyoZj0O1lZ1uSN67og8iWY
-	 +lHNUBfKo6Lvg==
-From: Chuck Lever <cel@kernel.org>
-To: Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Jan Kara <jack@suse.cz>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	NeilBrown <neil@brown.name>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>,
-	Jeff Layton <jlayton@kernel.org>
-Cc: Chuck Lever <chuck.lever@oracle.com>,
-	Trond Myklebust <trondmy@hammerspace.com>,
-	Anna Schumaker <anna@kernel.org>,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v4 0/8] nfsd/vfs: fix handling of delegated timestamp updates
-Date: Wed, 30 Jul 2025 09:54:10 -0400
-Message-ID: <175388362821.78947.18183127032969015435.b4-ty@oracle.com>
-X-Mailer: git-send-email 2.50.0
-In-Reply-To: <20250730-nfsd-testing-v4-0-7f5730570a52@kernel.org>
-References: <20250730-nfsd-testing-v4-0-7f5730570a52@kernel.org>
+	s=arc-20240116; t=1753883800; c=relaxed/simple;
+	bh=eOMWDKHUmy1gD0Z7poNwDp33IXetjz2L4RUzoqiHY7I=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Gu9lMPd4Z+IEHCKygHZdTC6vZ/ymtQ65q6Q3EoYxOg5sJl82gQrqrQzJN9XiJRCTG1D0/msnRdiCe8s1sRc5r9UT+lLynGgJXyPG8YETjrrxIEYBxzwJv0K5nwzaMAy//ZvlfP2OyEw2em1xokwH9reI0xmG4E7VWL2U3wZQxpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf01.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay01.hostedemail.com (Postfix) with ESMTP id 5A0C41DA394;
+	Wed, 30 Jul 2025 13:56:29 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf01.hostedemail.com (Postfix) with ESMTPA id B003A6000C;
+	Wed, 30 Jul 2025 13:56:25 +0000 (UTC)
+Date: Wed, 30 Jul 2025 09:56:41 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Steven Rostedt
+ <rostedt@kernel.org>, Florent Revest <revest@google.com>,
+ bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
+ <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, Menglong Dong
+ <menglong8.dong@gmail.com>, Naveen N Rao <naveen@kernel.org>, Michael
+ Ellerman <mpe@ellerman.id.au>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?=
+ <bjorn@rivosinc.com>, Andy Chiu <andybnac@gmail.com>, Alexandre Ghiti
+ <alexghiti@rivosinc.com>, Palmer Dabbelt <palmer@dabbelt.com>
+Subject: Re: [RFC 00/10] ftrace,bpf: Use single direct ops for bpf
+ trampolines
+Message-ID: <20250730095641.660800b1@gandalf.local.home>
+In-Reply-To: <aIn_12KHz7ikF2t1@krava>
+References: <20250729102813.1531457-1-jolsa@kernel.org>
+	<aIkLlB7Z7V--BeGi@J2N7QTR9R3.cambridge.arm.com>
+	<aIn_12KHz7ikF2t1@krava>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: B003A6000C
+X-Stat-Signature: 7a4jg1qcadtiqm5ucfmr9eog7prsws1c
+X-Rspamd-Server: rspamout02
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+GT+298XNw3sUtH/KUCJiMoJtrK0AAras=
+X-HE-Tag: 1753883785-400689
+X-HE-Meta: U2FsdGVkX18Y/wSr2PULlU+lJxRhXXAG/s/Ujl4zZXjBJpuMO1KJcwBl6CXFVM4KjGtjbyoRKGWOanlXAYGH35krn+qg641/t3dLIKJfubRLoHassBCAHH6NHSYjV/xU5DlgyPLzrruf7cTfAVQU9yhZdLOm/GBzFYd+mN3oTIa+0e7LTcEeMguNJfkLqAD2pGsjrgYJ3s851UwStnvdSsq4aYxwsejKlXtgRJJeRLAs7eeWOr/Tg2BKayY4NyeqP1CBq5OgEApEpQE0HhY/LrzaUzbgxIIpBzuhqDSUWNpJUT/neq02SIPkdVnRkvuWsVLeU+OMwlHlphB1TE8cvDSNbsG80ko4
 
-From: Chuck Lever <chuck.lever@oracle.com>
+On Wed, 30 Jul 2025 13:19:51 +0200
+Jiri Olsa <olsajiri@gmail.com> wrote:
 
-On Wed, 30 Jul 2025 09:24:29 -0400, Jeff Layton wrote:
-> This patchset fixes the handling of delegated timestamps in nfsd. This
-> one also adopts Neil's suggestopn to use FMODE_NOCMTIME to freeze
-> timestamp updates while there is a WRITE_ATTRS delegation outstanding.
+> so it's all work on PoC stage, the idea is to be able to attach many
+> (like 20,30,40k) functions to their trampolines quickly, which at the
+> moment is slow because all the involved interfaces work with just single
+> function/tracempoline relation
+
+Sounds like you are reinventing the ftrace mechanism itself. Which I warned
+against when I first introduced direct trampolines, which were purposely
+designed to do a few functions, not thousands. But, oh well.
+
+
+> Steven, please correct me if/when I'm wrong ;-)
 > 
-> Most of these patches are identical to the last set. I dropped the patch
-> that removes inode_set_ctime_deleg(), and reworked the logic in
-> setattr_copy() and friends to accomodate.
+> IIUC in x86_64, IF there's just single ftrace_ops defined for the function,
+> it will bypass ftrace trampoline and call directly the direct trampoline
+> for the function, like:
 > 
-> [...]
+>    <foo>:
+>      call direct_trampoline
+>      ...
 
-Applied v4 to nfsd-testing, thanks!
+Yes.
 
-[1/8] nfsd: fix assignment of ia_ctime.tv_nsec on delegated mtime update
-      commit: 237f236e44701cffc5cd9e302d4fec172a954d2f
-[2/8] nfsd: ignore ATTR_DELEG when checking ia_valid before notify_change()
-      commit: 30a594d856dc2fc89d3751b5d630cd55fceffd9a
-[3/8] vfs: add ATTR_CTIME_SET flag
-      commit: 3076cf4693efc8596a1d1eee17a9bc9b5c4b197d
-[4/8] nfsd: use ATTR_CTIME_SET for delegated ctime updates
-      commit: 12b1b09ddb932c2be8148758ebb5d93265293d18
-[5/8] nfsd: track original timestamps in nfs4_delegation
-      commit: 2082ff203cad83a7d50478112b2089743f8fea43
-[6/8] nfsd: fix SETATTR updates for delegated timestamps
-      commit: 90a615f4a2836bbaf91ac18c3157944655949368
-[7/8] nfsd: fix timestamp updates in CB_GETATTR
-      commit: ba17826b25e921ebca04fc54a59336dad68302ac
-[8/8] nfsd: freeze c/mtime updates with outstanding WRITE_ATTRS delegation
-      commit: 278138d4f85df580edde73ad4d89b8aae75d0e77
+And it will also do the same for normal ftrace functions. If you have:
 
---
-Chuck Lever
+struct ftrace_ops {
+	.func = myfunc;
+};
 
+It will create a trampoline that has:
+
+      <tramp>
+	...
+	call myfunc
+	...
+	ret
+
+On x86, I believe the ftrace_ops for myfunc is added to the trampoline,
+where as in arm, it's part of the function header. To modify it, it
+requires converting to the list operation (which ignores the ops
+parameter), then the ops at the function gets changed before it goes to the
+new function.
+
+And if it is the only ops attached to a function foo, the function foo
+would have:
+
+      <foo>
+	call tramp
+	...
+
+But what's nice about this is that if you have 12 different ftrace_ops that
+each attach to a 1000 different functions, but no two ftrace_ops attach to
+the same function, they all do the above. No hash needed!
+
+> 
+> IF there are other ftrace_ops 'users' on the same function, we execute
+> each of them like:
+> 
+>   <foo>:
+>     call ftrace_trampoline
+>       call ftrace_ops_1->func
+>       call ftrace_ops_2->func
+>       ...
+> 
+> with our direct ftrace_ops->func currently using ftrace_ops->direct_call
+> to return direct trampoline for the function:
+> 
+> 	-static void call_direct_funcs(unsigned long ip, unsigned long pip,
+> 	-                             struct ftrace_ops *ops, struct ftrace_regs *fregs)
+> 	-{
+> 	-       unsigned long addr = READ_ONCE(ops->direct_call);
+> 	-
+> 	-       if (!addr)
+> 	-               return;
+> 	-
+> 	-       arch_ftrace_set_direct_caller(fregs, addr);
+> 	-}
+> 
+> in the new changes it will do hash lookup (based on ip) for the direct
+> trampoline we want to execute:
+> 
+> 	+static void call_direct_funcs_hash(unsigned long ip, unsigned long pip,
+> 	+                                  struct ftrace_ops *ops, struct ftrace_regs *fregs)
+> 	+{
+> 	+       unsigned long addr;
+> 	+
+> 	+       addr = ftrace_find_rec_direct(ip);
+> 	+       if (!addr)
+> 	+               return;
+> 	+
+> 	+       arch_ftrace_set_direct_caller(fregs, addr);
+> 	+}
+
+I think the above will work.
+
+> 
+> still this is the slow path for the case where multiple ftrace_ops objects use
+> same function.. for the fast path we have the direct attachment as described above
+> 
+> sorry I probably forgot/missed discussion on this, but doing the fast path like in
+> x86_64 is not an option in arm, right?
+
+That's a question for Mark, right?
+
+-- Steve
