@@ -1,179 +1,98 @@
-Received: from lamorak.hansenpartnership.com (lamorak.hansenpartnership.com [198.37.111.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D2442DEA7D;
-	Wed, 30 Jul 2025 17:29:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.37.111.173
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 724DA1DE4E7;
+	Wed, 30 Jul 2025 18:26:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753896543; cv=none; b=Ohc3aCetAPThUtGic/FH0d6CXNcwOfullTiQT0rHCChJVNE8hCydtHjPbktsIOT9PW58M3AfTp1OBr9y0Z2QY79JcuMM5n7ja7XriPWJOSgiWwLZHH0z+rJzwyCyUieCRpwWVEQE86IX7RqelFaHLSydqux6cyuuXXVvFKVpnfI=
+	t=1753899988; cv=none; b=APREyKftwbFZusF4MPHEomyqPRXOew2/egIl0fIbIB3miX88Kbhwd1c3hfN0HvcVx1cBLdk6I/bvSickiphlGjGzvG52y1FlXnvF70vxZM86SfHV8zpIFb63JjlSXFgWRMyl5R1MCeKuM2/hJzKtYigsnJ1QcKUXr6IyBMOdtKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753896543; c=relaxed/simple;
-	bh=jtW2WPDHo1i0GZINGZRpFxtSaFbg9MxRVhF1WqPSDD8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DtvrHYyOA14ZM9UksmbK6JS94p03a6XI7IyMGk3/vf2l9M/5M257iHKoC0kfmZe966NOWzbOJ1z66ON6QUXKnesCsd7k3zVrMmAoak6q+s3D18gQf0M6cb9ltikwH3jDrx/2wxuKVtuShJwtHVwQj3mQwpbWcDDjNaca3uGYMYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=O1vR+GXe; arc=none smtp.client-ip=198.37.111.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="O1vR+GXe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=hansenpartnership.com; s=20151216; t=1753896541;
-	bh=jtW2WPDHo1i0GZINGZRpFxtSaFbg9MxRVhF1WqPSDD8=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:From;
-	b=O1vR+GXe4IU2DFmp7QTm9Sp/llTcM+crsI+C7SaBVIVA7ZsvNZqfWMVEgec45op6Y
-	 Jh7RpR8ZZ3Ncz3UvWQ42P4O88aIuSOfOKa16FkFJuemkCv/I0bjmb8Tp/O0vVJgR32
-	 qNsDMxxnhX7pFZR4XhISZGxT5PsqC3BiOgD3F7i4=
-Received: from lingrow.int.hansenpartnership.com (unknown [153.66.160.227])
-	by lamorak.hansenpartnership.com (Postfix) with ESMTP id 1480C1C0251;
-	Wed, 30 Jul 2025 13:29:01 -0400 (EDT)
-From: James Bottomley <James.Bottomley@HansenPartnership.com>
-To: bpf@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: Roberto Sassu <roberto.sassu@huawei.com>
-Subject: [PATCH v2 3/3] bpf: eliminate the allocation of an intermediate struct bpf_key
-Date: Wed, 30 Jul 2025 13:27:45 -0400
-Message-ID: <20250730172745.8480-4-James.Bottomley@HansenPartnership.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250730172745.8480-1-James.Bottomley@HansenPartnership.com>
-References: <20250730172745.8480-1-James.Bottomley@HansenPartnership.com>
+	s=arc-20240116; t=1753899988; c=relaxed/simple;
+	bh=I8VXE60ASwpxlj2aJHTunROXyMJlVkJgK2wvsHBAuaE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UFWLKPR0d2RQFOtNMUIYHhQozqehCnflb/nmJA6JrtvRypBMQ+qEtT3El206kb1+x0lQG5fjM7n6bQ/QNy4okq1+UG3YeLPlSQnyqh5rjlVibx8ov2kKv4mzDWGY73AfJdf8s6XXfTs9gnAoF4QLaRp3SZd10oSLQVDu8cmpt7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BFEB51BF7;
+	Wed, 30 Jul 2025 11:26:17 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 58A3B3F66E;
+	Wed, 30 Jul 2025 11:26:25 -0700 (PDT)
+Date: Wed, 30 Jul 2025 19:26:23 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>, KP Singh <kpsingh@kernel.org>,
+	Matt Bobrowski <mattbobrowski@google.com>,
+	Song Liu <song@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	James Clark <james.clark@linaro.org>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/6] perf auxtrace: Support AUX pause and resume with
+ BPF
+Message-ID: <20250730182623.GE143191@e132581.arm.com>
+References: <20250725-perf_aux_pause_resume_bpf_rebase-v3-0-9fc84c0f4b3a@arm.com>
+ <fd7c39d2-64b4-480e-8a29-abefcdc7d10a@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fd7c39d2-64b4-480e-8a29-abefcdc7d10a@intel.com>
 
-Now that struct bpf_key is an opaque structure only containing a
-pointer to the key, make it an alias for the key itself and thus
-eliminate the need to allocate and free the container.  Because the
-return value of bpf_lookup_system_key() is now overloaded with 0 being
-a legitimate built in key identifier being the same value as NULL
-indicating failure, key id 0 is swizzled to -1 to distinguish it again
-and swizzled back in bpf_key_put() and bpf_verify_pkcs7_signature() to
-ensure correctness.
+Hi Adrian,
 
-Signed-off-by: James Bottomley <James.Bottomley@HansenPartnership.com>
+On Mon, Jul 28, 2025 at 08:02:51PM +0300, Adrian Hunter wrote:
+> On 25/07/2025 12:59, Leo Yan wrote:
+> > This series extends Perf for fine-grained tracing by using BPF program
+> > to pause and resume AUX tracing. The BPF program can be attached to
+> > tracepoints (including ftrace tracepoints and dynamic tracepoints, like
+> > kprobe, kretprobe, uprobe and uretprobe).
+> 
+> Using eBPF to pause/resume AUX tracing seems like a great idea.
+> 
+> AFAICT with this patch set, there is just support for pause/resume
+> much like what could be done directly without eBPF, so I wonder if you
+> could share a bit more on how you see this evolving, and what your
+> future plans are?
 
----
-v2: keep empty struct bpf_key to avoid BTF problems and swizzle 0 key id.
----
- kernel/trace/bpf_trace.c | 43 +++++++++++++++-------------------------
- 1 file changed, 16 insertions(+), 27 deletions(-)
+IIUC, here you mean the tool can use `perf probe` to firstly create
+probes, then enable tracepoints as PMU event for AUX pause and resume.
 
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index c0ccd55a4d91..7242167fd4b6 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -1242,9 +1242,11 @@ static const struct bpf_func_proto bpf_get_func_arg_cnt_proto = {
- };
- 
- #ifdef CONFIG_KEYS
-+/* BTF requires this even if it serves no purpose */
- struct bpf_key {
--	struct key *key;
- };
-+/* conventional value to replace zero return which would become NULL */
-+const u64 BUILTIN_KEY = -1LL;
- 
- __bpf_kfunc_start_defs();
- 
-@@ -1276,7 +1278,6 @@ __bpf_kfunc_start_defs();
- __bpf_kfunc struct bpf_key *bpf_lookup_user_key(s32 serial, u64 flags)
- {
- 	key_ref_t key_ref;
--	struct bpf_key *bkey;
- 
- 	if (flags & ~KEY_LOOKUP_ALL)
- 		return NULL;
-@@ -1289,15 +1290,7 @@ __bpf_kfunc struct bpf_key *bpf_lookup_user_key(s32 serial, u64 flags)
- 	if (IS_ERR(key_ref))
- 		return NULL;
- 
--	bkey = kmalloc(sizeof(*bkey), GFP_KERNEL);
--	if (!bkey) {
--		key_put(key_ref_to_ptr(key_ref));
--		return NULL;
--	}
--
--	bkey->key = key_ref_to_ptr(key_ref);
--
--	return bkey;
-+	return (struct bpf_key *)key_ref_to_ptr(key_ref);
- }
- 
- /**
-@@ -1323,18 +1316,10 @@ __bpf_kfunc struct bpf_key *bpf_lookup_user_key(s32 serial, u64 flags)
-  */
- __bpf_kfunc struct bpf_key *bpf_lookup_system_key(u64 id)
- {
--	struct bpf_key *bkey;
--
- 	if (system_keyring_id_check(id) < 0)
- 		return NULL;
- 
--	bkey = kmalloc(sizeof(*bkey), GFP_ATOMIC);
--	if (!bkey)
--		return NULL;
--
--	bkey->key = (struct key *)(unsigned long)id;
--
--	return bkey;
-+	return (struct bpf_key *)(unsigned long)(id ? id : BUILTIN_KEY);
- }
- 
- /**
-@@ -1346,10 +1331,11 @@ __bpf_kfunc struct bpf_key *bpf_lookup_system_key(u64 id)
-  */
- __bpf_kfunc void bpf_key_put(struct bpf_key *bkey)
- {
--	if (system_keyring_id_check((unsigned long)bkey->key) < 0)
--		key_put(bkey->key);
-+	struct key *key = (struct key *)bkey;
- 
--	kfree(bkey);
-+	if (system_keyring_id_check((unsigned long)key) < 0 &&
-+	    (unsigned long)key != BUILTIN_KEY)
-+		key_put(key);
- }
- 
- #ifdef CONFIG_SYSTEM_DATA_VERIFICATION
-@@ -1370,11 +1356,15 @@ __bpf_kfunc int bpf_verify_pkcs7_signature(struct bpf_dynptr *data_p,
- {
- 	struct bpf_dynptr_kern *data_ptr = (struct bpf_dynptr_kern *)data_p;
- 	struct bpf_dynptr_kern *sig_ptr = (struct bpf_dynptr_kern *)sig_p;
-+	struct key *key = (struct key *)trusted_keyring;
- 	const void *data, *sig;
- 	u32 data_len, sig_len;
- 	int ret;
- 
--	if (system_keyring_id_check((unsigned long)trusted_keyring->key) < 0) {
-+	if ((unsigned long)key == BUILTIN_KEY)
-+		key = NULL;
-+
-+	if (system_keyring_id_check((unsigned long)key) < 0) {
- 		/*
- 		 * Do the permission check deferred in bpf_lookup_user_key().
- 		 * See bpf_lookup_user_key() for more details.
-@@ -1383,7 +1373,7 @@ __bpf_kfunc int bpf_verify_pkcs7_signature(struct bpf_dynptr *data_p,
- 		 * it is already done by keyring_search() called by
- 		 * find_asymmetric_key().
- 		 */
--		ret = key_validate(trusted_keyring->key);
-+		ret = key_validate(key);
- 		if (ret < 0)
- 			return ret;
- 	}
-@@ -1393,8 +1383,7 @@ __bpf_kfunc int bpf_verify_pkcs7_signature(struct bpf_dynptr *data_p,
- 	sig_len = __bpf_dynptr_size(sig_ptr);
- 	sig = __bpf_dynptr_data(sig_ptr, sig_len);
- 
--	return verify_pkcs7_signature(data, data_len, sig, sig_len,
--				      trusted_keyring->key,
-+	return verify_pkcs7_signature(data, data_len, sig, sig_len, key,
- 				      VERIFYING_UNSPECIFIED_SIGNATURE, NULL,
- 				      NULL);
- }
--- 
-2.43.0
+I would say a benefit from this series is users can use a single
+command to create probes and bind eBPF program for AUX pause and
+resume in one go.
 
+To be honest, at current stage, I don't have clear idea for expanding
+this feature. But a clear requirement is: AUX trace data usually is
+quite huge, after initial analysis, developers might want to focus
+on specific function profiling (based on function entry and exit) or
+specific period (E.g., start tracing when hit a tracepoing and stop when
+hit another tracepoint).
+
+eBPF program is powerful. Basically, we can extend it in two different
+dimensions. One direction is we can easily attach the eBPF program to more
+kernel modules, like networking, storage, etc. Another direction is to
+improve the eBPF program itself as a filter for better fine-grained
+tracing, so far we only support limited filtering based on CPU ID or PID,
+we also can extend the filtering based on time, event types, etc.
+
+Thanks,
+Leo
