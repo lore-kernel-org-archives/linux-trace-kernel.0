@@ -1,219 +1,352 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C39572D948A
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 30 Jul 2025 14:28:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BE041DE3D6;
+	Wed, 30 Jul 2025 14:33:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753885704; cv=none; b=ZnQt8AKnLIdFIVSpQxwiUQ14P8uWRmNJ8NXGZfha/hdr2IT4DOcRg/3DYvMUH2Ld3q++FqYOiDqyfIn2Iz+QB7zoVHgOmkZ63zaCHqyq59UEFqVzoWELCOIhHPMNi6U4PDh5oBbKVAbp7nLuASvCFDMYrxmjH1y4Fols88P1NO4=
+	t=1753886001; cv=none; b=ip2th2lmz60sbQsb0sHz/xoQE+sNp4EcVXBicyTCvwoAQ4Njt6MCJVBsVb/oQ2EHl9sLfEqvINS/yPZVCBGbf5mvXtHM+ECtwYaZtMqaoqlXm2qxisbxoqry025X2XmpotSZRstJmDkFt2rxQnvuURa9gRrbsbIxkwgYNo75b4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753885704; c=relaxed/simple;
-	bh=TDW5x6DvBZ7lvIDcVVcAKcADPgkzeitjKa0U8rd1OM0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T9G8FylD5Bi9JgHKT87/PJbYELDnkxrUSE/mOsI7YzQcXfWqX6N99Klzieop89y4FnpphjdRNcDnl6VdEYYAsWOwBS+tGQ3WwBlzpo94sc7G9YxkpJHsDu+onK391d7OgsGQNU5hOxayjY7E2WZwjCpPbZw06dCKgespwTf1FWE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=PG57ZssR; arc=none smtp.client-ip=209.85.160.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="PG57ZssR"
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-4aaaf1a63c1so47428961cf.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 30 Jul 2025 07:28:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1753885701; x=1754490501; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=yXicpotvi3lyQ9AOXQWfwG3KeaAtrSGGP0WC4PeRJ0I=;
-        b=PG57ZssR8cQUccAuRytaUgKSAEssylQd59XzzV+sbjSosfPEHBBIphfgg4DDmUSzwE
-         cDmBxMCwHXpxtbQv0v1Bb8VZkWFtNsJ6JGZLN1ICU6sGIB7QT9LJ9w36BzEYIdf9pwkT
-         o6yRnqFRNEHszBOT+xrqmrhp9nGd9MhLgfwHruD011EZ1ET4yCG96SUfdO9+sv22+vep
-         j1UksT9oW+qK1zTtYXgmqybKRAtncfx5QyGwdi63fFGXSCV/QO2aY8e99M32XUDlQjxE
-         PwD3cXkAnkkE79Re9LXHLn0dkXZ50LxSZRjpXriQMSKCIGbgN205FfGtcihMg02Osw4J
-         19og==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753885701; x=1754490501;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yXicpotvi3lyQ9AOXQWfwG3KeaAtrSGGP0WC4PeRJ0I=;
-        b=CDUykfdZPm9vwq4rO9l748BXUW5Dk2DklADaDOvoeJEfUkgHtAX2mzpZ3NJSbFhZnO
-         24s7QR+wx2B86ZXVzr5RFQI8nzVuECBITJessoQLBPqPdKhDKUivl0O9X9FHuPja1yOv
-         oSH+4NJevA9Y7LO7HsdEeT7ik8sDPskbrHkbLe0YVFi3ofNyGVmz5vHBevvE5y/1brWA
-         14apkoVkRDQL+0Czay1jo0F8Ko1zhVfaXuivTlWBVU5Rv24rNIhX+g8v7todI1SXFrBh
-         Dl+NIC/VDbWqkxuZzAKdwRC7O6v26Jlkv+/SwC+H4QqUBcZ63skJ9/gCk897p5tUqXxu
-         T8UA==
-X-Forwarded-Encrypted: i=1; AJvYcCUmCrn1WGRtj5D6QbuUCL2yYATdM54Kg7NCJOeHdSoclP7KRL66gT/GgcKhlWYpzG2sFGy3Yt0jdUkUbYla0pQoT30=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz3Pr1eNPHEdXN9EjaheYz01N4aBAv8q42ipRLrecPoz7LwDnzy
-	IcZpVfa393NsGdL2/OWs65Slgqs6rx6z6MR3YrtAqXJoS/HNVF6WhaLpN0O3PGL9h24=
-X-Gm-Gg: ASbGnctMXy+J8UcTiF+2SO/csH9Kv1GxnX7CN44woQ4mkqv+Mc5V8TXgdrfDsqLCEGT
-	+4MOY7wkO9yHSOAPVE+CxFaovksV7+bHF3M/doRnnj1bsiwnqrxwI3BvpfR31fD0qvBznEtmpnK
-	JM6cy9DivZ/nKz+HaTNc3v0JAUpPEniQvboRfPRuHboTEw4tYEn9mvBCVOC3+tJ/54FFzuY35RL
-	3OYgzXI29uzmmxpqGlqb/tnqP5dpVGu6+YN8j7UZRvawbOdGk9QV/I1wKdAsh2uzWfANe+g3WKx
-	s1uEvjh1EbcCPEy1Bdlz0GYeOl+FAlo9CXyc/lnAqEnQxWwV5iom8gWm2yfWXZzJcmrqdAEpMfz
-	Zu0/oIpHq8/jQ7uCHFsh83iN13IEIEHFyWlHbsSi/WU0qOmrfGRovbBrDlQL859a+2+RV
-X-Google-Smtp-Source: AGHT+IHCzPfwaMM+aIDs6tu6c39/KdwhCla3PbAO01xs1vOnpsn8EpRRsdfpw4N6uvD5MCuSC49wxQ==
-X-Received: by 2002:a05:622a:48:b0:4a9:cff3:68a2 with SMTP id d75a77b69052e-4aedbc3c0dbmr55369321cf.37.1753885700213;
-        Wed, 30 Jul 2025 07:28:20 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-47-55-120-4.dhcp-dynamic.fibreop.ns.bellaliant.net. [47.55.120.4])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4ae9963b6f9sm67178931cf.35.2025.07.30.07.28.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Jul 2025 07:28:19 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1uh7n0-00000000RbZ-432A;
-	Wed, 30 Jul 2025 11:28:18 -0300
-Date: Wed, 30 Jul 2025 11:28:18 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Leon Romanovsky <leon@kernel.org>, Matthew Wilcox <willy@infradead.org>,
-	David Hildenbrand <david@redhat.com>
-Cc: Robin Murphy <robin.murphy@arm.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Christoph Hellwig <hch@lst.de>, Jonathan Corbet <corbet@lwn.net>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>,
-	Alexander Potapenko <glider@google.com>,
-	Marco Elver <elver@google.com>, Dmitry Vyukov <dvyukov@google.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	=?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, iommu@lists.linux.dev,
-	virtualization@lists.linux.dev, kasan-dev@googlegroups.com,
-	linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH 0/8] dma-mapping: migrate to physical address-based API
-Message-ID: <20250730142818.GL26511@ziepe.ca>
-References: <CGME20250625131920eucas1p271b196cde042bd39ac08fb12beff5baf@eucas1p2.samsung.com>
- <cover.1750854543.git.leon@kernel.org>
- <35df6f2a-0010-41fe-b490-f52693fe4778@samsung.com>
- <20250627170213.GL17401@unreal>
- <20250630133839.GA26981@lst.de>
- <69b177dc-c149-40d3-bbde-3f6bad0efd0e@samsung.com>
- <f912c446-1ae9-4390-9c11-00dce7bf0fd3@arm.com>
- <20250730134026.GQ402218@unreal>
+	s=arc-20240116; t=1753886001; c=relaxed/simple;
+	bh=PlM6vG64I7c9NulyIvT028yULjYuIv0uAORqJQLB7Zs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=icBfK0prgktdpYXQ1GPgIaBRc+MnpoOtjJmMg3P4q+06N10bIQGakULqtN0I5ATQVm3mG2LPKThs6WVRgmcp1xk/pYlVImhzYt73g+HdmR5e6G9LaG3d0Yi9dBq0M80RjgyK0ky/+tUnok4LDd0BN0hadhOVE917k79YQWM9108=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf10.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay09.hostedemail.com (Postfix) with ESMTP id 82C3A8029E;
+	Wed, 30 Jul 2025 14:33:15 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf10.hostedemail.com (Postfix) with ESMTPA id 5B6A732;
+	Wed, 30 Jul 2025 14:33:12 +0000 (UTC)
+Date: Wed, 30 Jul 2025 10:33:28 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>, bpf@vger.kernel.org, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Mark Rutland
+ <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Namhyung Kim
+ <namhyung@kernel.org>, Takaya Saeki <takayas@google.com>, Douglas Raillard
+ <douglas.raillard@arm.com>, Tom Zanussi <zanussi@kernel.org>, Andrew Morton
+ <akpm@linux-foundation.org>, Thomas Gleixner <tglx@linutronix.de>, Ian
+ Rogers <irogers@google.com>, aahringo@redhat.com
+Subject: Re: [PATCH] tracing/probes: Allow use of BTF names to dereference
+ pointers
+Message-ID: <20250730103328.40bb6da5@gandalf.local.home>
+In-Reply-To: <20250730225340.92ead36268880e0bc098f12e@kernel.org>
+References: <20250729113335.2e4f087d@batman.local.home>
+	<20250730225340.92ead36268880e0bc098f12e@kernel.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250730134026.GQ402218@unreal>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: owht7mijtbqgypkt8zazaa3mkppuz44d
+X-Rspamd-Server: rspamout07
+X-Rspamd-Queue-Id: 5B6A732
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18KjGCoIIafpUQP6IflbDC2HCE3gjnzJUw=
+X-HE-Tag: 1753885992-619570
+X-HE-Meta: U2FsdGVkX1/uAB27RqUDe8L3UhaDhi+jNIDHMCg5551QroW6nIJzxG79cAkGo7qKAtEV+reGYZwKCbaNHq7Ux5XR6zwIQonhyqcX5eJmJmVfGyh3Kub/R5CfINaXsnvAMca+ZHfNOAkGN+AXMZ7crdG0izHXlwyN4RqrInJzuD5ykkDMDANkVKOGjalCDeKnerN2EoUp83W1iAz7Dc/3+sPlXAPvdXyMv6kL9JEKwoIj9WxuE7ck7URQb2fY+LOZTdVetE4U6MqM9taeG0r8rAjlUD2EyLWBMpHiFbBhS3lFOl5a2pqBhDB1miKuGrvItP3YYnja2uhAIrVFWISg13Z1YPV6J9NnwrA10KfS3LCkgz6I7m/PZt62SHqNJqjW
 
-On Wed, Jul 30, 2025 at 04:40:26PM +0300, Leon Romanovsky wrote:
+On Wed, 30 Jul 2025 22:53:40 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-> > The natural working unit for whatever replaces dma_map_page() will be
-> > whatever the replacement for alloc_pages() returns, and the replacement for
-> > kmap_atomic() operates on. Until that exists (and I simply cannot believe it
-> > would be an unadorned physical address) there cannot be any
-> > *meaningful*
 
-alloc_pages becomes legacy.
+> > If BTF is in the kernel, it can be used to find this with names, where the
+> > user doesn't need to find the actual offset:
+> > 
+> >  # echo 'f:cache kmem_cache_alloc_noprof size=+kmem_cache.size($arg1):u32' >> dynamic_events  
+> 
+> Great! This is something like a evolution of assembler to "symbolic"
+> assembler. ;)
 
-There will be some new API 'memdesc alloc'. If I understand Matthew's
-plan properly - here is a sketch of changing iommu-pages:
+Yep!
 
---- a/drivers/iommu/iommu-pages.c
-+++ b/drivers/iommu/iommu-pages.c
-@@ -36,9 +36,10 @@ static_assert(sizeof(struct ioptdesc) <= sizeof(struct page));
-  */
- void *iommu_alloc_pages_node_sz(int nid, gfp_t gfp, size_t size)
- {
-+       struct ioptdesc *desc;
-        unsigned long pgcnt;
--       struct folio *folio;
-        unsigned int order;
-+       void *addr;
- 
-        /* This uses page_address() on the memory. */
-        if (WARN_ON(gfp & __GFP_HIGHMEM))
-@@ -56,8 +57,8 @@ void *iommu_alloc_pages_node_sz(int nid, gfp_t gfp, size_t size)
-        if (nid == NUMA_NO_NODE)
-                nid = numa_mem_id();
- 
--       folio = __folio_alloc_node(gfp | __GFP_ZERO, order, nid);
--       if (unlikely(!folio))
-+       addr = memdesc_alloc_pages(&desc, gfp | __GFP_ZERO, order, nid);
-+       if (unlikely(!addr))
-                return NULL;
- 
-        /*
-@@ -73,7 +74,7 @@ void *iommu_alloc_pages_node_sz(int nid, gfp_t gfp, size_t size)
-        mod_node_page_state(folio_pgdat(folio), NR_IOMMU_PAGES, pgcnt);
-        lruvec_stat_mod_folio(folio, NR_SECONDARY_PAGETABLE, pgcnt);
- 
--       return folio_address(folio);
-+       return addr;
- }
+> 
+> > 
+> > Instead of the "+0x18", it would have "+kmem_cache.size" where the format is:
+> > 
+> >   +STRUCT.MEMBER[.MEMBER[..]]  
+> 
+> Yeah, and using '.' delimiter looks nice to me.
 
-Where the memdesc_alloc_pages() will kmalloc a 'struct ioptdesc' and
-some other change so that virt_to_ioptdesc() indirects through a new
-memdesc. See here:
+I know I initially suggested using ':' but then it hit me that a structure
+uses '.' and that made a lot more sense. Also, it made parsing easier as I
+had a hack to get around the ':' parsing that extracted the "type"
+(like :u64 or :string)
 
-https://kernelnewbies.org/MatthewWilcox/Memdescs
+> 
+> > 
+> > The delimiter is '.' and the first item is the structure name. Then the
+> > member of the structure to get the offset of. If that member is an
+> > embedded structure, another '.MEMBER' may be added to get the offset of
+> > its members with respect to the original value.
+> > 
+> >   "+kmem_cache.size($arg1)" is equivalent to:
+> > 
+> >   (*(struct kmem_cache *)$arg1).size
+> > 
+> > Anonymous structures are also handled:
+> > 
+> >   # echo 'e:xmit net.net_dev_xmit +net_device.name(+sk_buff.dev($skbaddr)):string' >> dynamic_events  
+> 
+> So this only replaces the "offset" part. So we still need to use
+> +OFFS() syntax for dereferencing the pointer.
 
-We don't end up with some kind of catch-all struct to mean 'cachable
-CPU memory' anymore because every user gets their own unique "struct
-XXXdesc". So the thinking has been that the phys_addr_t is the best
-option. I guess the alternative would be the memdesc as a handle, but
-I'm not sure that is such a good idea. 
+Correct.
 
-People still express a desire to be able to do IO to cachable memory
-that has a KVA through phys_to_virt but no memdesc/page allocation. I
-don't know if this will happen but it doesn't seem like a good idea to
-make it impossible by forcing memdesc types into low level APIs that
-don't use them.
 
-Also, the bio/scatterlist code between pin_user_pages() and DMA
-mapping is consolidating physical contiguity. This runs faster if you
-don't have to to page_to_phys() because everything is already
-phys_addr_t.
+> > And produces:
+> > 
+> >        trace-cmd-1381    [002] ...1.  2082.676268: read: (filemap_readahead.isra.0+0x0/0x150) file="trace.dat"
+> >   
+> 
+> OK, the desgin looks good to me. I have some comments below.
 
-> > progress made towards removing the struct page dependency from the DMA API.
-> > If there is also a goal to kill off highmem before then, then logically we
-> > should just wait for that to land, then revert back to dma_map_single()
-> > being the first-class interface, and dma_map_page() can turn into a trivial
-> > page_to_virt() wrapper for the long tail of caller conversions.
+I'd expected as much ;-)
 
-As I said there are many many projects related here and we can
-meaningfully make progress in parts. It is not functionally harmful to
-do the phys to page conversion before calling the legacy
-dma_ops/SWIOTLB etc. This avoids creating patch dependencies with
-highmem removal and other projects.
+This is for the next merge window so we have plenty of time.
 
-So long as the legacy things (highmem, dma_ops, etc) continue to work
-I think it is OK to accept some obfuscation to allow the modern things
-to work better. The majority flow - no highmem, no dma ops, no
-swiotlb, does not require struct page. Having to do
+> >  
+> > +#define BITS_ROUNDDOWN_BYTES(bits) ((bits) >> 3)
+> > +
+> > +static int find_member(const char *ptr, struct btf *btf,
+> > +		       const struct btf_type **type, int level)
+> > +{
+> > +	const struct btf_member *member;
+> > +	const struct btf_type *t = *type;
+> > +	int i;
+> > +
+> > +	/* Max of 3 depth of anonymous structures */
+> > +	if (level > 3)
+> > +		return -1;  
+> 
+> Please return an error code, maybe this is -E2BIG?
 
-  PTE -> phys -> page -> phys -> DMA
+OK.
 
-Does have a cost.
+I was thinking that perhaps we should update the error_log to handle these
+cases too.
 
-> The most reasonable way to prevent DMA_ATTR_SKIP_CPU_SYNC leakage is to
-> introduce new DMA attribute (let's call it DMA_ATTR_MMIO for now) and
-> pass it to both dma_map_phys() and dma_iova_link(). This flag will
-> indicate that p2p type is PCI_P2PDMA_MAP_THRU_HOST_BRIDGE and call to
-> right callbacks which will set IOMMU_MMIO flag and skip CPU sync,
+> 
+> > +
+> > +	for_each_member(i, t, member) {
+> > +		const char *tname = btf_name_by_offset(btf, member->name_off);
+> > +
+> > +		if (strcmp(ptr, tname) == 0) {
+> > +			*type = btf_type_by_id(btf, member->type);
+> > +			return BITS_ROUNDDOWN_BYTES(member->offset);
+> > +		}
+> > +
+> > +		/* Handle anonymous structures */
+> > +		if (strlen(tname))
+> > +			continue;
+> > +
+> > +		*type = btf_type_by_id(btf, member->type);
+> > +		if (btf_type_is_struct(*type)) {
+> > +			int offset = find_member(ptr, btf, type, level + 1);
+> > +
+> > +			if (offset < 0)
+> > +				continue;
+> > +
+> > +			return offset + BITS_ROUNDDOWN_BYTES(member->offset);
+> > +		}
+> > +	}
+> > +
+> > +	return -1;  
+> 
+> 	return -ENOENT;
 
-So the idea is if the memory is non-cachable, no-KVA you'd call
-dma_iova_link(phys_addr, DMA_ATTR_MMIO) and dma_map_phys(phys_addr,
-DMA_ATTR_MMIO) ?
+Ah. This return doesn't propagate up to the caller. It's a static function
+and just returns "not found". Which means that the "-E2BIG" will not be used.
 
-And then internally the dma_ops and dma_iommu would use the existing
-map_page/map_resource variations based on the flag, thus ensuring that
-MMIO is never kmap'd or cache flushed?
+If we want the -E2BIG to be used as well, then we can return the result of
+this function.
 
-dma_map_resource is really then just
-dma_map_phys(phys_addr, DMA_ATTR_MMIO)?
 
-I like this, I think it well addresses the concerns.
+> 
+> > +}
+> > +
+> > +/**
+> > + * btf_find_offset - Find an offset of a member for a structure
+> > + * @arg: A structure name followed by one or more members
+> > + * @offset_p: A pointer to where to store the offset
+> > + *
+> > + * Will parse @arg with the expected format of: struct.member[[.member]..]
+> > + * It is delimited by '.'. The first item must be a structure type.
+> > + * The next are its members. If the member is also of a structure type it
+> > + * another member may follow ".member".
+> > + *
+> > + * Note, @arg is modified but will be put back to what it was on return.
+> > + *
+> > + * Returns: 0 on success and -EINVAL if no '.' is present
+> > + *    or -ENXIO if the structure or member is not found.
+> > + *    Returns -EINVAL if BTF is not defined.
+> > + *  On success, @offset_p will contain the offset of the member specified
+> > + *    by @arg.
+> > + */
+> > +int btf_find_offset(char *arg, long *offset_p)
+> > +{
+> > +	const struct btf_type *t;
+> > +	struct btf *btf;
+> > +	long offset = 0;
+> > +	char *ptr;
+> > +	int ret;
+> > +	s32 id;
+> > +
+> > +	ptr = strchr(arg, '.');
+> > +	if (!ptr)
+> > +		return -EINVAL;  
+> 
+> Instead of just returning error, can't we log an error for helping user?
 
-Jason
+Yeah, but that will require the caller of this to handle it. I rather not
+have the probe error logging code put in this file.
+
+That means the negative numbers will need to mean something so that the
+trace probe logic can know what to report.
+
+> 
+> trace_probe_log_err(BYTE_OFFSET, ERROR_CODE);
+> 
+> The base offset is stored in ctx->offset, so you can use it.
+> ERROR_CODE is defined in trace_probe.h. 
+> 
+> Maybe you can add something like
+> 
+> 	C(BAD_STRUCT_FMT,		"Symbolic offset must be +STRUCT.MEMBER format"),\
+> 
+> And for other cases, you can use
+> 
+> 	C(BAD_BTF_TID,		"Failed to get BTF type info."),\
+
+OK, so the caller can handle this (see below).
+
+> 
+> > +
+> > +	*ptr = '\0';
+> > +
+> > +	id = bpf_find_btf_id(arg, BTF_KIND_STRUCT, &btf);
+> > +	if (id < 0)
+> > +		goto error;
+> > +
+> > +	/* Get BTF_KIND_FUNC type */
+> > +	t = btf_type_by_id(btf, id);
+> > +
+> > +	/* May allow more than one member, as long as they are structures */
+> > +	do {
+> > +		if (!t || !btf_type_is_struct(t))
+> > +			goto error;
+> > +
+> > +		*ptr++ = '.';
+> > +		arg = ptr;
+> > +		ptr = strchr(ptr, '.');
+> > +		if (ptr)
+> > +			*ptr = '\0';
+> > +
+> > +		ret = find_member(arg, btf, &t, 0);
+> > +		if (ret < 0)
+> > +			goto error;
+> > +
+> > +		offset += ret;
+> > +
+> > +	} while (ptr);
+> > +
+> > +	*offset_p = offset;
+> > +	return 0;
+> > +
+> > +error:
+> > +	if (ptr)
+> > +		*ptr = '.';
+> > +	return -ENXIO;
+> > +}
+> > diff --git a/kernel/trace/trace_btf.h b/kernel/trace/trace_btf.h
+> > index 4bc44bc261e6..7b0797a6050b 100644
+> > --- a/kernel/trace/trace_btf.h
+> > +++ b/kernel/trace/trace_btf.h
+> > @@ -9,3 +9,13 @@ const struct btf_member *btf_find_struct_member(struct btf *btf,
+> >  						const struct btf_type *type,
+> >  						const char *member_name,
+> >  						u32 *anon_offset);
+> > +
+> > +#ifdef CONFIG_PROBE_EVENTS_BTF_ARGS
+> > +/* Will modify arg, but will put it back before returning. */
+> > +int btf_find_offset(char *arg, long *offset);
+> > +#else
+> > +static inline int btf_find_offset(char *arg, long *offset)
+> > +{  
+> 
+> Here also should use 
+> 
+> 	C(NOSUP_BTFARG,		"BTF is not available or not supported"),	\
+> 
+
+Again, this should be from the caller.
+
+> 
+> Thank you,
+> 
+> > +	return -EINVAL;
+
+So this can return -ENODEV;
+
+
+> > +}
+> > +#endif
+> > diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+> > index 424751cdf31f..4c13e51ea481 100644
+> > --- a/kernel/trace/trace_probe.c
+> > +++ b/kernel/trace/trace_probe.c
+> > @@ -1137,7 +1137,7 @@ parse_probe_arg(char *arg, const struct fetch_type *type,
+> >  
+> >  	case '+':	/* deref memory */
+> >  	case '-':
+> > -		if (arg[1] == 'u') {
+> > +		if (arg[1] == 'u' && isdigit(arg[2])) {
+> >  			deref = FETCH_OP_UDEREF;
+> >  			arg[1] = arg[0];
+> >  			arg++;
+> > @@ -1150,7 +1150,10 @@ parse_probe_arg(char *arg, const struct fetch_type *type,
+> >  			return -EINVAL;
+> >  		}
+> >  		*tmp = '\0';
+> > -		ret = kstrtol(arg, 0, &offset);
+> > +		if (arg[0] != '-' && !isdigit(*arg))
+> > +			ret = btf_find_offset(arg, &offset);
+
+Here we could have:
+
+			if (ret < 0) {
+				int err = 0;
+				switch (ret) {
+				case -ENODEV: err = NOSUP_BTFARG; break;
+				case -E2BIG: err = MEMBER_TOO_DEEP; break;
+				case -EINVAL: err = BAD_STRUCT_FMT; break;
+				case -ENXIO: err = BAD_BTF_TID; break;
+				}
+				if (err)
+					trace_probe_log_err(ctx->offset, err);
+				return ret;
+			}
+
+-- Steve
+
+			
+
+
+> > +		else
+> > +			ret = kstrtol(arg, 0, &offset);
+> >  		if (ret) {
+> >  			trace_probe_log_err(ctx->offset, BAD_DEREF_OFFS);
+> >  			break;
+> > -- 
+> > 2.47.2
+> >   
+> 
+> 
+
