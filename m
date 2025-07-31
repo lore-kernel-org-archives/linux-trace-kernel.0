@@ -1,177 +1,148 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8A96D515;
-	Thu, 31 Jul 2025 15:42:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA55072637;
+	Thu, 31 Jul 2025 17:03:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753976581; cv=none; b=hGPf/Mu2vw+YTakbekoYzBEx5JgegT04vb+tkK8Cyp9K8sEOEmYO74k9QNwC2OO7/9FLDzflAqwDVZzb46QXovROV0vE4pvA3Etr16/+yqHul0laCfwtTFYeKoQYNuPKCUHJ8PSIJ5oXUN8PphWBqPFqore2Pf393ndy1oS5++g=
+	t=1753981414; cv=none; b=f9fqzySSLbkxT0pxH3UCo6idRcC8vBiu4Z582gPR/fJpTWdAhBEFqDetRLPrghQJWvdyF7LHsUCs/112NusJ4hdFz8G5srsLBtQjTtgWgKjBR+id1lWtmR8P4foClvgdCgRabqUP3MiEqqss5q5MJdZLXa1n2OvuXKVNA4AZaL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753976581; c=relaxed/simple;
-	bh=1WWG3Zuv514jM/ZH3hlMOl2lhe3oKQ046ntFyv4CX4Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DQYU2gq4uKDZTC5ZEK/pLjVuC2ypmZEibG+wuUK0YRAn/YXLJDQUq4LW9Tx1E2m4LZkHe9cT4X5tvEyUQj5TlgEogWD88Fr+bxOqjIsDsNqOl0tFgi0hCkdoth0MWRdrKji8Z9iMGE3Zx9kwiB2GclBEJpbITZb9hMfw6XQoroY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 01A141BF7;
-	Thu, 31 Jul 2025 08:42:50 -0700 (PDT)
-Received: from [192.168.1.127] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C46A23F66E;
-	Thu, 31 Jul 2025 08:42:54 -0700 (PDT)
-Message-ID: <d887e166-0fd8-4b70-b6b7-6d3c0138d87b@arm.com>
-Date: Thu, 31 Jul 2025 16:42:52 +0100
+	s=arc-20240116; t=1753981414; c=relaxed/simple;
+	bh=7vdU2nzIlB0cH7WoyqZ34N9wygjHGM2SndCa4WqN494=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BgYq137J8/lYe0cuL2tmxRaHGnuwDBKUrX4zjbPMC3xB6ElAtBnmX1GeP8JeXflR1u5qq7rB9EuOp/UsQc9DsrrdlMYwjAkrlS4lmmjAVkMgV4DojVEOn9wzRx+MShSDYW3Ub5bDsYYnkq6gkZpD+bNPND5H2GYu8K3lS30yuS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eRBCbek+; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eRBCbek+"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4589180b266so6414355e9.3;
+        Thu, 31 Jul 2025 10:03:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1753981411; x=1754586211; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xEpBFSQ0HXzud7IO5DhdcLDekO1YKRMjZmaFWgvgSc8=;
+        b=eRBCbek+hHIdnz3alR4L3EcDC0qBZIz7l9HBC5MSNadDakfQphhWAeI9pak2DKXRHP
+         05UF6iU/gF34o4FwWQ3GmJF6wC0zxJZZA3xEvtRxwnEOV+K3vqdSB+GMPKBQ8Vi016v4
+         cs5Z4kg9UttfWuHyJwD7ZTOpkKweFiUFToG+t2spYrQDcYlMl6fzhlnd4PUVmsF34l1s
+         0T/inqwPctGGqZs5eaP9jJmH1e4TGdXNcoMcu0Z5ZhXW9/sXWg002cHosZw4NFqAT2r3
+         BfmWqYqNslztfpvHR2mrmKIJQhHTYctMHrQRqcTxJvCABWnxknhYhqZCV6a56wxNWmhk
+         wSAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753981411; x=1754586211;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xEpBFSQ0HXzud7IO5DhdcLDekO1YKRMjZmaFWgvgSc8=;
+        b=GaADsaBTRgKkjSlgQzIx6s8eqpGk+ULc/Gjc0NIGvOThBwp2i22bNFbVu2IEKKH6ZM
+         QvCpuXoiolWqRupq91ay5I1uT727pCZyxAKa+uSgCw831WqCPKkAfEAunRR0O0hSAnnO
+         YR6oOQ4qufmeaqZyIGSTtCCUCKGrCEitpCFL7eN4zUGesQ3m0jR5S2gVL71MCKRk5Rfn
+         BaAXPQCv1AGoObrx4T4+b/wUj5LYt9pyhHufz8FXsvK5pP69zwLmxxxXqc50Eil7YVPU
+         1gyXPqbwCESYFUHYaT8culIy53IwKoQjNIRppZ5WPrd66EKYL8NJMXNlDhrzC6Z32rvy
+         Wf0g==
+X-Forwarded-Encrypted: i=1; AJvYcCU8/vcgJWgA1NXT+zO+dHbmlq5LV/nNRiRo7WYUoeY/s7MSfrECO0GQnwNc683z7lvU6cB5WHQK1fBTu7cR1ennoHo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy4x11cpkny9OqfxsM/2aoieBNTNo+DYWpQHEX86/D0X/ReaLik
+	vEQe0jHvxHvPoSZkG9EJ4++n4A7Oz3CEyqytT6AUDKYV1+cb94P0w+hMtQBwm+81lUVsiiC+fBh
+	ruJXeXTiLJYJrH3m/3DS/qT4xrvBV7bs=
+X-Gm-Gg: ASbGnct/AY89yBTs01q56DGlQS4VHP9DNcbMDCF5ZaQIAogggLdqj3gOrZb5C8kJVgM
+	MyAUgXx6QQJP+MxhwOnXprZ/zlHGPneMtCRbsaFvesazGuiv7MHeX0KbwUmqp00BbSZISVagwrv
+	fRer5CNdoVYaey/09GZ4V2HAlFucIVvNSxXC5IHm8AcOs1puCeklSTg7jiMkGY6ps/kdq+2ytjs
+	0RnblUz9XrwbS0CZ9RmFHY=
+X-Google-Smtp-Source: AGHT+IFpRBawkvMo/n1r3ipVeiq0Qvriz2CEYDNLPJeGzKOkQWguv/EPcTJlUcFU4BXghx9xLYi/TOsk1XlpNYDXT84=
+X-Received: by 2002:a05:6000:2483:b0:3b7:899c:e87c with SMTP id
+ ffacd0b85a97d-3b794fb2209mr7161449f8f.2.1753981410719; Thu, 31 Jul 2025
+ 10:03:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] tracing/probes: Allow use of BTF names to dereference
- pointers
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Linux trace kernel <linux-trace-kernel@vger.kernel.org>,
- bpf@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>,
- Namhyung Kim <namhyung@kernel.org>, Takaya Saeki <takayas@google.com>,
- Tom Zanussi <zanussi@kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
- Thomas Gleixner <tglx@linutronix.de>, Ian Rogers <irogers@google.com>,
- aahringo@redhat.com
-References: <20250729113335.2e4f087d@batman.local.home>
- <dc817ce7-9551-4365-bd94-3c102a6acda8@arm.com>
- <20250731092953.2d8eea47@gandalf.local.home>
-Content-Language: en-US
-From: Douglas Raillard <douglas.raillard@arm.com>
-In-Reply-To: <20250731092953.2d8eea47@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250730172745.8480-1-James.Bottomley@HansenPartnership.com> <20250730172745.8480-3-James.Bottomley@HansenPartnership.com>
+In-Reply-To: <20250730172745.8480-3-James.Bottomley@HansenPartnership.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Thu, 31 Jul 2025 10:03:17 -0700
+X-Gm-Features: Ac12FXyiNA3gXOAh4AjOrsVUaR2uwglIAPRIY0vYqTLm0IIPd0Jo4Jom8wXsUCQ
+Message-ID: <CAADnVQJd0zwSnepH=1f6mwnd-1oFF8gkuCFnEgbMVE8pZ3qz0g@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] bpf: remove bpf_key reference
+To: James Bottomley <James.Bottomley@hansenpartnership.com>
+Cc: bpf <bpf@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, 
+	Roberto Sassu <roberto.sassu@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 31-07-2025 14:29, Steven Rostedt wrote:
-> On Thu, 31 Jul 2025 12:44:49 +0100
-> Douglas Raillard <douglas.raillard@arm.com> wrote:
-> 
->>> The delimiter is '.' and the first item is the structure name. Then the
->>> member of the structure to get the offset of. If that member is an
->>> embedded structure, another '.MEMBER' may be added to get the offset of
->>> its members with respect to the original value.
->>>
->>>     "+kmem_cache.size($arg1)" is equivalent to:
->>>
->>>     (*(struct kmem_cache *)$arg1).size
->>>
->>> Anonymous structures are also handled:
->>>
->>>     # echo 'e:xmit net.net_dev_xmit +net_device.name(+sk_buff.dev($skbaddr)):string' >> dynamic_events
->>
->> Not sure how hard that would be but the type of the expression could probably be inferred from
->> BTF as well in some cases. Some cases may be ambiguous (like char* that could be either a buffer
->> to display as hex or a null-terminated ASCII string) but BTF would still allow to restrict
->> to something sensible (e.g. prevent u32 for a char*).
-> 
-> Hmm, should be possible, but would require passing that information back to
-> the caller of the BTF lookup function.
-> 
-> 
-> 
->>> diff --git a/kernel/trace/trace_btf.c b/kernel/trace/trace_btf.c
->>> index 5bbdbcbbde3c..b69404451410 100644
->>> --- a/kernel/trace/trace_btf.c
->>> +++ b/kernel/trace/trace_btf.c
->>> @@ -120,3 +120,109 @@ const struct btf_member *btf_find_struct_member(struct btf *btf,
->>>    	return member;
->>>    }
->>>    
->>> +#define BITS_ROUNDDOWN_BYTES(bits) ((bits) >> 3)
->>> +
->>> +static int find_member(const char *ptr, struct btf *btf,
->>> +		       const struct btf_type **type, int level)
->>> +{
->>> +	const struct btf_member *member;
->>> +	const struct btf_type *t = *type;
->>> +	int i;
->>> +
->>> +	/* Max of 3 depth of anonymous structures */
->>> +	if (level > 3)
->>> +		return -1;
->>> +
->>> +	for_each_member(i, t, member) {
->>> +		const char *tname = btf_name_by_offset(btf, member->name_off);
->>> +
->>> +		if (strcmp(ptr, tname) == 0) {
->>> +			*type = btf_type_by_id(btf, member->type);
->>> +			return BITS_ROUNDDOWN_BYTES(member->offset);
->>
->> member->offset does not only contain the offset, and the offset may not be
->> a multiple of 8:
->> https://elixir.bootlin.com/linux/v6.16/source/include/uapi/linux/btf.h#L126
->>
->>   From the BTF spec (https://docs.kernel.org/bpf/btf.html):
->>
->> If the kind_flag is set, the btf_member.offset contains
->> both member bitfield size and bit offset.
->> The bitfield size and bit offset are calculated as below.:
->>
->> #define BTF_MEMBER_BITFIELD_SIZE(val)   ((val) >> 24)
->> #define BTF_MEMBER_BIT_OFFSET(val)      ((val) & 0xffffff)
-> 
-> So basically just need to change that to:
-> 
-> 		if (strcmp(ptr, tname) == 0) {
-> 			int offset = BTF_MEMBER_BIT_OFFSET(member->offset);
-> 			*type = btf_type_by_id(btf, member->type);
-> 			return BITS_ROUNDDOWN_BYTES(offset);
-> 
-> ?
+On Wed, Jul 30, 2025 at 10:32=E2=80=AFAM James Bottomley
+<James.Bottomley@hansenpartnership.com> wrote:
+>
+> bpf_key.has_ref is used to distinguish between real key pointers and
+> the fake key pointers that are used for system keyrings (to ensure the
+> actual pointers to system keyrings are never visible outside
+> certs/system_keyring.c).  The keyrings subsystem has an exported
+> function to do this, so use that in the bpf keyring code eliminating
+> the need to store has_ref.
+>
+> Signed-off-by: James Bottomley <James.Bottomley@HansenPartnership.com>
+>
+> ---
+> v2: use unsigned long for pointer to int conversion
+> ---
+>  kernel/trace/bpf_trace.c | 7 ++-----
+>  1 file changed, 2 insertions(+), 5 deletions(-)
+>
+> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> index e7bf00d1cd05..c0ccd55a4d91 100644
+> --- a/kernel/trace/bpf_trace.c
+> +++ b/kernel/trace/bpf_trace.c
+> @@ -1244,7 +1244,6 @@ static const struct bpf_func_proto bpf_get_func_arg=
+_cnt_proto =3D {
+>  #ifdef CONFIG_KEYS
+>  struct bpf_key {
+>         struct key *key;
+> -       bool has_ref;
+>  };
+>
+>  __bpf_kfunc_start_defs();
+> @@ -1297,7 +1296,6 @@ __bpf_kfunc struct bpf_key *bpf_lookup_user_key(s32=
+ serial, u64 flags)
+>         }
+>
+>         bkey->key =3D key_ref_to_ptr(key_ref);
+> -       bkey->has_ref =3D true;
+>
+>         return bkey;
+>  }
+> @@ -1335,7 +1333,6 @@ __bpf_kfunc struct bpf_key *bpf_lookup_system_key(u=
+64 id)
+>                 return NULL;
+>
+>         bkey->key =3D (struct key *)(unsigned long)id;
+> -       bkey->has_ref =3D false;
+>
+>         return bkey;
+>  }
+> @@ -1349,7 +1346,7 @@ __bpf_kfunc struct bpf_key *bpf_lookup_system_key(u=
+64 id)
+>   */
+>  __bpf_kfunc void bpf_key_put(struct bpf_key *bkey)
+>  {
+> -       if (bkey->has_ref)
+> +       if (system_keyring_id_check((unsigned long)bkey->key) < 0)
+>                 key_put(bkey->key);
 
-This would work in practice for now, but strictly speaking you should check
-the kind_flag field in btf_type.info (bit 31) of the parent struct/union:
-https://elixir.bootlin.com/linux/v6.16/source/include/uapi/linux/btf.h#L38
-  __btf_member_bit_offset() seems to do exactly that.
+Should be (u64) to avoid truncation ?
 
+But is it really the case that id=3D=3D1 and id=3D=3D2 are exposed to UAPI =
+already?
 
-While writing that, I realized there is another subtlety: BTF encodes int member offsets in 2 different ways:
-1. Either their bit offset is encoded struct btf_member, and the btf_type of the member is an integer type with no leading padding bits.
-2. Or the rounded-down offset is encoded in struct btf_member and the integer type contains some leading padding bits information:
-https://docs.kernel.org/bpf/btf.html#btf-kind-int
+As far as I can see lookup_user_key() does:
+        default:
+                key_ref =3D ERR_PTR(-EINVAL);
+                if (id < 1)
+                        goto error;
 
-The 2nd case is somewhat surprising but BTF_KIND_INT has 3 pieces of information:
-1. The C signedness of the type.
-2. The number of value bits of the type.
-3. The offset of the 1st bit to interpret as being the value. Anything before is leading padding.
+                key =3D key_lookup(id);
 
-That means that the actual bit offset of an int member's value in a parent struct is:
-
-   <offset of the member> + <offset of the type of the member>
-
-You could technically have all members with btf_member.offset == 0 and then encode the actual values offsets in the btf_type of the members.
-
-> 
->>
->>> +		}
->>> +
->>> +		/* Handle anonymous structures */
->>> +		if (strlen(tname))
->>> +			continue;
->>> +
->>> +		*type = btf_type_by_id(btf, member->type);
->>> +		if (btf_type_is_struct(*type)) {
->>> +			int offset = find_member(ptr, btf, type, level + 1);
->>> +
->>> +			if (offset < 0)
->>> +				continue;
->>> +
->>> +			return offset + BITS_ROUNDDOWN_BYTES(member->offset);
-> 
-> And here too.
-> 
-> -- Steve
-> 
->>> +		}
->>> +	}
->>> +
->>> +	return -1;
->>> +}
->>> +
-
+so only id=3D=3D0 is invalid, but id=3D1 can be a valid user key, no?
