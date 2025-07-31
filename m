@@ -1,104 +1,74 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 517592BE7C7;
-	Thu, 31 Jul 2025 10:57:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD6C82BFC8F;
+	Thu, 31 Jul 2025 11:43:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753959462; cv=none; b=Xnb37jHN+hi68X96sBARpqksl9kW8dLTJScmukMYNYj+inCfE9oq+HqDMw6nUDsDUK39QhNh0wJvWG7RPRVfmSUXOn7CdcsxUUWLK3xP8om8RsNwZiGhqyd3UH3cthwlb6M1JHYBUSkxGHErFkQCa3Ldd0PnpIZvT76g0+ORDCU=
+	t=1753962190; cv=none; b=rdrz3RLnTW5QUoG3ODYOQZaov+1k0YGaxUg9ktwYTkVSmRVKyuQ9zktIxq6XV95G3mPf74C0IOZjFDlzr5hpFTVPuowCeYyUikGq3pVlXl5v+puTP6w8d+D8JqnFnW70hFf1dhqGX4S/mnH2tXk0zR9X2uXqBBoRC9ok5RZKFPk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753959462; c=relaxed/simple;
-	bh=XmRDefPS7256cXgbN7EdkkG/1Z2+f8NW1zw/oLbcdhc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iQPVTNFTxkg1eOcSVV3dhGFa4GrTGncQ4iwdYP1P+T8JiWDKJyj6xMmUrgJz/Gsdvhpa0+r+B4wXxFVRzVL1kbmP7vTpws0npI033ssoFZJRMXSOiPWiiNQPYQeRl3wKtOZ8l9fAnFt4NKmD6fKwHZnvnKFxH2nXVbHc4DxXGm4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A8FA71D13;
-	Thu, 31 Jul 2025 03:57:31 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 508213F66E;
-	Thu, 31 Jul 2025 03:57:39 -0700 (PDT)
-Date: Thu, 31 Jul 2025 11:57:37 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: kernel test robot <oliver.sang@intel.com>
-Cc: oe-lkp@lists.linux.dev, lkp@intel.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Matt Bobrowski <mattbobrowski@google.com>,
-	Song Liu <song@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	James Clark <james.clark@linaro.org>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@linaro.org>, bpf@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND v3 5/6] perf record: Support AUX pause and resume
- with BPF
-Message-ID: <20250731105737.GG143191@e132581.arm.com>
-References: <202507310818.a05d2380-lkp@intel.com>
- <20250731091148.GF143191@e132581.arm.com>
+	s=arc-20240116; t=1753962190; c=relaxed/simple;
+	bh=qWrWOnrFxmvlk/gulM72oTIARntU2LerRXBDnEsmhz0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pqy8nZWhC9NDxHWtQ+APVS8jJtDib/2uz30ztO0HP90T52Pkj903P7pKvIXqjKV3jKnRmmFYSPe8cTg9bbOwwBfZgTdSEeC22kIWJ2XrXHda3xZ/TGezawa6FFZeO4POjghaqfOQRGVQl1h5ZtssK7g/EKyRCr9b2VRGBEyf57k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf05.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay05.hostedemail.com (Postfix) with ESMTP id 25FCE5AE12;
+	Thu, 31 Jul 2025 11:43:01 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf05.hostedemail.com (Postfix) with ESMTPA id 649A22000E;
+	Thu, 31 Jul 2025 11:42:58 +0000 (UTC)
+Date: Thu, 31 Jul 2025 07:43:16 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: kernel test robot <lkp@intel.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ oe-kbuild-all@lists.linux.dev, Mark Rutland <mark.rutland@arm.com>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Linux Memory Management List
+ <linux-mm@kvack.org>, Namhyung Kim <namhyung@kernel.org>, Jonathan Corbet
+ <corbet@lwn.net>, Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH v2 1/2] tracing: Have eprobes have their own config
+ option
+Message-ID: <20250731074316.01372681@gandalf.local.home>
+In-Reply-To: <20250731070836.69c43401858db35dd3b43ff0@kernel.org>
+References: <20250729161912.056641407@kernel.org>
+	<202507301452.JPAcMvT0-lkp@intel.com>
+	<20250730191101.7e6203f21b94c3f932fa8348@kernel.org>
+	<20250730091727.7b3a8b96@gandalf.local.home>
+	<20250730225722.c88d2dbd3dfa07310de7edd4@kernel.org>
+	<20250730100155.268d2442@gandalf.local.home>
+	<20250731070836.69c43401858db35dd3b43ff0@kernel.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250731091148.GF143191@e132581.arm.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: eamgt8m16dyjxneimeu1i7pdo8cbqd71
+X-Rspamd-Server: rspamout08
+X-Rspamd-Queue-Id: 649A22000E
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/2QzxW4XVvfLrsFIwKaHhcoGCASP1Aksc=
+X-HE-Tag: 1753962178-872116
+X-HE-Meta: U2FsdGVkX1947nv5PoTy5NutxctdkU/H9qclbFNhMbDa/Emfi9eh29SVV8qUTTOxJKouHXZcQ88Un7HHerBhmr8IAWIVbZmv/S6GXXI33owq+ZPkog30CDT5GZ77aBlObKXzxgmYSrd2eXytOamIOH1Hn7IFJMW3eD3yA/yHdKJXPMVgTQWXlegT6B+rdsdcshalXqiheuARp273GsvDUOiL0CNcXZ+y+IQySTMO4Dq+rHIM7ZolMg7ADr1GC8oocpktjM65YslXXNm428dyjDgkt7CAwItuTH9SESGIyQoeWvhqGeAz+CpPnPMcEidmFxHcQmZBQSMwZc9jeLErgM7XFSQefTMe
 
-Hi,
+On Thu, 31 Jul 2025 07:08:36 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-On Thu, Jul 31, 2025 at 10:11:48AM +0100, Leo Yan wrote:
-> Hi,
+> > I still have the trace/for-next to push (I've finished testing your last
+> > "attribute" patch and now I'm just letting it simmer in linux-next before
+> > doing the pull request). I can still add this to that one if you want.
+> >   
 > 
-> On Thu, Jul 31, 2025 at 03:26:01PM +0800, kernel test robot wrote:
-> 
-> [...]
-> 
-> > 2025-07-30 19:06:25 sudo /usr/src/linux-perf-x86_64-rhel-9.4-bpf-e350af63969b875598f0656a20d801bbcaa7bd76/tools/perf/perf test 64 -v
-> >  64: Convert perf time to TSC                                        :
-> >  64.1: TSC support                                                   : Running (2 active)
-> >  64.1: TSC support                                                   : Ok
-> > --- start ---
-> > test child forked, pid 7359
-> > Using CPUID GenuineIntel-6-9E-D
-> > evlist__open() failed
-> > ---- end(-1) ----
-> >  64.2: Perf time to TSC                                              : FAILED!
-> 
-> I roughly read the job.yaml file, seems it does not install clang.
-> Thus, the building will not enalbe the option BUILD_BPF_SKEL=1.
-> 
-> As a result, auxtrace__update_bpf_map() will return a failure. I will
-> fix this issue in next spin.
-> 
-> Thanks for test and reporting.
+> OK, could you push this to Linus?
 
-I played a bit and found that if with the option "BUILD_BPF_SKEL := 0",
-I even failed to build perf (I will fix in new version).
-
-I think you should have built perf with enabled BUILD_BPF_SKEL. However,
-in this case, I cannot reproduce the test failure, both on my x86_64 and
-Arm64 machines. I reviewed the code and have no clue this patch will
-cause the failure.
-
-Is it possible to run the test at your side with the option "perf test
-64 -vvv" for debugging info?  Or if it is possible related to the
-setting kernel.perf_event_paranoid?
+Will do later today.
 
 Thanks,
-Leo
+
+-- Steve
