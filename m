@@ -1,81 +1,90 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EAEA2E40E
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 31 Jul 2025 08:02:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68C3729CB32
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 31 Jul 2025 08:39:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753948951; cv=none; b=lKMwuV1p30ZWcVR/hckMfUMzth3d97GqNCTHbqqDSbbApWbGInJDHFszFUgk84+rpKfnYcjBzUlblj4jQMK8GuYh4UTc5cZmG1wZD7TMkEEHjMxcCzU+QA9TPVlKQAksxmkhAOCVm55bqzYcD5WrPkbSoevE0L/2AD+jDCIoNcs=
+	t=1753951174; cv=none; b=tNrIBlBU1LY0x3tsoBF08q5dTv8S0I9S5D42CwMf7oiOsliLdppvz+Dp1v/rVOCinfjkj0tN965mxLSucKSij8FkhBcMIyMlpoP93bOn115AWmMQTFTvtBQ74TX6q2yyuHjPB/qCBydtfGW4YyNjecviqMxziFTJjcdFagvNJLs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753948951; c=relaxed/simple;
-	bh=LdicY+2ncQNT9KCrIYxZm9IcrU2l5w1pIT/SGT4TkQQ=;
+	s=arc-20240116; t=1753951174; c=relaxed/simple;
+	bh=ScqaWIT05BcQ0HPRFwowC3ovmEJYqJ2vz0WF+Z0uITE=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Mxmr9CJUYXdlLhA4ZldPEJaM28izLNESwU47qISS4joKPrq3YrBVmjOfa1tr9OzAeYA0/wDm9stez2kcGmAoiWrxgOoAq0qOxEaCG15Mwwhj29Lf++ycXxidXH8g8lk0TK1UHg4jqsFtH1cAPPE1/5UqdJ0u5jJt0OdnQFr9SiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RGBhkMjl; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:Content-Type; b=OcB46UlAxX2c3b4MPs2XpLKE7Lr4FGRQ6XdwIDwhJlpJ8iC5cekIyHHVTfovqrVNNXUIzSMk3bwYcaZ2s7Si1JNZuhNpsyArTgIpLkvGKcALgirKkd4H3G57ksKbMLRt2XR8tKXEwmyzCp8nVo4wkGnnB0DYoUbjihh3orSzqnQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eCaIRez/; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RGBhkMjl"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eCaIRez/"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1753948949;
+	s=mimecast20190719; t=1753951171;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=HHZ9+ef1VJ3neo5CwDLUurfNI4xnlLHmxEsfHcd9QeQ=;
-	b=RGBhkMjl/KVFG4nDABMONH1zRJOqmAuoucIBAVHh01nfQP5zOa8OngxB9xlJHya+H5/VnK
-	R734JuBmKOBO6MgWDZ2soPse+oOc4chMOjUOx3/xLWEKOMIVkJRm0lXoe9A2tdUa/WVZh/
-	dA7l9azA2Fy6HqIFJ/29bnkmBFP6mn4=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=ScqaWIT05BcQ0HPRFwowC3ovmEJYqJ2vz0WF+Z0uITE=;
+	b=eCaIRez/SPbt9M2v20wO2NVY96rt1QA3S885ba4j1xYYUv5BNc+RVQww0z26nHVsoqUcfm
+	h0pYAJMBzQ1Z4wCCftdzkTo6M+3MbUHuMzIXZJ00SB5JRWbSKe4jJ9hQfpNhz0ByP3nj8+
+	el8+8//BeRyiYPPfrO5irnobmf2v1gg=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-456-tnFmPD7tNxunD2APHHbaeQ-1; Thu, 31 Jul 2025 04:02:23 -0400
-X-MC-Unique: tnFmPD7tNxunD2APHHbaeQ-1
-X-Mimecast-MFC-AGG-ID: tnFmPD7tNxunD2APHHbaeQ_1753948942
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3b793f76a46so531993f8f.2
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 31 Jul 2025 01:02:23 -0700 (PDT)
+ us-mta-548-c6kC-JkTPeyI-s7d8s5Lnw-1; Thu, 31 Jul 2025 04:39:29 -0400
+X-MC-Unique: c6kC-JkTPeyI-s7d8s5Lnw-1
+X-Mimecast-MFC-AGG-ID: c6kC-JkTPeyI-s7d8s5Lnw_1753951168
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3b788d00e26so276828f8f.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 31 Jul 2025 01:39:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753948942; x=1754553742;
+        d=1e100.net; s=20230601; t=1753951168; x=1754555968;
         h=mime-version:user-agent:content-transfer-encoding:autocrypt
          :references:in-reply-to:date:cc:to:from:subject:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Lgv6U/W/hpoRUHyZFqCrSaXyDup15bzLQFsiG+oYoJU=;
-        b=A8TEza5ioe+4mllWplljef0vSdsiB0sQrAVpvZXYpcUi2vR7Cq5MeBwNRwqWFGJPxY
-         AjHjDy0GROwgBfFcwf65RkNdfh/3UgBWSba8jSj+a6gsWBiXSA3dmE7tFLWMxEXxiF5H
-         lxy1V7vrI3OgcyZZSmvltHIqfIJynYHljVmgs3I8ElAO6+udKtZUnRO98OZKNikHe5Mt
-         PQD+V1NzZwRcgbrNuepIZZUouMCs+vQGfngNF1tNfPi392o3twJodKccxJteZb/Ts5OF
-         gyVpCEx7C3I8y4id2Pm6tsECF5o9UNEy0KUSuoOBOiDYBda9UMyJ00e+NJ6PXYpSvB8P
-         E2Aw==
-X-Forwarded-Encrypted: i=1; AJvYcCWv//JlH/Ii4AkDv7doqQm5HDxjj2PIjcOwMc4KehwSd8bF0/khANi68N5wMM/6pk24BGaeKK4GnTBqG7HyvIeDcMk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywx+I/kxzu/vDT8jDZm0wxCwgyH6P1ZuhdF47xm/dQJabq9FZF3
-	dUrp/UpMzxLWkUKaYHpghyay2tsIfBqIKR0+Ui/75ZHydiiNrwF1uM/K1GzmusawlQEoBwwNEkb
-	a9i2fcco/QV6+rM3rFAHYmtFpcoTVNwKmed/1qV0WedVIURJ1WHWBcV1zn6cIM0s94YMhUGTiHA
+        bh=F7yP0szGzNbiy8cyqFmK1DSuaFl+Rz6XKugDUijkRpE=;
+        b=apQQ3DIXhPRJzTPhHck3+Y6eJAdJ4L3o9FvbWHiCeINB2RftC/J2GL+gNrfEAmFT2H
+         8B/km3CIYQTlYFvRk9+TkZllVQFBrsGT5efnBcrwAziMIpYs7XlEFmwKy+hkUigbz+hD
+         +xm3dgwiMXhprMZO21XotQtHKuzhtILgQ8vPUu5LzCTXt55hjitEJ7qlpIb6f/Wa0cLv
+         G83uM8wT5pZyQ1IXJgv/qaxL8xpPa7xBOOH+kT7hjn/xRfiGj9LN2CTMujIcQOMFrXeX
+         pAcrCc4kSLXzRPaQq6Gbku9oz7bSgZLOql4sC/eGlnep13BxeNAq3PhMQtb7oChOBtaZ
+         pUJw==
+X-Forwarded-Encrypted: i=1; AJvYcCVPRsh+Pti+eCJU+h0+4t3sXtBogSg8XHAMgum53rv6jVmaYgwp2FcAnc0faX6cRJZrWc1d1WOuR4JbUn/5mKlkppE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzLOKMr3mvHA2qnAJ/cJP5fzvHLNyh8hkxjv/bnnNq75dWJ/YtB
+	PeBlQjgpY7MajINKQimQ12pS+t43qtl/x8WjvTk5m6Vtx9zGcYXwAGcWoeFfwvcZNSq0R3rmJYh
+	mWfvbTvC2fhu2e4vTEfEecI5JMRVP9RNDatsQiLmrLp59PBU6nvJiqKkX2tVnsG09UqFHZSOLdg
 	==
-X-Gm-Gg: ASbGnctFMpcWs9umvc8H+KadrGAJDw8KoOG/txyLZpz0W1xrwrpGRXgfcr7rqkHDlUF
-	YXBiXbIA/myFRx+N5eqvAcuwVHtqbg3aPVFVzhhHnQvsE09lrJT9aswCXVjdTNhkkbT9DNH7GGG
-	3LxT0xMDm2YsK5WwdW6Ug78ZCDdkC3zb/YFoaDV6BZthmZ+CpoOPNJ7v/iMyy63xjhRMfIHtg6W
-	BZ5oRX+MEgBbM/WADC+7kJQukeCEM0cQhMzk1hrKgjPcZGh1S7yeo5HsrtuxQ0sqEav6sstr1+s
-	3EEnsPxpvKdQwAIEcG+u4YrffuRhPolw03YFxAv9Pjql9jdFZUFZb0xhRJ4Q8UdZ/w==
-X-Received: by 2002:a05:6000:4287:b0:3b7:7633:4e71 with SMTP id ffacd0b85a97d-3b794fecc7cmr5082557f8f.13.1753948941969;
-        Thu, 31 Jul 2025 01:02:21 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH4pG6nXG2ua5v/+0ufLTKW+zE77EAA3F4z8dCGzhgrLwSHi6vxpr0yH0anYvSH+8Di5uZR8g==
-X-Received: by 2002:a05:6000:4287:b0:3b7:7633:4e71 with SMTP id ffacd0b85a97d-3b794fecc7cmr5082530f8f.13.1753948941555;
-        Thu, 31 Jul 2025 01:02:21 -0700 (PDT)
+X-Gm-Gg: ASbGnctl0h6UJ3GXZcwU6G6qTFUDXijnp5Dx4apQujAyxNPnRhnbyfj9eB6lAxZFH4r
+	S9Sy7/B3O/CWsZww851vMkfxQ/e2HkylmSLgQ7D4J4HeWVU3db1Mt9IVvi3O5W1VkuPjlt2Mw5Y
+	qhSnA7FDBGfxg/TVPU37bUt++GgL7678+fLbwbpTSuL846ve5y4W1l2csVizKfHuMBCffDthewr
+	fFVNn9W+3N/vchh1FQv5q/3sroBFYsaD+1Mm+08iUlLEhS3JBnhnJxqHFc4eRPDVXuGRT3x3wSd
+	wKetMqyBIkYJzLhcXJ9c2oZ+gxSDG8zR7WDK7XLWAqzob4kWj7LiT2bzleqpXK/qkg==
+X-Received: by 2002:adf:8b59:0:b0:3a6:d95e:f38c with SMTP id ffacd0b85a97d-3b79501e606mr3553006f8f.33.1753951168406;
+        Thu, 31 Jul 2025 01:39:28 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFlb7Q8yPGsqPrhTD0Y5orBknXFGcVgXJ65AHafvMuaqJXp4tRD1gmzSipBYjnC3cMeTlLrew==
+X-Received: by 2002:adf:8b59:0:b0:3a6:d95e:f38c with SMTP id ffacd0b85a97d-3b79501e606mr3552988f8f.33.1753951167972;
+        Thu, 31 Jul 2025 01:39:27 -0700 (PDT)
 Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.40])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b79c453c80sm1482291f8f.43.2025.07.31.01.02.20
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b79c3b9c7dsm1589327f8f.26.2025.07.31.01.39.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 31 Jul 2025 01:02:21 -0700 (PDT)
-Message-ID: <0fb442dc58bd36345b60f4bb8f6be73db74900ac.camel@redhat.com>
-Subject: Re: [PATCH 2/5] rv/ltl: Support per-cpu monitors
+        Thu, 31 Jul 2025 01:39:27 -0700 (PDT)
+Message-ID: <5a7c492bbad7d56f347ee629734fdbab275d6333.camel@redhat.com>
+Subject: Re: [PATCH 4/5] sched: Add rt task enqueue/dequeue trace points
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: Nam Cao <namcao@linutronix.de>
 Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
  <mhiramat@kernel.org>,  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Thu, 31 Jul 2025 10:02:19 +0200
-In-Reply-To: <da946aaf40a8d1a320dc62673013ceceef1c93b3.1753879295.git.namcao@linutronix.de>
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,  Ingo
+ Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Juri
+ Lelli <juri.lelli@redhat.com>,  Vincent Guittot
+ <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Ben Segall	 <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Valentin
+ Schneider	 <vschneid@redhat.com>
+Date: Thu, 31 Jul 2025 10:39:25 +0200
+In-Reply-To: <20250731073520.ktIOaGts@linutronix.de>
 References: <cover.1753879295.git.namcao@linutronix.de>
-	 <da946aaf40a8d1a320dc62673013ceceef1c93b3.1753879295.git.namcao@linutronix.de>
+	 <8f83869a5040bd7cd3096bd12090c1ab110ae5c4.1753879295.git.namcao@linutronix.de>
+	 <767a9d59081220594d21856f329fb35988ef7925.camel@redhat.com>
+	 <20250730151818.7RemAREO@linutronix.de>
+	 <5065c29035be39dee954f2b233a40ae15dcc5035.camel@redhat.com>
+	 <20250731073520.ktIOaGts@linutronix.de>
 Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
  keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
  1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
@@ -90,64 +99,90 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: vQzvZKnFjRHH5Pit2Atg-twyZHIaNSZqgEdHVoFp5Hw_1753948942
+X-Mimecast-MFC-PROC-ID: hvGVWajqEO0DlffRT5AwEyFcMIPvOBxyLhAyMjFAI3s_1753951168
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2025-07-30 at 14:45 +0200, Nam Cao wrote:
-> Add support for per-cpu run-time verification linear temporal logic
-> monitors. This is analogous to deterministic automaton per-cpu
-> monitors.
+On Thu, 2025-07-31 at 09:35 +0200, Nam Cao wrote:
+> On Wed, Jul 30, 2025 at 06:18:45PM +0200, Gabriele Monaco wrote:
+> > Well, thinking about it again, these tracepoints might simplify
+> > things
+> > considerably when tasks change policy..
+> >=20
+> > Syscalls may fail, for that you could register to sys_exit and
+> > check
+> > the return value, but at that point the policy changed already, so
+> > you
+> > cannot tell if it's a relevant event or not (e.g. same policy).
+> > Also sched_setscheduler_nocheck would be out of the picture here,
+> > not
+> > sure how recurrent that is though (and might not matter if you only
+> > focus on userspace tasks).
+> >=20
+> > If you go down the route of adding tracepoints, why not have other
+> > classes benefit too? I believe calling them from the enqueue_task /
+> > dequeue_task in sched/core.c would allow you to easily filter out
+> > by
+> > policy anyway (haven't tested).
 >=20
-> Signed-off-by: Nam Cao <namcao@linutronix.de>
-> ---
+> Something like the untested patch below?
 >=20
-> diff --git a/kernel/trace/rv/rv_trace.h b/kernel/trace/rv/rv_trace.h
-> index 4a6faddac614..f9e5fd044c45 100644
-> --- a/kernel/trace/rv/rv_trace.h
-> +++ b/kernel/trace/rv/rv_trace.h
-> @@ -177,6 +177,53 @@ DECLARE_EVENT_CLASS(error_ltl_monitor_id,
-> =C2=A0#include <monitors/pagefault/pagefault_trace.h>
-> =C2=A0#include <monitors/sleep/sleep_trace.h>
-> =C2=A0// Add new monitors based on CONFIG_LTL_MON_EVENTS_ID here
-> +
-> +#ifdef CONFIG_LTL_MON_EVENTS_IMPLICIT
-> +DECLARE_EVENT_CLASS(event_ltl_monitor,
-> +
-> +=09TP_PROTO(unsigned int cpu, char *states, char *atoms, char
-> *next),
-> +
+> Will you have a use case for it too? Then I will try to accommodate
+> your use case, otherwise I will do just enough for my case.
 
-You don't really need to follow to the ID/IMPLICIT convention here.
-
-These LTL per-cpu monitors are, in fact, not implicit since they do
-have an id (the CPU), implicit makes sense with the current
-implementation of da_get_monitor that uses the current CPU (doesn't
-have to stay that way, but there was no need to change so far).
-
-If you don't want to get rid of the task's comm in the tracepoint (and
-unify both with an integer id, like with DA), I'd suggest you use
-different names like CONFIG_LTL_MON_EVENTS_TASK (in fact that doesn't
-just have an ID) and CONFIG_LTL_MON_EVENTS_CPU (or even
-CONFIG_LTL_MON_EVENTS_ID, for this it actually makes sense).
-
-I'd prefer it as general as possible to ease new monitor types, but to
-be real picky the LTLs per-task are not ID and the per-cpu are not
-IMPLICIT.
-
-The id field is what the rv userspace tool uses to differentiate
-monitor types, by the way.
-
-
-> +#endif /* CONFIG_LTL_MON_EVENTS_IMPLICIT */
-> +
->  #endif /* CONFIG_LTL_MON_EVENTS_ID */
-
-Also, I'm not sure if that was intended, but
-CONFIG_LTL_MON_EVENTS_IMPLICIT gets compiled only with
-CONFIG_LTL_MON_EVENTS_ID.
+Well, I'm still defining the best set of tracepoints I need, if you see
+it cleaner go ahead the way you're currently doing, then.
+Unless anyone else complains let's keep it like this.
 
 Thanks,
 Gabriele
+
+>=20
+> Nam
+>=20
+> diff --git a/include/trace/events/sched.h
+> b/include/trace/events/sched.h
+> index c38f12f7f903..b50668052f99 100644
+> --- a/include/trace/events/sched.h
+> +++ b/include/trace/events/sched.h
+> @@ -906,6 +906,14 @@ DECLARE_TRACE(dequeue_task_rt,
+> =C2=A0=09TP_PROTO(int cpu, struct task_struct *task),
+> =C2=A0=09TP_ARGS(cpu, task));
+> =C2=A0
+> +DECLARE_TRACE(enqueue_task,
+> +=09TP_PROTO(int cpu, struct task_struct *task),
+> +=09TP_ARGS(cpu, task));
+> +
+> +DECLARE_TRACE(dequeue_task,
+> +=09TP_PROTO(int cpu, struct task_struct *task),
+> +=09TP_ARGS(cpu, task));
+> +
+> =C2=A0#endif /* _TRACE_SCHED_H */
+> =C2=A0
+> =C2=A0/* This part must be outside protection */
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index b485e0639616..2af90532982a 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -2077,6 +2077,8 @@ unsigned long get_wchan(struct task_struct *p)
+> =C2=A0
+> =C2=A0void enqueue_task(struct rq *rq, struct task_struct *p, int flags)
+> =C2=A0{
+> +=09trace_enqueue_task_tp(rq->cpu, p);
+> +
+> =C2=A0=09if (!(flags & ENQUEUE_NOCLOCK))
+> =C2=A0=09=09update_rq_clock(rq);
+> =C2=A0
+> @@ -2103,6 +2105,8 @@ void enqueue_task(struct rq *rq, struct
+> task_struct *p, int flags)
+> =C2=A0 */
+> =C2=A0inline bool dequeue_task(struct rq *rq, struct task_struct *p, int
+> flags)
+> =C2=A0{
+> +=09trace_dequeue_task_tp(rq->cpu, p);
+> +
+> =C2=A0=09if (sched_core_enabled(rq))
+> =C2=A0=09=09sched_core_dequeue(rq, p, flags);
+> =C2=A0
 
