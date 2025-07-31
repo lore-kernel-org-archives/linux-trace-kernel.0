@@ -1,119 +1,196 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F30521DE4E7;
-	Thu, 31 Jul 2025 17:37:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7107DB644;
+	Thu, 31 Jul 2025 18:04:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753983469; cv=none; b=QtdnoSCB1APPAUE0K8Vg5GeL9VsoogNbG11sf+WntPXvE/A/kTM20qpvZ0SwSnHoi6CZrhrisFHToiAHZQ0FHUk+R+4gGClQwlODH0SISSfoEGK34z66Tw/8m6qbGGVVE/j5qepE2MhIREarbnlJlp3KmFn9H/ozHAEFMU7mFIY=
+	t=1753985062; cv=none; b=YCpY0aapJ3EmCm9NATK+esF1mOD+lmfo6HvnHALEyaEb7ACaanC8vcEwvxEuq0ixKv7fpwAXK1BsL/FkzWMXzX0zCUNPANsTflb73DzAvdKI3T42MUFEweStCHbSW8EusO+x+B2EYO4sJ1gtWQnQxc2jX72B91WHCV0KMkY86Vk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753983469; c=relaxed/simple;
-	bh=fC5Kj2P9hQGv6REhbUedHA1baP40WX3wJpYks9ETIRA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=punSK1KeXwIaenIBU3V0v9tYgJwJ9uuzM2vdsQXqiiz7uzVJmWYouCOVa1i/L5YGj0iZ7UvSiS8D7JluEj6Pd9zhA+/lyJ13a0worymnsJ93YCGVcuUIdhmTJvH0td3qzve4td2qL+OHmkON/j4xo/WhagpPDS+y93WB5dOAPvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=iKWwh1a8; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1753985062; c=relaxed/simple;
+	bh=tk2QGSbpErFtQaa/cNHStRHVBU0RFslrHXFiXqQI33E=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WxWPQJK2/pUfSkxP6YE0k0x9P8niWlNUxO9S3X+3Wn89okmc4hujvizvI6Ya18WRp1j0gVUaCFHA3SacLeKUPrFeDxx8y4F3GeJhrGKuByb4fhZbVzjkG0+W10Kn7ddngHCFWCfikOG6+EwsPCx8zLlaGsa74hdwuYutAWxfF78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GpOA2Vje; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iKWwh1a8"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=p81bLGAEXCTve0S2bSlDolWBTWQ0gkC1ozZDbrTl9gw=; b=iKWwh1a88Q0pAf4bvxfAD5Txdc
-	EE90MjrkC8Uduz8SZ6vXiansbV8frsRKlWXThc48w73PhEqccyoX4tMljfHq+8Rhz9i2ceiiTpnNQ
-	7hjsoOf+OUPX+pHbDNVQLDykrMSNBfUePqaONzx/4EcyEuzR/wo0kYwvkbEPCkU9M1bzxAWY1d2bj
-	ohP5kNlKgUTJVA9ZUQHkyV+nsX3SWV9d4/YDSTVwIwFe2VNJRwzXwJ/sEIwEa9qaSxvuX+eYykKKV
-	Yo/BB2cxQ9KFglR+QaHCwdd6BFZFTPe+0RrFxYMe0Vnzv0Y1POwKGhi1jrFc7WsVSY+Z/IRvpV2Bt
-	sXEcrVpw==;
-Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uhXDL-0000000H6sX-2SDg;
-	Thu, 31 Jul 2025 17:37:11 +0000
-Date: Thu, 31 Jul 2025 18:37:11 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
-	Christoph Hellwig <hch@lst.de>, Leon Romanovsky <leon@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
-	Alexander Potapenko <glider@google.com>,
-	Marco Elver <elver@google.com>, Dmitry Vyukov <dvyukov@google.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, iommu@lists.linux.dev,
-	virtualization@lists.linux.dev, kasan-dev@googlegroups.com,
-	linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org,
-	Jason Gunthorpe <jgg@ziepe.ca>
-Subject: Re: [PATCH 0/8] dma-mapping: migrate to physical address-based API
-Message-ID: <aIupx_8vOg8wQh6w@casper.infradead.org>
-References: <CGME20250625131920eucas1p271b196cde042bd39ac08fb12beff5baf@eucas1p2.samsung.com>
- <cover.1750854543.git.leon@kernel.org>
- <35df6f2a-0010-41fe-b490-f52693fe4778@samsung.com>
- <20250627170213.GL17401@unreal>
- <20250630133839.GA26981@lst.de>
- <69b177dc-c149-40d3-bbde-3f6bad0efd0e@samsung.com>
- <f912c446-1ae9-4390-9c11-00dce7bf0fd3@arm.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GpOA2Vje"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3b785a69454so880292f8f.2;
+        Thu, 31 Jul 2025 11:04:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1753985059; x=1754589859; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Fbin+GZQHDGmwlTYhez++Hd6ORPDFk74NiNgP51hNRc=;
+        b=GpOA2VjewWsvDsj6X+UZnQHxIs8srUH+iMWNaAN5Xgy81TBfDQnkZ5v7BYAj1ZwQfu
+         pSImvel/dECwukJJO+VpSjKnoMGwfR3EDYUOSUhsXWJ9LNsOJBinzLuO1DvwcmrPhB/G
+         Wm2DsRd1kBhMSho4ldFDWoxrPBIUthne97l5XVXJoQHEK4ZqHp5Mxb9gf3/P5nFNHkq0
+         9IlZh2qKXPyO9CXi/5iEVK9dRYS22n90xfomahAFAfztErPAcq8Z8l5I6tKVfSEjv28u
+         8KsgbzK9Kn6I+HujeztN+stiER2gV0JjSTcyCsXrjVn9uRBkfQuY9kKwR2b7JUqBJJtR
+         6CMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753985059; x=1754589859;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Fbin+GZQHDGmwlTYhez++Hd6ORPDFk74NiNgP51hNRc=;
+        b=UUfrG59aWZP0gFro/5Xv7790bXTtQfxt/VD450ewGf3pKXN3ZkwHaJGaPT689Fmvgh
+         /HQB7bWfqmea+b25MWxY/y3VGco3WBdYicORvvsNY8Mf1vpQyIBFcmwREOJORDCQI6nW
+         FpSudsw08iHNDg0PR6Ot8MbKssyB5WIAazPkpOs6v+n/K2aEZqiO8BWgtJG926e8zoXr
+         gCW3r6lgkpEYBYV8yxpYWumUI0E8KB1oXv6umS529Za/XPe0TdIwx5htIxCS2/72Hhku
+         UCvqBuqVw+1p6KVCr5Qy7UoVgXEc8bc6MzEMVwOMiAmuKDcJr7L9Pg3GilX4ISvoRSBa
+         tj2g==
+X-Forwarded-Encrypted: i=1; AJvYcCVgADn2bvo9cK/WLycMp/o83aqByedNWQX5pLOcMFTgnhzKTfuMD35+ji2L4WUjWZmURgBeR4qWIuFTBKNr++B28Sk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzCH7FnyL8Nig7+gPbLgzWMstuG5iAbAHs0YSWka0/mcbPR0pg2
+	lfoTR0VVw7BlRMZXUENgolhyrxdPqFRqQABhe+PAgPC1PfmRfYsoeKCGaEZAGZmDCl6aym/SnoB
+	G89FzlpyjLXoyvR9qFeLXJk1T4h2a4rM=
+X-Gm-Gg: ASbGncv4VNg2b0n+BSvpKspgrI2PfrZ/nUhKTYQsw0ZyZRn17wStJO6zMzKXuJ1A6wF
+	9i09ZRhdBZeOxuYjR9qMlw9Pwcqqx5d1ZLS4Qd7kEzkcVtzcwWeoOzEz+nH2/lp4Z1v6lQ9kdre
+	pe6SHHQv9Z9kfACZvSOBwvinTq+nuXFYOg7I9ByhaPBGl/VDwUm3vlIK8LzAW2na8TTsNj7phnN
+	qXcJMIIUwPBm+0RTtrXCLA=
+X-Google-Smtp-Source: AGHT+IEx/7pY0WKBtxFiwsFXrOayGNLGLVdna8o4FuW/Qc4fuPmjdP8DBK1bqqkcECTu7SAoPxsIlIrG8DQVcZdNSYk=
+X-Received: by 2002:a05:6000:2dc5:b0:3b8:d15f:45a2 with SMTP id
+ ffacd0b85a97d-3b8d15f4d83mr939771f8f.14.1753985058278; Thu, 31 Jul 2025
+ 11:04:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f912c446-1ae9-4390-9c11-00dce7bf0fd3@arm.com>
+References: <20250730172745.8480-1-James.Bottomley@HansenPartnership.com>
+ <20250730172745.8480-3-James.Bottomley@HansenPartnership.com>
+ <CAADnVQJd0zwSnepH=1f6mwnd-1oFF8gkuCFnEgbMVE8pZ3qz0g@mail.gmail.com> <c3460d84d40922b57d190631cb92f83533c3aba7.camel@HansenPartnership.com>
+In-Reply-To: <c3460d84d40922b57d190631cb92f83533c3aba7.camel@HansenPartnership.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Thu, 31 Jul 2025 11:04:04 -0700
+X-Gm-Features: Ac12FXyboMwQ7iOEIYBVDMHPvWXDuR-iovWI6-gqGFfdTME8BpIv1I3RGPWlavw
+Message-ID: <CAADnVQKXpt1cvyk_NSHORZBhEJTXHmGL4mtJZVy8mKrRU-++nw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] bpf: remove bpf_key reference
+To: James Bottomley <James.Bottomley@hansenpartnership.com>
+Cc: bpf <bpf@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, 
+	Roberto Sassu <roberto.sassu@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Robin,
+On Thu, Jul 31, 2025 at 10:27=E2=80=AFAM James Bottomley
+<James.Bottomley@hansenpartnership.com> wrote:
+>
+> On Thu, 2025-07-31 at 10:03 -0700, Alexei Starovoitov wrote:
+> > On Wed, Jul 30, 2025 at 10:32=E2=80=AFAM James Bottomley
+> > <James.Bottomley@hansenpartnership.com> wrote:
+> > >
+> > > bpf_key.has_ref is used to distinguish between real key pointers
+> > > and
+> > > the fake key pointers that are used for system keyrings (to ensure
+> > > the
+> > > actual pointers to system keyrings are never visible outside
+> > > certs/system_keyring.c).  The keyrings subsystem has an exported
+> > > function to do this, so use that in the bpf keyring code
+> > > eliminating
+> > > the need to store has_ref.
+> > >
+> > > Signed-off-by: James Bottomley
+> > > <James.Bottomley@HansenPartnership.com>
+> > >
+> > > ---
+> > > v2: use unsigned long for pointer to int conversion
+> > > ---
+> > >  kernel/trace/bpf_trace.c | 7 ++-----
+> > >  1 file changed, 2 insertions(+), 5 deletions(-)
+> > >
+> > > diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> > > index e7bf00d1cd05..c0ccd55a4d91 100644
+> > > --- a/kernel/trace/bpf_trace.c
+> > > +++ b/kernel/trace/bpf_trace.c
+> > > @@ -1244,7 +1244,6 @@ static const struct bpf_func_proto
+> > > bpf_get_func_arg_cnt_proto =3D {
+> > >  #ifdef CONFIG_KEYS
+> > >  struct bpf_key {
+> > >         struct key *key;
+> > > -       bool has_ref;
+> > >  };
+> > >
+> > >  __bpf_kfunc_start_defs();
+> > > @@ -1297,7 +1296,6 @@ __bpf_kfunc struct bpf_key
+> > > *bpf_lookup_user_key(s32 serial, u64 flags)
+> > >         }
+> > >
+> > >         bkey->key =3D key_ref_to_ptr(key_ref);
+> > > -       bkey->has_ref =3D true;
+> > >
+> > >         return bkey;
+> > >  }
+> > > @@ -1335,7 +1333,6 @@ __bpf_kfunc struct bpf_key
+> > > *bpf_lookup_system_key(u64 id)
+> > >                 return NULL;
+> > >
+> > >         bkey->key =3D (struct key *)(unsigned long)id;
+> > > -       bkey->has_ref =3D false;
+> > >
+> > >         return bkey;
+> > >  }
+> > > @@ -1349,7 +1346,7 @@ __bpf_kfunc struct bpf_key
+> > > *bpf_lookup_system_key(u64 id)
+> > >   */
+> > >  __bpf_kfunc void bpf_key_put(struct bpf_key *bkey)
+> > >  {
+> > > -       if (bkey->has_ref)
+> > > +       q
+> > >                 key_put(bkey->key);
+> >
+> > Should be (u64) to avoid truncation ?
+>
+> It can't be: gcc only allows pointer to unsigned long conversion, so
+> the statement
+>
+>   if (system_keyring_id_check((u64)bkey->key) < 0)
+>
+> produces a pointer to int conversion error.  Since the function
+> prototype is u64 the conversion from unsigned long to u64 happens
+> automatically.
+>
+>
+> > But is it really the case that id=3D=3D1 and id=3D=3D2 are exposed to U=
+API
+> > already?
+> >
+> > As far as I can see lookup_user_key() does:
+> >         default:
+> >                 key_ref =3D ERR_PTR(-EINVAL);
+> >                 if (id < 1)
+> >                         goto error;
+> >
+> >                 key =3D key_lookup(id);
+> >
+> > so only id=3D=3D0 is invalid, but id=3D1 can be a valid user key, no?
+>
+> Well, remember the id as pointer trick is only used for the system_key
+> lookup.  What you get back from user_key lookup is a real pointer to
+> the key (regardless of what serial id you pass in) so there's no chance
+> of getting 1 or 2 back for a user key.
+>
+> However, if you were thinking of overloading key look up, it is
+> currently the case, in spite of the check in lookup above, that user
+> key serial numbers begin at three thanks to this code in
+> key.c:key_alloc_serial()
+>
+>         do {
+>                 get_random_bytes(&key->serial, sizeof(key->serial));
+>
+>                 key->serial >>=3D 1; /* negative numbers are not permitte=
+d */
+>         } while (key->serial < 3);
 
-I don't know the DMA mapping code well and haven't reviewed this
-patch set in particular, but I wanted to comment on some of the things
-you say here.
+I see. That's what I was missing.
 
-> Marek, I'm surprised that even you aren't seeing why that would at best be
-> pointless churn. The fundamental design of dma_map_page() operating on
-> struct page is that it sits in between alloc_pages() at the caller and
-> kmap_atomic() deep down in the DMA API implementation (which also subsumes
-> any dependencies on having a kernel virtual address at the implementation
-> end). The natural working unit for whatever replaces dma_map_page() will be
-> whatever the replacement for alloc_pages() returns, and the replacement for
-> kmap_atomic() operates on. Until that exists (and I simply cannot believe it
-> would be an unadorned physical address) there cannot be any *meaningful*
-> progress made towards removing the struct page dependency from the DMA API.
-> If there is also a goal to kill off highmem before then, then logically we
-> should just wait for that to land, then revert back to dma_map_single()
-> being the first-class interface, and dma_map_page() can turn into a trivial
-> page_to_virt() wrapper for the long tail of caller conversions.
+> David said he would prefer, if we to allow system keyring lookup here,
+> to use negative ids (like keyrings) for them.
 
-While I'm sure we'd all love to kill off highmem, that's not a realistic
-goal for another ten years or so.  There are meaningful improvements we
-can make, for example pulling page tables out of highmem, but we need to
-keep file data and anonymous memory in highmem, so we'll need to support
-DMA to highmem for the foreseeable future.
+Makes sense to me as well.
+Do you want to do a follow up or respin this set ?
 
-The replacement for kmap_atomic() is already here -- it's
-kmap_(atomic|local)_pfn().  If a simple wrapper like kmap_local_phys()
-would make this more palatable, that would be fine by me.  Might save
-a bit of messing around with calculating offsets in each caller.
-
-As far as replacing alloc_pages() goes, some callers will still use
-alloc_pages().  Others will use folio_alloc() or have used kmalloc().
-Or maybe the caller won't have used any kind of page allocation because
-they're doing I/O to something that isn't part of Linux's memory at all.
-Part of the Grand Plan here is for Linux to catch up with Xen's ability
-to do I/O to guests without allocating struct pages for every page of
-memory in the guests.
-
-You say that a physical address will need some adornment -- can you
-elaborate on that for me?  It may be that I'm missing something
-important here.
+Would be great if he can ack this set too.
