@@ -1,82 +1,117 @@
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7761719DF62;
-	Thu, 31 Jul 2025 22:14:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 240602777E8;
+	Thu, 31 Jul 2025 22:29:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754000098; cv=none; b=RcOn4GsXa+TvGvur85RoIog21j7R10XnWmXp6F1bnu/qTZ5F/T8aacG0z6VuD/ch1DwTuTDIK4WbZToozGTj5BCk0Bg2qc1IlyUj0LqB9VJ5keisytmLkNiC7fsXIlRsxug/xsYAlSCDRRbD2IXrtzU7j7d6zExrRb/PgAgd5RY=
+	t=1754000981; cv=none; b=EiXFW/3RHFShDnEj5m2j/ELx5Cn4yaPNaPCNy2JwcMb+fHLgv9JeMlY4vLx69TXKd9kbLWA5uoDjFbQPLjGaSJ1E7cHZ20KwSytDYnKD2W3LgEmzf/3216zJFoRB8teNCImJIJsoKsh2Cuc8InEN0YBUZz0mRPuYsm1GYWrD8z4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754000098; c=relaxed/simple;
-	bh=T2iK/JRIu+MAVgGULZdaXCB0yQ+4ElAMiiMnn10eWxg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LzK7tf6LNjjdKcdmEJKIjzZqWibGKLrD/OsDpXVsDGww7Z+8qQR3FZrLSVdfUatRi7p5QJZLV0WUrSn1L5odjXT/yr+Or4eukPUabn9QgOVbOzTOE+CRY+Xg/k/9yGN9IeROUM8qoQ224/MboEMtsNq/4U/30l0ecCtsvjUgzW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf07.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay07.hostedemail.com (Postfix) with ESMTP id 7A97B160732;
-	Thu, 31 Jul 2025 22:14:47 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf07.hostedemail.com (Postfix) with ESMTPA id 4923D20030;
-	Thu, 31 Jul 2025 22:14:44 +0000 (UTC)
-Date: Thu, 31 Jul 2025 18:15:03 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>, bpf@vger.kernel.org, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>,
- Namhyung Kim <namhyung@kernel.org>, Takaya Saeki <takayas@google.com>,
- Douglas Raillard <douglas.raillard@arm.com>, Tom Zanussi
- <zanussi@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Thomas
- Gleixner <tglx@linutronix.de>, Ian Rogers <irogers@google.com>,
- aahringo@redhat.com
-Subject: Re: [PATCH] tracing/probes: Allow use of BTF names to dereference
- pointers
-Message-ID: <20250731181503.2662c1c7@gandalf.local.home>
-In-Reply-To: <aIvlrQEZQ6OTZxAY@krava>
-References: <20250729113335.2e4f087d@batman.local.home>
-	<aIvlrQEZQ6OTZxAY@krava>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1754000981; c=relaxed/simple;
+	bh=KzlZ+JTGzDjXQzM1ODwtEYqyZ+h/YI+hr6FqovTMq+w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OEg9nKulqT0CfWDEJoyLCMDGb0eqe90PTucCQGnKmSeS8y6EhKOPNVbL9tbgntIOGBG+Da0ccisMRuGt7XNHPJ1BenKL75Fqw6PSdTIlZdNmFKk4MGwEuEOqS5gWQIgMg+CCFfQUbEuKHlNj6RCuSexTpg4ikmgNXN9uhS6ssrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kOpjLkMx; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kOpjLkMx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1754000980; x=1785536980;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=KzlZ+JTGzDjXQzM1ODwtEYqyZ+h/YI+hr6FqovTMq+w=;
+  b=kOpjLkMxOPYRVPjBhc2knG1M2nVi9opW6isYI1bIA2Wi4GlT6sDyuIOW
+   8+ju4LsISMwusb3g5ib10gt401T6RW2h0uY8DIxW45ftjucwgFerGcXi7
+   QGL4A7AWDorCU4L3cOVfomw/hnl6Hg0uHnU8eGvkZ87WPrvZTqLQZborB
+   hB+slhC/5Znsmd6VHyKuGD60sBjRK45Rze+MTkwD+SUWNIoeyJAVxdCDt
+   LxqkyeWiGO9HDq72fFv7Uv9BxyYmlLlks6AMR+abGcs9H79x+XR+WLdvl
+   f0JXKew5KIXphJ+oM1+0xpYXz4OgKtRDSG8l0Y3Yy4MFjDVPzTUB08Re0
+   Q==;
+X-CSE-ConnectionGUID: 9gcWIbbtQIuG+TFpMT3EGg==
+X-CSE-MsgGUID: X3D2bkInTqSXpRrHfp7hRQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11508"; a="56038121"
+X-IronPort-AV: E=Sophos;i="6.17,255,1747724400"; 
+   d="scan'208";a="56038121"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2025 15:29:40 -0700
+X-CSE-ConnectionGUID: aqcDJqGhSxCRX/RaGhNRVQ==
+X-CSE-MsgGUID: ss1G1ZHQR9ycKIDy0XgIDg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.17,255,1747724400"; 
+   d="scan'208";a="163301179"
+Received: from lkp-server01.sh.intel.com (HELO 160750d4a34c) ([10.239.97.150])
+  by fmviesa006.fm.intel.com with ESMTP; 31 Jul 2025 15:29:38 -0700
+Received: from kbuild by 160750d4a34c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uhbmK-00049G-08;
+	Thu, 31 Jul 2025 22:29:36 +0000
+Date: Fri, 1 Aug 2025 06:28:47 +0800
+From: kernel test robot <lkp@intel.com>
+To: James Bottomley <James.Bottomley@hansenpartnership.com>,
+	bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, Roberto Sassu <roberto.sassu@huawei.com>
+Subject: Re: [PATCH v2 3/3] bpf: eliminate the allocation of an intermediate
+ struct bpf_key
+Message-ID: <202508010803.nlVVIZ7G-lkp@intel.com>
+References: <20250730172745.8480-4-James.Bottomley@HansenPartnership.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 4923D20030
-X-Stat-Signature: gk43yptynx94a9irn4b7sfzkab9mopr5
-X-Rspamd-Server: rspamout02
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18aRYcpEoFQX773FH3fd8FR5oGOdXff/aE=
-X-HE-Tag: 1754000084-43510
-X-HE-Meta: U2FsdGVkX1+VnurXHtEPrwd65fkKV2qDbXnGLvvxC9q8uwHd3+ckcA/wbwH8Ayigco7RS/fW7SCJ8KdwN4f7ffZ6jlpSSbLxbDpS4lJxSXHgGpxHP1L3buQg1ecSBI8+8uQgriXZVWCMITez94pdHuJiEYKwwYmXBxhXqXLPp9+7HYJiBo8if2mItRT4OLg7X2inxEclMHH4ropPVvMNzyimKDqw24zJNI25Z1kqEP2ifZYkmTwEzRiBECDPdsTOk9p0BLquFa4hHlD4XF3QLJ46ncpQIf7D7gD/zUj9MHNk7Tao3k/1mMXZVfkyaEJj4UF3Anrgc/7YoQg75Gb0VgfLOTr0Ly8P
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250730172745.8480-4-James.Bottomley@HansenPartnership.com>
 
-On Thu, 31 Jul 2025 23:52:45 +0200
-Jiri Olsa <olsajiri@gmail.com> wrote:
+Hi James,
 
-> > +int btf_find_offset(char *arg, long *offset_p)
-> > +{
-> > +	const struct btf_type *t;
-> > +	struct btf *btf;
-> > +	long offset = 0;
-> > +	char *ptr;
-> > +	int ret;
-> > +	s32 id;
-> > +
-> > +	ptr = strchr(arg, '.');
-> > +	if (!ptr)
-> > +		return -EINVAL;
-> > +
-> > +	*ptr = '\0';
-> > +
-> > +	id = bpf_find_btf_id(arg, BTF_KIND_STRUCT, &btf);  
-> 
-> hi,
-> I think you need to call btf_put(btf) before return
+kernel test robot noticed the following build warnings:
 
-I think you're correct ;-)
+[auto build test WARNING on bpf-next/master]
+[also build test WARNING on bpf/master linus/master v6.16 next-20250731]
+[cannot apply to bpf-next/net]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
--- Steve
+url:    https://github.com/intel-lab-lkp/linux/commits/James-Bottomley/bpf-make-bpf_key-an-opaque-type/20250731-013040
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git master
+patch link:    https://lore.kernel.org/r/20250730172745.8480-4-James.Bottomley%40HansenPartnership.com
+patch subject: [PATCH v2 3/3] bpf: eliminate the allocation of an intermediate struct bpf_key
+config: i386-randconfig-141-20250731 (https://download.01.org/0day-ci/archive/20250801/202508010803.nlVVIZ7G-lkp@intel.com/config)
+compiler: gcc-11 (Debian 11.3.0-12) 11.3.0
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202508010803.nlVVIZ7G-lkp@intel.com/
+
+smatch warnings:
+kernel/trace/bpf_trace.c:1337 bpf_key_put() warn: always true condition '(key != BUILTIN_KEY) => (0-u32max != u64max)'
+
+vim +1337 kernel/trace/bpf_trace.c
+
+  1324	
+  1325	/**
+  1326	 * bpf_key_put - decrement key reference count if key is valid and free bpf_key
+  1327	 * @bkey: bpf_key structure
+  1328	 *
+  1329	 * Decrement the reference count of the key inside *bkey*, if the pointer
+  1330	 * is valid, and free *bkey*.
+  1331	 */
+  1332	__bpf_kfunc void bpf_key_put(struct bpf_key *bkey)
+  1333	{
+  1334		struct key *key = (struct key *)bkey;
+  1335	
+  1336		if (system_keyring_id_check((unsigned long)key) < 0 &&
+> 1337		    (unsigned long)key != BUILTIN_KEY)
+  1338			key_put(key);
+  1339	}
+  1340	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
