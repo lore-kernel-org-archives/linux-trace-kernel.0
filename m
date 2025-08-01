@@ -1,33 +1,42 @@
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
+Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39AB826FA7B;
-	Fri,  1 Aug 2025 15:14:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4689E1D7E37;
+	Fri,  1 Aug 2025 15:19:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754061284; cv=none; b=gg6l0t7hjFKDmFBiSEy2lHrzf4BrA4PygPRNX44CzCMNwc0qCPXZ95W2q/21EJAdSHWF3oBAsi13mRR8vJUXZvTp6S3E/KmdAmV4KtGRY1o7bFWDjsFC09+ANdcm/97yBJu9GaLygBEhRGmk8wtNKj6OJ+ViYCiV28p/FOsFDtY=
+	t=1754061545; cv=none; b=fUoVsbiR+VaqvXRzIcvXBYPQNVVqQR2uc/vL803upE0vGMgNcJsiFmpvHScP/XoVSXtxRvtXDmEmSoXNEojvMvAYXldb2teVivZrTFI3gWsi3DsPb/gK7R+wiLVZUciA2Empb80kNzwIAyWR3fz7XXr2pGXzPbdr9LfTZcI5r/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754061284; c=relaxed/simple;
-	bh=z/VXTL9XJ4xncPDLbz2NCbekM9lyeRi/bg0hzGvJNV0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=ZyN6UibjAbdFtMquNaaIt5wySqYaNVaNRPT4Awof19C1SsN0AcNNAeuuGOQvkigLClOQBwA03gTcflDJR9oBdX9nNx2ViSjb0lwOiInyO11iqo7XpWlanHBPOil1aLtnA8FCQlQdGY1BengIOEomsKmdZYXJEBZkkApHlLmL//A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
+	s=arc-20240116; t=1754061545; c=relaxed/simple;
+	bh=MJt1O5PgGCgdKLxzhcyGpMTDCKhMZs8K5bnjRub5LYs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CgqMRf6uqcsk7dK1LQirfTfkC8WDwMDyzQLcxw6aEcx/Yz1DzPOy08PiqlrxAizqEuF1sgrMwPCix3kYJcmPsTA1moE0xVHls5VYGdwRKmu+VrJQEAUOJ6n90EpYml2vL4mrPfIy84bfufnYGZcC4cZXs65NRGQ65t/87WOSji0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf13.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay04.hostedemail.com (Postfix) with ESMTP id 5F2501A012E;
-	Fri,  1 Aug 2025 15:14:34 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf13.hostedemail.com (Postfix) with ESMTPA id 8C44420011;
-	Fri,  1 Aug 2025 15:14:32 +0000 (UTC)
-Date: Fri, 1 Aug 2025 11:14:53 -0400
+Received: from omf09.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay06.hostedemail.com (Postfix) with ESMTP id 6FC801139E9;
+	Fri,  1 Aug 2025 15:19:01 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf09.hostedemail.com (Postfix) with ESMTPA id 98F5120024;
+	Fri,  1 Aug 2025 15:18:58 +0000 (UTC)
+Date: Fri, 1 Aug 2025 11:19:19 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, bpf@vger.kernel.org, Douglas Raillard
- <douglas.raillard@arm.com>, Yonghong Song <yonghong.song@linux.dev>
-Subject: [PATCH v2] tracing: Have unsigned int function args displayed as 
- hexadecimal
-Message-ID: <20250801111453.01502861@gandalf.local.home>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko
+ <andrii@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Martin KaFai Lau
+ <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu
+ <song@kernel.org>, KP Singh <kpsingh@kernel.org>
+Subject: Re: [PATCH] btf: Simplify BTF logic with use of __free(btf_put)
+Message-ID: <20250801111919.13c0620e@gandalf.local.home>
+In-Reply-To: <CAADnVQLFLSwrnHKZUtUpwQ1tst71AfYCcbbtK2haxF=R9StpSw@mail.gmail.com>
+References: <20250801071622.63dc9b78@gandalf.local.home>
+	<CAADnVQLky+R-tfkGaDo-R_-tJ8E3bmWz8Ug7etgTKsCpfXTSKw@mail.gmail.com>
+	<20250801110705.373c69b4@gandalf.local.home>
+	<CAADnVQLFLSwrnHKZUtUpwQ1tst71AfYCcbbtK2haxF=R9StpSw@mail.gmail.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -37,96 +46,30 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: iyzrnr6w4pjc1djibas7in4xd3rr8x5q
-X-Rspamd-Server: rspamout07
-X-Rspamd-Queue-Id: 8C44420011
+X-Stat-Signature: uh8zk8moytwqhj6gqjk57ygys15kzhr8
+X-Rspamd-Server: rspamout01
+X-Rspamd-Queue-Id: 98F5120024
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18xssWv1N8xOSx5bKZvuO7jwFLxY1ftaow=
-X-HE-Tag: 1754061272-841103
-X-HE-Meta: U2FsdGVkX1+lplGtHrEAOkWKXPskBQQAellZmOYwCbwAU98pNAaFo31+QYlRNB/tKE+WEwWhpUmiSmvXvt5kQWhomZcmMfOoLL1FETZ66ZZ8uuEiM/VEYynAVv77VYUXoFgbpuLNRNmzpRfn57FZxLWZtpO0T50W2sxzpm9vLjcjno8w+oh+ilaiKzMJpefGec0I1qO5vuUo23L2wTiYuRS3lDvooqx9lgsixZ8quEO16HXPR+RTMAJNk1NX7F+x5V15U/TXlT1HJCgjBRo5FxXbMAEMQ5t0cC+hm4WSBpYp7tm5dNzkrvwoLn2jd9Ho/muqSrZWt4h7cGk8+tOcG6cO6VVzibYWBSF5h2EiuQhvjFFaKZ6L07pgIm9eXGqQvRVIzTkW4HY3TvRf9KYXUA==
+X-Session-ID: U2FsdGVkX1/C2s2qNC4iOOfdt7rTFaR3WFgLRxItvbM=
+X-HE-Tag: 1754061538-639185
+X-HE-Meta: U2FsdGVkX1+Qh4hk+SHCZoUjeaYpTw1e78S+soH8knU75LmgkQQkfwOhuLesDj8onmziu/yPQb5SiRixNA/AoOjU2YoHOTaXWFHkwokG7hoRNbHdhKHZ72XCxiNJJDi83wAjHtZx/CeF4x2JvxB3DQ7fGofSjvHQPjJQ6RcTJIUUz7z1Hrb5oynfKt034Cd6nf53OCIW915lJ+urdM6zdVFBqke6OFSvpV1BxFNKhiRoYQeV4WBUKhbciHPmVJ+0mXtSwhNNoQpzyZYJkM8QK3PJUh51Hn4Hozt8RFtib1GOY5YkrzmmIp3at5zaQ0VYGGX8QmM14mH6DxufsZcYrdFvu1iBwBmj
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Fri, 1 Aug 2025 08:12:08 -0700
+Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
 
-Most function arguments that are passed in as unsigned int or unsigned
-long are better displayed as hexadecimal than normal integer. For example,
-the functions:
+> 
+> You can use it in kernel/trace/trace_output.c, of course,
 
-static void __create_object(unsigned long ptr, size_t size,
-				int min_count, gfp_t gfp, unsigned int objflags);
+I guess that means I should just use the DEFINE_FREE() in that file
+directly and not in the btf.h header file?
 
-static bool stack_access_ok(struct unwind_state *state, unsigned long _addr,
-			    size_t len);
+> but I really think it's a step back in maintainability.
+> All this cleanup.h is not a silver bullet. It needs to be used sparingly.
 
-void __local_bh_disable_ip(unsigned long ip, unsigned int cnt);
+I have my reservations about the cleanup.h code too. But the more I use it,
+the more I like it. My biggest worry is guard() leak. That is, having a
+lock or interrupt/preemption disabled for longer than they need to be,
+because code was added at the end of the function after the protection is
+needed.
 
-Show up in the trace as:
-
-    __create_object(ptr=-131387050520576, size=4096, min_count=1, gfp=3264, objflags=0) <-kmem_cache_alloc_noprof
-    stack_access_ok(state=0xffffc9000233fc98, _addr=-60473102566256, len=8) <-unwind_next_frame
-    __local_bh_disable_ip(ip=-2127311112, cnt=256) <-handle_softirqs
-
-Instead, by displaying unsigned as hexadecimal, they look more like this:
-
-    __create_object(ptr=0xffff8881028d2080, size=0x280, min_count=1, gfp=0x82820, objflags=0x0) <-kmem_cache_alloc_node_noprof
-    stack_access_ok(state=0xffffc90000003938, _addr=0xffffc90000003930, len=0x8) <-unwind_next_frame
-    __local_bh_disable_ip(ip=0xffffffff8133cef8, cnt=0x100) <-handle_softirqs
-
-Which is much easier to understand as most unsigned longs are usually just
-pointers. Even the "unsigned int cnt" in __local_bh_disable_ip() looks
-better as hexadecimal as a lot of flags are passed as unsigned.
-
-Acked-by: Yonghong Song <yonghong.song@linux.dev>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
-Changes since v1: https://lore.kernel.org/20250731193126.2eeb21c6@gandalf.local.home
-
-- Fixed whitespace issues (Yonghong Song)
-
- kernel/trace/trace_output.c | 17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
-index 0b3db02030a7..fe54003de860 100644
---- a/kernel/trace/trace_output.c
-+++ b/kernel/trace/trace_output.c
-@@ -690,6 +690,12 @@ int trace_print_lat_context(struct trace_iterator *iter)
- }
- 
- #ifdef CONFIG_FUNCTION_TRACE_ARGS
-+
-+static u32 btf_type_int(const struct btf_type *t)
-+{
-+	return *(u32 *)(t + 1);
-+}
-+
- void print_function_args(struct trace_seq *s, unsigned long *args,
- 			 unsigned long func)
- {
-@@ -701,6 +707,8 @@ void print_function_args(struct trace_seq *s, unsigned long *args,
- 	struct btf *btf;
- 	s32 tid, nr = 0;
- 	int a, p, x;
-+	int int_data;
-+	u16 encode;
- 
- 	trace_seq_printf(s, "(");
- 
-@@ -744,7 +752,14 @@ void print_function_args(struct trace_seq *s, unsigned long *args,
- 			trace_seq_printf(s, "0x%lx", arg);
- 			break;
- 		case BTF_KIND_INT:
--			trace_seq_printf(s, "%ld", arg);
-+			/* Get the INT encodoing */
-+			int_data = btf_type_int(t);
-+			encode = BTF_INT_ENCODING(int_data);
-+			/* Print unsigned ints as hex */
-+			if (encode & BTF_INT_SIGNED)
-+				trace_seq_printf(s, "%ld", arg);
-+			else
-+				trace_seq_printf(s, "0x%lx", arg);
- 			break;
- 		case BTF_KIND_ENUM:
- 			trace_seq_printf(s, "%ld", arg);
--- 
-2.47.2
-
+-- Steve
