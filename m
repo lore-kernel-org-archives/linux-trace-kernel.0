@@ -1,313 +1,145 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3542823D28C
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  1 Aug 2025 11:20:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754047247; cv=fail; b=Vpki4TpRvX+xw92VTuex8UQRUU6r7A4rtCoTc3xZ2b7QTCbQxacmdJiUqtQDK/qQIqGrapkZbZKyiTkFwHeyEf5rz62Q3w7MA3nBVA2XuX+15mJjapn2SuXFCjjLPPiXklF0kGkqAXHBEuZ6Tw9+AY7n+L/VqFDbSsqiCkc6+jE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754047247; c=relaxed/simple;
-	bh=AS1c58QgL4t5gD7d+lvZM875S0iI7ssfz8zN4ehU5ZU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Csk6inPKwkP3rD39zS3QzAV82mgGQyhwkzySSs8ayucwwmfUezeppYu3X9cfASwUz7Y1sUn+uwvI0ao3WSSXnZZlvIdpj4yfeLJ4rxWOdBC1hY435DiH/VMlGebqwRuBv0Xajj3ZIr5eUWct2bbeS4JijVNvcB9NnvNzP4xz+HE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=SWlZaImO; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=MwI1dgGs; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6981123E358;
+	Fri,  1 Aug 2025 12:38:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1754051889; cv=none; b=TMBeOgBmgRIrqqqF3jCaXtIdwTRVv2ay6SMSoMOnLt8KHBX9sKz9UWNh6gCCtxxaWoOR48V6aOqZvjmfayBMCimVydWVsg7hZpeH5oZw49rdKI0EqG+PfLTgY0C6FQO1Thm8HaQhZbRgembDUkkPgpzhDYHM5T0vdLr6X2VD8ME=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1754051889; c=relaxed/simple;
+	bh=Ye/8ymgyTNlqL0+zOaZUdjRrgZzlqEJB2KZfvCVzt78=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YBDzOXqL3WMxXq7wIZRyoPSMmYGy3begpmTNm9Y33bWe4XtbEmJk8y6+XbWWYj6Ul4hwmqGBHZ8sMaKa1o3ulXtUE8vbv7Fd1FNpESbNjQVpRtvw1h36Dl66OSUaadO7UDpe2iKfJPJ9FYAWc2RAm5YjqVwtHFltYV0j0vWBm+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=c+jFatqc; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="SWlZaImO";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="MwI1dgGs"
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 571B7Cho002658;
-	Fri, 1 Aug 2025 11:20:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="c+jFatqc"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5716CRrY022019;
+	Fri, 1 Aug 2025 12:36:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2025-04-25; bh=v8SCqTh25wYvD3lRt1
-	Mt3Pm46hZjAlAsY04XA2Lv4Gg=; b=SWlZaImOq9V3LFegKWTR39rKsJTS9lETah
-	fZbr/AIpifNhIUWy1A1Uj2ci+2mTAOKi6viHJc2GWFWRQchnounkydViiuFiJ6EF
-	46+/YBJsnq844sQ0Lv5YwmbHBP482nkLkODp2WbQKChsmlbk96LlxJnRAgCb4pg0
-	8DoKvg5fI7+zfLJngiL6UsYhlmtZowrQkVOTjZS6p98Wh7624qY7Lv34VLkBDgxP
-	awhAD5GKnTaMfJXFzC0wQSm1YkPgC51BYiC9cbLq4VA4oAc5tRhKJu68/l8dH0Pa
-	UcE1qIU380UQ4cJIf9s4HFAZCImwiNCaPoYXK4eMOpiAghgFkmww==
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 487y2p2xja-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 01 Aug 2025 11:20:15 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 5719UUpj020488;
-	Fri, 1 Aug 2025 11:20:14 GMT
-Received: from ph0pr06cu001.outbound.protection.outlook.com (mail-westus3azon11011009.outbound.protection.outlook.com [40.107.208.9])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 484nfm1kur-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 01 Aug 2025 11:20:14 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Jr/ldLhWciKJ0HSJaz9JGYkYPOe271e6dM2lfNQCnEknfLTJqpXkNr/FqjSUoKMhGuLizxGnqBwUWwI5Xa/a1omTgCO+v4uxOxkvest3xcIWbCl7sUZgMpuPHYiiDku0zIMT1WB6EHAzrON9cbzWeYT1QkY0Vg1yEli1DuJrWnhGMff2kfyxPXnDh8d7MuwM6OFWJ4Ome+uRORjPF+RpZ3zySRp5wMisoOgjyv6VJYyaBI+1na79pwd9KuxKheUeE+S2j5n5NACKK3Y3rHhWUyUtXPqBc63/EH0v8ui7l/k0mTMEMei9vi4Wm65qK+8yv8FiRj7LTWKSEmFOlWVa6Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=v8SCqTh25wYvD3lRt1Mt3Pm46hZjAlAsY04XA2Lv4Gg=;
- b=QnIja0B/irL0U0dmXPnQKjZHjNjsnpr1bLVsC14DoRkuzpt8xDM6wU34qMnieaAxChURbhr7iho1Y2RL0mzfsVtSHV+81ynQW/aJKnBrDG5HPPKqSi03pOa3IVkHOh/hN07Fh/84y8ohTVLyH+gg6JGfd2cyIZOCt8HOsWKEYiHN3ca0B4rZaF6I6hUGE2Nu65nGFAgQrmJnaOtfuncHLISqYXt8h5kg2dNJwmEElj8nAvfYHU2Q1SjveQPeEy4qbyQqzefKqlk+9rpAZS+xU9hT7+8I7Oqn0sI+MKYpN1axkZaO1i7EhpASCklYlzeUMJQ8qayJFZW+Y5qF1cf31w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=v8SCqTh25wYvD3lRt1Mt3Pm46hZjAlAsY04XA2Lv4Gg=;
- b=MwI1dgGsuzXBmnbmKdJCjDrGZiroEkBLTmYIwkJaTkB1ZO+VVm03HESBTWG1Lnp10WaFf4teuHCqSJgA9ZDdFtRm/ZqWUyPbkRWznuLxT5xNzPGyV+us15f0EJkafYtJaw4hGGlOAtfOKB7IPbxk6RjdEnW1X9VphWxFqS58cck=
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
- by SA1PR10MB6541.namprd10.prod.outlook.com (2603:10b6:806:2bd::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8943.27; Fri, 1 Aug
- 2025 11:20:05 +0000
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2%5]) with mapi id 15.20.8989.013; Fri, 1 Aug 2025
- 11:20:05 +0000
-Date: Fri, 1 Aug 2025 12:20:02 +0100
-From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-To: Uladzislau Rezki <urezki@gmail.com>
-Cc: Harry Yoo <harry.yoo@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        "David S . Miller" <davem@davemloft.net>,
-        Andreas Larsson <andreas@gaisler.com>,
-        Jarkko Sakkinen <jarkko@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-        Kees Cook <kees@kernel.org>, Peter Xu <peterx@redhat.com>,
-        David Hildenbrand <david@redhat.com>, Zi Yan <ziy@nvidia.com>,
-        Baolin Wang <baolin.wang@linux.alibaba.com>,
-        "Liam R . Howlett" <Liam.Howlett@oracle.com>,
-        Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
-        Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
-        Xu Xin <xu.xin16@zte.com.cn>,
-        Chengming Zhou <chengming.zhou@linux.dev>,
-        Hugh Dickins <hughd@google.com>, Vlastimil Babka <vbabka@suse.cz>,
-        Mike Rapoport <rppt@kernel.org>,
-        Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
-        Rik van Riel <riel@surriel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
+	:references:subject:to; s=pp1; bh=foCGo2d0YHQot57U02sfDowq93U1Hl
+	JgNTX8LWFZ2NY=; b=c+jFatqc+1VFPTlKTyrUOvQIlKNLDdPbmb8a38dX2HTflO
+	iy7U9Lt6z4UXgHfCM67wiBqXbYhr1qNXCPWL2aktClS/rJrNt3ox8KpFSBL9xAcK
+	XwB5qWYlS0OgfSM/MyFQsSDTpgODwuBnWWKhk33ZiWwHDZbgfm6XkSPDcUXvT9XW
+	yWWFtpCoke/T8r9qv9k+okOZYTuJ0qCnn4um7IgRnoKMI+bj0GIwLBcbDzg/owgZ
+	NCUHMbMImhmM5vDoCX11vLIITX3xIkGrnlpBT0CM0MnrTkSGY+ZSNz5yILqH65n9
+	NxUSm/p98M0ugSMqkJS4ydrqKoa/bVYk8uOw6p5Q==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 484qen8q0r-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 01 Aug 2025 12:36:55 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5719Kjio016406;
+	Fri, 1 Aug 2025 12:36:53 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 485aun18qv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 01 Aug 2025 12:36:53 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 571Can9433685958
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 1 Aug 2025 12:36:49 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9436C20043;
+	Fri,  1 Aug 2025 12:36:49 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8DB6D20040;
+	Fri,  1 Aug 2025 12:36:48 +0000 (GMT)
+Received: from osiris (unknown [9.111.82.186])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Fri,  1 Aug 2025 12:36:48 +0000 (GMT)
+Date: Fri, 1 Aug 2025 14:36:47 +0200
+From: Heiko Carstens <hca@linux.ibm.com>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: Jens Remus <jremus@linux.ibm.com>, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        x86@kernel.org, Steven Rostedt <rostedt@kernel.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Ilya Leoshkevich <iii@linux.ibm.com>,
         Masami Hiramatsu <mhiramat@kernel.org>,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
-        Muchun Song <muchun.song@linux.dev>,
-        Oscar Salvador <osalvador@suse.de>, Jann Horn <jannh@google.com>,
-        Pedro Falcato <pfalcato@suse.de>, Johannes Weiner <hannes@cmpxchg.org>,
-        Qi Zheng <zhengqi.arch@bytedance.com>,
-        Shakeel Butt <shakeel.butt@linux.dev>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-sgx@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        nvdimm@lists.linux.dev, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] mm: update core kernel code to use vm_flags_t
- consistently
-Message-ID: <69860c97-8a76-4ce5-b1d6-9d7c8370d9cd@lucifer.local>
-References: <cover.1750274467.git.lorenzo.stoakes@oracle.com>
- <d1588e7bb96d1ea3fe7b9df2c699d5b4592d901d.1750274467.git.lorenzo.stoakes@oracle.com>
- <aIgSpAnU8EaIcqd9@hyeyoo>
- <73764aaa-2186-4c8e-8523-55705018d842@lucifer.local>
- <aIkVRTouPqhcxOes@pc636>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aIkVRTouPqhcxOes@pc636>
-X-ClientProxiedBy: MM0P280CA0079.SWEP280.PROD.OUTLOOK.COM
- (2603:10a6:190:8::12) To DM4PR10MB8218.namprd10.prod.outlook.com
- (2603:10b6:8:1cc::16)
+        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Indu Bhagat <indu.bhagat@oracle.com>,
+        "Jose E. Marchesi" <jemarch@gnu.org>,
+        Beau Belgrave <beaub@linux.microsoft.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jens Axboe <axboe@kernel.dk>, Florian Weimer <fweimer@redhat.com>,
+        Sam James <sam@gentoo.org>
+Subject: Re: [RFC PATCH v1 12/16] unwind_user/backchain: Introduce back chain
+ user space unwinding
+Message-ID: <20250801123647.9905A43-hca@linux.ibm.com>
+References: <20250710163522.3195293-1-jremus@linux.ibm.com>
+ <20250710163522.3195293-13-jremus@linux.ibm.com>
+ <a4dd5okskro2h45zmqgg3etj6uwici2hoop2uaf6iqrlaej7yh@xlduwjqke4ec>
+ <63665c54-db44-452f-b321-1162ff6c3fe4@linux.ibm.com>
+ <ddwondzj74rr3fgvsdnkch7trrcwltasb236hvvx5tnywf2lhu@vo47rcoyu2nc>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|SA1PR10MB6541:EE_
-X-MS-Office365-Filtering-Correlation-Id: d34b2c87-c0ec-4d31-ea22-08ddd0ed5d74
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?jWSkbU1craqS4JZ0irEe3l5RBaybj1Up9v/xLp6tilUhM81pFJe+FnJ0d2CW?=
- =?us-ascii?Q?gdtpO79o/td5nhVkxo6aPXODXCHS+2KGBkGGtujndb12wDj52879QF1CV2jL?=
- =?us-ascii?Q?0BZEdyVYH2dYTUXfk7IzHSWoBo48FgB1A/hRQ4TKOzU0yY+Lt5xXUa+n2SP6?=
- =?us-ascii?Q?68cuVqK+q9hpCXx1olQO2AHC9RZty6Ask1fPO0lIQSF1f7vOC1AHJB5okVMw?=
- =?us-ascii?Q?IoXkMZr3Yw5Xis5Z7S9NY6Qf1a5FHt65A7jO5bWLdMV5OLro88SPJgUOPYOS?=
- =?us-ascii?Q?4od93MU5Y+HuNlvY/JYv6RNCcq9qZTG2n4O8dzBvflKtJvjBdZTpfG+/saZW?=
- =?us-ascii?Q?8gFhojcNVS4qtrxxnaSno1KWGKDixjrSgJA0M+PF5YBd8EOfS+kar1CqC4VK?=
- =?us-ascii?Q?GXxZ81XkSr3DGfx3lB3IFsoKRKg9xG9qq7lNOlU1HOFyh/oLLvjeHFqL4zX8?=
- =?us-ascii?Q?aPQur/6JUSmxbXhi6ebPtkBIisPb93ZXoewXJoiKxokivu07VYHKsApqnWIw?=
- =?us-ascii?Q?XaVR7RxBY51CEDGycybxfa1zNmbghxa3DsPPpJ2fDjY9Nf+whjfj8H66O6G/?=
- =?us-ascii?Q?58Ma2DPq14xvCuxftwnNntvxqda7a+ISi6uHmbgIMWukiHr4Ti4mlfNWnnEI?=
- =?us-ascii?Q?UrNzO5veH1MPmjlXBLIujsmu3MfsezZIUReT6cgA07PO/LZCCL68+W5665uA?=
- =?us-ascii?Q?ihRLAmGdvXgRrS9odVlRpduHHcCp7bcc3avHo6rc+pzcyN+8cWsqxUj2vwpy?=
- =?us-ascii?Q?i9Qtqy0aOBUo5q2CuQkjZBCmanaHLpydynyvgHbO67HrYIrpCSB91Lm0OFLq?=
- =?us-ascii?Q?7qcpZuzTum32Ph53FbnVQXhOuEhgbFW4KUTwaVCPb0JiMgVewVAxALbjjkz3?=
- =?us-ascii?Q?4EQDyQQAYpRkaAi/4hbRVPJBchxghIinbctBeMyjZreVNAZQ9SvXHWUaaE3z?=
- =?us-ascii?Q?6KJ+YgRuewzA3CxYYVkU56FaCYvlGveY4mqJyvI4W6KtN+Qwe6jZu43LCjkz?=
- =?us-ascii?Q?pmSFuuxpX/NV1Byc/YGcV6ZKipSkmWf0bRKCsbYoZ+uCGllhQBB7F8vBAD0M?=
- =?us-ascii?Q?dFcY5WbO14y6NRIEUA/Qpiff4nACPCtoGRgudm6+dM9FApX9G4MG0U5lKxCe?=
- =?us-ascii?Q?40fZ5zGkvQkHo+uByu2C29+eyCM713+9/L22BScmqU9TTdW5HWn+NHSKqQ4m?=
- =?us-ascii?Q?bDWXHTzImYprMxhu+8u7Au6lRa9zxFnl9oPYGi1REyyUmOamrjKYd8miy1U7?=
- =?us-ascii?Q?tw9W9qOLbKQ+g+84nA5bjRf0SrWm8t7qFEoWzAPWrU4FY9YukDjaDpe3iEMl?=
- =?us-ascii?Q?54lDaK35z+Z8VXzqeeM17ON4itIn1OE1ucxk9BwlhpKSqv7CSv9ENuQiWYeG?=
- =?us-ascii?Q?99PCd5wVjddI/YNhJN7cGHLzp9FzajKrdRQjLTawPStxY1AZWJb7UubQs22J?=
- =?us-ascii?Q?12YOdztPGiw=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?c24tHN7toEMUnyNpt/551N/ka1StxPezcyLSbB9t2YBu43+h9U/OFDYs5Xft?=
- =?us-ascii?Q?jYR0HIccVUHxeEzxLf/2t5NrryRfCScP7AzZTQXt6zsKdMI5T8i0h2/2ZNDv?=
- =?us-ascii?Q?+cETPFmdHFKsU60IP5eyWrOkPQ/ojS7eDSmo4oQS55/IkQUV6mwlj+q4EmOg?=
- =?us-ascii?Q?j7aUfruVJXKD8f+4IQjkUglGT6OuhKaAJBuiIVPB6/9GUsUK+V0z23/4kagp?=
- =?us-ascii?Q?lJmz1xVaWS4VfgtwboFQs4E/p6xYnxYTEffoG0/EUhfKkZFUL7mEu5d2Q7pa?=
- =?us-ascii?Q?TuJrLk/Rp+2ij5M7oVKAn7Y+UzWj0MmzUb0cYeAnuKUPcjK0KIhxR1vOFYms?=
- =?us-ascii?Q?gXm7h2eQrrHtJVt1mBUxYpNA82qB0Aj5PrVyExVdo1lGyuQWXDW/gwjIL4iv?=
- =?us-ascii?Q?FIMXvt0KiN5cmqEpBuaAHlHRApCtey/xjjYEus88oCk48uTij74fEMk9UuMV?=
- =?us-ascii?Q?Hk2PkqBBiV0pgjNcL6Agv/MlL7p7C7XmfTFjmUh9iUpJoij/tShKrJJu2xLc?=
- =?us-ascii?Q?Zw7gMxPyLCbWnKFKl9qveHFdumCNsB/uJkGVrct0WgpeF9iwgPPWnj6l5sQ3?=
- =?us-ascii?Q?VHn5Kbl3QMlZLSqciZEXXX64bGWQaklL4S5hdlzsgcLJ0FAAPJ/prgn3DsCv?=
- =?us-ascii?Q?4SlScDicRqGHQqchnw9n2Q2uGXDFIgCB3g3tfrjFFZ6rWl89YSj7a5bIkOR8?=
- =?us-ascii?Q?HDfecZi1e4QezQPUxvkq3dABzzN43QhNbmIWt8apQWBGVGt/68k1e5wZ6XdI?=
- =?us-ascii?Q?nSRLkoSGSNgiF/xvCgPtMUcVLjcVZoTEgITsBXWtZFo6pEhqPVXDdBcotY5N?=
- =?us-ascii?Q?lIE0cMCHrQLJl6Zk88ekO/hu703T1ZmhB4bxz3610Q9GmW0E962RA4uBJHI9?=
- =?us-ascii?Q?eXLOKEoIgtfJ4jXX9lz4rDp/pfvXftXMhIqw/ZNe13XHr4VUp1ZOzqwL1HdZ?=
- =?us-ascii?Q?jcBxAeWXdVf8xckrBTQVWB1SBW3FG/PysodLjKebUnBlWrBgKeNol4c2fq7u?=
- =?us-ascii?Q?bzgtLNtBXx/bHylRQoaOSUQlVlh9bJTkpRXU9Z/kP05OJamZBBq02S0J00aJ?=
- =?us-ascii?Q?+28ve10nTJG80g3n1xouCyK2pK09A3spyjZqgf1o1pzLdLIcIjOSz4MtKrO1?=
- =?us-ascii?Q?OQCOpDYAwtEOcTcrFu+aFxWNOdhK9CMzMOOpXTurQsV8DdX9L/cIpiwd2jKl?=
- =?us-ascii?Q?JuguRzUraciWCOfk2T1P5BabQhAApNrD2S/X97PUBJL6HP8mnFcTUVIFajC1?=
- =?us-ascii?Q?8D0AVc0kbNHYCxaYWs+C9xvcNzvAqPIVJegw2y+Ihx+89z9LBV+dF1Vj249t?=
- =?us-ascii?Q?d9SWgYtwRh2R9/+Y5eEganPq6vFoXFTwFmHpvOF7FgQtapNtr+EGOrvoa2pf?=
- =?us-ascii?Q?QAXsqPsnuXK13ItYuDn0IivMrjHw5+/Uyt/84stbkZclzE8Buf+dzylEca0a?=
- =?us-ascii?Q?oja7q6XNHZdB4oLX+dstiEGzyUQhbg3I5g6XsBj+mJq6aVB2do28JoApzKHu?=
- =?us-ascii?Q?7UpUFY3KuKHAWrxwilk/2iDLwDMYGWfKPr/+UUak+v8AbP1lhpJC+YGC3as/?=
- =?us-ascii?Q?Oyi2E9AeRi/lL4HNlITsA86hM5uGIiWJzj8z2k8OFRXSTV0TYT/OI7cNcIbl?=
- =?us-ascii?Q?7w=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	ABFRZTqIzRaYdJnU0E6r7vVg2NIgRKcCzAQ88xuJbifkqisqplkTnYesqYR0zBD96ajWpFhpJD0QaEqSOcWeBvG6FNSqbjvgQe+W7r7qUB6kF546sMurtVJdYKCjOOhNMM00CDF37FbLmj+Zj/KI8ssCX2DzqMGlRFOERvMKYNE8mjEuzYR3OCO9HSTh8SYFH5kg3thNCFXwhsacf78SQQ+3gYYJs68meY+1gCFNQiIrOOE+4she6XrD3qYWFj12e5EUHzAfwkuw2C/1XTW3qF/H0BVdPFfUaqUVw1j9E626VszYg0ydJ3iou7YXKvCjFnUnX/tNII3q0XdYkpmq/FEwDaTwh4R3j+nJPm9908Yj/eK//vELbZLcaiQINtzfEJhWsouqyszpbn6GaoexDG8vH7zIqZznJwWzFuSJXvTpGh0tMg6TGMxYGkk4ju7eilD2ULqknJjJ8emCO0gDHalw9EOLNFg3nCJrorQmQOEHdtgZ+59m81MTwdJJvsdreko9NW9DpwsFnyJYXy1lvDvx5mPWtugsUbu792TPME1I+4IynNWb1Qmy6jXCwXhufOlk921OYALLZW9xifxd1qhVgRksVc0Fo4xknDZBLm8=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d34b2c87-c0ec-4d31-ea22-08ddd0ed5d74
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Aug 2025 11:20:05.2347
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: f/Dht4xGSlTexB+bH3Zc7JWdrK16mU04qNCnS2vhW0KDXc2IN8BipqetgkcfkMIG4lTXCl6WJenF207MtG3upAu9UMHMu5NZHgf496ofGdw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR10MB6541
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ddwondzj74rr3fgvsdnkch7trrcwltasb236hvvx5tnywf2lhu@vo47rcoyu2nc>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: wmg_jJYi_bAxFEdtwgpPXeefh0YLfbdi
+X-Proofpoint-GUID: wmg_jJYi_bAxFEdtwgpPXeefh0YLfbdi
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODAxMDA5MiBTYWx0ZWRfX1Kf3ofBZeGu1
+ QofOzzqthUplNvFwtwQYixbImxKlfN1xZT8EfXqd13DTYS1bwEpz1jejGIxtcSTmlMvLsiH8HGm
+ B1SKosiCxTz39sR0NomiFtBWyML7ROuf0dzeJWMwefF4q3cHWmacBR/2+HC4bOf76TZx9uKndSY
+ 0tjnQHBo7JWgpLOCT9F38jAI6VGAeRZ8fhGyZYaS580zJ9Di/ocxBByG2aFM8o7QZ8xO7+kdFpJ
+ RA65SxfwkzkA1F4Kmlox97bj5+uboCOGWe80/JbgaCzJZAAD+pvbkNK4XSB3fd72vDuKZAV8sIB
+ ypbhdM/g/EUxFjaPY/8sBtt8zkuRq6PUPjwPwA9GfwZ4QU1m6sYQbScEuAfWWHEhvauieThPVMH
+ EtjHZdzD3QkdQuTePaYv7iwrINOljCk+lXi3dqAeZ8F7yL7cZwDlsc+4O+D8H2sA3CG3OqwF
+X-Authority-Analysis: v=2.4 cv=BJOzrEQG c=1 sm=1 tr=0 ts=688cb4e7 cx=c_pps
+ a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+ a=kj9zAlcOel0A:10 a=2OwXVqhp2XgA:10 a=1JbVbOoES49UGEVtLQsA:9
+ a=CjuIK1q_8ugA:10
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-08-01_03,2025-07-31_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 suspectscore=0 bulkscore=0
- malwarescore=0 mlxscore=0 adultscore=0 mlxlogscore=999 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
- definitions=main-2508010084
-X-Authority-Analysis: v=2.4 cv=COwqXQrD c=1 sm=1 tr=0 ts=688ca2ef b=1 cx=c_pps
- a=qoll8+KPOyaMroiJ2sR5sw==:117 a=qoll8+KPOyaMroiJ2sR5sw==:17
- a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
- a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
- a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=2OwXVqhp2XgA:10 a=GoEa3M9JfhUA:10 a=W-BuJQ1ab2AFM1Ey5ewA:9
- a=CjuIK1q_8ugA:10 cc=ntf awl=host:12071
-X-Proofpoint-ORIG-GUID: FpIFy6yO8AI0AMIB_u6dpPhlEWkq7dHw
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODAxMDA4NCBTYWx0ZWRfXxAs/uRbrg2PX
- 51qBlhliv44HSGUdPo+T6+s46eLuu9Nb/4HWRUR15Xl1tdGHfZYtijnmvhDSS8EYRNIOme0MzEp
- u+gDulm4yT82yaQvaXSa+Y4/i1eorl6zsw0uYyxsRMjv4FyNy1gF/2iaOiWykedqximVWAf1PIH
- IdDjYqHVw9M86un91+IiRJSPsnv/PvpQHl4oSSNQRg26xjUKmyqndvX5QjrFlYfEdAM2l2QE+Rw
- XAq9c6xaRVZJ1wpMWBBznQNMtZ4iYOZQaIwp6YHDtIWOWslmOwHtxitWv8RAImdnJU1Z8BOsdIR
- EAmScN4udDb0aYVBaIwAEoYZh5gA8X4/foG+oH/HXo0YouMCFrxIRjD/RPHRhGmuyXnoGVR3/Y7
- nK97v45EEPVHxw/F/VRkD5XGPr6zpl/dHH6lCpvX4B1+gAWaIsLWh7XjtZ2RODrrvyfNNa7D
-X-Proofpoint-GUID: FpIFy6yO8AI0AMIB_u6dpPhlEWkq7dHw
+ definitions=2025-08-01_04,2025-07-31_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 phishscore=0 suspectscore=0 spamscore=0 lowpriorityscore=0
+ mlxlogscore=585 priorityscore=1501 malwarescore=0 mlxscore=0 bulkscore=0
+ adultscore=0 clxscore=1011 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2508010092
 
-So sorry Ulad, I meant to get back to you on this sooner!
+On Thu, Jul 17, 2025 at 10:19:54PM -0700, Josh Poimboeuf wrote:
+> On Thu, Jul 17, 2025 at 02:20:12PM +0200, Jens Remus wrote:
+> > > Also, if distros aren't even compiling with -mbackchain, I wonder if we
+> > > can just not do this altogether :-)
+> > 
+> > My original intent was to use unwind user's for_each_user_frame() to
+> > replace the exiting stack tracing logic in arch_stack_walk_user_common()
+> > in arch/s390/kernel/stacktrace.c, which currently supports backchain.
+> > Given that for_each_user_frame() was made private in the latest unwind
+> > user series version hinders me.  The use was also low, because the
+> > currentl arch_stack_walk_user_common() implementation does not support
+> > page faults, so that the attempt to use unwind user sframe would always
+> > fail and fallback to unwind user backchain.  My hope was that somebody
+> > with more Kernel skills could give me a few hints at how it could be
+> > made to support deferred unwind. :-)
+> 
+> I believe stack_trace_save_user() is only used by ftrace, and that will
+> no longer be needed once ftrace starts using unwind_user.
+> 
+> Maybe Heiko knows if that backchain user stacktrace code has any users?
+> 
+> If distros aren't building with -mbackchain, maybe backchain support can
+> be considered obsoleted by sframe, and we can get away with not
+> implementing it.
 
-On Tue, Jul 29, 2025 at 08:39:01PM +0200, Uladzislau Rezki wrote:
-> On Tue, Jul 29, 2025 at 06:25:39AM +0100, Lorenzo Stoakes wrote:
-> > Andrew - FYI there's nothing to worry about here, the type remains
-> > precisely the same, and I'll send a patch to fix this trivial issue so when
-> > later this type changes vmalloc will be uaffected.
-> >
-> > On Tue, Jul 29, 2025 at 09:15:51AM +0900, Harry Yoo wrote:
-> > > [Adding Uladzislau to Cc]
-> >
-> > Ulad - could we PLEASE get rid of 'vm_flags' in vmalloc? It's the precise
-> > same name and (currently) type as vma->vm_flags and is already the source
-> > of confusion.
-> >
-> You mean all "vm_flags" variable names? "vm_struct" has flags as a
-> member. So you want:
->
-> urezki@pc638:~/data/backup/coding/linux-not-broken.git$ grep -rn vm_flags mm/execmem.c
-> 29:                          pgprot_t pgprot, unsigned long vm_flags)
-> 39:             vm_flags |= VM_DEFER_KMEMLEAK;
-> 41:     if (vm_flags & VM_ALLOW_HUGE_VMAP)
-> 45:                              pgprot, vm_flags, NUMA_NO_NODE,
-> 51:                                      pgprot, vm_flags, NUMA_NO_NODE,
-> 85:                          pgprot_t pgprot, unsigned long vm_flags)
-> 259:    unsigned long vm_flags = VM_ALLOW_HUGE_VMAP;
-> 266:    p = execmem_vmalloc(range, alloc_size, PAGE_KERNEL, vm_flags);
-> 376:    unsigned long vm_flags = VM_FLUSH_RESET_PERMS;
-> 385:            p = execmem_vmalloc(range, size, pgprot, vm_flags);
-> urezki@pc638:~/data/backup/coding/linux-not-broken.git$ grep -rn vm_flags mm/vmalloc.c
-> 3853: * @vm_flags:                additional vm area flags (e.g. %VM_NO_GUARD)
-> 3875:                   pgprot_t prot, unsigned long vm_flags, int node,
-> 3894:   if (vmap_allow_huge && (vm_flags & VM_ALLOW_HUGE_VMAP)) {
-> 3912:                             VM_UNINITIALIZED | vm_flags, start, end, node,
-> 3977:   if (!(vm_flags & VM_DEFER_KMEMLEAK))
-> 4621:   vm_flags_set(vma, VM_DONTEXPAND | VM_DONTDUMP);
-> urezki@pc638:~/data/backup/coding/linux-not-broken.git$ grep -rn vm_flags mm/execmem.c
-> 29:                          pgprot_t pgprot, unsigned long vm_flags)
-> 39:             vm_flags |= VM_DEFER_KMEMLEAK;
-> 41:     if (vm_flags & VM_ALLOW_HUGE_VMAP)
-> 45:                              pgprot, vm_flags, NUMA_NO_NODE,
-> 51:                                      pgprot, vm_flags, NUMA_NO_NODE,
-> 85:                          pgprot_t pgprot, unsigned long vm_flags)
-> 259:    unsigned long vm_flags = VM_ALLOW_HUGE_VMAP;
-> 266:    p = execmem_vmalloc(range, alloc_size, PAGE_KERNEL, vm_flags);
-> 376:    unsigned long vm_flags = VM_FLUSH_RESET_PERMS;
-> 385:            p = execmem_vmalloc(range, size, pgprot, vm_flags);
-> urezki@pc638:~/data/backup/coding/linux-not-broken.git$ grep -rn vm_flags ./include/linux/vmalloc.h
-> 172:                    pgprot_t prot, unsigned long vm_flags, int node,
-> urezki@pc638:~/data/backup/coding/linux-not-broken.git$
->
-> to rename all those "vm_flags" to something, for example, like "flags"?
-
-Yeah, sorry I know it's a churny pain, but I think it's such a silly source
-of confusion _in general_, not only this series where I made a mistake (of
-course entirely my fault but certainly more understandable given the
-naming), but in the past I've certainly sat there thinking 'hmmm wait' :)
-
-Really I think we should rename 'vm_struct' too, but if that causes _too
-much_ churn fair enough.
-
-I think even though it's long-winded, 'vmalloc_flags' would be good, both
-in fields and local params as it makes things very very clear.
-
-Equally 'vm_struct' -> 'vmalloc_struct' would be a good change.
-
-Let me know what you think,
-
->
-> Thanks!
->
-> --
-> Uladzislau Rezki
-
-cheers, Lorenzo
+I guess that's a valid option. I know only of some special cases where
+users compile everything on their own with -mbackchain to make this
+work on a per-case basis. It shouldn't cause to much pain for them to
+switch to sframe, as soon as that is available.
