@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B299B2472BD;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD422269AFB;
 	Fri,  1 Aug 2025 14:25:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754058305; cv=none; b=lhDCXVU6qzAfAoAmsQQttLncPXkM2bC6uO0ZznZMgfj3WsyvM7oJ+p1+dpmAKOgyNhEUxX+AzgaTiMskk/T44EDk4PTf73XhRYeHZEUg+W/Z4B88G//EFyddShp7B0DJ2jWAxcuvMwlQ/VftPTT8+9OvqLrTfzktlnJdSj7XDmI=
+	t=1754058306; cv=none; b=YNVRler78fOZmesWi+IuMSdv/UxF3oOI9WZw72rETmUiropUu+H6sMSfzv38qzWCyZGWvRaKY1AWtZINyCAyoSIYmKP4hC3gdxwnKP8lxb9yP+ENnXnMdn5m4ZSuJK9WxmWn7AuLssXewIoYpp5dXZYEjnDafvScY4o3Feb4xPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754058305; c=relaxed/simple;
-	bh=5vo5nx9SFtWUoShcEz3+vT4OCwsILlL6rhdrqsLDQ20=;
+	s=arc-20240116; t=1754058306; c=relaxed/simple;
+	bh=cctrR7jatq+pM1SG3SF/xhHgsBAYobbqH/fKsmbXX3k=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=HUSvPLSXd45Fr4I7velo1petTkhCZQphLgvZqhaL1emkR5GGjbWw0vUQdJatR7hQLrWmFmWYSvj+tD4Z98CXnC7NvvrNlseW3pA8aNWQCTCnjSb11PxE0h+/L3Cpx3rYe6rxcMLOwkG0xrpOkfWNffT3s/i4699wSBZ8eYeUBZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IyPJspmt; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type; b=cDmpLk37sBpNPA7qbM3NciLEIHbXfKtCstzZ1OzfgJNX6KzCYJforh4rLaiMcwa/qhn4GKZiysXjsEs7uePCGme0wblkCe/cJYyswuWGrJK3lcj6gMTrfGnoXTyJ6zlgZKpIB+Un7haBuqohVBiUnm+JYYYfNppCYU+EcHOKtu4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k6tbdMDd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IyPJspmt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EC91C4CEF6;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k6tbdMDd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81721C4CEF9;
 	Fri,  1 Aug 2025 14:25:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1754058305;
-	bh=5vo5nx9SFtWUoShcEz3+vT4OCwsILlL6rhdrqsLDQ20=;
+	bh=cctrR7jatq+pM1SG3SF/xhHgsBAYobbqH/fKsmbXX3k=;
 	h=Date:From:To:Cc:Subject:References:From;
-	b=IyPJspmtwhAkCDnHkiVIijKdldIQJzDqp4wGNR5h4+YPEqc/Ggu582UPSkCO3Ys8Y
-	 /18Nzbvloh07UPPMxK+Fo+dpC1uy+scwwAAUBFTPf3NRi8wwW+3eBwdey2pZXwNC2f
-	 Aijd3RJJvLn7OaVmGH+uIJCNhb9/yVEduk0FknIqwTgJ4Te/4FxKxg5vD+QPr1N3AS
-	 yjRJo5K4osEDZhdZjrSLfOpwGzTWvvfU8Rno+UK7jcPGwuw2oBY0bgkfEMN/bRnFTk
-	 KAJz2ug6sEGYCWZN2NyWKBR98sCjj3c+5X7DIEEhRW9Vi07hCGLy5O7tRLMJ6Nxt5K
-	 7xSv3Siiy7otw==
+	b=k6tbdMDdqnGTzcnHoD69vTcKoAUXj09NndX3nmUIxVklGd7nzO3RXtBnfyzCbyYNS
+	 ZfEw0d9V2wMMAHfKzAypyai2M/xqjZER3x9nPVIKAqPY6SHJL4kLCLwDepB0ejyui1
+	 XMAnh/p9HqkYtOKajwHbjAyHc3Qp37upoiraG04F0lQnIZAy9WDkpi+4dCoziV5l9Y
+	 V024HjkjXOCH4j4rVAfyrAS3gSpVQjIMTqYm8shemFcWEZTT2/TMx6uTsPmwh2Dfpm
+	 Ckde5B1hFF3AMJRxYnWVo+unKza4q5H8Ok4a9ktfMIYVWTs5fXpNWfDD4B9A6za3Xq
+	 uvLxOQYZv90Hw==
 Received: from rostedt by gandalf with local (Exim 4.98.2)
 	(envelope-from <rostedt@kernel.org>)
-	id 1uhqhK-00000007Uu7-1wTP;
+	id 1uhqhK-00000007Uub-2dKq;
 	Fri, 01 Aug 2025 10:25:26 -0400
-Message-ID: <20250801142526.312104819@kernel.org>
+Message-ID: <20250801142526.482977630@kernel.org>
 User-Agent: quilt/0.68
-Date: Fri, 01 Aug 2025 10:25:07 -0400
+Date: Fri, 01 Aug 2025 10:25:08 -0400
 From: Steven Rostedt <rostedt@kernel.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -40,7 +40,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH 1/5] tracing: Remove unneeded goto out logic
+Subject: [PATCH 2/5] tracing: Add guard(ring_buffer_nest)
 References: <20250801142506.431659758@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -52,140 +52,195 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-Several places in the trace.c file there's a goto out where the out is
-simply a return. There's no reason to jump to the out label if it's not
-doing any more logic but simply returning from the function.
+Some calls to the tracing ring buffer can happen when the ring buffer is
+already being written to by the same context (for example, a
+trace_printk() in between a ring_buffer_lock_reserve() and a
+ring_buffer_unlock_commit()).
 
-Replace the goto outs with a return and remove the out labels.
+In order to not trigger the recursion detection, these functions use
+ring_buffer_nest_start() and ring_buffer_nest_end(). Create a guard() for
+these functions so that their use cases can be simplified and not need to
+use goto for the release.
 
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/trace.c | 38 +++++++++++++++-----------------------
- 1 file changed, 15 insertions(+), 23 deletions(-)
+ include/linux/ring_buffer.h       |  3 ++
+ kernel/trace/trace.c              | 69 +++++++++++++------------------
+ kernel/trace/trace_events_synth.c |  6 +--
+ 3 files changed, 34 insertions(+), 44 deletions(-)
 
+diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
+index cd7f0ae26615..8253cb69540c 100644
+--- a/include/linux/ring_buffer.h
++++ b/include/linux/ring_buffer.h
+@@ -144,6 +144,9 @@ int ring_buffer_write(struct trace_buffer *buffer,
+ void ring_buffer_nest_start(struct trace_buffer *buffer);
+ void ring_buffer_nest_end(struct trace_buffer *buffer);
+ 
++DEFINE_GUARD(ring_buffer_nest, struct trace_buffer *,
++	     ring_buffer_nest_start(_T), ring_buffer_nest_end(_T))
++
+ struct ring_buffer_event *
+ ring_buffer_peek(struct trace_buffer *buffer, int cpu, u64 *ts,
+ 		 unsigned long *lost_events);
 diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 945a8ecf2c62..0ec9cab9a812 100644
+index 0ec9cab9a812..332487179e1d 100644
 --- a/kernel/trace/trace.c
 +++ b/kernel/trace/trace.c
-@@ -1841,7 +1841,7 @@ int trace_get_user(struct trace_parser *parser, const char __user *ubuf,
+@@ -1160,13 +1160,11 @@ int __trace_array_puts(struct trace_array *tr, unsigned long ip,
  
- 	ret = get_user(ch, ubuf++);
- 	if (ret)
+ 	trace_ctx = tracing_gen_ctx();
+ 	buffer = tr->array_buffer.buffer;
+-	ring_buffer_nest_start(buffer);
++	guard(ring_buffer_nest)(buffer);
+ 	event = __trace_buffer_lock_reserve(buffer, TRACE_PRINT, alloc,
+ 					    trace_ctx);
+-	if (!event) {
+-		size = 0;
 -		goto out;
-+		return ret;
- 
- 	read++;
- 	cnt--;
-@@ -1855,7 +1855,7 @@ int trace_get_user(struct trace_parser *parser, const char __user *ubuf,
- 		while (cnt && isspace(ch)) {
- 			ret = get_user(ch, ubuf++);
- 			if (ret)
--				goto out;
-+				return ret;
- 			read++;
- 			cnt--;
- 		}
-@@ -1865,8 +1865,7 @@ int trace_get_user(struct trace_parser *parser, const char __user *ubuf,
- 		/* only spaces were written */
- 		if (isspace(ch) || !ch) {
- 			*ppos += read;
--			ret = read;
--			goto out;
-+			return read;
- 		}
- 	}
- 
-@@ -1874,13 +1873,12 @@ int trace_get_user(struct trace_parser *parser, const char __user *ubuf,
- 	while (cnt && !isspace(ch) && ch) {
- 		if (parser->idx < parser->size - 1)
- 			parser->buffer[parser->idx++] = ch;
--		else {
--			ret = -EINVAL;
--			goto out;
--		}
-+		else
-+			return -EINVAL;
-+
- 		ret = get_user(ch, ubuf++);
- 		if (ret)
--			goto out;
-+			return ret;
- 		read++;
- 		cnt--;
- 	}
-@@ -1895,15 +1893,11 @@ int trace_get_user(struct trace_parser *parser, const char __user *ubuf,
- 		/* Make sure the parsed string always terminates with '\0'. */
- 		parser->buffer[parser->idx] = 0;
- 	} else {
--		ret = -EINVAL;
--		goto out;
-+		return -EINVAL;
- 	}
- 
- 	*ppos += read;
--	ret = read;
--
--out:
--	return ret;
-+	return read;
- }
- 
- /* TODO add a seq_buf_to_buffer() */
-@@ -2405,10 +2399,10 @@ int __init register_tracer(struct tracer *type)
- 	mutex_unlock(&trace_types_lock);
- 
- 	if (ret || !default_bootup_tracer)
--		goto out_unlock;
-+		return ret;
- 
- 	if (strncmp(default_bootup_tracer, type->name, MAX_TRACER_SIZE))
--		goto out_unlock;
+-	}
++	if (!event)
 +		return 0;
  
- 	printk(KERN_INFO "Starting tracer '%s'\n", type->name);
- 	/* Do we want this tracer to start on bootup? */
-@@ -2420,8 +2414,7 @@ int __init register_tracer(struct tracer *type)
- 	/* disable other selftests, since this will break it. */
- 	disable_tracing_selftest("running a tracer");
+ 	entry = ring_buffer_event_data(event);
+ 	entry->ip = ip;
+@@ -1182,8 +1180,6 @@ int __trace_array_puts(struct trace_array *tr, unsigned long ip,
  
-- out_unlock:
--	return ret;
-+	return 0;
- }
- 
- static void tracing_reset_cpu(struct array_buffer *buf, int cpu)
-@@ -8963,12 +8956,12 @@ ftrace_trace_snapshot_callback(struct trace_array *tr, struct ftrace_hash *hash,
-  out_reg:
- 	ret = tracing_arm_snapshot(tr);
- 	if (ret < 0)
--		goto out;
-+		return ret;
- 
- 	ret = register_ftrace_function_probe(glob, tr, ops, count);
- 	if (ret < 0)
- 		tracing_disarm_snapshot(tr);
+ 	__buffer_unlock_commit(buffer, event);
+ 	ftrace_trace_stack(tr, buffer, trace_ctx, 4, NULL);
 - out:
-+
- 	return ret < 0 ? ret : 0;
+-	ring_buffer_nest_end(buffer);
+ 	return size;
  }
+ EXPORT_SYMBOL_GPL(__trace_array_puts);
+@@ -1213,7 +1209,6 @@ int __trace_bputs(unsigned long ip, const char *str)
+ 	struct bputs_entry *entry;
+ 	unsigned int trace_ctx;
+ 	int size = sizeof(struct bputs_entry);
+-	int ret = 0;
  
-@@ -11070,7 +11063,7 @@ __init static int tracer_alloc_buffers(void)
- 	BUILD_BUG_ON(TRACE_ITER_LAST_BIT > TRACE_FLAGS_MAX_SIZE);
+ 	if (!printk_binsafe(tr))
+ 		return __trace_puts(ip, str, strlen(str));
+@@ -1227,11 +1222,11 @@ int __trace_bputs(unsigned long ip, const char *str)
+ 	trace_ctx = tracing_gen_ctx();
+ 	buffer = tr->array_buffer.buffer;
  
- 	if (!alloc_cpumask_var(&tracing_buffer_mask, GFP_KERNEL))
+-	ring_buffer_nest_start(buffer);
++	guard(ring_buffer_nest)(buffer);
+ 	event = __trace_buffer_lock_reserve(buffer, TRACE_BPUTS, size,
+ 					    trace_ctx);
+ 	if (!event)
 -		goto out;
-+		return -ENOMEM;
++		return 0;
  
- 	if (!alloc_cpumask_var(&global_trace.tracing_cpumask, GFP_KERNEL))
- 		goto out_free_buffer_mask;
-@@ -11188,7 +11181,6 @@ __init static int tracer_alloc_buffers(void)
- 	free_cpumask_var(global_trace.tracing_cpumask);
- out_free_buffer_mask:
- 	free_cpumask_var(tracing_buffer_mask);
+ 	entry = ring_buffer_event_data(event);
+ 	entry->ip			= ip;
+@@ -1240,10 +1235,7 @@ int __trace_bputs(unsigned long ip, const char *str)
+ 	__buffer_unlock_commit(buffer, event);
+ 	ftrace_trace_stack(tr, buffer, trace_ctx, 4, NULL);
+ 
+-	ret = 1;
+- out:
+-	ring_buffer_nest_end(buffer);
+-	return ret;
++	return 1;
+ }
+ EXPORT_SYMBOL_GPL(__trace_bputs);
+ 
+@@ -3397,21 +3389,19 @@ int trace_vbprintk(unsigned long ip, const char *fmt, va_list args)
+ 
+ 	size = sizeof(*entry) + sizeof(u32) * len;
+ 	buffer = tr->array_buffer.buffer;
+-	ring_buffer_nest_start(buffer);
+-	event = __trace_buffer_lock_reserve(buffer, TRACE_BPRINT, size,
+-					    trace_ctx);
+-	if (!event)
+-		goto out;
+-	entry = ring_buffer_event_data(event);
+-	entry->ip			= ip;
+-	entry->fmt			= fmt;
+-
+-	memcpy(entry->buf, tbuffer, sizeof(u32) * len);
+-	__buffer_unlock_commit(buffer, event);
+-	ftrace_trace_stack(tr, buffer, trace_ctx, 6, NULL);
++	scoped_guard(ring_buffer_nest, buffer) {
++		event = __trace_buffer_lock_reserve(buffer, TRACE_BPRINT, size,
++						    trace_ctx);
++		if (!event)
++			goto out_put;
++		entry = ring_buffer_event_data(event);
++		entry->ip			= ip;
++		entry->fmt			= fmt;
+ 
 -out:
- 	return ret;
+-	ring_buffer_nest_end(buffer);
++		memcpy(entry->buf, tbuffer, sizeof(u32) * len);
++		__buffer_unlock_commit(buffer, event);
++		ftrace_trace_stack(tr, buffer, trace_ctx, 6, NULL);
++	}
+ out_put:
+ 	put_trace_buf();
+ 
+@@ -3452,20 +3442,19 @@ int __trace_array_vprintk(struct trace_buffer *buffer,
+ 	len = vscnprintf(tbuffer, TRACE_BUF_SIZE, fmt, args);
+ 
+ 	size = sizeof(*entry) + len + 1;
+-	ring_buffer_nest_start(buffer);
+-	event = __trace_buffer_lock_reserve(buffer, TRACE_PRINT, size,
+-					    trace_ctx);
+-	if (!event)
+-		goto out;
+-	entry = ring_buffer_event_data(event);
+-	entry->ip = ip;
+-
+-	memcpy(&entry->buf, tbuffer, len + 1);
+-	__buffer_unlock_commit(buffer, event);
+-	ftrace_trace_stack(printk_trace, buffer, trace_ctx, 6, NULL);
++	scoped_guard(ring_buffer_nest, buffer) {
++		event = __trace_buffer_lock_reserve(buffer, TRACE_PRINT, size,
++						    trace_ctx);
++		if (!event)
++			goto out;
++		entry = ring_buffer_event_data(event);
++		entry->ip = ip;
+ 
++		memcpy(&entry->buf, tbuffer, len + 1);
++		__buffer_unlock_commit(buffer, event);
++		ftrace_trace_stack(printk_trace, buffer, trace_ctx, 6, NULL);
++	}
+ out:
+-	ring_buffer_nest_end(buffer);
+ 	put_trace_buf();
+ 
+ out_nobuffer:
+diff --git a/kernel/trace/trace_events_synth.c b/kernel/trace/trace_events_synth.c
+index 33cfbd4ed76d..f24ee61f8884 100644
+--- a/kernel/trace/trace_events_synth.c
++++ b/kernel/trace/trace_events_synth.c
+@@ -536,12 +536,12 @@ static notrace void trace_event_raw_event_synth(void *__data,
+ 	 * is being performed within another event.
+ 	 */
+ 	buffer = trace_file->tr->array_buffer.buffer;
+-	ring_buffer_nest_start(buffer);
++	guard(ring_buffer_nest)(buffer);
+ 
+ 	entry = trace_event_buffer_reserve(&fbuffer, trace_file,
+ 					   sizeof(*entry) + fields_size);
+ 	if (!entry)
+-		goto out;
++		return;
+ 
+ 	for (i = 0, n_u64 = 0; i < event->n_fields; i++) {
+ 		val_idx = var_ref_idx[i];
+@@ -584,8 +584,6 @@ static notrace void trace_event_raw_event_synth(void *__data,
+ 	}
+ 
+ 	trace_event_buffer_commit(&fbuffer);
+-out:
+-	ring_buffer_nest_end(buffer);
  }
  
+ static void free_synth_event_print_fmt(struct trace_event_call *call)
 -- 
 2.47.2
 
