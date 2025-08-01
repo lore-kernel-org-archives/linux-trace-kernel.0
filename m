@@ -1,115 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E862328D821;
-	Fri,  1 Aug 2025 20:38:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44CA01A01C6;
+	Fri,  1 Aug 2025 20:55:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754080717; cv=none; b=PHQ9DoEFXrcw20VZTCGgwXN5d9PaBWKkD4pMM5U8DNFGEY5g5pxLIGKEmRTgI309vgpEoSXs6aB9L59fZ9icHDBa53ZajrpOnZ1uV5A9YMxpyaLTpemPS9CpDkHC9+moN1sn+Bo0qicuLASGN5QL8ihqvKxI7GIxmurSOT+l1/Q=
+	t=1754081746; cv=none; b=rqEp8MEHTNg9mvefd1QcQKjkejGvlg6EpBcW9s613paSRqb+3B8e17R8RrRANV082YpqaIwu3mp3Vn4VMG9a/kxNr0dMoCwudPYr1tFyqWgIjK5DcAeqyyPXMloax50YyB9aPKt6h3cPJKRjEavSfAKvZGt670y3HOf123Tmg8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754080717; c=relaxed/simple;
-	bh=jeMxIFQt8cB+r45OB46qo/PPW19UaEPLR2jFap9uz5s=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=kb76L8eQCs5fken2HnunJn0hMmCMnTvGmMwjfIRTJ0uyr9XFhZwDn2Vmxwk/lILwSGYp3/grEnsp67c5lH6iCiWsKsh9q4bL4DyP35E5kT9TNutinhiDw+yHplfoKFGiEuFxnCLiCLyA5ZAWyqxFvMBtlPmcknmCwg4ttB85rLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oMr5N3WQ; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oMr5N3WQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0D80C4CEE7;
-	Fri,  1 Aug 2025 20:38:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754080716;
-	bh=jeMxIFQt8cB+r45OB46qo/PPW19UaEPLR2jFap9uz5s=;
-	h=Date:From:To:Cc:Subject:References:From;
-	b=oMr5N3WQs0siVAlDcZXdHTLZeWEfoq0QyfKIm3WRm+w3zoQKcCE2kKQkNqDiOA7x8
-	 EoFCpRQU6T+1aiPobE19iqwKv+olTIbmzD997ckspAMbYdZqMpsU0J9ktXDMZOaWpn
-	 NSeR/HBvAmRjwbJt03bq0R/JIbPwqDyG9F/O4FJYS7licRp8aA1wvuZB4R/AuBqlZS
-	 IjgAOp2gOwEbr77zA/uESK9UDxT/CcJS+008891mced/071+QFAhUMoRslgHJegJfM
-	 IylLg1XnXxXbZHUvS4M4kBuihJIsxxCN+q3iWK04f4bPpC0SjzhrFGztaoCzWYrgqm
-	 eHg1wa3YqA5IA==
-Received: from rostedt by gandalf with local (Exim 4.98.2)
-	(envelope-from <rostedt@kernel.org>)
-	id 1uhwWo-00000007jbY-1THp;
-	Fri, 01 Aug 2025 16:38:58 -0400
-Message-ID: <20250801203858.205479143@kernel.org>
-User-Agent: quilt/0.68
-Date: Fri, 01 Aug 2025 16:37:27 -0400
-From: Steven Rostedt <rostedt@kernel.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v2 5/5] ring-buffer: Convert ring_buffer_write() to use
- guard(preempt_notrace)
-References: <20250801203722.072085868@kernel.org>
+	s=arc-20240116; t=1754081746; c=relaxed/simple;
+	bh=YKoSvIfIZ7AfnVI0xRJuSnbZ0NUlNJsWfV+lTb4X1ME=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=RtCiv1M8Jq3E2f3wdjNUZ7SO12G3El1VhJ5ozsqJhIGF1lS46B/y4w9M4ydR1M6/5+Jd550h4oSHeFbX7uT3eIBO9ihooQsuPzexxmhosUqG11Vf4wiUNFpk0tOu6vqA5b2304jHoYaqs9aTS7b+Uw3JSMPr6YgYq0RwKcyg25U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf06.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay10.hostedemail.com (Postfix) with ESMTP id 52F62C02E9;
+	Fri,  1 Aug 2025 20:55:42 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf06.hostedemail.com (Postfix) with ESMTPA id 455F82000F;
+	Fri,  1 Aug 2025 20:55:40 +0000 (UTC)
+Date: Fri, 1 Aug 2025 16:56:01 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, bpf@vger.kernel.org, Douglas Raillard 
+ <douglas.raillard@arm.com>, Yonghong Song <yonghong.song@linux.dev>, Martin
+ KaFai Lau <martin.lau@linux.dev>
+Subject: [PATCH v3] tracing: Have unsigned int function args displayed as
+ hexadecimal
+Message-ID: <20250801165601.7770d65c@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Queue-Id: 455F82000F
+X-Stat-Signature: 4rgkmjttq7tus4ozhrsxm3tdjtfistk7
+X-Rspamd-Server: rspamout06
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+toM6PJ9IUUVVrvcyW7KbjTmf3peylLOQ=
+X-HE-Tag: 1754081740-584668
+X-HE-Meta: U2FsdGVkX19Fm/hcv1qlHgsYskUR6qWw97KTHYFsmgwN52SRvUQc5kPI93X08cMuGbEtEF+3ByRMMXt7Nxc/YgO6of4iMd4wFR5zdfCqzAsmm34El8qxMZfVdJ/GCdGl5cvQkAf285LnVZFTiQDpoTqdl961kG1YXBR1gSezBFe8zfUOrct9E/LLqRxkolXa30B9axNSwGDNJPD6r40GEyvOgs88jMP2zfuRnrHp8GE+eG4clHZMvhPADo9chazNxv6hXEaUQZe6tw3UaKeGiJzbldaxRlu6TFxJ5X7rYji6+1EJPANmi9aRqUTPh/6x7K9KokdNNnIQVM0H8pDNguJ5ZCm+i32Z8WYUQ0tmJ3jwJygQV34jNV+fONAp3j/kDpb3imCWbvvTPsQ8UhfMgQ==
 
+=46rom aff4ac7a3e0bc7e7db72a0fae52f1a8b06e415f0 Mon Sep 17 00:00:00 2001
 From: Steven Rostedt <rostedt@goodmis.org>
+Date: Fri, 1 Aug 2025 11:14:53 -0400
+Subject: [PATCH] tracing: Have unsigned int function args displayed as
+ hexadecimal
 
-The function ring_buffer_write() has a goto out to only do a
-preempt_enable_notrace(). This can be replaced by a guard.
+Most function arguments that are passed in as unsigned int or unsigned
+long are better displayed as hexadecimal than normal integer. For example,
+the functions:
 
+static void __create_object(unsigned long ptr, size_t size,
+				int min_count, gfp_t gfp, unsigned int objflags);
+
+static bool stack_access_ok(struct unwind_state *state, unsigned long _addr,
+			    size_t len);
+
+void __local_bh_disable_ip(unsigned long ip, unsigned int cnt);
+
+Show up in the trace as:
+
+    __create_object(ptr=3D-131387050520576, size=3D4096, min_count=3D1, gfp=
+=3D3264, objflags=3D0) <-kmem_cache_alloc_noprof
+    stack_access_ok(state=3D0xffffc9000233fc98, _addr=3D-60473102566256, le=
+n=3D8) <-unwind_next_frame
+    __local_bh_disable_ip(ip=3D-2127311112, cnt=3D256) <-handle_softirqs
+
+Instead, by displaying unsigned as hexadecimal, they look more like this:
+
+    __create_object(ptr=3D0xffff8881028d2080, size=3D0x280, min_count=3D1, =
+gfp=3D0x82820, objflags=3D0x0) <-kmem_cache_alloc_node_noprof
+    stack_access_ok(state=3D0xffffc90000003938, _addr=3D0xffffc90000003930,=
+ len=3D0x8) <-unwind_next_frame
+    __local_bh_disable_ip(ip=3D0xffffffff8133cef8, cnt=3D0x100) <-handle_so=
+ftirqs
+
+Which is much easier to understand as most unsigned longs are usually just
+pointers. Even the "unsigned int cnt" in __local_bh_disable_ip() looks
+better as hexadecimal as a lot of flags are passed as unsigned.
+
+Changes since v2: https://lore.kernel.org/20250801111453.01502861@gandalf.l=
+ocal.home
+
+- Use btf_int_encoding() instead of open coding it (Martin KaFai Lau)
+
+Acked-by: Yonghong Song <yonghong.song@linux.dev>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/ring_buffer.c | 16 ++++++----------
- 1 file changed, 6 insertions(+), 10 deletions(-)
+ kernel/trace/trace_output.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 00fc38d70e86..9d7bf17fbfba 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -4714,26 +4714,26 @@ int ring_buffer_write(struct trace_buffer *buffer,
- 	int ret = -EBUSY;
- 	int cpu;
- 
--	preempt_disable_notrace();
-+	guard(preempt_notrace)();
- 
- 	if (atomic_read(&buffer->record_disabled))
--		goto out;
-+		return -EBUSY;
- 
- 	cpu = raw_smp_processor_id();
- 
- 	if (!cpumask_test_cpu(cpu, buffer->cpumask))
--		goto out;
-+		return -EBUSY;
- 
- 	cpu_buffer = buffer->buffers[cpu];
- 
- 	if (atomic_read(&cpu_buffer->record_disabled))
--		goto out;
-+		return -EBUSY;
- 
- 	if (length > buffer->max_data_size)
--		goto out;
-+		return -EBUSY;
- 
- 	if (unlikely(trace_recursive_lock(cpu_buffer)))
--		goto out;
-+		return -EBUSY;
- 
- 	event = rb_reserve_next_event(buffer, cpu_buffer, length);
- 	if (!event)
-@@ -4751,10 +4751,6 @@ int ring_buffer_write(struct trace_buffer *buffer,
- 
-  out_unlock:
- 	trace_recursive_unlock(cpu_buffer);
--
-- out:
--	preempt_enable_notrace();
--
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(ring_buffer_write);
--- 
+diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
+index 0b3db02030a7..97db0b0ccf3e 100644
+--- a/kernel/trace/trace_output.c
++++ b/kernel/trace/trace_output.c
+@@ -701,6 +701,7 @@ void print_function_args(struct trace_seq *s, unsigned =
+long *args,
+ 	struct btf *btf;
+ 	s32 tid, nr =3D 0;
+ 	int a, p, x;
++	u16 encode;
+=20
+ 	trace_seq_printf(s, "(");
+=20
+@@ -744,7 +745,12 @@ void print_function_args(struct trace_seq *s, unsigned=
+ long *args,
+ 			trace_seq_printf(s, "0x%lx", arg);
+ 			break;
+ 		case BTF_KIND_INT:
+-			trace_seq_printf(s, "%ld", arg);
++			encode =3D btf_int_encoding(t);
++			/* Print unsigned ints as hex */
++			if (encode & BTF_INT_SIGNED)
++				trace_seq_printf(s, "%ld", arg);
++			else
++				trace_seq_printf(s, "0x%lx", arg);
+ 			break;
+ 		case BTF_KIND_ENUM:
+ 			trace_seq_printf(s, "%ld", arg);
+--=20
 2.47.2
-
 
