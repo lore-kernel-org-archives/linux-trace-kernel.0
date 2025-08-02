@@ -1,52 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B1D52147F9;
-	Fri,  1 Aug 2025 21:03:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1FBE2CA8;
+	Sat,  2 Aug 2025 00:13:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754082217; cv=none; b=te9V4mWhn2/XD45gwoLwCJKp46VS7hzLaFkSlEhAuiDFM3FpqT9bzrd5EPK5cPxt9T+NdF+dRBUq8P7a443AqFyu4V0HXCz+b6Bp8/WTmSvkre3kRt6CLXCxC5bh8sFBg1cTunLisS8JFIJ3BmWqShCTaHtDvd4nEhlwxI856b4=
+	t=1754093628; cv=none; b=fa9NHRpTZjzql6o74Lnefgxn0zbiHPMj31w9ZQa8z/iBMlydqLg3OawJvoRM1cp+ZdGnKG0+PYgKaS7QpPyl55gtA9PrGWQhSn7yJ/D2Bo+CruEe9m2qSerZrBcuoMRHHtJBRuxMnYH92Kwr4DdiWGUDPGy6iQickBysZ+YF5Hg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754082217; c=relaxed/simple;
-	bh=2IgccXrML8eTSCHq8i8NG7mRfzsM4SW1DbQbW7h/63o=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bs2r+VbAu0BtEPiF87ptSyxGiLghJYAvzuGITcdR/bMiN5HeVS9RCgBNoM6kXKlm7sMdjmfo2gVPeWtTRLDAqKlGM7SFCSLwN8WLBZye5WjuQPgCfH4bJ7y/nI6rGL6KPNs0WhCkxp10988XD2TDG6M9GF3/1qedEoBaTKqgzN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qTcBVxfF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1754093628; c=relaxed/simple;
+	bh=NFlXoApd3CPjEwQEtOgO8eJ9vKqvMEwqp04r+9HudI0=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=CQGMM9JJbiIUYRySPA8xrfVMkIQOV31g5e/Bk5sYTj01zXtuPKVkDAxr1mejqz7o2/8CM5+jD3XQsxGV6KkAMfi64KM6FbVpsOLl51Y6ZPeLvYVb0rPKj6KL5YDKB7/L57vEKVwg6l9ro3NDFHfTUOL4f1dmvYYd3dru21T/Fm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XX1N4cFw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qTcBVxfF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BEC1C4CEE7;
-	Fri,  1 Aug 2025 21:03:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XX1N4cFw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A4DBC4CEE7;
+	Sat,  2 Aug 2025 00:13:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754082215;
-	bh=2IgccXrML8eTSCHq8i8NG7mRfzsM4SW1DbQbW7h/63o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qTcBVxfF+mhViauYFPTaQyiIlVGrpqFWWl4i6C1BKv/Njn5gmxCz6PgMx4v3BzLd+
-	 /kl8gsPpO9wumGLVGPt+EGMLfU4w2OWitzrAmr5bnL/QwnpAiTS6LsJIjbTUi3PtGm
-	 2uvHOjUr6mP2Li8o6fUO7xPQ1Xj8xmVNRD9SANSZwoiHoyeSqZXTwslsIJMxsF28hC
-	 XhkOOkrm6SFq2uKVsudFQqlD1AmDEuIhzlfAgbRd3XVkJ0n9u/1biG7XPjLV41B4C4
-	 Dqq8NvbDU5GxOD5YFSvBpMkc1gpfA7ZpI7KbYqK+QRvd1X+autuUfG86wwv98qYgsV
-	 boHwO1XVfOPGg==
-From: Jiri Olsa <jolsa@kernel.org>
-To: Oleg Nesterov <oleg@redhat.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Andrii Nakryiko <andrii@kernel.org>
-Cc: bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	x86@kernel.org,
-	Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ingo Molnar <mingo@kernel.org>
-Subject: [RFC 4/4] selftests/bpf: Add uprobe context ip register change test
-Date: Fri,  1 Aug 2025 23:02:38 +0200
-Message-ID: <20250801210238.2207429-5-jolsa@kernel.org>
-X-Mailer: git-send-email 2.50.1
-In-Reply-To: <20250801210238.2207429-1-jolsa@kernel.org>
-References: <20250801210238.2207429-1-jolsa@kernel.org>
+	s=k20201202; t=1754093628;
+	bh=NFlXoApd3CPjEwQEtOgO8eJ9vKqvMEwqp04r+9HudI0=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=XX1N4cFwjCcMo3HhHoDw54YuTO3Dp4Vfdsg4AqLZO00b2/Nwpz1dv3j9W3UA8I0Ah
+	 kSYcADiEeUb5zj63vbUUDalD14ho9fAhlbosrHwupwbUpO2vKa3CaYIMMqc1U01c/w
+	 JlTJmPjpnv1A+3wnaPQOTkamRqYSGugVQdefP9cLT2agfDO9muwSSijPvtraGHkFzM
+	 y7NIiygrxbo+qDFx7lAQznvMcJ+I8MHeehiYedF/ypZCVTRRbH2zs7PSmsSSz+2SMN
+	 ripQxgYQ1KvCRA1EWd4Hyp1vu4ZuhNjrAHhEHH637IpaG0SpKH044fJj+bXVTdqlBh
+	 M0aj0Z1ecsJiA==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADCBE383BF56;
+	Sat,  2 Aug 2025 00:14:04 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -54,104 +37,64 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v16 00/10] unwind_user: Deferred unwinding infrastructure
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <175409364350.4093813.8276409208818762249.git-patchwork-notify@kernel.org>
+Date: Sat, 02 Aug 2025 00:14:03 +0000
+References: <20250729182304.965835871@kernel.org>
+In-Reply-To: <20250729182304.965835871@kernel.org>
+To: Steven Rostedt <rostedt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ jpoimboe@kernel.org, peterz@infradead.org, mingo@kernel.org,
+ jolsa@kernel.org, acme@kernel.org, namhyung@kernel.org, tglx@linutronix.de,
+ andrii@kernel.org, indu.bhagat@oracle.com, jemarch@gnu.org,
+ beaub@linux.microsoft.com, jremus@linux.ibm.com,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org, axboe@kernel.dk,
+ fweimer@redhat.com, sam@gentoo.org
 
-Adding test to check we can change the application execution
-through instruction pointer change through uprobe program.
+Hello:
 
-It's x86_64 specific test.
+This series was applied to bpf/bpf-next.git (master)
+by Steven Rostedt (Google) <rostedt@goodmis.org>:
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- .../testing/selftests/bpf/prog_tests/uprobe.c | 48 +++++++++++++++++++
- .../testing/selftests/bpf/progs/test_uprobe.c | 14 ++++++
- 2 files changed, 62 insertions(+)
+On Tue, 29 Jul 2025 14:23:04 -0400 you wrote:
+> Jen Remus suggested some updates from v15:
+> 
+>   https://lore.kernel.org/linux-trace-kernel/20250725185512.673587297@kernel.org/
+> 
+> Those were:
+> 
+> - Make fp_frame into a constant
+> 
+> [...]
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/uprobe.c b/tools/testing/selftests/bpf/prog_tests/uprobe.c
-index 7c7cb08d10b3..05cd3b65260f 100644
---- a/tools/testing/selftests/bpf/prog_tests/uprobe.c
-+++ b/tools/testing/selftests/bpf/prog_tests/uprobe.c
-@@ -190,10 +190,58 @@ static void regs_common(void)
- 	test_uprobe__destroy(skel);
- }
- 
-+static __naked unsigned long uprobe_regs_change_ip_1(void)
-+{
-+	asm volatile (
-+		"movq $0xc0ffee, %rax\n"
-+		"ret\n"
-+	);
-+}
-+
-+static __naked unsigned long uprobe_regs_change_ip_2(void)
-+{
-+	asm volatile (
-+		"movq $0xdeadbeef, %rax\n"
-+		"ret\n"
-+	);
-+}
-+
-+static void regs_ip(void)
-+{
-+	LIBBPF_OPTS(bpf_uprobe_opts, uprobe_opts);
-+	struct test_uprobe *skel;
-+	unsigned long ret;
-+
-+	skel = test_uprobe__open_and_load();
-+	if (!ASSERT_OK_PTR(skel, "skel_open"))
-+		return;
-+
-+	skel->bss->my_pid = getpid();
-+	skel->bss->ip = (unsigned long) uprobe_regs_change_ip_2;
-+
-+	uprobe_opts.func_name = "uprobe_regs_change_ip_1";
-+	skel->links.test_regs_change_ip = bpf_program__attach_uprobe_opts(
-+						skel->progs.test_regs_change_ip,
-+						-1,
-+						"/proc/self/exe",
-+						0 /* offset */,
-+						&uprobe_opts);
-+	if (!ASSERT_OK_PTR(skel->links.test_regs_change_ip, "bpf_program__attach_uprobe_opts"))
-+		goto cleanup;
-+
-+	ret = uprobe_regs_change_ip_1();
-+	ASSERT_EQ(ret, 0xdeadbeef, "ret");
-+
-+cleanup:
-+	test_uprobe__destroy(skel);
-+}
-+
- static void test_uprobe_regs_change(void)
- {
- 	if (test__start_subtest("regs_change_common"))
- 		regs_common();
-+	if (test__start_subtest("regs_change_ip"))
-+		regs_ip();
- }
- #else
- static void test_uprobe_regs_change(void) { }
-diff --git a/tools/testing/selftests/bpf/progs/test_uprobe.c b/tools/testing/selftests/bpf/progs/test_uprobe.c
-index 9437bd76a437..12f4065fca20 100644
---- a/tools/testing/selftests/bpf/progs/test_uprobe.c
-+++ b/tools/testing/selftests/bpf/progs/test_uprobe.c
-@@ -82,4 +82,18 @@ int BPF_UPROBE(test_regs_change)
- 	ctx->si  = regs.si;
- 	return 0;
- }
-+
-+unsigned long ip;
-+
-+SEC("uprobe")
-+int BPF_UPROBE(test_regs_change_ip)
-+{
-+	pid_t pid = bpf_get_current_pid_tgid() >> 32;
-+
-+	if (pid != my_pid)
-+		return 0;
-+
-+	ctx->ip = ip;
-+	return 0;
-+}
- #endif
+Here is the summary with links:
+  - [v16,01/10] unwind_user: Add user space unwinding API with frame pointer support
+    https://git.kernel.org/bpf/bpf-next/c/71753c6ed2bf
+  - [v16,02/10] unwind_user/deferred: Add unwind_user_faultable()
+    https://git.kernel.org/bpf/bpf-next/c/5e32d0f15cc5
+  - [v16,03/10] unwind_user/deferred: Add unwind cache
+    https://git.kernel.org/bpf/bpf-next/c/b9c73524106e
+  - [v16,04/10] unwind_user/deferred: Add deferred unwinding interface
+    https://git.kernel.org/bpf/bpf-next/c/2dffa355f6c2
+  - [v16,05/10] unwind_user/deferred: Make unwind deferral requests NMI-safe
+    https://git.kernel.org/bpf/bpf-next/c/055c7060e7ca
+  - [v16,06/10] unwind deferred: Use bitmask to determine which callbacks to call
+    https://git.kernel.org/bpf/bpf-next/c/be3d526a5b34
+  - [v16,07/10] unwind deferred: Add unwind_completed mask to stop spurious callbacks
+    https://git.kernel.org/bpf/bpf-next/c/4c75133e745a
+  - [v16,08/10] unwind: Add USED bit to only have one conditional on way back to user space
+    https://git.kernel.org/bpf/bpf-next/c/858fa8a3b083
+  - [v16,09/10] unwind deferred: Use SRCU unwind_deferred_task_work()
+    https://git.kernel.org/bpf/bpf-next/c/357eda2d7450
+  - [v16,10/10] unwind: Finish up unwind when a task exits
+    https://git.kernel.org/bpf/bpf-next/c/b3b9cb11aa03
+
+You are awesome, thank you!
 -- 
-2.50.1
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
