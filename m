@@ -1,100 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1FBE2CA8;
-	Sat,  2 Aug 2025 00:13:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C23F91EA7DF
+	for <linux-trace-kernel@vger.kernel.org>; Sat,  2 Aug 2025 10:35:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754093628; cv=none; b=fa9NHRpTZjzql6o74Lnefgxn0zbiHPMj31w9ZQa8z/iBMlydqLg3OawJvoRM1cp+ZdGnKG0+PYgKaS7QpPyl55gtA9PrGWQhSn7yJ/D2Bo+CruEe9m2qSerZrBcuoMRHHtJBRuxMnYH92Kwr4DdiWGUDPGy6iQickBysZ+YF5Hg=
+	t=1754130953; cv=none; b=qOCjs6elLufHmqyVNvTZEnh/InDo9GWXYHTxU6siooBua7q/p0qpYkR+JMI8RBDy5cc6T6X//DOKzMd8qwuH6QWRP2w08fUy8Wff7mnEYySgpu8BezfVqH3oZonx4da476ovmc+aJv90upIvpVoonbi1sAVcpeTGNKr4xbbrtx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754093628; c=relaxed/simple;
-	bh=NFlXoApd3CPjEwQEtOgO8eJ9vKqvMEwqp04r+9HudI0=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=CQGMM9JJbiIUYRySPA8xrfVMkIQOV31g5e/Bk5sYTj01zXtuPKVkDAxr1mejqz7o2/8CM5+jD3XQsxGV6KkAMfi64KM6FbVpsOLl51Y6ZPeLvYVb0rPKj6KL5YDKB7/L57vEKVwg6l9ro3NDFHfTUOL4f1dmvYYd3dru21T/Fm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XX1N4cFw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1754130953; c=relaxed/simple;
+	bh=1Uj13WzecZIDJ4INt1Rw447b+I7X9TTWD1JGhKjVzXA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=n0zwX5ACHJzQoSri4uqEjlYgozZBOdowCU/NYq+ZhP+n3fjJPPVp7hpyBKihjG28yuvqJFNU9s8gS7hwoitGujGX/9hD2GXByR5scVatz8oq5iF68fHq9Vv8KorH1piDhoTEHmjpZu98KMbODxct/sFAl1c+YHN8A/y5l2VGCPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ErExNi2l; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XX1N4cFw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A4DBC4CEE7;
-	Sat,  2 Aug 2025 00:13:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754093628;
-	bh=NFlXoApd3CPjEwQEtOgO8eJ9vKqvMEwqp04r+9HudI0=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=XX1N4cFwjCcMo3HhHoDw54YuTO3Dp4Vfdsg4AqLZO00b2/Nwpz1dv3j9W3UA8I0Ah
-	 kSYcADiEeUb5zj63vbUUDalD14ho9fAhlbosrHwupwbUpO2vKa3CaYIMMqc1U01c/w
-	 JlTJmPjpnv1A+3wnaPQOTkamRqYSGugVQdefP9cLT2agfDO9muwSSijPvtraGHkFzM
-	 y7NIiygrxbo+qDFx7lAQznvMcJ+I8MHeehiYedF/ypZCVTRRbH2zs7PSmsSSz+2SMN
-	 ripQxgYQ1KvCRA1EWd4Hyp1vu4ZuhNjrAHhEHH637IpaG0SpKH044fJj+bXVTdqlBh
-	 M0aj0Z1ecsJiA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADCBE383BF56;
-	Sat,  2 Aug 2025 00:14:04 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ErExNi2l"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1754130950;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZDacmucnw23kEnOX8217Q3tfUEPnn76onGyj7DcVKiI=;
+	b=ErExNi2lsT4s0d0+SFisyplFkGQe7PSdsnT3yakJo8qw7uER+E+O5/bUeHwIbqQ/7oPRLY
+	/F9DnEMIUcgCpPIun+kJja5SeR7kK51eL+U1GA870GaZix+SAPMrSjBQzau3chs7HanJSC
+	ng6VkxjW03CVL2Zo+WaeGLQ3pjRQ7x4=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-189-QpngofaIPa6G3Qs7PgEIZA-1; Sat,
+ 02 Aug 2025 06:35:46 -0400
+X-MC-Unique: QpngofaIPa6G3Qs7PgEIZA-1
+X-Mimecast-MFC-AGG-ID: QpngofaIPa6G3Qs7PgEIZA_1754130944
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 643FB180045B;
+	Sat,  2 Aug 2025 10:35:43 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.25])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 38D8719373D9;
+	Sat,  2 Aug 2025 10:35:37 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Sat,  2 Aug 2025 12:34:33 +0200 (CEST)
+Date: Sat, 2 Aug 2025 12:34:27 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	x86@kernel.org, Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
+	Ingo Molnar <mingo@kernel.org>
+Subject: Re: [RFC 1/4] uprobe: Do not emulate/sstep original instruction when
+ ip is changed
+Message-ID: <20250802103426.GC31711@redhat.com>
+References: <20250801210238.2207429-1-jolsa@kernel.org>
+ <20250801210238.2207429-2-jolsa@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v16 00/10] unwind_user: Deferred unwinding infrastructure
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <175409364350.4093813.8276409208818762249.git-patchwork-notify@kernel.org>
-Date: Sat, 02 Aug 2025 00:14:03 +0000
-References: <20250729182304.965835871@kernel.org>
-In-Reply-To: <20250729182304.965835871@kernel.org>
-To: Steven Rostedt <rostedt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- jpoimboe@kernel.org, peterz@infradead.org, mingo@kernel.org,
- jolsa@kernel.org, acme@kernel.org, namhyung@kernel.org, tglx@linutronix.de,
- andrii@kernel.org, indu.bhagat@oracle.com, jemarch@gnu.org,
- beaub@linux.microsoft.com, jremus@linux.ibm.com,
- torvalds@linux-foundation.org, akpm@linux-foundation.org, axboe@kernel.dk,
- fweimer@redhat.com, sam@gentoo.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250801210238.2207429-2-jolsa@kernel.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-Hello:
+On 08/01, Jiri Olsa wrote:
+>
+> If uprobe handler changes instruction pointer we still execute single
+> step) or emulate the original instruction and increment the (new) ip
+> with its length.
 
-This series was applied to bpf/bpf-next.git (master)
-by Steven Rostedt (Google) <rostedt@goodmis.org>:
+Yes... but what if we there are multiple consumers? The 1st one changes
+instruction_pointer, the next is unaware. Or it may change regs->ip too...
 
-On Tue, 29 Jul 2025 14:23:04 -0400 you wrote:
-> Jen Remus suggested some updates from v15:
+Oleg.
+
+> This makes the new instruction pointer bogus and application will
+> likely crash on illegal instruction execution.
 > 
->   https://lore.kernel.org/linux-trace-kernel/20250725185512.673587297@kernel.org/
+> If user decided to take execution elsewhere, it makes little sense
+> to execute the original instruction, so let's skip it.
 > 
-> Those were:
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+>  kernel/events/uprobes.c | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> - Make fp_frame into a constant
+> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> index 4c965ba77f9f..dff5509cde67 100644
+> --- a/kernel/events/uprobes.c
+> +++ b/kernel/events/uprobes.c
+> @@ -2742,6 +2742,9 @@ static void handle_swbp(struct pt_regs *regs)
+>  
+>  	handler_chain(uprobe, regs);
+>  
+> +	if (instruction_pointer(regs) != bp_vaddr)
+> +		goto out;
+> +
+>  	if (arch_uprobe_skip_sstep(&uprobe->arch, regs))
+>  		goto out;
+>  
+> -- 
+> 2.50.1
 > 
-> [...]
-
-Here is the summary with links:
-  - [v16,01/10] unwind_user: Add user space unwinding API with frame pointer support
-    https://git.kernel.org/bpf/bpf-next/c/71753c6ed2bf
-  - [v16,02/10] unwind_user/deferred: Add unwind_user_faultable()
-    https://git.kernel.org/bpf/bpf-next/c/5e32d0f15cc5
-  - [v16,03/10] unwind_user/deferred: Add unwind cache
-    https://git.kernel.org/bpf/bpf-next/c/b9c73524106e
-  - [v16,04/10] unwind_user/deferred: Add deferred unwinding interface
-    https://git.kernel.org/bpf/bpf-next/c/2dffa355f6c2
-  - [v16,05/10] unwind_user/deferred: Make unwind deferral requests NMI-safe
-    https://git.kernel.org/bpf/bpf-next/c/055c7060e7ca
-  - [v16,06/10] unwind deferred: Use bitmask to determine which callbacks to call
-    https://git.kernel.org/bpf/bpf-next/c/be3d526a5b34
-  - [v16,07/10] unwind deferred: Add unwind_completed mask to stop spurious callbacks
-    https://git.kernel.org/bpf/bpf-next/c/4c75133e745a
-  - [v16,08/10] unwind: Add USED bit to only have one conditional on way back to user space
-    https://git.kernel.org/bpf/bpf-next/c/858fa8a3b083
-  - [v16,09/10] unwind deferred: Use SRCU unwind_deferred_task_work()
-    https://git.kernel.org/bpf/bpf-next/c/357eda2d7450
-  - [v16,10/10] unwind: Finish up unwind when a task exits
-    https://git.kernel.org/bpf/bpf-next/c/b3b9cb11aa03
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
 
