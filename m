@@ -1,211 +1,191 @@
-Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 682A51F4612;
-	Mon,  4 Aug 2025 14:50:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
+Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3755828643E
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  4 Aug 2025 16:50:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754319037; cv=none; b=tnv6SoaXRcLYASbCGlwpT9XRLh6XAhywwTllf3p9n5vtEdws7uHJBLSwrKUHWtQEUtRcgUzet6xjG3Q8gd2iRx1RYGcEsojmBmIG5U+Vicxs7uakJfp9ljLqpAZJS/rfFQIblpGAvldUjodZ7qqwzUDbmWkuTU/mZJgmIkYeDfk=
+	t=1754326233; cv=none; b=hqpLUKnmicdaGL1KlVK4hYbAUhdis71WJmGNGt9yhI8dramIcaTkxcn/6QDXRLLjbFB/VfVC9BjQNzdoExRZ11PjCQTd03o17vsOG3VZnbL76Uuw8Itwa89jyzmE5ZrbQzDHzhKfmBo0fFKFoiViekal47I7pmAG5jYiyHs4cVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754319037; c=relaxed/simple;
-	bh=Lv0zUTekwP29mYEeNY8FP4NK5pv608kruRZBw117cek=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mmnpBLWhqj1nMQoaUHvFxcq0QJzEirbGBh3bSkUSMcOtCOItle/YT9f3iGpCTEW7db07/BCsffnnMAI1PxQ/NmfbfoieGGzL483pCw7tmV7i8VLmmOqW10ZX4KnajsHz7licwqeV4cIhEHxaZtclEZQ7wCtrmz7WI0cweY9rCwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
-	by localhost (Postfix) with ESMTP id 4bwdx61Fwbz9t2k;
-	Mon,  4 Aug 2025 16:19:54 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id aafYWNPsnuTc; Mon,  4 Aug 2025 16:19:54 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase1.c-s.fr (Postfix) with ESMTP id 4bwdx60NySz9t2V;
-	Mon,  4 Aug 2025 16:19:54 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 0679F8B766;
-	Mon,  4 Aug 2025 16:19:54 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id 25xDQtsmUhRS; Mon,  4 Aug 2025 16:19:53 +0200 (CEST)
-Received: from [10.25.207.160] (unknown [10.25.207.160])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id BF56C8B763;
-	Mon,  4 Aug 2025 16:19:53 +0200 (CEST)
-Message-ID: <7e1adda9-4348-4c4e-953e-3fd21e4ff3c5@csgroup.eu>
-Date: Mon, 4 Aug 2025 16:19:53 +0200
+	s=arc-20240116; t=1754326233; c=relaxed/simple;
+	bh=kK0pAZEQ3UTDnUPphllVs8Qqcw43r7Oswt4hrdkA9rY=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=JFB3w4y7RF3JXVVvbnB3pbQJTmFjsEGhZzWg9keVY3gS2wvBoUG0rVxbgTJNuxB6HpoxpQoFOEKBBBB3Cc0w6HEt9zChvmSMF9Av5J3VSSItQ8A11Ta+0/z1pACf+DTERYwDeipVkJ2dbOB26Z6RyKpn0lxnHNE4cjhd9q2h9F4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3e410d87893so33467475ab.3
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 04 Aug 2025 09:50:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1754326230; x=1754931030;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=fagjy2iLto/pnsl8DNKQe4B2WHfyVOXCDXwDQMZ0quQ=;
+        b=lvlJzom6OCHHj6avYLV7e35xCID0kAe7ri7DAuwWgwJABDtwi9VP9JxmBl8WLisksX
+         l/wGot83c/VecpdO4jnO4xTDeo9Q8PupyfM9M5MddjUCI9evQr0sRdQGktJRJM4Nwjay
+         g3Xu2AaWE0qPoAmanx2HVvPFEm/rA4A64rrvvdkVWBfpOJ9STOPifNdQzP4r6xLZrvqE
+         gdI8aa82XghiATtRy9jXtkiyNNntclQ4FHcFFwoZ3xMvu2qNb+j7N8JKTMWDQOcMqT5U
+         oENaFXS1c8f6G6Q41+7xJKa4lApPQii0Lm5JgoGljC2r+lvym2CaoKP2Snk+Oq6GpA6H
+         dpdw==
+X-Forwarded-Encrypted: i=1; AJvYcCX8zti6cpH1YBXYdApA5nyXXLzk2dTlr3vOy3Zj135OWLqD899OcCpR4K3U23UPbeu6wxE56w7lGMgQm01I3oUldRc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZcQ6FS8PqsEdjrwaX4+b6RhGjnX/BD4vpNUaq/lxASD+Kh8GV
+	FjZ3gPBTy/HSkZKh4As9YLVY56nE8T/rcy3MNHND0kYkdSUEyMae+gKdIh+U1QOcUt6bDMFY9/J
+	1YIsT75Bzv0iRugFa/X4lHmuMoD/+/FnP50ch8LDXUdSjFyg3Kx7gYM24qcI=
+X-Google-Smtp-Source: AGHT+IFIhmNbFt0lmxEGAmQHdR0pjiegiXE6hRN7V8igjGNkj/roFw/kYULydhUwmZa1fRnvEO0KAi4rfFVJOgjGTTLbdhJBUSXG
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] powerpc/ftrace: support
- CONFIG_FUNCTION_GRAPH_RETVAL
-To: Aditya Bodkhe <adityab1@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com,
- rostedt@goodmis.org, mhiramat@kernel.org, mark.rutland@arm.com,
- venkat88@linux.ibm.com
-References: <20250722085648.1640-1-adityab1@linux.ibm.com>
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-Content-Language: fr-FR
-In-Reply-To: <20250722085648.1640-1-adityab1@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:1d9d:b0:3dc:7f3b:acb1 with SMTP id
+ e9e14a558f8ab-3e41618be7dmr155298785ab.13.1754326230187; Mon, 04 Aug 2025
+ 09:50:30 -0700 (PDT)
+Date: Mon, 04 Aug 2025 09:50:30 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6890e4d6.050a0220.7f033.000e.GAE@google.com>
+Subject: [syzbot] [trace?] [bpf?] possible deadlock in down_trylock (3)
+From: syzbot <syzbot+c3740bc819eb55460ec3@syzkaller.appspotmail.com>
+To: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
+	daniel@iogearbox.net, eddyz87@gmail.com, haoluo@google.com, 
+	john.fastabend@gmail.com, jolsa@kernel.org, kpsingh@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	martin.lau@linux.dev, mathieu.desnoyers@efficios.com, 
+	mattbobrowski@google.com, mhiramat@kernel.org, rostedt@goodmis.org, 
+	sdf@fomichev.me, song@kernel.org, syzkaller-bugs@googlegroups.com, 
+	yonghong.song@linux.dev
+Content-Type: text/plain; charset="UTF-8"
+
+Hello,
+
+syzbot found the following issue on:
+
+HEAD commit:    84b92a499e7e Add linux-next specific files for 20250731
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=11065aa2580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=b335f01a07f73eac
+dashboard link: https://syzkaller.appspot.com/bug?extid=c3740bc819eb55460ec3
+compiler:       Debian clang version 20.1.7 (++20250616065708+6146a88f6049-1~exp1~20250616065826.132), Debian LLD 20.1.7
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14167834580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16f27cf0580000
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/97d9ce461c85/disk-84b92a49.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/0ca812ed76e7/vmlinux-84b92a49.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/0959d28a047f/bzImage-84b92a49.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+c3740bc819eb55460ec3@syzkaller.appspotmail.com
+
+FAULT_INJECTION: forcing a failure.
+name fail_usercopy, interval 1, probability 0, space 0, times 0
+============================================
+WARNING: possible recursive locking detected
+6.16.0-next-20250731-syzkaller #0 Not tainted
+--------------------------------------------
+syz.3.22/6137 is trying to acquire lock:
+ffffffff8e12e278 ((console_sem).lock){-...}-{2:2}, at: down_trylock+0x20/0xb0 kernel/locking/semaphore.c:176
+
+but task is already holding lock:
+ffffffff8e12e278 ((console_sem).lock){-...}-{2:2}, at: down+0x39/0xd0 kernel/locking/semaphore.c:96
+
+other info that might help us debug this:
+ Possible unsafe locking scenario:
+
+       CPU0
+       ----
+  lock((console_sem).lock);
+  lock((console_sem).lock);
+
+ *** DEADLOCK ***
+
+ May be due to missing lock nesting notation
+
+2 locks held by syz.3.22/6137:
+ #0: ffffffff8e12e278 ((console_sem).lock){-...}-{2:2}, at: down+0x39/0xd0 kernel/locking/semaphore.c:96
+ #1: ffffffff8e139f20 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire include/linux/rcupdate.h:331 [inline]
+ #1: ffffffff8e139f20 (rcu_read_lock){....}-{1:3}, at: rcu_read_lock include/linux/rcupdate.h:841 [inline]
+ #1: ffffffff8e139f20 (rcu_read_lock){....}-{1:3}, at: __bpf_trace_run kernel/trace/bpf_trace.c:2256 [inline]
+ #1: ffffffff8e139f20 (rcu_read_lock){....}-{1:3}, at: bpf_trace_run2+0x186/0x4b0 kernel/trace/bpf_trace.c:2298
+
+stack backtrace:
+CPU: 0 UID: 0 PID: 6137 Comm: syz.3.22 Not tainted 6.16.0-next-20250731-syzkaller #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 07/12/2025
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
+ print_deadlock_bug+0x28b/0x2a0 kernel/locking/lockdep.c:3041
+ check_deadlock kernel/locking/lockdep.c:3093 [inline]
+ validate_chain+0x1a3f/0x2140 kernel/locking/lockdep.c:3895
+ __lock_acquire+0xab9/0xd20 kernel/locking/lockdep.c:5237
+ lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5868
+ __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+ _raw_spin_lock_irqsave+0xa7/0xf0 kernel/locking/spinlock.c:162
+ down_trylock+0x20/0xb0 kernel/locking/semaphore.c:176
+ __down_trylock_console_sem+0xd0/0x1e0 kernel/printk/printk.c:326
+ console_trylock kernel/printk/printk.c:2868 [inline]
+ console_trylock_spinning kernel/printk/printk.c:2009 [inline]
+ vprintk_emit+0x320/0x7a0 kernel/printk/printk.c:2449
+ _printk+0xcf/0x120 kernel/printk/printk.c:2475
+ fail_dump lib/fault-inject.c:66 [inline]
+ should_fail_ex+0x3f5/0x560 lib/fault-inject.c:174
+ strncpy_from_user+0x36/0x290 lib/strncpy_from_user.c:118
+ strncpy_from_user_nofault+0x72/0x150 mm/maccess.c:192
+ bpf_trace_copy_string kernel/bpf/helpers.c:755 [inline]
+ bpf_bprintf_prepare+0xbbc/0x13d0 kernel/bpf/helpers.c:976
+ ____bpf_trace_printk kernel/trace/bpf_trace.c:373 [inline]
+ bpf_trace_printk+0xdb/0x190 kernel/trace/bpf_trace.c:363
+ bpf_prog_7c77c7e0f6645ad8+0x3e/0x44
+ bpf_dispatcher_nop_func include/linux/bpf.h:1322 [inline]
+ __bpf_prog_run include/linux/filter.h:718 [inline]
+ bpf_prog_run include/linux/filter.h:725 [inline]
+ __bpf_trace_run kernel/trace/bpf_trace.c:2257 [inline]
+ bpf_trace_run2+0x284/0x4b0 kernel/trace/bpf_trace.c:2298
+ __bpf_trace_contention_begin+0xdc/0x130 include/trace/events/lock.h:95
+ __do_trace_contention_begin include/trace/events/lock.h:95 [inline]
+ trace_contention_begin include/trace/events/lock.h:95 [inline]
+ __down_common+0x5ad/0x6a0 kernel/locking/semaphore.c:292
+ down+0x80/0xd0 kernel/locking/semaphore.c:100
+ console_lock+0x145/0x1b0 kernel/printk/printk.c:2849
+ do_fb_ioctl+0x509/0x750 drivers/video/fbdev/core/fb_chrdev.c:123
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:598 [inline]
+ __se_sys_ioctl+0xf9/0x170 fs/ioctl.c:584
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f92c678eb69
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffda68c54f8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00007f92c69b5fa0 RCX: 00007f92c678eb69
+RDX: 0000200000000080 RSI: 0000000000004606 RDI: 0000000000000005
+RBP: 00007ffda68c5550 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000001
+R13: 00007f92c69b5fa0 R14: 00007f92c69b5fa0 R15: 0000000000000003
+ </TASK>
 
 
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-Le 22/07/2025 à 10:56, Aditya Bodkhe a écrit :
-> commit a1be9ccc57f0 ("function_graph: Support recording and printing the
-> return value of function") introduced support for function graph return
-> value tracing.
-> 
-> Additionally, commit a3ed4157b7d8 ("fgraph: Replace fgraph_ret_regs with
-> ftrace_regs") further refactored and optimized the implementation,
-> making `struct fgraph_ret_regs` unnecessary.
-> 
-> This patch enables the above modifications for powerpc all, ensuring that
-> function graph return value tracing is available on this architecture.
-> 
-> In this patch we have redefined two functions:
-> - 'ftrace_regs_get_return_value()' - the existing implementation on
-> ppc returns -ve of return value based on some conditions not
-> relevant to our patch.
-> - 'ftrace_regs_get_frame_pointer()' - always returns 0 in current code .
-> 
-> We also allocate stack space to equivalent of 'SWITCH_FRAME_SIZE',
-> allowing us to directly use predefined offsets like 'GPR3' and 'GPR4'
-> this keeps code clean and consistent with already defined offsets .
-> 
-> After this patch, v6.14+ kernel can also be built with FPROBE on powerpc
-> but there are a few other build and runtime dependencies for FPROBE to
-> work properly. The next patch addresses them.
-> 
-> Signed-off-by: Aditya Bodkhe <adityab1@linux.ibm.com>
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-Reviewed-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
-> ---
-> 
-> Changelog:
-> v1 -> v2:
-> - Added explanation for redefining ftrace_regs_get_return_value()
-> and ftrace_regs_get_frame_pointer()
-> - Explained why stack space equivalent to 'SWITCH_FRAME_SIZE' is allocated.
-> 
->   arch/powerpc/Kconfig                     |  1 +
->   arch/powerpc/include/asm/ftrace.h        | 15 +++++++++
->   arch/powerpc/kernel/trace/ftrace_entry.S | 42 ++++++++++++++----------
->   3 files changed, 41 insertions(+), 17 deletions(-)
-> 
-> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-> index c3e0cc83f120..9163521bc4b9 100644
-> --- a/arch/powerpc/Kconfig
-> +++ b/arch/powerpc/Kconfig
-> @@ -250,6 +250,7 @@ config PPC
->   	select HAVE_FUNCTION_ARG_ACCESS_API
->   	select HAVE_FUNCTION_DESCRIPTORS	if PPC64_ELF_ABI_V1
->   	select HAVE_FUNCTION_ERROR_INJECTION
-> +	select HAVE_FUNCTION_GRAPH_FREGS
->   	select HAVE_FUNCTION_GRAPH_TRACER
->   	select HAVE_FUNCTION_TRACER		if !COMPILE_TEST && (PPC64 || (PPC32 && CC_IS_GCC))
->   	select HAVE_GCC_PLUGINS			if GCC_VERSION >= 50200   # plugin support on gcc <= 5.1 is buggy on PPC
-> diff --git a/arch/powerpc/include/asm/ftrace.h b/arch/powerpc/include/asm/ftrace.h
-> index 82da7c7a1d12..6ffc9c9cf4e3 100644
-> --- a/arch/powerpc/include/asm/ftrace.h
-> +++ b/arch/powerpc/include/asm/ftrace.h
-> @@ -50,6 +50,21 @@ static __always_inline struct pt_regs *arch_ftrace_get_regs(struct ftrace_regs *
->   		asm volatile("mfmsr %0" : "=r" ((_regs)->msr));	\
->   	} while (0)
->   
-> +#undef ftrace_regs_get_return_value
-> +static __always_inline unsigned long
-> +ftrace_regs_get_return_value(const struct ftrace_regs *fregs)
-> +{
-> +	return arch_ftrace_regs(fregs)->regs.gpr[3];
-> +}
-> +#define ftrace_regs_get_return_value ftrace_regs_get_return_value
-> +
-> +#undef ftrace_regs_get_frame_pointer
-> +static __always_inline unsigned long
-> +ftrace_regs_get_frame_pointer(const struct ftrace_regs *fregs)
-> +{
-> +	return arch_ftrace_regs(fregs)->regs.gpr[1];
-> +}
-> +
->   static __always_inline void
->   ftrace_regs_set_instruction_pointer(struct ftrace_regs *fregs,
->   				    unsigned long ip)
-> diff --git a/arch/powerpc/kernel/trace/ftrace_entry.S b/arch/powerpc/kernel/trace/ftrace_entry.S
-> index 3565c67fc638..3da14d8271d9 100644
-> --- a/arch/powerpc/kernel/trace/ftrace_entry.S
-> +++ b/arch/powerpc/kernel/trace/ftrace_entry.S
-> @@ -409,23 +409,31 @@ EXPORT_SYMBOL(_mcount)
->   _GLOBAL(return_to_handler)
->   	/* need to save return values */
->   #ifdef CONFIG_PPC64
-> -	std	r4,  -32(r1)
-> -	std	r3,  -24(r1)
-> +	stdu	r1, -SWITCH_FRAME_SIZE(r1)
-> +	std	r4, GPR4(r1)
-> +	std	r3, GPR3(r1)
-> +	/* Save previous stack pointer (r1) */
-> +	addi	r3, r1, SWITCH_FRAME_SIZE
-> +	std	r3, GPR1(r1)
->   	/* save TOC */
-> -	std	r2,  -16(r1)
-> -	std	r31, -8(r1)
-> +	std	r2, 24(r1)
-> +	std	r31, 32(r1)
->   	mr	r31, r1
-> -	stdu	r1, -112(r1)
-> -
-> +	/* pass ftrace_regs/pt_regs to ftrace_return_to_handler */
-> +	addi	r3, r1, STACK_INT_FRAME_REGS
->   	/*
->   	 * We might be called from a module.
->   	 * Switch to our TOC to run inside the core kernel.
->   	 */
->   	LOAD_PACA_TOC()
->   #else
-> -	stwu	r1, -16(r1)
-> -	stw	r3, 8(r1)
-> -	stw	r4, 12(r1)
-> +	stwu	r1, -SWITCH_FRAME_SIZE(r1)
-> +	stw	r4, GPR4(r1)
-> +	stw	r3, GPR3(r1)
-> +	addi	r3, r1, SWITCH_FRAME_SIZE
-> +	stw	r3, GPR1(r1)
-> +	/* pass ftrace_regs/pt_regs to ftrace_return_to_handler */
-> +	addi	r3, r1, STACK_INT_FRAME_REGS
->   #endif
-> 
->   
->   	bl	ftrace_return_to_handler
-> @@ -435,15 +443,15 @@ _GLOBAL(return_to_handler)
->   	mtlr	r3
->   
->   #ifdef CONFIG_PPC64
-> -	ld	r1, 0(r1)
-> -	ld	r4,  -32(r1)
-> -	ld	r3,  -24(r1)
-> -	ld	r2,  -16(r1)
-> -	ld	r31, -8(r1)
-> +	ld	r4,  GPR4(r1)
-> +	ld	r3,  GPR3(r1)
-> +	ld	r2,  24(r1)
-> +	ld	r31, 32(r1)
-> +	ld	r1,  0(r1)
->   #else
-> -	lwz	r3, 8(r1)
-> -	lwz	r4, 12(r1)
-> -	addi	r1, r1, 16
-> +	lwz	r3, GPR3(r1)
-> +	lwz	r4, GPR4(r1)
-> +	addi	r1, r1, SWITCH_FRAME_SIZE
->   #endif
->   
->   	/* Jump back to real return address */
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
 
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
