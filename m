@@ -1,119 +1,121 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A66F2E36F6;
-	Mon,  4 Aug 2025 03:38:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCAFB2BAF7;
+	Mon,  4 Aug 2025 05:49:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754278717; cv=none; b=OhyiS3bSBXlts9BR5kPRSRH84f3LmqmIiYL/j8k7fRrW5UmJBz0YD0c2XmV0cSP/62BsGKPelexoLLViyn862YaW/Y5Wy8oErbCDC/KsIlU2QKqxUqpFSHsfPLeauoq2Zsyo9xWTN8PUvrp5MOFtWs63muARyQ2lOtD+8qwzLCE=
+	t=1754286592; cv=none; b=VL+B6Bm5m0PQJJbKA8mufSyGIA989iyzt3oPA/utVhh7LyTd09HM4bD6VrK5RILvF2meH3Oa2lQxmV25Py/f1fey1p6EInNt/bERHmn/PscMtnbRMsP5yGSu8Hen9rUQEh8OwkujMlYXjCCrNYVzc0RIbMrEtYdo0BU/28COBIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754278717; c=relaxed/simple;
-	bh=SOeerCe2y6K5nRKWsYQD+Gw3CrMokUtIY1kTl7H92Ok=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VDpCrFrrQUzopFF2+opqgRcbokp/xSRvYNbVMXD01AE9aHhTXKs1FP5k+juedTHTkBsZ0U5UOtHWDSPi+JXyxb/QRboHBBejuicFXg0cz/22unpAWy9sC7yDRkWhQ3DLywmFWDTPO8W44c3jLA1WRVF9KzeaJl2LefsJIC7Vrtc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=vIsLKdYF; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1754286592; c=relaxed/simple;
+	bh=v6KOv9AwwPoGB+pXKveTCZw9kDFVMLUbbeeNYsX7GA0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=rlUrPHbKYJvAntBUlOe4ol3QTkd3qjfB3I6p84ZGeevoVRpg/eCwDWhRY3+t6dEUkzwBKD9Iz6EM/OQzmqETdwuA/k4c9hs0KFhVi7gUyapTnyW0Fv72Omagcq7XxwZaP5xH9OqtitehR/olFlBEhXvUSR/J9oi1xif2d02LeuQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4oMYbmHB; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ejsJ4aSE; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vIsLKdYF"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=SmxoINSQKVJVK+Bn4i2QXaigutnESsGDJWcnHJouMq8=; b=vIsLKdYFH8YXGskFCYuFxM0Kri
-	4LEo9ReJIfgKFC95xymdzIuZHgWmCy4G3xVF1JqLP/afdrq9I84T2Y/HuFvZL4VO6QmU21lsUX/J7
-	vabemJeVXNbK57caQoIcupupdF5BH7q6dfJPU0J/aad1iPWgFP1Pta6YnAxGVC/HxIlB76K9yRSGM
-	9j3b/WmA+tZKaDnoC39qDIVxVYX23JxNjVp20InQWi7XyuBDNDCOuusdG9eda9qGfK1Uki2htTbQ5
-	+Xwy3IqaT9W3uDTeg3KYHyV0grcCXOdru7B95ajExnsHQEygus1gpnlTvvukrNJXtwkIJZ4HcTmaN
-	wXIAK1ig==;
-Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uim1N-000000099Z0-0JOE;
-	Mon, 04 Aug 2025 03:37:57 +0000
-Date: Mon, 4 Aug 2025 04:37:56 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Robin Murphy <robin.murphy@arm.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Christoph Hellwig <hch@lst.de>, Leon Romanovsky <leon@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
-	Alexander Potapenko <glider@google.com>,
-	Marco Elver <elver@google.com>, Dmitry Vyukov <dvyukov@google.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, iommu@lists.linux.dev,
-	virtualization@lists.linux.dev, kasan-dev@googlegroups.com,
-	linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH 0/8] dma-mapping: migrate to physical address-based API
-Message-ID: <aJArFNkuP8DJIdMY@casper.infradead.org>
-References: <CGME20250625131920eucas1p271b196cde042bd39ac08fb12beff5baf@eucas1p2.samsung.com>
- <cover.1750854543.git.leon@kernel.org>
- <35df6f2a-0010-41fe-b490-f52693fe4778@samsung.com>
- <20250627170213.GL17401@unreal>
- <20250630133839.GA26981@lst.de>
- <69b177dc-c149-40d3-bbde-3f6bad0efd0e@samsung.com>
- <f912c446-1ae9-4390-9c11-00dce7bf0fd3@arm.com>
- <aIupx_8vOg8wQh6w@casper.infradead.org>
- <20250803155906.GM26511@ziepe.ca>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4oMYbmHB";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ejsJ4aSE"
+From: Nam Cao <namcao@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1754286582;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pE43r15NPasHIaYyV7dMb/iMne6ri7GQAz+8r8MJbhk=;
+	b=4oMYbmHBtJLdK2sdZ3c7qJl+o3xWeHKd98TnJMRYY68YF/nSIV+BHCRMg649Xr4vQaUtUx
+	zgyKTQY8It6EvGWWw6uY5apEOcSJsPnRIxm8svFHsYr3n8fDHM0PGcQ7xcCou3FHoQbE9b
+	K7M9Q0Ch3Sp//ivmMg5/XtBftvdN5X7qigOgBJirV5ZAO6l1gIvHiMMN/IZ7zxIrXM+d1F
+	05MvQ+2+609AJL3WorStgo72kNAhEdYwv35Cm9sveV/UAiZlsPdokO9B2KVcLpu/q6WFeE
+	WhK4zUobaOiaNMywINem6ssBXP6UiqjQzUj0P+axz6B+z3N81sCkfNOXbZLthQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1754286582;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pE43r15NPasHIaYyV7dMb/iMne6ri7GQAz+8r8MJbhk=;
+	b=ejsJ4aSEQt/AV2fcPQ7ynzVzKYAlU1M1wJYJuPQX7k0LvGIcggFr3B8gSSEl+aZTDxFiLL
+	tIUJ5/8LmoQmHODg==
+To: K Prateek Nayak <kprateek.nayak@amd.com>, Gabriele Monaco
+ <gmonaco@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, Ingo
+ Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Juri
+ Lelli <juri.lelli@redhat.com>, Vincent Guittot
+ <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Valentin
+ Schneider <vschneid@redhat.com>
+Subject: Re: [PATCH 4/5] sched: Add rt task enqueue/dequeue trace points
+In-Reply-To: <78775d05-b39e-4b8b-97dd-115f57582b50@amd.com>
+References: <cover.1753879295.git.namcao@linutronix.de>
+ <8f83869a5040bd7cd3096bd12090c1ab110ae5c4.1753879295.git.namcao@linutronix.de>
+ <767a9d59081220594d21856f329fb35988ef7925.camel@redhat.com>
+ <20250730151818.7RemAREO@linutronix.de>
+ <5065c29035be39dee954f2b233a40ae15dcc5035.camel@redhat.com>
+ <20250731073520.ktIOaGts@linutronix.de>
+ <179674c6-f82a-4718-ace2-67b5e672fdee@amd.com>
+ <20250801072946.nTiUlMwS@linutronix.de>
+ <97c8a989-08b1-4233-8f5a-cb8b582b6c02@amd.com>
+ <c403aacc94dc09aa9ad4441be6095d00b2091f68.camel@redhat.com>
+ <78775d05-b39e-4b8b-97dd-115f57582b50@amd.com>
+Date: Mon, 04 Aug 2025 07:49:29 +0200
+Message-ID: <875xf3vdp2.fsf@yellow.woof>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250803155906.GM26511@ziepe.ca>
+Content-Type: text/plain
 
-On Sun, Aug 03, 2025 at 12:59:06PM -0300, Jason Gunthorpe wrote:
-> Matthew, do you think it makes sense to introduce types to make this
-> clearer? We have two kinds of values that a phys_addr_t can store -
-> something compatible with kmap_XX_phys(), and something that isn't.
+K Prateek Nayak <kprateek.nayak@amd.com> writes:
 
-I was with you up until this point.  And then you said "What if we have
-a raccoon that isn't a raccoon" and my brain derailed.
+> Hello Gabriele,
+>
+> On 8/1/2025 4:34 PM, Gabriele Monaco wrote:
+>> Hello Prateek,
+>> 
+>> thanks for the comments, this looks much more convoluted than I would
+>> have expected.
+>> As Nam pointed out, currently RV is not going to rely on those events
+>> for fair tasks (existing monitors are fine with tracepoints like
+>> wakeup/set_state/switch).
+>> 
+>> For the time being it might be better just add the tracepoints in the
+>> RT enqueue/dequeue (the only needed for this series) and not complicate
+>> things.
+>> 
+>> At most we may want to keep tracepoint names general, allowing the
+>> tracing call to be added later to other locations (or moved to a
+>> general one) without changing too much, besides existing users.
+>> And perhaps a comment saying the tracepoints are currently only
+>> supported on RT would do.
+>
+> Most of my comments was just thinking out loud around fair tasks being
+> delayed on the dequeue path. If RV filters out RT tasks and the use-case
+> one concerns them, then Nam's suggestion is good.
+>
+> I was just being cautious of folks expecting a "enqueued <--> dequeued"
+> transition for *all* tasks and finding it doesn't hold after delayed
+> dequeue. Since these are internal tracepoints, I'm sure folks using them
+> with RV would do their due diligence when testing these monitors before
+> deployment.
+>
+>> 
+>> Anyway, that's your call Nam, I'm fine with your initial proposal as
+>> well, unless some scheduler guys complain.
+>
+> I would be happy to help test alternate approaches if others have
+> concerns around delayed dequeue but for all other cases, Nam's approach
+> looks good. Sorry if my paranoia caused you folks any trouble!
 
-> This was recently a long discussion in ARM KVM as well which had a
-> similar confusion that a phys_addr_t was actually two very different
-> things inside its logic.
+No trouble at all, it was all helpful comments.
 
-No.  A phys_addr_t is a phys_addr_t.  If something's abusing a
-phys_addr_t to store something entirely different then THAT is what
-should be using a different type.  We've defined what a phys_addr_t
-is.  That was in Documentation/core-api/bus-virt-phys-mapping.rst
-before Arnd removed it; to excerpt the relevant bit:
+I agree with Gabriele, it is not important right now, so I will stick to
+the latest diff I sent. Leaving it to the poor soul who needs this for
+fair tasks to figure it out (which will probably be future me).
 
----
-
-- CPU untranslated.  This is the "physical" address.  Physical address
-  0 is what the CPU sees when it drives zeroes on the memory bus.
-
-[...]
-So why do we care about the physical address at all? We do need the physical
-address in some cases, it's just not very often in normal code.  The physical
-address is needed if you use memory mappings, for example, because the
-"remap_pfn_range()" mm function wants the physical address of the memory to
-be remapped as measured in units of pages, a.k.a. the pfn.
-
----
-
-So if somebody is stuffing something else into phys_addr_t, *THAT* is
-what needs to be fixed, not adding a new sub-type of phys_addr_t for
-things which are actually phys_addr_t.
-
-> We clearly have these two different ideas floating around in code,
-> page tables, etc.
-
-No.  No, we don't.  I've never heard of this asininity before.
-
+Thanks for the insights,
+Nam
