@@ -1,106 +1,149 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58A60223DDE;
-	Mon,  4 Aug 2025 06:05:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A422422A4FC
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  4 Aug 2025 06:22:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754287544; cv=none; b=sCfuXaJ7O7Sfhlfa+FoCs6xqxUvP5cFfs+q4hgGb4qTvKwXj1O2z7W9O1Wjxa4VHad8gqk8lFdClWBNrq0pY2PBcg8htp8na9IrH2C0+QxUmDKBfQVUBC9wOJvXXB+Ect8eJU2O/Nu4lUPiUEzCCXZfzojfy6Njqs1E1DmGiv98=
+	t=1754288524; cv=none; b=e97D4AU8rzNWsmEPEO+b852XY/doRD/OqWe/TxKh151mhGondFUpp9sKU3Gf9FnuhCOWeKGCGWsVZrhExawl0wELwrC/ZGWphuE+q6iauq3VncrP/nFeOI/xEJg5zbt5LNwmaqJY6mgxxINOEcwuf05cs+iNtej5W4AKBsa0U14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754287544; c=relaxed/simple;
-	bh=f2UO1Xfipf3cy27q87nSBY3PLFb81udKPt37Waz6k40=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=QPrZdZWRdS7thzutNLUQ7ODdhijLCfz5gAyWZtJ8Sk8QXkwwhoHQY3aueaJ4Z7X1QAL+XbuKYiJKahZNCd8U6kmVCM+wtsPB0GeEiZsqy5LAs9tS37nVrYFCNZ6jn3fQcEPK0zTSG9e6osjAP/yE48E+edSf8jp0uQaxUGp3zTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZuumebY1; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=TAaLddOd; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1754288524; c=relaxed/simple;
+	bh=ZVTBW5jom+wDo14xqU/nVDagKZZ7c7CrXYvPIvLZROc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=H2S7UyIV45P2Ioeb1ek2AFY2GGiI2NcbPYkv3z4afuSkehkTXB3+qGL3PJ7eHGge1Cr9nnj69C3Y1SP4GGHdvw+/JRUxBw56+advIc3A3m/UXBxHcezaNdb0++eam4W0STUl4JLBxygQ/3najLsu2tQoxTj5/TQ/l87z5SwJRJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VFpTr7z4; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZuumebY1";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TAaLddOd"
-From: Nam Cao <namcao@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1754287541;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=f2UO1Xfipf3cy27q87nSBY3PLFb81udKPt37Waz6k40=;
-	b=ZuumebY1fiKoCwj+m8PUnbjAB70bQ9fB1PYJ1eHxmZ5+rHpQvNL+n/Ev08Psq7bNtVnXtY
-	mL6HcAQhO1MZdXJoEVNlks8XQ9GKr6Y0g+cQ551ybOjb8vGBuBfoyka2DyGjDW1DrlP1QR
-	k4L8fAA7Im4NwBsUcxmDUFRzeq/NJx8n3jT7RcGk6koPFo8X142DRMVOO50MVhkxgdV+X2
-	C5DPrrLH1nmfaLcW/RU3R2MSBvEj0jmHzG4vSBxed1KRu8Iu2hR9Jj5eU352nIySGkeVzx
-	UOuU20bgBIfaOV12/fm6ma2SAxYLikKeIZtApNs5x6EqJj9x8QH6gwwyy48eVQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1754287541;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=f2UO1Xfipf3cy27q87nSBY3PLFb81udKPt37Waz6k40=;
-	b=TAaLddOd89dst2OGZVze4VvpYlF3PJtqU+Zc8EJNCgkPobtmumICXd39NMEHaUBIMi4kPC
-	B5BE1kzzn8Tzh9Dg==
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, Ingo
- Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Juri
- Lelli <juri.lelli@redhat.com>, Vincent Guittot
- <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Valentin
- Schneider <vschneid@redhat.com>
-Subject: Re: [PATCH 5/5] rv: Add rts monitor
-In-Reply-To: <c1635857f735aa91679c153f785e09beed9b5b2f.camel@redhat.com>
-References: <cover.1753879295.git.namcao@linutronix.de>
- <20834b8fcd4dfe75642cec2097e29f4c636a33fb.1753879295.git.namcao@linutronix.de>
- <a78008bb05acae77f0572c3e5651cb2bceaaaf98.camel@redhat.com>
- <20250801075810._Ng7G1QT@linutronix.de>
- <c1635857f735aa91679c153f785e09beed9b5b2f.camel@redhat.com>
-Date: Mon, 04 Aug 2025 08:05:39 +0200
-Message-ID: <8734a7vcy4.fsf@yellow.woof>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VFpTr7z4"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-458b49c98a7so13792705e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 03 Aug 2025 23:22:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1754288521; x=1754893321; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=YeEcVaPruyFJjHGwTwns3V0T483/MZqGWdfOA8z6Bjg=;
+        b=VFpTr7z4lSDl+YfvurNCmckFom/oz2xyIMvZ0gd+Hrj+q/CwX7LA8Wv2aWp20BUmsc
+         F57UuHJ7mP+ZPOh96rfKGN1e9itJSwJaqb3Idw8jaz88CMwXQz7ksDIhIVYLHFxqbJtF
+         N68x/1GyeeSXALygyLIQhwsviGnoiBoDEBcLyTPSrEzQxOfgYIDWz20i/+nVOqptkraJ
+         Pnxz3DQ3xt+b2tju6lGLoSIAUChWXgbRIw4QCvV/YOwezbrnBuO4BzWaWY6a4/MrgoLO
+         4zOtZ81Wo5RMYvcy8iQfTDF/vibhanXtjFetQUP0N6eYa11u0hD/NOkdEYaLfdHUPVB4
+         0p4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1754288521; x=1754893321;
+        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YeEcVaPruyFJjHGwTwns3V0T483/MZqGWdfOA8z6Bjg=;
+        b=N+CnaiDkgsNdNilwXF9hS2GRP0jl9+7HALqvijtGhuXS9evJPemAZyFs4rYTSAi0rn
+         pT5d1aw7t8xijuJ8RAPalBqQJ4GgO6iFvoJd4QBpmSCkuR6DaUNOJN/mjSbt6+PilTEl
+         hf1zhMbZz0zKcVQ6JfSs12yIaPFH9j9OaJ0tL0bgAQa93KlchVsuM0ECb6L0jdQWAGBp
+         ZFOlsOkjh83XLyaU8pS/dTklLh5cvdyYgrJt7s4Z4hgYnIYPFJ28lqza0gD8JxGdiQl3
+         Z9Hp/oYmvQgFiTGxTDNstqJC4GtO9pMXwgZyi16LBBUvc0CKZwm7n3d+5j6DtgTxbvDF
+         WeBw==
+X-Forwarded-Encrypted: i=1; AJvYcCVqfo1/OE0rbtytqHOlz5HecPs5t4MxNAowMsrS4QkB5Uky1c/YcUBoZrY5/VLr2h5lo4QpLA0NvRY8mTWqXmPbF30=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyLkeB5T7E5m8VyI1RuhbQK0zPaFEbf0BLwR978lh+WElhtrRdJ
+	sp26jPV0LoHydEhicQiaebVmi3G2hnJM2GVN1YHyccHV+Nyl2Wl9A5ASh/E7MwpXlvE=
+X-Gm-Gg: ASbGnctFwi5ag+hj8k6yn8C8aOIoJDAiSJU+fEYjk0AyPHRRGjBAhrqHlmKA+mb01B4
+	5vGHAz6v8K20ihQd4tqoyCB4aS4pkzTHHaBPpRH7FjqrBJSzItQVkZK3zFXPLyC0Cdm09DBZc0v
+	LkdJL6whuwqAKCL+TCN6Mlf92GoU5VeW0k3hppLtSBto6Pj+Xq6hhhYjaJ1vzBRbZNqXI46XAeh
+	OzXn56f6BNoSN78J7JUbXfZdPrPHFwGkC947qSw8cCuqAhAvZ+WWqhWeHv8H0iPxIoTE1O1vEkk
+	lxfvdi7wjsCrGZlBVVOMsXx92LWRyIvoHip4OL2xtfIOued6HolTWoE+2J0PkFPsz/w7J+y3N0Q
+	DWcKx5uP4HRktuRNOL19Ur7j8Yr0=
+X-Google-Smtp-Source: AGHT+IH2T/8BuRm1IuYQ8ZzUxeJrK/gX8hiqAWQjPLCDcfQbPMq9lk1U66LzhxKbxgNFFI75QhHvNg==
+X-Received: by 2002:a05:600c:4692:b0:456:133f:a02d with SMTP id 5b1f17b1804b1-458b6b312d9mr64383135e9.17.1754288520939;
+        Sun, 03 Aug 2025 23:22:00 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-459db3048bdsm21955145e9.29.2025.08.03.23.21.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 03 Aug 2025 23:22:00 -0700 (PDT)
+Date: Mon, 4 Aug 2025 09:21:56 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: oe-kbuild@lists.linux.dev,
+	James Bottomley <James.Bottomley@hansenpartnership.com>,
+	bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Cc: lkp@intel.com, oe-kbuild-all@lists.linux.dev,
+	Roberto Sassu <roberto.sassu@huawei.com>
+Subject: Re: [PATCH v2 3/3] bpf: eliminate the allocation of an intermediate
+ struct bpf_key
+Message-ID: <df5a917b-fa24-42b7-8d71-b70e5156528e@suswa.mountain>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250730172745.8480-4-James.Bottomley@HansenPartnership.com>
 
-Gabriele Monaco <gmonaco@redhat.com> writes:
-> Wait, by /works properly/ you mean it reports a violation. I just
-> noticed you mention it in the description.
->
-> It's reasonable to request RT throttling disabled on sanely configured
-> RT systems. But throttling is a /valid/ kernel feature, I get you mark
-> it as /unwanted/ though.
+Hi James,
 
-True.
+kernel test robot noticed the following build warnings:
 
-> I guess if that's the case, this monitor doesn't belong in the sched
-> collection because it's meant to validate the kernel behaviour, not its
-> configuration for a specific purpose (RT).
-> Isn't it better off with the rtapp ones (which validate the system
-> configuration to run in an RT scenario).
->
-> Does it make sense to you?
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Yeah I was a bit unsure where to put this monitor. But under rtapp makes
-sense, if you prefer it there.
+url:    https://github.com/intel-lab-lkp/linux/commits/James-Bottomley/bpf-make-bpf_key-an-opaque-type/20250731-013040
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git master
+patch link:    https://lore.kernel.org/r/20250730172745.8480-4-James.Bottomley%40HansenPartnership.com
+patch subject: [PATCH v2 3/3] bpf: eliminate the allocation of an intermediate struct bpf_key
+config: i386-randconfig-141-20250803 (https://download.01.org/0day-ci/archive/20250804/202508040803.nwExqJWe-lkp@intel.com/config)
+compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
 
-> I still want to give it a run when I have a bit more time, besides with
-> RT throttle, can the monitor really fail on a working system?
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+| Closes: https://lore.kernel.org/r/202508040803.nwExqJWe-lkp@intel.com/
 
-RT throttling and fair deadline server are the only two known mechanisms
-which would fail the monitor.
+smatch warnings:
+kernel/trace/bpf_trace.c:1364 bpf_verify_pkcs7_signature() warn: impossible condition '(key == BUILTIN_KEY) => (0-u32max == u64max)'
 
-In the future, there may also be sched_ext deadline server:
-https://lore.kernel.org/all/20250702232944.3221001-1-joelagnelf@nvidia.com/#t
+vim +1364 kernel/trace/bpf_trace.c
 
-They exist for good reasons, but they are also a problem to real-time
-tasks. I am posting this monitor because we did a cyclic test the other
-day and observed some big latencies, and we had no idea why. It turned
-out it was the fair deadline server. So we need this monitor to tell us
-if some similar mechanisms exist or will appear in the future.
+cce4c40b960673 Daniel Xu       2024-06-12  1353  __bpf_kfunc int bpf_verify_pkcs7_signature(struct bpf_dynptr *data_p,
+cce4c40b960673 Daniel Xu       2024-06-12  1354  			       struct bpf_dynptr *sig_p,
+865b0566d8f1a0 Roberto Sassu   2022-09-20  1355  			       struct bpf_key *trusted_keyring)
+865b0566d8f1a0 Roberto Sassu   2022-09-20  1356  {
+cce4c40b960673 Daniel Xu       2024-06-12  1357  	struct bpf_dynptr_kern *data_ptr = (struct bpf_dynptr_kern *)data_p;
+cce4c40b960673 Daniel Xu       2024-06-12  1358  	struct bpf_dynptr_kern *sig_ptr = (struct bpf_dynptr_kern *)sig_p;
+9cc2aa8d6b5c93 James Bottomley 2025-07-30  1359  	struct key *key = (struct key *)trusted_keyring;
+74523c06ae20b8 Song Liu        2023-11-06  1360  	const void *data, *sig;
+74523c06ae20b8 Song Liu        2023-11-06  1361  	u32 data_len, sig_len;
+865b0566d8f1a0 Roberto Sassu   2022-09-20  1362  	int ret;
+865b0566d8f1a0 Roberto Sassu   2022-09-20  1363  
+9cc2aa8d6b5c93 James Bottomley 2025-07-30 @1364  	if ((unsigned long)key == BUILTIN_KEY)
 
-If you try the monitor and see problems, let me know. Most likely it
-would be a flaw in the monitor, but there is also a chance there is
-another throttling mechanism we are not yet aware of.
+BUILTIN_KEY should be changed to -1L so that this works on 32bit
+systems.
 
-Nam
+9cc2aa8d6b5c93 James Bottomley 2025-07-30  1365  		key = NULL;
+9cc2aa8d6b5c93 James Bottomley 2025-07-30  1366  
+9cc2aa8d6b5c93 James Bottomley 2025-07-30  1367  	if (system_keyring_id_check((unsigned long)key) < 0) {
+865b0566d8f1a0 Roberto Sassu   2022-09-20  1368  		/*
+865b0566d8f1a0 Roberto Sassu   2022-09-20  1369  		 * Do the permission check deferred in bpf_lookup_user_key().
+865b0566d8f1a0 Roberto Sassu   2022-09-20  1370  		 * See bpf_lookup_user_key() for more details.
+865b0566d8f1a0 Roberto Sassu   2022-09-20  1371  		 *
+865b0566d8f1a0 Roberto Sassu   2022-09-20  1372  		 * A call to key_task_permission() here would be redundant, as
+865b0566d8f1a0 Roberto Sassu   2022-09-20  1373  		 * it is already done by keyring_search() called by
+865b0566d8f1a0 Roberto Sassu   2022-09-20  1374  		 * find_asymmetric_key().
+865b0566d8f1a0 Roberto Sassu   2022-09-20  1375  		 */
+9cc2aa8d6b5c93 James Bottomley 2025-07-30  1376  		ret = key_validate(key);
+865b0566d8f1a0 Roberto Sassu   2022-09-20  1377  		if (ret < 0)
+865b0566d8f1a0 Roberto Sassu   2022-09-20  1378  			return ret;
+865b0566d8f1a0 Roberto Sassu   2022-09-20  1379  	}
+865b0566d8f1a0 Roberto Sassu   2022-09-20  1380  
+74523c06ae20b8 Song Liu        2023-11-06  1381  	data_len = __bpf_dynptr_size(data_ptr);
+74523c06ae20b8 Song Liu        2023-11-06  1382  	data = __bpf_dynptr_data(data_ptr, data_len);
+74523c06ae20b8 Song Liu        2023-11-06  1383  	sig_len = __bpf_dynptr_size(sig_ptr);
+74523c06ae20b8 Song Liu        2023-11-06  1384  	sig = __bpf_dynptr_data(sig_ptr, sig_len);
+74523c06ae20b8 Song Liu        2023-11-06  1385  
+9cc2aa8d6b5c93 James Bottomley 2025-07-30  1386  	return verify_pkcs7_signature(data, data_len, sig, sig_len, key,
+865b0566d8f1a0 Roberto Sassu   2022-09-20  1387  				      VERIFYING_UNSPECIFIED_SIGNATURE, NULL,
+865b0566d8f1a0 Roberto Sassu   2022-09-20  1388  				      NULL);
+865b0566d8f1a0 Roberto Sassu   2022-09-20  1389  }
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
+
