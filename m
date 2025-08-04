@@ -1,138 +1,144 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B07123D295;
-	Mon,  4 Aug 2025 13:02:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3798923C4F2;
+	Mon,  4 Aug 2025 13:20:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754312555; cv=none; b=pGnZaO9+r+vzADfc8ZRVeX9dXayt6QsRZNr5bRVaG/zPf5e/J91YnzHA88oP3gkSvufii3+Ci/JR6oOAYSLGDT09ehFVBBmh2zKzLciq9ugX+fw16ED5tfOHOtMtzVdMjCoxT6NcHm4SaabPbmLqbixMRJ+wxZIYkRB/27jXfXc=
+	t=1754313603; cv=none; b=gmOYWjHHCKrxCNgLUPFdb4lkiYFJJnV6ZHP7aDAEoeGNutw70tZAmmsHrAYvpXvyrpnprjrEOW9SK6IzbmVUkD7F3iAOSwf4+bTgUL2H+MMsVk/sS6QruhGw0BYSP4BoatZv3vsTTlfexTWlmuJQkbusZPXmsMybMXtj0tiNpls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754312555; c=relaxed/simple;
-	bh=KJ/UgFDqRbxBwDKBasxWHrD/lJ88LOWc5cck1Eyrlko=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LM2jVUqTX4DWRMMgkxBToMTA8xPy8a7DRHI4HBaIEsRRAZt99/FbC5zkSdcX22LNK+RSuMZYmJ1pMWO4LiDxFEzzc2IxJr3Skqyh3BAY70Tuu+PxUkMhQJmZnb/HZyDv/qtCQMojflEfTjMGqsCF7GXyZInBMV/5BJGsBQvweE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lbDQgVrM; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1754313603; c=relaxed/simple;
+	bh=w14/wXRv448wVL7ebjW5zOAoi4bWCfWJ7cL4AYxgg3I=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=o7ntVZapWsTv9dtcZYaFNaQNd1bZTqmMsbwAS409YWhT6PodThUAQryEFBSaSoPZNldBrXkPlKbYGkuTzPpTSSydidtLJpV9ldtujgxD+RhRJ1IQW0uajSzedZck8y4b8YSHgV/m2BNtm/Da5SdzzkpP9KeMh3f5CY7WbPdBGNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hcWcrSMk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lbDQgVrM"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-61571192ba5so6383530a12.2;
-        Mon, 04 Aug 2025 06:02:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1754312552; x=1754917352; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=qeIilQ03OODqPPS1A7gu4nmzTbwmTDY7BMwLvZtC32M=;
-        b=lbDQgVrMofk+U9pHHF01HqTi+PVB3UVZDH+nAuS7/FKvkf44ajy3aLRgBn18icwtLc
-         EGrzkJtXXgyJXUryu5b8XH9MgmAfYxgYN7cxPynJzkOUr713Tjde2SODmX/1lS9CBiun
-         zFYM6CtQw3AK2VF12pPby3F0M4pXOqXvbonKstEyJt5qtEPwRDITqkPIpb5cGYpuBru/
-         feuEIK6YMlBxdZ6H1XBHVLstXnPsLnhxo8/oW+tn1l250qwkuaUzHHTTqVzO9nlN++qh
-         o2D+NDd80DzfBKH6y24rQCLhBXVwHnDoc8xPBNDB4SznCwfkoMsAbmgRFgkL/zum7E5f
-         kcQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754312552; x=1754917352;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qeIilQ03OODqPPS1A7gu4nmzTbwmTDY7BMwLvZtC32M=;
-        b=aZXXN6oqkHIY8q/dMpV6kOb544cmTmzg4X3roE6vz7yU4VrQkIzyNdG4+ApHsK47aE
-         PQUVj/1oHFJ5jQVtIjSJr8Igwe4LUGEh9PkiYBfIyGNmhJuEvS2p7G89oa0cH1kN/RgO
-         TMzmnqBIPR7zWJKB9lQBmebR8eDuLmz2VC+XbpkXLNjEEwaqnWWWiRkTrztVTod3yJr2
-         m1QtNJWIgn3jqyTrlRhqttBLHQtRachxemV4pODd0BJk03xol/rSSVLnQv7bh4JBhBO1
-         s9qsizsuxAkVm9TmWqcnB7gYcx+eqexaik8S/aFxn3smM4bEW9MCnWP3D4pqgdCXJ86h
-         3ZLg==
-X-Forwarded-Encrypted: i=1; AJvYcCUKLDLAL1Mrd/j0ObC4TDiCE4WTWKlOgn883jHyqg4uDjOtKoDWSLycWyH7ubzoKDMK6x7YaT6sAQUreZywSQaP9IYl@vger.kernel.org, AJvYcCUQ0l1B1aTeg7oO095/srlf4zVtLAUll2k6U+snffX2lcyGdQ/6aPN/duvsrrmTbd5qbuAn/NAWRTxpDMbI@vger.kernel.org, AJvYcCVdegalTKzyDNEzSdsYUoBfgY0/o4Gup8WFDSmGusuZ9sOrUSqZXkT9JWYJksKkbH+Wryg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy7MSZ+puxtyvPASwKfZQP37cdmp7C46qleDOVfBYxvYvyIw/aq
-	+ixQNfkxW8WJ2XPWdqqHEifhJ+q3kgCJx+yJ67s7Kk7tpANjTrfUA4N4
-X-Gm-Gg: ASbGncvrJyL6zDDXmPePIGM/VVSyxoN9E571/89E+zwvMvQTSWgbd7bNqAvMl7+32zr
-	NHTXJuuJfreoV2tRLyqpSXEp48mJz9LaRXrwL6WhNbQij5Eb4NzRvAOF3FLlCuBJOTZ2BhutSV0
-	+CjmwwIIpdaiMF7TolIXYPzww3La90sldj9ZT4c0ZngPpKeVWgi2fmVomyOcsxUnANCoYwAk1wa
-	CWgoIJxZ09/3MJr9QJuBWftnkAZNUQK9nvMn+RnPsvXoLXOfcfAz0oBcPH7ZLwV06F+Y3yrg2H0
-	MsVFfmsa41WWQw1o/PPqhnGyHS1BFn9rV1369yN8+SdMO4DQRTjj1zpoOO3Ych49DRvpHZL7MaT
-	YbC/wPy/2AsSGbHhYBBo=
-X-Google-Smtp-Source: AGHT+IGwC42uDRuXfuDzfKGa7qC/PmM3hiopRQT50RbwaPKdEWGITvtAYzH5iixwAJHfvqgey5SbKA==
-X-Received: by 2002:a05:6402:3553:b0:615:9c3b:17f with SMTP id 4fb4d7f45d1cf-615e6ef235cmr8220200a12.15.1754312551017;
-        Mon, 04 Aug 2025 06:02:31 -0700 (PDT)
-Received: from krava ([173.38.220.40])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-615a8f25739sm6920530a12.21.2025.08.04.06.02.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Aug 2025 06:02:30 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Mon, 4 Aug 2025 15:02:27 +0200
-To: Tao Chen <chen.dylane@linux.dev>
-Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
-	martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org,
-	yonghong.song@linux.dev, john.fastabend@gmail.com,
-	kpsingh@kernel.org, sdf@fomichev.me, haoluo@google.com,
-	mattbobrowski@google.com, rostedt@goodmis.org, mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH bpf-next] bpf: Disable migrate when kprobe_multi attach
- to access bpf_prog_active
-Message-ID: <aJCvY7G-gVR8taLh@krava>
-References: <20250804121615.1843956-1-chen.dylane@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hcWcrSMk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A42E1C4CEE7;
+	Mon,  4 Aug 2025 13:20:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1754313602;
+	bh=w14/wXRv448wVL7ebjW5zOAoi4bWCfWJ7cL4AYxgg3I=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=hcWcrSMk88NzP1OxcvyrE/rxaTdGD0LEaK6tJy+PZMM85MYcSQm3wluQBY+0l+jqs
+	 ONtBKx1W8/wIzUY/IncVfj1wAlIV38Q52oIdy2VJoB53Sl70blbWRRb7D5iYx6+Pm9
+	 3dNFlN14Oc/iFDwgIqXXNU3MH0kF/jJOK22JiPjYMuEifffej9nh4NR/pfiyL4aUjf
+	 gB9U/omDLAK/YEufWptVdr9imYEkGWN5WmHqMA2nkSrMlsLNSI1cb33GVYTC/OEnzQ
+	 B3ocXxfGCxb9nWbzxK9zm7tcBv0HNoMOW01eGHKVvoL78RG86rN1nmn8/50JPuywLO
+	 9ahcEopAnkBJw==
+Date: Mon, 4 Aug 2025 22:19:58 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ bpf@vger.kernel.org, Douglas Raillard <douglas.raillard@arm.com>
+Subject: Re: [PATCH] tracing: Have unsigned int function args displayed as
+ hexadecimal
+Message-Id: <20250804221958.501b5573a0ceb9f8d33c8a1a@kernel.org>
+In-Reply-To: <20250731193126.2eeb21c6@gandalf.local.home>
+References: <20250731193126.2eeb21c6@gandalf.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250804121615.1843956-1-chen.dylane@linux.dev>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Aug 04, 2025 at 08:16:15PM +0800, Tao Chen wrote:
-> The syscall link_create not protected by bpf_disable_instrumentation,
-> accessing percpu data bpf_prog_active should use cpu local_lock when
-> kprobe_multi program attach.
+On Thu, 31 Jul 2025 19:31:26 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
+
+> From: Steven Rostedt <rostedt@goodmis.org>
 > 
-> Fixes: 0dcac2725406 ("bpf: Add multi kprobe link")
-> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
+> Most function arguments that are passed in as unsigned int or unsigned
+> long are better displayed as hexadecimal than normal integer. For example,
+> the functions:
+> 
+> static void __create_object(unsigned long ptr, size_t size,
+> 				int min_count, gfp_t gfp, unsigned int objflags);
+> 
+> static bool stack_access_ok(struct unwind_state *state, unsigned long _addr,
+> 			    size_t len);
+> 
+> void __local_bh_disable_ip(unsigned long ip, unsigned int cnt);
+> 
+> Show up in the trace as:
+> 
+>     __create_object(ptr=-131387050520576, size=4096, min_count=1, gfp=3264, objflags=0) <-kmem_cache_alloc_noprof
+>     stack_access_ok(state=0xffffc9000233fc98, _addr=-60473102566256, len=8) <-unwind_next_frame
+>     __local_bh_disable_ip(ip=-2127311112, cnt=256) <-handle_softirqs
+> 
+> Instead, by displaying unsigned as hexadecimal, they look more like this:
+> 
+>     __create_object(ptr=0xffff8881028d2080, size=0x280, min_count=1, gfp=0x82820, objflags=0x0) <-kmem_cache_alloc_node_noprof
+>     stack_access_ok(state=0xffffc90000003938, _addr=0xffffc90000003930, len=0x8) <-unwind_next_frame
+>     __local_bh_disable_ip(ip=0xffffffff8133cef8, cnt=0x100) <-handle_softirqs
+> 
+> Which is much easier to understand as most unsigned longs are usually just
+> pointers. Even the "unsigned int cnt" in __local_bh_disable_ip() looks
+> better as hexadecimal as a lot of flags are passed as unsigned.
+> 
+
+Looks good to me. Maybe this format is better for programers :)
+
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+Thanks,
+
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 > ---
->  kernel/trace/bpf_trace.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  kernel/trace/trace_output.c | 17 ++++++++++++++++-
+>  1 file changed, 16 insertions(+), 1 deletion(-)
 > 
-> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> index 3ae52978cae..f6762552e8e 100644
-> --- a/kernel/trace/bpf_trace.c
-> +++ b/kernel/trace/bpf_trace.c
-> @@ -2728,23 +2728,23 @@ kprobe_multi_link_prog_run(struct bpf_kprobe_multi_link *link,
->  	struct pt_regs *regs;
->  	int err;
->  
-> +	migrate_disable();
->  	if (unlikely(__this_cpu_inc_return(bpf_prog_active) != 1)) {
-
-this is called all the way from graph tracer, which disables preemption in
-function_graph_enter_regs, so I think we can safely use __this_cpu_inc_return
-
-
->  		bpf_prog_inc_misses_counter(link->link.prog);
->  		err = 1;
->  		goto out;
->  	}
->  
-> -	migrate_disable();
-
-hum, but now I'm not sure why we disable migration in here then
-
-jirka
-
->  	rcu_read_lock();
->  	regs = ftrace_partial_regs(fregs, bpf_kprobe_multi_pt_regs_ptr());
->  	old_run_ctx = bpf_set_run_ctx(&run_ctx.session_ctx.run_ctx);
->  	err = bpf_prog_run(link->link.prog, regs);
->  	bpf_reset_run_ctx(old_run_ctx);
->  	rcu_read_unlock();
-> -	migrate_enable();
->  
->   out:
->  	__this_cpu_dec(bpf_prog_active);
-> +	migrate_enable();
->  	return err;
+> diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
+> index 0b3db02030a7..b18393d66a7f 100644
+> --- a/kernel/trace/trace_output.c
+> +++ b/kernel/trace/trace_output.c
+> @@ -690,6 +690,12 @@ int trace_print_lat_context(struct trace_iterator *iter)
 >  }
 >  
+>  #ifdef CONFIG_FUNCTION_TRACE_ARGS
+> +
+> +static u32 btf_type_int(const struct btf_type *t)
+> +{
+> +	return *(u32 *)(t + 1);
+> +}
+> +
+>  void print_function_args(struct trace_seq *s, unsigned long *args,
+>  			 unsigned long func)
+>  {
+> @@ -701,6 +707,8 @@ void print_function_args(struct trace_seq *s, unsigned long *args,
+>  	struct btf *btf;
+>  	s32 tid, nr = 0;
+>  	int a, p, x;
+> +	int int_data;
+> +	u16 encode;
+>  
+>  	trace_seq_printf(s, "(");
+>  
+> @@ -744,7 +752,14 @@ void print_function_args(struct trace_seq *s, unsigned long *args,
+>  			trace_seq_printf(s, "0x%lx", arg);
+>  			break;
+>  		case BTF_KIND_INT:
+> -			trace_seq_printf(s, "%ld", arg);
+> +			/* Get the INT encodoing */
+> +			int_data = btf_type_int(t);
+> +                        encode = BTF_INT_ENCODING(int_data);
+> +                        /* Print unsigned ints as hex */
+> +                        if (encode & BTF_INT_SIGNED)
+> +				trace_seq_printf(s, "%ld", arg);
+> +                        else
+> +                                trace_seq_printf(s, "0x%lx", arg);
+>  			break;
+>  		case BTF_KIND_ENUM:
+>  			trace_seq_printf(s, "%ld", arg);
 > -- 
-> 2.48.1
+> 2.47.2
 > 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
