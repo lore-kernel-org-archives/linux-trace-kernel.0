@@ -1,191 +1,142 @@
-Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3755828643E
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  4 Aug 2025 16:50:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A179F223DFB
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  4 Aug 2025 18:18:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754326233; cv=none; b=hqpLUKnmicdaGL1KlVK4hYbAUhdis71WJmGNGt9yhI8dramIcaTkxcn/6QDXRLLjbFB/VfVC9BjQNzdoExRZ11PjCQTd03o17vsOG3VZnbL76Uuw8Itwa89jyzmE5ZrbQzDHzhKfmBo0fFKFoiViekal47I7pmAG5jYiyHs4cVw=
+	t=1754331522; cv=none; b=BXO9Ki+CZdmoiuwC9h4Pba8O8ltN/lsd+3ohl8lU1i1g5wQ8ENpq8i1YGwml8RcwtuO1FR/w5VT/E4VTLHCLmlQCCAkB2jJ94kxh/LZuyai/mJn0cLYyIjUCTAkkFxH2cHPcu3QGZ5Z84JvQ7xKCBDMjqMHUR9zQwSMgEUK5BN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754326233; c=relaxed/simple;
-	bh=kK0pAZEQ3UTDnUPphllVs8Qqcw43r7Oswt4hrdkA9rY=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=JFB3w4y7RF3JXVVvbnB3pbQJTmFjsEGhZzWg9keVY3gS2wvBoUG0rVxbgTJNuxB6HpoxpQoFOEKBBBB3Cc0w6HEt9zChvmSMF9Av5J3VSSItQ8A11Ta+0/z1pACf+DTERYwDeipVkJ2dbOB26Z6RyKpn0lxnHNE4cjhd9q2h9F4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3e410d87893so33467475ab.3
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 04 Aug 2025 09:50:31 -0700 (PDT)
+	s=arc-20240116; t=1754331522; c=relaxed/simple;
+	bh=sJmIS+4VMfjqdG20GuSrtYDj9UHHKpW7QBhkO353ZHU=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YA0+y+faqLXhZ1hCycP6lX0zvnC7vkX9nH9JQaQ9NeQUEkTT99PMsWZPacEXDRVg4nJRt/6/4yEcWQBFarQS+5uRFNsLrpTXi50rpaCGY9aFjzWKMfB2Dn6YcZHac2a3XwPeCIumei22/NEWmI0f5aNiVUMzARmORdDoeJ1g+bs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Bu0fBxRB; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Bu0fBxRB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1754331519;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qPFuA3XT5rZs0YkAQkaYeJ3lMViwpDLOl0oehXQ14cg=;
+	b=Bu0fBxRB3Xwib2LPTtJz/ZZaXeAzINqf5EkMlZnDZSQvHinoiHmquD2aTuSYXSqGEmoVdB
+	yG64JGyTFdambR6b6LlafCZHnBsM7XW7oO+3cOFGC/vGtSnraG9QNhcyBQuSUjBxkVXO/z
+	E7RwUcfvj3BS2YVhilnXU5v0rFpDUn4=
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com
+ [209.85.166.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-570-Uqod6vOaOmiSSNMFQNUBiQ-1; Mon, 04 Aug 2025 14:18:36 -0400
+X-MC-Unique: Uqod6vOaOmiSSNMFQNUBiQ-1
+X-Mimecast-MFC-AGG-ID: Uqod6vOaOmiSSNMFQNUBiQ_1754331516
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-87c43c2af72so352329339f.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 04 Aug 2025 11:18:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754326230; x=1754931030;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=fagjy2iLto/pnsl8DNKQe4B2WHfyVOXCDXwDQMZ0quQ=;
-        b=lvlJzom6OCHHj6avYLV7e35xCID0kAe7ri7DAuwWgwJABDtwi9VP9JxmBl8WLisksX
-         l/wGot83c/VecpdO4jnO4xTDeo9Q8PupyfM9M5MddjUCI9evQr0sRdQGktJRJM4Nwjay
-         g3Xu2AaWE0qPoAmanx2HVvPFEm/rA4A64rrvvdkVWBfpOJ9STOPifNdQzP4r6xLZrvqE
-         gdI8aa82XghiATtRy9jXtkiyNNntclQ4FHcFFwoZ3xMvu2qNb+j7N8JKTMWDQOcMqT5U
-         oENaFXS1c8f6G6Q41+7xJKa4lApPQii0Lm5JgoGljC2r+lvym2CaoKP2Snk+Oq6GpA6H
-         dpdw==
-X-Forwarded-Encrypted: i=1; AJvYcCX8zti6cpH1YBXYdApA5nyXXLzk2dTlr3vOy3Zj135OWLqD899OcCpR4K3U23UPbeu6wxE56w7lGMgQm01I3oUldRc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZcQ6FS8PqsEdjrwaX4+b6RhGjnX/BD4vpNUaq/lxASD+Kh8GV
-	FjZ3gPBTy/HSkZKh4As9YLVY56nE8T/rcy3MNHND0kYkdSUEyMae+gKdIh+U1QOcUt6bDMFY9/J
-	1YIsT75Bzv0iRugFa/X4lHmuMoD/+/FnP50ch8LDXUdSjFyg3Kx7gYM24qcI=
-X-Google-Smtp-Source: AGHT+IFIhmNbFt0lmxEGAmQHdR0pjiegiXE6hRN7V8igjGNkj/roFw/kYULydhUwmZa1fRnvEO0KAi4rfFVJOgjGTTLbdhJBUSXG
+        d=1e100.net; s=20230601; t=1754331515; x=1754936315;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=qPFuA3XT5rZs0YkAQkaYeJ3lMViwpDLOl0oehXQ14cg=;
+        b=fEPDA+aKceMs4qoN7HwWWTZbIlaE5f5BYaq5qE9rOQlTbYEPV3f4UftU2QG7pnWmFV
+         QCqstrGGcU+4XZgSsJBHRwy4OXr7Ws0VTVu8EtgOhT9XbxBh04qZE5DgKcpW+bc93Ssc
+         T9gldeCJiKoJOX7HymvFpRCcp1T1RkVa0VoFm5ANl5fZdSBTsZ4p+PfEUZwzkvAk2wJM
+         FwzD9z0+r8b7roGwznd9tmwnl6zEMA9o7cEU9PLeZcflXxNQtmwAZGh9ZwW/UgYfQlCP
+         MBFR3xDmrrGxybFGW5Hu+TM55sTvYN12zyEFFrasFEZuuPtlI5Ko6uRuFw5x+JJ4/Qk+
+         8+tQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX4QTOLYlo56L7EeDELPwi77UxIswgQJ9A5mk+Lzxj7sn7QLsG7GnAS81m/XJvNYvRuqwqZD8h8v6/8O1LuxCJUdg4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzgaoA+V0lRctuNWHdMdRI5SCsmeHbsmGPhgQBAkFkCEfU/G73G
+	Q60JAQvbByEauuL9BMRlGeryuk52XIxi7FF87ReOcjWJF18ir58pNQEWv5aSv+hqd70STCaIn9k
+	YiJG6tqu6DyQhWppc8An+2UE9DutsEIRgM2k4LAreut7G9E3sJsmi4cSnvpsJL1B78Bd2M6BtIQ
+	==
+X-Gm-Gg: ASbGnctVw8rSCHUmveiIXezecYLGm6YVNsUCtXjXCRg6fFQ4f5lTT7iRJK7Sjz4q/iM
+	9zIMAh7CrZBdyz0k6L4ca+1kmVOGxGcoCTPno35Hd6obqULDKErMsE2P8Jgc3d5j1yZ15DWNBay
+	ywpUa4RruXQohvJmTdoXzj4EWPOLUAl4frYSeWfjjJMuPd6/bpNgu3QPdE6ajM3JPfb3GFqBBN8
+	WuXf5QLhwN9QFUypUqxFJ/8EySHjNxSWKwxYODowqIjljVZhxNZPte0gWEdOCHQjw2ZkDf+gVtX
+	cocxDmx6YDgm3wJc8HxNxMlEtU9Aej2tZyWOdoPvoKRQ5wZyPZzPflrezGZzruLbzhgg
+X-Received: by 2002:a05:6602:2cd5:b0:87c:2f66:70f9 with SMTP id ca18e2360f4ac-8816824b198mr1908989939f.0.1754331515398;
+        Mon, 04 Aug 2025 11:18:35 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGRY7UzzPxt1OP5gyqT0uCW4Gog0m9+ZLLEFgonjkQDZIWdxputL/74lAccIGpspoDTOpfy5Q==
+X-Received: by 2002:a05:6602:2cd5:b0:87c:2f66:70f9 with SMTP id ca18e2360f4ac-8816824b198mr1908985239f.0.1754331514891;
+        Mon, 04 Aug 2025 11:18:34 -0700 (PDT)
+Received: from crwood-thinkpadp16vgen1.minnmso.csb ([50.145.183.242])
+        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-88187f182a7sm60068839f.6.2025.08.04.11.18.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Aug 2025 11:18:34 -0700 (PDT)
+Message-ID: <0faa958ef9cc4b834a5ecdc92acd89520f522d44.camel@redhat.com>
+Subject: Re: [PATCH v2] tools/rtla: Consolidate common parameters into
+ shared structure
+From: Crystal Wood <crwood@redhat.com>
+To: Costa Shulyupin <costa.shul@redhat.com>, Steven Rostedt
+	 <rostedt@goodmis.org>, Tomas Glozar <tglozar@redhat.com>, John Kacur
+	 <jkacur@redhat.com>, Eder Zulian <ezulian@redhat.com>, Dan Carpenter
+	 <dan.carpenter@linaro.org>, Jan Stancek <jstancek@redhat.com>, 
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org
+Date: Mon, 04 Aug 2025 13:18:33 -0500
+In-Reply-To: <20250726072455.289445-1-costa.shul@redhat.com>
+References: <20250726072455.289445-1-costa.shul@redhat.com>
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1d9d:b0:3dc:7f3b:acb1 with SMTP id
- e9e14a558f8ab-3e41618be7dmr155298785ab.13.1754326230187; Mon, 04 Aug 2025
- 09:50:30 -0700 (PDT)
-Date: Mon, 04 Aug 2025 09:50:30 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6890e4d6.050a0220.7f033.000e.GAE@google.com>
-Subject: [syzbot] [trace?] [bpf?] possible deadlock in down_trylock (3)
-From: syzbot <syzbot+c3740bc819eb55460ec3@syzkaller.appspotmail.com>
-To: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
-	daniel@iogearbox.net, eddyz87@gmail.com, haoluo@google.com, 
-	john.fastabend@gmail.com, jolsa@kernel.org, kpsingh@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	martin.lau@linux.dev, mathieu.desnoyers@efficios.com, 
-	mattbobrowski@google.com, mhiramat@kernel.org, rostedt@goodmis.org, 
-	sdf@fomichev.me, song@kernel.org, syzkaller-bugs@googlegroups.com, 
-	yonghong.song@linux.dev
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: wrAGqgaSYP9CdDf4BlbwpxQBRY1vehciFYASOg0jBaw_1754331516
+X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Sat, 2025-07-26 at 10:24 +0300, Costa Shulyupin wrote:
+> timerlat_params and osnoise_params structures contain 15 identical
+> fields.
+>=20
+> Introduce a common_params structure and move those fields into it to
+> eliminate the code duplication and improve maintainability.
+>=20
+> Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
 
-syzbot found the following issue on:
+FWIW I have a bigger consolidation patchset in the works, that merges a
+lot of the codepaths as well as having everything use osnoise_params
+(with some members being tool-specific, indicated by comments).  If you
+want, I could rebase that on this and use container_of() to for tool-
+specific params... but then that adds complexity with the top and hist-
+specific params, most of which are common between timerlat and osnoise
+(and not merged by this patch).  So we might want to just keep it simple
+with one big struct.
 
-HEAD commit:    84b92a499e7e Add linux-next specific files for 20250731
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=11065aa2580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b335f01a07f73eac
-dashboard link: https://syzkaller.appspot.com/bug?extid=c3740bc819eb55460ec3
-compiler:       Debian clang version 20.1.7 (++20250616065708+6146a88f6049-1~exp1~20250616065826.132), Debian LLD 20.1.7
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14167834580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16f27cf0580000
+Any thoughts?
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/97d9ce461c85/disk-84b92a49.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/0ca812ed76e7/vmlinux-84b92a49.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/0959d28a047f/bzImage-84b92a49.xz
+> diff --git a/tools/tracing/rtla/src/utils.h b/tools/tracing/rtla/src/util=
+s.h
+> index a2a6f89f342d..4c99a3746380 100644
+> --- a/tools/tracing/rtla/src/utils.h
+> +++ b/tools/tracing/rtla/src/utils.h
+> @@ -59,6 +59,32 @@ struct sched_attr {
+>  };
+>  #endif /* SCHED_ATTR_SIZE_VER0 */
+> =20
+> +/*
+> + * common_params - Parameters shared between timerlat_params and osnoise=
+_params
+> + */
+> +struct common_params {
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+c3740bc819eb55460ec3@syzkaller.appspotmail.com
+I'm not sure that util.h makes sense for this... it's pretty core rtla
+stuff rather than helper utilities.  I'd just put it in osnoise.h (or a
+new common.h if we want to keep the actual-osnoise-tracer stuff
+separate, though currently it's a jumble).
 
-FAULT_INJECTION: forcing a failure.
-name fail_usercopy, interval 1, probability 0, space 0, times 0
-============================================
-WARNING: possible recursive locking detected
-6.16.0-next-20250731-syzkaller #0 Not tainted
---------------------------------------------
-syz.3.22/6137 is trying to acquire lock:
-ffffffff8e12e278 ((console_sem).lock){-...}-{2:2}, at: down_trylock+0x20/0xb0 kernel/locking/semaphore.c:176
+Do we have any naming conventions for the actual osnoise tracer as
+opposed to the broader osnoise family?  I don't know if it's likely
+we'll ever try to put something outside the osnoise family to rtla, but
+if we do "common" could be a bit too generic.  Not sure if that's worth
+worrying about at this point.  Certainly better than using "osnoise" for
+both without clarifying.
 
-but task is already holding lock:
-ffffffff8e12e278 ((console_sem).lock){-...}-{2:2}, at: down+0x39/0xd0 kernel/locking/semaphore.c:96
+-Crystal
 
-other info that might help us debug this:
- Possible unsafe locking scenario:
-
-       CPU0
-       ----
-  lock((console_sem).lock);
-  lock((console_sem).lock);
-
- *** DEADLOCK ***
-
- May be due to missing lock nesting notation
-
-2 locks held by syz.3.22/6137:
- #0: ffffffff8e12e278 ((console_sem).lock){-...}-{2:2}, at: down+0x39/0xd0 kernel/locking/semaphore.c:96
- #1: ffffffff8e139f20 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire include/linux/rcupdate.h:331 [inline]
- #1: ffffffff8e139f20 (rcu_read_lock){....}-{1:3}, at: rcu_read_lock include/linux/rcupdate.h:841 [inline]
- #1: ffffffff8e139f20 (rcu_read_lock){....}-{1:3}, at: __bpf_trace_run kernel/trace/bpf_trace.c:2256 [inline]
- #1: ffffffff8e139f20 (rcu_read_lock){....}-{1:3}, at: bpf_trace_run2+0x186/0x4b0 kernel/trace/bpf_trace.c:2298
-
-stack backtrace:
-CPU: 0 UID: 0 PID: 6137 Comm: syz.3.22 Not tainted 6.16.0-next-20250731-syzkaller #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 07/12/2025
-Call Trace:
- <TASK>
- dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
- print_deadlock_bug+0x28b/0x2a0 kernel/locking/lockdep.c:3041
- check_deadlock kernel/locking/lockdep.c:3093 [inline]
- validate_chain+0x1a3f/0x2140 kernel/locking/lockdep.c:3895
- __lock_acquire+0xab9/0xd20 kernel/locking/lockdep.c:5237
- lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5868
- __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
- _raw_spin_lock_irqsave+0xa7/0xf0 kernel/locking/spinlock.c:162
- down_trylock+0x20/0xb0 kernel/locking/semaphore.c:176
- __down_trylock_console_sem+0xd0/0x1e0 kernel/printk/printk.c:326
- console_trylock kernel/printk/printk.c:2868 [inline]
- console_trylock_spinning kernel/printk/printk.c:2009 [inline]
- vprintk_emit+0x320/0x7a0 kernel/printk/printk.c:2449
- _printk+0xcf/0x120 kernel/printk/printk.c:2475
- fail_dump lib/fault-inject.c:66 [inline]
- should_fail_ex+0x3f5/0x560 lib/fault-inject.c:174
- strncpy_from_user+0x36/0x290 lib/strncpy_from_user.c:118
- strncpy_from_user_nofault+0x72/0x150 mm/maccess.c:192
- bpf_trace_copy_string kernel/bpf/helpers.c:755 [inline]
- bpf_bprintf_prepare+0xbbc/0x13d0 kernel/bpf/helpers.c:976
- ____bpf_trace_printk kernel/trace/bpf_trace.c:373 [inline]
- bpf_trace_printk+0xdb/0x190 kernel/trace/bpf_trace.c:363
- bpf_prog_7c77c7e0f6645ad8+0x3e/0x44
- bpf_dispatcher_nop_func include/linux/bpf.h:1322 [inline]
- __bpf_prog_run include/linux/filter.h:718 [inline]
- bpf_prog_run include/linux/filter.h:725 [inline]
- __bpf_trace_run kernel/trace/bpf_trace.c:2257 [inline]
- bpf_trace_run2+0x284/0x4b0 kernel/trace/bpf_trace.c:2298
- __bpf_trace_contention_begin+0xdc/0x130 include/trace/events/lock.h:95
- __do_trace_contention_begin include/trace/events/lock.h:95 [inline]
- trace_contention_begin include/trace/events/lock.h:95 [inline]
- __down_common+0x5ad/0x6a0 kernel/locking/semaphore.c:292
- down+0x80/0xd0 kernel/locking/semaphore.c:100
- console_lock+0x145/0x1b0 kernel/printk/printk.c:2849
- do_fb_ioctl+0x509/0x750 drivers/video/fbdev/core/fb_chrdev.c:123
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:598 [inline]
- __se_sys_ioctl+0xf9/0x170 fs/ioctl.c:584
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f92c678eb69
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffda68c54f8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00007f92c69b5fa0 RCX: 00007f92c678eb69
-RDX: 0000200000000080 RSI: 0000000000004606 RDI: 0000000000000005
-RBP: 00007ffda68c5550 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000001
-R13: 00007f92c69b5fa0 R14: 00007f92c69b5fa0 R15: 0000000000000003
- </TASK>
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
