@@ -1,206 +1,115 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA4681D5CF2;
-	Mon,  4 Aug 2025 10:54:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED7591F4617
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  4 Aug 2025 11:04:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754304871; cv=none; b=b5VphjqpHvKTXGlnKOp68hfAGc+NPVccUyln8omoPCg3CzYpj8kAtrCASjhxsG+nIlLFYr+crIjZiTgzb4iZGWSWitu2RHlsba3CQUEcJ+RrFJKUlHe3+PZIdnRcV6+TUQPNhtlBd2FcKmF5Qfw6Pg6we2198TP7BbilWgeyp5E=
+	t=1754305483; cv=none; b=dOvrYr58NKXgEF3tkjXfdzikXlpV+wZfpAGLhcZHJ92T0vWQZ8VI/KAYRqPa/j8q9nBJVo1fRWn0Z27801wohKBqW/fApnnAoTmeAt9kNUNrkx7WSpR6vFNyqLPwi3/NxSrkaKoD0nia776f4/yvpSJcxTwLKpyfZ2eh1pOBJCI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754304871; c=relaxed/simple;
-	bh=LLYmh07tODzNKrSqXaL0z3ysxtPy/JmLxTic6NiwVjE=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ov2B4Z+1XE7OwKefx/80lvOVxzdoz0RgshwJgXxU4+HcVH4yh+C9ZFPjK9ar1tJloWMBdZIsbuMEAqg+30p0cI8d8KsEN1ejUQztOX+wxsmXhDyoBbNI7qI79QdZGwA+FwK7Radx7o/FK/VQQHy2AYpDR2UXsuztWAmGuyh7iwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Uh2Gn0q0; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1754305483; c=relaxed/simple;
+	bh=AlMaGkAWIp33XVD6gYnhzdujTiQCBHSv7RY66Elv5fs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LjkSM4RwJd4CpyUUTajwk4mfXYoUgGiSS79hM4WQ27BmRyc6Gb2cnNbpjXkOBAYCIzzharJYTUIlIyMWjMTpZR2BMb50CsJjd0XvNW6K19qNoXXMpjuNFjvm4vHOiAfZRnDT5U/uhrP4Kjk+6V+yKfvioWa1H6w6S2+hkBkTf1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UyE6WMyd; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Uh2Gn0q0"
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-33211f7f06eso35695241fa.2;
-        Mon, 04 Aug 2025 03:54:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1754304868; x=1754909668; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=X4RxvHMamXD48DKrjLVxOGxx8Xo0bomZZqlvqy6+mMo=;
-        b=Uh2Gn0q05+FYkWk0VZulC4Q/x7+Yq8YKAgFG8Zgy0lXIKYjRxrUY01lGBijYFcWzI9
-         czAGM84crafWTALrr2y7nFIqOB8c/KLZRLDMPxzE9Ip8JouprTpkzDfmvytNaKwhNlSy
-         8rmfj5d279xMnRcDO/8XvjeC72IWIRxrE3JqhezxFdnPlBcu4zDWuwQ9xtFKMVnlHzdw
-         CtdPeXs63CMRXYKQfIeAjPhZswnmsSzE7czti+pHuGuvVkbxKHH2oL08cYUy4yPjfP/+
-         DFoXeUr7wWjwGgNAsY0zInJFA0o+0yXia5SKyKub2ckNpNc+L/aSH6fDntuTS+AOZ9zc
-         xt8A==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UyE6WMyd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1754305480;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AlMaGkAWIp33XVD6gYnhzdujTiQCBHSv7RY66Elv5fs=;
+	b=UyE6WMydZkKWGDa8YOxvZBBUyN8ZV9vwetyXyBgGVIDdbXUpKGMHmXiLEg1NcmfAJ/qWQF
+	yQDryGtGt43EXw0nqr1uEtd6Jt7/GybgytYNGoUesoOrzWQBo+aIR5voHL0IksHzA+n4HP
+	t7tx9ZaJyT+oEuOn1QYQPW8cQ5iUKTc=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-37-cEdKM-RONnaI7ZyizUVUkg-1; Mon, 04 Aug 2025 07:04:39 -0400
+X-MC-Unique: cEdKM-RONnaI7ZyizUVUkg-1
+X-Mimecast-MFC-AGG-ID: cEdKM-RONnaI7ZyizUVUkg_1754305479
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-af92f13d2abso197394966b.2
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 04 Aug 2025 04:04:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754304868; x=1754909668;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=X4RxvHMamXD48DKrjLVxOGxx8Xo0bomZZqlvqy6+mMo=;
-        b=L2k0w2eopkCw+wo7lSvRcthu+P6ngN0GBh3oE8S99h7ARNfuNwcJ3sqaTSyvTBj8Ob
-         RTSXMzCFRRW2CIgn4FDiu3z2jxl8WNnd0fQc0LFxy5UoxCq7EvsihPil25VUu0CRtASJ
-         62jUrqE+AJYaIkd6EQ+QqwhBHUI+mYL59VhAMFuiBFvPp+k6fxDA5i7RHGObo59NHIUs
-         SC0liQsrwFN2jfN8OlF9NAehnRMRtktr0GMMkok+yymTk5Xh8WlKlMf+PnrLYfQRFy9s
-         Au/+ijwa3sXmZQtHcB9r0K94mTtQlI9y0fXRkO0DrRVQR+ijX+dMq4/fDNqPg6q42BUW
-         xLDw==
-X-Forwarded-Encrypted: i=1; AJvYcCUNfsY32aenR5TTYjLopQxJcJW0YI1xBB15q1f/KgaN0jxS+wet7xInMsnHq3fJNe2g0zRHDb9pHNzyXGHDLg==@vger.kernel.org, AJvYcCV/LudbpFr3ZPYbKPc3NK9XAPQg0rMwtpxN0Xty5Ekj2F1hmmn76FzkZq7PEUxB1C97ixU=@vger.kernel.org, AJvYcCVnN3c06z5ESZ1w1IyzYUF3altTy9tMBWdDjhgwvwHEYFYEeSxVI3DxnZVmWdG4ScY6m3ok3flBauiIrBMf@vger.kernel.org, AJvYcCWpsnTL3WvYW42tMrSExp3+NyfUBc6M0ldR1s7ZPBt74xruaoSI55CEUpkcyk5YF61O5Cw73UnMfoPOOw==@vger.kernel.org, AJvYcCXGCNjxKLGpTSlJtKBHuDRqI6JhZ66Ka9+FjLr4fpklNr9f+Www1vShUoVavwQWGB+SgtwBuUc2/JzksrmzBfsvV/4n@vger.kernel.org, AJvYcCXin6r0nuOsGKAL5x+yojTjbWF1YZjXeAY0ylQCgisn9tOqxyGbdNobIuDq93XJM8/l7uN90yKk/yYs@vger.kernel.org
-X-Gm-Message-State: AOJu0YxR2En5uTOoAn20N13788kkpolieOSeTRTfBgVEGUewKM2qeSwM
-	8uxeiVJ4+KMxNhIvlvpil10gu80jPi1Hvwm9tx55Pu/2bk0w0iptlU0A
-X-Gm-Gg: ASbGnctajp32N59rDl1u87AMGHhdS7VjKpeOfg6gYAkEHPsB6sAmXkESHOoaYNuibS0
-	lozIQfUJel+4HJA3JC/ruIT2LLwF1EyvefBW1TVVPGNC4dv9v2MdeagVhSCbZ2kxi6TF3WwbFMe
-	YBMTdGTBMGK3SzgfzwA4W4fiYQDRi3c/Uk4cCya9Ep4Z2vK8IlMVHbysYVH6qHwLrCG16t3N63M
-	EwlT8h0QoxNEsFfn9/RmFWrzjANfWwyV7uaeJysIG2VHjmf5g7oCIywY8Ao3GKWP19r4dVBV+8t
-	9iMLuARGEXs+h2EgkrgUrFhzVMAfweC5fXHNn8H79DEjQs/QtRm7IDFgpzFzRzML5qm6O6/H4Uo
-	2CEb5YbUZSHOAjx8FhaGn/4bhEc365o3b3Ouz9X58xwgVk7bDUW84ha/tfCy4
-X-Google-Smtp-Source: AGHT+IGJZZFcFy8qBb/9BVJvSpxogtzfM17wxVB5B1bfSxKSrolhCiqzChAu468YcmIMkpSbHFvpbA==
-X-Received: by 2002:a05:651c:20ce:20b0:332:4a77:ad9f with SMTP id 38308e7fff4ca-3325677af91mr12521651fa.24.1754304867614;
-        Mon, 04 Aug 2025 03:54:27 -0700 (PDT)
-Received: from pc636 (host-95-203-22-207.mobileonline.telia.com. [95.203.22.207])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-33238271bdfsm16396311fa.6.2025.08.04.03.54.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Aug 2025 03:54:26 -0700 (PDT)
-From: Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date: Mon, 4 Aug 2025 12:54:21 +0200
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Uladzislau Rezki <urezki@gmail.com>, Harry Yoo <harry.yoo@oracle.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"David S . Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Kees Cook <kees@kernel.org>, Peter Xu <peterx@redhat.com>,
-	David Hildenbrand <david@redhat.com>, Zi Yan <ziy@nvidia.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
-	Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
-	Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
-	Xu Xin <xu.xin16@zte.com.cn>,
-	Chengming Zhou <chengming.zhou@linux.dev>,
-	Hugh Dickins <hughd@google.com>, Vlastimil Babka <vbabka@suse.cz>,
-	Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>, Rik van Riel <riel@surriel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
-	Muchun Song <muchun.song@linux.dev>,
-	Oscar Salvador <osalvador@suse.de>, Jann Horn <jannh@google.com>,
-	Pedro Falcato <pfalcato@suse.de>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Qi Zheng <zhengqi.arch@bytedance.com>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org,
-	sparclinux@vger.kernel.org, linux-sgx@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-	nvdimm@lists.linux.dev, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] mm: update core kernel code to use vm_flags_t
- consistently
-Message-ID: <aJCRXVP-ZFEPtl1Y@pc636>
-References: <cover.1750274467.git.lorenzo.stoakes@oracle.com>
- <d1588e7bb96d1ea3fe7b9df2c699d5b4592d901d.1750274467.git.lorenzo.stoakes@oracle.com>
- <aIgSpAnU8EaIcqd9@hyeyoo>
- <73764aaa-2186-4c8e-8523-55705018d842@lucifer.local>
- <aIkVRTouPqhcxOes@pc636>
- <69860c97-8a76-4ce5-b1d6-9d7c8370d9cd@lucifer.local>
+        d=1e100.net; s=20230601; t=1754305478; x=1754910278;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=AlMaGkAWIp33XVD6gYnhzdujTiQCBHSv7RY66Elv5fs=;
+        b=vQm/O9Sa9HSHP7UAhSlT541yJ8jXp2R1yOvjG1lqYBK9Y55UZULCPR5g7sV1bjiM0H
+         iBhb5h5HPEGCQzaKfJX7z4D0pzaU+uZ8d2oABLIoyCNQDJbOc6BsT6FsUjtUn7K9wDOm
+         bugPg7U6DkOPgtFSr73LJyG+ArCP+ligInqN7L9MvRFvomkBvE8mcYn11+SCqMXoF6yz
+         lS9OnQSF54roQqOjXF/1lCokeZaSvuxwxsUaIOzk/9xhGQDOIjOULCtLDhtmbgMAYGdq
+         CLdpR31VGHRKuEEET3wkL0EMCHPaPHSnGEEd2yDNEuOwPJDZe41xukU39UFBshB/vbLA
+         zvSg==
+X-Forwarded-Encrypted: i=1; AJvYcCWyPji6mNafbRtl+BrYWSZtq7aH7UQX1rbnSTAoQLtcspoipXgvWKGhVmnWnRgYAM8sKxuiMa47oC5gJp37wMxVmyM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/dVJUq7bZi9109CaNsrJJDlRYOcSCxi6Ko4AhfnDYSZ3BL4hE
+	HxD/yAKqppxBCR5rMmw+OawqXgtd1M6aB0GzBlcGMAvGDD3PlBV4WN0Vy03QEk/7vkTdlfEYshC
+	CUyeBqlpqCW6ODt1IZGT8qxHWb0M1w1mpVY82iuH4AoeFjsHTaI8PogmGFg8zfuso1RqCI1X4fm
+	lCuwxhydSXET3MUnhIc1yYYCwgdUHFONkxyg9etwKIjK4td8uj
+X-Gm-Gg: ASbGncsNnAZIvWqj+XYwPVs54sX6eGU0vXRjb+yL/muV3HsztEKpbSCpnmlyw+/FmR3
+	Kml0EnzI76NHGlu1xadKTnlRqtkFKfxtYDtAuCWRlxnW8q7reyMvhW5Eg59vQOynLLMOJGeKHJV
+	oHtlz40tsnEuhJUC3PsG3gZdFdQQ5H2ELrjgpjZCxBj7dsvcMAq3Y=
+X-Received: by 2002:a17:907:6e8f:b0:ae3:bb0a:1ccd with SMTP id a640c23a62f3a-af94006657emr999150066b.26.1754305478468;
+        Mon, 04 Aug 2025 04:04:38 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHYv6saSy1ylfhTj/Jz/JQpBZyAQZBk9EeSPyhAKJXHG+//8QADIyR4pm7NN5d3EM6/5VqHVVyekcVuIXPvf/Q=
+X-Received: by 2002:a17:907:6e8f:b0:ae3:bb0a:1ccd with SMTP id
+ a640c23a62f3a-af94006657emr999146466b.26.1754305477941; Mon, 04 Aug 2025
+ 04:04:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <69860c97-8a76-4ce5-b1d6-9d7c8370d9cd@lucifer.local>
+References: <20250611135644.219127-1-tglozar@redhat.com> <20250611135644.219127-3-tglozar@redhat.com>
+ <CADDUTFzG4mvTyN4cBLzqkGBWkPkDP1-jzOZKxosxP+X8rKLBew@mail.gmail.com>
+In-Reply-To: <CADDUTFzG4mvTyN4cBLzqkGBWkPkDP1-jzOZKxosxP+X8rKLBew@mail.gmail.com>
+From: Tomas Glozar <tglozar@redhat.com>
+Date: Mon, 4 Aug 2025 13:04:27 +0200
+X-Gm-Features: Ac12FXxijqs_f0jwCTFb5h27rcz3weL_6C4DRAy_TX7Ih5MQ7W204gk5XYVwzPE
+Message-ID: <CAP4=nvQ6mcka9GAKOYY=M3LWo7qGoXy7GuMB8c2M92si+yMFcw@mail.gmail.com>
+Subject: Re: [PATCH 2/8] rtla/timerlat: Add action on threshold feature
+To: Costa Shulyupin <costa.shul@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, linux-trace-kernel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, John Kacur <jkacur@redhat.com>, 
+	Luis Goncalves <lgoncalv@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Chang Yin <cyin@redhat.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: aADS7AspR8IbRjhdj0wuHISyTJ3qkudwMS0veX3JUTQ_1754305479
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello, Lorenzo!
-
-> So sorry Ulad, I meant to get back to you on this sooner!
-> 
-> On Tue, Jul 29, 2025 at 08:39:01PM +0200, Uladzislau Rezki wrote:
-> > On Tue, Jul 29, 2025 at 06:25:39AM +0100, Lorenzo Stoakes wrote:
-> > > Andrew - FYI there's nothing to worry about here, the type remains
-> > > precisely the same, and I'll send a patch to fix this trivial issue so when
-> > > later this type changes vmalloc will be uaffected.
-> > >
-> > > On Tue, Jul 29, 2025 at 09:15:51AM +0900, Harry Yoo wrote:
-> > > > [Adding Uladzislau to Cc]
-> > >
-> > > Ulad - could we PLEASE get rid of 'vm_flags' in vmalloc? It's the precise
-> > > same name and (currently) type as vma->vm_flags and is already the source
-> > > of confusion.
-> > >
-> > You mean all "vm_flags" variable names? "vm_struct" has flags as a
-> > member. So you want:
-> >
-> > urezki@pc638:~/data/backup/coding/linux-not-broken.git$ grep -rn vm_flags mm/execmem.c
-> > 29:                          pgprot_t pgprot, unsigned long vm_flags)
-> > 39:             vm_flags |= VM_DEFER_KMEMLEAK;
-> > 41:     if (vm_flags & VM_ALLOW_HUGE_VMAP)
-> > 45:                              pgprot, vm_flags, NUMA_NO_NODE,
-> > 51:                                      pgprot, vm_flags, NUMA_NO_NODE,
-> > 85:                          pgprot_t pgprot, unsigned long vm_flags)
-> > 259:    unsigned long vm_flags = VM_ALLOW_HUGE_VMAP;
-> > 266:    p = execmem_vmalloc(range, alloc_size, PAGE_KERNEL, vm_flags);
-> > 376:    unsigned long vm_flags = VM_FLUSH_RESET_PERMS;
-> > 385:            p = execmem_vmalloc(range, size, pgprot, vm_flags);
-> > urezki@pc638:~/data/backup/coding/linux-not-broken.git$ grep -rn vm_flags mm/vmalloc.c
-> > 3853: * @vm_flags:                additional vm area flags (e.g. %VM_NO_GUARD)
-> > 3875:                   pgprot_t prot, unsigned long vm_flags, int node,
-> > 3894:   if (vmap_allow_huge && (vm_flags & VM_ALLOW_HUGE_VMAP)) {
-> > 3912:                             VM_UNINITIALIZED | vm_flags, start, end, node,
-> > 3977:   if (!(vm_flags & VM_DEFER_KMEMLEAK))
-> > 4621:   vm_flags_set(vma, VM_DONTEXPAND | VM_DONTDUMP);
-> > urezki@pc638:~/data/backup/coding/linux-not-broken.git$ grep -rn vm_flags mm/execmem.c
-> > 29:                          pgprot_t pgprot, unsigned long vm_flags)
-> > 39:             vm_flags |= VM_DEFER_KMEMLEAK;
-> > 41:     if (vm_flags & VM_ALLOW_HUGE_VMAP)
-> > 45:                              pgprot, vm_flags, NUMA_NO_NODE,
-> > 51:                                      pgprot, vm_flags, NUMA_NO_NODE,
-> > 85:                          pgprot_t pgprot, unsigned long vm_flags)
-> > 259:    unsigned long vm_flags = VM_ALLOW_HUGE_VMAP;
-> > 266:    p = execmem_vmalloc(range, alloc_size, PAGE_KERNEL, vm_flags);
-> > 376:    unsigned long vm_flags = VM_FLUSH_RESET_PERMS;
-> > 385:            p = execmem_vmalloc(range, size, pgprot, vm_flags);
-> > urezki@pc638:~/data/backup/coding/linux-not-broken.git$ grep -rn vm_flags ./include/linux/vmalloc.h
-> > 172:                    pgprot_t prot, unsigned long vm_flags, int node,
-> > urezki@pc638:~/data/backup/coding/linux-not-broken.git$
-> >
-> > to rename all those "vm_flags" to something, for example, like "flags"?
-> 
-> Yeah, sorry I know it's a churny pain, but I think it's such a silly source
-> of confusion _in general_, not only this series where I made a mistake (of
-> course entirely my fault but certainly more understandable given the
-> naming), but in the past I've certainly sat there thinking 'hmmm wait' :)
-> 
-> Really I think we should rename 'vm_struct' too, but if that causes _too
-> much_ churn fair enough.
-> 
-> I think even though it's long-winded, 'vmalloc_flags' would be good, both
-> in fields and local params as it makes things very very clear.
+ne 3. 8. 2025 v 13:08 odes=C3=ADlatel Costa Shulyupin <costa.shul@redhat.co=
+m> napsal:
 >
-> 
-> Equally 'vm_struct' -> 'vmalloc_struct' would be a good change.
-> 
-Uh.. This could be a pain :) I will have a look and see what we can do.
+> The term "threshold" is ambiguous. The use of the term is inconsistent
+> across the tools. In osnoise top and hist, it means "the minimum delta
+> to be considered noise," which conflicts with the semantics of the
+> `--on-threshold <action>` option. To avoid confusion, I propose
+> introducing "low" and "high" thresholds and updating the sources and
+> documentation accordingly.
+>
 
-Thanks!
+There is already existing naming for that: "minimum delta to be
+considered noise" is called "sample threshold" while the timerlat one
+is called "stop tracing threshold" (well, the source simply calls the
+latter "stop tracing" or "stop"); timerlat also has another threshold,
+the stack threshold (specified with -s).
 
---
-Uladzislau Rezki
+The patchset (well, the v2 of it) has been already merged upstream, so
+I'd prefer keeping the naming for rtla-timerlat, and if this is
+implemented in rtla-osnoise in the future, a different name can be
+used (--on-stop/--on-stop-threshold maybe?). The documentation clearly
+says the threshold is the one specified by either -i or -T [1]. What
+do you think?
+
+Tomas
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
+/Documentation/tools/rtla/common_timerlat_options.rst#n62
+
