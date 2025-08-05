@@ -1,104 +1,101 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EFCF13E02D;
-	Tue,  5 Aug 2025 12:22:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0F8513E02D
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  5 Aug 2025 12:23:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754396541; cv=none; b=JvRcCTw8CH9TnNk0pwTXJePIaODwjBNaEAhSOGBgtCeObhqzpbwL4k0qlLbwggGCrmaF+pyooPy9eKhVG8CzYMGpcl3cj173A6waRnwbl1Yzw7HLA/zva0uwOs6jgw7jiQMjTs6rNh/zNzuCiqp32ZGWhpfXtBSNUuKtxGIlM3Q=
+	t=1754396613; cv=none; b=u5qCPwqZ+5ltuW6Nd2ekrYkdCMmh+n59PUrvBcOwpn/oF2/odLTaOXyy5UG1c50+DOsnQEPqWc/CMZCPpgIYPNZKjEDvaxnhEk8dMkCz1UD44JBZ/02xcSWKwJ2w6SQmvRM0FkN77y42ZanQckY65oO8oIoTqVaJo0lqcmHs52Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754396541; c=relaxed/simple;
-	bh=t5LIvOPKCCMLE6CEQIjDBeOUoU9iW3UC8AEn+hRpZA8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WpEr9rr8W65R0NPV1LkwYj+0M6lOwVNy/HKDvl8kRLInrs91TUuuGiOQBmYTwVK3vOVWZ/7o7l/8MvjzDfQvDcCbkJ4dGy9hJzhhoLYaE5jtx66fi6sxE9gUVxHmOETai6F4DH4+Q9WTfVkmwfspLwhjCo6sCad9xvisd7y7Cas=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Xqig9eRc; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=OiFmtDvJ; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1754396613; c=relaxed/simple;
+	bh=xFnGQAK+SCGpQM5L461SVbPvgeMBSoj1Z0emM/2Xm3s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Gx34M08oivt43ISP1Lj6aqvgZpCX/XMkegYP+oqZxsC+UCgLuHZ2Y0EzMbb2rrV45sZAJk58V9XtDNXmADVI7qnIAYWiebtEz+sP+hEzCmBY6RYkoMDb8vm/rbGKYo41T6rjLZ/2xWsK8JZJKC7z//d5Jm9KJO4uTbAs7CMnnZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=uSmESP7A; arc=none smtp.client-ip=91.218.175.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Xqig9eRc";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OiFmtDvJ"
-Date: Tue, 5 Aug 2025 14:22:15 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1754396537;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="uSmESP7A"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1754396608;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NgSlPXIrxym8VP0mqPSMog5kqh+7STBDgOIav6T6SdY=;
-	b=Xqig9eRcWj4/7CpnX2a/Sh0oUDiHxTyKbCq12dVU6bl6R2J+HhaRVxLUcURUA4nJxLczVX
-	G1QmWgNAN15w80xxbAvccAGcEYok611Ji7jNJ1CgQifgRo+vL5fHYCF7xas0aZQopLvHfZ
-	UcLpkSPjMrUvspj1KVmaio969mGFJtw0Y636GVGlTqTngNHaEgbuvcPsB6aerMmgxrHiYb
-	RucHROvJme00sLPsFSk4kF8jyTpiHDZZ53ueoPhXJQxy9FgmLRppsADebxUXY/Tl/CG31F
-	T1B9b7WjHbo5ALSz+MYfbXX5aU7YgnP25Nmbyo21DPZ8TGtHyjm4exq0rgYSVg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1754396537;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NgSlPXIrxym8VP0mqPSMog5kqh+7STBDgOIav6T6SdY=;
-	b=OiFmtDvJJYNlDS3or/1DTgUWnX94UxnZweSREMzpBRZe2DqV+bqUzP5V4wKUmjMsbgzkhe
-	hiVSc/mNLH7bh/CQ==
-From: Nam Cao <namcao@linutronix.de>
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/5] rv: Add rts monitor
-Message-ID: <20250805122215.hXbwUchz@linutronix.de>
-References: <cover.1753879295.git.namcao@linutronix.de>
- <20834b8fcd4dfe75642cec2097e29f4c636a33fb.1753879295.git.namcao@linutronix.de>
- <b3499e8d79c2215b4fb765c0ceb5294f322efa3a.camel@redhat.com>
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Fnd61Z9ADig6IYqnJnuJZzpg/ZV/PVSlvhbbeJhiw5U=;
+	b=uSmESP7A11Q8dLzDlEkGxgxwqM5Lt4O0TrpSTubFDOCdSgWNT5U1pJjsNqWazpiMW3bPyS
+	IRj+z05WLaa+ZVPZnQYpRQFf7OXWXIQXiSIR3HYGcDtc1BeobT8A7Uvgn8yzcRCJTPlQTE
+	vr2pdoYWhKZ6v9QNJrwIkHdomxEOOtY=
+From: Tao Chen <chen.dylane@linux.dev>
+To: song@kernel.org,
+	jolsa@kernel.org,
+	ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	martin.lau@linux.dev,
+	eddyz87@gmail.com,
+	yonghong.song@linux.dev,
+	john.fastabend@gmail.com,
+	kpsingh@kernel.org,
+	sdf@fomichev.me,
+	haoluo@google.com,
+	mattbobrowski@google.com,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com
+Cc: bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Tao Chen <chen.dylane@linux.dev>
+Subject: [PATCH bpf-next] bpf: Remove migrate_disable in kprobe_multi_link_prog_run
+Date: Tue,  5 Aug 2025 20:23:12 +0800
+Message-ID: <20250805122312.1890951-1-chen.dylane@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <b3499e8d79c2215b4fb765c0ceb5294f322efa3a.camel@redhat.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, Aug 05, 2025 at 10:40:30AM +0200, Gabriele Monaco wrote:
-> Hello Nam,
-> 
-> I just built and booted up the monitor in a VM (virtme-ng), the
-> configuration has preemptirq tracepoints and all monitors so far (as we
-> have seen earlier, it doesn't build if rtapp monitors are not there
-> because of the circular dependency in the tracepoints).
-> 
-> All I did was to enable the monitor and printk reactor, but I get a
-> whole lot of errors (as in, I need to quit the VM for it to stop):
-> 
-> [ 1537.699834] rv: rts: 7: violation detected
-> [ 1537.699930] rv: rts: 3: violation detected
-> [ 1537.701827] rv: rts: 6: violation detected
-> [ 1537.704894] rv: rts: 0: violation detected
-> [ 1537.704925] rv: rts: 0: violation detected
-> [ 1537.704988] rv: rts: 3: violation detected
-> [ 1537.705019] rv: rts: 3: violation detected
-> [ 1537.705998] rv: rts: 0: violation detected
-> [ 1537.706024] rv: rts: 0: violation detected
-> [ 1537.709875] rv: rts: 6: violation detected
-> [ 1537.709921] rv: rts: 6: violation detected
-> [ 1537.711241] rv: rts: 6: violation detected
-> 
-> Curiously enough, I only see those CPUs (0, 3, 6 and 7).
-> Other runs have different CPUs but always a small subset (e.g. 10-15,
-> 6-7 only 2).
-> It doesn't always occur but enabling/disabling the monitor might help
-> triggering it.
-> 
-> Any idea what is happening?
+bpf program should run under migration disabled, kprobe_multi_link_prog_run
+called the way from graph tracer, which disables preemption in
+function_graph_enter_regs, as Jiri and Yonghong suggested, there is no
+need to use migrate_disable. As a result, some overhead maybe will be
+reduced.
 
-Thanks for the report. I can reproduce the issue.
+Fixes: 0dcac2725406 ("bpf: Add multi kprobe link")
+Signed-off-by: Tao Chen <chen.dylane@linux.dev>
+---
+ kernel/trace/bpf_trace.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-Looking at the tracepoints, it makes sense why the monitor complains, some
-RT tasks are enqueued but are not dequeued. Then a sched_switch happens
-which switches to a non-RT task.
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index 3ae52978cae..1993fc62539 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -2734,14 +2734,19 @@ kprobe_multi_link_prog_run(struct bpf_kprobe_multi_link *link,
+ 		goto out;
+ 	}
+ 
+-	migrate_disable();
++	/*
++	 * bpf program should run under migration disabled, kprobe_multi_link_prog_run
++	 * called the way from graph tracer, which disables preemption in
++	 * function_graph_enter_regs, so there is no need to use migrate_disable.
++	 * Accessing the above percpu data bpf_prog_active is also safe for the same
++	 * reason.
++	 */
+ 	rcu_read_lock();
+ 	regs = ftrace_partial_regs(fregs, bpf_kprobe_multi_pt_regs_ptr());
+ 	old_run_ctx = bpf_set_run_ctx(&run_ctx.session_ctx.run_ctx);
+ 	err = bpf_prog_run(link->link.prog, regs);
+ 	bpf_reset_run_ctx(old_run_ctx);
+ 	rcu_read_unlock();
+-	migrate_enable();
+ 
+  out:
+ 	__this_cpu_dec(bpf_prog_active);
+-- 
+2.48.1
 
-Most likely the dequeue tracepoint misses some cases, let me investigate..
-
-Nam
