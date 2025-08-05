@@ -1,151 +1,189 @@
-Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D3B621CC62
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  5 Aug 2025 09:28:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47685191F92;
+	Tue,  5 Aug 2025 09:38:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754386093; cv=none; b=qP4qBa+/mXO5qtf/o5GcVI1+o59t/ntrEIY+3t/5Xlmh6Ae8WDp5pa0Yp1Q9I48Iq1off4R3mkSFyJliEbcKxXtIxFibaSMQ7ZQqQTQpQVn9SNxD213ch6pccU0fheqmc9q4fd1VpQw5xrwSRBb7oa/rEN3rj23GNAQnisKzCTs=
+	t=1754386700; cv=none; b=s6Nd7jQCm+XROs5yCpCHsjR4KEuBAS93WPkYUxiULR/GDKp/z8d9QU1yC2vLGHeBCW6ApO89Hjm8uxZ7b3voqnx3IkvWcVgTBqVQT4dKXv0Q/E7/OvAWfExj2Wy7wVecZAbG4W+DklBNJt4SgJ2wB0CQpC/3q1sGbBZfXISUeaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754386093; c=relaxed/simple;
-	bh=7+uUq409iofdj2E1aMxnCZHDona4pEtANeAruxc2xIs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qb8ObWU9kjsqoz48FA0EMlSPPSzXF+p6TusxOJufc5aXuJeghq32ahcmaBx6WmO3VYiY3FBOfu3oEIx477lR2l4YwU6jd+8f7CXyi9atV1JR3Dke4fTXF4E7oYJAR8rNLILlP3l88H00PbFT+JgIkzPqOLoyPaymU7mSsmC2haU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=SrHaLIAK; arc=none smtp.client-ip=91.218.175.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1754386700; c=relaxed/simple;
+	bh=PtcIziWKmeZojE8NbukEIlxT+NCLvvfcRfGscENjViM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P83KCJ6DGd0veSH4gg3xDDVDsE9VQbxkof+8vOwIBuitl1glNCKYRe5xaIIakFnMjWeow8NOexqoMZrTJRvc6bFjR4h0UPu+zwwYKt2x11crgzunvA6HhDZnSWbqQBij/10iLECUpXGjv2GCNgGPbFifRPWbKGpZfLRzTv+rnE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WaqdWXeH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="SrHaLIAK"
-Message-ID: <a365a7ae-fee1-4148-9b5b-9593fde7f6f7@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1754386087;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2GufKtQSI/m9hW3OZjr51F0H/hsgTIHHhk7SWxhmKDc=;
-	b=SrHaLIAK/uStZRspzxcrw8fCE4LQ0pXWAYHIIhgZYLlZ5prbLqZKWuJJn38ExqHWfae6TB
-	cHjoItHFO5izEwwLj44KSjDUBf9HbkI0ildovbH9IzY0q2dE0mf0xcs3gC7c0jnUDNiWwq
-	78JbHlgs8jJ/V0cSuhblBsB1AgGTCmM=
-Date: Tue, 5 Aug 2025 17:27:58 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WaqdWXeH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B73A3C4CEF7;
+	Tue,  5 Aug 2025 09:38:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1754386699;
+	bh=PtcIziWKmeZojE8NbukEIlxT+NCLvvfcRfGscENjViM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WaqdWXeHFq4oltQn9PTlA505X/oL+/hHqNtgIoY7zKJ2rAIIyFMHaM+0OG/yh2pw4
+	 a4OPg6vNpHqwYzZOYWH9z2eFj0o9qdjphfKwQATxpDET/tUKgH15v5CCmaccGtiziI
+	 K47HqBXpuuIazHWs7f7nOBdJzkPcC6o7Uz2XE0NjVLokbL/vEdh4tvhC3lSlpz6wIJ
+	 cRJvBI/3D77VRI3Nw6Ov+py/jFgFc5Ni8OH6Dnx4eGST8kP5vZjYp9Nb+FQNxwUhWq
+	 2m2r86L7YkwtCZGME114r4pdSCFeteEHhrAOdiqvbKwV054IIClCJwCyv020K+cNSI
+	 X5cmccT7jkP9Q==
+Date: Tue, 5 Aug 2025 12:37:57 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Uladzislau Rezki <urezki@gmail.com>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Harry Yoo <harry.yoo@oracle.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"David S . Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Jarkko Sakkinen <jarkko@kernel.org>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Kees Cook <kees@kernel.org>, Peter Xu <peterx@redhat.com>,
+	David Hildenbrand <david@redhat.com>, Zi Yan <ziy@nvidia.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+	Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
+	Xu Xin <xu.xin16@zte.com.cn>,
+	Chengming Zhou <chengming.zhou@linux.dev>,
+	Hugh Dickins <hughd@google.com>, Vlastimil Babka <vbabka@suse.cz>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>, Rik van Riel <riel@surriel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
+	Muchun Song <muchun.song@linux.dev>,
+	Oscar Salvador <osalvador@suse.de>, Jann Horn <jannh@google.com>,
+	Pedro Falcato <pfalcato@suse.de>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Qi Zheng <zhengqi.arch@bytedance.com>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org,
+	sparclinux@vger.kernel.org, linux-sgx@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+	nvdimm@lists.linux.dev, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] mm: update core kernel code to use vm_flags_t
+ consistently
+Message-ID: <aJHQ9XCLtibFjt93@kernel.org>
+References: <cover.1750274467.git.lorenzo.stoakes@oracle.com>
+ <d1588e7bb96d1ea3fe7b9df2c699d5b4592d901d.1750274467.git.lorenzo.stoakes@oracle.com>
+ <aIgSpAnU8EaIcqd9@hyeyoo>
+ <73764aaa-2186-4c8e-8523-55705018d842@lucifer.local>
+ <aIkVRTouPqhcxOes@pc636>
+ <69860c97-8a76-4ce5-b1d6-9d7c8370d9cd@lucifer.local>
+ <aJCRXVP-ZFEPtl1Y@pc636>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH bpf-next] bpf: Disable migrate when kprobe_multi attach to
- access bpf_prog_active
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
- martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org,
- yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org,
- sdf@fomichev.me, haoluo@google.com, mattbobrowski@google.com,
- rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-References: <20250804121615.1843956-1-chen.dylane@linux.dev>
- <aJCvY7G-gVR8taLh@krava> <c5e66881-2fca-479b-9ef6-c9ada34e731c@linux.dev>
- <aJHJu6dOeKVIc7JV@krava>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Tao Chen <chen.dylane@linux.dev>
-In-Reply-To: <aJHJu6dOeKVIc7JV@krava>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aJCRXVP-ZFEPtl1Y@pc636>
 
-在 2025/8/5 17:07, Jiri Olsa 写道:
-> On Mon, Aug 04, 2025 at 10:15:46PM +0800, Tao Chen wrote:
->> 在 2025/8/4 21:02, Jiri Olsa 写道:
->>> On Mon, Aug 04, 2025 at 08:16:15PM +0800, Tao Chen wrote:
->>>> The syscall link_create not protected by bpf_disable_instrumentation,
->>>> accessing percpu data bpf_prog_active should use cpu local_lock when
->>>> kprobe_multi program attach.
->>>>
->>>> Fixes: 0dcac2725406 ("bpf: Add multi kprobe link")
->>>> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
->>>> ---
->>>>    kernel/trace/bpf_trace.c | 4 ++--
->>>>    1 file changed, 2 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
->>>> index 3ae52978cae..f6762552e8e 100644
->>>> --- a/kernel/trace/bpf_trace.c
->>>> +++ b/kernel/trace/bpf_trace.c
->>>> @@ -2728,23 +2728,23 @@ kprobe_multi_link_prog_run(struct bpf_kprobe_multi_link *link,
->>>>    	struct pt_regs *regs;
->>>>    	int err;
->>>> +	migrate_disable();
->>>>    	if (unlikely(__this_cpu_inc_return(bpf_prog_active) != 1)) {
->>>
->>> this is called all the way from graph tracer, which disables preemption in
->>> function_graph_enter_regs, so I think we can safely use __this_cpu_inc_return
->>>
->>>
->>>>    		bpf_prog_inc_misses_counter(link->link.prog);
->>>>    		err = 1;
->>>>    		goto out;
->>>>    	}
->>>> -	migrate_disable();
->>>
->>> hum, but now I'm not sure why we disable migration in here then
->>>
->>
->> It seems that there is a cant_migrate() check in bpf_prog_run, so it should
->> be disabled before run.
+On Mon, Aug 04, 2025 at 12:54:21PM +0200, Uladzislau Rezki wrote:
+> Hello, Lorenzo!
 > 
-> yes, but disabled preemption will take care of that
+> > So sorry Ulad, I meant to get back to you on this sooner!
+> > 
+> > On Tue, Jul 29, 2025 at 08:39:01PM +0200, Uladzislau Rezki wrote:
+> > > On Tue, Jul 29, 2025 at 06:25:39AM +0100, Lorenzo Stoakes wrote:
+> > > > Andrew - FYI there's nothing to worry about here, the type remains
+> > > > precisely the same, and I'll send a patch to fix this trivial issue so when
+> > > > later this type changes vmalloc will be uaffected.
+> > > >
+> > > > On Tue, Jul 29, 2025 at 09:15:51AM +0900, Harry Yoo wrote:
+> > > > > [Adding Uladzislau to Cc]
+> > > >
+> > > > Ulad - could we PLEASE get rid of 'vm_flags' in vmalloc? It's the precise
+> > > > same name and (currently) type as vma->vm_flags and is already the source
+> > > > of confusion.
+> > > >
+> > > You mean all "vm_flags" variable names? "vm_struct" has flags as a
+> > > member. So you want:
+> > >
+> > > urezki@pc638:~/data/backup/coding/linux-not-broken.git$ grep -rn vm_flags mm/execmem.c
+> > > 29:                          pgprot_t pgprot, unsigned long vm_flags)
+> > > 39:             vm_flags |= VM_DEFER_KMEMLEAK;
+> > > 41:     if (vm_flags & VM_ALLOW_HUGE_VMAP)
+> > > 45:                              pgprot, vm_flags, NUMA_NO_NODE,
+> > > 51:                                      pgprot, vm_flags, NUMA_NO_NODE,
+> > > 85:                          pgprot_t pgprot, unsigned long vm_flags)
+> > > 259:    unsigned long vm_flags = VM_ALLOW_HUGE_VMAP;
+> > > 266:    p = execmem_vmalloc(range, alloc_size, PAGE_KERNEL, vm_flags);
+> > > 376:    unsigned long vm_flags = VM_FLUSH_RESET_PERMS;
+> > > 385:            p = execmem_vmalloc(range, size, pgprot, vm_flags);
+> > > urezki@pc638:~/data/backup/coding/linux-not-broken.git$ grep -rn vm_flags mm/vmalloc.c
+> > > 3853: * @vm_flags:                additional vm area flags (e.g. %VM_NO_GUARD)
+> > > 3875:                   pgprot_t prot, unsigned long vm_flags, int node,
+> > > 3894:   if (vmap_allow_huge && (vm_flags & VM_ALLOW_HUGE_VMAP)) {
+> > > 3912:                             VM_UNINITIALIZED | vm_flags, start, end, node,
+> > > 3977:   if (!(vm_flags & VM_DEFER_KMEMLEAK))
+> > > 4621:   vm_flags_set(vma, VM_DONTEXPAND | VM_DONTDUMP);
+> > > urezki@pc638:~/data/backup/coding/linux-not-broken.git$ grep -rn vm_flags mm/execmem.c
+> > > 29:                          pgprot_t pgprot, unsigned long vm_flags)
+> > > 39:             vm_flags |= VM_DEFER_KMEMLEAK;
+> > > 41:     if (vm_flags & VM_ALLOW_HUGE_VMAP)
+> > > 45:                              pgprot, vm_flags, NUMA_NO_NODE,
+> > > 51:                                      pgprot, vm_flags, NUMA_NO_NODE,
+> > > 85:                          pgprot_t pgprot, unsigned long vm_flags)
+> > > 259:    unsigned long vm_flags = VM_ALLOW_HUGE_VMAP;
+> > > 266:    p = execmem_vmalloc(range, alloc_size, PAGE_KERNEL, vm_flags);
+> > > 376:    unsigned long vm_flags = VM_FLUSH_RESET_PERMS;
+> > > 385:            p = execmem_vmalloc(range, size, pgprot, vm_flags);
+> > > urezki@pc638:~/data/backup/coding/linux-not-broken.git$ grep -rn vm_flags ./include/linux/vmalloc.h
+> > > 172:                    pgprot_t prot, unsigned long vm_flags, int node,
+> > > urezki@pc638:~/data/backup/coding/linux-not-broken.git$
+> > >
+> > > to rename all those "vm_flags" to something, for example, like "flags"?
+> > 
+> > Yeah, sorry I know it's a churny pain, but I think it's such a silly source
+> > of confusion _in general_, not only this series where I made a mistake (of
+> > course entirely my fault but certainly more understandable given the
+> > naming), but in the past I've certainly sat there thinking 'hmmm wait' :)
+> > 
+> > Really I think we should rename 'vm_struct' too, but if that causes _too
+> > much_ churn fair enough.
+
+Well, it's not that terrible :)
+
+~/git/linux$ git grep -w vm_struct | wc -l
+173
+
+> > I think even though it's long-winded, 'vmalloc_flags' would be good, both
+> > in fields and local params as it makes things very very clear.
+> > 
+> > Equally 'vm_struct' -> 'vmalloc_struct' would be a good change.
+
+Do we really need the _struct suffix?
+How about vmalloc_area?
+
+It also seems that struct vmap_area can be made private to mm/.
+
+> Uh.. This could be a pain :) I will have a look and see what we can do.
 > 
-
-I see, you are right, preempt will pass the check, thanks.
-
-void __cant_migrate(const char *file, int line)
-{
-         static unsigned long prev_jiffy;
-
-         if (irqs_disabled())
-                 return;
-
-         if (is_migration_disabled(current))
-                 return;
-
-         if (!IS_ENABLED(CONFIG_PREEMPT_COUNT))
-                 return;
-
-         if (preempt_count() > 0)
-                 return;
-...
-
-> I think we can do change below plus some comment that Yonghong
-> is suggesting in the other reply
+> Thanks!
 > 
+> --
+> Uladzislau Rezki
 
-Yes, i will remove the migrate_disable and add some comment as you
-and Yonghong suggested.
-
-> jirka
-> 
-> 
-> ---
-> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> index 3ae52978cae6..74e8d9543c6d 100644
-> --- a/kernel/trace/bpf_trace.c
-> +++ b/kernel/trace/bpf_trace.c
-> @@ -2734,14 +2734,12 @@ kprobe_multi_link_prog_run(struct bpf_kprobe_multi_link *link,
->   		goto out;
->   	}
->   
-> -	migrate_disable();
->   	rcu_read_lock();
->   	regs = ftrace_partial_regs(fregs, bpf_kprobe_multi_pt_regs_ptr());
->   	old_run_ctx = bpf_set_run_ctx(&run_ctx.session_ctx.run_ctx);
->   	err = bpf_prog_run(link->link.prog, regs);
->   	bpf_reset_run_ctx(old_run_ctx);
->   	rcu_read_unlock();
-> -	migrate_enable();
->   
->    out:
->   	__this_cpu_dec(bpf_prog_active);
 -- 
-Best Regards
-Tao Chen
+Sincerely yours,
+Mike.
