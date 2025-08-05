@@ -1,167 +1,147 @@
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DE031E32D7
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  5 Aug 2025 15:36:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 319FE286434;
+	Tue,  5 Aug 2025 15:45:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754408171; cv=none; b=gN/7LuU1jrGgkWPI44itYpK48WeAgu+5FPRxGWrvwZqlIoipHJBf3AqUUxvrzowB2CtXTWNL12knW8jBjM846PuMw092rBV09gTWWhLongpDJVPnXPVfAlociztRu9NT5miLPcIuFQphMQdEomO1OsMumNPaUQz++HVsgjM6VVQ=
+	t=1754408725; cv=none; b=tEefWvqBz6NM5Y4dw27gVqqt0SgOdwLcnT3NLSL26XZGB3AG/ksGk8x2Wu8+fTAZRu7K8mqK3fFRXUf9Tfh1LS2p/y4EqceETgIUEWoycjSAtm6LPACmL3/r+M8Dm9ohtKKWWzVZYxqaGFFaYG8QOQksQxXBnqU0tTa08SJbbQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754408171; c=relaxed/simple;
-	bh=wdxaYDaFuQGcdWab2u1vRWh6ubZ0FBcIJSPOHoprdZM=;
+	s=arc-20240116; t=1754408725; c=relaxed/simple;
+	bh=HoxdE6jwa3liY1NRo15slzQzMH7KqknqK+hG56lQ8HQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MQM8lxJGzmhwuUHZfBX/3iyopIdriD3LltNOJiCPugxYnVOHkXxU38CeFVy9JzAMju7FlpxRLdFv+6c9D8EmeEvZrHOqKzZtuK7VCjjRW/pDyA1jTfIBy3N+RSiJSJbp8Wte6LvWk0h4VZZ3Ze/sDVQ5YN9nQgQG0OhYOa6J/JI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=ME13T7ql; arc=none smtp.client-ip=209.85.222.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ouw80B9zwDGFg5lmFF4gxzsShw30qbtpH4yKX+d2C3k+C7cEG8LNPwu2iUhPID69RecQBUYcCaVMgNlLnbVbVbFnkSG+JU50YMi+ZA1qmn4zSLoL1xXcJaYid+G67U+/Ra8dV9A2ovsuSRk0zxTt1g8sGNIKFJlKLaPpICa8QUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lduXrDup; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=aJNh4Gl4; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="ME13T7ql"
-Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7e806613af8so198218285a.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 05 Aug 2025 08:36:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1754408168; x=1755012968; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=N1MKz8dfPt28HzEOpdUPkfZENcnUFV9NfsoMVTYwzbE=;
-        b=ME13T7qlujFLxq8mKX31c/Td7LIBGSUIjNS9Z6W5QS1QsalqTz3hlx9PvxNNKHvUIa
-         Xmrfl17cPhbG7Kc8V/bFqsuVtobMfEXk0xIwFaMAGQsa+mx+W14YFLcmqpf+XAVWrQvO
-         nRT50LH0BAPqQQWC4eYGFTIkVYw1tvKll6akmdBcqTDaBE72MLPbWjVGjiInjnVlm93s
-         AVAzkkiXV2Uo1Vb+tsXHMQlERMV4zaSSg1/H6O97HkdwdqxxR7ubHze86HF/8+l9LzYB
-         aF36TMxjVnLNh8FzH3iJYNu12rFTPh1Hup7iO7j4zp4Qf2XxZ+frJJC5pb/Y/igpTT4p
-         p+Eg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754408168; x=1755012968;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=N1MKz8dfPt28HzEOpdUPkfZENcnUFV9NfsoMVTYwzbE=;
-        b=LG2Xl+2KZMKUlCF/8vD3z3OGaC/OdWal6CCI/pOnk+XByHBXAqOeSCvJwubmYBPcE9
-         nLZiUnqxsqaLO8GDq1pzTEjlEDAWKoVGyOkTBfHQWNkJCbT5+AMgKwbSzRRlEjfhhjrd
-         V0G07AGDlPDyIE8KbwTUcEpNHYUngc2ZPqmALBN3U8cjV9H6MYw0yDkO1a9+BwD+wk4x
-         Ef5uKlpefsFqvptgavkQ/gDXHxVZ6kc0ugBpL0QCulyFn+H/YZ8hQopXKX+ucSJcC0Xf
-         2khxpG0OJ+VTyUC9LeYF+f3bmW8AEw4ijcIk87cwvUO1dYI1I6owSBdTgVadRgGNsKKa
-         k7Fg==
-X-Forwarded-Encrypted: i=1; AJvYcCW4KFdBdWNrGpFNlijXZqHmyUg5Cm+Zp4ddHX3oqSFAMT2oJIdcKiLhDVlf6w2+muB6k+z25ND/E/L19DMatRj9IKk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwCOaaF+OONMo1395FLWy/Fg9EzchAJKZ92hSQ6UucC1NfTyFSe
-	MCxGW7uLcmcy5RpSFp0Pwqupihh35yD94ydyHzyBCKSC/JL/HJ/x2Z4NyNEaTVT2Ztc=
-X-Gm-Gg: ASbGncsoywpR70RX7OC2tlkd6nCq7J81n9xpj+RdVkXuFe5YW+XmQesf1VRDpfp819w
-	tNxdewLU3xfhE2pRlv3ehXIkKpDMbZYR2laCU+RBgrK6/lnvtJShnypLyRATAuVRYQj8ZWYDa+t
-	sil8uAJfuMEYks1tCNhqzYpvy1l5/b8g+Wmeqnn/aplq/owFKu/+rbnHDPPit4SJukPl2M5wryS
-	O+0sOmfdXM/wd44HbfYUWozV4iVjNIuTFp0sF+FCNmHY/NAM7CYNmJoP4DkezPcxxwc9DdBqL16
-	Nf8y95bl8v7ILSAgoUEAXcM/PNcJXMfjRww4ameMYDe/B9Mpwi8oJLhK7v1r49tProgDbPYfXA4
-	es+QIBmuJkMfRoK7xYPWPxnVjuSisezBL++DaWhdPmvLnpXGluuAiUo7OOL5GW4lBUckJMnh7K9
-	2ZrCo=
-X-Google-Smtp-Source: AGHT+IF1+3bX6DUQCrRo5YyM2fp0OCvjM/jusyZc5iy/VSCxNo0II2PGkJ9MrYPb1oYSw7F9hqkESg==
-X-Received: by 2002:a05:620a:12c6:b0:7e6:8f41:2055 with SMTP id af79cd13be357-7e6962e0c1bmr1733279285a.21.1754408168128;
-        Tue, 05 Aug 2025 08:36:08 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-47-55-120-4.dhcp-dynamic.fibreop.ns.bellaliant.net. [47.55.120.4])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7e67f5cd63fsm689744985a.39.2025.08.05.08.36.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Aug 2025 08:36:07 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1ujJhu-00000001YWx-3rSt;
-	Tue, 05 Aug 2025 12:36:06 -0300
-Date: Tue, 5 Aug 2025 12:36:06 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: Robin Murphy <robin.murphy@arm.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Christoph Hellwig <hch@lst.de>, Leon Romanovsky <leon@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>,
-	Alexander Potapenko <glider@google.com>,
-	Marco Elver <elver@google.com>, Dmitry Vyukov <dvyukov@google.com>,
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lduXrDup";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aJNh4Gl4"
+Date: Tue, 5 Aug 2025 17:45:15 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1754408721;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=i4rfhcJ52gaQkFE1q/jWz1hzPvkEMrx0BQFf5ulaRXc=;
+	b=lduXrDupwYh0a+DXp4SpGDoRm32XfU1qB3Mr/7fTkOO+coFkL7iClkpF7x5iW9FBNtCuJY
+	SOzoKi7fat3H1jtOn2lcigu8/hm3n2gPvIm88xGProB5obl6TvEgWaG9W5CBkkz9Gxs1gD
+	FGycOY7g8vfZtSwB4vffhdzMT1LhzMN3gk5R2uUoC4iaSWJhqf+EgkiZLPeVyXXSoqWVIh
+	fQi0DmmarY5sRwoDgf8Gy+CYdZnNQKu8PqtS/gmV7XLfRewc8Iu1YPyve1bcz1qWounjsK
+	BKudImcYnzG46QIclW8rJ55qbUG4INCO7so0QWQPtMc0PKyUVxgYmZ4HvLlNgg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1754408721;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=i4rfhcJ52gaQkFE1q/jWz1hzPvkEMrx0BQFf5ulaRXc=;
+	b=aJNh4Gl4q4S13mS1zPP5SX51bFIJ9hsuAUECIr3NoKnCqp4UyB4Ve+y83w+a8rVIXWRKZF
+	zXSj8L67UV4SnOCg==
+From: Nam Cao <namcao@linutronix.de>
+To: Gabriele Monaco <gmonaco@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	=?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, iommu@lists.linux.dev,
-	virtualization@lists.linux.dev, kasan-dev@googlegroups.com,
-	linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH 0/8] dma-mapping: migrate to physical address-based API
-Message-ID: <20250805153606.GR26511@ziepe.ca>
-References: <CGME20250625131920eucas1p271b196cde042bd39ac08fb12beff5baf@eucas1p2.samsung.com>
- <cover.1750854543.git.leon@kernel.org>
- <35df6f2a-0010-41fe-b490-f52693fe4778@samsung.com>
- <20250627170213.GL17401@unreal>
- <20250630133839.GA26981@lst.de>
- <69b177dc-c149-40d3-bbde-3f6bad0efd0e@samsung.com>
- <f912c446-1ae9-4390-9c11-00dce7bf0fd3@arm.com>
- <aIupx_8vOg8wQh6w@casper.infradead.org>
- <20250803155906.GM26511@ziepe.ca>
- <aJArFNkuP8DJIdMY@casper.infradead.org>
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/5] rv: Add rts monitor
+Message-ID: <20250805154515.CchJtec3@linutronix.de>
+References: <cover.1753879295.git.namcao@linutronix.de>
+ <20834b8fcd4dfe75642cec2097e29f4c636a33fb.1753879295.git.namcao@linutronix.de>
+ <b3499e8d79c2215b4fb765c0ceb5294f322efa3a.camel@redhat.com>
+ <20250805122215.hXbwUchz@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <aJArFNkuP8DJIdMY@casper.infradead.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250805122215.hXbwUchz@linutronix.de>
 
-On Mon, Aug 04, 2025 at 04:37:56AM +0100, Matthew Wilcox wrote:
-> On Sun, Aug 03, 2025 at 12:59:06PM -0300, Jason Gunthorpe wrote:
-> > Matthew, do you think it makes sense to introduce types to make this
-> > clearer? We have two kinds of values that a phys_addr_t can store -
-> > something compatible with kmap_XX_phys(), and something that isn't.
-> 
-> I was with you up until this point.  And then you said "What if we have
-> a raccoon that isn't a raccoon" and my brain derailed.
+On Tue, Aug 05, 2025 at 02:22:17PM +0200, Nam Cao wrote:
+> On Tue, Aug 05, 2025 at 10:40:30AM +0200, Gabriele Monaco wrote:
+> > Hello Nam,
+> > 
+> > I just built and booted up the monitor in a VM (virtme-ng), the
+> > configuration has preemptirq tracepoints and all monitors so far (as we
+> > have seen earlier, it doesn't build if rtapp monitors are not there
+> > because of the circular dependency in the tracepoints).
+> > 
+> > All I did was to enable the monitor and printk reactor, but I get a
+> > whole lot of errors (as in, I need to quit the VM for it to stop):
+> > 
+> > [ 1537.699834] rv: rts: 7: violation detected
+> > [ 1537.699930] rv: rts: 3: violation detected
+> > [ 1537.701827] rv: rts: 6: violation detected
+> > [ 1537.704894] rv: rts: 0: violation detected
+> > [ 1537.704925] rv: rts: 0: violation detected
+> > [ 1537.704988] rv: rts: 3: violation detected
+> > [ 1537.705019] rv: rts: 3: violation detected
+> > [ 1537.705998] rv: rts: 0: violation detected
+> > [ 1537.706024] rv: rts: 0: violation detected
+> > [ 1537.709875] rv: rts: 6: violation detected
+> > [ 1537.709921] rv: rts: 6: violation detected
+> > [ 1537.711241] rv: rts: 6: violation detected
+> > 
+> > Curiously enough, I only see those CPUs (0, 3, 6 and 7).
+> > Other runs have different CPUs but always a small subset (e.g. 10-15,
+> > 6-7 only 2).
+> > It doesn't always occur but enabling/disabling the monitor might help
+> > triggering it.
+> > 
+> > Any idea what is happening?
 
-I though it was clear..
+There are two issues:
 
-   kmap_local_pfn(phys >> PAGE_SHIFT)
-   phys_to_virt(phys)
+  - When the monitor is disabled then enabled, the number of queued task
+    does not reset. The monitor may mistakenly thinks there are queued RT
+    tasks, but there aren't.
 
-Does not work for all values of phys. It definately illegal for
-non-cachable MMIO. Agree?
+  - The enqueue tracepoint is registered before the dequeue tracepoint.
+    Therefore there may be a enqueue followed by a dequeue, but the monitor
+    missed the latter.
 
-There is a subset of phys that is cachable and has struct page that is
-usable with kmap_local_pfn()/etc
+The first issue can be fixed by reseting the queued task number at
+enabling.
 
-phys is always this:
+For the second issue, LTL monitors need something similar to
+da_monitor_enabled_##name(void). But a quick workaround is reordering the
+tracepoint registerations.
 
-> - CPU untranslated.  This is the "physical" address.  Physical address
->   0 is what the CPU sees when it drives zeroes on the memory bus.
+So with the below diff, I no longer see the issue.
 
-But that is a pure HW perspective. It doesn't say which of our SW APIs
-are allowed to use this address.
+Thanks again for noticing this!
 
-We have callchains in DMA API land that want to do a kmap at the
-bottom. It would be nice to mark the whole call chain that the
-phys_addr being passed around is actually required to be kmappable.
+Nam
 
-Because if you pass a non-kmappable MMIO backed phys it will explode
-in some way on some platforms.
-
-> > We clearly have these two different ideas floating around in code,
-> > page tables, etc.
-
-> No.  No, we don't.  I've never heard of this asininity before.
-
-Welcome to the fun world of cachable and non-cachable memory.
-
-Consider, today we can create struct pages of type
-MEMORY_DEVICE_PCI_P2PDMA for non-cachable MMIO. I think today you
-"can" use kmap to establish a cachable mapping in the vmap.
-
-But it is *illegal* to establish a cachable CPU mapping of MMIO. Archs
-are free to MCE if you do this - speculative cache line load of MMIO
-can just error in HW inside the interconnect.
-
-So, the phys_addr is always a "CPU untranslated physical address" but
-the cachable/non-cachable cases, or DRAM vs MMIO, are sometimes
-semantically very different things for the SW!
-
-Jason
+diff --git a/kernel/trace/rv/monitors/rts/rts.c b/kernel/trace/rv/monitors/rts/rts.c
+index 473004b673c5..3ddbf09db0dd 100644
+--- a/kernel/trace/rv/monitors/rts/rts.c
++++ b/kernel/trace/rv/monitors/rts/rts.c
+@@ -81,14 +81,21 @@ static void handle_sched_switch(void *data, bool preempt, struct task_struct *pr
+ 
+ static int enable_rts(void)
+ {
++	unsigned int cpu;
+ 	int retval;
+ 
+ 	retval = ltl_monitor_init();
+ 	if (retval)
+ 		return retval;
+ 
+-	rv_attach_trace_probe("rts", enqueue_task_rt_tp, handle_enqueue_task_rt);
++	for_each_possible_cpu(cpu) {
++		unsigned int *queued = per_cpu_ptr(&nr_queued, cpu);
++
++		*queued = 0;
++	}
++
+ 	rv_attach_trace_probe("rts", dequeue_task_rt_tp, handle_dequeue_task_rt);
++	rv_attach_trace_probe("rts", enqueue_task_rt_tp, handle_enqueue_task_rt);
+ 	rv_attach_trace_probe("rts", sched_switch, handle_sched_switch);
+ 
+ 	return 0;
