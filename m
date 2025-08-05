@@ -1,116 +1,108 @@
-Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
+Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6268D291C1F
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  5 Aug 2025 16:18:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F55E72630
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  5 Aug 2025 16:28:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754410690; cv=none; b=Cv8RBD3FSTi36fR1mVPIBP5vOudoi083uqldpAD0rw4pr+TsewhjYnz6GAEURNupjYImOGIfiEF6N+dAvTx+N8YRj5+DEeOjf2EpQMiv2qRVWf4nbdZAfoZ3nBMCijo/+CRPLX0NOylzOAYnAefQ8r8nmw8+B74d8EdVy6wQs/U=
+	t=1754411291; cv=none; b=Gl8fN6s/humlh89Yuh2lwt+um+0HsGPa3QIjRiXi9qt/UpoLz6x+HpZohBaMCdAO5R6OBnsu1N8TqiRqjCmYfe2BQSvs7Dt9awtEcBsjgfiI5N0Ayr4Yg2DI22Ewv90UkJbIIGUC3DbDaupy1prF4WyNCbfTHg/B8SLw5tMf7lA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754410690; c=relaxed/simple;
-	bh=Gje33Ku1Kycd0kqAcKLN0ia3FPXS5zk+1WtW9NDLHW8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hcTzkGoTkJ8PcAgUZh1+arM6m/1tWWlmggWFAmtKrKBeminIDHjSvoPAEkNLqYwkgqtywA6U22EVkauTZz9g2pzq0bKTN/VGbTlEqybav80IYZjGqqyAEpiFl4RRYKzrnKK12lR7byUac12vatVgVqne5tJy9ta0BNbVgB2ERcY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=V62fxt6c; arc=none smtp.client-ip=91.218.175.182
+	s=arc-20240116; t=1754411291; c=relaxed/simple;
+	bh=0THvNMFdfFhOxdvVstvFWtM+3I1dikuGop1BGeqltLE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tbNwxwh+udwkcSixWddbrwIajUIs1WFV3icqcwtJe2a7Wv0x5fqtSwk2Loao4iYwF9GZz3hVBEElG98nJ/SPoQpL1qB9Yu5/bWjprB/PIiApaVxlHN1AnHa1e9fGc5U/f4jc8VbfLyVNF5Z4jNKoVN82Xzgeqvplg4qAhWv4z1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ot62REN9; arc=none smtp.client-ip=95.215.58.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="V62fxt6c"
-Message-ID: <f7acfd22-bcf3-4dff-9a87-7c1e6f84ce9c@linux.dev>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ot62REN9"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1754410675;
+	t=1754411276;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=I3J2rk/T5mDdXAJ5BgbcckzUFF7bRL42mE76alpb8eE=;
-	b=V62fxt6cn6vW+HTPNNzUamAMCnIMy0ZIvTd0eo1+vnhdM2iSeFiTEs3/4nJgb1g0uktFHh
-	o2Q5URJtNjnuMRw6nLtPMUwKO1gUBfqpHhWoZ1HJc9pMbI3wuK5XYsx7NZCDepaeIIAVqJ
-	If+lBv8AmvCzGAY1gn7NZQ1jsy6wydk=
-Date: Wed, 6 Aug 2025 00:17:43 +0800
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=/Z7pYFfWoLH1aXLvPg1vJ4VkW5EEtjCy8xcya4QuHqA=;
+	b=ot62REN9lJLUGMUhPDjXjgTP+uLp3mM3Db4gCSkY2RqjkRUfLZV0puuIP/Bho6hsSGO8A6
+	H/FE3iatZ/u503Z47D6V/MbWu89/sPL0z0j3LKxmn4KFzTw1R6m16es9txHzcRdMKKUzEk
+	D1KujsxdypwmivC2GlxbwvX+ujsN490=
+From: Tao Chen <chen.dylane@linux.dev>
+To: ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	martin.lau@linux.dev,
+	eddyz87@gmail.com,
+	song@kernel.org,
+	yonghong.song@linux.dev,
+	john.fastabend@gmail.com,
+	kpsingh@kernel.org,
+	sdf@fomichev.me,
+	haoluo@google.com,
+	jolsa@kernel.org,
+	mattbobrowski@google.com,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com
+Cc: bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Tao Chen <chen.dylane@linux.dev>
+Subject: [PATCH bpf-next v2] bpf: Remove migrate_disable in kprobe_multi_link_prog_run
+Date: Wed,  6 Aug 2025 00:27:32 +0800
+Message-ID: <20250805162732.1896687-1-chen.dylane@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH bpf-next] bpf: Remove migrate_disable in
- kprobe_multi_link_prog_run
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: song@kernel.org, ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
- martin.lau@linux.dev, eddyz87@gmail.com, yonghong.song@linux.dev,
- john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me,
- haoluo@google.com, mattbobrowski@google.com, rostedt@goodmis.org,
- mhiramat@kernel.org, mathieu.desnoyers@efficios.com, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-References: <20250805122312.1890951-1-chen.dylane@linux.dev>
- <aJIrkAWK4ob5rCZ5@krava>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Tao Chen <chen.dylane@linux.dev>
-In-Reply-To: <aJIrkAWK4ob5rCZ5@krava>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-在 2025/8/6 00:04, Jiri Olsa 写道:
-> On Tue, Aug 05, 2025 at 08:23:12PM +0800, Tao Chen wrote:
->> bpf program should run under migration disabled, kprobe_multi_link_prog_run
->> called the way from graph tracer, which disables preemption in
->> function_graph_enter_regs, as Jiri and Yonghong suggested, there is no
->> need to use migrate_disable. As a result, some overhead maybe will be
->> reduced.
->>
->> Fixes: 0dcac2725406 ("bpf: Add multi kprobe link")
->> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
-> 
-> Acked-by: Jiri Olsa <jolsa@kernel.org>
-> 
-> thanks,
-> jirka
-> 
-> 
->> ---
->>   kernel/trace/bpf_trace.c | 9 +++++++--
->>   1 file changed, 7 insertions(+), 2 deletions(-)
->>
->> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
->> index 3ae52978cae..1993fc62539 100644
->> --- a/kernel/trace/bpf_trace.c
->> +++ b/kernel/trace/bpf_trace.c
->> @@ -2734,14 +2734,19 @@ kprobe_multi_link_prog_run(struct bpf_kprobe_multi_link *link,
->>   		goto out;
->>   	}
->>   
->> -	migrate_disable();
->> +	/*
->> +	 * bpf program should run under migration disabled, kprobe_multi_link_prog_run
->> +	 * called the way from graph tracer, which disables preemption in
-> 
-> nit, s/called the way/called all the way/
-> 
+bpf program should run under migration disabled, kprobe_multi_link_prog_run
+called all the way from graph tracer, which disables preemption in
+function_graph_enter_regs, as Jiri and Yonghong suggested, there is no
+need to use migrate_disable. As a result, some overhead maybe will be
+reduced.
 
-will fix it, thanks.
+Fixes: 0dcac2725406 ("bpf: Add multi kprobe link")
+Acked-by: Yonghong Song <yonghong.song@linux.dev>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Signed-off-by: Tao Chen <chen.dylane@linux.dev>
+---
+ kernel/trace/bpf_trace.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-> 
->> +	 * function_graph_enter_regs, so there is no need to use migrate_disable.
->> +	 * Accessing the above percpu data bpf_prog_active is also safe for the same
->> +	 * reason.
->> +	 */
->>   	rcu_read_lock();
->>   	regs = ftrace_partial_regs(fregs, bpf_kprobe_multi_pt_regs_ptr());
->>   	old_run_ctx = bpf_set_run_ctx(&run_ctx.session_ctx.run_ctx);
->>   	err = bpf_prog_run(link->link.prog, regs);
->>   	bpf_reset_run_ctx(old_run_ctx);
->>   	rcu_read_unlock();
->> -	migrate_enable();
->>   
->>    out:
->>   	__this_cpu_dec(bpf_prog_active);
->> -- 
->> 2.48.1
->>
+Change list:
+ v1 -> v2:
+  - s/called the way/called all the way/.(Jiri)
+ v1: https://lore.kernel.org/bpf/f7acfd22-bcf3-4dff-9a87-7c1e6f84ce9c@linux.dev
 
-
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index 3ae52978cae..5701791e3cb 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -2734,14 +2734,19 @@ kprobe_multi_link_prog_run(struct bpf_kprobe_multi_link *link,
+ 		goto out;
+ 	}
+ 
+-	migrate_disable();
++	/*
++	 * bpf program should run under migration disabled, kprobe_multi_link_prog_run
++	 * called all the way from graph tracer, which disables preemption in
++	 * function_graph_enter_regs, so there is no need to use migrate_disable.
++	 * Accessing the above percpu data bpf_prog_active is also safe for the same
++	 * reason.
++	 */
+ 	rcu_read_lock();
+ 	regs = ftrace_partial_regs(fregs, bpf_kprobe_multi_pt_regs_ptr());
+ 	old_run_ctx = bpf_set_run_ctx(&run_ctx.session_ctx.run_ctx);
+ 	err = bpf_prog_run(link->link.prog, regs);
+ 	bpf_reset_run_ctx(old_run_ctx);
+ 	rcu_read_unlock();
+-	migrate_enable();
+ 
+  out:
+ 	__this_cpu_dec(bpf_prog_active);
 -- 
-Best Regards
-Tao Chen
+2.48.1
+
