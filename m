@@ -1,65 +1,129 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C40E41400C;
-	Tue,  5 Aug 2025 13:37:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CCF0263F3C;
+	Tue,  5 Aug 2025 15:08:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754401043; cv=none; b=FvRJcc+rMArQf7CFWcmpR+btQYvko+a9fmZNOvpO6u11+emmqb6wPFlfolKP9Xp2slOVM5YDHRe4Kf471TC0cIwqBRIvbs8MGFdQ8Z5sDctqIGF2libPhmryKMGZpoSulq8w1yRTdb6wJ5jXh0TFCwwrhIRibXk1NAniZkp8/Wg=
+	t=1754406529; cv=none; b=W3iEn8ioI4BuKE+SI85/5Fx1fHWhaYye25vNSXjgqlFbJsT1LWhSBeFskU5yr033a0YYvnB1NRCeXDoR1a0P8XE8kZT01buj69C7xQyXBY9K4ZL46gQjkBZDBNMVAHXwYXAohpAaPnuppfxNRxMV/itAuonTwiwvPmfsO5OcZYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754401043; c=relaxed/simple;
-	bh=t8B62mkvDKxAydyLsM0PN7LNkkbjXn0sroLAgb7rOnA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=szuxY7SE05xtpg+nO5ylldXTreq2dCCe6Dzi4TWpcuk8/ncx7U7QZ2dkwmGr8vhP93nRmtxSZYrC7tbS31Ti7lRTvaMo++TsRyzNClNElX2UBQ5fZs5LayakqOnRBVOQN3rbVSPXnZf7czf3weKyvVGf5N22Y4rv4ybiAvJfrH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf12.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay09.hostedemail.com (Postfix) with ESMTP id C80D6814E9;
-	Tue,  5 Aug 2025 13:37:13 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf12.hostedemail.com (Postfix) with ESMTPA id EBB011A;
-	Tue,  5 Aug 2025 13:37:11 +0000 (UTC)
-Date: Tue, 5 Aug 2025 09:37:41 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Qianfeng Rong <rongqianfeng@vivo.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, willy@infradead.org
-Subject: Re: [PATCH] trace: Remove redundant __GFP_NOWARN
-Message-ID: <20250805093741.0a8ed16a@gandalf.local.home>
-In-Reply-To: <20250805023630.335719-1-rongqianfeng@vivo.com>
-References: <20250805023630.335719-1-rongqianfeng@vivo.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1754406529; c=relaxed/simple;
+	bh=hVcRW6KSa8Yn5WCJUu+xD2ZgiFj6m51RMmFzdtyVAwg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=idxaTql4Wyx6BoiIO4igJiMJFicA+g5npNQuFIvSqb9qT/qgJBV0m6RDChjmhxxAtOFL69+iFk8vTVnkZV2WsIlqrv4CKm0VbThXtyqOPjNPXi1bxaadEEuBZ8zaOfq+kLxG0imtLQrySdGEY5FmdWHUOYORHkwvgZQxfmyOhZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4bxGyx6TpQzKHMpF;
+	Tue,  5 Aug 2025 23:08:41 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id EB4201A07BB;
+	Tue,  5 Aug 2025 23:08:40 +0800 (CST)
+Received: from ultra.huawei.com (unknown [10.90.53.71])
+	by APP4 (Coremail) with SMTP id gCh0CgCHTg93HpJoQamsCg--.10744S2;
+	Tue, 05 Aug 2025 23:08:40 +0800 (CST)
+From: Pu Lehui <pulehui@huaweicloud.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH] tracing: Zero-initialize parser->buffer to avoid OOB access
+Date: Tue,  5 Aug 2025 15:12:03 +0000
+Message-Id: <20250805151203.1214790-1-pulehui@huaweicloud.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: j5edjuoapcjc9qwjh44emm1kn9s1g3uh
-X-Rspamd-Server: rspamout05
-X-Rspamd-Queue-Id: EBB011A
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+xPzhdDVPxXBgePBycPgPrV27rmxtrLJg=
-X-HE-Tag: 1754401031-42219
-X-HE-Meta: U2FsdGVkX1/kJmEUEQzhoLIfpnWU5hfZYvvua1LGWRFb83PLuO3/zkBFsqbFcxdyCcbfl+bbwpBY98KRbOeA5fPYvZOF4A+ScpREzzj8Qb/h19UlzaJFcTEpbvWNz+tD2wA0/xqVrM0TSv68xzXqn8FRyEI8hUOYbtenjnXJlV41x/tx5Mv1YstwMq/H+FAbCtgADdJ+IvSqAB9acWKVm5sdwHllUWdsQt9fol+4HAQM7yEDUCGCOAbJ4bi1/K11N1p+SWU7t5x7lZFJoc2gHECF5a+F+WUumI6Xk74y+KnSMT8ToiSOJ0z6Ua5SiWvGnvKBnAUJR/R4Djhlr25IgQU1ynM34sfwXnwLHZlwneiOFPVE0tV/7tdw/uLRzJkRr5lqWp6P0vhNCO7+9S+6bA==
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgCHTg93HpJoQamsCg--.10744S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Ar4UCryfuF4kury5Gw1rZwb_yoW8Kw4kpF
+	WfKrs7Gw4qgF4IvFs5Zr10qa4kXan8GrW7GFs7JryYqa9xKF1j9rZrCrnrWw1fCryrJryY
+	yFy8K3yUKr1DZaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUyEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI
+	7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxV
+	Cjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY
+	6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6x
+	AIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY
+	1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU80fO7UUUUU==
+X-CM-SenderInfo: psxovxtxl6x35dzhxuhorxvhhfrp/
 
-On Tue,  5 Aug 2025 10:36:29 +0800
-Qianfeng Rong <rongqianfeng@vivo.com> wrote:
+From: Pu Lehui <pulehui@huawei.com>
 
-> Commit 16f5dfbc851b ("gfp: include __GFP_NOWARN in GFP_NOWAIT")
-> made GFP_NOWAIT implicitly include __GFP_NOWARN.
-> 
-> Therefore, explicit __GFP_NOWARN combined with GFP_NOWAIT
-> (e.g., `GFP_NOWAIT | __GFP_NOWARN`) is now redundant. Let's clean
-> up these redundant flags across subsystems.
-> 
-> No functional changes.
-> 
-> Signed-off-by: Qianfeng Rong <rongqianfeng@vivo.com>
+When the length of the string written to set_ftrace_filter exceeds
+FTRACE_BUFF_MAX, the following KASAN alarm will be triggered:
 
-Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+BUG: KASAN: slab-out-of-bounds in strsep+0x18c/0x1b0
+Read of size 1 at addr ffff0000d00bd5ba by task ash/165
 
--- Steve
+CPU: 1 UID: 0 PID: 165 Comm: ash Not tainted 6.16.0-g6bcdbd62bd56-dirty #3 NONE
+Hardware name: linux,dummy-virt (DT)
+Call trace:
+ show_stack+0x34/0x50 (C)
+ dump_stack_lvl+0xa0/0x158
+ print_address_description.constprop.0+0x88/0x398
+ print_report+0xb0/0x280
+ kasan_report+0xa4/0xf0
+ __asan_report_load1_noabort+0x20/0x30
+ strsep+0x18c/0x1b0
+ ftrace_process_regex.isra.0+0x100/0x2d8
+ ftrace_regex_release+0x484/0x618
+ __fput+0x364/0xa58
+ ____fput+0x28/0x40
+ task_work_run+0x154/0x278
+ do_notify_resume+0x1f0/0x220
+ el0_svc+0xec/0xf0
+ el0t_64_sync_handler+0xa0/0xe8
+ el0t_64_sync+0x1ac/0x1b0
+
+The reason is that trace_get_user will fail when processing a string
+longer than FTRACE_BUFF_MAX, but not set the end of parser->buffer
+to 0. Then an oob access will be triggered in ftrace_regex_release->
+ftrace_process_regex->strsep->strpbrk. We can solve this problem by
+zero-initializing parser->buffer.
+
+Fixes: 8c9af478c06b ("ftrace: Handle commands when closing set_ftrace_filter file")
+Signed-off-by: Pu Lehui <pulehui@huawei.com>
+---
+ kernel/trace/trace.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
+
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 4283ed4e8f59..97e66cbd3617 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -1776,7 +1776,7 @@ int trace_parser_get_init(struct trace_parser *parser, int size)
+ {
+ 	memset(parser, 0, sizeof(*parser));
+ 
+-	parser->buffer = kmalloc(size, GFP_KERNEL);
++	parser->buffer = kzalloc(size, GFP_KERNEL);
+ 	if (!parser->buffer)
+ 		return 1;
+ 
+@@ -1860,13 +1860,10 @@ int trace_get_user(struct trace_parser *parser, const char __user *ubuf,
+ 
+ 	/* We either got finished input or we have to wait for another call. */
+ 	if (isspace(ch) || !ch) {
+-		parser->buffer[parser->idx] = 0;
+ 		parser->cont = false;
+ 	} else if (parser->idx < parser->size - 1) {
+ 		parser->cont = true;
+ 		parser->buffer[parser->idx++] = ch;
+-		/* Make sure the parsed string always terminates with '\0'. */
+-		parser->buffer[parser->idx] = 0;
+ 	} else {
+ 		return -EINVAL;
+ 	}
+-- 
+2.34.1
+
