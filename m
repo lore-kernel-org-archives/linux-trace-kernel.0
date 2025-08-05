@@ -1,165 +1,167 @@
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 400672797AD;
-	Tue,  5 Aug 2025 15:18:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DE031E32D7
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  5 Aug 2025 15:36:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754407124; cv=none; b=ldmJ8yJTR+Fj8VXziHmUkoXIaXE2FrDHNcl+1fNRvq8cvamUSp0f493n4xUZ9/h8f/D2rWxdceSGjAR8HnlEoVVchBfpU377rhGmU8lso0LScS6tsTuiMJqCIKAIhtl+k4EivW9lcecLZJwLY16eK2DjJsTPmQ1w+SQO9870wcc=
+	t=1754408171; cv=none; b=gN/7LuU1jrGgkWPI44itYpK48WeAgu+5FPRxGWrvwZqlIoipHJBf3AqUUxvrzowB2CtXTWNL12knW8jBjM846PuMw092rBV09gTWWhLongpDJVPnXPVfAlociztRu9NT5miLPcIuFQphMQdEomO1OsMumNPaUQz++HVsgjM6VVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754407124; c=relaxed/simple;
-	bh=pDE7fSiYl1/mCF0GA3dI0d52Bsae8iJN6UgVNKXIgOQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OLZDB8QuOSgleGsqxxEZuZix4Ir7xyIMqoQ3Rsg3HBEfvtyZA3h6jjzkkAM2pJd79uV9oCoZutyWEVXtQ2+lmcoQDwNhnI0hGnhE4LjpkhCbOdQfDwBbCJ1uUU01mnzVLX8uSKCtrKhiiUY9ScTl4agoieIsSec4A/laAbZDIq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf15.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay03.hostedemail.com (Postfix) with ESMTP id 350D5B624B;
-	Tue,  5 Aug 2025 15:18:35 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf15.hostedemail.com (Postfix) with ESMTPA id 7E7C11D;
-	Tue,  5 Aug 2025 15:18:33 +0000 (UTC)
-Date: Tue, 5 Aug 2025 11:19:03 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Pu Lehui <pulehui@huaweicloud.com>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] tracing: Zero-initialize parser->buffer to avoid OOB
- access
-Message-ID: <20250805111903.3114427b@gandalf.local.home>
-In-Reply-To: <20250805151203.1214790-1-pulehui@huaweicloud.com>
-References: <20250805151203.1214790-1-pulehui@huaweicloud.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1754408171; c=relaxed/simple;
+	bh=wdxaYDaFuQGcdWab2u1vRWh6ubZ0FBcIJSPOHoprdZM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MQM8lxJGzmhwuUHZfBX/3iyopIdriD3LltNOJiCPugxYnVOHkXxU38CeFVy9JzAMju7FlpxRLdFv+6c9D8EmeEvZrHOqKzZtuK7VCjjRW/pDyA1jTfIBy3N+RSiJSJbp8Wte6LvWk0h4VZZ3Ze/sDVQ5YN9nQgQG0OhYOa6J/JI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=ME13T7ql; arc=none smtp.client-ip=209.85.222.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="ME13T7ql"
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7e806613af8so198218285a.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 05 Aug 2025 08:36:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1754408168; x=1755012968; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=N1MKz8dfPt28HzEOpdUPkfZENcnUFV9NfsoMVTYwzbE=;
+        b=ME13T7qlujFLxq8mKX31c/Td7LIBGSUIjNS9Z6W5QS1QsalqTz3hlx9PvxNNKHvUIa
+         Xmrfl17cPhbG7Kc8V/bFqsuVtobMfEXk0xIwFaMAGQsa+mx+W14YFLcmqpf+XAVWrQvO
+         nRT50LH0BAPqQQWC4eYGFTIkVYw1tvKll6akmdBcqTDaBE72MLPbWjVGjiInjnVlm93s
+         AVAzkkiXV2Uo1Vb+tsXHMQlERMV4zaSSg1/H6O97HkdwdqxxR7ubHze86HF/8+l9LzYB
+         aF36TMxjVnLNh8FzH3iJYNu12rFTPh1Hup7iO7j4zp4Qf2XxZ+frJJC5pb/Y/igpTT4p
+         p+Eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1754408168; x=1755012968;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=N1MKz8dfPt28HzEOpdUPkfZENcnUFV9NfsoMVTYwzbE=;
+        b=LG2Xl+2KZMKUlCF/8vD3z3OGaC/OdWal6CCI/pOnk+XByHBXAqOeSCvJwubmYBPcE9
+         nLZiUnqxsqaLO8GDq1pzTEjlEDAWKoVGyOkTBfHQWNkJCbT5+AMgKwbSzRRlEjfhhjrd
+         V0G07AGDlPDyIE8KbwTUcEpNHYUngc2ZPqmALBN3U8cjV9H6MYw0yDkO1a9+BwD+wk4x
+         Ef5uKlpefsFqvptgavkQ/gDXHxVZ6kc0ugBpL0QCulyFn+H/YZ8hQopXKX+ucSJcC0Xf
+         2khxpG0OJ+VTyUC9LeYF+f3bmW8AEw4ijcIk87cwvUO1dYI1I6owSBdTgVadRgGNsKKa
+         k7Fg==
+X-Forwarded-Encrypted: i=1; AJvYcCW4KFdBdWNrGpFNlijXZqHmyUg5Cm+Zp4ddHX3oqSFAMT2oJIdcKiLhDVlf6w2+muB6k+z25ND/E/L19DMatRj9IKk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwCOaaF+OONMo1395FLWy/Fg9EzchAJKZ92hSQ6UucC1NfTyFSe
+	MCxGW7uLcmcy5RpSFp0Pwqupihh35yD94ydyHzyBCKSC/JL/HJ/x2Z4NyNEaTVT2Ztc=
+X-Gm-Gg: ASbGncsoywpR70RX7OC2tlkd6nCq7J81n9xpj+RdVkXuFe5YW+XmQesf1VRDpfp819w
+	tNxdewLU3xfhE2pRlv3ehXIkKpDMbZYR2laCU+RBgrK6/lnvtJShnypLyRATAuVRYQj8ZWYDa+t
+	sil8uAJfuMEYks1tCNhqzYpvy1l5/b8g+Wmeqnn/aplq/owFKu/+rbnHDPPit4SJukPl2M5wryS
+	O+0sOmfdXM/wd44HbfYUWozV4iVjNIuTFp0sF+FCNmHY/NAM7CYNmJoP4DkezPcxxwc9DdBqL16
+	Nf8y95bl8v7ILSAgoUEAXcM/PNcJXMfjRww4ameMYDe/B9Mpwi8oJLhK7v1r49tProgDbPYfXA4
+	es+QIBmuJkMfRoK7xYPWPxnVjuSisezBL++DaWhdPmvLnpXGluuAiUo7OOL5GW4lBUckJMnh7K9
+	2ZrCo=
+X-Google-Smtp-Source: AGHT+IF1+3bX6DUQCrRo5YyM2fp0OCvjM/jusyZc5iy/VSCxNo0II2PGkJ9MrYPb1oYSw7F9hqkESg==
+X-Received: by 2002:a05:620a:12c6:b0:7e6:8f41:2055 with SMTP id af79cd13be357-7e6962e0c1bmr1733279285a.21.1754408168128;
+        Tue, 05 Aug 2025 08:36:08 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-47-55-120-4.dhcp-dynamic.fibreop.ns.bellaliant.net. [47.55.120.4])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7e67f5cd63fsm689744985a.39.2025.08.05.08.36.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Aug 2025 08:36:07 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1ujJhu-00000001YWx-3rSt;
+	Tue, 05 Aug 2025 12:36:06 -0300
+Date: Tue, 5 Aug 2025 12:36:06 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Robin Murphy <robin.murphy@arm.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Christoph Hellwig <hch@lst.de>, Leon Romanovsky <leon@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>,
+	Alexander Potapenko <glider@google.com>,
+	Marco Elver <elver@google.com>, Dmitry Vyukov <dvyukov@google.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	=?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, iommu@lists.linux.dev,
+	virtualization@lists.linux.dev, kasan-dev@googlegroups.com,
+	linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH 0/8] dma-mapping: migrate to physical address-based API
+Message-ID: <20250805153606.GR26511@ziepe.ca>
+References: <CGME20250625131920eucas1p271b196cde042bd39ac08fb12beff5baf@eucas1p2.samsung.com>
+ <cover.1750854543.git.leon@kernel.org>
+ <35df6f2a-0010-41fe-b490-f52693fe4778@samsung.com>
+ <20250627170213.GL17401@unreal>
+ <20250630133839.GA26981@lst.de>
+ <69b177dc-c149-40d3-bbde-3f6bad0efd0e@samsung.com>
+ <f912c446-1ae9-4390-9c11-00dce7bf0fd3@arm.com>
+ <aIupx_8vOg8wQh6w@casper.infradead.org>
+ <20250803155906.GM26511@ziepe.ca>
+ <aJArFNkuP8DJIdMY@casper.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 7E7C11D
-X-Stat-Signature: 7rneqf3fhmfy5sxdiymbicjajfu4drht
-X-Rspamd-Server: rspamout06
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18uIjbFd+mgPW3433ZyClr4cyagnhZhg6I=
-X-HE-Tag: 1754407113-973937
-X-HE-Meta: U2FsdGVkX1/y73NjOqs/z96wfe/BAl/izjehKV0AATZ18Wy+3fkitZKLmNscbyGNYcV+X+HoQ1MIY6mkmuWM27/w+4azIbWP/nAu8N5rFQz50Z1mn4W54H+7+VGPsDxGkmvXRbIgZd9wUPqbwpa5EDbAOUO1IwrXnYphnQWZYHwHlCEn9wp6ylFmujCTpn5r5EQXUq7aQY7SvxVlmQECB6pOa/JfNN1nimqIfgOrZsAd8ybG3ikIOVYw1PrUaSwJw3yQ8UcTDh7Gjt0oX9YkNAtK1q+aOS1WvvqOrqXizqFU69R1qnvATRIbbX5SiZM8uM9K4StGh57ZvzJ/fjwKVxezy7JluLOVBIBJP2kAxaDThYWUi82BYg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aJArFNkuP8DJIdMY@casper.infradead.org>
 
-On Tue,  5 Aug 2025 15:12:03 +0000
-Pu Lehui <pulehui@huaweicloud.com> wrote:
-
-> From: Pu Lehui <pulehui@huawei.com>
+On Mon, Aug 04, 2025 at 04:37:56AM +0100, Matthew Wilcox wrote:
+> On Sun, Aug 03, 2025 at 12:59:06PM -0300, Jason Gunthorpe wrote:
+> > Matthew, do you think it makes sense to introduce types to make this
+> > clearer? We have two kinds of values that a phys_addr_t can store -
+> > something compatible with kmap_XX_phys(), and something that isn't.
 > 
-> When the length of the string written to set_ftrace_filter exceeds
-> FTRACE_BUFF_MAX, the following KASAN alarm will be triggered:
-> 
-> BUG: KASAN: slab-out-of-bounds in strsep+0x18c/0x1b0
-> Read of size 1 at addr ffff0000d00bd5ba by task ash/165
-> 
-> CPU: 1 UID: 0 PID: 165 Comm: ash Not tainted 6.16.0-g6bcdbd62bd56-dirty #3 NONE
-> Hardware name: linux,dummy-virt (DT)
-> Call trace:
->  show_stack+0x34/0x50 (C)
->  dump_stack_lvl+0xa0/0x158
->  print_address_description.constprop.0+0x88/0x398
->  print_report+0xb0/0x280
->  kasan_report+0xa4/0xf0
->  __asan_report_load1_noabort+0x20/0x30
->  strsep+0x18c/0x1b0
->  ftrace_process_regex.isra.0+0x100/0x2d8
->  ftrace_regex_release+0x484/0x618
->  __fput+0x364/0xa58
->  ____fput+0x28/0x40
->  task_work_run+0x154/0x278
->  do_notify_resume+0x1f0/0x220
->  el0_svc+0xec/0xf0
->  el0t_64_sync_handler+0xa0/0xe8
->  el0t_64_sync+0x1ac/0x1b0
-> 
-> The reason is that trace_get_user will fail when processing a string
-> longer than FTRACE_BUFF_MAX, but not set the end of parser->buffer
-> to 0. Then an oob access will be triggered in ftrace_regex_release->
-> ftrace_process_regex->strsep->strpbrk. We can solve this problem by
-> zero-initializing parser->buffer.
-> 
-> Fixes: 8c9af478c06b ("ftrace: Handle commands when closing set_ftrace_filter file")
+> I was with you up until this point.  And then you said "What if we have
+> a raccoon that isn't a raccoon" and my brain derailed.
 
-Fix one bug then create another!!!
+I though it was clear..
 
-> Signed-off-by: Pu Lehui <pulehui@huawei.com>
-> ---
->  kernel/trace/trace.c | 5 +----
->  1 file changed, 1 insertion(+), 4 deletions(-)
-> 
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index 4283ed4e8f59..97e66cbd3617 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -1776,7 +1776,7 @@ int trace_parser_get_init(struct trace_parser *parser, int size)
->  {
->  	memset(parser, 0, sizeof(*parser));
->  
-> -	parser->buffer = kmalloc(size, GFP_KERNEL);
-> +	parser->buffer = kzalloc(size, GFP_KERNEL);
->  	if (!parser->buffer)
->  		return 1;
->  
-> @@ -1860,13 +1860,10 @@ int trace_get_user(struct trace_parser *parser, const char __user *ubuf,
->  
->  	/* We either got finished input or we have to wait for another call. */
->  	if (isspace(ch) || !ch) {
-> -		parser->buffer[parser->idx] = 0;
->  		parser->cont = false;
->  	} else if (parser->idx < parser->size - 1) {
->  		parser->cont = true;
->  		parser->buffer[parser->idx++] = ch;
-> -		/* Make sure the parsed string always terminates with '\0'. */
-> -		parser->buffer[parser->idx] = 0;
+   kmap_local_pfn(phys >> PAGE_SHIFT)
+   phys_to_virt(phys)
 
-The returned buffer is expected to end with a '0'. This now removes that if
-the idx is the length of the parser.
+Does not work for all values of phys. It definately illegal for
+non-cachable MMIO. Agree?
 
->  	} else {
->  		return -EINVAL;
->  	}
+There is a subset of phys that is cachable and has struct page that is
+usable with kmap_local_pfn()/etc
 
-The real fix would be:
+phys is always this:
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index d0b1964648c1..422224a55f1d 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -815,7 +815,7 @@ int trace_pid_write(struct trace_pid_list *filtered_pids,
- 	loff_t pos;
- 	pid_t pid;
- 
--	if (trace_parser_get_init(&parser, PID_BUF_SIZE + 1))
-+	if (trace_parser_get_init(&parser, PID_BUF_SIZE))
- 		return -ENOMEM;
- 
- 	/*
-@@ -1776,7 +1776,7 @@ int trace_parser_get_init(struct trace_parser *parser, int size)
- {
- 	memset(parser, 0, sizeof(*parser));
- 
--	parser->buffer = kmalloc(size, GFP_KERNEL);
-+	parser->buffer = kmalloc(size + 1, GFP_KERNEL);
- 	if (!parser->buffer)
- 		return 1;
- 
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 05447b958a1a..a3ce88a48947 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -1507,7 +1507,7 @@ ftrace_event_write(struct file *file, const char __user *ubuf,
- 	if (ret < 0)
- 		return ret;
- 
--	if (trace_parser_get_init(&parser, EVENT_BUF_SIZE + 1))
-+	if (trace_parser_get_init(&parser, EVENT_BUF_SIZE))
- 		return -ENOMEM;
- 
- 	read = trace_get_user(&parser, ubuf, cnt, ppos);
+> - CPU untranslated.  This is the "physical" address.  Physical address
+>   0 is what the CPU sees when it drives zeroes on the memory bus.
 
--- Steve
+But that is a pure HW perspective. It doesn't say which of our SW APIs
+are allowed to use this address.
+
+We have callchains in DMA API land that want to do a kmap at the
+bottom. It would be nice to mark the whole call chain that the
+phys_addr being passed around is actually required to be kmappable.
+
+Because if you pass a non-kmappable MMIO backed phys it will explode
+in some way on some platforms.
+
+> > We clearly have these two different ideas floating around in code,
+> > page tables, etc.
+
+> No.  No, we don't.  I've never heard of this asininity before.
+
+Welcome to the fun world of cachable and non-cachable memory.
+
+Consider, today we can create struct pages of type
+MEMORY_DEVICE_PCI_P2PDMA for non-cachable MMIO. I think today you
+"can" use kmap to establish a cachable mapping in the vmap.
+
+But it is *illegal* to establish a cachable CPU mapping of MMIO. Archs
+are free to MCE if you do this - speculative cache line load of MMIO
+can just error in HW inside the interconnect.
+
+So, the phys_addr is always a "CPU untranslated physical address" but
+the cachable/non-cachable cases, or DRAM vs MMIO, are sometimes
+semantically very different things for the SW!
+
+Jason
