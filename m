@@ -1,129 +1,65 @@
-Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 715211A23A0
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  5 Aug 2025 12:29:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C40E41400C;
+	Tue,  5 Aug 2025 13:37:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754396949; cv=none; b=EwWHjvHxkaka3mTtg7kHEjx+a/z348DAYSDBtC+GQXMPoUh689/QvLfH7z+kz7et50mUWUJbQmIaYWAct/NS871QRbj+dhIY1a2FWtT/eUG2MnvNHYt8mg+xxpGZcO0ZwY3sZT5ZOJtOmWUZaVY5FnaKZMRIe0lpfR87+0Djfbk=
+	t=1754401043; cv=none; b=FvRJcc+rMArQf7CFWcmpR+btQYvko+a9fmZNOvpO6u11+emmqb6wPFlfolKP9Xp2slOVM5YDHRe4Kf471TC0cIwqBRIvbs8MGFdQ8Z5sDctqIGF2libPhmryKMGZpoSulq8w1yRTdb6wJ5jXh0TFCwwrhIRibXk1NAniZkp8/Wg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754396949; c=relaxed/simple;
-	bh=jQI3r5EcHpVmvb0kE+VVHZ2s5vS4vaedPS/qBJTjkJg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=n/YsE5TQkPlZNenQWikSuEHLO/qhkANRyFvPuFqE1o9STGgsxxHQIw4c0ghHvxs69xTRl1NFGGmfXRFVLh7ccQf9Rzbzn4IEVTyW5bL7KOLi8+eQdgsYO6B/z5RTH0feuxbDfe6PrT33T37+N0bt6TGqOQdgGibmPTv1PBpERAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=guaEMK7+; arc=none smtp.client-ip=91.218.175.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="guaEMK7+"
-Message-ID: <6a931aca-1aad-41e4-8449-89f48121abba@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1754396943;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ckYT6H+4ykVzg0eOUxMZqle5eJFuVeA2UGYUlhfYHG4=;
-	b=guaEMK7+1o0ANEzCQZ+8hTcY+qFUMroxIncUJG7XG6DOuqpSI56dNDuudGOyDJCUxv1yZk
-	zSWOKeYN3X4BQ9ow/3vxvK+uhpgQ5CcgRN2k3Hfj7Fxil3vRPZUihC4nhwTzKpHpxADjdQ
-	7ia33uIK8AZ3GorOkgqc3INtLWjjd6M=
-Date: Tue, 5 Aug 2025 20:28:48 +0800
+	s=arc-20240116; t=1754401043; c=relaxed/simple;
+	bh=t8B62mkvDKxAydyLsM0PN7LNkkbjXn0sroLAgb7rOnA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=szuxY7SE05xtpg+nO5ylldXTreq2dCCe6Dzi4TWpcuk8/ncx7U7QZ2dkwmGr8vhP93nRmtxSZYrC7tbS31Ti7lRTvaMo++TsRyzNClNElX2UBQ5fZs5LayakqOnRBVOQN3rbVSPXnZf7czf3weKyvVGf5N22Y4rv4ybiAvJfrH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf12.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay09.hostedemail.com (Postfix) with ESMTP id C80D6814E9;
+	Tue,  5 Aug 2025 13:37:13 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf12.hostedemail.com (Postfix) with ESMTPA id EBB011A;
+	Tue,  5 Aug 2025 13:37:11 +0000 (UTC)
+Date: Tue, 5 Aug 2025 09:37:41 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Qianfeng Rong <rongqianfeng@vivo.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, willy@infradead.org
+Subject: Re: [PATCH] trace: Remove redundant __GFP_NOWARN
+Message-ID: <20250805093741.0a8ed16a@gandalf.local.home>
+In-Reply-To: <20250805023630.335719-1-rongqianfeng@vivo.com>
+References: <20250805023630.335719-1-rongqianfeng@vivo.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH bpf-next] bpf: Disable migrate when kprobe_multi attach to
- access bpf_prog_active
-To: Yonghong Song <yonghong.song@linux.dev>, Jiri Olsa <olsajiri@gmail.com>
-Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
- martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org,
- john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me,
- haoluo@google.com, mattbobrowski@google.com, rostedt@goodmis.org,
- mhiramat@kernel.org, mathieu.desnoyers@efficios.com, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-References: <20250804121615.1843956-1-chen.dylane@linux.dev>
- <aJCvY7G-gVR8taLh@krava> <3cf22505-e338-4cc1-ab76-896bfc336b40@linux.dev>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Tao Chen <chen.dylane@linux.dev>
-In-Reply-To: <3cf22505-e338-4cc1-ab76-896bfc336b40@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: j5edjuoapcjc9qwjh44emm1kn9s1g3uh
+X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: EBB011A
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+xPzhdDVPxXBgePBycPgPrV27rmxtrLJg=
+X-HE-Tag: 1754401031-42219
+X-HE-Meta: U2FsdGVkX1/kJmEUEQzhoLIfpnWU5hfZYvvua1LGWRFb83PLuO3/zkBFsqbFcxdyCcbfl+bbwpBY98KRbOeA5fPYvZOF4A+ScpREzzj8Qb/h19UlzaJFcTEpbvWNz+tD2wA0/xqVrM0TSv68xzXqn8FRyEI8hUOYbtenjnXJlV41x/tx5Mv1YstwMq/H+FAbCtgADdJ+IvSqAB9acWKVm5sdwHllUWdsQt9fol+4HAQM7yEDUCGCOAbJ4bi1/K11N1p+SWU7t5x7lZFJoc2gHECF5a+F+WUumI6Xk74y+KnSMT8ToiSOJ0z6Ua5SiWvGnvKBnAUJR/R4Djhlr25IgQU1ynM34sfwXnwLHZlwneiOFPVE0tV/7tdw/uLRzJkRr5lqWp6P0vhNCO7+9S+6bA==
 
-在 2025/8/5 12:05, Yonghong Song 写道:
-> 
-> 
-> On 8/4/25 6:02 AM, Jiri Olsa wrote:
->> On Mon, Aug 04, 2025 at 08:16:15PM +0800, Tao Chen wrote:
->>> The syscall link_create not protected by bpf_disable_instrumentation,
->>> accessing percpu data bpf_prog_active should use cpu local_lock when
->>> kprobe_multi program attach.
->>>
->>> Fixes: 0dcac2725406 ("bpf: Add multi kprobe link")
->>> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
->>> ---
->>>   kernel/trace/bpf_trace.c | 4 ++--
->>>   1 file changed, 2 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
->>> index 3ae52978cae..f6762552e8e 100644
->>> --- a/kernel/trace/bpf_trace.c
->>> +++ b/kernel/trace/bpf_trace.c
->>> @@ -2728,23 +2728,23 @@ kprobe_multi_link_prog_run(struct 
->>> bpf_kprobe_multi_link *link,
->>>       struct pt_regs *regs;
->>>       int err;
->>> +    migrate_disable();
->>>       if (unlikely(__this_cpu_inc_return(bpf_prog_active) != 1)) {
->> this is called all the way from graph tracer, which disables 
->> preemption in
->> function_graph_enter_regs, so I think we can safely use 
->> __this_cpu_inc_return
-> 
-> Agree. migrate_disable() is not needed here. But it would be great to 
-> add some
-> comments here since for most other prog_run, they typically have 
-> migrate_disable/enable.
-> 
->>
->>
->>>           bpf_prog_inc_misses_counter(link->link.prog);
->>>           err = 1;
->>>           goto out;
->>>       }
->>> -    migrate_disable();
->> hum, but now I'm not sure why we disable migration in here then
-> 
-> Probably a oversight.
-> 
->>
->> jirka
->>
->>>       rcu_read_lock();
->>>       regs = ftrace_partial_regs(fregs, bpf_kprobe_multi_pt_regs_ptr());
->>>       old_run_ctx = bpf_set_run_ctx(&run_ctx.session_ctx.run_ctx);
->>>       err = bpf_prog_run(link->link.prog, regs);
->>>       bpf_reset_run_ctx(old_run_ctx);
->>>       rcu_read_unlock();
->>> -    migrate_enable();
->>>    out:
->>>       __this_cpu_dec(bpf_prog_active);
->>> +    migrate_enable();
->>>       return err;
->>>   }
->>> -- 
->>> 2.48.1
->>>
-> 
+On Tue,  5 Aug 2025 10:36:29 +0800
+Qianfeng Rong <rongqianfeng@vivo.com> wrote:
 
-Hi Jiri, Yonghong,
+> Commit 16f5dfbc851b ("gfp: include __GFP_NOWARN in GFP_NOWAIT")
+> made GFP_NOWAIT implicitly include __GFP_NOWARN.
+> 
+> Therefore, explicit __GFP_NOWARN combined with GFP_NOWAIT
+> (e.g., `GFP_NOWAIT | __GFP_NOWARN`) is now redundant. Let's clean
+> up these redundant flags across subsystems.
+> 
+> No functional changes.
+> 
+> Signed-off-by: Qianfeng Rong <rongqianfeng@vivo.com>
 
-I send another patch as you suggested, pls review it, thanks.
+Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-https://lore.kernel.org/bpf/20250805122312.1890951-1-chen.dylane@linux.dev
-
--- 
-Best Regards
-Tao Chen
+-- Steve
