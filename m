@@ -1,204 +1,223 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2043.outbound.protection.outlook.com [40.107.94.43])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F370E29CB48;
-	Wed,  6 Aug 2025 18:44:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.43
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754505889; cv=fail; b=ZR1mBhFj4xF2FwR4mAm9bEDeYErkh8b+tuYprurKg6vnwaBYfGL9wrDFKg8gV6/YQiSQCh1gPOp7BFvXXYa1MEAkfcaleOylbULuIgU0WUOOfEbQjtbqDNrzoRrSj3rSnewttnhfLEP/a6lmvGZ1pHxPFNpHj40TOJHf29qRvmg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754505889; c=relaxed/simple;
-	bh=xYf+k7Iaj0957awcWB+XNbmWhAO46t1jzeVZWlhFq3g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=XR319bza7FoSPT5wDDOYb5W7PyaoCdZ10wmACzwplNIhcVbA4bHg7vWEKEwCkF21vJthYewN0+LeqOgtSXFrBZmcsJprSRnh+FCSXA4GBL1wE1YGBs1JSS1Nabs9rZzSwjKtX3yTC0GuYcv26ptPthFc5BEoddwlgKtrHBW0bpo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=gi6vwpK5; arc=fail smtp.client-ip=40.107.94.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76CF91FF7B4;
+	Wed,  6 Aug 2025 20:30:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1754512258; cv=none; b=i11mTfINOx+cNKkpEyYzFkVRCQIatBmQ6+fhGfoTcjn4gzyDve9OuWgSqzLjWTnFdnp7JHR39MuadhnudiokSJ0NEBITNPbh2dC5dt9UkvRYL3Ne6efio0LyiXHhb/vadK8dxuPmg7azvylWTb3DkGwuqlERFKqCIbPBtk3wvEc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1754512258; c=relaxed/simple;
+	bh=IUvrNEmDlCZzmuFligTjfGnRr54fRAByHqiRZrgG2+o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Hv4LdJOhY3T/zVvWC1ehF55veyIN2/tvhEadVNGR9WM08NpVwHFUuKrPz/3mH4g2IbvSetb2Fk4EmoIOTfPDKtWWoCAhhX6U7OwZZ5LhZIAgIglhkAtC89kO5xgQDAnRoH38RcLKoZyM5a905VHh76cPXHCN5XByphdl19KJ6po=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lgwfzB8P; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="gi6vwpK5"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=IOauFcSkTIcu6PD7QaXL2Z0ekh+G12NbVdlqxqSUF329YDRGdMpJsGxQ6P4fut1tX1Ygpb2vcf9dUG0A0MElFOeAQVNP/mC5F81GfWDQgksWCKY3exzISuXthAjUdgIYtHFTj0Owe+9QXSzhnS3Y1Z0hdtVKu1b5yWNh1+UPlVGYgFopNcqoI1Uq2qcC5mCuSNmu76shE9RpAgnwh2k89srZg30ukYjhzkwSwExmvQJIQTZ8T9PTwPhjvA5QuXHLEBQ0RY1nsssiq6+hp7UYpZSSgUxBd/u4jVF4EY/YUnZ2Z4HL7m1UCCzjYywsq+gxEqMOgHHxs+CkjwjL2f0EHQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XsnX/855VPl+V555Ssmgek9Y1s47JtlT+wpnIJ5f4UM=;
- b=LQ6Jyo8G+G6ShACF49yYeqmyidGB0PDIIqMDs0nKLWlkVU/UmfgLc7T4MJY7TDU1yh8MXPDbtGY20MFTe09zB4nTAV65ukkxyTBPT3tcGVzajUAClpnO+YcvyqJDL7zewB/NQZ1KnCJswCw5Qj0D+5Rrg+EMO/moi7PeQkeV18W3gTe0RKU7fTud9aHwjkkKZMCK615a22skSiCkRjigdQ//IwUVPvF23/WEP+FJ5osRc5NK9c2TfOx49oXxg2vuZwwZBToXedmTA/suZVsxI3Xg2ybxN2iF0LD0baRTaDtd3vQWX/drHxUHP4kHdsnQqefLNOSiML9EABsYRRxRiw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XsnX/855VPl+V555Ssmgek9Y1s47JtlT+wpnIJ5f4UM=;
- b=gi6vwpK5i9Jx4O9Pk6cIfi9UBlgeHFY5Hf4CRLGXdYp/1NAtrsXAhN/5hLWkN143xMrb1UAUDqxZJUdgN9ZSnTEO1d9Rokd4vDp5ZbhHTfZTyd/WEhNSqkWisD71CJuUAzkVwU9fvS8NL7ZgiZx6cqgGB8p18ccgPwUfZa72/0Vvip0apOrLU8CjtBJzPchTVgnz74mn6tB+wIO1TPha9NpyIkzXKWoZCn5+t9/Rydd308vn/NYmjJZYYyB66ZvPfBShdDHToalZKv4wz5ARxu9ZTe6wxKLN5OoXm119nzoLrxPPIC09n73TdVYV6oxW1x/KVUYVVvdVyMtUKCxqiQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
- by DM3PR12MB9389.namprd12.prod.outlook.com (2603:10b6:0:46::9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8989.20; Wed, 6 Aug 2025 18:44:44 +0000
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732%4]) with mapi id 15.20.9009.013; Wed, 6 Aug 2025
- 18:44:44 +0000
-Date: Wed, 6 Aug 2025 15:44:43 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Leon Romanovsky <leon@kernel.org>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
-	Leon Romanovsky <leonro@nvidia.com>,
-	Abdiel Janulgue <abdiel.janulgue@gmail.com>,
-	Alexander Potapenko <glider@google.com>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Christoph Hellwig <hch@lst.de>, Danilo Krummrich <dakr@kernel.org>,
-	iommu@lists.linux.dev, Jason Wang <jasowang@redhat.com>,
-	Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
-	Jonathan Corbet <corbet@lwn.net>, Juergen Gross <jgross@suse.com>,
-	kasan-dev@googlegroups.com, Keith Busch <kbusch@kernel.org>,
-	linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	linux-nvme@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-	linux-trace-kernel@vger.kernel.org,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lgwfzB8P"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1754512256; x=1786048256;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=IUvrNEmDlCZzmuFligTjfGnRr54fRAByHqiRZrgG2+o=;
+  b=lgwfzB8PLT7hy8+WnnjA3EP18/+lHPyU7vlu9WhkqaeqVakT8ErEnd5I
+   vCELXqA3UpPnsD3AvSWSuGvvueaL8ylCCs2BuMVXsJVmFFuGIDwjVp59B
+   VbyuRwJjIGysuHCoAepSqSryFdM3sfM/hV9emAtPUg11surGctcJUZvxF
+   BJ68ODxQnJz2jLBVbotDO9qdR50dmXpdVWArzvbxfVMK0JEGpHgZtgYhV
+   T9+1WTmZfv21Pz5lLwyRUKs6W7nqcrqZDbE6G1ltMxasvTWqZoRTOzSKn
+   Bz3zJY/Rpf1qASQ9fUlbvmYNk9azCh3I6nzpP9L3kKoIlGmk6TsnftAlM
+   A==;
+X-CSE-ConnectionGUID: +ud1jGIdTR6HxYcinXvncw==
+X-CSE-MsgGUID: wsPEi5XETF2fw4AB1v9dxw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11514"; a="56806106"
+X-IronPort-AV: E=Sophos;i="6.17,271,1747724400"; 
+   d="scan'208";a="56806106"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2025 13:30:55 -0700
+X-CSE-ConnectionGUID: UsXKBFW4QpCuPgMwmiQ6lA==
+X-CSE-MsgGUID: 44kMhEi7QB2iCbTDY/YqCw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.17,271,1747724400"; 
+   d="scan'208";a="165666300"
+Received: from lkp-server02.sh.intel.com (HELO 4ea60e6ab079) ([10.239.97.151])
+  by fmviesa010.fm.intel.com with ESMTP; 06 Aug 2025 13:30:50 -0700
+Received: from kbuild by 4ea60e6ab079 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1ujkmZ-00024O-1u;
+	Wed, 06 Aug 2025 20:30:45 +0000
+Date: Thu, 7 Aug 2025 04:28:42 +0800
+From: kernel test robot <lkp@intel.com>
+To: Nam Cao <namcao@linutronix.de>, Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>, rust-for-linux@vger.kernel.org,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	virtualization@lists.linux.dev, Will Deacon <will@kernel.org>,
-	xen-devel@lists.xenproject.org
-Subject: Re: [PATCH v1 05/16] iommu/dma: rename iommu_dma_*map_page to
- iommu_dma_*map_phys
-Message-ID: <20250806184443.GD184255@nvidia.com>
-References: <cover.1754292567.git.leon@kernel.org>
- <9186ccefda5ea97b56ec006900127650f9e324b5.1754292567.git.leon@kernel.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9186ccefda5ea97b56ec006900127650f9e324b5.1754292567.git.leon@kernel.org>
-X-ClientProxiedBy: YT4PR01CA0189.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:110::7) To CH3PR12MB8659.namprd12.prod.outlook.com
- (2603:10b6:610:17c::13)
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Gabriele Monaco <gmonaco@redhat.com>,
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, Nam Cao <namcao@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	K Prateek Nayak <kprateek.nayak@amd.com>
+Subject: Re: [PATCH v2 5/5] rv: Add rts monitor
+Message-ID: <202508070415.RDcwKpac-lkp@intel.com>
+References: <88fdbeb3f2ecf3a6259f3ee8636ae5b21fa6b72d.1754466623.git.namcao@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|DM3PR12MB9389:EE_
-X-MS-Office365-Filtering-Correlation-Id: b540726a-1087-4405-7c29-08ddd5194fa3
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?DVKK7m2kwbrFdFZ5CLqlkp3pCfT0gAPJfkqrhOJzBqvcXtAOkkMPkBXU7sc2?=
- =?us-ascii?Q?HlPv8+ODQt8Q5OlIqzIGrgF1p47orRrCOtS8kcyGubzJCJWHSvgXFfbNgzrw?=
- =?us-ascii?Q?/hbV1f0thZ7bBK1+ra1Aq/S4ghWekXsp1lWa5ZxaEgJoM6cjrxFNxViHVCTx?=
- =?us-ascii?Q?TFLHB25mCEIL35Hl32dvuQWzbEU0GAEIVAXeJcPoCROymPkl0kkmjQDuHvBq?=
- =?us-ascii?Q?RkZnbgMNgQDJ5hVraqmr3DqGxwMzxY5CuzgTXC97OTldBsMrUA48sPfSRdID?=
- =?us-ascii?Q?tqSf1yn9ePjr7Hy3vLsEgX3F0fYDVHBJtKI9SaZ5L0p+cu7Uc8LFfr3KenOK?=
- =?us-ascii?Q?veB8r0oF8RmSDkboVZYVJ4LxD8KpGeCBlI1IJSOkSZhp4XGn7VEzxR5UaicJ?=
- =?us-ascii?Q?p+DZqdQDosr9FvrmtVsyYhFNf0Y2CCMgoyKiHR0xD9ROFjvV+cl1RfBE0BOa?=
- =?us-ascii?Q?YvmN68/7ccmDS1DD4nBhm8zR6JmvobuG2WYZkzk6+yrKS9xauJWj3D8vvJSG?=
- =?us-ascii?Q?ii403ZJLIjngZYo/rzax6f8v2jfN4Jz1HtN3ZTqbZg0NQCTu85kWr/XhusG8?=
- =?us-ascii?Q?F5hs0NGzJY4IEmIJhJmvxnvKn1HNsXTHNXCHtLh71RhGP8n9SKXQYRLtxCkv?=
- =?us-ascii?Q?8pavmU/3d5KiWUm9ny/KjITJYthuwGGpygrPizbHaBrHquUx3GGBYbggfwoa?=
- =?us-ascii?Q?LMi66WtjB3AYwHRmXlIVUPirRtnF0O2CjHopmmjRrUKzu4uclUBDvVYN8x4X?=
- =?us-ascii?Q?2ROpvPSIJNfSYsU3AAEHC3YyOxDvvBLXnyJqCcf88hehfvMBMBVH0P2drFon?=
- =?us-ascii?Q?+XfyYtM6hVF4OPxaIeAh9YPKm0WxFl2Np8kW/tUzqJewVNeQ/WUIsU4Hizuc?=
- =?us-ascii?Q?277SUZf3nJE1rAykfN8m3DpJw5Jlp7asNbwBPEsJ2BKh7AJdAs8cicqZ+vrG?=
- =?us-ascii?Q?b/jL7tNZV/kmFGInFAGBeRXEhEba3f9GEefwbC9P1BqjLhB2EO7yvQO1WTnF?=
- =?us-ascii?Q?6sddW5eTpyKv0H2raRyInjVjvpPWDDoxfKR0rUXlY9ChanIcCnXTn85sYUKR?=
- =?us-ascii?Q?DrzR2KaplMd0BKRatDtIcigFzcesXkNSQtOAzG1HsKQ7txmWKoQBE1FhduWp?=
- =?us-ascii?Q?hdFKFriNDZB38pm6yKLTLlA1be01LI3JCWrLA42f+bdGiIxnHudbioh7FR5c?=
- =?us-ascii?Q?dnZi+Yl6hOwt5XWRfEzWN9lFDY/Cv7paTTfwrzYaFmCUDkmuGl6P3lTqXmXt?=
- =?us-ascii?Q?W+d+zHryLrLJG5nW9l7UEflk6LbaYe2nqjW7GsuAMzjd7oJm60dj8MZRJM7y?=
- =?us-ascii?Q?QD7MjGm5CTHLyX0co1pLB+az+/asfUfJo2+DFm1tG8cFiM1C2Xx3v1Qr3tM9?=
- =?us-ascii?Q?qNJRj6rUu1FVWh3IOwVptrTBgkcqwQwkFY1H2p9ZJUSixRrIEJPB8s6E+XmY?=
- =?us-ascii?Q?ttj2uhMec8w=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?H5EEEmksxB5nY2IizxojE35HXRRm8/DB/1QSzYsVyyVgI96BpLxbIuv5TDkx?=
- =?us-ascii?Q?nUGpwu2dJU6+r3X915pb8KC9O5dreCxHz158+pG2Fj6dAGBEledNoRSGoX0R?=
- =?us-ascii?Q?hbO65fGcbNBhmktBgZ2vmYBPQBsB0lY2syDGxqUeE0cUd2r9ARBLOsowZs6r?=
- =?us-ascii?Q?TGvou3G03c+uNESEZFI58JjOQ60EdRFWaha/si8J3haXH+axt49E95RcDf57?=
- =?us-ascii?Q?vbmEin9T70GxM/I6kKe9bMKickVzch2GwVucyBZhjx2WYVrYch1nj9TyCpRH?=
- =?us-ascii?Q?D3j0bTzOuFiIpRkZxysQpHON+YOkT3Jo4gWIHSNf6RlgD1bA3wE7ONa3dLnN?=
- =?us-ascii?Q?MQ27zykqOoiFAJf+LhCVKLhRVr7yMezgpp1DhO3HeIzs4+BjizAZMMzRyBE5?=
- =?us-ascii?Q?4VQ5IMsQ2ve0tfUGNIFgDJAzGSmNJBp+nmNckIuz4+Y4UeV9wxAaC6k85kEJ?=
- =?us-ascii?Q?ZyTnGNZMgxjCp2kn9yXy3d3gcYf7k25G7xfdo5+J8yTjS66m8YMMuDBZKLhd?=
- =?us-ascii?Q?+oA4Zz484q0UmlLvbDJWR2YZRO9C5wu4qCvVQyo/cV6Xf23MW47rmjSOSt4i?=
- =?us-ascii?Q?8gyIzgAUlSqrYizSHaM5cTpNNalJdBGbGHEAuZSnUZJPabrYVD8zYlVofvMA?=
- =?us-ascii?Q?5jQ2gxzhomsXJI4XpWFcLHjkPZbl3ReZV2Iv4UV816nGs7RtY9ywpvEEH3M6?=
- =?us-ascii?Q?d37UY82AQkgHJ389AJxpqATWo+7813trld15qO08wOP7wptlSKTBtLxFqyp1?=
- =?us-ascii?Q?p5K5mq4BDwrw4ErAxSXgmqHMJmwrMkBiODHeMV/7BRLuY36DMVyv844QXfcN?=
- =?us-ascii?Q?5JXYB6b0PeVylkrKNvdTrz1aNY3GOeyDWYzbbsnDYKyAO8mjTrOVj0ZCSdxd?=
- =?us-ascii?Q?V1l1olpKmeAMJEJZSxoT4NugVaKwxOfUKz8aTEG8cK7rLgBGKNzwSZvC6E+r?=
- =?us-ascii?Q?TZ60eqsirzXmat2EcjPl25ppMdHGy3IbMnQ/J9sgxmY/z9E9OuwHJWp7bA6X?=
- =?us-ascii?Q?zvjg8HBBbOwzT0WPfDsVKH7X4LiJmimUfgZZmgn0zuXLHlidtJWJeQa8fqgv?=
- =?us-ascii?Q?bqEHDo6ZVh+k/D9MdKr+ZDNQXkGO5ny9caMPWLw42d5z3DncVGuDbtgJ7wUg?=
- =?us-ascii?Q?1GLNNvORRle4a8/329sxw5VCmtaA+NcMj0xHlOg8OkHs+zBaTfknUMZ1S11e?=
- =?us-ascii?Q?Il92mJk32OizprAwz+I6hfDG+f5USQm3BrAz3Fe5DKhO3+Rq+fHW4Updrapg?=
- =?us-ascii?Q?xWKhNg7TXgqka6KKCknRW16XrkrH9wbo07ZPDyRvtjmSI0Kz8389jwNNrVOf?=
- =?us-ascii?Q?OUwZQImlpAEA11s3KKAs/HNdN9uURSwzJkCT55r6laWcFrnQtmKmNQNXh1bb?=
- =?us-ascii?Q?DWShheY2RnxJzO+KOAGR3f97vhXpXHJ+Ku9Wu0v9i+qRbybf1HLv8bXf27LJ?=
- =?us-ascii?Q?oCEXhhTsPvH0NVJ6P73+0jAj/p0R/zyWNg3RaqPhpJO1OCqeXbABd26YLLMw?=
- =?us-ascii?Q?jIP6a6G7UJYSNhOAYVZHG104pJg0qJOHmW7DkhK7vFiCR7az3SJsxBwlslee?=
- =?us-ascii?Q?9D1Cn5vtkBFmiLwdXkc=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b540726a-1087-4405-7c29-08ddd5194fa3
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Aug 2025 18:44:44.5493
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 0L4SPqUDcaxxJuMXBA+m3YBuJJPuxs4NsJn9UIVDrRqDkc08va7Gss0v4bBIJNIw
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PR12MB9389
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <88fdbeb3f2ecf3a6259f3ee8636ae5b21fa6b72d.1754466623.git.namcao@linutronix.de>
 
-On Mon, Aug 04, 2025 at 03:42:39PM +0300, Leon Romanovsky wrote:
-> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-> index 399838c17b705..11c5d5f8c0981 100644
-> --- a/drivers/iommu/dma-iommu.c
-> +++ b/drivers/iommu/dma-iommu.c
-> @@ -1190,11 +1190,9 @@ static inline size_t iova_unaligned(struct iova_domain *iovad, phys_addr_t phys,
->  	return iova_offset(iovad, phys | size);
->  }
->  
-> -dma_addr_t iommu_dma_map_page(struct device *dev, struct page *page,
-> -	      unsigned long offset, size_t size, enum dma_data_direction dir,
-> -	      unsigned long attrs)
-> +dma_addr_t iommu_dma_map_phys(struct device *dev, phys_addr_t phys, size_t size,
-> +		enum dma_data_direction dir, unsigned long attrs)
->  {
-> -	phys_addr_t phys = page_to_phys(page) + offset;
->  	bool coherent = dev_is_dma_coherent(dev);
->  	int prot = dma_info_to_prot(dir, coherent, attrs);
->  	struct iommu_domain *domain = iommu_get_dma_domain(dev);
+Hi Nam,
 
-No issue with pushing the page_to_phys to the looks like two callers..
+kernel test robot noticed the following build errors:
 
-It is worth pointing though that today if the page * was a
-MEMORY_DEVICE_PCI_P2PDMA page then it is illegal to call the swiotlb
-functions a few lines below this:
+[auto build test ERROR on trace/for-next]
+[also build test ERROR on linus/master next-20250806]
+[cannot apply to tip/sched/core v6.16]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-                phys = iommu_dma_map_swiotlb(dev, phys, size, dir, attrs);
+url:    https://github.com/intel-lab-lkp/linux/commits/Nam-Cao/rv-ltl-Prepare-for-other-monitor-types/20250806-160342
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace for-next
+patch link:    https://lore.kernel.org/r/88fdbeb3f2ecf3a6259f3ee8636ae5b21fa6b72d.1754466623.git.namcao%40linutronix.de
+patch subject: [PATCH v2 5/5] rv: Add rts monitor
+config: sh-allmodconfig (https://download.01.org/0day-ci/archive/20250807/202508070415.RDcwKpac-lkp@intel.com/config)
+compiler: sh4-linux-gcc (GCC) 15.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250807/202508070415.RDcwKpac-lkp@intel.com/reproduce)
 
-ie struct page alone as a type is not sufficient to make this function
-safe for a long time now.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202508070415.RDcwKpac-lkp@intel.com/
 
-So I would add some explanation in the commit message how this will be
-situated in the final call chains, and maybe leave behind a comment
-that attrs may not have ATTR_MMIO in this function.
+All errors (new ones prefixed by >>):
 
-I think the answer is iommu_dma_map_phys() is only called for
-!ATTR_MMIO addresses, and that iommu_dma_map_resource() will be called
-for ATTR_MMIO?
+   In file included from include/asm-generic/percpu.h:7,
+                    from ./arch/sh/include/generated/asm/percpu.h:1,
+                    from include/linux/irqflags.h:19,
+                    from arch/sh/include/asm/cmpxchg-irq.h:5,
+                    from arch/sh/include/asm/cmpxchg.h:21,
+                    from arch/sh/include/asm/atomic.h:19,
+                    from include/linux/atomic.h:7,
+                    from include/asm-generic/bitops/atomic.h:5,
+                    from arch/sh/include/asm/bitops.h:23,
+                    from include/linux/bitops.h:67,
+                    from include/linux/kernel.h:23,
+                    from include/linux/interrupt.h:6,
+                    from include/linux/trace_recursion.h:5,
+                    from include/linux/ftrace.h:10,
+                    from kernel/trace/rv/monitors/rts/rts.c:2:
+   include/rv/ltl_monitor.h: In function 'ltl_get_monitor':
+>> include/linux/percpu-defs.h:90:40: error: section attribute cannot be specified for local variables
+      90 |         extern __PCPU_DUMMY_ATTRS char __pcpu_unique_##name;            \
+         |                                        ^~~~~~~~~~~~~~
+   include/linux/percpu-defs.h:113:9: note: in expansion of macro 'DEFINE_PER_CPU_SECTION'
+     113 |         DEFINE_PER_CPU_SECTION(type, name, "")
+         |         ^~~~~~~~~~~~~~~~~~~~~~
+   include/rv/ltl_monitor.h:69:16: note: in expansion of macro 'DEFINE_PER_CPU'
+      69 |         static DEFINE_PER_CPU(struct ltl_monitor, ltl_monitor);
+         |                ^~~~~~~~~~~~~~
+   include/linux/percpu-defs.h:91:33: error: section attribute cannot be specified for local variables
+      91 |         __PCPU_DUMMY_ATTRS char __pcpu_unique_##name;                   \
+         |                                 ^~~~~~~~~~~~~~
+   include/linux/percpu-defs.h:113:9: note: in expansion of macro 'DEFINE_PER_CPU_SECTION'
+     113 |         DEFINE_PER_CPU_SECTION(type, name, "")
+         |         ^~~~~~~~~~~~~~~~~~~~~~
+   include/rv/ltl_monitor.h:69:16: note: in expansion of macro 'DEFINE_PER_CPU'
+      69 |         static DEFINE_PER_CPU(struct ltl_monitor, ltl_monitor);
+         |                ^~~~~~~~~~~~~~
+>> include/linux/percpu-defs.h:91:33: error: declaration of '__pcpu_unique_ltl_monitor' with no linkage follows extern declaration
+      91 |         __PCPU_DUMMY_ATTRS char __pcpu_unique_##name;                   \
+         |                                 ^~~~~~~~~~~~~~
+   include/linux/percpu-defs.h:113:9: note: in expansion of macro 'DEFINE_PER_CPU_SECTION'
+     113 |         DEFINE_PER_CPU_SECTION(type, name, "")
+         |         ^~~~~~~~~~~~~~~~~~~~~~
+   include/rv/ltl_monitor.h:69:16: note: in expansion of macro 'DEFINE_PER_CPU'
+      69 |         static DEFINE_PER_CPU(struct ltl_monitor, ltl_monitor);
+         |                ^~~~~~~~~~~~~~
+   include/linux/percpu-defs.h:90:40: note: previous declaration of '__pcpu_unique_ltl_monitor' with type 'char'
+      90 |         extern __PCPU_DUMMY_ATTRS char __pcpu_unique_##name;            \
+         |                                        ^~~~~~~~~~~~~~
+   include/linux/percpu-defs.h:113:9: note: in expansion of macro 'DEFINE_PER_CPU_SECTION'
+     113 |         DEFINE_PER_CPU_SECTION(type, name, "")
+         |         ^~~~~~~~~~~~~~~~~~~~~~
+   include/rv/ltl_monitor.h:69:16: note: in expansion of macro 'DEFINE_PER_CPU'
+      69 |         static DEFINE_PER_CPU(struct ltl_monitor, ltl_monitor);
+         |                ^~~~~~~~~~~~~~
+>> include/rv/ltl_monitor.h:69:51: error: section attribute cannot be specified for local variables
+      69 |         static DEFINE_PER_CPU(struct ltl_monitor, ltl_monitor);
+         |                                                   ^~~~~~~~~~~
+   include/linux/percpu-defs.h:92:51: note: in definition of macro 'DEFINE_PER_CPU_SECTION'
+      92 |         extern __PCPU_ATTRS(sec) __typeof__(type) name;                 \
+         |                                                   ^~~~
+   include/rv/ltl_monitor.h:69:16: note: in expansion of macro 'DEFINE_PER_CPU'
+      69 |         static DEFINE_PER_CPU(struct ltl_monitor, ltl_monitor);
+         |                ^~~~~~~~~~~~~~
+>> include/rv/ltl_monitor.h:69:51: error: section attribute cannot be specified for local variables
+      69 |         static DEFINE_PER_CPU(struct ltl_monitor, ltl_monitor);
+         |                                                   ^~~~~~~~~~~
+   include/linux/percpu-defs.h:93:51: note: in definition of macro 'DEFINE_PER_CPU_SECTION'
+      93 |         __PCPU_ATTRS(sec) __weak __typeof__(type) name
+         |                                                   ^~~~
+   include/rv/ltl_monitor.h:69:16: note: in expansion of macro 'DEFINE_PER_CPU'
+      69 |         static DEFINE_PER_CPU(struct ltl_monitor, ltl_monitor);
+         |                ^~~~~~~~~~~~~~
+>> include/rv/ltl_monitor.h:69:51: error: weak declaration of 'ltl_monitor' must be public
+      69 |         static DEFINE_PER_CPU(struct ltl_monitor, ltl_monitor);
+         |                                                   ^~~~~~~~~~~
+   include/linux/percpu-defs.h:93:51: note: in definition of macro 'DEFINE_PER_CPU_SECTION'
+      93 |         __PCPU_ATTRS(sec) __weak __typeof__(type) name
+         |                                                   ^~~~
+   include/rv/ltl_monitor.h:69:16: note: in expansion of macro 'DEFINE_PER_CPU'
+      69 |         static DEFINE_PER_CPU(struct ltl_monitor, ltl_monitor);
+         |                ^~~~~~~~~~~~~~
+>> include/rv/ltl_monitor.h:69:51: error: declaration of 'ltl_monitor' with no linkage follows extern declaration
+      69 |         static DEFINE_PER_CPU(struct ltl_monitor, ltl_monitor);
+         |                                                   ^~~~~~~~~~~
+   include/linux/percpu-defs.h:93:51: note: in definition of macro 'DEFINE_PER_CPU_SECTION'
+      93 |         __PCPU_ATTRS(sec) __weak __typeof__(type) name
+         |                                                   ^~~~
+   include/rv/ltl_monitor.h:69:16: note: in expansion of macro 'DEFINE_PER_CPU'
+      69 |         static DEFINE_PER_CPU(struct ltl_monitor, ltl_monitor);
+         |                ^~~~~~~~~~~~~~
+   include/rv/ltl_monitor.h:69:51: note: previous declaration of 'ltl_monitor' with type 'struct ltl_monitor'
+      69 |         static DEFINE_PER_CPU(struct ltl_monitor, ltl_monitor);
+         |                                                   ^~~~~~~~~~~
+   include/linux/percpu-defs.h:92:51: note: in definition of macro 'DEFINE_PER_CPU_SECTION'
+      92 |         extern __PCPU_ATTRS(sec) __typeof__(type) name;                 \
+         |                                                   ^~~~
+   include/rv/ltl_monitor.h:69:16: note: in expansion of macro 'DEFINE_PER_CPU'
+      69 |         static DEFINE_PER_CPU(struct ltl_monitor, ltl_monitor);
+         |                ^~~~~~~~~~~~~~
 
-Jason
+
+vim +69 include/rv/ltl_monitor.h
+
+a9769a5b987838 Nam Cao 2025-07-09  61  
+59c45d176bc0f2 Nam Cao 2025-08-06  62  static struct ltl_monitor *ltl_get_monitor(monitor_target target)
+a9769a5b987838 Nam Cao 2025-07-09  63  {
+59c45d176bc0f2 Nam Cao 2025-08-06  64  	return &target->rv[ltl_monitor_slot].ltl_mon;
+a9769a5b987838 Nam Cao 2025-07-09  65  }
+50fd6be3de4982 Nam Cao 2025-08-06  66  #elif LTL_MONITOR_TYPE == RV_MON_PER_CPU
+50fd6be3de4982 Nam Cao 2025-08-06  67  static struct ltl_monitor *ltl_get_monitor(unsigned int cpu)
+50fd6be3de4982 Nam Cao 2025-08-06  68  {
+50fd6be3de4982 Nam Cao 2025-08-06 @69  	static DEFINE_PER_CPU(struct ltl_monitor, ltl_monitor);
+50fd6be3de4982 Nam Cao 2025-08-06  70  
+50fd6be3de4982 Nam Cao 2025-08-06  71  	return per_cpu_ptr(&ltl_monitor, cpu);
+50fd6be3de4982 Nam Cao 2025-08-06  72  }
+59c45d176bc0f2 Nam Cao 2025-08-06  73  #endif
+a9769a5b987838 Nam Cao 2025-07-09  74  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
