@@ -1,44 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B90EA202F87;
-	Wed,  6 Aug 2025 08:01:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D627220696;
+	Wed,  6 Aug 2025 08:01:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754467300; cv=none; b=iIGBSaCxkdDYswDPAN37EjHYTymirmxl/w+0zZ4PJtAT/B3aapsASuroU8NeFL7N0omojcKCkCatB1tHSbFLtBhPhLc+4LFbniVjcmRGndVuZm7Hfz+x41WSJtQEKauk1iyMqeRAP4FxOCxVkC0U3zQ1hwyBzYKm92EMe397+6s=
+	t=1754467303; cv=none; b=jySi+L2FhUE+6DoVn1B+2fSV/nWNEgNobWmo/7uLg3acIqazCgDG1ibvWso1h9wGXKv1YbcmifwTR5XZhL6EdtB6DuD+mNZCzaA2zExT982BeN88UnuMuSv9bq5ePKwdIE3qEkBndtyV76JPB7VitO86P1Vc3ZZ6InMhuEBb5lE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754467300; c=relaxed/simple;
-	bh=e1GY5vP2bNmEyxjinI6NGV5JEY4vvanAT/Q+7Kr9JzI=;
+	s=arc-20240116; t=1754467303; c=relaxed/simple;
+	bh=BADNlnr1kahP8rhg4GWY4CVvz7wi0h9h7FQXGQQn0ew=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Ybm3yNaTMaF0NUCvnAFPDZ55NyHWCF7S+GQVc+fNXzjhP1Ccr6KaxYrHRq586dtTxbc2CLKEcap2crAcUILXQLYEgdDRCFFUnO0vhTlt3K4ob6zkpSSQ0/kQ4tCnRw++lhVtEbSxdoWYk4gtDMyEjbs8Yx5PzPwSh/tCHLqFl4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BJO+Z6HY; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=7pY9NSpm; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=qXPhKGIcWKb+2i6WsQArNJ8ab3Yr2qGS6yYzV4HWKGarYmvhcqD7iM2PcleE8IF4/RAiCmzmKlmP9i1EetKbosRUAh0MrRBjPJa1aKz9uxaTMfBKEQ0Dvs2J0FEsXQJ+3iyzs5NDk7dI86DP+2KywyCAuFn7CnD4+rjk13QHOBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JnNsKd2f; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=oB5ahXfZ; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BJO+Z6HY";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="7pY9NSpm"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JnNsKd2f";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="oB5ahXfZ"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1754467290;
+	s=2020; t=1754467291;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=9TG2oABEAGBSkyTcy0x4wV10S9w0c3hQgYmDbKB7zh8=;
-	b=BJO+Z6HYp1NNFmnvkJBM/hOq/oK3qFXsWgB0dFU89oYtEEY/HQZVrIGLAB3MVnf7vH2KeZ
-	kVcQtCuSPl3K7BFLPswrrd4EfT/wIGFJgMzZoRKaZHj8plg1krifQKhkwxhnPnGJl1ByQD
-	ny59/x4t72Cg+O7yu1Zm5tekq7/fTWKj88S159zOcoAXZ9j7nXVZvehmxTvdEtefa85OBe
-	2MC89Yh8nskBJrq+eAeHQxpcGNl99OFXAOf7jl1xkdS1tgQTYi4g0blxSmVXiLciTCKfwV
-	56fYv+9OlxkKURng/Jb7E6yrMz8zmMh0r4y9zuybCyUhMDYAdp5sblYU5aXGOA==
+	bh=8zmzmOCHQBCMM1BNC7xojuuKhp7HRhP0dq47/Fa8kkU=;
+	b=JnNsKd2fydome4WKvfwKdMeQELD8vZjZ95yEPfrAml7w11g0eSeEQMAy1IcvZLFIlmEqfD
+	K0ttWtxNp05RsyluXwCPCd8rZt3nL3jTFHKGQO3my5X5uWqQuKXDN15LwUTvtu+U3kcGHe
+	CvcNSEya2FS6+qZ/zzhCQFz5+KNAxrPaV41J1HtwqgMuyU4YG2+Eq+68W8qOnPCnXgNkct
+	6unFjykCn8yykZAjKCNNVn1iXygb/Mlle9TESjzxR86J/2NLBpd1yfea7mf4H82sUsfUOg
+	NqwDCOy92jW3o+BMOWyPoZtdKrz57WStv65l8gUBEjTVl7O33wrAGt7LKmSGtw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1754467290;
+	s=2020e; t=1754467291;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=9TG2oABEAGBSkyTcy0x4wV10S9w0c3hQgYmDbKB7zh8=;
-	b=7pY9NSpmXsuqhqJlheAoXPcnN0wF8Tr74oez3fLekjJUVJiGwetMqZT7UDeOznONvWo89v
-	B5fBOsGCNyHyI6Cg==
+	bh=8zmzmOCHQBCMM1BNC7xojuuKhp7HRhP0dq47/Fa8kkU=;
+	b=oB5ahXfZFLRfrIbO4jAiaNyFh/wOFwKu6j39zQmPXEcT655TjdNNBy3fWGVCUedfe6q18z
+	s4ECgb5tzgh01nAQ==
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
@@ -55,9 +55,9 @@ Cc: Nam Cao <namcao@linutronix.de>,
 	Mel Gorman <mgorman@suse.de>,
 	Valentin Schneider <vschneid@redhat.com>,
 	K Prateek Nayak <kprateek.nayak@amd.com>
-Subject: [PATCH v2 4/5] sched: Add task enqueue/dequeue trace points
-Date: Wed,  6 Aug 2025 10:01:20 +0200
-Message-Id: <f87ce0cb979daa3e8221c496de16883ca53f3950.1754466623.git.namcao@linutronix.de>
+Subject: [PATCH v2 5/5] rv: Add rts monitor
+Date: Wed,  6 Aug 2025 10:01:21 +0200
+Message-Id: <88fdbeb3f2ecf3a6259f3ee8636ae5b21fa6b72d.1754466623.git.namcao@linutronix.de>
 In-Reply-To: <cover.1754466623.git.namcao@linutronix.de>
 References: <cover.1754466623.git.namcao@linutronix.de>
 Precedence: bulk
@@ -68,8 +68,9 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Add trace points into enqueue_task() and dequeue_task(). They are useful to
-implement RV monitor which validates RT scheduling.
+Add "real-time scheduling" monitor, which validates that SCHED_RR and
+SCHED_FIFO tasks are scheduled before tasks with normal and extensible
+scheduling policies
 
 Signed-off-by: Nam Cao <namcao@linutronix.de>
 ---
@@ -83,64 +84,450 @@ Cc: Mel Gorman <mgorman@suse.de>
 Cc: Valentin Schneider <vschneid@redhat.com>
 Cc: K Prateek Nayak <kprateek.nayak@amd.com>
 ---
-v2: Move the tracepoints to cover all task enqueue/dequeue, not just RT
+v2:
+  - use the new tracepoints
+  - move to be under the rtapp container monitor
+  - re-generate with the modified scripts
+  - fixup incorrect enqueued status
 ---
- include/trace/events/sched.h | 13 +++++++++++++
- kernel/sched/core.c          |  8 +++++++-
- 2 files changed, 20 insertions(+), 1 deletion(-)
+ Documentation/trace/rv/monitor_sched.rst |  19 +++
+ kernel/trace/rv/Kconfig                  |   1 +
+ kernel/trace/rv/Makefile                 |   1 +
+ kernel/trace/rv/monitors/rts/Kconfig     |  17 +++
+ kernel/trace/rv/monitors/rts/rts.c       | 144 +++++++++++++++++++++++
+ kernel/trace/rv/monitors/rts/rts.h       | 126 ++++++++++++++++++++
+ kernel/trace/rv/monitors/rts/rts_trace.h |  15 +++
+ kernel/trace/rv/rv_trace.h               |   1 +
+ tools/verification/models/sched/rts.ltl  |   5 +
+ 9 files changed, 329 insertions(+)
+ create mode 100644 kernel/trace/rv/monitors/rts/Kconfig
+ create mode 100644 kernel/trace/rv/monitors/rts/rts.c
+ create mode 100644 kernel/trace/rv/monitors/rts/rts.h
+ create mode 100644 kernel/trace/rv/monitors/rts/rts_trace.h
+ create mode 100644 tools/verification/models/sched/rts.ltl
 
-diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
-index c08893bde255..ec38928e61e7 100644
---- a/include/trace/events/sched.h
-+++ b/include/trace/events/sched.h
-@@ -898,6 +898,19 @@ DECLARE_TRACE(sched_set_need_resched,
- 	TP_PROTO(struct task_struct *tsk, int cpu, int tif),
- 	TP_ARGS(tsk, cpu, tif));
+diff --git a/Documentation/trace/rv/monitor_sched.rst b/Documentation/trace=
+/rv/monitor_sched.rst
+index 3f8381ad9ec7..2f9d62a1af1f 100644
+--- a/Documentation/trace/rv/monitor_sched.rst
++++ b/Documentation/trace/rv/monitor_sched.rst
+@@ -396,6 +396,25 @@ preemption is always disabled. On non- ``PREEMPT_RT`` =
+kernels, the interrupts
+ might invoke a softirq to set ``need_resched`` and wake up a task. This is
+ another special case that is currently not supported by the monitor.
 =20
-+/*
-+ * The two trace points below may not work as expected for fair tasks due
-+ * to delayed dequeue. See:
-+ * https://lore.kernel.org/lkml/179674c6-f82a-4718-ace2-67b5e672fdee@amd.c=
-om/
-+ */
-+DECLARE_TRACE(enqueue_task,
-+	TP_PROTO(int cpu, struct task_struct *task),
-+	TP_ARGS(cpu, task));
++Monitor rts
++-----------
 +
-+DECLARE_TRACE(dequeue_task,
-+	TP_PROTO(int cpu, struct task_struct *task),
-+	TP_ARGS(cpu, task));
++The real-time scheduling monitor validates that tasks with real-time sched=
+uling
++policies (`SCHED_FIFO` and `SCHED_RR`) are always scheduled before tasks w=
+ith
++normal and extensible scheduling policies (`SCHED_OTHER`, `SCHED_BATCH`,
++`SCHED_IDLE`, `SCHED_EXT`):
 +
- #endif /* _TRACE_SCHED_H */
-=20
- /* This part must be outside protection */
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index b485e0639616..553c08a63395 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -2077,6 +2077,8 @@ unsigned long get_wchan(struct task_struct *p)
-=20
- void enqueue_task(struct rq *rq, struct task_struct *p, int flags)
- {
-+	trace_enqueue_task_tp(rq->cpu, p);
++.. literalinclude:: ../../../tools/verification/models/sched/rts.ltl
 +
- 	if (!(flags & ENQUEUE_NOCLOCK))
- 		update_rq_clock(rq);
++Note that this monitor may report errors if real-time throttling or fair
++deadline server is enabled. These mechanisms prevent real-time tasks from
++monopolying the CPU by giving tasks with normal and extensible scheduling
++policies a chance to run. They give system administrators a chance to kill=
+ a
++misbehaved real-time task. However, they violate the scheduling priorities=
+ and
++may cause latency to well-behaved real-time tasks. Thus, if you see errors=
+ from
++this monitor, consider disabling real-time throttling and the fair deadline
++server.
++
+ References
+ ----------
 =20
-@@ -2119,7 +2121,11 @@ inline bool dequeue_task(struct rq *rq, struct task_=
-struct *p, int flags)
- 	 * and mark the task ->sched_delayed.
- 	 */
- 	uclamp_rq_dec(rq, p);
--	return p->sched_class->dequeue_task(rq, p, flags);
-+	if (p->sched_class->dequeue_task(rq, p, flags)) {
-+		trace_dequeue_task_tp(rq->cpu, p);
-+		return true;
+diff --git a/kernel/trace/rv/Kconfig b/kernel/trace/rv/Kconfig
+index 7ef89006ed50..e9007ed32aea 100644
+--- a/kernel/trace/rv/Kconfig
++++ b/kernel/trace/rv/Kconfig
+@@ -67,6 +67,7 @@ source "kernel/trace/rv/monitors/opid/Kconfig"
+ source "kernel/trace/rv/monitors/rtapp/Kconfig"
+ source "kernel/trace/rv/monitors/pagefault/Kconfig"
+ source "kernel/trace/rv/monitors/sleep/Kconfig"
++source "kernel/trace/rv/monitors/rts/Kconfig"
+ # Add new rtapp monitors here
+=20
+ # Add new monitors here
+diff --git a/kernel/trace/rv/Makefile b/kernel/trace/rv/Makefile
+index 750e4ad6fa0f..d7bfc7ae6677 100644
+--- a/kernel/trace/rv/Makefile
++++ b/kernel/trace/rv/Makefile
+@@ -17,6 +17,7 @@ obj-$(CONFIG_RV_MON_STS) +=3D monitors/sts/sts.o
+ obj-$(CONFIG_RV_MON_NRP) +=3D monitors/nrp/nrp.o
+ obj-$(CONFIG_RV_MON_SSSW) +=3D monitors/sssw/sssw.o
+ obj-$(CONFIG_RV_MON_OPID) +=3D monitors/opid/opid.o
++obj-$(CONFIG_RV_MON_RTS) +=3D monitors/rts/rts.o
+ # Add new monitors here
+ obj-$(CONFIG_RV_REACTORS) +=3D rv_reactors.o
+ obj-$(CONFIG_RV_REACT_PRINTK) +=3D reactor_printk.o
+diff --git a/kernel/trace/rv/monitors/rts/Kconfig b/kernel/trace/rv/monitor=
+s/rts/Kconfig
+new file mode 100644
+index 000000000000..5481b371bce1
+--- /dev/null
++++ b/kernel/trace/rv/monitors/rts/Kconfig
+@@ -0,0 +1,17 @@
++# SPDX-License-Identifier: GPL-2.0-only
++#
++config RV_MON_RTS
++	depends on RV
++	select RV_LTL_MONITOR
++	depends on RV_MON_RTAPP
++	default y
++	select LTL_MON_EVENTS_CPU
++	bool "rts monitor"
++	help
++	  Add support for RTS (real-time scheduling) monitor which validates
++	  that real-time-priority tasks are scheduled before SCHED_OTHER tasks.
++
++	  This monitor may report an error if RT throttling or deadline server
++	  is enabled.
++
++	  Say Y if you are debugging or testing a real-time system.
+diff --git a/kernel/trace/rv/monitors/rts/rts.c b/kernel/trace/rv/monitors/=
+rts/rts.c
+new file mode 100644
+index 000000000000..b4c3d3a4671d
+--- /dev/null
++++ b/kernel/trace/rv/monitors/rts/rts.c
+@@ -0,0 +1,144 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <linux/ftrace.h>
++#include <linux/tracepoint.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/init.h>
++#include <linux/rv.h>
++#include <linux/sched/deadline.h>
++#include <linux/sched/rt.h>
++#include <rv/instrumentation.h>
++
++#define MODULE_NAME "rts"
++
++#include <trace/events/sched.h>
++#include <rv_trace.h>
++#include <monitors/rtapp/rtapp.h>
++
++#include "rts.h"
++#include <rv/ltl_monitor.h>
++
++static DEFINE_PER_CPU(unsigned int, nr_queued);
++
++static void ltl_atoms_fetch(unsigned int cpu, struct ltl_monitor *mon)
++{
++}
++
++static void ltl_atoms_init(unsigned int cpu, struct ltl_monitor *mon,
++			   bool target_creation)
++{
++	ltl_atom_set(mon, LTL_SCHED_SWITCH, false);
++	ltl_atom_set(mon, LTL_SCHED_SWITCH_DL, false);
++	ltl_atom_set(mon, LTL_SCHED_SWITCH_RT, false);
++
++	/*
++	 * This may not be accurate, there may be enqueued RT tasks. But that's
++	 * okay, the worst we get is a false negative. It will be accurate as
++	 * soon as the CPU no longer has any queued RT task.
++	 */
++	ltl_atom_set(mon, LTL_RT_TASK_ENQUEUED, false);
++}
++
++static void handle_enqueue_task(void *data, int cpu, struct task_struct *t=
+ask)
++{
++	unsigned int *queued =3D per_cpu_ptr(&nr_queued, cpu);
++
++	if (!rt_task(task))
++		return;
++
++	(*queued)++;
++	ltl_atom_update(cpu, LTL_RT_TASK_ENQUEUED, true);
++}
++
++static void handle_dequeue_task(void *data, int cpu, struct task_struct *t=
+ask)
++{
++	unsigned int *queued =3D per_cpu_ptr(&nr_queued, cpu);
++
++	if (!rt_task(task))
++		return;
++
++	/*
++	 * This may not be accurate for a short time after the monitor is
++	 * enabled, because there may be enqueued RT tasks which are not counted
++	 * torward nr_queued. But that's okay, the worst we get is a false
++	 * negative. nr_queued will be accurate as soon as the CPU no longer has
++	 * any queued RT task.
++	 */
++	if (*queued)
++		(*queued)--;
++	if (!*queued)
++		ltl_atom_update(cpu, LTL_RT_TASK_ENQUEUED, false);
++}
++
++static void handle_sched_switch(void *data, bool preempt, struct task_stru=
+ct *prev,
++				struct task_struct *next, unsigned int prev_state)
++{
++	unsigned int cpu =3D smp_processor_id();
++	struct ltl_monitor *mon =3D ltl_get_monitor(cpu);
++
++	ltl_atom_set(mon, LTL_SCHED_SWITCH_RT, rt_task(next));
++	ltl_atom_set(mon, LTL_SCHED_SWITCH_DL, dl_task(next));
++	ltl_atom_update(cpu, LTL_SCHED_SWITCH, true);
++
++	ltl_atom_set(mon, LTL_SCHED_SWITCH_RT, false);
++	ltl_atom_set(mon, LTL_SCHED_SWITCH_DL, false);
++	ltl_atom_update(cpu, LTL_SCHED_SWITCH, false);
++}
++
++static int enable_rts(void)
++{
++	unsigned int cpu;
++	int retval;
++
++	retval =3D ltl_monitor_init();
++	if (retval)
++		return retval;
++
++	for_each_possible_cpu(cpu) {
++		unsigned int *queued =3D per_cpu_ptr(&nr_queued, cpu);
++
++		*queued =3D 0;
 +	}
-+	return false;
- }
++
++	rv_attach_trace_probe("rts", dequeue_task_tp, handle_dequeue_task);
++	rv_attach_trace_probe("rts", enqueue_task_tp, handle_enqueue_task);
++	rv_attach_trace_probe("rts", sched_switch, handle_sched_switch);
++
++	return 0;
++}
++
++static void disable_rts(void)
++{
++	rv_detach_trace_probe("rts", sched_switch, handle_sched_switch);
++	rv_detach_trace_probe("rts", enqueue_task_tp, handle_enqueue_task);
++	rv_detach_trace_probe("rts", dequeue_task_tp, handle_dequeue_task);
++
++	ltl_monitor_destroy();
++}
++
++/*
++ * This is the monitor register section.
++ */
++static struct rv_monitor rv_rts =3D {
++	.name =3D "rts",
++	.description =3D "Validate that real-time tasks are scheduled before lowe=
+r-priority tasks",
++	.enable =3D enable_rts,
++	.disable =3D disable_rts,
++};
++
++static int __init register_rts(void)
++{
++	return rv_register_monitor(&rv_rts, &rv_rtapp);
++}
++
++static void __exit unregister_rts(void)
++{
++	rv_unregister_monitor(&rv_rts);
++}
++
++module_init(register_rts);
++module_exit(unregister_rts);
++
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("Nam Cao <namcao@linutronix.de>");
++MODULE_DESCRIPTION("rts: Validate that real-time tasks are scheduled befor=
+e lower-priority tasks");
+diff --git a/kernel/trace/rv/monitors/rts/rts.h b/kernel/trace/rv/monitors/=
+rts/rts.h
+new file mode 100644
+index 000000000000..5881f30a38ce
+--- /dev/null
++++ b/kernel/trace/rv/monitors/rts/rts.h
+@@ -0,0 +1,126 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++/*
++ * C implementation of Buchi automaton, automatically generated by
++ * tools/verification/rvgen from the linear temporal logic specification.
++ * For further information, see kernel documentation:
++ *   Documentation/trace/rv/linear_temporal_logic.rst
++ */
++
++#include <linux/rv.h>
++
++#define MONITOR_NAME rts
++
++#define LTL_MONITOR_TYPE RV_MON_PER_CPU
++
++enum ltl_atom {
++	LTL_RT_TASK_ENQUEUED,
++	LTL_SCHED_SWITCH,
++	LTL_SCHED_SWITCH_DL,
++	LTL_SCHED_SWITCH_RT,
++	LTL_NUM_ATOM
++};
++static_assert(LTL_NUM_ATOM <=3D RV_MAX_LTL_ATOM);
++
++static const char *ltl_atom_str(enum ltl_atom atom)
++{
++	static const char *const names[] =3D {
++		"rt_ta_en",
++		"sc_sw",
++		"sc_sw_dl",
++		"sc_sw_rt",
++	};
++
++	return names[atom];
++}
++
++enum ltl_buchi_state {
++	S0,
++	S1,
++	S2,
++	S3,
++	S4,
++	RV_NUM_BA_STATES
++};
++static_assert(RV_NUM_BA_STATES <=3D RV_MAX_BA_STATES);
++
++static void ltl_start(unsigned int cpu, struct ltl_monitor *mon)
++{
++	bool sched_switch_rt =3D test_bit(LTL_SCHED_SWITCH_RT, mon->atoms);
++	bool sched_switch_dl =3D test_bit(LTL_SCHED_SWITCH_DL, mon->atoms);
++	bool sched_switch =3D test_bit(LTL_SCHED_SWITCH, mon->atoms);
++	bool rt_task_enqueued =3D test_bit(LTL_RT_TASK_ENQUEUED, mon->atoms);
++	bool val13 =3D !rt_task_enqueued;
++	bool val8 =3D sched_switch_dl || val13;
++	bool val9 =3D sched_switch_rt || val8;
++	bool val6 =3D !sched_switch;
++	bool val1 =3D !rt_task_enqueued;
++
++	if (val1)
++		__set_bit(S0, mon->states);
++	if (val6)
++		__set_bit(S1, mon->states);
++	if (val9)
++		__set_bit(S4, mon->states);
++}
++
++static void
++ltl_possible_next_states(struct ltl_monitor *mon, unsigned int state, unsi=
+gned long *next)
++{
++	bool sched_switch_rt =3D test_bit(LTL_SCHED_SWITCH_RT, mon->atoms);
++	bool sched_switch_dl =3D test_bit(LTL_SCHED_SWITCH_DL, mon->atoms);
++	bool sched_switch =3D test_bit(LTL_SCHED_SWITCH, mon->atoms);
++	bool rt_task_enqueued =3D test_bit(LTL_RT_TASK_ENQUEUED, mon->atoms);
++	bool val13 =3D !rt_task_enqueued;
++	bool val8 =3D sched_switch_dl || val13;
++	bool val9 =3D sched_switch_rt || val8;
++	bool val6 =3D !sched_switch;
++	bool val1 =3D !rt_task_enqueued;
++
++	switch (state) {
++	case S0:
++		if (val1)
++			__set_bit(S0, next);
++		if (val6)
++			__set_bit(S1, next);
++		if (val9)
++			__set_bit(S4, next);
++		break;
++	case S1:
++		if (val6)
++			__set_bit(S1, next);
++		if (val1 && val6)
++			__set_bit(S2, next);
++		if (val1 && val9)
++			__set_bit(S3, next);
++		if (val9)
++			__set_bit(S4, next);
++		break;
++	case S2:
++		if (val6)
++			__set_bit(S1, next);
++		if (val1 && val6)
++			__set_bit(S2, next);
++		if (val1 && val9)
++			__set_bit(S3, next);
++		if (val9)
++			__set_bit(S4, next);
++		break;
++	case S3:
++		if (val1)
++			__set_bit(S0, next);
++		if (val6)
++			__set_bit(S1, next);
++		if (val9)
++			__set_bit(S4, next);
++		break;
++	case S4:
++		if (val1)
++			__set_bit(S0, next);
++		if (val6)
++			__set_bit(S1, next);
++		if (val9)
++			__set_bit(S4, next);
++		break;
++	}
++}
+diff --git a/kernel/trace/rv/monitors/rts/rts_trace.h b/kernel/trace/rv/mon=
+itors/rts/rts_trace.h
+new file mode 100644
+index 000000000000..ac4ea84162f7
+--- /dev/null
++++ b/kernel/trace/rv/monitors/rts/rts_trace.h
+@@ -0,0 +1,15 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++/*
++ * Snippet to be included in rv_trace.h
++ */
++
++#ifdef CONFIG_RV_MON_RTS
++DEFINE_EVENT(event_ltl_monitor_cpu, event_rts,
++	TP_PROTO(unsigned int cpu, char *states, char *atoms, char *next),
++	TP_ARGS(cpu, states, atoms, next));
++
++DEFINE_EVENT(error_ltl_monitor_cpu, error_rts,
++	TP_PROTO(unsigned int cpu),
++	TP_ARGS(cpu));
++#endif /* CONFIG_RV_MON_RTS */
+diff --git a/kernel/trace/rv/rv_trace.h b/kernel/trace/rv/rv_trace.h
+index bf7cca6579ec..7b3a6fb8ca6f 100644
+--- a/kernel/trace/rv/rv_trace.h
++++ b/kernel/trace/rv/rv_trace.h
+@@ -221,6 +221,7 @@ DECLARE_EVENT_CLASS(error_ltl_monitor_cpu,
 =20
- void activate_task(struct rq *rq, struct task_struct *p, int flags)
+ 	TP_printk("cpu%u: violation detected", __entry->cpu)
+ );
++#include <monitors/rts/rts_trace.h>
+ // Add new monitors based on CONFIG_LTL_MON_EVENTS_CPU here
+=20
+ #endif /* CONFIG_LTL_MON_EVENTS_CPU */
+diff --git a/tools/verification/models/sched/rts.ltl b/tools/verification/m=
+odels/sched/rts.ltl
+new file mode 100644
+index 000000000000..90872bca46b1
+--- /dev/null
++++ b/tools/verification/models/sched/rts.ltl
+@@ -0,0 +1,5 @@
++RULE =3D always (RT_TASK_ENQUEUED imply SCHEDULE_RT_NEXT)
++
++SCHEDULE_RT_NEXT =3D (not SCHED_SWITCH) until (SCHED_SWITCH_RT or EXCEPTIO=
+NS)
++
++EXCEPTIONS =3D SCHED_SWITCH_DL or not RT_TASK_ENQUEUED
 --=20
 2.39.5
 
