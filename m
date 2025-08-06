@@ -1,53 +1,53 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C941227EB9;
-	Wed,  6 Aug 2025 22:06:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C00926B2AE;
+	Wed,  6 Aug 2025 23:52:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754518006; cv=none; b=OaOlEpVIC3QjV24iFDmbFHs1sttYCalgt0eVK31PdvrfkPb4Jr82fLx18cVoWA55E9EFGXpBztJhjbWPbtSXIEhnbecshebsziGC8cJ0w6+ab0XdAaAl0qeA2K+bRoh7KJ7PIj1i4kR0S9BWssWqdxOA/P5/y91ngMd+IDlQdqU=
+	t=1754524375; cv=none; b=NG0iFcdVQk6rsSr2SCBo86aKD2KDAUH75fK+OZYiMRYTCHmd3M5vfGDfe2zuj8Mhzp1AW8K9pzeHaU/YrOIZABpOjZH46FVWTxMqNR2a6I8xdt4RTwFVM7prmC0TjO99wzPvchvYlTTLTdu1y7WyddGXqW/WOgbzVyiMpIFCrWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754518006; c=relaxed/simple;
-	bh=2rUd3i6DivO+05DXaSp+LgSEmwownIpwutoceQhLjrQ=;
+	s=arc-20240116; t=1754524375; c=relaxed/simple;
+	bh=5xTtW82Mv9yRIHCO6jImfqwBSzJM//vmSGPn9K0IJ/4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VPZcKrH7L4sy14tqveJTFr54sseG+/KDNalU+z1hSU+GM4hhyM3vbPDrJnDzSgamBDyNCCdUJR83bW/1nu/MeynTM4wNuXZI2R92b3gdKJaysQyEqbPI22ResKVHONROF0i/mS8O0+10UizRZLFohCzfz6w+8h6hRMuTA3pmjP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=llU+V5Iu; arc=none smtp.client-ip=192.198.163.17
+	 Content-Type:Content-Disposition:In-Reply-To; b=cB47ilV0sYMbTFDAZvd0dOci3F8a4LB75xMCHx/vcbWaAPpsxQWt+JB7bThsRCO66wHJrn5KNt2qTWdrdp7Frvum7ht9Jf+uUnQ7dDBj1jF+0421rnKRfWHEw6kXfb0PiQTTFhZDgdfvY4MTI/CGxIMzvJ4sVex3VrlXKxhMrCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N7lwiS3E; arc=none smtp.client-ip=198.175.65.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="llU+V5Iu"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N7lwiS3E"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1754518004; x=1786054004;
+  t=1754524373; x=1786060373;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=2rUd3i6DivO+05DXaSp+LgSEmwownIpwutoceQhLjrQ=;
-  b=llU+V5IuKT52XM3yeTtGXbqUrlFETJP1m6xVdwoWXwmtNNniZRau62H2
-   vpaHpm5X/Gwp0DHw9UrPwmDQ/aEiV/5AwVYe00+t1fnqaEMijdjcJgFc1
-   m2JvP6/2vw8oQ9xxyb2rP6QwCRYJa65f3uxde6jysdnF3GG3iaNTHjVdG
-   oBhWOWuoLfMFC+gDTM3WgCrC2QqlBYjBu4OPg9elP1iro0z79+si5Pjos
-   YMLme2TSgqHX/yeulG4BeXCpC5Xzyy488EVW4X6BRG26pM56P9H8ivvXK
-   4XZzAOcQ2SyUpTG18d9lHwWsHSFKBoapMFPzawIWY2SMW15F30AfIiWKz
-   A==;
-X-CSE-ConnectionGUID: v0ftFZHzTr233ZG0MF+GnA==
-X-CSE-MsgGUID: gxvI8dYVS4m8y9EpKL2Y2g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11514"; a="56764618"
+  bh=5xTtW82Mv9yRIHCO6jImfqwBSzJM//vmSGPn9K0IJ/4=;
+  b=N7lwiS3EcB8xHW1DxFyUjM0gl+SvoiP9bb+IQm/ecaOxy2kpVmWufdLH
+   hSCLm7NiPhp9ernnddDR+sbavufNOPWlN3TPHVoDJ8CPT87i160CnOkf9
+   Nu2qgZujeEiYhubDg704A7sHVr1oeVpVi72X6egGfp3p84ZiA1WPcE5Kf
+   gZ8iV9pwrSoMTwg2iRoodOcP/0LazpYXmFxAUKm+KwmP1N6IsyLxv5ANy
+   YAcF1GpIvXFE9xEr4vbaPZkLDnXm5LsHKQlmPTfgrF0fPY5Rsg2mWLtgT
+   kuaHW1S2IFmEHmmocohnM3dFK1yzZuK+xevaF7IoqezMAKJNWWRsaMmEC
+   g==;
+X-CSE-ConnectionGUID: G8YVAX0rSaKtGJDXOHvYHg==
+X-CSE-MsgGUID: 2RIa+OsrRwun8gS+khUfsw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11514"; a="56929197"
 X-IronPort-AV: E=Sophos;i="6.17,271,1747724400"; 
-   d="scan'208";a="56764618"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2025 15:06:43 -0700
-X-CSE-ConnectionGUID: qYezRnfIQiaHI8qbrVdEHw==
-X-CSE-MsgGUID: OXzz8Kv+RN+UEkRdj15dWg==
+   d="scan'208";a="56929197"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2025 16:52:52 -0700
+X-CSE-ConnectionGUID: Uyxsy+wiRgGG7DL8BY0JDw==
+X-CSE-MsgGUID: AZGfKwRzScChBlbB/MfCgw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.17,271,1747724400"; 
-   d="scan'208";a="169136448"
+   d="scan'208";a="195741040"
 Received: from lkp-server02.sh.intel.com (HELO 4ea60e6ab079) ([10.239.97.151])
-  by fmviesa005.fm.intel.com with ESMTP; 06 Aug 2025 15:06:40 -0700
+  by fmviesa001.fm.intel.com with ESMTP; 06 Aug 2025 16:52:49 -0700
 Received: from kbuild by 4ea60e6ab079 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1ujmHN-00029C-0f;
-	Wed, 06 Aug 2025 22:06:37 +0000
-Date: Thu, 7 Aug 2025 06:05:53 +0800
+	id 1ujnw6-0002Bm-1s;
+	Wed, 06 Aug 2025 23:52:46 +0000
+Date: Thu, 7 Aug 2025 07:52:44 +0800
 From: kernel test robot <lkp@intel.com>
 To: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
@@ -61,12 +61,11 @@ Cc: oe-kbuild-all@lists.linux.dev, Masami Hiramatsu <mhiramat@kernel.org>,
 	Takaya Saeki <takayas@google.com>, Tom Zanussi <zanussi@kernel.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Ian Rogers <irogers@google.com>, aahringo@redhat.com,
-	Douglas Raillard <douglas.raillard@arm.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>
-Subject: Re: [PATCH 1/7] tracing: Replace syscall RCU pointer assignment with
- READ/WRITE_ONCE()
-Message-ID: <202508070546.KmEoxWkg-lkp@intel.com>
-References: <20250805193234.745705874@kernel.org>
+	Douglas Raillard <douglas.raillard@arm.com>
+Subject: Re: [PATCH 6/7] tracing: Allow syscall trace events to read more
+ than one user parameter
+Message-ID: <202508070706.TiTQY0Ne-lkp@intel.com>
+References: <20250805193235.582013098@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -75,7 +74,7 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250805193234.745705874@kernel.org>
+In-Reply-To: <20250805193235.582013098@kernel.org>
 
 Hi Steven,
 
@@ -89,144 +88,195 @@ https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
 url:    https://github.com/intel-lab-lkp/linux/commits/Steven-Rostedt/tracing-Replace-syscall-RCU-pointer-assignment-with-READ-WRITE_ONCE/20250806-122312
 base:   https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace for-next
-patch link:    https://lore.kernel.org/r/20250805193234.745705874%40kernel.org
-patch subject: [PATCH 1/7] tracing: Replace syscall RCU pointer assignment with READ/WRITE_ONCE()
-config: x86_64-randconfig-123-20250806 (https://download.01.org/0day-ci/archive/20250807/202508070546.KmEoxWkg-lkp@intel.com/config)
+patch link:    https://lore.kernel.org/r/20250805193235.582013098%40kernel.org
+patch subject: [PATCH 6/7] tracing: Allow syscall trace events to read more than one user parameter
+config: x86_64-randconfig-123-20250806 (https://download.01.org/0day-ci/archive/20250807/202508070706.TiTQY0Ne-lkp@intel.com/config)
 compiler: gcc-12 (Debian 12.2.0-14+deb12u1) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250807/202508070546.KmEoxWkg-lkp@intel.com/reproduce)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250807/202508070706.TiTQY0Ne-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202508070546.KmEoxWkg-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202508070706.TiTQY0Ne-lkp@intel.com/
 
 sparse warnings: (new ones prefixed by >>)
->> kernel/trace/trace_syscalls.c:313:20: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct trace_event_file *trace_file @@     got struct trace_event_file [noderef] __rcu * @@
-   kernel/trace/trace_syscalls.c:313:20: sparse:     expected struct trace_event_file *trace_file
-   kernel/trace/trace_syscalls.c:313:20: sparse:     got struct trace_event_file [noderef] __rcu *
-   kernel/trace/trace_syscalls.c:358:20: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct trace_event_file *trace_file @@     got struct trace_event_file [noderef] __rcu * @@
-   kernel/trace/trace_syscalls.c:358:20: sparse:     expected struct trace_event_file *trace_file
-   kernel/trace/trace_syscalls.c:358:20: sparse:     got struct trace_event_file [noderef] __rcu *
->> kernel/trace/trace_syscalls.c:394:17: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct trace_event_file [noderef] __rcu *volatile @@     got struct trace_event_file *file @@
-   kernel/trace/trace_syscalls.c:394:17: sparse:     expected struct trace_event_file [noderef] __rcu *volatile
-   kernel/trace/trace_syscalls.c:394:17: sparse:     got struct trace_event_file *file
-   kernel/trace/trace_syscalls.c:432:17: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct trace_event_file [noderef] __rcu *volatile @@     got struct trace_event_file *file @@
-   kernel/trace/trace_syscalls.c:432:17: sparse:     expected struct trace_event_file [noderef] __rcu *volatile
-   kernel/trace/trace_syscalls.c:432:17: sparse:     got struct trace_event_file *file
+>> kernel/trace/trace_syscalls.c:620:53: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void const [noderef] __user *from @@     got char *ptr @@
+   kernel/trace/trace_syscalls.c:620:53: sparse:     expected void const [noderef] __user *from
+   kernel/trace/trace_syscalls.c:620:53: sparse:     got char *ptr
+>> kernel/trace/trace_syscalls.c:623:54: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected char const [noderef] __user *src @@     got char *ptr @@
+   kernel/trace/trace_syscalls.c:623:54: sparse:     expected char const [noderef] __user *src
+   kernel/trace/trace_syscalls.c:623:54: sparse:     got char *ptr
+   kernel/trace/trace_syscalls.c:707:20: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct trace_event_file *trace_file @@     got struct trace_event_file [noderef] __rcu * @@
+   kernel/trace/trace_syscalls.c:707:20: sparse:     expected struct trace_event_file *trace_file
+   kernel/trace/trace_syscalls.c:707:20: sparse:     got struct trace_event_file [noderef] __rcu *
+   kernel/trace/trace_syscalls.c:824:20: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct trace_event_file *trace_file @@     got struct trace_event_file [noderef] __rcu * @@
+   kernel/trace/trace_syscalls.c:824:20: sparse:     expected struct trace_event_file *trace_file
+   kernel/trace/trace_syscalls.c:824:20: sparse:     got struct trace_event_file [noderef] __rcu *
+   kernel/trace/trace_syscalls.c:871:9: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct trace_event_file [noderef] __rcu *volatile @@     got struct trace_event_file *file @@
+   kernel/trace/trace_syscalls.c:871:9: sparse:     expected struct trace_event_file [noderef] __rcu *volatile
+   kernel/trace/trace_syscalls.c:871:9: sparse:     got struct trace_event_file *file
+   kernel/trace/trace_syscalls.c:909:17: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct trace_event_file [noderef] __rcu *volatile @@     got struct trace_event_file *file @@
+   kernel/trace/trace_syscalls.c:909:17: sparse:     expected struct trace_event_file [noderef] __rcu *volatile
+   kernel/trace/trace_syscalls.c:909:17: sparse:     got struct trace_event_file *file
 
-vim +313 kernel/trace/trace_syscalls.c
+vim +620 kernel/trace/trace_syscalls.c
 
-   290	
-   291	static void ftrace_syscall_enter(void *data, struct pt_regs *regs, long id)
-   292	{
-   293		struct trace_array *tr = data;
-   294		struct trace_event_file *trace_file;
-   295		struct syscall_trace_enter *entry;
-   296		struct syscall_metadata *sys_data;
-   297		struct trace_event_buffer fbuffer;
-   298		unsigned long args[6];
-   299		int syscall_nr;
-   300		int size;
-   301	
-   302		/*
-   303		 * Syscall probe called with preemption enabled, but the ring
-   304		 * buffer and per-cpu data require preemption to be disabled.
-   305		 */
-   306		might_fault();
-   307		guard(preempt_notrace)();
-   308	
-   309		syscall_nr = trace_get_syscall_nr(current, regs);
-   310		if (syscall_nr < 0 || syscall_nr >= NR_syscalls)
-   311			return;
-   312	
- > 313		trace_file = READ_ONCE(tr->enter_syscall_files[syscall_nr]);
-   314		if (!trace_file)
-   315			return;
-   316	
-   317		if (trace_trigger_soft_disabled(trace_file))
-   318			return;
-   319	
-   320		sys_data = syscall_nr_to_meta(syscall_nr);
-   321		if (!sys_data)
-   322			return;
-   323	
-   324		size = sizeof(*entry) + sizeof(unsigned long) * sys_data->nb_args;
-   325	
-   326		entry = trace_event_buffer_reserve(&fbuffer, trace_file, size);
-   327		if (!entry)
-   328			return;
-   329	
-   330		entry = ring_buffer_event_data(fbuffer.event);
-   331		entry->nr = syscall_nr;
-   332		syscall_get_arguments(current, regs, args);
-   333		memcpy(entry->args, args, sizeof(unsigned long) * sys_data->nb_args);
-   334	
-   335		trace_event_buffer_commit(&fbuffer);
-   336	}
-   337	
-   338	static void ftrace_syscall_exit(void *data, struct pt_regs *regs, long ret)
-   339	{
-   340		struct trace_array *tr = data;
-   341		struct trace_event_file *trace_file;
-   342		struct syscall_trace_exit *entry;
-   343		struct syscall_metadata *sys_data;
-   344		struct trace_event_buffer fbuffer;
-   345		int syscall_nr;
-   346	
-   347		/*
-   348		 * Syscall probe called with preemption enabled, but the ring
-   349		 * buffer and per-cpu data require preemption to be disabled.
-   350		 */
-   351		might_fault();
-   352		guard(preempt_notrace)();
-   353	
-   354		syscall_nr = trace_get_syscall_nr(current, regs);
-   355		if (syscall_nr < 0 || syscall_nr >= NR_syscalls)
-   356			return;
-   357	
-   358		trace_file = READ_ONCE(tr->exit_syscall_files[syscall_nr]);
-   359		if (!trace_file)
-   360			return;
-   361	
-   362		if (trace_trigger_soft_disabled(trace_file))
-   363			return;
-   364	
-   365		sys_data = syscall_nr_to_meta(syscall_nr);
-   366		if (!sys_data)
-   367			return;
-   368	
-   369		entry = trace_event_buffer_reserve(&fbuffer, trace_file, sizeof(*entry));
-   370		if (!entry)
-   371			return;
-   372	
-   373		entry = ring_buffer_event_data(fbuffer.event);
-   374		entry->nr = syscall_nr;
-   375		entry->ret = syscall_get_return_value(current, regs);
-   376	
-   377		trace_event_buffer_commit(&fbuffer);
-   378	}
-   379	
-   380	static int reg_event_syscall_enter(struct trace_event_file *file,
-   381					   struct trace_event_call *call)
-   382	{
-   383		struct trace_array *tr = file->tr;
-   384		int ret = 0;
-   385		int num;
-   386	
-   387		num = ((struct syscall_metadata *)call->data)->syscall_nr;
-   388		if (WARN_ON_ONCE(num < 0 || num >= NR_syscalls))
-   389			return -ENOSYS;
-   390		mutex_lock(&syscall_trace_lock);
-   391		if (!tr->sys_refcount_enter)
-   392			ret = register_trace_sys_enter(ftrace_syscall_enter, tr);
-   393		if (!ret) {
- > 394			WRITE_ONCE(tr->enter_syscall_files[num], file);
-   395			tr->sys_refcount_enter++;
-   396		}
-   397		mutex_unlock(&syscall_trace_lock);
-   398		return ret;
-   399	}
-   400	
+6bc850d6f8f730 Steven Rostedt 2025-08-05  526  
+623bd9e046f95c Steven Rostedt 2025-08-05  527  static char *sys_fault_user(struct syscall_metadata *sys_data,
+623bd9e046f95c Steven Rostedt 2025-08-05  528  			    struct syscall_buf_info *sinfo,
+623bd9e046f95c Steven Rostedt 2025-08-05  529  			    unsigned long *args,
+623bd9e046f95c Steven Rostedt 2025-08-05  530  			    unsigned int data_size[SYSCALL_FAULT_MAX_CNT])
+6bc850d6f8f730 Steven Rostedt 2025-08-05  531  {
+623bd9e046f95c Steven Rostedt 2025-08-05  532  	char *buffer = per_cpu_ptr(sinfo->sbuf, smp_processor_id())->buf;
+6bc850d6f8f730 Steven Rostedt 2025-08-05  533  	unsigned long mask = sys_data->user_mask;
+623bd9e046f95c Steven Rostedt 2025-08-05  534  	unsigned long size = SYSCALL_FAULT_ARG_SZ - 1;
+6bc850d6f8f730 Steven Rostedt 2025-08-05  535  	unsigned int cnt;
+b979d33ec48bbd Steven Rostedt 2025-08-05  536  	bool array = false;
+623bd9e046f95c Steven Rostedt 2025-08-05  537  	char *ptr_array[SYSCALL_FAULT_MAX_CNT];
+623bd9e046f95c Steven Rostedt 2025-08-05  538  	char *buf;
+623bd9e046f95c Steven Rostedt 2025-08-05  539  	int read[SYSCALL_FAULT_MAX_CNT];
+6bc850d6f8f730 Steven Rostedt 2025-08-05  540  	int trys = 0;
+623bd9e046f95c Steven Rostedt 2025-08-05  541  	int uargs;
+6bc850d6f8f730 Steven Rostedt 2025-08-05  542  	int ret;
+623bd9e046f95c Steven Rostedt 2025-08-05  543  	int i = 0;
+623bd9e046f95c Steven Rostedt 2025-08-05  544  
+623bd9e046f95c Steven Rostedt 2025-08-05  545  	/* The extra is appended to the user data in the buffer */
+623bd9e046f95c Steven Rostedt 2025-08-05  546  	BUILD_BUG_ON(SYSCALL_FAULT_USER_MAX + sizeof(EXTRA) >=
+623bd9e046f95c Steven Rostedt 2025-08-05  547  		     SYSCALL_FAULT_ARG_SZ);
+623bd9e046f95c Steven Rostedt 2025-08-05  548  
+623bd9e046f95c Steven Rostedt 2025-08-05  549  	/*
+623bd9e046f95c Steven Rostedt 2025-08-05  550  	 * If this system call event has a size argument, use
+623bd9e046f95c Steven Rostedt 2025-08-05  551  	 * it to define how much of user space memory to read,
+623bd9e046f95c Steven Rostedt 2025-08-05  552  	 * and read it as an array and not a string.
+623bd9e046f95c Steven Rostedt 2025-08-05  553  	 */
+623bd9e046f95c Steven Rostedt 2025-08-05  554  	if (sys_data->user_arg_size >= 0) {
+623bd9e046f95c Steven Rostedt 2025-08-05  555  		array = true;
+623bd9e046f95c Steven Rostedt 2025-08-05  556  		size = args[sys_data->user_arg_size];
+623bd9e046f95c Steven Rostedt 2025-08-05  557  		if (size > SYSCALL_FAULT_ARG_SZ - 1)
+623bd9e046f95c Steven Rostedt 2025-08-05  558  			size = SYSCALL_FAULT_ARG_SZ - 1;
+623bd9e046f95c Steven Rostedt 2025-08-05  559  	}
+623bd9e046f95c Steven Rostedt 2025-08-05  560  
+623bd9e046f95c Steven Rostedt 2025-08-05  561  	while (mask) {
+623bd9e046f95c Steven Rostedt 2025-08-05  562  		int idx = ffs(mask) - 1;
+623bd9e046f95c Steven Rostedt 2025-08-05  563  		mask &= ~BIT(idx);
+623bd9e046f95c Steven Rostedt 2025-08-05  564  
+623bd9e046f95c Steven Rostedt 2025-08-05  565  		if (WARN_ON_ONCE(i == SYSCALL_FAULT_MAX_CNT))
+623bd9e046f95c Steven Rostedt 2025-08-05  566  			break;
+6bc850d6f8f730 Steven Rostedt 2025-08-05  567  
+6bc850d6f8f730 Steven Rostedt 2025-08-05  568  		/* Get the pointer to user space memory to read */
+623bd9e046f95c Steven Rostedt 2025-08-05  569  		ptr_array[i++] = (char *)args[idx];
+623bd9e046f95c Steven Rostedt 2025-08-05  570  	}
+623bd9e046f95c Steven Rostedt 2025-08-05  571  
+623bd9e046f95c Steven Rostedt 2025-08-05  572  	uargs = i;
+623bd9e046f95c Steven Rostedt 2025-08-05  573  
+623bd9e046f95c Steven Rostedt 2025-08-05  574  	/* Clear the values that are not used */
+623bd9e046f95c Steven Rostedt 2025-08-05  575  	for (; i < SYSCALL_FAULT_MAX_CNT; i++) {
+623bd9e046f95c Steven Rostedt 2025-08-05  576  		data_size[i] = -1; /* Denotes no pointer */
+623bd9e046f95c Steven Rostedt 2025-08-05  577  	}
+6bc850d6f8f730 Steven Rostedt 2025-08-05  578  
+6bc850d6f8f730 Steven Rostedt 2025-08-05  579   again:
+6bc850d6f8f730 Steven Rostedt 2025-08-05  580  	/*
+6bc850d6f8f730 Steven Rostedt 2025-08-05  581  	 * If this task is preempted by another user space task, it
+6bc850d6f8f730 Steven Rostedt 2025-08-05  582  	 * will cause this task to try again. But just in case something
+6bc850d6f8f730 Steven Rostedt 2025-08-05  583  	 * changes where the copying from user space causes another task
+6bc850d6f8f730 Steven Rostedt 2025-08-05  584  	 * to run, prevent this from going into an infinite loop.
+6bc850d6f8f730 Steven Rostedt 2025-08-05  585  	 * 10 tries should be plenty.
+6bc850d6f8f730 Steven Rostedt 2025-08-05  586  	 */
+6bc850d6f8f730 Steven Rostedt 2025-08-05  587  	if (trys++ > 10) {
+6bc850d6f8f730 Steven Rostedt 2025-08-05  588  		static bool once;
+6bc850d6f8f730 Steven Rostedt 2025-08-05  589  		/*
+6bc850d6f8f730 Steven Rostedt 2025-08-05  590  		 * Only print a message instead of a WARN_ON() as this could
+6bc850d6f8f730 Steven Rostedt 2025-08-05  591  		 * theoretically trigger under real load.
+6bc850d6f8f730 Steven Rostedt 2025-08-05  592  		 */
+6bc850d6f8f730 Steven Rostedt 2025-08-05  593  		if (!once)
+6bc850d6f8f730 Steven Rostedt 2025-08-05  594  			pr_warn("Error: Too many tries to read syscall %s\n", sys_data->name);
+6bc850d6f8f730 Steven Rostedt 2025-08-05  595  		once = true;
+623bd9e046f95c Steven Rostedt 2025-08-05  596  		return buffer;
+6bc850d6f8f730 Steven Rostedt 2025-08-05  597  	}
+6bc850d6f8f730 Steven Rostedt 2025-08-05  598  
+6bc850d6f8f730 Steven Rostedt 2025-08-05  599  	/* Read the current sched switch count */
+6bc850d6f8f730 Steven Rostedt 2025-08-05  600  	cnt = this_cpu_read(sched_switch_cnt);
+6bc850d6f8f730 Steven Rostedt 2025-08-05  601  
+6bc850d6f8f730 Steven Rostedt 2025-08-05  602  	/*
+6bc850d6f8f730 Steven Rostedt 2025-08-05  603  	 * Preemption is going to be enabled, but this task must
+6bc850d6f8f730 Steven Rostedt 2025-08-05  604  	 * remain on this CPU.
+6bc850d6f8f730 Steven Rostedt 2025-08-05  605  	 */
+6bc850d6f8f730 Steven Rostedt 2025-08-05  606  	migrate_disable();
+6bc850d6f8f730 Steven Rostedt 2025-08-05  607  
+6bc850d6f8f730 Steven Rostedt 2025-08-05  608  	/*
+6bc850d6f8f730 Steven Rostedt 2025-08-05  609  	 * Now preemption is being enabed and another task can come in
+6bc850d6f8f730 Steven Rostedt 2025-08-05  610  	 * and use the same buffer and corrupt our data.
+6bc850d6f8f730 Steven Rostedt 2025-08-05  611  	 */
+6bc850d6f8f730 Steven Rostedt 2025-08-05  612  	preempt_enable_notrace();
+6bc850d6f8f730 Steven Rostedt 2025-08-05  613  
+623bd9e046f95c Steven Rostedt 2025-08-05  614  	buf = buffer;
+623bd9e046f95c Steven Rostedt 2025-08-05  615  
+623bd9e046f95c Steven Rostedt 2025-08-05  616  	for (i = 0; i < uargs; i++, buf += SYSCALL_FAULT_ARG_SZ) {
+623bd9e046f95c Steven Rostedt 2025-08-05  617  		char *ptr = ptr_array[i];
+623bd9e046f95c Steven Rostedt 2025-08-05  618  
+b979d33ec48bbd Steven Rostedt 2025-08-05  619  		if (array) {
+b979d33ec48bbd Steven Rostedt 2025-08-05 @620  			ret = __copy_from_user(buf, ptr, size);
+b979d33ec48bbd Steven Rostedt 2025-08-05  621  			ret = ret ? -1 : size;
+b979d33ec48bbd Steven Rostedt 2025-08-05  622  		} else {
+6bc850d6f8f730 Steven Rostedt 2025-08-05 @623  			ret = strncpy_from_user(buf, ptr, size);
+b979d33ec48bbd Steven Rostedt 2025-08-05  624  		}
+623bd9e046f95c Steven Rostedt 2025-08-05  625  		read[i] = ret;
+623bd9e046f95c Steven Rostedt 2025-08-05  626  	}
+6bc850d6f8f730 Steven Rostedt 2025-08-05  627  
+6bc850d6f8f730 Steven Rostedt 2025-08-05  628  	preempt_disable_notrace();
+6bc850d6f8f730 Steven Rostedt 2025-08-05  629  	migrate_enable();
+6bc850d6f8f730 Steven Rostedt 2025-08-05  630  
+6bc850d6f8f730 Steven Rostedt 2025-08-05  631  	/*
+6bc850d6f8f730 Steven Rostedt 2025-08-05  632  	 * Preemption is disabled again, now check the sched_switch_cnt.
+6bc850d6f8f730 Steven Rostedt 2025-08-05  633  	 * If it increased by two or more, then another user space process
+6bc850d6f8f730 Steven Rostedt 2025-08-05  634  	 * may have schedule in and corrupted our buffer. In that case
+6bc850d6f8f730 Steven Rostedt 2025-08-05  635  	 * the copying must be retried.
+6bc850d6f8f730 Steven Rostedt 2025-08-05  636  	 *
+6bc850d6f8f730 Steven Rostedt 2025-08-05  637  	 * Note, if this task was scheduled out and only kernel threads
+6bc850d6f8f730 Steven Rostedt 2025-08-05  638  	 * were scheduled in (maybe to process the fault), then the
+6bc850d6f8f730 Steven Rostedt 2025-08-05  639  	 * counter would increment again when this task scheduled in.
+6bc850d6f8f730 Steven Rostedt 2025-08-05  640  	 * If this task scheduled out and another user task scheduled
+6bc850d6f8f730 Steven Rostedt 2025-08-05  641  	 * in, this task would still need to be scheduled back in and
+6bc850d6f8f730 Steven Rostedt 2025-08-05  642  	 * the counter would increment by at least two.
+6bc850d6f8f730 Steven Rostedt 2025-08-05  643  	 */
+6bc850d6f8f730 Steven Rostedt 2025-08-05  644  	if (this_cpu_read(sched_switch_cnt) > cnt + 1)
+6bc850d6f8f730 Steven Rostedt 2025-08-05  645  		goto again;
+6bc850d6f8f730 Steven Rostedt 2025-08-05  646  
+623bd9e046f95c Steven Rostedt 2025-08-05  647  	buf = buffer;
+623bd9e046f95c Steven Rostedt 2025-08-05  648  	for (i = 0; i < uargs; i++, buf += SYSCALL_FAULT_ARG_SZ) {
+623bd9e046f95c Steven Rostedt 2025-08-05  649  
+623bd9e046f95c Steven Rostedt 2025-08-05  650  		ret = read[i];
+623bd9e046f95c Steven Rostedt 2025-08-05  651  		if (ret < 0)
+623bd9e046f95c Steven Rostedt 2025-08-05  652  			continue;
+623bd9e046f95c Steven Rostedt 2025-08-05  653  		buf[ret] = '\0';
+623bd9e046f95c Steven Rostedt 2025-08-05  654  
+b979d33ec48bbd Steven Rostedt 2025-08-05  655  		/* For strings, replace any non-printable characters with '.' */
+b979d33ec48bbd Steven Rostedt 2025-08-05  656  		if (!array) {
+623bd9e046f95c Steven Rostedt 2025-08-05  657  			for (int x = 0; x < ret; x++) {
+623bd9e046f95c Steven Rostedt 2025-08-05  658  				if (!isprint(buf[x]))
+623bd9e046f95c Steven Rostedt 2025-08-05  659  					buf[x] = '.';
+6bc850d6f8f730 Steven Rostedt 2025-08-05  660  			}
+6bc850d6f8f730 Steven Rostedt 2025-08-05  661  
+6bc850d6f8f730 Steven Rostedt 2025-08-05  662  			/*
+623bd9e046f95c Steven Rostedt 2025-08-05  663  			 * If the text was truncated due to our max limit,
+623bd9e046f95c Steven Rostedt 2025-08-05  664  			 * add "..." to the string.
+6bc850d6f8f730 Steven Rostedt 2025-08-05  665  			 */
+623bd9e046f95c Steven Rostedt 2025-08-05  666  			if (ret > SYSCALL_FAULT_USER_MAX) {
+623bd9e046f95c Steven Rostedt 2025-08-05  667  				strscpy(buf + SYSCALL_FAULT_USER_MAX, EXTRA,
+623bd9e046f95c Steven Rostedt 2025-08-05  668  					sizeof(EXTRA));
+623bd9e046f95c Steven Rostedt 2025-08-05  669  				ret = SYSCALL_FAULT_USER_MAX + sizeof(EXTRA);
+6bc850d6f8f730 Steven Rostedt 2025-08-05  670  			} else {
+6bc850d6f8f730 Steven Rostedt 2025-08-05  671  				buf[ret++] = '\0';
+6bc850d6f8f730 Steven Rostedt 2025-08-05  672  			}
+623bd9e046f95c Steven Rostedt 2025-08-05  673  		} else {
+623bd9e046f95c Steven Rostedt 2025-08-05  674  			ret = min(ret, SYSCALL_FAULT_USER_MAX);
+623bd9e046f95c Steven Rostedt 2025-08-05  675  		}
+623bd9e046f95c Steven Rostedt 2025-08-05  676  		data_size[i] = ret;
+b979d33ec48bbd Steven Rostedt 2025-08-05  677  	}
+6bc850d6f8f730 Steven Rostedt 2025-08-05  678  
+623bd9e046f95c Steven Rostedt 2025-08-05  679  	return buffer;
+6bc850d6f8f730 Steven Rostedt 2025-08-05  680  }
+6bc850d6f8f730 Steven Rostedt 2025-08-05  681  
 
 -- 
 0-DAY CI Kernel Test Service
