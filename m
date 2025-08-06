@@ -1,533 +1,222 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D627220696;
-	Wed,  6 Aug 2025 08:01:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A04062AD00
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  6 Aug 2025 08:15:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754467303; cv=none; b=jySi+L2FhUE+6DoVn1B+2fSV/nWNEgNobWmo/7uLg3acIqazCgDG1ibvWso1h9wGXKv1YbcmifwTR5XZhL6EdtB6DuD+mNZCzaA2zExT982BeN88UnuMuSv9bq5ePKwdIE3qEkBndtyV76JPB7VitO86P1Vc3ZZ6InMhuEBb5lE=
+	t=1754468157; cv=none; b=eShrGM3tO8yspFTQzQdw0hMcJ5DCYxoTgKdiy48aJJpu2KgF6aiMWsKpXNurr0RIC7xfYc1+RTBuqzC5qMMdrJrDc34Tx9XdrQeF27mBEW3SCpTgl/vqL2kSpuSfg1pBm2r/DmHRUSC8sCRs1xqpK6JIgB+G0t6Of1aBE1JXg7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754467303; c=relaxed/simple;
-	bh=BADNlnr1kahP8rhg4GWY4CVvz7wi0h9h7FQXGQQn0ew=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=qXPhKGIcWKb+2i6WsQArNJ8ab3Yr2qGS6yYzV4HWKGarYmvhcqD7iM2PcleE8IF4/RAiCmzmKlmP9i1EetKbosRUAh0MrRBjPJa1aKz9uxaTMfBKEQ0Dvs2J0FEsXQJ+3iyzs5NDk7dI86DP+2KywyCAuFn7CnD4+rjk13QHOBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JnNsKd2f; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=oB5ahXfZ; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1754468157; c=relaxed/simple;
+	bh=IZpgs72iL+V7e6krAJhMkzgG9wJ+Gkygl6Q3oCobk8s=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=j6/o2ycFboUOZzMyzA4wi1YF65OjLML/4cYQGaLv7n2gpBlaKPmQk+0u2pqQmRaxdX8WPLwkjAyJl7h/rf8SS1BVejR0vPtoAYpKbwp8wbpOzQCjlyDf1X7uJ3nrUEvzh4w08pdoeMQrZQShA9NAWuSZ/pyWE+KIM5BWpzQLlV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EA8adP5h; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JnNsKd2f";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="oB5ahXfZ"
-From: Nam Cao <namcao@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1754467291;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EA8adP5h"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1754468153;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8zmzmOCHQBCMM1BNC7xojuuKhp7HRhP0dq47/Fa8kkU=;
-	b=JnNsKd2fydome4WKvfwKdMeQELD8vZjZ95yEPfrAml7w11g0eSeEQMAy1IcvZLFIlmEqfD
-	K0ttWtxNp05RsyluXwCPCd8rZt3nL3jTFHKGQO3my5X5uWqQuKXDN15LwUTvtu+U3kcGHe
-	CvcNSEya2FS6+qZ/zzhCQFz5+KNAxrPaV41J1HtwqgMuyU4YG2+Eq+68W8qOnPCnXgNkct
-	6unFjykCn8yykZAjKCNNVn1iXygb/Mlle9TESjzxR86J/2NLBpd1yfea7mf4H82sUsfUOg
-	NqwDCOy92jW3o+BMOWyPoZtdKrz57WStv65l8gUBEjTVl7O33wrAGt7LKmSGtw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1754467291;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8zmzmOCHQBCMM1BNC7xojuuKhp7HRhP0dq47/Fa8kkU=;
-	b=oB5ahXfZFLRfrIbO4jAiaNyFh/wOFwKu6j39zQmPXEcT655TjdNNBy3fWGVCUedfe6q18z
-	s4ECgb5tzgh01nAQ==
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Nam Cao <namcao@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Ben Segall <bsegall@google.com>,
-	Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>
-Subject: [PATCH v2 5/5] rv: Add rts monitor
-Date: Wed,  6 Aug 2025 10:01:21 +0200
-Message-Id: <88fdbeb3f2ecf3a6259f3ee8636ae5b21fa6b72d.1754466623.git.namcao@linutronix.de>
-In-Reply-To: <cover.1754466623.git.namcao@linutronix.de>
-References: <cover.1754466623.git.namcao@linutronix.de>
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=IZpgs72iL+V7e6krAJhMkzgG9wJ+Gkygl6Q3oCobk8s=;
+	b=EA8adP5hOY2C3P6stYF2Z2js3qyjBeKIKirvnHFp33A0tyPwWf1XiQ2OaJqq/VfKcx/5DC
+	sUpoSLUVWd2YGtpyJI3JyemB72Jy/qYDNlAClzFaaczmY3PU7W2cRfx1LTn204xsYORXb8
+	WQZd7e2TiueahZvni4roULVnOwseGdk=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-502-Rj6sqd07Pcuvg6P9eIGB8w-1; Wed, 06 Aug 2025 04:15:52 -0400
+X-MC-Unique: Rj6sqd07Pcuvg6P9eIGB8w-1
+X-Mimecast-MFC-AGG-ID: Rj6sqd07Pcuvg6P9eIGB8w_1754468151
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-459d7ae12b8so21362365e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 06 Aug 2025 01:15:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1754468151; x=1755072951;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lhM9xOQimaRmPvynN2QJcit/7aVh+anT1n0vb1zuRIk=;
+        b=BoSg0g6lNccaCc4bipQaia61jIoCwfC1baOzXBIFVj9H8aFnhrdgD4GhU9r3HRCef8
+         vM7XpG7HFF2pjsCGpv7Gbz36OqO8uq+59NcCnM/stfGeA/LVeMiUvuv4fqmJ7mA+2WDV
+         VOwRbc8j1wn7V9WNJV0I4lanr4PUYh/2yD6HThihekx+E3Xw05IOC51MTec4sWFkWDpu
+         HT3Sr0sFjss1spC+A4YSDaMuxqrWD6VhsJXFuFQh5ySOfTw4VCG7PTYxj9mZ8AU9unOZ
+         sgnIiObtGvBxTXsyeyR6gmjQ5ykFQILeJhx1rbU4hPiXlM5RVDMqljR9TMzIsjHyF3of
+         LmhA==
+X-Forwarded-Encrypted: i=1; AJvYcCUPEQj3nioU/K78H6Dk4eT8cYDLScgnsDhgPFudpXgd2tqZhqVv0I/uo+/6LGmT/XQF60Nyp2odBhnv3OFqDR/XFRQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzPf+4mZXfp+Kn8my0RR2JFH4t12huVhhNyjsgJBOJvd0baTqKg
+	D45mhsoEVxfSI5jW7eEnYXmnwTBjFkrF9lefDXOlqYrrZOJQrtH/jcNHczBWpip9sR34pip4U21
+	SKt/cO5BFp1yODFQFLK/8zdpxHFAn+YAxD9lPU1DIt6vYHu3p7Z8EpPWD44Y2Iix5cKuV3gFkAg
+	==
+X-Gm-Gg: ASbGncsEacNMZp5fTBJaDyT1p6pd5I9I1W0faPMjr9UBaznUmxWVRdqiR6wyAuXk8n8
+	5DNkOXgKCaCA0/OKOvg5Jnr7IYqyV/KU9a0QpOrDxHt9yTGCaXX/I8fjscr0dX0hWQob41InVAl
+	0xrC1joEL8HFjmUPjH8RYoKl+cBOjQm0VIEBpNfrzZ6OSRo2nxW5EdchaGuiriGkZqu3rUTPgiK
+	GTVxG+6vyWFa5B6PnhxuDKtYkI3r3Nqet2dYN2EZOUshH2iiNK2UqZ6B5H0AKa4/kcuKjSEXLac
+	vwLUN24dx0kxkuB/3QWewJZJW29KmF9UHuo1ij7kQpklFaUraCt8gp5koromCNQb8A==
+X-Received: by 2002:a05:600c:450e:b0:456:1006:5418 with SMTP id 5b1f17b1804b1-459e7089870mr17345955e9.13.1754468151228;
+        Wed, 06 Aug 2025 01:15:51 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGJwdNcjJoVypBzS/E0W0QaV4Mh53JQzXCjPyCpue0GuL82XdUNCr1X0+QGiaVe3Jo1xns1xQ==
+X-Received: by 2002:a05:600c:450e:b0:456:1006:5418 with SMTP id 5b1f17b1804b1-459e7089870mr17345535e9.13.1754468150751;
+        Wed, 06 Aug 2025 01:15:50 -0700 (PDT)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.35])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-459e79ef4c8sm18937515e9.6.2025.08.06.01.15.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Aug 2025 01:15:50 -0700 (PDT)
+Message-ID: <1ddbe4c89a12c6282fa6db19c4649b90ab2fcf9d.camel@redhat.com>
+Subject: Re: [PATCH 5/5] rv: Add rts monitor
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: Nam Cao <namcao@linutronix.de>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>,  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Wed, 06 Aug 2025 10:15:48 +0200
+In-Reply-To: <20250805154515.CchJtec3@linutronix.de>
+References: <cover.1753879295.git.namcao@linutronix.de>
+	 <20834b8fcd4dfe75642cec2097e29f4c636a33fb.1753879295.git.namcao@linutronix.de>
+	 <b3499e8d79c2215b4fb765c0ceb5294f322efa3a.camel@redhat.com>
+	 <20250805122215.hXbwUchz@linutronix.de>
+	 <20250805154515.CchJtec3@linutronix.de>
+Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
+ keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
+ 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
+ Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
+ xyhmqeUWOzFx5P43S1E1dhsrLWgP
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: NXRqTvv6hcOOY5na1YX5if2af0LIkN0Kk9sd7rZwj5g_1754468151
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Add "real-time scheduling" monitor, which validates that SCHED_RR and
-SCHED_FIFO tasks are scheduled before tasks with normal and extensible
-scheduling policies
+On Tue, 2025-08-05 at 17:45 +0200, Nam Cao wrote:
+> On Tue, Aug 05, 2025 at 02:22:17PM +0200, Nam Cao wrote:
+> > On Tue, Aug 05, 2025 at 10:40:30AM +0200, Gabriele Monaco wrote:
+> > > Hello Nam,
+> > >=20
+> > > I just built and booted up the monitor in a VM (virtme-ng), the
+> > > configuration has preemptirq tracepoints and all monitors so far
+> > > (as we
+> > > have seen earlier, it doesn't build if rtapp monitors are not
+> > > there
+> > > because of the circular dependency in the tracepoints).
+> > >=20
+> > > All I did was to enable the monitor and printk reactor, but I get
+> > > a
+> > > whole lot of errors (as in, I need to quit the VM for it to
+> > > stop):
+> > >=20
+> > > [ 1537.699834] rv: rts: 7: violation detected
+> > > [ 1537.699930] rv: rts: 3: violation detected
+> > > [ 1537.701827] rv: rts: 6: violation detected
+> > > [ 1537.704894] rv: rts: 0: violation detected
+> > > [ 1537.704925] rv: rts: 0: violation detected
+> > > [ 1537.704988] rv: rts: 3: violation detected
+> > > [ 1537.705019] rv: rts: 3: violation detected
+> > > [ 1537.705998] rv: rts: 0: violation detected
+> > > [ 1537.706024] rv: rts: 0: violation detected
+> > > [ 1537.709875] rv: rts: 6: violation detected
+> > > [ 1537.709921] rv: rts: 6: violation detected
+> > > [ 1537.711241] rv: rts: 6: violation detected
+> > >=20
+> > > Curiously enough, I only see those CPUs (0, 3, 6 and 7).
+> > > Other runs have different CPUs but always a small subset (e.g.
+> > > 10-15,
+> > > 6-7=C2=A0only 2).
+> > > It doesn't always occur but enabling/disabling the monitor might
+> > > help
+> > > triggering it.
+> > >=20
+> > > Any idea what is happening?
+>=20
+> There are two issues:
+>=20
+> =C2=A0 - When the monitor is disabled then enabled, the number of queued
+> task does not reset. The monitor may mistakenly thinks there are
+> queued RT tasks, but there aren't.
+>=20
+> =C2=A0 - The enqueue tracepoint is registered before the dequeue
+> tracepoint.
+> =C2=A0=C2=A0=C2=A0 Therefore there may be a enqueue followed by a dequeue=
+, but the
+> monitor missed the latter.
+>=20
+> The first issue can be fixed by reseting the queued task number at
+> enabling.
 
-Signed-off-by: Nam Cao <namcao@linutronix.de>
----
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Juri Lelli <juri.lelli@redhat.com>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc: Ben Segall <bsegall@google.com>
-Cc: Mel Gorman <mgorman@suse.de>
-Cc: Valentin Schneider <vschneid@redhat.com>
-Cc: K Prateek Nayak <kprateek.nayak@amd.com>
----
-v2:
-  - use the new tracepoints
-  - move to be under the rtapp container monitor
-  - re-generate with the modified scripts
-  - fixup incorrect enqueued status
----
- Documentation/trace/rv/monitor_sched.rst |  19 +++
- kernel/trace/rv/Kconfig                  |   1 +
- kernel/trace/rv/Makefile                 |   1 +
- kernel/trace/rv/monitors/rts/Kconfig     |  17 +++
- kernel/trace/rv/monitors/rts/rts.c       | 144 +++++++++++++++++++++++
- kernel/trace/rv/monitors/rts/rts.h       | 126 ++++++++++++++++++++
- kernel/trace/rv/monitors/rts/rts_trace.h |  15 +++
- kernel/trace/rv/rv_trace.h               |   1 +
- tools/verification/models/sched/rts.ltl  |   5 +
- 9 files changed, 329 insertions(+)
- create mode 100644 kernel/trace/rv/monitors/rts/Kconfig
- create mode 100644 kernel/trace/rv/monitors/rts/rts.c
- create mode 100644 kernel/trace/rv/monitors/rts/rts.h
- create mode 100644 kernel/trace/rv/monitors/rts/rts_trace.h
- create mode 100644 tools/verification/models/sched/rts.ltl
+Mmh good catch, indeed you have a counter separated from the LTL thing
+here.
 
-diff --git a/Documentation/trace/rv/monitor_sched.rst b/Documentation/trace=
-/rv/monitor_sched.rst
-index 3f8381ad9ec7..2f9d62a1af1f 100644
---- a/Documentation/trace/rv/monitor_sched.rst
-+++ b/Documentation/trace/rv/monitor_sched.rst
-@@ -396,6 +396,25 @@ preemption is always disabled. On non- ``PREEMPT_RT`` =
-kernels, the interrupts
- might invoke a softirq to set ``need_resched`` and wake up a task. This is
- another special case that is currently not supported by the monitor.
-=20
-+Monitor rts
-+-----------
-+
-+The real-time scheduling monitor validates that tasks with real-time sched=
-uling
-+policies (`SCHED_FIFO` and `SCHED_RR`) are always scheduled before tasks w=
-ith
-+normal and extensible scheduling policies (`SCHED_OTHER`, `SCHED_BATCH`,
-+`SCHED_IDLE`, `SCHED_EXT`):
-+
-+.. literalinclude:: ../../../tools/verification/models/sched/rts.ltl
-+
-+Note that this monitor may report errors if real-time throttling or fair
-+deadline server is enabled. These mechanisms prevent real-time tasks from
-+monopolying the CPU by giving tasks with normal and extensible scheduling
-+policies a chance to run. They give system administrators a chance to kill=
- a
-+misbehaved real-time task. However, they violate the scheduling priorities=
- and
-+may cause latency to well-behaved real-time tasks. Thus, if you see errors=
- from
-+this monitor, consider disabling real-time throttling and the fair deadline
-+server.
-+
- References
- ----------
-=20
-diff --git a/kernel/trace/rv/Kconfig b/kernel/trace/rv/Kconfig
-index 7ef89006ed50..e9007ed32aea 100644
---- a/kernel/trace/rv/Kconfig
-+++ b/kernel/trace/rv/Kconfig
-@@ -67,6 +67,7 @@ source "kernel/trace/rv/monitors/opid/Kconfig"
- source "kernel/trace/rv/monitors/rtapp/Kconfig"
- source "kernel/trace/rv/monitors/pagefault/Kconfig"
- source "kernel/trace/rv/monitors/sleep/Kconfig"
-+source "kernel/trace/rv/monitors/rts/Kconfig"
- # Add new rtapp monitors here
-=20
- # Add new monitors here
-diff --git a/kernel/trace/rv/Makefile b/kernel/trace/rv/Makefile
-index 750e4ad6fa0f..d7bfc7ae6677 100644
---- a/kernel/trace/rv/Makefile
-+++ b/kernel/trace/rv/Makefile
-@@ -17,6 +17,7 @@ obj-$(CONFIG_RV_MON_STS) +=3D monitors/sts/sts.o
- obj-$(CONFIG_RV_MON_NRP) +=3D monitors/nrp/nrp.o
- obj-$(CONFIG_RV_MON_SSSW) +=3D monitors/sssw/sssw.o
- obj-$(CONFIG_RV_MON_OPID) +=3D monitors/opid/opid.o
-+obj-$(CONFIG_RV_MON_RTS) +=3D monitors/rts/rts.o
- # Add new monitors here
- obj-$(CONFIG_RV_REACTORS) +=3D rv_reactors.o
- obj-$(CONFIG_RV_REACT_PRINTK) +=3D reactor_printk.o
-diff --git a/kernel/trace/rv/monitors/rts/Kconfig b/kernel/trace/rv/monitor=
-s/rts/Kconfig
-new file mode 100644
-index 000000000000..5481b371bce1
---- /dev/null
-+++ b/kernel/trace/rv/monitors/rts/Kconfig
-@@ -0,0 +1,17 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+config RV_MON_RTS
-+	depends on RV
-+	select RV_LTL_MONITOR
-+	depends on RV_MON_RTAPP
-+	default y
-+	select LTL_MON_EVENTS_CPU
-+	bool "rts monitor"
-+	help
-+	  Add support for RTS (real-time scheduling) monitor which validates
-+	  that real-time-priority tasks are scheduled before SCHED_OTHER tasks.
-+
-+	  This monitor may report an error if RT throttling or deadline server
-+	  is enabled.
-+
-+	  Say Y if you are debugging or testing a real-time system.
-diff --git a/kernel/trace/rv/monitors/rts/rts.c b/kernel/trace/rv/monitors/=
-rts/rts.c
-new file mode 100644
-index 000000000000..b4c3d3a4671d
---- /dev/null
-+++ b/kernel/trace/rv/monitors/rts/rts.c
-@@ -0,0 +1,144 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/ftrace.h>
-+#include <linux/tracepoint.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/rv.h>
-+#include <linux/sched/deadline.h>
-+#include <linux/sched/rt.h>
-+#include <rv/instrumentation.h>
-+
-+#define MODULE_NAME "rts"
-+
-+#include <trace/events/sched.h>
-+#include <rv_trace.h>
-+#include <monitors/rtapp/rtapp.h>
-+
-+#include "rts.h"
-+#include <rv/ltl_monitor.h>
-+
-+static DEFINE_PER_CPU(unsigned int, nr_queued);
-+
-+static void ltl_atoms_fetch(unsigned int cpu, struct ltl_monitor *mon)
-+{
-+}
-+
-+static void ltl_atoms_init(unsigned int cpu, struct ltl_monitor *mon,
-+			   bool target_creation)
-+{
-+	ltl_atom_set(mon, LTL_SCHED_SWITCH, false);
-+	ltl_atom_set(mon, LTL_SCHED_SWITCH_DL, false);
-+	ltl_atom_set(mon, LTL_SCHED_SWITCH_RT, false);
-+
-+	/*
-+	 * This may not be accurate, there may be enqueued RT tasks. But that's
-+	 * okay, the worst we get is a false negative. It will be accurate as
-+	 * soon as the CPU no longer has any queued RT task.
-+	 */
-+	ltl_atom_set(mon, LTL_RT_TASK_ENQUEUED, false);
-+}
-+
-+static void handle_enqueue_task(void *data, int cpu, struct task_struct *t=
-ask)
-+{
-+	unsigned int *queued =3D per_cpu_ptr(&nr_queued, cpu);
-+
-+	if (!rt_task(task))
-+		return;
-+
-+	(*queued)++;
-+	ltl_atom_update(cpu, LTL_RT_TASK_ENQUEUED, true);
-+}
-+
-+static void handle_dequeue_task(void *data, int cpu, struct task_struct *t=
-ask)
-+{
-+	unsigned int *queued =3D per_cpu_ptr(&nr_queued, cpu);
-+
-+	if (!rt_task(task))
-+		return;
-+
-+	/*
-+	 * This may not be accurate for a short time after the monitor is
-+	 * enabled, because there may be enqueued RT tasks which are not counted
-+	 * torward nr_queued. But that's okay, the worst we get is a false
-+	 * negative. nr_queued will be accurate as soon as the CPU no longer has
-+	 * any queued RT task.
-+	 */
-+	if (*queued)
-+		(*queued)--;
-+	if (!*queued)
-+		ltl_atom_update(cpu, LTL_RT_TASK_ENQUEUED, false);
-+}
-+
-+static void handle_sched_switch(void *data, bool preempt, struct task_stru=
-ct *prev,
-+				struct task_struct *next, unsigned int prev_state)
-+{
-+	unsigned int cpu =3D smp_processor_id();
-+	struct ltl_monitor *mon =3D ltl_get_monitor(cpu);
-+
-+	ltl_atom_set(mon, LTL_SCHED_SWITCH_RT, rt_task(next));
-+	ltl_atom_set(mon, LTL_SCHED_SWITCH_DL, dl_task(next));
-+	ltl_atom_update(cpu, LTL_SCHED_SWITCH, true);
-+
-+	ltl_atom_set(mon, LTL_SCHED_SWITCH_RT, false);
-+	ltl_atom_set(mon, LTL_SCHED_SWITCH_DL, false);
-+	ltl_atom_update(cpu, LTL_SCHED_SWITCH, false);
-+}
-+
-+static int enable_rts(void)
-+{
-+	unsigned int cpu;
-+	int retval;
-+
-+	retval =3D ltl_monitor_init();
-+	if (retval)
-+		return retval;
-+
-+	for_each_possible_cpu(cpu) {
-+		unsigned int *queued =3D per_cpu_ptr(&nr_queued, cpu);
-+
-+		*queued =3D 0;
-+	}
-+
-+	rv_attach_trace_probe("rts", dequeue_task_tp, handle_dequeue_task);
-+	rv_attach_trace_probe("rts", enqueue_task_tp, handle_enqueue_task);
-+	rv_attach_trace_probe("rts", sched_switch, handle_sched_switch);
-+
-+	return 0;
-+}
-+
-+static void disable_rts(void)
-+{
-+	rv_detach_trace_probe("rts", sched_switch, handle_sched_switch);
-+	rv_detach_trace_probe("rts", enqueue_task_tp, handle_enqueue_task);
-+	rv_detach_trace_probe("rts", dequeue_task_tp, handle_dequeue_task);
-+
-+	ltl_monitor_destroy();
-+}
-+
-+/*
-+ * This is the monitor register section.
-+ */
-+static struct rv_monitor rv_rts =3D {
-+	.name =3D "rts",
-+	.description =3D "Validate that real-time tasks are scheduled before lowe=
-r-priority tasks",
-+	.enable =3D enable_rts,
-+	.disable =3D disable_rts,
-+};
-+
-+static int __init register_rts(void)
-+{
-+	return rv_register_monitor(&rv_rts, &rv_rtapp);
-+}
-+
-+static void __exit unregister_rts(void)
-+{
-+	rv_unregister_monitor(&rv_rts);
-+}
-+
-+module_init(register_rts);
-+module_exit(unregister_rts);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Nam Cao <namcao@linutronix.de>");
-+MODULE_DESCRIPTION("rts: Validate that real-time tasks are scheduled befor=
-e lower-priority tasks");
-diff --git a/kernel/trace/rv/monitors/rts/rts.h b/kernel/trace/rv/monitors/=
-rts/rts.h
-new file mode 100644
-index 000000000000..5881f30a38ce
---- /dev/null
-+++ b/kernel/trace/rv/monitors/rts/rts.h
-@@ -0,0 +1,126 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+/*
-+ * C implementation of Buchi automaton, automatically generated by
-+ * tools/verification/rvgen from the linear temporal logic specification.
-+ * For further information, see kernel documentation:
-+ *   Documentation/trace/rv/linear_temporal_logic.rst
-+ */
-+
-+#include <linux/rv.h>
-+
-+#define MONITOR_NAME rts
-+
-+#define LTL_MONITOR_TYPE RV_MON_PER_CPU
-+
-+enum ltl_atom {
-+	LTL_RT_TASK_ENQUEUED,
-+	LTL_SCHED_SWITCH,
-+	LTL_SCHED_SWITCH_DL,
-+	LTL_SCHED_SWITCH_RT,
-+	LTL_NUM_ATOM
-+};
-+static_assert(LTL_NUM_ATOM <=3D RV_MAX_LTL_ATOM);
-+
-+static const char *ltl_atom_str(enum ltl_atom atom)
-+{
-+	static const char *const names[] =3D {
-+		"rt_ta_en",
-+		"sc_sw",
-+		"sc_sw_dl",
-+		"sc_sw_rt",
-+	};
-+
-+	return names[atom];
-+}
-+
-+enum ltl_buchi_state {
-+	S0,
-+	S1,
-+	S2,
-+	S3,
-+	S4,
-+	RV_NUM_BA_STATES
-+};
-+static_assert(RV_NUM_BA_STATES <=3D RV_MAX_BA_STATES);
-+
-+static void ltl_start(unsigned int cpu, struct ltl_monitor *mon)
-+{
-+	bool sched_switch_rt =3D test_bit(LTL_SCHED_SWITCH_RT, mon->atoms);
-+	bool sched_switch_dl =3D test_bit(LTL_SCHED_SWITCH_DL, mon->atoms);
-+	bool sched_switch =3D test_bit(LTL_SCHED_SWITCH, mon->atoms);
-+	bool rt_task_enqueued =3D test_bit(LTL_RT_TASK_ENQUEUED, mon->atoms);
-+	bool val13 =3D !rt_task_enqueued;
-+	bool val8 =3D sched_switch_dl || val13;
-+	bool val9 =3D sched_switch_rt || val8;
-+	bool val6 =3D !sched_switch;
-+	bool val1 =3D !rt_task_enqueued;
-+
-+	if (val1)
-+		__set_bit(S0, mon->states);
-+	if (val6)
-+		__set_bit(S1, mon->states);
-+	if (val9)
-+		__set_bit(S4, mon->states);
-+}
-+
-+static void
-+ltl_possible_next_states(struct ltl_monitor *mon, unsigned int state, unsi=
-gned long *next)
-+{
-+	bool sched_switch_rt =3D test_bit(LTL_SCHED_SWITCH_RT, mon->atoms);
-+	bool sched_switch_dl =3D test_bit(LTL_SCHED_SWITCH_DL, mon->atoms);
-+	bool sched_switch =3D test_bit(LTL_SCHED_SWITCH, mon->atoms);
-+	bool rt_task_enqueued =3D test_bit(LTL_RT_TASK_ENQUEUED, mon->atoms);
-+	bool val13 =3D !rt_task_enqueued;
-+	bool val8 =3D sched_switch_dl || val13;
-+	bool val9 =3D sched_switch_rt || val8;
-+	bool val6 =3D !sched_switch;
-+	bool val1 =3D !rt_task_enqueued;
-+
-+	switch (state) {
-+	case S0:
-+		if (val1)
-+			__set_bit(S0, next);
-+		if (val6)
-+			__set_bit(S1, next);
-+		if (val9)
-+			__set_bit(S4, next);
-+		break;
-+	case S1:
-+		if (val6)
-+			__set_bit(S1, next);
-+		if (val1 && val6)
-+			__set_bit(S2, next);
-+		if (val1 && val9)
-+			__set_bit(S3, next);
-+		if (val9)
-+			__set_bit(S4, next);
-+		break;
-+	case S2:
-+		if (val6)
-+			__set_bit(S1, next);
-+		if (val1 && val6)
-+			__set_bit(S2, next);
-+		if (val1 && val9)
-+			__set_bit(S3, next);
-+		if (val9)
-+			__set_bit(S4, next);
-+		break;
-+	case S3:
-+		if (val1)
-+			__set_bit(S0, next);
-+		if (val6)
-+			__set_bit(S1, next);
-+		if (val9)
-+			__set_bit(S4, next);
-+		break;
-+	case S4:
-+		if (val1)
-+			__set_bit(S0, next);
-+		if (val6)
-+			__set_bit(S1, next);
-+		if (val9)
-+			__set_bit(S4, next);
-+		break;
-+	}
-+}
-diff --git a/kernel/trace/rv/monitors/rts/rts_trace.h b/kernel/trace/rv/mon=
-itors/rts/rts_trace.h
-new file mode 100644
-index 000000000000..ac4ea84162f7
---- /dev/null
-+++ b/kernel/trace/rv/monitors/rts/rts_trace.h
-@@ -0,0 +1,15 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+/*
-+ * Snippet to be included in rv_trace.h
-+ */
-+
-+#ifdef CONFIG_RV_MON_RTS
-+DEFINE_EVENT(event_ltl_monitor_cpu, event_rts,
-+	TP_PROTO(unsigned int cpu, char *states, char *atoms, char *next),
-+	TP_ARGS(cpu, states, atoms, next));
-+
-+DEFINE_EVENT(error_ltl_monitor_cpu, error_rts,
-+	TP_PROTO(unsigned int cpu),
-+	TP_ARGS(cpu));
-+#endif /* CONFIG_RV_MON_RTS */
-diff --git a/kernel/trace/rv/rv_trace.h b/kernel/trace/rv/rv_trace.h
-index bf7cca6579ec..7b3a6fb8ca6f 100644
---- a/kernel/trace/rv/rv_trace.h
-+++ b/kernel/trace/rv/rv_trace.h
-@@ -221,6 +221,7 @@ DECLARE_EVENT_CLASS(error_ltl_monitor_cpu,
-=20
- 	TP_printk("cpu%u: violation detected", __entry->cpu)
- );
-+#include <monitors/rts/rts_trace.h>
- // Add new monitors based on CONFIG_LTL_MON_EVENTS_CPU here
-=20
- #endif /* CONFIG_LTL_MON_EVENTS_CPU */
-diff --git a/tools/verification/models/sched/rts.ltl b/tools/verification/m=
-odels/sched/rts.ltl
-new file mode 100644
-index 000000000000..90872bca46b1
---- /dev/null
-+++ b/tools/verification/models/sched/rts.ltl
-@@ -0,0 +1,5 @@
-+RULE =3D always (RT_TASK_ENQUEUED imply SCHEDULE_RT_NEXT)
-+
-+SCHEDULE_RT_NEXT =3D (not SCHED_SWITCH) until (SCHED_SWITCH_RT or EXCEPTIO=
-NS)
-+
-+EXCEPTIONS =3D SCHED_SWITCH_DL or not RT_TASK_ENQUEUED
---=20
-2.39.5
+>=20
+> For the second issue, LTL monitors need something similar to
+> da_monitor_enabled_##name(void). But a quick workaround is reordering
+> the tracepoint registerations.
+
+I didn't make it on time before your V2, I assume you solved already so
+you might ignore this.
+
+You kinda have something like the da_monitor_enabled: the
+rv_ltl_all_atoms_known
+
+I wonder if you could define LTL_RT_TASK_ENQUEUED only when you
+actually know it (or are reasonably sure based on your internal
+counter). Or at least not set all atoms until the monitor is fully set
+up.
+
+Anyway reordering the tracepoints registration is likely necessary
+whatever you do, but I'm afraid a problem like this can occur pretty
+often with this type of monitors.
+
+Thanks,
+Gabriele
+
+>=20
+> So with the below diff, I no longer see the issue.
+>=20
+> Thanks again for noticing this!
+>=20
+> Nam
+>=20
+> diff --git a/kernel/trace/rv/monitors/rts/rts.c
+> b/kernel/trace/rv/monitors/rts/rts.c
+> index 473004b673c5..3ddbf09db0dd 100644
+> --- a/kernel/trace/rv/monitors/rts/rts.c
+> +++ b/kernel/trace/rv/monitors/rts/rts.c
+> @@ -81,14 +81,21 @@ static void handle_sched_switch(void *data, bool
+> preempt, struct task_struct *pr
+> =C2=A0
+> =C2=A0static int enable_rts(void)
+> =C2=A0{
+> +=09unsigned int cpu;
+> =C2=A0=09int retval;
+> =C2=A0
+> =C2=A0=09retval =3D ltl_monitor_init();
+> =C2=A0=09if (retval)
+> =C2=A0=09=09return retval;
+> =C2=A0
+> -=09rv_attach_trace_probe("rts", enqueue_task_rt_tp,
+> handle_enqueue_task_rt);
+> +=09for_each_possible_cpu(cpu) {
+> +=09=09unsigned int *queued =3D per_cpu_ptr(&nr_queued, cpu);
+> +
+> +=09=09*queued =3D 0;
+> +=09}
+> +
+> =C2=A0=09rv_attach_trace_probe("rts", dequeue_task_rt_tp,
+> handle_dequeue_task_rt);
+> +=09rv_attach_trace_probe("rts", enqueue_task_rt_tp,
+> handle_enqueue_task_rt);
+> =C2=A0=09rv_attach_trace_probe("rts", sched_switch,
+> handle_sched_switch);
+> =C2=A0
+> =C2=A0=09return 0;
 
