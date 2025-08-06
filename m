@@ -1,44 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B031820A5EC;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B02BA205AA1;
 	Wed,  6 Aug 2025 08:01:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754467298; cv=none; b=U3RhedeLoM0YA0GFlc8BuSmAuEGxF0ZWbrFwngijsa5ATnQ9d/fcdTCowFduKme3/ST9mcYk55FlPZhO/vnNxrzdi5xZJ8Nnws5rkIGkTw16/1VpyDqggvQcmrcb6UbHF27FmKxKWiej2woZ6t9fp12JEhdr7LGZT1F/fkFynVs=
+	t=1754467298; cv=none; b=ppiC40snzaYQoQn4TofAqRbkPFUecPBH3rYG+EJe10sVQsYYYlZc+1nEjy16hnFt14Ickhqbvb/HBCCHDof7veK8IHWPJODDKheXivH7btyQE+DB9/jZZPuxAQjiirx/9g4tMRRxk5CYClekcv30Yi229xWElWjJAL92kjSI8IU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1754467298; c=relaxed/simple;
-	bh=8ZQpaVqGZMiSUnYX8EDOyClxHz2CZCaC9dSfVWom550=;
+	bh=Uesn38aob0MqcbKV3gio0rTGdqwKMtOR7nm2jvHxr4I=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ZGNErEVo3wcgk2p2hO0nfYxS4OZ/XG3FMIPc6h9hgtfaezCiRJKcHMrc2yHLn1jyKWuMVYoyHCAlptn1ZdH/zEZyqoDI2AfC0u+0TzZsyt8KosocEdvcT2ElzPndnaxFFtVzMx6bwRT0OVJfhVuW88gt+nKakrSmGXiFsi7WXAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=hXNVaiXT; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3YSL8LZr; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=vF1LEYy9EZKNFKhlxIRzYbUxCxABr0SVxzNMDj43HoJu+nFMZPFctjtQu89fxZus1NH9Tj5vrn/G8ZctkoAAJEHcblxhK1xrYqVtbMrknbk0bmcIRFaePivzlPM11KDA51aE5vHuODYO4hFjAaGm5j3+hvyvpH9CaqYQ5tmCnQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=03j0tmuS; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fXsBEKlV; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hXNVaiXT";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3YSL8LZr"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="03j0tmuS";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fXsBEKlV"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1754467289;
+	s=2020; t=1754467288;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=DnRAFrkM/lmqxcfi1GIpiaGCyoxcPE5rzhs8o1bC4d8=;
-	b=hXNVaiXTyCTfcKjLSo1DfSw+WTfcwYfbAoCYqsXcm0zQxOlp5Qch4yH/wM6I3ibGnJoUdj
-	vDdbax0TkPrWcK4Ef5KjjbuCCkTkpsRry3JHguP2Ag8hPNmkzMh475aEK6csFfvlRQqO8G
-	F3kkbYL3OVpLYjBWm1L6+Tyv87bg8TdipPJsYblEHk3U5LhjEBeuMl0iD2WAZlsjlh5+t+
-	/VTGsOT4RjY1t51XD17nBINjzJc3b2W3r6BId84zUGyAcjynt0frPvK3KGf8RZwfcg1I44
-	S5juJt6D0Ho+8bVtfflKSo89eR7vTuZ3yYv5t4OY1uGiRDw7Nh2x9sBX/2P12A==
+	bh=sTX3RTvCUX/Mm46SCDPZbioQpsq3KjD49jPHt93BLXs=;
+	b=03j0tmuSn4UpxWJJQj6z/P+9XuWbi6fltbN3mVixvyEyvvJbb/oIpQi/G4kOs6qE8Jxy7l
+	BL0oYhAjsuSQw4ZxjwYqwHUcpJRKq+dLcmOdtDkaitEWurekLEaexbD4UeO9VF06AA0pvw
+	mhIbhC43DP022AXK1tfKmSpDmHqQh/8MuK8pWvqanPw1fNk2TTHOxkaalBjxLQ4hKEj2Vn
+	2MpJyA6tITd7X6DgULIO5QUoqOkZfRwOhkEy8M1aCHVO6Ds4+IbO53dOKKI02dJRTPr7nz
+	Y38+Z0KXLUwdNhXD8cnL3JjfxfjmcnucdgmrNO3n1yCLsi2UXXsF46M2UU/O7g==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1754467289;
+	s=2020e; t=1754467288;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=DnRAFrkM/lmqxcfi1GIpiaGCyoxcPE5rzhs8o1bC4d8=;
-	b=3YSL8LZrXx49xc/4Wf9gd7WwOrspjctFTPD7mS2DTM+qO4E2mKFHNjdRs2EkmsLMCEmQ3y
-	U9KNx7MxI2GczHDA==
+	bh=sTX3RTvCUX/Mm46SCDPZbioQpsq3KjD49jPHt93BLXs=;
+	b=fXsBEKlVmyayAWh/cFcO94BIAdjcmqHmFrkFc5OkhhVDvsP5XWBj/+2nVyappRpGXberad
+	34zBKhvb+1DyfCBw==
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
@@ -46,9 +46,9 @@ To: Steven Rostedt <rostedt@goodmis.org>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Nam Cao <namcao@linutronix.de>
-Subject: [PATCH v2 2/5] rv/ltl: Support per-cpu monitors
-Date: Wed,  6 Aug 2025 10:01:18 +0200
-Message-Id: <8e2b9d37f0543b1c0f78119d459d2294d99c8d4d.1754466623.git.namcao@linutronix.de>
+Subject: [PATCH v2 1/5] rv/ltl: Prepare for other monitor types
+Date: Wed,  6 Aug 2025 10:01:17 +0200
+Message-Id: <b55d857ea6cbecc380d69038886e351e361cf587.1754466623.git.namcao@linutronix.de>
 In-Reply-To: <cover.1754466623.git.namcao@linutronix.de>
 References: <cover.1754466623.git.namcao@linutronix.de>
 Precedence: bulk
@@ -59,157 +59,284 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Add support for per-cpu run-time verification linear temporal logic
-monitors. This is analogous to deterministic automaton per-cpu monitors.
+rv/ltl_monitor.h is the template file used by all LTL monitors. But only
+per-task monitor is supported.
 
+Prepare to support for other monitor types:
+
+  - Change the monitored target type into an opaque type which will be
+    defined differently depending on the monitor type. This type is only
+    defined as struct task_struct * for now.
+
+  - Separate out the per-task-specific printf format and arguments, so that
+    rv_cond_react() can be shared with other monitor types.
+
+No functional change intended.
+
+Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
 Signed-off-by: Nam Cao <namcao@linutronix.de>
 ---
-v2: Rename "implicit" to "cpu"
+v2: define the macros for DA usage as well
 ---
- include/rv/ltl_monitor.h   | 32 ++++++++++++++++++++++++++
- kernel/trace/rv/Kconfig    |  4 ++++
- kernel/trace/rv/rv_trace.h | 46 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 82 insertions(+)
+ include/linux/rv.h                            |  4 +
+ include/rv/ltl_monitor.h                      | 85 +++++++++++--------
+ .../trace/rv/monitors/pagefault/pagefault.h   |  2 +
+ kernel/trace/rv/monitors/sleep/sleep.h        |  2 +
+ 4 files changed, 58 insertions(+), 35 deletions(-)
 
+diff --git a/include/linux/rv.h b/include/linux/rv.h
+index 14410a42faef..10a8be730d89 100644
+--- a/include/linux/rv.h
++++ b/include/linux/rv.h
+@@ -13,6 +13,10 @@
+ #define MAX_DA_NAME_LEN			32
+ #define MAX_DA_RETRY_RACING_EVENTS	3
+=20
++#define RV_MON_GLOBAL	0
++#define RV_MON_PER_CPU	1
++#define RV_MON_PER_TASK	2
++
+ #ifdef CONFIG_RV
+ #include <linux/bitops.h>
+ #include <linux/types.h>
 diff --git a/include/rv/ltl_monitor.h b/include/rv/ltl_monitor.h
-index 9dabc5b133a3..4ad08b5b9f2d 100644
+index 67031a774e3d..9dabc5b133a3 100644
 --- a/include/rv/ltl_monitor.h
 +++ b/include/rv/ltl_monitor.h
-@@ -23,12 +23,21 @@
-=20
- typedef struct task_struct *monitor_target;
-=20
-+#elif LTL_MONITOR_TYPE =3D=3D RV_MON_PER_CPU
-+
-+#define TARGET_PRINT_FORMAT "%u"
-+#define TARGET_PRINT_ARGS(cpu) cpu
-+
-+typedef unsigned int monitor_target;
-+
+@@ -16,49 +16,63 @@
+ #error "Please include $(MODEL_NAME).h generated by rvgen"
  #endif
 =20
++#if LTL_MONITOR_TYPE =3D=3D RV_MON_PER_TASK
++
++#define TARGET_PRINT_FORMAT "%s[%d]"
++#define TARGET_PRINT_ARGS(task) task->comm, task->pid
++
++typedef struct task_struct *monitor_target;
++
++#endif
++
  #ifdef CONFIG_RV_REACTORS
  #define RV_MONITOR_NAME CONCATENATE(rv_, MONITOR_NAME)
  static struct rv_monitor RV_MONITOR_NAME;
 =20
-+static struct ltl_monitor *ltl_get_monitor(monitor_target target);
-+
- static void rv_cond_react(monitor_target target)
+-static void rv_cond_react(struct task_struct *task)
++static void rv_cond_react(monitor_target target)
  {
  	if (!rv_reacting_on() || !RV_MONITOR_NAME.react)
-@@ -54,6 +63,13 @@ static struct ltl_monitor *ltl_get_monitor(monitor_targe=
-t target)
- {
- 	return &target->rv[ltl_monitor_slot].ltl_mon;
- }
-+#elif LTL_MONITOR_TYPE =3D=3D RV_MON_PER_CPU
-+static struct ltl_monitor *ltl_get_monitor(unsigned int cpu)
-+{
-+	static DEFINE_PER_CPU(struct ltl_monitor, ltl_monitor);
+ 		return;
+-	RV_MONITOR_NAME.react("rv: "__stringify(MONITOR_NAME)": %s[%d]: violation=
+ detected\n",
+-			      task->comm, task->pid);
 +
-+	return per_cpu_ptr(&ltl_monitor, cpu);
-+}
++	RV_MONITOR_NAME.react(
++		"rv: "__stringify(MONITOR_NAME)": "TARGET_PRINT_FORMAT": violation detec=
+ted\n",
++		TARGET_PRINT_ARGS(target));
+ }
+ #else
+-static void rv_cond_react(struct task_struct *task)
++static void rv_cond_react(monitor_target target)
+ {
+ }
  #endif
 =20
- static void ltl_target_init(monitor_target target, bool target_creation)
-@@ -108,6 +124,22 @@ static void ltl_monitor_destroy(void)
+-static int ltl_monitor_slot =3D RV_PER_TASK_MONITOR_INIT;
++static void ltl_atoms_fetch(monitor_target target, struct ltl_monitor *mon=
+);
++static void ltl_atoms_init(monitor_target target, struct ltl_monitor *mon,=
+ bool target_creation);
+=20
+-static void ltl_atoms_fetch(struct task_struct *task, struct ltl_monitor *=
+mon);
+-static void ltl_atoms_init(struct task_struct *task, struct ltl_monitor *m=
+on, bool task_creation);
++#if LTL_MONITOR_TYPE =3D=3D RV_MON_PER_TASK
++static int ltl_monitor_slot =3D RV_PER_TASK_MONITOR_INIT;
+=20
+-static struct ltl_monitor *ltl_get_monitor(struct task_struct *task)
++static struct ltl_monitor *ltl_get_monitor(monitor_target target)
+ {
+-	return &task->rv[ltl_monitor_slot].ltl_mon;
++	return &target->rv[ltl_monitor_slot].ltl_mon;
+ }
++#endif
+=20
+-static void ltl_task_init(struct task_struct *task, bool task_creation)
++static void ltl_target_init(monitor_target target, bool target_creation)
+ {
+-	struct ltl_monitor *mon =3D ltl_get_monitor(task);
++	struct ltl_monitor *mon =3D ltl_get_monitor(target);
+=20
+ 	memset(&mon->states, 0, sizeof(mon->states));
+=20
+ 	for (int i =3D 0; i < LTL_NUM_ATOM; ++i)
+ 		__set_bit(i, mon->unknown_atoms);
+=20
+-	ltl_atoms_init(task, mon, task_creation);
+-	ltl_atoms_fetch(task, mon);
++	ltl_atoms_init(target, mon, target_creation);
++	ltl_atoms_fetch(target, mon);
+ }
+=20
++#if LTL_MONITOR_TYPE =3D=3D RV_MON_PER_TASK
+ static void handle_task_newtask(void *data, struct task_struct *task, unsi=
+gned long flags)
+ {
+-	ltl_task_init(task, true);
++	ltl_target_init(task, true);
+ }
+=20
+ static int ltl_monitor_init(void)
+@@ -77,10 +91,10 @@ static int ltl_monitor_init(void)
+ 	read_lock(&tasklist_lock);
+=20
+ 	for_each_process_thread(g, p)
+-		ltl_task_init(p, false);
++		ltl_target_init(p, false);
+=20
+ 	for_each_present_cpu(cpu)
+-		ltl_task_init(idle_task(cpu), false);
++		ltl_target_init(idle_task(cpu), false);
+=20
+ 	read_unlock(&tasklist_lock);
+=20
+@@ -94,17 +108,18 @@ static void ltl_monitor_destroy(void)
  	rv_put_task_monitor_slot(ltl_monitor_slot);
  	ltl_monitor_slot =3D RV_PER_TASK_MONITOR_INIT;
  }
-+
-+#elif LTL_MONITOR_TYPE =3D=3D RV_MON_PER_CPU
-+
-+static int ltl_monitor_init(void)
-+{
-+	unsigned int cpu;
-+
-+	for_each_possible_cpu(cpu)
-+		ltl_target_init(cpu, false);
-+	return 0;
-+}
-+
-+static void ltl_monitor_destroy(void)
-+{
-+}
-+
- #endif
++#endif
 =20
- static void ltl_illegal_state(monitor_target target, struct ltl_monitor *m=
+-static void ltl_illegal_state(struct task_struct *task, struct ltl_monitor=
+ *mon)
++static void ltl_illegal_state(monitor_target target, struct ltl_monitor *m=
 on)
-diff --git a/kernel/trace/rv/Kconfig b/kernel/trace/rv/Kconfig
-index 5b4be87ba59d..7ef89006ed50 100644
---- a/kernel/trace/rv/Kconfig
-+++ b/kernel/trace/rv/Kconfig
-@@ -16,6 +16,10 @@ config DA_MON_EVENTS_ID
- 	select RV_MON_MAINTENANCE_EVENTS
- 	bool
+ {
+-	CONCATENATE(trace_error_, MONITOR_NAME)(task);
+-	rv_cond_react(task);
++	CONCATENATE(trace_error_, MONITOR_NAME)(target);
++	rv_cond_react(target);
+ }
 =20
-+config LTL_MON_EVENTS_CPU
-+	select RV_MON_EVENTS
-+	bool
-+
- config LTL_MON_EVENTS_ID
- 	select RV_MON_EVENTS
- 	bool
-diff --git a/kernel/trace/rv/rv_trace.h b/kernel/trace/rv/rv_trace.h
-index 4a6faddac614..bf7cca6579ec 100644
---- a/kernel/trace/rv/rv_trace.h
-+++ b/kernel/trace/rv/rv_trace.h
-@@ -177,8 +177,54 @@ DECLARE_EVENT_CLASS(error_ltl_monitor_id,
- #include <monitors/pagefault/pagefault_trace.h>
- #include <monitors/sleep/sleep_trace.h>
- // Add new monitors based on CONFIG_LTL_MON_EVENTS_ID here
-+
- #endif /* CONFIG_LTL_MON_EVENTS_ID */
+-static void ltl_attempt_start(struct task_struct *task, struct ltl_monitor=
+ *mon)
++static void ltl_attempt_start(monitor_target target, struct ltl_monitor *m=
+on)
+ {
+ 	if (rv_ltl_all_atoms_known(mon))
+-		ltl_start(task, mon);
++		ltl_start(target, mon);
+ }
 =20
-+#ifdef CONFIG_LTL_MON_EVENTS_CPU
-+DECLARE_EVENT_CLASS(event_ltl_monitor_cpu,
+ static inline void ltl_atom_set(struct ltl_monitor *mon, enum ltl_atom ato=
+m, bool value)
+@@ -117,7 +132,7 @@ static inline void ltl_atom_set(struct ltl_monitor *mon=
+, enum ltl_atom atom, boo
+ }
+=20
+ static void
+-ltl_trace_event(struct task_struct *task, struct ltl_monitor *mon, unsigne=
+d long *next_state)
++ltl_trace_event(monitor_target target, struct ltl_monitor *mon, unsigned l=
+ong *next_state)
+ {
+ 	const char *format_str =3D "%s";
+ 	DECLARE_SEQ_BUF(atoms, 64);
+@@ -137,10 +152,10 @@ ltl_trace_event(struct task_struct *task, struct ltl_=
+monitor *mon, unsigned long
+ 		}
+ 	}
+=20
+-	CONCATENATE(trace_event_, MONITOR_NAME)(task, states, atoms.buffer, next);
++	CONCATENATE(trace_event_, MONITOR_NAME)(target, states, atoms.buffer, nex=
+t);
+ }
+=20
+-static void ltl_validate(struct task_struct *task, struct ltl_monitor *mon)
++static void ltl_validate(monitor_target target, struct ltl_monitor *mon)
+ {
+ 	DECLARE_BITMAP(next_states, RV_MAX_BA_STATES) =3D {0};
+=20
+@@ -152,35 +167,35 @@ static void ltl_validate(struct task_struct *task, st=
+ruct ltl_monitor *mon)
+ 			ltl_possible_next_states(mon, i, next_states);
+ 	}
+=20
+-	ltl_trace_event(task, mon, next_states);
++	ltl_trace_event(target, mon, next_states);
+=20
+ 	memcpy(mon->states, next_states, sizeof(next_states));
+=20
+ 	if (!rv_ltl_valid_state(mon))
+-		ltl_illegal_state(task, mon);
++		ltl_illegal_state(target, mon);
+ }
+=20
+-static void ltl_atom_update(struct task_struct *task, enum ltl_atom atom, =
+bool value)
++static void ltl_atom_update(monitor_target target, enum ltl_atom atom, boo=
+l value)
+ {
+-	struct ltl_monitor *mon =3D ltl_get_monitor(task);
++	struct ltl_monitor *mon =3D ltl_get_monitor(target);
+=20
+ 	ltl_atom_set(mon, atom, value);
+-	ltl_atoms_fetch(task, mon);
++	ltl_atoms_fetch(target, mon);
+=20
+ 	if (!rv_ltl_valid_state(mon)) {
+-		ltl_attempt_start(task, mon);
++		ltl_attempt_start(target, mon);
+ 		return;
+ 	}
+=20
+-	ltl_validate(task, mon);
++	ltl_validate(target, mon);
+ }
+=20
+-static void __maybe_unused ltl_atom_pulse(struct task_struct *task, enum l=
+tl_atom atom, bool value)
++static void __maybe_unused ltl_atom_pulse(monitor_target target, enum ltl_=
+atom atom, bool value)
+ {
+-	struct ltl_monitor *mon =3D ltl_get_monitor(task);
++	struct ltl_monitor *mon =3D ltl_get_monitor(target);
+=20
+-	ltl_atom_update(task, atom, value);
++	ltl_atom_update(target, atom, value);
+=20
+ 	ltl_atom_set(mon, atom, !value);
+-	ltl_validate(task, mon);
++	ltl_validate(target, mon);
+ }
+diff --git a/kernel/trace/rv/monitors/pagefault/pagefault.h b/kernel/trace/=
+rv/monitors/pagefault/pagefault.h
+index c580ec194009..d449af84c24c 100644
+--- a/kernel/trace/rv/monitors/pagefault/pagefault.h
++++ b/kernel/trace/rv/monitors/pagefault/pagefault.h
+@@ -11,6 +11,8 @@
+=20
+ #define MONITOR_NAME pagefault
+=20
++#define LTL_MONITOR_TYPE RV_MON_PER_TASK
 +
-+	TP_PROTO(unsigned int cpu, char *states, char *atoms, char *next),
+ enum ltl_atom {
+ 	LTL_PAGEFAULT,
+ 	LTL_RT,
+diff --git a/kernel/trace/rv/monitors/sleep/sleep.h b/kernel/trace/rv/monit=
+ors/sleep/sleep.h
+index 2ab46fd218d2..0c87875d9040 100644
+--- a/kernel/trace/rv/monitors/sleep/sleep.h
++++ b/kernel/trace/rv/monitors/sleep/sleep.h
+@@ -11,6 +11,8 @@
+=20
+ #define MONITOR_NAME sleep
+=20
++#define LTL_MONITOR_TYPE RV_MON_PER_TASK
 +
-+	TP_ARGS(cpu, states, atoms, next),
-+
-+	TP_STRUCT__entry(
-+		__field(unsigned int, cpu)
-+		__string(states, states)
-+		__string(atoms, atoms)
-+		__string(next, next)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->cpu =3D cpu;
-+		__assign_str(states);
-+		__assign_str(atoms);
-+		__assign_str(next);
-+	),
-+
-+	TP_printk("cpu%u: (%s) x (%s) -> (%s)", __entry->cpu,
-+		  __get_str(states), __get_str(atoms), __get_str(next))
-+);
-+
-+DECLARE_EVENT_CLASS(error_ltl_monitor_cpu,
-+
-+	TP_PROTO(unsigned int cpu),
-+
-+	TP_ARGS(cpu),
-+
-+	TP_STRUCT__entry(
-+		__field(unsigned int, cpu)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->cpu =3D cpu;
-+	),
-+
-+	TP_printk("cpu%u: violation detected", __entry->cpu)
-+);
-+// Add new monitors based on CONFIG_LTL_MON_EVENTS_CPU here
-+
-+#endif /* CONFIG_LTL_MON_EVENTS_CPU */
-+
- #ifdef CONFIG_RV_MON_MAINTENANCE_EVENTS
- /* Tracepoint useful for monitors development, currenly only used in DA */
- TRACE_EVENT(rv_retries_error,
+ enum ltl_atom {
+ 	LTL_ABORT_SLEEP,
+ 	LTL_BLOCK_ON_RT_MUTEX,
 --=20
 2.39.5
 
