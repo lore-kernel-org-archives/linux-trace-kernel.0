@@ -1,141 +1,233 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93DFE221FA0
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  6 Aug 2025 12:45:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AB3F215F4A;
+	Wed,  6 Aug 2025 14:40:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754484330; cv=none; b=ueup13NRFjLh6STMWtu3nxMyF5cf78su5bcPUkubv32VR3jRv+rlUJvH4TbtrYVr03IKwPQr5N0dEESNL8o2V97OurMD5ZG63a5BVp340gChat2bBGDGy/UKSnQIWJpNegFopooy0ZOEyGcTJjY9vFyf/aMJA/THp+KBtksuTQ0=
+	t=1754491207; cv=none; b=VqeONS2O1Yh/OpxipQqoI+rCJUkkY9WCnwH6MchRMxnzUSbEvunGE4y2JArzF0dgEXhn1Pz0QmAMYqXmAOKscvwWO4GwND51IAHiN+/UjC/48XzZrrbWQ+j/mQzen/yN6h8/VvJr7BMD7+4x+Axkb6LwiMN3jbHNmd4ZzvgKGD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754484330; c=relaxed/simple;
-	bh=AvfHEuh1vdd6Rnvmp0mKItr2TcKVCUNpW2isZVtulII=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WGJUJT7Bi6Qs8cZb5lN4qHzDeHszZqLCX9qwFxrynQVBW3RNXEHEEJ7YpiN23MhF23d2i6fHPY1l7B1vdTPJpLLSzdU2TUhSiu+seabCGJTTwhW8yN67l27PcOv0taZORN+Tf2y17slai/lI9Eer68EB6lEiNk5t5FC61ARQcEQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bFXNFX8C; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1754491207; c=relaxed/simple;
+	bh=aLheObBNOVd5wWcfX/UlmeZiWYAW9l+I+b/18Y/UWsk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BuYgWD5AsC/tOoecV/T202QcV6MQsKe+XV7EJVGGVfXHeMzjHn4uH0sLMOHDGf5r0yYN7rzgHGSxrP2MrjFqKFrMj2/1i1P511OKujrX8KDgJH7Ik6plTIk4nLEIVQfmewyMKrmrgHB0ZkD5x2qtruMRYbm6Iqa3TI58LkVtaaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HUiBI2+G; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bFXNFX8C"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1754484327;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=AvfHEuh1vdd6Rnvmp0mKItr2TcKVCUNpW2isZVtulII=;
-	b=bFXNFX8CpoTgOwrb8fr/xQu5q2BkPfcsEcTNo0ycRFy2CG4REqiDytFQ2N6iRoWSNUGQd/
-	FwHDaeNuFpYgRTfE5K7VQ/Jbc/DxI/EfXuq05igoUlZ8lV6ekF9jAZqS2QHy7f+uornUF6
-	YRNGZrSdvSSRMHduUQZrMzvs40khF0k=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-589-01UspkC7MhW0Dc-cQMij_g-1; Wed, 06 Aug 2025 08:45:26 -0400
-X-MC-Unique: 01UspkC7MhW0Dc-cQMij_g-1
-X-Mimecast-MFC-AGG-ID: 01UspkC7MhW0Dc-cQMij_g_1754484326
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-4af117ffc70so110359861cf.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 06 Aug 2025 05:45:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754484326; x=1755089126;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jMjNHNQ0G5LG4I1RqSHiwTb0enyDrEvAe+FlJh6jMwA=;
-        b=GoW5FvWQIns24Te5aCbaWn/HngoYHNjCxfrmoTmkBDGCAdgMnSY0/nJUNC3sm8DoTn
-         7Mp6bMRxLcejs2UpX7I80Qq1JTvGhTJ5uHJnJWP1/KcRbOT3BEGcmnpfrbHDttykUFEJ
-         XNhkl/TEeDUXvrTyCCoYviTkIJ95q7FvG0fwtOVHXB/+nZDC/HRcGNzBDJjf8pvCAFUO
-         yhMqMeCH27GmhaOUOeH2Et4nUFvrQ4+/mhpBqcvaMG8Yhh5Ga+aNvIZM9vaPenQARXlq
-         n7WhX8hDhl+ZXda045qNUHR54uFI9q0cmera2BGDzrjj9uTnJo5oGWqNX5Ts3xMJfYcg
-         cUvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU5d3tv7q1eMwJVO7FOvHlS5gU3IT20uJ0ZlUYBA2CpbFZwJRT/HDxMWDbWP+YIfoDgmzlWDdrxXRBB/UusUVVF26Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzu/Eme7t60HY7eYnpPS7VeshznjtWRMPkVDwhJm8wF1jl9Opgn
-	yzfI1nNg9n3XucBDiJ6RdptaomoIlm+yuikRYOI1TMIkr27UsRagES37VDsr6Q6Nmg7sXtxhvUH
-	aucJQxl8kicfFKvkbbZOG5Y+RYEziy+axDk0x+ClaS52QG82Xn3nW4eUqOZboVOw3BE8UjW68nQ
-	==
-X-Gm-Gg: ASbGncvQ22e1N0UowDDhOTIMsFkfRRYvR8e9R4bt/W/EgQ4joKWy1M7jxpWkOB0XX26
-	DNX04fgtHVYpD2V2HmPQuX+Ie+wKhZ5z+1DgHczpa8UTdQ9VAFooLFG4/eD33WwdZs5Zc1ggnSI
-	QOXR3Jk9SSMOzmVntBvv67OeBzx9aB9tsB6Zu/cs+89NdE9624klVT+pxYaGQszSXRkwmu5akEr
-	jNwoi8Bcc9n4n77uoTbIA/+RxWjmjAdfv8ew3E5UDNqoZpEL0mCeA/yvTCr8O38QN+TUD68mFdD
-	mqFEK/iw8qIXKxXj2g+AHwBuCIiBgpn5yh3QzJW6S64YOmA+qCSl4xki6d0aJSUx2Q==
-X-Received: by 2002:a05:622a:355:b0:4b0:8f6e:d728 with SMTP id d75a77b69052e-4b09138c9c0mr38195631cf.21.1754484325736;
-        Wed, 06 Aug 2025 05:45:25 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHTMYU08BgHnXR1+czy5QcVCMHzz8YG+OtEkdxRx4oxsXU/v8COQ+2pdCxkJHBTMz4Q6mU6DQ==
-X-Received: by 2002:a05:622a:355:b0:4b0:8f6e:d728 with SMTP id d75a77b69052e-4b09138c9c0mr38195381cf.21.1754484325386;
-        Wed, 06 Aug 2025 05:45:25 -0700 (PDT)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.35])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4b085ad7d08sm19326441cf.53.2025.08.06.05.45.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Aug 2025 05:45:25 -0700 (PDT)
-Message-ID: <8f379f2072ee12afda37455aa0ad4e37d53c4f2d.camel@redhat.com>
-Subject: Re: [PATCH] rv: Fix wrong type cast in enabled_monitors_next()
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Nam Cao <namcao@linutronix.de>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>,  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Wed, 06 Aug 2025 14:45:22 +0200
-In-Reply-To: <20250806120911.989365-1-namcao@linutronix.de>
-References: <20250806120911.989365-1-namcao@linutronix.de>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
- xyhmqeUWOzFx5P43S1E1dhsrLWgP
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HUiBI2+G"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1754491205; x=1786027205;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=aLheObBNOVd5wWcfX/UlmeZiWYAW9l+I+b/18Y/UWsk=;
+  b=HUiBI2+GTtL5ii4QgrJl1fixrXv4ZSM8MoKJAgt0DhJemkSflUOAVlzx
+   Ac790g17R8dltPS1plVJTGNYTQSNje/zcOR1dFaF56mqdfJWXy2WehOGG
+   VwzNjwQxrROslM/M4fToNowlqec+YYKNIVd4Z0R01uYhxbev41Jgr/9Pc
+   jNCZk846/4Pgybjb+yGPmJH2A3bs8u4bAftRMIPOyiOAeYAE2qu2lvCd/
+   u0nMtGdUI8yFlhzs9zrENHGcYianQAmmEtN7yuGTARIWnCszABcbseoFA
+   f5tOf/Gz9pqubY1GJlQuEaB5Ffnn6C6QotlkOz+KJKCNUxApePcGpaDIj
+   Q==;
+X-CSE-ConnectionGUID: oj9t9v83RgWRNJarMe+YPg==
+X-CSE-MsgGUID: mrjFQZDJQXqzSUGh4qjm8Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11514"; a="56889862"
+X-IronPort-AV: E=Sophos;i="6.17,268,1747724400"; 
+   d="scan'208";a="56889862"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2025 07:40:04 -0700
+X-CSE-ConnectionGUID: 5NGPTsi5QaGcZR7dOLyoKw==
+X-CSE-MsgGUID: shcTRVviTBSO32SyPM8lpQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.17,268,1747724400"; 
+   d="scan'208";a="188461741"
+Received: from lkp-server02.sh.intel.com (HELO 4ea60e6ab079) ([10.239.97.151])
+  by fmviesa002.fm.intel.com with ESMTP; 06 Aug 2025 07:40:01 -0700
+Received: from kbuild by 4ea60e6ab079 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1ujfJ3-0001m2-0O;
+	Wed, 06 Aug 2025 14:39:54 +0000
+Date: Wed, 6 Aug 2025 22:39:48 +0800
+From: kernel test robot <lkp@intel.com>
+To: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Takaya Saeki <takayas@google.com>, Tom Zanussi <zanussi@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ian Rogers <irogers@google.com>, aahringo@redhat.com,
+	Douglas Raillard <douglas.raillard@arm.com>
+Subject: Re: [PATCH 3/7] tracing: Have syscall trace events read user space
+ string
+Message-ID: <202508062230.puMRaDdE-lkp@intel.com>
+References: <20250805193235.080757106@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: SbQJc72ZGu0mfyL7PGl4BcRX_IE1x2PhGQxDaSRoAeQ_1754484326
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250805193235.080757106@kernel.org>
+
+Hi Steven,
+
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on trace/for-next]
+[also build test ERROR on linus/master v6.16 next-20250806]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Steven-Rostedt/tracing-Replace-syscall-RCU-pointer-assignment-with-READ-WRITE_ONCE/20250806-122312
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace for-next
+patch link:    https://lore.kernel.org/r/20250805193235.080757106%40kernel.org
+patch subject: [PATCH 3/7] tracing: Have syscall trace events read user space string
+config: parisc-randconfig-r071-20250806 (https://download.01.org/0day-ci/archive/20250806/202508062230.puMRaDdE-lkp@intel.com/config)
+compiler: hppa-linux-gcc (GCC) 11.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250806/202508062230.puMRaDdE-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202508062230.puMRaDdE-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   kernel/trace/trace_syscalls.c: In function 'check_faultable_syscall':
+>> kernel/trace/trace_syscalls.c:886:14: error: '__NR_newfstatat' undeclared (first use in this function); did you mean 'sys_newfstatat'?
+     886 |         case __NR_newfstatat:
+         |              ^~~~~~~~~~~~~~~
+         |              sys_newfstatat
+   kernel/trace/trace_syscalls.c:886:14: note: each undeclared identifier is reported only once for each function it appears in
 
 
+vim +886 kernel/trace/trace_syscalls.c
 
-On Wed, 2025-08-06 at 14:09 +0200, Nam Cao wrote:
-> Argument 'p' of enabled_monitors_next() is not a pointer to struct
-> rv_monitor, it is actually a pointer to the list_head inside struct
-> rv_monitor. Therefore it is wrong to cast 'p' to struct rv_monitor *.
->=20
-> This wrong type cast has been there since the beginning. But it still
-> worked because the list_head was the first field in struct
-> rv_monitor_def.
-> This is no longer true since commit 24cbfe18d55a ("rv: Merge struct
-> rv_monitor_def into struct rv_monitor") moved the list_head, and this
-> wrong type cast became a functional problem.
->=20
-> Properly use container_of() instead.
+   802	
+   803	/*
+   804	 * For system calls that reference user space memory that can
+   805	 * be recorded into the event, set the system call meta data's user_mask
+   806	 * to the "args" index that points to the user space memory to retrieve.
+   807	 */
+   808	static void check_faultable_syscall(struct trace_event_call *call, int nr)
+   809	{
+   810		struct syscall_metadata *sys_data = call->data;
+   811	
+   812		/* Only work on entry */
+   813		if (sys_data->enter_event != call)
+   814			return;
+   815	
+   816		switch (nr) {
+   817		/* user arg at position 0 */
+   818		case __NR_access:
+   819		case __NR_acct:
+   820		case __NR_add_key: /* Just _type. TODO add _description */
+   821		case __NR_chdir:
+   822		case __NR_chown:
+   823		case __NR_chmod:
+   824		case __NR_chroot:
+   825		case __NR_creat:
+   826		case __NR_delete_module:
+   827		case __NR_execve:
+   828		case __NR_fsopen:
+   829		case __NR_getxattr: /* Just pathname, TODO add name */
+   830		case __NR_lchown:
+   831		case __NR_lgetxattr: /* Just pathname, TODO add name */
+   832		case __NR_lremovexattr: /* Just pathname, TODO add name */
+   833		case __NR_link: /* Just oldname. TODO add newname */
+   834		case __NR_listxattr: /* Just pathname, TODO add list */
+   835		case __NR_llistxattr: /* Just pathname, TODO add list */
+   836		case __NR_lsetxattr: /* Just pathname, TODO add list */
+   837		case __NR_open:
+   838		case __NR_memfd_create:
+   839		case __NR_mount: /* Just dev_name, TODO add dir_name and type */
+   840		case __NR_mkdir:
+   841		case __NR_mknod:
+   842		case __NR_mq_open:
+   843		case __NR_mq_unlink:
+   844		case __NR_pivot_root: /* Just new_root, TODO add old_root */
+   845		case __NR_readlink:
+   846		case __NR_removexattr: /* Just pathname, TODO add name */
+   847		case __NR_rename: /* Just oldname. TODO add newname */
+   848		case __NR_request_key: /* Just _type. TODO add _description */
+   849		case __NR_rmdir:
+   850		case __NR_setxattr: /* Just pathname, TODO add list */
+   851		case __NR_shmdt:
+   852		case __NR_statfs:
+   853		case __NR_swapon:
+   854		case __NR_swapoff:
+   855		case __NR_symlink: /* Just oldname. TODO add newname */
+   856		case __NR_truncate:
+   857		case __NR_unlink:
+   858		case __NR_umount2:
+   859		case __NR_utime:
+   860		case __NR_utimes:
+   861			sys_data->user_mask = BIT(0);
+   862			break;
+   863		/* user arg at position 1 */
+   864		case __NR_execveat:
+   865		case __NR_faccessat:
+   866		case __NR_faccessat2:
+   867		case __NR_finit_module:
+   868		case __NR_fchmodat:
+   869		case __NR_fchmodat2:
+   870		case __NR_fchownat:
+   871		case __NR_fgetxattr:
+   872		case __NR_flistxattr:
+   873		case __NR_fsetxattr:
+   874		case __NR_fspick:
+   875		case __NR_fremovexattr:
+   876		case __NR_futimesat:
+   877		case __NR_getxattrat: /* Just pathname, TODO add name */
+   878		case __NR_inotify_add_watch:
+   879		case __NR_linkat: /* Just oldname. TODO add newname */
+   880		case __NR_listxattrat: /* Just pathname, TODO add list */
+   881		case __NR_mkdirat:
+   882		case __NR_mknodat:
+   883		case __NR_mount_setattr:
+   884		case __NR_move_mount: /* Just from_pathname, TODO add to_pathname */
+   885		case __NR_name_to_handle_at:
+ > 886		case __NR_newfstatat:
+   887		case __NR_openat:
+   888		case __NR_openat2:
+   889		case __NR_open_tree:
+   890		case __NR_open_tree_attr:
+   891		case __NR_readlinkat:
+   892		case __NR_renameat: /* Just oldname. TODO add newname */
+   893		case __NR_renameat2: /* Just oldname. TODO add newname */
+   894		case __NR_removexattrat: /* Just pathname, TODO add name */
+   895		case __NR_quotactl:
+   896		case __NR_setxattrat: /* Just pathname, TODO add list */
+   897		case __NR_syslog:
+   898		case __NR_symlinkat: /* Just oldname. TODO add newname */
+   899		case __NR_statx:
+   900		case __NR_unlinkat:
+   901		case __NR_utimensat:
+   902			sys_data->user_mask = BIT(1);
+   903			break;
+   904		/* user arg at position 2 */
+   905		case __NR_init_module:
+   906		case __NR_fsconfig:
+   907			sys_data->user_mask = BIT(2);
+   908			break;
+   909		/* user arg at position 4 */
+   910		case __NR_fanotify_mark:
+   911			sys_data->user_mask = BIT(4);
+   912			break;
+   913		default:
+   914			sys_data->user_mask = 0;
+   915		}
+   916	}
+   917	
 
-Good catch, thanks!
-
-Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
-
->=20
-> Fixes: 24cbfe18d55a ("rv: Merge struct rv_monitor_def into struct
-> rv_monitor")
-> Signed-off-by: Nam Cao <namcao@linutronix.de>
-> ---
-> =C2=A0kernel/trace/rv/rv.c | 2 +-
-> =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/kernel/trace/rv/rv.c b/kernel/trace/rv/rv.c
-> index bd7d56dbf6c2..6ce3495164d8 100644
-> --- a/kernel/trace/rv/rv.c
-> +++ b/kernel/trace/rv/rv.c
-> @@ -495,7 +495,7 @@ static void *available_monitors_next(struct
-> seq_file *m, void *p, loff_t *pos)
-> =C2=A0 */
-> =C2=A0static void *enabled_monitors_next(struct seq_file *m, void *p,
-> loff_t *pos)
-> =C2=A0{
-> -=09struct rv_monitor *mon =3D p;
-> +=09struct rv_monitor *mon =3D container_of(p, struct rv_monitor,
-> list);
-> =C2=A0
-> =C2=A0=09(*pos)++;
-> =C2=A0
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
