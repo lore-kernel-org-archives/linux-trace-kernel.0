@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0D8621ADA7;
-	Wed,  6 Aug 2025 12:39:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D5D328BAAF;
+	Wed,  6 Aug 2025 12:43:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754483989; cv=none; b=DIDTOYnZtw8njPLSMm44pjQjYLpiuE78vzG3ZLSrD4eAuy4QJPjQKdPu1fnethtoci0hRUyBbz9522d4Q+SKWgDln0qMbG5dn1Y489Q0y4G1jWzxx1af8T+vNzI1Sn0zZgWD/QZbjWYLfh98qd78R/+0dnshxmEonpx15gpjIiU=
+	t=1754484232; cv=none; b=Am1425u2YHZVw2gaPi2HkfrzFw9nHKI2GEEUr8UW47/erBl+5Z1OhBoIGMGIEl4VX9UdGv125My501XnXKx2fN6kBNZ5gL2byLTObEkwmvUNz8hTeu3JSzZe9Ie7jPoChImeVHIQ2RRyPp5G9Q/n9NHygpPxKnob8SHtao9NN2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754483989; c=relaxed/simple;
-	bh=ANPNYrCFCIkqQyWJwWkD+sCkwU7t+1WOva2vvWabb/Y=;
+	s=arc-20240116; t=1754484232; c=relaxed/simple;
+	bh=/7IndVma90HA7/q28zkq66FvY805P6nZspAQNyovBd0=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IjMmkY/L/ZUV2DRYH5Pe9mi3RGGXPkxFOohfxWotFF+xXtE1b5r+kgQywkoaBtiHIN89FTT1OAQ3UmCfY+KxHPpija+sZ3yUwo763AKJiR+oggw3lprNGzDtiNmDAqw4u9Br6BYqNr/K3ZS+3m/EKLwXMjVXw33DH2IG0oYY4Jw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LMIOhgvt; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=PEyhzxuCwDbQOOd4Q0AkTmRb/3cvfYvpDGIAa8oWpgMPyqBnuCIUuvjySegOVLYyKH6UKQtZdNg6kVc/NXwztH6ClpydkF3pVywEcGor9+8kNgDVp+yXnLccYdUyC0RMZerZu7Abalz7j8OZHTRkbX72Dd19o32hj6pZDYrowE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WxsItseI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LMIOhgvt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40D48C4CEE7;
-	Wed,  6 Aug 2025 12:39:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WxsItseI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C9B8C4CEF6;
+	Wed,  6 Aug 2025 12:43:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754483988;
-	bh=ANPNYrCFCIkqQyWJwWkD+sCkwU7t+1WOva2vvWabb/Y=;
+	s=k20201202; t=1754484231;
+	bh=/7IndVma90HA7/q28zkq66FvY805P6nZspAQNyovBd0=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=LMIOhgvtVjOSSyocjhADIjxPlL5K81zqWEJdF+hAP/eGfg10wN+b5a5Qbm4yx038c
-	 IPHB1LJyqBJB6uDA3XsHXjUAbx+dNE82MDhggonOpjywiGJ6oeGhT9yd+NQ6YB9A1U
-	 nO0axAQQkdxDJzPiEj/JHQr4FOK4J8D1sf6POktX4S+L2My8agzecwEek5Di8mudCK
-	 0A/3uTMJlwtbAvpt54K5Csms7evcf7As9O/3hga4FwA0lC3NqTQO8sg93jG7bj13pT
-	 6jde46HfoGYiR0Ku0VWZgSD3qNuTAWtNbE4IwKH4djaLfsxpP0es66Dd9XjyXynBrA
-	 yA2FkTnpngyhg==
-Date: Wed, 6 Aug 2025 08:39:44 -0400
+	b=WxsItseI/3NXWPMhjClCJ64zZTR5+c6qvZrMWHcmLGFWRiVCCLml/T3/L8YWYd1kq
+	 5bDOvL0TVaED4zm3TwF5my+DDCyM/KhqfL4uHOm5zUdhZgQIp1fpjAQxjoV2MvMjj0
+	 cnJqlsPj0KfQKmCz/3vtdHmOVepjQErYy/19IGCORbJNR/Yc8jRoaVgbJAMMPmFGaI
+	 Q9MPwX6lgwaNMbxhXPecsuHDcnhgYHf/Ec5pPfzy78Kzb2V4MZGT1atGh9qnAOUV/4
+	 EN7j5sGTRx46V7NiZj9pRfqsV8lCc0uvLbNC73XtXgWf03StB683x1n7HUMmgyGo/j
+	 uXBt19yiQgN+w==
+Date: Wed, 6 Aug 2025 08:43:47 -0400
 From: Steven Rostedt <rostedt@kernel.org>
 To: Douglas Raillard <douglas.raillard@arm.com>
 Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
@@ -36,13 +36,13 @@ Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
  Namhyung Kim <namhyung@kernel.org>, Takaya Saeki <takayas@google.com>, Tom
  Zanussi <zanussi@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ian
  Rogers <irogers@google.com>, aahringo@redhat.com
-Subject: Re: [PATCH 2/7] tracing: Have syscall trace events show "0x" for
- values greater than 10
-Message-ID: <20250806083944.036de894@batman.local.home>
-In-Reply-To: <c4f1b8d4-774f-42c1-a828-42c79756503d@arm.com>
+Subject: Re: [PATCH 7/7] tracing: Add syscall_user_buf_size to limit amount
+ written
+Message-ID: <20250806084347.79360a5e@batman.local.home>
+In-Reply-To: <91cd9924-aaff-404a-8be7-79a6c7452a89@arm.com>
 References: <20250805192646.328291790@kernel.org>
-	<20250805193234.915257520@kernel.org>
-	<c4f1b8d4-774f-42c1-a828-42c79756503d@arm.com>
+	<20250805193235.747004484@kernel.org>
+	<91cd9924-aaff-404a-8be7-79a6c7452a89@arm.com>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -53,47 +53,38 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed, 6 Aug 2025 11:24:33 +0100
+On Wed, 6 Aug 2025 11:50:06 +0100
 Douglas Raillard <douglas.raillard@arm.com> wrote:
 
 > On 05-08-2025 20:26, Steven Rostedt wrote:
 > > From: Steven Rostedt <rostedt@goodmis.org>
 > > 
-> > Currently the syscall trace events show each value as hexadecimal, but
-> > without adding "0x" it can be confusing:
-> > 
-> >     sys_write(fd: 4, buf: 0x55c4a1fa9270, count: 44)
-> > 
-> > Looks like the above write wrote 44 bytes, when in reality it wrote 68
-> > bytes.
-> > 
-> > Add a "0x" for all values greater or equal to 10 to remove the ambiguity.
-> > For values less than 10, leave off the "0x" as that just adds noise to the
-> > output.  
+> > When a system call that reads user space addresses copy it to the ring
+> > buffer, it can copy up to 511 bytes of data. This can waste precious ring
+> > buffer space if the user isn't interested in the output. Add a new file
+> > "syscall_user_buf_size" that gets initialized to a new config
+> > CONFIG_SYSCALL_BUF_SIZE_DEFAULT that defaults to 128.  
 > 
-> I'm on the fence for the value-dependent format. This looks like
-> it could easily make life harder for quick&dirty scripts, but then both
-> awk's strtonum() and Python's int(x, base=16) seem to handle
-> the presence/absence of the 0x prefix so maybe it's a non-issue.
+> Have you considered dynamically removing some event fields ? We routinely hit
+> the same problem with some of our events that have rarely-used large fields.
 
-Yes, but the trace file is more for humans than scripts, and the 0x1 is
-just noise.
+We do that already with eprobes. Note, syscall events are pseudo events
+hooked on the raw_syscall events. Thus modifying what is displayed is
+trivial as it's done manually anyway. For normal events, it's all in
+the TRACE_EVENT() macro which defines the fields at boot. Trying to
+modify it later is very difficult.
 
 > 
-> OTH, a hand-crafted regex designed after a small set of input may start
-> to randomly fail if one field unexpectedly goes beyond 10 ...
+> If we could have a "fields" file in /sys/kernel/tracing/events/*/*/fields
+> that allowed selecting what field is needed that would be amazing. I had plans
+> to build something like that in our kernel module based on the synthetic events API,
+> but did not proceed as that API is not exported in a useful way.
 
-If you are doing hand crafted scripts, I'd suggest to use tracing
-filters or other tooling that can handle this easily ;-)
+Take a look at eprobes. You can make a new event based from an existing
+event (including other dynamic events and syscalls).
 
-> 
-> Just using explicit hex may be the best here, as the actual proper fix
-> (type-level display hints) is harder. It could probably be implemented
-> using btf_decl_tag() and __builtin_btf_type_id() to retrieve the BTF info.
+I finally got around to adding documentation about it:
 
-That would add a dependency on BTF, which I would like to avoid.
-
-Thanks!
+  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/trace/eprobetrace.rst
 
 -- Steve
-
