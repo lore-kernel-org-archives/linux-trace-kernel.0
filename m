@@ -1,71 +1,72 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76CF91FF7B4;
-	Wed,  6 Aug 2025 20:30:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C941227EB9;
+	Wed,  6 Aug 2025 22:06:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754512258; cv=none; b=i11mTfINOx+cNKkpEyYzFkVRCQIatBmQ6+fhGfoTcjn4gzyDve9OuWgSqzLjWTnFdnp7JHR39MuadhnudiokSJ0NEBITNPbh2dC5dt9UkvRYL3Ne6efio0LyiXHhb/vadK8dxuPmg7azvylWTb3DkGwuqlERFKqCIbPBtk3wvEc=
+	t=1754518006; cv=none; b=OaOlEpVIC3QjV24iFDmbFHs1sttYCalgt0eVK31PdvrfkPb4Jr82fLx18cVoWA55E9EFGXpBztJhjbWPbtSXIEhnbecshebsziGC8cJ0w6+ab0XdAaAl0qeA2K+bRoh7KJ7PIj1i4kR0S9BWssWqdxOA/P5/y91ngMd+IDlQdqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754512258; c=relaxed/simple;
-	bh=IUvrNEmDlCZzmuFligTjfGnRr54fRAByHqiRZrgG2+o=;
+	s=arc-20240116; t=1754518006; c=relaxed/simple;
+	bh=2rUd3i6DivO+05DXaSp+LgSEmwownIpwutoceQhLjrQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Hv4LdJOhY3T/zVvWC1ehF55veyIN2/tvhEadVNGR9WM08NpVwHFUuKrPz/3mH4g2IbvSetb2Fk4EmoIOTfPDKtWWoCAhhX6U7OwZZ5LhZIAgIglhkAtC89kO5xgQDAnRoH38RcLKoZyM5a905VHh76cPXHCN5XByphdl19KJ6po=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lgwfzB8P; arc=none smtp.client-ip=198.175.65.17
+	 Content-Type:Content-Disposition:In-Reply-To; b=VPZcKrH7L4sy14tqveJTFr54sseG+/KDNalU+z1hSU+GM4hhyM3vbPDrJnDzSgamBDyNCCdUJR83bW/1nu/MeynTM4wNuXZI2R92b3gdKJaysQyEqbPI22ResKVHONROF0i/mS8O0+10UizRZLFohCzfz6w+8h6hRMuTA3pmjP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=llU+V5Iu; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lgwfzB8P"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="llU+V5Iu"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1754512256; x=1786048256;
+  t=1754518004; x=1786054004;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=IUvrNEmDlCZzmuFligTjfGnRr54fRAByHqiRZrgG2+o=;
-  b=lgwfzB8PLT7hy8+WnnjA3EP18/+lHPyU7vlu9WhkqaeqVakT8ErEnd5I
-   vCELXqA3UpPnsD3AvSWSuGvvueaL8ylCCs2BuMVXsJVmFFuGIDwjVp59B
-   VbyuRwJjIGysuHCoAepSqSryFdM3sfM/hV9emAtPUg11surGctcJUZvxF
-   BJ68ODxQnJz2jLBVbotDO9qdR50dmXpdVWArzvbxfVMK0JEGpHgZtgYhV
-   T9+1WTmZfv21Pz5lLwyRUKs6W7nqcrqZDbE6G1ltMxasvTWqZoRTOzSKn
-   Bz3zJY/Rpf1qASQ9fUlbvmYNk9azCh3I6nzpP9L3kKoIlGmk6TsnftAlM
+  bh=2rUd3i6DivO+05DXaSp+LgSEmwownIpwutoceQhLjrQ=;
+  b=llU+V5IuKT52XM3yeTtGXbqUrlFETJP1m6xVdwoWXwmtNNniZRau62H2
+   vpaHpm5X/Gwp0DHw9UrPwmDQ/aEiV/5AwVYe00+t1fnqaEMijdjcJgFc1
+   m2JvP6/2vw8oQ9xxyb2rP6QwCRYJa65f3uxde6jysdnF3GG3iaNTHjVdG
+   oBhWOWuoLfMFC+gDTM3WgCrC2QqlBYjBu4OPg9elP1iro0z79+si5Pjos
+   YMLme2TSgqHX/yeulG4BeXCpC5Xzyy488EVW4X6BRG26pM56P9H8ivvXK
+   4XZzAOcQ2SyUpTG18d9lHwWsHSFKBoapMFPzawIWY2SMW15F30AfIiWKz
    A==;
-X-CSE-ConnectionGUID: +ud1jGIdTR6HxYcinXvncw==
-X-CSE-MsgGUID: wsPEi5XETF2fw4AB1v9dxw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11514"; a="56806106"
+X-CSE-ConnectionGUID: v0ftFZHzTr233ZG0MF+GnA==
+X-CSE-MsgGUID: gxvI8dYVS4m8y9EpKL2Y2g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11514"; a="56764618"
 X-IronPort-AV: E=Sophos;i="6.17,271,1747724400"; 
-   d="scan'208";a="56806106"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2025 13:30:55 -0700
-X-CSE-ConnectionGUID: UsXKBFW4QpCuPgMwmiQ6lA==
-X-CSE-MsgGUID: 44kMhEi7QB2iCbTDY/YqCw==
+   d="scan'208";a="56764618"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2025 15:06:43 -0700
+X-CSE-ConnectionGUID: qYezRnfIQiaHI8qbrVdEHw==
+X-CSE-MsgGUID: OXzz8Kv+RN+UEkRdj15dWg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.17,271,1747724400"; 
-   d="scan'208";a="165666300"
+   d="scan'208";a="169136448"
 Received: from lkp-server02.sh.intel.com (HELO 4ea60e6ab079) ([10.239.97.151])
-  by fmviesa010.fm.intel.com with ESMTP; 06 Aug 2025 13:30:50 -0700
+  by fmviesa005.fm.intel.com with ESMTP; 06 Aug 2025 15:06:40 -0700
 Received: from kbuild by 4ea60e6ab079 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1ujkmZ-00024O-1u;
-	Wed, 06 Aug 2025 20:30:45 +0000
-Date: Thu, 7 Aug 2025 04:28:42 +0800
+	id 1ujmHN-00029C-0f;
+	Wed, 06 Aug 2025 22:06:37 +0000
+Date: Thu, 7 Aug 2025 06:05:53 +0800
 From: kernel test robot <lkp@intel.com>
-To: Nam Cao <namcao@linutronix.de>, Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
+To: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, Nam Cao <namcao@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linux Memory Management List <linux-mm@kvack.org>,
 	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>
-Subject: Re: [PATCH v2 5/5] rv: Add rts monitor
-Message-ID: <202508070415.RDcwKpac-lkp@intel.com>
-References: <88fdbeb3f2ecf3a6259f3ee8636ae5b21fa6b72d.1754466623.git.namcao@linutronix.de>
+	Namhyung Kim <namhyung@kernel.org>,
+	Takaya Saeki <takayas@google.com>, Tom Zanussi <zanussi@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ian Rogers <irogers@google.com>, aahringo@redhat.com,
+	Douglas Raillard <douglas.raillard@arm.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>
+Subject: Re: [PATCH 1/7] tracing: Replace syscall RCU pointer assignment with
+ READ/WRITE_ONCE()
+Message-ID: <202508070546.KmEoxWkg-lkp@intel.com>
+References: <20250805193234.745705874@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -74,149 +75,158 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <88fdbeb3f2ecf3a6259f3ee8636ae5b21fa6b72d.1754466623.git.namcao@linutronix.de>
+In-Reply-To: <20250805193234.745705874@kernel.org>
 
-Hi Nam,
+Hi Steven,
 
-kernel test robot noticed the following build errors:
+kernel test robot noticed the following build warnings:
 
-[auto build test ERROR on trace/for-next]
-[also build test ERROR on linus/master next-20250806]
-[cannot apply to tip/sched/core v6.16]
+[auto build test WARNING on trace/for-next]
+[also build test WARNING on linus/master v6.16 next-20250806]
 [If your patch is applied to the wrong git tree, kindly drop us a note.
 And when submitting patch, we suggest to use '--base' as documented in
 https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Nam-Cao/rv-ltl-Prepare-for-other-monitor-types/20250806-160342
+url:    https://github.com/intel-lab-lkp/linux/commits/Steven-Rostedt/tracing-Replace-syscall-RCU-pointer-assignment-with-READ-WRITE_ONCE/20250806-122312
 base:   https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace for-next
-patch link:    https://lore.kernel.org/r/88fdbeb3f2ecf3a6259f3ee8636ae5b21fa6b72d.1754466623.git.namcao%40linutronix.de
-patch subject: [PATCH v2 5/5] rv: Add rts monitor
-config: sh-allmodconfig (https://download.01.org/0day-ci/archive/20250807/202508070415.RDcwKpac-lkp@intel.com/config)
-compiler: sh4-linux-gcc (GCC) 15.1.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250807/202508070415.RDcwKpac-lkp@intel.com/reproduce)
+patch link:    https://lore.kernel.org/r/20250805193234.745705874%40kernel.org
+patch subject: [PATCH 1/7] tracing: Replace syscall RCU pointer assignment with READ/WRITE_ONCE()
+config: x86_64-randconfig-123-20250806 (https://download.01.org/0day-ci/archive/20250807/202508070546.KmEoxWkg-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14+deb12u1) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250807/202508070546.KmEoxWkg-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202508070415.RDcwKpac-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202508070546.KmEoxWkg-lkp@intel.com/
 
-All errors (new ones prefixed by >>):
+sparse warnings: (new ones prefixed by >>)
+>> kernel/trace/trace_syscalls.c:313:20: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct trace_event_file *trace_file @@     got struct trace_event_file [noderef] __rcu * @@
+   kernel/trace/trace_syscalls.c:313:20: sparse:     expected struct trace_event_file *trace_file
+   kernel/trace/trace_syscalls.c:313:20: sparse:     got struct trace_event_file [noderef] __rcu *
+   kernel/trace/trace_syscalls.c:358:20: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct trace_event_file *trace_file @@     got struct trace_event_file [noderef] __rcu * @@
+   kernel/trace/trace_syscalls.c:358:20: sparse:     expected struct trace_event_file *trace_file
+   kernel/trace/trace_syscalls.c:358:20: sparse:     got struct trace_event_file [noderef] __rcu *
+>> kernel/trace/trace_syscalls.c:394:17: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct trace_event_file [noderef] __rcu *volatile @@     got struct trace_event_file *file @@
+   kernel/trace/trace_syscalls.c:394:17: sparse:     expected struct trace_event_file [noderef] __rcu *volatile
+   kernel/trace/trace_syscalls.c:394:17: sparse:     got struct trace_event_file *file
+   kernel/trace/trace_syscalls.c:432:17: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct trace_event_file [noderef] __rcu *volatile @@     got struct trace_event_file *file @@
+   kernel/trace/trace_syscalls.c:432:17: sparse:     expected struct trace_event_file [noderef] __rcu *volatile
+   kernel/trace/trace_syscalls.c:432:17: sparse:     got struct trace_event_file *file
 
-   In file included from include/asm-generic/percpu.h:7,
-                    from ./arch/sh/include/generated/asm/percpu.h:1,
-                    from include/linux/irqflags.h:19,
-                    from arch/sh/include/asm/cmpxchg-irq.h:5,
-                    from arch/sh/include/asm/cmpxchg.h:21,
-                    from arch/sh/include/asm/atomic.h:19,
-                    from include/linux/atomic.h:7,
-                    from include/asm-generic/bitops/atomic.h:5,
-                    from arch/sh/include/asm/bitops.h:23,
-                    from include/linux/bitops.h:67,
-                    from include/linux/kernel.h:23,
-                    from include/linux/interrupt.h:6,
-                    from include/linux/trace_recursion.h:5,
-                    from include/linux/ftrace.h:10,
-                    from kernel/trace/rv/monitors/rts/rts.c:2:
-   include/rv/ltl_monitor.h: In function 'ltl_get_monitor':
->> include/linux/percpu-defs.h:90:40: error: section attribute cannot be specified for local variables
-      90 |         extern __PCPU_DUMMY_ATTRS char __pcpu_unique_##name;            \
-         |                                        ^~~~~~~~~~~~~~
-   include/linux/percpu-defs.h:113:9: note: in expansion of macro 'DEFINE_PER_CPU_SECTION'
-     113 |         DEFINE_PER_CPU_SECTION(type, name, "")
-         |         ^~~~~~~~~~~~~~~~~~~~~~
-   include/rv/ltl_monitor.h:69:16: note: in expansion of macro 'DEFINE_PER_CPU'
-      69 |         static DEFINE_PER_CPU(struct ltl_monitor, ltl_monitor);
-         |                ^~~~~~~~~~~~~~
-   include/linux/percpu-defs.h:91:33: error: section attribute cannot be specified for local variables
-      91 |         __PCPU_DUMMY_ATTRS char __pcpu_unique_##name;                   \
-         |                                 ^~~~~~~~~~~~~~
-   include/linux/percpu-defs.h:113:9: note: in expansion of macro 'DEFINE_PER_CPU_SECTION'
-     113 |         DEFINE_PER_CPU_SECTION(type, name, "")
-         |         ^~~~~~~~~~~~~~~~~~~~~~
-   include/rv/ltl_monitor.h:69:16: note: in expansion of macro 'DEFINE_PER_CPU'
-      69 |         static DEFINE_PER_CPU(struct ltl_monitor, ltl_monitor);
-         |                ^~~~~~~~~~~~~~
->> include/linux/percpu-defs.h:91:33: error: declaration of '__pcpu_unique_ltl_monitor' with no linkage follows extern declaration
-      91 |         __PCPU_DUMMY_ATTRS char __pcpu_unique_##name;                   \
-         |                                 ^~~~~~~~~~~~~~
-   include/linux/percpu-defs.h:113:9: note: in expansion of macro 'DEFINE_PER_CPU_SECTION'
-     113 |         DEFINE_PER_CPU_SECTION(type, name, "")
-         |         ^~~~~~~~~~~~~~~~~~~~~~
-   include/rv/ltl_monitor.h:69:16: note: in expansion of macro 'DEFINE_PER_CPU'
-      69 |         static DEFINE_PER_CPU(struct ltl_monitor, ltl_monitor);
-         |                ^~~~~~~~~~~~~~
-   include/linux/percpu-defs.h:90:40: note: previous declaration of '__pcpu_unique_ltl_monitor' with type 'char'
-      90 |         extern __PCPU_DUMMY_ATTRS char __pcpu_unique_##name;            \
-         |                                        ^~~~~~~~~~~~~~
-   include/linux/percpu-defs.h:113:9: note: in expansion of macro 'DEFINE_PER_CPU_SECTION'
-     113 |         DEFINE_PER_CPU_SECTION(type, name, "")
-         |         ^~~~~~~~~~~~~~~~~~~~~~
-   include/rv/ltl_monitor.h:69:16: note: in expansion of macro 'DEFINE_PER_CPU'
-      69 |         static DEFINE_PER_CPU(struct ltl_monitor, ltl_monitor);
-         |                ^~~~~~~~~~~~~~
->> include/rv/ltl_monitor.h:69:51: error: section attribute cannot be specified for local variables
-      69 |         static DEFINE_PER_CPU(struct ltl_monitor, ltl_monitor);
-         |                                                   ^~~~~~~~~~~
-   include/linux/percpu-defs.h:92:51: note: in definition of macro 'DEFINE_PER_CPU_SECTION'
-      92 |         extern __PCPU_ATTRS(sec) __typeof__(type) name;                 \
-         |                                                   ^~~~
-   include/rv/ltl_monitor.h:69:16: note: in expansion of macro 'DEFINE_PER_CPU'
-      69 |         static DEFINE_PER_CPU(struct ltl_monitor, ltl_monitor);
-         |                ^~~~~~~~~~~~~~
->> include/rv/ltl_monitor.h:69:51: error: section attribute cannot be specified for local variables
-      69 |         static DEFINE_PER_CPU(struct ltl_monitor, ltl_monitor);
-         |                                                   ^~~~~~~~~~~
-   include/linux/percpu-defs.h:93:51: note: in definition of macro 'DEFINE_PER_CPU_SECTION'
-      93 |         __PCPU_ATTRS(sec) __weak __typeof__(type) name
-         |                                                   ^~~~
-   include/rv/ltl_monitor.h:69:16: note: in expansion of macro 'DEFINE_PER_CPU'
-      69 |         static DEFINE_PER_CPU(struct ltl_monitor, ltl_monitor);
-         |                ^~~~~~~~~~~~~~
->> include/rv/ltl_monitor.h:69:51: error: weak declaration of 'ltl_monitor' must be public
-      69 |         static DEFINE_PER_CPU(struct ltl_monitor, ltl_monitor);
-         |                                                   ^~~~~~~~~~~
-   include/linux/percpu-defs.h:93:51: note: in definition of macro 'DEFINE_PER_CPU_SECTION'
-      93 |         __PCPU_ATTRS(sec) __weak __typeof__(type) name
-         |                                                   ^~~~
-   include/rv/ltl_monitor.h:69:16: note: in expansion of macro 'DEFINE_PER_CPU'
-      69 |         static DEFINE_PER_CPU(struct ltl_monitor, ltl_monitor);
-         |                ^~~~~~~~~~~~~~
->> include/rv/ltl_monitor.h:69:51: error: declaration of 'ltl_monitor' with no linkage follows extern declaration
-      69 |         static DEFINE_PER_CPU(struct ltl_monitor, ltl_monitor);
-         |                                                   ^~~~~~~~~~~
-   include/linux/percpu-defs.h:93:51: note: in definition of macro 'DEFINE_PER_CPU_SECTION'
-      93 |         __PCPU_ATTRS(sec) __weak __typeof__(type) name
-         |                                                   ^~~~
-   include/rv/ltl_monitor.h:69:16: note: in expansion of macro 'DEFINE_PER_CPU'
-      69 |         static DEFINE_PER_CPU(struct ltl_monitor, ltl_monitor);
-         |                ^~~~~~~~~~~~~~
-   include/rv/ltl_monitor.h:69:51: note: previous declaration of 'ltl_monitor' with type 'struct ltl_monitor'
-      69 |         static DEFINE_PER_CPU(struct ltl_monitor, ltl_monitor);
-         |                                                   ^~~~~~~~~~~
-   include/linux/percpu-defs.h:92:51: note: in definition of macro 'DEFINE_PER_CPU_SECTION'
-      92 |         extern __PCPU_ATTRS(sec) __typeof__(type) name;                 \
-         |                                                   ^~~~
-   include/rv/ltl_monitor.h:69:16: note: in expansion of macro 'DEFINE_PER_CPU'
-      69 |         static DEFINE_PER_CPU(struct ltl_monitor, ltl_monitor);
-         |                ^~~~~~~~~~~~~~
+vim +313 kernel/trace/trace_syscalls.c
 
-
-vim +69 include/rv/ltl_monitor.h
-
-a9769a5b987838 Nam Cao 2025-07-09  61  
-59c45d176bc0f2 Nam Cao 2025-08-06  62  static struct ltl_monitor *ltl_get_monitor(monitor_target target)
-a9769a5b987838 Nam Cao 2025-07-09  63  {
-59c45d176bc0f2 Nam Cao 2025-08-06  64  	return &target->rv[ltl_monitor_slot].ltl_mon;
-a9769a5b987838 Nam Cao 2025-07-09  65  }
-50fd6be3de4982 Nam Cao 2025-08-06  66  #elif LTL_MONITOR_TYPE == RV_MON_PER_CPU
-50fd6be3de4982 Nam Cao 2025-08-06  67  static struct ltl_monitor *ltl_get_monitor(unsigned int cpu)
-50fd6be3de4982 Nam Cao 2025-08-06  68  {
-50fd6be3de4982 Nam Cao 2025-08-06 @69  	static DEFINE_PER_CPU(struct ltl_monitor, ltl_monitor);
-50fd6be3de4982 Nam Cao 2025-08-06  70  
-50fd6be3de4982 Nam Cao 2025-08-06  71  	return per_cpu_ptr(&ltl_monitor, cpu);
-50fd6be3de4982 Nam Cao 2025-08-06  72  }
-59c45d176bc0f2 Nam Cao 2025-08-06  73  #endif
-a9769a5b987838 Nam Cao 2025-07-09  74  
+   290	
+   291	static void ftrace_syscall_enter(void *data, struct pt_regs *regs, long id)
+   292	{
+   293		struct trace_array *tr = data;
+   294		struct trace_event_file *trace_file;
+   295		struct syscall_trace_enter *entry;
+   296		struct syscall_metadata *sys_data;
+   297		struct trace_event_buffer fbuffer;
+   298		unsigned long args[6];
+   299		int syscall_nr;
+   300		int size;
+   301	
+   302		/*
+   303		 * Syscall probe called with preemption enabled, but the ring
+   304		 * buffer and per-cpu data require preemption to be disabled.
+   305		 */
+   306		might_fault();
+   307		guard(preempt_notrace)();
+   308	
+   309		syscall_nr = trace_get_syscall_nr(current, regs);
+   310		if (syscall_nr < 0 || syscall_nr >= NR_syscalls)
+   311			return;
+   312	
+ > 313		trace_file = READ_ONCE(tr->enter_syscall_files[syscall_nr]);
+   314		if (!trace_file)
+   315			return;
+   316	
+   317		if (trace_trigger_soft_disabled(trace_file))
+   318			return;
+   319	
+   320		sys_data = syscall_nr_to_meta(syscall_nr);
+   321		if (!sys_data)
+   322			return;
+   323	
+   324		size = sizeof(*entry) + sizeof(unsigned long) * sys_data->nb_args;
+   325	
+   326		entry = trace_event_buffer_reserve(&fbuffer, trace_file, size);
+   327		if (!entry)
+   328			return;
+   329	
+   330		entry = ring_buffer_event_data(fbuffer.event);
+   331		entry->nr = syscall_nr;
+   332		syscall_get_arguments(current, regs, args);
+   333		memcpy(entry->args, args, sizeof(unsigned long) * sys_data->nb_args);
+   334	
+   335		trace_event_buffer_commit(&fbuffer);
+   336	}
+   337	
+   338	static void ftrace_syscall_exit(void *data, struct pt_regs *regs, long ret)
+   339	{
+   340		struct trace_array *tr = data;
+   341		struct trace_event_file *trace_file;
+   342		struct syscall_trace_exit *entry;
+   343		struct syscall_metadata *sys_data;
+   344		struct trace_event_buffer fbuffer;
+   345		int syscall_nr;
+   346	
+   347		/*
+   348		 * Syscall probe called with preemption enabled, but the ring
+   349		 * buffer and per-cpu data require preemption to be disabled.
+   350		 */
+   351		might_fault();
+   352		guard(preempt_notrace)();
+   353	
+   354		syscall_nr = trace_get_syscall_nr(current, regs);
+   355		if (syscall_nr < 0 || syscall_nr >= NR_syscalls)
+   356			return;
+   357	
+   358		trace_file = READ_ONCE(tr->exit_syscall_files[syscall_nr]);
+   359		if (!trace_file)
+   360			return;
+   361	
+   362		if (trace_trigger_soft_disabled(trace_file))
+   363			return;
+   364	
+   365		sys_data = syscall_nr_to_meta(syscall_nr);
+   366		if (!sys_data)
+   367			return;
+   368	
+   369		entry = trace_event_buffer_reserve(&fbuffer, trace_file, sizeof(*entry));
+   370		if (!entry)
+   371			return;
+   372	
+   373		entry = ring_buffer_event_data(fbuffer.event);
+   374		entry->nr = syscall_nr;
+   375		entry->ret = syscall_get_return_value(current, regs);
+   376	
+   377		trace_event_buffer_commit(&fbuffer);
+   378	}
+   379	
+   380	static int reg_event_syscall_enter(struct trace_event_file *file,
+   381					   struct trace_event_call *call)
+   382	{
+   383		struct trace_array *tr = file->tr;
+   384		int ret = 0;
+   385		int num;
+   386	
+   387		num = ((struct syscall_metadata *)call->data)->syscall_nr;
+   388		if (WARN_ON_ONCE(num < 0 || num >= NR_syscalls))
+   389			return -ENOSYS;
+   390		mutex_lock(&syscall_trace_lock);
+   391		if (!tr->sys_refcount_enter)
+   392			ret = register_trace_sys_enter(ftrace_syscall_enter, tr);
+   393		if (!ret) {
+ > 394			WRITE_ONCE(tr->enter_syscall_files[num], file);
+   395			tr->sys_refcount_enter++;
+   396		}
+   397		mutex_unlock(&syscall_trace_lock);
+   398		return ret;
+   399	}
+   400	
 
 -- 
 0-DAY CI Kernel Test Service
