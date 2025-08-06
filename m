@@ -1,159 +1,117 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 916BE1922C0;
-	Wed,  6 Aug 2025 10:20:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACAE728A417;
+	Wed,  6 Aug 2025 10:24:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754475619; cv=none; b=OriULYYK4vDFCB9VKH9LoUmN60IFA8xvkDGiRvYix+7b1rsIvtPZUy4McDx/KGjES39cH/4d9dN148Yz3ve3OoiwiB9st7xFHbJi75NFyVm/9FU4Af+7+0PdvwShnF5WOplecjTrmftJNLrZdIgRL+q5egILC4J3zuNd5kB4ZCw=
+	t=1754475880; cv=none; b=Fs2E7yOOKqNO6w8FTDwnOrMjse1S00bpJdO1ZDdHgvXcEdlOxlcmZoQQp+vTQyo7F9H5HOYe3Aq3/uluIXOfzzRZLeBOkN59H4LIa0IpUJyoDOBEvR/xSUoqqgKPBtFcgjR+S0f0x8ibe7LFDh19KP8ElbGe0LsgS9n/seyaVKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754475619; c=relaxed/simple;
-	bh=COvGXp7LtjUshMDg0yELE6cQAN8nXPTRktokIYkICsc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F5ZKHf4DjDqeLzfdg+8W1CoIG7DyPTymTxm1aKGcuNlhDSLuotGWABS/UEdQyEYmOsqV/+XHQf+Y4N1wGo33JbzupgT46JndKOhXJxRT3Y9G9mU3L2J9Ld+xMV/g0g9UEUheyHY/1YIEk3z3R88w6BroseZar6PsETeyQwik7Ow=
+	s=arc-20240116; t=1754475880; c=relaxed/simple;
+	bh=5yGYo6ZdZt+LHxya/chgqlmuAM6976MZ+YA5qh6OG4M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tHITF3v7xCHu4rUzKN1tWOHG7MfTOZGfr8rX3Z9NDlYWfmIVOV/c3F0vWfFnU+sdPQfXW6GJG6cygRIEvWb4G/Lk8Ms82SZrC6nZGZ8jRX7m6y9WAfrghBEediTA2ZyuEcc3GsebJ5/NqHkZXCXhJF0WjkD8MujL6ZwV7VW4pr8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CE8981E8D;
-	Wed,  6 Aug 2025 03:20:08 -0700 (PDT)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 115603F738;
-	Wed,  6 Aug 2025 03:20:13 -0700 (PDT)
-Date: Wed, 6 Aug 2025 11:20:08 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Steven Rostedt <rostedt@kernel.org>, Florent Revest <revest@google.com>,
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Menglong Dong <menglong8.dong@gmail.com>,
-	Naveen N Rao <naveen@kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	=?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>,
-	Andy Chiu <andybnac@gmail.com>,
-	Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>
-Subject: Re: [RFC 00/10] ftrace,bpf: Use single direct ops for bpf trampolines
-Message-ID: <aJMsWB2Sxb7-66zs@J2N7QTR9R3>
-References: <aIn_12KHz7ikF2t1@krava>
- <aIyNOd18TRLu8EpY@J2N7QTR9R3>
- <aI6CltnCRbVXwyfm@krava>
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 82E011E8D;
+	Wed,  6 Aug 2025 03:24:29 -0700 (PDT)
+Received: from [192.168.1.127] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B41793F738;
+	Wed,  6 Aug 2025 03:24:34 -0700 (PDT)
+Message-ID: <c4f1b8d4-774f-42c1-a828-42c79756503d@arm.com>
+Date: Wed, 6 Aug 2025 11:24:33 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aI6CltnCRbVXwyfm@krava>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/7] tracing: Have syscall trace events show "0x" for
+ values greater than 10
+To: Steven Rostedt <rostedt@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Peter Zijlstra <peterz@infradead.org>, Namhyung Kim <namhyung@kernel.org>,
+ Takaya Saeki <takayas@google.com>, Tom Zanussi <zanussi@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Ian Rogers <irogers@google.com>,
+ aahringo@redhat.com
+References: <20250805192646.328291790@kernel.org>
+ <20250805193234.915257520@kernel.org>
+Content-Language: en-US
+From: Douglas Raillard <douglas.raillard@arm.com>
+In-Reply-To: <20250805193234.915257520@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sat, Aug 02, 2025 at 11:26:46PM +0200, Jiri Olsa wrote:
-> On Fri, Aug 01, 2025 at 10:49:56AM +0100, Mark Rutland wrote:
-> > On Wed, Jul 30, 2025 at 01:19:51PM +0200, Jiri Olsa wrote:
-> > > On Tue, Jul 29, 2025 at 06:57:40PM +0100, Mark Rutland wrote:
-> > > > 
-> > > > On Tue, Jul 29, 2025 at 12:28:03PM +0200, Jiri Olsa wrote:
-> > > > > hi,
-> > > > > while poking the multi-tracing interface I ended up with just one
-> > > > > ftrace_ops object to attach all trampolines.
-> > > > > 
-> > > > > This change allows to use less direct API calls during the attachment
-> > > > > changes in the future code, so in effect speeding up the attachment.
-> > > > 
-> > > > How important is that, and what sort of speedup does this result in? I
-> > > > ask due to potential performance hits noted below, and I'm lacking
-> > > > context as to why we want to do this in the first place -- what is this
-> > > > intended to enable/improve?
-> > > 
-> > > so it's all work on PoC stage, the idea is to be able to attach many
-> > > (like 20,30,40k) functions to their trampolines quickly, which at the
-> > > moment is slow because all the involved interfaces work with just single
-> > > function/tracempoline relation
-> > 
-> > Do you know which aspect of that is slow? e.g. is that becuase you have
-> > to update each ftrace_ops independently, and pay the synchronization
-> > overhead per-ops?
-> > 
-> > I ask because it might be possible to do some more batching there, at
-> > least for architectures like arm64 that use the CALL_OPS approach.
+On 05-08-2025 20:26, Steven Rostedt wrote:
+> From: Steven Rostedt <rostedt@goodmis.org>
 > 
-> IIRC it's the rcu sync in register_ftrace_direct and ftrace_shutdown
-> I'll try to profile that case again, there  might have been changes
-> since the last time we did that
-
-Do you mean synchronize_rcu_tasks()?
-
-The call in register_ftrace_direct() was removed in commit:
-
-  33f137143e651321 ("ftrace: Use asynchronous grace period for register_ftrace_direct()")
-
-... but in ftrace_shutdown() we still have a call to synchronize_rcu_tasks(),
-and to synchronize_rcu_tasks_rude().
-
-The call to synchronize_rcu_tasks() is still necessary, but we might be
-abel to batch that better with API changes.
-
-I think we might be able to remove the call to
-synchronize_rcu_tasks_rude() on architectures with ARCH_WANTS_NO_INSTR,
-since there shouldn't be any instrumentable functions called with RCU
-not watching. That'd need to be checked.
-
-[...]
-
-> > > sorry I probably forgot/missed discussion on this, but doing the fast path like in
-> > > x86_64 is not an option in arm, right?
-> > 
-> > On arm64 we have a fast path, BUT branch range limitations means that we
-> > cannot always branch directly from the instrumented function to the
-> > direct func with a single branch instruction. We use ops->direct_call to
-> > handle that case within a common trampoline, which is significantly
-> > cheaper that iterating over the ops and/or looking up the direct func
-> > from a hash.
-> > 
-> > With CALL_OPS, we place a pointer to the ops immediately before the
-> > instrumented function, and have the instrumented function branch to a
-> > common trampoline which can load that pointer (and can then branch to
-> > any direct func as necessary).
-> > 
-> > The instrumented function looks like:
-> > 
-> > 	# Aligned to 8 bytes
-> > 	func - 8:
-> > 		< pointer to ops >
+> Currently the syscall trace events show each value as hexadecimal, but
+> without adding "0x" it can be confusing:
 > 
-> stupid question.. so there's ftrace_ops pointer stored for each function at
-> 'func - 8` ?  why not store the func's direct trampoline address in there?
+>     sys_write(fd: 4, buf: 0x55c4a1fa9270, count: 44)
+> 
+> Looks like the above write wrote 44 bytes, when in reality it wrote 68
+> bytes.
+> 
+> Add a "0x" for all values greater or equal to 10 to remove the ambiguity.
+> For values less than 10, leave off the "0x" as that just adds noise to the
+> output.
 
-Once reason is that today we don't have trampolines for all ops. Since
-branch range limitations can require bouncing through the common ops,
-it's simpler/better to bounce from that to the regular call than to
-bounce from that to a trampoline which makes the regular call.
+I'm on the fence for the value-dependent format. This looks like
+it could easily make life harder for quick&dirty scripts, but then both
+awk's strtonum() and Python's int(x, base=16) seem to handle
+the presence/absence of the 0x prefix so maybe it's a non-issue.
 
-We *could* consider adding trampolines, but that comes with a jump in
-complexity that we originally tried to avoid, and a potential
-performance hit for regular ftrace calls. IIUC that will require similar
-synchronization to what we have today, so it's not clearly a win
-generally.
+OTH, a hand-crafted regex designed after a small set of input may start
+to randomly fail if one field unexpectedly goes beyond 10 ...
 
-I'd like to better understand what the real bottleneck is; AFAICT it's
-the tasks-rcu synchronization, and sharing the hash means that you only
-need to do that once. I think that it should be possible to share that
-synchronization across multiple ops updates with some API changes (e.g.
-something like the batching of text_poke on x86).
+Just using explicit hex may be the best here, as the actual proper fix
+(type-level display hints) is harder. It could probably be implemented
+using btf_decl_tag() and __builtin_btf_type_id() to retrieve the BTF info.
 
-If we can do that, it might benefit other users too (e.g.
-live-patching), even if trampolines aren't being used, and would keep
-the arch bits simple/maintainable.
+> 
+> Also change the iterator to check if "i" is nonzero and print the ", "
+> delimiter at the start, then adding the logic to the trace_seq_printf() at
+> the end.
+> 
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+>   kernel/trace/trace_syscalls.c | 12 +++++++++---
+>   1 file changed, 9 insertions(+), 3 deletions(-)
+> 
+> diff --git a/kernel/trace/trace_syscalls.c b/kernel/trace/trace_syscalls.c
+> index 3a0b65f89130..0f932b22f9ec 100644
+> --- a/kernel/trace/trace_syscalls.c
+> +++ b/kernel/trace/trace_syscalls.c
+> @@ -153,14 +153,20 @@ print_syscall_enter(struct trace_iterator *iter, int flags,
+>   		if (trace_seq_has_overflowed(s))
+>   			goto end;
+>   
+> +		if (i)
+> +			trace_seq_puts(s, ", ");
+> +
+>   		/* parameter types */
+>   		if (tr && tr->trace_flags & TRACE_ITER_VERBOSE)
+>   			trace_seq_printf(s, "%s ", entry->types[i]);
+>   
+>   		/* parameter values */
+> -		trace_seq_printf(s, "%s: %lx%s", entry->args[i],
+> -				 trace->args[i],
+> -				 i == entry->nb_args - 1 ? "" : ", ");
+> +		if (trace->args[i] < 10)
+> +			trace_seq_printf(s, "%s: %lu", entry->args[i],
+> +					 trace->args[i]);
+> +		else
+> +			trace_seq_printf(s, "%s: 0x%lx", entry->args[i],
+> +					 trace->args[i]);
+>   	}
+>   
+>   	trace_seq_putc(s, ')');
 
-[...]
-
-> thanks for all the details, I'll check if both the new change and ops->direct_call
-> could live together for x86 and other arch, but it will probably complicate
-> things a lot more
-
-Thanks; please let me know if there's any challenges there!
-
-Mark.
+-- 
+Douglas
