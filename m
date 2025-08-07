@@ -1,224 +1,334 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05F12BE46;
-	Thu,  7 Aug 2025 05:58:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754546315; cv=fail; b=WDHpQCQ3XlwkNp6FL74EAWScWHzzddIVg5DO4NBSw7S/SJPDOzcjvkwm86vCuCwDhr2Jp6XUL5Z4AxhKoxBybXvkJY0wUYB3afw6RLBeDo7iz3Q6dyjYSsBHL5NFhPPSpkugYHdU0U9VmBCatg1e4FoF6dbOljSVI1LNz0bfZHc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754546315; c=relaxed/simple;
-	bh=TkSM9dGDkU3CTTprAEJxFKEsCCpQmczuvFTi4atj/Qk=;
-	h=Date:From:To:CC:Subject:Message-ID:Content-Type:
-	 Content-Disposition:MIME-Version; b=nsCW7JRToaQycQdP58PpaPv/u8irKT3ASTwPhxlDDLgGJHcKw52mfZYAppS27FTALGUAimm9K7GaCe0UCgP0o3OJ8k/2h5ePISSM4hohXnZK+YIjSdIRNIDWLIPeLY7MKDOetDCvQWsNNtj//0SJz7cGwRbIGQ0BKuEP+UPAkLI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AWNRXAgY; arc=fail smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 954277FBA1;
+	Thu,  7 Aug 2025 06:34:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1754548493; cv=none; b=rfjrJXTkrcJIqX3GfbkNJyrw3JEsKfF1O3Wxk7JeVoVhuVMxWRpLxXzw8nQzXF98swLI6712oUV1N1Eubb35M1LFg8n7/qLKDZiEJtJ7Ug98jZHsVFnDF4nksUD72XP52ka0+tlA9ZPPjxpakYkqpbgLnjpMfoQT4+2uDaM6Ekg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1754548493; c=relaxed/simple;
+	bh=yLIMhLwG4fvZtaq1+QbmdDfEQnWZeJolXFY/ttnj028=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Rgnbj72xQ0qD4mQLrLXo0vykRAmR4T2UcDblu9s3fPTXtdFx+gy4aObjOXLXc3FdCGyJyv/iPuSNZT8pgqcIJRACG2YUpn3kR4mqVa2OQup/WVpDpj3JX2eC5LhfqJBBLYewisVY8sexHf3yn7uhTXSQ0Er/cQdQv2BfzZLnNAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=hKXse06K; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AWNRXAgY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1754546314; x=1786082314;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=TkSM9dGDkU3CTTprAEJxFKEsCCpQmczuvFTi4atj/Qk=;
-  b=AWNRXAgY5fy3qATrot7TeoKRfNEuhiHz/TNc1/5jLHZBIb4j34wvdT3U
-   l28c3G0jhXPKeYkVvwW5HezzBVxV4ReiP3hhJDIkTeTw9IBYK3Bpm75wQ
-   hhM3et5qps02jkWIlRkZjjkd14CvAYsA50CKZc7bm/jr8F9GssJoDQAvs
-   HC09mAft8fseVkY9mwPevmmlHfKUSq2ZH2t06VnGViHIlQuWJNx+pJiAG
-   eZAe6NFNSBmEfngu/pD8FnLhDMQpKzG6KgG9E2r0wP8E0KbSKL+yZ/gL2
-   emOaPKFkYPFpYrZ9JAPdfW8E1cb5C68UdK7xExg1K62nJJ8lQp7R9Rbr0
-   Q==;
-X-CSE-ConnectionGUID: AT7HB2fmRiGkHJy3zS7kug==
-X-CSE-MsgGUID: rjWmj1sUSTGG/bvAEslIDg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11514"; a="67141184"
-X-IronPort-AV: E=Sophos;i="6.17,271,1747724400"; 
-   d="scan'208";a="67141184"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2025 22:58:34 -0700
-X-CSE-ConnectionGUID: 7GBPkmhoSC6pPQHRuPTc3w==
-X-CSE-MsgGUID: EcprQbEiRkWu3jokj1UlVg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.17,271,1747724400"; 
-   d="scan'208";a="169095308"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2025 22:58:32 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.26; Wed, 6 Aug 2025 22:58:32 -0700
-Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.26 via Frontend Transport; Wed, 6 Aug 2025 22:58:32 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (40.107.244.66)
- by edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.26; Wed, 6 Aug 2025 22:58:31 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=F9qJdV1zh7/rUkpAG1qYOyV957HKkvZm2pf8z3VdQIxvAtFviacIdXSWfgQQoeBsmxQVfrqO9x4oIVDyHFU4qqb4EwojoL0abo7mrEt5oyfLA7pPCul0VjaeXulMpoNpJIQS0tmcqs/hajV7S2we6X+222vdvhhlB4reYVXqUblnCDdDqY3MWNrnQ5FYND0+FPuebtl40UXWoSfvq5PRqL1pQV/ZEtkQs9xPuwnqajJNetm1FlkiUDYHjaicmqH/+mJ0XYqwvq/kJj3Q6CZ6WgMGehY/QLOSQwuWP9PDhEUeTRjJUW3vPVoiFi0hqEijTA1Sp4+bFC2KfJRvBA/JqA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=StIMYGb8ppy3UCSVyoRHyfzwwVMCFBCdVnop+GYXReY=;
- b=d9l5MPMlVw0U5uL94/oVtILL30hRkdxrcOcoJeplFIhO+QpjKgw3KH9n9M+hBnxBmRYe9KM3WSeiR6jG2oON7RRsHS1XEBYcoGKVCt51RMRm8Z6jsmkGFQx2CeyY5EVYINR6m0zCqs9dKgScAyEEm/7a2Ye2Otwde9BHgSakzzhQRObTBX/OMVjlfcRlFTiOrW9QGibK1RQeH/FYbePtrNFzodcmCi67Y1GDWs4PjVEMVyUTC/p20o8sgMcYTblVNi/4oOTnWwyD/NJF3DM1ThnhzdRb3m43pB51F0szfMvScBFtLHn/o09ZlyP2tuFPOBhlS544X5fXVKV7UtwQLA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from LV3PR11MB8603.namprd11.prod.outlook.com (2603:10b6:408:1b6::9)
- by DM4PR11MB5327.namprd11.prod.outlook.com (2603:10b6:5:392::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9009.13; Thu, 7 Aug
- 2025 05:58:29 +0000
-Received: from LV3PR11MB8603.namprd11.prod.outlook.com
- ([fe80::4622:29cf:32b:7e5c]) by LV3PR11MB8603.namprd11.prod.outlook.com
- ([fe80::4622:29cf:32b:7e5c%5]) with mapi id 15.20.9009.013; Thu, 7 Aug 2025
- 05:58:29 +0000
-Date: Thu, 7 Aug 2025 13:58:18 +0800
-From: kernel test robot <oliver.sang@intel.com>
-To: Gabriele Monaco <gmonaco@redhat.com>
-CC: <oe-lkp@lists.linux.dev>, <lkp@intel.com>, <linux-kernel@vger.kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@redhat.com>, "Peter
- Zijlstra" <peterz@infradead.org>, Masami Hiramatsu <mhiramat@kernel.org>,
-	"Nam Cao" <namcao@linutronix.de>, Tomas Glozar <tglozar@redhat.com>, Juri
- Lelli <jlelli@redhat.com>, Clark Williams <williams@redhat.com>, John Kacur
-	<jkacur@redhat.com>, <linux-trace-kernel@vger.kernel.org>,
-	<aubrey.li@linux.intel.com>, <yu.c.chen@intel.com>, <oliver.sang@intel.com>
-Subject: [linus:master] [sched]  adcc3bfa88:
- kunit.VCAP_API_DebugFS_Testsuite.vcap_api_show_admin_raw_test.fail
-Message-ID: <202508070739.4c6e0633-lkp@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-X-ClientProxiedBy: SI2PR04CA0017.apcprd04.prod.outlook.com
- (2603:1096:4:197::15) To LV3PR11MB8603.namprd11.prod.outlook.com
- (2603:10b6:408:1b6::9)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="hKXse06K"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5776CoqW032244;
+	Thu, 7 Aug 2025 06:34:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	+vAYAORzrriPUdJ+Q/oYHNyyItcYIcDJcqMoO5EPZgA=; b=hKXse06KhM1knT5j
+	7RDvqPzGg5IJlXPGU0Lk0Vjxa76n3FvZ7RLOz83tx/HjuKDb5+s3KuipR42A/dTG
+	gkH11ouP2gg9iTEPb3Med1Mf9tpWtZlv6F8Ncw2oSnBi7tMPV3O/lZy4T1pktRHo
+	8YsWmZyP5V3NH2CrlR3TiYu9dR4e/H98GVEO/URPHikCnZumDZhfShvxhe5USXSk
+	O8auAORkY6K8PuCmcv4/4NSwZs3AMuJQnYLvhx5d8kydcUvalk6SvF2OQNFapLAS
+	45gh4A11AILgb7/hITijqajWzGOAbHnFL8//rXkrnDglHbXvXqzL1G8GUNFAfNPQ
+	07XcIA==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 48bpw2wbgx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 07 Aug 2025 06:34:37 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5776Yaer005536
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 7 Aug 2025 06:34:36 GMT
+Received: from [10.239.133.49] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Wed, 6 Aug
+ 2025 23:34:32 -0700
+Message-ID: <fbb693a7-224a-4155-88a2-67e05faaf21e@quicinc.com>
+Date: Thu, 7 Aug 2025 14:34:29 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV3PR11MB8603:EE_|DM4PR11MB5327:EE_
-X-MS-Office365-Filtering-Correlation-Id: 825f3e78-0323-4275-f293-08ddd5776ebe
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?/bMoqJ786R4swbWvZUVDQneuZPkGzbgX1mgED5h00Th0lIWrDHV5aveS/Nys?=
- =?us-ascii?Q?y4UZpodnMuU0MfkrAsrTOm4f1NdJgvxenaIeAlyoDBHd6okr5fhfec/e3Y0t?=
- =?us-ascii?Q?WtZDo0lflKdPWvotClwyrmoHHoTV70Z5ZcUyy5Od1ab7MbKp+KJazF7miRNL?=
- =?us-ascii?Q?mj49GSRM/XBynbPqnj+COSaSTq4Y+Gxh+VYwVTAxSFa1AGF+TDvjyB6OFOfG?=
- =?us-ascii?Q?ddlBvw+Vs3BDlCi1LNnISJhNAq1duwCs9PgYUUQDW8Y06Hr+1lteT69B/Hdp?=
- =?us-ascii?Q?eqSIOMTQlu7bs02VqLxF/MGu9nl0iY3VNml4cGvdOWXWznQZrvnWiTj9oMvi?=
- =?us-ascii?Q?1frWAV1b0XCswE6bxyzPxnESmEEoDf05BMYTS4Yb8/or10hkCIc07PygPxqp?=
- =?us-ascii?Q?CqJiFGc313t524WbWEz9NgZhPLyTt2u6nFucv+Vjt4Fdgogk+KGfissGRjeS?=
- =?us-ascii?Q?jNpbzPuqAmpft7mAws3KDE24KC/WaaBwn5UCY6B+njkIqVnk9Ns5U1vSI3sf?=
- =?us-ascii?Q?GUf0hr7XKDs+18qyqFsIh6N3cMnu8athZwHT1p9FaSIkCLdcjhfOlFw3SKRM?=
- =?us-ascii?Q?X/7sqG1edhMwxAC8VH0Rvoccv94NUcVhEd8qpFvdEQMCmmqHyLSVMt6f8hiv?=
- =?us-ascii?Q?ybOgLQ3dbIHTioKo/AfyVm1i3z6f1E/WXAm8sJK/ATGWBurgBXepOk152Umq?=
- =?us-ascii?Q?5ujrtT5kAqKaqaYIrGnN2JfLEMMl4CKAzKc/JLT0YdIL4dtTDQYYc5dn5d5F?=
- =?us-ascii?Q?7xfjuJMhSNBIkSAT4E1GkYoZQdTPenAsLoE6CKrXY/KR6dygpaN/2BgKlqo9?=
- =?us-ascii?Q?yFYocBGwoQn+/8/VWp+g/oB0wRcB4QPweBRnij3TA+ybS1ScM0vdAZoDwh5m?=
- =?us-ascii?Q?Mnl3EUdfQFARab+ckGjGzGCqoQ5soIaKAb5V/nVNc/6nAZXG/wPyYXiimSCQ?=
- =?us-ascii?Q?hfMdoRW76M93PN6suCkFYtDnv/cmtgGUhF8C6hWVgLxK4YI7Xn3Gt4EHNfN/?=
- =?us-ascii?Q?MZWzVmctQ4Pon+mNSIOtn+rqu89S/V0BdzwhqppDpW35hK33rLy/TIMv82zc?=
- =?us-ascii?Q?sZlXJeNq/qqVabLX0PT2c8MbgUQeKqYeO+FRuZm3awK+pFWoBh+RwVLbcAKs?=
- =?us-ascii?Q?Lw0uX/9EeXGaVIuXW7ZvVavRUNAoU0a7pzTY+mZL8YUASgGJV/XPSwb9bebT?=
- =?us-ascii?Q?OnJLMLCy9UCNMw6IA+l9BpNc3OyWqEZmEb7KdB0+88iVScLJsjuPtg5gNyCB?=
- =?us-ascii?Q?WO2sypgLdpJ9TiYZQpKKgHU0rFzXvznYr5d/DNZZzx+aQr7ZeqEIJcTyxgVs?=
- =?us-ascii?Q?sx1wFaRnS/8uERWGsG2ici1DJrTlNFGuezmgd6QNIwNCpbgeiIKpTX/7rquF?=
- =?us-ascii?Q?3odl7az+rrd4K+8/hYO/gmYpD9Ua?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR11MB8603.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?wEptm7vmaglNns8aAgKQYHJ0ZSJ2uNr4Mwkl0XsaOX44JBm6MyTBYSfbTNDJ?=
- =?us-ascii?Q?Cg+ZXmzrEtRi+rIIHQLqoCk3iHFBvG4Hl2dmjUapfquR+2E9fHZ24lTud2nX?=
- =?us-ascii?Q?j0ECJLp9k3oIcOMTcM7Tm0iUCkUM0utRKAuC3qDq18YG4RLJENEjhyZ4Ee5t?=
- =?us-ascii?Q?+P7iKycdzLF7yZ9B74Tst8VWQUWZeJmhBxrATGe0iNN+aAVP3untN7JuYxLk?=
- =?us-ascii?Q?PR81uED9Gu910EktJIm32MrbFam2/79MH8d4OrrP3mNBm3SBfZGqTtEGvRxh?=
- =?us-ascii?Q?yMAIQiA3LdxQv1xIPuyq6uNKGrLmC22IPAe1Xe9RagJicq5rlckZAKjNYOzY?=
- =?us-ascii?Q?0aC85nSPviaRihRH//KnS2/4bKAHnjIlQdwS/aNcbDiCLPn8xN3xr87aCSas?=
- =?us-ascii?Q?mfdJxpeN/EY/ClZbcccYw6dcOT3bCTSj5fs4NLgZiYWgV0by4FntHVjTWNS4?=
- =?us-ascii?Q?yoYNmPUV5+nuqn8WRZSSnLq0hVq+rqmczJmA6yKSme9K5Gbj2suIuTWbZb+5?=
- =?us-ascii?Q?x+l3R19T1Z5jh+lyqKf3Ix9UTNSq+ChZkBXb1vo+UZXd9tmsNsGsp0Lqj+DJ?=
- =?us-ascii?Q?4WhKYMWRE5AILYWwSSrXC+z518cVkkpbLriSYWC3LAdk/v33BTeP9aXk1ryq?=
- =?us-ascii?Q?MXRjyZUGXrqCC3gNrSh7vgcGhL1whjlXQcXsdi0Kk/tjgGQkg+kxuyvZlllt?=
- =?us-ascii?Q?eifKLLk23b+Dh/ZkNoyQMa2JvJjmxhJ7q8kq31i8pfcnvykhs5gq+PI+BRXz?=
- =?us-ascii?Q?OyFk+evBi0Y/2OUHBdG4kTlO6/6osgVng7vyAI2EKto2FBPa54b94ru6M+nr?=
- =?us-ascii?Q?R5clqfsiiWGRZO0PCzooYx+eTWvzsMYBURdmo56S8Db49+pZWP/oeB/QdxLE?=
- =?us-ascii?Q?lPXZnYUPM1k0pwQIwsihPT5y1hdWDbCLbIWbrfqs4KPdY81zYCYw5GWB80HY?=
- =?us-ascii?Q?TyT/p0LU8KvMKEzmQvmOX3YPWDuxtYNUoFScxLdLXbN2NIGRwp0WRheia0nO?=
- =?us-ascii?Q?GCob8hjuquiGlz7rpmGc0S3O0zVOvb+HKULoOKzA9AeUpIxLTsb2L2AxIlcN?=
- =?us-ascii?Q?qWAdnNSfCMB21k/+sZ1f4ZGpAvC1LRdK1+ojwM+FRwzKNdRHNxI7OWizLCUf?=
- =?us-ascii?Q?HzA8w9D9XzfTL8dSm+oZNdHjKze9YOkyjDgnMlSGgQeFJz/gGcgD/vfy1v4/?=
- =?us-ascii?Q?cGcQCIPa8Dwjy/cFJmxnJlEVPrZzoLTEF9CLjv3Dp3zJDBrgWPnzMYOG8CnC?=
- =?us-ascii?Q?OAdWP1JToqBhm150nnQfJiMUr8FD4UrwyERMegiJUm9i0QdvobNqhTzWsOcn?=
- =?us-ascii?Q?vJcwH5aQMtkEfEF/ofO5Y49D76C1z702WMHWgzb4u1ZcgnHXeCvqeEesR/Xl?=
- =?us-ascii?Q?hWyfz/8uwFOYCtO6nQJsI3B3desb/KR/Q18JuSWzE0h0vfe2yxUEia62e/dL?=
- =?us-ascii?Q?HVSSDVL+40VvJaxSbiK/63w66ulEgAgYe6m2jc70P+P2F3vKzNxe+IZW1idG?=
- =?us-ascii?Q?4Lds6ptMhzNZxbu/I6Kxmjn2T45dUJjXdEJZxcEOMQQpzR3IF1KWOc2s3aRN?=
- =?us-ascii?Q?0k42lcs2ZEbHIT5VChsx7RJ45wWmpyYlzEF9OB+9bk3YlZXXdqvJRHuNQqd2?=
- =?us-ascii?Q?sw=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 825f3e78-0323-4275-f293-08ddd5776ebe
-X-MS-Exchange-CrossTenant-AuthSource: LV3PR11MB8603.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Aug 2025 05:58:29.3477
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: es3TStlVxo3AoVLbmxDEwrJFWjsl1jNJybilsxxCXo+UURk+cTRm7Tlv8KgRgmf1q+d1lLtOKf7pVgHAGI7IRg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB5327
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] stm: class: Add MIPI OST protocol support
+To: Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Steven Rostedt
+	<rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        "Jonathan
+ Corbet" <corbet@lwn.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Tingwei Zhang
+	<quic_tingweiz@quicinc.com>
+CC: <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+        <linux-doc@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-arm-msm@vger.kernel.org>,
+        Yuanfang Zhang <quic_yuanfang@quicinc.com>,
+        Tao Zhang
+	<quic_taozha@quicinc.com>,
+        Hao Zhang <quic_hazha@quicinc.com>
+References: <20230419141328.37472-1-quic_jinlmao@quicinc.com>
+ <87cz3yyiqf.fsf@ubik.fi.intel.com>
+Content-Language: en-US
+From: Jinlong Mao <quic_jinlmao@quicinc.com>
+In-Reply-To: <87cz3yyiqf.fsf@ubik.fi.intel.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=Vbz3PEp9 c=1 sm=1 tr=0 ts=689448fd cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=2OwXVqhp2XgA:10 a=COk6AnOGAAAA:8
+ a=b55CFHG7iiXKeY8L-hQA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: -GOc8sAEv-RcYJ75lxStY_8IBQuYJA7m
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODA2MDAwOCBTYWx0ZWRfX8M/trCRHG0r3
+ 5InmPPFyj/YFls1zisGC/cSV4Ri1xxORfGM0HhTk40jMhQDArESBAKDrtE7Uqz3av8Sa1JS8/wb
+ bKA31BrUs/QDF0n5tBJ2WfY5RzIP+EMmt4GDHGLj0XBjkbz7StqaForb4jkasBW9CvPahEtEoQ4
+ BaCHl5JUg+oMWMFnS0pbZJpAmDuvB1olc7ri5cs7I5EeSbW6VYBlk/XSe03wgFvjAkWzpOiyhTA
+ Grbg24ViW8GIOXpD5eQz173OFHAC0WR/DiqKIcRVZ2bbnkDmTCOt4iXBogfjLMNsGosj3ESMjsm
+ 8HjL5WMdio9db7ECoBoVPcEv3o9rPpoHpNBQJTETlZCIaeddo/tTZ33h1mLhuIUZs5YOenk13uN
+ +ncssL07
+X-Proofpoint-GUID: -GOc8sAEv-RcYJ75lxStY_8IBQuYJA7m
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-08-06_05,2025-08-06_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1011 malwarescore=0 adultscore=0 suspectscore=0 bulkscore=0
+ phishscore=0 priorityscore=1501 spamscore=0 impostorscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2508060008
 
 
 
-Hello,
+On 4/20/2023 6:02 PM, Alexander Shishkin wrote:
+> Mao Jinlong <quic_jinlmao@quicinc.com> writes:
+> 
+>> Add MIPI OST(Open System Trace) protocol support for stm to format
+>> the traces. OST over STP packet consists of Header/Payload/End. In
+>> header, there will be STARTSIMPLE/VERSION/ENTITY/PROTOCOL. STARTSIMPLE
+>> is used to signal the beginning of a simplified OST base protocol
+>> packet.The Entity ID field is a one byte unsigned number that identifies
+>> the source. FLAG packet is used for END token.
+> 
+> We'd need a better explanation of what OST is, maybe a link to the spec
+> if one exists.
+> 
+Hi Alexander,
 
-kernel test robot noticed "kunit.VCAP_API_DebugFS_Testsuite.vcap_api_show_admin_raw_test.fail" on:
+Checked with different internal teams. Spec is not public. We need to 
+upstream these codes. We can add more explanation into the commit
+text. Is that ok for your ?
 
-commit: adcc3bfa8806761ac21aa271f78454113ec6936e ("sched: Adapt sched tracepoints for RV task model")
-https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
-
-[test failed on linus/master      6a68cec16b647791d448102376a7eec2820e874f]
-[test failed on linux-next/master 84b92a499e7eca54ba1df6f6c6e01766025943f1]
-
-in testcase: kunit
-version: 
-with following parameters:
-
-	group: group-03
-
-
-
-config: x86_64-rhel-9.4-kunit
-compiler: gcc-12
-test machine: 8 threads 1 sockets Intel(R) Core(TM) i7-3770K CPU @ 3.50GHz (Ivy Bridge) with 16G memory
-
-(please refer to attached dmesg/kmsg for entire log/backtrace)
-
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <oliver.sang@intel.com>
-| Closes: https://lore.kernel.org/oe-lkp/202508070739.4c6e0633-lkp@intel.com
-
-
-[   80.925851]     # vcap_api_show_admin_raw_test: EXPECTATION FAILED at drivers/net/ethernet/microchip/vcap/vcap_api_debugfs_kunit.c:377
-                   Expected test_expected == test_pr_buffer[0], but
-                       test_expected == "  addr: 786, X6 rule, keysets: VCAP_KFS_MAC_ETYPE
-               "
-                       test_pr_buffer[0] == ""
-[   80.926182]     not ok 2 vcap_api_show_admin_raw_test
+Thanks
+Jinlong Mao
 
 
 
-The kernel config and materials to reproduce are available at:
-https://download.01.org/0day-ci/archive/20250807/202508070739.4c6e0633-lkp@intel.com
-
-
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> Another thing that this patch does is adding source identification,
+> which needs to be described better.
+> 
+> [...]
+> 
+>> +CONFIG_STM_PROTO_OST is for p_ost driver enablement. Once this config
+>> +is enabled, you can select the p_ost protocol by command below:
+>> +
+>> +# mkdir /sys/kernel/config/stp-policy/stm0:p_ost.policy
+>> +
+>> +The policy name format is extended like this:
+>> +    <device_name>:<protocol_name>.<policy_name>
+>> +
+>> +With coresight-stm device, it will be look like "stm0:p_ost.policy".
+> 
+> The part about protocol selection should probably be in stm.rst
+> instead.
+> 
+>> +You can check if the protocol is set successfully by:
+>> +# cat /sys/kernel/config/stp-policy/stm0:p_ost.policy/protocol
+>> +p_ost
+> 
+> A successful mkdir is technically enough.
+> 
+>> +With MIPI OST protocol driver, the attributes for each protocol node is:
+>> +# mkdir /sys/kernel/config/stp-policy/stm0:p_ost.policy/default
+>> +# ls /sys/kernel/config/stp-policy/stm0:p_ost.policy/default
+>> +channels  entity    masters
+> 
+> Where's "entity_available"?
+> 
+>> +The entity here is the set the entity that p_ost supports. Currently
+>> +p_ost supports ftrace and console entity.
+>> +
+>> +Get current available entity that p_ost supports:
+>> +# cat /sys/kernel/config/stp-policy/stm0:p_ost.policy/default/entity_available
+>> +ftrace console
+>> +
+>> +Set entity:
+>> +# echo 'ftrace' > /sys/kernel/config/stp-policy/stm0:p_ost.policy/default/entity
+> 
+> This is not a very good example, as it will flag everything that goes
+> through STM as "ftrace", which is probably not what anybody wants.
+> 
+> The bigger question is, why do we need to set the source type (for
+> which "entity" is not a very good name, btw) in the configfs when
+> corresponding stm source drivers already carry this information.
+> There should be a way to propagate the source type from stm source
+> driver to the protocol driver without relying on the user to set it
+> correctly.
+> 
+>> +See Documentation/ABI/testing/configfs-stp-policy-p_ost for more details.
+>> diff --git a/drivers/hwtracing/stm/Kconfig b/drivers/hwtracing/stm/Kconfig
+>> index eda6b11d40a1..daa4aa09f64d 100644
+>> --- a/drivers/hwtracing/stm/Kconfig
+>> +++ b/drivers/hwtracing/stm/Kconfig
+>> @@ -40,6 +40,20 @@ config STM_PROTO_SYS_T
+>>   
+>>   	  If you don't know what this is, say N.
+>>   
+>> +config STM_PROTO_OST
+>> +	tristate "MIPI OST STM framing protocol driver"
+>> +	default CONFIG_STM
+>> +	help
+>> +	  This is an implementation of MIPI OST protocol to be used
+>> +	  over the STP transport. In addition to the data payload, it
+>> +	  also carries additional metadata for entity, better
+>> +	  means of trace source identification, etc.
+> 
+> What does "entity" mean here?
+> 
+> [...]
+> 
+>> +#define OST_TOKEN_STARTSIMPLE		(0x10)
+>> +#define OST_VERSION_MIPI1		(0x10 << 8)
+> 
+> Either write them as bits (BIT(12)) or as a hex value (0x1000).
+> 
+>> +/* entity id to identify the source*/
+>> +#define OST_ENTITY_FTRACE		(0x01 << 16)
+>> +#define OST_ENTITY_CONSOLE		(0x02 << 16)
+>> +
+>> +#define OST_CONTROL_PROTOCOL		(0x0 << 24)
+> 
+> Zero, really? At this point I'm wondering if this code has even been
+> tested.
+> 
+> [...]
+> 
+>> +static ssize_t
+>> +ost_t_policy_entity_store(struct config_item *item, const char *page,
+>> +			size_t count)
+>> +{
+>> +	struct mutex *mutexp = &item->ci_group->cg_subsys->su_mutex;
+>> +	struct ost_policy_node *pn = to_pdrv_policy_node(item);
+>> +	char str[10] = "";
+>> +
+>> +	mutex_lock(mutexp);
+>> +	if (sscanf(page, "%s", str) != 1)
+>> +		return -EINVAL;
+>> +	mutex_unlock(mutexp);
+> 
+> You forgot to release the mutex in the error path.
+> Also, why do you need a mutex around sscanf() in the first place?
+> Also, the sscanf() can overrun str.
+> 
+>> +	if (!strcmp(str, str_ost_entity_type[OST_ENTITY_TYPE_FTRACE]))
+>> +		pn->entity_type = OST_ENTITY_TYPE_FTRACE;
+>> +	else if (!strcmp(str, str_ost_entity_type[OST_ENTITY_TYPE_CONSOLE]))
+>> +		pn->entity_type = OST_ENTITY_TYPE_CONSOLE;
+> 
+> Why can't you strcmp() on the page directly?
+> Also, this is where you do want to hold the mutex.
+> Also, what if there are more source types?
+> 
+>> +	else
+>> +		return -EINVAL;
+>> +	return count;
+>> +}
+>> +CONFIGFS_ATTR(ost_t_policy_, entity);
+>> +
+>> +static ssize_t ost_t_policy_entity_available_show(struct config_item *item,
+>> +				char *page)
+>> +{
+>> +	return scnprintf(page, PAGE_SIZE, "%s\n", "ftrace console");
+> 
+> Don't hardcode these.
+> 
+>> +}
+>> +CONFIGFS_ATTR_RO(ost_t_policy_, entity_available);
+>> +
+>> +static struct configfs_attribute *ost_t_policy_attrs[] = {
+>> +	&ost_t_policy_attr_entity,
+>> +	&ost_t_policy_attr_entity_available,
+>> +	NULL,
+>> +};
+>> +
+>> +static ssize_t notrace ost_write(struct stm_data *data,
+>> +		struct stm_output *output, unsigned int chan,
+>> +		const char *buf, size_t count)
+>> +{
+>> +	unsigned int c = output->channel + chan;
+>> +	unsigned int m = output->master;
+>> +	const unsigned char nil = 0;
+>> +	u32 header = DATA_HEADER;
+>> +	u8 trc_hdr[16];
+>> +	ssize_t sz;
+>> +
+>> +	struct ost_output *op = output->pdrv_private;
+> 
+> As said above, the stm source driver that calls here already knows its
+> own source type, there's no need to store it separately.
+> 
+>> +
+>> +	/*
+>> +	 * Identify the source by entity type.
+>> +	 * If entity type is not set, return error value.
+>> +	 */
+>> +	if (op->node.entity_type == OST_ENTITY_TYPE_FTRACE) {
+>> +		header |= OST_ENTITY_FTRACE;
+>> +	} else if (op->node.entity_type == OST_ENTITY_TYPE_CONSOLE) {
+>> +		header |= OST_ENTITY_CONSOLE;
+>> +	} else {
+>> +		pr_debug("p_ost: Entity must be set for trace data.");
+> 
+> You forgot a newline.
+> Also, this message seems to be quite useless: it's either a nop or a
+> dmesg storm. In general, it's a bad idea to printk() in the write
+> callback.
+> 
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	/*
+>> +	 * STP framing rules for OST frames:
+>> +	 *   * the first packet of the OST frame is marked;
+>> +	 *   * the last packet is a FLAG with timestamped tag.
+>> +	 */
+>> +	/* Message layout: HEADER / DATA / TAIL */
+>> +	/* HEADER */
+>> +	sz = data->packet(data, m, c, STP_PACKET_DATA, STP_PACKET_MARKED,
+>> +			  4, (u8 *)&header);
+>> +	if (sz <= 0)
+>> +		return sz;
+>> +
+>> +	/* DATA */
+>> +	*(u16 *)(trc_hdr) = STM_MAKE_VERSION(0, 4);
+>> +	*(u16 *)(trc_hdr + 2) = STM_HEADER_MAGIC;
+>> +	*(u32 *)(trc_hdr + 4) = raw_smp_processor_id();
+>> +	*(u64 *)(trc_hdr + 8) = task_tgid_nr(get_current());
+> 
+> What's the value in exporting PIDs when there are PID namespaces? How is
+> this useful? Also, neither console nor ftrace are required to come in a
+> task context.
+> 
+> I already asked in the previous version, why is trc_hdr not a struct?
+> 
+> There also used to be a timestamp field in trc_hdr, what happened to it?
+> 
+> Regards,
+> --
+> Alex
 
