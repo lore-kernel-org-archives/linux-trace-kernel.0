@@ -1,576 +1,235 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2060.outbound.protection.outlook.com [40.107.243.60])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1631D25D536
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  7 Aug 2025 13:33:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754573624; cv=none; b=rFtOzKaM3xZbeJSWVMX/ZmuZToW1aulgK1UNwzh/Nfza7eG74+cC6MQX6wRAcSazpUJ7gbzEBJnFqmaSItAfiCZSwB45LFcYaf3SfIaVfYuCaJSwnw0fe/ZbKcWWIL9ddogFqdoDuL9Q5CKl3cUqVcKYhae7/vFkOTcfN2nt9hM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754573624; c=relaxed/simple;
-	bh=U6K+ANY7fkta6at7VP2ODHOw6XdAPLK7qstCcEL/BJs=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JIxOCco1sUD9KqW+1SQHks+MSR53NpmCtw6a1+EiVa+rYqC6wzkLdvjI4WmIbWhX0mM7TR+SYAUj8+lkCzhvyQV/YihRlUyuv2QmZ/1O8ams+Cg4X4lfc7m2ws5wajptC5wfrqaZW/W0PEX9Lvli+Hy6Lpc6x+AA5dMxAERlOGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DHqN5LJN; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6027424E4C3;
+	Thu,  7 Aug 2025 13:38:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.60
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1754573935; cv=fail; b=lZwYe7zmbsjyXe4SrPta4bIkYO/TbI1bnJZgWLKtYoF2CouOvY7qa6Q6JRIsO9PySDVWHVDWyuuOsvjSbOOqU613tpfi0kyEXnmFtFM+K/GvlgYiyyfpDOe3cz8dac2g72ocDT4Kve4+a06u0vlgbmZTJsRsOQ+NHTU2Xt914ro=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1754573935; c=relaxed/simple;
+	bh=YYkX+2ESGPrpGc4G/ZKAlhPbvd03EeNYskhxHUGxXrE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=LcPy46qaRIx0vHztcAcmmUdCX3ovgIG7uqqUhYxF0bY64+ic79l289wEMZJABpccmmPzbM2sTylcuE/jdtf1ElYKx7Pf2RhtcLu2ciB1xQao71sRBU7+b2Ykp8T4HaWIMQoK0yAYFGgf9jNzeTLZO1mJzh/5KZWCnmefSALAb0Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Bf0mhOSD; arc=fail smtp.client-ip=40.107.243.60
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DHqN5LJN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1754573620;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=U6K+ANY7fkta6at7VP2ODHOw6XdAPLK7qstCcEL/BJs=;
-	b=DHqN5LJNQD8NbbTYoRC/z/XyYlFl/wjg8p86hQL5nMIcRaCPUj3nFXbsydab4XpXQRb7q9
-	k7sBYvJ071gNHJyiWf7HNQ6IxII9T5ePttHRmn19mjQFz3KrgqWeiwJtClzJPA3tMkU3bn
-	nQ5Pq9l0rzNwSvGoEWaHuxARJlsNDGs=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-139-5DZnFdZoPKW2MDDQDE_JxQ-1; Thu, 07 Aug 2025 09:33:39 -0400
-X-MC-Unique: 5DZnFdZoPKW2MDDQDE_JxQ-1
-X-Mimecast-MFC-AGG-ID: 5DZnFdZoPKW2MDDQDE_JxQ_1754573619
-Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-70707168c59so11155156d6.2
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 07 Aug 2025 06:33:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754573619; x=1755178419;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JzvjZNuRe7YCX2KZM4OxlwHzZyDCzCQGFpr0/LzBYBo=;
-        b=bR0Hr/dh3JjnahX0MNw5loAGQRrkLP+vApt2Zk6LJRNXMJaCLti8x4JvojgxfrWQbb
-         5imARPJXpBeYOaf43+BjhRfbeFRfmZ7gAd7TnIyCQfH0/8+6OpA73sQx8kTgQbEfXKiK
-         FHR7qS9MUpJabB/F8bdVTUHEPQWg2tQcLtJvj8GTdZKV417ceQAUXTBvmgLwPIslKYjk
-         zwMPrjjVnoDNyBR+is2+dN8LGNW6yA/ikfO8/MO0tYsRfpgodJcGizmJsq59NlsaUcRl
-         st56ilT5Mn0PvL4J0nm0Oh1s6RUG+EbzY1tbwKjI6yfUnqGDZJkyAoY7rucuOx4qUis0
-         YJ5A==
-X-Forwarded-Encrypted: i=1; AJvYcCVH7rDpLsa9JUlg9bjv6oWNOftTF9p9zRepk5VjrriUE+Nrd4XPOEo7WEAEWnJT+J3A7R8ZkCDlYOmyti056gM074Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzyP8q7qM4Kp07hrD3V/hciiSn1763Xi8QGSQ8OmAYuUEtT7B16
-	dxtkDkflwmjgSiyU70IsCSbW9cWUglg8KMqISYXvouoLQfsG2eGPXvIgNxRlV0QDjz4mTK+MiUN
-	D92TR2tFadT5RpqfypxS1FzwN2TtD2eacbwEJt+uofwSegFbYWzwb9tsC41NM7wSXPbktjmZOXw
-	==
-X-Gm-Gg: ASbGncvcNajJtgq5c0LECUo07uDtzXKUvpczz9tMxbGDauDHMF5jN+7dQXc0QRk6x0J
-	j62oZIzajUBVrBm9Ziczb4cY3p5FYITwVcR1XUSn0JhnThQMRUgcWlMcy/drP3NVL/EaiJYDB6Q
-	bG7eA4HGrIkJCyn6XVTEnsOUCjqo+TFTgYFLzzXnsrRDhVjsqnVR/szJzNXjhPsekAx1VYdFD+b
-	cJuBhPRSqK7wXTBgOOYz+3G2EIVYWBQ0lBThXPvZ3aPh5M03dR1epK++imesMyFGlK20aYoZOFe
-	cQT2P0k4tA0Ka49Vo2luAD69bgL6kUpSdGm47MSoLxNdriz7GeCTbFirwPSYT//WEg==
-X-Received: by 2002:a05:6214:1d05:b0:707:4aa0:2f4 with SMTP id 6a1803df08f44-7097ae5dbb2mr85915116d6.20.1754573619006;
-        Thu, 07 Aug 2025 06:33:39 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEX/+DVKAkIMUWAfViHhwH0ZWPtd2exQo2/Ctaqin01+KTwAF+GzoEvfJHNNow4U4RS0EmwKA==
-X-Received: by 2002:a05:6214:1d05:b0:707:4aa0:2f4 with SMTP id 6a1803df08f44-7097ae5dbb2mr85914546d6.20.1754573618298;
-        Thu, 07 Aug 2025 06:33:38 -0700 (PDT)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.30])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-7077c9dff72sm97167506d6.15.2025.08.07.06.33.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Aug 2025 06:33:37 -0700 (PDT)
-Message-ID: <957660bfb5c291b5bece9e557f30866728b9aed0.camel@redhat.com>
-Subject: Re: [PATCH v2 5/5] rv: Add rts monitor
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Nam Cao <namcao@linutronix.de>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>,  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Thu, 07 Aug 2025 15:33:35 +0200
-In-Reply-To: <88fdbeb3f2ecf3a6259f3ee8636ae5b21fa6b72d.1754466623.git.namcao@linutronix.de>
-References: <cover.1754466623.git.namcao@linutronix.de>
-	 <88fdbeb3f2ecf3a6259f3ee8636ae5b21fa6b72d.1754466623.git.namcao@linutronix.de>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
- xyhmqeUWOzFx5P43S1E1dhsrLWgP
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42)
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Bf0mhOSD"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=odOtssjFOkCHYaLHQ+/p9kfwL3oWQqyiWiKZLpw7XJiF0foKdV34qpOhsa1iNCspSxVdxU4gA0WIItvoFQ9sRtdvvhlbhXyTBk5Ca0RXJ3RlP78IzX7daEYxP+3DERHoiEVZUq6MhT6APGT5uklKHYQGIFquSh71x2Puus3T4i8nJPnglcxkCDj+8H6wruHDXuIIsoc9Tm1p4FS/4NhFdVpTORh7rLv1w8bBVZVxzJvWspW37QJRE8JbsVFRKO7JzmyP7iBHI65AgMr19mjmpCkS4hgxSVfHwg581jbnkd35C/EEQ7HPbqjeAMv/llJMdnXVlbhEQw0Qywxz9wytHA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=54Px3zvYf4CuEyxVRynpi6iF48N3mew5kEum4tnD5v0=;
+ b=WHGqL+evN1vHpZ7qbQ6RVVDVkvnpn9fYJEwlKcNw2tuS3UHw/cekUJCZobaYpQw5oT7ZwdVyQKnVpTVWm91I3/g6uByftqmmGJajARVQMwsOO9dqOj08ynUXbkUqDt6SJ5/gtWuR9mLD8+eLzSM5/PNlgbOjQw+WTLl9Q+Wilktn4nmyWf4bk60zuNCZL/pFTfeMO+nffuX/AI27zQBaZMKSFQQb2GELkui8GmIZSdjYczrggAtJANFiIiV2RKlxQg+TV+OCwfC3kU1vxB88biOmpAblynNudTd1fLMHTUoWJN7e0avj0G1kzWej0DCDpJG7TOjvkxlpUnW+JZo5Vg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=54Px3zvYf4CuEyxVRynpi6iF48N3mew5kEum4tnD5v0=;
+ b=Bf0mhOSD+JdgReLtcb1INqB0/uyZWs8MTJetWOhSwa3/PLkVmbmv/hM6Jl3dg3NDMwPrsdDM/AlzyEUrUBURHkACZ6cjHLXiooKnG2YMGnzXwkRRzEcBCBNXbcVCGh58e12vxDNvxaaYSD3/bhb5e9s0aMvTNDZ9mGcWTWp5Z0O13GK0Lzmffv4MQJjFCGVLtyoFeRFT2sBeSM6zy6Jvlf/218RHAdsr+LCFfAT+PZAJJKhqdojdp/MgjqxqGvZgP7XN2ZxopR4zMA620B+mgkDwCkQXS11WIz7ZuvEqkQWL/b9jGOLORKloIcURxJ7DSXvoNKuXdOWI1COqBddbww==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
+ by DS0PR12MB8768.namprd12.prod.outlook.com (2603:10b6:8:14f::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9009.13; Thu, 7 Aug
+ 2025 13:38:49 +0000
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732%4]) with mapi id 15.20.9009.017; Thu, 7 Aug 2025
+ 13:38:49 +0000
+Date: Thu, 7 Aug 2025 10:38:48 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Leon Romanovsky <leon@kernel.org>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
+	Leon Romanovsky <leonro@nvidia.com>,
+	Abdiel Janulgue <abdiel.janulgue@gmail.com>,
+	Alexander Potapenko <glider@google.com>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Christoph Hellwig <hch@lst.de>, Danilo Krummrich <dakr@kernel.org>,
+	iommu@lists.linux.dev, Jason Wang <jasowang@redhat.com>,
+	Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
+	Jonathan Corbet <corbet@lwn.net>, Juergen Gross <jgross@suse.com>,
+	kasan-dev@googlegroups.com, Keith Busch <kbusch@kernel.org>,
+	linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	linux-nvme@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+	linux-trace-kernel@vger.kernel.org,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>, rust-for-linux@vger.kernel.org,
+	Sagi Grimberg <sagi@grimberg.me>,
+	Stefano Stabellini <sstabellini@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	virtualization@lists.linux.dev, Will Deacon <will@kernel.org>,
+	xen-devel@lists.xenproject.org
+Subject: Re: [PATCH v1 11/16] dma-mapping: export new dma_*map_phys()
+ interface
+Message-ID: <20250807133848.GL184255@nvidia.com>
+References: <cover.1754292567.git.leon@kernel.org>
+ <b96c639433d3b614288be4b305ecba3a9fb2c00f.1754292567.git.leon@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b96c639433d3b614288be4b305ecba3a9fb2c00f.1754292567.git.leon@kernel.org>
+X-ClientProxiedBy: YT4PR01CA0497.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:10c::15) To CH3PR12MB8659.namprd12.prod.outlook.com
+ (2603:10b6:610:17c::13)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 0ddHMBOn3DUyqS-qUVy-e1GKWmZ7i6X3tUJMUANcids_1754573619
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|DS0PR12MB8768:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5c6203ba-7b89-4eee-7a5d-08ddd5b7bd5f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?AMKVoTshkoWihCrrnOUvbEbK3Gi7aXCYIDForZBGpYKryA4uJRbN0UDpbFTN?=
+ =?us-ascii?Q?H/nr1xjNK0yCSTAH2/3voqKzqcPQ8JjFMyfvCCv2aMnvNbHTA33B63muGzmW?=
+ =?us-ascii?Q?5DuQYeQkxu9Uw2xN2G18A8DecvYxjTEqqa7EJ52Dz0bjjAPXvhQ6AbLFGWBo?=
+ =?us-ascii?Q?59GavV3fO9HNdDxXcrP+paneiJa1nxYzUrzHDIscVuUyHiCjrFZNgOHhDikR?=
+ =?us-ascii?Q?7wcVcGvgI+hCp9HjXxKQW7tGN8V0FZgKJ/bqXmnsX/x5N/3zlk0pVa9FtJCH?=
+ =?us-ascii?Q?CLPxOt79JdMBCRMDwcNL4hI95vmDbD6/mce+8brYWOpRzcZnRWyO0Z5vCBGI?=
+ =?us-ascii?Q?JDKz/8pIG7Vb3fuJmFMrtI+6ePyGKdAZgWpMJplKOpaDdL8hONs1XFxGY7VF?=
+ =?us-ascii?Q?svLNjoB5HWfHueL7yuniD8+OFfjxkYeo06UE1BdxGED3DIddzKnkvCsYbmy2?=
+ =?us-ascii?Q?VVwT75RYTyr6y5rIgz8ZLeboijTMVYkuysX3l8Ek+VqpZpozDcvGgOwi5WrW?=
+ =?us-ascii?Q?TLv867KYTn5yifskzFshdlklW2WRDN6LKSXpACxyJQaInAZ5DaBuhGWJmIoI?=
+ =?us-ascii?Q?DaBEtwnyLGOS/S1BvFNEUiuqy0i++7tiaJLQxVzGHrqb1qEGEukHyzAMHjZi?=
+ =?us-ascii?Q?TDdil9vH++NAqfwB+u16QWc/W04KAsYHH0kgRD1OlGGP4AQ/OWmGu2I69nP3?=
+ =?us-ascii?Q?IeWJNgKGb2zPeCIR5L77759PtmgLjN9ZhwxCfwgEgrCcd6CywpMAD2pVM8hu?=
+ =?us-ascii?Q?3mZVa0GoXXJgLkCn2cznn+Rk7DSN3JZxQZRyFAC7E5crCHy/caMXV0IW6cKu?=
+ =?us-ascii?Q?u34KX7iKGK8KAze/O4LNUcsx+v3h1RnDfd/N/Rou0rM+Z5viJS4XumBIE1Jz?=
+ =?us-ascii?Q?SzYPcu8cpkdfVKdtTBdSm0oGs3ugExQh0AgyzrygW3AI/wEbU+hmjREG4iGS?=
+ =?us-ascii?Q?qtmNR6urQDwKamP16/n/ls1+o0YkvBPAuhiwtpUP9HOlaORcZB3FN29xVU1v?=
+ =?us-ascii?Q?TqXUAq7QjNtdswDx9oAvbvt/vTce4GRKf/wneoIZAVvOjUckgyP6SfE/Y193?=
+ =?us-ascii?Q?jwhYRGUwASumZDJM62eTSJoZUQEb7/X0M+i1nPjqPkJP33D4vu3NtK94/gKB?=
+ =?us-ascii?Q?wGakF67m/iwQtk5r07m1A/AtX6+j5UjwVztZ34j7mNl+c1EeLAnYfnmrB7aw?=
+ =?us-ascii?Q?sJwNviOQtRPsQfeJqQ/GG5CFr4zbQt7E0hoxpBm9rXEMb8O7/x3Nu0rM+YS6?=
+ =?us-ascii?Q?rxP5rXjWZsJa9uzk+4HAdEq4C3vazwpTl7fBeNJsDiScIPUUvpC5+7OteGZ3?=
+ =?us-ascii?Q?pM8bimM2DTTDvatW94F9tddt+JSq7lKAKgOsbF3YH0ARnXa7VuNBAwsbNsbU?=
+ =?us-ascii?Q?Kt8K+jvchAm+kmGcMUFNcXaGLGeT2VGjqdTOqFq/nWWV8fszgKi6LZ8x6BWB?=
+ =?us-ascii?Q?oJRmbUVR0z0=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?MBPINjYfPGiE5jDtZnc+kL6Tem1DGVvWnnr4IAqOJ3QqDGwGQYyBqSEdaTWv?=
+ =?us-ascii?Q?rCrkX2y/Sk4d6j61UbByvUXt3nKTkD+MeO8cPgtXL/XPX2sGtHrb8gNrSr/u?=
+ =?us-ascii?Q?OEKNTVQZ7CHsvHCdnd9X5FXuoX0i/hrhFXJMhY5OxAO2m5eI/uVKfnRhtNME?=
+ =?us-ascii?Q?WfPPxcc0BXNl1H77XG1bbVfLl4VNWDgxX70H0hEofaU4W5E3P1swLrZW9mdQ?=
+ =?us-ascii?Q?Feukc/5DifHe2SePpUv2EKDGC4VLP8K0ep5Ci+eTGyK2EaR19DpqUB7DqHVw?=
+ =?us-ascii?Q?ocoo7Xx2dFbyGGwWrbx8IanAzYUqZ6w3V2/BwdDcAbpOYtPMk++ubsPaWkJS?=
+ =?us-ascii?Q?86KBb6LCEKOCBbnz91YiL8E+jtdRHZk0nVLho1rNXZKq6wB0lX7GySKFPJYi?=
+ =?us-ascii?Q?4omNcGV34wSS0K+GJyD46PR/zDcAmDow1riE3YHKDXpojGGSfyFt7iU3pvfH?=
+ =?us-ascii?Q?wc8uUrVB+XPvmrMfTcW6f6GhHRWWtb4Dv4kTaBpvPOa+uihaAGvn0nj+7oA0?=
+ =?us-ascii?Q?lH1msGlh5aLcnLykZ0KM2VqWGkDwK1aa8TxDl0T7g19lHp/PkCYYEyI4Oydg?=
+ =?us-ascii?Q?x36u5MNNY4csSkfMtShIOKMjAXTOfgsV3noFPXKv7GWBj4G63jQRQy7KIztY?=
+ =?us-ascii?Q?iPkXT0BhYBwhfcaZNLxAMZv/8/Vpu40Cz3B5loET0MoCiijmOSqhjQdf7GwW?=
+ =?us-ascii?Q?D35UMZoK5FjnyeDHRoCkY78/CsRcdqBbRu0V6nzyYh7xTVf8SEmvcU4/IM9+?=
+ =?us-ascii?Q?3LW+QVoPsOUarqzKeGJeU5AoFMb/rluC1yy28WSJumduJKF/GZW2yw51wFAB?=
+ =?us-ascii?Q?AX9Y4SJw5BaOn58fwEy4isBeUtWN43pvqqdfGWTuVGltm4QnzrrRrmFYQxzo?=
+ =?us-ascii?Q?YCfQhh0zaLBvD0u0iYz56hPKffO19tDiR+lPXZxIpIVEszLomukhAvwhOJUW?=
+ =?us-ascii?Q?Mw+9j/MEH0hp09oZ3t8tmTi9yYBa4OvVYhtPBCu7s0rvRmL1yCnVTkTlJvQ5?=
+ =?us-ascii?Q?l3+N6jLtVsMz+54ZIPO8T0dp0FSwyKmeiM2I57nUM+9+kei6xaLYl/nsyMcS?=
+ =?us-ascii?Q?lFDpa4criGr7VWHlF9ecZdlmf8lRoqzbwaY2QJALFxY+Yy8lXP2jKXIhGrlI?=
+ =?us-ascii?Q?nsR1LN7f5+rqLOuMwqDQX4KgxOZc2rBg31tXp98jmNTtVA0VPrwb7rTxuXnP?=
+ =?us-ascii?Q?K7xw5frFaQTc7Tm/sId0dEa4GdyvSh4TxEDupjoJUpbOPfqqUDwiCgIA8VCG?=
+ =?us-ascii?Q?qGb3DHiGYlIQyyN5h8MRnLL5ilAlfSWqxXHhjp5U3+BnT323tDZHc4o4W3Hr?=
+ =?us-ascii?Q?xKkMQNzUFeKjJZjncuQgF/AamcRWrEHt26fXixwlZVz+XJNC3GEHrBc+Ri4r?=
+ =?us-ascii?Q?0+lMkCA/HXc2Shv8z27rCCJ46nrnGEQEFheADapJYipY4Mc0WWth2NBJ4r/t?=
+ =?us-ascii?Q?SM90I4M3q/2GCRG7KRKfbnaRI5P/PHGCBgNBYW/YrXQ62mQggCHMTmkRy/6E?=
+ =?us-ascii?Q?aahjgO1NFxrLDGTYgcHOkgZKuqC/j4pfzuZPIHHd7UDLyQf/J9B+7fmCNSfu?=
+ =?us-ascii?Q?sxifWglQ0mC+PDduUgw=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5c6203ba-7b89-4eee-7a5d-08ddd5b7bd5f
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Aug 2025 13:38:49.1750
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ONwX7mHa1EuCmMcNdBKJGTu1Z2nQrZWEhwSNbSygKKjIuQb9Rcj66qSQFOkzaU9W
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8768
 
-On Wed, 2025-08-06 at 10:01 +0200, Nam Cao wrote:
-> Add "real-time scheduling" monitor, which validates that SCHED_RR and
-> SCHED_FIFO tasks are scheduled before tasks with normal and
-> extensible scheduling policies
->=20
-> Signed-off-by: Nam Cao <namcao@linutronix.de>
-> ---
-> v2:
-> =C2=A0 - use the new tracepoints
-> =C2=A0 - move to be under the rtapp container monitor
-> =C2=A0 - re-generate with the modified scripts
-> =C2=A0 - fixup incorrect enqueued status
-> ---
-> =C2=A0Documentation/trace/rv/monitor_sched.rst |=C2=A0 19 +++
-> =C2=A0tools/verification/models/sched/rts.ltl=C2=A0 |=C2=A0=C2=A0 5 +
+On Mon, Aug 04, 2025 at 03:42:45PM +0300, Leon Romanovsky wrote:
+> From: Leon Romanovsky <leonro@nvidia.com>
+> 
+> Introduce new DMA mapping functions dma_map_phys() and dma_unmap_phys()
+> that operate directly on physical addresses instead of page+offset
+> parameters. This provides a more efficient interface for drivers that
+> already have physical addresses available.
+> 
+> The new functions are implemented as the primary mapping layer, with
+> the existing dma_map_page_attrs() and dma_unmap_page_attrs() functions
+> converted to simple wrappers around the phys-based implementations.
 
-You moved it under rtapp, you probably want to move the LTL model and
-the descriptions there too.
+Briefly explain how the existing functions are remapped into wrappers
+calling the phys functions.
 
-Thanks,
-Gabriele
+> +dma_addr_t dma_map_page_attrs(struct device *dev, struct page *page,
+> +		size_t offset, size_t size, enum dma_data_direction dir,
+> +		unsigned long attrs)
+> +{
+> +	phys_addr_t phys = page_to_phys(page) + offset;
+> +
+> +	if (unlikely(attrs & DMA_ATTR_MMIO))
+> +		return DMA_MAPPING_ERROR;
+> +
+> +	if (IS_ENABLED(CONFIG_DMA_API_DEBUG))
+> +		WARN_ON_ONCE(!pfn_valid(PHYS_PFN(phys)));
 
->=20
-> diff --git a/Documentation/trace/rv/monitor_sched.rst
-> b/Documentation/trace/rv/monitor_sched.rst
-> index 3f8381ad9ec7..2f9d62a1af1f 100644
-> --- a/Documentation/trace/rv/monitor_sched.rst
-> +++ b/Documentation/trace/rv/monitor_sched.rst
-> @@ -396,6 +396,25 @@ preemption is always disabled. On non-
-> ``PREEMPT_RT`` kernels, the interrupts
-> =C2=A0might invoke a softirq to set ``need_resched`` and wake up a task.
-> This is
-> =C2=A0another special case that is currently not supported by the monitor=
-.
-> =C2=A0
-> +Monitor rts
-> +-----------
-> +
-> +The real-time scheduling monitor validates that tasks with real-time
-> scheduling
-> +policies (`SCHED_FIFO` and `SCHED_RR`) are always scheduled before
-> tasks with
-> +normal and extensible scheduling policies (`SCHED_OTHER`,
-> `SCHED_BATCH`,
-> +`SCHED_IDLE`, `SCHED_EXT`):
-> +
-> +.. literalinclude:: ../../../tools/verification/models/sched/rts.ltl
-> +
-> +Note that this monitor may report errors if real-time throttling or
-> fair
-> +deadline server is enabled. These mechanisms prevent real-time tasks
-> from
-> +monopolying the CPU by giving tasks with normal and extensible
-> scheduling
-> +policies a chance to run. They give system administrators a chance
-> to kill a
-> +misbehaved real-time task. However, they violate the scheduling
-> priorities and
-> +may cause latency to well-behaved real-time tasks. Thus, if you see
-> errors from
-> +this monitor, consider disabling real-time throttling and the fair
-> deadline
-> +server.
-> +
-> =C2=A0References
-> =C2=A0----------
-> =C2=A0
-> diff --git a/kernel/trace/rv/Kconfig b/kernel/trace/rv/Kconfig
-> index 7ef89006ed50..e9007ed32aea 100644
-> --- a/kernel/trace/rv/Kconfig
-> +++ b/kernel/trace/rv/Kconfig
-> @@ -67,6 +67,7 @@ source "kernel/trace/rv/monitors/opid/Kconfig"
-> =C2=A0source "kernel/trace/rv/monitors/rtapp/Kconfig"
-> =C2=A0source "kernel/trace/rv/monitors/pagefault/Kconfig"
-> =C2=A0source "kernel/trace/rv/monitors/sleep/Kconfig"
-> +source "kernel/trace/rv/monitors/rts/Kconfig"
-> =C2=A0# Add new rtapp monitors here
-> =C2=A0
-> =C2=A0# Add new monitors here
-> diff --git a/kernel/trace/rv/Makefile b/kernel/trace/rv/Makefile
-> index 750e4ad6fa0f..d7bfc7ae6677 100644
-> --- a/kernel/trace/rv/Makefile
-> +++ b/kernel/trace/rv/Makefile
-> @@ -17,6 +17,7 @@ obj-$(CONFIG_RV_MON_STS) +=3D monitors/sts/sts.o
-> =C2=A0obj-$(CONFIG_RV_MON_NRP) +=3D monitors/nrp/nrp.o
-> =C2=A0obj-$(CONFIG_RV_MON_SSSW) +=3D monitors/sssw/sssw.o
-> =C2=A0obj-$(CONFIG_RV_MON_OPID) +=3D monitors/opid/opid.o
-> +obj-$(CONFIG_RV_MON_RTS) +=3D monitors/rts/rts.o
-> =C2=A0# Add new monitors here
-> =C2=A0obj-$(CONFIG_RV_REACTORS) +=3D rv_reactors.o
-> =C2=A0obj-$(CONFIG_RV_REACT_PRINTK) +=3D reactor_printk.o
-> diff --git a/kernel/trace/rv/monitors/rts/Kconfig
-> b/kernel/trace/rv/monitors/rts/Kconfig
-> new file mode 100644
-> index 000000000000..5481b371bce1
-> --- /dev/null
-> +++ b/kernel/trace/rv/monitors/rts/Kconfig
-> @@ -0,0 +1,17 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +#
-> +config RV_MON_RTS
-> +=09depends on RV
-> +=09select RV_LTL_MONITOR
-> +=09depends on RV_MON_RTAPP
-> +=09default y
-> +=09select LTL_MON_EVENTS_CPU
-> +=09bool "rts monitor"
-> +=09help
-> +=09=C2=A0 Add support for RTS (real-time scheduling) monitor which
-> validates
-> +=09=C2=A0 that real-time-priority tasks are scheduled before
-> SCHED_OTHER tasks.
-> +
-> +=09=C2=A0 This monitor may report an error if RT throttling or
-> deadline server
-> +=09=C2=A0 is enabled.
-> +
-> +=09=C2=A0 Say Y if you are debugging or testing a real-time system.
-> diff --git a/kernel/trace/rv/monitors/rts/rts.c
-> b/kernel/trace/rv/monitors/rts/rts.c
-> new file mode 100644
-> index 000000000000..b4c3d3a4671d
-> --- /dev/null
-> +++ b/kernel/trace/rv/monitors/rts/rts.c
-> @@ -0,0 +1,144 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#include <linux/ftrace.h>
-> +#include <linux/tracepoint.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/init.h>
-> +#include <linux/rv.h>
-> +#include <linux/sched/deadline.h>
-> +#include <linux/sched/rt.h>
-> +#include <rv/instrumentation.h>
-> +
-> +#define MODULE_NAME "rts"
-> +
-> +#include <trace/events/sched.h>
-> +#include <rv_trace.h>
-> +#include <monitors/rtapp/rtapp.h>
-> +
-> +#include "rts.h"
-> +#include <rv/ltl_monitor.h>
-> +
-> +static DEFINE_PER_CPU(unsigned int, nr_queued);
-> +
-> +static void ltl_atoms_fetch(unsigned int cpu, struct ltl_monitor
-> *mon)
-> +{
-> +}
-> +
-> +static void ltl_atoms_init(unsigned int cpu, struct ltl_monitor
-> *mon,
-> +=09=09=09=C2=A0=C2=A0 bool target_creation)
-> +{
-> +=09ltl_atom_set(mon, LTL_SCHED_SWITCH, false);
-> +=09ltl_atom_set(mon, LTL_SCHED_SWITCH_DL, false);
-> +=09ltl_atom_set(mon, LTL_SCHED_SWITCH_RT, false);
-> +
-> +=09/*
-> +=09 * This may not be accurate, there may be enqueued RT tasks.
-> But that's
-> +=09 * okay, the worst we get is a false negative. It will be
-> accurate as
-> +=09 * soon as the CPU no longer has any queued RT task.
-> +=09 */
-> +=09ltl_atom_set(mon, LTL_RT_TASK_ENQUEUED, false);
-> +}
-> +
-> +static void handle_enqueue_task(void *data, int cpu, struct
-> task_struct *task)
-> +{
-> +=09unsigned int *queued =3D per_cpu_ptr(&nr_queued, cpu);
-> +
-> +=09if (!rt_task(task))
-> +=09=09return;
-> +
-> +=09(*queued)++;
-> +=09ltl_atom_update(cpu, LTL_RT_TASK_ENQUEUED, true);
-> +}
-> +
-> +static void handle_dequeue_task(void *data, int cpu, struct
-> task_struct *task)
-> +{
-> +=09unsigned int *queued =3D per_cpu_ptr(&nr_queued, cpu);
-> +
-> +=09if (!rt_task(task))
-> +=09=09return;
-> +
-> +=09/*
-> +=09 * This may not be accurate for a short time after the
-> monitor is
-> +=09 * enabled, because there may be enqueued RT tasks which are
-> not counted
-> +=09 * torward nr_queued. But that's okay, the worst we get is a
-> false
-> +=09 * negative. nr_queued will be accurate as soon as the CPU
-> no longer has
-> +=09 * any queued RT task.
-> +=09 */
-> +=09if (*queued)
-> +=09=09(*queued)--;
-> +=09if (!*queued)
-> +=09=09ltl_atom_update(cpu, LTL_RT_TASK_ENQUEUED, false);
-> +}
-> +
-> +static void handle_sched_switch(void *data, bool preempt, struct
-> task_struct *prev,
-> +=09=09=09=09struct task_struct *next, unsigned
-> int prev_state)
-> +{
-> +=09unsigned int cpu =3D smp_processor_id();
-> +=09struct ltl_monitor *mon =3D ltl_get_monitor(cpu);
-> +
-> +=09ltl_atom_set(mon, LTL_SCHED_SWITCH_RT, rt_task(next));
-> +=09ltl_atom_set(mon, LTL_SCHED_SWITCH_DL, dl_task(next));
-> +=09ltl_atom_update(cpu, LTL_SCHED_SWITCH, true);
-> +
-> +=09ltl_atom_set(mon, LTL_SCHED_SWITCH_RT, false);
-> +=09ltl_atom_set(mon, LTL_SCHED_SWITCH_DL, false);
-> +=09ltl_atom_update(cpu, LTL_SCHED_SWITCH, false);
-> +}
-> +
-> +static int enable_rts(void)
-> +{
-> +=09unsigned int cpu;
-> +=09int retval;
-> +
-> +=09retval =3D ltl_monitor_init();
-> +=09if (retval)
-> +=09=09return retval;
-> +
-> +=09for_each_possible_cpu(cpu) {
-> +=09=09unsigned int *queued =3D per_cpu_ptr(&nr_queued, cpu);
-> +
-> +=09=09*queued =3D 0;
-> +=09}
-> +
-> +=09rv_attach_trace_probe("rts", dequeue_task_tp,
-> handle_dequeue_task);
-> +=09rv_attach_trace_probe("rts", enqueue_task_tp,
-> handle_enqueue_task);
-> +=09rv_attach_trace_probe("rts", sched_switch,
-> handle_sched_switch);
-> +
-> +=09return 0;
-> +}
-> +
-> +static void disable_rts(void)
-> +{
-> +=09rv_detach_trace_probe("rts", sched_switch,
-> handle_sched_switch);
-> +=09rv_detach_trace_probe("rts", enqueue_task_tp,
-> handle_enqueue_task);
-> +=09rv_detach_trace_probe("rts", dequeue_task_tp,
-> handle_dequeue_task);
-> +
-> +=09ltl_monitor_destroy();
-> +}
-> +
-> +/*
-> + * This is the monitor register section.
-> + */
-> +static struct rv_monitor rv_rts =3D {
-> +=09.name =3D "rts",
-> +=09.description =3D "Validate that real-time tasks are scheduled
-> before lower-priority tasks",
-> +=09.enable =3D enable_rts,
-> +=09.disable =3D disable_rts,
-> +};
-> +
-> +static int __init register_rts(void)
-> +{
-> +=09return rv_register_monitor(&rv_rts, &rv_rtapp);
-> +}
-> +
-> +static void __exit unregister_rts(void)
-> +{
-> +=09rv_unregister_monitor(&rv_rts);
-> +}
-> +
-> +module_init(register_rts);
-> +module_exit(unregister_rts);
-> +
-> +MODULE_LICENSE("GPL");
-> +MODULE_AUTHOR("Nam Cao <namcao@linutronix.de>");
-> +MODULE_DESCRIPTION("rts: Validate that real-time tasks are scheduled
-> before lower-priority tasks");
-> diff --git a/kernel/trace/rv/monitors/rts/rts.h
-> b/kernel/trace/rv/monitors/rts/rts.h
-> new file mode 100644
-> index 000000000000..5881f30a38ce
-> --- /dev/null
-> +++ b/kernel/trace/rv/monitors/rts/rts.h
-> @@ -0,0 +1,126 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +
-> +/*
-> + * C implementation of Buchi automaton, automatically generated by
-> + * tools/verification/rvgen from the linear temporal logic
-> specification.
-> + * For further information, see kernel documentation:
-> + *=C2=A0=C2=A0 Documentation/trace/rv/linear_temporal_logic.rst
-> + */
-> +
-> +#include <linux/rv.h>
-> +
-> +#define MONITOR_NAME rts
-> +
-> +#define LTL_MONITOR_TYPE RV_MON_PER_CPU
-> +
-> +enum ltl_atom {
-> +=09LTL_RT_TASK_ENQUEUED,
-> +=09LTL_SCHED_SWITCH,
-> +=09LTL_SCHED_SWITCH_DL,
-> +=09LTL_SCHED_SWITCH_RT,
-> +=09LTL_NUM_ATOM
-> +};
-> +static_assert(LTL_NUM_ATOM <=3D RV_MAX_LTL_ATOM);
-> +
-> +static const char *ltl_atom_str(enum ltl_atom atom)
-> +{
-> +=09static const char *const names[] =3D {
-> +=09=09"rt_ta_en",
-> +=09=09"sc_sw",
-> +=09=09"sc_sw_dl",
-> +=09=09"sc_sw_rt",
-> +=09};
-> +
-> +=09return names[atom];
-> +}
-> +
-> +enum ltl_buchi_state {
-> +=09S0,
-> +=09S1,
-> +=09S2,
-> +=09S3,
-> +=09S4,
-> +=09RV_NUM_BA_STATES
-> +};
-> +static_assert(RV_NUM_BA_STATES <=3D RV_MAX_BA_STATES);
-> +
-> +static void ltl_start(unsigned int cpu, struct ltl_monitor *mon)
-> +{
-> +=09bool sched_switch_rt =3D test_bit(LTL_SCHED_SWITCH_RT, mon-
-> >atoms);
-> +=09bool sched_switch_dl =3D test_bit(LTL_SCHED_SWITCH_DL, mon-
-> >atoms);
-> +=09bool sched_switch =3D test_bit(LTL_SCHED_SWITCH, mon->atoms);
-> +=09bool rt_task_enqueued =3D test_bit(LTL_RT_TASK_ENQUEUED, mon-
-> >atoms);
-> +=09bool val13 =3D !rt_task_enqueued;
-> +=09bool val8 =3D sched_switch_dl || val13;
-> +=09bool val9 =3D sched_switch_rt || val8;
-> +=09bool val6 =3D !sched_switch;
-> +=09bool val1 =3D !rt_task_enqueued;
-> +
-> +=09if (val1)
-> +=09=09__set_bit(S0, mon->states);
-> +=09if (val6)
-> +=09=09__set_bit(S1, mon->states);
-> +=09if (val9)
-> +=09=09__set_bit(S4, mon->states);
-> +}
-> +
-> +static void
-> +ltl_possible_next_states(struct ltl_monitor *mon, unsigned int
-> state, unsigned long *next)
-> +{
-> +=09bool sched_switch_rt =3D test_bit(LTL_SCHED_SWITCH_RT, mon-
-> >atoms);
-> +=09bool sched_switch_dl =3D test_bit(LTL_SCHED_SWITCH_DL, mon-
-> >atoms);
-> +=09bool sched_switch =3D test_bit(LTL_SCHED_SWITCH, mon->atoms);
-> +=09bool rt_task_enqueued =3D test_bit(LTL_RT_TASK_ENQUEUED, mon-
-> >atoms);
-> +=09bool val13 =3D !rt_task_enqueued;
-> +=09bool val8 =3D sched_switch_dl || val13;
-> +=09bool val9 =3D sched_switch_rt || val8;
-> +=09bool val6 =3D !sched_switch;
-> +=09bool val1 =3D !rt_task_enqueued;
-> +
-> +=09switch (state) {
-> +=09case S0:
-> +=09=09if (val1)
-> +=09=09=09__set_bit(S0, next);
-> +=09=09if (val6)
-> +=09=09=09__set_bit(S1, next);
-> +=09=09if (val9)
-> +=09=09=09__set_bit(S4, next);
-> +=09=09break;
-> +=09case S1:
-> +=09=09if (val6)
-> +=09=09=09__set_bit(S1, next);
-> +=09=09if (val1 && val6)
-> +=09=09=09__set_bit(S2, next);
-> +=09=09if (val1 && val9)
-> +=09=09=09__set_bit(S3, next);
-> +=09=09if (val9)
-> +=09=09=09__set_bit(S4, next);
-> +=09=09break;
-> +=09case S2:
-> +=09=09if (val6)
-> +=09=09=09__set_bit(S1, next);
-> +=09=09if (val1 && val6)
-> +=09=09=09__set_bit(S2, next);
-> +=09=09if (val1 && val9)
-> +=09=09=09__set_bit(S3, next);
-> +=09=09if (val9)
-> +=09=09=09__set_bit(S4, next);
-> +=09=09break;
-> +=09case S3:
-> +=09=09if (val1)
-> +=09=09=09__set_bit(S0, next);
-> +=09=09if (val6)
-> +=09=09=09__set_bit(S1, next);
-> +=09=09if (val9)
-> +=09=09=09__set_bit(S4, next);
-> +=09=09break;
-> +=09case S4:
-> +=09=09if (val1)
-> +=09=09=09__set_bit(S0, next);
-> +=09=09if (val6)
-> +=09=09=09__set_bit(S1, next);
-> +=09=09if (val9)
-> +=09=09=09__set_bit(S4, next);
-> +=09=09break;
-> +=09}
-> +}
-> diff --git a/kernel/trace/rv/monitors/rts/rts_trace.h
-> b/kernel/trace/rv/monitors/rts/rts_trace.h
-> new file mode 100644
-> index 000000000000..ac4ea84162f7
-> --- /dev/null
-> +++ b/kernel/trace/rv/monitors/rts/rts_trace.h
-> @@ -0,0 +1,15 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +
-> +/*
-> + * Snippet to be included in rv_trace.h
-> + */
-> +
-> +#ifdef CONFIG_RV_MON_RTS
-> +DEFINE_EVENT(event_ltl_monitor_cpu, event_rts,
-> +=09TP_PROTO(unsigned int cpu, char *states, char *atoms, char
-> *next),
-> +=09TP_ARGS(cpu, states, atoms, next));
-> +
-> +DEFINE_EVENT(error_ltl_monitor_cpu, error_rts,
-> +=09TP_PROTO(unsigned int cpu),
-> +=09TP_ARGS(cpu));
-> +#endif /* CONFIG_RV_MON_RTS */
-> diff --git a/kernel/trace/rv/rv_trace.h b/kernel/trace/rv/rv_trace.h
-> index bf7cca6579ec..7b3a6fb8ca6f 100644
-> --- a/kernel/trace/rv/rv_trace.h
-> +++ b/kernel/trace/rv/rv_trace.h
-> @@ -221,6 +221,7 @@ DECLARE_EVENT_CLASS(error_ltl_monitor_cpu,
-> =C2=A0
-> =C2=A0=09TP_printk("cpu%u: violation detected", __entry->cpu)
-> =C2=A0);
-> +#include <monitors/rts/rts_trace.h>
-> =C2=A0// Add new monitors based on CONFIG_LTL_MON_EVENTS_CPU here
-> =C2=A0
-> =C2=A0#endif /* CONFIG_LTL_MON_EVENTS_CPU */
-> diff --git a/tools/verification/models/sched/rts.ltl
-> b/tools/verification/models/sched/rts.ltl
-> new file mode 100644
-> index 000000000000..90872bca46b1
-> --- /dev/null
-> +++ b/tools/verification/models/sched/rts.ltl
-> @@ -0,0 +1,5 @@
-> +RULE =3D always (RT_TASK_ENQUEUED imply SCHEDULE_RT_NEXT)
-> +
-> +SCHEDULE_RT_NEXT =3D (not SCHED_SWITCH) until (SCHED_SWITCH_RT or
-> EXCEPTIONS)
-> +
-> +EXCEPTIONS =3D SCHED_SWITCH_DL or not RT_TASK_ENQUEUED
+This is not useful, if we have a struct page and did page_to_phys then
+pfn_valid is always true.
 
+Instead this should check for any ZONE_DEVICE page and reject that.
+And handle the error:
+
+  if (WARN_ON_ONCE()) return DMA_MAPPING_ERROR;
+
+I'd add another debug check inside dma_map_phys that if !ATTR_MMIO
+then pfn_valid, and not zone_device
+
+> @@ -337,41 +364,18 @@ EXPORT_SYMBOL(dma_unmap_sg_attrs);
+>  dma_addr_t dma_map_resource(struct device *dev, phys_addr_t phys_addr,
+>  		size_t size, enum dma_data_direction dir, unsigned long attrs)
+>  {
+
+> -	const struct dma_map_ops *ops = get_dma_ops(dev);
+> -	dma_addr_t addr = DMA_MAPPING_ERROR;
+> -
+> -	BUG_ON(!valid_dma_direction(dir));
+> -
+> -	if (WARN_ON_ONCE(!dev->dma_mask))
+> +	if (IS_ENABLED(CONFIG_DMA_API_DEBUG) &&
+> +	    WARN_ON_ONCE(pfn_valid(PHYS_PFN(phys_addr))))
+>  		return DMA_MAPPING_ERROR;
+>  
+> -	if (dma_map_direct(dev, ops))
+> -		addr = dma_direct_map_resource(dev, phys_addr, size, dir, attrs);
+> -	else if (use_dma_iommu(dev))
+> -		addr = iommu_dma_map_resource(dev, phys_addr, size, dir, attrs);
+> -	else if (ops->map_resource)
+> -		addr = ops->map_resource(dev, phys_addr, size, dir, attrs);
+> -
+> -	trace_dma_map_resource(dev, phys_addr, addr, size, dir, attrs);
+> -	debug_dma_map_resource(dev, phys_addr, size, dir, addr, attrs);
+> -	return addr;
+> +	return dma_map_phys(dev, phys_addr, size, dir, attrs | DMA_ATTR_MMIO);
+>  }
+>  EXPORT_SYMBOL(dma_map_resource);
+
+I think this makes alot of sense at least.
+
+Jason
