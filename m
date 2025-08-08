@@ -1,96 +1,87 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 300A21C5D72
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  7 Aug 2025 15:53:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 719D1367;
+	Fri,  8 Aug 2025 04:05:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754581986; cv=none; b=NO9RxFRLJb2NxUYRpCvBVpQuDI/tBhbwCnSPbgyqh1MKyOvYPoeI07MgEabXd+biY4/HhjZeMQEMyTU24CgJIRgpXAbouRccWDgqM3M4LOVFoUKdILkA3WLB4Q3jmk/A3iAEBjOuXyRALLni1JbJta8wd4/Z8e9W0itBVuLaufk=
+	t=1754625949; cv=none; b=C0ukprLZJhpeNxby+PqgQbwI0AOqQz5PmWNAzv9ozAWT2p3DeNY9jNJLAVLaxF0IF56RBkKJn+xXlDFFYAtBtRsNn1Ahx/bnWFKd9wJhy3OsTMBNJapAP9bglo6CPlq2pc42DBCk8E3TmpJA+PSVSiOMoLhXLq2zExWExEP0iyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754581986; c=relaxed/simple;
-	bh=4+71XntHF9I7Qtv+3R507T2pAwqnQEhwRWqeq7OxH+A=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=lbWk1wplDTEzzDQoYjbvmZmBY5FgsDIYQIblVlY440VLa6SLvpQ1fdZ+Kr7cli258X8o9xLBA2jLI9iRRMLkuSbAd8h18oWq8R6LOLttE7Xi4Mslyl7Rfjdp6AKwYblJRSKUuJ4RfvRk2ce/iAgHvcCMctvA6ZmYmKGtta3OHGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=J3nYMSZe; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1754625949; c=relaxed/simple;
+	bh=1e0fzHuI/rntwQ57mo91TY0dA532PxuDhYaJ1EW9Fz8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cHut0/Vamkz45Swk55NfO4SvnUBWBNhbm88VDbMWV6TJBdCo/cGxwqKJUpErJvnBMFoXTkHxQfx+els93vZEvLFVPmdnZDahNP+OAZEF5V2OX3cRHFgQ9qBxRL2upChHdxZZjGQZQmM4pWfkDeZEcGx6M4dceps4op3Z+Aq1ock=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=iV3En+K2; arc=none smtp.client-ip=91.218.175.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="J3nYMSZe"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-458baf449cbso11493115e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 07 Aug 2025 08:53:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1754581982; x=1755186782; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=RgYWZn/Eywl+Mav1OP5OPQFwLYxPERTQWcamv2kYiM0=;
-        b=J3nYMSZebw9VWmF/QFP0xi0DPINHaDxcmayNZVUhmhiwKjoyt5ksEhtLUPTmDpcW1R
-         BdawAJiarGvfm0g3zwwGM40yiz70a84x6wL7bW4IX544Ai9msCNfQeZurvla4bfCNXhO
-         VN053mU5vKFT2z2IBP4MqhFo99GUbKcdg77tvCRenlc83ADHHaPCz+zUBwG/tcHEpDSV
-         JEdupUZcmcq1frML9VufMn3qdecUA5fLu7frG44Z1f8Im9ztnXEustPziVWpPbnOdOQ9
-         xcQK8ATcDRc+sm4LZgmxV9pQuRpo8l8uBXfpKq3TxWVnhUyA1g3atPX/Hc3rTpc8FOSa
-         vpQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754581982; x=1755186782;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RgYWZn/Eywl+Mav1OP5OPQFwLYxPERTQWcamv2kYiM0=;
-        b=W5mI21mE3vOZfofKIcDcKcFAmPDYAwhIyeqyIvKF3tgoG6xSifL90XTQcgcxbXSYA4
-         zJElXzESOzlvaN+ufo5FuDfptLv+oVLXa6KXzy9fTglhJwfh4wLtmVtrPzpLjSoDVOAb
-         uSmAPg31o0HWtRsDJEdebYFCvwrn/ioilz9Jp4Pv4pDWGhAUMZcOTVf3bqNY5LE8UuCu
-         3HW7+15vx0a6Kv1xr4Z0XLbtEtjgOnnKrBIJ+PK10hQ40hRd10i/3jhd5t6fzK7RHsOJ
-         Q9CmD3GVsC5ibVwSvaqViX3TZ466iVvIRNoyJCe2rdqW/oRKISylWlxQI0Htx4xybola
-         rOTA==
-X-Gm-Message-State: AOJu0YxPjMIwXYSmso78y61D+FNvhxGMbVBvhoLGJYOC1X7H9dbvcKYA
-	9NqrrKn0UE72f1JuxQG4i4i3W4M0a+6g4So5arhzgiUiEKHnGlP3rruX5AyRdxJ4HLY=
-X-Gm-Gg: ASbGncs9Jv5+QfXX1bIR/TB2vnKXqPUtTi+bs9MUSTNP/yqFv0wCb6dsJl/vVX35hap
-	z6iDAkKJapcUUbPE08G9DbFJk17AybEA7KsIIjN/TLM3CCzOi9RhLjgMzzW1gb6NvFmKS2yAVQx
-	wRINJc0JKqm9m3UxhRPnuHSVS3I65JYHUXRrU4/mQdq3re0KSB9OlZTMNU4S4epFt/5EofU3Yfx
-	d801+kuhF6al+S6dbDgP8D7ne5GQ+XEwEW4R1rf6DC1VtxRzjKY8CTKslmsdWdk+MBSLflzwTic
-	c4UXIwNHVceHnXtOq296IyNzs11R3y0bEg27FSc7xW52Bn2CUJMMGAyHjl9jUBgCGRCyYm+8I8H
-	tWg3+MTLINkH3+phzWXZIrWgSOt4=
-X-Google-Smtp-Source: AGHT+IG7LmqZc3afyVGoXFygF2Qr6GsvOxpLivjldZc89XSTKdKTr/iVT9W5lay9X9qjdsm04oWwmA==
-X-Received: by 2002:a05:6000:1ac8:b0:3b7:88d8:efe with SMTP id ffacd0b85a97d-3b9000acb52mr152360f8f.41.1754581982388;
-        Thu, 07 Aug 2025 08:53:02 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-459db3048bdsm186191575e9.29.2025.08.07.08.53.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Aug 2025 08:53:01 -0700 (PDT)
-Date: Thu, 7 Aug 2025 18:52:56 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Steven Rostedt <srostedt@redhat.com>
-Cc: linux-trace-kernel@vger.kernel.org
-Subject: [bug report] tracing/events: add startup tests for events
-Message-ID: <aJTL2Av9ph7vhQ_U@stanley.mountain>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="iV3En+K2"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1754625944;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=1tv44tN9Mkqwho1YUvMPXc0XtnufGsYHnhFM50s3ejw=;
+	b=iV3En+K2TUha64n+UuYh59SLSzVkCFGIJl4f8bSG0DhIWIoNfj8XBuTqTGZ7n4ry6o3D/7
+	ce5GtCKgze09ueu/Oa1UV+efa+4rguhEJykPS8FPLUW/1DNt2TXyaM3wzviNEz0EwHNVMy
+	GMNpJxZ4/ZzltXHAjzPlxGvAFF+Gs6w=
+From: Tao Chen <chen.dylane@linux.dev>
+To: rostedt@goodmis.org,
+	bristot@kernel.org,
+	tglozar@redhat.com
+Cc: linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Tao Chen <chen.dylane@linux.dev>
+Subject: [RESEND PATCH linux-next 1/2] tools/latency-collector: Check pkg-config install
+Date: Fri,  8 Aug 2025 12:05:26 +0800
+Message-ID: <20250808040527.2036023-1-chen.dylane@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Hello Steven Rostedt,
+The tool pkg-config used to check libtraceevent and libtracefs, if not
+installed, it will report the libs not found, even though they have
+already been installed.
 
-Commit e6187007d6c3 ("tracing/events: add startup tests for events")
-from Apr 15, 2009 (linux-next), leads to the following Smatch static
-checker warning:
+Before:
+libtraceevent is missing. Please install libtraceevent-dev/libtraceevent-devel
+libtracefs is missing. Please install libtracefs-dev/libtracefs-devel
 
-	kernel/trace/trace_events.c:4704 event_test_stuff()
-	error: 'test_thread' dereferencing possible ERR_PTR()
+After:
+Makefile.config:10: *** Error: pkg-config needed by libtraceevent/libtracefs is missing
+on this system, please install it.
 
-kernel/trace/trace_events.c
-    4698 static __init void event_test_stuff(void)
-    4699 {
-    4700         struct task_struct *test_thread;
-    4701 
-    4702         test_thread = kthread_run(event_test_thread, NULL, "test-events");
-    4703         msleep(1);
---> 4704         kthread_stop(test_thread);
+Fixes: 9d56c88e5225 ("tools/tracing: Use tools/build makefiles on latency-collector")
+Signed-off-by: Tao Chen <chen.dylane@linux.dev>
+---
+ tools/tracing/latency/Makefile.config | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-Check for if (!IS_ERR(test_thread)) ?
+diff --git a/tools/tracing/latency/Makefile.config b/tools/tracing/latency/Makefile.config
+index 0fe6b50f029b..6efa13e3ca93 100644
+--- a/tools/tracing/latency/Makefile.config
++++ b/tools/tracing/latency/Makefile.config
+@@ -1,7 +1,15 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ 
++include $(srctree)/tools/scripts/utilities.mak
++
+ STOP_ERROR :=
+ 
++ifndef ($(NO_LIBTRACEEVENT),1)
++  ifeq ($(call get-executable,$(PKG_CONFIG)),)
++    $(error Error: $(PKG_CONFIG) needed by libtraceevent/libtracefs is missing on this system, please install it)
++  endif
++endif
++
+ define lib_setup
+   $(eval LIB_INCLUDES += $(shell sh -c "$(PKG_CONFIG) --cflags lib$(1)"))
+   $(eval LDFLAGS += $(shell sh -c "$(PKG_CONFIG) --libs-only-L lib$(1)"))
+-- 
+2.48.1
 
-    4705 }
-
-regards,
-dan carpenter
