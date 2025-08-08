@@ -1,125 +1,115 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96B032165E2;
-	Fri,  8 Aug 2025 07:53:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 852262750E5;
+	Fri,  8 Aug 2025 11:47:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754639589; cv=none; b=feRrpc90X1so6reWKeAi1DAczIYtIvA1AFJED4G5RoGLZxCXFAKkT5w8BEec7nEECiN9f2VJmT06hY+9OUaULzpZw7miL0ar0ZhHN7SUal3x3JFusqqFMX5g6U0kz8mbVtLTSxIsn8+RzDS3ajMXfjzHWPcve1+yJf38215KmJw=
+	t=1754653660; cv=none; b=UeL7F5nAH77wMORWhbkpm2nTUF8bQMdPhm0mLW/tzAEOXwvYCPFwoXccGM9VNYeBlX9e5WurSH4tSzGb3AOhGOgpAxHRmFcIPQ0Iyulr6LT90qU0/xbkDJxj5+3cdC4BVLdoIIOqo7Chmf0ygN9AyXz0cIGbKygtnT4MUgYR86k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754639589; c=relaxed/simple;
-	bh=/7ClYfMiSxAa1wTucVb/CJkSZIYnrq/mU6F7bRSsfVg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=SMiq0F/y71lGT7K35PsSxXV031x5LtVOSbcm1qx/3XZQLPXV4XAgkwWE4ygXJN5m6nBjCMUs+F5Rp1Yat/NTQkeZNFaopFP0EouX3C14AOS/ziVQDlU2uyG6MLU4n4j2T0HkEWzDCAnGtQgkoP2b77AWIDESaXI5tojHIigkhy8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=pA07gkxg; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=VhlU5wGj; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pA07gkxg";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VhlU5wGj"
-From: Nam Cao <namcao@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1754639585;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tgvQLFtkKGmmjE3l2Crv/yMEwEOMbKI3kuWlY+rtSxg=;
-	b=pA07gkxguS3KtmYy7DLtM3wOXtdxVrciLNp/FtkZahkbj6Kf7LF2NUuVKjMnnI+hqxPs7e
-	LewPqsAecVNYzcK3HOixoJVeBSWrhwMA6GrAkyYOs+9XI6QwpNHGFehO/ZAVteWr3IsRBt
-	zlfySEeLabBq8kgLjnRvwOKldUsyHI3lWAy+jaoadoYMXQJ4rYCyPFaKwBBdintNF8qMoG
-	SDhZ1MygrIkyTk8UG7FOFVzsKWHOxTAHwjF7PJSTQRbpbF9GuXyRob1Y76tNy88yojNa2h
-	8YmU4MH4jCJlQG8jUn5ZY7a8cmqCZhiaH+thf9ZRHHSeWBuXg+XUKxgSXTdsBA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1754639585;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tgvQLFtkKGmmjE3l2Crv/yMEwEOMbKI3kuWlY+rtSxg=;
-	b=VhlU5wGjtK/wzDzetlc9swBMxQ6cBYQO3ymCTc+Zh76HQkZDdEyYZS43X9ClrJyprKJicG
-	E6TwEJT4BCySPVDg==
-To: kernel test robot <oliver.sang@intel.com>, Gabriele Monaco
- <gmonaco@redhat.com>
-Cc: oe-lkp@lists.linux.dev, lkp@intel.com, linux-kernel@vger.kernel.org,
- Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@redhat.com>,
- Peter
- Zijlstra <peterz@infradead.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- Tomas Glozar <tglozar@redhat.com>, Juri
- Lelli <jlelli@redhat.com>, Clark Williams <williams@redhat.com>, John Kacur
- <jkacur@redhat.com>, linux-trace-kernel@vger.kernel.org,
- aubrey.li@linux.intel.com, yu.c.chen@intel.com, oliver.sang@intel.com,
- Steen Hegelund <Steen.Hegelund@microchip.com>, Daniel Machon
- <daniel.machon@microchip.com>, UNGLinuxDriver@microchip.com, Andrew Lunn
- <andrew+netdev@lunn.ch>, David S. Miller <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
- Abeni <pabeni@redhat.com>, linux-arm-kernel@lists.infradead.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [linus:master] [sched]  adcc3bfa88:
- kunit.VCAP_API_DebugFS_Testsuite.vcap_api_show_admin_raw_test.fail
-In-Reply-To: <202508070739.4c6e0633-lkp@intel.com>
-References: <202508070739.4c6e0633-lkp@intel.com>
-Date: Fri, 08 Aug 2025 09:52:53 +0200
-Message-ID: <87a54ap7vu.fsf@yellow.woof>
+	s=arc-20240116; t=1754653660; c=relaxed/simple;
+	bh=fw0LMFAx6/CelKIeGgsPTOu4keOgrwh72hmn0s1QYnE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iAMsMJey+xauUicgPRJndYf+xF6GA2omgsqjK1/H1QXrZDB/0t+auhvXEkY+8WS1kLCh42of82mknYI1hOI+TkUH3okuThBdaguOzQ8FK9ROIBvbaZeS5WN7JGg4P9KcB1u4DCZNd6Vbdcj8FOZUF+M3Q6A2fAOPXVIeRYze1ig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 72FF016F8;
+	Fri,  8 Aug 2025 04:47:28 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 290483F673;
+	Fri,  8 Aug 2025 04:47:36 -0700 (PDT)
+Date: Fri, 8 Aug 2025 12:47:34 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>, KP Singh <kpsingh@kernel.org>,
+	Matt Bobrowski <mattbobrowski@google.com>,
+	Song Liu <song@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	James Clark <james.clark@linaro.org>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/6] perf auxtrace: Support AUX pause and resume with
+ BPF
+Message-ID: <20250808114734.GB3420125@e132581.arm.com>
+References: <20250725-perf_aux_pause_resume_bpf_rebase-v3-0-9fc84c0f4b3a@arm.com>
+ <fd7c39d2-64b4-480e-8a29-abefcdc7d10a@intel.com>
+ <20250730182623.GE143191@e132581.arm.com>
+ <0a0ed9d4-6511-4f0b-868f-22a3f95697f8@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0a0ed9d4-6511-4f0b-868f-22a3f95697f8@intel.com>
 
+On Tue, Aug 05, 2025 at 10:16:29PM +0300, Adrian Hunter wrote:
+> On 30/07/2025 21:26, Leo Yan wrote:
+> > Hi Adrian,
+> > 
+> > On Mon, Jul 28, 2025 at 08:02:51PM +0300, Adrian Hunter wrote:
+> >> On 25/07/2025 12:59, Leo Yan wrote:
+> >>> This series extends Perf for fine-grained tracing by using BPF program
+> >>> to pause and resume AUX tracing. The BPF program can be attached to
+> >>> tracepoints (including ftrace tracepoints and dynamic tracepoints, like
+> >>> kprobe, kretprobe, uprobe and uretprobe).
+> >>
+> >> Using eBPF to pause/resume AUX tracing seems like a great idea.
+> >>
+> >> AFAICT with this patch set, there is just support for pause/resume
+> >> much like what could be done directly without eBPF, so I wonder if you
+> >> could share a bit more on how you see this evolving, and what your
+> >> future plans are?
+> > 
+> > IIUC, here you mean the tool can use `perf probe` to firstly create
+> > probes, then enable tracepoints as PMU event for AUX pause and resume.
+> 
+> Yes, like:
+> 
+> $ sudo perf probe 'do_sys_openat2 how->flags how->mode'
+> Added new event:
+>   probe:do_sys_openat2 (on do_sys_openat2 with flags=how->flags mode=how->mode)
+> 
+> You can now use it in all perf tools, such as:
+> 
+>         perf record -e probe:do_sys_openat2 -aR sleep 1
+> 
+> $ sudo perf probe do_sys_openat2%return
+> Added new event:
+>   probe:do_sys_openat2__return (on do_sys_openat2%return)
+> 
+> You can now use it in all perf tools, such as:
+> 
+>         perf record -e probe:do_sys_openat2__return -aR sleep 1
+> 
+> $ sudo perf record --kcore -e intel_pt/aux-action=start-paused/k -e probe:do_sys_openat2/aux-action=resume/ --filter='flags==0x98800' -e probe:do_sys_openat2__return/aux-action=pause/ -- ls
 
-Cc: netdev folks
+Thanks a lot for sharing the commands. I was able to replicate them
+using CoreSight.
 
-I don't see any connection between the reported commit and the
-problem. This looks like the driver's problem.
+Given that we can achieve the same result without using BPF, I am not
+sure how useful this series is. It may give us a base for exploring
+profiling that combines AUX trace and BPF, but I am fine with holding
+on until we have clear requirements for it.
 
-kernel test robot <oliver.sang@intel.com> writes:
+I would get suggestion from you and maintainers before proceeding
+further.
 
-> Hello,
->
-> kernel test robot noticed "kunit.VCAP_API_DebugFS_Testsuite.vcap_api_show_admin_raw_test.fail" on:
->
-> commit: adcc3bfa8806761ac21aa271f78454113ec6936e ("sched: Adapt sched tracepoints for RV task model")
-> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
->
-> [test failed on linus/master      6a68cec16b647791d448102376a7eec2820e874f]
-> [test failed on linux-next/master 84b92a499e7eca54ba1df6f6c6e01766025943f1]
->
-> in testcase: kunit
-> version: 
-> with following parameters:
->
-> 	group: group-03
->
->
->
-> config: x86_64-rhel-9.4-kunit
-> compiler: gcc-12
-> test machine: 8 threads 1 sockets Intel(R) Core(TM) i7-3770K CPU @ 3.50GHz (Ivy Bridge) with 16G memory
->
-> (please refer to attached dmesg/kmsg for entire log/backtrace)
->
->
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <oliver.sang@intel.com>
-> | Closes: https://lore.kernel.org/oe-lkp/202508070739.4c6e0633-lkp@intel.com
->
->
-> [   80.925851]     # vcap_api_show_admin_raw_test: EXPECTATION FAILED at drivers/net/ethernet/microchip/vcap/vcap_api_debugfs_kunit.c:377
->                    Expected test_expected == test_pr_buffer[0], but
->                        test_expected == "  addr: 786, X6 rule, keysets: VCAP_KFS_MAC_ETYPE
->                "
->                        test_pr_buffer[0] == ""
-> [   80.926182]     not ok 2 vcap_api_show_admin_raw_test
->
->
->
-> The kernel config and materials to reproduce are available at:
-> https://download.01.org/0day-ci/archive/20250807/202508070739.4c6e0633-lkp@intel.com
->
->
->
-> -- 
-> 0-DAY CI Kernel Test Service
-> https://github.com/intel/lkp-tests/wiki
+Thanks,
+Leo
