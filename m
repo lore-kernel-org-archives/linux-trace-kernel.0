@@ -1,215 +1,187 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0907D1F4C84;
-	Fri,  8 Aug 2025 18:39:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A79821F1317;
+	Fri,  8 Aug 2025 18:51:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754678342; cv=none; b=Rh8oPgGd3EuangGcd1+I2TFEArkypvtq+uMEtmo5rjavVc9P3FuiLyPGKAGgBywWxoeNcNF6vdhCPmzfY3DBnUmW3YTYQ5cV1U/8SLPyiqsCvgomir3bUrhaikSYRlV1eL4qRJU0ToBJb/cB0PiO101mbqipVoc+OeM+PQjXI4w=
+	t=1754679083; cv=none; b=jOkNpt7YkQ1LVc6nvp/gie3qsf3niB45UqJh3O6LN4Mnv2/ZWMjkJWhN1VEoojye9wka8sOu99hOdBhPeYp2ZmTEg3JH51k3iXYTnrXj4lqoo8YghUvPZDq93fKY7IJWA77q2U9ptBNME6BSSlhuIhtPeZ9P8DuUOAe0q1aqmIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754678342; c=relaxed/simple;
-	bh=wTcaw0dDssgCkxpjul2gQBoQ/cKBTeFMxCtlAzWgAfQ=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Im/xgt404gQs4t6zgoF/pSc1EtJURw0Pg9PrnyF1X19zl5gLqWn3midRt+QAlRGEc0Uoog3w/dZ/gWfiWkISrH18OsbpwEgQdkNjvhS/4kb0N4M22h9+xkfXzoqk7x04O5ESDVJEcIczQy7HNw5rzZj4Yv0jxUhtmLXYwXZxHEI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ghruLc0N; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1754679083; c=relaxed/simple;
+	bh=Xw71vlQN+dR5IVF6R7vT9L4ieXN7VDvTeRfHYilMwow=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=kwZjMcScv69vNjmMKZ9MF/xbtWBSFFQqvprobV6pXrcwv3W+n4ELgnuSV9v+Ngfp9/zabAvUuiljDbiguIcJJCmmxHTO+5ECUNBh/x78SA3zTjn3hkKpC/hCLlv6aVCjJwO6gt2O6/RYeP0yJVxcjvdJ4sKkHQ9QHuz2+s9n97U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=WGyqUFMD; arc=none smtp.client-ip=210.118.77.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ghruLc0N"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-af94e75445dso454790566b.0;
-        Fri, 08 Aug 2025 11:39:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1754678339; x=1755283139; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=7gWwtBN6ebQOcOxsCD+ybzhCBORN9wnDQdVJlpxrz/s=;
-        b=ghruLc0N4uuMhjZQZ3iSHrp2Xr79Zysue/DK4it3qA8GyN0JXxB5xgva7FJ1IGxocP
-         fbVU+28wOFRnPZ0KHgjHs2QObUAfO1wYJJFhhcP6Onizbarc6532o0H9RwDQnhnGlFyr
-         qDmHwaYIt3ZHhQtw4937GfsfGG4Inl9GUc7Mhv0YYjEBfWGcQeSB/CrxQxXLW8HlfgDn
-         pd57ilpcHKcgdZ1YxaSabQtgJFs3EwU/zJXWJIlXZVXDbOinC2pDqBF+E3tSq4t8/6N4
-         BWqcUi10hSL6oi4ZQEMV6bDyvnFuqvKrgcihlTfBPIICXa/5p22CYsqZrpeLHWumTy36
-         ptfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754678339; x=1755283139;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7gWwtBN6ebQOcOxsCD+ybzhCBORN9wnDQdVJlpxrz/s=;
-        b=jW9KeYMeTeMgk8QeY4uH7duhFsPNooaiCHuFWuYryGuH3O++Fu6NqS8to6TiZPsdkH
-         SUZYhrhj361v5eIig3T9Ka31lOJmndUCgxFf0p+VbMtb1e03UV3CuyoN0c09L3p+cHPE
-         KFJKGrufyeuXrvBvFtbp+41pmh00rsJQpsnfi1u1YRl8OlCuY02lEu6vFDr2vs8EE3cx
-         DGxohu4aeI3IYtWoCT8NkQfg0MAHOW3YYbTHBhr0B9kkfElxuKhmamQAQcv2Q7+mw+/+
-         vN+IptD0dMjbEVC5rPDB0HcNI72jlF8dGWidrdHP/ax/yjzPnbEzWUfMQQn9DTBHZGzN
-         tnzA==
-X-Forwarded-Encrypted: i=1; AJvYcCUexm5nWDcIsrwoLT+bLMs3TLVwO5T670wSYCF6R/OqvoPjuv67Hfu3t/xDZZlPU3MIsqE=@vger.kernel.org, AJvYcCUgB02T/X4F/Kqx2KETmo0rsq36b7dNiLifPRhdWU7QbWzK1lBKOgbRgZ/L1xITkkUX9Ek718V5dw5acMsQY/CC2YoX@vger.kernel.org, AJvYcCXaxeH4ukZwDy1mBMy3g9AuI6BIfpBVFeSQSh9c29JYxXVDeNYbdZuTfpg3e1NP8oBuL6jqjeRHPwTuEfQR@vger.kernel.org
-X-Gm-Message-State: AOJu0YxS/M747Pkwb9OoJ5fgPihiA6cZcLwK+N5nF5GiBZSrUrdF18cK
-	USBLU/MO2fc9Aui2eNBLU5ZZKW+o2noLcc9CDCGATijZn0cAQrBg3Gea
-X-Gm-Gg: ASbGncukDdL8mlYp1rDx8NnU1M5qe6clar4CX9o4HeXLft7ylYe5WyRVkRQ/Ek5CU6o
-	taLxHo4YxV2NOG5L8qEfsJFMXfU4zIbCoAki7gti0va2WxMTDUAMd0NFU8iC1wbvzaRGgpDFLc1
-	Mb7++7Qnvq2kOxeoEADUB4wbLQvCxnxig+pTHeq5dgkgm+5j+1EllBusSyNN/svvEiKRqpGsurx
-	GTlYhgFRetAhuirKFPd33hMiQ/kD39XcJo8B80ORupkZfZKcZMiO1nB4MmPSEa/QsSnuXpRBcTJ
-	NtnFFX1yCHAtrPt1e6lhrODqtsIqLqMSYvjBYVV7Wgo5UhmD9FpOe1t05pKXmYyddezaRHjD+uT
-	CNrvT8yaboAbYjw==
-X-Google-Smtp-Source: AGHT+IHm4FM+H2cY+xcahr29t1p51xqTQjA9Z1EzXFR/hkulXj4tdkM3UyPID6AE1hwChDqdy2Ks4Q==
-X-Received: by 2002:a17:907:8691:b0:ae1:c79f:2b2e with SMTP id a640c23a62f3a-af9c6540d48mr356899166b.40.1754678339050;
-        Fri, 08 Aug 2025 11:38:59 -0700 (PDT)
-Received: from krava ([2a00:102a:406f:c1c4:19f6:67fa:c879:8862])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-af91a219ecfsm1532455666b.94.2025.08.08.11.38.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Aug 2025 11:38:58 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Fri, 8 Aug 2025 20:38:56 +0200
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: Jiri Olsa <olsajiri@gmail.com>, Masami Hiramatsu <mhiramat@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	x86@kernel.org, Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Ingo Molnar <mingo@kernel.org>
-Subject: Re: [RFC 1/4] uprobe: Do not emulate/sstep original instruction when
- ip is changed
-Message-ID: <aJZEQDgIPr9wVUWP@krava>
-References: <20250801210238.2207429-1-jolsa@kernel.org>
- <20250801210238.2207429-2-jolsa@kernel.org>
- <20250802103426.GC31711@redhat.com>
- <aJBrXwHESPRTpwYa@krava>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="WGyqUFMD"
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250808185114euoutp0162c911292defe8bfee54f2309b1e8171~Z31I7WGpl0720707207euoutp01Y;
+	Fri,  8 Aug 2025 18:51:14 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250808185114euoutp0162c911292defe8bfee54f2309b1e8171~Z31I7WGpl0720707207euoutp01Y
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1754679074;
+	bh=eZMpLLPpWLfEcYOqjTqa6+eB/bqRZJ+BbYqsgnnPbkY=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=WGyqUFMDFBBsAtsI8xiD1Ayr7WYuZYdyBJMCoPCRGfrVxwAdMcl3GCV7Qwkcc4nI/
+	 gnDfUeRP8iiJIUgEStFM4TfVVnoq/LDogKUpBA2D+NmwrtJRryBOG1ru2ITf74oehS
+	 IO287BU42jFk8ZARXzvIDO/cRSfPjtUJVNlWylGo=
+Received: from eusmtip1.samsung.com (unknown [203.254.199.221]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250808185112eucas1p285bfbeb3352a16df0b5c8f262fadbf2f~Z31Hzuzfc1555715557eucas1p2H;
+	Fri,  8 Aug 2025 18:51:12 +0000 (GMT)
+Received: from [106.210.134.192] (unknown [106.210.134.192]) by
+	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250808185109eusmtip1cf791168d581e5b5b824a27d8cdd9069~Z31ElK-rK1126511265eusmtip1F;
+	Fri,  8 Aug 2025 18:51:09 +0000 (GMT)
+Message-ID: <a154e058-c0e6-4208-9f52-57cec22eaf7d@samsung.com>
+Date: Fri, 8 Aug 2025 20:51:08 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aJBrXwHESPRTpwYa@krava>
+User-Agent: Betterbird (Windows)
+Subject: Re: [PATCH v1 00/16] dma-mapping: migrate to physical address-based
+ API
+To: Jason Gunthorpe <jgg@nvidia.com>, Leon Romanovsky <leon@kernel.org>
+Cc: Abdiel Janulgue <abdiel.janulgue@gmail.com>, Alexander Potapenko
+	<glider@google.com>, Alex Gaynor <alex.gaynor@gmail.com>, Andrew Morton
+	<akpm@linux-foundation.org>, Christoph Hellwig <hch@lst.de>, Danilo
+	Krummrich <dakr@kernel.org>, iommu@lists.linux.dev, Jason Wang
+	<jasowang@redhat.com>, Jens Axboe <axboe@kernel.dk>, Joerg Roedel
+	<joro@8bytes.org>, Jonathan Corbet <corbet@lwn.net>, Juergen Gross
+	<jgross@suse.com>, kasan-dev@googlegroups.com, Keith Busch
+	<kbusch@kernel.org>, linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	linux-nvme@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+	linux-trace-kernel@vger.kernel.org, Madhavan Srinivasan
+	<maddy@linux.ibm.com>, Masami Hiramatsu <mhiramat@kernel.org>, Michael
+	Ellerman <mpe@ellerman.id.au>, "Michael S. Tsirkin" <mst@redhat.com>, Miguel
+	Ojeda <ojeda@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+	rust-for-linux@vger.kernel.org, Sagi Grimberg <sagi@grimberg.me>, Stefano
+	Stabellini <sstabellini@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
+	virtualization@lists.linux.dev, Will Deacon <will@kernel.org>,
+	xen-devel@lists.xenproject.org
+Content-Language: en-US
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+In-Reply-To: <20250807141929.GN184255@nvidia.com>
+Content-Transfer-Encoding: 8bit
+X-CMS-MailID: 20250808185112eucas1p285bfbeb3352a16df0b5c8f262fadbf2f
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250807141938eucas1p2319a0526b25db120b3c9aeb49f69cce1
+X-EPHeader: CA
+X-CMS-RootMailID: 20250807141938eucas1p2319a0526b25db120b3c9aeb49f69cce1
+References: <cover.1754292567.git.leon@kernel.org>
+	<CGME20250807141938eucas1p2319a0526b25db120b3c9aeb49f69cce1@eucas1p2.samsung.com>
+	<20250807141929.GN184255@nvidia.com>
 
-On Mon, Aug 04, 2025 at 10:12:15AM +0200, Jiri Olsa wrote:
-> On Sat, Aug 02, 2025 at 12:34:27PM +0200, Oleg Nesterov wrote:
-> > On 08/01, Jiri Olsa wrote:
-> > >
-> > > If uprobe handler changes instruction pointer we still execute single
-> > > step) or emulate the original instruction and increment the (new) ip
-> > > with its length.
-> > 
-> > Yes... but what if we there are multiple consumers? The 1st one changes
-> > instruction_pointer, the next is unaware. Or it may change regs->ip too...
-> 
-> right, and I think that's already bad in current code
-> 
-> how about we dd flag to the consumer that ensures it's the only consumer
-> on the uprobe.. and we would skip original instruction execution for such
-> uprobe if its consumer changes the regs->ip.. I'll try to come up with the
-> patch
+On 07.08.2025 16:19, Jason Gunthorpe wrote:
+> On Mon, Aug 04, 2025 at 03:42:34PM +0300, Leon Romanovsky wrote:
+>> Changelog:
+>> v1:
+>>   * Added new DMA_ATTR_MMIO attribute to indicate
+>>     PCI_P2PDMA_MAP_THRU_HOST_BRIDGE path.
+>>   * Rewrote dma_map_* functions to use thus new attribute
+>> v0: https://lore.kernel.org/all/cover.1750854543.git.leon@kernel.org/
+>> ------------------------------------------------------------------------
+>>
+>> This series refactors the DMA mapping to use physical addresses
+>> as the primary interface instead of page+offset parameters. This
+>> change aligns the DMA API with the underlying hardware reality where
+>> DMA operations work with physical addresses, not page structures.
+> Lets elaborate this as Robin asked:
+>
+> This series refactors the DMA mapping API to provide a phys_addr_t
+> based, and struct-page free, external API that can handle all the
+> mapping cases we want in modern systems:
+>
+>   - struct page based cachable DRAM
+>   - struct page MEMORY_DEVICE_PCI_P2PDMA PCI peer to peer non-cachable MMIO
+>   - struct page-less PCI peer to peer non-cachable MMIO
+>   - struct page-less "resource" MMIO
+>
+> Overall this gets much closer to Matthew's long term wish for
+> struct-pageless IO to cachable DRAM. The remaining primary work would
+> be in the mm side to allow kmap_local_pfn()/phys_to_virt() to work on
+> phys_addr_t without a struct page.
+>
+> The general design is to remove struct page usage entirely from the
+> DMA API inner layers. For flows that need to have a KVA for the
+> physical address they can use kmap_local_pfn() or phys_to_virt(). This
+> isolates the struct page requirements to MM code only. Long term all
+> removals of struct page usage are supporting Matthew's memdesc
+> project which seeks to substantially transform how struct page works.
+>
+> Instead make the DMA API internals work on phys_addr_t. Internally
+> there are still dedicated 'page' and 'resource' flows, except they are
+> now distinguished by a new DMA_ATTR_MMIO instead of by callchain. Both
+> flows use the same phys_addr_t.
+>
+> When DMA_ATTR_MMIO is specified things work similar to the existing
+> 'resource' flow. kmap_local_pfn(), phys_to_virt(), phys_to_page(),
+> pfn_valid(), etc are never called on the phys_addr_t. This requires
+> rejecting any configuration that would need swiotlb. CPU cache
+> flushing is not required, and avoided, as ATTR_MMIO also indicates the
+> address have no cachable mappings. This effectively removes any
+> DMA API side requirement to have struct page when DMA_ATTR_MMIO is
+> used.
+>
+> In the !DMA_ATTR_MMIO mode things work similarly to the 'page' flow,
+> except on the common path of no cache flush, no swiotlb it never
+> touches a struct page. When cache flushing or swiotlb copying
+> kmap_local_pfn()/phys_to_virt() are used to get a KVA for CPU
+> usage. This was already the case on the unmap side, now the map side
+> is symmetric.
+>
+> Callers are adjusted to set DMA_ATTR_MMIO. Existing 'resource' users
+> must set it. The existing struct page based MEMORY_DEVICE_PCI_P2PDMA
+> path must also set it. This corrects some existing bugs where iommu
+> mappings for P2P MMIO were improperly marked IOMMU_CACHE.
+>
+> Since ATTR_MMIO is made to work with all the existing DMA map entry
+> points, particularly dma_iova_link(), this finally allows a way to use
+> the new DMA API to map PCI P2P MMIO without creating struct page. The
+> VFIO DMABUF series demonstrates how this works. This is intended to
+> replace the incorrect driver use of dma_map_resource() on PCI BAR
+> addresses.
+>
+> This series does the core code and modern flows. A followup series
+> will give the same treatement to the legacy dma_ops implementation.
 
-how about something like below?
+Thanks for the elaborate description, that's something that was missing 
+in the previous attempt. I read again all the previous discussion and 
+this explanation and there are still two things that imho needs more 
+clarification.
 
-jirka
+
+First - basing the API on the phys_addr_t.
+
+Page based API had the advantage that it was really hard to abuse it and 
+call for something that is not 'a normal RAM'. I initially though that 
+phys_addr_t based API will somehow simplify arch specific 
+implementation, as some of them indeed rely on phys_addr_t internally, 
+but I missed other things pointed by Robin. Do we have here any 
+alternative?
 
 
----
-diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
-index 516217c39094..b2c49a2d5468 100644
---- a/include/linux/uprobes.h
-+++ b/include/linux/uprobes.h
-@@ -59,6 +59,7 @@ struct uprobe_consumer {
- 	struct list_head cons_node;
- 
- 	__u64 id;	/* set when uprobe_consumer is registered */
-+	bool is_unique; /* the only consumer on uprobe */
- };
- 
- #ifdef CONFIG_UPROBES
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index f774367c8e71..b317f9fbbf5c 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -1014,14 +1014,32 @@ static struct uprobe *alloc_uprobe(struct inode *inode, loff_t offset,
- 	return uprobe;
- }
- 
--static void consumer_add(struct uprobe *uprobe, struct uprobe_consumer *uc)
-+static bool consumer_can_add(struct list_head *head, struct uprobe_consumer *uc)
-+{
-+	/* there's no consumer, free to add one */
-+	if (list_empty(head))
-+		return true;
-+	/* uprobe has consumer(s), can't add unique one */
-+	if (uc->is_unique)
-+		return false;
-+	/* uprobe has consumer(s), we can add one only if it's not unique consumer */
-+	return !list_first_entry(head, struct uprobe_consumer, cons_node)->is_unique;
-+}
-+
-+static int consumer_add(struct uprobe *uprobe, struct uprobe_consumer *uc)
- {
- 	static atomic64_t id;
-+	int ret = -EBUSY;
- 
- 	down_write(&uprobe->consumer_rwsem);
-+	if (!consumer_can_add(&uprobe->consumers, uc))
-+		goto unlock;
- 	list_add_rcu(&uc->cons_node, &uprobe->consumers);
- 	uc->id = (__u64) atomic64_inc_return(&id);
-+	ret = 0;
-+unlock:
- 	up_write(&uprobe->consumer_rwsem);
-+	return ret;
- }
- 
- /*
-@@ -1410,7 +1428,12 @@ struct uprobe *uprobe_register(struct inode *inode,
- 		return uprobe;
- 
- 	down_write(&uprobe->register_rwsem);
--	consumer_add(uprobe, uc);
-+	ret = consumer_add(uprobe, uc);
-+	if (ret) {
-+		put_uprobe(uprobe);
-+		up_write(&uprobe->register_rwsem);
-+		return ERR_PTR(ret);
-+	}
- 	ret = register_for_each_vma(uprobe, uc);
- 	up_write(&uprobe->register_rwsem);
- 
-@@ -2522,7 +2545,7 @@ static bool ignore_ret_handler(int rc)
- 	return rc == UPROBE_HANDLER_REMOVE || rc == UPROBE_HANDLER_IGNORE;
- }
- 
--static void handler_chain(struct uprobe *uprobe, struct pt_regs *regs)
-+static void handler_chain(struct uprobe *uprobe, struct pt_regs *regs, bool *is_unique)
- {
- 	struct uprobe_consumer *uc;
- 	bool has_consumers = false, remove = true;
-@@ -2536,6 +2559,8 @@ static void handler_chain(struct uprobe *uprobe, struct pt_regs *regs)
- 		__u64 cookie = 0;
- 		int rc = 0;
- 
-+		*is_unique |= uc->is_unique;
-+
- 		if (uc->handler) {
- 			rc = uc->handler(uc, regs, &cookie);
- 			WARN(rc < 0 || rc > 2,
-@@ -2685,6 +2710,7 @@ static void handle_swbp(struct pt_regs *regs)
- {
- 	struct uprobe *uprobe;
- 	unsigned long bp_vaddr;
-+	bool is_unique = false;
- 	int is_swbp;
- 
- 	bp_vaddr = uprobe_get_swbp_addr(regs);
-@@ -2739,7 +2765,10 @@ static void handle_swbp(struct pt_regs *regs)
- 	if (arch_uprobe_ignore(&uprobe->arch, regs))
- 		goto out;
- 
--	handler_chain(uprobe, regs);
-+	handler_chain(uprobe, regs, &is_unique);
-+
-+	if (is_unique && instruction_pointer(regs) != bp_vaddr)
-+		goto out;
- 
- 	if (arch_uprobe_skip_sstep(&uprobe->arch, regs))
- 		goto out;
+Second - making dma_map_phys() a single API to handle all cases.
+
+Do we really need such single function to handle all cases? To handle 
+P2P case, the caller already must pass DMA_ATTR_MMIO, so it must somehow 
+keep such information internally. Cannot it just call existing 
+dma_map_resource(), so there will be clear distinction between these 2 
+cases (DMA to RAM and P2P DMA)? Do we need additional check for 
+DMA_ATTR_MMIO for every typical DMA user? I know that branching is 
+cheap, but this will probably increase code size for most of the typical 
+users for no reason.
+
+
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
+
