@@ -1,63 +1,65 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FB942E36E2;
-	Fri,  8 Aug 2025 05:13:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F7391C84BD;
+	Fri,  8 Aug 2025 05:29:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754629991; cv=none; b=D541EizXhE779t6ZMaV4XUNiMjtLZMZ+//HAjj9qgNHlBlUW00wNFr4EloYr16GOnX/W8kHnyWpeVu619L4+fgW6Vf1kfASViVMSN/SkT04YFtZfHzUjuEFLDDCgjCRQPwtMl+ezJXLTK63uMKfThC9lNeKhsm6bD+54oLmR+sA=
+	t=1754630996; cv=none; b=cAvAP6GDqa3qYgEUFmIzgS+D1/WhotRyI8qpSy3XKXa0GufPWTxRAY5MLMRE58wgza9Jyopn55jhf/TIXml5qMMBhxIqNEb1mIbeNiMP/JU2sWdCdgyPC4w4HEM5r1raREbjWrx3HFr3/DxpaBy/5cFf6lfEsKqEjnxCizHMSNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754629991; c=relaxed/simple;
-	bh=dmIwJzT96cC1HvfFO2mT8P4nn889ip+AFviqKz+52rQ=;
+	s=arc-20240116; t=1754630996; c=relaxed/simple;
+	bh=+3N/c59N2Q/1AxrrKmzUgnjRj42WZzs2QGrNEJjnFho=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=eyZkLav6/usPTEh6+uH1hp1DADVzqYHfL4cuaUffw+/DK3vIj18qC97a5geq/3JEGMQrsPK01tLs61rXiVUOB+0sGmQnEXhD81doyOSkdHLbnJiTnBMT9mCAT0Kg6rNl1aeCgX90ckhgfwN+oLp3o3V0tm9xvsl+hAQ66u7OReM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=N3tVkzJ7; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=grdIYdE0; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version:Content-Type; b=MbwdogjuVw4fqyaL3VHAvAtzstgWGotDlTv6x/WE4wAIQCkQH3FC/7/SEb6gLC7px0YEv5rlgPeVZttLR7TnOYPhkUQMHR6gxcK0PtV2wqBWhrshe3oi/JFOUfsPpRH8NNpPcqccLQgtpSLQAx9gp7WfbRg967DtERH4u6Abhjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MqAfp4SH; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1SUhtXFd; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="N3tVkzJ7";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="grdIYdE0"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MqAfp4SH";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1SUhtXFd"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1754629988;
+	s=2020; t=1754630992;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=dmIwJzT96cC1HvfFO2mT8P4nn889ip+AFviqKz+52rQ=;
-	b=N3tVkzJ7j5wldmI674hcohoB/enBrLFxsjMtIVecvsirTz1V3nZLa9Xt0sbz3O4rD4RyHH
-	ijPx8cODJjguUXwKdFIpWPfQSVsaB4z7ahO+5RVxBwNERR0Lcxki6utGhoqNLW0zuCQa7C
-	ngpx95UYF8BbPfQPdzZ18v0LB1l2bw1ta0n3F60wGrmsE4nCgmyAAG5Vt33iuRFF7T2+Sk
-	sgsTWikw3cwGvEHwCruN3FapdlaLK+nLEUh7YYR+iDa/yvn8+AXcWbL8nel7B7/khPHAnV
-	fPJbX+Nl4J7OR9gs+TW6cBTXxugH+i/WkgtFmnZXy1d6djxozRnylA5PkBJ8Cg==
+	bh=wHL70uQzzfCdF5/IMDDWLgzrkbKIyjVtvHrB1wUt3Zo=;
+	b=MqAfp4SHWNDUtROtipIEvGKQs8J+hbcY7nO4G54WPb67Pc4PAZNq2KqYcZYK1PkZOBFE5+
+	qAZ26WDPmMYkibxIib78izTtLewL/MATQ5HK5idVsgZxLZZmifXqqQTa9ofbGgjtzpOaLp
+	V1bn2PIwPDxIhG2E+eGZ/AZCTAF0a+5nghOmQVMlPbO3HVppbYpzuTbmm7d0QyHLaWMZtj
+	ECO6yits8+lcKd4xWOyPZ5v+aYCNQdroqCdasxOQ5a9I3ZokP3ym6HEwenqwYJVIBVZF3C
+	JZ9Ox7pOafafF+xTZUqSeboNe89LAwszZ78LASq27EdQ/8uSHtTFEqmGFF08Fw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1754629988;
+	s=2020e; t=1754630992;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=dmIwJzT96cC1HvfFO2mT8P4nn889ip+AFviqKz+52rQ=;
-	b=grdIYdE0A6eVNQQd4u4dukqepCVZGF0VRO3o+zeQv2m9exoDW80raOwzl4u7557u7EpqYU
-	bGeMRIgBd0TIJqDA==
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	bh=wHL70uQzzfCdF5/IMDDWLgzrkbKIyjVtvHrB1wUt3Zo=;
+	b=1SUhtXFdmXQfHgCKL0oqxrK4VPbdhic4XpQC65rPO0kxOWwtFc8wefiTS3LfZH8f3Pm05N
+	aC37Ej9cDDsXncDQ==
+To: Gabriele Monaco <gmonaco@redhat.com>, Steven Rostedt
+ <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>,
  linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot
+ <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Valentin
+ Schneider <vschneid@redhat.com>, K Prateek Nayak <kprateek.nayak@amd.com>
 Subject: Re: [PATCH v2 5/5] rv: Add rts monitor
-In-Reply-To: <957660bfb5c291b5bece9e557f30866728b9aed0.camel@redhat.com>
+In-Reply-To: <ecd720a0b971658a915473f0f864668cd6e1ef1a.camel@redhat.com>
 References: <cover.1754466623.git.namcao@linutronix.de>
  <88fdbeb3f2ecf3a6259f3ee8636ae5b21fa6b72d.1754466623.git.namcao@linutronix.de>
- <957660bfb5c291b5bece9e557f30866728b9aed0.camel@redhat.com>
-Date: Fri, 08 Aug 2025 07:13:07 +0200
-Message-ID: <87ldnupfa4.fsf@yellow.woof>
+ <ecd720a0b971658a915473f0f864668cd6e1ef1a.camel@redhat.com>
+Date: Fri, 08 Aug 2025 07:29:51 +0200
+Message-ID: <87ikiypei8.fsf@yellow.woof>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
 Gabriele Monaco <gmonaco@redhat.com> writes:
 
@@ -65,21 +67,50 @@ Gabriele Monaco <gmonaco@redhat.com> writes:
 >> Add "real-time scheduling" monitor, which validates that SCHED_RR and
 >> SCHED_FIFO tasks are scheduled before tasks with normal and
 >> extensible scheduling policies
->>=20
+>> 
 >> Signed-off-by: Nam Cao <namcao@linutronix.de>
 >> ---
->> v2:
->> =C2=A0 - use the new tracepoints
->> =C2=A0 - move to be under the rtapp container monitor
->> =C2=A0 - re-generate with the modified scripts
->> =C2=A0 - fixup incorrect enqueued status
->> ---
->> =C2=A0Documentation/trace/rv/monitor_sched.rst |=C2=A0 19 +++
->> =C2=A0tools/verification/models/sched/rts.ltl=C2=A0 |=C2=A0=C2=A0 5 +
 >
-> You moved it under rtapp, you probably want to move the LTL model and
-> the descriptions there too.
+> The monitor shows a violation also in case of priority inversion
+> boosting, e.g.:
+>
+>  stress-ng --prio-inv 2
 
-Ah, missed this one, thanks for pointing it out.
+This looks like something that would trigger the fair deadline server or
+RT throttling. Can you please try disabling both of them:
 
-Nam
+    echo 0 | tee /sys/kernel/debug/sched/fair_server/cpu*/runtime
+    sysctl -w kernel.sched_rt_runtime_us=-1
+
+and see if the problem persists?
+
+> It seems perfectly reasonable from the monitor description but it's
+> actually a behaviour meant to improve real time response.
+> Is the user seeing this type of violation supposed to make sure all
+> locks held by RT tasks are never shared by fair tasks? If that's the
+> case I'd mention it in the description.
+
+Boosted fair tasks are treated as RT tasks ;)
+
+> Also very rarely I see failures while cleaning up the monitor, not sure
+> exactly what caused it but I could reproduce it with something like:
+>
+>   for i in $(seq 100); do timeout -s INT 2 rv mon rts -r printk; done
+>
+> Running the monitor without stopping for the same amount of time
+> doesn't seem to show violations (until I terminate it).
+>
+> "rv" here is the tool under tools/verifications/rv, also the rv package
+> on fedora works, but debian/ubuntu may still be shipping an outdated
+> version, if they ship one at all.
+
+This one is strange, I cannot reproduce this issue. Did you run only
+that command, or did you have other things running as well?
+
+And does the problem still appears after disabling the fair deadline
+server and RT throttling?
+
+Thanks for trying it out.
+
+nam
+
