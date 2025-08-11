@@ -1,152 +1,106 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D40B255E27;
-	Mon, 11 Aug 2025 14:40:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FE041B041A;
+	Mon, 11 Aug 2025 15:05:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754923216; cv=none; b=JaIhXO0fOpmOxk3sICfC8CCh2aZHX2qlCJhLZPPsQbXjp1CL4NBJpUBCJY/OzpRb0Qtq327P+9XIv7Bedn7ICxoiqi0iNyW7R8fko/ABbk+QX33fmfUEYt9bQ81CYJsPzK5O1FGTNEzcrTTaGB4YzrJZNunahwn1U5gPcO2pCMA=
+	t=1754924748; cv=none; b=K/JSuhBFysyMinjn7svvbO/U2Ep8F6yTI5JiCP5Axb7G5Q+xQtxSJ+jpDDaESvSczbypiXZ2tfC3yQv377uVTd49yYU+XsBM+AVl5hkmEcmze5kU00KX9Yumv2c0jv7uuVEgIe9VjfT43J1L3LJQIvBtaiENiNeBiveCH7FtT80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754923216; c=relaxed/simple;
-	bh=lv/+AvXX14yIM310jrpu6bxshU2CXaTmX9NexPJVOls=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=p+3pVpr+Wr5vzCzwLz8b4wJq6mvLF66Dwb39FJasxt7XueqOt+libvaB0caZ5DitqmYlnF7kZopRTg9zwfVcwqUOJbrz4tLjxFvk16B0ZazsXkRivAZvhri0aLYuy0gw3rqPl8vg2u6LT0itKgVtbgmlBQ4wXoFajQroxrSRa14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E88BA2641;
-	Mon, 11 Aug 2025 07:40:04 -0700 (PDT)
-Received: from [192.168.20.57] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 74CAB3F738;
-	Mon, 11 Aug 2025 07:40:10 -0700 (PDT)
-Message-ID: <6904cf39-6c48-44cc-8884-f79d845508de@arm.com>
-Date: Mon, 11 Aug 2025 09:40:10 -0500
+	s=arc-20240116; t=1754924748; c=relaxed/simple;
+	bh=i/ALEUiI1jcKPez1nkMbsZV3bmmUIaCULP31iZ/ovAw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QSJC7F2h5/kNTDLqKBEsqMd6+19LLTS3sQTEIZNCU+6R+TJb5pu8KlRK8d6rv1PXzJYq6hh8+q6fl6FKpR54mFrtL5GAZE+4LRjYArz9RRxY5cSm+7wg66tbkgz/LIkMEZdpKouaQG2+/OkPlVxVTZZqdwOMbeHmlqdpbU4sbXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eDoBwKKF; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eDoBwKKF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1754924744; x=1786460744;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=i/ALEUiI1jcKPez1nkMbsZV3bmmUIaCULP31iZ/ovAw=;
+  b=eDoBwKKFTOUnjUhPoxEG7MQKe0xagBusWNZY1RVcsffuhRVRsWANru5E
+   N/LypkBnwCODWzQ7uIumVwB3oIQviYxjLZhOef6i0YmP4siCDOsRXIXMJ
+   gIfZaS8ZzG7XQj50nc2/jGzi+bLgaLeqwvArTU1fxwmd4ytN48Y8me9Hl
+   xYTMbE65VKZi88cMLuOyLnk2YuUG0+j1zri3IIVXfI1b3ruy1Xg693Um1
+   1RxYacXyVOaiM3ZrJTt9u5KOfenF21N8+h+8O5paAtoqGO6kiDllMPMHz
+   tEs0QpJk9ujC0BJLfZKKGpGdjl4BVlX3/4DVA0df89VrnY1LmA5+qARGx
+   w==;
+X-CSE-ConnectionGUID: ztqBbe78TYqntgBlkG12bA==
+X-CSE-MsgGUID: 1g6tCo+aTNiKPveI7kHbsA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11518"; a="56208639"
+X-IronPort-AV: E=Sophos;i="6.17,278,1747724400"; 
+   d="scan'208";a="56208639"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2025 08:05:43 -0700
+X-CSE-ConnectionGUID: nOIz8zmnS3q0/SNtukrWfQ==
+X-CSE-MsgGUID: jQdLgscnT9ud1YMXf+61aw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.17,278,1747724400"; 
+   d="scan'208";a="165571264"
+Received: from black.igk.intel.com ([10.91.253.5])
+  by orviesa009.jf.intel.com with ESMTP; 11 Aug 2025 08:05:37 -0700
+Received: by black.igk.intel.com (Postfix, from userid 1003)
+	id CAC0494; Mon, 11 Aug 2025 17:05:34 +0200 (CEST)
+Date: Mon, 11 Aug 2025 17:05:34 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Bhupesh <bhupesh@igalia.com>
+Cc: akpm@linux-foundation.org, kernel-dev@igalia.com,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org, oliver.sang@intel.com, lkp@intel.com,
+	laoar.shao@gmail.com, pmladek@suse.com, rostedt@goodmis.org,
+	mathieu.desnoyers@efficios.com, arnaldo.melo@gmail.com,
+	alexei.starovoitov@gmail.com, andrii.nakryiko@gmail.com,
+	mirq-linux@rere.qmqm.pl, peterz@infradead.org, willy@infradead.org,
+	david@redhat.com, viro@zeniv.linux.org.uk, keescook@chromium.org,
+	ebiederm@xmission.com, brauner@kernel.org, jack@suse.cz,
+	mingo@redhat.com, juri.lelli@redhat.com, bsegall@google.com,
+	mgorman@suse.de, vschneid@redhat.com,
+	linux-trace-kernel@vger.kernel.org, kees@kernel.org,
+	torvalds@linux-foundation.org
+Subject: Re: [PATCH v7 3/4] treewide: Replace 'get_task_comm()' with
+ 'strscpy_pad()'
+Message-ID: <aJoGvv5TEfl1liSm@black.igk.intel.com>
+References: <20250811064609.918593-1-bhupesh@igalia.com>
+ <20250811064609.918593-4-bhupesh@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 3/7] arm64: uaccess: Add additional userspace GCS
- accessors
-To: linux-trace-kernel@vger.kernel.org
-Cc: linux-perf-users@vger.kernel.org, mhiramat@kernel.org, oleg@redhat.com,
- peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
- namhyung@kernel.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
- adrian.hunter@intel.com, kan.liang@linux.intel.com,
- thiago.bauermann@linaro.org, broonie@kernel.org, yury.khrustalev@arm.com,
- kristina.martsenko@arm.com, liaochang1@huawei.com, catalin.marinas@arm.com,
- will@kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20250811141010.741989-1-jeremy.linton@arm.com>
- <20250811141010.741989-4-jeremy.linton@arm.com>
-Content-Language: en-US
-From: Jeremy Linton <jeremy.linton@arm.com>
-In-Reply-To: <20250811141010.741989-4-jeremy.linton@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250811064609.918593-4-bhupesh@igalia.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On 8/11/25 9:10 AM, Jeremy Linton wrote:
-> Uprobes need more advanced read, push, and pop userspace GCS
-> functionality. Implement those features using the existing gcsstr()
-> and copy_from_user().
+On Mon, Aug 11, 2025 at 12:16:08PM +0530, Bhupesh wrote:
+> As Linus mentioned in [1], we should get rid of 'get_task_comm()'
+> entirely and replace it with 'strscpy_pad()' implementation.
 > 
-> Its important to note that GCS pages can be read by normal
-> instructions, but the hardware validates that pages used by GCS
-> specific operations, have a GCS privilege set. We aren't validating this
-> in load_user_gcs because it requires stabilizing the VMA over the read
-> which may fault.
+> 'strscpy_pad()' will already make sure comm is NUL-terminated, so
+> we won't need the explicit final byte termination done in
+> 'get_task_comm()'.
 > 
-> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
-> Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-> ---
->   arch/arm64/include/asm/gcs.h | 54 ++++++++++++++++++++++++++++++++++++
->   1 file changed, 54 insertions(+)
+> The relevant 'get_task_comm()' users were identified using the
+> following search pattern:
+>  $ git grep 'get_task_comm*'
+
+> [1]. https://lore.kernel.org/all/CAHk-=wi5c=_-FBGo_88CowJd_F-Gi6Ud9d=TALm65ReN7YjrMw@mail.gmail.com/
 > 
-> diff --git a/arch/arm64/include/asm/gcs.h b/arch/arm64/include/asm/gcs.h
-> index e3b360c9dba4..bd9ff1dedcd9 100644
-> --- a/arch/arm64/include/asm/gcs.h
-> +++ b/arch/arm64/include/asm/gcs.h
-> @@ -116,6 +116,47 @@ static inline void put_user_gcs(unsigned long val, unsigned long __user *addr,
->   	uaccess_ttbr0_disable();
->   }
->   
-> +static inline void push_user_gcs(unsigned long val, int *err)
-> +{
-> +	u64 gcspr = read_sysreg_s(SYS_GCSPR_EL0);
-> +
-> +	gcspr -= sizeof(u64);
-> +	put_user_gcs(val, (unsigned long __user *)gcspr, err);
-> +	if (!*err)
-> +		write_sysreg_s(gcspr, SYS_GCSPR_EL0);
-> +}
-> +
-> +/*
-> + * Unlike put/push_user_gcs() above, get/pop_user_gsc() doesn't
-> + * validate the GCS permission is set on the page being read.  This
-> + * differs from how the hardware works when it consumes data stored at
-> + * GCSPR. Callers should assure this is acceptable.
-> + */
-> +static inline u64 get_user_gcs(unsigned long __user *addr, int *err)
-> +{
-> +	unsigned long ret;
-> +	u64 load = 0;
-> +
-> +	/* Ensure previous GCS operation are visible before we read the page */
-> +	gcsb_dsync();
-> +	ret = copy_from_user(&load, addr, sizeof(load));
-> +	if (ret != 0)
-> +		*err = ret;
-> +	return load;
-> +}
-> +
-> +static inline u64 pop_user_gcs(int *err)
-> +{
-> +	u64 gcspr = read_sysreg_s(SYS_GCSPR_EL0);
-> +	u64 read_val;
-> +
-> +	read_val = get_user_gcs((unsigned long __user *)gcspr, err);
-> +	if (!*err)
-> +		write_sysreg_s(gcspr + sizeof(u64), SYS_GCSPR_EL0);
-> +
-> +	return read_val;
-> +}
-> +
->   #else
->   
->   static inline bool task_gcs_el0_enabled(struct task_struct *task)
-> @@ -126,6 +167,10 @@ static inline bool task_gcs_el0_enabled(struct task_struct *task)
->   static inline void gcs_set_el0_mode(struct task_struct *task) { }
->   static inline void gcs_free(struct task_struct *task) { }
->   static inline void gcs_preserve_current_state(void) { }
-> +static inline void put_user_gcs(unsigned long val, unsigned long __user *addr,
-> +				int *err) { }
-> +static inline void push_user_gcs(unsigned long val, int *err) { }
-> +
->   static inline unsigned long gcs_alloc_thread_stack(struct task_struct *tsk,
->   						   const struct kernel_clone_args *args)
->   {
-> @@ -136,6 +181,15 @@ static inline int gcs_check_locked(struct task_struct *task,
->   {
->   	return 0;
->   }
-> +static inline u64 load_user_gcs(unsigned long __user *addr, int *err)
-> +{
-> +	*err = -EFAULT;
-> +	return 0;
-> +}
+> Signed-off-by: Bhupesh <bhupesh@igalia.com>
 
-I sent an old version sine this was sitting around during the merge 
-window. This should have been renamed along with the version above to
-'get_user_gcs'.
+Make that a Link tag?
 
+  Link: https://lore.kernel.org/all/CAHk-=wi5c=_-FBGo_88CowJd_F-Gi6Ud9d=TALm65ReN7YjrMw@mail.gmail.com/ #1
+  Signed-off-by: Bhupesh <bhupesh@igalia.com>
 
-> +static inline u64 pop_user_gcs(int *err)
-> +{
-> +	return 0;
-> +}
->   
->   #endif
->   
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
