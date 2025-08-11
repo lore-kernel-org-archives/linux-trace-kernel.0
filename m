@@ -1,54 +1,63 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8AB02DC327;
-	Mon, 11 Aug 2025 08:41:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D01FF2DC33D;
+	Mon, 11 Aug 2025 08:41:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754901663; cv=none; b=ON26cPHmgkMrU9rOww+f5Yf/3NQacwoqMnQzYUG6NVrqPG5TiMqjau5/HxmHrraWLzG9xzF53JOjU/iXVmo9k6IYMDHYmI4uZrTxODRFeYgHGsB3OGlLYjCI0Y3koz0qgrlccyMdJlZRLl+Jn26RXvbe3s7mTNQdQf8qcYan+w8=
+	t=1754901664; cv=none; b=Hk+t/Z6BwoS91MbJ6c5emoKfZTJp2/w2kVyO/qVCZcQNiGGNYPZslFQO7cGBfXTgx4N5Rca1Cf2qch4yuDT+ZVTgSGOkbrC1dS309ABlIseZ40U2JftzbiYaPBUOYdhb7X6UrBiXhJoMxETPSc/tbJBniBz8yKxe410S4xq5Cls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754901663; c=relaxed/simple;
-	bh=Pkh60LQE6oQM6hJ6LKjGr8fgjy8bvBfKlnosy6SE+X4=;
+	s=arc-20240116; t=1754901664; c=relaxed/simple;
+	bh=9YsG06WtB9/zUOgaTgppqAwdfXZoFjPNkZ6vFpzOkHs=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=YDSnwPFEroSetW7OnMDr7Ab5uKc9OMhm9SWzARxeKvw2lyBNd1GaSbimrIx4Aajxj9V2UvWhV6e5P3vFT25d6Al1uT1c39w+O+Fx5rARrGAoCXFGqKPmK4M7Yciim1YBRktgvriVgWgbxbCuy9aOrKilXVS1OQU2sMXA5xHQDuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=2mJ7MpNF; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=InUNx2If; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=uOu/ACjsM3C7rOPLvqUdg9oSTTEf4SofJAdCkBoq4Lqx5GarWY4vV8asXo+ACzkVPEa5EgPs5ugg1TkvUVlP3cZ6vZeUxqE5l6THYtOXElF1SwplS7NXpfxFz7r+DrTihoilxgUMTWCQO5EzNFxkmO8+9iB5uv9fpW8yozAVitk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=OukrhY09; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=hnyGRGTk; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2mJ7MpNF";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="InUNx2If"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OukrhY09";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hnyGRGTk"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1754901660;
+	s=2020; t=1754901661;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=c9JdoIob0IoJYUL+k+Xeng5nvnqhWJYDYOUC/vZBBeQ=;
-	b=2mJ7MpNF3cNzLViG+c6tQyB75EJe9ieMFbmeamzaGsVKHHSFyiG6WV1s9pjx4v9JxHw2lW
-	7qri/xnt+NcFZ3Je3t+gjyMPC66apFvAOhBJ27UHIuP9w8yR9CeLrsCKbWZ4hFrzT62o3/
-	x89vHb+3FJEJxAd3yhwwof2ChyvdaBB2VU94h5paRnGyO0YWLJNFMdcT4mPNxwPL9jD3ba
-	8OXuHldz0T+AqeJeEv2//tmAp3gky4jp3eNlogddmfIgcFL9BMFDjxRtiXgS/1UUGFroq2
-	Rfh+vcUORd4pHZk55HofbMFHqri+rtTKdRg2K7HLgIG1HfKgqeqrrojKA4kNpA==
+	bh=Miprh6lutDZczVUr8OdDe4LY5knk2xmnfHBwc1ZmSzQ=;
+	b=OukrhY09UYSeVdjYlnkQK4tMEcuxsTjqCe4eGSGEm6aZLcFulwJuydpmcaX7n0HjrLoiDp
+	84JesybPgouSeitUVFqHpd7b/33hEts1Mm5xTrFZsDuHHGx+6VHs0VKZPhTEIeitHNBk9N
+	LbIYBJNS41awBgx7JbLjHaUnfkAq/q+j2sVkegFKbCWmrpXSa43gaJoDukgw/iricv+34i
+	0FP3W+t/9WxPadng54VdgXTiraFjpUOVBC3UmT3kD+ZDwDmaIFvxAIazw+Vf48l4tDrAG4
+	oGaVc1FYBFRPhPwQPcis/WE68zLwhNPI0ujOuJOMj9hygFRkKQGuJcUkyVI1nw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1754901660;
+	s=2020e; t=1754901661;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=c9JdoIob0IoJYUL+k+Xeng5nvnqhWJYDYOUC/vZBBeQ=;
-	b=InUNx2IfXIg/90xO+3/pDTf0rrzwCY+UL0uwLE9IDXxGdOtuOdrNHRu5tVjT1eEBdqblEM
-	9+G4dX62jJ+vnXDw==
+	bh=Miprh6lutDZczVUr8OdDe4LY5knk2xmnfHBwc1ZmSzQ=;
+	b=hnyGRGTkvGJBfAbmtGNTsmCR6rhkiB0ptn4XyoH+DKZDpWTrK7v5eTM88lhJvW8zhbPl8W
+	QyDaxLZdFiJL2lDA==
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	Gabriele Monaco <gmonaco@redhat.com>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Cc: Nam Cao <namcao@linutronix.de>
-Subject: [PATCH v3 3/5] verification/rvgen/ltl: Support per-cpu monitor generation
-Date: Mon, 11 Aug 2025 10:40:51 +0200
-Message-Id: <e7fb580ca898c707573fe1dcf6312f0c2d7682c5.1754900299.git.namcao@linutronix.de>
+Cc: Nam Cao <namcao@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ben Segall <bsegall@google.com>,
+	Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	K Prateek Nayak <kprateek.nayak@amd.com>
+Subject: [PATCH v3 4/5] sched: Add task enqueue/dequeue trace points
+Date: Mon, 11 Aug 2025 10:40:52 +0200
+Message-Id: <918fe0f29a94e49db05c4f63a8a210dda9b90925.1754900299.git.namcao@linutronix.de>
 In-Reply-To: <cover.1754900299.git.namcao@linutronix.de>
 References: <cover.1754900299.git.namcao@linutronix.de>
 Precedence: bulk
@@ -59,185 +68,80 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Add support to generate per-cpu LTL monitors. Similar to generating per-cpu
-monitors from .dot files, the "-t per_cpu" parameter can be used to
-generate per-cpu monitors from .ltl files.
+Add trace points into enqueue_task() and dequeue_task(). They are useful to
+implement RV monitor which validates RT scheduling.
 
-Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
 Signed-off-by: Nam Cao <namcao@linutronix.de>
 ---
-v3: re-write the description in ltl_atoms_init() to be more precise
-v2: Rename "implicit" to "cpu"
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Juri Lelli <juri.lelli@redhat.com>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc: Ben Segall <bsegall@google.com>
+Cc: Mel Gorman <mgorman@suse.de>
+Cc: Valentin Schneider <vschneid@redhat.com>
+Cc: K Prateek Nayak <kprateek.nayak@amd.com>
 ---
- tools/verification/rvgen/rvgen/ltl2k.py       | 48 ++++++++++++++++---
- .../rvgen/rvgen/templates/ltl2k/main.c        |  9 ++--
- .../rvgen/rvgen/templates/ltl2k/trace.h       |  7 ++-
- 3 files changed, 50 insertions(+), 14 deletions(-)
+v3: fix up build issue on !SMP
+v2: Move the tracepoints to cover all task enqueue/dequeue, not just RT
+---
+ include/trace/events/sched.h | 13 +++++++++++++
+ kernel/sched/core.c          |  8 +++++++-
+ 2 files changed, 20 insertions(+), 1 deletion(-)
 
-diff --git a/tools/verification/rvgen/rvgen/ltl2k.py b/tools/verification/r=
-vgen/rvgen/ltl2k.py
-index b075f98d50c4..f291d1f03d05 100644
---- a/tools/verification/rvgen/rvgen/ltl2k.py
-+++ b/tools/verification/rvgen/rvgen/ltl2k.py
-@@ -57,9 +57,16 @@ class ltl2k(generator.Monitor):
-     template_dir =3D "ltl2k"
+diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
+index 7b2645b50e78..696d22af5a98 100644
+--- a/include/trace/events/sched.h
++++ b/include/trace/events/sched.h
+@@ -896,6 +896,19 @@ DECLARE_TRACE(sched_set_need_resched,
+ 	TP_PROTO(struct task_struct *tsk, int cpu, int tif),
+ 	TP_ARGS(tsk, cpu, tif));
 =20
-     def __init__(self, file_path, MonitorType, extra_params=3D{}):
--        if MonitorType !=3D "per_task":
--            raise NotImplementedError("Only per_task monitor is supported =
-for LTL")
-+        if MonitorType =3D=3D "per_task":
-+            self._target_arg =3D "struct task_struct *task"
-+            self._target =3D "task"
-+        elif MonitorType =3D=3D "per_cpu":
-+            self._target_arg =3D "unsigned int cpu"
-+            self._target =3D "cpu"
-+        else:
-+            raise NotImplementedError(f"LTL does not support monitor type =
-{MonitorType}")
-         super().__init__(extra_params)
-+        self.monitor_type =3D MonitorType
-         with open(file_path) as f:
-             self.atoms, self.ba, self.ltl =3D ltl2ba.create_graph(f.read())
-         self.atoms_abbr =3D abbreviate_atoms(self.atoms)
-@@ -67,6 +74,13 @@ class ltl2k(generator.Monitor):
-         if not self.name:
-             self.name =3D Path(file_path).stem
-=20
-+    def _fill_monitor_type(self) -> str:
-+        if self.monitor_type =3D=3D "per_task":
-+            return "#define LTL_MONITOR_TYPE RV_MON_PER_TASK"
-+        if self.monitor_type =3D=3D "per_cpu":
-+            return "#define LTL_MONITOR_TYPE RV_MON_PER_CPU"
-+        assert False
++/*
++ * The two trace points below may not work as expected for fair tasks due
++ * to delayed dequeue. See:
++ * https://lore.kernel.org/lkml/179674c6-f82a-4718-ace2-67b5e672fdee@amd.c=
+om/
++ */
++DECLARE_TRACE(enqueue_task,
++	TP_PROTO(int cpu, struct task_struct *task),
++	TP_ARGS(cpu, task));
 +
-     def _fill_states(self) -> str:
-         buf =3D [
-             "enum ltl_buchi_state {",
-@@ -174,7 +188,7 @@ class ltl2k(generator.Monitor):
-=20
-     def _fill_start(self):
-         buf =3D [
--            "static void ltl_start(struct task_struct *task, struct ltl_mo=
-nitor *mon)",
-+            "static void ltl_start(%s, struct ltl_monitor *mon)" % self._t=
-arget_arg,
-             "{"
-         ]
-=20
-@@ -205,7 +219,7 @@ class ltl2k(generator.Monitor):
-         buff =3D []
-         buff.append("static void handle_example_event(void *data, /* XXX: =
-fill header */)")
-         buff.append("{")
--        buff.append("\tltl_atom_update(task, LTL_%s, true/false);" % self.=
-atoms[0])
-+        buff.append("\tltl_atom_update(%s, LTL_%s, true/false);" % (self._=
-target, self.atoms[0]))
-         buff.append("}")
-         buff.append("")
-         return '\n'.join(buff)
-@@ -241,6 +255,9 @@ class ltl2k(generator.Monitor):
-             ""
-         ]
-=20
-+        buf.append(self._fill_monitor_type())
-+        buf.append('')
++DECLARE_TRACE(dequeue_task,
++	TP_PROTO(int cpu, struct task_struct *task),
++	TP_ARGS(cpu, task));
 +
-         buf.extend(self._fill_atoms())
-         buf.append('')
+ #endif /* _TRACE_SCHED_H */
 =20
-@@ -259,13 +276,32 @@ class ltl2k(generator.Monitor):
-         return '\n'.join(buf)
+ /* This part must be outside protection */
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index be00629f0ba4..6367799aa023 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -2077,6 +2077,8 @@ unsigned long get_wchan(struct task_struct *p)
 =20
-     def fill_monitor_class_type(self):
--        return "LTL_MON_EVENTS_ID"
-+        if self.monitor_type =3D=3D "per_task":
-+            return "LTL_MON_EVENTS_ID"
-+        if self.monitor_type =3D=3D "per_cpu":
-+            return "LTL_MON_EVENTS_CPU"
-+        assert False
-=20
-     def fill_monitor_class(self):
--        return "ltl_monitor_id"
-+        if self.monitor_type =3D=3D "per_task":
-+            return "ltl_monitor_id"
-+        if self.monitor_type =3D=3D "per_cpu":
-+            return "ltl_monitor_cpu"
-+        assert False
-+
-+    def fill_tracepoint_args_skel(self, tp_type):
-+        if tp_type =3D=3D "event":
-+            return \
-+                ("\tTP_PROTO(%s, char *states, char *atoms, char *next),\n=
-" % self._target_arg) + \
-+                ("\tTP_ARGS(%s, states, atoms, next)" % self._target)
-+        if tp_type =3D=3D "error":
-+            return \
-+                ("\tTP_PROTO(%s),\n" % self._target_arg) + \
-+                ("\tTP_ARGS(%s)" % self._target)
-=20
-     def fill_main_c(self):
-         main_c =3D super().fill_main_c()
-         main_c =3D main_c.replace("%%ATOMS_INIT%%", self.fill_atoms_init())
-+        main_c =3D main_c.replace("%%TARGET_ARG%%", self._target_arg)
-=20
-         return main_c
-diff --git a/tools/verification/rvgen/rvgen/templates/ltl2k/main.c b/tools/=
-verification/rvgen/rvgen/templates/ltl2k/main.c
-index f85d076fbf78..c6b51a04c360 100644
---- a/tools/verification/rvgen/rvgen/templates/ltl2k/main.c
-+++ b/tools/verification/rvgen/rvgen/templates/ltl2k/main.c
-@@ -23,7 +23,7 @@
- #include "%%MODEL_NAME%%.h"
- #include <rv/ltl_monitor.h>
-=20
--static void ltl_atoms_fetch(struct task_struct *task, struct ltl_monitor *=
-mon)
-+static void ltl_atoms_fetch(%%TARGET_ARG%%, struct ltl_monitor *mon)
+ void enqueue_task(struct rq *rq, struct task_struct *p, int flags)
  {
- 	/*
- 	 * This is called everytime the Buchi automaton is triggered.
-@@ -36,13 +36,14 @@ static void ltl_atoms_fetch(struct task_struct *task, s=
-truct ltl_monitor *mon)
++	trace_enqueue_task_tp(cpu_of(rq), p);
++
+ 	if (!(flags & ENQUEUE_NOCLOCK))
+ 		update_rq_clock(rq);
+=20
+@@ -2119,7 +2121,11 @@ inline bool dequeue_task(struct rq *rq, struct task_=
+struct *p, int flags)
+ 	 * and mark the task ->sched_delayed.
  	 */
+ 	uclamp_rq_dec(rq, p);
+-	return p->sched_class->dequeue_task(rq, p, flags);
++	if (p->sched_class->dequeue_task(rq, p, flags)) {
++		trace_dequeue_task_tp(cpu_of(rq), p);
++		return true;
++	}
++	return false;
  }
 =20
--static void ltl_atoms_init(struct task_struct *task, struct ltl_monitor *m=
-on, bool task_creation)
-+static void ltl_atoms_init(%%TARGET_ARG%%, struct ltl_monitor *mon, bool t=
-arget_creation)
- {
- 	/*
- 	 * This should initialize as many atomic propositions as possible.
- 	 *
--	 * @task_creation indicates whether the task is being created. This is
--	 * false if the task is already running before the monitor is enabled.
-+	 * @target_creation indicates whether the monitored target is being
-+	 * created. This is false if the monitor target exists already before
-+	 * the monitor is enabled.
- 	 */
- %%ATOMS_INIT%%
- }
-diff --git a/tools/verification/rvgen/rvgen/templates/ltl2k/trace.h b/tools=
-/verification/rvgen/rvgen/templates/ltl2k/trace.h
-index 49394c4b0f1c..87d3a1308926 100644
---- a/tools/verification/rvgen/rvgen/templates/ltl2k/trace.h
-+++ b/tools/verification/rvgen/rvgen/templates/ltl2k/trace.h
-@@ -6,9 +6,8 @@
-=20
- #ifdef CONFIG_RV_MON_%%MODEL_NAME_UP%%
- DEFINE_EVENT(event_%%MONITOR_CLASS%%, event_%%MODEL_NAME%%,
--	     TP_PROTO(struct task_struct *task, char *states, char *atoms, char *=
-next),
--	     TP_ARGS(task, states, atoms, next));
-+%%TRACEPOINT_ARGS_SKEL_EVENT%%);
-+
- DEFINE_EVENT(error_%%MONITOR_CLASS%%, error_%%MODEL_NAME%%,
--	     TP_PROTO(struct task_struct *task),
--	     TP_ARGS(task));
-+%%TRACEPOINT_ARGS_SKEL_ERROR%%);
- #endif /* CONFIG_RV_MON_%%MODEL_NAME_UP%% */
+ void activate_task(struct rq *rq, struct task_struct *p, int flags)
 --=20
 2.39.5
 
