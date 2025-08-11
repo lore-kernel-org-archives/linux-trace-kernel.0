@@ -1,146 +1,121 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0629F2D323D
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 11 Aug 2025 12:40:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F183C19DF5F;
+	Mon, 11 Aug 2025 13:49:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754916021; cv=none; b=FWvZh+NO9HuOMMC/668WFtJDrlPqnRenHBjn1VH5lmQVIpT5vFWHzOr8VaZrQGFvuiIwvXUDGSLViAISVQoW5VX7M2YE7bH/Ct9mfaMcabYVmOC0QwRg7e3HZ5hgjBhL17Qm8zNYUg1uuttCZ92KP+Mmqm6Svr2Se2X0XSfAGQY=
+	t=1754920181; cv=none; b=BhrvnoP2J7CnK1mc8QR2xlDa2ubFhQnZ21LoSp4LVzf3lg2jsYc6QRLGJxUZFUcDg9r3uyZySpcH6Ir+oPyFqKBvoAd5g83ZJPwQEsOyFJVuBVN/puCabbQeHZCuw8/7zGZjw1wnMg5XeB3LFyhH0RPNUoHPj9+agYzUjWqyeBY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754916021; c=relaxed/simple;
-	bh=bZ8JvErxR0ncMluhQbck3byby1FATW+QySRiWFQS31Q=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Jlr8jmg0vKVGh4xM0ObfzeWchhOpH0HN3xQ+SAmiyinPYNYXZxpaoG/grQdoxxFUCg1l9Efy7QeNEHD8PUVrSFCQHzkG+fhbYuxCNLHi3MEipZh0mbWcqjNu6LxwiRoEUafcisp0aytF56gfFJ8AB5EKOpzGtnYtNRxPAPuerkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JaPvPzUF; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1754920181; c=relaxed/simple;
+	bh=89ir4gbyOZrg9hEPgyanPf2svJoQtzXiPEaOmOIYzwQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=C0gFhJzwGIp092c0wEWao4wIigi5DqYY/JOqeZ5WS7MY+JFv67q/5/rG2RQxsWBoYJxk6zjWvgUB6cWpp9O3EyOSfC2EQTr6Efh+5mHtgXgLiuJj+yFcO2YHoE2kvKLvAwBEiJlDQ0tj2SE0IRSy2pjEfxPV+sf0CwfZ3xiG6O4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OiI9+y4P; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JaPvPzUF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1754916019;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=bZ8JvErxR0ncMluhQbck3byby1FATW+QySRiWFQS31Q=;
-	b=JaPvPzUFwnpKkqMhrP2J5jrpI5RIxAn+pMMsRk34H2FNw2SU3Yt5a6F+Vyk7MdifQ8znNV
-	JXKhBU+9oeWI0pZLuumsZiJ4GmIQmhK09oViBWXrp9+k39jLoce7GY33bC3zaw10UG5f2c
-	ZdvzH2sbSxEo60poanJdXAbFugT9cKU=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-503-tSOLMPh6NDmVGNiZMTCeVw-1; Mon, 11 Aug 2025 08:40:17 -0400
-X-MC-Unique: tSOLMPh6NDmVGNiZMTCeVw-1
-X-Mimecast-MFC-AGG-ID: tSOLMPh6NDmVGNiZMTCeVw_1754916017
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7e82a101470so801809485a.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 11 Aug 2025 05:40:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754916017; x=1755520817;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=H5BUV8YhRn/Ax4dIkTjLV1BItSPJ4aeJpn68BpS8ZZc=;
-        b=k1L1t/KoPf/oDHYLehTPBYZqYTaH9CrAKREqUIyyxWS1foS75/1U7yC0r7LHpT1lP4
-         stEAKKKtXFmHHFLQgOCZH7Q6uGb6MvmKVX9gAJFxVv1uhPcUcaYRxCC0GW+4lDA/74+e
-         3CIyTOEkO/yQqFgn+diwfCxkbRKDQ6wlnlfP2ClZdBYxqNFumxFSM6XGa4ebzn2lESr6
-         w9N6sJRLYjykszKA18FSOnGzPbPspvkA+mdR3r2p5aTJCXVf8VsPR9de4StuGH54a4Rk
-         BHdNnIUVEveqCnu84uty2Hp2bjj1pHiklO20aC3hzntAtmpzoaCA5AtD7coTmileoyM1
-         niDg==
-X-Gm-Message-State: AOJu0YzuWrGbfX8M4raiCkIf07dd0v8BlzEluIRTSqRez+Gd6Pe5mEUR
-	wWaDjELWFKDspPzwst1eH8tdAomiVkn5RFDdD4aDPcuCnMT9+jI7KITgbqC9yy2VEFpZ+tLQq8H
-	I2xPPOax8NuNmiupEJsI27myVe6cmfirpM3ONQqaLGwDtrA+5G6KsVbqW4Q6l0Q2BNkRbHcUzTw
-	==
-X-Gm-Gg: ASbGncsvZgTP68ht3KNJjOFpD86rAgdTB3sw9342TnmD/i1K0Hq9oEMOz6cHPLxJZvY
-	yQguxSuNP5qnTT8KhNo7vAOAT/PBzwNgLEnwi6SMCKxdpzRSM1GJi829sV2VzuU5Tkay1/EhhmT
-	HmeEzLBtWdAJlFII4K2UcDwh8YnKWRuVVBjy3DEFwebbm6bOvpNINpQILjmfnX6PadjNYS7mJ5P
-	OwFBkcnBXs9k70DNKHpvWbR2qPFYbxJFqMomqBuXGGcXjk/RdX0pdwKO5EfznI+DiE8A8MjHYRL
-	aRTeimQJPA9GzVjEgaEBqoz8RXjDY7HPtZiQZXqbyayhKE1km7Btk40j8MN74L5iFQ==
-X-Received: by 2002:a05:620a:a50c:b0:7e1:9357:85df with SMTP id af79cd13be357-7e82c7bcaf6mr1624713185a.55.1754916017068;
-        Mon, 11 Aug 2025 05:40:17 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEG9QTo9AdNmsvOYlTc5kHQZC3mxnMpfJ5588uXlgec0XggbhPVrUQNodSuN9JBendrRyxPOA==
-X-Received: by 2002:a05:620a:a50c:b0:7e1:9357:85df with SMTP id af79cd13be357-7e82c7bcaf6mr1624708485a.55.1754916016521;
-        Mon, 11 Aug 2025 05:40:16 -0700 (PDT)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.35])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7e80235288fsm1093882885a.22.2025.08.11.05.40.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Aug 2025 05:40:16 -0700 (PDT)
-Message-ID: <9e3d1c141c1e6609252aa38348986fe1436052b7.camel@redhat.com>
-Subject: Re: [PATCH v2] include/linux/rv.h: remove redundant include file
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Akhilesh Patil <akhilesh@ee.iitb.ac.in>, rostedt@goodmis.org, 
-	mhiramat@kernel.org, mathieu.desnoyers@efficios.com
-Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	akhileshpatilvnit@gmail.com, skhan@linuxfoundation.org
-Date: Mon, 11 Aug 2025 14:40:13 +0200
-In-Reply-To: <aJneRbHGlNFg7lr9@bhairav-test.ee.iitb.ac.in>
-References: <aJneRbHGlNFg7lr9@bhairav-test.ee.iitb.ac.in>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
- xyhmqeUWOzFx5P43S1E1dhsrLWgP
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OiI9+y4P"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1754920181; x=1786456181;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=89ir4gbyOZrg9hEPgyanPf2svJoQtzXiPEaOmOIYzwQ=;
+  b=OiI9+y4P0PdFykUcycSp7vUt3rTpmxxqhIBRQRaJGgIC4frdNfOhatUe
+   3MiKC0BZvjWcEmzDbaQHbpv5NasGSUlN45lKttvh7q2vGmxIS+Y+Y2CnO
+   F4Dp7qEn5FiY8IBjkulA7JwwWtjhhZisLzpIewGZSEUp6LKg4zamwMUHA
+   6RR+L0CEg3TAEHlED5aRvYCSYAPsRZohekLewSyqDEXQWA4z+c65JIH9Z
+   VXHMaamIfFaj/t0n7Fsr6/5UDTUUvBrEFHxg+DjI/YRO5xd6+44rnThuQ
+   GUFu0S2p28kEx+99ahyj+5DHU7+PLN1f+b+/f0SMrbK6ITU8GzMeKuS9m
+   Q==;
+X-CSE-ConnectionGUID: GoPUKobOQVCgINOE7Q35Mg==
+X-CSE-MsgGUID: pVEACYDWQ4O+PP6HrxT7vg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11518"; a="57042506"
+X-IronPort-AV: E=Sophos;i="6.17,278,1747724400"; 
+   d="scan'208";a="57042506"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2025 06:49:40 -0700
+X-CSE-ConnectionGUID: UddAGeqfSQqV1r7d/wGDPg==
+X-CSE-MsgGUID: b6jiBsnTQ6eJF3Fh4C++hQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.17,278,1747724400"; 
+   d="scan'208";a="165417321"
+Received: from dwesterg-mobl1.amr.corp.intel.com (HELO [10.125.111.51]) ([10.125.111.51])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2025 06:49:38 -0700
+Message-ID: <4f2f7e26-561e-483a-bc67-0cc29549b866@intel.com>
+Date: Mon, 11 Aug 2025 06:49:38 -0700
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 8VPJRIPtpHH8KhiDMwzj3Fc-nYwweDB6lXs0T1RdrNY_1754916017
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] MAINTAINERS: Remove bouncing kprobes maintainer
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+ Dave Hansen <dave.hansen@linux.intel.com>
+Cc: linux-kernel@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+ linux-trace-kernel@vger.kernel.org, Naveen N Rao <naveen@kernel.org>
+References: <20250808180124.7DDE2ECD@davehans-spike.ostc.intel.com>
+ <20250811155352.45ee7061226f3e85aeda54b7@kernel.org>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20250811155352.45ee7061226f3e85aeda54b7@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, 2025-08-11 at 17:42 +0530, Akhilesh Patil wrote:
-> Remove redundant include <linux/types.h> to clean up the code.
-> Move all unique include files inside CONFIG_RV as they are only
-> needed when CONFIG_RV is enabled.
+On 8/10/25 23:53, Masami Hiramatsu (Google) wrote:
+>> The kprobes MAINTAINERS entry includes anil.s.keshavamurthy@intel.com.
+>> That address is bouncing. Remove it.
+>>
+>> This still leaves three other listed maintainers.
+> OK, should this be an urgent commit?
 
+It's not urgent in that it's obviously not breaking anything.
 
-> Arrange include files alphabetically.
-
-That is usually not necessary. Also, it shouldn't happen, but sometimes
-the order of inclusion matters. Anyway this isn't the case here (builds
-fine locally) and when it is, the test robot should notice.
-
-
-Looks good to me overall, thanks!
-Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
-
->=20
-> Fixes: 24cbfe18d55a ("rv: Merge struct rv_monitor_def into struct
-> rv_monitor") [1]
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes:
-> https://lore.kernel.org/r/202507312017.oyD08TL5-lkp@intel.com/
-> Signed-off-by: Akhilesh Patil <akhilesh@ee.iitb.ac.in>
-> ---
-> =C2=A0include/linux/rv.h | 6 ++----
-> =C2=A01 file changed, 2 insertions(+), 4 deletions(-)
->=20
-> diff --git a/include/linux/rv.h b/include/linux/rv.h
-> index 14410a42faef..9520aab34bcb 100644
-> --- a/include/linux/rv.h
-> +++ b/include/linux/rv.h
-> @@ -7,16 +7,14 @@
-> =C2=A0#ifndef _LINUX_RV_H
-> =C2=A0#define _LINUX_RV_H
-> =C2=A0
-> -#include <linux/types.h>
-> -#include <linux/list.h>
-> -
-> =C2=A0#define MAX_DA_NAME_LEN=09=09=0932
-> =C2=A0#define MAX_DA_RETRY_RACING_EVENTS=093
-> =C2=A0
-> =C2=A0#ifdef CONFIG_RV
-> +#include <linux/array_size.h>
-> =C2=A0#include <linux/bitops.h>
-> +#include <linux/list.h>
-> =C2=A0#include <linux/types.h>
-> -#include <linux/array_size.h>
-> =C2=A0
-> =C2=A0/*
-> =C2=A0 * Deterministic automaton per-object variables.
-
+But if it was in code I maintain, I'd probably send it up to Linus to
+apply in the next -rc kernel instead of waiting for the next merge window.
