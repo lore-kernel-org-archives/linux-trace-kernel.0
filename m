@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 425962E03F3;
-	Tue, 12 Aug 2025 07:23:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 500AF2D8375;
+	Tue, 12 Aug 2025 07:32:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754983419; cv=none; b=QDoAOf9mDbjNPO8TsnFZkF0nKN0Vux/IAcv0NUiVCkt8dsN64fIktC65fb1p71JQWUSJ6/eQ/PWKJ6u0xiK+6Dp2SQwEOlx2UldP58nlLjzBtIw64Tz3gL4+Sjz3yFt7MmhNs4tQj+N/zF50THlJa43gHr6PDsSVKEY2mjmIhMM=
+	t=1754983932; cv=none; b=Wfkk2j2ZHh27VIiR30Oo1juzj6zzgrLpWkMMKMyNyUp45SQzQErTnc6Deejt5zDHii0cg19MjCspGWV5iUjSpFihZ51nQK1ZkaUmauZorf+ge2eoisRLFgD2qAFFqEY2nMHOrlb+eAfLmH9yxwTVtWW4eW2s7kCiOQXicRvedwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754983419; c=relaxed/simple;
-	bh=JiE8CKcIxE7skuyrDeYkQpvSNgGqopGhxb7VfznaQeE=;
+	s=arc-20240116; t=1754983932; c=relaxed/simple;
+	bh=O+0/mMzcYBzAXr5xY2ybwh3+r//NqA3Z+JWUeLP3lH4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BlNbnR5raJDvHmHjvbKXb9aWxCbRxvmCLF5CUkb5XltaxGe4VPlg5zR4vuJ7eP6TZLBUqcV2ZZNCzqDq+AWVZTFV8k2wx/4Qj8Fk3rjTmIEBjFoFYCHW4/CiQ0JiiUy008UIs2rjl+ivnstAxqtlW++n/61+7JuGwsw8o2N74V0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J9NTolve; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=pCPXulXJwFjnMX0/LTaFnMabiREJkhKHXBSwPfzRLjw03b8MKDZmOgV3RUjjGafficgJGBEtkIu4ENPMEpSPw0ufZNyDWEYcHbbn4+LvpEW4YQl+5n1P+xaIxMxuTgRQcmiucWACt1GSuUzuIU07OkQwu33qeScURtcefhc2CWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jqUtyZCn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J9NTolve"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C126C4CEF0;
-	Tue, 12 Aug 2025 07:23:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jqUtyZCn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76E05C4CEF0;
+	Tue, 12 Aug 2025 07:32:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754983416;
-	bh=JiE8CKcIxE7skuyrDeYkQpvSNgGqopGhxb7VfznaQeE=;
+	s=k20201202; t=1754983931;
+	bh=O+0/mMzcYBzAXr5xY2ybwh3+r//NqA3Z+JWUeLP3lH4=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=J9NTolveGpBhWAvij58oUWOP2vguKLwWjqPfp95pSn5u0OVwuc/8HgIIRNp/hgTYu
-	 Z2PzUYkZaSRY4k2AgBDndi3Tk97DXMXp2sclnItCHN+LNaMFnrD1snBel/5N/Zntht
-	 hR3VwLfaDfoIPLajJwG0kpZ5PCrUMC6ZMDdFUJ5nFe6+vmOzHgqknrroIQpoxjPRrs
-	 Y8R17VT6eeuHFcOc4dk6bPJnPohq/aqyonDJwiG21J4gx6VxcgHqTDIUWzdhq/+csO
-	 ll8+FioTFQeaBXJ4UFNBfqOdjR3drwg07aFdQzRH7uDuV3lW9cKwMys4CAebNhA3qe
-	 a2aczlbG19g/g==
-Message-ID: <09179c67-1dbe-41e5-9905-26b4c6bf9f60@kernel.org>
-Date: Tue, 12 Aug 2025 09:23:29 +0200
+	b=jqUtyZCnXk+znDbQjnFeGQOxKcz2AIPqI60/CZMZjjVL9St8LUuPHFepgL2ODH7Ve
+	 R7obL8/R2LFEiuafdIg0vPBB01R6gCyFyC0OGFJ80ZiB5iAFUoqiu99lD3qKJ6s7YM
+	 BUHD9b5IME2vAdrMcXwkOxGCJ7UxXd0PXx7MgdhaU4K6p7KY4vM1PaYKy73BYGIPQ9
+	 /1bD1fHuQK5srVVFWb9lluTLfm5V0alCUm/M8g+91BcVSw3YXzxNaViXF0g6AWjfDA
+	 wdyayNd14vwOZ2wM4jlUzeaRhkB0bmbdViN2v1lJ0f4Vjl67cTMEeTijj/accEY/7R
+	 7BkAoveiQrjJA==
+Message-ID: <c44c9aad-b08e-4be8-b135-258305b1f950@kernel.org>
+Date: Tue, 12 Aug 2025 09:32:04 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -118,34 +118,12 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 On 12/08/2025 09:04, Liju-clr Chen (陳麗如) wrote:
-> On Wed, 2024-12-11 at 09:44 +0100, Krzysztof Kozlowski wrote:
->>
->> External email : Please do not click links or open attachments until
->> you have verified the sender or the content.
->>
->>
->> On 14/11/2024 11:07, Liju-clr Chen wrote:
->>> +
->>> +static int gzvm_dev_open(struct inode *inode, struct file *file)
->>> +{
->>> +     /*
->>> +      * Reference count to prevent this module is unload without
->>> destroying
->>> +      * VM
->>
->> So you re-implemented suppress-bind attrs... no, drop.
->>
-> 
-> Thanks, will fix in next version.
+> we have guarded the gzvm driver with the CONFIG_MTK_GZVM Kconfig
+> option. This ensures the code is only compiled and active on selected
+> platforms, and will not affect other users or systems.
 
-I gave you comments within hours. You responded 8 months after. That is
-not making the process easy.
-
-I expect all comments applied in such case and I will not be reading
-further. You got comments, implement them fully. I think you reject
-them, but rejection after 8 months, means all context is gone.
-
-NAK
+That is simply not true, since it will be enabled in defconfig in EVERY
+platform. Look up approach of single kernel and single image.
 
 Best regards,
 Krzysztof
