@@ -1,62 +1,64 @@
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AB632E8895;
-	Tue, 12 Aug 2025 17:21:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E71892F4A07;
+	Tue, 12 Aug 2025 17:21:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755019289; cv=none; b=eEIj1M3C/Wps5bOYYXtEr1u77+ddpKgBo8clHQuxceKGPZ/nA+d7JsW654ASqZRwbc+kB+GpUUCMj55SnMMXd+zoaywbqx1fN/jzmShATHKpKWSR7npPtnrnv5arwkmvnXJYY7BzuDGaIsK6qUESyS8gTJf/ejFVdv1hnDm2sAE=
+	t=1755019304; cv=none; b=lEqQDNAKmaIvC6niXQ9rki2XAwsTHsnPRCOAbiA180fYAdOuz1koz0hkyr5RXhC9WhAq/pK/pG6H8s3lolKVuDRD+wHOVzU1yC00FayOLG7wgz/dceKCrxkcw2zfYdsEgWQ87tV99qezmvy5nV/SHu2oWfDJ+FndEJBqtLWy8DQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755019289; c=relaxed/simple;
-	bh=3tier0us37SQg9NvU0fXoUfnzhLWQCIG9q9OBNM7f/w=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SOjMvCri/e5FlRQ+VK53mre72mpBhPzZz5iO/BzfoPSkKliH1otawzHhS4ISzjwzrP3eSbGsT/VQbogyrqCNmQIww2wymrUkCVkrt6RdLIqoQkCrQ4KXWT2pzNOi/Ol09ek22Wwhg0HXuznCyBwecGWzHUGP867Vr4XVaHtQY+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N/6HJJDY; arc=none smtp.client-ip=209.85.222.169
+	s=arc-20240116; t=1755019304; c=relaxed/simple;
+	bh=sH8ZhJxjPjK/W5fojUbfcWKAEcP9xOolfJwD3H7oH74=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=sm5YdJBTBRj1CNeMdCq9LDa8+/BKwUGc+vlHrriDlYgLJC7OqjARKErsbNtF92dolsn7ooN839+a8SIq4FgHgyVNduJfxMyWq0ZrpM1K1goZslfjgFVba7msdqcATCGGZFUuOxI21pWfN03CiRS8ZI8dCWUp+CB+4Gjq0K/3G8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XljIEBWj; arc=none smtp.client-ip=209.85.222.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N/6HJJDY"
-Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-7e7f9bba93fso681948085a.3;
-        Tue, 12 Aug 2025 10:21:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XljIEBWj"
+Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7e806613af8so662680485a.2;
+        Tue, 12 Aug 2025 10:21:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1755019287; x=1755624087; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=lDwQUm3sZV03381lhrKBeQ+SKs2Y/6ZfkjM7dKYqOtc=;
-        b=N/6HJJDYsPndFYRR7Tcw2bzha8LWl9PGKG2E9fmeXTTDnUPq5T4fSlmPPmgVddwwDu
-         OBTh1TX3fYD7Bac1HPnKCDkpU7QIYMF+l6IjUrVpcFo7FeuhCOaH2VVST/mB/ukR3mGs
-         cWz9m2G3wiewW+cxZfkwS5xc0WE8CL+ZAHlGSfqaVe3aI5AFRIhZ47CEDjAeP2EeZaL3
-         t73OFfQpNb8Mr8RfNie+IvWKKqY8YpSuDwRKqOBMAz/RKkXF67SICI1jkDDdXuz1R4fS
-         jUOfsO+VCEarWKwkz1Z+M8VtLhoMVWr4I7jtBNMaqR40tCd0RFff4xGh+zSSX8xh6nJZ
-         aZ0Q==
+        d=gmail.com; s=20230601; t=1755019301; x=1755624101; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SM8pT9HqxyMa3H416EZmlZYSb6JbMTeAfDZVPtYuWGY=;
+        b=XljIEBWjq98e5JYMKguu4Kz48nZauIldiuv4RmV111srg+tYd0gafjkprconchQcQm
+         jVoYsw0f2b230TYK0h4Dbl0hen2zhdqKTlmFt1qAnnlP52peK1460Wl9bxpodGtfhL0w
+         iMkPUOyVlSYxfyoPmb7PKC1FCbRSaZqqD6QEUFLwDHup2kFxhGStXeNwIBQAr5qRf218
+         wL4aA7niCUIYjsm2U4si+NBAmuddMe2PneYqSyzBxw1G18wP8KQOAsBF7+c65OC2TYQA
+         YEkWq9P27aS4lxDwUnjTOYdKSDJYoJtmhC/IukWdeyiJoy/Tldgd+oTISp4D9e7nsjRD
+         yj3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755019287; x=1755624087;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lDwQUm3sZV03381lhrKBeQ+SKs2Y/6ZfkjM7dKYqOtc=;
-        b=ZOIjzsCyGvRTjw17Y52RkypJ/gqpL0WFKW/nrWLrKDX8TZXy1q2bLmaQcRNout5iI6
-         cvwcc7blu+FZYxU9CXxxMt2PxeilaXatD0R5WrQhR9eZH9ODQeFe6tKlBnkuLKpQ5ope
-         L1bOLzRTpeyc6+NgIdG0tdXdBXSfKRJ8svSPKtSNiQQRKY3I2c/KvWhlNgyKTnCvInKv
-         PXtAkvgYW/KIOt6LuQ8O9/zWen4lCQhEEY90Hs7gCOia9awsuX7ENXIel9whc2zmE29C
-         HrCXS4jLcTE5bVeF7kCzs4GyqowjHTq29AIzFklxDzIlqLtbk58lDUchrXZD8Wk7IU/c
-         Of8w==
-X-Forwarded-Encrypted: i=1; AJvYcCV1vnfOujp2Iz6JutjlBgijHgzDAt6FayeI6cU1KyBZha5VrT8g5RwE+WT/qjCB+c5KjytriarDmCws6aUuJsT9CER/@vger.kernel.org, AJvYcCVNbz0wHaWpEmglMCriMdrgVloMG9Jd5XRzsC9AkGy/13dwu2vXfCy0wsRjvo4LOamYd7AHnFF4UtJWsqVz@vger.kernel.org, AJvYcCXMWL7x9t19vS7e6CiA7vN1eE9AOMcxDiHSRAfK5KtLD8GyLtyKkfNDAyzy6woa6pwHELMT3HoIhuU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzEvQgb1xwsOdY4uokqafB6vdUrnv5NTbLzsUVy8d5rkRgKUAMe
-	Z2Rd0nHZlYDiLXpwDe6py2AZ+jTr/KIAVrYdzkGYLVrm2q12crE/III4
-X-Gm-Gg: ASbGncszqPqfDEjFpqR6DIm7dNLfCSNAvaz0xr9dDYPSIr2xa27gFwePz3ROdo9ArdN
-	yYEnYzkr5drLS/e7Ya0G4H2Phtuv4SwN2zvmBzkWG+06CPWlwHNxgUzpAFYnFJc7f/48AAtm1Uk
-	6g4unnSj5KlQVnbSCZZmCjQffCQWlBwqC+L+aT3PENkV7DsQvJdO/mFhlMQIfzdnC3ZzK6wYiIM
-	ZXZ+bQe6aq5NxhcS/KUXsM97yC3v08kWRcbHPX6oVsR+w2UogBjY4wLUMT1It6LwKpsfN6JXNhG
-	SdTmCjwh4k1zPVhNpT/6N/qLz6+SWIGkZgfDNLgkFcAG0Ek1yOntB1/qKxE/QkIysLMCo0fQaAQ
-	+kBTplAUxO2KLQz0LfuYcESamYQwHk6aF/79hwrSFpdc/cqjglv6T2i6h95rSJXn2sGXjyHjMQ/
-	8mntnyE4YcR7/y
-X-Google-Smtp-Source: AGHT+IF8AVDYC/rOYxa9bUZ9toRTeHflbFY1OCIB3N09BoqVOFDSpMS621QvkibEM1+jcr2A3RmQdg==
-X-Received: by 2002:a05:620a:4083:b0:7e8:14f2:174c with SMTP id af79cd13be357-7e865297232mr2423085a.24.1755019285922;
-        Tue, 12 Aug 2025 10:21:25 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1755019301; x=1755624101;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SM8pT9HqxyMa3H416EZmlZYSb6JbMTeAfDZVPtYuWGY=;
+        b=e+e8ZwevUd8khyVzoUGOcdch4nwNLDfNbZSCqCrfJXy59WjqHB7GdCUFTeSuiW5pql
+         /V8ih8FxHzUoy8NPdvAJ/yKX7DiHZ7ico36/X64SRx7Q1QG9I1saf401MQ4nbKgr2jeH
+         ELYmZvlmgEXcOUP1WkY4zrZMwGhqdAr7JU54zpn9adFrNyy7H8GcIUlvQyv3YJJAwqT9
+         BVmBWZ3DfWZTNtXUQVEyO8+Q7HgpkRtmf+sNwcrRsc66oOcT3wZSRvhBPpFlpOTFO0yU
+         cdpVXqHeqKayGLCNqTFu2VQBbA99/g8kMWhSyG5P3Wv0A3DgAp4vlgtuk/VkrxJ1Cfau
+         +wlQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV/+M1rEFgPVIN6yhUIc88/JIVI4wQAz7DXnwW/7Bt06m2q7y9P47bgffPFtJ0i3C+utJHTgF9VnKm/0o4HSY9iHT4u@vger.kernel.org, AJvYcCX2r9xHKzxW03vhfaGm3Yc3N86bKz4InFfMJX2wrEOn9c0eU85siQ5aNIlljE46XRGAdVW2U0KM2YAGOXg5@vger.kernel.org, AJvYcCXZGsB9sblN3Z96jk+kBbu29HSbDmCvr7QnFl1pmw5s6pWl4SllIvEQtkgBy9Tt6NpfF7Bzdr7Plf0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxHJHFyqE35xKgO9h2khEuy9Wsi/OQReayA28rXdnAWiy87SvrH
+	GlrR0eJZSUeCrikUxxsGii3BR+6pbUZpLhyhdg9JqnyADBHC7lH2skix
+X-Gm-Gg: ASbGnct2Hb6NBElx/9yoHXaaGJ+jFQotRb/1YwJFdJd3PtizOQW3Kx0yM4sDLED/3at
+	McjeMMOF9IvcuimuuBQPQyAA/cawNmK4DdRI989fxzFcH/Aot761OKmiWrSWVidGrHjYMnDO8Kd
+	1EgfecOITfNRElyyuduE0oz4CjqVPWRy+iVuWrEalRHOORRpGVuB2cwspDE9DYoVFxhvp1WmwQx
+	A9yaz9hwJel+/wBnBE1w4k91aSiBYf7bMDrobTVFD2nmr3BlhBrm6DFHLtC4KRBumY5LJNYbc3H
+	c1xAonFfGYDeaWfn43LOCT257vhjp8VKvpuNrVze7vkb4AhvL4erRwvt4FRlBQOSHRkKTXkG66h
+	UkOD+H3UwW4KzSWqAioX734tAqjrnE4TiEzu5f79wQTm1CKXBRYfQluFF7NttYLA348sa28iLH+
+	/HPB4CK4mKQjVa
+X-Google-Smtp-Source: AGHT+IFEw8r56npI81AcDYGc37RChY9ngq0KS6ptE8f5w0v/CPHg1XJGGEBnL4aJsNDXUzKjPbxAjQ==
+X-Received: by 2002:a05:620a:59:b0:7e7:ccc2:67d5 with SMTP id af79cd13be357-7e86463301bmr61867885a.61.1755019300564;
+        Tue, 12 Aug 2025 10:21:40 -0700 (PDT)
 Received: from ipravd-Nitro-AN515-55.mynetworksettings.com ([2600:4040:530f:f000:a841:61f7:aa1f:bc8])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7e82a1ccbfesm863457285a.51.2025.08.12.10.21.25
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7e82a1ccbfesm863457285a.51.2025.08.12.10.21.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Aug 2025 10:21:25 -0700 (PDT)
+        Tue, 12 Aug 2025 10:21:40 -0700 (PDT)
 From: Ivan Pravdin <ipravdin.official@gmail.com>
 To: rostedt@goodmis.org,
 	corbet@lwn.net,
@@ -65,10 +67,12 @@ To: rostedt@goodmis.org,
 	linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Ivan Pravdin <ipravdin.official@gmail.com>
-Subject: [PATCH v2 0/3] rtla: fix cgroup and trace options parsing
-Date: Tue, 12 Aug 2025 13:21:05 -0400
-Message-ID: <cover.1755018581.git.ipravdin.official@gmail.com>
+Subject: [PATCH v2 1/3] rtla: fix buffer overflow in actions_parse
+Date: Tue, 12 Aug 2025 13:21:07 -0400
+Message-ID: <358400afe299a82806e9969570cd3009621bcd8c.1755018581.git.ipravdin.official@gmail.com>
 X-Mailer: git-send-email 2.48.1
+In-Reply-To: <cover.1755018581.git.ipravdin.official@gmail.com>
+References: <cover.1755018581.git.ipravdin.official@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -77,48 +81,49 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This series fixes 3 issue in rtla timerlat and osnoise parsing.
+Currently, tests 3 and 13-22 in tests/timerlat.t fail with error:
 
-1. Fix buffer overflow when using --on-threshold option. Currently
-   passing `--on-threshold trace` causes rtla timerlat to segfault.
-   First patch addresses this issue.
+    *** buffer overflow detected ***: terminated
+    timeout: the monitored command dumped core
 
-2. Make -C/--cgroup option more user-friendly. Currently rtla timerlat
-   and osnoise parses does not allow to specify tracer's threads cgroup
-   name as `-C [cgroup]` or `--cgroup [cgroup]`. Second patch fixes this
-   by allowing users to specify cgroup in the aforementioned manner.
+The result of running `sudo make check` is
 
-3. When specifying `-t/--trace` before `-a/--auto`, trace filename is
-   override to default <osnoise|timerlat>_trace.txt. For example, when
-   running rtla as
+    tests/timerlat.t (Wstat: 0 Tests: 22 Failed: 11)
+      Failed tests:  3, 13-22
+    Files=3, Tests=34, 140 wallclock secs ( 0.07 usr  0.01 sys + 27.63 cusr
+    27.96 csys = 55.67 CPU)
+    Result: FAIL
 
-       `rtla timerlat top -t custom_file.txt -a 100`
+Fix buffer overflow in actions_parse to avoid this error. After this
+change, the tests results are
 
-   when the threshold is reached, timerlat_trace.txt file is created
-   instead of specified custom_file.txt. Third patch addresses this
-   issue.
+    tests/hwnoise.t ... ok
+    tests/osnoise.t ... ok
+    tests/timerlat.t .. ok
+    All tests successful.
+    Files=3, Tests=34, 186 wallclock secs ( 0.06 usr  0.01 sys + 41.10 cusr
+    44.38 csys = 85.55 CPU)
+    Result: PASS
 
-changes v1 -> v2:
-   - Moved removing clear_terminal from `fix -C/--cgroup interface`
-     patch to `fix -a overriding -t argument` patch
-   - Added clarification why to remove clear_terminal
-   - Added `Fixes:` tag to the `fix -C/--cgroup interface` patch
+Fixes: 6ea082b171e0 ("rtla/timerlat: Add action on threshold feature")
+Signed-off-by: Ivan Pravdin <ipravdin.official@gmail.com>
+---
+ tools/tracing/rtla/src/actions.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-v1: https://lore.kernel.org/linux-trace-kernel/cover.1755014784.git.ipravdin.official@gmail.com/T/#t
-
-Ivan Pravdin (3):
-  rtla: fix buffer overflow in actions_parse
-  rtla: fix -C/--cgroup interface
-  rtla: fix -a overriding -t argument
-
- Documentation/tools/rtla/common_options.rst |  2 +-
- tools/tracing/rtla/src/actions.c            |  2 +-
- tools/tracing/rtla/src/osnoise_hist.c       | 25 +++++++++-----
- tools/tracing/rtla/src/osnoise_top.c        | 25 +++++++++-----
- tools/tracing/rtla/src/timerlat_hist.c      | 25 +++++++++-----
- tools/tracing/rtla/src/timerlat_top.c       | 37 +++++++++------------
- 6 files changed, 66 insertions(+), 50 deletions(-)
-
+diff --git a/tools/tracing/rtla/src/actions.c b/tools/tracing/rtla/src/actions.c
+index aaf0808125d7..eab51c0c0ce2 100644
+--- a/tools/tracing/rtla/src/actions.c
++++ b/tools/tracing/rtla/src/actions.c
+@@ -131,7 +131,7 @@ actions_parse(struct actions *self, const char *trigger)
+ {
+ 	enum action_type type = ACTION_NONE;
+ 	char *token;
+-	char trigger_c[strlen(trigger)];
++	char trigger_c[strlen(trigger) + 1];
+ 
+ 	/* For ACTION_SIGNAL */
+ 	int signal = 0, pid = 0;
 -- 
 2.48.1
 
