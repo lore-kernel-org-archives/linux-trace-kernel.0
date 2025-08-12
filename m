@@ -1,145 +1,77 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F8172FE580;
-	Tue, 12 Aug 2025 18:37:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6BF82FD1AD;
+	Tue, 12 Aug 2025 18:41:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755023853; cv=none; b=e7wZFjwt/MiBfOemXG6SXOz48k65430VhBUF612L9cSYWhKNZA5iSIdRvQ/0h9gExpo47qa6pOB5Y8gvMxwynsFAYOiY+77gkPADKDcNMZbd0AshuKrybP/2KDV0+ZaP6nES1whw20NCGe2kWbM8Y0uNEuwdcTmgh8Lv8jrODxM=
+	t=1755024092; cv=none; b=faizlPnV0A+F0w2dLzjQfMz4nLCueC76ghdwZbSs1+ElkhpHbC/iOezDmDcv4ndn/Q3x/Brkglty67rB9T2SXZ2PSWdP/y6gV/XXtBInCuMdRPj0eAuLTsUc4eTidEx9n06ZM5uHS4MbD8j92uAmmrBKCv0qSBVVtKe4KStaAgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755023853; c=relaxed/simple;
-	bh=xdyl3wNJUL9EHqqJro185lpBfTTfmDjVvZZoTQKXqtI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tv420E5XnKCdg/hmzUbvxg3wSruqM3ZSu4Fm1ukOwTq8gGL3NiU3jZyQ6b5DQwaD08r34pHx8Sj6TyjFFCOvjcwofofVrUrT1CLcPf0xtMSEKshJH0aUG5jiiM0XITBlIX4jks0tsNlwopcgDHVpUSHG+RMz3LBdNBcVJ6QHkfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf06.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay10.hostedemail.com (Postfix) with ESMTP id E0AA1C0162;
-	Tue, 12 Aug 2025 18:37:28 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf06.hostedemail.com (Postfix) with ESMTPA id 1B4A82000E;
-	Tue, 12 Aug 2025 18:37:27 +0000 (UTC)
-Date: Tue, 12 Aug 2025 14:38:12 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Pu Lehui <pulehui@huaweicloud.com>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- pulehui@huawei.com
-Subject: Re: [PATCH v2] tracing: Limit access to parser->buffer when
- trace_get_user failed
-Message-ID: <20250812143812.3df42a3c@gandalf.local.home>
-In-Reply-To: <20250806070109.1320165-1-pulehui@huaweicloud.com>
-References: <20250806070109.1320165-1-pulehui@huaweicloud.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1755024092; c=relaxed/simple;
+	bh=m1YFo2pHoa2FnHSf+idfwIE1abFhAZSNl+JJ0+8GLMY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=kdRQdL1SLSlLIBmkzsUHIesVamNedMwrDMgb04LWz/r/NQuh9BXTWyLhJy8PJpf5S6Bikf1XX5QdPg51bnpViPsOQ5TxvWd1uFxxXp473J0Qx3bMXyfH0g30KdRGj443E29alnX7+1DxY7+aJ50U6jyQyQoMBvHMoFvqw/PM/tw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=bFfug0PV; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="bFfug0PV"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 2988A40AD9
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1755024090; bh=Qz9xyrwA+51NtlPF0l7SMypdEBoz7b93XGGhwSa5h80=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=bFfug0PVxFua0jbrjBW4UPzg+ccJSGnn6+athUML9m7e0hD8CCQe29cmaAN8BECrQ
+	 hTQJRlXANvyE2p8jbzS55SNYyKJy+ul+wYLUgaYlupx8av/INhoWVs/p6KCwhqmTHY
+	 m8RcuHYqZCkAA4McTvJ9kbPGYQQYdzXToDilYjKSwF6rbQHYRH95FfDWoGqgJqHcKP
+	 xJcCAgDwsO8tb0vLZoq1EWSkXDZSlYAB8yIHGgSzJkg+jUgN35lBXdayZ8Pg3Nopap
+	 sjieId9254wUOsfZuE0VjtVroRPE82OP+yoQBvQTpl22b5V5nX0dQF4dHAtWIk4pvq
+	 MkGYo/QeuuhOQ==
+Received: from localhost (unknown [IPv6:2601:280:4600:2da9::1fe])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 2988A40AD9;
+	Tue, 12 Aug 2025 18:41:30 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Gopi Krishna Menon <krishnagopi487@gmail.com>, rostedt@goodmis.org
+Cc: Gopi Krishna Menon <krishnagopi487@gmail.com>,
+ skhan@linuxfoundation.org, linux-trace-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-kernel-mentees@lists.linux.dev
+Subject: Re: [PATCH] Documentation/rv: Fix minor typo in monitor_synthesis page
+In-Reply-To: <20250810111249.93181-1-krishnagopi487@gmail.com>
+References: <20250810111249.93181-1-krishnagopi487@gmail.com>
+Date: Tue, 12 Aug 2025 12:41:29 -0600
+Message-ID: <87zfc4e61y.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: 5a185amd6tbuffwtnkh7ciux83yz84x3
-X-Rspamd-Server: rspamout01
-X-Rspamd-Queue-Id: 1B4A82000E
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18gcOGu3+FY9SK9Wp/5BgUn63hPXMMlCoQ=
-X-HE-Tag: 1755023847-742556
-X-HE-Meta: U2FsdGVkX18vGft3o/UTStQhqbdctPJOfkt53+XA2AoFDMHSNw23K2lfAkeTyB5Q7I22VVi49E9cKnZP5TImEQ567G1V/qx3WIjQ1fE0oD4O4DpSMT6VnHNG55qe1mvT/GwO+wTemynh7DKcKPkKNbvQtEV7c/mWxNQH5IqqdQkpCJV2gjNnrpOu81K/nNEXGMLuZ7OKtJyAsivzk62pxGwAVGVp7YS/8fB222T0FqFi9NVSJ8XmEtHUING/k3aA/S7283Kjw3KvPc3ylfYzPTQ/6ZVixjQjsUfkAbO0AN/n4YecKlkxqy+iEYU9sVHqy92w4YXUd3SMwZzLIH19KVziwM3df7IH
+Content-Type: text/plain
 
-On Wed,  6 Aug 2025 07:01:09 +0000
-Pu Lehui <pulehui@huaweicloud.com> wrote:
+Gopi Krishna Menon <krishnagopi487@gmail.com> writes:
 
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index 4283ed4e8f59..138212f4ecde 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -1814,9 +1814,11 @@ int trace_get_user(struct trace_parser *parser, const char __user *ubuf,
->  	if (!*ppos)
->  		trace_parser_clear(parser);
+> Specifically, fix spelling of "practice"
+>
+> Signed-off-by: Gopi Krishna Menon <krishnagopi487@gmail.com>
+> ---
+>  Documentation/trace/rv/monitor_synthesis.rst | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/Documentation/trace/rv/monitor_synthesis.rst b/Documentation/trace/rv/monitor_synthesis.rst
+> index ac808a7554f5..3a7d7b2f6cb6 100644
+> --- a/Documentation/trace/rv/monitor_synthesis.rst
+> +++ b/Documentation/trace/rv/monitor_synthesis.rst
+> @@ -181,7 +181,7 @@ which is the list of atomic propositions present in the LTL specification
+>  functions interacting with the Buchi automaton.
 >  
-> +	parser->fail = false;
+>  While generating code, `rvgen` cannot understand the meaning of the atomic
+> -propositions. Thus, that task is left for manual work. The recommended pratice
+> +propositions. Thus, that task is left for manual work. The recommended practice
+>  is adding tracepoints to places where the atomic propositions change; and in the
 
-This should be set when the parser is initialized.
+Applied, thanks.
 
-> +
->  	ret = get_user(ch, ubuf++);
->  	if (ret)
-> -		return ret;
-> +		goto fail;
->  
->  	read++;
->  	cnt--;
-> @@ -1830,7 +1832,7 @@ int trace_get_user(struct trace_parser *parser, const char __user *ubuf,
->  		while (cnt && isspace(ch)) {
->  			ret = get_user(ch, ubuf++);
->  			if (ret)
-> -				return ret;
-> +				goto fail;
->  			read++;
->  			cnt--;
->  		}
-> @@ -1848,12 +1850,14 @@ int trace_get_user(struct trace_parser *parser, const char __user *ubuf,
->  	while (cnt && !isspace(ch) && ch) {
->  		if (parser->idx < parser->size - 1)
->  			parser->buffer[parser->idx++] = ch;
-> -		else
-> -			return -EINVAL;
-> +		else {
-> +			ret = -EINVAL;
-> +			goto fail;
-> +		}
->  
->  		ret = get_user(ch, ubuf++);
->  		if (ret)
-> -			return ret;
-> +			goto fail;
->  		read++;
->  		cnt--;
->  	}
-> @@ -1868,11 +1872,15 @@ int trace_get_user(struct trace_parser *parser, const char __user *ubuf,
->  		/* Make sure the parsed string always terminates with '\0'. */
->  		parser->buffer[parser->idx] = 0;
->  	} else {
-> -		return -EINVAL;
-> +		ret = -EINVAL;
-> +		goto fail;
->  	}
->  
->  	*ppos += read;
->  	return read;
-> +fail:
-> +	parser->fail = true;
-
-Should have a helper function called: trace_parser_fail(parser) and use
-that.
-
--- Steve
-
-
-> +	return ret;
->  }
->  
->  /* TODO add a seq_buf_to_buffer() */
-> diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-> index 1dbf1d3cf2f1..5072bb25a860 100644
-> --- a/kernel/trace/trace.h
-> +++ b/kernel/trace/trace.h
-> @@ -1292,6 +1292,7 @@ bool ftrace_event_is_function(struct trace_event_call *call);
->   */
->  struct trace_parser {
->  	bool		cont;
-> +	bool		fail;
->  	char		*buffer;
->  	unsigned	idx;
->  	unsigned	size;
-> @@ -1299,7 +1300,7 @@ struct trace_parser {
->  
->  static inline bool trace_parser_loaded(struct trace_parser *parser)
->  {
-> -	return (parser->idx != 0);
-> +	return !parser->fail && parser->idx != 0;
->  }
->  
->  static inline bool trace_parser_cont(struct trace_parser *parser)
-
+jon
