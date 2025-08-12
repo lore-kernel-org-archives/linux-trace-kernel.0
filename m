@@ -1,286 +1,209 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54A852F83CB;
-	Tue, 12 Aug 2025 17:44:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755020657; cv=fail; b=o5Gjkxm1MtXVWNN/I97iLU83AByxiQs/AoCCM/ODUZAUSf05IZEZWMgoCjnyQkIpHQvkJnoOAqEnvx1w3L66nF/M5hIODMRFztUOip6HbCZu3dcN7mN6UZva/vSIxPHw0K555pSdQeaYC2DcYM7T8GAzJtuugaRQjpcbKLGV+38=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755020657; c=relaxed/simple;
-	bh=SlxiZ3HZgA7ShL7fS+sGEtEx7fEWzpugMBQVRM28O0U=;
-	h=Date:From:To:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=nTjZhpQxT/GwthZboeMgWP+rRt7j2TsNUGSKyCDMfg05wajEPVmqdxbfy8T5RoXQz3OpecCu/8oMZQE8dhiuFgw8BXOsCDTrCHpCfdvEwMAB8AzDDArFg5cXdi+E2zN3jAGO6OAlSQOx2VnO/jTipMNNAfnJtyerW7aF1/k16+E=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=KJ7ZivsN; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=JJKtCVm8; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="KJ7ZivsN";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="JJKtCVm8"
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57CDBx9r007838;
-	Tue, 12 Aug 2025 17:43:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
-	content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2025-04-25; bh=ArIHj7KNHl3qyqveLl
-	U1Ri+5epa40PlP1QC2D1MYhZs=; b=KJ7ZivsNv2vVpMSBYkz2SxMVjmxUpYu4Jg
-	WMYPypSxad/R5HtXxTmtyMIAWcgxgZq/QtLZfLviSj0BuWcluGQHqG3Einwh/+Xp
-	f63639GQbVa4xmL+MkppzMdLKGCvG7VIrbvuZ/WnIliAfLEIURlVJEvtL4wPims8
-	QMmpvP0xnETUOqA7Qejk/XgAVu9E7WJ5iIDxfPBjKT+Vy3bjC/FmmjyEstRaWk8k
-	bly4e4lx357HMaIJxrosvHJpNZSamBmpFSvvLEGrTqyLgT6QMLZOTL+kLGoZit/l
-	/cmh0N4LOtr63PGOerx9HDKmb4gVnXf2hIMlhzw+BZUqultraBww==
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 48dxvww655-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 12 Aug 2025 17:43:32 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 57CGIU6A009657;
-	Tue, 12 Aug 2025 17:43:30 GMT
-Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10on2069.outbound.protection.outlook.com [40.107.92.69])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 48dvsgk9us-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 12 Aug 2025 17:43:30 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=O+CuVjuTbRtr9mtIGPeauGBp7tJ0Pv1ZkN/RvM6nyRanCQ9alXLjvU/SMM5vgrzSPfjIAYjNwmAicGt9QsZGthPoCk6IxxhOVhLr/D1Km3DUfWYK0r9Et/UdO0NcwRGN6c0tGZFhYRqEjAzAnICGuIu77LHpClqM5wR7tuQ6/Z8waNx1wy6YGTq82vcmsK9WTg0FG1/JANf84z/mqrQDNk1mVc+G3CfLUi+97BnwxhhbgcbcsFjOY3NpAIPyIdByDxaTFyylCrBVZPYpzdEc2iV3Bx/66RekF5mLhaK4/W3ltPckopO0g+nAvnoxLv99hADnBP1ToGbN5Dh+hjZTAQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ArIHj7KNHl3qyqveLlU1Ri+5epa40PlP1QC2D1MYhZs=;
- b=JFgHMcGBnnl3Y8OlZdCmWFG6LDVQMxt4rQ2dsT/AC/q3wj5lAOdzOpIMtYwvfmah1+8vS6YlAkpPri7n+MgKI0ifvgI6nFdqGxLkTvXfI+6U5QLXTE6MPjyLsG9Xlskv+MJAs8LZ78zGxR9yc0O5as7s1Eg2N5+qOaSyRNH7ou2xpluUNJK939sTYpH5PzpoJSDYCQistL95QEEhPDnsMVCbU7shboLzs4KIk3s6nGGF+usVcBaLihq5rgYmumKTDU+xg1rJzTB6lssCHdKLLvL//KQN37OcrE03m8jrwlgeESkRcEBYCHakqCEa8gMRfvDI+hDR+v12rjlUQMg4gA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ArIHj7KNHl3qyqveLlU1Ri+5epa40PlP1QC2D1MYhZs=;
- b=JJKtCVm8MSOYc7mvVtxSZYB2aziYMbpdAww/DjSc2rVVcTGVso1Kr3a9pA/CZp472Es5TfoVcyV18sCaT56aagZBKqB9ld4X0Tm4LcAoRWhbTTHTSSLdLc0G7a2SRSXUQt1EUzp8ragyjVPdeg545yMtBGqRD5STjUiWAkpWnNA=
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
- by SA2PR10MB4810.namprd10.prod.outlook.com (2603:10b6:806:11c::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9031.13; Tue, 12 Aug
- 2025 17:43:27 +0000
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2%5]) with mapi id 15.20.9031.012; Tue, 12 Aug 2025
- 17:43:27 +0000
-Date: Tue, 12 Aug 2025 18:43:23 +0100
-From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Andreas Larsson <andreas@gaisler.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-        Kees Cook <kees@kernel.org>, David Hildenbrand <david@redhat.com>,
-        Zi Yan <ziy@nvidia.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
-        Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
-        Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
-        Xu Xin <xu.xin16@zte.com.cn>,
-        Chengming Zhou <chengming.zhou@linux.dev>,
-        Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
-        Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
-        David Rientjes <rientjes@google.com>,
-        Shakeel Butt <shakeel.butt@linux.dev>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
-        Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
-        Peter Xu <peterx@redhat.com>, Jann Horn <jannh@google.com>,
-        Pedro Falcato <pfalcato@suse.de>, Matthew Wilcox <willy@infradead.org>,
-        Mateusz Guzik <mjguzik@gmail.com>, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 10/10] mm: replace mm->flags with bitmap entirely and set
- to 64 bits
-Message-ID: <15ffaac2-9e83-4f96-8e3a-2aaebb8bb227@lucifer.local>
-References: <cover.1755012943.git.lorenzo.stoakes@oracle.com>
- <e1f6654e016d36c43959764b01355736c5cbcdf8.1755012943.git.lorenzo.stoakes@oracle.com>
- <scl3mdbh3atwaky5ae7sh2gyru6nomx6pulnifnmbj6hd4ug2n@ykbzkzo7e3bt>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <scl3mdbh3atwaky5ae7sh2gyru6nomx6pulnifnmbj6hd4ug2n@ykbzkzo7e3bt>
-X-ClientProxiedBy: GVZP280CA0097.SWEP280.PROD.OUTLOOK.COM
- (2603:10a6:150:275::11) To DM4PR10MB8218.namprd10.prod.outlook.com
- (2603:10b6:8:1cc::16)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 628DE1C84C7;
+	Tue, 12 Aug 2025 18:03:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1755021797; cv=none; b=f7zff5UqPe7/DhXKSYnhS50ejcOgRMykS9MfT6AWHXHaG5FbMctffY4QlFWundnqNSwOuaBpG82o1ZU/k6K+F8Z7nqamccR36Vwd5gsKgBOS6MzQwmXod6s+xrBslAmINk2SaG4Fv6UVmfkQheXDhxoZ1ttC9+0i6c35BYh5MPQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1755021797; c=relaxed/simple;
+	bh=uoE5dWMT1rbqa37q/SivFeXKyXJu/a/1HAMw6FnM4ro=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TvMm3XEJLXkSyXrAF6MpthQBnMZVgr06uQT4TDS5nK1awahWK+e6xAXcfPvzpselvfLg1e3FEvId1ufRTiY01NFUUbyN6FV0fyJPJyvcXvRFmO48p9u0dePsC2V3m1P1ukfpQI/Vkm/OT4xdqqQmAj0wN8HVZpc+WKQn+LoJ0YM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf11.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay02.hostedemail.com (Postfix) with ESMTP id D90E0135974;
+	Tue, 12 Aug 2025 18:03:13 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf11.hostedemail.com (Postfix) with ESMTPA id 05A2A2002F;
+	Tue, 12 Aug 2025 18:03:11 +0000 (UTC)
+Date: Tue, 12 Aug 2025 14:03:57 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Ryan Chung <seokwoo.chung130@gmail.com>
+Cc: mhiramat@kernel.org, mathieu.desnoyer@efficios.com,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-kernel-mentees@lists.linux.dev
+Subject: Re: [PATCH] trace/trace_fprobe.c: TODO: handle filter, nofilter or
+ symbol list
+Message-ID: <20250812140357.65d19062@gandalf.local.home>
+In-Reply-To: <20250812162101.5981-1-seokwoo.chung130@gmail.com>
+References: <20250812162101.5981-1-seokwoo.chung130@gmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|SA2PR10MB4810:EE_
-X-MS-Office365-Filtering-Correlation-Id: e724b4f3-5ac2-41b4-c820-08ddd9c7be10
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|1800799024|366016|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?GB09iGf+uc5eGf/C9RXl2vjSDGPGwXAqjyjC4/wy4hTFmeHFkSu6OQ+TxMb+?=
- =?us-ascii?Q?khqOIZsY7F+k/7P/mcC+kcadJ/WH8cVF5hn/iPy44zR3yaFy0EeeFSRK6QgQ?=
- =?us-ascii?Q?yvhIVLpSwGheN2YNtpGSaukDnTB/0xpYe0VdiXDpY+iv789syGHWauuHzB0U?=
- =?us-ascii?Q?5ELV+qspT2dLKh8iYCVDJg/Wc+qPN8quD3offIwOgI8LsD+bqDaA5PbK2atk?=
- =?us-ascii?Q?PlkjlWE2g46WiNOj5fXkuOrSiQvOswV42G4OTHcOUM2WaPlGGfTqFpXfNadT?=
- =?us-ascii?Q?TujEx/WDmKIADXybnpmiVr/+GTeiw9+G7qy7ahl1b1SBEQjh/BoDbLvoxkiA?=
- =?us-ascii?Q?rAbyTDjdKPiaCuPpvsfusNz/LXhFdeW5/lHcfyBRM2jQ1POuCD/b9fJtEktu?=
- =?us-ascii?Q?WLDfq3snK2d+2srAnIuIsG45bjfIFluBtV0gvYSlfFudPaBgljsYgmIYbHgs?=
- =?us-ascii?Q?vIfyiPOVoa6JuXjPiT+72LkcNVl1FGTS3lR4VSLD+SL26BQ0L0jm4RyimfIL?=
- =?us-ascii?Q?cTq0TlnuVcwjPw34oBZiCSU6aLvE6v/kL2H1wQy/sqHYAxS5vfILMOcJFY2f?=
- =?us-ascii?Q?cz/2BCWYY7Nsp+L9K19SRt/zrZl0VXfXZajAMzZkuG/y0qK0Xqd/Yav3Yaz+?=
- =?us-ascii?Q?7FoXTKKgeRTcY1+kmKEv1AnkIT7aqsC03XekKy9TCQ4laoaDoUrtwH/VlnG7?=
- =?us-ascii?Q?YNNHUVPFSaVJOScSUJH5mGE+O26as0cvaPTFdEvJUtCrZ4fHLj+g2ATLUPyp?=
- =?us-ascii?Q?2fOjCUvGFPUEWI3wiLac9l3TZOmOPIshFW8RbjdA4/SIfOaII9NdHttiDuNy?=
- =?us-ascii?Q?9KfeBwk1TVej53RK7SoGkhsmtpve5aL2kObPuK5/Q8Fao1yP2Qd56ypNCf9g?=
- =?us-ascii?Q?2Hh65MwIsL2WJ8n+HWxRH+l1AR+ouM0JZ4LMiSg0JorK5tM31oPSMSvhK7q3?=
- =?us-ascii?Q?n9Dh98HM42mEP/1L31ls6ybJ2QdAFTYEz4OalwZFVp+y00bBf0bP3bX62ElY?=
- =?us-ascii?Q?YT/4E2KMsBA0PVUvSIsVbhftzXUYPl/O5S2RBQwhbhk42yZm+NSae2LrkPBm?=
- =?us-ascii?Q?SPfdg0H4FpjAgGOs6sZC/jBmnn6SWNpSs200n2KcpILu2POLpe0WQ3uQl5j3?=
- =?us-ascii?Q?VS7/1ipZpoT7qCw2Q0UhwGCbLe4VEFQPBJbDfn395xkiMHEmkXms+MDfOFn3?=
- =?us-ascii?Q?WUt7dMgjM1HGisIC1MXQcZTE0kX+D8belW9pBfQlFmBQjWi2i1yl9X3dW6mj?=
- =?us-ascii?Q?0RBIJ0G5Fw1qPU1YmB6fQFHURhOrv0c0qrYIeC38sd9eXXUZTGtYCn9Q1jjs?=
- =?us-ascii?Q?cvRSLQcwj7yPKMFdXu0Vp1Hlj4btfc7YHAEN5tmfhH7U7TPULT67kBT3eDQX?=
- =?us-ascii?Q?shJQf51Bn+n/gRl0XSBXfHLpPQkTlhOPfkCGGiuuK8I8TC7oxJBXNuL13WVm?=
- =?us-ascii?Q?o4svhXE0FB329RjGRCgH94YVxbYZtq0EGbyTc/8npXOn3HW2M8s9Xw=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?kA0hXcfJsMa0z2gnWZn0SroBroloY6f32Ptg6O8H3sitV4uBvUSXtOdVZbX8?=
- =?us-ascii?Q?Vapix3y/blbZZ/LrxjNm2IA544ghcQxft4aHdWcUtt37dmS4dKp6c7TSKuDW?=
- =?us-ascii?Q?LysMnXJN2bW56bEQod84NWbhGUMui/eRJq0dNijlrVmr6IAKFXXTA8+zRUkX?=
- =?us-ascii?Q?toR93FALGFhUHueINhPeR1x6zY+Veqri94Skp4LhDXFhWP7+1U4pvSH7+bQS?=
- =?us-ascii?Q?3LkJ4lV0qAWdroOB27nLM8tzwnG7wRerLKyigMJzDxroWVw17MjRQlEotSWF?=
- =?us-ascii?Q?QaIFZxc2Itvotbc+8HNiYhLSPU/XJoIg7WrhQbPIoDMPPjeNU3kIaans6Ls9?=
- =?us-ascii?Q?Pu3M6VdZD+GSdkx5DdnkDPUTTQZ3dQWfI7iB7QYI9DZz2bC9JvQuoKU60vhB?=
- =?us-ascii?Q?LPwMfBPIuCgps4xyLkj61mhBhP5riz+XdRzGqfXY/8pYz/chN8BABkoB0Hh/?=
- =?us-ascii?Q?3ubc1cSBWgo7uvqiE/xE/YBEdX8Xw4b5JtKxBjwdqTjj8S24DnvpUa4tcizr?=
- =?us-ascii?Q?zUr+Oo2qGhyZqbmRWjSc6ig4rvPj7vMqjuLXrU3CK6lmjJBpnD0SZ46XNxkw?=
- =?us-ascii?Q?q/LcK5Kok6oc6DsNpwoMVUapyM4+2OhZhQt34KH5RkhC0qLTeyVeKyujw6r4?=
- =?us-ascii?Q?mjKT/AybL6D44GDG/XUZH2hPCK4Tq/SEz5/nUrVhgsG9Kbf0lC5049RNf++e?=
- =?us-ascii?Q?xkOWA5ZjXi8rV118fKtT7Zf1n/pfQ5cGHJMfgi3S4yfR3slKgdjcb1cghuH1?=
- =?us-ascii?Q?QS9BuMsg9e9b7EkVYVrZRqCRsRLG6bsmjlJQsAGODEoPnyL4Xa1KAcZf6ofy?=
- =?us-ascii?Q?4Vah0mNOJW/HqzMIR5u1UycAWWtn3a1LduS2UuPYq/Lnx+MqHTkpAenYOf3T?=
- =?us-ascii?Q?GY1itKbbcJ+dRTi6WyxL81jvuVei3FV+0nu9jBt+FPR6YDdjUf1sTk8jxOam?=
- =?us-ascii?Q?NTqtphtVYD7HKud+Ux8YytN8WkT4SGihtBpVMPqxKqf8EfO/EYgD5CMgew0R?=
- =?us-ascii?Q?s0YmLAmCpsrZHolr4YFxSiFOAbO13LguRfuvbcLe+kZaUllM6iNpFKee83iA?=
- =?us-ascii?Q?E/0YQEmWlRlzdfingk1p34+paw8Y62hkbcaYxBB6vG4cNhjRiSG+OSAxHXPy?=
- =?us-ascii?Q?ve72DyEXntzJmhRYWKa0aqfONxjiKXQHBX0aUr8M1Me0KGzyKvRfggrK9mNG?=
- =?us-ascii?Q?5vjd8LiVcEnlqr1HhN1G3cVZqhoPlTG8xLEppze8171AIt6JTXFrpdK7Zn3L?=
- =?us-ascii?Q?lGu1KEGCXqgTtmOU4QFOGeKmo5fsWUl6fA0f4FGRI1bJmMocL2Avr4KZwMMf?=
- =?us-ascii?Q?iOoxK9T3MsTp+N5zNZVFYqBwIOyRRT1La0oqvFJBc6thQWFqGNvy7fteFz5l?=
- =?us-ascii?Q?VaRdRvfpk8VAFyIpwZb6HZ1TClB1oTy7zfCxPtnR8VS3ddw33KyA3gEICBXS?=
- =?us-ascii?Q?/jmusnWvLTN7BwBYFLdDGU8n0mZ5zCapb0lXsDUhmDQXHIgEFL2GPFmWsG7C?=
- =?us-ascii?Q?z6HA6Ww7TvjJv15tPvRQ04Z+FVnODppU1PN2hCr/3Z3Rnmj+tysO5aS2DOtI?=
- =?us-ascii?Q?OfUF3+5HEp3Yrs274tMLmdUkLg1xpFdR7Q8AVfJHdCmBtOJ1VlHWARcxa8Ix?=
- =?us-ascii?Q?Wg=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	1UBjNw/Rl9ikB75H05hRWlx4JPgig9w7XxJ9xTTshypP4KP75rHqsAqVj6bwjhA4xK0keD3AuWwnfGo6E3F5JWs2Xyst8Y8P1cO3St1NIulOmydCkE+ng8PpX2o9u1nUZyn8reZ5TczBWcL22Ie4BW4iXe53ZfsMHj6JTZmxqaCJafM3sftZAynkDcFiQIKcyDGFmCwZBBvftlpNTwVwuaH+CmRoOSgCtLOlb0JYTbDs8YnE+EyyJfTGG4BUTdmi8ceXaen9onBhywaFA5A8uPTdmP5FV+ojkBMUL4dp9DGLyuqcoJJmmry0u0qCXVqx0jz2OeM0kA+JpGY5c4401Wo1mrONTMotyYSlg6ellgDyYiDCo1j9I1QL4Rt4bp5OVlDF+MXTD59ZRilL99R4fkJtsLHfQXXvodN7nXw87nkaEB9X/fXDItxzwulXwyVw+/SVDi40OByjE+Px6h6/u12y6pdckbJ3gj5bzsV6mFKW+GDdmYPtXKVn/11fFY0ZmZdP/UhN+/VsxBZiWxlYX57wCxQh2Tzijvx7AhhGLIEBkoSZXqAg5BSO7jFRPmAxzdwZg/PfGI61H5nGqDAJUJFwbCMtamE/bJcJq4JXFKY=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e724b4f3-5ac2-41b4-c820-08ddd9c7be10
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Aug 2025 17:43:27.0781
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 7cvCCz1UsY6eFjROCJfWhrTlEXh5dxCTRSA15Wr3srT6ZvZWnhpJYuIpxPh8dyuTmzvARLEbS/Q7vebCA+uYrCADbKv8FJBcR5xqokAzcFM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR10MB4810
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-08-12_07,2025-08-11_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 bulkscore=0
- adultscore=0 mlxscore=0 phishscore=0 spamscore=0 suspectscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2507300000 definitions=main-2508120170
-X-Proofpoint-GUID: 3D5uGX-bjzgyxhqNo6NrmN-mzQb_w0fQ
-X-Proofpoint-ORIG-GUID: 3D5uGX-bjzgyxhqNo6NrmN-mzQb_w0fQ
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODEyMDE3MCBTYWx0ZWRfX8tmmLlLHKj98
- fRy7OJWMUs/XFGybKZvcjoBSpi4uMGJG5gzohOofRMXUvIzbdzXd1hQIAGw9YfUEKxOJTo20mX0
- stIwsVaVW4q4oRnpFK9+RV52lcwXlZ28I9KdzMyNOBj/eVUNRoIMTtOuek1V6FBbk6P35VzoBhU
- LIVHwEGAorwMMHFSlLMaFl+AMHDdsdmEHzBioAzWu++bewuzfaCLrSnB9o0rJEylxsRLKFGDpN2
- GBWMRhLRvCWI9dI/gx4viKdNmaUkfrOjtomTf1XX+R5MBp7aBuc2ved4PwEf2VYS6gEhwJ1R571
- gi5UKKPA32E+YV/2aERx4AC2geWK8QMTq3/I2FrceSiTaIpN+kTcrYH6Wyw50OP6JtU68Xm3oXt
- DNTyb3vMdKlMoEVOs+m7XfB/sWnpuhaVniaP/yIeYHl3bGy0aNPeQ120rU6yxKG/ejif43yE
-X-Authority-Analysis: v=2.4 cv=dpnbC0g4 c=1 sm=1 tr=0 ts=689b7d44 b=1 cx=c_pps
- a=zPCbziy225d3KhSqZt3L1A==:117 a=zPCbziy225d3KhSqZt3L1A==:17
- a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
- a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
- a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=2OwXVqhp2XgA:10 a=GoEa3M9JfhUA:10 a=yPCof4ZbAAAA:8 a=Ef1f8lSEwX7UL4L_uaAA:9
- a=CjuIK1q_8ugA:10 cc=ntf awl=host:12069
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 05A2A2002F
+X-Stat-Signature: aqcdbrt1erm5365tnao8mx9yhbaosjwf
+X-Rspamd-Server: rspamout02
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18LYCTa3MKLGobOeCISNikzJOsZFzw7P0w=
+X-HE-Tag: 1755021791-302747
+X-HE-Meta: U2FsdGVkX19fo64gy4Zmd7lQ16RmDJ/YSTaXubJq5K4RC4Zl3Fj+PmlGAwrI5d9YWCmiVpt+GNLS0pc5F3/b8ohogMxg8jgLuIrv/pJVuV576eu9E9O/koFqgL1+4CtvQV2Gvd4tmxxTr0RJ/azgWNkR0qW57WvUWVR26/eUEwZ2mOCKFTy/XIDt5BZUvh0QrNiK6aop/q+jP4o72eYA0snS7rWtjH8LMhdwigiMHIH3xvU9VVKCZvLjUZB0RyZibbc6YDwInO1RG1NV2VmbF5iZ8AX7oS9KU6PzJ8RRLZhxMn7z4KH7fhuNhZHffFlcvGVfVmPKejDIcirricTTZKibU4vUpZNep0W+oGL4rZYMap8mUEL9US24BlQQlEstXtm6812xpnU=
 
-On Tue, Aug 12, 2025 at 01:35:18PM -0400, Liam R. Howlett wrote:
-> * Lorenzo Stoakes <lorenzo.stoakes@oracle.com> [250812 11:48]:
-> > Now we have updated all users of mm->flags to use the bitmap accessors,
-> > repalce it with the bitmap version entirely.
-> >
-> > We are then able to move to having 64 bits of mm->flags on both 32-bit and
-> > 64-bit architectures.
-> >
-> > We also update the VMA userland tests to ensure that everything remains
-> > functional there.
-> >
-> > No functional changes intended, other than there now being 64 bits of
-> > available mm_struct flags.
-> >
-> > Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
->
-> A nit below, but..
->
-> Reviewed-by: Liam R. Howlett <Liam.Howlett@oracle.com>
+On Wed, 13 Aug 2025 01:21:01 +0900
+Ryan Chung <seokwoo.chung130@gmail.com> wrote:
 
-Thanks!
+> Resolve TODO in `__register_trace_fprobe()`: 
+> parse `tf->symbol` robustly (support `sym!filter` and comma-separated lists), trim tokens, ignore empties, deduplicate symbols, use bulk registration for lists, return `-EEXIST` if already registered, and preserve lockdown/tracepoint deferral semantics.
 
-[snip]
+Hi Ryan,
 
-> > diff --git a/tools/testing/vma/vma_internal.h b/tools/testing/vma/vma_internal.h
-> > index cb1c2a8afe26..f13354bf0a1e 100644
-> > --- a/tools/testing/vma/vma_internal.h
-> > +++ b/tools/testing/vma/vma_internal.h
-> > @@ -249,6 +249,14 @@ struct mutex {};
-> >  #define DEFINE_MUTEX(mutexname) \
-> >  	struct mutex mutexname = {}
-> >
-> > +#define DECLARE_BITMAP(name, bits) \
-> > +	unsigned long name[BITS_TO_LONGS(bits)]
-> > +
-> > +#define NUM_MM_FLAG_BITS (64)
-> > +typedef struct {
-> > +	__private DECLARE_BITMAP(__mm_flags, NUM_MM_FLAG_BITS);
-> > +} mm_flags_t;
-> > +
->
-> nit, This might be better in common test code?  Probably just leave it
-> here until it's needed elsewhere.
+Please read the Submitting Patches document to have proper format.
 
-Yeah, I think we need to figure this out in a more sensible way so we keep
-things vaguely synced for this stuff more generally. I'll add a todo for
-this!
+ https://docs.kernel.org/process/submitting-patches.html
 
-I think fine for now, key point here is keeping the tests working.
 
-Cheers, Lorenzo
+For example, the change long should have a max column of 74 (with the
+exception of cut and paste commands or output)
+
+> 
+> Please note that this was my personal interpretation of what TODO
+> required here. Welcoming any feedback. 
+> 
+> Signed-off-by: Ryan Chung <seokwoo.chung130@gmail.com>
+> ---
+>  kernel/trace/trace_fprobe.c | 102 +++++++++++++++++++++++++++++++++++-
+>  1 file changed, 100 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/trace/trace_fprobe.c b/kernel/trace/trace_fprobe.c
+> index b40fa59159ac..37d4260b9012 100644
+> --- a/kernel/trace/trace_fprobe.c
+> +++ b/kernel/trace/trace_fprobe.c
+> @@ -12,6 +12,8 @@
+>  #include <linux/security.h>
+>  #include <linux/tracepoint.h>
+>  #include <linux/uaccess.h>
+> +#include <linux/string.h>
+> +#include <linux/slab.h>
+>  
+>  #include "trace_dynevent.h"
+>  #include "trace_probe.h"
+> @@ -762,8 +764,104 @@ static int __register_trace_fprobe(struct trace_fprobe *tf)
+>  		return __regsiter_tracepoint_fprobe(tf);
+>  	}
+>  
+> -	/* TODO: handle filter, nofilter or symbol list */
+> -	return register_fprobe(&tf->fp, tf->symbol, NULL);
+> +    /* Parse tf->symbol */
+> +    {
+
+Code does not add random blocks.
+
+> +        char *spec, *bang, *p;
+> +        int n = 0, w = 0, j, rc;
+
+Indentation is always 8 byte tabs (not spaces).
+
+> +        char **syms = NULL;
+> +
+> +        spec = kstrdup(tf->symbol, GFP_KERNEL);
+
+Why did you declare spec as "char **" when you use it as "char *"?
+
+> +        if (!spec)
+> +            return -ENOMEM;
+> +
+> +        /* If a '!' exists, treat it as single symbol + filter */
+> +        bang = strchr(spec, '!');
+> +        if (bang) {
+> +            char *sym, *flt;
+> +
+> +            *bang = '\0';
+> +            sym = strim(spec);
+> +            flt = strim(bang + 1);
+> +
+> +            if (!*sym || !*flt) {
+> +                kfree(spec);
+> +                return -EINVAL; /* reject empty symbol/filter */
+> +            }
+> +
+> +            rc = register_fprobe(&tf->fp, sym, flt);
+> +            kfree(spec);
+> +            return rc;
+> +        }
+> +
+> +        /* Comma list (or single symbol without '!') */
+> +        /* First pass: count non-empty tokens */
+
+Strange comments. Did you use AI to help you write this?
+
+-- Steve
+
+> +        p = spec;
+> +        while (p) {
+> +            char *tok = strsep(&p, ",");
+> +            if (tok && *strim(tok))
+> +                n++;
+> +        }
+> +
+> +        if (n == 0){
+> +            kfree(spec);
+> +            return -EINVAL;
+> +        }
+> +
+> +        /* Allocate array for pointers into spec (callee copies/consumes) */
+> +        syms = kcalloc(n, sizeof(*syms), GFP_KERNEL);
+> +        if (!syms) {
+> +            kfree(spec);
+> +            return -ENOMEM;
+> +        }
+> +
+> +        /* Second pass: fill, skipping empties */
+> +        p = spec;
+> +        while (p) {
+> +            char *tok = strsep(&p, ",");
+> +            char *s;
+> +
+> +            if (!tok)
+> +                break;
+> +            s = strim(tok);
+> +            if (!*s)
+> +                continue;
+> +            syms[w++] = s; 
+> +        }
+> +        
+> +        /* Dedup in-place */
+> +        for (i = 0; i < w; i++){
+> +            if (!syms[i])
+> +                continue;
+> +            for (j = i + 1; j < w; j++) {
+> +                if (syms[j] && !strcmp(syms[i], syms[j]))
+> +                    syms[j] = NULL;
+> +            }
+> +        }
+> +
+> +        /* Compact */
+> +        for (i = 0, j = 0; i < w; i++) {
+> +            if (syms[i])
+> +                syms[j++] = syms[i];
+> +        }
+> +        w = j;
+> +
+> +        /* After dedup, ensure we still have at least one symbol */
+> +        if (w == 0){
+> +            kfree(syms);
+> +            kfree(spec);
+> +            return -EINVAL;
+> +        }
+> +
+> +        /* Register list or single symbol, using the existing bulk API */
+> +        if (w == 1)
+> +            rc = register_fprobe(&tf->fp, syms[0], NULL);
+> +        else
+> +            rc = register_fprobe_syms(&tf->fp, (const char **)syms, w);
+> +
+> +        kfree(syms);
+> +        kfree(spec);
+> +        return rc;
+> +    }
+>  }
+>  
+>  /* Internal unregister function - just handle fprobe and flags */
+
