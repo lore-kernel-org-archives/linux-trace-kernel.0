@@ -1,72 +1,158 @@
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E19F03D994;
-	Tue, 12 Aug 2025 19:22:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9E152F0673;
+	Tue, 12 Aug 2025 20:13:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755026529; cv=none; b=ZMSMWRi/uotPp5jrofhQDtOnIfyrgrR0Y+WXZOkJj9WET3ssrk5eHS+0m3KNkU/F+ZNeMvh0eUTcMzWYiLDJr8fqF9HKWfQdWG5g15hptG3s1iBdGTCwFturM1oeybR90iXq9XG4AbcMroqgMjrZU+uDE3OY9liA4C00xVikrAg=
+	t=1755029609; cv=none; b=f+t5OakJvHg2tdZdYK1Cb5Q33bj15u3NXbgdA2soajct3WCtpMlDYwMxX8Mz31g3gEYEMXpla4dPU14/wPPGHxIp7Bq+Da7SN6yalTKc4SSFG3DtfmYw3wnQqximghMPGlaQft2lPFBR3zT/XpboyPwLhw1+G98b851rs15WciY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755026529; c=relaxed/simple;
-	bh=J3/WbnaWz9/+22dEjF6XblnKlT4Ye6mKeo014jzrCO8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AejZRtDUHe+vBNM9EhDAOKBJwKI3fv3uqSjr0fUbk0u2S2t/UiRiUqJqMo6w1uchs0E0vPOwy9s+ZuryjmNABlPJXoRWPiZC6hkhd9Shm5IehiRZYd03aSySG8Vvt7mxqAqf5gTU6wtSKA+H9bftSHT+F5tg990qP5TeEiPUu38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf06.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay04.hostedemail.com (Postfix) with ESMTP id A25B01A0199;
-	Tue, 12 Aug 2025 19:22:04 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf06.hostedemail.com (Postfix) with ESMTPA id 9D0A220014;
-	Tue, 12 Aug 2025 19:22:01 +0000 (UTC)
-Date: Tue, 12 Aug 2025 15:22:47 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Douglas Raillard <douglas.raillard@arm.com>
-Cc: Steven Rostedt <rostedt@kernel.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>,
- Namhyung Kim <namhyung@kernel.org>, Takaya Saeki <takayas@google.com>, Tom
- Zanussi <zanussi@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ian
- Rogers <irogers@google.com>, aahringo@redhat.com
-Subject: Re: [PATCH 2/7] tracing: Have syscall trace events show "0x" for
- values greater than 10
-Message-ID: <20250812152247.6a5a4ed1@gandalf.local.home>
-In-Reply-To: <8ec3ecea-a830-4de2-8191-e3a78b4427f0@arm.com>
-References: <20250805192646.328291790@kernel.org>
-	<20250805193234.915257520@kernel.org>
-	<c4f1b8d4-774f-42c1-a828-42c79756503d@arm.com>
-	<20250806083944.036de894@batman.local.home>
-	<8ec3ecea-a830-4de2-8191-e3a78b4427f0@arm.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1755029609; c=relaxed/simple;
+	bh=67thnts7t0DLgkZq/Ii6wBw0jrSFJtM5mUMWCYrbVS8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=gpmu5EpKg06/gjEnOBvYRUSECSS0AJpSo/Jg3E7SPM8lTzATPALntaAnVPGdHWcgOzWNPc20gGgrlIszCa4t6mbqeg6AKSECBHM8/1zTkWeQfXOyivUjt+GsgkdQAZFYi9G019HsjrBqFBLJOhvpehSAn9VhdAx9tf/AMsODE3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gZk5s4qd; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gZk5s4qd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AD26C4CEF0;
+	Tue, 12 Aug 2025 20:13:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755029609;
+	bh=67thnts7t0DLgkZq/Ii6wBw0jrSFJtM5mUMWCYrbVS8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=gZk5s4qdbM6pcT8YroWmQOKRLwIIFGieYYi0v9aoNi2ICJDuc3wg8bhKf+s6pvQNd
+	 c+i3MR/y/FAagcjMfROfPVLTOsoG3YlP79F/PpCEZGyFDsyuBtQtypuh96jit6toX0
+	 v+aQUOZ71f1sVS4LLJKLKq+8hdeGPjE2mpVgs/FuY2KZSzhX/6T7dzeh6CvpLmMDoF
+	 weuTiAVwv1mVOxNZA1KKoDpEA1hk0wwazemaioBJiDYkvkx74pTiTr9+YupNxQLK8F
+	 rz5RHVzbW4bBYKxh5nyMODvXXmIYvJS3DB65gwqyMSJvM3wUZw/6uqpQTB/gIvOiXG
+	 Gs3FPiwr7oo7A==
+From: SeongJae Park <sj@kernel.org>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: SeongJae Park <sj@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Jan Kara <jack@suse.cz>,
+	Kees Cook <kees@kernel.org>,
+	David Hildenbrand <david@redhat.com>,
+	Zi Yan <ziy@nvidia.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	Nico Pache <npache@redhat.com>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Dev Jain <dev.jain@arm.com>,
+	Barry Song <baohua@kernel.org>,
+	Xu Xin <xu.xin16@zte.com.cn>,
+	Chengming Zhou <chengming.zhou@linux.dev>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	David Rientjes <rientjes@google.com>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>,
+	Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	John Hubbard <jhubbard@nvidia.com>,
+	Peter Xu <peterx@redhat.com>,
+	Jann Horn <jannh@google.com>,
+	Pedro Falcato <pfalcato@suse.de>,
+	Matthew Wilcox <willy@infradead.org>,
+	Mateusz Guzik <mjguzik@gmail.com>,
+	linux-s390@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	sparclinux@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 00/10] mm: make mm->flags a bitmap and 64-bit on all arches
+Date: Tue, 12 Aug 2025 13:13:26 -0700
+Message-Id: <20250812201326.60843-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <cover.1755012943.git.lorenzo.stoakes@oracle.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: e1g8dufjfgr1edgaw1s9z7n3fm9wh9cg
-X-Rspamd-Server: rspamout08
-X-Rspamd-Queue-Id: 9D0A220014
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+DUAyjDeHUuDNt55k7ulkWz18COHNqojI=
-X-HE-Tag: 1755026521-325833
-X-HE-Meta: U2FsdGVkX186S8LxTduugok1CwWbPZmVVEBHkoxR+eV1p45F6a5ZqMSZEQOt2pzGcmsZZCpe1gxz5O0I45C85HkENDw/mRAU2HFDEEHrREVmvXFcgoaaQmwluj+xh/mregDHK6JMkv6ooRGiEh/DzrQnLuQJ+9jCUsesbLncGQvSmlguwAyyCkUjvujnWcY3XW7RjGpjGriox7okly6+HhcqfpC+0cLYwyYsF54VSNCSVJW6V/hKK53LShAvORAiM3LJjQSEx6Z3fV+VOTgNiA9CnvQ2/BDHiDor/xVAtXk0xX39MIIxgikOL1uaX2hlvuKBIqMav21jdPQDfW8B0d7Vy8m9x8wRxaABkfq3BPFI8WaUS2oDMtWrBJDfZv4uMqUqHGjgKKyvwDRMHxAqDA==
+Content-Transfer-Encoding: 8bit
 
-On Wed, 6 Aug 2025 17:42:38 +0100
-Douglas Raillard <douglas.raillard@arm.com> wrote:
+On Tue, 12 Aug 2025 16:44:09 +0100 Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
 
+> We are currently in the bizarre situation where we are constrained on the
+> number of flags we can set in an mm_struct based on whether this is a
+> 32-bit or 64-bit kernel.
 > 
-> AFAIK to this day, there is no tool providing a simple script/SQL interface
-> to a trace.dat file beyond basic filtering like trace-cmd report. I've had this
+> This is because mm->flags is an unsigned long field, which is 32-bits on a
+> 32-bit system and 64-bits on a 64-bit system.
+> 
+> In order to keep things functional across both architectures, we do not
+> permit mm flag bits to be set above flag 31 (i.e. the 32nd bit).
+> 
+> This is a silly situation, especially given how profligate we are in
+> storing metadata in mm_struct, so let's convert mm->flags into a bitmap and
+> allow ourselves as many bits as we like.
+
+I like this conversion.
+
+[...]
+> 
+> In order to execute this change, we introduce a new opaque type -
+> mm_flags_t - which wraps a bitmap.
+
+I have no strong opinion here, but I think coding-style.rst[1] has one?  To
+quote,
+
+    Please don't use things like ``vps_t``.
+    It's a **mistake** to use typedef for structures and pointers. 
+
+checkpatch.pl also complains similarly.
+
+Again, I have no strong opinion, but I think adding a clarification about why
+we use typedef despite of the documented recommendation here might be nice?
+
+[...]
+> For mm->flags initialisation on fork, we adjust the logic to ensure all
+> bits are cleared correctly, and then adjust the existing intialisation
+
+Nit.  s/intialisation/initialisation/ ?
+
+[...]
+
+[1] https://docs.kernel.org/process/coding-style.html#typedefs
 
 
-Well, I did have this patch that I never applied:
-
-https://lore.kernel.org/all/20200116104804.5d2f71e2@gandalf.local.home/
-
--- Steve
-
+Thanks,
+SJ
