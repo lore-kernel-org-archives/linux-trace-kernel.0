@@ -1,175 +1,204 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E72E08462;
-	Wed, 13 Aug 2025 03:48:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91E0B266584;
+	Wed, 13 Aug 2025 04:00:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755056909; cv=none; b=gqDhA+Z8SdnI00p45WFwq330Cf/zev/nMfTBP2CZ60nhSH5HBCdil5xSHU02esSd14mHl2t1JEj+R1P+A0ekGDwZXp0TPGnKsQJY+38u/Df9FZlXCSqJQq6WeGfrKkD9LvtPGbP3onvpfjoo6hLJTWJmrTY3DJYxSYCuxRxYvn0=
+	t=1755057613; cv=none; b=MEg+OuipgsuKaQr4r1YizK3f6Xc5fhXXSlADY+auKav0tpfdr3qYeX+AcV42SVIQKh0c09ai3QTmzulAvpVZ2tUJXR202OgoClAUiaTWptsDdOH/fbp8M2GkiFtEc0k2aJVvsjFwdZRbpGT8PzjKJQ4/uLyc3wzfVHXxOizkU4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755056909; c=relaxed/simple;
-	bh=SnN0Z/SHpOjfpRepzSQsa2MnHFe2VkpOH80abZi1T1o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=I9mKt6W4Z6QdqppiOdWVouUwxyA+pBIbVDkk5LcMt0H7X7JePVVdzDP0qmEqyCdbsSLmCWF92KC59zNUrHUCQ3i2S0vj/Gbp4ZZX3XjySYcXvruKUGjLinq6w/79LiW3p0r1NeU7PEmhBtL/1ffTPZ/iUSpWSy9r4GyRfOQylGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+	s=arc-20240116; t=1755057613; c=relaxed/simple;
+	bh=YXiYZhuwjSwWOCy5usUVUT0FPbusbyLiVUqNvqyd7RI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ERnDwO9x9mqkTHZdo+itE37+TGIWKAJyfVPMGx3Cp+voGb9p1FG2kqCrScxvmyOAu9/KOzlREjQdkuNvQglv/4Ettucb4BeMe9gGSzryUPz9RKR29G464uIN90vQ4zfAUK0vPULfBGecgobOe468bOx9lTiGdhCH8ezIzU6H+9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4c1vVH4vVgzKHMbW;
-	Wed, 13 Aug 2025 11:48:23 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.252])
-	by mail.maildlp.com (Postfix) with ESMTP id EA4B41A13B5;
-	Wed, 13 Aug 2025 11:48:22 +0800 (CST)
-Received: from [10.67.109.184] (unknown [10.67.109.184])
-	by APP3 (Coremail) with SMTP id _Ch0CgBXz9kFC5xoh4nEDQ--.26062S2;
-	Wed, 13 Aug 2025 11:48:22 +0800 (CST)
-Message-ID: <83c1747d-1e8e-45e9-a6a4-619bad4db1d4@huaweicloud.com>
-Date: Wed, 13 Aug 2025 11:48:21 +0800
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4c1vls16ymzYQv3H;
+	Wed, 13 Aug 2025 12:00:09 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id BFA5F1A0BDC;
+	Wed, 13 Aug 2025 12:00:07 +0800 (CST)
+Received: from ultra.huawei.com (unknown [10.90.53.71])
+	by APP4 (Coremail) with SMTP id gCh0CgDHkBHEDZxoZTcHDg--.42513S2;
+	Wed, 13 Aug 2025 12:00:05 +0800 (CST)
+From: Pu Lehui <pulehui@huaweicloud.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	pulehui@huawei.com
+Subject: [PATCH v3] tracing: Limit access to parser->buffer when trace_get_user failed
+Date: Wed, 13 Aug 2025 04:02:32 +0000
+Message-Id: <20250813040232.1344527-1-pulehui@huaweicloud.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] tracing: Limit access to parser->buffer when
- trace_get_user failed
-Content-Language: en-US
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- pulehui@huawei.com
-References: <20250806070109.1320165-1-pulehui@huaweicloud.com>
- <20250812143812.3df42a3c@gandalf.local.home>
-From: Pu Lehui <pulehui@huaweicloud.com>
-In-Reply-To: <20250812143812.3df42a3c@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_Ch0CgBXz9kFC5xoh4nEDQ--.26062S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxZF1xArW8Aw13trWxArWxCrg_yoW5Xr45pa
-	45KFs7JwsFqFWIyr40qr1kGa40q34rKryUGa1rJa4Yyr9FyrnF9rWxur9I9w1ftr18G3y7
-	AF4Yvr4jkr12qFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUylb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgDHkBHEDZxoZTcHDg--.42513S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxJw13Xw45GFyxZw1DAFW8JFb_yoWrCFyfpF
+	W3Krs7GwsFgF4IyFs5Zr18Gas5X3s5JryUGF4rJw1Yvr9rtr1j9rWxuryDuw1fK348G3y3
+	Ar4Yvr48Kr1qvw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUyEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
 	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
 	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
 	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
 	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
 	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAK
-	I48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
-	xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xII
-	jxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw2
-	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x02
-	67AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU7IJmUUUUU
+	Cjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI
+	7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxV
+	Cjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY
+	6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6x
+	AIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY
+	1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU80fO7UUUUU==
 X-CM-SenderInfo: psxovxtxl6x35dzhxuhorxvhhfrp/
 
+From: Pu Lehui <pulehui@huawei.com>
 
+When the length of the string written to set_ftrace_filter exceeds
+FTRACE_BUFF_MAX, the following KASAN alarm will be triggered:
 
-On 2025/8/13 2:38, Steven Rostedt wrote:
-> On Wed,  6 Aug 2025 07:01:09 +0000
-> Pu Lehui <pulehui@huaweicloud.com> wrote:
-> 
->> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
->> index 4283ed4e8f59..138212f4ecde 100644
->> --- a/kernel/trace/trace.c
->> +++ b/kernel/trace/trace.c
->> @@ -1814,9 +1814,11 @@ int trace_get_user(struct trace_parser *parser, const char __user *ubuf,
->>   	if (!*ppos)
->>   		trace_parser_clear(parser);
->>   
->> +	parser->fail = false;
-> 
-> This should be set when the parser is initialized.
+BUG: KASAN: slab-out-of-bounds in strsep+0x18c/0x1b0
+Read of size 1 at addr ffff0000d00bd5ba by task ash/165
 
-Hi Steven,
+CPU: 1 UID: 0 PID: 165 Comm: ash Not tainted 6.16.0-g6bcdbd62bd56-dirty
+Hardware name: linux,dummy-virt (DT)
+Call trace:
+ show_stack+0x34/0x50 (C)
+ dump_stack_lvl+0xa0/0x158
+ print_address_description.constprop.0+0x88/0x398
+ print_report+0xb0/0x280
+ kasan_report+0xa4/0xf0
+ __asan_report_load1_noabort+0x20/0x30
+ strsep+0x18c/0x1b0
+ ftrace_process_regex.isra.0+0x100/0x2d8
+ ftrace_regex_release+0x484/0x618
+ __fput+0x364/0xa58
+ ____fput+0x28/0x40
+ task_work_run+0x154/0x278
+ do_notify_resume+0x1f0/0x220
+ el0_svc+0xec/0xf0
+ el0t_64_sync_handler+0xa0/0xe8
+ el0t_64_sync+0x1ac/0x1b0
 
-parser->fail will always be set `false` when the parser is initialized, 
-as trace_parser_get_init will do `memset(parser, 0, sizeof(*parser))`.
+The reason is that trace_get_user will fail when processing a string
+longer than FTRACE_BUFF_MAX, but not set the end of parser->buffer to 0.
+Then an OOB access will be triggered in ftrace_regex_release->
+ftrace_process_regex->strsep->strpbrk. We can solve this problem by
+limiting access to parser->buffer when trace_get_user failed.
 
-I will remove this in next.
+Fixes: 8c9af478c06b ("ftrace: Handle commands when closing set_ftrace_filter file")
+Signed-off-by: Pu Lehui <pulehui@huawei.com>
+---
 
-> 
->> +
->>   	ret = get_user(ch, ubuf++);
->>   	if (ret)
->> -		return ret;
->> +		goto fail;
->>   
->>   	read++;
->>   	cnt--;
->> @@ -1830,7 +1832,7 @@ int trace_get_user(struct trace_parser *parser, const char __user *ubuf,
->>   		while (cnt && isspace(ch)) {
->>   			ret = get_user(ch, ubuf++);
->>   			if (ret)
->> -				return ret;
->> +				goto fail;
->>   			read++;
->>   			cnt--;
->>   		}
->> @@ -1848,12 +1850,14 @@ int trace_get_user(struct trace_parser *parser, const char __user *ubuf,
->>   	while (cnt && !isspace(ch) && ch) {
->>   		if (parser->idx < parser->size - 1)
->>   			parser->buffer[parser->idx++] = ch;
->> -		else
->> -			return -EINVAL;
->> +		else {
->> +			ret = -EINVAL;
->> +			goto fail;
->> +		}
->>   
->>   		ret = get_user(ch, ubuf++);
->>   		if (ret)
->> -			return ret;
->> +			goto fail;
->>   		read++;
->>   		cnt--;
->>   	}
->> @@ -1868,11 +1872,15 @@ int trace_get_user(struct trace_parser *parser, const char __user *ubuf,
->>   		/* Make sure the parsed string always terminates with '\0'. */
->>   		parser->buffer[parser->idx] = 0;
->>   	} else {
->> -		return -EINVAL;
->> +		ret = -EINVAL;
->> +		goto fail;
->>   	}
->>   
->>   	*ppos += read;
->>   	return read;
->> +fail:
->> +	parser->fail = true;
-> 
-> Should have a helper function called: trace_parser_fail(parser) and use
-> that.
+v3:
+- Remove `parser->fail = false` as it will be set when the parser is initialized.
+- Add trace_parser_fail helper.
 
-Alright! Will make it next version.
+v2: https://lore.kernel.org/all/20250806070109.1320165-1-pulehui@huaweicloud.com/
+- Add `fail` field to struct trace_parser to indicate parsing failed.
 
-> 
-> -- Steve
-> 
-> 
->> +	return ret;
->>   }
->>   
->>   /* TODO add a seq_buf_to_buffer() */
->> diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
->> index 1dbf1d3cf2f1..5072bb25a860 100644
->> --- a/kernel/trace/trace.h
->> +++ b/kernel/trace/trace.h
->> @@ -1292,6 +1292,7 @@ bool ftrace_event_is_function(struct trace_event_call *call);
->>    */
->>   struct trace_parser {
->>   	bool		cont;
->> +	bool		fail;
->>   	char		*buffer;
->>   	unsigned	idx;
->>   	unsigned	size;
->> @@ -1299,7 +1300,7 @@ struct trace_parser {
->>   
->>   static inline bool trace_parser_loaded(struct trace_parser *parser)
->>   {
->> -	return (parser->idx != 0);
->> +	return !parser->fail && parser->idx != 0;
->>   }
->>   
->>   static inline bool trace_parser_cont(struct trace_parser *parser)
+v1: https://lore.kernel.org/all/20250805151203.1214790-1-pulehui@huaweicloud.com/
+
+ kernel/trace/trace.c | 18 ++++++++++++------
+ kernel/trace/trace.h |  8 +++++++-
+ 2 files changed, 19 insertions(+), 7 deletions(-)
+
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 4283ed4e8f59..8d8935ed416d 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -1816,7 +1816,7 @@ int trace_get_user(struct trace_parser *parser, const char __user *ubuf,
+ 
+ 	ret = get_user(ch, ubuf++);
+ 	if (ret)
+-		return ret;
++		goto fail;
+ 
+ 	read++;
+ 	cnt--;
+@@ -1830,7 +1830,7 @@ int trace_get_user(struct trace_parser *parser, const char __user *ubuf,
+ 		while (cnt && isspace(ch)) {
+ 			ret = get_user(ch, ubuf++);
+ 			if (ret)
+-				return ret;
++				goto fail;
+ 			read++;
+ 			cnt--;
+ 		}
+@@ -1848,12 +1848,14 @@ int trace_get_user(struct trace_parser *parser, const char __user *ubuf,
+ 	while (cnt && !isspace(ch) && ch) {
+ 		if (parser->idx < parser->size - 1)
+ 			parser->buffer[parser->idx++] = ch;
+-		else
+-			return -EINVAL;
++		else {
++			ret = -EINVAL;
++			goto fail;
++		}
+ 
+ 		ret = get_user(ch, ubuf++);
+ 		if (ret)
+-			return ret;
++			goto fail;
+ 		read++;
+ 		cnt--;
+ 	}
+@@ -1868,11 +1870,15 @@ int trace_get_user(struct trace_parser *parser, const char __user *ubuf,
+ 		/* Make sure the parsed string always terminates with '\0'. */
+ 		parser->buffer[parser->idx] = 0;
+ 	} else {
+-		return -EINVAL;
++		ret = -EINVAL;
++		goto fail;
+ 	}
+ 
+ 	*ppos += read;
+ 	return read;
++fail:
++	trace_parser_fail(parser);
++	return ret;
+ }
+ 
+ /* TODO add a seq_buf_to_buffer() */
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index 1dbf1d3cf2f1..be6654899cae 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -1292,6 +1292,7 @@ bool ftrace_event_is_function(struct trace_event_call *call);
+  */
+ struct trace_parser {
+ 	bool		cont;
++	bool		fail;
+ 	char		*buffer;
+ 	unsigned	idx;
+ 	unsigned	size;
+@@ -1299,7 +1300,7 @@ struct trace_parser {
+ 
+ static inline bool trace_parser_loaded(struct trace_parser *parser)
+ {
+-	return (parser->idx != 0);
++	return !parser->fail && parser->idx != 0;
+ }
+ 
+ static inline bool trace_parser_cont(struct trace_parser *parser)
+@@ -1313,6 +1314,11 @@ static inline void trace_parser_clear(struct trace_parser *parser)
+ 	parser->idx = 0;
+ }
+ 
++static inline void trace_parser_fail(struct trace_parser *parser)
++{
++	parser->fail = true;
++}
++
+ extern int trace_parser_get_init(struct trace_parser *parser, int size);
+ extern void trace_parser_put(struct trace_parser *parser);
+ extern int trace_get_user(struct trace_parser *parser, const char __user *ubuf,
+-- 
+2.34.1
 
