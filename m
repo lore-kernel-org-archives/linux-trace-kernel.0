@@ -1,135 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F0A42F83CE;
-	Wed, 13 Aug 2025 15:07:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDC8D268C40
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 13 Aug 2025 15:33:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755097643; cv=none; b=Qvg8Cqxo5WLA2wRy7JEgnG9rKc2IP+qoj3CF5ZmSlJFGHMCFFpoAJASGk6fDWBunY6ZJrz4IehTAAFfBhIn5DOSh40MPq2M5KRN/U/Nuu1KxYfNKsWdqRyj6ahKHSTrqz0XVodJqP58UyLyWZ3F7Z0jnleczWizuFwSz525CZf4=
+	t=1755099213; cv=none; b=Ey+Bs7ZTdmUGy7sd6R0mO1YVHYgDJFuDAPN6htWY2i7DYksAMSFVBfCKliUU3amldeGmBYXjM9EENy+2QYskq/P6/p4/liLfiymFjBsXGj9/nifrea2P9p6TY7WNyi1DWfF4DZ1O7jAbM5vJU2MmxCBBh+RphtijMkxF5S80w/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755097643; c=relaxed/simple;
-	bh=AgCFVr8B6NzxkSuzvPEJMB9AhjM0iYqJptnGya/8rdo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E7m1svZiFDaZ0nHci6ZaIBKn9a+n+G40+lKu17ez50jptc+4LcdkE9drO3UZ/8nUpRwspBbABorq8IPDeSVYD9q+1WEj1+gq3H6fyE0S0N13lswcJh8AhUNmosGVapOsqANzgQ6YCTISJy1CvqV63nURmwKWhnEa7Cpa60Z8p4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YENt6LTm; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YENt6LTm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B711C4CEF1;
-	Wed, 13 Aug 2025 15:07:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755097642;
-	bh=AgCFVr8B6NzxkSuzvPEJMB9AhjM0iYqJptnGya/8rdo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YENt6LTmzTF5MtD2CCE/V13VNj4PuphZirCcbsVboFbdWpo5pbDoM+O1RwGND9hHA
-	 WetmjCRKzL7pVzJCuB6ANhgpmI5NnCbOUKiA98JWJtIXOH8N50EVLmuQyuay6zm6ky
-	 Onvhe46hQosw9HCamdkdEFdjBFc8sAKkHOvcvhEwHpJ12ST8cc+74GQ77yCDPQN8yP
-	 6Wv7nBFsNIocmJw6FI3A2Sw+oIhMT6YNdwdLIq5MhleD6VLBx07CKPNCPkvEmssek+
-	 ZjeG2ZowZ0nIKyT2jMky93WoiZsWFLORbU579a0ityJsLq0oaeKqLOOi+Bq4oEc02a
-	 vNc66YhlSs8qQ==
-Date: Wed, 13 Aug 2025 18:07:18 +0300
-From: Leon Romanovsky <leon@kernel.org>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
-	Abdiel Janulgue <abdiel.janulgue@gmail.com>,
-	Alexander Potapenko <glider@google.com>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Christoph Hellwig <hch@lst.de>, Danilo Krummrich <dakr@kernel.org>,
-	iommu@lists.linux.dev, Jason Wang <jasowang@redhat.com>,
-	Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
-	Jonathan Corbet <corbet@lwn.net>, Juergen Gross <jgross@suse.com>,
-	kasan-dev@googlegroups.com, Keith Busch <kbusch@kernel.org>,
-	linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	linux-nvme@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-	linux-trace-kernel@vger.kernel.org,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>, rust-for-linux@vger.kernel.org,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	virtualization@lists.linux.dev, Will Deacon <will@kernel.org>,
-	xen-devel@lists.xenproject.org
-Subject: Re: [PATCH v1 08/16] kmsan: convert kmsan_handle_dma to use physical
- addresses
-Message-ID: <20250813150718.GB310013@unreal>
-References: <cover.1754292567.git.leon@kernel.org>
- <5b40377b621e49ff4107fa10646c828ccc94e53e.1754292567.git.leon@kernel.org>
- <20250807122115.GH184255@nvidia.com>
+	s=arc-20240116; t=1755099213; c=relaxed/simple;
+	bh=Oo1nxd6Ov/1CUg5rzqw6f7a6E4Pmt2QOZ5fku7GDj0w=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FCibEeo0gIVRTovhXIFc3es45cOIx6pCpPOIsDVaUFcXX1t/E6BGXRfglJK8TMNKFFXCtcmwHsazdZ5eDU3ptBC4xb4d+/Zy8AOjgT9RtYsA+RuIFNbvBiWN/ZxAnLZDe+QM29aQtBNHz/KLfpp2f56eJEWWejedt1RgUOJPO4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf06.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay05.hostedemail.com (Postfix) with ESMTP id B3CF658A2F;
+	Wed, 13 Aug 2025 15:33:23 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf06.hostedemail.com (Postfix) with ESMTPA id 22CAD20014;
+	Wed, 13 Aug 2025 15:33:22 +0000 (UTC)
+Date: Wed, 13 Aug 2025 11:34:09 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Steven Rostedt <srostedt@redhat.com>, linux-trace-kernel@vger.kernel.org
+Subject: Re: [bug report] tracing/events: add startup tests for events
+Message-ID: <20250813113409.22afa127@gandalf.local.home>
+In-Reply-To: <aJTL2Av9ph7vhQ_U@stanley.mountain>
+References: <aJTL2Av9ph7vhQ_U@stanley.mountain>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250807122115.GH184255@nvidia.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 22CAD20014
+X-Stat-Signature: inusotcggsrpcj1jfz6uq8jhiqtxos84
+X-Rspamd-Server: rspamout06
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+YvENs2r4Dd9To1AdKff4LEyRIqugp9WM=
+X-HE-Tag: 1755099202-589885
+X-HE-Meta: U2FsdGVkX1/3P9hPC4mWdR7xA2sa+NcS+5xCkFRHEkrLfbPf0Vfkh6vBhlgaql7FTC2pzcNqZ7oYro0/EQ6H5a99GuCDoFKotoB08LSDiNo54Mmv3Ar6bt/gXaGTItNcEMV67OP2Ix4V51M0uikvlXZv0TJhEWQNH7X0BT3nMhZdonRwplwFb8Srs8pTlRN7mVDEFiTzXm3K/WfRUf2EJ1riunaouLPPk5A2LBxwsvc7rU+8OqNiB62njukLRviLEnl+/TLa8BqEV8zknPfgHDVzuP8S+FbdjyRPKzH/tpzOSmHGQLB0zZvjsenJmUFwYuU+QmIY3xS7Y1TtsrvX8YneLYLPC9FcVPzhRc+ZYBSxV6STnaj3m1r5GzQ92CZL
 
-On Thu, Aug 07, 2025 at 09:21:15AM -0300, Jason Gunthorpe wrote:
-> On Mon, Aug 04, 2025 at 03:42:42PM +0300, Leon Romanovsky wrote:
-> > From: Leon Romanovsky <leonro@nvidia.com>
-> > 
-> > Convert the KMSAN DMA handling function from page-based to physical
-> > address-based interface.
-> > 
-> > The refactoring renames kmsan_handle_dma() parameters from accepting
-> > (struct page *page, size_t offset, size_t size) to (phys_addr_t phys,
-> > size_t size). A PFN_VALID check is added to prevent KMSAN operations
-> > on non-page memory, preventing from non struct page backed address,
-> > 
-> > As part of this change, support for highmem addresses is implemented
-> > using kmap_local_page() to handle both lowmem and highmem regions
-> > properly. All callers throughout the codebase are updated to use the
-> > new phys_addr_t based interface.
-> 
-> Use the function Matthew pointed at kmap_local_pfn()
-> 
-> Maybe introduce the kmap_local_phys() he suggested too.
+On Thu, 7 Aug 2025 18:52:56 +0300
+Dan Carpenter <dan.carpenter@linaro.org> wrote:
 
-At this point it gives nothing.
+> Hello Steven Rostedt,
+> 
+> Commit e6187007d6c3 ("tracing/events: add startup tests for events")
+> from Apr 15, 2009 (linux-next), leads to the following Smatch static
+> checker warning:
+
+So this "bug" is in a selftest that has been running fine since 2009.
+
+Yes, if things go really bad then kthread_run() could return an error, and
+if it does, it means the system is having major issues at boot up.
 
 > 
-> >  /* Helper function to handle DMA data transfers. */
-> > -void kmsan_handle_dma(struct page *page, size_t offset, size_t size,
-> > +void kmsan_handle_dma(phys_addr_t phys, size_t size,
-> >  		      enum dma_data_direction dir)
-> >  {
-> >  	u64 page_offset, to_go, addr;
-> > +	struct page *page;
-> > +	void *kaddr;
-> >  
-> > -	if (PageHighMem(page))
-> > +	if (!pfn_valid(PHYS_PFN(phys)))
-> >  		return;
+> 	kernel/trace/trace_events.c:4704 event_test_stuff()
+> 	error: 'test_thread' dereferencing possible ERR_PTR()
 > 
-> Not needed, the caller must pass in a phys that is kmap
-> compatible. Maybe just leave a comment. FWIW today this is also not
-> checking for P2P or DEVICE non-kmap struct pages either, so it should
-> be fine without checks.
+> kernel/trace/trace_events.c
+>     4698 static __init void event_test_stuff(void)
+>     4699 {
+>     4700         struct task_struct *test_thread;
+>     4701 
+>     4702         test_thread = kthread_run(event_test_thread, NULL, "test-events");
+>     4703         msleep(1);
+> --> 4704         kthread_stop(test_thread);  
+> 
+> Check for if (!IS_ERR(test_thread)) ?
 
-It is not true as we will call to kmsan_handle_dma() unconditionally in
-dma_map_phys(). The reason to it is that kmsan_handle_dma() is guarded
-with debug kconfig options and cost of pfn_valid() can be accommodated
-in that case. It gives more clean DMA code.
+I'm not against taking a patch that adds a check, but I don't plan on
+updating it myself.
 
-   155 dma_addr_t dma_map_phys(struct device *dev, phys_addr_t phys, size_t size,
-   156                 enum dma_data_direction dir, unsigned long attrs)
-   157 {
-   <...>
-   187
-   188         kmsan_handle_dma(phys, size, dir);
-   189         trace_dma_map_phys(dev, phys, addr, size, dir, attrs);
-   190         debug_dma_map_phys(dev, phys, size, dir, addr, attrs);
-   191
-   192         return addr;
-   193 }
-   194 EXPORT_SYMBOL_GPL(dma_map_phys);
+static __init void event_test_stuff(void)
+{
+	struct task_struct *test_thread;
 
-So let's keep this patch as is.
+	test_thread = kthread_run(event_test_thread, NULL, "test-events");
+	if (WARN_ON_ONCE(IS_ERR(test_thread)))
+		return;
+	msleep(1);
+	kthread_stop(test_thread);
+}
 
-Thanks
+Would work for me.
+
+-- Steve
+
+
+> 
+>     4705 }
+> 
+> regards,
+> dan carpenter
+
