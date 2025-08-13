@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D96602EACF6;
-	Wed, 13 Aug 2025 14:29:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA4782EACF6;
+	Wed, 13 Aug 2025 14:29:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755095390; cv=none; b=ayQvnMRX7V/n/BxfjzEld3BpNgZx9UVmGGgDxG+oqmJ+sHZd/aqTmTYJMfmk07GvACGFxI0FR2xV3UbzU2vXn0GIBLJsgLViSLc+vf/fmGc5JU3tXW9Ln5gsR10Kr/0bNXLaou/4WPoWd+lQTLtoPUyqOqB2mWZ7bzjHIL09W+w=
+	t=1755095399; cv=none; b=KVujMB/2TWGzKOO81tyMZtsQwR6slaoOLGYmjKcrcgDBlFiq18GSY2ov0tBR6yFKUkxdgmdeiGooJG3M1w3R9QHloKaUvOILkczXbND8QGIrbFfGLkrzyat2dJBLoQHw5v9pOtm7oiV1ZxGewoLZbN0UvYB36WVmuL060SQGzzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755095390; c=relaxed/simple;
-	bh=KtZOOoU0yNnyX0bs6ukfbHdLNrul7k2oPOAIlTcgzIg=;
+	s=arc-20240116; t=1755095399; c=relaxed/simple;
+	bh=oAEVYAf3dzCEcckSbjnoduKc/tJlsEEvbBAJNtGqAd0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MFOLq6r1Hc8zNvyJtZIMjREbFxsBIryJ5tKPlJrbPWDQCrO8Wyw7sDXIbKWQv7dTPVb/vop4rLNgQkyigEKLr9Dtazlo9dOthEAwZZwTAge8YriAI3eoVMKkfWO0uF5Fr2zp7N3czI3lwtzDEGvnnq9D+7a+r3OG2UzX6qGgkI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I42ZjTtD; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=rRa6SbqONNTUhh8kp6qJm2+d0VPPd1YPrHDvccjuJWgHQEkmDDSXgPP7PxgFNcCDcSOSWG+92wrnMDmOQDEADr8zj9y+fV3NX0QVXIadOzUk25VUpu7nO7KStlXZt/hRcqHvmoI79Zjav8/W+C+GicLnuM2gTeeLdmFMWFZMtTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f2D2Uu4P; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I42ZjTtD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6A69C4CEEB;
-	Wed, 13 Aug 2025 14:29:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f2D2Uu4P"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E875C4CEEB;
+	Wed, 13 Aug 2025 14:29:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755095390;
-	bh=KtZOOoU0yNnyX0bs6ukfbHdLNrul7k2oPOAIlTcgzIg=;
+	s=k20201202; t=1755095399;
+	bh=oAEVYAf3dzCEcckSbjnoduKc/tJlsEEvbBAJNtGqAd0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=I42ZjTtDRVKB7SR84WgEp8XT6HIJQL4anw4JwP0t+l/3IziYJzavo9naZih5tXXoC
-	 ky+ddu/ybGgdO24l7/Yo6pgerlVFIUBzL12VgdfwL0fB7Yq0VyZWqlVf69OnSJF2hU
-	 oPx8OiLeadZNQIX5DCqhE82745ViYqi82srPpKyyk6xPdrBwt8JZ/U9B9TxSAfXVSL
-	 7L4RwlutX0XiQPMDitHAs6iysSkT7UYCAPNvmYNnVycmArkZLfmBE5haPDlDtucEd/
-	 WwJsZxAAw4hLDEmSqqmJAU0gJLPH5bY153Zf49igwOcTQYSH4/JwolofCu7v9pLeOd
-	 ZnsXDlC1mNl8w==
+	b=f2D2Uu4PPO9CxjojV19+JqJ6dKOW7c6vk1qiocVZ5I8+9tAHE0bpJkte/VPfiQGLm
+	 qYfWDJOFcRxxejH7hQgpwac6W4GnZ8gIkD+woDgvfV1gVx2ilh3UHHdurMR+w6B3qf
+	 fWhuVeRjEBndCcLRKI9D4kf2I+VS5rI1cMt/XjHGwpLCigGTUO56C6cSxJ8kFxKcGw
+	 NGDPF30EfBZnx433LayklqlS3O7DCW3a05uuxsZAWC28syCE03T1T7DKlUZOb8PXU6
+	 cssZ30Zs2urBdjjcsi6FuwLWWLRyKyyEWK8kSHyDK/cekn4GIIaAvN+KKEGjDiAdtC
+	 Dpx1zk+bgPS9Q==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH 1/4] tracing: probes: Use __free() for trace_probe_log
-Date: Wed, 13 Aug 2025 23:29:46 +0900
-Message-ID: <175509538609.193596.16646724647358218778.stgit@devnote2>
+Subject: [PATCH 2/4] tracing: eprobe: Cleanup eprobe event using __free()
+Date: Wed, 13 Aug 2025 23:29:55 +0900
+Message-ID: <175509539571.193596.4674012182718751429.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <175509537667.193596.9139462012987606126.stgit@devnote2>
 References: <175509537667.193596.9139462012987606126.stgit@devnote2>
@@ -50,135 +50,213 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Use __free() for trace_probe_log_clear() to cleanup error log interface.
+Use __free(trace_event_probe_cleanup) to remove unneeded gotos and
+cleanup the last part of trace_eprobe_parse_filter().
 
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- kernel/trace/trace_eprobe.c |    5 ++---
- kernel/trace/trace_probe.c  |    3 ++-
- kernel/trace/trace_probe.h  |    4 +++-
- kernel/trace/trace_uprobe.c |    6 ++----
- 4 files changed, 9 insertions(+), 9 deletions(-)
+ kernel/trace/trace_eprobe.c |   71 ++++++++++++++++++-------------------------
+ 1 file changed, 30 insertions(+), 41 deletions(-)
 
 diff --git a/kernel/trace/trace_eprobe.c b/kernel/trace/trace_eprobe.c
-index a1d402124836..aaba765d54cf 100644
+index aaba765d54cf..f7a1ff509d7e 100644
 --- a/kernel/trace/trace_eprobe.c
 +++ b/kernel/trace/trace_eprobe.c
-@@ -874,6 +874,7 @@ static int __trace_eprobe_create(int argc, const char *argv[])
+@@ -61,6 +61,9 @@ static void trace_event_probe_cleanup(struct trace_eprobe *ep)
+ 	kfree(ep);
+ }
+ 
++DEFINE_FREE(trace_event_probe_cleanup, struct trace_eprobe *,
++		if (!IS_ERR_OR_NULL(_T)) trace_event_probe_cleanup(_T))
++
+ static struct trace_eprobe *to_trace_eprobe(struct dyn_event *ev)
+ {
+ 	return container_of(ev, struct trace_eprobe, devent);
+@@ -197,10 +200,10 @@ static struct trace_eprobe *alloc_event_probe(const char *group,
+ 					      struct trace_event_call *event,
+ 					      int nargs)
+ {
+-	struct trace_eprobe *ep;
++	struct trace_eprobe *ep __free(trace_event_probe_cleanup) = NULL;
+ 	const char *event_name;
+ 	const char *sys_name;
+-	int ret = -ENOMEM;
++	int ret;
+ 
+ 	if (!event)
+ 		return ERR_PTR(-ENODEV);
+@@ -211,25 +214,22 @@ static struct trace_eprobe *alloc_event_probe(const char *group,
+ 	ep = kzalloc(struct_size(ep, tp.args, nargs), GFP_KERNEL);
+ 	if (!ep) {
+ 		trace_event_put_ref(event);
+-		goto error;
++		return ERR_PTR(-ENOMEM);
+ 	}
+ 	ep->event = event;
+ 	ep->event_name = kstrdup(event_name, GFP_KERNEL);
+ 	if (!ep->event_name)
+-		goto error;
++		return ERR_PTR(-ENOMEM);
+ 	ep->event_system = kstrdup(sys_name, GFP_KERNEL);
+ 	if (!ep->event_system)
+-		goto error;
++		return ERR_PTR(-ENOMEM);
+ 
+ 	ret = trace_probe_init(&ep->tp, this_event, group, false, nargs);
+ 	if (ret < 0)
+-		goto error;
++		return ERR_PTR(ret);
+ 
+ 	dyn_event_init(&ep->devent, &eprobe_dyn_event_ops);
+-	return ep;
+-error:
+-	trace_event_probe_cleanup(ep);
+-	return ERR_PTR(ret);
++	return_ptr(ep);
+ }
+ 
+ static int eprobe_event_define_fields(struct trace_event_call *event_call)
+@@ -856,13 +856,10 @@ static int trace_eprobe_parse_filter(struct trace_eprobe *ep, int argc, const ch
+ 	ret = create_event_filter(top_trace_array(), ep->event, ep->filter_str,
+ 				  true, &dummy);
+ 	free_event_filter(dummy);
+-	if (ret)
+-		goto error;
+-
+-	return 0;
+-error:
+-	kfree(ep->filter_str);
+-	ep->filter_str = NULL;
++	if (ret) {
++		kfree(ep->filter_str);
++		ep->filter_str = NULL;
++	}
+ 	return ret;
+ }
+ 
+@@ -874,6 +871,7 @@ static int __trace_eprobe_create(int argc, const char *argv[])
  	 * Fetch args (no space):
  	 *  <name>=$<field>[:TYPE]
  	 */
-+	const char *trlog __free(trace_probe_log_clear) = NULL;
++	struct trace_eprobe *ep __free(trace_event_probe_cleanup) = NULL;
+ 	const char *trlog __free(trace_probe_log_clear) = NULL;
  	const char *event = NULL, *group = EPROBE_EVENT_SYSTEM;
  	const char *sys_event = NULL, *sys_name = NULL;
- 	struct trace_event_call *event_call;
-@@ -887,7 +888,7 @@ static int __trace_eprobe_create(int argc, const char *argv[])
- 	if (argc < 2 || argv[0][0] != 'e')
- 		return -ECANCELED;
+@@ -881,7 +879,6 @@ static int __trace_eprobe_create(int argc, const char *argv[])
+ 	char *buf1 __free(kfree) = NULL;
+ 	char *buf2 __free(kfree) = NULL;
+ 	char *gbuf __free(kfree) = NULL;
+-	struct trace_eprobe *ep = NULL;
+ 	int ret = 0, filter_idx = 0;
+ 	int i, filter_cnt;
  
--	trace_probe_log_init("event_probe", argc, argv);
-+	trlog = trace_probe_log_init("event_probe", argc, argv);
- 
- 	event = strchr(&argv[0][1], ':');
+@@ -894,12 +891,12 @@ static int __trace_eprobe_create(int argc, const char *argv[])
  	if (event) {
-@@ -987,7 +988,6 @@ static int __trace_eprobe_create(int argc, const char *argv[])
- 			goto error;
- 		}
+ 		gbuf = kmalloc(MAX_EVENT_NAME_LEN, GFP_KERNEL);
+ 		if (!gbuf)
+-			goto mem_error;
++			return -ENOMEM;
+ 		event++;
+ 		ret = traceprobe_parse_event_name(&event, &group, gbuf,
+ 						  event - argv[0]);
+ 		if (ret)
+-			goto parse_error;
++			return -EINVAL;
  	}
--	trace_probe_log_clear();
- 	return ret;
  
- mem_error:
-@@ -996,7 +996,6 @@ static int __trace_eprobe_create(int argc, const char *argv[])
- parse_error:
- 	ret = -EINVAL;
- error:
--	trace_probe_log_clear();
- 	trace_event_probe_cleanup(ep);
- 	return ret;
- }
-diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-index 5cbdc423afeb..5b92376a58fc 100644
---- a/kernel/trace/trace_probe.c
-+++ b/kernel/trace/trace_probe.c
-@@ -156,7 +156,7 @@ static const struct fetch_type *find_fetch_type(const char *type, unsigned long
- static struct trace_probe_log trace_probe_log;
- extern struct mutex dyn_event_ops_mutex;
+ 	trace_probe_log_set_index(1);
+@@ -907,18 +904,18 @@ static int __trace_eprobe_create(int argc, const char *argv[])
  
--void trace_probe_log_init(const char *subsystem, int argc, const char **argv)
-+const char *trace_probe_log_init(const char *subsystem, int argc, const char **argv)
- {
- 	lockdep_assert_held(&dyn_event_ops_mutex);
+ 	buf2 = kmalloc(MAX_EVENT_NAME_LEN, GFP_KERNEL);
+ 	if (!buf2)
+-		goto mem_error;
++		return -ENOMEM;
  
-@@ -164,6 +164,7 @@ void trace_probe_log_init(const char *subsystem, int argc, const char **argv)
- 	trace_probe_log.argc = argc;
- 	trace_probe_log.argv = argv;
- 	trace_probe_log.index = 0;
-+	return subsystem;
- }
+ 	ret = traceprobe_parse_event_name(&sys_event, &sys_name, buf2, 0);
+ 	if (ret || !sys_event || !sys_name) {
+ 		trace_probe_log_err(0, NO_EVENT_INFO);
+-		goto parse_error;
++		return -EINVAL;
+ 	}
  
- void trace_probe_log_clear(void)
-diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
-index 842383fbc03b..76bf2dee8071 100644
---- a/kernel/trace/trace_probe.h
-+++ b/kernel/trace/trace_probe.h
-@@ -573,11 +573,13 @@ struct trace_probe_log {
- 	int		index;
- };
+ 	if (!event) {
+ 		buf1 = kstrdup(sys_event, GFP_KERNEL);
+ 		if (!buf1)
+-			goto mem_error;
++			return -ENOMEM;
+ 		event = buf1;
+ 	}
  
--void trace_probe_log_init(const char *subsystem, int argc, const char **argv);
-+const char *trace_probe_log_init(const char *subsystem, int argc, const char **argv);
- void trace_probe_log_set_index(int index);
- void trace_probe_log_clear(void);
- void __trace_probe_log_err(int offset, int err);
- 
-+DEFINE_FREE(trace_probe_log_clear, const char *, if (_T) trace_probe_log_clear())
-+
- #define trace_probe_log_err(offs, err)	\
- 	__trace_probe_log_err(offs, TP_ERR_##err)
- 
-diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
-index 8b0bcc0d8f41..722316b3dc16 100644
---- a/kernel/trace/trace_uprobe.c
-+++ b/kernel/trace/trace_uprobe.c
-@@ -539,6 +539,7 @@ static int register_trace_uprobe(struct trace_uprobe *tu)
-  */
- static int __trace_uprobe_create(int argc, const char **argv)
- {
-+	const char *trlog __free(trace_probe_log_clear) = NULL;
- 	const char *event = NULL, *group = UPROBE_EVENT_SYSTEM;
- 	char *arg, *filename, *rctr, *rctr_end, *tmp;
- 	unsigned long offset, ref_ctr_offset;
-@@ -565,7 +566,7 @@ static int __trace_uprobe_create(int argc, const char **argv)
- 	if (argc < 2)
- 		return -ECANCELED;
- 
--	trace_probe_log_init("trace_uprobe", argc, argv);
-+	trlog = trace_probe_log_init("trace_uprobe", argc, argv);
- 
+@@ -934,8 +931,7 @@ static int __trace_eprobe_create(int argc, const char *argv[])
  	if (argc - 2 > MAX_TRACE_ARGS) {
  		trace_probe_log_set_index(2);
-@@ -597,7 +598,6 @@ static int __trace_uprobe_create(int argc, const char **argv)
- 	if (ret) {
- 		trace_probe_log_err(0, FILE_NOT_FOUND);
- 		kfree(filename);
--		trace_probe_log_clear();
- 		return ret;
+ 		trace_probe_log_err(0, TOO_MANY_ARGS);
+-		ret = -E2BIG;
+-		goto error;
++		return -E2BIG;
  	}
- 	if (!d_is_reg(path.dentry)) {
-@@ -728,14 +728,12 @@ static int __trace_uprobe_create(int argc, const char **argv)
- error:
- 	free_trace_uprobe(tu);
- out:
--	trace_probe_log_clear();
+ 
+ 	scoped_guard(mutex, &event_mutex) {
+@@ -949,15 +945,14 @@ static int __trace_eprobe_create(int argc, const char *argv[])
+ 			trace_probe_log_err(0, BAD_ATTACH_EVENT);
+ 		/* This must return -ENOMEM or missing event, else there is a bug */
+ 		WARN_ON_ONCE(ret != -ENOMEM && ret != -ENODEV);
+-		ep = NULL;
+-		goto error;
++		return ret;
+ 	}
+ 
+ 	if (filter_idx) {
+ 		trace_probe_log_set_index(filter_idx);
+ 		ret = trace_eprobe_parse_filter(ep, filter_cnt, argv + filter_idx);
+ 		if (ret)
+-			goto parse_error;
++			return -EINVAL;
+ 	} else
+ 		ep->filter_str = NULL;
+ 
+@@ -967,11 +962,12 @@ static int __trace_eprobe_create(int argc, const char *argv[])
+ 		trace_probe_log_set_index(i + 2);
+ 		ret = trace_eprobe_tp_update_arg(ep, argv, i);
+ 		if (ret)
+-			goto error;
++			return ret;
+ 	}
+ 	ret = traceprobe_set_print_fmt(&ep->tp, PROBE_PRINT_EVENT);
+ 	if (ret < 0)
+-		goto error;
++		return ret;
++
+ 	init_trace_eprobe_call(ep);
+ 	scoped_guard(mutex, &event_mutex) {
+ 		ret = trace_probe_register_event_call(&ep->tp);
+@@ -980,24 +976,17 @@ static int __trace_eprobe_create(int argc, const char *argv[])
+ 				trace_probe_log_set_index(0);
+ 				trace_probe_log_err(0, EVENT_EXIST);
+ 			}
+-			goto error;
++			return ret;
+ 		}
+ 		ret = dyn_event_add(&ep->devent, &ep->tp.event->call);
+ 		if (ret < 0) {
+ 			trace_probe_unregister_event_call(&ep->tp);
+-			goto error;
++			return ret;
+ 		}
++		/* To avoid freeing registered eprobe event, clear ep. */
++		ep = NULL;
+ 	}
  	return ret;
+-
+-mem_error:
+-	ret = -ENOMEM;
+-	goto error;
+-parse_error:
+-	ret = -EINVAL;
+-error:
+-	trace_event_probe_cleanup(ep);
+-	return ret;
+ }
  
- fail_mem:
- 	ret = -ENOMEM;
- 
- fail_address_parse:
--	trace_probe_log_clear();
- 	path_put(&path);
- 	kfree(filename);
- 
+ /*
 
