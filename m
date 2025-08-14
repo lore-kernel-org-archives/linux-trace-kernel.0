@@ -1,183 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-183.mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9258A3019CB;
-	Thu, 14 Aug 2025 10:14:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89BBC2D46BC
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 14 Aug 2025 11:35:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755166497; cv=none; b=Hk2zp2vlvvaBrHDEMFVILZKZklZ6tZEhk9hw3u+9CKmRTgEg+r+rI/5r1qFkjleu4NlGiL7Y7hNWf6HXUFbM44YgBuaJj58KmbRgwhL7z9Bfo5P9tBWVBs5tipbW+UCoB/Mq1kQ/xA9u6cH4FCkU9fZNfFqUNRPpsZVZbnpuq+0=
+	t=1755171326; cv=none; b=mf72/VuSjczFQnZZxc2xmUeVBGEYsVJDgW34mS4sBS/fM93XDKSkkRbXuscPOOKxdq9QLoxIxj8zmwS1eT5//ew7OmCQy4VWAZ3vVzVQPBgKGr870Yp8lpGvVv2OBb97OifBbPH80a/3gJOKa2SHWkEVnWGTnogVpP3QbwA45uY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755166497; c=relaxed/simple;
-	bh=VNpaHZYPDKoIVZk7JizQ+fAc7bXMl6IIrMQIwsKC7lg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UR4BevQsG0dbK5JY/mGos9EQT9pY1vmjtbaF6Tdq3msqDCv/xLSjsyrKP4QRttVgfhCDflsLqz1yTTZHS3+Fqn0/nhqFlf7ehxhMreR4BZhlaj7XAImb8zmqev6gaITd1+4XuXokQ5biY6RYqSIxVBDrzw5E3ejP8gKsxtAOoy4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sgcAjNmQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1755171326; c=relaxed/simple;
+	bh=nDspi5PIcAYWdxA/EU332nj4Texe0LRHlFxJOAQtBaY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=S/VfHO7IF+kcCmJCCCN7Wd0YVb4gGojA+dkOkPZHWqX8ewSHIo13Yn8AabzlWWYKr7OTYHVD5gw4fS5jNF7wyn6BfP1d95JmJO3/8YN5six0R4Q1ccP9RGfSD/kkhTJanwWFX2nKCm3dKyh5oDpMKuHWIKERD85slNWxzm8T6fg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Ww+t6c8L; arc=none smtp.client-ip=95.215.58.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sgcAjNmQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E732C4CEED;
-	Thu, 14 Aug 2025 10:14:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755166497;
-	bh=VNpaHZYPDKoIVZk7JizQ+fAc7bXMl6IIrMQIwsKC7lg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sgcAjNmQ4H9PR9eNw1PcsrGYJZDdCoIhSA00MB1PlPh4PY294zzHjmBNp/Feerkz5
-	 onfh+H4AOnhzfctRKBnuKCZx/TKbia4qDj/ZGv49iPN8pTjetV2F9L2VUkgOWdWDRc
-	 XlrdyafRknSjL//iLlaNOBweJcYzh6FKt3CyXPCoJvTLjW4fEmAhBIfd9+UAEg8Pzu
-	 GT/aO6y+QSatuf+mIF+REo7cmsN0/u40Aqx/jFMMVRttbv3XnuIdoCIUPj7ks/cy6e
-	 xakUo8h2pDLy9UhEDhcLSzeOH+G0q/blCWi158fJN5vnT8J/3Fmo24+nsmO++3Zqz5
-	 MlYCBR+W1ikrA==
-From: Leon Romanovsky <leon@kernel.org>
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Leon Romanovsky <leonro@nvidia.com>,
-	Jason Gunthorpe <jgg@nvidia.com>,
-	Abdiel Janulgue <abdiel.janulgue@gmail.com>,
-	Alexander Potapenko <glider@google.com>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Christoph Hellwig <hch@lst.de>,
-	Danilo Krummrich <dakr@kernel.org>,
-	iommu@lists.linux.dev,
-	Jason Wang <jasowang@redhat.com>,
-	Jens Axboe <axboe@kernel.dk>,
-	Joerg Roedel <joro@8bytes.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Juergen Gross <jgross@suse.com>,
-	kasan-dev@googlegroups.com,
-	Keith Busch <kbusch@kernel.org>,
-	linux-block@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-nvme@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-trace-kernel@vger.kernel.org,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	rust-for-linux@vger.kernel.org,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	virtualization@lists.linux.dev,
-	Will Deacon <will@kernel.org>,
-	xen-devel@lists.xenproject.org
-Subject: [PATCH v2 15/16] block-dma: properly take MMIO path
-Date: Thu, 14 Aug 2025 13:13:33 +0300
-Message-ID: <87b7d3a0e3f6be9da49947923d52355ed0835833.1755153054.git.leon@kernel.org>
-X-Mailer: git-send-email 2.50.1
-In-Reply-To: <cover.1755153054.git.leon@kernel.org>
-References: <cover.1755153054.git.leon@kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Ww+t6c8L"
+Message-ID: <cfc4594a-7352-491a-b643-a87804f22322@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1755171321;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mfMJrYIyAcG+mjlukJ3S8XF3yl49bz3YOmF0vqdDPhM=;
+	b=Ww+t6c8LO+cT2C6CCvMsZjak3sh3oIAIeEkKVef7v+gq9DGBLSyaDEa3MivONWBzrxrXGt
+	S9Tv3kp0hFKvfd3VczRd89j88yW1AuLwzK+DFXWd+DEVZ9EUOJLhBc26s22bt5x85n7Lhy
+	F3nQDRxY0QaiZjvPKwkALypGRgnAJl8=
+Date: Thu, 14 Aug 2025 19:35:07 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Subject: Re: [PATCH bpf-next v2] bpf: Remove migrate_disable in
+ kprobe_multi_link_prog_run
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
+ martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org,
+ yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org,
+ sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org,
+ mattbobrowski@google.com, rostedt@goodmis.org, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, bpf@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+References: <20250805162732.1896687-1-chen.dylane@linux.dev>
+ <CAEf4BzZduEdBCzm56zwgrHpzV=CsMbzfVi5oR9w3H4vUQL6FYw@mail.gmail.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Tao Chen <chen.dylane@linux.dev>
+In-Reply-To: <CAEf4BzZduEdBCzm56zwgrHpzV=CsMbzfVi5oR9w3H4vUQL6FYw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-From: Leon Romanovsky <leonro@nvidia.com>
+在 2025/8/13 06:05, Andrii Nakryiko 写道:
+> On Tue, Aug 5, 2025 at 9:28 AM Tao Chen <chen.dylane@linux.dev> wrote:
+>>
+>> bpf program should run under migration disabled, kprobe_multi_link_prog_run
+>> called all the way from graph tracer, which disables preemption in
+>> function_graph_enter_regs, as Jiri and Yonghong suggested, there is no
+>> need to use migrate_disable. As a result, some overhead maybe will be
+>> reduced.
+>>
+>> Fixes: 0dcac2725406 ("bpf: Add multi kprobe link")
+>> Acked-by: Yonghong Song <yonghong.song@linux.dev>
+>> Acked-by: Jiri Olsa <jolsa@kernel.org>
+>> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
+>> ---
+>>   kernel/trace/bpf_trace.c | 9 +++++++--
+>>   1 file changed, 7 insertions(+), 2 deletions(-)
+>>
+>> Change list:
+>>   v1 -> v2:
+>>    - s/called the way/called all the way/.(Jiri)
+>>   v1: https://lore.kernel.org/bpf/f7acfd22-bcf3-4dff-9a87-7c1e6f84ce9c@linux.dev
+>>
+>> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+>> index 3ae52978cae..5701791e3cb 100644
+>> --- a/kernel/trace/bpf_trace.c
+>> +++ b/kernel/trace/bpf_trace.c
+>> @@ -2734,14 +2734,19 @@ kprobe_multi_link_prog_run(struct bpf_kprobe_multi_link *link,
+> 
+> even though bpf_prog_run() eventually calls cant_migrate(), we should
+> add it before that __this_cpu_inc_return() call as well, because that
+> one is relying on that non-migration independently from bpf_prog_run()
+> 
 
-Make sure that CPU is not synced and IOMMU is configured to take
-MMIO path by providing newly introduced DMA_ATTR_MMIO attribute.
+maybe cant_sleep() is better like trace_call_bpf, cant_sleep dose not 
+check migration_disabled again, which is done in 
+__this_cpu_preempt_check. I will add it in v3.
 
-Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
----
- block/blk-mq-dma.c         | 13 +++++++++++--
- include/linux/blk-mq-dma.h |  6 +++++-
- include/linux/blk_types.h  |  2 ++
- 3 files changed, 18 insertions(+), 3 deletions(-)
+>>                  goto out;
+>>          }
+>>
+>> -       migrate_disable();
+>> +       /*
+>> +        * bpf program should run under migration disabled, kprobe_multi_link_prog_run
+>> +        * called all the way from graph tracer, which disables preemption in
+>> +        * function_graph_enter_regs, so there is no need to use migrate_disable.
+>> +        * Accessing the above percpu data bpf_prog_active is also safe for the same
+>> +        * reason.
+>> +        */
+> 
+> let's shorten this a bit to something like:
+> 
+> /* graph tracer framework ensures we won't migrate */
+> cant_migrate();
+> 
+> all the other stuff in the comment can become outdated way too easily
+> and/or is sort of general BPF implementation knowledge
+> 
+> pw-bot: cr
+> 
+> 
+>>          rcu_read_lock();
+>>          regs = ftrace_partial_regs(fregs, bpf_kprobe_multi_pt_regs_ptr());
+>>          old_run_ctx = bpf_set_run_ctx(&run_ctx.session_ctx.run_ctx);
+>>          err = bpf_prog_run(link->link.prog, regs);
+>>          bpf_reset_run_ctx(old_run_ctx);
+>>          rcu_read_unlock();
+>> -       migrate_enable();
+>>
+>>    out:
+>>          __this_cpu_dec(bpf_prog_active);
+>> --
+>> 2.48.1
+>>
 
-diff --git a/block/blk-mq-dma.c b/block/blk-mq-dma.c
-index 37e2142be4f7..d415088ed9fd 100644
---- a/block/blk-mq-dma.c
-+++ b/block/blk-mq-dma.c
-@@ -87,8 +87,13 @@ static bool blk_dma_map_bus(struct blk_dma_iter *iter, struct phys_vec *vec)
- static bool blk_dma_map_direct(struct request *req, struct device *dma_dev,
- 		struct blk_dma_iter *iter, struct phys_vec *vec)
- {
-+	unsigned int attrs = 0;
-+
-+	if (req->cmd_flags & REQ_MMIO)
-+		attrs = DMA_ATTR_MMIO;
-+
- 	iter->addr = dma_map_phys(dma_dev, vec->paddr, vec->len,
--			rq_dma_dir(req), 0);
-+			rq_dma_dir(req), attrs);
- 	if (dma_mapping_error(dma_dev, iter->addr)) {
- 		iter->status = BLK_STS_RESOURCE;
- 		return false;
-@@ -103,14 +108,17 @@ static bool blk_rq_dma_map_iova(struct request *req, struct device *dma_dev,
- {
- 	enum dma_data_direction dir = rq_dma_dir(req);
- 	unsigned int mapped = 0;
-+	unsigned int attrs = 0;
- 	int error;
- 
- 	iter->addr = state->addr;
- 	iter->len = dma_iova_size(state);
-+	if (req->cmd_flags & REQ_MMIO)
-+		attrs = DMA_ATTR_MMIO;
- 
- 	do {
- 		error = dma_iova_link(dma_dev, state, vec->paddr, mapped,
--				vec->len, dir, 0);
-+				vec->len, dir, attrs);
- 		if (error)
- 			break;
- 		mapped += vec->len;
-@@ -176,6 +184,7 @@ bool blk_rq_dma_map_iter_start(struct request *req, struct device *dma_dev,
- 			 * same as non-P2P transfers below and during unmap.
- 			 */
- 			req->cmd_flags &= ~REQ_P2PDMA;
-+			req->cmd_flags |= REQ_MMIO;
- 			break;
- 		default:
- 			iter->status = BLK_STS_INVAL;
-diff --git a/include/linux/blk-mq-dma.h b/include/linux/blk-mq-dma.h
-index c26a01aeae00..6c55f5e58511 100644
---- a/include/linux/blk-mq-dma.h
-+++ b/include/linux/blk-mq-dma.h
-@@ -48,12 +48,16 @@ static inline bool blk_rq_dma_map_coalesce(struct dma_iova_state *state)
- static inline bool blk_rq_dma_unmap(struct request *req, struct device *dma_dev,
- 		struct dma_iova_state *state, size_t mapped_len)
- {
-+	unsigned int attrs = 0;
-+
- 	if (req->cmd_flags & REQ_P2PDMA)
- 		return true;
- 
- 	if (dma_use_iova(state)) {
-+		if (req->cmd_flags & REQ_MMIO)
-+			attrs = DMA_ATTR_MMIO;
- 		dma_iova_destroy(dma_dev, state, mapped_len, rq_dma_dir(req),
--				 0);
-+				 attrs);
- 		return true;
- 	}
- 
-diff --git a/include/linux/blk_types.h b/include/linux/blk_types.h
-index 09b99d52fd36..283058bcb5b1 100644
---- a/include/linux/blk_types.h
-+++ b/include/linux/blk_types.h
-@@ -387,6 +387,7 @@ enum req_flag_bits {
- 	__REQ_FS_PRIVATE,	/* for file system (submitter) use */
- 	__REQ_ATOMIC,		/* for atomic write operations */
- 	__REQ_P2PDMA,		/* contains P2P DMA pages */
-+	__REQ_MMIO,		/* contains MMIO memory */
- 	/*
- 	 * Command specific flags, keep last:
- 	 */
-@@ -420,6 +421,7 @@ enum req_flag_bits {
- #define REQ_FS_PRIVATE	(__force blk_opf_t)(1ULL << __REQ_FS_PRIVATE)
- #define REQ_ATOMIC	(__force blk_opf_t)(1ULL << __REQ_ATOMIC)
- #define REQ_P2PDMA	(__force blk_opf_t)(1ULL << __REQ_P2PDMA)
-+#define REQ_MMIO	(__force blk_opf_t)(1ULL << __REQ_MMIO)
- 
- #define REQ_NOUNMAP	(__force blk_opf_t)(1ULL << __REQ_NOUNMAP)
- 
 -- 
-2.50.1
-
+Best Regards
+Tao Chen
