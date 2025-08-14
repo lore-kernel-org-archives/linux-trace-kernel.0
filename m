@@ -1,290 +1,207 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A54F01459EA;
-	Thu, 14 Aug 2025 08:44:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 552012EA15A;
+	Thu, 14 Aug 2025 10:13:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755161047; cv=none; b=eIymfKwifjgSPW0YnL9NsE3DeyhfAaOxtrIXoubxHF2gtJJuEUFf9INq3+B1l9vFNcTyGFFkpDGQ+wBqg/YZ/pG4FVczAHgfkFznQ9IaCYGCQHM+OGSo8J2+XvO+muvb+Z3T07dKbZju6EFtadpJG3/cKTtgG8MfvK75IURteMY=
+	t=1755166430; cv=none; b=KQFLPCKHa/hmaTeENsiSlJLagOWNsxZhkQRmsIpM2UJq5QrbwR24BuaYfG0P7BSXQCr6dZQxRS4o1P249NjvbeEA5Pc8bCxgZ/U0IcHOQW6uTw5SbFKsQ2+QXRcQBX8ORqEZWs/5PmQrBpHVEe9UBNEJlJF+4Wdq7N1VcQ3J+rc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755161047; c=relaxed/simple;
-	bh=CTmqLMuj0bCvkwKZAg1Un//8JJ/uJlUZHANgFIqPtcA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qeF/Q1kRSCnDuVF0OhfJ4WeG0uCTsOJXzehPnv//cZgQrWnppRIcAceU3D+tuVoiHckSfaWiQhBWBu4SUibJ40v2Go0LDJTqD3vMzviBKK88nRuyhDhYfE+sZ5fyR1gqMf7Ub+eh1icUVpkOH9oXwLzD3QOEz8DhmoJUtKjeaDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nbIckPkp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1755166430; c=relaxed/simple;
+	bh=WvslSImvBRVIN9npZ+rLYR2kEKQBnxvpUzJZAvcwdxs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aW85MofCaHGVuBSMeBNTiowliCO2cyB/oublTW5SeQocPMHhdHahwtscybVkdDGN59AaQ0fxIgG82TdnWe9aS9Ofvhk/6BothFGtv1+o0Fw1sUNwRmLxEHxqDhUjPFR9wN7BwoERpETtW22JsRsUuauh141RwsSCGe5e6y5OpvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GbJfmdOg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nbIckPkp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 599B6C4CEEF;
-	Thu, 14 Aug 2025 08:43:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GbJfmdOg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15191C4CEED;
+	Thu, 14 Aug 2025 10:13:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755161047;
-	bh=CTmqLMuj0bCvkwKZAg1Un//8JJ/uJlUZHANgFIqPtcA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nbIckPkpIEKyJ2nMayYZEQWySgIgwvq+Q87fMBsC5439jXwx7UjxtP6/3aRizI0iv
-	 ijsnrrrpc8/3O6G/xs9aYaXyUBJeY0IX4fqyj3/x/rGOzs3QvqOtEfqO4IsrCj1EJJ
-	 vVTmwcSsXtJ+0YCx16H+VWsKJOqsPoCy1fgAXOLlGkTP8ir2BQUm7OaO8V1W2MBlEh
-	 imVNM6O/c1ae9lGeBjLpZoDfgKf1bT+2dj2T7y2GbzlYFwT1eLdqkINwalGzjVIgUn
-	 KmVdVPjlyrTerI/WOq7DBLaaWbpmX/v+w8GbjVLyRf5VAICnpi3ce09BCy/VxWeJ9r
-	 2nFsXdboCSbeg==
-Date: Thu, 14 Aug 2025 11:43:42 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	"David S . Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Kees Cook <kees@kernel.org>, David Hildenbrand <david@redhat.com>,
-	Zi Yan <ziy@nvidia.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
-	Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
-	Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
-	Xu Xin <xu.xin16@zte.com.cn>,
-	Chengming Zhou <chengming.zhou@linux.dev>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
-	David Rientjes <rientjes@google.com>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Oleg Nesterov <oleg@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
-	Peter Xu <peterx@redhat.com>, Jann Horn <jannh@google.com>,
-	Pedro Falcato <pfalcato@suse.de>,
-	Matthew Wilcox <willy@infradead.org>,
-	Mateusz Guzik <mjguzik@gmail.com>, linux-s390@vger.kernel.org,
-	linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+	s=k20201202; t=1755166429;
+	bh=WvslSImvBRVIN9npZ+rLYR2kEKQBnxvpUzJZAvcwdxs=;
+	h=From:To:Cc:Subject:Date:From;
+	b=GbJfmdOggEzm8njF3Ipzk+wplt5NpDFzWhDA8mQ22Appp4nEs/hEpcVVQQVZajRLT
+	 O88nGQEEP2f1y6g2DJ7AUnqg/jSHQfu6+8ooocHr11sduLrzG6pTywne0g+/M1EJAl
+	 02AnRdTbqcBbrPm3eJlvH+DaHFAahHTWIQ+4WG+JESkwNk7gs0x7vG654nR9ortQ+C
+	 VUWu+YXBeLXmlENfAVjFuPe7B1/xCB0sT5de0HgVXmYkUrv0XTzn9PxsTCEZarm8vE
+	 c1/pPOXYYDc3IibUSAxgsv8+okkLIlwU60yNvt77zmNHT/ed7hVFRfvFLMl7PYBeoB
+	 iMmfPD5OzUqFg==
+From: Leon Romanovsky <leon@kernel.org>
+To: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: Jason Gunthorpe <jgg@nvidia.com>,
+	Abdiel Janulgue <abdiel.janulgue@gmail.com>,
+	Alexander Potapenko <glider@google.com>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Christoph Hellwig <hch@lst.de>,
+	Danilo Krummrich <dakr@kernel.org>,
+	iommu@lists.linux.dev,
+	Jason Wang <jasowang@redhat.com>,
+	Jens Axboe <axboe@kernel.dk>,
+	Joerg Roedel <joro@8bytes.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Juergen Gross <jgross@suse.com>,
+	kasan-dev@googlegroups.com,
+	Keith Busch <kbusch@kernel.org>,
+	linux-block@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-nvme@lists.infradead.org,
+	linuxppc-dev@lists.ozlabs.org,
 	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 10/10] mm: replace mm->flags with bitmap entirely and set
- to 64 bits
-Message-ID: <aJ2hvmqj-wREpqXH@kernel.org>
-References: <cover.1755012943.git.lorenzo.stoakes@oracle.com>
- <e1f6654e016d36c43959764b01355736c5cbcdf8.1755012943.git.lorenzo.stoakes@oracle.com>
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	rust-for-linux@vger.kernel.org,
+	Sagi Grimberg <sagi@grimberg.me>,
+	Stefano Stabellini <sstabellini@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	virtualization@lists.linux.dev,
+	Will Deacon <will@kernel.org>,
+	xen-devel@lists.xenproject.org
+Subject: [PATCH v2 00/16] dma-mapping: migrate to physical address-based API
+Date: Thu, 14 Aug 2025 13:13:18 +0300
+Message-ID: <cover.1755153054.git.leon@kernel.org>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e1f6654e016d36c43959764b01355736c5cbcdf8.1755012943.git.lorenzo.stoakes@oracle.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Aug 12, 2025 at 04:44:19PM +0100, Lorenzo Stoakes wrote:
-> Now we have updated all users of mm->flags to use the bitmap accessors,
-> repalce it with the bitmap version entirely.
-> 
-> We are then able to move to having 64 bits of mm->flags on both 32-bit and
-> 64-bit architectures.
-> 
-> We also update the VMA userland tests to ensure that everything remains
-> functional there.
-> 
-> No functional changes intended, other than there now being 64 bits of
-> available mm_struct flags.
-> 
-> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Changelog:
+v2:
+ * Used commit messages and cover letter from Jason
+ * Moved setting IOMMU_MMIO flag to dma_info_to_prot function
+ * Micro-optimized the code
+ * Rebased code on v6.17-rc1
+v1: https://lore.kernel.org/all/cover.1754292567.git.leon@kernel.org
+ * Added new DMA_ATTR_MMIO attribute to indicate
+   PCI_P2PDMA_MAP_THRU_HOST_BRIDGE path.
+ * Rewrote dma_map_* functions to use thus new attribute
+v0: https://lore.kernel.org/all/cover.1750854543.git.leon@kernel.org/
+------------------------------------------------------------------------
 
-Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+This series refactors the DMA mapping to use physical addresses
+as the primary interface instead of page+offset parameters. This
+change aligns the DMA API with the underlying hardware reality where
+DMA operations work with physical addresses, not page structures.
 
-> ---
->  include/linux/mm.h               | 12 ++++++------
->  include/linux/mm_types.h         | 14 +++++---------
->  include/linux/sched/coredump.h   |  2 +-
->  tools/testing/vma/vma_internal.h | 19 +++++++++++++++++--
->  4 files changed, 29 insertions(+), 18 deletions(-)
-> 
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index 34311ebe62cc..b61e2d4858cf 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -724,32 +724,32 @@ static inline void assert_fault_locked(struct vm_fault *vmf)
->  
->  static inline bool mm_flags_test(int flag, const struct mm_struct *mm)
->  {
-> -	return test_bit(flag, ACCESS_PRIVATE(&mm->_flags, __mm_flags));
-> +	return test_bit(flag, ACCESS_PRIVATE(&mm->flags, __mm_flags));
->  }
->  
->  static inline bool mm_flags_test_and_set(int flag, struct mm_struct *mm)
->  {
-> -	return test_and_set_bit(flag, ACCESS_PRIVATE(&mm->_flags, __mm_flags));
-> +	return test_and_set_bit(flag, ACCESS_PRIVATE(&mm->flags, __mm_flags));
->  }
->  
->  static inline bool mm_flags_test_and_clear(int flag, struct mm_struct *mm)
->  {
-> -	return test_and_clear_bit(flag, ACCESS_PRIVATE(&mm->_flags, __mm_flags));
-> +	return test_and_clear_bit(flag, ACCESS_PRIVATE(&mm->flags, __mm_flags));
->  }
->  
->  static inline void mm_flags_set(int flag, struct mm_struct *mm)
->  {
-> -	set_bit(flag, ACCESS_PRIVATE(&mm->_flags, __mm_flags));
-> +	set_bit(flag, ACCESS_PRIVATE(&mm->flags, __mm_flags));
->  }
->  
->  static inline void mm_flags_clear(int flag, struct mm_struct *mm)
->  {
-> -	clear_bit(flag, ACCESS_PRIVATE(&mm->_flags, __mm_flags));
-> +	clear_bit(flag, ACCESS_PRIVATE(&mm->flags, __mm_flags));
->  }
->  
->  static inline void mm_flags_clear_all(struct mm_struct *mm)
->  {
-> -	bitmap_zero(ACCESS_PRIVATE(&mm->_flags, __mm_flags), NUM_MM_FLAG_BITS);
-> +	bitmap_zero(ACCESS_PRIVATE(&mm->flags, __mm_flags), NUM_MM_FLAG_BITS);
->  }
->  
->  extern const struct vm_operations_struct vma_dummy_vm_ops;
-> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-> index 25577ab39094..47d2e4598acd 100644
-> --- a/include/linux/mm_types.h
-> +++ b/include/linux/mm_types.h
-> @@ -932,7 +932,7 @@ struct mm_cid {
->   * Opaque type representing current mm_struct flag state. Must be accessed via
->   * mm_flags_xxx() helper functions.
->   */
-> -#define NUM_MM_FLAG_BITS BITS_PER_LONG
-> +#define NUM_MM_FLAG_BITS (64)
->  typedef struct {
->  	__private DECLARE_BITMAP(__mm_flags, NUM_MM_FLAG_BITS);
->  } mm_flags_t;
-> @@ -1119,11 +1119,7 @@ struct mm_struct {
->  		/* Architecture-specific MM context */
->  		mm_context_t context;
->  
-> -		/* Temporary union while we convert users to mm_flags_t. */
-> -		union {
-> -			unsigned long flags; /* Must use atomic bitops to access */
-> -			mm_flags_t _flags;   /* Must use mm_flags_* helpers to access */
-> -		};
-> +		mm_flags_t flags; /* Must use mm_flags_* hlpers to access */
->  
->  #ifdef CONFIG_AIO
->  		spinlock_t			ioctx_lock;
-> @@ -1236,7 +1232,7 @@ struct mm_struct {
->  /* Read the first system word of mm flags, non-atomically. */
->  static inline unsigned long __mm_flags_get_word(struct mm_struct *mm)
->  {
-> -	unsigned long *bitmap = ACCESS_PRIVATE(&mm->_flags, __mm_flags);
-> +	unsigned long *bitmap = ACCESS_PRIVATE(&mm->flags, __mm_flags);
->  
->  	return bitmap_read(bitmap, 0, BITS_PER_LONG);
->  }
-> @@ -1245,7 +1241,7 @@ static inline unsigned long __mm_flags_get_word(struct mm_struct *mm)
->  static inline void __mm_flags_set_word(struct mm_struct *mm,
->  				       unsigned long value)
->  {
-> -	unsigned long *bitmap = ACCESS_PRIVATE(&mm->_flags, __mm_flags);
-> +	unsigned long *bitmap = ACCESS_PRIVATE(&mm->flags, __mm_flags);
->  
->  	bitmap_copy(bitmap, &value, BITS_PER_LONG);
->  }
-> @@ -1253,7 +1249,7 @@ static inline void __mm_flags_set_word(struct mm_struct *mm,
->  /* Obtain a read-only view of the bitmap. */
->  static inline const unsigned long *__mm_flags_get_bitmap(const struct mm_struct *mm)
->  {
-> -	return (const unsigned long *)ACCESS_PRIVATE(&mm->_flags, __mm_flags);
-> +	return (const unsigned long *)ACCESS_PRIVATE(&mm->flags, __mm_flags);
->  }
->  
->  #define MM_MT_FLAGS	(MT_FLAGS_ALLOC_RANGE | MT_FLAGS_LOCK_EXTERN | \
-> diff --git a/include/linux/sched/coredump.h b/include/linux/sched/coredump.h
-> index 19ecfcceb27a..079ae5a97480 100644
-> --- a/include/linux/sched/coredump.h
-> +++ b/include/linux/sched/coredump.h
-> @@ -20,7 +20,7 @@ static inline unsigned long __mm_flags_get_dumpable(struct mm_struct *mm)
->  
->  static inline void __mm_flags_set_mask_dumpable(struct mm_struct *mm, int value)
->  {
-> -	unsigned long *bitmap = ACCESS_PRIVATE(&mm->_flags, __mm_flags);
-> +	unsigned long *bitmap = ACCESS_PRIVATE(&mm->flags, __mm_flags);
->  
->  	set_mask_bits(bitmap, MMF_DUMPABLE_MASK, value);
->  }
-> diff --git a/tools/testing/vma/vma_internal.h b/tools/testing/vma/vma_internal.h
-> index cb1c2a8afe26..f13354bf0a1e 100644
-> --- a/tools/testing/vma/vma_internal.h
-> +++ b/tools/testing/vma/vma_internal.h
-> @@ -249,6 +249,14 @@ struct mutex {};
->  #define DEFINE_MUTEX(mutexname) \
->  	struct mutex mutexname = {}
->  
-> +#define DECLARE_BITMAP(name, bits) \
-> +	unsigned long name[BITS_TO_LONGS(bits)]
-> +
-> +#define NUM_MM_FLAG_BITS (64)
-> +typedef struct {
-> +	__private DECLARE_BITMAP(__mm_flags, NUM_MM_FLAG_BITS);
-> +} mm_flags_t;
-> +
->  struct mm_struct {
->  	struct maple_tree mm_mt;
->  	int map_count;			/* number of VMAs */
-> @@ -260,7 +268,7 @@ struct mm_struct {
->  
->  	unsigned long def_flags;
->  
-> -	unsigned long flags; /* Must use atomic bitops to access */
-> +	mm_flags_t flags; /* Must use mm_flags_* helpers to access */
->  };
->  
->  struct vm_area_struct;
-> @@ -1333,6 +1341,13 @@ static inline void userfaultfd_unmap_complete(struct mm_struct *mm,
->  {
->  }
->  
-> +# define ACCESS_PRIVATE(p, member) ((p)->member)
-> +
-> +static inline bool mm_flags_test(int flag, const struct mm_struct *mm)
-> +{
-> +	return test_bit(flag, ACCESS_PRIVATE(&mm->flags, __mm_flags));
-> +}
-> +
->  /*
->   * Denies creating a writable executable mapping or gaining executable permissions.
->   *
-> @@ -1363,7 +1378,7 @@ static inline void userfaultfd_unmap_complete(struct mm_struct *mm,
->  static inline bool map_deny_write_exec(unsigned long old, unsigned long new)
->  {
->  	/* If MDWE is disabled, we have nothing to deny. */
-> -	if (!test_bit(MMF_HAS_MDWE, &current->mm->flags))
-> +	if (mm_flags_test(MMF_HAS_MDWE, current->mm))
->  		return false;
->  
->  	/* If the new VMA is not executable, we have nothing to deny. */
-> -- 
-> 2.50.1
-> 
+The series maintains export symbol backward compatibility by keeping
+the old page-based API as wrapper functions around the new physical
+address-based implementations.
+
+This series refactors the DMA mapping API to provide a phys_addr_t
+based, and struct-page free, external API that can handle all the
+mapping cases we want in modern systems:
+
+ - struct page based cachable DRAM
+ - struct page MEMORY_DEVICE_PCI_P2PDMA PCI peer to peer non-cachable
+   MMIO
+ - struct page-less PCI peer to peer non-cachable MMIO
+ - struct page-less "resource" MMIO
+
+Overall this gets much closer to Matthew's long term wish for
+struct-pageless IO to cachable DRAM. The remaining primary work would
+be in the mm side to allow kmap_local_pfn()/phys_to_virt() to work on
+phys_addr_t without a struct page.
+
+The general design is to remove struct page usage entirely from the
+DMA API inner layers. For flows that need to have a KVA for the
+physical address they can use kmap_local_pfn() or phys_to_virt(). This
+isolates the struct page requirements to MM code only. Long term all
+removals of struct page usage are supporting Matthew's memdesc
+project which seeks to substantially transform how struct page works.
+
+Instead make the DMA API internals work on phys_addr_t. Internally
+there are still dedicated 'page' and 'resource' flows, except they are
+now distinguished by a new DMA_ATTR_MMIO instead of by callchain. Both
+flows use the same phys_addr_t.
+
+When DMA_ATTR_MMIO is specified things work similar to the existing
+'resource' flow. kmap_local_pfn(), phys_to_virt(), phys_to_page(),
+pfn_valid(), etc are never called on the phys_addr_t. This requires
+rejecting any configuration that would need swiotlb. CPU cache
+flushing is not required, and avoided, as ATTR_MMIO also indicates the
+address have no cachable mappings. This effectively removes any
+DMA API side requirement to have struct page when DMA_ATTR_MMIO is
+used.
+
+In the !DMA_ATTR_MMIO mode things work similarly to the 'page' flow,
+except on the common path of no cache flush, no swiotlb it never
+touches a struct page. When cache flushing or swiotlb copying
+kmap_local_pfn()/phys_to_virt() are used to get a KVA for CPU
+usage. This was already the case on the unmap side, now the map side
+is symmetric.
+
+Callers are adjusted to set DMA_ATTR_MMIO. Existing 'resource' users
+must set it. The existing struct page based MEMORY_DEVICE_PCI_P2PDMA
+path must also set it. This corrects some existing bugs where iommu
+mappings for P2P MMIO were improperly marked IOMMU_CACHE.
+
+Since ATTR_MMIO is made to work with all the existing DMA map entry
+points, particularly dma_iova_link(), this finally allows a way to use
+the new DMA API to map PCI P2P MMIO without creating struct page. The
+VFIO DMABUF series demonstrates how this works. This is intended to
+replace the incorrect driver use of dma_map_resource() on PCI BAR
+addresses.
+
+This series does the core code and modern flows. A followup series
+will give the same treatment to the legacy dma_ops implementation.
+
+Thanks
+
+Leon Romanovsky (16):
+  dma-mapping: introduce new DMA attribute to indicate MMIO memory
+  iommu/dma: implement DMA_ATTR_MMIO for dma_iova_link().
+  dma-debug: refactor to use physical addresses for page mapping
+  dma-mapping: rename trace_dma_*map_page to trace_dma_*map_phys
+  iommu/dma: rename iommu_dma_*map_page to iommu_dma_*map_phys
+  iommu/dma: extend iommu_dma_*map_phys API to handle MMIO memory
+  dma-mapping: convert dma_direct_*map_page to be phys_addr_t based
+  kmsan: convert kmsan_handle_dma to use physical addresses
+  dma-mapping: handle MMIO flow in dma_map|unmap_page
+  xen: swiotlb: Open code map_resource callback
+  dma-mapping: export new dma_*map_phys() interface
+  mm/hmm: migrate to physical address-based DMA mapping API
+  mm/hmm: properly take MMIO path
+  block-dma: migrate to dma_map_phys instead of map_page
+  block-dma: properly take MMIO path
+  nvme-pci: unmap MMIO pages with appropriate interface
+
+ Documentation/core-api/dma-api.rst        |   4 +-
+ Documentation/core-api/dma-attributes.rst |  18 ++++
+ arch/powerpc/kernel/dma-iommu.c           |   4 +-
+ block/blk-mq-dma.c                        |  15 ++-
+ drivers/iommu/dma-iommu.c                 |  61 ++++++------
+ drivers/nvme/host/pci.c                   |  18 +++-
+ drivers/virtio/virtio_ring.c              |   4 +-
+ drivers/xen/swiotlb-xen.c                 |  21 +++-
+ include/linux/blk-mq-dma.h                |   6 +-
+ include/linux/blk_types.h                 |   2 +
+ include/linux/dma-direct.h                |   2 -
+ include/linux/dma-map-ops.h               |   8 +-
+ include/linux/dma-mapping.h               |  33 ++++++
+ include/linux/iommu-dma.h                 |  11 +-
+ include/linux/kmsan.h                     |  12 ++-
+ include/trace/events/dma.h                |   9 +-
+ kernel/dma/debug.c                        |  71 ++++---------
+ kernel/dma/debug.h                        |  37 ++-----
+ kernel/dma/direct.c                       |  22 +---
+ kernel/dma/direct.h                       |  52 ++++++----
+ kernel/dma/mapping.c                      | 116 +++++++++++++---------
+ kernel/dma/ops_helpers.c                  |   6 +-
+ mm/hmm.c                                  |  19 ++--
+ mm/kmsan/hooks.c                          |  36 +++++--
+ rust/kernel/dma.rs                        |   3 +
+ tools/virtio/linux/kmsan.h                |   2 +-
+ 26 files changed, 333 insertions(+), 259 deletions(-)
 
 -- 
-Sincerely yours,
-Mike.
+2.50.1
+
