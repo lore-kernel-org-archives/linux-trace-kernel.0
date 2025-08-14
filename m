@@ -1,180 +1,115 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4280F1F582A
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 14 Aug 2025 12:22:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DF221DE2A5;
+	Thu, 14 Aug 2025 12:35:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755174144; cv=none; b=e3UkRYtnqldu2qzyjHeARZpJ7k0BIHnXP+vB48JptVK5Jn6AtMdh7k49aqVrFc5IwuPSuK/f3qMXMABsfi8UQrxUnwpp7IAJy8d2/EMrOZA/NEiiDUxXDKZR8pgZl7J4QoyIJ2iC0mIFhF+6YBdL4doebgDOn79B028ezqz6WOQ=
+	t=1755174912; cv=none; b=bIT5Zc/kQ3NYWol5bPy/zl2FbXAOafSCrPtHbEQLl0V2U2ISBlP2gSjockzA5ZOXujj6/UuvkZbWNnGJtLLXrB2xi+WVnQ/zh69p/qiVS2lV0OasO0h6Z2JSmxgH+Zb8wepjuvM7I/1DFnc4GeQH7NBMcWPRKAYmS8ratnmf3u0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755174144; c=relaxed/simple;
-	bh=W4gf439JfbyV/7KdGp+M6ANXWSnSGAo8Pl1nandkIlw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FRpQCl68i8HXi+wgmFfXcKi0T4iz7rft5E73OkLOSSwtathXGkoRpHCepRtzZaKosUvFAnGVImh+yM6xkeB337COQh47T+x3lpI5YHwy/XOVFLowSyNCDkljBojZJ9NpUNYQ3+3HgyVqBjbPKlGnmyNzAmImTbxRzioGZNhtEKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QhDybWOe; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1755174912; c=relaxed/simple;
+	bh=5hXrpmcmtYiZJx4oU8qkI207P6Gx3hYundw5EKylrIQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DPdc7sHAGVD4TrJ2AMAQs8w+ZVFfeKiMAkPt0F0Q2+g+oLCATQPpfpK2j8cMiVkL7teBmg85fMm+qg1W/t1R0sb/Nzak8LER2tySdRJa7/fpPzMPOU7OMXgGSmwtr6rlnjXJDOyM+sgI6nzsP7XBJpawpIs6pbDFMAg53BnPVOU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N2g2BIJ8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QhDybWOe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1755174142;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Pt8/QjWB8CWN6SCfty+MuEXdLYmtGWrGQdCKz0oZNzo=;
-	b=QhDybWOe3YGFatLeaWpPKsXYpSod+5TvoW27Acbiczdl+mn6hGufDKjMiiPPryAoD7phw5
-	0p/s3tuc7tPemHZfzhjSUhS7CDyMlNuz/A/gYXF+tpB7eHgwxvVtnwKet1AnKbhnVI8+Sa
-	E4Cj4MlI6Qo27aoXrCduzfUxkqxRxXI=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-139-R2niOJslOFyaxL2WfdnhEQ-1; Thu,
- 14 Aug 2025 08:22:19 -0400
-X-MC-Unique: R2niOJslOFyaxL2WfdnhEQ-1
-X-Mimecast-MFC-AGG-ID: R2niOJslOFyaxL2WfdnhEQ_1755174134
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id AFBF21955EBE;
-	Thu, 14 Aug 2025 12:22:14 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.44.22.15])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1F3911800446;
-	Thu, 14 Aug 2025 12:22:11 +0000 (UTC)
-From: Gabriele Paoloni <gpaoloni@redhat.com>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: Gabriele Paoloni <gpaoloni@redhat.com>
-Subject: [PATCH v4] tracing: add testable specifications for event_enable_write/read
-Date: Thu, 14 Aug 2025 14:22:06 +0200
-Message-ID: <20250814122206.109096-1-gpaoloni@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N2g2BIJ8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3623FC4CEED;
+	Thu, 14 Aug 2025 12:35:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755174912;
+	bh=5hXrpmcmtYiZJx4oU8qkI207P6Gx3hYundw5EKylrIQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=N2g2BIJ8YPB3KdUqlIQ+3sf88XYTAU5YzXsxCIMkq+b9inEW2vgp9A4ivccGvjwfF
+	 AV/wNRHN7Rl4BZfB83b4YqKem1VH+FiuolX5SiQ0hmKku6kJ9fzYlnSHRYR/hZfo4A
+	 t7RgKyvSz54/20bp9OQxBJ3FdHTZ28zI3/O5nihwLrWH4XxMFsh7ImLJrid7kdNvXc
+	 dxHzSoTZ0eAkBFydpLdrAEROqaFVHC+xn4DDTCz/hN4fLyFBvzVlWYglA0CvtcModo
+	 8sk1zeTQvWBfTVENe6sc6PZjsbCDpigaPftEIsijKrs4a0DqSYC9HgT0MWUqY4ie5R
+	 dAHYa4zIponFg==
+Date: Thu, 14 Aug 2025 15:35:06 +0300
+From: Leon Romanovsky <leon@kernel.org>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
+	Abdiel Janulgue <abdiel.janulgue@gmail.com>,
+	Alexander Potapenko <glider@google.com>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Christoph Hellwig <hch@lst.de>, Danilo Krummrich <dakr@kernel.org>,
+	iommu@lists.linux.dev, Jason Wang <jasowang@redhat.com>,
+	Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
+	Jonathan Corbet <corbet@lwn.net>, Juergen Gross <jgross@suse.com>,
+	kasan-dev@googlegroups.com, Keith Busch <kbusch@kernel.org>,
+	linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	linux-nvme@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+	linux-trace-kernel@vger.kernel.org,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>, rust-for-linux@vger.kernel.org,
+	Sagi Grimberg <sagi@grimberg.me>,
+	Stefano Stabellini <sstabellini@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	virtualization@lists.linux.dev, Will Deacon <will@kernel.org>,
+	xen-devel@lists.xenproject.org
+Subject: Re: [PATCH v1 08/16] kmsan: convert kmsan_handle_dma to use physical
+ addresses
+Message-ID: <20250814123506.GD310013@unreal>
+References: <cover.1754292567.git.leon@kernel.org>
+ <5b40377b621e49ff4107fa10646c828ccc94e53e.1754292567.git.leon@kernel.org>
+ <20250807122115.GH184255@nvidia.com>
+ <20250813150718.GB310013@unreal>
+ <20250814121316.GC699432@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250814121316.GC699432@nvidia.com>
 
-This patch implements the documentation of event_enable_write and
-event_enable_read in the form of testable function's expectations.
+On Thu, Aug 14, 2025 at 09:13:16AM -0300, Jason Gunthorpe wrote:
+> On Wed, Aug 13, 2025 at 06:07:18PM +0300, Leon Romanovsky wrote:
+> > > >  /* Helper function to handle DMA data transfers. */
+> > > > -void kmsan_handle_dma(struct page *page, size_t offset, size_t size,
+> > > > +void kmsan_handle_dma(phys_addr_t phys, size_t size,
+> > > >  		      enum dma_data_direction dir)
+> > > >  {
+> > > >  	u64 page_offset, to_go, addr;
+> > > > +	struct page *page;
+> > > > +	void *kaddr;
+> > > >  
+> > > > -	if (PageHighMem(page))
+> > > > +	if (!pfn_valid(PHYS_PFN(phys)))
+> > > >  		return;
+> > > 
+> > > Not needed, the caller must pass in a phys that is kmap
+> > > compatible. Maybe just leave a comment. FWIW today this is also not
+> > > checking for P2P or DEVICE non-kmap struct pages either, so it should
+> > > be fine without checks.
+> > 
+> > It is not true as we will call to kmsan_handle_dma() unconditionally in
+> > dma_map_phys(). The reason to it is that kmsan_handle_dma() is guarded
+> > with debug kconfig options and cost of pfn_valid() can be accommodated
+> > in that case. It gives more clean DMA code.
+> 
+> Then check attrs here, not pfn_valid.
 
-Signed-off-by: Gabriele Paoloni <gpaoloni@redhat.com>
----
-Changes from v1:
-- Added "Context:" information and "Assumptions of use"
+attrs are not available in kmsan_handle_dma(). I can add it if you prefer.
 
-Changes from v2 and v3:
-- Addressed comments from: https://lore.kernel.org/linux-trace-kernel/CA+wEVJbjhLmA4ZR5w7s6QDCfjET=Pf2J9PsFhC2wdO1nQ5YY+A@mail.gmail.com/T/#ma46663274411b08c14f380a69363dc6225b09a45
----
- kernel/trace/trace_events.c | 84 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 84 insertions(+)
+> 
+> > So let's keep this patch as is.
+> 
+> Still need to fix the remarks you clipped, do not check PageHighMem
+> just call kmap_local_pfn(). All thie PageHighMem stuff is new to this
+> patch and should not be here, it is the wrong way to use highmem.
 
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 9f3e9537417d..af89eaed6a43 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -1772,6 +1772,49 @@ static void p_stop(struct seq_file *m, void *p)
- 	mutex_unlock(&event_mutex);
- }
- 
-+/**
-+ * event_enable_read - read from a trace event file to retrieve its status.
-+ * @filp: file pointer associated with the target trace event.
-+ * @ubuf: user space buffer where the event status is copied to.
-+ * @cnt: number of bytes to be copied to the user space buffer.
-+ * @ppos: the current position in the buffer.
-+ *
-+ * This is a way for user space executables to retrieve the status of a
-+ * specific event
-+ *
-+ * Function's expectations:
-+ * - The global event_mutex shall be taken before performing any operation
-+ *   on the target event;
-+ *
-+ * - The string copied to user space shall be formatted according to the
-+ *   status flags from the target event file:
-+ *   - If the enable flag is set AND the soft_disable flag is not set then
-+ *     the first character shall be set to "1" ELSE it shall be set to "0";
-+ *
-+ *   - If either the soft_disable flag or the soft_mode flag is set then the
-+ *     second character shall be set to "*" ELSE it is skipped;
-+ *
-+ *   - The string shall be terminated by a newline ("\n") and any remaining
-+ *     character shall be set to "0";
-+ *
-+ * - This function shall invoke simple_read_from_buffer() to perform the copy
-+ *   of the kernel space string to ubuf.
-+ *
-+ * Assumptions of Use:
-+ * - The caller shall pass cnt equal or greater than the length of the string
-+ *   to be copied to user space;
-+ *
-+ * - Any read operation on a file descriptor, unless it is the first operation
-+ *   following a trace event file open, shall be preceded by an lseek
-+ *   invocation to reposition the file offset to zero.
-+ *
-+ * Context: process context, locks and unlocks event_mutex.
-+ *
-+ * Return:
-+ * * the number of copied bytes on success
-+ * * %-ENODEV - the event file cannot be retrieved from the input filp
-+ * * any error returned by simple_read_from_buffer
-+ */
- static ssize_t
- event_enable_read(struct file *filp, char __user *ubuf, size_t cnt,
- 		  loff_t *ppos)
-@@ -1801,6 +1844,47 @@ event_enable_read(struct file *filp, char __user *ubuf, size_t cnt,
- 	return simple_read_from_buffer(ubuf, cnt, ppos, buf, strlen(buf));
- }
- 
-+/**
-+ * event_enable_write - write to a trace event file to enable/disable it.
-+ * @filp: file pointer associated with the target trace event.
-+ * @ubuf: user space buffer where the enable/disable value is copied from.
-+ * @cnt: number of bytes to be copied from the user space buffer.
-+ * @ppos: the current position in the buffer.
-+ *
-+ * This is a way for user space executables to enable or disable event
-+ * recording.
-+ *
-+ * Function's expectations:
-+ * - This function shall copy cnt bytes from the input ubuf buffer to a kernel
-+ *   space buffer and shall convert the string within the kernel space buffer
-+ *   into a decimal base format number;
-+ *
-+ * - The global event_mutex shall be taken before performing any operation
-+ *   on the target event;
-+ *
-+ * - This function shall check the size of the per-cpu ring-buffers used for
-+ *   the event trace data and, if smaller than TRACE_BUF_SIZE_DEFAULT, expand
-+ *   them to TRACE_BUF_SIZE_DEFAULT bytes (sizes larger than
-+ *   TRACE_BUF_SIZE_DEFAULT are not allowed);
-+ *
-+ * - This function shall invoke ftrace_event_enable_disable to enable or
-+ *   disable the target trace event according to the value read from user space
-+ *   (0 - disable, 1 - enable);
-+ *
-+ * - This function shall increase the file position pointed by ppos by the
-+ *   number of bytes specified by cnt.
-+ *
-+ * Context: process context, locks and unlocks event_mutex.
-+ *
-+ * Return:
-+ * * the number of written bytes on success
-+ * * any error returned by kstrtoul_from_user
-+ * * %-ENODEV - the event file cannot be retrieved from the input filp
-+ * * any error returned by tracing_update_buffers
-+ * * any error returned by ftrace_event_enable_disable
-+ * * %-EINVAL - the value copied from the user space ubuf is different
-+ * from 0 or 1
-+ */
- static ssize_t
- event_enable_write(struct file *filp, const char __user *ubuf, size_t cnt,
- 		   loff_t *ppos)
--- 
-2.48.1
+Sure, thanks
 
+> 
+> Jason
+> 
