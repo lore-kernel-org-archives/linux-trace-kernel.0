@@ -1,62 +1,63 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDCA421930B
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 14 Aug 2025 15:09:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FFE9246BD9
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 14 Aug 2025 15:09:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755184178; cv=none; b=qP3glGAgBMuJWkGAZgW1Ev14ltfUBAZt0r67wvl+wxaibo9Q8GmHHovYTayyekDr/mXkqR3XHg145j21t3XBaCVwuR2UUrULq24vGVFkJ/vALID7yZkdRDqYkEDphaLB3t4H1VDuCO3bIbPingvClMfdUVuv00q+3UKDd9vq8tM=
+	t=1755184186; cv=none; b=pj7joQOybn/9mx5NEUO8ta5RQ/2sCgfB+Ie6iAwtSXJReezOlDl52F1SH8UKzPiQQy1MDDxn4FBuX0u6bWA+TfRIT9KUIxTLck/3OOWUBkzqLV8f260C96H4qL0m5d8YkzcTj1U7PzEhK0NNjb2z1RfrwppiYSSFW+DwnYEVNdg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755184178; c=relaxed/simple;
-	bh=Ytt+GwLOQF6lNbGpxKq6MbUNEhgVYH/43PlqhE/y+4g=;
+	s=arc-20240116; t=1755184186; c=relaxed/simple;
+	bh=DaTo0a2SgdMK7730P2eup1Sohj6ne4zuS74GlH6CKyY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SnuEDcbE6nQN2sRzgjOzb5clxJTvcIz7Co07s1yOMh2MxUUCpHwaEDK3K8VwX2aghUOxlsds04tF1Y2bWSDMABmemuqkwTHurIuiVtMUX2FUP14L4KDFfrsca2XWZVU3QA2YGGrQhfE/NhV8lIEFfJP/PEkESTihRH+f5aIjk/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fR85xbJG; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=s3WYejsMdTH72/4J8wIC6wZs3UAartoOoE1WkqD9jLn/BCEG2ocABSRSTueZxo1R3f0T/NNgSguhi6xSH2wMz9A1QHoOV8hSKRmfxRXZbqdC4mgCgaRWwq1qI62BWRe6vNgtkMUXm21icb+snzosDxg4z5vUWYlebhClMfPie90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Cxeyq2Xv; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fR85xbJG"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Cxeyq2Xv"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1755184175;
+	s=mimecast20190719; t=1755184183;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=1mohDuCl0ZZagmBOAuDUIch+Z9jd935gCNczHyneeaQ=;
-	b=fR85xbJGT1DshIMKP37y0QAARjeAfRHC7c2L31KtNhTqcKyMnxftbMgIK347sAMhg06vSy
-	Zy3BPXWlw0Ph23xRYY2A+0PaUunPwaDw/jNjcM5mL0CR/GifU73uzKSklJRnBx68Tgg3ii
-	l6zuzhh5a4ESaidwAtqAsHrczmdaVT8=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	bh=DOMfw4EB+v4yoeooSIDCyC+G3wgkvmCh/SxX2hLFtDw=;
+	b=Cxeyq2XvyCxXrcYduIy7rKpdMGM/GlqxVnJvz1NbmJRz5Edc6R/Kh1aQ870k08auspemL7
+	v10rSVdfSgw1RGq6FyoXAyoIwvDC7RzO2MRkxZfpYmm4GTaPQYeRBXgxhODihykicIzBmt
+	9Ouafhzm2FyZEhzuO2Mif1ND6OwzhKc=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-641-BwlvoRA1PQ6zYf1TEnSfnQ-1; Thu,
- 14 Aug 2025 11:09:31 -0400
-X-MC-Unique: BwlvoRA1PQ6zYf1TEnSfnQ-1
-X-Mimecast-MFC-AGG-ID: BwlvoRA1PQ6zYf1TEnSfnQ_1755184170
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-79-dJF9Av4ZMHSQ2QkpNKgSlQ-1; Thu,
+ 14 Aug 2025 11:09:40 -0400
+X-MC-Unique: dJF9Av4ZMHSQ2QkpNKgSlQ-1
+X-Mimecast-MFC-AGG-ID: dJF9Av4ZMHSQ2QkpNKgSlQ_1755184178
 Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A12FD1800292;
-	Thu, 14 Aug 2025 15:09:30 +0000 (UTC)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6D78B19775A5;
+	Thu, 14 Aug 2025 15:09:38 +0000 (UTC)
 Received: from gmonaco-thinkpadt14gen3.rmtit.com (unknown [10.44.32.52])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 024D1180047F;
-	Thu, 14 Aug 2025 15:09:24 +0000 (UTC)
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id D9D8D1800295;
+	Thu, 14 Aug 2025 15:09:32 +0000 (UTC)
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: linux-kernel@vger.kernel.org,
-	Steven Rostedt <rostedt@goodmis.org>,
 	Jonathan Corbet <corbet@lwn.net>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-doc@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
 Cc: Gabriele Monaco <gmonaco@redhat.com>,
 	Nam Cao <namcao@linutronix.de>,
 	Tomas Glozar <tglozar@redhat.com>,
 	Juri Lelli <jlelli@redhat.com>,
 	Clark Williams <williams@redhat.com>,
 	John Kacur <jkacur@redhat.com>
-Subject: [RFC PATCH 11/17] Documentation/rv: Add documentation about hybrid automata
-Date: Thu, 14 Aug 2025 17:08:03 +0200
-Message-ID: <20250814150809.140739-12-gmonaco@redhat.com>
+Subject: [RFC PATCH 12/17] rv: Add sample hybrid monitors stall
+Date: Thu, 14 Aug 2025 17:08:04 +0200
+Message-ID: <20250814150809.140739-13-gmonaco@redhat.com>
 In-Reply-To: <20250814150809.140739-1-gmonaco@redhat.com>
 References: <20250814150809.140739-1-gmonaco@redhat.com>
 Precedence: bulk
@@ -68,463 +69,424 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-Describe theory and implementation of hybrid automata in the dedicated
-page hybrid_automata.rst
-Include a section on how to integrate a hybrid automaton in
-monitor_synthesis.rst
-Also remove a hanging $ in deterministic_automata.rst
+Add a sample monitor to showcase hybrid/timed automata.
+The stall monitor identifies tasks stalled for longer than a threshold
+and reacts when that happens.
 
 Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 ---
- .../trace/rv/deterministic_automata.rst       |   2 +-
- Documentation/trace/rv/hybrid_automata.rst    | 307 ++++++++++++++++++
- Documentation/trace/rv/index.rst              |   1 +
- Documentation/trace/rv/monitor_synthesis.rst  |  86 +++++
- 4 files changed, 395 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/trace/rv/hybrid_automata.rst
+ Documentation/tools/rv/rv-mon-stall.rst      |  44 +++++++
+ Documentation/trace/rv/monitor_stall.rst     |  43 +++++++
+ kernel/trace/rv/Kconfig                      |   1 +
+ kernel/trace/rv/Makefile                     |   1 +
+ kernel/trace/rv/monitors/stall/Kconfig       |   9 ++
+ kernel/trace/rv/monitors/stall/stall.c       | 116 +++++++++++++++++++
+ kernel/trace/rv/monitors/stall/stall.h       |  64 ++++++++++
+ kernel/trace/rv/monitors/stall/stall_trace.h |  19 +++
+ kernel/trace/rv/rv_trace.h                   |   1 +
+ tools/verification/models/stall.dot          |  20 ++++
+ 10 files changed, 318 insertions(+)
+ create mode 100644 Documentation/tools/rv/rv-mon-stall.rst
+ create mode 100644 Documentation/trace/rv/monitor_stall.rst
+ create mode 100644 kernel/trace/rv/monitors/stall/Kconfig
+ create mode 100644 kernel/trace/rv/monitors/stall/stall.c
+ create mode 100644 kernel/trace/rv/monitors/stall/stall.h
+ create mode 100644 kernel/trace/rv/monitors/stall/stall_trace.h
+ create mode 100644 tools/verification/models/stall.dot
 
-diff --git a/Documentation/trace/rv/deterministic_automata.rst b/Documentation/trace/rv/deterministic_automata.rst
-index d0638f95a455..7a1c2b20ec72 100644
---- a/Documentation/trace/rv/deterministic_automata.rst
-+++ b/Documentation/trace/rv/deterministic_automata.rst
-@@ -11,7 +11,7 @@ where:
- - *E* is the finite set of events;
- - x\ :subscript:`0` is the initial state;
- - X\ :subscript:`m` (subset of *X*) is the set of marked (or final) states.
--- *f* : *X* x *E* -> *X* $ is the transition function. It defines the state
-+- *f* : *X* x *E* -> *X* is the transition function. It defines the state
-   transition in the occurrence of an event from *E* in the state *X*. In the
-   special case of deterministic automata, the occurrence of the event in *E*
-   in a state in *X* has a deterministic next state from *X*.
-diff --git a/Documentation/trace/rv/hybrid_automata.rst b/Documentation/trace/rv/hybrid_automata.rst
+diff --git a/Documentation/tools/rv/rv-mon-stall.rst b/Documentation/tools/rv/rv-mon-stall.rst
 new file mode 100644
-index 000000000000..ecfff26d65bd
+index 000000000000..c79d7c2e4dd4
 --- /dev/null
-+++ b/Documentation/trace/rv/hybrid_automata.rst
-@@ -0,0 +1,307 @@
-+Hybrid Automata
-+===============
++++ b/Documentation/tools/rv/rv-mon-stall.rst
+@@ -0,0 +1,44 @@
++.. SPDX-License-Identifier: GPL-2.0
 +
-+Hybrid automata are an extension of deterministic automata, there are several
-+definitions of hybrid automata in the literature. The adaptation implemented
-+here is formally denoted by G and defined as a 7-tuple:
++============
++rv-mon-stall
++============
++--------------------
++Stalled task monitor
++--------------------
 +
-+        *G* = { *X*, *E*, *V*, *f*, x\ :subscript:`0`, X\ :subscript:`m`, *i* }
++:Manual section: 1
 +
-+- *X* is the set of states;
-+- *E* is the finite set of events;
-+- *V* is the finite set of environment variables;
-+- x\ :subscript:`0` is the initial state;
-+- X\ :subscript:`m` (subset of *X*) is the set of marked (or final) states.
-+- *f* : *X* x *E* x *C(V)* -> *X* is the transition function.
-+  It defines the state transition in the occurrence of an event from *E* in the
-+  state *X*. Unlike deterministic automata, the transition function also
-+  includes guards from the set of all possible constraints (defined as *C(V)*).
-+  Guards can be true or false with the valuation of *V* when the event occurs,
-+  and the transition is possible only when constraints are true. Similarly to
-+  deterministic automata, the occurrence of the event in *E* in a state in *X*
-+  has a deterministic next state from *X*, if the guard is true.
-+- *i* : *X* -> *C(V)* is the invariant assignment function, this is a
-+  constraint assigned to each state in *X*, every state in *X* must be left
-+  before the invariant turns to false. We can omit the representation of
-+  invariants whose value is true regardless of the valuation of *V*.
++SYNOPSIS
++========
 +
-+The set of all possible constraints *C(V)* is defined according to the
-+following grammar:
++**rv mon stall** [*OPTIONS*]
 +
-+        g = v < c | v > c | v <= c | v >= c | v == c | v != c | g && g | true
++DESCRIPTION
++===========
 +
-+With v a variable in *V* and c a numerical value.
++The stalled task (**stall**) monitor is a sample per-task timed monitor that
++checks if tasks are scheduled within a defined threshold after they are ready.
 +
-+We define the special case of hybrid automata whose variables grow with uniform
-+rates as timed automata. In this case, the variables are called clocks.
-+As the name implies, timed automata can be used to describe real time.
-+Additionally, clocks support another type of guard which always evaluates to true:
++See kernel documentation for further information about this monitor:
++<https://docs.kernel.org/trace/rv/monitor_stall.html>
 +
-+        reset(v)
++OPTIONS
++=======
 +
-+The reset constraint is used to set the value of a clock to 0.
++.. include:: common_ikm.rst
 +
-+It is important to note that any valid hybrid automaton is a valid
-+deterministic automaton with additional guards and invariants. Those can only
-+further constrain what transitions are valid but it is not possible to define
-+transition functions starting from the same state in *X* and the same event in
-+*E* but ending up in different states in *X* based on the valuation of *V*.
++SEE ALSO
++========
 +
-+Examples
-+--------
++**rv**\(1), **rv-mon**\(1)
 +
-+The 'wip' (wakeup in preemptive) example introduced as a deterministic automaton
-+can also be described as:
++Linux kernel *RV* documentation:
++<https://www.kernel.org/doc/html/latest/trace/rv/index.html>
 +
-+- *X* = { ``any_thread_running`` }
-+- *E* = { ``sched_waking`` }
-+- *V* = { ``preemptive`` }
-+- x\ :subscript:`0` = ``any_thread_running``
-+- X\ :subscript:`m` = {``any_thread_running``}
-+- *f* =
-+   - *f*\ (``any_thread_running``, ``sched_waking``, ``preemptive==0``) = ``any_thread_running``
-+- *i* =
-+   - *i*\ (``any_thread_running``) = ``true``
++AUTHOR
++======
 +
-+Which can be represented graphically as::
++Written by Gabriele Monaco <gmonaco@redhat.com>
 +
-+     |
-+     |
-+     v
-+   #====================#   sched_waking;preemptive==0
-+   H                    H ------------------------------+
-+   H any_thread_running H                               |
-+   H                    H <-----------------------------+
-+   #====================#
++.. include:: common_appendix.rst
+diff --git a/Documentation/trace/rv/monitor_stall.rst b/Documentation/trace/rv/monitor_stall.rst
+new file mode 100644
+index 000000000000..e4d9b050a32f
+--- /dev/null
++++ b/Documentation/trace/rv/monitor_stall.rst
+@@ -0,0 +1,43 @@
++Monitor stall
++=============
 +
-+In this example, by using the preemptive state of the system as an environment
-+variable, we can assert this constraint on ``sched_waking`` without requiring
-+preemption events (as we would in a deterministic automaton), which can be
-+useful in case those events are not available or not reliable on the system.
++- Name: stall - wakeup in preemptive
++- Type: per-task hybrid automaton
++- Author: Gabriele Monaco <gmonaco@redhat.com>
 +
-+Since all the invariants in *i* are true, we can omit them from the representation.
++Description
++-----------
 +
-+As a sample timed automaton we can define 'stall' as:
++The stalled task (stall) monitor is a sample per-task timed monitor that checks
++if tasks are scheduled within a defined threshold after they are ready::
 +
-+- *X* = { ``dequeued``, ``enqueued``, ``running``}
-+- *E* = { ``enqueue``, ``dequeue``, ``switch_in``}
-+- *V* = { ``clk`` }
-+- x\ :subscript:`0` = ``dequeue``
-+- X\ :subscript:`m` = {``dequeue``}
-+- *f* =
-+   - *f*\ (``enqueued``, ``switch_in``, ``clk < threshold``) = ``running``
-+   - *f*\ (``running``, ``dequeue``) = ``dequeued``
-+   - *f*\ (``dequeued``, ``enqueue``, ``reset(clk)``) = ``enqueued``
-+- *i* = *omitted as all true*
++                        |
++                        |
++                        v
++                      #==================================#
++                      H             dequeued             H <+
++                      #==================================#  |
++                        |                                   |
++                        | sched_wakeup;reset(clk)           |
++                        v                                   |
++                      +----------------------------------+  |
++                      |             enqueued             |  |
++                      |     clk < threshold_jiffies      |  | sched_switch_wait
++                      +----------------------------------+  |
++                        |                                   |
++                        | sched_switch_in                   |
++    sched_switch_in     v                                   |
++    sched_wakeup      +----------------------------------+  |
++  +------------------ |                                  |  |
++  |                   |             running              |  |
++  +-----------------> |                                  | -+
++                      +----------------------------------+
 +
-+Graphically represented as::
 +
-+       |
-+       |
-+       v
-+     #============================#
-+     H          dequeued          H <+
-+     #============================#  |
-+       |                             |
-+       | enqueue; reset(clk)         |
-+       v                             |
-+     +----------------------------+  |
-+     |          enqueued          |  | dequeue
-+     +----------------------------+  |
-+       |                             |
-+       | switch_in; clk < threshold  |
-+       v                             |
-+     +----------------------------+  |
-+     |          running           | -+
-+     +----------------------------+
++The threshold can be configured as a parameter by either booting with the
++``stall.threshold_jiffies=<new value>`` argument or writing a new value to
++``/sys/module/stall/parameters/threshold_jiffies``.
 +
-+This model imposes that the time between when a task is enqueued (it becomes
-+runnable) and when the task gets to run must be lower than a certain threshold.
-+A failure in this model means that the task is starving.
-+One problem in using guards on the edges in this case is that the model will
-+not report a failure until the ``switch_in`` event occurs. This means that,
-+according to the model, it is valid for the task never to run.
-+As this is not exactly what is intended, we can change the model as:
++Specification
++-------------
++Grapviz Dot file in tools/verification/models/stall.dot
+diff --git a/kernel/trace/rv/Kconfig b/kernel/trace/rv/Kconfig
+index 4ad392dfc57f..720fbe4935f8 100644
+--- a/kernel/trace/rv/Kconfig
++++ b/kernel/trace/rv/Kconfig
+@@ -78,6 +78,7 @@ source "kernel/trace/rv/monitors/pagefault/Kconfig"
+ source "kernel/trace/rv/monitors/sleep/Kconfig"
+ # Add new rtapp monitors here
+ 
++source "kernel/trace/rv/monitors/stall/Kconfig"
+ # Add new monitors here
+ 
+ config RV_REACTORS
+diff --git a/kernel/trace/rv/Makefile b/kernel/trace/rv/Makefile
+index 750e4ad6fa0f..51c95e2d2da6 100644
+--- a/kernel/trace/rv/Makefile
++++ b/kernel/trace/rv/Makefile
+@@ -17,6 +17,7 @@ obj-$(CONFIG_RV_MON_STS) += monitors/sts/sts.o
+ obj-$(CONFIG_RV_MON_NRP) += monitors/nrp/nrp.o
+ obj-$(CONFIG_RV_MON_SSSW) += monitors/sssw/sssw.o
+ obj-$(CONFIG_RV_MON_OPID) += monitors/opid/opid.o
++obj-$(CONFIG_RV_MON_STALL) += monitors/stall/stall.o
+ # Add new monitors here
+ obj-$(CONFIG_RV_REACTORS) += rv_reactors.o
+ obj-$(CONFIG_RV_REACT_PRINTK) += reactor_printk.o
+diff --git a/kernel/trace/rv/monitors/stall/Kconfig b/kernel/trace/rv/monitors/stall/Kconfig
+new file mode 100644
+index 000000000000..b19ba970c8af
+--- /dev/null
++++ b/kernel/trace/rv/monitors/stall/Kconfig
+@@ -0,0 +1,9 @@
++# SPDX-License-Identifier: GPL-2.0-only
++#
++config RV_MON_STALL
++	depends on RV
++	# XXX: add dependencies if there
++	select HA_MON_EVENTS_ID
++	bool "stall monitor"
++	help
++	  auto-generated
+diff --git a/kernel/trace/rv/monitors/stall/stall.c b/kernel/trace/rv/monitors/stall/stall.c
+new file mode 100644
+index 000000000000..c98ad9838146
+--- /dev/null
++++ b/kernel/trace/rv/monitors/stall/stall.c
+@@ -0,0 +1,116 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <linux/ftrace.h>
++#include <linux/tracepoint.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/init.h>
++#include <linux/rv.h>
++#include <rv/instrumentation.h>
 +
-+- *X* = { ``dequeued``, ``enqueued``, ``running``}
-+- *E* = { ``enqueue``, ``dequeue``, ``switch_in``}
-+- *V* = { ``clk`` }
-+- x\ :subscript:`0` = ``dequeue``
-+- X\ :subscript:`m` = {``dequeue``}
-+- *f* =
-+   - *f*\ (``enqueued``, ``switch_in``) = ``running``
-+   - *f*\ (``running``, ``dequeue``) = ``dequeued``
-+   - *f*\ (``dequeued``, ``enqueue``, ``reset(clk)``) = ``enqueued``
-+- *i* =
-+   - *i*\ (``enqueued``) = ``clk < threshold``
++#define MODULE_NAME "stall"
 +
-+Graphically::
++#include <trace/events/sched.h>
++#include <rv_trace.h>
 +
-+    |
-+    |
-+    v
-+  #=========================#
-+  H        dequeued         H <+
-+  #=========================#  |
-+    |                          |
-+    | enqueue; reset(clk)      |
-+    v                          |
-+  +-------------------------+  |
-+  |        enqueued         |  |
-+  |    clk < threshold      |  | dequeue
-+  +-------------------------+  |
-+    |                          |
-+    | switch_in                |
-+    v                          |
-+  +-------------------------+  |
-+  |         running         | -+
-+  +-------------------------+
++#define RV_MON_TYPE RV_MON_PER_TASK
++#include "stall.h"
++#include <rv/ha_monitor.h>
 +
-+In this case, we moved the guard as an invariant to the ``enqueued`` state,
-+this means we not only forbid the occurrence of ``switch_in`` when ``clk`` is
-+past the threshold but also mark as invalid in case we are *still* in
-+``enqueued`` after the threshold. This model is effectively in an invalid state
-+as soon as a task is starving, rather than when the starving task finally runs.
++static u64 threshold_jiffies = 1000;
++module_param(threshold_jiffies, ullong, 0644);
 +
-+Hybrid Automaton in C
-+---------------------
++static u64 ha_get_env(struct ha_monitor *ha_mon, enum envs_stall env)
++{
++	if (env == clk_stall)
++		return ha_get_clk_jiffy(ha_mon, env);
++	return ENV_INVALID_VALUE;
++}
 +
-+The definition of hybrid automata in C is heavily based on the deterministic
-+automata one. Specifically, we add the set of environment variables and the
-+constraints (both guards on transitions and invariants on states) as follows::
++static void ha_reset_env(struct ha_monitor *ha_mon, enum envs_stall env)
++{
++	if (env == clk_stall)
++		ha_reset_clk_jiffy(ha_mon, env);
++}
 +
-+  /* enum representation of X (set of states) to be used as index */
-+  enum states {
-+	dequeued = 0,
-+	enqueued,
-+	running,
-+	state_max
-+  };
++static bool ha_verify_constraint(struct ha_monitor *ha_mon,
++				 enum states curr_state, enum events event,
++				 enum states next_state)
++{
++	bool res = true;
 +
-+  #define INVALID_STATE state_max
++	if (curr_state == dequeued_stall && event == sched_wakeup_stall)
++		ha_reset_env(ha_mon, clk_stall);
 +
-+  /* enum representation of E (set of events) to be used as index */
-+  enum events {
-+	dequeue = 0,
-+	enqueue,
-+	switch_in,
-+	event_max
-+  };
++	if (next_state == curr_state || !res)
++		return res;
++	if (next_state == enqueued_stall)
++		ha_start_timer_jiffy(ha_mon, clk_stall, threshold_jiffies);
++	else if (curr_state == enqueued_stall)
++		res = !ha_cancel_timer(ha_mon);
++	return res;
++}
 +
-+  /* enum representation of V (set of environment variables) to be used as index */
-+  enum envs {
-+	clk = 0,
-+	env_max,
-+	env_max_stored = env_max
-+  };
++static void handle_sched_switch(void *data, bool preempt,
++				struct task_struct *prev,
++				struct task_struct *next,
++				unsigned int prev_state)
++{
++	if (!preempt && prev_state != TASK_RUNNING)
++		da_handle_start_event(prev, sched_switch_wait_stall);
++	da_handle_event(next, sched_switch_in_stall);
++}
 +
-+  struct automaton {
-+	char *state_names[state_max];                  // X: the set of states
-+	char *event_names[event_max];                  // E: the finite set of events
-+	char *env_names[env_max];                      // V: the finite set of env vars
-+	unsigned char function[state_max][event_max];  // f: transition function
-+	unsigned char initial_state;                   // x_0: the initial state
-+	bool final_states[state_max];                  // X_m: the set of marked states
-+  };
++static void handle_sched_wakeup(void *data, struct task_struct *p)
++{
++	da_handle_event(p, sched_wakeup_stall);
++}
 +
-+  struct automaton aut = {
++static int enable_stall(void)
++{
++	int retval;
++
++	retval = da_monitor_init();
++	if (retval)
++		return retval;
++
++	rv_attach_trace_probe("stall", sched_switch, handle_sched_switch);
++	rv_attach_trace_probe("stall", sched_wakeup, handle_sched_wakeup);
++
++	return 0;
++}
++
++static void disable_stall(void)
++{
++	rv_stall.enabled = 0;
++
++	rv_detach_trace_probe("stall", sched_switch, handle_sched_switch);
++	rv_detach_trace_probe("stall", sched_wakeup, handle_sched_wakeup);
++
++	da_monitor_destroy();
++}
++
++static struct rv_monitor rv_stall = {
++	.name = "stall",
++	.description = "identify tasks stalled for longer than a threshold.",
++	.enable = enable_stall,
++	.disable = disable_stall,
++	.reset = da_monitor_reset_all,
++	.enabled = 0,
++};
++
++static int __init register_stall(void)
++{
++	return rv_register_monitor(&rv_stall, NULL);
++}
++
++static void __exit unregister_stall(void)
++{
++	rv_unregister_monitor(&rv_stall);
++}
++
++module_init(register_stall);
++module_exit(unregister_stall);
++
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("Gabriele Monaco <gmonaco@redhat.com>");
++MODULE_DESCRIPTION("stall: identify tasks stalled for longer than a threshold.");
+diff --git a/kernel/trace/rv/monitors/stall/stall.h b/kernel/trace/rv/monitors/stall/stall.h
+new file mode 100644
+index 000000000000..89b32c97c455
+--- /dev/null
++++ b/kernel/trace/rv/monitors/stall/stall.h
+@@ -0,0 +1,64 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Automatically generated C representation of stall automaton
++ * For further information about this format, see kernel documentation:
++ *   Documentation/trace/rv/deterministic_automata.rst
++ */
++
++#define MONITOR_NAME stall
++
++enum states_stall {
++	dequeued_stall = 0,
++	enqueued_stall,
++	running_stall,
++	state_max_stall
++};
++
++#define INVALID_STATE state_max_stall
++
++enum events_stall {
++	sched_switch_in_stall = 0,
++	sched_switch_wait_stall,
++	sched_wakeup_stall,
++	event_max_stall
++};
++
++enum envs_stall {
++	clk_stall = 0,
++	env_max_stall,
++	env_max_stored_stall = env_max_stall
++};
++
++_Static_assert(env_max_stored_stall <= MAX_HA_ENV_LEN, "Not enough slots");
++
++struct automaton_stall {
++	char *state_names[state_max_stall];
++	char *event_names[event_max_stall];
++	char *env_names[env_max_stall];
++	unsigned char function[state_max_stall][event_max_stall];
++	unsigned char initial_state;
++	bool final_states[state_max_stall];
++};
++
++static const struct automaton_stall automaton_stall = {
 +	.state_names = {
 +		"dequeued",
 +		"enqueued",
 +		"running"
 +	},
 +	.event_names = {
-+		"dequeue",
-+		"enqueue",
-+		"switch_in"
++		"sched_switch_in",
++		"sched_switch_wait",
++		"sched_wakeup"
 +	},
 +	.env_names = {
 +		"clk"
 +	},
 +	.function = {
-+		{ INVALID_STATE,      enqueued, INVALID_STATE },
-+		{ INVALID_STATE, INVALID_STATE,       running },
-+		{      dequeued, INVALID_STATE, INVALID_STATE },
++		{       INVALID_STATE,       INVALID_STATE,      enqueued_stall },
++		{       running_stall,       INVALID_STATE,       INVALID_STATE },
++		{       running_stall,      dequeued_stall,       running_stall },
 +	},
-+	.initial_state = dequeued,
++	.initial_state = dequeued_stall,
 +	.final_states = { 1, 0, 0 },
-+  };
++};
+diff --git a/kernel/trace/rv/monitors/stall/stall_trace.h b/kernel/trace/rv/monitors/stall/stall_trace.h
+new file mode 100644
+index 000000000000..6a7cc1b1d040
+--- /dev/null
++++ b/kernel/trace/rv/monitors/stall/stall_trace.h
+@@ -0,0 +1,19 @@
++/* SPDX-License-Identifier: GPL-2.0 */
 +
-+  static bool verify_constraint(enum states curr_state, enum events event,
-+				 enum states next_state)
-+  {
-+	bool res = true;
++/*
++ * Snippet to be included in rv_trace.h
++ */
 +
-+	/* Validate guards as part of f */
-+	if (curr_state == enqueued && event == sched_switch_in)
-+		res = get_env(clk) < threshold;
-+	else if (curr_state == dequeued && event == sched_wakeup)
-+		reset_env(clk);
++#ifdef CONFIG_RV_MON_STALL
++DEFINE_EVENT(event_da_monitor_id, event_stall,
++	     TP_PROTO(int id, char *state, char *event, char *next_state, bool final_state),
++	     TP_ARGS(id, state, event, next_state, final_state));
 +
-+	/* Validate invariants in i */
-+	if (next_state == curr_state)
-+		return res;
-+	if (next_state == enqueued && res)
-+		start_timer(clk, threshold);
-+	else
-+		cancel_timer();
-+	return res;
-+  }
++DEFINE_EVENT(error_da_monitor_id, error_stall,
++	     TP_PROTO(int id, char *state, char *event),
++	     TP_ARGS(id, state, event));
 +
-+The function ``verify_constraint``, here reported as simplified, checks guards,
-+performs resets and starts timers to validate invariants according to
-+specification.
-+Due to the complex nature of environment variables, the user needs to provide
-+functions to get and reset environment variables, although we provide some
-+helpers for common types (e.g. clocks with ns or jiffy granularity).
-+Invariants defined in this way only make sense as clock expirations (e.g. *clk
-+< threshold*).
-+
-+Graphviz .dot format
-+--------------------
-+
-+Also the Graphviz representation of hybrid automata is an extension of the
-+deterministic automata one. Specifically, guards can be provided in the event
-+name separated by ``;``::
-+
-+    "state_start" -> "state_dest" [ label = "sched_waking;preemptible==0;reset(clk)" ];
-+
-+Invariant can be specified in the state label (not the node name!) separated by ``\n``::
-+
-+    "enqueued" [label = "enqueued\nclk < threshold_jiffies"];
-+
-+Constraints can be specified as valid C comparisons and allow spaces, the first
-+element of the comparison must be the clock while the second is a numerical or
-+parametrised value. Guards allow comparisons to be combined with boolean
-+operations (``&&`` and ``||``), resets must be separated from other constraints.
-+
-+This is the full example of the last version of the 'stall' model in DOT::
-+
-+  digraph state_automaton {
-+      {node [shape = circle] "enqueued"};
-+      {node [shape = plaintext, style=invis, label=""] "__init_dequeued"};
-+      {node [shape = doublecircle] "dequeued"};
-+      {node [shape = circle] "running"};
-+      "__init_dequeued" -> "dequeued";
-+      "enqueued" [label = "enqueued\nclk < threshold_jiffies"];
-+      "running" [label = "running"];
-+      "dequeued" [label = "dequeued"];
-+      "enqueued" -> "running" [ label = "switch_in" ];
-+      "running" -> "dequeued" [ label = "dequeue" ];
-+      "dequeued" -> "enqueued" [ label = "enqueue;reset(clk)" ];
-+      { rank = min ;
-+          "__init_dequeued";
-+          "dequeued";
-+      }
-+  }
-+
-+References
-+----------
-+
-+One book covering model checking and timed automata is::
-+
-+  Christel Baier and Joost-Pieter Katoen: Principles of Model Checking, The MIT Press, 2008.
-+
-+Hybrid automata are described in detail in::
-+
-+  Thomas Henzinger: The theory of hybrid automata, Proceedings 11th Annual IEEE Symposium on Logic in Computer Science (1996): 278-292.
-diff --git a/Documentation/trace/rv/index.rst b/Documentation/trace/rv/index.rst
-index a2812ac5cfeb..ad298784bda2 100644
---- a/Documentation/trace/rv/index.rst
-+++ b/Documentation/trace/rv/index.rst
-@@ -9,6 +9,7 @@ Runtime Verification
-    runtime-verification.rst
-    deterministic_automata.rst
-    linear_temporal_logic.rst
-+   hybrid_automata.rst
-    monitor_synthesis.rst
-    da_monitor_instrumentation.rst
-    monitor_wip.rst
-diff --git a/Documentation/trace/rv/monitor_synthesis.rst b/Documentation/trace/rv/monitor_synthesis.rst
-index ce0c1a5104d4..fd886d842693 100644
---- a/Documentation/trace/rv/monitor_synthesis.rst
-+++ b/Documentation/trace/rv/monitor_synthesis.rst
-@@ -45,6 +45,7 @@ creating monitors. The header files are:
++DEFINE_EVENT(error_env_da_monitor_id, error_env_stall,
++	     TP_PROTO(int id, char *state, char *event, char *env),
++	     TP_ARGS(id, state, event, env));
++#endif /* CONFIG_RV_MON_STALL */
+diff --git a/kernel/trace/rv/rv_trace.h b/kernel/trace/rv/rv_trace.h
+index dbb0cbbe15ca..3d9a4c70f523 100644
+--- a/kernel/trace/rv/rv_trace.h
++++ b/kernel/trace/rv/rv_trace.h
+@@ -187,6 +187,7 @@ DECLARE_EVENT_CLASS(error_env_da_monitor_id,
+ 		__entry->env)
+ );
  
-   * rv/da_monitor.h for deterministic automaton monitor.
-   * rv/ltl_monitor.h for linear temporal logic monitor.
-+  * rv/ha_monitor.h for hybrid automaton monitor.
++#include <monitors/stall/stall_trace.h>
+ // Add new monitors based on CONFIG_HA_MON_EVENTS_ID here
  
- rvgen
- -----
-@@ -252,6 +253,91 @@ the task, the monitor may need some time to start validating tasks which have
- been running before the monitor is enabled. Therefore, it is recommended to
- start the tasks of interest after enabling the monitor.
- 
-+rv/ha_monitor.h
-++++++++++++++++
-+
-+The implementation of hybrid automaton monitors derives directly from the
-+deterministic automaton one. Despite using a different header
-+(``ha_monitor.h``) the functions to handle events are the same (e.g.
-+``da_handle_event``).
-+
-+Additionally, the `rvgen` tool populates skeletons for the
-+``ha_verify_constraint``, ``ha_get_env`` and ``ha_reset_env`` based on the
-+monitor specification in the monitor source file.
-+
-+Unless the monitor relies on complex constraints, ``ha_verify_constraint``
-+is typically ready as it is generated by `rvgen`:
-+
-+* standard constraints on edges are turned into the form::
-+
-+    res = ha_get_env(ha_mon, ENV) < VALUE;
-+
-+* reset constraints are turned into the form::
-+
-+    ha_reset_env(ha_mon, ENV);
-+
-+* constraints on the state are implemented using timers
-+
-+  - armed before entering the state
-+
-+  - cancelled while entering any other state
-+
-+  - untouched if the state does not change as a result of the event
-+
-+Constraint values can be specified in 3 forms:
-+
-+* literal value (with optional unit). E.g.::
-+
-+    preemptive == 0
-+    clk < 100ns
-+    threshold <= 10j
-+
-+* constant value (uppercase string). E.g.::
-+
-+    clk < MAX_NS
-+
-+* parameter (lowercase string). E.g.::
-+
-+    clk <= threshold_jiffies
-+
-+In all cases, `rvgen` will try to understand the type of the environment
-+variable from the name or unit. For instance, constants or parameters
-+terminating with `_NS` or `_jiffies` are intended as clocks with ns and jiffy
-+granularity, respectively. Literals with measure unit `j` are jiffies and if a
-+time unit is specified (`ns` to `s`), `rvgen` will convert the value to `ns`.
-+
-+Constants need to be defined by the user (but unlike the name, they don't
-+necessarily need to be defined as constants). Parameters get converted to
-+module parameters and the user needs to provide a default value.
-+
-+If `rvgen` determines that the variable is a clock, it provides the getter and
-+resetter based on the unit. Otherwise, the user needs to provide an appropriate
-+definition.
-+Typically non-clock environment variables are not reset. In such case only the
-+getter skeleton will be present in the file generated by `rvgen`.
-+For instance, the getter for preemptive can be filled as::
-+
-+  static u64 ha_get_env(struct ha_monitor *ha_mon, enum envs env)
-+  {
-+      if (env == preemptible)
-+          return preempt_count() == 0;
-+      return ENV_INVALID_VALUE;
-+  }
-+
-+The function is supplied the ``ha_mon`` parameter in case some storage is
-+required (as it is for clocks), but environment variables without reset do not
-+require a storage and can ignore that argument.
-+The number of environment variables requiring a storage is limited by
-+``MAX_HA_ENV_LEN``, however such limitation doesn't stand for other variables.
-+
-+Finally, constraints on states are only valid for clocks and only if the
-+constraint is of the form `clk < N`. This is because such constraints are
-+implemented with the expiration of a timer.
-+Typically the clock variables are reset just before arming the timer, but this
-+doesn't have to be the case and the available functions take care of it.
-+It is a responsibility of per-task monitors to make sure no timer is left
-+running when the task exits.
-+
- Final remarks
- -------------
- 
+ #endif
+diff --git a/tools/verification/models/stall.dot b/tools/verification/models/stall.dot
+new file mode 100644
+index 000000000000..98e3ae47e104
+--- /dev/null
++++ b/tools/verification/models/stall.dot
+@@ -0,0 +1,20 @@
++digraph state_automaton {
++	center = true;
++	size = "7,11";
++	{node [shape = circle] "enqueued"};
++	{node [shape = plaintext, style=invis, label=""] "__init_dequeued"};
++	{node [shape = doublecircle] "dequeued"};
++	{node [shape = circle] "running"};
++	"__init_dequeued" -> "dequeued";
++	"enqueued" [label = "enqueued\nclk < threshold_jiffies"];
++	"running" [label = "running"];
++	"dequeued" [label = "dequeued", color = green3];
++	"running" -> "running" [ label = "sched_switch_in\nsched_wakeup" ];
++	"enqueued" -> "running" [ label = "sched_switch_in" ];
++	"running" -> "dequeued" [ label = "sched_switch_wait" ];
++	"dequeued" -> "enqueued" [ label = "sched_wakeup;reset(clk)" ];
++	{ rank = min ;
++		"__init_dequeued";
++		"dequeued";
++	}
++}
 -- 
 2.50.1
 
