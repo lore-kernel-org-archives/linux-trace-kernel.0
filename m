@@ -1,113 +1,93 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33814130A73;
-	Fri, 15 Aug 2025 13:52:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FA4F302CCC;
+	Fri, 15 Aug 2025 13:52:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755265945; cv=none; b=GOD4fWaSWmJ1a5sxlI3CewSGobL0NJrrcwpDe5gdWuBX3AYNWyzpRPij37RW/LvWB0Ipa1cDMZvns5tuCxyAWzPrzUkqLLEhlPWr6l+IsO78kQTA2iDy5S+jja5jqoyZ8colF6tVRepJbakZw+vK+SoB/ib4+R0ouvfoRI9J6AM=
+	t=1755265975; cv=none; b=UBK5P2qdFbUTHty8421H2kFgPzZC5m99+hsmFd2mwNxNt+5evYV5qH8Bf/nhW31mthPdcbBNeHpNtfIlNuHoWjf9eB16PY+z8Qr1304+tC0JHoL31/uHvS9RvbuqgIkvHikE/uwEC6kG/9o5ISXhlr2L41TXbkNlMpjnqekuZos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755265945; c=relaxed/simple;
-	bh=TL347Pnkwac8e08soycFU/rXmtgcm1iOvDEtV+FnrxA=;
+	s=arc-20240116; t=1755265975; c=relaxed/simple;
+	bh=YyAwX9d0yrQxt1AtdEKMS1xfPyYGo9E0HQVrmo6HFio=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FaQIf+E6EIESP4Zfts10U6oFowiQhZdcCDCkokmSgfKhrY9kfNgEUnsSb36Lvr29M/TxeSFVEU0x1ij3RNFV3uf2S2HalpkFf75YaHcr+kIKxHm9Y0ZexY70gHNxaWV+rxQUFB6AeOLO1chOebiyp5z7SEVpNFrw8x3FVlDgWYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=L6hHQhSa; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=HZap3y4w+c8lM7HBMn7fjznP1B8hbg1sZuzNO2/JMK0xf/DCbPUqv6Kp85fQExXHCPi6/Dtwoq1Xnwp1gxkPgA0dY72z5nPrke2egGs6NuFfmXr5bccBlGJ6OjnQpATVR5Sr94B2GiGwdS3/IGBJ+o75uG1HUgAY98fzoRp7Pr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ay1VIO4M; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="L6hHQhSa"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=Tf5ybTKdHBXeTwP/4vkptiHrucyOqHtoLbiAjT6hisU=; b=L6hHQhSatRhc7IV0KCKv7CFqJo
-	S0k728rMRdKDYLvAMj62hOXjcR53NRUscmGLXFnYC6DYO8Pi4capx9m9nUaRVYA3Q8EYBcD7PRMhh
-	B4tclLN5Y4VXLYK2EDiZnkfW6bkTqxHI63YyRZRd2vS5IhGCsO/rexFP7JZMqRQkSf5lvk4dPSzXg
-	a2ddgy1OXBhh5diha2sxuJeTMHd453JnXqycEV60I/+QvlHXJW6U2M2ZhmLo0ZsAAujrC45zZrawx
-	yRWlrlD8QZpv9UcZ5PyaiVVJNga071/ceav+35vpRaHd99QbV+/Q5clb1M+dqitfN3wy0QTtsRAlT
-	+Np8N5MA==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1umuqr-0000000DVDO-0ZbQ;
-	Fri, 15 Aug 2025 13:52:13 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id D16DD300310; Fri, 15 Aug 2025 15:52:12 +0200 (CEST)
-Date: Fri, 15 Aug 2025 15:52:12 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Nam Cao <namcao@linutronix.de>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>
-Subject: Re: [PATCH v2 4/5] sched: Add task enqueue/dequeue trace points
-Message-ID: <20250815135212.GA1386988@noisy.programming.kicks-ass.net>
-References: <cover.1754466623.git.namcao@linutronix.de>
- <f87ce0cb979daa3e8221c496de16883ca53f3950.1754466623.git.namcao@linutronix.de>
- <20250815134016.GB3289052@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ay1VIO4M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78F1DC4CEEB;
+	Fri, 15 Aug 2025 13:52:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755265974;
+	bh=YyAwX9d0yrQxt1AtdEKMS1xfPyYGo9E0HQVrmo6HFio=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ay1VIO4MZKIssq2DXmkvb9Y5xzxbYbHSJCMx9Q+b7drYxS0RvJmoAhIX4KjmakUQD
+	 QzyQueMvVtMnt4CD8QUWt1ncIY7GzX+bMM6KNhI3V+tcPnmJvtFwLtp46R9R3gxiZF
+	 3xIe+KY2D47BPbZ50ZN0iAnaesGtehgttZhCq/iPJutrQcQvt9m83DGGPzu/OZTCrR
+	 DZlc3Alk6BOGyuxr0/JijZf3WjBiZfjGF0RPKBZUjw+TxNH0tUFogTt9YLewsZJ8ll
+	 kEZOkiaQqQTz6JEEKBs+xEe0l4CwHvOCfp+vLj4AXKkBdI/lKEVhCBfwoOR44gZC/E
+	 dRwzDtGpoOXqw==
+Date: Fri, 15 Aug 2025 15:52:38 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Gerald Schaefer <gerald.schaefer@linux.ibm.com>, 
+	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, 
+	"David S . Miller" <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	"H . Peter Anvin" <hpa@zytor.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Jan Kara <jack@suse.cz>, Kees Cook <kees@kernel.org>, 
+	David Hildenbrand <david@redhat.com>, Zi Yan <ziy@nvidia.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, "Liam R . Howlett" <Liam.Howlett@oracle.com>, 
+	Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, 
+	Barry Song <baohua@kernel.org>, Xu Xin <xu.xin16@zte.com.cn>, 
+	Chengming Zhou <chengming.zhou@linux.dev>, Vlastimil Babka <vbabka@suse.cz>, 
+	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+	Michal Hocko <mhocko@suse.com>, David Rientjes <rientjes@google.com>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
+	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
+	Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
+	Valentin Schneider <vschneid@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, Jann Horn <jannh@google.com>, 
+	Pedro Falcato <pfalcato@suse.de>, Matthew Wilcox <willy@infradead.org>, 
+	Mateusz Guzik <mjguzik@gmail.com>, linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	sparclinux@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 06/10] mm: update coredump logic to correctly use bitmap
+ mm flags
+Message-ID: <20250815-neuzugang-gegessen-ff4c08a08ec0@brauner>
+References: <cover.1755012943.git.lorenzo.stoakes@oracle.com>
+ <2a5075f7e3c5b367d988178c79a3063d12ee53a9.1755012943.git.lorenzo.stoakes@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250815134016.GB3289052@noisy.programming.kicks-ass.net>
+In-Reply-To: <2a5075f7e3c5b367d988178c79a3063d12ee53a9.1755012943.git.lorenzo.stoakes@oracle.com>
 
-On Fri, Aug 15, 2025 at 03:40:17PM +0200, Peter Zijlstra wrote:
-> On Wed, Aug 06, 2025 at 10:01:20AM +0200, Nam Cao wrote:
+On Tue, Aug 12, 2025 at 04:44:15PM +0100, Lorenzo Stoakes wrote:
+> The coredump logic is slightly different from other users in that it both
+> stores mm flags and additionally sets and gets using masks.
 > 
-> > +/*
-> > + * The two trace points below may not work as expected for fair tasks due
-> > + * to delayed dequeue. See:
-> > + * https://lore.kernel.org/lkml/179674c6-f82a-4718-ace2-67b5e672fdee@amd.com/
-> > + */
+> Since the MMF_DUMPABLE_* flags must remain as they are for uABI reasons,
+> and of course these are within the first 32-bits of the flags, it is
+> reasonable to provide access to these in the same fashion so this logic can
+> all still keep working as it has been.
 > 
-> > +DECLARE_TRACE(dequeue_task,
-> > +	TP_PROTO(int cpu, struct task_struct *task),
-> > +	TP_ARGS(cpu, task));
-> > +
-> 
-> > @@ -2119,7 +2121,11 @@ inline bool dequeue_task(struct rq *rq, struct task_struct *p, int flags)
-> >  	 * and mark the task ->sched_delayed.
-> >  	 */
-> >  	uclamp_rq_dec(rq, p);
-> > -	return p->sched_class->dequeue_task(rq, p, flags);
-> > +	if (p->sched_class->dequeue_task(rq, p, flags)) {
-> > +		trace_dequeue_task_tp(rq->cpu, p);
-> > +		return true;
-> > +	}
-> > +	return false;
-> >  }
-> 
-> Hurmpff.. that's not very nice.
-> 
-> How about something like:
-> 
-> dequeue_task():
-> 	...
-> 	ret = p->sched_class->dequeue_task(rq, p, flags);
-> 	if (trace_dequeue_task_p_enabled() && !(flags & DEQUEUE_SLEEP))
-> 		__trace_dequeue_task_tp(rq->cpu, p);
-> 	return ret;
-> 
-> 
-> __block_task():
-> 	trace_dequeue_task_tp(rq->cpu, p);
-> 	...
-> 
-> 
-> Specifically, only DEQUEUE_SLEEP is allowed to fail, and DEQUEUE_SLEEP
-> will eventually cause __block_task() to be called, either directly, or
-> delayed.
+> Therefore, introduce coredump-specific helpers __mm_flags_get_dumpable()
+> and __mm_flags_set_mask_dumpable() for this purpose, and update all core
 
-If you extend the tracepoint with the sleep state, you can probably
-remove the nr_running tracepoints. Esp. once we get this new throttle
-stuff sorted.
+Why the double underscore here? Just looks a bit ugly so if we can avoid
+it I would but if not:
+
+Reviewed-by: Christian Brauner <brauner@kernel.org>
