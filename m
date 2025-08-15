@@ -1,127 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4972223815C;
-	Fri, 15 Aug 2025 05:11:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3863F2192F9;
+	Fri, 15 Aug 2025 06:08:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755234665; cv=none; b=n1HUpVcAGsenyroKZW8ej7Hj6E+KtH5oJteEN17QIETakqu9weoMXSj/Z7qeW6z3Qj4NOE+moPoz3Q4ZJUQ0PMGG3DlnWiqVCpSq+FGeLRwooAIes2wt2Tko8Su8QECw38ojWisKKau6pJpbQIL/Ap7J3wmi/hyBmuMQBG8KeAM=
+	t=1755238095; cv=none; b=WW6Ry5Im25Uq4K5L1Dc/sYPObCMliQWFuo6nCihtzr//EevLTWoBFZqeFRqMJ3JhEpBwMFBsRy+Uz/6VE9Z+F99+DXxREJdap7hAd6BusF0nCrp+jynQg8Me+bla96Y77IPCC5v98c1JIM3eDCb9GSIZ+KC2BVK20ZsnG/wkpQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755234665; c=relaxed/simple;
-	bh=rjs/V71n+3a48sbczUimLUbQ99An++PfjAuhQIEa13s=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=NHxjDFuSQEVNg3wE1HtqJicmMoCPtaZyI+pvKrg2Yq/HmwCkomnu5Q5/Yd+QFgtX+dKSsHYxXIV4PPIbT3AqFcHC7z18Gn7GjBdgnUgBEljnMbOeebrwxWmbg0pib4VeQpjq02p7kpUHcjL/OfKCkEYXPHKC37OQx/uNq8V9gQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qaZHeg2/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1755238095; c=relaxed/simple;
+	bh=tbJHKmM4HLfO48fOXVQkSO6aTHrBMsni/C0VTIkbqSg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Jw9McsKRbpsoybHDC3v9Eht9hccY4mDEaEWfhZwvViww0+V3d21RHpR2eUblR+y4nBext1IpzMljP2jHDOmht9KY3ZDT3NlmPryOJVL6RphzM7CYcNfNvD6n6fTq9mKB2k/X7oihL+2gUmV/iyB1KdOr370o83rPQo2+XIyfF54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=E6SWROy/; arc=none smtp.client-ip=115.124.30.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qaZHeg2/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDF32C4CEF4;
-	Fri, 15 Aug 2025 05:11:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755234665;
-	bh=rjs/V71n+3a48sbczUimLUbQ99An++PfjAuhQIEa13s=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=qaZHeg2/5a1nlFDrCh+QQq8+2z+k/HIBWZUD4nh0+1i6c37KB42J7MuL6+NCG/t+L
-	 Sb4lS+mkZ14VoVX+YlDNVGPRMcWMXRHAGigO6GBs+JD82O/j0LxY54D+zDNDsJYKAo
-	 sXevI5VIzQWOLFfl/WV5zUlxyV+wLZ1J0REOzQc8KXCWGG5zo4v1sD8WTb37YmZh26
-	 fQvGeRnhGwhiRkaAiLioOMAOHFUuoJ1KDM4vS7BfgMxeW43efHE9YPv+gnweYXLTPM
-	 XrWCUBDKKDrqe8banORHuWlWg0uTJGuY3c9EmS4cdtxIgiUKad4TjoW3OXKR2Ys5uU
-	 wi4dFrypsvChQ==
-Received: from phl-compute-12.internal (phl-compute-12.internal [10.202.2.52])
-	by mailfauth.phl.internal (Postfix) with ESMTP id CD58BF40066;
-	Fri, 15 Aug 2025 01:11:02 -0400 (EDT)
-Received: from phl-imap-08 ([10.202.2.84])
-  by phl-compute-12.internal (MEProxy); Fri, 15 Aug 2025 01:11:02 -0400
-X-ME-Sender: <xms:ZsGeaEjCAtEWX1UaHLA2gfColtQZO7w89chtZ2uFaG4vMYHweTmDIQ>
-    <xme:ZsGeaNCED0uQ78E9d2j9GAg3NYkGAhxwrM8S6giPlAbcy5DsDkd_hrjkIGTNdnggG
-    4eL_xWyjdx6jEOR_bI>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddugeeftdekucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtqhertdertdejnecuhfhrohhmpedfnfgvohhn
-    ucftohhmrghnohhvshhkhidfuceolhgvohhnsehkvghrnhgvlhdrohhrgheqnecuggftrf
-    grthhtvghrnhepffegjefgueegffffjeevheektdekgeevheelvdekieehvdejvdejjefh
-    hfelhfefnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiii
-    gvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehlvghonhdomhgvshhmthhprghuthhh
-    phgvrhhsohhnrghlihhthidquddvfedtheefleekgedqvdejjeeljeejvdekqdhlvghonh
-    eppehkvghrnhgvlhdrohhrgheslhgvohhnrdhnuhdpnhgspghrtghpthhtohepfeejpdhm
-    ohguvgepshhmthhpohhuthdprhgtphhtthhopehjohhroheskegshihtvghsrdhorhhgpd
-    hrtghpthhtoheprhhosghinhdrmhhurhhphhihsegrrhhmrdgtohhmpdhrtghpthhtohep
-    tghhrhhishhtohhphhgvrdhlvghrohihsegtshhgrhhouhhprdgvuhdprhgtphhtthhope
-    hmphgvsegvlhhlvghrmhgrnhdrihgurdgruhdprhgtphhtthhopegrsgguihgvlhdrjhgr
-    nhhulhhguhgvsehgmhgrihhlrdgtohhmpdhrtghpthhtoheprghlvgigrdhgrgihnhhorh
-    esghhmrghilhdrtghomhdprhgtphhtthhopehrohhsthgvughtsehgohhoughmihhsrdho
-    rhhgpdhrtghpthhtohepghhlihguvghrsehgohhoghhlvgdrtghomhdprhgtphhtthhope
-    hkrghsrghnqdguvghvsehgohhoghhlvghgrhhouhhpshdrtghomh
-X-ME-Proxy: <xmx:ZsGeaPWPNXdI6VvYib3k9QdMC2XlJbr86LA_KN5YspkDL_EEK6BRlA>
-    <xmx:ZsGeaI3d1bh3fFRFl4aiXZUts9ejR-WHFcon7KnhJbC_6nOGWjjn2Q>
-    <xmx:ZsGeaIdgKvfZyaCQpAF_MAary9Xg8Dva0Q5zSBAie2gJ8xC3nka9fw>
-    <xmx:ZsGeaNVlXDFhOQ5jT6MnFggS_FVesjsSUNJLf3EVumbGV5Io7NaXkQ>
-    <xmx:ZsGeaG9LccLFJ2EboOYrfkTWU2yRr6gsoUbWRyvB7Ij-X0QWOgy49Rp5>
-Feedback-ID: i927946fb:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 8094E2CE0071; Fri, 15 Aug 2025 01:11:02 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="E6SWROy/"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1755238083; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=c6Xki8soLW+vw63qx0n+Ld6/faF33zlxnTUtiZxzosw=;
+	b=E6SWROy/yb8tUTn5zKyYzwVtC358UkDJZGtD9bSklYxUIbfbvAfaL4KDYTrZWdRP0BlGeYuGXpB6hWPBRwxIv5l8NQOsuXuhQ0xRaJEGKA5tqB44PMu2fvsTShPFbHNwhyTdvKW2G4mICD1CThc+MmBU/wXK3O6Q/UOOuMRzfJA=
+Received: from 30.74.144.112(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0Wlnr11M_1755238078 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 15 Aug 2025 14:07:59 +0800
+Message-ID: <0e26b400-e477-4722-a524-8a3c520f5429@linux.alibaba.com>
+Date: Fri, 15 Aug 2025 14:07:57 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AWyaQ402xWe7
-Date: Fri, 15 Aug 2025 08:10:43 +0300
-From: "Leon Romanovsky" <leon@kernel.org>
-To: "Christophe Leroy" <christophe.leroy@csgroup.eu>,
- "Marek Szyprowski" <m.szyprowski@samsung.com>
-Cc: "Jason Gunthorpe" <jgg@nvidia.com>,
- "Abdiel Janulgue" <abdiel.janulgue@gmail.com>,
- "Alexander Potapenko" <glider@google.com>,
- "Alex Gaynor" <alex.gaynor@gmail.com>,
- "Andrew Morton" <akpm@linux-foundation.org>,
- "Christoph Hellwig" <hch@lst.de>, "Danilo Krummrich" <dakr@kernel.org>,
- iommu@lists.linux.dev, "Jason Wang" <jasowang@redhat.com>,
- "Jens Axboe" <axboe@kernel.dk>, "Joerg Roedel" <joro@8bytes.org>,
- "Jonathan Corbet" <corbet@lwn.net>, "Juergen Gross" <jgross@suse.com>,
- kasan-dev@googlegroups.com, "Keith Busch" <kbusch@kernel.org>,
- linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-nvme@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
- linux-trace-kernel@vger.kernel.org,
- "Madhavan Srinivasan" <maddy@linux.ibm.com>,
- "Masami Hiramatsu" <mhiramat@kernel.org>,
- "Michael Ellerman" <mpe@ellerman.id.au>,
- "Michael S. Tsirkin" <mst@redhat.com>, "Miguel Ojeda" <ojeda@kernel.org>,
- "Robin Murphy" <robin.murphy@arm.com>, rust-for-linux@vger.kernel.org,
- "Sagi Grimberg" <sagi@grimberg.me>,
- "Stefano Stabellini" <sstabellini@kernel.org>,
- "Steven Rostedt" <rostedt@goodmis.org>, virtualization@lists.linux.dev,
- "Will Deacon" <will@kernel.org>, xen-devel@lists.xenproject.org
-Message-Id: <45552b38-5717-4b0c-b0eb-8c463d8cf816@app.fastmail.com>
-In-Reply-To: <ccc8eeba-757a-440d-80d3-9158e80c19fe@csgroup.eu>
-References: <cover.1755193625.git.leon@kernel.org>
- <ccc8eeba-757a-440d-80d3-9158e80c19fe@csgroup.eu>
-Subject: Re: [PATCH v3 00/16] dma-mapping: migrate to physical address-based API
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 02/10] mm: convert core mm to mm_flags_*() accessors
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
+ Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Sven Schnelle <svens@linux.ibm.com>, "David S . Miller"
+ <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski
+ <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>,
+ Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ Kees Cook <kees@kernel.org>, David Hildenbrand <david@redhat.com>,
+ Zi Yan <ziy@nvidia.com>, "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+ Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+ Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
+ Xu Xin <xu.xin16@zte.com.cn>, Chengming Zhou <chengming.zhou@linux.dev>,
+ Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ David Rientjes <rientjes@google.com>, Shakeel Butt <shakeel.butt@linux.dev>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
+ Juri Lelli <juri.lelli@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
+ Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
+ Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
+ Peter Xu <peterx@redhat.com>, Jann Horn <jannh@google.com>,
+ Pedro Falcato <pfalcato@suse.de>, Matthew Wilcox <willy@infradead.org>,
+ Mateusz Guzik <mjguzik@gmail.com>, linux-s390@vger.kernel.org,
+ linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+ linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+References: <cover.1755012943.git.lorenzo.stoakes@oracle.com>
+ <1eb2266f4408798a55bda00cb04545a3203aa572.1755012943.git.lorenzo.stoakes@oracle.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <1eb2266f4408798a55bda00cb04545a3203aa572.1755012943.git.lorenzo.stoakes@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
 
-On Thu, Aug 14, 2025, at 22:05, Christophe Leroy wrote:
-> Le 14/08/2025 =C3=A0 19:53, Leon Romanovsky a =C3=A9crit=C2=A0:
->> Changelog:
->> v3:
->>   * Fixed typo in "cacheable" word
->>   * Simplified kmsan patch a lot to be simple argument refactoring
->
-> v2 sent today at 12:13, v3 sent today at 19:53 .... for only that ?
->
-> Have you read=20
-> https://docs.kernel.org//process/submitting-patches.html#don-t-get-dis=
-couraged-or-impatient=20
-> ?
+On 2025/8/12 23:44, Lorenzo Stoakes wrote:
+> As part of the effort to move to mm->flags becoming a bitmap field, convert
+> existing users to making use of the mm_flags_*() accessors which will, when
+> the conversion is complete, be the only means of accessing mm_struct flags.
+> 
+> This will result in the debug output being that of a bitmap output, which
+> will result in a minor change here, but since this is for debug only, this
+> should have no bearing.
+> 
+> Otherwise, no functional changes intended.
+> 
+> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> ---
 
-Yes, I'm aware of that section. It is not even remotely close to the rea=
-lity in different subsystems.
+LGTM.
+Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
 
-There are some places in the kernel where you never get any responses.
-
-Thanks
