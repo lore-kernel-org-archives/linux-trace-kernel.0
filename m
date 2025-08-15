@@ -1,103 +1,203 @@
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f195.google.com (mail-yb1-f195.google.com [209.85.219.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3863F2192F9;
-	Fri, 15 Aug 2025 06:08:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB53B293C42;
+	Fri, 15 Aug 2025 06:24:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755238095; cv=none; b=WW6Ry5Im25Uq4K5L1Dc/sYPObCMliQWFuo6nCihtzr//EevLTWoBFZqeFRqMJ3JhEpBwMFBsRy+Uz/6VE9Z+F99+DXxREJdap7hAd6BusF0nCrp+jynQg8Me+bla96Y77IPCC5v98c1JIM3eDCb9GSIZ+KC2BVK20ZsnG/wkpQA=
+	t=1755239052; cv=none; b=hr57pHLYCBwIbDsMMTkfFLdwTr9kQcEFrJ32x4en102tRoL7H1wQ/kbdddbwy2odl3IstfXbHBiV9QB0Qsw+J2WW4ZjF8Pp5CLLcuotwkU+EonqHEP6tqQd7/+NlfBXjS/L+iMWxYBdmjKPhnVDubrw3TTQX/Ofx/uo/wbaI3Eo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755238095; c=relaxed/simple;
-	bh=tbJHKmM4HLfO48fOXVQkSO6aTHrBMsni/C0VTIkbqSg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Jw9McsKRbpsoybHDC3v9Eht9hccY4mDEaEWfhZwvViww0+V3d21RHpR2eUblR+y4nBext1IpzMljP2jHDOmht9KY3ZDT3NlmPryOJVL6RphzM7CYcNfNvD6n6fTq9mKB2k/X7oihL+2gUmV/iyB1KdOr370o83rPQo2+XIyfF54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=E6SWROy/; arc=none smtp.client-ip=115.124.30.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1755239052; c=relaxed/simple;
+	bh=iIOcKGg0BZdG2Y1y8FQghjQJrB5hQv30DjYqir25x1Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NGotRKv7F4eY8dHBXlK8VkKxXwI5gMD1sDU93/q/eR9MpE5sxUjifeuHaJe7CBKYScwicpt7H12VU8zCHT97NbhAI1LJOICQuitOrpqp2o/VBI7TUIls5TQPFFlhr5iOg+V+pd0QYl/vXsG7agSe2qPeJ8ybhujf4qHBq5JA0CI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mUM1IxY4; arc=none smtp.client-ip=209.85.219.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="E6SWROy/"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1755238083; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=c6Xki8soLW+vw63qx0n+Ld6/faF33zlxnTUtiZxzosw=;
-	b=E6SWROy/yb8tUTn5zKyYzwVtC358UkDJZGtD9bSklYxUIbfbvAfaL4KDYTrZWdRP0BlGeYuGXpB6hWPBRwxIv5l8NQOsuXuhQ0xRaJEGKA5tqB44PMu2fvsTShPFbHNwhyTdvKW2G4mICD1CThc+MmBU/wXK3O6Q/UOOuMRzfJA=
-Received: from 30.74.144.112(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0Wlnr11M_1755238078 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Fri, 15 Aug 2025 14:07:59 +0800
-Message-ID: <0e26b400-e477-4722-a524-8a3c520f5429@linux.alibaba.com>
-Date: Fri, 15 Aug 2025 14:07:57 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mUM1IxY4"
+Received: by mail-yb1-f195.google.com with SMTP id 3f1490d57ef6-e931cae27c5so1696547276.1;
+        Thu, 14 Aug 2025 23:24:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1755239050; x=1755843850; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+GoQBPhmL2f6FsydtPjyCuCttyD7KlTP/GQ+sRZqNZE=;
+        b=mUM1IxY45rb7aH6loKT1L8GEuS5FOM5Nox2uRu9GjKjct/W1jHERt+KwrwWxOLKmu6
+         J94KlxWSFVffjWrxvhDWSJvGt9QpjZiMezp2S4Q4Y0uihXmGKzbnuCba24uoIw+ERJEB
+         ji6gokZZ1NuQxS8uoMXuIUKJXQrARDfV/9NGOrXyVuoKIKAMuAiUtB0Wsh99WCIpDP3b
+         4mDO8pxmKVSDs7sMkGzhAn3Lrulzu1fY1qQpuN+vND5JIkdbQ1f5fziZOmvXxI0lhZQ1
+         K0Oy14Kd1ztaK2PQKSQyKSoLXbjabd8hkjmt5zhScXLrJpgJCI/4HDlHXsXaoiUOixVq
+         xy4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755239050; x=1755843850;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+GoQBPhmL2f6FsydtPjyCuCttyD7KlTP/GQ+sRZqNZE=;
+        b=awyaNuWWMHHLoavh/vz5SxZXsq0N8rgsCDutOSNdG/Q48p8MpwxqHP/0K1f3ApJpwU
+         Hb9xPGPiV4EWpg5KUWgwTXJBtG4Q6bWygNoMq1oSGxKBjKVXVO8Y+50/O8SQBhtOufIP
+         fD7dheXANDi2Ad/YLF9TrjxQ1h7GIMh8YGxuNjBLmIyt/XHZEEeBccBXAwQBv80AXRRI
+         n1TIwxnwr/6wDNzXuohK0R5U3OPjHfOcJxh9p1SkHF15qz0I93SZJs3OzzfPQNV5okLq
+         k2wGGVKfX8Qd48sqfii1KUj4sXj1PqcpncNrs8GDsrPPRTxUHdUmLgxX9OeVcerSzmaD
+         dYDA==
+X-Forwarded-Encrypted: i=1; AJvYcCUl27BFMphA69tROjnkHd7t0/EHTONMAF+Eq0zE6funo1dPu8G86Z8+DTGtB0RStHBCEusOkJa5GjXp0CCTx3YLCMxJ@vger.kernel.org, AJvYcCW+qSeImsYonvBJXv9nURz2utq7JCPQlUYfLEdVGR1arO0xr1jVUVIjuMfauFZAvHDS+Pw=@vger.kernel.org, AJvYcCWqh3LIJ2D2OsYUGeZy8tERRtFEGzHckWHGQmstN2O5kVut+1W8dMczk6kCDwd1hwm/ni69QT0SXnAMnUPY@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQiltMk/oMx/CZCSX8mOLIP/fTvbXeO5TqAoaFJsrAm8T2m6Rr
+	Gk41ayiepbczvXReZkmOavrLlgzGP7CAQt6++Lg2J5boiV2y1GErQeU0elPiF/SDjuyXsk7AnHp
+	C0ytIib6iRuJ88WeMmI/2XNQ2lPjujkHLRm+KbtI=
+X-Gm-Gg: ASbGncsvWfkp4E9rkFXylMKSi+wAOvGRCE2grGQc2mRpRkeKLHFALbT8YTNRI1Jki6V
+	QkTqjA3kiyBiHgfQwps3EYwkBaW2tCxHwpbZ3Q0i5PL20Zpx/LDbGPDsxJNxokBM8Yo9PPZ1k8B
+	nGTIAAOawrbFN4CfDfEDfKXlVzjNXiwHjOkqOp9LM9Ql/DlHKbmqgzhRKCWbLaO12lp9U6c513+
+	KCt3nE=
+X-Google-Smtp-Source: AGHT+IGRT3oY2R2FJjFrJeAdKNlWxRKqtSPewDT0Fts3pT57ovruUEca55cDWIJcF9IGePWNDHaUwKRB5gUYneoFpOk=
+X-Received: by 2002:a05:690c:48c6:b0:71c:4271:c4e3 with SMTP id
+ 00721157ae682-71e6d90e441mr12082407b3.0.1755239049835; Thu, 14 Aug 2025
+ 23:24:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 02/10] mm: convert core mm to mm_flags_*() accessors
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
- Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>, "David S . Miller"
- <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>,
- Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski
- <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- Kees Cook <kees@kernel.org>, David Hildenbrand <david@redhat.com>,
- Zi Yan <ziy@nvidia.com>, "Liam R . Howlett" <Liam.Howlett@oracle.com>,
- Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
- Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
- Xu Xin <xu.xin16@zte.com.cn>, Chengming Zhou <chengming.zhou@linux.dev>,
- Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- David Rientjes <rientjes@google.com>, Shakeel Butt <shakeel.butt@linux.dev>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, Masami Hiramatsu
- <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
- Juri Lelli <juri.lelli@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
- Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
- Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
- Peter Xu <peterx@redhat.com>, Jann Horn <jannh@google.com>,
- Pedro Falcato <pfalcato@suse.de>, Matthew Wilcox <willy@infradead.org>,
- Mateusz Guzik <mjguzik@gmail.com>, linux-s390@vger.kernel.org,
- linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
- linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-References: <cover.1755012943.git.lorenzo.stoakes@oracle.com>
- <1eb2266f4408798a55bda00cb04545a3203aa572.1755012943.git.lorenzo.stoakes@oracle.com>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <1eb2266f4408798a55bda00cb04545a3203aa572.1755012943.git.lorenzo.stoakes@oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250731092433.49367-1-dongml2@chinatelecom.cn>
+ <20250731092433.49367-2-dongml2@chinatelecom.cn> <20250815004023.144cfbd9ae39fac9ce80ee98@kernel.org>
+In-Reply-To: <20250815004023.144cfbd9ae39fac9ce80ee98@kernel.org>
+From: Menglong Dong <menglong8.dong@gmail.com>
+Date: Fri, 15 Aug 2025 14:23:58 +0800
+X-Gm-Features: Ac12FXzrFeWoMvqbnjqtW4VN89JarCpfhXGP3yEjG-Q_tJXUzlSuExWxW7z0KlU
+Message-ID: <CADxym3YxHOYxZxrdd4vkU_sj8p7VNW=HjLOo9nQgO3jkAAfjng@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v3 1/4] fprobe: use rhltable for fprobe_ip_table
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: olsajiri@gmail.com, rostedt@goodmis.org, mathieu.desnoyers@efficios.com, 
+	hca@linux.ibm.com, revest@chromium.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Aug 14, 2025 at 11:40=E2=80=AFPM Masami Hiramatsu <mhiramat@kernel.=
+org> wrote:
+>
+> On Thu, 31 Jul 2025 17:24:24 +0800
+> Menglong Dong <menglong8.dong@gmail.com> wrote:
+>
+> > For now, all the kernel functions who are hooked by the fprobe will be
+> > added to the hash table "fprobe_ip_table". The key of it is the functio=
+n
+> > address, and the value of it is "struct fprobe_hlist_node".
+> >
+> > The budget of the hash table is FPROBE_IP_TABLE_SIZE, which is 256. And
+> > this means the overhead of the hash table lookup will grow linearly if
+> > the count of the functions in the fprobe more than 256. When we try to
+> > hook all the kernel functions, the overhead will be huge.
+> >
+> > Therefore, replace the hash table with rhltable to reduce the overhead.
+> >
+>
+> Hi Menglong,
+>
+> Thanks for update, I have just some nitpicks.
+>
+> > Signed-off-by: Menglong Dong <dongml2@chinatelecom.cn>
+> > ---
+> > v3:
+> > - some format optimization
+> > - handle the error that returned from rhltable_insert in
+> >   insert_fprobe_node
+> > ---
+> >  include/linux/fprobe.h |   3 +-
+> >  kernel/trace/fprobe.c  | 154 +++++++++++++++++++++++------------------
+> >  2 files changed, 90 insertions(+), 67 deletions(-)
+> >
+> > diff --git a/include/linux/fprobe.h b/include/linux/fprobe.h
+> > index 702099f08929..f5d8982392b9 100644
+> > --- a/include/linux/fprobe.h
+> > +++ b/include/linux/fprobe.h
+> > @@ -7,6 +7,7 @@
+> >  #include <linux/ftrace.h>
+> >  #include <linux/rcupdate.h>
+> >  #include <linux/refcount.h>
+> > +#include <linux/rhashtable.h>
+>
+> nit: can you also include this header file in fprobe.c ?
 
+OK!
 
-On 2025/8/12 23:44, Lorenzo Stoakes wrote:
-> As part of the effort to move to mm->flags becoming a bitmap field, convert
-> existing users to making use of the mm_flags_*() accessors which will, when
-> the conversion is complete, be the only means of accessing mm_struct flags.
-> 
-> This will result in the debug output being that of a bitmap output, which
-> will result in a minor change here, but since this is for debug only, this
-> should have no bearing.
-> 
-> Otherwise, no functional changes intended.
-> 
-> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> ---
+>
+> >  #include <linux/slab.h>
+> >
+[......]
+> >
+> >       mutex_lock(&fprobe_mutex);
+> > -     for (i =3D 0; i < FPROBE_IP_TABLE_SIZE; i++)
+> > -             fprobe_remove_node_in_module(mod, &fprobe_ip_table[i], &a=
+list);
+> > +     rhashtable_walk_enter(&fprobe_ip_table.ht, &iter);
+>
+> nit: Use rhltable_walk_enter() instead.
 
-LGTM.
-Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+OK!
 
+I'll send the V4 later with these nitpicks fixed.
+
+Thanks!
+Menglong Dong
+
+>
+> Others looks good to me.
+>
+> Thank you,
+>
+> > +     do {
+> > +             rhashtable_walk_start(&iter);
+> > +
+> > +             while ((node =3D rhashtable_walk_next(&iter)) && !IS_ERR(=
+node))
+> > +                     fprobe_remove_node_in_module(mod, node, &alist);
+> > +
+> > +             rhashtable_walk_stop(&iter);
+> > +     } while (node =3D=3D ERR_PTR(-EAGAIN));
+> > +     rhashtable_walk_exit(&iter);
+> >
+> >       if (alist.index < alist.size && alist.index > 0)
+> >               ftrace_set_filter_ips(&fprobe_graph_ops.ops,
+> > @@ -722,8 +729,16 @@ int register_fprobe_ips(struct fprobe *fp, unsigne=
+d long *addrs, int num)
+> >       ret =3D fprobe_graph_add_ips(addrs, num);
+> >       if (!ret) {
+> >               add_fprobe_hash(fp);
+> > -             for (i =3D 0; i < hlist_array->size; i++)
+> > -                     insert_fprobe_node(&hlist_array->array[i]);
+> > +             for (i =3D 0; i < hlist_array->size; i++) {
+> > +                     ret =3D insert_fprobe_node(&hlist_array->array[i]=
+);
+> > +                     if (ret)
+> > +                             break;
+> > +             }
+> > +             /* fallback on insert error */
+> > +             if (ret) {
+> > +                     for (i--; i >=3D 0; i--)
+> > +                             delete_fprobe_node(&hlist_array->array[i]=
+);
+> > +             }
+> >       }
+> >       mutex_unlock(&fprobe_mutex);
+> >
+> > @@ -819,3 +834,10 @@ int unregister_fprobe(struct fprobe *fp)
+> >       return ret;
+> >  }
+> >  EXPORT_SYMBOL_GPL(unregister_fprobe);
+> > +
+> > +static int __init fprobe_initcall(void)
+> > +{
+> > +     rhltable_init(&fprobe_ip_table, &fprobe_rht_params);
+> > +     return 0;
+> > +}
+> > +late_initcall(fprobe_initcall);
+> > --
+> > 2.50.1
+> >
+>
+>
+> --
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
