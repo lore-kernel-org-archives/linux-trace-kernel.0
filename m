@@ -1,261 +1,134 @@
-Received: from mail-pf1-f196.google.com (mail-pf1-f196.google.com [209.85.210.196])
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00D892D1913;
-	Fri, 15 Aug 2025 06:47:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C22072BE7AC;
+	Fri, 15 Aug 2025 06:55:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755240456; cv=none; b=Q4f+R+VDkDIGQvsX4S7n+cKYq54JiQJhtjTeY6JOnwm7t7CWRepcZl4neAN8gUsatD8oZiUZpIg6fU+t8n4OkTQQhtTIWVSqaKPCdPajJWTiOw7qjB7F7TLeMI6xeCjCNK/DE6Ash+4FWAqAkWcdxQDdUBMKItXpB04zIylpgT8=
+	t=1755240906; cv=none; b=D1a+22nA7X9XcySZPIwgahT2dEqhmMW6eU9fXHb4bp/xCWPG3OXwgI9TJsK55jZfMe8obpAzKu2M/3pn2l+akwc9Q2w/v6Qxf2qQ0qmB8azVrNMXRFTvrh/i/2Vs04t+wbUuP7/KBmFU3osiMIxFuKnGKxLHq60dZbmI7AWniGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755240456; c=relaxed/simple;
-	bh=Y0sVgiMIvCN1tEPgiAVLe8svWdYQEvpuSTM/2lhhTGQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ATy4GV8hsxTElt1NAbUyyyzEKiCwfBubp2QKCL0Sf6V1aLmouARr/hdpV9SLAVBZ0/uwsuIsCs+1+K1jXhRWBxZ4gUu1/847F+xQGWKRtgLFSlN0Gn8av+QXotqbXjnHizSto4NOBtqdZDc3+Dpb86184HjPKGTGRb2dw66Gnnk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JlsWtg54; arc=none smtp.client-ip=209.85.210.196
+	s=arc-20240116; t=1755240906; c=relaxed/simple;
+	bh=09O8iHCFCc9FeSzQNIAgrWWzvUvhP9zVo7akTxtlO9I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OWXPXEsQQ5CBB4x0aBIkG07CDh+ql6+kMSoDAcjkUwLFdn22pYgxQPPAyPRHHZa0tK6XdYTGyPclpEUXBdQZ2jqNOZ8qNh6MR08uLi8ozlwJzb2i+rq5s3l1R+1RSdg4ORBHtmH8cqBfovSgxmxl0YwY8TTjClsRNp4YqluTXKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dblyjfjk; arc=none smtp.client-ip=209.85.222.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JlsWtg54"
-Received: by mail-pf1-f196.google.com with SMTP id d2e1a72fcca58-76e2eb9ae80so1511571b3a.3;
-        Thu, 14 Aug 2025 23:47:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dblyjfjk"
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7e87061d120so175195885a.2;
+        Thu, 14 Aug 2025 23:55:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1755240454; x=1755845254; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1755240904; x=1755845704; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=I4PDMe7SP8CZO+JhWjjdFtQ1vR89wVuSvH9ObtDEfac=;
-        b=JlsWtg54GWru5oqIW9XQlViJn+k3rXg8VxFLIW9p7tqoXpTvKgki8RnIt7fUq/8+v9
-         wRBZdLznlvKCamxBqs9UoYKpvga6C4HaN2DWOeK0nEuKbqwqpkNOaMlyDSvCv+BUm43/
-         uHdOL35fxg1FHWBksEERtxMpUoXDVVN+1Wk6UzdcgjRWHZAr0SnOTO4XfonxFLB2SLA6
-         nAxqS6LJ6K9yUkuX28U78TPWYA1Pe8SP8DefxZ9Cm7zx3KoMBdBSY2bWdR6ly3uOxzg8
-         wmChigHI4TJpAvRM+csU+42IuZzSbCB2ntUcsbBiJRYoyiUdH42IXQ6As6Sau0MA/84G
-         WquQ==
+        bh=2Lg6KLMGFx8dXvnhjBDp9/6fMroiB5ppBoQnq73tIYw=;
+        b=dblyjfjk/KipKUN3ihQuc8X0z5iLUxXvked6Ai/GAXu8W0QcPvLaq0iD28Dbmcxikr
+         3hPC2x4PRA745RZrXtAZ4jkI45WdssVj9wLFf+5CfvrYZdEJj/KUxOcFhTP+CndVmeOH
+         pni+C2TnRrDL3OmstcdFjVpJqmTmtMocHfNwy42DSYsPf3rwM8a32Rxa+9RzpAsuhIMy
+         Vae/9nAGz2fSFKTnRCojkEe92PRCu/qovCXXvhr4935VYx6qROx0MS4TrJgYWSah6wJa
+         /vB4ZRGmd6dGYmH43Zmrn++5bH8l9F4IdOyUObFFeLeGKcY+HWsxv4bkd/0l0hJqkPHm
+         mlyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755240454; x=1755845254;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1755240904; x=1755845704;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=I4PDMe7SP8CZO+JhWjjdFtQ1vR89wVuSvH9ObtDEfac=;
-        b=N2lLAzy3bEmbJjPVVysQrU4Ftc/mJBRccLoVlu0uqlrPywWtOXNoiZIBnOSj20X+Gp
-         ySHtPKXuo3Eg7B1+gKclTQtpjUMO3fW94FmgShDhopNfDf4/H59h1HZ+EPrk0eym3RrC
-         htVh9ZXQcxN/gTxDQlUGybukWNE4mtOmsRiUtjxlnnPsS7a20xJMr/V38WgJaLgo8kip
-         6y3OI1h7EHmsneaxIurUqLPZFg/dewbneqaPoVZKiB2BluDj8msH8H7A9SrHITDRi1v3
-         RiwFp2hoTgl8DQaXtyqzytBjW/P1OMAMuuM8rrRXBjOzEENlY+ufCHtq8JeHL8KeHV0C
-         nKmA==
-X-Forwarded-Encrypted: i=1; AJvYcCUmbxLRVFkpJis4epm0PAmPwqihrxMF3zFoMMNbrF/iPtEwjg5kZD1sxcebQWNK7h07Lhc=@vger.kernel.org, AJvYcCW+LFjCKq8SXMDN7YD7WR/egjVqzjp7EFCuXu/wNGmILB+6LtOFAb1Hmg8Us98LKvplmCnMOn4qknb3nLU96DCHc3ff@vger.kernel.org, AJvYcCWvxUmL6ur/kDXjTEXcA3izvt4hEAFwJKerUy1chKFG48Vv7CwR1SHF7M7xYtfNzazteIRhbnRlyLTeFn2S@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy6uUoOvRudNyt45pg1iSERZ/eJcWjljOOnsXNz48DIEGDcFvvZ
-	OQ4SD1sBxGE7ltkj0ViNdkmXgc/ExqUyDGOq+gK5d1Bhr47tcMsFUzFj
-X-Gm-Gg: ASbGncvKB84JhoJEeJSALCiHbCGQ3NUMTSikYZdy/wT6t7ig5w0fCWwZk4gOtnVELMv
-	6I6ezyRjcQCDwm26c99GfJeqQrhdj5z5sIN4o5qVeOMnQewlUL+SGNOliwM3/48EoLKl5qew474
-	ESUkWlsqy5mH0lVN/JaHRFq6WCAnpkvyHB1/sgzRC3R0APanrgwjsesSUHLOKK2qtOmSXR71nWt
-	nRcweKLJWDyPIChthYpgUohJcTN9+kgcqAykE3LLznV/r+7ytzF6LpWEr9bD/yHJkKL0mUUq9nL
-	QHoBaekYwyvIwycpIdburkSnELlu8ut5duqAJjVNXvvw2UGf22f12wjZjfhL9pVmHiRVvvdj96P
-	SbSotG0znY4r1uVw6WROzb5Wkz/MKLA==
-X-Google-Smtp-Source: AGHT+IEpPQf+JHKjFjSgWqtn4rPpLWyc9VY7M5Q7JPqhR1Pw9ZB8mkZhnx1HbtDpf1FcmJxxiv/Cjg==
-X-Received: by 2002:a17:902:f68e:b0:240:6aad:1c43 with SMTP id d9443c01a7336-2446d905497mr14307425ad.48.1755240454201;
-        Thu, 14 Aug 2025 23:47:34 -0700 (PDT)
-Received: from 7940hx ([43.129.244.20])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2446d539032sm7161665ad.109.2025.08.14.23.47.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Aug 2025 23:47:33 -0700 (PDT)
-From: Menglong Dong <menglong8.dong@gmail.com>
-X-Google-Original-From: Menglong Dong <dongml2@chinatelecom.cn>
-To: mhiramat@kernel.org,
-	olsajiri@gmail.com
-Cc: rostedt@goodmis.org,
-	mathieu.desnoyers@efficios.com,
-	hca@linux.ibm.com,
-	revest@chromium.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: [PATCH bpf-next v4 4/4] selftests/bpf: add benchmark testing for kprobe-multi-all
-Date: Fri, 15 Aug 2025 14:47:10 +0800
-Message-ID: <20250815064712.771089-5-dongml2@chinatelecom.cn>
-X-Mailer: git-send-email 2.50.1
-In-Reply-To: <20250815064712.771089-1-dongml2@chinatelecom.cn>
-References: <20250815064712.771089-1-dongml2@chinatelecom.cn>
+        bh=2Lg6KLMGFx8dXvnhjBDp9/6fMroiB5ppBoQnq73tIYw=;
+        b=SNBlfkI77JAnZG2mDz9OoFUh8Xm7lN6t1mtUIid2VOPkmQR1o7w+ltaq7piWISNcRB
+         azmf5VCoj8tXA4EGhcg39x3/KoyORFLESE11yV8Bs0ZswVVrml8Jv4fT+I4gTUiNwhHy
+         NgHw7WTe9AK5O++tYYx8wqQUE43qUwvC4KwlTPFSbHJLdRlbphkbDVHL83gah81a/035
+         FUbti/kqp1jilSL/yzyDY+Y6Tvv4PA18IYdt0qVhZHc/sltMlBMFlep0Tgg0555fZJBT
+         qPfUfTnnFmEZEtEkHT3UT81X1YiM0B2uF5PwB/kMGWT7AJ6WBnridi7asirYa+6JmO5t
+         JKEw==
+X-Forwarded-Encrypted: i=1; AJvYcCV5G9Td/ROPtnq+qVKbCO/UVGsPm2+qBwnBtyDd78OSbhQd9bSh5NBBXrHFsopx1jau36YLWidrxICVx4I=@vger.kernel.org, AJvYcCXxzHiliMSdJddnws3anThS1LRsc2r82ayx/Sn4vd2FD2TU4kaD9WruiIpL2eV4hsTEWED9JlK4vWW0z2fS2jgb9zxK@vger.kernel.org
+X-Gm-Message-State: AOJu0YxX/4zp9qgBXJy2B/8LqTpvzmnmNTCn/XFoyLS0LtnAVhRaU1qb
+	wYCWDDRyYAVFa8xiMYVOXtj3jxJaDG9BS7b0pFWNd2XyQpbIVp8Z6xlua2hXcyQwjgdQlpFcvxh
+	opL00EnD3eI9WtohmHLKVi4ESvr4Ysj8=
+X-Gm-Gg: ASbGncuwocd3aC8saFhkzxGLjcJViA1R73wY15AISVBKy9Yn7nM4mDwrtu94vMc8DDD
+	WvSrQKfkIXzwiAaYEwjPt58AuvwGlNsAdLrAuDtpkGqrcfRNCSHZLjr+MwizlDO2uDrhyKhUSIH
+	c7XjWFL/SP203x544Xb39F0dqG37HqftS8Eet1UC7YaqsxjxM/12gkD0kG+uucCE29c5gzjQqPf
+	TIDKjNW
+X-Google-Smtp-Source: AGHT+IGYI6ILTmAXzXLkiCqprBRzYPxqp9bdmDzEQwq5O/vzmfeQ5EnNuuwwuFaM4Xzr8819ou+efflkjKPGqc4TWp4=
+X-Received: by 2002:a05:620a:4044:b0:7e8:3a80:f5f8 with SMTP id
+ af79cd13be357-7e87e0961b4mr113536385a.45.1755240903675; Thu, 14 Aug 2025
+ 23:55:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250814070719.865-1-xuewen.yan@unisoc.com> <20250814135501.GD115258@cmpxchg.org>
+In-Reply-To: <20250814135501.GD115258@cmpxchg.org>
+From: Xuewen Yan <xuewen.yan94@gmail.com>
+Date: Fri, 15 Aug 2025 14:54:52 +0800
+X-Gm-Features: Ac12FXx4tnqtPh1o32IWFaMxt5bNWUPOpDIjUGINTHUGjQyxrCLoS5CIQ8nCWoQ
+Message-ID: <CAB8ipk_wAg5UWDyjNV8MYQu6FRocw9sD7YM4rnBs_Ee6yupNWw@mail.gmail.com>
+Subject: Re: [RFC PATCH] sched: psi: Add psi events trace point
+To: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Xuewen Yan <xuewen.yan@unisoc.com>, rostedt@goodmis.org, surenb@google.com, 
+	peterz@infradead.org, mingo@redhat.com, mhiramat@kernel.org, 
+	mathieu.desnoyers@efficios.com, juri.lelli@redhat.com, 
+	vincent.guittot@linaro.org, dietmar.eggemann@arm.com, bsegall@google.com, 
+	andrii@kernel.org, vschneid@redhat.com, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, yuming.han@unisoc.com, ke.wang@unisoc.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-For now, the benchmark for kprobe-multi is single, which means there is
-only 1 function is hooked during testing. Add the testing
-"kprobe-multi-all", which will hook all the kernel functions during
-the benchmark. And the "kretprobe-multi-all" is added too.
+Hi Johannes,
 
-Signed-off-by: Menglong Dong <dongml2@chinatelecom.cn>
----
-v3:
-- add testcase kretprobe-multi-all
-- attach a empty kprobe-multi/kretprobe-multi prog to all the kernel
-  functions except bpf_get_numa_node_id to make the bench result more
-  accurate
----
- tools/testing/selftests/bpf/bench.c           |  4 ++
- .../selftests/bpf/benchs/bench_trigger.c      | 54 +++++++++++++++++++
- .../selftests/bpf/benchs/run_bench_trigger.sh |  4 +-
- .../selftests/bpf/progs/trigger_bench.c       | 12 +++++
- tools/testing/selftests/bpf/trace_helpers.c   |  3 ++
- 5 files changed, 75 insertions(+), 2 deletions(-)
+Thanks for the reply:)
 
-diff --git a/tools/testing/selftests/bpf/bench.c b/tools/testing/selftests/bpf/bench.c
-index ddd73d06a1eb..29dbf937818a 100644
---- a/tools/testing/selftests/bpf/bench.c
-+++ b/tools/testing/selftests/bpf/bench.c
-@@ -510,6 +510,8 @@ extern const struct bench bench_trig_kretprobe;
- extern const struct bench bench_trig_kprobe_multi;
- extern const struct bench bench_trig_kretprobe_multi;
- extern const struct bench bench_trig_fentry;
-+extern const struct bench bench_trig_kprobe_multi_all;
-+extern const struct bench bench_trig_kretprobe_multi_all;
- extern const struct bench bench_trig_fexit;
- extern const struct bench bench_trig_fmodret;
- extern const struct bench bench_trig_tp;
-@@ -578,6 +580,8 @@ static const struct bench *benchs[] = {
- 	&bench_trig_kprobe_multi,
- 	&bench_trig_kretprobe_multi,
- 	&bench_trig_fentry,
-+	&bench_trig_kprobe_multi_all,
-+	&bench_trig_kretprobe_multi_all,
- 	&bench_trig_fexit,
- 	&bench_trig_fmodret,
- 	&bench_trig_tp,
-diff --git a/tools/testing/selftests/bpf/benchs/bench_trigger.c b/tools/testing/selftests/bpf/benchs/bench_trigger.c
-index 82327657846e..c6634a64a7c0 100644
---- a/tools/testing/selftests/bpf/benchs/bench_trigger.c
-+++ b/tools/testing/selftests/bpf/benchs/bench_trigger.c
-@@ -226,6 +226,58 @@ static void trigger_fentry_setup(void)
- 	attach_bpf(ctx.skel->progs.bench_trigger_fentry);
- }
- 
-+static void attach_ksyms_all(struct bpf_program *empty, bool kretprobe)
-+{
-+	LIBBPF_OPTS(bpf_kprobe_multi_opts, opts);
-+	char **syms = NULL;
-+	size_t cnt = 0;
-+
-+	if (bpf_get_ksyms(&syms, &cnt, true)) {
-+		printf("failed to get ksyms\n");
-+		exit(1);
-+	}
-+
-+	printf("found %zu ksyms\n", cnt);
-+	opts.syms = (const char **) syms;
-+	opts.cnt = cnt;
-+	opts.retprobe = kretprobe;
-+	/* attach empty to all the kernel functions except bpf_get_numa_node_id. */
-+	if (!bpf_program__attach_kprobe_multi_opts(empty, NULL, &opts)) {
-+		printf("failed to attach bpf_program__attach_kprobe_multi_opts to all\n");
-+		exit(1);
-+	}
-+}
-+
-+static void trigger_kprobe_multi_all_setup(void)
-+{
-+	struct bpf_program *prog, *empty;
-+
-+	setup_ctx();
-+	empty = ctx.skel->progs.bench_kprobe_multi_empty;
-+	prog = ctx.skel->progs.bench_trigger_kprobe_multi;
-+	bpf_program__set_autoload(empty, true);
-+	bpf_program__set_autoload(prog, true);
-+	load_ctx();
-+
-+	attach_ksyms_all(empty, false);
-+	attach_bpf(prog);
-+}
-+
-+static void trigger_kretprobe_multi_all_setup(void)
-+{
-+	struct bpf_program *prog, *empty;
-+
-+	setup_ctx();
-+	empty = ctx.skel->progs.bench_kretprobe_multi_empty;
-+	prog = ctx.skel->progs.bench_trigger_kretprobe_multi;
-+	bpf_program__set_autoload(empty, true);
-+	bpf_program__set_autoload(prog, true);
-+	load_ctx();
-+
-+	attach_ksyms_all(empty, true);
-+	attach_bpf(prog);
-+}
-+
- static void trigger_fexit_setup(void)
- {
- 	setup_ctx();
-@@ -512,6 +564,8 @@ BENCH_TRIG_KERNEL(kretprobe, "kretprobe");
- BENCH_TRIG_KERNEL(kprobe_multi, "kprobe-multi");
- BENCH_TRIG_KERNEL(kretprobe_multi, "kretprobe-multi");
- BENCH_TRIG_KERNEL(fentry, "fentry");
-+BENCH_TRIG_KERNEL(kprobe_multi_all, "kprobe-multi-all");
-+BENCH_TRIG_KERNEL(kretprobe_multi_all, "kretprobe-multi-all");
- BENCH_TRIG_KERNEL(fexit, "fexit");
- BENCH_TRIG_KERNEL(fmodret, "fmodret");
- BENCH_TRIG_KERNEL(tp, "tp");
-diff --git a/tools/testing/selftests/bpf/benchs/run_bench_trigger.sh b/tools/testing/selftests/bpf/benchs/run_bench_trigger.sh
-index a690f5a68b6b..f7573708a0c3 100755
---- a/tools/testing/selftests/bpf/benchs/run_bench_trigger.sh
-+++ b/tools/testing/selftests/bpf/benchs/run_bench_trigger.sh
-@@ -6,8 +6,8 @@ def_tests=( \
- 	usermode-count kernel-count syscall-count \
- 	fentry fexit fmodret \
- 	rawtp tp \
--	kprobe kprobe-multi \
--	kretprobe kretprobe-multi \
-+	kprobe kprobe-multi kprobe-multi-all \
-+	kretprobe kretprobe-multi kretprobe-multi-all \
- )
- 
- tests=("$@")
-diff --git a/tools/testing/selftests/bpf/progs/trigger_bench.c b/tools/testing/selftests/bpf/progs/trigger_bench.c
-index 044a6d78923e..3d5f30c29ae3 100644
---- a/tools/testing/selftests/bpf/progs/trigger_bench.c
-+++ b/tools/testing/selftests/bpf/progs/trigger_bench.c
-@@ -97,6 +97,12 @@ int bench_trigger_kprobe_multi(void *ctx)
- 	return 0;
- }
- 
-+SEC("?kprobe.multi/bpf_get_numa_node_id")
-+int bench_kprobe_multi_empty(void *ctx)
-+{
-+	return 0;
-+}
-+
- SEC("?kretprobe.multi/bpf_get_numa_node_id")
- int bench_trigger_kretprobe_multi(void *ctx)
- {
-@@ -104,6 +110,12 @@ int bench_trigger_kretprobe_multi(void *ctx)
- 	return 0;
- }
- 
-+SEC("?kretprobe.multi/bpf_get_numa_node_id")
-+int bench_kretprobe_multi_empty(void *ctx)
-+{
-+	return 0;
-+}
-+
- SEC("?fentry/bpf_get_numa_node_id")
- int bench_trigger_fentry(void *ctx)
- {
-diff --git a/tools/testing/selftests/bpf/trace_helpers.c b/tools/testing/selftests/bpf/trace_helpers.c
-index 9da9da51b132..78cf1aab09d8 100644
---- a/tools/testing/selftests/bpf/trace_helpers.c
-+++ b/tools/testing/selftests/bpf/trace_helpers.c
-@@ -575,6 +575,9 @@ static bool skip_entry(char *name)
- 	if (!strcmp(name, "__rcu_read_unlock"))
- 		return true;
- 
-+	if (!strcmp(name, "bpf_get_numa_node_id"))
-+		return true;
-+
- 	return false;
- }
- 
--- 
-2.50.1
+On Thu, Aug 14, 2025 at 9:55=E2=80=AFPM Johannes Weiner <hannes@cmpxchg.org=
+> wrote:
+>
+> On Thu, Aug 14, 2025 at 03:07:19PM +0800, Xuewen Yan wrote:
+> > Add trace point to psi triggers. This is useful to
+> > observe the psi events in the kernel space.
+> >
+> > Signed-off-by: Xuewen Yan <xuewen.yan@unisoc.com>
+>
+> Can you elaborate on a situation in which you would use this?
 
+In the Android system, lmkd will kill processes by monitoring the
+pressure of psi,
+but lmkd may enter the UN state for some reasons, and be unable to
+kill the process in time, resulting in OOM.
+
+This hook can be used to detect psi just like lmkd, if lmkd was blocked,
+the kernel could kill processes to avoid the occurrence of OOM.
+
+Thanks!
+BR
+
+>
+> > ---
+> >  include/trace/events/sched.h | 5 +++++
+> >  kernel/sched/psi.c           | 2 ++
+> >  2 files changed, 7 insertions(+)
+> >
+> > diff --git a/include/trace/events/sched.h b/include/trace/events/sched.=
+h
+> > index 7b2645b50e78..c23cb2bc76fd 100644
+> > --- a/include/trace/events/sched.h
+> > +++ b/include/trace/events/sched.h
+> > @@ -896,6 +896,11 @@ DECLARE_TRACE(sched_set_need_resched,
+> >       TP_PROTO(struct task_struct *tsk, int cpu, int tif),
+> >       TP_ARGS(tsk, cpu, tif));
+> >
+> > +struct psi_trigger *t
+>
+> Missing ;
+
+sorry for missing this, would add it later...
+
+>
+> > +DECLARE_TRACE(psi_event,
+> > +     TP_PROTO(struct psi_trigger *t),
+> > +     TP_ARGS(t));
+> > +
+> >  #endif /* _TRACE_SCHED_H */
+> >
+> >  /* This part must be outside protection */
