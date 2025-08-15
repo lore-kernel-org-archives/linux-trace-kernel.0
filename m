@@ -1,134 +1,107 @@
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C22072BE7AC;
-	Fri, 15 Aug 2025 06:55:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51351275B09;
+	Fri, 15 Aug 2025 13:40:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755240906; cv=none; b=D1a+22nA7X9XcySZPIwgahT2dEqhmMW6eU9fXHb4bp/xCWPG3OXwgI9TJsK55jZfMe8obpAzKu2M/3pn2l+akwc9Q2w/v6Qxf2qQ0qmB8azVrNMXRFTvrh/i/2Vs04t+wbUuP7/KBmFU3osiMIxFuKnGKxLHq60dZbmI7AWniGU=
+	t=1755265230; cv=none; b=u1k3l9u8bBulnKlOllm4UZQ4jUwCtHwLHlQ+P6Y4Q8Nsgf1U0KmbocPVHgPGQ6fnUDaHo9UyoFx423dqSoA9TwZ5apBzss3QJOHg8C79aGcoodF6Q9tTP0Zfojxqyqkd3XJaZYB6DGSLV5/mmCahMcqrgECXH6jzrHdyfeVM9rw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755240906; c=relaxed/simple;
-	bh=09O8iHCFCc9FeSzQNIAgrWWzvUvhP9zVo7akTxtlO9I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OWXPXEsQQ5CBB4x0aBIkG07CDh+ql6+kMSoDAcjkUwLFdn22pYgxQPPAyPRHHZa0tK6XdYTGyPclpEUXBdQZ2jqNOZ8qNh6MR08uLi8ozlwJzb2i+rq5s3l1R+1RSdg4ORBHtmH8cqBfovSgxmxl0YwY8TTjClsRNp4YqluTXKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dblyjfjk; arc=none smtp.client-ip=209.85.222.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1755265230; c=relaxed/simple;
+	bh=gibDruno3cT8KxyiXeLHtpfzSPuVxzPl/juG+Mw5S+s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RuZWsQkl1V2ovDa1a+WQxSXryetyY5LRWLOuB+5e6GZVy2Sop8UxqwpeV6zrpklsbziqiSCPtW4ddyJJlE2OwLtEUlkzH5uO/SS+5NAuKuboq+gjyFs5bjnFH0TgRz3gmpHbK5oxwemlKmhUzJ6iSraSbNtYoKyvH9ydb7+Vtvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=esq0fxJa; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dblyjfjk"
-Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7e87061d120so175195885a.2;
-        Thu, 14 Aug 2025 23:55:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1755240904; x=1755845704; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2Lg6KLMGFx8dXvnhjBDp9/6fMroiB5ppBoQnq73tIYw=;
-        b=dblyjfjk/KipKUN3ihQuc8X0z5iLUxXvked6Ai/GAXu8W0QcPvLaq0iD28Dbmcxikr
-         3hPC2x4PRA745RZrXtAZ4jkI45WdssVj9wLFf+5CfvrYZdEJj/KUxOcFhTP+CndVmeOH
-         pni+C2TnRrDL3OmstcdFjVpJqmTmtMocHfNwy42DSYsPf3rwM8a32Rxa+9RzpAsuhIMy
-         Vae/9nAGz2fSFKTnRCojkEe92PRCu/qovCXXvhr4935VYx6qROx0MS4TrJgYWSah6wJa
-         /vB4ZRGmd6dGYmH43Zmrn++5bH8l9F4IdOyUObFFeLeGKcY+HWsxv4bkd/0l0hJqkPHm
-         mlyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755240904; x=1755845704;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2Lg6KLMGFx8dXvnhjBDp9/6fMroiB5ppBoQnq73tIYw=;
-        b=SNBlfkI77JAnZG2mDz9OoFUh8Xm7lN6t1mtUIid2VOPkmQR1o7w+ltaq7piWISNcRB
-         azmf5VCoj8tXA4EGhcg39x3/KoyORFLESE11yV8Bs0ZswVVrml8Jv4fT+I4gTUiNwhHy
-         NgHw7WTe9AK5O++tYYx8wqQUE43qUwvC4KwlTPFSbHJLdRlbphkbDVHL83gah81a/035
-         FUbti/kqp1jilSL/yzyDY+Y6Tvv4PA18IYdt0qVhZHc/sltMlBMFlep0Tgg0555fZJBT
-         qPfUfTnnFmEZEtEkHT3UT81X1YiM0B2uF5PwB/kMGWT7AJ6WBnridi7asirYa+6JmO5t
-         JKEw==
-X-Forwarded-Encrypted: i=1; AJvYcCV5G9Td/ROPtnq+qVKbCO/UVGsPm2+qBwnBtyDd78OSbhQd9bSh5NBBXrHFsopx1jau36YLWidrxICVx4I=@vger.kernel.org, AJvYcCXxzHiliMSdJddnws3anThS1LRsc2r82ayx/Sn4vd2FD2TU4kaD9WruiIpL2eV4hsTEWED9JlK4vWW0z2fS2jgb9zxK@vger.kernel.org
-X-Gm-Message-State: AOJu0YxX/4zp9qgBXJy2B/8LqTpvzmnmNTCn/XFoyLS0LtnAVhRaU1qb
-	wYCWDDRyYAVFa8xiMYVOXtj3jxJaDG9BS7b0pFWNd2XyQpbIVp8Z6xlua2hXcyQwjgdQlpFcvxh
-	opL00EnD3eI9WtohmHLKVi4ESvr4Ysj8=
-X-Gm-Gg: ASbGncuwocd3aC8saFhkzxGLjcJViA1R73wY15AISVBKy9Yn7nM4mDwrtu94vMc8DDD
-	WvSrQKfkIXzwiAaYEwjPt58AuvwGlNsAdLrAuDtpkGqrcfRNCSHZLjr+MwizlDO2uDrhyKhUSIH
-	c7XjWFL/SP203x544Xb39F0dqG37HqftS8Eet1UC7YaqsxjxM/12gkD0kG+uucCE29c5gzjQqPf
-	TIDKjNW
-X-Google-Smtp-Source: AGHT+IGYI6ILTmAXzXLkiCqprBRzYPxqp9bdmDzEQwq5O/vzmfeQ5EnNuuwwuFaM4Xzr8819ou+efflkjKPGqc4TWp4=
-X-Received: by 2002:a05:620a:4044:b0:7e8:3a80:f5f8 with SMTP id
- af79cd13be357-7e87e0961b4mr113536385a.45.1755240903675; Thu, 14 Aug 2025
- 23:55:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="esq0fxJa"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=jlHpGTlWl2uGCBF9xcdQEbpKyePld6IeFFDeJRmdPFc=; b=esq0fxJav8I6TLEn43LU/p3ebu
+	tIcIUXXcY+qOrSl+Kv9RibAy6XewgZeKP3aGl3bjQE29US+t+Nye13r2zkaK0kn2Q2OjX9UkhbErE
+	DaoAUIAMfEXlW/ILn5Ot1qyhvEFdxw+bNfS8DjCcZfJJxkPPw9SSjbChOWI9UM0wadczBuihtRvFT
+	d1Cwlu0YwrilqOZc8pPpHqjpozoX5ywQLgswi6fQXEAUMNg4GRkE5HtYoQET81LV5cTb1XvR/3ENI
+	5YCfTj5XQagOz1NHVji//2Ajo8VPbv1RoV4kqF2ZEGxs8QiqdkdsrE870kTTYhr1dzzpepIe16erI
+	viPF7X0w==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1umufK-0000000GjBa-1rio;
+	Fri, 15 Aug 2025 13:40:18 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 3551E3002ED; Fri, 15 Aug 2025 15:40:17 +0200 (CEST)
+Date: Fri, 15 Aug 2025 15:40:16 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Nam Cao <namcao@linutronix.de>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Gabriele Monaco <gmonaco@redhat.com>,
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	K Prateek Nayak <kprateek.nayak@amd.com>
+Subject: Re: [PATCH v2 4/5] sched: Add task enqueue/dequeue trace points
+Message-ID: <20250815134016.GB3289052@noisy.programming.kicks-ass.net>
+References: <cover.1754466623.git.namcao@linutronix.de>
+ <f87ce0cb979daa3e8221c496de16883ca53f3950.1754466623.git.namcao@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250814070719.865-1-xuewen.yan@unisoc.com> <20250814135501.GD115258@cmpxchg.org>
-In-Reply-To: <20250814135501.GD115258@cmpxchg.org>
-From: Xuewen Yan <xuewen.yan94@gmail.com>
-Date: Fri, 15 Aug 2025 14:54:52 +0800
-X-Gm-Features: Ac12FXx4tnqtPh1o32IWFaMxt5bNWUPOpDIjUGINTHUGjQyxrCLoS5CIQ8nCWoQ
-Message-ID: <CAB8ipk_wAg5UWDyjNV8MYQu6FRocw9sD7YM4rnBs_Ee6yupNWw@mail.gmail.com>
-Subject: Re: [RFC PATCH] sched: psi: Add psi events trace point
-To: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Xuewen Yan <xuewen.yan@unisoc.com>, rostedt@goodmis.org, surenb@google.com, 
-	peterz@infradead.org, mingo@redhat.com, mhiramat@kernel.org, 
-	mathieu.desnoyers@efficios.com, juri.lelli@redhat.com, 
-	vincent.guittot@linaro.org, dietmar.eggemann@arm.com, bsegall@google.com, 
-	andrii@kernel.org, vschneid@redhat.com, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, yuming.han@unisoc.com, ke.wang@unisoc.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f87ce0cb979daa3e8221c496de16883ca53f3950.1754466623.git.namcao@linutronix.de>
 
-Hi Johannes,
+On Wed, Aug 06, 2025 at 10:01:20AM +0200, Nam Cao wrote:
 
-Thanks for the reply:)
+> +/*
+> + * The two trace points below may not work as expected for fair tasks due
+> + * to delayed dequeue. See:
+> + * https://lore.kernel.org/lkml/179674c6-f82a-4718-ace2-67b5e672fdee@amd.com/
+> + */
 
-On Thu, Aug 14, 2025 at 9:55=E2=80=AFPM Johannes Weiner <hannes@cmpxchg.org=
-> wrote:
->
-> On Thu, Aug 14, 2025 at 03:07:19PM +0800, Xuewen Yan wrote:
-> > Add trace point to psi triggers. This is useful to
-> > observe the psi events in the kernel space.
-> >
-> > Signed-off-by: Xuewen Yan <xuewen.yan@unisoc.com>
->
-> Can you elaborate on a situation in which you would use this?
+> +DECLARE_TRACE(dequeue_task,
+> +	TP_PROTO(int cpu, struct task_struct *task),
+> +	TP_ARGS(cpu, task));
+> +
 
-In the Android system, lmkd will kill processes by monitoring the
-pressure of psi,
-but lmkd may enter the UN state for some reasons, and be unable to
-kill the process in time, resulting in OOM.
+> @@ -2119,7 +2121,11 @@ inline bool dequeue_task(struct rq *rq, struct task_struct *p, int flags)
+>  	 * and mark the task ->sched_delayed.
+>  	 */
+>  	uclamp_rq_dec(rq, p);
+> -	return p->sched_class->dequeue_task(rq, p, flags);
+> +	if (p->sched_class->dequeue_task(rq, p, flags)) {
+> +		trace_dequeue_task_tp(rq->cpu, p);
+> +		return true;
+> +	}
+> +	return false;
+>  }
 
-This hook can be used to detect psi just like lmkd, if lmkd was blocked,
-the kernel could kill processes to avoid the occurrence of OOM.
+Hurmpff.. that's not very nice.
 
-Thanks!
-BR
+How about something like:
 
->
-> > ---
-> >  include/trace/events/sched.h | 5 +++++
-> >  kernel/sched/psi.c           | 2 ++
-> >  2 files changed, 7 insertions(+)
-> >
-> > diff --git a/include/trace/events/sched.h b/include/trace/events/sched.=
-h
-> > index 7b2645b50e78..c23cb2bc76fd 100644
-> > --- a/include/trace/events/sched.h
-> > +++ b/include/trace/events/sched.h
-> > @@ -896,6 +896,11 @@ DECLARE_TRACE(sched_set_need_resched,
-> >       TP_PROTO(struct task_struct *tsk, int cpu, int tif),
-> >       TP_ARGS(tsk, cpu, tif));
-> >
-> > +struct psi_trigger *t
->
-> Missing ;
+dequeue_task():
+	...
+	ret = p->sched_class->dequeue_task(rq, p, flags);
+	if (trace_dequeue_task_p_enabled() && !(flags & DEQUEUE_SLEEP))
+		__trace_dequeue_task_tp(rq->cpu, p);
+	return ret;
 
-sorry for missing this, would add it later...
 
->
-> > +DECLARE_TRACE(psi_event,
-> > +     TP_PROTO(struct psi_trigger *t),
-> > +     TP_ARGS(t));
-> > +
-> >  #endif /* _TRACE_SCHED_H */
-> >
-> >  /* This part must be outside protection */
+__block_task():
+	trace_dequeue_task_tp(rq->cpu, p);
+	...
+
+
+Specifically, only DEQUEUE_SLEEP is allowed to fail, and DEQUEUE_SLEEP
+will eventually cause __block_task() to be called, either directly, or
+delayed.
