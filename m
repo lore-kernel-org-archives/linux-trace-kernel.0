@@ -1,83 +1,110 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8DDE347D0;
-	Sat, 16 Aug 2025 14:10:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D74042D46CA;
+	Sat, 16 Aug 2025 14:50:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755353455; cv=none; b=VHY+aWKwhE/N1xn4d67LbSXEl12LZ5qso04UG6FnqYi/bQ54Q6hQpHdJkQKpETz1bC6iHNdc+TVW8kJ/KH685ajlMQReKauSTG3KZcajX/p1/1MOWweATLJ4Ukd277MqtWd7TXh8GG33Hj3FtKhPfAfvxcrR/NftPXBt7dtC9oE=
+	t=1755355830; cv=none; b=YlGqqhWIPi2YbWMPj43H4KBPW2+UbRz+P2LLXu1MYj4m1MmgZCanIW4rZDVg/oENyekpKweIHkaYYaOsv6e6/pBs1YLj25EFUBp/Qo2hxD0sDGHOYbw9C2X1noZuUrmJqolLfCWaHd4hzw2g4vpYvXZO00eYYgEBlRbr7LKx35g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755353455; c=relaxed/simple;
-	bh=A2IijguzmvCHTThiAi181MW3ax9cyNUVOD8hxWfvK6c=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=R/pIM+wO8w7tN5EB8TmYxYc8ht+cT218H3De8XC/O2I2fn76YBCT1DdENCbqd66vW8k+MW/OHbFweRvGlrntBlx++ZYwCziFD6ieJlEEQPmi8T9pB3tzOpuBrPJ3CzyII3NFD/qnGbSkmdExNH2n0uzFWdGJch5NKIoHG5XQLXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S11BFUxr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1755355830; c=relaxed/simple;
+	bh=3/6j6G8m0fiGcHsJh9fJn6cHi5TaoU26V0jjDuRfG+A=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=VsMtu4UU4/DgQAtRIrBVD/Nlak/KGlIWlAhLR9C6tV4ud0mLsfdv2JLBzbIyFO/XMG5pp4tlMIWCBSvC7v8ozL7oK3GsIKq1YGzseYVceZIGRmjLm3mBYfmZackjLtR7ZZf6Eg9WVSsRu+wgEJMdmYZHB6QU/qo1vWU40+v2s64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f5cR47R6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S11BFUxr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA0CFC4CEEF;
-	Sat, 16 Aug 2025 14:10:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f5cR47R6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AA1CC4CEEF;
+	Sat, 16 Aug 2025 14:50:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755353455;
-	bh=A2IijguzmvCHTThiAi181MW3ax9cyNUVOD8hxWfvK6c=;
-	h=From:To:Cc:Subject:Date:From;
-	b=S11BFUxrqISZ7PjB6vyIt4f632pwnvgJUGmlSbLHWtwPqFb/eKGmaM9qGhmIp8+IP
-	 056Am6990PQ+vuEQS2Aps3bLabPSYmGa3vHfzVRclmMnbMmsTAR5Wpd+GejgPYqRUL
-	 7qqIZ6MUuVzmORhfyDGi82H6Oi1TaPJj0YsAJ5jvcYf6PQJcWx6+n0jrwj21RB9kl+
-	 hmAUfE84EtuDLgA4FF1LyOQR4Y+8G0BtSFLTA5Ar6nexW1PUipnQEGI4HPzFmj9ILy
-	 Bwr4gdqXlPgmuPsUcJElJHJkTRC5HxRgkpo/vAt0Z4Gi0KydiPl4aQkYAnedyQUs4Y
-	 DLY//0LSsuKTA==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	mhiramat@kernel.org,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Menglong Dong <menglong8.dong@gmail.com>,
-	Ryan Chung <seokwoo.chung130@gmail.com>
-Subject: [PATCH] tracing: fprobe-event: Sanitize wildcard for fprobe event name
-Date: Sat, 16 Aug 2025 23:10:51 +0900
-Message-ID: <175535345114.282990.12294108192847938710.stgit@devnote2>
-X-Mailer: git-send-email 2.43.0
-User-Agent: StGit/0.19
+	s=k20201202; t=1755355829;
+	bh=3/6j6G8m0fiGcHsJh9fJn6cHi5TaoU26V0jjDuRfG+A=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=f5cR47R6qxae48z9hM2mG0DES2xjsZfWd4eXtRf/u1POszbsgvpHz4oYwRrRBX+sF
+	 HG6wQSXjA+J2Q+ejd2Hjw0bdXH/x8EWJdO1fFoHk7HM+xI8vmqM62WFKbmytnFv2gr
+	 HeVNXOvdO5WWPv5M0aSm6ulo7kGtnqi6KPVSSUZtlC/XrI0kijHEBDuR8aqk5NX/sG
+	 VkDKCpTG3iO7R0NcddX+8jEUIjsKu/eC+JsuYcF0W4VMqramGQmI/6qiHiQAGxZfJh
+	 z4ttB6PpFLctgPaTtIZLTJ3gwcR7uCGS71IV8U8gBMYH3xtEPGVFJlnj1bIwegDXO+
+	 SSLSAs0zDe72A==
+Date: Sat, 16 Aug 2025 23:50:23 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Menglong Dong <menglong8.dong@gmail.com>
+Cc: olsajiri@gmail.com, rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
+ hca@linux.ibm.com, revest@chromium.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH bpf-next v4 1/4] fprobe: use rhltable for
+ fprobe_ip_table
+Message-Id: <20250816235023.4dabfbc13a46a859de61cf4d@kernel.org>
+In-Reply-To: <20250815064712.771089-2-dongml2@chinatelecom.cn>
+References: <20250815064712.771089-1-dongml2@chinatelecom.cn>
+	<20250815064712.771089-2-dongml2@chinatelecom.cn>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Hi Menglong,
 
-Fprobe event accepts wildcards for the target functions, but unless user
-specifies its event name, it makes an event with the wildcards.
+Sorry, one more thing.
 
-  /sys/kernel/tracing # echo 'f mutex*' >> dynamic_events
-  /sys/kernel/tracing # cat dynamic_events
-  f:fprobes/mutex*__entry mutex*
-  /sys/kernel/tracing # ls events/fprobes/
-  enable         filter         mutex*__entry
+> @@ -260,14 +263,12 @@ static int fprobe_entry(struct ftrace_graph_ent *trace, struct fgraph_ops *gops,
+>  	if (WARN_ON_ONCE(!fregs))
+>  		return 0;
+>  
+> -	first = node = find_first_fprobe_node(func);
+> -	if (unlikely(!first))
+> -		return 0;
+> -
+> +	rcu_read_lock();
 
-To fix this, replace the wildcard ('*') with an underscore.
+Actually, we don't need these rcu_read_lock() in this function, because
+the caller function_graph_enter_regs() uses ftrace_test_recursion_trylock()
+which disables preemption. Thus we don't need to do this again here.
 
-Fixes: 334e5519c375 ("tracing/probes: Add fprobe events for tracing function entry and exit.")
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Cc: stable@vger.kernel.org
----
- kernel/trace/trace.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> +	head = rhltable_lookup(&fprobe_ip_table, &func, fprobe_rht_params);
+>  	reserved_words = 0;
+> -	hlist_for_each_entry_from_rcu(node, hlist) {
+> +	rhl_for_each_entry_rcu(node, pos, head, hlist) {
+>  		if (node->addr != func)
+> -			break;
+> +			continue;
+>  		fp = READ_ONCE(node->fp);
+>  		if (!fp || !fp->exit_handler)
+>  			continue;
+> @@ -278,17 +279,19 @@ static int fprobe_entry(struct ftrace_graph_ent *trace, struct fgraph_ops *gops,
+>  		reserved_words +=
+>  			FPROBE_HEADER_SIZE_IN_LONG + SIZE_IN_LONG(fp->entry_data_size);
+>  	}
+> -	node = first;
+> +	rcu_read_unlock();
+>  	if (reserved_words) {
+>  		fgraph_data = fgraph_reserve_data(gops->idx, reserved_words * sizeof(long));
+>  		if (unlikely(!fgraph_data)) {
+> -			hlist_for_each_entry_from_rcu(node, hlist) {
+> +			rcu_read_lock();
 
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 1dbf1d3cf2f1..5a6688832da8 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -2204,7 +2204,7 @@ static inline bool is_good_system_name(const char *name)
- static inline void sanitize_event_name(char *name)
- {
- 	while (*name++ != '\0')
--		if (*name == ':' || *name == '.')
-+		if (*name == ':' || *name == '.' || *name == '*')
- 			*name = '_';
- }
- 
+Ditto.
 
+> +			rhl_for_each_entry_rcu(node, pos, head, hlist) {
+>  				if (node->addr != func)
+> -					break;
+> +					continue;
+>  				fp = READ_ONCE(node->fp);
+>  				if (fp && !fprobe_disabled(fp))
+>  					fp->nmissed++;
+>  			}
+> +			rcu_read_unlock();
+>  			return 0;
+>  		}
+>  	}
+
+Thank you,
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
