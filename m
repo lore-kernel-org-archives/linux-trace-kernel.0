@@ -1,238 +1,397 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D79EF41760;
-	Sun, 17 Aug 2025 04:28:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EA461E5718;
+	Sun, 17 Aug 2025 07:56:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755404916; cv=none; b=cm7BuUY7Nsxr5Xpf80G1FG/cS51wtVhFP6F7voIoayaRfgQL7Df3h5RvbJFWfmlHQ7+gZbOtiaVvlmkqbQXe7LAlKxzCtJAGG4ASKK6HXb2+9uIfz/DdLamKG3lqCBGpKjmBneo/QiIoKdMKmlyp0iSFwd/9jwpVvDE+cY4yx5w=
+	t=1755417401; cv=none; b=ZNOP+lc8hKUmJKY1q2p9oJ6Y4DBjN4TGESNxHJSIrKDaVUaRmAPQuOor8e8WbJbDvnIhZ4EvbxhyG3D/L6oIGDy8Ip2Kvmjx8PzcRaIlBbpWP4pQqD6r37sYg4MZ+wUVh4463+9odYB7n7yuzps8rJrQ7Cw9b2RPBi7t62hRu5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755404916; c=relaxed/simple;
-	bh=roBsXTXGnXLtqkdQMkwjW74wVTodWks6KmfOvZGXISw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=doRVRO6hNyIi2YLDdqrlawXd6eq5kMJo2di28kZJXSlwjR4MlxcjpIpsOcM1XZhgQlSkPajNCBm4/+S0gW/LWICoT7qNvDvbT81I1S3VQB88ocdy2RLQWmcEPCUtxM3VvF2SCjEoL4CTBGkJN0DU5yrycwu8WYcxN8rqSTjNY3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XFKeloyh; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1755417401; c=relaxed/simple;
+	bh=S60GrxtUjunK/rsP99mOcwBno1Hi+RGVldknhZrFPog=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=E1Bua23snGKJP17Htj3f6gX7prHSVm4phowX3Kcu66c2iVdARHAv6FtIK5eTKzSfdgcUWDoYNE0sZFgGE4keb+e1bC6iVLuWFmVutHvXNWDvbSAKZH5sAuv7N7cyhSZeyMbSbfzj2fuhIReH7R6PgE1J+dfZp3ywwKkaUI34nwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TKTR0oSU; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XFKeloyh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1755404914; x=1786940914;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=roBsXTXGnXLtqkdQMkwjW74wVTodWks6KmfOvZGXISw=;
-  b=XFKeloyhlwb8irfoyvgo7Pg+t6KTdTlk+STFtsP+c0JYse5ajNu50EGJ
-   wm68Vl/+1knApzLIn/88eye328LCPhIDknc9dqmD7qU5YIfgR9SzZlRFm
-   c4J5MbXgUC3UDJY7exAMGgwjqWNZwqw/bkiN+zcg51bc1ZlPm8d6esN8/
-   6rB5EmzdZvD74atveiw4CPgHhjCLWyxK+4LFHK8UBi9lCQgUit2MryEUa
-   LK4ltWhNDo9v9Sip37TPPQUlq5qqSE/H+9AKv8JaNlivoOhn6A4Mxyzx3
-   sVRYY9NXpWxuwxH8/eYjPE1JXmfHKwgAzHrCuKw1voIXjCRby8UGgqX2z
-   A==;
-X-CSE-ConnectionGUID: vlZRdxvsRxmgV9anzTiMPg==
-X-CSE-MsgGUID: Xtlx70LnQrKZvoQeaKMzRg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11524"; a="57578211"
-X-IronPort-AV: E=Sophos;i="6.17,293,1747724400"; 
-   d="scan'208";a="57578211"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2025 21:28:33 -0700
-X-CSE-ConnectionGUID: fy5oHdMkTVKdVnTF/IvgEg==
-X-CSE-MsgGUID: ThgxVKmvQRGwUvrdBbVe8Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.17,293,1747724400"; 
-   d="scan'208";a="171505443"
-Received: from lkp-server02.sh.intel.com (HELO 4ea60e6ab079) ([10.239.97.151])
-  by fmviesa005.fm.intel.com with ESMTP; 16 Aug 2025 21:28:31 -0700
-Received: from kbuild by 4ea60e6ab079 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1unV0O-000DMB-2Y;
-	Sun, 17 Aug 2025 04:28:28 +0000
-Date: Sun, 17 Aug 2025 12:28:09 +0800
-From: kernel test robot <lkp@intel.com>
-To: Ryan Chung <seokwoo.chung130@gmail.com>, rostedt@goodmis.org,
-	mhiramat@kernel.org, mathieu.desnoyer@efficios.com
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel-mentees@lists.linux.dev,
-	Ryan Chung <seokwoo.chung130@gmail.com>
-Subject: Re: [PATCH] trace/trace_fprobe.c: TODO: handle filter, nofilter or
- symbol list
-Message-ID: <202508171256.CSm9DAkb-lkp@intel.com>
-References: <20250812162101.5981-1-seokwoo.chung130@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TKTR0oSU"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-45a1b00797dso18734905e9.0;
+        Sun, 17 Aug 2025 00:56:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1755417398; x=1756022198; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=KUkUBMS1IwQlC3yVuJNJNDMd6KXZgr5vYss6MjFxEsY=;
+        b=TKTR0oSUrDPg/FKqzE4vDryY1kAGqEkay7mwhUVZVmN20yfS3JodwNdzkVql7QbF+X
+         VfkoTuKMO/CX8+lbZ49EBJvP8mM+lNNdMyAfTXPQRrgOclgyGQjtez+gJhXnFNW/TF+K
+         93Wk9BdYBHVeTELSqZTPeMCIzOhuBYqgwvfu8LKZNmKHA4iZ8K6Ogm26QyArIu2LvT+Z
+         XpC1N4qPMEp7Lsi8wTlfNhSlg37K6kX9a/iQTt7xX7gSTfdSd0fmNQH/vXW0XAyN71O0
+         r4UtD1bTfCGMhhNCE9hYRJFCh8mkFt//ZH65kYVsaFo+2+1fi+KmcYAg+jzFYX2qQTIx
+         KENw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755417398; x=1756022198;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KUkUBMS1IwQlC3yVuJNJNDMd6KXZgr5vYss6MjFxEsY=;
+        b=dat2UMvR8dOx3whR5KOuaQYdDMhS5g1SBUnHbNA7mNeR3wiz9fGRcF1FB9yCAppxnN
+         VrFwaSFFMyOdzxkYk3gya0NWHZHoVOlWKxIoUADT1O7UoS98gjKCsdo7YXJ4hzVjSw2c
+         S5F8KAEKXHalrX+6C1/L7xPIolZLzRk46oxFZ5Jt06Sas4cbDkKs1d1otXMSIdF71G9e
+         451pEF2JfxYtGEWedhvGcmaSZvL9RFKr/7/kCwFawRTehpRPlZ/jXwtp87xLjlD8nRmh
+         mxe6OyrBOJe+7C56GbzZ9DVYFA/ivDOKtgVsxi8IwN9BM84j42vV3uvReFmTuBZTb2wc
+         VQ8g==
+X-Forwarded-Encrypted: i=1; AJvYcCVo7rlxJ/QBjkVum97JHFCj+NwH7hBrrbwhDy+FWXU7jawI3ReQjkrX+B/cwJXFMuBxFSgv2w1qETNuwYQ=@vger.kernel.org, AJvYcCWdPVVl7uTluXOj+WCRyG4imyWE8ISPsB/D6IoZ5HPqWdSej83XL3ET8L5qElNEBoolEdykUpSgo1y6AG09fW/V6RKm@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyher0SB0it9N9ZYXR9Lw+lOxIlLL9A83SO/Fm1a5tgSTXtLRpo
+	rBgtOBYTGdoUY6AZfJBdgfYpt9zYnQpJSwpwjEqEWVd8PUyJS7QdhOF+
+X-Gm-Gg: ASbGnctoeRrBSMSbkU+XPMpW5R64+wfIcSZSzPA6M877Yt/1HhKnhk7EfY7kzrZxQRH
+	T+/ZJIA5Bpj1MxdJMX0yUc06yhu4ED/nDqSwicNRAqSUE/dncyq2a6kBNlsBaWdprlZFMQYoe66
+	pGRVHFGi7UDVM9Cm7dkcgMywaKf5Iy5Y/7+ahxrq+0EfDMY2T8/e9f2hyMNzh5rcgShHga2iq7h
+	CsrSCV6UjuKrTpLG16kj/HJpP2GhZQvxDWb1rn7S+i+dFoXfrplHsiF/Ab81gSJtmLr6rW5PhR6
+	QcUxx000o+xwwe13ZQDhFLXTjrXIGtcXSonltB0PGnSHbw+G0g52+JP87ZGeSfyvm0a87SHu09H
+	dyWLy/n+9Ca0y2wz2RDZJQ6cpYkc=
+X-Google-Smtp-Source: AGHT+IGnuF8FMt+qBubHcZo8C4fC7SAScCaoFFspsdeLBrDHUCiuRVvWkyQdN/xlCiJS+XIRkXcCWQ==
+X-Received: by 2002:a05:600c:3510:b0:456:1442:86e with SMTP id 5b1f17b1804b1-45a2184754bmr54181595e9.21.1755417397606;
+        Sun, 17 Aug 2025 00:56:37 -0700 (PDT)
+Received: from [127.0.1.1] ([156.205.52.101])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45a223292d2sm85254605e9.21.2025.08.17.00.56.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 17 Aug 2025 00:56:37 -0700 (PDT)
+From: Mohammad Gomaa <midomaxgomaa@gmail.com>
+Date: Sun, 17 Aug 2025 10:55:14 +0300
+Subject: [PATCH WIP v2] i2c: add tracepoints to aid debugging in
+ i2c-core-base
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250812162101.5981-1-seokwoo.chung130@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250817-refactor-add-i2c-tracepoints-v2-1-c0bad299e02e@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAOGKoWgC/42Nvw6CMBDGX4Xc7BlaBcXJ1c3NwTC0vQMuAUpaQ
+ jSEd7fhCRy/f79vhchBOMItWyHwIlH8mIQ+ZOA6M7aMQkmDznWRX/MSAzfGzT6gIULRDudgHE9
+ exjmiLVnbStPZUQUJMaW2fHb8G16PJ9TJ7CSm/Xe/XNQe/UdfFCokRafKUtnY4nJvByP90fkB6
+ m3bfhko6VPNAAAA
+X-Change-ID: 20250806-refactor-add-i2c-tracepoints-b6e2b92d4cd9
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+ Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-trace-kernel@vger.kernel.org, kenalba@google.com, 
+ hbarnor@chromium.org, rayxu@google.com, 
+ Mohammad Gomaa <midomaxgomaa@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1755417396; l=9680;
+ i=midomaxgomaa@gmail.com; s=20250806; h=from:subject:message-id;
+ bh=S60GrxtUjunK/rsP99mOcwBno1Hi+RGVldknhZrFPog=;
+ b=gWgvBnkdATsN3DKs3Z5qlPHcHkJnzpTwFSejfgHTy3WI8viywrt71UzukLAGZi2TyUpQpBc/2
+ in99gCwkdmSB3hX8nppWwX7A3Mt9862AgZUJFb2M8iwcWHmRsxK3qyl
+X-Developer-Key: i=midomaxgomaa@gmail.com; a=ed25519;
+ pk=I6wR1OynGsrkha14RX3loo3BZsP8pVrK45bErJtcxZE=
 
-Hi Ryan,
+Add tracepoints to i2c-core-base.c file to help trace
+and debug I2C device probe failures.
 
-kernel test robot noticed the following build warnings:
+The new trace points are:
+- i2c_device_probe_debug: records non-failure routines
+  e.g. IRQ 0.
+- i2c_device_probe_complete: records failed & successful
+  probbes with appropriate trace message.
 
-[auto build test WARNING on v6.16]
-[also build test WARNING on linus/master next-20250815]
-[cannot apply to trace/for-next v6.17-rc1]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+To support operation of these tracepoints an enum
+was added that stores log message for debug and failure.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Ryan-Chung/trace-trace_fprobe-c-TODO-handle-filter-nofilter-or-symbol-list/20250813-002748
-base:   v6.16
-patch link:    https://lore.kernel.org/r/20250812162101.5981-1-seokwoo.chung130%40gmail.com
-patch subject: [PATCH] trace/trace_fprobe.c: TODO: handle filter, nofilter or symbol list
-config: s390-randconfig-r073-20250817 (https://download.01.org/0day-ci/archive/20250817/202508171256.CSm9DAkb-lkp@intel.com/config)
-compiler: s390-linux-gcc (GCC) 8.5.0
+Signed-off-by: Mohammad Gomaa <midomaxgomaa@gmail.com>
+---
+Hello,
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202508171256.CSm9DAkb-lkp@intel.com/
+This patch adds tracepoints to i2c-core-base to aid with debugging I2C probing failrues.
 
-smatch warnings:
-kernel/trace/trace_fprobe.c:768 __register_trace_fprobe() warn: inconsistent indenting
+The motivation for this comes from my work in Google Summer of Code (GSoC) 2025:
+"ChromeOS Platform Input Device Quality Monitoring"
+https://summerofcode.withgoogle.com/programs/2025/projects/uCdIgK7K
 
-vim +768 kernel/trace/trace_fprobe.c
+This is my first submission to the Linux kernel, so any feedback is welcome.
+---
+Changes in v2:
+- Refactored i2c_device_probe_failed to i2c_device_probe_complete
+  to support both successful and failed probes.
+- Fixed formatting for TRACE_EVENT().
+- Used enum instead of string variable for "reason".
+- Link to v1: https://lore.kernel.org/r/20250806-refactor-add-i2c-tracepoints-v1-1-d1d39bd6fb57@gmail.com
+---
+ drivers/i2c/i2c-core-base.c | 63 ++++++++++++++++++++++++--------
+ include/trace/events/i2c.h  | 88 +++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 137 insertions(+), 14 deletions(-)
 
-   732	
-   733	/* Internal register function - just handle fprobe and flags */
-   734	static int __register_trace_fprobe(struct trace_fprobe *tf)
-   735	{
-   736		int i, ret;
-   737	
-   738		/* Should we need new LOCKDOWN flag for fprobe? */
-   739		ret = security_locked_down(LOCKDOWN_KPROBES);
-   740		if (ret)
-   741			return ret;
-   742	
-   743		if (trace_fprobe_is_registered(tf))
-   744			return -EINVAL;
-   745	
-   746		for (i = 0; i < tf->tp.nr_args; i++) {
-   747			ret = traceprobe_update_arg(&tf->tp.args[i]);
-   748			if (ret)
-   749				return ret;
-   750		}
-   751	
-   752		/* Set/clear disabled flag according to tp->flag */
-   753		if (trace_probe_is_enabled(&tf->tp))
-   754			tf->fp.flags &= ~FPROBE_FL_DISABLED;
-   755		else
-   756			tf->fp.flags |= FPROBE_FL_DISABLED;
-   757	
-   758		if (trace_fprobe_is_tracepoint(tf)) {
-   759	
-   760			/* This tracepoint is not loaded yet */
-   761			if (tf->tpoint == TRACEPOINT_STUB)
-   762				return 0;
-   763	
-   764			return __regsiter_tracepoint_fprobe(tf);
-   765		}
-   766	
-   767	    /* Parse tf->symbol */
- > 768	    {
-   769	        char *spec, *bang, *p;
-   770	        int n = 0, w = 0, j, rc;
-   771	        char **syms = NULL;
-   772	
-   773	        spec = kstrdup(tf->symbol, GFP_KERNEL);
-   774	        if (!spec)
-   775	            return -ENOMEM;
-   776	
-   777	        /* If a '!' exists, treat it as single symbol + filter */
-   778	        bang = strchr(spec, '!');
-   779	        if (bang) {
-   780	            char *sym, *flt;
-   781	
-   782	            *bang = '\0';
-   783	            sym = strim(spec);
-   784	            flt = strim(bang + 1);
-   785	
-   786	            if (!*sym || !*flt) {
-   787	                kfree(spec);
-   788	                return -EINVAL; /* reject empty symbol/filter */
-   789	            }
-   790	
-   791	            rc = register_fprobe(&tf->fp, sym, flt);
-   792	            kfree(spec);
-   793	            return rc;
-   794	        }
-   795	
-   796	        /* Comma list (or single symbol without '!') */
-   797	        /* First pass: count non-empty tokens */
-   798	        p = spec;
-   799	        while (p) {
-   800	            char *tok = strsep(&p, ",");
-   801	            if (tok && *strim(tok))
-   802	                n++;
-   803	        }
-   804	
-   805	        if (n == 0){
-   806	            kfree(spec);
-   807	            return -EINVAL;
-   808	        }
-   809	
-   810	        /* Allocate array for pointers into spec (callee copies/consumes) */
-   811	        syms = kcalloc(n, sizeof(*syms), GFP_KERNEL);
-   812	        if (!syms) {
-   813	            kfree(spec);
-   814	            return -ENOMEM;
-   815	        }
-   816	
-   817	        /* Second pass: fill, skipping empties */
-   818	        p = spec;
-   819	        while (p) {
-   820	            char *tok = strsep(&p, ",");
-   821	            char *s;
-   822	
-   823	            if (!tok)
-   824	                break;
-   825	            s = strim(tok);
-   826	            if (!*s)
-   827	                continue;
-   828	            syms[w++] = s; 
-   829	        }
-   830	        
-   831	        /* Dedup in-place */
-   832	        for (i = 0; i < w; i++){
-   833	            if (!syms[i])
-   834	                continue;
-   835	            for (j = i + 1; j < w; j++) {
-   836	                if (syms[j] && !strcmp(syms[i], syms[j]))
-   837	                    syms[j] = NULL;
-   838	            }
-   839	        }
-   840	
-   841	        /* Compact */
-   842	        for (i = 0, j = 0; i < w; i++) {
-   843	            if (syms[i])
-   844	                syms[j++] = syms[i];
-   845	        }
-   846	        w = j;
-   847	
-   848	        /* After dedup, ensure we still have at least one symbol */
-   849	        if (w == 0){
-   850	            kfree(syms);
-   851	            kfree(spec);
-   852	            return -EINVAL;
-   853	        }
-   854	
-   855	        /* Register list or single symbol, using the existing bulk API */
-   856	        if (w == 1)
-   857	            rc = register_fprobe(&tf->fp, syms[0], NULL);
-   858	        else
-   859	            rc = register_fprobe_syms(&tf->fp, (const char **)syms, w);
-   860	
-   861	        kfree(syms);
-   862	        kfree(spec);
-   863	        return rc;
-   864	    }
-   865	}
-   866	
+diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
+index ecca8c006b020379fb53293b20ab09ba25314609..7ca22759d26e85ee51bea60f414ed014e9bcec40 100644
+--- a/drivers/i2c/i2c-core-base.c
++++ b/drivers/i2c/i2c-core-base.c
+@@ -495,6 +495,8 @@ static int i2c_device_probe(struct device *dev)
+ 	struct i2c_driver	*driver;
+ 	bool do_power_on;
+ 	int status;
++	int err_reason;
++	bool has_id_table, has_acpi_match, has_of_match;
+ 
+ 	if (!client)
+ 		return 0;
+@@ -509,38 +511,54 @@ static int i2c_device_probe(struct device *dev)
+ 			/* Keep adapter active when Host Notify is required */
+ 			pm_runtime_get_sync(&client->adapter->dev);
+ 			irq = i2c_smbus_host_notify_to_irq(client);
++			err_reason = I2C_TRACE_REASON_HOST_NOTIFY;
+ 		} else if (is_of_node(fwnode)) {
+ 			irq = fwnode_irq_get_byname(fwnode, "irq");
+ 			if (irq == -EINVAL || irq == -ENODATA)
+ 				irq = fwnode_irq_get(fwnode, 0);
++			err_reason = I2C_TRACE_REASON_FROM_OF;
+ 		} else if (is_acpi_device_node(fwnode)) {
+ 			bool wake_capable;
+ 
+ 			irq = i2c_acpi_get_irq(client, &wake_capable);
+ 			if (irq > 0 && wake_capable)
+ 				client->flags |= I2C_CLIENT_WAKE;
++			err_reason = I2C_TRACE_REASON_FROM_ACPI;
+ 		}
+ 		if (irq == -EPROBE_DEFER) {
+ 			status = dev_err_probe(dev, irq, "can't get irq\n");
++			err_reason = I2C_TRACE_REASON_EPROBE_DEFER_IRQ;
+ 			goto put_sync_adapter;
+ 		}
+ 
+-		if (irq < 0)
++		if (irq < 0) {
++			trace_i2c_device_probe_debug(dev, err_reason);
+ 			irq = 0;
++		}
+ 
+ 		client->irq = irq;
+ 	}
+ 
+ 	driver = to_i2c_driver(dev->driver);
+ 
++	has_id_table = driver->id_table;
++	has_acpi_match = acpi_driver_match_device(dev, dev->driver);
++	has_of_match = i2c_of_match_device(dev->driver->of_match_table, client);
++
++	if (!has_id_table)
++		trace_i2c_device_probe_debug(dev, I2C_TRACE_REASON_NO_I2C_ID_TABLE);
++	if (!has_acpi_match)
++		trace_i2c_device_probe_debug(dev, I2C_TRACE_REASON_ACPI_ID_MISMATCH);
++	if (!has_of_match)
++		trace_i2c_device_probe_debug(dev, I2C_TRACE_REASON_OF_ID_MISMATCH);
++
+ 	/*
+ 	 * An I2C ID table is not mandatory, if and only if, a suitable OF
+ 	 * or ACPI ID table is supplied for the probing device.
+ 	 */
+-	if (!driver->id_table &&
+-	    !acpi_driver_match_device(dev, dev->driver) &&
+-	    !i2c_of_match_device(dev->driver->of_match_table, client)) {
++	if (!has_id_table && !has_acpi_match && !has_of_match) {
+ 		status = -ENODEV;
++		err_reason = I2C_TRACE_REASON_NO_ID_MATCH;
+ 		goto put_sync_adapter;
+ 	}
+ 
+@@ -550,47 +568,60 @@ static int i2c_device_probe(struct device *dev)
+ 		wakeirq = fwnode_irq_get_byname(fwnode, "wakeup");
+ 		if (wakeirq == -EPROBE_DEFER) {
+ 			status = dev_err_probe(dev, wakeirq, "can't get wakeirq\n");
++			err_reason = I2C_TRACE_REASON_EPROBE_DEFER_WAKEIRQ;
+ 			goto put_sync_adapter;
+ 		}
+ 
+ 		device_init_wakeup(&client->dev, true);
+ 
+-		if (wakeirq > 0 && wakeirq != client->irq)
++		if (wakeirq > 0 && wakeirq != client->irq) {
+ 			status = dev_pm_set_dedicated_wake_irq(dev, wakeirq);
+-		else if (client->irq > 0)
++			err_reason = I2C_TRACE_REASON_SET_DED_WAKE_FAILED;
++		} else if (client->irq > 0) {
+ 			status = dev_pm_set_wake_irq(dev, client->irq);
+-		else
++			err_reason = I2C_TRACE_REASON_SET_WAKE_FAILED;
++		} else {
+ 			status = 0;
++			err_reason = I2C_TRACE_REASON_NO_IRQ;
++		}
+ 
+-		if (status)
++		if (status) {
+ 			dev_warn(&client->dev, "failed to set up wakeup irq\n");
++			trace_i2c_device_probe_debug(&client->dev, err_reason);
++		}
+ 	}
+ 
+ 	dev_dbg(dev, "probe\n");
+ 
+ 	status = of_clk_set_defaults(to_of_node(fwnode), false);
+-	if (status < 0)
++	if (status < 0) {
++		err_reason = I2C_TRACE_REASON_SET_DEF_CLOCKS;
+ 		goto err_clear_wakeup_irq;
+-
++	}
+ 	do_power_on = !i2c_acpi_waive_d0_probe(dev);
+ 	status = dev_pm_domain_attach(&client->dev, do_power_on ? PD_FLAG_ATTACH_POWER_ON : 0);
+-	if (status)
++	if (status) {
++		err_reason = I2C_TRACE_REASON_ATTACH_PM_DOMAIN;
+ 		goto err_clear_wakeup_irq;
+-
++	}
+ 	client->devres_group_id = devres_open_group(&client->dev, NULL,
+ 						    GFP_KERNEL);
+ 	if (!client->devres_group_id) {
+ 		status = -ENOMEM;
++		err_reason = I2C_TRACE_REASON_OPEN_DEVRES_GROUP;
+ 		goto err_detach_pm_domain;
+ 	}
+ 
+ 	client->debugfs = debugfs_create_dir(dev_name(&client->dev),
+ 					     client->adapter->debugfs);
+ 
+-	if (driver->probe)
++	if (driver->probe) {
+ 		status = driver->probe(client);
+-	else
++		err_reason = I2C_TRACE_REASON_PROBE_FAILED;
++	} else {
+ 		status = -EINVAL;
++		err_reason = I2C_TRACE_REASON_NO_PROBE;
++	}
+ 
+ 	/*
+ 	 * Note that we are not closing the devres group opened above so
+@@ -603,6 +634,8 @@ static int i2c_device_probe(struct device *dev)
+ 	if (status)
+ 		goto err_release_driver_resources;
+ 
++	trace_i2c_device_probe_complete(&client->dev, status, err_reason);
++
+ 	return 0;
+ 
+ err_release_driver_resources:
+@@ -617,6 +650,8 @@ static int i2c_device_probe(struct device *dev)
+ 	if (client->flags & I2C_CLIENT_HOST_NOTIFY)
+ 		pm_runtime_put_sync(&client->adapter->dev);
+ 
++	trace_i2c_device_probe_complete(&client->dev, status, err_reason);
++
+ 	return status;
+ }
+ 
+diff --git a/include/trace/events/i2c.h b/include/trace/events/i2c.h
+index 142a23c6593c611de9abc2a89a146b95550b23cd..b00650ceba0a96a7cc538991ce5d5a45ea553715 100644
+--- a/include/trace/events/i2c.h
++++ b/include/trace/events/i2c.h
+@@ -16,6 +16,94 @@
+ /*
+  * drivers/i2c/i2c-core-base.c
+  */
++#ifndef I2C_TRACE_REASON_ENUM_DEFINED
++#define I2C_TRACE_REASON_ENUM_DEFINED
++
++#define I2C_TRACE_REASON \
++EM(HOST_NOTIFY,			"IRQ 0: could not get irq from Host Notify") \
++EM(FROM_OF,			"IRQ 0: could not get irq from OF") \
++EM(FROM_ACPI,			"IRQ 0: could not get irq from ACPI") \
++EM(EPROBE_DEFER_IRQ,		"IRQ 0: could not get IRQ due to EPROBE_DEFER") \
++EM(NO_I2C_ID_TABLE,		"no I2C ID table") \
++EM(ACPI_ID_MISMATCH,		"ACPI ID table mismatch") \
++EM(OF_ID_MISMATCH,		"OF ID table mismatch") \
++EM(NO_ID_MATCH,		"no I2C ID table and no ACPI/OF match") \
++EM(EPROBE_DEFER_WAKEIRQ,	"get wake IRQ due to EPROBE_DEFER") \
++EM(SET_DED_WAKE_FAILED,	"failed to set dedicated wakeup IRQ") \
++EM(SET_WAKE_FAILED,		"failed to set wakeup IRQ") \
++EM(NO_IRQ,			"no IRQ") \
++EM(SET_DEF_CLOCKS,		"set default clocks") \
++EM(ATTACH_PM_DOMAIN,		"attach PM domain") \
++EM(OPEN_DEVRES_GROUP,		"open devres group") \
++EM(PROBE_FAILED,		"specific driver probe failed") \
++EMe(NO_PROBE,			"no probe defined")
++
++#undef EM
++#undef EMe
++#define EM(a, b)	I2C_TRACE_REASON_##a,
++#define EMe(a, b)	I2C_TRACE_REASON_##a
++enum {
++	I2C_TRACE_REASON
++};
++
++#undef EM
++#undef EMe
++#define EM(a, b)	TRACE_DEFINE_ENUM(I2C_TRACE_REASON_##a);
++#define EMe(a, b)	TRACE_DEFINE_ENUM(I2C_TRACE_REASON_##a);
++I2C_TRACE_REASON
++
++#undef EM
++#undef EMe
++#define EM(a, b)		{ I2C_TRACE_REASON_##a, b },
++#define EMe(a, b)	{ I2C_TRACE_REASON_##a, b }
++
++#endif /* I2C_TRACE_REASON_ENUM_DEFINED */
++
++TRACE_EVENT(i2c_device_probe_debug,
++
++	TP_PROTO(struct device *dev, int err_reason),
++
++	TP_ARGS(dev, err_reason),
++
++	TP_STRUCT__entry(
++		__string(	devname,	dev_name(dev)	)
++		__field(	int,		err_reason	)
++	),
++
++	TP_fast_assign(
++		__assign_str(devname);
++		__entry->err_reason = err_reason;
++	),
++
++	TP_printk("device=%s: %s",
++		__get_str(devname),
++		__print_symbolic(__entry->err_reason, I2C_TRACE_REASON))
++);
++
++TRACE_EVENT(i2c_device_probe_complete,
++
++	TP_PROTO(struct device *dev, int status, int err_reason),
++
++	TP_ARGS(dev, status, err_reason),
++
++	TP_STRUCT__entry(
++		__string(	dev_name,	dev_name(dev)	)
++		__field(	int,		status		)
++		__field(	int,		err_reason	)
++	),
++
++	TP_fast_assign(
++		__assign_str(dev_name);
++		__entry->status = status;
++		__entry->err_reason = err_reason;
++	),
++
++	TP_printk("%s probe %s: %s",
++		__get_str(dev_name),
++		__entry->status ? "failed" : "succeeded",
++		__entry->status ? __print_symbolic(__entry->err_reason, I2C_TRACE_REASON) : "")
++);
++
+ extern int i2c_transfer_trace_reg(void);
+ extern void i2c_transfer_trace_unreg(void);
+ 
 
+---
+base-commit: 7e161a991ea71e6ec526abc8f40c6852ebe3d946
+change-id: 20250806-refactor-add-i2c-tracepoints-b6e2b92d4cd9
+
+Best regards,
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Mohammad Gomaa <midomaxgomaa@gmail.com>
+
