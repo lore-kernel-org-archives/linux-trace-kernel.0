@@ -1,260 +1,238 @@
-Received: from mail-pg1-f194.google.com (mail-pg1-f194.google.com [209.85.215.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AF27215175;
-	Sun, 17 Aug 2025 02:46:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D79EF41760;
+	Sun, 17 Aug 2025 04:28:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755398785; cv=none; b=vCpFboF34QgfBYn8r8R9ttO801I+7EVX3QoUD1RzAlehnOGoXogshHgZF7RDTs8np/w2To0DjpUUweyRUq4LD92kgZQMbnceho6tHIzvu+gB5pghvVlhF9PXUyfJU8ojEmB94mrZON4mWioqEo04b2c9vEJ6mACe/gkYfc7A+4s=
+	t=1755404916; cv=none; b=cm7BuUY7Nsxr5Xpf80G1FG/cS51wtVhFP6F7voIoayaRfgQL7Df3h5RvbJFWfmlHQ7+gZbOtiaVvlmkqbQXe7LAlKxzCtJAGG4ASKK6HXb2+9uIfz/DdLamKG3lqCBGpKjmBneo/QiIoKdMKmlyp0iSFwd/9jwpVvDE+cY4yx5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755398785; c=relaxed/simple;
-	bh=Y0sVgiMIvCN1tEPgiAVLe8svWdYQEvpuSTM/2lhhTGQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OnQ614y3z4HxVKjatBWxTMDctBiy7Bi4angp6ydJI9vZUbrphZCtFBVaLUi7DbnGdtNvV+lvAtKM8h/ojdMAxmlw7C7jejwj/dcLyf6O2XgSvOBfUkxJ4gMplbDl3Hkfl3rsyGoOemc2DyU6oPxQv7Kk9Srzdp0WA+P5DhX0EEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gdm3RNDQ; arc=none smtp.client-ip=209.85.215.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1755404916; c=relaxed/simple;
+	bh=roBsXTXGnXLtqkdQMkwjW74wVTodWks6KmfOvZGXISw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=doRVRO6hNyIi2YLDdqrlawXd6eq5kMJo2di28kZJXSlwjR4MlxcjpIpsOcM1XZhgQlSkPajNCBm4/+S0gW/LWICoT7qNvDvbT81I1S3VQB88ocdy2RLQWmcEPCUtxM3VvF2SCjEoL4CTBGkJN0DU5yrycwu8WYcxN8rqSTjNY3A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XFKeloyh; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gdm3RNDQ"
-Received: by mail-pg1-f194.google.com with SMTP id 41be03b00d2f7-b471740e488so3113322a12.1;
-        Sat, 16 Aug 2025 19:46:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1755398783; x=1756003583; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=I4PDMe7SP8CZO+JhWjjdFtQ1vR89wVuSvH9ObtDEfac=;
-        b=Gdm3RNDQIHpNdn7HvbdrITSFlMIWFK6SZLzCeRrsG5EZ3Il60hMIisQRh6zqpJkU6r
-         gQDPbaSz4niVS0xOmdq5bcJhyot4w9FwfIv9N2U5Pv5QeJyeZ1X//+VKqYOtp2neKeDo
-         GvnhjX39oD2jTGs/nUlsVxnNGlcjnnHmVcxfQnEbhHCQXmCKGQnrRn3AbGx+86VQa8Nq
-         1c2gs8d43MVsvvC/sVW37AaCMNUdnX7jd/yER6wqw0uMqKVRXM9Tx9HJvxuDn/A859Qb
-         kLqR3E//9GDATT7WcrAKDHnOHgL8Rpd3dXAxKu84xpIxjjX/grR/9LFZcpWaHDmwVQUD
-         QM7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755398783; x=1756003583;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=I4PDMe7SP8CZO+JhWjjdFtQ1vR89wVuSvH9ObtDEfac=;
-        b=N0sSo06i3Ga3u0YgM/eDDN3jNY3q7POAuozX0mPYlAi/guNp1JLMN1YF5zGI1g/AdG
-         7OTf2FmDHeAkXanDrwTEK82rSuiXyECF69VStfhvafSvLgtA+n/OA8ZMhySZLNd7d40I
-         dPB7nJYlZkJezh9rW78w7ET2jbwMJ8QodgTzjt1PWrQxELM3c6e9N1wHXsxKpmiJyBf0
-         cxLw4ICItpVRVJ/tHP7ny2DgNvkvDcE3c9bOhI22up0FDUxKjANymqOm1inOjEMBQoss
-         pMOGxb1KHWhOiP6gRIaM8Pb4z2ydkVBcntRYmyYBC24t6b//kpw0SOfFWXnTZ0m1ny+o
-         +ujA==
-X-Forwarded-Encrypted: i=1; AJvYcCV+T299XQxtOn2IjGB45NndnTXHRCd97zCiwI2BS27ufaQlHwa+Gg3JEqJFGZE60E1GGQg=@vger.kernel.org, AJvYcCVRjRKSFtphomQ0IHd7W7TlGT9OELlwOj2ZiBam3VCON+PIlqle3WPhAayOZ5SgIzqXZuFukEbjn6+zO7Sw@vger.kernel.org, AJvYcCXQdQQ+LtPavN0z1UzbfBoI0inMAFjWFXn+Qd8K4jaCK72rW19NlqV4Sn8LkUsV18qN7AnudRbX0v+4Zcvkyf6Khdh/@vger.kernel.org
-X-Gm-Message-State: AOJu0YyjVyhw55kcosowmOMxwOxYQvLxe3wIqfY0ibp854Dw22YY1sI+
-	X3kXei9+4tWYFXnJxkCln+Qduntz9rl9c9cKI08HTo8shQabDl5Mb8XC
-X-Gm-Gg: ASbGnctUBYn2kBoYJLTa5YkJ2H5lNEG24O9cwGEcrmpLkmjPT5wQn53QlRemk5do+We
-	dcGXE4xigEf5UKwYfcK3CtpnZq/AAorH9EW//5/jQrVp8qii4glulm7WhPbCJUiufbfMtaYHD8H
-	XB4qsqjnkq0GAqpOsouaxn24EvnaUEREWoOenDE/xlRXCOaHHplBEh86lIwkQfjcjoreVaJh7cc
-	TXYdqg+9EJOVPxxAoHNbC3jHC+Xh2564mJvG9FPUhXDn9/bP/o6Wl4JUDYaPM+RlY/FYZMLNdKg
-	4BYO1v+itKGWuF46AJEq9H+Dej5eJuZ0oIQb9C5wUov2wFaBiCvC6BXnthTa1KPhEZO5ya7MRic
-	JQ+UKME0L72CFiR7kvv/2y+qVmHgpyA==
-X-Google-Smtp-Source: AGHT+IEkRPYeSRtqbRyErbZ1r7ZynxxPHvXzI5eAhICn9Y7f2BvFMwBwIlBrZf6wG5Htf8n3RW09DA==
-X-Received: by 2002:a17:902:dac9:b0:240:1ed3:fc1f with SMTP id d9443c01a7336-2446d71a0afmr107827595ad.12.1755398783228;
-        Sat, 16 Aug 2025 19:46:23 -0700 (PDT)
-Received: from 7950hx ([43.129.244.20])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2446d50f382sm45009845ad.79.2025.08.16.19.46.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 16 Aug 2025 19:46:22 -0700 (PDT)
-From: Menglong Dong <menglong8.dong@gmail.com>
-X-Google-Original-From: Menglong Dong <dongml2@chinatelecom.cn>
-To: mhiramat@kernel.org
-Cc: rostedt@goodmis.org,
-	mathieu.desnoyers@efficios.com,
-	hca@linux.ibm.com,
-	revest@chromium.org,
-	linux-kernel@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XFKeloyh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1755404914; x=1786940914;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=roBsXTXGnXLtqkdQMkwjW74wVTodWks6KmfOvZGXISw=;
+  b=XFKeloyhlwb8irfoyvgo7Pg+t6KTdTlk+STFtsP+c0JYse5ajNu50EGJ
+   wm68Vl/+1knApzLIn/88eye328LCPhIDknc9dqmD7qU5YIfgR9SzZlRFm
+   c4J5MbXgUC3UDJY7exAMGgwjqWNZwqw/bkiN+zcg51bc1ZlPm8d6esN8/
+   6rB5EmzdZvD74atveiw4CPgHhjCLWyxK+4LFHK8UBi9lCQgUit2MryEUa
+   LK4ltWhNDo9v9Sip37TPPQUlq5qqSE/H+9AKv8JaNlivoOhn6A4Mxyzx3
+   sVRYY9NXpWxuwxH8/eYjPE1JXmfHKwgAzHrCuKw1voIXjCRby8UGgqX2z
+   A==;
+X-CSE-ConnectionGUID: vlZRdxvsRxmgV9anzTiMPg==
+X-CSE-MsgGUID: Xtlx70LnQrKZvoQeaKMzRg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11524"; a="57578211"
+X-IronPort-AV: E=Sophos;i="6.17,293,1747724400"; 
+   d="scan'208";a="57578211"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2025 21:28:33 -0700
+X-CSE-ConnectionGUID: fy5oHdMkTVKdVnTF/IvgEg==
+X-CSE-MsgGUID: ThgxVKmvQRGwUvrdBbVe8Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.17,293,1747724400"; 
+   d="scan'208";a="171505443"
+Received: from lkp-server02.sh.intel.com (HELO 4ea60e6ab079) ([10.239.97.151])
+  by fmviesa005.fm.intel.com with ESMTP; 16 Aug 2025 21:28:31 -0700
+Received: from kbuild by 4ea60e6ab079 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1unV0O-000DMB-2Y;
+	Sun, 17 Aug 2025 04:28:28 +0000
+Date: Sun, 17 Aug 2025 12:28:09 +0800
+From: kernel test robot <lkp@intel.com>
+To: Ryan Chung <seokwoo.chung130@gmail.com>, rostedt@goodmis.org,
+	mhiramat@kernel.org, mathieu.desnoyer@efficios.com
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: [PATCH bpf-next v5 4/4] selftests/bpf: add benchmark testing for kprobe-multi-all
-Date: Sun, 17 Aug 2025 10:46:05 +0800
-Message-ID: <20250817024607.296117-5-dongml2@chinatelecom.cn>
-X-Mailer: git-send-email 2.50.1
-In-Reply-To: <20250817024607.296117-1-dongml2@chinatelecom.cn>
-References: <20250817024607.296117-1-dongml2@chinatelecom.cn>
+	linux-kernel-mentees@lists.linux.dev,
+	Ryan Chung <seokwoo.chung130@gmail.com>
+Subject: Re: [PATCH] trace/trace_fprobe.c: TODO: handle filter, nofilter or
+ symbol list
+Message-ID: <202508171256.CSm9DAkb-lkp@intel.com>
+References: <20250812162101.5981-1-seokwoo.chung130@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250812162101.5981-1-seokwoo.chung130@gmail.com>
 
-For now, the benchmark for kprobe-multi is single, which means there is
-only 1 function is hooked during testing. Add the testing
-"kprobe-multi-all", which will hook all the kernel functions during
-the benchmark. And the "kretprobe-multi-all" is added too.
+Hi Ryan,
 
-Signed-off-by: Menglong Dong <dongml2@chinatelecom.cn>
----
-v3:
-- add testcase kretprobe-multi-all
-- attach a empty kprobe-multi/kretprobe-multi prog to all the kernel
-  functions except bpf_get_numa_node_id to make the bench result more
-  accurate
----
- tools/testing/selftests/bpf/bench.c           |  4 ++
- .../selftests/bpf/benchs/bench_trigger.c      | 54 +++++++++++++++++++
- .../selftests/bpf/benchs/run_bench_trigger.sh |  4 +-
- .../selftests/bpf/progs/trigger_bench.c       | 12 +++++
- tools/testing/selftests/bpf/trace_helpers.c   |  3 ++
- 5 files changed, 75 insertions(+), 2 deletions(-)
+kernel test robot noticed the following build warnings:
 
-diff --git a/tools/testing/selftests/bpf/bench.c b/tools/testing/selftests/bpf/bench.c
-index ddd73d06a1eb..29dbf937818a 100644
---- a/tools/testing/selftests/bpf/bench.c
-+++ b/tools/testing/selftests/bpf/bench.c
-@@ -510,6 +510,8 @@ extern const struct bench bench_trig_kretprobe;
- extern const struct bench bench_trig_kprobe_multi;
- extern const struct bench bench_trig_kretprobe_multi;
- extern const struct bench bench_trig_fentry;
-+extern const struct bench bench_trig_kprobe_multi_all;
-+extern const struct bench bench_trig_kretprobe_multi_all;
- extern const struct bench bench_trig_fexit;
- extern const struct bench bench_trig_fmodret;
- extern const struct bench bench_trig_tp;
-@@ -578,6 +580,8 @@ static const struct bench *benchs[] = {
- 	&bench_trig_kprobe_multi,
- 	&bench_trig_kretprobe_multi,
- 	&bench_trig_fentry,
-+	&bench_trig_kprobe_multi_all,
-+	&bench_trig_kretprobe_multi_all,
- 	&bench_trig_fexit,
- 	&bench_trig_fmodret,
- 	&bench_trig_tp,
-diff --git a/tools/testing/selftests/bpf/benchs/bench_trigger.c b/tools/testing/selftests/bpf/benchs/bench_trigger.c
-index 82327657846e..c6634a64a7c0 100644
---- a/tools/testing/selftests/bpf/benchs/bench_trigger.c
-+++ b/tools/testing/selftests/bpf/benchs/bench_trigger.c
-@@ -226,6 +226,58 @@ static void trigger_fentry_setup(void)
- 	attach_bpf(ctx.skel->progs.bench_trigger_fentry);
- }
- 
-+static void attach_ksyms_all(struct bpf_program *empty, bool kretprobe)
-+{
-+	LIBBPF_OPTS(bpf_kprobe_multi_opts, opts);
-+	char **syms = NULL;
-+	size_t cnt = 0;
-+
-+	if (bpf_get_ksyms(&syms, &cnt, true)) {
-+		printf("failed to get ksyms\n");
-+		exit(1);
-+	}
-+
-+	printf("found %zu ksyms\n", cnt);
-+	opts.syms = (const char **) syms;
-+	opts.cnt = cnt;
-+	opts.retprobe = kretprobe;
-+	/* attach empty to all the kernel functions except bpf_get_numa_node_id. */
-+	if (!bpf_program__attach_kprobe_multi_opts(empty, NULL, &opts)) {
-+		printf("failed to attach bpf_program__attach_kprobe_multi_opts to all\n");
-+		exit(1);
-+	}
-+}
-+
-+static void trigger_kprobe_multi_all_setup(void)
-+{
-+	struct bpf_program *prog, *empty;
-+
-+	setup_ctx();
-+	empty = ctx.skel->progs.bench_kprobe_multi_empty;
-+	prog = ctx.skel->progs.bench_trigger_kprobe_multi;
-+	bpf_program__set_autoload(empty, true);
-+	bpf_program__set_autoload(prog, true);
-+	load_ctx();
-+
-+	attach_ksyms_all(empty, false);
-+	attach_bpf(prog);
-+}
-+
-+static void trigger_kretprobe_multi_all_setup(void)
-+{
-+	struct bpf_program *prog, *empty;
-+
-+	setup_ctx();
-+	empty = ctx.skel->progs.bench_kretprobe_multi_empty;
-+	prog = ctx.skel->progs.bench_trigger_kretprobe_multi;
-+	bpf_program__set_autoload(empty, true);
-+	bpf_program__set_autoload(prog, true);
-+	load_ctx();
-+
-+	attach_ksyms_all(empty, true);
-+	attach_bpf(prog);
-+}
-+
- static void trigger_fexit_setup(void)
- {
- 	setup_ctx();
-@@ -512,6 +564,8 @@ BENCH_TRIG_KERNEL(kretprobe, "kretprobe");
- BENCH_TRIG_KERNEL(kprobe_multi, "kprobe-multi");
- BENCH_TRIG_KERNEL(kretprobe_multi, "kretprobe-multi");
- BENCH_TRIG_KERNEL(fentry, "fentry");
-+BENCH_TRIG_KERNEL(kprobe_multi_all, "kprobe-multi-all");
-+BENCH_TRIG_KERNEL(kretprobe_multi_all, "kretprobe-multi-all");
- BENCH_TRIG_KERNEL(fexit, "fexit");
- BENCH_TRIG_KERNEL(fmodret, "fmodret");
- BENCH_TRIG_KERNEL(tp, "tp");
-diff --git a/tools/testing/selftests/bpf/benchs/run_bench_trigger.sh b/tools/testing/selftests/bpf/benchs/run_bench_trigger.sh
-index a690f5a68b6b..f7573708a0c3 100755
---- a/tools/testing/selftests/bpf/benchs/run_bench_trigger.sh
-+++ b/tools/testing/selftests/bpf/benchs/run_bench_trigger.sh
-@@ -6,8 +6,8 @@ def_tests=( \
- 	usermode-count kernel-count syscall-count \
- 	fentry fexit fmodret \
- 	rawtp tp \
--	kprobe kprobe-multi \
--	kretprobe kretprobe-multi \
-+	kprobe kprobe-multi kprobe-multi-all \
-+	kretprobe kretprobe-multi kretprobe-multi-all \
- )
- 
- tests=("$@")
-diff --git a/tools/testing/selftests/bpf/progs/trigger_bench.c b/tools/testing/selftests/bpf/progs/trigger_bench.c
-index 044a6d78923e..3d5f30c29ae3 100644
---- a/tools/testing/selftests/bpf/progs/trigger_bench.c
-+++ b/tools/testing/selftests/bpf/progs/trigger_bench.c
-@@ -97,6 +97,12 @@ int bench_trigger_kprobe_multi(void *ctx)
- 	return 0;
- }
- 
-+SEC("?kprobe.multi/bpf_get_numa_node_id")
-+int bench_kprobe_multi_empty(void *ctx)
-+{
-+	return 0;
-+}
-+
- SEC("?kretprobe.multi/bpf_get_numa_node_id")
- int bench_trigger_kretprobe_multi(void *ctx)
- {
-@@ -104,6 +110,12 @@ int bench_trigger_kretprobe_multi(void *ctx)
- 	return 0;
- }
- 
-+SEC("?kretprobe.multi/bpf_get_numa_node_id")
-+int bench_kretprobe_multi_empty(void *ctx)
-+{
-+	return 0;
-+}
-+
- SEC("?fentry/bpf_get_numa_node_id")
- int bench_trigger_fentry(void *ctx)
- {
-diff --git a/tools/testing/selftests/bpf/trace_helpers.c b/tools/testing/selftests/bpf/trace_helpers.c
-index 9da9da51b132..78cf1aab09d8 100644
---- a/tools/testing/selftests/bpf/trace_helpers.c
-+++ b/tools/testing/selftests/bpf/trace_helpers.c
-@@ -575,6 +575,9 @@ static bool skip_entry(char *name)
- 	if (!strcmp(name, "__rcu_read_unlock"))
- 		return true;
- 
-+	if (!strcmp(name, "bpf_get_numa_node_id"))
-+		return true;
-+
- 	return false;
- }
- 
+[auto build test WARNING on v6.16]
+[also build test WARNING on linus/master next-20250815]
+[cannot apply to trace/for-next v6.17-rc1]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Ryan-Chung/trace-trace_fprobe-c-TODO-handle-filter-nofilter-or-symbol-list/20250813-002748
+base:   v6.16
+patch link:    https://lore.kernel.org/r/20250812162101.5981-1-seokwoo.chung130%40gmail.com
+patch subject: [PATCH] trace/trace_fprobe.c: TODO: handle filter, nofilter or symbol list
+config: s390-randconfig-r073-20250817 (https://download.01.org/0day-ci/archive/20250817/202508171256.CSm9DAkb-lkp@intel.com/config)
+compiler: s390-linux-gcc (GCC) 8.5.0
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202508171256.CSm9DAkb-lkp@intel.com/
+
+smatch warnings:
+kernel/trace/trace_fprobe.c:768 __register_trace_fprobe() warn: inconsistent indenting
+
+vim +768 kernel/trace/trace_fprobe.c
+
+   732	
+   733	/* Internal register function - just handle fprobe and flags */
+   734	static int __register_trace_fprobe(struct trace_fprobe *tf)
+   735	{
+   736		int i, ret;
+   737	
+   738		/* Should we need new LOCKDOWN flag for fprobe? */
+   739		ret = security_locked_down(LOCKDOWN_KPROBES);
+   740		if (ret)
+   741			return ret;
+   742	
+   743		if (trace_fprobe_is_registered(tf))
+   744			return -EINVAL;
+   745	
+   746		for (i = 0; i < tf->tp.nr_args; i++) {
+   747			ret = traceprobe_update_arg(&tf->tp.args[i]);
+   748			if (ret)
+   749				return ret;
+   750		}
+   751	
+   752		/* Set/clear disabled flag according to tp->flag */
+   753		if (trace_probe_is_enabled(&tf->tp))
+   754			tf->fp.flags &= ~FPROBE_FL_DISABLED;
+   755		else
+   756			tf->fp.flags |= FPROBE_FL_DISABLED;
+   757	
+   758		if (trace_fprobe_is_tracepoint(tf)) {
+   759	
+   760			/* This tracepoint is not loaded yet */
+   761			if (tf->tpoint == TRACEPOINT_STUB)
+   762				return 0;
+   763	
+   764			return __regsiter_tracepoint_fprobe(tf);
+   765		}
+   766	
+   767	    /* Parse tf->symbol */
+ > 768	    {
+   769	        char *spec, *bang, *p;
+   770	        int n = 0, w = 0, j, rc;
+   771	        char **syms = NULL;
+   772	
+   773	        spec = kstrdup(tf->symbol, GFP_KERNEL);
+   774	        if (!spec)
+   775	            return -ENOMEM;
+   776	
+   777	        /* If a '!' exists, treat it as single symbol + filter */
+   778	        bang = strchr(spec, '!');
+   779	        if (bang) {
+   780	            char *sym, *flt;
+   781	
+   782	            *bang = '\0';
+   783	            sym = strim(spec);
+   784	            flt = strim(bang + 1);
+   785	
+   786	            if (!*sym || !*flt) {
+   787	                kfree(spec);
+   788	                return -EINVAL; /* reject empty symbol/filter */
+   789	            }
+   790	
+   791	            rc = register_fprobe(&tf->fp, sym, flt);
+   792	            kfree(spec);
+   793	            return rc;
+   794	        }
+   795	
+   796	        /* Comma list (or single symbol without '!') */
+   797	        /* First pass: count non-empty tokens */
+   798	        p = spec;
+   799	        while (p) {
+   800	            char *tok = strsep(&p, ",");
+   801	            if (tok && *strim(tok))
+   802	                n++;
+   803	        }
+   804	
+   805	        if (n == 0){
+   806	            kfree(spec);
+   807	            return -EINVAL;
+   808	        }
+   809	
+   810	        /* Allocate array for pointers into spec (callee copies/consumes) */
+   811	        syms = kcalloc(n, sizeof(*syms), GFP_KERNEL);
+   812	        if (!syms) {
+   813	            kfree(spec);
+   814	            return -ENOMEM;
+   815	        }
+   816	
+   817	        /* Second pass: fill, skipping empties */
+   818	        p = spec;
+   819	        while (p) {
+   820	            char *tok = strsep(&p, ",");
+   821	            char *s;
+   822	
+   823	            if (!tok)
+   824	                break;
+   825	            s = strim(tok);
+   826	            if (!*s)
+   827	                continue;
+   828	            syms[w++] = s; 
+   829	        }
+   830	        
+   831	        /* Dedup in-place */
+   832	        for (i = 0; i < w; i++){
+   833	            if (!syms[i])
+   834	                continue;
+   835	            for (j = i + 1; j < w; j++) {
+   836	                if (syms[j] && !strcmp(syms[i], syms[j]))
+   837	                    syms[j] = NULL;
+   838	            }
+   839	        }
+   840	
+   841	        /* Compact */
+   842	        for (i = 0, j = 0; i < w; i++) {
+   843	            if (syms[i])
+   844	                syms[j++] = syms[i];
+   845	        }
+   846	        w = j;
+   847	
+   848	        /* After dedup, ensure we still have at least one symbol */
+   849	        if (w == 0){
+   850	            kfree(syms);
+   851	            kfree(spec);
+   852	            return -EINVAL;
+   853	        }
+   854	
+   855	        /* Register list or single symbol, using the existing bulk API */
+   856	        if (w == 1)
+   857	            rc = register_fprobe(&tf->fp, syms[0], NULL);
+   858	        else
+   859	            rc = register_fprobe_syms(&tf->fp, (const char **)syms, w);
+   860	
+   861	        kfree(syms);
+   862	        kfree(spec);
+   863	        return rc;
+   864	    }
+   865	}
+   866	
+
 -- 
-2.50.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
