@@ -1,141 +1,169 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 145391DFE0B;
-	Mon, 18 Aug 2025 02:01:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 257B4277003
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 18 Aug 2025 07:19:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755482499; cv=none; b=nEdu8/6COMd9Og+wS87coqRe5hoOdANrNKUeTSKALR+H1wJBQWrs8uV5y5PuUkHk2NGKqgz6WHSRobWgDoReRfPLrqksOXWF0JgYurvsTDlg3xpwIvmwKr8M9TPTBzsVRD/cztIRqXrpYDwwJTlZhlmpHfo3FvvuirlxbzWB56M=
+	t=1755501589; cv=none; b=T7PcoWdSnrpeYZVXLZEgpOxBJCaPxuRGiuhWQMU0fY/lIbCi+nYkpX1OL6DfW1PqNw/T/aM9DPXbonJVB740JSsA5vCKpAyq4jFd5K5plhAEYBwzzV1ALVD0/XSyhbZoXbZwsq6ZxcNDZL86qTIU0XnRHZyB5EmJOqBRZsvplE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755482499; c=relaxed/simple;
-	bh=3S7JR1J0KLdyO8pzE3T0jrrcCJZbmsNBb/5yq5sNZ4o=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=N+fmffq5NKfn1msGFBxG7nTZ+8iyKWFkKlQizvQCP+ehyqEL72tCOjcto81igCLL7LCzOEiFjh00a9WktgB14aFYUonD40eVKSlFZUTwgUUKzRR1MDiqMmFE+tiwJ5JIx4nLp3ONUQk4TFiznQlnOyn2bwyQmXtEPA5R6+qcB9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CMAISsBj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1755501589; c=relaxed/simple;
+	bh=FQTwmlOpSlpiDox1C07+RYr3g+cTRJXiQ5qNfxI4FSg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=HUbygOYkC3Tb1qquoLGPZLZyDBSnaQNzVbGwklANdaIaOw+s/V8WtpGACAAxTREPeBol1V8IT5LuEiRJpYebJhzzcuISRDcjfgfOhDVEYlQ/Q+mufctX8PtV1E4BoqnZZqThmkjL63zeYyJsczbn639n6GBSbS/5dNLq//dMlsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zn7wyT7z; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CMAISsBj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E864C116B1;
-	Mon, 18 Aug 2025 02:01:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755482496;
-	bh=3S7JR1J0KLdyO8pzE3T0jrrcCJZbmsNBb/5yq5sNZ4o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CMAISsBjUgA4fctYz+4cet0OK/3k219Lmk3YdowyIwCoe92HwH6npZNtE35zyIohk
-	 NUBeSAPtfEbp7/LSC6Pxz+FdCjG3kJwjsRqFiyWVlQ86Aq9q5BQ7B/V1IZ4TYcm9GG
-	 mogNnwJTXsc65r3YKG1UazHpeyCCeoPJRde1tNfDDOaD6H/VyqFViYo9kGsKMnN8q/
-	 wHIrsi22IgbLkpgj5uI7APahyk0OJKRlUfPmqAizUai/nWwKPcpzf+fqr4iCIA/CKM
-	 e2H09L5epXfBbONFv/5WNxtan5mZYLfGsrV6j5vi4ikev/0CbGiw8ZRLhqHKLMcOJY
-	 nf4MDGmhJ7ARQ==
-From: "Mario Limonciello (AMD)" <superm1@kernel.org>
-To: "Rafael J . Wysocki" <rafael@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>
-Cc: Pavel Machek <pavel@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	"James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
-	"Martin K . Petersen" <martin.petersen@oracle.com>,
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zn7wyT7z"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-45a1b0b6ac4so17486145e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 18 Aug 2025 00:19:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1755501585; x=1756106385; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=3zFG+ph3piKAY7MCJLonbSvB1EXUkHi8G1gdERzBPH0=;
+        b=zn7wyT7z5/PlPg5kAea3rYkRNKt98AB+Tb0R4VI/cLKBsF5HrEF7w4IBmq8M+eYi7q
+         A6qPBcEGkQQbom3TC21DdE3EfEI676YlC9TvPsU/mAdD1VOpEl/WuzZtK+Ln833tDWeB
+         CEH9T0Mv5p6h9z+X4S2UBWIksUR79i/NVkNYCXlCLJWW9JsdHps9LtsUSOEcUOcoxK5P
+         aen3fqyvPutlHyId58Axk1HpitAAG6rRcLteufyYoeXmt9d2NHlGnQ8lW00RxZxiQk4E
+         wV/Gz7MYTi2raFkN4iKXBHfJOuyGRep3NkwP+VDpO+sQAApiukB6r1U75fnxfROQ5BYI
+         x+rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755501585; x=1756106385;
+        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3zFG+ph3piKAY7MCJLonbSvB1EXUkHi8G1gdERzBPH0=;
+        b=VtFfVhJLSj7yVfyaIgV9+qoawi8nf884rHxWr1wDm2z/Pda9nCkIySwMJZcfJ0k60C
+         hhC06c289+uWlzfhuNQVLv4J3cuWfW6ehsggR1ctnsrBl7xDYcx+xlZvKYgtrsEsKK28
+         Bzqsoqk+8fsAWjHunCikFrdwlhf3GxPbOue53+aRWAtQ5nnhKd+YmQyuLspAI+VRlb4Y
+         lCEpWrEVINAwNgc1ZV2wwbyVLFkhLOyKvboTAQdL8KFDqYNQUoqLmLPqGeHs8CU8J1Tc
+         S7R30IjTjLTwISfc69ImMqOtFw/KcsBDwQrLsv2KuO3GOULjE5mWqDClhD+bpiNvg4zn
+         L3lw==
+X-Forwarded-Encrypted: i=1; AJvYcCXlfc7p5Cp3xGD4vJE5qby6E/BOdDBn/0g9ihDgwYim40s2VUxCJNHXxO03u1NrNqD6X+25uueu90JZjsO+6smcqYg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzRo4hng8zd9T++RH0+6wPXf9yGvvHTiBYQipBEcsyNsJiWA3TR
+	Bz/8DQya5fbRU2h/IQQ90KL9nNYcSQTilntCDYUo4pw6XpgRwxLIo6MD0WfdD9kB0Gk=
+X-Gm-Gg: ASbGncsnAD+gz/Sxt5rDBRqQLKRNxyvmEySosv5Nia36igxwYI9ZYVaX3qq+6E//ifb
+	ZUw5OE2s0/nPsvmaFWSa7wpdIyrvUqsmb+ZGQAp6erX1VljK/9ePsnchtxvmyyDxvkLLHu0wprn
+	JGjoMZHQBedjgB2QU9FMdxMxGhf0KvDrWxAhcBLw+pqWQ0wXgpR8RJL4ovNPtSzCJMgQ5ZgGRf3
+	Dx+M5KT5toUTdIfWHXIaqjoY3tEYsPSVapdrATx5B9ZWMVQGL5+525l0M8GWxrL3Rm4yPFBRrhX
+	loipD8o4FAPS3czGiCbKrd9uCM2gwfvTS4oS2EF+NpxUifiAmNuZeOGeh4oFBQqxWxGHd/rvDjW
+	ey17pGe82ZyLQU3bYpSO6/TFkD9ACikRkiiExhA==
+X-Google-Smtp-Source: AGHT+IHM4h5TvUroAVFtgE7l1uKXONfdURffdRsQdfk8r4Doc4NPI78w6r1cZehK5yFOkTP2w9cGBA==
+X-Received: by 2002:a05:600c:3594:b0:453:66f:b96e with SMTP id 5b1f17b1804b1-45a218095camr84039995e9.11.1755501585402;
+        Mon, 18 Aug 2025 00:19:45 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-45a209c25a1sm131087915e9.22.2025.08.18.00.19.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Aug 2025 00:19:44 -0700 (PDT)
+Date: Mon, 18 Aug 2025 10:19:41 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: oe-kbuild@lists.linux.dev, Mohammad Gomaa <midomaxgomaa@gmail.com>,
+	Wolfram Sang <wsa-dev@sang-engineering.com>,
 	Steven Rostedt <rostedt@goodmis.org>,
-	linux-pm@vger.kernel.org (open list:HIBERNATION (aka Software Suspend, aka swsusp)),
-	amd-gfx@lists.freedesktop.org (open list:RADEON and AMDGPU DRM DRIVERS),
-	dri-devel@lists.freedesktop.org (open list:DRM DRIVERS),
-	linux-pci@vger.kernel.org (open list:PCI SUBSYSTEM),
-	linux-scsi@vger.kernel.org (open list:SCSI SUBSYSTEM),
-	linux-usb@vger.kernel.org (open list:USB SUBSYSTEM),
-	linux-trace-kernel@vger.kernel.org (open list:TRACING),
-	AceLan Kao <acelan.kao@canonical.com>,
-	Kai-Heng Feng <kaihengf@nvidia.com>,
-	Mark Pearson <mpearson-lenovo@squebb.ca>,
-	=?UTF-8?q?Merthan=20Karaka=C5=9F?= <m3rthn.k@gmail.com>,
-	Eric Naim <dnaim@cachyos.org>,
-	"Mario Limonciello (AMD)" <superm1@kernel.org>,
-	Denis Benato <benato.denis96@gmail.com>
-Subject: [PATCH v6 11/11] PM: Use hibernate flows for system power off
-Date: Sun, 17 Aug 2025 21:01:01 -0500
-Message-ID: <20250818020101.3619237-12-superm1@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250818020101.3619237-1-superm1@kernel.org>
-References: <20250818020101.3619237-1-superm1@kernel.org>
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: lkp@intel.com, oe-kbuild-all@lists.linux.dev, linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	kenalba@google.com, hbarnor@chromium.org, rayxu@google.com,
+	Mohammad Gomaa <midomaxgomaa@gmail.com>
+Subject: Re: [PATCH WIP v2] i2c: add tracepoints to aid debugging in
+ i2c-core-base
+Message-ID: <202508181525.GKAXMVYv-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250817-refactor-add-i2c-tracepoints-v2-1-c0bad299e02e@gmail.com>
 
-When the system is powered off the kernel will call device_shutdown()
-which will issue callbacks into PCI core to wake up a device and call
-it's shutdown() callback.  This will leave devices in ACPI D0 which can
-cause some devices to misbehave with spurious wakeups and also leave some
-devices on which will consume power needlessly.
+Hi Mohammad,
 
-The issue won't happen if the device is in D3 before system shutdown, so
-putting device to low power state before shutdown solves the issue.
+kernel test robot noticed the following build warnings:
 
-ACPI Spec 6.5, "7.4.2.5 System \_S4 State" says "Devices states are
-compatible with the current Power Resource states. In other words, all
-devices are in the D3 state when the system state is S4."
+url:    https://github.com/intel-lab-lkp/linux/commits/Mohammad-Gomaa/i2c-add-tracepoints-to-aid-debugging-in-i2c-core-base/20250817-155936
+base:   7e161a991ea71e6ec526abc8f40c6852ebe3d946
+patch link:    https://lore.kernel.org/r/20250817-refactor-add-i2c-tracepoints-v2-1-c0bad299e02e%40gmail.com
+patch subject: [PATCH WIP v2] i2c: add tracepoints to aid debugging in i2c-core-base
+config: x86_64-randconfig-161-20250818 (https://download.01.org/0day-ci/archive/20250818/202508181525.GKAXMVYv-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14+deb12u1) 12.2.0
 
-The following "7.4.2.6 System \_S5 State (Soft Off)" states "The S5
-state is similar to the S4 state except that OSPM does not save any
-context." so it's safe to assume devices should be at D3 for S5.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+| Closes: https://lore.kernel.org/r/202508181525.GKAXMVYv-lkp@intel.com/
 
-To accomplish this, use the PMSG_POWEROFF event to call all the device
-hibernate callbacks when the kernel is compiled with hibernate support.
-If compiled without hibernate support or hibernate fails fall back into
-the previous shutdown flow.
+smatch warnings:
+drivers/i2c/i2c-core-base.c:535 i2c_device_probe() error: uninitialized symbol 'err_reason'.
 
-Cc: AceLan Kao <acelan.kao@canonical.com>
-Cc: Kai-Heng Feng <kaihengf@nvidia.com>
-Cc: Mark Pearson <mpearson-lenovo@squebb.ca>
-Cc: Merthan Karakaş <m3rthn.k@gmail.com>
-Tested-by: Eric Naim <dnaim@cachyos.org>
-Tested-by: Denis Benato <benato.denis96@gmail.com>
-Link: https://lore.kernel.org/linux-pci/20231213182656.6165-1-mario.limonciello@amd.com/
-Link: https://lore.kernel.org/linux-pci/20250506041934.1409302-1-superm1@kernel.org/
-Signed-off-by: Mario Limonciello (AMD) <superm1@kernel.org>
----
-v5:
- * split to multiple commits, re-order
-v4:
- * https://lore.kernel.org/linux-pci/20250616175019.3471583-1-superm1@kernel.org/
-v3:
- * Add new PMSG_POWEROFF and PM_EVENT_POWEROFF which alias to poweroff
-   callbacks
- * Don't try to cleanup on dpm_suspend_start() or dpm_suspend_end() failures
-   Jump right into normal shutdown flow instead.
- * https://lore.kernel.org/linux-pm/20250609024619.407257-1-superm1@kernel.org/T/#me6db0fb946e3d604a8f3d455128844ed802c82bb
----
- kernel/reboot.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+vim +/err_reason +535 drivers/i2c/i2c-core-base.c
 
-diff --git a/kernel/reboot.c b/kernel/reboot.c
-index ec087827c85cd..c8835f8e5f271 100644
---- a/kernel/reboot.c
-+++ b/kernel/reboot.c
-@@ -13,6 +13,7 @@
- #include <linux/kexec.h>
- #include <linux/kmod.h>
- #include <linux/kmsg_dump.h>
-+#include <linux/pm.h>
- #include <linux/reboot.h>
- #include <linux/suspend.h>
- #include <linux/syscalls.h>
-@@ -305,6 +306,11 @@ static void kernel_shutdown_prepare(enum system_states state)
- 		(state == SYSTEM_HALT) ? SYS_HALT : SYS_POWER_OFF, NULL);
- 	system_state = state;
- 	usermodehelper_disable();
-+#ifdef CONFIG_HIBERNATE_CALLBACKS
-+	if (!dpm_suspend_start(PMSG_POWEROFF) && !dpm_suspend_end(PMSG_POWEROFF))
-+		return;
-+	pr_emerg("Failed to power off devices, using shutdown instead.\n");
-+#endif
- 	device_shutdown();
- }
- /**
+f37dd80ac2a67e4 drivers/i2c/i2c-core.c      David Brownell           2007-02-13  491  static int i2c_device_probe(struct device *dev)
+^1da177e4c3f415 drivers/i2c/i2c-core.c      Linus Torvalds           2005-04-16  492  {
+5763a474c887d4a drivers/i2c/i2c-core-base.c Andy Shevchenko          2025-04-16  493  	struct fwnode_handle	*fwnode = dev_fwnode(dev);
+51298d1257b9f0a drivers/i2c/i2c-core.c      Jean Delvare             2009-09-18  494  	struct i2c_client	*client = i2c_verify_client(dev);
+51298d1257b9f0a drivers/i2c/i2c-core.c      Jean Delvare             2009-09-18  495  	struct i2c_driver	*driver;
+79ece9b292af6b0 drivers/i2c/i2c-core-base.c Ricardo Ribalda          2022-11-14  496  	bool do_power_on;
+50c3304a5e1e521 drivers/i2c/i2c-core.c      Hans Verkuil             2008-03-12  497  	int status;
+dc94c3bf033524a drivers/i2c/i2c-core-base.c Mohammad Gomaa           2025-08-17  498  	int err_reason;
+dc94c3bf033524a drivers/i2c/i2c-core-base.c Mohammad Gomaa           2025-08-17  499  	bool has_id_table, has_acpi_match, has_of_match;
+7b4fbc50fabb810 drivers/i2c/i2c-core.c      David Brownell           2007-05-01  500  
+51298d1257b9f0a drivers/i2c/i2c-core.c      Jean Delvare             2009-09-18  501  	if (!client)
+51298d1257b9f0a drivers/i2c/i2c-core.c      Jean Delvare             2009-09-18  502  		return 0;
+51298d1257b9f0a drivers/i2c/i2c-core.c      Jean Delvare             2009-09-18  503  
+6e76cb7dfd34a2e drivers/i2c/i2c-core-base.c Charles Keepax           2019-06-27  504  	client->irq = client->init_irq;
+6e76cb7dfd34a2e drivers/i2c/i2c-core-base.c Charles Keepax           2019-06-27  505  
+0c2a34937f7e4c4 drivers/i2c/i2c-core-base.c Wolfram Sang             2020-06-30  506  	if (!client->irq) {
+845c877009cf014 drivers/i2c/i2c-core.c      Mika Westerberg          2015-05-06  507  		int irq = -ENOENT;
+845c877009cf014 drivers/i2c/i2c-core.c      Mika Westerberg          2015-05-06  508  
+331c34255293cd0 drivers/i2c/i2c-core.c      Dmitry Torokhov          2017-01-04  509  		if (client->flags & I2C_CLIENT_HOST_NOTIFY) {
+331c34255293cd0 drivers/i2c/i2c-core.c      Dmitry Torokhov          2017-01-04  510  			dev_dbg(dev, "Using Host Notify IRQ\n");
+72bfcee11cf8950 drivers/i2c/i2c-core-base.c Jarkko Nikula            2019-04-30  511  			/* Keep adapter active when Host Notify is required */
+72bfcee11cf8950 drivers/i2c/i2c-core-base.c Jarkko Nikula            2019-04-30  512  			pm_runtime_get_sync(&client->adapter->dev);
+331c34255293cd0 drivers/i2c/i2c-core.c      Dmitry Torokhov          2017-01-04  513  			irq = i2c_smbus_host_notify_to_irq(client);
+dc94c3bf033524a drivers/i2c/i2c-core-base.c Mohammad Gomaa           2025-08-17  514  			err_reason = I2C_TRACE_REASON_HOST_NOTIFY;
+5763a474c887d4a drivers/i2c/i2c-core-base.c Andy Shevchenko          2025-04-16  515  		} else if (is_of_node(fwnode)) {
+5d9424b00b577b6 drivers/i2c/i2c-core-base.c Andy Shevchenko          2025-04-16  516  			irq = fwnode_irq_get_byname(fwnode, "irq");
+3fffd1283927342 drivers/i2c/i2c-core.c      Dmitry Torokhov          2015-08-17  517  			if (irq == -EINVAL || irq == -ENODATA)
+5d9424b00b577b6 drivers/i2c/i2c-core-base.c Andy Shevchenko          2025-04-16  518  				irq = fwnode_irq_get(fwnode, 0);
+dc94c3bf033524a drivers/i2c/i2c-core-base.c Mohammad Gomaa           2025-08-17  519  			err_reason = I2C_TRACE_REASON_FROM_OF;
+5763a474c887d4a drivers/i2c/i2c-core-base.c Andy Shevchenko          2025-04-16  520  		} else if (is_acpi_device_node(fwnode)) {
+b38f2d5d9615cf9 drivers/i2c/i2c-core-base.c Raul E Rangel            2022-09-29  521  			bool wake_capable;
+b38f2d5d9615cf9 drivers/i2c/i2c-core-base.c Raul E Rangel            2022-09-29  522  
+b38f2d5d9615cf9 drivers/i2c/i2c-core-base.c Raul E Rangel            2022-09-29  523  			irq = i2c_acpi_get_irq(client, &wake_capable);
+b38f2d5d9615cf9 drivers/i2c/i2c-core-base.c Raul E Rangel            2022-09-29  524  			if (irq > 0 && wake_capable)
+b38f2d5d9615cf9 drivers/i2c/i2c-core-base.c Raul E Rangel            2022-09-29  525  				client->flags |= I2C_CLIENT_WAKE;
+dc94c3bf033524a drivers/i2c/i2c-core-base.c Mohammad Gomaa           2025-08-17  526  			err_reason = I2C_TRACE_REASON_FROM_ACPI;
+3fffd1283927342 drivers/i2c/i2c-core.c      Dmitry Torokhov          2015-08-17  527  		}
+
+err_reason not set on else { path.
+
+3c3dd56f760da05 drivers/i2c/i2c-core-base.c Alain Volmat             2020-04-30  528  		if (irq == -EPROBE_DEFER) {
+5c52473b4496b35 drivers/i2c/i2c-core-base.c Xu Yang                  2025-05-07  529  			status = dev_err_probe(dev, irq, "can't get irq\n");
+dc94c3bf033524a drivers/i2c/i2c-core-base.c Mohammad Gomaa           2025-08-17  530  			err_reason = I2C_TRACE_REASON_EPROBE_DEFER_IRQ;
+3c3dd56f760da05 drivers/i2c/i2c-core-base.c Alain Volmat             2020-04-30  531  			goto put_sync_adapter;
+3c3dd56f760da05 drivers/i2c/i2c-core-base.c Alain Volmat             2020-04-30  532  		}
+331c34255293cd0 drivers/i2c/i2c-core.c      Dmitry Torokhov          2017-01-04  533  
+dc94c3bf033524a drivers/i2c/i2c-core-base.c Mohammad Gomaa           2025-08-17  534  		if (irq < 0) {
+dc94c3bf033524a drivers/i2c/i2c-core-base.c Mohammad Gomaa           2025-08-17 @535  			trace_i2c_device_probe_debug(dev, err_reason);
+                                                                                                                                          ^^^^^^^^^^
+
+6f34be7400c68d3 drivers/i2c/i2c-core.c      Geert Uytterhoeven       2014-11-17  536  			irq = 0;
+dc94c3bf033524a drivers/i2c/i2c-core-base.c Mohammad Gomaa           2025-08-17  537  		}
+2fd36c55264926e drivers/i2c/i2c-core.c      Laurent Pinchart         2014-10-30  538  
+2fd36c55264926e drivers/i2c/i2c-core.c      Laurent Pinchart         2014-10-30  539  		client->irq = irq;
+2fd36c55264926e drivers/i2c/i2c-core.c      Laurent Pinchart         2014-10-30  540  	}
+2fd36c55264926e drivers/i2c/i2c-core.c      Laurent Pinchart         2014-10-30  541  
+0c2a34937f7e4c4 drivers/i2c/i2c-core-base.c Wolfram Sang             2020-06-30  542  	driver = to_i2c_driver(dev->driver);
+0c2a34937f7e4c4 drivers/i2c/i2c-core-base.c Wolfram Sang             2020-06-30  543  
+dc94c3bf033524a drivers/i2c/i2c-core-base.c Mohammad Gomaa           2025-08-17  544  	has_id_table = driver->id_table;
+
 -- 
-2.43.0
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
