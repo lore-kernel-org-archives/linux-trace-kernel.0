@@ -1,61 +1,63 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3F4531A063;
-	Mon, 18 Aug 2025 12:27:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A8B43203B2;
+	Mon, 18 Aug 2025 12:27:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755520062; cv=none; b=YasGIbMLBmxV0uT+Vqxs7a02Dy3A/nz2Hd3WW9u5OzBo6I7J4xy6+hGjfCDcVIA0VngiTVAElJiiv9ZKCLOHYBs1Cp2EDpnUkmGVIBDernQuyjeRj1RagZC36UPzMB4lslD3AlrtTZY7yvV3oDB4WCs9+yumcv1EEFsJ2PFH+Eo=
+	t=1755520069; cv=none; b=NiWscz7Yg/PJC5S8Tl3bE7xC/3Qjm5rWs3lxnlGKkg0baaOd5H2Lm/jpl9IDa1/7BZtpZCJJO064dWkX+56rl2D9OWhUdXlu5/bZC9WqlFOi4Pi5D7abqmWMm3NECD4GrzMd5+t8xbsKA1Rf914SQ5XljckaOxEBhm32z2rN2rc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755520062; c=relaxed/simple;
-	bh=3q58Sea1h8GESEoJDAomrwW47aGk7SLAtFtQaQd+wR0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KoFpXIL7Z5H0WnAbuUFkrBNzgvnBQGr/wvu8tpuTAz75X7D4MMbk6z4gn06St1hHO4Aa4ybuOWmcQawKX8lKoKuXcn/nBdiaCj1hyu+8gm+0h1Df2CpJM/oWdKGZh1JDwoq3FDNceKMP7YuV6SzrVEVL/vikZOH7jNVmK0M6XpM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H/SgB8vL; arc=none smtp.client-ip=209.85.214.179
+	s=arc-20240116; t=1755520069; c=relaxed/simple;
+	bh=JBGYrGMGQb9ZBZC3MFgEIN+nizWSRG4X3GbMSkLOOu8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=W8oNLu7lCa9aFElggDv8/1ufG6vHa21juS0m5bwKczJ93xoXy2KVY1hcp8NUweZyveswGaHRKGgKEAkEO0WuOTaBVRYHuZPd2YoVq7lBGi+ZlBQLXU0RElmz2ri2Z0/C3hF3wJUGpWi4h+VSwuLLToJc5tqvaiwyUBHYZvttK28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GED38bxB; arc=none smtp.client-ip=209.85.215.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H/SgB8vL"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2445824dc27so35725265ad.3;
-        Mon, 18 Aug 2025 05:27:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GED38bxB"
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-b47173749dbso2709932a12.1;
+        Mon, 18 Aug 2025 05:27:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1755520060; x=1756124860; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=tLz55VslHZUWc+WNK7/9dQX6EPjwj3Sye3rvttPVWBA=;
-        b=H/SgB8vLBYvu9pPiyXiOq1Ps1sK2+jCQQ2U5N7YaizLQJnv1JK646l9R5upPRmUlud
-         LjfY3XeR6cV9AKnpXAIpQGD1V5CU3iUUw+jg93SxHnaknyTi0oN8wj+vnp73+D9EMf3O
-         7DUY4GGJYRPOpn/SHI43YfIfDIELW2+B+3idZvLLb/+piLtOCxOIhq4XLrouZbyjQly2
-         QkCwaLiBeUbLwYOuP+MhwfBNoy+Wxo/N+1vmcBukTSZ+Q34rUeFEQEfLYrAo1jonwDF1
-         Z0e+rEq+fQ3V49R4wjH5oLp3By5i2eajPqAdQrTp3ZYWHLa55/XRo7S+RDTH9PiYUdSo
-         dj0Q==
+        d=gmail.com; s=20230601; t=1755520067; x=1756124867; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cwneGKQ4sfoe7BKC8gdXxzrgKAJX+5iJGTZjGrJF3aY=;
+        b=GED38bxBxNQ+xx3fVz0PutHRu+tw/5cf0XrIzjE7TRFLJirE+zCYr3TZj93aDXnD5r
+         3ga+r941dTDA/oXr2eMqUEX3cgL3oxGYBva6sQ8+OGWH8kw66doKQrJ2QbTk6sH+UFJ6
+         Bs7z4fA7otvq+ZqyIVVqJzvJ4/pEE5xeb8tRP7UVbkjXT73OQ5aP48RUs7+6gZ2mtJT3
+         ePGGU4NJp+49EA7rBdlT/zyQ9+ioCaL9jhmX3KLUaRf/aQtllqO4Q7DuZAhIC751hL+g
+         x/yHdVgXvst+y41j8PGV7GqDwmFt85bx/RnszZQnmBc5blJdLn43tF3lyRyJYJgmVi+8
+         6vuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755520060; x=1756124860;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tLz55VslHZUWc+WNK7/9dQX6EPjwj3Sye3rvttPVWBA=;
-        b=bEu4a9q9bTvHTC1Yi3isPswfhRF5tKMy1dLaU1yvoITf3dvvLiS2cxbzJVAAx7qRW3
-         T0hlCtXU3OVem3+o7Uz+KLnG2gvNfI7HC+HEqI8NzzGxNVF/AtvhAYbeTyIRh94fww4m
-         AT8PR4rn/yOQwViQ6Js7N5lZUZhou7l+2ODVxa02gn6FtN5h8l+M8SwmnFNcVbv4mB5P
-         RIjSpl1uE9e0hZm5ssavhU8Xkj4eEeXfy6gjSdOPpwvWk40PBBLIs4fo2OyaX+LaH0W5
-         Kg4h7+xFLgQUOrSgf3MskSvhjG8eNs6YkVueq4MxLabEjY6RRnnJofhi+9fomVyFD8tR
-         LywQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUCd+3o2xx3ImzcnE6PxQX3BrW5N7eM8NjUXT3iMEd2/XTfYFKt1p8Zu+ShQx5+w1ZmqM3x+WJ47NNYaAADiH6RbQuo@vger.kernel.org, AJvYcCVzAqQVByCq4s5GH3tVtbhKZ2MQRZY+TpXwaOw0vyYYRqkOKa59xtAto1OWugDIlemcRlYhJpLfL9RLEBc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/9Co8lGEsRYX98rijcJNs9jjYlrfXGsWEii8RtVTsB9AIh6ue
-	Pc8GYFuvBE8Eda7VotcQ7zYAm7XL5q3v2guotGR16ZQ+c97+RVuZ2mZ0
-X-Gm-Gg: ASbGncu3NbnPbD4tyRbdXlu3myaC07mjafXXjSiYb8Szcws/fNcn7+1zpYUBItBGuoU
-	+3DeEJbrMkOXIGdam0NtRdUm6I423G/ncEmovJho3hqFB10KO1YhY0EyKxJzKj4R1+oBG6mNmbV
-	nKuzYmobEzSFrGcCi2C0Ihd8yDqbO9IV8Ty9NPeal1899EJigEMG+Ekmn2oXAFooDKilqmfVRhp
-	CKUl8nUVrH1Cnso7cAxLb30TvTllguy8xbVi+gtyPVgChzGSi39g7YodEn53VB2x8kM/kl+3PDT
-	WYgCYj3PtdwS8EjIEQe4Gaoqdg+MJDFe+i5QXXMCqBvv/AcnReA5jz/xxq9MlNeq8oKEjD/yXjq
-	8ibVXQJ/xtYXg1SerKnosiQIhPNemi3hQ0b8QD8ZAn0WD
-X-Google-Smtp-Source: AGHT+IFJoG7GUVCeL6hd8WV+Y7zmj5hS4uZb+5DVZCLwiS19xWtblwl3S9dqyVSmUGAeTUCsZgEg1w==
-X-Received: by 2002:a17:902:ebc2:b0:240:10dc:b7c9 with SMTP id d9443c01a7336-24478e0ed44mr102410085ad.9.1755520060020;
-        Mon, 18 Aug 2025 05:27:40 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1755520067; x=1756124867;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cwneGKQ4sfoe7BKC8gdXxzrgKAJX+5iJGTZjGrJF3aY=;
+        b=ZaXlH64vzhPjLuNPSWwe8Oh7pHRi0Yl1ljSdDMrezAcCS4+PhBgujxfGTR4U30D3hN
+         d9MC5L8R36FHjxii2dEDWMWZhbZcyztrDWgKcFjvu4dtc8lO5H807r6rQkLhBD1SONbT
+         D9D0fmr9dRmHyaEkPfU4N8I/Bq9a+mt3W+ykrnLdD9TyXYFROmH18dbhy/bPOYVCtWH8
+         AK2bNuDck9oXtzGPGvHoxq1wTfwkXMzL2yKcbjmAQ7R4jwCKMBWzuEAjrYeZTBUXp2Eg
+         Ykq9kl9LqehZ4TwtUyFpzRfuzJyK/3fPfL1XjJs4kthUqoiR6SBVqldNEaiYlqwWuz7Q
+         ML2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUpXvJFI40HmXP6mNmSvm3Z1IHkgQs3icNBx1yA/3TjUU6vkEYFWfq4nLDpnpz7IsPAg+7OCfogq096wr4N/DN6VIVe@vger.kernel.org, AJvYcCWH/5EvJtHJj9l8M5MKNlb29UE0nG1LPBEGgWlzpsGru6MJN9LCbJIl0q8DY6iMgu/CXyob5cuM+doB+2g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzUuadUfJrEADbB8abzP/9ea+d3VsnZnMfF6DapErcrbsrmdCYH
+	Kjm+LyRWwRGtGxokJ5JF/cUE8kpGBCiZ2RxmwgwnvX5Gwi3RLYA/AEUgkDgg38Q1Kixu8g==
+X-Gm-Gg: ASbGnct8Kq+XikncMMbsh0vcqmIO9Q51OX8KPSOGp8v6P6SOJ/bG3qY4MJDtYSxJaZQ
+	lWewqyZHaE5nMTG2E92R47l7PUIRXdiQ7BJ3vGOz1Meb+IpQeMFqGF1b4B2f6lW5g7yt7p0+RfM
+	TUvikJpvBESxjP0+Ati/VtTResRADmNQMnwN9nTF9FBadzNeCUHUO5pb0a5uJFdrZINflr3B2ku
+	yeIiaGt01p0MZmNnZlVPmja65lKEVCBsBemUd62qOh/CyZn6IagTyPnAwtqXa04By27S/nLIbGX
+	F5psz1M8dAUw905Q1VnYhmIxGtn4ZF6Tnq0EjdJupLzsAOdcX7i8pGmKxr9OA2HYOMJ863ofVSF
+	q9k8/AFf1ZYg6MX9tIXxwE3MydJFAiYpkfPsok8e9MTpe
+X-Google-Smtp-Source: AGHT+IGTAUGEwOZ5QaDSUG+R4n2NIvHL+mwgpzRGpuDYJ00xK6zUpiTVfF5BJr74uTjMSx7tqRF/ug==
+X-Received: by 2002:a17:903:2f82:b0:244:6c39:3383 with SMTP id d9443c01a7336-2446d709449mr143591315ad.21.1755520066653;
+        Mon, 18 Aug 2025 05:27:46 -0700 (PDT)
 Received: from localhost.localdomain ([2604:a840:3::3008])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2446d57f12esm79236705ad.157.2025.08.18.05.27.35
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2446d57f12esm79236705ad.157.2025.08.18.05.27.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Aug 2025 05:27:39 -0700 (PDT)
+        Mon, 18 Aug 2025 05:27:46 -0700 (PDT)
 From: Jinchao Wang <wangjinchao600@gmail.com>
 To: akpm@linux-foundation.org
 Cc: mhiramat@kernel.org,
@@ -65,10 +67,12 @@ Cc: mhiramat@kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	Jinchao Wang <wangjinchao600@gmail.com>
-Subject: [RFC PATCH 00/13] mm: Introduce Kernel Stack Watch debugging tool
-Date: Mon, 18 Aug 2025 20:26:05 +0800
-Message-ID: <20250818122720.434981-1-wangjinchao600@gmail.com>
+Subject: [RFC PATCH 01/13] mm: Add kstackwatch build infrastructure
+Date: Mon, 18 Aug 2025 20:26:06 +0800
+Message-ID: <20250818122720.434981-2-wangjinchao600@gmail.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250818122720.434981-1-wangjinchao600@gmail.com>
+References: <20250818122720.434981-1-wangjinchao600@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -77,67 +81,95 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patch series introduces Kernel Stack Watch (KSW), a lightweight
-debugging tool for detecting kernel stack corruption in real-time.
-The motivation comes from cases where corruption happens silently in
-one function but only manifests later as a crash in another,
-with no direct call trace connection. Such problems are often very
-difficult to debug with existing tools.
+Introduce the build system for kstackwatch, a new kernel stack
+corruption debugging tool. This patch adds the necessary Kconfig
+and Makefile infrastructure to support the kstackwatch subsystem.
 
-KSW works by combining hardware breakpoints with kprobes/kretprobes.
-It can watch a stack canary or a selected local variable, and detect
-the moment the corruption actually occurs. This allows developers to
-pinpoint the real source, rather than only observing the final crash.
+kstackwatch uses hardware write breakpoints to detect stack
+corruption in real-time, providing precise identification of
+the instruction that overwrites stack canaries or local variables.
+This is a significant improvement over traditional stack protection
+mechanisms that only detect corruption at function exit.
 
-Key features include:
-- Lightweight design with minimal impact on bug reproducibility
-- Real-time detection of stack corruption
-- Simple configuration through `/proc/kstackwatch`
-- Support for recursive functions with configurable nesting depth
+The implementation is placed in mm/kstackwatch/ alongside other
+memory debugging tools like KASAN, KFENCE, and KMSAN. The tool
+requires STACKPROTECTOR, hardware breakpoint support, and kprobes
+functionality to operate.
 
-To validate the approach, I have also prepared test modules and scripts
-that simulate corruption scenarios.
+The modular design splits functionality across:
+- kernel.c: Main logic and module lifecycle
+- stack.c: Stack canary detection and probing
+- watch.c: Hardware breakpoint management
 
-I am sharing this work to seek feedback on the idea and the design.
-Any comments or suggestions for improvement are very welcome.
-
-The series is structured as follows:
-
-Jinchao Wang (13):
-  mm: Add kstackwatch build infrastructure
-  x86/HWBP: Add arch_reinstall_hw_breakpoint() for atomic updates
-  mm/kstackwatch: Add module core and configuration interface
-  mm/kstackwatch: Add HWBP pre-allocation infrastructure
-  mm/kstackwatch: Add atomic HWBP arm/disarm operations
-  mm/kstackwatch: Add stack address resolution functions
-  mm/kstackwatch: Add kprobe and stack watch control
-  mm/kstackwatch: Wire up watch and stack subsystems in module core
-  mm/kstackwatch: Add architecture support validation
-  mm/kstackwatch: Handle nested function calls
-  mm/kstackwatch: Ignore corruption in kretprobe trampolines
-  mm/kstackwatch: Add debug and test functions
-  mm/kstackwatch: Add a test module and script
-
- arch/x86/include/asm/hw_breakpoint.h  |   1 +
- arch/x86/kernel/hw_breakpoint.c       |  50 ++++++
- mm/Kconfig.debug                      |  23 +++
- mm/Makefile                           |   1 +
- mm/kstackwatch/Makefile               |  11 ++
- mm/kstackwatch/kernel.c               | 248 ++++++++++++++++++++++++++
- mm/kstackwatch/kstackwatch.h          |  56 ++++++
- mm/kstackwatch/kstackwatch_test.c     | 237 ++++++++++++++++++++++++
- mm/kstackwatch/stack.c                | 222 +++++++++++++++++++++++
- mm/kstackwatch/watch.c                | 240 +++++++++++++++++++++++++
- tools/kstackwatch/kstackwatch_test.sh | 122 +++++++++++++
- 11 files changed, 1211 insertions(+)
+Signed-off-by: Jinchao Wang <wangjinchao600@gmail.com>
+---
+ mm/Kconfig.debug             | 12 ++++++++++++
+ mm/Makefile                  |  1 +
+ mm/kstackwatch/Makefile      |  3 +++
+ mm/kstackwatch/kernel.c      |  0
+ mm/kstackwatch/kstackwatch.h |  0
+ mm/kstackwatch/stack.c       |  0
+ mm/kstackwatch/watch.c       |  0
+ 7 files changed, 16 insertions(+)
  create mode 100644 mm/kstackwatch/Makefile
  create mode 100644 mm/kstackwatch/kernel.c
  create mode 100644 mm/kstackwatch/kstackwatch.h
- create mode 100644 mm/kstackwatch/kstackwatch_test.c
  create mode 100644 mm/kstackwatch/stack.c
  create mode 100644 mm/kstackwatch/watch.c
- create mode 100644 tools/kstackwatch/kstackwatch_test.sh
 
+diff --git a/mm/Kconfig.debug b/mm/Kconfig.debug
+index 32b65073d0cc..dd9c1bb7f549 100644
+--- a/mm/Kconfig.debug
++++ b/mm/Kconfig.debug
+@@ -309,3 +309,15 @@ config PER_VMA_LOCK_STATS
+ 	  overhead in the page fault path.
+ 
+ 	  If in doubt, say N.
++
++
++config KSTACK_WATCH
++	tristate "Kernel Stack Watch"
++	depends on STACKPROTECTOR && HAVE_HW_BREAKPOINT && KPROBES && HAVE_KRETPROBES
++	help
++	  This debugging tool monitors kernel stack usage. When enabled,
++	  it can detect potential stack corruption by watching the remaining
++	  stack space. This provides real-time warnings before a crash occurs,
++	  which is useful for debugging stability issues.
++
++	  If unsure, say N.
+diff --git a/mm/Makefile b/mm/Makefile
+index ef54aa615d9d..665c9f2bf987 100644
+--- a/mm/Makefile
++++ b/mm/Makefile
+@@ -92,6 +92,7 @@ obj-$(CONFIG_PAGE_POISONING) += page_poison.o
+ obj-$(CONFIG_KASAN)	+= kasan/
+ obj-$(CONFIG_KFENCE) += kfence/
+ obj-$(CONFIG_KMSAN)	+= kmsan/
++obj-$(CONFIG_KSTACK_WATCH)	+= kstackwatch/
+ obj-$(CONFIG_FAILSLAB) += failslab.o
+ obj-$(CONFIG_FAIL_PAGE_ALLOC) += fail_page_alloc.o
+ obj-$(CONFIG_MEMTEST)		+= memtest.o
+diff --git a/mm/kstackwatch/Makefile b/mm/kstackwatch/Makefile
+new file mode 100644
+index 000000000000..076822eb7661
+--- /dev/null
++++ b/mm/kstackwatch/Makefile
+@@ -0,0 +1,3 @@
++obj-$(CONFIG_KSTACK_WATCH)	+= kstackwatch.o
++
++kstackwatch-y := kernel.o stack.o watch.o
+diff --git a/mm/kstackwatch/kernel.c b/mm/kstackwatch/kernel.c
+new file mode 100644
+index 000000000000..e69de29bb2d1
+diff --git a/mm/kstackwatch/kstackwatch.h b/mm/kstackwatch/kstackwatch.h
+new file mode 100644
+index 000000000000..e69de29bb2d1
+diff --git a/mm/kstackwatch/stack.c b/mm/kstackwatch/stack.c
+new file mode 100644
+index 000000000000..e69de29bb2d1
+diff --git a/mm/kstackwatch/watch.c b/mm/kstackwatch/watch.c
+new file mode 100644
+index 000000000000..e69de29bb2d1
 -- 
 2.43.0
 
