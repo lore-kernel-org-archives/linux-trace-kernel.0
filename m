@@ -1,63 +1,63 @@
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
+Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEC6D31E0F6;
-	Mon, 18 Aug 2025 12:28:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38E923218A0;
+	Mon, 18 Aug 2025 12:28:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755520132; cv=none; b=XljK8LgMKX26ejje+8jsrCKIC4voZMkUJupuU5aqGQSUexToRqPhLF2DkMI3j5zAPgsrqzZsJmG6siD18EsieLRQkGRCnadvOWvtyKNbVlydlgo5l0jygUmmNgbVAZjGrmezai9wnLbOKOTlCGNgfbl6GP0sCIUk29C4EQfDfO4=
+	t=1755520138; cv=none; b=GWzVrNtpsDgaoO6x7nkg3owfPF0jti52bH8mixEEXuNRPY1CrWmg7HVeCiiZdP4ByP8NH0px6JtqJN6Zug3NFYfRzC4XrqAMm1JG9smPWLCNlIFqzBWXVhMHrY5NSsP2x2FbkH/v7IOXpchWFDp9xSDhSL2/4pld6wbWZIiYcBg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755520132; c=relaxed/simple;
-	bh=wmZX4iZ1QAttu+GtMjiuZJVJaEt/iIJgpSC1JIHJR9g=;
+	s=arc-20240116; t=1755520138; c=relaxed/simple;
+	bh=Pj0Tjj+ChQQtUHnWbQWDBxgqXCg/uukvG+zOJA018Fs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QM+RwbA3u11Oolxynu2F5cgrZLknyUJ65M0PbZcjMyHTfLpzAXEPqxEg9mr1RUUCurRuu7KKmOhpwEuzDpkMPiq9VRzkvdgCtB22o8qrHqvOZ+4MUEJxZBZC9ohZQFmBLDd2kybPQJ0UlTHpS5Z+L6nw7on0JCwHMKJeiYvOYQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YUAz77bj; arc=none smtp.client-ip=209.85.215.171
+	 MIME-Version; b=cUQgBuUOynqpXJwej+xK1p8F5zAeOWqqfnYaMaXmp4Gf1jK2JHPb1xg2ECQWvYjXD7lGxDf12eT6fq2fHARw/c6sqafIKy/6ND/zO/ayW9zgC0CmHcYzaT8iEqAhSHYvKJlcFX+3kDs1jH7Bapou3Zr/gqNamjaL98deDs7o6AE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YZJGLy3M; arc=none smtp.client-ip=209.85.215.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YUAz77bj"
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-b47156b3b79so2999378a12.0;
-        Mon, 18 Aug 2025 05:28:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YZJGLy3M"
+Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-b47475cf8eeso519934a12.3;
+        Mon, 18 Aug 2025 05:28:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1755520130; x=1756124930; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1755520136; x=1756124936; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=9/RS8QNjk0KWNIhfT85AHfvR5fdku6bJ5ncWD3++qNE=;
-        b=YUAz77bjYzzeVC9lAOa8/jrxH1xO+P9q5JDeR+MdAe0k8WH+70DaEqOV4JuVSKWk/f
-         mdfIxJUozkCCIpMoI1EaeE6prAtH4gIosqAKCJv0HNx0A5cDg/qH4HHy30PHJamJo+sI
-         ZB1rtRvpMMEm+Y8orEI8zDqXsjXKiT1fQQLV/5/NhAqlhUPrd7DIjEWlRVQwT4X/Vowz
-         pTcIakOauCNx/v5uK3w+eK9nNT1RkRbLc2P6Y24qEv+lWt4H2e9TdjaF+LtRJjVIhiD/
-         CcSBAdeJ4m80LmeCyhJVZDMfoXuXW3MdNy9pC0n/u4M4LL/R5U8cb6UbYuZYP73ie9YG
-         O2jg==
+        bh=Nxh86RQjx8x9Y8+TdxwdmIa/RJOrFh+0RUsbopHZ3sQ=;
+        b=YZJGLy3M8zCw94DDPjEdOO2f7nj0O6WP126teJqqtwaLK7HYDwYYpUsRqqkZJZkWyT
+         YME2Ekp9I2xE3fbvA5azGG1Eog7S+X0UbK62uxkolx/r7nIC9873sN2n6JodheLTGymX
+         AOmCR+hgy+8JTC/tRtJ/4q4pqe0kdknYWCnPcW7Iwcst3eOHbNbfXXh8Lfy0RSkChScW
+         aM++mhBfEdoCMKPQXoHaKrNNCFJAGIb3kuAp53K+Q/zjuJhCLzkbNz6vTpMosilgLqqF
+         iRHOPKq0qYI+xXkEnbaCrsOV8ArNSlXXK7vu8Zj460bLY89+L1YALm/wgcQO6L6ZzvhL
+         +DXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755520130; x=1756124930;
+        d=1e100.net; s=20230601; t=1755520136; x=1756124936;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=9/RS8QNjk0KWNIhfT85AHfvR5fdku6bJ5ncWD3++qNE=;
-        b=izcUyrapcfLGfT6So+fELPN1mW+LXmJgr/yWNcF9vLSA97K/B/dcM1Ixe7dn3ObNJb
-         PXvIlKxMzrjwKojJBDnrzSQTQlE8rH/u/XDU2W8eu8GKkYc9GjqOD13+K3IFPXuJZ9EQ
-         tD7BnqW4WKH40xD8lhfB6jeD8AP70mnbkVEzSE3xBdz3tOOVrbmdmU2gTuutFX60mV+c
-         NhfXOt3IyRgY2/Nkq3BQ7Qdc6gqFsAkIOYoHXHt5rXBRCHTEECI0qhfBVflPoRg44x9D
-         IkSYkwnPawUTVK7maW6HdfiCRRXpzkHE26+ZOI2qWQpE2WihwswSrcoppr++WqbAmUl9
-         qaWA==
-X-Forwarded-Encrypted: i=1; AJvYcCVNNkqCkkfcVASxmOD8T+O2lquHNJ/KcnWzegjBY9Dpy8CuNU1bbEnocByvXq99tEq8px83QcCpSWSiK+QYgpWv6M3y@vger.kernel.org, AJvYcCWzC0K5VQj9DI3jIN5Mhdxt2wEHaa84njSi8xA3cW6VA7uJ/1AfHVHS9MUhm15UpCkqjxyalkkbSJwyZq4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzNWOPWmdMrXHXvMCaqniez9JMwvPEuUWTvCbUtE1wXqVYSdrLZ
-	i7Pl6iByHViETl/BH9JhvRARSbwhaTkuREMu1x2RigWDh+p5yugnFXKP
-X-Gm-Gg: ASbGnculhiVukAkkk12PagJOBmUfvCQGiEp3JWkKntAaBjQ4ydjKGcawCl2JfCxaQy6
-	2L8kJ84AXAqZvLYh3NDygDBPjbGJDYLoQGn/wQoIioNUxPkIEVUwIbxzijFALVfI7XarhAtKnV2
-	kawaoa7+1MujKCpZYy4hqC91F5PrueJ3ro3pOk+zo7p3Avq1LvrH+07Afs6+eE7X2nULplovbjD
-	81DBS3WU/+R3cmHuJumA5QD4yEGKCqB760dpbhTBAGxsZN0ifM0Zpr+h4PYwOYXM8AhAp+qD8Ti
-	KwGR8ORjTJGVXLyKIpn7fTp9iLmjtSrEOOd65nERw8X3h8D2/tWz5zlkaQxbq/74uuaRtM8JKVA
-	Pe44Tp4PlkAuXWyLkDhW2OfkO+MFeR0qcfaZroYIYj+kY
-X-Google-Smtp-Source: AGHT+IFshKCn58LpNxaRlYFZ6LZcaPJSmzPeYiERgbkx+OgOwBhC9613S8BZN35Pd779veDghhniVA==
-X-Received: by 2002:a17:902:f550:b0:231:d0da:5e1f with SMTP id d9443c01a7336-2446bdd72ffmr162785695ad.21.1755520129990;
-        Mon, 18 Aug 2025 05:28:49 -0700 (PDT)
+        bh=Nxh86RQjx8x9Y8+TdxwdmIa/RJOrFh+0RUsbopHZ3sQ=;
+        b=LH3bcodi7822yXr1AeGKI7JL5ptJ87FGB82BM+JrPf40XRTI7Fc0KkOehdUqK6JRwk
+         HAyK92tBuvyC2X9AOiUmzfNhZTlzN1AXgZKpGQNoZZmPnztcqCY4/W9vZHvoBAv2yadQ
+         SKp6BkD3nLx3mthOu0we54OJ1eRrJsEGl3tmQ+/RiH8aZvngcbuAOWqJmdsXxy1H8rx5
+         R9+zStfzOAKNLQ5KV8fjaDRLxMShamNzZdsdwI7mJa7TJY5K2xDruGjA/LX19XCkQnv5
+         2HoVxUuAWoBfDzjNMkr9IA9FZCU5m0NGNqhvT3A4p9cR2YYyhYDQdfaUs7PiRy8pyarT
+         RW+g==
+X-Forwarded-Encrypted: i=1; AJvYcCUXrdsRalQUmyY8N4jdRvEp7D+zeCNHMFqZa06ZCo5MpzXJlFsWPjGJzovmToSilSv/FwOE/BBdRbtl7Q47M/qoEJPx@vger.kernel.org, AJvYcCVi3An+L/9uZC1h/Qr1m7p7LHfuDCW8bNRj6oYdGxmqCJag1UW5oUN/bFjlhOjE8SAcigPW/Fgv15YOu6c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwH1dep6qpsjBRznkYq11FaWobseqFaZvpretx5EEugpnQtRH3a
+	5NZKi2+rVjkGDPCTcQQUeR/BOeaqQHo8DaCqIXZDOf80NlPOeSH1Jojp
+X-Gm-Gg: ASbGncuiq78m4H4XpPuLqezgZfB5qZbuUE4zBr24PkOKPKkVMkrTpCgvYjrFIYEPiKV
+	Ml+IkpFu64stmLBA0FErOIzyleJY24t88BQfD1+O8+8kpzkFN5w+iH8DvWgWoMlhS7UUIAYbyug
+	JjGkpbG9FwbLkVBcQg4e1/vtgHmG6K6R5fQr9OSiDVD9lazNn3KLjMtFgOWVy8J/PKdpBBHj9Wy
+	ROr6rNcwQoTiBIkFLiuo55pkpf0pyQK5V0oMmGLSg+JnHJ2VcuipibwQsgcYGdQtlhltXvyqkNt
+	HnAvIeTO688aTOS0QRbP7GaMXFifK5+18FQBS0BnVTXh3tHvSjeTTjy02NSwFnCWsQWTIm5OGgU
+	8jV3Ihga+ptUWK9Do5naL7Zqry8hM
+X-Google-Smtp-Source: AGHT+IGaSWeKYBv3gFakrVGYfHWtsjon//FUbcLW3c3fM5l7j3n889K+m8tBE3IoQkxw8ZsbZ6mXEw==
+X-Received: by 2002:a17:903:3c67:b0:240:6fd0:25b7 with SMTP id d9443c01a7336-2446d8f9568mr203579095ad.38.1755520136340;
+        Mon, 18 Aug 2025 05:28:56 -0700 (PDT)
 Received: from localhost.localdomain ([2604:a840:3::3008])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2446d57f12esm79236705ad.157.2025.08.18.05.28.46
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2446d57f12esm79236705ad.157.2025.08.18.05.28.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Aug 2025 05:28:49 -0700 (PDT)
+        Mon, 18 Aug 2025 05:28:55 -0700 (PDT)
 From: Jinchao Wang <wangjinchao600@gmail.com>
 To: akpm@linux-foundation.org
 Cc: mhiramat@kernel.org,
@@ -67,11 +67,11 @@ Cc: mhiramat@kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	Jinchao Wang <wangjinchao600@gmail.com>
-Subject: [RFC PATCH 11/13] mm/kstackwatch: Ignore corruption in kretprobe trampolines
-Date: Mon, 18 Aug 2025 20:26:16 +0800
-Message-ID: <20250818122720.434981-12-wangjinchao600@gmail.com>
+Subject: [RFC PATCH 12/13] mm/kstackwatch: Add debug and test functions
+Date: Mon, 18 Aug 2025 20:26:17 +0800
+Message-ID: <20250818122720.434981-13-wangjinchao600@gmail.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250818122720.434981-11-wangjinchao600@gmail.com>
+In-Reply-To: <20250818122720.434981-12-wangjinchao600@gmail.com>
 References: <20250818122720.434981-1-wangjinchao600@gmail.com>
  <20250818122720.434981-2-wangjinchao600@gmail.com>
  <20250818122720.434981-3-wangjinchao600@gmail.com>
@@ -83,6 +83,7 @@ References: <20250818122720.434981-1-wangjinchao600@gmail.com>
  <20250818122720.434981-9-wangjinchao600@gmail.com>
  <20250818122720.434981-10-wangjinchao600@gmail.com>
  <20250818122720.434981-11-wangjinchao600@gmail.com>
+ <20250818122720.434981-12-wangjinchao600@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -91,77 +92,71 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patch adds logic to prevent the KStackWatch tool from
-triggering on events that occur inside `kretprobe` trampolines.
+This patch adds new helper functions to the kstackwatch module to aid in
+debugging and testing.
 
-The `kretprobe` mechanism temporarily diverts execution through a
-trampoline to handle function returns. When a HWBP is set.
-It can be triggered within this trampoline after the watched function
-exit, and before the exit_handler called, leading to a false positive.
-
-The patch resolves the address range of the `arch_rethook_trampoline`
-and checks the call stack within the breakpoint handler to see if the
-event's instruction pointer (IP) is within this range. If it is, the
-event is ignored.
+- `ksw_watch_show()`: Displays information about the currently active hardware
+  breakpoint, such as its address and length. This is useful for verifying
+  that a breakpoint has been correctly installed.
+- `ksw_watch_fire()`: Manually triggers the active hardware breakpoint. This
+  function is for testing the breakpoint handler to ensure it correctly
+  identifies and reports the stack corruption.
 
 Signed-off-by: Jinchao Wang <wangjinchao600@gmail.com>
 ---
- mm/kstackwatch/watch.c | 37 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
+ mm/kstackwatch/kstackwatch.h |  4 ++++
+ mm/kstackwatch/watch.c       | 20 ++++++++++++++++++++
+ 2 files changed, 24 insertions(+)
 
+diff --git a/mm/kstackwatch/kstackwatch.h b/mm/kstackwatch/kstackwatch.h
+index c24a651977c0..27c71a9391ac 100644
+--- a/mm/kstackwatch/kstackwatch.h
++++ b/mm/kstackwatch/kstackwatch.h
+@@ -2,6 +2,8 @@
+ #ifndef _KSTACKWATCH_H
+ #define _KSTACKWATCH_H
+ 
++#include <linux/kprobes.h>
++#include <linux/perf_event.h>
+ #include <linux/types.h>
+ 
+ #define MAX_FUNC_NAME_LEN 64
+@@ -48,5 +50,7 @@ int ksw_watch_init(struct ksw_config *config);
+ void ksw_watch_exit(void);
+ int ksw_watch_on(u64 watch_addr, u64 watch_len);
+ void ksw_watch_off(void);
++void ksw_watch_show(void);
++void ksw_watch_fire(void);
+ 
+ #endif /* _KSTACKWATCH_H */
 diff --git a/mm/kstackwatch/watch.c b/mm/kstackwatch/watch.c
-index 7ab247531961..1b4cf5d42db9 100644
+index 1b4cf5d42db9..28ea24e4ae3a 100644
 --- a/mm/kstackwatch/watch.c
 +++ b/mm/kstackwatch/watch.c
-@@ -31,11 +31,48 @@ static void ksw_watch_on_local_cpu(void *useless);
- static DEFINE_PER_CPU(call_single_data_t,
- 		      hwbp_csd) = CSD_INIT(ksw_watch_on_local_cpu, NULL);
- 
-+/* Resolved once, then reused */
-+static unsigned long tramp_start, tramp_end;
+@@ -218,3 +218,23 @@ void ksw_watch_off(void)
+ 	ksw_watch_on((unsigned long)&marker, sizeof(marker));
+ 	pr_info("KSW: All HWBPs disarmed\n");
+ }
 +
-+static void ksw_watch_resolve_trampolines(void)
++/* Debug functions */
++void ksw_watch_show(void)
 +{
-+	unsigned long sz, off;
++	struct perf_event *bp;
 +
-+	if (likely(tramp_start && tramp_end))
-+		return;
-+
-+	tramp_start = kallsyms_lookup_name("arch_rethook_trampoline");
-+	if (tramp_start && kallsyms_lookup_size_offset(tramp_start, &sz, &off))
-+		tramp_end = tramp_start + sz;
++	bp = *this_cpu_ptr(watch_events);
++	pr_info("KSW: HWBP info test - bp_addr: 0x%px len:%llu\n",
++		(void *)bp->attr.bp_addr, bp->attr.bp_len);
 +}
 +
-+static bool ksw_watch_in_trampoline(unsigned long ip)
++void ksw_watch_fire(void)
 +{
-+	if (tramp_start && tramp_end && ip >= tramp_start && ip < tramp_end)
-+		return true;
-+	return false;
++	struct perf_event *bp;
++	char *ptr;
++
++	bp = *this_cpu_ptr(watch_events);
++	ptr = (char *)READ_ONCE(bp->attr.bp_addr);
++	*ptr = 0x42; // This should trigger immediately
 +}
-+
- /* Enhanced breakpoint handler with watch identification */
- static void ksw_watch_handler(struct perf_event *bp,
- 			      struct perf_sample_data *data,
- 			      struct pt_regs *regs)
- {
-+	unsigned long entries[MAX_STACK_ENTRIES];
-+	int i, nr = 0;
-+
-+	ksw_watch_resolve_trampolines();
-+
-+#if IS_ENABLED(CONFIG_STACKTRACE)
-+	nr = stack_trace_save_regs(regs, entries, MAX_STACK_ENTRIES, 0);
-+	for (i = 0; i < nr; i++) {
-+		if (ksw_watch_in_trampoline(entries[i])) {
-+			pr_info("KSW: Found rethook trampolines, ignoring hit\n");
-+			return;
-+		}
-+	}
-+#endif
-+
- 	pr_emerg("========== KStackWatch: Caught stack corruption =======\n");
- 	pr_emerg("KSW: config %s\n", watch_config->config_str);
- 	show_regs(regs);
 -- 
 2.43.0
 
