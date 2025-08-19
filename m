@@ -1,47 +1,47 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85800340DAB
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 19 Aug 2025 13:45:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E42F32A3C3
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 19 Aug 2025 13:45:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755611138; cv=none; b=rglpoRGAhpmOHwN1JHdRTxzfMtTX+AxjlPFZLmXS9l2Mv9t486VDPC7g9F8yA6Waj49qipiLq6vLmuDpoo44LZFdz+DYPUIfhCpmuXAGSwiTA4b8IoX65mZZggBf6QeEgLubh1YS9TyKW48DwfH295hAYIpXunmsklsFshCN658=
+	t=1755611156; cv=none; b=C1BvqeId8dxP8saxMnb9h2MoMTEv9LOXnXmsb4dHaKVfnHpovyrmNS/LcBUyoeNNsnWUwyA3yzhZvepHP+CEPOWfbNs/4a25AnqXhhQxSo8Z7X0LTVvqOzjoDg3Rk32ItamFEdJoZcjLQMlijZKC+IEJ6dbv0uIKDdLCPOBsw1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755611138; c=relaxed/simple;
-	bh=BcBkd2ONu3qEsJ8amjqoMv8e03xJ7JS1NkQC4inL7hY=;
+	s=arc-20240116; t=1755611156; c=relaxed/simple;
+	bh=bUoF8o+qhtqbCIHGE+B5eohfl/qebE8G1Jg9K7je0to=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RXLnY9kAZS1KGu1l2gAzc9lyoQUb5z3nAYlbXWhsmRhLORIsHfrLHyHZWB4UMpibrzHvs0upKX4PgZ/CXg8emvziSMOeKMW1QrGKySpaXyHQlyaZAttx2IdXAxkQ5pgpraHEeEQN4RjQCH/Vz95urslTA6kvpHOsXNQI42I4yT4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Vy/Lfhip; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=OJHLTTQRM1FDBsMjAf7sSRntwUVSgjN+J9RXihvF0HAvmjmoyHL/oyp0f+hNem4d45MGUHQI6Q+9TNsQAOXhOU7SeV0Tps+AObTL6eGeNUFLKkXe3PvzW4Mw8Dgg+ccohS9tjEtmy/xA6XXso/EmhLBpw5O+7pGjWrMsTaxj3Q0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IEvsBevJ; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Vy/Lfhip"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IEvsBevJ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1755611136;
+	s=mimecast20190719; t=1755611153;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=V5DchuEmH6POX8OSi9R3/H3ulGAsujcIoqxqs5qQqIk=;
-	b=Vy/Lfhipd0Hxn6/3mcbGrg/LKB0HzdjFozDkEOQkaMXt0+QS4GoWxQ9Zxvf18mCSZ+DwlV
-	iO0UnyxXuAE5KCDWpEP7B2LFO+aO65lkEOb9oMNxPhyPyajMLc8nR5c77x5jAaDdQD4Pwy
-	vE5IhrDBHXD3tzXo5f+lVLjX7Z3sVD8=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	bh=ENywRgeFkaGbdbIXNdDIup+iQujNfOziwpxb6S+KNKI=;
+	b=IEvsBevJePTjJYTcQLVjqFVRzktp326qy13Mso4Ci3JI+CCJOiyohx4Gb81au+00NQ0bD8
+	dZ7zGsRPvneofZhc8NMzV6I+kZyOMr/KXRsmTeoPikUxDLd2+wo9qVaT0nyjbat9mTxMrd
+	oMSzyiPkhtLja2W7CDADKyKCS8irVjg=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-682-kyYq5qvsNpunGuM_q3lK-Q-1; Tue,
- 19 Aug 2025 09:45:31 -0400
-X-MC-Unique: kyYq5qvsNpunGuM_q3lK-Q-1
-X-Mimecast-MFC-AGG-ID: kyYq5qvsNpunGuM_q3lK-Q_1755611126
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-421-PodVLyjuPvO85QIsdcVHrg-1; Tue,
+ 19 Aug 2025 09:45:49 -0400
+X-MC-Unique: PodVLyjuPvO85QIsdcVHrg-1
+X-Mimecast-MFC-AGG-ID: PodVLyjuPvO85QIsdcVHrg_1755611145
 Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8979F180034D;
-	Tue, 19 Aug 2025 13:45:26 +0000 (UTC)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 044EC19775E2;
+	Tue, 19 Aug 2025 13:45:45 +0000 (UTC)
 Received: from h1.redhat.com (unknown [10.22.64.137])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3C00D19560BC;
-	Tue, 19 Aug 2025 13:45:08 +0000 (UTC)
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4934119560AB;
+	Tue, 19 Aug 2025 13:45:26 +0000 (UTC)
 From: Nico Pache <npache@redhat.com>
 To: linux-mm@kvack.org,
 	linux-doc@vger.kernel.org,
@@ -86,9 +86,9 @@ Cc: david@redhat.com,
 	mhocko@suse.com,
 	rdunlap@infradead.org,
 	hughd@google.com
-Subject: [PATCH v10 08/13] khugepaged: avoid unnecessary mTHP collapse attempts
-Date: Tue, 19 Aug 2025 07:42:00 -0600
-Message-ID: <20250819134205.622806-9-npache@redhat.com>
+Subject: [PATCH v10 09/13] khugepaged: enable collapsing mTHPs even when PMD THPs are disabled
+Date: Tue, 19 Aug 2025 07:42:01 -0600
+Message-ID: <20250819134205.622806-10-npache@redhat.com>
 In-Reply-To: <20250819134205.622806-1-npache@redhat.com>
 References: <20250819134205.622806-1-npache@redhat.com>
 Precedence: bulk
@@ -100,60 +100,56 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-There are cases where, if an attempted collapse fails, all subsequent
-orders are guaranteed to also fail. Avoid these collapse attempts by
-bailing out early.
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
 
+We have now allowed mTHP collapse, but thp_vma_allowable_order() still only
+checks if the PMD-sized mTHP is allowed to collapse. This prevents scanning
+and collapsing of 64K mTHP when only 64K mTHP is enabled. Thus, we should
+modify the checks to allow all large orders of anonymous mTHP.
+
+Acked-by: David Hildenbrand <david@redhat.com>
+Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
 Signed-off-by: Nico Pache <npache@redhat.com>
 ---
- mm/khugepaged.c | 31 ++++++++++++++++++++++++++++++-
- 1 file changed, 30 insertions(+), 1 deletion(-)
+ mm/khugepaged.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
 diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index 6a4cf7e4a7cc..7d9b5100bea1 100644
+index 7d9b5100bea1..2cadd07341de 100644
 --- a/mm/khugepaged.c
 +++ b/mm/khugepaged.c
-@@ -1389,10 +1389,39 @@ static int collapse_scan_bitmap(struct mm_struct *mm, unsigned long address,
- 			ret = collapse_huge_page(mm, address, referenced, unmapped,
- 						 cc, mmap_locked, order,
- 						 offset * KHUGEPAGED_MIN_MTHP_NR);
--			if (ret == SCAN_SUCCEED) {
+@@ -491,7 +491,11 @@ void khugepaged_enter_vma(struct vm_area_struct *vma,
+ {
+ 	if (!mm_flags_test(MMF_VM_HUGEPAGE, vma->vm_mm) &&
+ 	    hugepage_pmd_enabled()) {
+-		if (thp_vma_allowable_order(vma, vm_flags, TVA_KHUGEPAGED, PMD_ORDER))
++		unsigned long orders = vma_is_anonymous(vma) ?
++					THP_ORDERS_ALL_ANON : BIT(PMD_ORDER);
 +
-+			/*
-+			 * Analyze failure reason to determine next action:
-+			 * - goto next_order: try smaller orders in same region
-+			 * - continue: try other regions at same order
-+			 * - break: stop all attempts (system-wide failure)
-+			 */
-+			switch (ret) {
-+			/* Cases were we should continue to the next region */
-+			case SCAN_SUCCEED:
- 				collapsed += (1 << order);
-+			case SCAN_PAGE_RO:
-+			case SCAN_PTE_MAPPED_HUGEPAGE:
- 				continue;
-+			/* Cases were lower orders might still succeed */
-+			case SCAN_LACK_REFERENCED_PAGE:
-+			case SCAN_EXCEED_NONE_PTE:
-+			case SCAN_EXCEED_SWAP_PTE:
-+			case SCAN_EXCEED_SHARED_PTE:
-+			case SCAN_PAGE_LOCK:
-+			case SCAN_PAGE_COUNT:
-+			case SCAN_PAGE_LRU:
-+			case SCAN_PAGE_NULL:
-+			case SCAN_DEL_PAGE_LRU:
-+			case SCAN_PTE_NON_PRESENT:
-+			case SCAN_PTE_UFFD_WP:
-+			case SCAN_ALLOC_HUGE_PAGE_FAIL:
-+				goto next_order;
-+			/* All other cases should stop collapse attempts */
-+			default:
-+				break;
- 			}
-+			break;
- 		}
++		if (thp_vma_allowable_orders(vma, vm_flags, TVA_KHUGEPAGED,
++					    orders))
+ 			__khugepaged_enter(vma->vm_mm);
+ 	}
+ }
+@@ -2671,6 +2675,8 @@ static unsigned int collapse_scan_mm_slot(unsigned int pages, int *result,
  
- next_order:
+ 	vma_iter_init(&vmi, mm, khugepaged_scan.address);
+ 	for_each_vma(vmi, vma) {
++		unsigned long orders = vma_is_anonymous(vma) ?
++					THP_ORDERS_ALL_ANON : BIT(PMD_ORDER);
+ 		unsigned long hstart, hend;
+ 
+ 		cond_resched();
+@@ -2678,7 +2684,8 @@ static unsigned int collapse_scan_mm_slot(unsigned int pages, int *result,
+ 			progress++;
+ 			break;
+ 		}
+-		if (!thp_vma_allowable_order(vma, vma->vm_flags, TVA_KHUGEPAGED, PMD_ORDER)) {
++		if (!thp_vma_allowable_orders(vma, vma->vm_flags,
++			TVA_KHUGEPAGED, orders)) {
+ skip:
+ 			progress++;
+ 			continue;
 -- 
 2.50.1
 
