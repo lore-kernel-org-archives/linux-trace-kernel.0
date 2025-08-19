@@ -1,141 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AB3430F520;
-	Tue, 19 Aug 2025 17:39:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 245A930C37D;
+	Tue, 19 Aug 2025 17:50:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755625141; cv=none; b=kAixRL4my1nXHgx4h17OkFiaciHjmCGgLreyvxQVsp7kO+LmVicMLl+uQkEpbnHo/O0yS0ZPt+aKBEJGIyW/ldkFir4wA3C96azFsdHfEruphTX+8ofj8cKNRFkaGJoUs1ByCz4a4yTNAb2+20aIZrJc+m4vkFgXe8w2Sv2Xt5g=
+	t=1755625820; cv=none; b=fDQ+yWabYUjmvI9i9OzeTKIiXcxRu8WpNcN7SNpEMwpFqtFJg2RJc/Bdb0H49UXcbfTPf5TeSvi5JzEqU2MyosKEB+ZoLlVODZuBV+hL1V6wh34s/dtVXz4Yx1fEXB7RlhpxVeKdmjfeFMQ+ZG2iv7jHN6KH8oprC72e62C0sCM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755625141; c=relaxed/simple;
-	bh=shzOb9LxCd4j9ffIAYJARd3Ll/bIHN63Rdsm8jF6HN0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=li0Za4uyQ1tRHewOlMQfUPuJnpj4SP03LGx95e8pS0bf5vc9USfxR30f4RbLCaG7i6WpqJqQJr647uHv1wtIrYafFjGsgwcOIwQw5iZ2XfCkjgNvWqWR5vV3zvSkJHc90m4vGxV607ft0z3NZp/IE7Hfhja8OC1b6rFiTowvLqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hP0G8Q00; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hP0G8Q00"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A44ECC113D0;
-	Tue, 19 Aug 2025 17:38:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755625141;
-	bh=shzOb9LxCd4j9ffIAYJARd3Ll/bIHN63Rdsm8jF6HN0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hP0G8Q00yNTh5FfM8EvmXjWXPCW1VAkoQrIqWO2opf8nY5Pp8kyRoAQ5sJbskFxHe
-	 Dpw2oE6bb6R9DP3zDSAoqrpgkr4LknFTjksf2ZVtrQBA00wb60mjNgoeDWPO1iTMvR
-	 mOZkqJAPBVE7i3vpf3SqAKzTQw9K5Rc7DptngH5viddKvezFNMaYxTj51UPsnXjIa2
-	 zH66GE5Ky5jjWEuNnqpxi+DfDo3WTnC7VWe1CnDp489D3vz6rDN4s4/RlMVvekkmmH
-	 q8YXIBSj9tnBwBYbvKw41cRhfgSA56D3XB40ha8nKdeMey7WqJRapAA4sbPWPZyDe2
-	 vdbwCoOpeQYmA==
-From: Leon Romanovsky <leon@kernel.org>
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Leon Romanovsky <leonro@nvidia.com>,
-	Jason Gunthorpe <jgg@nvidia.com>,
-	Abdiel Janulgue <abdiel.janulgue@gmail.com>,
-	Alexander Potapenko <glider@google.com>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Christoph Hellwig <hch@lst.de>,
-	Danilo Krummrich <dakr@kernel.org>,
-	iommu@lists.linux.dev,
-	Jason Wang <jasowang@redhat.com>,
-	Jens Axboe <axboe@kernel.dk>,
-	Joerg Roedel <joro@8bytes.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Juergen Gross <jgross@suse.com>,
-	kasan-dev@googlegroups.com,
-	Keith Busch <kbusch@kernel.org>,
-	linux-block@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-nvme@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-trace-kernel@vger.kernel.org,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	rust-for-linux@vger.kernel.org,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	virtualization@lists.linux.dev,
-	Will Deacon <will@kernel.org>,
-	xen-devel@lists.xenproject.org
-Subject: [PATCH v4 16/16] nvme-pci: unmap MMIO pages with appropriate interface
-Date: Tue, 19 Aug 2025 20:37:00 +0300
-Message-ID: <545fffb8c364f36102919a5a1d57137731409f3c.1755624249.git.leon@kernel.org>
-X-Mailer: git-send-email 2.50.1
-In-Reply-To: <cover.1755624249.git.leon@kernel.org>
-References: <cover.1755624249.git.leon@kernel.org>
+	s=arc-20240116; t=1755625820; c=relaxed/simple;
+	bh=OhvM2c7vEcF7jWm0ycE4LKWrQFWuA4XQtHjMBwYvVro=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jdP9OKuLt0MEDajT58D4PlhjFZvjUAG20L7wEKmxeYGDum4cJY4ELmz0PA4oLpX/vtmUYvSMofI45ibHoio6dtO+d3OCOM1jLlmYofxbqc8/zv2IumKb6N6vfgP7SrV8c6n8dFS29wepqhMrZnqoca3MeoRK5aUEjSCw37RxygA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf19.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay09.hostedemail.com (Postfix) with ESMTP id D808B81E0F;
+	Tue, 19 Aug 2025 17:50:09 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf19.hostedemail.com (Postfix) with ESMTPA id 1AC4120028;
+	Tue, 19 Aug 2025 17:50:08 +0000 (UTC)
+Date: Tue, 19 Aug 2025 13:50:08 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Luo Gengkun <luogengkun@huaweicloud.com>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing: Fix tracing_marker may trigger page fault
+ during preempt_disable
+Message-ID: <20250819135008.5f1ba00e@gandalf.local.home>
+In-Reply-To: <20250819105152.2766363-1-luogengkun@huaweicloud.com>
+References: <20250819105152.2766363-1-luogengkun@huaweicloud.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 1AC4120028
+X-Stat-Signature: p8w9hboa5cfhpjby15feuu5fzpmreku7
+X-Rspamd-Server: rspamout06
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19WEKIKa+f8n9kXIveZU+urR907NvqVxVg=
+X-HE-Tag: 1755625808-295650
+X-HE-Meta: U2FsdGVkX18xwxqT8yDACISI+ww2K8vt7CJrfyYEbE9Cn0iPMCF2zzIr3mRABDlQWj+Hyob1lra91gAGYw2UPXqpF49FqkFclE1Rbvpb8uxh1YgR2Dvy2cXBZyKGZ+d1HOQA/SUU9JbMEIzNoZyxLDdzuGMr4kceqaw7axGmxnvVgvEjTQU7dv5zfHPl/9snGwjhr2pzsScNMoZr8wvQMO++miKZNJEjMpi8BSufxS0w6eCGdNWC9cImN7iyuHIBrx/oL22c+YABEJuBIASGiwkNZgw5ToHCS6rQAv0+67nBlkcUj2ntHG1tiNlcdbIIzddlnb/hPBc8sjQOLXMsQCNYYcriaL+p
 
-From: Leon Romanovsky <leonro@nvidia.com>
+On Tue, 19 Aug 2025 10:51:52 +0000
+Luo Gengkun <luogengkun@huaweicloud.com> wrote:
 
-Block layer maps MMIO memory through dma_map_phys() interface
-with help of DMA_ATTR_MMIO attribute. There is a need to unmap
-that memory with the appropriate unmap function, something which
-wasn't possible before adding new REQ attribute to block layer in
-previous patch.
+> Both tracing_mark_write and tracing_mark_raw_write call
+> __copy_from_user_inatomic during preempt_disable. But in some case,
+> __copy_from_user_inatomic may trigger page fault, and will call schedule()
+> subtly. And if a task is migrated to other cpu, the following warning will
 
-Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
----
- drivers/nvme/host/pci.c | 18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
+Wait! What?
 
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index 2c6d9506b172..f8ecc0e0f576 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -682,11 +682,15 @@ static void nvme_free_prps(struct request *req)
- {
- 	struct nvme_iod *iod = blk_mq_rq_to_pdu(req);
- 	struct nvme_queue *nvmeq = req->mq_hctx->driver_data;
-+	unsigned int attrs = 0;
- 	unsigned int i;
- 
-+	if (req->cmd_flags & REQ_MMIO)
-+		attrs = DMA_ATTR_MMIO;
-+
- 	for (i = 0; i < iod->nr_dma_vecs; i++)
--		dma_unmap_page(nvmeq->dev->dev, iod->dma_vecs[i].addr,
--				iod->dma_vecs[i].len, rq_dma_dir(req));
-+		dma_unmap_phys(nvmeq->dev->dev, iod->dma_vecs[i].addr,
-+				iod->dma_vecs[i].len, rq_dma_dir(req), attrs);
- 	mempool_free(iod->dma_vecs, nvmeq->dev->dmavec_mempool);
- }
- 
-@@ -699,15 +703,19 @@ static void nvme_free_sgls(struct request *req)
- 	unsigned int sqe_dma_len = le32_to_cpu(iod->cmd.common.dptr.sgl.length);
- 	struct nvme_sgl_desc *sg_list = iod->descriptors[0];
- 	enum dma_data_direction dir = rq_dma_dir(req);
-+	unsigned int attrs = 0;
-+
-+	if (req->cmd_flags & REQ_MMIO)
-+		attrs = DMA_ATTR_MMIO;
- 
- 	if (iod->nr_descriptors) {
- 		unsigned int nr_entries = sqe_dma_len / sizeof(*sg_list), i;
- 
- 		for (i = 0; i < nr_entries; i++)
--			dma_unmap_page(dma_dev, le64_to_cpu(sg_list[i].addr),
--				le32_to_cpu(sg_list[i].length), dir);
-+			dma_unmap_phys(dma_dev, le64_to_cpu(sg_list[i].addr),
-+				le32_to_cpu(sg_list[i].length), dir, attrs);
- 	} else {
--		dma_unmap_page(dma_dev, sqe_dma_addr, sqe_dma_len, dir);
-+		dma_unmap_phys(dma_dev, sqe_dma_addr, sqe_dma_len, dir, attrs);
- 	}
- }
- 
--- 
-2.50.1
+__copy_from_user_inatomic() is allowed to be called from in atomic context.
+Hence the name it has. How the hell can it sleep? If it does, it's totally
+broken!
 
+Now, I'm not against using nofault() as it is better named, but I want to
+know why you are suggesting this change. Did you actually trigger a bug here?
+
+> be trigger:
+>         if (RB_WARN_ON(cpu_buffer,
+>                        !local_read(&cpu_buffer->committing)))
+> 
+> An example can illustrate this issue:
+> 
+> process flow						CPU
+> ---------------------------------------------------------------------
+> 
+> tracing_mark_raw_write():				cpu:0
+>    ...
+>    ring_buffer_lock_reserve():				cpu:0
+>       ...
+>       cpu = raw_smp_processor_id()			cpu:0
+>       cpu_buffer = buffer->buffers[cpu]			cpu:0
+>       ...
+>    ...
+>    __copy_from_user_inatomic():				cpu:0
+>       ...
+>       # page fault
+>       do_mem_abort():					cpu:0
+
+Sounds to me that arm64 __copy_from_user_inatomic() may be broken.
+
+>          ...
+>          # Call schedule
+>          schedule()					cpu:0
+> 	 ...
+>    # the task schedule to cpu1
+>    __buffer_unlock_commit():				cpu:1
+>       ...
+>       ring_buffer_unlock_commit():			cpu:1
+> 	 ...
+> 	 cpu = raw_smp_processor_id()			cpu:1
+> 	 cpu_buffer = buffer->buffers[cpu]		cpu:1
+> 
+> As shown above, the process will acquire cpuid twice and the return values
+> are not the same.
+> 
+> To fix this problem using copy_from_user_nofault instead of
+> __copy_from_user_inatomic, as the former performs 'access_ok' before
+> copying.
+> 
+> Fixes: 656c7f0d2d2b ("tracing: Replace kmap with copy_from_user() in trace_marker writing")
+
+The above commit was intorduced in 2016. copy_from_user_nofault() was
+introduced in 2020. I don't think this would be the fix for that kernel.
+
+So no, I'm not taking this patch. If you see __copy_from_user_inatomic()
+sleeping, it's users are not the issue. That function is.
+
+-- Steve
+
+
+
+> Signed-off-by: Luo Gengkun <luogengkun@huaweicloud.com>
