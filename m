@@ -1,181 +1,267 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43D4430E842
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 19 Aug 2025 10:53:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF4B932A3C3
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 19 Aug 2025 13:43:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755600819; cv=none; b=T41nGI2hLJoiI4b4lHy47TgOOxDhKG4b5U0AG6ibeW/OYGN9/pxnsOdoOxhL6XK7v9oP/6hehOdpG8ciGU87ZnXy+PBANuRQsqf90FQw6ve+uuxgR37KD61uDkOSRYyexjMb7YRvJumW8dxroik5Zis9Rbowql42gzMH8y3HoWI=
+	t=1755610984; cv=none; b=j5UpZxSJnkFyjgRWCcMce4YN+541aL/xwhn/z+88AaGu16HeUdh04ERpBIhZdpXqpIyNQcxTNxfbNWRUtdvlFLELi9Dwaz+0rthlnpbztT3hxmtFFRZ50tkUt5HpjIEzOSTqfqsf1WnN8B8UWDezkSej/xQM28JbrRe8Bd8hQIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755600819; c=relaxed/simple;
-	bh=EO7ENISm3BJxsvKkBt5+Cb5jSwNR2GlaMZL8G5qc7Rs=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=c3YPY18zPXmDL4LRZGsApVhrlts1fXDXl7g4YfDQ5gxHomlhYvWDblXIEru47C3b6IQn+Rbg2qIqkv2ukAyMpXhe+sSdT9a4rqxlyZoxo/ZIa8bmvNt0Jf7/Nr9n7PG6sN4fVJOuCi+DVHSN6q8I3yK85bT7xfx8DrwL8lKa79g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=h5IZ6+dz; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1755610984; c=relaxed/simple;
+	bh=FOWwu2o9Xgb4kRq+IFztU+5yUHImrnuQ7hF5c+HQqsk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZeHx618QbY13xWeWSXMXISy8vj7V9msYglgY/lXKzFs93TeKmH3ZaNFzwao65QSHYnyc3dUroS5ZlYbh0Lgue6r88H2OqP9MA3lagEFjc+/aPj8qWytaKHt78n3d69mvFL5WcziD3QCGnsdXBLGp5zxtC49sUL7l5bjmDXxWCQk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CaPqPySr; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h5IZ6+dz"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CaPqPySr"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1755600817;
+	s=mimecast20190719; t=1755610981;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=EO7ENISm3BJxsvKkBt5+Cb5jSwNR2GlaMZL8G5qc7Rs=;
-	b=h5IZ6+dzc/LbLaPgSzfZd2lCym58f6YCWlPnjGczu/2VXAgc5rwZVSsLY/cM7uQLKWHMgt
-	5jt0thVcv+2sl0/mA6LT1poTaxHtHyJIIbiDQgKX9lFx3eeaEfps3BZ7/1CfHaJVckZrb9
-	inJ+RYrYX5/OtfAE5Gc2eIWh4v+Z7kw=
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
- [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-192-s_rOwHcsPC-uOVyDW_u3pA-1; Tue, 19 Aug 2025 06:53:33 -0400
-X-MC-Unique: s_rOwHcsPC-uOVyDW_u3pA-1
-X-Mimecast-MFC-AGG-ID: s_rOwHcsPC-uOVyDW_u3pA_1755600813
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7e8704e34ccso2112260985a.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 19 Aug 2025 03:53:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755600813; x=1756205613;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EO7ENISm3BJxsvKkBt5+Cb5jSwNR2GlaMZL8G5qc7Rs=;
-        b=ulBGJIuNyn7h1VlGGjdkBcsA77z9hEjekD2hEz9092NVHGab+sKzLoMeeUORojXLt5
-         xKZ5OviBJXgHE7rnmzUeRCRCcTSEwbpPE3qEcO/dr+RsI+Gj+KTqHj8BjmYDrxW5eBVY
-         Yy4YM5bkMSdLl7zURA0wM1mzbA07kI56CHoxk5ISmC1zpp1jL/FYSzw2C7GjX87G1gnj
-         MYoTHnUwtlboMO4GFVS4Pz0kaqGTF8M4O1yH0Ygk20Uhj8ssm521gFV/g91y19/UgfK8
-         muaHLa7MaJnPiu9Ksu+KEdhlIPDZhX1HbGx5j+KGQ6xylX6OPp8wiQECXmSi/S5uCUZ9
-         hKjA==
-X-Forwarded-Encrypted: i=1; AJvYcCXHfwOU+inlajOv9NfvGN65aA/PKFxZxHnwiv+V7gpH0rjIOg/FlnlKoFweeG0iasuHGEHFj6q28YkyB7A14DAt6no=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwDhW5U0C/8wTg8JVwhSDT2Xit7kd45nOXUtDzMJwkhNFUleuSF
-	WVSWdeBl66E0WKHWhxTr9kWrPPe+MjdrLtIOaYF1LYrdE6YNbvG0m91YVfAbbxs6r2/yWBgIMbi
-	5g+hlb/nj+b7bBDLk4sb5+seeuSObz7zcQtzCzob3qiX7yyvHuV9A2+vuF6WLUSIhAWVuIZfOQw
-	==
-X-Gm-Gg: ASbGnctiXk5bq5pfnO1Zrma1j9CYJZwXevyRLXyhMlVhpYggBw1r/XvgPV3ca/zVhOq
-	qc3U31UUE1FhJmMoWUQjJLym8Xq4uja/4ot3g0mN7oopgtyugmdf00DkVoYDltKMfuGFn7jDrap
-	iyOLTe+Pxfvo59NH4gV4uIPl/l++LlG4EW0Fh+ULlUqeJp0Ad5lPcYOFYGxG5GJ3hCaJ6fBXeaS
-	v+ou46wvo7aJrLoRdsqyylbiMr63qnhA0wsME0i+vE5pGZkLKPP0upXrumA6PduqOnm/AbMzvCI
-	mDs42qX3sT+vsAtRDnlAvv68Y6QObjRAUHaHmdf2gF3WABmJ3XfPM8BSkdCgYZPFcg==
-X-Received: by 2002:a05:620a:6919:b0:7e8:5bb:b398 with SMTP id af79cd13be357-7e9f33150acmr222348885a.9.1755600813293;
-        Tue, 19 Aug 2025 03:53:33 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFP30Q9P2VNlQmQH24vup08QANMA6P1yMtCmVsXUmoSlrvw+NxlGy89RF9eCDaDscDIOYA0ig==
-X-Received: by 2002:a05:620a:6919:b0:7e8:5bb:b398 with SMTP id af79cd13be357-7e9f33150acmr222346485a.9.1755600812832;
-        Tue, 19 Aug 2025 03:53:32 -0700 (PDT)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.40])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7e87e0228f1sm759267485a.8.2025.08.19.03.53.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Aug 2025 03:53:32 -0700 (PDT)
-Message-ID: <d907bcaa640a44ecb739b3253df49e16bcd4e38d.camel@redhat.com>
-Subject: Re: [RFC PATCH 08/17] rv: Add Hybrid Automata monitor type
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Juri Lelli <juri.lelli@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, linux-trace-kernel@vger.kernel.org,
- Nam Cao <namcao@linutronix.de>, Tomas Glozar <tglozar@redhat.com>, Juri
- Lelli <jlelli@redhat.com>, Clark Williams <williams@redhat.com>,  John
- Kacur <jkacur@redhat.com>
-Date: Tue, 19 Aug 2025 12:53:29 +0200
-In-Reply-To: <aKRNMHCslAt3dx5t@jlelli-thinkpadt14gen4.remote.csb>
-References: <20250814150809.140739-1-gmonaco@redhat.com>
-	 <20250814150809.140739-9-gmonaco@redhat.com>
-	 <aKRBg-KhyCqgFEg3@jlelli-thinkpadt14gen4.remote.csb>
-	 <762f7d52bf75475d3ec2587a8e370e4fb2a5ae6a.camel@redhat.com>
-	 <aKRNMHCslAt3dx5t@jlelli-thinkpadt14gen4.remote.csb>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
- xyhmqeUWOzFx5P43S1E1dhsrLWgP
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42)
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=FJ3ypUlMzXz2IhKZB9gKLujpc2LItSundB12cO28tq8=;
+	b=CaPqPySrx3jgbMpiid1qNWUQ97fo8HkGS7Cgs/+Tpjw4YhAkIXmXjp32n8zjCjop6XuB26
+	HfVB1SH2mHVR+Q1qS1JtCWg+cBEyXJdPCl0DiYMyW17qXPwwXVUDHwYWz0OhG25AKonZsv
+	UoDyE48dJI7lFK8RuQbz1oB2SYrobi0=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-232-C-RlPLunMhS_zJhtzEPiHg-1; Tue,
+ 19 Aug 2025 09:42:57 -0400
+X-MC-Unique: C-RlPLunMhS_zJhtzEPiHg-1
+X-Mimecast-MFC-AGG-ID: C-RlPLunMhS_zJhtzEPiHg_1755610973
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 930E81955BE4;
+	Tue, 19 Aug 2025 13:42:51 +0000 (UTC)
+Received: from h1.redhat.com (unknown [10.22.64.137])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7B62319560AB;
+	Tue, 19 Aug 2025 13:42:30 +0000 (UTC)
+From: Nico Pache <npache@redhat.com>
+To: linux-mm@kvack.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: david@redhat.com,
+	ziy@nvidia.com,
+	baolin.wang@linux.alibaba.com,
+	lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com,
+	ryan.roberts@arm.com,
+	dev.jain@arm.com,
+	corbet@lwn.net,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	akpm@linux-foundation.org,
+	baohua@kernel.org,
+	willy@infradead.org,
+	peterx@redhat.com,
+	wangkefeng.wang@huawei.com,
+	usamaarif642@gmail.com,
+	sunnanyong@huawei.com,
+	vishal.moola@gmail.com,
+	thomas.hellstrom@linux.intel.com,
+	yang@os.amperecomputing.com,
+	kirill.shutemov@linux.intel.com,
+	aarcange@redhat.com,
+	raquini@redhat.com,
+	anshuman.khandual@arm.com,
+	catalin.marinas@arm.com,
+	tiwai@suse.de,
+	will@kernel.org,
+	dave.hansen@linux.intel.com,
+	jack@suse.cz,
+	cl@gentwo.org,
+	jglisse@google.com,
+	surenb@google.com,
+	zokeefe@google.com,
+	hannes@cmpxchg.org,
+	rientjes@google.com,
+	mhocko@suse.com,
+	rdunlap@infradead.org,
+	hughd@google.com
+Subject: [PATCH v10 00/13] khugepaged: mTHP support
+Date: Tue, 19 Aug 2025 07:41:52 -0600
+Message-ID: <20250819134205.622806-1-npache@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 2Vb2axjXc-j2yaWnT9xF_-AHY7fICxzilSlYzrZAdpI_1755600813
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
+The following series provides khugepaged with the capability to collapse
+anonymous memory regions to mTHPs.
 
+To achieve this we generalize the khugepaged functions to no longer depend
+on PMD_ORDER. Then during the PMD scan, we use a bitmap to track chunks of
+pages (defined by KHUGEPAGED_MTHP_MIN_ORDER) that are utilized. After the
+PMD scan is done, we do binary recursion on the bitmap to find the optimal
+mTHP sizes for the PMD range. The restriction on max_ptes_none is removed
+during the scan, to make sure we account for the whole PMD range. When no
+mTHP size is enabled, the legacy behavior of khugepaged is maintained.
+max_ptes_none will be scaled by the attempted collapse order to determine
+how full a mTHP must be to be eligible for the collapse to occur. If a
+mTHP collapse is attempted, but contains swapped out, or shared pages, we
+don't perform the collapse. It is now also possible to collapse to mTHPs
+without requiring the PMD THP size to be enabled.
 
-On Tue, 2025-08-19 at 12:08 +0200, Juri Lelli wrote:
-> On 19/08/25 11:48, Gabriele Monaco wrote:
-> > That's a good point, I need to check the actual overhead..
-> >=20
-> > One thing to note is that this timer is used only on state
-> > constraints,
-> > one could write roughly the same monitor like this:
-> >=20
-> > =C2=A0 +------------------------------------------+
-> > =C2=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 enqueued=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |
-> > =C2=A0 +------------------------------------------+
-> > =C2=A0=C2=A0=C2=A0 |
-> > =C2=A0=C2=A0=C2=A0 | sched_switch_in;clk < threshold_jiffies
-> > =C2=A0=C2=A0=C2=A0 v
-> >=20
-> > or like this:
-> >=20
-> > =C2=A0 +------------------------------------------+
-> > =C2=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 enqueued=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |
-> > =C2=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clk < threshol=
-d_jiffies=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |
-> > =C2=A0 +------------------------------------------+
-> > =C2=A0=C2=A0=C2=A0 |
-> > =C2=A0=C2=A0=C2=A0 | sched_switch_in
-> > =C2=A0=C2=A0=C2=A0 v
-> >=20
-> > the first won't fail as soon as the threshold passes, but will
-> > eventually fail when the sched_switch_in event occurs. This won't
-> > use a timer at all (well, mostly, some calls are still made to keep
-> > the code general, I could improve that if it matters).
-> >=20
-> > Depending on the monitor, the first option could be a lower
-> > overhead yet valid alternative to the second, if it's guaranteed
-> > sched_switch_in will eventually come and reaction latency isn't an
-> > issue.
->=20
-> Right, as in the first example you have in the docs. I was thinking
-> it would be cool to possibly replace the hung task monitor with this
-> one, but again we would need to check for overhead, as the definition
-> that does expect a switch_in to eventually happen wouldn't work in
-> this case.
+With the default max_ptes_none=511, the code should keep its most of its
+original behavior. When enabling multiple adjacent (m)THP sizes we need to
+set max_ptes_none<=255. With max_ptes_none > HPAGE_PMD_NR/2 you will
+experience collapse "creep" and constantly promote mTHPs to the next
+available size. This is due the fact that a collapse will introduce at
+least 2x the number of pages, and on a future scan will satisfy the
+promotion condition once again.
 
-Yeah if the overhead is really high that might be an option. Although
-the monitor might become a bit pointless then: if a task starves
-forever, no error will be reported.
+Patch 1:     Refactor/rename hpage_collapse
+Patch 2:     Some refactoring to combine madvise_collapse and khugepaged
+Patch 3-5:   Generalize khugepaged functions for arbitrary orders
+Patch 6-8:   The mTHP patches
+Patch 9-10:  Allow khugepaged to operate without PMD enabled
+Patch 11-12: Tracing/stats
+Patch 13:    Documentation
 
-If that's a real issue, I might look at other options where to check
-for constraints (the tick perhaps).
+---------
+ Testing
+---------
+- Built for x86_64, aarch64, ppc64le, and s390x
+- selftests mm
+- I created a test script that I used to push khugepaged to its limits
+   while monitoring a number of stats and tracepoints. The code is
+   available here[1] (Run in legacy mode for these changes and set mthp
+   sizes to inherit)
+   The summary from my testings was that there was no significant
+   regression noticed through this test. In some cases my changes had
+   better collapse latencies, and was able to scan more pages in the same
+   amount of time/work, but for the most part the results were consistent.
+- redis testing. I tested these changes along with my defer changes
+  (see followup [4] post for more details). We've decided to get the mTHP
+  changes merged first before attempting the defer series.
+- some basic testing on 64k page size.
+- lots of general use.
 
-> > > Does this also need to be _HARD on RT for the monitor to work?
-> >=20
-> > That might be something we want configurable actually.. I assume
-> > the more aggressive the timer is, the more overhead it will have on
-> > the system.
-> > Some monitors might be fine with a bit of latency.
->=20
-> It might not only be about latency, as if the callback timer is not
-> serviced in case of starvation (if it's not hard) then the monitor
-> won't probably react and we won't be able to rely on it.
+V10 Changes:
+- Fixed bug where bitmap tracking was off by one leading to weird behavior
+  in some test cases.
+- Track mTHP stats for PMD order too (Baolin)
+- indentation cleanup (David)
+- add review/ack tags
+- Improve the control flow, readability, and result handling in
+  collapse_scan_bitmap (Baolin)
+- Indentation nits/cleanup (David)
+- Converted u8 orders to unsigned int to be consistent with other folio
+  callers (David)
+- Handled conflicts with Devs work on pte batching
+- Changed SWAP/SHARED restriction comments to a TODO comment (David)
+- Squashed main mTHP patch and the introduce bitmap patch (David)
+- Other small nits
 
-I think hit that in some conditions and changed the ha_cancel_timer()
-to handle this case.
+V9 Changes: [3]
+- Drop madvise_collapse support [2]. Further discussion needed.
+- Add documentation entries for new stats (Baolin)
+- Fix missing stat update (MTHP_STAT_COLLAPSE_EXCEED_SWAP) that was
+  accidentally dropped in v7 (Baolin)
+- Fix mishandled conflict noted in v8 (merged into wrong commit)
+- change rename from khugepaged to collapse (Dev)
 
-After leaving the state arming a timer, we always cancel it (to avoid
-it expiring outside) at that time if it was expiring but the callback
-didn't run, the monitor fails.
+V8 Changes:
+- Fix mishandled conflict with shmem config changes (Baolin)
+- Add Baolin's patches for allowing collapse without PMD enabled
+- Add additional patch for allowing madvise_collapse without PMD enabled
+- Documentations nits (Randy)
+- Simplify SCAN_ANY_PROCESS lock jumbling (Liam)
+- Add a BUG_ON to the mTHP collapse similar to PMD (Dev)
+- Remove doc comment about khugepaged PMD only limitation (Dev)
+- Change revalidation function to accept multiple orders
+- Handled conflicts introduced by Lorenzo's madvise changes
 
-Again, if the monitor never leaves the state, we'd never report a
-failure, but I'm not sure how common that is.
+V7 (RESEND)
 
-Thanks,
-Gabriele
+V6 Changes:
+- Dont release the anon_vma_lock early (like in the PMD case), as not all
+  pages are isolated.
+- Define the PTE as null to avoid a uninitilized condition
+- minor nits and newline cleanup
+- make sure to unmap and unlock the pte for the swapin case
+- change the revalidation to always check the PMD order (as this will make
+  sure that no other VMA spans it)
+
+V5 Changes:
+- switched the order of patches 1 and 2
+- fixed some edge cases on the unified madvise_collapse and khugepaged
+- Explained the "creep" some more in the docs
+- fix EXCEED_SHARED vs EXCEED_SWAP accounting issue
+- fix potential highmem issue caused by a early unmap of the PTE
+
+V4 Changes:
+- Rebased onto mm-unstable
+- small changes to Documentation
+
+V3 Changes:
+- corrected legacy behavior for khugepaged and madvise_collapse
+- added proper mTHP stat tracking
+- Minor changes to prevent a nested lock on non-split-lock arches
+- Took Devs version of alloc_charge_folio as it has the proper stats
+- Skip cases were trying to collapse to a lower order would still fail
+- Fixed cases were the bitmap was not being updated properly
+- Moved Documentation update to this series instead of the defer set
+- Minor bugs discovered during testing and review
+- Minor "nit" cleanup
+
+V2 Changes:
+- Minor bug fixes discovered during review and testing
+- removed dynamic allocations for bitmaps, and made them stack based
+- Adjusted bitmap offset from u8 to u16 to support 64k pagesize.
+- Updated trace events to include collapsing order info.
+- Scaled max_ptes_none by order rather than scaling to a 0-100 scale.
+- No longer require a chunk to be fully utilized before setting the bit.
+   Use the same max_ptes_none scaling principle to achieve this.
+- Skip mTHP collapse that requires swapin or shared handling. This helps
+   prevent some of the "creep" that was discovered in v1.
+
+A big thanks to everyone that has reviewed, tested, and participated in
+the development process. Its been a great experience working with all of
+you on this long endeavour.
+
+[1] - https://gitlab.com/npache/khugepaged_mthp_test
+[2] - https://lore.kernel.org/all/23b8ad10-cd1f-45df-a25c-78d01c8af44f@redhat.com/
+[3] - https://lore.kernel.org/lkml/20250714003207.113275-1-npache@redhat.com/
+[4] - https://lore.kernel.org/lkml/20250515033857.132535-1-npache@redhat.com/
+
+Baolin Wang (2):
+  khugepaged: enable collapsing mTHPs even when PMD THPs are disabled
+  khugepaged: kick khugepaged for enabling none-PMD-sized mTHPs
+
+Dev Jain (1):
+  khugepaged: generalize alloc_charge_folio()
+
+Nico Pache (10):
+  khugepaged: rename hpage_collapse_* to collapse_*
+  introduce collapse_single_pmd to unify khugepaged and madvise_collapse
+  khugepaged: generalize hugepage_vma_revalidate for mTHP support
+  khugepaged: generalize __collapse_huge_page_* for mTHP support
+  khugepaged: add mTHP support
+  khugepaged: skip collapsing mTHP to smaller orders
+  khugepaged: avoid unnecessary mTHP collapse attempts
+  khugepaged: improve tracepoints for mTHP orders
+  khugepaged: add per-order mTHP khugepaged stats
+  Documentation: mm: update the admin guide for mTHP collapse
+
+ Documentation/admin-guide/mm/transhuge.rst |  44 +-
+ include/linux/huge_mm.h                    |   5 +
+ include/linux/khugepaged.h                 |   4 +
+ include/trace/events/huge_memory.h         |  34 +-
+ mm/huge_memory.c                           |  11 +
+ mm/khugepaged.c                            | 552 +++++++++++++++------
+ 6 files changed, 468 insertions(+), 182 deletions(-)
+
+-- 
+2.50.1
 
