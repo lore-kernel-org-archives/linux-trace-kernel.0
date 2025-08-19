@@ -1,58 +1,65 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E70DF28C01E;
-	Tue, 19 Aug 2025 19:17:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79157219A81;
+	Tue, 19 Aug 2025 19:58:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755631079; cv=none; b=lVLvjCb+ovj7dfOr878+F/Z5uohDBFwBBtY/sk2pHsxHErWkaeMFvDoaXpObzB8DLGXNw9QKTLxuHEtaeNM+9l/yCtPioYVTCpVRW9s2bEiXAo3VonPMqUPATecFPlFu5PWBEzvKCLZewtfTajuwqoQWWhviqV9aH4jf721WONk=
+	t=1755633506; cv=none; b=JwsKf8qwwVmugXroJ69KSsFRGUV4gQ75750/Fw7ZKAdee0ggrvfP+CbF9a+9pX1rEulL9euOeMvLhvpLin6xh6vNgEpGcEaK1rCYqwIiPINLnZUpqSnmNkg6KqVAmQ/3SU5vlGbhojh/Ls4FxnOCHt8ugMvx9vNloDx3PvlrvAU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755631079; c=relaxed/simple;
-	bh=8VUS3MNjijYEEqUa9MHAfh0tD+Axljmg+OjHaNQW6g8=;
+	s=arc-20240116; t=1755633506; c=relaxed/simple;
+	bh=nA9A0H3LrJ78fHP6AI7J40nKWuK6fskQEP9rQ9tJOXc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sTPJohUoLlQAcqQ7JguHH1ZN0irCskrhjypJ88+6Guy56otyZDPA1kVpMleL23ywZJhqF5XOrQ5+IE0fRFb+uBDWEFOHC66QWcVmRbN4guiCmY30DrVbWKzlO1oIluKAhgZSdJvpsttqXqI0m+Kg1nNCuHkPB8LV8LG5eCBUSUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=dqS8uZ80; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=fWc2HsYxf7v7mr+pa8zxCVP63CH6CLv534WNQt4ReyblVd1umjW9JsSwSDmcxzIidq3Q4UP5Njhuk0B+3ZUSLEaRncX7D5kZdphZjlOWJE9vjJzvijutNqbftAGrWiOykLcJlXyHgza4XeU41lY+xmuoMuBI3IsM0Spu5qBeMtg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z3cV0Sxj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dqS8uZ80"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=8VUS3MNjijYEEqUa9MHAfh0tD+Axljmg+OjHaNQW6g8=; b=dqS8uZ80Rk5tXFFCRB5CZq50gx
-	lv7ZulxCqtHX0Ya6L+PdbUsphJ+np2C37VfzeRXt0AZ41r0c/x+UcWCE7ZTFP/f1g9rPg4fuZTmA0
-	SFLS/yaav4eEd3FhEqsqCiejUQSsLSgR0U5aDcW4nKQh5/zBf4NWW3Fxj3K8LmstHqzYDcB/x/5wz
-	o8BmyHwAPiyEICvV1jvXExtVLevQm96UhMxtIyIb01sXmSzNGw9Cpo3nA7cE7CpbYCC1ykhP+ptPP
-	wjnFVmKLOm9VkvN9mqnygfxT+Jukw0L56xuDEaEYPagGRJosc3IcTf0PcLzU3SeNk9E6zANh/SaiB
-	FqZC5Pww==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uoRq5-000000005WP-0Ziq;
-	Tue, 19 Aug 2025 19:17:45 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 1577F30036F; Tue, 19 Aug 2025 21:17:44 +0200 (CEST)
-Date: Tue, 19 Aug 2025 21:17:44 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	x86@kernel.org, Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	David Laight <David.Laight@aculab.com>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@t-8ch.de>,
-	Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCHv6 perf/core 10/22] uprobes/x86: Add support to optimize
- uprobes
-Message-ID: <20250819191744.GN3289052@noisy.programming.kicks-ass.net>
-References: <20250720112133.244369-1-jolsa@kernel.org>
- <20250720112133.244369-11-jolsa@kernel.org>
- <20250725191318.554f2f3afe27584e03a0eaa2@kernel.org>
- <aIftAJg1hZGYp4NF@krava>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z3cV0Sxj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63D9EC4CEF1;
+	Tue, 19 Aug 2025 19:58:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755633506;
+	bh=nA9A0H3LrJ78fHP6AI7J40nKWuK6fskQEP9rQ9tJOXc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Z3cV0SxjdjsbyAxLQAHXL9YQoVkd3oE/w0tg8f+/28wYPFIcCuOtf+n31sKJ+LyN1
+	 6N7biz9o/yCuPtFBnn8ELyTNlP5RA151eN7wKi8pNSNB92o83ezmb7znz1ImNM7cWr
+	 xClDJ2+EAIi/fyYTQNzUsM/2eAKArOgzFRoBwUKtf83SqZF5p6itYTMDZFBizPzyOj
+	 cmndtkVjtFJFxZFPGtELV1/fpgrqmBEwX35+EsRatiowr0CXr7OcQuw39qyPoRCSeg
+	 uQXDSW9Z/GPeI4IjUnpByoqXUrISGom24QKuNeZMIoK+/Modr6dLR2faOTSocU7qPz
+	 FiaHtir3WFZ4Q==
+Date: Tue, 19 Aug 2025 13:58:22 -0600
+From: Keith Busch <kbusch@kernel.org>
+To: Leon Romanovsky <leon@kernel.org>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
+	Leon Romanovsky <leonro@nvidia.com>,
+	Jason Gunthorpe <jgg@nvidia.com>,
+	Abdiel Janulgue <abdiel.janulgue@gmail.com>,
+	Alexander Potapenko <glider@google.com>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Christoph Hellwig <hch@lst.de>, Danilo Krummrich <dakr@kernel.org>,
+	iommu@lists.linux.dev, Jason Wang <jasowang@redhat.com>,
+	Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
+	Jonathan Corbet <corbet@lwn.net>, Juergen Gross <jgross@suse.com>,
+	kasan-dev@googlegroups.com, linux-block@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, linux-nvme@lists.infradead.org,
+	linuxppc-dev@lists.ozlabs.org, linux-trace-kernel@vger.kernel.org,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>, rust-for-linux@vger.kernel.org,
+	Sagi Grimberg <sagi@grimberg.me>,
+	Stefano Stabellini <sstabellini@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	virtualization@lists.linux.dev, Will Deacon <will@kernel.org>,
+	xen-devel@lists.xenproject.org
+Subject: Re: [PATCH v4 16/16] nvme-pci: unmap MMIO pages with appropriate
+ interface
+Message-ID: <aKTXXv7kE0pGGn_8@kbusch-mbp>
+References: <cover.1755624249.git.leon@kernel.org>
+ <545fffb8c364f36102919a5a1d57137731409f3c.1755624249.git.leon@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -61,15 +68,17 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aIftAJg1hZGYp4NF@krava>
+In-Reply-To: <545fffb8c364f36102919a5a1d57137731409f3c.1755624249.git.leon@kernel.org>
 
-On Mon, Jul 28, 2025 at 11:34:56PM +0200, Jiri Olsa wrote:
+On Tue, Aug 19, 2025 at 08:37:00PM +0300, Leon Romanovsky wrote:
+> From: Leon Romanovsky <leonro@nvidia.com>
+> 
+> Block layer maps MMIO memory through dma_map_phys() interface
+> with help of DMA_ATTR_MMIO attribute. There is a need to unmap
+> that memory with the appropriate unmap function, something which
+> wasn't possible before adding new REQ attribute to block layer in
+> previous patch.
 
-> Peter, do you have more comments?
+Looks good.
 
-I'm not really a fan of this syscall is faster than exception stuff. Yes
-it is for current hardware, but I suspect much of this will be a
-maintenance burden 'soon'.
-
-Anyway, I'll queue the patches tomorrow. I think the shadow stack thing
-wants fixing though. The rest we can prod at whenever.
+Reviewed-by: Keith Busch <kbusch@kernel.org>
