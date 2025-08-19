@@ -1,215 +1,198 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12DD931AF01
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 19 Aug 2025 09:48:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43DCC3112B0
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 19 Aug 2025 09:57:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755596890; cv=none; b=HVS/RYfC0fOqWkbDwdYxPBKH6xzTnQ6cNa6SoJ4+bqoiszi0qUMXy4PN0BYmj1Jtd5CaXQUPuSkyR3sZSdtrCKGzdWdzgxqxQC+cYADYmEblbsK9F9w+tYonecKYZDOxc0Qchevpar7DQXyTNyZUu+PSktFvb3DEqSOYj7oMuM0=
+	t=1755597428; cv=none; b=HoK6IFlyeack/y7TYGopFi98JtlZ7i+TPvhjWISoh+4MYbTrVSMPqcriLDIrljldXQEsHO0pcFst4DuislXQwqeMwmMMmK2qIvV/9tH7qtEOEJ4rebSS5WeNF+FmxeV+udsOjGMXnamHymJvgGANu7onlBxksBux1DeUPYToIxA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755596890; c=relaxed/simple;
-	bh=CXAzoakGiyPueEF2zUdlRqJE8rAXji6b4FA6f0pN86s=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=g2babR8VxjWawsdmgkDUZa7//B2xL03cOMyFnbvqz5ojZbIo/WghSS/S/QkE7t5a3VHbkvoZEgdJzPtES3AF3U8/drfE7nkIGi+w/sckRkMO8EvVq+bw8e9UcgDa84K0t4T8WaudJSL1RN90KtLjcwlFVkB/KKm+EyehQQ8qjRE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dWUJBgsu; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1755597428; c=relaxed/simple;
+	bh=1ubucLddQMJmUq8vjtzNlVwWTiogh6llKgtEaT/i9oE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 In-Reply-To:Content-Type:Content-Disposition; b=q/50+eEtXsHMgXfYlxezRM8ASQ5h4vWlTv0pKfwd1px+RqqdK9taKqV2+sktURuGLj1z9PL3LxvVj/1j6qlNPL1aJF+omLij0Dfb9ko/QgPFMv+PoYuAM6lnTkzqQFiJ3Zg8nHxfqKPg/ZW8NMQi3gUp24AhaiON6nXCdR6z60I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GZI3vuYC; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dWUJBgsu"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GZI3vuYC"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1755596886;
+	s=mimecast20190719; t=1755597425;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=KmSQau8XRMXIwy67r15o6A1pXxItimAwCNrRbFws7NY=;
-	b=dWUJBgsuklEH/ByP4G28R6EtJmhCJl9aMAAzS8kv1wL5h0n04SMxAuVUS9ulR49JiCAqv8
-	x63+DT6mS9XULdhpvu/91dmiGSPHGBj1SZ7F7jeOkwq5Fh/46QGPLLK4vP04EsR1M/fZOk
-	dxBeP2OdhkKHsan9xhB1rxWDcQIwuD8=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	 in-reply-to:in-reply-to:references:references;
+	bh=ovO3/gXHZDqtkD72WJKDDP7JTR3a7GhFon9JbVq5pdo=;
+	b=GZI3vuYC3kDsf3PkLjyKefAtmldAqAtn3aKSXCKegUVX08A/JvG2DaTZXi7OwTptPWqxoD
+	CH0LX2FpBWI6pEzq8eQ0kli4kih/5gixOuVQweBFa+UqdqWo+Q8ZGjS6Aw1pZrO8vCdHGi
+	f0koweIInN7jHRh9Hpmzb0WsBq6ZA38=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-153-7pVX6EQHOS2VwJ1YBcG-ig-1; Tue, 19 Aug 2025 05:48:05 -0400
-X-MC-Unique: 7pVX6EQHOS2VwJ1YBcG-ig-1
-X-Mimecast-MFC-AGG-ID: 7pVX6EQHOS2VwJ1YBcG-ig_1755596884
-Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-61a2d6c0585so2392165a12.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 19 Aug 2025 02:48:05 -0700 (PDT)
+ us-mta-477-3HM7P9WaNvKeS5Vwad4EOA-1; Tue, 19 Aug 2025 05:57:03 -0400
+X-MC-Unique: 3HM7P9WaNvKeS5Vwad4EOA-1
+X-Mimecast-MFC-AGG-ID: 3HM7P9WaNvKeS5Vwad4EOA_1755597423
+Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-4b109be525eso139956061cf.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 19 Aug 2025 02:57:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755596884; x=1756201684;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qEVzF9oT/1hpvRKnmvG6fiGVxNfk5lnVaqv5Ao7G/uk=;
-        b=GgAB7B/39vcrvykyXvZkjvNdjLrhCgprdJH9MnzmEzkB8fUyIF+Hxu7jqzv5d9aZON
-         YzABOsEyC0HUH8tmBgQk9LhR9V7e0zAJcJ7gATa68porKiedz957hO0ec7zgKrlcmZoK
-         wbimwGer0Hc/w1E5N0K5Gaf/jfMVww7EmqoupTTpDFcCsxlflnhPhawXJUJ48RZCTlOE
-         jz3/FewZRdsmSWIJduOFLvgU0QKAEDJnKp3ssqU1LhawpfrCsAXNqP+aV2abksu4Mn1g
-         qGvdXc77A4hCygpE0d1WyfZZoZKByvzJbYsdJUEUb86+GLAr2QyP9ipKzhR2INs4+sR7
-         0c1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWXDrqq4/7HxwtID7kLyEM+VTpCFzzEVQ5ko3OworKl455gO/DdAKXwaVx4NzdLjd3kDWSGEL57uo+fWapLse43tfM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwxzIUy2Ltq/G3nn/Xn66Lw9l1CzkfczyoqXRKR7CMjBAANcsyS
-	jezgPoLeeIbULmcbuKEmVTmX58pXTL3IaFh6PMQ0PeDoHcIueBdvjFj7DmkaLyJEgT1NFEccQwj
-	frsH89F7oJzLU8WWqdENCxEQXQupr9fAM4fE9UP40YgFF4Z4+WuPCAVpsrs3YRoQOS90mPq4snA
+        d=1e100.net; s=20230601; t=1755597423; x=1756202223;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ovO3/gXHZDqtkD72WJKDDP7JTR3a7GhFon9JbVq5pdo=;
+        b=bWCjG5A/BY7X6sadJOsR4WKvJkFc1RJnPSvm2I3xwLryLEGN86mtqft84QG70i5RiI
+         Mc1Ajtm9qutvOlj+2SyPcGb9KHNYrcVUPfAodDypHq3okK08RojkOVVHw4iDmXz89eL4
+         49bvDbzWGUE/9AltWI+FVU+3cucsaBcDBZlHxpzi81rcw+IChF5TYrWtgraXKYicTQ2b
+         3yL9QBd4PbQKz5gQPlaW5GAwz/Nu7+7M677ruprgwutHi+smmEx/qBdUtA0rJNII+lqA
+         NkUKTLZ3UJ9Gy8jjXHF7IyKTXQDVI81QFcYAgC8YSohcCiDXA+KTe/33mQC5TEydx2yO
+         bA5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWgwi2pej7xmVZFptTwOEEWbvfUow6E9POy3xAJKgw4DrR8YPV/TvA6aAAliYvgbllEOW4D826qX2pCpDHkYB0ikQM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzy1TcHOA8ZhmaStYjC48UusXtE6IrggJylD5ItKK50IpkOl4Oz
+	S4EruJOCU7kusrstdB/l3ABua5447pNFKVLW71QYMcd3G4oguUfgXTgAj8Rvcr4m8CT61amNRhx
+	elWaHSygDIyCBmrnUk2qr4HcD32AqWPeTS9IH+R2iZ51ryQWmx9MKXbeQG+REPvZ+NxnBg1KByg
 	==
-X-Gm-Gg: ASbGncszCmXIH3srFGltg2fxSNcqBOfEI1xsJBnDWJAvH6hI3mQkJ/6YbNQNgdXAyn6
-	5E6qaEA6+Lh7KaQlLzQXxCFt+IKFPxoI6Wt/jgC4aGdBUSdtZB00KpMFFj7iH2wihFcdF54Bsq8
-	CvalBtfqYpdPbHBSfFLVwsniSfjiqOXng2I1DmNfgzd20vv/44UTqsqqd2bZ4i3UmppftXb9hT3
-	seQ3z9UO1qUcUCzTa23lQ0X04/bufdYaRpIAZUmr4mz8kRg8S+l0GJZwpcFFzuPQlwpcyUnYtnv
-	AC6jId99iRH1sWCcxxCZCsASM6OjOs2GQHIy5n4/vkH9/bKkh34KeUJy8TqxHa+GEZ2H
-X-Received: by 2002:a05:6402:3507:b0:618:229d:7076 with SMTP id 4fb4d7f45d1cf-61a7e6d9d08mr1448292a12.6.1755596884458;
-        Tue, 19 Aug 2025 02:48:04 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGianlZlTSJvsyDj4NNwcANeQwzhSMO1y9TEJ4ddHKW0W9g+a+n0D6BGlgBabUSWl9iNSdJYw==
-X-Received: by 2002:a05:6402:3507:b0:618:229d:7076 with SMTP id 4fb4d7f45d1cf-61a7e6d9d08mr1448268a12.6.1755596884025;
-        Tue, 19 Aug 2025 02:48:04 -0700 (PDT)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([195.174.134.174])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-61a75778cb0sm1399367a12.27.2025.08.19.02.48.02
+X-Gm-Gg: ASbGncvs3bF3j8iRv5glnwI21XgpXwY/xIRYiWkBZmTPEupuWSmz6qtydNRCpf2Ihf9
+	J7/vG96Z3gBX7FMpI2ZT239PtSHR7lqBFgLjPwJJTDPVPj6ABYAQunQGYUyOtBNv05Zvhi3XEwr
+	kF3kXrLXOrJmPgt1DtN0XkiQuCDGqtrULVch52pT3S3ulNkph1xc0AUT5xzMVgsxNeuFpJAg/Bb
+	00Ukg/S4ogMMHFVWx1ZmcMXQLNFqc88K/9MBhGskRw/XHNd9Qu6D/Lf+BbdP0w95BSfV0jkMP4W
+	YKeqbYdp7+E1yUioc9GLoGOy6hDgyayRGK26PCPbM8dEwOAAl4IUQW9UoVZuYXFXS5Jl
+X-Received: by 2002:ac8:5cc7:0:b0:4b0:7d41:df7a with SMTP id d75a77b69052e-4b286ef3974mr18223131cf.56.1755597422856;
+        Tue, 19 Aug 2025 02:57:02 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFPOnJ8MWq8N3ISVkEuPgun5DwRV+bNUHYaZl50LdgymHYzejrD/IRP5r0A6M+wbxfPykgqiA==
+X-Received: by 2002:ac8:5cc7:0:b0:4b0:7d41:df7a with SMTP id d75a77b69052e-4b286ef3974mr18222921cf.56.1755597422408;
+        Tue, 19 Aug 2025 02:57:02 -0700 (PDT)
+Received: from jlelli-thinkpadt14gen4.remote.csb ([151.29.81.70])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4b11dc5d069sm65369421cf.21.2025.08.19.02.56.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Aug 2025 02:48:03 -0700 (PDT)
-Message-ID: <762f7d52bf75475d3ec2587a8e370e4fb2a5ae6a.camel@redhat.com>
-Subject: Re: [RFC PATCH 08/17] rv: Add Hybrid Automata monitor type
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Juri Lelli <juri.lelli@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, linux-trace-kernel@vger.kernel.org,
- Nam Cao <namcao@linutronix.de>, Tomas Glozar <tglozar@redhat.com>, Juri
- Lelli <jlelli@redhat.com>, Clark Williams <williams@redhat.com>,  John
- Kacur <jkacur@redhat.com>
-Date: Tue, 19 Aug 2025 11:48:01 +0200
-In-Reply-To: <aKRBg-KhyCqgFEg3@jlelli-thinkpadt14gen4.remote.csb>
+        Tue, 19 Aug 2025 02:57:01 -0700 (PDT)
+Date: Tue, 19 Aug 2025 11:56:57 +0200
+From: Juri Lelli <juri.lelli@redhat.com>
+To: Gabriele Monaco <gmonaco@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	linux-trace-kernel@vger.kernel.org, Nam Cao <namcao@linutronix.de>,
+	Tomas Glozar <tglozar@redhat.com>, Juri Lelli <jlelli@redhat.com>,
+	Clark Williams <williams@redhat.com>,
+	John Kacur <jkacur@redhat.com>
+Subject: Re: [RFC PATCH 14/17] sched: Add deadline tracepoints
+Message-ID: <aKRKaTJBxD3kdt_G@jlelli-thinkpadt14gen4.remote.csb>
 References: <20250814150809.140739-1-gmonaco@redhat.com>
-	 <20250814150809.140739-9-gmonaco@redhat.com>
-	 <aKRBg-KhyCqgFEg3@jlelli-thinkpadt14gen4.remote.csb>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
- xyhmqeUWOzFx5P43S1E1dhsrLWgP
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42)
+ <20250814150809.140739-15-gmonaco@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+In-Reply-To: <20250814150809.140739-15-gmonaco@redhat.com>
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: xhaIcg2hGfWUWZnnG4dpxcxHIfEhT59v37j2a3i6cBc_1755596884
+X-Mimecast-MFC-PROC-ID: Pv30vBXPjhHYSXkYTxW71MGAuKtlTpgzwxT7_3ioH1U_1755597423
 X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+Hi!
 
+On 14/08/25 17:08, Gabriele Monaco wrote:
+> Add the following tracepoints:
+> 
+> * sched_dl_throttle(dl):
+>     Called when a deadline entity is throttled
+> * sched_dl_replenish(dl):
+>     Called when a deadline entity's runtime is replenished
+> * sched_dl_server_start(dl):
+>     Called when a deadline server is started
+> * sched_dl_server_stop(dl, hard):
+>     Called when a deadline server is stopped (hard) or put to idle
+>     waiting for the next period (!hard)
+> 
+> Those tracepoints can be useful to validate the deadline scheduler with
+> RV and are not exported to tracefs.
+> 
+> Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
+> ---
+>  include/trace/events/sched.h | 55 ++++++++++++++++++++++++++++++++++++
+>  kernel/sched/deadline.c      |  8 ++++++
+>  2 files changed, 63 insertions(+)
+> 
+> diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
+> index 7b2645b50e78..f34cc1dc4a13 100644
+> --- a/include/trace/events/sched.h
+> +++ b/include/trace/events/sched.h
+> @@ -609,6 +609,45 @@ TRACE_EVENT(sched_pi_setprio,
+>  			__entry->oldprio, __entry->newprio)
+>  );
+>  
+> +/*
+> +DECLARE_EVENT_CLASS(sched_dl_template,
+> +
+> +	TP_PROTO(struct sched_dl_entity *dl),
+> +
+> +	TP_ARGS(dl),
+> +
+> +	TP_STRUCT__entry(
+> +		__field(  struct task_struct *,	tsk		)
+> +		__string( comm,		dl->dl_server ? "server" : container_of(dl, struct task_struct, dl)->comm	)
+> +		__field(  pid_t,	pid		)
+> +		__field(  s64,		runtime		)
+> +		__field(  u64,		deadline	)
+> +		__field(  int,		dl_yielded	)
 
-On Tue, 2025-08-19 at 11:18 +0200, Juri Lelli wrote:
-> Hi!
->=20
-> On 14/08/25 17:08, Gabriele Monaco wrote:
->=20
-> ...
->=20
-> > +/*
-> > + * ha_monitor_init_env - setup timer and reset all environment
-> > + *
-> > + * Called from a hook in the DA start functions, it supplies the
-> > da_mon
-> > + * corresponding to the current ha_mon.
-> > + * Not all hybrid automata require the timer, still set it for
-> > simplicity.
-> > + */
-> > +static inline void ha_monitor_init_env(struct da_monitor *da_mon)
-> > +{
-> > +=09struct ha_monitor *ha_mon =3D to_ha_monitor(da_mon);
-> > +
-> > +=09ha_monitor_reset_all_stored(ha_mon);
-> > +=09if (unlikely(!ha_mon->timer.base))
-> > +=09=09hrtimer_setup(&ha_mon->timer,
-> > ha_monitor_timer_callback,
-> > +=09=09=09=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 CLOCK_MONOTONIC, HRTIMER_MODE_=
-REL);
-> > +}
->=20
-> ...
->=20
-> > +/*
-> > + * Helper functions to handle the monitor timer.
-> > + * Not all monitors require a timer, in such case the timer will
-> > be set up but
-> > + * never armed.
-> > + * Timers start since the last reset of the supplied env or from
-> > now if env is
-> > + * not an environment variable. If env was not initialised no
-> > timer starts.
-> > + * Timers can expire on any CPU unless the monitor is per-cpu,
-> > + * where we assume every event occurs on the local CPU.
-> > + */
-> > +static inline void ha_start_timer_ns(struct ha_monitor *ha_mon,
-> > enum envs env,
-> > +=09=09=09=09=C2=A0=C2=A0=C2=A0=C2=A0 u64 expire)
-> > +{
-> > +=09int mode =3D HRTIMER_MODE_REL;
-> > +=09u64 passed =3D 0;
-> > +
-> > +=09if (env >=3D 0 && env < ENV_MAX_STORED) {
-> > +=09=09if (ha_monitor_env_invalid(ha_mon, env))
-> > +=09=09=09return;
-> > +=09=09passed =3D ha_get_env(ha_mon, env);
-> > +=09}
-> > +=09if (RV_MON_TYPE =3D=3D RV_MON_PER_CPU)
-> > +=09=09mode |=3D HRTIMER_MODE_PINNED;
-> > +=09hrtimer_start(&ha_mon->timer, ns_to_ktime(expire -
-> > passed), mode);
-> > +}
->=20
-> Also, my only concern with the usage of per-task timers is that
-> reprogramming add overhead, so I wonder if this gets noticeable when
-> running some kind of performance sensitive workload in production (as
-> it was reported for dl-server). Did you test such a case?
+I wonder if, while we are at it, we want to print all the other fields
+as well (they might turn out to be useful). That would be
 
-That's a good point, I need to check the actual overhead..
+ .:: static (easier to retrieve with just a trace)
+ - dl_runtime
+ - dl_deadline
+ - dl_period
 
-One thing to note is that this timer is used only on state constraints,
-one could write roughly the same monitor like this:
+ .:: behaviour (RECLAIM)
+ - flags
 
-  +------------------------------------------+
-  |                 enqueued                 |
-  +------------------------------------------+
-    |
-    | sched_switch_in;clk < threshold_jiffies
-    v
+ .:: state
+ - dl_ bool flags in addition to dl_yielded
 
-or like this:
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__assign_str(comm);
+> +		__entry->pid		= dl->dl_server ? -1 : container_of(dl, struct task_struct, dl)->pid;
+> +		__entry->runtime	= dl->runtime;
+> +		__entry->deadline	= dl->deadline;
+> +		__entry->dl_yielded	= dl->dl_yielded;
+> +	),
+> +
+> +	TP_printk("comm=%s pid=%d runtime=%lld deadline=%lld yielded=%d",
+                                                        ^^^
+							llu ?
 
-  +------------------------------------------+
-  |                 enqueued                 |
-  |         clk < threshold_jiffies          |
-  +------------------------------------------+
-    |
-    | sched_switch_in
-    v
+> +			__get_str(comm), __entry->pid,
+> +			__entry->runtime, __entry->deadline,
+> +			__entry->dl_yielded)
+> +);
 
-the first won't fail as soon as the threshold passes, but will
-eventually fail when the sched_switch_in event occurs. This won't use a
-timer at all (well, mostly, some calls are still made to keep the code
-general, I could improve that if it matters).
+...
 
-Depending on the monitor, the first option could be a lower overhead
-yet valid alternative to the second, if it's guaranteed sched_switch_in
-will eventually come and reaction latency isn't an issue.
+> @@ -1482,6 +1486,7 @@ static void update_curr_dl_se(struct rq *rq, struct sched_dl_entity *dl_se, s64
+>  
+>  throttle:
+>  	if (dl_runtime_exceeded(dl_se) || dl_se->dl_yielded) {
+> +		trace_sched_dl_throttle_tp(dl_se);
+>  		dl_se->dl_throttled = 1;
 
-> Does this also need to be _HARD on RT for the monitor to work?
+I believe we also need to trace the dl_check_constrained_dl() throttle,
+please take a look.
 
-That might be something we want configurable actually.. I assume the
-more aggressive the timer is, the more overhead it will have on the
-system.
-Some monitors might be fine with a bit of latency.
+Also - we discussed this point a little already offline - but I still
+wonder if we have to do anything special for dl-server defer. Those
+entities are started as throttled until 0-lag, so maybe we should still
+trace them explicitly as so?
 
-For example in the deadline case, I believe, the monitor is not
-supposed to fix anything, but merely report violations. So we don't
-really care to react on time, but to react at all.
-
-I'm going to assess the overhead and see how to offer some more
-configurability.
+In addition, since it's related, maybe we should do something about
+sched_switch event, that is currently not aware of deadlines, runtimes,
+etc.
 
 Thanks,
-Gabriele
+Juri
 
