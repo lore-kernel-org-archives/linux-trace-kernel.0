@@ -1,89 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E995D19995E;
-	Tue, 19 Aug 2025 23:27:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10CB313A86C;
+	Wed, 20 Aug 2025 00:27:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755646040; cv=none; b=HiwFpbyA/tzllSSHRiHJa9XV1vAeKOIHfT0HEeot/A9f3S8aaXGcEopqfFlTl+HXxS1pNJjmv/qKAkQbmwVyBJjiC2pJKVjHzFdYNDoY3P43ZnVcK4h7/kP2l+iLQhP9GtGuo/hx0NC8PuL57WU9NWxuvliC9T/4vND6JoJqy+Y=
+	t=1755649647; cv=none; b=d7r/14wMP+lKaCz1ZH4naMzWvihDt07Cri7iSrRaxSd42F7QBEfPntUda3Y0Q5lt4z7uHBEL6lUqHQETMqSTd2rf1RINqCoyEhJPKi7BImLcJ2SMxqSnJND9WemhqmvGqN97lHzfV5474tP1vylruGdvR4Y4ZojNIKKgTaJzYDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755646040; c=relaxed/simple;
-	bh=StK7LLCIi/T78bXL7vsuBOy+1a+q7EGx/sYqS/vJ5aE=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=nbrs8asfaJwKKSVaTL261vefLlTFTyXQRX2w2kthi/gyLbs3USUtJdJ4WXlrqg/rsk9ZPuCI6RdeakGTXijAFQVIuL2ecSqxNt+xfsyspQNztFRdw8le7gH4tOErnviLZ8ZuTJx+vIM98OqPB+e/rXU4hQdxCtVQ5mlbuDmLb2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=XMJlcmKk; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="XMJlcmKk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11860C4CEF1;
-	Tue, 19 Aug 2025 23:27:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1755646039;
-	bh=StK7LLCIi/T78bXL7vsuBOy+1a+q7EGx/sYqS/vJ5aE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=XMJlcmKkALFr4TudUnPWezMfy+QVDd6QTbbBn71Cl1POxmJsM2VdaIdRzwRUI4YIr
-	 WHhKhSUdcEw2VbEHqGyalF53+CH0XxN2o+yBcfHc4V42Eb+ANrN7HBeY+r2g5hzxwi
-	 W0aQL2en+wURxpKd1VLzhZO8UsghxyQ1+horDhmQ=
-Date: Tue, 19 Aug 2025 16:27:18 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: David Hildenbrand <david@redhat.com>, Lorenzo Stoakes
- <lorenzo.stoakes@oracle.com>, LKML <linux-kernel@vger.kernel.org>, Linux
- trace kernel <linux-trace-kernel@vger.kernel.org>, linux-mm@kvack.org,
- x86@kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Dave Hansen
- <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Thomas
- Gleixner <tglx@linutronix.de>, Peter Zijlstra <peterz@infradead.org>,
- Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH] mm, x86/mm: Move creating the tlb_flush event back to
- x86 code
-Message-Id: <20250819162718.4321299ac1e8be7973014fc0@linux-foundation.org>
-In-Reply-To: <20250819184255.74307764@gandalf.local.home>
-References: <20250612100313.3b9a8b80@batman.local.home>
-	<65bb272d-b2d4-4d2a-9c7f-d3d5d2eba23d@lucifer.local>
-	<20250616150942.789c791a@batman.local.home>
-	<32c85c56-063a-40ea-b6ea-e49304447ad6@redhat.com>
-	<20250616161735.26785bf45d765345b89ad0c8@linux-foundation.org>
-	<20250819184255.74307764@gandalf.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1755649647; c=relaxed/simple;
+	bh=gm2a1v9IVPuOwd8HEXy/VDr0ag/FHWUnuaXgT4HbLik=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jJGWWUP54I2HNuYUnRWkbbApsrnrsdwAIs50Xjm15jdQGyMBX9nIk2U93uNrHyUv3q9YoXMGFIw468bQPSAQiHUMYycmmGuup9VFkOCx7997dRYy+0P5lQsJzpDjgP7cHICruO6MDkxd0Nd9yWwVmPHrnASO1QlC6wVDcauIhVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf18.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay04.hostedemail.com (Postfix) with ESMTP id 3676F1A0287;
+	Wed, 20 Aug 2025 00:27:17 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf18.hostedemail.com (Postfix) with ESMTPA id 0590D2E;
+	Wed, 20 Aug 2025 00:27:14 +0000 (UTC)
+Date: Tue, 19 Aug 2025 20:27:15 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Bibo Mao <maobibo@loongson.cn>, LKML <linux-kernel@vger.kernel.org>,
+ Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+ kvm@vger.kernel.org, loongarch@lists.linux.dev, Tianrui Zhao
+ <zhaotianrui@loongson.cn>, Paolo Bonzini <pbonzini@redhat.com>, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH] LoongArch: KVM: Move kvm_iocsr tracepoint out of
+ generic code
+Message-ID: <20250819202715.6f1cf0d6@gandalf.local.home>
+In-Reply-To: <CAAhV-H4TGus35B6ONdkSOMwWw+H6NRmHStV-Xu7vUYYrkDGfUQ@mail.gmail.com>
+References: <20250722094734.4920545b@gandalf.local.home>
+	<2c2f5036-c3ae-3904-e940-8a8b71a65957@loongson.cn>
+	<20250723214659.064b5d4a@gandalf.local.home>
+	<15e46f69-f270-0520-1ad4-874448439d2b@loongson.cn>
+	<CAAhV-H4TGus35B6ONdkSOMwWw+H6NRmHStV-Xu7vUYYrkDGfUQ@mail.gmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Queue-Id: 0590D2E
+X-Stat-Signature: tui4sbrzrksw68jmexsrk315o7o7n5td
+X-Rspamd-Server: rspamout02
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1++WOHapJUxAf+8t+c3THz1mBYsdmfqoyY=
+X-HE-Tag: 1755649634-528654
+X-HE-Meta: U2FsdGVkX18/nuGO+4wD+/Da8NSvPyPWizSJqU41fOf5srsgKcJhPQQfj8hvGQ+9RFovMTcjm++P2p1pyoagm8leyJqJpug8p61ybQ8+cexkgDpssKeB8xI9xycTlttA9xt8WXEOGXRV7XK3QcnZlX+LuM2ynNjWvXuZeBo4kSuNYALGvinW8xJJ+WEF6YjlC4qZRz0c4TI6XUMSF6YzmvvRgpjzTKHrSfL9SB36XUsMlLNwtkx7XWQP3k15iJ8mwYkEEh94ICrMOMwFsmziyefZ5aGK/PHVkYfIRpabd3dghYvjC38hgeeW64t+NZOloc4K+VOJc1fFHqT8wKZ8ECZ8uOTdluHZur+0ngE5ZDCtq3T+E2R1eLk6wTS1LWz/
 
-On Tue, 19 Aug 2025 18:42:55 -0400 Steven Rostedt <rostedt@goodmis.org> wrote:
+On Thu, 24 Jul 2025 19:56:42 +0800
+Huacai Chen <chenhuacai@kernel.org> wrote:
 
-> On Mon, 16 Jun 2025 16:17:35 -0700
-> Andrew Morton <akpm@linux-foundation.org> wrote:
-> 
-> > On Mon, 16 Jun 2025 21:19:18 +0200 David Hildenbrand <david@redhat.com> wrote:
-> > 
-> > > >>> Fixes: 4cc79b3303f22 ("mm/migration: add trace events for base page and HugeTLB migrations")
-> > > >>> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>  
-> > > >>
-> > > >> LGTM so:
-> > > >>
-> > > >> Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>  
-> > > > 
-> > > > Thanks.
-> > > > 
-> > > > Should I take this or should this go through the mm tree?  
-> > > 
-> > > I suspect this can go through your tree. (@Andrew)
-> > >   
-> > 
-> > Sure.
-> 
-> Did this fall through the cracks?
+> On Thu, Jul 24, 2025 at 9:51=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> wr=
+ote:
+> >
+> >
+> >
+> > On 2025/7/24 =E4=B8=8A=E5=8D=889:46, Steven Rostedt wrote: =20
+> > > On Thu, 24 Jul 2025 09:39:40 +0800
+> > > Bibo Mao <maobibo@loongson.cn> wrote:
+> > > =20
+> > >>>    #define kvm_fpu_load_symbol      \
+> > >>>     {0, "unload"},          \
+> > >>>     {1, "load"}
+> > >>> =20
+> > >> Reviewed-by: Bibo Mao <maobibo@loongson.cn> =20
+> > >
+> > > Thanks,
+> > >
+> > > Should this go through the loongarch tree or should I take it? =20
+> > Huacai,
+> >
+> > What is your point about this? =20
+> I will take it, thanks.
+>=20
+> Huacai
 
-I guess so.
+Did this fall through the cracks?
 
-<elides lewd crack about "cracks">
-
-I added it with your revised
-
-Fixes: e73ad5ff2f76 ("mm, x86/mm: Make the batched unmap TLB flush API more gene
-ric")
+-- Steve
