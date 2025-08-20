@@ -1,66 +1,67 @@
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E9FC2773FF
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 20 Aug 2025 18:11:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D37B2629F
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 20 Aug 2025 18:11:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755713462; cv=none; b=Wfykj6ANbEUYXOg593paOCiYM01PnwmbLAtHYP9kbQcUtCkBhBiDh34IpxNjeWJjIoiG6Wf5Q6zU+wGmZFhq2VPF4BvEHuPfiGCt1VhSNlP8s8y3b0AdBDDGICAbVujIw/Ik06Am/c5DVCrmiH+QuUEzevNm35YzS8hiJa/MPhM=
+	t=1755713464; cv=none; b=PvCu/sZtXwBmCiAqOxcekRo0dRjALYhqKjeV3m1DELd8rEgfxk+RTvdzwbFVELSpbu6fkEy4HzTMBa40AMcoolqSJj70ClUbQ9f2tWtsUCVadlWg8L912a2vsvA9DLiniqOD3YlBmMT4bQdEU5VefJPlmNOc67dTjogeukMewU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755713462; c=relaxed/simple;
-	bh=30hBneVdyS9iZwz/B5yGbZLg6bVYoB+QLeHzqt8+awU=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=DoSGKB76VIOUozA0+cIJJsYiwGzcwnC+Hg+XnuxY/Jp95thzzRygXEd4TSZ26CYbPlky4iXA91VqtLpN+ZOuoHcyqPGy/Ixn+wDZXJniMbINt0NAU3QynUl8l5BVzXv1fBZU9X4+PBc/xqyNovuXggxhOkR83kU+GQZiZVTw4Z4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=criticallink.com; spf=pass smtp.mailfrom=criticallink.com; dkim=pass (2048-bit key) header.d=criticallink.com header.i=@criticallink.com header.b=ilncVVp5; arc=none smtp.client-ip=209.85.160.169
+	s=arc-20240116; t=1755713464; c=relaxed/simple;
+	bh=etqFjPFs3vp08TxiXSqimCaG1/79A2Or3SQaEf8w0P8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=U3J7PMVA6KMh5kbK5g25tUvpWLBFgiNX+fyYtnYxXrCrCcj5WgqFdybHpBC0ZDatQt/zsL11EaJ4qO2GpoAorGOO+FwxQ5Dvk8sovKcNW+Fmtxg7/Ds+rKCnILk0PB1S3xgQyKhKZn4sa+3xQRjeduVnMNlqSX/XVd0rtBlRWrY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=criticallink.com; spf=pass smtp.mailfrom=criticallink.com; dkim=pass (2048-bit key) header.d=criticallink.com header.i=@criticallink.com header.b=S0R+J9io; arc=none smtp.client-ip=209.85.222.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=criticallink.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=criticallink.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=criticallink.com header.i=@criticallink.com header.b="ilncVVp5"
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-4b0fa7ed37dso12500491cf.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 20 Aug 2025 11:11:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=criticallink.com header.i=@criticallink.com header.b="S0R+J9io"
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7e8706491ecso10002085a.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 20 Aug 2025 11:11:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=criticallink.com; s=google; t=1755713459; x=1756318259; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=gtAIVrr8kKwpVUxcVvvrtpb7XAUtMtKSCzGNUheW2Ow=;
-        b=ilncVVp5ROW2/RTHYvdWncC3Ry1CM/DcawZT4zDxgF3scq28Kk7usXZQeUCJNW9eaF
-         G2DhBm3tkL6asaMdH87FLb6C8MyGKvhMsMqc7QdJQl0cQjh19yhju5obugzNuyoCLtcn
-         rO9UKEX/WrMfiUm0D0qOMHVHqxx5xa3OBntzH3hPl0tqSEO/6kpqQ/kYZcF7S38IUdwi
-         EiCGkMXvncWGEW3xHHFpOENlJinjxpC+SUUAFwCjCGhWvA6dFTFnLcXV+tz6JRiVGXp7
-         cEh5kQ2TwkiaswLyun7un27IBfsFM2tJe+kgNQ7rNFhEkD8BhYzpfAzqwlVDobhq4Xdo
-         Yp3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755713459; x=1756318259;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=criticallink.com; s=google; t=1755713461; x=1756318261; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=gtAIVrr8kKwpVUxcVvvrtpb7XAUtMtKSCzGNUheW2Ow=;
-        b=Zzzjc0rXrSs82AAFchM+XLUkPkJt6d9Yr4CACvY3JjBNnuC09RjlyeNMIHXk+RuOOw
-         93sqeY5Zk+K8C70v8LBdDzBIsrGhLN+fxDZJPGzuF7yCu6b2pKE35slE3wWBbBh1vpgw
-         2f4ZW5KR7hBIvRrEJpztFiGsxSfEuQPgLlY3Ch7Si3EyIE9uewXXwyHkGzCYFMNXbBIl
-         LHeKQ28v51Ra0a570/c/JCQdFzn5R4vWJxtlEkk+rs9h9JTtyI5ME7DEuHVAIAqEqwPB
-         kidmjBjMM3Q4baj3eHnalsd9BZfNZ+8txdt2Vr/81kLw2gpVnnDmxC0qmCEwozeNfDZb
-         xKDg==
-X-Forwarded-Encrypted: i=1; AJvYcCUX3nwtPCa1VA39Kz4CrH3a35hecK7UXD3v84cc4lH4/U2Zw80GuRFsJ97Nw6BBKXuSB0P3ghsmV4WoFj3VVPqcNYI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzu7kpWKLRWoPoBxgqSh7sY0PKK3M8QmtdRv/qzBScflWhT0Pu7
-	KK3OPqjGraoEKBMzX6rM2zdgB8D4EXDsJUuPunrLeehWrjbEmipsy7PVjNbZbaaOzA==
-X-Gm-Gg: ASbGncvCCBFTKxfsjRZLxcLaJ5aOy0qkgaHMYOG1vfS98CjKgMnl0SIeWKrkjt6zDTf
-	2D2M01IjUMSlBNVPN+u4qnq2LHso2wVMWOXVuVxIu/RUu038crZgDpfh4lD4h7y9EWR4jXwzVM6
-	WNaZKNe1+9lI2TmF098Mh6Xn/YZ1KmMneINJMS5w8AEyMj7jhTiNgJTGCWLaLm4aw6e+T2DV941
-	LQF3jVr92hbjVoPa6GXPEcVLb5rHEmHHc8wFIhbIHsHgOfWwjZFVBnrJ9ObYePOGFgZ9S9mjbkf
-	vknRrIMXC9m5LJuehfx3uOe1rNhavFKmdtwF644LS829Crw07C6H3Lw8lXeT/qeKH90iCr/BruD
-	ZotEsVLrzwJOOLAAl33I5AyJ50Fn3lpFQv1Qrc3l9VLGSzAzSICNqbARkGsdYFQB44R3ZNCA7Id
-	NYgo5ZNKwQkXLazQC7+kkLLUJ0QKirSY38RRcMmYPX4+zskQ==
-X-Google-Smtp-Source: AGHT+IHfwF0SHLGbBh6c7/vZywX7H0BigZ2QG6D5oe4Z2s4ohRyshmxOsFLeEGyGni+YNfdJqd8KSw==
-X-Received: by 2002:a05:622a:18a6:b0:4b2:9a53:7c15 with SMTP id d75a77b69052e-4b29d6cb53dmr5722711cf.25.1755713459313;
-        Wed, 20 Aug 2025 11:10:59 -0700 (PDT)
+        bh=Sq16eDaTYQMOn9zzBVLH7MX2YKx+OdDLLiqd/RRx9IE=;
+        b=S0R+J9ioxszKJr5W/BtgJq2Gw7MWtJjLlr2E/46CxnSzN7qKi5gK3Wz8dV18BrHz+L
+         6U1LGKMwGbpzEI1JWU+6TbIOJBXojcKXK2WPU331gpcGw58XSR2gL0JUoiMKiNJYPxsY
+         x3bgTy0+Exo2MRrVN3ui/SffQS73SV8DiBcnqZxyclMT4J+5TphpQJSZZDBwd2K1fd3J
+         zYBJOfoI0hW+J9WbUE8p86hVaWoGXJRTaYor1NUpHHlExL+o0nztH/w2Fg4PwOdHxpG1
+         SDvEG2J42ys91ELb3KKjqUktnwuwxGuXZt4UDzDFdKW1qb3QupkrhuWcSUTXWpn8Hz7S
+         0ixQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755713461; x=1756318261;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Sq16eDaTYQMOn9zzBVLH7MX2YKx+OdDLLiqd/RRx9IE=;
+        b=fofVBCzRc5P1Dhu+VSS6LBZTIarWZKfZYhr1MNG+t2by9YNXgrveeEKW/FCurPTs+z
+         nDwwMiUMSteW0sGjioLwQZalmm9i73q7KOOzUSZP9GVUkttyuFfjBnJWJTvuEphHvziY
+         a24xdsuDaHdHZ2oFjcXuaTZP++N7WTK7fGP4ZKjpIDaiOMKoyzC4pEZnusejUDq43lQL
+         jLMjn2+emXzUNZKajfw/KwqgGNtmJnyot3sCrxDXD633zCMPHGhTkJe+wDIoZWoqHCy9
+         E4KOrSjRw3DGBs9cDiAOl834E/vCdvMyV0mHMdB7SOJudTxrHDi/wjbFMHiBjliWB9iH
+         71ZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVbp9FQzLgV82CnTk7qBsnKLZ1ZPodmc84zoIBl1hNNoTm0D7DTMRvCeZdu2CpPcibhMtyuQrlPb03Ek0pc6wXtM9E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwnUWY0iYAfoyZyBIbHCz65kjr9e4ErC26ce7CGU0NZUCMa5aRe
+	wO5mf7i0MftrOynct8l5km4huqh+OWFrjiRPGMjZModO58KckTzCUgbYGvZTb/Lrmw==
+X-Gm-Gg: ASbGncvdlduUZUZ+e13caPqHUuAfwtWZY7KYICwqdJqDar2/7epAbjZ/HL+Ljx7fOZ4
+	ZHIw9cpMuXYmtI2IDdesnaD7Na62/c8xP0zIq8yh3JdgmRS8XBKs1NAUhq3IJ2wLz8rNW6jMKKA
+	mozCGg8M9ca1AWG75S0U2E9RofsYQO0+wr/edPSh4nsi+0h+TzqL8aOXbrdpJHzYndfp/JA7c2M
+	z2vJP89oLcgY4MiTmEyHboDN7Fu9m6xKhKoknhlTPKzPt3B9HYCCraKIw5ReEUEuBDYmZeqCGj2
+	s0Xjwp7erpe9dnVuqIbU8ZbVhZ7C7vbJgtz+ciIWdmMbJm0uIwGLcd91U7Taowij9pO5hbpUCuK
+	z49gQZlUq3qJVFffGXgtZqFneXBXaT2fa9yhEhsBVGOeWTPiy/BS2SZY0XQ77zYu8/tPpZ/OM+F
+	hmcL90PeTUK6Aou6EvfC388zMUIdqgyRJhAsI=
+X-Google-Smtp-Source: AGHT+IHxSEMhGEa7cC/Xc549bj9LNnxJcU8yUkf8DRST4/na6Np0IFzpa9wqSwyR96VMC4fVeNSogg==
+X-Received: by 2002:a05:620a:4550:b0:7e6:20a9:1855 with SMTP id af79cd13be357-7e9fcb7b646mr468924185a.44.1755713461000;
+        Wed, 20 Aug 2025 11:11:01 -0700 (PDT)
 Received: from jcormier-MS-7A93.syr.criticallink.com (static-72-90-70-109.syrcny.fios.verizon.net. [72.90.70.109])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7e87e076811sm977497485a.36.2025.08.20.11.10.58
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7e87e076811sm977497485a.36.2025.08.20.11.10.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Aug 2025 11:10:58 -0700 (PDT)
+        Wed, 20 Aug 2025 11:11:00 -0700 (PDT)
 From: Jonathan Cormier <jcormier@criticallink.com>
-Subject: [PATCH 0/2] PATCH: firmware: ti_sci: Add trace events to TI SCI
-Date: Wed, 20 Aug 2025 14:10:43 -0400
-Message-Id: <20250820-linux_master_ti_sci_trace-v1-0-2a69c0abf55e@criticallink.com>
+Date: Wed, 20 Aug 2025 14:10:44 -0400
+Subject: [PATCH 1/2] firmware: ti_sci: Add trace events
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -69,10 +70,9 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAKQPpmgC/x3MQQqDMBBA0avIrBuIgVTsVUoJQzKpA5qWmSiCe
- HeDy7f4/wAlYVJ4dQcIbaz8Kw39o4M4YfmS4dQMzjpvBzuamcu6hwW1koTKQSOHKhjJjH1ODvP
- Tp4jQ+r9Q5v1+vz/neQEOqIxMawAAAA==
-X-Change-ID: 20250709-linux_master_ti_sci_trace-91fd2af65dca
+Message-Id: <20250820-linux_master_ti_sci_trace-v1-1-2a69c0abf55e@criticallink.com>
+References: <20250820-linux_master_ti_sci_trace-v1-0-2a69c0abf55e@criticallink.com>
+In-Reply-To: <20250820-linux_master_ti_sci_trace-v1-0-2a69c0abf55e@criticallink.com>
 To: Nishanth Menon <nm@ti.com>, Tero Kristo <kristo@kernel.org>, 
  Santosh Shilimkar <ssantosh@kernel.org>, 
  Steven Rostedt <rostedt@goodmis.org>, 
@@ -83,51 +83,202 @@ Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
  linux-trace-kernel@vger.kernel.org, 
  Jonathan Cormier <jcormier@criticallink.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1037;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5565;
  i=jcormier@criticallink.com; h=from:subject:message-id;
- bh=30hBneVdyS9iZwz/B5yGbZLg6bVYoB+QLeHzqt8+awU=;
- b=owEBbQKS/ZANAwAKAdzX/S4LNuuqAcsmYgBopg+xuRBsVzXaYKYyTI5vBfVW51jOnFCmZ1pIw
- ALJl+D7eYSJAjMEAAEKAB0WIQT/MozqCeZtYxNnVN/c1/0uCzbrqgUCaKYPsQAKCRDc1/0uCzbr
- qnE5EACMWtJmoFWZA+MCgRUIDFZR3DCrO0PRy+5QYmFUEZxTCaxsULzwf3WoegqeAkhtD8wPqQH
- 0swjGhM4l5p84Y/LbNS1US6BfVATP2zHMwp3qOwX9XOYhIieOxNqjT1Beawu218666Zn8YkE0on
- Wx3/64Hf2mv/SMPV9RUv6DEZivri6H7RKv+l0/UrnNWE5U17CAPOBCRBY4mLPEdw0it/37FbdE2
- eG7sry5a4qI6SrT6uPND93dFai2vqkcagDBE48BsZOpwfNcCP3UAuhoXupUttyTpYel1sPRKAen
- kckLOT7o627QYo5ASWVAhgl1x5gJmIZzF/gTBBV1C+Zr/9/baAUSsDGdtGJf7VgyuxXBdQX4hO/
- CZ9neF0EI/8wTXntdLvAnIrLi17PVFmdzUVjG3i5/r7bJH65eY1migrCCQI6FfJFv5zhxAHiFTZ
- LvgRJjMXKTFHJjUIaEx63lVmPsfNACiT13FzzTBEFiFLLFpCXQj+ntVeInRhFpGi1pVvLgzEvjT
- cTCSaDC54RhK0upW+mCaHZVvjSlq4svDQ/8Y+e5vzhHX60aEYafZlXpJQtn7VJMcruc5uPIhkmC
- 0okS49r2Q3B3nRJbCS0hXYHEEo323eSc/P1aA0QfpmwKB78FoQpyOFoXwVW3lMv2VpVKV8rN6L+
- aF+I49vn205iukQ==
+ bh=etqFjPFs3vp08TxiXSqimCaG1/79A2Or3SQaEf8w0P8=;
+ b=owEBbQKS/ZANAwAKAdzX/S4LNuuqAcsmYgBopg+yRRf9U93bUOX/Qf7T3PjkuKN5XsQfsWGwo
+ rTZnMjw3MSJAjMEAAEKAB0WIQT/MozqCeZtYxNnVN/c1/0uCzbrqgUCaKYPsgAKCRDc1/0uCzbr
+ qi3ED/wO/MtdnWf/w4gZK0rTauaX9xNidQJ8Nh0wJMp4R7fjhHDVutuzdwc/uB/l4tBYhWqTVPc
+ jdB+1F01gq5yrNbMDoXMThfKfDnYPMXDd9kSsQZfdltNysj0Mikkx3T1oKcT6iPYLxC4Box4CAu
+ rimQdnMRcfZ4nQ0Vn76Zd5DrhEUlX3vKOuQuUYqGMmEaXjgcRumaWvNrw9vzoN11/61pz6Cq3Ot
+ kFmDBVaqV+CNLgHQ3j3le0AT/dow+0RKx+NQKp5POFcHcMz4PF/wleJusUhSLxVtdp5ZvQFODVB
+ DJFSYLR38U5mpWhL2414tQuUJvd05VIvDxe6HmSUuZjwnPM7HVschUOzKMU0d4fa47vJiehGq7R
+ JCUxRR7qNNjM7DhMYcM14xh/lXEmwhO6nBizfbhAe1eAt6SskCMNbfHASpsRKIqm4zKAdvFiSVM
+ S9ErQSLc5wHV8C3NTgapXnNb67NnP0TF1t5fgEwKO61ST+Wd/AxdtjMs4NCIySeMG48iv1lfvnS
+ wHvaZjzO66h1UpGLsVINxgUnIXIu49Nnm0BGtZzwK0pfj+xAQ+fgKtKW25uyGxJx32yJ6qvd7qm
+ KbIWdvRorQs/Ehbi+DJxJaSiUzj4A0Qwu5H0x8wgGrc7QvZBcsugzrPJZbv8QIIRRzNA6RMF+t5
+ h/dEZcJcsgnO17g==
 X-Developer-Key: i=jcormier@criticallink.com; a=openpgp;
  fpr=FF328CEA09E66D63136754DFDCD7FD2E0B36EBAA
 
-Add trace events to help debug and measure the speed of the
-communication channel.
+Add TI sci trace events to help to debug and measure the speed of the
+communication channel. The xfer_begin and xfer_end calls can be used
+to time how long a transfer takes. The rx_callback and msg_dump trace
+events help track the data that gets returned.
 
-Add parsing of the messages types but I am not sure how to parse the
-flags, since the REQ and RESP flags conflict. Left as seperate commit to
-make it easier to drop or make changes depending on comments.  The two
-commits should squash easily.
-
-Nishanth Menon and Vignesh Raghavendra requested I send this patch
-upstream.
+Based on tracing done in ARM SCMI
 
 Signed-off-by: Jonathan Cormier <jcormier@criticallink.com>
 ---
-Jonathan Cormier (2):
-      firmware: ti_sci: Add trace events
-      firmware: ti_sci: trace: Decode message types
+ MAINTAINERS                     |  1 +
+ drivers/firmware/Makefile       |  3 ++
+ drivers/firmware/ti_sci.c       | 11 ++++++
+ drivers/firmware/ti_sci_trace.h | 87 +++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 102 insertions(+)
 
- MAINTAINERS                     |   1 +
- drivers/firmware/Makefile       |   3 +
- drivers/firmware/ti_sci.c       |  11 +++
- drivers/firmware/ti_sci_trace.h | 146 ++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 161 insertions(+)
----
-base-commit: d7b8f8e20813f0179d8ef519541a3527e7661d3a
-change-id: 20250709-linux_master_ti_sci_trace-91fd2af65dca
+diff --git a/MAINTAINERS b/MAINTAINERS
+index fad6cb025a1918beec113b576cf28b76151745ef..a6fac706feceedfc5039ec07de954ac35a9af848 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -24631,6 +24631,7 @@ F:	drivers/pmdomain/ti/ti_sci_pm_domains.c
+ F:	include/dt-bindings/soc/ti,sci_pm_domain.h
+ F:	include/linux/soc/ti/ti_sci_inta_msi.h
+ F:	include/linux/soc/ti/ti_sci_protocol.h
++F:	include/trace/events/ti_sci.h
+ 
+ TEXAS INSTRUMENTS' TMP117 TEMPERATURE SENSOR DRIVER
+ M:	Puranjay Mohan <puranjay@kernel.org>
+diff --git a/drivers/firmware/Makefile b/drivers/firmware/Makefile
+index 4ddec2820c96fa9be012e89dac3038968bb67039..a055c53bdfa9e5c64adb4e20a9ca6c6661d80297 100644
+--- a/drivers/firmware/Makefile
++++ b/drivers/firmware/Makefile
+@@ -2,6 +2,9 @@
+ #
+ # Makefile for the linux kernel.
+ #
++
++ccflags-y += -I$(src)			# needed for trace events
++
+ obj-$(CONFIG_ARM_SCPI_PROTOCOL)	+= arm_scpi.o
+ obj-$(CONFIG_ARM_SDE_INTERFACE)	+= arm_sdei.o
+ obj-$(CONFIG_DMI)		+= dmi_scan.o
+diff --git a/drivers/firmware/ti_sci.c b/drivers/firmware/ti_sci.c
+index ae5fd1936ad322e5e3a94897cc042f6548f919e6..87b1330305939bb6b19bbdaa594b17b266092a34 100644
+--- a/drivers/firmware/ti_sci.c
++++ b/drivers/firmware/ti_sci.c
+@@ -127,6 +127,9 @@ struct ti_sci_info {
+ #define cl_to_ti_sci_info(c)	container_of(c, struct ti_sci_info, cl)
+ #define handle_to_ti_sci_info(h) container_of(h, struct ti_sci_info, handle)
+ 
++#define CREATE_TRACE_POINTS
++#include "ti_sci_trace.h"
++
+ #ifdef CONFIG_DEBUG_FS
+ 
+ /**
+@@ -269,6 +272,9 @@ static void ti_sci_rx_callback(struct mbox_client *cl, void *m)
+ 		return;
+ 	}
+ 
++	trace_ti_sci_rx_callback(hdr, 0);
++	trace_ti_sci_msg_dump(hdr, xfer);
++
+ 	ti_sci_dump_header_dbg(dev, hdr);
+ 	/* Take a copy to the rx buffer.. */
+ 	memcpy(xfer->xfer_buf, mbox_msg->buf, xfer->rx_len);
+@@ -402,6 +408,9 @@ static inline int ti_sci_do_xfer(struct ti_sci_info *info,
+ 	int timeout;
+ 	struct device *dev = info->dev;
+ 	bool done_state = true;
++	struct ti_sci_msg_hdr *hdr = (struct ti_sci_msg_hdr *)xfer->tx_message.buf;
++
++	trace_ti_sci_xfer_begin(hdr, 0);
+ 
+ 	ret = mbox_send_message(info->chan_tx, &xfer->tx_message);
+ 	if (ret < 0)
+@@ -437,6 +446,8 @@ static inline int ti_sci_do_xfer(struct ti_sci_info *info,
+ 	 */
+ 	mbox_client_txdone(info->chan_tx, ret);
+ 
++	trace_ti_sci_xfer_end(hdr, ret);
++
+ 	return ret;
+ }
+ 
+diff --git a/drivers/firmware/ti_sci_trace.h b/drivers/firmware/ti_sci_trace.h
+new file mode 100644
+index 0000000000000000000000000000000000000000..7f99c41ea08aec6cf64d601576cad29b14c6ad5b
+--- /dev/null
++++ b/drivers/firmware/ti_sci_trace.h
+@@ -0,0 +1,87 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM ti_sci
++
++#if !defined(_TRACE_TI_SCI_H) || defined(TRACE_HEADER_MULTI_READ)
++#define _TRACE_TI_SCI_H
++
++#include <linux/tracepoint.h>
++
++
++DECLARE_EVENT_CLASS(ti_sci_hdr_event_class,
++	TP_PROTO(struct ti_sci_msg_hdr *hdr, int status),
++	TP_ARGS(hdr, status),
++
++	TP_STRUCT__entry(
++		__field(u16, type)
++		__field(u8, host)
++		__field(u8, seq)
++		__field(u32, flags)
++		__field(int, status)
++	),
++
++	TP_fast_assign(
++		__entry->type = hdr->type;
++		__entry->host = hdr->host;
++		__entry->seq = hdr->seq;
++		__entry->flags = hdr->flags;
++		__entry->status = status;
++	),
++
++	TP_printk("type=%04X host=%02X seq=%02X flags=%08X status=%d",
++		__entry->type, __entry->host, __entry->seq, __entry->flags, __entry->status)
++);
++
++DEFINE_EVENT(ti_sci_hdr_event_class,
++	ti_sci_xfer_begin,
++	TP_PROTO(struct ti_sci_msg_hdr *hdr, int status),
++	TP_ARGS(hdr, status)
++);
++
++DEFINE_EVENT(ti_sci_hdr_event_class,
++	ti_sci_rx_callback,
++	TP_PROTO(struct ti_sci_msg_hdr *hdr, int status),
++	TP_ARGS(hdr, status)
++);
++
++DEFINE_EVENT(ti_sci_hdr_event_class,
++	ti_sci_xfer_end,
++	TP_PROTO(struct ti_sci_msg_hdr *hdr, int status),
++	TP_ARGS(hdr, status)
++);
++
++
++TRACE_EVENT(ti_sci_msg_dump,
++	TP_PROTO(struct ti_sci_msg_hdr *hdr, struct ti_sci_xfer *xfer),
++	TP_ARGS(hdr, xfer),
++
++	TP_STRUCT__entry(
++		__field(u16, type)
++		__field(u8, host)
++		__field(u8, seq)
++		__field(u32, flags)
++		__field(size_t, len)
++		__dynamic_array(unsigned char, cmd, xfer->rx_len)
++	),
++
++	TP_fast_assign(
++		__entry->type = hdr->type;
++		__entry->host = hdr->host;
++		__entry->seq = hdr->seq;
++		__entry->flags = hdr->flags;
++		__entry->len = xfer->rx_len;
++		memcpy(__get_dynamic_array(cmd), xfer->xfer_buf, __entry->len);
++	),
++
++	TP_printk("type=%04X host=%02X seq=%02X flags=%08X data=%s",
++		__entry->type, __entry->host, __entry->seq, __entry->flags,
++		__print_hex_str(__get_dynamic_array(cmd), __entry->len))
++);
++#endif /* _TRACE_TI_SCI_H */
++
++/* This part must be outside protection */
++#undef TRACE_INCLUDE_PATH
++#define TRACE_INCLUDE_PATH .
++#undef TRACE_INCLUDE_FILE
++#define TRACE_INCLUDE_FILE ti_sci_trace
++#include <trace/define_trace.h>
 
-Best regards,
 -- 
-Jonathan Cormier <jcormier@criticallink.com>
+2.43.0
 
