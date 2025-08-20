@@ -1,89 +1,87 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2EFE2D63EE
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 20 Aug 2025 07:26:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA0B72D94B9
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 20 Aug 2025 08:11:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755674809; cv=none; b=ueRzfEqwkPL9xmrj2gLgiPyJSh8kCdVJQD//ZD8IDqPxsIg0LiUDpnrY0r9BwObBs/pbAMSd8JtAh/weP+dOVRK24TJCmOzFx/LlYLWMUSjbohOyGE801OIF8Iky7eyqWrP7j8HkKNswJmb22u2k0mcVVO3gSocZ1t+QcMS7UeM=
+	t=1755677498; cv=none; b=V6rj5WGMp1Pmi+QL8NYmUm0NZNSU+xg5QQJAiR3qOWkzTCHtKYqX8TI+7ZIkl3qviAZyP0LT9xjuEdBz0GQ1wghTvWdx7FOdaG6BV/fzkMD/Zvn1uGyhlgKwIUgpEh6O6Kq5Y+t1pqV7XJK7bOKgXrQEkbIoLmJKtEqRG/UCDL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755674809; c=relaxed/simple;
-	bh=ZuX2HRuY540gLLn3OBzHXp4J6+mRpc3xLSPypfFFPPU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=D8Rz8PHeoiBpZyVYyxxoJHQfsIZLov/BTNbCZ2vEtO3O7rw47QeGj0rI2x2uE7Igq51sSochItH6bzACGfbzcDZmo7aVk8zNpRKdPEcqgIis5AEFtXxocfxqooxHquBK4gFPYz8T9gcwbk3d5UZ7V5S1cJ0zF0djRkzhbfyas3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=W1rhmHN/; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W1rhmHN/"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-333f8d39e94so46940001fa.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 20 Aug 2025 00:26:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1755674806; x=1756279606; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZuX2HRuY540gLLn3OBzHXp4J6+mRpc3xLSPypfFFPPU=;
-        b=W1rhmHN/EfUEv3Oh4CjZm2N3JxzCZz3VHoZQsUaJ76sEHeNb5EyB/i2Y5Y3v5XVb4w
-         ubBbvbF7IS9oDyQ+dV1Mvqws7yz8vgalMEL6ZS5x+ieo4wlYNPJu9aLNOKLGJ/uiU0Ce
-         N9HaIQl1B02sd7KXfpgCpU0w6MnWI5AfjTVgqd9kKf+BuSNyHkDsNnI3C5Cv0iN8pvq6
-         XaA5dUnmzTFeqZmYcSnONBaVjexY9ksXWXQIWleXrWOBL1fSuAQV/PcB+2pHreBXwhD2
-         fwLIIoSqW1aMk1FmQUOgpnxvtLrFb7q1y4PluKVkUCBiVG/LuGvG9yA3op7DsC6uN+Oa
-         SxdA==
+	s=arc-20240116; t=1755677498; c=relaxed/simple;
+	bh=BLo/SK0OwyLXmx4CkLXt0Zv4XSiG7FN8vxZrhqD9o9A=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=QSWEnqMlgGgC/fJCsDmxEUBcN2LBi9g4Smvo0Uf3F3s3f8wfcJ+a7EyqH25iq09dLtFuVHpv/2eTcj0r9fmp18gwz302e3+iex4pvbl9h9y+e3W/t20281mpy5B1KrqQ+/sDgh+Gdi+Rzqk5xDoU2RrTvcZp7TStifLNIz5UKOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3e67df0ee00so11079515ab.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 20 Aug 2025 01:11:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755674806; x=1756279606;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ZuX2HRuY540gLLn3OBzHXp4J6+mRpc3xLSPypfFFPPU=;
-        b=c2/EpW63TOqf4eawAbmcc/2i78JI0gq+hpEqLiyC8iKcAsD27ms3iN6gtCgLB7ntnD
-         3q5Z9snQIxRrZAecZB5SNbTHZcAMJ8XzbMQnzrXyk09XOhOXIuqLnqMvVyi+rnm/jb91
-         MhJeN+8zrgVDNiw8vBs1pO0pi9pt9B7dAPmHEfnfH/3AkAzwH+/P8pxgl+v/kYasP/Wg
-         2jF2AenCG0v7RGMiTX2pjZB8cyvj6Yk8dftEs1hW7r0MTNJ0gR/AJqDuYBBApkrZqaSe
-         qTmZZ8NMugFA0I5UBD2MOYZTo9j7Zbsb/HvTiS83jvhIizDaPA6dWduyCHNijmIqCn+1
-         IX0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVN0sZNlPuUziMgTkSz5tc5PdzMNHdEyWvjHNFl4q1pW7WgtfCJ5B40Y0MHJtsS7ROp4Efep0R/soDeN0GQEISIRRw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyRu2XFqYc6Y4a/85jVcjTSkUtq0NnVnhC9lwsN/yEstq5jsI8H
-	o1oJrPBWYqpBk/x9DBEb5hjMYwxBZ6+TiCAWuqJRU2YPK3zTpxaBCzA+8xxqEWsdve2rH8B+XXH
-	Z1jrObjVkM82YQU1fD+Zd9jg3WOn83IADwThDDEgfrg==
-X-Gm-Gg: ASbGncup9Es0hSsqVjLosltVVugDCLglidomNwlp0TrWKYw72GFS7Vg2bGhhlDhymDK
-	5Lahaq+hTmVPIGYJglVXFxPvr+XVEhROgjKIkWkhs6cD6OB7cv4d9YALycXAckYLVtx+KD3+jG5
-	bolSAy6iR1fyS55NaOr0e5YyUjtCR7nqE8kkR8qbGIfEchSr1C8NXu4Zp7S9PDRdBtKF7DGx6FJ
-	PHwYylUk02S
-X-Google-Smtp-Source: AGHT+IFkIVL0QsIdOZQlW0D+lgAA1nsGZknVFkVpqjaB4S1VwEZ4JXZCYItH3d8xt7tCiiSuJNsOnXUlgb3FzUcPr1E=
-X-Received: by 2002:a2e:be22:0:b0:332:2405:4d13 with SMTP id
- 38308e7fff4ca-3353bea0a8fmr5933501fa.39.1755674805791; Wed, 20 Aug 2025
- 00:26:45 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1755677496; x=1756282296;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=nxnWMV7nk+HUWAMMTqThfYs5utB2u1ueiMVLfITSQbU=;
+        b=kwxIJ98w88dLuzZAMXqQIkB1zqbtauin+eZNJv0CXvwgJZyr20Jy5HSDEMAFdhzgrn
+         VCawPUsIetu2kk66XwIeBIME3ek8M8DHAi5bv+APfX/qKg71qPzWC+mQPscsH5nw6Emx
+         6hCaLSooN2PvxgeEYpgjmP1IQ+bYZS2EfmC1MQ7ZbYIMOeE+OwN2bd3WbrUYei3l4ysO
+         /Q+b+RC/g47+eV9YiKF6/JGrUKggbTBWP8iEKyUEqtKiFKttV7H0Nvyuu9SeYgatYC3w
+         B2gnH+ZoY0/WoJPK5t9x/FJuKWilKkFJJDHH0CehtsBhGOIS6y1WGUHkJMmmEsJ8+906
+         jPbw==
+X-Forwarded-Encrypted: i=1; AJvYcCUjXcg/MtgZMgK7dKzhTvPspwUYO8wk/LOl8EWb1rp2yoWZig51YcK2e9GN94h/ZHCEl88S+gXiSNh5fJas3uMWwes=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzuLmkh65uHpzUui/rf26L5UYqhRsEgVd8Ln8ODl1g0CaxTnlHu
+	CFm0ifMp4Fpd5CSM0UYmw46nh3mslVigmOWdp7FgxPyaWaV9Bqccsu45RxPSIpS8ri8ya7wXE5p
+	IPnaMctxSHQhPg7tOLbqi/77DrAtABJWUJSBIk85kFY6VdfuxsaA6soj4yyk=
+X-Google-Smtp-Source: AGHT+IFgeuEM3R5jjreDnx783f1j+D6ZavtdfNGu7vZ6rTYRTO689dyA93mAmaz0QwfaU3/2wl/YgWTulJDhCQTdE/oRAQPR+L7I
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250818103931.1100084-1-richard@nod.at>
-In-Reply-To: <20250818103931.1100084-1-richard@nod.at>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 20 Aug 2025 09:26:34 +0200
-X-Gm-Features: Ac12FXzmS-9yGVF-QG0jps5D9FFgyHp9dtJtJ14yfzuuesjlk_IGoKkXWSgMngU
-Message-ID: <CACRpkdbwUU5TmeVhcSAZ_ZaFa5nGVtyFBjNXBwNMC5y38heELA@mail.gmail.com>
-Subject: Re: [PATCH] ARM: ftrace: Implement HAVE_FUNCTION_GRAPH_FREGS
-To: Richard Weinberger <richard@nod.at>
-Cc: linux@armlinux.org.uk, rostedt@goodmis.org, mhiramat@kernel.org, 
-	mark.rutland@arm.com, ardb@kernel.org, ebiggers@kernel.org, nathan@kernel.org, 
-	dave@vasilevsky.ca, ruanjinjie@huawei.com, liuyuntao12@huawei.com, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, Donglin Peng <pengdonglin@sangfor.com.cn>
+X-Received: by 2002:a05:6e02:1c06:b0:3e6:7aad:25ff with SMTP id
+ e9e14a558f8ab-3e67ca3920emr40494565ab.23.1755677495895; Wed, 20 Aug 2025
+ 01:11:35 -0700 (PDT)
+Date: Wed, 20 Aug 2025 01:11:35 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68a58337.050a0220.1b2f6c.000c.GAE@google.com>
+Subject: [syzbot] Monthly trace report (Aug 2025)
+From: syzbot <syzbot+listba220efcf7f3e6e8ea56@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	mhiramat@kernel.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 
-Unsolicited thread intervention:
+Hello trace maintainers/developers,
 
-Richard if you use ftrace on ARM a lot, have you looked into
-patchable function entry as described by Mark Rutland for
-ARM64 in this talk?
-https://www.youtube.com/watch?v=p9cqUTF4I0w
-(Described at 19:12 into the talk.)
+This is a 31-day syzbot report for the trace subsystem.
+All related reports/information can be found at:
+https://syzkaller.appspot.com/upstream/s/trace
 
-I think it would be neat if we could do this on ARM32 as well
-but I do not know how hard it would be.
+During the period, 1 new issues were detected and 0 were fixed.
+In total, 12 issues are still open and 55 have already been fixed.
 
-Yours,
-Linus Walleij
+Some of the still happening issues:
+
+Ref Crashes Repro Title
+<1> 576     Yes   WARNING in tracing_buffers_mmap_close
+                  https://syzkaller.appspot.com/bug?extid=ddc001b92c083dbf2b97
+<2> 80      Yes   WARNING in blk_register_tracepoints
+                  https://syzkaller.appspot.com/bug?extid=c54ded83396afee31eb1
+<3> 52      Yes   INFO: task hung in blk_trace_ioctl (4)
+                  https://syzkaller.appspot.com/bug?extid=ed812ed461471ab17a0c
+<4> 52      Yes   WARNING in tracepoint_probe_unregister (3)
+                  https://syzkaller.appspot.com/bug?extid=a1d25e53cd4a10f7f2d3
+<5> 8       Yes   INFO: task hung in blk_trace_setup (4)
+                  https://syzkaller.appspot.com/bug?extid=9c1ebb9957045e00ac63
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+To disable reminders for individual bugs, reply with the following command:
+#syz set <Ref> no-reminders
+
+To change bug's subsystems, reply with:
+#syz set <Ref> subsystems: new-subsystem
+
+You may send multiple commands in a single email message.
