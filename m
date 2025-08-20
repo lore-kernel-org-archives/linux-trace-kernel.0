@@ -1,279 +1,447 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 921901DDC33;
-	Wed, 20 Aug 2025 15:58:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.18
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755705501; cv=fail; b=k7O7ZIdRe7fJYW6Vra+UFmAwK9zpJzcTXnGNGsTMKoZpCwXDBYwZkWR38fy4i6+OrXwHu05joL3E6JDwBHXDibu29mDShQ1+EOtpLyyMK3KP7pUGqoLkupvPQMtkaIzNJvO5GnVELpdO/QsY2PMTXXIrh+ZNGbZM9nVQAhuyI8I=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755705501; c=relaxed/simple;
-	bh=iXvAZIFqPBl3m+uk4MdYej0soRXK00UzIDarZ9jFRdE=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=u2NDgq4pEwlDVRO23SOzMfQ0XzybSm9VF57i5jy0ITJOvN+AuNNLjsPUP8RaF4Ixw+Aid0JINjAhq7+jJUG8+wZzsmgCkDRb61aDoJ0YyGQaMeq8ZSoz1wYChvO6FfEO8caXqfbe/5kptJIZNcgk7AsfQkS12f1zcbNsuGSDDEw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CER8fJ10; arc=fail smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7455F322DBE
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 20 Aug 2025 16:36:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1755707794; cv=none; b=blepvgKi5orzHVH3v4CL/5mSd+faxZULePk1kfo4RcjPobSxvpbFs5AtaimsU9T80TImuh+Qyq8xJhJpiQm85P4kEm0JOvSMFQRu77XfUJQ5tePMWfBT/qsqqVcpXSGXLGm25/aWEwS0Qr+itdZWjE4ZuXOnit3LWidmypgtfV0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1755707794; c=relaxed/simple;
+	bh=1cJtr5xnb1uIlwFraPS2r+t6B2j92UPF8n4XcrNZCs4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EhlTdE2SDYvFC2ut81aRIDLmenJVwKlTd+ex5Eek/oUUKttvJJ5dy6Q5uNdMVwC94nXlGrs0HNGzKRhz0E2HcyxfBbzPJf/sRIIeQ21icSbec9PE5k15V2PWeSVVpaG5InxU8x2FtvqPsSWOxOuzcwtHGEpBoKfXCcMI+bfE0Xw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hBlKRJvS; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CER8fJ10"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1755705500; x=1787241500;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=iXvAZIFqPBl3m+uk4MdYej0soRXK00UzIDarZ9jFRdE=;
-  b=CER8fJ10Ul6G2cwW4igl6wEFkQHP/3ygxcNsu3k9CSEio/hd188Km7BE
-   s1fAKy/VjEGDX5Z8pxeDadUey634Q9/1ITwxJojLA0ux34eDYHGuCNbHk
-   Rl5AEn9ACoh+ktsbNGvTPBO3HBLyzQXINvp5V/HqA/VEa7roFNLA+IMCX
-   tJy/K6a8sLdeL9ZF1xkrvYpW8wxNVz/qvb2P3GiMfUb7emq0qAW8Ueu8V
-   LOsNi8fV9F/1/ukSUc8+npg6AA8WV9CdSn6YFxF6SaIt7TxCbgl42V1WH
-   sLfu387DChVvpknl24t02R0QOGra0+RALXvNQJbNSHWC7Q58YbQQBvr97
-   w==;
-X-CSE-ConnectionGUID: aViaKSsJQ6CrBFg4TohuUQ==
-X-CSE-MsgGUID: f0CQTNciSfag4t/zfvhAXg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11527"; a="57176821"
-X-IronPort-AV: E=Sophos;i="6.17,302,1747724400"; 
-   d="scan'208";a="57176821"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2025 08:58:18 -0700
-X-CSE-ConnectionGUID: I48UoAEYTm+R1rLLqgcE8Q==
-X-CSE-MsgGUID: BQOrqZj0Q6y7lLnkCaDehQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.17,302,1747724400"; 
-   d="scan'208";a="168114188"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2025 08:58:18 -0700
-Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.17; Wed, 20 Aug 2025 08:58:17 -0700
-Received: from ORSEDG903.ED.cps.intel.com (10.7.248.13) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.17 via Frontend Transport; Wed, 20 Aug 2025 08:58:17 -0700
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (40.107.220.57)
- by edgegateway.intel.com (134.134.137.113) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.17; Wed, 20 Aug 2025 08:58:17 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ZoUBpzX68dPMoCM3z8QMpBp9Z6mKXelWoz4gYPKuzZeFP2Sg4430wdWgtxnEw0f6soYcUnpeZ8uC611KFa+d8ObyfGo1e9MnHxr3UYqjt/jxUui93uq5eemx3CGiLvE64Lo5nAYc9dJsmf8BuEeyaK9i9Io8UU7hlEXGkN2Jkb/FWkZlOd24z5CBnuN4fJeSe/yXe5u0Qgx+xSrXmjy5hesdmddTW7bdoppIkENMxKrNm+727P5RbZZ6F4Nw71jsO9I0FmBDtSqjM61ZLAVTT3UQX3RTMQHIdDzS2r3kYT+MMWuhZDGUhSkwAVmOywriUSMrH2WuJd6CQSfjjRfGCg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=iXvAZIFqPBl3m+uk4MdYej0soRXK00UzIDarZ9jFRdE=;
- b=eoNlY83WChD3nvAW0v6Qs1tkAhaoVG0+lf51AWsp6/CwMQZrMZAfUR4DtEB4WwH9qpMlZnsPL5QCJNXhF5KN40zeXHO2OyWvsFaMbnxGfoEAwN/zK1JdcAZ/wDKSEDB/wJ8usJ5U94Mr/Oflb+dKtpCfGu+FLuAFwAz/mkEQB20KIHWbLn0y1+f8hpOc1e9U4BZdoWEp04DleWEqJQIhK+gPkK2bdUJAMwB9bNctlEkqAwneNif9nO5X7tE7M6r/A5wWyxAH7ngf61yxkhnb6Yxi4vzv9B4Sze05FLmZtEcAE/dLmyUYpqPWOv3hhte91Umh1EZhRIeuF61Bn2r9qg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from MN0PR11MB5963.namprd11.prod.outlook.com (2603:10b6:208:372::10)
- by IA0PR11MB7956.namprd11.prod.outlook.com (2603:10b6:208:40b::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9052.14; Wed, 20 Aug
- 2025 15:58:14 +0000
-Received: from MN0PR11MB5963.namprd11.prod.outlook.com
- ([fe80::edb2:a242:e0b8:5ac9]) by MN0PR11MB5963.namprd11.prod.outlook.com
- ([fe80::edb2:a242:e0b8:5ac9%5]) with mapi id 15.20.9031.023; Wed, 20 Aug 2025
- 15:58:14 +0000
-From: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
-To: "jolsa@kernel.org" <jolsa@kernel.org>, "peterz@infradead.org"
-	<peterz@infradead.org>
-CC: "songliubraving@fb.com" <songliubraving@fb.com>, "alan.maguire@oracle.com"
-	<alan.maguire@oracle.com>, "mhiramat@kernel.org" <mhiramat@kernel.org>,
-	"andrii@kernel.org" <andrii@kernel.org>, "john.fastabend@gmail.com"
-	<john.fastabend@gmail.com>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "mingo@kernel.org" <mingo@kernel.org>,
-	"rostedt@goodmis.org" <rostedt@goodmis.org>, "David.Laight@aculab.com"
-	<David.Laight@aculab.com>, "yhs@fb.com" <yhs@fb.com>, "oleg@redhat.com"
-	<oleg@redhat.com>, "linux-trace-kernel@vger.kernel.org"
-	<linux-trace-kernel@vger.kernel.org>, "bpf@vger.kernel.org"
-	<bpf@vger.kernel.org>, "thomas@t-8ch.de" <thomas@t-8ch.de>,
-	"haoluo@google.com" <haoluo@google.com>, "x86@kernel.org" <x86@kernel.org>
-Subject: Re: [PATCHv6 perf/core 10/22] uprobes/x86: Add support to optimize
- uprobes
-Thread-Topic: [PATCHv6 perf/core 10/22] uprobes/x86: Add support to optimize
- uprobes
-Thread-Index: AQHcEc5LWQgc1WQMikmopLJo2+WQ07RrstqA
-Date: Wed, 20 Aug 2025 15:58:14 +0000
-Message-ID: <9ece46a40ae89925312398780c3bc3518f229aff.camel@intel.com>
-References: <20250720112133.244369-1-jolsa@kernel.org>
-	 <20250720112133.244369-11-jolsa@kernel.org>
-	 <20250819191515.GM3289052@noisy.programming.kicks-ass.net>
-	 <20250820123033.GL3245006@noisy.programming.kicks-ass.net>
-In-Reply-To: <20250820123033.GL3245006@noisy.programming.kicks-ass.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-user-agent: Evolution 3.44.4-0ubuntu2 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: MN0PR11MB5963:EE_|IA0PR11MB7956:EE_
-x-ms-office365-filtering-correlation-id: 2914035a-0de2-4270-4e99-08dde0025f13
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016|38070700018;
-x-microsoft-antispam-message-info: =?utf-8?B?cGp3UEJQMmI0WFg5ZkRNc042Sy9MRmYzWmthRUZBMUN4TUxyQlpWRllqdnlx?=
- =?utf-8?B?VlhtUjh0T2xMOE9uQVBnL1pwWmUvcCttR0hCRERQeWdQSC9tMmE2Wi85VXBF?=
- =?utf-8?B?aVhLK0RBQ0NReGx1bUplb0tQb2svNGRwd0RVWjNLZ2ErOGxESFBxdEVubms2?=
- =?utf-8?B?S0F0NUJIYzhENUdxcVJ5Q0NKbGo4ejRxNzlKQXV3c1dTZHJwWWdqR01ucHY3?=
- =?utf-8?B?NnZXWmJDZytidU9wbGVTam9UV04wQ1ZlY2hmNVhKckQzZzdmSm1reC9MWm8z?=
- =?utf-8?B?VG5xcDJLbVhTdW9CL2JsNHQwZG5IRlVFYXhReFYvTG5zeURCT2ZYMUp2ZHE4?=
- =?utf-8?B?YW1oTFY1SlNSNkl2MnVRZzhnOFpYNThYSSsyMG40QVA5a1F2Smp6blo4SVE0?=
- =?utf-8?B?eTlXLzh2aDNkc2Q2RzFQc0VmcE9ObDdFQUlMMG9uS3JCdUt6TmFkNnk5TXhQ?=
- =?utf-8?B?eXV6aHh5LzE3VDlkRFk3a3lZb0Z0YXlnU2RBbUtIb0tlcjNNaVVkaWFtY3I3?=
- =?utf-8?B?ZUNQdldkaVUxa1VKbVFJaysrNzBES3BPUTJ2TFQ4OWRuZVdWbGs4VjhvdWlz?=
- =?utf-8?B?b0Nsdnh0UUk3MmdkdlpnM1BJMDJiOC9VbTBha2IrMWozQm1FemdPR0dlcTQv?=
- =?utf-8?B?ajY5VVJOUnZOejI4NjlFemtvMXkyRmRtWkIzVVZCbmtISVR1VTV4MFJrUXNQ?=
- =?utf-8?B?bjlmMmNseXE2aEgwYWlKOUhMV0JhelZGYkVva2ZjR3Z3c0RBSEZ5Ykh3TmVw?=
- =?utf-8?B?ZjFTbDJhUnFCdCtUZUg0UEV5aVUzdHU2RnoxakwrcXhhall2dTRVK2Nsb0Jr?=
- =?utf-8?B?eXFLZGhLNWxPMXlxQ3hyK3V2b0FZcURUSEFLVE8ybVRqWU5nYlphRHlZMTFF?=
- =?utf-8?B?VXR0LzQ3RnZKNEFHRzhYN0tkVjlyWnNtenlsOEY1WWNQNEdlYTM0anpzNjNt?=
- =?utf-8?B?ejdSeExIUjhpNVJSdXFLWTRIcTRrdktLNWxZUnpnbHNsdTFQSWtiKy9qUGlj?=
- =?utf-8?B?OGVndExpWUZoSGVDNVgvMWkzT3dnTFhTMU5JbnhrYUlOQkZ4aEhlYS82MGFp?=
- =?utf-8?B?aDNpQzBhMWVZVnhxZW9CSWpNNzJ5TlRVVE9CaytiTUUzTmRvcFJCTHdteUh0?=
- =?utf-8?B?ckpDVWZnTktSS0NEdmVpVUl3Rk92Snh3V0hDMnAySU4yTmYzSHhNU0VtVm1V?=
- =?utf-8?B?aU02c3NwdlhRNExEd21BM0xvTHoyZnpObkhlSWY0ZWZleWd0TUx3dUhXcDBI?=
- =?utf-8?B?N3p0M3ZVRVVSMGtSeXoxT0ZRbEVBVFF4MGdHbysyMUlQYnU2WVVlK041Wk1L?=
- =?utf-8?B?MVJXUTV4LzN2akgvZ0NJYjhncUJUb29xSEErSWt0S0ZkQUc4NlAvTTQ0aHNK?=
- =?utf-8?B?K1FiRFl2blR6ODMzWW5aaDhlMXVIWWF5VU5MRzQ2d3VrK0hhZFJ3NW1DZ0lD?=
- =?utf-8?B?SFAxTGRSeEdKY2lyU2NJdHpaRkJZNnJiOVdEZ1k5SnBaMmpNR2VVQWlCMWpS?=
- =?utf-8?B?SWVTU2JGUXZIOFRsQUdlaTI4d0czbW5aVUpNaTBkUTNaRlM3UFFJbUxnLzcz?=
- =?utf-8?B?L0RTdjhRbUNWTEJrQXhUSk1BM0JKSm9mREI5dVVyeVRLbGxQbXBkc2JwcHJm?=
- =?utf-8?B?Tno4YXpnRm5RZUE1bTJLQWNqck5jc0dkMnFGUkdJNFRTODFLS1pQTEhEeHRt?=
- =?utf-8?B?cEIyQUlsVnQzQ3hxc1UyVi82MkdnS2tueDd0RjYvMGJqbkMxc3R2bEp5WmJB?=
- =?utf-8?B?Z0x4ZDcwcXM5cnIrbnU0bktUWFhwYndLVGRMcDFpWU1Nc0J5ekNyakVSWDBt?=
- =?utf-8?B?TUlFVlF0cWxFaFFOK2hwQndBZzk0VG90VEJaVU5DUWpQZUMxamxkQUxrR2Q3?=
- =?utf-8?B?ckt0a2pwa082a0c2dVczK1dXUFV1TGc1L2d6L2ZtNFdBMUNDM3YxL0VHcG9a?=
- =?utf-8?B?LzVVdmZwY2VlYjZTL3RKK3NmMEdTbWkyOFpSdnRwcS9xKzc4RS95a0t5c092?=
- =?utf-8?B?ME5MaWhSSTF3PT0=?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR11MB5963.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?Qm1zOFNpN245R0txcnIyQmFjTkVJV0x5OFJGcVNTTnFtYUxBc3VtdUJ4T2Ny?=
- =?utf-8?B?TmdVcDVYeDM0NU9LbllqWkdDamVFdlVMOXJlL2RnQnFtM3lPb2poOGduOXIv?=
- =?utf-8?B?MzFLVVRkZ3VTWlYwc3lwMFcyYXZhMEd0Q3RScFhIOW92Q1oyanY0THZTb0tp?=
- =?utf-8?B?WVhxbmRWWkNzSEVQWkVmL280M0duWUVLNmNVaTYvVzdETFFxdXE2d05oR3Y1?=
- =?utf-8?B?KzFuN1RickdWQkV1NTJreW0xZFdnTGVnaXFWMFQrYVNoQ08rS3M5ZFNFZGs2?=
- =?utf-8?B?L2Z1WjFISFBjZklUQ2NqbmtjV283OVVlUHg2TEZYZ1NjMDlrdGk5Q1FpQ3Zp?=
- =?utf-8?B?NHFOOTRKS0E2cHRieTl1VUtreCsxSHgrdDR1N2lGRE5TSFdtVEpaTURUOUVi?=
- =?utf-8?B?N2xvKzJUMUtLQm0vZHFOaGxYZ2JTL2IxTWtoOUk2bDlDVE13VjkvYzRhRjhD?=
- =?utf-8?B?N3lRK3VFQmNrQmwyS1h4bWozQzk1dGdSbkc3cHBVWHlWMUU3ZEV0cm5zQllh?=
- =?utf-8?B?RFJLRWliTnVZcHpwNkdiOEorNnZEMktrQ3A3Y0phRy9aS2lPTytYUSt3emtX?=
- =?utf-8?B?OE02U0hEYmF5ZDB3LzdyMGRwNW9PNkxnaVl3VnJmcjh5Qy81ZzRZZHFoaHE1?=
- =?utf-8?B?QmRyUEwzSUoyTGVVdWEvZlhzS3VmcHUxekFVWmVhWnpnbG1NMGtVUnJwcERT?=
- =?utf-8?B?Q3FrYXRuN214cWpEakFoUlZPQUVrbHBYZDRJRnBNTTArclMxSHJ3WkZRUFlk?=
- =?utf-8?B?TDk2c3Q3dUJETDIyaGNySE00ZU1sZEMzak5BYzlCaWpUWURFaW10dFpSY1hk?=
- =?utf-8?B?MHY5M3VuUHdJVHp5UytTNUFIK2ovZ2hLVk44ZXBQSjcrRjR4dW1PQ0dRb1Mz?=
- =?utf-8?B?S1VGZmU4ejlBSEZXMnlSakxwWG40OC9UNE5pLytEY3RHcEkvaithVzA0NWpI?=
- =?utf-8?B?bjJVWnI1a3duQTI1NWdVdWhWRHNWckNTaURMZWlJR09Gc1pvQ240dm12OHVK?=
- =?utf-8?B?RXQycVYwa1BFQW1nVFBBV3dKYWUxNjJFZ0VhMllDdWEzRWNFOGd2ZFBJUlR3?=
- =?utf-8?B?V0JGTXBWVUV0M3FJU3lUMmN3aEc0aDlkTnduV3JNQzBUdlppL2ZnT0FsU2ZY?=
- =?utf-8?B?cHR0dzJXNFhYbDhFMGFFazVNQUtNVnUvb3Z6dzdGdHRodFd6RnVRQjhMQlNG?=
- =?utf-8?B?cWVKYkRxNlVtOGFjRWVqZFV3TWtwVVJMbm10RDllTkNINjgxcEJIS2xRNlhJ?=
- =?utf-8?B?OU5HU1BTREgvRldQUDdacTRTODNnVWRDK3ZNZitoRURvU1FqdDZEVS8wYmtw?=
- =?utf-8?B?emw5ODFUK29DbFJmcXczbWJyTGRCS3JPTll1KzE4WXNIMkM5QnVCQitvLzRi?=
- =?utf-8?B?cjBESjRnUHJXS2lER0tOcUlhNGExMys2QnN3OThDRkNTK25zNkNrUzVScnVT?=
- =?utf-8?B?TElDY1AwdFoyYkxXVWdOWFU4ZzdvR00ya3dRWGJtSVRaL3djeFUvM0hNVU5Z?=
- =?utf-8?B?cGI0YnhFQW9TalZsQTV6dVVVTnNiOHc3MHBlcHFRcjhLUllLd3FaVmdWd0VV?=
- =?utf-8?B?RlZLNDkrUTdNb3c4OHdzUjM3eVBSRytiM0IrTUhPb0ExU3lxTHBXWm1Ob05w?=
- =?utf-8?B?ODIzNjFvUEVRc2hvb0FsREFDd21HNnBEOS9DVENrc1RUUHMrRmN2TEl2S3Va?=
- =?utf-8?B?ZXFBYmtCa3FtcGZrMk1wb3hSL2hNcC9FUWtJMWhmSWJtcWJoVUxxTnFCdlV1?=
- =?utf-8?B?Q2NIRUtSS2RBR1lEdWs4empqYjg2Q1l5MkY4OHE1RmVMZ0tRRkZNL0ZMWkZy?=
- =?utf-8?B?RUIxUE9QWVlRNnYyRFAxVThLYVk4RDRyL0R4eCszclp1Rm5IaGxnWUJQN1hv?=
- =?utf-8?B?OUk2OGUrc1ErbVNUUjlndUxiMm9tVUF6N29CcjBiRFVCNGpQUGwxVzFIYTds?=
- =?utf-8?B?akI2VW5wODRxZTdFVjY4blBtRTFXd0NEMGoycHJYem1uMGhWdGQ1WlpKaUJB?=
- =?utf-8?B?enZTcFZVTURSVHdpK1gxOThDRVgyQmRQZFFpU1huTjdtczN5R0lXeE1YVDU4?=
- =?utf-8?B?d0pJa1kySjZMalFmclBLMm9nUVYwUFBQQW1xdGpyazRUZkVXcDByWG9wOWtn?=
- =?utf-8?B?dDlSM09LZ2I5MjBsQlowWEZkNWt3citGYkQ1ZlpWR3AxNTN3UzBRS3lsNi9x?=
- =?utf-8?B?Vnc9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <FCA19D07701EAF43BD83EB6F06D04193@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hBlKRJvS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1755707790;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RvtlwWUqesIYENKIJjSR0UkLBe3hTSdGUFezNYbbvkY=;
+	b=hBlKRJvSPkJYzyggan/mj8184VofEA7StHs1O1Dd0qSMqH2FkaO7JpQ64xROGoMa5S2ODk
+	2lWV2u9U6TPdbKLDxOAagnFoswJIYQk1ZAtQRNXDbrVBrayva5qfpoIxzI168jJOAtlw65
+	zwjStre1Zg8+MoCzWrdCV9XA7PH+7JE=
+Received: from mail-yw1-f197.google.com (mail-yw1-f197.google.com
+ [209.85.128.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-102-M98xqKOVM9a4KktrPJBEYA-1; Wed, 20 Aug 2025 12:36:27 -0400
+X-MC-Unique: M98xqKOVM9a4KktrPJBEYA-1
+X-Mimecast-MFC-AGG-ID: M98xqKOVM9a4KktrPJBEYA_1755707787
+Received: by mail-yw1-f197.google.com with SMTP id 00721157ae682-71d603b2fa1so288137b3.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 20 Aug 2025 09:36:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755707787; x=1756312587;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RvtlwWUqesIYENKIJjSR0UkLBe3hTSdGUFezNYbbvkY=;
+        b=sgUFPiXRuMtur5OC4kgKcDU7L5eNcuoAMd6NZlr1C6HHYHDwvYRXWrPt9E5mhrPjHK
+         iN/QfjoWkIhPAmSF16VN8CRlpB68TVjxG9NLdQeytRfAv/EdbHfKloBYtTZuKoim1e0h
+         aAH3DCmCryIFQym66oRGd2GfADTVlcjbOS/uNDidfa/Hm1MUR4dPbvANKHrYEMihEBc6
+         pcibIPeAm+ffFyRVcoqrZnTx+NLUWmRJunPx5R+NXngtgVC5oD01u3I14xsUQOW9ktyj
+         A7FWp+r3erByecILMtrZYz7kbUBBhcsmwZGN5kwhp5rnn5/0n/qK4o0rdH0h73W8iS79
+         ++Bw==
+X-Forwarded-Encrypted: i=1; AJvYcCX5JDTeKK3Ol9jmDTHebcuHB1nFJ9l34WWalw05xrpfGo5ijjvbpQ+cSaSTD+9FoFTy22VJSxNd/HYON2cBH8Ga/1A=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywo9Q/dxoyV6unDazy9ZRXW/42ImTwrKPcoIbG8PyJx6Im858MU
+	Off6hS7tLqyigAnUom8BXWIvoo1KbL8Frnfk+zx/r12vqWeQeuTVhCTANTqLcZmpKOcXdhZzd5X
+	JfKQ7TwP1Kyk3nUMIEWG6ZlokDJ2Fa0pQkZd/gr2s9/8HDnfmB15D5ENgRF6OLQzFiv03s99zdt
+	7xNMJaisrctSg5OVYfuNPmHYAiSi0R04aKY+qTmN9wulSi497T
+X-Gm-Gg: ASbGncuZHF17mDhECPf+WcJsrbZ6vbKhp1bO5+OFse1JA++5+VvYnhmlEB2KIvXd4Ks
+	P8nkuJAxMl7EiuSGDwTNwNPXNLfW1PF917gCdCyePJR8+FECRKYHJdFlmAmFh3m0q7QPf2L+jhy
+	4laggDzBrBK55zUTkPaVXpAU8=
+X-Received: by 2002:a05:6902:124c:b0:e94:ffef:f759 with SMTP id 3f1490d57ef6-e94ffeffb71mr1803815276.0.1755707786371;
+        Wed, 20 Aug 2025 09:36:26 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG4HcRCJqL9vTQ/7ox3BvjpkrAei2D0oMgx2P0qN9HBDbCGUlv1atq6zFqXMh5NOKuFN79QdAgvfzzh1V38bA8=
+X-Received: by 2002:a05:6902:124c:b0:e94:ffef:f759 with SMTP id
+ 3f1490d57ef6-e94ffeffb71mr1803742276.0.1755707785709; Wed, 20 Aug 2025
+ 09:36:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR11MB5963.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2914035a-0de2-4270-4e99-08dde0025f13
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Aug 2025 15:58:14.5622
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: BzC46ss5NDG1yYIo23Yt5BTySIAHDWxKR9X+v17XCuvnqnC4HuniJ4Xu1Z/TB7nINLU6YuKX/Xwajnzdh0aegDzKObOKaVvxWJgI5hKVROI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR11MB7956
-X-OriginatorOrg: intel.com
+References: <20250819134205.622806-1-npache@redhat.com> <20250819134205.622806-3-npache@redhat.com>
+ <248d57e5-8cd5-408b-a6c8-970df6876b6c@lucifer.local>
+In-Reply-To: <248d57e5-8cd5-408b-a6c8-970df6876b6c@lucifer.local>
+From: Nico Pache <npache@redhat.com>
+Date: Wed, 20 Aug 2025 10:35:57 -0600
+X-Gm-Features: Ac12FXzjf4Igr1tHl9lliKUKtFV236tYdnecnsgkQbabWzhsGT93TnmDGE_Rezk
+Message-ID: <CAA1CXcC-7MudjF06JaJQUvKkNh4vPHTTeoMDBE-devotyFXjkA@mail.gmail.com>
+Subject: Re: [PATCH v10 02/13] introduce collapse_single_pmd to unify
+ khugepaged and madvise_collapse
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: linux-mm@kvack.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	david@redhat.com, ziy@nvidia.com, baolin.wang@linux.alibaba.com, 
+	Liam.Howlett@oracle.com, ryan.roberts@arm.com, dev.jain@arm.com, 
+	corbet@lwn.net, rostedt@goodmis.org, mhiramat@kernel.org, 
+	mathieu.desnoyers@efficios.com, akpm@linux-foundation.org, baohua@kernel.org, 
+	willy@infradead.org, peterx@redhat.com, wangkefeng.wang@huawei.com, 
+	usamaarif642@gmail.com, sunnanyong@huawei.com, vishal.moola@gmail.com, 
+	thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com, 
+	kirill.shutemov@linux.intel.com, aarcange@redhat.com, raquini@redhat.com, 
+	anshuman.khandual@arm.com, catalin.marinas@arm.com, tiwai@suse.de, 
+	will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz, cl@gentwo.org, 
+	jglisse@google.com, surenb@google.com, zokeefe@google.com, hannes@cmpxchg.org, 
+	rientjes@google.com, mhocko@suse.com, rdunlap@infradead.org, hughd@google.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: YlI-DtgQ3AaW9nA8A28YlUgnkphKXjTiIFHfWj6Q-YA_1755707787
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-SSdtIG5vdCBzdXJlIHdlIHNob3VsZCBvcHRpbWl6ZSBmb3Igc2hhZG93IHN0YWNrIHlldC4gVW5s
-ZXNzIGl0J3MgZWFzeSB0byB0aGluaw0KYWJvdXQuLi4gKGJlbG93KQ0KDQpPbiBXZWQsIDIwMjUt
-MDgtMjAgYXQgMTQ6MzAgKzAyMDAsIFBldGVyIFppamxzdHJhIHdyb3RlOg0KPiAtLS0gYS9hcmNo
-L3g4Ni9pbmNsdWRlL2FzbS9zaHN0ay5oDQo+ICsrKyBiL2FyY2gveDg2L2luY2x1ZGUvYXNtL3No
-c3RrLmgNCj4gQEAgLTIzLDYgKzIzLDggQEAgaW50IHNldHVwX3NpZ25hbF9zaGFkb3dfc3RhY2so
-c3RydWN0IGtzaQ0KPiDCoGludCByZXN0b3JlX3NpZ25hbF9zaGFkb3dfc3RhY2sodm9pZCk7DQo+
-IMKgaW50IHNoc3RrX3VwZGF0ZV9sYXN0X2ZyYW1lKHVuc2lnbmVkIGxvbmcgdmFsKTsNCj4gwqBi
-b29sIHNoc3RrX2lzX2VuYWJsZWQodm9pZCk7DQo+ICtpbnQgc2hzdGtfcG9wKHU2NCAqdmFsKTsN
-Cj4gK2ludCBzaHN0a19wdXNoKHU2NCB2YWwpOw0KPiDCoCNlbHNlDQo+IMKgc3RhdGljIGlubGlu
-ZSBsb25nIHNoc3RrX3ByY3RsKHN0cnVjdCB0YXNrX3N0cnVjdCAqdGFzaywgaW50IG9wdGlvbiwN
-Cj4gwqAJCQnCoMKgwqDCoMKgwqAgdW5zaWduZWQgbG9uZyBhcmcyKSB7IHJldHVybiAtRUlOVkFM
-OyB9DQo+IEBAIC0zNSw2ICszNyw4IEBAIHN0YXRpYyBpbmxpbmUgaW50IHNldHVwX3NpZ25hbF9z
-aGFkb3dfc3QNCj4gwqBzdGF0aWMgaW5saW5lIGludCByZXN0b3JlX3NpZ25hbF9zaGFkb3dfc3Rh
-Y2sodm9pZCkgeyByZXR1cm4gMDsgfQ0KPiDCoHN0YXRpYyBpbmxpbmUgaW50IHNoc3RrX3VwZGF0
-ZV9sYXN0X2ZyYW1lKHVuc2lnbmVkIGxvbmcgdmFsKSB7IHJldHVybiAwOyB9DQo+IMKgc3RhdGlj
-IGlubGluZSBib29sIHNoc3RrX2lzX2VuYWJsZWQodm9pZCkgeyByZXR1cm4gZmFsc2U7IH0NCj4g
-K3N0YXRpYyBpbmxpbmUgaW50IHNoc3RrX3BvcCh1NjQgKnZhbCkgeyByZXR1cm4gLUVOT1RTVVBQ
-OyB9DQo+ICtzdGF0aWMgaW5saW5lIGludCBzaHN0a19wdXNoKHU2NCB2YWwpIHsgcmV0dXJuIC1F
-Tk9UU1VQUDsgfQ0KPiDCoCNlbmRpZiAvKiBDT05GSUdfWDg2X1VTRVJfU0hBRE9XX1NUQUNLICov
-DQo+IMKgDQo+IMKgI2VuZGlmIC8qIF9fQVNTRU1CTEVSX18gKi8NCj4gLS0tIGEvYXJjaC94ODYv
-a2VybmVsL3Noc3RrLmMNCj4gKysrIGIvYXJjaC94ODYva2VybmVsL3Noc3RrLmMNCj4gQEAgLTI0
-Niw2ICsyNDYsNDYgQEAgc3RhdGljIHVuc2lnbmVkIGxvbmcgZ2V0X3VzZXJfc2hzdGtfYWRkcg0K
-PiDCoAlyZXR1cm4gc3NwOw0KPiDCoH0NCj4gwqANCj4gK2ludCBzaHN0a19wb3AodTY0ICp2YWwp
-DQo+ICt7DQo+ICsJaW50IHJldCA9IDA7DQo+ICsJdTY0IHNzcDsNCj4gKw0KPiArCWlmICghZmVh
-dHVyZXNfZW5hYmxlZChBUkNIX1NIU1RLX1NIU1RLKSkNCj4gKwkJcmV0dXJuIC1FTk9UU1VQUDsN
-Cj4gKw0KPiArCWZwcmVnc19sb2NrX2FuZF9sb2FkKCk7DQo+ICsNCj4gKwlyZG1zcnEoTVNSX0lB
-MzJfUEwzX1NTUCwgc3NwKTsNCj4gKwlpZiAodmFsICYmIGdldF91c2VyKCp2YWwsIChfX3VzZXIg
-dTY0ICopc3NwKSkNCj4gKwnCoMKgwqAgcmV0ID0gLUVGQVVMVDsNCj4gKwlzc3AgKz0gU1NfRlJB
-TUVfU0laRTsNCj4gKwl3cm1zcnEoTVNSX0lBMzJfUEwzX1NTUCwgc3NwKTsNCj4gKw0KPiArCWZw
-cmVnc191bmxvY2soKTsNCj4gKw0KPiArCXJldHVybiByZXQ7DQo+ICt9DQo+ICsNCj4gK2ludCBz
-aHN0a19wdXNoKHU2NCB2YWwpDQo+ICt7DQo+ICsJdTY0IHNzcDsNCj4gKwlpbnQgcmV0Ow0KPiAr
-DQo+ICsJaWYgKCFmZWF0dXJlc19lbmFibGVkKEFSQ0hfU0hTVEtfU0hTVEspKQ0KPiArCQlyZXR1
-cm4gLUVOT1RTVVBQOw0KPiArDQo+ICsJZnByZWdzX2xvY2tfYW5kX2xvYWQoKTsNCj4gKw0KPiAr
-CXJkbXNycShNU1JfSUEzMl9QTDNfU1NQLCBzc3ApOw0KPiArCXNzcCAtPSBTU19GUkFNRV9TSVpF
-Ow0KPiArCXdybXNycShNU1JfSUEzMl9QTDNfU1NQLCBzc3ApOw0KPiArCXJldCA9IHdyaXRlX3Vz
-ZXJfc2hzdGtfNjQoKF9fdXNlciB2b2lkICopc3NwLCB2YWwpOw0KDQpTaG91bGQgd2Ugcm9sZSBi
-YWNrIHNzcCBpZiB0aGVyZSBpcyBhIGZhdWx0Pw0KDQo+ICsJZnByZWdzX3VubG9jaygpOw0KPiAr
-DQo+ICsJcmV0dXJuIHJldDsNCj4gK30NCj4gKw0KPiDCoCNkZWZpbmUgU0hTVEtfREFUQV9CSVQg
-QklUKDYzKQ0KPiDCoA0KPiDCoHN0YXRpYyBpbnQgcHV0X3Noc3RrX2RhdGEodTY0IF9fdXNlciAq
-YWRkciwgdTY0IGRhdGEpDQo+IC0tLSBhL2FyY2gveDg2L2tlcm5lbC91cHJvYmVzLmMNCj4gKysr
-IGIvYXJjaC94ODYva2VybmVsL3Vwcm9iZXMuYw0KPiBAQCAtODA0LDcgKzgwNCw3IEBAIFNZU0NB
-TExfREVGSU5FMCh1cHJvYmUpDQo+IMKgew0KPiDCoAlzdHJ1Y3QgcHRfcmVncyAqcmVncyA9IHRh
-c2tfcHRfcmVncyhjdXJyZW50KTsNCj4gwqAJc3RydWN0IHVwcm9iZV9zeXNjYWxsX2FyZ3MgYXJn
-czsNCj4gLQl1bnNpZ25lZCBsb25nIGlwLCBzcDsNCj4gKwl1bnNpZ25lZCBsb25nIGlwLCBzcCwg
-c3JldDsNCj4gwqAJaW50IGVycjsNCj4gwqANCj4gwqAJLyogQWxsb3cgZXhlY3V0aW9uIG9ubHkg
-ZnJvbSB1cHJvYmUgdHJhbXBvbGluZXMuICovDQo+IEBAIC04MzEsNiArODMxLDkgQEAgU1lTQ0FM
-TF9ERUZJTkUwKHVwcm9iZSkNCj4gwqANCj4gwqAJc3AgPSByZWdzLT5zcDsNCj4gwqANCj4gKwlp
-ZiAoc2hzdGtfcG9wKCZzcmV0KSA9PSAwICYmIHNyZXQgIT0gYXJncy5yZXRhZGRyKQ0KPiArCQln
-b3RvIHNpZ2lsbDsNCj4gKw0KPiDCoAloYW5kbGVfc3lzY2FsbF91cHJvYmUocmVncywgcmVncy0+
-aXApOw0KPiDCoA0KPiDCoAkvKg0KPiBAQCAtODU1LDYgKzg1OCw5IEBAIFNZU0NBTExfREVGSU5F
-MCh1cHJvYmUpDQo+IMKgCWlmIChhcmdzLnJldGFkZHIgLSA1ICE9IHJlZ3MtPmlwKQ0KPiDCoAkJ
-YXJncy5yZXRhZGRyID0gcmVncy0+aXA7DQo+IMKgDQo+ICsJaWYgKHNoc3RrX3B1c2goYXJncy5y
-ZXRhZGRyKSA9PSAtRUZBVUxUKQ0KPiArCQlnb3RvIHNpZ2lsbDsNCj4gKw0KDQpBcmUgd2UgZWZm
-ZWN0aXZlbHkgYWxsb3dpbmcgYXJiaXRyYXJ5IHNoYWRvdyBzdGFjayBwdXNoIGhlcmU/IEkgc2Vl
-IHdlIG5lZWQgdG8NCmJlIGluIGluX3Vwcm9iZV90cmFtcG9saW5lKCksIGJ1dCB0aGVyZSBpcyBu
-byBtbWFwIGxvY2sgdGFrZW4sIHNvIGl0J3MgYSByYWN5DQpjaGVjay4gSSdtIHF1ZXN0aW9uaW5n
-IGlmIHRoZSBzZWN1cml0eSBwb3N0dXJlIHR3ZWFrIGlzIHdvcnRoIHRoaW5raW5nIGFib3V0IGZv
-cg0Kd2hhdGV2ZXIgdGhlIGxldmVsIG9mIGludGVyc2VjdGlvbiBvZiB1cHJvYmVzIHVzYWdlIGFu
-ZCBzaGFkb3cgc3RhY2sgaXMgdG9kYXkuDQoNCj4gwqAJcmVncy0+aXAgPSBpcDsNCj4gwqANCj4g
-wqAJZXJyID0gY29weV90b191c2VyKCh2b2lkIF9fdXNlciAqKXJlZ3MtPnNwLCAmYXJncywgc2l6
-ZW9mKGFyZ3MpKTsNCj4gQEAgLTExMjQsMTQgKzExMzAsNiBAQCB2b2lkIGFyY2hfdXByb2JlX29w
-dGltaXplKHN0cnVjdCBhcmNoX3VwDQo+IMKgCXN0cnVjdCBtbV9zdHJ1Y3QgKm1tID0gY3VycmVu
-dC0+bW07DQo+IMKgCXVwcm9iZV9vcGNvZGVfdCBpbnNuWzVdOw0KPiDCoA0KPiAtCS8qDQo+IC0J
-ICogRG8gbm90IG9wdGltaXplIGlmIHNoYWRvdyBzdGFjayBpcyBlbmFibGVkLCB0aGUgcmV0dXJu
-IGFkZHJlc3MgaGlqYWNrDQo+IC0JICogY29kZSBpbiBhcmNoX3VyZXRwcm9iZV9oaWphY2tfcmV0
-dXJuX2FkZHIgdXBkYXRlcyB3cm9uZyBmcmFtZSB3aGVuDQo+IC0JICogdGhlIGVudHJ5IHVwcm9i
-ZSBpcyBvcHRpbWl6ZWQgYW5kIHRoZSBzaGFkb3cgc3RhY2sgY3Jhc2hlcyB0aGUgYXBwLg0KPiAt
-CSAqLw0KPiAtCWlmIChzaHN0a19pc19lbmFibGVkKCkpDQo+IC0JCXJldHVybjsNCj4gLQ0KPiDC
-oAlpZiAoIXNob3VsZF9vcHRpbWl6ZShhdXByb2JlKSkNCj4gwqAJCXJldHVybjsNCj4gwqANCg0K
+On Wed, Aug 20, 2025 at 5:22=E2=80=AFAM Lorenzo Stoakes
+<lorenzo.stoakes@oracle.com> wrote:
+>
+> On Tue, Aug 19, 2025 at 07:41:54AM -0600, Nico Pache wrote:
+> > The khugepaged daemon and madvise_collapse have two different
+> > implementations that do almost the same thing.
+> >
+> > Create collapse_single_pmd to increase code reuse and create an entry
+> > point to these two users.
+> >
+> > Refactor madvise_collapse and collapse_scan_mm_slot to use the new
+> > collapse_single_pmd function. This introduces a minor behavioral change
+> > that is most likely an undiscovered bug. The current implementation of
+> > khugepaged tests collapse_test_exit_or_disable before calling
+> > collapse_pte_mapped_thp, but we weren't doing it in the madvise_collaps=
+e
+> > case. By unifying these two callers madvise_collapse now also performs
+> > this check.
+> >
+> > Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+> > Acked-by: David Hildenbrand <david@redhat.com>
+> > Signed-off-by: Nico Pache <npache@redhat.com>
+> > ---
+> >  mm/khugepaged.c | 94 ++++++++++++++++++++++++++-----------------------
+> >  1 file changed, 49 insertions(+), 45 deletions(-)
+> >
+> > diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+> > index 0e7bbadf03ee..b7b98aebb670 100644
+> > --- a/mm/khugepaged.c
+> > +++ b/mm/khugepaged.c
+> > @@ -2382,6 +2382,50 @@ static int collapse_scan_file(struct mm_struct *=
+mm, unsigned long addr,
+> >       return result;
+> >  }
+> >
+> > +/*
+> > + * Try to collapse a single PMD starting at a PMD aligned addr, and re=
+turn
+> > + * the results.
+> > + */
+> > +static int collapse_single_pmd(unsigned long addr,
+> > +                             struct vm_area_struct *vma, bool *mmap_lo=
+cked,
+> > +                             struct collapse_control *cc)
+> > +{
+> > +     int result =3D SCAN_FAIL;
+>
+> You assign result in all branches, so this can be uninitialised.
+ack, thanks.
+>
+> > +     struct mm_struct *mm =3D vma->vm_mm;
+> > +
+> > +     if (!vma_is_anonymous(vma)) {
+> > +             struct file *file =3D get_file(vma->vm_file);
+> > +             pgoff_t pgoff =3D linear_page_index(vma, addr);
+> > +
+> > +             mmap_read_unlock(mm);
+> > +             *mmap_locked =3D false;
+> > +             result =3D collapse_scan_file(mm, addr, file, pgoff, cc);
+> > +             fput(file);
+> > +             if (result =3D=3D SCAN_PTE_MAPPED_HUGEPAGE) {
+> > +                     mmap_read_lock(mm);
+> > +                     *mmap_locked =3D true;
+> > +                     if (collapse_test_exit_or_disable(mm)) {
+> > +                             mmap_read_unlock(mm);
+> > +                             *mmap_locked =3D false;
+> > +                             result =3D SCAN_ANY_PROCESS;
+> > +                             goto end;
+>
+> Don't love that in e.g. collapse_scan_mm_slot() we are using the mmap loc=
+k being
+> disabled as in effect an error code.
+>
+> Is SCAN_ANY_PROCESS correct here? Because in collapse_scan_mm_slot() you'=
+d
+> previously:
+https://lore.kernel.org/lkml/a881ed65-351a-469f-b625-a3066d0f1d5c@linux.ali=
+baba.com/
+Baolin brought up a good point a while back that if
+collapse_test_exit_or_disable returns true we will be breaking out of
+the loop and should change the return value to indicate this. So to
+combine the madvise breakout and the scan_slot breakout we drop the
+lock and return SCAN_ANY_PROCESS.
+>
+>         if (*result =3D=3D SCAN_PTE_MAPPED_HUGEPAGE) {
+>                 mmap_read_lock(mm);
+>                 if (collapse_test_exit_or_disable(mm))
+>                         goto breakouterloop;
+>                 ...
+>         }
+>
+> But now you're setting result =3D SCAN_ANY_PROCESS rather than
+> SCAN_PTE_MAPPED_HUGEPAGE in this instance?
+>
+> You don't mention that you're changing this, or at least explicitly enoug=
+h,
+> the commit message should state that you're changing this and explain why
+> it's ok.
+I do state it but perhaps I need to be more verbose! I will update the
+message to state we are also changing the result value too.
+>
+> This whole file is horrid, and it's kinda an aside, but I really wish we
+> had some comment going through each of the scan_result cases and explaini=
+ng
+> what each one meant.
+Yeah its been a huge pain to have to investigate what everything is
+supposed to mean, and I often have to go searching to confirm things.
+include/trace/events/huge_memory.h has a "good" summary of them
+>
+> Also I think:
+>
+>         return SCAN_ANY_PROCESS;
+>
+> Is better than:
+>
+>         result =3D SCAN_ANY_PROCESS;
+>         goto end;
+I agree! I will change that :)
+>         ...
+> end:
+>         return result;
+>
+> > +                     }
+> > +                     result =3D collapse_pte_mapped_thp(mm, addr,
+> > +                                                      !cc->is_khugepag=
+ed);
+>
+> Hm another change here, in the original code in collapse_scan_mm_slot()
+> this is:
+>
+>         *result =3D collapse_pte_mapped_thp(mm,
+>                 khugepaged_scan.address, false);
+>
+> Presumably collapse_scan_mm_slot() is only ever invoked with
+> cc->is_khugepaged?
+Correct, but the madvise_collapse calls this with true, hence why it
+now depends on the is_khugepaged variable. No functional change here.
+>
+> Maybe worth adding a VM_WARN_ON_ONCE(!cc->is_khugepaged) at the top of
+> collapse_scan_mm_slot() to assert this (and other places where your chang=
+e
+> assumes this to be the case).
+Ok I will investigate doing that but it would take a huge mistake to
+hit that assertion.
+>
+>
+> > +                     if (result =3D=3D SCAN_PMD_MAPPED)
+> > +                             result =3D SCAN_SUCCEED;
+> > +                     mmap_read_unlock(mm);
+> > +                     *mmap_locked =3D false;
+> > +             }
+> > +     } else {
+> > +             result =3D collapse_scan_pmd(mm, vma, addr, mmap_locked, =
+cc);
+> > +     }
+> > +     if (cc->is_khugepaged && result =3D=3D SCAN_SUCCEED)
+> > +             ++khugepaged_pages_collapsed;
+>
+> Similarly, presumably because collapse_scan_mm_slot() only ever invoked
+> khugepaged case this didn't have the cc->is_khugepaged check?
+Correct, we only increment this when its khugepaged, so we need to
+guard it so madvise collapse wont increment this.
+>
+> > +end:
+> > +     return result;
+> > +}
+>
+> There's a LOT of nesting going on here, I think we can simplify this a
+> lot. If we make the change I noted above re: returning SCAN_ANY_PROCESS< =
+we
+> can move the end label up a bit and avoid a ton of nesting, e.g.:
+Ah I like this much more, I will try to implement/test it.
+>
+> static int collapse_single_pmd(unsigned long addr,
+>                                 struct vm_area_struct *vma, bool *mmap_lo=
+cked,
+>                                 struct collapse_control *cc)
+> {
+>         struct mm_struct *mm =3D vma->vm_mm;
+>         struct file *file;
+>         pgoff_t pgoff;
+>         int result;
+>
+>         if (vma_is_anonymous(vma)) {
+>                 result =3D collapse_scan_pmd(mm, vma, addr, mmap_locked, =
+cc);
+>                 goto end:
+>         }
+>
+>         file =3D get_file(vma->vm_file);
+>         pgoff =3D linear_page_index(vma, addr);
+>
+>         mmap_read_unlock(mm);
+>         *mmap_locked =3D false;
+>         result =3D collapse_scan_file(mm, addr, file, pgoff, cc);
+>         fput(file);
+>         if (result !=3D SCAN_PTE_MAPPED_HUGEPAGE)
+>                 goto end;
+>
+>         mmap_read_lock(mm);
+>         *mmap_locked =3D true;
+>         if (collapse_test_exit_or_disable(mm)) {
+>                 mmap_read_unlock(mm);
+>                 *mmap_locked =3D false;
+>                 return SCAN_ANY_PROCESS;
+>         }
+>         result =3D collapse_pte_mapped_thp(mm, addr, !cc->is_khugepaged);
+>         if (result =3D=3D SCAN_PMD_MAPPED)
+>                 result =3D SCAN_SUCCEED;
+>         mmap_read_unlock(mm);
+>         *mmap_locked =3D false;
+>
+> end:
+>         if (cc->is_khugepaged && result =3D=3D SCAN_SUCCEED)
+>                 ++khugepaged_pages_collapsed;
+>
+>         return result;
+> }
+>
+> (untested, thrown together so do double check!)
+>
+> > +
+> >  static unsigned int collapse_scan_mm_slot(unsigned int pages, int *res=
+ult,
+> >                                           struct collapse_control *cc)
+> >       __releases(&khugepaged_mm_lock)
+> > @@ -2455,34 +2499,9 @@ static unsigned int collapse_scan_mm_slot(unsign=
+ed int pages, int *result,
+> >                       VM_BUG_ON(khugepaged_scan.address < hstart ||
+> >                                 khugepaged_scan.address + HPAGE_PMD_SIZ=
+E >
+> >                                 hend);
+> > -                     if (!vma_is_anonymous(vma)) {
+> > -                             struct file *file =3D get_file(vma->vm_fi=
+le);
+> > -                             pgoff_t pgoff =3D linear_page_index(vma,
+> > -                                             khugepaged_scan.address);
+> > -
+> > -                             mmap_read_unlock(mm);
+> > -                             mmap_locked =3D false;
+> > -                             *result =3D collapse_scan_file(mm,
+> > -                                     khugepaged_scan.address, file, pg=
+off, cc);
+> > -                             fput(file);
+> > -                             if (*result =3D=3D SCAN_PTE_MAPPED_HUGEPA=
+GE) {
+> > -                                     mmap_read_lock(mm);
+> > -                                     if (collapse_test_exit_or_disable=
+(mm))
+> > -                                             goto breakouterloop;
+> > -                                     *result =3D collapse_pte_mapped_t=
+hp(mm,
+> > -                                             khugepaged_scan.address, =
+false);
+> > -                                     if (*result =3D=3D SCAN_PMD_MAPPE=
+D)
+> > -                                             *result =3D SCAN_SUCCEED;
+> > -                                     mmap_read_unlock(mm);
+> > -                             }
+> > -                     } else {
+> > -                             *result =3D collapse_scan_pmd(mm, vma,
+> > -                                     khugepaged_scan.address, &mmap_lo=
+cked, cc);
+> > -                     }
+> > -
+> > -                     if (*result =3D=3D SCAN_SUCCEED)
+> > -                             ++khugepaged_pages_collapsed;
+> >
+> > +                     *result =3D collapse_single_pmd(khugepaged_scan.a=
+ddress,
+> > +                                                     vma, &mmap_locked=
+, cc);
+> >                       /* move to next address */
+> >                       khugepaged_scan.address +=3D HPAGE_PMD_SIZE;
+> >                       progress +=3D HPAGE_PMD_NR;
+> > @@ -2799,34 +2818,19 @@ int madvise_collapse(struct vm_area_struct *vma=
+, unsigned long start,
+> >               mmap_assert_locked(mm);
+> >               memset(cc->node_load, 0, sizeof(cc->node_load));
+> >               nodes_clear(cc->alloc_nmask);
+> > -             if (!vma_is_anonymous(vma)) {
+> > -                     struct file *file =3D get_file(vma->vm_file);
+> > -                     pgoff_t pgoff =3D linear_page_index(vma, addr);
+> >
+> > -                     mmap_read_unlock(mm);
+> > -                     mmap_locked =3D false;
+> > -                     result =3D collapse_scan_file(mm, addr, file, pgo=
+ff, cc);
+> > -                     fput(file);
+> > -             } else {
+> > -                     result =3D collapse_scan_pmd(mm, vma, addr,
+> > -                                                &mmap_locked, cc);
+> > -             }
+> > +             result =3D collapse_single_pmd(addr, vma, &mmap_locked, c=
+c);
+> > +
+>
+> Ack the fact you noted the behaviour change re:
+> collapse_test_exit_or_disable() that seems fine.
+>
+> >               if (!mmap_locked)
+> >                       *lock_dropped =3D true;
+> >
+> > -handle_result:
+> >               switch (result) {
+> >               case SCAN_SUCCEED:
+> >               case SCAN_PMD_MAPPED:
+> >                       ++thps;
+> >                       break;
+> > -             case SCAN_PTE_MAPPED_HUGEPAGE:
+> > -                     BUG_ON(mmap_locked);
+> > -                     mmap_read_lock(mm);
+> > -                     result =3D collapse_pte_mapped_thp(mm, addr, true=
+);
+> > -                     mmap_read_unlock(mm);
+> > -                     goto handle_result;
+>
+> One thing that differs with new code her is we filter SCAN_PMD_MAPPED to
+> SCAN_SUCCEED.
+>
+> I was about to say 'but ++thps - is this correct' but now I realise this
+> was looping back on itself with a goto to do just that... ugh ye gads.
+>
+> Anwyay that's fine because it doesn't change anything.
+>
+> Re: switch statement in general, again would be good to always have each
+> scan possibility in switch statements, but perhaps given so many not
+> practical :)
+
+Yeah it may be worth investigating for future changes I have for
+khugepaged (including the new switch statement I implement later and
+you commented on)
+>
+> (that way the compiler warns on missing a newly added enum val)
+>
+> >               /* Whitelisted set of results where continuing OK */
+> > +             case SCAN_PTE_MAPPED_HUGEPAGE:
+> >               case SCAN_PMD_NULL:
+> >               case SCAN_PTE_NON_PRESENT:
+> >               case SCAN_PTE_UFFD_WP:
+> > --
+
+Thanks for the review :)
+
+-- Nico
+> > 2.50.1
+> >
+>
+
