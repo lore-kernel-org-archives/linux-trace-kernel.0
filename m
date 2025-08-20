@@ -1,132 +1,102 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D4D6EACD;
-	Wed, 20 Aug 2025 01:05:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 010401A5BBE;
+	Wed, 20 Aug 2025 01:07:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755651943; cv=none; b=g0H/X8VEbd7XPdJKvRNqEPLVi7PYxJTDyc9Rc8kN6MBGrbugfrDEzMDGVmwY6LIDP3Mjz4I4lOHTtZulxr2rVjLiwK+uaKh0Xj9eH16LBM9gxL342DRBp0VPzgu8uw7dmiZ8/Nab+czfvMv4jAQn759pHqr8TKceH9tO3SJw7aM=
+	t=1755652058; cv=none; b=c3COniuCV35winPC6n3mQmYWWK26HKFwQbW8+30Z23FiV7F/r48odMVB0aEvovtL0clV34BQvSZCQUlhTCMTci3r/6uuLqtyQSMK7ypFls/HK4KsrnVAqz9JXS+5K73wO0GfSf4iaHXICcWcRM2l5q0MyK9DnEX9w+3cTLEUK68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755651943; c=relaxed/simple;
-	bh=XhlmI8i+KqUK5uZkc2v9r1gmC5W7iW4f0P6CkJxGuoE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XZTfn+wgXXz2frQE88uWIRIDRVbas0C0kPK0iNIyM1tPkiur3OLgbZL5wk3490ZRyL7blhEI7nizwQ92YV8mv38xrAVgcjCt27qrAx6J6ybGk815Hobbo8LuuRkKlQ/Cja9QxjHtI7BSKQft6uwk8cZ+wzjlvoKoVeRvUh/rC9o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf10.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay09.hostedemail.com (Postfix) with ESMTP id E0CA282E7C;
-	Wed, 20 Aug 2025 01:05:39 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf10.hostedemail.com (Postfix) with ESMTPA id D175E40;
-	Wed, 20 Aug 2025 01:05:37 +0000 (UTC)
-Date: Tue, 19 Aug 2025 21:05:38 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Tengda Wu <wutengda@huaweicloud.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next 2/2] ftrace: Fix potential use-after-free for
- set_ftrace_{notrace,filter} files
-Message-ID: <20250819210538.29ae29cb@gandalf.local.home>
-In-Reply-To: <20250813023044.2121943-3-wutengda@huaweicloud.com>
-References: <20250813023044.2121943-1-wutengda@huaweicloud.com>
-	<20250813023044.2121943-3-wutengda@huaweicloud.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1755652058; c=relaxed/simple;
+	bh=7k1sO4iEhovzZCGouVmIOXCPWu2hqIEKv/p30wza8KM=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=Peg9/ieHxmEuxOb6ukW6SA41vNZjM41offM0Sa5yqCm/SjVpc/mNOjwA1xBo2lAO5FU1E0I64SC3pB2nYuBJX7ig/h/WqJZhsVYqB6sYn3/mawijjRm+E/CkwU5i/Ly3WkgvnYj0qsQcfdtuoL0DpFUbs0Hb6SAb7lxGDI21ZMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jm+YZY6+; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jm+YZY6+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55680C4CEF1;
+	Wed, 20 Aug 2025 01:07:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755652055;
+	bh=7k1sO4iEhovzZCGouVmIOXCPWu2hqIEKv/p30wza8KM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=jm+YZY6+eKEYj/dwKSFp7pLWmr4rLJJ+lwO++Ltrmw8KhMyMguxRDbf/jHiIyl/jb
+	 XRh3AtGTizFqz7pBQFHA1f9pwFiXWgmwaZkYVjvNCtT7PaDh9xtL2URYQ7vARarjb8
+	 rtKaM1eJFl9yLS+i/ncdspn+Fwd0+HVjDn1h4wUsRGetXBR8dCz80At8Qngi6uSoD3
+	 aMX9RnMBnWpOH0TBf6WA3MJ1YwTIsagJ1YrUSyErW5ReGUMVmE5rvccQSZ6jf6XZfU
+	 cuGJ8mmym1nPbWwFi90Sjl17oIRXs+F2lOosccdSBP4TS4p5KERRs9ESK9BLO8GY/f
+	 MVcLUl0XvQ3PQ==
+Date: Wed, 20 Aug 2025 10:07:31 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Ben Hutchings <benh@debian.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] bootconfig: Fix negative seeks on 32-bit with LFS
+ enabled
+Message-Id: <20250820100731.df29750fa21d864d18169d5c@kernel.org>
+In-Reply-To: <aKHlevxeg6Y7UQrz@decadent.org.uk>
+References: <aKHlevxeg6Y7UQrz@decadent.org.uk>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: tknhr8xd9kmhfrtd4qpq8wgr5njp6phq
-X-Rspamd-Server: rspamout08
-X-Rspamd-Queue-Id: D175E40
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19lPzznN9BqkSLbKjRzTc1GmmBmEI/30QY=
-X-HE-Tag: 1755651937-782463
-X-HE-Meta: U2FsdGVkX19bTUORDxUnSTsZJ1dAnyRqe0JsY1IHA3u5lgf2VivYtch8t27OpslgaN8whTDXN/QU2cR68Jw9TeF8M16V1qMbkzBzYRvUdXE/UJ8etxt7CrubtJCl878LjlrxXQUG1b7hKJTVKSRoD092tGRqJee3pWDR7sH4v7GQCONALfAxTiN2yZV9szYr5hvBVmPBApDnH8zm7kNZoxx+iWoVpkFbKug/EhriJpR+yXtyVaEG/mqF+hdS+Wjxwasxa04hd5u10gtZcpzOH0Csb1alyqPZoNWShZIjyXG2eHEsluU8mliAyj4QFjgw7iOs6++q4/yd7mk///mRywI4qF4B6bqRK548AsNoDyZHtoLsWWWRY1vpkTmWMg7H58nloV4wKtw96hpHaq1XVBpUvvsniUpHUByXqeMsok0=
 
-On Wed, 13 Aug 2025 02:30:44 +0000
-Tengda Wu <wutengda@huaweicloud.com> wrote:
+On Sun, 17 Aug 2025 16:21:46 +0200
+Ben Hutchings <benh@debian.org> wrote:
+
+> Commit 26dda5769509 "tools/bootconfig: Cleanup bootconfig footer size
+> calculations" replaced some expressions of type int with the
+> BOOTCONFIG_FOOTER_SIZE macro, which expands to an expression of type
+> size_t, which is unsigned.
+> 
+> On 32-bit architectures with LFS enabled (i.e. off_t is 64-bit), the
+> seek offset of -BOOTCONFIG_FOOTER_SIZE now turns into a positive
+> value.
+
+Oops, I thought the sign bit would be extended.
+
+> 
+> Fix this by casting the size to off_t before negating it.
+> 
+> Just in case someone changes BOOTCONFIG_MAGIC_LEN to have type size_t
+> later, do the same thing to the seek offset of -BOOTCONFIG_MAGIC_LEN.
+> 
+> Fixes: 26dda5769509 ("tools/bootconfig: Cleanup bootconfig footer size calculations")
+> Signed-off-by: Ben Hutchings <benh@debian.org>
+
+Thanks for the fix!
+
+> ---
+>  tools/bootconfig/main.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/bootconfig/main.c b/tools/bootconfig/main.c
+> index 57c669d2aa90..55d59ed507d5 100644
+> --- a/tools/bootconfig/main.c
+> +++ b/tools/bootconfig/main.c
+> @@ -193,7 +193,7 @@ static int load_xbc_from_initrd(int fd, char **buf)
+>  	if (stat.st_size < BOOTCONFIG_FOOTER_SIZE)
+>  		return 0;
+>  
+> -	if (lseek(fd, -BOOTCONFIG_MAGIC_LEN, SEEK_END) < 0)
+> +	if (lseek(fd, -(off_t)BOOTCONFIG_MAGIC_LEN, SEEK_END) < 0)
+>  		return pr_errno("Failed to lseek for magic", -errno);
+>  
+>  	if (read(fd, magic, BOOTCONFIG_MAGIC_LEN) < 0)
+> @@ -203,7 +203,7 @@ static int load_xbc_from_initrd(int fd, char **buf)
+>  	if (memcmp(magic, BOOTCONFIG_MAGIC, BOOTCONFIG_MAGIC_LEN) != 0)
+>  		return 0;
+>  
+> -	if (lseek(fd, -BOOTCONFIG_FOOTER_SIZE, SEEK_END) < 0)
+> +	if (lseek(fd, -(off_t)BOOTCONFIG_FOOTER_SIZE, SEEK_END) < 0)
+>  		return pr_errno("Failed to lseek for size", -errno);
+>  
+>  	if (read(fd, &size, sizeof(uint32_t)) < 0)
 
 
-> Since the reader's hash is always tied to its file descriptor (fd),
-> the writer cannot directly manage the reader's hash. To fix this,
-> introduce a refcount for ftrace_hash, initialized to 1. The count
-> is incremented only when a reader opens it, and decremented when
-> either a reader or writer releases it, thereby controlling the timing
-> of ftrace_hash deallocation.
-
-Hmm, I think the code that the first patch touches is the issue here too.
-
-Instead of doing all these extra hacks, we should simply copy the hash for
-read too.
-
-That is, the real fix for both patches is this:
-
--- Steve
-
-From: Steven Rostedt <rostedt@goodmis.org>
-Subject: [PATCH] ftrace: Also allocate hash for reading of filter files
-
-Currently the reader of set_ftrace_filter and set_ftrace_notrace just adds
-the pointer to the global tracer hash to its iterator. Unlike the writer
-that allocates a copy of the hash, the reader keeps the pointer to the
-filter hashes. This is problematic because this pointer is static across
-function calls that release the locks that can update the global tracer
-hashes. This can cause UAF and similar bugs.
-
-Allocate the hash for reading the filter files like it is done for the
-writers. This not only fixes UAF bugs, but also makes the code a bit
-simpler as it doesn't have to differentiate when to free the iterator's
-hash between writers and readers.
-
-Cc: stable@vger.kernel.org
-Fixes: c20489dad156 ("ftrace: Assign iter->hash to filter or notrace hashes on seq read")
-Closes: https://lore.kernel.org/all/20250813023044.2121943-1-wutengda@huaweicloud.com/
-Reported-by: Tengda Wu <wutengda@huaweicloud.com>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/ftrace.c | 16 +++++++---------
- 1 file changed, 7 insertions(+), 9 deletions(-)
-
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 00b76d450a89..f992a5eb878e 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -4661,13 +4661,14 @@ ftrace_regex_open(struct ftrace_ops *ops, int flag,
- 	        } else {
- 			iter->hash = alloc_and_copy_ftrace_hash(size_bits, hash);
- 		}
-+	} else {
-+		iter->hash = alloc_and_copy_ftrace_hash(hash->size_bits, hash);
-+	}
- 
--		if (!iter->hash) {
--			trace_parser_put(&iter->parser);
--			goto out_unlock;
--		}
--	} else
--		iter->hash = hash;
-+	if (!iter->hash) {
-+		trace_parser_put(&iter->parser);
-+		goto out_unlock;
-+	}
- 
- 	ret = 0;
- 
-@@ -6543,9 +6544,6 @@ int ftrace_regex_release(struct inode *inode, struct file *file)
- 		ftrace_hash_move_and_update_ops(iter->ops, orig_hash,
- 						      iter->hash, filter_hash);
- 		mutex_unlock(&ftrace_lock);
--	} else {
--		/* For read only, the hash is the ops hash */
--		iter->hash = NULL;
- 	}
- 
- 	mutex_unlock(&iter->ops->func_hash->regex_lock);
 -- 
-2.50.1
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
