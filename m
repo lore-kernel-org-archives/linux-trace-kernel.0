@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 010401A5BBE;
-	Wed, 20 Aug 2025 01:07:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C33D13A3F7;
+	Wed, 20 Aug 2025 01:20:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755652058; cv=none; b=c3COniuCV35winPC6n3mQmYWWK26HKFwQbW8+30Z23FiV7F/r48odMVB0aEvovtL0clV34BQvSZCQUlhTCMTci3r/6uuLqtyQSMK7ypFls/HK4KsrnVAqz9JXS+5K73wO0GfSf4iaHXICcWcRM2l5q0MyK9DnEX9w+3cTLEUK68=
+	t=1755652810; cv=none; b=VyJ5oCNXAU7LWKdZ/BOaeRUCg+YyMXSPadZnaOShdkj03TdLIbIDyIjrJu+jAlJQJeZ82lk4SQPgtGHt+1fIbmZSIEZ1UPROhVyg1J+EDBxNc5qeBDE3N1jzQMN/Uh09qWuIx9Olb07ooutNL715cBMh1K3PtbDH+N4WCYTi/rw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755652058; c=relaxed/simple;
-	bh=7k1sO4iEhovzZCGouVmIOXCPWu2hqIEKv/p30wza8KM=;
+	s=arc-20240116; t=1755652810; c=relaxed/simple;
+	bh=63sILRJcItw4yl8FfiixuWKpnQxVxwP7O5fDtUt+k6I=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=Peg9/ieHxmEuxOb6ukW6SA41vNZjM41offM0Sa5yqCm/SjVpc/mNOjwA1xBo2lAO5FU1E0I64SC3pB2nYuBJX7ig/h/WqJZhsVYqB6sYn3/mawijjRm+E/CkwU5i/Ly3WkgvnYj0qsQcfdtuoL0DpFUbs0Hb6SAb7lxGDI21ZMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jm+YZY6+; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=U0BfnwrGq88fxNJcQW4s6pAZxqvafspq2saO2rYNa/xxoNlFyTYvYPgMVsNze+G25znJEAdULLE8cb1O4vItIPEtwSta8EnV+mfTOp9YwTWkGghJiEyUh+i4pIl5Ns5PMlpzCEj/5anROsM6y4NdgHrqpA5uDYhjqYR2ysndREE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cURs7ZyT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jm+YZY6+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55680C4CEF1;
-	Wed, 20 Aug 2025 01:07:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cURs7ZyT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B352C4CEF1;
+	Wed, 20 Aug 2025 01:20:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755652055;
-	bh=7k1sO4iEhovzZCGouVmIOXCPWu2hqIEKv/p30wza8KM=;
+	s=k20201202; t=1755652809;
+	bh=63sILRJcItw4yl8FfiixuWKpnQxVxwP7O5fDtUt+k6I=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=jm+YZY6+eKEYj/dwKSFp7pLWmr4rLJJ+lwO++Ltrmw8KhMyMguxRDbf/jHiIyl/jb
-	 XRh3AtGTizFqz7pBQFHA1f9pwFiXWgmwaZkYVjvNCtT7PaDh9xtL2URYQ7vARarjb8
-	 rtKaM1eJFl9yLS+i/ncdspn+Fwd0+HVjDn1h4wUsRGetXBR8dCz80At8Qngi6uSoD3
-	 aMX9RnMBnWpOH0TBf6WA3MJ1YwTIsagJ1YrUSyErW5ReGUMVmE5rvccQSZ6jf6XZfU
-	 cuGJ8mmym1nPbWwFi90Sjl17oIRXs+F2lOosccdSBP4TS4p5KERRs9ESK9BLO8GY/f
-	 MVcLUl0XvQ3PQ==
-Date: Wed, 20 Aug 2025 10:07:31 +0900
+	b=cURs7ZyTaPZ+ZyF2B216Au8BxU/TXYzL+uKyyuUHGBwJKIYgnmX+8rQWg7GKNHmRu
+	 i28Use60RBsvN5hUI1y2lIEcv5VODmYecHblrYZGaary2oMDvTAW78ZBXr057oaCoZ
+	 pyQkhMwwfEYUsxEy/I1tBwVq2BhIFvIom05KWrdTaJRDEONy4OI2dGtwwjloyEFDTt
+	 EPzk9itvNchQM5GWl/qiGumDoIEnNftrOpsefSp3YHlfbYlJqP8q4XU1gxCO84DE+X
+	 XpbhM3d1Q2afe60uEOncr2vF4lwf5SzzLaLAJv4g8RQxlovWdYdJ+JfMOQfH4QmmY8
+	 sX5nu363SX3og==
+Date: Wed, 20 Aug 2025 10:20:05 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Ben Hutchings <benh@debian.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] bootconfig: Fix negative seeks on 32-bit with LFS
- enabled
-Message-Id: <20250820100731.df29750fa21d864d18169d5c@kernel.org>
-In-Reply-To: <aKHlevxeg6Y7UQrz@decadent.org.uk>
-References: <aKHlevxeg6Y7UQrz@decadent.org.uk>
+To: Ye Weihua <yeweihua4@huawei.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Mark Rutland
+ <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ <linux-trace-kernel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH -next] trace/fgraph: Fix the warning caused by missing
+ unregister notifier
+Message-Id: <20250820102005.a6bcf7787d5c6e9d10beb0db@kernel.org>
+In-Reply-To: <20250818073332.3890629-1-yeweihua4@huawei.com>
+References: <20250818073332.3890629-1-yeweihua4@huawei.com>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -45,57 +47,65 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Sun, 17 Aug 2025 16:21:46 +0200
-Ben Hutchings <benh@debian.org> wrote:
+On Mon, 18 Aug 2025 07:33:32 +0000
+Ye Weihua <yeweihua4@huawei.com> wrote:
 
-> Commit 26dda5769509 "tools/bootconfig: Cleanup bootconfig footer size
-> calculations" replaced some expressions of type int with the
-> BOOTCONFIG_FOOTER_SIZE macro, which expands to an expression of type
-> size_t, which is unsigned.
+> This warning was triggered during testing on v6.16:
 > 
-> On 32-bit architectures with LFS enabled (i.e. off_t is 64-bit), the
-> seek offset of -BOOTCONFIG_FOOTER_SIZE now turns into a positive
-> value.
-
-Oops, I thought the sign bit would be extended.
-
+> notifier callback ftrace_suspend_notifier_call already registered
+> WARNING: CPU: 2 PID: 86 at kernel/notifier.c:23 notifier_chain_register+0x44/0xb0
+> ...
+> Call Trace:
+>  <TASK>
+>  blocking_notifier_chain_register+0x34/0x60
+>  register_ftrace_graph+0x330/0x410
+>  ftrace_profile_write+0x1e9/0x340
+>  vfs_write+0xf8/0x420
+>  ? filp_flush+0x8a/0xa0
+>  ? filp_close+0x1f/0x30
+>  ? do_dup2+0xaf/0x160
+>  ksys_write+0x65/0xe0
+>  do_syscall_64+0xa4/0x260
+>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
 > 
-> Fix this by casting the size to off_t before negating it.
+> When writing to the function_profile_enabled interface, the notifier was
+> not unregistered after start_graph_tracing failed, causing a warning the
+> next time function_profile_enabled was written.
 > 
-> Just in case someone changes BOOTCONFIG_MAGIC_LEN to have type size_t
-> later, do the same thing to the seek offset of -BOOTCONFIG_MAGIC_LEN.
+> Fixed by adding unregister_pm_notifier in the exception path.
 > 
-> Fixes: 26dda5769509 ("tools/bootconfig: Cleanup bootconfig footer size calculations")
-> Signed-off-by: Ben Hutchings <benh@debian.org>
 
-Thanks for the fix!
+This looks good to me.
 
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+Thanks!
+
+> Fixes: 4a2b8dda3f870 ("tracing/function-graph-tracer: fix a regression while suspend to disk")
+> Signed-off-by: Ye Weihua <yeweihua4@huawei.com>
 > ---
->  tools/bootconfig/main.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  kernel/trace/fgraph.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/tools/bootconfig/main.c b/tools/bootconfig/main.c
-> index 57c669d2aa90..55d59ed507d5 100644
-> --- a/tools/bootconfig/main.c
-> +++ b/tools/bootconfig/main.c
-> @@ -193,7 +193,7 @@ static int load_xbc_from_initrd(int fd, char **buf)
->  	if (stat.st_size < BOOTCONFIG_FOOTER_SIZE)
->  		return 0;
+> diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
+> index c5b207992fb4..dac2d58f3949 100644
+> --- a/kernel/trace/fgraph.c
+> +++ b/kernel/trace/fgraph.c
+> @@ -1391,10 +1391,11 @@ int register_ftrace_graph(struct fgraph_ops *gops)
+>  error:
+>  	if (ret) {
+>  		ftrace_graph_active--;
+>  		gops->saved_func = NULL;
+>  		fgraph_lru_release_index(i);
+> +		unregister_pm_notifier(&ftrace_suspend_notifier);
+>  	}
+>  	return ret;
+>  }
 >  
-> -	if (lseek(fd, -BOOTCONFIG_MAGIC_LEN, SEEK_END) < 0)
-> +	if (lseek(fd, -(off_t)BOOTCONFIG_MAGIC_LEN, SEEK_END) < 0)
->  		return pr_errno("Failed to lseek for magic", -errno);
->  
->  	if (read(fd, magic, BOOTCONFIG_MAGIC_LEN) < 0)
-> @@ -203,7 +203,7 @@ static int load_xbc_from_initrd(int fd, char **buf)
->  	if (memcmp(magic, BOOTCONFIG_MAGIC, BOOTCONFIG_MAGIC_LEN) != 0)
->  		return 0;
->  
-> -	if (lseek(fd, -BOOTCONFIG_FOOTER_SIZE, SEEK_END) < 0)
-> +	if (lseek(fd, -(off_t)BOOTCONFIG_FOOTER_SIZE, SEEK_END) < 0)
->  		return pr_errno("Failed to lseek for size", -errno);
->  
->  	if (read(fd, &size, sizeof(uint32_t)) < 0)
+>  void unregister_ftrace_graph(struct fgraph_ops *gops)
+> -- 
+> 2.34.1
+> 
 
 
 -- 
