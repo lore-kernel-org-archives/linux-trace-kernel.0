@@ -1,87 +1,70 @@
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lithops.sigma-star.at (mailout.nod.at [116.203.167.152])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA0B72D94B9
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 20 Aug 2025 08:11:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29D9B2D838A;
+	Wed, 20 Aug 2025 08:12:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.167.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755677498; cv=none; b=V6rj5WGMp1Pmi+QL8NYmUm0NZNSU+xg5QQJAiR3qOWkzTCHtKYqX8TI+7ZIkl3qviAZyP0LT9xjuEdBz0GQ1wghTvWdx7FOdaG6BV/fzkMD/Zvn1uGyhlgKwIUgpEh6O6Kq5Y+t1pqV7XJK7bOKgXrQEkbIoLmJKtEqRG/UCDL8=
+	t=1755677526; cv=none; b=ZoEs2Y5ugaNMNbh6H85YK0eEn7JgZiUDWAcVURmnEoJqQn3Zl9FniSNDZj1oeR/NL+lShBYg2OsGL5T6FJ+36bGVp3DlWWWpht46tn84qjn/2fe3EUwEU4ywpfdSMogjvEYIe4L7sErbJcqICZ0ZtjKV3Ao2OD5BZyPmE8t5mmU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755677498; c=relaxed/simple;
-	bh=BLo/SK0OwyLXmx4CkLXt0Zv4XSiG7FN8vxZrhqD9o9A=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=QSWEnqMlgGgC/fJCsDmxEUBcN2LBi9g4Smvo0Uf3F3s3f8wfcJ+a7EyqH25iq09dLtFuVHpv/2eTcj0r9fmp18gwz302e3+iex4pvbl9h9y+e3W/t20281mpy5B1KrqQ+/sDgh+Gdi+Rzqk5xDoU2RrTvcZp7TStifLNIz5UKOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3e67df0ee00so11079515ab.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 20 Aug 2025 01:11:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755677496; x=1756282296;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=nxnWMV7nk+HUWAMMTqThfYs5utB2u1ueiMVLfITSQbU=;
-        b=kwxIJ98w88dLuzZAMXqQIkB1zqbtauin+eZNJv0CXvwgJZyr20Jy5HSDEMAFdhzgrn
-         VCawPUsIetu2kk66XwIeBIME3ek8M8DHAi5bv+APfX/qKg71qPzWC+mQPscsH5nw6Emx
-         6hCaLSooN2PvxgeEYpgjmP1IQ+bYZS2EfmC1MQ7ZbYIMOeE+OwN2bd3WbrUYei3l4ysO
-         /Q+b+RC/g47+eV9YiKF6/JGrUKggbTBWP8iEKyUEqtKiFKttV7H0Nvyuu9SeYgatYC3w
-         B2gnH+ZoY0/WoJPK5t9x/FJuKWilKkFJJDHH0CehtsBhGOIS6y1WGUHkJMmmEsJ8+906
-         jPbw==
-X-Forwarded-Encrypted: i=1; AJvYcCUjXcg/MtgZMgK7dKzhTvPspwUYO8wk/LOl8EWb1rp2yoWZig51YcK2e9GN94h/ZHCEl88S+gXiSNh5fJas3uMWwes=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzuLmkh65uHpzUui/rf26L5UYqhRsEgVd8Ln8ODl1g0CaxTnlHu
-	CFm0ifMp4Fpd5CSM0UYmw46nh3mslVigmOWdp7FgxPyaWaV9Bqccsu45RxPSIpS8ri8ya7wXE5p
-	IPnaMctxSHQhPg7tOLbqi/77DrAtABJWUJSBIk85kFY6VdfuxsaA6soj4yyk=
-X-Google-Smtp-Source: AGHT+IFgeuEM3R5jjreDnx783f1j+D6ZavtdfNGu7vZ6rTYRTO689dyA93mAmaz0QwfaU3/2wl/YgWTulJDhCQTdE/oRAQPR+L7I
+	s=arc-20240116; t=1755677526; c=relaxed/simple;
+	bh=5ffBfXfkWnxBLysk65/GWI3ham98Fz2RAzunURzEpHM=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=e1um4uDicAC9MhzQat0Z+p8IZxWng8+tCNHKjJ7Gs2hzD3m3SQXzgOpxM2kNofUqoeTboa96i6hqsy3MBu7MW76SzVtJqq+AwnJn3EqFcTQSMDCvmL4ZJPEWN+6z7E6sLLk1GGW57zzwqK8vqRqVO1Tm6kDaBdGAX/cLVafjeKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at; spf=fail smtp.mailfrom=nod.at; arc=none smtp.client-ip=116.203.167.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nod.at
+Received: from localhost (localhost [127.0.0.1])
+	by lithops.sigma-star.at (Postfix) with ESMTP id 183792CE348;
+	Wed, 20 Aug 2025 10:11:55 +0200 (CEST)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
+	with ESMTP id XVIhD7bjm513; Wed, 20 Aug 2025 10:11:54 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by lithops.sigma-star.at (Postfix) with ESMTP id A84F02CE374;
+	Wed, 20 Aug 2025 10:11:54 +0200 (CEST)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id ObgVaPfNnbRa; Wed, 20 Aug 2025 10:11:54 +0200 (CEST)
+Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
+	by lithops.sigma-star.at (Postfix) with ESMTP id 7C0032CE348;
+	Wed, 20 Aug 2025 10:11:54 +0200 (CEST)
+Date: Wed, 20 Aug 2025 10:11:54 +0200 (CEST)
+From: Richard Weinberger <richard@nod.at>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Russell King <linux@armlinux.org.uk>, Steven Rostedt <rostedt@goodmis.org>, 
+	mhiramat <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	ardb@kernel.org, Eric Biggers <ebiggers@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, dave@vasilevsky.ca, 
+	ruanjinjie@huawei.com, liuyuntao12@huawei.com, 
+	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, 
+	linux-kernel <linux-kernel@vger.kernel.org>, 
+	linux-trace-kernel@vger.kernel.org, 
+	Donglin Peng <pengdonglin@sangfor.com.cn>
+Message-ID: <1672011332.146872.1755677514318.JavaMail.zimbra@nod.at>
+In-Reply-To: <CACRpkdYYTe0YArbheo3msd6r+CNrt9oSZWNjkiwb=ZNWfJ1dkQ@mail.gmail.com>
+References: <20250818103931.1100084-1-richard@nod.at> <CACRpkdYYTe0YArbheo3msd6r+CNrt9oSZWNjkiwb=ZNWfJ1dkQ@mail.gmail.com>
+Subject: Re: [PATCH] ARM: ftrace: Implement HAVE_FUNCTION_GRAPH_FREGS
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1c06:b0:3e6:7aad:25ff with SMTP id
- e9e14a558f8ab-3e67ca3920emr40494565ab.23.1755677495895; Wed, 20 Aug 2025
- 01:11:35 -0700 (PDT)
-Date: Wed, 20 Aug 2025 01:11:35 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68a58337.050a0220.1b2f6c.000c.GAE@google.com>
-Subject: [syzbot] Monthly trace report (Aug 2025)
-From: syzbot <syzbot+listba220efcf7f3e6e8ea56@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	mhiramat@kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF141 (Linux)/8.8.12_GA_3809)
+Thread-Topic: ftrace: Implement HAVE_FUNCTION_GRAPH_FREGS
+Thread-Index: CVXhU17DidlkWtQ6Ka0vacHBgIlQ2A==
 
-Hello trace maintainers/developers,
+----- Urspr=C3=BCngliche Mail -----
+> Von: "Linus Walleij" <linus.walleij@linaro.org>
+> Can you put this patch into Russell's patch tracker?
+> https://www.armlinux.org.uk/developer/patches/
 
-This is a 31-day syzbot report for the trace subsystem.
-All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/trace
+So far I had no success doing so.
+Whenever I add the patch, I get back to the patch add form without
+an error message or such.
 
-During the period, 1 new issues were detected and 0 were fixed.
-In total, 12 issues are still open and 55 have already been fixed.
-
-Some of the still happening issues:
-
-Ref Crashes Repro Title
-<1> 576     Yes   WARNING in tracing_buffers_mmap_close
-                  https://syzkaller.appspot.com/bug?extid=ddc001b92c083dbf2b97
-<2> 80      Yes   WARNING in blk_register_tracepoints
-                  https://syzkaller.appspot.com/bug?extid=c54ded83396afee31eb1
-<3> 52      Yes   INFO: task hung in blk_trace_ioctl (4)
-                  https://syzkaller.appspot.com/bug?extid=ed812ed461471ab17a0c
-<4> 52      Yes   WARNING in tracepoint_probe_unregister (3)
-                  https://syzkaller.appspot.com/bug?extid=a1d25e53cd4a10f7f2d3
-<5> 8       Yes   INFO: task hung in blk_trace_setup (4)
-                  https://syzkaller.appspot.com/bug?extid=9c1ebb9957045e00ac63
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-To disable reminders for individual bugs, reply with the following command:
-#syz set <Ref> no-reminders
-
-To change bug's subsystems, reply with:
-#syz set <Ref> subsystems: new-subsystem
-
-You may send multiple commands in a single email message.
+Thanks,
+//richard
