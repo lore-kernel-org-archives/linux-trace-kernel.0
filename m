@@ -1,71 +1,104 @@
-Received: from abb.hmeau.com (abb.hmeau.com [180.181.231.80])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C24027CB35;
-	Wed, 20 Aug 2025 02:05:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=180.181.231.80
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E2042C859;
+	Wed, 20 Aug 2025 03:03:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755655522; cv=none; b=NKQIbHEOAxaV9fXjquytXYIiQNRATGltACCZhVE3tkY8ir0Rzg9v1IZn6YzpAvot15zVZ8EylxXE32ZfgiZRl9cKt/vFCWk7fMhU7LwoiOcvgPQ42cbcPY8SuF/b9KpxMsOxymuO9DgsoKMaqp1p/YQQYiY5hClEU12rNZuxY6w=
+	t=1755658999; cv=none; b=gRZatXw604icjp7HimW1KM9i8w4BgQRNlvFVJL+yVN9Chx/5frKEgOTbEjYr9/1x5eT4r1zY8+drTEoFyYjNfMh250CRx1EjNVBkcA4lAHV9/jPvLCtkgKe4WppjKtVpCL7QnG6Wutm3dzlmqRo/gUsp8vmQnNyPOU5wrekjApA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755655522; c=relaxed/simple;
-	bh=X9NTX1SzBwgkZdilljkAHG6X9Xk/OANUE6ryZG11rCc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=OlblxYef6cAfjJZK9slKEJmGxO5KRFDsF3BfLZnIXwhd9UoO31jZAQyJacVTYRbef3Ri6+YDDzIv9iqie204OaCnCTgUP8s26+VJmSuBfnsuH9+VEsoYmlREXnv1R8WgNNJ1G0v40S1NPgE/jLd/g6MzYF8EzOygSn0D6eLoHdg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=aSlIru3f; arc=none smtp.client-ip=180.181.231.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1755658999; c=relaxed/simple;
+	bh=dUb5J4XH+q4916VJxIDDUCe2v7YaXyLg5gTQb9sEMLQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ElTMVNibVW1ze910DZXWu9gvfIa3/kPr8B4Z7jVstOon0Z5xwsyDoSQy7zX4f9Bnw/bVn+PYEUNJSjMqpkr9IsEvxIUcyfahzSQ88iwGKidc5OivrdyoSQRHJGeTKZpSQg3rNLMJAgv6G+lPrHb1XiZ715qmSJBz1nEr4mgT170=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TacO3eIF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="aSlIru3f"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:Message-ID:Subject:Cc:To:
-	From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:References:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=cUUe9dsY9MAIPqES7FFoDEA5qENhhjh9/kZ9Y8+L7+o=; b=aSlIru3fW1j+J8J3bjg4SlMHAI
-	MjTEyeuCR8Brk/mXk0QLUVIPHSnnFqxxsZyIGDNnFqt1pXsmgGSjhPbUtqgdOGDhLViRkINT0Q2Ff
-	EvMDL3qTIY9ffqy2lqWONTBuhgjHIWgC0vOK5CFZtHvSkgXxgHKd2PXQAFwdUlSrszi619JcA7rgl
-	64AeW5bzkz4O9+RCc5KXzM8CgP2gaYTShlflxww+fJ4sTI47psbeXWP5WIPvmCHBowVkVyycDyUXl
-	bneFLsRsg73jo8xANwvZzWheSF3NOd8ajyAGFw0KVZF0mXpFJ671KA/82XDlAPHQTiGweZwRR6Don
-	ntb8YA0A==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1uoXwo-00FgHU-1a;
-	Wed, 20 Aug 2025 10:05:03 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Wed, 20 Aug 2025 10:05:02 +0800
-Date: Wed, 20 Aug 2025 10:05:02 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: "Masami Hiramatsu  , Google" <mhiramat@kernel.org>
-Cc: olsajiri@gmail.com, menglong8.dong@gmail.com, mhiramat@kernel.org,
-	rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
-	hca@linux.ibm.com, revest@chromium.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: Re: [PATCH bpf-next v5 1/4] fprobe: use rhltable for fprobe_ip_table
-Message-ID: <aKUtTpAYaMdNgj2a@gondor.apana.org.au>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TacO3eIF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27067C4CEF1;
+	Wed, 20 Aug 2025 03:03:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755658999;
+	bh=dUb5J4XH+q4916VJxIDDUCe2v7YaXyLg5gTQb9sEMLQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=TacO3eIFWhHfC9iieBE0ZVulubtG93C+xWiJ94hVccdRj9Od4S0EHBmnzP8cynW+q
+	 JWawgVH9Q+GGZQZr1Y4eT11DaWFe5AJNn3JdPJ0ixY6avteUXXDFM4Kj7lrvwhJYu9
+	 62C4m8xbI5lhv4I8VO2xDhOXGMwReZ+p6X2VTwvFjv77+Fyumm3lT+e/uSxHHTbsxe
+	 fujBmYHh++k6QVhrel0J9R/DBAMA2+aCcRtVRBP/vNd5lCnfda9+NGX3Uq0+9uyXOn
+	 7RaKwC7tqvTyPKRXTfKiKL6d8a8j0wBz2BqAjqrGFeq9DoYAgNm++KpczvtvYr8gAo
+	 K95syn8Sx8xRQ==
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-618b62dbb21so8581987a12.2;
+        Tue, 19 Aug 2025 20:03:19 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVaSeJxkkhSK/OEA7MuwWBLYk6NFQcULlbEzqSOk8T4BjB3iQEPfyEvlKEwwJIW84g8YXM=@vger.kernel.org, AJvYcCX+M9+dAU0prhJ2xgt1sxRk4uYo7pwjHUxQbvLewiUKb0htHDh8DIRKaoqRdbnjVqp2S6X2IDJWeuMGYBoC@vger.kernel.org, AJvYcCXJAVz9Or3F3chgAcheb5vnb97wP3yGnArdLceigpUz2LbrB+Rfx4puU1zhgF0p2apTF9ToVinAv94eJPugIwxfdtT1@vger.kernel.org
+X-Gm-Message-State: AOJu0YxFYslHDoTiXTpXfxmDxCo61EyyzS4MgnF9T2dKem9ZJHl8bxMI
+	ECX5CQEMKS9SlII9xzGsObWkHN2BQk3WikjnBIoJfdiaodndy24G0Byk7QuZ6K2KO76+z1b+Q+X
+	QHMQc1TbMdxkqV0iZBWz8NFUs8zT/eKU=
+X-Google-Smtp-Source: AGHT+IGipsXdMkhLBiLLaqBjRzQlCXf5lG2voaM7ZlbwMucGPhtm3dMQcQrGXzIeWhNwxO91JT0saO4PJ+B8zwJNi0k=
+X-Received: by 2002:a05:6402:208a:b0:615:b0e2:124b with SMTP id
+ 4fb4d7f45d1cf-61a9762bcb8mr1222075a12.24.1755658997791; Tue, 19 Aug 2025
+ 20:03:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250819111111.40f443fd7faae8e92f93beaf@kernel.org>
-X-Newsgroups: apana.lists.os.linux.kernel
+References: <20250722094734.4920545b@gandalf.local.home> <2c2f5036-c3ae-3904-e940-8a8b71a65957@loongson.cn>
+ <20250723214659.064b5d4a@gandalf.local.home> <15e46f69-f270-0520-1ad4-874448439d2b@loongson.cn>
+ <CAAhV-H4TGus35B6ONdkSOMwWw+H6NRmHStV-Xu7vUYYrkDGfUQ@mail.gmail.com> <20250819202715.6f1cf0d6@gandalf.local.home>
+In-Reply-To: <20250819202715.6f1cf0d6@gandalf.local.home>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 20 Aug 2025 11:03:05 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5y8Tckih4jd3C8Q-M6OZiw2szCYuxLQfBXehpWSvrstA@mail.gmail.com>
+X-Gm-Features: Ac12FXz1padV2khVDKOyi3ekCMiGCzktzpAq5rTbzGUfDyfjZIQ6IiG85R2dpeE
+Message-ID: <CAAhV-H5y8Tckih4jd3C8Q-M6OZiw2szCYuxLQfBXehpWSvrstA@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: KVM: Move kvm_iocsr tracepoint out of generic code
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Bibo Mao <maobibo@loongson.cn>, LKML <linux-kernel@vger.kernel.org>, 
+	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>, kvm@vger.kernel.org, 
+	loongarch@lists.linux.dev, Tianrui Zhao <zhaotianrui@loongson.cn>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Masami Hiramatsu  , Google <mhiramat@kernel.org> wrote:
+On Wed, Aug 20, 2025 at 8:27=E2=80=AFAM Steven Rostedt <rostedt@goodmis.org=
+> wrote:
 >
-> Good catch! Hmm, previously we guaranteed that the find_first_fprobe_node()
-> must be called under rcu read locked or fprobe_mutex locked, so that the
-> node list should not be changed. But according to the comment of
-> rhltable_lookup(), we need to lock the rcu_read_lock() around that.
+> On Thu, 24 Jul 2025 19:56:42 +0800
+> Huacai Chen <chenhuacai@kernel.org> wrote:
+>
+> > On Thu, Jul 24, 2025 at 9:51=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> =
+wrote:
+> > >
+> > >
+> > >
+> > > On 2025/7/24 =E4=B8=8A=E5=8D=889:46, Steven Rostedt wrote:
+> > > > On Thu, 24 Jul 2025 09:39:40 +0800
+> > > > Bibo Mao <maobibo@loongson.cn> wrote:
+> > > >
+> > > >>>    #define kvm_fpu_load_symbol      \
+> > > >>>     {0, "unload"},          \
+> > > >>>     {1, "load"}
+> > > >>>
+> > > >> Reviewed-by: Bibo Mao <maobibo@loongson.cn>
+> > > >
+> > > > Thanks,
+> > > >
+> > > > Should this go through the loongarch tree or should I take it?
+> > > Huacai,
+> > >
+> > > What is your point about this?
+> > I will take it, thanks.
+> >
+> > Huacai
+>
+> Did this fall through the cracks?
+I don't know what this means, but I think you are pinging.
 
-Just as is the case for RCU in general, rcu read locks are unnecessary
-for rhashtable if you already hold the write-side locks.
+This patch appears after I sent the KVM PR for 6.17, and it isn't a
+bugfix, so it will go to 6.18.
 
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Huacai
+
+>
+> -- Steve
