@@ -1,121 +1,115 @@
-Received: from SHSQR01.spreadtrum.com (unknown [222.66.158.135])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA2661EB5FE
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 20 Aug 2025 11:29:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B8092D6639;
+	Wed, 20 Aug 2025 12:19:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755689382; cv=none; b=sTLw9mSxtzJl6ryUQeiYJ1JRrqJF7FQKrEV22he7F+VHHKQonPla/wvUTvveOZtYEmns+IAhftlkZRjkhF/Jz93KefcPAuF+mW/py96os6UILZfzpcOLYWU2kzIybZQFVWfmzYjyKpR16JRrdBFDamEa/wapxBfexTg/O2cn9fg=
+	t=1755692344; cv=none; b=NRtElwc1PszN8LgK+rswGvEwYeUwWpWyFe7hafGc8emT9jDpnzTGIZTXKAyi+EFL5HfMyPacZesxnKDrmK/5B1dKOLS8GpqxiW6nIlqKH5Bky6cORLkiqkRJnupOWA5+wKeW4Mz2YOA5ZY4C0bWrwS1D4nllsDayRbnEMDQXlM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755689382; c=relaxed/simple;
-	bh=T5FvkqWOXad4x0y8AzXJoCUnNRNy9Ko6IXABOeQg53w=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OKIeGyvjOiWpF/qWWuEsf7EtdE6+artf1TVd9cOT8UHh19O3P4BiNEcRd+GxrBr52WukaWLe/GTGTHRQ6Z7436bUiIxlYO1zfSWrvLl9dpe8JR3kOsA0IQgyR+aAiW3C5RSgEBqCvlZn/YlE3Z/VZolgdw+H+qHogydQLT3ThSM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; dkim=pass (2048-bit key) header.d=unisoc.com header.i=@unisoc.com header.b=eV/RzVBm; arc=none smtp.client-ip=222.66.158.135
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=unisoc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
+	s=arc-20240116; t=1755692344; c=relaxed/simple;
+	bh=Xqv+/fPvXKgUeiydkHHJT3gITGIHF+fYQbYUDsajg2A=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XNstT7/Lu5Nb2oyoGeqKmMZs9S6Xg01pB6qrTaGtOWpd24qlJzov2FGy8mJcE/c4g26ltt8ahWeEMSVF4QhZcW40YoDqwtFmxslOyC0PkxAipBqNWC+Bv8r0yGhPNWm1xT4GXiTbHl316WSJpnBj/GFpqEPg+O+GDqik+EMdhhw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Pc+cl2Td; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=unisoc.com header.i=@unisoc.com header.b="eV/RzVBm"
-Received: from dlp.unisoc.com ([10.29.3.86])
-	by SHSQR01.spreadtrum.com with ESMTP id 57KBQa2i021503;
-	Wed, 20 Aug 2025 19:26:36 +0800 (+08)
-	(envelope-from Xuewen.Yan@unisoc.com)
-Received: from SHDLP.spreadtrum.com (bjmbx01.spreadtrum.com [10.0.64.7])
-	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4c6PKB1H8Nz2LGccR;
-	Wed, 20 Aug 2025 19:26:06 +0800 (CST)
-Received: from BJ10918NBW01.spreadtrum.com (10.0.73.73) by
- BJMBX01.spreadtrum.com (10.0.64.7) with Microsoft SMTP Server (TLS) id
- 15.0.1497.48; Wed, 20 Aug 2025 19:26:33 +0800
-From: Xuewen Yan <xuewen.yan@unisoc.com>
-To: <hannes@cmpxchg.org>, <surenb@google.com>, <peterz@infradead.org>,
-        <mathieu.desnoyers@efficios.com>, <mhiramat@kernel.org>,
-        <rostedt@goodmis.org>, <mingo@redhat.com>
-CC: <juri.lelli@redhat.com>, <vincent.guittot@linaro.org>,
-        <dietmar.eggemann@arm.com>, <bsegall@google.com>, <mgorman@suse.de>,
-        <vschneid@redhat.com>, <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>, <ke.wang@unisoc.com>,
-        <yuming.han@unisoc.com>, <xuewen.yan94@gmail.com>
-Subject: [RFC PATCH V2] sched: psi: Add psi events trace point
-Date: Wed, 20 Aug 2025 19:26:21 +0800
-Message-ID: <20250820112621.4045-1-xuewen.yan@unisoc.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pc+cl2Td"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-45a1b004954so46591675e9.0;
+        Wed, 20 Aug 2025 05:19:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1755692341; x=1756297141; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=GI/go3ldWysRCFnDe+HVoMG5rlSajkF9o4GsGDgen+Q=;
+        b=Pc+cl2TdsWBudFH5R+AqONbl6oh0CzJZyExGpu/QTH0zzIFJ8FOz4TksYdDbeu/loi
+         qBaogPzVhWFYnid7+DJj90DtRZMmqMU6pQw63IspR2yt3ulgy7OWGIuxl2yjcQmKc/7X
+         HHcdQe1sSF/1/8+RM7eEA3VePldhkg9oU+vU1RrnCvZKs0OdcGGP5S5txB3/ZJ3isnCB
+         o1LFmEC1P6k+WTP2Ad1RbnHO/aaj0KdajrHNtQKnKfVTrqX6beDcaTtcxiuVY09yro2o
+         0JSnIFmSP7Q8IO3ZTuzB+PWdkze3LgtTdlWBXnST1lGC1jb9zM1bggETh7B6I+89v36C
+         RTyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755692341; x=1756297141;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GI/go3ldWysRCFnDe+HVoMG5rlSajkF9o4GsGDgen+Q=;
+        b=OiZremnlLXygYT/JnTY8b0zGGdg3nkTcuQznVzD/jMaMZhjOq8TxPpKbnJY0tk1Wid
+         gI/sQG9+EZsH72shS3NJmg42bEnMSB6IqN4ZP7rwH9tQMJw94dYP/ofbAHM3ZgJ/Q70q
+         iTOiyiayX/rhT7L4LxHXccf1xHe++tlF5mN0T0/35SLahFIda0aqXmRXEkkI/iQ6+4MA
+         EgALlJa5lqbyTWxqs7ip8g7K13TIZg5nSUh6TDvOQbbYw/Nx0xMKCL8eNaLRo9hZy5qY
+         maENg2hYxaDmiGW09noeIMqZCNtSYx6nVSW4j9i5W9bKpaGXt6+fGkmLYh/VjGONOjOk
+         j/xQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW8wYWpJFnavWZtpz4ALm0u51M4obtIWK8LMsMgT8R32BuOl2LeS+frLUrnSXDzfdqLQTlK/4PktKyB73v+@vger.kernel.org, AJvYcCX76A+gch5qLuBTSS7X8LrieK1GWzFeBVmYB6KPZELwPbqVMrQjz7ozAbkPaqmePnN+eNM=@vger.kernel.org, AJvYcCXr8ruyrFe34mo4OtXqJKex7XxbESAp7vznofY2fTY7gnP2ff8rLmewg752g8Y1sHCWm3lk1+2dXnACJK8DXuFkekNV@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx6+1aovCAj2twTbILfCRzba2Ml4QNthS+z+OMxpOY84rQM4OyL
+	7oWy3aTHQop5c+hycTpKEZENEfbBsNfICcVUIaHFlTUIDT/t2SRlFXTQ
+X-Gm-Gg: ASbGncvofv/1leGV/w6yIkZvn2VMu3i6vVCFu1hvtikCJ18q0yNX4Fi0Ko8eLNFuZur
+	2vwfaz15+LfBFn9hAMy19ZWkP/O9HyFFkuTO+uuME+hRu94EJ06hHr+AullfBm0jXlJQURhIun6
+	th08/TY1G2vQIEzQ7NlhgluT/+/kv6woabIjJ0Oa/q41/c/0CWEM/F7kpFT6+KTF+D3h//ZmRLE
+	7qNU62ILTw6Ku6ueytzmmhjXXwYIZEpK7fR0n1lIzG0rj2p5yIX/cYOWrgTJ/i2g9s6hGr8sp92
+	FGR4KWiRF+AEk2wKelr6WX/IYP0hRw5cHEVFIDWBQQxCKudu1ADdTCKSu8Wd7CGXEk0chSc3vxE
+	qiDZ2ODI=
+X-Google-Smtp-Source: AGHT+IHJ+tU2fM45DI2ot9VR1BpSQ14mEoDogR18uG0MTDiB9Qu9dv4Wtzuja/t2XucGRZHMRTJyCg==
+X-Received: by 2002:a05:600c:4691:b0:459:dd34:52fb with SMTP id 5b1f17b1804b1-45b479aa901mr22161715e9.12.1755692341248;
+        Wed, 20 Aug 2025 05:19:01 -0700 (PDT)
+Received: from krava ([2a02:8308:a00c:e200::31e0])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45b47cad57asm33272345e9.24.2025.08.20.05.19.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Aug 2025 05:19:00 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Wed, 20 Aug 2025 14:18:58 +0200
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Oleg Nesterov <oleg@redhat.com>, Andrii Nakryiko <andrii@kernel.org>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, x86@kernel.org,
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	David Laight <David.Laight@aculab.com>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@t-8ch.de>,
+	Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCHv6 perf/core 08/22] uprobes/x86: Add mapping for optimized
+ uprobe trampolines
+Message-ID: <aKW9Mrbj_6H9MXrm@krava>
+References: <20250720112133.244369-1-jolsa@kernel.org>
+ <20250720112133.244369-9-jolsa@kernel.org>
+ <20250819145345.GL3289052@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
- BJMBX01.spreadtrum.com (10.0.64.7)
-X-MAIL:SHSQR01.spreadtrum.com 57KBQa2i021503
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=unisoc.com;
-	s=default; t=1755689202;
-	bh=CYYb5kpRQZSLKYpYw4o6JXQoxBGPulNHrelKWKt6GvE=;
-	h=From:To:CC:Subject:Date;
-	b=eV/RzVBmwFXmiG/DR2lEH+voNk41Bv8PmU5yk4+hGzFvyFfYJXBVhgTIkmPkvxH9c
-	 M5eac89AF0PWLQfCX82IgWkSrdskCifhoMbgBCpsFgw5gerYcOLaO//V1TYF5J3yDp
-	 hi/vQbDJbwM87PH+YRJGphrAxapL1byVaHJRt2FY6e6qnotm8rZoxazrTDWSLDFaE1
-	 S5FjjWuW8WenstjplG2ybAnX0CRaf1F1SL2xFA6eJB7kCbmYd7O6mR5+mleakBBhSd
-	 0IirhnIqyQPAFKFb8nmLE4Y9suYvYNqxYe0bqCKFsuTz7N6eGsSR7pHu6UZ3Mj+PCE
-	 x7I8ScwFiphhA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250819145345.GL3289052@noisy.programming.kicks-ass.net>
 
-Add trace point to psi triggers. This is useful to
-observe the psi events in the kernel space.
+On Tue, Aug 19, 2025 at 04:53:45PM +0200, Peter Zijlstra wrote:
+> On Sun, Jul 20, 2025 at 01:21:18PM +0200, Jiri Olsa wrote:
+> > +static void destroy_uprobe_trampoline(struct uprobe_trampoline *tramp)
+> > +{
+> > +	/*
+> > +	 * We do not unmap and release uprobe trampoline page itself,
+> > +	 * because there's no easy way to make sure none of the threads
+> > +	 * is still inside the trampoline.
+> > +	 */
+> > +	hlist_del(&tramp->node);
+> > +	kfree(tramp);
+> > +}
+> 
+> I am somewhat confused; isn't this called from
+> __mmput()->uprobe_clear_state()->arch_uprobe_clear_state ?
+> 
+> At that time we don't have threads anymore and mm is about to be
+> destroyed anyway.
 
-One use of this is to monitor memory pressure.
-When the pressure is too high, we can kill the process
-in the kernel space to prevent OOM.
+ah you mean the comment, right? we need to release tramp objects
 
-Signed-off-by: Xuewen Yan <xuewen.yan@unisoc.com>
----
-v2:
--fix compilation error;
--export the tp;
--add more commit message;
----
- include/trace/events/sched.h | 5 +++++
- kernel/sched/psi.c           | 4 ++++
- 2 files changed, 9 insertions(+)
+the comment is leftover from some of the previous version, it can be
+removed, sorry
 
-diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
-index 7b2645b50e78..d54db5fcbca2 100644
---- a/include/trace/events/sched.h
-+++ b/include/trace/events/sched.h
-@@ -896,6 +896,11 @@ DECLARE_TRACE(sched_set_need_resched,
- 	TP_PROTO(struct task_struct *tsk, int cpu, int tif),
- 	TP_ARGS(tsk, cpu, tif));
- 
-+struct psi_trigger;
-+DECLARE_TRACE(psi_event,
-+	TP_PROTO(struct psi_trigger *t),
-+	TP_ARGS(t));
-+
- #endif /* _TRACE_SCHED_H */
- 
- /* This part must be outside protection */
-diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
-index 59fdb7ebbf22..f06eb91a1250 100644
---- a/kernel/sched/psi.c
-+++ b/kernel/sched/psi.c
-@@ -141,6 +141,8 @@
- #include <linux/psi.h>
- #include "sched.h"
- 
-+EXPORT_TRACEPOINT_SYMBOL_GPL(psi_event_tp);
-+
- static int psi_bug __read_mostly;
- 
- DEFINE_STATIC_KEY_FALSE(psi_disabled);
-@@ -509,6 +511,8 @@ static void update_triggers(struct psi_group *group, u64 now,
- 		if (now < t->last_event_time + t->win.size)
- 			continue;
- 
-+		trace_psi_event_tp(t);
-+
- 		/* Generate an event */
- 		if (cmpxchg(&t->event, 0, 1) == 0) {
- 			if (t->of)
--- 
-2.25.1
-
+jirka
