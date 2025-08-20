@@ -1,507 +1,225 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBAEF26F2AD;
-	Wed, 20 Aug 2025 17:48:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755712106; cv=none; b=tGJm/LitG+6xWqmM2filduzDN4JLuX00LmAwySVaSk5P3Qzn86yB96a27qKktbVYgcxt2uiENuNB+TieaiFf5t6GLZLwPEWFUO/VLKx3bVNj4586itenRKtxOogv1U8tWUWO+eXOu7b3/RGZEJMe3b+o3nSaBNaQfh1z5ZY/FDI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755712106; c=relaxed/simple;
-	bh=GLOu/5+miF6SK3uvUgQZ7X/TIIdX4xaLBTRmqef6cyI=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=qX0vP3T+3FWQGWZACpq0ZZTa5nEipz0eKyqASNNuvI8L1jLwe2ZgfBlvYG2Opbxjtr6MChKbe0/hUylUpi3z/XgwtruSYzG19XUugem4rEgCqX02Q+Rca4FXiX1q+UGl8Cz9CFUPBMDQzdNHYWS8sWhPBRDYnP9rs1cb1QlvopU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d6Fx/rIG; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22CF125A347;
+	Wed, 20 Aug 2025 18:04:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.16
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1755713057; cv=fail; b=Aj9RJzQSOFfaxPW3R9QF7xR8JlykWeQuBMkph7XJdWqMiipVFBc7U1IRCihlyx7rkfftbQnoyOgXUSvEklPiYT8qTN60AKYo84k6c+5bvqq83uRejlZbmY6wNQVUbpK0w6whDpdT5eyw3YOgXQ3g6SwD7+MsvjA7ose9essWwUA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1755713057; c=relaxed/simple;
+	bh=kalWnHq5yyYRtwAOnWyTDBhCG1BmjKNJT5TUb9MBIX4=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=jq95DNujYyIfYTthiLAf88yMiH6g/jveGe7wbwJHsj9l8gXQUOh2l+F8Phms6BV4xG6KkkTKuvtoji3Ve1z71FL0WUSQT3T8D9escWazB3EiiWTm+MWSKn3Vielek0UOS0evw1Qe/cwQZRJnWwR7exUQ4MG4d6QBnJkpPzwBfDM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DXVoU+C9; arc=fail smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d6Fx/rIG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A8F9C116B1;
-	Wed, 20 Aug 2025 17:48:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755712105;
-	bh=GLOu/5+miF6SK3uvUgQZ7X/TIIdX4xaLBTRmqef6cyI=;
-	h=Date:From:To:Cc:Subject:References:From;
-	b=d6Fx/rIGZbSl0M/fLBLdG0FTpquHQAZkJydl2mQwPdO356fxtrnnI5pWaLNoR3PtZ
-	 U8U9Wz/UgMfH0tVz85Qp4XV48BBrHlVn7kpPGdudks+/GrsZwno2DCWKmAg2OZ2XOP
-	 NX3fDEJO18Rw6860VQEhir5CmdceXn0NC0wyPbfgpXwZxO4qCYyoMStpI36YTQGNnY
-	 QyH44GrjezALlZHdJtkILXa95yrijHM18Yo/8M8sXDdgoI0850GL7Wub09f2/8V5/d
-	 BKGY8FdAZujNcflKzVxP+Y7glVrbl0VpLyEORFop0E47QCA1qm0TfJZQ7ZSsx2yAFz
-	 CALHff3t97rdQ==
-Received: from rostedt by gandalf with local (Exim 4.98.2)
-	(envelope-from <rostedt@kernel.org>)
-	id 1uomvE-00000000rTi-0y1g;
-	Wed, 20 Aug 2025 13:48:28 -0400
-Message-ID: <20250820174828.080947631@kernel.org>
-User-Agent: quilt/0.68
-Date: Wed, 20 Aug 2025 13:47:54 -0400
-From: Steven Rostedt <rostedt@kernel.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org,
- linux-kbuild@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Arnd Bergmann <arnd@arndb.de>,
- Masahiro Yamada <masahiroy@kernel.org>,
- Nathan Chancellor <nathan@kernel.org>,
- Nicolas Schier <nicolas.schier@linux.dev>,
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
- Catalin Marinas <catalin.marinas@arm.com>,
- Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH v6 2/3] tracing: Add a tracepoint verification check at build time
-References: <20250820174752.684086778@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DXVoU+C9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1755713055; x=1787249055;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=kalWnHq5yyYRtwAOnWyTDBhCG1BmjKNJT5TUb9MBIX4=;
+  b=DXVoU+C933HSSplMXm+h6T70Z7cWhOIjZM9rvs4rSiw6vvR0VVK/711o
+   8NQUQikqLhufnV72+ao5bSb0m2S7C2bjyL/fcS2GLRFTRj/GfYEhkWobo
+   s1fXsckZZ1xNgHY9dHgQDdh80LE6WcfvjAG2/f/MaL3KL/tUbQ5iKG6K9
+   ohc0HOfCWJm2bTLzEmpW0DnyaAtU91F1K+dnMMEy0FjqwzGJP8VCE2eus
+   FwFObCvhIk0/Lp+bLw1XSbP1dRFnYrPF/epZxsdAtjtfQrgsa1YLBg+n1
+   7yNFJa+saoz8OpXWIDkLJsv4cD0DBs73arzR7DY9/PTlG6fHt60q8s6aI
+   g==;
+X-CSE-ConnectionGUID: UlJFKN5ORey3oBNyO7qnLQ==
+X-CSE-MsgGUID: Yacs0B8RSZCI/yCwfkT33w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11527"; a="45564963"
+X-IronPort-AV: E=Sophos;i="6.17,306,1747724400"; 
+   d="scan'208";a="45564963"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2025 11:04:14 -0700
+X-CSE-ConnectionGUID: 9TFNv1lCR1+bWuyzdO1YMQ==
+X-CSE-MsgGUID: /IAQbvWyTxaquVRBJUagBA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.17,306,1747724400"; 
+   d="scan'208";a="167402160"
+Received: from fmsmsx903.amr.corp.intel.com ([10.18.126.92])
+  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2025 11:04:14 -0700
+Received: from FMSMSX902.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.17; Wed, 20 Aug 2025 11:04:13 -0700
+Received: from fmsedg902.ED.cps.intel.com (10.1.192.144) by
+ FMSMSX902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.17 via Frontend Transport; Wed, 20 Aug 2025 11:04:13 -0700
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (40.107.102.73)
+ by edgegateway.intel.com (192.55.55.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.17; Wed, 20 Aug 2025 11:04:13 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=kplkwxTEOGztICf0q8I8ySpr+og6g9iDuBpLkgmHqKyqDd1mHyuQaxB8kBF8exh8oBZq+aIMGDUFjP1N9GDP3pCa654ouOVPB2yCYGyQOVyrac0KMyy2tSJLJnR2lR7HPjPpcSDhcl3d2Q02UXVa55T6E6nsDZDHt74peLnGC3Py9FB4bbwDDU3Olm1mFpIdS72usPPhumvOwi+H6TzDoX1+HNrWrqu3Ntn0ixoM6aEPgZXbxq9PGtwP3RNPTmoGV5s4Zt669nY1GyvvGGL6wSSh30Q/emMu3isZ/GxeOcgg59WKsTOfVD19vI1aDWvLM5Kj9aX4ZECBwpyxk/qrag==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=kalWnHq5yyYRtwAOnWyTDBhCG1BmjKNJT5TUb9MBIX4=;
+ b=oLbHSIJchZCefMbsPNEEql1ZDPPKt9ZNsNo7Sc7i0QDKW2TYm+06JM1VPibZu+VLSg/MF80SxlRJknEYMiDJqPEIcfRNnptqmeTwfnJl+D20yxOA1PpW0EyXcy1kSbeVhhfBgYxD9aJ5nVXHAUaTakLrUGoOulwrshGuNkkHuHEkkIrspdqY/ROIYHWA4i7J4xGvSzn52ao669yePlpBy+gDcv8EgN1vNw9dpooDeRqi1hy8KBChnXytXs0NKR+xE8HPytfkunjy5t13UipUzTCcVGu+bIfdcUeWFtEz6vP+ximVLuNIEd+UVW68cq/7FEjdX6b36hwcYX8QN6fQyg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from MN0PR11MB5963.namprd11.prod.outlook.com (2603:10b6:208:372::10)
+ by CO1PR11MB4772.namprd11.prod.outlook.com (2603:10b6:303:97::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9052.14; Wed, 20 Aug
+ 2025 18:04:11 +0000
+Received: from MN0PR11MB5963.namprd11.prod.outlook.com
+ ([fe80::edb2:a242:e0b8:5ac9]) by MN0PR11MB5963.namprd11.prod.outlook.com
+ ([fe80::edb2:a242:e0b8:5ac9%5]) with mapi id 15.20.9031.023; Wed, 20 Aug 2025
+ 18:04:10 +0000
+From: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+To: "peterz@infradead.org" <peterz@infradead.org>
+CC: "songliubraving@fb.com" <songliubraving@fb.com>, "alan.maguire@oracle.com"
+	<alan.maguire@oracle.com>, "mhiramat@kernel.org" <mhiramat@kernel.org>,
+	"andrii@kernel.org" <andrii@kernel.org>, "john.fastabend@gmail.com"
+	<john.fastabend@gmail.com>, "mingo@kernel.org" <mingo@kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"rostedt@goodmis.org" <rostedt@goodmis.org>, "David.Laight@aculab.com"
+	<David.Laight@aculab.com>, "yhs@fb.com" <yhs@fb.com>, "oleg@redhat.com"
+	<oleg@redhat.com>, "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+	"thomas@t-8ch.de" <thomas@t-8ch.de>, "jolsa@kernel.org" <jolsa@kernel.org>,
+	"haoluo@google.com" <haoluo@google.com>, "x86@kernel.org" <x86@kernel.org>
+Subject: Re: [PATCHv6 perf/core 10/22] uprobes/x86: Add support to optimize
+ uprobes
+Thread-Topic: [PATCHv6 perf/core 10/22] uprobes/x86: Add support to optimize
+ uprobes
+Thread-Index: AQHcEc5LWQgc1WQMikmopLJo2+WQ07RrstqAgAAUyoCAAAPpgIAABMyAgAAFsgA=
+Date: Wed, 20 Aug 2025 18:04:10 +0000
+Message-ID: <447af60b944e0f7a8ddf012973029430af834b2e.camel@intel.com>
+References: <20250720112133.244369-1-jolsa@kernel.org>
+	 <20250720112133.244369-11-jolsa@kernel.org>
+	 <20250819191515.GM3289052@noisy.programming.kicks-ass.net>
+	 <20250820123033.GL3245006@noisy.programming.kicks-ass.net>
+	 <9ece46a40ae89925312398780c3bc3518f229aff.camel@intel.com>
+	 <20250820171237.GL4067720@noisy.programming.kicks-ass.net>
+	 <62574323ba73b0fec42a106ccc29f707b5696094.camel@intel.com>
+	 <20250820174347.GM3245006@noisy.programming.kicks-ass.net>
+In-Reply-To: <20250820174347.GM3245006@noisy.programming.kicks-ass.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+user-agent: Evolution 3.44.4-0ubuntu2 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: MN0PR11MB5963:EE_|CO1PR11MB4772:EE_
+x-ms-office365-filtering-correlation-id: b4fab206-68be-4aab-55c0-08dde013f701
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016|38070700018;
+x-microsoft-antispam-message-info: =?utf-8?B?WGVhSmxvMm1IRGdyaHJ2TGpsS3J4c05SL3EzQjh1THJDdXhvUFV0aUNwZ2Mv?=
+ =?utf-8?B?clI1eWpVQ0ZrckhFUWV3MFJJWmxvV1Zlc3d0K0lHc24vNStIeDRsVUIwK00x?=
+ =?utf-8?B?K21LZUVMZ1NaZW9WUk9xaFZmMG1aZ1cyWEdxMU4ranlBUzFMS0FoVEVEUHJQ?=
+ =?utf-8?B?ZmQ0M2U4ZjBTN0NKdFlscUxtSExBQ24wYzIrWk9FUzBuOVdaZlNUL3llRDlh?=
+ =?utf-8?B?MkR6UHczOXc5SzM0NDloS0lhL0ZHUWxIczIyeTNCRllqdmEyWm9BZG5sd3Vs?=
+ =?utf-8?B?SUpqSEhZQXJlbzlIQ0c2OTgyakZ1QXBSaDdGdGd2ejZUVzA1Q0dzaVVjemZm?=
+ =?utf-8?B?SkJoRzk1cW9jRGM2cjVTRWZkSFU3SUFzWVpxbDZpa05LQU5DeC9uL1VJM0dm?=
+ =?utf-8?B?QXdydGU0Skh4SjUyY2pMVDlkMHNkZzYzS0hpZUh3WGxiaFRiUXFyVnFiUmJ4?=
+ =?utf-8?B?WVhkWWE0RWgyVEN3UW44MEFtSUJDVkJqa1RyUWpDRmRlVjZjZVh3MVByTDBC?=
+ =?utf-8?B?eW5hb2w4Q0V1aWVFcStQNGMvV2Q1eFlsS1dLVjZOMXo2V0NWMDNjbzRIdmdQ?=
+ =?utf-8?B?Q2N2MWhNVDhoY0RLeFN6akRVOGhhOE1PbFFQaUt4T05xSnhkUVN1UDRwUEZr?=
+ =?utf-8?B?WUV3dlZtRE55alBkQjA4eWNZU0dWUy8xS0FvOEdUL1BMTk9sTHNhT3FmK09h?=
+ =?utf-8?B?Y1VaOE16SlJJRzN6MWpOUlUzUVFNdjltdVhBNldITnV1S0RvOXVHNlIyQzJo?=
+ =?utf-8?B?b0ZhcldncVkyemJHbWlxOXJlYkMxejBiNHZJZy9LVGxMT1RlQnNXa09HSG5h?=
+ =?utf-8?B?cWxUU0VUSzJkYkd3K253K2p0ZkhVeE83eGxpZzBtQWwrSktwd3FXZ1pka3kx?=
+ =?utf-8?B?aHBUZGYrMmpQOHlGdncwNVlxc0l1Q2Z4cWE4enprczJJaUdmQVljNnJ6VTd4?=
+ =?utf-8?B?N2xBNEI4cUE4K0JLcjdjSmJzZ0twbHJ6eHBHTXJabEpBYnpQUTYwakZEWSsy?=
+ =?utf-8?B?NVozcEcvRlJYcnhlUlFuVkdCa1JrdHJJbTVTUkVzc2haM2xmVjZCbXpSNE1H?=
+ =?utf-8?B?M1MycGxUR25ERnB4OTdONnk1eXpoMi94T2Y2cSttQXg5RDBMNFJVT0FpeXhu?=
+ =?utf-8?B?SFhsdzhxM1FBazRKZFN6RWxDMG15Yll0VS9ydTNNR1ZjQUpJY3JsOFVFZVlX?=
+ =?utf-8?B?cnVtbk9qUk5tSHNyaENYMWV4TGFqL3JocWVTR2hzV08vWEdjenhOUTVrNHkw?=
+ =?utf-8?B?dTNxMXUyM2xpd3VoRUhwMGdWWnI1blY0V1VtbEprZ2pKSVhZdGgxSStwV0Jy?=
+ =?utf-8?B?SUVtalB5WUMyUUJwR1h2QXF1b2g2bFJyUnJHTTlIeXhRVU50clhZRHMzWVM3?=
+ =?utf-8?B?aVgrOWZHWE16cC9lNlRaUEJub2wxeVp2dWlYVWZhYWJmRnRmNHZoM1V2WHBK?=
+ =?utf-8?B?Yjg1Mk1KTHl1aGtnV21McHN2cmhKbHVpUVBaa044M0llQWtvR2ZtL1FkRks3?=
+ =?utf-8?B?ZFE1WC9pMnZNN1FRcVpTOWZFZzUyaUhPMnprTEkvVndTVk5KWG0rQnZiOXBU?=
+ =?utf-8?B?cjI3bWNMa0JwQ1RVYThIY21Udnp2NjZqeDN3RlBFdnFJVXZqK2tFcVh1dEhs?=
+ =?utf-8?B?M1I3VEpVOEpJakNvWWMyOVRYNm1Tb0FuYzVPL2VoUlZwK2dJK3VYT0pUbFlq?=
+ =?utf-8?B?TkZLT2E1NGdYQ1hLTkJPamJhem9Cb3R3cGZ3OWdvNkdoZ1BPM1JqSE9ZWURv?=
+ =?utf-8?B?ZUY0cDREZ21xTUlkSkdRLzFuNjVCSi9ubkhFaG5QT0hvVW82eDUxclNHeWVJ?=
+ =?utf-8?B?L0xvSW8xYzRwZk1UTHJqRnlFWWVickxYUDZmcm8wcHBUdWxsMGtzeGdiaXA4?=
+ =?utf-8?B?TmljQktiaGZMZ1hlcUJwa2VIWVg4Z3IwNWRnaitVdmc0QlpqTm1pTFFyMW1T?=
+ =?utf-8?B?dnU5Y0NQR3h1MG8wU2tJVEdSdXgra2gvSWNJTjdnSmNCUXIwUEVFWUxFb08v?=
+ =?utf-8?B?VkxON1FDaXhRPT0=?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR11MB5963.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?bVMySmh0cUZyam9ObTRienRmZVIvSlVPd0RtelV6c2llRTc3TzA0OG90Q2Va?=
+ =?utf-8?B?dHNMV1Y3by9jNE9YWnRGRDhDYjJ2VnBIRC9ZOWllVG1xbmhHUXZuOGcxWXNz?=
+ =?utf-8?B?NDJlR29JQ2Rmb3lTeWY1dGFteHFkWHdDejZKZGkxV1Z1OGl4Y01PNXJ1QzdE?=
+ =?utf-8?B?eWI1UHdKMDhPdXpGYmVyN0xpNUZTTzNhYnZ5OEc0VVZvdCszZEJxMU5ZYkxm?=
+ =?utf-8?B?eWhFTzdJYlBQaWZuVU9WSFUvQXJBNWkwWnVaSVdSa2prUkNHaldDUHRkSTVI?=
+ =?utf-8?B?U1BSbFZhSVRoTEJuY0w3WUhHcGdhNVhqc1hqOWx0MlkwaFZqWi9YQ1ZpTy9Y?=
+ =?utf-8?B?SXFwTHBTbUxzU0Vra3Vtck9jMWp4YjVzNDRZdDdkYXdFdkE0K1NqZ1N0K0t2?=
+ =?utf-8?B?WCtPTVVvbStVcHVTMWtpWVBmWVZ6ZjNVVFNseWNXNndMU241OW1CTlRpUGZi?=
+ =?utf-8?B?dnhUN3JJTUU2SGxNek5LT1ErbTEzUmhHM0ZQNUk2QnJ1TFA0R0NmT2ZDWUQ4?=
+ =?utf-8?B?NnIzaVNNS2NsOUV3UE0zZ2w2Z2hpSEtKcC9ZalNORENXQ3dxRCt4SmNUZitQ?=
+ =?utf-8?B?ekxSWlUzczBTVDRKSmV3TjYxMG5VT0ErSG9MdnprTHh5OTM4aHZ4bFNicnBI?=
+ =?utf-8?B?UXZnSDJrNFBCaS82Ui8wN1JVTkNPNXBJaDJzTWRRTFQ4SWpudm5GRzRvZTRt?=
+ =?utf-8?B?NnNaTE5ndW0zT3ZKTmR6TkFNUFRGSGRxY3ZOSzVDVEdmaWpMeWpLTFhRdHJ0?=
+ =?utf-8?B?RnZraFYwUjZEclN2dnphZ1g0QUtDQnM0Wm1TdXJqTUFBSWRneDZsaXl6ek1P?=
+ =?utf-8?B?KzRXbXRNUHNlTVlYSnhudUdydXpZc0FmVVFpVEdLbC9XaStEZkgrRVFGOEtM?=
+ =?utf-8?B?bEVVajUzZ0FHbUdLZkJNN0habDZYb3ZURzVtSGw0bmJINWtYRGM4SmZrUCs4?=
+ =?utf-8?B?VXprdUNrdk5sdFlvenJpNFg5c2p0clN4L3FYZzVsVmJaYjVVNXlhV0Nzemh6?=
+ =?utf-8?B?RFNDK3oweHRwMmFUbk1oS1h1Z3BZeTEyTWJFdkM5blF1cXFpdk5aSDMzYUFH?=
+ =?utf-8?B?c1ZlK1ZpTUk5SG1Oc0p0em1kcnhRbkZ0Q0kyQThOdUFDRjVBYXhHVndDQ1R1?=
+ =?utf-8?B?Nnh6NGJxNnJ0ZnpHWTRKUzR3Q2piWXFOb3YrNTZKWkJmVWJ1V2xyUlJkcFpO?=
+ =?utf-8?B?eTRBdjRSUnhVMnNVUHpsbjdOUmtBWnhYZ0YyMTd2S3pCR3dwVDJ3cXMvRHcz?=
+ =?utf-8?B?L3c3MHgwUDQ0U1NpWjdiNHdKQVBQY0psV0lBazZyWWNIcVVtQlI5Y05mdm9i?=
+ =?utf-8?B?ZGEyVkxkcHcwTGtxL2lmbWVXWFhVUGZ6RWhCUXlRN2czMWFBcW4weHNLMXRZ?=
+ =?utf-8?B?OVE3dUc5cWFrWkZ0cGMxUU5yZVlDSTI2enV2ZklMVi9BT2JOWFhnT0NydTlh?=
+ =?utf-8?B?bklSZFVrWXRFM2lJZFJKWUFjRnAzYmw4VllmdTQ5ckVPLzZPVnh4SFpIY2tC?=
+ =?utf-8?B?cGlsZ2NPVGlkT2NlTFRRL2xBM1NVazRRaVlRcG5sYWtJNkxadTVmNFY4WlRR?=
+ =?utf-8?B?OEMrejZRQWM2ZGluSnVwaThEdlFGLy94UmdWTWFURmkraWxWYlZaeWtjTmsw?=
+ =?utf-8?B?WmN2bGw2UHdkVlpVTytIUVk2MUxZWkJacTB6VXRjTnE4SENSeHM3MnUyTnBJ?=
+ =?utf-8?B?UklkT29LbExWRDNWbk1xM1BzM0t0VXRpMG5pWm1Cc1R3N0ZzT3BFZjlFb0ZT?=
+ =?utf-8?B?cW9NYkdyQ3hyV1RiNWQ4aTVTYzhGaklnMXR1Nll3YnJjeXZzZ0R0c3V3aVVz?=
+ =?utf-8?B?dzkwMzAwOUp1ZTliM24wWmFQY1htOGZuUno2OGpHeGdnR20vZ3lWVkZIM2Nm?=
+ =?utf-8?B?NEVkeXFMNjlyTnFYL0x6clpEMVYraGE3RkxIcjBLTTlnU3pwaFpUSGc4WGVp?=
+ =?utf-8?B?Zk1RdzJYQnZKVS9GMmUzQjJrTmQ1OVlCZkhxTWQxY1FzZUxSR1ZIdndBcVVT?=
+ =?utf-8?B?MTNhbFpNU3NrRW5NNkxBMklvR2ZyaWtFd2pYaUVWRXpWaFlBSTB2am1kNjQ3?=
+ =?utf-8?B?Z1hWektMM2paS2FBNkpnM0k3bXMxSzdqTk0rdllzb25DT0tFampDbC9Tb1M0?=
+ =?utf-8?B?dlcySGtrS1QxU2dKOGxBdUZSNDhQU3JHV09mNDI2bDZKbFpjL1dVOUZQcHhW?=
+ =?utf-8?B?NEE9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <773C442DBE82B44FACC5C1FA30C9F531@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR11MB5963.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b4fab206-68be-4aab-55c0-08dde013f701
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Aug 2025 18:04:10.9165
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: d27JhJKqQcRBacrNh4ErkGgVoPrkOHFMaB4xDc9hU/oJiNojwqCcsNzJNbrAMZolJOWmGzc30Ole0Vy9FqGHVBJcaxSOapu6FdHEJy6iR6k=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR11MB4772
+X-OriginatorOrg: intel.com
 
-From: Steven Rostedt <rostedt@goodmis.org>
-
-If a tracepoint is defined via DECLARE_TRACE() or TRACE_EVENT() but never
-called (via the trace_<tracepoint>() function), its metadata is still
-around in memory and not discarded.
-
-When created via TRACE_EVENT() the situation is worse because the
-TRACE_EVENT() creates metadata that can be around 5k per trace event.
-Having unused trace events causes several thousand of wasted bytes.
-
-Add a verifier that injects a string of the name of the tracepoint it
-calls that is added to the discarded section "__tracepoint_check".
-For every builtin tracepoint, its name (which is saved in the in-memory
-section "__tracepoint_strings") will have its name also in the
-"__tracepoint_check" section if it is used.
-
-Add a new program that is run on build called tracepoint-update. This is
-executed on the vmlinux.o before the __tracepoint_check section is
-discarded (the section is discarded before vmlinux is created). This
-program will create an array of each string in the __tracepoint_check
-section and then sort it. Then it will walk the strings in the
-__tracepoint_strings section and do a binary search to check if its name
-is in the __tracepoint_check section. If it is not, then it is unused and
-a warning is printed.
-
-Note, this currently only handles tracepoints that are builtin and not in
-modules.
-
-Enabling this currently with a given config produces:
-
-warning: tracepoint 'sched_move_numa' is unused.
-warning: tracepoint 'sched_stick_numa' is unused.
-warning: tracepoint 'sched_swap_numa' is unused.
-warning: tracepoint 'pelt_hw_tp' is unused.
-warning: tracepoint 'pelt_irq_tp' is unused.
-warning: tracepoint 'rcu_preempt_task' is unused.
-warning: tracepoint 'rcu_unlock_preempted_task' is unused.
-warning: tracepoint 'xdp_bulk_tx' is unused.
-warning: tracepoint 'xdp_redirect_map' is unused.
-warning: tracepoint 'xdp_redirect_map_err' is unused.
-warning: tracepoint 'vma_mas_szero' is unused.
-warning: tracepoint 'vma_store' is unused.
-warning: tracepoint 'hugepage_set_pmd' is unused.
-warning: tracepoint 'hugepage_set_pud' is unused.
-warning: tracepoint 'hugepage_update_pmd' is unused.
-warning: tracepoint 'hugepage_update_pud' is unused.
-warning: tracepoint 'block_rq_remap' is unused.
-warning: tracepoint 'xhci_dbc_handle_event' is unused.
-warning: tracepoint 'xhci_dbc_handle_transfer' is unused.
-warning: tracepoint 'xhci_dbc_gadget_ep_queue' is unused.
-warning: tracepoint 'xhci_dbc_alloc_request' is unused.
-warning: tracepoint 'xhci_dbc_free_request' is unused.
-warning: tracepoint 'xhci_dbc_queue_request' is unused.
-warning: tracepoint 'xhci_dbc_giveback_request' is unused.
-warning: tracepoint 'tcp_ao_wrong_maclen' is unused.
-warning: tracepoint 'tcp_ao_mismatch' is unused.
-warning: tracepoint 'tcp_ao_key_not_found' is unused.
-warning: tracepoint 'tcp_ao_rnext_request' is unused.
-warning: tracepoint 'tcp_ao_synack_no_key' is unused.
-warning: tracepoint 'tcp_ao_snd_sne_update' is unused.
-warning: tracepoint 'tcp_ao_rcv_sne_update' is unused.
-
-Some of the above is totally unused but others are not used due to their
-"trace_" functions being inside configs, in which case, the defined
-tracepoints should also be inside those same configs. Others are
-architecture specific but defined in generic code, where they should
-either be moved to the architecture or be surrounded by #ifdef for the
-architectures they are for.
-
-This tool could be updated to process modules in the future.
-
-I'd like to thank Mathieu Desnoyers for suggesting using strings instead
-of pointers, as using pointers in vmlinux.o required handling relocations
-and it required implementing almost a full feature linker to do so.
-
-Link: https://lore.kernel.org/all/20250528114549.4d8a5e03@gandalf.local.home/
-
-Suggested-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com> # for using strings instead of pointers
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
-Changes since v5: https://lore.kernel.org/20250725025213.342188378@kernel.org
-
-- Fixed change log "it's name" to "its name" (Mathieu Desnoyers)
-
-- Removed unnecessary len = strlen(str) in increment of for_each_shdr_str()
-
-- Removed assigned but not used "count" in check_tracepoints (kernel test robot)
-
-- Added more comments
-
- include/asm-generic/vmlinux.lds.h |   1 +
- include/linux/tracepoint.h        |  10 ++
- kernel/trace/Kconfig              |  10 ++
- scripts/Makefile                  |   3 +
- scripts/link-vmlinux.sh           |   4 +
- scripts/tracepoint-update.c       | 232 ++++++++++++++++++++++++++++++
- 6 files changed, 260 insertions(+)
- create mode 100644 scripts/tracepoint-update.c
-
-diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-index ae2d2359b79e..b0aed322ccbd 100644
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -1047,6 +1047,7 @@ defined(CONFIG_AUTOFDO_CLANG) || defined(CONFIG_PROPELLER_CLANG)
- 	*(.modinfo)							\
- 	/* ld.bfd warns about .gnu.version* even when not emitted */	\
- 	*(.gnu.version*)						\
-+	*(__tracepoint_check)
- 
- #define DISCARDS							\
- 	/DISCARD/ : {							\
-diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
-index 826ce3f8e1f8..71d2e085c49e 100644
---- a/include/linux/tracepoint.h
-+++ b/include/linux/tracepoint.h
-@@ -221,6 +221,14 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
- 		__do_trace_##name(args);				\
- 	}
- 
-+#ifdef CONFIG_TRACEPOINT_WARN_ON_UNUSED
-+# define TRACEPOINT_CHECK(name)						\
-+	static const char __used __section("__tracepoint_check") __trace_check[] = \
-+		#name;
-+#else
-+# define TRACEPOINT_CHECK(tname)
-+#endif
-+
- /*
-  * Make sure the alignment of the structure in the __tracepoints section will
-  * not add unwanted padding between the beginning of the section and the
-@@ -270,6 +278,7 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
- 	__DECLARE_TRACE_COMMON(name, PARAMS(proto), PARAMS(args), PARAMS(data_proto)) \
- 	static inline void __do_trace_##name(proto)			\
- 	{								\
-+		TRACEPOINT_CHECK(name)					\
- 		if (cond) {						\
- 			guard(preempt_notrace)();			\
- 			__DO_TRACE_CALL(name, TP_ARGS(args));		\
-@@ -289,6 +298,7 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
- 	__DECLARE_TRACE_COMMON(name, PARAMS(proto), PARAMS(args), PARAMS(data_proto)) \
- 	static inline void __do_trace_##name(proto)			\
- 	{								\
-+		TRACEPOINT_CHECK(name)					\
- 		guard(rcu_tasks_trace)();				\
- 		__DO_TRACE_CALL(name, TP_ARGS(args));			\
- 	}								\
-diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-index d2c79da81e4f..6dcb0fbacf0d 100644
---- a/kernel/trace/Kconfig
-+++ b/kernel/trace/Kconfig
-@@ -1067,6 +1067,16 @@ config GCOV_PROFILE_FTRACE
- 	  Note that on a kernel compiled with this config, ftrace will
- 	  run significantly slower.
- 
-+config TRACEPOINT_WARN_ON_UNUSED
-+	bool "Warn on build if a tracepoint is defined but not used"
-+	depends on TRACEPOINTS
-+	help
-+	  This option checks if every builtin defined tracepoint is
-+	  used in the code. If a tracepoint is defined but not used,
-+	  it will waste memory as its metadata is still created.
-+	  This will cause a warning at build time if it detects a
-+	  tracepoint created but never called.
-+
- config FTRACE_SELFTEST
- 	bool
- 
-diff --git a/scripts/Makefile b/scripts/Makefile
-index f19624b3ed92..11bf1bbd8c5d 100644
---- a/scripts/Makefile
-+++ b/scripts/Makefile
-@@ -11,8 +11,10 @@ hostprogs-always-$(CONFIG_MODULE_SIG_FORMAT)		+= sign-file
- hostprogs-always-$(CONFIG_SYSTEM_EXTRA_CERTIFICATE)	+= insert-sys-cert
- hostprogs-always-$(CONFIG_RUST_KERNEL_DOCTESTS)		+= rustdoc_test_builder
- hostprogs-always-$(CONFIG_RUST_KERNEL_DOCTESTS)		+= rustdoc_test_gen
-+hostprogs-always-$(CONFIG_TRACEPOINT_WARN_ON_UNUSED)	+= tracepoint-update
- 
- sorttable-objs := sorttable.o elf-parse.o
-+tracepoint-update-objs := tracepoint-update.o elf-parse.o
- 
- ifneq ($(or $(CONFIG_X86_64),$(CONFIG_X86_32)),)
- always-$(CONFIG_RUST)					+= target.json
-@@ -27,6 +29,7 @@ generate_rust_target-rust := y
- rustdoc_test_builder-rust := y
- rustdoc_test_gen-rust := y
- 
-+HOSTCFLAGS_tracepoint-update.o = -I$(srctree)/tools/include
- HOSTCFLAGS_elf-parse.o = -I$(srctree)/tools/include
- HOSTCFLAGS_sorttable.o = -I$(srctree)/tools/include
- HOSTLDLIBS_sorttable = -lpthread
-diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
-index 51367c2bfc21..4934c5e6c0b1 100755
---- a/scripts/link-vmlinux.sh
-+++ b/scripts/link-vmlinux.sh
-@@ -211,6 +211,10 @@ kallsymso=
- strip_debug=
- generate_map=
- 
-+if is_enabled CONFIG_TRACEPOINT_WARN_ON_UNUSED; then
-+	${objtree}/scripts/tracepoint-update vmlinux.o
-+fi
-+
- if is_enabled CONFIG_KALLSYMS; then
- 	true > .tmp_vmlinux0.syms
- 	kallsyms .tmp_vmlinux0.syms .tmp_vmlinux0.kallsyms
-diff --git a/scripts/tracepoint-update.c b/scripts/tracepoint-update.c
-new file mode 100644
-index 000000000000..4018be0cb4df
---- /dev/null
-+++ b/scripts/tracepoint-update.c
-@@ -0,0 +1,232 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+
-+#include <sys/types.h>
-+#include <sys/stat.h>
-+#include <getopt.h>
-+#include <fcntl.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <stdbool.h>
-+#include <string.h>
-+#include <unistd.h>
-+#include <errno.h>
-+#include <pthread.h>
-+
-+#include "elf-parse.h"
-+
-+static Elf_Shdr *check_data_sec;
-+static Elf_Shdr *tracepoint_data_sec;
-+
-+static inline void *get_index(void *start, int entsize, int index)
-+{
-+	return start + (entsize * index);
-+}
-+
-+static int compare_strings(const void *a, const void *b)
-+{
-+	const char *av = *(const char **)a;
-+	const char *bv = *(const char **)b;
-+
-+	return strcmp(av, bv);
-+}
-+
-+struct elf_tracepoint {
-+	Elf_Ehdr *ehdr;
-+	const char **array;
-+	int count;
-+};
-+
-+#define REALLOC_SIZE (1 << 10)
-+#define REALLOC_MASK (REALLOC_SIZE - 1)
-+
-+static int add_string(const char *str, const char ***vals, int *count)
-+{
-+	const char **array = *vals;
-+
-+	if (!(*count & REALLOC_MASK)) {
-+		int size = (*count) + REALLOC_SIZE;
-+
-+		array = realloc(array, sizeof(char *) * size);
-+		if (!array) {
-+			fprintf(stderr, "Failed memory allocation\n");
-+			return -1;
-+		}
-+		*vals = array;
-+	}
-+
-+	array[(*count)++] = str;
-+	return 0;
-+}
-+
-+/**
-+ * for_each_shdr_str - iterator that reads strings that are in an ELF section.
-+ * @len: "int" to hold the length of the current string
-+ * @ehdr: A pointer to the ehdr of the ELF file
-+ * @sec: The section that has the strings to iterater on
-+ *
-+ * This is a for loop that iterates over all the nul terminated strings
-+ * that are in a given ELF section. The variable "str" will hold
-+ * the current string for each iteration and the passed in @len will
-+ * contain theh strlen() of that string.
-+ */
-+#define for_each_shdr_str(len, ehdr, sec)				\
-+	for (const char *str = (void *)(ehdr) + shdr_offset(sec),	\
-+			*end = str + shdr_size(sec);			\
-+	     len = strlen(str), str < end;				\
-+	     str += (len) + 1)
-+
-+
-+static void make_trace_array(struct elf_tracepoint *etrace)
-+{
-+	Elf_Ehdr *ehdr = etrace->ehdr;
-+	const char **vals = NULL;
-+	int count = 0;
-+	int len;
-+
-+	etrace->array = NULL;
-+
-+	/*
-+	 * The __tracepoint_check section is filled with strings of the
-+	 * names of tracepoints (in tracepoint_strings). Create an array
-+	 * that points to each string and then sort the array.
-+	 */
-+	for_each_shdr_str(len, ehdr, check_data_sec) {
-+		if (!len)
-+			continue;
-+		if (add_string(str, &vals, &count) < 0)
-+			return;
-+	}
-+
-+	/* If CONFIG_TRACEPOINT_VERIFY_USED is not set, there's nothing to do */
-+	if (!count)
-+		return;
-+
-+	qsort(vals, count, sizeof(char *), compare_strings);
-+
-+	etrace->array = vals;
-+	etrace->count = count;
-+}
-+
-+static int find_event(const char *str, void *array, size_t size)
-+{
-+	return bsearch(&str, array, size, sizeof(char *), compare_strings) != NULL;
-+}
-+
-+static void check_tracepoints(struct elf_tracepoint *etrace)
-+{
-+	Elf_Ehdr *ehdr = etrace->ehdr;
-+	int len;
-+
-+	if (!etrace->array)
-+		return;
-+
-+	/*
-+	 * The __tracepoints_strings section holds all the names of the
-+	 * defined tracepoints. If any of them are not in the
-+	 * __tracepoint_check_section it means they are not used.
-+	 */
-+	for_each_shdr_str(len, ehdr, tracepoint_data_sec) {
-+		if (!len)
-+			continue;
-+		if (!find_event(str, etrace->array, etrace->count)) {
-+			fprintf(stderr, "warning: tracepoint '%s' is unused.\n", str);
-+		}
-+	}
-+
-+	free(etrace->array);
-+}
-+
-+static void *tracepoint_check(struct elf_tracepoint *etrace)
-+{
-+	make_trace_array(etrace);
-+	check_tracepoints(etrace);
-+
-+	return NULL;
-+}
-+
-+static int process_tracepoints(void *addr, char const *const fname)
-+{
-+	struct elf_tracepoint etrace = {0};
-+	Elf_Ehdr *ehdr = addr;
-+	Elf_Shdr *shdr_start;
-+	Elf_Shdr *string_sec;
-+	const char *secstrings;
-+	unsigned int shnum;
-+	unsigned int shstrndx;
-+	int shentsize;
-+	int idx;
-+	int done = 2;
-+
-+	shdr_start = (Elf_Shdr *)((char *)ehdr + ehdr_shoff(ehdr));
-+	shentsize = ehdr_shentsize(ehdr);
-+
-+	shstrndx = ehdr_shstrndx(ehdr);
-+	if (shstrndx == SHN_XINDEX)
-+		shstrndx = shdr_link(shdr_start);
-+	string_sec = get_index(shdr_start, shentsize, shstrndx);
-+	secstrings = (const char *)ehdr + shdr_offset(string_sec);
-+
-+	shnum = ehdr_shnum(ehdr);
-+	if (shnum == SHN_UNDEF)
-+		shnum = shdr_size(shdr_start);
-+
-+	for (int i = 0; done && i < shnum; i++) {
-+		Elf_Shdr *shdr = get_index(shdr_start, shentsize, i);
-+
-+		idx = shdr_name(shdr);
-+
-+		/* locate the __tracepoint_check in vmlinux */
-+		if (!strcmp(secstrings + idx, "__tracepoint_check")) {
-+			check_data_sec = shdr;
-+			done--;
-+		}
-+
-+		/* locate the __tracepoints_ptrs section in vmlinux */
-+		if (!strcmp(secstrings + idx, "__tracepoints_strings")) {
-+			tracepoint_data_sec = shdr;
-+			done--;
-+		}
-+	}
-+
-+	if (!check_data_sec) {
-+		fprintf(stderr,	"no __tracepoint_check in file: %s\n", fname);
-+		return -1;
-+	}
-+
-+	if (!tracepoint_data_sec) {
-+		fprintf(stderr,	"no __tracepoint_strings in file: %s\n", fname);
-+		return -1;
-+	}
-+
-+	etrace.ehdr = ehdr;
-+	tracepoint_check(&etrace);
-+	return 0;
-+}
-+
-+int main(int argc, char *argv[])
-+{
-+	int n_error = 0;
-+	size_t size = 0;
-+	void *addr = NULL;
-+
-+	if (argc < 2) {
-+		fprintf(stderr, "usage: tracepoint-update vmlinux...\n");
-+		return 0;
-+	}
-+
-+	/* Process each file in turn, allowing deep failure. */
-+	for (int i = 1; i < argc; i++) {
-+		addr = elf_map(argv[i], &size, 1 << ET_REL);
-+		if (!addr) {
-+			++n_error;
-+			continue;
-+		}
-+
-+		if (process_tracepoints(addr, argv[i]))
-+			++n_error;
-+
-+		elf_unmap(addr, size);
-+	}
-+
-+	return !!n_error;
-+}
--- 
-2.50.1
-
-
+T24gV2VkLCAyMDI1LTA4LTIwIGF0IDE5OjQzICswMjAwLCBQZXRlciBaaWpsc3RyYSB3cm90ZToN
+Cj4gWWVzLiBCdXQgc3VwcG9ydGluZyB0aGUgc2hzdGsgaXNuJ3QgaGFyZCAoYXMgcGVyIHRoaXMg
+cGF0Y2gpLCBpdCBleGFjdGx5DQo+IG1hdGNoZXMgd2hhdCBpdCBhbHJlYWR5IGRvZXMgdG8gdGhl
+IG5vcm1hbCBzdGFjay4gU28gSSBkb24ndCBzZWUgYQ0KPiByZWFzb24gbm90IHRvIGRvIGl0Lg0K
+DQpUaGFua3MgZm9yIGV4cGxhaW5pbmcsIGFuZCBzb3JyeSBmb3IgYmVpbmcgc2xvdy4gR29pbmcg
+dG8gYmxhbWUgdGhpcyBoZWFkIGNvbGQuDQoNCj4gDQo+IEFueXdheSwgSSdtIG5vdCBhIGh1Z2Ug
+ZmFuIG9mIGFueSBvZiB0aGlzLiBJIHN1c3BlY3QgRlJFRCB3aWxsIG1ha2UgYWxsDQo+IHRoaXMg
+ZmFuY3kgY29kZSB0b3RhbGx5IGlycmVsZXZhbnQuIEJ1dCB1bnRpbCBwZW9wbGUgaGF2ZSBGUkVE
+IGVuYWJsZWQNCj4gaGFyZHdhcmUgaW4gbGFyZ2UgcXVhbnRpdGllcywgSSBzdXBwb3NlIHRoaXMg
+aGFzIGEgdXNlLg0KDQpJdCBkb2Vzbid0IHNvdW5kIHRvbyB1bmJvdW5kZWQgYW5kIEkgZ3Vlc3Mg
+YXMgbG9uZyBhcyBpdCdzIGp1c3QgYW4gb3B0aW1pemF0aW9uDQp3ZSBjYW4gYWx3YXlzIGJhY2sg
+aXQgb3V0IGlmIHNvbWVvbmUgZmluZHMgYSB3YXkgdG8gYWJ1c2UgaXQuDQo=
