@@ -1,154 +1,261 @@
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4671261B8F
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 20 Aug 2025 19:51:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27F7C1DDA18;
+	Wed, 20 Aug 2025 19:59:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755719512; cv=none; b=hGQ1R9qbSnwbv9sqfIHjphS9a416xfUMuXi536FnndoJTxy/B9qgCbC3nOvTrb1sdmhFQTIlmeE0y/NManiXEvW2YoLhSsHU6r/c9TnjFP9d5SUXDoSjj6oAyn1/tjGx2aYMIMxQHXCVfxUuJdRX41kiVfREPu+boa40vUWTmNE=
+	t=1755720001; cv=none; b=D58JMiRKWNB3ofTJQ55I132h2uMVoGh+9eWwLZBeGc1oh/fH4wePC2voLfuMF83b3AwOUpKSPfG4Pew5IknHI6QLyakpKMNByC28SrkV8lMW5vnnxaymhoUJ4zxGAj2fzjiLTzm+hmIAWZHg+P4W+g92fSQOC1YE8qYHDKB2YQw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755719512; c=relaxed/simple;
-	bh=oVhGTM1znDO6F7FjpKVLrhKRWRws+kg+AB55yVd7m6A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qCQYIjoM8FMn32feH2I/W1Up8PTQVWr+AZYcJwHOWOhBQcc+IScpZy4HOqHDwuALE2fwoJn9Ebc2wcHixgKQYX6m2VjrG+kHHCXpbqVm/dafpvPmTSG+Nr/4F1S8s43Od7Eo05s2nb1jHtdOBbLpNrwRkv1VvMk61OKkvvLDLjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1eqanLi9; arc=none smtp.client-ip=209.85.160.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1755720001; c=relaxed/simple;
+	bh=6L6X83vm3E3o+uPE71R0TU6u3FY3H4PuScC1hlMODBM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=oKePjnHkXoh8X2C1WIf8OALOlm1sIvhtQGswu2rheXOMIuU35CZkm+8DecA7dPWq8QhilWn8qiacwEJLS8MuKACMoMibjfFX+aeIjIaNTza9Ehr+VHhQNwLLQKgvz8gpdAq3Dh+69Wm9fXypuJ2VeP6+lYZEQlGHx0Yg6njj7RM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=KM2ME80B; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1eqanLi9"
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-4b29b715106so13101cf.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 20 Aug 2025 12:51:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1755719509; x=1756324309; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+5vWw0dImYJhGaYdSw1CwEfTyC3R0fK1vETd+qU82OY=;
-        b=1eqanLi9LOFZF6Wn5dJCE/efembwHyb/5z2eoRdp4ewMvspIoCJ++TrTVUZn6XUqeF
-         qjBF8lK42F9W03wjTAA+V+/CyAERTIWrp/UXiXwT6a6msDppZDDPH3ImPjx07Sgm7Lqk
-         SXZ2xSi8K5s+Ho5kNYcT1LDnU5JrbzaEHGzP/Dlt6w85YqFJdWqwV2hz9Z2evhOBT3tu
-         U+c44Hl5gZLfEF8lYCkkfzEEZtngZ5axmIR/uie5SUUWl6xiwj7jHusIxibTqsJ5KuGb
-         1/DumzJyvHYBtepsFj82oHAWIrJrb8tMzvCRipP50ZoEkl4tGq00PuOoiNSQOTQaYD1E
-         25fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755719509; x=1756324309;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+5vWw0dImYJhGaYdSw1CwEfTyC3R0fK1vETd+qU82OY=;
-        b=Yn7lzN71GZe5/vWSXVhSCFXevMiDP6r/WhgN3sR8B8CcpLfyRr/zcbSZohyFMPRb+J
-         16sj9cGQPa90uvhl6qQQMMj0al0WjXTxS0ZtVKwDnAJTG6gDGGOWkKeqHHSxNsfl6smh
-         eCclazHw316FCSFZtodo0LPczlowt2i00oUjZ6rE0813HNB68VE6aia4VMJ9syruIwmK
-         BTIV9fIEjKLGov4HTBRWdHwH6ddSyMb5QoQWw/cxBcSI0p5n+a15bgGXvCTet3hXCARF
-         yEBKOjxuudLg81vxqJdHtfbNVWebZPSwQzvc9FO0SAO7SjGKlCqSB8N5bfViyygZOeTY
-         q6iA==
-X-Forwarded-Encrypted: i=1; AJvYcCWOoxK0zt6DE/EWijk3J/o/x6hVsX3LN5SlNIoAQfqsA+Y09KI1InTZxskBm1Dn36rgcyjn+cToNek7HifrrOytIHI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxNOXYeAHoYl87CXQmaOf9URHUg4DOnzd0VWWVaOfyHlcEMSvKt
-	vS3AN4GkyMkv97oxvgxa/cd3uR9NeIzdOl94q4plAQw/f+pUydeNdcxk2iLZ++SnPypfSf79baz
-	MDaEPFteWS5JCfJ493Mhz0qhNzqbhcEdp+aTkkuOZ
-X-Gm-Gg: ASbGncsuPw9dJOKamo4uvP86gFneBuE/4CmD5tHUn/oSqTWnjw5/Wsn2s2EVuKCZTnn
-	morqqveZdRANxJtfrpO+KGsE1T18gp70NodYDK3dcZ66eQ1Q7NRc+mqXVzgy4zwgUIdaykOaGfu
-	vhpe+SQ701wuhdsj8pa9PP5IVyGKjh2pIo/tujcT4FdiuPxv+h4p0fNQD89T15nyybc0OgPqVM3
-	TLowvXFWwaQQgmfntj/5oBnpekgwnLxUdlRZ2gyhQuIu18SUEvcIwI=
-X-Google-Smtp-Source: AGHT+IFmZUSJrytsqPuwgDUy5DVDYRM42MCGIpeE67tmDdymvz8+SUmA2EGbfjRmGrougCGhxdFfnLTZ28Cybkub2ek=
-X-Received: by 2002:a05:622a:1107:b0:4b2:9d13:e973 with SMTP id
- d75a77b69052e-4b29f242890mr96511cf.0.1755719508942; Wed, 20 Aug 2025 12:51:48
- -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KM2ME80B"
+Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTP id 57KJxjjJ325974;
+	Wed, 20 Aug 2025 14:59:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1755719985;
+	bh=FkN/MDjZtLq4YcCo9QF8yvcL89leh7oczNKEorSdyk4=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=KM2ME80B+HoDnJ/8jka7ukowr1nUnLyyeHobTq2skdhavrFPCscw2/2OqfUTE9DWF
+	 KeBb3AAxLomU6ObXU6KNBc+oKrfDNxlTtL69ER3Q2o65w63dx/yqnc4vxq9Azf34c8
+	 EZqiGsBoxeb5pdcOhUyYARdaKZ2+JYMdCJ0mlU68=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 57KJxj1i2283160
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Wed, 20 Aug 2025 14:59:45 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Wed, 20
+ Aug 2025 14:59:44 -0500
+Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
+ Frontend Transport; Wed, 20 Aug 2025 14:59:45 -0500
+Received: from [10.249.42.149] ([10.249.42.149])
+	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 57KJxiLT1026617;
+	Wed, 20 Aug 2025 14:59:44 -0500
+Message-ID: <54018fdc-d332-415e-8747-f46d84245870@ti.com>
+Date: Wed, 20 Aug 2025 14:59:44 -0500
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250820112621.4045-1-xuewen.yan@unisoc.com>
-In-Reply-To: <20250820112621.4045-1-xuewen.yan@unisoc.com>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Wed, 20 Aug 2025 12:51:37 -0700
-X-Gm-Features: Ac12FXwTo9rcFuIY0Vp0Ru30qbyMNYeq28H_AtMTQxUiAB3kpq5P_3A0q3lX588
-Message-ID: <CAJuCfpE1pJ8qhHgqvExktsMeTBbtVSK2rkE5SfeTE2nOYrNozQ@mail.gmail.com>
-Subject: Re: [RFC PATCH V2] sched: psi: Add psi events trace point
-To: Xuewen Yan <xuewen.yan@unisoc.com>
-Cc: hannes@cmpxchg.org, peterz@infradead.org, mathieu.desnoyers@efficios.com, 
-	mhiramat@kernel.org, rostedt@goodmis.org, mingo@redhat.com, 
-	juri.lelli@redhat.com, vincent.guittot@linaro.org, dietmar.eggemann@arm.com, 
-	bsegall@google.com, mgorman@suse.de, vschneid@redhat.com, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	ke.wang@unisoc.com, yuming.han@unisoc.com, xuewen.yan94@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] firmware: ti_sci: Add trace events
+To: Jonathan Cormier <jcormier@criticallink.com>, Nishanth Menon <nm@ti.com>,
+        Tero Kristo <kristo@kernel.org>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Vignesh Raghavendra
+	<vigneshr@ti.com>
+CC: <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-trace-kernel@vger.kernel.org>
+References: <20250820-linux_master_ti_sci_trace-v1-0-2a69c0abf55e@criticallink.com>
+ <20250820-linux_master_ti_sci_trace-v1-1-2a69c0abf55e@criticallink.com>
+Content-Language: en-US
+From: Andrew Davis <afd@ti.com>
+In-Reply-To: <20250820-linux_master_ti_sci_trace-v1-1-2a69c0abf55e@criticallink.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Wed, Aug 20, 2025 at 4:28=E2=80=AFAM Xuewen Yan <xuewen.yan@unisoc.com> =
-wrote:
->
-> Add trace point to psi triggers. This is useful to
-> observe the psi events in the kernel space.
->
-> One use of this is to monitor memory pressure.
-> When the pressure is too high, we can kill the process
-> in the kernel space to prevent OOM.
->
-> Signed-off-by: Xuewen Yan <xuewen.yan@unisoc.com>
+On 8/20/25 1:10 PM, Jonathan Cormier wrote:
+> Add TI sci trace events to help to debug and measure the speed of the
+> communication channel. The xfer_begin and xfer_end calls can be used
+> to time how long a transfer takes. The rx_callback and msg_dump trace
+> events help track the data that gets returned.
+> 
+> Based on tracing done in ARM SCMI
+> 
+> Signed-off-by: Jonathan Cormier <jcormier@criticallink.com>
 > ---
-> v2:
-> -fix compilation error;
-> -export the tp;
-> -add more commit message;
-> ---
->  include/trace/events/sched.h | 5 +++++
->  kernel/sched/psi.c           | 4 ++++
->  2 files changed, 9 insertions(+)
->
-> diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
-> index 7b2645b50e78..d54db5fcbca2 100644
-> --- a/include/trace/events/sched.h
-> +++ b/include/trace/events/sched.h
-> @@ -896,6 +896,11 @@ DECLARE_TRACE(sched_set_need_resched,
->         TP_PROTO(struct task_struct *tsk, int cpu, int tif),
->         TP_ARGS(tsk, cpu, tif));
->
-> +struct psi_trigger;
-> +DECLARE_TRACE(psi_event,
-
-DECLARE_TRACE will create a tracepoint but will not export it in the
-tracefs. Why should we not have it in the tracefs?
-
-> +       TP_PROTO(struct psi_trigger *t),
-> +       TP_ARGS(t));
+>   MAINTAINERS                     |  1 +
+>   drivers/firmware/Makefile       |  3 ++
+>   drivers/firmware/ti_sci.c       | 11 ++++++
+>   drivers/firmware/ti_sci_trace.h | 87 +++++++++++++++++++++++++++++++++++++++++
+>   4 files changed, 102 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index fad6cb025a1918beec113b576cf28b76151745ef..a6fac706feceedfc5039ec07de954ac35a9af848 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -24631,6 +24631,7 @@ F:	drivers/pmdomain/ti/ti_sci_pm_domains.c
+>   F:	include/dt-bindings/soc/ti,sci_pm_domain.h
+>   F:	include/linux/soc/ti/ti_sci_inta_msi.h
+>   F:	include/linux/soc/ti/ti_sci_protocol.h
+> +F:	include/trace/events/ti_sci.h
+>   
+>   TEXAS INSTRUMENTS' TMP117 TEMPERATURE SENSOR DRIVER
+>   M:	Puranjay Mohan <puranjay@kernel.org>
+> diff --git a/drivers/firmware/Makefile b/drivers/firmware/Makefile
+> index 4ddec2820c96fa9be012e89dac3038968bb67039..a055c53bdfa9e5c64adb4e20a9ca6c6661d80297 100644
+> --- a/drivers/firmware/Makefile
+> +++ b/drivers/firmware/Makefile
+> @@ -2,6 +2,9 @@
+>   #
+>   # Makefile for the linux kernel.
+>   #
 > +
->  #endif /* _TRACE_SCHED_H */
->
->  /* This part must be outside protection */
-> diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
-> index 59fdb7ebbf22..f06eb91a1250 100644
-> --- a/kernel/sched/psi.c
-> +++ b/kernel/sched/psi.c
-> @@ -141,6 +141,8 @@
->  #include <linux/psi.h>
->  #include "sched.h"
->
-> +EXPORT_TRACEPOINT_SYMBOL_GPL(psi_event_tp);
-
-So, are you planning to attach some handler to this trace event in your dri=
-ver?
-
+> +ccflags-y += -I$(src)			# needed for trace events
 > +
->  static int psi_bug __read_mostly;
->
->  DEFINE_STATIC_KEY_FALSE(psi_disabled);
-> @@ -509,6 +511,8 @@ static void update_triggers(struct psi_group *group, =
-u64 now,
->                 if (now < t->last_event_time + t->win.size)
->                         continue;
->
-> +               trace_psi_event_tp(t);
-
-This should only be done if the below cmpxchg() check is true, right?
-Otherwise it will not match with what userspace is receiving.
-
+>   obj-$(CONFIG_ARM_SCPI_PROTOCOL)	+= arm_scpi.o
+>   obj-$(CONFIG_ARM_SDE_INTERFACE)	+= arm_sdei.o
+>   obj-$(CONFIG_DMI)		+= dmi_scan.o
+> diff --git a/drivers/firmware/ti_sci.c b/drivers/firmware/ti_sci.c
+> index ae5fd1936ad322e5e3a94897cc042f6548f919e6..87b1330305939bb6b19bbdaa594b17b266092a34 100644
+> --- a/drivers/firmware/ti_sci.c
+> +++ b/drivers/firmware/ti_sci.c
+> @@ -127,6 +127,9 @@ struct ti_sci_info {
+>   #define cl_to_ti_sci_info(c)	container_of(c, struct ti_sci_info, cl)
+>   #define handle_to_ti_sci_info(h) container_of(h, struct ti_sci_info, handle)
+>   
+> +#define CREATE_TRACE_POINTS
+> +#include "ti_sci_trace.h"
 > +
->                 /* Generate an event */
->                 if (cmpxchg(&t->event, 0, 1) =3D=3D 0) {
->                         if (t->of)
-> --
-> 2.25.1
->
+>   #ifdef CONFIG_DEBUG_FS
+>   
+>   /**
+> @@ -269,6 +272,9 @@ static void ti_sci_rx_callback(struct mbox_client *cl, void *m)
+>   		return;
+>   	}
+>   
+> +	trace_ti_sci_rx_callback(hdr, 0);
+> +	trace_ti_sci_msg_dump(hdr, xfer);
+> +
+
+You could instead put these in the same ti_sci_do_xfer() as the other
+trace additions, after the completion, xfer->xfer_buf will contain
+the response "hdr" message. Keeps all the tracing in one spot, and
+if you are going for timing info you'll want to take into account
+the completion scheduling/polling.
+
+Andrew
+
+>   	ti_sci_dump_header_dbg(dev, hdr);
+>   	/* Take a copy to the rx buffer.. */
+>   	memcpy(xfer->xfer_buf, mbox_msg->buf, xfer->rx_len);
+> @@ -402,6 +408,9 @@ static inline int ti_sci_do_xfer(struct ti_sci_info *info,
+>   	int timeout;
+>   	struct device *dev = info->dev;
+>   	bool done_state = true;
+> +	struct ti_sci_msg_hdr *hdr = (struct ti_sci_msg_hdr *)xfer->tx_message.buf;
+> +
+> +	trace_ti_sci_xfer_begin(hdr, 0);
+>   
+>   	ret = mbox_send_message(info->chan_tx, &xfer->tx_message);
+>   	if (ret < 0)
+> @@ -437,6 +446,8 @@ static inline int ti_sci_do_xfer(struct ti_sci_info *info,
+>   	 */
+>   	mbox_client_txdone(info->chan_tx, ret);
+>   
+> +	trace_ti_sci_xfer_end(hdr, ret);
+> +
+>   	return ret;
+>   }
+>   
+> diff --git a/drivers/firmware/ti_sci_trace.h b/drivers/firmware/ti_sci_trace.h
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..7f99c41ea08aec6cf64d601576cad29b14c6ad5b
+> --- /dev/null
+> +++ b/drivers/firmware/ti_sci_trace.h
+> @@ -0,0 +1,87 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#undef TRACE_SYSTEM
+> +#define TRACE_SYSTEM ti_sci
+> +
+> +#if !defined(_TRACE_TI_SCI_H) || defined(TRACE_HEADER_MULTI_READ)
+> +#define _TRACE_TI_SCI_H
+> +
+> +#include <linux/tracepoint.h>
+> +
+> +
+> +DECLARE_EVENT_CLASS(ti_sci_hdr_event_class,
+> +	TP_PROTO(struct ti_sci_msg_hdr *hdr, int status),
+> +	TP_ARGS(hdr, status),
+> +
+> +	TP_STRUCT__entry(
+> +		__field(u16, type)
+> +		__field(u8, host)
+> +		__field(u8, seq)
+> +		__field(u32, flags)
+> +		__field(int, status)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__entry->type = hdr->type;
+> +		__entry->host = hdr->host;
+> +		__entry->seq = hdr->seq;
+> +		__entry->flags = hdr->flags;
+> +		__entry->status = status;
+> +	),
+> +
+> +	TP_printk("type=%04X host=%02X seq=%02X flags=%08X status=%d",
+> +		__entry->type, __entry->host, __entry->seq, __entry->flags, __entry->status)
+> +);
+> +
+> +DEFINE_EVENT(ti_sci_hdr_event_class,
+> +	ti_sci_xfer_begin,
+> +	TP_PROTO(struct ti_sci_msg_hdr *hdr, int status),
+> +	TP_ARGS(hdr, status)
+> +);
+> +
+> +DEFINE_EVENT(ti_sci_hdr_event_class,
+> +	ti_sci_rx_callback,
+> +	TP_PROTO(struct ti_sci_msg_hdr *hdr, int status),
+> +	TP_ARGS(hdr, status)
+> +);
+> +
+> +DEFINE_EVENT(ti_sci_hdr_event_class,
+> +	ti_sci_xfer_end,
+> +	TP_PROTO(struct ti_sci_msg_hdr *hdr, int status),
+> +	TP_ARGS(hdr, status)
+> +);
+> +
+> +
+> +TRACE_EVENT(ti_sci_msg_dump,
+> +	TP_PROTO(struct ti_sci_msg_hdr *hdr, struct ti_sci_xfer *xfer),
+> +	TP_ARGS(hdr, xfer),
+> +
+> +	TP_STRUCT__entry(
+> +		__field(u16, type)
+> +		__field(u8, host)
+> +		__field(u8, seq)
+> +		__field(u32, flags)
+> +		__field(size_t, len)
+> +		__dynamic_array(unsigned char, cmd, xfer->rx_len)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__entry->type = hdr->type;
+> +		__entry->host = hdr->host;
+> +		__entry->seq = hdr->seq;
+> +		__entry->flags = hdr->flags;
+> +		__entry->len = xfer->rx_len;
+> +		memcpy(__get_dynamic_array(cmd), xfer->xfer_buf, __entry->len);
+> +	),
+> +
+> +	TP_printk("type=%04X host=%02X seq=%02X flags=%08X data=%s",
+> +		__entry->type, __entry->host, __entry->seq, __entry->flags,
+> +		__print_hex_str(__get_dynamic_array(cmd), __entry->len))
+> +);
+> +#endif /* _TRACE_TI_SCI_H */
+> +
+> +/* This part must be outside protection */
+> +#undef TRACE_INCLUDE_PATH
+> +#define TRACE_INCLUDE_PATH .
+> +#undef TRACE_INCLUDE_FILE
+> +#define TRACE_INCLUDE_FILE ti_sci_trace
+> +#include <trace/define_trace.h>
+> 
+
