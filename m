@@ -1,58 +1,62 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBA7E20330;
-	Thu, 21 Aug 2025 06:11:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E011424336D;
+	Thu, 21 Aug 2025 07:05:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755756717; cv=none; b=P4LQZLiTRrVJgOBqtMabvyBZXrIVTofkdCQ/w24ZS0QeUY3cUrRu85wJNI5eOFsroS+7z3zRjmRKaqTDgSRJEDb4tOW4kteR2WH3up1R6Cu1PX5kTquTfbMlcAPqr2CLH4lnOuB/4TohN56ksQ38ew7isRjZDneO7aLhkKFQzLQ=
+	t=1755759910; cv=none; b=iFf1UJ/6ic8qXUTr+DdER09T0JdendQZ93MQTyBsqBIykzZqSkb6OvaAw5TEec7iJ5ls8pnaJV8zGms1yLVWNdAYa67CXSR2bdyMtubjbvCkRHL1+lT0RaA0GAc7pXRhmTas42oZnJtPVKuyB85+mPUx5a23QbxKx0e5tGRBiBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755756717; c=relaxed/simple;
-	bh=+PhorBsR6XMQ86wn4MXz/aLDVw7PeqDWpjqLZ/xx6is=;
+	s=arc-20240116; t=1755759910; c=relaxed/simple;
+	bh=AMtmt9QZ1r4SViuDMdeKyVp19CTkjdyfk7ZlZMaN0bc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RIEah0tHvm98D7pippusqTkVYcbzaMHFUSW/Kc8JCR8RBzSJ8rn9zySpBIkCSpeYZyws+38dLHYxzXKKKQzS526id3N78OZJkAR+vawdiGZ6a9Rcraw56EyUlSpbMK/cehmfYewrVGNxi0wFgBfhyHZFBq0d9wq3jiRFS9wPMOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qP+aS7CD; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=EKktsPeGnm+TOqN/7rvfYsXcTZQY8ND5ZydBSi9VVTP3xA/9g7AXOl6oU6b7hDpXy9OKUnM6xDnHe5Vb+AB+EtzCwczDDq7Pe1ptBEdHvUxF5kEtreMA4sq9hd99j0EyuxmGzHmO7bsTnUIVkbf5wHEnTBEFtKO+iuTu0cm3fPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Dg/1AKfJ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4IiZ9cmE; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qP+aS7CD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D8EFC4CEED;
-	Thu, 21 Aug 2025 06:11:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755756717;
-	bh=+PhorBsR6XMQ86wn4MXz/aLDVw7PeqDWpjqLZ/xx6is=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qP+aS7CDTcx3AaSCB8aROP8Z3j5y7rpn2d+cQ4/5rom6GopCD2X8201ocHvfjnbPq
-	 o/Cqmum51WzIu7FGUPN30V/Q1n6m5dy0uwtUrdhJW1EV/uJuj/LsDDJ2sDRmKQqJo2
-	 CDMaQEuOQUOPifZxG8sSL97Jjg1Azpr1lNncNe8HEw0UAEVpeN7hHxCIuv8ABSHBtf
-	 ah/5gVJtO3HEOHaOFnydT/vSubHbRhIUY++u+Vr8YnV3gnCseqsBygmFo/gYGa45bo
-	 T7HdPJpFfC9C6URSWpKF+U5IQlLjeZifbgPzsNweYN9q2OxnY1BS8BTLpZ4uV/EAXI
-	 AaBmI9I71YYBw==
-Date: Thu, 21 Aug 2025 09:11:46 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Andy Lutomirski <luto@kernel.org>, Borislav Petkov <bp@alien8.de>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Daniel Gomez <da.gomez@samsung.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Dg/1AKfJ";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4IiZ9cmE"
+Date: Thu, 21 Aug 2025 09:05:04 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1755759905;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LQ6f+ZOYPIJjUyuvWWZybw8pCAISrbIIQPg4829zj+I=;
+	b=Dg/1AKfJ67dV2ppYQXDP0P/iKkQTRoBS62HKxEpnzROZcgKNuZBw6DUvsW+oq0NapFKBKq
+	MnBKhPsNHZCNfj4ajoKvL/r3/uev1keDcM8S9zTyXPnYGU6LwdyDd8/TrM8ot7Kid4cbTp
+	gtYi6PiDTAybPy156cjdCkvpdDLyk38al3x86o58SL67xkDY6vyoF16yQO8KAaasWFuHhz
+	w7WytR88n53sREV5KHk4SFCMsvWU2JnrShHTDrqykDOQHF/kwkVS+H8ZPaEpC1LKaC6tr+
+	ppAna9EIGRCoBZxiT5uPZ+JiT5a7Qb3BUeNjF8+5VKObB/2v+61i+03jdmr8bA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1755759905;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LQ6f+ZOYPIJjUyuvWWZybw8pCAISrbIIQPg4829zj+I=;
+	b=4IiZ9cmESPv9HO9eKP3bzlhp847tqtpwjnehsx5Xth1JxFastFOBW5TyIwrDuKpygF2nU1
+	PDZSqvEysNTUDFCQ==
+From: Nam Cao <namcao@linutronix.de>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Petr Pavlu <petr.pavlu@suse.com>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Yann Ylavic <ylavic.dev@gmail.com>, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, linux-modules@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH v3 8/8] x86/ftrace: enable EXECMEM_ROX_CACHE for ftrace
- allocations
-Message-ID: <aKa4otIF6AbhD2X3@kernel.org>
-References: <20250713071730.4117334-1-rppt@kernel.org>
- <20250713071730.4117334-9-rppt@kernel.org>
- <20250820184743.0302a8b5@gandalf.local.home>
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Gabriele Monaco <gmonaco@redhat.com>,
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	K Prateek Nayak <kprateek.nayak@amd.com>,
+	Phil Auld <pauld@redhat.com>
+Subject: Re: [PATCH v2 4/5] sched: Add task enqueue/dequeue trace points
+Message-ID: <20250821070504.-ZhqdfHs@linutronix.de>
+References: <cover.1754466623.git.namcao@linutronix.de>
+ <f87ce0cb979daa3e8221c496de16883ca53f3950.1754466623.git.namcao@linutronix.de>
+ <20250815134016.GB3289052@noisy.programming.kicks-ass.net>
+ <20250815135212.GA1386988@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -61,96 +65,67 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250820184743.0302a8b5@gandalf.local.home>
+In-Reply-To: <20250815135212.GA1386988@noisy.programming.kicks-ass.net>
 
-On Wed, Aug 20, 2025 at 06:47:43PM -0400, Steven Rostedt wrote:
-> On Sun, 13 Jul 2025 10:17:30 +0300
-> Mike Rapoport <rppt@kernel.org> wrote:
-> 
-> > From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+On Fri, Aug 15, 2025 at 03:52:12PM +0200, Peter Zijlstra wrote:
+> On Fri, Aug 15, 2025 at 03:40:17PM +0200, Peter Zijlstra wrote:
+> > On Wed, Aug 06, 2025 at 10:01:20AM +0200, Nam Cao wrote:
 > > 
-> > For the most part ftrace uses text poking and can handle ROX memory.
-> > The only place that requires writable memory is create_trampoline() that
-> > updates the allocated memory and in the end makes it ROX.
+> > > +/*
+> > > + * The two trace points below may not work as expected for fair tasks due
+> > > + * to delayed dequeue. See:
+> > > + * https://lore.kernel.org/lkml/179674c6-f82a-4718-ace2-67b5e672fdee@amd.com/
+> > > + */
 > > 
-> > Use execmem_alloc_rw() in x86::ftrace::alloc_tramp() and enable ROX cache
-> > for EXECMEM_FTRACE when configuration and CPU features allow that.
+> > > +DECLARE_TRACE(dequeue_task,
+> > > +	TP_PROTO(int cpu, struct task_struct *task),
+> > > +	TP_ARGS(cpu, task));
+> > > +
 > > 
-> > Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> > ---
+> > > @@ -2119,7 +2121,11 @@ inline bool dequeue_task(struct rq *rq, struct task_struct *p, int flags)
+> > >  	 * and mark the task ->sched_delayed.
+> > >  	 */
+> > >  	uclamp_rq_dec(rq, p);
+> > > -	return p->sched_class->dequeue_task(rq, p, flags);
+> > > +	if (p->sched_class->dequeue_task(rq, p, flags)) {
+> > > +		trace_dequeue_task_tp(rq->cpu, p);
+> > > +		return true;
+> > > +	}
+> > > +	return false;
+> > >  }
+> > 
+> > Hurmpff.. that's not very nice.
+> > 
+> > How about something like:
+> > 
+> > dequeue_task():
+> > 	...
+> > 	ret = p->sched_class->dequeue_task(rq, p, flags);
+> > 	if (trace_dequeue_task_p_enabled() && !(flags & DEQUEUE_SLEEP))
+> > 		__trace_dequeue_task_tp(rq->cpu, p);
+> > 	return ret;
+> > 
+> > 
+> > __block_task():
+> > 	trace_dequeue_task_tp(rq->cpu, p);
+> > 	...
+> > 
+> > 
+> > Specifically, only DEQUEUE_SLEEP is allowed to fail, and DEQUEUE_SLEEP
+> > will eventually cause __block_task() to be called, either directly, or
+> > delayed.
 > 
-> The "ftrace=function" kernel command line started crashing with v6.17-rc1,
-> and I bisected it down to this commit:
-> 
->  5d79c2be5081 ("x86/ftrace: enable EXECMEM_ROX_CACHE for ftrace allocations")
-> 
-> On boot I hit this:
-> 
-> [    0.159269] BUG: kernel NULL pointer dereference, address: 000000000000001c
-> [    0.160254] #PF: supervisor read access in kernel mode
-> [    0.160975] #PF: error_code(0x0000) - not-present page
-> [    0.161697] PGD 0 P4D 0
-> [    0.162055] Oops: Oops: 0000 [#1] SMP PTI
-> [    0.162619] CPU: 0 UID: 0 PID: 0 Comm: swapper Not tainted 6.17.0-rc2-test-00006-g48d06e78b7cb-dirty #9 PREEMPT(undef)
-> [    0.164141] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
-> [    0.165439] RIP: 0010:kmem_cache_alloc_noprof (mm/slub.c:4237) 
-> [    0.177483] Call Trace:
-> [    0.177828]  <TASK>
-> [    0.178123] mas_alloc_nodes (lib/maple_tree.c:176 (discriminator 2) lib/maple_tree.c:1255 (discriminator 2)) 
-> [    0.178692] mas_store_gfp (lib/maple_tree.c:5468) 
-> [    0.179223] execmem_cache_add_locked (mm/execmem.c:207) 
-> [    0.179870] execmem_alloc (mm/execmem.c:213 mm/execmem.c:313 mm/execmem.c:335 mm/execmem.c:475) 
-> [    0.180397] ? ftrace_caller (arch/x86/kernel/ftrace_64.S:169) 
-> [    0.180922] ? __pfx_ftrace_caller (arch/x86/kernel/ftrace_64.S:158) 
-> [    0.181517] execmem_alloc_rw (mm/execmem.c:487) 
-> [    0.182052] arch_ftrace_update_trampoline (arch/x86/kernel/ftrace.c:266 arch/x86/kernel/ftrace.c:344 arch/x86/kernel/ftrace.c:474) 
-> [    0.182778] ? ftrace_caller_op_ptr (arch/x86/kernel/ftrace_64.S:182) 
-> [    0.183388] ftrace_update_trampoline (kernel/trace/ftrace.c:7947) 
-> [    0.184024] __register_ftrace_function (kernel/trace/ftrace.c:368) 
-> [    0.184682] ftrace_startup (kernel/trace/ftrace.c:3048) 
-> [    0.185205] ? __pfx_function_trace_call (kernel/trace/trace_functions.c:210) 
-> [    0.185877] register_ftrace_function_nolock (kernel/trace/ftrace.c:8717) 
-> [    0.186595] register_ftrace_function (kernel/trace/ftrace.c:8745) 
-> [    0.187254] ? __pfx_function_trace_call (kernel/trace/trace_functions.c:210) 
-> [    0.187924] function_trace_init (kernel/trace/trace_functions.c:170) 
-> [    0.188499] tracing_set_tracer (kernel/trace/trace.c:5916 kernel/trace/trace.c:6349) 
-> [    0.189088] register_tracer (kernel/trace/trace.c:2391) 
-> [    0.189642] early_trace_init (kernel/trace/trace.c:11075 kernel/trace/trace.c:11149) 
-> [    0.190204] start_kernel (init/main.c:970) 
-> [    0.190732] x86_64_start_reservations (arch/x86/kernel/head64.c:307) 
-> [    0.191381] x86_64_start_kernel (??:?) 
-> [    0.191955] common_startup_64 (arch/x86/kernel/head_64.S:419) 
-> [    0.192534]  </TASK>
-> [    0.192839] Modules linked in:
-> [    0.193267] CR2: 000000000000001c
-> [    0.193730] ---[ end trace 0000000000000000 ]---
+> If you extend the tracepoint with the sleep state, you can probably
+> remove the nr_running tracepoints. Esp. once we get this new throttle
+> stuff sorted.
 
-maple tree is initialized after ftrace, so the patch below should fix it:
+Sorry, I'm a bit out of depth here. Can you elaborate?
 
-diff --git a/init/main.c b/init/main.c
-index 0ee0ee7b7c2c..5753e9539ae6 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -956,6 +956,7 @@ void start_kernel(void)
- 	sort_main_extable();
- 	trap_init();
- 	mm_core_init();
-+	maple_tree_init();
- 	poking_init();
- 	ftrace_init();
- 
-@@ -973,7 +974,6 @@ void start_kernel(void)
- 		 "Interrupts were enabled *very* early, fixing it\n"))
- 		local_irq_disable();
- 	radix_tree_init();
--	maple_tree_init();
- 
- 	/*
- 	 * Set up housekeeping before setting up workqueues to allow the unbound
- 
-> -- Steve
+By "sleep state" do you mean (flags & DEQUEUE_SLEEP)? The nr_running
+tracepoints are not hit if the task is throttled, while these new
+tracepoints are hit. How does the sleep state help with this difference?
 
--- 
-Sincerely yours,
-Mike.
+Also +Cc Phil Auld <pauld@redhat.com>, who seems to care about the
+nr_running tracepoints.
+
+Nam
