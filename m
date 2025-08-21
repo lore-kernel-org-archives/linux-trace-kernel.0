@@ -1,94 +1,79 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB86B23E32B;
-	Thu, 21 Aug 2025 12:38:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C9F3320CA1;
+	Thu, 21 Aug 2025 12:42:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755779924; cv=none; b=KfTtBlBiczdgpz7d3ORISZk9nOK6yJGoXw+hkAHM37cop3qj2BkVdWguB19/9bEIzQiquwH+znoLj/TVmsXaU0+sH7j8VfnGWgWdJSSKRTWnkqzKznZ39ZUQ7/314ZCNgh0+Whs3Yib270s4zUQeUH6alrxkH9zsX4Qs0Z/wVeY=
+	t=1755780170; cv=none; b=s12CtjwHAzIFSgWnrf4U9Vm2w5aFZdqooRy4wGwn4aGXrO/X5aeOp0gXSvuXxHpkq24BqDQlrKnCnrSJxOTFisJGoakED6E9tsBkU3fh+xg3Hx05N9rS3lrGco8VCz2a+f2XN9u8BKnDqNg9QXRmnk/xuDqegx9XomBDmf2FyhI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755779924; c=relaxed/simple;
-	bh=oXhDUv87NoCszJ8tfluMEgInDZ24yKa+PfkHBpJD45A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uL2FkKRzYBrPU0yIrIzmv+vvyUquaKLkAlfSTuDvcI7pEUmlfNxSmELgDHS26bKLKT/FgYDD/6cRuJDSXoS6fXrLmJc91rhySdvFT2fCvYRKgrrP0X3rRb1UIir5Yma93MhZgCiTdh88FSPDr5OvOfJPS6v+9IcCjRXwGTTpE4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3G9p2mup; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=pWUDwvyw; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1755780170; c=relaxed/simple;
+	bh=LTXvhMrfCGOgbq5T8Pqy50MbvA6yjBjsqVMrWM2yCtk=;
+	h=Message-ID:Date:From:To:Cc:Subject; b=OQ8QFVpzNAFg22OhOW42LJOgzGEy3L0Zl7gyWAn27rMFG2YUnFA3Vk8x2CJPPRN++UDzib5ER3kPPVWYu9VrSwZk+BnrKGcjRfnWhcoZEXY8zf3oRVNwNa7FiP63hPn4MAtgfb5h03j2kgzE0kHsiXufe9KcDAJdsa9qrOpJfIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=NwOoEsH8; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3G9p2mup";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pWUDwvyw"
-Date: Thu, 21 Aug 2025 14:38:39 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1755779921;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KbDOghMuFQXuB3jWN6gYshboT1kfc8EL9B6GPmeFLlE=;
-	b=3G9p2mupIErF15oKhHnIHUrphQ9Yd48PQ1Cxe/YnvoAlbTSwgPPp4RLUxROzs9jLMi2imG
-	nBoV9boof9YJ9BcuiXjmY6RPE1B0usKuPzpRHyaJaWkMpYheDV34ScdJB6ACTtAQtMMa/Y
-	DBdr9q9xPLz0A+Ntp0eCNPJIax90jNTXrip2H9YYr7eb9+ZKuarphEpitJ5ynDYzybQZ8N
-	zTVtw+WTAZ4xe0YPar82KLYbeT88erLSAMPfacM8HIw350iKKVmX7ddugY0nG8fxjUyup/
-	Z2si2IVLAB3vd6a5P9ZbBwf1FnoYjn0GJKhPQFzLEGHITj1uh1NZ8FtfWQgadA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1755779921;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KbDOghMuFQXuB3jWN6gYshboT1kfc8EL9B6GPmeFLlE=;
-	b=pWUDwvywEQ0Xe2xQakcXyJZvoTZjoZYJkMi95swQWMVSggu6/ZjsNxM/vzmbnRrwd/W0BZ
-	6SbWnA3HcwehyqAw==
-From: Nam Cao <namcao@linutronix.de>
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-	linux-trace-kernel@vger.kernel.org,
-	Tomas Glozar <tglozar@redhat.com>, Juri Lelli <jlelli@redhat.com>,
-	Clark Williams <williams@redhat.com>,
-	John Kacur <jkacur@redhat.com>
-Subject: Re: [RFC PATCH 10/17] verification/rvgen: Add support for Hybrid
- Automata
-Message-ID: <20250821123839.Gj3vCzCo@linutronix.de>
-References: <20250814150809.140739-1-gmonaco@redhat.com>
- <20250814150809.140739-11-gmonaco@redhat.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NwOoEsH8"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Subject:Cc:To:From:Date:Message-ID:
+	Sender:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=ZDd/E/eJc69eCEhmO/AHlbIPPmEIdZCQHwtjHHkjtw0=; b=NwOoEsH8paZXLhJUTOq02r6ayE
+	2Qj8TxefHp2IMw9CwjwYeP6BREMPwmIUEqkfeCRtjRmbL5KP5W/VECgS/8cQRYhlVo077jcj9Q33b
+	ZKLBDFWHZqfRGnqYPeQj2XsMX4ryD4irxJHDksUfnENdz93i99gxocTeHa5Ifj4Hpd1E87oTKiqVv
+	tacZc79ZOqv8I/lB8H6nFHl1jUOc1IAsx9XOA3yv2pX3qDZK3vo/PuYXyCfYrLKuKGKHjcGJGnM/4
+	u2cd8xDht9CzG/qsODn6GtfE/8Vr/qqjxcZS5mqepUJauaJg5NoGY5urv+VgLa5XJvr8fQ6Sk/Is6
+	XFDBralA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1up4co-00000000Y9N-1fjm;
+	Thu, 21 Aug 2025 12:42:38 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 0)
+	id 842023002ED; Thu, 21 Aug 2025 14:42:37 +0200 (CEST)
+Message-ID: <20250821122822.671515652@infradead.org>
+User-Agent: quilt/0.68
+Date: Thu, 21 Aug 2025 14:28:22 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: jolsa@kernel.org,
+ oleg@redhat.com,
+ andrii@kernel.org,
+ mhiramat@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+ peterz@infradead.org,
+ alx@kernel.org,
+ eyal.birger@gmail.com,
+ kees@kernel.org,
+ bpf@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org,
+ x86@kernel.org,
+ songliubraving@fb.com,
+ yhs@fb.com,
+ john.fastabend@gmail.com,
+ haoluo@google.com,
+ rostedt@goodmis.org,
+ alan.maguire@oracle.com,
+ David.Laight@ACULAB.COM,
+ thomas@t-8ch.de,
+ mingo@kernel.org,
+ rick.p.edgecombe@intel.com
+Subject: [PATCH 0/6] uprobes/x86: Cleanups and fixes
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250814150809.140739-11-gmonaco@redhat.com>
 
-On Thu, Aug 14, 2025 at 05:08:02PM +0200, Gabriele Monaco wrote:
-> +import re
+Hi,
 
-Oh no..
+These are cleanups and fixes that I applied on top of Jiri's patches:
 
-> +from typing import Iterator
->  
->  class Automata:
->      """Automata class: Reads a dot file and part it as an automata.
->  
-> +    It supports both deterministic and hybrid automata.
-> +
->      Attributes:
->          dot_file: A dot file with an state_automaton definition.
->      """
->  
->      invalid_state_str = "INVALID_STATE"
-> +    # val can be numerical, uppercase (constant or macro), lowercase (parameter or function)
-> +    # only numerical values should have units
-> +    constraint_rule = re.compile(r"""
-> +        ^
-> +        (?P<env>[a-zA-Z_][a-zA-Z0-9_]+)  # C-like identifier for the env var
-            ^
-            My regex knowledge is not that great, but I think this is not
-            standard regex syntax, right?
+  https://lkml.kernel.org/r/20250720112133.244369-1-jolsa@kernel.org
 
-            I'm guessing this is Python's feature to store this group into
-            "env"?
+The combined lot sits in:
 
-I think my brain's battery just run out, I will continue with the review
-another day.
+  git://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git perf/core
 
-Nam
+Jiri was going to send me some selftest updates that might mean rebasing that
+tree, but we'll see. If this all works we'll land it in -tip.
+
