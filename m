@@ -1,70 +1,70 @@
 Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1BBD1A9F8A;
-	Thu, 21 Aug 2025 14:27:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 290862DC322;
+	Thu, 21 Aug 2025 14:49:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755786464; cv=fail; b=uXRKCHUx2/gCBh5dUeFTxBShWKBld00eUKV7zbYjIb5FIt0GAUTg1pm6ouh28tEv9+qEf2sR7Wn4VfSwVJ2Kj7x9+EXvJlLhAwDJTRSgYFHMEC8rZXIevkiKDNbkO7x5P/RtA+oAOibP3XRA8oywE0Of5dmDTVQyF2V3Z6G4TFY=
+	t=1755787757; cv=fail; b=APwa9hugZ3CSdyOo0rDcB86BxU+PvwAQDRtUhuf+WJKinn8cpBFqW7gKmUHW1TaJKrpG1DLRGHHyGHVfjzXyjdkCbQFfF1XyuduyEBzP9zL1H/vzMiP9rQrLYCiX4yIF+nHPKS40cNkncvcpUesT0qt8BZ5aYbpee5w6hnZTsc4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755786464; c=relaxed/simple;
-	bh=UOoCYg1JTVj4760F/oQMuhlOwj3bdHlyz6RWg1EOIBA=;
+	s=arc-20240116; t=1755787757; c=relaxed/simple;
+	bh=yXVI8N2Z5a+0ST+ul/2/ShZBxyZcc7p8y/P1JggSY3Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=YdRHJv5Qbb9LUfzZLFPTDBNemn9nY+N3aSDYk/nfJGNJjDjCVcMOP+7btZ23Gp6pwlEEh1Z6CeH+DqxPmI1k7HoROCBq/h8HU9mUl/CGEfSmzk1l7NwYnabNupdfcUjy650aUjj9OPXNgq+fmY6OQr6w6yEUP7u2vSrYcyatuf0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=rii/t+cg; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=KlEyUUuT; arc=fail smtp.client-ip=205.220.177.32
+	 Content-Disposition:In-Reply-To:MIME-Version; b=ZFf2rWRJpJNAnjJboeBWO80Dn+aiLSzTmVBXMse9pOttOcjRzLsOKu8TYhmk/TWiSHKkvo2YnPJ7jrRc3BvGBV4bkfMWRuuis5XsTNNzuv1nw6jBA1J+0vnYRdl7Veqb3M6NVGLqSxMtF8wh9AhjfUfCooOSGEF31MOEHfQ03Ik=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Ulhfm/5J; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=b1mg3Z3I; arc=fail smtp.client-ip=205.220.177.32
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="rii/t+cg";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="KlEyUUuT"
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57LEBxlc019544;
-	Thu, 21 Aug 2025 14:27:03 GMT
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Ulhfm/5J";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="b1mg3Z3I"
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57LEhbLD032031;
+	Thu, 21 Aug 2025 14:48:18 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
 	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2025-04-25; bh=UOoCYg1JTVj4760F/o
-	QMuhlOwj3bdHlyz6RWg1EOIBA=; b=rii/t+cgN3ne2VW39TZCfBB0x2ujhPOAlr
-	2L+7GJmAfhBc+k3IJLDMml/1FTAW6umjBOiapc+fcHQh/UXsbw3UnIZ9AX+lLaFQ
-	D/4Jd70fnxmKGWpoEWFe/cg5Csk4kUDyPfI8gRX9OnLJB6TRDp9ec/TaKcS0z7PF
-	eZW5fWEaDOLCMsxSoWFqA8vyIb3OCfh7cG9Bgd2I/UxKBe2ANrQ4MwrwXaVgVlTL
-	3zNfeo0hZcjpII1LTyoMu+USGitONLF9KF5YSRiaGGpyOfEj1iv2eEmQXm4rYsvy
-	ZUhkM+lFrXluwkqg7moyU1q9rb6iKJG0EPm0kiGl3Is/zlntxiew==
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 48n0tr3jxc-1
+	:references:subject:to; s=corp-2025-04-25; bh=M8O2JJTC7pIKMeTJca
+	1dc18YoysPk8LtAX+2mKGMbJI=; b=Ulhfm/5JKxRiFaY+cUyH22fQtqCNU3GJ5w
+	ClfTZdEavyEmk4gCoDmnZ8Duy4f8jB1dZE8b1/fc0LSV04WVtO3EtK1Az4c9sgzO
+	VDW3SpTbc9FDazDmVCYMXEHQa0k0JzTKsWPTgVDPoeMDEze+Psu9o2wiX2IZfXVy
+	R9ZccZlE8CpvH7aacWxJJtc8Or9+KuX0ELXcGfiKBtvuJfnvoAca8U6s/HndhOIg
+	3BhGSr4DelCl7rP+VDxjTka7IZr71tKY5HZQm9gJ2ybVWv+UghEN9IQEzs7afE83
+	qINnP7mEAQQAQBUJ5e0MIp60Xkp0Jeigv8rMwKXhlEslw58iMH6w==
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 48n0tsujqa-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 21 Aug 2025 14:27:02 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 57LDwiq7020632;
-	Thu, 21 Aug 2025 14:27:02 GMT
-Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11on2086.outbound.protection.outlook.com [40.107.223.86])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 48nj6g4nv1-1
+	Thu, 21 Aug 2025 14:48:18 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 57LDC7VT026336;
+	Thu, 21 Aug 2025 14:48:17 GMT
+Received: from nam04-dm6-obe.outbound.protection.outlook.com (mail-dm6nam04on2052.outbound.protection.outlook.com [40.107.102.52])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 48n3sxn3b7-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 21 Aug 2025 14:27:02 +0000
+	Thu, 21 Aug 2025 14:48:17 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=RcswwiU2dJD9sys831bwyLgjSrS8w7UACT2xHpxgsQ84GfM0VSgl090cUMJrJ4ullvAIRwYXFa8KfcDkDrH/ZuwaVNOSeOsPwHqyyUXCNVBsSeQZsTaIG6UP6DIOvlN2dk9ZjXdz2pcmu8I99QusBy6MM8dJxZmEcMar9f1J8Hj9pjdaRLUENk9qqhoIR5QGGBWDu8djZbUVdV2XMO4mrBaDjBwWeRZWALOVzNdMVIPM/DE2zhDRj5w+mdvIGz3GJMNzpiEXYLeBsY/M+YIpQAsIetfjMOwL/Ji4P2o+4nV2o60KO7XrOzIDi1R6G3Y1WB4dFm+O1KmS5klBqc+7xw==
+ b=QyT7FTixVd+gf298UPtkldhjgqT4q09kvU7JHP8A3HdA4NWzR8rHMH+ilOreEFf95LpSNhQcP6YKP3rSehCsPdSsIcD9sUMqO2k/IfEqTIl68+EZBIH1T1xef/uoUFw1/+LwRW2GiRDitsSmqtUWSgpNeXKPN2/eCp/fpL7cJj6ZN4qqo5Gx2Cp7lQVIlsjbjBAyThH8fNMvtmF/4MJYD2ditkzWJkTccMZaooPj3KSw+CJWOljbp1QGw28njEkZeLkJICC3LpK2sAlwMyEv5ggY0MJzXIL3hQQsPbybmyQN1xaI7Zu+zZc0bnGuTkVnirBe/p1DWjsSWa9S6JGGCA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=UOoCYg1JTVj4760F/oQMuhlOwj3bdHlyz6RWg1EOIBA=;
- b=eNdxROBB4Y0dftLnDwWGhQgFNOE/iG/aaQUHUKC/71iKaIuigumDFO2Eb2sPfsqB3lU+P5u/+tBtl/hyZ4h/9N93GT2xPF0VShpruuBWx+RdMnkTYDaZxFHtUohfcj8Y9hoJKrV1LrCFc3TdAxX7uXxaPUy0f1yiRTTGP3LitaKJt5zIso88dT66V8wky/k+G1ZJhJ/at90UZjteR0nCQX+58snq0xvHmPRpvc3HCN73na+xid+tblvy/XxGEM/oYA5lylBCf8hBz+rec6l7sj5DeV1a3E+1CQi1knwDuizP/3a6VRyExU6tcgfD5ZkHwKSrupNseztFf62CHsqw1A==
+ bh=M8O2JJTC7pIKMeTJca1dc18YoysPk8LtAX+2mKGMbJI=;
+ b=cChuq06TRE9Z/UfOCwjgggHKOAnsioGP974qiIufAEuZej63OAi8J1YH9O/Gp1atHtdrPrZb7P1CJlr78VgEXtnzJZX01HpugsM+Hzz/n1hFsQulw0Vg3LW10XVq5X5CLK05w7qrPRZnX3rBoY/uujP4zK18GZlsVNPP+98srRADQXMMU07ZZATXe6eUY/nUI7StplQH0vTb/Sjf5UChyChOyj6oksDVX+41+Mh91n0Py8PbgsdQTNv4w5OyS7/euI1vr2PTxy2nA+BBw9SOImHP/0tqms+w3KjWOP7ArNSkV6vcFaTd0YpYbf4eBVGkypdtubJWYeiHNqc0UoaCiQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UOoCYg1JTVj4760F/oQMuhlOwj3bdHlyz6RWg1EOIBA=;
- b=KlEyUUuTYjBSHW/44G3wOAot7rchBUfNkRPk39ooEkAHvp6OcYNuxyk3RvYxViPU1sabqtSLGsfXAxqppPw4kss8b4N7AeuiVPBJitJMi5Xys0h/BdDta3I2AL3e8kerDqpA/ai3H7TPCYBBm2X109B1jqVMpH6DyENR2ctjMLA=
+ bh=M8O2JJTC7pIKMeTJca1dc18YoysPk8LtAX+2mKGMbJI=;
+ b=b1mg3Z3IO3ev+oGqH4q2VliVVn1/Ecg5XL8bh32hQp6mDcfse2Pjqpwp/Mv/weF0pb+cbFTHueOX/8K0pLyCMhWITB0Z8QkzvrflWhxCjB3sLW0EyAGBJbYGfX6YPLNa15QVzOUiRoM0vIkYgzt/pWEMS7pctm0XUcxJDkVixLM=
 Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
- by SA1PR10MB5685.namprd10.prod.outlook.com (2603:10b6:806:23d::5) with
+ by DS7PR10MB7252.namprd10.prod.outlook.com (2603:10b6:8:ee::22) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9031.19; Thu, 21 Aug
- 2025 14:26:58 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9052.14; Thu, 21 Aug
+ 2025 14:47:55 +0000
 Received: from DM4PR10MB8218.namprd10.prod.outlook.com
  ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
  ([fe80::2650:55cf:2816:5f2%5]) with mapi id 15.20.9031.024; Thu, 21 Aug 2025
- 14:26:58 +0000
-Date: Thu, 21 Aug 2025 15:26:55 +0100
+ 14:47:55 +0000
+Date: Thu, 21 Aug 2025 15:47:52 +0100
 From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 To: Nico Pache <npache@redhat.com>
 Cc: linux-mm@kvack.org, linux-doc@vger.kernel.org,
@@ -83,17 +83,15 @@ Cc: linux-mm@kvack.org, linux-doc@vger.kernel.org,
         jack@suse.cz, cl@gentwo.org, jglisse@google.com, surenb@google.com,
         zokeefe@google.com, hannes@cmpxchg.org, rientjes@google.com,
         mhocko@suse.com, rdunlap@infradead.org, hughd@google.com
-Subject: Re: [PATCH v10 10/13] khugepaged: kick khugepaged for enabling
- none-PMD-sized mTHPs
-Message-ID: <8f640d64-5bd4-4ed3-a108-8b85788c4f67@lucifer.local>
+Subject: Re: [PATCH v10 12/13] khugepaged: add per-order mTHP khugepaged stats
+Message-ID: <69e9c0e9-25bb-4ff6-8469-d9137a5e5a75@lucifer.local>
 References: <20250819134205.622806-1-npache@redhat.com>
- <20250819134205.622806-11-npache@redhat.com>
- <d9a02ed5-0d6e-41e6-985d-23f5a2de093d@lucifer.local>
+ <20250819141610.626140-1-npache@redhat.com>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d9a02ed5-0d6e-41e6-985d-23f5a2de093d@lucifer.local>
-X-ClientProxiedBy: MM0P280CA0072.SWEP280.PROD.OUTLOOK.COM
- (2603:10a6:190:8::30) To DM4PR10MB8218.namprd10.prod.outlook.com
+In-Reply-To: <20250819141610.626140-1-npache@redhat.com>
+X-ClientProxiedBy: MM0P280CA0058.SWEP280.PROD.OUTLOOK.COM
+ (2603:10a6:190:b::25) To DM4PR10MB8218.namprd10.prod.outlook.com
  (2603:10b6:8:1cc::16)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -102,108 +100,299 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|SA1PR10MB5685:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3704ad9c-5961-4904-c7eb-08dde0bec958
+X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|DS7PR10MB7252:EE_
+X-MS-Office365-Filtering-Correlation-Id: fdce3df2-22b1-49a8-dc69-08dde0c1b698
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|366016|7416014|7053199007;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?pwYQ41hOHA5lHRNQtP2zAAyRPcrSvvc01+ptoTekmn+9V79WisqUyw87TO4g?=
- =?us-ascii?Q?KR2MmgHySbtJNwH5bQhofq9llTzsa+TIuP5zt1ik2zqCTSOmQFFluzIS01lC?=
- =?us-ascii?Q?iELKCyxVOzxGlZLRfPn7VeTQsip6xrthAeJRVquBRxwFLtJi53WS/HT5r63M?=
- =?us-ascii?Q?/sLNGGrgZ0iXEzEjRjn8egs7J2I5eKsmrDnYVAtU5IFhkJsu3q+lGv+FYJZy?=
- =?us-ascii?Q?gnafrFv9JcqwZholtzEidQOC86QoIo2YdMsVXtpqpEMZu4NXAV8LFMpm7lsP?=
- =?us-ascii?Q?GVZSotaiqLcNvaea0YChteUrBcVjJVp4d2sH/afNvRXIWS9bQzu2xGr3P7fz?=
- =?us-ascii?Q?dSAiZiLfJv1zlP0tdMsXqFQsg86zKBZQLB6BaP/FqWF5MNLPCu815/dbAfXx?=
- =?us-ascii?Q?hhMwo9eFQtUoerklXknKsP4v5Dyfpr9b9KjlIfbBFP344NuTWkEfxYezwXCc?=
- =?us-ascii?Q?DiNHQYv4iqfCNdG12ss6QxkZyMjt78wZ/mZUGz2I4jYDtD9xZc8RnTjU7/E9?=
- =?us-ascii?Q?BhHQZlU5S66yfCDp/nhbKu+mcqVZlVebtEkjyVxEgyEgEQh0p+bTRbrCycmy?=
- =?us-ascii?Q?VLk233fqUw8kLVm33KXZK64J4mencZQANulGvzE9xEHghILHliabCtGdEWJG?=
- =?us-ascii?Q?8WfwFobOVOMvlcF/2gCYOaPKtpoX+jqJRuH/uGI10VrfkyY71hsayMtLrjrQ?=
- =?us-ascii?Q?rh5me540ZHPlV2fCVJMcGUqg2cROrFL1alnGzmrwvcH5x53/8GREUzxTnwSl?=
- =?us-ascii?Q?zd1Lf76smw9OuzDyRBtjJ2HexmNskEvvX/jhUF/ygZsap4Q9DcZTEVaQb9l0?=
- =?us-ascii?Q?9sZyCs1kyUiuHo8GdSQOyQN78ad6OaCgUBMtt+3G0cwTbrK0hIOm0/uJ3NKE?=
- =?us-ascii?Q?NkCElGNwttzfSUCYYY14fw/J7oMwocqv58hhL5uykJyLZZ1y6fMYDPXfS5iy?=
- =?us-ascii?Q?x+v+O30snEQJ7VwdJIT8gE+3+5is0eTBy6dxA5rofBPGh7VM+4Q62zD0y6dr?=
- =?us-ascii?Q?dl+pUoZNtXL75s1YmuGykJGS6Sk6qbPJUjNub+iIhn7T1OKp1HpXPLUGiKhO?=
- =?us-ascii?Q?PMig7FrQTkbVrqzSVCy7fem6nJySQDkoERW61nwjNpAANn5Ob9vbe+ArYFPw?=
- =?us-ascii?Q?fjDX3hfaxZ2jR6IZtH1zvj2XpxbIJ5kHKmbwLZdEAIU6rRJQdfhrNIT2NCRV?=
- =?us-ascii?Q?jW55g5EkZJO38EeTQJv+zjReeDJr4wbumXFZNRJRQ8l3JrqA1d6Fn3t7cI18?=
- =?us-ascii?Q?gnepB0bJIWrWaInzMtIG/rxhyAhnxH8jJDCJXX6koVqnBJSh7ZN2ms3e3iTz?=
- =?us-ascii?Q?RH+tEwM/LsnLdZ5yOvsFL1dYGRtjNLYzYmZN4kb2DbYPa3I9Z/iCXNtWjUHp?=
- =?us-ascii?Q?WYn1bzXr6mEJKHn5yarKEIp1pPY+iFEv02cYy9zZeRicbTmuxZjZ52do02md?=
- =?us-ascii?Q?hvPBKP2nkP4=3D?=
+	=?us-ascii?Q?rTA53gDoszq7ZwASgD2ustZo78dwTWVlMvoh2zd7OGAKWKZPeKkREsfjTHzJ?=
+ =?us-ascii?Q?Zqp64EGqptRSu6qDTrLyols2P920Qr03c4ifT67ZO980ktws1EdqEvUVQY33?=
+ =?us-ascii?Q?qApTlGBKMX5VUBIco+0WFCOfVq3nU/40tjED6bC+wozJifM+5IyPMbECBHNQ?=
+ =?us-ascii?Q?9OKvvGaal5w/SN0nDq4NLkEjGjf2ovXdDR1MSUK1enBz23hkLF3TbnZ0J1rC?=
+ =?us-ascii?Q?E+kRWirq5JC8av1IDEYBBj/Zso4nVGrkO6RyrEfO3+WynALtFsfWkY4eK/yB?=
+ =?us-ascii?Q?kUxx4pCD8n2jQDGMpxZVD+ipKOSCyia/ACF8SbAloLOwnh5eE5u2VutvUF8B?=
+ =?us-ascii?Q?HCBrWV/wZhCesSTSO4Zs7rmaoWsvqWm9GhxKIC+aJ+Au+v48ydk0345oWXBj?=
+ =?us-ascii?Q?Ie4zoJmu5Bp7FGY/KEKXenl22Q4z33PW01+GQGD65Rpf6L5h9KPTcC4uYzEE?=
+ =?us-ascii?Q?4xJGVkoeu/LW0KIjYboDDA3oUmeWAIA/6iSLOI0Xn+T3zbfqY1wFuCBbDtgz?=
+ =?us-ascii?Q?5QqvRFhZ4oYk97+Q/SQrRWPGTFrrVKmCy1Jva3gNoGf2Et9JOVgn7Q1me3Eu?=
+ =?us-ascii?Q?alYJ0yCBz2SFmBFWA0BIjt0wnfN4kh5KUoqRuS9DEYTJhyZ2zIrn/Y6afy1e?=
+ =?us-ascii?Q?tQMEBGF1LfQujGUR4s8y7uvs73rfmtnopYAic/j8LpFsJBLa30ImpxcjX4hY?=
+ =?us-ascii?Q?/Hkb4kKSku4wkVtuoML6glD4/Zav0anDFg9MgqWi3OcAQQxe1Yxz0EHPND62?=
+ =?us-ascii?Q?i0sJUKEj/vABqz2woUVt+4Hk5T6h9IuHJzrgfVKN6mKXZBNM9i6rA2t3g21J?=
+ =?us-ascii?Q?SbpKOmZLS/j8JNjlo48zsJ1k61KAB5pchL/54mEeoCYZIICNnv79rX0/XNQP?=
+ =?us-ascii?Q?yy/eyX3tCy3IwQXmB6WxEdx2407f4iiD0bli+f2qD/yxCMDCK7czy9RG4yjC?=
+ =?us-ascii?Q?+JwQEcN6B2Weg0J017bPoXVv3R8MvxT3X5upLKrTYZwqyC7o1ZRKBggHsKle?=
+ =?us-ascii?Q?POB8SUQrRsA/RJ7AlzzPiz1UjIWk0/d1lnWyXm/FxT7Z/xQPFop5HxYw2NNf?=
+ =?us-ascii?Q?fS8RUBrxu7KS0EP0+I5qWOywxAS4jqztcR3t6XBx3hQMUSDgjPzzpknCI92u?=
+ =?us-ascii?Q?HpyRrPeAs89CyHjydcVmYZC9dmbO0DE3dzP5ROdbuqiUeAAzLinsvWSixWsf?=
+ =?us-ascii?Q?d4B7xTICAEu47b9lYptTokUSmYRp3fYqzcuObs+C7uCGi5WZltmCLgwqfuEs?=
+ =?us-ascii?Q?2CBwk7bA6eMBpv53matz2S/iXSGprO1zMKiw7S3VAF67ujxFU5ssUD224sSl?=
+ =?us-ascii?Q?lUM8hpbWEiN5+6fGyy+wGkfwcB83RyB/Bd0Ud9NqzYPDoIiXJirIW4Mig0BC?=
+ =?us-ascii?Q?BpEjjC+qfeAbXeWN58mcUsKX96s2AzOdFZz5Hluvu2y+m4QfVsV2q0L+/a3n?=
+ =?us-ascii?Q?c2QG7NFRxtw=3D?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(7416014)(7053199007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?THi+PvZBruJP9qsQWuXsR1iUxHLj0lRn6R3ppz/d+pHr72w0vXfcI9NRikJt?=
- =?us-ascii?Q?Z9/R2XR05ZtfUN3dOLbT/MjaY2m5cQOqw/ZGWonx6gHWBTgaHi6k1qnM0TzK?=
- =?us-ascii?Q?M4GUTJYgjf27UoP8LE2rZCTdntoXjt2Q/towyVjFtSMEQZudZYkjUni4lruI?=
- =?us-ascii?Q?7BTP4SZdZ0sn2zVJGZHlHgieVmcnaqWv1x0Mwib/LnRiYax9FLhLTLJt1q5w?=
- =?us-ascii?Q?bMPP7pL7uWB8MjSgMdPsX04hep60jYucVuWqP28XTkcgA+Au0d6gfpBJeEIt?=
- =?us-ascii?Q?/3v7iNTQCHyMKtnmtldd3FY6h0hu1IIvpNM2cRZfgg3XoZXJQl9VpIbRNW6d?=
- =?us-ascii?Q?6FNdCN3OYp46+imTmfcZwGxXHUU1FAWfmV109EZcP79NTSK8lZEanWSjAjNT?=
- =?us-ascii?Q?UoLUPHncWIMwdHMJEUatveNRUyoSJ53z7QhhYb5F4RjeDaFXNdlAUNC2r5Ze?=
- =?us-ascii?Q?gvwsTSGv5OXVUsLb+9Kyp8Gaw2LhfDIbO6RGKy4sctg7cERBV3ZxKeokhzt3?=
- =?us-ascii?Q?ifjHZ30UhyDOnIZkX5yMH5j/OH94AsGsxGCze2R1hEkSvgFfMLhQm0WAy5Pq?=
- =?us-ascii?Q?h39WVcysn9jYOoM/+7z9RHU1jjmXizGO7S1vu+bl7jtyA++v+yCfpRQ+U6p8?=
- =?us-ascii?Q?QI22yH0md+sWMnfG75C/984GLp7zYq5WFbl5DkqT2TgSdk7GXK0O5WYgSdAO?=
- =?us-ascii?Q?nLPlStwHOfRmas/9QjCbCrB8kWDNg/T42X5oX3aMwxvveLFkWFMKkZo9cRrF?=
- =?us-ascii?Q?RnhvwEFHecsZSVW82p0MPYnsVeuyQvbZiaH475bWugxaesV3M0dcfF/Z/4gi?=
- =?us-ascii?Q?hpuCyRjOIN1LVG72cvIciMKW3BJa4VMMGMDatI8Tp52ymCzR5Pa8uelAXlBV?=
- =?us-ascii?Q?kVV6tjA3P6J4vR23C13nlO7gym3laZJt94vW665ZA81URgQJTNpHJ/ku9o/C?=
- =?us-ascii?Q?zThichtovjilnBsbDYMSwbzHVeL2V5QtbK9eW6G6Tv9NwHDLToIQQitqOMEF?=
- =?us-ascii?Q?HcktQvtZILF2rJaW4tXum+sLAVBGJXgnfj72OXKoHYEw3G1ZsA6ovMhMQzhm?=
- =?us-ascii?Q?BqpO47Gp7u4mcM8jSL69Ha52Mi3qpUTt2YkzO0ZXfuv1n0fuGnoTxcLf2RiZ?=
- =?us-ascii?Q?1hNyz/pVKjOKkco9oejY2bPb74t6YkPbXUU6EMiubusXFRe5isxr4qfZ7PTh?=
- =?us-ascii?Q?p6xZospeQ33IkXiQPRMs8R550GTXeksmOZ2jj7Dwbx3ASkfIa3EnRJnCuzkh?=
- =?us-ascii?Q?0nBpkABpktikONwfYF9Y6/URBEkYslAsYlLrD09yDQSdU0GO6pIpKMNDKsA7?=
- =?us-ascii?Q?aUkF4lRNGhQ0vjoZ6ZsstA/GujEDXkJK4r6auVY8PVsLWtLeKVf/Z+bLxKzZ?=
- =?us-ascii?Q?cB3cRn5K+w2H7zASLgfcPW1XBUT29IkwdSlScoF9RGgMhsc3uERRm4W0YT+m?=
- =?us-ascii?Q?9suVXtU9pI18UVz1pyvfSrY2YFf0xju67JIwlalYV6MVHVeBSpzKItEWPGWp?=
- =?us-ascii?Q?nT0+WJW7ULFC5y9Z43IvQZnlMnzbDrsk7gZk1DaUP9ZTMadrE2WqcxxyXTLW?=
- =?us-ascii?Q?SaUdBO3POsfEAsQ57cD0d0AnHEdJAAjKE29C4dVYSbe1aTD7vTgnT8N/6sx4?=
- =?us-ascii?Q?ew=3D=3D?=
+	=?us-ascii?Q?CcoKSY0uP0XoTN9p4qX3/uvxIjw+cEsDgeZejw+Il8rhWOWCOuxIEpGFQ1d7?=
+ =?us-ascii?Q?FDp949xtXU5HMRRGPcM+rbKlUlPADhYl0mhTrQ6puFROfKKxaCrIxvLa448K?=
+ =?us-ascii?Q?8b1AvxZprb/L2cCykvoxZH8yXaJZzk+7jyd5fKbCLWBg6YQQCGMdERMkseQj?=
+ =?us-ascii?Q?5L7v6aLFUV1xBoth4wT/8MsXPVJODPovFdm96bXVAxGHJpiPV1u2PT9gmskw?=
+ =?us-ascii?Q?GQwxeyAj66Cd5/AKAgQxNjwnfqRKvM58rxZTGh8paOAVqxGxFXlbpNylFf0a?=
+ =?us-ascii?Q?wU11fbTZPCuWaHh4KeJLFZiK1Zx7ki6KYSFDMlci4XkVYhGPuqYaNqr6kV/p?=
+ =?us-ascii?Q?4tsrKGKJOjFwqYMGLKpX8ygMXwKJw7BuQKS15mbZZhAHIUXt1q21TNleQsC7?=
+ =?us-ascii?Q?BlDAQHXz45ZyqM8YEQTbzreyn3tUFYOLdQMcztZeOI4dAqkE2p9Oa/u+EcIR?=
+ =?us-ascii?Q?U64+1zTCNcfrROkcvjUuhyWOJmntdxOWC0OYXAVQK4974lCv3mdjncTykOKX?=
+ =?us-ascii?Q?/FwkLKOL7tHTNwvK40zWHFWechap5sKhRp+8paCyaqy6wgiF5xSD/PiMCaCt?=
+ =?us-ascii?Q?uIhEl/e/Jtjs44v+XCkNFeYlT2bvIn77dVLQ1nlvuc/XzG7oJLurrh0dJqs6?=
+ =?us-ascii?Q?8MiFJjHKLGyyG81SNRcHfwWxKpoCGQkcTpd7NfaEI/3mqLd5yO2JHTrujKz3?=
+ =?us-ascii?Q?mWoywJBo2g6D/ZdOiADx9aGX7Alac/3qRgPswSuRiziZmCXe0uzS8hiL07Fb?=
+ =?us-ascii?Q?NRucAZQJDjgWKIrP8wE2JKgbp4iPa8boVHkHj/ElGQb3pRb0elqhI6xBuO6O?=
+ =?us-ascii?Q?WmJaUl7MvUd6hc2NFuYeSESaoxcYFhVwNG211tsgubb+yVV4qlnIWX1bG4HK?=
+ =?us-ascii?Q?QcgT9X7ogZuheeeThfZuF63Z/FpCnZSAsRnc2QVo35K9guppx18XkKb0m6ai?=
+ =?us-ascii?Q?d/G1IZhBiYcsFWkSqdh6hfnhKho7LVjOGP6Ofkz6mN9KhcATlJA2DA/x5E0H?=
+ =?us-ascii?Q?uy0Y5pWO9BQMcWNH0bisFu2sumeqVrJo3v+akHCTeDb57pLBSaKF1rfEzIfq?=
+ =?us-ascii?Q?bBGqdaqUh3OxmZEEwIkqvZFa3K6dHV5XEkrvaIib97AesFuYkuxBx0FzWNFk?=
+ =?us-ascii?Q?6AksHCtoAE8WfOXoEA4taGMvvZHGDbj9WRmLvtDyuRPx/lf2Z7kl4BPXk7vv?=
+ =?us-ascii?Q?OK31HcDli5xO80IPajH3DNm7xd7EphFivWb0PpCJq3mnA+zJvXoS1YJTsc0F?=
+ =?us-ascii?Q?+iww5B/p5vrye+gSCGqj7b0dizmYyrpW/tbEu0o7+DqwcVmUJhR3nA9jYLO+?=
+ =?us-ascii?Q?PxYqzMkvGPe3e8MsNsi4FBFOlkEP+mZzHaHyPHr+pkwwlEB44lt3gE//V7Nm?=
+ =?us-ascii?Q?MYfQR/M5sOTtIyjXxbmEetYiBnhXYb1rcHAHMNAZV2pYTMOUKFgKXeUPriKH?=
+ =?us-ascii?Q?+uNkoFJZBZLa95ro7Jiyax9gz2fUQVdzdQknxFj6s9bOZQLv0SHrFPxIG0OG?=
+ =?us-ascii?Q?C27AsasdqGk0Zu8nEmEYdNbAjjeDXDAv/Tt7lRtfARm5x01zs4uvEGE6FVij?=
+ =?us-ascii?Q?QtgB+T7YF/p+HaxGggu1UPf8kIMCUp9u1PNQo4bttNmuMNAxixICAcSTARab?=
+ =?us-ascii?Q?kA=3D=3D?=
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	vuv2D/3NSUja6Su0lKKxxa5gbDQG3dXIMLazbc9ijbgbKxTDen75D2Q+L6RPtq1gUq60AyuJmFLoI06TkgC/tdN+DtckJjI07CPxDlSeUa9GFP3Zek/umFNRwKoMRFWOTfgi1Lui6GTcNRjOTUA3e3KIhA598MjuyRe3bVUVgd4vHcGnmEf5mJO+E+BYxtxLK39OI5u01JKX3pNdIRly04AWBySBKTGrG/kKUgD4TQZKq5iTNSl7D/LnjBT6uMk9apdh1sV7yEuGtg8ZOcfbEHBJbJxB9gOZ4GrHuJch6Bh/W7EqeEZvYvXIg/wM3hWfH2xdCxfCZrMcAls7UkWZjXkB+im+Kq9y2/J3Xyk2Zv99orXVsmL9zgbtHB0J5H1NB3QRHoDN/0qQHxkBl0TX5RGYPsw++Q32undNIJQ9H9iLqd7jv21XCieWNkv77E9UifHj7HHaH3opE/4Eg6i++BLMwjMqbpDFKRhxQhDQ5bg0y93UbyN63Gf/JaWMk+gDqgpCw3gMQ/OxfJCKNFIM7J5Epf9VePuVie5qo4oJuZVcHxYBij42IKRwqGw/wC4op/UmSxH3Ja2xkkthOcviingskXoDOuBSVLSoWWoDmKc=
+	cruyF7waZPci7k72xtEjWcJsOJe5+K10OzrZHrYUlqa5ndTU7ZOsVUaSrNrjQ7agVSNhihwMXAFHCHcThkfpU92e461mlQrkA64/Kipy4BB9aMeXd0sWMfoGY+sfTDyrrbwILfmqvRYezrcYLo7dP005tHQ9ZFPpge1Fvtk0oN7jq2wKjblKpHz0H6QAvIRnB+AskHPvzJVkwh4i9Q6zRQbUXdZFJB/C9Fr8uIrtzooAWkA9ZNejZlUgDifPUM7stwf6epzS6VQkFm0Xw9fr5R/NGQ0RXj6/5unIU5w7jZzog4UdSEzRD+2ZK3p/SvWiiwkK3Ob7p8ECILRmrtkwdMboZg49NYC5bnBKRAcufVpSX/Hah02/2d9bjhcaS3Nq/K4+bR+DEsa0hMZUPkeaUXZKk2Fcerk+1HDCzVxwanNBPaDuKcy5tF6lXUApEcEGOJ6UNOvOIJGQN47JsO6nMwz4+uDpi6/f5yRQZ9dkl0hnMATq2U/YSfBKsF9gqnDu4XXLucmxpCA2h0Zv9uOptvqG1FV7+kWJ2Eg2aATBoi5DwWOfW7+IiSFOMi/p+BIRFOFylGv4rtkiMIv2Km1zHIWAirkr10OV6QLWiltLhkU=
 X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3704ad9c-5961-4904-c7eb-08dde0bec958
+X-MS-Exchange-CrossTenant-Network-Message-Id: fdce3df2-22b1-49a8-dc69-08dde0c1b698
 X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Aug 2025 14:26:58.3657
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Aug 2025 14:47:55.4491
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: usd8uV+3vTsYijuXjVK1kaaqkaX6uMyguDoC4W6ZR7ai96I+hXq/3HzFZWWi+G9pcXITRgjF7/riUVaLDcgOn/zZOQz8vLxfBCUz618G9Qs=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR10MB5685
+X-MS-Exchange-CrossTenant-UserPrincipalName: mndDs9MD9xvO9oGuu/KBylCgo3U4b6SxYn7Jemtin6rKPi92IjeAjYxXly35ZMgELdTz6sCLMVtWXQv1lIwFLDyWxJwYz3HUH4qpZjv0zQc=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR10MB7252
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
  definitions=2025-08-21_03,2025-08-20_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxlogscore=720
- suspectscore=0 bulkscore=0 spamscore=0 adultscore=0 phishscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2508110000 definitions=main-2508210116
-X-Proofpoint-GUID: wnCqZpq8h2OoBTlkHzBsg64nsi1wUc-E
-X-Authority-Analysis: v=2.4 cv=FY1uBJ+6 c=1 sm=1 tr=0 ts=68a72cb7 b=1 cx=c_pps
- a=zPCbziy225d3KhSqZt3L1A==:117 a=zPCbziy225d3KhSqZt3L1A==:17
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxscore=0 suspectscore=0
+ spamscore=0 phishscore=0 mlxlogscore=999 bulkscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2508110000
+ definitions=main-2508210120
+X-Proofpoint-GUID: vpXXJd_36qQK72amN3GNc6nWSIi9BeeZ
+X-Authority-Analysis: v=2.4 cv=S6eAAIsP c=1 sm=1 tr=0 ts=68a731b2 cx=c_pps
+ a=OOZaFjgC48PWsiFpTAqLcw==:117 a=OOZaFjgC48PWsiFpTAqLcw==:17
  a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
  a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
  a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=2OwXVqhp2XgA:10 a=GoEa3M9JfhUA:10 a=aCsQUMTWovaOMRiWN_QA:9
- a=CjuIK1q_8ugA:10 cc=ntf awl=host:12069
-X-Proofpoint-ORIG-GUID: wnCqZpq8h2OoBTlkHzBsg64nsi1wUc-E
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODE5MDE5NyBTYWx0ZWRfXxmn8X+rVop40
- W3tJPImZF0zHiaIHiAVpA47//NOHXQ0Ch5ZAAxrofASxeSUKF+qI8V8Wrqf033U/+PP5Se0ue0p
- 1pqPfkM8fycQMyijNlPtm19OVBGah+jWvPZywlz2BnqPdT2s3l+a1RfKZW2bgHFNJUtN+/JOUst
- XyvoT0RVKF7N+gLnz7oGQ4sG4bBRd4N7vxrpKtTehan2YSAbGK8LkKhmMUZYp3YqAeF5fIJHvOZ
- RVAMii1pkHs3VjULqteYkjA5UU1oCCr0SrwgPjju4ZXPttn69vnIvA1zfEfNn1Ux+VyWPfnRsiD
- MicRxWtaw9SK2t+K+xvJgzb+YGeL/K9HJ0AuJ5rBOYtYCEt3WiMq7knhfsvRjZ8aswqBRXDwlMN
- SvIXOCDl5gm+9tFnr/qB8BjnRqgdrJhEQ3HxaGnFDmvbXLnq0+o=
+ a=2OwXVqhp2XgA:10 a=GoEa3M9JfhUA:10 a=20KFwNOVAAAA:8 a=Y7f1edr8uATmA_85KAkA:9
+ a=CjuIK1q_8ugA:10 a=UhEZJTgQB8St2RibIkdl:22 a=Z5ABNNGmrOfJ6cZ5bIyy:22
+ a=QOGEsqRv6VhmHaoFNykA:22
+X-Proofpoint-ORIG-GUID: vpXXJd_36qQK72amN3GNc6nWSIi9BeeZ
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODE5MDE5NyBTYWx0ZWRfX+i+42olQYdUh
+ WRjteooGPhnKHGbi+GZ5YT9mSql1xeMRuaIg8VMpHVQA91c8/TK/KaOra9WBlkHghTJPnAhV8Aj
+ zbWx+OeeSRB+b8OkG94Qr4B6BfXpHQJtvkNRD0Y9Ma5tKuFS+nWOaJfZK0hCj4PqxGnCP98yjiC
+ f0s3b/gbYMTvZBLK3OQquop00IYgG6ZRzr9HobmpCEXEYxwlVSh+JmWlmMJyWDMsa8r1HSv1AbA
+ Xxib92wuHt8+MFZS/r7yOYmEfGS9ZkLQP1y93y+95X7HMYudHoxUw4RHftm874cFkjFXyu+0+la
+ he3DW6pkdpJnEjHYsb8BS+MQ6x2xDBH6heXUH7sCd2x39WTVkmQUJ08RZee4G71TMlzAmHxagGc
+ F0UxqZ2hxDldcgGUZeaVsqP1SkQw4Q==
 
-Oh and on this one I forgot to say - this seems to be where we're effectively
-turning the whole thing on, right?
+On Tue, Aug 19, 2025 at 08:16:10AM -0600, Nico Pache wrote:
+> With mTHP support inplace, let add the per-order mTHP stats for
+> exceeding NONE, SWAP, and SHARED.
+>
 
-I think it's really worth underlining that in the commit message :)
+This is really not enough of a commit message. Exceeding what, where, why,
+how? What does 'exceeding' mean here, etc. etc. More words please :)
+
+> Signed-off-by: Nico Pache <npache@redhat.com>
+> ---
+>  Documentation/admin-guide/mm/transhuge.rst | 17 +++++++++++++++++
+>  include/linux/huge_mm.h                    |  3 +++
+>  mm/huge_memory.c                           |  7 +++++++
+>  mm/khugepaged.c                            | 16 +++++++++++++---
+>  4 files changed, 40 insertions(+), 3 deletions(-)
+>
+> diff --git a/Documentation/admin-guide/mm/transhuge.rst b/Documentation/admin-guide/mm/transhuge.rst
+> index 7ccb93e22852..b85547ac4fe9 100644
+> --- a/Documentation/admin-guide/mm/transhuge.rst
+> +++ b/Documentation/admin-guide/mm/transhuge.rst
+> @@ -705,6 +705,23 @@ nr_anon_partially_mapped
+>         an anonymous THP as "partially mapped" and count it here, even though it
+>         is not actually partially mapped anymore.
+>
+> +collapse_exceed_swap_pte
+> +       The number of anonymous THP which contain at least one swap PTE.
+
+The number of anonymous THP what? Pages? Let's be specific.
+
+> +       Currently khugepaged does not support collapsing mTHP regions that
+> +       contain a swap PTE.
+
+Wait what? So we have a counter for something that's unsupported? That
+seems not so useful?
+
+> +
+> +collapse_exceed_none_pte
+> +       The number of anonymous THP which have exceeded the none PTE threshold.
+
+THP pages. What's the 'none PTE threshold'? Do you mean
+/sys/kernel/mm/transparent_hugepage/khugepaged/max_ptes_none ?
+
+Let's spell that out please, this is far too vague.
+
+> +       With mTHP collapse, a bitmap is used to gather the state of a PMD region
+> +       and is then recursively checked from largest to smallest order against
+> +       the scaled max_ptes_none count. This counter indicates that the next
+> +       enabled order will be checked.
+
+I think you really need to expand upon this as this is confusing and vague.
+
+I also don't think saying 'recursive' here really benefits anything, Just
+saying that we try to collapse the largest mTHP size we can in each
+instance, and then give a more 'words-y' explanation as to how
+max_ptes_none is (in effect) converted to a ratio of a PMD, and then that
+ratio is applied to the mTHP sizes.
+
+You can then go on to say that this counter measures the number of
+occasions in which this occurred.
+
+> +
+> +collapse_exceed_shared_pte
+> +       The number of anonymous THP which contain at least one shared PTE.
+
+anonymous THP pages right? :)
+
+> +       Currently khugepaged does not support collapsing mTHP regions that
+> +       contain a shared PTE.
+
+Again I don't really understand the purpose of creating a counter for
+something we don't support.
+
+Let's add it when we support it.
+
+I also in this case and the exceed swap case don't understand what you mean
+by exceed here, you need to spell this out clearly.
+
+Perhaps the context missing here is that you _also_ count THP events in
+these counters.
+
+But again, given we have THP_... counters for the stats mTHP doesn't do
+yet, I'd say adding these is pointless.
+
+> +
+>  As the system ages, allocating huge pages may be expensive as the
+>  system uses memory compaction to copy data around memory to free a
+>  huge page for use. There are some counters in ``/proc/vmstat`` to help
+> diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+> index 4ada5d1f7297..6f1593d0b4b5 100644
+> --- a/include/linux/huge_mm.h
+> +++ b/include/linux/huge_mm.h
+> @@ -144,6 +144,9 @@ enum mthp_stat_item {
+>  	MTHP_STAT_SPLIT_DEFERRED,
+>  	MTHP_STAT_NR_ANON,
+>  	MTHP_STAT_NR_ANON_PARTIALLY_MAPPED,
+> +	MTHP_STAT_COLLAPSE_EXCEED_SWAP,
+> +	MTHP_STAT_COLLAPSE_EXCEED_NONE,
+> +	MTHP_STAT_COLLAPSE_EXCEED_SHARED,
+
+Wh do we put 'collapse' here but not in the THP equivalents?
+
+>  	__MTHP_STAT_COUNT
+>  };
+>
+> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> index 20d005c2c61f..9f0470c3e983 100644
+> --- a/mm/huge_memory.c
+> +++ b/mm/huge_memory.c
+> @@ -639,6 +639,10 @@ DEFINE_MTHP_STAT_ATTR(split_failed, MTHP_STAT_SPLIT_FAILED);
+>  DEFINE_MTHP_STAT_ATTR(split_deferred, MTHP_STAT_SPLIT_DEFERRED);
+>  DEFINE_MTHP_STAT_ATTR(nr_anon, MTHP_STAT_NR_ANON);
+>  DEFINE_MTHP_STAT_ATTR(nr_anon_partially_mapped, MTHP_STAT_NR_ANON_PARTIALLY_MAPPED);
+> +DEFINE_MTHP_STAT_ATTR(collapse_exceed_swap_pte, MTHP_STAT_COLLAPSE_EXCEED_SWAP);
+> +DEFINE_MTHP_STAT_ATTR(collapse_exceed_none_pte, MTHP_STAT_COLLAPSE_EXCEED_NONE);
+> +DEFINE_MTHP_STAT_ATTR(collapse_exceed_shared_pte, MTHP_STAT_COLLAPSE_EXCEED_SHARED);
+> +
+>
+>  static struct attribute *anon_stats_attrs[] = {
+>  	&anon_fault_alloc_attr.attr,
+> @@ -655,6 +659,9 @@ static struct attribute *anon_stats_attrs[] = {
+>  	&split_deferred_attr.attr,
+>  	&nr_anon_attr.attr,
+>  	&nr_anon_partially_mapped_attr.attr,
+> +	&collapse_exceed_swap_pte_attr.attr,
+> +	&collapse_exceed_none_pte_attr.attr,
+> +	&collapse_exceed_shared_pte_attr.attr,
+>  	NULL,
+>  };
+>
+> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+> index c13bc583a368..5a3386043f39 100644
+> --- a/mm/khugepaged.c
+> +++ b/mm/khugepaged.c
+> @@ -594,7 +594,9 @@ static int __collapse_huge_page_isolate(struct vm_area_struct *vma,
+>  				continue;
+>  			} else {
+>  				result = SCAN_EXCEED_NONE_PTE;
+> -				count_vm_event(THP_SCAN_EXCEED_NONE_PTE);
+
+Hm so wait you were miscounting statistics in patch 10/13 when you turned
+all this one? That's not good.
+
+This should be in place _first_ before enabling the feature.
+
+> +				if (order == HPAGE_PMD_ORDER)
+> +					count_vm_event(THP_SCAN_EXCEED_NONE_PTE);
+> +				count_mthp_stat(order, MTHP_STAT_COLLAPSE_EXCEED_NONE);
+>  				goto out;
+>  			}
+>  		}
+> @@ -633,10 +635,17 @@ static int __collapse_huge_page_isolate(struct vm_area_struct *vma,
+>  			 * shared may cause a future higher order collapse on a
+>  			 * rescan of the same range.
+>  			 */
+> -			if (order != HPAGE_PMD_ORDER || (cc->is_khugepaged &&
+> -			    shared > khugepaged_max_ptes_shared)) {
+> +			if (order != HPAGE_PMD_ORDER) {
+
+Hm wait what? I dont understand what's going on here? You're no longer
+actually doing any check except order != HPAGE_PMD_ORDER?... am I missnig
+something?
+
+Again why we are bothering to maintain a counter that doesn't mean anything
+I don't know? I may be misinterpreting somehow however.
+
+> +				result = SCAN_EXCEED_SHARED_PTE;
+> +				count_mthp_stat(order, MTHP_STAT_COLLAPSE_EXCEED_SHARED);
+> +				goto out;
+> +			}
+> +
+> +			if (cc->is_khugepaged &&
+> +			    shared > khugepaged_max_ptes_shared) {
+>  				result = SCAN_EXCEED_SHARED_PTE;
+>  				count_vm_event(THP_SCAN_EXCEED_SHARED_PTE);
+> +				count_mthp_stat(order, MTHP_STAT_COLLAPSE_EXCEED_SHARED);
+>  				goto out;
+>  			}
+>  		}
+> @@ -1084,6 +1093,7 @@ static int __collapse_huge_page_swapin(struct mm_struct *mm,
+>  		 * range.
+>  		 */
+>  		if (order != HPAGE_PMD_ORDER) {
+> +			count_mthp_stat(order, MTHP_STAT_COLLAPSE_EXCEED_SWAP);
+
+This again seems surely to not be testing for what it claims to be
+tracking? I may again be missing context here.
+
+>  			pte_unmap(pte);
+>  			mmap_read_unlock(mm);
+>  			result = SCAN_EXCEED_SWAP_PTE;
+> --
+> 2.50.1
+>
