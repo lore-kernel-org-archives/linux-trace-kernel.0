@@ -1,106 +1,306 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA772246786;
-	Thu, 21 Aug 2025 07:14:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 489402727E7;
+	Thu, 21 Aug 2025 08:14:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755760496; cv=none; b=XMFyDWvGRR+xxqU0QdMhGsKs+d7xz4kwIAO9XxANCKN1Wocbt4TnMUkF6hFN3abSVScbIo9GkyqZQfVYHfLl7r3CiBvQ2hOBLt7NvIq7BAHKxL0C0Vl0VXrrtXbHWEExhfcnKxUKFwjJf9k+cd1XrxiNH6eZOCfmaJljFZbtJxA=
+	t=1755764049; cv=none; b=BCzcj4cic+eEQQq3ADWQJx96qG8sCgNYDHOfhsnXH4Q9j3pz+sJZfW/+YQT3ZXypa7RFV+ii/IoQBWtw6XbQuYaqMyXXfvHObEBu06Tzetz8DttvNn/3JfWJ+blC3Lh9mb/9HxYLuayTqrgELIRPkGoyIejZfvoOZVEc/VKB7Zk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755760496; c=relaxed/simple;
-	bh=NqCENmEVfUXXxHawVcKeQSrD5jWM+cjvxrnkE33kh4w=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=V2aWtUrk8TWgv8mj14w6dXXGR/NngR9wWcfdm+xLQuXsCHz+Ckv2zwqInePGlo17c48z9EDiO92mVvmGgI8H4uEOBbK+pN+M4aR6UV0LjeyhwZFxkBe77GlTMq1D8e2P9o7hAGVojvEefplYomfhAYyQ4X6LuiOKraMUoCUKpc4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4c6vhp4mwRzKHNFH;
-	Thu, 21 Aug 2025 15:14:50 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 2706E1A1968;
-	Thu, 21 Aug 2025 15:14:50 +0800 (CST)
-Received: from ultra.huawei.com (unknown [10.90.53.71])
-	by APP4 (Coremail) with SMTP id gCh0CgDXng9mx6Zo2+2lEQ--.46218S2;
-	Thu, 21 Aug 2025 15:14:48 +0800 (CST)
-From: Pu Lehui <pulehui@huaweicloud.com>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com
-Cc: linux-kernel@vger.kernel.org,
+	s=arc-20240116; t=1755764049; c=relaxed/simple;
+	bh=4DkZhm+ttNFAoF/CFkhooXB7A4sxmjtdUUXaeN4G7EY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=A79cIqM5n/yGVV4wJnv0UF/A4XFxrAFEpClC8fN1DButJ5E5cOn3+K/IF/sDidAAnpeOsIPkuYZXfnqf7JQnvWNe7t7Qa2vMgbWvthFfUwrBOEr1dnIoi+Uw0XPfFW72HqckMPdKDn6/TyqxpilGlYtnzURax3oNx4DYen3VT08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qmALpqai; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dXvHp8xc; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qmALpqai";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dXvHp8xc"
+Date: Thu, 21 Aug 2025 10:14:05 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1755764046;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0GIC4ZUCvr94Zkuj3kqHlKBZXwaMTSK6R/2NbQXv5yo=;
+	b=qmALpqai0wHoCYwbwLz3SCD2uda0CsodGTMl03Of5yPGjMHJ28EiAHyhNmW06G5oHR0CLC
+	wlFlvkcUb4vq58d4wL6S4o4SKqI9qnhqo900wP2mWVT+a2bUiNtLIis2seMbdGshCbW/7Y
+	9gQo9k8kIQKg1jFJ/N3zOz3p6klRdrF2N5dxPDc1BkKWw+cNlquhD7FgXNHtNkewIpuj66
+	hGovjF/GYrEcDlqO54f3A4DDMEVtR3CQbUSRTJ2YPQ6ezhu/0U7wSKQFosGK2V8J2xg4Vl
+	yVuA8Z1cnPCEr1t3kf8eEvMq7GPZHcwei3NLiUfmjVWZUdgSLkUQqUZ6ATg2Sg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1755764046;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0GIC4ZUCvr94Zkuj3kqHlKBZXwaMTSK6R/2NbQXv5yo=;
+	b=dXvHp8xcckHKGBWgHl/7MdL1Nr+lrBExAxp1sjNQBXjwo5+dJVz923TeX8O+ehZRzxeoZg
+	FsS8U0INCJcBScBw==
+From: Nam Cao <namcao@linutronix.de>
+To: Gabriele Monaco <gmonaco@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
 	linux-trace-kernel@vger.kernel.org,
-	pulehui@huawei.com
-Subject: [PATCH] tracing: Fix missing errno when zero parser->idx in trace_pid_write
-Date: Thu, 21 Aug 2025 07:17:21 +0000
-Message-Id: <20250821071721.3609109-1-pulehui@huaweicloud.com>
-X-Mailer: git-send-email 2.34.1
+	Tomas Glozar <tglozar@redhat.com>, Juri Lelli <jlelli@redhat.com>,
+	Clark Williams <williams@redhat.com>,
+	John Kacur <jkacur@redhat.com>
+Subject: Re: [RFC PATCH 01/17] rv: Refactor da_monitor to minimise macros
+Message-ID: <20250821081405.RQhrWVKp@linutronix.de>
+References: <20250814150809.140739-1-gmonaco@redhat.com>
+ <20250814150809.140739-2-gmonaco@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgDXng9mx6Zo2+2lEQ--.46218S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7AFyDJrWrXF18Gw1rJr43KFg_yoW8WrWrpF
-	1akF93JryrJF4jya18XF4kuFyxG3s5XryxCFs8G34rXa42yrWqgwsrAasxX3WfKrWUGFWf
-	J3yjyrZ8KFZFvaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUyKb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI
-	7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxV
-	Cjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY
-	6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6x
-	AIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY
-	1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU7IJmUUUUU
-X-CM-SenderInfo: psxovxtxl6x35dzhxuhorxvhhfrp/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250814150809.140739-2-gmonaco@redhat.com>
 
-From: Pu Lehui <pulehui@huawei.com>
+On Thu, Aug 14, 2025 at 05:07:53PM +0200, Gabriele Monaco wrote:
+> The da_monitor helper functions are generated from macros of the type:
+> 
+> DECLARE_DA_FUNCTION(name, type) \
+> static void da_func_x_##name(type arg) {} \
+> static void da_func_y_##name(type arg) {} \
+> 
+> This is good to minimise code duplication but the long macros made of
+> skipped end of lines is rather hard to parse. Since functions are
+> static, the advantage of naming them differently for each monitor is
+> minimal.
+> 
+> Refactor the da_monitor.h file to minimise macros, instead of declaring
+> functions from macros, we simply declare them with the same name for all
+> monitors (e.g. da_func_x) and for any remaining reference to the monitor
+> name (e.g. tracepoints, enums, global variables) we use the CONCATENATE
+> macro.
+> In this way the file is much easier to maintain while keeping the same
+> generality.
+> Functions depending on the monitor types are now conditionally compiled
+> according to the value of RV_MON_TYPE, which must be defined in the
+> monitor source.
+> The monitor type can be specified as in the original implementation,
+> although it's best to keep the default implementation (unsigned char) as
+> not all parts of code support larger data types, and likely there's no
+> need.
+> 
+> We keep the empty macro definitions to ease review of this change with
+> diff tools, but cleanup is required.
+> 
+> Also adapt existing monitors to keep the build working.
+> 
+> Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 
-When trace_get_user in trace_pid_write parses an only space, the
-!trace_parser_loaded branch will break with no errno, causing
-tr->filtered_pids to still be assigned with pid_list, which may trigger
-potential problems.
+Yes please! The macros are not pleasant to work with.
 
-This patch will also silence the fault injection syzkaller warning in
-tracepoint_add_func [0]. We can reproduce the warning by following the
-steps below:
-1. echo 8 >> set_event_notrace_pid. Let tr->filtered_pids owns one pid
-   and register sched_switch tracepoint.
-2. echo ' ' >> set_event_pid, and perform fault injection during chunk
-   allocation of trace_pid_list_alloc. Let pid_list with no pid and
-assign to tr->filtered_pids.
-3. echo ' ' >> set_event_pid. Let pid_list is NULL and assign to
-   tr->filtered_pids.
-4. echo 9 >> set_event_pid, will trigger the double register
-   sched_switch tracepoint warning.
+> ---
+>  include/linux/rv.h                     |   4 +
+>  include/rv/automata.h                  | 132 ++--
+>  include/rv/da_monitor.h                | 912 ++++++++++++-------------
+>  kernel/trace/rv/monitors/nrp/nrp.c     |  22 +-
+>  kernel/trace/rv/monitors/nrp/nrp.h     |   2 +
+>  kernel/trace/rv/monitors/opid/opid.c   |  32 +-
+>  kernel/trace/rv/monitors/opid/opid.h   |   2 +
+>  kernel/trace/rv/monitors/sco/sco.c     |  18 +-
+>  kernel/trace/rv/monitors/sco/sco.h     |   2 +
+>  kernel/trace/rv/monitors/scpd/scpd.c   |  20 +-
+>  kernel/trace/rv/monitors/scpd/scpd.h   |   2 +
+>  kernel/trace/rv/monitors/snep/snep.c   |  20 +-
+>  kernel/trace/rv/monitors/snep/snep.h   |   2 +
+>  kernel/trace/rv/monitors/snroc/snroc.c |  18 +-
+>  kernel/trace/rv/monitors/snroc/snroc.h |   2 +
+>  kernel/trace/rv/monitors/sssw/sssw.c   |  30 +-
+>  kernel/trace/rv/monitors/sssw/sssw.h   |   2 +
+>  kernel/trace/rv/monitors/sts/sts.c     |  26 +-
+>  kernel/trace/rv/monitors/sts/sts.h     |   2 +
+>  kernel/trace/rv/monitors/wip/wip.c     |  18 +-
+>  kernel/trace/rv/monitors/wip/wip.h     |   2 +
+>  kernel/trace/rv/monitors/wwnr/wwnr.c   |  20 +-
+>  kernel/trace/rv/monitors/wwnr/wwnr.h   |   2 +
+>  23 files changed, 650 insertions(+), 642 deletions(-)
+> 
+> diff --git a/include/linux/rv.h b/include/linux/rv.h
+> index 14410a42faef..3134681553b4 100644
+> --- a/include/linux/rv.h
+> +++ b/include/linux/rv.h
+> @@ -13,6 +13,10 @@
+>  #define MAX_DA_NAME_LEN			32
+>  #define MAX_DA_RETRY_RACING_EVENTS	3
+>  
+> +#define RV_MON_GLOBAL   0
+> +#define RV_MON_PER_CPU  1
+> +#define RV_MON_PER_TASK 2
+> +
+>  #ifdef CONFIG_RV
+>  #include <linux/bitops.h>
+>  #include <linux/types.h>
+> diff --git a/include/rv/automata.h b/include/rv/automata.h
+> index eb9e636809a0..5b5d2e94c034 100644
+> --- a/include/rv/automata.h
+> +++ b/include/rv/automata.h
+> @@ -6,6 +6,20 @@
+>   * models in C generated by the dot2k tool.
+>   */
+>  
+> +#ifndef MONITOR_NAME
+> +#error "MONITOR_NAME macro is not defined. Did you include $(MODEL_NAME).h generated by rvgen?"
+> +#endif
+> +
+> +#ifndef type
+> +#define type unsigned char
+> +#endif
+> +
+> +#define RV_AUTOMATON_NAME CONCATENATE(automaton_, MONITOR_NAME)
+> +#define EVENT_MAX CONCATENATE(event_max_, MONITOR_NAME)
+> +#define STATE_MAX CONCATENATE(state_max_, MONITOR_NAME)
+> +#define events CONCATENATE(events_, MONITOR_NAME)
+> +#define states CONCATENATE(states_, MONITOR_NAME)
 
-Link: https://lore.kernel.org/all/67cb890e.050a0220.d8275.022e.GAE@google.com [0]
-Fixes: b27f266f74fb ("tracing: Fix return value of trace_pid_write()")
-Signed-off-by: Pu Lehui <pulehui@huawei.com>
----
- kernel/trace/trace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I think these macros make it harder to read the code. E.g. it is not
+obvious what is "events" in "enum events event".
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 8d8935ed416d..feeb7eb71318 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -853,10 +853,10 @@ int trace_pid_write(struct trace_pid_list *filtered_pids,
- 		ubuf += ret;
- 		cnt -= ret;
- 
-+		ret = -EINVAL;
- 		if (!trace_parser_loaded(&parser))
- 			break;
- 
--		ret = -EINVAL;
- 		if (kstrtoul(parser.buffer, 0, &val))
- 			break;
- 
--- 
-2.34.1
+How about renaming these to be the same for all monitors, and get rid of
+these 4 macros?
 
+Something like
+
+	enum states_wip -> enum da_states
+	state_max_wip   -> da_state_max
+	etc
+
+Just my preference, of course. You probably have your reasons for doing it
+this way?
+
+> +/*
+> + * model_get_state_name - return the (string) name of the given state
+> + */
+> +static char *model_get_state_name(enum states state)
+> +{
+> +	if ((state < 0) || (state >= STATE_MAX))
+> +		return "INVALID";
+
+Just notice that this probably should be
+	if (BUG_ON((state < 0) || (state >= STATE_MAX)))
+
+You shouldn't do it in this patch of course. I just want to note it down.
+
+> index 17fa4f6e5ea6..bc02334aa8be 100644
+> --- a/include/rv/da_monitor.h
+> +++ b/include/rv/da_monitor.h
+> @@ -13,97 +13,102 @@
+>  
+>  #include <rv/automata.h>
+>  #include <linux/rv.h>
+> +#include <linux/stringify.h>
+>  #include <linux/bug.h>
+>  #include <linux/sched.h>
+>  
+> +#define RV_MONITOR_NAME CONCATENATE(rv_, MONITOR_NAME)
+> +#define RV_DA_MON_NAME CONCATENATE(da_mon_, MONITOR_NAME)
+
+These macros as well. Should we rename the monitors to be the same and get
+rid of the macros?
+
+I see you took this RV_MONITOR_NAME idea from LTL. But I'm starting to
+wonder if this is really a good idea.
+
+What do you think?
+
+> +#if RV_MON_TYPE == RV_MON_GLOBAL || RV_MON_TYPE == RV_MON_PER_CPU
+> +
+> +static inline bool
+> +da_event(struct da_monitor *da_mon, enum events event)
+> +{
+> +	enum states curr_state, next_state;
+> +
+> +	curr_state = READ_ONCE(da_mon->curr_state);
+> +	for (int i = 0; i < MAX_DA_RETRY_RACING_EVENTS; i++) {
+> +		next_state = model_get_next_state(curr_state, event);
+> +		if (next_state == INVALID_STATE) {
+> +			cond_react(curr_state, event);
+> +			CONCATENATE(trace_error_, MONITOR_NAME)(model_get_state_name(curr_state),
+> +					   model_get_event_name(event));
+> +			return false;
+> +		}
+> +		if (likely(try_cmpxchg(&da_mon->curr_state, &curr_state, next_state))) {
+> +			CONCATENATE(trace_event_, MONITOR_NAME)(model_get_state_name(curr_state),
+> +					   model_get_event_name(event),
+> +					   model_get_state_name(next_state),
+> +					   model_is_final_state(next_state));
+> +			return true;
+> +		}
+> +	}
+> +
+> +	trace_rv_retries_error(__stringify(MONITOR_NAME), model_get_event_name(event));
+> +	pr_warn("rv: " __stringify(MAX_DA_RETRY_RACING_EVENTS)
+> +		" retries reached for event %s, resetting monitor %s",
+> +		model_get_event_name(event), __stringify(MONITOR_NAME));
+> +	return false;
+> +}
+
+You have two da_event(), which is mostly similar, except the function's
+signature and the trace event. Would it be sane to unify them, and only
+putting the differences in #ifdef?
+
+Perhaps something like:
+
+#if RV_MON_TYPE == RV_MON_GLOBAL || RV_MON_TYPE == RV_MON_PER_CPU
+
+typedef struct {} monitor_target;
+
+static void da_trace_event(struct da_monitor *da_mon, monitor_target target,
+			   enum events event, enum states curr, enum states next)
+{
+	CONCATENATE(trace_event_, MONITOR_NAME)(model_get_state_name(curr_state),
+		    model_get_event_name(event),
+		    model_get_state_name(next_state),
+		    model_is_final_state(next_state));
+}
+
+#elif RV_MON_TYPE == RV_MON_PER_TASK
+
+typedef struct task_struct *monitor_target;
+
+static void da_trace_event(struct da_monitor *da_mon, struct task_struct *task,
+			   enum events event, enum states curr, enum states next)
+{
+	CONCATENATE(trace_event_, MONITOR_NAME)(task->pid,
+		   model_get_state_name(curr_state),
+		   model_get_event_name(event),
+		   model_get_state_name(next_state),
+		   model_is_final_state(next_state));
+}
+
+#endif
+
+static inline bool
+da_event(struct da_monitor *da_mon, monitor_target target, enum events event)
+{
+	enum states curr_state, next_state;
+
+	curr_state = READ_ONCE(da_mon->curr_state);
+	for (int i = 0; i < MAX_DA_RETRY_RACING_EVENTS; i++) {
+		next_state = model_get_next_state(curr_state, event);
+		if (next_state == INVALID_STATE) {
+			cond_react(curr_state, event);
+			da_trace_event(da_mon, event, target, curr_state, next_state);
+			return false;
+		}
+		if (likely(try_cmpxchg(&da_mon->curr_state, &curr_state, next_state))) {
+			da_trace_error(...);
+			return true;
+		}
+	}
+
+	trace_rv_retries_error(__stringify(MONITOR_NAME), model_get_event_name(event));
+	pr_warn("rv: " __stringify(MAX_DA_RETRY_RACING_EVENTS)
+		" retries reached for event %s, resetting monitor %s",
+		model_get_event_name(event), __stringify(MONITOR_NAME));
+	return false;
+}
+
+Same for the other functions.
+
+Nam
