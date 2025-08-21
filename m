@@ -1,137 +1,158 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CC4C194124;
-	Thu, 21 Aug 2025 02:11:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F7291FBEA6;
+	Thu, 21 Aug 2025 03:41:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755742297; cv=none; b=moZ4BNU3mx65KA39UFc4ud+uFEAVDCm+53rNMbCiAhk+247lwXPRtAxP+HldKzUQl4O+hAln7YVEQnR6g/6UyuwHQTVhtBoinJXYk3GnuXmnEylpdCdVXr1KG6eYpxuVg2Bc/NWhR8cmVK6h5rvyDA+MN2n+C2VpKTGjD0M6oHs=
+	t=1755747718; cv=none; b=VBjOXiGc5SUjxQIeWRr2oTbe9DbzLd0y6y+dqG+/1/yTDD5ln14P6X/0w2cbrKZMMFwTEzaWK8CY70H+kVzQvmVTSimisdt/PO2TAUU7If8OFCzRHMTbUDW135lfJ5C/iy8UHPgSqJNowsjSHlhOVp5/mr+XvoMX2JZRrz/YzMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755742297; c=relaxed/simple;
-	bh=KfoDvDxYcogeLGEPuoMCFKFWUu0e1tr8+QbKzrTi+Ug=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=K8w2VdgIZuXf9WMcoVxaPsTZO+5saA39GHnhUz8f+9EyqQhC7aKTt7OBhgvzsSHCyP9N4gIRCsHffU3wTCOz9KxOCyUWP0m2gt33c03Hxi0hA9eWeMzkdccJo05s+9yGDtmsgFnrVrIiarrwlkI7BkUE4lEGnWBQm+8AMiXzlUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4c6myq4cxKzKHMhh;
-	Thu, 21 Aug 2025 10:11:31 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 1C4841A0AD8;
-	Thu, 21 Aug 2025 10:11:31 +0800 (CST)
-Received: from huawei.com (unknown [10.67.174.45])
-	by APP4 (Coremail) with SMTP id gCh0CgB38hJLgKZo7P6NEQ--.63669S2;
-	Thu, 21 Aug 2025 10:11:30 +0800 (CST)
-From: Tengda Wu <wutengda@huaweicloud.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Ingo Molnar <mingo@elte.hu>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Tengda Wu <wutengda@huaweicloud.com>
-Subject: [PATCH -next v2] ftrace: Fix potential warning in trace_printk_seq during ftrace_dump
-Date: Thu, 21 Aug 2025 02:11:20 +0000
-Message-Id: <20250821021120.2986553-1-wutengda@huaweicloud.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1755747718; c=relaxed/simple;
+	bh=X+MusV7/pRuzSWK84Guko9Sj7ekebKWsuoI3ckFV02k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Yv+ThHgazDQZ7/63QA2mh9seUZehGiVzUpqm0hpuFab4YfuuvepxSNwvP3vwdlWnicGQdUIrW5QY6EOqHXvlDOsCZYuFsGBFbHsNY0JVDQyEHEOVOSWu4+DL9cc9xKMLKIXNRIhCNoASLzqfekX8ov+5nX+Z0kl9WewhbS6dKiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZEMdT9DK; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZEMdT9DK"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-afcb73394b4so81144966b.0;
+        Wed, 20 Aug 2025 20:41:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1755747715; x=1756352515; darn=vger.kernel.org;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ly8HhEQvY9JxMVhrYHzoh/hAff3HjFqcoEOj5b7KCq4=;
+        b=ZEMdT9DKGVPUePaus5FFyXbk3eLDWC8B6ohc3qetL7MdDsWjxA3kT5ey1D9i7Nu3T+
+         lTTC9S+mPBPbF1bdBcI5kLy/QHns9OFTc2p3MxwOhucGUJbWCNW8TD01uoyWZNF6UgKG
+         O9PeKfqJICWpp6Cw9CeZngFxE9nA4Q0gAx2B/SoMSwrOdaJrrOI6BjZ06fkszz9mourR
+         DkGMXe+YQ/KeAHu++P4yMqFBWadA9CyCjLarGklfhSQdx4GmCY/FFJcf0L+mWFGwmo8w
+         AVZBHNHs9z06ewFE96wpAVNMXJu+APjVECh0E/lsPK41T2tNPeyQg8mYRYBIGqX8HuPk
+         kN3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755747715; x=1756352515;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :reply-to:message-id:subject:cc:to:from:date:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=ly8HhEQvY9JxMVhrYHzoh/hAff3HjFqcoEOj5b7KCq4=;
+        b=cgJExGWyBzlUXk7CDAiYAGKkJl+oOF/8M0qYwaGjH2lj1EhyEQ1VZLj7cU9DqpJWmx
+         G/VmKTJ5s2lkhEkfLHa8kYWu363NfpxIvK7hvugx4VPJYeIYmnvn/XTAHntX69++RMy6
+         78VH+3e4juFJP+KXZHcq2doUry0XKmhlUHkMuY/3Lqb4bbGAB63RZi4bdsSErmF9q22R
+         pm/GFZYO//MGt5UbL1hMxCCGusQ3Yer8mjRnvVSzBXK+E3cKPy5jjw8hvmfnZ1AvcqkI
+         IclBPOBn6sf1+pvbxgbP40gNusDgy41RX6PwPz3xyKGMWkpGjHzpDqEiIIA/C2GKTPGN
+         6dYA==
+X-Forwarded-Encrypted: i=1; AJvYcCW78S5+yZ2JacgKY4ce0EoEqjMXnGSOCcwkFTNscxEMkFDcj5h/dHkCSuBPuYG6L6YQFoEwFynuNxwl0okQ@vger.kernel.org, AJvYcCW88HcGYAHvdY9BCLNNFquzmWKyzERn53YaHot8qIog27vTm0dRYxDgXz5j0YIv4pPifGIr4xEPPvM=@vger.kernel.org, AJvYcCX0f0T2kQ20kUvdrH9IOfrVE7wVT5vPIwx83K6mMNigOfZjJLinQuWiHPTRdl34ECBO6zh62DQCIfuVYXkBeakshhu7@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy050G6Yvky7ECqvi9I5ZkMq7XFflsBiZZAM9EqZi5D855WvImZ
+	N8XjUJ6wQeRblfIyOVVGuBhdoL22L4PRqxNB7nUNVSn4rzVkE2DiviF4
+X-Gm-Gg: ASbGncv7WyuS9Prxf0OsIuqe/qfwCeMbhNbmpvLcaXpr7X9nXFCyo5Q7FyiQP5cg7A0
+	i8/RPYV1395JrCPLyVAGjzFVDDbn4NnHgBob+k2L/gz9tH2Ze2oAH3EFpHGto8s9qiaMcnyfIcR
+	hJ+aDYpUFFBuG3XNY+v1bJ/A725OvCpqlVVaNUrTZJSoYqXaQzKkETa/PmtkaxmrdOgtP52Pt9f
+	8W31MklQhFIfgHhb2d1PRt95lKbRTj6ls2/pf3C3P72QHXfn/TwHTCJxrVmUK1w9s+cuRDEdSjs
+	v2DtF/POZHo/DQTSLJT+7KJhmIyfJ6Sh6MgnCPSz532cBAgQdAMFAKscHO5CMRXZeB/oLnpMJWR
+	jwn9p38wnce1Pyd7L4zs1rQ==
+X-Google-Smtp-Source: AGHT+IGaJqB8Du4nZbwZH6+ZZ1UR1jsjKqH51Z9VenWWYM+Y2riY0qwNibopPt1+EA0CWK1IUnGClQ==
+X-Received: by 2002:a17:907:3e8d:b0:af2:5a26:b32a with SMTP id a640c23a62f3a-afe07c154d7mr97515766b.30.1755747714772;
+        Wed, 20 Aug 2025 20:41:54 -0700 (PDT)
+Received: from localhost ([185.92.221.13])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-afded2ba31dsm299249166b.12.2025.08.20.20.41.54
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 20 Aug 2025 20:41:54 -0700 (PDT)
+Date: Thu, 21 Aug 2025 03:41:53 +0000
+From: Wei Yang <richard.weiyang@gmail.com>
+To: Nico Pache <npache@redhat.com>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, linux-mm@kvack.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, david@redhat.com,
+	ziy@nvidia.com, baolin.wang@linux.alibaba.com,
+	Liam.Howlett@oracle.com, ryan.roberts@arm.com, dev.jain@arm.com,
+	corbet@lwn.net, rostedt@goodmis.org, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, akpm@linux-foundation.org,
+	baohua@kernel.org, willy@infradead.org, peterx@redhat.com,
+	wangkefeng.wang@huawei.com, usamaarif642@gmail.com,
+	sunnanyong@huawei.com, vishal.moola@gmail.com,
+	thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com,
+	kirill.shutemov@linux.intel.com, aarcange@redhat.com,
+	raquini@redhat.com, anshuman.khandual@arm.com,
+	catalin.marinas@arm.com, tiwai@suse.de, will@kernel.org,
+	dave.hansen@linux.intel.com, jack@suse.cz, cl@gentwo.org,
+	jglisse@google.com, surenb@google.com, zokeefe@google.com,
+	hannes@cmpxchg.org, rientjes@google.com, mhocko@suse.com,
+	rdunlap@infradead.org, hughd@google.com
+Subject: Re: [PATCH v10 03/13] khugepaged: generalize hugepage_vma_revalidate
+ for mTHP support
+Message-ID: <20250821034153.uyxjy5yvxx5no5sf@master>
+Reply-To: Wei Yang <richard.weiyang@gmail.com>
+References: <20250819134205.622806-1-npache@redhat.com>
+ <20250819134205.622806-4-npache@redhat.com>
+ <cd4dd743-679f-4c55-9635-6d32e6fa5ff7@lucifer.local>
+ <CAA1CXcDORXqm4JoHn4ZSEhT3ajsuY2MAPwefMXk3+YMXcpvqkw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgB38hJLgKZo7P6NEQ--.63669S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7Kw13WFy7Kw4fJFyDCFyfJFb_yoW8Kr1rpF
-	y3K3srJrs5AFsrtF1UuF4xCr1xX3y0gry7WrsrJw1rJan8Ar1jvrnrt3ZaqFyfA3yDW3sI
-	yrWYy348Cw129FJanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkC14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AFwI0_
-	Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67
-	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIY
-	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
-	v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8
-	JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUonmRUU
-	UUU
-X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAA1CXcDORXqm4JoHn4ZSEhT3ajsuY2MAPwefMXk3+YMXcpvqkw@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 
-When calling ftrace_dump_one() concurrently with reading trace_pipe,
-a WARN_ON_ONCE() in trace_printk_seq() can be triggered due to a race
-condition.
+On Wed, Aug 20, 2025 at 09:40:40AM -0600, Nico Pache wrote:
+[...]
+>>
+>> >       if (!thp_vma_suitable_order(vma, address, PMD_ORDER))
+>> >               return SCAN_ADDRESS_RANGE;
+>> > -     if (!thp_vma_allowable_order(vma, vma->vm_flags, type, PMD_ORDER))
+>> > +     if (!thp_vma_allowable_orders(vma, vma->vm_flags, type, orders))
+>> >               return SCAN_VMA_CHECK;
+>> >       /*
+>> >        * Anon VMA expected, the address may be unmapped then
+>> > @@ -1134,7 +1135,8 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
+>> >               goto out_nolock;
+>> >
+>> >       mmap_read_lock(mm);
+>> > -     result = hugepage_vma_revalidate(mm, address, true, &vma, cc);
+>> > +     result = hugepage_vma_revalidate(mm, address, true, &vma, cc,
+>> > +                                      BIT(HPAGE_PMD_ORDER));
+>>
+>> Shouldn't this be PMD order? Seems equivalent.
+>Yeah i'm actually not sure why we have both... they seem to be the
+>same thing, but perhaps there is some reason for having two...
 
-The issue occurs because:
+I am confused with these two, PMD_ORDER above and HPAGE_PMD_ORDER from here.
 
-CPU0 (ftrace_dump)                              CPU1 (reader)
-echo z > /proc/sysrq-trigger
+Do we have a guide on when to use which?
 
-!trace_empty(&iter)
-trace_iterator_reset(&iter) <- len = size = 0
-                                                cat /sys/kernel/tracing/trace_pipe
-trace_find_next_entry_inc(&iter)
-  __find_next_entry
-    ring_buffer_empty_cpu <- all empty
-  return NULL
+>>
+>> >       if (result != SCAN_SUCCEED) {
+>> >               mmap_read_unlock(mm);
+>> >               goto out_nolock;
+>> > @@ -1168,7 +1170,8 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
+>> >        * mmap_lock.
+>> >        */
+>> >       mmap_write_lock(mm);
+>> > -     result = hugepage_vma_revalidate(mm, address, true, &vma, cc);
+>> > +     result = hugepage_vma_revalidate(mm, address, true, &vma, cc,
+>> > +                                      BIT(HPAGE_PMD_ORDER));
+>> >       if (result != SCAN_SUCCEED)
+>> >               goto out_up_write;
+>> >       /* check if the pmd is still valid */
+>> > @@ -2807,7 +2810,7 @@ int madvise_collapse(struct vm_area_struct *vma, unsigned long start,
+>> >                       mmap_read_lock(mm);
+>> >                       mmap_locked = true;
+>> >                       result = hugepage_vma_revalidate(mm, addr, false, &vma,
+>> > -                                                      cc);
+>> > +                                                      cc, BIT(HPAGE_PMD_ORDER));
+>> >                       if (result  != SCAN_SUCCEED) {
+>> >                               last_fail = result;
+>> >                               goto out_nolock;
+>> > --
+>> > 2.50.1
+>> >
+>>
+>
 
-trace_printk_seq(&iter.seq)
-  WARN_ON_ONCE(s->seq.len >= s->seq.size)
-
-In the context between trace_empty() and trace_find_next_entry_inc()
-during ftrace_dump, the ring buffer data was consumed by other readers.
-This caused trace_find_next_entry_inc to return NULL, failing to populate
-`iter.seq`. At this point, due to the prior trace_iterator_reset, both
-`iter.seq.len` and `iter.seq.size` were set to 0. Since they are equal,
-the WARN_ON_ONCE condition is triggered.
-
-Add a non-NULL check on the return value of trace_find_next_entry_inc
-prior to invoking trace_printk_seq, ensuring the `iter.seq` is properly
-populated before subsequent operations.
-
-Fixes: d769041f8653 ("ring_buffer: implement new locking")
-Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
----
- kernel/trace/trace.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
-
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 4283ed4e8f59..b4cec22753ea 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -10617,6 +10617,7 @@ static void ftrace_dump_one(struct trace_array *tr, enum ftrace_dump_mode dump_m
- 	 */
- 
- 	while (!trace_empty(&iter)) {
-+		void *ent;
- 
- 		if (!cnt)
- 			printk(KERN_TRACE "---------------------------------\n");
-@@ -10625,17 +10626,18 @@ static void ftrace_dump_one(struct trace_array *tr, enum ftrace_dump_mode dump_m
- 
- 		trace_iterator_reset(&iter);
- 		iter.iter_flags |= TRACE_FILE_LAT_FMT;
-+		ent = trace_find_next_entry_inc(&iter);
- 
--		if (trace_find_next_entry_inc(&iter) != NULL) {
-+		if (ent) {
- 			int ret;
- 
- 			ret = print_trace_line(&iter);
- 			if (ret != TRACE_TYPE_NO_CONSUME)
- 				trace_consume(&iter);
-+
-+			trace_printk_seq(&iter.seq);
- 		}
- 		touch_nmi_watchdog();
--
--		trace_printk_seq(&iter.seq);
- 	}
- 
- 	if (!cnt)
 -- 
-2.34.1
-
+Wei Yang
+Help you, Help me
