@@ -1,30 +1,30 @@
 Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6725281732;
-	Fri, 22 Aug 2025 01:26:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB7DF7261E;
+	Fri, 22 Aug 2025 01:35:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755825990; cv=none; b=e5SvA2iiK5u3z4nwlCtsFtxuTAsxpF3xEdFW0BSpGJflKhlwkBKoA862IxwrUoUHyzzhzRVmQlPk7lxL2+JDe0LwwaXR5ETf2QP+dlBGKghDTPcbPTO5mddbIypNjRPR1vrOvcII9Q2YZry5TIYBy+rNBm90YnwWjuzlW5Udw8Y=
+	t=1755826549; cv=none; b=ARCcjije5bt924QK4FpQhOARd0gall4ta5jVCjp4WmQy66oLrGKiFxmsT+AbpMm1ybdJ4vdxtVSEPj5kIi1hKdt/eWC1cVvcXT37emIog/YZf3Cxc3GGGHU4zrvTc+u52fnwqqSp4mfgEy68kruMhzUN8ER7bJ2KHCx78nWRw9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755825990; c=relaxed/simple;
-	bh=dL+tNK8irqmkqr5Oj7Gsu1orlNCurPKsma4kH5E3iZk=;
+	s=arc-20240116; t=1755826549; c=relaxed/simple;
+	bh=JalOgAPy+10ijoEjkUyxw2IZaQ73SnV+0ZOBdc0KXz4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QL6K6uUlXgYYgA7XdSnj6ntNcjgC0/VFi4YlB9/h6+t1iTFDb81fGSR7yaQQZnGcZrge2EAEbiys+akaDFslP3qjWB7NjJNkuYk4F3pw0xBkjNMRDCNbkHBqAQ4DWEYN6PaSuqD9EqzoWEJOHryznORI7HsSxT9C8WL7GOoghd0=
+	 In-Reply-To:Content-Type; b=qgk6jV3Rs7jkhFCMVfCwZbXTi2Iingslmz9QcnIdIlnuLTdXEUYMNnNEZa8msZuwXUqSQR7o7cwvx9MeRZs5fMbl0M7zHg+uE/LsBcQLHSVtwkeHdULX6a8CB5KnGgGzNd1x/FHUyS6JwZNXHoBDx6zUi18vDNCYzKKHhgbUAEI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
 Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4c7MwJ0hx5zKHMtV;
-	Fri, 22 Aug 2025 09:26:24 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id 93D721A1989;
-	Fri, 22 Aug 2025 09:26:23 +0800 (CST)
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4c7N746wB9zKHMww;
+	Fri, 22 Aug 2025 09:35:44 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 763841A1724;
+	Fri, 22 Aug 2025 09:35:44 +0800 (CST)
 Received: from [10.67.110.36] (unknown [10.67.110.36])
-	by APP2 (Coremail) with SMTP id Syh0CgDX5LY+x6donji7EQ--.56706S2;
-	Fri, 22 Aug 2025 09:26:23 +0800 (CST)
-Message-ID: <84a2f916-47c5-4c6f-9d36-771f60db35fc@huaweicloud.com>
-Date: Fri, 22 Aug 2025 09:26:22 +0800
+	by APP4 (Coremail) with SMTP id gCh0CgAX3w9vyadomKT9EQ--.7615S2;
+	Fri, 22 Aug 2025 09:35:44 +0800 (CST)
+Message-ID: <edc9900c-b2d9-49f9-bd12-cd44f11b89a1@huaweicloud.com>
+Date: Fri, 22 Aug 2025 09:35:43 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -32,106 +32,57 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH -next v2] ftrace: Fix potential warning in
- trace_printk_seq during ftrace_dump
+Subject: Re: [PATCH -next] ftrace: Fix potential warning in trace_printk_seq
+ during ftrace_dump
 To: Steven Rostedt <rostedt@goodmis.org>
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Ingo Molnar <mingo@elte.hu>, linux-trace-kernel@vger.kernel.org,
  linux-kernel@vger.kernel.org
-References: <20250821021120.2986553-1-wutengda@huaweicloud.com>
- <20250821110503.5f5c3156@gandalf.local.home>
+References: <20250820090017.2978279-1-wutengda@huaweicloud.com>
+ <20250820101054.50c0b8b8@gandalf.local.home>
+ <40bcf20b-e2e6-442f-bfd8-bb7ad6245397@huaweicloud.com>
+ <20250821105113.1536d567@gandalf.local.home>
 Content-Language: en-US
 From: Tengda Wu <wutengda@huaweicloud.com>
-In-Reply-To: <20250821110503.5f5c3156@gandalf.local.home>
+In-Reply-To: <20250821105113.1536d567@gandalf.local.home>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:Syh0CgDX5LY+x6donji7EQ--.56706S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7AryDXF4rZFW5tw1kGw4xCrg_yoW8Aw1Dpr
-	yfKFZrAFZ5JFWUtF1I9r1jyF1xt34ftry7Grs8Jr1rXrsxAryI9ryIyrnagryfA3s8Gr9a
-	yF4Yy34Uuw17XFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUylb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAK
-	I48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
-	xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xII
-	jxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw2
-	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x02
-	67AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUwxhLUUUUU
+X-CM-TRANSID:gCh0CgAX3w9vyadomKT9EQ--.7615S2
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYb7kC6x804xWl14x267AKxVW8JVW5JwAF
+	c2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII
+	0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xv
+	wVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4
+	x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG
+	64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r
+	1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCF04k20xvY0x0EwIxGrwCF
+	54CYxVCY1x0262kKe7AKxVWUAVWUtwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F4
+	0E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1l
+	IxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxV
+	AFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j
+	6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07UQzV
+	bUUUUU=
 X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
 
 
-On 2025/8/21 23:05, Steven Rostedt wrote:
-> On Thu, 21 Aug 2025 02:11:20 +0000
+On 2025/8/21 22:51, Steven Rostedt wrote:
+> On Thu, 21 Aug 2025 09:53:53 +0800
 > Tengda Wu <wutengda@huaweicloud.com> wrote:
 > 
->  tested this and was writing the change log for the pull request when I
-> realized an issue.
+>> There remains an edge case that concerns me: if size is 0, setting len to
+>> size - 1 would cause an underflow. Should we handle this edge case?
 > 
->> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
->> index 4283ed4e8f59..b4cec22753ea 100644
->> --- a/kernel/trace/trace.c
->> +++ b/kernel/trace/trace.c
->> @@ -10617,6 +10617,7 @@ static void ftrace_dump_one(struct trace_array *tr, enum ftrace_dump_mode dump_m
->>  	 */
->>  
->>  	while (!trace_empty(&iter)) {
->> +		void *ent;
->>  
->>  		if (!cnt)
->>  			printk(KERN_TRACE "---------------------------------\n");
->> @@ -10625,17 +10626,18 @@ static void ftrace_dump_one(struct trace_array *tr, enum ftrace_dump_mode dump_m
->>  
->>  		trace_iterator_reset(&iter);
->>  		iter.iter_flags |= TRACE_FILE_LAT_FMT;
->> +		ent = trace_find_next_entry_inc(&iter);
->>  
->> -		if (trace_find_next_entry_inc(&iter) != NULL) {
->> +		if (ent) {
-> 
-> Why do we need "ent"?
-> 
-> 
->>  			int ret;
->>  
->>  			ret = print_trace_line(&iter);
->>  			if (ret != TRACE_TYPE_NO_CONSUME)
->>  				trace_consume(&iter);
->> +
->> +			trace_printk_seq(&iter.seq);
-> 
-> Isn't just moving trace_printk_seq() enough?
-> 
-> The code is no different with or without the "ent" as "ent" is not used in
-> the if block.
+> When the trace_seq is allocated, the size is set to 8K. If size is ever
+> zero, then there would be no buffer. So no, we should not worry about that
+> edge case because if it happened then we have a lot of other things to
+> worry about.
 > 
 > -- Steve
 
-I apologize, as this is a trace left over from the initial patch modification
-process. While working with the original code, I added an `if (ent)` branch
-directly to trace_printk_seq and later realized it could be merged with the
-previous `if (ent)` branch. However, I forgot to remove the now-redundant ent
-after the merge. 
-
-I will correct this immediately and resend a new version.
+Got it, thanks for the clarification.
 
 -- Tengda
-
-
-
-> 
-> 
->>  		}
->>  		touch_nmi_watchdog();
->> -
->> -		trace_printk_seq(&iter.seq);
->>  	}
->>  
->>  	if (!cnt)
 
