@@ -1,180 +1,154 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2F93191F7E;
-	Sat, 23 Aug 2025 01:51:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A659393DD9;
+	Sat, 23 Aug 2025 03:45:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755913879; cv=none; b=QE44kwOIxpsxtKCSWLRsqRBcLUPn+9KDLcZx9GLXz1ZxwQdc7KkU2iW+ENj/280fXxcTo1hLYwdQxgU2ficRj1WcGwWCR0VTbsdFqv6E/T7K0SvfzOx6ROkdc3oUfasmmVbAU12LoNrYYuVY2v8CJoOUQ8XM9UBd3Y5e5BbWow8=
+	t=1755920747; cv=none; b=Y92H9u8M7EsPCzirGdAliUVeiMwD29+PluP/ROOhMHjZFou5eMF+4j2eY4GQT6tMm+6+yftWVq9qdTs1DheWEdsV4zBqLi5w8uikIMADvldNlOLUUByZtfDC/Qk6YCzdEPKOx9rmOU9CifEwTkQn1aoH4EH+OOtR+wRmuv8MCMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755913879; c=relaxed/simple;
-	bh=9IL82+ZMHtNoUMUQCmi6SqEPo7vkl78u6IFjldBhIXE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GdzQ8PQqwpo+TdB5VogP1KhRg6B/ckMk8xbcaIuc40a/a+Y6I27lptoVQqJIxFCSia7ZfpHlrKPqFEIntwkXM8rR6eXJo12G9k1Ia6/e2Tk/fOSTkpG5mMli/vvxK1dBe7w7uXezmAQCtkcrMaxSB3ublcblQ85mv2Tw31zWZ8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nkpZrRQa; arc=none smtp.client-ip=209.85.160.170
+	s=arc-20240116; t=1755920747; c=relaxed/simple;
+	bh=9x3y2/yFeBdmCFCxQj/2LG3T69P0gQUJaXx5PB0FGdY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=XTeq91IPDNp/z4mlwILW8kIAHFc1zi8zI6HOLIdqGen7E6uO72YDw0FiebCizzTPyHQqwnMKW4gSNmt3yC5vWnnHVNXRDChGOY0NK5frPoKdebpy/vg9OZI25RIrHX9OvU0WezmDA72+wLSg0zQUt+UuzLcHxm5POg+w8wb3T+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=at7p+bfG; arc=none smtp.client-ip=209.85.215.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nkpZrRQa"
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-4b109a95f09so19989811cf.1;
-        Fri, 22 Aug 2025 18:51:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="at7p+bfG"
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-b47174c3817so1839239a12.2;
+        Fri, 22 Aug 2025 20:45:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1755913876; x=1756518676; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1755920745; x=1756525545; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=8SwRRHTQP0nBTdGAqIgIiFDxBUOe4QX/ARyfuI/2piY=;
-        b=nkpZrRQaUFsOa3DyjKFUA9ddyS8s5WUapD6ZttOFDFEwURmJs+UK+QP0b2HC00I7cR
-         l3YAJ46T1bqNn8lTdroajk71GLEdt3e1BypAkfCkf19iDonvqi5O3fINpj5sSdklWFtm
-         4H+XKfbibPx2lxiBxfEPPQ/Y01Pj6/3soxysb6NqpcTnelzFN5Nfuh7KSIjFmjynOImR
-         kA4oaSmgz1ow2f2LOJ2DWu92a6Hor0xRSVCIN40Er1N3NNlJiCFhl89IOg4f1Y14DX5A
-         kkqXbvtJSKBUj2d9RsxduSs9ody9FwdUF2XWSl1xDx2OPeuOMTmCcv6RD61R5H8yhf4Z
-         REvQ==
+        bh=oN54dxueBLE8GyKLooKDuOn8pGWg59XPMNzuBOQXkMU=;
+        b=at7p+bfGjlVOJpbMQNnRClp0uHSNlA4e8MSk4ata2lzFLwRI/XRxjHapraWCbB8Z++
+         qnU5xRrp4i4WGxeHj6n26cTfSqCbpp58pznzancKpCWu9yh/Ui4Et2ygiKfTHLnUomJj
+         mPkmq9MuETI6snlanZqRt6YFbLFRTx5jSwEYBXNdeK1VEIBwAS0aSj9KmP0IwKc/7PXA
+         q3CVmKhroK1gPCYoCLc+zS8rhM6XLOCxrp1ZjNHVIoNhch3kq4iQ+5IO8IQZF3rf42e3
+         5D4QY3bGW+xihJbDxvzfDL+Xlc60I9vkkhjz7Wd7C6c/z8MjeSrxUyp2sBqV1kyCsCm2
+         z7ng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755913876; x=1756518676;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1755920745; x=1756525545;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=8SwRRHTQP0nBTdGAqIgIiFDxBUOe4QX/ARyfuI/2piY=;
-        b=IqrTNfjDlyLJlBp+1YuJOIgCto68T4S9behSO8auKuVc/tLiSwHY7PGxXmp53I+KIo
-         GucRCwVQrHmPKEUyQFhiFfPVTyTEU+BSQD9xaxXSHa97QcOl/an1EGZ5kXIc3FLLuUo3
-         VoXEnl/R7dxStftkkiojIXdRFJ23oq4Wt7tucOzseShQcBjQJGt5K6TK0ysLLSmuHWDD
-         m+DHCqHTz3NY0GMm8UEtnmT+RZEFa+L/PulJI2kUewBhFA7wseeSliHTw4Sqg3+fH7Wb
-         ayI5Wdy3sPC5tqBMWiUIxpL+YZF72cW5pQrEJ5/pBCbpBhECCIOuftzm6eKrDla1rIBi
-         3GWw==
-X-Forwarded-Encrypted: i=1; AJvYcCUZN18z7JtwK0DRecnrDZzJWnZDwubYSlZgZK6YrORCC11cw+mVOZ7ZpN8SGHBHGOpOM/9T/lsGQUi7BxY=@vger.kernel.org, AJvYcCVPcLgbQW+2pVGBPJ9X0Vatkxhdf59tD1lTRHacwNjLyNxvJgP/DpsIFOM7RRP/UawpBwlIihP3/XNLiQgrNfXs/9xN@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJNWBEd1MDWTJGHhAIlFuzCp1m1PC4oUeHXmo4VN3tAs3CoTnb
-	rYBwC1RwB8cuWqSISvF/dk0CKWdQRgjo4mJ2ewdUq6jeNVqtCe8aJV3bEQhd9Zeo7kkS63L6iJl
-	51+G06t41WFPGWGbx6GW42A+dQpVluL8=
-X-Gm-Gg: ASbGnctWIBG5w+Z3DUzQ7L7DXlyW6ug9GGYuWECp7pv60mFo6wmIUup8OGyUM7ZFJxz
-	FvaAVmLoWnWH1X3g+9jWWIIzeeyTLkEcHc41Gfnr4yMkdsDXEQ8PWfpzzW7kwaao42Jdrhd09n+
-	mvgIwP3YmKoTL1Eypp1ZmABaEtuz9SLAHMxFGJgamiq3/dYiHikKnCmJXQO9QCBE4wLnGF1uHEq
-	/B2OqSo
-X-Google-Smtp-Source: AGHT+IGs6gfyAjG2cAAtRWPgy4RZGMnSfLQFo8U3vfmfRrLb2XjrMHkj0jS212n0qWRQkwoVboPKFqUgJAxPNhLR1Tc=
-X-Received: by 2002:ac8:5a50:0:b0:4b0:bc43:dd90 with SMTP id
- d75a77b69052e-4b2aab20de1mr52908911cf.48.1755913876311; Fri, 22 Aug 2025
- 18:51:16 -0700 (PDT)
+        bh=oN54dxueBLE8GyKLooKDuOn8pGWg59XPMNzuBOQXkMU=;
+        b=jPiZA9u8cQM6xoYESFNtS98ytHnqzNxGavWkxBDKATu+7Oqf8p2JXzNPMoSH6kvLuK
+         rBXsEyIkSD1GlVCEd98YnqvNaD2oAnBKCcTLWCUBCTiTvJBLzomcvOIqHTV7Z98JJn7N
+         DjFGXZI59RfthKchEtlzw/ZsDg3YQYAUbR14C1ryTc5xOoAES3JB3nKYXj3+0xbRyufV
+         Ktxc59/5NNjkSy8OUZOJFwTm7kh395pLrRcjPLSQskqGvnA63LQxcq8MPxX2q2/mT4hO
+         fNyZfRC7opfqcyYyux/pTdSP2DwGOJhQKAqmO2Bpy9MQAxm9Vvg078Rl6Fu07PWMTasW
+         SOnQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVVosJr66TuvCuPG7fwBoC7PW858JG1EgLxqBDWLDWK3EjyKxDY55tbvTGtAIlx7faCNKcLMf6/ZP8OP/c=@vger.kernel.org, AJvYcCVpNR7I9v/Tle/169dbvhy+LCEisOBvLJP5i8oMSuni7mnK/o8WkT6icY1anI2OwzB8y/TZtMFwfwLAOBtjSDr/BK90@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxa/uNxr608O0YeFb0MMFH1ayT1NrmzRaIJ9Gro5dskInpGyZKV
+	pBxm4FAu4omg6QMIvuNpUYtwt0w/K/nFtkJHpeQ1iQO7aHigh5A9p4T5
+X-Gm-Gg: ASbGncsvbtq1rGjw+W0b50p40TYAb6IG6uvmgEKLFa4YsH8zTHeuqwM9WOYmgmA0lwy
+	A5YGFrucWWen8efTjhyhceLI7kKE5lTHPRthv46TfbLQixq8L/dmdaLT+ZuCQ2UrYZMWDU6JFpl
+	eAUL2Dw+PkiFDevpe3W3cFfFjlHBFIfJM+aumtMkSFXxOy5iYum7afW4lWFqsO5w749hQe10p4s
+	bOTjnndlaG/5oV+xUcxgQDYesJD1xomUkcp9dTUyz+TOaRuQUE/3c/3vfcgkFFW0fJ61e4Cyf6V
+	FgnQXJFx5gNgvSylRlHUvApcJ4gmPuG0SB896VTyBQHrBeI8JvOXq8EdHrL7ESCN8icVjHeOq2f
+	Xlr8kD/TBbxL2AZ/nixPuCzGhwVei+nuf
+X-Google-Smtp-Source: AGHT+IES+3yASvnpwBwvDfVDi+wAH8UfWJUE+JZiAoKr3xxgdCSHs8AWlNbUdWcBxkPh5MnRLIl1iA==
+X-Received: by 2002:a05:6a20:7f9a:b0:243:78a:82bb with SMTP id adf61e73a8af0-24340da1088mr7556049637.53.1755920745443;
+        Fri, 22 Aug 2025 20:45:45 -0700 (PDT)
+Received: from xiao.mioffice.cn ([43.224.245.230])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b49cb891bdesm1163698a12.12.2025.08.22.20.45.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Aug 2025 20:45:44 -0700 (PDT)
+From: Xiang Gao <gxxa03070307@gmail.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org
+Cc: mingo@redhat.com,
+	peterz@infradead.org,
+	juri.lelli@redhat.com,
+	vincent.guittot@linaro.org,
+	mathieu.desnoyers@efficios.com,
+	andrii@kernel.org,
+	mingo@kernel.org,
+	oleg@redhat.com,
+	akpm@linux-foundation.org,
+	gmonaco@redhat.com,
+	ricardo.neri-calderon@linux.intel.com,
+	libo.chen@oracle.com,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	gaoxiang17 <gaoxiang17@xiaomi.com>
+Subject: [PATCH v2 1/1] tracing/sched: add 'next_policy' to trace_sched_switch
+Date: Sat, 23 Aug 2025 11:45:35 +0800
+Message-Id: <ad2236efd94c1b061934b3ca2c4c82123dace1ab.1755920363.git.gaoxiang17@xiaomi.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <cover.1755920363.git.gaoxiang17@xiaomi.com>
+References: <cover.1755920363.git.gaoxiang17@xiaomi.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250820112621.4045-1-xuewen.yan@unisoc.com> <CAJuCfpE1pJ8qhHgqvExktsMeTBbtVSK2rkE5SfeTE2nOYrNozQ@mail.gmail.com>
-In-Reply-To: <CAJuCfpE1pJ8qhHgqvExktsMeTBbtVSK2rkE5SfeTE2nOYrNozQ@mail.gmail.com>
-From: Xuewen Yan <xuewen.yan94@gmail.com>
-Date: Sat, 23 Aug 2025 09:51:05 +0800
-X-Gm-Features: Ac12FXyvEdmW-vCosNzcSpd6FMkQLKvDG84TYFc__CWuj8riz8C-TCCMP7KXRPM
-Message-ID: <CAB8ipk8ywWv8j8OGugXjhwcZXj567LKULhLz7HS8Btx-_27yBQ@mail.gmail.com>
-Subject: Re: [RFC PATCH V2] sched: psi: Add psi events trace point
-To: Suren Baghdasaryan <surenb@google.com>
-Cc: Xuewen Yan <xuewen.yan@unisoc.com>, hannes@cmpxchg.org, peterz@infradead.org, 
-	mathieu.desnoyers@efficios.com, mhiramat@kernel.org, rostedt@goodmis.org, 
-	mingo@redhat.com, juri.lelli@redhat.com, vincent.guittot@linaro.org, 
-	dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de, 
-	vschneid@redhat.com, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, ke.wang@unisoc.com, yuming.han@unisoc.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Suren,
+From: gaoxiang17 <gaoxiang17@xiaomi.com>
 
-Thanks for your review:)
+Sometimes, when analyzing some real-time process issues, it is necessary to know the sched policy.
 
-On Thu, Aug 21, 2025 at 3:51=E2=80=AFAM Suren Baghdasaryan <surenb@google.c=
-om> wrote:
->
-> On Wed, Aug 20, 2025 at 4:28=E2=80=AFAM Xuewen Yan <xuewen.yan@unisoc.com=
-> wrote:
-> >
-> > Add trace point to psi triggers. This is useful to
-> > observe the psi events in the kernel space.
-> >
-> > One use of this is to monitor memory pressure.
-> > When the pressure is too high, we can kill the process
-> > in the kernel space to prevent OOM.
-> >
-> > Signed-off-by: Xuewen Yan <xuewen.yan@unisoc.com>
-> > ---
-> > v2:
-> > -fix compilation error;
-> > -export the tp;
-> > -add more commit message;
-> > ---
-> >  include/trace/events/sched.h | 5 +++++
-> >  kernel/sched/psi.c           | 4 ++++
-> >  2 files changed, 9 insertions(+)
-> >
-> > diff --git a/include/trace/events/sched.h b/include/trace/events/sched.=
-h
-> > index 7b2645b50e78..d54db5fcbca2 100644
-> > --- a/include/trace/events/sched.h
-> > +++ b/include/trace/events/sched.h
-> > @@ -896,6 +896,11 @@ DECLARE_TRACE(sched_set_need_resched,
-> >         TP_PROTO(struct task_struct *tsk, int cpu, int tif),
-> >         TP_ARGS(tsk, cpu, tif));
-> >
-> > +struct psi_trigger;
-> > +DECLARE_TRACE(psi_event,
->
-> DECLARE_TRACE will create a tracepoint but will not export it in the
-> tracefs. Why should we not have it in the tracefs?
+Show up in the trace as:
 
-I haven't figured out what content should be displayed in the trace yet.
-Until this is fully determined, I think it might be a better option to
-just export the tracepoint and let users add their own hooks to print
-the content they need.
+	 72.267374: sched_switch: prev_comm=grep prev_pid=67 prev_prio=19 prev_state=S ==> next_comm=cat next_pid=66 next_prio=120 next_policy=normal
+	 72.267594: sched_switch: prev_comm=cat prev_pid=66 prev_prio=120 prev_state=R+ ==> next_comm=grep next_pid=67 next_prio=19 next_policy=RR
+	562.192567: sched_switch: prev_comm=grep prev_pid=85 prev_prio=19 prev_state=S ==> next_comm=cat next_pid=84 next_prio=120 next_policy=normal
+	562.192944: sched_switch: prev_comm=cat prev_pid=84 prev_prio=120 prev_state=R+ ==> next_comm=grep next_pid=85 next_prio=19 next_policy=FIFO
 
->
-> > +       TP_PROTO(struct psi_trigger *t),
-> > +       TP_ARGS(t));
-> > +
-> >  #endif /* _TRACE_SCHED_H */
-> >
-> >  /* This part must be outside protection */
-> > diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
-> > index 59fdb7ebbf22..f06eb91a1250 100644
-> > --- a/kernel/sched/psi.c
-> > +++ b/kernel/sched/psi.c
-> > @@ -141,6 +141,8 @@
-> >  #include <linux/psi.h>
-> >  #include "sched.h"
-> >
-> > +EXPORT_TRACEPOINT_SYMBOL_GPL(psi_event_tp);
->
-> So, are you planning to attach some handler to this trace event in your d=
-river?
+Signed-off-by: gaoxiang17 <gaoxiang17@xiaomi.com>
+---
+ include/trace/events/sched.h | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
-Yes, our modules would attach a handler to observe the memory pressure.
+diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
+index 7b2645b50e78..00336211aca6 100644
+--- a/include/trace/events/sched.h
++++ b/include/trace/events/sched.h
+@@ -234,6 +234,7 @@ TRACE_EVENT(sched_switch,
+ 		__array(	char,	next_comm,	TASK_COMM_LEN	)
+ 		__field(	pid_t,	next_pid			)
+ 		__field(	int,	next_prio			)
++		__field(	unsigned int,	next_policy	)
+ 	),
+ 
+ 	TP_fast_assign(
+@@ -244,10 +245,11 @@ TRACE_EVENT(sched_switch,
+ 		memcpy(__entry->next_comm, next->comm, TASK_COMM_LEN);
+ 		__entry->next_pid	= next->pid;
+ 		__entry->next_prio	= next->prio;
++		__entry->next_policy	= next->policy;
+ 		/* XXX SCHED_DEADLINE */
+ 	),
+ 
+-	TP_printk("prev_comm=%s prev_pid=%d prev_prio=%d prev_state=%s%s ==> next_comm=%s next_pid=%d next_prio=%d",
++	TP_printk("prev_comm=%s prev_pid=%d prev_prio=%d prev_state=%s%s ==> next_comm=%s next_pid=%d next_prio=%d next_policy=%s",
+ 		__entry->prev_comm, __entry->prev_pid, __entry->prev_prio,
+ 
+ 		(__entry->prev_state & (TASK_REPORT_MAX - 1)) ?
+@@ -263,7 +265,16 @@ TRACE_EVENT(sched_switch,
+ 		  "R",
+ 
+ 		__entry->prev_state & TASK_REPORT_MAX ? "+" : "",
+-		__entry->next_comm, __entry->next_pid, __entry->next_prio)
++		__entry->next_comm, __entry->next_pid, __entry->next_prio,
++		__print_symbolic(__entry->next_policy,
++				{ SCHED_NORMAL,         "normal" },
++				{ SCHED_FIFO,           "FIFO" },
++				{ SCHED_RR,             "RR" },
++				{ SCHED_BATCH,          "batch" },
++				{ SCHED_IDLE,           "idle" },
++				{ SCHED_DEADLINE,       "deadline" },
++				{ SCHED_EXT,            "sched_ext"})
++	)
+ );
+ 
+ /*
+-- 
+2.34.1
 
->
-> > +
-> >  static int psi_bug __read_mostly;
-> >
-> >  DEFINE_STATIC_KEY_FALSE(psi_disabled);
-> > @@ -509,6 +511,8 @@ static void update_triggers(struct psi_group *group=
-, u64 now,
-> >                 if (now < t->last_event_time + t->win.size)
-> >                         continue;
-> >
-> > +               trace_psi_event_tp(t);
->
-> This should only be done if the below cmpxchg() check is true, right?
-> Otherwise it will not match with what userspace is receiving.
-
-If we put it below cmpxchg() check, we may lose some event before the
-user space repose the signal.
-Because the t->event needs to be set to 0 again.
-In order to ensure that all events are displayed, it is better to put
-it before the cmpxchg.
-
-Thanks!
-
->
-> > +
-> >                 /* Generate an event */
-> >                 if (cmpxchg(&t->event, 0, 1) =3D=3D 0) {
-> >                         if (t->of)
-> > --
-> > 2.25.1
-> >
