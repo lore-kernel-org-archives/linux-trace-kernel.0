@@ -1,194 +1,145 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA2A01FB3;
-	Sun, 24 Aug 2025 01:37:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4109269806;
+	Sun, 24 Aug 2025 13:08:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755999472; cv=none; b=MIjOKI+axLNr/vrOIdK/kueQVIUvpB/Q613wOr5rePWVipZvsaRUQ7bF5pbzrf6OJ9qJjqyQfPFHA/8HtK2WQEw4DZAApJ3fwOh/eJ0mERVe1C3GoIHU8dMUBcYzBNyZ+SyhY3zX70lh2RemKBKYutfn8WnZmrosFGJW8IHIih0=
+	t=1756040887; cv=none; b=NV6r8Ftqow5ZOVJXf1h1Yb3WdcDoUT6GYNUYPF/OCw6N0Q8jNv8sZDirE+F+R917iZ1JvrseDXCLqIK8uqSQ77TAR3X7HkMs2MM7mR9qSvkUfXjUOy0MNGZ91Ih5f49mvebThp4gMVALU/3EghxUw0cJqj7U76aOd3XIV1X2cpM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755999472; c=relaxed/simple;
-	bh=+nC/GVo0QfwdaQuyT0nNE/Npbuly6IsAQTazyH5tsZM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mYF35lORFVrqtv/6+BKCb2e311/+n7pxt89TjxJ+XmRr+w8e1XSSOWtRnTHNeWP4BkJpjeDrGer7ZBEQZ/AKgXZR09sSrDEkPd5a4pmh0oVmbzpQnqjsDg5daY9HjDf+xW8VsgAHE2xtU5GFUOi676p0TP5E/0q/PR6PqcXqGKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Re0Opgd9; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1756040887; c=relaxed/simple;
+	bh=c/pmFE4hhHdYRQMOehbBMtIk9AjMFS+JxZ7MckvIVMM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XZryTECr6Y0LP6XRXcLrmJp9XxgawPpuMpnBKORpF2rgU3kKkx2USL9mjiB0L2aykwGUyHWlqj9f8NSB78a5s+B+GW6yFe/4p56LV+yPFGkz5JRo+LZezMn4jLaqHZjMpKpHQI+fn04Yk79lnypV0hFGxVFRtZ7jrdFN6ejOQIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CMLqhO8Y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Re0Opgd9"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-61c20e28380so3010435a12.1;
-        Sat, 23 Aug 2025 18:37:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1755999469; x=1756604269; darn=vger.kernel.org;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6UBZPF5YbhnRufm437C0PF5qAjXN/Uh/I6Zgp8tz2Ts=;
-        b=Re0Opgd9jYlnwFpT6h+aVDFIjfXeYEmHQzqRsWqYSexyLkE1Whe9Va2mcV6aawmtp3
-         VteU1OPu0TVHsxcKajkixt7WqdUQGJguM8kSpKyw/J2G0TACUKbA9NqkKOjNC9+5NLaf
-         lzIHssA4/EGrlExK9Hv2PHwYySRY+SMmMkfo5sPzFrAuplk04WgVI8J02JIqZ9rDx/5V
-         OYm8haE0mb7B7Wi1Ly69ZMGMxe6XXljeg8oXRjLzLeySkOzO8sw8Pd5meWeicifmxZl/
-         FE8HyWlrKHEOPbmgkSGrEUSGfX8MZh+/NK8xeS/2gMEApu9qzMzxCpCs8728hRUmWkdf
-         ItcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755999469; x=1756604269;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :reply-to:message-id:subject:cc:to:from:date:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=6UBZPF5YbhnRufm437C0PF5qAjXN/Uh/I6Zgp8tz2Ts=;
-        b=iYRL0CyEZvD5Ji1VDT+ILBrZMS9g7laFM2mI3WA1UVFxJxQcufs2MDsOwWAiETB6Gp
-         GGt1WOOHebQx3Zwuawv9WkGNZjLEKNKSXu3bR469XpcCh9y7Vq1ChLqT27DzWHSOvqg8
-         4+WJP73MzlfevA02U2tvqUUqL9ldcGM/sN4gMEWvyHWDIgXcqba4rJMe6CCOtEivSe1p
-         kKb4RFvsKH5r9v2LLNJa7oehVOnhmCSC/impfJUYFMYCHvovylmldTG3DGtyqP8Mm/+2
-         1SfKNGkFz1tAlENWqtuynRyBOX+AvaV/Fk3SkzXfiMM/uGuiLSCDUDTxcsQ0nwAdc4IW
-         WBXw==
-X-Forwarded-Encrypted: i=1; AJvYcCUH1YD1exwXwYjp3A5DnXI2CfHP21tQRooBKPIJkwM0kqk3qTxG6vPsRXhOz5GRkdT42J9J525sQYbwz3P1@vger.kernel.org, AJvYcCVGJjaE0Mx7lridWrkIjSFb3vU/N8KuA9RVi/mOobcw5r8gJd3B4TPKDGG549zRoO0+a6w61VQS6jc=@vger.kernel.org, AJvYcCWPPgI/lDdblIydXojlUkFh4U/ryZhgbh1uZ+u0xkEsxnQrsX7lp/xN0O4MPE05AMJ1aDdOnJE2rpWaLGuMlOxtqZRV@vger.kernel.org
-X-Gm-Message-State: AOJu0YxaaK61PZ1ayCouga1c1iySzYlj1HDyJ+C52wEt/FeJt2aNJeKZ
-	1JVoOQGxBLX1vpceIYMZmG9we8SGiGSMqvABTRUQiIbq+G+w8E1Hw13N
-X-Gm-Gg: ASbGncuRKnAPefp+65bCSeScioek1bbonfZ8QVyudVORliHbuaQernQjA5ggWk8frU4
-	i5nhYQquNuTak3oer60jecgaTYNEFD0Vm1I90/ga2ogYkOVPG3DUi7kIlM4AThEgxGsWAgRQE9W
-	olU+NFGloe6oSjWXnwG58C/eNwWnlqski26xNeqIXee0OPNKWzGmhHLPSzYBnMwirJETs7AiZmm
-	1SoKYZnzGpr7H4EBXYMmSydUJIntnYwHHYPo2YB2KVgvswrlCTIZYLv13F3JJ1sekLQvp2t32Oj
-	sMV1DlbawKs1qKYBBxuTBOlkvkxg4Sn9i0ULXaq+q8OMrHZLvEFQDthWPpiOocpltanX0/NlfYu
-	AqtbX7GEJb6ZEiq4quaJc2sKFPw==
-X-Google-Smtp-Source: AGHT+IHxdAZXliDg4Pz7o7ZUiSoOONIAXZLqOCQdY0hkLH1p+jqAseH5s/K0XVWooeUz0LaIMhIjAQ==
-X-Received: by 2002:a05:6402:5057:b0:61a:8c7c:a1f4 with SMTP id 4fb4d7f45d1cf-61c1b48f5e9mr5913145a12.11.1755999468866;
-        Sat, 23 Aug 2025 18:37:48 -0700 (PDT)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-61c3174f4d4sm2476072a12.54.2025.08.23.18.37.46
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 23 Aug 2025 18:37:47 -0700 (PDT)
-Date: Sun, 24 Aug 2025 01:37:46 +0000
-From: Wei Yang <richard.weiyang@gmail.com>
-To: Nico Pache <npache@redhat.com>
-Cc: linux-mm@kvack.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	david@redhat.com, ziy@nvidia.com, baolin.wang@linux.alibaba.com,
-	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
-	ryan.roberts@arm.com, dev.jain@arm.com, corbet@lwn.net,
-	rostedt@goodmis.org, mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com, akpm@linux-foundation.org,
-	baohua@kernel.org, willy@infradead.org, peterx@redhat.com,
-	wangkefeng.wang@huawei.com, usamaarif642@gmail.com,
-	sunnanyong@huawei.com, vishal.moola@gmail.com,
-	thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com,
-	kirill.shutemov@linux.intel.com, aarcange@redhat.com,
-	raquini@redhat.com, anshuman.khandual@arm.com,
-	catalin.marinas@arm.com, tiwai@suse.de, will@kernel.org,
-	dave.hansen@linux.intel.com, jack@suse.cz, cl@gentwo.org,
-	jglisse@google.com, surenb@google.com, zokeefe@google.com,
-	hannes@cmpxchg.org, rientjes@google.com, mhocko@suse.com,
-	rdunlap@infradead.org, hughd@google.com
-Subject: Re: [PATCH v10 03/13] khugepaged: generalize hugepage_vma_revalidate
- for mTHP support
-Message-ID: <20250824013746.bvsz3vajjj2kphrl@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <20250819134205.622806-1-npache@redhat.com>
- <20250819134205.622806-4-npache@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CMLqhO8Y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1A3AC4CEEB;
+	Sun, 24 Aug 2025 13:08:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756040887;
+	bh=c/pmFE4hhHdYRQMOehbBMtIk9AjMFS+JxZ7MckvIVMM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=CMLqhO8YykEmBddsn1YaWApi85Vtax3IOM8A5OtISl56VsnwYsRIogHVJZNsDeWJx
+	 sGLwfH8I/jGN0HKUiLenRDinB1qGvTGkme1JfyOcjRFNJIgbtzY1QDVBdoMTZGrkW7
+	 TLhBuvWQOJ3ZxKEv6/lZhIuUXQlVKBtLzLGvDgJc/1bNbez8AS46SSHDqhtKzf68EY
+	 OYMDlPy1y+HwKEC2XZ2EG5M/rdQC/DTrQs/rG9E1EsHFY8wPUWF0T3wxgRlE7HaBL4
+	 CWkYghfcyCF/3ACTCVLM/MaFKdmlEVGYCsD2y7/G8cPYXYOEK96mu8K6syMW+H1A9e
+	 OvKx3AFqX+VNw==
+From: Mike Rapoport <rppt@kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org,
+	x86@kernel.org
+Subject: [PATCH] init/main.c: fix boot time tracing crash
+Date: Sun, 24 Aug 2025 16:07:59 +0300
+Message-ID: <20250824130759.1732736-1-rppt@kernel.org>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250819134205.622806-4-npache@redhat.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 8bit
 
-Hi, Nico
+From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 
-Some nit below.
+Steven Rostedt reported a crash with "ftrace=function" kernel command
+line:
 
-On Tue, Aug 19, 2025 at 07:41:55AM -0600, Nico Pache wrote:
->For khugepaged to support different mTHP orders, we must generalize this
->to check if the PMD is not shared by another VMA and the order is enabled.
->
->To ensure madvise_collapse can support working on mTHP orders without the
->PMD order enabled, we need to convert hugepage_vma_revalidate to take a
->bitmap of orders.
->
->No functional change in this patch.
->
->Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
->Acked-by: David Hildenbrand <david@redhat.com>
->Co-developed-by: Dev Jain <dev.jain@arm.com>
->Signed-off-by: Dev Jain <dev.jain@arm.com>
->Signed-off-by: Nico Pache <npache@redhat.com>
->---
-> mm/khugepaged.c | 13 ++++++++-----
-> 1 file changed, 8 insertions(+), 5 deletions(-)
->
->diff --git a/mm/khugepaged.c b/mm/khugepaged.c
->index b7b98aebb670..2d192ec961d2 100644
->--- a/mm/khugepaged.c
->+++ b/mm/khugepaged.c
+[    0.159269] BUG: kernel NULL pointer dereference, address: 000000000000001c
+[    0.160254] #PF: supervisor read access in kernel mode
+[    0.160975] #PF: error_code(0x0000) - not-present page
+[    0.161697] PGD 0 P4D 0
+[    0.162055] Oops: Oops: 0000 [#1] SMP PTI
+[    0.162619] CPU: 0 UID: 0 PID: 0 Comm: swapper Not tainted 6.17.0-rc2-test-00006-g48d06e78b7cb-dirty #9 PREEMPT(undef)
+[    0.164141] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+[    0.165439] RIP: 0010:kmem_cache_alloc_noprof (mm/slub.c:4237)
+[ 0.166186] Code: 90 90 90 f3 0f 1e fa 0f 1f 44 00 00 55 48 89 e5 41 57 41 56 41 55 41 54 49 89 fc 53 48 83 e4 f0 48 83 ec 20 8b 05 c9 b6 7e 01 <44> 8b 77 1c 65 4c 8b 2d b5 ea 20 02 4c 89 6c 24 18 41 89 f5 21 f0
+[    0.168811] RSP: 0000:ffffffffb2e03b30 EFLAGS: 00010086
+[    0.169545] RAX: 0000000001fff33f RBX: 0000000000000000 RCX: 0000000000000000
+[    0.170544] RDX: 0000000000002800 RSI: 0000000000002800 RDI: 0000000000000000
+[    0.171554] RBP: ffffffffb2e03b80 R08: 0000000000000004 R09: ffffffffb2e03c90
+[    0.172549] R10: ffffffffb2e03c90 R11: 0000000000000000 R12: 0000000000000000
+[    0.173544] R13: ffffffffb2e03c90 R14: ffffffffb2e03c90 R15: 0000000000000001
+[    0.174542] FS:  0000000000000000(0000) GS:ffff9d2808114000(0000) knlGS:0000000000000000
+[    0.175684] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    0.176486] CR2: 000000000000001c CR3: 000000007264c001 CR4: 00000000000200b0
+[    0.177483] Call Trace:
+[    0.177828]  <TASK>
+[    0.178123] mas_alloc_nodes (lib/maple_tree.c:176 (discriminator 2) lib/maple_tree.c:1255 (discriminator 2))
+[    0.178692] mas_store_gfp (lib/maple_tree.c:5468)
+[    0.179223] execmem_cache_add_locked (mm/execmem.c:207)
+[    0.179870] execmem_alloc (mm/execmem.c:213 mm/execmem.c:313 mm/execmem.c:335 mm/execmem.c:475)
+[    0.180397] ? ftrace_caller (arch/x86/kernel/ftrace_64.S:169)
+[    0.180922] ? __pfx_ftrace_caller (arch/x86/kernel/ftrace_64.S:158)
+[    0.181517] execmem_alloc_rw (mm/execmem.c:487)
+[    0.182052] arch_ftrace_update_trampoline (arch/x86/kernel/ftrace.c:266 arch/x86/kernel/ftrace.c:344 arch/x86/kernel/ftrace.c:474)
+[    0.182778] ? ftrace_caller_op_ptr (arch/x86/kernel/ftrace_64.S:182)
+[    0.183388] ftrace_update_trampoline (kernel/trace/ftrace.c:7947)
+[    0.184024] __register_ftrace_function (kernel/trace/ftrace.c:368)
+[    0.184682] ftrace_startup (kernel/trace/ftrace.c:3048)
+[    0.185205] ? __pfx_function_trace_call (kernel/trace/trace_functions.c:210)
+[    0.185877] register_ftrace_function_nolock (kernel/trace/ftrace.c:8717)
+[    0.186595] register_ftrace_function (kernel/trace/ftrace.c:8745)
+[    0.187254] ? __pfx_function_trace_call (kernel/trace/trace_functions.c:210)
+[    0.187924] function_trace_init (kernel/trace/trace_functions.c:170)
+[    0.188499] tracing_set_tracer (kernel/trace/trace.c:5916 kernel/trace/trace.c:6349)
+[    0.189088] register_tracer (kernel/trace/trace.c:2391)
+[    0.189642] early_trace_init (kernel/trace/trace.c:11075 kernel/trace/trace.c:11149)
+[    0.190204] start_kernel (init/main.c:970)
+[    0.190732] x86_64_start_reservations (arch/x86/kernel/head64.c:307)
+[    0.191381] x86_64_start_kernel (??:?)
+[    0.191955] common_startup_64 (arch/x86/kernel/head_64.S:419)
+[    0.192534]  </TASK>
+[    0.192839] Modules linked in:
+[    0.193267] CR2: 000000000000001c
+[    0.193730] ---[ end trace 0000000000000000 ]---
 
-There is a comment above this function, which says "revalidate vma before
-taking mmap_lock".
+The crash happens because on x86 ftrace allocations from execmem require
+maple tree to be initialized.
 
-I am afraid it is "after taking mmap_lock"? or "after taking mmap_lock again"?
+Move maple tree initialization that depends only on slab availability
+earlier in boot so that it will happen right after mm_core_init().
 
->@@ -917,7 +917,7 @@ static int collapse_find_target_node(struct collapse_control *cc)
-> static int hugepage_vma_revalidate(struct mm_struct *mm, unsigned long address,
-> 				   bool expect_anon,
-> 				   struct vm_area_struct **vmap,
->-				   struct collapse_control *cc)
->+				   struct collapse_control *cc, unsigned long orders)
-> {
-> 	struct vm_area_struct *vma;
-> 	enum tva_type type = cc->is_khugepaged ? TVA_KHUGEPAGED :
->@@ -930,9 +930,10 @@ static int hugepage_vma_revalidate(struct mm_struct *mm, unsigned long address,
-> 	if (!vma)
-> 		return SCAN_VMA_NULL;
-> 
->+	/* Always check the PMD order to insure its not shared by another VMA */
-> 	if (!thp_vma_suitable_order(vma, address, PMD_ORDER))
-> 		return SCAN_ADDRESS_RANGE;
->-	if (!thp_vma_allowable_order(vma, vma->vm_flags, type, PMD_ORDER))
->+	if (!thp_vma_allowable_orders(vma, vma->vm_flags, type, orders))
-> 		return SCAN_VMA_CHECK;
-> 	/*
-> 	 * Anon VMA expected, the address may be unmapped then
+Fixes: 5d79c2be5081 ("x86/ftrace: enable EXECMEM_ROX_CACHE for ftrace allocations")
+Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+---
+ init/main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Below is a comment, "thp_vma_allowable_order may return".
+diff --git a/init/main.c b/init/main.c
+index 0ee0ee7b7c2c..5753e9539ae6 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -956,6 +956,7 @@ void start_kernel(void)
+ 	sort_main_extable();
+ 	trap_init();
+ 	mm_core_init();
++	maple_tree_init();
+ 	poking_init();
+ 	ftrace_init();
+ 
+@@ -973,7 +974,6 @@ void start_kernel(void)
+ 		 "Interrupts were enabled *very* early, fixing it\n"))
+ 		local_irq_disable();
+ 	radix_tree_init();
+-	maple_tree_init();
+ 
+ 	/*
+ 	 * Set up housekeeping before setting up workqueues to allow the unbound
 
-Since you use thp_vma_allowable_orders, maybe we need to change the comment
-too.
-
->@@ -1134,7 +1135,8 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
-> 		goto out_nolock;
-> 
-> 	mmap_read_lock(mm);
->-	result = hugepage_vma_revalidate(mm, address, true, &vma, cc);
->+	result = hugepage_vma_revalidate(mm, address, true, &vma, cc,
->+					 BIT(HPAGE_PMD_ORDER));
-> 	if (result != SCAN_SUCCEED) {
-> 		mmap_read_unlock(mm);
-> 		goto out_nolock;
->@@ -1168,7 +1170,8 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
-> 	 * mmap_lock.
-> 	 */
-> 	mmap_write_lock(mm);
->-	result = hugepage_vma_revalidate(mm, address, true, &vma, cc);
->+	result = hugepage_vma_revalidate(mm, address, true, &vma, cc,
->+					 BIT(HPAGE_PMD_ORDER));
-> 	if (result != SCAN_SUCCEED)
-> 		goto out_up_write;
-> 	/* check if the pmd is still valid */
->@@ -2807,7 +2810,7 @@ int madvise_collapse(struct vm_area_struct *vma, unsigned long start,
-> 			mmap_read_lock(mm);
-> 			mmap_locked = true;
-> 			result = hugepage_vma_revalidate(mm, addr, false, &vma,
->-							 cc);
->+							 cc, BIT(HPAGE_PMD_ORDER));
-> 			if (result  != SCAN_SUCCEED) {
-> 				last_fail = result;
-> 				goto out_nolock;
->-- 
->2.50.1
->
-
+base-commit: c17b750b3ad9f45f2b6f7e6f7f4679844244f0b9
 -- 
-Wei Yang
-Help you, Help me
+2.50.1
+
