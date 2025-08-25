@@ -1,118 +1,172 @@
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F9B222DF95;
-	Mon, 25 Aug 2025 13:11:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58BBD26A08C;
+	Mon, 25 Aug 2025 14:01:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756127500; cv=none; b=ZWyl4yXbX8XC2xBwcvI9MFGdSkOi43JEqSmwRrY3hWbnBL/Jr5TZpA7L2z21Wu8vq0BfQqm0N/WQjmhuRQVIs4BfYwXJ8gfp8bgWe+8aBvSf5tDPgtYvLDCCbmc5qGYX30kwk8QdoicZNj0947NLFaMqpRWfOOayDyeyihmlUTc=
+	t=1756130510; cv=none; b=duq1Vx9z+ylAMPq62Js/v0npqI8v8CWLlvCX5M52q7ZbYYUBpQklHe2oGE4bLWnRaAKcn9gMBfhMyQjyMJJ61T/cgy8Fsd6HFJX+KnTyoAxLeq/L5rSb+U2b4wGq1QYd02m5vwVSxdt26Upmb2/UV3fBoQvHUcCDAMISPi2IQ30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756127500; c=relaxed/simple;
-	bh=OIgIaGr+BE+306Y6Tl8h4/650F+sm369Z7GPCzSsVho=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Rz7ErRJeapsc0NRtGl6UEqqCD83nnvBtRuxcqrSXpi6rCLPjHWuG5pZECF4qWVrf+CAtuQCjflMW6osDcAXX08M5N+jkHuwNI+geTy/MBAvLqzDf/Yy8i1xlv8Fd+XDaDb2OCx8C/U4KiGbsyDBNmF7Uh+PtS4e/5kLHNe73hi4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g2BWl5VT; arc=none smtp.client-ip=209.85.215.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1756130510; c=relaxed/simple;
+	bh=JYK5oZx2jKAoGrqaNkjjnyjA3UiseVMaOJbii9Eo/aw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OfFHoYhyzoRfdFdw7Z8jZyOTOvONdvXtP+lahUdRhY7A2sdEirqLB76NKxQf57utU8yP0oi3ijzLWaqxjnb8dEicv9nhpERaDwBboYVxRvrInaYE8SfZusbmuMaAquL0kdQASu1widz5+Dhs2oVCU9G/KCytBzUcJPr6RH33xyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B+P4bdmi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g2BWl5VT"
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-b474e8d6d01so2824022a12.0;
-        Mon, 25 Aug 2025 06:11:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1756127498; x=1756732298; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=r7uHrtrZhpgZRk0gGbUgDzQJCGEajHuc5dkdvC0IEnM=;
-        b=g2BWl5VT/Duus0Zsqr8q3YPCySZbuIboYsB3kgWJLg/FwBpQDYPDCFojdO4Dd0CJiG
-         bPCsicWKPfuH4vsfQrCEv7jvr2355WIcH8LV6xMkjPOo/OQ6YOGhiJax5SFF9inGeU8Z
-         Sox93AxCXCs1btHCmX0SRGZ3kgHY+xu+qFQ4LH+ZhuwbBXuTaI7h4rdCZWjOVH0zXTq+
-         iwmYfJkn8TlKOe8HjHoSVRgQjfyd7bJL01IasS0sBeZSCpRdTRTCEKdCu0mTSXW1inAe
-         4mscWc1Ic2etDGgMvjozm5+YEBCtvJjdgBOPUKhJ1ERR4I4n9/GATNaDST5XvHPP8GEl
-         mhrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756127498; x=1756732298;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=r7uHrtrZhpgZRk0gGbUgDzQJCGEajHuc5dkdvC0IEnM=;
-        b=XVATSp1HISfBsVbRJJRVu9YAdVye/B37W1Ay3/VNerLxTcXSBiATRstD4sYLjO7XNi
-         Gr2fYeklTuonOT5DBQD6CVa8KFJ3XDHX2WHTgwu8v8+vJVJG0J1tP/CkMwjwtSAK0s1Y
-         7xN8DgnEQ/GtM+qTmaEBUFTvM3Llsp4oSdhHTIsso3NUqAvW8cPwYkCMbeDtGBNHfcUx
-         4K/KkVb/QkPi3BFsUd1uDXz+NRB96Dn6KOTGAMhmemKJaHQpBZlFV+Vrn/rvTaUuk5hj
-         xvdFeCgnir+uLwQNMkUQwYmc/akeSCsmZH1RHJg7WB+kf8ZZMqrkekfGqkjw8NmNnZjp
-         4IRg==
-X-Forwarded-Encrypted: i=1; AJvYcCWwavw/przDe8H0upyBAP84dwwT8tNh5RPIvj/fmR2TuEcjv3k2RhlXZvCfp5lEMhvv7TT+quGUqja6HCs=@vger.kernel.org, AJvYcCX/D5ANYdQC9dJ2Fk996Jo4R6Edu3RjdEpgya8BUsVxCdvf4PGeD+udxHsqhzH9IUT5zRvA6cORnFUw9Vx76kJj49OX@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZuhsZZwhmGiX5P44Klz57mnvGNTjePMe7WULFbaaIbZFpL8aZ
-	bjstAOP+TJOQQQ9LOpBr45vn4/6f/O8BKr0M+GR6H6zCNkvRq1D1ib/j29bsRIDe0FszvQ==
-X-Gm-Gg: ASbGncs7gv93TANKoUr/w53o3KF7cGibSe0IT3MAa0JtucIC6jUhWcM3W3dyaLkmqMS
-	Swogh98ftp1sSIB7UisKthva9gw0BEmSzqFlEXd7ZEPDxoG+hku9TThCIfw1qRpm5rSeDPcV7/D
-	kvEMhT1AbcHZj8KrRJA/6CU7hmoUU3pMZchhgC8szz7RHcb/rWgscPnQ47WJvJ3GQ6ci6QDiQGI
-	158KV47VAJNMpkZGCYi3IZy2/6RFM6txRPGbSBI2QIEIhpVzlAS2vXH0fsXXw6Aq+NCg92M5G6b
-	tgidz6gOxfLIWaEQIngH+WDCOA4KC3VopXmC6jY/dJDg2NRPSk1fvocLrj6TkPZ4cXg/e06GSV/
-	ZCUKWl1/k57N1BiVJC8CtzxGtHw==
-X-Google-Smtp-Source: AGHT+IFbVFBJFVzIAzDQKA+W3eY4HXKeve+wc3ajfKtFsEqnzzGcvnDoGfuQcjBfLypQsN30CCxKvQ==
-X-Received: by 2002:a17:902:ec88:b0:242:9bbc:3644 with SMTP id d9443c01a7336-2462efacca1mr191818555ad.54.1756127498092;
-        Mon, 25 Aug 2025 06:11:38 -0700 (PDT)
-Received: from [127.0.0.1] ([2403:2c80:6::3058])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2466885ed8fsm68579725ad.71.2025.08.25.06.11.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Aug 2025 06:11:37 -0700 (PDT)
-Message-ID: <abcfe0ce-0c0b-4717-9069-a6798bb13b76@gmail.com>
-Date: Mon, 25 Aug 2025 21:11:30 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B+P4bdmi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D597AC4CEED;
+	Mon, 25 Aug 2025 14:01:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756130509;
+	bh=JYK5oZx2jKAoGrqaNkjjnyjA3UiseVMaOJbii9Eo/aw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=B+P4bdmi9cT5ft6PawuA6vnhqp21nyGNK7WDeDtmw/FLomN9WHQc3dbJhc8Lg5HyH
+	 7rb0HFOIuHa8mmRXv2Wx+Tnu5lI7xBC/AM1kAi+pGpfMM83+QiGVohyp0ecbYqQ2jp
+	 Nk5UrKQDuAU3UdohGu9UC9C5Yn/SRowMZBtKLhbwtaKtc8tZbLqTvylx9zG1cTUldH
+	 YFcgx2q0G2YBuHgRmwCebPdVUlkne55rdbRsNPOpFB5NhboHVIbtHXQyG28pi3Fz1f
+	 dmvyqcOz+ybEWaNi3pkk10d/0vm2aXBe62lUAdUeXqJgDd/T6qCRwUAMuzVvQe+35m
+	 rVYnNuaHDYJow==
+Date: Mon, 25 Aug 2025 07:01:49 -0700
+From: Kees Cook <kees@kernel.org>
+To: Bhupesh <bhupesh@igalia.com>
+Cc: akpm@linux-foundation.org, kernel-dev@igalia.com,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org, oliver.sang@intel.com, lkp@intel.com,
+	laoar.shao@gmail.com, pmladek@suse.com, rostedt@goodmis.org,
+	mathieu.desnoyers@efficios.com, arnaldo.melo@gmail.com,
+	alexei.starovoitov@gmail.com, andrii.nakryiko@gmail.com,
+	mirq-linux@rere.qmqm.pl, peterz@infradead.org, willy@infradead.org,
+	david@redhat.com, viro@zeniv.linux.org.uk, ebiederm@xmission.com,
+	brauner@kernel.org, jack@suse.cz, mingo@redhat.com,
+	juri.lelli@redhat.com, bsegall@google.com, mgorman@suse.de,
+	vschneid@redhat.com, linux-trace-kernel@vger.kernel.org,
+	torvalds@linux-foundation.org
+Subject: Re: [PATCH v8 4/5] treewide: Switch memcpy() users of 'task->comm'
+ to a more safer implementation
+Message-ID: <202508250656.9D56526@keescook>
+References: <20250821102152.323367-1-bhupesh@igalia.com>
+ <20250821102152.323367-5-bhupesh@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 07/13] mm/kstackwatch: Add kprobe and stack watch
- control
-Content-Language: en-US
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: akpm@linux-foundation.org, naveen@kernel.org, davem@davemloft.net,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-References: <20250818122720.434981-1-wangjinchao600@gmail.com>
- <20250818122720.434981-2-wangjinchao600@gmail.com>
- <20250818122720.434981-3-wangjinchao600@gmail.com>
- <20250818122720.434981-4-wangjinchao600@gmail.com>
- <20250818122720.434981-5-wangjinchao600@gmail.com>
- <20250818122720.434981-6-wangjinchao600@gmail.com>
- <20250818122720.434981-7-wangjinchao600@gmail.com>
- <20250818122720.434981-8-wangjinchao600@gmail.com>
- <20250825193127.a0acb9831733e0e51a5ef81d@kernel.org>
-From: Jinchao Wang <wangjinchao600@gmail.com>
-In-Reply-To: <20250825193127.a0acb9831733e0e51a5ef81d@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250821102152.323367-5-bhupesh@igalia.com>
 
-On 8/25/25 18:31, Masami Hiramatsu (Google) wrote:
-> On Mon, 18 Aug 2025 20:26:12 +0800
-> Jinchao Wang <wangjinchao600@gmail.com> wrote:
+On Thu, Aug 21, 2025 at 03:51:51PM +0530, Bhupesh wrote:
+> As Linus mentioned in [1], currently we have several memcpy() use-cases
+> which use 'current->comm' to copy the task name over to local copies.
+> For an example:
 > 
->> This patch adds the core logic for controlling the kernel
->> stack watch mechanism using a combination of kprobes and kretprobes.
->>
->> A kprobe is registered at function + ip_offset to turn on
->> the hardware breakpoint that monitors the stack. This allows
->> the tool to begin watching from a specific instruction within
->> the function. At the same time, a kretprobe is registered to be
->> triggered when the function returns. Its handler is responsible
->> for turning off the hardware breakpoint.
+>  ...
+>  char comm[TASK_COMM_LEN];
+>  memcpy(comm, current->comm, TASK_COMM_LEN);
+>  ...
 > 
-> Could you use fprobe instead of kretprobe for hooking function exit?
-> kretprobe is an old feature and will be replaced by fprobe.
+> These should be rather calling a wrappper like "get_task_array()",
+> which is implemented as:
 > 
-> You can find an example in samples/fprobe/fprobe_example.c
+>    static __always_inline void
+>        __cstr_array_copy(char *dst,
+>             const char *src, __kernel_size_t size)
+>    {
+>         memcpy(dst, src, size);
+>         dst[size] = 0;
+>    }
 > 
-> Thank you,
-Hi Masami,
-Thanks for the feedback.
-I will respin the patchset and replace the kretprobe with fprobe, as you
-advised.
+>    #define get_task_array(dst,src) \
+>       __cstr_array_copy(dst, src, __must_be_array(dst))
+> 
+> The relevant 'memcpy()' users were identified using the following search
+> pattern:
+>  $ git grep 'memcpy.*->comm\>'
+> 
+> Link: https://lore.kernel.org/all/CAHk-=wi5c=_-FBGo_88CowJd_F-Gi6Ud9d=TALm65ReN7YjrMw@mail.gmail.com/ #1
+> 
+> Signed-off-by: Bhupesh <bhupesh@igalia.com>
+> ---
+>  include/linux/coredump.h                      |  2 +-
+>  include/linux/sched.h                         | 32 +++++++++++++++++++
+>  include/linux/tracepoint.h                    |  4 +--
+>  include/trace/events/block.h                  | 10 +++---
+>  include/trace/events/oom.h                    |  2 +-
+>  include/trace/events/osnoise.h                |  2 +-
+>  include/trace/events/sched.h                  | 13 ++++----
+>  include/trace/events/signal.h                 |  2 +-
+>  include/trace/events/task.h                   |  4 +--
+>  tools/bpf/bpftool/pids.c                      |  6 ++--
+>  .../bpf/test_kmods/bpf_testmod-events.h       |  2 +-
+>  11 files changed, 54 insertions(+), 25 deletions(-)
+> 
+> diff --git a/include/linux/coredump.h b/include/linux/coredump.h
+> index 68861da4cf7c..bcee0afc5eaf 100644
+> --- a/include/linux/coredump.h
+> +++ b/include/linux/coredump.h
+> @@ -54,7 +54,7 @@ extern void vfs_coredump(const kernel_siginfo_t *siginfo);
+>  	do {	\
+>  		char comm[TASK_COMM_LEN];	\
+>  		/* This will always be NUL terminated. */ \
+> -		memcpy(comm, current->comm, sizeof(comm)); \
+> +		get_task_array(comm, current->comm); \
+>  		printk_ratelimited(Level "coredump: %d(%*pE): " Format "\n",	\
+>  			task_tgid_vnr(current), (int)strlen(comm), comm, ##__VA_ARGS__);	\
+>  	} while (0)	\
+> diff --git a/include/linux/sched.h b/include/linux/sched.h
+> index 5a58c1270474..d26d1dfb9904 100644
+> --- a/include/linux/sched.h
+> +++ b/include/linux/sched.h
+> @@ -1960,12 +1960,44 @@ extern void wake_up_new_task(struct task_struct *tsk);
+>  
+>  extern void kick_process(struct task_struct *tsk);
+>  
+> +/*
+> + * - Why not use task_lock()?
+> + *   User space can randomly change their names anyway, so locking for readers
+> + *   doesn't make sense. For writers, locking is probably necessary, as a race
+> + *   condition could lead to long-term mixed results.
+> + *   The logic inside __set_task_comm() should ensure that the task comm is
+> + *   always NUL-terminated and zero-padded. Therefore the race condition between
+> + *   reader and writer is not an issue.
+> + */
+> +
+>  extern void __set_task_comm(struct task_struct *tsk, const char *from, bool exec);
+>  #define set_task_comm(tsk, from) ({			\
+>  	BUILD_BUG_ON(sizeof(from) < TASK_COMM_LEN);	\
+>  	__set_task_comm(tsk, from, false);		\
+>  })
+>  
+> +/*
+> + * 'get_task_array' can be 'data-racy' in the destination and
+> + * should not be used for cases where a 'stable NUL at the end'
+> + * is needed. Its better to use strscpy and friends for such
+> + * use-cases.
+> + *
+> + * It is suited mainly for a 'just copy comm to a constant-sized
+> + * array' case - especially in performance sensitive use-cases,
+> + * like tracing.
+> + */
+> +
+> +static __always_inline void
+> +	__cstr_array_copy(char *dst, const char *src,
+> +			  __kernel_size_t size)
+> +{
+> +	memcpy(dst, src, size);
+> +	dst[size] = 0;
+> +}
+
+Please don't reinvent the wheel. :) We already have memtostr, please use
+that (or memtostr_pad).
+
+> +
+> +#define get_task_array(dst, src) \
+> +	__cstr_array_copy(dst, src, __must_be_array(dst))
+
+Uh, __must_be_array(dst) returns 0 on success. :P Are you sure you
+tested this?
 
 -- 
-Best regards,
-Jinchao
+Kees Cook
