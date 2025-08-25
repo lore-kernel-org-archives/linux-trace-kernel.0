@@ -1,131 +1,118 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6A4C27A917;
-	Mon, 25 Aug 2025 21:37:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94E2D1E32DB;
+	Mon, 25 Aug 2025 23:13:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756157832; cv=none; b=q3OMa9klER5kcD5hfQzcH5gEW7TqnE/VhFRTneqUwrlw9Ruy4lQnon4v6dAnVBJVeyxj47K7EVeVDBtSpzNjA3D0XmVWwws2RJuLrKb1iZuZqoyYDzXpZh+InipMXWpFSo/36P6fq4/tqnZ9SPk1Di+jP/zgFVDtia5yEbTg33M=
+	t=1756163621; cv=none; b=lpyz2LpmCFCUF3pbOr8AKcrX3T8HhOwCIx0qL62pB6Or/LQ0rxLGzL9WptL5gHAIz17k3V+V9xUnY94wFRrRtnWtn06ioG69GzS7qG6g3oRng00z4AjiFn26OCUxVUwQA5P4i4giysqEgmyZgdxMGsJkIyQUmiDB0tQv7LnRblo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756157832; c=relaxed/simple;
-	bh=R44bcAauESCYgLUnJio9oy6n01PzJ9gIprVhrTrJHrw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jysYVL6zkgDrCW3NlDdD4AKsp+HbcYV1IbcdhXRmL27yEHvsChfnOoa0Eh/Sq0iLbiQTuWFctTWTUn1oA5Ht2e0dBAdZcuP7w+a0W00fpZ8DJEaQfG8LtOvNTZ4Em1HCnXspuWpMbk/plehaBPNhO5YXS/jHcvh/teyxa9FO+2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cHK0J2XK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1756163621; c=relaxed/simple;
+	bh=9c9LXEjWXPYqkxhiHiDfT2diHN1UOnXZ4bqHvP5tpW8=;
+	h=Message-ID:Date:From:To:Cc:Subject; b=g7obqdDNaRczVfCFKyi2mEGwJRWO5wpJxW3CFV+/+MpCLEOVQ3AOmnP3oDhMHdZhdJgc7f2SwAGPqw2eQKg7zjplalfOGyHBnM2jVg+9ixCuR9M/OEAQF963nxQyOxugst6HHuHrUb83IMLyXLMB6asIXef6AR8Z+qlPMjur5kE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cyh5Bsl6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cHK0J2XK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49A2DC4CEED;
-	Mon, 25 Aug 2025 21:37:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cyh5Bsl6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15527C4CEED;
+	Mon, 25 Aug 2025 23:13:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756157832;
-	bh=R44bcAauESCYgLUnJio9oy6n01PzJ9gIprVhrTrJHrw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cHK0J2XKD7O53HrO4WZ8mbIIVXn1J5qjjnP+8NSiRBKE3qlSqot7fO4LiyDmh3qgE
-	 994EaQi3GxaYUTiVcTdNq2CGuy4qPwf/BZ6vvOP7yQ30A6KQwyOxLpJ4d9L/7pKqbH
-	 63qLEryMSPxlPH2YhbRhXt0pRoKURT7ELLjHiKpyDkSL4+J1AcoW5Sk8qXCImM2+ak
-	 p+lYv9xx85LoSuSqFv4ayEsXAVqjvuHqIqMi44uUedVEGuxxRKPPODQHHSRnAgIdh6
-	 6clMMLqdhTofD9UT8HCFqf2Jy7NMLg5RmykPuzN+FoKKgILHRb4q6/nyDxdavQQRRP
-	 2Gu14gyBVu0BQ==
-Date: Mon, 25 Aug 2025 14:37:11 -0700
-From: Kees Cook <kees@kernel.org>
-To: Uladzislau Rezki <urezki@gmail.com>
-Cc: Mike Rapoport <rppt@kernel.org>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Harry Yoo <harry.yoo@oracle.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"David S . Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Peter Xu <peterx@redhat.com>, David Hildenbrand <david@redhat.com>,
-	Zi Yan <ziy@nvidia.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
-	Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
-	Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
-	Xu Xin <xu.xin16@zte.com.cn>,
-	Chengming Zhou <chengming.zhou@linux.dev>,
-	Hugh Dickins <hughd@google.com>, Vlastimil Babka <vbabka@suse.cz>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>, Rik van Riel <riel@surriel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
-	Muchun Song <muchun.song@linux.dev>,
-	Oscar Salvador <osalvador@suse.de>, Jann Horn <jannh@google.com>,
-	Pedro Falcato <pfalcato@suse.de>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Qi Zheng <zhengqi.arch@bytedance.com>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org,
-	sparclinux@vger.kernel.org, linux-sgx@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-	nvdimm@lists.linux.dev, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] mm: update core kernel code to use vm_flags_t
- consistently
-Message-ID: <202508251436.762035B@keescook>
-References: <cover.1750274467.git.lorenzo.stoakes@oracle.com>
- <d1588e7bb96d1ea3fe7b9df2c699d5b4592d901d.1750274467.git.lorenzo.stoakes@oracle.com>
- <aIgSpAnU8EaIcqd9@hyeyoo>
- <73764aaa-2186-4c8e-8523-55705018d842@lucifer.local>
- <aIkVRTouPqhcxOes@pc636>
- <69860c97-8a76-4ce5-b1d6-9d7c8370d9cd@lucifer.local>
- <aJCRXVP-ZFEPtl1Y@pc636>
- <aJHQ9XCLtibFjt93@kernel.org>
- <aJItxJNfn8B2JBbn@pc636>
+	s=k20201202; t=1756163621;
+	bh=9c9LXEjWXPYqkxhiHiDfT2diHN1UOnXZ4bqHvP5tpW8=;
+	h=Date:From:To:Cc:Subject:From;
+	b=cyh5Bsl6S5dfeQR4+Y19G4yKBVJ4WhvbNDepdX34MMGXwoEPuHiV9epxiP4gWhI5q
+	 u2BdJ+4fo3egaIR+m9jR2jwkBWEV4o9v45FyG24duwTVnUTrWi2Y/i3/KSRfP2J45m
+	 faJXSWSLEyEJkDJpBC8HCuXhsEprsJIK4sKsPekzVUQIZHhKerAxUxawVFEtG0JMKB
+	 VLDzyuoNNIBh9NaC6j2bC+gOzbaYQfwwlO70hhQSNcICYmR43IFLmaixKLowpgRx/9
+	 8bEffBuw/1+fA7ApVBWZR+IAeQK7y369+6EweDlcXNQSXJwVqFMEw7CbjPtbzgI1D9
+	 +o8nTdHWwQeIg==
+Received: from rostedt by gandalf with local (Exim 4.98.2)
+	(envelope-from <rostedt@kernel.org>)
+	id 1uqgNv-00000002tFE-2Nvf;
+	Mon, 25 Aug 2025 19:13:55 -0400
+Message-ID: <20250825231301.433412523@kernel.org>
+User-Agent: quilt/0.68
+Date: Mon, 25 Aug 2025 19:13:01 -0400
+From: Steven Rostedt <rostedt@kernel.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org,
+ linux-kbuild@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Arnd Bergmann <arnd@arndb.de>,
+ Masahiro Yamada <masahiroy@kernel.org>,
+ Nathan Chancellor <nathan@kernel.org>,
+ Nicolas Schier <nicolas.schier@linux.dev>,
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+ Catalin Marinas <catalin.marinas@arm.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH v7 0/3] tracepoints: Add warnings for unused tracepoints and trace events
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aJItxJNfn8B2JBbn@pc636>
 
-On Tue, Aug 05, 2025 at 06:13:56PM +0200, Uladzislau Rezki wrote:
-> I agree. Also it can be even moved under vmalloc.c. There is only one
-> user which needs it globally, it is usercopy.c. It uses find_vmap_area()
-> which is wrong. See:
-> 
-> <snip>
-> 	if (is_vmalloc_addr(ptr) && !pagefault_disabled()) {
-> 		struct vmap_area *area = find_vmap_area(addr);
-> 
-> 		if (!area)
-> 			usercopy_abort("vmalloc", "no area", to_user, 0, n);
-> 
-> 		if (n > area->va_end - addr) {
-> 			offset = addr - area->va_start;
-> 			usercopy_abort("vmalloc", NULL, to_user, offset, n);
-> 		}
-> 		return;
-> 	}
-> <snip>
-> 
-> we can add a function which just assign va_start, va_end as input
-> parameters and use them in the usercopy.c. 
+Every trace event can take up to 5K of memory in text and metadata regardless
+if they are used or not. Trace events should not be created if they are not
+used.  Currently there's several events in the kernel that are defined
+but unused, either because their callers were removed without removing the
+trace event with it, or a config hides the trace event caller but not the
+trace event itself. And in some cases, trace events were simply added but were
+never called for whatever reason. The number of unused trace events continues
+to grow.
 
-Yes please! I'd must rather use some exported validation routine than
-having it hand-coded in usercopy.c. :)
+This patch series aims to fix this.
 
--- 
-Kees Cook
+The first patch moves the elf parsing out of sorttable.c so that it can be
+used by other tooling.
+
+The second patch creates a new program to run during build called
+tracepoint-update (note this may be extended to do other tracepoint
+modifications in the future). It also creates a new section called
+__tracepoint_check, where all callers of a tracepoint creates a variable
+that is placed in this section with the name of the tracepoint they use.
+The scripts/tracepoint-update.c is used to find tracepoints that are defined
+but not used which would mean they would not be in the __tracepoint_check
+section. It sorts the names from that section, and then reads the
+__tracepoint_strings section that has all compiled in tracepoint names. It
+makes sure that every tracepoint is found in the check section and if not, it
+prints a warning message about it.  This lists the missing tracepoints at
+build time.
+
+The third patch adds EXPORT_TRACEPOINT() to the __tracepoint_check section as
+well. There was several locations that adds tracepoints in the kernel proper
+that are only used in modules. It was getting quite complex trying to move
+things around that I just decided to make any tracepoint in a
+EXPORT_TRACEPOINT "used". I'm using the analogy of static and global
+functions. An unused static function gets a warning but an unused global one
+does not.
+
+Changes since v6:
+
+- Fixed cut and paste error of elf_map_long_size() using wrong field
+
+- Fix typo on comment (Randy Dunlap)
+
+Steven Rostedt (3):
+      sorttable: Move ELF parsing into scripts/elf-parse.[ch]
+      tracing: Add a tracepoint verification check at build time
+      tracepoint: Do not warn for unused event that is exported
+
+----
+ include/asm-generic/vmlinux.lds.h |   1 +
+ include/linux/tracepoint.h        |  12 +
+ kernel/trace/Kconfig              |  10 +
+ scripts/Makefile                  |   6 +
+ scripts/Makefile.vmlinux          |   2 +
+ scripts/elf-parse.c               | 198 ++++++++++++++++
+ scripts/elf-parse.h               | 305 ++++++++++++++++++++++++
+ scripts/link-vmlinux.sh           |   4 +
+ scripts/sorttable.c               | 477 +++-----------------------------------
+ scripts/tracepoint-update.c       | 232 ++++++++++++++++++
+ 10 files changed, 804 insertions(+), 443 deletions(-)
+ create mode 100644 scripts/elf-parse.c
+ create mode 100644 scripts/elf-parse.h
+ create mode 100644 scripts/tracepoint-update.c
