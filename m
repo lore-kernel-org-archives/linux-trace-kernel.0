@@ -1,42 +1,42 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A8242D5C61;
-	Mon, 25 Aug 2025 09:55:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2613C2D3A69;
+	Mon, 25 Aug 2025 10:06:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756115759; cv=none; b=bTUwzBmDm619yDudTLD8mtPjAbrbgaNXI1uHUwpKN13YWiJDhwbiz1WFyQBE8O9vUcLAE82/sgxZ1AY5DYtr5NSzHuCI+2pU4Hki8UYIM7NHCvkh3QhJ012xDn544GBDzNBya1+ZcnvqPgBeB05Nsr4Wz87d5KMYCAILPMxtI5w=
+	t=1756116397; cv=none; b=ZkUYRC5T6ZXb+3zSoAZbI/NkIEoZfVH8l0dQH1IInNsyeOkF9l1uAz4vzh3r+YxPeMbZlmrre9xajXkOo3IDlbHMislI93iCOrqk154NrGsP7kHtV5VbYCCzKULF6eBBb9jeIaMY8nq+YxJhoNHKterzkmnWapZZqk82KrEZQA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756115759; c=relaxed/simple;
-	bh=lGtfrfvnQoIdGQLhHh0iDxDrXu9sMFUP/0SzVV1kF0Q=;
+	s=arc-20240116; t=1756116397; c=relaxed/simple;
+	bh=ovBPuF4X5ABp0nuv52TJYGVcRNTqkSGYkjl/JQsyAlg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pEfFdPgRYE+PFsGb24B9FjUyb7bRAkYNbilib/inqMwjp3MQJ+ojlqTWEVorxhtHuae8lcLrwoKwSMyULMSDfwupRtfekRVyJVprA5SIgGduAnxB7pAboUF6lMe3vyhprktdr8h9aMXwUvrr2OTEQfEl26ZbiZaG5hQ14rw78IU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=oQlDCHn2; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=vXkJ7c72; arc=none smtp.client-ip=193.142.43.55
+	 Content-Type:Content-Disposition:In-Reply-To; b=pH5zdEuZmOVbnqPljU1zegy4+3atJhsEQZivT815CrgR2JlwMhOduoR3rmmwM0UCZROJlkRgOFrg9zhI679QEf0XJpF81yPeC3N80XTeFsHaRWOlvKYkhGO8yEOPSSzkbapD8NObFGsqhezhJGcFMrRrwPasNi8+APMf7mdiJ0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=K0BB1y3A; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Pkeg4IQY; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="oQlDCHn2";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vXkJ7c72"
-Date: Mon, 25 Aug 2025 11:55:54 +0200
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="K0BB1y3A";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Pkeg4IQY"
+Date: Mon, 25 Aug 2025 12:06:31 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1756115755;
+	s=2020; t=1756116392;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=CsNwdNgt3Cei2kSkCLTX8Ma530gKjb02dgxqfB6hDPI=;
-	b=oQlDCHn2OlPwtBW4P3lwkPyqzKy+TavDqQ12oRJV84vXGaoH6cqInOnH5/Jqo0+NDBwk4J
-	e28JIQoiP8E2HtD2JKFT3qdBOhd1ICO8WkWFoGs1Xi4NMs8NZC/EDXzIq+ade/xbn006oQ
-	qM94cXEGYZR97eyinNcOCjUgVQp40YYpnxHi94H09VAznHJL4wWrGb3I7D7qUFFpxD7865
-	+jXKxkgFYNXjGGrUSE+Ompad7OLMnI7bGObcIc8ydnx28YbXshTndofCT1jKRFTi6huDoH
-	CwberaSkf6ia8DQL+Xot7+0DLcKulEEr0Rfnl682/dmhqQml/0obR8HG2ayiUA==
+	bh=hBX/CMBtB58CvR7/q9l30OpA0bAkfhgvc3RLehTnQPY=;
+	b=K0BB1y3AHrqrj1/KLL6SZsDN0GoEKWnyEpBQfmXhhgw3dshM3SwNaWAysTRuNQge6x4C1L
+	n2OM8aehvgtLbiaEOqOQqpKQyz1p/hXcb+w9KqWISMzQx86/Almf5TR/AoJhX45E1j/NNd
+	LAW8mlVgwCBPUsMh4Z+VE+K6fDeeXt849IlYO11jUTjHK26FwHMafuJvKa9CH++QquJJm7
+	WuS0CnGgfxyxWwdGKyzhE2lHa946s8knDXYWKJCFcWxKHrfiKDUgBE8iWKXiVjlrCt6HwR
+	6POqGuAd0KBmkhwNxAIMkMQiBB30jBN7RGIwb8RcPratMcEqcz3dAS+vI6081w==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1756115755;
+	s=2020e; t=1756116392;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=CsNwdNgt3Cei2kSkCLTX8Ma530gKjb02dgxqfB6hDPI=;
-	b=vXkJ7c72/7t9acwpYY6I7dtH+Gwgqgu26Ya7jWua/R5DRIS5ecsDJG3sTUCOOBrpih8SOH
-	NJLPkSX+tZvzonDw==
+	bh=hBX/CMBtB58CvR7/q9l30OpA0bAkfhgvc3RLehTnQPY=;
+	b=Pkeg4IQYxwdsiYDYCA8KNWfu5+TnWGKBJfkIj2APdMg+CPI4/bRnBx/32Kx7jZwzySuSQV
+	Ozd4oUTJ2ubQZ9BA==
 From: Nam Cao <namcao@linutronix.de>
 To: Gabriele Monaco <gmonaco@redhat.com>
 Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
@@ -46,7 +46,7 @@ Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
 	John Kacur <jkacur@redhat.com>
 Subject: Re: [RFC PATCH 10/17] verification/rvgen: Add support for Hybrid
  Automata
-Message-ID: <20250825095554.NrT5tNY8@linutronix.de>
+Message-ID: <20250825100631.uTAyvLwP@linutronix.de>
 References: <20250814150809.140739-1-gmonaco@redhat.com>
  <20250814150809.140739-11-gmonaco@redhat.com>
 Precedence: bulk
@@ -60,160 +60,38 @@ Content-Disposition: inline
 In-Reply-To: <20250814150809.140739-11-gmonaco@redhat.com>
 
 On Thu, Aug 14, 2025 at 05:08:02PM +0200, Gabriele Monaco wrote:
->                  for i in event.split("\\n"):
-> +                    if ";" in i:
-> +                        # if the event contains a constraint (hybrid automata),
-> +                        # it will be separated by a ";":
-> +                        # "sched_switch;x<1000;reset(x)"
-> +                        line = i.split(";")
-> +                        i = line.pop(0)
-> +                        if len(line) > 2:
-> +                            raise ValueError("Only 1 constraint and 1 reset are supported")
-> +                        envs += self.__extract_env_var(line)
->                      events.append(i)
-
-How about we get rid of the (if ";"), and just split it:
-
-for i in event.split("\\n"):
-    # if the event contains a constraint (hybrid automata),
-    # it will be separated by a ";":
-    # "sched_switch;x<1000;reset(x)"
-    line = i.split(";")
-    events.append(line.pop(0))
-    if len(line) > 2:
-            raise ValueError("Only 1 constraint and 1 reset are supported")
-        envs += self.__extract_env_var(line)
-
-> +            else:
-> +                # state labels have the format:
-> +                # "enable_fired" [label = "enable_fired\ncondition"];
-> +                #  ----- label is here -----^^^^^
-> +                # label and node name must be the same, condition is optional
-> +                state = self.__dot_lines[cursor].split("label")[1].split('"')[1]
-
-I know I complained about regex last week, but for this case I think regex
-is more suitable:
-
-state = re.findall(r'".*?" \[label = "([^"]*)"\]', self.__dot_lines[cursor])[0]
-
-> +                if "\\n" in state:
-> +                    line = state.split("\\n")
-> +                    line.pop(0)
-> +                    if len(line) > 1:
-> +                        raise ValueError("Only 1 constraint is supported in the state")
-> +                    envs += self.__extract_env_var([line[0].replace(" ", "")])
-
-Same as above, I think we can just split without the if check.
-
->              cursor += 1
->  
-> -        return sorted(set(events))
-> -
-> -    def __create_matrix(self):
-> +        return sorted(set(events)), sorted(set(envs))
-> +
-> +    def _split_constraint_expr(self, constr: list[str]) -> Iterator[tuple[str,
-> +                                                                          str | None]]:
-> +        """
-> +        Get a list of strings of the type constr1 && constr2 and returns a list of
-> +        constraints and separators: [[constr1,"&&"],[constr2,None]]
-> +        """
-> +        exprs = []
-> +        seps = []
-> +        for c in constr:
-> +            while "&&" in c or "||" in c:
-> +                a = c.find("&&")
-> +                o = c.find("||")
-> +                pos = a if o < 0 or 0 < a < o else o
-> +                exprs.append(c[:pos].replace(" ", ""))
-> +                seps.append(c[pos:pos+2].replace(" ", ""))
-> +                c = c[pos+2:].replace(" ", "")
-> +            exprs.append(c)
-> +            seps.append(None)
-> +        return zip(exprs, seps)
-
-If && and || are the only things you intend to support, then this is
-probably okay. But if the syntax will ever be extended (e.g. brackets),
-this becomes unreadable really fast.
-
-Perhaps a "real" parser which converts the input string into abstract
-syntax tree is something worth considering.
-
-> +    def is_event_constraint(self, key: tuple[int, int] | int) -> bool:
-> +        """
-> +        Given the key in self.constraints return true if it is an event
-> +        constraint, false if it is a state constraint
-> +        """
-> +        return isinstance(key, tuple)
-
-I don't love this. A few years from now, someone could change state
-constraint to be a tuple, or change event contraint to not be tuple, and
-things break in confusing ways.
-
-Perhaps an explicit variable to store contraint type information instead?
-
-> -    def __get_enum_states_content(self):
-> +    def __get_enum_states_content(self) -> list[str]:
->          buff = []
->          buff.append("\t%s%s = 0," % (self.initial_state, self.enum_suffix))
->          for state in self.states:
-> @@ -36,7 +37,7 @@ class Dot2c(Automata):
->  
->          return buff
->  
-> -    def format_states_enum(self):
-> +    def format_states_enum(self) -> list[str]:
->          buff = []
->          buff.append("enum %s {" % self.enum_states_def)
->          buff += self.__get_enum_states_content()
-> @@ -58,7 +59,7 @@ class Dot2c(Automata):
->  
->          return buff
->  
-> -    def format_events_enum(self):
-> +    def format_events_enum(self) -> list[str]:
-
-These changes should be in your type annotation patch?
-
->          buff = []
->          buff.append("enum %s {" % self.enum_events_def)
->          buff += self.__get_enum_events_content()
-> @@ -66,7 +67,43 @@ class Dot2c(Automata):
->  
->          return buff
->  
-> -    def get_minimun_type(self):
-> +    def __get_non_stored_envs(self) -> list[str]:
-> +        return [ e for e in self.envs if e not in self.env_stored ]
-> +
-> +    def __get_enum_envs_content(self) -> list[str]:
+> +    def fill_constr_func(self) -> list[str]:
 > +        buff = []
-> +        first = True
-> +        # We first place env variables that have a u64 storage.
-> +        # Those are limited by MAX_HA_ENV_LEN, other variables
-> +        # are read only and don't require a storage.
-> +        unstored = self.__get_non_stored_envs()
-> +        for env in list(self.env_stored) + unstored:
-> +            if first:
-> +                buff.append("\t%s%s = 0," % (env, self.enum_suffix))
-> +                first = False
-> +            else:
-> +                buff.append("\t%s%s," % (env, self.enum_suffix))
+> +        if self.constraints:
+> +            buff.append(
+> +"""/*
+> + * This function is used to validate state transitions.
+> + *
+> + * It is generated by parsing the model, there is usually no need to change it,
+> + * unless conditions were incorrectly specified
 
-The "= 0" assignment for the first enum is not required right? Perhaps you
-can get rid of the 'first" thingy, and just do
+If the conditions were incorrectly specified, then they should be fixed in
+the automaton, not fixed in this generated C code.
 
-for env in list(self.env_stored) + unstored:
-    buff.append("\t%s%s," % (env, self.enum_suffix))
+> or too complex for the parser.
 
-> +        match unit:
-> +            case "us":
-> +                value *= 1000
-> +            case "ms":
-> +                value *= 1000000
-> +            case "s":
-> +                value *= 1000000000
+Do you have examples of these "too complex" cases? Is there a plan to
+handle them?
 
-Since when did Python have this? Nice!
+> + * If the monitor requires a timer, this function is responsible to arm it when
+> + * the next state has a constraint and cancel it in any other case. Transitions
+> + * to the same state never affect timers.
+> + */
+> +static bool ha_verify_constraint(struct ha_monitor *ha_mon,
+> +\t\t\t\t enum %s curr_state, enum %s event,
+> +\t\t\t\t enum %s next_state)
+> +{
+> +\tbool res = true;
+> +""" % (self.enum_states_def, self.enum_events_def, self.enum_states_def))
+> +            buff += self.__get_constr_condition()
+> +            buff += self.__get_state_constr_condition()
+> +            buff.append("""\treturn res;
+> +}\n""")
+> +        return buff
 
 Nam
