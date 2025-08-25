@@ -1,97 +1,217 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2613C2D3A69;
-	Mon, 25 Aug 2025 10:06:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98CFA22F75C;
+	Mon, 25 Aug 2025 10:31:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756116397; cv=none; b=ZkUYRC5T6ZXb+3zSoAZbI/NkIEoZfVH8l0dQH1IInNsyeOkF9l1uAz4vzh3r+YxPeMbZlmrre9xajXkOo3IDlbHMislI93iCOrqk154NrGsP7kHtV5VbYCCzKULF6eBBb9jeIaMY8nq+YxJhoNHKterzkmnWapZZqk82KrEZQA4=
+	t=1756117891; cv=none; b=KxQ13dhvasUiWQQ5vJZXmGuch0QfoFeAcopOZBrdFvNtzMchiZL2mwLeycjAGNvSUP+N/DVf6LsNrca7CcP7XJuAXy2JPVkVDHUZwawttxSEtZi34sUdboo3vQsy4+yPqovNedoDCy2vftg8IU0nQy7ToXu4ueeFx9GCANUlTNQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756116397; c=relaxed/simple;
-	bh=ovBPuF4X5ABp0nuv52TJYGVcRNTqkSGYkjl/JQsyAlg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pH5zdEuZmOVbnqPljU1zegy4+3atJhsEQZivT815CrgR2JlwMhOduoR3rmmwM0UCZROJlkRgOFrg9zhI679QEf0XJpF81yPeC3N80XTeFsHaRWOlvKYkhGO8yEOPSSzkbapD8NObFGsqhezhJGcFMrRrwPasNi8+APMf7mdiJ0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=K0BB1y3A; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Pkeg4IQY; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1756117891; c=relaxed/simple;
+	bh=DagyeZFyvQvu9dcSKHqH6sIuhOg3IuDx1uJP36Hi9Yw=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=lDACAYaS1tPrAlKHE0xgsFbeDV4fw1lfu6LlnmmxtscbigLtM5TjDKltnBC7yGnTdZhGP8LLpPcl0BBCC8CjD4f8dEkapSKuNg5+zzGgJa1dlDKY5Me8uuV2NXbnC+0kvVxDrxgc6/AYzbAp4Ygx/J/XW29wYcECXS5qEQ4VzE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lcsdjk5W; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="K0BB1y3A";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Pkeg4IQY"
-Date: Mon, 25 Aug 2025 12:06:31 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1756116392;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hBX/CMBtB58CvR7/q9l30OpA0bAkfhgvc3RLehTnQPY=;
-	b=K0BB1y3AHrqrj1/KLL6SZsDN0GoEKWnyEpBQfmXhhgw3dshM3SwNaWAysTRuNQge6x4C1L
-	n2OM8aehvgtLbiaEOqOQqpKQyz1p/hXcb+w9KqWISMzQx86/Almf5TR/AoJhX45E1j/NNd
-	LAW8mlVgwCBPUsMh4Z+VE+K6fDeeXt849IlYO11jUTjHK26FwHMafuJvKa9CH++QquJJm7
-	WuS0CnGgfxyxWwdGKyzhE2lHa946s8knDXYWKJCFcWxKHrfiKDUgBE8iWKXiVjlrCt6HwR
-	6POqGuAd0KBmkhwNxAIMkMQiBB30jBN7RGIwb8RcPratMcEqcz3dAS+vI6081w==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1756116392;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hBX/CMBtB58CvR7/q9l30OpA0bAkfhgvc3RLehTnQPY=;
-	b=Pkeg4IQYxwdsiYDYCA8KNWfu5+TnWGKBJfkIj2APdMg+CPI4/bRnBx/32Kx7jZwzySuSQV
-	Ozd4oUTJ2ubQZ9BA==
-From: Nam Cao <namcao@linutronix.de>
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-	linux-trace-kernel@vger.kernel.org,
-	Tomas Glozar <tglozar@redhat.com>, Juri Lelli <jlelli@redhat.com>,
-	Clark Williams <williams@redhat.com>,
-	John Kacur <jkacur@redhat.com>
-Subject: Re: [RFC PATCH 10/17] verification/rvgen: Add support for Hybrid
- Automata
-Message-ID: <20250825100631.uTAyvLwP@linutronix.de>
-References: <20250814150809.140739-1-gmonaco@redhat.com>
- <20250814150809.140739-11-gmonaco@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lcsdjk5W"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31AE1C4CEED;
+	Mon, 25 Aug 2025 10:31:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756117891;
+	bh=DagyeZFyvQvu9dcSKHqH6sIuhOg3IuDx1uJP36Hi9Yw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Lcsdjk5WPEu5YcN3zcRiAuHS5TcZGkyS8HxubNM7obfocjx37IjRtd6HK/w73qsP0
+	 erN8QRG5I4xEkNsDRoxSlD6ZKrlX86qjb+/q+ynIniTAy6SalxIXl+d+2F7mwjUJDV
+	 RsOBMANh/+1M2Vu2c6/2LrEAYMIYDgxhFOdZ88cIUTVTkhck8vaOmulpyN4xZlS+rl
+	 h8D6fbqOUsdiwbSOyF19Pz61tMmfE2LCuylCDhJjkaCa/vOQdCyFNzwqt3fiavcoXC
+	 DpcxaBuoVkeW7VYaVFkPpRaQP52ntahv+AylTq0oGsX5haF6EZzNzfH/BuoS9lYsVq
+	 zkC15AwIMtuuQ==
+Date: Mon, 25 Aug 2025 19:31:27 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Jinchao Wang <wangjinchao600@gmail.com>
+Cc: akpm@linux-foundation.org, mhiramat@kernel.org, naveen@kernel.org,
+ davem@davemloft.net, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 07/13] mm/kstackwatch: Add kprobe and stack watch
+ control
+Message-Id: <20250825193127.a0acb9831733e0e51a5ef81d@kernel.org>
+In-Reply-To: <20250818122720.434981-8-wangjinchao600@gmail.com>
+References: <20250818122720.434981-1-wangjinchao600@gmail.com>
+	<20250818122720.434981-2-wangjinchao600@gmail.com>
+	<20250818122720.434981-3-wangjinchao600@gmail.com>
+	<20250818122720.434981-4-wangjinchao600@gmail.com>
+	<20250818122720.434981-5-wangjinchao600@gmail.com>
+	<20250818122720.434981-6-wangjinchao600@gmail.com>
+	<20250818122720.434981-7-wangjinchao600@gmail.com>
+	<20250818122720.434981-8-wangjinchao600@gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250814150809.140739-11-gmonaco@redhat.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Aug 14, 2025 at 05:08:02PM +0200, Gabriele Monaco wrote:
-> +    def fill_constr_func(self) -> list[str]:
-> +        buff = []
-> +        if self.constraints:
-> +            buff.append(
-> +"""/*
-> + * This function is used to validate state transitions.
-> + *
-> + * It is generated by parsing the model, there is usually no need to change it,
-> + * unless conditions were incorrectly specified
+On Mon, 18 Aug 2025 20:26:12 +0800
+Jinchao Wang <wangjinchao600@gmail.com> wrote:
 
-If the conditions were incorrectly specified, then they should be fixed in
-the automaton, not fixed in this generated C code.
+> This patch adds the core logic for controlling the kernel
+> stack watch mechanism using a combination of kprobes and kretprobes.
+> 
+> A kprobe is registered at function + ip_offset to turn on
+> the hardware breakpoint that monitors the stack. This allows
+> the tool to begin watching from a specific instruction within
+> the function. At the same time, a kretprobe is registered to be
+> triggered when the function returns. Its handler is responsible
+> for turning off the hardware breakpoint.
 
-> or too complex for the parser.
+Could you use fprobe instead of kretprobe for hooking function exit?
+kretprobe is an old feature and will be replaced by fprobe.
 
-Do you have examples of these "too complex" cases? Is there a plan to
-handle them?
+You can find an example in samples/fprobe/fprobe_example.c
 
-> + * If the monitor requires a timer, this function is responsible to arm it when
-> + * the next state has a constraint and cancel it in any other case. Transitions
-> + * to the same state never affect timers.
-> + */
-> +static bool ha_verify_constraint(struct ha_monitor *ha_mon,
-> +\t\t\t\t enum %s curr_state, enum %s event,
-> +\t\t\t\t enum %s next_state)
+Thank you,
+
+> 
+> By using these two probes, the tool can precisely watch a function's
+> stack frame for its entire duration. This makes sure the HWBP is active
+> only when needed, which reduces overhead and avoids accidental triggers.
+> This also provides a clear and reliable way to manage the HWBP.
+> 
+> Signed-off-by: Jinchao Wang <wangjinchao600@gmail.com>
+> ---
+>  mm/kstackwatch/stack.c | 86 ++++++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 82 insertions(+), 4 deletions(-)
+> 
+> diff --git a/mm/kstackwatch/stack.c b/mm/kstackwatch/stack.c
+> index 8b558cdbda97..ba5280787e8f 100644
+> --- a/mm/kstackwatch/stack.c
+> +++ b/mm/kstackwatch/stack.c
+> @@ -6,8 +6,10 @@
+>  
+>  #include "kstackwatch.h"
+>  
+> +struct ksw_config *probe_config;
+> +
+>  /* Find canary address in current stack frame */
+> -static unsigned long __maybe_unused ksw_stack_find_canary(struct pt_regs *regs)
+> +static unsigned long ksw_stack_find_canary(struct pt_regs *regs)
+>  {
+>  	unsigned long *stack_ptr, *stack_end;
+>  	unsigned long expected_canary;
+> @@ -33,7 +35,7 @@ static unsigned long __maybe_unused ksw_stack_find_canary(struct pt_regs *regs)
+>  }
+>  
+>  /* Resolve stack offset to actual address */
+> -static unsigned long __maybe_unused ksw_stack_resolve_offset(struct pt_regs *regs,
+> +static unsigned long ksw_stack_resolve_offset(struct pt_regs *regs,
+>  					      s64 local_var_offset)
+>  {
+>  	unsigned long stack_base;
+> @@ -53,7 +55,7 @@ static unsigned long __maybe_unused ksw_stack_resolve_offset(struct pt_regs *reg
+>  }
+>  
+>  /* Validate that address is within current stack bounds */
+> -static int __maybe_unused ksw_stack_validate_addr(unsigned long addr, size_t size)
+> +static int ksw_stack_validate_addr(unsigned long addr, size_t size)
+>  {
+>  	unsigned long stack_start, stack_end;
+>  
+> @@ -73,7 +75,7 @@ static int __maybe_unused ksw_stack_validate_addr(unsigned long addr, size_t siz
+>  }
+>  
+>  /* Setup hardware breakpoints for active watches */
+> -static int __maybe_unused ksw_stack_prepare_watch(struct pt_regs *regs,
+> +static int ksw_stack_prepare_watch(struct pt_regs *regs,
+>  				   struct ksw_config *config, u64 *watch_addr,
+>  				   u64 *watch_len)
+>  {
+> @@ -110,3 +112,79 @@ static int __maybe_unused ksw_stack_prepare_watch(struct pt_regs *regs,
+>  	*watch_len = len;
+>  	return 0;
+>  }
+> +
+> +/* Kprobe handlers */
+> +static struct kprobe entry_probe;
+> +static struct kretprobe exit_probe;
+> +
+> +static void ksw_stack_entry_handler(struct kprobe *p, struct pt_regs *regs,
+> +				    unsigned long flags)
 > +{
-> +\tbool res = true;
-> +""" % (self.enum_states_def, self.enum_events_def, self.enum_states_def))
-> +            buff += self.__get_constr_condition()
-> +            buff += self.__get_state_constr_condition()
-> +            buff.append("""\treturn res;
-> +}\n""")
-> +        return buff
+> +	int ret;
+> +	u64 watch_addr;
+> +	u64 watch_len;
+> +
+> +	/* Setup breakpoints for all active watches */
+> +	ret = ksw_stack_prepare_watch(regs, probe_config, &watch_addr,
+> +				      &watch_len);
+> +	if (ret) {
+> +		pr_err("KSW: Failed to parse watch info: %d\n", ret);
+> +		return;
+> +	}
+> +	ret = ksw_watch_on(watch_addr, watch_len);
+> +	if (ret) {
+> +		pr_err("KSW: Failed to arm hwbp: %d\n", ret);
+> +		return;
+> +	}
+> +	pr_info("KSW: Armed for %s at addr:0x%llx len:%llu\n",
+> +		probe_config->function, watch_addr, watch_len);
+> +}
+> +
+> +/* Function exit handler */
+> +static int ksw_stack_exit_handler(struct kretprobe_instance *ri,
+> +				  struct pt_regs *regs)
+> +{
+> +	ksw_watch_off();
+> +	pr_info("KSW: Disarmed for %s\n", probe_config->function);
+> +
+> +	return 0;
+> +}
+> +
+> +int ksw_stack_init(struct ksw_config *config)
+> +{
+> +	int ret;
+> +
+> +	/* Setup entry probe */
+> +	memset(&entry_probe, 0, sizeof(entry_probe));
+> +	entry_probe.symbol_name = config->function;
+> +	entry_probe.offset = config->ip_offset;
+> +	entry_probe.post_handler = ksw_stack_entry_handler;
+> +	probe_config = config;
+> +	ret = register_kprobe(&entry_probe);
+> +	if (ret < 0) {
+> +		pr_err("KSW: Failed to register kprobe ret %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	/* Setup exit probe */
+> +	memset(&exit_probe, 0, sizeof(exit_probe));
+> +	exit_probe.kp.symbol_name = config->function;
+> +	exit_probe.handler = ksw_stack_exit_handler;
+> +	exit_probe.maxactive = 20;
+> +
+> +	ret = register_kretprobe(&exit_probe);
+> +	if (ret < 0) {
+> +		pr_err("KSW: Failed to register exit probe for %s: %d\n",
+> +		       probe_config->function, ret);
+> +		unregister_kprobe(&entry_probe);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +void ksw_stack_exit(void)
+> +{
+> +	unregister_kretprobe(&exit_probe);
+> +	unregister_kprobe(&entry_probe);
+> +}
+> -- 
+> 2.43.0
+> 
 
-Nam
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
