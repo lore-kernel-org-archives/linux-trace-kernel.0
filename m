@@ -1,74 +1,74 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 016852253EE
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 26 Aug 2025 12:51:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D56A18462
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 26 Aug 2025 12:52:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756212703; cv=none; b=hG4hcR0LqYcI6v72lRGfsyvDcXTQ/8i+UxK6NZWlLKhleslOjNieqmTcYXOewYtPAr9+FgajQRRirG6MnEoP2XGlvguQq6GsehzOJ9z30JCKxSqfc/neWfkMaf4ZkZTRkQKdgYgLxjMDhTbhup3gcvf9udqPawyTqzlQr1Kbw0c=
+	t=1756212769; cv=none; b=awQEy/bBVm3mjHiVVfiI8c3MFlWCenE8wDa2kEEouuRQY790/L5jxb3ChQFz6OqT89SceXJiOIigY+SyLC9F4T8bna8UJQ9vdOJzmjoINcIcGmO6ZGnWCKIlJfNA7JF0d6jyv9RUf9ou2nktHBnFDlrhDbnU6ymz8zgVq1tLRQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756212703; c=relaxed/simple;
-	bh=yt7PX86YZMaO/zrX2cd6zBWZMNRsvMh2Y0BhzLi5e4E=;
+	s=arc-20240116; t=1756212769; c=relaxed/simple;
+	bh=k5MCHKj7blibyy5zPpkOhb8vWnmi5w1AKxvpa4zk8pA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=T0I4LU6ITsvC942vzJO52VeACOyavrO5Ll7KRV5Yeolx4uRer0G7H8f+hTldI2ILdBT249GUh/26z5wSOvVSx1UQ3aeNUkYlJpSe1dHBkEdxo5YYPqXpN+wvzOLq5+lmKasetQEGZeDxiaVNdzBUDhlLIEnmSQrTaafw+o/CMmQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fsCb1jux; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=VvJ1+wMu4+Ow83ESrihh4D9R2PzMICVqOoDlYlcLYkmH5eo3iWV6U+/6bX1xHKgcN58aN5/shKO2YSnYxnUBEFPPWFr86Z3x6yJyU+A2txiUo/QYtUtu61CDCawLdeCEahvqDqI630OrghoMk8V/QMl9bhD7ihF/fLKmMx424uc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZhcCkZY4; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fsCb1jux"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZhcCkZY4"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1756212700;
+	s=mimecast20190719; t=1756212765;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=ssn/jpuXTRjbOLCPQ6KT3z7CgPD8X2cfIkgpAEmxoSg=;
-	b=fsCb1juxS05jfkSN7jIQS1E6Xo2DFEe1au7x30LOKZj9/Fo+uVPUOfLGZg2zAmZW14HAE5
-	lpSf+bp/fryfv9BkHb+8W/e5oPSaS0MKKmpf0G7LbJEYkNfueHp4cP2AsAjWt9Xb3Jcr/n
-	niAPLEed5AgO++qQ/Uz/pbmZMKDVhiA=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=5Vz1R7k8T1KQ49bbM/J3Kx97e9ioYWkA8ABG1durfCQ=;
+	b=ZhcCkZY4L5aiJc/UjUYaV1Y9rCmifqXZzRESi+ZHv5xVCR/pMPvWSRhffBSS69koXBHLWb
+	b6jlQ07/kxhpVrkeCeEGMDz0anKNfIENmWJW3JTBe+5+Ig+vGkotkP1U9+pu498w/2KCiK
+	KOtHDEfefybvNaqPZRh/KVk67t7etiU=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-133-HRGzpCTgO1OowFRTERGA-w-1; Tue, 26 Aug 2025 08:51:39 -0400
-X-MC-Unique: HRGzpCTgO1OowFRTERGA-w-1
-X-Mimecast-MFC-AGG-ID: HRGzpCTgO1OowFRTERGA-w_1756212698
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3c5ae800421so2628331f8f.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 26 Aug 2025 05:51:39 -0700 (PDT)
+ us-mta-621-luNnkFUFONO-qOsvcC2Kdg-1; Tue, 26 Aug 2025 08:52:44 -0400
+X-MC-Unique: luNnkFUFONO-qOsvcC2Kdg-1
+X-Mimecast-MFC-AGG-ID: luNnkFUFONO-qOsvcC2Kdg_1756212764
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-45a1b0511b3so33014005e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 26 Aug 2025 05:52:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756212698; x=1756817498;
+        d=1e100.net; s=20230601; t=1756212763; x=1756817563;
         h=content-transfer-encoding:in-reply-to:autocrypt:content-language
          :from:references:cc:to:subject:user-agent:mime-version:date
          :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ssn/jpuXTRjbOLCPQ6KT3z7CgPD8X2cfIkgpAEmxoSg=;
-        b=HDCU6hIqp+QO2OMii8o0Zff5alVpASNEXkrJCR/ayHawYVa8W0kopScHhjKgnJUPEK
-         sX81QqAEn+zVZAUmGHF6+A2ZA0q0o1HN8P9IERB8mzSS66lFIVCfW1J/GKqC9KtSg1LB
-         cnw+cOScSey/+kiNOxJTb7nspTc21nc+F2s17ULfv6IYME82Lctd/Oyst6sYDNUlWxq+
-         +scrlvr7QHE35kxFoq0CLEc/UkP/For7A8NkuE5GaBaLpGG+RT2R9AvNkvK/bv9Mp91g
-         8SHLv1M+oDSdtYOF9j7DyGNxne9uSEXIPlTei0HfdTTc6z1t1tWcqTUL0nU17mCE0SSG
-         nNBg==
-X-Forwarded-Encrypted: i=1; AJvYcCUqKkl00kXzliol6k73U4QIhwtkzKo2NUTI6UNGW6y1dFoMtn+IjnQhz96KIgf5/qfVx6H3bBq3Yv7NreiHgVFs7B8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZw8dODNh3IvkwolirdSjjQsR8oLp2t6qFpysUHVrXDLRBAsIL
-	GouiYg6GyCmiD51/hYMG/NPzEP/5LHGj4cLsF7mB5XvB1YLZ2XowrxhDTQIZqNbeWGS7xwe7Wmj
-	WS0lH4XzXw2H7kJfxJpSccQDCfGCi/EntgM77AFqKeUP04yu3eQSA0Bg+pOzCvgLHbOJCS6WeeQ
+        bh=5Vz1R7k8T1KQ49bbM/J3Kx97e9ioYWkA8ABG1durfCQ=;
+        b=Bs+DUBRD4gtz0IqMiiII2YQyFIatyRgWWZeJVPb+5k2jHsmyQnGNKpUMJbdutQMfIR
+         fZF9XxvaeP74pTT4+gJvlN+baG4cQrzv02xZOi0m3GoStKBezOpDsUES33ERe+KQPooc
+         xaIo/KepvPp1kbtLwsq+pVEPubzzfhRrETHFaZMu30yMlEO0cUEO9nYUpHhcfoYMPt0q
+         seEjzA5XyEo5P+SBM3L2z5YNmKh6O1yiRHPqLvyO8BWvKKML3RkNtJs0bpHsMub1y7lO
+         mp3QJtx4SPA333ewiZi6bv+JDIoBZRpqqrftpjAnw5AAX1coulCF4gwoztY09G8AxksY
+         pJBw==
+X-Forwarded-Encrypted: i=1; AJvYcCW1OBrBRQMiYoMslmzFbe1Ng+aMWPncsLYjcVfUgdbv6yKBZIx01IC8B3Goi8bRdRBMKnK5Z5HGbE2YOj8KtqY23uc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyMsV5XU/tQIs4NWcZJHd3OmEIBn8Wl19xYArGfREL2GwO3AJqr
+	friEYsb1Sj9ziyW0rt+ADhq6YPEHzl6a/BWqUdcfSywIkbdMCg7/2HxS8L1t7sScpRkQHFG1+LX
+	ilpgpuazWmbHD+vC8PANgm8tWI99Ou3SPipPXYA8D8Od4boPpGqevvMEtlV4wH+q+RurFQ6xowg
 	==
-X-Gm-Gg: ASbGnctYdd8bdf1QWoSV0GqFEeIpVNYjQdebHye3dFUp46OOUha5zOzLYulgZMB1YFI
-	33+qdqWtdKgU2b/B+kz/GYgIca9swVT0zQ+aGHU9xvK7FJa/M3EGITd2kVwX19xSDUZi232Cca/
-	BpJMs1Vl6tyqTGpu8MPvoKYMazXW8cqtb+vMj+JrbycqruY0FXYkiRXO4IesU4yW2RXPI+bOown
-	nExnICuRT+kZKF4JhsUA3W8awnxpEntSixJj02VygGYTemgDuUKppMSJocyZ65K3eb8uz/KYlrx
-	j1Z2CmF7cICMgDINwge2klmcFABEomswpyb4PIYuceQc36uBtIVbkgwpXtZuJL483b5+StKBgg=
+X-Gm-Gg: ASbGncsqu3FD9b8l0TqnqJJ72Fl/9rXaWiPp/xMbKt6AEPWxxN6EJY7rP13V55i8fA7
+	eLTTheYNSYbovVZ1yZ09jQLFomK8JYXZkLww8CQhMnTgDXOLwstP7UEOVj+2bBus5yOQT94WCd3
+	QzbLI6nSk58YH8zIZyIjYlmCzDfFE2XGuMC9tzs61YIhF5CPnhi3t3X/kdRj3k8Ml4Jlf8f0+Km
+	8rjG/xmD0Vnb2MFGUfjA0K7N7nrk8tbbYWxZEL291hH0686QmDVZ+6mHxYw7afN1r9MfGmZ1hwf
+	1Tm7ukn1o9t2qo9H5Kz4s1LWozfSehbBXFjHnpbZ/kSzLkXnaKGxdebo688HdjlOLtK/XO5zyQ=
 	=
-X-Received: by 2002:a05:6000:26c1:b0:3ca:a190:c45f with SMTP id ffacd0b85a97d-3caa190c7e5mr3558075f8f.16.1756212697946;
-        Tue, 26 Aug 2025 05:51:37 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEyjBgPsOULlt/GMGVomIiEKxcepINJfoXSLaYtklo9AIJ7LYUfR1QNVtypvSUKbPxSGG+sYQ==
-X-Received: by 2002:a05:6000:26c1:b0:3ca:a190:c45f with SMTP id ffacd0b85a97d-3caa190c7e5mr3558017f8f.16.1756212697472;
-        Tue, 26 Aug 2025 05:51:37 -0700 (PDT)
+X-Received: by 2002:a05:600c:1d87:b0:45b:5ff4:2f8f with SMTP id 5b1f17b1804b1-45b5ff43124mr61464765e9.4.1756212763428;
+        Tue, 26 Aug 2025 05:52:43 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE+M/jeTazxf68z81jh4Va5KXU4ShyIE7qdnSUUsql0k7LYf1+dpn5sXS6z1aKLM87GqMxuBA==
+X-Received: by 2002:a05:600c:1d87:b0:45b:5ff4:2f8f with SMTP id 5b1f17b1804b1-45b5ff43124mr61464415e9.4.1756212762973;
+        Tue, 26 Aug 2025 05:52:42 -0700 (PDT)
 Received: from ?IPV6:2a09:80c0:192:0:5dac:bf3d:c41:c3e7? ([2a09:80c0:192:0:5dac:bf3d:c41:c3e7])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3c70e4ba046sm17461806f8f.1.2025.08.26.05.51.35
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45b575736f1sm149280645e9.13.2025.08.26.05.52.40
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 26 Aug 2025 05:51:36 -0700 (PDT)
-Message-ID: <d74caa51-6bf7-4f76-b681-cf60826b139d@redhat.com>
-Date: Tue, 26 Aug 2025 14:51:34 +0200
+        Tue, 26 Aug 2025 05:52:42 -0700 (PDT)
+Message-ID: <bb769342-746c-4718-abd8-6f28d2220785@redhat.com>
+Date: Tue, 26 Aug 2025 14:52:40 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -76,7 +76,8 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 05/10] mm: convert uprobes to mm_flags_*() accessors
+Subject: Re: [PATCH 06/10] mm: update coredump logic to correctly use bitmap
+ mm flags
 To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
  Andrew Morton <akpm@linux-foundation.org>
 Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
@@ -120,7 +121,7 @@ Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
  linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
  linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 References: <cover.1755012943.git.lorenzo.stoakes@oracle.com>
- <1d4fe5963904cc0c707da1f53fbfe6471d3eff10.1755012943.git.lorenzo.stoakes@oracle.com>
+ <2a5075f7e3c5b367d988178c79a3063d12ee53a9.1755012943.git.lorenzo.stoakes@oracle.com>
 From: David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; keydata=
  xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -166,23 +167,31 @@ Autocrypt: addr=david@redhat.com; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <1d4fe5963904cc0c707da1f53fbfe6471d3eff10.1755012943.git.lorenzo.stoakes@oracle.com>
+In-Reply-To: <2a5075f7e3c5b367d988178c79a3063d12ee53a9.1755012943.git.lorenzo.stoakes@oracle.com>
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 0rRFcXeHn64fzXr-Hrbcfk-Bwkxo0NhmEnvwSg_mHks_1756212698
+X-Mimecast-MFC-PROC-ID: yETPtdVpt8r6iQOkUCRIRPCXZHIS0Q3VQc4ICGBIlRw_1756212764
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 12.08.25 17:44, Lorenzo Stoakes wrote:
-> As part of the effort to move to mm->flags becoming a bitmap field, convert
-> existing users to making use of the mm_flags_*() accessors which will, when
-> the conversion is complete, be the only means of accessing mm_struct flags.
+> The coredump logic is slightly different from other users in that it both
+> stores mm flags and additionally sets and gets using masks.
 > 
-> No functional change intended.
+> Since the MMF_DUMPABLE_* flags must remain as they are for uABI reasons,
+> and of course these are within the first 32-bits of the flags, it is
+> reasonable to provide access to these in the same fashion so this logic can
+> all still keep working as it has been.
+> 
+> Therefore, introduce coredump-specific helpers __mm_flags_get_dumpable()
+> and __mm_flags_set_mask_dumpable() for this purpose, and update all core
+> dump users of mm flags to use these.
 > 
 > Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 > ---
+
+Incl. fixup LGTM
 
 Acked-by: David Hildenbrand <david@redhat.com>
 
