@@ -1,282 +1,103 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E83803164AD
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 26 Aug 2025 15:53:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A26AD31A55D;
+	Tue, 26 Aug 2025 16:16:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756223625; cv=none; b=tMoa/5Xlu160e6n0PaMDO6cR+vYe7YdFdyuZV7NtbAEkn+ZCW0j1LW1zu5/hRI2kxjyLnry/4wj3M+IDi0DszTQiea4iEz3QjteeoqsirER65uDKPRuFF9q8HdU+X5/1Vaa92SrkXOx3joKirsdtSUCFcdJMmDMW0zCw+MLpJpA=
+	t=1756225012; cv=none; b=rJrmpzyHYUx76Sq/Lv5b8UBWNKpoV37/Z3DGsGrqXGicBxnHWLJbJPgsaTfLbLQTb+TxxKhqi3usFbY73mtx5B9F5n5x9neLKAZ9PWa3Gfpn0ktwaPLBJPJ0JRvrogyyI7mdA4wrlNqnCCwX1gfXsZfwsB/DNs83+SD1UoP8qEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756223625; c=relaxed/simple;
-	bh=P69Cksxfe/Q80STdfcKyieBFfFGdz3o3/vzI06BYov8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=e9x+YBhPkwfDOv3T9uhFNb4xZGbjS8ASmWt5/C3V3QlE1G/aJBOf+nPiB1u7K9UNfoKLZHjqQetSOfxdlDKg0D0I4B+g5iKyWny/YZOxV6oCq3WRnOpR3EtD/M/fk8TCV2N6E27AWX3ZR8jLuIubFEytbPVFJfxwQt//5gRRT14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=A5Dlq2GW; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1756225012; c=relaxed/simple;
+	bh=gPqI9UyQeX3oHqtA/lKa52Y/njo0Nx+KOfMcrKILs3I=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=NezF5+EHNb9x6f2Qji7uo4b/FJBmIe54+IVm+8+UnDcvG9sSXWFBjE0NinJUAHw+Cb8qWE0KoqaAA2wRf14wLNEnZvLfFzlQjR+rqwiKymOtlLxRAM/VA04+bfADewyAxcEKmgtqs7m9Y4XQCnJnkdlSFA/ZyttD1KbC/u1FVK8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zz+gF7qq; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A5Dlq2GW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1756223623;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=+U14wXv0VhbfGH2miM5ngrvAv4bmmIvsTMUNtMccNUc=;
-	b=A5Dlq2GW+ORpVuFEmP1VF3Zeib4UDYuxfS/4IjSp4NZEVVcyvUa4sEWkUNv62dHaFXO5pQ
-	1S+LkxXkV2Xtgq+Wy1t2wxNx/tl0BFLalH480JCWQSqmXudC8iPK4UDn5KT2LoZDyR7Qig
-	z3xEHK0Sh56NxBgnlkm7sd13qcegodU=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-117-ChmFuUr5NN6zMUCrxTaF6w-1; Tue, 26 Aug 2025 11:53:41 -0400
-X-MC-Unique: ChmFuUr5NN6zMUCrxTaF6w-1
-X-Mimecast-MFC-AGG-ID: ChmFuUr5NN6zMUCrxTaF6w_1756223621
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-45b645707f1so8481585e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 26 Aug 2025 08:53:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zz+gF7qq"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-45b618b7d33so18984935e9.1;
+        Tue, 26 Aug 2025 09:16:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1756225009; x=1756829809; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=3zZ89Yhb0nkZj5s6/rDGx+ZkKgCTweoTkSJp2qLrbtQ=;
+        b=Zz+gF7qqhCTEL/jm6MF/UgqOx2RVz1JT+I32xeO3x+61Jp0+k40ftL5CZ3JvncpqdF
+         +5I7TLshqInPQd0JL86glz8aSkmc/epESuYzlYUrGTxdzYmfIBLIYecjju5vaTDxF9gg
+         8P5gWKMUe7EYzUFdZaqdni/wIiKdG7Bmq1StdKgDYXAWngITbFMCYRv67t2Cog8yjJdT
+         fOTDAlCDCsiwijdtQDf5HpfFJJdVyqh1S4bP2t4F1uyONBkNofQqkzD46n6co/CWkrqU
+         f8/WwLlB+00IwOUDTtWULNcAHdZDnGCZW38dkjkIrbhjnx7vi1hSu5i1w0vJqbtG59C6
+         AW1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756223621; x=1756828421;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+U14wXv0VhbfGH2miM5ngrvAv4bmmIvsTMUNtMccNUc=;
-        b=swoinyhL1WuqDZBOzHg4xLfkumIr101b5xcHlE/38khioN0i+xzdciEo3rUUgwOp+N
-         yGTZkAW/NlGICixvhjx7UzMne7yQkw1V2rAoYtd4V3CGjDYmh0SSH68bW/ceLiFNZxlK
-         eOEjKxGpC5MLjGDmRPKRTke4qg0eLbxqS41uS2KY6zf6Q5I0DeGyJ9raJ3jf2OLX0UwD
-         nAraYCjrQZXc2yOa816woqZdrEEZEhW/VTLWI3kss2Tsf+62fwyvRr0a377Iu/ha5HoU
-         03+4YA72zbq6KP5fZYXTkT89eCGIKCilCgQRzTtDZ8B3nG4MCE3PvieJ6mbpz+mSYDPY
-         jpCg==
-X-Forwarded-Encrypted: i=1; AJvYcCU5GGJ4VkD8LtMVlsq+01Tm0YrQ6374FM/V4P2A1u+Q1yRd6MWh5SukuyX3BNpwfFI1ND2bjeytWKGOllMayk3id1w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyF4ff21SGhac8HQHADdlW8thfopSUyeWjYDv4uBtpFW5plyPu2
-	OFj2fZI7Ixn5qmNlw1mR3NYc19NeihO6+RkF/4HjL0Ec7Tgabnz9ovuPa7RzYg4tZ1vFoEXe/MN
-	e+26RnpuB19S9CZ16UiUBiJ1WSavuvkjpNlIClYAbm3F128iIALa5kNX3EKphOF7sJFBgkygXkw
-	==
-X-Gm-Gg: ASbGnct6BTiVp6qusN/WyVC2YOwQqX4oAUDzGcml3agG37XanWgO6qUWWz0VcVXBMoT
-	CbxRj5jF5R2QB1JPUfo7QJdc+UuJ23IfoDzU8UftwtGfUPjnwvXGW1MhJcg4efEDSprY0sftSwV
-	i4hARYVvzU+MonHWvfC1B4P6G93sJCk4vxUekAJm/iQxKZ4noM6vuKR3CGwh1HUauZ6myunjwTR
-	UF9SD2Dvck6DkgAiecjdCrEUJNcqqgsmsn8QI3JrmupTdCE7I1l/oF+DdSvOotvyvJOZawy73FB
-	1EovsQrSnRjDf+KEHN1Hhf0crDRNvhpr1Je2BmRJB7fOEJzg9ts1gC5vOyY3GEV+dIL/2YVU
-X-Received: by 2002:a05:600c:4ed0:b0:459:dfde:3323 with SMTP id 5b1f17b1804b1-45b517cfb81mr136206505e9.27.1756223620434;
-        Tue, 26 Aug 2025 08:53:40 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFSFZHuF3ZmBgbb1DmR6AWyXPp01fHC/E5LsiIPukWcFbvko5eip1UQdcjgn0D15hklxp1KaQ==
-X-Received: by 2002:a05:600c:4ed0:b0:459:dfde:3323 with SMTP id 5b1f17b1804b1-45b517cfb81mr136205695e9.27.1756223619755;
-        Tue, 26 Aug 2025 08:53:39 -0700 (PDT)
-Received: from ?IPV6:2a09:80c0:192:0:5dac:bf3d:c41:c3e7? ([2a09:80c0:192:0:5dac:bf3d:c41:c3e7])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3c711211cc8sm16703127f8f.36.2025.08.26.08.53.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 26 Aug 2025 08:53:39 -0700 (PDT)
-Message-ID: <49df1a2a-7c5b-4ada-98b8-8d7871fd7228@redhat.com>
-Date: Tue, 26 Aug 2025 17:53:36 +0200
+        d=1e100.net; s=20230601; t=1756225009; x=1756829809;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3zZ89Yhb0nkZj5s6/rDGx+ZkKgCTweoTkSJp2qLrbtQ=;
+        b=fnrFt22O6gtAHOGibW7IphMfZS2jNlwc9sBUSk7E21Zh0afFWJelXltUJxYwwwCURP
+         i6wg1Ni7bbITmS1gTVfjo7lItKN61PrQbvp1662EifnowdbOlT7Ec3zBsgFGqqc1ijNc
+         09JTGJ78ZQIlt8tLR9hH660B5uty6heLTqLE89PcfxKzB5K7jN8WMss1TXnpwL/W0Ay8
+         6f0HafzilEBHuavP3qvnEEfg+RNeKH1+IfPXRR7CJCtxhzqthbR5jgt3NC9oH7I4QG3u
+         VJNEqsynTTt3tAU1IUWFXk86qFPDKcxCz16LsVBIjKvKL76QWHECtw3BfMX+fFlIK2ZO
+         D2jw==
+X-Forwarded-Encrypted: i=1; AJvYcCV5IYsKiL+WAsRpnBXUqn4KHaJCizD2nNK/lOJYq9HFPe1JJHEz6D7z/O/Sae0ER52oruEblwwVTR0Hb/k=@vger.kernel.org, AJvYcCX84ycs4/UVRlxDZ/Xl0NOvq/I4XM9xtEJYZgrC8OLiNlsOZkHZt5hgjv1WPt/6RJYDjU3w4FpkakpiJPN/nheTUMzz@vger.kernel.org
+X-Gm-Message-State: AOJu0YyyX/DgnmSoKTWCGKumJxt2RL3otEUqOOyWA+9awEhognrSCZTY
+	ZnrfiyGamgk1nWfDPckpl0ifgVrPp8lwhj5+aJsOBkfGbJGYbxl4QzA=
+X-Gm-Gg: ASbGncvfAQLRu/pEdpY+EgvmtJE80ewGhh+3/ol7CaXbCP9s7uz/ZYFKt/rxr1PYBev
+	SKs0yHOMxaoFaWIDXgu1Lgd5ytrSW3X4pkG9L+nuZP9Mp2tEa4VaMQ76Kapuk5g2DmqSbA8lJ1k
+	hf2qQdr+TWNGI3XZ+V05s8S46EME0BhBEjcGFdViWM0gL6H3Kna6wJNFxpFKGns2jv3Vty72Huj
+	C/bdWe2mPcyu1kxPwjz9CudXPQxY4yzhf1/9E0wAywjP/Rw9wIWv6E2idAuCaFJGftGX7HlB62b
+	7wUUIqdKzAKKvo88rp/qDTOhoeOgMgoSQ7q8rtP/NopjFlJLn7CqWP4h3/t3Don3ldnInkLrY0T
+	hFDXxWRgjm2ga3ien7DTOk53y
+X-Google-Smtp-Source: AGHT+IH1Qd/Cg1lHdtOyIWfihrT3Lia92XnA6mJiXXvQK0U3Bvy2DESu+60TpXmoz3F8UyjzGSgGDA==
+X-Received: by 2002:a05:600c:5249:b0:440:6a1a:d89f with SMTP id 5b1f17b1804b1-45b5179ce4fmr126400825e9.4.1756225008871;
+        Tue, 26 Aug 2025 09:16:48 -0700 (PDT)
+Received: from vova-pc ([37.122.165.138])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3c70e4ba41bsm17752521f8f.10.2025.08.26.09.16.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Aug 2025 09:16:48 -0700 (PDT)
+Date: Tue, 26 Aug 2025 18:16:46 +0200
+From: Vladimir Riabchun <ferr.lambarginio@gmail.com>
+To: rostedt@goodmis.org
+Cc: mhiramat@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH v2] ftrace/samples: Fix function size computation
+Message-ID: <aK3d7vxNcO52kEmg@vova-pc>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 08/10] mm: update fork mm->flags initialisation to use
- bitmap
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>, "David S . Miller"
- <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>,
- Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski
- <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- Kees Cook <kees@kernel.org>, Zi Yan <ziy@nvidia.com>,
- Baolin Wang <baolin.wang@linux.alibaba.com>,
- "Liam R . Howlett" <Liam.Howlett@oracle.com>, Nico Pache
- <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
- Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
- Xu Xin <xu.xin16@zte.com.cn>, Chengming Zhou <chengming.zhou@linux.dev>,
- Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- David Rientjes <rientjes@google.com>, Shakeel Butt <shakeel.butt@linux.dev>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, Masami Hiramatsu
- <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
- Juri Lelli <juri.lelli@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
- Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
- Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
- Peter Xu <peterx@redhat.com>, Jann Horn <jannh@google.com>,
- Pedro Falcato <pfalcato@suse.de>, Matthew Wilcox <willy@infradead.org>,
- Mateusz Guzik <mjguzik@gmail.com>, linux-s390@vger.kernel.org,
- linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
- linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-References: <cover.1755012943.git.lorenzo.stoakes@oracle.com>
- <9fb8954a7a0f0184f012a8e66f8565bcbab014ba.1755012943.git.lorenzo.stoakes@oracle.com>
- <73a39f45-e10c-42f8-819b-7289733eae03@redhat.com>
- <d4f8346d-42eb-48db-962d-6bc0fc348510@lucifer.local>
- <d39e029a-8c12-42fb-8046-8e4a568134dc@redhat.com>
- <1743164d-c2d2-44a1-a2a9-aeeed8c13bc8@lucifer.local>
- <e91f7a38-3b17-4a0c-aedb-8b404d40cf59@redhat.com>
- <9e7f5149-afb7-4e94-b231-78876c41a438@lucifer.local>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- qIws/H2t
-In-Reply-To: <9e7f5149-afb7-4e94-b231-78876c41a438@lucifer.local>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: nYIDHDXIsFoK3_YSbXcgWRN0QvdmVs2vRTMSKXVMNmk_1756223621
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 26.08.25 17:39, Lorenzo Stoakes wrote:
-> On Tue, Aug 26, 2025 at 05:24:22PM +0200, David Hildenbrand wrote:
->> On 26.08.25 16:32, Lorenzo Stoakes wrote:
->>> On Tue, Aug 26, 2025 at 04:28:20PM +0200, David Hildenbrand wrote:
->>>> On 26.08.25 16:21, Lorenzo Stoakes wrote:
->>>>> On Tue, Aug 26, 2025 at 03:12:08PM +0200, David Hildenbrand wrote:
->>>>>> On 12.08.25 17:44, Lorenzo Stoakes wrote:
->>>>>>> We now need to account for flag initialisation on fork. We retain the
->>>>>>> existing logic as much as we can, but dub the existing flag mask legacy.
->>>>>>>
->>>>>>> These flags are therefore required to fit in the first 32-bits of the flags
->>>>>>> field.
->>>>>>>
->>>>>>> However, further flag propagation upon fork can be implemented in mm_init()
->>>>>>> on a per-flag basis.
->>>>>>>
->>>>>>> We ensure we clear the entire bitmap prior to setting it, and use
->>>>>>> __mm_flags_get_word() and __mm_flags_set_word() to manipulate these legacy
->>>>>>> fields efficiently.
->>>>>>>
->>>>>>> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
->>>>>>> ---
->>>>>>>      include/linux/mm_types.h | 13 ++++++++++---
->>>>>>>      kernel/fork.c            |  7 +++++--
->>>>>>>      2 files changed, 15 insertions(+), 5 deletions(-)
->>>>>>>
->>>>>>> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
->>>>>>> index 38b3fa927997..25577ab39094 100644
->>>>>>> --- a/include/linux/mm_types.h
->>>>>>> +++ b/include/linux/mm_types.h
->>>>>>> @@ -1820,16 +1820,23 @@ enum {
->>>>>>>      #define MMF_TOPDOWN		31	/* mm searches top down by default */
->>>>>>>      #define MMF_TOPDOWN_MASK	_BITUL(MMF_TOPDOWN)
->>>>>>> -#define MMF_INIT_MASK		(MMF_DUMPABLE_MASK | MMF_DUMP_FILTER_MASK |\
->>>>>>> +#define MMF_INIT_LEGACY_MASK	(MMF_DUMPABLE_MASK | MMF_DUMP_FILTER_MASK |\
->>>>>>>      				 MMF_DISABLE_THP_MASK | MMF_HAS_MDWE_MASK |\
->>>>>>>      				 MMF_VM_MERGE_ANY_MASK | MMF_TOPDOWN_MASK)
->>>>>>> -static inline unsigned long mmf_init_flags(unsigned long flags)
->>>>>>> +/* Legacy flags must fit within 32 bits. */
->>>>>>> +static_assert((u64)MMF_INIT_LEGACY_MASK <= (u64)UINT_MAX);
->>>>>>
->>>>>> Why not use the magic number 32 you are mentioning in the comment? :)
->>>>>
->>>>> Meh I mean UINT_MAX works as a good 'any bit' mask and this will work on
->>>>> both 32-bit and 64-bit systems.
->>>>>
->>>>>>
->>>>>> static_assert((u32)MMF_INIT_LEGACY_MASK != MMF_INIT_LEGACY_MASK);
->>>>>
->>>>> On 32-bit that'd not work would it?
->>>>
->>>> On 32bit, BIT(32) would exceed the shift width of unsigned long -> undefined
->>>> behavior.
->>>>
->>>> The compiler should naturally complain.
->>>
->>> Yeah, I don't love that sorry. Firstly it's a warning, so you may well miss it
->>> (I just tried),
->>
->> Upstream bots usually complain at you for warnings :P
-> 
-> Fine, but it's not a static assert and they can be delayed.
-> 
->>
->>> and secondly you're making the static assert not have any
->>> meaning except that you expect to trigger a compiler warning, it's a bit
->>> bizarre.
->>
->> On 64 bit where BIT(32) *makes any sense* it triggers as expected, no?
-> 
-> It's not a static assert.
-> 
->>
->>>
->>> My solution works (unless you can see a reason it shouldn't) and I don't find
->>> this approach any simpler.
->>
->> Please explain to me like I am a 5 yo how your approach works with BIT(32)
->> on 32bit when the behavior on 32bit is undefined. :P
-> 
-> OK right I see, in both cases BIT(32) is going to cause a warning on 32-bit.
-> 
-> I was wrong in thinking (u64)(1UL << 32) would get fixed up because of the
-> outer cast I guess.
-> 
-> This was the mistake here, so fine, we could do it this way.
-> 
-> I guess I'll have to respin the series at this point.
+In my_tramp1 function .size directive was placed above
+ASM_RET instruction, leading to a wrong function size.
 
-Let me think again: assuming someone would mess up the BIT() thing and 
-convert back to 1 << NR, your variant would catch it on 32bit I guess.
+Fixes: 9d907f1ae80b ("samples/ftrace: Fix asm function ELF annotations")
+Signed-off-by: Vladimir Riabchun <ferr.lambarginio@gmail.com>
+---
+Changes since v1: https://lore.kernel.org/all/aK2I2IGKRwmkQuIR@vova-pc/
+- Fix commit message
 
-So given I was primarily confused by the "u64" when talking about 32it, 
-no need for a full resend of this series just to clean this up.
+ samples/ftrace/ftrace-direct-modify.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/samples/ftrace/ftrace-direct-modify.c b/samples/ftrace/ftrace-direct-modify.c
+index cfea7a38befb..da3a9f2091f5 100644
+--- a/samples/ftrace/ftrace-direct-modify.c
++++ b/samples/ftrace/ftrace-direct-modify.c
+@@ -75,8 +75,8 @@ asm (
+ 	CALL_DEPTH_ACCOUNT
+ "	call my_direct_func1\n"
+ "	leave\n"
+-"	.size		my_tramp1, .-my_tramp1\n"
+ 	ASM_RET
++"	.size		my_tramp1, .-my_tramp1\n"
+ 
+ "	.type		my_tramp2, @function\n"
+ "	.globl		my_tramp2\n"
 -- 
-Cheers
-
-David / dhildenb
+2.43.0
 
