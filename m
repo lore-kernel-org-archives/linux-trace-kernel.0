@@ -1,137 +1,123 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8F19350829
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 27 Aug 2025 13:34:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C9CB21ADA4;
+	Wed, 27 Aug 2025 16:22:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756301674; cv=none; b=ghbgjt8suxrMbHTgoDWcFmf6fhdPv1o4wqdWasA15/TJZI9Y80BM+VP49rp0xuZ0gLv9FW3X5+1ZGY1aoDq46oZJjwCgeJeTG+hGxTLvBVE5gbhAsQyhMoiAN6cXOkjimoIaYQVm7+m1b4Edz+ftglGDBC0eYql+euD/PdKytRo=
+	t=1756311725; cv=none; b=PlSxlVB9xfU+W1GuYISAFfMCHMvQ7+uaX77XzLgt2R7pofs/aSHfBWvwgUCgZKa9IdKKXFiFewuoRlYFRowRNRYYLzKNaKmdWVlrm/UM6K43P/uGSpJLcBwzrrR/ewbPDhCza8+jyHmZUiXy25UfvGL5+oVHBubW7lAKuUitvfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756301674; c=relaxed/simple;
-	bh=RX86EKaxodx05Jo4CYVnvh22zphvQ7WnXi505H5/Y48=;
+	s=arc-20240116; t=1756311725; c=relaxed/simple;
+	bh=jCxCe7NfFgfjNDubdChvfWyemaO1MU4Akx1GvD0fAs0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EthJju9wqmGIDaFtXad2aiRHl7Q/5Iz+rQXTGnalTl359FeL8mAXeisCgng8jeXi7/0w9o96+yoG8DYXwE6nphxx/IlqUF+l904FpWU10zk0p7PggFTsKjQvJwodEUye5PYWkuGXKIsE9Q2kQxFm3dNaXhdlO8/+bLDPDGtgf30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IIR6YI/c; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 To:Cc:Content-Type; b=HE/SPlMxbk3qjqr+9kl/PfELEx7It1rgI6/N7bEeUpDkySQkwMwgTAA3R+dxSlimH3g2Z88RE5J7IP/WCh9W5IYwWPpcmAXX+4ps/zh0nMIXK8Nn8XtGMmDjjZdQTNFsODWEhTIzlA5J8f0AOabvXBvioQUkBnWowBlF8OQgSCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KGuHaasj; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IIR6YI/c"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1756301671;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jwmGCC5Gh56UXmzILLi26IzK/FvlTvLHRmWQRhUwlUY=;
-	b=IIR6YI/caPcL6BvxWEjcrAElKxpLclX+a+jxu49+h6yO/h6pyb8gEsiwetxUhDwj0ebkQI
-	WF+FpCRHzKfwFiHFf1Xp+GcG+IfQcTg8kQ3iKH2y/AL54+BskyC9zQsIIVlduq/iqrVguo
-	iQDHkXrvxSe1/UmUt2xCIlXWxp4ytW4=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-620-aj8Z1lUwOymk8q50PDEs-A-1; Wed, 27 Aug 2025 09:34:28 -0400
-X-MC-Unique: aj8Z1lUwOymk8q50PDEs-A-1
-X-Mimecast-MFC-AGG-ID: aj8Z1lUwOymk8q50PDEs-A_1756301668
-Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-61c927d2bfeso1930317a12.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 27 Aug 2025 06:34:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KGuHaasj"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3cbe70a7923so1295632f8f.2;
+        Wed, 27 Aug 2025 09:22:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1756311722; x=1756916522; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2D3AJk4D2c4vynhddacA8LBhopdWO4yfWWNEYOAts+o=;
+        b=KGuHaasjy751FjsmNLMdZU3Im4Zd/7xajWs5TdBEh3XJUptSGv3joA3i4cd3jWRLX9
+         5aB3VjiTFjKjsh071RZ3VtwOIIwSNSYPMgtpPY09Us+iMaFYNab/OJ0jpf8SqwT45QpQ
+         an0xE4fvo7LHTcoKRLssv/eDZmswlrbIyqkDe0sQN04f0XS8O/5/hR8D1/gtXYGVV/KT
+         xOAlh8kr+d+4SSE6ciXo0n2bHlCdqNK00ZAXki/eyjGom09cmrdIOi3jVJjTC58kIlTs
+         yZoih0fFyLiYboVrU6J07wqf9ib6V7v8ixAthedfRVZKCAmx3feabvOLt3mAAEV7MJFC
+         T0Pw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756301668; x=1756906468;
+        d=1e100.net; s=20230601; t=1756311722; x=1756916522;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=jwmGCC5Gh56UXmzILLi26IzK/FvlTvLHRmWQRhUwlUY=;
-        b=W/SOCST4tvj9moSEnPXdTfISO/Lo+g2Drklf4GV9rHZkkUjdEKQXV1BZJZPzqNioCu
-         oDLkRcPEdAffL+9QoFzqmobT9vhC4nAP9lYiqdzvdzldfRg1aIuaqy8FROhv/MpLEfQ7
-         xEnc8ZQPrHstDZpSvBCH32ug9Qk3zzgzvBBWKD7q+Sxd3yNVOFVlYTPfG5nbkexsHVg3
-         1df2pfQxOBkRwzhCfzl72huX7QZ7fONe4ZBvixOJ1ZrodgyQMY3NazoKo2t7LtGn2HXh
-         5tPdfUIchasuEkC7qUqjZswbPyaVLb4RNifVJCIXJgSu9CCDLOlPzAxy4fN3YfZDoz+D
-         eWqg==
-X-Forwarded-Encrypted: i=1; AJvYcCVbUsp3b33MKfiRI3rNWSoMCtRnGuXItLm4Sw6qligHOfNUAhsFYXD9I2aA77DkQawEKzFV8dQQqscMxmcd9tWw7uA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxnvu4PtvnolPurfwE+ndTEQbuKam+HDPL4jrM+st6P7LNXNf5q
-	BJerUN/HlN4cCRzPIiTjv0/eb6dRZ6GOfHrHvRUM4LDqf3gTvfsS6v+3hsdwsOudhjACZrNzTu9
-	bd1/rsl63pvqf7FbFxq+7uM2gHGFFtuYJE1eUDaQc8+JpSHhy0z0XXR5nm+AYX5lS+bdIpmIXKj
-	mwLwhvAcSUa/Ij4ayKKqf/afaCT9uc6zuo6Y4lzNBssYXPdf5E
-X-Gm-Gg: ASbGncsQrb5CRLuaZTBm/h6AQ8F2jTqSloh/wYqq+zopZu6aeB6dDir8C+RcbOBOjrb
-	aVoRHWk/QBrTDNUVgolxp6GkhLnjr1DW0yobg7ppUWs3tmraDdYtXgarL1H588HjEgKc6QFZTCg
-	qRXulpIY8Qz9LVBZINOBEqtm0tgnfRb52O5kozStcf3rwIgRkI128=
-X-Received: by 2002:a17:906:9c82:b0:af9:2e26:4636 with SMTP id a640c23a62f3a-afe296e74b7mr1660755966b.32.1756301667548;
-        Wed, 27 Aug 2025 06:34:27 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFbd1IMQf1t1xzflLzrok6ewkTK/MKKhyxlLarjQKXKkJAuMnn5EDWz7weKeRafRsrDteP40yhFFHnLXD9+UTc=
-X-Received: by 2002:a17:906:9c82:b0:af9:2e26:4636 with SMTP id
- a640c23a62f3a-afe296e74b7mr1660752566b.32.1756301667134; Wed, 27 Aug 2025
- 06:34:27 -0700 (PDT)
+        bh=2D3AJk4D2c4vynhddacA8LBhopdWO4yfWWNEYOAts+o=;
+        b=RwtkuK6STsxg1+GQj5BQs0WFzRm+MsV+EHeJBvTsaMIbmLwXiWqjezZftkFZHd3R+C
+         lFfHVWdPaBuXe8OaOm2D7o0KMqX1wLrg4k+84RWlRe+HidqS5zl3D76ryVkzLVCIcmTz
+         sjXhWXvIu8CwzljJWuvtnffJJzGvn883Bj2y6nWD3k0PxxZBG/HYI3KQQTmo1VOCde+H
+         NtgZgqQAamtG+ql2dnrLGnunuy2kXrdLMEm01486m60RVNR/M7I1OLEjlzna5gc/Q3ff
+         OLc7JaCBjKJTR111IUBHOUh00llu0x4TTWa6iBl9UqEgsNnqPOmAXHdmQ/Lj8iZASrbN
+         RfUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVi1eSikhc9V7qbxreRa8jqSs+ellf1ufbnqls8mbZM0ZGvS5GhxAod+fPXIqMfpZhhGdGqIQ1wwfYMstH7@vger.kernel.org, AJvYcCWKbDr+ioj2Q80H12dQK+wtjYUNfNXMh5bnEoxCtb3/382zqn5kr+K2s8uEgkq3xMXHKTE=@vger.kernel.org, AJvYcCWPDfq5Te4AeSv4911MlPS+6y3iCBpEuRwUdiFWNcySueQ5Qf1WVafk+vVzlGz18+4LKz0dKQW1TP8iJr3k0zAZ1XOY@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx1Lhs8/mqP77gBb+NghirVzwaC4npcaRYkWlLvftY23WAS4IZi
+	cofg80UNzJ2nGR9HlDONa8K0LQug1IEdxrSLaWO5fOSYnAshpqV9avYWj1cD1Ti93RJav00B9NH
+	8KJ68bBp5i55vvGcSAl8LZ8UM2baYPTw=
+X-Gm-Gg: ASbGncvUiX1RIDTTbEFaX17Y3zr5KiZ4owASdzNuo2EV/EgY8D+DDZ4T7F3H0w2RMiD
+	CgiJSos2gvqc8LubvIH3wrlM6d9OP6OhD+PpItP8mKIh15PCk2heU8ayrk9gJbJQLeB1jScBmA1
+	LLQlxB7xZLgOr/da0yUESI9qHupyIr683fHwPbax9Gg6mYhK2Fwd3+ofnd6Fyq53rmjFeYvfGKi
+	b3yFnAhiTZA49TXIJTs0ZFYWd55WZwISg==
+X-Google-Smtp-Source: AGHT+IFiweMNZe1Ue2jbWG+XrQZJD1Hhj87E+pj9VWnLFhG+6/ADwNhXG1QOFlSsoFq5TJR5UJpZyImKjFyDkhZ90UU=
+X-Received: by 2002:a5d:5d06:0:b0:3cb:6ce9:75f9 with SMTP id
+ ffacd0b85a97d-3cb6ce9788cmr6102232f8f.38.1756311721614; Wed, 27 Aug 2025
+ 09:22:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250821035719.137161-1-crwood@redhat.com> <20250821035719.137161-5-crwood@redhat.com>
-In-Reply-To: <20250821035719.137161-5-crwood@redhat.com>
-From: Tomas Glozar <tglozar@redhat.com>
-Date: Wed, 27 Aug 2025 15:34:15 +0200
-X-Gm-Features: Ac12FXw_KbmPWP3y14qhjXeMDM7cD_iXFkJSbnYUVHyvprjHFTcH0Pcfftj6KfA
-Message-ID: <CAP4=nvQPDEy_GZWTUhQcMYW32-3DvyeyjzDjNLcEEG1AwZnczg@mail.gmail.com>
-Subject: Re: [PATCH 4/7] tools/rtla: Consolidate code between osnoise/timerlat
- and hist/top
-To: Crystal Wood <crwood@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, linux-trace-kernel@vger.kernel.org, 
-	John Kacur <jkacur@redhat.com>, Costa Shulyupin <costa.shul@redhat.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: vsEBcUby3dfYSEs-WJQz5l8gjj3fsfrvDHT3pw79yVg_1756301668
-X-Mimecast-Originator: redhat.com
+References: <20250827123814.60217-1-dongml2@chinatelecom.cn>
+In-Reply-To: <20250827123814.60217-1-dongml2@chinatelecom.cn>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Wed, 27 Aug 2025 09:21:49 -0700
+X-Gm-Features: Ac12FXw1kFNZOu-9q7VTAHMguHUr8GQYIcnv17oOnH_FM8KnK8-h2dDeHlH0dXY
+Message-ID: <CAADnVQLBwjVhKFptO1_CEC9q1ugT1Cy2SiG5XgtD+kr7BTrr_A@mail.gmail.com>
+Subject: Re: [PATCH bpf-next] bpf: remove unnecessary rcu_read_lock in kprobe_multi_link_prog_run
+To: Menglong Dong <menglong8.dong@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Matt Bobrowski <mattbobrowski@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-=C4=8Dt 21. 8. 2025 v 5:58 odes=C3=ADlatel Crystal Wood <crwood@redhat.com>=
- napsal:
+On Wed, Aug 27, 2025 at 5:38=E2=80=AFAM Menglong Dong <menglong8.dong@gmail=
+.com> wrote:
 >
-> Some bits like aa_only and the user stuff are in common even though they
-> are only used by timerlat.  In the case of user stuff I plan to submit
-> patches for supporting that on osnoise, and it doesn't seem worthwhile to
-> jump through hoops to move some of that code out of code that is otherwis=
-e
-> able to be shared.  For aa_only, making it non-common would have preclude=
-d
-> sharing some code, and the code that the flag inhibits isn't tool-specifi=
-c
-> (unlike no_aa).  Plus, there's other common code referring to tool->aa.
+> Preemption is disabled in ftrace graph, which indicate rcu_read_lock. So
+> the rcu_read_lock is not needed in fprobe_entry(), and it is not needed
+> in kprobe_multi_link_prog_run() neither.
+
+kprobe_busy_begin() doing preempt_disable() is an implementation
+detail that might change.
+Having explicit rcu_read_lock() doesn't hurt.
+It's a nop anyway in PREEMPT_NONE.
+
+pw-bot: cr
+
+> Signed-off-by: Menglong Dong <dongml2@chinatelecom.cn>
 > ---
-
-aa_only is implemented only for top, because the behavior would be the
-same for hist: just do auto-analysis, no histogram, no top. Of course,
-it doesn't hurt that it is included as a common parameter.
-
-> +       stopped =3D osnoise_trace_is_off(tool, tool->record) && !stop_tra=
-cing;
-> +       if (stopped) {
-> +               printf("rtla hit stop tracing\n");
-> +               return_value =3D FAILED;
-> +       }
-> +
-
-Is the output change necessary? The original "osnoise hit stop
-tracing"/"timerlat hit stop tracing" refers to the osnoise and
-timerlat tracers, which stop tracing on threshold (unless mode is
-TRACING_MODE_BPF
-). We already have ops->tracer for the tracer name, that can be used here.
-
->  /*
->   * timerlat_top_bpf_main_loop - main loop to process events (BPF variant=
-)
->   */
->  static int
-> -timerlat_top_bpf_main_loop(struct osnoise_tool *top,
-> -                          struct osnoise_tool *record,
-> -                          struct osnoise_tool *aa,
-> -                          struct timerlat_params *params,
-> -                          struct timerlat_u_params *params_u)
-> +__timerlat_top_bpf_main_loop(struct osnoise_tool *tool)
-
-The naming here should be consistent with the comment and with
-timerlat-hist, that is, without the __ prefix, there is no other
-timerlat_top_bpf_main_loop that would create a conflict in this
-version of the patch.
-
-Tomas
-
+>  kernel/trace/bpf_trace.c | 2 --
+>  1 file changed, 2 deletions(-)
+>
+> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> index 606007c387c5..0e79fa84a634 100644
+> --- a/kernel/trace/bpf_trace.c
+> +++ b/kernel/trace/bpf_trace.c
+> @@ -2741,12 +2741,10 @@ kprobe_multi_link_prog_run(struct bpf_kprobe_mult=
+i_link *link,
+>                 goto out;
+>         }
+>
+> -       rcu_read_lock();
+>         regs =3D ftrace_partial_regs(fregs, bpf_kprobe_multi_pt_regs_ptr(=
+));
+>         old_run_ctx =3D bpf_set_run_ctx(&run_ctx.session_ctx.run_ctx);
+>         err =3D bpf_prog_run(link->link.prog, regs);
+>         bpf_reset_run_ctx(old_run_ctx);
+> -       rcu_read_unlock();
+>
+>   out:
+>         __this_cpu_dec(bpf_prog_active);
+> --
+> 2.51.0
+>
