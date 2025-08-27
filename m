@@ -1,123 +1,167 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C9CB21ADA4;
-	Wed, 27 Aug 2025 16:22:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17ED22BE65E;
+	Wed, 27 Aug 2025 16:59:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756311725; cv=none; b=PlSxlVB9xfU+W1GuYISAFfMCHMvQ7+uaX77XzLgt2R7pofs/aSHfBWvwgUCgZKa9IdKKXFiFewuoRlYFRowRNRYYLzKNaKmdWVlrm/UM6K43P/uGSpJLcBwzrrR/ewbPDhCza8+jyHmZUiXy25UfvGL5+oVHBubW7lAKuUitvfQ=
+	t=1756313965; cv=none; b=r2oi0gSI9irEGSQeWhPkpAZe9fVnp2ZnXRw0F4u9Ed6LQIjBnrTS0YypAMaFWjSHZiZ2si4qv1On5Gsm5cCaOs0ujI1QYztlJNYXJBMuzET6oCAQTJwNxicPCzjkNzwVs9sCJrmmozr5+k8N8/7N+a0CG0isJPmB6GIWbayVh8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756311725; c=relaxed/simple;
-	bh=jCxCe7NfFgfjNDubdChvfWyemaO1MU4Akx1GvD0fAs0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HE/SPlMxbk3qjqr+9kl/PfELEx7It1rgI6/N7bEeUpDkySQkwMwgTAA3R+dxSlimH3g2Z88RE5J7IP/WCh9W5IYwWPpcmAXX+4ps/zh0nMIXK8Nn8XtGMmDjjZdQTNFsODWEhTIzlA5J8f0AOabvXBvioQUkBnWowBlF8OQgSCg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KGuHaasj; arc=none smtp.client-ip=209.85.221.52
+	s=arc-20240116; t=1756313965; c=relaxed/simple;
+	bh=HP+oCFjbaV0ErYQHYOSOr3F3umYVDZHj90JBCgWCcms=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qIvMdXL2aP2v/bzQdVJIKI/Y9ZWXRdyNW560ii21ibwt2KTiGvfC1LcaCeEihbBDEjR120qEgvQ1n0utLobbOU2Kri7llQndnjbIM+WYRztLY+aPg9BlVUAxMeDseA9VAyr9dL5t6BqViJ9qlqWWsvcBHlHp59oUZM7WFmla+78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Pf7/0Js9; arc=none smtp.client-ip=209.85.208.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KGuHaasj"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3cbe70a7923so1295632f8f.2;
-        Wed, 27 Aug 2025 09:22:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pf7/0Js9"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-3366f66a04cso424171fa.1;
+        Wed, 27 Aug 2025 09:59:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1756311722; x=1756916522; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2D3AJk4D2c4vynhddacA8LBhopdWO4yfWWNEYOAts+o=;
-        b=KGuHaasjy751FjsmNLMdZU3Im4Zd/7xajWs5TdBEh3XJUptSGv3joA3i4cd3jWRLX9
-         5aB3VjiTFjKjsh071RZ3VtwOIIwSNSYPMgtpPY09Us+iMaFYNab/OJ0jpf8SqwT45QpQ
-         an0xE4fvo7LHTcoKRLssv/eDZmswlrbIyqkDe0sQN04f0XS8O/5/hR8D1/gtXYGVV/KT
-         xOAlh8kr+d+4SSE6ciXo0n2bHlCdqNK00ZAXki/eyjGom09cmrdIOi3jVJjTC58kIlTs
-         yZoih0fFyLiYboVrU6J07wqf9ib6V7v8ixAthedfRVZKCAmx3feabvOLt3mAAEV7MJFC
-         T0Pw==
+        d=gmail.com; s=20230601; t=1756313962; x=1756918762; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=cSz+0Jdl3rsxgIMqjiE4eLITB/Ptqi8xoIkjq9Q3i9w=;
+        b=Pf7/0Js9wTzUbA2z9j1s0We4psrMER+tLAPobYT1Uzur7QQR2hxzkJL6SIZaCkRpyr
+         w0bEYYDQXU377H4/trsEniu3lKkDLdddYLuMkZrAeA9YNihsGnmSBHkZQr+e0qI/3JIK
+         n2NZUmbXNiwzYYqAFp8DCLW22VfdO7/lh+5TgG1hIpWVlwIL9jCaCGuzk4Og1P1cjWOc
+         yamlOUyOSAxDaF0N9w4lK3tya9CAmHFBFSB1aBS8c3JeZAt0EMbsPpWGgRmT73XDCkbU
+         JKOEPG98pX1Qd89EIVAVIFHuiDZCN8bPc6Oax7u02yUihzLtuTLAstJWLM8lvS9mBbOm
+         fjhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756311722; x=1756916522;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2D3AJk4D2c4vynhddacA8LBhopdWO4yfWWNEYOAts+o=;
-        b=RwtkuK6STsxg1+GQj5BQs0WFzRm+MsV+EHeJBvTsaMIbmLwXiWqjezZftkFZHd3R+C
-         lFfHVWdPaBuXe8OaOm2D7o0KMqX1wLrg4k+84RWlRe+HidqS5zl3D76ryVkzLVCIcmTz
-         sjXhWXvIu8CwzljJWuvtnffJJzGvn883Bj2y6nWD3k0PxxZBG/HYI3KQQTmo1VOCde+H
-         NtgZgqQAamtG+ql2dnrLGnunuy2kXrdLMEm01486m60RVNR/M7I1OLEjlzna5gc/Q3ff
-         OLc7JaCBjKJTR111IUBHOUh00llu0x4TTWa6iBl9UqEgsNnqPOmAXHdmQ/Lj8iZASrbN
-         RfUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVi1eSikhc9V7qbxreRa8jqSs+ellf1ufbnqls8mbZM0ZGvS5GhxAod+fPXIqMfpZhhGdGqIQ1wwfYMstH7@vger.kernel.org, AJvYcCWKbDr+ioj2Q80H12dQK+wtjYUNfNXMh5bnEoxCtb3/382zqn5kr+K2s8uEgkq3xMXHKTE=@vger.kernel.org, AJvYcCWPDfq5Te4AeSv4911MlPS+6y3iCBpEuRwUdiFWNcySueQ5Qf1WVafk+vVzlGz18+4LKz0dKQW1TP8iJr3k0zAZ1XOY@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx1Lhs8/mqP77gBb+NghirVzwaC4npcaRYkWlLvftY23WAS4IZi
-	cofg80UNzJ2nGR9HlDONa8K0LQug1IEdxrSLaWO5fOSYnAshpqV9avYWj1cD1Ti93RJav00B9NH
-	8KJ68bBp5i55vvGcSAl8LZ8UM2baYPTw=
-X-Gm-Gg: ASbGncvUiX1RIDTTbEFaX17Y3zr5KiZ4owASdzNuo2EV/EgY8D+DDZ4T7F3H0w2RMiD
-	CgiJSos2gvqc8LubvIH3wrlM6d9OP6OhD+PpItP8mKIh15PCk2heU8ayrk9gJbJQLeB1jScBmA1
-	LLQlxB7xZLgOr/da0yUESI9qHupyIr683fHwPbax9Gg6mYhK2Fwd3+ofnd6Fyq53rmjFeYvfGKi
-	b3yFnAhiTZA49TXIJTs0ZFYWd55WZwISg==
-X-Google-Smtp-Source: AGHT+IFiweMNZe1Ue2jbWG+XrQZJD1Hhj87E+pj9VWnLFhG+6/ADwNhXG1QOFlSsoFq5TJR5UJpZyImKjFyDkhZ90UU=
-X-Received: by 2002:a5d:5d06:0:b0:3cb:6ce9:75f9 with SMTP id
- ffacd0b85a97d-3cb6ce9788cmr6102232f8f.38.1756311721614; Wed, 27 Aug 2025
- 09:22:01 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1756313962; x=1756918762;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cSz+0Jdl3rsxgIMqjiE4eLITB/Ptqi8xoIkjq9Q3i9w=;
+        b=Z2UHbZQQYFhnAjEFn+9q5xU36xXyqiRxvkk85DUNFY+N+mgdf/JU4I0pGM+4p33Rvs
+         jYN4MWYiNJxX5C+VPFfUSnu9YO6yPwruGXmRFSPtCldceTqV/OpMVX+Jkx3eCGqjBAUs
+         NuRUe5LK4/+KqDz8tLK1HKqpTv+ABxVAGvYPDgISsB7bC4sF/8jq3POJpi4PYqWbOn3c
+         qBbe8sIFvPggj4ioOb01nKICgkBSi+MENWiiyAJH/p7QPtMfgysGRJxX1GrmEf+qYJhJ
+         hqR/tGIV8HTjnN8zwXaXrU5FwK7ZE2Hfn9dTKvYjqovd+tlznLw79ANU6kHC7AANWKor
+         rQ6A==
+X-Forwarded-Encrypted: i=1; AJvYcCUdpn0dhMcBQ+tCH0oNc5b76ZJA5+QqZuYFhZwQxrJWtX/HMpVkJsAmt5bkwseehCwj5i2yCCe0NUWr@vger.kernel.org, AJvYcCUwg6yK+H5GckWR4Vx8Sw5pBzLPHhsab2sO3wROGMNnxUcN5o/BK+BwsedAyMr7aDkY1pg=@vger.kernel.org, AJvYcCVZR65+YMzi9fFsW/8VIKYkLYkuJGcBwwRz1zQ4JA0jniHn6TEcKJO1Mx3LTa2YiWci9yGlX0dJOS9bjpNwRgMmmtmT@vger.kernel.org, AJvYcCXTFe14OJKe/TxdFgwXZVfKeTqLo5lD9SMrN4Ivwr3zxF23re/5xuXLNUMgjVlel+BTvqgTcLCLkPYultSZZw==@vger.kernel.org, AJvYcCXUL+gLHCNVWJspvaxv1bEreKzmqGXQGhGRb4u2GtYQLPc0rtj6KKXbiXCT6a/4y+cFL6drwBS3TKpL1Wnw@vger.kernel.org, AJvYcCXfTETBDKEpCzfIDz2I51gCSDpsWLBkOzxTrP+TvAUI5jopTuZPLlBcRToOIiXNNqP/mqt546XNQLzUSQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/lvOZ2PAfasnZtt5sk80EN915m+AF8QkdmUrzGu9jz+3LJ63R
+	Ev+Uk9fRoTSYQb7t7Wrc/Xn+vv+QZz27g0ceezp4H5ppuFZLbWYo/5D/
+X-Gm-Gg: ASbGncu1tgUGWeXBLTJEH0ZV3nJwZLfv2iKFlZsDuU42ZmkRLSZI2ojSWEG1T1AibKq
+	pPj5cmYzaZDKXd+Pu0PMtTKVxIB4lcues6uMBMvwJMUBE7YnSIfzSDxPlVPrgIwHzfhikbEvFZL
+	ZNGOTSzBLewkzWwBH/FhsON7SunEy3joyhNS2iXwruuizfMNK5+qIuOsnlXhODMxDbg1B/rajBl
+	w2MD6uiW7igXDagOws1AX9pxJnNle1+XAIbprKNsFNy35JU99r/wX/Fd7IPj+i6Sj1HxnAs8s/J
+	csEwSWQxAajHYy+mbYl2IRFi6BRNOZdEPE1/hWnjDfGtWrXK9h8erw9o1GcFVutIRfqohp52GQ9
+	xaWAE6hoXrvDl+SJ/wFsa7dhwMQ4+P+Kvfl/xe0hDlmv/cpBJvMiJ
+X-Google-Smtp-Source: AGHT+IG4BeCx/VIPO9rnbCc0YcRdZMlua4eVbdX3PpKt/fKDdzrBfr7yiiTFTWfK/4UfPVTpR7vpyQ==
+X-Received: by 2002:a2e:be03:0:b0:336:7eed:2f8f with SMTP id 38308e7fff4ca-3367eed3c67mr29987221fa.32.1756313961794;
+        Wed, 27 Aug 2025 09:59:21 -0700 (PDT)
+Received: from pc636 (host-90-233-205-219.mobileonline.telia.com. [90.233.205.219])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-3365e5da244sm27443611fa.58.2025.08.27.09.59.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Aug 2025 09:59:21 -0700 (PDT)
+From: Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date: Wed, 27 Aug 2025 18:59:16 +0200
+To: Kees Cook <kees@kernel.org>
+Cc: Uladzislau Rezki <urezki@gmail.com>, Mike Rapoport <rppt@kernel.org>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Harry Yoo <harry.yoo@oracle.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"David S . Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Jarkko Sakkinen <jarkko@kernel.org>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Peter Xu <peterx@redhat.com>, David Hildenbrand <david@redhat.com>,
+	Zi Yan <ziy@nvidia.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+	Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
+	Xu Xin <xu.xin16@zte.com.cn>,
+	Chengming Zhou <chengming.zhou@linux.dev>,
+	Hugh Dickins <hughd@google.com>, Vlastimil Babka <vbabka@suse.cz>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>, Rik van Riel <riel@surriel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
+	Muchun Song <muchun.song@linux.dev>,
+	Oscar Salvador <osalvador@suse.de>, Jann Horn <jannh@google.com>,
+	Pedro Falcato <pfalcato@suse.de>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Qi Zheng <zhengqi.arch@bytedance.com>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org,
+	sparclinux@vger.kernel.org, linux-sgx@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+	nvdimm@lists.linux.dev, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] mm: update core kernel code to use vm_flags_t
+ consistently
+Message-ID: <aK85ZPVwBIv-sH85@pc636>
+References: <cover.1750274467.git.lorenzo.stoakes@oracle.com>
+ <d1588e7bb96d1ea3fe7b9df2c699d5b4592d901d.1750274467.git.lorenzo.stoakes@oracle.com>
+ <aIgSpAnU8EaIcqd9@hyeyoo>
+ <73764aaa-2186-4c8e-8523-55705018d842@lucifer.local>
+ <aIkVRTouPqhcxOes@pc636>
+ <69860c97-8a76-4ce5-b1d6-9d7c8370d9cd@lucifer.local>
+ <aJCRXVP-ZFEPtl1Y@pc636>
+ <aJHQ9XCLtibFjt93@kernel.org>
+ <aJItxJNfn8B2JBbn@pc636>
+ <202508251436.762035B@keescook>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250827123814.60217-1-dongml2@chinatelecom.cn>
-In-Reply-To: <20250827123814.60217-1-dongml2@chinatelecom.cn>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Wed, 27 Aug 2025 09:21:49 -0700
-X-Gm-Features: Ac12FXw1kFNZOu-9q7VTAHMguHUr8GQYIcnv17oOnH_FM8KnK8-h2dDeHlH0dXY
-Message-ID: <CAADnVQLBwjVhKFptO1_CEC9q1ugT1Cy2SiG5XgtD+kr7BTrr_A@mail.gmail.com>
-Subject: Re: [PATCH bpf-next] bpf: remove unnecessary rcu_read_lock in kprobe_multi_link_prog_run
-To: Menglong Dong <menglong8.dong@gmail.com>
-Cc: Jiri Olsa <jolsa@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Matt Bobrowski <mattbobrowski@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202508251436.762035B@keescook>
 
-On Wed, Aug 27, 2025 at 5:38=E2=80=AFAM Menglong Dong <menglong8.dong@gmail=
-.com> wrote:
->
-> Preemption is disabled in ftrace graph, which indicate rcu_read_lock. So
-> the rcu_read_lock is not needed in fprobe_entry(), and it is not needed
-> in kprobe_multi_link_prog_run() neither.
+On Mon, Aug 25, 2025 at 02:37:11PM -0700, Kees Cook wrote:
+> On Tue, Aug 05, 2025 at 06:13:56PM +0200, Uladzislau Rezki wrote:
+> > I agree. Also it can be even moved under vmalloc.c. There is only one
+> > user which needs it globally, it is usercopy.c. It uses find_vmap_area()
+> > which is wrong. See:
+> > 
+> > <snip>
+> > 	if (is_vmalloc_addr(ptr) && !pagefault_disabled()) {
+> > 		struct vmap_area *area = find_vmap_area(addr);
+> > 
+> > 		if (!area)
+> > 			usercopy_abort("vmalloc", "no area", to_user, 0, n);
+> > 
+> > 		if (n > area->va_end - addr) {
+> > 			offset = addr - area->va_start;
+> > 			usercopy_abort("vmalloc", NULL, to_user, offset, n);
+> > 		}
+> > 		return;
+> > 	}
+> > <snip>
+> > 
+> > we can add a function which just assign va_start, va_end as input
+> > parameters and use them in the usercopy.c. 
+> 
+> Yes please! I'd must rather use some exported validation routine than
+> having it hand-coded in usercopy.c. :)
+> 
+I will do it :)
 
-kprobe_busy_begin() doing preempt_disable() is an implementation
-detail that might change.
-Having explicit rcu_read_lock() doesn't hurt.
-It's a nop anyway in PREEMPT_NONE.
-
-pw-bot: cr
-
-> Signed-off-by: Menglong Dong <dongml2@chinatelecom.cn>
-> ---
->  kernel/trace/bpf_trace.c | 2 --
->  1 file changed, 2 deletions(-)
->
-> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> index 606007c387c5..0e79fa84a634 100644
-> --- a/kernel/trace/bpf_trace.c
-> +++ b/kernel/trace/bpf_trace.c
-> @@ -2741,12 +2741,10 @@ kprobe_multi_link_prog_run(struct bpf_kprobe_mult=
-i_link *link,
->                 goto out;
->         }
->
-> -       rcu_read_lock();
->         regs =3D ftrace_partial_regs(fregs, bpf_kprobe_multi_pt_regs_ptr(=
-));
->         old_run_ctx =3D bpf_set_run_ctx(&run_ctx.session_ctx.run_ctx);
->         err =3D bpf_prog_run(link->link.prog, regs);
->         bpf_reset_run_ctx(old_run_ctx);
-> -       rcu_read_unlock();
->
->   out:
->         __this_cpu_dec(bpf_prog_active);
-> --
-> 2.51.0
->
+--
+Uladzislau Rezki
