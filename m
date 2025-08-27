@@ -1,121 +1,129 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12454C133
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 27 Aug 2025 06:51:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E57C21B9DA
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 27 Aug 2025 11:34:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756277487; cv=none; b=tNubdR11uVkTQXUO30TfB8DlXCTSmmcooew/3AxyjOKMf0yg5WdgoXFHRyJz+MCi+UDb3FPIslzAH7fD1SOxfaJ0xbTZglBqdVlDa4keIrn4joPXVO1IN29171KLLamXnrtwsP37h3iDprNssTo3lngIKDMKJ7XxA+SmQvxZPKg=
+	t=1756294443; cv=none; b=NKmz8FXd6WOH5wf/c5expU5EVhbs4NPRoi7WCKeQtKiaKtVmqBTVChGvLaZ168CbXUQb/OKa2pNjz7KUxGJUWya1/B74Rl4KbYRTy7QLOws8JKsM4djg17uaVTzH31JLz44rxFCXfAq/KcNARuvW+Bgjop/hMrttYX/dQVuR5m0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756277487; c=relaxed/simple;
-	bh=NBFAPxkmF0nG2JXokfLo6NIDkFlGKGxnWNcZLB+xlE0=;
+	s=arc-20240116; t=1756294443; c=relaxed/simple;
+	bh=5PnxxqVLr73U3nVof7qw0XykiE9Dqn224cBtpc4rpJY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AN3UA8InrGlNz6Yl7DK/W6BPEzhopTAqjzH1ZPe8fj+aAfWt/d3R03wwp+73DEYyRU3Z2Jc6Fc2ONwd5Ao6x5YPBaIBf8Vs9n4JSRdjX5tTHhTGrg+CT38VUmtl5S0jqf6UEgn7IuWdNRkb79+V0ncL1zCGSRuZB8Pkf6Tip91U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=euBP7fyw; arc=none smtp.client-ip=170.10.133.124
+	 To:Cc:Content-Type; b=SvwanMahNrdiUkYbvoDG3WbyE05mz8l0j18614P2cfRB69jcmtHJ8wDp2/BpaJu/yyVjOkhOimS+3F9hJADwIbD8f46W+t1xUrMcZiaCIGUF7tKSgx8jYqGRjikkpdc9uTpfiqv5rFy4OG3kt59+/3cdCqsWF70U/UrH3XGTRWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aYUmhe9J; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="euBP7fyw"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aYUmhe9J"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1756277483;
+	s=mimecast20190719; t=1756294441;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=w/WadWqKMXyJrUdDy4ttS1CdpuC8sMO7gA9sEwfAQyw=;
-	b=euBP7fywYHEZ1VIG+Xnn/kU45ZJNndzZrdacN2oHar8Grne61k93yUv1hsM44eyjDwAAUM
-	ik5rqImD7hLXsElB9GJRUVnZZ4bDKtLXFfQ01R+/3U/oQ+m48jl9pY9Irr09AFdETov1FG
-	mtahmJvxpE/Hng7odY90e1CYYXi1tOw=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=zhYvpzvG1QLU6WXqIqVYTDuWBcmmAiykL3sskQNbuGU=;
+	b=aYUmhe9JEO5Xn5CiXX+shQQF/xKVYLsJK91QIIWDpDXr2At29lSXcM0eqMiYcHqrk8nHJx
+	3qgUYcb/GidIpJMFz315txKl2028YVUIjlcACATrtljOv8wqqb5yfi9AIrdMFD0glhGYfa
+	cbspRQgc3pLCxWZ4eYW6xZFkTizavL8=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-682-WPVgefU7M-KFZKRqFTHsaw-1; Wed, 27 Aug 2025 02:51:22 -0400
-X-MC-Unique: WPVgefU7M-KFZKRqFTHsaw-1
-X-Mimecast-MFC-AGG-ID: WPVgefU7M-KFZKRqFTHsaw_1756277481
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-afec2192e4aso34789866b.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 26 Aug 2025 23:51:22 -0700 (PDT)
+ us-mta-676-4n800O_4NYqOrpLbDPcsBg-1; Wed, 27 Aug 2025 07:33:57 -0400
+X-MC-Unique: 4n800O_4NYqOrpLbDPcsBg-1
+X-Mimecast-MFC-AGG-ID: 4n800O_4NYqOrpLbDPcsBg_1756294436
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-afcb7a2d707so460144866b.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 27 Aug 2025 04:33:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756277481; x=1756882281;
+        d=1e100.net; s=20230601; t=1756294436; x=1756899236;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=w/WadWqKMXyJrUdDy4ttS1CdpuC8sMO7gA9sEwfAQyw=;
-        b=vwvt/ac9z5otz6057agMr4zZ0iVg6AH1OqubAE17818j2+kCsris7m16S/lM3rBKbW
-         7nXQ06qttduemubHSm//jp7+baJdGSKoGZ4mcw+xoGpKZpHbXKVKUdbTpFJ25m/hfTRW
-         +lda34puKDrdxB/9woK063oJMdYeIRe8xwjPApa8DsFTbkAnrxjD7mLvv2S68/fFeul2
-         VMSjIUCHji/HBeJfCBBlCqzPJcByDLo+w9xBB9Z+yiCR9TqahBBrXgayvRIklmedrcco
-         QHaIA+TyMY6pBTMNDiqQJUzHhOaB9DB4UxjdqmSsA/xZfiOu6vAlfAjLr7H5MzJoMo2d
-         3t4A==
-X-Forwarded-Encrypted: i=1; AJvYcCVin5TUjypfuTVAjqvLtEGK1h0CNxn8WH9iaSaCaBxjrxS7/9leUu15uwJPxJN9zmxIY2Gj/SJWn1XW1lww48WKPds=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzhRb91OgSCAb+SAMKSYH7W9/8VxTdOGY8fk7T9E9BKPKrum8tZ
-	QiLxSFecksBIF0BQ/Xfufex6agpeX9ayHIhOfKxu4ZYIafdiP1XKstWPFUeolqdlZikker2bVMn
-	l3xCtBKVN5BmzS8Z2S3+Wdy9LQpvcbHdXJfukivf7Cb8KBIfVHhVzlQVSRAPno1R8arbCnEfvXA
-	sG5BWxy0SXjGoArpDKe3JPif7wFHw/bSvYDUL4M7kgqSAQmY2k
-X-Gm-Gg: ASbGncsysH56VrF5rOdVeTTs0WJi2iFPk/v0Sfk+44ZQBYkAakDfaBV9/85+GhsBpTy
-	QQId5YcunzVfhtnUWpHmnnmfTw6ajNmZiNnKkP5Cz7YzLLGctYMGkgcp86ZDINR4ZoEw3NHI40l
-	6uH6UBzLgssfiJd6lnotT8EGHvF6kvAoJpzrAWNal8fb8F6P1Lqko=
-X-Received: by 2002:a17:907:6d25:b0:afe:c795:9ae3 with SMTP id a640c23a62f3a-afec795ce5cmr59034766b.38.1756277481133;
-        Tue, 26 Aug 2025 23:51:21 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEHAaAA+0dLAd0rofqjX8xIsFsOA7bdl5WtvCtZUN+NyqC20bxjlzfPbsaLj7M8qEg5MLZzFVKQzjsauV3poQk=
-X-Received: by 2002:a17:907:6d25:b0:afe:c795:9ae3 with SMTP id
- a640c23a62f3a-afec795ce5cmr59032866b.38.1756277480799; Tue, 26 Aug 2025
- 23:51:20 -0700 (PDT)
+        bh=zhYvpzvG1QLU6WXqIqVYTDuWBcmmAiykL3sskQNbuGU=;
+        b=GS4Ha5s6QgRkDLN6B1MsNfy8xIme+eGUVv0zWlZ97A9TwiGM9NXIV5jwjynedKpjEB
+         hnn7oj57Sp2RVG02ucowj9SLyyRHlfzDvtH0JyvnlscfE0jwuCxLtoShW030vebbWhy8
+         UcM5G3j9zxWnBOQ00fSL2hsQkDYE5I03yOUTZsKw/jiZsFJCAKAAmfHhKYB71frCSJF2
+         f2TZenwn7QRzy4KOJZa+esO2DN/uT8DxVFIF6FJhcSmkzQ5aRWdqMECfZe0edMRcLRN9
+         11CLdLf0nrDxNUeV11CWQkjgWJOFpFLVRLFtENQ4e4Yw8mIx8iowZuWja4mSNEOzPzT/
+         /qBg==
+X-Forwarded-Encrypted: i=1; AJvYcCUECPI3IW+dK3W68/GJV0FSgM/h3ak2tGqcsun+saQl0X3XCRegTBgJPT6JBYwzDvNQhjm9KZz836i0zLfAkx7tGMQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4M16yTRMP+X4DWsgpJDSvTMrrI2CZ1JsauTJq4nFBzZYld7rG
+	ku5B0sTbfnU+TZ621rcu6PldmdyQUWK/5PsaIq6xy986D4juibkSD6WVUZc/W67evwQuTJrBlIN
+	6wg7a8O5xms9hvaXd5OxnN8zzbTAybzw+V2LeMTfTe/amoLzPltSFmrmNK4ErRJcRV+/ZxT6M5m
+	dVUkz+rT2WQ52mi5A31iSxty0vuC+6iXh8XO31HeqsSjmLwccv
+X-Gm-Gg: ASbGncsv1TiLL77yakJVsnux/aQ4GOeQAxx35o2BqYyfaWJpan+vJVqV7MD3bsfQcml
+	Z7nLaup1kbBDwPl9pQDAvapr5d2t+2i+IXjD2pX9L7H1HzrG4jljvpdhz7LnzhgiNwwUaZjk3Ci
+	wdOLHJAeB29eGYTAcP6YiPVnbDC9p3wvm+mCiCgsXxnP6ZcnM2B1s=
+X-Received: by 2002:a17:906:1d13:b0:afe:9e58:7550 with SMTP id a640c23a62f3a-afe9e587a39mr527084966b.19.1756294436444;
+        Wed, 27 Aug 2025 04:33:56 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGmIKrD07d7hjuPxla9NTSl3j9izBPR+tnmavw11VnA4HBsOChrmKiyTz2UynMaxOYddvXvX3Zgoa/zntkeltY=
+X-Received: by 2002:a17:906:1d13:b0:afe:9e58:7550 with SMTP id
+ a640c23a62f3a-afe9e587a39mr527082866b.19.1756294436039; Wed, 27 Aug 2025
+ 04:33:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250821035719.137161-1-crwood@redhat.com> <20250821035719.137161-3-crwood@redhat.com>
- <CADDUTFyDJGTKU9vq_f4AjV_YJtktW8LHRZuwgJWh5nPAnwUvBA@mail.gmail.com>
-In-Reply-To: <CADDUTFyDJGTKU9vq_f4AjV_YJtktW8LHRZuwgJWh5nPAnwUvBA@mail.gmail.com>
+References: <20250821035719.137161-1-crwood@redhat.com> <20250821035719.137161-4-crwood@redhat.com>
+In-Reply-To: <20250821035719.137161-4-crwood@redhat.com>
 From: Tomas Glozar <tglozar@redhat.com>
-Date: Wed, 27 Aug 2025 08:51:09 +0200
-X-Gm-Features: Ac12FXwsFRAWkx6J7wj93kDoCXQKQTYeetiSHkavaeVeUuav50Uq0heyaCdBExU
-Message-ID: <CAP4=nvS5rbwwc+MBX+Gana59SoP+rDt5Kw2rmnRKiX-0PTDtwA@mail.gmail.com>
-Subject: Re: [PATCH 2/7] tools/rtla: Move top/hist union members elsewhere
-To: Costa Shulyupin <costa.shul@redhat.com>
-Cc: Crystal Wood <crwood@redhat.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	linux-trace-kernel@vger.kernel.org, John Kacur <jkacur@redhat.com>
+Date: Wed, 27 Aug 2025 13:33:43 +0200
+X-Gm-Features: Ac12FXy03JtiusG0Oc-4rDQzGmJuyZ_UAHRwaFa-B5ETltlaZyS7WCJg8tnRx-o
+Message-ID: <CAP4=nvSVh-KUSMC9vT_59+wwmOHe_+reObznXZ-o5kd2rD_LNg@mail.gmail.com>
+Subject: Re: [PATCH 3/7] tools/rtla: Create common_apply_config()
+To: Crystal Wood <crwood@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, linux-trace-kernel@vger.kernel.org, 
+	John Kacur <jkacur@redhat.com>, Costa Shulyupin <costa.shul@redhat.com>
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: XGYMUpdWltmFhNdlAdix3-AvMda66M7C6qYVkbHtBds_1756277481
+X-Mimecast-MFC-PROC-ID: _nkR0SeGfDxeoSxsVBJWmRaICLepoitPVdHBFl8V84I_1756294436
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-=C3=BAt 26. 8. 2025 v 20:06 odes=C3=ADlatel Costa Shulyupin
-<costa.shul@redhat.com> napsal:
->
-> Moving `hist_params` into `common_params` could lead to
-> the `common_params` struct becoming a "god object" antipattern.
-> The `common_params` struct is intended to be tool-agnostic.
->
-> I suggest we use `hist_params` within the tools themselves,
-> rather than in `common_params`.
->
+=C4=8Dt 21. 8. 2025 v 5:58 odes=C3=ADlatel Crystal Wood <crwood@redhat.com>=
+ napsal:
+> At some point it would be nice to have all of the common code named and
+> located correctly, but it's a start.  Do we want to stick with "common" o=
+r
+> go with something less vague like "osn" for things that relate to the
+> broader osnoise mechanism rather than the specific osnoise tracer?
 
-I wouldn't worry about that at this point. Currently, both
-rtla-osnoise and rtla-timerlat, which are the only tools in rtla, use
-histograms, and share most of the histogram params. Furthermore,
-histograms can be seen as extra data compared to top mode. In this
-way, it is natural for hist_params to be a field in common_params.
+For functions that set tracer options that reside in
+/sys/kernel/tracing/osnoise and are used by both osnoise and timerlat
+tracers (like osnoise_set_cpus and osnoise_set_workload), I think we
+can call them tracer options, and make the function names
+"tracer_set_cpus" etc. Or just use "common", that seems fine to me,
+too.
 
-See, for example, this part of the patch (in timerlat_bpf.c):
+> +++ b/tools/tracing/rtla/src/common.c
+> @@ -0,0 +1,64 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +#define _GNU_SOURCE
 
--       if (params->entries !=3D 0) {
-+       if (params->common.hist.entries !=3D 0) {
-                /* Pass histogram options */
--               bpf->rodata->bucket_size =3D params->bucket_size;
-+               bpf->rodata->bucket_size =3D params->common.hist.bucket_siz=
-e;
+Nit: the newline is unnecessary after the SPDX identifier, other rtla
+source files that don't start with a copyright comment after the SPDX
+identifier (e.g. timerlat_bpf.c) don't have it.
 
-There is more information now in the code, making it clear "entries"
-is related to the histogram, plus if BPF sample collection is ever
-extended to osnoise, this code can be shared. That would not be
-possible if hist_params was moved to osnoise_params/timerlat_params.
+> @@ -44,4 +103,12 @@  struct common_params {
+>  int output_divisor;
+>  int pretty_output;
+>  int quiet;
+>+ int kernel_workload;
+>  };
 
-If tools that do not use a histogram are added in the future, this
-question can be revisited of course.
+It stood out to me that kernel_workload is moved to common, while
+user_workload is not. On a second look though, osnoise has to make
+sure kernel workload is created, but has no user workload option, so
+it makes sense.
+
+Reviewed-by: Tomas Glozar <tglozar@redhat.com>
+
+Tomas
+
+
 
 Tomas
 
