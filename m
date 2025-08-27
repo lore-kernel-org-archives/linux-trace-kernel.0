@@ -1,144 +1,107 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE3F01FFC49;
-	Wed, 27 Aug 2025 19:33:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38B85212546;
+	Wed, 27 Aug 2025 19:38:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756323193; cv=none; b=XIQJBf4fKQbjq2H3iagEyLGbkzzp83kRwXpc3ehK39WIHVAMIhs9dgWNTIDOM8ZFf2W7pWbwUsvppKrEmySNe1TjWfeDiJ2OvBNO+I6ETiFdQWW0RvUpmSWTwHaTHxZXouwnXrfiQ304E5UsAu4RUBL1lKKwJ3oub+UhW90V4Yw=
+	t=1756323490; cv=none; b=Ic3O3DH9qDrcggip4W7d+Jg2huUmXhPujUy60FsVgzrv4puEKU1MRdibO25a0AkvvXpM8mk8QWtiHBH6uDBQPZz4G/zTpKkK+p7ghXg2iXGYcxnlVTNWPuDp/Wo2OEok64wjmTrNCiH10hP56Lvqh7g95PP9sHqtRH3YXk9UlZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756323193; c=relaxed/simple;
-	bh=6DsncMSZiTkWh+WqTScsQ/jva3tXctOU6zWlU2hsJT0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RiATRxvrRcEBCKdK+4XmeU+g5XrmVuCBingc3k3H1dOHw3zn9TETqpVeYKgFnPDTpAFaCkrjiwfw2WtW8ixhSjGFJLwNdOhlbURzkYwLm2nPVhXKvR+xejbcM70WzM0XrAfWG8PmJuNpmbWd5n6D/DAFEN6YRxDJOYyB6ohtgEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G5dCtIWW; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1756323490; c=relaxed/simple;
+	bh=nLJGoGeuqPkpzEuh03+jK8eWmMrjjG2N95dLqjOBEos=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=udrT2jQOd8B+OsNQVqbds5zdK8gVherseB6d0Ho671OQ6cc/jA/YarZiZPNgUmwa9laExexSxoZk7Nc+a1YPu9q6hDuQDlcv9WG7tEG7kSH2NJdD+bl627QifLNvXmY2z4HMOSgraOUTAQQwdOOxIEyxGtN2ut+ppQm4Pj/kD3E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h8kFIKaw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G5dCtIWW"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3c79f0a606fso113087f8f.0;
-        Wed, 27 Aug 2025 12:33:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1756323190; x=1756927990; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qdOgLzLVEVxOyIO4zHuw9whMYOKbeYIspVzB3OvBoVY=;
-        b=G5dCtIWWj7Fcmz3wq3pQ7+5fIeR4keyULCVPqNGATzDjHCgkRGMMxsu8uRaNsrUhtk
-         6aIiMBdgp5po96m4XPR5KDBmhJEz95rH1iU8PqxNUuL4Dy3Fo4XdNvjDePWFD5y6jORa
-         HiQiJvFMcrDT6kKSyRRMqfB4bDGXYuXcliiiYabH9pt1WeOqIupu70pWkjXVC59/Z7/H
-         LupqRdZdrgQJmFm53ZHkH9AvcZfKoPvWSPfsnr/FJvAJKK9Klz6tVW/aG3tbqq1f21EU
-         bELAAOfRxcTNp0KQJ85J2s7UusxxDZcdey/WB4TiG0MZ4ULH5Mnv2ULQUuRl3oIcfvQY
-         nElw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756323190; x=1756927990;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qdOgLzLVEVxOyIO4zHuw9whMYOKbeYIspVzB3OvBoVY=;
-        b=XOnF3zNZfkXaqHmbZgCfmDCozhjSc0T867sZW1pqOGvRv+YRFtH/7heJHPyy8ycDy2
-         nPNrXOpeBgDNHeAdS1cFUKXaOLa3INHhLxZzdw23Gc98B0QhU5S972YsNxndvz6VPsUd
-         Hlp3XkCOPe/T0qXwkr5VqEmwpy9vpmR8qzPBFnO9vPD3AXDNbL28hRf/BM6Q52aRIJr9
-         vub7NSIqPTLLliRSkSXSWzLXvWUkbXlLYsOqbn+z2lbDnQHt+ctOsjwj7sHT7w+6SnQ9
-         6pfly8qQHCcf6oUhm8GcJ93rcKHZYyd0mRlp22XjNGFqAvJPbB/f5mOhl7mlfoIKm6Qd
-         uoIA==
-X-Forwarded-Encrypted: i=1; AJvYcCUTz5+wGywIRLcnoBY87xg0ds7SHWUF/55N7SrqsHB3+LuBZyecwyRVFwJ5CHf2j3dYz4Dtr1KkWmjn23yy@vger.kernel.org, AJvYcCUes4twjADf2SZwbTEW4mUljHfNKjAt1OCsYOQsXy727wfWphFE44KPoO6wLkXupZJ9uHME1Mmst4Q8e/aicjFJz3cB@vger.kernel.org, AJvYcCWy1LFUILa2XCh8zcSt08lV/0V4qxGAoxhFroW3cqyDE3tHn9E5D8IOB6NNaQjaOfejmdI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy89NzPy5xvvM9IVBDjKFsQXH43S/fLuyqSeEIjwpRViEEassZl
-	RqiJwkdzJcKw3EAyGEQj9mT3CrPs6NU4q6G55uX4gbW8NLvuFQXI5AjU
-X-Gm-Gg: ASbGncu9TL780FbSs959Pc+Boue3Ee5mEXvx8G6S9QQIOYI+jTCBxzOm1Ok1R3N+aZP
-	ePirDGdWTNmmTQk9Rv3KbB2W04p41iCmdMcS1NZDxjl1kyd0A6HuRu9WXH45SmXl0cgNPgZ0A6m
-	03T/n1EKE28Lnz+jVJl8hiU9AWpArpQRTV2hozZKCZ08ulIWKbw5CifKzjjszMOAM28HS82ZzNs
-	zqwQfF4e2zTo2bK3IBe3EXb8aHXwoLnQJkKqwt/MxGYSJBGVAQuq7tlGWjXClOt+3LhOpq17yEQ
-	njudwRbj/h+3EQtRQuVVc+wW11Pd8CZinEEwJCkLIJ6jRKcboNWR52X9zmAyAYGJLJZ2WeYwZnF
-	H/NyEdfgKpzeUA+xh95iscrLTSA2BDLB0DC4751IJdOTLZhw4ZRzGACdLMMmoGFZB
-X-Google-Smtp-Source: AGHT+IEK5LWBaRos0+vMfAdVULQES0PvVLHuzOtINzlrIxc6TjYzZirBRoCKNDPkDAGR5+jNWYX5jg==
-X-Received: by 2002:a5d:4d0a:0:b0:3cc:32f0:daf8 with SMTP id ffacd0b85a97d-3cc32f0db80mr3198374f8f.36.1756323189965;
-        Wed, 27 Aug 2025 12:33:09 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3c70e4b9f8dsm23595649f8f.9.2025.08.27.12.33.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Aug 2025 12:33:09 -0700 (PDT)
-Date: Wed, 27 Aug 2025 20:32:40 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: jolsa@kernel.org, oleg@redhat.com, andrii@kernel.org,
- mhiramat@kernel.org, linux-kernel@vger.kernel.org, alx@kernel.org,
- eyal.birger@gmail.com, kees@kernel.org, bpf@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, x86@kernel.org, songliubraving@fb.com,
- yhs@fb.com, john.fastabend@gmail.com, haoluo@google.com,
- rostedt@goodmis.org, alan.maguire@oracle.com, David.Laight@aculab.com,
- thomas@t-8ch.de, mingo@kernel.org, rick.p.edgecombe@intel.com
-Subject: Re: [PATCH 2/6] uprobes/x86: Optimize is_optimize()
-Message-ID: <20250827203240.664a030c@pumpkin>
-In-Reply-To: <20250826081840.GD3245006@noisy.programming.kicks-ass.net>
-References: <20250821122822.671515652@infradead.org>
-	<20250821123656.823296198@infradead.org>
-	<20250826065158.1b7ad5fc@pumpkin>
-	<20250826081840.GD3245006@noisy.programming.kicks-ass.net>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h8kFIKaw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBD1AC4CEF4;
+	Wed, 27 Aug 2025 19:38:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756323489;
+	bh=nLJGoGeuqPkpzEuh03+jK8eWmMrjjG2N95dLqjOBEos=;
+	h=Date:From:To:Cc:Subject:References:From;
+	b=h8kFIKawVBefXiWwzK9U0GbpGATeURNrmRnjKY35827ph1AG5BoEtOyXyBej0rean
+	 EWslgMF+3HLPR52ud7P67taYAMrjSVKZfjYYvLNeGxet25/w1IYW4wzKi6cMkQCMpV
+	 MZBjW//eFdcS17k5j4r7G1Fj9/vQiErnSuIW8/KAyJcNnKhUz/tqJG/8ZJQlvy7Spq
+	 ZfNpJVmM7wHRJQWXKlVQzl7vQlf5G+UQqJEYev9KFgmyp9xPWgvgTEitiyG78sftFh
+	 iKGKaV9rFwsMC7t5SwnqnBa6ProY42HiuaDSjs8IQPCr9NuAahopAd6yP58xlvi05b
+	 BRc6Wm3jQW9jw==
+Received: from rostedt by gandalf with local (Exim 4.98.2)
+	(envelope-from <rostedt@kernel.org>)
+	id 1urLyW-00000003jGq-24ik;
+	Wed, 27 Aug 2025 15:38:28 -0400
+Message-ID: <20250827193828.347397433@kernel.org>
+User-Agent: quilt/0.68
+Date: Wed, 27 Aug 2025 15:36:45 -0400
+From: Steven Rostedt <rostedt@kernel.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org,
+ x86@kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Josh Poimboeuf <jpoimboe@kernel.org>
+Subject: [PATCH v2 1/2] unwind_user/x86: Enable frame pointer unwinding on x86
+References: <20250827193644.527334838@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 
-On Tue, 26 Aug 2025 10:18:40 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
+From: Josh Poimboeuf <jpoimboe@kernel.org>
 
-> On Tue, Aug 26, 2025 at 06:51:58AM +0100, David Laight wrote:
-> 
-> > > @@ -1069,17 +1068,14 @@ int set_swbp(struct arch_uprobe *auprobe
-> > >  	     unsigned long vaddr)
-> > >  {
-> > >  	if (should_optimize(auprobe)) {
-> > > -		bool optimized = false;
-> > > -		int err;
-> > > -
-> > >  		/*
-> > >  		 * We could race with another thread that already optimized the probe,
-> > >  		 * so let's not overwrite it with int3 again in this case.
-> > >  		 */
-> > > -		err = is_optimized(vma->vm_mm, vaddr, &optimized);
-> > > -		if (err)
-> > > -			return err;
-> > > -		if (optimized)
-> > > +		int ret = is_optimized(vma->vm_mm, vaddr);
-> > > +		if (ret < 0)
-> > > +			return ret;
-> > > +		if (ret)
-> > >  			return 0;  
-> > 
-> > Looks like you should swap over 0 and 1.
-> > That would then be: if (ret <= 0) return ret;  
-> 
-> I considered that, but that was actually more confusing. Yes the return
-> check is neat, but urgh.
-> 
-> The tri-state return is: 
-> 
-> <0 -- error
->  0 -- false
->  1 -- true
-> 
-> and that is converted to the 'normal' convention:
-> 
-> <0 -- error
->  0 -- success
-> 
-> 
-> Making that intermediate:
-> 
-> <0 -- error
->  0 -- true
->  1 -- false
-> 
-> is just asking for trouble later.
+Use ARCH_INIT_USER_FP_FRAME to describe how frame pointers are unwound
+on x86, and enable CONFIG_HAVE_UNWIND_USER_FP accordingly so the
+unwind_user interfaces can be used.
 
-I'm sure the function name could be changed to make it all work :-)
+Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ arch/x86/Kconfig                   |  1 +
+ arch/x86/include/asm/unwind_user.h | 11 +++++++++++
+ 2 files changed, 12 insertions(+)
+ create mode 100644 arch/x86/include/asm/unwind_user.h
 
-	David
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 58d890fe2100..8f94c58d4de8 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -299,6 +299,7 @@ config X86
+ 	select HAVE_SYSCALL_TRACEPOINTS
+ 	select HAVE_UACCESS_VALIDATION		if HAVE_OBJTOOL
+ 	select HAVE_UNSTABLE_SCHED_CLOCK
++	select HAVE_UNWIND_USER_FP		if X86_64
+ 	select HAVE_USER_RETURN_NOTIFIER
+ 	select HAVE_GENERIC_VDSO
+ 	select VDSO_GETRANDOM			if X86_64
+diff --git a/arch/x86/include/asm/unwind_user.h b/arch/x86/include/asm/unwind_user.h
+new file mode 100644
+index 000000000000..8597857bf896
+--- /dev/null
++++ b/arch/x86/include/asm/unwind_user.h
+@@ -0,0 +1,11 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _ASM_X86_UNWIND_USER_H
++#define _ASM_X86_UNWIND_USER_H
++
++#define ARCH_INIT_USER_FP_FRAME							\
++	.cfa_off	= (s32)sizeof(long) *  2,				\
++	.ra_off		= (s32)sizeof(long) * -1,				\
++	.fp_off		= (s32)sizeof(long) * -2,				\
++	.use_fp		= true,
++
++#endif /* _ASM_X86_UNWIND_USER_H */
+-- 
+2.50.1
 
 
