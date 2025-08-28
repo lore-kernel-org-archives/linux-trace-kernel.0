@@ -1,208 +1,172 @@
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 772C82676E9;
-	Thu, 28 Aug 2025 07:00:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97AA72D0626;
+	Thu, 28 Aug 2025 07:34:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756364427; cv=none; b=QyQSZtJEPY7n8eMhYGb8IGot9c025K59dJzNrzhCISc3WBs6wRtuD6MuULPpyGf/FS4s10AUTGoupvEETMChhttp4Q9rrUF6dkOMjabS+BVRKPcqhCRXYm25L8Hl2OV8wzwppwBhoy7WKuIIJxhhCa0+bmcUsqTpDe7NS4J9KYI=
+	t=1756366451; cv=none; b=OOL8FbGlf4YJBwp1vpBgvGhsRjCPW+/03B69/P9LhAyvP3cL9M57VtvgqJUo+n4KP4XELyGFqnb60LGsqg3uZD0nhi0Krf2Ru0Y4QYz5ERGTeKc01tW/t3H5f9IwbcgSiw4cfe8OLv3H+PKdwqq5N8mFy5+Xp7utzq8wpzgmJUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756364427; c=relaxed/simple;
-	bh=udbIQSEPamCrzfR3SxCWA3q4BirD6kzgDECIv6Y64DU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UadgLF1Hw8VCX2jykN09Kgw/Nkye5eKPriGdxweUuY/ZyuK+0MlbhARm88jlOFcHXco+8As+8sz2wLmNuVVhSG7pHvUK5LCKXA4LcNn6wAouvu7tgw3K6qUO34PABbdR7hEEf2DwZIophakcdpWAeB2PbZiujGsPab9O2m9oxm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j94Cws2g; arc=none smtp.client-ip=209.85.160.169
+	s=arc-20240116; t=1756366451; c=relaxed/simple;
+	bh=KunA+ClFMMc2AGmooKotn9jUWmNj9tiso6TLGErh3uk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=c5FtKjt2mlCTqDA6oGlmuuqFeRN4GD+yr4/NswzgKGLEKmxgT+6nURIoSh7icASbFGsy0xOOqiBNE+x7mpdpwplKTQ7ITbKIxrldJ0Yn6vTfU7HS6HxknRpdbG7aQNJ9Fi4BOdaVi8U1qRJ2PVJobMcAb+yFv/fx8peVziMAtow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VfaMs52u; arc=none smtp.client-ip=209.85.210.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j94Cws2g"
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-4b297962b9cso6298541cf.2;
-        Thu, 28 Aug 2025 00:00:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VfaMs52u"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-76e4fc419a9so697543b3a.0;
+        Thu, 28 Aug 2025 00:34:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1756364423; x=1756969223; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qVR0d4WpbShciuNT/b54V9sqHVLPJVoLEvkbaEwtQlo=;
-        b=j94Cws2gfI2f15P/lGoKu6OpUZJcoLUpjFEEekqBOPsaSni8eu0mBvMD7fb2uHW2r4
-         BUc6rxMX8slb8L83uiZ9peadLJt42M6zJYIhmYAyWq55E0rw2usczrrH1c5otI7y2VLe
-         GUKI5Eq7uEy3EMGR70FZymWTICIQX6ErGQUTE85hFOkotRPkG1I1gQ+H84xlsbpVrF7r
-         sM3eV8TTGWtCs1f4TrN7KVu9Bgv1b7g3qsDcWbC4JiiI80Ee0OKRXWEARSngCx7LEyzu
-         4S4FT/g/eHvO/3dsjYN81wqNw3mcejNtewHK/zXZp/4SHspw9mQIFYPqgB5+ySr5G3SB
-         nmiA==
+        d=gmail.com; s=20230601; t=1756366449; x=1756971249; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=j+wvbIZSOArG9eklWNCAJ/EwS6c50oTh0cISY2nYyU4=;
+        b=VfaMs52uGvNjg5Hmj9IxtqqJCQgpfoztu7/Fa2c5oeUViIChZoH1X55eW6uZ8GGjxn
+         lo8PqWIt7gVgRCgWgjdGwgfSaXfVMS2Dw+nGy6la9yOrNPOK8cROwwsiY4e2ufHDn8qb
+         K1Hxa2VksEFJzXXVyWE0I5WufF25fPZePXioq+bO5tTUWEtypQ/2iDyBt2Q7Pn0CcLRy
+         r2+YsfamI494HcIBfBDkJT8bRXfu9nceCqZJjYAUEkt1wl/Ce7m7aXl+gy17BNt2yUXQ
+         iBKbxl0cazKTeBj9j9gKECTeApDL9Ubv2oYao9AQpXLPiWYbU94efcIovwSxEMC9H3lG
+         c9WA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756364423; x=1756969223;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qVR0d4WpbShciuNT/b54V9sqHVLPJVoLEvkbaEwtQlo=;
-        b=V64n/nSB2QD66DDBbGdTVqg5/L+kEn0BvLN3usbVjHdaulItKhxEMAMMPQWWO3vw3Q
-         pUDDD3N+RURm520XO/2HGSQ9uHcIiaKW2Ow8SrAM84VF8R2CCWrReu1E+fz5cKjGg321
-         WZG6n3O1qYVQ7qiY6C+q50viETa+S1EvvOg/j6Xhtocf8y+1C2aYSr6xyhs2aJTbuD9G
-         EozLy5yMl/sMO15t8MgBozaW/HpnArCep38H+gnGhQlI3BljINTE1bfTNfwPaxoJCgV1
-         seFs/DeNfeQvAIv51isPCgu/hxdg86VCh3ZZTZGmwg8oKytXowCXv/JPJcsnsFDeZQ6i
-         DKEg==
-X-Forwarded-Encrypted: i=1; AJvYcCVGd3pETrGQrplOD/5o06KjQQolO4/iYB8zx56RDVIRs2p87vE1UTcKsSZJLTuAu8sla9ZuWI2Zaj5B61I=@vger.kernel.org, AJvYcCXJYuEInvmMPCDK4zcwvnyf7dl6CxOQ1YebCKFwvzcjECpuwq0ZqVCZ59yupUvUwDotNfV2oWdldHp7psZCl3Pr6clY@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPX1lKmOjmTtDAC59bw2rB5pF/7XPhkKBZE8yQ1uz6rnhOw1hD
-	S9nTq57/fHKhWmFuJS/rB2vRp+r8R6RNvZv2DigEhMihUvNgdQqrLHsLZMsFAI6ovkndpKDqYvp
-	vQl3neaUhcoaAxdSAfCU4RvF0xcTOBwg=
-X-Gm-Gg: ASbGncuNM0/PUWlXC7BImy4F6VA0XbK3v9JDnjrhiVfQ8fi6+NUi2gdYgyRVJMRgYBu
-	eBgjlB+rvHBqGypdx2BrbU7ya4YXMRDTwPxFLaVNZbKU7whhlWxynb1DorzRR3HYWI5TZYeBZVp
-	0nKaqmBvjjMi2JTkRcwF3eMpNdQifvXt0TivKgx8TLSj7HozahJBCENvNqndgjCzCeuIAPBxaTj
-	K8kWy9Aov73AeSmsqY=
-X-Google-Smtp-Source: AGHT+IGwbRAS5Hnp4SPE2EKshAUJSh3gq1yFkD5zthp2GbV7EgQueIxZunecNm8uu4t5nHoNj5CbxGYpBAijsl2FGB8=
-X-Received: by 2002:a05:622a:5e09:b0:4b2:cf75:bf10 with SMTP id
- d75a77b69052e-4b2cf75c106mr113268761cf.17.1756364422979; Thu, 28 Aug 2025
- 00:00:22 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1756366449; x=1756971249;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=j+wvbIZSOArG9eklWNCAJ/EwS6c50oTh0cISY2nYyU4=;
+        b=fk+Il8zc8oZny5jYujEaA/4YOQPIlQ3uU/L8xSLedw4G5/mNlgTFIyS2rxGp8H1yNZ
+         VSzr+xZ4x9JaTgwBtaIRUGNM69R4JF1Nvh7ygGqBV3W3rj6Sus/DcfYLsxt447TCcobf
+         /ctrPsMjTgc6wRBJ/i87Dt4SAX4NoIa9jZNTwpTs9stLeqcqBrCbkUFfdXxxpH5Qvivo
+         4cNyHQ4ant46IWOsBPseRr43Dov6HnJWLorUsGoTHORJ0UjxcpDOxaJWdD1WTiq7uh2i
+         NxPAZlxehWCA8YjmL2q6Rq8BZdKETqgQIBlqvKGmbeD4eaeFGnXDtQUnRI+vwqBOFL/Z
+         4zpA==
+X-Forwarded-Encrypted: i=1; AJvYcCVBmjWKXZWLf/m1qhAPheBmjctgzPK6tQMGV5IPOnmwERAhVylYTcBFR78FNXMTmer2iJlhRc2BRkEbR473wOHQ9XQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzsqdl8RlOm5KIsnWRRXVtSKfFLThYmXoxbowbjn5ZAI4J9hKbb
+	HFx0kNnTe11W/vR0oCa7qbZf8VFqMCVnaJI2rSfB4o7mwHkcsGs9zX7B
+X-Gm-Gg: ASbGncvDJBHxC+Ipqw2q/KAiHAxlHqNO/YbzxMYC7ED5l56J2r3749GuICZAYTl2zw2
+	gGtrBH2Q3iaso42/CJXwM+/hR0XV33r7sJ6N35h4aYxOyKRDHVCOt4i5LlS5OpuuSJKjxhJ0CDO
+	q+xgJy+ToYMS3G2k3UlR6kS7N9Yw8wsrNxz/hNBH/s9DyxnJB5WZn6pBvjj6lg6VFdZouAQmLWD
+	wrk+bYmYaP7sSj9QKk+h+wv/V0WhSMoFh3/MZdv8SNHD0GvL7Nj94L6DM5y2B1XQTSZuiVC+UtO
+	Ig3xXtUyVqs9+gSPJKBNpcCKWdiaBv8woQpej/k7hQNdTNOPKm0qEps25vxWI7xkj/gScT99xXK
+	9LoISY4jgc78JP4MGsORWTO4V5pSYEkW8Yec/J1SPaan52uSU1Q==
+X-Google-Smtp-Source: AGHT+IE0Bj834whDXotueWX71WpNaH0hF1RPeXxQmdcXuHEqPvv59XyUYnfM+JaBPoGK6bm6cgZ0lA==
+X-Received: by 2002:a05:6a20:7d9a:b0:234:3932:2958 with SMTP id adf61e73a8af0-24340c47a88mr31770311637.20.1756366448736;
+        Thu, 28 Aug 2025 00:34:08 -0700 (PDT)
+Received: from localhost.localdomain ([103.88.46.62])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b49cb8afb7bsm13182613a12.16.2025.08.28.00.34.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Aug 2025 00:34:08 -0700 (PDT)
+From: Jinchao Wang <wangjinchao600@gmail.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	"Naveen N . Rao" <naveen@kernel.org>,
+	linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Jinchao Wang <wangjinchao600@gmail.com>
+Subject: [PATCH 00/17] mm/ksw: Introduce real-time Kernel Stack Watch debugging tool
+Date: Thu, 28 Aug 2025 15:32:33 +0800
+Message-ID: <20250828073311.1116593-1-wangjinchao600@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250820112621.4045-1-xuewen.yan@unisoc.com> <CAJuCfpE1pJ8qhHgqvExktsMeTBbtVSK2rkE5SfeTE2nOYrNozQ@mail.gmail.com>
- <CAB8ipk8ywWv8j8OGugXjhwcZXj567LKULhLz7HS8Btx-_27yBQ@mail.gmail.com> <CAJuCfpGH4UKmuaVMAE-CCPo-J-Qzufs55_DDR0bPbzyOC8-deg@mail.gmail.com>
-In-Reply-To: <CAJuCfpGH4UKmuaVMAE-CCPo-J-Qzufs55_DDR0bPbzyOC8-deg@mail.gmail.com>
-From: Xuewen Yan <xuewen.yan94@gmail.com>
-Date: Thu, 28 Aug 2025 15:00:12 +0800
-X-Gm-Features: Ac12FXwmEL1fWca1OtEvYTZnRoz-jLpoejzs5O82uVMaxXWiOIwVTBYFdC94SE0
-Message-ID: <CAB8ipk8PZoMyNstOssfwscCgdZ2E_dTtThH94QAjwEGEWAR23Q@mail.gmail.com>
-Subject: Re: [RFC PATCH V2] sched: psi: Add psi events trace point
-To: Suren Baghdasaryan <surenb@google.com>
-Cc: Xuewen Yan <xuewen.yan@unisoc.com>, hannes@cmpxchg.org, peterz@infradead.org, 
-	mathieu.desnoyers@efficios.com, mhiramat@kernel.org, rostedt@goodmis.org, 
-	mingo@redhat.com, juri.lelli@redhat.com, vincent.guittot@linaro.org, 
-	dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de, 
-	vschneid@redhat.com, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, ke.wang@unisoc.com, yuming.han@unisoc.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Aug 27, 2025 at 8:57=E2=80=AFAM Suren Baghdasaryan <surenb@google.c=
-om> wrote:
->
-> On Fri, Aug 22, 2025 at 6:51=E2=80=AFPM Xuewen Yan <xuewen.yan94@gmail.co=
-m> wrote:
-> >
-> > Hi Suren,
-> >
-> > Thanks for your review:)
-> >
-> > On Thu, Aug 21, 2025 at 3:51=E2=80=AFAM Suren Baghdasaryan <surenb@goog=
-le.com> wrote:
-> > >
-> > > On Wed, Aug 20, 2025 at 4:28=E2=80=AFAM Xuewen Yan <xuewen.yan@unisoc=
-.com> wrote:
-> > > >
-> > > > Add trace point to psi triggers. This is useful to
-> > > > observe the psi events in the kernel space.
-> > > >
-> > > > One use of this is to monitor memory pressure.
-> > > > When the pressure is too high, we can kill the process
-> > > > in the kernel space to prevent OOM.
-> > > >
-> > > > Signed-off-by: Xuewen Yan <xuewen.yan@unisoc.com>
-> > > > ---
-> > > > v2:
-> > > > -fix compilation error;
-> > > > -export the tp;
-> > > > -add more commit message;
-> > > > ---
-> > > >  include/trace/events/sched.h | 5 +++++
-> > > >  kernel/sched/psi.c           | 4 ++++
-> > > >  2 files changed, 9 insertions(+)
-> > > >
-> > > > diff --git a/include/trace/events/sched.h b/include/trace/events/sc=
-hed.h
-> > > > index 7b2645b50e78..d54db5fcbca2 100644
-> > > > --- a/include/trace/events/sched.h
-> > > > +++ b/include/trace/events/sched.h
-> > > > @@ -896,6 +896,11 @@ DECLARE_TRACE(sched_set_need_resched,
-> > > >         TP_PROTO(struct task_struct *tsk, int cpu, int tif),
-> > > >         TP_ARGS(tsk, cpu, tif));
-> > > >
-> > > > +struct psi_trigger;
-> > > > +DECLARE_TRACE(psi_event,
-> > >
-> > > DECLARE_TRACE will create a tracepoint but will not export it in the
-> > > tracefs. Why should we not have it in the tracefs?
-> >
-> > I haven't figured out what content should be displayed in the trace yet=
-.
-> > Until this is fully determined, I think it might be a better option to
-> > just export the tracepoint and let users add their own hooks to print
-> > the content they need.
->
-> You can report what you think makes sense today for this tracepoint.
-> Tracepoints can be enhanced later if needed since their format is
-> exported to the userspace and well-designed userspace parsers should
-> be able to parse new fields.
+This patch series introduces **KStackWatch**, a lightweight kernel debugging tool 
+for detecting kernel stack corruption in real time.
 
-Okay, I would change this to be tracepoint.
+The motivation comes from scenarios where corruption occurs silently in one function 
+but manifests later as a crash in another. Using KASAN may not reproduce the issue due
+to its heavy overhead. with no direct call trace linking the two. Such bugs are often
+extremely hard to debug with existing tools.
+I demonstrate this scenario in **test2 (silent corruption test)**.
 
->
-> >
-> > >
-> > > > +       TP_PROTO(struct psi_trigger *t),
-> > > > +       TP_ARGS(t));
-> > > > +
-> > > >  #endif /* _TRACE_SCHED_H */
-> > > >
-> > > >  /* This part must be outside protection */
-> > > > diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
-> > > > index 59fdb7ebbf22..f06eb91a1250 100644
-> > > > --- a/kernel/sched/psi.c
-> > > > +++ b/kernel/sched/psi.c
-> > > > @@ -141,6 +141,8 @@
-> > > >  #include <linux/psi.h>
-> > > >  #include "sched.h"
-> > > >
-> > > > +EXPORT_TRACEPOINT_SYMBOL_GPL(psi_event_tp);
-> > >
-> > > So, are you planning to attach some handler to this trace event in yo=
-ur driver?
-> >
-> > Yes, our modules would attach a handler to observe the memory pressure.
-> >
-> > >
-> > > > +
-> > > >  static int psi_bug __read_mostly;
-> > > >
-> > > >  DEFINE_STATIC_KEY_FALSE(psi_disabled);
-> > > > @@ -509,6 +511,8 @@ static void update_triggers(struct psi_group *g=
-roup, u64 now,
-> > > >                 if (now < t->last_event_time + t->win.size)
-> > > >                         continue;
-> > > >
-> > > > +               trace_psi_event_tp(t);
-> > >
-> > > This should only be done if the below cmpxchg() check is true, right?
-> > > Otherwise it will not match with what userspace is receiving.
-> >
-> > If we put it below cmpxchg() check, we may lose some event before the
-> > user space repose the signal.
-> > Because the t->event needs to be set to 0 again.
-> > In order to ensure that all events are displayed, it is better to put
-> > it before the cmpxchg.
->
-> Huh? Are you modifying the t->event inside your handler?! If so, that
-> is unacceptable and I will NAK this change. A driver should not
-> interfere with core kernel mechanisms.
+KStackWatch works by combining a hardware breakpoint with kprobe and fprobe.
+It can watch a stack canary or a selected local variable and detects the moment the 
+corruption actually occurs. This allows developers to pinpoint the real source rather 
+than only observing the final crash.
 
-Sorry for missing this, the next patch, I would export some variables
-instead of the pointer of t...
+Key features include:
 
-Thanks!
+  - Lightweight overhead with minimal impact on bug reproducibility  
+  - Real-time detection of stack corruption  
+  - Simple configuration through `/proc/kstackwatch`  
+  - Support for recursive depth filter  
 
->
-> >
-> > Thanks!
-> >
-> > >
-> > > > +
-> > > >                 /* Generate an event */
-> > > >                 if (cmpxchg(&t->event, 0, 1) =3D=3D 0) {
-> > > >                         if (t->of)
-> > > > --
-> > > > 2.25.1
-> > > >
+To validate the approach, the patch includes a test module and a test script.
+
+---
+This series builds on the previously proposed RFC[1] and incorporates feedback. The
+changes are as follows:
+
+Core Implementation
+
+  *   Replaced kretprobe with fprobe for function exit hooking, as suggested
+      by Masami Hiramatsu.
+  *   Introduced per-task depth logic to track recursion across scheduling
+  *   Removed the use of workqueue for a more efficient corruption check
+  *   Reordered patches for better logical flow
+  *   Simplified and improved commit messages throughout the series
+  *   Removed initial archcheck which should be improved later
+
+
+Testing and Architecture
+
+  *   Replaced the multiple-thread test with silent corruption test
+  *   Split self-tests into a separate patch to improve clarity.
+
+Maintenance
+  *   Added a new entry for KStackWatch to the MAINTAINERS file.
+
+[1] https://lore.kernel.org/lkml/20250818122720.434981-1-wangjinchao600@gmail.com/
+---
+
+The series is structured as follows:
+Jinchao Wang (17):
+  mm/ksw: add build system support
+  mm/ksw: add ksw_config struct and parser
+  mm/ksw: add /proc/kstackwatch interface
+  mm/ksw: add HWBP pre-allocation support
+  x86/HWBP: introduce arch_reinstall_hw_breakpoint() for atomic context
+  mm/ksw: add atomic watch on/off operations
+  mm/ksw: add stack probe support
+  mm/ksw: implement stack canary and local var resolution logic
+  mm/ksw: add per-task recursion depth tracking
+  mm/ksw: coordinate watch and stack for full functionality
+  mm/ksw: add self-debug functions for kstackwatch watch
+  mm/ksw: add test module
+  mm/ksw: add stack overflow test
+  mm/ksw: add simplified silent corruption test
+  mm/ksw: add recursive corruption test
+  tools/kstackwatch: add interactive test script for KStackWatch
+  MAINTAINERS: add entry for KStackWatch (Kernel Stack Watch)
+
+ MAINTAINERS                           |   6 +
+ arch/x86/include/asm/hw_breakpoint.h  |   1 +
+ arch/x86/kernel/hw_breakpoint.c       |  50 +++++
+ mm/Kconfig.debug                      |  20 ++
+ mm/Makefile                           |   1 +
+ mm/kstackwatch/Makefile               |   8 +
+ mm/kstackwatch/kernel.c               | 260 +++++++++++++++++++++++
+ mm/kstackwatch/kstackwatch.h          |  53 +++++
+ mm/kstackwatch/kstackwatch_test.c     | 261 +++++++++++++++++++++++
+ mm/kstackwatch/stack.c                | 289 ++++++++++++++++++++++++++
+ mm/kstackwatch/watch.c                | 177 ++++++++++++++++
+ tools/kstackwatch/kstackwatch_test.sh | 118 +++++++++++
+ 12 files changed, 1244 insertions(+)
+ create mode 100644 mm/kstackwatch/Makefile
+ create mode 100644 mm/kstackwatch/kernel.c
+ create mode 100644 mm/kstackwatch/kstackwatch.h
+ create mode 100644 mm/kstackwatch/kstackwatch_test.c
+ create mode 100644 mm/kstackwatch/stack.c
+ create mode 100644 mm/kstackwatch/watch.c
+ create mode 100644 tools/kstackwatch/kstackwatch_test.sh
+
+-- 
+2.43.0
+
