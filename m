@@ -1,88 +1,124 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE8ED286D69;
-	Thu, 28 Aug 2025 20:51:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07495223DDD;
+	Thu, 28 Aug 2025 20:54:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756414304; cv=none; b=NxSujv9GrzaqP/2CJj0lEhETjkeq5R08FLeNSPH3xZjDNRX/1Ebeqzm3t1+qz4APbUK51kU5rHjkvY5wOwKcuIScevJ7Ke+ZDHPARSF3Wei0fTG3hy/8uObd+vGQPQw2Z5tDZJ8BBT7UQQZAWKcuSombKaubnE4XxH4q+L0j58g=
+	t=1756414482; cv=none; b=o27mp3fSJ7+lhArDJEfixvWqnu9kJ5R28lVrlDvH5JnANODNuOHJ/M8XqMstnx3+u7pZ09TapZXqOdJpdkOR5T+LhptjT0sYmKFj2SghSndic4OvAu3iQRpmXCXvWU9Acc9htSde+FBaZ8KHpptfWaSIYLELYRkPj2lqQwZy7ys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756414304; c=relaxed/simple;
-	bh=FxH/pDnOssLoWeo5YWzH6Hmb4odFQlWNIVnuiWhowJY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QoczENwMBKOsK5SO+sineGJtCih5JRtOQ/dBcqJJIfpqqAKJ39rMnJiKH1RnzVzJW1zMX2Foy0YwcQAxSU6qjSaojat/Q8L2+uI9gf4nN6VkkPGJTOjkg+m6ihENh0Q+BxMw2Y51jcREh47JYIeEDlaj2jHPKME9h1xulNQCS8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GmxGqgFr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1756414482; c=relaxed/simple;
+	bh=G+6sPUUIFuKNkRdpDGh7oyzJRLExx6mM3Rr0TsrNav4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UJW2k16/lx3tF73mcM3NJo3nTqKqXeeoz6Un3pBSVZoeHksTZ5pOD27trkunvUBkmh6qw6Q/bF+ky/y2+I71iVzUPmp3NAov6uJ9KwqqYGjzoInKW/Afx/l0OsyPCJ77N1t+HjnMXmCm9JqIwj7KxhqAFsS7UA3p8s55i2f0I70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sCjN9TPm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GmxGqgFr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A85EEC4CEEB;
-	Thu, 28 Aug 2025 20:51:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sCjN9TPm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF632C4CEEB;
+	Thu, 28 Aug 2025 20:54:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756414304;
-	bh=FxH/pDnOssLoWeo5YWzH6Hmb4odFQlWNIVnuiWhowJY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=GmxGqgFryDHYc//IDjodBcWsQvNgkmjwd/lgo2PrvKO9PiXgFbEN6It8ETfcCYsXw
-	 NU51DFZ1nnVyh5DB0A5tFSH6yvXBdfQ2Zm79NuLMtzYhOIWzddrwJKcwulCQM2wmma
-	 n2G5GP+r4wGCACqxsgtecMmyCPXHaioUUtFChXLDK2fgM/aHwbq3An+RT66WZASVXa
-	 Hb3Jj+WmwjgXhIxynm5lEmouFDf8SlOrSi5sz3TqnzAmaRlfVznD/PPR0a9D+N8/yO
-	 1thagHK7hWIpLkZ8dc/zmmVHNozxCAHlLVjKihyExVeCLv7yudGg7VXUFRCszrqaAu
-	 C6zn1d1UPd5Mg==
-Date: Thu, 28 Aug 2025 16:51:39 -0400
-From: Steven Rostedt <rostedt@kernel.org>
-To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org, x86@kernel.org, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jiri Olsa
- <jolsa@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung
- Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Andrii
- Nakryiko <andrii@kernel.org>, Indu Bhagat <indu.bhagat@oracle.com>, "Jose
- E. Marchesi" <jemarch@gnu.org>, Beau Belgrave <beaub@linux.microsoft.com>,
- Jens Remus <jremus@linux.ibm.com>, Andrew Morton
- <akpm@linux-foundation.org>, Florian Weimer <fweimer@redhat.com>, Sam James
- <sam@gentoo.org>, Kees Cook <kees@kernel.org>, Carlos O'Donell
- <codonell@redhat.com>
-Subject: Re: [PATCH v6 5/6] tracing: Show inode and device major:minor in
- deferred user space stacktrace
-Message-ID: <20250828165139.15a74511@batman.local.home>
-In-Reply-To: <583E1D73-CED9-4526-A1DE-C65567EA779D@gmail.com>
-References: <20250828180300.591225320@kernel.org>
-	<20250828180357.223298134@kernel.org>
-	<CAHk-=wi0EnrBacWYJoUesS0LXUprbLmSDY3ywDfGW94fuBDVJw@mail.gmail.com>
-	<D7C36F69-23D6-4AD5-AED1-028119EAEE3F@gmail.com>
-	<CAHk-=wiBUdyV9UdNYEeEP-1Nx3VUHxUb0FQUYSfxN1LZTuGVyg@mail.gmail.com>
-	<20250828161718.77cb6e61@batman.local.home>
-	<583E1D73-CED9-4526-A1DE-C65567EA779D@gmail.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=k20201202; t=1756414481;
+	bh=G+6sPUUIFuKNkRdpDGh7oyzJRLExx6mM3Rr0TsrNav4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sCjN9TPmsmkv2CErZmw7eY4jhfo/PPQcCij3sdHoAaturic23UjSbV5/eD841QBrO
+	 q5lqa5UXldETsQDMVxoOfW90mr401cd2aNU4qwzO6IO/5MHaurrX5r01OojjZShQEf
+	 15Kqtld44h3aDOleBeJLOpcwjkQTTYAEhyrx8SC3goTrfnxyjVjHpigzIsE/EQK5r7
+	 FqO3qkArHFFA2cKutZwYB5+zz+dbLtckQEfa3MaBKs+Sg/PNA0jXRALMJBXOlqNLWJ
+	 BYklmKx3JSZ1NevsWbUBFS2Jp771ITiW6KubcU3EOHWT7p/JyrZiu2Mj04cW80QHY7
+	 3fGPgcRndIPdQ==
+Date: Thu, 28 Aug 2025 14:54:35 -0600
+From: Keith Busch <kbusch@kernel.org>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Leon Romanovsky <leon@kernel.org>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Abdiel Janulgue <abdiel.janulgue@gmail.com>,
+	Alexander Potapenko <glider@google.com>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Christoph Hellwig <hch@lst.de>, Danilo Krummrich <dakr@kernel.org>,
+	iommu@lists.linux.dev, Jason Wang <jasowang@redhat.com>,
+	Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
+	Jonathan Corbet <corbet@lwn.net>, Juergen Gross <jgross@suse.com>,
+	kasan-dev@googlegroups.com, linux-block@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, linux-nvme@lists.infradead.org,
+	linuxppc-dev@lists.ozlabs.org, linux-trace-kernel@vger.kernel.org,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>, rust-for-linux@vger.kernel.org,
+	Sagi Grimberg <sagi@grimberg.me>,
+	Stefano Stabellini <sstabellini@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	virtualization@lists.linux.dev, Will Deacon <will@kernel.org>,
+	xen-devel@lists.xenproject.org
+Subject: Re: [PATCH v4 15/16] block-dma: properly take MMIO path
+Message-ID: <aLDCC4rXcIKF8sRg@kbusch-mbp>
+References: <cover.1755624249.git.leon@kernel.org>
+ <642dbeb7aa94257eaea71ec63c06e3f939270023.1755624249.git.leon@kernel.org>
+ <aLBzeMNT3WOrjprC@kbusch-mbp>
+ <20250828165427.GB10073@unreal>
+ <aLCOqIaoaKUEOdeh@kbusch-mbp>
+ <20250828184115.GE7333@nvidia.com>
+ <aLCpqI-VQ7KeB6DL@kbusch-mbp>
+ <20250828191820.GH7333@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250828191820.GH7333@nvidia.com>
 
-On Thu, 28 Aug 2025 17:27:37 -0300
-Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com> wrote:
-
-> >I would love to have a hash to use. The next patch does the mapping
-> >of the inode numbers to their path name. It can  
+On Thu, Aug 28, 2025 at 04:18:20PM -0300, Jason Gunthorpe wrote:
+> On Thu, Aug 28, 2025 at 01:10:32PM -0600, Keith Busch wrote:
+> > 
+> > Data and metadata are mapped as separate operations. They're just
+> > different parts of one blk-mq request.
 > 
-> The path name is a nice to have detail, but a content based hash is
-> what we want, no?
-> 
-> Tracing/profiling has to be about contents of files later used for
-> analysis, and filenames provide no guarantee about that.
+> In that case the new bit leon proposes should only be used for the
+> unmap of the data pages and the metadata unmap should always be
+> unmapped as CPU?
 
-I could add the build id to the inode_cache as well (which I'll rename
-to file_cache).
+The common path uses host allocated memory to attach integrity metadata,
+but that isn't the only path. A user can attach their own metadata with
+nvme passthrough or the recent io_uring application metadata, and that
+could have been allocated from anywhere.
 
-Thus, the user stack trace will just have the offset and a hash value
-that will be match the output of the file_cache event which will have
-the path name and a build id (if one exists).
+In truth though, I hadn't tried p2p metadata before today, and it looks
+like bio_integrity_map_user() is missing the P2P extraction flags to
+make that work. Just added this patch below, now I can set p2p or host
+memory independently for data and integrity payloads:
 
-Would that work?
-
--- Steve
+---
+diff --git a/block/bio-integrity.c b/block/bio-integrity.c
+index 6b077ca937f6b..cf45603e378d5 100644
+--- a/block/bio-integrity.c
++++ b/block/bio-integrity.c
+@@ -265,6 +265,7 @@ int bio_integrity_map_user(struct bio *bio, struct iov_iter *iter)
+ 	unsigned int align = blk_lim_dma_alignment_and_pad(&q->limits);
+ 	struct page *stack_pages[UIO_FASTIOV], **pages = stack_pages;
+ 	struct bio_vec stack_vec[UIO_FASTIOV], *bvec = stack_vec;
++	iov_iter_extraction_t extraction_flags = 0;
+ 	size_t offset, bytes = iter->count;
+ 	unsigned int nr_bvecs;
+ 	int ret, nr_vecs;
+@@ -286,7 +287,12 @@ int bio_integrity_map_user(struct bio *bio, struct iov_iter *iter)
+ 	}
+ 
+ 	copy = !iov_iter_is_aligned(iter, align, align);
+-	ret = iov_iter_extract_pages(iter, &pages, bytes, nr_vecs, 0, &offset);
++
++	if (blk_queue_pci_p2pdma(q))
++		extraction_flags |= ITER_ALLOW_P2PDMA;
++
++	ret = iov_iter_extract_pages(iter, &pages, bytes, nr_vecs,
++					extraction_flags, &offset);
+ 	if (unlikely(ret < 0))
+ 		goto free_bvec;
+ 
+--
