@@ -1,63 +1,63 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A53CD2DF6E6;
-	Thu, 28 Aug 2025 07:34:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 498D92E040F;
+	Thu, 28 Aug 2025 07:34:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756366465; cv=none; b=FseGJDC+TKOwLRGsdoH7qqk8qBTfb8Dm0eFj21mNLy05Dvs6RMmBZ3AEBQGaujL/uTbr3jteeFbGUY4JyjTrJu9MhAcu+gfz23SBj1+SAzHq07tMhgkZbyg0B8asOqaZ6JKsR3AONy+4vQ5GnLZ1dbnZqcnD6kykYuRgprZ/dAE=
+	t=1756366470; cv=none; b=g67h/2qi5HUX5rAdySNbCcLypOQ+vQkiHBZN+FhAaUJ72w2l6p56MH/d9Ytw+4jMVKg0LCed+Qt7ZGLVhrZQr+3BXQfhlBKvZsehU/WNSYbI/aXzIj1EYkOiPyWzTQfgq+ehqQ0b3OQOLJ9oArduB5O7wrB/nGFilar0ajL9mpo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756366465; c=relaxed/simple;
-	bh=rufIEWmrAKLQ+mfcV5W+4Uljip8z5lF1CAVZ2QbsVZM=;
+	s=arc-20240116; t=1756366470; c=relaxed/simple;
+	bh=4PtaQ74SJJPVLMYDACBxzq/zXR+p3d86HHwkF6eNxxw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WlQx+RaSgsAmPB9+xmy/b3Xm2m/wzoCHFMi/HneKjNqHFyW0zZGE6Hr2SGIX1dKyRHuERmZmrWpAzFZO8GL1dVw57sUXycGC2922iN1dzqbuxAXaED4CDSO24UnITT+3HmANRngYKP1lwUWNElBotcj2w+RlWlVbM/8HY6G8t78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hIT7mrfu; arc=none smtp.client-ip=209.85.216.53
+	 MIME-Version; b=MD5Sz5nirKZqWfK/IkelA4TPmsYmfyr07EN3+CH0MIbfCMRiFqXyhea2IjPfEti0Eaw8b6iSwtDz3HkR4hmei/3GqyrdVn11w7hQSXtU9ipskELOGy57xq7m7tSzFXFLQaj48JEywYARUr15q7OSK/oDel8uFDhtMTXtLrZa/tI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bUQwbD9l; arc=none smtp.client-ip=209.85.214.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hIT7mrfu"
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-324e6daaa39so674718a91.0;
-        Thu, 28 Aug 2025 00:34:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bUQwbD9l"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-248dc002bbaso3272205ad.1;
+        Thu, 28 Aug 2025 00:34:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1756366463; x=1756971263; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1756366466; x=1756971266; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=06EnX4xNHqiA4W3dBLh6+8AEySVO628YRMoxqtZgpzs=;
-        b=hIT7mrfuPxaCiMuyeLR+JgUncHBIBjmoy9XGk4+qZbp+EAeWmR1Z9alOUQLf4VWPOM
-         PClQRGUPBaTNx/uQ2Nv63/gzPbY4d8YKCkfltMotppKIfl29ZPC1+VSGrEHFgROkQpsr
-         c+mBMZjQ6QmnOaF6CFJAJ33I5yaf5Si0rUyNaj1/gBUK0cngLq7g9tg7GGuf9h/HlHR2
-         xqhqKocSyqcQsiiLl0etO7Teadkwqibk7EjPA5jzWop2tlCiiMKSXcv0fIcP2SibPceu
-         JDutNJLi+JmLuRMHiAjeVRToWIolIPQK54tFfGaPRtWn8Mi0wk10LX+NPvHeafj/8CaZ
-         tE9Q==
+        bh=BQYOiNSD0BVFYt8LJn6Fepybq7p8FLHlj9qtf7JwQoI=;
+        b=bUQwbD9lMuoyP2w30lTwK0hBzlrtkuyJnseJ7gaycI3XfV44uhJZuQ3pJcz7Bd0oAI
+         NYs5YebXCbnC4Q/0k5p64oUNz9NXDX3p/DSEA2/kCbWyijVqbzlHefOQiDeQhiH35O6f
+         Xo2hHU5nv2NGTw1ohUPsJ13Zt3mKR//CicRaatSNcQlok1dy1fiu0cLkvV5ExF8pfFVw
+         nSYvY/9oYik/KUu0zqwF+ewqKr27Z8c1dUaYyASBUiXmCp9sjqvmXwMeDI1vFOd8VlPz
+         ulwCM4C3LisO/NxBTYF78A4Y6s+BJKo8J3VK1gvsXuUGse4WBsUUgXRRD0+Uh5QAG52q
+         ifLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756366463; x=1756971263;
+        d=1e100.net; s=20230601; t=1756366466; x=1756971266;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=06EnX4xNHqiA4W3dBLh6+8AEySVO628YRMoxqtZgpzs=;
-        b=N0sLLyoEXP5qLuu9L9tUAzSHKQjj90R249S9XqwsPv9TTva/c6bdCBSZ82teTKfbpa
-         1Nekp+WkC56VaqpBd+QmTv9KJlA7yJ+vut1Jl4edT2JHooggIIa4VKrGm5BYORz7eqA9
-         5oIcXZM8eDLCtJubFxWjXeGEbuqLO23DiOIAbI/riEM8hPeFh/hLRMzDP0qPLfM8WrIu
-         GviTHSUNmyeQCyyDpp9LiHYOgn2u4NhvyLL9atqyZh7uZFhiYVy31HrsbNXFL0gNCr2m
-         peXVEehthgGrw7pRBeMLtMuULAeymOpO1FFit7FZfsyDO1daRzcWcbstCsy07WJ0tFEZ
-         d6Xg==
-X-Forwarded-Encrypted: i=1; AJvYcCV1GIFdp2yGsqTG1/J04+jsRnAC1cbOybrQqevqplwiSKWVgnrVNiNu2fWuV4WBVnGKM+S9UI0r8KqT6l9qdb6o+po=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTRHYbPIo6LWdXOUp6C+Va6hb/tKwiLnESJ/Z+E6uhS3SJjg8G
-	MQBEsYJAyvN7phbVEa/pHZxti2MNXkTiFA6PBhxJH8bOD4MFnpGV+G77
-X-Gm-Gg: ASbGnctFIXJiPQii1eQXLey7UDTrLonAG2S6OD6FhPfszyxz0sAhgkytMyGEmxnwXfb
-	c/w49r0tOzHMlsltWnvvCV1EHcTEvdLcwpSn3H3a7bmhJOd9SBSAKerBbyMhVrmIFY9Oss3UAB/
-	o6NFoLa8U4FJK7oMP770UX5ipEx9bCG0YqFMSfFi73fbD/0Hcx1Dt7JJB9DLuhggt5OzcmSDHlt
-	4z4SMkwJP5Mi6qCfGQVwbeGL/Az4eIruwKHV2t49SRv6qor2YBEIH+/SPGrBByDJXsUvdFM6yeB
-	pBUMgJ4pIduk8J5JL0jrjrSr5vrdUwex+MCKnXeJDGUlCrhBKUe17+7gjWadjpQNJAS2ATJ+t+S
-	kiDlQMjtkp/sYPKjLTCG5/aHAWO/dBsBk8Zsd37CjTodAVA77tw==
-X-Google-Smtp-Source: AGHT+IF3oK1wtDDUKHh7prZzFv/h2WgsQ8uT2JvqKbar3UHoHg6u2L/SgTz5aOR5xgZdGT+bcHmpXA==
-X-Received: by 2002:a17:90b:5823:b0:327:50b2:8007 with SMTP id 98e67ed59e1d1-32750b28118mr9705895a91.32.1756366462755;
-        Thu, 28 Aug 2025 00:34:22 -0700 (PDT)
+        bh=BQYOiNSD0BVFYt8LJn6Fepybq7p8FLHlj9qtf7JwQoI=;
+        b=d9jiIqc5fkUd3is5SPWkT2Qb+wG55XSnqN+Ou3yHqQu4+XYnd9eXddp3b4fX0yVyhz
+         hY3ZqzrGgjHsJwWlKs2DNWpwPKakq/hOURyzDHbhlaBhghy1sUdISH+dsFB3DTiVxYdJ
+         jUbyEIcFZ0tdZVR+KK6Ykfl2W6umbQy1GlpFVd9VQlPLsRSSWn4KECsAyTPcg1emOVTJ
+         72KoRbHrwjzq8f0MDu8fBUAW7AWSOaxll/Kck8cxCRhMXDEaZCQw2UxXXKGbe3C6lhL5
+         GDzQwoolEXDdh0WR2nnFEpCPBzmUwAeHxGlH5qubvVFSwDUvBlxHBdeTTd3nSS1loTtA
+         Y1IA==
+X-Forwarded-Encrypted: i=1; AJvYcCXZX8TukVfVVTFGr/NNDlSFvzG7oxAVmH0iNFD1arpq1YHpTcZoTB4RgeXdKuA3iEdx2gIjeoUwiVPzcw5mn9PBorY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxlADKaQi3nU/UwAXqZB2X6u97zl5biLkAxNhTvmgSQhsRD1p+b
+	qayLlML+arNYo5rg0On7pEZGrp9HNXz95oLkEQFudmD/mal/c01N6fKm
+X-Gm-Gg: ASbGnctZphdlgdRS7s6z+bhHq9JMFjCFxhXZaugkb/WhYtj1KOQU6P/hWt0mEm+teM9
+	MGxE4t2WjyxO0NqKs1e2Yv3btOGTITX+XLNWw8BlkU1iN90veFjrWZrYP8/lDh5d9RpUNDC3NUA
+	fiaWeCEnIXY+V9OCYlRXciLZeStatOqBQSZWR42wgCKKxAZk7u6z8S3yUiYRHhAazcb+YmjJcGq
+	eKGi9TTaOLsXrGeePGKnqrpT+UOoRyNBK0Y3cYktdoynpaISyIi+wdYcBz+KzDmmOCBgkApkHQm
+	vEScOrwZb8Lsz3g9bMqSx/MJG+5rEogRQSBKBONj5roBDQ44UO+ZqFYUyKafd3v/+2gdJ4p3Kct
+	fHCb+jO5cHyNU75lbd6tYiJw5WdpIr4Hv+igaR64wMARws0PD1kBie6phjDt+brTk1/xyQZ0=
+X-Google-Smtp-Source: AGHT+IE4aRaufJVGsSk9bLtr/W5Lqko9zfUO1kQyEX8W4RgjXYJGEEk+9pgg5qU+rFjRTJfPqxplDQ==
+X-Received: by 2002:a17:902:d4d2:b0:248:9964:3796 with SMTP id d9443c01a7336-24899643b24mr70784475ad.43.1756366466373;
+        Thu, 28 Aug 2025 00:34:26 -0700 (PDT)
 Received: from localhost.localdomain ([103.88.46.62])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b49cb8afb7bsm13182613a12.16.2025.08.28.00.34.19
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b49cb8afb7bsm13182613a12.16.2025.08.28.00.34.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Aug 2025 00:34:22 -0700 (PDT)
+        Thu, 28 Aug 2025 00:34:26 -0700 (PDT)
 From: Jinchao Wang <wangjinchao600@gmail.com>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
@@ -66,9 +66,9 @@ To: Andrew Morton <akpm@linux-foundation.org>,
 	linux-trace-kernel@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org,
 	Jinchao Wang <wangjinchao600@gmail.com>
-Subject: [PATCH 04/17] mm/ksw: add HWBP pre-allocation support
-Date: Thu, 28 Aug 2025 15:32:37 +0800
-Message-ID: <20250828073311.1116593-5-wangjinchao600@gmail.com>
+Subject: [PATCH 05/17] x86/HWBP: introduce arch_reinstall_hw_breakpoint() for atomic context
+Date: Thu, 28 Aug 2025 15:32:38 +0800
+Message-ID: <20250828073311.1116593-6-wangjinchao600@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250828073311.1116593-1-wangjinchao600@gmail.com>
 References: <20250828073311.1116593-1-wangjinchao600@gmail.com>
@@ -80,99 +80,92 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Pre-allocate per-CPU hardware breakpoints at init with a dummy address,
-which will be retargeted dynamically in kprobe handler. This avoids
-allocation in atomic contexts.
+Introduce arch_reinstall_hw_breakpoint() to update hardware breakpoint
+parameters (address, length, type) without freeing and reallocating the
+debug register slot.
+
+This allows atomic updates in contexts where memory allocation is not
+permitted, such as kprobe handlers.
 
 Signed-off-by: Jinchao Wang <wangjinchao600@gmail.com>
 ---
- mm/kstackwatch/kstackwatch.h |  6 ++++
- mm/kstackwatch/watch.c       | 62 ++++++++++++++++++++++++++++++++++++
- 2 files changed, 68 insertions(+)
+ arch/x86/include/asm/hw_breakpoint.h |  1 +
+ arch/x86/kernel/hw_breakpoint.c      | 50 ++++++++++++++++++++++++++++
+ 2 files changed, 51 insertions(+)
 
-diff --git a/mm/kstackwatch/kstackwatch.h b/mm/kstackwatch/kstackwatch.h
-index b5f1835586c1..2318779bde70 100644
---- a/mm/kstackwatch/kstackwatch.h
-+++ b/mm/kstackwatch/kstackwatch.h
-@@ -36,4 +36,10 @@ struct ksw_config {
- 	char config_str[MAX_CONFIG_STR_LEN];
- };
+diff --git a/arch/x86/include/asm/hw_breakpoint.h b/arch/x86/include/asm/hw_breakpoint.h
+index 0bc931cd0698..bb7c70ad22fe 100644
+--- a/arch/x86/include/asm/hw_breakpoint.h
++++ b/arch/x86/include/asm/hw_breakpoint.h
+@@ -59,6 +59,7 @@ extern int hw_breakpoint_exceptions_notify(struct notifier_block *unused,
  
-+extern bool panic_on_catch;
-+
-+/* watch management */
-+int ksw_watch_init(struct ksw_config *config);
-+void ksw_watch_exit(void);
-+
- #endif /* _KSTACKWATCH_H */
-diff --git a/mm/kstackwatch/watch.c b/mm/kstackwatch/watch.c
-index cec594032515..e7ed88700b49 100644
---- a/mm/kstackwatch/watch.c
-+++ b/mm/kstackwatch/watch.c
-@@ -1 +1,63 @@
- // SPDX-License-Identifier: GPL-2.0
-+
-+#include <linux/hw_breakpoint.h>
-+#include <linux/kern_levels.h>
-+#include <linux/kprobes.h>
-+#include <linux/printk.h>
-+#include <linux/perf_event.h>
-+#include <linux/sched/debug.h>
-+#include <linux/slab.h>
-+#include <linux/smp.h>
-+#include <linux/stacktrace.h>
-+
-+#include "kstackwatch.h"
-+
-+#define MAX_STACK_ENTRIES 64
-+
-+struct perf_event *__percpu *watch_events;
-+struct ksw_config *watch_config;
-+
-+static unsigned long long watch_holder;
-+
-+static void ksw_watch_handler(struct perf_event *bp,
-+			      struct perf_sample_data *data,
-+			      struct pt_regs *regs)
+ 
+ int arch_install_hw_breakpoint(struct perf_event *bp);
++int arch_reinstall_hw_breakpoint(struct perf_event *bp);
+ void arch_uninstall_hw_breakpoint(struct perf_event *bp);
+ void hw_breakpoint_pmu_read(struct perf_event *bp);
+ void hw_breakpoint_pmu_unthrottle(struct perf_event *bp);
+diff --git a/arch/x86/kernel/hw_breakpoint.c b/arch/x86/kernel/hw_breakpoint.c
+index b01644c949b2..89135229ed21 100644
+--- a/arch/x86/kernel/hw_breakpoint.c
++++ b/arch/x86/kernel/hw_breakpoint.c
+@@ -132,6 +132,56 @@ int arch_install_hw_breakpoint(struct perf_event *bp)
+ 	return 0;
+ }
+ 
++/*
++ * Reinstall a hardware breakpoint on the current CPU.
++ *
++ * This function is used to re-establish a perf counter hardware breakpoint.
++ * It finds the debug address register slot previously allocated for the
++ * breakpoint and re-enables it by writing the address to the debug register
++ * and setting the corresponding bits in the debug control register (DR7).
++ *
++ * It is expected that the breakpoint's event context lock is already held
++ * and interrupts are disabled, ensuring atomicity and safety from other
++ * event handlers.
++ */
++int arch_reinstall_hw_breakpoint(struct perf_event *bp)
 +{
-+	pr_err("========== KStackWatch: Caught stack corruption =======\n");
-+	pr_err("KSW: config %s\n", watch_config->config_str);
-+	show_regs(regs);
-+	pr_err("=================== KStackWatch End ==================\n");
++	struct arch_hw_breakpoint *info = counter_arch_bp(bp);
++	unsigned long *dr7;
++	int i;
 +
-+	if (panic_on_catch)
-+		panic("KSW: Stack corruption detected");
-+}
++	lockdep_assert_irqs_disabled();
 +
-+int ksw_watch_init(struct ksw_config *config)
-+{
-+	struct perf_event_attr attr;
++	for (i = 0; i < HBP_NUM; i++) {
++		struct perf_event **slot = this_cpu_ptr(&bp_per_reg[i]);
 +
-+	hw_breakpoint_init(&attr);
-+	attr.bp_addr = (unsigned long)&watch_holder;
-+	attr.bp_len = HW_BREAKPOINT_LEN_8;
-+	attr.bp_type = HW_BREAKPOINT_W;
-+	watch_events =
-+		register_wide_hw_breakpoint(&attr, ksw_watch_handler, NULL);
-+	if (IS_ERR((void *)watch_events)) {
-+		int ret = PTR_ERR((void *)watch_events);
-+
-+		pr_err("KSW: failed to register wide hw breakpoint: %d\n", ret);
-+		return ret;
++		if (*slot == bp)
++			break;
 +	}
 +
-+	watch_config = config;
-+	pr_info("KSW: watch inited\n");
++	if (WARN_ONCE(i == HBP_NUM, "Can't find a matching breakpoint slot"))
++		return -EINVAL;
++
++	set_debugreg(info->address, i);
++	__this_cpu_write(cpu_debugreg[i], info->address);
++
++	dr7 = this_cpu_ptr(&cpu_dr7);
++	*dr7 |= encode_dr7(i, info->len, info->type);
++
++	/*
++	 * Ensure we first write cpu_dr7 before we set the DR7 register.
++	 * This ensures an NMI never see cpu_dr7 0 when DR7 is not.
++	 */
++	barrier();
++
++	set_debugreg(*dr7, 7);
++	if (info->mask)
++		amd_set_dr_addr_mask(info->mask, i);
++
 +	return 0;
 +}
++EXPORT_SYMBOL_GPL(arch_reinstall_hw_breakpoint);
 +
-+void ksw_watch_exit(void)
-+{
-+	unregister_wide_hw_breakpoint(watch_events);
-+	watch_events = NULL;
-+
-+	pr_info("KSW: watch exited\n");
-+}
+ /*
+  * Uninstall the breakpoint contained in the given counter.
+  *
 -- 
 2.43.0
 
