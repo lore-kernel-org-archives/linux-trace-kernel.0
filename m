@@ -1,110 +1,112 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1582A2FD1C2;
-	Thu, 28 Aug 2025 07:35:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1DBD2FF657
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 28 Aug 2025 08:09:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756366510; cv=none; b=FTiQ/zIoxbFDMeD/5rgw8yO/AkQYOCKog6E3dDczuih30Vcxk0t37Oeo19XDUQBko8K9uGHCTzzVZMmDAZZmolbnXRCPDMgnwO+kZyz5BzKoTFt715EL6zjmA4CV79xKH9Zo1KuixiJhzJEAyQ+sN7qEVsfz+7+ZvAhY4Dj7Ido=
+	t=1756368566; cv=none; b=ntjOjPEeYJ3fR3oZ7I6daieGmJyK9BeLWslcv3CddX089XZn8JXJhI1Mz7ylcn41oAQW+eNidHz+2bgkCK84r62TPQMHfZkZidLXEQ+9hl3SXmnIWH4nLHvm3XaafvbkVsCwO0R9tNNPoKYMasRm1jqOxK79GN2ClPa+g5FNVLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756366510; c=relaxed/simple;
-	bh=8M2/0UwLcXRxMD4ixlU21GMSrgoCNNEd15QxD/byhss=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rCqoC+f/n3c8jb7TDrHyyfiNSYZAo+x/DyoSrtwhGATIlBCGnkugwMp/QxQEKMQ22/WijPCzwfdul5vwMsqCIYkT4ccuXwDD/8Yba6mUHRW00fTOeI1UuEgXj6ldWLPZlZtLE/6oX86WfVkeD02N6KOW8B006R8Pj+V9UkUn1ps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Cox9wtDn; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1756368566; c=relaxed/simple;
+	bh=KWLppW27q/4Diqwf+MBTjS6h1YzQ2wdwo54JdjAjV0A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=F7isaIdnVxUEGV7VfVeWJJaVRgRMdMUOKZp8hHZOWYF3FcalGVFuJd7rGGxdWhhH1CPc4yAUExCc3GMbUNeorPaqgFBTqt7o2LmYWO5oJGgNphNjs93zFrD7KGWlE3385gVR35/g+jVsm52M52F1W30ifwgYWchoMXE7WYj8sOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Xs6Youh+; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cox9wtDn"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-771e1e64fbbso786682b3a.3;
-        Thu, 28 Aug 2025 00:35:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1756366508; x=1756971308; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eP+OdhpAXeM3MeCoK1wrQ3GVDNoiOJzpSPwPKz/ThLg=;
-        b=Cox9wtDne8+LjAmL8OUbPqLfknAWhTGmLu1WLIGOBCOiPt/GJputAsHABFQCwg6Rct
-         1gJFAk7Qt78msPe5Hq45CfE7yEOPtVIFsm73y72Bt22p0+reQjoCl/gL0kDyA++5UE3w
-         8e3p+mjIcFqhWMcsUYil1kgEt0/5NnaIouo9qFQh/uXLgrL3LBP3aVTuv8nxamZbZ+0J
-         ZnYQ/7cWVXXn04O7jTrHPeRL4KcNcHL6BG+gHLu7Jjky5NadPGlSRp9r4GDvMoGgBoOd
-         QtmePwMUpb9qGLOWuAC/thOPV0kDk7qj8Ifh0H0Oi/cHESBzsZd/45SrPOexWVxrtvdv
-         PtDQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Xs6Youh+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1756368562;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=J1X5xYFvxFRrDibTBm3CBqs8PX8cBvU7VPmwkuKPTwg=;
+	b=Xs6Youh+V7UlcSrp8yEtbLMert6EDY6WS6G06DPEXg7W0kC4myVjyvwsU1Bu1bOXM4e8f7
+	Tgv7CQv1KrK618GtVHwuNqArV0xa6qdj46Ih4DguejveMCvrulw8Za5+vTgJth5UTeOSCM
+	JpwDEpzv8Pd95jYc5b+wqcXuvSttH8Q=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-460-9bZr66JLM-SGR621wWRFQQ-1; Thu, 28 Aug 2025 04:09:21 -0400
+X-MC-Unique: 9bZr66JLM-SGR621wWRFQQ-1
+X-Mimecast-MFC-AGG-ID: 9bZr66JLM-SGR621wWRFQQ_1756368560
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-afeeb44fe3fso25587766b.2
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 28 Aug 2025 01:09:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756366508; x=1756971308;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1756368560; x=1756973360;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=eP+OdhpAXeM3MeCoK1wrQ3GVDNoiOJzpSPwPKz/ThLg=;
-        b=JDgB3K2p/JDM/OajNttEi65mzeHrQGKajJno1pJJAggvTJCI/7tcAcMmBy3kE46jIu
-         WshBSH9VEU5APhHmT6VoLWAULShLHZjKMlLxmCcLpfNBJrQPdHUJlw8poFPd5NtRgiTM
-         iqvYcsSeZxF1d8c1z0fZ/BGCvYXGTF1OK9GVNZM9ffbpWX+XQeCGiAGtjhaur7IPKiRT
-         BWEYyVv/nY70Xhj4mETXGm+Vfxm5nyD3OLG0zbdLM0PwqD5b7e83o5kZOL4/L3lxa8bm
-         7v7g4OrsEwnlmnw6H7PM13xjSX2A6t4wRKeaSWp7Tunm1dMxKAlb00OpON9qsZM4X1md
-         fRXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXCU1W+oisOIAHqtJxGKXH6zDemS/Npm8mlOMOXgzKzDTxt2aAtvJsyTrdiqCr8CT3xWclvWW4c2Z37mv96s3iESqo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzl1OdzSqS51ObPJ8vveq3G0zHEWQcH5VigZe1Srta/kbj8Ii0T
-	UuWLeMzQTEJV9WcmZzL2YrqyNaFTHNDk/12QGjdVV4woP2wI5LYfrQme
-X-Gm-Gg: ASbGncuo3bNeTR+Hxwt2D6SpY/W8M7MuQsB1W/T+X9ZaLZe4LFS5lMubr6nxPbbkvA7
-	fIKvsdSxRV/iYF81glo9euJu04vDPkPnHMURFHHyb3yECVi6QjDWgOqorhLWKP9KIKdvEkfmcS7
-	qYqXbZ7oteqqKJPj/TxEQYh8PDs/wMe8Z75w9Mhe3vM3Yt4lw02JfVkv527yg35VL/mDbdZVKLD
-	quykz/mfLrzJDVk+sfeXYhrheDaqTjDwH6mNx+fLFqYhg27MaRrExqO3iftgfTsFW1rTUnYItA/
-	0/SQKkzvvOPlKEN4v37eKD+Kb/619My7v3sur7BFw1aSz1lT3vwD0uT4R6X+KdAYjPcK/aMxCLm
-	9f7BccvKqozWNlaKGFrf7mFbI4yzPt8TP2lF5ozqUVXiJUUFIvSD9QCa+yCB1
-X-Google-Smtp-Source: AGHT+IG3E7HsLBsyZBtUPuuN6RttHjWI+4mOI8ICICciNWM3PhjKuCGhtkvM8/9T1iyfrPsEw+5ApQ==
-X-Received: by 2002:a05:6a20:7291:b0:243:b144:adaa with SMTP id adf61e73a8af0-243b144b09emr1456023637.54.1756366508342;
-        Thu, 28 Aug 2025 00:35:08 -0700 (PDT)
-Received: from localhost.localdomain ([103.88.46.62])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b49cb8afb7bsm13182613a12.16.2025.08.28.00.35.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Aug 2025 00:35:07 -0700 (PDT)
-From: Jinchao Wang <wangjinchao600@gmail.com>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	"Naveen N . Rao" <naveen@kernel.org>,
-	linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Jinchao Wang <wangjinchao600@gmail.com>
-Subject: [PATCH 17/17] MAINTAINERS: add entry for KStackWatch (Kernel Stack Watch)
-Date: Thu, 28 Aug 2025 15:32:50 +0800
-Message-ID: <20250828073311.1116593-18-wangjinchao600@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250828073311.1116593-1-wangjinchao600@gmail.com>
-References: <20250828073311.1116593-1-wangjinchao600@gmail.com>
+        bh=J1X5xYFvxFRrDibTBm3CBqs8PX8cBvU7VPmwkuKPTwg=;
+        b=o0TKb4KkiWC4R7jZl7tgnlcg77MY4/A7vlFGdi27yKyAya1pzMy7Pi0wMyzTmyXC/3
+         U5vqidv83U3j7d9IUKKhYFLUavaedWpOt3aaRFwY0MNiUXbIHnWHYq2NRh2IrE3RI5id
+         /nZMkEPL9GR8+9xKKeTsuKDqWXqsguUEXCdDuYmvHhFlybI3OTKybePoLMCsS9UjooaQ
+         Wy9y9Khe0h+Q9toiyGpjT4DborRUAvnt2doKmJYVYFbkRZkHm5YY3s6ZAb1LtT2iGEwH
+         XC4LuvyxYiycN9trcnrH/5pzq5osTOWpK1Hgd0AOK8V5kSPye7g4GUM/5SEWK+Gs+r8l
+         bJog==
+X-Forwarded-Encrypted: i=1; AJvYcCXva/IXCOl3uAbRybrZjUpJiimi3fdSGA/xThmQgUNu+kwWQ1YVjlgi9/l/tyV99T01NJvv+lUBX/mb/z6+nJgT/bY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyMHdocZjC3MKZ6f2c0fAbJ+scM7r4XuNee1knYZvgS3HGZ1VaB
+	T34rSXKVdV3O8uPAuJ8fS/m/Z4cVgymNrtWTUVvnBMAC7YwfdtAzVIgjdg74YFz+T+9tV3jq6CE
+	F0MhEmtFyHDY13QCUOGlcAtcEXLZwUCdK95Igl3JivfjDoRuzu4RZ10RNqNqUJgrLzJ0SHq39LM
+	PQKBjzqF3Que04N6/w0JroPbx0F4VP5sQcgigLKT8jc3Ov/irO
+X-Gm-Gg: ASbGnctl93BjWxnLN/04DkEbhvxvumLPGolJFl2onPIShNwELl64bpg32K6KFYJv5D6
+	OBLkMPGXQCj3APDEnQ0QjcwbI4lOh07YVopxmDKc14MihNwkx5Xjw/XC6o3nS2Hl/OSG/whTB5P
+	EZeWPUx6s9uPzFlrADbQY=
+X-Received: by 2002:a17:907:72c9:b0:ae0:cc5f:88ef with SMTP id a640c23a62f3a-afe29048ce7mr2180671066b.32.1756368559700;
+        Thu, 28 Aug 2025 01:09:19 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH/Pp/IS16Ptj4fYRr9tGLSsAfJHMWl+3v6JgoiyGrvraFv9v4O2zf+cCIcianCKMxQGHIgguBYwcbwQTyAaB4=
+X-Received: by 2002:a17:907:72c9:b0:ae0:cc5f:88ef with SMTP id
+ a640c23a62f3a-afe29048ce7mr2180668466b.32.1756368559221; Thu, 28 Aug 2025
+ 01:09:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250821035719.137161-1-crwood@redhat.com> <20250821035719.137161-7-crwood@redhat.com>
+In-Reply-To: <20250821035719.137161-7-crwood@redhat.com>
+From: Tomas Glozar <tglozar@redhat.com>
+Date: Thu, 28 Aug 2025 10:09:08 +0200
+X-Gm-Features: Ac12FXxxiiozQ3xgHpFGeH1oT8GgzVSXXUHflx4r11TIim38PG_b5m52qIfSlJI
+Message-ID: <CAP4=nvQthvoE9tGPqbXmk3dP_XJjmgkh_wXDd9JiVTTGvM3nKQ@mail.gmail.com>
+Subject: Re: [PATCH 6/7] tools/rtla: Add test engine support for unexpected output
+To: Crystal Wood <crwood@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, linux-trace-kernel@vger.kernel.org, 
+	John Kacur <jkacur@redhat.com>, Costa Shulyupin <costa.shul@redhat.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: Zur4do7ZOx-KRyLKVrCuk-6JwBlamayswr2Qb9mbPPg_1756368560
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add Jinchao Wang as the maintainer for KStackWatch, including its kernel
-module and test script.
+=C4=8Dt 21. 8. 2025 v 5:58 odes=C3=ADlatel Crystal Wood <crwood@redhat.com>=
+ napsal:
+>
+> Simplify the code so that we can print failures as they happen rather
+> than trying to figure out what went wrong after printing "not ok".  This
+> also means that "not ok" gets printed after the info rather than before,
+> which seems more intuitive anyway.
+>
 
-Signed-off-by: Jinchao Wang <wangjinchao600@gmail.com>
----
- MAINTAINERS | 6 ++++++
- 1 file changed, 6 insertions(+)
+This change is causing some formatting issues, e.g.:
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index fed6cd812d79..097a0462e604 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13354,6 +13354,12 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest.git
- F:	Documentation/dev-tools/kselftest*
- F:	tools/testing/selftests/
- 
-+KERNEL STACK WATCH
-+M:	Jinchao Wang <wangjinchao600@gmail.com>
-+S:	Maintained
-+F:	mm/kstackwatch/
-+F:	tools/kstackwatch/
-+
- KERNEL SMB3 SERVER (KSMBD)
- M:	Namjae Jeon <linkinjeon@kernel.org>
- M:	Namjae Jeon <linkinjeon@samba.org>
--- 
-2.43.0
+tests/hwnoise.t ... 2/6 # Output match failed: "rtla hit stop tracing"
+# Error iterating on events
+# Oops, error disabling tracer
+#
+# exit code 1
+tests/hwnoise.t ... 3/6 not ok 3 - set the automatic trace mode
+
+(the comment is on the same line as the previous test)
+
+Furthermore, it's standard to first print "not ok" and then the
+comments, see the documentation to Test::More [1], so I think we
+should keep that.
+
+[1] https://metacpan.org/pod/Test::More#ok
+
+Tomas
 
