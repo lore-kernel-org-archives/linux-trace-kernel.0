@@ -1,111 +1,105 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56272340D90;
-	Thu, 28 Aug 2025 17:15:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1300E30CD84;
+	Thu, 28 Aug 2025 18:03:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756401325; cv=none; b=HjTueI1GQffMoqMsbKBaacZXY+wB6ruHntr5Jy31qu1wWQN8Z/SN9HY0XipUxo86Y40rqOM3+1C88EyfZ4MeOJvTHbO4R8fbst95nG2jmyrDjPYM8/ayFPdPfIsi1e++IaQdMPiw0cpTVm8Kes5RBcl7/UKNohC/LxTDr5XYRKo=
+	t=1756404216; cv=none; b=VpehZEoAUeTd3eIn9+FXY1P5WXi2EJ4f5Su1V68v0JWHqojLaNWD255nruQEQ4F8G0OUW3kSSYZjKxoac2oP8hzJ1NHzuc9LpdeKpExQxr9GCPaKis/Hrpa8KIrgc1Cs3PUy7qL0HE/ajx92+DuN/pqf+iSvTYuPonwU3lppq0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756401325; c=relaxed/simple;
-	bh=ou3iD8shgadPVxQRtF41FaHPfXiCub7fMhAggBLVXMc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CIK1BTXrRUzIbeO8wFyOuRuBiD4ndwXhbtS+o9mCWHAKjuJkjWoM9BLrVjoqHm6iODw67pBqn6VPkXymOXOivAFl8E7dbE5J7W0Qy5C2oJxYWzHyMOAJh87t6trgYWvLxC1BHhID6z3PXChBEh9iTC14EKEiOJP1zYGmTP2Sif0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fnmNyIm6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1756404216; c=relaxed/simple;
+	bh=len1TqcKGRiWgn4i9K88WT0rfFP/JPV1Xx3J5okLYhI=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=AgyD//GIv66u8nAkt2swyCkfST86XoXGkhVyRUGDV6KnpEJSvepXLm8h5DLliHpnyVjyhlW2TEaB36pdjGyp3RA+YAieNmLaNfVdKVQnWNm97Cb1sJyPM1nTjPjiaE7eAhdx9aNrExSnnoEQ588tmtXplDuLpV5eFv3/iAhYn/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Uk0Lw9gy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fnmNyIm6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A72BC4CEF4;
-	Thu, 28 Aug 2025 17:15:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Uk0Lw9gy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DADF6C4CEED;
+	Thu, 28 Aug 2025 18:03:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756401324;
-	bh=ou3iD8shgadPVxQRtF41FaHPfXiCub7fMhAggBLVXMc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fnmNyIm6kveacQ6zFjHwSr/ld+cbNXoqmfCrawHp1gvsXVCDDljqqxTV+b1zApRgH
-	 5lcwKbYEv5XvzJ74pZRRlHz4xMMdbU2hypSAtpXWfDMqRVbb/qc2SqQSSCNqbZ1peQ
-	 BdR01HGV590kQ600i1NoQpXCyGOYKnHeIsk3mGhcH3PGq+tQybbYkfchgS5mr5H49F
-	 IvJGdW2sSi79scStsbkC/ihQucpNHR67O3EvTjBCfBwOnwU2YHvQc3Mh/Yo09lKjUz
-	 oioVDuGo8iH8GapTPxpdVPh2h5wOe61XtWreqwSjOT2z6hU8npwTgtY7JSO24epBr/
-	 2W6Y4P8WQ/UJw==
-Date: Thu, 28 Aug 2025 11:15:20 -0600
-From: Keith Busch <kbusch@kernel.org>
-To: Leon Romanovsky <leon@kernel.org>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
-	Jason Gunthorpe <jgg@nvidia.com>,
-	Abdiel Janulgue <abdiel.janulgue@gmail.com>,
-	Alexander Potapenko <glider@google.com>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Christoph Hellwig <hch@lst.de>, Danilo Krummrich <dakr@kernel.org>,
-	iommu@lists.linux.dev, Jason Wang <jasowang@redhat.com>,
-	Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
-	Jonathan Corbet <corbet@lwn.net>, Juergen Gross <jgross@suse.com>,
-	kasan-dev@googlegroups.com, linux-block@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, linux-nvme@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org, linux-trace-kernel@vger.kernel.org,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>, rust-for-linux@vger.kernel.org,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	virtualization@lists.linux.dev, Will Deacon <will@kernel.org>,
-	xen-devel@lists.xenproject.org
-Subject: Re: [PATCH v4 15/16] block-dma: properly take MMIO path
-Message-ID: <aLCOqIaoaKUEOdeh@kbusch-mbp>
-References: <cover.1755624249.git.leon@kernel.org>
- <642dbeb7aa94257eaea71ec63c06e3f939270023.1755624249.git.leon@kernel.org>
- <aLBzeMNT3WOrjprC@kbusch-mbp>
- <20250828165427.GB10073@unreal>
+	s=k20201202; t=1756404215;
+	bh=len1TqcKGRiWgn4i9K88WT0rfFP/JPV1Xx3J5okLYhI=;
+	h=Date:From:To:Cc:Subject:References:From;
+	b=Uk0Lw9gylnba4ypnY+JeVoxsq3OIvYUi/IDBRUuPwiRaVicREVR478oxPIZweAr4H
+	 VF431oNQc36kJHvP9+H2B18r2JaCyT0cedHccHVNwSwpvA8/gO8aE6GJbisBjvgDpt
+	 tj3leRlUeXhwLFhR8Fh3YxjEAo5mwMCBiAnFTGAY94e+l1A2fSxAI4EkU4chDZTr0j
+	 6xSdONqNDCnleQKBya9365kh/uO9TMLpFMx6cc6EUefrVoq1xH6Abq4fel1FmXn67k
+	 U122bFoZ/5EGufmcdwiyUjDG4he7HL60oK7uciqSooGqvnVU8bMrRifkNfiBYBBDiw
+	 aV3bEvbRSIypg==
+Received: from rostedt by gandalf with local (Exim 4.98.2)
+	(envelope-from <rostedt@kernel.org>)
+	id 1urgya-00000004GBK-2uqk;
+	Thu, 28 Aug 2025 14:03:56 -0400
+Message-ID: <20250828180356.546256287@kernel.org>
+User-Agent: quilt/0.68
+Date: Thu, 28 Aug 2025 14:03:01 -0400
+From: Steven Rostedt <rostedt@kernel.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org,
+ x86@kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Josh Poimboeuf <jpoimboe@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@kernel.org>,
+ Jiri Olsa <jolsa@kernel.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Andrii Nakryiko <andrii@kernel.org>,
+ Indu Bhagat <indu.bhagat@oracle.com>,
+ "Jose E. Marchesi" <jemarch@gnu.org>,
+ Beau Belgrave <beaub@linux.microsoft.com>,
+ Jens Remus <jremus@linux.ibm.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Florian Weimer <fweimer@redhat.com>,
+ Sam James <sam@gentoo.org>,
+ Kees Cook <kees@kernel.org>,
+ "Carlos O'Donell" <codonell@redhat.com>
+Subject: [PATCH v6 1/6] tracing: Do not bother getting user space stacktraces for kernel
+ threads
+References: <20250828180300.591225320@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250828165427.GB10073@unreal>
+Content-Type: text/plain; charset=UTF-8
 
-On Thu, Aug 28, 2025 at 07:54:27PM +0300, Leon Romanovsky wrote:
-> On Thu, Aug 28, 2025 at 09:19:20AM -0600, Keith Busch wrote:
-> > On Tue, Aug 19, 2025 at 08:36:59PM +0300, Leon Romanovsky wrote:
-> > > diff --git a/include/linux/blk_types.h b/include/linux/blk_types.h
-> > > index 09b99d52fd36..283058bcb5b1 100644
-> > > --- a/include/linux/blk_types.h
-> > > +++ b/include/linux/blk_types.h
-> > > @@ -387,6 +387,7 @@ enum req_flag_bits {
-> > >  	__REQ_FS_PRIVATE,	/* for file system (submitter) use */
-> > >  	__REQ_ATOMIC,		/* for atomic write operations */
-> > >  	__REQ_P2PDMA,		/* contains P2P DMA pages */
-> > > +	__REQ_MMIO,		/* contains MMIO memory */
-> > >  	/*
-> > >  	 * Command specific flags, keep last:
-> > >  	 */
-> > > @@ -420,6 +421,7 @@ enum req_flag_bits {
-> > >  #define REQ_FS_PRIVATE	(__force blk_opf_t)(1ULL << __REQ_FS_PRIVATE)
-> > >  #define REQ_ATOMIC	(__force blk_opf_t)(1ULL << __REQ_ATOMIC)
-> > >  #define REQ_P2PDMA	(__force blk_opf_t)(1ULL << __REQ_P2PDMA)
-> > > +#define REQ_MMIO	(__force blk_opf_t)(1ULL << __REQ_MMIO)
-> > 
-> > Now that my integrity metadata DMA series is staged, I don't think we
-> > can use REQ flags like this because data and metadata may have different
-> > mapping types. I think we should add a flags field to the dma_iova_state
-> > instead.
-> 
-> Before integrity metadata code was merged, the assumption was that request is
-> only one type or p2p or host. Is it still holding now?
+From: Steven Rostedt <rostedt@goodmis.org>
 
-I don't think that was ever the case. Metadata is allocated
-independently of the data payload, usually by the kernel in
-bio_integrity_prep() just before dispatching the request. The bio may
-have a p2p data payload, but the integrity metadata is just a kmalloc
-buf in that path.
+If a user space stacktrace is requested when running a kernel thread, just
+return, as there's no point trying to get the user space stacktrace as
+there is no user space.
 
-> And we can't store in dma_iova_state() as HMM/RDMA code works in page-based
-> granularity and one dma_iova_state() can mix different types.
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+Changes since v5: https://lore.kernel.org/20250424192613.014380756@goodmis.org
 
-I see.
+- Also add check for PF_USER_WORKER to test for kernel thread
+
+ kernel/trace/trace.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 1b7db732c0b1..2cca29c9863d 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -3138,6 +3138,10 @@ ftrace_trace_userstack(struct trace_array *tr,
+ 	if (!(tr->trace_flags & TRACE_ITER_USERSTACKTRACE))
+ 		return;
+ 
++	/* No point doing user space stacktraces on kernel threads */
++	if (current->flags & (PF_KTHREAD | PF_USER_WORKER))
++		return;
++
+ 	/*
+ 	 * NMIs can not handle page faults, even with fix ups.
+ 	 * The save user stack can (and often does) fault.
+-- 
+2.50.1
+
+
