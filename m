@@ -1,124 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07495223DDD;
-	Thu, 28 Aug 2025 20:54:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A44F7352090;
+	Thu, 28 Aug 2025 21:00:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756414482; cv=none; b=o27mp3fSJ7+lhArDJEfixvWqnu9kJ5R28lVrlDvH5JnANODNuOHJ/M8XqMstnx3+u7pZ09TapZXqOdJpdkOR5T+LhptjT0sYmKFj2SghSndic4OvAu3iQRpmXCXvWU9Acc9htSde+FBaZ8KHpptfWaSIYLELYRkPj2lqQwZy7ys=
+	t=1756414831; cv=none; b=eI7mY/9PTzn/YLYUZPRo3qyRih2Zddtt6T7bLT05gowOCjEpV5DFVtx702hJcUf8ymgAPGBmkHPT4zAEdd4o90uzxO9NAkoUopZVv7dBXOwQapKwHrKKCjjaow3pJ0JNTn8yH0pmx4fSbpXEF+5QKCoxsP7Fg5NZCDJNDOTAciM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756414482; c=relaxed/simple;
-	bh=G+6sPUUIFuKNkRdpDGh7oyzJRLExx6mM3Rr0TsrNav4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UJW2k16/lx3tF73mcM3NJo3nTqKqXeeoz6Un3pBSVZoeHksTZ5pOD27trkunvUBkmh6qw6Q/bF+ky/y2+I71iVzUPmp3NAov6uJ9KwqqYGjzoInKW/Afx/l0OsyPCJ77N1t+HjnMXmCm9JqIwj7KxhqAFsS7UA3p8s55i2f0I70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sCjN9TPm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1756414831; c=relaxed/simple;
+	bh=UrtKpeO3llBQn6sGqd9y8iFW/cjpJgGXJC9q1AX2zbA=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=uhXkRmRGMF4PuInHjyUqyokdmI5t5SmodWW3OWtGD+V70fXMQSk2vBu25k/hsGr4dWSFtfLr2aHPlxax0dEtGhFS1wKGSaMJ7Z3YUpyGjfhYV1LV1o95n5VMuAG8xRqkaKJYyCFXkfnDCSRgDEx6x6EGo8GeQA8sTnz3lDlwq+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AIXy+EWr; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sCjN9TPm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF632C4CEEB;
-	Thu, 28 Aug 2025 20:54:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756414481;
-	bh=G+6sPUUIFuKNkRdpDGh7oyzJRLExx6mM3Rr0TsrNav4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sCjN9TPmsmkv2CErZmw7eY4jhfo/PPQcCij3sdHoAaturic23UjSbV5/eD841QBrO
-	 q5lqa5UXldETsQDMVxoOfW90mr401cd2aNU4qwzO6IO/5MHaurrX5r01OojjZShQEf
-	 15Kqtld44h3aDOleBeJLOpcwjkQTTYAEhyrx8SC3goTrfnxyjVjHpigzIsE/EQK5r7
-	 FqO3qkArHFFA2cKutZwYB5+zz+dbLtckQEfa3MaBKs+Sg/PNA0jXRALMJBXOlqNLWJ
-	 BYklmKx3JSZ1NevsWbUBFS2Jp771ITiW6KubcU3EOHWT7p/JyrZiu2Mj04cW80QHY7
-	 3fGPgcRndIPdQ==
-Date: Thu, 28 Aug 2025 14:54:35 -0600
-From: Keith Busch <kbusch@kernel.org>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Leon Romanovsky <leon@kernel.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Abdiel Janulgue <abdiel.janulgue@gmail.com>,
-	Alexander Potapenko <glider@google.com>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Christoph Hellwig <hch@lst.de>, Danilo Krummrich <dakr@kernel.org>,
-	iommu@lists.linux.dev, Jason Wang <jasowang@redhat.com>,
-	Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
-	Jonathan Corbet <corbet@lwn.net>, Juergen Gross <jgross@suse.com>,
-	kasan-dev@googlegroups.com, linux-block@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, linux-nvme@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org, linux-trace-kernel@vger.kernel.org,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>, rust-for-linux@vger.kernel.org,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	virtualization@lists.linux.dev, Will Deacon <will@kernel.org>,
-	xen-devel@lists.xenproject.org
-Subject: Re: [PATCH v4 15/16] block-dma: properly take MMIO path
-Message-ID: <aLDCC4rXcIKF8sRg@kbusch-mbp>
-References: <cover.1755624249.git.leon@kernel.org>
- <642dbeb7aa94257eaea71ec63c06e3f939270023.1755624249.git.leon@kernel.org>
- <aLBzeMNT3WOrjprC@kbusch-mbp>
- <20250828165427.GB10073@unreal>
- <aLCOqIaoaKUEOdeh@kbusch-mbp>
- <20250828184115.GE7333@nvidia.com>
- <aLCpqI-VQ7KeB6DL@kbusch-mbp>
- <20250828191820.GH7333@nvidia.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AIXy+EWr"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-45b618b7d33so11626615e9.1;
+        Thu, 28 Aug 2025 14:00:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1756414828; x=1757019628; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=UrtKpeO3llBQn6sGqd9y8iFW/cjpJgGXJC9q1AX2zbA=;
+        b=AIXy+EWrUucJcLRYtTx8+OHAN4177XDPks5BBckGdwE+zFA4/vSv3pLuHS/zBZIyq0
+         hAisY745rqvD4LQ1Xssub2MRiwvMNZG+DrYpRDRON2YSH3kw+2I7EiDeJHA0pysvS0OY
+         dRJGKccpXLnpetW44TG0Lcr5u95P9rVC1vsK8Rf4owGgDCmww3rgFqz8ySYLFYZP48ji
+         gW2D/2ZazMiz86fGkx8LI7+miogmb23eO1iyLLa9Lh1vMMq/TbIGlusFjR/aNJUBDOcZ
+         Jrlms6Gs/E39+VUFTZgwZy5wspibPLsHHriwP3nCJ4Gqx0/cndwxZzuMCfETNegyAIld
+         vw1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756414828; x=1757019628;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=UrtKpeO3llBQn6sGqd9y8iFW/cjpJgGXJC9q1AX2zbA=;
+        b=aklKClz7pqrzBOm2VZyf5rXirQW8x2qtr8uGG5AjjYbwQIloA/RgxKYYku4CuTcOtI
+         VOaHuarPiVj9UAJO6ORzA3DSX+VSuzSns/34DgO9mnIXLMY7Zs08LTmFN8/1TsBqigT9
+         srJVLslVkGOyJvkSAwnZCsxWwSjqF7kWPSUjbKsxQWy/7J2K/l+TSDy5o48l4zy0NnlB
+         vZqMfUjMJAEy03A2zEZplcJanejWDLMJ3h7TnTAuGbLWeIWDsvxhmu3LGKJup1hgRwMS
+         aMcP6Gv4Q2FnG+fadGjQVK5p/pOVPZjeSt95lsJCfnYR7jf799g4KQts00UVMH+k3Y3t
+         cOyA==
+X-Forwarded-Encrypted: i=1; AJvYcCVNjZpGKJkT+g8Nzo3RmjgJXcmF/VYTRDUxJgEGimROmF/VlZVIkg/DboudFjkms0oGrXc=@vger.kernel.org, AJvYcCWPh3HXTJYyp+CWw9D5vrAw5TGyTDUE5SRu0ThWuyH4ehrvGCVyPf5gOVGe29Q28OZdXm30O9Moh3EWkkoV@vger.kernel.org, AJvYcCX5QOK8qijc2PxWMz2YKMRdIfGIxpLrjR8h9khXh5/sVgycsYEnOQZjKPQc4SsppHOB2NEp9VATsOoyOOmI4K5U1wx+@vger.kernel.org
+X-Gm-Message-State: AOJu0YzV+EY0hTTx/z/JvliS3AYh0aEVTlObFgfhd5fQ0r9ln9F53TU9
+	jE+AFaIkOUglEI9LSXNhkPtNjpxUTPab2LXbeItE2dsyatwJUymUYlOQ
+X-Gm-Gg: ASbGncu0GNyy6i+RLBDjiE9msO0ZYzT3obrnIbpTnQLKLmpS8emTGpX/JGsYLpTX2P5
+	MlCMRH0aD99OT3A3zD1VP9omZWIVZn+rs5l4F2wHT6Hjh8lhGQSXRSGbtu4F8BJrlbExjIoIb6x
+	VZScicsp0rqvG4nGUXhJilfIBsBronEhH3bvjzk5LK0fBQZgkDzfKl1CDRFpVUNK8ryjHBdoR1e
+	7yGvnQ6RTphnttETtn2HobJ8Gjt/IETY6F7m5Ob1Tie52phXq0Lh21kM+JgpWTdsgKoiIfa9pJt
+	AQ7INTZ6BF5BUcE9g9Y6DsQc/9GUljlcB80QTpxPocM9XPW+9gAJRjOjI4bqoqXiqNNLglOKkm9
+	w6olPhsgvSG11xtk5HB+PKnR91WE78m0ZG+RdsxwLcJNccbXK
+X-Google-Smtp-Source: AGHT+IHm01eYfbSzPrRUG/fxP6I2oxrrCmv9eiKXNm7/Hz/jeQZpSNVcECbSVXjHrS8axA74wdvFxg==
+X-Received: by 2002:a05:600c:154f:b0:456:1560:7c63 with SMTP id 5b1f17b1804b1-45b5179cf31mr205890405e9.3.1756414827621;
+        Thu, 28 Aug 2025 14:00:27 -0700 (PDT)
+Received: from ehlo.thunderbird.net ([185.255.128.130])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45b7e7f14bbsm9520155e9.8.2025.08.28.14.00.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 28 Aug 2025 14:00:26 -0700 (PDT)
+Date: Thu, 28 Aug 2025 18:00:22 -0300
+From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+To: Steven Rostedt <rostedt@kernel.org>
+CC: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, x86@kernel.org,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Andrii Nakryiko <andrii@kernel.org>, Indu Bhagat <indu.bhagat@oracle.com>,
+ "Jose E. Marchesi" <jemarch@gnu.org>,
+ Beau Belgrave <beaub@linux.microsoft.com>, Jens Remus <jremus@linux.ibm.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Florian Weimer <fweimer@redhat.com>, Sam James <sam@gentoo.org>,
+ Kees Cook <kees@kernel.org>, Carlos O'Donell <codonell@redhat.com>
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v6_5/6=5D_tracing=3A_Show_inode_and_devi?=
+ =?US-ASCII?Q?ce_major=3Aminor_in_deferred_user_space_stacktrace?=
+User-Agent: Thunderbird for Android
+In-Reply-To: <20250828165139.15a74511@batman.local.home>
+References: <20250828180300.591225320@kernel.org> <20250828180357.223298134@kernel.org> <CAHk-=wi0EnrBacWYJoUesS0LXUprbLmSDY3ywDfGW94fuBDVJw@mail.gmail.com> <D7C36F69-23D6-4AD5-AED1-028119EAEE3F@gmail.com> <CAHk-=wiBUdyV9UdNYEeEP-1Nx3VUHxUb0FQUYSfxN1LZTuGVyg@mail.gmail.com> <20250828161718.77cb6e61@batman.local.home> <583E1D73-CED9-4526-A1DE-C65567EA779D@gmail.com> <20250828165139.15a74511@batman.local.home>
+Message-ID: <F8A0C174-F51B-40A4-8DC5-C75B8706BE74@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250828191820.GH7333@nvidia.com>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Aug 28, 2025 at 04:18:20PM -0300, Jason Gunthorpe wrote:
-> On Thu, Aug 28, 2025 at 01:10:32PM -0600, Keith Busch wrote:
-> > 
-> > Data and metadata are mapped as separate operations. They're just
-> > different parts of one blk-mq request.
-> 
-> In that case the new bit leon proposes should only be used for the
-> unmap of the data pages and the metadata unmap should always be
-> unmapped as CPU?
 
-The common path uses host allocated memory to attach integrity metadata,
-but that isn't the only path. A user can attach their own metadata with
-nvme passthrough or the recent io_uring application metadata, and that
-could have been allocated from anywhere.
 
-In truth though, I hadn't tried p2p metadata before today, and it looks
-like bio_integrity_map_user() is missing the P2P extraction flags to
-make that work. Just added this patch below, now I can set p2p or host
-memory independently for data and integrity payloads:
+On August 28, 2025 5:51:39 PM GMT-03:00, Steven Rostedt <rostedt@kernel=2E=
+org> wrote:
+>On Thu, 28 Aug 2025 17:27:37 -0300
+>Arnaldo Carvalho de Melo <arnaldo=2Emelo@gmail=2Ecom> wrote:
+>
+>> >I would love to have a hash to use=2E The next patch does the mapping
+>> >of the inode numbers to their path name=2E It can =20
+>>=20
+>> The path name is a nice to have detail, but a content based hash is
+>> what we want, no?
+>>=20
+>> Tracing/profiling has to be about contents of files later used for
+>> analysis, and filenames provide no guarantee about that=2E
+>
+>I could add the build id to the inode_cache as well (which I'll rename
+>to file_cache)=2E
+>
+>Thus, the user stack trace will just have the offset and a hash value
+>that will be match the output of the file_cache event which will have
+>the path name and a build id (if one exists)=2E
+>
+>Would that work?
 
----
-diff --git a/block/bio-integrity.c b/block/bio-integrity.c
-index 6b077ca937f6b..cf45603e378d5 100644
---- a/block/bio-integrity.c
-+++ b/block/bio-integrity.c
-@@ -265,6 +265,7 @@ int bio_integrity_map_user(struct bio *bio, struct iov_iter *iter)
- 	unsigned int align = blk_lim_dma_alignment_and_pad(&q->limits);
- 	struct page *stack_pages[UIO_FASTIOV], **pages = stack_pages;
- 	struct bio_vec stack_vec[UIO_FASTIOV], *bvec = stack_vec;
-+	iov_iter_extraction_t extraction_flags = 0;
- 	size_t offset, bytes = iter->count;
- 	unsigned int nr_bvecs;
- 	int ret, nr_vecs;
-@@ -286,7 +287,12 @@ int bio_integrity_map_user(struct bio *bio, struct iov_iter *iter)
- 	}
- 
- 	copy = !iov_iter_is_aligned(iter, align, align);
--	ret = iov_iter_extract_pages(iter, &pages, bytes, nr_vecs, 0, &offset);
-+
-+	if (blk_queue_pci_p2pdma(q))
-+		extraction_flags |= ITER_ALLOW_P2PDMA;
-+
-+	ret = iov_iter_extract_pages(iter, &pages, bytes, nr_vecs,
-+					extraction_flags, &offset);
- 	if (unlikely(ret < 0))
- 		goto free_bvec;
- 
---
+Probably=2E
+
+This "if it is available" question is valid, but since 2016 it's is more o=
+f a "did developers disabled it explicitly?"
+
+If my "googling" isn't wrong, GNU LD defaults to generating a build ID in =
+ELF images since 2011 and clang's companion since 2016=2E
+
+So making it even more available than what the BPF guys did long ago and p=
+erf piggybacked on at some point, by having it cached, on request?, in some=
+ 20 bytes alignment hole in task_struct that would be only used when profil=
+ing/tracing may be amenable=2E
+
+- Arnaldo=20
