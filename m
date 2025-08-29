@@ -1,31 +1,35 @@
 Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D99C31E32BE;
-	Fri, 29 Aug 2025 02:18:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECA211BC5C;
+	Fri, 29 Aug 2025 02:24:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756433891; cv=none; b=qupyXHLlS7hQxvTvFr4gRJ0jqGLWPYKa5imY2NFopP5TEgH8CXHu7nQYdhiXO3U+CuOY9QRsuykIwhFLtet4x+koYstGEKfcs7EbbRHrcb8Fxwkiwl16wXUWrwNg9y/LzCFRjIn/rt1lSDv7BCDu0AFf8lEgHr3uQE/ENlyaecE=
+	t=1756434246; cv=none; b=nFfUeJEv3H50tLxZRzm0umS4WgOB71t5P2zqr73SHT+ZTJIxJPpZuXTMI5+DvnkqzsJgREuDVNNhLF0YoL+oTfcXpIz3v8MR1At8I1SKpcheDUYuj+vpNmbH2DrThWnqseoHN0wqVThRTfAAgnQQMQkKpkSeCE29ZYQ+j5WD0wo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756433891; c=relaxed/simple;
-	bh=zPImQ+S2+bHhXt3/ANQ8J2V6d3n857iAaQD+q/4oskw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=JCjLnuXSllFRicaWXpzgJ/7Rz69B17OK02wXnp5IxR1vEd2SlcPFVwY0MLOJumJ7sCBzNvgcc6/E1gj7LSpxP4+TwxOzjSGsEj699KEt5fv0KSJ9gMpIwnL9AkdPp3QJnnZUEclmOUTe1PGxBQZLWIDV7mxyrDc6/dG7aUMZF3A=
+	s=arc-20240116; t=1756434246; c=relaxed/simple;
+	bh=LD/dzZkotatbWC2pE8zf0hWA4c2sI4NHyeAEv9C7cWM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=AT40xwjQPbdSeKiEvnlkU8yCIDYAfLUz9HIS/Yt3eT/P88nhBK+qtB2oG3MVKisNG3DMX1jPmkw8pDNLw5EAhalj1WYlOIksCiE4lTuFY5a3ZExt/x4YFu/7TKJ0UdVSQQSV4uxsCSRo/finf0OrQmZkbzRbq66NJuxYfMjh6Xk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf17.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay06.hostedemail.com (Postfix) with ESMTP id 68A861192D6;
-	Fri, 29 Aug 2025 02:18:02 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf17.hostedemail.com (Postfix) with ESMTPA id A458F19;
-	Fri, 29 Aug 2025 02:18:00 +0000 (UTC)
-Date: Thu, 28 Aug 2025 22:17:59 -0400
+Received: from omf03.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay02.hostedemail.com (Postfix) with ESMTP id 89F1713A104;
+	Fri, 29 Aug 2025 02:24:00 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf03.hostedemail.com (Postfix) with ESMTPA id 8C5916000B;
+	Fri, 29 Aug 2025 02:23:58 +0000 (UTC)
+Date: Thu, 28 Aug 2025 22:23:57 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>, linux-wireless@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Johannes Berg <johannes@sipsolutions.net>
-Subject: [PATCH] cfg80211: Remove unused tracepoints
-Message-ID: <20250828221759.131160ee@batman.local.home>
+To: Menglong Dong <dongml2@chinatelecom.cn>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, kernel
+ test robot <oliver.sang@intel.com>, "Paul E. McKenney" <paulmck@kernel.org>
+Subject: Re: [PATCH] tracing: fprobe: fix suspicious rcu usage in
+ fprobe_entry
+Message-ID: <20250828222357.55fab4c2@batman.local.home>
+In-Reply-To: <20250829021436.19982-1-dongml2@chinatelecom.cn>
+References: <20250829021436.19982-1-dongml2@chinatelecom.cn>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -35,113 +39,87 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: dksocuffydty3ausz59s7nha8f7q8jnf
-X-Rspamd-Server: rspamout05
-X-Rspamd-Queue-Id: A458F19
+X-Stat-Signature: ima4r3ynrjku7c7wbsowqez1ui5yugaf
+X-Rspamd-Server: rspamout07
+X-Rspamd-Queue-Id: 8C5916000B
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+VFm/Vr4/2aUDNPbM/CaHBykL/3/sP+EY=
-X-HE-Tag: 1756433880-90718
-X-HE-Meta: U2FsdGVkX19djLNOA9fsDBdUBzRNk8elZK/ZlmS2qU4kZ+A/uafVQnZHNU/JujwdOswNiCKHl6AjZ5sM86iKUMmsNCkzldmtBe398xRS0SwK8XPQmnK+gXOsKB45OrTEkcoQGSu20P6drrkNw/RKbTl8bi+iUsDWz/rdwKJ0k/54+VN//yAN9eljtmNL2MEWyadJQyM1xq8oXvm5q1xJxo2EBJbH/Qp6V8PCnQeR5nmW4pi3dDZNYDR+AMA0TcUIMaAFLO0tbYR+3lNg3+LqEOVecufWA4/CDpJILdMCX/6bWeWOeao8wFJKhxNglJ6y+yuNV0HJ9UKLqQMGQ/A7WNXN1ke/piT4i+pRLBmFyswtL0R3Ae8VgPxJfr/Zdovi
+X-Session-ID: U2FsdGVkX1/Um7o/xuj05SM+I7zwu49yDvaXP8UURTk=
+X-HE-Tag: 1756434238-941031
+X-HE-Meta: U2FsdGVkX1+FHbgTP4MfqSCwG9uihNP6dP7ItW+sZr3ePzAx9HQ5c+Dgw8J/7OPRXZ3Nu4Y6JNJ/ds01+7jSZBhERC0W9TOk12MTo+zFRJ8vutOg3L7m8dKYaqV5FKtFHp5M4RTxk4RkLzenmiB+lXj5TNija+K6C4ibVSZYmL3tdvltH7s1szI246tiQXD1P2POJrt2pPbwEjR9NbeWHJ5ZFNulVL8PA0RYriESOUMyyL7OafSjKSWN8V8e4H1lpSGZsSA4foxdnIMB+75Lbd31mCqOmQF5NtsbRWG0OE/+5lKu0CCr56wujU2BDVG6iG/111qDS4SBgxfCQFoWu/zvIA2WQ1doiUppHLL4tv9+sjsCr14yLw==
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Fri, 29 Aug 2025 10:14:36 +0800
+Menglong Dong <dongml2@chinatelecom.cn> wrote:
 
-Tracepoints that are defined take up around 5K each, even if they are not
-used. If they are defined and not used, then they waste memory for unused
-code. Soon unused tracepoints will cause warnings.
+> rcu_read_lock() is not needed in fprobe_entry, but rcu_dereference_check()
+> is used in rhltable_lookup(), which causes suspicious RCU usage warning:
+> 
+>   WARNING: suspicious RCU usage
+>   6.17.0-rc1-00001-gdfe0d675df82 #1 Tainted: G S
+>   -----------------------------
+>   include/linux/rhashtable.h:602 suspicious rcu_dereference_check() usage!
+>   ......
+>   stack backtrace:
+>   CPU: 1 UID: 0 PID: 4652 Comm: ftracetest Tainted: G S
+>   Tainted: [S]=CPU_OUT_OF_SPEC, [I]=FIRMWARE_WORKAROUND
+>   Hardware name: Dell Inc. OptiPlex 7040/0Y7WYT, BIOS 1.1.1 10/07/2015
+>   Call Trace:
+>    <TASK>
+>    dump_stack_lvl+0x7c/0x90
+>    lockdep_rcu_suspicious+0x14f/0x1c0
+>    __rhashtable_lookup+0x1e0/0x260
+>    ? __pfx_kernel_clone+0x10/0x10
+>    fprobe_entry+0x9a/0x450
+>    ? __lock_acquire+0x6b0/0xca0
+>    ? find_held_lock+0x2b/0x80
+>    ? __pfx_fprobe_entry+0x10/0x10
+>    ? __pfx_kernel_clone+0x10/0x10
+>    ? lock_acquire+0x14c/0x2d0
+>    ? __might_fault+0x74/0xc0
+>    function_graph_enter_regs+0x2a0/0x550
+>    ? __do_sys_clone+0xb5/0x100
+>    ? __pfx_function_graph_enter_regs+0x10/0x10
+>    ? _copy_to_user+0x58/0x70
+>    ? __pfx_kernel_clone+0x10/0x10
+>    ? __x64_sys_rt_sigprocmask+0x114/0x180
+>    ? __pfx___x64_sys_rt_sigprocmask+0x10/0x10
+>    ? __pfx_kernel_clone+0x10/0x10
+>    ftrace_graph_func+0x87/0xb0
+> 
+> Fix this by using rcu_read_lock() for rhltable_lookup(). Alternatively, we
+> can use rcu_lock_acquire(&rcu_lock_map) here to obtain better performance.
+> However, it's not a common usage :/
 
-Remove the unused tracepoints of the cfg80211 subsystem. They are:
+So this is needed even though it's called under preempt_disable().
 
-cfg80211_chandef_dfs_required
-cfg80211_return_u32
-cfg80211_return_uint
-cfg80211_send_rx_auth
+Paul, do we need to add an rcu_read_lock() because the code in rht
+(rhashtable) requires RCU read lock?
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- net/wireless/trace.h | 56 --------------------------------------------
- 1 file changed, 56 deletions(-)
+I thought that rcu_read_lock() and preempt_disable() have been merged?
 
-diff --git a/net/wireless/trace.h b/net/wireless/trace.h
-index 34c584a215e5..9b6074155d59 100644
---- a/net/wireless/trace.h
-+++ b/net/wireless/trace.h
-@@ -3137,23 +3137,6 @@ DEFINE_EVENT(cfg80211_netdev_mac_evt, cfg80211_notify_new_peer_candidate,
- 	TP_ARGS(netdev, macaddr)
- );
- 
--DECLARE_EVENT_CLASS(netdev_evt_only,
--	TP_PROTO(struct net_device *netdev),
--	TP_ARGS(netdev),
--	TP_STRUCT__entry(
--		NETDEV_ENTRY
--	),
--	TP_fast_assign(
--		NETDEV_ASSIGN;
--	),
--	TP_printk(NETDEV_PR_FMT , NETDEV_PR_ARG)
--);
--
--DEFINE_EVENT(netdev_evt_only, cfg80211_send_rx_auth,
--	TP_PROTO(struct net_device *netdev),
--	TP_ARGS(netdev)
--);
--
- TRACE_EVENT(cfg80211_send_rx_assoc,
- 	TP_PROTO(struct net_device *netdev,
- 		 const struct cfg80211_rx_assoc_resp_data *data),
-@@ -3480,21 +3463,6 @@ TRACE_EVENT(cfg80211_reg_can_beacon,
- 		  __entry->prohibited_flags, __entry->permitting_flags)
- );
- 
--TRACE_EVENT(cfg80211_chandef_dfs_required,
--	TP_PROTO(struct wiphy *wiphy, struct cfg80211_chan_def *chandef),
--	TP_ARGS(wiphy, chandef),
--	TP_STRUCT__entry(
--		WIPHY_ENTRY
--		CHAN_DEF_ENTRY
--	),
--	TP_fast_assign(
--		WIPHY_ASSIGN;
--		CHAN_DEF_ASSIGN(chandef);
--	),
--	TP_printk(WIPHY_PR_FMT ", " CHAN_DEF_PR_FMT,
--		  WIPHY_PR_ARG, CHAN_DEF_PR_ARG)
--);
--
- TRACE_EVENT(cfg80211_ch_switch_notify,
- 	TP_PROTO(struct net_device *netdev,
- 		 struct cfg80211_chan_def *chandef,
-@@ -3862,30 +3830,6 @@ DEFINE_EVENT(cfg80211_bss_evt, cfg80211_return_bss,
- 	TP_ARGS(pub)
- );
- 
--TRACE_EVENT(cfg80211_return_uint,
--	TP_PROTO(unsigned int ret),
--	TP_ARGS(ret),
--	TP_STRUCT__entry(
--		__field(unsigned int, ret)
--	),
--	TP_fast_assign(
--		__entry->ret = ret;
--	),
--	TP_printk("ret: %d", __entry->ret)
--);
--
--TRACE_EVENT(cfg80211_return_u32,
--	TP_PROTO(u32 ret),
--	TP_ARGS(ret),
--	TP_STRUCT__entry(
--		__field(u32, ret)
--	),
--	TP_fast_assign(
--		__entry->ret = ret;
--	),
--	TP_printk("ret: %u", __entry->ret)
--);
--
- TRACE_EVENT(cfg80211_report_wowlan_wakeup,
- 	TP_PROTO(struct wiphy *wiphy, struct wireless_dev *wdev,
- 		 struct cfg80211_wowlan_wakeup *wakeup),
--- 
-2.50.1
+-- Steve
+
+
+> 
+> Reported-by: kernel test robot <oliver.sang@intel.com>
+> Closes: https://lore.kernel.org/oe-lkp/202508281655.54c87330-lkp@intel.com
+> Fixes: dfe0d675df82 ("tracing: fprobe: use rhltable for fprobe_ip_table")
+> Signed-off-by: Menglong Dong <dongml2@chinatelecom.cn>
+> ---
+>  kernel/trace/fprobe.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
+> index fb127fa95f21..fece0f849c1c 100644
+> --- a/kernel/trace/fprobe.c
+> +++ b/kernel/trace/fprobe.c
+> @@ -269,7 +269,9 @@ static int fprobe_entry(struct ftrace_graph_ent *trace, struct fgraph_ops *gops,
+>  	if (WARN_ON_ONCE(!fregs))
+>  		return 0;
+>  
+> +	rcu_read_lock();
+>  	head = rhltable_lookup(&fprobe_ip_table, &func, fprobe_rht_params);
+> +	rcu_read_unlock();
+>  	reserved_words = 0;
+>  	rhl_for_each_entry_rcu(node, pos, head, hlist) {
+>  		if (node->addr != func)
 
