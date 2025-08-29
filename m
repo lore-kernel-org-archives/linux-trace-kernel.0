@@ -1,207 +1,212 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C7DC321F37;
-	Fri, 29 Aug 2025 15:07:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7B681FDA8E
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 29 Aug 2025 15:48:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756480062; cv=none; b=lIs67Nolg3trh1i2a3RCELXqlTMvzjXumQZWTw3jxV5L56htm+NUl39C7CTf8BcOM0WWgbPsAzsPcJBeMVsH1gFGTUTV91GEOZVUoFfIYOES0wC3aiRyna/F80SNCsFjA0VQqRpJubBmFl1rD3d31BFiuEkQ71NbYgFNvBZqCq8=
+	t=1756482487; cv=none; b=ukUwoWCg6LuGsnWgDGQcc3xC29k1Z/yYytsigHGjkH0luMySKqkWB7QfTvFe4jtT7sR4jWTJ/P7gYXLWX+EixDDhE7ggmqS26iLPyNkSie4R3Ja5cz7yMxIKf9tWNdeK+4oJUsl/+VC9z5f/pxBZmUuyjMeRHQF+f9EQmCA2f5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756480062; c=relaxed/simple;
-	bh=97CGla5pB7DKcJ8OJXm4108wxl3hH8kDUjnW5dSe6yE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C1uAC9AIjSuaGIYxciV7EwRVRYCF/EPfJNqWLz15BjuUrOJJXoclkxJ64Lz8g0GKD82f9Vm2I8VyhXRs+HTlDSnpP/mR8uT2nBMyCv3pbsr6AlwaaH1no7hZTFS157qLOuNCqDOOdecc2Uf63TDbTHvQZU1fKqzYEMKtqKRwvuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IdXaaKgd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1756482487; c=relaxed/simple;
+	bh=IvNOoAxgGRDV/pz/+Da0UiB1N1KkrY/4Hn+qpOfi20Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RrHBTLBwbR+ljGwTwN0DkToNtknSdJlFzS3BvCI2FnBgZbhPdFFTwNldJfSSwmaespKWPNfukFxeWIusa+1YBXTeFwPHdQ2BVd3gfEgc0mAhtO4mumNVzphcCVU3a8Gd3JvSBDl/jVxObxH+X++R/iMEWKu8ojLWxxMMYDkEjSo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=OyqyB8ts; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IdXaaKgd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 063FEC4CEF0;
-	Fri, 29 Aug 2025 15:07:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756480062;
-	bh=97CGla5pB7DKcJ8OJXm4108wxl3hH8kDUjnW5dSe6yE=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=IdXaaKgdAjB9Krugil/NAPNZh7tGr7cArL8+TTYtzq2g9HeEmfGHXWnEcg3SZnU30
-	 Z460TU0rXaU+z/5Ze8C/gP1y6sxVmEkOJRoMVfEBNjHX85YVrpz3MDWg91q21DW3ax
-	 eQ3ssz7L4tf8dBt2xfXtC/ruzMKbL5niNHD+ezGeVJBNlUGx9jWYBq1qXCQwHp21QZ
-	 ugU1/wWRErYWFqtiWK7xT1mMXI3k9L1DBYauly6DjMO3sUsLVzVg3e63WsrONMh+Xv
-	 RahNjyAPsBlDzbuRGa27IUalf3ViGgaWKyquHDr7Fg1c9gtmXG/hKafAlc0uzLp/QA
-	 RbjP1OXB9tadA==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id A4CF5CE0BB0; Fri, 29 Aug 2025 08:07:41 -0700 (PDT)
-Date: Fri, 29 Aug 2025 08:07:41 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: kernel test robot <oliver.sang@intel.com>
-Cc: oe-lkp@lists.linux.dev, lkp@intel.com, linux-kernel@vger.kernel.org,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [paulmck-rcu:dev.2025.08.13a] [tracing]  364ac25d46:
- WARNING:at_arch/x86/mm/fault.c:#do_user_addr_fault
-Message-ID: <68044ea3-32c1-4d72-9bd3-fe2031669d79@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <202508211038.c93e8603-lkp@intel.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="OyqyB8ts"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-afede1b3d05so394408166b.2
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 29 Aug 2025 08:48:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1756482484; x=1757087284; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=qQUhdimbGwdD8GQxXTeeb1UkXF/zoKTQKbXke/E9VAE=;
+        b=OyqyB8tsLYL4p9kseMdEjlIkzVLQj3zwWq1cetTDkE1xYhHMRNsJwlN3OeA7ta8Blj
+         KbSutIkx0G6lMTP7jSwCgHFzQTePTwLb0CaIUU9iTemK88oTgDyAgAo/SncMHJxW1QFS
+         7heKoDwb4hR6zbpFwjNY3WA2l7ts1HKbQuw8k=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756482484; x=1757087284;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qQUhdimbGwdD8GQxXTeeb1UkXF/zoKTQKbXke/E9VAE=;
+        b=hf79L0AxSaRMeQkKpKj/OumDrH6osxYe2wZiN54jBKW4nqODehsElw0r/4k2OtRNCc
+         84oxIb88A/A0p5QGDhBJvBTfDRW5cA6bYZR2Rbmy+o0dHNGQsp3+W/Sob4FIxtGaDZuN
+         VMgd3O1Z8XId5eK3IISi+O1UHdGJHyLfITWL2YYltRL//x2e7KaZZfheaY4AK5O3wbbW
+         3UF/SpJ35C2oVegL23kzSqR5gnbFY+MQv8pBaa/pfJUJHVNd8JhoC7k3OxQKcYMyjLo1
+         ElJRyfo/KjsOyCPLwjgHHNL4JFICU7OoEeTWTIIuojgImbV5iXIrfZIf8y7O7UClQEn4
+         FSKA==
+X-Forwarded-Encrypted: i=1; AJvYcCWUUzIm+drV3GCkI7CobI1cZXS1O7QJcnmNvpF/T2lJWhWO2BFRsXvvrZWHv7uMw5a3xfDvW0wG0MEAbYayV51KQQA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwQA+Q6bOh9CRbVqbnFcgEW4nPhNs8xHz9bmpx28qVSrdplbcC5
+	2iO5ol4qwcJCZrEro7IttiZ1h+ASg97nXvW+uphn9j0Fcgx87R/VNF2kt3nbOt02A6coXEx6mBc
+	Nym7WGKWMsQ==
+X-Gm-Gg: ASbGncv41F5Pef1HOVyMY5G0L+GG2+V+TGl6+h1pUoQ9PMJx2vs/F1mvBb3JAZo5afz
+	UpQkWBg/riNwxJoFJrj5r/uUz1ViBU4yY1RzeaI/GcI/D+NaMFOcQ+tyQ4ELIX/pj0pPMWCYAqv
+	0yroBtDeZgiyms5Y4Pgnx6C1TI5d+BLDe4TTD4/PiDois3aWu9yErQFlvFf+QZflWBcU/8bSZ11
+	wukVUnqp/n6XAIejDThzd0M+iYAmCQbJRzrHt0wAKalJFLjcEVATFsqhtSkoC+ZoSi8AaAnjJli
+	TMEmekwYSSo/vyI6XsUmeAcrVpNfGBqLZhZ1ag/18tzfhw7X4908YbL3TUrsJse3EVYThtnWY8j
+	krifb+JOpqKs+BrYKN0S7mIG44ZmkpG7jFKIEoU0qLYL/joQol24Jpmsm2KRbaWNXC6x9aFxa
+X-Google-Smtp-Source: AGHT+IFM0qkBLqvW+1tvtE1JhRQbvF/eJWf2QddrKXqrrDKhtKha0CxJAdxCFqm8+YlSFoYLC03QPA==
+X-Received: by 2002:a17:906:794d:b0:afe:caf7:6ddc with SMTP id a640c23a62f3a-afecaf771camr972969266b.18.1756482483618;
+        Fri, 29 Aug 2025 08:48:03 -0700 (PDT)
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com. [209.85.218.43])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-afefcbd8ed2sm219574466b.66.2025.08.29.08.48.00
+        for <linux-trace-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 29 Aug 2025 08:48:01 -0700 (PDT)
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-afeec747e60so274486766b.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 29 Aug 2025 08:48:00 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU5/M9DEElVRtV9ye/VXGcUgR0Fn8hzmZhkgsVDmDkfjqdrYFH40hJ2xU+nnmMgThkPqLMLNiWgNVl6uXGOg8BAK9E=@vger.kernel.org
+X-Received: by 2002:a17:907:1c84:b0:af9:4fa9:b132 with SMTP id
+ a640c23a62f3a-afe29548f36mr2755239066b.33.1756482480512; Fri, 29 Aug 2025
+ 08:48:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202508211038.c93e8603-lkp@intel.com>
+References: <20250828180300.591225320@kernel.org> <20250828180357.223298134@kernel.org>
+ <CAHk-=wi0EnrBacWYJoUesS0LXUprbLmSDY3ywDfGW94fuBDVJw@mail.gmail.com>
+ <D7C36F69-23D6-4AD5-AED1-028119EAEE3F@gmail.com> <CAHk-=wiBUdyV9UdNYEeEP-1Nx3VUHxUb0FQUYSfxN1LZTuGVyg@mail.gmail.com>
+ <20250828161718.77cb6e61@batman.local.home> <CAHk-=wiujYBqcZGyBgLOT+OWdY3cz7EhbZE0GidhJmLNd9VPOQ@mail.gmail.com>
+ <20250828164819.51e300ec@batman.local.home> <CAHk-=wjRC0sRZio4TkqP8_S+Fr8LUypVucPDnmERrHVjWOABXw@mail.gmail.com>
+ <20250828171748.07681a63@batman.local.home> <CAHk-=wh0LjoJmRPHF41eQ1ZRf085urz+rvQQ-rwp8dLQCdqohw@mail.gmail.com>
+ <20250829110639.1cfc5dcc@gandalf.local.home>
+In-Reply-To: <20250829110639.1cfc5dcc@gandalf.local.home>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Fri, 29 Aug 2025 08:47:44 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjeT3RKCTMDCcZzXznuvG2qf0fpKbHKCZuoPzxFYxVcQw@mail.gmail.com>
+X-Gm-Features: Ac12FXwNlyz00O8OVBJK4ieQwLO8cLGOqnKUasO_BCaKG_QlAegARW0kUgVHzi8
+Message-ID: <CAHk-=wjeT3RKCTMDCcZzXznuvG2qf0fpKbHKCZuoPzxFYxVcQw@mail.gmail.com>
+Subject: Re: [PATCH v6 5/6] tracing: Show inode and device major:minor in
+ deferred user space stacktrace
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Steven Rostedt <rostedt@kernel.org>, Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org, x86@kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, 
+	Indu Bhagat <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>, 
+	Beau Belgrave <beaub@linux.microsoft.com>, Jens Remus <jremus@linux.ibm.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Florian Weimer <fweimer@redhat.com>, 
+	Sam James <sam@gentoo.org>, Kees Cook <kees@kernel.org>, "Carlos O'Donell" <codonell@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Aug 21, 2025 at 01:26:45PM +0800, kernel test robot wrote:
-> 
-> hi, Paul,
-> 
-> we also noticed there is similar commit in newer branch
->   dev.2025.08.14a
->   dev.2025.08.19a
-> but we didn't finish any bisect for them so far.
-> 
-> if the issue is already known and fixed in newer version, please just ignore
-> this report. sorry if any inconvenience.
-> 
-> below full report FYI.
-> 
-> 
-> Hello,
-> 
-> kernel test robot noticed "WARNING:at_arch/x86/mm/fault.c:#do_user_addr_fault" on:
-> 
-> commit: 364ac25d46eea504eb90229d2a1f92e18c1a1eae ("tracing: Guard __DECLARE_TRACE() use of __DO_TRACE_CALL() with SRCU-fast")
-> https://git.kernel.org/cgit/linux/kernel/git/paulmck/linux-rcu.git dev.2025.08.13a
-> 
-> in testcase: boot
-> 
-> config: i386-randconfig-004-20250819
-> compiler: clang-20
-> test machine: qemu-system-i386 -enable-kvm -cpu SandyBridge -smp 2 -m 4G
-> 
-> (please refer to attached dmesg/kmsg for entire log/backtrace)
+On Fri, 29 Aug 2025 at 08:06, Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> The hash value can actually last longer than the file pointer. Thus, if we
+> use the file pointer for the hash, then we could risk it getting freed and
+> then allocated again for different file. Then we get the same hash value
+> for two different paths.
 
-Thank you for your testing efforts, and apologies for being slow!
+No, no no.
 
-Could you please try the diagnostic patch at the end of this email?
+That doesn't mean that the hash "lasts longer" than the file pointer.
+Quite the reverse.
 
-							Thanx, Paul
+It is literally about the fact that YOU HAVE TO TAKE LIFETIMES INTO ACCOUNT.
 
-> +----------------------------------------------------+------------+------------+
-> |                                                    | c0e2a3f449 | 364ac25d46 |
-> +----------------------------------------------------+------------+------------+
-> | WARNING:at_arch/x86/mm/fault.c:#do_user_addr_fault | 0          | 12         |
-> | EIP:do_user_addr_fault                             | 0          | 12         |
-> | BUG:kernel_NULL_pointer_dereference,address        | 0          | 12         |
-> | Oops                                               | 0          | 12         |
-> | EIP:do_int80_syscall_32                            | 0          | 12         |
-> | Kernel_panic-not_syncing:Fatal_exception           | 0          | 12         |
-> +----------------------------------------------------+------------+------------+
-> 
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <oliver.sang@intel.com>
-> | Closes: https://lore.kernel.org/oe-lkp/202508211038.c93e8603-lkp@intel.com
-> 
-> 
-> [    5.974959][  T117] ------------[ cut here ]------------
-> [ 5.975530][ T117] WARNING: CPU: 1 PID: 117 at arch/x86/mm/fault.c:1276 do_user_addr_fault (ld-temp.o:?) 
-> [    5.976496][  T117] Modules linked in:
-> [    5.976924][  T117] CPU: 1 UID: 0 PID: 117 Comm: sh Not tainted 6.17.0-rc1-00010-g364ac25d46ee #1 NONE  7aaffa6b74f3c55be0a24cdbe6593fcd4ccf301d
-> [    5.978263][  T117] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
-> [ 5.979306][ T117] EIP: do_user_addr_fault (ld-temp.o:?) 
-> [ 5.979859][ T117] Code: 15 fe ff ff 89 f9 ff 75 f0 e8 96 04 00 00 83 c4 04 e9 03 fe ff ff 89 f9 89 da ff 75 f0 e8 72 01 00 00 83 c4 04 e9 ef fd ff ff <0f> 0b 89 f9 89 da ff 75 f0 e8 fc 03 00 00 83 c4 04 e9 d9 fd ff ff
-> All code
-> ========
->    0:	15 fe ff ff 89       	adc    $0x89fffffe,%eax
->    5:	f9                   	stc
->    6:	ff 75 f0             	push   -0x10(%rbp)
->    9:	e8 96 04 00 00       	call   0x4a4
->    e:	83 c4 04             	add    $0x4,%esp
->   11:	e9 03 fe ff ff       	jmp    0xfffffffffffffe19
->   16:	89 f9                	mov    %edi,%ecx
->   18:	89 da                	mov    %ebx,%edx
->   1a:	ff 75 f0             	push   -0x10(%rbp)
->   1d:	e8 72 01 00 00       	call   0x194
->   22:	83 c4 04             	add    $0x4,%esp
->   25:	e9 ef fd ff ff       	jmp    0xfffffffffffffe19
->   2a:*	0f 0b                	ud2		<-- trapping instruction
->   2c:	89 f9                	mov    %edi,%ecx
->   2e:	89 da                	mov    %ebx,%edx
->   30:	ff 75 f0             	push   -0x10(%rbp)
->   33:	e8 fc 03 00 00       	call   0x434
->   38:	83 c4 04             	add    $0x4,%esp
->   3b:	e9 d9 fd ff ff       	jmp    0xfffffffffffffe19
-> 
-> Code starting with the faulting instruction
-> ===========================================
->    0:	0f 0b                	ud2
->    2:	89 f9                	mov    %edi,%ecx
->    4:	89 da                	mov    %ebx,%edx
->    6:	ff 75 f0             	push   -0x10(%rbp)
->    9:	e8 fc 03 00 00       	call   0x40a
->    e:	83 c4 04             	add    $0x4,%esp
->   11:	e9 d9 fd ff ff       	jmp    0xfffffffffffffdef
-> [    5.981783][  T117] EAX: 80000000 EBX: 00000000 ECX: 00000000 EDX: 4875de00
-> [    5.982461][  T117] ESI: 46bf1f14 EDI: 46bf1f14 EBP: 46bf1ef0 ESP: 46bf1ec4
-> [    5.983152][  T117] DS: 007b ES: 007b FS: 00d8 GS: 0033 SS: 0068 EFLAGS: 00010046
-> [    5.983885][  T117] CR0: 80050033 CR2: 00000004 CR3: 06fc8000 CR4: 00040690
-> [    5.984575][  T117] Call Trace:
-> [ 5.984911][ T117] ? exc_page_fault (ld-temp.o:?) 
-> [ 5.985376][ T117] ? pvclock_clocksource_read_nowd (ld-temp.o:?) 
-> [ 5.985971][ T117] ? handle_exception (arch/x86/entry/entry_32.S:1048) 
-> [ 5.986454][ T117] ? do_int80_syscall_32 (ld-temp.o:?) 
-> [ 5.986948][ T117] ? entry_INT80_32 (arch/x86/entry/entry_32.S:945) 
-> [ 5.987410][ T117] ? insn_get_code_seg_params (ld-temp.o:?) 
-> [ 5.987948][ T117] ? pvclock_clocksource_read_nowd (ld-temp.o:?) 
-> [ 5.988547][ T117] ? do_int80_syscall_32 (ld-temp.o:?) 
-> [ 5.989050][ T117] ? pvclock_clocksource_read_nowd (ld-temp.o:?) 
-> [ 5.989645][ T117] ? do_int80_syscall_32 (ld-temp.o:?) 
-> [ 5.990146][ T117] ? entry_INT80_32 (arch/x86/entry/entry_32.S:945) 
-> [ 5.990611][ T117] ? irqentry_exit (ld-temp.o:?) 
-> [ 5.991053][ T117] ? exc_page_fault (ld-temp.o:?) 
-> [ 5.991512][ T117] ? entry_INT80_32 (arch/x86/entry/entry_32.S:945) 
-> [    5.991915][  T117] irq event stamp: 5810
-> [ 5.992173][ T117] hardirqs last enabled at (5809): do_wait (ld-temp.o:?) 
-> [ 5.992686][ T117] hardirqs last disabled at (5810): do_int80_syscall_32 (ld-temp.o:?) 
-> [ 5.993245][ T117] softirqs last enabled at (5692): local_bh_enable (ld-temp.o:?) 
-> [ 5.993776][ T117] softirqs last disabled at (5690): local_bh_disable (ld-temp.o:?) 
-> [    5.994304][  T117] ---[ end trace 0000000000000000 ]---
-> 
-> 
-> The kernel config and materials to reproduce are available at:
-> https://download.01.org/0day-ci/archive/20250821/202508211038.c93e8603-lkp@intel.com
-> 
-> 
-> 
-> -- 
-> 0-DAY CI Kernel Test Service
-> https://github.com/intel/lkp-tests/wiki
+So you are being confused, and that shows in your "solution".
 
+And the thing is, the "you have to take lifetimes into account' is
+true *regardless* of what you use as your index. It was true even with
+inode numbers and major/minor numbers, in that file deletion and
+creation would basically end up reusing the same "hash".
 
-commit 2d6142ce44dca77fb173bb96850634b169277214
-Author: Paul E. McKenney <paulmck@kernel.org>
-Date:   Thu Aug 28 12:56:42 2025 -0700
+And this is my *point*: the advantage of the 'struct file *' is that
+it is a local thing that gets reused potentially quite quickly, and
+*forces* you to get the lifetime right.
 
-    EXP tracing: Diagnostic for __DECLARE_TRACE() use of SRCU-fast
-    
-    This patch is intended to test the theory that preemption needs to be
-    disabled in some portion of the tracing infrastructure extending from
-    the __DECLARE_TRACE() macro to the target BPF program.
-    
-    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+So don't mess that up.
 
-diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
-index a22c1ab88560b8..c422e4c5ed51ed 100644
---- a/include/linux/tracepoint.h
-+++ b/include/linux/tracepoint.h
-@@ -273,7 +273,7 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
- 	static inline void __do_trace_##name(proto)			\
- 	{								\
- 		if (cond) {						\
--			guard(srcu_fast_notrace)(&tracepoint_srcu);	\
-+			guard(preempt_notrace)();			\
- 			__DO_TRACE_CALL(name, TP_ARGS(args));		\
- 		}							\
- 	}								\
+Except you do, and suggest this instead:
+
+> What I'm looking at doing is using both the file pointer as well as its
+> path to make the hash:
+
+NO NO NO.
+
+Now you are only saying "ok, I have a bogus lifetime, so I'll make a
+hash where that isn't obvious any more because reuse is harder to
+trigger".
+
+IOW: YOU ARE MAKING THE BUG WORSE BY HIDING IT.
+
+You're not fixing anything at all. You are literally making it obvious
+that your design is bogus and you're not thinking things through.
+
+So stop it. Really.
+
+Instead, realize that *ANY* hash you use has a limited lifetime, and
+the *ONLY* validity of that random number - whether it's a hash of the
+file pointer, an inode number, or anything else - is DURING THE
+MAPPING THAT IT USES.
+
+As long as the mapping exists, you know the thing is stable, because
+the mapping has a reference to the file (which has a reference to the
+path, which has a reference to the inode - so it all stays consistent
+and stable).
+
+But *immediately* when the mapping goes away, it's now no longer valid
+to think it has some meaning any more. Really. It might be a temporary
+file that was already unlinked, and the 'munmap()' is the last thing
+that releases the inode and it gets deleted from disk, and a new inode
+is created with the exact same inode number, and maybe even the exact
+same 'struct inode *' pointer.
+
+And as long as you don't understand this, you will always get this
+wrong, and you'll create bogus "workarounds" that just hide the REAL
+bug. Bogus workarounds like making a random different hash that is
+just less likely to show your mistake.
+
+In other words, to get this right, you *have* to associate the hash
+with the mmap creation that precedes it in the trace. You MUST NOT
+reuse it, not unless you also have some kind of reference count model
+that keeps track of how many mmap's that hash is associated with.
+
+Put another way: the only valid way to reuse it is if you manually
+track the lifetime of it. Anything else is WRONG.
+
+Now, tracking the actual lifetime of the hash is probably doable, but
+it's complex and error-prone. You can't do it by using the reference
+count in the 'struct file' itself, because that would keep the
+lifetime of the file artificially elevated, so you'd have to do some
+entirely separate thing that tracks things. Don't do it.
+
+Anyway, the way to fix this is to not care about lifetimes at all:
+just treat the hash as the random number it is, and just accept the
+fact that the number gets actively reused and has no meaning.
+
+Instead, just make sure that when you *use* the hash in user space,
+you always associate the hash with the previous trace event for the
+mmap that used that hash.
+
+You need to look up the event anyway to figure out what the hash means.
+
+And this is where the whole "short lifetime" is so important. It's
+what *forces* you to get this right, instead of doing the wrong thing
+and thinking that hashes have lifetimes that they simply do not have.
+
+The number in the stack trace - regardless of what that number is - is
+*ONLY* valid if you associate it with the last mmap that created that
+number.
+
+You don't even have to care about the unmap event, because that unmap
+- while it will potentially kill the lifetime of the hash if it was
+the last use of that file - also means that now there won't be any new
+stack traces with that hash any more. So you can ignore the lifetime
+in that respect: all that matters is that yes, it can get re-used, but
+you'll see a new mmap event with that hash if it is.
+
+(And then you might still have the complexity with per-cpu trace
+buffers etc where the ordering between an mmap event on one CPU might
+not be entirely obvious wrt the stack trace even on another CPU with a
+different thread that shares the same VM, but that's no different from
+any of the other percpu trace buffer ordering issues).
+
+                 Linus
