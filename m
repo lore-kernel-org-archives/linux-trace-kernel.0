@@ -1,180 +1,153 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14D3C274FFE;
-	Fri, 29 Aug 2025 11:12:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4D8A265CC0;
+	Fri, 29 Aug 2025 12:25:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756465960; cv=none; b=P0agqy/WlNIxQeJg3kBGDHl38krHNb2LYpbv9Z4vtw2VQgf4BceYF5g8cVAYhy6srng9OJwYovwvXhrfaf9uTDA93XCHtTzyJsVTc5pEcs4wl+xxX0bCVKeNYJFIm42W6prb5JcolJSjtLLybyPpoKKkP2pYwu2wLkQq/VTMObM=
+	t=1756470348; cv=none; b=AWQig3H/7STtCixTWi9dBdzCtgXT50QQ8nIdrqcvI1HAdXhrdX2diR6zwaU+MoTAlz3+jlekDOPwpDRZ1GVcWeCHRW30KxxE2UbQ/F+FHizaX5orU41G15/FY4K8Q4LjoMYCCmQPRNCXk9TwZj2LkrP5B4pnNsjmBr9pUUBIubY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756465960; c=relaxed/simple;
-	bh=Qlwzayq/Pf0Medk24NErKYNLUDYes+Gcgm2LBjkXTgk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t8XmgDSf4fxPhm+/kNbD1bM+4Chsq3flZNxV2CJHjOAj2Tb2JlHQGgmjhRUVbQZPWJdyO0jxTZYyaRbYiUVQgNTGcDrbuERWNj9XmdY/qjlY23uGfzYYsiTa0eR/wBx0xy+67BGcIhPIW4v9cKbmfZ00FX2PmjWhq86C/TgQ7+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tXKjOj7A; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tXKjOj7A"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92AA0C4CEF0;
-	Fri, 29 Aug 2025 11:12:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756465959;
-	bh=Qlwzayq/Pf0Medk24NErKYNLUDYes+Gcgm2LBjkXTgk=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=tXKjOj7AG876DMc52h/44P4naRLGEWgfjFATVKZTrYKtuvR98EqkPj9hVHuttvdpu
-	 W/H8boSrZ5l8MMl5pZzlbnC8k1x+St3TM17LDMXbcQwB91UYD9fFG5E0GhVdfqaChY
-	 bYf++Fo2NGJusO5BUUCgEZ8821b4yPAGkcJAAF30aE8X60wwg5pUBK6DA1j8r0BVu7
-	 1h/JaY5nT8CEu5T3q5W2o3Frw2sQ2M6507hyd++IR/sIU0aWESlPA2uo/+J+1zjn/C
-	 HooUW/AXwtIOqf424wiaXR57fFBTPXN5gVsTaJVAF9CfXnk0RPzRMkSkp68yAriyEp
-	 QDEjGe94zDWQw==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 4234DCE0B2A; Fri, 29 Aug 2025 04:12:39 -0700 (PDT)
-Date: Fri, 29 Aug 2025 04:12:39 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: menglong.dong@linux.dev
-Cc: Steven Rostedt <rostedt@goodmis.org>, mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	kernel test robot <oliver.sang@intel.com>
-Subject: Re: [PATCH] tracing: fprobe: fix suspicious rcu usage in fprobe_entry
-Message-ID: <89796a20-5fe8-4ec9-a192-6b8c58f8388a@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20250829021436.19982-1-dongml2@chinatelecom.cn>
- <20250828222357.55fab4c2@batman.local.home>
- <2396899.ElGaqSPkdT@7940hx>
+	s=arc-20240116; t=1756470348; c=relaxed/simple;
+	bh=3u1+i5KWMvzk3PcIfscyZ1ILqglDLdFXMkr2wdThA14=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IEyP9lFQkziefZNradTymoHkdMN6DZSN2Ip0VeKKNtcZAmDfCO+RpsrBneBd/MYUocjQn6R3b5zjMRLzkx8qFRH0+6ffbMJ1H62CW2GI9b+/+xE7TFvctt/cEv7oWg7naPcopPTX8tjRKZVy/6VdFLKyLjrqbeEmYf8EKUw2eAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf20.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id 5EE46BADE0;
+	Fri, 29 Aug 2025 12:25:44 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf20.hostedemail.com (Postfix) with ESMTPA id 5CCF120027;
+	Fri, 29 Aug 2025 12:25:42 +0000 (UTC)
+Date: Fri, 29 Aug 2025 08:26:04 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Luo Gengkun <luogengkun@huaweicloud.com>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Catalin
+ Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] tracing: Fix tracing_marker may trigger page fault
+ during preempt_disable
+Message-ID: <20250829082604.1e3fd06e@gandalf.local.home>
+In-Reply-To: <436e4fa7-f8c7-4c23-a28a-4e5eebe2f854@huaweicloud.com>
+References: <20250819105152.2766363-1-luogengkun@huaweicloud.com>
+	<20250819135008.5f1ba00e@gandalf.local.home>
+	<436e4fa7-f8c7-4c23-a28a-4e5eebe2f854@huaweicloud.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2396899.ElGaqSPkdT@7940hx>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 5CCF120027
+X-Stat-Signature: z4qee96ax9gocnkpiu6zi9es954bzpw8
+X-Rspamd-Server: rspamout02
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1//eG0SPh1gXzSvhvFw/mS6TyA0QJDKqYs=
+X-HE-Tag: 1756470342-908911
+X-HE-Meta: U2FsdGVkX195ZgDOTbivrDBTaufOHEnsk6PH2OHOVpi9ojybHHHjo+zy+PeSzr/EOxHT+tJW9yhUm44IbnMOZIbQ9I5ne1xKch07oeuKvb843vUBYWVLBhmzJmPTdMMwUrD3UZ5jKD0jWcwB+oouhMyHzFKenViz4q+lSCtfhzKxn5fCJBjZAfjiF/lS7i1B8eE2ND5nI+rBiA9a6ZWJ+2UiTAhUWYAmR4C5ooFf7VFPF/LXnrAnb36shVcxzstQwJp5t9eeyJhrs0mn5AH8v/zHwvU1YGJLeG9Xsavq3ongCZTqfdoVEMKzCcz1SMRbh1dgLJSiwgD1jxqrLBzE2r8JHLs5DsA8h53z7hGGNQ8SjLGpCFqkWqYEhEpLDX+r
 
-On Fri, Aug 29, 2025 at 10:49:46AM +0800, menglong.dong@linux.dev wrote:
-> On 2025/8/29 10:23 Steven Rostedt <rostedt@goodmis.org> write:
-> > On Fri, 29 Aug 2025 10:14:36 +0800
-> > Menglong Dong <dongml2@chinatelecom.cn> wrote:
-> > 
-> > > rcu_read_lock() is not needed in fprobe_entry, but rcu_dereference_check()
-> > > is used in rhltable_lookup(), which causes suspicious RCU usage warning:
-> > > 
-> > >   WARNING: suspicious RCU usage
-> > >   6.17.0-rc1-00001-gdfe0d675df82 #1 Tainted: G S
-> > >   -----------------------------
-> > >   include/linux/rhashtable.h:602 suspicious rcu_dereference_check() usage!
-> > >   ......
-> > >   stack backtrace:
-> > >   CPU: 1 UID: 0 PID: 4652 Comm: ftracetest Tainted: G S
-> > >   Tainted: [S]=CPU_OUT_OF_SPEC, [I]=FIRMWARE_WORKAROUND
-> > >   Hardware name: Dell Inc. OptiPlex 7040/0Y7WYT, BIOS 1.1.1 10/07/2015
-> > >   Call Trace:
-> > >    <TASK>
-> > >    dump_stack_lvl+0x7c/0x90
-> > >    lockdep_rcu_suspicious+0x14f/0x1c0
-> > >    __rhashtable_lookup+0x1e0/0x260
-> > >    ? __pfx_kernel_clone+0x10/0x10
-> > >    fprobe_entry+0x9a/0x450
-> > >    ? __lock_acquire+0x6b0/0xca0
-> > >    ? find_held_lock+0x2b/0x80
-> > >    ? __pfx_fprobe_entry+0x10/0x10
-> > >    ? __pfx_kernel_clone+0x10/0x10
-> > >    ? lock_acquire+0x14c/0x2d0
-> > >    ? __might_fault+0x74/0xc0
-> > >    function_graph_enter_regs+0x2a0/0x550
-> > >    ? __do_sys_clone+0xb5/0x100
-> > >    ? __pfx_function_graph_enter_regs+0x10/0x10
-> > >    ? _copy_to_user+0x58/0x70
-> > >    ? __pfx_kernel_clone+0x10/0x10
-> > >    ? __x64_sys_rt_sigprocmask+0x114/0x180
-> > >    ? __pfx___x64_sys_rt_sigprocmask+0x10/0x10
-> > >    ? __pfx_kernel_clone+0x10/0x10
-> > >    ftrace_graph_func+0x87/0xb0
-> > > 
-> > > Fix this by using rcu_read_lock() for rhltable_lookup(). Alternatively, we
-> > > can use rcu_lock_acquire(&rcu_lock_map) here to obtain better performance.
-> > > However, it's not a common usage :/
-> > 
-> > So this is needed even though it's called under preempt_disable().
-> 
-> It is needed when the lock debug configs are enabled.
-> 
-> > 
-> > Paul, do we need to add an rcu_read_lock() because the code in rht
-> > (rhashtable) requires RCU read lock?
-> > 
-> > I thought that rcu_read_lock() and preempt_disable() have been merged?
-> 
-> Maybe we can do some adjustment do rcu_read_lock_held_common()
-> like this:
-> 
-> diff --git a/kernel/rcu/update.c b/kernel/rcu/update.c
-> index c912b594ba98..280fa4d2fc79 100644
-> --- a/kernel/rcu/update.c
-> +++ b/kernel/rcu/update.c
-> @@ -114,6 +114,10 @@ static bool rcu_read_lock_held_common(bool *ret)
->                 *ret = false;
->                 return true;
->         }
-> +       if (!preemptible()) {
-> +               *ret = true;
-> +               return true;
-> +       }
->         return false;
->  }
->  
-> @@ -123,7 +127,7 @@ int rcu_read_lock_sched_held(void)
->  
->         if (rcu_read_lock_held_common(&ret))
->                 return ret;
-> -       return lock_is_held(&rcu_sched_lock_map) || !preemptible();
-> +       return lock_is_held(&rcu_sched_lock_map);
->  }
->  EXPORT_SYMBOL(rcu_read_lock_sched_held);
->  #endif
-> 
-> I think it's a bad idea, as !preemptiable() has different semantic
-> with rcu_read_lock() :(
 
-Especially given the definition of preemptible() within kernels built
-with CONFIG_PREEMPT_COUNT=n...
+[ Adding arm64 maintainers ]
 
-							Thanx, Paul
+On Fri, 29 Aug 2025 16:29:07 +0800
+Luo Gengkun <luogengkun@huaweicloud.com> wrote:
 
-> Thanks!
-> Menglong Dong
+> On 2025/8/20 1:50, Steven Rostedt wrote:
+> > On Tue, 19 Aug 2025 10:51:52 +0000
+> > Luo Gengkun <luogengkun@huaweicloud.com> wrote:
+> >  
+> >> Both tracing_mark_write and tracing_mark_raw_write call
+> >> __copy_from_user_inatomic during preempt_disable. But in some case,
+> >> __copy_from_user_inatomic may trigger page fault, and will call schedule()
+> >> subtly. And if a task is migrated to other cpu, the following warning will  
+> > Wait! What?
+> >
+> > __copy_from_user_inatomic() is allowed to be called from in atomic context.
+> > Hence the name it has. How the hell can it sleep? If it does, it's totally
+> > broken!
+> >
+> > Now, I'm not against using nofault() as it is better named, but I want to
+> > know why you are suggesting this change. Did you actually trigger a bug here?  
 > 
-> > 
+> yes, I trigger this bug in arm64.
+
+And I still think this is an arm64 bug.
+
+> 
+> >  
+> >> be trigger:
+> >>          if (RB_WARN_ON(cpu_buffer,
+> >>                         !local_read(&cpu_buffer->committing)))
+> >>
+> >> An example can illustrate this issue:
+> >>
+> >> process flow						CPU
+> >> ---------------------------------------------------------------------
+> >>
+> >> tracing_mark_raw_write():				cpu:0
+> >>     ...
+> >>     ring_buffer_lock_reserve():				cpu:0
+> >>        ...
+> >>        cpu = raw_smp_processor_id()			cpu:0
+> >>        cpu_buffer = buffer->buffers[cpu]			cpu:0
+> >>        ...
+> >>     ...
+> >>     __copy_from_user_inatomic():				cpu:0
+> >>        ...
+> >>        # page fault
+> >>        do_mem_abort():					cpu:0  
+> > Sounds to me that arm64 __copy_from_user_inatomic() may be broken.
+> >  
+> >>           ...
+> >>           # Call schedule
+> >>           schedule()					cpu:0
+> >> 	 ...
+> >>     # the task schedule to cpu1
+> >>     __buffer_unlock_commit():				cpu:1
+> >>        ...
+> >>        ring_buffer_unlock_commit():			cpu:1
+> >> 	 ...
+> >> 	 cpu = raw_smp_processor_id()			cpu:1
+> >> 	 cpu_buffer = buffer->buffers[cpu]		cpu:1
+> >>
+> >> As shown above, the process will acquire cpuid twice and the return values
+> >> are not the same.
+> >>
+> >> To fix this problem using copy_from_user_nofault instead of
+> >> __copy_from_user_inatomic, as the former performs 'access_ok' before
+> >> copying.
+> >>
+> >> Fixes: 656c7f0d2d2b ("tracing: Replace kmap with copy_from_user() in trace_marker writing")  
+> > The above commit was intorduced in 2016. copy_from_user_nofault() was
+> > introduced in 2020. I don't think this would be the fix for that kernel.
+> >
+> > So no, I'm not taking this patch. If you see __copy_from_user_inatomic()
+> > sleeping, it's users are not the issue. That function is.
+> >
 > > -- Steve
-> > 
-> > 
-> > > 
-> > > Reported-by: kernel test robot <oliver.sang@intel.com>
-> > > Closes: https://lore.kernel.org/oe-lkp/202508281655.54c87330-lkp@intel.com
-> > > Fixes: dfe0d675df82 ("tracing: fprobe: use rhltable for fprobe_ip_table")
-> > > Signed-off-by: Menglong Dong <dongml2@chinatelecom.cn>
-> > > ---
-> > >  kernel/trace/fprobe.c | 2 ++
-> > >  1 file changed, 2 insertions(+)
-> > > 
-> > > diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-> > > index fb127fa95f21..fece0f849c1c 100644
-> > > --- a/kernel/trace/fprobe.c
-> > > +++ b/kernel/trace/fprobe.c
-> > > @@ -269,7 +269,9 @@ static int fprobe_entry(struct ftrace_graph_ent *trace, struct fgraph_ops *gops,
-> > >  	if (WARN_ON_ONCE(!fregs))
-> > >  		return 0;
-> > >  
-> > > +	rcu_read_lock();
-> > >  	head = rhltable_lookup(&fprobe_ip_table, &func, fprobe_rht_params);
-> > > +	rcu_read_unlock();
-> > >  	reserved_words = 0;
-> > >  	rhl_for_each_entry_rcu(node, pos, head, hlist) {
-> > >  		if (node->addr != func)
-> > 
-> > 
-> > 
-> 
-> 
-> 
-> 
+> >
+> >  
+> I noticed that in most places where __copy_from_user_inatomic() is used,
+
+"most" but not all?
+
+> it is within the pagefault_disable/enable() section. When pagefault_disable()
+> is called, user access methods will no sleep. So I'm going to send a v2patch which use pagefault_disable/enable()to fix this problem. -- Gengkun
+
+No, I don't want that either. __copy_from_user_inatomic() SHOULD NOT SLEEP!
+If it does, than it is a bug!
+
+If it can sleep, "inatomic" is a very bad name. The point of being
+"inatomic" is that you are in a location that IS NOT ALLOWED TO SLEEP!
+
+I don't want to fix a symptom and leave a bug around.
+
+BTW, the reason not to fault is because this might be called in code that is
+already doing a fault and could cause deadlocks. The no sleeping part is a
+side effect.
+
+-- Steve
