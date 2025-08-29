@@ -1,135 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC1CF1E1C1A;
-	Fri, 29 Aug 2025 01:56:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8478202980
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 29 Aug 2025 02:14:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756432590; cv=none; b=IKfCR7zVv/1Mz4v2H9ssRG+e7xCIyqdwN3utvk6z/fhDJNz/WhMu0zYZ12dSElPo3lCO2DVmZsjgof9IfttlQjc4PIDI7/c0w1F2LCqk929nhc4s6XfmhpRXmXS+g0BYnqB51Wrypq+CUgb82iqJ6cOuF9SG/IGi0SJ7UAaLCu4=
+	t=1756433697; cv=none; b=sQsSbPZjqvvOhTXvLz6caIWQILH648RsqDKQlCkSraVTe96zhN1dUP2CoAe3/7mavpnFb6uqDqg7r8z6hA+033O+o1AskREcmKJMcZlWNGCqqJzw1W5Z5B/tl74zt84Y9JYax11SI5Et4dUVb9IlH5MueHN0jIftBoo65p+p9g8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756432590; c=relaxed/simple;
-	bh=5TyW6yrGeyb7nMU0ulwU5MSbnNPSaEJZ7KfGOW7dCqw=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=Mekl5tagGsgOXW3iy5wHT1oLLqwcEYNWO4BNW4Oa/gm1b0yx5cgHjOGvYGPa8s2IZ+b1g4cUwx0HknhT58OIRW5HyiJyeQQ2ujVRMd3Flu1RQ5T/IG8i0Vz8FHCPThWNdjSosLfOEMjVHRmQ86FVvTzeh8a/i3Emi3C+In4F8t4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kMf/YGJo; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kMf/YGJo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAC48C4CEFB;
-	Fri, 29 Aug 2025 01:56:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756432588;
-	bh=5TyW6yrGeyb7nMU0ulwU5MSbnNPSaEJZ7KfGOW7dCqw=;
-	h=Date:From:To:Cc:Subject:References:From;
-	b=kMf/YGJoHz5UypoQ6DWMc2pj+6VszUnwU/bXsBp6B7JdXcDzW8R+qXfO5rIAfzzfO
-	 cktfF/ok9SbvgcrUC384jdu/6Sn33Ee8Q2ewcmjBaRtinvwM/J7vcxcL+ay2xERKH4
-	 Xi3VZAs/noLrmq9WGyxo5Tv48SPB9+r1NjaI4XzlksbnSeA3IZyHhFaufaF1thP/2E
-	 afvwE19UHg94YAuUszAgCawiTqM/FltkKaaMkR0A4+S5kdilZckzHoPD/p1DVbemBk
-	 pTelZssk1wSEc9XPBNH05VFn+1qnt7o1yxHetkBpsXHOH2qVikSn+hHbyP8S+GsHmO
-	 9WwhoFiBO6NdA==
-Received: from rostedt by gandalf with local (Exim 4.98.2)
-	(envelope-from <rostedt@kernel.org>)
-	id 1uroME-00000004Prb-1YA0;
-	Thu, 28 Aug 2025 21:56:50 -0400
-Message-ID: <20250829015650.224063821@kernel.org>
-User-Agent: quilt/0.68
-Date: Thu, 28 Aug 2025 21:55:55 -0400
-From: Steven Rostedt <rostedt@kernel.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org,
- linux-usb@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Peter Chen <peter.chen@kernel.org>,
- Pawel Laszczak <pawell@cadence.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 3/3] cdnsp: Remove unused tracepoints
-References: <20250829015552.314865014@kernel.org>
+	s=arc-20240116; t=1756433697; c=relaxed/simple;
+	bh=jHPXfkFeIwjt4mfYaOe/rVaJ3mviT+kE7KTC7JsGT6Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BZEVbcKVvUKfCu+lp8sF0u5qnYOmdp8N73HxGTmQcelqdR2HhuPIqSWvJORBbHf0kjv5S0KutDmqij5swqo76YYoVffORAP1292j2h43HGHMTY/Q5F/Q8/Hm/6EaWCEDfxfqGHTzYjCp8B6ufV2YV0MABh2WAgHdELe+0PAkoWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chinatelecom.cn; spf=pass smtp.mailfrom=linux.dev; arc=none smtp.client-ip=91.218.175.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chinatelecom.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Menglong Dong <dongml2@chinatelecom.cn>
+To: mhiramat@kernel.org
+Cc: rostedt@goodmis.org,
+	mathieu.desnoyers@efficios.com,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	kernel test robot <oliver.sang@intel.com>
+Subject: [PATCH] tracing: fprobe: fix suspicious rcu usage in fprobe_entry
+Date: Fri, 29 Aug 2025 10:14:36 +0800
+Message-ID: <20250829021436.19982-1-dongml2@chinatelecom.cn>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-From: Steven Rostedt <rostedt@goodmis.org>
+rcu_read_lock() is not needed in fprobe_entry, but rcu_dereference_check()
+is used in rhltable_lookup(), which causes suspicious RCU usage warning:
 
-Tracepoints that are defined take up around 5K each, even if they are not
-used. If they are defined and not used, then they waste memory for unused
-code. Soon unused tracepoints will cause warnings.
+  WARNING: suspicious RCU usage
+  6.17.0-rc1-00001-gdfe0d675df82 #1 Tainted: G S
+  -----------------------------
+  include/linux/rhashtable.h:602 suspicious rcu_dereference_check() usage!
+  ......
+  stack backtrace:
+  CPU: 1 UID: 0 PID: 4652 Comm: ftracetest Tainted: G S
+  Tainted: [S]=CPU_OUT_OF_SPEC, [I]=FIRMWARE_WORKAROUND
+  Hardware name: Dell Inc. OptiPlex 7040/0Y7WYT, BIOS 1.1.1 10/07/2015
+  Call Trace:
+   <TASK>
+   dump_stack_lvl+0x7c/0x90
+   lockdep_rcu_suspicious+0x14f/0x1c0
+   __rhashtable_lookup+0x1e0/0x260
+   ? __pfx_kernel_clone+0x10/0x10
+   fprobe_entry+0x9a/0x450
+   ? __lock_acquire+0x6b0/0xca0
+   ? find_held_lock+0x2b/0x80
+   ? __pfx_fprobe_entry+0x10/0x10
+   ? __pfx_kernel_clone+0x10/0x10
+   ? lock_acquire+0x14c/0x2d0
+   ? __might_fault+0x74/0xc0
+   function_graph_enter_regs+0x2a0/0x550
+   ? __do_sys_clone+0xb5/0x100
+   ? __pfx_function_graph_enter_regs+0x10/0x10
+   ? _copy_to_user+0x58/0x70
+   ? __pfx_kernel_clone+0x10/0x10
+   ? __x64_sys_rt_sigprocmask+0x114/0x180
+   ? __pfx___x64_sys_rt_sigprocmask+0x10/0x10
+   ? __pfx_kernel_clone+0x10/0x10
+   ftrace_graph_func+0x87/0xb0
 
-Remove the unused tracepoints of the cdnsp subsystem. They are:
+Fix this by using rcu_read_lock() for rhltable_lookup(). Alternatively, we
+can use rcu_lock_acquire(&rcu_lock_map) here to obtain better performance.
+However, it's not a common usage :/
 
-cdnsp_defered_event
-cdnsp_ep0_halted
-cdnsp_free_priv_device
-cdnsp_handle_cmd_flush_ep
-
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Reported-by: kernel test robot <oliver.sang@intel.com>
+Closes: https://lore.kernel.org/oe-lkp/202508281655.54c87330-lkp@intel.com
+Fixes: dfe0d675df82 ("tracing: fprobe: use rhltable for fprobe_ip_table")
+Signed-off-by: Menglong Dong <dongml2@chinatelecom.cn>
 ---
- drivers/usb/cdns3/cdnsp-trace.h | 25 -------------------------
- 1 file changed, 25 deletions(-)
+ kernel/trace/fprobe.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/usb/cdns3/cdnsp-trace.h b/drivers/usb/cdns3/cdnsp-trace.h
-index f2bcf77a5d0a..9b33a736c3de 100644
---- a/drivers/usb/cdns3/cdnsp-trace.h
-+++ b/drivers/usb/cdns3/cdnsp-trace.h
-@@ -178,11 +178,6 @@ DEFINE_EVENT(cdnsp_log_simple, cdnsp_ep0_set_config,
- 	TP_ARGS(msg)
- );
+diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
+index fb127fa95f21..fece0f849c1c 100644
+--- a/kernel/trace/fprobe.c
++++ b/kernel/trace/fprobe.c
+@@ -269,7 +269,9 @@ static int fprobe_entry(struct ftrace_graph_ent *trace, struct fgraph_ops *gops,
+ 	if (WARN_ON_ONCE(!fregs))
+ 		return 0;
  
--DEFINE_EVENT(cdnsp_log_simple, cdnsp_ep0_halted,
--	TP_PROTO(char *msg),
--	TP_ARGS(msg)
--);
--
- DEFINE_EVENT(cdnsp_log_simple, cdnsp_ep_halt,
- 	TP_PROTO(char *msg),
- 	TP_ARGS(msg)
-@@ -399,11 +394,6 @@ DEFINE_EVENT(cdnsp_log_trb, cdnsp_cmd_timeout,
- 	TP_ARGS(ring, trb)
- );
- 
--DEFINE_EVENT(cdnsp_log_trb, cdnsp_defered_event,
--	TP_PROTO(struct cdnsp_ring *ring, struct cdnsp_generic_trb *trb),
--	TP_ARGS(ring, trb)
--);
--
- DECLARE_EVENT_CLASS(cdnsp_log_pdev,
- 	TP_PROTO(struct cdnsp_device *pdev),
- 	TP_ARGS(pdev),
-@@ -433,16 +423,6 @@ DEFINE_EVENT(cdnsp_log_pdev, cdnsp_alloc_priv_device,
- 	TP_ARGS(vdev)
- );
- 
--DEFINE_EVENT(cdnsp_log_pdev, cdnsp_free_priv_device,
--	TP_PROTO(struct cdnsp_device *vdev),
--	TP_ARGS(vdev)
--);
--
--DEFINE_EVENT(cdnsp_log_pdev, cdnsp_setup_device,
--	TP_PROTO(struct cdnsp_device *vdev),
--	TP_ARGS(vdev)
--);
--
- DEFINE_EVENT(cdnsp_log_pdev, cdnsp_setup_addressable_priv_device,
- 	TP_PROTO(struct cdnsp_device *vdev),
- 	TP_ARGS(vdev)
-@@ -575,11 +555,6 @@ DEFINE_EVENT(cdnsp_log_ep_ctx, cdnsp_handle_cmd_stop_ep,
- 	TP_ARGS(ctx)
- );
- 
--DEFINE_EVENT(cdnsp_log_ep_ctx, cdnsp_handle_cmd_flush_ep,
--	TP_PROTO(struct cdnsp_ep_ctx *ctx),
--	TP_ARGS(ctx)
--);
--
- DEFINE_EVENT(cdnsp_log_ep_ctx, cdnsp_handle_cmd_set_deq_ep,
- 	TP_PROTO(struct cdnsp_ep_ctx *ctx),
- 	TP_ARGS(ctx)
++	rcu_read_lock();
+ 	head = rhltable_lookup(&fprobe_ip_table, &func, fprobe_rht_params);
++	rcu_read_unlock();
+ 	reserved_words = 0;
+ 	rhl_for_each_entry_rcu(node, pos, head, hlist) {
+ 		if (node->addr != func)
 -- 
-2.50.1
-
+2.51.0
 
