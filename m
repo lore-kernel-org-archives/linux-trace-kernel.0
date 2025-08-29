@@ -1,126 +1,117 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E37A8101DE
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 29 Aug 2025 16:29:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CD1F1C1F05;
+	Fri, 29 Aug 2025 16:33:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756484943; cv=none; b=iNMVd7TgZCoeEyuh2CpGOReIKSjiRddznSTA11tikeAUUmigxVgesG8bY4KBDXJuKE6gtGBTJ4IArRFU7DFAsuMMqZRagx32xnW2y0Y4e2hFn7m23DZUZUf+Toep/94byM478yl1KQKJaOcHQGqfRmcr2+JDKFlhSMxr0PMHjOo=
+	t=1756485189; cv=none; b=e9vNKvlxmB+Bvk5/f9S2dG+Xrs6ohegr6ZZfbrh+jvCD530vi3TB9L8M2x93RzjPIggptsYelAB+Q5WQxo3wiy6WbMpXD6vovv0dHZdGoTwujfgVlL2WjqNQEazg4Mc/r0pJ4lgTW0akEDsOOLqtWSJb0G1dnVb7nGmXZ/l4w+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756484943; c=relaxed/simple;
-	bh=JAYlCBf5lvQf2RAI2BCV6usuwiQQx3hpU17cVIVxX3g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RmAAuH/YWEvLawUP8+aT4ZoWGAgWUTnzavSnLlGMayX+Dg1YadzMx8SEnW4dO+WG0WmJN1NerHRygJMPWn8LlJJy4UT3GlNZFTGwNWCZtDd4rNF/ski+vegZ/2NKQGqieCIycPFpa8GQufVtNE4G21BYX2PzUWpEs+qILQ0HIcs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=AhpQWR63; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="AhpQWR63"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-afede1b3d05so403579166b.2
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 29 Aug 2025 09:29:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1756484939; x=1757089739; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ayhtkB5kKKP+MCd/lsnF5BgjvtsGJ8UuOa5gag5oWTg=;
-        b=AhpQWR63yX6QlnDCVzNemeg1aUhg+sk84+aLyn2Cw33yghbV+HYDAV8pTHmUmkNe5z
-         ISvF5uEx7Mss53N1JiT1LmpbdPAxQbWZieI4FTKDYpUispwEHXN8kghS+OeLuagrky3J
-         bYBwupT9wc1MWRbgFhjR0i0UY5BacIL+3bFrc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756484939; x=1757089739;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ayhtkB5kKKP+MCd/lsnF5BgjvtsGJ8UuOa5gag5oWTg=;
-        b=PG9jUbNRzXc5pmvXsHIJpt5hWYexAJEuq9E7rPEXR2HhE8hjGH7p5Lg8mS2AxeyrFL
-         9zyN6X6JmkBG17tmLK9xhZMR8NNxBiwjqQ4ZmWLD5xPLy/Vu2YEf7FdM0+DZuzOz1zNf
-         GUvdjZdLrUL+WXCIg7vkLOJYnKUfOTSyZdJnlGbG3mcAFFI3si0PDJX7PCYY2aLpgRhB
-         0bGMcSlIiqGpQD7+bIk3KUBtmRuPnkbJ9HXoCJk2sliCDTFxhHy5RTjRyscWN/J/WLaf
-         8qd0T1B6dfQiWkD4YG4hP1LWMHpdIEMHYA6/eUiZs3V8NPplXyOymQdBTuy9fzO7QNeA
-         zU9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWSasBi6ZqkVsMVNys1kmtsYBbzTF31Mpjj6FaWGrwhgtt9hfGrL6xhqpgNVnTJzFuAPT03jSmjTgM42wANlHENi/0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyqMv4udraGYXGbijLlkpcWh2ral1nMUpTXRrWHJHIHsYpe7F4O
-	iosOPBBh4gbVEE8EY+Bo0gQXxS7iqPTEebQ2Tjb8p9efntYldgfSXD590WNH9mjmTFVPt/c+Ifs
-	EDpTIqIHx+w==
-X-Gm-Gg: ASbGncuxSu9HARI3eFE/25s0wPzMoPP+qC24KO3Kfjy4tnJ1FomzDnJdHGbFyp+nMtW
-	nkaaxBjK3cHbw4KER9p01GaffHOyyvNU8dafRfnVzaQz1DqfNSxBNiZRDsIvz1BgwC7UXSGoreM
-	p2jjXTxV0SDuTCF3juZ+TNpRd9jxqXZuN9+bUZCrsiv0lLnaXZQHdcnCgow5cNoKi3tZjGXHw7K
-	PObkIcjHI44hltvayetPrsluwygJONz24D+8emnY0gVAOGwBa6LZUY+0Zs80y8KYmt8igdheWyc
-	qnp73BBP0PHEc9uruzcnIXxa5QnW3lt2YR+aZUmepBXCguqTeS6XuLPsGL72zR753jd4iMqHhiR
-	eTDVPv3Ia3xrcbQAHoDzLpNSPBxMqVE9tdcnAEYAy08Q/ey7KQZyKyv28imzltPCg6yhPLDl5
-X-Google-Smtp-Source: AGHT+IGc1bzNLIsg+sSl5arwb7c40NtIjVNjNaFmaeYo+Mskr7ijOzpZp/jBTWZpvVJKhQ6rvkY8kg==
-X-Received: by 2002:a17:907:7eaa:b0:afe:ca13:a1e1 with SMTP id a640c23a62f3a-afeca13a8abmr937161766b.0.1756484939025;
-        Fri, 29 Aug 2025 09:28:59 -0700 (PDT)
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com. [209.85.218.45])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-afefca0a5fasm228633266b.30.2025.08.29.09.28.58
-        for <linux-trace-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 29 Aug 2025 09:28:58 -0700 (PDT)
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-afeec747e60so281154366b.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 29 Aug 2025 09:28:58 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU2sqG5G/EzPn7AheDn+RfW2HRgIKmsqJSxgkUL9dz6zSYrt/TGWpiIL1903gOe6xeHY+AgHyFgeHTbTWOKh/yG6KQ=@vger.kernel.org
-X-Received: by 2002:a17:906:c116:b0:af9:a1e4:a35b with SMTP id
- a640c23a62f3a-afe28f864bamr2310935766b.7.1756484937731; Fri, 29 Aug 2025
- 09:28:57 -0700 (PDT)
+	s=arc-20240116; t=1756485189; c=relaxed/simple;
+	bh=nvG0E5ZhYK5MJoTg4GDlBaItGIBcw2d9WraWaihQzpE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lfFJAWFtf7bE1zlfJwGrQ3nca8xV0oYuOVHSGl8bZ/qp5FAQX9JwNtdNdkZmY6mrOipaL3BwEdyCtRK7bU6DeMhhKa5cwDPG/RuZp9isGXZPZJh7rCu9qQ7jub+UcvQ+HNVevi/0tcOWJaOTKq32OvyfwWOWr/gXwHJOYvoq3KE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf02.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay10.hostedemail.com (Postfix) with ESMTP id 3C9FCC0896;
+	Fri, 29 Aug 2025 16:33:04 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf02.hostedemail.com (Postfix) with ESMTPA id ECA1E80015;
+	Fri, 29 Aug 2025 16:32:58 +0000 (UTC)
+Date: Fri, 29 Aug 2025 12:33:21 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Steven Rostedt <rostedt@kernel.org>, Arnaldo Carvalho de Melo
+ <arnaldo.melo@gmail.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, x86@kernel.org,
+ Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jiri
+ Olsa <jolsa@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Andrii Nakryiko <andrii@kernel.org>, Indu Bhagat <indu.bhagat@oracle.com>,
+ "Jose E. Marchesi" <jemarch@gnu.org>, Beau Belgrave
+ <beaub@linux.microsoft.com>, Jens Remus <jremus@linux.ibm.com>, Andrew
+ Morton <akpm@linux-foundation.org>, Florian Weimer <fweimer@redhat.com>,
+ Sam James <sam@gentoo.org>, Kees Cook <kees@kernel.org>, "Carlos O'Donell"
+ <codonell@redhat.com>
+Subject: Re: [PATCH v6 5/6] tracing: Show inode and device major:minor in
+ deferred user space stacktrace
+Message-ID: <20250829123321.63c9f525@gandalf.local.home>
+In-Reply-To: <CAHk-=wjCOWCzXG7Z=wkbLYOOcqFbuZTXSdX2yqCCWWOvanugUg@mail.gmail.com>
+References: <20250828180300.591225320@kernel.org>
+	<20250828180357.223298134@kernel.org>
+	<CAHk-=wi0EnrBacWYJoUesS0LXUprbLmSDY3ywDfGW94fuBDVJw@mail.gmail.com>
+	<D7C36F69-23D6-4AD5-AED1-028119EAEE3F@gmail.com>
+	<CAHk-=wiBUdyV9UdNYEeEP-1Nx3VUHxUb0FQUYSfxN1LZTuGVyg@mail.gmail.com>
+	<20250828161718.77cb6e61@batman.local.home>
+	<CAHk-=wiujYBqcZGyBgLOT+OWdY3cz7EhbZE0GidhJmLNd9VPOQ@mail.gmail.com>
+	<20250828164819.51e300ec@batman.local.home>
+	<CAHk-=wjRC0sRZio4TkqP8_S+Fr8LUypVucPDnmERrHVjWOABXw@mail.gmail.com>
+	<20250828171748.07681a63@batman.local.home>
+	<CAHk-=wh0LjoJmRPHF41eQ1ZRf085urz+rvQQ-rwp8dLQCdqohw@mail.gmail.com>
+	<20250829110639.1cfc5dcc@gandalf.local.home>
+	<CAHk-=wjeT3RKCTMDCcZzXznuvG2qf0fpKbHKCZuoPzxFYxVcQw@mail.gmail.com>
+	<CAHk-=wjCOWCzXG7Z=wkbLYOOcqFbuZTXSdX2yqCCWWOvanugUg@mail.gmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250828180300.591225320@kernel.org> <20250828180357.223298134@kernel.org>
- <CAHk-=wi0EnrBacWYJoUesS0LXUprbLmSDY3ywDfGW94fuBDVJw@mail.gmail.com>
- <D7C36F69-23D6-4AD5-AED1-028119EAEE3F@gmail.com> <CAHk-=wiBUdyV9UdNYEeEP-1Nx3VUHxUb0FQUYSfxN1LZTuGVyg@mail.gmail.com>
- <20250828161718.77cb6e61@batman.local.home> <CAHk-=wiujYBqcZGyBgLOT+OWdY3cz7EhbZE0GidhJmLNd9VPOQ@mail.gmail.com>
- <20250828164819.51e300ec@batman.local.home> <CAHk-=wjRC0sRZio4TkqP8_S+Fr8LUypVucPDnmERrHVjWOABXw@mail.gmail.com>
- <20250828171748.07681a63@batman.local.home> <CAHk-=wh0LjoJmRPHF41eQ1ZRf085urz+rvQQ-rwp8dLQCdqohw@mail.gmail.com>
- <20250829110639.1cfc5dcc@gandalf.local.home> <CAHk-=wjeT3RKCTMDCcZzXznuvG2qf0fpKbHKCZuoPzxFYxVcQw@mail.gmail.com>
- <20250829121900.0e79673c@gandalf.local.home>
-In-Reply-To: <20250829121900.0e79673c@gandalf.local.home>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Fri, 29 Aug 2025 09:28:41 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wj6+8vXfBQKoU4=8CSvgSEe1A++1KuQhXRZBHVvgFzzJg@mail.gmail.com>
-X-Gm-Features: Ac12FXzKsn5qgiNoTPpUW92vL8XQH-QBVsXDCKCPAfj3-whVMqZU-D3ENWgGNVI
-Message-ID: <CAHk-=wj6+8vXfBQKoU4=8CSvgSEe1A++1KuQhXRZBHVvgFzzJg@mail.gmail.com>
-Subject: Re: [PATCH v6 5/6] tracing: Show inode and device major:minor in
- deferred user space stacktrace
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Steven Rostedt <rostedt@kernel.org>, Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org, x86@kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, 
-	Indu Bhagat <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>, 
-	Beau Belgrave <beaub@linux.microsoft.com>, Jens Remus <jremus@linux.ibm.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Florian Weimer <fweimer@redhat.com>, 
-	Sam James <sam@gentoo.org>, Kees Cook <kees@kernel.org>, "Carlos O'Donell" <codonell@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: fajkd43mw64d5hsx51m4n734ki86gnp7
+X-Rspamd-Server: rspamout07
+X-Rspamd-Queue-Id: ECA1E80015
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+bqOqdpN7LTQMsmPjOiNjsKgQJjfUekco=
+X-HE-Tag: 1756485178-347167
+X-HE-Meta: U2FsdGVkX1/6r0lfSm84U5iVNsJiuqkZyHmu8dDfJFZxSk088FqCrEwXM1xBNjtM/svUyMJqVyYDcj8rUIM8ey1O6me8UarWSysyky7t8Dhku/ztC/hmCRVdIbQ55BgEr+niMHY6tGbXoLK4Q+Sib9dxiPjTg8OJlknfZcUuB0cDKbZNeyI/wdBLbByfvV7P/79/jxCz+xDLMpysW3EV3xNGAH5In15Sg/USnJeI8OfnOMp1O03QSSeH13ZXwAEBAFN+n1Nf99qWBI6mGhlB23BG/M6jKk983TOLysz+btWdso1WM1YcEGzF4pj8kWu23fvF3TDfz8yPH4I+sX/3FwBeeChPdzu4wanQYcUuRmSdA+sZfjVW7krSUvy2BoW9
 
-On Fri, 29 Aug 2025 at 09:18, Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> Basically what I need is that every time I add a file/hash mapping to the
-> hashtable, I really need a callback to know when that file goes away. And
-> then I can remove it from the hash table, so that the next time that hash is
-> added, it will trigger another "print the file associated with this hash".
+On Fri, 29 Aug 2025 09:07:58 -0700
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-That works, but why would you care?
+> The dentry pointer will typically stick around rather aggressively,
+> and will likely remain the same when you delete a file and create
+> another one with the same name, and the mnt pointer will stick around
+> too, so the contents of 'struct path' will be the exact same for two
+> completely different files across a delete/create event.
 
-Why don't you just register the hash value and NOT CARE.
+I'm not sure how often a trace would expand the event of running code,
+deleting the code, recreating it, and running it again. But that means the
+stack traces of the original code will be useless regardless. But at a
+minimum, the recreating of the code should trigger another print, and this
+would give it a different build-id (which I'm not recording as well as the
+path).
 
-Leave it all to later when the trace gets analyzed.
+> 
+> So hashing the path is very likely to stay the same as long as the
+> actual path stays the same, but would be fairly insensitive to the
+> underlying data changing. People might not care, particularly with
+> executables and libraries that simply don't get switched around much.
+> 
+> And, 'struct file *' will get reused randomly just based on memory
+> allocation issues, but I wouldn't be surprised if a close/open
+> sequence would get the same 'struct file *' pointer.
+> 
+> So these will all have various different 'value stays the same, but
+> the underlying data changed' patterns. I really think that you should
+> just treat the hash as a very random number, not assign it *any*
+> meaning at trace collection time, and the more random the better.
+> 
+> And then do all the "figure it out" work in user space when *looking*
+> at the traces. It might be a bit more work, and involve a bit more
+> data, but I _think_ it should be very straightforward to just do a
+> "what was the last mmap that had this hash"
 
-Leave it be. The normal situation is presumably going to be that
-millions of stack traces will be generated, and nobody will even look
-at them.
+I just realized that I'm using the rhashtable as an "does this hash exist".
+I could get the content of the item that matches the hash and compare it to
+what was used to create the hash in the first place. If there's a reference
+counter or some other identifier I could use to know that the passed in vma
+is the same as what is in the hash table, I can use this to know if the
+hash needs to be updated with the new information or not.
 
-> My question now is, is there a callback that can be registered by the
-> file_cache to know when the vma or the file change?
-
-No. And what's the point? I just told you that unmap doesn't matter.
-All that matters is mmap.
-
-Don't try to "reuse" hashes. Just treat them as opaque numbers.
-
-             Linus
+-- Steve
