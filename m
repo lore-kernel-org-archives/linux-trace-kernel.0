@@ -1,179 +1,67 @@
-Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 343351DFF7;
-	Fri, 29 Aug 2025 01:55:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.113
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C17D71A314F;
+	Fri, 29 Aug 2025 01:56:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756432559; cv=none; b=glkYkF3QlN7OhnJj0NnP+wXtB2S1PTbUAkc0jb+D5vkIDdzs8oaB/cnbPwLl5th8blJetaCTnl5rJ2y6j/ivjZ/EVpzTCkY2bqnp81tCEUo9/KOkYIvkXhDzGSj36HNVB0d/ccIpGzk6lcTFFVEktOdfzXqlwElMST6T30/TY6A=
+	t=1756432588; cv=none; b=CVYDywcp37nLYWo7uIlT6FQfu0iFAzPT5hwp3b1ypvK8gwuRmqV1aDEqH0wlzAGuJHvB/Rl5291+vx+Ie5yD4/wMIDaPd+59O29mx7jwiYC9y3hNIJAxE0fvGyiV7Es+8gS1oaouY5WZfBLX4SrPVH/Jy0m88geGqSKbJQzZh7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756432559; c=relaxed/simple;
-	bh=3lsN2vYrm0K0VPxgIEq3nbg372iNirHaFaobU8Zn3f4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AKiLSCNNz9uXHkndBTBC1X5kf71wR4kWmDui8+Yv7TfAuiS+cFgYxb4wKqtQTo/EVH7HtiAcGbKOMO1NC+GVz7u5EZtD/M8MG7iB6ohfeLyIYZoVUs0YSuAL1UgLzAooVkVvCFQEK6M1+wNbWBfafzSS3u0dK9B58JtPtV6D2z8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=qp5+QKze; arc=none smtp.client-ip=115.124.30.113
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1756432588; c=relaxed/simple;
+	bh=Gahg1PmzzwlLvzybwAuPqY03/QNPU52zxWkz+uzIwY8=;
+	h=Message-ID:Date:From:To:Cc:Subject; b=Qa7HEWjeMJL8yYPH5erV3HEfVZbHrnk49f7Nt17OMBG1Z1pDJ+GbsDq+H+yIW6C0EWbJ7MwOeU9EHyBK7m144oaTL0YoyQs0Hlcxl0MmtsLuIq3z5OIxk69obHauRJ8u0bIoKD4w5akaBhDYUD/tFlvVpiHabg08AIfHXl+o1ck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QGSSFFhu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="qp5+QKze"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1756432546; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=lJhaXXSDqG4GAemXi4WtUd9dZ0qacHvLnl2G4eecVXc=;
-	b=qp5+QKzei9RANO0q2YxZZEd9LzYOIxWITBkfUAN166JrRnwx6UC2mpG1IpxyrYHuuaEuobLWzCDi+wKVhtaiFvuX+zdDQYZPs1+9bF8Em4oSvCY13jPoVxkH86H8rdIKluAAL7v6eperbGLzjS3NOOLN2ddZDHe1EHI6RxtQiig=
-Received: from 30.74.144.113(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0Wmpa1nb_1756432541 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Fri, 29 Aug 2025 09:55:42 +0800
-Message-ID: <2a141eef-46e2-46e1-9b0f-066ec537600d@linux.alibaba.com>
-Date: Fri, 29 Aug 2025 09:55:37 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QGSSFFhu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A8DAC4CEF4;
+	Fri, 29 Aug 2025 01:56:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756432588;
+	bh=Gahg1PmzzwlLvzybwAuPqY03/QNPU52zxWkz+uzIwY8=;
+	h=Date:From:To:Cc:Subject:From;
+	b=QGSSFFhupvR6s1Vg550bodKFYpJbZvAMa0Nrc0AF+SN5vkTf90w9JhVbJIfvDxcey
+	 Uz5QKmIdeFUGgU8uPlhcxBwsrtBbqrLpRu6BapW8E0jvdM2NjW8+aP1xfCzNU+5bMr
+	 I1e83dUf2khblwTSQV+R62KMgPekSx7d3c68+2PcSTg3MZ6YcNJmjWZyaK6y06kDXn
+	 or7RBEZHtdHGh4vx8018EuYOJOyp7/clIsoZWYYNkL7zsMt2JiZ+D/Nxj7dwWSJzGP
+	 8Hnlt6wPRYIVQL2jPKZ+frFH0nu6OW3VIeTK3hJSp+hIUHBkJmnVEFlqzXPPYWUePC
+	 /sQRVUyv6IUqQ==
+Received: from rostedt by gandalf with local (Exim 4.98.2)
+	(envelope-from <rostedt@kernel.org>)
+	id 1uroMD-00000004Pq7-3amI;
+	Thu, 28 Aug 2025 21:56:49 -0400
+Message-ID: <20250829015552.314865014@kernel.org>
+User-Agent: quilt/0.68
+Date: Thu, 28 Aug 2025 21:55:52 -0400
+From: Steven Rostedt <rostedt@kernel.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org,
+ linux-usb@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Peter Chen <peter.chen@kernel.org>,
+ Pawel Laszczak <pawell@cadence.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 0/3] cdns: Remove unused tracepoints
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 00/13] khugepaged: mTHP support
-To: Dev Jain <dev.jain@arm.com>, David Hildenbrand <david@redhat.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Nico Pache <npache@redhat.com>, linux-mm@kvack.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, ziy@nvidia.com, Liam.Howlett@oracle.com,
- ryan.roberts@arm.com, corbet@lwn.net, rostedt@goodmis.org,
- mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- akpm@linux-foundation.org, baohua@kernel.org, willy@infradead.org,
- peterx@redhat.com, wangkefeng.wang@huawei.com, usamaarif642@gmail.com,
- sunnanyong@huawei.com, vishal.moola@gmail.com,
- thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com,
- kirill.shutemov@linux.intel.com, aarcange@redhat.com, raquini@redhat.com,
- anshuman.khandual@arm.com, catalin.marinas@arm.com, tiwai@suse.de,
- will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz, cl@gentwo.org,
- jglisse@google.com, surenb@google.com, zokeefe@google.com,
- hannes@cmpxchg.org, rientjes@google.com, mhocko@suse.com,
- rdunlap@infradead.org, hughd@google.com
-References: <20250819134205.622806-1-npache@redhat.com>
- <e971c7e0-70f0-4ce0-b288-4b581e8c15d3@lucifer.local>
- <38b37195-28c8-4471-bd06-951083118efd@arm.com>
- <0d9c6088-536b-4d7a-8f75-9be5f0faa86f@lucifer.local>
- <CAA1CXcCqhFoGBvFK-ox2sJw7QHaFt+-Lw09BDYsAGKg4qc8nSw@mail.gmail.com>
- <CAA1CXcAXTL811VJxqyL18CUw8FNek6ibPr6pKJ_7rfGn-ZU-1A@mail.gmail.com>
- <5bea5efa-2efc-4c01-8aa1-a8711482153c@lucifer.local>
- <CAA1CXcBDq9PucQdfQRh1iqJLPB6Jn6mNy28v_AuHWb9kz1gpqQ@mail.gmail.com>
- <d110a84a-a827-48b4-91c5-67cec3e92874@lucifer.local>
- <95012dfc-d82d-4ae2-b4cd-1e8dcf15e44b@redhat.com>
- <bdbb5168-7657-4f11-a42d-b75cce7e0bca@lucifer.local>
- <e34e1ffe-c377-4c9a-b28b-ca873f3620ac@redhat.com>
- <db2320ee-6bd4-49c1-8fce-0468f48e1842@linux.alibaba.com>
- <c8c5e818-536a-4d72-b8dc-36aeb1b61800@arm.com>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <c8c5e818-536a-4d72-b8dc-36aeb1b61800@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
 
+Tracepoints take up around 5K per tracepoint. This is regardless if they are
+used or not. Soon unused tracepoints will cause warnings.
 
+The cdns subsystem has several unused tracepoints. Remove them.
 
-On 2025/8/28 18:48, Dev Jain wrote:
-> 
-> On 28/08/25 3:16 pm, Baolin Wang wrote:
->> (Sorry for chiming in late)
->>
->> On 2025/8/22 22:10, David Hildenbrand wrote:
->>>>> Once could also easily support the value 255 (HPAGE_PMD_NR / 2- 1), 
->>>>> but not sure
->>>>> if we have to add that for now.
->>>>
->>>> Yeah not so sure about this, this is a 'just have to know' too, and 
->>>> yes you
->>>> might add it to the docs, but people are going to be mightily 
->>>> confused, esp if
->>>> it's a calculated value.
->>>>
->>>> I don't see any other way around having a separate tunable if we 
->>>> don't just have
->>>> something VERY simple like on/off.
->>>
->>> Yeah, not advocating that we add support for other values than 0/511, 
->>> really.
->>>
->>>>
->>>> Also the mentioned issue sounds like something that needs to be 
->>>> fixed elsewhere
->>>> honestly in the algorithm used to figure out mTHP ranges (I may be 
->>>> wrong - and
->>>> happy to stand corrected if this is somehow inherent, but reallly 
->>>> feels that
->>>> way).
->>>
->>> I think the creep is unavoidable for certain values.
->>>
->>> If you have the first two pages of a PMD area populated, and you 
->>> allow for at least half of the #PTEs to be non/zero, you'd collapse 
->>> first a
->>> order-2 folio, then and order-3 ... until you reached PMD order.
->>>
->>> So for now we really should just support 0 / 511 to say "don't 
->>> collapse if there are holes" vs. "always collapse if there is at 
->>> least one pte used".
->>
->> If we only allow setting 0 or 511, as Nico mentioned before, "At 511, 
->> no mTHP collapses would ever occur anyway, unless you have 2MB 
->> disabled and other mTHP sizes enabled. Technically, at 511, only the 
->> highest enabled order would ever be collapsed."
-> I didn't understand this statement. At 511, mTHP collapses will occur if 
-> khugepaged cannot get a PMD folio. Our goal is to collapse to the 
-> highest order folio.
+Steven Rostedt (3):
+      cdns2: Remove unused tracepoints
+      cdns3: Remove unused tracepoints
+      cdnsp: Remove unused tracepoints
 
-Yes, I’m not saying that it’s incorrect behavior when set to 511. What I 
-mean is, as in the example I gave below, users may only want to allow a 
-large order collapse when the number of present PTEs reaches half of the 
-large folio, in order to avoid RSS bloat.
-
-So we might also need to consider whether 255 is a reasonable 
-configuration for mTHP collapse.
-
->> In other words, for the scenario you described, although there are 
->> only 2 PTEs present in a PMD, it would still get collapsed into a PMD- 
->> sized THP. In reality, what we probably need is just an order-2 mTHP 
->> collapse.
->>
->> If 'khugepaged_max_ptes_none' is set to 255, I think this would 
->> achieve the desired result: when there are only 2 PTEs present in a 
->> PMD, an order-2 mTHP collapse would be successed, but it wouldn’t 
->> creep up to an order-3 mTHP collapse. That’s because:
->> When attempting an order-3 mTHP collapse, 'threshold_bits' = 1, while 
->> 'bits_set' = 1 (means only 1 chunk is present), so 'bits_set > 
->> threshold_bits' is false, then an order-3 mTHP collapse wouldn’t be 
->> attempted. No?
->>
->> So I have some concerns that if we only allow setting 0 or 511, it may 
->> not meet the goal we have for mTHP collapsing.
->>
->>>>> Because, as raised in the past, I'm afraid nobody on this earth has 
->>>>> a clue how
->>>>> to set this parameter to values different to 0 (don't waste memory 
->>>>> with khugepaged)
->>>>> and 511 (page fault behavior).
->>>>
->>>> Yup
->>>>
->>>>>
->>>>>
->>>>> If any other value is set, essentially
->>>>>     pr_warn("Unsupported 'max_ptes_none' value for mTHP collapse");
->>>>>
->>>>> for now and just disable it.
->>>>
->>>> Hmm but under what circumstances? I would just say unsupported value 
->>>> not mention
->>>> mTHP or people who don't use mTHP might find that confusing.
->>>
->>> Well, we can check whether any mTHP size is enabled while the value 
->>> is set to something unexpected. We can then even print the 
->>> problematic sizes if we have to.
->>>
->>> We could also just just say that if the value is set to something 
->>> else than 511 (which is the default), it will be treated as being "0" 
->>> when collapsing mthp, instead of doing any scaling.
->>>
->>
-
+----
+ drivers/usb/cdns3/cdns3-trace.h            | 61 --------------------------
+ drivers/usb/cdns3/cdnsp-trace.h            | 25 -----------
+ drivers/usb/gadget/udc/cdns2/cdns2-trace.h | 69 ------------------------------
+ 3 files changed, 155 deletions(-)
