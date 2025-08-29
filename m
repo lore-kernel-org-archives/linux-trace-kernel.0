@@ -1,138 +1,149 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAAF233A02B;
-	Fri, 29 Aug 2025 17:58:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 338A521019E;
+	Fri, 29 Aug 2025 18:10:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756490285; cv=none; b=MRsq5MVaGqSPgM+PNeaxHftnWinbDDhRfmLHLKs4bQhpGfMmnubdRjPZNRv412c5OLIZbGZCb/LTMrs4nEVqVAQ5WZOc/hjZPXak0JzAbFaEFqzbNXntVugXbQ0+TOYdWLWTpW+0OIq7HDc8qiEc/RLhqmPJBmyRLsgMAJWzvHI=
+	t=1756491020; cv=none; b=PW1RbyFm6pAlb8a+rD/IY1krM6TRHsBDRHPtN9L2g6fvl2XqOhE0K2ajXc66q4BwrBrW0zqqmwqw8GoxhTaqfD6YXbeF1pqAMS1jdN0Ayy4s5tcAo186lp5n6bcVptFkbsg7k0J3XhtZPAHrRYNIJdiVp8ZauRyAbpxvwUXX9YE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756490285; c=relaxed/simple;
-	bh=I5OY4LFNqLLPDVxAMmWT8dvCgWbSg5IxhOzBtc0iMzg=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=p4pg10kBXksLAD5fz639JohnFxnAoGi8mdgR2yB/cIof5ipQDfFoRHUmXTBAbrW1WlGjgJXWfJv3AfQQDpf5SOn8Ja1d/7kkMavujMfLoZ9wN0dpclZa+hqg9NSZYhu7HTRAHq31bJYMxA9l/UwVKzVzMdlwYe+XB22IPpsPcnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OZiFrf6e; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1756491020; c=relaxed/simple;
+	bh=SXu3T17dYbp/ukZ8uJydGVdZ6zcCuFcjGzpDGMwa+Nc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HKD1whapY09keBQKdviaQHsUdOtbcq2/nWQqUIfA+MBiClFxxigbachQOj6jlJA9Y7y4TZJ1fO9zlV5VDRkw3rfSFRk9i8jfFppsHaktJMqikvI6HRUqUDcy4VMbFdbyi/BmdApYw/Ho51oJK/GxkkaCav/QL+HCp1DPTuowxVQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ooi7zA7T; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OZiFrf6e"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-afcb72d5409so411527966b.0;
-        Fri, 29 Aug 2025 10:58:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1756490282; x=1757095082; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=awljRsOqs8zmeNHYRoc+5rBvpq/dx6uCVPg6gUVT0+I=;
-        b=OZiFrf6e9Jjn1530oCX4PWJlu9/iro3fcM412I8cluZ1EozinH4nTgzRFbO/nHyEWx
-         pXg5QuBbzCj5CpSJsiewYzrNUY5iLSn26vbXSEkna9kxcuGPYpk+9wpU6at0xxyna/Bk
-         eDEDQNgzWQVDV2C4DkNfN/190TvjtIXI/3oKRcsK1TwWsyFh4KUnHXCdu9NBNhQaZTOk
-         gvzV/2xUOZKhWNjs9T6CsARvr//vil+PIBqE5XaIoBgoZaSH5unPvNe//r44uzUXASre
-         1ys1IJBx7PMpHVeC2wA7FkRlnAGCLuADnFtvWT++DVu9nZ5RRKTyWPD7BhOfvpKpI+oY
-         yRCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756490282; x=1757095082;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=awljRsOqs8zmeNHYRoc+5rBvpq/dx6uCVPg6gUVT0+I=;
-        b=cJ7DFfltFN4t9I7mwC7vLLNAqu8of52/g7VBJNZ/LQ6BdRVNmTUvrWR1rT6QsS2jmg
-         hT4OtdUxRDFepR4VMzOery9iNUstlm0xE1U6Op4skMzm5VK+1xe3lTSTimoAT9bOL/3e
-         xldbv3VlOWG3DrQV0MloS0qxY8D5d1lb7ZzmpyoV+XAvAFHh5zFI6ID8cBzSK4OjKHzq
-         +v3M0e0irGw/nQdHDTpn6zSzKc+x3rUS699MdoEn68IxL71ALUYHYp09CQrTHiX+Tugb
-         FjsoCMA5jBNpsDPfihlP9p+45d6YvjNN+nG2Ue6Cuaj5KQPgSuIf7/FZ2J9K+XXuWwjR
-         UulA==
-X-Forwarded-Encrypted: i=1; AJvYcCVJX6qRnCVj1hwHNuelIVqzwHVLwztj39k0uuLyt7ETkAz3Z56ZnNgS3WmfpSbOwrVzPxfOrGnbSgxpRctjHyiT8QA/@vger.kernel.org, AJvYcCVa741gtauBJCM4FWuwN/p/56ds7TyiKSDIbS/T4JRDMUfSO27A4YH1ru7giEiatPhm1II=@vger.kernel.org, AJvYcCVvxFeAp1wyf7rSp4qm7WUMGWH68Qy4gGk1G4/wRZyDRQyekHRk9egxHw7VNG+Wx8MO68snQm6GQj3xRlle@vger.kernel.org
-X-Gm-Message-State: AOJu0YzjftVK4idqkx1j8oLa9guMb2SsuM7tfx3JYdpoQ/IZrJBppt2g
-	zPE5esrDJF5Ii+25Du4h/fxwRTL2aHSM9ULYa1rJkTVHyTLUiU/zmlCe
-X-Gm-Gg: ASbGnctuNxVoHOcVhdRxc+JY9H7V8WR9Lc6CIRctRGV3MclYDlBqVfvVjeWngO0PsWS
-	dCrRXjEla+MW4OFwQUExnZwHsQmir1Dy1V/gqfQG+nSSgUlEjNUqNsfmgLjS/gMSyU/h2zJpS+N
-	JKLsKD1xg/tAfRAIvDfJ0GWJVqmJdW9g2U1TgWe1Yz5R8fYB//fTqKKTSDN6rrLQNE7Ib6eieSA
-	Uoa235OEUhXC8n8JDWSxwPZJBnJu1YNGFT90pAxOK7KbJSgOH9tkG0WcVYK6Ha6waU1A5fuksBU
-	ElDi8zx12YrywJJ1iE37R7bV8CBvTcVQQAGNAUCDziHPULjDbIG6y4AeYIcvJo2d2CG26mh+wqt
-	I/zBpFcZ8XNCBLcPHEIvp28C7ZLGJdW4rA0QW20QJwWKP1jNMmt+uQfU=
-X-Google-Smtp-Source: AGHT+IFFhvEUCgb8MdiqB5hU668wQfYZA1otaPB+NgmfFMTUA8Ozb1vwvDCyI7yEpIjBDdG+r6qzzA==
-X-Received: by 2002:a17:907:e915:b0:afe:63ae:c337 with SMTP id a640c23a62f3a-afe63af7fd3mr2115252566b.57.1756490281728;
-        Fri, 29 Aug 2025 10:58:01 -0700 (PDT)
-Received: from ehlo.thunderbird.net ([31.40.215.52])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-afefca0e5e2sm242172766b.38.2025.08.29.10.58.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 29 Aug 2025 10:58:00 -0700 (PDT)
-Date: Fri, 29 Aug 2025 14:57:57 -0300
-From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>,
- Steven Rostedt <rostedt@goodmis.org>
-CC: Steven Rostedt <rostedt@kernel.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, x86@kernel.org,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Andrii Nakryiko <andrii@kernel.org>, Indu Bhagat <indu.bhagat@oracle.com>,
- "Jose E. Marchesi" <jemarch@gnu.org>,
- Beau Belgrave <beaub@linux.microsoft.com>, Jens Remus <jremus@linux.ibm.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Florian Weimer <fweimer@redhat.com>, Sam James <sam@gentoo.org>,
- Kees Cook <kees@kernel.org>, Carlos O'Donell <codonell@redhat.com>
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v6_5/6=5D_tracing=3A_Show_inode_and_devi?=
- =?US-ASCII?Q?ce_major=3Aminor_in_deferred_user_space_stacktrace?=
-User-Agent: Thunderbird for Android
-In-Reply-To: <CAHk-=wi3muqW7XAEawu+xvvqADMmoqyvmDPYUC_64aCnqz-WLg@mail.gmail.com>
-References: <20250828180300.591225320@kernel.org> <D7C36F69-23D6-4AD5-AED1-028119EAEE3F@gmail.com> <CAHk-=wiBUdyV9UdNYEeEP-1Nx3VUHxUb0FQUYSfxN1LZTuGVyg@mail.gmail.com> <20250828161718.77cb6e61@batman.local.home> <CAHk-=wiujYBqcZGyBgLOT+OWdY3cz7EhbZE0GidhJmLNd9VPOQ@mail.gmail.com> <20250828164819.51e300ec@batman.local.home> <CAHk-=wjRC0sRZio4TkqP8_S+Fr8LUypVucPDnmERrHVjWOABXw@mail.gmail.com> <20250828171748.07681a63@batman.local.home> <CAHk-=wh0LjoJmRPHF41eQ1ZRf085urz+rvQQ-rwp8dLQCdqohw@mail.gmail.com> <20250829110639.1cfc5dcc@gandalf.local.home> <CAHk-=wjeT3RKCTMDCcZzXznuvG2qf0fpKbHKCZuoPzxFYxVcQw@mail.gmail.com> <CAHk-=wjCOWCzXG7Z=wkbLYOOcqFbuZTXSdX2yqCCWWOvanugUg@mail.gmail.com> <20250829123321.63c9f525@gandalf.local.home> <CAHk-=wgv11k-3e8Ee-Vk_KHJMB0S9J1PwHqFUv2X-Z8eFWq8mg@mail.gmail.com> <CAHk-=whbHyKvJ5VSvObfmGSSEukYhv5DZVhR3_-smu_1_b54mg@mail.gmail.com> <20250829130239.61e25379@gandalf.local.home> <CAHk-=wi3muqW7XAEawu+xvvqADMmoqyvmDPYUC_64aCnqz-WLg@mail.gmail.com>
-Message-ID: <24E50A07-EC58-4864-9DB3-E5DB869AD030@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ooi7zA7T"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08C02C4CEF0;
+	Fri, 29 Aug 2025 18:10:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756491018;
+	bh=SXu3T17dYbp/ukZ8uJydGVdZ6zcCuFcjGzpDGMwa+Nc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ooi7zA7T9NmpAVf2EhalPYoUyuzdraHp5C4oj/l4tumul2weopj5FJ1utOM+alOHE
+	 kKgusS+zU63i44OmypyAXKPtErTb3bB1GndFYFN2okuf9dT8hCaNdpoFVkJ5p8agh+
+	 KkkEsMX5T3gC8JIm2Ov+5zT8s4L7tpEw7w/6ThgCsQL1Xlg6GXrAAbC6OLHWNTeh0w
+	 FXzd4JTSiV52V1QufIh9KkzXjYT+hvbp3zSg4ylf/XGvXabRt4g7AwLZFCUhy7Zrgf
+	 S8hNoGjWZuOpsjDmYOt//9aCCpoZgyxV/RwMeINevxHuMv5KmXpH/JQL39xFf9C15W
+	 UspQvwHff7f7A==
+Date: Fri, 29 Aug 2025 11:10:07 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Jinghao Jia <jinghao7@illinois.edu>,
+	Wentao Zhang <wentaoz5@illinois.edu>,
+	Sasha Levin <sashal@kernel.org>
+Cc: Matt.Kelly2@boeing.com, akpm@linux-foundation.org,
+	andrew.j.oppelt@boeing.com, anton.ivanov@cambridgegreys.com,
+	ardb@kernel.org, arnd@arndb.de, bhelgaas@google.com, bp@alien8.de,
+	chuck.wolber@boeing.com, dave.hansen@linux.intel.com,
+	dvyukov@google.com, hpa@zytor.com, johannes@sipsolutions.net,
+	jpoimboe@kernel.org, justinstitt@google.com, kees@kernel.org,
+	kent.overstreet@linux.dev, linux-arch@vger.kernel.org,
+	linux-efi@vger.kernel.org, Wentao Zhang <wentaoz5@illinois.edu>,
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-um@lists.infradead.org,
+	llvm@lists.linux.dev, luto@kernel.org, marinov@illinois.edu,
+	masahiroy@kernel.org, maskray@google.com,
+	mathieu.desnoyers@efficios.com, matthew.l.weber3@boeing.com,
+	mhiramat@kernel.org, mingo@redhat.com, morbo@google.com,
+	ndesaulniers@google.com, oberpar@linux.ibm.com, paulmck@kernel.org,
+	peterz@infradead.org, richard@nod.at, rostedt@goodmis.org,
+	samitolvanen@google.com, samuel.sarkisian@boeing.com,
+	steven.h.vanderleest@boeing.com, tglx@linutronix.de,
+	tingxur@illinois.edu, tyxu@illinois.edu, x86@kernel.org
+Subject: Re: [PATCH v2 0/4] Enable measuring the kernel's Source-based Code
+ Coverage and MC/DC with Clang
+Message-ID: <20250829181007.GA468030@ax162>
+References: <20241002045347.GE555609@thelio-3990X>
+ <20241002064252.41999-1-wentaoz5@illinois.edu>
+ <20241003232938.GA1663252@thelio-3990X>
+ <284fe8fa-c094-49b7-8e16-3318676d38e3@illinois.edu>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <284fe8fa-c094-49b7-8e16-3318676d38e3@illinois.edu>
 
+Hi Jinghao and Wentao,
 
+On Thu, Nov 21, 2024 at 11:05:14PM -0600, Jinghao Jia wrote:
+...
+> On 10/3/24 6:29 PM, Nathan Chancellor wrote:
+> > I seem to have narrowed down it to a few different configurations on top
+> > of x86_64_defconfig but I will include the full bad configuration as an
+> > attachment just in case anything else is relevant.
+...
+> > $ qemu-system-x86_64 \
+> >     -display none \
+> >     -nodefaults \
+> >     -M q35 \
+> >     -d unimp,guest_errors \
+> >     -append 'console=ttyS0 earlycon=uart8250,io,0x3f8' \
+> >     -kernel arch/x86/boot/bzImage
+> >     -initrd rootfs.cpio \
+> >     -cpu host \
+> >     -enable-kvm \
+> >     -m 8G \
+> >     -smp 8 \
+> >     -serial mon:stdio
+> > <hangs with no output>
+> 
+> This hang is caused by an early boot exception -- gdb shows the execution
+> reaches the halt loop in early_fixup_exception().  Dumping regs->ip associated
+> with this exception points us to the following instruction:
+> 
+> ffffffff89b58074:       48 ff 05 85 7f 4a 76    incq   0x764a7f85(%rip)        # 0 <fixed_percpu_data>
+> 
+> This is apparently an incorrect access to the per-cpu variable (the cpu offset
+> in %gs is needed) and triggers a null-ptr-deref. Without CONFIG_AMD_MEM_ENCRYPT
+> (one of the bad configs), it turns out the instruction is actually accessing
+> the llvm prof-counter of strscpy():
+> 
+> ffffffff89b85a04:       48 ff 05 6d 94 7d fa    incq   -0x5826b93(%rip)        # ffffffff8435ee78 <__profc__Z13sized_strscpyPcU25pass_dynamic_object_size1PKcU25pass_dynamic_object_size1m>
+> 
+> This symbol is left undefined in the bad vmlinux, which explains why the
+> faulting instruction is accessing address 0.  Tracing through the kernel
+> linking process shows that the symbol is still defined (as a weak symbol) in
+> vmlinux.a and vmlinux.o, but becomes undefined after the first round of linking
+> of the kernel image (.tmp_vmlinux1).
+> 
+> After playing with it a little bit, we found the creation of vmlinux.o to be
+> the problem. Specifically, if we use mold[1] instead of lld to create the
+> object and pass it to the later stages of kernel linking, the symbol will be
+> properly defined as a data symbol (and the kernel can boot).
+> 
+> It seems that the issue does not reproduce with LLVM-20. Nevertheless we have
+> reported[2] this to upstream llvm.
+> 
+> [1]: https://github.com/rui314/mold
+> [2]: https://github.com/llvm/llvm-project/issues/116575
 
-On August 29, 2025 2:13:33 PM GMT-03:00, Linus Torvalds <torvalds@linux-fo=
-undation=2Eorg> wrote:
->On Fri, 29 Aug 2025 at 10:02, Steven Rostedt <rostedt@goodmis=2Eorg> wrot=
-e:
->>
->> Note, the ring buffer can be mapped to user space=2E So anything writte=
-n into
->> the buffer is already exposed=2E
->
->Oh, good point=2E Yeah, that means that you have to do the hashing
->immediately=2E Too bad=2E Because while 'vma->vm_file' is basically free
->(since you have to access the vma for other reasons anyway), a good
->hash isn't=2E
+Sasha pinged me on IRC earlier this week about this series and this
+issue, noting that he was unable to reproduce it with a similar
+toolchain version and the instructions above. I was able to confirm that
+at 6.17-rc1 with this patch set applied (after fixing a couple of minor
+conflicts), I no longer see this boot issue but it is still reproducible
+on 6.12.
 
+In attempting to narrow my bisect window to find what patch fixes this
+issue, I noticed that this configuration actually fails to build with
 
-Can't we continue with that idea by using some VMA sequential number that =
-don't expose anything critical to user space but allows us to match stack e=
-ntries to mmap records?
+  Absolute reference to symbol '__llvm_prf_cnts' not permitted in .head.text
 
-Deferring the heavily lift to when needed is great=2E
+in 6.15 and 6.14 as a result of Ard's commit faf0ed487415 ("x86/boot:
+Reject absolute references in .head.text"). Bisecting between 6.15 and
+6.16 reveals Ard's commit a3cbbb4717e1 ("x86/boot: Move SEV startup code
+into startup/") resolves the build error and that kernel boots, which
+seems to make sense to me given what code was involved here. It is
+possible that arch/x86/boot/startup will want 'LLVM_COV_PROFILE := n'
+since all other instrumentation is disabled.
 
-- Arnaldo=20
+I built v6.17-rc1 + this series with a fuller distribution configuration
+and CONFIG_LLVM_COV_PROFILE_ALL=y. That kernel boots fine in QEMU but I
+have done no further evaluation.
 
->
->siphash is good and fast for being what it is, but it's not completely
->free=2E It's something like 50 shift/xor pairs, and it obviously needs
->to also access that secret hash value that is likely behind a cache
->miss=2E=2E
->
->Still, I suspect it's the best we've got=2E
->
->(If hashing is noticeable, it *might* be worth it to use
->'siphash_1u32()' and only hash 32 bits of the pointers=2E That makes the
->hashing slightly cheaper, and since the low bits of the pointer will
->be zero anyway due to alignment, and the high bits don't have a lot of
->information in them either, it doesn't actually remove much
->information=2E You might get collissions if the two pointers are exactly
->32 GB apart or whatever, but that sounds really really unlucky)
->
->                Linus
-
-- Arnaldo 
+Cheers,
+Nathan
