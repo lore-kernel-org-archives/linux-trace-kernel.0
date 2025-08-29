@@ -1,177 +1,150 @@
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EC452BDC29;
-	Fri, 29 Aug 2025 10:20:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D953431195B;
+	Fri, 29 Aug 2025 11:11:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756462859; cv=none; b=As2EQLhJOk/IeD43lgtza6BgHOFhWzn1SkFh9N/GGDI+8lPQ2vsfCDV3FafxRy83mkGdWI7pBIsjTD5L5xyVrOXmSYFCkPUSfD0jfv+c8R0w3BLx5iPbzThILPcMCT6SfeZFObZm/IGWoRRPfk9ma1fb1Rl6Na5tNPK/AI9DjtI=
+	t=1756465864; cv=none; b=tKO2PyGbDNErrWTdu/r7DjUxFsSEcFvWWLoJtswqvlYDUI15HL049XvsKJH1yxzqy5pTVzVhRMxiMY1Gxc9Da0Ydumf7Ys1qkQ1CU5pkj0NwIGrCYYBA5eLXotaeJhmPGGUwVZ36YqmmkLcyUpGFyKHl3+v/27de8AcQH7GpJes=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756462859; c=relaxed/simple;
-	bh=rTuM4HyLXv0HkKhzB1HqfKGUw2X9cj0CbvmTtW6kJQQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=g92AMgpCp+1O1dC0xCY6kr4f5AvLYolwDdrReFAVDzYphV2eZxmb9tjLmEzLq2JqB1ltm/66FO98kxg4jmGEPuZiVnKL/+Gs57Mkcg+oPj1IrSQN6XvyQqZrks1/ZlqrnAugElP12x0RF2A7vvZk+uJ2xFUQCvORaG39ZHRBL6M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ApglThvA; arc=none smtp.client-ip=209.85.160.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1756465864; c=relaxed/simple;
+	bh=XrISwkshv/fm4VJp+80IDI8Zvux51pHfYKBB7IzD38s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cCSkXMQiDiuegFWvGlR5MAu3UVmPUa3HjpnMm6WJ/azDIbgGA7VVKXkNmlo6ECacKF8a5dO5CPtbHs9myTbaCmoXIBjWqP4q9MHIRDEvh0rEkSkrMMYOfqnCMYbX7v7UaLkMCaufHjk34jkCl6DttXgNzaGMvotJgB5jL36TE2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s/B0EQdt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ApglThvA"
-Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-4b109c58e29so30946631cf.3;
-        Fri, 29 Aug 2025 03:20:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1756462857; x=1757067657; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=WjJb244je6yF5o7DG4HZYvptosAOCAiUrRmEuRTr5Ko=;
-        b=ApglThvAFKJ4ROva9PtgzvquGlq8BmCwBcyBpTZY+d3T9XLZ0DMTSHG4Yd+FhKijrt
-         mHNwauuiGQQIFrqAgqyqBEVma5HiPfZmztzLKqR28jJZAM6HhQWaQcLzDlcbARlfDGdN
-         apYEQ+OjtUN4cZVi2ZXKFOLrr3d/HYcDEPHtoMyX4MW97iH+UG2OwkRkHebP9XYI85aD
-         QGMCJg9LSp4eUV/wX5FhMcPhomvsx4/rYdjqsbbro6HUConMa2S5RE5zPJuVG9LIVebm
-         8rFrmwrVaDEjhJW3G6zb2Y3K0nqIqz3SBH2Kf88WKENk9SKaQq+y6qO74wXfzbLOxSv+
-         0H/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756462857; x=1757067657;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WjJb244je6yF5o7DG4HZYvptosAOCAiUrRmEuRTr5Ko=;
-        b=xN95hqTjmht4WUvF7/PVGQNg9CcpJ8neIG4cVX7ai89+ANy6+CxtW4sjEvFtpzIS6O
-         Vv/ml5qcvBulIh2AtWKik4L8zsDDQN+UVjEISDfEkmNIsC0RTTej55jv9Qp9qXv/k7KY
-         PstOM1qjCGvwLOhxjEkMLZXK2P/U+vSscMYBkI0y0z52IIzqRGZR535RkW2PP3eYuFrd
-         IOibMtXsfSJsCTUlUmWUe2b9WgeQdE2bK7SQuGR3b3OLHLsN90FtJ+1f4MsjxMMgX8Lz
-         GHMCAPRBcuofhTlk6fujpyioKyQTDKH9SNGkmznV8jI8XVPPVcklRq1DdUN3iThHVnor
-         V7rg==
-X-Forwarded-Encrypted: i=1; AJvYcCVzkZe0ikoxZdTX+weCAWVid2WSNKWWXo4InE8n0ceHeT+uV5E7rou8ZtvbI/LtBV4qSa6EcdNtdq1PWGo=@vger.kernel.org, AJvYcCXM4eLnZdb/6iFZfhCPRJyKqdY7q3RZIS+FzER+9F4tQnmL96UHU3kJwSKMpkl0lyHxPYZbN7Z8t37aODlSWazT9hvr@vger.kernel.org
-X-Gm-Message-State: AOJu0YwtNrYGn4r9v6TOARTbU6l9lhLpCg5TTezpWzAOhZcan482dq6U
-	/rGooa8pA4S1GiTXp5ck4T4dYRhobz85VmXgBgSp4+XZW+wF0jzKRPPJ
-X-Gm-Gg: ASbGnctD2uzBZVNl5r6w4ETmEWQiLH3r+GedQLGqo8xIBAXiCg9vJ8ua+0b+i2ziLl9
-	5HKodDVcSBO6FIw3jtb1d4fyqj5sX9pDTBUfUybCsdmKYzia1kVDWiuqZh0wm0wERWFJmnOcTA9
-	uC04XVYTMPrJgNnyQRWmszA2Cgv47XGs1CUPUY6dm0z3hP1DQ/XUaB0nvY0r450Jw8miPGUkR5v
-	7JKiDxS0xGm4GBvjT7/g40Qc//g1lhE+dAf14uwtdgeSqXWgkagOdDER7KXnd0EXm7Q9HAkWs1S
-	IsmYtz/v6YEYEGYLPl2UB/UU2xmmG5m7DBj6nc7UX3fwryVKQvnlpluZk8oOxZLBkKtKgeF6x1m
-	Jk9mG0kEq2LlRKq0QD7lwD0ehswpYjlBQBkPXz3dMFhYYP6u/r1OCIbtcquO2jqUYCzfUp20V9V
-	mkbw==
-X-Google-Smtp-Source: AGHT+IEpiZCq5IpcaeDaADmwLkP+lAph4VKUk68Z76kgVzdnxSfiYvwF84kDgpFXT5A50iCWzlmDzQ==
-X-Received: by 2002:a05:622a:254:b0:4b3:10f0:15d9 with SMTP id d75a77b69052e-4b310f0473bmr10494911cf.67.1756462856623;
-        Fri, 29 Aug 2025 03:20:56 -0700 (PDT)
-Received: from seokw-960QHA.mynetworksettings.com ([2600:4041:4491:2000:a7bc:32f2:59b0:ebe2])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4b30b6de6absm12321771cf.45.2025.08.29.03.20.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Aug 2025 03:20:56 -0700 (PDT)
-From: Ryan Chung <seokwoo.chung130@gmail.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s/B0EQdt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B4F9C4CEF0;
+	Fri, 29 Aug 2025 11:11:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756465863;
+	bh=XrISwkshv/fm4VJp+80IDI8Zvux51pHfYKBB7IzD38s=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=s/B0EQdtsKOIuA4rBjxph2wZiLkga9SJa0VIureD7fnGJw/57ikwvISWxlCCP4Zjd
+	 +z7Tg8E/udCHSdwNdhC2Yai+S7oMW+QuXONTrIg+gGWZ0UTFP4WyFcj/fiE4CajUu2
+	 wM+mr0jkuGf0uzYyy+CJl3pkx5/Dsky42+lgvBbNnH63zsrkJc+/9N87R1SMrD4nxO
+	 FuTUq0+JfFZzDPsPUTl7/7agJGFXwUIgXREFJ6tG0HTKRlxa846ztnZL7Si/2eVWNz
+	 ZMjMvxMBuUR7jxW0lG52He/6OMa0vLyBNv1j0ydhL4DmKGlg/wWP4DjxnjEKza+yFV
+	 dj6fpBcktp+Jw==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id EDC16CE0B2A; Fri, 29 Aug 2025 04:11:02 -0700 (PDT)
+Date: Fri, 29 Aug 2025 04:11:02 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Menglong Dong <dongml2@chinatelecom.cn>, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Ryan Chung <seokwoo.chung130@gmail.com>
-Subject: [PATCH v2] trace_fprobe.c: TODO: handle filter, nofilter or symbol list
-Date: Fri, 29 Aug 2025 19:20:50 +0900
-Message-ID: <20250829102050.232291-1-seokwoo.chung130@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	kernel test robot <oliver.sang@intel.com>, tgraf@suug.ch,
+	herbert@gondor.apana.org.au, linux-crypto@vger.kernel.org
+Subject: Re: [PATCH] tracing: fprobe: fix suspicious rcu usage in fprobe_entry
+Message-ID: <d1da3939-62e6-4ad1-afcc-5710ce3f6cbd@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20250829021436.19982-1-dongml2@chinatelecom.cn>
+ <20250828222357.55fab4c2@batman.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250828222357.55fab4c2@batman.local.home>
 
-This v2 addresses the TODO in trace_fprobe to handle comma-separated
-symbol lists and the '!' prefix. Tokens starting with '!' are collected
-as "nofilter", and the others as "filter", then passed to
-register_fprobe() accordingly. Empty tokens are rejected and errors are
-reported with trace_probe_log_err().
+On Thu, Aug 28, 2025 at 10:23:57PM -0400, Steven Rostedt wrote:
+> On Fri, 29 Aug 2025 10:14:36 +0800
+> Menglong Dong <dongml2@chinatelecom.cn> wrote:
+> 
+> > rcu_read_lock() is not needed in fprobe_entry, but rcu_dereference_check()
+> > is used in rhltable_lookup(), which causes suspicious RCU usage warning:
+> > 
+> >   WARNING: suspicious RCU usage
+> >   6.17.0-rc1-00001-gdfe0d675df82 #1 Tainted: G S
+> >   -----------------------------
+> >   include/linux/rhashtable.h:602 suspicious rcu_dereference_check() usage!
+> >   ......
+> >   stack backtrace:
+> >   CPU: 1 UID: 0 PID: 4652 Comm: ftracetest Tainted: G S
+> >   Tainted: [S]=CPU_OUT_OF_SPEC, [I]=FIRMWARE_WORKAROUND
+> >   Hardware name: Dell Inc. OptiPlex 7040/0Y7WYT, BIOS 1.1.1 10/07/2015
+> >   Call Trace:
+> >    <TASK>
+> >    dump_stack_lvl+0x7c/0x90
+> >    lockdep_rcu_suspicious+0x14f/0x1c0
+> >    __rhashtable_lookup+0x1e0/0x260
+> >    ? __pfx_kernel_clone+0x10/0x10
+> >    fprobe_entry+0x9a/0x450
+> >    ? __lock_acquire+0x6b0/0xca0
+> >    ? find_held_lock+0x2b/0x80
+> >    ? __pfx_fprobe_entry+0x10/0x10
+> >    ? __pfx_kernel_clone+0x10/0x10
+> >    ? lock_acquire+0x14c/0x2d0
+> >    ? __might_fault+0x74/0xc0
+> >    function_graph_enter_regs+0x2a0/0x550
+> >    ? __do_sys_clone+0xb5/0x100
+> >    ? __pfx_function_graph_enter_regs+0x10/0x10
+> >    ? _copy_to_user+0x58/0x70
+> >    ? __pfx_kernel_clone+0x10/0x10
+> >    ? __x64_sys_rt_sigprocmask+0x114/0x180
+> >    ? __pfx___x64_sys_rt_sigprocmask+0x10/0x10
+> >    ? __pfx_kernel_clone+0x10/0x10
+> >    ftrace_graph_func+0x87/0xb0
+> > 
+> > Fix this by using rcu_read_lock() for rhltable_lookup(). Alternatively, we
+> > can use rcu_lock_acquire(&rcu_lock_map) here to obtain better performance.
+> > However, it's not a common usage :/
+> 
+> So this is needed even though it's called under preempt_disable().
+> 
+> Paul, do we need to add an rcu_read_lock() because the code in rht
+> (rhashtable) requires RCU read lock?
+> 
+> I thought that rcu_read_lock() and preempt_disable() have been merged?
 
-Questions for maintainers (to confirm my understanding):
-  * Parsing location: Masami suggested doing the parsing in the parse
-    stage (e.g., via parse_symbol_and_return()). v2 keeps the logic in
-    __register_trace_fprobe(), but I can move the call into the parsing
-    path in v3 if that is the preferred place. Is that correct?
-  * Documentation: I plan to update the user-facing docs for fprobe
-    syntax. Is Documentation/trace/ the right place (e.g., 
-    Documentation/trace/fprobetrace.rst)?
+Yes, preempt_disable() does indeed start an RCU read-side critical section,
+just as surely as rcu_read_lock() does.
 
-Link: https://lore.kernel.org/linux-trace-kernel/20250812162101.5981-1-seokwoo.chung130@gmail.com/
-Signed-off-by: Ryan Chung <seokwoo.chung130@gmail.com>
----
+However, this is a lockdep check inside of __rhashtable_lookup():
 
-Changes in v2:
-  * Classify '!' tokens as nofilter, others as filter; pass both to
-    register_fprobe().
-  * Reject empty tokens; log errors with trace_probe_log_*().
-  * Use __free(kfree) for temporary buffers.
-  * Keep subject and style per "Submitting patches" (tabs, wrapping).
-  * No manual dedup (leave to ftrace).
+	rht_dereference_rcu(ht->tbl, ht)
 
- kernel/trace/trace_fprobe.c | 48 +++++++++++++++++++++++++++++++++++--
- 1 file changed, 46 insertions(+), 2 deletions(-)
+Which is defined as:
 
-diff --git a/kernel/trace/trace_fprobe.c b/kernel/trace/trace_fprobe.c
-index b36ade43d4b3..d731d9754a39 100644
---- a/kernel/trace/trace_fprobe.c
-+++ b/kernel/trace/trace_fprobe.c
-@@ -815,6 +815,11 @@ static int trace_fprobe_verify_target(struct trace_fprobe *tf)
- static int __register_trace_fprobe(struct trace_fprobe *tf)
- {
- 	int i, ret;
-+	const char *p, *q;
-+	size_t spec_len, flen = 0, nflen = 0, tlen;
-+	bool have_f = false, have_nf = false;
-+	char *filter __free(kfree) = NULL;
-+	char *nofilter __free(kfree) = NULL;
- 
- 	/* Should we need new LOCKDOWN flag for fprobe? */
- 	ret = security_locked_down(LOCKDOWN_KPROBES);
-@@ -835,8 +840,47 @@ static int __register_trace_fprobe(struct trace_fprobe *tf)
- 	if (trace_fprobe_is_tracepoint(tf))
- 		return __regsiter_tracepoint_fprobe(tf);
- 
--	/* TODO: handle filter, nofilter or symbol list */
--	return register_fprobe(&tf->fp, tf->symbol, NULL);
-+	spec_len = strlen(tf->symbol);
-+	filter = kzalloc(spec_len + 1, GFP_KERNEL);
-+	nofilter = kzalloc(spec_len + 1, GFP_KERNEL);
-+	if (!filter || !nofilter)
-+		return -ENOMEM;
-+
-+	p = tf->symbol;
-+	for (p = tf->symbol; p; p = q ? q + 1 : NULL) {
-+		q = strchr(p, ',');
-+		tlen = q ? (size_t)(q-p) : strlen(p);
-+
-+		/* reject empty token */
-+		if (!tlen) {
-+			trace_probe_log_set_index(1);
-+			trace_probe_log_err(0, BAD_TP_NAME);
-+			return -EINVAL;
-+		}
-+
-+		if (*p == '!') {
-+			if (tlen == 1) {
-+				trace_probe_log_set_index(1);
-+				trace_probe_log_err(0, BAD_TP_NAME);
-+				return -EINVAL;
-+			}
-+			if (have_nf)
-+				nofilter[nflen++] = ',';
-+			memcpy(nofilter + nflen, p + 1, tlen - 1);
-+			nflen += tlen - 1;
-+			have_nf = true;
-+		} else {
-+			if (have_f)
-+				filter[flen++] = ',';
-+			memcpy(filter + flen, p, tlen);
-+			flen += tlen;
-+			have_f = true;
-+		}
-+	}
-+
-+	return register_fprobe(&tf->fp,
-+			have_f ? filter : NULL,
-+			have_nf ? nofilter : NULL);
- }
- 
- /* Internal unregister function - just handle fprobe and flags */
--- 
-2.43.0
+	rcu_dereference_check(p, lockdep_rht_mutex_is_held(ht));
 
+This is explicitly telling lockdep that rcu_read_lock() is OK and
+holding ht->mutex is OK, but nothing else is.
+
+So an alternative way to fix this is to declare it to be a false positive,
+and then avoid that false positive by adding a check that preemption
+is disabled.  Adding the rhashtable maintainers for their perspective.
+
+							Thanx, Paul
+
+> -- Steve
+> 
+> 
+> > 
+> > Reported-by: kernel test robot <oliver.sang@intel.com>
+> > Closes: https://lore.kernel.org/oe-lkp/202508281655.54c87330-lkp@intel.com
+> > Fixes: dfe0d675df82 ("tracing: fprobe: use rhltable for fprobe_ip_table")
+> > Signed-off-by: Menglong Dong <dongml2@chinatelecom.cn>
+> > ---
+> >  kernel/trace/fprobe.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
+> > index fb127fa95f21..fece0f849c1c 100644
+> > --- a/kernel/trace/fprobe.c
+> > +++ b/kernel/trace/fprobe.c
+> > @@ -269,7 +269,9 @@ static int fprobe_entry(struct ftrace_graph_ent *trace, struct fgraph_ops *gops,
+> >  	if (WARN_ON_ONCE(!fregs))
+> >  		return 0;
+> >  
+> > +	rcu_read_lock();
+> >  	head = rhltable_lookup(&fprobe_ip_table, &func, fprobe_rht_params);
+> > +	rcu_read_unlock();
+> >  	reserved_words = 0;
+> >  	rhl_for_each_entry_rcu(node, pos, head, hlist) {
+> >  		if (node->addr != func)
+> 
