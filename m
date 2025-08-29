@@ -1,162 +1,141 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B9C2221D9E;
-	Fri, 29 Aug 2025 17:18:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00F8B343209
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 29 Aug 2025 17:39:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756487883; cv=none; b=ei1qhNK4R85yFg8+1qRXsAJjFhtIJa8JzEp7fefvHyaMNwCokiSmWBMupB71w9poOhxXcJnR+Eo7uj9MSjKUFp0jQsrnUd4Vmc7Dkzy0UjQUSaoiH1pSXNQRcSNY6mhIOKeV1GG9TJs6uc+aFVj7tFj8j7+JcaP14jWQe65P210=
+	t=1756489180; cv=none; b=bsGyDSq/XjJ2XN/aw5zNq1GUMYMKe8fcWALrp/cMV7CvYQMRAny3aaX2raMrWDMfWENe4fXLc5Qw2dzghO5jSLYnOVwSOL0F2nccKyMtT1z/yQeC72AloDzynTUGL21s0vr/bygy300MH4AjSf3twVxTQ/AOUw0MOsqsqd7+vUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756487883; c=relaxed/simple;
-	bh=ZN03sxhjmicQosWeGmY4JnLGwOZXXH0G5tX2JHrs4Yo=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=Mc2tsocf+zUln1RCtlJ2qIZsdZXCAFwaud3Q/uUrvNjyIypz9dLpvvsNOQeMJ9L+ZKqoOLeLcrBkOtHsOqceju7Oc46F6GXEof3z0TbI9bOxsAO8K/+SHElaMfnFvijwrg82p2tPd6smMwsAVkF1rCDKY3ByPJ0xjARkOeETIV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hvrTh0QK; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1756489180; c=relaxed/simple;
+	bh=0Iwk8kojSYVfnDLAmzrwi9KHqF0f7PplXnNwNjdrHA8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=J4vVZZNmmlouxbTJci9SBdKtSDVUgFJhkY+zARIuAocNOo9qbieOaGfgSOj7AKnFY1hsts98J5D9NBO8mcNzV9G6OidNje6OEjNHXnLVpQX0mIwjm8I/FJEdyIyiiKJHieDgf1D3J0OR+BuKc1HycemgTyLqEGS7wVjLXubGB1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=I7siMDK0; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hvrTh0QK"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-afcb7a3b3a9so361399066b.2;
-        Fri, 29 Aug 2025 10:18:01 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="I7siMDK0"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-afcb7ae31caso443618366b.3
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 29 Aug 2025 10:39:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1756487880; x=1757092680; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=xrzuRNSlyqmubW3zh5/hhg2Gt+wTZOmIedHD4WFNRfs=;
-        b=hvrTh0QKBKwUISs8thiPN+QAtnUf9e0VpQgfLYR46hyYOmnbTGKrOYnDyjW7qJabah
-         03T3KdvQgMa3g9WLBd27uKdSSodp09fu83Erhw9WWV3WZZPg/cjbGACQuFUocJcndNwo
-         yVIRZe/8u2dQRjvhfNoX4C+vA453ky32Hovy2tEUTz+JgtFmVxbDs3aOvP34HcA1lOBK
-         jihDPT1lNttFd9bzu71NI5k+0QXWdWParHd8aHOSOo2LS6V6cAFOw6z1j8gUVhNQGX3K
-         CTFWQsiD+HkS9sTxbltXt+NBP/wCK9xsQJZRBVyBaxU3J2CurIRyzUGmcVZG+IUWIqmO
-         Fi3Q==
+        d=linux-foundation.org; s=google; t=1756489176; x=1757093976; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=/JzHs6USaZca2JuAKnnFeoU743SczkPKj5+4UqlxGdQ=;
+        b=I7siMDK0nVqBhg66tMVWyHS9rCi/M2tZZqEFjUBMi7mXI5AbTPBa4xbGtHOmh39Fj2
+         tM+JmOyrB2GQbTUsmuUANsjgYL6pYoQ1Y0q48lo9UmdYtefDVdkifKdGn8P3FATpBwW+
+         hm6G0uUIHwbrHWhYE8PrVwtSCWvUAsjwtjkLw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756487880; x=1757092680;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xrzuRNSlyqmubW3zh5/hhg2Gt+wTZOmIedHD4WFNRfs=;
-        b=MoUg+bd8pwXcpzSrMAoIm8K9E1Dw6GlELppbj0rIAHn9I72j0x1r7uDgmmykZsWoIX
-         DUrDdJVeN7qoWLDd1WxOIiwYq+BcBqdHN21ZWWx1fDd0ruF5AMrIOqNSTpvhbUcgJ0fo
-         uDfl8bcjcgHbsUEH1G9XQRbtKw9vnvfvCn0Vv0eWlDULmNMOvd01JKs9xorrz0VHLIvl
-         w+q2wNfJdIgZWTjzElFCia2jZiNagfE1lebRdeks4Pa4eTMNZ25NpaxVmVaBITWVjkEJ
-         D+3fqH4aIKbcH4wbxU9f21SSmNtCAmpIy9WmX8cZ2NbWSeFPISoXgG7+EFG3kCiPjbXF
-         iT8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVZa2twsitgSY9OaMPRq83SkvZUSBsPKha6k+Svto871W5ciGsDFAnafM9yveZrTEIDGYQ0fK+qJOLLXffSwiG+eE6b@vger.kernel.org, AJvYcCVxQArDHXtqx7NpC+QAJe+Kg+RwtKQO8dLZsE7lbxy4rHk26aTfCZXD0iucXsx9Tt3ViA5SOlbNSq8DpGXY@vger.kernel.org, AJvYcCW4DjNboXTbgg4zw723nuSfgP9u2dL6iVbrzRUiHxKcD6BrUkDoy3XRkl/qIeVM5MzbBho=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw6SBpUprKR1gFLCzVeN7ebBTpsjajyR9fiAGoCcnBu/rNCt8ES
-	UAi0OgGOSjsNTVAh0oymKz/4yKPbOmrybqfIgpb1URBM6bFBwqdk80fy
-X-Gm-Gg: ASbGncuvoccJycuex1wMjohY0WJ6QXxkZ/bTHHy5t3Vgi50iBQBzuYdnlZ5uAEQyA9i
-	JF3NV9UFJjDdM7eVjDXzB+wCt6AvS/KTCgFSvoclhuvXtdVdY7WfU36EEOsCm7s1eEYSWra78gn
-	9mjTJWMXWYuosZ+mbdtPNUIFyOtXIyca9SteZ9jFnq+ewju2QQKIpr+3j0IF9ZE599VkrLfexoH
-	OjpjgRLUF6FRpJyNOaKvC8k/uYlmZ8i92/q6zUXoSewUvFwlRL4BxHLl/KJduND878gA3ImYRcr
-	ORWxT3z8cwtYSz+PjiYTuPT68n9xyVLuhhccn+9ng8TXTfW33ngbZFeDcdKFS8DkijgVUFD/766
-	aEwN2TXb/PNsOxHR4PojtPDMkhggBKoQj66xvOSiH3kE/
-X-Google-Smtp-Source: AGHT+IFolD4Novq7SEQgN2iErN14DtXsvntBpVAJMgWA0Dt3VXGsPTSQaYEnIZc9sb/n3S4QKp1fxw==
-X-Received: by 2002:a17:907:1b1a:b0:af9:c321:7e01 with SMTP id a640c23a62f3a-afe29043210mr2312160166b.41.1756487880211;
-        Fri, 29 Aug 2025 10:18:00 -0700 (PDT)
-Received: from ehlo.thunderbird.net ([31.40.215.52])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-afefcc2d50dsm232774366b.93.2025.08.29.10.17.58
+        d=1e100.net; s=20230601; t=1756489176; x=1757093976;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/JzHs6USaZca2JuAKnnFeoU743SczkPKj5+4UqlxGdQ=;
+        b=BgWCiqkWFc6heYFxFYFOaIXfftxObV8QVgvsX7wa+oCPSLPki2zWFYIx5Q2A042s1a
+         JjYe3/pS5eNPiK/+tkx1KEiz18w8RtWhcqE8Age3UE5Wxw1onmab9/B7JI1viwZMi7B+
+         CWNY1InLpZCxExA0/zX7abyAUkDfTiE8Rqiyzpv1kTye5u3y/l0VDjqHID2E/ncDVM5k
+         3ROioUoJGH/fuJCkhxR2St1lH9Ax8bH1D+NuUlMBSF9bm4/AdHbsgWSzWRbYNYiezN4Z
+         +ZyAemShlG3ELi/5lV4i3IchyYiZmqqStqeTovz4x0VTBdOENj/yaPr9RPH2JKJAXyjv
+         K3hg==
+X-Forwarded-Encrypted: i=1; AJvYcCUhm6FDrVt1yZH7Ww/TVJ8JNAV+gsjlzRWGqerFhnSbJlkgSO1RtZPWWXwkZcOqv7Puj9FojmjyOz5JjyjOtMJOUMo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzNAwMVdVPQhNjB2MuV/dd+b5CIgDcJ9IRSBxwHoKwtyQYN+7py
+	6IaBbNHt4JxPdYXCgCgpbp5dT0Tg4fzAv9SI3lBsdyE1PC4uG2G4K7qFWnSfwjoJB6kLZa/trx+
+	CMPSKay/Q4w==
+X-Gm-Gg: ASbGncsFpQ61itGkEXn/23mMjA09+o0YURuGcksxcp+/fSDCmHv5eDbh5H9dchy+amf
+	dRrqsBBn7HIS4A4v9o/j6r6OviFkGPVFKxxfRVxuolmX8hAlr75EVl/1G/GLgybkdFOHMeCMH3j
+	h3PpGXC1mm+l+dlb+ohPuW82PQjYj8rzBTlvOV63VqGNZRCwdYN4pGzV0qOHUeeYhePpNvLnS6k
+	17wAq4CkwyQUxGo+pmiprCbW4BWVKKPCf+66z46Qi0jl58kQhT2LHAgX24KRzy1gAyUtZEQ1KHq
+	iUpEesBuGZqz3PEC80u11LoVI5cLDHul+BU8kzkLsMaw9Vj1G/EOOlraQX0x12QlGm8KhGQ0WI5
+	RfTBG82fW2n4yc1zRdnf6F4eA3DkQRQE3LFFuZLkPJO+Te1BDyvLdjnzVDoLRN16Iw33KPDn3
+X-Google-Smtp-Source: AGHT+IFrsYXj4GjrD99ySqfsIwNYoAisqZVBR+a7Im8HSIccaj8sN3fe8yzO6dMkDA5t+ufo86vlxg==
+X-Received: by 2002:a17:906:478f:b0:af9:3589:68cb with SMTP id a640c23a62f3a-afe2974a001mr2780944666b.48.1756489176108;
+        Fri, 29 Aug 2025 10:39:36 -0700 (PDT)
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com. [209.85.208.43])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-afefca3cce4sm243488966b.45.2025.08.29.10.39.35
+        for <linux-trace-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 29 Aug 2025 10:17:59 -0700 (PDT)
-Date: Fri, 29 Aug 2025 14:17:55 -0300
-From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>,
- Steven Rostedt <rostedt@goodmis.org>
-CC: Steven Rostedt <rostedt@kernel.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, x86@kernel.org,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Andrii Nakryiko <andrii@kernel.org>, Indu Bhagat <indu.bhagat@oracle.com>,
- "Jose E. Marchesi" <jemarch@gnu.org>,
- Beau Belgrave <beaub@linux.microsoft.com>, Jens Remus <jremus@linux.ibm.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Florian Weimer <fweimer@redhat.com>, Sam James <sam@gentoo.org>,
- Kees Cook <kees@kernel.org>, Carlos O'Donell <codonell@redhat.com>
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v6_5/6=5D_tracing=3A_Show_inode_and_devi?=
- =?US-ASCII?Q?ce_major=3Aminor_in_deferred_user_space_stacktrace?=
-User-Agent: Thunderbird for Android
-In-Reply-To: <CAHk-=wid_71e2FQ-kZ-=aGTkBxDjLwtWqcsuNSxrarnU4ewFCg@mail.gmail.com>
-References: <20250828180300.591225320@kernel.org> <20250828180357.223298134@kernel.org> <CAHk-=wi0EnrBacWYJoUesS0LXUprbLmSDY3ywDfGW94fuBDVJw@mail.gmail.com> <D7C36F69-23D6-4AD5-AED1-028119EAEE3F@gmail.com> <CAHk-=wiBUdyV9UdNYEeEP-1Nx3VUHxUb0FQUYSfxN1LZTuGVyg@mail.gmail.com> <20250828161718.77cb6e61@batman.local.home> <CAHk-=wiujYBqcZGyBgLOT+OWdY3cz7EhbZE0GidhJmLNd9VPOQ@mail.gmail.com> <20250828164819.51e300ec@batman.local.home> <CAHk-=wjRC0sRZio4TkqP8_S+Fr8LUypVucPDnmERrHVjWOABXw@mail.gmail.com> <20250828171748.07681a63@batman.local.home> <CAHk-=wh0LjoJmRPHF41eQ1ZRf085urz+rvQQ-rwp8dLQCdqohw@mail.gmail.com> <20250829110639.1cfc5dcc@gandalf.local.home> <CAHk-=wjeT3RKCTMDCcZzXznuvG2qf0fpKbHKCZuoPzxFYxVcQw@mail.gmail.com> <20250829121900.0e79673c@gandalf.local.home> <CAHk-=wj6+8vXfBQKoU4=8CSvgSEe1A++1KuQhXRZBHVvgFzzJg@mail.gmail.com> <20250829124922.6826cfe6@gandalf.local.home> <CAHk-=wid_71e2FQ-kZ-=aGTkBxDjLwtWqcsuNSxrarnU4ewFCg@mail.gmail.com>
-Message-ID: <6B146FF6-B84E-40A2-A4FA-ABD5576BF463@gmail.com>
+        Fri, 29 Aug 2025 10:39:35 -0700 (PDT)
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-61caa266828so4952642a12.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 29 Aug 2025 10:39:35 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWASf/oLTbgdXTBt/3UEtWLl/8g9r24HmCgABEGkqOXKxAgjSfkksUHAseti1QnmkJVPK9K9109Z8O+QrZ4yT7qANw=@vger.kernel.org
+X-Received: by 2002:a17:907:7286:b0:afe:d24f:fd70 with SMTP id
+ a640c23a62f3a-afed2500115mr854960366b.43.1756488835450; Fri, 29 Aug 2025
+ 10:33:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+References: <20250828180300.591225320@kernel.org> <20250828180357.223298134@kernel.org>
+ <CAHk-=wi0EnrBacWYJoUesS0LXUprbLmSDY3ywDfGW94fuBDVJw@mail.gmail.com>
+ <D7C36F69-23D6-4AD5-AED1-028119EAEE3F@gmail.com> <CAHk-=wiBUdyV9UdNYEeEP-1Nx3VUHxUb0FQUYSfxN1LZTuGVyg@mail.gmail.com>
+ <20250828161718.77cb6e61@batman.local.home> <CAHk-=wiujYBqcZGyBgLOT+OWdY3cz7EhbZE0GidhJmLNd9VPOQ@mail.gmail.com>
+ <20250828164819.51e300ec@batman.local.home> <CAHk-=wjRC0sRZio4TkqP8_S+Fr8LUypVucPDnmERrHVjWOABXw@mail.gmail.com>
+ <20250828171748.07681a63@batman.local.home> <CAHk-=wh0LjoJmRPHF41eQ1ZRf085urz+rvQQ-rwp8dLQCdqohw@mail.gmail.com>
+ <20250829110639.1cfc5dcc@gandalf.local.home> <CAHk-=wjeT3RKCTMDCcZzXznuvG2qf0fpKbHKCZuoPzxFYxVcQw@mail.gmail.com>
+ <20250829121900.0e79673c@gandalf.local.home> <CAHk-=wj6+8vXfBQKoU4=8CSvgSEe1A++1KuQhXRZBHVvgFzzJg@mail.gmail.com>
+ <20250829124922.6826cfe6@gandalf.local.home> <CAHk-=wid_71e2FQ-kZ-=aGTkBxDjLwtWqcsuNSxrarnU4ewFCg@mail.gmail.com>
+ <6B146FF6-B84E-40A2-A4FA-ABD5576BF463@gmail.com>
+In-Reply-To: <6B146FF6-B84E-40A2-A4FA-ABD5576BF463@gmail.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Fri, 29 Aug 2025 10:33:38 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjgdKtBAAu10W04VTktRcgEMZu+92sf1PW-TV-cfZO3OQ@mail.gmail.com>
+X-Gm-Features: Ac12FXy9v9IJY2LXrpDvJU9dj4Mt87wFmaIDhMj9zyTfDwA5B4n7cidgQycVydY
+Message-ID: <CAHk-=wjgdKtBAAu10W04VTktRcgEMZu+92sf1PW-TV-cfZO3OQ@mail.gmail.com>
+Subject: Re: [PATCH v6 5/6] tracing: Show inode and device major:minor in
+ deferred user space stacktrace
+To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Steven Rostedt <rostedt@kernel.org>, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org, x86@kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, 
+	Indu Bhagat <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>, 
+	Beau Belgrave <beaub@linux.microsoft.com>, Jens Remus <jremus@linux.ibm.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Florian Weimer <fweimer@redhat.com>, 
+	Sam James <sam@gentoo.org>, Kees Cook <kees@kernel.org>, "Carlos O'Donell" <codonell@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 
+On Fri, 29 Aug 2025 at 10:18, Arnaldo Carvalho de Melo
+<arnaldo.melo@gmail.com> wrote:
+>
+> As long as we don't lose those mmap events due to memory pressure/lost
+> events and we have timestamps to order it all before lookups, yeah
+> should work.
 
+The main reason to lose mmap events that I can see is that you start
+tracing in the middle of running something (for example, tracing
+systemd or some other "started at boot" thing).
 
-On August 29, 2025 1:59:21 PM GMT-03:00, Linus Torvalds <torvalds@linux-fo=
-undation=2Eorg> wrote:
->On Fri, 29 Aug 2025 at 09:49, Steven Rostedt <rostedt@goodmis=2Eorg> wrot=
-e:
->>
->> What do I use to make the hash?
->
->Literally just '(unsigned long)(vma->vm_file)'=2E
->
->Nothing else=2E
->
->> One thing this is trying to do is not have to look up the path name for
->> every line of a stack trace=2E
->
->That's the *opposite* of what I've been suggesting=2E I've literally
->been talking about just saving off the hash of the file pointer=2E
->
->(And I just suggested that what you actually save off isn't even the
->hash - just the value - and that you can hash it later at a less
->critical point in time)
->
->Don't do *any* work at all at trace collection time=2E All you need is
->to literally access three fields in the 'vma':
->
-> - 'vm_start' and 'vm_pgoff' are needed to calculate the offset in the
->file using the user space address
->
-> - save off the value of 'vm_file' for later hashing
->
->and I really think you're done=2E
->
->Then, for the actual trace, you need two things:
->
-> - you need the mmap trace event that has the 'file' value, and you
->create a mmap event with that value hashed, and at that point you also
->output the pathname and/or things like the build ID
->
-> - for the stack trace events, you output the offset in the file, and
->you hash and output the file value
->
->now, in user space, you have all you need=2E All you do is match the
->hashes=2E They are random numbers, and user space cannot know what they
->are=2E They are just cookies as a mapping ID=2E
->
->And look, now you have the pathname and the build ID - or whatever you
->saved off in that mmap event=2E And at stack trace time, you needed to
->do *nothing*=2E
->
->And mmap is rare enough - and heavy enough - that doing that pathname
->and build ID at *that* point is a non-issue=2E
+Then you'd not have any record of an actual mmap at all because it
+happened before you started tracing, even if there is no memory
+pressure or other thing going on.
 
+That is not necessarily a show-stopper: you could have some fairly
+simple count for "how many times have I seen this hash", and add a
+"mmap reminder" event (which would just be the exact same thing as the
+regular mmap event).
 
-Or using a preexisting one in the DSO used for the executable mmap=2E
+You do it for the first time you see it, and every N times afterwards
+(maybe by simply using a counter array that is indexed by the low bits
+of the hash, and incrementing it for every hash you see, and if it was
+zero modulo N you do that "mmap reminder" thing).
 
-As long as we don't lose those mmap events due to memory pressure/lost eve=
-nts and we have timestamps to order it all before lookups, yeah should work=
-=2E
+Yes, at that point you'd need to do that whole "generate path and
+build ID", but if 'N' is a large enough number, it's pretty rare.
+Maybe using a 16-bit counter would be sufficient (ie N would naturally
+be 65536 when it becomes zero again).
 
-- Arnaldo=20
+That might be a good thing regardless just to have some guaranteed
+limit of how far back in the trace you need to go to find the mmap
+information for some hash. If you have long traces, maybe you don't
+want to walk back billions of events.
 
->
->See what I'm trying to say?
->
->               Linus
+But I wouldn't suggest doing that as a *first* implementation. I'm
+just saying that it could be added if people find that it's a problem.
 
-- Arnaldo 
+            Linus
