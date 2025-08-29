@@ -1,110 +1,179 @@
-Received: from mail-yw1-f194.google.com (mail-yw1-f194.google.com [209.85.128.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A39A635950;
-	Fri, 29 Aug 2025 00:47:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 343351DFF7;
+	Fri, 29 Aug 2025 01:55:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.113
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756428435; cv=none; b=le027e/sap7T3g2iWfwVh5x2BxMvndO+6xUL1ox90f7rPfnlzCxI52wGroiuJNRlss2RwBYfDxNJaJnwVC4cOXATeslCSRXfBUMXnCDK19i6DbKiemeuixsAxNs93xjFQfJbK7A+OPwz2CODHX9w5XFxK0BZj1BuSeugs5CY6rU=
+	t=1756432559; cv=none; b=glkYkF3QlN7OhnJj0NnP+wXtB2S1PTbUAkc0jb+D5vkIDdzs8oaB/cnbPwLl5th8blJetaCTnl5rJ2y6j/ivjZ/EVpzTCkY2bqnp81tCEUo9/KOkYIvkXhDzGSj36HNVB0d/ccIpGzk6lcTFFVEktOdfzXqlwElMST6T30/TY6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756428435; c=relaxed/simple;
-	bh=oPmuy3TGat4ooWHkoK7e11Wk5LiHB8i/yOjViDSxrUw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JS0SIsye0poiiVZr/WfaO1P77WTyxJviEOlH2yMXb2nawnNPODUvcgjVK76tsgVHKi4FywFEoHZD83ytfVpgM4C3DYpI8kxogTFePyWDW+1ltmq+AEQY3azH2H/GnVctsVMEV2+LSxqF7U28gAMccKEwxslxYvKdAtvNiN1Xpzs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fFOIxhJ3; arc=none smtp.client-ip=209.85.128.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1756432559; c=relaxed/simple;
+	bh=3lsN2vYrm0K0VPxgIEq3nbg372iNirHaFaobU8Zn3f4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AKiLSCNNz9uXHkndBTBC1X5kf71wR4kWmDui8+Yv7TfAuiS+cFgYxb4wKqtQTo/EVH7HtiAcGbKOMO1NC+GVz7u5EZtD/M8MG7iB6ohfeLyIYZoVUs0YSuAL1UgLzAooVkVvCFQEK6M1+wNbWBfafzSS3u0dK9B58JtPtV6D2z8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=qp5+QKze; arc=none smtp.client-ip=115.124.30.113
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fFOIxhJ3"
-Received: by mail-yw1-f194.google.com with SMTP id 00721157ae682-71d60501806so12829717b3.2;
-        Thu, 28 Aug 2025 17:47:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1756428432; x=1757033232; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wuiyXbkz/oKZln4w17K1UpJPXhKbnq2sEqaKGCGVONo=;
-        b=fFOIxhJ3FRTdUTAh+hRM9FHON4IpZk3S2BfSHgmOj0ZTRbuP5GX1n+/IVK3B8Hj5GA
-         3CuDXUTz8o8GWMTPrIUqAawIe06q4tROmsPk9BtJO86ghHPohpqLnRYNBP4RR3PxdLtQ
-         J4Az9P/gt4rcNM2T8RAS1/fE48iJp/cL/tnEBTfsSMtVUwvn7VdN0KmJSpBae+Y2wQ5H
-         rLrrgt44CQ6mI3tITm4hlPeo6tX3UwlT6r/99nQimOoSqeObDWH28lNxigN4P1mKXoN8
-         Qg836UJprN+TwdSKstnQOmFL1AGomfttsk5hmC3UbqQm0qZcwFqwdKewGOqoxEBOFmlu
-         tzoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756428432; x=1757033232;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wuiyXbkz/oKZln4w17K1UpJPXhKbnq2sEqaKGCGVONo=;
-        b=GrCRPMChDE/B+1NsWucULaPRRLz1rty5mhzV0slujPnVgAV+xw9AV4QK2g4CkzdtVx
-         bqG0ULVfcQjPFiPxFbSbfVqKg0d7fD53pXt37qsG45jEMYmlMz2Hf3vmHJxrSN6GgEXZ
-         kzuRE/+iuIBqlsx5SxLwPbY5npdByBL/tRr1hABK2dB4tXQqx1ps6PrXfuXAS5+2Rfj1
-         din0JZwYV0x7tBXPo4ZYhsD2fRRXQcU1pIW+l7nceo/2UBZKomyv1fDVinXkV1D5BEpO
-         UgbvaCkLvGDq6Rs6MleMlGPVhvTLc9JpIB+DfPCOrGj07+cPeJeg2yWByXaycOj42Czo
-         UZ/A==
-X-Forwarded-Encrypted: i=1; AJvYcCUX6ZGas94sHpfW8x73DEwHldj9fw5gY+cjy7nICFig4kj8GQ9HqZ+YmRGWyi9plvK+RFvAfTUMpEZfLX9zLiawWCuj@vger.kernel.org, AJvYcCVjeTRSrcGO9QD59zmnubjVefwQa7IZsUShItzuXI2NBLmh3Zz/QlK7uHKIaI/IuKJa2dIVuvz4OT8SIkQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzcbgnmvlOxd3iLNhr00sF0j16QPZ/6CpdO/FD/GgKJ8NmLFh5W
-	NrkXk0YSFQrirb2G4+VNH8J1qZHhT5Z9aqNrpbwMUaLYXv/bxxN0vQ7TaTEfUxc5ejSbJrlBvBq
-	B7/M9HsWe+OhCeu6x0AfPGPjmFhPfTAo=
-X-Gm-Gg: ASbGncu7EtFk0txjqLdQdt4e56eHJh29bTaK9Mh6mxVCstpF1Th3lLeyg8Qpi4ddW/w
-	75MJ1xBz7auQDJdge0riI0PYRTtqaVjyI0rjXjooIyNDfXPVk+FXHXDN0GBiccS3GgEY2xJu2Y9
-	mjU/Rr+FxqGp4sSWtvBO/fdmTWW7Db1sc2hUlgk1IdSuA/WDT+tRHHnme4HSykYo22x4+NtmJMq
-	ELax+IpZbhwXvlblbhiPuXhZbsEYOj6
-X-Google-Smtp-Source: AGHT+IFUTRuTOBbOyVGMOGyozpIKe/8z9Kms9zBBGUkwhou9GlReWWHS4I0oGgJfP0HC+5MiGifVts7hT8mQcm3Tq2w=
-X-Received: by 2002:a05:690c:4507:b0:71a:300c:d17e with SMTP id
- 00721157ae682-71fdc2f32c8mr320538557b3.20.1756428432558; Thu, 28 Aug 2025
- 17:47:12 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="qp5+QKze"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1756432546; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=lJhaXXSDqG4GAemXi4WtUd9dZ0qacHvLnl2G4eecVXc=;
+	b=qp5+QKzei9RANO0q2YxZZEd9LzYOIxWITBkfUAN166JrRnwx6UC2mpG1IpxyrYHuuaEuobLWzCDi+wKVhtaiFvuX+zdDQYZPs1+9bF8Em4oSvCY13jPoVxkH86H8rdIKluAAL7v6eperbGLzjS3NOOLN2ddZDHe1EHI6RxtQiig=
+Received: from 30.74.144.113(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0Wmpa1nb_1756432541 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 29 Aug 2025 09:55:42 +0800
+Message-ID: <2a141eef-46e2-46e1-9b0f-066ec537600d@linux.alibaba.com>
+Date: Fri, 29 Aug 2025 09:55:37 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <202508281655.54c87330-lkp@intel.com> <CADxym3aHUDGahE1S2LzaDZA4vZP637txcMzQR3_r1U00GikEUA@mail.gmail.com>
- <20250828103433.1498f8a7@gandalf.local.home>
-In-Reply-To: <20250828103433.1498f8a7@gandalf.local.home>
-From: Menglong Dong <menglong8.dong@gmail.com>
-Date: Fri, 29 Aug 2025 08:47:01 +0800
-X-Gm-Features: Ac12FXzl5_fAXXUIThWutnEuE1vHvA1GXqPeGhxPSFJPZ1LIhVHxUVfVStR-Tkg
-Message-ID: <CADxym3YhwQ=2z8u2RNoEK3iM2KwafeM-aB8OAspCyOaLy+iu=g@mail.gmail.com>
-Subject: Re: [linux-next:master] [tracing] dfe0d675df: WARNING:suspicious_RCU_usage
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, oe-lkp@lists.linux.dev, 
-	kernel test robot <oliver.sang@intel.com>, lkp@intel.com, 
-	Menglong Dong <dongml2@chinatelecom.cn>, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v10 00/13] khugepaged: mTHP support
+To: Dev Jain <dev.jain@arm.com>, David Hildenbrand <david@redhat.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Nico Pache <npache@redhat.com>, linux-mm@kvack.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, ziy@nvidia.com, Liam.Howlett@oracle.com,
+ ryan.roberts@arm.com, corbet@lwn.net, rostedt@goodmis.org,
+ mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ akpm@linux-foundation.org, baohua@kernel.org, willy@infradead.org,
+ peterx@redhat.com, wangkefeng.wang@huawei.com, usamaarif642@gmail.com,
+ sunnanyong@huawei.com, vishal.moola@gmail.com,
+ thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com,
+ kirill.shutemov@linux.intel.com, aarcange@redhat.com, raquini@redhat.com,
+ anshuman.khandual@arm.com, catalin.marinas@arm.com, tiwai@suse.de,
+ will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz, cl@gentwo.org,
+ jglisse@google.com, surenb@google.com, zokeefe@google.com,
+ hannes@cmpxchg.org, rientjes@google.com, mhocko@suse.com,
+ rdunlap@infradead.org, hughd@google.com
+References: <20250819134205.622806-1-npache@redhat.com>
+ <e971c7e0-70f0-4ce0-b288-4b581e8c15d3@lucifer.local>
+ <38b37195-28c8-4471-bd06-951083118efd@arm.com>
+ <0d9c6088-536b-4d7a-8f75-9be5f0faa86f@lucifer.local>
+ <CAA1CXcCqhFoGBvFK-ox2sJw7QHaFt+-Lw09BDYsAGKg4qc8nSw@mail.gmail.com>
+ <CAA1CXcAXTL811VJxqyL18CUw8FNek6ibPr6pKJ_7rfGn-ZU-1A@mail.gmail.com>
+ <5bea5efa-2efc-4c01-8aa1-a8711482153c@lucifer.local>
+ <CAA1CXcBDq9PucQdfQRh1iqJLPB6Jn6mNy28v_AuHWb9kz1gpqQ@mail.gmail.com>
+ <d110a84a-a827-48b4-91c5-67cec3e92874@lucifer.local>
+ <95012dfc-d82d-4ae2-b4cd-1e8dcf15e44b@redhat.com>
+ <bdbb5168-7657-4f11-a42d-b75cce7e0bca@lucifer.local>
+ <e34e1ffe-c377-4c9a-b28b-ca873f3620ac@redhat.com>
+ <db2320ee-6bd4-49c1-8fce-0468f48e1842@linux.alibaba.com>
+ <c8c5e818-536a-4d72-b8dc-36aeb1b61800@arm.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <c8c5e818-536a-4d72-b8dc-36aeb1b61800@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, Aug 28, 2025 at 10:34=E2=80=AFPM Steven Rostedt <rostedt@goodmis.or=
-g> wrote:
->
-> On Thu, 28 Aug 2025 17:09:35 +0800
-> Menglong Dong <menglong8.dong@gmail.com> wrote:
->
-> > > [  354.955971][ T4652]  dump_stack_lvl+0x7c/0x90
-> > > [  354.955978][ T4652]  lockdep_rcu_suspicious+0x14f/0x1c0
-> > > [  354.955987][ T4652]  __rhashtable_lookup+0x1e0/0x260
-> >
-> > rcu_read_lock() is not needed in fprobe_entry, but
-> > rcu_dereference_check() is used in rhltable_lookup(), which
-> > causes this warning.
->
-> Why is rcu_read_lock() not needed in fprobe_entry()?
-
-This is how it worked previously. In ftrace_test_recursion_trylock(),
-preemption will be disabled, which ensure the RCU read-side
-critical section.
 
 
-Thanks!
-Menglong Dong
+On 2025/8/28 18:48, Dev Jain wrote:
+> 
+> On 28/08/25 3:16 pm, Baolin Wang wrote:
+>> (Sorry for chiming in late)
+>>
+>> On 2025/8/22 22:10, David Hildenbrand wrote:
+>>>>> Once could also easily support the value 255 (HPAGE_PMD_NR / 2- 1), 
+>>>>> but not sure
+>>>>> if we have to add that for now.
+>>>>
+>>>> Yeah not so sure about this, this is a 'just have to know' too, and 
+>>>> yes you
+>>>> might add it to the docs, but people are going to be mightily 
+>>>> confused, esp if
+>>>> it's a calculated value.
+>>>>
+>>>> I don't see any other way around having a separate tunable if we 
+>>>> don't just have
+>>>> something VERY simple like on/off.
+>>>
+>>> Yeah, not advocating that we add support for other values than 0/511, 
+>>> really.
+>>>
+>>>>
+>>>> Also the mentioned issue sounds like something that needs to be 
+>>>> fixed elsewhere
+>>>> honestly in the algorithm used to figure out mTHP ranges (I may be 
+>>>> wrong - and
+>>>> happy to stand corrected if this is somehow inherent, but reallly 
+>>>> feels that
+>>>> way).
+>>>
+>>> I think the creep is unavoidable for certain values.
+>>>
+>>> If you have the first two pages of a PMD area populated, and you 
+>>> allow for at least half of the #PTEs to be non/zero, you'd collapse 
+>>> first a
+>>> order-2 folio, then and order-3 ... until you reached PMD order.
+>>>
+>>> So for now we really should just support 0 / 511 to say "don't 
+>>> collapse if there are holes" vs. "always collapse if there is at 
+>>> least one pte used".
+>>
+>> If we only allow setting 0 or 511, as Nico mentioned before, "At 511, 
+>> no mTHP collapses would ever occur anyway, unless you have 2MB 
+>> disabled and other mTHP sizes enabled. Technically, at 511, only the 
+>> highest enabled order would ever be collapsed."
+> I didn't understand this statement. At 511, mTHP collapses will occur if 
+> khugepaged cannot get a PMD folio. Our goal is to collapse to the 
+> highest order folio.
 
->
-> -- Steve
->
-> >
-> > Adding rcu_read_lock() here is able to suppress this warning.
-> > Maybe we need only rcu_lock_acquire(&rcu_lock_map) here,
-> > but it's not a common usage. What do you think, Masami?
->
+Yes, I’m not saying that it’s incorrect behavior when set to 511. What I 
+mean is, as in the example I gave below, users may only want to allow a 
+large order collapse when the number of present PTEs reaches half of the 
+large folio, in order to avoid RSS bloat.
+
+So we might also need to consider whether 255 is a reasonable 
+configuration for mTHP collapse.
+
+>> In other words, for the scenario you described, although there are 
+>> only 2 PTEs present in a PMD, it would still get collapsed into a PMD- 
+>> sized THP. In reality, what we probably need is just an order-2 mTHP 
+>> collapse.
+>>
+>> If 'khugepaged_max_ptes_none' is set to 255, I think this would 
+>> achieve the desired result: when there are only 2 PTEs present in a 
+>> PMD, an order-2 mTHP collapse would be successed, but it wouldn’t 
+>> creep up to an order-3 mTHP collapse. That’s because:
+>> When attempting an order-3 mTHP collapse, 'threshold_bits' = 1, while 
+>> 'bits_set' = 1 (means only 1 chunk is present), so 'bits_set > 
+>> threshold_bits' is false, then an order-3 mTHP collapse wouldn’t be 
+>> attempted. No?
+>>
+>> So I have some concerns that if we only allow setting 0 or 511, it may 
+>> not meet the goal we have for mTHP collapsing.
+>>
+>>>>> Because, as raised in the past, I'm afraid nobody on this earth has 
+>>>>> a clue how
+>>>>> to set this parameter to values different to 0 (don't waste memory 
+>>>>> with khugepaged)
+>>>>> and 511 (page fault behavior).
+>>>>
+>>>> Yup
+>>>>
+>>>>>
+>>>>>
+>>>>> If any other value is set, essentially
+>>>>>     pr_warn("Unsupported 'max_ptes_none' value for mTHP collapse");
+>>>>>
+>>>>> for now and just disable it.
+>>>>
+>>>> Hmm but under what circumstances? I would just say unsupported value 
+>>>> not mention
+>>>> mTHP or people who don't use mTHP might find that confusing.
+>>>
+>>> Well, we can check whether any mTHP size is enabled while the value 
+>>> is set to something unexpected. We can then even print the 
+>>> problematic sizes if we have to.
+>>>
+>>> We could also just just say that if the value is set to something 
+>>> else than 511 (which is the default), it will be treated as being "0" 
+>>> when collapsing mthp, instead of doing any scaling.
+>>>
+>>
+
