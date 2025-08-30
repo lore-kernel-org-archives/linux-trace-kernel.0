@@ -1,107 +1,74 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F00AF3C33;
-	Sat, 30 Aug 2025 01:25:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24F53215075;
+	Sat, 30 Aug 2025 10:22:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756517152; cv=none; b=tdApICa6c21c8X1hqbEJ7z8pr+U04k0MeGS73I1nlxn5XMAXbXXSvJI4x4tanuywSIe085yeby3ntxmhs67awc8MsKX8SsftCAYSKhc0Qj5ZsWcu07bexZn/O5vfg3VHpBGECQazzflOHnjdp1s7axfqYAKHHogs/4nR/qIRlGY=
+	t=1756549376; cv=none; b=NhjI17hjRaII/Cfuhfxu+NRxeCJulyZ37d+6mxHQc2L+R81yp4TkL0muGJCHTccqlbBTRDWmdoBe7xvg6ML3Y8+UwtscWBy2jva5vujNJEB+yrtHa+c9x9rI0tethwniQq+3GVLUEuWKLHEx3GD1ulAPZgN6KaqPS1uASu5LMDQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756517152; c=relaxed/simple;
-	bh=aQfMa7G8xSMpwFrU9h8/JS2wva8i/q2sArpym3zZluI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=A7VeXe9GCsNsBO6er9ttEc6UkradYJ+wD5/PPci51htgOimF73XGwchvJeInII0rdeHaaWp/BKDGQSlpj9kOGdhDIinPEVFA4zeO5j0dWGFKBjRfCBYHTRdRev1X/QkY5l4cXEtDTM5oLJwuqxQIEcPRsJBmBRbw9vqqBhykfd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf16.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id 172A613ACBE;
-	Sat, 30 Aug 2025 01:25:47 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf16.hostedemail.com (Postfix) with ESMTPA id E042F2000E;
-	Sat, 30 Aug 2025 01:25:41 +0000 (UTC)
-Date: Fri, 29 Aug 2025 21:26:05 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>, Steven Rostedt
- <rostedt@kernel.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, x86@kernel.org,
- Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jiri
- Olsa <jolsa@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Andrii Nakryiko <andrii@kernel.org>, Indu Bhagat <indu.bhagat@oracle.com>,
- "Jose E. Marchesi" <jemarch@gnu.org>, Beau Belgrave
- <beaub@linux.microsoft.com>, Jens Remus <jremus@linux.ibm.com>, Andrew
- Morton <akpm@linux-foundation.org>, Florian Weimer <fweimer@redhat.com>,
- Sam James <sam@gentoo.org>, Kees Cook <kees@kernel.org>, "Carlos O'Donell"
- <codonell@redhat.com>
-Subject: Re: [PATCH v6 5/6] tracing: Show inode and device major:minor in
- deferred user space stacktrace
-Message-ID: <20250829212605.445e1479@gandalf.local.home>
-In-Reply-To: <20250829212023.4ab9506f@gandalf.local.home>
-References: <20250828180300.591225320@kernel.org>
-	<CAHk-=wh0LjoJmRPHF41eQ1ZRf085urz+rvQQ-rwp8dLQCdqohw@mail.gmail.com>
-	<20250829110639.1cfc5dcc@gandalf.local.home>
-	<CAHk-=wjeT3RKCTMDCcZzXznuvG2qf0fpKbHKCZuoPzxFYxVcQw@mail.gmail.com>
-	<20250829121900.0e79673c@gandalf.local.home>
-	<CAHk-=wj6+8vXfBQKoU4=8CSvgSEe1A++1KuQhXRZBHVvgFzzJg@mail.gmail.com>
-	<20250829124922.6826cfe6@gandalf.local.home>
-	<CAHk-=wid_71e2FQ-kZ-=aGTkBxDjLwtWqcsuNSxrarnU4ewFCg@mail.gmail.com>
-	<6B146FF6-B84E-40A2-A4FA-ABD5576BF463@gmail.com>
-	<CAHk-=wjgdKtBAAu10W04VTktRcgEMZu+92sf1PW-TV-cfZO3OQ@mail.gmail.com>
-	<20250829141142.3ffc8111@gandalf.local.home>
-	<CAHk-=wh8QVL4rb_17+6NfxW=AF-HS0WarMmq-nYm42akG0-Gbg@mail.gmail.com>
-	<20250829171855.64f2cbfc@gandalf.local.home>
-	<CAHk-=wj7rL47QetC+e70y7pgyH4v7Q2vcSZatRsCk+Z6urA3hw@mail.gmail.com>
-	<20250829190935.7e014820@gandalf.local.home>
-	<CAHk-=wgNeu8_=kPnKwFpwMUC=o-uh=KjJWePR9ujk=7F9yNXDQ@mail.gmail.com>
-	<20250829212023.4ab9506f@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1756549376; c=relaxed/simple;
+	bh=HwX32QeFjPWmTiGI3BtXr13beWWLdfFnHIp1PwXx2Z8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ed9jged3fkJy0xwUMcfHGwfAutiuEkokF6tzb3mlXvphkfZ7OLpsmJgUsW2r8gzwa/jjwNYmjY/DbRLdflWj1o3Z5iOnsGF2wdrr6ScWsC1X3GCx2hcWSFFbXrMLRWzuP5CVruQ57F5OCHqjsMuD9s9FtYmmiUBAjlIPWtF9yO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D05E4C4CEEB;
+	Sat, 30 Aug 2025 10:22:53 +0000 (UTC)
+Date: Sat, 30 Aug 2025 11:22:51 +0100
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Luo Gengkun <luogengkun@huaweicloud.com>, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, Will Deacon <will@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	Mark Rutland <mark.rutland@arm.com>,
+	Al Viro <viro@zeniv.linux.org.uk>
+Subject: Re: [PATCH] tracing: Fix tracing_marker may trigger page fault
+ during preempt_disable
+Message-ID: <aLLQ-43Ll8rF7kon@arm.com>
+References: <20250819105152.2766363-1-luogengkun@huaweicloud.com>
+ <20250819135008.5f1ba00e@gandalf.local.home>
+ <436e4fa7-f8c7-4c23-a28a-4e5eebe2f854@huaweicloud.com>
+ <20250829082604.1e3fd06e@gandalf.local.home>
+ <20250829083655.3d38d02b@gandalf.local.home>
+ <aLIFRHcsEo2e2GE7@arm.com>
+ <20250829181311.079f33bf@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout04
-X-Rspamd-Queue-Id: E042F2000E
-X-Stat-Signature: p96rn3iquaawkxjothy37xu4s1xjpczj
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+MiEqrAYBwDRHk7XtPOHKUXUWRtT2lBTA=
-X-HE-Tag: 1756517141-622699
-X-HE-Meta: U2FsdGVkX18XdQHVzdi5IJHrLJr+zTe1edsim9VGa7GrXpnPXGndCYwFdLFmXWnDDCkMD6Hu+g2C6VTyhqEJPVL66Oxj08WcZVP/wngTqUz66NLXCZuJ/AxtejyOt3HUXYr2WQeUh23p6pynBSTDsOOkxVGlKSCEBGj/PbddJvtn3zmUeMJ9SrkgUQqlvl++6DLMpVDNAQzS0ywOqeFFYw4mN1/DIs/AfKuDBKFi0DVJMPhmuyfmky3qUzUUBoyX8KvbzBBF2r8NU2sBSun7P2re1IbqDUFcTJrgZzbzSOlzzG9PQUcDrzoePRWAWpSsw+ZJEeBLK11Q6p6MkWHmVgoZq3RqNx2GlLupjuTdPICSB2iu/x6d8W8fhryIqMmx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250829181311.079f33bf@gandalf.local.home>
 
-On Fri, 29 Aug 2025 21:20:23 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> > I'm done arguing. You're not listening, so I'll just let you know that  
+On Fri, Aug 29, 2025 at 06:13:11PM -0400, Steven Rostedt wrote:
+> On Fri, 29 Aug 2025 20:53:40 +0100
+> Catalin Marinas <catalin.marinas@arm.com> wrote:
+> valid user address.
+> > BTW, arm64 also bails out early in do_page_fault() if in_atomic() but I
+> > suspect that's not the case here.
+> > 
+> > Adding Al Viro since since he wrote a large part of uaccess.h.
 > 
-> I am listening. I'm just not understanding you.
+> So, __copy_from_user_inatomic() is supposed to be called if
+> pagefault_disable() has already been called? If this is the case, can we
+> add more comments to this code? I've been using the inatomic() version this
+> way in preempt disabled locations since 2016.
 
-BTW, I'm not arguing with you. I'm really trying hard to figure out what it
-is that you want me to do. I'm looking for that "don't use dentry outside
-of VFS" moment.
+This should work as long as in_atomic() returns true as it's checked in
+the arm64 fault code. With PREEMPT_NONE, however, I don't think this
+works. __copy_from_user_inatomic() could be changed to call
+pagefault_disable() if !in_atomic() but you might as well call
+copy_from_user_nofault() in the trace code directly as per Luo's patch.
 
-I get we have in the call stack the offsets of the file and a magical hash
-value that represents that vma.
+> I just wanted to figure out why __copy_from_user_inatomic() wasn't atomic.
+> If anything, it needs to be better documented.
 
-What I don't get is what is user space suppose to match that magical hash
-value to?
+Yeah, I had no idea until I looked at the code. I guess it means it can
+be safely used if in_atomic() == true (well, making it up, not sure what
+the intention was).
 
-Do you want me to trace all mmaps and trigger an event for them that show
-the hash value and the path names?
-
-If that's the case, what do I do about the major use case of tracing an
-application after it has mapped all it's memory to files?
-
-What about wasted ring buffer space for recording every mmap when the
-majority of them will not be used. It could risk dropping events of the
-mmaps we care about.
-
-Again, I'm not arguing with you. I'm trying to figure out what you are
-suggesting.
-
--- Steve
+-- 
+Catalin
