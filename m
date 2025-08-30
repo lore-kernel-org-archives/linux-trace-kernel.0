@@ -1,25 +1,25 @@
 Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1CAD313E2F;
-	Fri, 29 Aug 2025 23:42:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 725BA1388;
+	Sat, 30 Aug 2025 00:36:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756510954; cv=none; b=DwOL8nrTTjb5B+5wuT2C4jgnYoTkPKN8jt0ffoUN0x3ftIgGV1HtQ7BsRNLMdJ0lgSoslLrHmbJ8/iKW/z8ir5gG/LVqLQr21EwMk/dJQjK3BcGDAHGgBQQ1Zz7QwY+4xIMGhWdPVGvBCjm94gRcF+psPq9DdnFJ/Uw6gGNrW4Q=
+	t=1756514174; cv=none; b=c0EjD/A32APWeXwK7yyiYgSoPdobKK3eLZ4JA5bz+X6HR3CR52qTyWXavZnP7UKTcIImI7dYvJoO/QIfn1jJyVn8LDhYSyIh3AxShJx10XZFmAB7yOSqBUneXM11itPrMzY4ork/+BxlzIn+Nja5bhPV4OCRFdODN3fcInaUTIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756510954; c=relaxed/simple;
-	bh=OMoarhBKWRFMEKlBjhoZlnUHQlWKXzQC/8XRcWcRgQk=;
+	s=arc-20240116; t=1756514174; c=relaxed/simple;
+	bh=qsMti+LWhYucHDA3xzzk7LXoXUO9jYvItet2jyL2qNI=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gPc4QurEi4CHLLMlWCjbo9RKJvK1eaOEmYnYAHp3zEBn5zWDlfvvU1c5uGV/2gdAeIxDcMMZ6hY/AcfIYQsDJakf7VAaTB1dkPZRw6xEpxafXUSh58hRADK9sZFvhNF9zNeTG434KfSxnu1xK9jWn94ezgBb6oL5ZhthF51OQYo=
+	 MIME-Version:Content-Type; b=ZqY7bCD47aexzr4KwRVPptmzR6//nSZndagbsv2Ri+FA75izKgfnRiNixANZOt3pkuofTucKmJ748pSDcfArGHEoV845bE4wEq8muOwGp/L7DHJ3uemnNxftNWAbmpb4RGkCq4m3v0lFu5DD9ktmDGtc+nVh8hJW5RVemP2N/jY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf10.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay10.hostedemail.com (Postfix) with ESMTP id 0DBCCC0A3E;
-	Fri, 29 Aug 2025 23:42:29 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf10.hostedemail.com (Postfix) with ESMTPA id C022930;
-	Fri, 29 Aug 2025 23:42:23 +0000 (UTC)
-Date: Fri, 29 Aug 2025 19:42:46 -0400
+Received: from omf03.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay07.hostedemail.com (Postfix) with ESMTP id 6A1E21606F0;
+	Sat, 30 Aug 2025 00:36:09 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf03.hostedemail.com (Postfix) with ESMTPA id 0A5D56000B;
+	Sat, 30 Aug 2025 00:36:03 +0000 (UTC)
+Date: Fri, 29 Aug 2025 20:36:27 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>, Steven Rostedt
@@ -38,10 +38,9 @@ Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>, Steven Rostedt
  <codonell@redhat.com>
 Subject: Re: [PATCH v6 5/6] tracing: Show inode and device major:minor in
  deferred user space stacktrace
-Message-ID: <20250829194246.744c760b@gandalf.local.home>
-In-Reply-To: <20250829190935.7e014820@gandalf.local.home>
+Message-ID: <20250829203627.3bbb9c24@gandalf.local.home>
+In-Reply-To: <20250829194246.744c760b@gandalf.local.home>
 References: <20250828180300.591225320@kernel.org>
-	<CAHk-=wjRC0sRZio4TkqP8_S+Fr8LUypVucPDnmERrHVjWOABXw@mail.gmail.com>
 	<20250828171748.07681a63@batman.local.home>
 	<CAHk-=wh0LjoJmRPHF41eQ1ZRf085urz+rvQQ-rwp8dLQCdqohw@mail.gmail.com>
 	<20250829110639.1cfc5dcc@gandalf.local.home>
@@ -57,6 +56,7 @@ References: <20250828180300.591225320@kernel.org>
 	<20250829171855.64f2cbfc@gandalf.local.home>
 	<CAHk-=wj7rL47QetC+e70y7pgyH4v7Q2vcSZatRsCk+Z6urA3hw@mail.gmail.com>
 	<20250829190935.7e014820@gandalf.local.home>
+	<20250829194246.744c760b@gandalf.local.home>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -66,85 +66,86 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: C022930
-X-Stat-Signature: azhwezcc14saodu69w4ah5bim47aswj1
-X-Rspamd-Server: rspamout06
+X-Stat-Signature: qeeg9p3gxtqwn1yhdotjp5fxoqtn4meg
+X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: 0A5D56000B
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18JIfWswO10uE6nLVJT4VE/MKCv0PTvJos=
-X-HE-Tag: 1756510943-862589
-X-HE-Meta: U2FsdGVkX199iHuOEkJPwTYcEot9z3agL4VFtTQKQhV4DCgF8Nuvn5MIUxD2Y0mU3qJhMXmgywmTSbzffvJOkpbtCIcds0bkVeHfRC05gAdzqhkqgpFW2eVTB/MptON7Q2zOWE75bOXxMk82l4NkllEB5fQw0caXw0Wc4bZQJDSJFxvVkMTKNyWl7bCHSU1UPA3vEhFjqbbAb1gZCb87gRV6S4XRCbSTP9G9q4Tg0vNTT2xswqvX/xDaZRUJ6rQGX9M4PenXkAA4IckVgETmOumbbmzyj+rJb7qbSwZd7xWeCNuD+Xy+hA1j7z3WdEmzSY5tSLeD8qH7rGR4qyMfey58dLe1FK01+AOjWaKfQQ3iVhzh0+tvLiVUGFzAvmGy
+X-Session-ID: U2FsdGVkX1+xcImp8TxVi+CCl2dnC6hREgbekVcnl3c=
+X-HE-Tag: 1756514163-476374
+X-HE-Meta: U2FsdGVkX19n43wdPBIbkHhrdzMH6DataEPRK47xCyyx1UXXit2BgIP9Tq1W3JoMSrSuGFn1io2mRJDoO18d47VGNrFj3omXyhXloMxMIfcc/q9/QiwewOeQ1aXjc4T2l9U/kIpfL7LFyxVHQBV1LWDeVdTZUGESVVd8rKbliev4HcwhwSDRdIo9oif2LQaZ8R49/uH+9G5EGc94vRPBKjMhy3yrZWExB32gT6jqcNqKoHVVz4TKFrnBAGtqUWDF8VlQpQCGVbVJfru2N3s5ii+gLV2v8oxdl+oHdJylWEaBxrU/JriyRwUswYUpGqWLnKV9nb1mjSkCv0DBBW/M42f3Jevw78+w84AfHcdCCoaqLMnkvETo/0F1MgzcHhJAtAwkhQvGo5HC823tnUsnMfjuXSxF5ACI
 
-On Fri, 29 Aug 2025 19:09:35 -0400
+On Fri, 29 Aug 2025 19:42:46 -0400
 Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> > NOTHING like that. You don't look at the hash. You don't "register"
-> > it. You don't touch it in any way. You literally just use it as a
-> > value, and user space will figure it out later. At event parsing time.  
+>    vma = NULL;
+>    hash = 0;
+>    foreach addr in callchain
+>      if (!vma || addr not in range of vma) {
+>        vma = vma_lookup(addr);
+>        hash = get_hash(vma);
+>      }
+>      callchain[i] = addr - offset;
+>      hash[i] = hash;
 > 
-> I guess this is where I'm stuck. How does user space know what those hash
-> values mean? Where does it get the information from?
+> 
+> I had that get_hash(vma) have something like:
+> 
+> 
+>   u32 get_hash(vma) {
+>      unsigned long ptr = (unsigned long)vma->vm_file;
+>      u32 hash;
+> 
+>      /* Remove alignment */
+>      ptr >>= 3;
+>      hash = siphash_1u32((u32)ptr, &key);
 
-This is why I had the stored hash items in a "file_cache". It was the way
-to know that a new vma is being used and needs an event to show it.
+Oh, this hash isn't that great, as it did appear to have collisions. But I
+saw in vsprintf() it has something like:
+
+#ifdef CONFIG_64BIT
+	return (u32)(unsigned long)siphash_1u64((u64)ptr, &key);
+#else
+	return (u32)siphash_1u32((u32)ptr, &key);
+#endif
+
+Which for the 64 bit version, it uses all the bits to calculate the hash,
+and the resulting bottom 32 is rather a good spread.
 
 > 
-> That is, this would likely be useful:
+>      if (lookup_hash(hash))
+>         return hash; // already saved
 > 
->   vma = NULL;
->   foreach addr in callchain
->     if (!vma || addr not in range of vma)
->       vma = vma_lookup(addr);
+>      // The above is the most common case and is quick.
+>      // Especially compared to vma_lookup() and the hash algorithm
+> 
+>      /* Slow but only happens when a new vma is discovered */
+>      trigger_event_that_maps_hash_to_file_data(hash, vma);
+> 
+>      /* Doesn't happen again for this hash value */
+>      save_hash(hash);
 
-You already stated that the vma_lookup() and the hash algorithm is very
-expensive, but they need to be done anyway. A simple hash lookup is quick
-and would be lost in the noise.
+So this basically creates the output of:
 
-
-   vma = NULL;
-   hash = 0;
-   foreach addr in callchain
-     if (!vma || addr not in range of vma) {
-       vma = vma_lookup(addr);
-       hash = get_hash(vma);
-     }
-     callchain[i] = addr - offset;
-     hash[i] = hash;
-
-
-I had that get_hash(vma) have something like:
-
-
-  u32 get_hash(vma) {
-     unsigned long ptr = (unsigned long)vma->vm_file;
-     u32 hash;
-
-     /* Remove alignment */
-     ptr >>= 3;
-     hash = siphash_1u32((u32)ptr, &key);
-
-     if (lookup_hash(hash))
-        return hash; // already saved
-
-     // The above is the most common case and is quick.
-     // Especially compared to vma_lookup() and the hash algorithm
-
-     /* Slow but only happens when a new vma is discovered */
-     trigger_event_that_maps_hash_to_file_data(hash, vma);
-
-     /* Doesn't happen again for this hash value */
-     save_hash(hash);
+       trace-cmd-1034    [003] .....   142.197674: <user stack unwind>
+cookie=300000004
+ =>  <000000000008f687> : 0x666220af
+ =>  <0000000000014560> : 0x88512fee
+ =>  <000000000001f94a> : 0x88512fee
+ =>  <000000000001fc9e> : 0x88512fee
+ =>  <000000000001fcfa> : 0x88512fee
+ =>  <000000000000ebae> : 0x88512fee
+ =>  <0000000000029ca8> : 0x666220af
+       trace-cmd-1034    [003] ...1.   142.198063: file_cache: hash=0x666220af path=/usr/lib/x86_64-linux-gnu/libc.so.6 build_id={0x10bddb6d,0xf5234181,0xc2f72e26,0x1aa4f797,0x6aa19eda}
+       trace-cmd-1034    [003] ...1.   142.198093: file_cache: hash=0x88512fee path=/usr/local/bin/trace-cmd build_id={0x3f399e26,0xf9eb2d4d,0x475fa369,0xf5bb7eeb,0x6244ae85}
 
 
-This is also where I would have a callback from munmap() to remove the
-vmas from this hash table because they are no longer around. And if a new
-vma came around with the same vm_file address, it would not be found in the
-hash table and would trigger the print again with the hash and the new file
-it represents.
+Where the first instances of the vma with the values of 0x666220af and
+0x88512fee get printed, but from then on, they are not. That is, from then
+on, the lookup will return true, and no processing will take place.
 
-This "garbage" was how I implemented the way to let user space know what
-the meaning of the hash values are.
+And periodically, I could clear the hash cache, so that all vmas get
+printed again. But this would be rate limited to not cause performance
+issues.
 
-Otherwise, we need something else to expose to user space what those hashes
-mean. And that's where I don't know what you are expecting.
 
 -- Steve
