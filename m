@@ -1,144 +1,98 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A805922FDFF
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 30 Aug 2025 19:04:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2786442065;
+	Sun, 31 Aug 2025 10:17:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756580655; cv=none; b=j7cJTrNtUp22YmIK9z10q6KeRfmfkPn04N8M5encNyCg/22vlbk4qMUkcx55KUJcOZObXZuWD9xrYEbJP3wU6Z1PSZADbP1E7Vkm5UkdWSTqk3Cf/USTjWYis3FtK/mpD8k5Zx9NiYHp3SlJE+ibkPwB3ehhvJVC1+BzTUC2MBw=
+	t=1756635472; cv=none; b=lWUbBbgiiQ8p0iv8RcaCnlUHaxf7au28h2V0FibIAkhG6yHnzJgc3JvaxQ3z0nNlOi7GN4to4qrQrqYoc7m/fKS942OH7w5vtxIrO1dfJO161x7RXwRP2TV36Nctl8c3979YpJVGyWD8e5ODd8TENwvyUVMqgkCuQRxg8dCAtdA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756580655; c=relaxed/simple;
-	bh=APZRD3R5mQMFLWqOyeRR80xS4Xl7AJEaecu1Pv4PsOA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RpyKmYvk1P4tCpX/8S7op3mCsYw3eLQU+8G57K0USHi/U9XjBpXuyrJ8/dxMq1yRGRn7z8vFu6Oof51KO1ATHlypF5YUymyi298jCl7sqVoO1XNaY3U83KwvQs6K8sz3f6zstTUYarrOs/H291AgNscytHN9SvaiofLiBwXgqfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=N9xjW2FA; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1756635472; c=relaxed/simple;
+	bh=WgMXyIuYHUXdsskYc7L9F2jvIhSMcMVwt1SocD3L+tQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VFKCeU3obJn9Mjzbz5cuZyTP6ps5hDFejNw9nJPZ4yZtfVTYPxjvAkqmz7OMuUdc7pifcPiuE9K64KR9jNDBJWbPUQWQCFCNW80GpDmlTpECF5i25ICPnw000hG/LUgp5J9YnacLSR88xK52Z+OjXZs219kALiX/cDJtIx/fZy4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cU7wK/YF; arc=none smtp.client-ip=209.85.222.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="N9xjW2FA"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-61cd1046d42so3809078a12.3
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 30 Aug 2025 12:04:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cU7wK/YF"
+Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7fac8fdea9fso298276085a.2;
+        Sun, 31 Aug 2025 03:17:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1756580652; x=1757185452; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=7C7HDDF1V0ye1jSQLTEXSfhzx7+YOYStSyUtu7nMWFg=;
-        b=N9xjW2FAZLWTnANDMuuUTurweSJVg+W+cMkhqkeQ+jIvV0MqgoK9mCVkCwb2WM7+sx
-         2bpgNSOQrLMtF9ygUXM3HIJU7oWNS+pTyBzHJeCPmJwRug+jAV2IHOxXTbg7w5SIVw64
-         e6hqg0dPcFO5a55Fokww6K2l5rqiHJbdhK4As=
+        d=gmail.com; s=20230601; t=1756635470; x=1757240270; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ipp/CqJGnu3UvrsRy3sfGCJOG70DAK1lDD2BMO20XEI=;
+        b=cU7wK/YFujPyQQc+T7Cj8ZJW0KholGExLbmZuUhbvkh4QdCloPzzHeQ6V25ETIZZK9
+         E8snocOm8gfS2S1zAGo6o+Adp6fSzExKP5S6SfI8TOFQFfr2go3nUKqvoiHJDz6DAJV8
+         5JUcakbKkairbDn9TqfiH+ZLnyyDGcvnWLYCoTKzPqBBERY7oNBJnlmP6UIy3a3Dbyn1
+         dduLNTXK4buLIkmyU9QNwzg8PwNF1cd2ytKp87SxdBYOxRStFs3wdrtr2rHAVkfAEu+x
+         lFmpa1+bYqmcQL43iQPCrIRBiy+drP0xBbVRhzZFMljYZmHu6lB6x4x5CtGEsei6fHfB
+         px2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756580652; x=1757185452;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1756635470; x=1757240270;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=7C7HDDF1V0ye1jSQLTEXSfhzx7+YOYStSyUtu7nMWFg=;
-        b=SfVHzc1xH6T8TczZrfA5UsPJJWA9/9UEFoQmM7EJtqJ1O7qkCvYjK8MDkttEZU0Ll2
-         tjWUgMPujnroflr2Lekwuekt/WdQKPnNJPRZ6Gn6IKa1uIUouDBSu504AwCscUcIaJVV
-         2kDifAo0C5HsesMJgAu+IeCRny/T3W0X9Rdqa6SuySKsSkdN7QY0jU9sprt5jqMkOlVU
-         kj3u2OZZHssQySViZwJ1ZS2URhmk9wGEqqgMhSTEcxUKNjgQnF7NmS/0DTwHI5CHwnaD
-         H5H3IGkIhgbxyz6ZvKZraXPwnyAmy4Z1d24YOSr7GiZ7ow7NP3ZYA1yGe68yUlIbCZfT
-         gTuA==
-X-Forwarded-Encrypted: i=1; AJvYcCVmRmEQvWEfRu93e2se+FLlRNs0PnXRAK7sy9+zqHaO7yXU9rS1SWnyeXGRhsGzxIWLShU2Q9QbOf7PHN/MRLs/bVY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzUVt6rXum3UdhuIrKN/+sjTcDBmOTWyvK/WILo/Bj+FaTKmJVp
-	KOBWch1X/gS/ZuLMWgj5dqGWdbvFSDW5ABGlPQHA0EUO53db0kbl1YTgJQN4YN0l7DbjElgP0d5
-	ucVYLOQYPpA==
-X-Gm-Gg: ASbGncujUte8jU2GW1gjtTYEnFNO7kxg5mlLCy81bqOra7+oLQao1T2vXVC+bcSv4Ed
-	ZQLbLWVN/gnsY/8R3//VH8OObxnQHWwG/RleVpcXn1U6fRR6TN4MXFjoJsnWGzeSXi4garEvDPo
-	U1vUbcAYo+WSRCq65Gu8RtxfndIyfkHY26YuXHOZSoRjP8Nck4V0I/aKpdbPeBoR0LryxwhkyRK
-	tYaqgBZj4tIxKz7dcHMJUBas43E7ZhCvX9cb606wdAirggGnyv9bwe+YzNxW0ECylrDBZ2jF3dJ
-	nnsKI9WHFgYKMDzr9k1k9jTDsTjrGKdeY8kU89pqOr5xXDXVZhR7jLwu/6VkYNRiL9vts71jK2K
-	7xt69ZP9EMAVUelczNcE7w3m3FZg+3YIAKFve/vOTwRprYzR+WPmqMRV/4VN4TH61S1FfQmWr
-X-Google-Smtp-Source: AGHT+IE6SJ7yIyqrg5AUPTVvtwxAK/8vgWEDL+aW8ypKXrLJGh0QMvZ7zKc5Bfci1QdTTjcrYSQQBg==
-X-Received: by 2002:a05:6402:2747:b0:615:9d94:2934 with SMTP id 4fb4d7f45d1cf-61d2689310emr2619571a12.10.1756580651721;
-        Sat, 30 Aug 2025 12:04:11 -0700 (PDT)
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com. [209.85.208.45])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-61cfc4bbd09sm4068874a12.33.2025.08.30.12.04.10
-        for <linux-trace-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 30 Aug 2025 12:04:10 -0700 (PDT)
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-61cd1046d42so3809058a12.3
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 30 Aug 2025 12:04:10 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVgmjdNleL3KgrfGgXe0Ab1AL1oOTTHJrh5GofADfSIZONeFgKiKBYF6BwLVYTpotgu0dsbfDFp3uN6pYUI8WEZDNA=@vger.kernel.org
-X-Received: by 2002:a05:6402:26c4:b0:61d:1cbf:bb4a with SMTP id
- 4fb4d7f45d1cf-61d26d7904amr2319235a12.29.1756580650360; Sat, 30 Aug 2025
- 12:04:10 -0700 (PDT)
+        bh=Ipp/CqJGnu3UvrsRy3sfGCJOG70DAK1lDD2BMO20XEI=;
+        b=c+QBvYX58/HYeTDemves+vKUiyHPXMsptU7a3Blj4vbMdPvbod1m4y0SdRoQdJvUyj
+         fVjEeWmbH34j8Aqx4wKp/NOiCKWZ9WzcViXXzmS4Ao8jqXElqzqQwv9jVOqbXrT6Ivy+
+         EfwN7G6m55BroxRKqOSiNRHnHwHlYIbvJGzYbVoR/v4DMvNcgLDiLvheY4D+F0r/RG5W
+         EymNon1hfw6KCVOe1KY4SOpndSjEIz7/42qWOHnx8eLHFbT8d8HV9E4nkelTsCwEylW8
+         Ee0Lg8BNF2WfJMhyZ1279n5oyyFu6gudehxy0jF+QnEW33H6Jv0tta5DtRi9lVTzchYa
+         ju4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCURaUWesqbSNylsQQ8uSmBh0mWmaTIGwiu+JKBmyPm7OOWAl6HKuGBfh/B8R4HQx4mDfyumG3e45BHoQwt8@vger.kernel.org, AJvYcCVLHfaofFL6niWHm3K1UzSmq240atMlqF26benCo1zsu2/CWziC28NLqvOAPUZGj/TsRijj430u69aL0X6CdWOUjBt+@vger.kernel.org, AJvYcCXTTtPpKKWlMPOpz2tRKneHyT8iJJOKwrLyTJybGX62S0QnSS03a4uRoWrq0DpS0HbNws0ghDoHHP0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJV0IWK8WNvMH9CZglUvL0LqIuLb6wh8J3CF8m22R5RcPROsrJ
+	oYs1uav+v3r/o0G+mS9DNIIx2JKKLcxKIpO0DE5ejABVRkNa6ZQBk/+l
+X-Gm-Gg: ASbGncvghCIBjVERXWxtB7MUX9AhX2QeEKWBgbWCGGPDcGaUXeoiRjC4KVF4wU7cRdI
+	D4DSVJDG1is/Ixt+ynPk/yz96MzhC+HTaPVkOcw2LN/UNGZTllEX5xB2LXiABwWOZAmunfc16op
+	cEXPCnjwO8H4CtxwOSwvscGdrGYDsv+qk43FA5PHv5ifPBK9dE3KyhiUnLSPFZuWDVK4REIyjBx
+	y9GOTGr5FFt+R6wWvDpWxQRo8EUqE7B8ljKvR1032ZdVnIr6kNhhMZEcavmi9xB/eBZdxfrag2B
+	Kh1GV1kyEKrj9zPVXSksmY3pKMyfrbawHZ5bzGJPyb5XI6A65PWbY75dsVsHDeVFMoADQoGNRJf
+	sMHUiQaCx6jh+ibMgNwHGiBUjMMkQX1Jm9GgOixq5JG2mDfry6v7DxFAdtJ0PKahEPVounn74F/
+	4jRw==
+X-Google-Smtp-Source: AGHT+IHZ1ssnnZzP2UdpQ0Ya7Rknskr0E+/ay0R2C3CfiGo6hckrP+f/i5G8f4xMd9tGm5cHuX19EA==
+X-Received: by 2002:a05:620a:179f:b0:7f3:4a0f:3581 with SMTP id af79cd13be357-7ff26eaaf8fmr392838985a.12.1756635469980;
+        Sun, 31 Aug 2025 03:17:49 -0700 (PDT)
+Received: from seokw-960QHA.mynetworksettings.com ([2600:4041:4491:2000:1bcc:1b67:3f57:d21e])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7fc16536012sm480262785a.66.2025.08.31.03.17.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 31 Aug 2025 03:17:49 -0700 (PDT)
+From: Ryan Chung <seokwoo.chung130@gmail.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	corbet@lwn.net
+Cc: Ryan Chung <seokwoo.chung130@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Subject: [PATCH 0/2] trace: minor documentation fixes for clarity and
+Date: Sun, 31 Aug 2025 19:17:27 +0900
+Message-ID: <20250831101736.11519-1-seokwoo.chung130@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250828180300.591225320@kernel.org> <20250828171748.07681a63@batman.local.home>
- <CAHk-=wh0LjoJmRPHF41eQ1ZRf085urz+rvQQ-rwp8dLQCdqohw@mail.gmail.com>
- <20250829110639.1cfc5dcc@gandalf.local.home> <CAHk-=wjeT3RKCTMDCcZzXznuvG2qf0fpKbHKCZuoPzxFYxVcQw@mail.gmail.com>
- <20250829121900.0e79673c@gandalf.local.home> <CAHk-=wj6+8vXfBQKoU4=8CSvgSEe1A++1KuQhXRZBHVvgFzzJg@mail.gmail.com>
- <20250829124922.6826cfe6@gandalf.local.home> <CAHk-=wid_71e2FQ-kZ-=aGTkBxDjLwtWqcsuNSxrarnU4ewFCg@mail.gmail.com>
- <6B146FF6-B84E-40A2-A4FA-ABD5576BF463@gmail.com> <CAHk-=wjgdKtBAAu10W04VTktRcgEMZu+92sf1PW-TV-cfZO3OQ@mail.gmail.com>
- <20250829141142.3ffc8111@gandalf.local.home> <CAHk-=wh8QVL4rb_17+6NfxW=AF-HS0WarMmq-nYm42akG0-Gbg@mail.gmail.com>
- <20250829171855.64f2cbfc@gandalf.local.home> <CAHk-=wj7rL47QetC+e70y7pgyH4v7Q2vcSZatRsCk+Z6urA3hw@mail.gmail.com>
- <20250829190935.7e014820@gandalf.local.home> <CAHk-=wgNeu8_=kPnKwFpwMUC=o-uh=KjJWePR9ujk=7F9yNXDQ@mail.gmail.com>
- <20250830143114.395ed246@batman.local.home>
-In-Reply-To: <20250830143114.395ed246@batman.local.home>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Sat, 30 Aug 2025 12:03:53 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjgXGuJVaOmftxnwrS6FafwrLL+yHrH6-sgbBRB-iLn8w@mail.gmail.com>
-X-Gm-Features: Ac12FXyz3WKCTj4mxXVo4xp6AMniUURUWjQ5DeVA017M_IaQp-7QOD-FOUdEOvk
-Message-ID: <CAHk-=wjgXGuJVaOmftxnwrS6FafwrLL+yHrH6-sgbBRB-iLn8w@mail.gmail.com>
-Subject: Re: [PATCH v6 5/6] tracing: Show inode and device major:minor in
- deferred user space stacktrace
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>, Steven Rostedt <rostedt@kernel.org>, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org, x86@kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, 
-	Indu Bhagat <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>, 
-	Beau Belgrave <beaub@linux.microsoft.com>, Jens Remus <jremus@linux.ibm.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Florian Weimer <fweimer@redhat.com>, 
-	Sam James <sam@gentoo.org>, Kees Cook <kees@kernel.org>, "Carlos O'Donell" <codonell@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Sat, 30 Aug 2025 at 11:31, Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> If we are going to rely on mmap, then we might as well get rid of the
-> vma_lookup() altogether. The mmap event will have the mapping of the
-> file to the actual virtual address.
+Resend: fixed recipients; no changes
 
-It actually won't - not unless you also track every mremap etc.
+Hi all,
 
-Which is certainly doable, but I'd argue that it's a lot of complexity.
+This short series cleans up two small wording issues in the tracing docs to
+improve readability. There are no functional changes.
 
-All you really want is an ID for the file mapping, and yes, I agree
-that it's very very annoying that we don't have anything that can then
-be correlated to user space any other way than also having a stage
-that tracks mmap.
+Ryan Chung (2):
+  trace: rephrase for clearer documentation
+  trace: fix grammar error in debugging.rst
 
-I've slept on it and tried to come up with something, and I can't. As
-mentioned, the inode->i_ino isn't actually exposed to user space as
-such at all for some common filesystems, so while it's very
-traditional, it really doesn't actually work. It's also almost
-impossible to turn into a path, which is what you often would want for
-many cases.
+ Documentation/trace/boottime-trace.rst | 2 +-
+ Documentation/trace/debugging.rst      | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-That said, having slept on it, I'm starting to come around to the
-inode number model, not because I think it's a good model - it really
-isn't - but because it's a very historical mistake.
+-- 
+2.43.0
 
-And in particular, it's the same mistake we made in /proc/<xyz>/maps.
-
-So I think it's very very wrong, but it does have the advantage that
-it's a number that we already do export.
-
-But the inode we expose that way isn't actually the
-'vma->vm_file->f_inode' as you'd think, it's actually
-
-        inode = file_user_inode(vma->vm_file);
-
-which is subtly different for the backing inode case (ie overlayfs).
-
-Oh, how I dislike that thing, but using the same thing as
-/proc/<xyz>/maps does avoid some problems.
-
-                Linus
