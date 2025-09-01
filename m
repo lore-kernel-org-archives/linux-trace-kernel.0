@@ -1,118 +1,176 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED4B02F3C11
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  1 Sep 2025 14:24:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85C722EF653;
+	Mon,  1 Sep 2025 14:44:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756736654; cv=none; b=ASJ0i3TVyf739JE6CD4HoAr9zhXBR6Z9N0GuJT3MQE1NTqFwxCDJ74QFWm6mwSUuqFMRiwVPvTS+57wqwKPiUsQAbaN9a5AAPXSgfmJy9yt8BBKVjLt+PmddWNPBbluy9BgHVDLrq4+GOrshIxLUB+uLWRXV4naf3VFZ6mabhMo=
+	t=1756737880; cv=none; b=IegbCq4PK074yQDH8vwiW4QYUxrSVjV/LTS+b0DdKb3B8NafP2WsPF3/drnIgkKxXZAVga34j3Y0E0sLU1zlZTsHbzutMABwFb51xY3rUJgGu9TzeQnl0Ds5fNTPOqG2BjqYH+sl4Knz+c2mR5ZHT2+LjOI67CiWRkgorMldbdU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756736654; c=relaxed/simple;
-	bh=qAAqpIJ1sZ+WXhv9jSL+yNgDxW9OQV2lwq5CpKUVeRw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=P4kufR3z3cPP/TaFkcJQzMC2ALSRiHz1Palyfir9lNkJcsJujcDd7+CL18GeMXtHrIy8W7IMdV5XdLK6NftLrCflUQ++g7JfCPUDJIr45oG8x5I8XWN8iz9Q+GErgeiolg5ti06rkXGOy6NLeh/2AB/N53Rs6oEEzf31PLQ5kiM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Taf3q1Md; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1756737880; c=relaxed/simple;
+	bh=rOQuaa8RDkK43QH4byDdVI+QZow0U6m4AZGslI0lojk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=BjBv9aM98h3OtWKlICoJ4vJxS+yOz76IdcHrO3stpBNc9jCsbp50ZFL/W39BOMhUnlRIHYaKfC3Qo29Md8DvHW3uDF40bZMcVENW05Xj+0z1mYXT/67N7Un4RBgXsi8zpd43+lpTEPuPduukqSi1gKd4WMF++t18/99AhLGl1fI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rE/UMgkN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Taf3q1Md"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1756736651;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DIgXc9xeVr9BBWUbZa2zZn7PQsTxZuClMXuY+mTcrPY=;
-	b=Taf3q1Md13l9t/XFe03udI8KY30l3Kx+jd8BC8QX6jrdyLhIvBw7lZFDcYmgnov5RbWQ0x
-	fLjEcIlxIdFypVI+mGFtgh0LSJa65RfzLSA4ZpSv8X1eiDNz1myl4F3gzGiwl0AyMq5kGG
-	1f0EwqzdlO50y876YlgSg4SG92ShRIM=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-523-iUQtIQXgNza8I6ouz_FUuA-1; Mon, 01 Sep 2025 10:24:10 -0400
-X-MC-Unique: iUQtIQXgNza8I6ouz_FUuA-1
-X-Mimecast-MFC-AGG-ID: iUQtIQXgNza8I6ouz_FUuA_1756736650
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-afeceee8bf7so423058166b.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 01 Sep 2025 07:24:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756736649; x=1757341449;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DIgXc9xeVr9BBWUbZa2zZn7PQsTxZuClMXuY+mTcrPY=;
-        b=RdE0lUu8endTNxlyj4s7xNa4n2N8SIltUFsolVbM/TYqpdwfK94PRQDOiNr/VoyyyH
-         ZN2sXTbFK3w/5VIB9tJ2qpvvtE56VFTjrXEXpGoIR5c3PYzpR5jpiR96wfhRJ80l5B+s
-         EtdpS8BIAcMC+CnqXL0EaaFl66J4QuxLPWaiSCzk+BqGKYbBp23vvbtaw+rCPvp48qdD
-         1mCh/NHWSdaSONPHWkRJHIpEDiL8Kw8ktmkmUsCRdQ8/DgWqovHXFWXQZkrORHs8wERX
-         3p57uJ1Ohkc2mTTjihDnO/TUtlyH15MjoFTr33K9zIw85A9JHsrxLAgdaoNMEZL55enM
-         V6rg==
-X-Forwarded-Encrypted: i=1; AJvYcCUgb0zLK6QHOftlx1AigHPMmv9TAyNnwP+EYyFmG6aUMpjHSqPhc3uAh3rnJPTD4OQGiWyctdAhc8Idcicgvm1JzRU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyVXOFAv4999nWakgKNl6SoVQ2mXKNihypIg2ttkCJbUzfgVx6b
-	abz3LfAtSPfMBBs6NCcwHFnikcPXJcax/TXInihzjBgikF4W21qbBnuM2WnG6UvqLkNVlx+gFx6
-	EL+P/SzTNK46RS81z5ZOqIiwfoaK0URFtijZgSKNg0ZAn1ImNgjInT/Kedis5aXQpEueJOABw6N
-	+7wGGHem7Q3QL8qi+6pfOC4rXzUnha8kj3H/32TGEI1mIA8IJo
-X-Gm-Gg: ASbGnctGgXv/wYjJSgNvKj2YGNpTdK3p5hQAGX2ePmj18HDRr2FvM9Or8F7t7eI0Rxn
-	xfRnvc2M3yuO5Phbw6/Xx4UedqEhwqiRSyPwxL3TuC4gRGe5rTXlucRZHUcwDl7fCpuEP/MKyIv
-	tQ1bDSku/ScHlIj2yo/FD4Y5x0pFBfbej+c7QmdPGGSQTlyFSDWiE=
-X-Received: by 2002:a17:907:94c8:b0:aff:7:4f12 with SMTP id a640c23a62f3a-b01d8a2778dmr739983866b.5.1756736649581;
-        Mon, 01 Sep 2025 07:24:09 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGn4xY0HH8qCdFSyK5OTzgVVXjJ12ZvaUYluQIqf0B2o60S1nht1dzIxUJp1Vzx3IwFYsWYnxkzkFbv5Vovccg=
-X-Received: by 2002:a17:907:94c8:b0:aff:7:4f12 with SMTP id
- a640c23a62f3a-b01d8a2778dmr739980466b.5.1756736649117; Mon, 01 Sep 2025
- 07:24:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rE/UMgkN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54952C4CEF0;
+	Mon,  1 Sep 2025 14:44:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756737880;
+	bh=rOQuaa8RDkK43QH4byDdVI+QZow0U6m4AZGslI0lojk=;
+	h=From:To:Cc:Subject:Date:From;
+	b=rE/UMgkNnYVi4ZNLy8sjvPBhINyu5faw4K0yw857IeiDzM82os/aOyNuW6Wj8YdH6
+	 3QGsDyOpCCQAqmq43Bk5LlQ0cVMl5Q7jZki+gmCkk7lZL2citbZSzH0Wow5q8oUgga
+	 7LGVs4CURcQ7X06kjMbR+lOIcXVH+jDsK+BZeJfi0Jffg3Rtl2fx7OoPwKt2ojGBWI
+	 I59xIKRMfFJa4SLxDXI+y/yidmO6aKwfGpqciBpWLJ957jHbJCqSjrNcOD3pHkMsje
+	 z5QtHULPQ7rpw0DGpMQO/wiGuWKI4mmTDz67K4fha8Sar6ZPt0xrrURTe7OWsq3/Y8
+	 RYcAsnZouu0GQ==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	x86@kernel.org
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Ian Rogers <irogers@google.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: [RFC PATCH 0/6] tracing: wprobe: Add wprobe for watchpoint
+Date: Mon,  1 Sep 2025 23:44:35 +0900
+Message-ID: <175673787502.478080.3342912952394010967.stgit@devnote2>
+X-Mailer: git-send-email 2.43.0
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1755018581.git.ipravdin.official@gmail.com> <96f305f622de233c28d4ed9f23583b4d6ab2d1ac.1755018581.git.ipravdin.official@gmail.com>
-In-Reply-To: <96f305f622de233c28d4ed9f23583b4d6ab2d1ac.1755018581.git.ipravdin.official@gmail.com>
-From: Tomas Glozar <tglozar@redhat.com>
-Date: Mon, 1 Sep 2025 16:23:55 +0200
-X-Gm-Features: Ac12FXx63Tybu7ddN4dNpy-VZp0KptTHLkvU7Nm5KFnqWm7q4-qPMwNWVhWSlzk
-Message-ID: <CAP4=nvRZ_SY_xdC6N8LkKUA=a-QP5gc5SMgBr4jod6+tu0TFeA@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] rtla: fix -a overriding -t argument
-To: Ivan Pravdin <ipravdin.official@gmail.com>
-Cc: rostedt@goodmis.org, corbet@lwn.net, linux-trace-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: TAAROBpFWhOr_U4-izngtUf6jmZg-9agp-0fTZjPT1w_1756736650
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-=C3=BAt 12. 8. 2025 v 19:22 odes=C3=ADlatel Ivan Pravdin
-<ipravdin.official@gmail.com> napsal:
->
-> When running rtla as
->
->     `rtla <timerlat|osnoise> <top|hist> -t custom_file.txt -a 100`
->
-> -a options override trace output filename specified by -t option.
-> Running the command above will create <timerlat|osnoise>_trace.txt file
-> instead of custom_file.txt. Fix this by making sure that -a option does
-> not override trace output filename even if it's passed after trace
-> output filename is specified.
->
+Hi,
 
-Yes, this should not be overridden, it's a bug in both the old
-implementation and the new one using actions. Thank you for the fix.
+Here is an RFC series for adding new wprobe (watch probe) which
+provides memory access tracing event. Moreover, this can be used via
+event trigger. Thus it can trace memory access on a dynamically
+allocated objects too.
 
-> Remove clear_terminal in timerlat top as it removes "Saving trace to <fil=
-ename>"
-> line from the terminal and is not used in other modes.
->
+In this version, I reuse Jinchao's arch_reinstall_hw_breakpoint()
+patch[1].
 
-This is not the correct fix for the issue. clear_terminal is needed in
-timerlat top (and osnoise top) to clear the terminal before the
-updated status is printed, the fix removes it without a replacement,
-breaking this behavior. Also, this is a different issue that appeared
-only when the actions patchset [1] was merged, and should go into a
-separate patch with a different Fixes tag.
+[1] https://lore.kernel.org/all/20250828073311.1116593-6-wangjinchao600@gmail.com/
 
-[1] https://lore.kernel.org/linux-trace-kernel/20250626123405.1496931-1-tgl=
-ozar@redhat.com/T/#t
+The basic usage of this wprobe is similar to other probes;
 
-Tomas
+  w:[GRP/][EVENT] [r|w|rw]@<ADDRESS|SYMBOL[+OFFS]> [FETCHARGS]
 
+This defines a new wprobe event. For example, to trace jiffies update,
+you can do;
+
+ echo 'w:my_jiffies w@jiffies:8 value=+0($addr)' >> dynamic_events
+ echo 1 > events/wprobes/my_jiffies/enable
+
+Moreover, this can be combined with event trigger to trace the memory
+accecss on slab objects. The trigger syntax is;
+
+  set_wprobe:WPROBE_EVENT:FIELD[+ADJUST]
+  clear_wprobe:WPROBE_EVENT
+
+For example, trace the first 8 byte of the dentry data structure passed
+to do_truncate() until it is deleted by __dentry_kill().
+(Note: all tracefs setup uses '>>' so that it does not kick do_truncate())
+
+  # echo 'w:watch rw@0:8 address=$addr value=+0($addr)' > dynamic_events
+
+  # echo 'f:truncate do_truncate dentry=$arg2' >> dynamic_events
+  # echo 'set_wprobe:watch:dentry' >> events/fprobes/truncate/trigger
+
+  # echo 'f:dentry_kill __dentry_kill dentry=$arg1' >> dynamic_events
+  # echo 'clear_wprobe:watch' >> events/fprobes/dentry_kill/trigger
+
+  # echo 1 >> events/fprobes/truncate/enable
+  # echo 1 >> events/fprobes/dentry_kill/enable
+
+  # echo aaa > /tmp/hoge
+  # echo bbb > /tmp/hoge
+  # echo ccc > /tmp/hoge
+  # rm /tmp/hoge
+
+Then, the trace data will show;
+
+# tracer: nop
+#
+# entries-in-buffer/entries-written: 16/16   #P:8
+#
+#                                _-----=> irqs-off/BH-disabled
+#                               / _----=> need-resched
+#                              | / _---=> hardirq/softirq
+#                              || / _--=> preempt-depth
+#                              ||| / _-=> migrate-disable
+#                              |||| /     delay
+#           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
+#    [    7.026136] sh (113) used greatest stack depth: 12912 bytes left
+          | |         |   |||||     |         |
+              sh-113     [002] .....     7.024402: truncate: (do_truncate+0x4/0x120) dentry=0xffff8880069194b8
+              sh-113     [002] ..Zff     7.024822: watch: (lookup_fast+0xaa/0x150) address=0xffff8880069194b8 value=0x200008
+              sh-113     [002] ..Zff     7.024830: watch: (step_into+0x82/0x360) address=0xffff8880069194b8 value=0x200008
+              sh-113     [002] ..Zff     7.024834: watch: (step_into+0x9f/0x360) address=0xffff8880069194b8 value=0x200008
+              sh-113     [002] ..Zff     7.024839: watch: (path_openat+0xb3a/0xe70) address=0xffff8880069194b8 value=0x200008
+              sh-113     [002] ..Zff     7.024843: watch: (path_openat+0xb9a/0xe70) address=0xffff8880069194b8 value=0x200008
+              sh-113     [002] .....     7.024847: truncate: (do_truncate+0x4/0x120) dentry=0xffff8880069194b8
+              sh-113     [002] ...1.     7.025364: dentry_kill: (__dentry_kill+0x0/0x220) dentry=0xffff888006919380
+              sh-113     [002] ...1.     7.025511: dentry_kill: (__dentry_kill+0x0/0x220) dentry=0xffff8880069195f0
+              rm-118     [003] ...1.     7.027543: dentry_kill: (__dentry_kill+0x0/0x220) dentry=0xffff8880069194b8
+              sh-113     [002] ...2.     7.027825: dentry_kill: (__dentry_kill+0x0/0x220) dentry=0xffff8880044429c0
+              sh-113     [002] ...2.     7.027833: dentry_kill: (__dentry_kill+0x0/0x220) dentry=0xffff888004442270
+
+
+Thank you,
+
+---
+
+Jinchao Wang (1):
+      x86/HWBP: introduce arch_reinstall_hw_breakpoint() for atomic context
+
+Masami Hiramatsu (Google) (5):
+      tracing: wprobe: Add watchpoint probe event based on hardware breakpoint
+      HWBP: Add modify_wide_hw_breakpoint_local() API
+      tracing: wprobe: Add wprobe event trigger
+      selftests: tracing: Add a basic testcase for wprobe
+      selftests: tracing: Add syntax testcase for wprobe
+
+
+ Documentation/trace/index.rst                      |    1 
+ Documentation/trace/wprobetrace.rst                |  129 ++
+ arch/Kconfig                                       |   10 
+ arch/x86/Kconfig                                   |    1 
+ arch/x86/include/asm/hw_breakpoint.h               |    3 
+ arch/x86/kernel/hw_breakpoint.c                    |   61 +
+ include/linux/hw_breakpoint.h                      |    6 
+ include/linux/trace_events.h                       |    3 
+ kernel/events/hw_breakpoint.c                      |   36 +
+ kernel/trace/Kconfig                               |   24 
+ kernel/trace/Makefile                              |    1 
+ kernel/trace/trace.c                               |    9 
+ kernel/trace/trace.h                               |    5 
+ kernel/trace/trace_probe.c                         |   20 
+ kernel/trace/trace_probe.h                         |    8 
+ kernel/trace/trace_wprobe.c                        | 1111 ++++++++++++++++++++
+ .../ftrace/test.d/dynevent/add_remove_wprobe.tc    |   68 +
+ .../test.d/dynevent/wprobes_syntax_errors.tc       |   20 
+ 18 files changed, 1513 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/trace/wprobetrace.rst
+ create mode 100644 kernel/trace/trace_wprobe.c
+ create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/add_remove_wprobe.tc
+ create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/wprobes_syntax_errors.tc
+
+--
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
