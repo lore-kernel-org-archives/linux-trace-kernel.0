@@ -1,184 +1,118 @@
-Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E96733CE8E;
-	Mon,  1 Sep 2025 13:58:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED4B02F3C11
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  1 Sep 2025 14:24:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756735121; cv=none; b=p8myWMRv021lBeeFX36nJctacuR2N0Fc8JxpJah+XfSwCAfc6CvRcWUeFGW+/Gj9fPN3JjBHpvrCmIj+yYtFaQGMv5eU8LY0MW37uzRA/zdqWzNzIIMWTQ1yZvumcpVy7vzgG6LkAOWgVrvcbvTmXEK4vwI2Nv+ljPY4lzw9usM=
+	t=1756736654; cv=none; b=ASJ0i3TVyf739JE6CD4HoAr9zhXBR6Z9N0GuJT3MQE1NTqFwxCDJ74QFWm6mwSUuqFMRiwVPvTS+57wqwKPiUsQAbaN9a5AAPXSgfmJy9yt8BBKVjLt+PmddWNPBbluy9BgHVDLrq4+GOrshIxLUB+uLWRXV4naf3VFZ6mabhMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756735121; c=relaxed/simple;
-	bh=oUIhwrLYwstlzlY55FK1ZW41MS2asLYsST3xVM4ctTc=;
+	s=arc-20240116; t=1756736654; c=relaxed/simple;
+	bh=qAAqpIJ1sZ+WXhv9jSL+yNgDxW9OQV2lwq5CpKUVeRw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TmMOEnLWS5DUAxAXIHggxgGsFCo6JdM2ALfcpCibpy0SGTw14eqETYC+W3usYj3GY5L+1+HSZB/iMHh2glZ9jTkb9Q7Vv01E70AsoBSKMAUea7QHOrmBMoLxGwjlUT0Jkb21Sfwf9so6ub2QIhrzcbd6Jv8sL+15y97HrprQnug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.166.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-3ea8b3a64b5so37258755ab.2;
-        Mon, 01 Sep 2025 06:58:39 -0700 (PDT)
+	 To:Cc:Content-Type; b=P4kufR3z3cPP/TaFkcJQzMC2ALSRiHz1Palyfir9lNkJcsJujcDd7+CL18GeMXtHrIy8W7IMdV5XdLK6NftLrCflUQ++g7JfCPUDJIr45oG8x5I8XWN8iz9Q+GErgeiolg5ti06rkXGOy6NLeh/2AB/N53Rs6oEEzf31PLQ5kiM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Taf3q1Md; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Taf3q1Md"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1756736651;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DIgXc9xeVr9BBWUbZa2zZn7PQsTxZuClMXuY+mTcrPY=;
+	b=Taf3q1Md13l9t/XFe03udI8KY30l3Kx+jd8BC8QX6jrdyLhIvBw7lZFDcYmgnov5RbWQ0x
+	fLjEcIlxIdFypVI+mGFtgh0LSJa65RfzLSA4ZpSv8X1eiDNz1myl4F3gzGiwl0AyMq5kGG
+	1f0EwqzdlO50y876YlgSg4SG92ShRIM=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-523-iUQtIQXgNza8I6ouz_FUuA-1; Mon, 01 Sep 2025 10:24:10 -0400
+X-MC-Unique: iUQtIQXgNza8I6ouz_FUuA-1
+X-Mimecast-MFC-AGG-ID: iUQtIQXgNza8I6ouz_FUuA_1756736650
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-afeceee8bf7so423058166b.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 01 Sep 2025 07:24:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756735118; x=1757339918;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NmDip3pK7R1bCI3jhASK9yPIU2OeMFz+fVnQvMU5RZM=;
-        b=ookCPzvg4cb5ovsdKebhU9K1Jellm/G19uG0vP9BQQd5+2BvVH/x/LbzCj/FX3czQU
-         D56X+ZNQR7t7AVnlBd956tJMelVCbbrRJGozIquP7a//oFufEZ0nAPJPay1Cjy3MPG3W
-         opeW/AwAjHbpXcaPkhEMhyjYURdxax0GksqLu3ku76N3QQhkljfXw23BRWrgqNoC0GPO
-         nYSHznM2/yatV/Py7Ad9ScpoRF3Tdc9qERGrKCrCmXaMxY/cWl9X/3vhazam6F41YZTC
-         kgVW6itpB1+DuYTrG64iiKVbNdK9wG2GLajqrGfhVbcs6p0uTM72mdNfRYEB8U9/Nsy2
-         TPbA==
-X-Forwarded-Encrypted: i=1; AJvYcCUPk72/MJ1XL3orkt1h30T5dNqDAG1qze7Ps6g0NLrj8nImuVqFVYOTYHZQp4W2X5SZyJ8FeKOD/6qkD6cht9k=@vger.kernel.org, AJvYcCVmSHHSt0VVUuLIVw0i8yLvBfUJw2EhT3oKbfHEnyuFrkXS1+z49GCGRPz99IAhnr6GqfhqLDGopU9JGZjW@vger.kernel.org, AJvYcCVnrDmBmUXjqoQGDIMhoMipYV/LX5YaskjBvZOpPmEdqk2u4Rm3oiE/ErkIbAKeNT4+g0W3Ba7gJIXPwA==@vger.kernel.org, AJvYcCWJ/QPcMNYaQAF0GSkT8o4Cml92E+oPD/FCUCVuqUJ+bI+dvZAkYTTlZgdUNueRcib0zmIJG0khaGzgTpXP@vger.kernel.org, AJvYcCWJOwfMQy0qWS3M9oRdV9FNrUl7qPanIqNpnQkL+OOLqliwzB3tob4ZUD6rtSpnLa0uchOag+jZEmfygQ==@vger.kernel.org, AJvYcCWq0KyV93N6QOXX1OrDyT1klUvQ26lgsdAF37wkwJAQLXnr2pQQVDhwcJO4xm+pe53Yd+CcVMZ+7Ql1Zb8=@vger.kernel.org, AJvYcCWrQAYj8WGWxIR7AUxBgeWBPxKjrBdvdcflvQrq+mj1lItZCZnHZJCwjjk4T+2PjB7GRJyn/tAp@vger.kernel.org, AJvYcCWsduK2I9NsCHHGe5HItJOxFRex8ufP21bnwGEtPtynq7ZzPs3aqWNiftxK9W6DNxffoUqKuFafsp2MlU4=@vger.kernel.org, AJvYcCX+v0Gn/VSMF8kaFdc21KTXDdyJqZzeg/kwfVIIr3mNvEZ+uC5Nc5bLdGcFE+vwiInmKO0iQvhtkA==@vger.kernel.org, AJvYcCX0Dn1kBR7hrJOAciV1qKjHqcnS5MXJAAhc4sgEOPZE/JY3XuIdaFf9qjYPuxZ5ZV+Qk8vWCvm9@vger.kernel.org, AJvYcCXBEbf5r102sOi+/VhZEgxB8NTRa5AJMJRlmaTRlvrM9ERsZH+/6UrQJxe/1c9o6+gurzx7aAKqw//85Q==@vger.kernel.org, AJvYcCXEDC2OdkZbDzDZ3Jqp/dx3nhb2cBTRwIr1ROGDMF4AP8TOnU3RueUZb0qSYav73wSbdll5XEozbp1RDA==@vger.kernel.org, AJvYcCXGW+ChK4FRj6QsFSo4YvUb2sRNw9YHJvJqTHsZt7AOmuwDDjXiThnsNZLn9GZMD8KIY72brkgfqdjz1DfDrQ==@vger.kernel.org, AJvYcCXNb9gJWF099r/WlJ1U4rkeEbZrflQ2STzzvSSQCcghkie2xVoKCx1uCWXdrEz5JASBr8kBXmGizUM=@vger.kernel.org, AJvYcCXOnpq0fM1hPHETsIvAEp/fFtS6s1HtQB//tCqJxxK4MBI68hTqZnW1fsX+R4PSxEOvv6fBuWvipGME6r2fvT7nVOOClU4R@vger.kernel.org, AJvYcCXYAiRGiLEB4I5uZCecFQWCWyPlBk33XCItexigMxdnGZU+OP9tuL7UbBLnTFtUKVaQgrkLxBHp2ihAdwq9XA==@vger.kernel.org, AJvYcCXb6UgBlEMzvCZ3VCRBZwJm9kLfr8fvtVWcS7lPagqcXLWb0SytKF7dgrP+/7+zY1RgnkNCSOy4etam8dEIPMifQw==@vger.kernel.org, AJvYcCXwSDbsq6XqXbKbWoC/d6nEeJizTQq8OBf2TYK+Dh29G6NpyxSQXVUXMjug1kWDE5JwbPpaLtnPMe/qFNVHna+Rctqx@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUyk8HjxOOjTH5RoSbkckQLqIq9/b5p9QDj8sFrmWXDSbd7zBb
-	RETIIEF1qtNcOhY1hj/SXpae0sbMVoX4Dcq4lG2XuhI4ix+CuuSuuTnDj/0lfYYPZ+8=
-X-Gm-Gg: ASbGncsTq2wOGyoDJ3IhiHCsLAo73elOod8a4B9S63dCuNP0ZZfoAjVxwfy2iVMIUZ0
-	uqN/qO/BTDNzAXIMPqC4wmgNLVoRcmbO09FVOPzzuphm4yWUMS6M86y5mo5D02nf8UPVOptdtgC
-	G//RVSHD53Wq8heqh8ewsk+4hs9X+Zj/0Kt01bUAGt+uirjehtnTAdszj8LB7bUtVXyPrB7UCa8
-	2N2IJaBZS+hIvgsd4IjNBFgfv6sDpXf317pgLAsH42sGLFNfXa8+eq7jdpphoyCRWSP1h7ZRVcu
-	hmQM6yR9JKzsB3Md+5jkCF7wBPiW/ohQq2D8fR4bmbbCxJH8wLD/n7kg/0a/6vf2G076dhgOARd
-	nB9+t1Z4tQ1BBKqtpX7Fx/5MEWCdawtuDcuW64D1xVN7iYYlw8AKAEAolgDnh
-X-Google-Smtp-Source: AGHT+IE1J+AW0AMEEiqaet6OiGOZk/hzIXBMdylebzV2SmaVtuyinJakXg/+9VDOjnZLVzI4feXpcQ==
-X-Received: by 2002:a05:6e02:1a4c:b0:3ed:eab:439a with SMTP id e9e14a558f8ab-3f400475d88mr158077645ab.12.1756735105932;
-        Mon, 01 Sep 2025 06:58:25 -0700 (PDT)
-Received: from mail-io1-f50.google.com (mail-io1-f50.google.com. [209.85.166.50])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3f3e07ea04fsm29940595ab.25.2025.09.01.06.58.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 01 Sep 2025 06:58:25 -0700 (PDT)
-Received: by mail-io1-f50.google.com with SMTP id ca18e2360f4ac-8873044d611so46683239f.1;
-        Mon, 01 Sep 2025 06:58:25 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUS5YqmU67qM4/ABmrAkAJCKdOCvdDtgVK2AFgFiwihzx21YfOZ0W+rZQbXYLPi5E4xKvQ43jTFSeCck+15@vger.kernel.org,
- AJvYcCUg/+3jdpYxm4bpCGgWJ7aVbv69npnj7c5DUZmlsppOoQ6FxzTrUDiJUuxlabquLMCQt1RwDYQJGg==@vger.kernel.org,
- AJvYcCUn2CbUvtkyFG88YuUQYnva+624tedkL0Qd+KxmDG0r7vboKSUecYLeu/3DsaPnAO0lBF6xwySMiBjg/51E@vger.kernel.org,
- AJvYcCUrgt2NVbgowDyxI9LPiIsxJiN6AhN1NymMkUftPY53HaSzECRDbq7NtifZBAmyszYsp6MlQX4iTQ4=@vger.kernel.org,
- AJvYcCUuEvr87UeSno31ysMo6JkpPqSyt5paj4yx1hSiLNQjaSUTyArEjU3eMYRRk1mp29ss9czxhq8zEgxEjw==@vger.kernel.org,
- AJvYcCV+ts6sMYcJOnntCRU3vJsQDvt+iVy58SmJHi5hwLabDYIf0hW6m7dqKLBfQPoM+TyP/jt9oog4DYimOg==@vger.kernel.org,
- AJvYcCV9ffK3RX8jSxXMalgnqigWjFcWRh22J+Emh4yqH9RC89FkBSXz+/fzTYJ8YLFErNdoUz9c+xtU@vger.kernel.org,
- AJvYcCVAao1Qttj7NHcENAyE8JRuBJufneZFHwKpczRuX8NvJOlNj9R3U8ER+E9TwOQR0TCjqBioOEWUFwJGGTcsFWYWgQ==@vger.kernel.org,
- AJvYcCVnucVCiFAMk46UDvr6gHeKu2x9RyjujKsjeFO68G9dpzS+eWoclRD3LLN2DVz/Il91fpVcpuGV@vger.kernel.org,
- AJvYcCVtFxTLZAMeU+l5eMn3Ad+L6orDWE2PO71aHWYWqDEt+nFG/Jap+NcQXfIHcYdjRN50AJeFjgL/LQh7fw==@vger.kernel.org,
- AJvYcCVtqsSdCSpF9AF3XYjtVg0ktspu38/42kOz7riEI0Foc1aLh7hHZl9m2yJxIuGyc9bGcB+mFVW9YqO/z10=@vger.kernel.org,
- AJvYcCVvoLYodC8U/JcsCmFFu2AdJvLnt1hsvHCYICYysx4qd7UnUMW2W22MRI+Tuq3cWlg6CCc82b7iReVcRmgFVg==@vger.kernel.org,
- AJvYcCVwxUaV4TERRuoLaXpiRwUkQNN5P3+Op8Ve4/TxnnQ6+1VEd1atmnWGJpx9qq9ZBFD7/MRECqW66XJxZQ==@vger.kernel.org,
- AJvYcCW2hwihokiau9oJoZLUwL6S0pFYtLt7TpGkZhSestGKgUpav9QW+cug26Ax7pexr5/GEUfq+vWJrSvGuFmidK8=@vger.kernel.org,
- AJvYcCWAMFF+j80ZiO88t2JPIF0QxDmQWvWMJ7730a4AcruwNz5tww3fttvVoBsvuXzOKolzTxO6kMLAtOqsqqve4g==@vger.kernel.org,
- AJvYcCWFMqLfYqkrqukIzoFX9uHfJ8NxuKFCKENdkvRFL3kbFejcrbL6mwOru3uJo++oDsrO5UboYATBQi8YPcw=@vger.kernel.org,
- AJvYcCXBW+kMjmply+YARH3geGX0gj2rM8QakCmir//t5q9DtT+RObNyGsWo1kUlZ09Z+mYLX7BdAFPAYPS1UQLtS763539D@vger.kernel.org,
- AJvYcCXBWYTcLnG07iyMSiB2MoZFjcHdmtPgK+exmYc1V3jJNtAU45g1rgGiXuR2QiI+XQ2i4OaqiBab+xd1OyaWbe9o239AVzvZ@vger.kernel.org
-X-Received: by 2002:a05:6102:3053:b0:52a:c340:11db with SMTP id
- ada2fe7eead31-52b1bb24afcmr2206016137.27.1756734711158; Mon, 01 Sep 2025
- 06:51:51 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1756736649; x=1757341449;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DIgXc9xeVr9BBWUbZa2zZn7PQsTxZuClMXuY+mTcrPY=;
+        b=RdE0lUu8endTNxlyj4s7xNa4n2N8SIltUFsolVbM/TYqpdwfK94PRQDOiNr/VoyyyH
+         ZN2sXTbFK3w/5VIB9tJ2qpvvtE56VFTjrXEXpGoIR5c3PYzpR5jpiR96wfhRJ80l5B+s
+         EtdpS8BIAcMC+CnqXL0EaaFl66J4QuxLPWaiSCzk+BqGKYbBp23vvbtaw+rCPvp48qdD
+         1mCh/NHWSdaSONPHWkRJHIpEDiL8Kw8ktmkmUsCRdQ8/DgWqovHXFWXQZkrORHs8wERX
+         3p57uJ1Ohkc2mTTjihDnO/TUtlyH15MjoFTr33K9zIw85A9JHsrxLAgdaoNMEZL55enM
+         V6rg==
+X-Forwarded-Encrypted: i=1; AJvYcCUgb0zLK6QHOftlx1AigHPMmv9TAyNnwP+EYyFmG6aUMpjHSqPhc3uAh3rnJPTD4OQGiWyctdAhc8Idcicgvm1JzRU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVXOFAv4999nWakgKNl6SoVQ2mXKNihypIg2ttkCJbUzfgVx6b
+	abz3LfAtSPfMBBs6NCcwHFnikcPXJcax/TXInihzjBgikF4W21qbBnuM2WnG6UvqLkNVlx+gFx6
+	EL+P/SzTNK46RS81z5ZOqIiwfoaK0URFtijZgSKNg0ZAn1ImNgjInT/Kedis5aXQpEueJOABw6N
+	+7wGGHem7Q3QL8qi+6pfOC4rXzUnha8kj3H/32TGEI1mIA8IJo
+X-Gm-Gg: ASbGnctGgXv/wYjJSgNvKj2YGNpTdK3p5hQAGX2ePmj18HDRr2FvM9Or8F7t7eI0Rxn
+	xfRnvc2M3yuO5Phbw6/Xx4UedqEhwqiRSyPwxL3TuC4gRGe5rTXlucRZHUcwDl7fCpuEP/MKyIv
+	tQ1bDSku/ScHlIj2yo/FD4Y5x0pFBfbej+c7QmdPGGSQTlyFSDWiE=
+X-Received: by 2002:a17:907:94c8:b0:aff:7:4f12 with SMTP id a640c23a62f3a-b01d8a2778dmr739983866b.5.1756736649581;
+        Mon, 01 Sep 2025 07:24:09 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGn4xY0HH8qCdFSyK5OTzgVVXjJ12ZvaUYluQIqf0B2o60S1nht1dzIxUJp1Vzx3IwFYsWYnxkzkFbv5Vovccg=
+X-Received: by 2002:a17:907:94c8:b0:aff:7:4f12 with SMTP id
+ a640c23a62f3a-b01d8a2778dmr739980466b.5.1756736649117; Mon, 01 Sep 2025
+ 07:24:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250901-nios2-implement-clone3-v2-0-53fcf5577d57@siemens-energy.com>
- <20250901-nios2-implement-clone3-v2-3-53fcf5577d57@siemens-energy.com>
-In-Reply-To: <20250901-nios2-implement-clone3-v2-3-53fcf5577d57@siemens-energy.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 1 Sep 2025 15:51:38 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWyCbOgs6XyW=8PG2pVw1-zhWP_VtsXsGz1HeFrZ6kjdA@mail.gmail.com>
-X-Gm-Features: Ac12FXxyJUafI_d6iF6chcUi31LuXt_e8cojxsF4wFcxCNHCg2s17r6RQqbjdms
-Message-ID: <CAMuHMdWyCbOgs6XyW=8PG2pVw1-zhWP_VtsXsGz1HeFrZ6kjdA@mail.gmail.com>
-Subject: Re: [PATCH v2 3/4] arch: copy_thread: pass clone_flags as u64
-To: schuster.simon@siemens-energy.com
-Cc: Dinh Nguyen <dinguyen@kernel.org>, Christian Brauner <brauner@kernel.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>, 
-	David Hildenbrand <david@redhat.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
-	Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
-	Valentin Schneider <vschneid@redhat.com>, Kees Cook <kees@kernel.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, Guo Ren <guoren@kernel.org>, 
-	Oleg Nesterov <oleg@redhat.com>, Jens Axboe <axboe@kernel.dk>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, Tejun Heo <tj@kernel.org>, 
-	Johannes Weiner <hannes@cmpxchg.org>, =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>, 
-	Paul Moore <paul@paul-moore.com>, Serge Hallyn <sergeh@kernel.org>, 
-	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, 
-	Anna-Maria Behnsen <anna-maria@linutronix.de>, Frederic Weisbecker <frederic@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	John Johansen <john.johansen@canonical.com>, 
-	Stephen Smalley <stephen.smalley.work@gmail.com>, Ondrej Mosnacek <omosnace@redhat.com>, 
-	Kentaro Takeda <takedakn@nttdata.co.jp>, Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>, 
-	Richard Henderson <richard.henderson@linaro.org>, Matt Turner <mattst88@gmail.com>, 
-	Vineet Gupta <vgupta@kernel.org>, Russell King <linux@armlinux.org.uk>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Brian Cain <bcain@kernel.org>, 
-	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Michal Simek <monstr@monstr.eu>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	Jonas Bonn <jonas@southpole.se>, 
-	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>, Stafford Horne <shorne@gmail.com>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Sven Schnelle <svens@linux.ibm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, 
-	Rich Felker <dalias@libc.org>, John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
-	Andreas Larsson <andreas@gaisler.com>, Richard Weinberger <richard@nod.at>, 
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>, Johannes Berg <johannes@sipsolutions.net>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-csky@vger.kernel.org, 
-	linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	cgroups@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, apparmor@lists.ubuntu.com, 
-	selinux@vger.kernel.org, linux-alpha@vger.kernel.org, 
-	linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
-	linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, 
-	linux-sh@vger.kernel.org, sparclinux@vger.kernel.org, 
-	linux-um@lists.infradead.org
+References: <cover.1755018581.git.ipravdin.official@gmail.com> <96f305f622de233c28d4ed9f23583b4d6ab2d1ac.1755018581.git.ipravdin.official@gmail.com>
+In-Reply-To: <96f305f622de233c28d4ed9f23583b4d6ab2d1ac.1755018581.git.ipravdin.official@gmail.com>
+From: Tomas Glozar <tglozar@redhat.com>
+Date: Mon, 1 Sep 2025 16:23:55 +0200
+X-Gm-Features: Ac12FXx63Tybu7ddN4dNpy-VZp0KptTHLkvU7Nm5KFnqWm7q4-qPMwNWVhWSlzk
+Message-ID: <CAP4=nvRZ_SY_xdC6N8LkKUA=a-QP5gc5SMgBr4jod6+tu0TFeA@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] rtla: fix -a overriding -t argument
+To: Ivan Pravdin <ipravdin.official@gmail.com>
+Cc: rostedt@goodmis.org, corbet@lwn.net, linux-trace-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: TAAROBpFWhOr_U4-izngtUf6jmZg-9agp-0fTZjPT1w_1756736650
+X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 1 Sept 2025 at 15:10, Simon Schuster via B4 Relay
-<devnull+schuster.simon.siemens-energy.com@kernel.org> wrote:
-> From: Simon Schuster <schuster.simon@siemens-energy.com>
+=C3=BAt 12. 8. 2025 v 19:22 odes=C3=ADlatel Ivan Pravdin
+<ipravdin.official@gmail.com> napsal:
 >
-> With the introduction of clone3 in commit 7f192e3cd316 ("fork: add
-> clone3") the effective bit width of clone_flags on all architectures was
-> increased from 32-bit to 64-bit, with a new type of u64 for the flags.
-> However, for most consumers of clone_flags the interface was not
-> changed from the previous type of unsigned long.
+> When running rtla as
 >
-> While this works fine as long as none of the new 64-bit flag bits
-> (CLONE_CLEAR_SIGHAND and CLONE_INTO_CGROUP) are evaluated, this is still
-> undesirable in terms of the principle of least surprise.
+>     `rtla <timerlat|osnoise> <top|hist> -t custom_file.txt -a 100`
 >
-> Thus, this commit fixes all relevant interfaces of the copy_thread
-> function that is called from copy_process to consistently pass
-> clone_flags as u64, so that no truncation to 32-bit integers occurs on
-> 32-bit architectures.
+> -a options override trace output filename specified by -t option.
+> Running the command above will create <timerlat|osnoise>_trace.txt file
+> instead of custom_file.txt. Fix this by making sure that -a option does
+> not override trace output filename even if it's passed after trace
+> output filename is specified.
 >
-> Signed-off-by: Simon Schuster <schuster.simon@siemens-energy.com>
 
-Fixes: c5febea0956fd387 ("fork: Pass struct kernel_clone_args into copy_thread")
+Yes, this should not be overridden, it's a bug in both the old
+implementation and the new one using actions. Thank you for the fix.
 
->  arch/m68k/kernel/process.c       | 2 +-
+> Remove clear_terminal in timerlat top as it removes "Saving trace to <fil=
+ename>"
+> line from the terminal and is not used in other modes.
+>
 
-Acked-by: Geert Uytterhoeven <geert@linux-m68k.org> # m68k
+This is not the correct fix for the issue. clear_terminal is needed in
+timerlat top (and osnoise top) to clear the terminal before the
+updated status is printed, the fix removes it without a replacement,
+breaking this behavior. Also, this is a different issue that appeared
+only when the actions patchset [1] was merged, and should go into a
+separate patch with a different Fixes tag.
 
-Gr{oetje,eeting}s,
+[1] https://lore.kernel.org/linux-trace-kernel/20250626123405.1496931-1-tgl=
+ozar@redhat.com/T/#t
 
-                        Geert
+Tomas
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
