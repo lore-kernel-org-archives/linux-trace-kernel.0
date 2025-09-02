@@ -1,219 +1,168 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-out3.simply.com (smtp-out3.simply.com [94.231.106.210])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02BB82E54C8;
-	Tue,  2 Sep 2025 06:59:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61C6B2E612B;
+	Tue,  2 Sep 2025 07:02:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.231.106.210
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756796397; cv=none; b=WQwejtSPvsQGIYsAKteUA3mdcU7G7f3mGnduqtu5G8U5y4BwjdL6FoacKtUzaUw7Bn3L/xhOtoFRU1otmnuzQVBzoGO/o27CZOHjhUAmQPyCMv+giI2QLeBQTU0+B62CHDAXiVyIT35WkjrpWeh/bDTYvTR6r8M0CaYTzOfhPKk=
+	t=1756796575; cv=none; b=LY1DnuHFys5wkWVYv73rGWgcGgQuKateyV/RHgHDaacx78LOzp1a78VKol3/I65za/fHlx5Pg4v7lRUeeFVxBIYoUxYOfNyMaDgYkoZNowovVRnONy7uh4E5sfWBDW68912j2yBXrclJPjFn07g6Px84cLNQ62zZQehOacTny9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756796397; c=relaxed/simple;
-	bh=x3FVEFwQFp8TTQdyPISwrH44ZHd6XjCgIN4iMNbuhf8=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=mxHB1k1AamIpZXJmJ6xrN92BdwTbCn7IcLTfe15GZOq7WkNDTfow0SOhY6xNdtkxFYFB6Uf9Wva+nA/ag1D8WgFbW9W3LzwUAr2Mb76xsCGunKjb4JpyBew80/KCESnBL2d4KIWKHbzUQtlmgVWnH1FfYm1jfGfw4PB2O/emnBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eOUPQVh4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1756796575; c=relaxed/simple;
+	bh=6SPdunicingxAcBfsldZqnJI+0vSclBx7oORnENDYxw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=s8RJ+pW+YFtQVqXbI8eiUSzm4Uk3o8I7G5qOEAYla3qiZhZcM976Ru+ZzN25tKh6jo3BeCAS8aT+u5YG5vzPEGS0BmpvrKJqq6B+kU66Rk/pKUkvWlqvx54IbqdP5yIzIMrraqSiEkSJvZ9G7ReNTm17qOsdNTtpoLVX94srTGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gaisler.com; spf=pass smtp.mailfrom=gaisler.com; dkim=fail (0-bit key) header.d=gaisler.com header.i=@gaisler.com header.b=XV9R3DCg reason="key not found in DNS"; arc=none smtp.client-ip=94.231.106.210
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gaisler.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gaisler.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eOUPQVh4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EE54C4CEF5;
-	Tue,  2 Sep 2025 06:59:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756796396;
-	bh=x3FVEFwQFp8TTQdyPISwrH44ZHd6XjCgIN4iMNbuhf8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=eOUPQVh432tLD/Q3KsDAoVqN9zZ/9jJL1knzoGP6FRir16uxZQAHanonozVec58xi
-	 qw1Wwk2R/9BujBsVJvMebld1AKP9VBOnLirLjb5jbGKwHzQCemrEWTf7vm95JYorHZ
-	 PGcLh//CFNnX7YyDkbeUhLOusFvTICjk9iwGs0hB88pQSUHJ1m6A03fefDvMmJla4S
-	 OXGgAiLia0oP5SAFSuHDCCDsb78kkQJnOYQHAG56Zg70MkiqBzbjC9PIMkqaS2ivpb
-	 WcwcVsivo8shX/kSlr+hQiW/eRecuHqlqn5+xLs2nMM0AOpHtUkJDeIrLPSJIer5DV
-	 OXVBkRH2lY5JQ==
-Date: Tue, 2 Sep 2025 15:59:53 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: paulmck@kernel.org
-Cc: Steven Rostedt <rostedt@goodmis.org>, Menglong Dong
- <dongml2@chinatelecom.cn>, mathieu.desnoyers@efficios.com,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, kernel
- test robot <oliver.sang@intel.com>, tgraf@suug.ch,
- herbert@gondor.apana.org.au, linux-crypto@vger.kernel.org
-Subject: Re: [PATCH] tracing: fprobe: fix suspicious rcu usage in
- fprobe_entry
-Message-Id: <20250902155953.048dc8eab1f7f07e4bf35aab@kernel.org>
-In-Reply-To: <615da75d-cb2f-4e7e-9e11-6b19f03fea6c@paulmck-laptop>
-References: <20250829021436.19982-1-dongml2@chinatelecom.cn>
-	<20250828222357.55fab4c2@batman.local.home>
-	<d1da3939-62e6-4ad1-afcc-5710ce3f6cbd@paulmck-laptop>
-	<20250901170655.0757884ad7c2afb63ced3230@kernel.org>
-	<615da75d-cb2f-4e7e-9e11-6b19f03fea6c@paulmck-laptop>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=gaisler.com header.i=@gaisler.com header.b="XV9R3DCg"
+Received: from localhost (localhost [127.0.0.1])
+	by smtp.simply.com (Simply.com) with ESMTP id 4cGGsM5nS0z1DDXQ;
+	Tue,  2 Sep 2025 09:02:47 +0200 (CEST)
+Received: from [192.168.0.25] (h-98-128-223-123.NA.cust.bahnhof.se [98.128.223.123])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by smtp.simply.com (Simply.com) with ESMTPSA id 4cGGsH2GP0z1FXjK;
+	Tue,  2 Sep 2025 09:02:43 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gaisler.com;
+	s=simplycom2; t=1756796567;
+	bh=h7e86hl0UV9Yd9fEU7lHS/lq+4/qNkF5NKsTGqMW0Gs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=XV9R3DCgzqtpsDdLU5B6YmrRSDSwOb/e+RN3Y/eiKzfpmARJpEfk4rM3nFZX0bFUT
+	 Cgk+F60Qfnp/lcw23nKISESK50dxfqXIzcv7lABAQzI+QL2HTB89cK9os+EVA7PGjD
+	 2JhF3WzYfsb9MEQHgbmUEpzjWOe7UaJDN1f3QJPTIjlP5MtBhYOcxRaj/x5aIgyAIx
+	 VylpL5fKm3LmJNVO1eTnB/fXzhohsODH/8iwc5vr/F7Q+FJODNFYRjy3a+H0jjVZXA
+	 zhn5kjjNaRe2tU3x5rK51dkv4aqaegmt92utDpWIUQsQcnBLirXe5OB9CcfJT7NVBK
+	 WwxEwsTBW60LQ==
+Message-ID: <f2371539-cd4e-4d70-9576-4bb1c677104c@gaisler.com>
+Date: Tue, 2 Sep 2025 09:02:41 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/4] arch: copy_thread: pass clone_flags as u64
+To: schuster.simon@siemens-energy.com, Dinh Nguyen <dinguyen@kernel.org>,
+ Christian Brauner <brauner@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ David Hildenbrand <david@redhat.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
+ <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ Juri Lelli <juri.lelli@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
+ Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
+ Kees Cook <kees@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>, Guo Ren <guoren@kernel.org>,
+ Oleg Nesterov <oleg@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+ Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
+ Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
+ =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>,
+ Paul Moore <paul@paul-moore.com>, Serge Hallyn <sergeh@kernel.org>,
+ James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>,
+ Anna-Maria Behnsen <anna-maria@linutronix.de>,
+ Frederic Weisbecker <frederic@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Masami Hiramatsu
+ <mhiramat@kernel.org>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ John Johansen <john.johansen@canonical.com>,
+ Stephen Smalley <stephen.smalley.work@gmail.com>,
+ Ondrej Mosnacek <omosnace@redhat.com>,
+ Kentaro Takeda <takedakn@nttdata.co.jp>,
+ Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+ Richard Henderson <richard.henderson@linaro.org>,
+ Matt Turner <mattst88@gmail.com>, Vineet Gupta <vgupta@kernel.org>,
+ Russell King <linux@armlinux.org.uk>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Brian Cain <bcain@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>, Geert Uytterhoeven <geert@linux-m68k.org>,
+ Michal Simek <monstr@monstr.eu>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Jonas Bonn <jonas@southpole.se>,
+ Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+ Stafford Horne <shorne@gmail.com>,
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+ Helge Deller <deller@gmx.de>, Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Sven Schnelle <svens@linux.ibm.com>,
+ Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>,
+ John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+ Richard Weinberger <richard@nod.at>,
+ Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+ Johannes Berg <johannes@sipsolutions.net>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, Chris Zankel <chris@zankel.net>,
+ Max Filippov <jcmvbkbc@gmail.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ linux-riscv@lists.infradead.org, linux-csky@vger.kernel.org,
+ linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ cgroups@vger.kernel.org, linux-security-module@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, apparmor@lists.ubuntu.com,
+ selinux@vger.kernel.org, linux-alpha@vger.kernel.org,
+ linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+ linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+ linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+ linux-um@lists.infradead.org
+References: <20250901-nios2-implement-clone3-v2-0-53fcf5577d57@siemens-energy.com>
+ <20250901-nios2-implement-clone3-v2-3-53fcf5577d57@siemens-energy.com>
+Content-Language: en-US
+From: Andreas Larsson <andreas@gaisler.com>
+In-Reply-To: <20250901-nios2-implement-clone3-v2-3-53fcf5577d57@siemens-energy.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Mon, 1 Sep 2025 08:00:15 -0700
-"Paul E. McKenney" <paulmck@kernel.org> wrote:
-
-> On Mon, Sep 01, 2025 at 05:06:55PM +0900, Masami Hiramatsu wrote:
-> > On Fri, 29 Aug 2025 04:11:02 -0700
-> > "Paul E. McKenney" <paulmck@kernel.org> wrote:
-> > 
-> > > On Thu, Aug 28, 2025 at 10:23:57PM -0400, Steven Rostedt wrote:
-> > > > On Fri, 29 Aug 2025 10:14:36 +0800
-> > > > Menglong Dong <dongml2@chinatelecom.cn> wrote:
-> > > > 
-> > > > > rcu_read_lock() is not needed in fprobe_entry, but rcu_dereference_check()
-> > > > > is used in rhltable_lookup(), which causes suspicious RCU usage warning:
-> > > > > 
-> > > > >   WARNING: suspicious RCU usage
-> > > > >   6.17.0-rc1-00001-gdfe0d675df82 #1 Tainted: G S
-> > > > >   -----------------------------
-> > > > >   include/linux/rhashtable.h:602 suspicious rcu_dereference_check() usage!
-> > > > >   ......
-> > > > >   stack backtrace:
-> > > > >   CPU: 1 UID: 0 PID: 4652 Comm: ftracetest Tainted: G S
-> > > > >   Tainted: [S]=CPU_OUT_OF_SPEC, [I]=FIRMWARE_WORKAROUND
-> > > > >   Hardware name: Dell Inc. OptiPlex 7040/0Y7WYT, BIOS 1.1.1 10/07/2015
-> > > > >   Call Trace:
-> > > > >    <TASK>
-> > > > >    dump_stack_lvl+0x7c/0x90
-> > > > >    lockdep_rcu_suspicious+0x14f/0x1c0
-> > > > >    __rhashtable_lookup+0x1e0/0x260
-> > > > >    ? __pfx_kernel_clone+0x10/0x10
-> > > > >    fprobe_entry+0x9a/0x450
-> > > > >    ? __lock_acquire+0x6b0/0xca0
-> > > > >    ? find_held_lock+0x2b/0x80
-> > > > >    ? __pfx_fprobe_entry+0x10/0x10
-> > > > >    ? __pfx_kernel_clone+0x10/0x10
-> > > > >    ? lock_acquire+0x14c/0x2d0
-> > > > >    ? __might_fault+0x74/0xc0
-> > > > >    function_graph_enter_regs+0x2a0/0x550
-> > > > >    ? __do_sys_clone+0xb5/0x100
-> > > > >    ? __pfx_function_graph_enter_regs+0x10/0x10
-> > > > >    ? _copy_to_user+0x58/0x70
-> > > > >    ? __pfx_kernel_clone+0x10/0x10
-> > > > >    ? __x64_sys_rt_sigprocmask+0x114/0x180
-> > > > >    ? __pfx___x64_sys_rt_sigprocmask+0x10/0x10
-> > > > >    ? __pfx_kernel_clone+0x10/0x10
-> > > > >    ftrace_graph_func+0x87/0xb0
-> > > > > 
-> > > > > Fix this by using rcu_read_lock() for rhltable_lookup(). Alternatively, we
-> > > > > can use rcu_lock_acquire(&rcu_lock_map) here to obtain better performance.
-> > > > > However, it's not a common usage :/
-> > > > 
-> > > > So this is needed even though it's called under preempt_disable().
-> > > > 
-> > > > Paul, do we need to add an rcu_read_lock() because the code in rht
-> > > > (rhashtable) requires RCU read lock?
-> > > > 
-> > > > I thought that rcu_read_lock() and preempt_disable() have been merged?
-> > > 
-> > > Yes, preempt_disable() does indeed start an RCU read-side critical section,
-> > > just as surely as rcu_read_lock() does.
-> > > 
-> > > However, this is a lockdep check inside of __rhashtable_lookup():
-> > > 
-> > > 	rht_dereference_rcu(ht->tbl, ht)
-> > > 
-> > > Which is defined as:
-> > > 
-> > > 	rcu_dereference_check(p, lockdep_rht_mutex_is_held(ht));
-> > > 
-> > > This is explicitly telling lockdep that rcu_read_lock() is OK and
-> > > holding ht->mutex is OK, but nothing else is.
-> > 
-> > That is similar to the kprobes, which also allows accessing in
-> > rcu critical section or under mutex.
-> > 
-> > > So an alternative way to fix this is to declare it to be a false positive,
-> > > and then avoid that false positive by adding a check that preemption
-> > > is disabled.  Adding the rhashtable maintainers for their perspective.
-> > 
-> > What about changing it alloing it with preempt disabled flag?
+On 2025-09-01 15:09, Simon Schuster via B4 Relay wrote:
+> From: Simon Schuster <schuster.simon@siemens-energy.com>
 > 
-> I am not sure that "it" that you are proposing changing.  ;-)
-
-Sorry, Ii meant the rcu_dereference_check().
-
+> With the introduction of clone3 in commit 7f192e3cd316 ("fork: add
+> clone3") the effective bit width of clone_flags on all architectures was
+> increased from 32-bit to 64-bit, with a new type of u64 for the flags.
+> However, for most consumers of clone_flags the interface was not
+> changed from the previous type of unsigned long.
 > 
-> However, another option for the the above rcu_dereference_check() to
-> become something like this:
+> While this works fine as long as none of the new 64-bit flag bits
+> (CLONE_CLEAR_SIGHAND and CLONE_INTO_CGROUP) are evaluated, this is still
+> undesirable in terms of the principle of least surprise.
 > 
-> 	rcu_dereference_check(p, lockdep_rht_mutex_is_held(ht) ||
-> 				 rcu_read_lock_any_held());
+> Thus, this commit fixes all relevant interfaces of the copy_thread
+> function that is called from copy_process to consistently pass
+> clone_flags as u64, so that no truncation to 32-bit integers occurs on
+> 32-bit architectures.
 > 
-> This would be happy with any RCU reader, including rcu_read_lock(),
-> preempt_disable(), local_irq_disable(), local_bh_disable(), and various
-> handler contexts.  One downside is that this would *always* be happy in
-> a kernel built with CONFIG_PREEMPT_{NONE,VOLUNTARY}=y.
+> Signed-off-by: Simon Schuster <schuster.simon@siemens-energy.com>
+> ---
 
-Ah, indeed. This means that we lose the ability to explicitly check
-whether the rcu pointer is in a critical section on that kernel.
+Thanks for this and for the whole series! Needed foundation for a
+sparc32 clone3 implementation as well.
 
-> 
-> If this is happening often enough, it would be easy for me to create an
-> rcu_dereference_all_check() that allows all forms of vanilla RCU readers
-> (but not, for example, SRCU readers), but with only two use cases,
-> it is not clear to me that this is an overall win.
+>  arch/sparc/kernel/process_32.c   | 2 +-
+>  arch/sparc/kernel/process_64.c   | 2 +-
 
-OK, I think this discussion is important for the patch from Menglong [1]
+Acked-by: Andreas Larsson <andreas@gaisler.com> # sparc
 
-[1] https://lore.kernel.org/all/20250829021436.19982-1-dongml2@chinatelecom.cn/
+Cheers,
+Andreas
 
-because this does not make an rcu critical section while using `head`
-but it works because fprobe_entry() runs under preempt_disable().
-
-Is it better to use `guard(rcu)()` instead of rcu_read_lock() so that
-it explicitly secure the `head` usage? I just wonder if there is any
-downside to extend rcu_read_lock() area (still in the same
-preempt_disable section).
-
-Thank you,
-
-> 
-> Or am I missing a turn in here somewhere?
-> 
-> 							Thanx, Paul
-> 
-> > Thank you,
-> > 
-> > > 
-> > > 							Thanx, Paul
-> > > 
-> > > > -- Steve
-> > > > 
-> > > > 
-> > > > > 
-> > > > > Reported-by: kernel test robot <oliver.sang@intel.com>
-> > > > > Closes: https://lore.kernel.org/oe-lkp/202508281655.54c87330-lkp@intel.com
-> > > > > Fixes: dfe0d675df82 ("tracing: fprobe: use rhltable for fprobe_ip_table")
-> > > > > Signed-off-by: Menglong Dong <dongml2@chinatelecom.cn>
-> > > > > ---
-> > > > >  kernel/trace/fprobe.c | 2 ++
-> > > > >  1 file changed, 2 insertions(+)
-> > > > > 
-> > > > > diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-> > > > > index fb127fa95f21..fece0f849c1c 100644
-> > > > > --- a/kernel/trace/fprobe.c
-> > > > > +++ b/kernel/trace/fprobe.c
-> > > > > @@ -269,7 +269,9 @@ static int fprobe_entry(struct ftrace_graph_ent *trace, struct fgraph_ops *gops,
-> > > > >  	if (WARN_ON_ONCE(!fregs))
-> > > > >  		return 0;
-> > > > >  
-> > > > > +	rcu_read_lock();
-> > > > >  	head = rhltable_lookup(&fprobe_ip_table, &func, fprobe_rht_params);
-> > > > > +	rcu_read_unlock();
-> > > > >  	reserved_words = 0;
-> > > > >  	rhl_for_each_entry_rcu(node, pos, head, hlist) {
-> > > > >  		if (node->addr != func)
-> > > > 
-> > 
-> > 
-> > -- 
-> > Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
