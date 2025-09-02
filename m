@@ -1,223 +1,219 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F2E3469D;
-	Tue,  2 Sep 2025 06:59:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02BB82E54C8;
+	Tue,  2 Sep 2025 06:59:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756796352; cv=none; b=fItQRSED7eAa34vKHU8otx4QcIwU/OWKgFE9AEI5AROTTre0OVFT9ETVoBeveHPwOlS9D9qC/9/L0dSTns9xIOOuYvLaNGO2TaZeUvIcrwdyobjM6j5AdpucY/qcWCOP4PROC7UrlcORzi3ly9gM4P2C59eIoDzNPqvr66mjykw=
+	t=1756796397; cv=none; b=WQwejtSPvsQGIYsAKteUA3mdcU7G7f3mGnduqtu5G8U5y4BwjdL6FoacKtUzaUw7Bn3L/xhOtoFRU1otmnuzQVBzoGO/o27CZOHjhUAmQPyCMv+giI2QLeBQTU0+B62CHDAXiVyIT35WkjrpWeh/bDTYvTR6r8M0CaYTzOfhPKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756796352; c=relaxed/simple;
-	bh=aNFNdb9BghjJA9Tzkpx25Ji4dZPWsARMv0J3tXAx2fk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X1ThdC5mzzhVVeu1Ei/NaBd1059ue73pRVulVTQPargfm1/sEe/lsVBCow1NKD6GZ3vFA29+efJm/OPwVOoBSugNYHNmPSorNMYOt+JR6PCjTB31I12cyWEuKDMWF/kACoihVeoU4+7ZeFj3lJMtoTe1ZMrjXtvxC6zSpqmw6ws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ql+4h5O6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1756796397; c=relaxed/simple;
+	bh=x3FVEFwQFp8TTQdyPISwrH44ZHd6XjCgIN4iMNbuhf8=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=mxHB1k1AamIpZXJmJ6xrN92BdwTbCn7IcLTfe15GZOq7WkNDTfow0SOhY6xNdtkxFYFB6Uf9Wva+nA/ag1D8WgFbW9W3LzwUAr2Mb76xsCGunKjb4JpyBew80/KCESnBL2d4KIWKHbzUQtlmgVWnH1FfYm1jfGfw4PB2O/emnBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eOUPQVh4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ql+4h5O6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21A12C4CEED;
-	Tue,  2 Sep 2025 06:59:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eOUPQVh4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EE54C4CEF5;
+	Tue,  2 Sep 2025 06:59:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756796351;
-	bh=aNFNdb9BghjJA9Tzkpx25Ji4dZPWsARMv0J3tXAx2fk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ql+4h5O6gxhEMZse4++nLrPH2BN1cdv/hzeAlXeyU+iY2hiXpbDRuw08QVfL2ZNc8
-	 LHcvMVnarVT5dA58QLAm8Gc/vQ3jm9hsFZiMzbIqUlsE6dVWPqInp7dgk1qt/yLA39
-	 asqAiHHPiYygFxqZfuhm9BjDUdk9nZETD4PuN82GVjE13FUgZtKTxHsbXAE+SmCoyD
-	 k8hSWu1oAg4JssnfYZFYjOGUK+zFHniO6AUTmx4b9XwKtbegL/ShY+WlA/LDOW4efb
-	 uxYZgY3WcVw3lQWW8GTAvRnWbCkDG4XyYKNSzGHAN8IeMy8ed8KJtpqwLDI4GCE4ld
-	 StPPjpiK2rWIg==
-Date: Mon, 1 Sep 2025 23:59:09 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Steven Rostedt <rostedt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	bpf@vger.kernel.org, x86@kernel.org,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Indu Bhagat <indu.bhagat@oracle.com>,
-	"Jose E. Marchesi" <jemarch@gnu.org>,
-	Beau Belgrave <beaub@linux.microsoft.com>,
-	Jens Remus <jremus@linux.ibm.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jens Axboe <axboe@kernel.dk>, Florian Weimer <fweimer@redhat.com>,
-	Sam James <sam@gentoo.org>
-Subject: Re: [PATCH v15 7/8] perf script: Display
- PERF_RECORD_CALLCHAIN_DEFERRED
-Message-ID: <aLaVvT6v8ZyinYFx@z2>
-References: <20250825180638.877627656@kernel.org>
- <20250825180802.557798597@kernel.org>
+	s=k20201202; t=1756796396;
+	bh=x3FVEFwQFp8TTQdyPISwrH44ZHd6XjCgIN4iMNbuhf8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=eOUPQVh432tLD/Q3KsDAoVqN9zZ/9jJL1knzoGP6FRir16uxZQAHanonozVec58xi
+	 qw1Wwk2R/9BujBsVJvMebld1AKP9VBOnLirLjb5jbGKwHzQCemrEWTf7vm95JYorHZ
+	 PGcLh//CFNnX7YyDkbeUhLOusFvTICjk9iwGs0hB88pQSUHJ1m6A03fefDvMmJla4S
+	 OXGgAiLia0oP5SAFSuHDCCDsb78kkQJnOYQHAG56Zg70MkiqBzbjC9PIMkqaS2ivpb
+	 WcwcVsivo8shX/kSlr+hQiW/eRecuHqlqn5+xLs2nMM0AOpHtUkJDeIrLPSJIer5DV
+	 OXVBkRH2lY5JQ==
+Date: Tue, 2 Sep 2025 15:59:53 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: paulmck@kernel.org
+Cc: Steven Rostedt <rostedt@goodmis.org>, Menglong Dong
+ <dongml2@chinatelecom.cn>, mathieu.desnoyers@efficios.com,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, kernel
+ test robot <oliver.sang@intel.com>, tgraf@suug.ch,
+ herbert@gondor.apana.org.au, linux-crypto@vger.kernel.org
+Subject: Re: [PATCH] tracing: fprobe: fix suspicious rcu usage in
+ fprobe_entry
+Message-Id: <20250902155953.048dc8eab1f7f07e4bf35aab@kernel.org>
+In-Reply-To: <615da75d-cb2f-4e7e-9e11-6b19f03fea6c@paulmck-laptop>
+References: <20250829021436.19982-1-dongml2@chinatelecom.cn>
+	<20250828222357.55fab4c2@batman.local.home>
+	<d1da3939-62e6-4ad1-afcc-5710ce3f6cbd@paulmck-laptop>
+	<20250901170655.0757884ad7c2afb63ced3230@kernel.org>
+	<615da75d-cb2f-4e7e-9e11-6b19f03fea6c@paulmck-laptop>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250825180802.557798597@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Steven,
+On Mon, 1 Sep 2025 08:00:15 -0700
+"Paul E. McKenney" <paulmck@kernel.org> wrote:
 
-On Mon, Aug 25, 2025 at 02:06:45PM -0400, Steven Rostedt wrote:
-> From: Namhyung Kim <namhyung@kernel.org>
+> On Mon, Sep 01, 2025 at 05:06:55PM +0900, Masami Hiramatsu wrote:
+> > On Fri, 29 Aug 2025 04:11:02 -0700
+> > "Paul E. McKenney" <paulmck@kernel.org> wrote:
+> > 
+> > > On Thu, Aug 28, 2025 at 10:23:57PM -0400, Steven Rostedt wrote:
+> > > > On Fri, 29 Aug 2025 10:14:36 +0800
+> > > > Menglong Dong <dongml2@chinatelecom.cn> wrote:
+> > > > 
+> > > > > rcu_read_lock() is not needed in fprobe_entry, but rcu_dereference_check()
+> > > > > is used in rhltable_lookup(), which causes suspicious RCU usage warning:
+> > > > > 
+> > > > >   WARNING: suspicious RCU usage
+> > > > >   6.17.0-rc1-00001-gdfe0d675df82 #1 Tainted: G S
+> > > > >   -----------------------------
+> > > > >   include/linux/rhashtable.h:602 suspicious rcu_dereference_check() usage!
+> > > > >   ......
+> > > > >   stack backtrace:
+> > > > >   CPU: 1 UID: 0 PID: 4652 Comm: ftracetest Tainted: G S
+> > > > >   Tainted: [S]=CPU_OUT_OF_SPEC, [I]=FIRMWARE_WORKAROUND
+> > > > >   Hardware name: Dell Inc. OptiPlex 7040/0Y7WYT, BIOS 1.1.1 10/07/2015
+> > > > >   Call Trace:
+> > > > >    <TASK>
+> > > > >    dump_stack_lvl+0x7c/0x90
+> > > > >    lockdep_rcu_suspicious+0x14f/0x1c0
+> > > > >    __rhashtable_lookup+0x1e0/0x260
+> > > > >    ? __pfx_kernel_clone+0x10/0x10
+> > > > >    fprobe_entry+0x9a/0x450
+> > > > >    ? __lock_acquire+0x6b0/0xca0
+> > > > >    ? find_held_lock+0x2b/0x80
+> > > > >    ? __pfx_fprobe_entry+0x10/0x10
+> > > > >    ? __pfx_kernel_clone+0x10/0x10
+> > > > >    ? lock_acquire+0x14c/0x2d0
+> > > > >    ? __might_fault+0x74/0xc0
+> > > > >    function_graph_enter_regs+0x2a0/0x550
+> > > > >    ? __do_sys_clone+0xb5/0x100
+> > > > >    ? __pfx_function_graph_enter_regs+0x10/0x10
+> > > > >    ? _copy_to_user+0x58/0x70
+> > > > >    ? __pfx_kernel_clone+0x10/0x10
+> > > > >    ? __x64_sys_rt_sigprocmask+0x114/0x180
+> > > > >    ? __pfx___x64_sys_rt_sigprocmask+0x10/0x10
+> > > > >    ? __pfx_kernel_clone+0x10/0x10
+> > > > >    ftrace_graph_func+0x87/0xb0
+> > > > > 
+> > > > > Fix this by using rcu_read_lock() for rhltable_lookup(). Alternatively, we
+> > > > > can use rcu_lock_acquire(&rcu_lock_map) here to obtain better performance.
+> > > > > However, it's not a common usage :/
+> > > > 
+> > > > So this is needed even though it's called under preempt_disable().
+> > > > 
+> > > > Paul, do we need to add an rcu_read_lock() because the code in rht
+> > > > (rhashtable) requires RCU read lock?
+> > > > 
+> > > > I thought that rcu_read_lock() and preempt_disable() have been merged?
+> > > 
+> > > Yes, preempt_disable() does indeed start an RCU read-side critical section,
+> > > just as surely as rcu_read_lock() does.
+> > > 
+> > > However, this is a lockdep check inside of __rhashtable_lookup():
+> > > 
+> > > 	rht_dereference_rcu(ht->tbl, ht)
+> > > 
+> > > Which is defined as:
+> > > 
+> > > 	rcu_dereference_check(p, lockdep_rht_mutex_is_held(ht));
+> > > 
+> > > This is explicitly telling lockdep that rcu_read_lock() is OK and
+> > > holding ht->mutex is OK, but nothing else is.
+> > 
+> > That is similar to the kprobes, which also allows accessing in
+> > rcu critical section or under mutex.
+> > 
+> > > So an alternative way to fix this is to declare it to be a false positive,
+> > > and then avoid that false positive by adding a check that preemption
+> > > is disabled.  Adding the rhashtable maintainers for their perspective.
+> > 
+> > What about changing it alloing it with preempt disabled flag?
 > 
-> Handle the deferred callchains in the script output.
-> 
->   $ perf script
->   perf     801 [000]    18.031793:          1 cycles:P:
->           ffffffff91a14c36 __intel_pmu_enable_all.isra.0+0x56 ([kernel.kallsyms])
->           ffffffff91d373e9 perf_ctx_enable+0x39 ([kernel.kallsyms])
->           ffffffff91d36af7 event_function+0xd7 ([kernel.kallsyms])
->           ffffffff91d34222 remote_function+0x42 ([kernel.kallsyms])
->           ffffffff91c1ebe1 generic_exec_single+0x61 ([kernel.kallsyms])
->           ffffffff91c1edac smp_call_function_single+0xec ([kernel.kallsyms])
->           ffffffff91d37a9d event_function_call+0x10d ([kernel.kallsyms])
->           ffffffff91d33557 perf_event_for_each_child+0x37 ([kernel.kallsyms])
->           ffffffff91d47324 _perf_ioctl+0x204 ([kernel.kallsyms])
->           ffffffff91d47c43 perf_ioctl+0x33 ([kernel.kallsyms])
->           ffffffff91e2f216 __x64_sys_ioctl+0x96 ([kernel.kallsyms])
->           ffffffff9265f1ae do_syscall_64+0x9e ([kernel.kallsyms])
->           ffffffff92800130 entry_SYSCALL_64+0xb0 ([kernel.kallsyms])
-> 
->   perf     801 [000]    18.031814: DEFERRED CALLCHAIN
->               7fb5fc22034b __GI___ioctl+0x3b (/usr/lib/x86_64-linux-gnu/libc.so.6)
-> 
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->  tools/perf/builtin-script.c | 89 +++++++++++++++++++++++++++++++++++++
->  1 file changed, 89 insertions(+)
-> 
-> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> index d9fbdcf72f25..d17e0a3d8567 100644
-> --- a/tools/perf/builtin-script.c
-> +++ b/tools/perf/builtin-script.c
-> @@ -2484,6 +2484,93 @@ static int process_sample_event(const struct perf_tool *tool,
->  	return ret;
->  }
->  
-> +static int process_deferred_sample_event(const struct perf_tool *tool,
-> +					 union perf_event *event,
-> +					 struct perf_sample *sample,
-> +					 struct evsel *evsel,
-> +					 struct machine *machine)
-> +{
-> +	struct perf_script *scr = container_of(tool, struct perf_script, tool);
-> +	struct perf_event_attr *attr = &evsel->core.attr;
-> +	struct evsel_script *es = evsel->priv;
-> +	unsigned int type = output_type(attr->type);
-> +	struct addr_location al;
-> +	FILE *fp = es->fp;
-> +	int ret = 0;
-> +
-> +	if (output[type].fields == 0)
-> +		return 0;
-> +
-> +	/* Set thread to NULL to indicate addr_al and al are not initialized */
-> +	addr_location__init(&al);
-> +
-> +	if (perf_time__ranges_skip_sample(scr->ptime_range, scr->range_num,
-> +					  sample->time)) {
-> +		goto out_put;
-> +	}
-> +
-> +	if (debug_mode) {
-> +		if (sample->time < last_timestamp) {
-> +			pr_err("Samples misordered, previous: %" PRIu64
-> +				" this: %" PRIu64 "\n", last_timestamp,
-> +				sample->time);
-> +			nr_unordered++;
-> +		}
-> +		last_timestamp = sample->time;
-> +		goto out_put;
-> +	}
-> +
-> +	if (filter_cpu(sample))
-> +		goto out_put;
-> +
-> +	if (machine__resolve(machine, &al, sample) < 0) {
-> +		pr_err("problem processing %d event, skipping it.\n",
-> +		       event->header.type);
-> +		ret = -1;
-> +		goto out_put;
-> +	}
-> +
-> +	if (al.filtered)
-> +		goto out_put;
-> +
-> +	if (!show_event(sample, evsel, al.thread, &al, NULL))
-> +		goto out_put;
-> +
-> +	if (evswitch__discard(&scr->evswitch, evsel))
-> +		goto out_put;
-> +
-> +	perf_sample__fprintf_start(scr, sample, al.thread, evsel,
-> +				   PERF_RECORD_CALLCHAIN_DEFERRED, fp);
-> +	fprintf(fp, "DEFERRED CALLCHAIN");
-> +
-> +	if (PRINT_FIELD(IP)) {
-> +		struct callchain_cursor *cursor = NULL;
-> +
-> +		if (symbol_conf.use_callchain && sample->callchain) {
-> +			cursor = get_tls_callchain_cursor();
-> +			if (thread__resolve_callchain(al.thread, cursor, evsel,
-> +						      sample, NULL, NULL,
-> +						      scripting_max_stack)) {
-> +				pr_info("cannot resolve deferred callchains\n");
-> +				cursor = NULL;
-> +			}
-> +		}
-> +
-> +		fputc(cursor ? '\n' : ' ', fp);
-> +		sample__fprintf_sym(sample, &al, 0, output[type].print_ip_opts,
-> +				    cursor, symbol_conf.bt_stop_list, fp);
-> +	}
-> +
-> +	fprintf(fp, "\n");
-> +
-> +	if (verbose > 0)
-> +		fflush(fp);
-> +
-> +out_put:
-> +	addr_location__exit(&al);
-> +	return ret;
-> +}
-> +
->  // Used when scr->per_event_dump is not set
->  static struct evsel_script es_stdout;
->  
-> @@ -4080,6 +4167,7 @@ int cmd_script(int argc, const char **argv)
->  
->  	perf_tool__init(&script.tool, !unsorted_dump);
->  	script.tool.sample		 = process_sample_event;
-> +	script.tool.callchain_deferred	 = process_deferred_sample_event;
->  	script.tool.mmap		 = perf_event__process_mmap;
->  	script.tool.mmap2		 = perf_event__process_mmap2;
->  	script.tool.comm		 = perf_event__process_comm;
-> @@ -4106,6 +4194,7 @@ int cmd_script(int argc, const char **argv)
->  	script.tool.throttle		 = process_throttle_event;
->  	script.tool.unthrottle		 = process_throttle_event;
->  	script.tool.ordering_requires_timestamps = true;
-> +	script.tool.merge_deferred_callchains = false;
+> I am not sure that "it" that you are proposing changing.  ;-)
 
-Oops, this chunk should belong to the next patch which introduces this
-field.  Sorry about that.
+Sorry, Ii meant the rcu_dereference_check().
 
-Thanks,
-Namhyung
-
-
->  	session = perf_session__new(&data, &script.tool);
->  	if (IS_ERR(session))
->  		return PTR_ERR(session);
-> -- 
-> 2.50.1
 > 
+> However, another option for the the above rcu_dereference_check() to
+> become something like this:
 > 
+> 	rcu_dereference_check(p, lockdep_rht_mutex_is_held(ht) ||
+> 				 rcu_read_lock_any_held());
+> 
+> This would be happy with any RCU reader, including rcu_read_lock(),
+> preempt_disable(), local_irq_disable(), local_bh_disable(), and various
+> handler contexts.  One downside is that this would *always* be happy in
+> a kernel built with CONFIG_PREEMPT_{NONE,VOLUNTARY}=y.
+
+Ah, indeed. This means that we lose the ability to explicitly check
+whether the rcu pointer is in a critical section on that kernel.
+
+> 
+> If this is happening often enough, it would be easy for me to create an
+> rcu_dereference_all_check() that allows all forms of vanilla RCU readers
+> (but not, for example, SRCU readers), but with only two use cases,
+> it is not clear to me that this is an overall win.
+
+OK, I think this discussion is important for the patch from Menglong [1]
+
+[1] https://lore.kernel.org/all/20250829021436.19982-1-dongml2@chinatelecom.cn/
+
+because this does not make an rcu critical section while using `head`
+but it works because fprobe_entry() runs under preempt_disable().
+
+Is it better to use `guard(rcu)()` instead of rcu_read_lock() so that
+it explicitly secure the `head` usage? I just wonder if there is any
+downside to extend rcu_read_lock() area (still in the same
+preempt_disable section).
+
+Thank you,
+
+> 
+> Or am I missing a turn in here somewhere?
+> 
+> 							Thanx, Paul
+> 
+> > Thank you,
+> > 
+> > > 
+> > > 							Thanx, Paul
+> > > 
+> > > > -- Steve
+> > > > 
+> > > > 
+> > > > > 
+> > > > > Reported-by: kernel test robot <oliver.sang@intel.com>
+> > > > > Closes: https://lore.kernel.org/oe-lkp/202508281655.54c87330-lkp@intel.com
+> > > > > Fixes: dfe0d675df82 ("tracing: fprobe: use rhltable for fprobe_ip_table")
+> > > > > Signed-off-by: Menglong Dong <dongml2@chinatelecom.cn>
+> > > > > ---
+> > > > >  kernel/trace/fprobe.c | 2 ++
+> > > > >  1 file changed, 2 insertions(+)
+> > > > > 
+> > > > > diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
+> > > > > index fb127fa95f21..fece0f849c1c 100644
+> > > > > --- a/kernel/trace/fprobe.c
+> > > > > +++ b/kernel/trace/fprobe.c
+> > > > > @@ -269,7 +269,9 @@ static int fprobe_entry(struct ftrace_graph_ent *trace, struct fgraph_ops *gops,
+> > > > >  	if (WARN_ON_ONCE(!fregs))
+> > > > >  		return 0;
+> > > > >  
+> > > > > +	rcu_read_lock();
+> > > > >  	head = rhltable_lookup(&fprobe_ip_table, &func, fprobe_rht_params);
+> > > > > +	rcu_read_unlock();
+> > > > >  	reserved_words = 0;
+> > > > >  	rhl_for_each_entry_rcu(node, pos, head, hlist) {
+> > > > >  		if (node->addr != func)
+> > > > 
+> > 
+> > 
+> > -- 
+> > Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
