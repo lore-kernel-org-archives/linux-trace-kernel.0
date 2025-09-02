@@ -1,227 +1,216 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2089.outbound.protection.outlook.com [40.107.236.89])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15353223DF0;
-	Mon,  1 Sep 2025 22:23:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.89
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756765388; cv=fail; b=r5Wlk3MOYTxTtnTwbcuxEkt8/xUCUuJ4LZ0WRB0M/Fg5AuKarxkhT3Big0crdEAtlv/DQgl8qS4GNRNgPdOl84OQE9lcnik1riI7yTFYBg9Im6i3s56fJzcEx0Gmwy9+vFKDA2ZdlS7E+XO8a9ICwN8R99uhXYujt1zfJzl2BiQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756765388; c=relaxed/simple;
-	bh=SKsEqrfWqt4lAH0J38O2mxYc+fEgGNAHMd4VG7LEAPs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=FvA4zm62RipLZMfh4iCt/6RuVw7Zc95eHb0S+FHR5fdjLhcDGPNNYMQmQryxR2A1zhN6Ryc7PRKWuoBEHQ0SfJC/CJSKu2h7hd+waE8kPN14QbYspwnmQ3wdlUFHqLvPYp8f7F8M7mJ6MFU05/5En7L7eN88nsVtj0tolGDuWqw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=iv80n33E; arc=fail smtp.client-ip=40.107.236.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AE354414;
+	Tue,  2 Sep 2025 02:21:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1756779711; cv=none; b=F/Rd+PP0TJuJwQXz/0wUTID1Q981RIU7K+zB8EZzSz+6NsG9s6d4U3R0/Y986utycifsD/INUzMcN3xWKSAJ/CsJexPVIyZMRNvqHmjjutE6iDkC97yKw4WZ3zOOo9SZ1NQv26V/fGZs3nnwnaYCpTVQbExXabAkgnLCCpMe5v8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1756779711; c=relaxed/simple;
+	bh=QxyQmaWGUfjo1CyzoIwXOiE5z6bTP5jsQPqeFuE7b+k=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=bnPMVwbt6ViNaVaPB57HrrmEcLFXkSiXQPpQIRws/XhDp/MWoX+IPiAzdhNXGiQTuyMQzRvZ2uTIDb8asAHHaNVyQBa0ErZupeHEOJiBVSD0avZ53XMk5aKf4y+f/K3qGJTsfSqjB9QRS0k37nBCS1XFomPr2cwQOrlkKJsZHKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DPT/P+du; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="iv80n33E"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=bS1daFUznnVp//4wMYjsC7mQ61wfIUfOOaXIhB/KaP2C0FWv8GZ+AgFHdNow9W+6LXe4icajYJ2+WxXsc3zUbDKHO5qLBwEuMw+Q9bPQuu+vMYEQBHOuug5k1pMM+CHRmqItzRdnFmk0yd9gP1Dz8dtvUDuBXv37ceqZgk4JkGoauVNdC7DCt21lV4fbSKhkV5UqbzVrfG15J2hRPgi77evgwJcR5AbM88DSP+44Jl9DoMtdqDfb7NmsFMEjmsqpPAOnDztFEHEvqFK124YgXyGcVctt2NDvsBD9+LotYwcs40TPnAp0q4vlNtCGwMuLIVI1Kmi6+1vjV6I4h+6LPw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9PcD09FKAh1vF3qniFuOOvXvPYB3eKU4OoIktmAdxRs=;
- b=WD2g5hBKoBkYOk72WapCvsuBh+eJvISk6j/e7JOqGTjIMxvJ6yAKX/KGI8zX0b5x+4+D7HcK3ab0wk3SSgkNNQppdXjtXvwPBNcDl/9NZoiOPLVlA8jNZj4FT0aSixw2m2UOrq1lugxBIVYkegHX2pu9CTI0Plgmcu0xrdJl/XdmmG2pvxFen7O4klgiyYAPTFe38ZrLdRzIPoHJi1rLN5fMWUI5o1tfon6zz69GRkz9LZxZUWlRiWWC9ogwpn6NCnXrDMvwgcJSwnxSofKEcQ8vMyV9E7xVIeOfnxtX5z0kY9O2R0Z8GRkFx68JvIa68t9nPT2dARPCjIyNbT6RZA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9PcD09FKAh1vF3qniFuOOvXvPYB3eKU4OoIktmAdxRs=;
- b=iv80n33ELEVJgtxrACFzsV82DMFeFd43SDMUiVLoegOHzbTYcA7r4CMH1sbGiPoY6cwkuw8VulWQXba0j3FeFjvT99gIiZa4vX8Tzxx6ip5ceePsWwkLhRXSXlIYIfhDj575uqeU9wxrHXDHja0UAN2pR+vtTxAgO4nG3CyLXU+T05mEaLRUYs7E4y+fRcEbPSVIgJ8eY0kCgCrTk+rYKNed0UZd8lKNowWUkVaZ3s3qL7UShVOncZb5UGp2klTxwCLlqBGluBQPWABO3E40ijffqC669j7VNVkElnT7UPJLbWBGvdbKL4Mnt4A5edHgaXkcDk65Yj3I1HAbQh/hKw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
- by IA1PR12MB7495.namprd12.prod.outlook.com (2603:10b6:208:419::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9073.27; Mon, 1 Sep
- 2025 22:23:03 +0000
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732%4]) with mapi id 15.20.9073.026; Mon, 1 Sep 2025
- 22:23:03 +0000
-Date: Mon, 1 Sep 2025 19:23:02 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Leon Romanovsky <leon@kernel.org>,
-	Abdiel Janulgue <abdiel.janulgue@gmail.com>,
-	Alexander Potapenko <glider@google.com>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Christoph Hellwig <hch@lst.de>, Danilo Krummrich <dakr@kernel.org>,
-	iommu@lists.linux.dev, Jason Wang <jasowang@redhat.com>,
-	Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
-	Jonathan Corbet <corbet@lwn.net>, Juergen Gross <jgross@suse.com>,
-	kasan-dev@googlegroups.com, Keith Busch <kbusch@kernel.org>,
-	linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	linux-nvme@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-	linux-trace-kernel@vger.kernel.org,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>, rust-for-linux@vger.kernel.org,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	virtualization@lists.linux.dev, Will Deacon <will@kernel.org>,
-	xen-devel@lists.xenproject.org
-Subject: Re: [PATCH v4 00/16] dma-mapping: migrate to physical address-based
- API
-Message-ID: <20250901222302.GA186519@nvidia.com>
-References: <cover.1755624249.git.leon@kernel.org>
- <CGME20250828115738eucas1p24f3c17326b318c95a5569a2c9651ff92@eucas1p2.samsung.com>
- <20250828115729.GA10073@unreal>
- <26bd901a-0812-492d-9736-4a7bb2e6d6b4@samsung.com>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <26bd901a-0812-492d-9736-4a7bb2e6d6b4@samsung.com>
-X-ClientProxiedBy: YT2PR01CA0016.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:38::21) To CH3PR12MB8659.namprd12.prod.outlook.com
- (2603:10b6:610:17c::13)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DPT/P+du"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68D9FC4CEF0;
+	Tue,  2 Sep 2025 02:21:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756779710;
+	bh=QxyQmaWGUfjo1CyzoIwXOiE5z6bTP5jsQPqeFuE7b+k=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=DPT/P+duW8tcFp+i7LVO2MJ6JAgZK7s5xGccAbSwin16/mMzRG2kZcaRNwrH+nB89
+	 XWE5gL+2wqzMFI3FPOHR/EL8uzkkFvX7ZNiBeMbgzTESOjZIZFMmOTKIwyiFcH8SJm
+	 glwMmdyqo2nO8hGh5L4xl4HTRZsggoNT7paQA1/B9fTlP2p9W65h3S2cIWND2Iw8yz
+	 96X7zNlXdHqMZzw+M9dumiKGVRkZnxWjObb94psK9Y9dxVpZ3VX+I4qotLNT9xwUlZ
+	 ijmOvQFg5jsZl2ne95aU0Nr4kgDNp9Tl5jt0PwsarcgQjQs+JlDlwfP+GSu0zR+OpC
+	 FqMK/8uO7AWfw==
+Date: Tue, 2 Sep 2025 11:21:47 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Ryan Chung <seokwoo.chung130@gmail.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-trace-kernel@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] trace_fprobe.c: TODO: handle filter, nofilter or
+ symbol list
+Message-Id: <20250902112147.165c8030837b6b21cf402fd3@kernel.org>
+In-Reply-To: <20250829102050.232291-1-seokwoo.chung130@gmail.com>
+References: <20250829102050.232291-1-seokwoo.chung130@gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|IA1PR12MB7495:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2712e776-387d-4145-20bb-08dde9a61dfa
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?V0E1b1lMQkNvUlZFcUJCUEU4NWNRZTNUNnMwT3J1MjJOc0N0MTRoUWdhTkd1?=
- =?utf-8?B?VW9GZ1FISlp2ekpIeGRia1RkR1F5VThDUituWGpVWVVHOWlNZzB3bExoZVNn?=
- =?utf-8?B?SDJGRmcwYmlDTVcyQ1NkQ2lvd0lwVWIwcDlYYURNVFFBdHZMUHBvMURRR1Ir?=
- =?utf-8?B?OGc3UG42ZTRlMktlN1BCVUR4NHNCRDA2T2V2dUJBN1liUlRjTGxIT0hZMkhN?=
- =?utf-8?B?YmJaV0dTZ3VYS292S1VMb2hJSWNhYzRmWDJOZnFxaktvTWplVGRDUjQ0RlJ3?=
- =?utf-8?B?U2VVY0pxaHlmallkNkd2ZElUd2l3L0FDelhSeHQyTlNTd2hwS2xvMDF0RFlI?=
- =?utf-8?B?R2xVTTJ1NUxZTWgvSnNvTGp0Y0ovQ21LcTkvaFV5UmpTUzlTUDhEV0pibXhU?=
- =?utf-8?B?ejlXZkN3Z3NtRDR2bUx6dUVVL3BtM0ZyN3BDbGMrVHJpaS9BM0p6T2Uyclpw?=
- =?utf-8?B?eE1ESmxUNkFWSHkwZkFLdDhDaHloMUwvMFM0ZmtNaWtIaGhZRDdIZEZVcVYw?=
- =?utf-8?B?TC85ckZTa1M1bWtVQ3F1azFyeDFWb3lyL2crMEtVcVcrZjczTGRxdU1pY3lH?=
- =?utf-8?B?bXhlT2Rla2VpdDdIQUV4b21uQ3FGTnA0dU9ZU0lmSVo2TEJPcG1LaDVBTG1o?=
- =?utf-8?B?cW9INzArVVJlZUNUUXY0QytHN1J4M3VWRUpRZHlMYTFyZTA1RHdWVlo4dktW?=
- =?utf-8?B?dHNPdnl4dHovK0EyOHBneUN4aC9WdWhyamZodytPNTBzcHg2bU9nOCtpN2JG?=
- =?utf-8?B?TTB2NkRnT1FKWWo0bkNDdXZBY2dMVzVocHBXTnp6TXRGdDk5UlJSNWZsSWUw?=
- =?utf-8?B?YmRBRjc4RTNKdXdkTzc2MmtyaWt1VEphMTR2c3Q3UzBJOEhUYzBGQXdvYlpL?=
- =?utf-8?B?OW9VbDQ5dDJERTZRMW9Ib0R2bnduMFVSMVBBZ083YzBSSzNxM1hyU1RDTmVX?=
- =?utf-8?B?UHJEMnNsdC8vSmJDWUwvaW1ScXBGQUpnMGJCb1lIWVJSNW43Qm9rVTVCTVRD?=
- =?utf-8?B?aTIyMUUyUm9KelBESWc2UUJ4YWNEc2Z5ODBsRjVOKzM0SEQrMVF3QXV4SnQ5?=
- =?utf-8?B?T0t0dC94bGxHaUo4eml1UFY5bmtWQjNpdEZXZ1BsNE1nZmFyTlQwU1p4enZC?=
- =?utf-8?B?amFHa2pLM2c5Tk9wUk5ObUFFRnN3SjhIVUFEclhzN20wdG1tbmxYYjE1NnNU?=
- =?utf-8?B?dFM3dUhIWVZEN3E4ODFxS1lRUjVHSG1VNG9qMm5hRFRsOEYxb2F1MkxKdmdP?=
- =?utf-8?B?ajFQTU1VUVNrL2Rrb21mTkg2bXdSZThLUHJOSEhKSHh2SWlwM0t4RVl5ZXpo?=
- =?utf-8?B?bW1DNk9KOHNBMkcrWkwvM1JUZ1FPU2d5c0JHZmNvL1hrc1NsalRHUlExZTho?=
- =?utf-8?B?RFdDSDM0NXo5cW1kTlk4RDVGaWc3YUhTZTdMWHRJbXJ3Y3FwRjNkQUkxRW1i?=
- =?utf-8?B?VVRBUm4rQ3QydHNxMlRFaU9KM0h4N3VCMVE3dWlVay94V0o4ZzQrVDdoaU9C?=
- =?utf-8?B?d0hLZ0JWWDE2UXY3THY3T05hMFVkNjFvMG9GL3M4UytyaThINkRXTXhNVlhV?=
- =?utf-8?B?WTQyMnNqZk1TT1loRXdYSWV3ZjhsMURMRllTQVZvZFZ6MHhicyt3S3NTVm9y?=
- =?utf-8?B?NkkvVEttZU1nSUtmMDNhcE5UTjYxTXpGYVVuby9HQkY1MXQxVDdDdi9ZMzh6?=
- =?utf-8?B?dWtsc2dGTkJiWWNnVGVlbGw1V1VHb25CWmcvQmFjTTJvN3lHdlFsc1J0cFp4?=
- =?utf-8?B?b1BOMmFtWjhYVTZ6NjdleTlFVEFvSUNiYnc5MDNBUURpQk1VcFoyV01tSW41?=
- =?utf-8?B?WVg4N0kvUmxnVFhuZkZJZE1NRnVpQWowVW03bWRIZ1dSQ2FuTXdwVXEzMkRZ?=
- =?utf-8?B?V1IxblJ1L3A2N0Z4N2t3VGVaT1JNR0IzbHZVdlBtUk5qVFpSZnZGY1NsdXBN?=
- =?utf-8?Q?9gT21r84I2k=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?RkpjdmdHb1RMcitLaVM5OG5FZUZkYlU1WndDVjBnR1RrdEwxT3Jvdk8rVklj?=
- =?utf-8?B?d3NEVm1qSzBERU1wdVptRFhTUGZRTG43SDVvSHRCL25yMnZaSUMvVE1sUDJE?=
- =?utf-8?B?aldBMXRhTnNYN0c3NUVxK1M4dGFNNjQ2VFBnMmV0MnJzSCt0YTJGWlhLM0Fy?=
- =?utf-8?B?WjBjVVFiMDFmL2JLby8yWk9KYkk2REh1TFVQVGtxSUtFbytRY0xhMWt0VWxG?=
- =?utf-8?B?VW5GcEozb25ZaHUxWGQ5N3RTa3g4L1ZQeUQ2SVY2T2VmdHFnV29pa2lNc0h6?=
- =?utf-8?B?YVgwZTlyRDgyNmlxY3g4V2FyaVNsKzUzTzRlL0R2TFUyUzljZWx2SmY0VEpw?=
- =?utf-8?B?WFUxeTBrczh5MytEUUtVbU5XT0pOZ2U5T3NMR0xxUW5BNTd2MjNEVEZKVTJ1?=
- =?utf-8?B?Z1BHckFwWlJxZUVKckNsSUxFdGlScEtxM2ZBMkRHcHFtaGtkeGc0TEFRbEdt?=
- =?utf-8?B?ZnlXd1BzdEdZYUZxVFJXRmlFVks5MDlnNUYyVk0raHJ4NUpWbnozNG14RW1B?=
- =?utf-8?B?YzVIVEdERkUreVZaZlhUMTlDbDdBVzRRb3NCM0hiZGg0cXhuVGkzNm1oc1VU?=
- =?utf-8?B?TG4vSXZON2F5ZGUzUk1KMFM3SlRtQ0hyQkJlSmFFM0lnRGlnaVZEbC9EL2V2?=
- =?utf-8?B?VlhYdDZWL082a3pidkNQeEpGZEUwc2NWTStKQlByZnNLV2p0bGpmR2VVM2ho?=
- =?utf-8?B?ZFU1V3NrbGNaWlgyRFUvYTlKaUV3Kys0Qk91N1AxemVMemVhOURUYTRkQmln?=
- =?utf-8?B?MnNCSSsydW9KWFhQS0d1eVdEUTlITGVTVzNFZXlyd3BxeTRrZkg4Sk03bEw2?=
- =?utf-8?B?TWU3TE5mRVNDRU9VMmQ3V09yNlN6cWFrMjNOTjN5bXIwTVQ0RWJKU0tXdUFH?=
- =?utf-8?B?b0t3MkJoYkc5ZlR2c3R6YjRaU2RWVFBYdnFnQ1kraU9tc0ZXNlExa2xMeVZU?=
- =?utf-8?B?RFEwQWJtbGZGRHR0NXlSYXZhV0E0THk3WGRERUU4a3gzYjlTMnJlUWZ6eDM4?=
- =?utf-8?B?d0M3Ti9NNy83S1lCWGFqT0luTkF2VzF0ZUo5OW1sWUwzRXVpZzd4cnJhNmx6?=
- =?utf-8?B?K0dnLzhOZVdqMTBjVjgrL3pUTlByL3Z4WitmbkRSaEFwZGp1VVdJUDhsQWY5?=
- =?utf-8?B?akZpMlh2aDVYSUhwVXNpZWVjTnJqVXZ4T0prNDdQL2JSN200dlZ6NlBocnow?=
- =?utf-8?B?clorWUFjejM3WnpURWFkU1k2dDlSZUZ3RHJCZm1ZU2s0VmxKVDVvVlNNc2Ro?=
- =?utf-8?B?NW10T3ZYdi9LRXQ0dVdBRmVURHdaRlMzaUJzRm1SLzdzU1NVZ0QrcGU3UEVT?=
- =?utf-8?B?ZklXY1l3cFE3M09uT2w4bjkzcHpMcXZHT3k3bjhTcmpuT3dnQ2RMRmdDMmRQ?=
- =?utf-8?B?UzBDMXpoVlpwb3RVVVNqY2FUbkttYmplV01RRlQ5K1Ruc3p3QmFmSytaWnJM?=
- =?utf-8?B?RGJiVWQ3eWp5RTVFYXhmQWUrYzJlbmVjbzA2d1NCKzN1eS9LYlBLbWtnNEd0?=
- =?utf-8?B?RVdQMHVFdWZwTnVFcnFMQkpneXhocmw3d0ZMalo2dHMwQmhnY0VwNjI5Mkta?=
- =?utf-8?B?ZUNDQmhtZlg5eUpyVFhPM2s1NFZhbGVkbU9DZ1lxL1RCbGR6Q201WmsyMXE4?=
- =?utf-8?B?T2laZ1Bqb1NDNmNjU1dFVXZQb0xQOXd5Q1VwbWZQeXJhSkxmamRJa0MvTDQ0?=
- =?utf-8?B?bU00WXVZWlNYOTd5SlJBWUNydkpNVVhIUkVabkI3OHI1VWV1QlowOC9TdVZY?=
- =?utf-8?B?cm0vNlViOVp1V2Nxc2czaWZjbW1VVDBURVlCbHc5L3JtN2gycDNGNkNUNis2?=
- =?utf-8?B?ZkdyWnN6UU9rNzJ5bFFLZFJreTZkanlIUkRibk1MMEk2L0VXcFhLcGp3TW1T?=
- =?utf-8?B?dnlQUE9RRmFheVRaUitFbTZQaG1oenBLSXg4WFFiZXFJbHV5d3RMYUN5azZI?=
- =?utf-8?B?ZmlmMHR4YytsKzlaeUJ1dXpjdG9EYkJka2tMd0pMOXk1RGRIS2JJaStRdEk0?=
- =?utf-8?B?a0NkRTlmcVY4RloxUUI3Q21LU01Md2MxUzhqTUZ6TjdiVisrWUR3aFpKMjZQ?=
- =?utf-8?B?Y3lDWVlqZC9iUzB3dmtEWjJOK0NldjA5SWxxejlxZnNUTUZBZW56OVBOVW1r?=
- =?utf-8?Q?mYgQ=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2712e776-387d-4145-20bb-08dde9a61dfa
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Sep 2025 22:23:03.5273
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: w4znFzS8ZQTnhjINhC0mXrOLe3RICQMXCayvRTPzL4tTrPL8qJPNdtjBo+rtk6D0
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB7495
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Sep 01, 2025 at 11:47:59PM +0200, Marek Szyprowski wrote:
-> I would like to give those patches a try in linux-next, but in meantime 
-> I tested it on my test farm and found a regression in dma_map_resource() 
-> handling. Namely the dma_map_resource() is no longer possible with size 
-> not aligned to kmalloc()'ed buffer, as dma_direct_map_phys() calls 
-> dma_kmalloc_needs_bounce(),
+Hi Ryan,
 
-Hmm, it's this bit:
+Thanks for update.
 
-	capable = dma_capable(dev, dma_addr, size, !(attrs & DMA_ATTR_MMIO));
-	if (unlikely(!capable) || dma_kmalloc_needs_bounce(dev, size, dir)) {
-		if (is_swiotlb_active(dev) && !(attrs & DMA_ATTR_MMIO))
-			return swiotlb_map(dev, phys, size, dir, attrs);
+On Fri, 29 Aug 2025 19:20:50 +0900
+Ryan Chung <seokwoo.chung130@gmail.com> wrote:
 
-		goto err_overflow;
-	}
+> This v2 addresses the TODO in trace_fprobe to handle comma-separated
+> symbol lists and the '!' prefix. Tokens starting with '!' are collected
+> as "nofilter", and the others as "filter", then passed to
+> register_fprobe() accordingly. Empty tokens are rejected and errors are
+> reported with trace_probe_log_err().
 
-We shouldn't be checking dma_kmalloc_needs_bounce() on mmio as there
-is no cache flushing so the "dma safe alignment" for non-coherent DMA
-does not apply.
+OK, can you describe how it changes the syntax. You may find more things
+to write it down.
 
-Like you say looks good to me, and more of the surrouding code can be
-pulled in too, no sense in repeating the boolean logic:
+For example, fprobe is not only a function entry, but also it supports
+function return. How it is specified? Current "%return" suffix is introduced
+for single symbol (function), like schedule%return. If we introduce a list
+of symbols and filters, it looks more complicated.
 
-	if (attrs & DMA_ATTR_MMIO) {
-		dma_addr = phys;
-		if (unlikely(!dma_capable(dev, dma_addr, size, false)))
-			goto err_overflow;
-	} else {
-		dma_addr = phys_to_dma(dev, phys);
-		if (unlikely(!dma_capable(dev, dma_addr, size, true)) ||
-		    dma_kmalloc_needs_bounce(dev, size, dir)) {
-			if (is_swiotlb_active(dev))
-				return swiotlb_map(dev, phys, size, dir, attrs);
+For example, "!funcAB,funcC,funcA*%return" seems like the exit of funcA*,
+the entry of funcC, but not covers funcAB. It is naturally misleading
+users. We have to check "funcA*%return,!funcAB,funcC" pattern.
 
-			goto err_overflow;
-		}
-		if (!dev_is_dma_coherent(dev) &&
-		    !(attrs & DMA_ATTR_SKIP_CPU_SYNC))
-			arch_sync_dma_for_device(phys, size, dir);
-	}
+Thus, I think we should use another suffix, like ":exit" (I think the colon
+does strongly separate than comma, what do you think?), or just
+prohibit to use "%return" but user needs to specify "$retval" in fetcharg
+to specify it is the fprobe on function exit. (this maybe more natural)
 
-Jason
+The reason why I talked about how to specify the exit point of a function
+so far, is because the variables that can be accessed at the entrance
+and exit are different.
+
+Also, fprobe supports event-name autogeneration from the symbol name,
+e.g. 'symbol__entry' or 'symbol__exit'. Recently I found the symbol
+already supports wildcards, so sanitize it from the event name [1]
+
+[1] https://lore.kernel.org/all/175535345114.282990.12294108192847938710.stgit@devnote2/
+
+To use this list-style filters, we may need to reject if there is no
+event name. Of cause we can generate event-name from the symbol list
+but you need to sanitize non alphabet-number characters.
+
+Ah, here is another one, symbol is used for ctx->funcname, and this is
+used for querying BTF. But obviously BTF context is unusable for this
+case. So we should set the ctx->funcname = NULL with listed filter.
+
+> 
+> Questions for maintainers (to confirm my understanding):
+>   * Parsing location: Masami suggested doing the parsing in the parse
+>     stage (e.g., via parse_symbol_and_return()). v2 keeps the logic in
+>     __register_trace_fprobe(), but I can move the call into the parsing
+>     path in v3 if that is the preferred place. Is that correct?
+
+Most of above processes have been done in parse_symbol_and_return(),
+thus the parsing it should be done around there.
+
+>   * Documentation: I plan to update the user-facing docs for fprobe
+>     syntax. Is Documentation/trace/ the right place (e.g., 
+>     Documentation/trace/fprobetrace.rst)?
+
+Yes, please explain it with examples.
+
+Also, can you add a testcase (in a sparate patch) for this syntax?)
+
+Thank you,
+
+> 
+> Link: https://lore.kernel.org/linux-trace-kernel/20250812162101.5981-1-seokwoo.chung130@gmail.com/
+> Signed-off-by: Ryan Chung <seokwoo.chung130@gmail.com>
+
+> ---
+> 
+> Changes in v2:
+>   * Classify '!' tokens as nofilter, others as filter; pass both to
+>     register_fprobe().
+>   * Reject empty tokens; log errors with trace_probe_log_*().
+>   * Use __free(kfree) for temporary buffers.
+>   * Keep subject and style per "Submitting patches" (tabs, wrapping).
+>   * No manual dedup (leave to ftrace).
+> 
+>  kernel/trace/trace_fprobe.c | 48 +++++++++++++++++++++++++++++++++++--
+>  1 file changed, 46 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/trace/trace_fprobe.c b/kernel/trace/trace_fprobe.c
+> index b36ade43d4b3..d731d9754a39 100644
+> --- a/kernel/trace/trace_fprobe.c
+> +++ b/kernel/trace/trace_fprobe.c
+> @@ -815,6 +815,11 @@ static int trace_fprobe_verify_target(struct trace_fprobe *tf)
+>  static int __register_trace_fprobe(struct trace_fprobe *tf)
+
+This is not a good place to add anymore, because this change turned out
+not to meet the expected prerequisites. (when I commented TODO here,
+I didn't expected too.)
+
+Anyway, this is a good opportunity to review this TODO deeper.
+
+Thank you,
+
+>  {
+>  	int i, ret;
+> +	const char *p, *q;
+> +	size_t spec_len, flen = 0, nflen = 0, tlen;
+> +	bool have_f = false, have_nf = false;
+> +	char *filter __free(kfree) = NULL;
+> +	char *nofilter __free(kfree) = NULL;
+>  
+>  	/* Should we need new LOCKDOWN flag for fprobe? */
+>  	ret = security_locked_down(LOCKDOWN_KPROBES);
+> @@ -835,8 +840,47 @@ static int __register_trace_fprobe(struct trace_fprobe *tf)
+>  	if (trace_fprobe_is_tracepoint(tf))
+>  		return __regsiter_tracepoint_fprobe(tf);
+>  
+> -	/* TODO: handle filter, nofilter or symbol list */
+> -	return register_fprobe(&tf->fp, tf->symbol, NULL);
+> +	spec_len = strlen(tf->symbol);
+> +	filter = kzalloc(spec_len + 1, GFP_KERNEL);
+> +	nofilter = kzalloc(spec_len + 1, GFP_KERNEL);
+> +	if (!filter || !nofilter)
+> +		return -ENOMEM;
+> +
+> +	p = tf->symbol;
+> +	for (p = tf->symbol; p; p = q ? q + 1 : NULL) {
+> +		q = strchr(p, ',');
+> +		tlen = q ? (size_t)(q-p) : strlen(p);
+> +
+> +		/* reject empty token */
+> +		if (!tlen) {
+> +			trace_probe_log_set_index(1);
+> +			trace_probe_log_err(0, BAD_TP_NAME);
+> +			return -EINVAL;
+> +		}
+> +
+> +		if (*p == '!') {
+> +			if (tlen == 1) {
+> +				trace_probe_log_set_index(1);
+> +				trace_probe_log_err(0, BAD_TP_NAME);
+> +				return -EINVAL;
+> +			}
+> +			if (have_nf)
+> +				nofilter[nflen++] = ',';
+> +			memcpy(nofilter + nflen, p + 1, tlen - 1);
+> +			nflen += tlen - 1;
+> +			have_nf = true;
+> +		} else {
+> +			if (have_f)
+> +				filter[flen++] = ',';
+> +			memcpy(filter + flen, p, tlen);
+> +			flen += tlen;
+> +			have_f = true;
+> +		}
+> +	}
+> +
+> +	return register_fprobe(&tf->fp,
+> +			have_f ? filter : NULL,
+> +			have_nf ? nofilter : NULL);
+>  }
+>  
+>  /* Internal unregister function - just handle fprobe and flags */
+> -- 
+> 2.43.0
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
