@@ -1,46 +1,56 @@
-Received: from abb.hmeau.com (abb.hmeau.com [180.181.231.80])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 131CB242D98;
-	Tue,  2 Sep 2025 09:17:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=180.181.231.80
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C4BB2EA464;
+	Tue,  2 Sep 2025 09:28:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756804642; cv=none; b=qCVhHrhfIF2A5hHXoTveX3ZrvR/giB3HZYXraairoz4rdj+vK9a7rYegfhwjygqwVkvHkcXTD6N2haAM886xdy34dLoOC2OF2NkmVqujlmiNMcKORa2kZj9oOnzJ5QMxerVzliJ4EDmaneRYUJ+jJO+7AeiQvrwsVT13KG5/2z8=
+	t=1756805334; cv=none; b=Ckh2s6ELMs82n8fdAjkYBDPbl3gYhR7NudXJQJt2L1bA/US6Xi6N9IewSYW7ONqSyvP6fLhW9raubsk2zvHvwlIRRcDePxjZqLpoKrNN/hetEAFOT3lgp4sA9m3hMhkb7zvbT5hqhv2++cakvI6Vj2b2WhUZDSesKa1uW+qf484=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756804642; c=relaxed/simple;
-	bh=u/gpzFc54E7Qkui3Rf+FQee8DH7Jl2fl0v2tnQNBejs=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=mI+bIWXjt7zO6tA2VqT13z3xa5cXNCQOOyNQu+qIiWZdgNo+/PcQKx45e8LMjPZCzGcpzzO7JoT7l+UH860qPJ4gDHNCoK172+3+Y1si6eFLzWsYupn+EiL/Lwy7bpbFIPHwTKH4QBlyy1VCYVBCvhiIBtFWjeBrmm2737UgxVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=kWNUjHso; arc=none smtp.client-ip=180.181.231.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1756805334; c=relaxed/simple;
+	bh=UgZ7SM6IjKlYVPoNsvYYsdE4WyHhu1HRfKxVLXMBlc0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HoRa0PJQNYaw6rb93UERRCmW4h9gPR30DSWOi/Po9c9s64ZXbDdNBG5+zDWle8EeqXc497FRByPFKDjTNl4tQK2H3DS7WC8R7Ya6n8lagQx6KGaytBtRTAoadIJucq/hA3VAQWfIzA2p2TPBDTiVVCGOv5I/9+DID5m+hqKP2Lw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cy7EZqCl; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DsC7PwIa; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="kWNUjHso"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:Message-ID:Subject:Cc:To:
-	From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:References:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=2Dmf2HsAjLA9aMcC0oK5XbhwP0WeOH0TUSdhNSFuoWg=; b=kWNUjHso6SRKfHUaQV0X1yfbm0
-	fdGdpbbUrng21bwO4DHcKE2NjzYFD0RDzw4CYke6Y7od3AKYiCJthROr7U4SJkJm8KO7SPw3QfAwy
-	1WRWtJ8MiKS94qm0OZIF7kF4sVAH7tfiEAITMJ7SU1PuVQ2rDsTJNdicyvlUxnGyyAWSl6r1arbPS
-	n/bbJQiCpmCWbrH42wGlDI+OuKy3n/izvdnSXHmhdoPVNo7Vj3h7oh4H0ZHbp23BSnD02t1ONd/zY
-	URPWEI8rmJdSoqwskcX7uV2VMMCOTqC7rqtbXrSLdlvTzyq7VsZuD02gFcyJyazBEZNR/OYHrGjgM
-	tPICuk9g==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1utMt1-001wj9-1v;
-	Tue, 02 Sep 2025 17:17:05 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Tue, 02 Sep 2025 17:17:03 +0800
-Date: Tue, 2 Sep 2025 17:17:03 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Menglong Dong <dongml2@chinatelecom.cn>
-Cc: mhiramat@kernel.org, rostedt@goodmis.org,
-	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, oliver.sang@intel.com
-Subject: Re: [PATCH] tracing: fprobe: fix suspicious rcu usage in fprobe_entry
-Message-ID: <aLa2D4It1Zxc7bs0@gondor.apana.org.au>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cy7EZqCl";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DsC7PwIa"
+Date: Tue, 2 Sep 2025 11:28:48 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1756805330;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XPk40DGpwHSU4m21RqW9qfSDAsFyA91HOZ7rs5aCHjo=;
+	b=cy7EZqClMwK9aE8WnitenUxqgWV3QK0Ztp2YW8GdRzRvNAtg6ZKMqY98CFLq0putMet5L1
+	9VvamaHhkwj+9u8w1sHOPgOMxRIUQJ8r+FU2iv5m6UHVr+7odOlWb6OjMlcxH08iSSh3Ol
+	AdazapmuI3L5bak+vfGgbzbivozWjHr0E4Rhk55mavtt+BoS8D4QwbOa0oyiRyiK+ywpu5
+	K439ARtNdDEaYI18hQof1RMZUWTqmhNIjOwPzNLnYu3Y2ENMLELoF1hj8CNhtQqAo42HMQ
+	Nse7wK3f55Xa/0sdiJibq42bKGkxJOV5GXMOg5tMaKqfXzmGxD7JS3EwXJtjpA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1756805330;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XPk40DGpwHSU4m21RqW9qfSDAsFyA91HOZ7rs5aCHjo=;
+	b=DsC7PwIaQDI9EX65Psc6lC3nN8sAa0icSCJKhFFaoPi0cBSHaUWLHoYB/wb6hoDlvpfhRX
+	HUaICHqA7/sHzxAg==
+From: Nam Cao <namcao@linutronix.de>
+To: Gabriele Monaco <gmonaco@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	Tomas Glozar <tglozar@redhat.com>, Juri Lelli <jlelli@redhat.com>,
+	Clark Williams <williams@redhat.com>,
+	John Kacur <jkacur@redhat.com>
+Subject: Re: [RFC PATCH 13/17] rv: Convert the opid monitor to a hybrid
+ automaton
+Message-ID: <20250902092848.tscxe_nR@linutronix.de>
+References: <20250814150809.140739-1-gmonaco@redhat.com>
+ <20250814150809.140739-14-gmonaco@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -49,33 +59,24 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250829021436.19982-1-dongml2@chinatelecom.cn>
-X-Newsgroups: apana.lists.os.linux.kernel
+In-Reply-To: <20250814150809.140739-14-gmonaco@redhat.com>
 
-Menglong Dong <dongml2@chinatelecom.cn> wrote:
->
-> diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-> index fb127fa95f21..fece0f849c1c 100644
-> --- a/kernel/trace/fprobe.c
-> +++ b/kernel/trace/fprobe.c
-> @@ -269,7 +269,9 @@ static int fprobe_entry(struct ftrace_graph_ent *trace, struct fgraph_ops *gops,
->        if (WARN_ON_ONCE(!fregs))
->                return 0;
-> 
-> +       rcu_read_lock();
->        head = rhltable_lookup(&fprobe_ip_table, &func, fprobe_rht_params);
-> +       rcu_read_unlock();
->        reserved_words = 0;
->        rhl_for_each_entry_rcu(node, pos, head, hlist) {
->                if (node->addr != func)
+On Thu, Aug 14, 2025 at 05:08:05PM +0200, Gabriele Monaco wrote:
+> +doesn't match a task wakeup and might occur with only interrupts disabled.
+> +The interrupt and preemption status are validated by the hybrid automaton
+> +constraints when processing the events::
+> +
+> +   |
+> +   |
+> +   v
+> + #=========#   sched_need_resched;irq_off == 1
+> + H         H   sched_waking;irq_off == 1 && preempt_off == 1
+> + H   any   H ------------------------------------------------+
+> + H         H                                                 |
+> + H         H <-----------------------------------------------+
+> + #=========#
 
-Actually this isn't quite right.  I know that it is a false-positive
-so that it's actually safe, but if you're going to mark it with
-rcu_read_lock, it should cover both the lookup as well as the
-dereference which happens in the loop rhl_for_each_entry_rcu.
+Yeah, I like this much better. The previous monitor looks like it is easily
+broken by any kernel refactoring.
 
-Thanks,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Nam
