@@ -1,173 +1,223 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50C7B1C1F0D;
-	Tue,  2 Sep 2025 03:47:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F2E3469D;
+	Tue,  2 Sep 2025 06:59:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756784866; cv=none; b=kDQSU11l893Tl4jyS0yw2xzOajY99H89S3phTe9X6EXziUhER0YZkZ9NUAHyi/QsstmRRVXGNU4Hb596Z35Hl9mr4h8nHheIPrOGut1+v5bAieFIcsA1FNP9Nw2i+3H+5bNMS+6bwOe3kz1kLw5u/dAl8APadEv5yZG+Cgz5xgs=
+	t=1756796352; cv=none; b=fItQRSED7eAa34vKHU8otx4QcIwU/OWKgFE9AEI5AROTTre0OVFT9ETVoBeveHPwOlS9D9qC/9/L0dSTns9xIOOuYvLaNGO2TaZeUvIcrwdyobjM6j5AdpucY/qcWCOP4PROC7UrlcORzi3ly9gM4P2C59eIoDzNPqvr66mjykw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756784866; c=relaxed/simple;
-	bh=L4bvL7NVFqZCfjF05fgpoSFQ/PhLhaAoIak7Jz4dAeI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MvBCgHK67/D0KQqbJdGMYdEZOPgseO1ija06NfS02eJ6YX4Pb1MIbkxTri6V3r1sxw9t/0pmV4mk6XedWG59+9HOUFwfKGPSbhfOU9aXtjEFiHaC7KyVvneLC54z/Z+1LNXW8ZxylL/WDgGFlJa00q6ipldfzVjktM0Fd9+D/sY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4cGBX570X6zKHN7m;
-	Tue,  2 Sep 2025 11:47:33 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id CC8A51A1195;
-	Tue,  2 Sep 2025 11:47:33 +0800 (CST)
-Received: from [10.67.108.244] (unknown [10.67.108.244])
-	by APP4 (Coremail) with SMTP id gCh0CgCn8IzUaLZou5poBA--.16810S3;
-	Tue, 02 Sep 2025 11:47:33 +0800 (CST)
-Message-ID: <cc6eb973-d82b-4afc-83fb-a2c28cc79d36@huaweicloud.com>
-Date: Tue, 2 Sep 2025 11:47:32 +0800
+	s=arc-20240116; t=1756796352; c=relaxed/simple;
+	bh=aNFNdb9BghjJA9Tzkpx25Ji4dZPWsARMv0J3tXAx2fk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=X1ThdC5mzzhVVeu1Ei/NaBd1059ue73pRVulVTQPargfm1/sEe/lsVBCow1NKD6GZ3vFA29+efJm/OPwVOoBSugNYHNmPSorNMYOt+JR6PCjTB31I12cyWEuKDMWF/kACoihVeoU4+7ZeFj3lJMtoTe1ZMrjXtvxC6zSpqmw6ws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ql+4h5O6; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ql+4h5O6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21A12C4CEED;
+	Tue,  2 Sep 2025 06:59:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756796351;
+	bh=aNFNdb9BghjJA9Tzkpx25Ji4dZPWsARMv0J3tXAx2fk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ql+4h5O6gxhEMZse4++nLrPH2BN1cdv/hzeAlXeyU+iY2hiXpbDRuw08QVfL2ZNc8
+	 LHcvMVnarVT5dA58QLAm8Gc/vQ3jm9hsFZiMzbIqUlsE6dVWPqInp7dgk1qt/yLA39
+	 asqAiHHPiYygFxqZfuhm9BjDUdk9nZETD4PuN82GVjE13FUgZtKTxHsbXAE+SmCoyD
+	 k8hSWu1oAg4JssnfYZFYjOGUK+zFHniO6AUTmx4b9XwKtbegL/ShY+WlA/LDOW4efb
+	 uxYZgY3WcVw3lQWW8GTAvRnWbCkDG4XyYKNSzGHAN8IeMy8ed8KJtpqwLDI4GCE4ld
+	 StPPjpiK2rWIg==
+Date: Mon, 1 Sep 2025 23:59:09 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Steven Rostedt <rostedt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	bpf@vger.kernel.org, x86@kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Indu Bhagat <indu.bhagat@oracle.com>,
+	"Jose E. Marchesi" <jemarch@gnu.org>,
+	Beau Belgrave <beaub@linux.microsoft.com>,
+	Jens Remus <jremus@linux.ibm.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jens Axboe <axboe@kernel.dk>, Florian Weimer <fweimer@redhat.com>,
+	Sam James <sam@gentoo.org>
+Subject: Re: [PATCH v15 7/8] perf script: Display
+ PERF_RECORD_CALLCHAIN_DEFERRED
+Message-ID: <aLaVvT6v8ZyinYFx@z2>
+References: <20250825180638.877627656@kernel.org>
+ <20250825180802.557798597@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] tracing: Fix tracing_marker may trigger page fault during
- preempt_disable
-Content-Language: en-US
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
- Steven Rostedt <rostedt@goodmis.org>
-Cc: mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Catalin Marinas
- <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>
-References: <20250819105152.2766363-1-luogengkun@huaweicloud.com>
- <20250819135008.5f1ba00e@gandalf.local.home>
- <436e4fa7-f8c7-4c23-a28a-4e5eebe2f854@huaweicloud.com>
- <20250829082604.1e3fd06e@gandalf.local.home>
- <20250902005645.8c6436b535731a4917745c5d@kernel.org>
-From: Luo Gengkun <luogengkun@huaweicloud.com>
-In-Reply-To: <20250902005645.8c6436b535731a4917745c5d@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:gCh0CgCn8IzUaLZou5poBA--.16810S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxurW8tF17XF1xCr4UJry3XFb_yoWrGr4xpr
-	yfKa9rKF45X34jywsFvw10qryUtr4UXry8Wr1kGF18W34q9rn8XFWxKw48uFWUWr9rJw1S
-	yw4UXr9xWr15Za7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUymb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
-	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vI
-	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
-	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0
-	cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8V
-	AvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E
-	14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07UAwIDUUUUU=
-X-CM-SenderInfo: 5oxrwvpqjn3046kxt4xhlfz01xgou0bp/
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250825180802.557798597@kernel.org>
+
+Hi Steven,
+
+On Mon, Aug 25, 2025 at 02:06:45PM -0400, Steven Rostedt wrote:
+> From: Namhyung Kim <namhyung@kernel.org>
+> 
+> Handle the deferred callchains in the script output.
+> 
+>   $ perf script
+>   perf     801 [000]    18.031793:          1 cycles:P:
+>           ffffffff91a14c36 __intel_pmu_enable_all.isra.0+0x56 ([kernel.kallsyms])
+>           ffffffff91d373e9 perf_ctx_enable+0x39 ([kernel.kallsyms])
+>           ffffffff91d36af7 event_function+0xd7 ([kernel.kallsyms])
+>           ffffffff91d34222 remote_function+0x42 ([kernel.kallsyms])
+>           ffffffff91c1ebe1 generic_exec_single+0x61 ([kernel.kallsyms])
+>           ffffffff91c1edac smp_call_function_single+0xec ([kernel.kallsyms])
+>           ffffffff91d37a9d event_function_call+0x10d ([kernel.kallsyms])
+>           ffffffff91d33557 perf_event_for_each_child+0x37 ([kernel.kallsyms])
+>           ffffffff91d47324 _perf_ioctl+0x204 ([kernel.kallsyms])
+>           ffffffff91d47c43 perf_ioctl+0x33 ([kernel.kallsyms])
+>           ffffffff91e2f216 __x64_sys_ioctl+0x96 ([kernel.kallsyms])
+>           ffffffff9265f1ae do_syscall_64+0x9e ([kernel.kallsyms])
+>           ffffffff92800130 entry_SYSCALL_64+0xb0 ([kernel.kallsyms])
+> 
+>   perf     801 [000]    18.031814: DEFERRED CALLCHAIN
+>               7fb5fc22034b __GI___ioctl+0x3b (/usr/lib/x86_64-linux-gnu/libc.so.6)
+> 
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+>  tools/perf/builtin-script.c | 89 +++++++++++++++++++++++++++++++++++++
+>  1 file changed, 89 insertions(+)
+> 
+> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> index d9fbdcf72f25..d17e0a3d8567 100644
+> --- a/tools/perf/builtin-script.c
+> +++ b/tools/perf/builtin-script.c
+> @@ -2484,6 +2484,93 @@ static int process_sample_event(const struct perf_tool *tool,
+>  	return ret;
+>  }
+>  
+> +static int process_deferred_sample_event(const struct perf_tool *tool,
+> +					 union perf_event *event,
+> +					 struct perf_sample *sample,
+> +					 struct evsel *evsel,
+> +					 struct machine *machine)
+> +{
+> +	struct perf_script *scr = container_of(tool, struct perf_script, tool);
+> +	struct perf_event_attr *attr = &evsel->core.attr;
+> +	struct evsel_script *es = evsel->priv;
+> +	unsigned int type = output_type(attr->type);
+> +	struct addr_location al;
+> +	FILE *fp = es->fp;
+> +	int ret = 0;
+> +
+> +	if (output[type].fields == 0)
+> +		return 0;
+> +
+> +	/* Set thread to NULL to indicate addr_al and al are not initialized */
+> +	addr_location__init(&al);
+> +
+> +	if (perf_time__ranges_skip_sample(scr->ptime_range, scr->range_num,
+> +					  sample->time)) {
+> +		goto out_put;
+> +	}
+> +
+> +	if (debug_mode) {
+> +		if (sample->time < last_timestamp) {
+> +			pr_err("Samples misordered, previous: %" PRIu64
+> +				" this: %" PRIu64 "\n", last_timestamp,
+> +				sample->time);
+> +			nr_unordered++;
+> +		}
+> +		last_timestamp = sample->time;
+> +		goto out_put;
+> +	}
+> +
+> +	if (filter_cpu(sample))
+> +		goto out_put;
+> +
+> +	if (machine__resolve(machine, &al, sample) < 0) {
+> +		pr_err("problem processing %d event, skipping it.\n",
+> +		       event->header.type);
+> +		ret = -1;
+> +		goto out_put;
+> +	}
+> +
+> +	if (al.filtered)
+> +		goto out_put;
+> +
+> +	if (!show_event(sample, evsel, al.thread, &al, NULL))
+> +		goto out_put;
+> +
+> +	if (evswitch__discard(&scr->evswitch, evsel))
+> +		goto out_put;
+> +
+> +	perf_sample__fprintf_start(scr, sample, al.thread, evsel,
+> +				   PERF_RECORD_CALLCHAIN_DEFERRED, fp);
+> +	fprintf(fp, "DEFERRED CALLCHAIN");
+> +
+> +	if (PRINT_FIELD(IP)) {
+> +		struct callchain_cursor *cursor = NULL;
+> +
+> +		if (symbol_conf.use_callchain && sample->callchain) {
+> +			cursor = get_tls_callchain_cursor();
+> +			if (thread__resolve_callchain(al.thread, cursor, evsel,
+> +						      sample, NULL, NULL,
+> +						      scripting_max_stack)) {
+> +				pr_info("cannot resolve deferred callchains\n");
+> +				cursor = NULL;
+> +			}
+> +		}
+> +
+> +		fputc(cursor ? '\n' : ' ', fp);
+> +		sample__fprintf_sym(sample, &al, 0, output[type].print_ip_opts,
+> +				    cursor, symbol_conf.bt_stop_list, fp);
+> +	}
+> +
+> +	fprintf(fp, "\n");
+> +
+> +	if (verbose > 0)
+> +		fflush(fp);
+> +
+> +out_put:
+> +	addr_location__exit(&al);
+> +	return ret;
+> +}
+> +
+>  // Used when scr->per_event_dump is not set
+>  static struct evsel_script es_stdout;
+>  
+> @@ -4080,6 +4167,7 @@ int cmd_script(int argc, const char **argv)
+>  
+>  	perf_tool__init(&script.tool, !unsorted_dump);
+>  	script.tool.sample		 = process_sample_event;
+> +	script.tool.callchain_deferred	 = process_deferred_sample_event;
+>  	script.tool.mmap		 = perf_event__process_mmap;
+>  	script.tool.mmap2		 = perf_event__process_mmap2;
+>  	script.tool.comm		 = perf_event__process_comm;
+> @@ -4106,6 +4194,7 @@ int cmd_script(int argc, const char **argv)
+>  	script.tool.throttle		 = process_throttle_event;
+>  	script.tool.unthrottle		 = process_throttle_event;
+>  	script.tool.ordering_requires_timestamps = true;
+> +	script.tool.merge_deferred_callchains = false;
+
+Oops, this chunk should belong to the next patch which introduces this
+field.  Sorry about that.
+
+Thanks,
+Namhyung
 
 
-On 2025/9/1 23:56, Masami Hiramatsu (Google) wrote:
-> On Fri, 29 Aug 2025 08:26:04 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
->
->> [ Adding arm64 maintainers ]
->>
->> On Fri, 29 Aug 2025 16:29:07 +0800
->> Luo Gengkun <luogengkun@huaweicloud.com> wrote:
->>
->>> On 2025/8/20 1:50, Steven Rostedt wrote:
->>>> On Tue, 19 Aug 2025 10:51:52 +0000
->>>> Luo Gengkun <luogengkun@huaweicloud.com> wrote:
->>>>   
->>>>> Both tracing_mark_write and tracing_mark_raw_write call
->>>>> __copy_from_user_inatomic during preempt_disable. But in some case,
->>>>> __copy_from_user_inatomic may trigger page fault, and will call schedule()
->>>>> subtly. And if a task is migrated to other cpu, the following warning will
->>>> Wait! What?
->>>>
->>>> __copy_from_user_inatomic() is allowed to be called from in atomic context.
->>>> Hence the name it has. How the hell can it sleep? If it does, it's totally
->>>> broken!
->>>>
->>>> Now, I'm not against using nofault() as it is better named, but I want to
->>>> know why you are suggesting this change. Did you actually trigger a bug here?
->>> yes, I trigger this bug in arm64.
->> And I still think this is an arm64 bug.
-> I think it could be.
->
->>>>   
->>>>> be trigger:
->>>>>           if (RB_WARN_ON(cpu_buffer,
->>>>>                          !local_read(&cpu_buffer->committing)))
->>>>>
->>>>> An example can illustrate this issue:
-> You've missed an important part.
->
->>>>> process flow						CPU
->>>>> ---------------------------------------------------------------------
->>>>>
->>>>> tracing_mark_raw_write():				cpu:0
->>>>>      ...
->>>>>      ring_buffer_lock_reserve():				cpu:0
->>>>>         ...
-> 	preempt_disable_notrace(); --> this is unlocked by ring_buffer_unlock_commit()
->
->>>>>         cpu = raw_smp_processor_id()			cpu:0
->>>>>         cpu_buffer = buffer->buffers[cpu]			cpu:0
->>>>>         ...
->>>>>      ...
->>>>>      __copy_from_user_inatomic():				cpu:0
-> So this is called under preempt-disabled.
->
->>>>>         ...
->>>>>         # page fault
->>>>>         do_mem_abort():					cpu:0
->>>> Sounds to me that arm64 __copy_from_user_inatomic() may be broken.
->>>>   
->>>>>            ...
->>>>>            # Call schedule
->>>>>            schedule()					cpu:0
-> If this does not check the preempt flag, it is a problem.
-> Maybe arm64 needs to do fixup and abort instead of do_mem_abort()?
-
-My kernel was built without CONFIG_PREEMPT_COUNT, so the preempt_disable()
-does nothing more than act as a barrier. In this case, it can pass the
-check by schedule(). Perhaps this is another issue?
-
->
->>>>> 	 ...
->>>>>      # the task schedule to cpu1
->>>>>      __buffer_unlock_commit():				cpu:1
->>>>>         ...
->>>>>         ring_buffer_unlock_commit():			cpu:1
->>>>> 	 ...
->>>>> 	 cpu = raw_smp_processor_id()			cpu:1
->>>>> 	 cpu_buffer = buffer->buffers[cpu]		cpu:1
-> 	preempt_enable_notrace(); <-- here we enable preempt again.
->
->>>>> As shown above, the process will acquire cpuid twice and the return values
->>>>> are not the same.
->>>>>
->>>>> To fix this problem using copy_from_user_nofault instead of
->>>>> __copy_from_user_inatomic, as the former performs 'access_ok' before
->>>>> copying.
->>>>>
->>>>> Fixes: 656c7f0d2d2b ("tracing: Replace kmap with copy_from_user() in trace_marker writing")
->>>> The above commit was intorduced in 2016. copy_from_user_nofault() was
->>>> introduced in 2020. I don't think this would be the fix for that kernel.
->>>>
->>>> So no, I'm not taking this patch. If you see __copy_from_user_inatomic()
->>>> sleeping, it's users are not the issue. That function is.
->
-> BTW, the biggest difference between __copy_from_user() and
->   __copy_from_user_inatomic() is `might_fault()` and `should_fail_usercopy()`.
-> The latter is a fault injection, so we can ignore it. But since
-> the `might_fail()` is NOT in __copy_from_user_inatomic(), it is designed
-> not to cause fault as Steve said?
->
-> Thank you,
->
-
+>  	session = perf_session__new(&data, &script.tool);
+>  	if (IS_ERR(session))
+>  		return PTR_ERR(session);
+> -- 
+> 2.50.1
+> 
+> 
