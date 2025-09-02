@@ -1,234 +1,188 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5E7F283138;
-	Tue,  2 Sep 2025 11:58:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 209B22DAFA1;
+	Tue,  2 Sep 2025 14:02:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756814337; cv=none; b=JMN3GjhudfMIeYYBvRAB3Gh9E31pLfgAWGEhMukZfTVCqtQxMlGFsx2zyISxhsx2/gc4N6/5UFZKiy42vV9hz9f2EEP4rNYNTR0xxlS1nb2WJf6D33JxLogDWRLq1hf4ScFU52k/Eo9Uo7o2bVUwdxAEbjI0mJsUxl8HA1889X0=
+	t=1756821729; cv=none; b=nollm/QliW0WWazLxzMieIXTTyJ0Boa+D3WjxHgmHpTYZeLXOWN3QYsUY1Ae3tChT9YnKyAcWgp93pTF6q7DE1Dp1TPACOA5yFl3dRb8CJN4B0LymI1dp8cqDVeMBS9JWZtLfRdAeN3u4/PynlnpHRp1WnUtWdp301SyXGHdgZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756814337; c=relaxed/simple;
-	bh=dqyFXXyzhiyh/gyk8t682VcCl6KLwKRKKVK06zfUt9s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ol6rf8WNchTuVo6N/vWQig0eEmkFbsnmrUZ4G88+/9qd3afI5j6RoTJUMcTRmya+VGfBiNUw8Big0m4oIM5jGFoXAPUqiPcLcPgrYYA7A1r+ucSzXjBHogRhNCNJmDjiIgoiq0XPWngG4nGjwevZwyE4VfxmquGQGdbWYtDYdIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g9yZ3azo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1756821729; c=relaxed/simple;
+	bh=TnrmD0mhc59HwXLL9zQn0KMma7lkRp9WlnF7msqnTk0=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=mxOnWf8pu6FFXnUy3jAm7JjGD3wjrcOCtHb/frjFKMx5roK3XwmqOG4plxk+10qkl+RI1xvT75LkP0r4jjqkQGsSPEa7mkQh2nRIog297VJGIZwaY6dGITldgXxKi1Z+M0IEEdkL1h2yNjyLuAvykUZgtDpaHq3RIIO5Xlsb1lo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s/PqbcY0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g9yZ3azo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7318EC4CEF5;
-	Tue,  2 Sep 2025 11:58:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s/PqbcY0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE567C4CEED;
+	Tue,  2 Sep 2025 14:02:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756814337;
-	bh=dqyFXXyzhiyh/gyk8t682VcCl6KLwKRKKVK06zfUt9s=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=g9yZ3azolm9sIH0U2tWY5itVXElHQ8kdHl6DiWU7snmIoSdN+p5sK3ZEue7Is3KYS
-	 V6Hp/5b7xJJgWYexANKnp4cd7rfxABPbON2hH7dKBaU2/7Ulgg9udR6iXllw1MOOMK
-	 tnjFm4ncR6Ef62eh+4QRrCumH+6mNGpoyb6rBdI3uw+UlZ5KTZc4ueUe3kTfHqnpYX
-	 yYTBQXWNGjp9pmmF0BdeP/pTt8T31Tfyhhe5THElTcZA9Qj6AYyb+G3lndiQuGhaJe
-	 pRpUlrZpM6DIGGQASodEFIYQAdlvry4dmS6pcxPeMVUUOXiGiEqlDXZ++mZv4qYLpL
-	 jETYtVSqv2SGQ==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 091F7CE0E40; Tue,  2 Sep 2025 04:58:57 -0700 (PDT)
-Date: Tue, 2 Sep 2025 04:58:57 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Menglong Dong <dongml2@chinatelecom.cn>,
-	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	kernel test robot <oliver.sang@intel.com>, tgraf@suug.ch,
-	herbert@gondor.apana.org.au, linux-crypto@vger.kernel.org
-Subject: Re: [PATCH] tracing: fprobe: fix suspicious rcu usage in fprobe_entry
-Message-ID: <215e01cf-8c00-4c71-bab3-9f7e596185e8@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20250829021436.19982-1-dongml2@chinatelecom.cn>
- <20250828222357.55fab4c2@batman.local.home>
- <d1da3939-62e6-4ad1-afcc-5710ce3f6cbd@paulmck-laptop>
- <20250901170655.0757884ad7c2afb63ced3230@kernel.org>
- <615da75d-cb2f-4e7e-9e11-6b19f03fea6c@paulmck-laptop>
- <20250902155953.048dc8eab1f7f07e4bf35aab@kernel.org>
+	s=k20201202; t=1756821728;
+	bh=TnrmD0mhc59HwXLL9zQn0KMma7lkRp9WlnF7msqnTk0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=s/PqbcY0vhfmLt+MTvs45AIvcGukmlyuQN0QGHJP8151KheaWM6hvgZGOiloF0LpU
+	 vNc+GOxDZGmMSAUJUDKQ+RnROiLy1f6uC8LgkHXj+j2G15RBFfQd9AWFkReYd3B9jt
+	 sO1v9Sz+F7F5xPQ8Gxxe4EWbtStaxGSib49Z9b9Lv8As2AYgD2kgX4WbAzn2kfB6i3
+	 OZyBJgk4UCJMDTKhqPjrpYqZZjxGGgxpIV2RS5SAaZE2aWwKa5W9nvyrxj+XCAjUOr
+	 M1PjZy7Mq7zZREQgVyVc9Q2gH1dTOADP7UHzeq+LJrLsvsH0lbjL9trGt3nkAUx/Xp
+	 D0OzcWFWi9eEg==
+Date: Tue, 2 Sep 2025 23:02:04 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Jinchao Wang <wangjinchao600@gmail.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, x86@kernel.org,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Thomas Gleixner
+ <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>, Alexander
+ Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers
+ <irogers@google.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, "Masami Hiramatsu (Google)"
+ <mhiramat@kernel.org>
+Subject: Re: [RFC PATCH 0/6] tracing: wprobe: Add wprobe for watchpoint
+Message-Id: <20250902230204.f3e81b03e7f6805caba1b717@kernel.org>
+In-Reply-To: <175673787502.478080.3342912952394010967.stgit@devnote2>
+References: <175673787502.478080.3342912952394010967.stgit@devnote2>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250902155953.048dc8eab1f7f07e4bf35aab@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Sep 02, 2025 at 03:59:53PM +0900, Masami Hiramatsu wrote:
-> On Mon, 1 Sep 2025 08:00:15 -0700
-> "Paul E. McKenney" <paulmck@kernel.org> wrote:
+(Adding Jinchao)
+
+On Mon,  1 Sep 2025 23:44:35 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+
+> Hi,
 > 
-> > On Mon, Sep 01, 2025 at 05:06:55PM +0900, Masami Hiramatsu wrote:
-> > > On Fri, 29 Aug 2025 04:11:02 -0700
-> > > "Paul E. McKenney" <paulmck@kernel.org> wrote:
-> > > 
-> > > > On Thu, Aug 28, 2025 at 10:23:57PM -0400, Steven Rostedt wrote:
-> > > > > On Fri, 29 Aug 2025 10:14:36 +0800
-> > > > > Menglong Dong <dongml2@chinatelecom.cn> wrote:
-> > > > > 
-> > > > > > rcu_read_lock() is not needed in fprobe_entry, but rcu_dereference_check()
-> > > > > > is used in rhltable_lookup(), which causes suspicious RCU usage warning:
-> > > > > > 
-> > > > > >   WARNING: suspicious RCU usage
-> > > > > >   6.17.0-rc1-00001-gdfe0d675df82 #1 Tainted: G S
-> > > > > >   -----------------------------
-> > > > > >   include/linux/rhashtable.h:602 suspicious rcu_dereference_check() usage!
-> > > > > >   ......
-> > > > > >   stack backtrace:
-> > > > > >   CPU: 1 UID: 0 PID: 4652 Comm: ftracetest Tainted: G S
-> > > > > >   Tainted: [S]=CPU_OUT_OF_SPEC, [I]=FIRMWARE_WORKAROUND
-> > > > > >   Hardware name: Dell Inc. OptiPlex 7040/0Y7WYT, BIOS 1.1.1 10/07/2015
-> > > > > >   Call Trace:
-> > > > > >    <TASK>
-> > > > > >    dump_stack_lvl+0x7c/0x90
-> > > > > >    lockdep_rcu_suspicious+0x14f/0x1c0
-> > > > > >    __rhashtable_lookup+0x1e0/0x260
-> > > > > >    ? __pfx_kernel_clone+0x10/0x10
-> > > > > >    fprobe_entry+0x9a/0x450
-> > > > > >    ? __lock_acquire+0x6b0/0xca0
-> > > > > >    ? find_held_lock+0x2b/0x80
-> > > > > >    ? __pfx_fprobe_entry+0x10/0x10
-> > > > > >    ? __pfx_kernel_clone+0x10/0x10
-> > > > > >    ? lock_acquire+0x14c/0x2d0
-> > > > > >    ? __might_fault+0x74/0xc0
-> > > > > >    function_graph_enter_regs+0x2a0/0x550
-> > > > > >    ? __do_sys_clone+0xb5/0x100
-> > > > > >    ? __pfx_function_graph_enter_regs+0x10/0x10
-> > > > > >    ? _copy_to_user+0x58/0x70
-> > > > > >    ? __pfx_kernel_clone+0x10/0x10
-> > > > > >    ? __x64_sys_rt_sigprocmask+0x114/0x180
-> > > > > >    ? __pfx___x64_sys_rt_sigprocmask+0x10/0x10
-> > > > > >    ? __pfx_kernel_clone+0x10/0x10
-> > > > > >    ftrace_graph_func+0x87/0xb0
-> > > > > > 
-> > > > > > Fix this by using rcu_read_lock() for rhltable_lookup(). Alternatively, we
-> > > > > > can use rcu_lock_acquire(&rcu_lock_map) here to obtain better performance.
-> > > > > > However, it's not a common usage :/
-> > > > > 
-> > > > > So this is needed even though it's called under preempt_disable().
-> > > > > 
-> > > > > Paul, do we need to add an rcu_read_lock() because the code in rht
-> > > > > (rhashtable) requires RCU read lock?
-> > > > > 
-> > > > > I thought that rcu_read_lock() and preempt_disable() have been merged?
-> > > > 
-> > > > Yes, preempt_disable() does indeed start an RCU read-side critical section,
-> > > > just as surely as rcu_read_lock() does.
-> > > > 
-> > > > However, this is a lockdep check inside of __rhashtable_lookup():
-> > > > 
-> > > > 	rht_dereference_rcu(ht->tbl, ht)
-> > > > 
-> > > > Which is defined as:
-> > > > 
-> > > > 	rcu_dereference_check(p, lockdep_rht_mutex_is_held(ht));
-> > > > 
-> > > > This is explicitly telling lockdep that rcu_read_lock() is OK and
-> > > > holding ht->mutex is OK, but nothing else is.
-> > > 
-> > > That is similar to the kprobes, which also allows accessing in
-> > > rcu critical section or under mutex.
-> > > 
-> > > > So an alternative way to fix this is to declare it to be a false positive,
-> > > > and then avoid that false positive by adding a check that preemption
-> > > > is disabled.  Adding the rhashtable maintainers for their perspective.
-> > > 
-> > > What about changing it alloing it with preempt disabled flag?
-> > 
-> > I am not sure that "it" that you are proposing changing.  ;-)
+> Here is an RFC series for adding new wprobe (watch probe) which
+> provides memory access tracing event. Moreover, this can be used via
+> event trigger. Thus it can trace memory access on a dynamically
+> allocated objects too.
+
+BTW, this series is on the top of probes/for-next branch in the
+linux-trace tree.
+
+Thanks,
+
 > 
-> Sorry, Ii meant the rcu_dereference_check().
+> In this version, I reuse Jinchao's arch_reinstall_hw_breakpoint()
+> patch[1].
 > 
-> > 
-> > However, another option for the the above rcu_dereference_check() to
-> > become something like this:
-> > 
-> > 	rcu_dereference_check(p, lockdep_rht_mutex_is_held(ht) ||
-> > 				 rcu_read_lock_any_held());
-> > 
-> > This would be happy with any RCU reader, including rcu_read_lock(),
-> > preempt_disable(), local_irq_disable(), local_bh_disable(), and various
-> > handler contexts.  One downside is that this would *always* be happy in
-> > a kernel built with CONFIG_PREEMPT_{NONE,VOLUNTARY}=y.
+> [1] https://lore.kernel.org/all/20250828073311.1116593-6-wangjinchao600@gmail.com/
 > 
-> Ah, indeed. This means that we lose the ability to explicitly check
-> whether the rcu pointer is in a critical section on that kernel.
-
-It is a usability/bug-detection design tradeoff, and as such, the RCU
-user's choice.  RCU is simply an arms supplier on this one.  ;-)
-
-> > If this is happening often enough, it would be easy for me to create an
-> > rcu_dereference_all_check() that allows all forms of vanilla RCU readers
-> > (but not, for example, SRCU readers), but with only two use cases,
-> > it is not clear to me that this is an overall win.
+> The basic usage of this wprobe is similar to other probes;
 > 
-> OK, I think this discussion is important for the patch from Menglong [1]
+>   w:[GRP/][EVENT] [r|w|rw]@<ADDRESS|SYMBOL[+OFFS]> [FETCHARGS]
 > 
-> [1] https://lore.kernel.org/all/20250829021436.19982-1-dongml2@chinatelecom.cn/
+> This defines a new wprobe event. For example, to trace jiffies update,
+> you can do;
 > 
-> because this does not make an rcu critical section while using `head`
-> but it works because fprobe_entry() runs under preempt_disable().
-
-Agreed, and that appears to be what initiated this dicussion.
-
-> Is it better to use `guard(rcu)()` instead of rcu_read_lock() so that
-> it explicitly secure the `head` usage? I just wonder if there is any
-> downside to extend rcu_read_lock() area (still in the same
-> preempt_disable section).
-
-Another option is `scoped_guard(rcu)`, for example, as used in
-ftrace_find_callable_addr() in arch/loongarch/kernel/ftrace_dyn.c.
-That way you keep the RAII usability while keeping the RCU read-side
-critical section small.
-
-							Thanx, Paul
-
+>  echo 'w:my_jiffies w@jiffies:8 value=+0($addr)' >> dynamic_events
+>  echo 1 > events/wprobes/my_jiffies/enable
+> 
+> Moreover, this can be combined with event trigger to trace the memory
+> accecss on slab objects. The trigger syntax is;
+> 
+>   set_wprobe:WPROBE_EVENT:FIELD[+ADJUST]
+>   clear_wprobe:WPROBE_EVENT
+> 
+> For example, trace the first 8 byte of the dentry data structure passed
+> to do_truncate() until it is deleted by __dentry_kill().
+> (Note: all tracefs setup uses '>>' so that it does not kick do_truncate())
+> 
+>   # echo 'w:watch rw@0:8 address=$addr value=+0($addr)' > dynamic_events
+> 
+>   # echo 'f:truncate do_truncate dentry=$arg2' >> dynamic_events
+>   # echo 'set_wprobe:watch:dentry' >> events/fprobes/truncate/trigger
+> 
+>   # echo 'f:dentry_kill __dentry_kill dentry=$arg1' >> dynamic_events
+>   # echo 'clear_wprobe:watch' >> events/fprobes/dentry_kill/trigger
+> 
+>   # echo 1 >> events/fprobes/truncate/enable
+>   # echo 1 >> events/fprobes/dentry_kill/enable
+> 
+>   # echo aaa > /tmp/hoge
+>   # echo bbb > /tmp/hoge
+>   # echo ccc > /tmp/hoge
+>   # rm /tmp/hoge
+> 
+> Then, the trace data will show;
+> 
+> # tracer: nop
+> #
+> # entries-in-buffer/entries-written: 16/16   #P:8
+> #
+> #                                _-----=> irqs-off/BH-disabled
+> #                               / _----=> need-resched
+> #                              | / _---=> hardirq/softirq
+> #                              || / _--=> preempt-depth
+> #                              ||| / _-=> migrate-disable
+> #                              |||| /     delay
+> #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
+> #    [    7.026136] sh (113) used greatest stack depth: 12912 bytes left
+>           | |         |   |||||     |         |
+>               sh-113     [002] .....     7.024402: truncate: (do_truncate+0x4/0x120) dentry=0xffff8880069194b8
+>               sh-113     [002] ..Zff     7.024822: watch: (lookup_fast+0xaa/0x150) address=0xffff8880069194b8 value=0x200008
+>               sh-113     [002] ..Zff     7.024830: watch: (step_into+0x82/0x360) address=0xffff8880069194b8 value=0x200008
+>               sh-113     [002] ..Zff     7.024834: watch: (step_into+0x9f/0x360) address=0xffff8880069194b8 value=0x200008
+>               sh-113     [002] ..Zff     7.024839: watch: (path_openat+0xb3a/0xe70) address=0xffff8880069194b8 value=0x200008
+>               sh-113     [002] ..Zff     7.024843: watch: (path_openat+0xb9a/0xe70) address=0xffff8880069194b8 value=0x200008
+>               sh-113     [002] .....     7.024847: truncate: (do_truncate+0x4/0x120) dentry=0xffff8880069194b8
+>               sh-113     [002] ...1.     7.025364: dentry_kill: (__dentry_kill+0x0/0x220) dentry=0xffff888006919380
+>               sh-113     [002] ...1.     7.025511: dentry_kill: (__dentry_kill+0x0/0x220) dentry=0xffff8880069195f0
+>               rm-118     [003] ...1.     7.027543: dentry_kill: (__dentry_kill+0x0/0x220) dentry=0xffff8880069194b8
+>               sh-113     [002] ...2.     7.027825: dentry_kill: (__dentry_kill+0x0/0x220) dentry=0xffff8880044429c0
+>               sh-113     [002] ...2.     7.027833: dentry_kill: (__dentry_kill+0x0/0x220) dentry=0xffff888004442270
+> 
+> 
 > Thank you,
 > 
-> > 
-> > Or am I missing a turn in here somewhere?
-> > 
-> > 							Thanx, Paul
-> > 
-> > > Thank you,
-> > > 
-> > > > 
-> > > > 							Thanx, Paul
-> > > > 
-> > > > > -- Steve
-> > > > > 
-> > > > > 
-> > > > > > 
-> > > > > > Reported-by: kernel test robot <oliver.sang@intel.com>
-> > > > > > Closes: https://lore.kernel.org/oe-lkp/202508281655.54c87330-lkp@intel.com
-> > > > > > Fixes: dfe0d675df82 ("tracing: fprobe: use rhltable for fprobe_ip_table")
-> > > > > > Signed-off-by: Menglong Dong <dongml2@chinatelecom.cn>
-> > > > > > ---
-> > > > > >  kernel/trace/fprobe.c | 2 ++
-> > > > > >  1 file changed, 2 insertions(+)
-> > > > > > 
-> > > > > > diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-> > > > > > index fb127fa95f21..fece0f849c1c 100644
-> > > > > > --- a/kernel/trace/fprobe.c
-> > > > > > +++ b/kernel/trace/fprobe.c
-> > > > > > @@ -269,7 +269,9 @@ static int fprobe_entry(struct ftrace_graph_ent *trace, struct fgraph_ops *gops,
-> > > > > >  	if (WARN_ON_ONCE(!fregs))
-> > > > > >  		return 0;
-> > > > > >  
-> > > > > > +	rcu_read_lock();
-> > > > > >  	head = rhltable_lookup(&fprobe_ip_table, &func, fprobe_rht_params);
-> > > > > > +	rcu_read_unlock();
-> > > > > >  	reserved_words = 0;
-> > > > > >  	rhl_for_each_entry_rcu(node, pos, head, hlist) {
-> > > > > >  		if (node->addr != func)
-> > > > > 
-> > > 
-> > > 
-> > > -- 
-> > > Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> ---
+> 
+> Jinchao Wang (1):
+>       x86/HWBP: introduce arch_reinstall_hw_breakpoint() for atomic context
+> 
+> Masami Hiramatsu (Google) (5):
+>       tracing: wprobe: Add watchpoint probe event based on hardware breakpoint
+>       HWBP: Add modify_wide_hw_breakpoint_local() API
+>       tracing: wprobe: Add wprobe event trigger
+>       selftests: tracing: Add a basic testcase for wprobe
+>       selftests: tracing: Add syntax testcase for wprobe
 > 
 > 
-> -- 
+>  Documentation/trace/index.rst                      |    1 
+>  Documentation/trace/wprobetrace.rst                |  129 ++
+>  arch/Kconfig                                       |   10 
+>  arch/x86/Kconfig                                   |    1 
+>  arch/x86/include/asm/hw_breakpoint.h               |    3 
+>  arch/x86/kernel/hw_breakpoint.c                    |   61 +
+>  include/linux/hw_breakpoint.h                      |    6 
+>  include/linux/trace_events.h                       |    3 
+>  kernel/events/hw_breakpoint.c                      |   36 +
+>  kernel/trace/Kconfig                               |   24 
+>  kernel/trace/Makefile                              |    1 
+>  kernel/trace/trace.c                               |    9 
+>  kernel/trace/trace.h                               |    5 
+>  kernel/trace/trace_probe.c                         |   20 
+>  kernel/trace/trace_probe.h                         |    8 
+>  kernel/trace/trace_wprobe.c                        | 1111 ++++++++++++++++++++
+>  .../ftrace/test.d/dynevent/add_remove_wprobe.tc    |   68 +
+>  .../test.d/dynevent/wprobes_syntax_errors.tc       |   20 
+>  18 files changed, 1513 insertions(+), 3 deletions(-)
+>  create mode 100644 Documentation/trace/wprobetrace.rst
+>  create mode 100644 kernel/trace/trace_wprobe.c
+>  create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/add_remove_wprobe.tc
+>  create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/wprobes_syntax_errors.tc
+> 
+> --
 > Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
