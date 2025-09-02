@@ -1,76 +1,105 @@
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27FA6303C8E;
-	Tue,  2 Sep 2025 14:28:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF4C92DEA77;
+	Tue,  2 Sep 2025 14:35:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756823324; cv=none; b=l+wyXl8aLRmsNkCn4PxR2P6MmxggzV2jyHQ55YOxOUPwQj8R+EePRZdAymWVZlme4D/4RPrC/4AQwiutAEL7tQntX7qoMIc1666v+KN+JP24QGThG1lTty24FGqYOS1mktjvoYZQeXiJvxegvSLzXK3LRnD8CAtMn3CPtgOaBeg=
+	t=1756823716; cv=none; b=Ertiiv1NbzUxxj6H12Iujv5fc7lLQo9UKq/SxalpYNc/6YvaMfrs9NioQZkZ1HdV8TYjrvbTX4uVYglx0v3iHfN10w9812TjmMZit2vWTy6wCULm94JXg6Bml4BWH5GqO/8bd36WEFcKu0AjPUTq759+OtSJNb2NkheSaQyq/yE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756823324; c=relaxed/simple;
-	bh=TkrgpslKuSPo0ZM9EHtcWoH4HGK/nqSdH+oSDOiB6Ok=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZACfkZOuobU+2Npb8LMjvWp8Ge47rP6oBXw7tN1DPKAAOkHRqW3YA0jHRqjJ7mzHQRbrbEgZfInw2/jE4NltJUj2ot2+MJ7D0jJh0rqNJTWVVl4uV+huLtJf0gy3SHzxfo0FWAa29/fBmkYCAnjdlsNIjNTDmW5M+rrBBfYU+Go=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf10.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay09.hostedemail.com (Postfix) with ESMTP id 78E578479E;
-	Tue,  2 Sep 2025 14:28:34 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf10.hostedemail.com (Postfix) with ESMTPA id C1DAC2F;
-	Tue,  2 Sep 2025 14:28:32 +0000 (UTC)
-Date: Tue, 2 Sep 2025 10:28:31 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Ryan Chung <seokwoo.chung130@gmail.com>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com, corbet@lwn.net,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org
-Subject: Re: [PATCH 0/2] trace: minor documentation fixes for clarity and
-Message-ID: <20250902102831.134a26c1@batman.local.home>
-In-Reply-To: <20250831101736.11519-1-seokwoo.chung130@gmail.com>
-References: <20250831101736.11519-1-seokwoo.chung130@gmail.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1756823716; c=relaxed/simple;
+	bh=N24nlm+kQ3jC8awxfDsEzAyVYXN9c8rmf4oiujA97ns=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=q7CZ4s3hlMV79+okxet3qq/R83LJIqb+Ql+CyxxDBK70eJJx8dvG//dBir1cJ5g1iQWO6N6NoGRRZS22udKjtu3kAPLbOYtdZMDXVrSEYXEGeGnudSomlR7EOK9KHKxYFxgyC8fQtXJMRE4uufPQSlLJfOSo8ja5Ll/gHQIcowY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZYLGCcUK; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZYLGCcUK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB929C4CEED;
+	Tue,  2 Sep 2025 14:35:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756823715;
+	bh=N24nlm+kQ3jC8awxfDsEzAyVYXN9c8rmf4oiujA97ns=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ZYLGCcUKuJW3aFhe2fn/TlqaVf2qVov4NkBm91mhBBo+8TGhP5PMRBnPWeDLMEPWI
+	 n8T0sz82s9nPQCoSdHg+OCmJQtpCbNifjauTPH4BOOk8E0QKyDomKeslalBXAiqV8u
+	 oAglYPNIeUqfr/0R5XQjDe5JyMc7XhUkGigqmkQcVz+nwgwEMjVgB+dEoReIrMbIhd
+	 x69wByS+LrOB06FLH5/4LIbO62yk5qWoza3BsRZK30EFWFLx1+79KFIFAVQtbQ/MQE
+	 ntHKxqQeyHIjoq5J5JyhieOwurJdJFeB0ba7lbztxDtGJ1x0JnTQPVTjTfvgapSaQg
+	 jpq9dWVAKSk4w==
+From: Jiri Olsa <jolsa@kernel.org>
+To: Oleg Nesterov <oleg@redhat.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andrii Nakryiko <andrii@kernel.org>
+Cc: bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	x86@kernel.org,
+	Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Hao Luo <haoluo@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH perf/core 00/11] uprobes: Add unique uprobe
+Date: Tue,  2 Sep 2025 16:34:53 +0200
+Message-ID: <20250902143504.1224726-1-jolsa@kernel.org>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: C1DAC2F
-X-Stat-Signature: myjeqdrbq5gjo49jcyeh3p83o3etmie6
-X-Rspamd-Server: rspamout06
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/+8mfpzDUQ5m9ZGTfRTsKTiR+ji7LAwBU=
-X-HE-Tag: 1756823312-267627
-X-HE-Meta: U2FsdGVkX19qbpG0qlynaYkahSQbtc12Jj/iBc6ysBBfCr+SoLsYjIZZQ3ODD9oPqd72krZPKn/ewCwDfOg0t5IKFZL/JW/ejtppPJpo9MXg8gIpUCsRIOxSc15gzPSQoP8sUen8EdshGcvvF4r+ANBSqSkE1dpvyZy1/icizd9XMuOFjMr+kto0OYb6Yp5AZMjCp4h6Q/ZCvfeLRV1cLeZDDdzgxcgyOVCCsPM5cQr74f4HJCmKr/aTHR6Wmyn54lIGCJTI67dzi9TUM4Y+s8XxHJvLncQqL2pgiE/Pmd3zFjxGpotnXzF+wbCSns5XONhaeZrJRQnnM6cfHsp8cSVk4VPC+5PzVmDyaFqp24Dcn88cmAzUDyrYeRqwn3I+MlF3bNoN+jp5gsPmyTqLEA==
+Content-Transfer-Encoding: 8bit
 
-On Sun, 31 Aug 2025 19:17:27 +0900
-Ryan Chung <seokwoo.chung130@gmail.com> wrote:
+hi,
+this patchset adds unique uprobe and support to change userspace
+task's registers from within bpf uprobe program.
 
-> Resend: fixed recipients; no changes
-> 
-> Hi all,
-> 
-> This short series cleans up two small wording issues in the tracing docs to
-> improve readability. There are no functional changes.
-> 
-> Ryan Chung (2):
->   trace: rephrase for clearer documentation
->   trace: fix grammar error in debugging.rst
-> 
->  Documentation/trace/boottime-trace.rst | 2 +-
->  Documentation/trace/debugging.rst      | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
+We recently had several requests for tetragon to be able to change
+user application function return value or divert its execution through
+instruction pointer change.
 
-Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+v1 changes (from rfc [1]):
+- added unique probe support
+- added more tests
 
-The only comments I would make is the subject tag for the trace files
-is actually "tracing:" and not "trace:".
+thanks,
+jirka
 
-Also, even though the changes are minor, a simple change log would
-still be nice.
 
--- Steve
+[1] https://lore.kernel.org/bpf/20250801210238.2207429-1-jolsa@kernel.org/
+---
+Jiri Olsa (11):
+      uprobes: Add unique flag to uprobe consumer
+      uprobes: Skip emulate/sstep on unique uprobe when ip is changed
+      perf: Add support to attach standard unique uprobe
+      bpf: Add support to attach uprobe_multi unique uprobe
+      bpf: Allow uprobe program to change context registers
+      libbpf: Add support to attach unique uprobe_multi uprobe
+      libbpf: Add support to attach generic unique uprobe
+      selftests/bpf: Add uprobe multi context registers changes test
+      selftests/bpf: Add uprobe multi context ip register change test
+      selftests/bpf: Add uprobe multi unique attach test
+      selftests/bpf: Add uprobe unique attach test
+
+ include/linux/bpf.h                                        |   1 +
+ include/linux/trace_events.h                               |   2 +-
+ include/linux/uprobes.h                                    |   1 +
+ include/uapi/linux/bpf.h                                   |   3 +-
+ kernel/events/core.c                                       |  12 ++++-
+ kernel/events/uprobes.c                                    |  43 ++++++++++++++--
+ kernel/trace/bpf_trace.c                                   |   7 +--
+ kernel/trace/trace_event_perf.c                            |   4 +-
+ kernel/trace/trace_probe.h                                 |   2 +-
+ kernel/trace/trace_uprobe.c                                |   9 ++--
+ tools/include/uapi/linux/bpf.h                             |   3 +-
+ tools/lib/bpf/libbpf.c                                     |  36 +++++++++++---
+ tools/lib/bpf/libbpf.h                                     |   8 ++-
+ tools/testing/selftests/bpf/prog_tests/bpf_cookie.c        |   1 +
+ tools/testing/selftests/bpf/prog_tests/uprobe.c            | 111 ++++++++++++++++++++++++++++++++++++++++-
+ tools/testing/selftests/bpf/prog_tests/uprobe_multi_test.c | 248 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ tools/testing/selftests/bpf/progs/uprobe_multi.c           |  38 ++++++++++++++
+ tools/testing/selftests/bpf/progs/uprobe_multi_unique.c    |  34 +++++++++++++
+ 18 files changed, 534 insertions(+), 29 deletions(-)
+ create mode 100644 tools/testing/selftests/bpf/progs/uprobe_multi_unique.c
