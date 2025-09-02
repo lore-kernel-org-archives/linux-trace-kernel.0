@@ -1,152 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73C883148CD;
-	Tue,  2 Sep 2025 15:11:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5A8A3375DA;
+	Tue,  2 Sep 2025 16:11:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756825897; cv=none; b=J8sw/TRROML6zoVL0uEjmmKkggp0TcrArhcxVqMLzV1OGqRaAB/ESpheFWT81q757SPbVHIJ6Wk8ChsqwBrmnHiUWtFobdoaNYPq42Ux8zelRgPJohz8+p2nmkYlLBKiAdMYiGfTu54+69ZB2FpckM4eZWefBBt7jsvDyA9JAW0=
+	t=1756829497; cv=none; b=meUemaHurGI576rx8u3Fg4Ub9aQ4SxQKjFJt9IKq8qqXgNzbtfJzantXSbM/hOacP4sU5xHHGhYFkmRVn6R7lX6+Wjckv02ZlqeK2NDPT5X1WliTuPw9sNjzlLwNl2Krh0QHRNVMM0vGcrpskV5+mMUdtXeE0WAN97FShiSszS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756825897; c=relaxed/simple;
-	bh=+9HP5l15oB0iuIxiMajn5CQ9jjlvaMDVkmHUr0VRnPE=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=RlplHV/dKq7PXiN0t/LVELX17FzWyRFB/+J+kQML+KkoD/hLfiorgh7Mu4gjYquNdKUm0FP55OqcJ/DLulZ3ntrxWpET13WG9u62DzvbKHznli8lW6wQb+e4mIOYWIvyVkM7I6lHgn5lbPEpC6lRbMQhoekPFHzg/sD/GE2Taks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IpRwT66F; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1756829497; c=relaxed/simple;
+	bh=jTW8kVFk5PN3HuFXHJyL7zyMWDABWszA9BxNrkt5TOA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZrOSB5LAD/sNStLirtNoS0qprC6VW9M+7yLqm6ZjH7gg5dGTlBUqPxQKqFdiUOPv/9ce/s5mv+IQ5Y4hOIDPmKYmOKaCb6U6vCyfG0ou2OzUUxZ3UZNn4HReXklDxdVIdXcQu8Gurqwc8LTppUPlQ1cXPFdWwXyi6nKAcRrFljg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DXdmJjJl; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IpRwT66F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29226C4CEED;
-	Tue,  2 Sep 2025 15:11:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756825896;
-	bh=+9HP5l15oB0iuIxiMajn5CQ9jjlvaMDVkmHUr0VRnPE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=IpRwT66FVpw1fiRZdgU1RMfO19xdpyqn8bSTkI6PIMtvG7dycONNDE/Hj5UllIENt
-	 t6vLb93qRvUYZX4SrQh3N3fXMoYrkRdo3prO2qDbEP32kebZV6o2saVtjSsFpoS5xh
-	 Vnltxi2p7JV8Nrz8twUDqAqlvWK/2P5+NO9IJWEFaHnCOkQx6ia4f40yhbtLQDKvoG
-	 5v9z136RTvBVms54J7DXV0hagCA2zHfJ7pfoFNIB6r9anPOVao7EMEHpNarLxtjQdj
-	 Ck8KZR19EvV7hbyfzwZZlJABS2UIL988ptmnFnqKtit1BO9BOO9xr3t2GSRZpCxfCB
-	 MvQYX0PruiYbg==
-Date: Wed, 3 Sep 2025 00:11:33 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- x86@kernel.org, Song Liu <songliubraving@fb.com>, Yonghong Song
- <yhs@fb.com>, John Fastabend <john.fastabend@gmail.com>, Hao Luo
- <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar
- <mingo@kernel.org>
-Subject: Re: [PATCH perf/core 01/11] uprobes: Add unique flag to uprobe
- consumer
-Message-Id: <20250903001133.8a02cf5db5ab4fd23c9a334f@kernel.org>
-In-Reply-To: <20250902143504.1224726-2-jolsa@kernel.org>
-References: <20250902143504.1224726-1-jolsa@kernel.org>
-	<20250902143504.1224726-2-jolsa@kernel.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DXdmJjJl"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-b04271cfc3eso296969066b.3;
+        Tue, 02 Sep 2025 09:11:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1756829494; x=1757434294; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2dcZpUvLVz3N0at5fXDhoAD++E+8uoI2vo+O9PjHjxU=;
+        b=DXdmJjJlMiQuesX1dfc8SFL+xs9UQOod39hIT5WybyNLOIxcIiEmyS2Z99On7i/pWv
+         pbtCKWmDENyaMltBn5PL3VFw3ItxRG67TQ6Qw5AKGQPNQn+CZgYi+JJsyoYNQN0iae7s
+         BylNdqpzjt9lSZJSrA/sLXks9waYkZXSfFuKRWYmakqNTOGRc6+6YeEqITA2i8P09Bs0
+         f1Cmuw5SJV7rNvOZTBs2NbEwxrxsHi7SgktCTNXYNo8Z/yYKCdpXGfWBP7kceJwUujnF
+         xtDNsTe+KJFD7WJzryYPu8/V3azy1P+he6NMrNL/WZIN2QGqmFxTvi5N6kR9F+dwtFyS
+         Q4aQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756829494; x=1757434294;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2dcZpUvLVz3N0at5fXDhoAD++E+8uoI2vo+O9PjHjxU=;
+        b=qqTS9XY/j+MxXyYaEpetsTz5Xvgg4aHyyf/zYLR0m6IMp0jy4juMiAiNOK6GFJVuVE
+         IpkeMekbtfIzKjaVcSQOFXTxmfF5Gqk6WdY3+AnHz8qtu2CiNoOkvBejOCnkPKYHMsLw
+         nlLlfi5P7V8wVoF+jag1oH3feye6cEX6LF6FOReLdpBtLd4OlJFQMzZ0CNKYB8/5j1+T
+         SsS+XhElkdVqyBwKToAMovNEEU3mSeAQEKp95b4hK3IyfdsNWALzIJ9AF5XVnyorRDz/
+         oH8+Qb2v7yvMc7eB4sZJRBYwoLT89J2C8cvp0n1w1YPcIOzfAoW366F9DePzSkSzT5T8
+         nt+g==
+X-Forwarded-Encrypted: i=1; AJvYcCU5FOS+pKgEkIepFQHQxJ2FlualIXrD2+Myv5ygefUze4J+DC7AmEw7GYZ88U5RZugVbJo/e0xWMKxAH+RYaaRMHbQC@vger.kernel.org, AJvYcCV8RbKXQv9rW6kKR6JFZ0xEUI4vzqC/AJk7GGkQaRUi9Yy02LY3r3TI9WNpz4q6ZhfYnL+/gWY/8VLySqtw@vger.kernel.org, AJvYcCWp+uarZnd7YXCvJg6ocDIpco/HfJXfSjdXmWzsJTFJBCcFo+fIl4jy047YKdlWV5E/POg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzhCDk4KgxB+PdvSvD95AtiO9dAwE6e470hHM5emcW1yyU8Cwro
+	Gs8kbJLPL/uTfEBkETKxlthEfWkmqnuS71q7KBS5+rot2FEe/zv1FpM+lVriw1apsOSLwFjo8gr
+	jR/hQQ6UAcyuMGJXtHWANxEPWr1j+aGo=
+X-Gm-Gg: ASbGncujZaweWH9Ss4zSe3xGHETqfF3SArM1Y/tmPUpzv+THYguwstggnmPX8OQ96Rn
+	wj0b2/Boo6SUYL1q6nM1gFlrVwczwCz/lUybRHSsm/xz/HyHAaaihkLycuXuGHwvmiPqVYUsJzd
+	15uYVZ3+HlaLPIqiggvLI1dj5hzrd8Eruj6Uv1JNDGdRpw1dqOf1gt19CTcwjrtl/LmUFkrd/JM
+	WrwQu8gggCkMbmL1+PdZM4ph1oHzWj9LQ==
+X-Google-Smtp-Source: AGHT+IERdIljI9N7Xe/T21h5febi7Y0OYO4gOFIJTKeQ7Xhez0g3OMTeZX2wNcts37cq/XlPW8fxUGYhvx5teij95Y0=
+X-Received: by 2002:a17:907:7291:b0:b04:3e43:eccc with SMTP id
+ a640c23a62f3a-b043e43f17amr552559166b.40.1756829493901; Tue, 02 Sep 2025
+ 09:11:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+References: <20250902143504.1224726-1-jolsa@kernel.org> <20250902143504.1224726-5-jolsa@kernel.org>
+In-Reply-To: <20250902143504.1224726-5-jolsa@kernel.org>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Tue, 2 Sep 2025 09:11:22 -0700
+X-Gm-Features: Ac12FXzfov0r30nmd6VkzyQEbnijwjfleIGZKFPAEflFWqIgyGmqUWuPgQC4Xmk
+Message-ID: <CAADnVQ+MntzHdwSe_Oqe7CU=E3yjko=7+9GTnapsPWwe4oqpsw@mail.gmail.com>
+Subject: Re: [PATCH perf/core 04/11] bpf: Add support to attach uprobe_multi
+ unique uprobe
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Oleg Nesterov <oleg@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Andrii Nakryiko <andrii@kernel.org>, bpf <bpf@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>, 
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
+	John Fastabend <john.fastabend@gmail.com>, Hao Luo <haoluo@google.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue,  2 Sep 2025 16:34:54 +0200
-Jiri Olsa <jolsa@kernel.org> wrote:
-
-> Adding unique flag to uprobe consumer to ensure it's the only consumer
-> attached on the uprobe.
-> 
-> This is helpful for use cases when consumer wants to change user space
-> registers, which might confuse other consumers. With this change we can
-> ensure there's only one consumer on specific uprobe.
-
-nit: Does this mean one callback (consumer) is exclusively attached?
-If so, "exclusive" will be better wording?
-
-The logic looks good to me.
-
-Thanks,
-
-> 
+On Tue, Sep 2, 2025 at 7:38=E2=80=AFAM Jiri Olsa <jolsa@kernel.org> wrote:
+>
+> Adding support to attach unique uprobe through uprobe multi link
+> interface.
+>
+> Adding new BPF_F_UPROBE_MULTI_UNIQUE flag that denotes the unique
+> uprobe creation.
+>
 > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 > ---
->  include/linux/uprobes.h |  1 +
->  kernel/events/uprobes.c | 30 ++++++++++++++++++++++++++++--
->  2 files changed, 29 insertions(+), 2 deletions(-)
-> 
-> diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
-> index 08ef78439d0d..0df849dee720 100644
-> --- a/include/linux/uprobes.h
-> +++ b/include/linux/uprobes.h
-> @@ -60,6 +60,7 @@ struct uprobe_consumer {
->  	struct list_head cons_node;
->  
->  	__u64 id;	/* set when uprobe_consumer is registered */
-> +	bool is_unique; /* the only consumer on uprobe */
->  };
->  
->  #ifdef CONFIG_UPROBES
-> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> index 996a81080d56..b9b088f7333a 100644
-> --- a/kernel/events/uprobes.c
-> +++ b/kernel/events/uprobes.c
-> @@ -1024,14 +1024,35 @@ static struct uprobe *alloc_uprobe(struct inode *inode, loff_t offset,
->  	return uprobe;
->  }
->  
-> -static void consumer_add(struct uprobe *uprobe, struct uprobe_consumer *uc)
-> +static bool consumer_can_add(struct list_head *head, struct uprobe_consumer *uc)
-> +{
-> +	/* Uprobe has no consumer, we can add any. */
-> +	if (list_empty(head))
-> +		return true;
-> +	/* Uprobe has consumer/s, we can't add unique one. */
-> +	if (uc->is_unique)
-> +		return false;
-> +	/*
-> +	 * Uprobe has consumer/s, we can add nother consumer only if the
-> +	 * current consumer is not unique.
-> +	 **/
-> +	return !list_first_entry(head, struct uprobe_consumer, cons_node)->is_unique;
-> +}
-> +
-> +static int consumer_add(struct uprobe *uprobe, struct uprobe_consumer *uc)
->  {
->  	static atomic64_t id;
-> +	int ret = -EBUSY;
->  
->  	down_write(&uprobe->consumer_rwsem);
-> +	if (!consumer_can_add(&uprobe->consumers, uc))
-> +		goto unlock;
->  	list_add_rcu(&uc->cons_node, &uprobe->consumers);
->  	uc->id = (__u64) atomic64_inc_return(&id);
-> +	ret = 0;
-> +unlock:
->  	up_write(&uprobe->consumer_rwsem);
-> +	return ret;
->  }
->  
->  /*
-> @@ -1420,7 +1441,12 @@ struct uprobe *uprobe_register(struct inode *inode,
->  		return uprobe;
->  
->  	down_write(&uprobe->register_rwsem);
-> -	consumer_add(uprobe, uc);
-> +	ret = consumer_add(uprobe, uc);
-> +	if (ret) {
-> +		put_uprobe(uprobe);
-> +		up_write(&uprobe->register_rwsem);
-> +		return ERR_PTR(ret);
-> +	}
->  	ret = register_for_each_vma(uprobe, uc);
->  	up_write(&uprobe->register_rwsem);
->  
-> -- 
-> 2.51.0
-> 
+>  include/uapi/linux/bpf.h       | 3 ++-
+>  kernel/trace/bpf_trace.c       | 4 +++-
+>  tools/include/uapi/linux/bpf.h | 3 ++-
+>  3 files changed, 7 insertions(+), 3 deletions(-)
+>
+> diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
+> index 233de8677382..3de9eb469fe2 100644
+> --- a/include/uapi/linux/bpf.h
+> +++ b/include/uapi/linux/bpf.h
+> @@ -1300,7 +1300,8 @@ enum {
+>   * BPF_TRACE_UPROBE_MULTI attach type to create return probe.
+>   */
+>  enum {
+> -       BPF_F_UPROBE_MULTI_RETURN =3D (1U << 0)
+> +       BPF_F_UPROBE_MULTI_RETURN =3D (1U << 0),
+> +       BPF_F_UPROBE_MULTI_UNIQUE =3D (1U << 1),
 
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+I second Masami's point. "exclusive" name fits better.
+And once you use that name the "multi_exclusive"
+part will not make sense.
+How can an exclusive user of the uprobe be "multi" at the same time?
+Like attaching to multiple uprobes and modifying regsiters
+in all of them? Is it practical ?
+It feels to me BPF_F_UPROBE_EXCLUSIVE should be targeting
+one specific uprobe.
