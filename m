@@ -1,147 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A003B320380;
-	Tue,  2 Sep 2025 14:50:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF415304BA0
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  2 Sep 2025 14:55:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756824614; cv=none; b=KewAgUwecNZtnLsoQ/xIuD2ERv6tEkJ70DW+dCuSw20c+dzU+P9FwJvutROQ/dKPU+rHNG6cVXhZL11fNWPV78yjsrHHlqwJ9OrrlyxQkg2LVYFamZK0RYp5L1uBMQRd/+K0qxxVjtVt9xsLGnwV/2JhG5ZVwz5JjTip6HHhrLM=
+	t=1756824930; cv=none; b=J77a0DfSd/YsV6tgtbXzuZniZ6B5JcP5sc+JWJ+6xt4ETZzqPy8XjubZwM55ko9MIIzsyCDBRZXtT2UvwNc5LBkpsAFl3t1IV0HtfhJMbBrP5OXyeP8fjhx8ud+w2xoGqE5CAUiTtlmDKjTV8eedQRwM0A+ZLnfQMUj3RuXv/T0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756824614; c=relaxed/simple;
-	bh=5GnXky7X8jRP4E4M761xyU7kxSqR5w3y9HvcAnisW/0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DF3LiaLSBetH//9MbFOpK1A2mz5FJEJ2gNZTpoJCYmMl6EofryuiHBesFBpRdwr1iBca99O8y3fD/yTywruqyI1TmrAOh8YaS5HPxdExQ48XHm11s6Wv6if/lDHjH0V2KCYKDH4ZYXdDUAQtaghvErL2Ud6fdISWc/RyPm0t+hs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rJeu6B43; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1756824930; c=relaxed/simple;
+	bh=x91AmagGFMOtZuXmG4RqVXoVp9qcPc0XFnUmaJ/YIm4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 In-Reply-To:Content-Type:Content-Disposition; b=n0jxMJMixeqH+OB6z+aQ5P9ecflGhhBrHL+wKdJql54moAwGpry4rdTXKElMYLM3O45HNtE+wb97Z5sWZaYwierjPLUBlHFYSprjQPDtHM9/2vBvN3SpvjVR8vzmKZHrCIL4KMHt6IT52aTN91yMv1j4o1qZpd7squ4Oy7k//D4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Afo+AjW7; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rJeu6B43"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3108C4CEED;
-	Tue,  2 Sep 2025 14:50:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756824614;
-	bh=5GnXky7X8jRP4E4M761xyU7kxSqR5w3y9HvcAnisW/0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rJeu6B43+1PA3hIr12hg0lnVgq8hEaO1Lw0dSu66C4Hxh6OtUnH4qrmq2UzSSZ1N4
-	 l2ZMHW11no8o4RgcofoNHTdHE1yoSWlx22rWWSHOD8+Ogvu4ojzleuOhx12qfasdh8
-	 1xBycpNin9JG/1JisPEuSXMSjGw3Xeby21NvKY8cKczB0oynk2yRys0EmsHljVnB3u
-	 KBLTyBq9WFsVfFALrQa4WJtvJqzt56sC8sAjNNKhzQLMvhf/aVz1+461ufH6pc4SF9
-	 +Mv7reAnOosbLyMyMqxFSSvL8KoRwphakYFROv2rFhXteTJEarDn/NkqrxQfsDao9k
-	 qBoW5Cs7du2bQ==
-From: Leon Romanovsky <leon@kernel.org>
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Leon Romanovsky <leonro@nvidia.com>,
-	Jason Gunthorpe <jgg@nvidia.com>,
-	Abdiel Janulgue <abdiel.janulgue@gmail.com>,
-	Alexander Potapenko <glider@google.com>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Christoph Hellwig <hch@lst.de>,
-	Danilo Krummrich <dakr@kernel.org>,
-	David Hildenbrand <david@redhat.com>,
-	iommu@lists.linux.dev,
-	Jason Wang <jasowang@redhat.com>,
-	Jens Axboe <axboe@kernel.dk>,
-	Joerg Roedel <joro@8bytes.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Juergen Gross <jgross@suse.com>,
-	kasan-dev@googlegroups.com,
-	Keith Busch <kbusch@kernel.org>,
-	linux-block@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-nvme@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-trace-kernel@vger.kernel.org,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	rust-for-linux@vger.kernel.org,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Stefano Stabellini <sstabellini@kernel.org>,
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Afo+AjW7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1756824927;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CFNwloMDDAvR9YVWd6AQKio0WoX59cEAVHNiSQ9F17k=;
+	b=Afo+AjW7uZS0t2Els172C8Kw8RYiGgQWHylowF2HVt4+j2hEYKCIZ69eD7gGJnrKDXABoP
+	5tl/oyerjUIptNJnp8QNHXL3lL7iQ6PaqPZy/+L1rMzWfOMQEcMx3bN4Wpe4kfbpWxc4VR
+	cqRbtotiiCsqixqwGkeeoekUnbXPVl4=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-453-8D1I5ZDfP9KaOKlg1J79AQ-1; Tue, 02 Sep 2025 10:55:26 -0400
+X-MC-Unique: 8D1I5ZDfP9KaOKlg1J79AQ-1
+X-Mimecast-MFC-AGG-ID: 8D1I5ZDfP9KaOKlg1J79AQ_1756824925
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3d17731acb6so2937378f8f.3
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 02 Sep 2025 07:55:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756824925; x=1757429725;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CFNwloMDDAvR9YVWd6AQKio0WoX59cEAVHNiSQ9F17k=;
+        b=xARrZHw7fXl16ecvua3e1y7HSvqMpXmkNmy2jqdjTPnwh87ZcIHCr+jnlF5wE6+2fF
+         u8bucCapOLG32+Lz3eWFoPZHIcmko9FD9qHaG1UGZQhWzhLbViPlVWSWrg3kxrzLpexT
+         6r8YKLtQVzljC/kZhlUJNjBF3RzLzkuKjy493sjzFiGgrcCnuC1FDD1esyofmo+dFsBS
+         0NgCTmet+DdUUjW75e+DTIl0p/xCQAOIxPue/Vnmtl0iq6x7Rjc0RFmfTHWtQdryqYEr
+         O1zhzJpFP1jI0u6FJZL+GvZ1BDRjqnjbr5/OI77UdXIeXpw0yR/gSsFQJGpfuqW74LkK
+         8zvg==
+X-Forwarded-Encrypted: i=1; AJvYcCV8zNwBExeSuwjpIAomlLokFiP+QvLEGBqDbALxQTrK8/c6FhP/3nc5BfcP2FluHMF5eR3cio95h96kNWEYl9gbNWw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxrtMKjdERn8Q82m3G+4AtneSZzOVdvgcEIwsPDxvbq1VxvGHSq
+	isF+LJcqDZVvaakG+ZpJKBMQYPim75xh/YMGFSzivur9UPwlvkkGw/X/tG1Xrf2SahyT1fk/lxC
+	HQUdUmKvjZZci63zhfQ+H3Rid0MiH+fJkgp5EdMv55++PunDZKh4QU1jklA6422k+JsWt4vm9Uw
+	==
+X-Gm-Gg: ASbGncudIAy0opYnj1ypLToC639K/xncArv3LM+55VxtGiPd2JkFckuc42XBH4QIO0/
+	A9Z2yRBvQV/VpH6mb9TEfoblgzH8YANyAyHTRCD7XgyeqM91nzUWcz2X1jv0fWqLeLxR/tIFdsK
+	Q09c+/+LfyKaqCZjGoT6zkJXHXqmEN9JQH0CfM85uNcXcpdIT5oZdox+foJb+4xuqzhH40kY3Pb
+	TjZP1jkWPt3qPbIfac24dB4/JzlFz+5rMdhp6UvVAK4Yyq49GEALjjzLYAe5umA2D7FIlv8lRnp
+	dLmJB9Xaq79IZAPKGY9bHgp29JcgsCOAQZbkulupAFGCb7G39SaSE6ZriG4Yqm2HeafxcB0=
+X-Received: by 2002:a05:6000:18ac:b0:3d8:3eca:a9ad with SMTP id ffacd0b85a97d-3d83ecac1femr4388491f8f.20.1756824925383;
+        Tue, 02 Sep 2025 07:55:25 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFr+eQvFvHKDY9pW1QWHP+fNzpn5umUflMtRnLW1mu9VwW/LAlTg4kdk2oVrowt/ttwr680hw==
+X-Received: by 2002:a05:6000:18ac:b0:3d8:3eca:a9ad with SMTP id ffacd0b85a97d-3d83ecac1femr4388298f8f.20.1756824922871;
+        Tue, 02 Sep 2025 07:55:22 -0700 (PDT)
+Received: from jlelli-thinkpadt14gen4.remote.csb ([151.29.70.210])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3cf33add294sm21363639f8f.29.2025.09.02.07.55.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Sep 2025 07:55:22 -0700 (PDT)
+Date: Tue, 2 Sep 2025 16:55:20 +0200
+From: Juri Lelli <juri.lelli@redhat.com>
+To: Gabriele Monaco <gmonaco@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
 	Steven Rostedt <rostedt@goodmis.org>,
-	virtualization@lists.linux.dev,
-	Will Deacon <will@kernel.org>,
-	xen-devel@lists.xenproject.org
-Subject: [PATCH v5 13/16] mm/hmm: properly take MMIO path
-Date: Tue,  2 Sep 2025 17:48:50 +0300
-Message-ID: <4aac9ae9c0fe39a2e47139fae6d602f71d90bd09.1756822782.git.leon@kernel.org>
-X-Mailer: git-send-email 2.50.1
-In-Reply-To: <cover.1756822782.git.leon@kernel.org>
-References: <cover.1756822782.git.leon@kernel.org>
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>, linux-trace-kernel@vger.kernel.org,
+	Nam Cao <namcao@linutronix.de>, Tomas Glozar <tglozar@redhat.com>,
+	Juri Lelli <jlelli@redhat.com>,
+	Clark Williams <williams@redhat.com>,
+	John Kacur <jkacur@redhat.com>
+Subject: Re: [RFC PATCH 14/17] sched: Add deadline tracepoints
+Message-ID: <aLcFWBGfeET6_KuO@jlelli-thinkpadt14gen4.remote.csb>
+References: <20250814150809.140739-1-gmonaco@redhat.com>
+ <20250814150809.140739-15-gmonaco@redhat.com>
+ <aKRKaTJBxD3kdt_G@jlelli-thinkpadt14gen4.remote.csb>
+ <20250819101244.GF4067720@noisy.programming.kicks-ass.net>
+ <711ff45f008bb4943418c40eba604e83858767ff.camel@redhat.com>
+ <aKSD3Pm_9qqmEaNv@jlelli-thinkpadt14gen4.remote.csb>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <aKSD3Pm_9qqmEaNv@jlelli-thinkpadt14gen4.remote.csb>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: bfOu3il8W0RORvq6Ru1JG7U-F_AVZatnt2Jrw7Ti4Ak_1756824925
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-From: Leon Romanovsky <leonro@nvidia.com>
+On 19/08/25 16:02, Juri Lelli wrote:
+> On 19/08/25 12:34, Gabriele Monaco wrote:
 
-In case peer-to-peer transaction traverses through host bridge,
-the IOMMU needs to have IOMMU_MMIO flag, together with skip of
-CPU sync.
+...
 
-The latter was handled by provided DMA_ATTR_SKIP_CPU_SYNC flag,
-but IOMMU flag was missed, due to assumption that such memory
-can be treated as regular one.
+> > > As per the whole _tp() thing, you can attach to the actual
+> > > sched_switch tracepoint with a module and read whatever you want.
+> > 
+> > Yeah I believe Juri referred to model constraints on the already
+> > existing events rather than new tracepoints here.
+> 
+> Separately from this series, maybe we should put such a module/bpf thing
+> somewhere shared, so it's easier to use it when needed.
 
-Reuse newly introduced DMA attribute to properly take MMIO path.
+Maybe we could
 
-Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
-Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
 ---
- mm/hmm.c | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 383cfc684e8e..994b6973d77d 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -117,6 +117,10 @@ EXPORT_TRACEPOINT_SYMBOL_GPL(sched_util_est_cfs_tp);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(sched_util_est_se_tp);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(sched_update_nr_running_tp);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(sched_compute_energy_tp);
++EXPORT_TRACEPOINT_SYMBOL_GPL(sched_dl_throttle_tp);
++EXPORT_TRACEPOINT_SYMBOL_GPL(sched_dl_replenish_tp);
++EXPORT_TRACEPOINT_SYMBOL_GPL(sched_dl_server_start_tp);
++EXPORT_TRACEPOINT_SYMBOL_GPL(sched_dl_server_stop_tp);
+ 
+ DEFINE_PER_CPU_SHARED_ALIGNED(struct rq, runqueues);
+---
 
-diff --git a/mm/hmm.c b/mm/hmm.c
-index 015ab243f081..6556c0e074ba 100644
---- a/mm/hmm.c
-+++ b/mm/hmm.c
-@@ -746,7 +746,7 @@ dma_addr_t hmm_dma_map_pfn(struct device *dev, struct hmm_dma_map *map,
- 	case PCI_P2PDMA_MAP_NONE:
- 		break;
- 	case PCI_P2PDMA_MAP_THRU_HOST_BRIDGE:
--		attrs |= DMA_ATTR_SKIP_CPU_SYNC;
-+		attrs |= DMA_ATTR_MMIO;
- 		pfns[idx] |= HMM_PFN_P2PDMA;
- 		break;
- 	case PCI_P2PDMA_MAP_BUS_ADDR:
-@@ -776,7 +776,7 @@ dma_addr_t hmm_dma_map_pfn(struct device *dev, struct hmm_dma_map *map,
- 			goto error;
- 
- 		dma_addr = dma_map_phys(dev, paddr, map->dma_entry_size,
--					DMA_BIDIRECTIONAL, 0);
-+					DMA_BIDIRECTIONAL, attrs);
- 		if (dma_mapping_error(dev, dma_addr))
- 			goto error;
- 
-@@ -811,16 +811,17 @@ bool hmm_dma_unmap_pfn(struct device *dev, struct hmm_dma_map *map, size_t idx)
- 	if ((pfns[idx] & valid_dma) != valid_dma)
- 		return false;
- 
-+	if (pfns[idx] & HMM_PFN_P2PDMA)
-+		attrs |= DMA_ATTR_MMIO;
-+
- 	if (pfns[idx] & HMM_PFN_P2PDMA_BUS)
- 		; /* no need to unmap bus address P2P mappings */
--	else if (dma_use_iova(state)) {
--		if (pfns[idx] & HMM_PFN_P2PDMA)
--			attrs |= DMA_ATTR_SKIP_CPU_SYNC;
-+	else if (dma_use_iova(state))
- 		dma_iova_unlink(dev, state, idx * map->dma_entry_size,
- 				map->dma_entry_size, DMA_BIDIRECTIONAL, attrs);
--	} else if (dma_need_unmap(dev))
-+	else if (dma_need_unmap(dev))
- 		dma_unmap_phys(dev, dma_addrs[idx], map->dma_entry_size,
--			       DMA_BIDIRECTIONAL, 0);
-+			       DMA_BIDIRECTIONAL, attrs);
- 
- 	pfns[idx] &=
- 		~(HMM_PFN_DMA_MAPPED | HMM_PFN_P2PDMA | HMM_PFN_P2PDMA_BUS);
--- 
-2.50.1
+so that the new tps can be used from modules like sched_tp Phil
+mentioned?
+
+Thanks,
+Juri
 
