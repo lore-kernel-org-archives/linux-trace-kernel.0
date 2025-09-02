@@ -1,120 +1,143 @@
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB9EA306484;
-	Tue,  2 Sep 2025 18:05:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC6202147E6;
+	Tue,  2 Sep 2025 18:09:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756836308; cv=none; b=sm2nX4AUXFuhEpn6Wqn81LA9Cw2j1ErpsaVAgNLUMQ1+54mTPDu88nhIupUGKAJNFTqrLAbEEjTIfE+7gPspolnNZJZ8hDOjB5IO+48lxBgGb+4ydSO62ZGKglXKk54PTw2BNcT4kPiM6RcLIT5kpRPWehuVbOlimy2vY2Cle4g=
+	t=1756836578; cv=none; b=igJWtvolAkwgRtZ8TZyn4oEH7dvn/YsZrHSnZKDUoLGMUXPtnbDaWy/IOSPRu/DqvdDMSPUH59S3I3T4mfquh/KNy4rUME8AiknIOVLptd+5CNcKVm3VZyHIen5s8cdq1miMl8irKO1aqcsnx5jWF3Qrxaqqh1EQaoa+u6bgaZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756836308; c=relaxed/simple;
-	bh=vpT2P3exydX6YeKtZHeLeVFc39w1RZ60CDz2GhDUKZ4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tSLExoC5YLeIhZI8guk4LSHs+JTUV3qYdITfbQ/kwNCxhtD7D0Y/b+QNMHLq9E2t26RypZhcGU52dhiivTCmU5yy9TjkQkjtrFnXaYV3J4izoiQj1FBpumM6iC/wkqzCWDLNP+x+G4XpheMHj/Et1C6txysMWeXwnnT6oE1yRBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DAP+c4gi; arc=none smtp.client-ip=209.85.222.173
+	s=arc-20240116; t=1756836578; c=relaxed/simple;
+	bh=0L92IAUziNvNfAmcUTkrdk+mI92e4YaDMRgPtCfWEuQ=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UXBLPvzzQSluXBaBrexJ2bYjvwwbOlo/nSTVuSpmGCRXkx+WMAa0XrPds4lDtb5cS936xk9+lWhAaHLbvAyLUqE7xkQQx1SRJu4LrPieoGGRoyyd+Oj0lb2r/U3r66232aV0EZ6UMVh68TceZ4DaFvmiBRx+qwoF34JCkZzAJbQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TxYrAxGI; arc=none smtp.client-ip=209.85.219.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DAP+c4gi"
-Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-80a6937c99bso3790785a.2;
-        Tue, 02 Sep 2025 11:05:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TxYrAxGI"
+Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-71a2d730d03so18177226d6.3;
+        Tue, 02 Sep 2025 11:09:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1756836306; x=1757441106; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=pIlvD98GkMGtBK+DFLvb23jF6yu54W1IsWgy/W32FDg=;
-        b=DAP+c4giJo7Suhx1JqUlLHRx3rk+/q8XO5GfaBl+hYabjtHG8lXDGMoMNP4P24DXTy
-         Kw6RIk3etZhWzkjC+7wqy97tmz3lql8QiL/pgTgiLSAuFsgYfnHGN5Qg7AubYj7w5wBh
-         2Y26WVORlkZwHlU1dTQVHny/ab+GtpPSlEKvQeVeF4V/85Yhtmz5IXlzeAfTCByuyGPN
-         vcqGabgfn2rNZlFMX8kfa7L99EbEGeCLdwqtbRi7NMG4xIWjvaORN5LEAJRuYEHJsdcc
-         pODuQZw+pV/ln3efOfUPH0MRRQCntrs18RCBqyUXLbd75zLWtvID0rYEr5COoqrah5QK
-         XXIQ==
+        d=gmail.com; s=20230601; t=1756836575; x=1757441375; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=6p2iaxf1xKy8cucNERCImCIG2yh14K1c4hbzVAT+H/w=;
+        b=TxYrAxGIXChcqdPoyt10T3TEVhtIFD+O3uTrUmHo8In++Rs1OSAlAKR9rGesHglj55
+         eARuVBD+AtIY8pdTHB20I3mq2+1LFD6Uh13Wd8gDavy0coL3pH5vYmo6Ld110Td4wc49
+         /Q/itbyu7Qtrz5llrd01pxWgP4tTfi4FRUiYXBZ35YMbd+i0RPF/uQPk9eZbbX1QJ5b1
+         jjOEb1vBfCPQWzyY0QKy/LIcSLalUip1W5+aWYy+q3HBMW+Ubhm8hPUgfW7kISOfB9A/
+         Fed98vC2BM+NNe5LBxmLvn+lkPhxSem6dQF+Tmf+vEorbhRguEGsZwKgtX2v3MEjSm0o
+         s8HA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756836306; x=1757441106;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pIlvD98GkMGtBK+DFLvb23jF6yu54W1IsWgy/W32FDg=;
-        b=E6eZtLz+hD3gkha+Y0+R43K/GENW2PRTDDCI0SkNqv/uoFtO3yCPYKp8JPQWjJLq51
-         XqDwfGvs5uEQ9VsP4kRuvNtVRy+124uWFuwxFeHFGuGwuKvRb9pKkjTlAte3fp9h1zcq
-         947BAjp+qUNNVpTL2I+10cxNcffhU6iJ9yPVwnQ0OMDGfJN6UoJGaQg3Y9rurCHia8mG
-         2cy0xIIUo107V+w1Dyv5lMYxikDUNk1IUon6XjfzHKmNFIQR+EawUGAHpHdvsGT/VzCR
-         INTe8qGKGgcYUuasymK4fFM60pVGnK7vXXE52JYFXpD0J1RluP14hVh20UudSYmG0Bm7
-         VYbA==
-X-Forwarded-Encrypted: i=1; AJvYcCU5Nh1TNqO5D5Ii/zdiEZ0fguQwfiLI+aT/mHKp4IoSQ9agGaAjQBLCTQhjXeHSDox5zprKsycWESU=@vger.kernel.org, AJvYcCW5QBCDrEg/n4WhT3xGHYjWbsJT+OhnJkS3XTkHG19bcA/8SW6h2m98tOhjlA9jQbTdlTKbMrfzZzdbStaz@vger.kernel.org, AJvYcCXPQXrjrfQ96e3aRDXNoVI20nvBApjhs3hW1V4nBvl8JUz4HkRCiATe2wr2/JEsQZ6es8HT8nzloMklgOZ9qF9Lzcx9@vger.kernel.org
-X-Gm-Message-State: AOJu0YxyAjxd83VXezzLd4ZXTwQnhOB2HeOMyeeIt3v5SoydrfwSY2Ei
-	xGQph8GQCnHTHmgeL5C8WaYvE1J2h4HE9ApAdDG8H+WvRNc4f1HSodNN
-X-Gm-Gg: ASbGncvaGb2nE9uT8gNynCcTzrVkJVxmNc1KB/Ds3wJpZl3+jAU/bLaFaWSpvJxV0Wl
-	x3YjrBib9jBiAQg6aQl6+MDSWBmLWBkhiSj/gbHSvPj69lmMqgDqEKVeCDf8lFTJXoX6qDetrBP
-	CFVl5bDZ1phspL4o1sAWEE0bZjnyQ81JfWkZx+deBcJAXoUGlQf/rfLm+m6TZrFS8bn2XLy1Kz4
-	lnVxYIm9httoTT0pUO/NSWt6pjqclwKrsa6J8gn4QyZ7+3s/AJ2xjMdXp1XPhwbAr1PoLqeXw4t
-	Ae3S2gR7Pk/4tif7S8Ic7tzexcxeRTr8YaSgQ73EC9mY4iHEI3l+JapSf09xwHX8NihqPODAUc7
-	w+GUz1BTZyX1ZwYUa9QzlcFK6
-X-Google-Smtp-Source: AGHT+IG33G49UmwxidPwPIQ27msoCdvjNpNqGAldLPbiPT90UJCo4nVgEXSQnnZTEoLi/H9MtlNbSQ==
-X-Received: by 2002:a05:620a:4095:b0:7f9:ad9a:1eec with SMTP id af79cd13be357-7ff2b0dc837mr1439926185a.42.1756836305431;
-        Tue, 02 Sep 2025 11:05:05 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1756836575; x=1757441375;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6p2iaxf1xKy8cucNERCImCIG2yh14K1c4hbzVAT+H/w=;
+        b=S86oApvIkyUlzgOMxUQWWUcyGj2b46QzAxS1ZOHc3hpmJc0xDccaF32WYYRJLgeaRm
+         UZWBJDkdwt7P+fofqICpio3FYV1T2fUBlcshHiGUZhscKNbLFuu8nv59xXgHIPbUfvSl
+         dqYqVNkJ+aqp1lSzBEdF/M0LsnYsjv7XQxB7AG18Mvy33sBokPE7T7Kp0MsI5A9t14R9
+         iygAMWlJwkEl6WB59SwhMxH5wTr2hmySbZ4ef642FRvmIA+kB+ts9avKBKXy3ICvhPwE
+         baRyOukRtJQTUdET+P94vmE9NqecVCDZKzN1F543mUKUW/lVrduKf0X+Wq/1ehUwbLNw
+         RQTw==
+X-Forwarded-Encrypted: i=1; AJvYcCUf1yrNC7vRVEKcyrNvrpNJTb/l+gtHT0DrBQTlBFplyol3cfLr9nHl5gk0CVhpZSfsyRb1JFCevsgAW/i6VC+edxdi@vger.kernel.org, AJvYcCV8Wt3tO1QRm421rz/tE1bmEXQwV6QolVA80goGR/Ol5FsXNiCvjirq8H5n7wRgVi184vomCQQY72hsE8xl@vger.kernel.org, AJvYcCXRihf1Fg02gDG6sOg+/aQAc58chfboGV8tBng/NvgUXtTEWvTCXiMMGjFmKFEw7mse8cbKFRd37nw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxOKIN0PgjPaO6MbkU6l61G1iOvG8QCYvXTZwcmy7rZsvb4Oygt
+	HtDoU37DYw8RwVbWBakTJVdTnHIC5F7IEdyOkTBYI3tPM7CsTXwoWuhZ
+X-Gm-Gg: ASbGnctAgAj09UnZJlMCR7HxrFbX2nxvYqO0W6DMyI/F4myJ01QkKB8SJJfLAgo3Rv7
+	mZc0WEyX9YKX0DiQqt1T1ptckPv2NzEzXAEgMlxTapVg5feeY+KuXV3qyEtUtPF5dxFfaS8UvOk
+	eHO0fVBIw2w8CctZljfVj7M1EfI3Db/xxHQU9ge4BLLHWvMnVVls9qkbtPrJZHlVMMpRBBOiZ+q
+	tOT5hlcLP5IAwcUeBt7MxHWoyQoqYRhaHH5Rtgk/i/NlAg9wuAJIxLW9ANScWZLuk3UtkvrUBg6
+	5pY+o/Nceru1virh1sJCD8KHfuYrRrLTSpQmG3DYFd5P7rjjEeoGjppo65t5P/Hxf4JHSSjZ0xZ
+	BkAXqt3vIeFdeRfeXx155I2h9xZp2Y6qzcDY=
+X-Google-Smtp-Source: AGHT+IF8z6iDNNlWO8O3jO1uwuPXCaRCgFAqH5i81eo36J0SYm4UWdKSZslZI3tIZpmXBYQgJAIklg==
+X-Received: by 2002:a05:6214:1256:b0:70d:ca4f:5121 with SMTP id 6a1803df08f44-70fac78fa83mr182734256d6.25.1756836575247;
+        Tue, 02 Sep 2025 11:09:35 -0700 (PDT)
 Received: from ideapad ([130.64.64.33])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-80698720d04sm174129385a.24.2025.09.02.11.05.04
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-720b475d63asm15668396d6.48.2025.09.02.11.09.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Sep 2025 11:05:05 -0700 (PDT)
-Date: Tue, 2 Sep 2025 14:05:03 -0400
+        Tue, 02 Sep 2025 11:09:34 -0700 (PDT)
+Date: Tue, 2 Sep 2025 14:09:33 -0400
 From: Ivan Pravdin <ipravdin.official@gmail.com>
-To: Tomas Glozar <tglozar@redhat.com>
-Cc: rostedt@goodmis.org, corbet@lwn.net, 
-	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] rtla: fix -a overriding -t argument
-Message-ID: <bc746db5ybqt7f6pga243opnh5sn4dsggwerhh63ydv4wk4pej@64effpqdxias>
+To: Crystal Wood <crwood@redhat.com>, rostedt@goodmis.org, corbet@lwn.net, 
+	tglozar@redhat.com, linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] rtla: fix -C/--cgroup interface
+Message-ID: <jbf4si2tfwlquzna4sxbemr53ecwo3xwuroi5als5vlk4vla72@trp4p7jxw2ue>
 References: <cover.1755018581.git.ipravdin.official@gmail.com>
- <96f305f622de233c28d4ed9f23583b4d6ab2d1ac.1755018581.git.ipravdin.official@gmail.com>
- <CAP4=nvRZ_SY_xdC6N8LkKUA=a-QP5gc5SMgBr4jod6+tu0TFeA@mail.gmail.com>
+ <9394c039d5c957bd8417669148391e20fa1276ee.1755018581.git.ipravdin.official@gmail.com>
+ <3b9bf6e435b2eb85b44557d474a003ec6d2c0c1c.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP4=nvRZ_SY_xdC6N8LkKUA=a-QP5gc5SMgBr4jod6+tu0TFeA@mail.gmail.com>
+In-Reply-To: <3b9bf6e435b2eb85b44557d474a003ec6d2c0c1c.camel@redhat.com>
 
-On Mon, Sep 01, 2025 at 04:23:55PM +0200, Tomas Glozar wrote:
-> út 12. 8. 2025 v 19:22 odesílatel Ivan Pravdin
-> <ipravdin.official@gmail.com> napsal:
-> >
-> > When running rtla as
-> >
-> >     `rtla <timerlat|osnoise> <top|hist> -t custom_file.txt -a 100`
-> >
-> > -a options override trace output filename specified by -t option.
-> > Running the command above will create <timerlat|osnoise>_trace.txt file
-> > instead of custom_file.txt. Fix this by making sure that -a option does
-> > not override trace output filename even if it's passed after trace
-> > output filename is specified.
-> >
+On Fri, Aug 29, 2025 at 02:12:28PM -0500, Crystal Wood wrote:
+> On Tue, 2025-08-12 at 13:21 -0400, Ivan Pravdin wrote:
+> > Currently, user can only specify cgroup to the tracer's thread the
+> > following ways:
+> > 
+> >     `-C[cgroup]`
+> >     `-C[=cgroup]`
+> >     `--cgroup[=cgroup]`
+> > 
+> > If user tries to specify cgroup as `-C [cgroup]` or `--cgroup [cgroup]`,
+> > the parser silently fails and rtla's cgroup is used for the tracer
+> > threads.
+> > 
+> > To make interface more user-friendly, allow user to specify cgroup in
+> > the aforementioned way, i.e. `-C [cgroup]` and `--cgroup [cgroup]`
+> > 
+> > Change documentation to reflect this user interface change.
 > 
-> Yes, this should not be overridden, it's a bug in both the old
-> implementation and the new one using actions. Thank you for the fix.
-> 
-> > Remove clear_terminal in timerlat top as it removes "Saving trace to <filename>"
-> > line from the terminal and is not used in other modes.
-> >
-> 
-> This is not the correct fix for the issue. clear_terminal is needed in
-> timerlat top (and osnoise top) to clear the terminal before the
-> updated status is printed, the fix removes it without a replacement,
-> breaking this behavior. Also, this is a different issue that appeared
-> only when the actions patchset [1] was merged, and should go into a
-> separate patch with a different Fixes tag.
-> 
-> [1] https://lore.kernel.org/linux-trace-kernel/20250626123405.1496931-1-tglozar@redhat.com/T/#t
+> I know these are the semantics that --trace implements, but they're
+> rather atypical... especially -C=group.
 
-Makes sense. This problem indeed does not happend for osnoise. I will
-update it in the next version of the patch.
+The new semantics allow for -C [group] which is the same as -t
+[filename] that has been fixed for -t/--trace.
 
 > 
-> Tomas
+> > @@ -559,12 +559,17 @@ static struct osnoise_params
+> >  			break;
+> >  		case 'C':
+> >  			params->cgroup = 1;
+> > -			if (!optarg) {
+> > -				/* will inherit this cgroup */
+> > +			if (optarg) {
+> > +				if (optarg[0] == '=') {
+> > +					/* skip the = */
+> > +					params->cgroup_name = &optarg[1];
+> > +				} else {
+> > +					params->cgroup_name = optarg;
+> > +				}
+> > +			} else if (optind < argc && argv[optind][0] != '-') {
+> > +				params->cgroup_name = argv[optind];
+> > +			} else {
+> >  				params->cgroup_name = NULL;
+> > -			} else if (*optarg == '=') {
+> > -				/* skip the = */
+> > -				params->cgroup_name = ++optarg;
+> 
+> If we're going to be consistently using these semantics, we should move
+> this logic into a utility function rather than open-coding it
+> everywhere.
+
+Sure, I will move it into a utility function in the next version.
+ 
+> Also, theoretically, shouldn't we be advancing optind for the case where
+> that's consumed?  Not that it matters much if we don't have positional
+> arguments once the options begin, and if we did, then allowing
+> "--arg optional-thing" would be ambiguous...
+
+It does seem that we should advance optind when optional argument is
+provided. Good catch. I will fix it in the next version.
+
+> -Crystal
 > 
 
 	Ivan Pravdin
