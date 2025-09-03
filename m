@@ -1,101 +1,72 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 561F32EA759;
-	Wed,  3 Sep 2025 21:01:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44D0E2BE64D;
+	Wed,  3 Sep 2025 21:32:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756933283; cv=none; b=mRh7hPwXBx20edaknXMuykZcP7ZCmVHrCd3a0gKPhtverdPNDnqtdXWRTsnovLCnX8TQfQ59Qz9N0SMr0prAhSfqd4NRjGWZS24F1bG9vXOgH480+qax15fbnr6IhpvP1+EqP0PF64no9QDqKLL5zFoOXCdmO/dw+YS8of2/tDM=
+	t=1756935169; cv=none; b=g/XJ6pu8RfWfvYctxFX/9M+7ynKENa1J4OAFpwc6NRAniVDEBlQFuTWaKbfj9cSSMn72NW0gyG7QTAfDP3ygHsFC7N4mAquA0piAhlUt8IkQFc99DLPzqFAGcVn+SCw7UXk5sfTy9bS2M28vGAVzcBUr515tZZnrMkm5cTqwCO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756933283; c=relaxed/simple;
-	bh=XGdtskBGFwtyVmK1+2rQa6K/YB7bXVnyuqJbm3/8uYI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F65I5Lf3jmxthyCHbyE+NQ54vDVJOTXwPWOwPpG8pUGtDn6hJ9HXtTss5uJpI3J5iP0lSOYDFSCu3jEzNgx5h8zRugG+fTW2rx9nwRlmHexhxPczPzVgtqXdITXYSsqRwHwb4GTU8aEItgGyIMFQL7nv67+sVtS3kO9ldZv5FcY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=q6n6Sg8z; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1756935169; c=relaxed/simple;
+	bh=PdLCzF0DByByZ8PGBP+flHVIYL/dRMgBFPRsO0VGpdQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=XykLGMKzGLI220g/QZUrL/tM8CWQQcaGPGYOurlZMP7y8UjGDR7uTXTg+dVI3eVvpVG8imOxsamGfQsOM3gX6mcBCdOyj0QbsZZUXLWyxeyQAFE3EvtPXN3r6yS2UFU4muXq9eEjHLGnUhzq1UwJS3rLxZ4OrWpg53HGj7V8ssc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=pf5rt/2G; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="q6n6Sg8z"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=XGyZmgjExmsUZagUGeDDTjnxL29Q9nuxRuIDWGJRPo0=; b=q6n6Sg8z2OTXCODlF0HhYQDenI
-	/dEkTZtI3M3mHdsd9kmgquVEGU3N6Jl4hcdO4OTyqDfofqLarN7HcUu/bq0v7P4jKSLPXa6TWb8q/
-	I08RPLd1qZNH1kgTx85f7a3lwftClNFKxpn1gDpla4g6MhQQfPC7NnAuNTpIufnKeFg/2nRb+N4pg
-	MiAFevHM/8Qs90HJlQ4wHj0NYg6CayuWspJnm4hz3bLDobVmvLwMdZaPgHHuPRA/njA0+fE5FFzzH
-	hySYJLVn+HBJiEpb6DcdZIfrcTUpsz4usbRg0tYaGj2WjjTpmCwlu/AEbGIjxYlAKp+DyihkznZDN
-	9StjEMfA==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1utubQ-00000007yhf-0fEl;
-	Wed, 03 Sep 2025 21:01:13 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 18D9D300220; Wed, 03 Sep 2025 23:01:12 +0200 (CEST)
-Date: Wed, 3 Sep 2025 23:01:12 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	x86@kernel.org, Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	David Laight <David.Laight@aculab.com>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@t-8ch.de>,
-	Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCHv6 perf/core 09/22] uprobes/x86: Add uprobe syscall to
- speed up uprobe
-Message-ID: <20250903210112.GS4067720@noisy.programming.kicks-ass.net>
-References: <20250720112133.244369-1-jolsa@kernel.org>
- <20250720112133.244369-10-jolsa@kernel.org>
- <CAEf4BzaxtW_W1M94e3q0Qw4vM_heHqU7zFeH-fFHOQBwy5+7LQ@mail.gmail.com>
- <aLirakTXlr4p2Z7K@krava>
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="pf5rt/2G"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 2FAF140AE3
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1756935165; bh=vzyLqfwbWFvCCDvBIM5lXqYLIe2UqeBnDeGY9vGSBjU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=pf5rt/2G1Z1dDdzhLsTe9z+/sU50EdcT9l1PwoOmQzixKmwlEVUXpBApS+xE0qSY9
+	 8VbjujxJwzeBhhGefswI6FiNftVQxm3OE3Xo8/vGddYqwnCO+rjGuvgkXURA/ylQja
+	 sZfXEL5BUgByOYC78fE2NS3gSe1Skkqh8vu97IXyEULAd254qyovCvvLN8PtVtwUkH
+	 ydud0cqlca4Tubvb5jXKyQnlzqLjX7STWYjlhAXf3TqlUuwp7C9aAthaXQkxLEuBLe
+	 VJSKWT58JsxYM9Z0z0FAi37OE+2dYJETzIsBiPanUrV0q2SwvcKa9YfNSekcl0iK8b
+	 XIzYUbSaeTpWg==
+Received: from localhost (unknown [IPv6:2601:280:4600:2da9::1fe])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 2FAF140AE3;
+	Wed,  3 Sep 2025 21:32:45 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Steven Rostedt <rostedt@goodmis.org>, Ryan Chung
+ <seokwoo.chung130@gmail.com>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org
+Subject: Re: [PATCH 0/2] trace: minor documentation fixes for clarity and
+In-Reply-To: <20250903155209.058e22d4@batman.local.home>
+References: <20250831101736.11519-1-seokwoo.chung130@gmail.com>
+ <20250902102831.134a26c1@batman.local.home> <aLiH_zWPOsjMRs9V@gmail.com>
+ <20250903155209.058e22d4@batman.local.home>
+Date: Wed, 03 Sep 2025 15:32:44 -0600
+Message-ID: <875xdzql1f.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aLirakTXlr4p2Z7K@krava>
+Content-Type: text/plain
 
-On Wed, Sep 03, 2025 at 10:56:10PM +0200, Jiri Olsa wrote:
+Steven Rostedt <rostedt@goodmis.org> writes:
 
-> > > +SYSCALL_DEFINE0(uprobe)
-> > > +{
-> > > +       struct pt_regs *regs = task_pt_regs(current);
-> > > +       struct uprobe_syscall_args args;
-> > > +       unsigned long ip, sp;
-> > > +       int err;
-> > > +
-> > > +       /* Allow execution only from uprobe trampolines. */
-> > > +       if (!in_uprobe_trampoline(regs->ip))
-> > > +               goto sigill;
-> > 
-> > Hey Jiri,
-> > 
-> > So I've been thinking what's the simplest and most reliable way to
-> > feature-detect support for this sys_uprobe (e.g., for libbpf to know
-> > whether we should attach at nop5 vs nop1), and clearly that would be
-> > to try to call uprobe() syscall not from trampoline, and expect some
-> > error code.
-> > 
-> > How bad would it be to change this part to return some unique-enough
-> > error code (-ENXIO, -EDOM, whatever).
-> > 
-> > Is there any reason not to do this? Security-wise it will be just fine, right?
-> 
-> good question.. maybe :) the sys_uprobe sigill error path followed the
-> uprobe logic when things go bad, seem like good idea to be strict
-> 
-> I understand it'd make the detection code simpler, but it could just
-> just fork and check for sigill, right?
+> On Thu, 4 Sep 2025 03:25:03 +0900
+> Ryan Chung <seokwoo.chung130@gmail.com> wrote:
+>
+>> Hi. Thank you for your comment. 
+>> I will make sure to add the change log next time.
+>> Please let me know if I should do it and make a v2. 
+>
+> I already gave an ack. I'll let Jon decided if there should be a v2 or
+> not.
 
-Can't you simply uprobe your own nop5 and read back the text to see what
-it turns into?
+No need - I applied them and applied the tweak directly.
+
+Thanks,
+
+jon
