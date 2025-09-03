@@ -1,127 +1,98 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from abb.hmeau.com (abb.hmeau.com [180.181.231.80])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AEEA273810;
-	Wed,  3 Sep 2025 04:15:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62AC321771B;
+	Wed,  3 Sep 2025 04:22:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=180.181.231.80
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756872923; cv=none; b=j917O72SM+Om1I1/3AzWIsUlxdGqtVhJ3lHHLetuYtGmqTXenrhkNQwgyhDm+ya2ctvrU7lGgZgEw8jeSbgd6huK+cSkDBJYEhNYRd7VvnF/7/GATHZh740hS7hLpXYd0W7wXrgr+hkSV7m5c9iFUPYYTBrZDLkWoW9FZETfeXE=
+	t=1756873356; cv=none; b=MZojYYlNhi/DZZu7FqKQxagt59xf+v32i5Ws3r+SFJxqWDrz6vENrpMf4u/TQPF+x0l1RM59NTDwxqnDI2cKhp12R5RYl91kl8uQ9dfBwBu5j3M2rSUqzH9S46NZ/2UrMUlpqbo9RVesZDBleEGYDYIZDAEx2MWjoiN4wXH7uP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756872923; c=relaxed/simple;
-	bh=GuRr763jlK6fbSSNGrRKUXsei1H3/BG5/gQDE61R2d0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ud5EnafJ/Km1yF0G5Wgrh8jNq5OR3nL0gDI7zTS9t7PJI6IYUiV54FhgX7btOPm/Z5RYss6Jtmh+kyvZIOiJ9LCiwCP7pCrN2f2o2q5ZCdPB2L7pGi/kcsMTtDqqj8I51N6W/tcCl8xnl3nCYVX1ClgwP6ttBR/PfBZcz9eSFKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4cGq5R3y3bz14MXT;
-	Wed,  3 Sep 2025 12:15:07 +0800 (CST)
-Received: from kwepemf100007.china.huawei.com (unknown [7.202.181.221])
-	by mail.maildlp.com (Postfix) with ESMTPS id 82A5514027D;
-	Wed,  3 Sep 2025 12:15:17 +0800 (CST)
-Received: from [10.67.109.184] (10.67.109.184) by
- kwepemf100007.china.huawei.com (7.202.181.221) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 3 Sep 2025 12:15:16 +0800
-Message-ID: <e3c22d00-1a0c-45e0-bc76-955d367ab4d1@huawei.com>
-Date: Wed, 3 Sep 2025 12:15:16 +0800
+	s=arc-20240116; t=1756873356; c=relaxed/simple;
+	bh=bUnPlAUDuytZwZB+RmwFWMXIzaTlHleVXCLGzp3kX/8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h0PXLPTzYJjLrWCevNEFF8Z6xoi13ZcCHBp30t39m1k02xilMjYSmaEbZ/wIDUJX8i7tol/7WMvgYI56H+MJCT9Jy4J/ye4bDhf+RWQmMog6uPbH70BmFYdQgeYg07KKaqI8m/OWDC2XA9iqW7Poj64KekJogc8qqjmFd6T7OZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=efxb6A7f; arc=none smtp.client-ip=180.181.231.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="efxb6A7f"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=h1T/VJ13Yj29sa7Y17m34iJ5coI2Zh+zi5CLeplvDJE=; b=efxb6A7fx4GA/9nFkNRy5pnlnA
+	mlJpN3mbPABV+BJtU56OQMd033uklI73XoNcDWPNVjTn3bxHIvG+c74SPDZ+h9tg5JCPJ1LlWuFJl
+	J7dmXVCQ7e+WO/VcDCwaWxp05ZZ22pglLlKEHHGRR3yI2ok41aLbY9lrdtMm42vSjBhOiZNeriNQE
+	Gm3+FJqKsltbPRcJwmstBn/X5kZj+TQSaXKbVufuq1JHPJTzEkbUKx6WKIDt+CsNBwejdyDiP9N0L
+	VQ3NTP4qrRxEVcJ5ocq6VV0kGJB29yplFFx4GvWBPehZ5HXcc/Oad3YrdXDfxEdA6yI2a9b1S0QJE
+	9iwPcH2Q==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1utel5-002Crc-0L;
+	Wed, 03 Sep 2025 12:22:04 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Wed, 03 Sep 2025 12:22:03 +0800
+Date: Wed, 3 Sep 2025 12:22:03 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: menglong.dong@linux.dev
+Cc: mhiramat@kernel.org, rostedt@goodmis.org,
+	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, oliver.sang@intel.com
+Subject: Re: [PATCH] tracing: fprobe: fix suspicious rcu usage in fprobe_entry
+Message-ID: <aLfCa1FkLc3T4QI3@gondor.apana.org.au>
+References: <aLa2D4It1Zxc7bs0@gondor.apana.org.au>
+ <3005966.e9J7NaK4W3@7940hx>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] tracing: Fix missing errno when zero parser->idx in
- trace_pid_write
-Content-Language: en-US
-To: <rostedt@goodmis.org>
-CC: <mhiramat@kernel.org>, <mathieu.desnoyers@efficios.com>, Pu Lehui
-	<pulehui@huaweicloud.com>, <linux-kernel@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>
-References: <20250821071721.3609109-1-pulehui@huaweicloud.com>
-From: Pu Lehui <pulehui@huawei.com>
-In-Reply-To: <20250821071721.3609109-1-pulehui@huaweicloud.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: kwepems100001.china.huawei.com (7.221.188.238) To
- kwepemf100007.china.huawei.com (7.202.181.221)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3005966.e9J7NaK4W3@7940hx>
 
-
-On 2025/8/21 15:17, Pu Lehui wrote:
-> From: Pu Lehui <pulehui@huawei.com>
+On Tue, Sep 02, 2025 at 05:50:32PM +0800, menglong.dong@linux.dev wrote:
+> On 2025/9/2 17:17 Herbert Xu <herbert@gondor.apana.org.au> write:
+> > Menglong Dong <dongml2@chinatelecom.cn> wrote:
+> > >
+> > > diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
+> > > index fb127fa95f21..fece0f849c1c 100644
+> > > --- a/kernel/trace/fprobe.c
+> > > +++ b/kernel/trace/fprobe.c
+> > > @@ -269,7 +269,9 @@ static int fprobe_entry(struct ftrace_graph_ent *trace, struct fgraph_ops *gops,
+> > >        if (WARN_ON_ONCE(!fregs))
+> > >                return 0;
+> > > 
+> > > +       rcu_read_lock();
+> > >        head = rhltable_lookup(&fprobe_ip_table, &func, fprobe_rht_params);
+> > > +       rcu_read_unlock();
+> > >        reserved_words = 0;
+> > >        rhl_for_each_entry_rcu(node, pos, head, hlist) {
+> > >                if (node->addr != func)
+> > 
+> > Actually this isn't quite right.  I know that it is a false-positive
+> > so that it's actually safe, but if you're going to mark it with
+> > rcu_read_lock, it should cover both the lookup as well as the
+> > dereference which happens in the loop rhl_for_each_entry_rcu.
 > 
-> When trace_get_user in trace_pid_write parses an only space, the
-> !trace_parser_loaded branch will break with no errno, causing
-> tr->filtered_pids to still be assigned with pid_list, which may trigger
-> potential problems.
+> Yeah, I understand. The rcu_read_lock() here is totally used to
+> suppress the suspicious rcu usage warning, not for the protection.
+> So I used it just for the rhltable_lookup() to reduce the impact.
+> Maybe I should add some comment for it.
 
-Hi Steven,
+My point is that after a lookup you will be doing some sort of a
+dereference on the RCU pointer.  That would cause exactly the same
+splat that rhltable_lookup itself generated.
 
-Sorry, this patch will break the cleanup functionality of 
-"set_ftrace_pid" as indicated in [0]. Pls ignore this patch.
+For example, rhl_for_each_entry_rcu should have created the same
+warning, but it doesn't because for some reason it is using
+rcu_dereference_raw.  I'll need to dig up the history of this
+to see if there is a good reason for it to not warn.
 
-Link: https://lore.kernel.org/all/202509022339.ae20a8bb-lkp@intel.com [0]
-
-> 
-> This patch will also silence the fault injection syzkaller warning in
-> tracepoint_add_func [0]. We can reproduce the warning by following the
-> steps below:
-> 1. echo 8 >> set_event_notrace_pid. Let tr->filtered_pids owns one pid
->     and register sched_switch tracepoint.
-> 2. echo ' ' >> set_event_pid, and perform fault injection during chunk
->     allocation of trace_pid_list_alloc. Let pid_list with no pid and
-> assign to tr->filtered_pids.
-> 3. echo ' ' >> set_event_pid. Let pid_list is NULL and assign to
->     tr->filtered_pids.
-> 4. echo 9 >> set_event_pid, will trigger the double register
->     sched_switch tracepoint warning.
-
-As for this fault injection syzkaller issue, shall we need to silence 
-it? How about the below fix?
-
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index e6b50b416e63..c17c031e7917 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -834,7 +834,11 @@ int trace_pid_write(struct trace_pid_list 
-*filtered_pids,
-                 /* copy the current bits to the new max */
-                 ret = trace_pid_list_first(filtered_pids, &pid);
-                 while (!ret) {
--                       trace_pid_list_set(pid_list, pid);
-+                       ret = trace_pid_list_set(pid_list, pid);
-+                       if (ret) {
-+                               trace_parser_put(&parser);
-+                               return ret;
-+                       }
-                         ret = trace_pid_list_next(filtered_pids, pid + 
-1, &pid);
-                         nr_pids++;
-                 }
-
-> 
-> Link: https://lore.kernel.org/all/67cb890e.050a0220.d8275.022e.GAE@google.com [0]
-> Fixes: b27f266f74fb ("tracing: Fix return value of trace_pid_write()")
-> Signed-off-by: Pu Lehui <pulehui@huawei.com>
-> ---
->   kernel/trace/trace.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index 8d8935ed416d..feeb7eb71318 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -853,10 +853,10 @@ int trace_pid_write(struct trace_pid_list *filtered_pids,
->   		ubuf += ret;
->   		cnt -= ret;
->   
-> +		ret = -EINVAL;
->   		if (!trace_parser_loaded(&parser))
->   			break;
->   
-> -		ret = -EINVAL;
->   		if (kstrtoul(parser.buffer, 0, &val))
->   			break;
->   
+Cheers,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
