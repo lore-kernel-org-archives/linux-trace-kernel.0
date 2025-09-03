@@ -1,115 +1,117 @@
-Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 746EB362995;
-	Wed,  3 Sep 2025 18:25:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECEF67080D;
+	Wed,  3 Sep 2025 18:26:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756923907; cv=none; b=UTBfY/jhAyxn9VNzsBSiR8h4UEcB6W/uoyyoSrmR0IdUxJSQwiouFKxs+V5WU2wFzCnqi+EyPVZ/iXxV7t38R8D8IVG5WqgfNs8o9pVe7JpVVOgIXBP/rSUtbqntmBXftDUnfe7ou5BNYxxVhPLqnNJhG9VIDuJCOA31fidPZYw=
+	t=1756924021; cv=none; b=vGwDVn8PuMFzLoCG9GJNS70C+/m8P0Qq9qPXBZFq2Om0hesiqtvffmNDUV4EnzQufzV5qA4G/NW96LTLXaltWy3vkAjOOsamDn1eaHtI1uEEup0EL3uxZNc5vrtOwOwK3Ek8UrSq3zPckeRuivUvMKa0A6oM1kSw0culJ/2SLxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756923907; c=relaxed/simple;
-	bh=8gpc6kMrndw4M962Y7S8ceJAWleQhacld4rPxwaAuGA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YFJ588Uj1ieHNqPN8K50jsUhetlVC220GknsVDAe/F9TAN6iRji5U/C/i5tuvUxaD2V0tMtWZ4F4evdOoEFT5wUu4Ccw+UFKfHSOOgZNnBfKPZCWDDzSVTscy/es8n5n9zFkTmSZpBfb7hL1eGODDAW2/93FBdHtJO7vSP6oR0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=awNAjDPr; arc=none smtp.client-ip=209.85.219.52
+	s=arc-20240116; t=1756924021; c=relaxed/simple;
+	bh=RkCLVUm+VgOwpMKBClxS3j3qJZ5e/WWIbWbR5Bx5iFM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KoX3JJAIxOrp9ptk/EbKs+4I/jm6nu560O+4MyyyGTK6r7MwTxk4dRZNR+4gHMLdITxeNpJpRZ4f8mZFy4iks6T0ZCsjAwa0Z4deWLkL3N/7AuUjJPq47r7gKSxJP5sSdVXERL09WIqx93WJwr2WmZ+6t7yE181KNVZHWhSu1Ks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AkKzpzwC; arc=none smtp.client-ip=209.85.210.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="awNAjDPr"
-Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-7240eb21ccaso8496806d6.0;
-        Wed, 03 Sep 2025 11:25:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AkKzpzwC"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-77238a3101fso170100b3a.0;
+        Wed, 03 Sep 2025 11:26:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1756923905; x=1757528705; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=CTc0pjUarCBmBq2VGRCMBpe3VbsyG/A//yTqfRbCJ/E=;
-        b=awNAjDPreDdLAEq5k4HLBj7aKONyraa7P0yA87JYQg1Orj9zzNCyRP6IikUlh7Lcaf
-         wErU4OiwIR/j/Ni73iiR5LqpOHXx7jNsiTu1MInm4Nx6MJUhrZnjHbXXnObFHQeRzplF
-         KvhVWaBQijvwlVdGwXYxxzZe8zNZ4iaNcZer+rDQnu8RlxAYkWkaWAYf39OIlZezubTb
-         v8T5az/hBgo2MysRiSi66UMHcYxMnIP7ucKduc8a55N/k244ybNj1Viag/3UNMtenS6Q
-         jAiHA7peM3mkZv+nBJFBeTTh+837oVTchWgVCXQkh0egGiiSe+Wgip33qUNBPeg3muLz
-         DdhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756923905; x=1757528705;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1756924019; x=1757528819; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=CTc0pjUarCBmBq2VGRCMBpe3VbsyG/A//yTqfRbCJ/E=;
-        b=WdawUPUYmDUKbu8DxrDb2OnNG9C+BQj+tzk5fWhAjtcimxUnCNAuOMGk0fD9PbkC/V
-         YrdK01LGFZmsLLs0W93RPTFis7oSp0GGYIDAryfod6N3N0AaUjk4ld7+GE/h2/bRVW0l
-         GKPVrByswAn4P7l1JlcI4VFsAX7UMVFEaMSY6OnHdUL81QLZAzAJysLkgd8Ztue9RfRs
-         S+hxiZzkwDxSNYFXmLxxE8iU1KiG8NHXrd5nSmIRBy7kdfSUF25pi+9hGYVpZDQ0bUPR
-         /YV2uVKeyBftNHoaZ7OiroKA0BFdB8R4RmB7oGNDsNkHwLuxC6E7O7BvH73Xh4v4I4rs
-         XHTg==
-X-Forwarded-Encrypted: i=1; AJvYcCV7gDoBSe+h85uiv0iltIAngP05I7Gt8tUhHlNjzjtbwLKsF/Ywl8MGYBSpbG41gtb7TzlyB5xL7cdtgb5fcIA5Nfb5@vger.kernel.org, AJvYcCVIYpbO+m/JHrMgBm+6DgRHT7cEZ+hj9tkBSfL34uKnQlV2Yeiv6YHaePAnPeV9UgoYEf7kKzViP+M=@vger.kernel.org, AJvYcCVjndEwgLOHkZGyMl5yA3dEZT1SA5UI8bdNyIy/1PUj3dq59u3OOwnGo591nTXDBcZajzL41jQccZvKwpSz@vger.kernel.org
-X-Gm-Message-State: AOJu0YzL2ukD4ZrA+61lP2x4bXqD5B7r3TCMhQ0zcxcMTWnE/lJW4AeC
-	siJyYVurx04hPGBcHGSED23DacAksVIYiv//M0ap4QUa+YCDSI8RwpLvsniVHkik2XKasg==
-X-Gm-Gg: ASbGncurOZMaYp8FTvgTAo1VzrEcvXF5bA+4275e0xh1X/IeycV5KLjQeynUpyGX0Ap
-	wVazR25nse82akZ+D89ubbHaUAM9Xl23GK0dyRB2eTMzCxk5HFjE9LsZYCwoHjHHlf8EiOb9BTV
-	kJUC9x/QUmIoxNev+9MoQOMVTcz2Jg+R66kA3lponJZHdCoZU/cDBevs9gl/YUPI3HwFOPfULqI
-	o4jwCsH7q+JuxUcICg3W9mXCCVyYdflY71mg8KhTunQzf4UwMgL9Tq1SeBeqhC6hFlK8KDvxYYq
-	45afVs8RI0P+YbKDqMbN2dLJtm3BS3yKbKSCfUwdnOxaXQtFdMKAqY+vEOeWTaGxgk6eJq/GZC4
-	Cdc0ufkg6pHURWLD/rpbFNayc45h/an1CsKP3xHSv0wJ9+LEG
-X-Google-Smtp-Source: AGHT+IEzPCnSFDIIko5XzIhlnGQnV76vwv0dzGHaNdjyAS1E5bTbpFLSmiESIEyJ/zMJNHrSMtBPcw==
-X-Received: by 2002:a05:6214:611c:b0:710:52a1:d0f4 with SMTP id 6a1803df08f44-71052a1d49fmr162605276d6.14.1756923905240;
-        Wed, 03 Sep 2025 11:25:05 -0700 (PDT)
-Received: from gmail.com (wlc3.cooper.edu. [199.98.16.8])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-720b683283csm32651166d6.68.2025.09.03.11.25.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Sep 2025 11:25:04 -0700 (PDT)
-Date: Thu, 4 Sep 2025 03:25:03 +0900
-From: Ryan Chung <seokwoo.chung130@gmail.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com, corbet@lwn.net,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH 0/2] trace: minor documentation fixes for clarity and
-Message-ID: <aLiH_zWPOsjMRs9V@gmail.com>
-References: <20250831101736.11519-1-seokwoo.chung130@gmail.com>
- <20250902102831.134a26c1@batman.local.home>
+        bh=hoqojG11OHkQISj5q0OcGSIF6PQ5yOqHBvHUpFUBBLM=;
+        b=AkKzpzwCq3fOf4DqIHxPI1OyJwAkubkZ2T3dU0zTG/q1plm0JDNWm1nYBOndXEtK6Y
+         6LwZuk+UtVnd0Jqkq2BG73jEOcainNzJRpOVo5xidrsiALFhXYsER1H/siobOa2sxxOx
+         NYwydH6vnTfFq+zOLvMilt9mxz8DFySZxIYR0TGZFVN7llElY8Oyy6Er3ifmznztoRrE
+         JzoDaHvcXv0LDCh6kZOj4XgaM4sXf6v6QoCbqfr27L2xN0WiWgmjD8UyfHNLHwzn8c9z
+         3CVCXSRmnt0Yx0UgCZaP9vDOPpvY08dyG0VWguKBzS+T2zuk3cO1mBqstufGBhpiVPBI
+         jdow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756924019; x=1757528819;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hoqojG11OHkQISj5q0OcGSIF6PQ5yOqHBvHUpFUBBLM=;
+        b=LuBGSZTQTq2j0Yh++cdXf5zKFaHmw+L3luuWpxU19oUnBKwGHWxZANnJNWb0VkFuJZ
+         iG9LppUhKkcebMA1I67sQ3VNaOJfcFV+sSFmWLXTkqeuHSZmWESn7I0X+upVCpWr4fRz
+         3EDzDRoAAh/qs9+LBpOAgzLbhgNE+5c4W4KgPXU5i2oYDHPpqXIF5zX9VI7qg87UQ/+r
+         ZRnJ3xashZBuCtAMaEWZO+9fUQ6Im3JUfbYKLT0aQcppAJl+ASTDfZZb7gnWmZMrdA5y
+         KYLWwDv/r5vPZpMpMl9TWHHT/SmGxu6Wl7hS3nQ3n9zgsuzDjmoMkb+bv6Hk3h2zpj1w
+         DnFg==
+X-Forwarded-Encrypted: i=1; AJvYcCUpNC+robxb0W8wGIKtE9t0c0IXiFU+zDCdCeyJ8OqjUEAeh4PK5b777kuhu6+3HfcCfaehAmzUYslfpW5fNzxAiX2E@vger.kernel.org, AJvYcCVZ0cI0U5oaKd1T/iN7/2QwEuLdvCHa1A08TpXdyigSu8rvDvcwYt3D/v1BIa97y8P1OsK/NtoztNeHGqeU@vger.kernel.org, AJvYcCXyD7Q8pn8Ki5bMntdWlTXxF5lRKZ5UBCJGfx8N5jEtS3nuNbLyW83Nj/kK+gGjU0aLTvg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx1+vhqdtBVKntUjXqGkeSA1cuFu4MzlGdIW4Fto8cnSCjPjjkI
+	lF69U+bAUmv7Yg8ChnkglWDJ2gtNPGYh/ce5xEooSkOFVdn8I3mjQxW0AYA0NHdlDMrdf1o9Ww+
+	KLFdiOKqMbgiGan7aUkQKKMfTQRcTUi4=
+X-Gm-Gg: ASbGncsiB9L9uP/8C21zzYexkDo1IE124g9dqs3IPpnmOfwVPO1ns/g4XAEIXmKS+iM
+	8vyv6nzO1V81G4Lg7SJ7mhNnp9nSlfIpR6wtDtrA3mEW1QS5/FCF2eK4JN1n1uvyJ9TmMkVy5lX
+	Qs16mn7VJIDs2OpnqmVpdRLwEBzHDCdWePb3FrFinqLbwwOGxhXJkxj+WWIcL4jkBg77jzsEnwQ
+	yhtKCgoOiSjkIA3068LhTY=
+X-Google-Smtp-Source: AGHT+IFgN2FUXZavbPeV9BKbJ7/eI0glYRzG78d+xwWBDtnYXKTVD20iLZJVasGCDV1CXsMDO7Hapk0kbA3BbAaJOI8=
+X-Received: by 2002:a17:903:234a:b0:248:cd0b:3426 with SMTP id
+ d9443c01a7336-24944a460c6mr248501325ad.20.1756924019230; Wed, 03 Sep 2025
+ 11:26:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250902102831.134a26c1@batman.local.home>
+References: <20250902143504.1224726-1-jolsa@kernel.org> <20250902143504.1224726-8-jolsa@kernel.org>
+In-Reply-To: <20250902143504.1224726-8-jolsa@kernel.org>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Wed, 3 Sep 2025 11:26:47 -0700
+X-Gm-Features: Ac12FXz1My-dnKSo13TXTJx2Lt0P_uhhsDDW7OL8yKRB2Q5QGJtg2HXASRzwTow
+Message-ID: <CAEf4BzaT+fAMqFXDMFV1tiRSu0vTy3btcx1TS8FyawSe0TQ95g@mail.gmail.com>
+Subject: Re: [PATCH perf/core 07/11] libbpf: Add support to attach generic
+ unique uprobe
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Oleg Nesterov <oleg@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	x86@kernel.org, Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
+	John Fastabend <john.fastabend@gmail.com>, Hao Luo <haoluo@google.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Sep 02, 2025 at 10:28:31AM -0400, Steven Rostedt wrote:
-> On Sun, 31 Aug 2025 19:17:27 +0900
-> Ryan Chung <seokwoo.chung130@gmail.com> wrote:
-> 
-> > Resend: fixed recipients; no changes
-> > 
-> > Hi all,
-> > 
-> > This short series cleans up two small wording issues in the tracing docs to
-> > improve readability. There are no functional changes.
-> > 
-> > Ryan Chung (2):
-> >   trace: rephrase for clearer documentation
-> >   trace: fix grammar error in debugging.rst
-> > 
-> >  Documentation/trace/boottime-trace.rst | 2 +-
-> >  Documentation/trace/debugging.rst      | 2 +-
-> >  2 files changed, 2 insertions(+), 2 deletions(-)
-> > 
-> 
-> Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> 
-> The only comments I would make is the subject tag for the trace files
-> is actually "tracing:" and not "trace:".
-> 
-> Also, even though the changes are minor, a simple change log would
-> still be nice.
-> 
-> -- Steve
+On Tue, Sep 2, 2025 at 7:36=E2=80=AFAM Jiri Olsa <jolsa@kernel.org> wrote:
+>
+> Adding support to attach unique generic uprobe by adding the 'unique'
+> bool flag to struct bpf_uprobe_opts.
+>
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+>  tools/lib/bpf/libbpf.c | 29 ++++++++++++++++++++++++-----
+>  tools/lib/bpf/libbpf.h |  4 +++-
+>  2 files changed, 27 insertions(+), 6 deletions(-)
+>
+> diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+> index 1f613a5f95b6..aac2bd4fb95e 100644
+> --- a/tools/lib/bpf/libbpf.c
+> +++ b/tools/lib/bpf/libbpf.c
+> @@ -11045,11 +11045,19 @@ static int determine_uprobe_retprobe_bit(void)
+>         return parse_uint_from_file(file, "config:%d\n");
+>  }
+>
+> +static int determine_uprobe_unique_bit(void)
+> +{
+> +       const char *file =3D "/sys/bus/event_source/devices/uprobe/format=
+/unique";
+> +
+> +       return parse_uint_from_file(file, "config:%d\n");
+> +}
 
-Hi. Thank you for your comment. 
-I will make sure to add the change log next time.
-Please let me know if I should do it and make a v2. 
+perf event-based attachment is legacy and libbpf will automatically
+try to use BPF_LINK_CREATE, so I don't think we need to add this at
+all.
 
-Best regards,
-Ryan Chung
+But I also feel like we don't really need any special thing for
+"exclusive uprobe", because ultimately we just want to let uprobe
+override user registers, which we can allow for normal uprobes, as I
+mentioned in the other email.
+
+[...]
