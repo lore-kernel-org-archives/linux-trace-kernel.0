@@ -1,122 +1,352 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F2C02D3A71;
-	Wed,  3 Sep 2025 04:41:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2D9C2D4B4E;
+	Wed,  3 Sep 2025 04:58:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756874516; cv=none; b=B+NgY05FhnMe9/GGYizIUfc2kR89n73Qit/Q3xbIKge6nxlqgdmB03IS0TtbJN51cnLTpoerHgMQy6rqFBSX1uJKWl1a/Bic9JuNo0iuiOLlkUuAN/EPitQKsSlbJAq03UrA6yL9Y+tPHui0MGRCvaFt7SGygDOZ42UDrHQIIJA=
+	t=1756875499; cv=none; b=thOBBgjuXZc5/bDmzWd+brSk7o5VJr9UTfrNfN+MeSvdHDXwoFjd7+BQYunAol2AbVo5Rk/RFNfzM9Y0NJMHwLxbqPszdzZQ516tkDbZPRFcmmUkCXGg3PUmm/kTc97222BX+FGgeRCDIF8MOiU4xdGCkBtUeOfGpyPdsn05VtI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756874516; c=relaxed/simple;
-	bh=Ce5ETH+F6WnWDEeaq7pLglfV4JdFcr3PKEJyxp/keno=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XN1gnNkX7wy3aXifhWNBNemX2RmarO9zHhtk1Ze6t0g6gjegt/ZxAMu8qTJ6Hi/Yt/LwYqJAyhhuOmXvSkrZQx7UFXHeLf9Rr93OO5gXQrCVwHhHApvfKP981Mpzds8AMMnBpMoCYBI5jbjN4aFiDKh14WrcYF49m2VMjN3vIqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s/wbSSBA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1756875499; c=relaxed/simple;
+	bh=6YJvO7PqsDrEvLx2JteHA5sSPVycN44jl8SxtQBZTHw=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=gFnKLTwecZBlwShlvoqwYUz7sHY6xarARy4kHYQL2uh7am7gnoPQ4CLOO740HjbvprGwcxWWRlwU4wKZs/1ulruPhXp0E6PY0rKdnq67Nw1J7LREC8KYxeUadiKto2oHChJwFaZVDKVDWT//UalO0/WuZiwXny9k1MKJyBptPHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RHRNFLhQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s/wbSSBA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C2AAC4CEF0;
-	Wed,  3 Sep 2025 04:41:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RHRNFLhQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04C8CC4CEF0;
+	Wed,  3 Sep 2025 04:58:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756874516;
-	bh=Ce5ETH+F6WnWDEeaq7pLglfV4JdFcr3PKEJyxp/keno=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=s/wbSSBARIKT8Fd9JqzskawfzifT7+BPOBAzwXDl6WBxhU410noLNvQWfHvv+Nb4Q
-	 SbPcIb3hxSHQY5dHlRH7uTb7j/F/Gu7pEGr7MuO33HXsvNskDBMUab0jPLJFQsfQGn
-	 DBDR9JuXyqBeBGip1IjfApmvbUcrJdSUfPe1zWbEw+SMhMPPGSNw74IL9FARn5fKmF
-	 zjHgI792YdyiwMwWOpQd3S9Oo3Edup8Zqq77sQ1wl2zqgUT6OeYww9IfARtdlcDtB3
-	 vOHV/VFLi6+2jqm//3XxZoeker+XP6Xe8Qrr8AEKkb368Q3fZA1sXUVv4Sn/GGGapn
-	 XGwAwOPKYtzMA==
-Message-ID: <29e61472-5f41-4e76-9b5b-f3e106d6a629@kernel.org>
-Date: Tue, 2 Sep 2025 23:41:52 -0500
+	s=k20201202; t=1756875498;
+	bh=6YJvO7PqsDrEvLx2JteHA5sSPVycN44jl8SxtQBZTHw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=RHRNFLhQh+CxZitPcxGq0MmzpR0gHMbqTumPkFZKSLS1jgT5b0kVXbXhWc/Pvdxsq
+	 RsNZjGr70W6P93yRbsaOro7UK+llD/EXQ0e3fIWkdW/OUAV0zkpkUGIuXPtAC1XQSr
+	 aZn3ox+K9cek1H/kDmIg6KLBhcslnlqdT/TxpqOcok4yzPr65Ji4pHjSkJB6CioEIZ
+	 mTiHxFltJ3QvXv5hIi3YkbFtWGl9DH/Gm0EcblCyeNRf6pEEq7Ayj69TfR8wcV/+9Q
+	 RrJKVnC8aON60DMRGR3DyEKleqf27d0g9yduDWZ0WbzKRr0N6dJH8gJqc3MJc3bco5
+	 cj1PJVVYYGJlg==
+Date: Wed, 3 Sep 2025 13:58:14 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
+ linux-trace-kernel@vger.kernel.org, maz@kernel.org, oliver.upton@linux.dev,
+ joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com,
+ kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ jstultz@google.com, qperret@google.com, will@kernel.org,
+ aneesh.kumar@kernel.org, kernel-team@android.com,
+ linux-kernel@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>,
+ linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v6 12/24] tracing: selftests: Add trace remote tests
+Message-Id: <20250903135814.57c4ec19de536032c640b755@kernel.org>
+In-Reply-To: <20250821081412.1008261-13-vdonnefort@google.com>
+References: <20250821081412.1008261-1-vdonnefort@google.com>
+	<20250821081412.1008261-13-vdonnefort@google.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 00/11] Improvements to S5 power consumption
-To: "Rafael J . Wysocki" <rafael@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>
-Cc: Pavel Machek <pavel@kernel.org>, Len Brown <lenb@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Danilo Krummrich <dakr@kernel.org>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
- "Martin K . Petersen" <martin.petersen@oracle.com>,
- Steven Rostedt <rostedt@goodmis.org>,
- "open list:HIBERNATION (aka Software Suspend, aka swsusp)"
- <linux-pm@vger.kernel.org>,
- "open list:RADEON and AMDGPU DRM DRIVERS" <amd-gfx@lists.freedesktop.org>,
- "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
- "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
- "open list:SCSI SUBSYSTEM" <linux-scsi@vger.kernel.org>,
- "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>,
- "open list:TRACING" <linux-trace-kernel@vger.kernel.org>,
- AceLan Kao <acelan.kao@canonical.com>, Kai-Heng Feng <kaihengf@nvidia.com>,
- Mark Pearson <mpearson-lenovo@squebb.ca>,
- =?UTF-8?Q?Merthan_Karaka=C5=9F?= <m3rthn.k@gmail.com>,
- Eric Naim <dnaim@cachyos.org>
-References: <20250818020101.3619237-1-superm1@kernel.org>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <20250818020101.3619237-1-superm1@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 8/17/2025 9:00 PM, Mario Limonciello (AMD) wrote:
-> A variety of issues both in function and in power consumption have been
-> raised as a result of devices not being put into a low power state when
-> the system is powered off.
-> 
-> There have been some localized changes[1] to PCI core to help these issues,
-> but they have had various downsides.
-> 
-> This series instead tries to use the S4 flow when the system is being
-> powered off.  This lines up the behavior with what other operating systems
-> do as well.  If for some reason that fails or is not supported, run their
-> shutdown() callbacks.
-> 
-> Cc: AceLan Kao <acelan.kao@canonical.com>
-> Cc: Kai-Heng Feng <kaihengf@nvidia.com>
-> Cc: Mark Pearson <mpearson-lenovo@squebb.ca>
-> Cc: Merthan Karakaş <m3rthn.k@gmail.com>
-> Cc: Eric Naim <dnaim@cachyos.org>
-> ---
-> v5->v6:
->   * Fix for LKP robot issue
->   * Some commit message changes
->   * Rebase on 6.17-rc2
-> 
-> Mario Limonciello (AMD) (11):
->    PM: Introduce new PMSG_POWEROFF event
->    scsi: Add PM_EVENT_POWEROFF into suspend callbacks
->    usb: sl811-hcd: Add PM_EVENT_POWEROFF into suspend callbacks
->    USB: Pass PMSG_POWEROFF event to suspend_common() for poweroff with S4
->      flow
->    PCI: PM: Disable device wakeups when halting system through S4 flow
->    PCI: PM: Split out code from pci_pm_suspend_noirq() into helper
->    PCI: PM: Run bridge power up actions as part of restore phase
->    PCI: PM: Use pci_power_manageable() in pci_pm_poweroff_noirq()
->    PCI: Put PCIe bridges with downstream devices into D3 at hibernate
->    drm/amd: Avoid evicting resources at S5
->    PM: Use hibernate flows for system power off
-> 
->   drivers/base/power/main.c                  |  7 ++
->   drivers/gpu/drm/amd/amdgpu/amdgpu_device.c |  4 +
->   drivers/pci/pci-driver.c                   | 99 +++++++++++++++-------
->   drivers/scsi/mesh.c                        |  1 +
->   drivers/scsi/stex.c                        |  1 +
->   drivers/usb/core/hcd-pci.c                 | 11 ++-
->   drivers/usb/host/sl811-hcd.c               |  1 +
->   include/linux/pm.h                         |  5 +-
->   include/trace/events/power.h               |  3 +-
->   kernel/reboot.c                            |  6 ++
->   10 files changed, 103 insertions(+), 35 deletions(-)
-> 
+On Thu, 21 Aug 2025 09:14:00 +0100
+Vincent Donnefort <vdonnefort@google.com> wrote:
 
-Rafael, Bjorn,
+> Exercise the tracefs interface for trace remote with a set of tests to
+> check:
+> 
+>   * loading/unloading (unloading.tc)
+>   * reset (reset.tc)
+>   * size changes (buffer_size.tc)
+>   * event integrity (trace_pipe)
+> 
+> Cc: Shuah Khan <skhan@linuxfoundation.org>
+> Cc: linux-kselftest@vger.kernel.org
+> Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+> 
+> diff --git a/tools/testing/selftests/ftrace/test.d/remotes/buffer_size.tc b/tools/testing/selftests/ftrace/test.d/remotes/buffer_size.tc
+> new file mode 100644
+> index 000000000000..60bf431ccc91
+> --- /dev/null
+> +++ b/tools/testing/selftests/ftrace/test.d/remotes/buffer_size.tc
+> @@ -0,0 +1,24 @@
+> +#!/bin/sh
+> +# SPDX-License-Identifier: GPL-2.0
+> +# description: Test trace remote buffer size
 
-Any feedback for this series?
+I think this test requires `remotes/`. If so, please add
 
-Thanks,
+# requires: remotes
+
+Then this test will be skipped if it is not enabled.
+
+> +
+> +. $TEST_DIR/remotes/functions
+> +
+> +test_buffer_size()
+> +{
+> +    echo 0 > tracing_on
+> +    assert_unloaded
+> +
+> +    echo 4096 > buffer_size_kb
+> +    echo 1 > tracing_on
+> +    assert_loaded
+> +
+> +    echo 0 > tracing_on
+> +    echo 7 > buffer_size_kb
+> +}
+> +
+> +if [ -z "$SOURCE_REMOTE_TEST" ]; then
+> +    set -e
+> +    setup_remote_test
+> +    test_buffer_size
+> +fi
+> diff --git a/tools/testing/selftests/ftrace/test.d/remotes/functions b/tools/testing/selftests/ftrace/test.d/remotes/functions
+> new file mode 100644
+> index 000000000000..504a495b3b1b
+> --- /dev/null
+> +++ b/tools/testing/selftests/ftrace/test.d/remotes/functions
+> @@ -0,0 +1,33 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +
+> +setup_remote()
+> +{
+> +	local name=$1
+> +
+> +	[ -e $TRACING_DIR/remotes/$name/write_event ] || exit_unresolved
+> +
+> +	cd remotes/$name/
+> +	echo 0 > tracing_on
+> +	clear_trace
+> +	echo 7 > buffer_size_kb
+> +	echo 0 > events/enable
+> +	echo 1 > events/$name/selftest/enable
+> +	echo 1 > tracing_on
+> +}
+> +
+> +setup_remote_test()
+> +{
+> +	[ -d $TRACING_DIR/remotes/test/ ] || modprobe remote_test || exit_unresolved
+> +
+> +	setup_remote "test"
+> +}
+> +
+> +assert_loaded()
+> +{
+> +	grep -q "(loaded)" buffer_size_kb
+> +}
+> +
+> +assert_unloaded()
+> +{
+> +	grep -q "(unloaded)" buffer_size_kb
+> +}
+> diff --git a/tools/testing/selftests/ftrace/test.d/remotes/reset.tc b/tools/testing/selftests/ftrace/test.d/remotes/reset.tc
+> new file mode 100644
+> index 000000000000..93d6eb2a807f
+> --- /dev/null
+> +++ b/tools/testing/selftests/ftrace/test.d/remotes/reset.tc
+> @@ -0,0 +1,105 @@
+> +#!/bin/sh
+> +# SPDX-License-Identifier: GPL-2.0
+> +# description: Test trace remote reset
+
+Ditto.
+
+> +
+> +. $TEST_DIR/remotes/functions
+> +
+> +get_cpu_ids()
+> +{
+> +    sed -n 's/^processor\s*:\s*\([0-9]\+\).*/\1/p' /proc/cpuinfo
+> +}
+> +
+> +dump_trace()
+> +{
+> +    output=$(mktemp /tmp/remote_test.XXXXXX)
+
+For the test-local temporary working directory, can you use $TMPDIR
+instead of /tmp ? That directory is removed after running each test.
+
+> +    cat trace_pipe > $output &
+> +    pid=$!
+> +    sleep 1
+> +    kill -1 $pid
+> +
+> +    echo $output
+> +}
+> +
+> +check_reset()
+> +{
+> +    write_event_path="write_event"
+> +    taskset=""
+> +
+> +    clear_trace
+> +
+> +    # Is the buffer empty?
+> +    output=$(dump_trace)
+> +    test $(wc -l $output | cut -d ' ' -f1) -eq 0
+> +
+> +    if $(echo $(pwd) | grep -q "per_cpu/cpu"); then
+> +        write_event_path="../../write_event"
+> +        cpu_id=$(echo $(pwd) | sed -e 's/.*per_cpu\/cpu//')
+> +        taskset="taskset -c $cpu_id"
+> +    fi
+> +    rm $output
+> +
+> +    # Can we properly write a new event?
+> +    $taskset echo 7890 > $write_event_path
+> +    output=$(dump_trace)
+> +    test $(wc -l $output | cut -d ' ' -f1) -eq 1
+> +    grep -q "id=7890" $output
+> +    rm $output
+> +}
+> +
+> +test_global_interface()
+> +{
+> +    output=$(mktemp /tmp/remote_test.XXXXXX)
+> +
+> +    # Confidence check
+> +    echo 123456 > write_event
+> +    output=$(dump_trace)
+> +    grep -q "id=123456" $output
+> +    rm $output
+> +
+> +    # Reset single event
+> +    echo 1 > write_event
+> +    check_reset
+> +
+> +    # Reset lost events
+> +    for i in $(seq 1 10000); do
+> +        echo 1 > write_event
+> +    done
+> +    check_reset
+> +}
+> +
+> +test_percpu_interface()
+> +{
+> +    [ "$(get_cpu_ids | wc -l)" -ge 2 ] || return 0
+> +
+> +    for cpu in $(get_cpu_ids); do
+> +        taskset -c $cpu echo 1 > write_event
+> +    done
+> +
+> +    check_non_empty=0
+> +    for cpu in $(get_cpu_ids); do
+> +        cd per_cpu/cpu$cpu/
+> +
+> +        if [ $check_non_empty -eq 0 ]; then
+> +            check_reset
+> +            check_non_empty=1
+> +        else
+> +            # Check we have only reset 1 CPU
+> +            output=$(dump_trace)
+> +            test $(wc -l $output | cut -d ' ' -f1) -eq 1
+> +            rm $output
+> +        fi
+> +        cd -
+> +    done
+> +}
+> +
+> +test_reset()
+> +{
+> +    test_global_interface
+> +    test_percpu_interface
+> +}
+> +
+> +if [ -z "$SOURCE_REMOTE_TEST" ]; then
+> +    set -e
+> +    setup_remote_test
+> +    test_reset
+> +fi
+> diff --git a/tools/testing/selftests/ftrace/test.d/remotes/trace_pipe.tc b/tools/testing/selftests/ftrace/test.d/remotes/trace_pipe.tc
+> new file mode 100644
+> index 000000000000..f4bd2b3655e0
+> --- /dev/null
+> +++ b/tools/testing/selftests/ftrace/test.d/remotes/trace_pipe.tc
+> @@ -0,0 +1,57 @@
+> +#!/bin/sh
+> +# SPDX-License-Identifier: GPL-2.0
+> +# description: Test trace remote trace_pipe
+
+Ditto.
+
+> +
+> +. $TEST_DIR/remotes/functions
+> +
+> +test_trace_pipe()
+> +{
+> +    echo 0 > tracing_on
+> +    assert_unloaded
+> +
+> +    echo 1024 > buffer_size_kb
+> +    echo 1 > tracing_on
+> +    assert_loaded
+> +
+> +    output=$(mktemp /tmp/remote_test.XXXXXX)
+> +
+> +    cat trace_pipe > $output &
+> +    pid=$!
+> +
+> +    for i in $(seq 1 1000); do
+> +        echo $i > write_event
+> +    done
+> +
+> +    echo 0 > tracing_on
+> +    sleep 1
+> +    kill $pid
+> +
+> +    prev_ts=0 # TODO: Init with proper clock value
+> +    prev_id=0
+> +
+> +    # Only keep <timestamp> <id>
+> +    sed -i -e 's/\[[0-9]*\]\s*\([0-9]*.[0-9]*\): [a-z]* id=\([0-9]*\)/\1 \2/' $output
+> +
+> +    IFS=$'\n'
+
+This fails checkbashisms test. Can you use printf for this?
+
+IFS=$(printf "\n")
+
+
+> +    for line in $(cat $output); do
+> +        ts=$(echo $line | cut -d ' ' -f 1)
+> +        id=$(echo $line | cut -d ' ' -f 2)
+> +
+> +        test $(echo "$ts>$prev_ts" | bc) -eq 1
+> +        test $id -eq $((prev_id + 1))
+> +
+> +        prev_ts=$ts
+> +        prev_id=$id
+> +    done
+> +
+> +    test $prev_id -eq 1000
+> +
+> +    rm $output
+> +}
+> +
+> +if [ -z "$SOURCE_REMOTE_TEST" ]; then
+> +    set -e
+> +
+> +    setup_remote_test
+> +    test_trace_pipe
+> +fi
+> diff --git a/tools/testing/selftests/ftrace/test.d/remotes/unloading.tc b/tools/testing/selftests/ftrace/test.d/remotes/unloading.tc
+> new file mode 100644
+> index 000000000000..99f97e100fde
+> --- /dev/null
+> +++ b/tools/testing/selftests/ftrace/test.d/remotes/unloading.tc
+> @@ -0,0 +1,40 @@
+> +#!/bin/sh
+> +# SPDX-License-Identifier: GPL-2.0
+> +# description: Test trace remote unloading
+
+Here, please add "requires: remotes" line.
+
+Thank you,
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
