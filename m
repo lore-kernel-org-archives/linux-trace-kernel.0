@@ -1,117 +1,192 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECEF67080D;
-	Wed,  3 Sep 2025 18:26:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0A3229D0E;
+	Wed,  3 Sep 2025 19:50:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756924021; cv=none; b=vGwDVn8PuMFzLoCG9GJNS70C+/m8P0Qq9qPXBZFq2Om0hesiqtvffmNDUV4EnzQufzV5qA4G/NW96LTLXaltWy3vkAjOOsamDn1eaHtI1uEEup0EL3uxZNc5vrtOwOwK3Ek8UrSq3zPckeRuivUvMKa0A6oM1kSw0culJ/2SLxI=
+	t=1756929040; cv=none; b=kVFwaL6/60VicEGMNEQgH/pQ8oiSKmj2hPMou70fLSIhkbJmAfr8LVTmAaLTeBfK6sf0KmBak3QFy2mDPRp2VGYo4LmWfPublvR1ah5hYtm1r79nnfEjx5Jj1dZP4KXIUyTzr14KdEJx08xPlaAF+5P+V4Tpqa28k6dn9ZhjEhE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756924021; c=relaxed/simple;
-	bh=RkCLVUm+VgOwpMKBClxS3j3qJZ5e/WWIbWbR5Bx5iFM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KoX3JJAIxOrp9ptk/EbKs+4I/jm6nu560O+4MyyyGTK6r7MwTxk4dRZNR+4gHMLdITxeNpJpRZ4f8mZFy4iks6T0ZCsjAwa0Z4deWLkL3N/7AuUjJPq47r7gKSxJP5sSdVXERL09WIqx93WJwr2WmZ+6t7yE181KNVZHWhSu1Ks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AkKzpzwC; arc=none smtp.client-ip=209.85.210.170
+	s=arc-20240116; t=1756929040; c=relaxed/simple;
+	bh=O31dmHfc7geJEvris/Ly7Pd4Q81L3VNPulUMDdTSH1Q=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FGbrUZlzcE99k6WdNpGWxP8jfL2zPOhdVS6oHCSEXLKG8LHXPJTSqA+L61Il5I5yEckTPIBZhqybF/yl2e8HVWSinKkCITqhTe+/cIxHUYJiqFppWfFGzQfgdYApqIh+m2+zs8JTAyi0+eyAosWKtH7vg4ysM6XxtA0jXqrKiP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JOTQ40Qc; arc=none smtp.client-ip=209.85.218.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AkKzpzwC"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-77238a3101fso170100b3a.0;
-        Wed, 03 Sep 2025 11:26:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JOTQ40Qc"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-afcb7ace3baso48784366b.3;
+        Wed, 03 Sep 2025 12:50:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1756924019; x=1757528819; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hoqojG11OHkQISj5q0OcGSIF6PQ5yOqHBvHUpFUBBLM=;
-        b=AkKzpzwCq3fOf4DqIHxPI1OyJwAkubkZ2T3dU0zTG/q1plm0JDNWm1nYBOndXEtK6Y
-         6LwZuk+UtVnd0Jqkq2BG73jEOcainNzJRpOVo5xidrsiALFhXYsER1H/siobOa2sxxOx
-         NYwydH6vnTfFq+zOLvMilt9mxz8DFySZxIYR0TGZFVN7llElY8Oyy6Er3ifmznztoRrE
-         JzoDaHvcXv0LDCh6kZOj4XgaM4sXf6v6QoCbqfr27L2xN0WiWgmjD8UyfHNLHwzn8c9z
-         3CVCXSRmnt0Yx0UgCZaP9vDOPpvY08dyG0VWguKBzS+T2zuk3cO1mBqstufGBhpiVPBI
-         jdow==
+        d=gmail.com; s=20230601; t=1756929037; x=1757533837; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=gaHs0FewPkWbV/t+y5r/zPWx8uRFCtdWPBg+J8FlR2Q=;
+        b=JOTQ40Qci24pfTJaKOYk9HSt7tbEHcyj9yKWfIPi8jjdIOZlKaB3lwPZoP9zprd+zs
+         8G8c2p/12l2RX1pt00oIMovUqQfvlH0A07kYGTDVtcgAfJD+3r1Ml+smBpeeF+VK21jK
+         qHSoHJFSfbo9wAlYQTC9tf4GEts/wDAB0Ya0DjFhVtL86YCqNdc7QRe7higxgCjN5Xue
+         ZcAWj+m/288HqCncvx72mGoooyK12gVxzmmyY2vJ+TZvFFwLRqltoEXymNmH0ZUSEVXn
+         6jBC2FuJT0g1ctNlFNF4fGmoy5Gz9/Ah6dZa/nvPRcJu3uBqD1Y1Oky3bvCZtqH9VeNj
+         6VwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756924019; x=1757528819;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hoqojG11OHkQISj5q0OcGSIF6PQ5yOqHBvHUpFUBBLM=;
-        b=LuBGSZTQTq2j0Yh++cdXf5zKFaHmw+L3luuWpxU19oUnBKwGHWxZANnJNWb0VkFuJZ
-         iG9LppUhKkcebMA1I67sQ3VNaOJfcFV+sSFmWLXTkqeuHSZmWESn7I0X+upVCpWr4fRz
-         3EDzDRoAAh/qs9+LBpOAgzLbhgNE+5c4W4KgPXU5i2oYDHPpqXIF5zX9VI7qg87UQ/+r
-         ZRnJ3xashZBuCtAMaEWZO+9fUQ6Im3JUfbYKLT0aQcppAJl+ASTDfZZb7gnWmZMrdA5y
-         KYLWwDv/r5vPZpMpMl9TWHHT/SmGxu6Wl7hS3nQ3n9zgsuzDjmoMkb+bv6Hk3h2zpj1w
-         DnFg==
-X-Forwarded-Encrypted: i=1; AJvYcCUpNC+robxb0W8wGIKtE9t0c0IXiFU+zDCdCeyJ8OqjUEAeh4PK5b777kuhu6+3HfcCfaehAmzUYslfpW5fNzxAiX2E@vger.kernel.org, AJvYcCVZ0cI0U5oaKd1T/iN7/2QwEuLdvCHa1A08TpXdyigSu8rvDvcwYt3D/v1BIa97y8P1OsK/NtoztNeHGqeU@vger.kernel.org, AJvYcCXyD7Q8pn8Ki5bMntdWlTXxF5lRKZ5UBCJGfx8N5jEtS3nuNbLyW83Nj/kK+gGjU0aLTvg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx1+vhqdtBVKntUjXqGkeSA1cuFu4MzlGdIW4Fto8cnSCjPjjkI
-	lF69U+bAUmv7Yg8ChnkglWDJ2gtNPGYh/ce5xEooSkOFVdn8I3mjQxW0AYA0NHdlDMrdf1o9Ww+
-	KLFdiOKqMbgiGan7aUkQKKMfTQRcTUi4=
-X-Gm-Gg: ASbGncsiB9L9uP/8C21zzYexkDo1IE124g9dqs3IPpnmOfwVPO1ns/g4XAEIXmKS+iM
-	8vyv6nzO1V81G4Lg7SJ7mhNnp9nSlfIpR6wtDtrA3mEW1QS5/FCF2eK4JN1n1uvyJ9TmMkVy5lX
-	Qs16mn7VJIDs2OpnqmVpdRLwEBzHDCdWePb3FrFinqLbwwOGxhXJkxj+WWIcL4jkBg77jzsEnwQ
-	yhtKCgoOiSjkIA3068LhTY=
-X-Google-Smtp-Source: AGHT+IFgN2FUXZavbPeV9BKbJ7/eI0glYRzG78d+xwWBDtnYXKTVD20iLZJVasGCDV1CXsMDO7Hapk0kbA3BbAaJOI8=
-X-Received: by 2002:a17:903:234a:b0:248:cd0b:3426 with SMTP id
- d9443c01a7336-24944a460c6mr248501325ad.20.1756924019230; Wed, 03 Sep 2025
- 11:26:59 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1756929037; x=1757533837;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gaHs0FewPkWbV/t+y5r/zPWx8uRFCtdWPBg+J8FlR2Q=;
+        b=a3vYMhsdohjIG6GlDgJLMT5dmBfaP22f44wNMwfNJNfwZ05QBCwDQfQ5JJVflHoYn+
+         TpluBiExf4p+hvuirSk6F/kdXfwN/MRkNOPZjwmNp5PRMyUZIOej2m8DgZsjtGDu7xBH
+         ARdzyEb6iUa7jnKDxV7VhQix8h4owl065hFM8GCrPahwMJC2CuTOvS8jcjtOEaP3DoLV
+         adLLxQSv8bGfvLeooF4wvUiMcWbrqIj+l+UEYffIMVFxpFl35HjZNXWTZ/XR1S0/w750
+         1VVDDXNb4L+Ar/ZNHa9kNIxsyzU9Mo7CFDzhYJzpnhSvqP91KHiXexME4GhEiTsR8xtV
+         WX8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVD/XWkOXIel/1ZYIJZBaJ8sx1gestzsHqpPa898rHk4hirxdwJ6pzzWzTfmnJPUTY95Ro=@vger.kernel.org, AJvYcCVXfcoxg8pA/PYocr6iRTxdv1r2ecVtPncvhGpRgZrmpC2HZq+4Uf1FJimwU5Mzj2BkR9l+WSUwEC2Pc4xs@vger.kernel.org, AJvYcCVz9OWEK4MgjJdIHm8mEAHKu53zF+2p9b0Pi71wcmaKsCCbVvjrkTq5WUPIF+0LG8N4mAPNarCQXOuFjhwKtTzH6Gof@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywg51mcNnZ7WxFL7jmkS91EtgywD0gqO131DYgJ76surwfexjBm
+	zjLc/qf8YI6cz+gtg5bU9BRBGUWmWzi5VDH7PizZPoycQ9QkWgKDr5/x
+X-Gm-Gg: ASbGncv45fpPW0ennfzfW/BVapShxqRCgJAZoMvr5/4ejGGQo3bUtjchwapYcvU+Ouy
+	jMpxPQpQyzhWyKn2++u4G+uqIavNIxdwLXpoDXEdpbwm/S9nOLsqs/QDHRfV4pPr+jcUkAG2Owa
+	QCYDTv1pRVvClMYepA+UjopaD6on9XuMDrG/si/JbxSBNX0tEXd2SPySss2TrKm9CvCHo+q5RkW
+	OluX/BsPClLib9j+Mik4z5BAZypWCNd8L9LXyLysARjKdJOLgWIwcGZOHs1c/eZTL343Fa8BYNN
+	6bBsrkVGKEvZpd9uY57C98s2I+IAfEg+pwomnHnDgyY7iqaW09MRJuQdxbEnjqxa0LLw03/lfR5
+	1rv9iwT90aS8Um18K6ks+Zg==
+X-Google-Smtp-Source: AGHT+IEpTXDdePmttzZ1ZD9TKhMMmlY+ohWG5ikWx1wikh4ei37m8jY7o2zvUugdxjRsAewRga9gMQ==
+X-Received: by 2002:a17:907:94ce:b0:ae0:ad5c:4185 with SMTP id a640c23a62f3a-b01f20bc52cmr1867397666b.57.1756929036735;
+        Wed, 03 Sep 2025 12:50:36 -0700 (PDT)
+Received: from krava ([176.74.159.170])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-61cfc1c77d0sm12729765a12.11.2025.09.03.12.50.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Sep 2025 12:50:36 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Wed, 3 Sep 2025 21:50:34 +0200
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	x86@kernel.org, Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
+	Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH perf/core 02/11] uprobes: Skip emulate/sstep on unique
+ uprobe when ip is changed
+Message-ID: <aLicCjuqchpm1h5I@krava>
+References: <20250902143504.1224726-1-jolsa@kernel.org>
+ <20250902143504.1224726-3-jolsa@kernel.org>
+ <20250903112648.GC18799@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250902143504.1224726-1-jolsa@kernel.org> <20250902143504.1224726-8-jolsa@kernel.org>
-In-Reply-To: <20250902143504.1224726-8-jolsa@kernel.org>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Wed, 3 Sep 2025 11:26:47 -0700
-X-Gm-Features: Ac12FXz1My-dnKSo13TXTJx2Lt0P_uhhsDDW7OL8yKRB2Q5QGJtg2HXASRzwTow
-Message-ID: <CAEf4BzaT+fAMqFXDMFV1tiRSu0vTy3btcx1TS8FyawSe0TQ95g@mail.gmail.com>
-Subject: Re: [PATCH perf/core 07/11] libbpf: Add support to attach generic
- unique uprobe
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Oleg Nesterov <oleg@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	x86@kernel.org, Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
-	John Fastabend <john.fastabend@gmail.com>, Hao Luo <haoluo@google.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250903112648.GC18799@redhat.com>
 
-On Tue, Sep 2, 2025 at 7:36=E2=80=AFAM Jiri Olsa <jolsa@kernel.org> wrote:
->
-> Adding support to attach unique generic uprobe by adding the 'unique'
-> bool flag to struct bpf_uprobe_opts.
->
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> ---
->  tools/lib/bpf/libbpf.c | 29 ++++++++++++++++++++++++-----
->  tools/lib/bpf/libbpf.h |  4 +++-
->  2 files changed, 27 insertions(+), 6 deletions(-)
->
-> diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-> index 1f613a5f95b6..aac2bd4fb95e 100644
-> --- a/tools/lib/bpf/libbpf.c
-> +++ b/tools/lib/bpf/libbpf.c
-> @@ -11045,11 +11045,19 @@ static int determine_uprobe_retprobe_bit(void)
->         return parse_uint_from_file(file, "config:%d\n");
->  }
->
-> +static int determine_uprobe_unique_bit(void)
-> +{
-> +       const char *file =3D "/sys/bus/event_source/devices/uprobe/format=
-/unique";
-> +
-> +       return parse_uint_from_file(file, "config:%d\n");
-> +}
+On Wed, Sep 03, 2025 at 01:26:48PM +0200, Oleg Nesterov wrote:
+> On 09/02, Jiri Olsa wrote:
+> >
+> > If user decided to take execution elsewhere, it makes little sense
+> > to execute the original instruction, so let's skip it.
+> 
+> Exactly.
+> 
+> So why do we need all these "is_unique" complications? Only a single
+> is_unique/exclusive consumer can change regs->ip, so I guess handle_swbp()
+> can just do
+> 
+> 	handler_chain(uprobe, regs);
+> 	if (instruction_pointer(regs) != bp_vaddr)
+> 		goto out;
 
-perf event-based attachment is legacy and libbpf will automatically
-try to use BPF_LINK_CREATE, so I don't think we need to add this at
-all.
+hum, that's what I did in rfc [1] but I thought you did not like that [2]
 
-But I also feel like we don't really need any special thing for
-"exclusive uprobe", because ultimately we just want to let uprobe
-override user registers, which we can allow for normal uprobes, as I
-mentioned in the other email.
+[1] https://lore.kernel.org/bpf/20250801210238.2207429-2-jolsa@kernel.org/
+[2] https://lore.kernel.org/bpf/20250802103426.GC31711@redhat.com/
 
-[...]
+I guess I misunderstood your reply [2], I'd be happy to drop the
+unique/exclusive flag
+
+jirka
+
+> 
+> 
+> > Allowing this
+> > behaviour only for uprobe with unique consumer attached.
+> 
+> But if a non-exclusive consumer changes regs->ip, we have a problem
+> anyway, right?
+> 
+> We can probably add something like
+> 
+> 		rc = uc->handler(uc, regs, &cookie);
+> 	+	WARN_ON(!uc->is_unique && instruction_pointer(regs) != bp_vaddr);
+> 
+> into handler_chain(), although I don't think this is needed.
+> 
+> Oleg.
+> 
+> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> > ---
+> >  kernel/events/uprobes.c | 13 ++++++++++---
+> >  1 file changed, 10 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> > index b9b088f7333a..da8291941c6b 100644
+> > --- a/kernel/events/uprobes.c
+> > +++ b/kernel/events/uprobes.c
+> > @@ -2568,7 +2568,7 @@ static bool ignore_ret_handler(int rc)
+> >  	return rc == UPROBE_HANDLER_REMOVE || rc == UPROBE_HANDLER_IGNORE;
+> >  }
+> >  
+> > -static void handler_chain(struct uprobe *uprobe, struct pt_regs *regs)
+> > +static void handler_chain(struct uprobe *uprobe, struct pt_regs *regs, bool *is_unique)
+> >  {
+> >  	struct uprobe_consumer *uc;
+> >  	bool has_consumers = false, remove = true;
+> > @@ -2582,6 +2582,9 @@ static void handler_chain(struct uprobe *uprobe, struct pt_regs *regs)
+> >  		__u64 cookie = 0;
+> >  		int rc = 0;
+> >  
+> > +		if (is_unique)
+> > +			*is_unique |= uc->is_unique;
+> > +
+> >  		if (uc->handler) {
+> >  			rc = uc->handler(uc, regs, &cookie);
+> >  			WARN(rc < 0 || rc > 2,
+> > @@ -2735,6 +2738,7 @@ static void handle_swbp(struct pt_regs *regs)
+> >  {
+> >  	struct uprobe *uprobe;
+> >  	unsigned long bp_vaddr;
+> > +	bool is_unique = false;
+> >  	int is_swbp;
+> >  
+> >  	bp_vaddr = uprobe_get_swbp_addr(regs);
+> > @@ -2789,7 +2793,10 @@ static void handle_swbp(struct pt_regs *regs)
+> >  	if (arch_uprobe_ignore(&uprobe->arch, regs))
+> >  		goto out;
+> >  
+> > -	handler_chain(uprobe, regs);
+> > +	handler_chain(uprobe, regs, &is_unique);
+> > +
+> > +	if (is_unique && instruction_pointer(regs) != bp_vaddr)
+> > +		goto out;
+> >  
+> >  	/* Try to optimize after first hit. */
+> >  	arch_uprobe_optimize(&uprobe->arch, bp_vaddr);
+> > @@ -2819,7 +2826,7 @@ void handle_syscall_uprobe(struct pt_regs *regs, unsigned long bp_vaddr)
+> >  		return;
+> >  	if (arch_uprobe_ignore(&uprobe->arch, regs))
+> >  		return;
+> > -	handler_chain(uprobe, regs);
+> > +	handler_chain(uprobe, regs, NULL);
+> >  }
+> >  
+> >  /*
+> > -- 
+> > 2.51.0
+> > 
+> 
