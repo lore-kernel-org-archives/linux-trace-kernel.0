@@ -1,48 +1,65 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3C86279DA3;
-	Wed,  3 Sep 2025 10:31:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC23422DF86
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  3 Sep 2025 10:51:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756895493; cv=none; b=Q0mnxpY57zTxdTuQ235DMcU5hP6FmU/xUBztK0pN6awHctPpUzu0AjQe5r6gq9mb9/oMlLatgxXPsd5oseG8JgoF6PN8qT4N9vl9iitt2TF5A6bkgkqAHwzf+bHhX/heW/tbIyYki1YsOaQy86y8ZG8kW6B0t9CLWKbe/iJLrkw=
+	t=1756896671; cv=none; b=UfuUaoaJq7zSnarKavJL4en6WpqjEPUvt/svM6Y4XhLGeZAGbNSulMknjEDTzNKmCebwNjeLDwgsIGWhnlfXO85ssl3Pa8dgVGkiqXONREpTN/nKKIluBu+rrhc3fuTggCBwk7jGxOHK3vfUwSGIE4xPHa16mCPnt3P/1RvwdxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756895493; c=relaxed/simple;
-	bh=0B3nLZs7Ua+KW7LjOWjwB9lGSpTmwpy/EG15w0U8e3k=;
+	s=arc-20240116; t=1756896671; c=relaxed/simple;
+	bh=R2LCpwreJdznLf2leEoWhdR9qD3ooKnYR6/rcs01KWU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UxZANJ3/LuEAxj+PYidWTJSz2iHAVp1HmZLbWHeaiMFq5C85zXH1saD8QkzntbeTVtabc5tyOnKuQeNSAZ6auGG4RsGOaICpNghgqXM/2cv8UNlva7GU25OOlI2gdkgcDYrM1w0OSPmkeuejKKVn41toGEcpep9yGDneece6Afg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tth4tRFf; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=fSKnlhru+lmLdqhO+HLVeiJzYWJVEgBfb4SZ+th7cP2sTIrIjfmHyT44uq3SLB6ToZMLe9WtbZE54APq/8vti9DnjziGAEEDDijWUiZ15Qi7m3ND/Kw7kCxMkfKk3yKOSv4mVfFPEbRjhIzkMzpK8srdXbAboWOBg69Cm7JnjX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AihRPJ4H; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tth4tRFf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42D1FC4CEF0;
-	Wed,  3 Sep 2025 10:31:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756895492;
-	bh=0B3nLZs7Ua+KW7LjOWjwB9lGSpTmwpy/EG15w0U8e3k=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=tth4tRFfCHGy1dEHvnj7kXw9/jgOF5MohFf9B/2S2wtsL04C9HC718pXarghT+Biq
-	 kkb+H8NBzX/qFdL13wvDJNMBrTnhCVz5EWxNya5ZfjEw5Afu9GJmbs1L7IeN9zcfW1
-	 /QbguRnl7W406SHwohDd36HLhPULUixtapOWVhQJBo765HlKVCXOJrcHCFxojVnJlk
-	 SKgqTTbortv8ZB6Z3v3H0rW24cdQkLr82dguvemFUtrdj5CfpB6JoOLPgF6ISM/R0G
-	 G4w6cnckYytQ8bHMpB0EdXM0RLGA+mbiJSTBECybJLaCJrTm/qJa5mTT2QfzaXY1B7
-	 Avq7nT/yC8m9Q==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id D85D4CE0FFB; Wed,  3 Sep 2025 03:31:31 -0700 (PDT)
-Date: Wed, 3 Sep 2025 03:31:31 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Oliver Sang <oliver.sang@intel.com>
-Cc: oe-lkp@lists.linux.dev, lkp@intel.com, linux-kernel@vger.kernel.org,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [paulmck-rcu:dev.2025.08.13a] [tracing]  364ac25d46:
- WARNING:at_arch/x86/mm/fault.c:#do_user_addr_fault
-Message-ID: <d1ee722b-eb90-4b7e-9c2f-2db7d3b33ce9@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <202508211038.c93e8603-lkp@intel.com>
- <68044ea3-32c1-4d72-9bd3-fe2031669d79@paulmck-laptop>
- <aLebLoM2OQD+KPxQ@xsang-OptiPlex-9020>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AihRPJ4H"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1756896669;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=N3Ukxt9C+GpVZT/jwVqngtAkGPSKE0YadV98aD+g7Ro=;
+	b=AihRPJ4HS0Ke7XeM2ZF2UP7M+s6O3lgHFq8PhygvWfoTlhxaTFMfTHbkHkHRJ5FBpUEs+F
+	KdbVYvjd87CmkL0RVKSGlHfQPNCFMP6F2+kHpgvJAKwr/spz8T6pZ4gGcWDLFGXgbeIwhJ
+	N/9QBEzRmoWQFNir6geyc6KH9UEDUgQ=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-389-TYMDsMzpOqGvS4HR5evMRg-1; Wed,
+ 03 Sep 2025 06:51:04 -0400
+X-MC-Unique: TYMDsMzpOqGvS4HR5evMRg-1
+X-Mimecast-MFC-AGG-ID: TYMDsMzpOqGvS4HR5evMRg_1756896662
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3768218002C1;
+	Wed,  3 Sep 2025 10:51:02 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.52])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 2B19819560B1;
+	Wed,  3 Sep 2025 10:50:56 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Wed,  3 Sep 2025 12:49:40 +0200 (CEST)
+Date: Wed, 3 Sep 2025 12:49:33 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	x86@kernel.org, Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
+	Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH perf/core 01/11] uprobes: Add unique flag to uprobe
+ consumer
+Message-ID: <20250903104933.GB18799@redhat.com>
+References: <20250902143504.1224726-1-jolsa@kernel.org>
+ <20250902143504.1224726-2-jolsa@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -51,98 +68,38 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aLebLoM2OQD+KPxQ@xsang-OptiPlex-9020>
+In-Reply-To: <20250902143504.1224726-2-jolsa@kernel.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On Wed, Sep 03, 2025 at 09:34:38AM +0800, Oliver Sang wrote:
-> hi, Paul,
-> 
-> On Fri, Aug 29, 2025 at 08:07:41AM -0700, Paul E. McKenney wrote:
-> > On Thu, Aug 21, 2025 at 01:26:45PM +0800, kernel test robot wrote:
-> > > 
-> > > hi, Paul,
-> > > 
-> > > we also noticed there is similar commit in newer branch
-> > >   dev.2025.08.14a
-> > >   dev.2025.08.19a
-> > > but we didn't finish any bisect for them so far.
-> > > 
-> > > if the issue is already known and fixed in newer version, please just ignore
-> > > this report. sorry if any inconvenience.
-> > > 
-> > > below full report FYI.
-> > > 
-> > > 
-> > > Hello,
-> > > 
-> > > kernel test robot noticed "WARNING:at_arch/x86/mm/fault.c:#do_user_addr_fault" on:
-> > > 
-> > > commit: 364ac25d46eea504eb90229d2a1f92e18c1a1eae ("tracing: Guard __DECLARE_TRACE() use of __DO_TRACE_CALL() with SRCU-fast")
-> > > https://git.kernel.org/cgit/linux/kernel/git/paulmck/linux-rcu.git dev.2025.08.13a
-> > > 
-> > > in testcase: boot
-> > > 
-> > > config: i386-randconfig-004-20250819
-> > > compiler: clang-20
-> > > test machine: qemu-system-i386 -enable-kvm -cpu SandyBridge -smp 2 -m 4G
-> > > 
-> > > (please refer to attached dmesg/kmsg for entire log/backtrace)
-> > 
-> > Thank you for your testing efforts, and apologies for being slow!
-> > 
-> > Could you please try the diagnostic patch at the end of this email?
-> > 
-> > 							Thanx, Paul
-> 
-> by applying the patch, the issue gone. but since you said this is a 'diagnostic
-> patch', not sure if it's a real fix. anyway:
-> 
-> Tested-by: kernel test robot <oliver.sang@intel.com>
+On 09/02, Jiri Olsa wrote:
+>
+> +static bool consumer_can_add(struct list_head *head, struct uprobe_consumer *uc)
+> +{
+> +	/* Uprobe has no consumer, we can add any. */
+> +	if (list_empty(head))
+> +		return true;
+> +	/* Uprobe has consumer/s, we can't add unique one. */
+> +	if (uc->is_unique)
+> +		return false;
+> +	/*
+> +	 * Uprobe has consumer/s, we can add nother consumer only if the
+> +	 * current consumer is not unique.
+> +	 **/
+> +	return !list_first_entry(head, struct uprobe_consumer, cons_node)->is_unique;
+> +}
 
-Thank you very much!  This tells me that something on the code path from
-the tracepoint to the BPF program needs to have preemption disabled.
-I will leave the diagnostic patch in my tree, and will be looking into
-what the real fix should be.
+Since you are going to send V2 anyway... purely cosmetic and subjective nit,
+but somehow I can't resist,
 
-							Thanx, Paul
+	bool consumer_can_add(struct list_head *head, struct uprobe_consumer *new)
+	{
+		struct uprobe_consumer *old = list_first_entry_or_null(...);
 
-> [...]
-> 
-> > > If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> > > the same patch/commit), kindly add following tags
-> > > | Reported-by: kernel test robot <oliver.sang@intel.com>
-> > > | Closes: https://lore.kernel.org/oe-lkp/202508211038.c93e8603-lkp@intel.com
-> 
-> [...]
-> 
-> > > The kernel config and materials to reproduce are available at:
-> > > https://download.01.org/0day-ci/archive/20250821/202508211038.c93e8603-lkp@intel.com
-> > > -- 
-> > > 0-DAY CI Kernel Test Service
-> > > https://github.com/intel/lkp-tests/wiki
-> > 
-> > 
-> > commit 2d6142ce44dca77fb173bb96850634b169277214
-> > Author: Paul E. McKenney <paulmck@kernel.org>
-> > Date:   Thu Aug 28 12:56:42 2025 -0700
-> > 
-> >     EXP tracing: Diagnostic for __DECLARE_TRACE() use of SRCU-fast
-> >     
-> >     This patch is intended to test the theory that preemption needs to be
-> >     disabled in some portion of the tracing infrastructure extending from
-> >     the __DECLARE_TRACE() macro to the target BPF program.
-> >     
-> >     Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> > 
-> > diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
-> > index a22c1ab88560b8..c422e4c5ed51ed 100644
-> > --- a/include/linux/tracepoint.h
-> > +++ b/include/linux/tracepoint.h
-> > @@ -273,7 +273,7 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
-> >  	static inline void __do_trace_##name(proto)			\
-> >  	{								\
-> >  		if (cond) {						\
-> > -			guard(srcu_fast_notrace)(&tracepoint_srcu);	\
-> > +			guard(preempt_notrace)();			\
-> >  			__DO_TRACE_CALL(name, TP_ARGS(args));		\
-> >  		}							\
-> >  	}								\
+		return !old || (!old->exclusive && !new->exclusive);
+	}
+
+looks a bit more readable to me. Please ignore if you like your version more.
+
+Oleg.
+
