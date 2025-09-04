@@ -1,177 +1,139 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A21CF20408A;
-	Thu,  4 Sep 2025 14:03:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 130012D3EC0;
+	Thu,  4 Sep 2025 15:02:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756994589; cv=none; b=IeTUlZN6JbHgXMKw1evYWV8r9oo7Smfiiq7sVDr8NYAyREMk87bftXxyBrU7IeqBx2vw7mYTDdoi8TdxwR/vgWyX2MaWDeRG2YDWXyIbf3QbGOPuLvHoKBYPdCcWbEx4NR1eW/NwcpO/IPxwTdFKQIJaZqXZ2/fdjjb1/y75kSo=
+	t=1756998131; cv=none; b=FsS1BOAfED/Lr21020RKJuJtJeyoPpJVnj1FaCOjTbOUr/UbZcflLtfcXINfw0zp0auDEjIoeJJ9HVNiiGwfIMdFWcf/XecOqUvpQDy7T5xzDdXZ+qu1ViR3u3V1HCH3n22jMnqQFXS6Q5PavrYfjvsW96yyuZyNX514eO3Zh3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756994589; c=relaxed/simple;
-	bh=3qM7uV+5UMLViDXjERZK/FA9M3c/FnFeaYWRo66RaHs=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QIu3U8J6Sieb9FF/Xw4gw45bjobA2ZvO3a6Bf2iHUPe6H5IHIcIVNLNzBSvbKV+1WjO6p0lBwK+acFZNz3ADnm4xys4FmFHe6uX0YXhMl5vdy7mUwROZYuu6EmrxvT2yGf8ZD+AO46qq+4hO+hPYlyfQwHnBODyKuYcAOusInko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AqoTEP1S; arc=none smtp.client-ip=209.85.208.54
+	s=arc-20240116; t=1756998131; c=relaxed/simple;
+	bh=WsAaT5z9DTXprMXgadEDAY3E4jgG3J07sJHYyh6BVw4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=laPZir0K+xE9q+eWs/ADSKJyLfnFpv+aXYAVb8OY2D4V+UfkWjh2S82Khb4l9vy+ri6fSqaIZcq45kHgMsHMJIsb+lcYGc+h/aDv4t5pa3RSsGsG9rz7Lw0mbS4p4e6WW4gcSm0zI3pXTrMotWmE7xE4Kh+QV8+N5XsNvk/2Lg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FaLOxh72; arc=none smtp.client-ip=209.85.221.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AqoTEP1S"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-6188b5ad681so1692881a12.0;
-        Thu, 04 Sep 2025 07:03:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FaLOxh72"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3e2055ce7b3so427521f8f.0;
+        Thu, 04 Sep 2025 08:02:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1756994586; x=1757599386; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=GhoiaZNxxlj25tTSW2x4zxK6+7X5oeucikOwx7TRzr8=;
-        b=AqoTEP1SUSyia0OCh1Viu5CDtQa0H1OWZinNORt5h4BWxVfxFwZ1FMBXP+t3hIaDG4
-         BF40LzMG5zv68jno8prxV4TffG6dxpPyxf2XmxB1DPvtJ0xywxwo1Y9JMjmmKgj1EhLa
-         IQJiXwLV3Foor/mE6ra8RobYjkyT2A7olxahY+byiq7WLsv9RgVVzS+8yiZrRffr0yQq
-         4rmuK4wE4j31B8dXpY53mWWVbwKO8T1ys/ZU8PMiovT/2lZVwXvSngkM6aIBJzWnv89D
-         4mYBhGdO9nEeZrZe/3uutecMNC5pF2MZ58TKTJR+wFHXK0NjEIbH5piJ5p9fAUBfjccb
-         yX8A==
+        d=gmail.com; s=20230601; t=1756998128; x=1757602928; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=a2ajTeyG2BSzRFwWcOgVNlWU2GcEhvUma3dwfU9D+78=;
+        b=FaLOxh72/54hyhLZ4Vvp0g3qhrJyDNdwqjZZ9se3T136mee+OR0RbQfYpu78VjKb92
+         IPJ/9i/eHFsErpfss7d5Oj0cOdjb7fvjrqzTRtYkpQHXDbASNAPDmjbrPvxc00drHPE5
+         wVUyXTIa9SwOY+F6jgLsirAALhsbBQ6cWl0BeGXvt+PSOH+10jnLcVsQdgpAk92zG7jc
+         LzKLmZ0J9nXKZi0xuwfPdj/3V7ws4fZTndpgGZPZAhWpr09JnCtUB/V1tU+RVrbseMoV
+         H8oKLIW2RBLq/wjmXLfAe3D2oo5hcp+o1PdaE/qqWCEfmXAK1OXn16SRnbe64DkJvFEq
+         la5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756994586; x=1757599386;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GhoiaZNxxlj25tTSW2x4zxK6+7X5oeucikOwx7TRzr8=;
-        b=aQQIXDiiDRPC1eWqzCB0geQczol3qo8AEpy3pw7+Surxu6EPtUPCIp72D8jU+LcUWI
-         3W4JC5koNrhZk+R2qkwLXXVlJ9g/W+ThbOEcsHqtVP/tQZaeobW8BjIFxaF8TARPkqtF
-         rVdqXAmCSXx7bsUlHmqL8TInON1sLo8tFmbp/AT/bkCvwtqzPu767JzRsbAx0/wrFdZY
-         Smp1a5AXWBnWxZbpOMrn6uOsJ2quB1L3pfJ3vlsHFDKvkmVx8+a3sIMnsjgGl21LHuXd
-         pRbbbXqe7bQWdxNsrZ22H+ANF48TpRp7CpvhGooTIU32bYlzNRBalQoPdydljma3wyft
-         opfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUHupM1So0YTxyC5Ee8zvMQlEQoGFo/8an6Zkit0EyJXUyKIL2acbSmLmwHWdP77diSG6pRGpbXbZGWn0no+RQZOvud@vger.kernel.org, AJvYcCVhf7Hvumk1Mb/NDoAyPVXZMaxy2eyfwyFd9rxGLVHxpxKIO1UNAB+L8I/KG4+xGnLVNMU=@vger.kernel.org, AJvYcCWI4tVaANrya/Ur114e+ipfBGZsbIm56GZxuz3jjvn2mBdnSheKTgyGIgGE4/+ieZGI5NeLiaXmdmkc1y/N@vger.kernel.org
-X-Gm-Message-State: AOJu0YzkGXlboCusjQCHbIprjLop3r/bQn0jkg7iEsHU9g6P485kKXmj
-	uIC+xRlx3gn13PacEybppPK806NHjuyWzFsugK+KP/azsYX4GJNRpnQt
-X-Gm-Gg: ASbGnctM+EXm8olwmpwkt72YPd3M0i+c0FHjPbJGJ3XmQqd66qpkVvkDAfOzstv7Uc6
-	D7szxK4OJv4HcmZhB57dFUMpagMc1pefV4XFwyMDMBjhnfVXoVyswQ7YpMFpGJ7WaFECUoLNJ+G
-	HGO5yNKuNcazCyDZklkcTOtvcvWD8aAId9CA8BN18MChlNEoy0ATQyubbeBnqmvFyv1FyKGPlT6
-	wFy9uHdtNrIt97rccmFCcXQrUhtZetthkPorP3bb6bU3sxiIGErMcLWF/R2j7XVPfMTE3VKGMRZ
-	Lgb3hXNAgFFfxnLyfrNSvtJQT8TnNQZZXfvQinbUeAhnh3Vi1WPynhAVrGrFaI6P9k+kPMefBeV
-	1x2umO+9Pmrg=
-X-Google-Smtp-Source: AGHT+IFAbZiozd6cdFmgXfmverq93S0YaAXJcno52giATX+FJi/xSH9+WMm7vLIv18AeMJeuskQpJg==
-X-Received: by 2002:a05:6402:1e8c:b0:620:894c:656c with SMTP id 4fb4d7f45d1cf-620894c7c6fmr1002749a12.29.1756994585528;
-        Thu, 04 Sep 2025 07:03:05 -0700 (PDT)
-Received: from krava ([176.74.159.170])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-61cfc5575dcsm14326489a12.49.2025.09.04.07.03.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Sep 2025 07:03:05 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Thu, 4 Sep 2025 16:03:02 +0200
-To: Jann Horn <jannh@google.com>
-Cc: Jiri Olsa <olsajiri@gmail.com>,
-	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	x86@kernel.org, Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	David Laight <David.Laight@aculab.com>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@t-8ch.de>,
-	Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCHv6 perf/core 09/22] uprobes/x86: Add uprobe syscall to
- speed up uprobe
-Message-ID: <aLmcFp4Ya7SL6FxU@krava>
-References: <20250720112133.244369-1-jolsa@kernel.org>
- <20250720112133.244369-10-jolsa@kernel.org>
- <CAEf4BzaxtW_W1M94e3q0Qw4vM_heHqU7zFeH-fFHOQBwy5+7LQ@mail.gmail.com>
- <aLirakTXlr4p2Z7K@krava>
- <20250903210112.GS4067720@noisy.programming.kicks-ass.net>
- <CAEf4Bza-5u1j75YjvMdfgsEexv2W8nwikMaOUYpScie6ZWDOsg@mail.gmail.com>
- <aLlGHSgTR5T17dma@krava>
- <CAG48ez2BBTiDGT1NNK2dfZLiYMF-C75EAcufcVKWtP+Y4v-Utw@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1756998128; x=1757602928;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=a2ajTeyG2BSzRFwWcOgVNlWU2GcEhvUma3dwfU9D+78=;
+        b=ZaXv+e5vJnPqzw7t7RbkmKJ+nXahsS+DZnKgah2MzfrU78RwTpi24j76E+1j8i+eKg
+         8Hqhb8/u+umJM0G7zvw/O3OSNJ3XBOQ/HQrBFym7NlPXLZ+DHuSmhKgfdI6AECJp+PdL
+         Npwrppp9NLa3ys4OYtSUbnyMa9HNStnu0WhV3gHhXMOYFeQWs7ivP53v60Ft8urL5q++
+         cKfyJuPizgf5N2gdYvoCjqmoS40aAZbgTrzPirinrU0mv/ssFDS9p+0w3nxZhqOpJCUX
+         wYYAnAagNKyg/8RpGHweo4H+TjuHenkBXp5T7hH88xPQLJdwOqpAmbwYfcbgvv3HgjdI
+         JLTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUifZrFyzcz/hndgnYfOEfFMgH/wLDs76hjd7gJu3HtFEMcK+rpGXJwqw1lRC6xvdLRrns=@vger.kernel.org, AJvYcCWbOh54Ij+EEZ4e3mxty4WDsV9WJHHyKi8VWJfQF5m2QmQryXooPr094EsB4hUkkquwr5pjOhjCw3Cxu39MzDwiInu5@vger.kernel.org, AJvYcCXN9Ha4JtcLAA87zdwnzmhBeg/8912qDSGj5KfQIb5hmRlyrnfNG3SG7dMcN2t9hrmy8cvq5tKrmHqfyNZQ@vger.kernel.org
+X-Gm-Message-State: AOJu0YxWkL07hL83Y18u7dfhg2LW25J9Cu1F8uctUi4kDsEt0YCIwqGq
+	Xfo05hiQv1QOYgQZMfHyPR+ib6TBG4DsG5jFLIfan2jXfHuYxHOav9bTuqq1BgePQCfAX0GtoWv
+	qhPGnfgajqtRug6Pv5r2f9QT6gIGE+zo=
+X-Gm-Gg: ASbGncsoJGCBqNKycb25uZiHQIdb0vvTf5308SuwxA8RZdXIxmbH0yrl7pe9tgJiFy1
+	osxyYwYJLc43/vbsZ0l1bEfmRIKvpVbFtWq9bT4flER7IAim/ZiwP7G/ZZwX/3lfiNm8hHI2VVC
+	ZfsCaiPrkIhDwCmODbx0NqAvCZLcnRuVFOTFIFDyJtj5Kb9LMv8BbiBSf7fvvJ7qZ98YlJmF7Nn
+	hx87D005Ck8q0OG8rVGO+U=
+X-Google-Smtp-Source: AGHT+IFkJxBHJsi/qhXBTMrnuJxMrKa9yT7zV/ASPN4AZtBUYPr88vFciqMUlhOtEU6msJtj1095Jt5l4VsOVmKLPPo=
+X-Received: by 2002:a05:6000:4013:b0:3b7:94a2:87e8 with SMTP id
+ ffacd0b85a97d-3d1dcb75006mr14310626f8f.18.1756998124908; Thu, 04 Sep 2025
+ 08:02:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAG48ez2BBTiDGT1NNK2dfZLiYMF-C75EAcufcVKWtP+Y4v-Utw@mail.gmail.com>
+References: <20250902143504.1224726-1-jolsa@kernel.org> <20250902143504.1224726-3-jolsa@kernel.org>
+ <20250903112648.GC18799@redhat.com> <aLicCjuqchpm1h5I@krava>
+ <20250904084949.GB27255@redhat.com> <aLluB1Qe6Y9B8G_e@krava> <20250904112317.GD27255@redhat.com>
+In-Reply-To: <20250904112317.GD27255@redhat.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Thu, 4 Sep 2025 08:01:53 -0700
+X-Gm-Features: Ac12FXzf4RJj6-nnXZ3VoZB1z-JhMD_QU665pLEmSa9O2cuDWoa1D1tma5CQqOQ
+Message-ID: <CAADnVQ+DHGc8R0Tdxf7eUj1R0TDGHXLwk5D4i_0==2_rfXGbfw@mail.gmail.com>
+Subject: Re: [PATCH perf/core 02/11] uprobes: Skip emulate/sstep on unique
+ uprobe when ip is changed
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Jiri Olsa <olsajiri@gmail.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Andrii Nakryiko <andrii@kernel.org>, bpf <bpf@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>, 
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
+	John Fastabend <john.fastabend@gmail.com>, Hao Luo <haoluo@google.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Sep 04, 2025 at 11:39:33AM +0200, Jann Horn wrote:
-> On Thu, Sep 4, 2025 at 9:56 AM Jiri Olsa <olsajiri@gmail.com> wrote:
-> > On Wed, Sep 03, 2025 at 04:12:37PM -0700, Andrii Nakryiko wrote:
-> > > On Wed, Sep 3, 2025 at 2:01 PM Peter Zijlstra <peterz@infradead.org> wrote:
-> > > >
-> > > > On Wed, Sep 03, 2025 at 10:56:10PM +0200, Jiri Olsa wrote:
-> > > >
-> > > > > > > +SYSCALL_DEFINE0(uprobe)
-> > > > > > > +{
-> > > > > > > +       struct pt_regs *regs = task_pt_regs(current);
-> > > > > > > +       struct uprobe_syscall_args args;
-> > > > > > > +       unsigned long ip, sp;
-> > > > > > > +       int err;
-> > > > > > > +
-> > > > > > > +       /* Allow execution only from uprobe trampolines. */
-> > > > > > > +       if (!in_uprobe_trampoline(regs->ip))
-> > > > > > > +               goto sigill;
-> > > > > >
-> > > > > > Hey Jiri,
-> > > > > >
-> > > > > > So I've been thinking what's the simplest and most reliable way to
-> > > > > > feature-detect support for this sys_uprobe (e.g., for libbpf to know
-> > > > > > whether we should attach at nop5 vs nop1), and clearly that would be
-> > > > > > to try to call uprobe() syscall not from trampoline, and expect some
-> > > > > > error code.
-> > > > > >
-> > > > > > How bad would it be to change this part to return some unique-enough
-> > > > > > error code (-ENXIO, -EDOM, whatever).
-> > > > > >
-> > > > > > Is there any reason not to do this? Security-wise it will be just fine, right?
-> > > > >
-> > > > > good question.. maybe :) the sys_uprobe sigill error path followed the
-> > > > > uprobe logic when things go bad, seem like good idea to be strict
-> > > > >
-> > > > > I understand it'd make the detection code simpler, but it could just
-> > > > > just fork and check for sigill, right?
-> > > >
-> > > > Can't you simply uprobe your own nop5 and read back the text to see what
-> > > > it turns into?
-> > >
-> > > Sure, but none of that is neither fast, nor cheap, nor that simple...
-> > > (and requires elevated permissions just to detect)
-> > >
-> > > Forking is also resource-intensive. (think from libbpf's perspective,
-> > > it's not cool for library to fork some application just to check such
-> > > a seemingly simple thing as whether to
-> > >
-> > > The question is why all that? That SIGILL when !in_uprobe_trampoline()
-> > > is just paranoid. I understand killing an application if it tries to
-> > > screw up "protocol" in all the subsequent checks. But here it's
-> > > equally secure to just fail that syscall with normal error, instead of
-> > > punishing by death.
+On Thu, Sep 4, 2025 at 4:26=E2=80=AFAM Oleg Nesterov <oleg@redhat.com> wrot=
+e:
+>
+> On 09/04, Jiri Olsa wrote:
 > >
-> > adding Jann to the loop, any thoughts on this ^^^ ?
-> 
-> If I understand correctly, the main reason for the SIGILL is that if
-> you hit an error in here when coming from an actual uprobe, and if the
-> syscall were to just return an error, then you'd end up not restoring
-> registers as expected which would probably end up crashing the process
-> in a pretty ugly way?
+> > On Thu, Sep 04, 2025 at 10:49:50AM +0200, Oleg Nesterov wrote:
+> > > On 09/03, Jiri Olsa wrote:
+> > > >
+> > > > On Wed, Sep 03, 2025 at 01:26:48PM +0200, Oleg Nesterov wrote:
+> > > > > On 09/02, Jiri Olsa wrote:
+> > > > > >
+> > > > > > If user decided to take execution elsewhere, it makes little se=
+nse
+> > > > > > to execute the original instruction, so let's skip it.
+> > > > >
+> > > > > Exactly.
+> > > > >
+> > > > > So why do we need all these "is_unique" complications? Only a sin=
+gle
+> > > > > is_unique/exclusive consumer can change regs->ip, so I guess hand=
+le_swbp()
+> > > > > can just do
+> > > > >
+> > > > >         handler_chain(uprobe, regs);
+> > > > >         if (instruction_pointer(regs) !=3D bp_vaddr)
+> > > > >                 goto out;
+> > > >
+> > > > hum, that's what I did in rfc [1] but I thought you did not like th=
+at [2]
+> > > >
+> > > > [1] https://lore.kernel.org/bpf/20250801210238.2207429-2-jolsa@kern=
+el.org/
+> > > > [2] https://lore.kernel.org/bpf/20250802103426.GC31711@redhat.com/
+> > > >
+> > > > I guess I misunderstood your reply [2], I'd be happy to drop the
+> > > > unique/exclusive flag
+> > >
+> > > Well, but that rfc didn't introduce the exclusive consumers, and I th=
+ink
+> > > we agree that even with these changes the non-exclusive consumers mus=
+t
+> > > never change regs->ip?
+> >
+> > ok, got excited too soon.. so you meant getting rid of is_unique
+> > check only for this patch and have just change below..  but keep
+> > the unique/exclusive flag from patch#1
+>
+> Yes, this is what I meant,
+>
+> > IIUC Andrii would remove the unique flag completely?
+>
+> Lets wait for Andrii...
 
-for some cases yes, for the initial checks I think we could just skip
-the uprobe and process would continue just fine
-
-we use sigill because the trap code paths use it for errors and to be
-paranoid about the !in_uprobe_trampoline check
-
-jirka
-
-> 
-> I guess as long as in_uprobe_trampoline() is reliable (which it should
-> be), it would be fine to return an error when in_uprobe_trampoline()
-> fails, though it would be nice to have a short comment describing that
-> calls from uprobe trampolines must never fail with an error.
-
-
+Not Andrii, but I see only negatives in this extra flag.
+It doesn't add any safety or guardrails.
+No need to pollute uapi with pointless flags.
