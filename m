@@ -1,257 +1,160 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9251730DD31;
-	Thu,  4 Sep 2025 17:26:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2486154654;
+	Thu,  4 Sep 2025 18:06:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757006765; cv=none; b=bApl2QJNmGD3AuLNMwGUDvuLQ/BN0SxXP/DMp0KavMTDeWnUttchbFYW0GWl64WnUhp8P8PZaDQzMqnyqTKsqWxzQ6sPqGMd+1rZUvgcnPJrzXVgV73XlrFUv6hl9JpmB32BqL4Frju7qI4TSHPcZSLs6CVcbvJUlADbXwSLlZQ=
+	t=1757009209; cv=none; b=CAtXPurNczRnbs7FT1QRE3Ry8v2DNO6W8OMyAC/ATj+azdJkv8SLczrx6dW3HtB+Gv+oV0TqX6UrKj1dBYxerw/+smS+6HMbh5ovkV/ikEvf8PnhvxphZQAHRMSui0XJnw5AS0RiEjkDwutE5gVzlAcEN830mSahmopZgurYOZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757006765; c=relaxed/simple;
-	bh=BzE37pCTjBM4grm+sMS4LKVV5Q/CpMxXMvX6vlqHE6E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bb4PA0iWaI8N1gCQN4SZ+sXGu8POhDHEZQuMItSdtAHAJUTusqMgfX5MzvE0r/A0Ej2zwyIl2xWuwZdv1hyD6pP2V2druItiIkJlY/Hrmb9d3bTuRN3+VlUwENIuxEoBtyVGE2cm+/I5UxaGVdECmskpsJy6jxDjAtwDE9UPkQk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 606A31596;
-	Thu,  4 Sep 2025 10:25:53 -0700 (PDT)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 694A33F6A8;
-	Thu,  4 Sep 2025 10:25:59 -0700 (PDT)
-Date: Thu, 4 Sep 2025 18:25:56 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: panfan <panfan@qti.qualcomm.com>
-Cc: catalin.marinas@arm.com, will@kernel.org, rostedt@goodmis.org,
-	mhiramat@kernel.org, samitolvanen@google.com, song@kernel.org,
-	ardb@kernel.org, dylanbhatch@google.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, kdong@qti.qualcomm.com
-Subject: Re: [PATCH v1] arm64: ftrace: fix unreachable PLT for ftrace_caller
- in init_module with CONFIG_DYNAMIC_FTRACE
-Message-ID: <aLnLpArhiT-mQxn9@J2N7QTR9R3>
-References: <20250819063418.1263119-1-panfan@qti.qualcomm.com>
+	s=arc-20240116; t=1757009209; c=relaxed/simple;
+	bh=9CiMvOSQWinJMq6NIMYH71ecyKhv5aE1CwwMMJiawrQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OFV7V26bJRgr/iiSrlIexdqWB4nWfAJit1FdILFQ3OFUv6EXbasKY3lAGKictfItUDw3Sbq3821jyxuH8O8IaHPYEqdgi/P+ch1f5rTnFMTAOYTo6B7wEIm+9pxJWljWcBG9Ln3oytwvPe7LYm/lmwyYV6rnEi9sl9EbOL5ri8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bXXS8GQg; arc=none smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bXXS8GQg"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-32bb1132c11so335806a91.0;
+        Thu, 04 Sep 2025 11:06:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1757009206; x=1757614006; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VuyixO0hwkwyh9bGg9JvqJw6+GK3Lee4B6ulKn5PzeY=;
+        b=bXXS8GQg7+G55WXP7sw4YOSdcgqNzo979WaHB+UWgEUbErUDF4g0Dw13jAf0QxNt29
+         JQYHGa8wQBwnJkA00ASh088g6lpF0GPqeTsmue38XQZBLtXc7mQVe+sXOZllVgQkU+d7
+         qMPwUBIxlLnEKfp5nl7tgT9Hx77NDkU65viYYG6cWWd2owTOff0k53IOsDOpLFPdv7dU
+         yeFzsvyJ/vMJSjXwpJx7fnHB6sQYPiGsn79E6Gcm66XOuN4X7uyk3eOc4InX1sF+mZN9
+         oi/zo2lC/ds8L5/W67qQcAfEi6I1DGEXpPHAsqeLlcK41GE0ZwOpQCxeDZxvA9G5gyfS
+         5IeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757009206; x=1757614006;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VuyixO0hwkwyh9bGg9JvqJw6+GK3Lee4B6ulKn5PzeY=;
+        b=AXIVdsrX9dak8vZyY+NVRFbncRZr6+LbmmcQvxylNprP+wSdVUUd4HjD5gUj/pGxQY
+         u56kF9MtT/uELzIdrCARUTV+Abw8Cg3f1bKD2wkiXKYMH2su7T1ezDbAFtftj8Iokzub
+         EutE54z/Aqs360qWychFXXGon11iU/ulojfBY/xVcrNz2w2I68sikOmZPClPIRZZcE2u
+         k4OtWiS54LxtgqMjS26ZPr5i3RCSMpuUovuw2ZfeZjlmuuIlcexuKqZ1QeyG/n00lDDn
+         iHgop/GuUVCdPzovxSqd2kV5coWIsSJOpmAqSEuqT5Wq15nLrjZ6JS2BGAq82lneQ5Vm
+         X+xg==
+X-Forwarded-Encrypted: i=1; AJvYcCUpHq1iYrZ/SUe0d5caAHfafX61NdPIT3sUQOpOa7l1WQb4dd3+DEed8ZYfxGrFiZ0yKjk=@vger.kernel.org, AJvYcCVA5CZuIj4T9j2YkGC83cUi3HVRj8mZJktrt5BPac5+Pq2XZn6f4kwamLby0gfOpCDlJ5fQWgAWck8jscTa@vger.kernel.org, AJvYcCXexh/Bt05N6MnUTCKtRpHVfDicHGWLNSspXgmoAsiOSedbcnbkFx+OYtrK9YNxiWPpnbUiH8FZDU6+Nlb1kDaevQCy@vger.kernel.org
+X-Gm-Message-State: AOJu0YwMggedmTugmh2DJFW18kwD4rJu/wMqXCyyzWwT9blWHqPV45Ih
+	OvivHVCuoHUD06Tp9+Qu7f39P4pxu+K+Ec0T0djXRVLeg9ZLQdO60B53H+jR9NSkrjENnrsuJZ1
+	jUMO1pY/9mYrdHVMALUaNBu0DaYu0I8w=
+X-Gm-Gg: ASbGnctxtY/NUoQ51eyeCNPy7wEzaK8OlYQhKrafOK0f9irWM/N1QcCkeXZ/klhXd2n
+	iKAW76OjMU4/4IZxu7iXDYnUoYu8RirxDRDatifwlTpVeF33SBubVe0BV9mr8HV4TuntOVBnQzB
+	B+tnu/0lCPnnnIiLfLAGGKHo5sIDWWIsuJp1pc4byAgIGP1ctVIP4u/TC0JNV891wAehS9GEFDO
+	IdJnvjlwgIdDX7e/JD7BH0=
+X-Google-Smtp-Source: AGHT+IHCUO6rhTvzEP9t2OmyzIkR6yMvWXQ4BzuYoMuX/kGOeMKz713GAJpf+6/fxt3zD3e/QK0zSs48VraZx+P8jak=
+X-Received: by 2002:a17:90b:4c4b:b0:32b:5c14:3bb6 with SMTP id
+ 98e67ed59e1d1-32bbcb94786mr624377a91.1.1757009206177; Thu, 04 Sep 2025
+ 11:06:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250819063418.1263119-1-panfan@qti.qualcomm.com>
+References: <20250902143504.1224726-1-jolsa@kernel.org> <20250902143504.1224726-3-jolsa@kernel.org>
+ <20250903112648.GC18799@redhat.com> <aLicCjuqchpm1h5I@krava>
+ <20250904084949.GB27255@redhat.com> <aLluB1Qe6Y9B8G_e@krava>
+ <20250904112317.GD27255@redhat.com> <CAADnVQ+DHGc8R0Tdxf7eUj1R0TDGHXLwk5D4i_0==2_rfXGbfw@mail.gmail.com>
+In-Reply-To: <CAADnVQ+DHGc8R0Tdxf7eUj1R0TDGHXLwk5D4i_0==2_rfXGbfw@mail.gmail.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Thu, 4 Sep 2025 11:06:31 -0700
+X-Gm-Features: Ac12FXzGYab9OQQet97J76DuBacUMuW8DPWM-yoh5yepaOsk3yRtmPhPFspT8nw
+Message-ID: <CAEf4BzbxjRwxhJTLUgJNwR-vEbDybBpawNsRb+y+PiDsxzT=eA@mail.gmail.com>
+Subject: Re: [PATCH perf/core 02/11] uprobes: Skip emulate/sstep on unique
+ uprobe when ip is changed
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Oleg Nesterov <oleg@redhat.com>, Jiri Olsa <olsajiri@gmail.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Andrii Nakryiko <andrii@kernel.org>, bpf <bpf@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>, 
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
+	John Fastabend <john.fastabend@gmail.com>, Hao Luo <haoluo@google.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
-
-On Mon, Aug 18, 2025 at 11:34:18PM -0700, panfan wrote:
-> with the previous patch [PATCH v3 6/6] arm64: module: rework module VA
-> range selection, the module region can use a full 2GB for large modules.
+On Thu, Sep 4, 2025 at 8:02=E2=80=AFAM Alexei Starovoitov
+<alexei.starovoitov@gmail.com> wrote:
 >
-> On arm64 with CONFIG_DYNAMIC_FTRACE, due to the ±128 MB range limit of
-> the `BL` instruction, ftrace uses a PLT entry to branch indirectly to
-> ftrace_caller when modules may be placed far away.
+> On Thu, Sep 4, 2025 at 4:26=E2=80=AFAM Oleg Nesterov <oleg@redhat.com> wr=
+ote:
+> >
+> > On 09/04, Jiri Olsa wrote:
+> > >
+> > > On Thu, Sep 04, 2025 at 10:49:50AM +0200, Oleg Nesterov wrote:
+> > > > On 09/03, Jiri Olsa wrote:
+> > > > >
+> > > > > On Wed, Sep 03, 2025 at 01:26:48PM +0200, Oleg Nesterov wrote:
+> > > > > > On 09/02, Jiri Olsa wrote:
+> > > > > > >
+> > > > > > > If user decided to take execution elsewhere, it makes little =
+sense
+> > > > > > > to execute the original instruction, so let's skip it.
+> > > > > >
+> > > > > > Exactly.
+> > > > > >
+> > > > > > So why do we need all these "is_unique" complications? Only a s=
+ingle
+> > > > > > is_unique/exclusive consumer can change regs->ip, so I guess ha=
+ndle_swbp()
+> > > > > > can just do
+> > > > > >
+> > > > > >         handler_chain(uprobe, regs);
+> > > > > >         if (instruction_pointer(regs) !=3D bp_vaddr)
+> > > > > >                 goto out;
+> > > > >
+> > > > > hum, that's what I did in rfc [1] but I thought you did not like =
+that [2]
+> > > > >
+> > > > > [1] https://lore.kernel.org/bpf/20250801210238.2207429-2-jolsa@ke=
+rnel.org/
+> > > > > [2] https://lore.kernel.org/bpf/20250802103426.GC31711@redhat.com=
+/
+> > > > >
+> > > > > I guess I misunderstood your reply [2], I'd be happy to drop the
+> > > > > unique/exclusive flag
+> > > >
+> > > > Well, but that rfc didn't introduce the exclusive consumers, and I =
+think
+> > > > we agree that even with these changes the non-exclusive consumers m=
+ust
+> > > > never change regs->ip?
+> > >
+> > > ok, got excited too soon.. so you meant getting rid of is_unique
+> > > check only for this patch and have just change below..  but keep
+> > > the unique/exclusive flag from patch#1
+> >
+> > Yes, this is what I meant,
+> >
+> > > IIUC Andrii would remove the unique flag completely?
+> >
+> > Lets wait for Andrii...
 >
-> Currently, this PLT(.text.ftrace_trampoline) resides in MOD_TEXT,
-> so call sites in .init.text cannot reach it by `BL` if .init.text
-> and .text are allocated in different 128 MB regions.
+> Not Andrii, but I see only negatives in this extra flag.
+> It doesn't add any safety or guardrails.
+> No need to pollute uapi with pointless flags.
 
-Ouch; sorry about this. Given the failure mode below, this is a pretty
-horrid bug.
++1. I think it's fine to just have something like
 
-> For example, init_moudle in tz_log_dlkm.ko can not reach PLT or
-> ftrace_caller by `BL`:
-> 
-> module_direct_base = 0xFFFFFFC07B270000   128M
-> module_plt_base = 0xFFFFFFC003270000  2G
-> 
-> mod = 0xFFFFFFC07FF65880 -> (
->     state = MODULE_STATE_COMING,
->     name = "tz_log_dlkm",
->     init = 0xFFFFFFC00370F01C,
-> 
->     mem = (
->       (base = 0xFFFFFFC07E7E8000, size = 12288,  // MOD_TEXT -- direct
->       (base = 0xFFFFFFC07FF65000, size = 12288,  // MOD_DATA
->       (base = 0xFFFFFFC07FFFB000, size = 12288,  // MOD_RODATA
->       (base = 0xFFFFFFC07DDA9000, size = 4096,   // MOD_RO_AFTER_INIT
->       (base = 0xFFFFFFC00370F000, size = 4096,   // MOD_INIT_TEXT -- plt
->       (base = 0xFFFFFFC003711000, size = 12288,  // MOD_INIT_DATA
-> 
->     arch = (
->       core = (plt_shndx = 8, plt_num_entries = 0, plt_max_entries = 35),
->       init = (plt_shndx = 9, plt_num_entries = 1, plt_max_entries = 1),
->       ftrace_trampolines = 0xFFFFFFC07E7EA730 -> (   //
-> .text.ftrace_trampoline in MOD_TEXT
-> 
-> PLT in .text.ftrace_trampoline:
-> 0xFFFFFFC07E7EA730            adrp    x16,0xFFFFFFC080014000
-> 0xFFFFFFC07E7EA734            add     x16,x16,#0xF64   ; x16,x16,#3940
-> 0xFFFFFFC07E7EA738            br      x16; ftrace_caller
-> 
-> Here, init_module() in MOD_INIT_TEXT cannot branch to the PLT in MOD_TEXT
-> because the offset exceeds 128 MB. As a result,
-> ftrace fails to update `nop` to `BL` and inserts `brk #0x100` instead:
-> 
-> 0xFFFFFFC00370F01C  init_module:    mov     x9,x30
-> 0xFFFFFFC00370F020                  brk     #0x100           ; #256
-> 
-> [   36.290790][  T835] label_imm_common: offset out of range
-> 
-> [   36.333765][  T835] Kernel text patching generated an invalid instruct
-> ion at init_module+0x4/0xfe4 [tz_log_dlkm]!
-> 
-> [   36.335728][  T835] Call trace:
-> [   36.335735][  T835]  init_module+0x4/0xfe4 [tz_log_dlkm]
-> [   36.335750][  T835]  do_init_module+0x60/0x2cc
-> [   36.335761][  T835]  load_module+0x10e0/0x12ac
-> [   36.335771][  T835]  __arm64_sys_finit_module+0x240/0x348
-> [   36.335780][  T835]  invoke_syscall+0x60/0x11c
-> [   36.335791][  T835]  el0_svc_common+0xb4/0xf0
-> [   36.335801][  T835]  do_el0_svc+0x24/0x30
-> [   36.335810][  T835]  el0_svc+0x3c/0x74
-> [   36.335821][  T835]  el0t_64_sync_handler+0x68/0xbc
-> [   36.335831][  T835]  el0t_64_sync+0x1a8/0x1ac
->
-> To fix this, introduce an additional `.init.text.ftrace_trampoline`
-> section for .init.text. This provides a PLT within MOD_INIT_TEXT, ensuring
-> that init functions can branch within range using `BL`. This section
-> is freed after do_one_initcall, so there is no persistent cost.
-> The core text continues to use the existing PLT in MOD_TEXT.
-> 
-> Signed-off-by: panfan <panfan@qti.qualcomm.com>
+if (unlikely(instruction_pointer(regs) !=3D bp_vaddr))
+      goto out;
 
-Aside from one nit below, I think this is the right fix, though I think
-it would be good to simplify/clarify the commit message.
+after all uprobe callbacks were processed. Even if every single one of
+them modify IP, the last one that did that wins. Others (if they care)
+can detect this.
 
-How about:
-
-| On arm64, it has been possible for a module's sections to be placed more
-| than 128M away from each other since commit:
-| 
-|   3e35d303ab7d ("arm64: module: rework module VA range selection")
-| 
-| Due to this, an ftrace callsite in a module's .init.text section can be
-| out of branch range for the module's ftrace PLT entry (in the module's
-| .text section). Any attempt to enable tracing of that callsite will
-| result in a BRK being patched into the callsite, resulting in a fatal
-| exception when the callsite is later executed.
-| 
-| Fix this by adding an additional trampoline for .init.text, which will
-| be within range.
-| 
-| No additional trampolines are necessary due to to the way a given
-| module's executable sections are packed together. Any executable
-| section beginning with ".init" or ".exit" will be placed in
-| MOD_INIT_TEXT, and any other executable section will be placed in
-| MOD_TEXT.
-| 
-| Fixes: 3e35d303ab7d ("arm64: module: rework module VA range selection")
-
-[...]
-
-> -static struct plt_entry *get_ftrace_plt(struct module *mod)
-> +static struct plt_entry *get_ftrace_plt(struct module *mod, unsigned long addr)
->  {
->  #ifdef CONFIG_MODULES
-> -	struct plt_entry *plt = mod->arch.ftrace_trampolines;
-> +	struct plt_entry *plt = NULL;
-> +
-> +	if (within_module_mem_type(addr, mod, MOD_INIT_TEXT))
-> +		plt = mod->arch.init_ftrace_trampolines;
-> +	else
-> +		plt = mod->arch.ftrace_trampolines;
->  
->  	return &plt[FTRACE_PLT_IDX];
-
-It would be good if we could explicitly verify that the region is either
-MOD_TEXT or MOD_INIT_TEXT, and if not, return NULL, e.g.
-
-
-	if (within_module_mem_type(addr, mod, MOD_INIT_TEXT))
-		plt = mod->arch.init_ftrace_trampolines;
-	else if (within_module_mem_type(addr, mod, MOD_TEXT))
-		plt = mod->arch.ftrace_trampolines;
-	else
-		return NULL;
-
-That last case should never happen, but if it does it'll cause
-ftrace_find_callable_addr() to log a warning and return false, such that
-its callers can return an error.
-
-Other than that, I think this is fine. With those changes:
-
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-
-Mark.
-
->  #else
-> @@ -332,7 +337,7 @@ static bool ftrace_find_callable_addr(struct dyn_ftrace *rec,
->  	if (WARN_ON(!mod))
->  		return false;
->  
-> -	plt = get_ftrace_plt(mod);
-> +	plt = get_ftrace_plt(mod, pc);
->  	if (!plt) {
->  		pr_err("ftrace: no module PLT for %ps\n", (void *)*addr);
->  		return false;
-> diff --git a/arch/arm64/kernel/module-plts.c b/arch/arm64/kernel/module-plts.c
-> index bde32979c06a..7afd370da9f4 100644
-> --- a/arch/arm64/kernel/module-plts.c
-> +++ b/arch/arm64/kernel/module-plts.c
-> @@ -283,7 +283,7 @@ int module_frob_arch_sections(Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
->  	unsigned long core_plts = 0;
->  	unsigned long init_plts = 0;
->  	Elf64_Sym *syms = NULL;
-> -	Elf_Shdr *pltsec, *tramp = NULL;
-> +	Elf_Shdr *pltsec, *tramp = NULL, *init_tramp = NULL;
->  	int i;
->  
->  	/*
-> @@ -298,6 +298,9 @@ int module_frob_arch_sections(Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
->  		else if (!strcmp(secstrings + sechdrs[i].sh_name,
->  				 ".text.ftrace_trampoline"))
->  			tramp = sechdrs + i;
-> +		else if (!strcmp(secstrings + sechdrs[i].sh_name,
-> +				 ".init.text.ftrace_trampoline"))
-> +			init_tramp = sechdrs + i;
->  		else if (sechdrs[i].sh_type == SHT_SYMTAB)
->  			syms = (Elf64_Sym *)sechdrs[i].sh_addr;
->  	}
-> @@ -363,5 +366,12 @@ int module_frob_arch_sections(Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
->  		tramp->sh_size = NR_FTRACE_PLTS * sizeof(struct plt_entry);
->  	}
->  
-> +	if (init_tramp) {
-> +		init_tramp->sh_type = SHT_NOBITS;
-> +		init_tramp->sh_flags = SHF_EXECINSTR | SHF_ALLOC;
-> +		init_tramp->sh_addralign = __alignof__(struct plt_entry);
-> +		init_tramp->sh_size = NR_FTRACE_PLTS * sizeof(struct plt_entry);
-> +	}
-> +
->  	return 0;
->  }
-> diff --git a/arch/arm64/kernel/module.c b/arch/arm64/kernel/module.c
-> index 40148d2725ce..d6d443c4a01a 100644
-> --- a/arch/arm64/kernel/module.c
-> +++ b/arch/arm64/kernel/module.c
-> @@ -466,6 +466,17 @@ static int module_init_ftrace_plt(const Elf_Ehdr *hdr,
->  	__init_plt(&plts[FTRACE_PLT_IDX], FTRACE_ADDR);
->  
->  	mod->arch.ftrace_trampolines = plts;
-> +
-> +	s = find_section(hdr, sechdrs, ".init.text.ftrace_trampoline");
-> +	if (!s)
-> +		return -ENOEXEC;
-> +
-> +	plts = (void *)s->sh_addr;
-> +
-> +	__init_plt(&plts[FTRACE_PLT_IDX], FTRACE_ADDR);
-> +
-> +	mod->arch.init_ftrace_trampolines = plts;
-> +
->  #endif
->  	return 0;
->  }
-> -- 
-> 2.34.1
-> 
+Generally speaking, this is a very specialized use case (which is why
+the opposition to complicating UAPI for all of that), and I'd expect
+to have at most 1 such uprobe callbacks at any attach point, while all
+others (if there are any "others") are read-only and won't care about
+return IP.
