@@ -1,136 +1,203 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C06372BDC1D;
-	Wed,  3 Sep 2025 23:12:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38F355661;
+	Thu,  4 Sep 2025 00:21:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756941178; cv=none; b=IBBkfhFYTUX9UMN1QBYv4/dkpXSbDC6BbIMIwTFtXGcPF1TqE+25oPtfeA8NkYVZblNvO6gaJ8VbcMNNNw77eMtGWXDLwNqk0Q159GOHDgHGm7gAQj0faJR5IM18MydHTV05wRBl32JjPCzC7vo7uB4jz1PaFITD6mF9+3jbsaI=
+	t=1756945309; cv=none; b=OqMctaPBe7fXqPFg9POzBVsj+4RQ6ezNPKMdPq7H+R7JIxi7wy0NVquo99Be0IBu1Ps/NLW4jwnn4oj/2yX76MzZPocfV0+hPkfLnd5r6CWHnhWCxMJjsOqoS+fTNLF536ctLdU1JtcMVwJ+X2g+lxHq9bktzbq2QOLeJhkvwjc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756941178; c=relaxed/simple;
-	bh=7Nluk1zrxvjw8V2VyZPB8fuv98T1UivfeQbKQNgU1ok=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=foMB6r5cbl6F9NUxKcVjjQlxO02jhbA/caVaHjZ1Z4L/M4880xlLmTfdN8lllSC1dq/HDlnLhbAkxkA8O51ENWJ53hJ3k8pdCvuxsqJgMpacEHwc+LCfTDanuiyvzJfYRV8Wyk4ckSOZaRcmUVzSe6jYslQe+xqcXqrPcvKodjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JRxOlfiH; arc=none smtp.client-ip=209.85.214.171
+	s=arc-20240116; t=1756945309; c=relaxed/simple;
+	bh=Uvje703zsinmBVFdkez0uo0N7a2443VJU1IkzFzJUas=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=uCRgrFd24Vth3c1LLcU08NbfYmQE1LelbKqUG9TopbACZmlUYyR1E2iy4JkZc9YFav1AWPhwseoOjKxCvEq2KNGw9WC4xkA+kQEBy6h8KE01jWdQt3l3gNMeAD1FIKHrnR+2ckhzajZ6o+FcjH9m0haCz+wgUyiA4gfOPedIrm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YQ2CdSuv; arc=none smtp.client-ip=209.85.210.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JRxOlfiH"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2489acda3bbso3886145ad.1;
-        Wed, 03 Sep 2025 16:12:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YQ2CdSuv"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-77238a3101fso344151b3a.0;
+        Wed, 03 Sep 2025 17:21:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1756941173; x=1757545973; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=It0e2JrH3ZFKYa+3DcELj8Z5oxYFVPHQ8lvRREkQ5Mw=;
-        b=JRxOlfiHYB+O1iyfN5G5pJ1mATmW9HBpyWrOP3i+ziTkg60Fl1trWb8F+jmRbvbcBT
-         jjqfySzsJcUL+37nXYqOVkn6++/j1gIpatbWoIzu/n6DLXjck/WFRku1JaDpn7f9cPIm
-         SKa8ZwdJWpEOSMDrHieBXMOWpKsR3lnjg7pO122i/aAaaCuHDYjyO7nspM8A2b1FJ+z4
-         QIuhUmKuRPLtOBti4CsqKbeogeARbbCLiTxT9DgFpnC+V/8lZ3xy6KLYCv4qigQr9KfT
-         9RvHvub2cnvQcFb2LT9mMMBy6joT54CJif5U06dCiXEmhgU8WV/LMix1PtCk/+97PutA
-         TJdA==
+        d=gmail.com; s=20230601; t=1756945307; x=1757550107; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=HHlaBgzUa1Qmmhf3CcsWTtBaw+HbaoWGOhuV0heFh9I=;
+        b=YQ2CdSuvAaIUIbBgevctV6VvR8ZeKRhpOBpsYkKGIJG2hlvc/RXFT2joz2aaEVR1+1
+         rUfieZR1uaQ4Zzkuijdp99tfgdeG0swcY+m/rrrVMxZCTJFGDPxeUFuR6k1MINyktJg6
+         r2V0pkZsYPi0stxq8S5jn55kjoy+CwZaoAKBlmnkISJL9REnxk1+tdSBErMF1OSmW3+f
+         4o/AGcb+b9CG5GgNWAu8IKLei5p5+l7i4GWx3qJ8JQv+jdxrQ9XobetjPdhxoqPsw4Fj
+         neWNAS50h8mzOG/pgZh1PRd7+qZSIUrecOWGdMKeW9keixWvgfN1qAboabCfV0Prr7o3
+         kB/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756941173; x=1757545973;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=It0e2JrH3ZFKYa+3DcELj8Z5oxYFVPHQ8lvRREkQ5Mw=;
-        b=Of77DUCsEtRCU0aqfBXihfGNgvmBYerJC2L5KT98TYyBr8Ug27E4kgzT37XGyizj6R
-         FlsEKobQFtIaSDPBAFWQkBq466IAma/THZG31NcCtT3ResR+mRUSYIOOOpRYGEZp3Nle
-         1LYX8yNS0X4UhLCnBT7QGdI0jscc5GVZllJKkJJB5k8Yak34Qv74zsf6eiyTfJgFbGa5
-         5cewWT9TU8IFM0LzujKjb8Z5uJ2s+3GZuUKyrLqdUR6JZiOilbTwLfAKiHGMv/uTbswu
-         RXWaKsifgYKN3M65LGasdk7MHDzoWjj2AxN7HNzxILKN/xhKGCOtnq76a1UNc9Kob4pS
-         /Mdw==
-X-Forwarded-Encrypted: i=1; AJvYcCWKnah3MVUcUYDPG6SgoZulYcHevVt4GaL7Nz1LlXnWNmpwWFON/lJfAPYBSFR8+H2Gp/r9azl00RsWlw+i@vger.kernel.org, AJvYcCXeFj8SDu8HLajrLE/UOGV85HynyLxFZTykjhFzVN1P7QVJZjAfjwudaCySmwKQD3+Xn5M=@vger.kernel.org, AJvYcCXpp8tdQRfO/zvJwnqm+17g4oGIho0hTPcCccT8C480gNCapaPzSzcjFOm0WIDX99iRezhb6uPTP9RdIBwC3RAbZlss@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx6H8/TAnqqQXMZl3dXPZM42D85HEpdYpv1o19vUoUW15Kq8Dgz
-	z2YOhrtR3T/UfGDPYLevXS7JpbSw6gX3xaOBx4BEd3U7PCGa/4cpZTVUXTtlPcch3m26m0Yg/O+
-	/gayj7kLSojtAqthJ8PKvPDX9fcnUtrg=
-X-Gm-Gg: ASbGncvDdQ7XQB1rW9HMewCAZYtryOfQ8NE+m1hw+2lD2v54HFlZWgMvrYoncFkRXPb
-	jrkObRzLG0RjbPn0gg3vOHwyi/0tjk/Gady9A7xecm+Q2M/dnrb1lcLswWoVEN0K816ypu4sZUQ
-	hCS4J/u7GCKN19LiH80icnjmlc78dJz1+C93is4CYErtLPNZd510AY6BS1EWEnw7hEPb8keojwH
-	5/art5vz7MRtEYSvEkR4NM=
-X-Google-Smtp-Source: AGHT+IHg6YdmCGOkFZDj+ngDvMe3gELnPnahcq0/S2zwKwB7gDpYCReU64s3GLtiHUKRxPc7YPlJCg8iUuX6U3MVxTQ=
-X-Received: by 2002:a17:903:1ab0:b0:246:76ed:e25d with SMTP id
- d9443c01a7336-24944b15b8cmr209445105ad.50.1756941173012; Wed, 03 Sep 2025
- 16:12:53 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1756945307; x=1757550107;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HHlaBgzUa1Qmmhf3CcsWTtBaw+HbaoWGOhuV0heFh9I=;
+        b=IkWmvsZp/RTcMYmdHWwaFnHEU0sXL4YUoJdoiwfFa/ZRkfxqAuu3CtIf6VDHzUlg77
+         qyWDHXZgsiotu9z9RRqa+uItbxl0BGY+2j1PQ3lMO1pyYCqQvXPr1BlhzVIVvnvSUdxF
+         EB82h6Roh+yASY/jmBmevQCR419ZQZxOSuE8VzXjhy3KqvDH6r2e28yw6YZbstm/R5Cv
+         A87ZJgktmr+oKGPDlU8HUxkZouXydIQ1jiFsDg4Pjb9dU8IPjC7mg8o33o6XnaswSbJs
+         zHsCa0Fmvdo41wTlF84rOP4Eq7TAAWpqV9vE9LvHlQ6NIsSp0xT/ySUcXLKGk2f1461g
+         /N+A==
+X-Forwarded-Encrypted: i=1; AJvYcCUfHx5PH0UOTn2nwLahxtvFBV9VBX0NYtW0oOZl87JVyxbNE/shvrjbIptFXkD6KlMFaUBULK0hLWNJmN+4503T@vger.kernel.org, AJvYcCWOkNGbbsnsvrzqDzjVfJa48JFbio3R2rKwwyoOVhE7o1cAFpCKwaFQfWc1JtpkjA8LFeMPrdINnKEzZtmTJox7iAFw@vger.kernel.org
+X-Gm-Message-State: AOJu0YwzT1re3PApYTQAlIO09Qz2qGZZpQxzNkJ/sJDdRRH9HyM/DaT/
+	sIhlPYc9WrY23YFjzGpvevlXQWOEkEhH1dp+EeIsGth4yf1DhNc3Jyiu
+X-Gm-Gg: ASbGncuInoMhZgbgwJYCgjnmml3k5fYAKVIWI8Ugi10kn4nkpa6k0viI0YC7XspiK50
+	f3fWJ97JpgzVI8z4B/brRNbNSI2bzL+LX3Sxyr9p6TXI1Q/f1leNLOJj5HueztMztFLQXwWhL+R
+	kMSxoeQoJKW6LXYzXOFIm9XQ2xwoyABUEg1+uGLwhtcBZavgJ5CSwcBtfQYxF3nBAoEWBDxRDUS
+	rW9JzkJl982U4kutmvn0kmRyasfQItbRsMRyfBHIZxrQVIFoGMAdUMuBTd6aEyHiRQ6s3Sq0y6v
+	NOvkm7ucF0F9Z4DNicxhaEWOqhxD+81lQJq1bUFarCA6xg9lMcWUEQiXxgZdLsGd7Oa2izoyTYm
+	OmJTQmqoTc/GaGpqWVtdP8P2AfQpSpFuMravsEk+bxU14zMmaBDax
+X-Google-Smtp-Source: AGHT+IE2Rm0qq4WLXUHC72wTGZQAf9KHWheCu6SFRXozAz2xgm8zzpEZ+y20XdO59dgoeGrCi7nsVQ==
+X-Received: by 2002:a05:6a00:9285:b0:772:5836:741 with SMTP id d2e1a72fcca58-772583608e0mr15901990b3a.11.1756945307314;
+        Wed, 03 Sep 2025 17:21:47 -0700 (PDT)
+Received: from localhost.localdomain ([45.142.165.62])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7722a4bd2aesm17579551b3a.48.2025.09.03.17.21.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Sep 2025 17:21:46 -0700 (PDT)
+From: Jinchao Wang <wangjinchao600@gmail.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	"Naveen N . Rao" <naveen@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	David Hildenbrand <david@redhat.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	linux-perf-users@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Jinchao Wang <wangjinchao600@gmail.com>
+Subject: [PATCH v2 00/18] mm/ksw: Introduce real-time Kernel Stack Watch debugging tool
+Date: Thu,  4 Sep 2025 08:20:57 +0800
+Message-ID: <20250904002126.1514566-1-wangjinchao600@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250720112133.244369-1-jolsa@kernel.org> <20250720112133.244369-10-jolsa@kernel.org>
- <CAEf4BzaxtW_W1M94e3q0Qw4vM_heHqU7zFeH-fFHOQBwy5+7LQ@mail.gmail.com>
- <aLirakTXlr4p2Z7K@krava> <20250903210112.GS4067720@noisy.programming.kicks-ass.net>
-In-Reply-To: <20250903210112.GS4067720@noisy.programming.kicks-ass.net>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Wed, 3 Sep 2025 16:12:37 -0700
-X-Gm-Features: Ac12FXxfFG0VC2mv82k-Eyv4Nse4_KEUPqQBdCPeUV8pfy3v3M8bUeEFsmZ36pI
-Message-ID: <CAEf4Bza-5u1j75YjvMdfgsEexv2W8nwikMaOUYpScie6ZWDOsg@mail.gmail.com>
-Subject: Re: [PATCHv6 perf/core 09/22] uprobes/x86: Add uprobe syscall to
- speed up uprobe
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Jiri Olsa <olsajiri@gmail.com>, Oleg Nesterov <oleg@redhat.com>, 
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, x86@kernel.org, 
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
-	John Fastabend <john.fastabend@gmail.com>, Hao Luo <haoluo@google.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Alan Maguire <alan.maguire@oracle.com>, David Laight <David.Laight@aculab.com>, 
-	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>, 
-	Ingo Molnar <mingo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Sep 3, 2025 at 2:01=E2=80=AFPM Peter Zijlstra <peterz@infradead.org=
-> wrote:
->
-> On Wed, Sep 03, 2025 at 10:56:10PM +0200, Jiri Olsa wrote:
->
-> > > > +SYSCALL_DEFINE0(uprobe)
-> > > > +{
-> > > > +       struct pt_regs *regs =3D task_pt_regs(current);
-> > > > +       struct uprobe_syscall_args args;
-> > > > +       unsigned long ip, sp;
-> > > > +       int err;
-> > > > +
-> > > > +       /* Allow execution only from uprobe trampolines. */
-> > > > +       if (!in_uprobe_trampoline(regs->ip))
-> > > > +               goto sigill;
-> > >
-> > > Hey Jiri,
-> > >
-> > > So I've been thinking what's the simplest and most reliable way to
-> > > feature-detect support for this sys_uprobe (e.g., for libbpf to know
-> > > whether we should attach at nop5 vs nop1), and clearly that would be
-> > > to try to call uprobe() syscall not from trampoline, and expect some
-> > > error code.
-> > >
-> > > How bad would it be to change this part to return some unique-enough
-> > > error code (-ENXIO, -EDOM, whatever).
-> > >
-> > > Is there any reason not to do this? Security-wise it will be just fin=
-e, right?
-> >
-> > good question.. maybe :) the sys_uprobe sigill error path followed the
-> > uprobe logic when things go bad, seem like good idea to be strict
-> >
-> > I understand it'd make the detection code simpler, but it could just
-> > just fork and check for sigill, right?
->
-> Can't you simply uprobe your own nop5 and read back the text to see what
-> it turns into?
+This patch series introduces **KStackWatch**, a lightweight kernel debugging tool
+for detecting kernel stack corruption in real time.
 
-Sure, but none of that is neither fast, nor cheap, nor that simple...
-(and requires elevated permissions just to detect)
+The motivation comes from scenarios where corruption occurs silently in one function
+but manifests later as a crash in another. Using KASAN may not reproduce the issue due
+to its heavy overhead. with no direct call trace linking the two. Such bugs are often
+extremely hard to debug with existing tools.
+I demonstrate this scenario in **test2 (silent corruption test)**.
 
-Forking is also resource-intensive. (think from libbpf's perspective,
-it's not cool for library to fork some application just to check such
-a seemingly simple thing as whether to
+KStackWatch works by combining a hardware breakpoint with kprobe and fprobe.
+It can watch a stack canary or a selected local variable and detects the moment the
+corruption actually occurs. This allows developers to pinpoint the real source rather
+than only observing the final crash.
 
-The question is why all that? That SIGILL when !in_uprobe_trampoline()
-is just paranoid. I understand killing an application if it tries to
-screw up "protocol" in all the subsequent checks. But here it's
-equally secure to just fail that syscall with normal error, instead of
-punishing by death.
+Key features include:
+
+  - Lightweight overhead with minimal impact on bug reproducibility
+  - Real-time detection of stack corruption
+  - Simple configuration through `/proc/kstackwatch`
+  - Support for recursive depth filter
+
+To validate the approach, the patch includes a test module and a test script.
+
+---
+V2 incorporates feedback and builds on the previously proposed RFC [1] and V1 [2].
+The changes are as follows:
+V2:
+  * Make hardware breakpoint and stack operations architecture-independent.
+V1:
+Core Implementation
+
+  *   Replaced kretprobe with fprobe for function exit hooking, as suggested
+      by Masami Hiramatsu
+  *   Introduced per-task depth logic to track recursion across scheduling
+  *   Removed the use of workqueue for a more efficient corruption check
+  *   Reordered patches for better logical flow
+  *   Simplified and improved commit messages throughout the series
+  *   Removed initial archcheck which should be improved later
+
+
+Testing and Architecture
+
+  *   Replaced the multiple-thread test with silent corruption test
+  *   Split self-tests into a separate patch to improve clarity.
+
+Maintenance
+  *   Added a new entry for KStackWatch to the MAINTAINERS file.
+
+[1] https://lore.kernel.org/lkml/20250818122720.434981-1-wangjinchao600@gmail.com/
+[2] https://lore.kernel.org/all/20250828073311.1116593-1-wangjinchao600@gmail.com/
+---
+
+The series is structured as follows:
+
+Jinchao Wang (18):
+  mm/ksw: add build system support
+  mm/ksw: add ksw_config struct and parser
+  mm/ksw: add /proc/kstackwatch interface
+  mm/ksw: add HWBP pre-allocation support
+  x86/hw_breakpoint: introduce arch_reinstall_hw_breakpoint() for atomic
+    context
+  perf/hw_breakpoint: add arch-independent hw_breakpoint_modify_local()
+  mm/ksw: add atomic watch on/off operations
+  mm/ksw: add stack probe support
+  mm/ksw: implement stack canary and local var resolution logic
+  mm/ksw: add per-task recursion depth tracking
+  mm/ksw: coordinate watch and stack for full functionality
+  mm/ksw: add self-debug functions for kstackwatch watch
+  mm/ksw: add test module
+  mm/ksw: add stack overflow test
+  mm/ksw: add simplified silent corruption test
+  mm/ksw: add recursive corruption test
+  tools/kstackwatch: add interactive test script for KStackWatch
+  MAINTAINERS: add entry for KStackWatch (Kernel Stack Watch)
+
+ MAINTAINERS                           |   6 +
+ arch/x86/include/asm/hw_breakpoint.h  |   1 +
+ arch/x86/kernel/hw_breakpoint.c       |  50 +++++
+ include/linux/hw_breakpoint.h         |   1 +
+ kernel/events/hw_breakpoint.c         |  18 ++
+ mm/Kconfig.debug                      |  20 ++
+ mm/Makefile                           |   1 +
+ mm/kstackwatch/Makefile               |   8 +
+ mm/kstackwatch/kernel.c               | 260 +++++++++++++++++++++++
+ mm/kstackwatch/kstackwatch.h          |  53 +++++
+ mm/kstackwatch/kstackwatch_test.c     | 261 +++++++++++++++++++++++
+ mm/kstackwatch/stack.c                | 286 ++++++++++++++++++++++++++
+ mm/kstackwatch/watch.c                | 175 ++++++++++++++++
+ tools/kstackwatch/kstackwatch_test.sh | 118 +++++++++++
+ 14 files changed, 1258 insertions(+)
+ create mode 100644 mm/kstackwatch/Makefile
+ create mode 100644 mm/kstackwatch/kernel.c
+ create mode 100644 mm/kstackwatch/kstackwatch.h
+ create mode 100644 mm/kstackwatch/kstackwatch_test.c
+ create mode 100644 mm/kstackwatch/stack.c
+ create mode 100644 mm/kstackwatch/watch.c
+ create mode 100755 tools/kstackwatch/kstackwatch_test.sh
+
+-- 
+2.43.0
+
