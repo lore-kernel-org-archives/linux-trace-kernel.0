@@ -1,56 +1,83 @@
-Received: from abb.hmeau.com (abb.hmeau.com [180.181.231.80])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1449F2F90E6;
-	Thu,  4 Sep 2025 09:45:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=180.181.231.80
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D2A472629;
+	Thu,  4 Sep 2025 10:46:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756979117; cv=none; b=qaGeqJOwozinFX0tmSvSn7IOotJs5E0IPBnEJNFCDvyvlPkUtygoKXmta2kZ+/HGS+rq2i0nKrBkiE4678Hml30zH8IVcLCqd6/LqRRhXS93w9O6N7lUuoWRaQ6WHvlZXHzyQfY6iWNeBaPMaZ/sk8IaxZ66w8/ZQLWjGtlCJPY=
+	t=1756982796; cv=none; b=NHS8eaiWynCARtEcGCbGZIHrzjnjhqYEzS/LxoBEZIUnIliSrBfWKLYlxEbyp6uGYAZClOoZj6b3SPkDPbosquNkz8wN/oqAIxlvsg9Idi2+4nRLsbIUiXfUaODHSNLGQeBP+zRiR41bQmFhNcERCjiMvQt7xPkOanWGZmMztFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756979117; c=relaxed/simple;
-	bh=XHPvdKbjG5ka9RaObhQu+o1XhqKNYZRUilx9t5/3HlI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E22afEdyuE0OBdbcEdUypLMF4OFB0D5fLJkBS5+5LwswksRIcscSu1yUNqiNBq3zt5TWC3wFO8isaS9Ioi/xbx8rAvEpnRF+dDgokfwYYDhY/Y5NZwNZsIhKIcBTi4JzfVZf3/kRNpXoV1PbQ2bywHC00k8USwJW3Qdg1fom3LQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=KKgGORZe; arc=none smtp.client-ip=180.181.231.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1756982796; c=relaxed/simple;
+	bh=t7jhEFWu/vL/nffTlTXgSrADqDago8gdgl9cPR+Pi2o=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Xl25waemFlhMPQgqupXsTK9VvZmfgibbh/OzKZfSkkGqj4ZJ/br5Kdlh/GkMWKZF4sqinjZRlsenORCmntcv8Xuwg6Tqn0TrfjUj01BkLwgUm7vnv0T2bmBUldgrkQ2KTxpUS3P4aunZ3ujHzAR2O//km1BINndDUUFxpYMeljc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DCE6VIp+; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="KKgGORZe"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=+EgLYPOzr2Seya9sjkwg+xKsIVeQv5IYNgfp7NTJIiw=; b=KKgGORZejla2hVwlTXeP8DUBX2
-	UjtFEy9nX3hpfKCoAG3teGS/OU516sAxK6BwMLDQFJ+bXPMRAPxTqvxbRFoELKYQGvfUkQdEIW1E5
-	g9pc1bEX6O8d32UvrdLom2K0zv3yOzNvKNVcEoTRQkZMj7WVN82fq8tJBUlcSHvF53qZ38zzWTAC4
-	hS8Kw8v9IvX/I7wLZA/6blnhVw1Zib3giZt8A/xwY3VSdemkFVmqOGYtgzYXSbWf+PjGRpOHhEO33
-	MXcf4K7kim/QHyxEPDCdGq+a81hWw6RmdANlfEgiLpDeqzkPjAFPUksHjApAsSfnWCcpSqWsPw9vs
-	aYoWiHtA==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1uu6H3-002ZQx-1d;
-	Thu, 04 Sep 2025 17:44:54 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Thu, 04 Sep 2025 17:44:53 +0800
-Date: Thu, 4 Sep 2025 17:44:53 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Menglong Dong <dongml2@chinatelecom.cn>,
-	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	kernel test robot <oliver.sang@intel.com>, tgraf@suug.ch,
-	linux-crypto@vger.kernel.org
-Subject: [PATCH] rhashtable: Use rcu_dereference_all and
- rcu_dereference_all_check
-Message-ID: <aLlflTV_SDwMB7mq@gondor.apana.org.au>
-References: <20250829021436.19982-1-dongml2@chinatelecom.cn>
- <20250828222357.55fab4c2@batman.local.home>
- <d1da3939-62e6-4ad1-afcc-5710ce3f6cbd@paulmck-laptop>
- <20250901170655.0757884ad7c2afb63ced3230@kernel.org>
- <615da75d-cb2f-4e7e-9e11-6b19f03fea6c@paulmck-laptop>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DCE6VIp+"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-61d143aa4acso1293837a12.2;
+        Thu, 04 Sep 2025 03:46:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1756982793; x=1757587593; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=v/6MCHmVs/INco1rBZwPhEs0od+L81/1d00TkL5c64U=;
+        b=DCE6VIp+KFjtVo2zuxUq1CFdhffi+0fvDvJZQ9+Q1brEeLGbQ53BIfcxRn4+aWCAhU
+         Pa58YEMF15RVfOIyaOhj1IxEQ3CB6wcGAl+Rq9puOY4eeGcPUM2h7cKNKxkN1g6REsSz
+         l2NCBU+BAgdkkR6/3UHGytxzd5zag6Nm64UUcDCliPCTHI/mFjjLwL45rmLWA0whDrbI
+         +hsnWDMLz1uvO+gaj+DPmm2VJM/qS5Jqi9XXLt+wY1WAk4XudcrKPr+z8/BUXB1CHRRn
+         ClBhquHrijfbFIODWmUin8Uh574WVobyTxu18tclAWURfvXBa0o55uEuKZBjcINh2BRq
+         Q9rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756982793; x=1757587593;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=v/6MCHmVs/INco1rBZwPhEs0od+L81/1d00TkL5c64U=;
+        b=fspTrS3GjtQfV2K0tSsEk9xvXRZhtM1rE2hpc4Exb4mex7vIXkWgtZdJvQGMZac59F
+         Mq7L5cuU3GzUXnfWs9bTpTgcZQQmWvpww8FCpfr4KJZe/JZsOF6elcbxw/4vLdaHZgkK
+         D6ypuZkZRo4KGr1be8mH3ENk5kdYFukgWKtyq8yjPSBMN6r5yf2nP7xnsAgfOzj28mrU
+         jQGqQveN22qjWdiPTWAKWHj3KcjyleMUDkl1Zx4oXyiHSkQYIfIPilAe+6r9g33c/UXZ
+         d580TAMa6e11IPHO2B8jjrmG/zYtPVsSXeNWU8i9EL31+9AZL+LDbs8E8BaeAXFVSUsi
+         ePAg==
+X-Forwarded-Encrypted: i=1; AJvYcCUI5y9fkJBVEHB8Ha4XxLDnSKaUt+AGyVEI6pLoIwnRW1O0PW5Qsi9aGxzpqj0fRCjQGyM=@vger.kernel.org, AJvYcCXq7TXE4lenJU1mevyUDdAHXGZrEPLuNxLWw+vOs2epnjojOXje+oHf/sAXcjPSG862GKiIWZ0dS1Gqc37lIibV1Gc3@vger.kernel.org, AJvYcCXs6iR2xSxIc8CnneIsAOCjgIjs80ctryotlOScvdlRLw3yTPggdBMFXUdBrawe39fRJc/9iLzCJ6ALJwT8@vger.kernel.org
+X-Gm-Message-State: AOJu0YwAQFiS3JukDKxYJkojSWXInmI4MaSSJLDCt7ho9lFcpDQRfmGT
+	AlM+lBF4VwiVRf63ybzWfVsgJAn2dwqv6wN/X0svZ+I8vYuXUa29iZwy
+X-Gm-Gg: ASbGncubnUA3uVALkGGNq6UMGegmnRv5+3Q8XWHcHTZ2+schrsYuRZYj/xBOveO/2pA
+	TjIbsPsQDJ112uOtz8urTTZAenxKTGyNngqHpd/zfr/AiQYC89EZBfzXn07re1XrjJw5G6fqPfo
+	9hpHXnFi7pTTlfJ5T/N5rWT6D+6+PecLlFUbXUJdybxzOb++tGWybxmnWkmZTrSM7NKfWY8rzEc
+	HYuGxRcQ/DastVS5AQ3OOksPplTYrMsWH2t5CenNSJYjXk9ZbldliUMG7TmxwxO/sD1P5n2GhFA
+	s9aaShm989jRiXM4LRErC6i5898SCyA9GrTQYnBma7+SUL4O0yqcf5TNzwvA79M3qFCVUNHPyU6
+	OewIeg9E=
+X-Google-Smtp-Source: AGHT+IF2BbXiznN72q968yvBy6zKn2zLuchEHAzxeMcnRqvSKT6buqhPOlQiBdzDdyf17ZN1MJI/1Q==
+X-Received: by 2002:a17:907:6d18:b0:afe:ba8e:7378 with SMTP id a640c23a62f3a-b01d979d03dmr2024143466b.48.1756982793072;
+        Thu, 04 Sep 2025 03:46:33 -0700 (PDT)
+Received: from krava ([2a02:8308:a00c:e200::31e0])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b017e4b9ed7sm1308898266b.90.2025.09.04.03.46.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Sep 2025 03:46:32 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Thu, 4 Sep 2025 12:46:31 +0200
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Jiri Olsa <olsajiri@gmail.com>, Masami Hiramatsu <mhiramat@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	x86@kernel.org, Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
+	Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH perf/core 02/11] uprobes: Skip emulate/sstep on unique
+ uprobe when ip is changed
+Message-ID: <aLluB1Qe6Y9B8G_e@krava>
+References: <20250902143504.1224726-1-jolsa@kernel.org>
+ <20250902143504.1224726-3-jolsa@kernel.org>
+ <20250903112648.GC18799@redhat.com>
+ <aLicCjuqchpm1h5I@krava>
+ <20250904084949.GB27255@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -59,171 +86,60 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <615da75d-cb2f-4e7e-9e11-6b19f03fea6c@paulmck-laptop>
+In-Reply-To: <20250904084949.GB27255@redhat.com>
 
-On Mon, Sep 01, 2025 at 08:00:15AM -0700, Paul E. McKenney wrote:
->
-> However, another option for the the above rcu_dereference_check() to
-> become something like this:
+On Thu, Sep 04, 2025 at 10:49:50AM +0200, Oleg Nesterov wrote:
+> On 09/03, Jiri Olsa wrote:
+> >
+> > On Wed, Sep 03, 2025 at 01:26:48PM +0200, Oleg Nesterov wrote:
+> > > On 09/02, Jiri Olsa wrote:
+> > > >
+> > > > If user decided to take execution elsewhere, it makes little sense
+> > > > to execute the original instruction, so let's skip it.
+> > >
+> > > Exactly.
+> > >
+> > > So why do we need all these "is_unique" complications? Only a single
+> > > is_unique/exclusive consumer can change regs->ip, so I guess handle_swbp()
+> > > can just do
+> > >
+> > > 	handler_chain(uprobe, regs);
+> > > 	if (instruction_pointer(regs) != bp_vaddr)
+> > > 		goto out;
+> >
+> > hum, that's what I did in rfc [1] but I thought you did not like that [2]
+> >
+> > [1] https://lore.kernel.org/bpf/20250801210238.2207429-2-jolsa@kernel.org/
+> > [2] https://lore.kernel.org/bpf/20250802103426.GC31711@redhat.com/
+> >
+> > I guess I misunderstood your reply [2], I'd be happy to drop the
+> > unique/exclusive flag
 > 
-> 	rcu_dereference_check(p, lockdep_rht_mutex_is_held(ht) ||
-> 				 rcu_read_lock_any_held());
-> 
-> This would be happy with any RCU reader, including rcu_read_lock(),
-> preempt_disable(), local_irq_disable(), local_bh_disable(), and various
-> handler contexts.  One downside is that this would *always* be happy in
-> a kernel built with CONFIG_PREEMPT_{NONE,VOLUNTARY}=y.
+> Well, but that rfc didn't introduce the exclusive consumers, and I think
+> we agree that even with these changes the non-exclusive consumers must
+> never change regs->ip?
 
-Why is that a problem? Assuming that it is always safe to perform
-an rcu_dereference_all() on such a kernel, not warning would appear
-to be the right thing to do.
+ok, got excited too soon.. so you meant getting rid of is_unique
+check only for this patch and have just change below..  but keep
+the unique/exclusive flag from patch#1
 
-> If this is happening often enough, it would be easy for me to create an
-> rcu_dereference_all_check() that allows all forms of vanilla RCU readers
-> (but not, for example, SRCU readers), but with only two use cases,
-> it is not clear to me that this is an overall win.
-> 
-> Or am I missing a turn in here somewhere?
+IIUC Andrii would remove the unique flag completely?
 
-As I said rhashtable is just a middle-man, while it does some
-RCU actions internally, in the end the user is free to choose
-the RCU variant (vanilla, bh, sched).  So I'm faced with the
-choice of using only rcu_dereference_all in rhashtable code,
-or splitting the rhashtable API into three variants just like
-RCU.  I'd rather not do this especially because it appears RCU
-itself has essentially morphed into a single variant because
-call_rcu etc. always waits for all three variants.
+jirka
 
-So how about this patch?
 
----8<---
-Add rcu_dereference_all and rcu_dereference_all_check so that
-library code such as rhashtable can be used with any RCU variant.
-
-As it stands rcu_dereference is used within rashtable, which
-creates false-positive warnings if the user calls it from another
-RCU variant context, such as preempt_disable().
-
-Use the rcu_dereference_all and rcu_dereference_all_check calls
-in rhashtable to suppress these warnings.
-
-Also replace the rcu_dereference_raw calls in the list iterators
-with rcu_dereference_all to uncover buggy calls.
-
-Reported-by: Menglong Dong <dongml2@chinatelecom.cn>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-
-diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
-index 120536f4c6eb..b4261a0498f0 100644
---- a/include/linux/rcupdate.h
-+++ b/include/linux/rcupdate.h
-@@ -713,6 +713,23 @@ do {									      \
- 				(c) || rcu_read_lock_sched_held(), \
- 				__rcu)
+--
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index b9b088f7333a..1baf5d2792ff 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -2791,6 +2791,9 @@ static void handle_swbp(struct pt_regs *regs)
  
-+/**
-+ * rcu_dereference_all_check() - rcu_dereference_all with debug checking
-+ * @p: The pointer to read, prior to dereferencing
-+ * @c: The conditions under which the dereference will take place
-+ *
-+ * This is the RCU-all counterpart to rcu_dereference_check().
-+ * However, please note that starting in v5.0 kernels, vanilla RCU grace
-+ * periods wait for preempt_disable() regions of code in addition to
-+ * regions of code demarked by rcu_read_lock() and rcu_read_unlock().
-+ * This means that synchronize_rcu(), call_rcu, and friends all take not
-+ * only rcu_read_lock() but also rcu_read_lock_*() into account.
-+ */
-+#define rcu_dereference_all_check(p, c) \
-+	__rcu_dereference_check((p), __UNIQUE_ID(rcu), \
-+				(c) || rcu_read_lock_any_held(), \
-+				__rcu)
+ 	handler_chain(uprobe, regs);
+ 
++	if (instruction_pointer(regs) != bp_vaddr)
++		goto out;
 +
- /*
-  * The tracing infrastructure traces RCU (we want that), but unfortunately
-  * some of the RCU checks causes tracing to lock up the system.
-@@ -767,6 +784,14 @@ do {									      \
-  */
- #define rcu_dereference_sched(p) rcu_dereference_sched_check(p, 0)
+ 	/* Try to optimize after first hit. */
+ 	arch_uprobe_optimize(&uprobe->arch, bp_vaddr);
  
-+/**
-+ * rcu_dereference_all() - fetch RCU-all-protected pointer for dereferencing
-+ * @p: The pointer to read, prior to dereferencing
-+ *
-+ * Makes rcu_dereference_check() do the dirty work.
-+ */
-+#define rcu_dereference_all(p) rcu_dereference_all_check(p, 0)
-+
- /**
-  * rcu_pointer_handoff() - Hand off a pointer from RCU to other mechanism
-  * @p: The pointer to hand off
-diff --git a/include/linux/rhashtable.h b/include/linux/rhashtable.h
-index 6c85b28ea30b..e9b5ac26b42d 100644
---- a/include/linux/rhashtable.h
-+++ b/include/linux/rhashtable.h
-@@ -272,13 +272,13 @@ struct rhash_lock_head __rcu **rht_bucket_nested_insert(
- 	rcu_dereference_protected(p, lockdep_rht_mutex_is_held(ht))
- 
- #define rht_dereference_rcu(p, ht) \
--	rcu_dereference_check(p, lockdep_rht_mutex_is_held(ht))
-+	rcu_dereference_all_check(p, lockdep_rht_mutex_is_held(ht))
- 
- #define rht_dereference_bucket(p, tbl, hash) \
- 	rcu_dereference_protected(p, lockdep_rht_bucket_is_held(tbl, hash))
- 
- #define rht_dereference_bucket_rcu(p, tbl, hash) \
--	rcu_dereference_check(p, lockdep_rht_bucket_is_held(tbl, hash))
-+	rcu_dereference_all_check(p, lockdep_rht_bucket_is_held(tbl, hash))
- 
- #define rht_entry(tpos, pos, member) \
- 	({ tpos = container_of(pos, typeof(*tpos), member); 1; })
-@@ -373,7 +373,7 @@ static inline struct rhash_head *__rht_ptr(
- static inline struct rhash_head *rht_ptr_rcu(
- 	struct rhash_lock_head __rcu *const *bkt)
- {
--	return __rht_ptr(rcu_dereference(*bkt), bkt);
-+	return __rht_ptr(rcu_dereference_all(*bkt), bkt);
- }
- 
- static inline struct rhash_head *rht_ptr(
-@@ -497,7 +497,7 @@ static inline void rht_assign_unlock(struct bucket_table *tbl,
- 	for (({barrier(); }),						\
- 	     pos = head;						\
- 	     !rht_is_a_nulls(pos);					\
--	     pos = rcu_dereference_raw(pos->next))
-+	     pos = rcu_dereference_all(pos->next))
- 
- /**
-  * rht_for_each_rcu - iterate over rcu hash chain
-@@ -513,7 +513,7 @@ static inline void rht_assign_unlock(struct bucket_table *tbl,
- 	for (({barrier(); }),					\
- 	     pos = rht_ptr_rcu(rht_bucket(tbl, hash));		\
- 	     !rht_is_a_nulls(pos);				\
--	     pos = rcu_dereference_raw(pos->next))
-+	     pos = rcu_dereference_all(pos->next))
- 
- /**
-  * rht_for_each_entry_rcu_from - iterated over rcu hash chain from given head
-@@ -560,7 +560,7 @@ static inline void rht_assign_unlock(struct bucket_table *tbl,
-  * list returned by rhltable_lookup.
-  */
- #define rhl_for_each_rcu(pos, list)					\
--	for (pos = list; pos; pos = rcu_dereference_raw(pos->next))
-+	for (pos = list; pos; pos = rcu_dereference_all(pos->next))
- 
- /**
-  * rhl_for_each_entry_rcu - iterate over rcu hash table list of given type
-@@ -574,7 +574,7 @@ static inline void rht_assign_unlock(struct bucket_table *tbl,
-  */
- #define rhl_for_each_entry_rcu(tpos, pos, list, member)			\
- 	for (pos = list; pos && rht_entry(tpos, pos, member);		\
--	     pos = rcu_dereference_raw(pos->next))
-+	     pos = rcu_dereference_all(pos->next))
- 
- static inline int rhashtable_compare(struct rhashtable_compare_arg *arg,
- 				     const void *obj)
-
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
