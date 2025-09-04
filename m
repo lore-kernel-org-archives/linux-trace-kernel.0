@@ -1,123 +1,125 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41DA12FD7A0
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  4 Sep 2025 11:24:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CF26199FAB;
+	Thu,  4 Sep 2025 11:37:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756985096; cv=none; b=gOwQHJbox2QxGGjb5sDwUluDw8yNBk3+zxjVytQJBL44bgOErGHwQ6U4cOlr1+pabC7wy7y8foWWYJfzGjKZrgGRnr42jcNx9cSbcZw8/KRNpR+awrxG5Rmc28nBUzbbx0MPWv096ay/Qlwa5K0trqJQR+MFpBG9pzpqATgcTro=
+	t=1756985834; cv=none; b=YIwJwZjmV4CJF9B4i/gY+CfLu0D5VryGTFCHQ7UGUWHiVPL1g8XTWr99RKin6v1uD3E6Cnd6JXA9nUytY1YWFyf3BeNg+kvB2UPnni7OSNziEUoSybpwyyxSKYe5Kq64HCo9MxSki+yONqwdmTfitjwRv6tt6KPJGnvSfAWvtOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756985096; c=relaxed/simple;
-	bh=kf+9HDiVeFZDHfJthh5dLpO1I207zVKh8nvH272oWPo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ofb6MG5RmDPj8MNKAEPuqm4dUPiE1u/eptoDfvkjmsWLwymfwtxZj8SjYl/9k+o+8veBULgPMlXVhePrGw5n/oa7sdEgjkq3NRJlCrerIvkO0lEatxviRoddUI12ZzqAuhQ8SuG1am7AqpSkGu+c1LIAH3i3J8j9yCNbbbEw7To=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UiqGOBRw; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1756985834; c=relaxed/simple;
+	bh=cR0kkQiOhOO+mVhWrGef3b5Ko/oMPdeUXKcuvtI9dCg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=OC8jCaj5a+WuJrslqR/oKzl6s+TFHsmSsFz01JGjcq6hKoOKbqilQeneyaGfnEIxG1pj/uO1IGihP1NtwBmy7eTWk/fMHrtXMhh5ppM1v8OUZ151JPt6eKvRKOjcRJB8BmTgrVtmZknQak0jhf10w6W7IRR+UYZYvamW8vN9v/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B/w81wI7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UiqGOBRw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1756985093;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NNlSWipseSmsVlx3oPXi/Dm4sWLczG9la9f/1OIiTnU=;
-	b=UiqGOBRwKRnAZSyB4rd50GX7E8QG/F5ZzdVkVtnq2p2inbFqmkG62MkzHG5t5ZF61hFGd9
-	FuHs48pT269gb8RK4sFmD1+ohLc2Qd/hljG0eBuhRIc49KaOqVpyiIUKtRVLVW2zWWo35x
-	UE2QdYzSEKv5vI3DD0WHGx72TSwPPF8=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-455-nqnVc4rAM9WkkRaS95Gtzw-1; Thu,
- 04 Sep 2025 07:24:49 -0400
-X-MC-Unique: nqnVc4rAM9WkkRaS95Gtzw-1
-X-Mimecast-MFC-AGG-ID: nqnVc4rAM9WkkRaS95Gtzw_1756985088
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9E0D91800378;
-	Thu,  4 Sep 2025 11:24:47 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.52])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 481FE3002D26;
-	Thu,  4 Sep 2025 11:24:40 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Thu,  4 Sep 2025 13:23:25 +0200 (CEST)
-Date: Thu, 4 Sep 2025 13:23:17 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	x86@kernel.org, Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH perf/core 02/11] uprobes: Skip emulate/sstep on unique
- uprobe when ip is changed
-Message-ID: <20250904112317.GD27255@redhat.com>
-References: <20250902143504.1224726-1-jolsa@kernel.org>
- <20250902143504.1224726-3-jolsa@kernel.org>
- <20250903112648.GC18799@redhat.com>
- <aLicCjuqchpm1h5I@krava>
- <20250904084949.GB27255@redhat.com>
- <aLluB1Qe6Y9B8G_e@krava>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B/w81wI7"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 8ED14C4CEF4;
+	Thu,  4 Sep 2025 11:37:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756985833;
+	bh=cR0kkQiOhOO+mVhWrGef3b5Ko/oMPdeUXKcuvtI9dCg=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=B/w81wI7qXIsro9bibPxmg+ZtAiMrL6JcnGEZV8e0QPovfVifYbSiULHNf95UXjJc
+	 KI9kURiacpcn62USXSS+TVSvf1rBh1AmpQv+nr5GEdCBzLRkGZEIEkxOH/r7fNuMB8
+	 j+CBHqxVPwQKJ0ALAHopoqx7SuXM4CS7HM0AsOhbTBKEgr+MnU47w3aH72wIH0TrCO
+	 g47RrUgEjtn+1G7Mxa9KWPfdtkzIGJ8QkzF5BVBrLobiWxDuAibKHwQCsiU9YTyVRq
+	 te4vznFwU0gvOONAlunMPym9MGUsEult9OfAke32YJ5Qztj0qQJ9PvjC3lwFFz6WsQ
+	 B/7nNU1okCG7Q==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7670BCA1016;
+	Thu,  4 Sep 2025 11:37:13 +0000 (UTC)
+From: Simon Schuster via B4 Relay <devnull+schuster.simon.siemens-energy.com@kernel.org>
+Date: Thu, 04 Sep 2025 13:36:52 +0200
+Subject: [PATCH] rv/ltl_monitor: adapt handle_task_newtask to u64
+ clone_flags
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aLluB1Qe6Y9B8G_e@krava>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250904-trace-task-newtask-fix-callbacks-v1-1-8edb3d557365@siemens-energy.com>
+X-B4-Tracking: v=1; b=H4sIANN5uWgC/x2NQQqDQAxFryJZGxitU7RXERcxRhuUsUwGWxDv3
+ sHV48Hj/xNMoorBqzghyqGme8hSlQXwm8IiqFN2qF3tXecaTJFYMJGtGOR7c9YfMm3bSLwajpV
+ vn4+GfTcR5JlPlBzcF/1wXX/dCTs2cgAAAA==
+X-Change-ID: 20250904-trace-task-newtask-fix-callbacks-b158634c59da
+To: Steven Rostedt <rostedt@goodmis.org>, 
+ Christian Brauner <brauner@kernel.org>, 
+ Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: David Hildenbrand <david@redhat.com>, 
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Arnd Bergmann <arnd@arndb.de>, 
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ kernel test robot <lkp@intel.com>, 
+ Simon Schuster <schuster.simon@siemens-energy.com>
+X-Mailer: b4 0.14.3-dev-2ce6c
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1756985832; l=2094;
+ i=schuster.simon@siemens-energy.com; s=20250818;
+ h=from:subject:message-id;
+ bh=csJ5txv6tqXJkqrIKhkf4TfiADTvCuVUIksSMgyFOQc=;
+ b=38kU7qTU3ePme9DQA8Us2hLlr+NTH5vWQV+CBallDDv1+gLQMyaXqtUPGu2nQ1fcpi28/61XV
+ ZZRnu69MyC5CqWYDz/cxbvX75QNMrlichdqEVJIep+QIIh6PWPsSZvz
+X-Developer-Key: i=schuster.simon@siemens-energy.com; a=ed25519;
+ pk=PUhOMiSp43aSeRE1H41KApxYOluamBFFiMfKlBjocvo=
+X-Endpoint-Received: by B4 Relay for
+ schuster.simon@siemens-energy.com/20250818 with auth_id=495
+X-Original-From: Simon Schuster <schuster.simon@siemens-energy.com>
+Reply-To: schuster.simon@siemens-energy.com
 
-On 09/04, Jiri Olsa wrote:
->
-> On Thu, Sep 04, 2025 at 10:49:50AM +0200, Oleg Nesterov wrote:
-> > On 09/03, Jiri Olsa wrote:
-> > >
-> > > On Wed, Sep 03, 2025 at 01:26:48PM +0200, Oleg Nesterov wrote:
-> > > > On 09/02, Jiri Olsa wrote:
-> > > > >
-> > > > > If user decided to take execution elsewhere, it makes little sense
-> > > > > to execute the original instruction, so let's skip it.
-> > > >
-> > > > Exactly.
-> > > >
-> > > > So why do we need all these "is_unique" complications? Only a single
-> > > > is_unique/exclusive consumer can change regs->ip, so I guess handle_swbp()
-> > > > can just do
-> > > >
-> > > > 	handler_chain(uprobe, regs);
-> > > > 	if (instruction_pointer(regs) != bp_vaddr)
-> > > > 		goto out;
-> > >
-> > > hum, that's what I did in rfc [1] but I thought you did not like that [2]
-> > >
-> > > [1] https://lore.kernel.org/bpf/20250801210238.2207429-2-jolsa@kernel.org/
-> > > [2] https://lore.kernel.org/bpf/20250802103426.GC31711@redhat.com/
-> > >
-> > > I guess I misunderstood your reply [2], I'd be happy to drop the
-> > > unique/exclusive flag
-> >
-> > Well, but that rfc didn't introduce the exclusive consumers, and I think
-> > we agree that even with these changes the non-exclusive consumers must
-> > never change regs->ip?
->
-> ok, got excited too soon.. so you meant getting rid of is_unique
-> check only for this patch and have just change below..  but keep
-> the unique/exclusive flag from patch#1
+From: Simon Schuster <schuster.simon@siemens-energy.com>
 
-Yes, this is what I meant,
+Since commit edd3cb05c00a ("copy_process: pass clone_flags as u64 across
+calltree") the task_newtask trace event exposes clone_flags as u64 to
+its callbacks.
 
-> IIUC Andrii would remove the unique flag completely?
+However, ltl_monitor was not adapted, resulting in a faulty callback.
+This also resulted in an lkp build warning due to
+-Wincompatible-pointer-types.
 
-Lets wait for Andrii...
+Fixes: edd3cb05c00a ("copy_process: pass clone_flags as u64 across calltree")
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Closes: https://lore.kernel.org/lkml/20250904113334.18822d43@canb.auug.org.au/
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202509040134.bQVbm7ja-lkp@intel.com/
+Signed-off-by: Simon Schuster <schuster.simon@siemens-energy.com>
+---
+I did further search for other in-tree users of the task_newtask
+callback, but the trace macros make it a bit harder. Yet, as far as I
+could see, there are none, so this patch hopefully resolves the problem
+for good. The other matches all relate to "tp_btf/task_newtask", which
+seems to be unaffected.
 
-Oleg.
+With this patch, ARCH=S390 allmodconfig -- that originally tripped the
+LKP builds -- now builds without further -Wincompatible-pointer-types
+warnings.
+
+Sorry for causing this trouble, and thanks to Stephen Rothwell for
+testing/reporting.
+---
+ include/rv/ltl_monitor.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/rv/ltl_monitor.h b/include/rv/ltl_monitor.h
+index 67031a774e3d..5368cf5fd623 100644
+--- a/include/rv/ltl_monitor.h
++++ b/include/rv/ltl_monitor.h
+@@ -56,7 +56,7 @@ static void ltl_task_init(struct task_struct *task, bool task_creation)
+ 	ltl_atoms_fetch(task, mon);
+ }
+ 
+-static void handle_task_newtask(void *data, struct task_struct *task, unsigned long flags)
++static void handle_task_newtask(void *data, struct task_struct *task, u64 flags)
+ {
+ 	ltl_task_init(task, true);
+ }
+
+---
+base-commit: edd3cb05c00a040dc72bed20b14b5ba865188bce
+change-id: 20250904-trace-task-newtask-fix-callbacks-b158634c59da
+
+Best regards,
+-- 
+Simon Schuster <schuster.simon@siemens-energy.com>
+
 
