@@ -1,67 +1,56 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E2D82D2390
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  4 Sep 2025 08:51:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10DC82D23A5;
+	Thu,  4 Sep 2025 08:58:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756975886; cv=none; b=BQ1CflWYb3VipUKYbbpitywGX9l4rMkJyjUvSxmtgDThoDVz7o15TgSwS/6fKH/mTWihcxjPtQcPrwB8NTfu5Vg01Pm2KFx9XaoPYuzkeFvSGo5B6tsckJe1zW69abXeTY3Zedb9154qe1YUgGqttjcYpvYdzJBxmqeF9h2HW5E=
+	t=1756976290; cv=none; b=mmM4/9mlwx5VPV+XtC1dyt77A5+IAzeGkF3+gxDITKDVWFrHZKORO4lB6QphwTghdDYMENcEI4aMrJTtQPqR6cA4AELptx/O3vbUbyNfAJRlo2+pR7zD9GGujwIjsTGmd9W8rpmoAWgziTMW5wV0y6QZg6mEzXX9DrxLyTfpj6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756975886; c=relaxed/simple;
-	bh=kd8rDK6t+wVjPKffuRs99409lYJP4hc4W7ZRJeOM6K0=;
+	s=arc-20240116; t=1756976290; c=relaxed/simple;
+	bh=t6L8ZlnVN36wvOF7lHp++9Zn1qSba4PbffbnNTtGYlY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kLUblBqfnJecjYVe/j9g8ULX7q4CQCSHC0YgILxsLglL8Lgs09fp3+NgPFCPMaR3UsJlA2WclOdlvvXnRlRT1dIb8x+KZRXEDuU0XImmzmcWCb37/FkZuItJBWXRPKqvgl1y7YTJqEAHBOIs7pjRz3KGzjpGan2MQdNnThJLcbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RbmZqyvU; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Kx4NgfU04VGFMuaDRcuNIbAi7Yv9BUFa7QubJJvdfxSwYvcu+6ozdFNWWZn7RTaFhVhaC8n0WDpbe6EGtG02idnVTTYUS83nCQV0SSqKtteluf8wA6eEft/iXYVd71NZkbYRy10b69C7MuIC+jPedS2jxFv7eaK/gUkekOqspFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3E110RiW; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=vNClmjGW; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RbmZqyvU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1756975884;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3E110RiW";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vNClmjGW"
+Date: Thu, 4 Sep 2025 10:58:05 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1756976287;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=bt3LAXhgvrSLIKod81c7m7+ZTsO9TpO34qJq6parCmk=;
-	b=RbmZqyvUixE6PQopbcrGN4aEXW0xjTMlo2JiHby0mCDGXBAanZMKE36BhAdfXidnSvbzvt
-	k9xn3S2v3ljmKItODNXpP3VKlWEbjVXMKSq/dGKrFONM7WUOgvp437+CSzj8494gWeenNu
-	YpCPWAH4CFJx4ByCzbLmNbye47PtnWU=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-479-r52OELBBN9CON0H9FJYDAw-1; Thu,
- 04 Sep 2025 04:51:20 -0400
-X-MC-Unique: r52OELBBN9CON0H9FJYDAw-1
-X-Mimecast-MFC-AGG-ID: r52OELBBN9CON0H9FJYDAw_1756975878
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7281818004D4;
-	Thu,  4 Sep 2025 08:51:18 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.52])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 4FE2E1800446;
-	Thu,  4 Sep 2025 08:51:13 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Thu,  4 Sep 2025 10:49:56 +0200 (CEST)
-Date: Thu, 4 Sep 2025 10:49:50 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	x86@kernel.org, Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH perf/core 02/11] uprobes: Skip emulate/sstep on unique
- uprobe when ip is changed
-Message-ID: <20250904084949.GB27255@redhat.com>
-References: <20250902143504.1224726-1-jolsa@kernel.org>
- <20250902143504.1224726-3-jolsa@kernel.org>
- <20250903112648.GC18799@redhat.com>
- <aLicCjuqchpm1h5I@krava>
+	bh=PHWraxP+ssEoLc7VJUdtZWdkuJMer6cVKoa1HpNeYug=;
+	b=3E110RiWS0C5ryrnh3OGKC9EyVceoxOsVcCOMf1YuxOIVALliajwDLOZjuzFbTfgaWlcLu
+	kiNytkNSBbi32VcAePskuWDBDodgRQrldFj4Tu03TOnorSDpMRbxe8trjszsDqtyWT/AF9
+	HSv5yLMnVDlmXiCVbDySC8TLw/8zPvIiKEdRkg325rq0g7M5rtFsrDaxj0cbnIouf77qCE
+	so/3Ht1fwXKvLWOh2IkY+V27k7AbzJ9251eyOndrr7v12ZvaODpMJrYHljduN3r2Jq4BUy
+	3x0ZedMvsCE1B0fwaPCwh5/RXLR5Q0Xwo3GX1xaylda18PKvyrhTRkpO4Zh/BQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1756976287;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PHWraxP+ssEoLc7VJUdtZWdkuJMer6cVKoa1HpNeYug=;
+	b=vNClmjGWAjc9K0tDAof+6W5q0ZtGexcpfHGXsn+OOjt18AaoF9hVCsnvOx/6LReszPAD46
+	uSWV813wFh9T3SCA==
+From: Nam Cao <namcao@linutronix.de>
+To: Gabriele Monaco <gmonaco@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+	linux-trace-kernel@vger.kernel.org,
+	Tomas Glozar <tglozar@redhat.com>, Juri Lelli <jlelli@redhat.com>,
+	Clark Williams <williams@redhat.com>,
+	John Kacur <jkacur@redhat.com>
+Subject: Re: [RFC PATCH 16/17] verification/rvgen: Add support for per-obj
+ monitors
+Message-ID: <20250904085805.X1LXKplC@linutronix.de>
+References: <20250814150809.140739-1-gmonaco@redhat.com>
+ <20250814150809.140739-17-gmonaco@redhat.com>
+ <20250904082054.W0fQJAQw@linutronix.de>
+ <a2813fab9089cf89d6ac60998abe4fa3f226d9d7.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -70,49 +59,28 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aLicCjuqchpm1h5I@krava>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+In-Reply-To: <a2813fab9089cf89d6ac60998abe4fa3f226d9d7.camel@redhat.com>
 
-On 09/03, Jiri Olsa wrote:
+On Thu, Sep 04, 2025 at 10:39:31AM +0200, Gabriele Monaco wrote:
+> Mmh, I see what you mean.
+> I wasn't aware of this textwrap, but what immediately comes to mind is
+> that we'd end up mixing spaces (python indentation) and tabs (C
+> indentation).
 >
-> On Wed, Sep 03, 2025 at 01:26:48PM +0200, Oleg Nesterov wrote:
-> > On 09/02, Jiri Olsa wrote:
-> > >
-> > > If user decided to take execution elsewhere, it makes little sense
-> > > to execute the original instruction, so let's skip it.
-> >
-> > Exactly.
-> >
-> > So why do we need all these "is_unique" complications? Only a single
-> > is_unique/exclusive consumer can change regs->ip, so I guess handle_swbp()
-> > can just do
-> >
-> > 	handler_chain(uprobe, regs);
-> > 	if (instruction_pointer(regs) != bp_vaddr)
-> > 		goto out;
->
-> hum, that's what I did in rfc [1] but I thought you did not like that [2]
->
-> [1] https://lore.kernel.org/bpf/20250801210238.2207429-2-jolsa@kernel.org/
-> [2] https://lore.kernel.org/bpf/20250802103426.GC31711@redhat.com/
->
-> I guess I misunderstood your reply [2], I'd be happy to drop the
-> unique/exclusive flag
+> While textwrap may handle the case, it doesn't look too readable to me.
+> 
+> I'd say we can (slowly) transition to using textwrap here but mandate
+> having \t for tabs to make them explicit (didn't test).
+> 
+> What do you think?
 
-Well, but that rfc didn't introduce the exclusive consumers, and I think
-we agree that even with these changes the non-exclusive consumers must
-never change regs->ip?
+Right, I didn't consider the mixing indentation problem.
 
-> > But if a non-exclusive consumer changes regs->ip, we have a problem
-> > anyway, right?
-> >
-> > We can probably add something like
-> >
-> > 		rc = uc->handler(uc, regs, &cookie);
-> > 	+	WARN_ON(!uc->is_unique && instruction_pointer(regs) != bp_vaddr);
-> >
-> > into handler_chain(), although I don't think this is needed.
+Using \t isn't much better, it is harder to see how the generated code will
+look.
 
-Oleg.
+One idea is using something like clang-format
+(Documentation/dev-tools/clang-format.rst). It doesn't have to be done in
+this series of course, I'm fine leaving this be for now.
 
+Nam
