@@ -1,348 +1,239 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B4AD5661;
-	Thu,  4 Sep 2025 01:32:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F03791FF1C4
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  4 Sep 2025 02:45:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756949544; cv=none; b=OKjyzAeHxDXKWNAOpOo9lEC6EbOH9huM3eqY2PXXqTmUrf/j62x6vcixcf470AUVtMN0W8XDtTXZYoh14cE7SFYUbQr+/loxp5l4eJOMs4aCIxCCYbz8xP8LUZ/AM0YZ3JApVKRSf7El8Biiioey4jlJPRcQyouNzJSK/HJVg/A=
+	t=1756953921; cv=none; b=a59uUMr3iqXTr0N/MWN+C+stzLCFqtGqz8nRmH/xJEffUSGkoZuBRlFLhop/gZYQ+VqvzTWs+e/qBY7RMQ2xXWLtqwW46Ks/TJX6eOPXktMPk8AMBt1iZZxbCnHglnj+fam+Dv9jYzZrGNETYesWN6htq02IW3ofUnl34FA6f0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756949544; c=relaxed/simple;
-	bh=l93qY3fTTLAE5J+kOYY/T0I+Q5vnv+2oWsWmEki3LBI=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=HNKHrgmmJLJJEtFTcKW/AuA3Q41QbIuKwFwasV/5rJW+/OT5SvuogE/rmpV4v+N4Sz0z/5ho3uM1HWdWDS3ueYJp2up1lDVCwKYtkeY+s91y7N94iB+tobaQhl+0zn5eV543dA1q7IKjpbxl6bOSM7xDHdBGL9kFkyT6iOxIcgI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ueEyciu3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1756953921; c=relaxed/simple;
+	bh=Qt/MtTPWhMw/1QKOuqGpt5nL8j9h6axJ33IZXIYIFXQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UIP+/42dHQI+FKL1TYclaUPj8syA58BUQ6V/vMUwbGR+2gzUUlMU9Z1FM4jamHz0oCv5Ilpo/Mgc/lb8cv+YEnzvaP/rigJnW4TUcd71lOqgmP74efCTgMkAFiCfbZ09RxtDGtBM+RkqEwzPWcol786XN6FQwN/lCjvgh1oI8q8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QhADQgBk; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ueEyciu3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36BB6C4CEE7;
-	Thu,  4 Sep 2025 01:32:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756949543;
-	bh=l93qY3fTTLAE5J+kOYY/T0I+Q5vnv+2oWsWmEki3LBI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ueEyciu3rzy5Ig03+g4uj1mkJKGS4bCB/rWI4HoIFdnW4CMt5Pc9NbYnuuXrln4Jk
-	 CUQUH35N6b5lgXoIhHANOVVdDkhyH9/G2JEZuuDsYDxtFt4q9RM4ce2avRzGieXBLp
-	 jzv9NiktYEwuXRkLtMxqjZQFSBcAXqwkYjK0R0qXlieY9yM1JDTYT23haq1NAdPba8
-	 vbUROs5pmhzRSC1pT715NKJoXTIZ1+JTVxMr8B0BJ6AqnQpOjZZ4iow7JH24N3lgel
-	 aPMLOcydkS9vRQjx7MUZKUnJgNPk9UhgzUzhY0N+9O5jthZkP/JXChg7Yb0+bMCwOY
-	 zjrlrRugN1/9w==
-Date: Thu, 4 Sep 2025 10:32:19 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Ryan Chung <seokwoo.chung130@gmail.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] trace_fprobe.c: TODO: handle filter, nofilter or
- symbol list
-Message-Id: <20250904103219.f4937968362bfff1ecd3f004@kernel.org>
-In-Reply-To: <aLiHQNBPOytj_85Q@gmail.com>
-References: <20250829102050.232291-1-seokwoo.chung130@gmail.com>
-	<20250902112147.165c8030837b6b21cf402fd3@kernel.org>
-	<aLiHQNBPOytj_85Q@gmail.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QhADQgBk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1756953917;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vPxCu9vKoeVGljjV+zdc6Z80QMxQJE+zOXw3nyK4sH4=;
+	b=QhADQgBk2rit/fUC0DDp1TRT55J/k9qcezL2SAnNkjOi7NMv5rWs3wJfQkbMsbYuBwvBlw
+	JyOcPjih0XMCvoOkxXLPkr+BBeEQchQXpArJNfYYMz2hpJpyMPnxM/X40YMpOZdKsH/zct
+	p8I02LNPAmOeudOK+9yWxQAUIb/e2hs=
+Received: from mail-yb1-f198.google.com (mail-yb1-f198.google.com
+ [209.85.219.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-650-w9zRrsCINt2LqNgGt5tl-w-1; Wed, 03 Sep 2025 22:45:16 -0400
+X-MC-Unique: w9zRrsCINt2LqNgGt5tl-w-1
+X-Mimecast-MFC-AGG-ID: w9zRrsCINt2LqNgGt5tl-w_1756953916
+Received: by mail-yb1-f198.google.com with SMTP id 3f1490d57ef6-e9bdc2582e1so1082592276.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 03 Sep 2025 19:45:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756953916; x=1757558716;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vPxCu9vKoeVGljjV+zdc6Z80QMxQJE+zOXw3nyK4sH4=;
+        b=TjGGyjDog8M4Vq5oa+7IbrasCKKuTczdIqn4NLtF3cboZhf6xw4ZUce3x/4r0GoxJq
+         yczfhoydUdk28AA2gclP2VnA12r2dxUxGS8S2/hjLz4U/r1B/iWU01BSR2XFv+abgp2Z
+         KOw9Y6cuyRZGhS11kVRqG8IyXeDoT1H0+wqZWWIhxZpszi7MCGA//uLo2E4pesKt0num
+         ZIDza7xAmV+oD8bSU4xRFfVHOC2Dz8cV8U2qn11pmlFeZ9hxPXImpV0k46kYXtTkkFZW
+         yBCoOCvd/SNfnsGVJ7ZN+xUzC/IWUEW8uqL1Qrlc1Cq0oKBBeAq8o5+TpiMHCBFnj+Xq
+         8uhw==
+X-Forwarded-Encrypted: i=1; AJvYcCWIw0LGMycEAtVn2r5oTSWgVXaRkPGffptYYyArx1f4hEWZoSLBA18heCKv0Y9utZUIO0/iMPo3vz2LPufpL78lLEs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzC5UKidcmkGIH+dlSoHMyP0GkYSU5h0wUE74iMyzDY73QyDwkX
+	GkyTF4m/jKpOFwet0NZFfWMU4fO3fDRYMq34HTdG3tZF/iwWlHcvMBcJ2clDu3DvWFjfeulE4HG
+	z7b4O9EVGMrC5WUcRGCbyxanj+HTHGy39w1QQjZnuOTEKySHu6rhuVSL2nvKthXNCQW8qHGAq4O
+	vVFmMWZhEd24mBfOunUlO5qpDQOEEPPsAbvAJKEHAsHs8zlZmh
+X-Gm-Gg: ASbGnctAFwXApONhS5d8J12MguhjubPI4JdDp5WGBpt9zbt5EJptYxbW02HhkATAOBc
+	0SZEqlXveU+M2AhqLNyY66bUfdfSG7qe/Z8+4oxEyc+au64WH+fTYLzSTBYGyDnvTq3+KRVet7R
+	K5CDdpwJwZsGPwBsPoukbgB2BAPlZqjCwKPCc=
+X-Received: by 2002:a05:690e:2505:10b0:604:3ec3:621f with SMTP id 956f58d0204a3-6043ec3697fmr1929425d50.11.1756953915872;
+        Wed, 03 Sep 2025 19:45:15 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGGX0I7zxt7UAjC+8zhaIcnRAoNKfZBZRVzfF1SdLbX7NsNViAzDXLJ8goQlVtnL8b6l8mfbAHDzM/108cubFk=
+X-Received: by 2002:a05:690e:2505:10b0:604:3ec3:621f with SMTP id
+ 956f58d0204a3-6043ec3697fmr1929398d50.11.1756953915472; Wed, 03 Sep 2025
+ 19:45:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+References: <20250819134205.622806-1-npache@redhat.com> <e971c7e0-70f0-4ce0-b288-4b581e8c15d3@lucifer.local>
+ <38b37195-28c8-4471-bd06-951083118efd@arm.com> <0d9c6088-536b-4d7a-8f75-9be5f0faa86f@lucifer.local>
+ <CAA1CXcCqhFoGBvFK-ox2sJw7QHaFt+-Lw09BDYsAGKg4qc8nSw@mail.gmail.com>
+ <CAA1CXcAXTL811VJxqyL18CUw8FNek6ibPr6pKJ_7rfGn-ZU-1A@mail.gmail.com>
+ <5bea5efa-2efc-4c01-8aa1-a8711482153c@lucifer.local> <CAA1CXcBDq9PucQdfQRh1iqJLPB6Jn6mNy28v_AuHWb9kz1gpqQ@mail.gmail.com>
+ <d110a84a-a827-48b4-91c5-67cec3e92874@lucifer.local>
+In-Reply-To: <d110a84a-a827-48b4-91c5-67cec3e92874@lucifer.local>
+From: Nico Pache <npache@redhat.com>
+Date: Wed, 3 Sep 2025 20:44:49 -0600
+X-Gm-Features: Ac12FXzRQLYo9kZFI3Qk7n_u81yp4P3AXqlGuLWUAY0EAnPSUHNRv8g5odcdF08
+Message-ID: <CAA1CXcBVR=L5_6x5FGeR693AB_YqEF=4KAX7_2fRgGNa1j1j9A@mail.gmail.com>
+Subject: Re: [PATCH v10 00/13] khugepaged: mTHP support
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Dev Jain <dev.jain@arm.com>, linux-mm@kvack.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	david@redhat.com, ziy@nvidia.com, baolin.wang@linux.alibaba.com, 
+	Liam.Howlett@oracle.com, ryan.roberts@arm.com, corbet@lwn.net, 
+	rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
+	akpm@linux-foundation.org, baohua@kernel.org, willy@infradead.org, 
+	peterx@redhat.com, wangkefeng.wang@huawei.com, usamaarif642@gmail.com, 
+	sunnanyong@huawei.com, vishal.moola@gmail.com, 
+	thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com, 
+	kirill.shutemov@linux.intel.com, aarcange@redhat.com, raquini@redhat.com, 
+	anshuman.khandual@arm.com, catalin.marinas@arm.com, tiwai@suse.de, 
+	will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz, cl@gentwo.org, 
+	jglisse@google.com, surenb@google.com, zokeefe@google.com, hannes@cmpxchg.org, 
+	rientjes@google.com, mhocko@suse.com, rdunlap@infradead.org, hughd@google.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: ZBCtBHsPSAbBfHUEcMlKsQN7T8lEUm1vbLTFbCVqJJI_1756953916
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 4 Sep 2025 03:21:52 +0900
-Ryan Chung <seokwoo.chung130@gmail.com> wrote:
+On Thu, Aug 21, 2025 at 10:55=E2=80=AFAM Lorenzo Stoakes
+<lorenzo.stoakes@oracle.com> wrote:
+>
+> On Thu, Aug 21, 2025 at 10:46:18AM -0600, Nico Pache wrote:
+> > > > > > Thanks and I"ll have a look, but this series is unmergeable wit=
+h a broken
+> > > > > > default in
+> > > > > > /sys/kernel/mm/transparent_hugepage/khugepaged/mthp_max_ptes_no=
+ne_ratio
+> > > > > > sorry.
+> > > > > >
+> > > > > > We need to have a new tunable as far as I can tell. I also find=
+ the use of
+> > > > > > this PMD-specific value as an arbitrary way of expressing a rat=
+io pretty
+> > > > > > gross.
+> > > > > The first thing that comes to mind is that we can pin max_ptes_no=
+ne to
+> > > > > 255 if it exceeds 255. It's worth noting that the issue occurs on=
+ly
+> > > > > for adjacently enabled mTHP sizes.
+> > >
+> > > No! Presumably the default of 511 (for PMDs with 512 entries) is set =
+for a
+> > > reason, arbitrarily changing this to suit a specific case seems crazy=
+ no?
+> > We wouldn't be changing it for PMD collapse, just for the new
+> > behavior. At 511, no mTHP collapses would ever occur anyways, unless
+> > you have 2MB disabled and other mTHP sizes enabled. Technically at 511
+> > only the highest enabled order always gets collapsed.
+> >
+> > Ive also argued in the past that 511 is a terrible default for
+> > anything other than thp.enabled=3Dalways, but that's a whole other can
+> > of worms we dont need to discuss now.
+> >
+> > with this cap of 255, the PMD scan/collapse would work as intended,
+> > then in mTHP collapses we would never introduce this undesired
+> > behavior. We've discussed before that this would be a hard problem to
+> > solve without introducing some expensive way of tracking what has
+> > already been through a collapse, and that doesnt even consider what
+> > happens if things change or are unmapped, and rescanning that section
+> > would be helpful. So having a strictly enforced limit of 255 actually
+> > seems like a good idea to me, as it completely avoids the undesired
+> > behavior and does not require the admins to be aware of such an issue.
+> >
+> > Another thought similar to what (IIRC) Dev has mentioned before, if we
+> > have max_ptes_none > 255 then we only consider collapses to the
+> > largest enabled order, that way no creep to the largest enabled order
+> > would occur in the first place, and we would get there straight away.
+> >
+> > To me one of these two solutions seem sane in the context of what we
+> > are dealing with.
+> > >
+> > > > >
+> > > > > ie)
+> > > > > if order!=3DHPAGE_PMD_ORDER && khugepaged_max_ptes_none > 255
+> > > > >       temp_max_ptes_none =3D 255;
+> > > > Oh and my second point, introducing a new tunable to control mTHP
+> > > > collapse may become exceedingly complex from a tuning and code
+> > > > management standpoint.
+> > >
+> > > Umm right now you hve a ratio expressed in PTES per mTHP * ((PTEs per=
+ PMD) /
+> > > PMD) 'except please don't set to the usual default when using mTHP' a=
+nd it's
+> > > currently default-broken.
+> > >
+> > > I'm really not sure how that is simpler than a seprate tunable that c=
+an be
+> > > expressed as a ratio (e.g. percentage) that actually makes some kind =
+of sense?
+> > I agree that the current tunable wasn't designed for this, but we
+> > tried to come up with something that leverages the tunable we have to
+> > avoid new tunables and added complexity.
+> > >
+> > > And we can make anything workable from a code management point of vie=
+w by
+> > > refactoring/developing appropriately.
+> > What happens if max_ptes_none =3D 0 and the ratio is 50% - 1 pte
+> > (ideally the max number)? seems like we would be saying we want no new
+> > none pages, but also to allow new none pages. To me that seems equally
+> > broken and more confusing than just taking a scale of the current
+> > number (now with a cap).
+> >
+> >
+>
+> The one thing we absolutely cannot have is a default that causes this
+> 'creeping' behaviour. This feels like shipping something that is broken a=
+nd
+> alluding to it in the documentation.
+Ok I've put a lot of thought and time into this and came up with a solution=
+.
 
-> On Tue, Sep 02, 2025 at 11:21:47AM +0900, Masami Hiramatsu wrote:
-> Hi Masami,
-> 
-> Thank you for your comments.
-> 
-> > Hi Ryan,
-> > 
-> > Thanks for update.
-> > 
-> > On Fri, 29 Aug 2025 19:20:50 +0900
-> > Ryan Chung <seokwoo.chung130@gmail.com> wrote:
-> > 
-> > > This v2 addresses the TODO in trace_fprobe to handle comma-separated
-> > > symbol lists and the '!' prefix. Tokens starting with '!' are collected
-> > > as "nofilter", and the others as "filter", then passed to
-> > > register_fprobe() accordingly. Empty tokens are rejected and errors are
-> > > reported with trace_probe_log_err().
-> > 
-> > OK, can you describe how it changes the syntax. You may find more things
-> > to write it down.
-> > 
-> 
-> > For example, fprobe is not only a function entry, but also it supports
-> > function return. How it is specified? Current "%return" suffix is introduced
-> > for single symbol (function), like schedule%return. If we introduce a list
-> > of symbols and filters, it looks more complicated.
-> > 
-> 
-> I see your concern and where my confusion came from.
-> 
-> > For example, "!funcAB,funcC,funcA*%return" seems like the exit of funcA*,
-> > the entry of funcC, but not covers funcAB. It is naturally misleading
-> > users. We have to check "funcA*%return,!funcAB,funcC" pattern.
-> > 
-> > Thus, I think we should use another suffix, like ":exit" (I think the colon
-> > does strongly separate than comma, what do you think?), or just
-> > prohibit to use "%return" but user needs to specify "$retval" in fetcharg
-> > to specify it is the fprobe on function exit. (this maybe more natural)
-> > 
-> 
-> I agree with you here. Using another suffix will make it more clearer
-> for the user. 
-> 
-> So in that sense, I am guessing you are suggesting:
-> :exit (return)
-> :entry (explicit entry)
+Here is what I currently have tested and would like to proposing:
 
-Yes, that's right.
+- Expand bitmap to HPAGE_PMD_NR (512)*, this increases the accuracy of
+the max_pte_none handling, and removes a lot of inaccuracies caused by
+the compression into 128 bits that was being done. This also makes the
+code a lot easier to understand.
 
-> 
-> So this applies to the entire list. If a comma or wildcard is present
-> and %return appears, the parser will reject it with -EINVAL and a
-> precise trace_probe_log() index. For a single symbol, we use the legacy
-> foo%return.
-> 
-> Ex)
-> funcA*,!funcAB,funcC          # entry (default)
-> funcA*,!funcAB,funcC:exit     # exit (spec-level)
-> schedule%return               # single-symbol legacy
+- When attempting mTHP level collapses cap max_ptes_none to 255 to
+prevent the creep issue
 
-Right. this also should be shown in README so that test program can
-identify the kernel supports new syntax.
+Ive tested this and found this performs better than my previous
+version, allows for more granular control via max_ptes_none, and
+prevents the creep issue without any admin knowledge needed.
 
-> 
-> > The reason why I talked about how to specify the exit point of a function
-> > so far, is because the variables that can be accessed at the entrance
-> > and exit are different.
-> > 
-> 
-> Ah I see.
-> 
-> > Also, fprobe supports event-name autogeneration from the symbol name,
-> > e.g. 'symbol__entry' or 'symbol__exit'. Recently I found the symbol
-> > already supports wildcards, so sanitize it from the event name [1]
-> > 
-> > [1] https://lore.kernel.org/all/175535345114.282990.12294108192847938710.stgit@devnote2/
-> > 
-> > To use this list-style filters, we may need to reject if there is no
-> > event name. Of cause we can generate event-name from the symbol list
-> > but you need to sanitize non alphabet-number characters.
-> > 
-> > Ah, here is another one, symbol is used for ctx->funcname, and this is
-> > used for querying BTF. But obviously BTF context is unusable for this
-> > case. So we should set the ctx->funcname = NULL with listed filter.
-> > 
-> 
-> So it seems like this TODO is actually a bit larger scope than the
-> patch anticipated.
+I think this is a good middle ground between completely disabling the
+fine tune control, and doing a better job at mitigating
+misconfiguration.
 
-Yeah, sorry for confusion. It was too simple.
+**Baolin actually also expands the bitmap to 512 in his khugepaged
+collapse file mTHP support patchset
 
-> 
-> In that sense, maybe we could:
-> - for Single, literaly symbol, keep autogen symbol__entry/symbol__exit
->   and sanitize wildcards.
-> - for List or wildcard, require an explicit [GROUP/]EVENT; reject if
->   ommitted. No autogen.
+Does this sound reasonable to you?
 
-Also, 
-  - update <tracefs>/README so that we can write a new test case for
-    this syntax.
-  - update current existing test case's "requires:" lines.
+-- Nico
+>
+> I spoke to David off-list and he gave some insight into this and perhaps
+> some reasonable means of avoiding an additional tunable.
+>
+> I don't want to rehash what he said as I think it's more productive for h=
+im
+> to reply when he has time but broadly I think how we handle this needs
+> careful consideration.
+>
+> To me it's clear that some sense of ratio is just immediately very very
+> confusing, but then again this interface is already confusing, as with mu=
+ch
+> of THP.
+>
+> Anyway I'll let David respond here so we don't loop around before he has =
+a
+> chance to add his input.
+>
+> Cheers, Lorenzo
+>
 
-> 
-> I don't completely understand ctx->funcname you mentioned for the
-> usecase for querying BTF. I will research it more.
-
-It is only used for BTF (BPF type format, describes function prototype
-which can be queried by function name), so you just need to set it NULL.
-
-> > > 
-> > > Questions for maintainers (to confirm my understanding):
-> > >   * Parsing location: Masami suggested doing the parsing in the parse
-> > >     stage (e.g., via parse_symbol_and_return()). v2 keeps the logic in
-> > >     __register_trace_fprobe(), but I can move the call into the parsing
-> > >     path in v3 if that is the preferred place. Is that correct?
-> > 
-> > Most of above processes have been done in parse_symbol_and_return(),
-> > thus the parsing it should be done around there.
-> > 
-> 
-> Thank you.
-> 
-> > >   * Documentation: I plan to update the user-facing docs for fprobe
-> > >     syntax. Is Documentation/trace/ the right place (e.g., 
-> > >     Documentation/trace/fprobetrace.rst)?
-> > 
-> > Yes, please explain it with examples.
-> > 
-> > Also, can you add a testcase (in a sparate patch) for this syntax?)
-> > 
-> 
-> Yes. I will add selftests under tools/testing/selftests/ftrace/:
-> Accept when list entry/exit; ! exclusions; whitespace variants.
-> Reject when empty tokens, leading/trailing commas, %return with lists or
-> wildcards, mixed forms.
-> Naming: autogen only for single literal; list/wildcard requires explicit
-> event name. 
-> BTF: ctx->fullname == NULL when multi/wildcard.
-
-Yes, that's what I meant.
-
-> 
-> I will add the following: 
-> # entry across a list
-> echo 'f:net/tx_entry tcp_sendmsg*,!tcp_sendmsg_locked,tcp_sendpage' \
->   > /sys/kernel/tracing/dynamic_events
-> 
-> # exit across the same list (spec-level)
-> echo 'f:net/tx_exit tcp_sendmsg*,!tcp_sendmsg_locked,tcp_sendpage:exit' \
->   > /sys/kernel/tracing/dynamic_events
-> 
-> echo 1 > /sys/kernel/tracing/events/net/tx_entry/enable
-> echo 1 > /sys/kernel/tracing/events/net/tx_exit/enable
-
-OK, but carefully choose the symbols, some of them can be disappear
-depending on Kconfig.
-
-> 
-> > Thank you,
-> > 
-> > > 
-> > > Link: https://lore.kernel.org/linux-trace-kernel/20250812162101.5981-1-seokwoo.chung130@gmail.com/
-> > > Signed-off-by: Ryan Chung <seokwoo.chung130@gmail.com>
-> > 
-> > > ---
-> > > 
-> > > Changes in v2:
-> > >   * Classify '!' tokens as nofilter, others as filter; pass both to
-> > >     register_fprobe().
-> > >   * Reject empty tokens; log errors with trace_probe_log_*().
-> > >   * Use __free(kfree) for temporary buffers.
-> > >   * Keep subject and style per "Submitting patches" (tabs, wrapping).
-> > >   * No manual dedup (leave to ftrace).
-> > > 
-> > >  kernel/trace/trace_fprobe.c | 48 +++++++++++++++++++++++++++++++++++--
-> > >  1 file changed, 46 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/kernel/trace/trace_fprobe.c b/kernel/trace/trace_fprobe.c
-> > > index b36ade43d4b3..d731d9754a39 100644
-> > > --- a/kernel/trace/trace_fprobe.c
-> > > +++ b/kernel/trace/trace_fprobe.c
-> > > @@ -815,6 +815,11 @@ static int trace_fprobe_verify_target(struct trace_fprobe *tf)
-> > >  static int __register_trace_fprobe(struct trace_fprobe *tf)
-> > 
-> > This is not a good place to add anymore, because this change turned out
-> > not to meet the expected prerequisites. (when I commented TODO here,
-> > I didn't expected too.)
-> > 
-> > Anyway, this is a good opportunity to review this TODO deeper.
-> > 
-> > Thank you,
-> > 
-> 
-> I see. My question is whether or not all the symbol and filter should be
-> done in a separate location or possibly separate function (i.e.,
-> parse_symbol_and_return()).
-
-That's a good question. I recommend you to have a separate function
-because it needs a set of local variables, and independent logic.
-It also needs to introduce .filter and .nofilter fields in trace_fprobe.
-
-> 
-> Unless you prefer dropping %return entirely now, I’ll keep it for
-> single-symbol compatibility and mark it legacy in
-> Documentation/trace/fprobetrace.rst.
-
-Yeah, please keep it for backward compatibility.
-
-> I’ll send v3 with the parser
-> move, the spec-level suffix, explicit-name rule for list/wildcard,
-> BTF guard, docs, and selftests.
-
-Sounds good.
-
-Thank you!
-
-> 
-> > >  {
-> > >  	int i, ret;
-> > > +	const char *p, *q;
-> > > +	size_t spec_len, flen = 0, nflen = 0, tlen;
-> > > +	bool have_f = false, have_nf = false;
-> > > +	char *filter __free(kfree) = NULL;
-> > > +	char *nofilter __free(kfree) = NULL;
-> > >  
-> > >  	/* Should we need new LOCKDOWN flag for fprobe? */
-> > >  	ret = security_locked_down(LOCKDOWN_KPROBES);
-> > > @@ -835,8 +840,47 @@ static int __register_trace_fprobe(struct trace_fprobe *tf)
-> > >  	if (trace_fprobe_is_tracepoint(tf))
-> > >  		return __regsiter_tracepoint_fprobe(tf);
-> > >  
-> > > -	/* TODO: handle filter, nofilter or symbol list */
-> > > -	return register_fprobe(&tf->fp, tf->symbol, NULL);
-> > > +	spec_len = strlen(tf->symbol);
-> > > +	filter = kzalloc(spec_len + 1, GFP_KERNEL);
-> > > +	nofilter = kzalloc(spec_len + 1, GFP_KERNEL);
-> > > +	if (!filter || !nofilter)
-> > > +		return -ENOMEM;
-> > > +
-> > > +	p = tf->symbol;
-> > > +	for (p = tf->symbol; p; p = q ? q + 1 : NULL) {
-> > > +		q = strchr(p, ',');
-> > > +		tlen = q ? (size_t)(q-p) : strlen(p);
-> > > +
-> > > +		/* reject empty token */
-> > > +		if (!tlen) {
-> > > +			trace_probe_log_set_index(1);
-> > > +			trace_probe_log_err(0, BAD_TP_NAME);
-> > > +			return -EINVAL;
-> > > +		}
-> > > +
-> > > +		if (*p == '!') {
-> > > +			if (tlen == 1) {
-> > > +				trace_probe_log_set_index(1);
-> > > +				trace_probe_log_err(0, BAD_TP_NAME);
-> > > +				return -EINVAL;
-> > > +			}
-> > > +			if (have_nf)
-> > > +				nofilter[nflen++] = ',';
-> > > +			memcpy(nofilter + nflen, p + 1, tlen - 1);
-> > > +			nflen += tlen - 1;
-> > > +			have_nf = true;
-> > > +		} else {
-> > > +			if (have_f)
-> > > +				filter[flen++] = ',';
-> > > +			memcpy(filter + flen, p, tlen);
-> > > +			flen += tlen;
-> > > +			have_f = true;
-> > > +		}
-> > > +	}
-> > > +
-> > > +	return register_fprobe(&tf->fp,
-> > > +			have_f ? filter : NULL,
-> > > +			have_nf ? nofilter : NULL);
-> > >  }
-> > >  
-> > >  /* Internal unregister function - just handle fprobe and flags */
-> > > -- 
-> > > 2.43.0
-> > > 
-> > 
-> > 
-> > -- 
-> > Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> Best regards,
-> Ryan Chung
-> 
-> 
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
