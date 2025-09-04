@@ -1,130 +1,141 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A383E27FB30;
-	Thu,  4 Sep 2025 06:47:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90FC128934F
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  4 Sep 2025 07:07:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756968439; cv=none; b=nzBaqvQHvqbzHOzRwez7RS+DbMeBYIbVUCEFZOAY/0y3wlWOS99Q692SVyQPspI/hd/BQCEI1x6N7k4IMG7K0iXIp14C5q5SBfXS89C8TiQkr/FevIOD04VGJqjaF78yPswFpx6U35E6E0r/9MKpz88uHFNkIklKkmvHUabp+uw=
+	t=1756969666; cv=none; b=aFz3Mu5rUjQ8fhLXaQ8KfKiEsVWnJqnbrfRna/Y/nETkO7KIN0TciIELzhvpJaaxeJCXClncpefe/lVPD8xtUbPzu6kIT64mdTVXRcVOR70iQCSScQonAztIbbVtCWki/N/UTq0/7y2aBaJm7XzV3Brlj1wZVRjTE+XI0fAXdUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756968439; c=relaxed/simple;
-	bh=V+KbhRiHSS3Yw9mT+RFbahEQhxzLIfxKllFZYhhIOX8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oY9JSxAEwC2BroE5CzrfbGVmg3vbLtgKF9qzlHd/IOg4GGTJCUhjTfyAIGJgpLy30L1eNMq6GLozqKvDZd7K836pAj7TzKUZCW2ZCtmXN+3KiDlSifsqBPglDt7lkW0+0z014LllYy7BoNC3QEZ9bvCsUKqfEshvBUxVqd7Bo9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=WzA82SHo; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1756969666; c=relaxed/simple;
+	bh=DUrG6PR34cXrcYpSYxsvTL94sfC96aXBavlnY8zKEIE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BXhoEvqG5B7oblTRk6gvPKob4Dyp6LGK1goMLGyPP4MdRqBf917oiCvMOT8hPzxZb3gTfiKEatS4bmtoE9rc7ZtuhP+WmkiTV3rm3ulhwf9mlTGD1kh9EKH6eehpkmCvICADNgWcjYQuONBGncXQMsNhNKa0Y/4CUi07sYiBOq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Z54XqH0N; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WzA82SHo"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=efyhR8wHhw8uesblYSnLgPQBPUNCW7rCVpcxJ83V5M0=; b=WzA82SHoMRi9yVKB7fE7LAuc1c
-	jsspskezLL1ajqArYYKzI6cX4WAwNcIkBBMtuGNUrV7io6kKfesya8FJMYYysXDzhT5ImjOLY6LFV
-	248MTKZQHUNmlfu2GDFS/rdAZg0ZwzLMpkBnhkCCu548qhVx0yqSkFrCciRhTe05ZA4D36cQAIgAF
-	uSGincVkuMSsYe6AEzciEecgQynn8iCwaWTJrIk4o8qLMnj04bDec49lcxdEb4sUGgOY8xHaRUya2
-	SrO/LvCDU13jdZ3xoZf3iSRb8Uw1HdzRWYccGJKRwrny/suwG+mF2+B1WfIwU77Mz+0C+q3L0/MR+
-	dw+7hO0w==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uu3kK-00000004IX4-0HP9;
-	Thu, 04 Sep 2025 06:47:00 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 91B3F3002BF; Thu, 04 Sep 2025 08:46:59 +0200 (CEST)
-Date: Thu, 4 Sep 2025 08:46:59 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Jinchao Wang <wangjinchao600@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	"Naveen N . Rao" <naveen@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	David Hildenbrand <david@redhat.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>, linux-perf-users@vger.kernel.org,
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 07/18] mm/ksw: add atomic watch on/off operations
-Message-ID: <20250904064659.GV4067720@noisy.programming.kicks-ass.net>
-References: <20250904002126.1514566-1-wangjinchao600@gmail.com>
- <20250904002126.1514566-8-wangjinchao600@gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z54XqH0N"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1756969663;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=DUrG6PR34cXrcYpSYxsvTL94sfC96aXBavlnY8zKEIE=;
+	b=Z54XqH0Njrz05TPHCns0jDbh8GSpI9gvVVXHP6lTxUoQL4Bbc3c5rgvxiHxewWIEMckJtu
+	JRe/+z6ENiAS89bG0q6JCZlg6vgonEYAA8uLyW78G8Z15xwmEZ05trxqhWV5reHp8aSBJA
+	rX2Kh2Or/XWCPUy8aISCfBg1Usvnt0c=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-628-bpUIsivwNmKHoAsf93L8pQ-1; Thu, 04 Sep 2025 03:07:42 -0400
+X-MC-Unique: bpUIsivwNmKHoAsf93L8pQ-1
+X-Mimecast-MFC-AGG-ID: bpUIsivwNmKHoAsf93L8pQ_1756969661
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3dc0f2fd4acso397237f8f.2
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 04 Sep 2025 00:07:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756969661; x=1757574461;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RK8KRyGK3L9aFSO9gu7sW13SelZTzFglM4QC1yE7PXI=;
+        b=cd9sQpjS/x3SIDTXJfqyhqERvmlIBbW4oDUedd4reht9NJIQsvnKPQ0toL+JixAkDd
+         Tsh2QIMk7Kz+MrUjslsiqWxWTG0uSqkrzcwSr/84JjV0ZgiRfQA354RMhA8fU4JtbHlt
+         B09mq82j6IKuocm7HDGQwFZwcC7IdaW19JYw+p5VaipfwREVpN6cgIcMt/GYSH9HUc4B
+         85T0R8zcq3+SAia/Y8m4bzcad4PLGKJBysMBRfwZ9T++bGwXe79IJgKxLowATNhmMFtA
+         Tsp9Qp/NAVXMqGqbJmrXh7kA+cDa9QRR5jwXydsRcL/tVyV7oUQPTA7jF7tVN4mcQQAA
+         LH1Q==
+X-Gm-Message-State: AOJu0Yx5UdyWABNHj2NvXu+zYACerryzCrU3Rn9HNx6pj93uJsnn7Uwt
+	X+K4bIKWJyFEBLUH8SZ2XKSkTgEtyplj3ilP1d7yNSdflf4PGQYlciLIFzPWU1+thytpABc1lh7
+	NXedT3Geb18jVs8lzfqwIbaR+HF0p8UVK9Q/YMjMBMGv2ABEYNYwv2S+4drpx2rUm3Y2NQ+c3Y2
+	UY9G/9nhOB
+X-Gm-Gg: ASbGncvjQbaOocV/jvk4ZIeWuzcSZBDm69FU9HSB/wbEkIRped4LRFRNu1K9xK68Jki
+	PRoMFXYQFsHmMOVznqH2gxcvFn7BrDu6omuT0RheLWBquD3xKJQ+fDhIEHl5bKsqKpwKalY+tfV
+	MXllYnqqpPDyTObLjNn4Q6TMZDeSQQq23Icee7sARUcZ8o2aRCt6Tx5B/aSHqFmB0bPhCKYWJKk
+	68aQYm1b+mFxSlLbcL445396wNggOSNhMfK1pKtVEUxHgJZzFAETlI6knnILyjjB9wU7jwVN3rQ
+	HsLHY3ifTuvdTIe2DW2rix5ngYQG/HAsqo8osYQS4UvYLZP35LKl4JRqYfBk08tN5g==
+X-Received: by 2002:adf:a406:0:b0:3e1:7964:2c17 with SMTP id ffacd0b85a97d-3e17964361cmr348624f8f.62.1756969660798;
+        Thu, 04 Sep 2025 00:07:40 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFAG1gjB38L4a5W8ATy0+T7HjTHZIKgrGns44FrZQ91ODwrAyl3bQdk5UUgaAnn5EYjP5/6vQ==
+X-Received: by 2002:adf:a406:0:b0:3e1:7964:2c17 with SMTP id ffacd0b85a97d-3e17964361cmr348607f8f.62.1756969660313;
+        Thu, 04 Sep 2025 00:07:40 -0700 (PDT)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.42])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3df4fd372c1sm4413056f8f.29.2025.09.04.00.07.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Sep 2025 00:07:39 -0700 (PDT)
+Message-ID: <8fa89db22320220e1bc411ded115f0a40097f961.camel@redhat.com>
+Subject: Re: [PATCH] rv: Fix missing mutex unlock in rv_register_monitor()
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: Zhen Ni <zhen.ni@easystack.cn>, Nam Cao <namcao@linutronix.de>
+Cc: linux-trace-kernel@vger.kernel.org, Steven Rostedt
+ <rostedt@goodmis.org>, 	mhiramat@kernel.org, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>
+Date: Thu, 04 Sep 2025 09:07:38 +0200
+In-Reply-To: <20250903065112.1878330-1-zhen.ni@easystack.cn>
+References: <20250903065112.1878330-1-zhen.ni@easystack.cn>
+Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
+ keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
+ 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
+ Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
+ xyhmqeUWOzFx5P43S1E1dhsrLWgP
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250904002126.1514566-8-wangjinchao600@gmail.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: GhW5h5O_fkxsXMGqZQxh3z6nD9JzNnmQ_oD8wcUD8p8_1756969661
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Sep 04, 2025 at 08:21:04AM +0800, Jinchao Wang wrote:
+On Wed, 2025-09-03 at 14:51 +0800, Zhen Ni wrote:
+> If create_monitor_dir() fails, the function returns directly without
+> releasing rv_interface_lock. This leaves the mutex locked and causes
+> subsequent monitor registration attempts to deadlock.
+>=20
+> Fix it by making the error path jump to out_unlock, ensuring that the
+> mutex is always released before returning.
+>=20
+> Fixes: 24cbfe18d55a ("rv: Merge struct rv_monitor_def into struct
+> rv_monitor")
+> Signed-off-by: Zhen Ni <zhen.ni@easystack.cn>
 
-> +static DEFINE_PER_CPU(call_single_data_t,
-> +		      watch_csd) = CSD_INIT(ksw_watch_on_local_cpu,
-> +					    &watch_info);
-> +
+Good catch, thank you!
 
-> +int ksw_watch_on(u64 watch_addr, u64 watch_len)
-> +{
-> +	unsigned long flags;
-> +	int cpu;
-> +
-> +	if (!watch_addr) {
-> +		pr_err("KSW: watch with invalid address\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	spin_lock_irqsave(&watch_lock, flags);
-> +
-> +	/*
-> +	 * check if already watched
-> +	 */
-> +	if (watch_info.addr != 0 && // not uninit
-> +	    watch_info.addr != (unsigned long)&watch_holder && // installed
-> +	    watch_addr != (unsigned long)&watch_holder) { //not restore
-> +		spin_unlock_irqrestore(&watch_lock, flags);
-> +		return -EBUSY;
-> +	}
-> +
-> +	watch_info.addr = watch_addr;
-> +	watch_info.len = watch_len;
-> +
-> +	spin_unlock_irqrestore(&watch_lock, flags);
-> +
-> +	if (watch_addr == (unsigned long)&watch_holder)
-> +		pr_debug("KSW: watch off starting\n");
-> +	else
-> +		pr_debug("KSW: watch on starting\n");
-> +
-> +	for_each_online_cpu(cpu) {
-> +		if (cpu == raw_smp_processor_id()) {
-> +			ksw_watch_on_local_cpu(&watch_info);
-> +		} else {
-> +			call_single_data_t *csd = &per_cpu(watch_csd, cpu);
-> +
-> +			smp_call_function_single_async(cpu, csd);
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
+Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
 
-What do you think happens when two ksw_watch_on() instances run
-concurrently?
+I would also add a:
 
-What happens if a CPU comes online/offline concurrently with
-ksw_watch_on()?
+Fixes: 24cbfe18d55a ("rv: Merge struct rv_monitor_def into struct rv_monito=
+r")
+
+(Adding Nam to the loop, as author of that patch)
+
+Thanks,
+Gabriele
+
+> ---
+> =C2=A0kernel/trace/rv/rv.c | 2 +-
+> =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/kernel/trace/rv/rv.c b/kernel/trace/rv/rv.c
+> index 1482e91c39f4..e35565dd2dc5 100644
+> --- a/kernel/trace/rv/rv.c
+> +++ b/kernel/trace/rv/rv.c
+> @@ -805,7 +805,7 @@ int rv_register_monitor(struct rv_monitor
+> *monitor, struct rv_monitor *parent)
+> =C2=A0
+> =C2=A0=09retval =3D create_monitor_dir(monitor, parent);
+> =C2=A0=09if (retval)
+> -=09=09return retval;
+> +=09=09goto out_unlock;
+> =C2=A0
+> =C2=A0=09/* keep children close to the parent for easier
+> visualisation */
+> =C2=A0=09if (parent)
+
