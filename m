@@ -1,134 +1,153 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F15D225C818
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  4 Sep 2025 18:57:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C29A72701C4;
+	Thu,  4 Sep 2025 19:42:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757012252; cv=none; b=s/R3nXhtAa94B9kREfI+9MsUtNo+yT6TvNQDExUkGC3UMlrnvF7txaKr/ALArnE6J/8nR9bokkkUNEN0CnPxytW9BuCLMevzsG4rYKCR1wqE7EhigsrEYFopMX23qRW+rsY/IcEfYhHBqRR8wKFYVs1Bofg9cqFcXkoiTXRRxfc=
+	t=1757014961; cv=none; b=Gvg4Al6F+AwtpXfFh90t11RxDSLeGCD1mJGsQEUaVrn9d85V86DE4WWYg5GuLgBpQ+DqvbibeUxiqjg5Jvvo1q/s5StSKTgGhkCUAc09KidPVn3IMkSa0w0HN3lyNF9qQlMNj4t5M4Hz+ezcOVM2eEo+P6sEX5o9oThTH0do+Z8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757012252; c=relaxed/simple;
-	bh=KhNsHMrf/sqhKR9sqHXIW82i5pCmcA37pzNT3Ot6msA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ecq8YoaYVN+Z0IgLxcVX1H4mFffIWu0l2AXY3KYsEU2/4qvnYuSugIO5kwG4biaV+2otB+tiVOHwsMnTdCLooidsUe1YQpj86RRp107PbY56Z5P9smuE56uqKYivDEMsHpFhOQ+aCkLd71V2oydG0/rzCW/zjbUR4NR+woY4yqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KqSC/YVX; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1757014961; c=relaxed/simple;
+	bh=RnviVVbWEOiXEHtL4IcjzUZfgue4MBSlmwXOenkFBFk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ehzkltmOEjPPLDQrbEDKbGn1WI6VD9edNT8QW1Q16/8DfZrqEzFUSgNDVlc4EF5iW91kY5wB2/cHK6CSuOrhD6yudzYFC8GU87eHEe0hp7LQV2S2P6fjTwSmWFoo1xBUvPpdXHA7f1Y+hhh2T0+bF2F8JFQuYAXTIOM67dgRLyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PsMSQaIh; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KqSC/YVX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1757012250;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DmCH56rhjiTxUbJSVCbpismgDUwi7/9oaxfTAsfdf3k=;
-	b=KqSC/YVXuwks0ZLlMlvoaYJQ3MnzF/e8zeSO0jcR39aZFw9bivRc7Nc64fU7WdDW6FhQAQ
-	khq083UwuN95nncYgZBrpxzpY4f7jW7zmNR+/ITDuIzVS9wY8Z8TTCfESqNiC1vZJr9Tz3
-	cnXQf8rs4foxp7N0y1M1QvE4nuTbKM8=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-179-Y0I7RuJ5P4C1Do2xTWLcJg-1; Thu,
- 04 Sep 2025 14:57:26 -0400
-X-MC-Unique: Y0I7RuJ5P4C1Do2xTWLcJg-1
-X-Mimecast-MFC-AGG-ID: Y0I7RuJ5P4C1Do2xTWLcJg_1757012242
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7A87B1800357;
-	Thu,  4 Sep 2025 18:57:22 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.52])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 14EC31800446;
-	Thu,  4 Sep 2025 18:57:16 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Thu,  4 Sep 2025 20:56:00 +0200 (CEST)
-Date: Thu, 4 Sep 2025 20:55:54 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-	Jiri Olsa <olsajiri@gmail.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf <bpf@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>,
-	X86 ML <x86@kernel.org>, Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH perf/core 02/11] uprobes: Skip emulate/sstep on unique
- uprobe when ip is changed
-Message-ID: <20250904185553.GB23718@redhat.com>
-References: <20250902143504.1224726-1-jolsa@kernel.org>
- <20250902143504.1224726-3-jolsa@kernel.org>
- <20250903112648.GC18799@redhat.com>
- <aLicCjuqchpm1h5I@krava>
- <20250904084949.GB27255@redhat.com>
- <aLluB1Qe6Y9B8G_e@krava>
- <20250904112317.GD27255@redhat.com>
- <CAADnVQ+DHGc8R0Tdxf7eUj1R0TDGHXLwk5D4i_0==2_rfXGbfw@mail.gmail.com>
- <CAEf4BzbxjRwxhJTLUgJNwR-vEbDybBpawNsRb+y+PiDsxzT=eA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PsMSQaIh"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-32b4c6a2a98so1371814a91.1;
+        Thu, 04 Sep 2025 12:42:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1757014959; x=1757619759; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sRRH8xuKcexqodKPmFErIaLChAXFetcv8fz2tMfV9ZI=;
+        b=PsMSQaIhZKSOitxrtb5BMqCgbKq6RdqpwQXxj6QwzZvzzLFBmkb4uUNWlxr0/8kwrr
+         mTHWw2XWdX0wATHauVxGGYiKUtflM8MokcUhQaLvSgRKmbSrwmb+fGjsCC8zoMnUAKZw
+         FhLN3w4PJgAsYbx9lOWPgXh9qvASZ0NdJ9NkJ3GXHi+BK/5K841voh4/k2qfDugPbE3F
+         y4eV+mhiydpiVdoKJMfPBMsGDxs9zK7OMk3h20078n9pxO+Y+uwUKb6HaZciplj/yjF8
+         d8CYLObQQDAwE4vlONEiKTvOxOezysseWJoxLKCa/M0j6f21LmdLw6EOc75DY9CunI75
+         BH0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757014959; x=1757619759;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sRRH8xuKcexqodKPmFErIaLChAXFetcv8fz2tMfV9ZI=;
+        b=cjPupRwP6k8Z0Y1jWFAgY9aGn9N0aWYhCMcIFP0uzFDg7BRPQZxeYNlx6A80x1RPKY
+         E0KI2WpzduD/L8v86nv52EOBXO+DqnVxKjbVaIEcXhgyFqlENsGnXcDP1kJ0J73Jh02O
+         j+5HtGAHPdkZX3yMIp4Gf46IGQvbSITk/mAFhbmOPVl2vyGyuqkvEhixKFDUpE5rN68h
+         fpe+eDFU7YUZ3m9oAgKpYXdqiLPkg8RXNG56k9WMewoiFkn9sWHwJC1PcWtoXgQR7Oqa
+         zgMYNJItzwN/jmKJN/T8vsOWFQ/SRVhokx8k8RP5D/gAdtq2gfVwdJ2i3oKihDwv+y9U
+         vk8A==
+X-Forwarded-Encrypted: i=1; AJvYcCU7mHUcTMwZvXCIXMz5UaMWNgPcWDGbpsXyByKl+ynEmf2Ko0ZLU0YysCtEOGiL9HGEYn+NfutXvS/KO5TOxHhS5/Nv@vger.kernel.org, AJvYcCW5sXogWglBIUzVRw+Gh/ulhFMEDSQTsrvPXJZRfhjVc9fETLayNLJjJQ0Dg9vyMzHKDhA=@vger.kernel.org, AJvYcCX8ynNeZj3JBKdJE4urAMwDI+3ElaHqzOHZwbF/j5rFZ+ZJiJyt4TPVBWb7K9rCAmtN1LxN4bxRxoj2O1uh@vger.kernel.org
+X-Gm-Message-State: AOJu0YzTAWO5CHWXT3W3oNaJqaGXWLahHV7jgURDJ4i5R6R1Uuzcfx9T
+	uxQ4dpjBRUnGipHKujJQwGyjJtyDDoNJT2PQp6PU/bFiiB3XKoYZAchM+em7xNxbNYCpax77npi
+	gd3RaZUgotqJiHEOK4cDuc5MWhCmEzQc=
+X-Gm-Gg: ASbGncvfm3+8gdnVUh5RaxbIo0Mlsh/LDiXbZqguSc5G8RQYAuWRLE07UTJm6LTxwSI
+	Nsp1FnVaVhgtCSgXgXVPOp3v2uA6ilEYuYDbVvhWGJN63WuYFHuhh0BxjaBckRpV6p6C7efz0zS
+	z+FqfCylhTWNZ/s/SUOTBEMLMCShh7TR/tGg1DouLTYzmlRvzIkwD1U+ecVgsSWVTO5cUMVPLOp
+	pNRDDPuLFPSYwHW7PmPc5E=
+X-Google-Smtp-Source: AGHT+IH+FSKKN9rspP5eEoPLAKkz+ytKYowGIauifwS5Ywzucmk/3A+wIJDBwpzQ6AC0BXwu5SDZBr5uK9EqvWD3ioM=
+X-Received: by 2002:a17:90b:1c12:b0:329:d8d2:3602 with SMTP id
+ 98e67ed59e1d1-329d8d23bbbmr17688480a91.17.1757014958776; Thu, 04 Sep 2025
+ 12:42:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEf4BzbxjRwxhJTLUgJNwR-vEbDybBpawNsRb+y+PiDsxzT=eA@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+References: <20250902143504.1224726-1-jolsa@kernel.org> <20250902143504.1224726-3-jolsa@kernel.org>
+ <20250903112648.GC18799@redhat.com> <aLicCjuqchpm1h5I@krava>
+ <20250904084949.GB27255@redhat.com> <aLluB1Qe6Y9B8G_e@krava>
+ <20250904112317.GD27255@redhat.com> <CAADnVQ+DHGc8R0Tdxf7eUj1R0TDGHXLwk5D4i_0==2_rfXGbfw@mail.gmail.com>
+ <CAEf4BzbxjRwxhJTLUgJNwR-vEbDybBpawNsRb+y+PiDsxzT=eA@mail.gmail.com> <20250904185553.GB23718@redhat.com>
+In-Reply-To: <20250904185553.GB23718@redhat.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Thu, 4 Sep 2025 12:42:23 -0700
+X-Gm-Features: Ac12FXzy5H0zV8JjGNVM9nTVhltOVCESG_bHF7Ua-LTn184gsKfoxNXLvmdrFBo
+Message-ID: <CAEf4BzYb=mqN84a8+xc-Du1QkUBYMgwAuStYqastJJHQE4Os5g@mail.gmail.com>
+Subject: Re: [PATCH perf/core 02/11] uprobes: Skip emulate/sstep on unique
+ uprobe when ip is changed
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Jiri Olsa <olsajiri@gmail.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Andrii Nakryiko <andrii@kernel.org>, bpf <bpf@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>, 
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
+	John Fastabend <john.fastabend@gmail.com>, Hao Luo <haoluo@google.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 09/04, Andrii Nakryiko wrote:
+On Thu, Sep 4, 2025 at 11:57=E2=80=AFAM Oleg Nesterov <oleg@redhat.com> wro=
+te:
 >
-> On Thu, Sep 4, 2025 at 8:02 AM Alexei Starovoitov
-> <alexei.starovoitov@gmail.com> wrote:
+> On 09/04, Andrii Nakryiko wrote:
 > >
-> > On Thu, Sep 4, 2025 at 4:26 AM Oleg Nesterov <oleg@redhat.com> wrote:
+> > On Thu, Sep 4, 2025 at 8:02=E2=80=AFAM Alexei Starovoitov
+> > <alexei.starovoitov@gmail.com> wrote:
 > > >
-> > > On 09/04, Jiri Olsa wrote:
+> > > On Thu, Sep 4, 2025 at 4:26=E2=80=AFAM Oleg Nesterov <oleg@redhat.com=
+> wrote:
 > > > >
+> > > > On 09/04, Jiri Olsa wrote:
+> > > > >
+> > > > >
+> > > > > ok, got excited too soon.. so you meant getting rid of is_unique
+> > > > > check only for this patch and have just change below..  but keep
+> > > > > the unique/exclusive flag from patch#1
 > > > >
-> > > > ok, got excited too soon.. so you meant getting rid of is_unique
-> > > > check only for this patch and have just change below..  but keep
-> > > > the unique/exclusive flag from patch#1
+> > > > Yes, this is what I meant,
+> > > >
+> > > > > IIUC Andrii would remove the unique flag completely?
+> > > >
+> > > > Lets wait for Andrii...
 > > >
-> > > Yes, this is what I meant,
-> > >
-> > > > IIUC Andrii would remove the unique flag completely?
-> > >
-> > > Lets wait for Andrii...
+> > > Not Andrii, but I see only negatives in this extra flag.
+> > > It doesn't add any safety or guardrails.
+> > > No need to pollute uapi with pointless flags.
 > >
-> > Not Andrii, but I see only negatives in this extra flag.
-> > It doesn't add any safety or guardrails.
-> > No need to pollute uapi with pointless flags.
+> > +1. I think it's fine to just have something like
+> >
+> > if (unlikely(instruction_pointer(regs) !=3D bp_vaddr))
+> >       goto out;
+> >
+> > after all uprobe callbacks were processed. Even if every single one of
+> > them modify IP, the last one that did that wins.
 >
-> +1. I think it's fine to just have something like
+> OK. If any consumer can change regs->ip, then I can only repeat:
 >
-> if (unlikely(instruction_pointer(regs) != bp_vaddr))
->       goto out;
+>         Yes... but what if we there are multiple consumers? The 1st one c=
+hanges
+>         instruction_pointer, the next is unaware. Or it may change regs->=
+ip too...
 >
-> after all uprobe callbacks were processed. Even if every single one of
-> them modify IP, the last one that did that wins.
+> > Others (if they care)
+> > can detect this.
+>
+> How? If the the consumer which changes regs->ip is not the 1st one?
+>
 
-OK. If any consumer can change regs->ip, then I can only repeat:
+We are probably speaking past each other. uprobe consumers (including
+BPF ones) see struct pt_regs, so they get what's the latest regs->ip.
+Sure, they won't know that it was changed, but oh well, not sure that
+matters all that much. And if it does matter, then we can solve that
+by giving users ability to carefully order consumers (we have similar
+problems and some solutions for that in BPF for some other BPF
+programs; it just never been necessary for uprobes/kprobes
+specifically).
 
-	Yes... but what if we there are multiple consumers? The 1st one changes
-	instruction_pointer, the next is unaware. Or it may change regs->ip too...
+> That said. If you guys don't see a problem - I won't even try to argue.
 
-> Others (if they care)
-> can detect this.
+I don't, yep.
 
-How? If the the consumer which changes regs->ip is not the 1st one?
-
-That said. If you guys don't see a problem - I won't even try to argue.
-
-As I said many times, I have no idea how people actually use uprobes ;)
-
-Oleg.
-
+>
+> As I said many times, I have no idea how people actually use uprobes ;)
+>
+> Oleg.
+>
