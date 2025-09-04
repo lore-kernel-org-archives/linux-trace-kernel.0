@@ -1,64 +1,35 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 491492F3C38;
-	Thu,  4 Sep 2025 16:38:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9251730DD31;
+	Thu,  4 Sep 2025 17:26:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757003887; cv=none; b=uMrvdn674Lp9YGEU7AkZu1D088puqH+PDWRw1UppHHFiBHRBavRZ4P9i39CZZk84ipE05jR0e6YfKKp9ek9W4wld8F5aEH58RKomM72X61YpLW+d5Da3AiwG0s9Cnutu79bQtjl6xE9fNukArwHq0dPmo880FufvQb0OFNTTMww=
+	t=1757006765; cv=none; b=bApl2QJNmGD3AuLNMwGUDvuLQ/BN0SxXP/DMp0KavMTDeWnUttchbFYW0GWl64WnUhp8P8PZaDQzMqnyqTKsqWxzQ6sPqGMd+1rZUvgcnPJrzXVgV73XlrFUv6hl9JpmB32BqL4Frju7qI4TSHPcZSLs6CVcbvJUlADbXwSLlZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757003887; c=relaxed/simple;
-	bh=GM8BVc/lCUz3JRvFBhTmIBDA+zKVOyBTKFKiYcWAtQY=;
+	s=arc-20240116; t=1757006765; c=relaxed/simple;
+	bh=BzE37pCTjBM4grm+sMS4LKVV5Q/CpMxXMvX6vlqHE6E=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NEGconv1KCcejJKsLKpiFD6bmugX6BD/2rSFxLGOcVikYQVnL0KJXyB2HeuDOgRa5Bx5UnmqBgCuPFsb1NAoiaroGIXaAojiRNC9eao+0z0iDeLochpelTvtBDxiiL3V8J7dXEq/R8htmCmUDSCEfoIjarA9WyudzUxX92AW+K4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O6UxRI+f; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O6UxRI+f"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE1EEC4CEF0;
-	Thu,  4 Sep 2025 16:38:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757003886;
-	bh=GM8BVc/lCUz3JRvFBhTmIBDA+zKVOyBTKFKiYcWAtQY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=O6UxRI+fgNAd2wy+m9iIzJ7lycQIEDH0R6sDvZmDJNttg0I8+hO4a6T/GWHExgqvZ
-	 HmwvPTeyO+K0OY8heQ7LC+LdBM+4tNQ4fOOYLbZUzgEN3eVT3w0h/FHlDsWHfJMS+v
-	 hbsMQIsEhPgdoAaZwcyGpwLBJJ1Xvb2RreyirE36/rHrReRVmov0Jm5J8WGIoszPLD
-	 bgonwrTevIDpAtvv18gwnztq3XE6JqNESmzaRjL2D9Rj4IRogNJkRNID/+LYrnIl2S
-	 q5Z5R+QV0iEBCN2W7ukqilJvJ5SQqiQYkd1KOgDe1cMALW2HLblTVnrWajNfVd0Wem
-	 h2MtuzzWIHdew==
-Date: Thu, 4 Sep 2025 13:38:03 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Leo Yan <leo.yan@arm.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Tomas Glozar <tglozar@redhat.com>, KP Singh <kpsingh@kernel.org>,
-	Matt Bobrowski <mattbobrowski@google.com>,
-	Song Liu <song@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	James Clark <james.clark@linaro.org>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@linaro.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/6] perf auxtrace: Support AUX pause and resume with
- BPF
-Message-ID: <aLnAazxkczTFSMcL@x1>
-References: <20250725-perf_aux_pause_resume_bpf_rebase-v3-0-9fc84c0f4b3a@arm.com>
- <fd7c39d2-64b4-480e-8a29-abefcdc7d10a@intel.com>
- <20250730182623.GE143191@e132581.arm.com>
- <0a0ed9d4-6511-4f0b-868f-22a3f95697f8@intel.com>
- <20250808114734.GB3420125@e132581.arm.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=bb4PA0iWaI8N1gCQN4SZ+sXGu8POhDHEZQuMItSdtAHAJUTusqMgfX5MzvE0r/A0Ej2zwyIl2xWuwZdv1hyD6pP2V2druItiIkJlY/Hrmb9d3bTuRN3+VlUwENIuxEoBtyVGE2cm+/I5UxaGVdECmskpsJy6jxDjAtwDE9UPkQk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 606A31596;
+	Thu,  4 Sep 2025 10:25:53 -0700 (PDT)
+Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 694A33F6A8;
+	Thu,  4 Sep 2025 10:25:59 -0700 (PDT)
+Date: Thu, 4 Sep 2025 18:25:56 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: panfan <panfan@qti.qualcomm.com>
+Cc: catalin.marinas@arm.com, will@kernel.org, rostedt@goodmis.org,
+	mhiramat@kernel.org, samitolvanen@google.com, song@kernel.org,
+	ardb@kernel.org, dylanbhatch@google.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, kdong@qti.qualcomm.com
+Subject: Re: [PATCH v1] arm64: ftrace: fix unreachable PLT for ftrace_caller
+ in init_module with CONFIG_DYNAMIC_FTRACE
+Message-ID: <aLnLpArhiT-mQxn9@J2N7QTR9R3>
+References: <20250819063418.1263119-1-panfan@qti.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -68,123 +39,219 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250808114734.GB3420125@e132581.arm.com>
+In-Reply-To: <20250819063418.1263119-1-panfan@qti.qualcomm.com>
 
-On Fri, Aug 08, 2025 at 12:47:34PM +0100, Leo Yan wrote:
-> On Tue, Aug 05, 2025 at 10:16:29PM +0300, Adrian Hunter wrote:
-> > On 30/07/2025 21:26, Leo Yan wrote:
-> > > On Mon, Jul 28, 2025 at 08:02:51PM +0300, Adrian Hunter wrote:
-> > >> On 25/07/2025 12:59, Leo Yan wrote:
-> > >>> This series extends Perf for fine-grained tracing by using BPF program
-> > >>> to pause and resume AUX tracing. The BPF program can be attached to
-> > >>> tracepoints (including ftrace tracepoints and dynamic tracepoints, like
-> > >>> kprobe, kretprobe, uprobe and uretprobe).
+Hi,
 
-> > >> Using eBPF to pause/resume AUX tracing seems like a great idea.
+On Mon, Aug 18, 2025 at 11:34:18PM -0700, panfan wrote:
+> with the previous patch [PATCH v3 6/6] arm64: module: rework module VA
+> range selection, the module region can use a full 2GB for large modules.
+>
+> On arm64 with CONFIG_DYNAMIC_FTRACE, due to the ±128 MB range limit of
+> the `BL` instruction, ftrace uses a PLT entry to branch indirectly to
+> ftrace_caller when modules may be placed far away.
+>
+> Currently, this PLT(.text.ftrace_trampoline) resides in MOD_TEXT,
+> so call sites in .init.text cannot reach it by `BL` if .init.text
+> and .text are allocated in different 128 MB regions.
 
-> > >> AFAICT with this patch set, there is just support for pause/resume
-> > >> much like what could be done directly without eBPF, so I wonder if you
-> > >> could share a bit more on how you see this evolving, and what your
-> > >> future plans are?
+Ouch; sorry about this. Given the failure mode below, this is a pretty
+horrid bug.
 
-> > > IIUC, here you mean the tool can use `perf probe` to firstly create
-> > > probes, then enable tracepoints as PMU event for AUX pause and resume.
+> For example, init_moudle in tz_log_dlkm.ko can not reach PLT or
+> ftrace_caller by `BL`:
+> 
+> module_direct_base = 0xFFFFFFC07B270000   128M
+> module_plt_base = 0xFFFFFFC003270000  2G
+> 
+> mod = 0xFFFFFFC07FF65880 -> (
+>     state = MODULE_STATE_COMING,
+>     name = "tz_log_dlkm",
+>     init = 0xFFFFFFC00370F01C,
+> 
+>     mem = (
+>       (base = 0xFFFFFFC07E7E8000, size = 12288,  // MOD_TEXT -- direct
+>       (base = 0xFFFFFFC07FF65000, size = 12288,  // MOD_DATA
+>       (base = 0xFFFFFFC07FFFB000, size = 12288,  // MOD_RODATA
+>       (base = 0xFFFFFFC07DDA9000, size = 4096,   // MOD_RO_AFTER_INIT
+>       (base = 0xFFFFFFC00370F000, size = 4096,   // MOD_INIT_TEXT -- plt
+>       (base = 0xFFFFFFC003711000, size = 12288,  // MOD_INIT_DATA
+> 
+>     arch = (
+>       core = (plt_shndx = 8, plt_num_entries = 0, plt_max_entries = 35),
+>       init = (plt_shndx = 9, plt_num_entries = 1, plt_max_entries = 1),
+>       ftrace_trampolines = 0xFFFFFFC07E7EA730 -> (   //
+> .text.ftrace_trampoline in MOD_TEXT
+> 
+> PLT in .text.ftrace_trampoline:
+> 0xFFFFFFC07E7EA730            adrp    x16,0xFFFFFFC080014000
+> 0xFFFFFFC07E7EA734            add     x16,x16,#0xF64   ; x16,x16,#3940
+> 0xFFFFFFC07E7EA738            br      x16; ftrace_caller
+> 
+> Here, init_module() in MOD_INIT_TEXT cannot branch to the PLT in MOD_TEXT
+> because the offset exceeds 128 MB. As a result,
+> ftrace fails to update `nop` to `BL` and inserts `brk #0x100` instead:
+> 
+> 0xFFFFFFC00370F01C  init_module:    mov     x9,x30
+> 0xFFFFFFC00370F020                  brk     #0x100           ; #256
+> 
+> [   36.290790][  T835] label_imm_common: offset out of range
+> 
+> [   36.333765][  T835] Kernel text patching generated an invalid instruct
+> ion at init_module+0x4/0xfe4 [tz_log_dlkm]!
+> 
+> [   36.335728][  T835] Call trace:
+> [   36.335735][  T835]  init_module+0x4/0xfe4 [tz_log_dlkm]
+> [   36.335750][  T835]  do_init_module+0x60/0x2cc
+> [   36.335761][  T835]  load_module+0x10e0/0x12ac
+> [   36.335771][  T835]  __arm64_sys_finit_module+0x240/0x348
+> [   36.335780][  T835]  invoke_syscall+0x60/0x11c
+> [   36.335791][  T835]  el0_svc_common+0xb4/0xf0
+> [   36.335801][  T835]  do_el0_svc+0x24/0x30
+> [   36.335810][  T835]  el0_svc+0x3c/0x74
+> [   36.335821][  T835]  el0t_64_sync_handler+0x68/0xbc
+> [   36.335831][  T835]  el0t_64_sync+0x1a8/0x1ac
+>
+> To fix this, introduce an additional `.init.text.ftrace_trampoline`
+> section for .init.text. This provides a PLT within MOD_INIT_TEXT, ensuring
+> that init functions can branch within range using `BL`. This section
+> is freed after do_one_initcall, so there is no persistent cost.
+> The core text continues to use the existing PLT in MOD_TEXT.
+> 
+> Signed-off-by: panfan <panfan@qti.qualcomm.com>
 
-> > Yes, like:
+Aside from one nit below, I think this is the right fix, though I think
+it would be good to simplify/clarify the commit message.
 
-> > $ sudo perf probe 'do_sys_openat2 how->flags how->mode'
-> > Added new event:
-> >   probe:do_sys_openat2 (on do_sys_openat2 with flags=how->flags mode=how->mode)
+How about:
 
-> > You can now use it in all perf tools, such as:
+| On arm64, it has been possible for a module's sections to be placed more
+| than 128M away from each other since commit:
+| 
+|   3e35d303ab7d ("arm64: module: rework module VA range selection")
+| 
+| Due to this, an ftrace callsite in a module's .init.text section can be
+| out of branch range for the module's ftrace PLT entry (in the module's
+| .text section). Any attempt to enable tracing of that callsite will
+| result in a BRK being patched into the callsite, resulting in a fatal
+| exception when the callsite is later executed.
+| 
+| Fix this by adding an additional trampoline for .init.text, which will
+| be within range.
+| 
+| No additional trampolines are necessary due to to the way a given
+| module's executable sections are packed together. Any executable
+| section beginning with ".init" or ".exit" will be placed in
+| MOD_INIT_TEXT, and any other executable section will be placed in
+| MOD_TEXT.
+| 
+| Fixes: 3e35d303ab7d ("arm64: module: rework module VA range selection")
 
-> >         perf record -e probe:do_sys_openat2 -aR sleep 1
+[...]
 
-> > $ sudo perf probe do_sys_openat2%return
-> > Added new event:
-> >   probe:do_sys_openat2__return (on do_sys_openat2%return)
+> -static struct plt_entry *get_ftrace_plt(struct module *mod)
+> +static struct plt_entry *get_ftrace_plt(struct module *mod, unsigned long addr)
+>  {
+>  #ifdef CONFIG_MODULES
+> -	struct plt_entry *plt = mod->arch.ftrace_trampolines;
+> +	struct plt_entry *plt = NULL;
+> +
+> +	if (within_module_mem_type(addr, mod, MOD_INIT_TEXT))
+> +		plt = mod->arch.init_ftrace_trampolines;
+> +	else
+> +		plt = mod->arch.ftrace_trampolines;
+>  
+>  	return &plt[FTRACE_PLT_IDX];
 
-> > You can now use it in all perf tools, such as:
+It would be good if we could explicitly verify that the region is either
+MOD_TEXT or MOD_INIT_TEXT, and if not, return NULL, e.g.
 
-> >         perf record -e probe:do_sys_openat2__return -aR sleep 1
 
-> > $ sudo perf record --kcore -e intel_pt/aux-action=start-paused/k -e probe:do_sys_openat2/aux-action=resume/ --filter='flags==0x98800' -e probe:do_sys_openat2__return/aux-action=pause/ -- ls
+	if (within_module_mem_type(addr, mod, MOD_INIT_TEXT))
+		plt = mod->arch.init_ftrace_trampolines;
+	else if (within_module_mem_type(addr, mod, MOD_TEXT))
+		plt = mod->arch.ftrace_trampolines;
+	else
+		return NULL;
 
-> Thanks a lot for sharing the commands. I was able to replicate them
-> using CoreSight.
+That last case should never happen, but if it does it'll cause
+ftrace_find_callable_addr() to log a warning and return false, such that
+its callers can return an error.
 
-> Given that we can achieve the same result without using BPF, I am not
-> sure how useful this series is. It may give us a base for exploring
-> profiling that combines AUX trace and BPF, but I am fine with holding
-> on until we have clear requirements for it.
+Other than that, I think this is fine. With those changes:
 
-> I would get suggestion from you and maintainers before proceeding
-> further.
+Acked-by: Mark Rutland <mark.rutland@arm.com>
 
-Maybe retrofit this for starting stopping profiling non HW tracing
-sections?
+Mark.
 
-We have now:
-
-⬢ [acme@toolbx perf-tools-next]$ perf record -h switch
-
- Usage: perf record [<options>] [<command>]
-    or: perf record [<options>] -- <command> [<options>]
-
-        --switch-events   Record context switch events
-        --switch-max-files <n>
-                          Limit number of switch output generated files
-        --switch-output[=<signal or size[BKMG] or time[smhd]>]
-                          Switch output when receiving SIGUSR2 (signal) or cross a size or time threshold
-        --switch-output-event <switch output event>
-                          switch output event selector. use 'perf list' to list available events
-
-⬢ [acme@toolbx perf-tools-next]$
-
-That will dump a snapshot when some event takes place, but that is done
-with a sideband thread, from 'man perf-record':
-
---switch-output-event::
-Events that will cause the switch of the perf.data file, auto-selecting
---switch-output=signal, the results are similar as internally the side band
-thread will also send a SIGUSR2 to the main one.
-
-Uses the same syntax as --event, it will just not be recorded, serving only to
-switch the perf.data file as soon as the --switch-output event is processed by
-a separate sideband thread.
-
-This sideband thread is also used to other purposes, like processing the
-PERF_RECORD_BPF_EVENT records as they happen, asking the kernel for extra BPF
-information, etc.
-
-----------------------
-
-And in perf-report we have:
-
-----
-
---switch-on EVENT_NAME::
-        Only consider events after this event is found.
-
-        This may be interesting to measure a workload only after some initialization
-        phase is over, i.e. insert a perf probe at that point and then using this
-        option with that probe.
-
---switch-off EVENT_NAME::
-        Stop considering events after this event is found.
-
---show-on-off-events::
-        Show the --switch-on/off events too. This has no effect in 'perf report' now
-        but probably we'll make the default not to show the switch-on/off events
-        on the --group mode and if there is only one event besides the off/on ones,
-        go straight to the histogram browser, just like 'perf report' with no events
-        explicitly specified does.
-
-----
-
-If we had it in 'perf record' then we would have reduced perf.data
-files.
-
-I.e. we would have something like '-e {cycles,instructions}/action=start-paused/k' -e probe:do_sys_openat2/action=resume/ --filter='flags==0x98800' -e probe:do_sys_openat2__return/action=pause/
-
-- Arnaldo
+>  #else
+> @@ -332,7 +337,7 @@ static bool ftrace_find_callable_addr(struct dyn_ftrace *rec,
+>  	if (WARN_ON(!mod))
+>  		return false;
+>  
+> -	plt = get_ftrace_plt(mod);
+> +	plt = get_ftrace_plt(mod, pc);
+>  	if (!plt) {
+>  		pr_err("ftrace: no module PLT for %ps\n", (void *)*addr);
+>  		return false;
+> diff --git a/arch/arm64/kernel/module-plts.c b/arch/arm64/kernel/module-plts.c
+> index bde32979c06a..7afd370da9f4 100644
+> --- a/arch/arm64/kernel/module-plts.c
+> +++ b/arch/arm64/kernel/module-plts.c
+> @@ -283,7 +283,7 @@ int module_frob_arch_sections(Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
+>  	unsigned long core_plts = 0;
+>  	unsigned long init_plts = 0;
+>  	Elf64_Sym *syms = NULL;
+> -	Elf_Shdr *pltsec, *tramp = NULL;
+> +	Elf_Shdr *pltsec, *tramp = NULL, *init_tramp = NULL;
+>  	int i;
+>  
+>  	/*
+> @@ -298,6 +298,9 @@ int module_frob_arch_sections(Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
+>  		else if (!strcmp(secstrings + sechdrs[i].sh_name,
+>  				 ".text.ftrace_trampoline"))
+>  			tramp = sechdrs + i;
+> +		else if (!strcmp(secstrings + sechdrs[i].sh_name,
+> +				 ".init.text.ftrace_trampoline"))
+> +			init_tramp = sechdrs + i;
+>  		else if (sechdrs[i].sh_type == SHT_SYMTAB)
+>  			syms = (Elf64_Sym *)sechdrs[i].sh_addr;
+>  	}
+> @@ -363,5 +366,12 @@ int module_frob_arch_sections(Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
+>  		tramp->sh_size = NR_FTRACE_PLTS * sizeof(struct plt_entry);
+>  	}
+>  
+> +	if (init_tramp) {
+> +		init_tramp->sh_type = SHT_NOBITS;
+> +		init_tramp->sh_flags = SHF_EXECINSTR | SHF_ALLOC;
+> +		init_tramp->sh_addralign = __alignof__(struct plt_entry);
+> +		init_tramp->sh_size = NR_FTRACE_PLTS * sizeof(struct plt_entry);
+> +	}
+> +
+>  	return 0;
+>  }
+> diff --git a/arch/arm64/kernel/module.c b/arch/arm64/kernel/module.c
+> index 40148d2725ce..d6d443c4a01a 100644
+> --- a/arch/arm64/kernel/module.c
+> +++ b/arch/arm64/kernel/module.c
+> @@ -466,6 +466,17 @@ static int module_init_ftrace_plt(const Elf_Ehdr *hdr,
+>  	__init_plt(&plts[FTRACE_PLT_IDX], FTRACE_ADDR);
+>  
+>  	mod->arch.ftrace_trampolines = plts;
+> +
+> +	s = find_section(hdr, sechdrs, ".init.text.ftrace_trampoline");
+> +	if (!s)
+> +		return -ENOEXEC;
+> +
+> +	plts = (void *)s->sh_addr;
+> +
+> +	__init_plt(&plts[FTRACE_PLT_IDX], FTRACE_ADDR);
+> +
+> +	mod->arch.init_ftrace_trampolines = plts;
+> +
+>  #endif
+>  	return 0;
+>  }
+> -- 
+> 2.34.1
+> 
