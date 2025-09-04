@@ -1,139 +1,190 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 130012D3EC0;
-	Thu,  4 Sep 2025 15:02:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 491492F3C38;
+	Thu,  4 Sep 2025 16:38:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756998131; cv=none; b=FsS1BOAfED/Lr21020RKJuJtJeyoPpJVnj1FaCOjTbOUr/UbZcflLtfcXINfw0zp0auDEjIoeJJ9HVNiiGwfIMdFWcf/XecOqUvpQDy7T5xzDdXZ+qu1ViR3u3V1HCH3n22jMnqQFXS6Q5PavrYfjvsW96yyuZyNX514eO3Zh3k=
+	t=1757003887; cv=none; b=uMrvdn674Lp9YGEU7AkZu1D088puqH+PDWRw1UppHHFiBHRBavRZ4P9i39CZZk84ipE05jR0e6YfKKp9ek9W4wld8F5aEH58RKomM72X61YpLW+d5Da3AiwG0s9Cnutu79bQtjl6xE9fNukArwHq0dPmo880FufvQb0OFNTTMww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756998131; c=relaxed/simple;
-	bh=WsAaT5z9DTXprMXgadEDAY3E4jgG3J07sJHYyh6BVw4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=laPZir0K+xE9q+eWs/ADSKJyLfnFpv+aXYAVb8OY2D4V+UfkWjh2S82Khb4l9vy+ri6fSqaIZcq45kHgMsHMJIsb+lcYGc+h/aDv4t5pa3RSsGsG9rz7Lw0mbS4p4e6WW4gcSm0zI3pXTrMotWmE7xE4Kh+QV8+N5XsNvk/2Lg8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FaLOxh72; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1757003887; c=relaxed/simple;
+	bh=GM8BVc/lCUz3JRvFBhTmIBDA+zKVOyBTKFKiYcWAtQY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NEGconv1KCcejJKsLKpiFD6bmugX6BD/2rSFxLGOcVikYQVnL0KJXyB2HeuDOgRa5Bx5UnmqBgCuPFsb1NAoiaroGIXaAojiRNC9eao+0z0iDeLochpelTvtBDxiiL3V8J7dXEq/R8htmCmUDSCEfoIjarA9WyudzUxX92AW+K4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O6UxRI+f; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FaLOxh72"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3e2055ce7b3so427521f8f.0;
-        Thu, 04 Sep 2025 08:02:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1756998128; x=1757602928; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=a2ajTeyG2BSzRFwWcOgVNlWU2GcEhvUma3dwfU9D+78=;
-        b=FaLOxh72/54hyhLZ4Vvp0g3qhrJyDNdwqjZZ9se3T136mee+OR0RbQfYpu78VjKb92
-         IPJ/9i/eHFsErpfss7d5Oj0cOdjb7fvjrqzTRtYkpQHXDbASNAPDmjbrPvxc00drHPE5
-         wVUyXTIa9SwOY+F6jgLsirAALhsbBQ6cWl0BeGXvt+PSOH+10jnLcVsQdgpAk92zG7jc
-         LzKLmZ0J9nXKZi0xuwfPdj/3V7ws4fZTndpgGZPZAhWpr09JnCtUB/V1tU+RVrbseMoV
-         H8oKLIW2RBLq/wjmXLfAe3D2oo5hcp+o1PdaE/qqWCEfmXAK1OXn16SRnbe64DkJvFEq
-         la5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756998128; x=1757602928;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=a2ajTeyG2BSzRFwWcOgVNlWU2GcEhvUma3dwfU9D+78=;
-        b=ZaXv+e5vJnPqzw7t7RbkmKJ+nXahsS+DZnKgah2MzfrU78RwTpi24j76E+1j8i+eKg
-         8Hqhb8/u+umJM0G7zvw/O3OSNJ3XBOQ/HQrBFym7NlPXLZ+DHuSmhKgfdI6AECJp+PdL
-         Npwrppp9NLa3ys4OYtSUbnyMa9HNStnu0WhV3gHhXMOYFeQWs7ivP53v60Ft8urL5q++
-         cKfyJuPizgf5N2gdYvoCjqmoS40aAZbgTrzPirinrU0mv/ssFDS9p+0w3nxZhqOpJCUX
-         wYYAnAagNKyg/8RpGHweo4H+TjuHenkBXp5T7hH88xPQLJdwOqpAmbwYfcbgvv3HgjdI
-         JLTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUifZrFyzcz/hndgnYfOEfFMgH/wLDs76hjd7gJu3HtFEMcK+rpGXJwqw1lRC6xvdLRrns=@vger.kernel.org, AJvYcCWbOh54Ij+EEZ4e3mxty4WDsV9WJHHyKi8VWJfQF5m2QmQryXooPr094EsB4hUkkquwr5pjOhjCw3Cxu39MzDwiInu5@vger.kernel.org, AJvYcCXN9Ha4JtcLAA87zdwnzmhBeg/8912qDSGj5KfQIb5hmRlyrnfNG3SG7dMcN2t9hrmy8cvq5tKrmHqfyNZQ@vger.kernel.org
-X-Gm-Message-State: AOJu0YxWkL07hL83Y18u7dfhg2LW25J9Cu1F8uctUi4kDsEt0YCIwqGq
-	Xfo05hiQv1QOYgQZMfHyPR+ib6TBG4DsG5jFLIfan2jXfHuYxHOav9bTuqq1BgePQCfAX0GtoWv
-	qhPGnfgajqtRug6Pv5r2f9QT6gIGE+zo=
-X-Gm-Gg: ASbGncsoJGCBqNKycb25uZiHQIdb0vvTf5308SuwxA8RZdXIxmbH0yrl7pe9tgJiFy1
-	osxyYwYJLc43/vbsZ0l1bEfmRIKvpVbFtWq9bT4flER7IAim/ZiwP7G/ZZwX/3lfiNm8hHI2VVC
-	ZfsCaiPrkIhDwCmODbx0NqAvCZLcnRuVFOTFIFDyJtj5Kb9LMv8BbiBSf7fvvJ7qZ98YlJmF7Nn
-	hx87D005Ck8q0OG8rVGO+U=
-X-Google-Smtp-Source: AGHT+IFkJxBHJsi/qhXBTMrnuJxMrKa9yT7zV/ASPN4AZtBUYPr88vFciqMUlhOtEU6msJtj1095Jt5l4VsOVmKLPPo=
-X-Received: by 2002:a05:6000:4013:b0:3b7:94a2:87e8 with SMTP id
- ffacd0b85a97d-3d1dcb75006mr14310626f8f.18.1756998124908; Thu, 04 Sep 2025
- 08:02:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O6UxRI+f"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE1EEC4CEF0;
+	Thu,  4 Sep 2025 16:38:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757003886;
+	bh=GM8BVc/lCUz3JRvFBhTmIBDA+zKVOyBTKFKiYcWAtQY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=O6UxRI+fgNAd2wy+m9iIzJ7lycQIEDH0R6sDvZmDJNttg0I8+hO4a6T/GWHExgqvZ
+	 HmwvPTeyO+K0OY8heQ7LC+LdBM+4tNQ4fOOYLbZUzgEN3eVT3w0h/FHlDsWHfJMS+v
+	 hbsMQIsEhPgdoAaZwcyGpwLBJJ1Xvb2RreyirE36/rHrReRVmov0Jm5J8WGIoszPLD
+	 bgonwrTevIDpAtvv18gwnztq3XE6JqNESmzaRjL2D9Rj4IRogNJkRNID/+LYrnIl2S
+	 q5Z5R+QV0iEBCN2W7ukqilJvJ5SQqiQYkd1KOgDe1cMALW2HLblTVnrWajNfVd0Wem
+	 h2MtuzzWIHdew==
+Date: Thu, 4 Sep 2025 13:38:03 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Leo Yan <leo.yan@arm.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Tomas Glozar <tglozar@redhat.com>, KP Singh <kpsingh@kernel.org>,
+	Matt Bobrowski <mattbobrowski@google.com>,
+	Song Liu <song@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	James Clark <james.clark@linaro.org>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/6] perf auxtrace: Support AUX pause and resume with
+ BPF
+Message-ID: <aLnAazxkczTFSMcL@x1>
+References: <20250725-perf_aux_pause_resume_bpf_rebase-v3-0-9fc84c0f4b3a@arm.com>
+ <fd7c39d2-64b4-480e-8a29-abefcdc7d10a@intel.com>
+ <20250730182623.GE143191@e132581.arm.com>
+ <0a0ed9d4-6511-4f0b-868f-22a3f95697f8@intel.com>
+ <20250808114734.GB3420125@e132581.arm.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250902143504.1224726-1-jolsa@kernel.org> <20250902143504.1224726-3-jolsa@kernel.org>
- <20250903112648.GC18799@redhat.com> <aLicCjuqchpm1h5I@krava>
- <20250904084949.GB27255@redhat.com> <aLluB1Qe6Y9B8G_e@krava> <20250904112317.GD27255@redhat.com>
-In-Reply-To: <20250904112317.GD27255@redhat.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Thu, 4 Sep 2025 08:01:53 -0700
-X-Gm-Features: Ac12FXzf4RJj6-nnXZ3VoZB1z-JhMD_QU665pLEmSa9O2cuDWoa1D1tma5CQqOQ
-Message-ID: <CAADnVQ+DHGc8R0Tdxf7eUj1R0TDGHXLwk5D4i_0==2_rfXGbfw@mail.gmail.com>
-Subject: Re: [PATCH perf/core 02/11] uprobes: Skip emulate/sstep on unique
- uprobe when ip is changed
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: Jiri Olsa <olsajiri@gmail.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Andrii Nakryiko <andrii@kernel.org>, bpf <bpf@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>, 
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
-	John Fastabend <john.fastabend@gmail.com>, Hao Luo <haoluo@google.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250808114734.GB3420125@e132581.arm.com>
 
-On Thu, Sep 4, 2025 at 4:26=E2=80=AFAM Oleg Nesterov <oleg@redhat.com> wrot=
-e:
->
-> On 09/04, Jiri Olsa wrote:
-> >
-> > On Thu, Sep 04, 2025 at 10:49:50AM +0200, Oleg Nesterov wrote:
-> > > On 09/03, Jiri Olsa wrote:
-> > > >
-> > > > On Wed, Sep 03, 2025 at 01:26:48PM +0200, Oleg Nesterov wrote:
-> > > > > On 09/02, Jiri Olsa wrote:
-> > > > > >
-> > > > > > If user decided to take execution elsewhere, it makes little se=
-nse
-> > > > > > to execute the original instruction, so let's skip it.
-> > > > >
-> > > > > Exactly.
-> > > > >
-> > > > > So why do we need all these "is_unique" complications? Only a sin=
-gle
-> > > > > is_unique/exclusive consumer can change regs->ip, so I guess hand=
-le_swbp()
-> > > > > can just do
-> > > > >
-> > > > >         handler_chain(uprobe, regs);
-> > > > >         if (instruction_pointer(regs) !=3D bp_vaddr)
-> > > > >                 goto out;
-> > > >
-> > > > hum, that's what I did in rfc [1] but I thought you did not like th=
-at [2]
-> > > >
-> > > > [1] https://lore.kernel.org/bpf/20250801210238.2207429-2-jolsa@kern=
-el.org/
-> > > > [2] https://lore.kernel.org/bpf/20250802103426.GC31711@redhat.com/
-> > > >
-> > > > I guess I misunderstood your reply [2], I'd be happy to drop the
-> > > > unique/exclusive flag
-> > >
-> > > Well, but that rfc didn't introduce the exclusive consumers, and I th=
-ink
-> > > we agree that even with these changes the non-exclusive consumers mus=
-t
-> > > never change regs->ip?
-> >
-> > ok, got excited too soon.. so you meant getting rid of is_unique
-> > check only for this patch and have just change below..  but keep
-> > the unique/exclusive flag from patch#1
->
-> Yes, this is what I meant,
->
-> > IIUC Andrii would remove the unique flag completely?
->
-> Lets wait for Andrii...
+On Fri, Aug 08, 2025 at 12:47:34PM +0100, Leo Yan wrote:
+> On Tue, Aug 05, 2025 at 10:16:29PM +0300, Adrian Hunter wrote:
+> > On 30/07/2025 21:26, Leo Yan wrote:
+> > > On Mon, Jul 28, 2025 at 08:02:51PM +0300, Adrian Hunter wrote:
+> > >> On 25/07/2025 12:59, Leo Yan wrote:
+> > >>> This series extends Perf for fine-grained tracing by using BPF program
+> > >>> to pause and resume AUX tracing. The BPF program can be attached to
+> > >>> tracepoints (including ftrace tracepoints and dynamic tracepoints, like
+> > >>> kprobe, kretprobe, uprobe and uretprobe).
 
-Not Andrii, but I see only negatives in this extra flag.
-It doesn't add any safety or guardrails.
-No need to pollute uapi with pointless flags.
+> > >> Using eBPF to pause/resume AUX tracing seems like a great idea.
+
+> > >> AFAICT with this patch set, there is just support for pause/resume
+> > >> much like what could be done directly without eBPF, so I wonder if you
+> > >> could share a bit more on how you see this evolving, and what your
+> > >> future plans are?
+
+> > > IIUC, here you mean the tool can use `perf probe` to firstly create
+> > > probes, then enable tracepoints as PMU event for AUX pause and resume.
+
+> > Yes, like:
+
+> > $ sudo perf probe 'do_sys_openat2 how->flags how->mode'
+> > Added new event:
+> >   probe:do_sys_openat2 (on do_sys_openat2 with flags=how->flags mode=how->mode)
+
+> > You can now use it in all perf tools, such as:
+
+> >         perf record -e probe:do_sys_openat2 -aR sleep 1
+
+> > $ sudo perf probe do_sys_openat2%return
+> > Added new event:
+> >   probe:do_sys_openat2__return (on do_sys_openat2%return)
+
+> > You can now use it in all perf tools, such as:
+
+> >         perf record -e probe:do_sys_openat2__return -aR sleep 1
+
+> > $ sudo perf record --kcore -e intel_pt/aux-action=start-paused/k -e probe:do_sys_openat2/aux-action=resume/ --filter='flags==0x98800' -e probe:do_sys_openat2__return/aux-action=pause/ -- ls
+
+> Thanks a lot for sharing the commands. I was able to replicate them
+> using CoreSight.
+
+> Given that we can achieve the same result without using BPF, I am not
+> sure how useful this series is. It may give us a base for exploring
+> profiling that combines AUX trace and BPF, but I am fine with holding
+> on until we have clear requirements for it.
+
+> I would get suggestion from you and maintainers before proceeding
+> further.
+
+Maybe retrofit this for starting stopping profiling non HW tracing
+sections?
+
+We have now:
+
+⬢ [acme@toolbx perf-tools-next]$ perf record -h switch
+
+ Usage: perf record [<options>] [<command>]
+    or: perf record [<options>] -- <command> [<options>]
+
+        --switch-events   Record context switch events
+        --switch-max-files <n>
+                          Limit number of switch output generated files
+        --switch-output[=<signal or size[BKMG] or time[smhd]>]
+                          Switch output when receiving SIGUSR2 (signal) or cross a size or time threshold
+        --switch-output-event <switch output event>
+                          switch output event selector. use 'perf list' to list available events
+
+⬢ [acme@toolbx perf-tools-next]$
+
+That will dump a snapshot when some event takes place, but that is done
+with a sideband thread, from 'man perf-record':
+
+--switch-output-event::
+Events that will cause the switch of the perf.data file, auto-selecting
+--switch-output=signal, the results are similar as internally the side band
+thread will also send a SIGUSR2 to the main one.
+
+Uses the same syntax as --event, it will just not be recorded, serving only to
+switch the perf.data file as soon as the --switch-output event is processed by
+a separate sideband thread.
+
+This sideband thread is also used to other purposes, like processing the
+PERF_RECORD_BPF_EVENT records as they happen, asking the kernel for extra BPF
+information, etc.
+
+----------------------
+
+And in perf-report we have:
+
+----
+
+--switch-on EVENT_NAME::
+        Only consider events after this event is found.
+
+        This may be interesting to measure a workload only after some initialization
+        phase is over, i.e. insert a perf probe at that point and then using this
+        option with that probe.
+
+--switch-off EVENT_NAME::
+        Stop considering events after this event is found.
+
+--show-on-off-events::
+        Show the --switch-on/off events too. This has no effect in 'perf report' now
+        but probably we'll make the default not to show the switch-on/off events
+        on the --group mode and if there is only one event besides the off/on ones,
+        go straight to the histogram browser, just like 'perf report' with no events
+        explicitly specified does.
+
+----
+
+If we had it in 'perf record' then we would have reduced perf.data
+files.
+
+I.e. we would have something like '-e {cycles,instructions}/action=start-paused/k' -e probe:do_sys_openat2/action=resume/ --filter='flags==0x98800' -e probe:do_sys_openat2__return/action=pause/
+
+- Arnaldo
