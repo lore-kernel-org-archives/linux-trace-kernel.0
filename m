@@ -1,157 +1,118 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C55E2C21EB
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  4 Sep 2025 08:39:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E2D82D2390
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  4 Sep 2025 08:51:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756975181; cv=none; b=HGwyy4z6LcR8Lu+gHzEdW3KLDcdJsBMgUiW3cSS9LHvylJEA/mAJurCowXf9t77n7H5xnXZGukhUjWCbWBSjPbuKZngMxVqHOzEBZ14OWp4Lmqhl0Z7x6nwg/xQ4oAhctEWb2WOsvYbTU0JU1Jy04sAT0b9CM7agEfjlHNGt0xs=
+	t=1756975886; cv=none; b=BQ1CflWYb3VipUKYbbpitywGX9l4rMkJyjUvSxmtgDThoDVz7o15TgSwS/6fKH/mTWihcxjPtQcPrwB8NTfu5Vg01Pm2KFx9XaoPYuzkeFvSGo5B6tsckJe1zW69abXeTY3Zedb9154qe1YUgGqttjcYpvYdzJBxmqeF9h2HW5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756975181; c=relaxed/simple;
-	bh=XFpM+yYTaMrEnROi9B4nYgCpjcyWjoNNWbxY2syzKVs=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TJwth5uNhVBPEp3uKLhMP2kJ/DKKamY0Z8px/mUXJF9C+j1b8m3glyIkXGx6B5+nZ0SnIwEJY4YIP9zu+U9tecT0A+IAmpMnwMfF66x3G9mJ0yIKCitJnMQQEdt96Bi3mB0avRsBRraaOTYOP/NUth32Y/VZyu4ZpizuSmPZ9ks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IZr+z59H; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1756975886; c=relaxed/simple;
+	bh=kd8rDK6t+wVjPKffuRs99409lYJP4hc4W7ZRJeOM6K0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kLUblBqfnJecjYVe/j9g8ULX7q4CQCSHC0YgILxsLglL8Lgs09fp3+NgPFCPMaR3UsJlA2WclOdlvvXnRlRT1dIb8x+KZRXEDuU0XImmzmcWCb37/FkZuItJBWXRPKqvgl1y7YTJqEAHBOIs7pjRz3KGzjpGan2MQdNnThJLcbc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RbmZqyvU; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IZr+z59H"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RbmZqyvU"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1756975178;
+	s=mimecast20190719; t=1756975884;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=XFpM+yYTaMrEnROi9B4nYgCpjcyWjoNNWbxY2syzKVs=;
-	b=IZr+z59HPemFBV0HhLicwmwrlWx9C7o85KVBE74tZfiqNxqlYfIerVs1H4DTAJDFgxxbaL
-	2vD+xK63L97s8HAGn/6e9sIxjD2XQopv9xjFEAWO0BYI6lB5OuCerJDaLNP3HgcdaPcoPi
-	tC/yXcHlR+T84c61HhrCXBEjM52ZsG8=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-400-A1WBfG9HNyq6s-CNu3fDoQ-1; Thu, 04 Sep 2025 04:39:35 -0400
-X-MC-Unique: A1WBfG9HNyq6s-CNu3fDoQ-1
-X-Mimecast-MFC-AGG-ID: A1WBfG9HNyq6s-CNu3fDoQ_1756975174
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3df2f4aedd1so493224f8f.3
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 04 Sep 2025 01:39:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756975174; x=1757579974;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=f0hzQ2a9v1Rzd23MMlpkQFgzttJOaFNChg5sTvJ96Kk=;
-        b=vkfgCTgIYNFV4ZVqZg46W24rebBF1QWMhUm5Hbptk126dIncLwt+0PpDUHCi81ZKjU
-         q5+Dt3kGRKCdBj+s3dpjeNbjGk9OqDOOfH4OY7Ebn+jIRyG03wQ+ZEyvYBJvadjXNb6/
-         YqgbhwSoB8YfrRpzCIENVxZThBJCyJ1rMrEGXV0zCaN5bboL8bOf4VkgFPOYS4kkdLcS
-         bW3hILkhdmPfoqUwx58RI3ALbr9b0RlwbaYxxrCO/aa8S+TTjgB/P6pKrzAQpTK/MxWz
-         qCFXtZ6XC/OnXovMRdmm9D/jBBog6cQahGDT2B9w9aTelecbLObdjfbBXxsxX3w/HPnX
-         y9tg==
-X-Forwarded-Encrypted: i=1; AJvYcCXj2QYvf+UivMXPuEuENPn2cagCipQ+6InrSVa0qXDJwW58TSMxcs+oGwTuO2qPZnWv6jvgtD9PHDy0iErBCebU0Og=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxLMsJD+sQcjGkvgpID7kvYVp528jGO1qiXpjTneQdJIz11RnbC
-	kbrVG+aTbf6gfDhZdTCFOSUtQW4rhzd7BRTFJAWwBZGhUxIgJlUytTA0NUUJgngZm5nU7NYNSLU
-	Pxb56xfhGxRSPwJKNMHKtaTPQtHW88erNN17eLFI8BspktH4+ido81FW/Y0RAh+BN9dqvVTxlKq
-	ie5f3AEo1i
-X-Gm-Gg: ASbGncvd83jKEv8EtMlQteedl5FUhIzvFZkdJapgc0OfNs0qpa0lZ1e4NqNslnPRje6
-	LY0uhueOg01Asw8sZVIomizDxwCSm8p/a5hu2mpMg8HxxOdt/QcMOCDIkaQUC7M+0RVm8XFYVfX
-	/MM5zuYsXXXluAgseP7ImANOXaVauoyCs1fesFxSPk8DxJlJYNI/f5iTR+USt1XZENC75tbj+F2
-	vYe3BkbLMtb6DNTgUj5dbBPohKXlHMMDw3I+lozFliohFdtVkWaAHMLyjWyeuRTnLBQX5Uidbvm
-	z1vViTPFB5yADMO+O93qxFEunKhDQyiJD1H4kzAQzp9A6i5MOq7r2PSzzGK1RlnGnQ==
-X-Received: by 2002:a05:6000:4202:b0:3e1:addf:58f4 with SMTP id ffacd0b85a97d-3e1addf6672mr660507f8f.57.1756975173865;
-        Thu, 04 Sep 2025 01:39:33 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEZE7tSFnufedEV5cMkbNyKprnC3TYa8i/aOEHrDa/AD29kXH54pzkmGPOW9Qhn5Fp6F3/bOg==
-X-Received: by 2002:a05:6000:4202:b0:3e1:addf:58f4 with SMTP id ffacd0b85a97d-3e1addf6672mr660479f8f.57.1756975173416;
-        Thu, 04 Sep 2025 01:39:33 -0700 (PDT)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.42])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3d520eada16sm17982800f8f.41.2025.09.04.01.39.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Sep 2025 01:39:32 -0700 (PDT)
-Message-ID: <a2813fab9089cf89d6ac60998abe4fa3f226d9d7.camel@redhat.com>
-Subject: Re: [RFC PATCH 16/17] verification/rvgen: Add support for per-obj
- monitors
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Nam Cao <namcao@linutronix.de>
-Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, 
-	linux-trace-kernel@vger.kernel.org, Tomas Glozar <tglozar@redhat.com>, Juri
- Lelli <jlelli@redhat.com>, Clark Williams <williams@redhat.com>, John Kacur
- <jkacur@redhat.com>
-Date: Thu, 04 Sep 2025 10:39:31 +0200
-In-Reply-To: <20250904082054.W0fQJAQw@linutronix.de>
-References: <20250814150809.140739-1-gmonaco@redhat.com>
-	 <20250814150809.140739-17-gmonaco@redhat.com>
-	 <20250904082054.W0fQJAQw@linutronix.de>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
- xyhmqeUWOzFx5P43S1E1dhsrLWgP
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42)
+	 in-reply-to:in-reply-to:references:references;
+	bh=bt3LAXhgvrSLIKod81c7m7+ZTsO9TpO34qJq6parCmk=;
+	b=RbmZqyvUixE6PQopbcrGN4aEXW0xjTMlo2JiHby0mCDGXBAanZMKE36BhAdfXidnSvbzvt
+	k9xn3S2v3ljmKItODNXpP3VKlWEbjVXMKSq/dGKrFONM7WUOgvp437+CSzj8494gWeenNu
+	YpCPWAH4CFJx4ByCzbLmNbye47PtnWU=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-479-r52OELBBN9CON0H9FJYDAw-1; Thu,
+ 04 Sep 2025 04:51:20 -0400
+X-MC-Unique: r52OELBBN9CON0H9FJYDAw-1
+X-Mimecast-MFC-AGG-ID: r52OELBBN9CON0H9FJYDAw_1756975878
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7281818004D4;
+	Thu,  4 Sep 2025 08:51:18 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.52])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 4FE2E1800446;
+	Thu,  4 Sep 2025 08:51:13 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Thu,  4 Sep 2025 10:49:56 +0200 (CEST)
+Date: Thu, 4 Sep 2025 10:49:50 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	x86@kernel.org, Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
+	Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH perf/core 02/11] uprobes: Skip emulate/sstep on unique
+ uprobe when ip is changed
+Message-ID: <20250904084949.GB27255@redhat.com>
+References: <20250902143504.1224726-1-jolsa@kernel.org>
+ <20250902143504.1224726-3-jolsa@kernel.org>
+ <20250903112648.GC18799@redhat.com>
+ <aLicCjuqchpm1h5I@krava>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: QpqeWQMrueDMTl-AH25WeM0LoS_xDMCxWxBqpeHODqc_1756975174
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aLicCjuqchpm1h5I@krava>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
+On 09/03, Jiri Olsa wrote:
+>
+> On Wed, Sep 03, 2025 at 01:26:48PM +0200, Oleg Nesterov wrote:
+> > On 09/02, Jiri Olsa wrote:
+> > >
+> > > If user decided to take execution elsewhere, it makes little sense
+> > > to execute the original instruction, so let's skip it.
+> >
+> > Exactly.
+> >
+> > So why do we need all these "is_unique" complications? Only a single
+> > is_unique/exclusive consumer can change regs->ip, so I guess handle_swbp()
+> > can just do
+> >
+> > 	handler_chain(uprobe, regs);
+> > 	if (instruction_pointer(regs) != bp_vaddr)
+> > 		goto out;
+>
+> hum, that's what I did in rfc [1] but I thought you did not like that [2]
+>
+> [1] https://lore.kernel.org/bpf/20250801210238.2207429-2-jolsa@kernel.org/
+> [2] https://lore.kernel.org/bpf/20250802103426.GC31711@redhat.com/
+>
+> I guess I misunderstood your reply [2], I'd be happy to drop the
+> unique/exclusive flag
 
+Well, but that rfc didn't introduce the exclusive consumers, and I think
+we agree that even with these changes the non-exclusive consumers must
+never change regs->ip?
 
-On Thu, 2025-09-04 at 10:20 +0200, Nam Cao wrote:
-> On Thu, Aug 14, 2025 at 05:08:08PM +0200, Gabriele Monaco wrote:
-> > +=C2=A0=C2=A0=C2=A0 def fill_per_obj_definitions(self) -> list:
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if self.monitor_type =3D=3D=
- "per_obj":
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret=
-urn ["""
-> > +/*
-> > + * da_get_id - Get the id from a target
-> > + */
-> > +static inline da_id_type da_get_id(monitor_target target)
-> > +{
-> > +=09return /* XXX: define how to get an id from the target */;
-> > +}
-> > +"""]
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return []
-> > +
->=20
-> I know this is the existing style that we have. But I think this is
-> not something we should keep. How about something like:
->=20
-> import textwrap
->=20
-> def fill_per_obj_definitions(self) -> list:
-> =C2=A0=C2=A0=C2=A0 if self.monitor_type =3D=3D "per_obj":
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return [textwrap.dedent("""
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-* da_get_id - Get the id from a target
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-*/
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 static=
- inline da_id_type da_get_id(monitor_target target)
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 {
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=09return /* XXX: define how to get an id from the
-> target */;
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 """)]
-> =C2=A0=C2=A0=C2=A0 return []
+> > But if a non-exclusive consumer changes regs->ip, we have a problem
+> > anyway, right?
+> >
+> > We can probably add something like
+> >
+> > 		rc = uc->handler(uc, regs, &cookie);
+> > 	+	WARN_ON(!uc->is_unique && instruction_pointer(regs) != bp_vaddr);
+> >
+> > into handler_chain(), although I don't think this is needed.
 
-Mmh, I see what you mean.
-I wasn't aware of this textwrap, but what immediately comes to mind is
-that we'd end up mixing spaces (python indentation) and tabs (C
-indentation).
-While textwrap may handle the case, it doesn't look too readable to me.
-
-I'd say we can (slowly) transition to using textwrap here but mandate
-having \t for tabs to make them explicit (didn't test).
-
-What do you think?
-
-Thanks,
-Gabriele
+Oleg.
 
