@@ -1,56 +1,51 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from abb.hmeau.com (abb.hmeau.com [180.181.231.80])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10DC82D23A5;
-	Thu,  4 Sep 2025 08:58:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B66222DF6F6;
+	Thu,  4 Sep 2025 09:09:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=180.181.231.80
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756976290; cv=none; b=mmM4/9mlwx5VPV+XtC1dyt77A5+IAzeGkF3+gxDITKDVWFrHZKORO4lB6QphwTghdDYMENcEI4aMrJTtQPqR6cA4AELptx/O3vbUbyNfAJRlo2+pR7zD9GGujwIjsTGmd9W8rpmoAWgziTMW5wV0y6QZg6mEzXX9DrxLyTfpj6I=
+	t=1756976951; cv=none; b=ipIsbcEMatMK0imTrBIEN1GT6zamEVdS0ToOEPYWZlRyP96a9knSwiwWWnMfhCW7I8EYsJqq60KgnF/Qja2kB+bwBWZfZ1qCObvBni27OFUdAUU1FwEI0kwOyYS/ahgZJYXKL7DmVqySVrGjJmpzK1NgQsPujfs3Mv39pmkHI1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756976290; c=relaxed/simple;
-	bh=t6L8ZlnVN36wvOF7lHp++9Zn1qSba4PbffbnNTtGYlY=;
+	s=arc-20240116; t=1756976951; c=relaxed/simple;
+	bh=G/J06Q7pmBlKJjTl3EXiNLMWxSy8VxCDwe2a+IgycIw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Kx4NgfU04VGFMuaDRcuNIbAi7Yv9BUFa7QubJJvdfxSwYvcu+6ozdFNWWZn7RTaFhVhaC8n0WDpbe6EGtG02idnVTTYUS83nCQV0SSqKtteluf8wA6eEft/iXYVd71NZkbYRy10b69C7MuIC+jPedS2jxFv7eaK/gUkekOqspFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3E110RiW; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=vNClmjGW; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=syMUpAGxeKrDvveUHA8oehdrBrin12YlOUN8V9KN2UDvU7SAdRwPzRHQH1h/M0W/IOwAvOnDgj6NVewI7NP//iguPthw35ke+9k1sP+0B5pPWlfyNWwLEEMRO1OS7w01PO8Xr0cndqacjevKf3PVwdWVPyO0VtFRvE05dF0hchU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=TMBW675y; arc=none smtp.client-ip=180.181.231.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3E110RiW";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vNClmjGW"
-Date: Thu, 4 Sep 2025 10:58:05 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1756976287;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PHWraxP+ssEoLc7VJUdtZWdkuJMer6cVKoa1HpNeYug=;
-	b=3E110RiWS0C5ryrnh3OGKC9EyVceoxOsVcCOMf1YuxOIVALliajwDLOZjuzFbTfgaWlcLu
-	kiNytkNSBbi32VcAePskuWDBDodgRQrldFj4Tu03TOnorSDpMRbxe8trjszsDqtyWT/AF9
-	HSv5yLMnVDlmXiCVbDySC8TLw/8zPvIiKEdRkg325rq0g7M5rtFsrDaxj0cbnIouf77qCE
-	so/3Ht1fwXKvLWOh2IkY+V27k7AbzJ9251eyOndrr7v12ZvaODpMJrYHljduN3r2Jq4BUy
-	3x0ZedMvsCE1B0fwaPCwh5/RXLR5Q0Xwo3GX1xaylda18PKvyrhTRkpO4Zh/BQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1756976287;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PHWraxP+ssEoLc7VJUdtZWdkuJMer6cVKoa1HpNeYug=;
-	b=vNClmjGWAjc9K0tDAof+6W5q0ZtGexcpfHGXsn+OOjt18AaoF9hVCsnvOx/6LReszPAD46
-	uSWV813wFh9T3SCA==
-From: Nam Cao <namcao@linutronix.de>
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-	linux-trace-kernel@vger.kernel.org,
-	Tomas Glozar <tglozar@redhat.com>, Juri Lelli <jlelli@redhat.com>,
-	Clark Williams <williams@redhat.com>,
-	John Kacur <jkacur@redhat.com>
-Subject: Re: [RFC PATCH 16/17] verification/rvgen: Add support for per-obj
- monitors
-Message-ID: <20250904085805.X1LXKplC@linutronix.de>
-References: <20250814150809.140739-1-gmonaco@redhat.com>
- <20250814150809.140739-17-gmonaco@redhat.com>
- <20250904082054.W0fQJAQw@linutronix.de>
- <a2813fab9089cf89d6ac60998abe4fa3f226d9d7.camel@redhat.com>
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="TMBW675y"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=X8lJPPz3uM+KxHe0Nl9wRADaXsNsKIAR64B5GXSwg2c=; b=TMBW675yw/+89loQ095MXEB8Z+
+	IAvtY7OTS48P8otGdOUX5t3gH7wg1hgnvRzxzqQvG/POQ+aE6xCHUjEYcWYq35Q89VMtEcU6rPvei
+	xS05RYuyHvCCXwJDs0XdEZnyNqXZKva4VndSsUtO6g9k1y2SydxgOYwtmJNDoCXeT/rqV9Q+vCVZ4
+	0s1+e6W5wEsKpMXogMG6EX7nktGMcJEvZGVqfd8KX6M4ZIEgiPVBZkBJ7tqDToOE907Mfk26Yhnlx
+	jPsLlSrjtg5c2O80LpZayRU5vOKpI9VV83hdMP6qv493DrjKaz4BR96anUG2OyE+ICXZEKaA/TsXp
+	I00k4Uhg==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1uu5hw-002YvI-25;
+	Thu, 04 Sep 2025 17:08:38 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Thu, 04 Sep 2025 17:08:37 +0800
+Date: Thu, 4 Sep 2025 17:08:37 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Menglong Dong <menglong.dong@linux.dev>
+Cc: mhiramat@kernel.org, rostedt@goodmis.org,
+	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, oliver.sang@intel.com,
+	"Paul E. McKenney" <paulmck@kernel.org>
+Subject: Re: [PATCH] tracing: fprobe: fix suspicious rcu usage in fprobe_entry
+Message-ID: <aLlXFQaRmKaCeXTG@gondor.apana.org.au>
+References: <aLa2D4It1Zxc7bs0@gondor.apana.org.au>
+ <3005966.e9J7NaK4W3@7940hx>
+ <aLfCa1FkLc3T4QI3@gondor.apana.org.au>
+ <5038598.31r3eYUQgx@7940hx>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -59,28 +54,38 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a2813fab9089cf89d6ac60998abe4fa3f226d9d7.camel@redhat.com>
+In-Reply-To: <5038598.31r3eYUQgx@7940hx>
 
-On Thu, Sep 04, 2025 at 10:39:31AM +0200, Gabriele Monaco wrote:
-> Mmh, I see what you mean.
-> I wasn't aware of this textwrap, but what immediately comes to mind is
-> that we'd end up mixing spaces (python indentation) and tabs (C
-> indentation).
+On Thu, Sep 04, 2025 at 11:37:35AM +0800, Menglong Dong wrote:
 >
-> While textwrap may handle the case, it doesn't look too readable to me.
+> Yeah, I understand what you mean. I noticed this, and that's why
+> I added the rcu_read_lock() for rhashtable_lookup() only.
 > 
-> I'd say we can (slowly) transition to using textwrap here but mandate
-> having \t for tabs to make them explicit (didn't test).
-> 
-> What do you think?
+> Maybe it is to obtain better performance? Just guess ;)
+> And hlist_for_each_entry_rcu() also uses rcu_dereference_raw().
 
-Right, I didn't consider the mixing indentation problem.
+I did some digging and this appears to be the source of the
+rcu_dereference_raw call:
 
-Using \t isn't much better, it is harder to see how the generated code will
-look.
+commit 3120438ad68601f341e61e7cb1323b0e1a6ca367
+Author: Paul E. McKenney <paulmck@kernel.org>
+Date:   Mon Feb 22 17:04:48 2010 -0800
 
-One idea is using something like clang-format
-(Documentation/dev-tools/clang-format.rst). It doesn't have to be done in
-this series of course, I'm fine leaving this be for now.
+    rcu: Disable lockdep checking in RCU list-traversal primitives
 
-Nam
+    The theory is that use of bare rcu_dereference() is more prone
+    to error than use of the RCU list-traversal primitives.
+    Therefore, disable lockdep RCU read-side critical-section
+    checking in these primitives for the time being.  Once all of
+    the rcu_dereference() uses have been dealt with, it may be time
+    to re-enable lockdep checking for the RCU list-traversal
+    primitives.
+
+So I don't think there is a good reason to use rcu_dereference_raw
+here at all.
+
+Cheers,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
