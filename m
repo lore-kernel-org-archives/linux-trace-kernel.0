@@ -1,160 +1,273 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2486154654;
-	Thu,  4 Sep 2025 18:06:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 964A42FABE2;
+	Thu,  4 Sep 2025 18:28:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757009209; cv=none; b=CAtXPurNczRnbs7FT1QRE3Ry8v2DNO6W8OMyAC/ATj+azdJkv8SLczrx6dW3HtB+Gv+oV0TqX6UrKj1dBYxerw/+smS+6HMbh5ovkV/ikEvf8PnhvxphZQAHRMSui0XJnw5AS0RiEjkDwutE5gVzlAcEN830mSahmopZgurYOZ8=
+	t=1757010482; cv=none; b=BK+dzvqExUxGEBuNV2qZo/rH55WMla5CIladrYVos+SEu37LxZ4tWvfO1t5/0kO1ha36OlzgogAr1AVYzAG36YtPL/geVIxEAb7BmJ62eYly4zXOFqEKE5JU6/0UViFIBDx2P3zKH9uio7VcdkDKGKj6/Ag+r2lwjjTYucE/A4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757009209; c=relaxed/simple;
-	bh=9CiMvOSQWinJMq6NIMYH71ecyKhv5aE1CwwMMJiawrQ=;
+	s=arc-20240116; t=1757010482; c=relaxed/simple;
+	bh=ffLIQ3FaiYZNtElI4OJ0F2JYmjc0S5H12kcNdyc3VUE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OFV7V26bJRgr/iiSrlIexdqWB4nWfAJit1FdILFQ3OFUv6EXbasKY3lAGKictfItUDw3Sbq3821jyxuH8O8IaHPYEqdgi/P+ch1f5rTnFMTAOYTo6B7wEIm+9pxJWljWcBG9Ln3oytwvPe7LYm/lmwyYV6rnEi9sl9EbOL5ri8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bXXS8GQg; arc=none smtp.client-ip=209.85.216.52
+	 To:Cc:Content-Type; b=lpFt5LTcIXYzZyIq3nPLbUXZDsQs0Dl58sN1bNGc0qh9eCyNbXNP9XRNSBiDPR2tfHa47qTJhwcrtU/HymLiNyLmjD0zhg/D5Cy+5A6c5/NbGbUUuD1kBHpbz3A6BfVxR/SRVf8x5zM0jtrXMW9REZdidREuIshGxttroaWFugA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LdKchDH5; arc=none smtp.client-ip=209.85.214.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bXXS8GQg"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-32bb1132c11so335806a91.0;
-        Thu, 04 Sep 2025 11:06:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LdKchDH5"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-24884d9e54bso14148555ad.0;
+        Thu, 04 Sep 2025 11:28:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1757009206; x=1757614006; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1757010480; x=1757615280; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=VuyixO0hwkwyh9bGg9JvqJw6+GK3Lee4B6ulKn5PzeY=;
-        b=bXXS8GQg7+G55WXP7sw4YOSdcgqNzo979WaHB+UWgEUbErUDF4g0Dw13jAf0QxNt29
-         JQYHGa8wQBwnJkA00ASh088g6lpF0GPqeTsmue38XQZBLtXc7mQVe+sXOZllVgQkU+d7
-         qMPwUBIxlLnEKfp5nl7tgT9Hx77NDkU65viYYG6cWWd2owTOff0k53IOsDOpLFPdv7dU
-         yeFzsvyJ/vMJSjXwpJx7fnHB6sQYPiGsn79E6Gcm66XOuN4X7uyk3eOc4InX1sF+mZN9
-         oi/zo2lC/ds8L5/W67qQcAfEi6I1DGEXpPHAsqeLlcK41GE0ZwOpQCxeDZxvA9G5gyfS
-         5IeA==
+        bh=UFcf01DXYxJozGudqNMPPaA6uZcECj7e/1HGQreU6Co=;
+        b=LdKchDH5Ieo8UHm+OxDkaWV9tHB1S/h0gbwh0SrD6r1Y5MElY60NZSzaKdiwUocLB+
+         dOljdj0Zc9fiiGhv5YgeNsOI1YwWi4xdFb39/YMrF1SfiEMvvgIirJR1GY1ytGEO1mBU
+         49TZrdBuLq5dDvoWaw1LhKh2oKh6QQ1UvPczVL5UpKq6gdq5Lz61GiweEf1s9f1VRFxT
+         dWFujhEXsnEahdez6x+fDTWuQ1luCVumbGdQjd9n6+adhRifd7gF/b3drmMYVYRWEFTq
+         Ctow3b1yAY8V0WTWBYNl+LLGtsDu9WO/f5LAVqPIIWOzigrT12kPmiMiblUzgwBeiiVI
+         MX2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757009206; x=1757614006;
+        d=1e100.net; s=20230601; t=1757010480; x=1757615280;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=VuyixO0hwkwyh9bGg9JvqJw6+GK3Lee4B6ulKn5PzeY=;
-        b=AXIVdsrX9dak8vZyY+NVRFbncRZr6+LbmmcQvxylNprP+wSdVUUd4HjD5gUj/pGxQY
-         u56kF9MtT/uELzIdrCARUTV+Abw8Cg3f1bKD2wkiXKYMH2su7T1ezDbAFtftj8Iokzub
-         EutE54z/Aqs360qWychFXXGon11iU/ulojfBY/xVcrNz2w2I68sikOmZPClPIRZZcE2u
-         k4OtWiS54LxtgqMjS26ZPr5i3RCSMpuUovuw2ZfeZjlmuuIlcexuKqZ1QeyG/n00lDDn
-         iHgop/GuUVCdPzovxSqd2kV5coWIsSJOpmAqSEuqT5Wq15nLrjZ6JS2BGAq82lneQ5Vm
-         X+xg==
-X-Forwarded-Encrypted: i=1; AJvYcCUpHq1iYrZ/SUe0d5caAHfafX61NdPIT3sUQOpOa7l1WQb4dd3+DEed8ZYfxGrFiZ0yKjk=@vger.kernel.org, AJvYcCVA5CZuIj4T9j2YkGC83cUi3HVRj8mZJktrt5BPac5+Pq2XZn6f4kwamLby0gfOpCDlJ5fQWgAWck8jscTa@vger.kernel.org, AJvYcCXexh/Bt05N6MnUTCKtRpHVfDicHGWLNSspXgmoAsiOSedbcnbkFx+OYtrK9YNxiWPpnbUiH8FZDU6+Nlb1kDaevQCy@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMggedmTugmh2DJFW18kwD4rJu/wMqXCyyzWwT9blWHqPV45Ih
-	OvivHVCuoHUD06Tp9+Qu7f39P4pxu+K+Ec0T0djXRVLeg9ZLQdO60B53H+jR9NSkrjENnrsuJZ1
-	jUMO1pY/9mYrdHVMALUaNBu0DaYu0I8w=
-X-Gm-Gg: ASbGnctxtY/NUoQ51eyeCNPy7wEzaK8OlYQhKrafOK0f9irWM/N1QcCkeXZ/klhXd2n
-	iKAW76OjMU4/4IZxu7iXDYnUoYu8RirxDRDatifwlTpVeF33SBubVe0BV9mr8HV4TuntOVBnQzB
-	B+tnu/0lCPnnnIiLfLAGGKHo5sIDWWIsuJp1pc4byAgIGP1ctVIP4u/TC0JNV891wAehS9GEFDO
-	IdJnvjlwgIdDX7e/JD7BH0=
-X-Google-Smtp-Source: AGHT+IHCUO6rhTvzEP9t2OmyzIkR6yMvWXQ4BzuYoMuX/kGOeMKz713GAJpf+6/fxt3zD3e/QK0zSs48VraZx+P8jak=
-X-Received: by 2002:a17:90b:4c4b:b0:32b:5c14:3bb6 with SMTP id
- 98e67ed59e1d1-32bbcb94786mr624377a91.1.1757009206177; Thu, 04 Sep 2025
- 11:06:46 -0700 (PDT)
+        bh=UFcf01DXYxJozGudqNMPPaA6uZcECj7e/1HGQreU6Co=;
+        b=XksGs2emezw7bpgVUHYt53FbGUrKlm12U9qz5Uj3waZOMUBzIQk5vcoABtIl/foi8u
+         00CP6tRQP8xgw5LPJdSfz2qiQKG3s1RulJg7IIz0pdkpY2TG6HJ+Rx2Z0WK90LnVFE08
+         LZvVnnBO4QnCodVIs6WJQM8QVMET4at5pIzZk4mAscH5mxRxwoqyRwz6l1n+70dW+U2y
+         8dd7Ox+T1Bj+0tI8fVf9NDQ7utCnQCr5p3I8ggAYxiFk8HHVd7s8K56LLDMi5Jo1CxM5
+         VIyCGr/QnVPKCXqc4s9y/u6HOuNX05gXS4kHtAO2c8Lf9l1dYF+mJRhEsdlTzva6sBtC
+         zveA==
+X-Forwarded-Encrypted: i=1; AJvYcCUSLL0VhbZKz1hx2h8nvSXN2zI6tkLgOGN+Sn6vjpEdYwQUieikmy7pAOIVZ2aMmh++oREvliHoIlQkSNGxxoFBP3Kr@vger.kernel.org, AJvYcCUhLZVoHozY45tpqBpyAbBi6B1Yf2FH+tuuBQlww1wH/pHrlwK68Y8LSPU1vlOpTRjiWqw=@vger.kernel.org, AJvYcCXtczmJvurJTmhLT6xmwUmthAIcC0V1C0tx7loimXwn8dl3+S2vSBS4Bu234YZy9eDdMFHMYXXspstNGu8o@vger.kernel.org
+X-Gm-Message-State: AOJu0YxOPTT4dDD47ZQUXSQelKYFmqVWQf7Q9xOj8/YDQ0WHH8q3vD63
+	RHvCocHAOhW13W0XHyOz+8P6R1Xmmg7VBVcYEHwARwLcRyLfateb1IAANd42KiBbTVPM7vsgqKX
+	CCtn3OhWdV8hU4h+ueIiDHkRJW6woGgI=
+X-Gm-Gg: ASbGncugtvj4u06r5kjuLX/U9pG1P0FVmUxeniAt8+pmm8rMA9iJ3dBPqHI4L1IW/nZ
+	AkXXcbzvVekSmJzihCBRT4+CC6dLlPjGjjEFqT/LDHWpU5cw5xTFD6/xTF+paYsdiuDajjJHHJu
+	VucbSrgzLaV5Cd+a0UBwLJnM60/3eBnzlxe1Xu5YfO0bJ2F31mY7HE9zK7QHb+eM7Y0NtZIS2s9
+	FRIh1/lKTZGzjdy0eHlrHU=
+X-Google-Smtp-Source: AGHT+IFmjG6A3aSE+CmXab8GXk/ptByCG1d6SNBMRp3QPcCj1+z42ojsmggSYN0fEMSk94BqMVxQdOUBFPWJh+K79Ng=
+X-Received: by 2002:a17:903:2309:b0:249:3781:38e3 with SMTP id
+ d9443c01a7336-2494486f48fmr245916815ad.10.1757010479749; Thu, 04 Sep 2025
+ 11:27:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250902143504.1224726-1-jolsa@kernel.org> <20250902143504.1224726-3-jolsa@kernel.org>
- <20250903112648.GC18799@redhat.com> <aLicCjuqchpm1h5I@krava>
- <20250904084949.GB27255@redhat.com> <aLluB1Qe6Y9B8G_e@krava>
- <20250904112317.GD27255@redhat.com> <CAADnVQ+DHGc8R0Tdxf7eUj1R0TDGHXLwk5D4i_0==2_rfXGbfw@mail.gmail.com>
-In-Reply-To: <CAADnVQ+DHGc8R0Tdxf7eUj1R0TDGHXLwk5D4i_0==2_rfXGbfw@mail.gmail.com>
+References: <20250720112133.244369-1-jolsa@kernel.org> <20250720112133.244369-10-jolsa@kernel.org>
+ <CAEf4BzaxtW_W1M94e3q0Qw4vM_heHqU7zFeH-fFHOQBwy5+7LQ@mail.gmail.com> <aLlKJWRs5etuvFuK@krava>
+In-Reply-To: <aLlKJWRs5etuvFuK@krava>
 From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Thu, 4 Sep 2025 11:06:31 -0700
-X-Gm-Features: Ac12FXzGYab9OQQet97J76DuBacUMuW8DPWM-yoh5yepaOsk3yRtmPhPFspT8nw
-Message-ID: <CAEf4BzbxjRwxhJTLUgJNwR-vEbDybBpawNsRb+y+PiDsxzT=eA@mail.gmail.com>
-Subject: Re: [PATCH perf/core 02/11] uprobes: Skip emulate/sstep on unique
- uprobe when ip is changed
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Oleg Nesterov <oleg@redhat.com>, Jiri Olsa <olsajiri@gmail.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+Date: Thu, 4 Sep 2025 11:27:45 -0700
+X-Gm-Features: Ac12FXwZL9LiktKhjwvBuDGzti3AR3z8oS4Qg9Bvtj7egtgdX2ynkU-qrM7BF4U
+Message-ID: <CAEf4BzYUyOP_ziQjXshVeKmiocLjtWH+8LVHSaFNN1p=sp2rNg@mail.gmail.com>
+Subject: nop5-optimized USDTs WAS: Re: [PATCHv6 perf/core 09/22] uprobes/x86:
+ Add uprobe syscall to speed up uprobe
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
 	Andrii Nakryiko <andrii@kernel.org>, bpf <bpf@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>, 
+	open list <linux-kernel@vger.kernel.org>, 
+	Linux trace kernel <linux-trace-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>, 
 	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
 	John Fastabend <john.fastabend@gmail.com>, Hao Luo <haoluo@google.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@kernel.org>
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Alan Maguire <alan.maguire@oracle.com>, David Laight <David.Laight@aculab.com>, 
+	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>, 
+	Ingo Molnar <mingo@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Sep 4, 2025 at 8:02=E2=80=AFAM Alexei Starovoitov
-<alexei.starovoitov@gmail.com> wrote:
+-- Andrii
+
+On Thu, Sep 4, 2025 at 1:13=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> wrote=
+:
 >
-> On Thu, Sep 4, 2025 at 4:26=E2=80=AFAM Oleg Nesterov <oleg@redhat.com> wr=
+> On Wed, Sep 03, 2025 at 11:24:31AM -0700, Andrii Nakryiko wrote:
+> > On Sun, Jul 20, 2025 at 4:23=E2=80=AFAM Jiri Olsa <jolsa@kernel.org> wr=
 ote:
-> >
-> > On 09/04, Jiri Olsa wrote:
 > > >
-> > > On Thu, Sep 04, 2025 at 10:49:50AM +0200, Oleg Nesterov wrote:
-> > > > On 09/03, Jiri Olsa wrote:
-> > > > >
-> > > > > On Wed, Sep 03, 2025 at 01:26:48PM +0200, Oleg Nesterov wrote:
-> > > > > > On 09/02, Jiri Olsa wrote:
-> > > > > > >
-> > > > > > > If user decided to take execution elsewhere, it makes little =
-sense
-> > > > > > > to execute the original instruction, so let's skip it.
-> > > > > >
-> > > > > > Exactly.
-> > > > > >
-> > > > > > So why do we need all these "is_unique" complications? Only a s=
-ingle
-> > > > > > is_unique/exclusive consumer can change regs->ip, so I guess ha=
-ndle_swbp()
-> > > > > > can just do
-> > > > > >
-> > > > > >         handler_chain(uprobe, regs);
-> > > > > >         if (instruction_pointer(regs) !=3D bp_vaddr)
-> > > > > >                 goto out;
-> > > > >
-> > > > > hum, that's what I did in rfc [1] but I thought you did not like =
-that [2]
-> > > > >
-> > > > > [1] https://lore.kernel.org/bpf/20250801210238.2207429-2-jolsa@ke=
-rnel.org/
-> > > > > [2] https://lore.kernel.org/bpf/20250802103426.GC31711@redhat.com=
-/
-> > > > >
-> > > > > I guess I misunderstood your reply [2], I'd be happy to drop the
-> > > > > unique/exclusive flag
-> > > >
-> > > > Well, but that rfc didn't introduce the exclusive consumers, and I =
-think
-> > > > we agree that even with these changes the non-exclusive consumers m=
-ust
-> > > > never change regs->ip?
+> > > Adding new uprobe syscall that calls uprobe handlers for given
+> > > 'breakpoint' address.
 > > >
-> > > ok, got excited too soon.. so you meant getting rid of is_unique
-> > > check only for this patch and have just change below..  but keep
-> > > the unique/exclusive flag from patch#1
+> > > The idea is that the 'breakpoint' address calls the user space
+> > > trampoline which executes the uprobe syscall.
+> > >
+> > > The syscall handler reads the return address of the initial call
+> > > to retrieve the original 'breakpoint' address. With this address
+> > > we find the related uprobe object and call its consumers.
+> > >
+> > > Adding the arch_uprobe_trampoline_mapping function that provides
+> > > uprobe trampoline mapping. This mapping is backed with one global
+> > > page initialized at __init time and shared by the all the mapping
+> > > instances.
+> > >
+> > > We do not allow to execute uprobe syscall if the caller is not
+> > > from uprobe trampoline mapping.
+> > >
+> > > The uprobe syscall ensures the consumer (bpf program) sees registers
+> > > values in the state before the trampoline was called.
+> > >
+> > > Acked-by: Andrii Nakryiko <andrii@kernel.org>
+> > > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> > > ---
+> > >  arch/x86/entry/syscalls/syscall_64.tbl |   1 +
+> > >  arch/x86/kernel/uprobes.c              | 139 +++++++++++++++++++++++=
+++
+> > >  include/linux/syscalls.h               |   2 +
+> > >  include/linux/uprobes.h                |   1 +
+> > >  kernel/events/uprobes.c                |  17 +++
+> > >  kernel/sys_ni.c                        |   1 +
+> > >  6 files changed, 161 insertions(+)
+> > >
+> > > diff --git a/arch/x86/entry/syscalls/syscall_64.tbl b/arch/x86/entry/=
+syscalls/syscall_64.tbl
+> > > index cfb5ca41e30d..9fd1291e7bdf 100644
+> > > --- a/arch/x86/entry/syscalls/syscall_64.tbl
+> > > +++ b/arch/x86/entry/syscalls/syscall_64.tbl
+> > > @@ -345,6 +345,7 @@
+> > >  333    common  io_pgetevents           sys_io_pgetevents
+> > >  334    common  rseq                    sys_rseq
+> > >  335    common  uretprobe               sys_uretprobe
+> > > +336    common  uprobe                  sys_uprobe
+> > >  # don't use numbers 387 through 423, add new calls after the last
+> > >  # 'common' entry
+> > >  424    common  pidfd_send_signal       sys_pidfd_send_signal
+> > > diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
+> > > index 6c4dcbdd0c3c..d18e1ae59901 100644
+> > > --- a/arch/x86/kernel/uprobes.c
+> > > +++ b/arch/x86/kernel/uprobes.c
+> > > @@ -752,6 +752,145 @@ void arch_uprobe_clear_state(struct mm_struct *=
+mm)
+> > >         hlist_for_each_entry_safe(tramp, n, &state->head_tramps, node=
+)
+> > >                 destroy_uprobe_trampoline(tramp);
+> > >  }
+> > > +
+> > > +static bool __in_uprobe_trampoline(unsigned long ip)
+> > > +{
+> > > +       struct vm_area_struct *vma =3D vma_lookup(current->mm, ip);
+> > > +
+> > > +       return vma && vma_is_special_mapping(vma, &tramp_mapping);
+> > > +}
+> > > +
+> > > +static bool in_uprobe_trampoline(unsigned long ip)
+> > > +{
+> > > +       struct mm_struct *mm =3D current->mm;
+> > > +       bool found, retry =3D true;
+> > > +       unsigned int seq;
+> > > +
+> > > +       rcu_read_lock();
+> > > +       if (mmap_lock_speculate_try_begin(mm, &seq)) {
+> > > +               found =3D __in_uprobe_trampoline(ip);
+> > > +               retry =3D mmap_lock_speculate_retry(mm, seq);
+> > > +       }
+> > > +       rcu_read_unlock();
+> > > +
+> > > +       if (retry) {
+> > > +               mmap_read_lock(mm);
+> > > +               found =3D __in_uprobe_trampoline(ip);
+> > > +               mmap_read_unlock(mm);
+> > > +       }
+> > > +       return found;
+> > > +}
+> > > +
+> > > +/*
+> > > + * See uprobe syscall trampoline; the call to the trampoline will pu=
+sh
+> > > + * the return address on the stack, the trampoline itself then pushe=
+s
+> > > + * cx, r11 and ax.
+> > > + */
+> > > +struct uprobe_syscall_args {
+> > > +       unsigned long ax;
+> > > +       unsigned long r11;
+> > > +       unsigned long cx;
+> > > +       unsigned long retaddr;
+> > > +};
+> > > +
+> > > +SYSCALL_DEFINE0(uprobe)
+> > > +{
+> > > +       struct pt_regs *regs =3D task_pt_regs(current);
+> > > +       struct uprobe_syscall_args args;
+> > > +       unsigned long ip, sp;
+> > > +       int err;
+> > > +
+> > > +       /* Allow execution only from uprobe trampolines. */
+> > > +       if (!in_uprobe_trampoline(regs->ip))
+> > > +               goto sigill;
 > >
-> > Yes, this is what I meant,
+> > Hey Jiri,
 > >
-> > > IIUC Andrii would remove the unique flag completely?
-> >
-> > Lets wait for Andrii...
+> > So I've been thinking what's the simplest and most reliable way to
+> > feature-detect support for this sys_uprobe (e.g., for libbpf to know
+> > whether we should attach at nop5 vs nop1), and clearly that would be
 >
-> Not Andrii, but I see only negatives in this extra flag.
-> It doesn't add any safety or guardrails.
-> No need to pollute uapi with pointless flags.
+> wrt nop5/nop1.. so the idea is to have USDT macro emit both nop1,nop5
+> and store some info about that in the usdt's elf note, right?
+>
 
-+1. I think it's fine to just have something like
+Yes.
 
-if (unlikely(instruction_pointer(regs) !=3D bp_vaddr))
-      goto out;
+> libbpf will read usdt record and in case it has both nop1/nop5 and if
+> the sys_uprobe is detected, we will adjust usdt address to nop1 or nop5
+>
 
-after all uprobe callbacks were processed. Even if every single one of
-them modify IP, the last one that did that wins. Others (if they care)
-can detect this.
+Yes.
 
-Generally speaking, this is a very specialized use case (which is why
-the opposition to complicating UAPI for all of that), and I'd expect
-to have at most 1 such uprobe callbacks at any attach point, while all
-others (if there are any "others") are read-only and won't care about
-return IP.
+> I recall you said you might have an idea where to store this flag
+> in elf note.. or are we bumping the usdt's elf note n_type ?
+>
+
+Neither. I was contemplating just to look whether there is nop5 after
+nop1 from libbpf side, which would probably always work reliably in
+practice, but, technically, might be misused if you artificially put
+nop5 after USDT() call and then jump into that nop5 from somewhere
+else. Then it would trigger USDT where it shouldn't.
+
+But I don't want to change n_type, as I want anyone else doing their
+own USDT parsing/attaching to work just as they used to.
+
+So, here's the current idea. USDT lays out three strings one after the
+other in ELF note: provider, \0, name, \0, args, \0. We also record
+total note data size there, so we know how much contents is there. I
+was thinking we can add just one extra \0 at the end (and if necessary
+we can treat that as 4th string with extra arguments in the future,
+who knows). If libbpf detects that extra \0, then we can be reasonably
+confident that nop5 is part of USDT and is safe to be used correctly.
+
+Unless there are some super paranoid USDT parsers out there, it should
+be nicely backwards compatible. Libbpf seems to not care right now
+about that extra zero, which is a good sign. readelf handles that just
+fine as well. So all good signs so far. I haven't tested anything else
+(bpftrace is currently broken for me w.r.t. USDT attachment even with
+old format, so I can't quickly check, please help, if you can).
+
+> thanks,
+> jirka
+>
+>
+> > to try to call uprobe() syscall not from trampoline, and expect some
+> > error code.
+> >
+> > How bad would it be to change this part to return some unique-enough
+> > error code (-ENXIO, -EDOM, whatever).
+> >
+> > Is there any reason not to do this? Security-wise it will be just fine,=
+ right?
+> >
+> > > +
+> > > +       err =3D copy_from_user(&args, (void __user *)regs->sp, sizeof=
+(args));
+> > > +       if (err)
+> > > +               goto sigill;
+> > > +
+> > > +       ip =3D regs->ip;
+> > > +
+> >
+> > [...]
