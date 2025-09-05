@@ -1,56 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B74DA306B2D;
-	Fri,  5 Sep 2025 14:59:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AF27306B1D;
+	Fri,  5 Sep 2025 16:13:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757084352; cv=none; b=ECY2ZcQ/h0HkjQgBOoQv7nUeY5ZDu+JtRzNU5RYwyM05ygCDk1he3xQniE7aod4lzqGmhXOM2P7CGvrAU8x6Z/gws9UxNal+HiEUKYnptVvdkRmUc43+zvzyndz/IWuFp7bjZGtA5TCuyUEQiR5lYUM4C+E5Pf+P7O3fkQC3Bgg=
+	t=1757088839; cv=none; b=UREPym5UfmrPbnxhjdMDC8z+Gievhje4b8hN/LkNCWd+S9/5fi3BUPOMmBljKTqyJSQkzlY0h9HwE0b77dJtqc02p95BlDbGX3P9fMtL0PKoNK8ek0N3VK542L7LkvCBiYJMVw1ILtX1g3qyPiMszrrZk4eYU67TvPwoBpL0uQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757084352; c=relaxed/simple;
-	bh=YmnJaLz0IT7+Cz6HPZlkjrX2bTrODXvTpLb48ZgINCg=;
+	s=arc-20240116; t=1757088839; c=relaxed/simple;
+	bh=YdFIG94YPJs4n/3rT3ux8EbJmDGtB2Mn/Eam+IehyD4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BxUVC3gsd+1rc2uIzuhSnKainbI/6Br4YtNsHGejTgHaMSqkoKr9PYtuj32l5YpcFU3glrVay7wxuTDVgRg6Ss9394As5AT2nSaolBKI4UlpiQ6cD5be2I/snBNoPnmJ0Fk5becEK0Bmz+UosNALSYH6idA38te8IU6dSd9x5MQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jY8Zv952; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jY8Zv952"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3DFEC4CEF1;
-	Fri,  5 Sep 2025 14:59:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757084351;
-	bh=YmnJaLz0IT7+Cz6HPZlkjrX2bTrODXvTpLb48ZgINCg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jY8Zv952wb/Q8W/J63HPd2ABUL5kpgAUMBceZRLhyiqphtw4Zln9Gu7tGjom1VB7y
-	 p6tsuy1ismksy6XT+qjc3hela7bgo5nQZ8Kok0jpidpgy8f7CJ4F+cV/avT02QKL1C
-	 zjjdLFjvtecJWI6PAJP7COsgPoCkfmxKOX+GzHNY1T7O6TdH/4RKPpMwxCOA1DbglD
-	 alclBs1bYIYPLDro3nexcG33erHQqU+Q19eYx9t6b3RzgYtlcS/luO/6xyMIUbN35E
-	 JO3FEgmQWJ+6MyamBz4mHzgz+KEIWmf/k7roe5hhQlG9VlSUHfHEGraPwoUu3WEBC9
-	 ZSiPqId5Ed5iw==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	x86@kernel.org
-Cc: Jinchao Wang <wangjinchao600@gmail.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Ian Rogers <irogers@google.com>,
+	 MIME-Version:Content-Type; b=Yc2vWmHCmr3mvK+m4MZw5NXcAhoBnvaMA6wS3RMz/6Pntn8C6v4OS93uhCdeYBFK020Ro/DyQ6Xf0fiz8LRn+gWqJN938Dq0j4/epqIBk7zMNYAWRH4ThXgHIFOoSlh4mR5d/UZyqt2o1S6KIRbBnVIt2z/ICXN7BKblnkD6HX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E4FEC4CEF1;
+	Fri,  5 Sep 2025 16:13:56 +0000 (UTC)
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: will@kernel.org,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mark.rutland@arm.com,
+	samitolvanen@google.com,
+	song@kernel.org,
+	ardb@kernel.org,
+	dylanbhatch@google.com,
+	panfan <panfan@qti.qualcomm.com>
+Cc: linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH v2 6/6] selftests: tracing: Add syntax testcase for wprobe
-Date: Fri,  5 Sep 2025 23:59:05 +0900
-Message-ID: <175708434524.64001.3071330722993500865.stgit@devnote2>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <175708427997.64001.11661389635019507808.stgit@devnote2>
-References: <175708427997.64001.11661389635019507808.stgit@devnote2>
-User-Agent: StGit/0.19
+	kdong@qti.qualcomm.com,
+	haijianc@qti.qualcomm.com
+Subject: Re: [PATCH v2] arm64: ftrace: fix unreachable PLT for ftrace_caller in init_module with CONFIG_DYNAMIC_FTRACE
+Date: Fri,  5 Sep 2025 17:13:50 +0100
+Message-ID: <175708881849.3546185.8607701618216308416.b4-ty@arm.com>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250905032236.3220885-1-panfan@qti.qualcomm.com>
+References: <20250905032236.3220885-1-panfan@qti.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -60,41 +44,25 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Thu, 04 Sep 2025 20:22:36 -0700, panfan wrote:
+> On arm64, it has been possible for a module's sections to be placed more
+> than 128M away from each other since commit:
+> 
+>   commit 3e35d303ab7d ("arm64: module: rework module VA range selection")
+> 
+> Due to this, an ftrace callsite in a module's .init.text section can be
+> out of branch range for the module's ftrace PLT entry (in the module's
+> .text section). Any attempt to enable tracing of that callsite will
+> result in a BRK being patched into the callsite, resulting in a fatal
+> exception when the callsite is later executed.
+> 
+> [...]
 
-Add "wprobe_syntax_errors.tc" testcase for testing syntax errors
-of the watch probe events.
+Applied to arm64 (for-next/fixes), thanks!
 
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- .../test.d/dynevent/wprobes_syntax_errors.tc       |   20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
- create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/wprobes_syntax_errors.tc
+[1/1] arm64: ftrace: fix unreachable PLT for ftrace_caller in init_module with CONFIG_DYNAMIC_FTRACE
+      https://git.kernel.org/arm64/c/a7ed7b9d0ebb
 
-diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/wprobes_syntax_errors.tc b/tools/testing/selftests/ftrace/test.d/dynevent/wprobes_syntax_errors.tc
-new file mode 100644
-index 000000000000..82a273d9efb4
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/dynevent/wprobes_syntax_errors.tc
-@@ -0,0 +1,20 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+# description: Watch probe event parser error log check
-+# requires: dynamic_events "w[:[<group>/][<event>]] [r|w|rw]@<addr>[:<len>]":README
-+
-+check_error() { # command-with-error-pos-by-^
-+    ftrace_errlog_check 'event_probe' "$1" 'dynamic_events'
-+}
-+
-+check_error 'w ^symbol'			# BAD_ACCESS_FMT
-+check_error 'w ^a@symbol'		# BAD_ACCESS_TYPE
-+check_error 'w w@^symbol'		# BAD_ACCESS_ADDR
-+check_error 'w w@^jiffies+offset'	# BAD_ACCESS_ADDR
-+check_error 'w w@jiffies:^100'		# BAD_ACCESS_LEN
-+check_error 'w w@jiffies ^$arg1'	# BAD_VAR
-+check_error 'w w@jiffies ^$retval'	# BAD_VAR
-+check_error 'w w@jiffies ^$stack'	# BAD_VAR
-+check_error 'w w@jiffies ^%ax'		# BAD_VAR
-+
-+exit 0
+-- 
+Catalin
 
