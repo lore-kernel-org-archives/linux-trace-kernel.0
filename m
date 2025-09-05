@@ -1,265 +1,288 @@
-Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013021.outbound.protection.outlook.com [40.107.159.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 959CB393DEA;
-	Fri,  5 Sep 2025 18:06:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.21
-ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757095603; cv=fail; b=cPfZ6HxpTBvfequ5bk+UuWTP9rogXA8r8oOqLvp3NKc1p7IwNDuCMmf0F8ivBreEdS6XhaR3u0CaG4IHFIkL6hLLkCgVnD35ZKljwpau1LSb1XUBDwGQA/JLhG6SDMSKhNUBJU7dsLK5FOtKsg+M0Ja67aloCxGp76aKu/iKtAI=
-ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757095603; c=relaxed/simple;
-	bh=1gTLAAXZnGFG7IlnCVasjTdy6d5SqkgxdcG4hXbHv9Y=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=HnPCwhsq7Il9UQTq0HKI93LJeYi2SbFpezn9CSROBiqSfGjOmr+ZWYTAG3Zo7vbS5TXr3plbQGxcLGFmqItKufcn4uYFdKjbCkIXalWr+5QFufu7SsKygG5cxjGvaOgO+vzdaviKr34PQMfgGUXMVllHj1naKzC3r7pCHc83JC8=
-ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=DxHO32Se; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=DxHO32Se; arc=fail smtp.client-ip=40.107.159.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ABEABA42;
+	Fri,  5 Sep 2025 18:44:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1757097864; cv=none; b=kQctZ2OXUSQs2cTrQ7/PO+1ZrJrQTuhMKucM15XbmPPhwSKtZuYrEe3JoeeshOPFMP+YrvhDVTqADT0or71MAd9NVTUS2bpmGm/kq9exwRu89/rJFoLnd1MTUo2GgmroYx4bOFqfzMxA1iX7u8VMg26zWzkqO6nUL1EKGwINpyI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1757097864; c=relaxed/simple;
+	bh=ZQNgERA0y4yQFBZbBynTp7jtf+lJH6n/7LZjm0mmzOQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=S8sncBoMb1zmFK4YIK5Q/N233Qnweg783S2T4qsV4XhsxnSugfxUvQpohCNR3N0213HWAairfPaczBZ1rvkNghWUFePZ00bQnrz6SlqswLHx/CI47HmvGKcdf7AqyL6MmEX/3xRkIUOJRgfA7edUVeIh59CurcpTDxBMTFJClXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FK8X93N+; arc=none smtp.client-ip=209.85.215.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="DxHO32Se";
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="DxHO32Se"
-ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
- b=RIxYmUGek/9B8osvjHKeWN+eWdoeJWir1NLRxz2vdLnSsWabbcTjfZJmRKUtpCKxHRmtOMvjnh2KkzBTyYJzTkzz6sXXq3uj59wtR3djeE3OHLo1XJMf84xwTO7Lrn9xSTgDAilfht9YKwS4yC2LpuSPDemP4dXhOZa92iYxey0UPOjGaLjsTfTX7/VPdSSBttkYmeTxxjsbxZIdZ6kdqUICQe3hGpja7NkvG4pm6oGM/dmrQipqZa7mhgwRcdIb/xE82S2sLwAyDwPhVvAyptiQPTh+8Cz2MivCzKe/wplIXpnpg/pza2nArPbp/QvPvhYikm/bwh0reaFLMr0xHw==
-ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Yl2IFBoQ+y+/6HaUGKXsVb7gS29m8F6Ju4xovBP9E0Y=;
- b=yazVcW30iTPfAaeHOJlWmW3sg0rvDsz7wVWhZmFYRSNWpYkQk5jvCbIfuFMioT7gIcglgx8k9AtDShYvhHp+ztKbMXWV+4d7JdUqHbZOQsTuapXCkm617SVeCLXZeW9j7g+TLePa4VfXv6lhWIkQt4Kt8wpbOly8ju3+5oJ+l/lnBsV/9b8VS4k6Yh1Fl/VKWa/5OzTFV2IUM1sWRTi17jeeWpwt7u3w1cHNRNnxzON69zucIJ85tdjA8T/U1O5+yqUDmNMoCGCD49qxFE+E4UXlaV/imsPVUiSbJ95CuUE9LZyEvRR4DT51d1zSAmdMyD42zq9uIlGI7CanUxi8xA==
-ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
- 4.158.2.129) smtp.rcpttodomain=redhat.com smtp.mailfrom=arm.com; dmarc=pass
- (p=none sp=none pct=100) action=none header.from=arm.com; dkim=pass
- (signature was verified) header.d=arm.com; arc=pass (0 oda=1 ltdi=1
- spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
- dmarc=[1,1,header.from=arm.com])
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Yl2IFBoQ+y+/6HaUGKXsVb7gS29m8F6Ju4xovBP9E0Y=;
- b=DxHO32SeKGwJ8iCVwuVg/kwaPfk42sxqNJ9OJDJbjvSdbS2l3X4k3HLAUNPS1A+5u6YT3jpBLMyCOrJFQsVOaB6VCyiNau/FGqqDHR7sqbrq76QHzBn3UEmGECoKYAxEQzmKyGu9UXoYl2i+mZcJGbm3BSRuzx6znWPKsAnfF+0=
-Received: from AS9PR06CA0486.eurprd06.prod.outlook.com (2603:10a6:20b:49b::11)
- by AM9PR08MB6068.eurprd08.prod.outlook.com (2603:10a6:20b:2dc::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9094.19; Fri, 5 Sep
- 2025 18:06:37 +0000
-Received: from AM4PEPF00027A6C.eurprd04.prod.outlook.com
- (2603:10a6:20b:49b:cafe::86) by AS9PR06CA0486.outlook.office365.com
- (2603:10a6:20b:49b::11) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9094.20 via Frontend Transport; Fri,
- 5 Sep 2025 18:06:37 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 4.158.2.129)
- smtp.mailfrom=arm.com; dkim=pass (signature was verified)
- header.d=arm.com;dmarc=pass action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 4.158.2.129 as permitted sender) receiver=protection.outlook.com;
- client-ip=4.158.2.129; helo=outbound-uk1.az.dlp.m.darktrace.com; pr=C
-Received: from outbound-uk1.az.dlp.m.darktrace.com (4.158.2.129) by
- AM4PEPF00027A6C.mail.protection.outlook.com (10.167.16.90) with Microsoft
- SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.9094.14
- via Frontend Transport; Fri, 5 Sep 2025 18:06:36 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=yWtLM2nZDNRKE0v7/7m1o9SoDSku0U0gNqRK0FJRV+QCZI+JJmFWZ9o/FFP1zMQNZzOIJm/9c3jsuvryIwDdqV1BFf8MMXcSL59QeIcC/u/+lvYmlP8nsmpPU21f+ABVM7HtM5WaqlSupzYYgryQ4pIaoPEpvtVI8fYtulv8MDunGU0N8K2ei6c+QUZu55IQmmyVF1LBffATeZMS2/By1K52hFJu83coaig/2rPqUU3GVq7BJO7aoyJ1x1Y81ByxBpI7fh4dnfAlEr3QIFMkA8whcO5g43ppG8YT38IYFX4oGa5RkEBymIKQas93jGgobLcFA9/gs3KSig2n4FqZDA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Yl2IFBoQ+y+/6HaUGKXsVb7gS29m8F6Ju4xovBP9E0Y=;
- b=WlsQr+oQNOBUD8gJeyhHgL2KvvPal9PahWpT8fJ6cOUj+4YBoEadvATFAf/ImzKjr9gexdQeGazKgj/mlQJFVs4O4yBSCOOFcO7Q1DOrYJ1nqcZA0nt7+EHPXL5u+BoB6gvdEgTNrUgYGQJpfUOTAMu6VtiXpZS+NzyL1rBlPStVkTCAT9AGovHuAqLduNLxU5Tzsc/vNZxWKfBV8wQEdK1ILddCuVsY+3gazgmzkPJaLRSZxKk8u7MHmx2Owb0WsHGqj3NtA5GvsCiSbfsAZXLVh6+Fbd984a1ZAa66QHdd/M8u/9GZQsGR1cjd1TBPSh27/t1fiEgNvA9lzNN5CQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Yl2IFBoQ+y+/6HaUGKXsVb7gS29m8F6Ju4xovBP9E0Y=;
- b=DxHO32SeKGwJ8iCVwuVg/kwaPfk42sxqNJ9OJDJbjvSdbS2l3X4k3HLAUNPS1A+5u6YT3jpBLMyCOrJFQsVOaB6VCyiNau/FGqqDHR7sqbrq76QHzBn3UEmGECoKYAxEQzmKyGu9UXoYl2i+mZcJGbm3BSRuzx6znWPKsAnfF+0=
-Authentication-Results-Original: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=arm.com;
-Received: from AM9PR08MB7120.eurprd08.prod.outlook.com (2603:10a6:20b:3dc::22)
- by DB9PR08MB7890.eurprd08.prod.outlook.com (2603:10a6:10:39d::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9073.27; Fri, 5 Sep
- 2025 18:06:03 +0000
-Received: from AM9PR08MB7120.eurprd08.prod.outlook.com
- ([fe80::2933:29aa:2693:d12e]) by AM9PR08MB7120.eurprd08.prod.outlook.com
- ([fe80::2933:29aa:2693:d12e%5]) with mapi id 15.20.9094.016; Fri, 5 Sep 2025
- 18:06:03 +0000
-Message-ID: <f8eab519-edc5-460b-8f7a-83bf7827f502@arm.com>
-Date: Fri, 5 Sep 2025 23:35:51 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 00/13] khugepaged: mTHP support
-To: Nico Pache <npache@redhat.com>, linux-mm@kvack.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: david@redhat.com, ziy@nvidia.com, baolin.wang@linux.alibaba.com,
- lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, ryan.roberts@arm.com,
- corbet@lwn.net, rostedt@goodmis.org, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, akpm@linux-foundation.org,
- baohua@kernel.org, willy@infradead.org, peterx@redhat.com,
- wangkefeng.wang@huawei.com, usamaarif642@gmail.com, sunnanyong@huawei.com,
- vishal.moola@gmail.com, thomas.hellstrom@linux.intel.com,
- yang@os.amperecomputing.com, kirill.shutemov@linux.intel.com,
- aarcange@redhat.com, raquini@redhat.com, anshuman.khandual@arm.com,
- catalin.marinas@arm.com, tiwai@suse.de, will@kernel.org,
- dave.hansen@linux.intel.com, jack@suse.cz, cl@gentwo.org,
- jglisse@google.com, surenb@google.com, zokeefe@google.com,
- hannes@cmpxchg.org, rientjes@google.com, mhocko@suse.com,
- rdunlap@infradead.org, hughd@google.com
-References: <20250819134205.622806-1-npache@redhat.com>
-Content-Language: en-US
-From: Dev Jain <dev.jain@arm.com>
-In-Reply-To: <20250819134205.622806-1-npache@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MA5PR01CA0004.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a01:174::6) To AM9PR08MB7120.eurprd08.prod.outlook.com
- (2603:10a6:20b:3dc::22)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FK8X93N+"
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-b4df220483fso1621657a12.2;
+        Fri, 05 Sep 2025 11:44:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1757097861; x=1757702661; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nHnUDrUWgejp0WjuEKozA0AnSyb+zQSK0hfAp9o2nHQ=;
+        b=FK8X93N+BvmfBAzp2S4w/cDKHLBxIFsZ5WZypb2tfaE2azTES1HWo4PMxNKTLenzKB
+         XMQjqUb1b6xSXm8q7253+Wbn0kj/cFWu89nc32/JxSnXWDW8/rtVeqtgJsIOzNJ18hjv
+         +UJtRjcIenJSQFGGElXfQzws0zwS9aD/b4/qx9t3/vSU9vSPuDrX/CeTHiLiDkgRi+mZ
+         Oo9dZh/0aGhxRGLaOC6sb63LZ/PYo84aXnKLmLfaKSk48KhnNhadIpvFZJJvhm+0DXiE
+         mpMTTnqG8h3WY8E829V6adgnu4O8mp4MwZlXPvpDKns80HVGH4b5gc223mnAh14GhQYz
+         VeDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757097861; x=1757702661;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nHnUDrUWgejp0WjuEKozA0AnSyb+zQSK0hfAp9o2nHQ=;
+        b=LSJpc2WUbzJ/kk404NE27appYtkbkgkc6Fnc9Hrq8taj0ZcuCHp0Raa5L9DWSCTjf8
+         6J0uTsU/GOsnVdY5kjsMPpXewZqZUo8xlTNwXJJCvWSsz+YhLpIZYsmCX6cgd8KeSb0t
+         OGV0xu3rZINRmAzpZyPg6rIyUkOL6ZnmI+iZZ3NjXcTn8CFpouYhD81bf0nsw4+cD0vl
+         olLzBU6JYqynWs7ZtmtK9xH1S3qjRLrhJialw00CrJ1NN6tiF5fDzafPdv/qJ+NpPBvs
+         q7ZlvXW36DoNXeqglzEXzbmfhSAadBevkNdzkCx2dNYKysi8sb+gu0wVoLpYn4UF50a2
+         mZrw==
+X-Forwarded-Encrypted: i=1; AJvYcCVC0GG2lLyfRugKEA3TJt6OpB0dTYdnHDLx4S8Q4DWyqoPln9ft6Z1h2OCJceCOeymjBHw=@vger.kernel.org, AJvYcCVrlISdudx+QPYWH2gqmJ/uTpK2B/+wUYDTDdGzeWOknYQLYcRVS6/WwS4+517PzuyLu7bP20HcBkMwCnNOvkOyvGFb@vger.kernel.org, AJvYcCXP683AMAXNmtb5u0fY+rzjMJlG0sCQ4A5US8VfK9hkSOFHJMfABdImYSD3sSmZX0Mw5DJ9gttyugssEY9n@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxr2A5Irr4o39G8Ygwd3+SW4TX/61tnGj2haalcbpunSGCsXZCs
+	8GxGmKrZOBxAp7CHeCWa19uTIRDYTA82h4ejoWRB2p3YdNEHNWT9TjsNVa+GYVH+HX7y7+JT5fR
+	nr0AzBDBAcQ7/1SYU85oGpRvNoHruPIU=
+X-Gm-Gg: ASbGncuih//iRMwP2FGy4Zc6Iw/lgG3hkDdq8/NAjGlSgNUic7YWwZRGyLIBJ0KLwX5
+	1FStRr+vk89SCdr/mq3aelf4gPU1q2BKcJrYTWqQuF4+xiyyYepsC5OILahiXNu18FX4HkLNbSD
+	fxjmFEz54L+rY/TiVU5PpCtv+20ULQxb9fnJj5OzwK0y+AKSVdaXuu5Sprt4f3QhrbDTmqzfmCo
+	ABnga0X4I0AiT/s3dIVs7/WJA==
+X-Google-Smtp-Source: AGHT+IE44Le1wqETGN6PLQEBfU45g/Rd2TNGJSruccfJLtkK7B0GmqnWICjAUKyeeo3IePvArhM05iwms89uJE+mRBw=
+X-Received: by 2002:a17:90b:3a50:b0:329:f110:fe9e with SMTP id
+ 98e67ed59e1d1-329f110ff48mr20394878a91.17.1757097861274; Fri, 05 Sep 2025
+ 11:44:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-TrafficTypeDiagnostic:
-	AM9PR08MB7120:EE_|DB9PR08MB7890:EE_|AM4PEPF00027A6C:EE_|AM9PR08MB6068:EE_
-X-MS-Office365-Filtering-Correlation-Id: 292548c1-d485-44e5-5e07-08ddeca6f485
-x-checkrecipientrouted: true
-NoDisclaimer: true
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam-Untrusted:
- BCL:0;ARA:13230040|366016|376014|7416014|1800799024;
-X-Microsoft-Antispam-Message-Info-Original:
- =?utf-8?B?RjFhSUxERW84aG5JeGJyUWNVV3hybHM0d3NPbnV6SVZXdEp4Q2VGTGZja3ZT?=
- =?utf-8?B?MVlDeGw1RmRyK1R0b3FKRTJGQS9pMnh2aSs3cXZYa1ZvL3M0aUlYVzhtQ1Ew?=
- =?utf-8?B?anBhazVXaDB2UExSQS94aXdybUhZbDRjRlNqMjl5Y0g4TjExU216bDdIZ09o?=
- =?utf-8?B?cXNjcmM2dWRHSFZmRE1mU00zOU40N2dFaG9yM2h2cXZGTG12Q0R5dXl0aG96?=
- =?utf-8?B?OTJqdEFDbGlVSjVSWnZQKzZVTnFuTVJFbm1CR2ZQQ1VoN0p5ZFpIZ3BtOUti?=
- =?utf-8?B?YStHOEN2elFQckhBdjV0NVRiTHJzTFVvMDRyMDFCWGtDaFVNcytrVnJuL2ls?=
- =?utf-8?B?M2l1MGRBMHlkdU9KTjFOTWErVGNtbTZkdEExdys1ay83U2NXVFUzLzlrWTdq?=
- =?utf-8?B?NEV4cVVxZ01wZWM5VEkzbURjTnE5ZlhMMDd4dS9wTVlNVXYyWnBmbDVVSVhi?=
- =?utf-8?B?bFdHRWNoZ0dVOFZlV2QrSnppT1dvaHZrZEJ4dFh6czhYMnQybGxtZUxBR1k1?=
- =?utf-8?B?VWNFdUlRNTNzRCtmTWtJa3RBdGhONDhjeWZKbWtKa29sN05nODJNNHhwOWxE?=
- =?utf-8?B?QldHNDNBbkUyQ25iR05CN3lCVVNOOHlLN2swelZENjVCb2diWVRGT0Rxb21Z?=
- =?utf-8?B?bCswbjdtTkQ3VjFwTFdRWXlTVjBhK0ZoQlRIbDBnQlU1SlgvZVFTemNtTGVx?=
- =?utf-8?B?VCtEb3laZ0YzTUhNbXVQVi92RklMWUJNeTZhenplOHpnaTV5Qk9zZk1OR0Jl?=
- =?utf-8?B?RHAraHFnaE1FbE9namJmWHY5TkxsWkd3MHE1TVlUQkhINWY4NDRNQmhXdUVT?=
- =?utf-8?B?YmhuRUJwSGN0TE5GNlAxdVNHTHo3SktaTkJseThMU3JsU0V4Mmh6OVJ5RHZZ?=
- =?utf-8?B?eG5JOTlIMkFlakxOUFNqVGQ5bUdxeWNTUWhaU0cwbUZaWUppSFFOQkNtRVdi?=
- =?utf-8?B?YWR6V1hmSlc4K0hpTHhWUEd3ajZLSk5hL2hHekdOMFpVcTdWVUJpbUZwYXIr?=
- =?utf-8?B?dlJ4ZjZqL0V6WlhjU0hlY3lmWVdzYTRtSkVFdHJuSkpYV29vRllHaDcvU0h5?=
- =?utf-8?B?cTE1UEJrNnpndDNWZHR0R0xNUUdOOXBTUmVTQVJlRnhWMkw0eHhCd1d6a2d6?=
- =?utf-8?B?YUgwMGlCT3JjMVF1aHEyWUxGOU8rYlVXb1hXdVQycXFuMGdKV01TR2JpOUVs?=
- =?utf-8?B?R1lPb0xCbG1scjUyYytudTdva0RJWmNZOExFRFhEbE56MENsYnN6MXptZ01R?=
- =?utf-8?B?RlpCeTJCOTNHZE95dWRhcWt5dUY3dnU1K2lCQ1hrZEhSRTJKYU9JbWZPQnlX?=
- =?utf-8?B?V3VyVXNldWZUNFlna2xkUGFUUG13TEtlODVTK3RCZ0dnNnliQnVwRkRaekRn?=
- =?utf-8?B?MjFDRXUrNW83M0NQZzVpdldBNUdhckk2ZzFCeUhsbDc3d3RPY3YwZVhyR0l3?=
- =?utf-8?B?MU1NNXU2SldwN1kraUt4eVF5ejJsb3VIMmxOVlU5L3VzZVlnbFllOUV6QlRJ?=
- =?utf-8?B?NkhCNVhjWUtwNDdnYzhxVmtoZHYwbHRlWnNxZWkxaFpKUWNoOFEyS2JCdFVM?=
- =?utf-8?B?ZUlFeFJEWHZzUWIvMEN6ZkJ1Rjl3MHFiNG9FcVN1cEJsdEMySElBQ0dSb1F3?=
- =?utf-8?B?UWNNVUpEU29CQVFxSUdkeDBHZU44dTFVaWRZRkVXQjdhOTFWL0NXNStQaTNL?=
- =?utf-8?B?TGtGWlJuUUFialN6UGwveThOamt0SVpVQ2tuK0VZWFdJckd1TUJvenpGQUxo?=
- =?utf-8?B?UkxJZVBYbjMvNG03akZzMUJoZ3VBRUxIS0cyVmxUekZTSHRzQVhkdEhRNUo5?=
- =?utf-8?B?eitjMHROSVJiWmg4dHpsV0VDYW83K3ZvLzJUZFpNZnZaOFk4U0w4UnlRV21x?=
- =?utf-8?B?WWNxVXo0NWNoanJVSVNZb1RMZXlML3pNWHo2bkNmVzZRTUxrRWFGK3ZTeWJn?=
- =?utf-8?Q?xLuMr3DgxMg=3D?=
-X-Forefront-Antispam-Report-Untrusted:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR08MB7120.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR08MB7890
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped:
- AM4PEPF00027A6C.eurprd04.prod.outlook.com
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id-Prvs:
-	9de2718b-79f3-4496-bb7b-08ddeca6e088
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|35042699022|1800799024|14060799003|7416014|376014|82310400026|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?VlpCSTlteWpuckpzbXRURVVDUWt1RkhkaldJWFBLTzV5ZlExZ05sM2ZBYVdB?=
- =?utf-8?B?QUFqRHpMZkdHNk9tMWwyUHB0eE1Ib3pXY0tkWUhCem0rTU0zYkIrQWdCcHhy?=
- =?utf-8?B?UkJLVEl2Ni9RbGc5eUtxK2hXSWtDTmJ3OWdQYUJ4ZTlYd09URnhZaWRkeXo3?=
- =?utf-8?B?R2I4ZlpmK2NqakkyMFc4MXpKV3hLclMwLzVtNStwUFFLL2gzWDdQY1YvaUZP?=
- =?utf-8?B?RTV0NmpLV2Q1V3VrL3YvWlViRUVJQWlrc1JkUjhwaDRXaGhKSVBxSnhQL2lX?=
- =?utf-8?B?Y2pXZHVxMXZTa25aZVp3RFJxRHBaTUFuelo3Z1BpT3M4c2Rod2R4R3hpOTFi?=
- =?utf-8?B?aWd5ZDBDWlRXbG85eFVLUi92L3BjZ2dnd0FlSTFPZ2lGbTE5R3NIM0p4N25w?=
- =?utf-8?B?L2VwL0FwV1JyZVAvL1BENW51VFNkbk0wdzRnZm5CUUY2eDhMTUlwdndZbmdH?=
- =?utf-8?B?T3A1clNrbzBva3RuVm9uY1d0cS9hUlRZdFE3WjBnaTlzeDRibnRGU3BrSWlX?=
- =?utf-8?B?dkxHZ0s5ekY5aGtFeEducGdWOGh3a2tteDRKU1FQUVhRYXBmMmNJQ2lWWkMz?=
- =?utf-8?B?a2RwMG5MKzRNbnZON2I5bWRrTDZHQmtRRllOSjNBQWxtOUlxaTVRMmlWWGNH?=
- =?utf-8?B?YXBSdWR5UTdITzZFVmJxYmlEeWxEL2tWRGtXcVQzaXk2VUtEZjdNYkJXSk9t?=
- =?utf-8?B?d0hYU3k4MTVIOFFCbWNGeUZNZGQ5UE4wd3JHT09Lbi9rS2IrTjliYW12L3pC?=
- =?utf-8?B?RCtUOGVHMXlPb3haU3BuN2lNRDdlMGErQ3FCYy9zZVZ2eUIzUXBvTUhVbEtD?=
- =?utf-8?B?Y0txVEhiRG9KVGxXRElCV0JXallMY1h2RmRZQUFNYjFjOXZxbXkyR0Q4dG02?=
- =?utf-8?B?amV2bFdlZU51ZzVEWXBTNGtBaTFCZXI3MGNVY09ZQVd3YWlBRllUSkpLbmdr?=
- =?utf-8?B?eXFDMlc2eWQxZ0FRZHhESXZESTljamlXRjJWcG00eTlYNmNrcnpSa3lOV2s4?=
- =?utf-8?B?cyt2eHp6bGhWVHNtb2xoVUw2S2twWk5Zamg1YnFjUXJ4aU1PY3A0UDRKL0Ni?=
- =?utf-8?B?djlkS05kbnlUQm9vOGhnYWwrL0o3MGNNZ21NeWZnOTNLRFVvUStzcldtZll6?=
- =?utf-8?B?bFYzYjRGWUdKVXBFVHBjN0oyeEdocWRFallDZlpQWWU4SDJmemxGQVZoNjJV?=
- =?utf-8?B?Tzg5YmZpaUVBeGlSR0pwc3hSQitydDUraDA2NGw5WVFCR1dWeGN3dm5oRzNK?=
- =?utf-8?B?alVrdTBvSTNtVmp0RjNrdXhEN1VRTjRHQ2Q4ZU83SHk4SE9aZ1pKejBUYmQ0?=
- =?utf-8?B?VGZLaGZQUit6REFXZzh2R2dnYTJhVENLOE9CRmNQUUc3R0FUcjJLeWZXU0dM?=
- =?utf-8?B?ZUZteFRneVpNVGVYUEU0dGFXdHUvQ0JKSjVEUW5GSkU3dzR5WVdPOU50RzhO?=
- =?utf-8?B?L0hoWmpwdlNvaVVsNkdxc2JtTUlyK216VlcrNTdKdkdTaUhieEdNcTROTzM0?=
- =?utf-8?B?TzJsVEI3dktUZ2dtWTlXaUorYk5LQmJza205WUNrdDhBT09LdzdjbjZVU1Br?=
- =?utf-8?B?NmFYMnpwTEU2K0N2ZVlHa2pqY0JiUmlBc1UyZVpkVjE2SE9FRkRSUkZzMW5s?=
- =?utf-8?B?bVZVYVVJTkl4VDNoajhQY0lGU3dVdmo4bHV0TlpUcmxFdnhxRUhseW9QVDJQ?=
- =?utf-8?B?TDluVUp6R2RLTU9MdmJpb0VHZVl5Y2pJWTlOeXBLMzZHZTYvcWhJRUcyclBy?=
- =?utf-8?B?MEhCd3NNQzBoc1gvYkFXUGx4NGwwN1lLSXJUbEdmL1pwME1udlNPbENjdGJ6?=
- =?utf-8?B?aVRoNnBuLzhFcERCQ29Jb1RuT0ZuR1FsSVo0d3NqVmRVekovaG91ZDBocFND?=
- =?utf-8?B?YTI4dExCa2xlaHlWb3BqQnB0ZldJaGx2Mzk3L21PZWo5NWhUcHhMbjZwZXZO?=
- =?utf-8?B?RUR6a2NZTTNhQ2RjenYyVlFmdlljdFlSc0dXa1ROUVVSRnBWcWpVZmt5TUhM?=
- =?utf-8?B?bmhYSjFzQjZ5ZjZyak1tWDdMdVpPdVkvblRiaFJaeFgySDg3QTZDdDdYTEhV?=
- =?utf-8?Q?e3SAdp?=
-X-Forefront-Antispam-Report:
-	CIP:4.158.2.129;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-uk1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(35042699022)(1800799024)(14060799003)(7416014)(376014)(82310400026)(36860700013);DIR:OUT;SFP:1101;
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Sep 2025 18:06:36.7041
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 292548c1-d485-44e5-5e07-08ddeca6f485
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[4.158.2.129];Helo=[outbound-uk1.az.dlp.m.darktrace.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	AM4PEPF00027A6C.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR08MB6068
+References: <20250720112133.244369-1-jolsa@kernel.org> <20250720112133.244369-10-jolsa@kernel.org>
+ <CAEf4BzaxtW_W1M94e3q0Qw4vM_heHqU7zFeH-fFHOQBwy5+7LQ@mail.gmail.com>
+ <aLirakTXlr4p2Z7K@krava> <20250903210112.GS4067720@noisy.programming.kicks-ass.net>
+ <CAEf4Bza-5u1j75YjvMdfgsEexv2W8nwikMaOUYpScie6ZWDOsg@mail.gmail.com>
+ <aLlGHSgTR5T17dma@krava> <CAG48ez2BBTiDGT1NNK2dfZLiYMF-C75EAcufcVKWtP+Y4v-Utw@mail.gmail.com>
+ <aLmcFp4Ya7SL6FxU@krava> <CAEf4BzbPSTEKs2ya6-d5ecR=wdsRtxRwLJO0r+oEm-_R-B2_yQ@mail.gmail.com>
+ <aLq_geGpgBKKfI7e@krava>
+In-Reply-To: <aLq_geGpgBKKfI7e@krava>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Fri, 5 Sep 2025 11:44:09 -0700
+X-Gm-Features: Ac12FXz5drT-M1y1Zd0gBL7XliEZ-Yzb35NoflktN0p-5TQ9knOeeI-BMj3-Kac
+Message-ID: <CAEf4BzaXoyUCfDgy55FCvR_qCSoyAc51mSpMphWt4p9+t_60kg@mail.gmail.com>
+Subject: Re: [PATCHv6 perf/core 09/22] uprobes/x86: Add uprobe syscall to
+ speed up uprobe
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Jann Horn <jannh@google.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Oleg Nesterov <oleg@redhat.com>, Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	x86@kernel.org, Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
+	John Fastabend <john.fastabend@gmail.com>, Hao Luo <haoluo@google.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Alan Maguire <alan.maguire@oracle.com>, David Laight <David.Laight@aculab.com>, 
+	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>, 
+	Ingo Molnar <mingo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, Sep 5, 2025 at 3:46=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> wrote=
+:
+>
+> On Thu, Sep 04, 2025 at 11:32:06AM -0700, Andrii Nakryiko wrote:
+> > On Thu, Sep 4, 2025 at 7:03=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> w=
+rote:
+> > >
+> > > On Thu, Sep 04, 2025 at 11:39:33AM +0200, Jann Horn wrote:
+> > > > On Thu, Sep 4, 2025 at 9:56=E2=80=AFAM Jiri Olsa <olsajiri@gmail.co=
+m> wrote:
+> > > > > On Wed, Sep 03, 2025 at 04:12:37PM -0700, Andrii Nakryiko wrote:
+> > > > > > On Wed, Sep 3, 2025 at 2:01=E2=80=AFPM Peter Zijlstra <peterz@i=
+nfradead.org> wrote:
+> > > > > > >
+> > > > > > > On Wed, Sep 03, 2025 at 10:56:10PM +0200, Jiri Olsa wrote:
+> > > > > > >
+> > > > > > > > > > +SYSCALL_DEFINE0(uprobe)
+> > > > > > > > > > +{
+> > > > > > > > > > +       struct pt_regs *regs =3D task_pt_regs(current);
+> > > > > > > > > > +       struct uprobe_syscall_args args;
+> > > > > > > > > > +       unsigned long ip, sp;
+> > > > > > > > > > +       int err;
+> > > > > > > > > > +
+> > > > > > > > > > +       /* Allow execution only from uprobe trampolines=
+. */
+> > > > > > > > > > +       if (!in_uprobe_trampoline(regs->ip))
+> > > > > > > > > > +               goto sigill;
+> > > > > > > > >
+> > > > > > > > > Hey Jiri,
+> > > > > > > > >
+> > > > > > > > > So I've been thinking what's the simplest and most reliab=
+le way to
+> > > > > > > > > feature-detect support for this sys_uprobe (e.g., for lib=
+bpf to know
+> > > > > > > > > whether we should attach at nop5 vs nop1), and clearly th=
+at would be
+> > > > > > > > > to try to call uprobe() syscall not from trampoline, and =
+expect some
+> > > > > > > > > error code.
+> > > > > > > > >
+> > > > > > > > > How bad would it be to change this part to return some un=
+ique-enough
+> > > > > > > > > error code (-ENXIO, -EDOM, whatever).
+> > > > > > > > >
+> > > > > > > > > Is there any reason not to do this? Security-wise it will=
+ be just fine, right?
+> > > > > > > >
+> > > > > > > > good question.. maybe :) the sys_uprobe sigill error path f=
+ollowed the
+> > > > > > > > uprobe logic when things go bad, seem like good idea to be =
+strict
+> > > > > > > >
+> > > > > > > > I understand it'd make the detection code simpler, but it c=
+ould just
+> > > > > > > > just fork and check for sigill, right?
+> > > > > > >
+> > > > > > > Can't you simply uprobe your own nop5 and read back the text =
+to see what
+> > > > > > > it turns into?
+> > > > > >
+> > > > > > Sure, but none of that is neither fast, nor cheap, nor that sim=
+ple...
+> > > > > > (and requires elevated permissions just to detect)
+> > > > > >
+> > > > > > Forking is also resource-intensive. (think from libbpf's perspe=
+ctive,
+> > > > > > it's not cool for library to fork some application just to chec=
+k such
+> > > > > > a seemingly simple thing as whether to
+> > > > > >
+> > > > > > The question is why all that? That SIGILL when !in_uprobe_tramp=
+oline()
+> > > > > > is just paranoid. I understand killing an application if it tri=
+es to
+> > > > > > screw up "protocol" in all the subsequent checks. But here it's
+> > > > > > equally secure to just fail that syscall with normal error, ins=
+tead of
+> > > > > > punishing by death.
+> > > > >
+> > > > > adding Jann to the loop, any thoughts on this ^^^ ?
+> > > >
+> > > > If I understand correctly, the main reason for the SIGILL is that i=
+f
+> > > > you hit an error in here when coming from an actual uprobe, and if =
+the
+> > > > syscall were to just return an error, then you'd end up not restori=
+ng
+> > > > registers as expected which would probably end up crashing the proc=
+ess
+> > > > in a pretty ugly way?
+> > >
+> > > for some cases yes, for the initial checks I think we could just skip
+> > > the uprobe and process would continue just fine
+> > >
+> >
+> > For non-buggy kernel implementation in_uprobe_trampoline(regs->ip)
+> > will (should) always be true when triggered for kernel-installed
+> > uprobe. So this check can fail only for cases when someone
+> > intentionally called sys_uprobe not from kernel-generated and
+> > kernel-controlled trampoline.
+> >
+> > At which point it's totally fine to just return an error and do nothing=
+.
+> >
+> > > we use sigill because the trap code paths use it for errors and to be
+> > > paranoid about the !in_uprobe_trampoline check
+> >
+> > Yeah, and it should be totally fine to keep doing that.
+> >
+> > It's just about that entry in_uprobe_trampoline() check. And that's
+> > sufficient to make all this nicely integrated with USDT use cases.
+> >
+> > (I'd say it would be nice to also amend this into original patch to
+> > avoid someone cherry picking original commit and forgetting/missing
+> > the follow up change. But that's up to Peter.)
+> >
+> > Jiri, can you please send a quick patch and see how that goes? Thanks!
+>
+> seems like it's as easy as the change below, I'll send formal patches
+> later if I don't hear otherwise.. we will also need man page change
+>
+> jirka
+>
+>
+> ---
+> diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
+> index 0a8c0a4a5423..845aeaf36b8d 100644
+> --- a/arch/x86/kernel/uprobes.c
+> +++ b/arch/x86/kernel/uprobes.c
+> @@ -810,7 +810,7 @@ SYSCALL_DEFINE0(uprobe)
+>
+>         /* Allow execution only from uprobe trampolines. */
+>         if (!in_uprobe_trampoline(regs->ip))
+> -               goto sigill;
+> +               return -ENXIO;
+>
 
-On 19/08/25 7:11 pm, Nico Pache wrote:
-> The following series provides khugepaged with the capability to collapse
-> anonymous memory regions to mTHPs.
->
-> To achieve this we generalize the khugepaged functions to no longer depend
-> on PMD_ORDER. Then during the PMD scan, we use a bitmap to track chunks of
-> pages (defined by KHUGEPAGED_MTHP_MIN_ORDER) that are utilized. After the
-> PMD scan is done, we do binary recursion on the bitmap to find the optimal
-> mTHP sizes for the PMD range. The restriction on max_ptes_none is removed
-> during the scan, to make sure we account for the whole PMD range. When no
-> mTHP size is enabled, the legacy behavior of khugepaged is maintained.
-> max_ptes_none will be scaled by the attempted collapse order to determine
-> how full a mTHP must be to be eligible for the collapse to occur. If a
-> mTHP collapse is attempted, but contains swapped out, or shared pages, we
-> don't perform the collapse. It is now also possible to collapse to mTHPs
-> without requiring the PMD THP size to be enabled.
->
-> With the default max_ptes_none=511, the code should keep its most of its
-> original behavior. When enabling multiple adjacent (m)THP sizes we need to
-> set max_ptes_none<=255. With max_ptes_none > HPAGE_PMD_NR/2 you will
-> experience collapse "creep" and constantly promote mTHPs to the next
-> available size. This is due the fact that a collapse will introduce at
-> least 2x the number of pages, and on a future scan will satisfy the
-> promotion condition once again.
->
-> Patch 1:     Refactor/rename hpage_collapse
-> Patch 2:     Some refactoring to combine madvise_collapse and khugepaged
-> Patch 3-5:   Generalize khugepaged functions for arbitrary orders
-> Patch 6-8:   The mTHP patches
-> Patch 9-10:  Allow khugepaged to operate without PMD enabled
-> Patch 11-12: Tracing/stats
-> Patch 13:    Documentation
->
->
+thanks!
 
-For the next version, it will be really great if you can mention
-the lore links referencing important ideas guiding the evolution
-of the algorithm - say, a policy decision we make. (I frequently do
-that albeit I think I over-do it :)) I am asking because I am
-completely lost on the current discussion going on around
-the max_ptes_* scaling (been busy with other stuff).
-  
+Acked-by: Andrii Nakryiko <andrii@kernel.org>
 
+>         err =3D copy_from_user(&args, (void __user *)regs->sp, sizeof(arg=
+s));
+>         if (err)
+> diff --git a/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c b/to=
+ols/testing/selftests/bpf/prog_tests/uprobe_syscall.c
+> index 5da0b49eeaca..6d75ede16e7c 100644
+> --- a/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
+> +++ b/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
+> @@ -757,34 +757,12 @@ static void test_uprobe_race(void)
+>  #define __NR_uprobe 336
+>  #endif
+>
+> -static void test_uprobe_sigill(void)
+> +static void test_uprobe_error(void)
+>  {
+> -       int status, err, pid;
+> +       long err =3D syscall(__NR_uprobe);
+>
+> -       pid =3D fork();
+> -       if (!ASSERT_GE(pid, 0, "fork"))
+> -               return;
+> -       /* child */
+> -       if (pid =3D=3D 0) {
+> -               asm volatile (
+> -                       "pushq %rax\n"
+> -                       "pushq %rcx\n"
+> -                       "pushq %r11\n"
+> -                       "movq $" __stringify(__NR_uprobe) ", %rax\n"
+> -                       "syscall\n"
+> -                       "popq %r11\n"
+> -                       "popq %rcx\n"
+> -                       "retq\n"
+> -               );
+> -               exit(0);
+> -       }
+> -
+> -       err =3D waitpid(pid, &status, 0);
+> -       ASSERT_EQ(err, pid, "waitpid");
+> -
+> -       /* verify the child got killed with SIGILL */
+> -       ASSERT_EQ(WIFSIGNALED(status), 1, "WIFSIGNALED");
+> -       ASSERT_EQ(WTERMSIG(status), SIGILL, "WTERMSIG");
+> +       ASSERT_EQ(err, -1, "error");
+> +       ASSERT_EQ(errno, ENXIO, "errno");
+>  }
+>
+>  static void __test_uprobe_syscall(void)
+> @@ -805,8 +783,8 @@ static void __test_uprobe_syscall(void)
+>                 test_uprobe_usdt();
+>         if (test__start_subtest("uprobe_race"))
+>                 test_uprobe_race();
+> -       if (test__start_subtest("uprobe_sigill"))
+> -               test_uprobe_sigill();
+> +       if (test__start_subtest("uprobe_error"))
+> +               test_uprobe_error();
+>         if (test__start_subtest("uprobe_regs_equal"))
+>                 test_uprobe_regs_equal(false);
+>         if (test__start_subtest("regs_change"))
