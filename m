@@ -1,112 +1,138 @@
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA707225761;
-	Fri,  5 Sep 2025 22:44:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E27891D416E;
+	Fri,  5 Sep 2025 23:19:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757112269; cv=none; b=XzKZ3m2JRiGAN815DNWcNAY4QJIydzD/Gyt/UcIrIH7N+n071wkGZNpjRp60yR524ptFmPntYQOw66R1rmHwpQQybxrUTspCpP5tKhkbsv4BNt09S/4M79c1qDoQt0K+XZ5BVCOkIVJuSu9MKcxc+UbTltHEHYi9h4IgVpcyF+U=
+	t=1757114346; cv=none; b=pNJ3zLuo17FTsvHsiHRYq44c2JxAkUaLkvgu0XlyhjeJZQz2Bdqp2Pn43c911kbDwPd2Joalz9vwkBM9aOsuoQW/OnqbTWM8AwwTqRNCims6EuCQnfVpsnzFVJa68Sgp1WV3mK+M43v4ORSPBcrgU10pgL/NrLUx5PhDsOJDnBU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757112269; c=relaxed/simple;
-	bh=b4E7YUBbTxDl1IdysgCGqbCapfo4w1LJG0OG5yD8YxQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=K6Wy7GZdPyu242O+lKvdzZWhif/6LUBaABc4IicjPC2kpWe1vfThJ8kpaziR2aKgbZ3gjv9KtE+HxpyM4aTcSJ7qSd00qq7n5/0Ga773K+qZh7zAEapbb3SXI85j0yEXSA4I8xKnSgD0RvnLJxpkWNc0ZaNv1aQHNpZSYVjpUHg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf14.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay09.hostedemail.com (Postfix) with ESMTP id EAC60855CF;
-	Fri,  5 Sep 2025 22:44:18 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf14.hostedemail.com (Postfix) with ESMTPA id DDBB92F;
-	Fri,  5 Sep 2025 22:44:16 +0000 (UTC)
-Date: Fri, 5 Sep 2025 18:44:56 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Wang Liang <wangliang74@huawei.com>
-Cc: <mhiramat@kernel.org>, <mathieu.desnoyers@efficios.com>,
- <tglozar@redhat.com>, <yuehaibing@huawei.com>,
- <zhangchangzhong@huawei.com>, <linux-trace-kernel@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH -next] tracing/osnoise: fix null-ptr-deref in
- bitmap_parselist
-Message-ID: <20250905184456.084d1ff3@gandalf.local.home>
-In-Reply-To: <20250905032544.231962-1-wangliang74@huawei.com>
-References: <20250905032544.231962-1-wangliang74@huawei.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1757114346; c=relaxed/simple;
+	bh=X4LWfw7XzGycXhNmKo5/oVoaXxnUZl7fO9KijW5BlEk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I6MlLAoo9qajd35sRvPBRgu6BWvIy5be492yA6IVSqym5VMx1n0ffRWqaG1+LLvRlPTcxPY36A+qM3eAU5AloMEVzL0+4KlqfIzRY45iFd5Li5MuJRIrEIHzJIfwG1fddpJ+Va7vo5235xYg8BG+4rcZSCW/gU0JFipQTKJMBvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iwhbVKKW; arc=none smtp.client-ip=209.85.215.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iwhbVKKW"
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-b475dfb4f42so1559655a12.0;
+        Fri, 05 Sep 2025 16:19:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1757114344; x=1757719144; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=eEMr+Cyrtz+r7sJA3C93LzdGGUEefqmRC6fYCHMz4Kw=;
+        b=iwhbVKKWXp+q6zP9EswIzaGc/DJuHiZ3HBSOFEFzwz39v6d8rI/TzxTzYzcGG21ftA
+         mLaCu2HvvbDU2D3Tqp4uanfAtZr+2wWt1OZGgf9SdSSSUCAEhcXI1m58EBRl8fyzQ/SA
+         Iuyj8lO0Yi6MUcmvgLL+Ry3iTLu6GG2wADYpETtWpkJxhOD6oEoI00/O+USCANxxkbfx
+         rJC8ua/OBc66xOQMVsckBRffoP9CnbHZJ9wgXU0u/XVz6is0byzVXmcehvMdDgC/VQKq
+         XlUrP+Nyvt9lAcsLANtOiKNxpowt8ufDlqT7KedBNBB7NwsmN1v4vIzFTw90pGjPFbFB
+         Wn6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757114344; x=1757719144;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eEMr+Cyrtz+r7sJA3C93LzdGGUEefqmRC6fYCHMz4Kw=;
+        b=lbN3mv0MAleYZjp79ICx8RiWTuzH/MecnkzS2HuTOTVJ/qQ6/7W12bzl5cF3wukmTT
+         GTf+8Sr2GHP2Vm56gMfRaBjO1e+yzNlFrR6ErvEfXZn6eZY0AgWe9T6KXahnJonzfQS9
+         h7oBV2eUHo7EzU8oZqfTF5VwjcyRhFS4gk/we8rjQFqfTBsP0lBqqZOk5bLt44nZ3Hud
+         4jOJ8fvcCww5Hl7QlmeJCEtAoLhMnFscQUh/wfykR8jeF3QGupPLqQDXRnzrfR6eGfUD
+         cLLy8pdFrmjp8F/ajMeDWJFXdu7FCmCtpd6/1067sNm2wET47Rs/KQzeptebDWeQakVK
+         xy1g==
+X-Forwarded-Encrypted: i=1; AJvYcCXPsU0jeRpM4vWoZZLca1r1GcoN68TGy7v5F2x6mgcYy4Y8pEM3UVZ0CUpBOKLDFNoIm/7xrbgLhLfyWRA=@vger.kernel.org, AJvYcCXdkvTHZaEQFYAVDRYIW/pjnfM5n7lvlityRa+bgfr9cdbYPcdO2QzmVVM1Zqdy2siWACl149+5j4qpRrVKVZEwbO8z@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxtauppzu2GT9tyzTZ5lcm1vt8DH7H0kVjGN7d0ZQvqF1M/1nFV
+	7wD2M5984gTrxT7r88BhDNr9evdFb18pCCHryxw1tf+dWj8Y1yKWPs1I/k4+xYT0
+X-Gm-Gg: ASbGncv1DwcukXrie2PAWuv8eVHbUybHZVN6kPKeY09gQwkRYpjCZexNccag6OO7p7F
+	toUEmNSszKq97paayFaNwsFFUvT+3hlbWTM2p83fqC7+Eb/t68UNI2nksc7w705PzFadoBy/qDb
+	vKaMScpjYQ6tFil5295r18SQkQCQjBCsNQAr9/f8riGdTcHHOiw5/0++DvX6B3+TwbbMX9GGN0S
+	cLusQfl0J1Tvi5KS18cpdhRy3/sU9U/MkrOdgMBq0zYZ9Ivi1o915O6n4NaTp5vnzXbpNlwvBsK
+	tnFHCwKG2ZXCvsoWd7yThRFerrA4lbcxTjG3zxkeTpdXvV8wmfCIGWysWhflgrJuTXKympwdf88
+	rxsbOsrpJZ1AViHc0YXhQlmtveH9ijz7Fyd+aVkEiBtzvZA==
+X-Google-Smtp-Source: AGHT+IEZunIdMChKjW5FSHSQZiCMwnCx8dI9dYrX6AmOs+tl+Q4iKJiQQ5ngXBecvWeccL+lEm2Ciw==
+X-Received: by 2002:a17:903:288:b0:246:cb10:6e2f with SMTP id d9443c01a7336-2516ec6f1c3mr5870655ad.26.1757114343999;
+        Fri, 05 Sep 2025 16:19:03 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7722a4b99fasm23306657b3a.57.2025.09.05.16.19.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Sep 2025 16:19:03 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Fri, 5 Sep 2025 16:19:02 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: Ye Weihua <yeweihua4@huawei.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] trace/fgraph: Fix the warning caused by missing
+ unregister notifier
+Message-ID: <9d6ee97b-5b0a-48a7-850d-de18d3107bce@roeck-us.net>
+References: <20250818073332.3890629-1-yeweihua4@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout04
-X-Rspamd-Queue-Id: DDBB92F
-X-Stat-Signature: sjoifturoeki6aihikoggsk8y3dmy1i3
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+SWaqcfkOCS2nIjaR4KErsCdEd0BUKlF0=
-X-HE-Tag: 1757112256-800584
-X-HE-Meta: U2FsdGVkX18i4FTtYOVj3V6ntD6buYHMMmm1w5EGeVUV8ilFeNUH4cD91YMIjgLLGmdtEh3QFPa47ad2xaJFpqrOMJOKOmJ0BPjO5iaHAKHv5O1um9Sq3i+bpx9zyLvWJTPYXkIfM2uYlqQoteurtVZkcwiMSRIo351D+3kVWotfElcvezUibVNR1Ub3p+Rv1EPmFYcec3mMRNk7u333XRwkgNPWr1dO3DQyk28jfb6N2JSD0doxzDYEOfmSR/Q3vCRceiq9WxGDUp+R260OWd5qOAsVXqiF/gzCe5wEzaFWUzz3V3QDHQIVf5BVwFFFVFNhzdC7fhMOJyTEkYK9q9nuYM+SOAj0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250818073332.3890629-1-yeweihua4@huawei.com>
 
-On Fri, 5 Sep 2025 11:25:44 +0800
-Wang Liang <wangliang74@huawei.com> wrote:
+Hi,
 
-Hi Wang,
-
-FYI, the tracincg subsystem requires capital subject:
-
-  tracing/osnoise: Fix null-ptr-deref in bitmap_parselist()
-
-And parenthesis for function names.
-
-> A crash was observed with the following output:
+On Mon, Aug 18, 2025 at 07:33:32AM +0000, Ye Weihua wrote:
+> This warning was triggered during testing on v6.16:
 > 
-> BUG: kernel NULL pointer dereference, address: 0000000000000010
-> Oops: Oops: 0000 [#1] SMP NOPTI
-> CPU: 2 UID: 0 PID: 92 Comm: osnoise_cpus Not tainted 6.17.0-rc4-00201-gd69eb204c255 #138 PREEMPT(voluntary)
-> RIP: 0010:bitmap_parselist+0x53/0x3e0
+> notifier callback ftrace_suspend_notifier_call already registered
+> WARNING: CPU: 2 PID: 86 at kernel/notifier.c:23 notifier_chain_register+0x44/0xb0
+> ...
 > Call Trace:
 >  <TASK>
->  osnoise_cpus_write+0x7a/0x190
->  vfs_write+0xf8/0x410
->  ? do_sys_openat2+0x88/0xd0
->  ksys_write+0x60/0xd0
+>  blocking_notifier_chain_register+0x34/0x60
+>  register_ftrace_graph+0x330/0x410
+>  ftrace_profile_write+0x1e9/0x340
+>  vfs_write+0xf8/0x420
+>  ? filp_flush+0x8a/0xa0
+>  ? filp_close+0x1f/0x30
+>  ? do_dup2+0xaf/0x160
+>  ksys_write+0x65/0xe0
 >  do_syscall_64+0xa4/0x260
 >  entry_SYSCALL_64_after_hwframe+0x77/0x7f
->  </TASK>
 > 
-> This issue can be reproduced by below code:
+> When writing to the function_profile_enabled interface, the notifier was
+> not unregistered after start_graph_tracing failed, causing a warning the
+> next time function_profile_enabled was written.
 > 
-> fd=open("/sys/kernel/debug/tracing/osnoise/cpus", O_WRONLY);
-> write(fd, "0-2", 0);
+> Fixed by adding unregister_pm_notifier in the exception path.
 > 
-> When user pass 'count=0' to osnoise_cpus_write(), kmalloc() will return
-> ZERO_SIZE_PTR (16) and cpulist_parse() treat it as a normal value, which
-> trigger the null pointer dereference. Add check for the parameter 'count'.
-> 
-> Fixes: 17f89102fe23 ("tracing/osnoise: Allow arbitrarily long CPU string")
-> Signed-off-by: Wang Liang <wangliang74@huawei.com>
+> Fixes: 4a2b8dda3f870 ("tracing/function-graph-tracer: fix a regression while suspend to disk")
+> Signed-off-by: Ye Weihua <yeweihua4@huawei.com>
 > ---
->  kernel/trace/trace_osnoise.c | 3 +++
->  1 file changed, 3 insertions(+)
+>  kernel/trace/fgraph.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
-> index fd259da0aa64..edf5178d0317 100644
-> --- a/kernel/trace/trace_osnoise.c
-> +++ b/kernel/trace/trace_osnoise.c
-> @@ -2322,6 +2322,9 @@ osnoise_cpus_write(struct file *filp, const char __user *ubuf, size_t count,
->  	int running, err;
->  	char *buf __free(kfree) = NULL;
->  
-> +	if (count < 1)
-> +		return -EINVAL;
+> diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
+> index c5b207992fb4..dac2d58f3949 100644
+> --- a/kernel/trace/fgraph.c
+> +++ b/kernel/trace/fgraph.c
+> @@ -1391,10 +1391,11 @@ int register_ftrace_graph(struct fgraph_ops *gops)
+>  error:
+>  	if (ret) {
+>  		ftrace_graph_active--;
+>  		gops->saved_func = NULL;
+>  		fgraph_lru_release_index(i);
+> +		unregister_pm_notifier(&ftrace_suspend_notifier);
 
-Sending a count of 0 is not invalid. This should simply return 0;
+Is this really correct ? The pm notifier is only registered if
+ftrace_graph_active==1, but not if it is larger than that.
+The above code unregisters it unconditionally, even if
+ftrace_graph_active > 1. I can see that the resulting double
+unregistration in unregister_ftrace_graph() doesn't really
+matter since the error return will be ignored, but is it really
+irrelevant for the successful registered graphs no longer get the
+benefit of the pm notifier callback ?
 
--- Steve
-
-> +
->  	buf = kmalloc(count, GFP_KERNEL);
->  	if (!buf)
->  		return -ENOMEM;
-
+Guenter
