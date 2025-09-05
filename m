@@ -1,168 +1,99 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D80F1222594;
-	Fri,  5 Sep 2025 08:38:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4710C2F744B
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  5 Sep 2025 08:53:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757061530; cv=none; b=D2ks8FjOYMp1zzo2MrggSsAJQk3fj/IJoNxOGhyo2N/v2J0wF2QFB8wSYRCfqshm6G0HduqnhE1O7xXkEYZ/NtfOYFqOjigCiS+kmb4dlO0qh6bjaI/kz/NAc4nDV5E4YVhkm/CyFl45/8FtRdPDzmyow7yVdvFgRLuwxoywIyM=
+	t=1757062415; cv=none; b=Jk8niO1XhbzHFVz2XF6u5hCpKV1z4/PvbOFOl9Oyj18xo6BFacOkiwdQ8HfcBgWlSblkCpMhDEqNtPEbJnkb42Pw2KcY32uM0nbcKtW9H07ltPuxa5Ow7xISJwRWyyFexzbwHkAysMf1hTKvPEIkgMdpQubET2dLFWTiIZgos5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757061530; c=relaxed/simple;
-	bh=jkLTVGDQyGvp2VGSJ84Q/tzQ9JUtr5HITxCZfTbHdoI=;
+	s=arc-20240116; t=1757062415; c=relaxed/simple;
+	bh=dcdyIOSIHdWK4hUmpfn/IRSAzQGUbzHF2AD9bcA3XYA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=APYDPjEUYaTnbU8RCKGXZ71gRzL3pb2dcVcsNRUxmCEyeX0pyuZndg11alMDAG1dBSLlCX4KKDUyfR8hqKEm9yabakOdTtemImzxlGtRZ1N70xDMsGZCm20mMCZ8/pH4MT3w75gTTbNLkxJba6OiCyizOjfAv8S7zIytqOrTLJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=R4b+CBZZ; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=trzBw7YMDcRFz99izMy1Yur29q0RHkaevG4xR+BYaAWAld76QpyicSbSxxTRzK/Pi5GkJLP/aqLJbwhPOLRXWpx9vMEZ8n+Dy28T8v9J1dRUHl6QdlWYQanDHgVV4K5r3MMvTvcplt+5LwjTcZF5koK0avUSNcSDlNc/5CpcdLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Nl12NNYs; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="R4b+CBZZ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=Om9p5nchqSzMFiVI8uUuwUfI4UaRwvpBhNH4IXNq5Hg=; b=R4b+CBZZ5G4FtZxCDVm1UoPQUo
-	v8kkly1N6o0/AOPJPJi0TJ5nUWajzLZOyYrf78kCoF+932Cpdv+JJ4VQxrLdu4TNxPt9IaR0w296U
-	nXMQGyQ5T2RtynQVzL2lME7/S8r1r/9ZxHG7APSRZRPYtoZWXyz/da/yg0idzNOzK5enKZkGJsAFh
-	TcdGonZKELB7XMFN94kFo6HeXtJ6qwbQG1/J/fSLpHLmOeCpAYMG8MvTfXqDWKksKjIl5e7RDrI9Y
-	NQ/a4ybnXuCNqzl+ylEf/k5CX2XyL5RnOwNFfXvKQZKBkw0kF4gfEyOCE7803jHKZEzVcWHY3Rrep
-	yYbpn5vQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uuRxp-0000000EmVO-3F3o;
-	Fri, 05 Sep 2025 08:38:34 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 552C530034B; Fri, 05 Sep 2025 10:38:33 +0200 (CEST)
-Date: Fri, 5 Sep 2025 10:38:33 +0200
-From: Peter Zijlstra <peterz@infradead.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Nl12NNYs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1757062413;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dcdyIOSIHdWK4hUmpfn/IRSAzQGUbzHF2AD9bcA3XYA=;
+	b=Nl12NNYsEAc6pe1dxfkTIbqDo2+V5Tg+Xa5htJh9HG6s1kbSuEfhn6cgGjcGRRm/xJcZbS
+	MPvlxk8xzzXglXvA8ruBRkyG5ptPIErE/jn/dxTgRdUOcc66+TH0q/cawwGgP0Xw3fgCo3
+	46CYayEMLsFTTIetnYmGSxp7i9gFG74=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-620-yoJ3J4YrM3ORNbUgzmsrFw-1; Fri,
+ 05 Sep 2025 04:53:27 -0400
+X-MC-Unique: yoJ3J4YrM3ORNbUgzmsrFw-1
+X-Mimecast-MFC-AGG-ID: yoJ3J4YrM3ORNbUgzmsrFw_1757062405
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2DA981956056;
+	Fri,  5 Sep 2025 08:53:25 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.52])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id B372418003FC;
+	Fri,  5 Sep 2025 08:53:19 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Fri,  5 Sep 2025 10:52:03 +0200 (CEST)
+Date: Fri, 5 Sep 2025 10:51:56 +0200
+From: Oleg Nesterov <oleg@redhat.com>
 To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Jiri Olsa <olsajiri@gmail.com>, Oleg Nesterov <oleg@redhat.com>,
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+	Jiri Olsa <olsajiri@gmail.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
 	Andrii Nakryiko <andrii@kernel.org>, bpf <bpf@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	Linux trace kernel <linux-trace-kernel@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>,
 	X86 ML <x86@kernel.org>, Song Liu <songliubraving@fb.com>,
 	Yonghong Song <yhs@fb.com>,
 	John Fastabend <john.fastabend@gmail.com>,
 	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	David Laight <David.Laight@aculab.com>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@t-8ch.de>,
 	Ingo Molnar <mingo@kernel.org>
-Subject: Re: nop5-optimized USDTs WAS: Re: [PATCHv6 perf/core 09/22]
- uprobes/x86: Add uprobe syscall to speed up uprobe
-Message-ID: <20250905083833.GR4068168@noisy.programming.kicks-ass.net>
-References: <CAEf4BzaxtW_W1M94e3q0Qw4vM_heHqU7zFeH-fFHOQBwy5+7LQ@mail.gmail.com>
- <aLlKJWRs5etuvFuK@krava>
- <CAEf4BzYUyOP_ziQjXshVeKmiocLjtWH+8LVHSaFNN1p=sp2rNg@mail.gmail.com>
- <20250904203511.GB4067720@noisy.programming.kicks-ass.net>
- <CAEf4BzZ6xSc7cFy7rF=G2+gPAfK+5cvZ0eDhnd5eP5m1t9EK-A@mail.gmail.com>
- <20250904205210.GQ3245006@noisy.programming.kicks-ass.net>
- <CAEf4BzY216jgetzA_TBY7_jSkcw-TGCj64s96ijoi3iAhcyHuw@mail.gmail.com>
- <20250904215617.GR3245006@noisy.programming.kicks-ass.net>
- <20250904215826.GP4068168@noisy.programming.kicks-ass.net>
- <20250905082447.GQ4068168@noisy.programming.kicks-ass.net>
+Subject: Re: [PATCH perf/core 02/11] uprobes: Skip emulate/sstep on unique
+ uprobe when ip is changed
+Message-ID: <20250905085155.GA12770@redhat.com>
+References: <20250902143504.1224726-3-jolsa@kernel.org>
+ <20250903112648.GC18799@redhat.com>
+ <aLicCjuqchpm1h5I@krava>
+ <20250904084949.GB27255@redhat.com>
+ <aLluB1Qe6Y9B8G_e@krava>
+ <20250904112317.GD27255@redhat.com>
+ <CAADnVQ+DHGc8R0Tdxf7eUj1R0TDGHXLwk5D4i_0==2_rfXGbfw@mail.gmail.com>
+ <CAEf4BzbxjRwxhJTLUgJNwR-vEbDybBpawNsRb+y+PiDsxzT=eA@mail.gmail.com>
+ <20250904185553.GB23718@redhat.com>
+ <CAEf4BzYb=mqN84a8+xc-Du1QkUBYMgwAuStYqastJJHQE4Os5g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250905082447.GQ4068168@noisy.programming.kicks-ass.net>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4BzYb=mqN84a8+xc-Du1QkUBYMgwAuStYqastJJHQE4Os5g@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On Fri, Sep 05, 2025 at 10:24:47AM +0200, Peter Zijlstra wrote:
-> +bool insn_is_nop(struct insn *insn)
-> +{
-> +	u8 rex, rex_b = 0, rex_x = 0, rex_r = 0, rex_w = 0;
-> +	u8 modrm, modrm_mod, modrm_reg, modrm_rm;
-> +	u8 sib = 0, sib_scale, sib_index, sib_base;
-> +
-> +	if (insn->rex_prefix.nbytes) {
-> +		rex = insn->rex_prefix.bytes[0];
-> +		rex_w = !!X86_REX_W(rex);
-> +		rex_r = !!X86_REX_R(rex);
-> +		rex_x = !!X86_REX_X(rex);
-> +		rex_b = !!X86_REX_B(rex);
-> +	}
-> +
-> +	if (insn->modrm.nbytes) {
-> +		modrm = insn->modrm.bytes[0];
-> +		modrm_mod = X86_MODRM_MOD(modrm);
-> +		modrm_reg = X86_MODRM_REG(modrm) + 8*rex_r;
-> +		modrm_rm  = X86_MODRM_RM(modrm)  + 8*rex_b;
-> +	}
-> +
-> +	if (insn->sib.nbytes) {
-> +		sib = insn->sib.bytes[0];
-> +		sib_scale = X86_SIB_SCALE(sib);
-> +		sib_index = X86_SIB_INDEX(sib) + 8*rex_x;
-> +		sib_base  = X86_SIB_BASE(sib)  + 8*rex_b;
-> +
-> +		modrm_rm = sib_base;
-> +	}
-> +
-> +	switch (insn->opcode.bytes[0]) {
-> +	case 0x0f: /* 2nd byte */
-> +		break;
-> +
-> +	case 0x89: /* MOV */
-> +		if (modrm_mod != 3) /* register-direct */
-> +			return false;
-> +
-> +		if (insn->x86_64 && !rex_w) /* native size */
-> +			return false;
-> +
-> +		for (int i = 0; i < insn->prefixes.nbytes; i++) {
-> +			if (insn->prefixes.bytes[i] == 0x66) /* OSP */
-> +				return false;
-> +		}
-> +
-> +		return modrm_reg == modrm_rm; /* MOV %reg, %reg */
-> +
-> +	case 0x8d: /* LEA */
-> +		if (modrm_mod == 0 || modrm_mod == 3) /* register-indirect with disp */
-> +			return false;
-> +
-> +		if (insn->x86_64 && !rex_w) /* native size */
-> +			return false;
-> +
-> +		if (insn->displacement.value != 0)
-> +			return false;
-> +
-> +		if (sib & (sib_scale != 0 || sib_index != 4)) /* (%reg, %eiz, 1) */
+On 09/04, Andrii Nakryiko wrote:
+>
+> On Thu, Sep 4, 2025 at 11:57 AM Oleg Nesterov <oleg@redhat.com> wrote:
+> >
+> > That said. If you guys don't see a problem - I won't even try to argue.
+>
+> I don't, yep.
 
-Argh, that should obviously be: &&
+OK. Then I am fine with that too.
 
-> +			return false;
-> +
-> +		for (int i = 0; i < insn->prefixes.nbytes; i++) {
-> +			if (insn->prefixes.bytes[i] != 0x3e) /* DS */
-> +				return false;
-> +		}
-> +
-> +		return modrm_reg == modrm_rm; /* LEA 0(%reg), %reg */
-> +
-> +	case 0x90: /* NOP */
-> +		for (int i = 0; i < insn->prefixes.nbytes; i++) {
-> +			if (insn->prefixes.bytes[i] == 0xf3) /* REP */
-> +				return false; /* REP NOP -- PAUSE */
-> +		}
-> +		return true;
-> +
-> +	case 0xe9: /* JMP.d32 */
-> +	case 0xeb: /* JMP.d8 */
-> +		return insn->immediate.value == 0; /* JMP +0 */
-> +
-> +	default:
-> +		return false;
-> +	}
-> +
-> +	switch (insn->opcode.bytes[1]) {
-> +	case 0x1f:
-> +		return modrm_reg == 0; /* 0f 1f /0 -- NOPL */
-> +
-> +	default:
-> +		return false;
-> +	}
-> +}
+Oleg.
+
