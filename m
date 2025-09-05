@@ -1,163 +1,155 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 988612E36F1;
-	Fri,  5 Sep 2025 20:58:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 416CF2F3C16;
+	Fri,  5 Sep 2025 21:40:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757105902; cv=none; b=XvHRJvqvutXoKgNHyZ+ZdHS/h0kZ8O+Y13CecTRT04x+3XDTnHUWuQv7uFHAD5l2kprSC+ov9nPX6+HyCum7vdrPgXGgPSEwgJK56Xy4qhfjPK5Pnif4cr6zHlaYUxH/nQ/G6RId9y/SfIqu04yMTqYdqzNioKYnJ0WFAzej5Rs=
+	t=1757108446; cv=none; b=PQeAZzE2I7PBjCH9Q6JwpC77ToGUishgy5ptyDyGFIvh0r5F0QzdAbLcrH6Ergwt8cGUIyTsHRDCOMNHEwzuweKaWzmAFvApFmoPeN3FeJdkOCJ4TPykxXpvcpNbExT4qeT5Bt7IYRekHM840ksL9UYiP2k4c2bC0bMQAyfohes=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757105902; c=relaxed/simple;
-	bh=JKhp4iQNMvplNSLCvN5SbNCBpcxiojFisJJsDiDMSK8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SqJGQtIuIjOrLa7EkztLH+e5oSZMq5GU3Ui9sH9fLddRk8uACD9PrSVXvBs1N0VIorF101hgHPqUN3DC6KSJm3314CZa7M3IT2PnpXndWmioVl5tT/ta2TECwWjmkn4aYBBrm6XeIuG5Oge+Sci2c3/k1kh6jBh1HTR3psQsp6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YxBVW1vW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1757108446; c=relaxed/simple;
+	bh=FDY959cO9wwTENDJzS2+XGN7bG6tY4hhG8E4UV3KT4U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=C/zmByHK7KIBiyjXit9cL6Gah+HX4jjeobaIglIwwFquBavUGqnSeosJIN/WZoMzkIhb7jbGSPevdSF6NopEJJ6NHln818UZYu740CuxPWQ8H81d3fM1Zbr8NDp7PFRPbldy17UsB3XD9uZd4aiMW9ujLsZ/O9XfQcytKWjoPw8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bXE8L5pH; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YxBVW1vW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E3AEC4CEF5;
-	Fri,  5 Sep 2025 20:58:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757105902;
-	bh=JKhp4iQNMvplNSLCvN5SbNCBpcxiojFisJJsDiDMSK8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=YxBVW1vWumM5gPr2bg33BaUr70e2KrfBOaxFU20CtmMlS7kxaWIuTMVyw6ZMnt5Bk
-	 icOm9PeLGdLK2SDkPxYKaMXBZYfV6Y23i0udnpdvneysBIer2KI5gWr/Mfo1XNmpsF
-	 k4wQ6zhy8t+eaNMQD2B73LrIiSvsQS0TZ9G9MvjBP6faOqFKZPyFYae2kRnmDk33Ya
-	 Iww5HG1inffS+2oJBtcq9isHAgZ7hBqD75qZ+pm0gQWXCoQjcQU581NQ66Bur5CgEH
-	 SdXeJ5OpYUgiDGjpVctfFjcRAC6FS22M+dpDJM9vahQJIwaYenPL2h3ZeBvuI6jx/t
-	 GLtsNs690QyHw==
-From: Jiri Olsa <jolsa@kernel.org>
-To: Oleg Nesterov <oleg@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Andrii Nakryiko <andrii@kernel.org>
-Cc: Alejandro Colomar <alx@kernel.org>,
-	bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	x86@kernel.org,
-	Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	David Laight <David.Laight@ACULAB.COM>,
-	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas@t-8ch.de>,
-	Ingo Molnar <mingo@kernel.org>,
-	Jann Horn <jannh@google.com>
-Subject: [PATCH 3/3] man2: Add uprobe syscall page
-Date: Fri,  5 Sep 2025 22:57:31 +0200
-Message-ID: <20250905205731.1961288-4-jolsa@kernel.org>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20250905205731.1961288-1-jolsa@kernel.org>
-References: <20250905205731.1961288-1-jolsa@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bXE8L5pH"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-61d7b2ec241so3079977a12.0;
+        Fri, 05 Sep 2025 14:40:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1757108442; x=1757713242; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JjQFGEB6YpkPaQvXYN6qaYlcf1r3Th/NOUzoCak8BuA=;
+        b=bXE8L5pHRd6u+fsIX6U2kTDfQw5nxX/x+NCwEplzrWYDUbiTSAOuYyhrLgLulPvdE9
+         zGvx/ADrmyYzyXo00Ga2SMD7Hw2ASRGDS6zAgZJjj3MqqUfgNOUI/+wGKpdHFEFtzexp
+         b3Ai70nhiluK5rKBZGM85Z+Ruz5RZ1vwpRWk/Zg2i/ArSRdlORLGawfot4bix2vol7Br
+         2chhgmWR2NkPhDan/qjekTjQvWMe6wuIoF7VYJwmEWcuGZpPPtvM0i0fIOqTTix7Culb
+         5V4E/bFj3vmsK3u40JJoep3fyVkMoVt0+jG2STPaJkLSbBt7206jkSNj9Q1aqAbIsM23
+         dTng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757108442; x=1757713242;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JjQFGEB6YpkPaQvXYN6qaYlcf1r3Th/NOUzoCak8BuA=;
+        b=PDDFkfPilFJOaJNAt8wGnjuAQXTegEwe23VdhB1mx+NQyE0WI/Ct3l9U8uX+T8mlIW
+         aqsiNkYuUylAfzmaocSxyJZkNz5eSf1OblwDtSdS8viFUr33shxof2Unm1dxPGkaeo1D
+         jjorU+zGGZ/u/tV6V7rWJx3wEl2AWv9C1z0WO1+vZYclrylyEpbIBA6CH7JUpht3jnNW
+         0AXfOq9jhFOaTXAy2tj6NcVyerMDljIVIGaKX604e4T2gRdcZyxVi/gfUX0QglDRLk0R
+         bp7YNL8LdWnd3c6o3RkEp+NjjHf/9YLMwYllfgsjIYO1ZrRXSXZAhc79xD7dVYwqonEF
+         idjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUSOMP1Gj1OheQLCSH8kmOeYjdfOGAIX1r+QQcVhRi5+Qlt1tKbbQDNoVzgJmU4o3yv7+N3tg8b0G+1QNW5j/QlxI2O@vger.kernel.org, AJvYcCVemXP9HK/j1LH16JM12naTllHfOo2jamP35AblTGHD9Ph2LJwIm0Uvwf0DsDXcGFYhyZrXHTGUQLeoFKvN@vger.kernel.org, AJvYcCVpnCIvkvF0WqH37ad2qJ4reNoTRX4u5DJpiXaFTq1CLmI6dI3NyyjWJ3bOP+nyNSA2RuI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwRy5bSUbf32DgPNKOXy4ck1nZKxUVZn6cnCUgwkROmit+V0MA3
+	xgsarobAFFhjsNQKkAA5XEhlKuoxHn1zHgxDtiTNU/CZJ1zVSsilb68/XRoOa5SKYU7+De3kjDw
+	r3zDLf+fSrfiuvVFDom1w8v4NwKnjsBE=
+X-Gm-Gg: ASbGnct+Zuh9mJknjxjuqsw0iGkO7CCiiYCEHSfZGnlvZLocwAF3Zt4/F5/rBfPVKK7
+	dM+cbP9RfVV+dzf91AXeeDrgYMevkR916BzU2WM0+wTVP4Di8FODvtZHF3JRK/JFFfs3BR4rWuM
+	mAKVcLxaRZyRDspnCf6l/Raye9kx3X0jBnTOMpXJ7FL3jWf9YITw5iMxPLd3Q6hCEk22PPjzZ4C
+	NQCQh41bdOkjE9yzkyFNOor2Q==
+X-Google-Smtp-Source: AGHT+IFZfG8mZqRvQ/99I3k+YKlP8EPpxCHHBeoBZvG3bPIr/jsBy+2GreK7+mcbhzjpnK50IxYgO09KjN/nC7yPV4s=
+X-Received: by 2002:a17:907:94c1:b0:ae0:d1f3:f7f4 with SMTP id
+ a640c23a62f3a-b04b13cd58bmr25664466b.13.1757108442262; Fri, 05 Sep 2025
+ 14:40:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250905205731.1961288-1-jolsa@kernel.org> <20250905205731.1961288-3-jolsa@kernel.org>
+In-Reply-To: <20250905205731.1961288-3-jolsa@kernel.org>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Fri, 5 Sep 2025 14:40:26 -0700
+X-Gm-Features: Ac12FXwbNGJ3otrnN6W2Jgm_ZRnGxpsFDGJFYKQUsNpWsEdtmyGy6UEoMuQMrfI
+Message-ID: <CAEf4BzYnr1UEk-6b73Won4HqcQ_c3Tg+zsHaBXM1P4n3LjKzAQ@mail.gmail.com>
+Subject: Re: [PATCH perf/core 2/3] selftests/bpf: Fix uprobe_sigill test for
+ uprobe syscall error value
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, x86@kernel.org, 
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
+	John Fastabend <john.fastabend@gmail.com>, Hao Luo <haoluo@google.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Alan Maguire <alan.maguire@oracle.com>, David Laight <David.Laight@aculab.com>, 
+	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>, 
+	Ingo Molnar <mingo@kernel.org>, Jann Horn <jannh@google.com>, Alejandro Colomar <alx@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Changing uretprobe syscall man page to be shared with new
-uprobe syscall man page.
+On Fri, Sep 5, 2025 at 1:58=E2=80=AFPM Jiri Olsa <jolsa@kernel.org> wrote:
+>
+> The uprobe syscall now returns -ENXIO errno when called outside
+> kernel trampoline, fixing the current sigill test to reflect that
+> and renaming it to uprobe_error.
+>
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+>  .../selftests/bpf/prog_tests/uprobe_syscall.c | 34 ++++---------------
+>  1 file changed, 6 insertions(+), 28 deletions(-)
+>
 
-Cc: Alejandro Colomar <alx@kernel.org>
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- man/man2/uprobe.2    |  1 +
- man/man2/uretprobe.2 | 42 +++++++++++++++++++++++++++++-------------
- 2 files changed, 30 insertions(+), 13 deletions(-)
- create mode 100644 man/man2/uprobe.2
+Acked-by: Andrii Nakryiko <andrii@kernel.org>
 
-diff --git a/man/man2/uprobe.2 b/man/man2/uprobe.2
-new file mode 100644
-index 000000000000..ea5ccf901591
---- /dev/null
-+++ b/man/man2/uprobe.2
-@@ -0,0 +1 @@
-+.so man2/uretprobe.2
-diff --git a/man/man2/uretprobe.2 b/man/man2/uretprobe.2
-index c81d4c5313a3..a1e4a1fa56f4 100644
---- a/man/man2/uretprobe.2
-+++ b/man/man2/uretprobe.2
-@@ -2,46 +2,62 @@
- .\"
- .\" SPDX-License-Identifier: Linux-man-pages-copyleft
- .\"
--.TH uretprobe 2 (date) "Linux man-pages (unreleased)"
-+.TH uprobe 2 (date) "Linux man-pages (unreleased)"
- .SH NAME
-+uprobe,
- uretprobe
- \-
--execute pending return uprobes
-+execute pending entry or return uprobes
- .SH SYNOPSIS
- .nf
-+.B int uprobe(void);
- .B int uretprobe(void);
- .fi
- .SH DESCRIPTION
-+.BR uprobe ()
-+is an alternative to breakpoint instructions
-+for triggering entry uprobe consumers.
-+.P
- .BR uretprobe ()
- is an alternative to breakpoint instructions
- for triggering return uprobe consumers.
- .P
- Calls to
--.BR uretprobe ()
-+these system calls
- are only made from the user-space trampoline provided by the kernel.
- Calls from any other place result in a
--.BR SIGILL .
-+.BR SIGILL
-+or error value (see below).
-+
- .SH RETURN VALUE
- The return value is architecture-specific.
- .SH ERRORS
- .TP
- .B SIGILL
--.BR uretprobe ()
--was called by a user-space program.
-+uretprobe() was called by a user-space program.
-+.TP
-+.B ENXIO
-+uprobe() was called by a user-space program.
- .SH VERSIONS
- The behavior varies across systems.
- .SH STANDARDS
- None.
- .SH HISTORY
-+.TP
-+.BR uprobe ()
-+TBD
-+.TP
-+.BR uretprobe ()
- Linux 6.11.
- .P
--.BR uretprobe ()
--was initially introduced for the x86_64 architecture
--where it was shown to be faster than breakpoint traps.
--It might be extended to other architectures.
-+These system calls
-+were initially introduced for the x86_64 architecture
-+where they were shown to be faster than breakpoint traps.
-+They might be extended to other architectures.
- .SH CAVEATS
--.BR uretprobe ()
--exists only to allow the invocation of return uprobe consumers.
--It should
-+These system calls
-+exist only to allow the invocation of
-+entry or return uprobe consumers.
-+They should
- .B never
- be called directly.
--- 
-2.51.0
-
+> diff --git a/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c b/to=
+ols/testing/selftests/bpf/prog_tests/uprobe_syscall.c
+> index 5da0b49eeaca..6d75ede16e7c 100644
+> --- a/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
+> +++ b/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
+> @@ -757,34 +757,12 @@ static void test_uprobe_race(void)
+>  #define __NR_uprobe 336
+>  #endif
+>
+> -static void test_uprobe_sigill(void)
+> +static void test_uprobe_error(void)
+>  {
+> -       int status, err, pid;
+> +       long err =3D syscall(__NR_uprobe);
+>
+> -       pid =3D fork();
+> -       if (!ASSERT_GE(pid, 0, "fork"))
+> -               return;
+> -       /* child */
+> -       if (pid =3D=3D 0) {
+> -               asm volatile (
+> -                       "pushq %rax\n"
+> -                       "pushq %rcx\n"
+> -                       "pushq %r11\n"
+> -                       "movq $" __stringify(__NR_uprobe) ", %rax\n"
+> -                       "syscall\n"
+> -                       "popq %r11\n"
+> -                       "popq %rcx\n"
+> -                       "retq\n"
+> -               );
+> -               exit(0);
+> -       }
+> -
+> -       err =3D waitpid(pid, &status, 0);
+> -       ASSERT_EQ(err, pid, "waitpid");
+> -
+> -       /* verify the child got killed with SIGILL */
+> -       ASSERT_EQ(WIFSIGNALED(status), 1, "WIFSIGNALED");
+> -       ASSERT_EQ(WTERMSIG(status), SIGILL, "WTERMSIG");
+> +       ASSERT_EQ(err, -1, "error");
+> +       ASSERT_EQ(errno, ENXIO, "errno");
+>  }
+>
+>  static void __test_uprobe_syscall(void)
+> @@ -805,8 +783,8 @@ static void __test_uprobe_syscall(void)
+>                 test_uprobe_usdt();
+>         if (test__start_subtest("uprobe_race"))
+>                 test_uprobe_race();
+> -       if (test__start_subtest("uprobe_sigill"))
+> -               test_uprobe_sigill();
+> +       if (test__start_subtest("uprobe_error"))
+> +               test_uprobe_error();
+>         if (test__start_subtest("uprobe_regs_equal"))
+>                 test_uprobe_regs_equal(false);
+>         if (test__start_subtest("regs_change"))
+> --
+> 2.51.0
+>
