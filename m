@@ -1,130 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8D5526FA77;
-	Sat,  6 Sep 2025 14:37:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A9A722AE7F;
+	Sat,  6 Sep 2025 16:09:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757169443; cv=none; b=bp0aMyiIll3k2FxGQg4O0uuOiWz87qORMFIzaFq3x85TsJBQ5r2b7ITIsHlAhz/Is/c1tGhZxgxC1V/V9nKtn+luXe4DWTiBgnpTkSsvZq0YD6ULC1u2uI2dH4n2E0zx6LQn6+X/6eeML2TU4OHMPOgIO57VpjIZc026T3C244w=
+	t=1757174973; cv=none; b=PMTVXbUjgb4ZpRji3urvWzXxpGPRY6vAyQRX0XzijDWs69mPn4JnZWzmB7GCPknX3lH/0MHuK23Fl464SP+n7H9fpY72MBzCBahd7a7li89uhoAk6p0iJyd0SfP3vlcpbVU0wHC1DA3Lvy7mG2A2o5e0FXYmgDELbG5FrWvvg2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757169443; c=relaxed/simple;
-	bh=e45GnWdTbpGR5XbbMlWgx0cpqS/IXSsc+dt4fnRje1I=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=p8VHdBxlq7zSanQ0APeYgcodLTTSPLpxdV6x4Pz2PpV612rPCm9BSpldg6eWqwm3E+aMULru54icNvGwDAWeGjuE0CT/WFGLUx6dllii0xEffz9uSp8N4CEKYU+HkzYx3rstzDgtt0B3f3b9VtHxnx1e8L+dcY5x0i8S39gQyx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oD09KgU5; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oD09KgU5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2CB8C4CEF9;
-	Sat,  6 Sep 2025 14:37:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757169443;
-	bh=e45GnWdTbpGR5XbbMlWgx0cpqS/IXSsc+dt4fnRje1I=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=oD09KgU5b1aNTAyh3zXohPA9+D+bEAdiiDFpdtUF75+tApgwdwUlwlGFmlvTZ8ZH1
-	 IO+4mjFdpysiPLG/mG5+TcHV4DohKihMDmIy7v6LihFW02+rvX+fYZJXdEF1UGA+IG
-	 mL8X//U20AcW4PM/rHHgGSyMzPNYOahJnRvm/lxu4S/J0BpPIpqgtBtTdC99ufdhAD
-	 p8DPKdDD0sxjXF5LOfDqoFfkPP0OQsJD/7FYwcuy59Yk1UT9sBMUZlbUi731Fvy+4M
-	 2KTQtTSyNhU4FtC4J13VzyZy5gtzywkVqETICLlWe1hQSx1+k+oxeg1whAKOyuIyyt
-	 v5ABlhpW+GB4Q==
-From: "Mario Limonciello (AMD)" <superm1@kernel.org>
-To: "Rafael J . Wysocki" <rafael@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>
-Cc: Pavel Machek <pavel@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	"James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
-	"Martin K . Petersen" <martin.petersen@oracle.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	linux-pm@vger.kernel.org (open list:HIBERNATION (aka Software Suspend, aka swsusp)),
-	amd-gfx@lists.freedesktop.org (open list:RADEON and AMDGPU DRM DRIVERS),
-	dri-devel@lists.freedesktop.org (open list:DRM DRIVERS),
-	linux-pci@vger.kernel.org (open list:PCI SUBSYSTEM),
-	linux-scsi@vger.kernel.org (open list:SCSI SUBSYSTEM),
-	linux-usb@vger.kernel.org (open list:USB SUBSYSTEM),
-	linux-trace-kernel@vger.kernel.org (open list:TRACING),
-	AceLan Kao <acelan.kao@canonical.com>,
-	Kai-Heng Feng <kaihengf@nvidia.com>,
-	Mark Pearson <mpearson-lenovo@squebb.ca>,
-	=?UTF-8?q?Merthan=20Karaka=C5=9F?= <m3rthn.k@gmail.com>,
-	Eric Naim <dnaim@cachyos.org>,
-	"Mario Limonciello (AMD)" <superm1@kernel.org>,
-	Denis Benato <benato.denis96@gmail.com>
-Subject: [PATCH v6 RESEND 11/11] PM: Use hibernate flows for system power off
-Date: Sat,  6 Sep 2025 09:36:42 -0500
-Message-ID: <20250906143642.2590808-12-superm1@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250906143642.2590808-1-superm1@kernel.org>
-References: <20250906143642.2590808-1-superm1@kernel.org>
+	s=arc-20240116; t=1757174973; c=relaxed/simple;
+	bh=ZVMnFSiSfId55V+CDp45AtQsnYf+aWQvUGnkZ+tpdUA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lq5lDzp9VHIEyP3YH98eZzlnqF6cKcWinNTtzamVgpEyvGchWUvDJmmi28I7qRZN0sxLIe7V/aRb8zMDSzMNn2ZhrRQGvSWbF6aZh1KEb/B9IXI4Pc7n6nZbsJj83puYj+z63TTGpwOxbNhModXfBIflVL+S5GMOT4u4SmVB+hE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf13.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay01.hostedemail.com (Postfix) with ESMTP id CCFA81DEB15;
+	Sat,  6 Sep 2025 16:09:28 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf13.hostedemail.com (Postfix) with ESMTPA id E16B92000D;
+	Sat,  6 Sep 2025 16:09:26 +0000 (UTC)
+Date: Sat, 6 Sep 2025 12:10:07 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Wang Liang <wangliang74@huawei.com>
+Cc: <mhiramat@kernel.org>, <mathieu.desnoyers@efficios.com>,
+ <tglozar@redhat.com>, <yuehaibing@huawei.com>,
+ <zhangchangzhong@huawei.com>, <linux-trace-kernel@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] tracing/osnoise: Fix null-ptr-deref in
+ bitmap_parselist()
+Message-ID: <20250906121007.5ceb3436@gandalf.local.home>
+In-Reply-To: <20250906035610.3880282-1-wangliang74@huawei.com>
+References: <20250906035610.3880282-1-wangliang74@huawei.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: 1wkxw71sn6a7x1od7ec9zyyxscasf8nt
+X-Rspamd-Server: rspamout01
+X-Rspamd-Queue-Id: E16B92000D
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18s3X8X1w8plByCinU/NOmjwVSy8nGncNk=
+X-HE-Tag: 1757174966-487100
+X-HE-Meta: U2FsdGVkX1/k2vEet8ITzYIMZSz2CbnnnDo5IHtKNKv+JJ+vbWfowAYjjsVjkcE5SqQaTUNzZ28wsPtZtOTc6eZzIiP6ElQauKGb08HCYcsKs47i723FVegAE9uRM1JJWdAH/PGzAeOvc9to/y/tYsSaD5MVVrNQPDCvelUW4dEkPYWS3fpSDsagAayH0aylUigDMXYoSvO5EB1v0UHoAFO6Fqxy+f8VYR4AByzOLGllECeZxwmro4HoLxwzwXd7cEv8p7KIYfaBpiKtGxDiyxxMi00jG7qh1ZmfrLFOP8ZmiRJ3/rFjWLV2DkPWCQluLmOA/5vt13czUr+TxqntmaJ0xaE3drigyIcIAldv1a1o8hOwwLTgoA==
 
-When the system is powered off the kernel will call device_shutdown()
-which will issue callbacks into PCI core to wake up a device and call
-it's shutdown() callback.  This will leave devices in ACPI D0 which can
-cause some devices to misbehave with spurious wakeups and also leave some
-devices on which will consume power needlessly.
+On Sat, 6 Sep 2025 11:56:10 +0800
+Wang Liang <wangliang74@huawei.com> wrote:
 
-The issue won't happen if the device is in D3 before system shutdown, so
-putting device to low power state before shutdown solves the issue.
+> A crash was observed with the following output:
+> 
+> BUG: kernel NULL pointer dereference, address: 0000000000000010
+> Oops: Oops: 0000 [#1] SMP NOPTI
+> CPU: 2 UID: 0 PID: 92 Comm: osnoise_cpus Not tainted 6.17.0-rc4-00201-gd69eb204c255 #138 PREEMPT(voluntary)
+> RIP: 0010:bitmap_parselist+0x53/0x3e0
+> Call Trace:
+>  <TASK>
+>  osnoise_cpus_write+0x7a/0x190
+>  vfs_write+0xf8/0x410
+>  ? do_sys_openat2+0x88/0xd0
+>  ksys_write+0x60/0xd0
+>  do_syscall_64+0xa4/0x260
+>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+>  </TASK>
+> 
+> This issue can be reproduced by below code:
+> 
+> fd=open("/sys/kernel/debug/tracing/osnoise/cpus", O_WRONLY);
+> write(fd, "0-2", 0);
+> 
+> When user pass 'count=0' to osnoise_cpus_write(), kmalloc() will return
+> ZERO_SIZE_PTR (16) and cpulist_parse() treat it as a normal value, which
+> trigger the null pointer dereference. Add check for the parameter 'count'.
+> 
+> Link: https://lore.kernel.org/all/20250905032544.231962-1-wangliang74@huawei.com/
+> Fixes: 17f89102fe23 ("tracing/osnoise: Allow arbitrarily long CPU string")
+> Signed-off-by: Wang Liang <wangliang74@huawei.com>
+> ---
+> v2: return 0 when sending a count of 0.
 
-ACPI Spec 6.5, "7.4.2.5 System \_S4 State" says "Devices states are
-compatible with the current Power Resource states. In other words, all
-devices are in the D3 state when the system state is S4."
+FYI, I usually have this say:
 
-The following "7.4.2.6 System \_S5 State (Soft Off)" states "The S5
-state is similar to the S4 state except that OSPM does not save any
-context." so it's safe to assume devices should be at D3 for S5.
+Changes since v2: https://lore.kernel.org/all/20250905032544.231962-1-wangliang74@huawei.com/
 
-To accomplish this, use the PMSG_POWEROFF event to call all the device
-hibernate callbacks when the kernel is compiled with hibernate support.
-If compiled without hibernate support or hibernate fails fall back into
-the previous shutdown flow.
+and list the rest.
 
-Cc: AceLan Kao <acelan.kao@canonical.com>
-Cc: Kai-Heng Feng <kaihengf@nvidia.com>
-Cc: Mark Pearson <mpearson-lenovo@squebb.ca>
-Cc: Merthan Karakaş <m3rthn.k@gmail.com>
-Tested-by: Eric Naim <dnaim@cachyos.org>
-Tested-by: Denis Benato <benato.denis96@gmail.com>
-Link: https://lore.kernel.org/linux-pci/20231213182656.6165-1-mario.limonciello@amd.com/
-Link: https://lore.kernel.org/linux-pci/20250506041934.1409302-1-superm1@kernel.org/
-Signed-off-by: Mario Limonciello (AMD) <superm1@kernel.org>
----
- kernel/reboot.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+I know Linus doesn't like links to the patch, but I find them useful, and
+even more useful when the patch has a link to previous versions. ;-)
 
-diff --git a/kernel/reboot.c b/kernel/reboot.c
-index ec087827c85cd..c8835f8e5f271 100644
---- a/kernel/reboot.c
-+++ b/kernel/reboot.c
-@@ -13,6 +13,7 @@
- #include <linux/kexec.h>
- #include <linux/kmod.h>
- #include <linux/kmsg_dump.h>
-+#include <linux/pm.h>
- #include <linux/reboot.h>
- #include <linux/suspend.h>
- #include <linux/syscalls.h>
-@@ -305,6 +306,11 @@ static void kernel_shutdown_prepare(enum system_states state)
- 		(state == SYSTEM_HALT) ? SYS_HALT : SYS_POWER_OFF, NULL);
- 	system_state = state;
- 	usermodehelper_disable();
-+#ifdef CONFIG_HIBERNATE_CALLBACKS
-+	if (!dpm_suspend_start(PMSG_POWEROFF) && !dpm_suspend_end(PMSG_POWEROFF))
-+		return;
-+	pr_emerg("Failed to power off devices, using shutdown instead.\n");
-+#endif
- 	device_shutdown();
- }
- /**
--- 
-2.43.0
+I see that you did add it to the "link" above, which is probably fine too.
+
+-- Steve
+
+> ---
+>  kernel/trace/trace_osnoise.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
+> index fd259da0aa64..337bc0eb5d71 100644
+> --- a/kernel/trace/trace_osnoise.c
+> +++ b/kernel/trace/trace_osnoise.c
+> @@ -2322,6 +2322,9 @@ osnoise_cpus_write(struct file *filp, const char
+> __user *ubuf, size_t count, int running, err;
+>  	char *buf __free(kfree) = NULL;
+>  
+> +	if (count < 1)
+> +		return 0;
+> +
+>  	buf = kmalloc(count, GFP_KERNEL);
+>  	if (!buf)
+>  		return -ENOMEM;
 
