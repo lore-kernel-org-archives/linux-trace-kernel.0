@@ -1,116 +1,141 @@
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A9A722AE7F;
-	Sat,  6 Sep 2025 16:09:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BDD554279
+	for <linux-trace-kernel@vger.kernel.org>; Sun,  7 Sep 2025 02:23:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757174973; cv=none; b=PMTVXbUjgb4ZpRji3urvWzXxpGPRY6vAyQRX0XzijDWs69mPn4JnZWzmB7GCPknX3lH/0MHuK23Fl464SP+n7H9fpY72MBzCBahd7a7li89uhoAk6p0iJyd0SfP3vlcpbVU0wHC1DA3Lvy7mG2A2o5e0FXYmgDELbG5FrWvvg2w=
+	t=1757211828; cv=none; b=TvqwQSgjfu0tPtHpoyi9/vfMOR1ZAhly0kbJnvMQoJIii1cZF4pP9qrCosb3SrsbU1EJyejfgWiUbuXN/iafeoZG8RdO0eX6AKXg3H/sKxazFw7GLD46dl3NrF6+FrZ+JpNYtDYCFs47mqZ+fZ75X07wLBXKMKQJorYS6y5P2+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757174973; c=relaxed/simple;
-	bh=ZVMnFSiSfId55V+CDp45AtQsnYf+aWQvUGnkZ+tpdUA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lq5lDzp9VHIEyP3YH98eZzlnqF6cKcWinNTtzamVgpEyvGchWUvDJmmi28I7qRZN0sxLIe7V/aRb8zMDSzMNn2ZhrRQGvSWbF6aZh1KEb/B9IXI4Pc7n6nZbsJj83puYj+z63TTGpwOxbNhModXfBIflVL+S5GMOT4u4SmVB+hE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf13.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay01.hostedemail.com (Postfix) with ESMTP id CCFA81DEB15;
-	Sat,  6 Sep 2025 16:09:28 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf13.hostedemail.com (Postfix) with ESMTPA id E16B92000D;
-	Sat,  6 Sep 2025 16:09:26 +0000 (UTC)
-Date: Sat, 6 Sep 2025 12:10:07 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Wang Liang <wangliang74@huawei.com>
-Cc: <mhiramat@kernel.org>, <mathieu.desnoyers@efficios.com>,
- <tglozar@redhat.com>, <yuehaibing@huawei.com>,
- <zhangchangzhong@huawei.com>, <linux-trace-kernel@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] tracing/osnoise: Fix null-ptr-deref in
- bitmap_parselist()
-Message-ID: <20250906121007.5ceb3436@gandalf.local.home>
-In-Reply-To: <20250906035610.3880282-1-wangliang74@huawei.com>
-References: <20250906035610.3880282-1-wangliang74@huawei.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1757211828; c=relaxed/simple;
+	bh=fU2/QRBNloyWHPZwDtUtgN8BMiLrbJ7ALDq0Kza2HSI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:content-type; b=sSWKga8nDLdIBWFJHg8eN5sFprHlmSae2i0Oq8woZur87+SgGnNj+QqRxRVWqMO/BfWJJaOCCXWKEVe0hbx8UqfUxwoNO0cn2uBvoNcQ+oR409PqVkzdOKiUL+8ZH6wCHBw5NC7CuPG/8JIGdDnRxRGDAMIWdExoK+OXXp3wF9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HVbC/kIS; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HVbC/kIS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1757211824;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=eKta5jItXUnhLWu5FlkjEeVXw/iB1AnfiY60QC5jWSY=;
+	b=HVbC/kIS/rSLZH0FVCWtifV2si6hKp2GV+e31vEEFcChgECj5JmHzt/zmmigijKu+20Mfj
+	L4MYI/EFV+nbd0l3lkQFHSBL1vfeUA2d7CurechHaLSCOoxd1tl5GcfXOectDkjsius3kA
+	UxelJVsEw0P7r3wX2PD6X1xZSy50kDE=
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
+ [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-484-OjCn0d4DMSyV_sAqbOcl5A-1; Sat, 06 Sep 2025 22:23:43 -0400
+X-MC-Unique: OjCn0d4DMSyV_sAqbOcl5A-1
+X-Mimecast-MFC-AGG-ID: OjCn0d4DMSyV_sAqbOcl5A_1757211823
+Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-4b5f9673e56so26549041cf.3
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 06 Sep 2025 19:23:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757211823; x=1757816623;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=eKta5jItXUnhLWu5FlkjEeVXw/iB1AnfiY60QC5jWSY=;
+        b=JuWJ6D4ZnXPlhvyY1S9ThUlHZdO4H8HKJDATHgE8xh/9zwvU/gliB0Mv/OTTWm6/CZ
+         B+oaEnjbwYnTSbfzl389Of6HvbwZ0ye5bf4XHKxvwV/G/sQ3ezBgm6jS/AgAVuAsdduf
+         zgb/+i9Bvire3RwbV2VyxiWJ8zGl76lu0KIKTTKlam1p6AL3xA3tRL3vytWUvB6omgXV
+         GHZrRLrWEEc1zX57v9E0NGb+6vngfzfXyzVbGbMdubeuHfU2VJn0DB9dMLvnMRrwzzhl
+         svb8YlQnG+E1chfbi5oAW52PR61U7rYDvdHehZ++1KoUPT/0JGTfOLXS+tcsFOASRRkA
+         zEwg==
+X-Gm-Message-State: AOJu0YzsFQ8NwkbNBfDN++nwGLja9DViowQtxs8eYLlF0Eb2+0I5ngiy
+	0fNE+wwnlzFRUI2sbIT5ayzVZgphu3VxGJokfA8QM7o+8o7183q9h7/Hl1NSVMBt2YJCFaxUffs
+	3tIZi81+MEzl/rlDjLkulPVf3/+H0rPqEEIBVYFO7RWFAo2bdC5u/YmBs/mv+/TlHIGOabyhH5Q
+	==
+X-Gm-Gg: ASbGncv0YJ7J1w/cbjA+WxX/ld56wS7HqP+cvpxgrRzsTwyHzmwAj+Du+W58Q2v3K/s
+	lFU0DndR0GsMoXzCFx/9EToo3rXYCHCnKHnME9LLmZBGs+//IFWnNMTHUkQNMNRqxV3Q7kb25OI
+	GpcV8dIYf6jFPz4W2X2WvbMOgz+hAolMFtGMLTYQ5LDhA7nvrLeUBaKF7n//tl85mEWyRv5NwHU
+	8tNw9Pq7AOLE25vhGCuJjmJukmaeREN7dmP/Qs9sYOeV/LopYxkKMJCyiasx5B6vVWpztpi+v9/
+	papHCb7o5CoO3jm6Ztesld8/m+f1tZ2BDHMjdlicYHrpmu7q7+MDhTJ4ADXwXBeuBRWxb0Q=
+X-Received: by 2002:a05:622a:578c:b0:4b2:d501:d177 with SMTP id d75a77b69052e-4b600f9da7amr14115581cf.3.1757211822989;
+        Sat, 06 Sep 2025 19:23:42 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHmtY5i5gLC3Dh3QaLX1boI5IUHrEiKcvtJTsX24PLUziZv/6PXd9JR/FrcOLTBJP1OjMKzmg==
+X-Received: by 2002:a05:622a:578c:b0:4b2:d501:d177 with SMTP id d75a77b69052e-4b600f9da7amr14115521cf.3.1757211822649;
+        Sat, 06 Sep 2025 19:23:42 -0700 (PDT)
+Received: from crwood-thinkpadp16vgen1.minnmso.csb ([2601:447:c680:2b50:ee6f:85c2:7e3e:ee98])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4b48f673fecsm71105401cf.21.2025.09.06.19.23.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 06 Sep 2025 19:23:42 -0700 (PDT)
+From: Crystal Wood <crwood@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-trace-kernel@vger.kernel.org,
+	John Kacur <jkacur@redhat.com>,
+	Tomas Glozar <tglozar@redhat.com>,
+	Costa Shulyupin <costa.shul@redhat.com>,
+	Crystal Wood <crwood@redhat.com>
+Subject: [PATCH v2 0/7] tools/rtla: Code consolidation and osnoise actions
+Date: Sat,  6 Sep 2025 21:23:18 -0500
+Message-ID: <20250907022325.243930-1-crwood@redhat.com>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: 1wkxw71sn6a7x1od7ec9zyyxscasf8nt
-X-Rspamd-Server: rspamout01
-X-Rspamd-Queue-Id: E16B92000D
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18s3X8X1w8plByCinU/NOmjwVSy8nGncNk=
-X-HE-Tag: 1757174966-487100
-X-HE-Meta: U2FsdGVkX1/k2vEet8ITzYIMZSz2CbnnnDo5IHtKNKv+JJ+vbWfowAYjjsVjkcE5SqQaTUNzZ28wsPtZtOTc6eZzIiP6ElQauKGb08HCYcsKs47i723FVegAE9uRM1JJWdAH/PGzAeOvc9to/y/tYsSaD5MVVrNQPDCvelUW4dEkPYWS3fpSDsagAayH0aylUigDMXYoSvO5EB1v0UHoAFO6Fqxy+f8VYR4AByzOLGllECeZxwmro4HoLxwzwXd7cEv8p7KIYfaBpiKtGxDiyxxMi00jG7qh1ZmfrLFOP8ZmiRJ3/rFjWLV2DkPWCQluLmOA/5vt13czUr+TxqntmaJ0xaE3drigyIcIAldv1a1o8hOwwLTgoA==
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: FAi2oQZjklc-TkJBg2OsKxW3rcsko6a5zbHTzFf0Dug_1757211823
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+content-type: text/plain; charset="US-ASCII"; x-default=true
 
-On Sat, 6 Sep 2025 11:56:10 +0800
-Wang Liang <wangliang74@huawei.com> wrote:
+Consolidate code between osnoise/timerlat and top/hist for easier
+maintenance and less future divergence.
 
-> A crash was observed with the following output:
-> 
-> BUG: kernel NULL pointer dereference, address: 0000000000000010
-> Oops: Oops: 0000 [#1] SMP NOPTI
-> CPU: 2 UID: 0 PID: 92 Comm: osnoise_cpus Not tainted 6.17.0-rc4-00201-gd69eb204c255 #138 PREEMPT(voluntary)
-> RIP: 0010:bitmap_parselist+0x53/0x3e0
-> Call Trace:
->  <TASK>
->  osnoise_cpus_write+0x7a/0x190
->  vfs_write+0xf8/0x410
->  ? do_sys_openat2+0x88/0xd0
->  ksys_write+0x60/0xd0
->  do_syscall_64+0xa4/0x260
->  entry_SYSCALL_64_after_hwframe+0x77/0x7f
->  </TASK>
-> 
-> This issue can be reproduced by below code:
-> 
-> fd=open("/sys/kernel/debug/tracing/osnoise/cpus", O_WRONLY);
-> write(fd, "0-2", 0);
-> 
-> When user pass 'count=0' to osnoise_cpus_write(), kmalloc() will return
-> ZERO_SIZE_PTR (16) and cpulist_parse() treat it as a normal value, which
-> trigger the null pointer dereference. Add check for the parameter 'count'.
-> 
-> Link: https://lore.kernel.org/all/20250905032544.231962-1-wangliang74@huawei.com/
-> Fixes: 17f89102fe23 ("tracing/osnoise: Allow arbitrarily long CPU string")
-> Signed-off-by: Wang Liang <wangliang74@huawei.com>
-> ---
-> v2: return 0 when sending a count of 0.
+As a consequence, actions work on osnoise as well as timerlat, so
+expose it to the user, document it, and test it.
 
-FYI, I usually have this say:
+v2: minor changes from Tomas's feedback
 
-Changes since v2: https://lore.kernel.org/all/20250905032544.231962-1-wangliang74@huawei.com/
+v1: https://lore.kernel.org/linux-trace-kernel/20250821035719.137161-1-crwood@redhat.com/T/#t
 
-and list the rest.
+Costa Shulyupin (1):
+  tools/rtla: Consolidate common parameters into shared structure
 
-I know Linus doesn't like links to the patch, but I find them useful, and
-even more useful when the patch has a link to previous versions. ;-)
+Crystal Wood (6):
+  tools/rtla: Move top/hist params into common struct
+  tools/rtla: Create common_apply_config()
+  tools/rtla: Consolidate code between osnoise/timerlat and hist/top
+  tools/rtla: Fix -A option name in test comment
+  tools/rtla: Add test engine support for unexpected output
+  tools/rtla: Add remaining support for osnoise actions
 
-I see that you did add it to the "link" above, which is probably fine too.
+ Documentation/tools/rtla/common_options.rst   |  61 ++
+ .../tools/rtla/common_osnoise_options.rst     |   8 +
+ .../tools/rtla/common_timerlat_options.rst    |  74 +-
+ Documentation/tools/rtla/rtla-hwnoise.rst     |   2 +
+ .../tools/rtla/rtla-osnoise-hist.rst          |   2 +
+ Documentation/tools/rtla/rtla-osnoise-top.rst |   2 +
+ .../tools/rtla/rtla-timerlat-hist.rst         |   2 +
+ .../tools/rtla/rtla-timerlat-top.rst          |   2 +
+ tools/tracing/rtla/src/Build                  |   1 +
+ tools/tracing/rtla/src/actions.c              |   8 +-
+ tools/tracing/rtla/src/actions.h              |   2 +-
+ tools/tracing/rtla/src/common.c               | 344 ++++++++++
+ tools/tracing/rtla/src/common.h               | 154 +++++
+ tools/tracing/rtla/src/osnoise.c              | 101 ++-
+ tools/tracing/rtla/src/osnoise.h              | 114 +---
+ tools/tracing/rtla/src/osnoise_hist.c         | 369 ++++------
+ tools/tracing/rtla/src/osnoise_top.c          | 303 +++------
+ tools/tracing/rtla/src/timerlat.c             | 210 ++++--
+ tools/tracing/rtla/src/timerlat.h             |  55 +-
+ tools/tracing/rtla/src/timerlat_bpf.c         |  22 +-
+ tools/tracing/rtla/src/timerlat_hist.c        | 642 +++++-------------
+ tools/tracing/rtla/src/timerlat_top.c         | 568 ++++------------
+ tools/tracing/rtla/src/trace.h                |   3 -
+ tools/tracing/rtla/tests/engine.sh            |  26 +-
+ tools/tracing/rtla/tests/osnoise.t            |  27 +-
+ tools/tracing/rtla/tests/timerlat.t           |   4 +-
+ 26 files changed, 1395 insertions(+), 1711 deletions(-)
+ create mode 100644 tools/tracing/rtla/src/common.c
+ create mode 100644 tools/tracing/rtla/src/common.h
 
--- Steve
-
-> ---
->  kernel/trace/trace_osnoise.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
-> index fd259da0aa64..337bc0eb5d71 100644
-> --- a/kernel/trace/trace_osnoise.c
-> +++ b/kernel/trace/trace_osnoise.c
-> @@ -2322,6 +2322,9 @@ osnoise_cpus_write(struct file *filp, const char
-> __user *ubuf, size_t count, int running, err;
->  	char *buf __free(kfree) = NULL;
->  
-> +	if (count < 1)
-> +		return 0;
-> +
->  	buf = kmalloc(count, GFP_KERNEL);
->  	if (!buf)
->  		return -ENOMEM;
+-- 
+2.48.1
 
