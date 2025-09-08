@@ -1,298 +1,152 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACD10314B6F;
-	Mon,  8 Sep 2025 17:53:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF6E51E8324;
+	Mon,  8 Sep 2025 19:02:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757354025; cv=none; b=P6o6knDyXZDKjlsXZfBhrX6sAoXouV2DpgBWJrCKLIR31sFyc+WbEZqzizp+KyCl6lGejvOc5NIQSEFstC3jUUkzRpRBuzUgZQwejFTtLOxIT4EiLMvckc+aaj3R2hGydW6LCXt3CsuTjySUMHeqXOGd1dGbWHaSYvu8EY0P8hQ=
+	t=1757358142; cv=none; b=AGVBNURe05eJE1fZW9mHCSZ7jzBEsPtStoqW23rTH7mVKtKSVBtAtFDQcpMQzknfKBAuDQze0jNaAwzhOSJutgs+5WYWIuavsNoQajFNULui3ak3RTH7ytZHMWfPBHEuQTstCVyEnUz8gXMlfP0+g1/mj8QsVWWNW/d9wgushWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757354025; c=relaxed/simple;
-	bh=5cMJwgzbFaeqGlrg+kINQGY81TF01dm+eABK3WLDNcM=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=qL4GiljrmDf3SoID8yfnHnAAuDYUNgrTjbsnsuwVhjl6EcMNR0tJrkjFrjV7Rp4OuP3CUWshJ5G3oYJJ/N3MYbkILxWMGM1JPn4Qtr/pD+15+b/lB/iLkfVufCc6zsDwMW8JUxZHCnLX12DxzBB0opWvKaDYHP2o/o2pLP1J+cU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cisnVJOh; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cisnVJOh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41892C4CEF5;
-	Mon,  8 Sep 2025 17:53:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757354025;
-	bh=5cMJwgzbFaeqGlrg+kINQGY81TF01dm+eABK3WLDNcM=;
-	h=Date:From:To:Cc:Subject:References:From;
-	b=cisnVJOhNKDyfRHJQze9GNCXHq9Nf+Y0btvKK+JgWW2jt/txbH2/nBiESNodofGMG
-	 /xonDkKAEx60xzwxNsFAiau9O0oiCAZeR5dbUV9XMY0WlGeiqi3QtaF7rUncUQw+lt
-	 RjV9FKAY1wHT8FDOBGibRzGo0cXvyPxaoihYY2suWty+pviKgrkiwUPtEeKOKBnPxJ
-	 8pkhOuYHYq+p6K165pqbOWzinLncPoAAQCIFm7nApoZOUXin53iOCxzwqF2J1pSXJi
-	 QIDPG7Rt7Y3c0GOji15CSLJEDh3I482YhKSxJt4fTW3dRZvuh3ka3CjGfsUTYF2dne
-	 GShVm8bsI2eyQ==
-Received: from rostedt by gandalf with local (Exim 4.98.2)
-	(envelope-from <rostedt@kernel.org>)
-	id 1uvg4U-000000076A7-1BoL;
-	Mon, 08 Sep 2025 13:54:30 -0400
-Message-ID: <20250908175430.136672865@kernel.org>
-User-Agent: quilt/0.68
-Date: Mon, 08 Sep 2025 13:53:20 -0400
-From: Steven Rostedt <rostedt@kernel.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org,
- x86@kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Josh Poimboeuf <jpoimboe@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@kernel.org>,
- Jiri Olsa <jolsa@kernel.org>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>,
- Andrii Nakryiko <andrii@kernel.org>,
- Indu Bhagat <indu.bhagat@oracle.com>,
- "Jose E. Marchesi" <jemarch@gnu.org>,
- Beau Belgrave <beaub@linux.microsoft.com>,
- Jens Remus <jremus@linux.ibm.com>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Florian Weimer <fweimer@redhat.com>,
- Sam James <sam@gentoo.org>,
- Kees Cook <kees@kernel.org>,
- "Carlos O'Donell" <codonell@redhat.com>
-Subject: [PATCH v16 1/4] perf tools: Minimal CALLCHAIN_DEFERRED support
-References: <20250908175319.841517121@kernel.org>
+	s=arc-20240116; t=1757358142; c=relaxed/simple;
+	bh=qoERetJrl9ZYiLDZetUpY4DFOm8TL+eKJyVCXAF76co=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ec7FIrVuFn9PUOVk+lTFQjf4ISHZR2fFqKHjmFUBXbvjfSVPgN28S8MJXcz7jffujACHer/MuSHPMdpU/L/bYPzKOJDvdFDLpQ2XC/PODRipo11leXfJidmjB4mGBRubuKmu3Bn/clEYQ7xKc0oRXxxAon5m/zo8WuwMzRM4u/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf18.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay09.hostedemail.com (Postfix) with ESMTP id 3F5A7852D1;
+	Mon,  8 Sep 2025 19:02:13 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf18.hostedemail.com (Postfix) with ESMTPA id 7430732;
+	Mon,  8 Sep 2025 19:02:11 +0000 (UTC)
+Date: Mon, 8 Sep 2025 15:02:57 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Pu Lehui <pulehui@huaweicloud.com>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] tracing: Silence warning when chunk allocation fails
+ in trace_pid_write
+Message-ID: <20250908150257.23731d24@gandalf.local.home>
+In-Reply-To: <20250908024658.2390398-1-pulehui@huaweicloud.com>
+References: <20250908024658.2390398-1-pulehui@huaweicloud.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout04
+X-Rspamd-Queue-Id: 7430732
+X-Stat-Signature: 9o6fbypd84tghfzo9oky94emdq8h835p
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19/ajdtOhUTRX7eRkFJLyCJmCS6YjLx718=
+X-HE-Tag: 1757358131-741100
+X-HE-Meta: U2FsdGVkX18eEM841sijLg+FwXIK0YyLsclUV6i9fU5rvYnlHW2uLAg3OuBlz+dd8GmJXbF0S7QK0gIgHrvFaxifAOHi6mHPD15atXcI5zYRqkATrn+LryfZKXiZlPyROnGdTICFxwlEzFi1Lk6qBYH59tjMskb9pqro78WXjZkkc7bcB/XH1wZISGogfk4a56FwecBbR0BRl00qHZ9ZLVd5vguO8UD9/NfvKiqYHqG1M6cYbPIe9TPJE455l/2MRSnyOPSMm+8I0aTtmgAqrG/fKZc/jmjLELUXG7gJwqWX8tSUsYm7sjcHdV8wj5qUrgou4QvPL/ZuJ+bGnjV4NZ5DK8hhlu66O9TRnjCYt3w0qnBHu9OxdO2oI2KqwKLiWLD6FfY6HVv25gsmYEO7iIJkU66aZPavxfCqAmBItfK96TVTMV0OMURVVjr86dgax2obWN7UTPYcmk8bC68zzj/v1CqCRYDx
 
-From: Namhyung Kim <namhyung@kernel.org>
+On Mon,  8 Sep 2025 02:46:58 +0000
+Pu Lehui <pulehui@huaweicloud.com> wrote:
 
-Add a new event type for deferred callchains and a new callback for the
-struct perf_tool.  For now it doesn't actually handle the deferred
-callchains but it just marks the sample if it has the PERF_CONTEXT_
-USER_DEFFERED in the callchain array.
+> From: Pu Lehui <pulehui@huawei.com>
+> 
+> Syzkaller trigger a fault injection warning:
+> 
+> WARNING: CPU: 1 PID: 12326 at tracepoint_add_func+0xbfc/0xeb0
+> Modules linked in:
+> CPU: 1 UID: 0 PID: 12326 Comm: syz.6.10325 Tainted: G U 6.14.0-rc5-syzkaller #0
+> Tainted: [U]=USER
+> Hardware name: Google Compute Engine/Google Compute Engine
+> RIP: 0010:tracepoint_add_func+0xbfc/0xeb0 kernel/tracepoint.c:294
+> Code: 09 fe ff 90 0f 0b 90 0f b6 74 24 43 31 ff 41 bc ea ff ff ff
+> RSP: 0018:ffffc9000414fb48 EFLAGS: 00010283
+> RAX: 00000000000012a1 RBX: ffffffff8e240ae0 RCX: ffffc90014b78000
+> RDX: 0000000000080000 RSI: ffffffff81bbd78b RDI: 0000000000000001
+> RBP: 0000000000000000 R08: 0000000000000001 R09: 0000000000000000
+> R10: 0000000000000001 R11: 0000000000000001 R12: ffffffffffffffef
+> R13: 0000000000000000 R14: dffffc0000000000 R15: ffffffff81c264f0
+> FS:  00007f27217f66c0(0000) GS:ffff8880b8700000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 0000001b2e80dff8 CR3: 00000000268f8000 CR4: 00000000003526f0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>  <TASK>
+>  tracepoint_probe_register_prio+0xc0/0x110 kernel/tracepoint.c:464
+>  register_trace_prio_sched_switch include/trace/events/sched.h:222 [inline]
+>  register_pid_events kernel/trace/trace_events.c:2354 [inline]
+>  event_pid_write.isra.0+0x439/0x7a0 kernel/trace/trace_events.c:2425
+>  vfs_write+0x24c/0x1150 fs/read_write.c:677
+>  ksys_write+0x12b/0x250 fs/read_write.c:731
+>  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+>  do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
+>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> 
+> We can reproduce the warning by following the steps below:
+> 1. echo 8 >> set_event_notrace_pid. Let tr->filtered_pids owns one pid
+>    and register sched_switch tracepoint.
+> 2. echo ' ' >> set_event_pid, and perform fault injection during chunk
+>    allocation of trace_pid_list_alloc. Let pid_list with no pid and
+> assign to tr->filtered_pids.
+> 3. echo ' ' >> set_event_pid. Let pid_list is NULL and assign to
+>    tr->filtered_pids.
+> 4. echo 9 >> set_event_pid, will trigger the double register
+>    sched_switch tracepoint warning.
+> 
+> The reason is that syzkaller injects a fault into the chunk allocation
+> in trace_pid_list_alloc, causing a failure in trace_pid_list_set, which
+> may trigger double register of the same tracepoint. This only occurs
+> when the system is about to crash, but to suppress this warning, let's
+> add failure handling logic to trace_pid_list_set.
+> 
+> Fixes: 8d6e90983ade ("tracing: Create a sparse bitmask for pid filtering")
+> Reported-by: syzbot+161412ccaeff20ce4dde@syzkaller.appspotmail.com
+> Closes: https://lore.kernel.org/all/67cb890e.050a0220.d8275.022e.GAE@google.com
+> Signed-off-by: Pu Lehui <pulehui@huawei.com>
+> ---
 
-At least, perf report can dump the raw data with this change.  Actually
-this requires the next commit to enable attr.defer_callchain, but if you
-already have a data file, it'll show the following result.
+FYI, when sending a v2, please state below the three dashes what was
+changed since v1. Something like:
 
-  $ perf report -D
-  ...
-  0x5fe0@perf.data [0x40]: event: 22
-  .
-  . ... raw event: size 64 bytes
-  .  0000:  16 00 00 00 02 00 40 00 02 00 00 00 00 00 00 00  ......@.........
-  .  0010:  00 fe ff ff ff ff ff ff 4b d3 3f 25 45 7f 00 00  ........K.?%E...
-  .  0020:  21 03 00 00 21 03 00 00 43 02 12 ab 05 00 00 00  !...!...C.......
-  .  0030:  00 00 00 00 00 00 00 00 09 00 00 00 00 00 00 00  ................
+Changes since v1: https://lore.kernel.org/all/20250821071721.3609109-1-pulehui@huaweicloud.com/
 
-  0 24344920643 0x5fe0 [0x40]: PERF_RECORD_CALLCHAIN_DEFERRED(IP, 0x2): 801/801: 0 [300000001]
-  ... FP chain: nr:2
-  .....  0: fffffffffffffe00
-  .....  1: 00007f45253fd34b
-  : unhandled!
+- Instead of returning -EINVAL before trace_parser_load() have
+  trace_pid_write() return error when trace_pid_list_set() returns an error.
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- tools/lib/perf/include/perf/event.h       |  8 ++++++++
- tools/perf/util/event.c                   |  1 +
- tools/perf/util/evsel.c                   | 18 ++++++++++++++++++
- tools/perf/util/machine.c                 |  1 +
- tools/perf/util/perf_event_attr_fprintf.c |  1 +
- tools/perf/util/sample.h                  |  4 +++-
- tools/perf/util/session.c                 | 18 ++++++++++++++++++
- tools/perf/util/tool.c                    |  1 +
- tools/perf/util/tool.h                    |  3 ++-
- 9 files changed, 53 insertions(+), 2 deletions(-)
 
-diff --git a/tools/lib/perf/include/perf/event.h b/tools/lib/perf/include/perf/event.h
-index 6608f1e3701b..4af8cb238e27 100644
---- a/tools/lib/perf/include/perf/event.h
-+++ b/tools/lib/perf/include/perf/event.h
-@@ -151,6 +151,13 @@ struct perf_record_switch {
- 	__u32			 next_prev_tid;
- };
- 
-+struct perf_record_callchain_deferred {
-+	struct perf_event_header header;
-+	__u64			 cookie;
-+	__u64			 nr;
-+	__u64			 ips[];
-+};
-+
- struct perf_record_header_attr {
- 	struct perf_event_header header;
- 	struct perf_event_attr	 attr;
-@@ -522,6 +529,7 @@ union perf_event {
- 	struct perf_record_read			read;
- 	struct perf_record_throttle		throttle;
- 	struct perf_record_sample		sample;
-+	struct perf_record_callchain_deferred	callchain_deferred;
- 	struct perf_record_bpf_event		bpf;
- 	struct perf_record_ksymbol		ksymbol;
- 	struct perf_record_text_poke_event	text_poke;
-diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
-index fcf44149feb2..4c92cc1a952c 100644
---- a/tools/perf/util/event.c
-+++ b/tools/perf/util/event.c
-@@ -61,6 +61,7 @@ static const char *perf_event__names[] = {
- 	[PERF_RECORD_CGROUP]			= "CGROUP",
- 	[PERF_RECORD_TEXT_POKE]			= "TEXT_POKE",
- 	[PERF_RECORD_AUX_OUTPUT_HW_ID]		= "AUX_OUTPUT_HW_ID",
-+	[PERF_RECORD_CALLCHAIN_DEFERRED]	= "CALLCHAIN_DEFERRED",
- 	[PERF_RECORD_HEADER_ATTR]		= "ATTR",
- 	[PERF_RECORD_HEADER_EVENT_TYPE]		= "EVENT_TYPE",
- 	[PERF_RECORD_HEADER_TRACING_DATA]	= "TRACING_DATA",
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index d264c143b592..7512b9fb877d 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -3002,6 +3002,18 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
- 	data->data_src = PERF_MEM_DATA_SRC_NONE;
- 	data->vcpu = -1;
- 
-+	if (event->header.type == PERF_RECORD_CALLCHAIN_DEFERRED) {
-+		const u64 max_callchain_nr = UINT64_MAX / sizeof(u64);
-+
-+		data->callchain = (struct ip_callchain *)&event->callchain_deferred.nr;
-+		if (data->callchain->nr > max_callchain_nr)
-+			return -EFAULT;
-+
-+		if (evsel->core.attr.sample_id_all)
-+			perf_evsel__parse_id_sample(evsel, event, data);
-+		return 0;
-+	}
-+
- 	if (event->header.type != PERF_RECORD_SAMPLE) {
- 		if (!evsel->core.attr.sample_id_all)
- 			return 0;
-@@ -3132,6 +3144,12 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
- 		if (data->callchain->nr > max_callchain_nr)
- 			return -EFAULT;
- 		sz = data->callchain->nr * sizeof(u64);
-+		if (evsel->core.attr.defer_callchain &&
-+		    data->callchain->nr >= PERF_DEFERRED_ITEMS &&
-+		    data->callchain->ips[data->callchain->nr - PERF_DEFERRED_ITEMS] == PERF_CONTEXT_USER_DEFERRED) {
-+			data->deferred_callchain = true;
-+			data->deferred_cookie = data->callchain->ips[data->callchain->nr - 1];
-+		}
- 		OVERFLOW_CHECK(array, sz, max_size);
- 		array = (void *)array + sz;
- 	}
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index b5dd42588c91..841b711d970e 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -2124,6 +2124,7 @@ static int add_callchain_ip(struct thread *thread,
- 				*cpumode = PERF_RECORD_MISC_KERNEL;
- 				break;
- 			case PERF_CONTEXT_USER:
-+			case PERF_CONTEXT_USER_DEFERRED:
- 				*cpumode = PERF_RECORD_MISC_USER;
- 				break;
- 			default:
-diff --git a/tools/perf/util/perf_event_attr_fprintf.c b/tools/perf/util/perf_event_attr_fprintf.c
-index 66b666d9ce64..abfd9b9a718c 100644
---- a/tools/perf/util/perf_event_attr_fprintf.c
-+++ b/tools/perf/util/perf_event_attr_fprintf.c
-@@ -343,6 +343,7 @@ int perf_event_attr__fprintf(FILE *fp, struct perf_event_attr *attr,
- 	PRINT_ATTRf(inherit_thread, p_unsigned);
- 	PRINT_ATTRf(remove_on_exec, p_unsigned);
- 	PRINT_ATTRf(sigtrap, p_unsigned);
-+	PRINT_ATTRf(defer_callchain, p_unsigned);
- 
- 	PRINT_ATTRn("{ wakeup_events, wakeup_watermark }", wakeup_events, p_unsigned, false);
- 	PRINT_ATTRf(bp_type, p_unsigned);
-diff --git a/tools/perf/util/sample.h b/tools/perf/util/sample.h
-index fae834144ef4..68392e6298b7 100644
---- a/tools/perf/util/sample.h
-+++ b/tools/perf/util/sample.h
-@@ -106,7 +106,9 @@ struct perf_sample {
- 	u16 ins_lat;
- 	/** @weight3: On x86 holds retire_lat, on powerpc holds p_stage_cyc. */
- 	u16 weight3;
--	bool no_hw_idx;		/* No hw_idx collected in branch_stack */
-+	bool no_hw_idx;			/* No hw_idx collected in branch_stack */
-+	bool deferred_callchain;	/* Has deferred user callchains */
-+	u64 deferred_cookie;
- 	char insn[MAX_INSN];
- 	void *raw_data;
- 	struct ip_callchain *callchain;
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 26ae078278cd..a071006350f5 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -720,6 +720,7 @@ static perf_event__swap_op perf_event__swap_ops[] = {
- 	[PERF_RECORD_CGROUP]		  = perf_event__cgroup_swap,
- 	[PERF_RECORD_TEXT_POKE]		  = perf_event__text_poke_swap,
- 	[PERF_RECORD_AUX_OUTPUT_HW_ID]	  = perf_event__all64_swap,
-+	[PERF_RECORD_CALLCHAIN_DEFERRED]  = perf_event__all64_swap,
- 	[PERF_RECORD_HEADER_ATTR]	  = perf_event__hdr_attr_swap,
- 	[PERF_RECORD_HEADER_EVENT_TYPE]	  = perf_event__event_type_swap,
- 	[PERF_RECORD_HEADER_TRACING_DATA] = perf_event__tracing_data_swap,
-@@ -1123,6 +1124,20 @@ static void dump_sample(struct evsel *evsel, union perf_event *event,
- 		sample_read__printf(sample, evsel->core.attr.read_format);
- }
- 
-+static void dump_deferred_callchain(struct evsel *evsel, union perf_event *event,
-+				    struct perf_sample *sample)
-+{
-+	if (!dump_trace)
-+		return;
-+
-+	printf("(IP, 0x%x): %d/%d: %#" PRIx64 " [%llx]\n",
-+	       event->header.misc, sample->pid, sample->tid, sample->ip,
-+		event->callchain_deferred.cookie);
-+
-+	if (evsel__has_callchain(evsel))
-+		callchain__printf(evsel, sample);
-+}
-+
- static void dump_read(struct evsel *evsel, union perf_event *event)
- {
- 	struct perf_record_read *read_event = &event->read;
-@@ -1353,6 +1368,9 @@ static int machines__deliver_event(struct machines *machines,
- 		return tool->text_poke(tool, event, sample, machine);
- 	case PERF_RECORD_AUX_OUTPUT_HW_ID:
- 		return tool->aux_output_hw_id(tool, event, sample, machine);
-+	case PERF_RECORD_CALLCHAIN_DEFERRED:
-+		dump_deferred_callchain(evsel, event, sample);
-+		return tool->callchain_deferred(tool, event, sample, evsel, machine);
- 	default:
- 		++evlist->stats.nr_unknown_events;
- 		return -1;
-diff --git a/tools/perf/util/tool.c b/tools/perf/util/tool.c
-index e83c7ababc2a..8bf86af1ca90 100644
---- a/tools/perf/util/tool.c
-+++ b/tools/perf/util/tool.c
-@@ -279,6 +279,7 @@ void perf_tool__init(struct perf_tool *tool, bool ordered_events)
- 	tool->read = process_event_sample_stub;
- 	tool->throttle = process_event_stub;
- 	tool->unthrottle = process_event_stub;
-+	tool->callchain_deferred = process_event_sample_stub;
- 	tool->attr = process_event_synth_attr_stub;
- 	tool->event_update = process_event_synth_event_update_stub;
- 	tool->tracing_data = process_event_synth_tracing_data_stub;
-diff --git a/tools/perf/util/tool.h b/tools/perf/util/tool.h
-index 18b76ff0f26a..2676d84da80c 100644
---- a/tools/perf/util/tool.h
-+++ b/tools/perf/util/tool.h
-@@ -42,7 +42,8 @@ enum show_feature_header {
- 
- struct perf_tool {
- 	event_sample	sample,
--			read;
-+			read,
-+			callchain_deferred;
- 	event_op	mmap,
- 			mmap2,
- 			comm,
--- 
-2.50.1
+I have a Link tag to this email that is added by my scripts, with the idea
+that this email will have a link to the previous version and so on. It will
+create a chain of the email discussions that lead to what lands in mainline.
 
+-- Steve
+
+
+>  kernel/trace/trace.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index 1b7db732c0b1..f2a84d1ce4b7 100644
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+> @@ -834,7 +834,10 @@ int trace_pid_write(struct trace_pid_list *filtered_pids,
+>  		/* copy the current bits to the new max */
+>  		ret = trace_pid_list_first(filtered_pids, &pid);
+>  		while (!ret) {
+> -			trace_pid_list_set(pid_list, pid);
+> +			ret = trace_pid_list_set(pid_list, pid);
+> +			if (ret < 0)
+> +				goto out;
+> +
+>  			ret = trace_pid_list_next(filtered_pids, pid + 1, &pid);
+>  			nr_pids++;
+>  		}
+> @@ -871,6 +874,7 @@ int trace_pid_write(struct trace_pid_list *filtered_pids,
+>  		trace_parser_clear(&parser);
+>  		ret = 0;
+>  	}
+> + out:
+>  	trace_parser_put(&parser);
+>  
+>  	if (ret < 0) {
 
