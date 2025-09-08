@@ -1,95 +1,121 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01C832E8B83
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  8 Sep 2025 12:18:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 315F42FE598;
+	Mon,  8 Sep 2025 12:39:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757333939; cv=none; b=gSSGXY2S7K4TQu9FBV3UDUOy6RmfMKaoT8bqBu4C5uBdQ4H7PijBrLxQesKHmCQS4KP1TcOJRReCTcTBTNjBR7u0GzYtj54y91bCwB9VfubnEBYB9Is5tAu1830Mloj300xquuA31g8PkhbV36yGnn2a9IbPOFZuKt4fI4ZF+JA=
+	t=1757335150; cv=none; b=EeIMP0RHw7FjrwCyR1JjzJNSR2VLM5XSJuaYm1cNT+Nz2ZBGpuWix0p7GYY5iu8nUL7JE1xcEXCoOR3qn0oekG9/FfBBJ0Cy+DW8wOQXQNs4y0DLoA9yqobQp2crb4BEtXci9tCThmYFkyELZ86y0lk393RJpbb8IZYb14XsOnA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757333939; c=relaxed/simple;
-	bh=5vlDUZUZwiQlLm6jVhrQJ5f0lQQe/0x8ks5t54Vjry0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ertEHQnH0yBy9lEyxvopueyWHEHMllpWUlyGCxdQx5Tt2/xjXto++e6VzyV1SnJi/2EID/FjSW6P5mQ4PrW/x39/h3DMRza1dPzbI9WkbJY0fqFYpwaQPNJ2GNL1xjo9dawRBmqkzmcT3FaYDoMOehj/K0ycYhYxYzHj2lWm0dw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FyOFLpcG; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1757335150; c=relaxed/simple;
+	bh=Kmgj7JQ2MfTOSMke4wzOHnSg8Sksyl64nAuAQ+DhI4A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=txoUPBc6zRjvFy/iM6Eum2PuclmrTR+x0oYJjk4+drzC6p7wmPIdyRwrT/GNSXLpwi22Lcp45nZqGL7cuMLWNZt921a6y6vwT/tUzNmeobHVWAFut0iuKYPKqdBZVQxHxeDKotN+skwaJmzPJrmqBYaH94e6LUHFzx21U6yvbK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ufv6Hcx6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FyOFLpcG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1757333937;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bW+7NF8VUGFCtj1oVTDPjGSmVH0sAuFf5qtS0rCjfME=;
-	b=FyOFLpcGXBsGO1ZZ2QOXKCdVwhsST4i9h5MKo/Th5cBRHOnPvEWVUtCTs9JXLvHDbxhPx5
-	bEbbkJehsBudEkBKV38rupuATzC1jNP8j0xreHdhnkpnuAYYIHE88Cn+tkiXFShM+jaNDr
-	2em7HDxHH93lsvw6zCl6wS/DbEiol8g=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-241-xpBiZS9LPvSrqiEV8pADGA-1; Mon,
- 08 Sep 2025 08:18:53 -0400
-X-MC-Unique: xpBiZS9LPvSrqiEV8pADGA-1
-X-Mimecast-MFC-AGG-ID: xpBiZS9LPvSrqiEV8pADGA_1757333931
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7641F180034D;
-	Mon,  8 Sep 2025 12:18:51 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.189])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id B410C180044F;
-	Mon,  8 Sep 2025 12:18:46 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Mon,  8 Sep 2025 14:17:27 +0200 (CEST)
-Date: Mon, 8 Sep 2025 14:17:21 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	x86@kernel.org, Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCHv2 perf/core 2/4] uprobe: Do not emulate/sstep original
- instruction when ip is changed
-Message-ID: <20250908121721.GB5489@redhat.com>
-References: <20250908121310.46824-1-jolsa@kernel.org>
- <20250908121310.46824-3-jolsa@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ufv6Hcx6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D710C4CEF1;
+	Mon,  8 Sep 2025 12:39:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757335150;
+	bh=Kmgj7JQ2MfTOSMke4wzOHnSg8Sksyl64nAuAQ+DhI4A=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Ufv6Hcx6jWD5AxW92cK+ljuNUfSXKHnQZv3kXveaEsZj/qc477qtV8lnGeC+yl2LV
+	 RS+Xs28IVJiEsEENic3DIoEPQdZSHhAU4cy+TktV0KVy4p51YIFXAv1grFur5A4cuH
+	 6bQZcKwbFMBzc6sdl3QoFscqqxGb0GSshxGjTLYgZ5ZSGs+wSs4Anmp+mAqfz/3G43
+	 d2i25P5YPiPUgIUQnhTbmOJCWuiJLaNYNMsOWex5ofVrrPe+JZ78aYrYUP0jSNG4sY
+	 WuOYdOOajtBz008C++gHVHO1nJV3AOOUYzXAxps+DjP5BGGjNMGuX5Ral+AlLsdZhH
+	 w1T2hkMKtFUDQ==
+Message-ID: <af78dfb4-de61-4b8c-a131-cf39a4c3c4b0@kernel.org>
+Date: Mon, 8 Sep 2025 07:39:07 -0500
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250908121310.46824-3-jolsa@kernel.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 RESEND 00/11] Improvements to S5 power consumption
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J . Wysocki" <rafael@kernel.org>
+Cc: Danilo Krummrich <dakr@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Pavel Machek <pavel@kernel.org>, Len Brown <lenb@kernel.org>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ "James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
+ "Martin K . Petersen" <martin.petersen@oracle.com>,
+ Steven Rostedt <rostedt@goodmis.org>,
+ "open list:HIBERNATION (aka Software Suspend, aka swsusp)"
+ <linux-pm@vger.kernel.org>,
+ "open list:RADEON and AMDGPU DRM DRIVERS" <amd-gfx@lists.freedesktop.org>,
+ "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+ "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+ "open list:SCSI SUBSYSTEM" <linux-scsi@vger.kernel.org>,
+ "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>,
+ "open list:TRACING" <linux-trace-kernel@vger.kernel.org>,
+ AceLan Kao <acelan.kao@canonical.com>, Kai-Heng Feng <kaihengf@nvidia.com>,
+ Mark Pearson <mpearson-lenovo@squebb.ca>,
+ =?UTF-8?Q?Merthan_Karaka=C5=9F?= <m3rthn.k@gmail.com>,
+ Eric Naim <dnaim@cachyos.org>
+References: <20250906143642.2590808-1-superm1@kernel.org>
+ <2025090852-coma-tycoon-9f37@gregkh>
+Content-Language: en-US
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <2025090852-coma-tycoon-9f37@gregkh>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 09/08, Jiri Olsa wrote:
->
-> If user decided to take execution elsewhere, it makes little sense
-> to execute the original instruction, so let's skip it.
 
-...
 
-> @@ -2768,6 +2768,13 @@ static void handle_swbp(struct pt_regs *regs)
->  	/* Try to optimize after first hit. */
->  	arch_uprobe_optimize(&uprobe->arch, bp_vaddr);
->
-> +	/*
-> +	 * If user decided to take execution elsewhere, it makes little sense
-> +	 * to execute the original instruction, so let's skip it.
-> +	 */
-> +	if (instruction_pointer(regs) != bp_vaddr)
-> +		goto out;
-> +
+On 9/8/25 4:19 AM, Greg Kroah-Hartman wrote:
+> On Sat, Sep 06, 2025 at 09:36:31AM -0500, Mario Limonciello (AMD) wrote:
+>> A variety of issues both in function and in power consumption have been
+>> raised as a result of devices not being put into a low power state when
+>> the system is powered off.
+>>
+>> There have been some localized changes[1] to PCI core to help these issues,
+>> but they have had various downsides.
+>>
+>> This series instead tries to use the S4 flow when the system is being
+>> powered off.  This lines up the behavior with what other operating systems
+>> do as well.  If for some reason that fails or is not supported, run their
+>> shutdown() callbacks.
+>>
+>> Cc: AceLan Kao <acelan.kao@canonical.com>
+>> Cc: Kai-Heng Feng <kaihengf@nvidia.com>
+>> Cc: Mark Pearson <mpearson-lenovo@squebb.ca>
+>> Cc: Merthan Karakaş <m3rthn.k@gmail.com>
+>> Cc: Eric Naim <dnaim@cachyos.org>
+>> ---
+>> v6 RESEND:
+>>   * Resent because Greg said he was ignoring it and would like the whole
+>>     series to be able to review.
+> 
+> Messy, but wow, I'll trust you all that this actually works properly.
 
-Acked-by: Oleg Nesterov <oleg@redhat.com>
+Yes; I double checked from a UART log all devices (now) went to correct 
+state and from power measurement hardware the respective drop in power.
+
+I will note I have a sampling bias of hardware being x86 AMD hardware.
+Some of the testers of the series also tested Intel hardware which had 
+similar power consumption problem, and I know there were improvements 
+there too.
+
+We probably will have to wait for linux-next for non-x86 hardware coverage.
+> No objections from me, but I don't want my ack on this as I don't know
+> how to maintain it :)
+> 
+
+I mean - if all goes well even a failed S4 flow should fall back to old 
+path shutdown.  I *did contrive some failures* in an earlier version of 
+the series and confirmed in the UART log it emitted the printk that it 
+was falling back to shutdown.
+
+I had two ideas that maybe could help for regression risk though:
+1) I could add a shutdown= kernel parameter.  I'm not sure what words to 
+use for the two paths but the idea would be if someone had a shutdown 
+failure they could isolate if it's due to this by adding the parameter.
+
+2) I could make a Documentation/ file explaining some examples how to 
+get the shutdown log saved to pstore in case they don't have a UART 
+available.
 
