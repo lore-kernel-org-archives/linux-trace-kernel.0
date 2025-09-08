@@ -1,225 +1,202 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB3BC2E1EE6
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  8 Sep 2025 23:10:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 264692E2DD8;
+	Mon,  8 Sep 2025 23:13:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757373014; cv=none; b=I5L+w6I9i5z710dOzA5QSQC/MQ0MlhLyUaCdvC1wzwaU6QWfwEu3MiucBBGcNAHtnAc9+XUO6JHasNtHKtxHqpK164+DMNszD/kcltGMrAz1FZEJcvr7UFCltE5eb8Gtn50ZTmlh5cserkEDinZQxjWfMbhqM+njf/maWyBePy0=
+	t=1757373185; cv=none; b=YFSGF9YYIsg3Ly/cUyUPefxUM/XrYXK31thlp+kOCyUbxOeQLg2ijl7YH/6WXZpNdQBIm70hZrOz8xdO3lCMcQVsabNMm3xYrsLP1sZ8pD2AOYejVcOEq9izeigRrsogL3sqsml4niHl+qPBqjuZKZpJ9ppODHniShAX59QQWzA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757373014; c=relaxed/simple;
-	bh=FS4nc2fJeS5Q3A/mcWeQ/ZPhjTODNmSRZ+cO8Gw2KxQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=j5RlZaIImfu9Sx+tV2yAJPvNuh77lf8xXk1HVPxiBeo3I5qt8thVZVRBk7Go28/nXyWwRmu+sZprrDyGPL4c1S9gbw6J3Yv6zqp79AdO1eOBMJEZN9AVFKXRFjOb6ZZYH2Wx4pkHMpVEftNgHvQfNqFEKJYtGG6zLm/NCGG6e1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=MV0f/LN9; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="MV0f/LN9"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-b0473327e70so804580466b.3
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 08 Sep 2025 16:10:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1757373010; x=1757977810; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=n3Q44KwJ8t0CaEyMHJTLNYuOABw/iss9AUCNI8J6M2g=;
-        b=MV0f/LN9H2UEh/BmH0WkTH+g6+dFORcfNj2oHMRgrEcVSwAUREBSqc1fRHuseHquWt
-         bsfqqXd9mDF4KYVoltqeBaDFkxphrdWr1txAois3XZchT8U7Va3OGVhuVXk0rZs1ceaS
-         K5kQhRmXzU0e6JwacowsR36bZllFuDZ8nLq4g=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757373010; x=1757977810;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=n3Q44KwJ8t0CaEyMHJTLNYuOABw/iss9AUCNI8J6M2g=;
-        b=hyMPXd3s1alDnF/SUD5Z991++vC56NXYgKWJonz2gIxNKDiDMRdsHIxtiyXmIVWPSs
-         61MQ3ICVTyG+UijQYWKrfsRq5R1jARWQ+9y5+YPTYylp/54Xc6umtikkyXYEGWo1Qb5k
-         EIGRYSvUmbOD6dFmZdEwHW0mBn2SfTSm154c++JoJd+6hhwtjUB21/1A7Q3F7nfiizn/
-         wG3rmkM1EIUUljvVuwMQ+dFI9m420u9LkuudusYpYmz1N2pprpMHRBCvB0DrSJsz+hqS
-         D9Fj/ljz394v4TpQ3tMS7CMbYf82Q1gvTAgqkkG9rPRHxOCzDYCEyipr00MGmFXiY8ZA
-         wh6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUsZKfLJPxrKcmkElq5G3WZJPl7nuDV+hgSx+bXsuiGjX9h2eJgfsy1OMrvjlCmiZqzi7UhiEPK1Et+7jTXv0OYpOI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxGNpvnMu3U08Zloge9oDTitFbRNyI+T32aVwnKvEcrKMh6zVOS
-	7uC3SgMcb4PX8SsQaLbZ3+pYXh69BkmRa0ir0ba45ZtjhclzDfoy7tzLYOekFKI8DwV/w5DWD6E
-	dQS5DOkU=
-X-Gm-Gg: ASbGnctPiFP5COjgMRCwPXPNE+onAAZTqJkiYww3lWUVpHExltUoMTBLtPC8u5LjsGQ
-	R4aKX4qjA3nNfmXYjdbfeRognnp8AUqzYfNpXann27hJzeaasgEQld9Wj4SFti44vhc2wcHQEI9
-	QjIFND8zuh3YP5Erm8vazzfWCGTGaFNQgAFFSUNjkULBEiCXKytPbql/y2ja+M4VakkYoTwpxr0
-	r7R6ooTsmVppwHL1wymBj27heDn5XENQRGoyuCU6m4d+ogR1UJrtnym/fQDiLxMZJU3zzO/GWlb
-	c6XXkASynS83HyWFUMWilIADg76E3nQUzd1btl3uNYvcb+H8QRsFWiHlMAAk10suq8VuHTyxap5
-	HsAfzgWwjKVdB1/0UcvW4o2X0EDioJhBAeqxBno7AVRcuY+VXYGIHWhDtPgp8Z/+xtRKpw2yO
-X-Google-Smtp-Source: AGHT+IEjTBbkXXtlPAlNM/V01L2Srht4IGXANAculOlhYcDRVwuRAV5tYSB+DDS7cHlGnjFa53QYMg==
-X-Received: by 2002:a17:907:1c16:b0:b04:b08e:fcd with SMTP id a640c23a62f3a-b04b16b80d7mr904477866b.46.1757373009846;
-        Mon, 08 Sep 2025 16:10:09 -0700 (PDT)
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com. [209.85.218.42])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b04129eccbfsm2224104266b.7.2025.09.08.16.10.08
-        for <linux-trace-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 08 Sep 2025 16:10:08 -0700 (PDT)
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-afcb7322da8so948830966b.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 08 Sep 2025 16:10:08 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCX5HmrqWBDbBkpsWkQu574xHs/hY41JjGqsp7Ya2MZSbtfkDpCVtOFUEzT/xzc2tJUxXTQCM3O83Sj0nVuqnw9PGfM=@vger.kernel.org
-X-Received: by 2002:a17:907:6d0d:b0:ae3:8c9b:bd61 with SMTP id
- a640c23a62f3a-b04b13fb3d7mr915632966b.12.1757373007881; Mon, 08 Sep 2025
- 16:10:07 -0700 (PDT)
+	s=arc-20240116; t=1757373185; c=relaxed/simple;
+	bh=pak7E63ByXmvft2YjYHpDwKjJ8C0PRzTeUjBBGFFwfI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=msqszv+Uc3X5rMtREfhTfDajVp3IW4UNKKIaWH1b54dW/k4tWAZT+gC1hvQ+EcJQLcOc1xQIhQpLHutnZzbkWtSfANL0JP9zk3X+bcETKoT5Ppb6JNSn/qTifTuq0MgklyAIajWYdP+IDpadmgO/UrMQQ5elAMG+Ps+3K40wy8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf07.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay02.hostedemail.com (Postfix) with ESMTP id 06F5F13A9C6;
+	Mon,  8 Sep 2025 23:13:00 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf07.hostedemail.com (Postfix) with ESMTPA id 8BFCD20024;
+	Mon,  8 Sep 2025 23:12:57 +0000 (UTC)
+Date: Mon, 8 Sep 2025 19:13:43 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ linux-trace-kernel@vger.kernel.org, maz@kernel.org, oliver.upton@linux.dev,
+ joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com,
+ kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ jstultz@google.com, qperret@google.com, will@kernel.org,
+ aneesh.kumar@kernel.org, kernel-team@android.com,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 02/24] ring-buffer: Introduce ring-buffer remotes
+Message-ID: <20250908191343.70aec65c@gandalf.local.home>
+In-Reply-To: <20250821081412.1008261-3-vdonnefort@google.com>
+References: <20250821081412.1008261-1-vdonnefort@google.com>
+	<20250821081412.1008261-3-vdonnefort@google.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250828180300.591225320@kernel.org> <20250829110639.1cfc5dcc@gandalf.local.home>
- <CAHk-=wjeT3RKCTMDCcZzXznuvG2qf0fpKbHKCZuoPzxFYxVcQw@mail.gmail.com>
- <20250829121900.0e79673c@gandalf.local.home> <CAHk-=wj6+8vXfBQKoU4=8CSvgSEe1A++1KuQhXRZBHVvgFzzJg@mail.gmail.com>
- <20250829124922.6826cfe6@gandalf.local.home> <CAHk-=wid_71e2FQ-kZ-=aGTkBxDjLwtWqcsuNSxrarnU4ewFCg@mail.gmail.com>
- <6B146FF6-B84E-40A2-A4FA-ABD5576BF463@gmail.com> <CAHk-=wjgdKtBAAu10W04VTktRcgEMZu+92sf1PW-TV-cfZO3OQ@mail.gmail.com>
- <20250829141142.3ffc8111@gandalf.local.home> <CAHk-=wh8QVL4rb_17+6NfxW=AF-HS0WarMmq-nYm42akG0-Gbg@mail.gmail.com>
- <20250829171855.64f2cbfc@gandalf.local.home> <CAHk-=wj7rL47QetC+e70y7pgyH4v7Q2vcSZatRsCk+Z6urA3hw@mail.gmail.com>
- <20250829190935.7e014820@gandalf.local.home> <CAHk-=wgNeu8_=kPnKwFpwMUC=o-uh=KjJWePR9ujk=7F9yNXDQ@mail.gmail.com>
- <20250830143114.395ed246@batman.local.home> <CAHk-=wjgXGuJVaOmftxnwrS6FafwrLL+yHrH6-sgbBRB-iLn8w@mail.gmail.com>
- <20250908174235.29a57e62@gandalf.local.home>
-In-Reply-To: <20250908174235.29a57e62@gandalf.local.home>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Mon, 8 Sep 2025 16:09:50 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiEL-5f96NbRtm4JJVi6u=3Edto9-ZABgpOc6WAj=gX=w@mail.gmail.com>
-X-Gm-Features: Ac12FXy1lCy2MUtjNn6OggSKXnFGQilTbpirSh9H6fsZa-eyGTZysLHvi-fEy38
-Message-ID: <CAHk-=wiEL-5f96NbRtm4JJVi6u=3Edto9-ZABgpOc6WAj=gX=w@mail.gmail.com>
-Subject: Re: [PATCH v6 5/6] tracing: Show inode and device major:minor in
- deferred user space stacktrace
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>, Steven Rostedt <rostedt@kernel.org>, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org, x86@kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, 
-	Indu Bhagat <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>, 
-	Beau Belgrave <beaub@linux.microsoft.com>, Jens Remus <jremus@linux.ibm.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Florian Weimer <fweimer@redhat.com>, 
-	Sam James <sam@gentoo.org>, Kees Cook <kees@kernel.org>, "Carlos O'Donell" <codonell@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: ni7ydp9qrbpt8wgjrstbwwnyqtmr8gbj
+X-Rspamd-Server: rspamout07
+X-Rspamd-Queue-Id: 8BFCD20024
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19spjhfSY8UjKtitQgQ6eGgmVn5ZRZnrII=
+X-HE-Tag: 1757373177-398356
+X-HE-Meta: U2FsdGVkX1+IYfgT6MRlvk2osIuZXjZrIlcJ4j9/jdqdanGEhbZpZhCkTpcCHolekSvIfER4UCHritpDYKSNxXgeJHqJ4HFNi+KSq85REf37ElikqMQ6enV+we450+7K3/zRwvh3tzoU7hK8b8RkMPcS01+e25BZJtT2vPtAg89pc47YLCh+ATrC5dFyupHwG+ffe8rj9YC5oUtdktmWy+uf6QV05vyZnBq60DRLd762Jv9bKMP0uAX+xN1XtX59B2qr+VZRXRqL3s5QelwxrIDGbc5C5hrUH+iqYvqKWKiSVN3T/L9jqWqw5z4P/aAxnhKoWd14umpKUdFJzHSrdxJxP+WXbLKj
 
-On Mon, 8 Sept 2025 at 14:42, Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> I just re-read the entire thread, and I'm still not sure where to go with
-> this.
+On Thu, 21 Aug 2025 09:13:50 +0100
+Vincent Donnefort <vdonnefort@google.com> wrote:
 
-So honestly, I don't know how to get where you want to get - or
-whether it's even *possible* without horrible performance impact.
+> +int ring_buffer_poll_remote(struct trace_buffer *buffer, int cpu);
+> +
+> +struct trace_buffer *
+> +__ring_buffer_alloc_remote(struct ring_buffer_remote *remote,
+> +			   struct lock_class_key *key);
+> +
+> +#define ring_buffer_remote(remote)				\
+> +({								\
+> +	static struct lock_class_key __key;			\
+> +	__ring_buffer_alloc_remote(remote, &__key);		\
 
-And no, we're not adding crap interfaces to mmap/munmap just for a
-stupid sysfs tracing thing.
+If this allocates, then it should have "alloc" in its name too. Why isn't this:
 
-> Ideally, the user space stack trace should look like:
->
->    futex_requeue-1044    [002] .....   168.761423: <user stack unwind> cookie=31500000003
->  =>  <000000000009a9ee> : path=/usr/lib/x86_64-linux-gnu/libselinux.so.1 build_id={0x3ba6e0c2,0xdd815e8,0xe1821a58,0xa5940cef,0x7c7bc5ab}
->  =>  <0000000000001472> : path=/work/c/futex_requeue build_id={0xc02417ea,0x1f4e0143,0x338cf27d,0x506a7a5d,0x7884d090}
->  =>  <0000000000092b7b> : path=/usr/lib/x86_64-linux-gnu/libselinux.so.1 build_id={0x3ba6e0c2,0xdd815e8,0xe1821a58,0xa5940cef,0x7c7bc5ab}
+#define ring_buffer_alloc_remote(remote)			\
 
-Yes. And I think that's what you should aim to generate. Not inode
-numbers, because inode numbers are the wrong thing.
+?
 
-> Note, the build-id isn't really necessary for my own use case, because the
-> applications seldom change on a chromebook. I added it as it appears to be
-> useful for others I've talked to that would like to use this.
+> +})
+>  #endif /* _LINUX_RING_BUFFER_H */
+> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> index 064005c9347e..8044cb23ef88 100644
+> --- a/kernel/trace/ring_buffer.c
+> +++ b/kernel/trace/ring_buffer.c
+> @@ -523,6 +523,8 @@ struct ring_buffer_per_cpu {
+>  	struct trace_buffer_meta	*meta_page;
+>  	struct ring_buffer_cpu_meta	*ring_meta;
+>  
+> +	struct ring_buffer_remote	*remote;
+> +
+>  	/* ring buffer pages to update, > 0 to add, < 0 to remove */
+>  	long				nr_pages_to_update;
+>  	struct list_head		new_pages; /* new pages to add */
+> @@ -545,6 +547,8 @@ struct trace_buffer {
+>  
+>  	struct ring_buffer_per_cpu	**buffers;
+>  
+> +	struct ring_buffer_remote	*remote;
+> +
+>  	struct hlist_node		node;
+>  	u64				(*clock)(void);
+>  
+> @@ -2296,6 +2300,40 @@ static int __rb_allocate_pages(struct ring_buffer_per_cpu *cpu_buffer,
+>  	return -ENOMEM;
+>  }
+> 
 
-My personal suspicion is that in reality, the pathname is sufficient.
-It's certainly a lot better than inode numbers are, in that the
-pathname is meaningful even after-the-fact, and even on a different
-machine etc. It's not some guaranteed match with some particular
-library or executable version, no. But for some random one-time quick
-scripting thing that uses sysfs, it's probably "good enough".
 
-The build id is certainly very convenient too, but it's not *always*
-convenient. And 99% of the time you could just look up the build id
-from the path, even though obviously that wouldn't work across
-machines and wouldn't work across system updates.
+> +int ring_buffer_poll_remote(struct trace_buffer *buffer, int cpu)
+> +{
+> +	struct ring_buffer_per_cpu *cpu_buffer;
+> +	unsigned long flags;
+> +
+> +	if (cpu != RING_BUFFER_ALL_CPUS) {
+> +		if (!cpumask_test_cpu(cpu, buffer->cpumask))
+> +			return -EINVAL;
+> +
+> +		cpu_buffer = buffer->buffers[cpu];
+> +
+> +		raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
 
-> But printing a copy of the full path name and build-id at every stack trace
-> is expensive. The path lookup may not be so bad, but the space on the ring
-> buffer is.
+The above can be replaced by:
 
-So that's the thing. You can do it right, or you can do it wrong. I'd
-personally tend to prefer the "expensive but right", and just make it
-a trace-time option.
+		guard(raw_spinlock)(&cpu_buffer->reader_lock);
 
-> To compensate this, we could replace the path and build-id with a unique
-> identifier, (being an inode/device or hash, or whatever) to associate that
-> file. It may even work if it is unique per task. Then whenever one of these
-> identifiers were to show up representing a new file, it would be printed.
+> +		if (rb_read_remote_meta_page(cpu_buffer))
+> +			rb_wakeups(buffer, cpu_buffer);
+> +		raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
 
-So I really hate the inode number, because it's just wrong.
+Then we don't need the unlock.
 
-You can't match it across machines, and to make things worse it's not
-even *meaningful* over time or over machines - or to humans - so it's
-strictly clearly objectively worse than the pathname.
+> +
+> +		return 0;
+> +	}
+> +
+> +	/*
+> +	 * Make sure all the ring buffers are up to date before we start reading
+> +	 * them.
+> +	 */
+> +	for_each_buffer_cpu(buffer, cpu) {
+> +		cpu_buffer = buffer->buffers[cpu];
+> +
+> +		raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
 
-But more importanly - rven on the *local* machine - and at the moment
-- it's actually wrong.
+Ditto.
 
-Exactly because the inode number you look up is *not* the user-visible
-inode number from 'stat()'.
+> +		rb_read_remote_meta_page(buffer->buffers[cpu]);
+> +		raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
+> +	}
+> +
+> +	for_each_buffer_cpu(buffer, cpu) {
+> +		cpu_buffer = buffer->buffers[cpu];
+> +
+> +		raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
 
-So it's *really* wrong to use the inode number. It's basically never
-right. And bever will be, even if you can make it appear useful in
-some specific cases.
+Ditto.
 
-The *one* saving grace for the inode number is that *in*the*moment*
-you can match it against /proc/<pid>/maps, because that /proc file has
-that historical bug too (it wasn't buggy at the time that /proc file
-was introduced, but our filesystems have become much more complex
-since).
+-- Steve
 
-So if you do that
 
-    inode = file_user_inode(vma->vm_file);
+> +		if (rb_num_of_entries(cpu_buffer))
+> +			rb_wakeups(buffer, buffer->buffers[cpu]);
+> +		raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  #ifdef CONFIG_RING_BUFFER_ALLOW_SWAP
+>  /**
+>   * ring_buffer_swap_cpu - swap a CPU buffer between two ring buffers
+> @@ -6600,6 +6801,7 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
+>  	unsigned int commit;
+>  	unsigned int read;
+>  	u64 save_timestamp;
+> +	bool force_memcpy;
+>  
+>  	if (!cpumask_test_cpu(cpu, buffer->cpumask))
+>  		return -1;
+> @@ -6637,6 +6839,8 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
+>  	/* Check if any events were dropped */
+>  	missed_events = cpu_buffer->lost_events;
+>  
+> +	force_memcpy = cpu_buffer->mapped || cpu_buffer->remote;
+> +
+>  	/*
+>  	 * If this page has been partially read or
+>  	 * if len is not big enough to read the rest of the page or
+> @@ -6646,7 +6850,7 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
+>  	 */
+>  	if (read || (len < (commit - read)) ||
+>  	    cpu_buffer->reader_page == cpu_buffer->commit_page ||
+> -	    cpu_buffer->mapped) {
+> +	    force_memcpy) {
+>  		struct buffer_data_page *rpage = cpu_buffer->reader_page->page;
+>  		unsigned int rpos = read;
+>  		unsigned int pos = 0;
+> @@ -7222,7 +7426,7 @@ int ring_buffer_map(struct trace_buffer *buffer, int cpu,
+>  	unsigned long flags, *subbuf_ids;
+>  	int err;
+>  
+> -	if (!cpumask_test_cpu(cpu, buffer->cpumask))
+> +	if (!cpumask_test_cpu(cpu, buffer->cpumask) || buffer->remote)
+>  		return -EINVAL;
+>  
+>  	cpu_buffer = buffer->buffers[cpu];
 
-that I mentioned, at least the otherwise random inode numbers can be
-matched to *something*.
-
-That still doesn't fix the other issues with inode numbers, but it
-means that at the time of the trace - and on the machine that the
-tracing is done - you can now match that not-quite-real inode number
-and device against another /proc file, and turn it into a pathname.
-
-But it's kind of sad to do that, when you could just do the pathname
-in the trace directly, and not force the stupid interface in the first
-place.
-
-And honestly, at that point it's still not really *better* than the
-pathname (and arguably much much worse, because you might not be able
-to do the matching if you didn't catch the /proc/<pid>/maps file).
-
-So the inode number - together with a lookup in /proc/<pid>/maps - is
-generally about the same as just giving a path, but typically much
-less convenient, and anybody using that interface would have to do
-extra work in user space.
-
-And *none* of these issues would be true of somebody who uses the
-'perf()' interface that can do all of this much more efficiently, and
-without the downsides, and without any artificially limited sysfs
-interfaces.
-
-So that really makes me go: just don't expose this at all in sysfs
-files.  You *cannot* do a good job in sysfs, because the interface is
-strictly worse than just doing the proper job using perf.
-
-Alternatively, just do the expensive thing. Expose the actual
-pathname, and expose the build ID. Yes, it's expensive, but dammit,
-that's the whole *point* of tracing in sysfs. sysfs was never about
-being efficient, it was about convenience.
-
-So if you trace through sysfs, you either don't get the full
-information that could be there, or pay the price for the expense of
-generating the full info.
-
-Make the "give me the expensive output" be a dynamic flag, so that you
-don't do it by default, but if you have some model where you are
-scripting things with shell-script rather than doing 'perf record', at
-least you get good output.
-
-Hmm?
-
-           Linus
