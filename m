@@ -1,92 +1,72 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A6111E1E19;
-	Mon,  8 Sep 2025 09:19:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C8AF2DE71C
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  8 Sep 2025 10:13:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757323175; cv=none; b=fdKiLPGKvxaAbmaERz1XgmPcEK5dwmz/6lldmePtU4KklYJYPdekpcoH8MjuivsUwaVfnD0qLwji7DZzTCJ7TeLs6cPGYT3HsXAqQ0f7xH6Qlj2TbTRJYG1ZZzhMb8BvS4yxjV2dmw/QMwQY3L1w55OUf1SzRWZts2bGlFLnT6I=
+	t=1757326430; cv=none; b=FbSFwn7AB6PVNA7C++40Y8jAHrJGaXu4XHnpeGZk91la6iUu9NgBWz5wNqO9HDGky16eKaDqtqIsNEEwKFMERIyXCEoze7fuHaePKiU0LuectW7LgMjH3dYOZkH7C7zOHQmuDcaeeFU2+byrpfUAIY+Okrl6Q+42XM0PfLXeLKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757323175; c=relaxed/simple;
-	bh=djpAvoW8u0704b3oCV7FoPkRvtuc1IaqNChDWkioAgU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jG1UmanAi2h7oOJNmxgMdN8/PjxDzsiVvVCLcu7Z70CaTXdNzjgnMKQ9OjOX7XMdDrrXO3NTh+E1m2TpkGrtg7TyIQ6dblkUFHk433WiyCipFCZff29pgAAQVeqF52dMWTUd/UKdbb/7dcxOusFlSZpJIjYqQuBnyPb9KsF0dvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=fcWN17ce; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1757326430; c=relaxed/simple;
+	bh=3pvVKGd7pcGv4RXsx05CvvxQspqn3K5m7zfBYj1+QQA=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=MoL7J+HEW57X0IcxHi89fes8oQFI+Ysd3qEzRUqU2UppQliakE4EkiImjaowIa6kB3pomTcmF9y361f0ch9SjPd7b/RD+BYtVU+/fQj0L/Uxih9BA/jgkDCxbVqMwn0YRDmgr42xVysi/Hh/+a3GS804nQR/7f0ypsZR2tnwP04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ih76/L2l; arc=none smtp.client-ip=91.218.175.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="fcWN17ce"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 403A1C4CEF1;
-	Mon,  8 Sep 2025 09:19:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1757323174;
-	bh=djpAvoW8u0704b3oCV7FoPkRvtuc1IaqNChDWkioAgU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fcWN17ceIcjLaoFIMu7BW8j7N6aCbAyD0tzxQ2/zL9QllPAU+C2j0edPPXXeYF9wD
-	 j05L9/lmUombWtgzQys5J0K7QYXMbupcLWWyciQ3NwOznXntp/DvdmvEn8laqFKnB1
-	 eAzUFOIGG7fAuEN3pmIdQqI77eMV6TvrYvVKPa40=
-Date: Mon, 8 Sep 2025 11:19:31 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: "Mario Limonciello (AMD)" <superm1@kernel.org>
-Cc: "Rafael J . Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Pavel Machek <pavel@kernel.org>, Len Brown <lenb@kernel.org>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
-	"Martin K . Petersen" <martin.petersen@oracle.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	"open list:HIBERNATION (aka Software Suspend, aka swsusp)" <linux-pm@vger.kernel.org>,
-	"open list:RADEON and AMDGPU DRM DRIVERS" <amd-gfx@lists.freedesktop.org>,
-	"open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-	"open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-	"open list:SCSI SUBSYSTEM" <linux-scsi@vger.kernel.org>,
-	"open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>,
-	"open list:TRACING" <linux-trace-kernel@vger.kernel.org>,
-	AceLan Kao <acelan.kao@canonical.com>,
-	Kai-Heng Feng <kaihengf@nvidia.com>,
-	Mark Pearson <mpearson-lenovo@squebb.ca>,
-	Merthan =?utf-8?Q?Karaka=C5=9F?= <m3rthn.k@gmail.com>,
-	Eric Naim <dnaim@cachyos.org>
-Subject: Re: [PATCH v6 RESEND 00/11] Improvements to S5 power consumption
-Message-ID: <2025090852-coma-tycoon-9f37@gregkh>
-References: <20250906143642.2590808-1-superm1@kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ih76/L2l"
+Content-Type: text/plain;
+	charset=us-ascii
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1757326417;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ySYSYlIA/WaQQvWmLKzzHmlSzbnnjmLpztV22CiKLVQ=;
+	b=ih76/L2lS8JBDzjzBYQzyoQ97mWRepyVcKp+RDwwuSie+Xq6sRUWWJqvd4fSWrsRAhOUMB
+	si0E7Z+e0nvbcMEJiji+CPL75J5TLfNPPJvQj2KB2rh0E6KbozE8rBlnyKU6NRDg8PBeeU
+	KvLX67GLefwHdZejGvHN4dAueGcETsY=
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250906143642.2590808-1-superm1@kernel.org>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.700.81\))
+Subject: Re: [PATCH] tracing: probes: Replace strcpy() with memcpy() in
+ __trace_probe_log_err()
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Thorsten Blum <thorsten.blum@linux.dev>
+In-Reply-To: <20250825160540.9a5272a8a93a789eb36a7098@kernel.org>
+Date: Mon, 8 Sep 2025 12:13:23 +0200
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-hardening@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Message-Id: <635528D7-9B5F-4B7C-9568-87375BA866C3@linux.dev>
+References: <20250820214717.778243-3-thorsten.blum@linux.dev>
+ <20250825160540.9a5272a8a93a789eb36a7098@kernel.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+X-Migadu-Flow: FLOW_OUT
 
-On Sat, Sep 06, 2025 at 09:36:31AM -0500, Mario Limonciello (AMD) wrote:
-> A variety of issues both in function and in power consumption have been
-> raised as a result of devices not being put into a low power state when
-> the system is powered off.
+Hi Masami,
+
+On 25. Aug 2025, at 09:05, Masami Hiramatsu (Google) wrote:
+> On Wed, 20 Aug 2025 23:47:18 +0200
+> Thorsten Blum <thorsten.blum@linux.dev> wrote:
 > 
-> There have been some localized changes[1] to PCI core to help these issues,
-> but they have had various downsides.
+>> strcpy() is deprecated; use memcpy() instead.
+>> 
+>> Link: https://github.com/KSPP/linux/issues/88
+>> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
 > 
-> This series instead tries to use the S4 flow when the system is being
-> powered off.  This lines up the behavior with what other operating systems
-> do as well.  If for some reason that fails or is not supported, run their
-> shutdown() callbacks.
-> 
-> Cc: AceLan Kao <acelan.kao@canonical.com>
-> Cc: Kai-Heng Feng <kaihengf@nvidia.com>
-> Cc: Mark Pearson <mpearson-lenovo@squebb.ca>
-> Cc: Merthan Karakaş <m3rthn.k@gmail.com>
-> Cc: Eric Naim <dnaim@cachyos.org>
-> ---
-> v6 RESEND:
->  * Resent because Greg said he was ignoring it and would like the whole
->    series to be able to review.
+> OK, looks good to me.
 
-Messy, but wow, I'll trust you all that this actually works properly.
-No objections from me, but I don't want my ack on this as I don't know
-how to maintain it :)
+Did you forget to add a Reviewed-by: tag and/or to add it to your tree?
 
-thanks,
+Thanks,
+Thorsten
 
-greg k-h
