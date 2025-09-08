@@ -1,202 +1,150 @@
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 264692E2DD8;
-	Mon,  8 Sep 2025 23:13:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EB5223AE87
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  8 Sep 2025 23:27:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757373185; cv=none; b=YFSGF9YYIsg3Ly/cUyUPefxUM/XrYXK31thlp+kOCyUbxOeQLg2ijl7YH/6WXZpNdQBIm70hZrOz8xdO3lCMcQVsabNMm3xYrsLP1sZ8pD2AOYejVcOEq9izeigRrsogL3sqsml4niHl+qPBqjuZKZpJ9ppODHniShAX59QQWzA=
+	t=1757374034; cv=none; b=ravK2PkJ7fbWU0kmN4ieEPu8joGqYdv5oln3egY1vWvHhcuwf8/dVT+zddaTyUU63sDqsx45AvQeXZYBQRKWFVfu0t0NGISuf8PNBuZcO+aZfFLquDL0hPCEV/jwlx9M5v+bW9M4AoZoSvyDaFgoM27iIzIqddac+Iegx+pjm0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757373185; c=relaxed/simple;
-	bh=pak7E63ByXmvft2YjYHpDwKjJ8C0PRzTeUjBBGFFwfI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=msqszv+Uc3X5rMtREfhTfDajVp3IW4UNKKIaWH1b54dW/k4tWAZT+gC1hvQ+EcJQLcOc1xQIhQpLHutnZzbkWtSfANL0JP9zk3X+bcETKoT5Ppb6JNSn/qTifTuq0MgklyAIajWYdP+IDpadmgO/UrMQQ5elAMG+Ps+3K40wy8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf07.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id 06F5F13A9C6;
-	Mon,  8 Sep 2025 23:13:00 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf07.hostedemail.com (Postfix) with ESMTPA id 8BFCD20024;
-	Mon,  8 Sep 2025 23:12:57 +0000 (UTC)
-Date: Mon, 8 Sep 2025 19:13:43 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Vincent Donnefort <vdonnefort@google.com>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- linux-trace-kernel@vger.kernel.org, maz@kernel.org, oliver.upton@linux.dev,
- joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com,
- kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- jstultz@google.com, qperret@google.com, will@kernel.org,
- aneesh.kumar@kernel.org, kernel-team@android.com,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 02/24] ring-buffer: Introduce ring-buffer remotes
-Message-ID: <20250908191343.70aec65c@gandalf.local.home>
-In-Reply-To: <20250821081412.1008261-3-vdonnefort@google.com>
-References: <20250821081412.1008261-1-vdonnefort@google.com>
-	<20250821081412.1008261-3-vdonnefort@google.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1757374034; c=relaxed/simple;
+	bh=9j1F9Hlgq0izFEcvkNVfyEGzv++lE2ro3SvVkZ0AdfI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XEilcauVulo4/77HtV82yTEhYRVhxJ0JoWYwG5XG3w5OjLrKatMG3m6ZenvCaMm+Av1TIgNzEfexIGSiQadRnjFzFVsWcPXNLmmbmG5yoEELC8AbiEEXSv9aIS7KXtVptcenDngXn9n/zydm2tPbIr0C2fJXqRDhxdviG2LoKL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=DDTDe3M7; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="DDTDe3M7"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-b04b55d5a2cso457907466b.2
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 08 Sep 2025 16:27:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1757374030; x=1757978830; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Bsrp6f7rC2KY8hXQre2m5AM/+TH/nwxi0ROAfuOjXMY=;
+        b=DDTDe3M70UhExHay50xJFwDQ25pd4rJc6eM0GeFnHyqdln+Np1zTWQ5VoSImdaVSDo
+         EI/9BgaucrHhb37xC9CgyJgVOhRt53IGMhUQQFYpRdm7wI389mOi+ZKSjjYEEounDsSZ
+         hucCKBDkSD50njoB/n2A2V7bwuZPSu1e1u+JQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757374030; x=1757978830;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Bsrp6f7rC2KY8hXQre2m5AM/+TH/nwxi0ROAfuOjXMY=;
+        b=TOITkYUpG+3nU6Izcvd5qrzEZ7irr+UP+Q8MDDDqiEepfxwEaaQD5kdaK/pPw26lMT
+         BwLcI2xAYtRgiDmqMDwAOWyMhBkdDjkq34akvKBotxGo5EoTaJtYXSD4NzdiMpFIixvX
+         CK8It/c5/wqMZzGKEf+BIROm9TFfQpdyVI9siyrlIHD3UClmdeRxYizCNsK7DgCBnEu0
+         FRvyD2sThoGJaTWR2djdxKkaAvswXOuNUuwcz2NOC/43BUVj6/LcrAe3Wlpd8nzBNWo/
+         sfxA+qt0Jd0TaVYR4H5E0vSXlkJbUNIk5xNyT9sqItvYtlQ+4yx+gBiBOP55DupZR2Kv
+         h7og==
+X-Forwarded-Encrypted: i=1; AJvYcCXCBd5co8ZIdmoEYGxUISI3HWq7n9CH/C7QyJs4YGO4SXVgccoofbJKqodmlPjrflEWmLHW/E1Z1FrkuYf5Esl4SpQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzYc0dOhd29EeLblPTWnEo7w7t+BDTzkvFvswmVvP102/5Ss4tB
+	gRCnqm4EnFbp8O+8GsJMKWWZRLPBg0knRsME+3LNYj7Vu7EEgvzN/lWSde8eStSUcLuMrr30z9E
+	p+cx1GY4=
+X-Gm-Gg: ASbGncuVFTOuCBYUhdBSBZrX1R0WlIGNjEUA2K0bjFSfkLc92iVfzHsJtGGZ/zRaew+
+	XpY8dSisbRHfjWN0kV4xIwJgZKKy9L7rOmTDmVkTpUIzNWrB2MNQdv9wFKFj0y/elccKhTVHzmD
+	kUPUk30Dhb3hoYjLEp8eCqSJ37qq6tGp8W/oR/0aPX/du9SLOrl8cFK0kSRUIBNJk/dTHZF44fT
+	M9VGGWC3A/YrK1hV85BNdgIrrX+osgKAbZaf4g4Uf9zEy8EedHqqhGkRkMe3Cy5VTx5J+YdmiV6
+	zcf7bXjQgiuK1icweHBFIXMbEvKZKOueHRZE0HpE4pio0WKahQLJhPMnAVZi8AQhyr3QyAZDHnH
+	g+3qBIT2YiyqIX0Jx/op+fp7M7YeXwcoSZ1+ldF4gYS6W6Q2usUQoSxRYtIRgYhNnB0oU3NfN
+X-Google-Smtp-Source: AGHT+IHvoJuojuU6yBzU4Gb+hyQAkrzRj/TLwt0i3vx1k0d38m1XEYaQrg2hsuixkLNriyG5+/CJsg==
+X-Received: by 2002:a17:907:7f8f:b0:b04:36bb:545 with SMTP id a640c23a62f3a-b04b16dd7bcmr1063233066b.48.1757374030565;
+        Mon, 08 Sep 2025 16:27:10 -0700 (PDT)
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com. [209.85.218.43])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aff9918dbd2sm2380083666b.103.2025.09.08.16.27.07
+        for <linux-trace-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 08 Sep 2025 16:27:07 -0700 (PDT)
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-b04b55d5a2cso457899166b.2
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 08 Sep 2025 16:27:07 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXIWLcsbCv+20kIGiaJQi42i+Pzwom1KuTRX+wmRJC9Tp+oHY6hSLhC4xlvvOQcxvr0TDtdIfcGxVNYS5hE0b3+2lk=@vger.kernel.org
+X-Received: by 2002:a17:906:f597:b0:b04:ad1c:59e4 with SMTP id
+ a640c23a62f3a-b04b13cfa09mr966785466b.12.1757374027292; Mon, 08 Sep 2025
+ 16:27:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: ni7ydp9qrbpt8wgjrstbwwnyqtmr8gbj
-X-Rspamd-Server: rspamout07
-X-Rspamd-Queue-Id: 8BFCD20024
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19spjhfSY8UjKtitQgQ6eGgmVn5ZRZnrII=
-X-HE-Tag: 1757373177-398356
-X-HE-Meta: U2FsdGVkX1+IYfgT6MRlvk2osIuZXjZrIlcJ4j9/jdqdanGEhbZpZhCkTpcCHolekSvIfER4UCHritpDYKSNxXgeJHqJ4HFNi+KSq85REf37ElikqMQ6enV+we450+7K3/zRwvh3tzoU7hK8b8RkMPcS01+e25BZJtT2vPtAg89pc47YLCh+ATrC5dFyupHwG+ffe8rj9YC5oUtdktmWy+uf6QV05vyZnBq60DRLd762Jv9bKMP0uAX+xN1XtX59B2qr+VZRXRqL3s5QelwxrIDGbc5C5hrUH+iqYvqKWKiSVN3T/L9jqWqw5z4P/aAxnhKoWd14umpKUdFJzHSrdxJxP+WXbLKj
+References: <20250828180300.591225320@kernel.org> <20250829110639.1cfc5dcc@gandalf.local.home>
+ <CAHk-=wjeT3RKCTMDCcZzXznuvG2qf0fpKbHKCZuoPzxFYxVcQw@mail.gmail.com>
+ <20250829121900.0e79673c@gandalf.local.home> <CAHk-=wj6+8vXfBQKoU4=8CSvgSEe1A++1KuQhXRZBHVvgFzzJg@mail.gmail.com>
+ <20250829124922.6826cfe6@gandalf.local.home> <CAHk-=wid_71e2FQ-kZ-=aGTkBxDjLwtWqcsuNSxrarnU4ewFCg@mail.gmail.com>
+ <6B146FF6-B84E-40A2-A4FA-ABD5576BF463@gmail.com> <CAHk-=wjgdKtBAAu10W04VTktRcgEMZu+92sf1PW-TV-cfZO3OQ@mail.gmail.com>
+ <20250829141142.3ffc8111@gandalf.local.home> <CAHk-=wh8QVL4rb_17+6NfxW=AF-HS0WarMmq-nYm42akG0-Gbg@mail.gmail.com>
+ <20250829171855.64f2cbfc@gandalf.local.home> <CAHk-=wj7rL47QetC+e70y7pgyH4v7Q2vcSZatRsCk+Z6urA3hw@mail.gmail.com>
+ <20250829190935.7e014820@gandalf.local.home> <CAHk-=wgNeu8_=kPnKwFpwMUC=o-uh=KjJWePR9ujk=7F9yNXDQ@mail.gmail.com>
+ <20250830143114.395ed246@batman.local.home> <CAHk-=wjgXGuJVaOmftxnwrS6FafwrLL+yHrH6-sgbBRB-iLn8w@mail.gmail.com>
+ <20250908174235.29a57e62@gandalf.local.home> <CAHk-=wiEL-5f96NbRtm4JJVi6u=3Edto9-ZABgpOc6WAj=gX=w@mail.gmail.com>
+In-Reply-To: <CAHk-=wiEL-5f96NbRtm4JJVi6u=3Edto9-ZABgpOc6WAj=gX=w@mail.gmail.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Mon, 8 Sep 2025 16:26:50 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgyry=1=gabJ0iw_HbqrHkg84gCvKQXi5Qg5u6pq=vwzg@mail.gmail.com>
+X-Gm-Features: Ac12FXw_TEqw3uAfoUb6rds-8PBZlK9wEtfwraJcwLFCTgjp6oxAH2_abLFrQqY
+Message-ID: <CAHk-=wgyry=1=gabJ0iw_HbqrHkg84gCvKQXi5Qg5u6pq=vwzg@mail.gmail.com>
+Subject: Re: [PATCH v6 5/6] tracing: Show inode and device major:minor in
+ deferred user space stacktrace
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>, Steven Rostedt <rostedt@kernel.org>, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org, x86@kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, 
+	Indu Bhagat <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>, 
+	Beau Belgrave <beaub@linux.microsoft.com>, Jens Remus <jremus@linux.ibm.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Florian Weimer <fweimer@redhat.com>, 
+	Sam James <sam@gentoo.org>, Kees Cook <kees@kernel.org>, "Carlos O'Donell" <codonell@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 21 Aug 2025 09:13:50 +0100
-Vincent Donnefort <vdonnefort@google.com> wrote:
+On Mon, 8 Sept 2025 at 16:09, Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> Make the "give me the expensive output" be a dynamic flag, so that you
+> don't do it by default, but if you have some model where you are
+> scripting things with shell-script rather than doing 'perf record', at
+> least you get good output.
 
-> +int ring_buffer_poll_remote(struct trace_buffer *buffer, int cpu);
-> +
-> +struct trace_buffer *
-> +__ring_buffer_alloc_remote(struct ring_buffer_remote *remote,
-> +			   struct lock_class_key *key);
-> +
-> +#define ring_buffer_remote(remote)				\
-> +({								\
-> +	static struct lock_class_key __key;			\
-> +	__ring_buffer_alloc_remote(remote, &__key);		\
+Side note: you could make that dynamic flag be basically "per-target",
+by having the *tracer* open the files that it wants to match against,
+and guaranteeing that the dentry stays around by virtue of having
+opened the files.
 
-If this allocates, then it should have "alloc" in its name too. Why isn't this:
+Then - I'm handwaving a bit here - you could have some "hash the
+dentry pointer" model.
 
-#define ring_buffer_alloc_remote(remote)			\
+In that model,  you couldn't use the 'struct file' hash, because now
+you're matching against different 'open()' cases: the tracer that uses
+sysfs would open the executable and the libraries it knows it is going
+to trace, and keep them open for the duration of the trace in order to
+have stable hashes for those files.
 
-?
+All the tracer would need is some simple interface to "give me the
+hash for the file I just opened", and then it could easily match that
+against any hashes it sees in sysfs stack traces.
 
-> +})
->  #endif /* _LINUX_RING_BUFFER_H */
-> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index 064005c9347e..8044cb23ef88 100644
-> --- a/kernel/trace/ring_buffer.c
-> +++ b/kernel/trace/ring_buffer.c
-> @@ -523,6 +523,8 @@ struct ring_buffer_per_cpu {
->  	struct trace_buffer_meta	*meta_page;
->  	struct ring_buffer_cpu_meta	*ring_meta;
->  
-> +	struct ring_buffer_remote	*remote;
-> +
->  	/* ring buffer pages to update, > 0 to add, < 0 to remove */
->  	long				nr_pages_to_update;
->  	struct list_head		new_pages; /* new pages to add */
-> @@ -545,6 +547,8 @@ struct trace_buffer {
->  
->  	struct ring_buffer_per_cpu	**buffers;
->  
-> +	struct ring_buffer_remote	*remote;
-> +
->  	struct hlist_node		node;
->  	u64				(*clock)(void);
->  
-> @@ -2296,6 +2300,40 @@ static int __rb_allocate_pages(struct ring_buffer_per_cpu *cpu_buffer,
->  	return -ENOMEM;
->  }
-> 
+The advantage of this model is that now the tracer not only has the
+hash, and controls the lifetime, it means that the tracer also can
+decide to look up build IDs etc if it wants to.
 
+The disadvantage is obvious, though: this requires that the tracer
+know what the files in question are. Of course, that's usually not
+that hard. You might literally just know it a-priori (ie just from
+what you are tracing along with having run 'ldd' etc), but for the
+'I'm tracing a running process' you can use that /proc/<pid>/maps file
+to start populating your hash information.
 
-> +int ring_buffer_poll_remote(struct trace_buffer *buffer, int cpu)
-> +{
-> +	struct ring_buffer_per_cpu *cpu_buffer;
-> +	unsigned long flags;
-> +
-> +	if (cpu != RING_BUFFER_ALL_CPUS) {
-> +		if (!cpumask_test_cpu(cpu, buffer->cpumask))
-> +			return -EINVAL;
-> +
-> +		cpu_buffer = buffer->buffers[cpu];
-> +
-> +		raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
+I'm *not* claiming this is a wonderful interface, but it's at least a
+*fairly* straightforward way to give some kind of cheap hash ID for
+the user space traces, and it puts the burden of "hash lifetime"
+clearly on user space, not on the kernel having to try to maintain
+some kind of hash map.
 
-The above can be replaced by:
+In other words: if user space wants to get good information, maybe
+user space needs to work at it a bit.  The kernel side shouldn't be
+made complicated or be expected to bend over backwards.
 
-		guard(raw_spinlock)(&cpu_buffer->reader_lock);
-
-> +		if (rb_read_remote_meta_page(cpu_buffer))
-> +			rb_wakeups(buffer, cpu_buffer);
-> +		raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
-
-Then we don't need the unlock.
-
-> +
-> +		return 0;
-> +	}
-> +
-> +	/*
-> +	 * Make sure all the ring buffers are up to date before we start reading
-> +	 * them.
-> +	 */
-> +	for_each_buffer_cpu(buffer, cpu) {
-> +		cpu_buffer = buffer->buffers[cpu];
-> +
-> +		raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
-
-Ditto.
-
-> +		rb_read_remote_meta_page(buffer->buffers[cpu]);
-> +		raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
-> +	}
-> +
-> +	for_each_buffer_cpu(buffer, cpu) {
-> +		cpu_buffer = buffer->buffers[cpu];
-> +
-> +		raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
-
-Ditto.
-
--- Steve
-
-
-> +		if (rb_num_of_entries(cpu_buffer))
-> +			rb_wakeups(buffer, buffer->buffers[cpu]);
-> +		raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  #ifdef CONFIG_RING_BUFFER_ALLOW_SWAP
->  /**
->   * ring_buffer_swap_cpu - swap a CPU buffer between two ring buffers
-> @@ -6600,6 +6801,7 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
->  	unsigned int commit;
->  	unsigned int read;
->  	u64 save_timestamp;
-> +	bool force_memcpy;
->  
->  	if (!cpumask_test_cpu(cpu, buffer->cpumask))
->  		return -1;
-> @@ -6637,6 +6839,8 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
->  	/* Check if any events were dropped */
->  	missed_events = cpu_buffer->lost_events;
->  
-> +	force_memcpy = cpu_buffer->mapped || cpu_buffer->remote;
-> +
->  	/*
->  	 * If this page has been partially read or
->  	 * if len is not big enough to read the rest of the page or
-> @@ -6646,7 +6850,7 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
->  	 */
->  	if (read || (len < (commit - read)) ||
->  	    cpu_buffer->reader_page == cpu_buffer->commit_page ||
-> -	    cpu_buffer->mapped) {
-> +	    force_memcpy) {
->  		struct buffer_data_page *rpage = cpu_buffer->reader_page->page;
->  		unsigned int rpos = read;
->  		unsigned int pos = 0;
-> @@ -7222,7 +7426,7 @@ int ring_buffer_map(struct trace_buffer *buffer, int cpu,
->  	unsigned long flags, *subbuf_ids;
->  	int err;
->  
-> -	if (!cpumask_test_cpu(cpu, buffer->cpumask))
-> +	if (!cpumask_test_cpu(cpu, buffer->cpumask) || buffer->remote)
->  		return -EINVAL;
->  
->  	cpu_buffer = buffer->buffers[cpu];
-
+          Linus
