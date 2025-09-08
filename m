@@ -1,111 +1,134 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D44DD1C07C4
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  8 Sep 2025 14:48:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B99C1C8E6;
+	Mon,  8 Sep 2025 17:14:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757342898; cv=none; b=TrMpwHnGDBUSf7JPIKsRHrBDGOIEZbehWkztZb1o7eAKGeMrRTZBrEF4zZZX/t57B6pAyNk6TWQzomFRjq8TVTjVsoNeksJEaKkrrHJyGNiXoYCUA378nx0EikNf4Ah7/J4eWjgaBYU93ppR12CYBLikScIOM/DrHlegTLiMKxI=
+	t=1757351678; cv=none; b=IHzr6ahxb4oss/2OZ+vgy+ndyH8iGkeyPSTYPZ0TiqdmYOLcIC4EeqL/oawlzFCBl4vc1yQhoSdUkbdwKJNV3QObQGXCN2pY1zY1du3/1ClYbauCO4+XhgM1tfm9D+ZDBgnQatRpUUfaNDVN+1Wc4V4U8dzvrILblmnPpwwKP2U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757342898; c=relaxed/simple;
-	bh=wZNl7eycZG5NTOJezAbjhmL/CqhonOBDOVxjsfkU7Jk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DXC6hyAA6EuMTVW/MRQ2Q2XGiPJK6GEbBCYvQr78tocfyHygvYNSeNnGj1KGvpqINbzeC49VGmCE+diOAYDipywWsfv2+BFMRJmDYEy9dz2qscbLK+2I3EQncRiMU35oY/q4iIpkAX7Q+0aQKMbhi69ZfoVQH8KsYm185rTXROw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=A9JZ1PoE; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1757351678; c=relaxed/simple;
+	bh=wvkeqx65sSJKzWss4FZcpi/7dcO4VYCJZ9nOeFspncA=;
+	h=Message-ID:Date:From:To:Cc:Subject; b=nWRaKU1PqLd5HV0jRPlJZ0Khyhw889rSySc0w30lm0UGz9mezDVUBbozhdxSrgnxh1vyvpp0Ura38W9DB6uvBm8BBMf+yEk3ILmwaDkkOno2e9Pr9Y8h5hL775NgeSH5Bf0ljq/Oc5Nd+qT77oVsCY02kjHgiKvvhppiNMsafnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PvtXDYDX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A9JZ1PoE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1757342893;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UAha/Cuitu476bZ7HFAeir03avfwvbt+xFJIGg/4QuQ=;
-	b=A9JZ1PoEn/9uzBKKm9sp1C2eP15h4opxMLI4IRbfaWEWujn4j4d6T1gq5/hBQvPP5jqp69
-	7umlbU1U1cHT/8ZT1xtO/UlgJ9iYdWt16IHDP0Or3uwlrJc+GbuSSTGQ9xedXxpSS92ItG
-	vDkSAvhshelYkP+HNFz9+OLzZ0Yke28=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-517-D11nuVF5Nj24LGj4-zESvA-1; Mon, 08 Sep 2025 10:48:12 -0400
-X-MC-Unique: D11nuVF5Nj24LGj4-zESvA-1
-X-Mimecast-MFC-AGG-ID: D11nuVF5Nj24LGj4-zESvA_1757342892
-Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-4b5ee6cd9a3so80996661cf.2
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 08 Sep 2025 07:48:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757342892; x=1757947692;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=UAha/Cuitu476bZ7HFAeir03avfwvbt+xFJIGg/4QuQ=;
-        b=paHIGZz6htn3GtweESIxcjvLAbFnazwkxBe60+CTBEwAZEeTElCT/hFVJsgW1WG/4p
-         eMknRU2mAxr3bequPE0axrlr/a7MHjvoHpFm2ijAcRANA/AfhYQN0nEHlEk881eOZ180
-         cfWiGspDe0BOo5sYkSSOYaV8/DVPSflbNkog+owYSUn3u6xg+PuwFUxdPKa/VAXZdttn
-         GkR1S8WXYx/m2QhxaHOj9YvXYSKXebqLGWxxPCZBOm/vCKLd00Kyd71WGfRQeoiV0nFE
-         6N2HldT80yb5gnpHh8DO485nS3OXhSQqoPoi6wQ23RvWzmzwAeh6yb5JWFuieARjO9vM
-         2ydw==
-X-Gm-Message-State: AOJu0Yyg+aLRmKIPjnA2mUERDLiB88wIlXJYiAnU0uKLttwJ497S98Zc
-	wW3udjZVw1lpS/wLuj9Wga5k1fWusqTzf5o1uzr76OLYXeoPSboB35ciblVwQwlAspd2aj2EZVP
-	xzIe2/QDpZ5IMzWpnjr4kwTcX5CzjV/XtRDKWxbqfUP8WZUPMXHaBKIZrAfWBxiIfH3doVTIg4w
-	==
-X-Gm-Gg: ASbGncsmVOaHIDTUzYzYXWYcDgwUoTmnpipfSNFvROc0cmu4GEmLykwCdRbUh7TkG18
-	ZfXd9M4vvUk0VZAYyFAzdY1LgtYQJjMrVsdQu7t9Zk1IpxTiyHj5y2lY09qQvcqqf60g+wP5ku4
-	NUnmw+a1EclV3iT90hrCoaWO5uLfpmQN6uKqWkHmhzOkBU/F2gjNxzi3WcU88xExXpdTPoHYIqY
-	Ywq8QAp0OPdpu/NDRhCytj9T4ue9mOJhjBq2W+Y+CAS+ZUjrBs0rHTOntCovWWTroD7dJhGqSJ2
-	vTwjzmdmsuzRsZNyxFciH0lG9JM0s1eH/0scQ/MGvDv/OU7o3aOpGB2dYCEx9bJUpEgiSNE=
-X-Received: by 2002:a05:622a:4185:b0:4b5:d586:d74a with SMTP id d75a77b69052e-4b5f83e0756mr98949671cf.37.1757342892007;
-        Mon, 08 Sep 2025 07:48:12 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHLdgieL/B5l82jYTiqprFvmLxBMu13PlQAa54oARLKnpJ/jX1nmih2wG3W1UXMVzEnrEzSyQ==
-X-Received: by 2002:a05:622a:4185:b0:4b5:d586:d74a with SMTP id d75a77b69052e-4b5f83e0756mr98949241cf.37.1757342891475;
-        Mon, 08 Sep 2025 07:48:11 -0700 (PDT)
-Received: from crwood-thinkpadp16vgen1.minnmso.csb ([2601:447:c680:2b50:ee6f:85c2:7e3e:ee98])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4b48f756d16sm99850001cf.34.2025.09.08.07.48.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Sep 2025 07:48:11 -0700 (PDT)
-Message-ID: <2beae00128b235525a068527185443211beeb041.camel@redhat.com>
-Subject: Re: [PATCH v2 6/7] tools/rtla: Add test engine support for
- unexpected output
-From: Crystal Wood <crwood@redhat.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-trace-kernel@vger.kernel.org, John Kacur <jkacur@redhat.com>, 
- Tomas Glozar <tglozar@redhat.com>, Costa Shulyupin <costa.shul@redhat.com>
-Date: Mon, 08 Sep 2025 09:48:10 -0500
-In-Reply-To: <20250907022325.243930-7-crwood@redhat.com>
-References: <20250907022325.243930-1-crwood@redhat.com>
-	 <20250907022325.243930-7-crwood@redhat.com>
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PvtXDYDX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87A7CC4CEF5;
+	Mon,  8 Sep 2025 17:14:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757351678;
+	bh=wvkeqx65sSJKzWss4FZcpi/7dcO4VYCJZ9nOeFspncA=;
+	h=Date:From:To:Cc:Subject:From;
+	b=PvtXDYDXWtbIhjJHmrM2dDvPz3abub8XQ02C9APjhAn8iTHcjtY8NAszuuPcb3CEN
+	 RgQvfJ1mdZSh0XBMHYoBOqg1d7HoxZtdrPF3icvX9rjTLfpZkPDQJRkaMcU4nVQMv5
+	 55Z0Y3vz7+ZfsXw3LsKdz7g2IdmPLBtlPm4SIxnhqn1phzFsUHeKQ4wgsGfNlfWNhm
+	 Yv70ddvVPLwZoShyih7sYPEiTw4B08dvFYcDn3TgcCKrcfVLOV+hZ25KubnI2Wl2zc
+	 jZEkFuWLNuspvSa9paXtAXNsCqz7hnzwaEBRR//vsurT54FUPbd8VaAktMg9omlKaL
+	 UrKPyImLqLAnw==
+Received: from rostedt by gandalf with local (Exim 4.98.2)
+	(envelope-from <rostedt@kernel.org>)
+	id 1uvfSe-000000075Ny-1hzo;
+	Mon, 08 Sep 2025 13:15:24 -0400
+Message-ID: <20250908171412.268168931@kernel.org>
+User-Agent: quilt/0.68
+Date: Mon, 08 Sep 2025 13:14:12 -0400
+From: Steven Rostedt <rostedt@kernel.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org,
+ x86@kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Josh Poimboeuf <jpoimboe@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@kernel.org>,
+ Jiri Olsa <jolsa@kernel.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Andrii Nakryiko <andrii@kernel.org>,
+ Indu Bhagat <indu.bhagat@oracle.com>,
+ "Jose E. Marchesi" <jemarch@gnu.org>,
+ Beau Belgrave <beaub@linux.microsoft.com>,
+ Jens Remus <jremus@linux.ibm.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Florian Weimer <fweimer@redhat.com>,
+ Sam James <sam@gentoo.org>,
+ Kees Cook <kees@kernel.org>,
+ "Carlos O'Donell" <codonell@redhat.com>
+Subject: [RESEND][PATCH v15 0/4] perf: Support the deferred unwinding infrastructure
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: jV6KEtVkHju3C_iti09MFnNuJ3MIxsnd0In7lVdCjTM_1757342892
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Sat, 2025-09-06 at 21:23 -0500, Crystal Wood wrote:
-> Add a check() parameter to indicate which text must not appear in the
-> output.
->=20
-> Simplify the code so that we can print failures as they happen rather
-> than trying to figure out what went wrong after printing "not ok".  This
-> also means that "not ok" gets printed after the info rather than before,
-> which seems more intuitive anyway.
->=20
-> Signed-off-by: Crystal Wood <crwood@redhat.com>
-> ---
-> v2: Preserved the original ordering of "not ok" versus diagnostics as per
-> convention
 
-Oops, forgot to edit the actual commit message to reflect the v2 update.
-If there's no other need for a respin, please just remove the second
-paragraph when committing.
+[
+  This is simply a resend of version 15 of this patch series
+  but with only the kernel changes. I'm separating out the user space
+  changes to their own series.
+  The original v15 is here:
+    https://lore.kernel.org/linux-trace-kernel/20250825180638.877627656@kernel.org/
+]
 
-Thanks,
-Crystal
+This patch set is based off of perf/core of the tip tree:
+  git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
 
+To run this series, you can checkout this repo that has this series as well as the above:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git  unwind/perf-test
+
+This series implements the perf interface to use deferred user space stack
+tracing.
+
+Patch 1 adds a new API interface to the user unwinder logic to allow perf to
+get the current context cookie for it's task event tracing. Perf's task event
+tracing maps a single task per perf event buffer and it follows the task
+around, so it only needs to implement its own task_work to do the deferred
+stack trace. Because it can still suffer not knowing which user stack trace
+belongs to which kernel stack due to dropped events, having the cookie to
+create a unique identifier for each user space stack trace to know which
+kernel stack to append it to is useful.
+
+Patch 2 adds the per task deferred stack traces to perf. It adds a new event
+type called PERF_RECORD_CALLCHAIN_DEFERRED that is recorded when a task is
+about to go back to user space and happens in a location that pages may be
+faulted in. It also adds a new callchain context called PERF_CONTEXT_USER_DEFERRED
+that is used as a place holder in a kernel callchain to append the deferred
+user space stack trace to.
+
+Patch 3 adds the user stack trace context cookie in the kernel callchain right
+after the PERF_CONTEXT_USER_DEFERRED context so that the user space side can
+map the request to the deferred user space stack trace.
+
+Patch 4 adds support for the per CPU perf events that will allow the kernel to
+associate each of the per CPU perf event buffers to a single application. This
+is needed so that when a request for a deferred stack trace happens on a task
+that then migrates to another CPU, it will know which CPU buffer to use to
+record the stack trace on. It is possible to have more than one perf user tool
+running and a request made by one perf tool should have the deferred trace go
+to the same perf tool's perf CPU event buffer. A global list of all the
+descriptors representing each perf tool that is using deferred stack tracing
+is created to manage this.
+
+
+Josh Poimboeuf (1):
+      perf: Support deferred user callchains
+
+Steven Rostedt (3):
+      unwind deferred: Add unwind_user_get_cookie() API
+      perf: Have the deferred request record the user context cookie
+      perf: Support deferred user callchains for per CPU events
+
+----
+ include/linux/perf_event.h            |  11 +-
+ include/linux/unwind_deferred.h       |   5 +
+ include/uapi/linux/perf_event.h       |  25 +-
+ kernel/bpf/stackmap.c                 |   4 +-
+ kernel/events/callchain.c             |  14 +-
+ kernel/events/core.c                  | 421 +++++++++++++++++++++++++++++++++-
+ kernel/unwind/deferred.c              |  21 ++
+ tools/include/uapi/linux/perf_event.h |  25 +-
+ 8 files changed, 518 insertions(+), 8 deletions(-)
