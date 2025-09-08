@@ -1,82 +1,84 @@
-Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 185D42ECD30;
-	Mon,  8 Sep 2025 23:37:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 887DB1CAB3;
+	Mon,  8 Sep 2025 23:53:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757374638; cv=none; b=DPaNNoJ+CggllApx9eL8AbunlX4eiXg7J7ELH8oKZgYQNh1gS0/j0Wbmn0C3WWo/3sJhCMiOebvy5TF35RBYYnyJ3Uus05ZzWHxiq7Jo/6Lh8/A9mBP+MLcAvnZD1HNBgICTHUtQRgT8AzIZMileSChnubdaiAMUoQSQTLBtBG0=
+	t=1757375593; cv=none; b=kWT2xfkV15IGrH4ppsMwoPPHOO1N0nf3q7msCezRVzTKUdy1xl9TOMBpx96eXeUXCouQaQnK6eq8vWl5/DjYg8/+wDeu7lgYgTz3Urk0WNlp6u1gPMkWlUCfSzSVStBxer4QOqhTMXMi4d8QqmO45MeEWfyi3iRWwTq0BTDgVRM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757374638; c=relaxed/simple;
-	bh=b/7INvGlACZqgSm8XhR6n/N4TB0Cl26/+RGOEBMuczE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=c6f7ez5M0EDn9UOcOY8/ux7HtmVq6CoU6EiJas5SsCNw6BCSV4Lb78m2hZ8XrxTK3+cOWAdMTkQsTOundwIfHXQ88cuJGPqXrl8C6eYd1V/U6bTcgNxyyDV3GE4RjMJiozBShEaNcug8cMdjgpC6dDetj7rYUGngSjDlvQJ8sk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf07.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay01.hostedemail.com (Postfix) with ESMTP id 7F90A1DDB91;
-	Mon,  8 Sep 2025 23:37:14 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf07.hostedemail.com (Postfix) with ESMTPA id F243A20024;
-	Mon,  8 Sep 2025 23:37:10 +0000 (UTC)
-Date: Mon, 8 Sep 2025 19:37:57 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Vincent Donnefort <vdonnefort@google.com>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- linux-trace-kernel@vger.kernel.org, maz@kernel.org, oliver.upton@linux.dev,
- joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com,
- kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- jstultz@google.com, qperret@google.com, will@kernel.org,
- aneesh.kumar@kernel.org, kernel-team@android.com,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 04/24] tracing: Add reset to trace remotes
-Message-ID: <20250908193757.079aae76@gandalf.local.home>
-In-Reply-To: <20250821081412.1008261-5-vdonnefort@google.com>
-References: <20250821081412.1008261-1-vdonnefort@google.com>
-	<20250821081412.1008261-5-vdonnefort@google.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1757375593; c=relaxed/simple;
+	bh=Z6lCT2gqD0jDDMHc3VKxAWbTg7jDCGmhF/8kLGUdgEg=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=c5DOdCA8So/mBBK28Gd/XbVil0tE96lZ/Kur3E2IaBa32/BD5pzp1Z1ASZUb2Cs9OhFRLA8PiN1W7zsanrrdA7OrgYtVT39Yz+EqIfI0mfLzOJKBC+5Q+/vIBeCtTwbIZwFMkLiVvChTim0yrBLCGYej+EVayPVASnHY6zn/+U8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kFfn3VkA; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kFfn3VkA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C548BC4CEF1;
+	Mon,  8 Sep 2025 23:53:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757375592;
+	bh=Z6lCT2gqD0jDDMHc3VKxAWbTg7jDCGmhF/8kLGUdgEg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=kFfn3VkAtZ91wza+2pr3+Ooq8uZPREvsKfiUCs3sRRFBJ83E7VygIcMPT/Abw6pml
+	 dKNykhAfyfY7Jg09n4//XUfxm8oqoT31BdfElbSmTbO5Kd2Yrv/V2rjFq7FGebez+s
+	 RmVfz8B3dFkbpQkFRHZicqpqCopiCLfSxZVRHMKyLxfT8br3xHUqzUMsdO0SjuLHTj
+	 1agnNR3qk5+/qk9rp7lY8eXPVBTem+f4H3/ROd+Dt0bFch6glBsbRSVc2OEvvGCWIT
+	 7V3xHde/XFe0OtuzwiA4aQTPtXhUXSXQkn0M6g1WSlllNixOMdytvUL6PJaK7FfnF+
+	 M1PAc4FeQESyw==
+Date: Tue, 9 Sep 2025 08:53:08 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Thorsten Blum <thorsten.blum@linux.dev>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-hardening@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing: probes: Replace strcpy() with memcpy() in
+ __trace_probe_log_err()
+Message-Id: <20250909085308.15a7f4379b5d324051bbd383@kernel.org>
+In-Reply-To: <635528D7-9B5F-4B7C-9568-87375BA866C3@linux.dev>
+References: <20250820214717.778243-3-thorsten.blum@linux.dev>
+	<20250825160540.9a5272a8a93a789eb36a7098@kernel.org>
+	<635528D7-9B5F-4B7C-9568-87375BA866C3@linux.dev>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: wdbcg9cmz9hgzbiksnz8z5e99z9oj6b5
-X-Rspamd-Server: rspamout07
-X-Rspamd-Queue-Id: F243A20024
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18XbN7DKfTHTi5CaU0ETRtueyTq0Kn+udA=
-X-HE-Tag: 1757374630-126015
-X-HE-Meta: U2FsdGVkX1+EtvhnbdP2Gtp4noi9cwQOFuTgiBxTimh80Zt9R2I9RRFZOl6Ad9iETIg8Vo1wn0H3utT0IieAsllW9nATADRweoco0USuPbF/DP4mzyWeE7aIzDtTjPTMCyknsX9vb+/wfUw4RcDhTt6//E9Z3hqrulPr2olWCfWURJbu73yPFEi3lUwCRSODrbQJTtcFs9kbOy6wjiU0k5sLzN78GCaIrqX6j0uq3wxNHph6lidTpEKShX9mn39tAzBAhFD2JHB0HJDOgo8fyH/TPKH5N4qstseJVEKZysaLeFeVQlz4byE2opEgIDC69C7Sll18FkwB6E6vUWqaMXNqzjYegYIr
 
-On Thu, 21 Aug 2025 09:13:52 +0100
-Vincent Donnefort <vdonnefort@google.com> wrote:
+On Mon, 8 Sep 2025 12:13:23 +0200
+Thorsten Blum <thorsten.blum@linux.dev> wrote:
 
-> @@ -400,7 +436,9 @@ static int trace_remote_init_tracefs(const char *name, struct trace_remote *remo
->  	    !trace_create_file("buffer_size_kb", TRACEFS_MODE_WRITE, remote_d, remote,
->  			       &buffer_size_kb_fops) ||
->  	    !trace_create_file("trace_pipe", TRACEFS_MODE_READ, remote_d, remote,
-> -			       &trace_pipe_fops))
-> +			       &trace_pipe_fops) ||
-> +	    !trace_create_file("trace", 0200, remote_d, remote,
-> +			       &trace_fops))
->  		goto err;
->  
->  	percpu_d = tracefs_create_dir("per_cpu", remote_d);
-> @@ -422,7 +460,9 @@ static int trace_remote_init_tracefs(const char *name, struct trace_remote *remo
->  		}
->  
->  		if (!trace_create_cpu_file("trace_pipe", TRACEFS_MODE_READ, cpu_d, remote, cpu,
-> -					   &trace_pipe_fops))
-> +					   &trace_pipe_fops) ||
-> +		    !trace_create_cpu_file("trace", 0200, cpu_d, remote, cpu,
-> +					   &trace_fops))
->  			goto err;
->  	}
+> Hi Masami,
+> 
+> On 25. Aug 2025, at 09:05, Masami Hiramatsu (Google) wrote:
+> > On Wed, 20 Aug 2025 23:47:18 +0200
+> > Thorsten Blum <thorsten.blum@linux.dev> wrote:
+> > 
+> >> strcpy() is deprecated; use memcpy() instead.
+> >> 
+> >> Link: https://github.com/KSPP/linux/issues/88
+> >> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+> > 
+> > OK, looks good to me.
+> 
+> Did you forget to add a Reviewed-by: tag and/or to add it to your tree?
 
-I wonder if we should name the file "reset" to not be confusing to users
-when they cat the file and it doesn't produce any output.
+Thanks for ping me. No problem, I will add my Signed-by when
+picking this to probes/for-next.
+Since I will be responsible for applying this patch and sending
+it to Linus, this includes the "Reviewed-by" as well.
 
--- Steve
+Thank you,
+
+> 
+> Thanks,
+> Thorsten
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
