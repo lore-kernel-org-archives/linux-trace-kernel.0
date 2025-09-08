@@ -1,109 +1,85 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6DC521D3E4
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  8 Sep 2025 11:27:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5C89315D57;
+	Mon,  8 Sep 2025 12:13:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757330839; cv=none; b=CMsDPFSWvHiz0hoUM2KjaDyxcdtnw//aHhab0HRzVd3VasagfRkBJOKcVoEnfaUFp3sENUF5XaohB5cikuNal8RmODyZD6iauGz0aYazYF1J3Q5tASvJz/Rm3IHkPc4o1qwT+YdXo09Uf7I4n03YVRfXVTfguw8K8moYlLQM+gQ=
+	t=1757333601; cv=none; b=pLa/IBZMNWx1UFExP2Kdzds7qXg7HamBTd+rDBLepkgiHgOsHs5mE3Viii/4tLBo1Kl1jlw1NaujLC3ZoQ3mY9EHKY8TMHd3f/GD6jh5TiIenw8zQUtP4ScSTA72c+uFbV0SSkPI30/2aNOPL3Siwxwe1y0G6mGHibOeeWK0DIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757330839; c=relaxed/simple;
-	bh=RR//94mPZG5vNioGDRbAJ4bcOodAMEvGvZIWfIfDl0U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V0Qf38eYjc4e80bNtQwh1k+Sb10genp2AxAHpqIDdKbIg+TWlULj5F0pIKmHHxCaMek9XjqTldgCBgSkpVTCMgi3xVbFTUR99ydcQk+dHtnph3FjlbmZy4RG+q+syw6+Q4kCFOYz2dt4ktmTvyrPoRceezaFbzfUD7JFV4mcKKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HGrw4w5h; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1757333601; c=relaxed/simple;
+	bh=epcr8vXWo27xn1G3na7S3kMbX58DE6xb7OS8s4HtZkg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=N20P/KxbD8VaxRkeXVpQhsTNCg0xNRb39XG/Qoo/Od98Wo4b77w8LsI61Bhc7pFxZE8xzVwuDq6ZxzDpiBAdEbvoVrfUDtgS078YG6txcopc2+yzV/IUVIqw7bB0yWijsNzfmKJOm345NQ7QDRLDXZeXYtE84Ee9BiWaJIAo1Xo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fW6cjW2L; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HGrw4w5h"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1757330836;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IzG6xHUZe+gUPgC+juGd9gz+bkD6UX0YlA+R494FhJo=;
-	b=HGrw4w5hn7umr8INo5/hd87nuS5G9hP0uDnJhqlnkmwEx/1CcJennw52TBXgB5QrXGji01
-	brXMVE+sp1gFq85iA4Se1FGJFndOKse8U+kgccUKAHzjCne5rSI2bXqhlqCX6tJ8Uv2N5E
-	3K/23tdRitzB+khNUylEuIt0FzuiDFA=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-583-quJmHg-9Pdmg8_VkifqyKQ-1; Mon,
- 08 Sep 2025 07:27:13 -0400
-X-MC-Unique: quJmHg-9Pdmg8_VkifqyKQ-1
-X-Mimecast-MFC-AGG-ID: quJmHg-9Pdmg8_VkifqyKQ_1757330830
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5B4E4180045C;
-	Mon,  8 Sep 2025 11:27:09 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.189])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 33E581955F24;
-	Mon,  8 Sep 2025 11:27:01 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Mon,  8 Sep 2025 13:25:45 +0200 (CEST)
-Date: Mon, 8 Sep 2025 13:25:37 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	x86@kernel.org, Song Liu <songliubraving@fb.com>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fW6cjW2L"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EA4BC4CEF1;
+	Mon,  8 Sep 2025 12:13:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757333601;
+	bh=epcr8vXWo27xn1G3na7S3kMbX58DE6xb7OS8s4HtZkg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=fW6cjW2LH6VyalH3xc3j6nP9GGtXgHxBjGEKuOD5F29nRREhq+2Xs/2G6mzc3W+/x
+	 EWTpJoQEBbAROr9YYccc7wRap/ovIsPfBub4xeOpnnZYwQxdcEtXykw9n+rqErpZPH
+	 0NFJ8bfeOic2JKgXKQcYUBOqfTkX3dYTS1ERSNEVC/GHmmn0oQKR+Fl1JyPJdKxuO5
+	 JdHqjfd6cCRj2j+UYCJ4xgLqlzMy9riW90v8QKc+zT8B6KvfN57Evh027wWA4LgI5Y
+	 q+zy5tj3tHfKLaJawImUbsMEgaNl7AtECbcx1tPrswXSccHyipsC0DOGxTxIH1emYd
+	 bTf/m36i0GUtw==
+From: Jiri Olsa <jolsa@kernel.org>
+To: Oleg Nesterov <oleg@redhat.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andrii Nakryiko <andrii@kernel.org>
+Cc: bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	x86@kernel.org,
+	Song Liu <songliubraving@fb.com>,
 	Yonghong Song <yhs@fb.com>,
 	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	David Laight <David.Laight@ACULAB.COM>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@t-8ch.de>,
-	Ingo Molnar <mingo@kernel.org>, Jann Horn <jannh@google.com>,
-	Alejandro Colomar <alx@kernel.org>
-Subject: Re: [PATCH perf/core 1/3] uprobes/x86: Return error from uprobe
- syscall when not called from trampoline
-Message-ID: <20250908112536.GA5489@redhat.com>
-References: <20250905205731.1961288-1-jolsa@kernel.org>
- <20250905205731.1961288-2-jolsa@kernel.org>
+	Hao Luo <haoluo@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ingo Molnar <mingo@kernel.org>
+Subject: [PATCHv2 perf/core 0/4] uprobe,bpf: Allow to change app registers from uprobe registers
+Date: Mon,  8 Sep 2025 14:13:06 +0200
+Message-ID: <20250908121310.46824-1-jolsa@kernel.org>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250905205731.1961288-2-jolsa@kernel.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+Content-Transfer-Encoding: 8bit
 
-On 09/05, Jiri Olsa wrote:
->
-> Currently uprobe syscall handles all errors with forcing SIGILL to current
-> process. As suggested by Andrii it'd be helpful for uprobe syscall detection
-> to return error value for the !in_uprobe_trampoline check.
->
-> This way we could just call uprobe syscall and based on return value we will
-> find out if the kernel has it.
->
-> Suggested-by: Andrii Nakryiko <andrii@kernel.org>
-> Acked-by: Andrii Nakryiko <andrii@kernel.org>
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> ---
->  arch/x86/kernel/uprobes.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
-> index 0a8c0a4a5423..845aeaf36b8d 100644
-> --- a/arch/x86/kernel/uprobes.c
-> +++ b/arch/x86/kernel/uprobes.c
-> @@ -810,7 +810,7 @@ SYSCALL_DEFINE0(uprobe)
->
->  	/* Allow execution only from uprobe trampolines. */
->  	if (!in_uprobe_trampoline(regs->ip))
-> -		goto sigill;
-> +		return -ENXIO;
+hi,
+we recently had several requests for tetragon to be able to change
+user application function return value or divert its execution through
+instruction pointer change.
 
-I agree.
+This patchset adds support for uprobe program to change app's registers
+including instruction pointer.
 
-Acked-by: Oleg Nesterov <oleg@redhat.com>
+v2 changes:
+- moving back to original change without the uniqeu/exclusive flag
+  as discussed in here [1]
 
+thanks,
+jirka
+
+
+[1] https://lore.kernel.org/bpf/CAEf4BzbxjRwxhJTLUgJNwR-vEbDybBpawNsRb+y+PiDsxzT=eA@mail.gmail.com/
+---
+Jiri Olsa (4):
+      bpf: Allow uprobe program to change context registers
+      uprobe: Do not emulate/sstep original instruction when ip is changed
+      selftests/bpf: Add uprobe context registers changes test
+      selftests/bpf: Add uprobe context ip register change test
+
+ include/linux/bpf.h                             |   1 +
+ kernel/events/core.c                            |   4 +++
+ kernel/events/uprobes.c                         |   7 +++++
+ kernel/trace/bpf_trace.c                        |   3 +-
+ tools/testing/selftests/bpf/prog_tests/uprobe.c | 156 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ tools/testing/selftests/bpf/progs/test_uprobe.c |  38 +++++++++++++++++++++++++
+ 6 files changed, 206 insertions(+), 3 deletions(-)
