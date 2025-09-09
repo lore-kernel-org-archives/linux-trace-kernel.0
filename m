@@ -1,199 +1,173 @@
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A3CD72634;
-	Tue,  9 Sep 2025 01:17:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D6311E7C12;
+	Tue,  9 Sep 2025 02:11:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757380647; cv=none; b=l3746+tRU7GRGTEUyhv0GhTQYtrvNktgJwP/UE8D+uwQo+J4tag6AaDFEUmMMZdv0rdZGq0vPm7CpPXLl+IaKzkQRfkK5tuZbyfF5xYfYXyuxzxW7w4MK+Q6KuelCbqG9DrHGQGY400JuyXwIoIA9bq9u3KgJjO18eoBKFbZ4Xc=
+	t=1757383918; cv=none; b=ioG+KsylPvAoVajgk2aXmm7feaSOfYetTMvH8Yoh9TMqo7LbwiTULAIxhyu8h9uiJaHFc+BxX4CgkV6tW00pE62WrJnT4WrHlpBkP/37KaUzOvZSawOsW33A2umZC+YahvGa0mw6yM3i8xGD950jtgQH6nEXTR4ynBYEdW8AJVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757380647; c=relaxed/simple;
-	bh=WyS4dxEmWDZXMBOG37rJkEoTtkOROH67mn1SKF8pw60=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ze67xYaaegLo3kEHWHCcV6LU9eEdcxneBkE+hO0yE3tKldFxgvD0f3fhTui7Y6hPIKQMZRyY+tv9bK+bXc4v2VDPuTxbQjK119/L3/sKEkbZHtle+SryLqsgpp6XNjfT8VYzjef5UNTr/6NNDxJkC6nBcw3OsfrZH38wAsK05nQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf11.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay08.hostedemail.com (Postfix) with ESMTP id 444591402B4;
-	Tue,  9 Sep 2025 01:17:21 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf11.hostedemail.com (Postfix) with ESMTPA id EE7F12002C;
-	Tue,  9 Sep 2025 01:17:15 +0000 (UTC)
-Date: Mon, 8 Sep 2025 21:18:02 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>, Steven Rostedt
- <rostedt@kernel.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, x86@kernel.org,
- Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jiri
- Olsa <jolsa@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Andrii Nakryiko <andrii@kernel.org>, Indu Bhagat <indu.bhagat@oracle.com>,
- "Jose E. Marchesi" <jemarch@gnu.org>, Beau Belgrave
- <beaub@linux.microsoft.com>, Jens Remus <jremus@linux.ibm.com>, Andrew
- Morton <akpm@linux-foundation.org>, Florian Weimer <fweimer@redhat.com>,
- Sam James <sam@gentoo.org>, Kees Cook <kees@kernel.org>, "Carlos O'Donell"
- <codonell@redhat.com>
-Subject: Re: [PATCH v6 5/6] tracing: Show inode and device major:minor in
- deferred user space stacktrace
-Message-ID: <20250908211802.1d3438d3@gandalf.local.home>
-In-Reply-To: <CAHk-=wiEL-5f96NbRtm4JJVi6u=3Edto9-ZABgpOc6WAj=gX=w@mail.gmail.com>
-References: <20250828180300.591225320@kernel.org>
-	<20250829121900.0e79673c@gandalf.local.home>
-	<CAHk-=wj6+8vXfBQKoU4=8CSvgSEe1A++1KuQhXRZBHVvgFzzJg@mail.gmail.com>
-	<20250829124922.6826cfe6@gandalf.local.home>
-	<CAHk-=wid_71e2FQ-kZ-=aGTkBxDjLwtWqcsuNSxrarnU4ewFCg@mail.gmail.com>
-	<6B146FF6-B84E-40A2-A4FA-ABD5576BF463@gmail.com>
-	<CAHk-=wjgdKtBAAu10W04VTktRcgEMZu+92sf1PW-TV-cfZO3OQ@mail.gmail.com>
-	<20250829141142.3ffc8111@gandalf.local.home>
-	<CAHk-=wh8QVL4rb_17+6NfxW=AF-HS0WarMmq-nYm42akG0-Gbg@mail.gmail.com>
-	<20250829171855.64f2cbfc@gandalf.local.home>
-	<CAHk-=wj7rL47QetC+e70y7pgyH4v7Q2vcSZatRsCk+Z6urA3hw@mail.gmail.com>
-	<20250829190935.7e014820@gandalf.local.home>
-	<CAHk-=wgNeu8_=kPnKwFpwMUC=o-uh=KjJWePR9ujk=7F9yNXDQ@mail.gmail.com>
-	<20250830143114.395ed246@batman.local.home>
-	<CAHk-=wjgXGuJVaOmftxnwrS6FafwrLL+yHrH6-sgbBRB-iLn8w@mail.gmail.com>
-	<20250908174235.29a57e62@gandalf.local.home>
-	<CAHk-=wiEL-5f96NbRtm4JJVi6u=3Edto9-ZABgpOc6WAj=gX=w@mail.gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1757383918; c=relaxed/simple;
+	bh=+Qb/DM0RRK6qZzxfU2ONA179La2VSxxhvYOCDG6wXyw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LFsDHlA0w3O9d/T5wFGiNjeM1p0j24w9yBNib27UvMLnsJQEbzQfgipQJw/qTUfnyKE7gykNU7b6E8zFpaXfmAqG0P2YeazVgn+Yy9vWN4OL56PJdH7Cu7RBNvzqvbRIkOps+a38RmDYJJ/zIo4sH9eQTaDBtVyuDW1+2fVEhjc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4cLS4R6n4dzKHLyk;
+	Tue,  9 Sep 2025 10:11:51 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 1CF651A1B05;
+	Tue,  9 Sep 2025 10:11:52 +0800 (CST)
+Received: from [10.67.109.184] (unknown [10.67.109.184])
+	by APP4 (Coremail) with SMTP id gCh0CgBXoo7ljL9o1QmCBw--.23994S2;
+	Tue, 09 Sep 2025 10:11:50 +0800 (CST)
+Message-ID: <1347f753-f135-4c17-93b1-5a99f9299310@huaweicloud.com>
+Date: Tue, 9 Sep 2025 10:11:48 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] tracing: Silence warning when chunk allocation fails
+ in trace_pid_write
+Content-Language: en-US
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+References: <20250908024658.2390398-1-pulehui@huaweicloud.com>
+ <20250908150257.23731d24@gandalf.local.home>
+From: Pu Lehui <pulehui@huaweicloud.com>
+In-Reply-To: <20250908150257.23731d24@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: jbo5gt7j8qwnq1u4m4kjfbxyns645h8j
-X-Rspamd-Server: rspamout01
-X-Rspamd-Queue-Id: EE7F12002C
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/v1P4jlNvlxCkwaDuyC3roPHDk5Tixu8E=
-X-HE-Tag: 1757380635-192276
-X-HE-Meta: U2FsdGVkX18WrPDkWXPcZGdwFRnyFGOC/tyENIyeZeht5/i1S5pnpkwDKCU7gQW5BmpVpBhIF8TIXR5etkzMBDKVzj3keQ09Lc4fxmDjkdBQoLuzehRUUW92LUaXJTdwwB9bCodS4wjv+8mcK88QZxDuJEV6/DJPwngRcW9fBcQhTGK/Ih87pX4Ip3U1MXRj/UtdAVEj1cTBqxf9gLlXLTPgoUwCxqyfj5RLjjTZQDp+CKXY0n4EPnoMc7cGyaR5WBLfdKTyPQS6hcNgOFiXZICDn9sg5vGWR9yj6JPkswDyjKzng/R63xXcNcHet0UCvkPqCG6bQw+9WmNREqJlX2JR3NfAj0C86cwimadPYd9G6yGX5DGIUexLx0i4i/IrnusKIzxxmDoZCNnIW/htuPqIWacG7FowpRaKrvFUtKg=
+X-CM-TRANSID:gCh0CgBXoo7ljL9o1QmCBw--.23994S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxWw4rKr43Xr47Xr1xAryfXrb_yoWrKF4kpF
+	y5GFn7KF4rtF4jyF18WF1rWr18J398AFyxJr1xGw1rAFnFkr1jgr47GryUX3Z8JrWUJrya
+	yr1qvw45Kr4jqaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUymb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
+	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vI
+	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
+	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0
+	cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8V
+	AvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E
+	14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jjVbkUUUUU=
+X-CM-SenderInfo: psxovxtxl6x35dzhxuhorxvhhfrp/
 
-On Mon, 8 Sep 2025 16:09:50 -0700
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-
-> > To compensate this, we could replace the path and build-id with a unique
-> > identifier, (being an inode/device or hash, or whatever) to associate that
-> > file. It may even work if it is unique per task. Then whenever one of these
-> > identifiers were to show up representing a new file, it would be printed.  
+On 2025/9/9 3:02, Steven Rostedt wrote:
+> On Mon,  8 Sep 2025 02:46:58 +0000
+> Pu Lehui <pulehui@huaweicloud.com> wrote:
 > 
-> So I really hate the inode number, because it's just wrong.
-
-I just mentioned an identifier, it didn't need to be the inode.
-
+>> From: Pu Lehui <pulehui@huawei.com>
+>>
+>> Syzkaller trigger a fault injection warning:
+>>
+>> WARNING: CPU: 1 PID: 12326 at tracepoint_add_func+0xbfc/0xeb0
+>> Modules linked in:
+>> CPU: 1 UID: 0 PID: 12326 Comm: syz.6.10325 Tainted: G U 6.14.0-rc5-syzkaller #0
+>> Tainted: [U]=USER
+>> Hardware name: Google Compute Engine/Google Compute Engine
+>> RIP: 0010:tracepoint_add_func+0xbfc/0xeb0 kernel/tracepoint.c:294
+>> Code: 09 fe ff 90 0f 0b 90 0f b6 74 24 43 31 ff 41 bc ea ff ff ff
+>> RSP: 0018:ffffc9000414fb48 EFLAGS: 00010283
+>> RAX: 00000000000012a1 RBX: ffffffff8e240ae0 RCX: ffffc90014b78000
+>> RDX: 0000000000080000 RSI: ffffffff81bbd78b RDI: 0000000000000001
+>> RBP: 0000000000000000 R08: 0000000000000001 R09: 0000000000000000
+>> R10: 0000000000000001 R11: 0000000000000001 R12: ffffffffffffffef
+>> R13: 0000000000000000 R14: dffffc0000000000 R15: ffffffff81c264f0
+>> FS:  00007f27217f66c0(0000) GS:ffff8880b8700000(0000) knlGS:0000000000000000
+>> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> CR2: 0000001b2e80dff8 CR3: 00000000268f8000 CR4: 00000000003526f0
+>> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+>> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+>> Call Trace:
+>>   <TASK>
+>>   tracepoint_probe_register_prio+0xc0/0x110 kernel/tracepoint.c:464
+>>   register_trace_prio_sched_switch include/trace/events/sched.h:222 [inline]
+>>   register_pid_events kernel/trace/trace_events.c:2354 [inline]
+>>   event_pid_write.isra.0+0x439/0x7a0 kernel/trace/trace_events.c:2425
+>>   vfs_write+0x24c/0x1150 fs/read_write.c:677
+>>   ksys_write+0x12b/0x250 fs/read_write.c:731
+>>   do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+>>   do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
+>>   entry_SYSCALL_64_after_hwframe+0x77/0x7f
+>>
+>> We can reproduce the warning by following the steps below:
+>> 1. echo 8 >> set_event_notrace_pid. Let tr->filtered_pids owns one pid
+>>     and register sched_switch tracepoint.
+>> 2. echo ' ' >> set_event_pid, and perform fault injection during chunk
+>>     allocation of trace_pid_list_alloc. Let pid_list with no pid and
+>> assign to tr->filtered_pids.
+>> 3. echo ' ' >> set_event_pid. Let pid_list is NULL and assign to
+>>     tr->filtered_pids.
+>> 4. echo 9 >> set_event_pid, will trigger the double register
+>>     sched_switch tracepoint warning.
+>>
+>> The reason is that syzkaller injects a fault into the chunk allocation
+>> in trace_pid_list_alloc, causing a failure in trace_pid_list_set, which
+>> may trigger double register of the same tracepoint. This only occurs
+>> when the system is about to crash, but to suppress this warning, let's
+>> add failure handling logic to trace_pid_list_set.
+>>
+>> Fixes: 8d6e90983ade ("tracing: Create a sparse bitmask for pid filtering")
+>> Reported-by: syzbot+161412ccaeff20ce4dde@syzkaller.appspotmail.com
+>> Closes: https://lore.kernel.org/all/67cb890e.050a0220.d8275.022e.GAE@google.com
+>> Signed-off-by: Pu Lehui <pulehui@huawei.com>
+>> ---
 > 
-> So if you do that
+> FYI, when sending a v2, please state below the three dashes what was
+> changed since v1. Something like:
 > 
->     inode = file_user_inode(vma->vm_file);
-
-And if I do end up using an inode, I'll make sure to use that.
-
-
-> And *none* of these issues would be true of somebody who uses the
-> 'perf()' interface that can do all of this much more efficiently, and
-> without the downsides, and without any artificially limited sysfs
-> interfaces.
-
-Note, there is no user space component running during the trace when
-tracing with tracefs, whereas perf requires a user space tool to be
-running along with what is being traced. The idea, is not to affect what is
-being traced by a user space tracer. Tracing is started when needed, and
-when the anomaly is detected, tracing is stopped, and then the tooling
-extracts the trace and post processes it.
-
+> Changes since v1: https://lore.kernel.org/all/20250821071721.3609109-1-pulehui@huaweicloud.com/
 > 
-> So that really makes me go: just don't expose this at all in sysfs
-> files.  You *cannot* do a good job in sysfs, because the interface is
-> strictly worse than just doing the proper job using perf.
+> - Instead of returning -EINVAL before trace_parser_load() have
+>    trace_pid_write() return error when trace_pid_list_set() returns an error.
 > 
-> Alternatively, just do the expensive thing. Expose the actual
-> pathname, and expose the build ID. Yes, it's expensive, but dammit,
-> that's the whole *point* of tracing in sysfs. sysfs was never about
-> being efficient, it was about convenience.
-
-Technically, it's "tracefs" and not "sysfs". When tracefs is configured,
-sysfs will create a directory called /sys/kernel/tracing to allow user
-space to mount tracefs there, but it is still a separate file system which
-can be mounted outside of sysfs.
-
-The code in tracefs is designed to be very efficient and tries very hard to
-keep the overhead down. The tracefs ring buffer is still 2 or 3 times
-faster than the perf buffer. It is optimized for tracing, and that's even
-why it doesn't rely on a user space component, as it's another way to allow
-always-on-tracing to not affect the system as much while tracing.
-
 > 
-> So if you trace through sysfs, you either don't get the full
-> information that could be there, or pay the price for the expense of
-> generating the full info.
+> I have a Link tag to this email that is added by my scripts, with the idea
+> that this email will have a link to the previous version and so on. It will
+> create a chain of the email discussions that lead to what lands in mainline.
 
-But I will say the time to get the path name isn't an issue here. It's the
-size of the path name being recorded into the ring buffer. The ring buffer's
-size is limited, and a lot of compaction techniques are used to try to use
-it efficiently.
-
-As the stack trace only happens when the task goes back to user space, it's
-not as a time sensitive event as say function tracing. Thus spending a few
-more microseconds on something isn't going to cause much of a notice.
-
-An 8 byte identifier for a file is much better than the path name where it
-can be 40 bytes or more. In my example:
-
- /usr/lib/x86_64-linux-gnu/libselinux.so.1
-
-is 41 bytes, 42 if you count the nul terminating byte.
-
-Now if we just hash the path name, that would be doable. Then when we see a
-new name pop up, we can trigger another event to show the path name (and
-perhaps even the build id). What's nice about triggering another event to
-show the full path name, is that you can put that other event into another
-buffer, to keep the path names from dropping stack traces, and vice versa.
-
-I liked an idea you had in a previous email:
-https://lore.kernel.org/all/CAHk-=wjgdKtBAAu10W04VTktRcgEMZu+92sf1PW-TV-cfZO3OQ@mail.gmail.com/
-
-    You do it for the first time you see it, and every N times afterwards
-    (maybe by simply using a counter array that is indexed by the low bits
-    of the hash, and incrementing it for every hash you see, and if it was
-    zero modulo N you do that "mmap reminder" thing).
-
-Instead of a N counter, have a time expiry of say 200 milliseconds or so. At
-the stack trace, look at the path name, hash it, put it into a look up
-table, and if it's not there, trigger the other event to show the path name
-and save it and a timestamp into the look up table. If it's in the look up
-table, and the timestamp is greater than 200 milliseconds, trigger it again
-and reset the timestamp.
-
-The idea is only to remove duplicates, and move the longer names into a
-separate buffer.
-
-Recording full path names in every stack trace will make it much harder to
-use the information as it will lose a lot more stack traces.
+It's indeed necessary. Thanks Steven.
 
 > 
-> Make the "give me the expensive output" be a dynamic flag, so that you
-> don't do it by default, but if you have some model where you are
-> scripting things with shell-script rather than doing 'perf record', at
-> least you get good output.
-
-Note, it's not a shell script. We do have tooling, it's just that nothing
-runs while the trace is happening. The tooling starts the trace and exits.
-When the issue is discovered, tracing is stopped, and the tooling will then
-extract the trace and process it. If a crash occurs, the persistent ring
-buffer can be extracted to get the data.
-
-We will use this in the field. That is, on chromebooks where people have
-opted in to allow analysis of their machines. If there's an anomaly
-detected in thousands of users, we can start tracing and then extract the
-traces to debug what is happening on their machines. We want to make sure
-we get enough stack traces that will go back far enough to where the issue
-first occurred. Hence why we want to keep the traces small and compact.
-
--- Steve
+> -- Steve
+> 
+> 
+>>   kernel/trace/trace.c | 6 +++++-
+>>   1 file changed, 5 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+>> index 1b7db732c0b1..f2a84d1ce4b7 100644
+>> --- a/kernel/trace/trace.c
+>> +++ b/kernel/trace/trace.c
+>> @@ -834,7 +834,10 @@ int trace_pid_write(struct trace_pid_list *filtered_pids,
+>>   		/* copy the current bits to the new max */
+>>   		ret = trace_pid_list_first(filtered_pids, &pid);
+>>   		while (!ret) {
+>> -			trace_pid_list_set(pid_list, pid);
+>> +			ret = trace_pid_list_set(pid_list, pid);
+>> +			if (ret < 0)
+>> +				goto out;
+>> +
+>>   			ret = trace_pid_list_next(filtered_pids, pid + 1, &pid);
+>>   			nr_pids++;
+>>   		}
+>> @@ -871,6 +874,7 @@ int trace_pid_write(struct trace_pid_list *filtered_pids,
+>>   		trace_parser_clear(&parser);
+>>   		ret = 0;
+>>   	}
+>> + out:
+>>   	trace_parser_put(&parser);
+>>   
+>>   	if (ret < 0) {
 
