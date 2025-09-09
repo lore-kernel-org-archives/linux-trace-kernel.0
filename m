@@ -1,99 +1,138 @@
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6614925D535;
-	Tue,  9 Sep 2025 18:51:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C556225415;
+	Tue,  9 Sep 2025 19:16:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757443917; cv=none; b=QUisuaw1fFvXeziqpTWxBORJCrVbZHU6NqhNDK3CxN+XYtuIChZ2ZY8Dqo6jWMQ2mUvFeVoihKoXrwthd4FtmDA6/QtQSC/dSNCtJUQlsJF2NYjrlPonki6/Ab5wyGeQOpmEZ7oIeuytxObxEOHL6S4I1KJRQXzHm+/FQTEBBIk=
+	t=1757445395; cv=none; b=lHN/9pDIfMstCUoIyK61xmJU1KJxSGLB89iYaiCDjX0W1OmzSW3O41QhITeyhGz9LkVdrOv8wc5vM7zhNTwR5xNEsHtQe3dn7jNSqbiqNCLRFxJFw1Q4a+FfRGG8bIg1JRIsS37tdoWXVBoBZFUqq/xJL2xQPjn1T0ibJJrXaPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757443917; c=relaxed/simple;
-	bh=BspH+H9bDmo8zPVTnwL3CGtMUZHBn1KnVEmbw2azLPs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LCLGs3+I35xPy+/FVYc5hEAYDu+oVDNtHDHFFlhk0H03t/izQvpByOfIO1ny055RKfh1w/im2eyOxxLn4MJkztENaAGdSWUzdon+HP7h7h8iZex+7afZ76bH7t/TmKxar+Akr9+XCOnsM3Y93i2qSx/urHvVPbqgwpiQ/Gf3MB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf13.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay07.hostedemail.com (Postfix) with ESMTP id F2317160720;
-	Tue,  9 Sep 2025 18:51:51 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf13.hostedemail.com (Postfix) with ESMTPA id 7B67F20012;
-	Tue,  9 Sep 2025 18:51:48 +0000 (UTC)
-Date: Tue, 9 Sep 2025 14:52:36 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Vincent Donnefort <vdonnefort@google.com>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- linux-trace-kernel@vger.kernel.org, maz@kernel.org, oliver.upton@linux.dev,
- joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com,
- kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- jstultz@google.com, qperret@google.com, will@kernel.org,
- aneesh.kumar@kernel.org, kernel-team@android.com,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 04/24] tracing: Add reset to trace remotes
-Message-ID: <20250909145236.69192cd0@gandalf.local.home>
-In-Reply-To: <20250909143948.420bfb1c@gandalf.local.home>
-References: <20250821081412.1008261-1-vdonnefort@google.com>
-	<20250821081412.1008261-5-vdonnefort@google.com>
-	<20250908193757.079aae76@gandalf.local.home>
-	<aMAZMaZJ1_Eny5Ku@google.com>
-	<20250909094028.3265b751@gandalf.local.home>
-	<aMBSa29ev0BNgr5R@google.com>
-	<20250909143948.420bfb1c@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1757445395; c=relaxed/simple;
+	bh=cvjs2rCwr/swxBfVgyr8t6/tNbruth6PRMQgQt0HV2o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Yqefw+/brIiHZpbs0LbRce03CnxF8Ix2J9Thia7f3KfQfY99t2hUiSy7xbG0Pt7XjF2nXqqdewEsqZqLJBCYweqQP5WdyxRkc8PGXKuHqmVFyZ31k7/hYlYsr4R8FNR6tSAzIiMKuaNTp7h0Nfj5tuFFpNDOMjqsUHzeJugHkLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ph09nlnz; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ph09nlnz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AB41C4CEF4;
+	Tue,  9 Sep 2025 19:16:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757445395;
+	bh=cvjs2rCwr/swxBfVgyr8t6/tNbruth6PRMQgQt0HV2o=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Ph09nlnz48AjrwU0S1msu7S5hr3O+7fKDONrb0Bijxmc3Hfl96BS2wieCUFGV9fc2
+	 LrluOAXBbIY66Ri3uJ+1w1sKyPx/FDqxehGF3AlcOOkLOTijudI3PHRb6mNUKauToI
+	 pvYM2nxD91T3MkYdFhf1lKJAxdQyKHVF8prjBhojOD+EwX7+anAlSTLBQXz/rZRxyy
+	 +a5N/vFrsIobkE/CjU+wkpj+BECOOVN4WxWwQCX2k0to2derBibL5M9+Wi71juUhiq
+	 Mx9AsUaJQPypGWH06reV28bBNDgOMRPUkOIdvtyOwlkb8aFAz0GjMx1+81koMTDvwZ
+	 LXkyxfJXJs/8w==
+From: "Mario Limonciello (AMD)" <superm1@kernel.org>
+To: "Rafael J . Wysocki" <rafael@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>
+Cc: Pavel Machek <pavel@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	"James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	linux-pm@vger.kernel.org (open list:HIBERNATION (aka Software Suspend, aka swsusp)),
+	amd-gfx@lists.freedesktop.org (open list:RADEON and AMDGPU DRM DRIVERS),
+	dri-devel@lists.freedesktop.org (open list:DRM DRIVERS),
+	linux-pci@vger.kernel.org (open list:PCI SUBSYSTEM),
+	linux-scsi@vger.kernel.org (open list:SCSI SUBSYSTEM),
+	linux-usb@vger.kernel.org (open list:USB SUBSYSTEM),
+	linux-trace-kernel@vger.kernel.org (open list:TRACING),
+	AceLan Kao <acelan.kao@canonical.com>,
+	Kai-Heng Feng <kaihengf@nvidia.com>,
+	Mark Pearson <mpearson-lenovo@squebb.ca>,
+	=?UTF-8?q?Merthan=20Karaka=C5=9F?= <m3rthn.k@gmail.com>,
+	Eric Naim <dnaim@cachyos.org>,
+	"Guilherme G . Piccoli" <gpiccoli@igalia.com>,
+	"Mario Limonciello (AMD)" <superm1@kernel.org>
+Subject: [PATCH v7 00/12] Improvements to S5 power consumption
+Date: Tue,  9 Sep 2025 14:16:07 -0500
+Message-ID: <20250909191619.2580169-1-superm1@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 7B67F20012
-X-Stat-Signature: 6jcmoe7kyeoer8m9umxo4ko1reffbtxx
-X-Rspamd-Server: rspamout02
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/Tp3xCEgkAFI9W9nCgXIN17UPOUbr/RZU=
-X-HE-Tag: 1757443908-581386
-X-HE-Meta: U2FsdGVkX19lVud6y51xD4pMo2ZnzH0+UrCZC4hG0ICafd9IutkjFFOMtBXudM1zmBAVN/ESckwodi3a29EU01Len6FKTmVk2tjNG99glyZ+QI696mxRxOxD2bUPYF12N/hHUtbTx6vVRZCXpWAb/7xweUx089qM/JRxCOCfk1eA4id+quq9lOrlkLW9+L2+dle6GSfGoW9IwFgYvjLbC4ZtzLIlYJA3uH0qIqcJwJqThsDREqcMQCssMntZzpGq5l0GJHyAy7fi4dCWAcWK8H91UnGqFFzUOmr9Yo/BbOFYTy3NVlTEEx5rX1M42WuDEufQlOM1JvbO1zjYLsvHPI6FqzaraTfe2/fIxIwCHJC+xQ9246RoD9BVWgA5Vh6t
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, 9 Sep 2025 14:39:48 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+A variety of issues both in function and in power consumption have been
+raised as a result of devices not being put into a low power state when
+the system is powered off.
 
-> But anyway, I think it should work for the remote buffers too. Let me go
-> and fix the current iterator.
+There have been some localized changes[1] to PCI core to help these issues,
+but they have had various downsides.
 
-I thought it was broken but it isn't ;-) I did it properly, I just didn't
-look deep enough.
+This series instead uses the driver hibernate flows when the system is
+being powered off or halted.  This lines up the behavior with what other
+operating systems do as well.  If for some reason that fails or is not
+supported, run driver shutdown() callbacks.
 
-So yeah, look at the rb_iter_head_event() code. The ring buffer iterator
-has a copy of the event. It has:
+Rafael did mention in earlier versions of the series concerns about
+regression risk.  He was looking for thoughts from Greg who isn't against
+it but also isn't sure about how to maintain it. [1]
 
-	if ((iter->head + length) > commit || length > iter->event_size)
-		/* Writer corrupted the read? */
-		goto reset;
+This has been validated by me and several others in AMD
+on a variety of AMD hardware platforms. It's been validated by some
+community members on their Intel hardware. To my knowledge it has not
+been validated on non-x86.
 
-	memcpy(iter->event, event, length);
-	/*
-	 * If the page stamp is still the same after this rmb() then the
-	 * event was safely copied without the writer entering the page.
-	 */
-	smp_rmb();
+On my development laptop I have also contrived failures in the hibernation
+callbacks to make sure that the fallback to shutdown callback works.
 
-	/* Make sure the page didn't change since we read this */
-	if (iter->page_stamp != iter_head_page->page->time_stamp ||
-	    commit > rb_page_commit(iter_head_page))
-		goto reset;
+In order to assist with potential regressions the series also includes
+documentation to help with getting a kernel log at shutdown after
+the disk is unmounted.
 
-It first checks before copying that the data it's about to copy hasn't been
-touched by the writer.
+Cc: AceLan Kao <acelan.kao@canonical.com>
+Cc: Kai-Heng Feng <kaihengf@nvidia.com>
+Cc: Mark Pearson <mpearson-lenovo@squebb.ca>
+Cc: Merthan Karakaş <m3rthn.k@gmail.com>
+Cc: Eric Naim <dnaim@cachyos.org>
+Link: https://lore.kernel.org/linux-usb/2025090852-coma-tycoon-9f37@gregkh/ [1]
+---
+v6->v7:
+ * Add documentation on how to debug a shutdown hang
+ * Adjust commit messages per feedback from Bjorn
 
-It then copies the event into the iter->event temp buffer.
+Mario Limonciello (AMD) (12):
+  PM: Introduce new PMSG_POWEROFF event
+  scsi: Add PM_EVENT_POWEROFF into suspend callbacks
+  usb: sl811-hcd: Add PM_EVENT_POWEROFF into suspend callbacks
+  USB: Pass PMSG_POWEROFF event to suspend_common()
+  PCI/PM: Disable device wakeups when halting or powering off system
+  PCI/PM: Split out code from pci_pm_suspend_noirq() into helper
+  PCI/PM: Run bridge power up actions as part of restore phase
+  PCI/PM: Use pci_power_manageable() in pci_pm_poweroff_noirq()
+  PCI: Put PCIe bridges with downstream devices into D3 at hibernate
+  drm/amd: Avoid evicting resources at S5
+  PM: Use hibernate flows for system power off
+  Documentation: power: Add document on debugging shutdown hangs
 
-Then it checks again that the data hasn't been touched. If it has, then
-consider the data corrupt and end the iteration. This is how the "trace"
-file works. I believe you could do the same for the remote code.
+ Documentation/power/index.rst              |  1 +
+ Documentation/power/shutdown-debugging.rst | 55 ++++++++++++
+ drivers/base/power/main.c                  |  7 ++
+ drivers/gpu/drm/amd/amdgpu/amdgpu_device.c |  4 +
+ drivers/pci/pci-driver.c                   | 99 +++++++++++++++-------
+ drivers/scsi/mesh.c                        |  1 +
+ drivers/scsi/stex.c                        |  1 +
+ drivers/usb/core/hcd-pci.c                 | 11 ++-
+ drivers/usb/host/sl811-hcd.c               |  1 +
+ include/linux/pm.h                         |  5 +-
+ include/trace/events/power.h               |  3 +-
+ kernel/reboot.c                            |  6 ++
+ 12 files changed, 159 insertions(+), 35 deletions(-)
+ create mode 100644 Documentation/power/shutdown-debugging.rst
 
-If we are gonna keep the "trace" file, let's make sure it's fully
-implemented.
 
--- Steve
+base-commit: 76eeb9b8de9880ca38696b2fb56ac45ac0a25c6c
+-- 
+2.43.0
+
