@@ -1,135 +1,121 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F2D6246788;
-	Tue,  9 Sep 2025 15:20:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADF3132CF76
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  9 Sep 2025 16:10:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757431228; cv=none; b=lShkhaXfIKTAm92bwM8A5UlcarXI74+kZkwTS0Mw5o7qSosVDpWOiWllGecJngv+BONgv1ahTRb2wqfCvg5sLh3GBpdA8Ub36SR5XWyth/OF87Q9wDek7lfDML4EvxJ+YgN6yIO5bboRgR12m0qsSnux3jWCDnORCRtWIIdFl7M=
+	t=1757434224; cv=none; b=nPGL5EIWfZak3xPlQnFMwNK1wry16O64xtzVimC3/jxtf6NM6OYZkTqz3Wsc0CsRG/TejlVb5b27CSIYQpm+XoTW/p6GmwqngULmwgWpEMUKexE1Ps51Hdz5tdVg4n93hBvc0VEYr6fotLnwRI/UkrlOysfqa8lm2wFna5ybmq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757431228; c=relaxed/simple;
-	bh=24MEWkpDU+oPsVLsFh/DCdvIvAifluDEpWqU6cVm6uY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=V8IgQ2C6GS0qYOiXw39l4fywbhs207oaEVSbgwPXtI9DITeotxpw9gn/VQFW83Klg+QEQmjydhlCKL1/ugWAN82dTLuOGTuvGo7cYJx9VBbQDTXL0cnh2ySGLvgvFj+CND0SjJO2zTJioiJnE84Vl2R3Yf7GHrKo6m56gpw9I8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H0hfksql; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1757434224; c=relaxed/simple;
+	bh=bvmtY118txyjfxnCSpGNzanxwErszIEgZjkDshuNbJ0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QMH6FNETw1CBQZtJnDRUZNBJzmOBjVGE5gbk8EVQWMxJ2IryUO146+rbVgr2BjzHWyk4gFEyb4AhSC1DDWSlAl3orWVHDYw4D7rUk64sG/wSuywUgt8YzJGPY/hcBqLYidZ9+CWw1FiqoHcc0ylXtNhdv9StP4UoonfkZBAEhkg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FRyHgv3W; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H0hfksql"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-772481b2329so5951731b3a.2;
-        Tue, 09 Sep 2025 08:20:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FRyHgv3W"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-45dd505a1dfso35354295e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 09 Sep 2025 09:10:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1757431227; x=1758036027; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hLHe+egzyj71r6iVZkeqWuv/uV5QzYXqi8KlStEJB/s=;
-        b=H0hfksqlot5u/jKfDrdCsTC4sIKt/zb20BsLETL1lh3Xpt1bo3ou06vwX3t0zwqeqZ
-         MiGC7TPPCNAKSQABAm2+R+nV2CNW8l6wWy1h44/CZmGKB/lV3uiR/eh/9dnHiB3dW5Sd
-         qiZ+5bpFLdbiWn0yC9grogPxX2mLXfMZsPYz01SCZWd1SXoodaPbSdyqoOl/UUDqu8Zw
-         EPhRoXlDhewwNMdSQFl7biQ7NGlYE0QIaUejqFfEI+mqoLe/CDEJ5DKM7vk9zMTErJjs
-         k8J0Pvs7VT8RU3LVWCT9e9xY2JMkakCZNh1YgltqhhIcTnpUlthiruofGObFocEy9b8i
-         JYVQ==
+        d=google.com; s=20230601; t=1757434221; x=1758039021; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=J+NppKLzVrIsIoSaivdIxFGudWC05VGLRO9K0C3DxKA=;
+        b=FRyHgv3W5U8JKjUdNBgBEukF7I82pH6MTp9NPt1tkQkjEJb84zJe4ONos+/4vHt15s
+         tsPyDew5aD5CdTQnmfE/AxPn6vSb9VUquAgKqxt/WPHzo8JpVZ8wZGZmrqDQmj5iE0AZ
+         1oJYtk1UVEHZGyvafKqOZdG702CAmi4qWd3coiA9BATMaRkcp/h4QHFiY5xCENX/CNjg
+         jwlW3mGf0SGSJNGoHkEdCD9pUQSwr/k1kNKOT3YZ9wDN8sBjJ7pm2py7DBqjPRCGL0b6
+         vaMh7ggTz5KsYArg/uxSzUH/oHs68T7ht3UBXQFON2fkqVjX9sB5qScHbnF3xerzuh9K
+         oJPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757431227; x=1758036027;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hLHe+egzyj71r6iVZkeqWuv/uV5QzYXqi8KlStEJB/s=;
-        b=cDO9zNvouGgt9yTpy6pu8uBsj4aod+fdiLwDEGNCf88It+gbb4I8KmQmvsqpHE4/vc
-         3aqxy/W6Pu+M2WYf3ACGw5zbqiohWP2RtBRiSa01pWzhWI1pVD9WuWfuTi9RfJnyFoD+
-         n/kLdzBMDLZ1AnvBCmvTVvA0m2plYNYXYixbKQnImhDu12g/FGDjcI6bQ+f85+En/zgh
-         GSsr4yrC8XgFyI2EWCCBEqvA5eYYSf8V1bSCv1uB/fvPLlL+ULF6Ve6Km4u5yyso/VO3
-         d6Lh0uCxEx46nPxGc4d5NvCUFk2D8OQI+coTDsG7tgaUbrYFar0V3tIf4+a3l7VhIeLN
-         Or1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUJpBGob1WhjM7y0oknsYZQ+vZzzUqv9tDbOxyPLv/FSoHsK3xafatWDwVnnr2ZMb4Gahw0qKSXffS8VIMCrXdeRnYa@vger.kernel.org, AJvYcCVC/WNNw5g333M2JheBYtDk0M7zzbFhQrFnhnlj37iwiPjDtD6xDcJOInmZxzQtj8Gi3aY=@vger.kernel.org, AJvYcCVuY693xXOl+6/CVcyPLjEddv6O7zVmikFG7+Rke3ZHW6+1pqdmumTiqKlGn0GsX6HlgnL4+YM9tPw6x6Vy@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy0yF+G4usrXkastG1LjDt0+K+nttfT7oSxxHy+JexfDygxIZaV
-	3wChxxEe9tWT/ydEQYrvhqDe8zLaP4SWENTA62N9h3RQlCBF/J1Q1UWGMhJ1H6oPpsMwLFv17dg
-	nQW2XGXBp7g7cRsTgkHyKc2RLHUabERk=
-X-Gm-Gg: ASbGnctdMyv+dRznwaNdiSZAO6zltIuodgnf72t2yQ7VTEub8of5LKiDjPfZwtrlHh0
-	RcrHUt6qGfauf2BEiGAU3FeD0VtFIC97YXOhEdT5RmWoYk5Qyn8jmIJ9fyRomw5MVe3VHVDBvo5
-	8S+ZteEmdcdntQQzWnwN4KLoTSOsrf6Ji9Hw8kpUhA0qy9w19viHb6XAY8O8X+PJtsYpPQy2Sle
-	aYP5T9Py5Q4mSzRNsepOlg=
-X-Google-Smtp-Source: AGHT+IHg4JXF1EvCqzPzzXH4bT9W+XFU3eS3rEjSI4kSq0X630Rt8af52WqrdvC1S3yakfX5aw1JR0xXrGCjfGy4yWw=
-X-Received: by 2002:a05:6a20:3c8f:b0:248:f4c3:b31e with SMTP id
- adf61e73a8af0-2534441f670mr19093658637.33.1757431226633; Tue, 09 Sep 2025
- 08:20:26 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1757434221; x=1758039021;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=J+NppKLzVrIsIoSaivdIxFGudWC05VGLRO9K0C3DxKA=;
+        b=o/CaP1Al+xuKEkfAFIK44Iz1K4H86e7SiGuKpFVfFpFzjsUjr37UwvcLP4LKVK58Ox
+         tsEO31whB5RAWxrh0wQawsuDp05U4cbezl5L1XRJ3Z6M9EV5SztN/AjZE2jAn54Fib0u
+         NVAJuWAZb67Da7Ktm9eWoVkXPnMUfozoaxC+f6up7S2RvqghGLWzL4qsU8AFKa5eC7c9
+         wkyfiiEcd3HR8x+iqcI+1D7rn2tTv0hgfdy3k8I1MI1ePAG/oG3y/uqUW7J4clOSdXUG
+         SEhDgTZZOGRavv+BQxlox/ff6zPWlaQ7FLcUTLZgGr6Tp3OdLpOfEpqMNJygKJuyLGB1
+         OlDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWcJ6x/os73WGmUITBIssJzrCyYHV2avGAo0NQtGkV5bpath5NEnmrUw7ixYl2OzImHrYUfB4WSix62Fn+VTJmFDuI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwvksRDGEvSinqdxIa5s7uAYyjXQaIRCU3zlgd6ZJGjRn4HxntO
+	GY3n54aaLsQAHvEyCeGCOwuRt0IC71NCTDHF+KT5CdkmPwyd8iNPHifOnz84RuEqGw==
+X-Gm-Gg: ASbGncukGKR91ifvUpAfjxUdv+ehNQUdc0zXEV4mRIZjOsxexCnkLZM79exPCA3Hkh/
+	ZEMubVY15FCEZ+LrCoY36A6Sry+3p2Jtuwx8n+auxTU7MpRQA9tM8gUoNZycmzVScS50kBd8vw4
+	37pv2Y5Hvs0lu/ArVZHHOgYyRDiinZLsaQzzrVJMQ6Bjm2qXpw3Wb4EFWXKPCM6VThaVeANch/V
+	zfyAo8wkweZa1LXmXJJIopS3OqAdopl0FqwuoUm4ILakmRevt77B8dqBycP2iDta5nk1s86fkU4
+	vJmausbG5azuvVR2UZ2TZwLn2ABOkQYRY42aXBt5bcXKEYy7YzUNPxBqORpGH/srStQ+NY6SD2H
+	BCiW5s2ffdsY7eSZA/aD3BK6iNwRXIV4zb/h3jOmdkWn/cuXEz2ZK5McvVXiiIBDMkSRKo2R3jV
+	9y11aO
+X-Google-Smtp-Source: AGHT+IEcQIe0OC8lSfD+aiR6eeprIeDl6s8EC4O8tczqPnzu992yeZRmguAnbDmw2y0KnALeXMKgPg==
+X-Received: by 2002:a05:6000:1449:b0:3e4:ea11:f7df with SMTP id ffacd0b85a97d-3e64392b8c4mr12530932f8f.40.1757434220628;
+        Tue, 09 Sep 2025 09:10:20 -0700 (PDT)
+Received: from google.com (211.29.195.35.bc.googleusercontent.com. [35.195.29.211])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3e752238910sm3069080f8f.41.2025.09.09.09.10.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Sep 2025 09:10:19 -0700 (PDT)
+Date: Tue, 9 Sep 2025 17:10:16 +0100
+From: Vincent Donnefort <vdonnefort@google.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+	linux-trace-kernel@vger.kernel.org, maz@kernel.org,
+	oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com,
+	yuzenghui@huawei.com, kvmarm@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, jstultz@google.com,
+	qperret@google.com, will@kernel.org, aneesh.kumar@kernel.org,
+	kernel-team@android.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 03/24] tracing: Introduce trace remotes
+Message-ID: <aMBRaPzjR4OJVIWn@google.com>
+References: <20250821081412.1008261-1-vdonnefort@google.com>
+ <20250821081412.1008261-4-vdonnefort@google.com>
+ <20250908193606.47143d09@gandalf.local.home>
+ <aMAYvA9LSvfxvt_C@google.com>
+ <20250909093848.402674b7@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250821122822.671515652@infradead.org> <aKcqm023mYJ5Gv2l@krava>
- <aKgtaXHtQvJ0nm_b@krava> <CAEf4BzYg9jsEK1XdKW4dKFdOSrY4CAspaCAAv6ZJZScHxkHSyA@mail.gmail.com>
- <aMAiMrLlfmG9FbQ3@krava>
-In-Reply-To: <aMAiMrLlfmG9FbQ3@krava>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Tue, 9 Sep 2025 11:20:13 -0400
-X-Gm-Features: Ac12FXzAifWnHsDNUsovzlMLCf6odlC_hVRrnGq8pMR5gysK-J62aUi7y_H-z10
-Message-ID: <CAEf4BzZnvWH-X-7qKvx2LxzR+xkFfvjj27Tfjoui5xnph-urMw@mail.gmail.com>
-Subject: Re: [PATCH 0/6] uprobes/x86: Cleanups and fixes
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: andrii@kernel.org, Peter Zijlstra <peterz@infradead.org>, oleg@redhat.com, 
-	mhiramat@kernel.org, linux-kernel@vger.kernel.org, alx@kernel.org, 
-	eyal.birger@gmail.com, kees@kernel.org, bpf@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, x86@kernel.org, songliubraving@fb.com, 
-	yhs@fb.com, john.fastabend@gmail.com, haoluo@google.com, rostedt@goodmis.org, 
-	alan.maguire@oracle.com, David.Laight@aculab.com, thomas@t-8ch.de, 
-	mingo@kernel.org, rick.p.edgecombe@intel.com, 
-	Alexei Starovoitov <ast@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250909093848.402674b7@gandalf.local.home>
 
-On Tue, Sep 9, 2025 at 8:48=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> wrote=
-:
->
-> On Fri, Aug 22, 2025 at 11:05:59AM -0700, Andrii Nakryiko wrote:
-> > On Fri, Aug 22, 2025 at 1:42=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> =
-wrote:
-> > >
-> > > On Thu, Aug 21, 2025 at 04:18:03PM +0200, Jiri Olsa wrote:
-> > > > On Thu, Aug 21, 2025 at 02:28:22PM +0200, Peter Zijlstra wrote:
-> > > > > Hi,
-> > > > >
-> > > > > These are cleanups and fixes that I applied on top of Jiri's patc=
-hes:
-> > > > >
-> > > > >   https://lkml.kernel.org/r/20250720112133.244369-1-jolsa@kernel.=
-org
-> > > > >
-> > > > > The combined lot sits in:
-> > > > >
-> > > > >   git://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git =
-perf/core
-> > > > >
-> > > > > Jiri was going to send me some selftest updates that might mean r=
-ebasing that
-> > > > > tree, but we'll see. If this all works we'll land it in -tip.
-> > > > >
-> > > >
-> > > > hi,
-> > > > sent the selftest fix in here:
-> > > >   https://lore.kernel.org/bpf/20250821141557.13233-1-jolsa@kernel.o=
-rg/T/#u
-> > >
-> > > Andrii,
-> > > do we want any special logistic for the bpf/selftest changes or it co=
-uld
-> > > go through the tip tree?
-> >
-> > let's route selftest changes through tip together with the rest of
-> > uprobe changes, it's unlikely to conflict
->
-> fyi, there's conflict now between tip/perf/core and bpf-next/master
-> in the selftests.. due to usdt SIB argument support changes
->
-> please let me know if you need any help in resolving that
+On Tue, Sep 09, 2025 at 09:38:48AM -0400, Steven Rostedt wrote:
+> On Tue, 9 Sep 2025 13:08:28 +0100
+> Vincent Donnefort <vdonnefort@google.com> wrote:
+> 
+> > > > +		rb_desc = __next_ring_buffer_desc(rb_desc);  
+> > > 
+> > > Is there no check to make sure that the cpu mask matches what the rb_desc
+> > > will have?  
+> > 
+> > The function is filling rb_desc[], based on the cpumask input, so both will
+> > match when returning from this function.
+> > It is then easy to handle the case where some CPUs are not part of the cpumask.
+> > See remote_test_load() where for_each_ring_buffer_desc() iterates over all the
+> > CPUs from the trace_desc but uses rb_desc->cpu.
+> > 
+> > Is it what you meant?
+> 
+> I'm more worried about the allocation not being big enough for the rb_desc
+> being filled. I just noticed that the trace_remote_register() function is
+> missing a kerneldoc header. Please add one and specify what the parameters
+> are for as well as their requirements.
+> 
+> It's fine to state that the allocation of desc must match what the cpumask
+> is. But the lack of comments about what the function does and what is
+> expected of the parameters makes it hard to know if it is performing
+> properly.
 
-so selftest change hasn't landed in tip/perf/core just yet, is that
-right? If there is a conflict, I guess that changes equation a bit.
-I'd land it in bpf-next and for now disable that test in BPF CI until
-the trees converge. WDYT?
+Ok, will do!
 
->
-> jirka
+I could also add a desc_size parameter to make sure we won't overflow the given
+desc?
+
+> 
+> -- Steve
