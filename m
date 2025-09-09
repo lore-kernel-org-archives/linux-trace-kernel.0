@@ -1,133 +1,274 @@
-Received: from mail-io1-f80.google.com (mail-io1-f80.google.com [209.85.166.80])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F802321F30
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  9 Sep 2025 11:39:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.80
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F1AB258ECC
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  9 Sep 2025 12:08:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757417974; cv=none; b=ihikj75r33lkXXRwAPgccv4Ft6pZ6rTnan0YFXkkKFdM7gUR73/7jMfARwytuJzybbKO72OZD+/QF8J9gWBN3PRcgomSy0ezoJH8HvyjN4if3Bpu5WnE6/AOFeYhvV6pzsg05Qx0+1quX3xjqrXFda9/asMOsEceC6jMdsRprPA=
+	t=1757419716; cv=none; b=eFrclPa0xg75kWCLPhr/xWgpfyrq8naLZ+R4yUXcJAWnqQ9w3+ifkE30D2Ww42B0lp4Uk6PMVJNMRM0adN3CxA8o9Sl9wbuhbhnWATIakhqKtTmmZ+mba1NscZIDuuCs0widZrM/TI4d63v3hWp5qrF/o3aQ/ECsuIrgunZF32I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757417974; c=relaxed/simple;
-	bh=mtfgJC6mRhWeUBamsoa21BCrYCeBPdeJ0l1lldAejIA=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=tN3ZIX8qc1MT2p1UsSoJUC/ZDTYBRln+x1T9NHR9ZPrE1B97BDoRNdFoaOmqSeKQ/ODhuVMCAxvCyFiOYEdIMg2SMPiAKVHAhuVOJqgLw1Ugzb0UYmdRcP1oRrz/OywzZqtepaKY9wD4OVnPKGbpVoWSP114aNP1k+mgE5ckufg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f80.google.com with SMTP id ca18e2360f4ac-8870219dce3so515130339f.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 09 Sep 2025 04:39:32 -0700 (PDT)
+	s=arc-20240116; t=1757419716; c=relaxed/simple;
+	bh=e2bY/7qkyaiM/i1NmIYcr9PECxFTLhoEx9C77uMaccw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EwwQR1ufIV90hKNM8kCI/MCx5Y3t6G8BQELrsDcdEJw5cWDar9asgsZWeSThJ2rbxi4xst/iNpj6QvUlxwUci2paQz6VBk+wgajndGqvCvCn7p58zfQumuxI9CdJ93SccB63hB34YFF6ZkHrjbkGDi+69feuSlBC3QSq9XpqpWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YA6yO1rp; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YA6yO1rp"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3e3aafe06a7so2671260f8f.0
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 09 Sep 2025 05:08:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1757419713; x=1758024513; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=M7vDbC+h+/IIbH/cXwkOmZAco4ey3LkcdIeQn9K9PmM=;
+        b=YA6yO1rpCt9mH5rn7Aik1rwu72oWsprZ6nTKcO3enh8WJfwYxniaXF9tjmxQmvnNUj
+         UMUdmmk32rdYu8DkSp+AJDYvpZqKgzfTyqdmZHriavkUZ/uj4n26KU10gOmhYiYkAyqW
+         /5rBgBA5lLY+9QiiTpJSWgfNaK3ajpTtxXRovDrVrBYEFc1sU6rjz4YQ2nK/FNnfJs48
+         83e7SyuAJrYnt8nfmPlgJCM9NcUbKNFdncNe7S+REpPx+MXgoUYz2Z+HonR9itn2BDHw
+         SEebZEX4xjTnmAdB4z6pYuRvUNFjHNmtZ/gi/OaD8w1Vb975+OZpCXyOSpjOC3WIa8Tx
+         SPlg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757417971; x=1758022771;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=0DR1NbwOuCzEmWu0AkP/aduI1He0ADmflanoaSiOmxk=;
-        b=dBtiXUTa+dMli9ygQTd+WiTfUqAYY4hJiQI6THKLGNtrOUn/Jvi3PA11pPdaaA9Frs
-         0HKei7f+iAAq/m0WiJ5807kKFMb2qoeLM8I2ZzskKd2shtmItJDuAQTDBZ6OjFGbtzDP
-         y/CBE3mB9Zfrn5e/CP2jAwB3Y/E3ZxCaSGMeXqkr3Kn53ZwZLN5idRt0czKY+ZlLuZYl
-         vhVCtPIMshFBVSNDYd5/HYRUZVIxr+5r1fpC6Z7ckeDOKG9jclcqxcnLnKCcc4I3Tx8N
-         CDPaV4ZHZ4etyPFgV914CtUOmCYmymoygxJP3ODFQ+8m/NbKdVy/B6I72pe4SDiGN6Aa
-         1yjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVn/DOr8TOVeBZTb9rb0lChGaCbZTPgW5BqjsjFaygXy2xtLqLx2KJ0GuiXRa5ayB3tMJ4uSRpwLUyi2FIzrbAzZNQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwM6M65pQAb54dxykxhyUnLd7H/3gqC3LMuBWMnI7Zt+ZJsB/50
-	VAyX8rcOnaoFKg58Qphf+Zve0eOqTwLpb2wMNl0Etz9UzHyZqCSGuUSoSF9ereTnvkkUf5u7qkM
-	bMYk+s0rVvy/DhJBkbZxp70Rc08ANtk1mE9xuESTTja5HzfvEiDmkoRx4Zgk=
-X-Google-Smtp-Source: AGHT+IF62rkxMyBfjOX8r3B7ezx1SAJDtsbixOyF1uN6h+vq0suHWhPGowKv7zE5VUYKTqLk5spLkMq/1EwguJXacmhYt/7RATzz
+        d=1e100.net; s=20230601; t=1757419713; x=1758024513;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=M7vDbC+h+/IIbH/cXwkOmZAco4ey3LkcdIeQn9K9PmM=;
+        b=OipdBcDEaXIFzBvNCXpQApKtRnLrBbhmjd31R4MAX51I+aOR9NxW0LVOq3Y8n40Km/
+         oQo8t8/EigPettwmhwYBclnzl4FEINHIYa+ZufClVZUWZhJR0WZC68MTCOQPHnc66mq1
+         BdrvvdaZ9epp4aOGqofCy8cINmkNBgCnlCo/p1aRBhJkWko4wMbyXlTdzjmOFbAVRZ/i
+         ce1gT5jC8jbO/mIzd7X89Am81qakGRKWt3dAXevmY8Zzj+J0f60oy/x3lfuJvXYfUJix
+         xqOieW14Oeqr3vrM7knJn55aZsz9j3+WUslsoAyVECXvbH7XcE9Af59FlzjsaWNqa3kG
+         Zbvw==
+X-Forwarded-Encrypted: i=1; AJvYcCUXLgwu7rPuCRHijrNqf6Ggb68LRC1hYVSU2xtV6x5ZnMwn+FpqbHrdeAnNul+0pAIHP4FApDM6cjVuejI1NNtwbpo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy1Tkb9+3nXE05N/1M1z2lOcZKKSQO+9wlOfS/ZRoIT8v7q+b4V
+	ooUvBTBbOwUTPuDfXHDgM/DamF1TasH6NMFs17jS+gQVnIt9AqWdR75S0m7cHQq2Xw==
+X-Gm-Gg: ASbGncvpUFj8hxJ10fFzBWkTZ/jttkj7swmewbmDQlalkUZXzZvBMpNkCNgNpLEunxw
+	iqoe3K4fIRFR6oJIGL8j4f3WlptSX9lYztSdDLf4s8zucxQL7ic8bYCZX3NhcI3GWqVpH2wUD/r
+	wxo3XD4wophLCiQOI9fU6wyJGmkcJEghqX/Tn7dgJ6/8YHaq8zmEoDHFguB+kIIy3mmMCXG4fTD
+	vPNX807RaxfKnkpFLqU2J6vnNB7/6nxnVAqQsvgPRN35QDmdnGShaq6YyDpdASbn+2h26Q7ygAo
+	zS+IlGk0erAB8v8hvwSe1Qmphdb/aP72vY9S5+Ahz+fTQp42L5rXaN9D9O9/DFh/wW+EIjUm7C1
+	8U183DvxquOsVZG6pkif/9TlL70mBTJJti6eqR1KfxMA5bHFJrHL7H+t7PHqml5WLV71j47MCKA
+	HnopFH
+X-Google-Smtp-Source: AGHT+IEmpSA1PmUMsgcmd2ZNoedzp7F9aWzukj/yEFhZuO5KFbaj8r4hHCaj2MqwR9Y8LELRFzynbQ==
+X-Received: by 2002:a05:6000:2486:b0:3e7:490c:1a2 with SMTP id ffacd0b85a97d-3e7490c049dmr6915730f8f.10.1757419712364;
+        Tue, 09 Sep 2025 05:08:32 -0700 (PDT)
+Received: from google.com (211.29.195.35.bc.googleusercontent.com. [35.195.29.211])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3e7521c9cb9sm2559883f8f.20.2025.09.09.05.08.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Sep 2025 05:08:31 -0700 (PDT)
+Date: Tue, 9 Sep 2025 13:08:28 +0100
+From: Vincent Donnefort <vdonnefort@google.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+	linux-trace-kernel@vger.kernel.org, maz@kernel.org,
+	oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com,
+	yuzenghui@huawei.com, kvmarm@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, jstultz@google.com,
+	qperret@google.com, will@kernel.org, aneesh.kumar@kernel.org,
+	kernel-team@android.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 03/24] tracing: Introduce trace remotes
+Message-ID: <aMAYvA9LSvfxvt_C@google.com>
+References: <20250821081412.1008261-1-vdonnefort@google.com>
+ <20250821081412.1008261-4-vdonnefort@google.com>
+ <20250908193606.47143d09@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1b06:b0:3f3:4562:ca92 with SMTP id
- e9e14a558f8ab-3fd8e98d28cmr172816265ab.10.1757417971719; Tue, 09 Sep 2025
- 04:39:31 -0700 (PDT)
-Date: Tue, 09 Sep 2025 04:39:31 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68c011f3.050a0220.2ff435.0003.GAE@google.com>
-Subject: [syzbot] [trace?] WARNING in tracepoint_add_func (3)
-From: syzbot <syzbot+eb730f6ee28e001e5a2e@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	mathieu.desnoyers@efficios.com, mhiramat@kernel.org, rostedt@goodmis.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250908193606.47143d09@gandalf.local.home>
 
-Hello,
+On Mon, Sep 08, 2025 at 07:36:05PM -0400, Steven Rostedt wrote:
+> On Thu, 21 Aug 2025 09:13:51 +0100
+> Vincent Donnefort <vdonnefort@google.com> wrote:
+> 
+> > A trace remote relies on ring-buffer remotes to read and control
+> > compatible tracing buffers, written by entity such as firmware or
+> > hypervisor.
+> > 
+> > Add a Tracefs directory remotes/ that contains all instances of trace
+> > remotes. Each instance follows the same hierarchy as any other to ease
+> > the support by existing user-space tools.
+> > 
+> > This currently does not provide any event support, which will come
+> > later.
+> > 
+> > Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+> > 
+> > diff --git a/include/linux/trace_remote.h b/include/linux/trace_remote.h
+> > new file mode 100644
+> > index 000000000000..de043a6f2fe0
+> > --- /dev/null
+> > +++ b/include/linux/trace_remote.h
+> > @@ -0,0 +1,21 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +
+> > +#ifndef _LINUX_TRACE_REMOTE_H
+> > +#define _LINUX_TRACE_REMOTE_H
+> > +
+> > +#include <linux/ring_buffer.h>
+> > +
+> > +struct trace_remote_callbacks {
+> > +	struct trace_buffer_desc *
+> > +		(*load_trace_buffer)(unsigned long size, void *priv);
+> 
+> I believe this is one of those cases where the 80 char limit is more of a
+> guildline than a rule. It looks better to keep the above as one line.
+> 
+> > +	void	(*unload_trace_buffer)(struct trace_buffer_desc *desc, void *priv);
+> 
+> Heck, this is already passed 80 characters ;-)
+> 
+> > +	int	(*enable_tracing)(bool enable, void *priv);
+> > +	int	(*swap_reader_page)(unsigned int cpu, void *priv);
+> > +};
+> > +
+> > +int trace_remote_register(const char *name, struct trace_remote_callbacks *cbs, void *priv);
+> > +int trace_remote_alloc_buffer(struct trace_buffer_desc *desc, size_t size,
+> > +			      const struct cpumask *cpumask);
+> > +void trace_remote_free_buffer(struct trace_buffer_desc *desc);
+> > +
+> > +#endif
+> > diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+> > index d2c79da81e4f..99af56d39eaf 100644
+> > --- a/kernel/trace/Kconfig
+> > +++ b/kernel/trace/Kconfig
+> > @@ -1238,4 +1238,7 @@ config HIST_TRIGGERS_DEBUG
+> >  
+> 
+> 
+> > +
+> > +int trace_remote_register(const char *name, struct trace_remote_callbacks *cbs, void *priv)
+> > +{
+> > +	struct trace_remote *remote;
+> > +
+> > +	remote = kzalloc(sizeof(*remote), GFP_KERNEL);
+> > +	if (!remote)
+> > +		return -ENOMEM;
+> > +
+> > +	remote->cbs = cbs;
+> > +	remote->priv = priv;
+> > +	remote->trace_buffer_size = 7 << 10;
+> > +	remote->poll_ms = 100;
+> 
+> What's with the magic numbers?
 
-syzbot found the following issue on:
+The 7KiB value can be modified with the tracefs file buffer_size_kb.
 
-HEAD commit:    d69eb204c255 Merge tag 'net-6.17-rc5' of git://git.kernel...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=14f67162580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=fecbb496f75d3d61
-dashboard link: https://syzkaller.appspot.com/bug?extid=eb730f6ee28e001e5a2e
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+the 100ms can't be modified. I could either make a tracefs file or just a
+trace_remote_set_poll_ms() function so it can be modified after registration.
 
-Unfortunately, I don't have any reproducer for this issue yet.
+In all cases, I'll add a TRACE_REMOTE_DEFAULT_XXXX definition at the start of
+the file.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/a6f2a6d6a06c/disk-d69eb204.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/3767a1bdccea/vmlinux-d69eb204.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/2387e35c8e78/bzImage-d69eb204.xz
+> 
+> > +	mutex_init(&remote->lock);
+> > +
+> > +	if (trace_remote_init_tracefs(name, remote)) {
+> > +		kfree(remote);
+> > +		return -ENOMEM;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +void trace_remote_free_buffer(struct trace_buffer_desc *desc)
+> > +{
+> > +	struct ring_buffer_desc *rb_desc;
+> > +	int cpu;
+> > +
+> > +	for_each_ring_buffer_desc(rb_desc, cpu, desc) {
+> > +		unsigned int id;
+> > +
+> > +		free_page(rb_desc->meta_va);
+> > +
+> > +		for (id = 0; id < rb_desc->nr_page_va; id++)
+> > +			free_page(rb_desc->page_va[id]);
+> > +	}
+> > +}
+> > +
+> > +int trace_remote_alloc_buffer(struct trace_buffer_desc *desc, size_t size,
+> > +			      const struct cpumask *cpumask)
+> > +{
+> > +	int nr_pages = (PAGE_ALIGN(size) / PAGE_SIZE) + 1;
+> > +	struct ring_buffer_desc *rb_desc;
+> > +	int cpu;
+> > +
+> > +	desc->nr_cpus = 0;
+> > +	desc->struct_len = offsetof(struct trace_buffer_desc, __data);
+> 
+> The above is better as:
+> 
+> 	desc->struct_len = struct_size(desc, __data, 0);
+> 
+> As it also does some other checks, like make sure __data is a flexible
+> array.
+> 
+> > +
+> > +	rb_desc = (struct ring_buffer_desc *)&desc->__data[0];
+> > +
+> > +	for_each_cpu(cpu, cpumask) {
+> > +		unsigned int id;
+> > +
+> > +		rb_desc->cpu = cpu;
+> > +		rb_desc->nr_page_va = 0;
+> > +		rb_desc->meta_va = (unsigned long)__get_free_page(GFP_KERNEL);
+> > +		if (!rb_desc->meta_va)
+> > +			goto err;
+> > +
+> > +		for (id = 0; id < nr_pages; id++) {
+> > +			rb_desc->page_va[id] = (unsigned long)__get_free_page(GFP_KERNEL);
+> > +			if (!rb_desc->page_va[id])
+> 
+> What exactly are these pages allocated for? Is this what the remote will
+> use to write to? There should be more comments about how this is used.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+eb730f6ee28e001e5a2e@syzkaller.appspotmail.com
+Those are the actual ring-buffer data pages. I'll add a comment here.
+> 
+> > +				goto err;
+> > +
+> > +			rb_desc->nr_page_va++;
+> > +		}
+> > +		desc->nr_cpus++;
+> > +		desc->struct_len += offsetof(struct ring_buffer_desc, page_va);
+> > +		desc->struct_len += sizeof(rb_desc->page_va[0]) * rb_desc->nr_page_va;
+> 
+> Shouldn't the above be:
+> 
+> 		desc->struct_len += struct_size(rb_desc, page_va, rb_desc->nr_page_va);
+> 
+> ?
 
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 20575 at kernel/tracepoint.c:294 tracepoint_add_func+0xbf2/0xea0 kernel/tracepoint.c:294
-Modules linked in:
-CPU: 0 UID: 0 PID: 20575 Comm: syz.3.1826 Tainted: G          I         syzkaller #0 PREEMPT(full) 
-Tainted: [I]=FIRMWARE_WORKAROUND
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 07/12/2025
-RIP: 0010:tracepoint_add_func+0xbf2/0xea0 kernel/tracepoint.c:294
-Code: 54 12 fe ff 90 0f 0b 90 0f b6 74 24 43 31 ff bb ea ff ff ff e8 1f 0d fe ff 80 7c 24 44 00 0f 84 77 fb ff ff e8 2f 12 fe ff 90 <0f> 0b 90 e9 69 fb ff ff e8 21 12 fe ff 48 8b 44 24 10 48 8d 78 18
-RSP: 0018:ffffc90004b3fb48 EFLAGS: 00010287
-RAX: 000000000000128b RBX: ffffffffffffffef RCX: ffffc9000cf8c000
-RDX: 0000000000080000 RSI: ffffffff81bcf8a1 RDI: 0000000000000001
-RBP: 0000000000000000 R08: 0000000000000001 R09: 0000000000000000
-R10: 0000000000000001 R11: 0000000000000000 R12: dffffc0000000000
-R13: 0000000000000000 R14: ffffffff8e645aa0 R15: ffffffff81c3bd00
-FS:  00007f88b35446c0(0000) GS:ffff8881246bd000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000001b33600ff8 CR3: 000000004752c000 CR4: 00000000003526f0
-Call Trace:
- <TASK>
- tracepoint_probe_register_prio+0xbc/0x100 kernel/tracepoint.c:464
- register_trace_prio_sched_switch include/trace/events/sched.h:220 [inline]
- register_pid_events kernel/trace/trace_events.c:2390 [inline]
- event_pid_write.isra.0+0x480/0x7f0 kernel/trace/trace_events.c:2461
- vfs_write+0x29d/0x11d0 fs/read_write.c:684
- ksys_write+0x12a/0x250 fs/read_write.c:738
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xcd/0x490 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f88b278ebe9
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f88b3544038 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 00007f88b29c5fa0 RCX: 00007f88b278ebe9
-RDX: 000000000000fdf3 RSI: 0000000000000000 RDI: 0000000000000003
-RBP: 00007f88b2811e19 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 00007f88b29c6038 R14: 00007f88b29c5fa0 R15: 00007ffc283ad408
- </TASK>
+Yes, that'd look way better.
 
+> 
+> > +		rb_desc = __next_ring_buffer_desc(rb_desc);
+> 
+> Is there no check to make sure that the cpu mask matches what the rb_desc
+> will have?
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+The function is filling rb_desc[], based on the cpumask input, so both will
+match when returning from this function.
+It is then easy to handle the case where some CPUs are not part of the cpumask.
+See remote_test_load() where for_each_ring_buffer_desc() iterates over all the
+CPUs from the trace_desc but uses rb_desc->cpu.
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Is it what you meant?
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+> 
+> -- Steve
+> 
+> > +	}
+> > +
+> > +	return 0;
+> > +
+> > +err:
+> > +	trace_remote_free_buffer(desc);
+> > +	return -ENOMEM;
+> > +}
+> 
