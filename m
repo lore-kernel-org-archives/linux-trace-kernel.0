@@ -1,25 +1,25 @@
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C74062EFD86;
-	Tue,  9 Sep 2025 18:18:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE9FE25DAF0;
+	Tue,  9 Sep 2025 18:39:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757441929; cv=none; b=Zxx8gO9pE8EVJnpHyOFkhYX+Ip2FrgjKiFkuIg/whC0eC58zJ29aD+bfYBfc+fw1dJvzgzvwwY9OESkGFHbL5OSU3FEmmmeWH6Xa25l3CTo6uyUmCpH+k2zq2QJjg5hAO0xVgeomImXSwtfRpMO8FR9H0+GMrF9tmIdDtEp9jeo=
+	t=1757443148; cv=none; b=egbE/n/oqKsyHBaQMp7kUlA1+IAz+x0kXRypFlBL+TM6dM/gMaVVeyq1jkvxDYf0Dn2pCXJVBSL+V5+QUSnzkWscDwmT5UidQtpW93V7JvtQa2Kez2+mBe13KR3dpfe/g0H1LsI7wsAUxyFRtzZBSev6jCTRG467PCs3U+zHypA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757441929; c=relaxed/simple;
-	bh=c+UjXcPyXKjM7+Tb+xcH0eAP8Rhl0lUQ67XY7B3xHL0=;
+	s=arc-20240116; t=1757443148; c=relaxed/simple;
+	bh=eqcE62nxhCYT/g1eduv2zGQJ99h5K0JxSzmZu9RmBP4=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=B9KPFdOw9QQnWtdfcvKAGo01ZE18e5CUntcQEK0oNahblnl9lel7j0vdukPVv4xGsjg4TAT56VKrAPoN1Uc3bZ5ouayKOuWXm3BShMNr7BMWj8RKGk0eymPPSM6XEYRKijzo+Yl2IJu9s0xst88Q9EAHIUFb7oV4VSoxM1X7NEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
+	 MIME-Version:Content-Type; b=b4nsspJv1rAJPBxz1L+eKyloJ130+ZRAZcNCfEkXt1agNHw5G77EAmiPtXtx+NDbxo6sBDmMi7dYLtCl5cHX4qm5d4n47UiOa0Jfuuj+rSU3KUriXP29izaUUxt6R+v64uqIUA1cU7K+Fd723r7ysIbNpNU42jnKtXmhCwDgoAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf10.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay10.hostedemail.com (Postfix) with ESMTP id 1A429C06B6;
-	Tue,  9 Sep 2025 18:18:40 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf10.hostedemail.com (Postfix) with ESMTPA id B1F662F;
-	Tue,  9 Sep 2025 18:18:36 +0000 (UTC)
-Date: Tue, 9 Sep 2025 14:19:24 -0400
+Received: from omf20.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay08.hostedemail.com (Postfix) with ESMTP id 69E5A14069C;
+	Tue,  9 Sep 2025 18:39:04 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf20.hostedemail.com (Postfix) with ESMTPA id B2FDE20025;
+	Tue,  9 Sep 2025 18:39:00 +0000 (UTC)
+Date: Tue, 9 Sep 2025 14:39:48 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: Vincent Donnefort <vdonnefort@google.com>
 Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
@@ -29,15 +29,15 @@ Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
  jstultz@google.com, qperret@google.com, will@kernel.org,
  aneesh.kumar@kernel.org, kernel-team@android.com,
  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 03/24] tracing: Introduce trace remotes
-Message-ID: <20250909141924.2f17f1a5@gandalf.local.home>
-In-Reply-To: <aMBRaPzjR4OJVIWn@google.com>
+Subject: Re: [PATCH v6 04/24] tracing: Add reset to trace remotes
+Message-ID: <20250909143948.420bfb1c@gandalf.local.home>
+In-Reply-To: <aMBSa29ev0BNgr5R@google.com>
 References: <20250821081412.1008261-1-vdonnefort@google.com>
-	<20250821081412.1008261-4-vdonnefort@google.com>
-	<20250908193606.47143d09@gandalf.local.home>
-	<aMAYvA9LSvfxvt_C@google.com>
-	<20250909093848.402674b7@gandalf.local.home>
-	<aMBRaPzjR4OJVIWn@google.com>
+	<20250821081412.1008261-5-vdonnefort@google.com>
+	<20250908193757.079aae76@gandalf.local.home>
+	<aMAZMaZJ1_Eny5Ku@google.com>
+	<20250909094028.3265b751@gandalf.local.home>
+	<aMBSa29ev0BNgr5R@google.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -47,35 +47,51 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: eqc7w7y8zn6us7jyigopqwf3nc7ynjtf
-X-Rspamd-Server: rspamout08
-X-Rspamd-Queue-Id: B1F662F
+X-Rspamd-Queue-Id: B2FDE20025
+X-Stat-Signature: 88rpahm4umjmmcjmrz9w7j3z6z8cjawb
+X-Rspamd-Server: rspamout02
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+42t01sKe6NN3Yv3aPETwZq7DQof3HuwQ=
-X-HE-Tag: 1757441916-886505
-X-HE-Meta: U2FsdGVkX1/FkbATY5c/bszCpTxcE2Cn42lYpIlf0+M2DnBLkDpeiDnFpxC7EnRVRWD7bBFR2LjqPKnXdu1P9EKDSXtR8hvE7QrEkuS23WAKU0+q8dSKFLWS6N09CoZuqDFBzUC6JBO9+ehpwvzhwv+MRRoJKAOqD2hA/RvOMNI9mPvrU7rSjtczYd0M1o8dnaq3smAVl3E7hIw6B9IvF8IaP8iFSh5u5E8Q6yYK9zKMSBT2wxyFEpcqxQl9a5pBntG8IUIljfZxm8tIcO54NkMEyojXNkhab20elYHd/QR1soOKOMhADArVAJrmA2hitNlYDnbzyXFuq6lpHdLW75t+Br0U3Akn
+X-Session-ID: U2FsdGVkX1/Dfb0F/ok0yMi6rVU9qwiXjkJqxDcdMLk=
+X-HE-Tag: 1757443140-354827
+X-HE-Meta: U2FsdGVkX1/dFMJGRD+C6O+Za+iRGR7QlQeUizfNtukq1m6fiS7yJXJxYQxG9yxfVWgqP1DYfzB0aOk3vcc97HywbUnaMvNe17yZQK7V0szWK1Xn6Fl1E/CQyXQAKRnkuCgAc7SuJp0V/GjwyvI52PlbVs4xIb6J5bfiz08Jgs1BYuK2BxX9Q4cDppfKLQ5O3V9K0Fdd3muKjQcb4613ryQc1TiRocoDXYvOIhxEJ3hsZTAKZllg5vzY8IgoDRAIEVes+/4idN+hXi8UaE6BF780N6C1bIYBKIOoWDOENiR/Vg6w8f57zdLTvf6x0jOhYSOnHsTZAQiFGZjiGXvDuz1xkAnD1qwI
 
-On Tue, 9 Sep 2025 17:10:16 +0100
+On Tue, 9 Sep 2025 17:14:35 +0100
 Vincent Donnefort <vdonnefort@google.com> wrote:
 
-
-> > I'm more worried about the allocation not being big enough for the rb_desc
-> > being filled. I just noticed that the trace_remote_register() function is
-> > missing a kerneldoc header. Please add one and specify what the parameters
-> > are for as well as their requirements.
+> On Tue, Sep 09, 2025 at 09:40:28AM -0400, Steven Rostedt wrote:
+> > On Tue, 9 Sep 2025 13:10:25 +0100
+> > Vincent Donnefort <vdonnefort@google.com> wrote:
+> >   
+> > > > I wonder if we should name the file "reset" to not be confusing to users
+> > > > when they cat the file and it doesn't produce any output.    
+> > > 
+> > > My idea was to keep the exact same interface as the rest of the tracing. I could
+> > > keep that /trace file for compatibility and add /reset?
+> > > 
+> > > "cat trace" could also just returns a text like *** not supported *** ?  
 > > 
-> > It's fine to state that the allocation of desc must match what the cpumask
-> > is. But the lack of comments about what the function does and what is
-> > expected of the parameters makes it hard to know if it is performing
-> > properly.  
+> > If it's never going to be supported, I rather not add it. It not being
+> > there is a sure way of knowing it's not supported. Just adding it because
+> > the normal system has it is actually worse if it doesn't behave the same.  
 > 
-> Ok, will do!
+> If later we extend the meta-page to support non-consuming read, /trace would
+> then become useful.
 > 
-> I could also add a desc_size parameter to make sure we won't overflow the given
-> desc?
+> Another argument for non-consuming read would be to enable dump on panic.
+> 
+> But I understand your point, it might be wishful thinking at this point.
+>
 
-I wonder if we should just to make sure things are checked. Having a
-bitmask determine the size is kinda strange.
+It may be possible to still do a trace file. Basically, it would work the
+same way the normal iterator works. Today it reads the trace while the
+writer could be modifying it.
+
+Actually, I think there's a bug in the iterator code today :-p
+
+It needs to be modified to copy the event, as it currently passes the event
+as is and that event could be written over by the writer.
+
+But anyway, I think it should work for the remote buffers too. Let me go
+and fix the current iterator.
 
 -- Steve
-
