@@ -1,161 +1,344 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2715F2EDD75;
-	Tue,  9 Sep 2025 04:56:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 155FF2E2DD8
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  9 Sep 2025 06:37:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757393815; cv=none; b=bRq39rFh3jcrKazDVfjQXmO6UEvvJnGAt3lwCc01camIm53mlCWnCvTqiMNW8fOjLyjiJ3h4IkTbqcZi6OFYXZ+bm5iQ3l+BgO+VqsymgKnsz+h/U3TDigEq6+SdumQOQ/7COdQ84e+UJn01uA0Dg1f7VrUv8z7aAKqVeIvsm+w=
+	t=1757399847; cv=none; b=R5ur5m9xAKsTbU8ijDKX+jmR0GuXKOEwK0E4WzEhdD9GLhNgi6RXo9ASdTkp1noYpLGjb3yS8ZGKI0gPW+eHdxM/SsreAcynqIfil/OvBi+2XXCH/Gv6nGApkA84dZJ1d/aM2flhR1EFr88cpgDgCX3kdVpem8B0XxAd3tnHm7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757393815; c=relaxed/simple;
-	bh=/HyIIgPLZb50eZ5QZHtehqP4UA9+BRMtPUQfqVLuSf4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sByqPh/9ATRDcXt0C5Af/YmgcGw9cmSMTsJ5VV/AbdHti3oZkPdR5OVPmQHhSA3J5r2K2HYWBhufT9FDG0i0E9x0QWzWCLLFz0AYYjLz1thv6ImQtklnk5WmKu3FSAgHT5DZsjbnYVSw5o24/qDlMnyDBmrML0wEX/dj26iSQws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=q/j7Vd33; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1757399847; c=relaxed/simple;
+	bh=ypgFCow3WWV2YVE+kV44xMSXOTzB04r9qyWaIR95Ep0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ia9zpCRbr6VsO/Fg8ncJUiklTRI4h6WPlu7qHwcjDwVRPJ4thyrgR5imK4tMdcqFPM0+YkknjRM+7UJUtrbk7mEOHdGqMfzARbLReb/R1dCTo5U4mbjig4qA6RnaxTQ7Uf1IT8WlwFrG6oXPRl4MCt1lTrRAff3m58r/8MSjVsc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OLt/T5Ej; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="q/j7Vd33"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 588Kb7hs006132;
-	Tue, 9 Sep 2025 04:56:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=ege0PpU3PXIxwrWk6
-	aL4+g/xV/+bR77zChowZVDxpLc=; b=q/j7Vd33laRvAxz7z1/ccAMY/UdBTSQ1/
-	YJ7LmDdeZwSbgfwu8xdCMRagg/TKoSOGU+7ymD+jhMrBJgzg7bfpDN5mYeUNJrKA
-	aMYqRB0YIYP4CDtIbG6rQ2fUUfuRMXuE1wPqLrdC3d+9YJoEaFSM/1d7P84f4bo7
-	K0+MGdwkp9jMyFP72CFkLDD56rL5Lq0lcmN7EF8/h98r47GQMbNQaD7qQp2lDjuu
-	tmFFLn7KF20eEiQI+LhhVtCC4RH2/gBs9fIWYYbkXZK4F4MnZ7KUU3BC7ga0rxTG
-	I5gordvQwD8WHosPXP6KJ3IhAIZwPuu44C3DC7nYTtrcPwr4F2oxQ==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 490cmwnfpp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 09 Sep 2025 04:56:37 +0000 (GMT)
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 5894nhIc006175;
-	Tue, 9 Sep 2025 04:56:36 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 490cmwnfpk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 09 Sep 2025 04:56:36 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 58936HMS017187;
-	Tue, 9 Sep 2025 04:56:35 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4911gm951q-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 09 Sep 2025 04:56:35 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5894uTGJ44630384
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 9 Sep 2025 04:56:29 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7E8282004B;
-	Tue,  9 Sep 2025 04:56:29 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 97F0220043;
-	Tue,  9 Sep 2025 04:56:26 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.109.199.159])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  9 Sep 2025 04:56:26 +0000 (GMT)
-From: Aditya Bodkhe <adityab1@linux.ibm.com>
-To: linuxppc-dev@lists.ozlabs.org
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com,
-        christophe.leroy@csgroup.eu, rostedt@goodmis.org, mhiramat@kernel.org,
-        mark.rutland@arm.com, Hari Bathini <hbathini@linux.ibm.com>,
-        Aditya Bodkhe <aditya.b1@linux.ibm.com>
-Subject: [PATCH v3 2/2] powerpc/fprobe: fix updated fprobe for function-graph tracer
-Date: Tue,  9 Sep 2025 10:26:15 +0530
-Message-ID: <20250909045615.50251-2-adityab1@linux.ibm.com>
-X-Mailer: git-send-email 2.50.0
-In-Reply-To: <20250909045615.50251-1-adityab1@linux.ibm.com>
-References: <20250909045615.50251-1-adityab1@linux.ibm.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OLt/T5Ej"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1757399843;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RqG3RTyS1kzfQKhWZN5qquD47StQlgHE41X7mr5xwLY=;
+	b=OLt/T5EjYi5ib5s2I1V+FW9vql64CT1dehyTaa2wqW2JBaI6Wc8Nu17YysMzqFJmeuFYN4
+	KkFKvgVy99MntWpK769kjaJG20RivxMj8NhA/YO1J02foSIFVBny2QPRhNUPPylybNQv6R
+	Gsmd4zDIJHdRYjMm/lFkAIbZFbFxWV0=
+Received: from mail-yx1-f69.google.com (mail-yx1-f69.google.com
+ [74.125.224.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-377-LSPrOnQtMliH-0mUe8Uvug-1; Tue, 09 Sep 2025 02:37:21 -0400
+X-MC-Unique: LSPrOnQtMliH-0mUe8Uvug-1
+X-Mimecast-MFC-AGG-ID: LSPrOnQtMliH-0mUe8Uvug_1757399841
+Received: by mail-yx1-f69.google.com with SMTP id 956f58d0204a3-60fb0c64421so2760284d50.2
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 08 Sep 2025 23:37:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757399841; x=1758004641;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RqG3RTyS1kzfQKhWZN5qquD47StQlgHE41X7mr5xwLY=;
+        b=eERGImmhM9PhZfZHe2+bSH0ilEkGZ6f4FVAybhfKZ208K82A36wrA9Si//2+TjEUik
+         hhft+IQGirm76oOx60maBmUsT7naICNIrlTORCUmTm8l8lKTa+M+jf+ITOJ9I5iGpIC7
+         /4Q3ZY8gbPGYXD7AzGPI0z3tE4X+7cvvLXIyNTyeo+TPTNcngzLKOrBdldD/yKi6Qk1O
+         KcST6Av74pdJ68zRQR4oh+zHEbaAhc4lJtDXyR2XKdI3y1DxhJVnmT++GoI+LxRSp607
+         WKBkGXJCEhfevKZe9nbD8CiooLZv0RQs1UR5eqG8g1dfbPPMXhnIv1StPJaCymkjXySX
+         wlhw==
+X-Forwarded-Encrypted: i=1; AJvYcCWh0IH1+rsX+WDOcObWVLgqm2G/dW+uVIuCJSJdD9/qWYdzn+f+zrXufU0YP9AGMYA/EeaZ2TlVRpNqyHcG4BXY/do=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyF4hRhD5iXPbbicwRTLCPsHiIvpB5xoIKJwAFm/6adORUd6Hkk
+	vPNnHCG8kaAARwTHIMkB2uywocwIKQn72vfd5LI0RC0kLY+oH7JbiBMt+eusQtwjagSb2qEF2vL
+	vu5iOB1b7+0ZSmxFExQ4pwnkwxp9B9NmUlbaPRtsfy+CrKCeJG78ANKWzyJKLbwmK1XFW1bJLFO
+	NRmHlRR5MGz8/GLm19jsTrpvw5cBqqDwv8mffr8m+2DS3wKipS
+X-Gm-Gg: ASbGncsuZebT4iawC9r0oxI3lFLaeHQRapnNqxg4Hi5i+h8enLQe2Q43G2f6lCWJGxN
+	iqi+FNA4//FnnSfok3SgugPWtF8PVooejs4Oy5GjND1bNy64pVSfU6NEiLJj2nO8FUWtNxbfFEL
+	ORokt+qXHoTc516ojz77hJn0+IRx+Wr6SrS7M=
+X-Received: by 2002:a05:690e:144:b0:607:623b:bc86 with SMTP id 956f58d0204a3-61022a5b6afmr7711514d50.13.1757399841032;
+        Mon, 08 Sep 2025 23:37:21 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF3RLuHOOrVUGgUVWsftrAee1GOAvhURBR+lyrsCxnC5Yz6xvo+Y7AAS0EviAsb6AHXO4uFnhEL78gIvOjZTjM=
+X-Received: by 2002:a05:690e:144:b0:607:623b:bc86 with SMTP id
+ 956f58d0204a3-61022a5b6afmr7711492d50.13.1757399840597; Mon, 08 Sep 2025
+ 23:37:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: _fmrD5P7y9BGUtXruOOdD691ezopI8kR
-X-Proofpoint-ORIG-GUID: 1iBxPOlWrYefmL6pjBeK0-NJscggtXjP
-X-Authority-Analysis: v=2.4 cv=J52q7BnS c=1 sm=1 tr=0 ts=68bfb385 cx=c_pps
- a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
- a=yJojWOMRYYMA:10 a=VnNF1IyMAAAA:8 a=VwQbUJbxAAAA:8 a=eJdZZeSqwtc_5qrUTOUA:9
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTA2MDAyNSBTYWx0ZWRfXxHtI/Gq4Wm9o
- 7bxqYB2xPdblwqi0ddwZFIqChhi3UvogGertggcswaQIDc/NUbgod491S3l8f/WdNwmVKM7C97r
- tNjUwMaOz3zI8EBCM+Dha5031FYW1JO/WZ+a2rpYh5mZ0qKd5+BHWnWAUDLOWaw3HrpZIRt49Fj
- gARCRi+XzViEf+zQa3aqwAxJXYrRxVJYPLPx4d5l2X2evufjJuOb35MYLOjAsIBPS+6K0QNQ6UJ
- JpPPv+TcijZoP7hHpWCfSmk2J1wicmkX9Ev1s5qd3BqNyDLg6bv4Jpf7viLD7cW3B7MM9RvgopT
- eZfO8WcmUM2w0vcF47Swe+t+1yl1GKfOvGbb0hX8kLS/MhsN0uPYxfjmn64AlJMrwnqb2/RG0VH
- wYIqtsxm
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-09-08_06,2025-09-08_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 clxscore=1015 suspectscore=0 spamscore=0 phishscore=0
- bulkscore=0 adultscore=0 malwarescore=0 priorityscore=1501
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2509060025
+References: <20250819134205.622806-1-npache@redhat.com> <20250819141610.626140-1-npache@redhat.com>
+ <69e9c0e9-25bb-4ff6-8469-d9137a5e5a75@lucifer.local>
+In-Reply-To: <69e9c0e9-25bb-4ff6-8469-d9137a5e5a75@lucifer.local>
+From: Nico Pache <npache@redhat.com>
+Date: Tue, 9 Sep 2025 00:36:54 -0600
+X-Gm-Features: Ac12FXxx2cxmv7nW-JKof664kgo6jd1Xxe4arL1d9RHPXxyd11yOp6quCb1KZ0I
+Message-ID: <CAA1CXcD+E8kSA2P5JchayQb5wrwmUVPRCK+W-qiD=Xtz03ti+Q@mail.gmail.com>
+Subject: Re: [PATCH v10 12/13] khugepaged: add per-order mTHP khugepaged stats
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: linux-mm@kvack.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	david@redhat.com, ziy@nvidia.com, baolin.wang@linux.alibaba.com, 
+	Liam.Howlett@oracle.com, ryan.roberts@arm.com, dev.jain@arm.com, 
+	corbet@lwn.net, rostedt@goodmis.org, mhiramat@kernel.org, 
+	mathieu.desnoyers@efficios.com, akpm@linux-foundation.org, baohua@kernel.org, 
+	willy@infradead.org, peterx@redhat.com, wangkefeng.wang@huawei.com, 
+	usamaarif642@gmail.com, sunnanyong@huawei.com, vishal.moola@gmail.com, 
+	thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com, 
+	kirill.shutemov@linux.intel.com, aarcange@redhat.com, raquini@redhat.com, 
+	anshuman.khandual@arm.com, catalin.marinas@arm.com, tiwai@suse.de, 
+	will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz, cl@gentwo.org, 
+	jglisse@google.com, surenb@google.com, zokeefe@google.com, hannes@cmpxchg.org, 
+	rientjes@google.com, mhocko@suse.com, rdunlap@infradead.org, hughd@google.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: _UHumv74iPI8AMjhCujCBZbdE4WBpFoPD1WfvVwp25I_1757399841
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Hari Bathini <hbathini@linux.ibm.com>
+On Thu, Aug 21, 2025 at 8:49=E2=80=AFAM Lorenzo Stoakes
+<lorenzo.stoakes@oracle.com> wrote:
+>
+> On Tue, Aug 19, 2025 at 08:16:10AM -0600, Nico Pache wrote:
+> > With mTHP support inplace, let add the per-order mTHP stats for
+> > exceeding NONE, SWAP, and SHARED.
+> >
+>
+> This is really not enough of a commit message. Exceeding what, where, why=
+,
+> how? What does 'exceeding' mean here, etc. etc. More words please :)
+Ok I will add more in the next version
+>
+> > Signed-off-by: Nico Pache <npache@redhat.com>
+> > ---
+> >  Documentation/admin-guide/mm/transhuge.rst | 17 +++++++++++++++++
+> >  include/linux/huge_mm.h                    |  3 +++
+> >  mm/huge_memory.c                           |  7 +++++++
+> >  mm/khugepaged.c                            | 16 +++++++++++++---
+> >  4 files changed, 40 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/Documentation/admin-guide/mm/transhuge.rst b/Documentation=
+/admin-guide/mm/transhuge.rst
+> > index 7ccb93e22852..b85547ac4fe9 100644
+> > --- a/Documentation/admin-guide/mm/transhuge.rst
+> > +++ b/Documentation/admin-guide/mm/transhuge.rst
+> > @@ -705,6 +705,23 @@ nr_anon_partially_mapped
+> >         an anonymous THP as "partially mapped" and count it here, even =
+though it
+> >         is not actually partially mapped anymore.
+> >
+> > +collapse_exceed_swap_pte
+> > +       The number of anonymous THP which contain at least one swap PTE=
+.
+>
+> The number of anonymous THP what? Pages? Let's be specific.
+ack
+>
+> > +       Currently khugepaged does not support collapsing mTHP regions t=
+hat
+> > +       contain a swap PTE.
+>
+> Wait what? So we have a counter for something that's unsupported? That
+> seems not so useful?
+The current implementation does not support swapped out or shared
+pages. However these counters allow us to monitor when a mTHP collapse
+fails due to exceeding the threshold (ie 0, hitting any swapped out or
+shared page)
+>
+> > +
+> > +collapse_exceed_none_pte
+> > +       The number of anonymous THP which have exceeded the none PTE th=
+reshold.
+>
+> THP pages. What's the 'none PTE threshold'? Do you mean
+> /sys/kernel/mm/transparent_hugepage/khugepaged/max_ptes_none ?
+ack, I will expand these descriptions
+>
+> Let's spell that out please, this is far too vague.
+>
+> > +       With mTHP collapse, a bitmap is used to gather the state of a P=
+MD region
+> > +       and is then recursively checked from largest to smallest order =
+against
+> > +       the scaled max_ptes_none count. This counter indicates that the=
+ next
+> > +       enabled order will be checked.
+>
+> I think you really need to expand upon this as this is confusing and vagu=
+e.
+>
+> I also don't think saying 'recursive' here really benefits anything, Just
+> saying that we try to collapse the largest mTHP size we can in each
+> instance, and then give a more 'words-y' explanation as to how
+> max_ptes_none is (in effect) converted to a ratio of a PMD, and then that
+> ratio is applied to the mTHP sizes.
+>
+> You can then go on to say that this counter measures the number of
+> occasions in which this occurred.
+ack I will clean it up
+>
+> > +
+> > +collapse_exceed_shared_pte
+> > +       The number of anonymous THP which contain at least one shared P=
+TE.
+>
+> anonymous THP pages right? :)
+regions?
+>
+> > +       Currently khugepaged does not support collapsing mTHP regions t=
+hat
+> > +       contain a shared PTE.
+>
+> Again I don't really understand the purpose of creating a counter for
+> something we don't support.
+see above
+>
+> Let's add it when we support it.
+>
+> I also in this case and the exceed swap case don't understand what you me=
+an
+> by exceed here, you need to spell this out clearly.
+>
+> Perhaps the context missing here is that you _also_ count THP events in
+> these counters.
+>
+> But again, given we have THP_... counters for the stats mTHP doesn't do
+> yet, I'd say adding these is pointless.
+>
+> > +
+> >  As the system ages, allocating huge pages may be expensive as the
+> >  system uses memory compaction to copy data around memory to free a
+> >  huge page for use. There are some counters in ``/proc/vmstat`` to help
+> > diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+> > index 4ada5d1f7297..6f1593d0b4b5 100644
+> > --- a/include/linux/huge_mm.h
+> > +++ b/include/linux/huge_mm.h
+> > @@ -144,6 +144,9 @@ enum mthp_stat_item {
+> >       MTHP_STAT_SPLIT_DEFERRED,
+> >       MTHP_STAT_NR_ANON,
+> >       MTHP_STAT_NR_ANON_PARTIALLY_MAPPED,
+> > +     MTHP_STAT_COLLAPSE_EXCEED_SWAP,
+> > +     MTHP_STAT_COLLAPSE_EXCEED_NONE,
+> > +     MTHP_STAT_COLLAPSE_EXCEED_SHARED,
+>
+> Wh do we put 'collapse' here but not in the THP equivalents?
+to indicate they come from the collapse functionality. I can shorten
+it by removing COLLAPSE if youd like
+>
+> >       __MTHP_STAT_COUNT
+> >  };
+> >
+> > diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> > index 20d005c2c61f..9f0470c3e983 100644
+> > --- a/mm/huge_memory.c
+> > +++ b/mm/huge_memory.c
+> > @@ -639,6 +639,10 @@ DEFINE_MTHP_STAT_ATTR(split_failed, MTHP_STAT_SPLI=
+T_FAILED);
+> >  DEFINE_MTHP_STAT_ATTR(split_deferred, MTHP_STAT_SPLIT_DEFERRED);
+> >  DEFINE_MTHP_STAT_ATTR(nr_anon, MTHP_STAT_NR_ANON);
+> >  DEFINE_MTHP_STAT_ATTR(nr_anon_partially_mapped, MTHP_STAT_NR_ANON_PART=
+IALLY_MAPPED);
+> > +DEFINE_MTHP_STAT_ATTR(collapse_exceed_swap_pte, MTHP_STAT_COLLAPSE_EXC=
+EED_SWAP);
+> > +DEFINE_MTHP_STAT_ATTR(collapse_exceed_none_pte, MTHP_STAT_COLLAPSE_EXC=
+EED_NONE);
+> > +DEFINE_MTHP_STAT_ATTR(collapse_exceed_shared_pte, MTHP_STAT_COLLAPSE_E=
+XCEED_SHARED);
+> > +
+> >
+> >  static struct attribute *anon_stats_attrs[] =3D {
+> >       &anon_fault_alloc_attr.attr,
+> > @@ -655,6 +659,9 @@ static struct attribute *anon_stats_attrs[] =3D {
+> >       &split_deferred_attr.attr,
+> >       &nr_anon_attr.attr,
+> >       &nr_anon_partially_mapped_attr.attr,
+> > +     &collapse_exceed_swap_pte_attr.attr,
+> > +     &collapse_exceed_none_pte_attr.attr,
+> > +     &collapse_exceed_shared_pte_attr.attr,
+> >       NULL,
+> >  };
+> >
+> > diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+> > index c13bc583a368..5a3386043f39 100644
+> > --- a/mm/khugepaged.c
+> > +++ b/mm/khugepaged.c
+> > @@ -594,7 +594,9 @@ static int __collapse_huge_page_isolate(struct vm_a=
+rea_struct *vma,
+> >                               continue;
+> >                       } else {
+> >                               result =3D SCAN_EXCEED_NONE_PTE;
+> > -                             count_vm_event(THP_SCAN_EXCEED_NONE_PTE);
+>
+> Hm so wait you were miscounting statistics in patch 10/13 when you turned
+> all this one? That's not good.
+>
+> This should be in place _first_ before enabling the feature.
+Ok I can move them around.
+>
+> > +                             if (order =3D=3D HPAGE_PMD_ORDER)
+> > +                                     count_vm_event(THP_SCAN_EXCEED_NO=
+NE_PTE);
+> > +                             count_mthp_stat(order, MTHP_STAT_COLLAPSE=
+_EXCEED_NONE);
+> >                               goto out;
+> >                       }
+> >               }
+> > @@ -633,10 +635,17 @@ static int __collapse_huge_page_isolate(struct vm=
+_area_struct *vma,
+> >                        * shared may cause a future higher order collaps=
+e on a
+> >                        * rescan of the same range.
+> >                        */
+> > -                     if (order !=3D HPAGE_PMD_ORDER || (cc->is_khugepa=
+ged &&
+> > -                         shared > khugepaged_max_ptes_shared)) {
+> > +                     if (order !=3D HPAGE_PMD_ORDER) {
+>
+> Hm wait what? I dont understand what's going on here? You're no longer
+> actually doing any check except order !=3D HPAGE_PMD_ORDER?... am I missn=
+ig
+> something?
+>
+> Again why we are bothering to maintain a counter that doesn't mean anythi=
+ng
+> I don't know? I may be misinterpreting somehow however.
+>
+> > +                             result =3D SCAN_EXCEED_SHARED_PTE;
+> > +                             count_mthp_stat(order, MTHP_STAT_COLLAPSE=
+_EXCEED_SHARED);
+> > +                             goto out;
+> > +                     }
+> > +
+> > +                     if (cc->is_khugepaged &&
+> > +                         shared > khugepaged_max_ptes_shared) {
+> >                               result =3D SCAN_EXCEED_SHARED_PTE;
+> >                               count_vm_event(THP_SCAN_EXCEED_SHARED_PTE=
+);
+> > +                             count_mthp_stat(order, MTHP_STAT_COLLAPSE=
+_EXCEED_SHARED);
+> >                               goto out;
+> >                       }
+> >               }
+> > @@ -1084,6 +1093,7 @@ static int __collapse_huge_page_swapin(struct mm_=
+struct *mm,
+> >                * range.
+> >                */
+> >               if (order !=3D HPAGE_PMD_ORDER) {
+> > +                     count_mthp_stat(order, MTHP_STAT_COLLAPSE_EXCEED_=
+SWAP);
+>
+> This again seems surely to not be testing for what it claims to be
+> tracking? I may again be missing context here.
+We are bailing out of the mTHP collapse due to it having a SWAP page.
+In turn exceeding our threshold of 0.
 
-Since commit 4346ba160409 ("fprobe: Rewrite fprobe on function-graph
-tracer"), FPROBE depends on HAVE_FUNCTION_GRAPH_FREGS. With previous
-patch adding HAVE_FUNCTION_GRAPH_FREGS for powerpc, FPROBE can be
-enabled on powerpc. But with the commit b5fa903b7f7c ("fprobe: Add
-fprobe_header encoding feature"), asm/fprobe.h header is needed to
-define arch dependent encode/decode macros. The fprobe header MSB
-pattern on powerpc is not 0xf. So, define FPROBE_HEADER_MSB_PATTERN
-expected on powerpc.
-
-Also, commit 762abbc0d09f ("fprobe: Use ftrace_regs in fprobe exit
-handler") introduced HAVE_FTRACE_REGS_HAVING_PT_REGS for archs that
-have pt_regs in ftrace_regs. Advertise that on powerpc to reuse
-common definitions like ftrace_partial_regs().
-
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
-Signed-off-by: Aditya Bodkhe <aditya.b1@linux.ibm.com>
----
- arch/powerpc/Kconfig              |  1 +
- arch/powerpc/include/asm/fprobe.h | 12 ++++++++++++
- 2 files changed, 13 insertions(+)
- create mode 100644 arch/powerpc/include/asm/fprobe.h
-
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 451d0e140051..35d32cc43255 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -243,6 +243,7 @@ config PPC
- 	select HAVE_EFFICIENT_UNALIGNED_ACCESS
- 	select HAVE_GUP_FAST
- 	select HAVE_FTRACE_GRAPH_FUNC
-+	select HAVE_FTRACE_REGS_HAVING_PT_REGS
- 	select HAVE_FUNCTION_ARG_ACCESS_API
- 	select HAVE_FUNCTION_DESCRIPTORS	if PPC64_ELF_ABI_V1
- 	select HAVE_FUNCTION_ERROR_INJECTION
-diff --git a/arch/powerpc/include/asm/fprobe.h b/arch/powerpc/include/asm/fprobe.h
-new file mode 100644
-index 000000000000..d64bc28fb3d3
---- /dev/null
-+++ b/arch/powerpc/include/asm/fprobe.h
-@@ -0,0 +1,12 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _ASM_PPC_FPROBE_H
-+#define _ASM_PPC_FPROBE_H
-+
-+#include <asm-generic/fprobe.h>
-+
-+#ifdef CONFIG_64BIT
-+#undef FPROBE_HEADER_MSB_PATTERN
-+#define FPROBE_HEADER_MSB_PATTERN	(PAGE_OFFSET & ~FPROBE_HEADER_MSB_MASK)
-+#endif
-+
-+#endif /* _ASM_PPC_FPROBE_H */
--- 
-2.51.0
+Cheers,
+-- Nico
+>
+> >                       pte_unmap(pte);
+> >                       mmap_read_unlock(mm);
+> >                       result =3D SCAN_EXCEED_SWAP_PTE;
+> > --
+> > 2.50.1
+> >
+>
 
