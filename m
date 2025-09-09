@@ -1,167 +1,133 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D92A274B29;
-	Tue,  9 Sep 2025 16:39:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45B2F2FD1D8;
+	Tue,  9 Sep 2025 16:41:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757435949; cv=none; b=Nfu/hPom/67Rvi7FUDA8xfmJYzFMp2+ujDSGTmkRIGcoQxv+Mq3t1Hxff3drpC6eo0y0LG0Ji5ESqyqwck2KyhFVw1wmgEbw7Z4uXvQvEuUn/aAblCT9ZTq3QZkuUSF/kNxZjqNans1ykPSWj/zQJQOIuKGuaNq1xsocQbFnCXY=
+	t=1757436103; cv=none; b=ke21wWaE5gvJyuE9WjHL8l19pm8potJVOadWps4KXXrVEdpXPnyYV3fCK9z7bRMmG61+pS/tRMK98iVT6M5vrNJqC87woffInF43zw1lfTbQQV2xehqxD3cR/e7o0cKLkIVeqkfsxvm+mk3m1F0OF323nT2TSdcyg50AEV8lV3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757435949; c=relaxed/simple;
-	bh=VloP65NkSd3Zg2ql4Ajk7Ic3j/6MT0ZjCUyShEmI8ko=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jh41w2TEeuqCXBhRZkDcrfUaBNXirUQjTtVnLO1wp5QVQveNMj0SAxFcP+ED0ktP7eCUIJuUgKP5le9Y/209eC7aI3TznqGwAg7h7B2fvMoEnA8nTj6P4rKJCYUMxTtWZkeip1KHcC7Dug6uVD+nzMsuf1zmKGQV7KgQlolHxdw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WqRYXB4R; arc=none smtp.client-ip=209.85.128.47
+	s=arc-20240116; t=1757436103; c=relaxed/simple;
+	bh=sE+54cTetqTW8l2sgbIbuSfULf9SMJk/2p38cYnLlII=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZbYTNlkt44+lsr+Egt8lYQ0jwI28A1BIvevNgPKhRfTaAUc2FrGu8rw/0c7ECKVIcjTFA4uvLD9z6vhPHkLxk1E3qri2Wgf1Lnd7N0N4st3hn2IyKocYVjRCx297+azcrncQ40FP8YWe9yQyG5729RsHJVhlRVN3xRzC1copsQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T0+xqNGy; arc=none smtp.client-ip=209.85.216.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WqRYXB4R"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-45de6ab6ce7so15716895e9.1;
-        Tue, 09 Sep 2025 09:39:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T0+xqNGy"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-329b760080fso5734745a91.1;
+        Tue, 09 Sep 2025 09:41:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1757435946; x=1758040746; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=P2Uku8TU34XQJJFzBct703dmoWJVtTS3G666iVLYjPg=;
-        b=WqRYXB4Rs49nxflbsRWZMuEdC5McEzCHNThKNCqBsyCUTvdRQaxfNFr5FfU0te/m/A
-         HNsskCXfTWuSO4r+qCHPMjcbl/EdXfcQsWkftkEaWhbhcofKAeEngVz9ZVb4nI42qE67
-         UDxh5Pn+sbttQ50NQCn0sDuZ2By8GwHONAOLDjDJvz4KLjAKIUUDGPLe8l8hAgRbGHSZ
-         eMB9apivaI/XvwDwd3R/qJXWfKCBHJZjEWjjLiAFA+aNPnMtDMQl0LZBqQaPxxSd1OuV
-         gUNHflJFrm4s3M3C3ngTM+ck7Y13Cz/AJtfBW2Sl5s0N/WZgFSlWHCk0FSwJk7jdfDXk
-         nzNQ==
+        d=gmail.com; s=20230601; t=1757436101; x=1758040901; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Kk4Wab53KOqVHzBBwTop8biFtl8+//r37MLHjmIT+pE=;
+        b=T0+xqNGyQKp3vPTnHCbSjeXzZaAqowvkkX1siVmeUkcigI9cCDlV3dDni4hT9k/OPR
+         BRTNMyeIRynQHric5+hEXld7vkRVqR03iUT15k+6RpCqxt8MDKmNhJp4o2l+s5RogbqL
+         16N7DTnnE4i4KBj+VaQWmXwEunQvsExiOMbJnPFUU2GpsDSowJWow3AZ85hqeiQpbP2s
+         2rVNDNykj22Wn8XVWJqegquQ1k2lVCRTJdRLzvrs2hBpVw2thlF+J4GzuqgrRaLyC9FE
+         SDuDtJhEFr4TalKOH2zIY9rVSVs1d5yv68ekVIIta6Jo+2k0WX+2WUpDeB18qsU6uLsk
+         7+Tg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757435946; x=1758040746;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=P2Uku8TU34XQJJFzBct703dmoWJVtTS3G666iVLYjPg=;
-        b=dS46u4bewjbAW2nFCFa7dnOWAzUFdBi2bLoStCvfSjV7Fa0ttcYKnExosfIt00plMU
-         CrbWoheIK846qK6NyBGP76OVPXwbY4gIA7XO96XaSJwtlIZb3opmxsK2+ldnPcVkLM/K
-         tHhJGzYToEvKnXecwreYK6Zf8gJEGh2cyFv20KMXE9JYolrzNW9TAkc24LX3Q1eFmB+a
-         FhIa7Kc4okU1eu8YTQjOwCPvcHBowyk6/yyV27a/Fd+VHZ58U4nAltU517UpjLSeWCFk
-         gv+RoB6TteoOQl2ZZvkLjXmD+TI/kh57vLg+QtZMxRCU1DxConCUzUCaqCH0/y3kRC4n
-         dRNQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUJkhZatL4CHo+V/PXBO5RjsfyLnXIn02wbkvjMyOnB9SpMbo+gjJFupMqZjLw9tADeCw8bPnyU/HVmYM8kq1VKnMq9@vger.kernel.org, AJvYcCUoqf7vwOEwv0JDcmEcbRtmDdKSJmPYuGJ5tZb3zrf3Qxyt64SRG1XNPl8Q1tb4bSNyYvU=@vger.kernel.org, AJvYcCVNAFxwP31FGpi4ZOdIrqcDor4dmG+NQoKero1n1Ivv2VXCBJig4YG2wBs0Bvza8DJ55dWV9Xyvm2upRyfp@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUdnLC54fhrYj6IVDcJEF9ABMcDiflB1K1bASaIGSlnOkPsPUR
-	6iOHSlIljRkKnpn9I0WzhsNYyppXoNEe0wa5eg942fVerYDX+z/z21uf
-X-Gm-Gg: ASbGncuI1ZhkBuoSrlaiOJKYRhiuRgUUjALh64AUSGTGutFlKZMHPfT9wKBNitK4i8N
-	JII4GAQY8GpIusfQ9QwvJu7KIb6t+JZg9KRiSl+km2Px+oLd/CsGgHGTfz7RVu8BKTPDcJgJeWB
-	Kvv6FJmGQklmBpvye6mqH61nRng6pi9ztQ6nc2BNRrJcmMwUUCDWu/BxCCARR3TEslzb0/pgZvN
-	CLz+8qh3UZRxDDJbYWeLK5iP0OUsVrelCBr/El3KsG9jCc9opjAq/xn47oUnqWF4W8RB9O2lgGP
-	BuOOu8YpaBAu01XhoLYCmAohaH+b/1Qpk/WKSi6yAVOI4TrvGSrrrKBEYqfa0G4d0rfTlGogi+N
-	2C0/Gf45b6ACAQw3zWzJ/AQ==
-X-Google-Smtp-Source: AGHT+IG7y1sbIDdOG0mV0MkzBgOk/+sS0sjVjV3LNFIoI1TOYgEb04LKrhl4CEQN36OfP7pQ4cIVKg==
-X-Received: by 2002:a05:6000:250c:b0:3e4:ea11:f7d8 with SMTP id ffacd0b85a97d-3e642da5105mr10519911f8f.20.1757435945622;
-        Tue, 09 Sep 2025 09:39:05 -0700 (PDT)
-Received: from krava ([176.74.159.170])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45de18f4824sm146031215e9.10.2025.09.09.09.39.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Sep 2025 09:39:05 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Tue, 9 Sep 2025 18:39:02 +0200
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Jiri Olsa <olsajiri@gmail.com>, andrii@kernel.org,
-	Peter Zijlstra <peterz@infradead.org>, oleg@redhat.com,
-	mhiramat@kernel.org, linux-kernel@vger.kernel.org, alx@kernel.org,
-	eyal.birger@gmail.com, kees@kernel.org, bpf@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, x86@kernel.org,
-	songliubraving@fb.com, yhs@fb.com, john.fastabend@gmail.com,
-	haoluo@google.com, rostedt@goodmis.org, alan.maguire@oracle.com,
-	David.Laight@aculab.com, thomas@t-8ch.de, mingo@kernel.org,
-	rick.p.edgecombe@intel.com, Alexei Starovoitov <ast@kernel.org>
-Subject: Re: [PATCH 0/6] uprobes/x86: Cleanups and fixes
-Message-ID: <aMBYJvtvR7c-Srkb@krava>
-References: <20250821122822.671515652@infradead.org>
- <aKcqm023mYJ5Gv2l@krava>
- <aKgtaXHtQvJ0nm_b@krava>
- <CAEf4BzYg9jsEK1XdKW4dKFdOSrY4CAspaCAAv6ZJZScHxkHSyA@mail.gmail.com>
- <aMAiMrLlfmG9FbQ3@krava>
- <CAEf4BzZnvWH-X-7qKvx2LxzR+xkFfvjj27Tfjoui5xnph-urMw@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1757436101; x=1758040901;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Kk4Wab53KOqVHzBBwTop8biFtl8+//r37MLHjmIT+pE=;
+        b=Ga/r9jdFmdoOqv178RoqI70drelugdwj1CcAGtjiqSwAH6h/mAELytTtqVd40I3vuZ
+         Ju4rBBfswDa+W3B0TlLO0xG4s3xI9kQiWjyeI38+VD8o1HPBU9csSxD2BB0v8GBuXWTG
+         +ebmHpXvuVBDc1c43xe+vhNgj7EZKcYCGLwf8sPkRrHC7bxY5HlyogiQqS1FkHYaicf5
+         noWXV+LSfgVcR9pXlaOoRg1P6sPgO5E0BKo7rCn/ucKIsA1AZHr5qpesB/BtMIeJMIfL
+         J9GT3SrzrSjbgpHRckpX71Eul8s9pFxhanR9kAc0xfdoLbQCaNVWj3XgB9DEP/YVAcZm
+         930g==
+X-Forwarded-Encrypted: i=1; AJvYcCUIfK5O8oXM0wrtLyv4czsZUd1/wag21PSCPlD2YxrWPpCrQ7DPrmKSGDVgW8W4ajVdpTtT4+wtllEEYv901WJlxqo4@vger.kernel.org, AJvYcCVnMtSO43ciXEvHlX20HuMHb1TSgfbMBECRhyh7WkHQIlYFGjXxDJiW58Z+/TdQ7CVX2wE=@vger.kernel.org, AJvYcCWI4OwWLNfAYHBYOycumgHT7mJ2DQPt/eY6sTMuMA/Fjd2fnjfEO39TXljHyfti6oVXXr1HqpPeAcORvcH/@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx6R0jcXOo6eu6ywXxwvNiqQRc/9P0r+Wpf4xrbk6NMHRMZ0qPe
+	4ieLnna8ykkP3111xn7J1Rlm/wlspO14Il5OsKnmAmXLZ5li0jj+zlcN6vrymXlHLU11BXIpYh2
+	cJJJqoB02VAYbbEU0SK35B/44vtIBX2Y=
+X-Gm-Gg: ASbGnct4E95YpyPu0lZkhXxkT/guPci6Z0KsmAp8cMagPzeXJwnFfYyfJhAaU1fD7jN
+	IKDwWOHcA+xyFxOlrrF96VyEDV/MrCGAxxOtGXyEz0YSe9fKygtqbVzqO4Y8c67C69jDoCC3nLx
+	p/2Z/l/NPyGA6T3kfTyOoHU7HzXYf/GN1tp9gwFoPLOM9+F7BELxsZ5qspqfPQIcug9YMiIoEe8
+	2SnYzF0hUdi6MhmWgKSX0Y=
+X-Google-Smtp-Source: AGHT+IFs6bnt99qVuT5n41o0ik4LkSgJjGedVGkUGf7QaHTrjZ9R7XvYldnZA/eYzc2gGJF+vIHoKVUeG+5+7NBBE+s=
+X-Received: by 2002:a17:90a:d403:b0:327:9345:7097 with SMTP id
+ 98e67ed59e1d1-32d43f003bemr17114028a91.10.1757436101507; Tue, 09 Sep 2025
+ 09:41:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEf4BzZnvWH-X-7qKvx2LxzR+xkFfvjj27Tfjoui5xnph-urMw@mail.gmail.com>
+References: <20250909123857.315599-1-jolsa@kernel.org>
+In-Reply-To: <20250909123857.315599-1-jolsa@kernel.org>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Tue, 9 Sep 2025 12:41:27 -0400
+X-Gm-Features: Ac12FXzcQ2yxKgJ8Vv5PJ7St7b3CIBMMt99WCQui8QjMFDnS97lkogR1V2s7twE
+Message-ID: <CAEf4Bzb4ErWn=2SajBcyJxqGEYy0DXmtWuXKLskPGLG-Y9POFA@mail.gmail.com>
+Subject: Re: [PATCHv3 perf/core 0/6] uprobe,bpf: Allow to change app registers
+ from uprobe registers
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Oleg Nesterov <oleg@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	x86@kernel.org, Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
+	John Fastabend <john.fastabend@gmail.com>, Hao Luo <haoluo@google.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Sep 09, 2025 at 11:20:13AM -0400, Andrii Nakryiko wrote:
-> On Tue, Sep 9, 2025 at 8:48 AM Jiri Olsa <olsajiri@gmail.com> wrote:
-> >
-> > On Fri, Aug 22, 2025 at 11:05:59AM -0700, Andrii Nakryiko wrote:
-> > > On Fri, Aug 22, 2025 at 1:42 AM Jiri Olsa <olsajiri@gmail.com> wrote:
-> > > >
-> > > > On Thu, Aug 21, 2025 at 04:18:03PM +0200, Jiri Olsa wrote:
-> > > > > On Thu, Aug 21, 2025 at 02:28:22PM +0200, Peter Zijlstra wrote:
-> > > > > > Hi,
-> > > > > >
-> > > > > > These are cleanups and fixes that I applied on top of Jiri's patches:
-> > > > > >
-> > > > > >   https://lkml.kernel.org/r/20250720112133.244369-1-jolsa@kernel.org
-> > > > > >
-> > > > > > The combined lot sits in:
-> > > > > >
-> > > > > >   git://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git perf/core
-> > > > > >
-> > > > > > Jiri was going to send me some selftest updates that might mean rebasing that
-> > > > > > tree, but we'll see. If this all works we'll land it in -tip.
-> > > > > >
-> > > > >
-> > > > > hi,
-> > > > > sent the selftest fix in here:
-> > > > >   https://lore.kernel.org/bpf/20250821141557.13233-1-jolsa@kernel.org/T/#u
-> > > >
-> > > > Andrii,
-> > > > do we want any special logistic for the bpf/selftest changes or it could
-> > > > go through the tip tree?
-> > >
-> > > let's route selftest changes through tip together with the rest of
-> > > uprobe changes, it's unlikely to conflict
-> >
-> > fyi, there's conflict now between tip/perf/core and bpf-next/master
-> > in the selftests.. due to usdt SIB argument support changes
-> >
-> > please let me know if you need any help in resolving that
-> 
-> so selftest change hasn't landed in tip/perf/core just yet, is that
-> right? If there is a conflict, I guess that changes equation a bit.
-> I'd land it in bpf-next and for now disable that test in BPF CI until
-> the trees converge. WDYT?
+On Tue, Sep 9, 2025 at 8:39=E2=80=AFAM Jiri Olsa <jolsa@kernel.org> wrote:
+>
+> hi,
+> we recently had several requests for tetragon to be able to change
+> user application function return value or divert its execution through
+> instruction pointer change.
+>
+> This patchset adds support for uprobe program to change app's registers
+> including instruction pointer.
+>
+> v3 changes:
+> - deny attach of kprobe,multi with kprobe_write_ctx set [Alexei]
+> - added more tests for denied kprobe attachment
+>
+> thanks,
+> jirka
+>
+>
+> ---
+> Jiri Olsa (6):
+>       bpf: Allow uprobe program to change context registers
+>       uprobe: Do not emulate/sstep original instruction when ip is change=
+d
+>       selftests/bpf: Add uprobe context registers changes test
+>       selftests/bpf: Add uprobe context ip register change test
+>       selftests/bpf: Add kprobe write ctx attach test
+>       selftests/bpf: Add kprobe multi write ctx attach test
+>
 
-I can see the selftests changes in tip/perf/core already
+For the series:
 
-jirka
+Acked-by: Andrii Nakryiko <andrii@kernel.org>
 
+Question is which tree will this go through? Most changes are in BPF,
+so probably bpf-next, right?
 
-16ed38922765 (HEAD -> tip/perf/core) perf: Skip user unwind if the task is a kernel thread
-d77e3319e310 perf: Simplify get_perf_callchain() user logic
-90942f9fac05 perf: Use current->flags & PF_KTHREAD|PF_USER_WORKER instead of current->mm == NULL
-153f9e74dec2 perf: Have get_perf_callchain() return NULL if crosstask and user are set
-e649bcda25b5 perf: Remove get_perf_callchain() init_nr argument
-f49e1be19542 perf/x86: Print PMU counters bitmap in x86_pmu_show_pmu_cap()
-2676dbf9f4fb perf/x86/intel: Add ICL_FIXED_0_ADAPTIVE bit into INTEL_FIXED_BITS_MASK
-9b3e119784bc perf/x86/intel: Change macro GLOBAL_CTRL_EN_PERF_METRICS to BIT_ULL(48)
-0c5caea762de perf/x86: Add PERF_CAP_PEBS_TIMING_INFO flag
-43796f305078 perf/x86/intel: Fix IA32_PMC_x_CFG_B MSRs access error
-d9cf9c6884d2 perf/x86/intel: Use early_initcall() to hook bts_init()
-e173287b5d21 uprobes: Remove redundant __GFP_NOWARN
-9ffc7a635c35 selftests/seccomp: validate uprobe syscall passes through seccomp
-89d1d8434d24 seccomp: passthrough uprobe systemcall without filtering
-52718438af2a selftests/bpf: Fix uprobe syscall shadow stack test
-3abf4298c613 selftests/bpf: Change test_uretprobe_regs_change for uprobe and uretprobe
-275eae678986 selftests/bpf: Add uprobe_regs_equal test
-875e1705ad99 selftests/bpf: Add optimized usdt variant for basic usdt test
-c11661bd9adf selftests/bpf: Add uprobe syscall sigill signal test
-c8be59667cf1 selftests/bpf: Add hit/attach/detach race optimized uprobe test
-d5c86c337010 selftests/bpf: Add uprobe/usdt syscall tests
-7932c4cf5771 selftests/bpf: Rename uprobe_syscall_executed prog to test_uretprobe_multi
-4e7005223e6d selftests/bpf: Reorg the uprobe_syscall test function
-17c3b0015764 selftests/bpf: Import usdt.h from libbpf/usdt project
-354492a0e1bc uprobes/x86: Add SLS mitigation to the trampolines
-60ed85b7e469 uprobes/x86: Make asm style consistent
-...
+>  include/linux/bpf.h                                        |   1 +
+>  kernel/events/core.c                                       |   4 +++
+>  kernel/events/uprobes.c                                    |   7 +++++
+>  kernel/trace/bpf_trace.c                                   |   7 +++--
+>  tools/testing/selftests/bpf/prog_tests/attach_probe.c      |  28 +++++++=
+++++++++++
+>  tools/testing/selftests/bpf/prog_tests/kprobe_multi_test.c |  27 +++++++=
++++++++++
+>  tools/testing/selftests/bpf/prog_tests/uprobe.c            | 156 +++++++=
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
++++++++++-
+>  tools/testing/selftests/bpf/progs/kprobe_write_ctx.c       |  22 +++++++=
+++++++
+>  tools/testing/selftests/bpf/progs/test_uprobe.c            |  38 +++++++=
+++++++++++++++++
+>  9 files changed, 287 insertions(+), 3 deletions(-)
+>  create mode 100644 tools/testing/selftests/bpf/progs/kprobe_write_ctx.c
