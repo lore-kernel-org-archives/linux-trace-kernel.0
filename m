@@ -1,117 +1,216 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from abb.hmeau.com (abb.hmeau.com [180.181.231.80])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE0B1287255;
-	Tue,  9 Sep 2025 09:30:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2254623A9AD;
+	Tue,  9 Sep 2025 09:51:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=180.181.231.80
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757410214; cv=none; b=PwKhminDPrdZxZiInDMeK5IyuEaT98D5tZoT0hpdQpLJ+2dTH3cO6WNh4RjXebe/amjBA8IR03Pt4VjUfwglMCvWbVln7Vh6P4/Qv6M0dWmQxmoPnkxDouIoyJqxFmqDGW60k6UzP1xnUdKKqqt6QImVEJ9LYJgrSONLAOvNMQk=
+	t=1757411480; cv=none; b=O/VpoM8kcQ8fbqhcCxkK1CIE+vfLnhQ7H6fS49KCL+aZkNjcJnQ7q8IFXieAR0GgXgx3qoW5JM2I70V6MHWoS80T0gbP2ffJ+O59jZ6TtcKNQUWxcDZWicrdTVFv9As3cFetSJs2+l+ofgX8njmd0kS3CVZAO+tUIjH/iAdroXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757410214; c=relaxed/simple;
-	bh=ZS+DAE9/Z9nXzpidJmud1I5Zwcs3iyPVMBV5PQxLTCw=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=a6c3SFXuLhzmVDFtwpLzX/VZ21sR0nuwMNgejy+Nzmg0unf3nQasMT+/g8HbQXSMc2aw/cZRPU8ZuQItI/vq25CI5WQjp/QrFOCVVYU1jyRUQcEHfYTCDCXBhk/sck4SZf+3lNmJGMTlJMkzNCv5w4dZUuUBk4JdxTc7ILmtueE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.194])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4cLdjS4SJ1z13NYc;
-	Tue,  9 Sep 2025 17:26:04 +0800 (CST)
-Received: from kwepemh200013.china.huawei.com (unknown [7.202.181.122])
-	by mail.maildlp.com (Postfix) with ESMTPS id B0E901402C4;
-	Tue,  9 Sep 2025 17:30:03 +0800 (CST)
-Received: from kwepemh200013.china.huawei.com (7.202.181.122) by
- kwepemh200013.china.huawei.com (7.202.181.122) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 9 Sep 2025 17:30:03 +0800
-Received: from kwepemh200013.china.huawei.com ([7.202.181.122]) by
- kwepemh200013.china.huawei.com ([7.202.181.122]) with mapi id 15.02.1544.011;
- Tue, 9 Sep 2025 17:30:03 +0800
-From: "zhangxiaomeng (A)" <zhangxiaomeng13@huawei.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-CC: "mhiramat@kernel.org" <mhiramat@kernel.org>, "dhowells@redhat.com"
-	<dhowells@redhat.com>, "wsa@kernel.org" <wsa@kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>
-Subject: =?gb2312?B?u9i4tDogW1BBVENIXSBpMmM6IEZpeCBPT0IgYWNjZXNzIGluIHRyYWNlX2V2?=
- =?gb2312?B?ZW50X3Jhd19ldmVudF9zbWJ1c193cml0ZQ==?=
-Thread-Topic: [PATCH] i2c: Fix OOB access in trace_event_raw_event_smbus_write
-Thread-Index: AQHcHELNHRvaa1K3UkS4EFSwZAlRm7SKnwcQ
-Date: Tue, 9 Sep 2025 09:30:03 +0000
-Message-ID: <39437e40a6f14c5189e86cffb0b6abb5@huawei.com>
-References: <20250821012312.3591166-1-zhangxiaomeng13@huawei.com>
- <20250902154957.7987e5ff@batman.local.home>
-In-Reply-To: <20250902154957.7987e5ff@batman.local.home>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+	s=arc-20240116; t=1757411480; c=relaxed/simple;
+	bh=dxAgqHYfwc+Jq/6iS88EyuM4BR3dfbdXdAyPr/Im890=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pr+H2vn/NA1N91c2SxwdVvoM521aod/PIYwO2OrYhcp5XFSeixuwC2Ox9C+YjMijVtkGRy7IxAzyWmcw0YbxQ6lV2Wd+hbPxHWYEIT1xgT6qCgCxoNNP849kIxTcGijxnAPdgeltW4/YKHeTOz5PhgpMVJL4pAV6ZCqMUVsTyMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=dtmKSne/; arc=none smtp.client-ip=180.181.231.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="dtmKSne/"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=UXVb8+XVTA+K7M34tFHgxCD3hHpqzNEL7ZAPbcMEDKg=; b=dtmKSne/vV66aDS+9THZZ9GXJr
+	F/wABRDacifQCpnTsHdwECyvrgxe6K6xipEH46NCv2I2Rrz4hEbwNDRi+1g/NVeB5VdUUvNUAkFWQ
+	WQCGjt0XWpPWPDCyPxcW99olCQ5dSBwGxeSkHbqvWZFOsIb3jgXR9gv8bzaCHhuYHQOXbeUt78/Le
+	6vJ1zezscnJf5rFzCLgLM2bSPiv7s3zMQMK7KbuU9gqpFT6a0uAVpUaZigw3FyxWhrZq0k7z/6sj6
+	MQn0RUQ3fm9OqREp8ivu0k5C/zQUVjUNCEbPCoetqs4Uact9KZ6/5IyonW25lRa9C2CQe/3X12R1n
+	MpqMIHgA==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1uvuke-003uPR-1b;
+	Tue, 09 Sep 2025 17:50:57 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Tue, 09 Sep 2025 17:50:56 +0800
+Date: Tue, 9 Sep 2025 17:50:56 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Menglong Dong <dongml2@chinatelecom.cn>,
+	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	kernel test robot <oliver.sang@intel.com>, tgraf@suug.ch,
+	linux-crypto@vger.kernel.org
+Subject: [v2 PATCH] rhashtable: Use rcu_dereference_all and
+ rcu_dereference_all_check
+Message-ID: <aL_4gCJibYMW0J98@gondor.apana.org.au>
+References: <20250829021436.19982-1-dongml2@chinatelecom.cn>
+ <20250828222357.55fab4c2@batman.local.home>
+ <d1da3939-62e6-4ad1-afcc-5710ce3f6cbd@paulmck-laptop>
+ <20250901170655.0757884ad7c2afb63ced3230@kernel.org>
+ <615da75d-cb2f-4e7e-9e11-6b19f03fea6c@paulmck-laptop>
+ <aLlflTV_SDwMB7mq@gondor.apana.org.au>
+ <c3ada9ab-0676-4d73-9feb-9f401a031a4e@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c3ada9ab-0676-4d73-9feb-9f401a031a4e@paulmck-laptop>
 
-SSBwcmV2aW91c2x5IGF0dGVtcHRlZCB0byBhcHBseSBhIGZpeCB3aXRoaW4gdGhlIGkyY2Rldl9p
-b2N0bF9zbWJ1cyBmdW5jdGlvbi4gV2hpbGUgdGhpcyBhcHByb2FjaCB3YXMgc3VjY2Vzc2Z1bCBp
-biBwcmV2ZW50aW5nIHRoZSB3YXJuaW5nLCBJIGZvdW5kIHRoYXQgdGhlIHJlcXVpcmVkIGNoYW5n
-ZXMgd2VyZSBxdWl0ZSBleHRlbnNpdmUuIFRoZSBXQVJOIGlzIHRyaWdnZXJlZCBieSB0aGUgdHJh
-Y2Vfc21idXNfd3JpdGUgdHJhY2Vwb2ludCwgd2hpY2ggcGVyZm9ybXMgYSBtZW1jcHkoX19lbnRy
-eS0+YnVmLCBkYXRhLT5ibG9jaywgbGVuKSBmb3Igd3JpdGUgb3BlcmF0aW9ucyBvbiB0aHJlZSBz
-cGVjaWZpYyBibG9jayBwcm90b2NvbHM6IEkyQ19TTUJVU19CTE9DS19EQVRBLCBJMkNfU01CVVNf
-STJDX0JMT0NLX0RBVEEsIGFuZCBJMkNfU01CVVNfQkxPQ0tfUFJPQ19DQUxMLiBUbyBmaXggdGhp
-cyBpbiBpMmNkZXZfaW9jdGxfc21idXMsIGl0IHdvdWxkIGJlIG5lY2Vzc2FyeSB0byBhZGQgY2hl
-Y2tzIGZvciBhbGwgdGhyZWUgb2YgdGhlc2UgY2FzZXMsIHdoaWNoIG1ha2VzIHRoZSBzb2x1dGlv
-biByYXRoZXIgY29tcGxleC4NCg0KLS14aWFvbWVuZw0KLS0tLS3Tyrz+1K28/i0tLS0tDQq3orz+
-yMs6IFN0ZXZlbiBSb3N0ZWR0IDxyb3N0ZWR0QGdvb2RtaXMub3JnPiANCreiy83KsbzkOiAyMDI1
-xOo51MIzyNUgMzo1MA0KytW8/sjLOiB6aGFuZ3hpYW9tZW5nIChBKSA8emhhbmd4aWFvbWVuZzEz
-QGh1YXdlaS5jb20+DQqzrcvNOiBtaGlyYW1hdEBrZXJuZWwub3JnOyBkaG93ZWxsc0ByZWRoYXQu
-Y29tOyB3c2FAa2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgt
-dHJhY2Uta2VybmVsQHZnZXIua2VybmVsLm9yZw0K1vfM4jogUmU6IFtQQVRDSF0gaTJjOiBGaXgg
-T09CIGFjY2VzcyBpbiB0cmFjZV9ldmVudF9yYXdfZXZlbnRfc21idXNfd3JpdGUNCg0KT24gVGh1
-LCAyMSBBdWcgMjAyNSAwMToyMzoxMiArMDAwMA0KWGlhb21lbmcgWmhhbmcgPHpoYW5neGlhb21l
-bmcxM0BodWF3ZWkuY29tPiB3cm90ZToNCg0KPiBUaGUgc21idXNfd3JpdGUgdHJhY2Vwb2ludCBj
-b3BpZXMgX19lbnRyeS0+bGVuIGJ5dGVzIGludG8gYSBmaXhlZCANCj4gSTJDX1NNQlVTX0JMT0NL
-X01BWCArIDIgYnVmZmVyLiBPdmVyc2l6ZWQgbGVuZ3RocyAoZS5nLiwgNDYpIGV4Y2VlZCANCj4g
-dGhlIGRlc3RpbmF0aW9uIGFuZCBvdmVyLXJlYWQgdGhlIHNvdXJjZSBidWZmZXIsIHRyaWdnZXJp
-bmcgT09CIA0KPiB3YXJuaW5nOg0KPiANCj4gbWVtY3B5OiBkZXRlY3RlZCBmaWVsZC1zcGFubmlu
-ZyB3cml0ZSAoc2l6ZSA0OCkgb2Ygc2luZ2xlIGZpZWxkIA0KPiAiZW50cnktPmJ1ZiIgYXQgaW5j
-bHVkZS90cmFjZS9ldmVudHMvc21idXMuaDo2MCAoc2l6ZSAzNCkNCj4gDQo+IENsYW1wIHRoZSBj
-b3B5IHNpemUgdG8gSTJDX1NNQlVTX0JMT0NLX01BWCArIDIgYmVmb3JlIG1lbWNweSgpLg0KPiBU
-aGlzIG9ubHkgYWZmZWN0cyB0cmFjaW5nIGFuZCBkb2VzIG5vdCBjaGFuZ2UgSTJDIHRyYW5zZmVy
-IGJlaGF2aW9yLg0KPiANCj4gRml4ZXM6IDhhMzI1OTk3ZDk1ZCAoImkyYzogQWRkIG1lc3NhZ2Ug
-dHJhbnNmZXIgdHJhY2Vwb2ludHMgZm9yIFNNQlVTIA0KPiBbdmVyICMyXSIpDQo+IFNpZ25lZC1v
-ZmYtYnk6IFhpYW9tZW5nIFpoYW5nIDx6aGFuZ3hpYW9tZW5nMTNAaHVhd2VpLmNvbT4NCj4gLS0t
-DQo+ICBpbmNsdWRlL3RyYWNlL2V2ZW50cy9zbWJ1cy5oIHwgMiArKw0KPiAgMSBmaWxlIGNoYW5n
-ZWQsIDIgaW5zZXJ0aW9ucygrKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvdHJhY2UvZXZl
-bnRzL3NtYnVzLmggDQo+IGIvaW5jbHVkZS90cmFjZS9ldmVudHMvc21idXMuaCBpbmRleCA3MWE4
-N2VkZmM0NmQuLmUzMDZkOGI5MjhjMyAxMDA2NDQNCj4gLS0tIGEvaW5jbHVkZS90cmFjZS9ldmVu
-dHMvc21idXMuaA0KPiArKysgYi9pbmNsdWRlL3RyYWNlL2V2ZW50cy9zbWJ1cy5oDQo+IEBAIC01
-Nyw2ICs1Nyw4IEBAIFRSQUNFX0VWRU5UX0NPTkRJVElPTihzbWJ1c193cml0ZSwNCj4gIAkJY2Fz
-ZSBJMkNfU01CVVNfSTJDX0JMT0NLX0RBVEE6DQo+ICAJCQlfX2VudHJ5LT5sZW4gPSBkYXRhLT5i
-bG9ja1swXSArIDE7DQo+ICAJCWNvcHk6DQo+ICsJCQlpZiAoX19lbnRyeS0+bGVuID4gSTJDX1NN
-QlVTX0JMT0NLX01BWCArIDIpDQo+ICsJCQkJX19lbnRyeS0+bGVuID0gSTJDX1NNQlVTX0JMT0NL
-X01BWCArIDI7DQo+ICAJCQltZW1jcHkoX19lbnRyeS0+YnVmLCBkYXRhLT5ibG9jaywgX19lbnRy
-eS0+bGVuKTsNCj4gIAkJCWJyZWFrOw0KPiAgCQljYXNlIEkyQ19TTUJVU19RVUlDSzoNCg0KVGhl
-IGNvZGUgaGFzOg0KDQogICAgICAgICAgICAgICAgc3dpdGNoIChwcm90b2NvbCkgew0KICAgICAg
-ICAgICAgICAgIGNhc2UgSTJDX1NNQlVTX0JZVEVfREFUQToNCiAgICAgICAgICAgICAgICAgICAg
-ICAgIF9fZW50cnktPmxlbiA9IDE7DQogICAgICAgICAgICAgICAgICAgICAgICBnb3RvIGNvcHk7
-DQogICAgICAgICAgICAgICAgY2FzZSBJMkNfU01CVVNfV09SRF9EQVRBOg0KICAgICAgICAgICAg
-ICAgIGNhc2UgSTJDX1NNQlVTX1BST0NfQ0FMTDoNCiAgICAgICAgICAgICAgICAgICAgICAgIF9f
-ZW50cnktPmxlbiA9IDI7DQogICAgICAgICAgICAgICAgICAgICAgICBnb3RvIGNvcHk7DQogICAg
-ICAgICAgICAgICAgY2FzZSBJMkNfU01CVVNfQkxPQ0tfREFUQToNCiAgICAgICAgICAgICAgICBj
-YXNlIEkyQ19TTUJVU19CTE9DS19QUk9DX0NBTEw6DQogICAgICAgICAgICAgICAgY2FzZSBJMkNf
-U01CVVNfSTJDX0JMT0NLX0RBVEE6DQogICAgICAgICAgICAgICAgICAgICAgICBfX2VudHJ5LT5s
-ZW4gPSBkYXRhLT5ibG9ja1swXSArIDE7DQogICAgICAgICAgICAgICAgY29weTogICANCiAgICAg
-ICAgICAgICAgICAgICAgICAgIG1lbWNweShfX2VudHJ5LT5idWYsIGRhdGEtPmJsb2NrLCBfX2Vu
-dHJ5LT5sZW4pOw0KICAgICAgICAgICAgICAgICAgICAgICAgYnJlYWs7DQogICAgICAgICAgICAg
-ICAgY2FzZSBJMkNfU01CVVNfUVVJQ0s6DQogICAgICAgICAgICAgICAgY2FzZSBJMkNfU01CVVNf
-QllURToNCiAgICAgICAgICAgICAgICBjYXNlIEkyQ19TTUJVU19JMkNfQkxPQ0tfQlJPS0VOOg0K
-ICAgICAgICAgICAgICAgIGRlZmF1bHQ6DQogICAgICAgICAgICAgICAgICAgICAgICBfX2VudHJ5
-LT5sZW4gPSAwOw0KICAgICAgICAgICAgICAgIH0NCg0KSSBvbmx5IHNlZSB0d28gY2FsbHMgdG8g
-dGhlIGNvcHkgd2hlcmUgb25lIGlzIGxlbiA9IDEgYW5kIHRoZSBvdGhlciBpcyBsZW4gPSAyLiBX
-aHkgbm90IHB1dCB0aGUgY2hlY2sgYmVmb3JlIHRoZSBjb3B5IGxhYmVsPw0KDQotLSBTdGV2ZQ0K
-DQo=
+On Mon, Sep 08, 2025 at 08:23:27AM -0700, Paul E. McKenney wrote:
+>
+> I am guessing that you want to send this up via the rhashtable path.
+
+Yes I could push that along.
+
+>  * This is similar to rcu_dereference_check(), but allows protection
+>  * by all forms of vanilla RCU readers, including preemption disabled,
+>  * bh-disabled, and interrupt-disabled regions of code.  Note that "vanilla
+>  * RCU" excludes SRCU and the various Tasks RCU flavors.  Please note
+>  * that this macro should not be backported to any Linux-kernel version
+>  * preceding v5.0 due to changes in synchronize_rcu() semantics prior
+>  * to that version.
+> 
+> The "should not" vs. "can not" accounts for the possibility of people
+> using synchronize_rcu_mult(), but someone wanting to do that best know
+> what they are doing.  ;-)
+
+Thanks! I've incorported that into the patch:
+
+---8<---
+Add rcu_dereference_all and rcu_dereference_all_check so that
+library code such as rhashtable can be used with any RCU variant.
+
+As it stands rcu_dereference is used within rashtable, which
+creates false-positive warnings if the user calls it from another
+RCU context, such as preempt_disable().
+
+Use the rcu_dereference_all and rcu_dereference_all_check calls
+in rhashtable to suppress these warnings.
+
+Also replace the rcu_dereference_raw calls in the list iterators
+with rcu_dereference_all to uncover buggy calls.
+
+Reported-by: Menglong Dong <dongml2@chinatelecom.cn>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
+
+diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
+index 120536f4c6eb..448eb1f0cb48 100644
+--- a/include/linux/rcupdate.h
++++ b/include/linux/rcupdate.h
+@@ -713,6 +713,24 @@ do {									      \
+ 				(c) || rcu_read_lock_sched_held(), \
+ 				__rcu)
+ 
++/**
++ * rcu_dereference_all_check() - rcu_dereference_all with debug checking
++ * @p: The pointer to read, prior to dereferencing
++ * @c: The conditions under which the dereference will take place
++ *
++ * This is similar to rcu_dereference_check(), but allows protection
++ * by all forms of vanilla RCU readers, including preemption disabled,
++ * bh-disabled, and interrupt-disabled regions of code.  Note that "vanilla
++ * RCU" excludes SRCU and the various Tasks RCU flavors.  Please note
++ * that this macro should not be backported to any Linux-kernel version
++ * preceding v5.0 due to changes in synchronize_rcu() semantics prior
++ * to that version.
++ */
++#define rcu_dereference_all_check(p, c) \
++	__rcu_dereference_check((p), __UNIQUE_ID(rcu), \
++				(c) || rcu_read_lock_any_held(), \
++				__rcu)
++
+ /*
+  * The tracing infrastructure traces RCU (we want that), but unfortunately
+  * some of the RCU checks causes tracing to lock up the system.
+@@ -767,6 +785,14 @@ do {									      \
+  */
+ #define rcu_dereference_sched(p) rcu_dereference_sched_check(p, 0)
+ 
++/**
++ * rcu_dereference_all() - fetch RCU-all-protected pointer for dereferencing
++ * @p: The pointer to read, prior to dereferencing
++ *
++ * Makes rcu_dereference_check() do the dirty work.
++ */
++#define rcu_dereference_all(p) rcu_dereference_all_check(p, 0)
++
+ /**
+  * rcu_pointer_handoff() - Hand off a pointer from RCU to other mechanism
+  * @p: The pointer to hand off
+diff --git a/include/linux/rhashtable.h b/include/linux/rhashtable.h
+index e740157f3cd7..05a221ce79a6 100644
+--- a/include/linux/rhashtable.h
++++ b/include/linux/rhashtable.h
+@@ -272,13 +272,13 @@ struct rhash_lock_head __rcu **rht_bucket_nested_insert(
+ 	rcu_dereference_protected(p, lockdep_rht_mutex_is_held(ht))
+ 
+ #define rht_dereference_rcu(p, ht) \
+-	rcu_dereference_check(p, lockdep_rht_mutex_is_held(ht))
++	rcu_dereference_all_check(p, lockdep_rht_mutex_is_held(ht))
+ 
+ #define rht_dereference_bucket(p, tbl, hash) \
+ 	rcu_dereference_protected(p, lockdep_rht_bucket_is_held(tbl, hash))
+ 
+ #define rht_dereference_bucket_rcu(p, tbl, hash) \
+-	rcu_dereference_check(p, lockdep_rht_bucket_is_held(tbl, hash))
++	rcu_dereference_all_check(p, lockdep_rht_bucket_is_held(tbl, hash))
+ 
+ #define rht_entry(tpos, pos, member) \
+ 	({ tpos = container_of(pos, typeof(*tpos), member); 1; })
+@@ -373,7 +373,7 @@ static inline struct rhash_head *__rht_ptr(
+ static inline struct rhash_head *rht_ptr_rcu(
+ 	struct rhash_lock_head __rcu *const *bkt)
+ {
+-	return __rht_ptr(rcu_dereference(*bkt), bkt);
++	return __rht_ptr(rcu_dereference_all(*bkt), bkt);
+ }
+ 
+ static inline struct rhash_head *rht_ptr(
+@@ -497,7 +497,7 @@ static inline void rht_assign_unlock(struct bucket_table *tbl,
+ 	for (({barrier(); }),						\
+ 	     pos = head;						\
+ 	     !rht_is_a_nulls(pos);					\
+-	     pos = rcu_dereference_raw(pos->next))
++	     pos = rcu_dereference_all(pos->next))
+ 
+ /**
+  * rht_for_each_rcu - iterate over rcu hash chain
+@@ -513,7 +513,7 @@ static inline void rht_assign_unlock(struct bucket_table *tbl,
+ 	for (({barrier(); }),					\
+ 	     pos = rht_ptr_rcu(rht_bucket(tbl, hash));		\
+ 	     !rht_is_a_nulls(pos);				\
+-	     pos = rcu_dereference_raw(pos->next))
++	     pos = rcu_dereference_all(pos->next))
+ 
+ /**
+  * rht_for_each_entry_rcu_from - iterated over rcu hash chain from given head
+@@ -560,7 +560,7 @@ static inline void rht_assign_unlock(struct bucket_table *tbl,
+  * list returned by rhltable_lookup.
+  */
+ #define rhl_for_each_rcu(pos, list)					\
+-	for (pos = list; pos; pos = rcu_dereference_raw(pos->next))
++	for (pos = list; pos; pos = rcu_dereference_all(pos->next))
+ 
+ /**
+  * rhl_for_each_entry_rcu - iterate over rcu hash table list of given type
+@@ -574,7 +574,7 @@ static inline void rht_assign_unlock(struct bucket_table *tbl,
+  */
+ #define rhl_for_each_entry_rcu(tpos, pos, list, member)			\
+ 	for (pos = list; pos && rht_entry(tpos, pos, member);		\
+-	     pos = rcu_dereference_raw(pos->next))
++	     pos = rcu_dereference_all(pos->next))
+ 
+ static inline int rhashtable_compare(struct rhashtable_compare_arg *arg,
+ 				     const void *obj)
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
