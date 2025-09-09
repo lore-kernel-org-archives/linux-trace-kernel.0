@@ -1,273 +1,149 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 998311BDCF;
-	Tue,  9 Sep 2025 07:18:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC8DA238C07;
+	Tue,  9 Sep 2025 07:43:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757402307; cv=none; b=Ft+SB9Rn21QVLv9KmAoIEUXtfFM3qA4YYQDNeelnuGRj8/xrr/wCyq921kx9KfeQv9pv1S3mUeEu3h1VAxK6ZoAb66JghUvysEjFt/zvDu2JFqeNkgZGkWRTSrWIfq9OwRhDrS3+xplT8Yc7OAR9fP44Yr2j0GrGJkenS3fKD8M=
+	t=1757403783; cv=none; b=Gacql+3Tj59geMmsRm28qxcLY5FMhJgvTRizHAXcmxTgWsTP5lpfquJ5JjA0JCyQE7Z5Z5gVwE4jkYeKWtwBloHqugfhEUX0fQ7KZBnAiFkt6JV1wKGExapq7ses+gzJK/5Bc56/TwtK17Nr6jc5XnUMmuA1btowgidDMtrZGbc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757402307; c=relaxed/simple;
-	bh=9eCmkdDPqy64lacKVevoRSp4xze/FmSgeGGhW6m4y+s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hh5vT87nTsDeH7K6qbtB+3XA9W3j3h5NZkytIaa1kBRYCPxBpnCYbhctgQ2t3QvPic6oXXe2Ptgt6IH/bFBzpPlCtBJ59AEvic9x/kQKahIW6AfLjyfe9uE8K4wm+25R30a68+OmEQa1y9ktJjOFYrO955ES5WnyU6q5ioW3D84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=F0ob7Eiz; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1757403783; c=relaxed/simple;
+	bh=urd/4rmKjr2mQ/VCO7nQ8YDst0DtM+tpJ0FsUi3+hb4=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=QJcXVq6mSMNLX6qY8QV2zLoqKIh5RW1HOZ5C9AZpzQIXuvaUl4C1PEGmnHG8xF1jTyB5TTntceQBvyQdtLOMEiNzkrwMIE5kVjlsaCIcMoyyVT25uTGaD/JlB7QgVya3hCT0v4gFR7We7I3s/2t6skOCLkH8ZzyeFwSlSslKf3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gMY4/Q7W; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="F0ob7Eiz"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 588Mpv1T022960;
-	Tue, 9 Sep 2025 07:18:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=hjqHTV
-	qv4LgPJB3gW/Ooz87fYzFgcaYeFzD2uFG8HMg=; b=F0ob7Eiz9eb2KDQ8G3cm3x
-	YQDXEY7hHjwDzY9ZyA0i/fB6JKyMDOo4ss3tP+U1EuFrM0cYoJIo5HcT8ftxAQLO
-	aIwQt+GROaAW0NXUfGVQVj/4XhTlUTuGlTeD7zVUudSyK5NxuzykiesVPIRPGfvH
-	V0301T8EWP6zdx3DibL9/5xvxivP88JzFmwTCHBro/MNNN7le4r8A1p414PD5lhI
-	8qeD4q0ue9aiShoY7uuu3xG9E/vTdEKYA8Fu+LFF29kXgDCcNhc6pz9cI3oK3IHZ
-	3JhRlXecQUObvv2i8Js0QdacrqL4hStZqb49iaKosl9rDQUiJBD5dgE0wNMxNmrQ
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 490xycu08a-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 09 Sep 2025 07:18:06 +0000 (GMT)
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 5897I5Qi029500;
-	Tue, 9 Sep 2025 07:18:05 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 490xycu088-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 09 Sep 2025 07:18:05 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5895mrMd020458;
-	Tue, 9 Sep 2025 07:18:04 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 490yp0t14a-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 09 Sep 2025 07:18:04 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5897I03551970330
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 9 Sep 2025 07:18:00 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4DD8E20040;
-	Tue,  9 Sep 2025 07:18:00 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 052B220043;
-	Tue,  9 Sep 2025 07:17:57 +0000 (GMT)
-Received: from [9.43.21.165] (unknown [9.43.21.165])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  9 Sep 2025 07:17:56 +0000 (GMT)
-Message-ID: <fe1b474b-a9d7-482c-b713-28eb2af37329@linux.ibm.com>
-Date: Tue, 9 Sep 2025 12:47:55 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gMY4/Q7W"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A14BC4CEF4;
+	Tue,  9 Sep 2025 07:43:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757403783;
+	bh=urd/4rmKjr2mQ/VCO7nQ8YDst0DtM+tpJ0FsUi3+hb4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=gMY4/Q7WwX+gc4TAGcFOQUQS61sree24OoA9iWdFPX0bBQ13pRAuXQzR2sss6XOH5
+	 uEjjx3FpDS6zcsOi/hySfXDXeNFzPg6XGc1cGfpBI27hY0zSSb7wwxk9RR04MjWya1
+	 7/x1ONQbXyXEu3R/L5Bmm7PlVrMYjDjA+FoD3rjobSSXZrrV5VsoFtq3qVE4bqmoPt
+	 B8zi8fbFqaj/EapirWunlejeF+ERuUML4so98QsMjZJwRqT8MxCE0PlHEyFNI/IH9i
+	 r5rPWrfK10x+UkWAKd09J/N0vzJChM3MBAIAagmnMhCwlgMaxWLDG7QuaMAItjh5OP
+	 7TtKl9bDPN+Jg==
+Date: Tue, 9 Sep 2025 16:43:00 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Pu Lehui <pulehui@huaweicloud.com>
+Cc: rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] tracing: Silence warning when chunk allocation fails
+ in trace_pid_write
+Message-Id: <20250909164300.72ebc2c27921251d33de48af@kernel.org>
+In-Reply-To: <20250908024658.2390398-1-pulehui@huaweicloud.com>
+References: <20250908024658.2390398-1-pulehui@huaweicloud.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] powerpc/ftrace: support
- CONFIG_FUNCTION_GRAPH_RETVAL
-To: Aditya Bodkhe <adityab1@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com,
-        christophe.leroy@csgroup.eu, rostedt@goodmis.org, mhiramat@kernel.org,
-        mark.rutland@arm.com, Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-References: <20250909045615.50251-1-adityab1@linux.ibm.com>
-Content-Language: en-US
-From: Hari Bathini <hbathini@linux.ibm.com>
-In-Reply-To: <20250909045615.50251-1-adityab1@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: vXfCZE_0cvAGRpCPEF7y3HQIaait3uaS
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTA2MDIzNSBTYWx0ZWRfX4H8nU5jqR/6X
- Q+/KacEVOef2pVLC93c4ikI3mQefj7T9YNDy+dbLppsDqyGv4dOE4/a9UTAL8P/quXQlpJlrNsJ
- w3IYK552YAmyX7P52Ry20HNG2OMJZydFsGVkHJ1k6kKMBcFU+xMIxvH8QmUWDfKZG6YdLEbbnyw
- pG3SB2MtVzLedl0gYRjxzxpbtqyi4HnuiZ3XnLSSndfIV3E8OA8QWxKlUJGj7RLcWGw8oUt6sWr
- ANDDtyI1YDyVd7ktxIL/AIOKyRmGjQqeCF8O0SWHdoE4gDtXqrjin54ZmxA//LBgcvPFQIBhe3c
- 8nO9Zbqz4kL59J3MM/+6qW/pWaTsoPASCQhICxSK8cHGm90uzyfYuVMu5ZHlCELfBe4z+8cMvAC
- lF2Dls9d
-X-Proofpoint-GUID: zXW5mYf8BmCY4BVrdt7wGSVf0siSEgGW
-X-Authority-Analysis: v=2.4 cv=F59XdrhN c=1 sm=1 tr=0 ts=68bfd4ae cx=c_pps
- a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
- a=IkcTkHD0fZMA:10 a=yJojWOMRYYMA:10 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8
- a=1UX6Do5GAAAA:8 a=dNnesIPfpvp5sUh9fRYA:9 a=QEXdDO2ut3YA:10
- a=Et2XPkok5AAZYJIKzHr1:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-09-08_06,2025-09-08_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 malwarescore=0 suspectscore=0 phishscore=0 clxscore=1015
- impostorscore=0 bulkscore=0 adultscore=0 spamscore=0 classifier=typeunknown
- authscore=0 authtc= authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2507300000 definitions=main-2509060235
 
+On Mon,  8 Sep 2025 02:46:58 +0000
+Pu Lehui <pulehui@huaweicloud.com> wrote:
 
-
-On 09/09/25 10:26 am, Aditya Bodkhe wrote:
-> commit a1be9ccc57f0 ("function_graph: Support recording and printing the
-> return value of function") introduced support for function graph return
-> value tracing.
+> From: Pu Lehui <pulehui@huawei.com>
 > 
-> Additionally, commit a3ed4157b7d8 ("fgraph: Replace fgraph_ret_regs with
-> ftrace_regs") further refactored and optimized the implementation,
-> making `struct fgraph_ret_regs` unnecessary.
+> Syzkaller trigger a fault injection warning:
 > 
-> This patch enables the above modifications for powerpc all, ensuring that
-> function graph return value tracing is available on this architecture.
+> WARNING: CPU: 1 PID: 12326 at tracepoint_add_func+0xbfc/0xeb0
+> Modules linked in:
+> CPU: 1 UID: 0 PID: 12326 Comm: syz.6.10325 Tainted: G U 6.14.0-rc5-syzkaller #0
+> Tainted: [U]=USER
+> Hardware name: Google Compute Engine/Google Compute Engine
+> RIP: 0010:tracepoint_add_func+0xbfc/0xeb0 kernel/tracepoint.c:294
+> Code: 09 fe ff 90 0f 0b 90 0f b6 74 24 43 31 ff 41 bc ea ff ff ff
+> RSP: 0018:ffffc9000414fb48 EFLAGS: 00010283
+> RAX: 00000000000012a1 RBX: ffffffff8e240ae0 RCX: ffffc90014b78000
+> RDX: 0000000000080000 RSI: ffffffff81bbd78b RDI: 0000000000000001
+> RBP: 0000000000000000 R08: 0000000000000001 R09: 0000000000000000
+> R10: 0000000000000001 R11: 0000000000000001 R12: ffffffffffffffef
+> R13: 0000000000000000 R14: dffffc0000000000 R15: ffffffff81c264f0
+> FS:  00007f27217f66c0(0000) GS:ffff8880b8700000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 0000001b2e80dff8 CR3: 00000000268f8000 CR4: 00000000003526f0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>  <TASK>
+>  tracepoint_probe_register_prio+0xc0/0x110 kernel/tracepoint.c:464
+>  register_trace_prio_sched_switch include/trace/events/sched.h:222 [inline]
+>  register_pid_events kernel/trace/trace_events.c:2354 [inline]
+>  event_pid_write.isra.0+0x439/0x7a0 kernel/trace/trace_events.c:2425
+>  vfs_write+0x24c/0x1150 fs/read_write.c:677
+>  ksys_write+0x12b/0x250 fs/read_write.c:731
+>  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+>  do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
+>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
 > 
-> In this patch we have redefined two functions:
-> - 'ftrace_regs_get_return_value()' - the existing implementation on
-> ppc returns -ve of return value based on some conditions not
-> relevant to our patch.
-> - 'ftrace_regs_get_frame_pointer()' - always returns 0 in current code .
+> We can reproduce the warning by following the steps below:
+> 1. echo 8 >> set_event_notrace_pid. Let tr->filtered_pids owns one pid
+>    and register sched_switch tracepoint.
+> 2. echo ' ' >> set_event_pid, and perform fault injection during chunk
+>    allocation of trace_pid_list_alloc. Let pid_list with no pid and
+> assign to tr->filtered_pids.
+> 3. echo ' ' >> set_event_pid. Let pid_list is NULL and assign to
+>    tr->filtered_pids.
+> 4. echo 9 >> set_event_pid, will trigger the double register
+>    sched_switch tracepoint warning.
 > 
-> We also allocate stack space to equivalent of 'SWITCH_FRAME_SIZE',
-> allowing us to directly use predefined offsets like 'GPR3' and 'GPR4'
-> this keeps code clean and consistent with already defined offsets .
+> The reason is that syzkaller injects a fault into the chunk allocation
+> in trace_pid_list_alloc, causing a failure in trace_pid_list_set, which
+> may trigger double register of the same tracepoint. This only occurs
+> when the system is about to crash, but to suppress this warning, let's
+> add failure handling logic to trace_pid_list_set.
 > 
-> After this patch, v6.14+ kernel can also be built with FPROBE on powerpc
-> but there are a few other build and runtime dependencies for FPROBE to
-> work properly. The next patch addresses them.
-> 
+> Fixes: 8d6e90983ade ("tracing: Create a sparse bitmask for pid filtering")
+> Reported-by: syzbot+161412ccaeff20ce4dde@syzkaller.appspotmail.com
+> Closes: https://lore.kernel.org/all/67cb890e.050a0220.d8275.022e.GAE@google.com
+> Signed-off-by: Pu Lehui <pulehui@huawei.com>
 
 Looks good to me.
 
-Reviewed-by: Hari Bathini <hbathini@linux.ibm.com>
+Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-> Tested-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-> Reviewed-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-> Signed-off-by: Aditya Bodkhe <adityab1@linux.ibm.com>
-> ---
-> 
-> Changelog:
-> v2 -> v3:
-> - Rebase on Linux 6.17-rc4
-> 
-> v2:https://lore.kernel.org/all/20250722085648.1640-1-adityab1@linux.ibm.com/
-> 
-> v1 -> v2:
-> - Added explanation for redefining ftrace_regs_get_return_value()
-> and ftrace_regs_get_frame_pointer()
-> - Explained why stack space equivalent to 'SWITCH_FRAME_SIZE' is allocated.
-> 
-> v1:https://lore.kernel.org/all/20250528134820.74121-1-adityab1@linux.ibm.com/
-> 
-> ---
->   arch/powerpc/Kconfig                     |  1 +
->   arch/powerpc/include/asm/ftrace.h        | 15 +++++++++
->   arch/powerpc/kernel/trace/ftrace_entry.S | 42 ++++++++++++++----------
->   3 files changed, 41 insertions(+), 17 deletions(-)
-> 
-> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-> index 93402a1d9c9f..451d0e140051 100644
-> --- a/arch/powerpc/Kconfig
-> +++ b/arch/powerpc/Kconfig
-> @@ -246,6 +246,7 @@ config PPC
->   	select HAVE_FUNCTION_ARG_ACCESS_API
->   	select HAVE_FUNCTION_DESCRIPTORS	if PPC64_ELF_ABI_V1
->   	select HAVE_FUNCTION_ERROR_INJECTION
-> +	select HAVE_FUNCTION_GRAPH_FREGS
->   	select HAVE_FUNCTION_GRAPH_TRACER
->   	select HAVE_FUNCTION_TRACER		if !COMPILE_TEST && (PPC64 || (PPC32 && CC_IS_GCC))
->   	select HAVE_GCC_PLUGINS			if GCC_VERSION >= 50200   # plugin support on gcc <= 5.1 is buggy on PPC
-> diff --git a/arch/powerpc/include/asm/ftrace.h b/arch/powerpc/include/asm/ftrace.h
-> index 82da7c7a1d12..6ffc9c9cf4e3 100644
-> --- a/arch/powerpc/include/asm/ftrace.h
-> +++ b/arch/powerpc/include/asm/ftrace.h
-> @@ -50,6 +50,21 @@ static __always_inline struct pt_regs *arch_ftrace_get_regs(struct ftrace_regs *
->   		asm volatile("mfmsr %0" : "=r" ((_regs)->msr));	\
->   	} while (0)
->   
-> +#undef ftrace_regs_get_return_value
-> +static __always_inline unsigned long
-> +ftrace_regs_get_return_value(const struct ftrace_regs *fregs)
-> +{
-> +	return arch_ftrace_regs(fregs)->regs.gpr[3];
-> +}
-> +#define ftrace_regs_get_return_value ftrace_regs_get_return_value
-> +
-> +#undef ftrace_regs_get_frame_pointer
-> +static __always_inline unsigned long
-> +ftrace_regs_get_frame_pointer(const struct ftrace_regs *fregs)
-> +{
-> +	return arch_ftrace_regs(fregs)->regs.gpr[1];
-> +}
-> +
->   static __always_inline void
->   ftrace_regs_set_instruction_pointer(struct ftrace_regs *fregs,
->   				    unsigned long ip)
-> diff --git a/arch/powerpc/kernel/trace/ftrace_entry.S b/arch/powerpc/kernel/trace/ftrace_entry.S
-> index 3565c67fc638..6599fe3c6234 100644
-> --- a/arch/powerpc/kernel/trace/ftrace_entry.S
-> +++ b/arch/powerpc/kernel/trace/ftrace_entry.S
-> @@ -409,23 +409,31 @@ EXPORT_SYMBOL(_mcount)
->   _GLOBAL(return_to_handler)
->   	/* need to save return values */
->   #ifdef CONFIG_PPC64
-> -	std	r4,  -32(r1)
-> -	std	r3,  -24(r1)
-> +	stdu	r1, -SWITCH_FRAME_SIZE(r1)
-> +	std	r4, GPR4(r1)
-> +	std	r3, GPR3(r1)
-> +	/* Save previous stack pointer (r1) */
-> +	addi	r3, r1, SWITCH_FRAME_SIZE
-> +	std	r3, GPR1(r1)
->   	/* save TOC */
-> -	std	r2,  -16(r1)
-> -	std	r31, -8(r1)
-> +	std	r2,  24(r1)
-> +	std	r31, 32(r1)
->   	mr	r31, r1
-> -	stdu	r1, -112(r1)
-> -
-> +	/* pass ftrace_regs/pt_regs to ftrace_return_to_handler */
-> +	addi	r3, r1, STACK_INT_FRAME_REGS
->   	/*
->   	 * We might be called from a module.
->   	 * Switch to our TOC to run inside the core kernel.
->   	 */
->   	LOAD_PACA_TOC()
->   #else
-> -	stwu	r1, -16(r1)
-> -	stw	r3, 8(r1)
-> -	stw	r4, 12(r1)
-> +	stwu	r1, -SWITCH_FRAME_SIZE(r1)
-> +	stw	r4, GPR4(r1)
-> +	stw	r3, GPR3(r1)
-> +	addi	r3, r1, SWITCH_FRAME_SIZE
-> +	stw	r3, GPR1(r1)
-> +	/* pass ftrace_regs/pt_regs to ftrace_return_to_handler */
-> +	addi	r3, r1, STACK_INT_FRAME_REGS
->   #endif
->   
->   	bl	ftrace_return_to_handler
-> @@ -435,15 +443,15 @@ _GLOBAL(return_to_handler)
->   	mtlr	r3
->   
->   #ifdef CONFIG_PPC64
-> -	ld	r1, 0(r1)
-> -	ld	r4,  -32(r1)
-> -	ld	r3,  -24(r1)
-> -	ld	r2,  -16(r1)
-> -	ld	r31, -8(r1)
-> +	ld	r4,  GPR4(r1)
-> +	ld	r3,  GPR3(r1)
-> +	ld	r2,  24(r1)
-> +	ld	r31, 32(r1)
-> +	ld	r1,  0(r1)
->   #else
-> -	lwz	r3, 8(r1)
-> -	lwz	r4, 12(r1)
-> -	addi	r1, r1, 16
-> +	lwz	r3, GPR3(r1)
-> +	lwz	r4, GPR4(r1)
-> +	addi	r1, r1, SWITCH_FRAME_SIZE
->   #endif
->   
->   	/* Jump back to real return address */
+Thank you,
 
+
+> ---
+>  kernel/trace/trace.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index 1b7db732c0b1..f2a84d1ce4b7 100644
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+> @@ -834,7 +834,10 @@ int trace_pid_write(struct trace_pid_list *filtered_pids,
+>  		/* copy the current bits to the new max */
+>  		ret = trace_pid_list_first(filtered_pids, &pid);
+>  		while (!ret) {
+> -			trace_pid_list_set(pid_list, pid);
+> +			ret = trace_pid_list_set(pid_list, pid);
+> +			if (ret < 0)
+> +				goto out;
+> +
+>  			ret = trace_pid_list_next(filtered_pids, pid + 1, &pid);
+>  			nr_pids++;
+>  		}
+> @@ -871,6 +874,7 @@ int trace_pid_write(struct trace_pid_list *filtered_pids,
+>  		trace_parser_clear(&parser);
+>  		ret = 0;
+>  	}
+> + out:
+>  	trace_parser_put(&parser);
+>  
+>  	if (ret < 0) {
+> -- 
+> 2.34.1
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
