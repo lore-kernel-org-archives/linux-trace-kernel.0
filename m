@@ -1,118 +1,146 @@
-Received: from esa4.hgst.iphmx.com (esa4.hgst.iphmx.com [216.71.154.42])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75C7D340DAC;
-	Tue,  9 Sep 2025 11:09:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.71.154.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 757222F5E
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  9 Sep 2025 11:25:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757416145; cv=none; b=PzWmZ/nyF7mr5eoqpA/T6adCli3V7AGOvDyv3PhXoPdDrWzJCCQ2fzVhaQboM7kyQLs/OzBJqFJhTv4a3muxaGjX+blX4GKaNMoW4ZVu5wA7ntaVez0zEOCSO1jKoApSFxjsfMvfXTdAyisQQHwvd6IdT7pnjpkrdvq68OVHwv4=
+	t=1757417153; cv=none; b=COqoj8oQaARgCLlybxGDCic6h90/YjDhlop9zV1EAoVv1Rxq3ATDsyqh2HYmgqKWOufX3b08vm8/Y8imFKx8k3CQof0Q7DgJRoB01VokahtgVGDpcqotm7dBRn9eiaFojLcUQAsiKnw20OypOjum4j4vu9h7WrCViHeewwqo65Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757416145; c=relaxed/simple;
-	bh=clLA9tWFF0dM3xcPiJ8JYCP9d84ZpF4epwkmDjKG8sY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=bgPLhlnUnRDHnUg7d4Z8a+BZG2ShgHZPBfpDkACUlEGkH3BlP4Ng66SAyc+T4wkct9vORbBxBAt6E67C4Hf3sVO5z1S0uvcj3c3vWo5/SPor13PfWTmCaDiEMsan3menRWxBpBBSsxK3lGENDwPF14SesaKs41dBM2TfyyM3EjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=aFpFFcRF; arc=none smtp.client-ip=216.71.154.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
+	s=arc-20240116; t=1757417153; c=relaxed/simple;
+	bh=Q9FbQUZ5URjqQVVOu1N6zHK7KaHfVu166G0k+3m1kn0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QK5NHkdsxH1kulXW4lYHnyYdaN2idhImGkfnLAd3gcEMqolWJS7mTzGaUkYFpo/0YdZgSVsWv6tI0DzkqQTWfzmgKDrQbUCl0a+rteurEhQXTikMGFrIX65inBQLoR9jdtQv363A6CYwA4KIdZnMhjvTD6kjnZVUcRru1dJoX2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HSYmbjQI; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="aFpFFcRF"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1757416143; x=1788952143;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=clLA9tWFF0dM3xcPiJ8JYCP9d84ZpF4epwkmDjKG8sY=;
-  b=aFpFFcRFgVxrw0pgfcnoZS2uUDHd6OxLN1KE2dS+vlHS7IrGw+twxHyD
-   MgwLkgHbnXZIo1JpVDRXePB7HSCQMlUnQOO3bKcVTKiBQAKVkaP4uq3gP
-   vA6OQoAezXwh+5yQapgLd81suY03krx7tGMLCKuleWSLXgZO0L6FJg/mq
-   PCa2JTMQZ+2utldsp0BW2qjb+ZdsD8INV24H6salLFwktbIIp8iRQZFiv
-   evRvCuAK5TqFdaFDLM3Q6FCKZrqZGEIaqCvlmHSZJ3P6Kxfc7GMhciKhD
-   45tQJqgCy+FjnhX1jLqwXfrSkgHhoanGBUtFWWqKGVAwCmCaSwbpX6qvN
-   g==;
-X-CSE-ConnectionGUID: Ew2F+RyERl6IFxny4yDc8g==
-X-CSE-MsgGUID: VLLsjRN1S7aB6f6+LHGXdA==
-X-IronPort-AV: E=Sophos;i="6.18,251,1751212800"; 
-   d="scan'208";a="112810963"
-Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 09 Sep 2025 19:09:03 +0800
-IronPort-SDR: 68c00acf_adlbHp1nnPv5ulJrlzstDkc3/w4XNGVvvEGzbkfRfyHILtn
- vLvcB0Me8Cdf/lazIPKZkzZuUfIxq6miMNYtOdA==
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 09 Sep 2025 04:09:03 -0700
-WDCIronportException: Internal
-Received: from c02g55f6ml85.ad.shared (HELO C02G55F6ML85.wdc.com) ([10.224.183.46])
-  by uls-op-cesaip01.wdc.com with ESMTP; 09 Sep 2025 04:08:59 -0700
-From: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-To: Jens Axboe <axboe@kernel.dk>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-btrace@vger.kernel.org,
-	John Garry <john.g.garry@oracle.com>,
-	Hannes Reinecke <hare@suse.de>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Christoph Hellwig <hch@lst.de>,
-	Naohiro Aota <naohiro.aota@wdc.com>,
-	Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
-	Chaitanya Kulkarni <chaitanyak@nvidia.com>,
-	"Martin K . Petersen" <martin.petersen@oracle.com>,
-	Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Subject: [PATCH 21/21] blkparse: parse zone append completions
-Date: Tue,  9 Sep 2025 13:07:23 +0200
-Message-Id: <20250909110723.75676-22-johannes.thumshirn@wdc.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
-In-Reply-To: <20250909110723.75676-1-johannes.thumshirn@wdc.com>
-References: <20250909110723.75676-1-johannes.thumshirn@wdc.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HSYmbjQI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1757417150;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=67kLMlzJHu1zizON4sZWeLtQA79a0BMr9YCFQKhVd+0=;
+	b=HSYmbjQIDo3mYGNEI76p8otC3X0HatVZAzSgM/E6umCVQnJdSwdGtD9quKiqXsgTUPxHb6
+	ihM3WB+MteuQg3kMZ6cX1Gk/cGBZ54ENn7mS9ek1nirEr2MHugShWLKKmNFiXjeJbTG2Sn
+	K4TamSppZVmYzGfD9bOuazcx6lCOYXg=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-549-kY4gBH2hNM2KMEfUqTeowA-1; Tue, 09 Sep 2025 07:25:49 -0400
+X-MC-Unique: kY4gBH2hNM2KMEfUqTeowA-1
+X-Mimecast-MFC-AGG-ID: kY4gBH2hNM2KMEfUqTeowA_1757417148
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-b042eb3ac03so485502466b.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 09 Sep 2025 04:25:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757417148; x=1758021948;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=67kLMlzJHu1zizON4sZWeLtQA79a0BMr9YCFQKhVd+0=;
+        b=CNrI6MTokYTL878HlXxBxJOJ+3mC9BKFwOrUHfrDMjBtyZKQAdi0kOGE320/De0oZn
+         OPXl9TgYhvIsx0nGTR5+YIzABOYH9DmGsQTr6unIF2ZanQS6Gc++EdqP21SfCIDflVET
+         XTJ2z4YUl9rY4yczXoDKN5Oj5D+iAoviJHWG4PUHMH+4P4rV/x+T7AqcEHhuQM4vsKKl
+         XW+pozt2J9R/ZVv6L0REpgGMnMT5V2N0D0XabbxsyAuDQ1MKbtzfUit/aZ4/EBZivnr2
+         L15JrhcjDSV2R3Ud47d6e/1g8/PXfPxngDNxnYLzfzCwD5s2Mcr9yaUwMekuk3WMq53Y
+         IMcA==
+X-Forwarded-Encrypted: i=1; AJvYcCU8i3ajz7nK+j/j8mnMOzj89jRTgXCU3J0eYQB29mqfpy+3EdlsPwtZcPEEWuTl3r2LwEJaJm46gYb8A0UrAynjYxA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzXsE2MueVOMC4dtDhpM2yNYrpYMmRkCg30UGPEKfW9ZCVwTOXt
+	GLmhMi6f17XLPFkxW5UX8iIba+RpY7Wr2F4c9HTx9g5bqRsF6AUA+JJOi6I0SP7l/0saho2JNOt
+	fNuyQp+P7tFKD9J0XKy3RPRT4l7gLyrFIgoW353JuIeghk32DKyeu7i8HJXbk39I0fAwdA4xNhu
+	AECSFL2yAj0JHCrXsuzgsl/VBjHSFyrkux1drSJYxE9qfdLpX9QhSyUvQt1Fk=
+X-Gm-Gg: ASbGncsVwaamzio9w2gpoORuOgKpW6t/fC0BQp52hcMOnW3Cvl3firrIB1VdCkIde1P
+	ylrxgPrSk1Bb4i/+My6jFBNxbwFKOLwIepD29GqjaqDh8Hs1JqwY/3K7NrTBxnePrajMapu2a+B
+	mMBqzcyTRtgt7p4pKn2PY=
+X-Received: by 2002:a17:907:2d25:b0:af9:a5f8:2f0c with SMTP id a640c23a62f3a-b04b1476a9bmr1018593166b.28.1757417147785;
+        Tue, 09 Sep 2025 04:25:47 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGHFzOpKo6IgPt9Fre5tBMKMQaCvkwdCdi7dZPsOl6NBwM1CgHkN959EUhsitLdkdjkCwWVuFu4TCyFJ0oeB2o=
+X-Received: by 2002:a17:907:2d25:b0:af9:a5f8:2f0c with SMTP id
+ a640c23a62f3a-b04b1476a9bmr1018589666b.28.1757417147346; Tue, 09 Sep 2025
+ 04:25:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250907022325.243930-1-crwood@redhat.com>
+In-Reply-To: <20250907022325.243930-1-crwood@redhat.com>
+From: Tomas Glozar <tglozar@redhat.com>
+Date: Tue, 9 Sep 2025 13:25:36 +0200
+X-Gm-Features: Ac12FXxzV7ROCA3ThDL-gCaGW8FDfHdWHFSkEll3JyFYe9dG030nch0wAzhi_Sw
+Message-ID: <CAP4=nvTgBPRbUvSLEJGW4nAQ6i6jghhE+qVGs657Dtb9ZWE3eg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/7] tools/rtla: Code consolidation and osnoise actions
+To: Crystal Wood <crwood@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, linux-trace-kernel@vger.kernel.org, 
+	John Kacur <jkacur@redhat.com>, Costa Shulyupin <costa.shul@redhat.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: tMHm9Z5BssTVl5x4IgN9jjlghNeNLAQBK2U19mGOPIs_1757417148
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Parse completion of Zone Append commands in blkparse.
+ne 7. 9. 2025 v 4:23 odes=C3=ADlatel Crystal Wood <crwood@redhat.com> napsa=
+l:
+>
+> v2: minor changes from Tomas's feedback
+>
 
-Signed-off-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
----
- blkparse_fmt.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+Thank you! Looks good now. (The help message for rtla-osnoise-top
+shows --on-end without the argument, but that is my typo (it's also in
+timerlat), let's just fix that later.)
 
-diff --git a/blkparse_fmt.c b/blkparse_fmt.c
-index 467c8c5..725ddbe 100644
---- a/blkparse_fmt.c
-+++ b/blkparse_fmt.c
-@@ -331,6 +331,27 @@ static void process_zoned(char *act, struct blk_io_trace2 *t,
- 			  unsigned long long elapsed, char *name)
- {
- 	switch (act[1]) {
-+	case 'A':	/* Zone Append */
-+		if (elapsed != -1ULL) {
-+			if (t_sec(t))
-+				fprintf(ofp, "%llu + %u (%8llu) [%d]\n",
-+					(unsigned long long) t->sector,
-+					t_sec(t), elapsed, t->error);
-+			else
-+				fprintf(ofp, "%llu (%8llu) [%d]\n",
-+					(unsigned long long) t->sector,
-+					elapsed, t->error);
-+		} else {
-+			if (t_sec(t))
-+				fprintf(ofp, "%llu + %u [%d]\n",
-+					(unsigned long long) t->sector,
-+					t_sec(t), t->error);
-+			else
-+				fprintf(ofp, "%llu [%d]\n",
-+					(unsigned long long) t->sector,
-+					t->error);
-+		}
-+		break;
- 	case 'P': /* Zone Plug */
- 		fprintf(ofp, "[%s]\n", name);
- 		break;
--- 
-2.51.0
+> v1: https://lore.kernel.org/linux-trace-kernel/20250821035719.137161-1-cr=
+wood@redhat.com/T/#t
+>
+> Costa Shulyupin (1):
+>   tools/rtla: Consolidate common parameters into shared structure
+>
+> Crystal Wood (6):
+>   tools/rtla: Move top/hist params into common struct
+>   tools/rtla: Create common_apply_config()
+>   tools/rtla: Consolidate code between osnoise/timerlat and hist/top
+>   tools/rtla: Fix -A option name in test comment
+>   tools/rtla: Add test engine support for unexpected output
+>   tools/rtla: Add remaining support for osnoise action
+>
+>  Documentation/tools/rtla/common_options.rst   |  61 ++
+>  .../tools/rtla/common_osnoise_options.rst     |   8 +
+>  .../tools/rtla/common_timerlat_options.rst    |  74 +-
+>  Documentation/tools/rtla/rtla-hwnoise.rst     |   2 +
+>  .../tools/rtla/rtla-osnoise-hist.rst          |   2 +
+>  Documentation/tools/rtla/rtla-osnoise-top.rst |   2 +
+>  .../tools/rtla/rtla-timerlat-hist.rst         |   2 +
+>  .../tools/rtla/rtla-timerlat-top.rst          |   2 +
+>  tools/tracing/rtla/src/Build                  |   1 +
+>  tools/tracing/rtla/src/actions.c              |   8 +-
+>  tools/tracing/rtla/src/actions.h              |   2 +-
+>  tools/tracing/rtla/src/common.c               | 344 ++++++++++
+>  tools/tracing/rtla/src/common.h               | 154 +++++
+>  tools/tracing/rtla/src/osnoise.c              | 101 ++-
+>  tools/tracing/rtla/src/osnoise.h              | 114 +---
+>  tools/tracing/rtla/src/osnoise_hist.c         | 369 ++++------
+>  tools/tracing/rtla/src/osnoise_top.c          | 303 +++------
+>  tools/tracing/rtla/src/timerlat.c             | 210 ++++--
+>  tools/tracing/rtla/src/timerlat.h             |  55 +-
+>  tools/tracing/rtla/src/timerlat_bpf.c         |  22 +-
+>  tools/tracing/rtla/src/timerlat_hist.c        | 642 +++++-------------
+>  tools/tracing/rtla/src/timerlat_top.c         | 568 ++++------------
+>  tools/tracing/rtla/src/trace.h                |   3 -
+>  tools/tracing/rtla/tests/engine.sh            |  26 +-
+>  tools/tracing/rtla/tests/osnoise.t            |  27 +-
+>  tools/tracing/rtla/tests/timerlat.t           |   4 +-
+>  26 files changed, 1395 insertions(+), 1711 deletions(-)
+>  create mode 100644 tools/tracing/rtla/src/common.c
+>  create mode 100644 tools/tracing/rtla/src/common.h
+>
+> --
+> 2.48.1
+>
+
+Reviewed-by: Tomas Glozar  <tglozar@redhat.com>
+
+Tomas
 
