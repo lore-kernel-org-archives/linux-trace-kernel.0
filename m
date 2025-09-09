@@ -1,97 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 574E5303A21;
-	Tue,  9 Sep 2025 19:37:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9B2422156B;
+	Tue,  9 Sep 2025 21:47:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757446673; cv=none; b=QMIENappSzMzwE3tsCbeYlAzwWpGty8pwrW7hR+W/O1/GWNHyrClRtiB5iOYSqNtR5TWHstscdlKj/2hRaUjoCb7PD7pt3zSayKVSfq/RhfcefSSmqZreLjv7GZQ9i31h9s8eMr5pWUJCZqbdZ6kGHUQOAyWch/oIgb87dNUMDY=
+	t=1757454431; cv=none; b=M6STA8Tp9P9n3xJES34mfIFcGyjQq3i8rf40esmf0CE9eMvhk+X+VHiMDlhokCeyZmC1h5exyRC94dQ4uaha1NjXI0epykuqBExlxqxonQKD9FRxG5bG49Oxr+YOWb+QzUrgp5BxqjCso4Zv+yyefmzR9Gtg6W6eYzOisyXbbu8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757446673; c=relaxed/simple;
-	bh=Vkfs1C2Q/m2ciXngYEnMywKI/5g7jYuOYmYnMi4Z+6A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Rm4LUgXeKAsTGWx/ZlACaduok0nVUObGFx9OsGPz6taAPydSRUvc4WtNHB+WR2CZEAtihAnoMa8W3oiqdVtvLrPDtqXLI8U553y93eLI+rxkVKWhQlpfVw0KEv0J25lpUWW9/gJfGRmd+nb2hmHabdPbGIP3eIlgGskjtnG3s9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BK33sGpV; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BK33sGpV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30BB1C4CEF4;
-	Tue,  9 Sep 2025 19:37:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757446672;
-	bh=Vkfs1C2Q/m2ciXngYEnMywKI/5g7jYuOYmYnMi4Z+6A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BK33sGpV6gJZdNQka35B5igzFncF6O4QoVJduYx5uymEwm19+Pae/Y8Ji2ztm6vFh
-	 Of79hrgQzN752E6kK9Pd6CitdpQ05JM71b0yY2nJK5WUadz3JmWI4AqHd+rhRkpPML
-	 jPSesTwS7Zw48bKNgh3AxJtfj3r28MMf09jWFv3Lide1Ok8C5lkasp0zoJfr6zuOnF
-	 N5cxlSvTSt07fnYvpbKZtFqt6TP2eL80kCSBPIQL9mOveIT/STSyNFrSlP91N6uUF+
-	 FdL0uwcDH/ATxbhiykxuiJP1XMjnnp4vhtxpR+0sRrU4PCEIaA22KI5S4HXWZpjWlB
-	 smMV1bUYsFvcA==
-Date: Tue, 9 Sep 2025 22:37:48 +0300
-From: Leon Romanovsky <leon@kernel.org>
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Jason Gunthorpe <jgg@nvidia.com>,
-	Abdiel Janulgue <abdiel.janulgue@gmail.com>,
-	Alexander Potapenko <glider@google.com>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Christoph Hellwig <hch@lst.de>, Danilo Krummrich <dakr@kernel.org>,
-	David Hildenbrand <david@redhat.com>, iommu@lists.linux.dev,
-	Jason Wang <jasowang@redhat.com>, Jens Axboe <axboe@kernel.dk>,
-	Joerg Roedel <joro@8bytes.org>, Jonathan Corbet <corbet@lwn.net>,
-	Juergen Gross <jgross@suse.com>, kasan-dev@googlegroups.com,
-	Keith Busch <kbusch@kernel.org>, linux-block@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, linux-nvme@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org, linux-trace-kernel@vger.kernel.org,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>, rust-for-linux@vger.kernel.org,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	virtualization@lists.linux.dev, Will Deacon <will@kernel.org>,
-	xen-devel@lists.xenproject.org
-Subject: Re: [PATCH v6 03/16] dma-debug: refactor to use physical addresses
- for page mapping
-Message-ID: <20250909193748.GG341237@unreal>
-References: <cover.1757423202.git.leonro@nvidia.com>
- <56d1a6769b68dfcbf8b26a75a7329aeb8e3c3b6a.1757423202.git.leonro@nvidia.com>
+	s=arc-20240116; t=1757454431; c=relaxed/simple;
+	bh=5UNVEqM0SA3LiwvwtQD9PCp1Z2RCknate6LOsHyQXXc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QoKUPVwdLobloTPKdR46bI2rWllqTQcuiBPMfQmPcccmLqCgdhXKY2IAOLqdDzNsTVaWc5gjKHFIfLXX8I0sDSC+z8LwYI7NYyylDVRYkdrCCGFn1/SY+OizLTVqvzX+p2ATVhKBEdhx4BtvpbtBBg0Iw51UmOWpUekw/D5xO5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf18.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay08.hostedemail.com (Postfix) with ESMTP id 8E31F140119;
+	Tue,  9 Sep 2025 21:47:06 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf18.hostedemail.com (Postfix) with ESMTPA id F1A102F;
+	Tue,  9 Sep 2025 21:47:02 +0000 (UTC)
+Date: Tue, 9 Sep 2025 17:47:50 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ linux-trace-kernel@vger.kernel.org, maz@kernel.org, oliver.upton@linux.dev,
+ joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com,
+ kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ jstultz@google.com, qperret@google.com, will@kernel.org,
+ aneesh.kumar@kernel.org, kernel-team@android.com,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 06/24] tracing: Add events to trace remotes
+Message-ID: <20250909174750.72be9bbc@gandalf.local.home>
+In-Reply-To: <20250821081412.1008261-7-vdonnefort@google.com>
+References: <20250821081412.1008261-1-vdonnefort@google.com>
+	<20250821081412.1008261-7-vdonnefort@google.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <56d1a6769b68dfcbf8b26a75a7329aeb8e3c3b6a.1757423202.git.leonro@nvidia.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: 7ej5srhi7m6dgtzrcpzb7hsqh8cx9fhr
+X-Rspamd-Server: rspamout01
+X-Rspamd-Queue-Id: F1A102F
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+a22/GqU1qf8xhKUjNZ3RQSMe8o75J0/I=
+X-HE-Tag: 1757454422-816481
+X-HE-Meta: U2FsdGVkX1+MvwcffwkTYY4ptHTCjtVWAhsGAZBNw+vbcSDhGOmJ57KfO9RcRgJyDZ7EMrHLo//as4KF2ZC7464Edt85xLb32cnKLFN690CNFKswW4Bz3sjDMJN1RrqzpF7mk143fnM1ZtLJSfThUbqWXcvj3Zg1Lu9AxVbp41YNt6DG5haSE/V1tiaKAj/2e0X+WCTO9Lf0X6lRMxGO8TRxXK/mlnv8xXdxBXd8kCltiEIFf0LsNw5Ycq2HHG8zVEfoFYFr57k1wrlzWpuzmMY7SvwVs+bIvAvytdIqtaLvCHQR1r90l/Clh7yLvQbsvk1lSpG27MYvzlTzDWhENKoRw42PjCZq
 
-On Tue, Sep 09, 2025 at 04:27:31PM +0300, Leon Romanovsky wrote:
-> From: Leon Romanovsky <leonro@nvidia.com>
+On Thu, 21 Aug 2025 09:13:54 +0100
+Vincent Donnefort <vdonnefort@google.com> wrote:
 
-<...>
+> @@ -265,16 +272,19 @@ static struct trace_remote_iterator *trace_remote_iter(struct trace_remote *remo
+>  static bool trace_remote_iter_next(struct trace_remote_iterator *iter)
+>  {
+>  	struct trace_buffer *trace_buffer = iter->remote->trace_buffer;
+> +	struct ring_buffer_event *rb_evt;
+>  	int cpu = iter->cpu;
+>  
+>  	if (cpu != RING_BUFFER_ALL_CPUS) {
+>  		if (ring_buffer_empty_cpu(trace_buffer, cpu))
+>  			return false;
+>  
+> -		if (!ring_buffer_peek(trace_buffer, cpu, &iter->ts, &iter->lost_events))
+> +		rb_evt = ring_buffer_peek(trace_buffer, cpu, &iter->ts, &iter->lost_events);
+> +		if (!rb_evt)
+>  			return false;
+>  
+>  		iter->evt_cpu = cpu;
+> +		iter->evt = (struct remote_event_hdr *)&rb_evt->array[1];
 
->  include/linux/page-flags.h         |  1 +
+Hmm, shouldn't this use ring_buffer_event_data(rb_evt) instead?
 
-<...>
+If the events get big, then it would be array[2]. But the
+ring_buffer_event_data() hides that detail.
 
-> --- a/include/linux/page-flags.h
-> +++ b/include/linux/page-flags.h
-> @@ -614,6 +614,7 @@ FOLIO_FLAG(dropbehind, FOLIO_HEAD_PAGE)
->   * available at this point.
->   */
->  #define PageHighMem(__p) is_highmem_idx(page_zonenum(__p))
-> +#define PhysHighMem(__p) (PageHighMem(phys_to_page(__p)))
+>  		return true;
+>  	}
+>  
+> @@ -286,7 +296,8 @@ static bool trace_remote_iter_next(struct trace_remote_iterator *iter)
+>  		if (ring_buffer_empty_cpu(trace_buffer, cpu))
+>  			continue;
+>  
+> -		if (!ring_buffer_peek(trace_buffer, cpu, &ts, &lost_events))
+> +		rb_evt = ring_buffer_peek(trace_buffer, cpu, &ts, &lost_events);
 
-This was a not so great idea to add PhysHighMem() because of "else"
-below which unfolds to maze of macros and automatically generated
-functions with "static inline int Page##uname ..." signature.
+Ditto.
 
->  #define folio_test_highmem(__f)	is_highmem_idx(folio_zonenum(__f))
->  #else
->  PAGEFLAG_FALSE(HighMem, highmem)
+> +		if (!rb_evt)
+>  			continue;
+>  
+>  		if (ts >= iter->ts)
+> @@ -294,14 +305,18 @@ static bool trace_remote_iter_next(struct trace_remote_iterator *iter)
+>  
+>  		iter->ts = ts;
+>  		iter->evt_cpu = cpu;
+> +		iter->evt = (struct remote_event_hdr *)&rb_evt->array[1];
 
-Thanks
+Ditto.
+
+-- Steve
+
+>  		iter->lost_events = lost_events;
+>  	}
+>  
+>  	return iter->ts != U64_MAX;
+>  }
+>  
+> +static struct remote_event *trace_remote_find_event(struct trace_remote *remote, unsigned short id);
+> +
+>  static int trace_remote_iter_print(struct trace_remote_iterator *iter)
+>  {
+> +	struct remote_event *evt;
+>  	unsigned long usecs_rem;
+>  	u64 ts = iter->ts;
+>  
