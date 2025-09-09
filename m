@@ -1,138 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E44132A3D7;
-	Tue,  9 Sep 2025 12:40:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1923933CE8A;
+	Tue,  9 Sep 2025 12:48:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757421613; cv=none; b=upQYzFJXJAUM81PL2Oln+JGy6y8Cg9HXcB8/gileAPdaS6qKqbjIxKUjpVJfduZrMRm+XuUS813viUaR6K9SXUCIV+atRDm9f8VBrGKkhAn+gNQpEHJPb8mD/wuMxmZKGqLswP71wCEeJ6Oe/aE3q6jjcsh/rIrFV+oZU7ZxxUs=
+	t=1757422135; cv=none; b=DSDv0PFof7Nj5pSckE11+DmkPuD3t9u2V5SYQDmj66pP/LRFr+WZMhRsLG3E0iATern6BZ2wJomOqnWd93QCnsq3ImXA3NNclZuaaDbSVd+rfg5OggScuAAMY1HmrX/Ua9U9CjpUK2OAj6bPvGamCEy7vclru/AH9ty/23vrFY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757421613; c=relaxed/simple;
-	bh=E0pyzzXc5ywisIehqLd9QVqn8ohz0R6l3t8a5bN6GPQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gjuqdS9xrcK+Ysv1OpfDwdxgtPo7Zh5JYsC+RCCc35k0CMa+u4E2O9xwQ7mlO5HadeJQhGC6DIcBfRU4xqk948zUoRNYBdLkyE5C7U2gO8duGLOZzt98qUYUtFHXiqniYK5tKximFgE9cHRq25TCpt4wR9Gs3Azan3bEwJmr22s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NdpnaDqS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1757422135; c=relaxed/simple;
+	bh=+JMovtK9qa9KEq5NZgWWnT3tGAs3RwWeeUf1gpYqEv8=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Wz+kRkaMlOiD0/jxkidRwbqwjAEi+AY9cneEXy9MugKaEh+UBV5jry48EmH5L1UZ7dpxPVHHHQ3UVeX0Os3poL8C6XTWOGxo7qH7RnJzGBSE8cmWqyXPHFg2AwiySnycfdhlSh3s7t/8kPETGyftmOmPsA5WcOm9snhQHEif9DQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hxgA3kkr; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NdpnaDqS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B11DC4CEF4;
-	Tue,  9 Sep 2025 12:40:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757421612;
-	bh=E0pyzzXc5ywisIehqLd9QVqn8ohz0R6l3t8a5bN6GPQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=NdpnaDqSV+cIrUEa0xp48dPO9/HLwy2WjTn/gdyoiBwiV03w8my8dnDSlWtX5pcy0
-	 tKUuU78gwaXUDoL5kHeSumgsXw5rGiWb8FuRqjOqQFHQypt/ZsAF87cu0iLh4XPMVB
-	 oKatSJuVKW3KvmOzHN+T0xqYen9FVEstV4fWndAFoyoGhh76EcmAnEp44sbGMeDd6W
-	 NmwCYWVpnoV6tTCJdlWXWxnqhmEX88MW3bCXhH4y8I4bjUsDdR37Ssaeb5R/uRrqd+
-	 vFkW7+0oxAhr9y7tHWSEQpF/u42j5BVrfki6M31XSlMEkTUi6RX0QQpp7FH+KfpWPH
-	 1uyWd42IlBOqw==
-From: Jiri Olsa <jolsa@kernel.org>
-To: Oleg Nesterov <oleg@redhat.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Andrii Nakryiko <andrii@kernel.org>
-Cc: bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	x86@kernel.org,
-	Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ingo Molnar <mingo@kernel.org>
-Subject: [PATCHv3 perf/core 6/6] selftests/bpf: Add kprobe multi write ctx attach test
-Date: Tue,  9 Sep 2025 14:38:57 +0200
-Message-ID: <20250909123857.315599-7-jolsa@kernel.org>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20250909123857.315599-1-jolsa@kernel.org>
-References: <20250909123857.315599-1-jolsa@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hxgA3kkr"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3dce6eed889so4387340f8f.0;
+        Tue, 09 Sep 2025 05:48:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1757422132; x=1758026932; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=pAPLfkkPj67rHhBhVqzI9PsMjjg5E3qJ7gcxueQzy1E=;
+        b=hxgA3kkrQp9ZgvKDFmFDFfa5siQmdD0poM31cINBvQt/1Hy5fpdEqHdlHp8pobQ2Vi
+         JtgNGtGknkb2a1/hl7VAXwkpts5Pa+e3Q2IfwPWLmf2pzG7Pd0AhLDfDPTMaVOVxgcCg
+         8+QJ3siLTQXQboScL388yueIPXcK3zh8ZS/CFEefsxI2B1iDE6qcEn3a1KKJJY/hisqL
+         HeCaBirKeo+chu9c6w23sbbIMfr7g1lo5pPEtPt5ltAsGk5jGcQJnXXKlJzTgfFvSK2B
+         YHcGT6BQ9GxgnsXFIDPp36yz0LzOxMXKc2bzXPoE5sl1ytqpcu4o2VyY4vwHip5kuDSe
+         nUWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757422132; x=1758026932;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pAPLfkkPj67rHhBhVqzI9PsMjjg5E3qJ7gcxueQzy1E=;
+        b=viL3Dnaf6l++9iEc/vvcVxz5p9juOHfcesHpqedlMGI3Pf8qLfwX4XVVosgVQBhTgJ
+         F0MMKeFVgx9MmDlVUcoUjNgdmj+/uizbu4I7NkyvDjFyNKNyl2cN0irIIsZLKOt4KThv
+         hUf9o7aDxJL7hQe8k5tD2jDLBemSh+YMHwe2GaIwHh5bZVswVQj/695E93lCZJligcTr
+         bUvVGKEwLMfq++ARLqZp2+6ZLnqwPg7UVhOw7Tjyqjslju5rmmgbpaCZSS/hOw5XP4uv
+         3DukMYu9Lq3RKONwE2kaMhH024Jmrj48yX3dcrz6nbdb1VmkzDWb+VzSePXMKn02QQ1I
+         aoIg==
+X-Forwarded-Encrypted: i=1; AJvYcCUWkAkfNC0b/rsm7VZn+PmQRHENURD7B4mlpGj5EOaXZJcOHzFTzjMqFVLSOr2g6Jri8V0=@vger.kernel.org, AJvYcCUnpBpwdVGoF0mZvwfxI2yJVBoX2o8+KlvTO48sp/3nYUkVas/EnJTlv65yNfoOrHcLCHl8KA2GslsVUOon@vger.kernel.org, AJvYcCVxRmgoCgWuHf+5Sw1LvcWcQygU/s+Dv7ZvBv7ELlCED4zAqcnQXfazoeHc/id84zTOYtQkl6UTDQpOnVaxEehwk8k2@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzoxqq+JNZxAYMq+7JdLcyLy+SlK3y4vPaYw9poqQHzSCQmf6ty
+	dfiqv92IqXmjg4IacwvMVq+D+C62kB8VudyE6xerQX/6391CS2Qd+OJ1
+X-Gm-Gg: ASbGncv1kKpmtl4YuGYbrH11JqZITeXUu624JIiao65WqDDfzs7ZOadnbijmnoHXojf
+	4aoLKH4LnS8YGHDCU8RthqPAcwR7LNyzMKEZBkzSa4/8ymVpcySSbBCEXVh92NFXOqLlCYlTdvj
+	GvQngqA2e9PLiZ224v2V5PlZmNe+cntiSojh6wOY2N/AHz/Sb4yq3SuL6Kt4dcR3+0CU8QsVTi4
+	bYdijncz6eX/jUSZ453/YK5bwuSfuJAQzY89rI2JmO7yEaKD87+WnlO3VHMymXemAOrRnKJ/OVE
+	VH8MZGFUALN+ObBD9T6DGxDc80SSaODi8IQwlZ+ibJepXMJ/0t8kYKzR/ZDHV4F5ot8sd8R08el
+	sNBFhemU=
+X-Google-Smtp-Source: AGHT+IGc0xGnEdIpwDEeQeQ0CM6RtTnogfjsoF30A9jrLCsnWoMgQOhwiGxBIapBm9YYHXX34EEDKw==
+X-Received: by 2002:a05:6000:1789:b0:3e4:e4e:343c with SMTP id ffacd0b85a97d-3e646257512mr9879355f8f.31.1757422132258;
+        Tue, 09 Sep 2025 05:48:52 -0700 (PDT)
+Received: from krava ([2a02:8308:a00c:e200::31e0])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45df15f7051sm9330885e9.3.2025.09.09.05.48.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Sep 2025 05:48:51 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Tue, 9 Sep 2025 14:48:50 +0200
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Jiri Olsa <olsajiri@gmail.com>, andrii@kernel.org,
+	Peter Zijlstra <peterz@infradead.org>, oleg@redhat.com,
+	mhiramat@kernel.org, linux-kernel@vger.kernel.org, alx@kernel.org,
+	eyal.birger@gmail.com, kees@kernel.org, bpf@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, x86@kernel.org,
+	songliubraving@fb.com, yhs@fb.com, john.fastabend@gmail.com,
+	haoluo@google.com, rostedt@goodmis.org, alan.maguire@oracle.com,
+	David.Laight@aculab.com, thomas@t-8ch.de, mingo@kernel.org,
+	rick.p.edgecombe@intel.com
+Subject: Re: [PATCH 0/6] uprobes/x86: Cleanups and fixes
+Message-ID: <aMAiMrLlfmG9FbQ3@krava>
+References: <20250821122822.671515652@infradead.org>
+ <aKcqm023mYJ5Gv2l@krava>
+ <aKgtaXHtQvJ0nm_b@krava>
+ <CAEf4BzYg9jsEK1XdKW4dKFdOSrY4CAspaCAAv6ZJZScHxkHSyA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4BzYg9jsEK1XdKW4dKFdOSrY4CAspaCAAv6ZJZScHxkHSyA@mail.gmail.com>
 
-Adding test to check we can't attach kprobe multi program
-that writes to the context.
+On Fri, Aug 22, 2025 at 11:05:59AM -0700, Andrii Nakryiko wrote:
+> On Fri, Aug 22, 2025 at 1:42 AM Jiri Olsa <olsajiri@gmail.com> wrote:
+> >
+> > On Thu, Aug 21, 2025 at 04:18:03PM +0200, Jiri Olsa wrote:
+> > > On Thu, Aug 21, 2025 at 02:28:22PM +0200, Peter Zijlstra wrote:
+> > > > Hi,
+> > > >
+> > > > These are cleanups and fixes that I applied on top of Jiri's patches:
+> > > >
+> > > >   https://lkml.kernel.org/r/20250720112133.244369-1-jolsa@kernel.org
+> > > >
+> > > > The combined lot sits in:
+> > > >
+> > > >   git://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git perf/core
+> > > >
+> > > > Jiri was going to send me some selftest updates that might mean rebasing that
+> > > > tree, but we'll see. If this all works we'll land it in -tip.
+> > > >
+> > >
+> > > hi,
+> > > sent the selftest fix in here:
+> > >   https://lore.kernel.org/bpf/20250821141557.13233-1-jolsa@kernel.org/T/#u
+> >
+> > Andrii,
+> > do we want any special logistic for the bpf/selftest changes or it could
+> > go through the tip tree?
+> 
+> let's route selftest changes through tip together with the rest of
+> uprobe changes, it's unlikely to conflict
 
-It's x86_64 specific test.
+fyi, there's conflict now between tip/perf/core and bpf-next/master
+in the selftests.. due to usdt SIB argument support changes
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- .../bpf/prog_tests/kprobe_multi_test.c        | 27 +++++++++++++++++++
- .../selftests/bpf/progs/kprobe_write_ctx.c    |  7 +++++
- 2 files changed, 34 insertions(+)
+please let me know if you need any help in resolving that
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/kprobe_multi_test.c b/tools/testing/selftests/bpf/prog_tests/kprobe_multi_test.c
-index e19ef509ebf8..bc52389217e2 100644
---- a/tools/testing/selftests/bpf/prog_tests/kprobe_multi_test.c
-+++ b/tools/testing/selftests/bpf/prog_tests/kprobe_multi_test.c
-@@ -7,6 +7,7 @@
- #include "kprobe_multi_session.skel.h"
- #include "kprobe_multi_session_cookie.skel.h"
- #include "kprobe_multi_verifier.skel.h"
-+#include "kprobe_write_ctx.skel.h"
- #include "bpf/libbpf_internal.h"
- #include "bpf/hashmap.h"
- 
-@@ -753,6 +754,30 @@ static void test_attach_override(void)
- 	kprobe_multi_override__destroy(skel);
- }
- 
-+#ifdef __x86_64__
-+static void test_attach_write_ctx(void)
-+{
-+	struct kprobe_write_ctx *skel = NULL;
-+	struct bpf_link *link = NULL;
-+
-+	skel = kprobe_write_ctx__open_and_load();
-+	if (!ASSERT_OK_PTR(skel, "kprobe_write_ctx__open_and_load"))
-+		return;
-+
-+	link = bpf_program__attach_kprobe_opts(skel->progs.kprobe_multi_write_ctx,
-+						     "bpf_fentry_test1", NULL);
-+	if (!ASSERT_ERR_PTR(link, "bpf_program__attach_kprobe_opts"))
-+		bpf_link__destroy(link);
-+
-+	kprobe_write_ctx__destroy(skel);
-+}
-+#else
-+static void test_attach_write_ctx(void)
-+{
-+	test__skip();
-+}
-+#endif
-+
- void serial_test_kprobe_multi_bench_attach(void)
- {
- 	if (test__start_subtest("kernel"))
-@@ -792,5 +817,7 @@ void test_kprobe_multi_test(void)
- 		test_session_cookie_skel_api();
- 	if (test__start_subtest("unique_match"))
- 		test_unique_match();
-+	if (test__start_subtest("attach_write_ctx"))
-+		test_attach_write_ctx();
- 	RUN_TESTS(kprobe_multi_verifier);
- }
-diff --git a/tools/testing/selftests/bpf/progs/kprobe_write_ctx.c b/tools/testing/selftests/bpf/progs/kprobe_write_ctx.c
-index 4621a5bef4e2..f77aef0474d3 100644
---- a/tools/testing/selftests/bpf/progs/kprobe_write_ctx.c
-+++ b/tools/testing/selftests/bpf/progs/kprobe_write_ctx.c
-@@ -12,4 +12,11 @@ int kprobe_write_ctx(struct pt_regs *ctx)
- 	ctx->ax = 0;
- 	return 0;
- }
-+
-+SEC("kprobe.multi")
-+int kprobe_multi_write_ctx(struct pt_regs *ctx)
-+{
-+	ctx->ax = 0;
-+	return 0;
-+}
- #endif
--- 
-2.51.0
-
+jirka
