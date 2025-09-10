@@ -1,235 +1,235 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60F64214A9B;
-	Wed, 10 Sep 2025 01:50:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757469055; cv=fail; b=U6uvmvgZzRw0QqXAZpEHiwGZz6hrVgAr4thwPA9l6U1ksEzL4iH4SazNgz9BMOrySVyWx4iTUMZ/P0yKYzh3/xfnO6RWIH8mTGfJ73TOPkwytc4LyWwr8eVFSC6BT6SYkkmul6rOap8vd+cjiE2cMvBn6KjzTAmcXN9qiQjxu74=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757469055; c=relaxed/simple;
-	bh=ZEPz1Q5IQK6dAhlwXz2RO/NGdpTs9I6JLKaIziVHXy8=;
-	h=To:Cc:Subject:From:In-Reply-To:Message-ID:References:Date:
-	 Content-Type:MIME-Version; b=hr0Bd+WVvVmMi7k8Vo5q2dH3ugThxh4I1P9r/ovNOu5oqcApn9w/nkvLmfyDAW5b0OzWYXwfquwmcQw1UvGEVIrz5Fu90IkIIXZ1yW1ncEzBqanFDAiZI/JHx4skNPVqCKfXALy4J6LJUkMh0ox6R8ltmYQleBQhQ/bnMURDYYU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Kip4JBgG; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=xtR+NHvY; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 408BD31D39F;
+	Wed, 10 Sep 2025 05:24:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1757481850; cv=none; b=WniLmIzIL2h3Q60HZd5wIaTnoMqa991vdKKcBFdMisJYFdF5yFnRZ6riZx64Lv9NelP9onFT/bQj+NDqcHiIeAISROOVjWox+KnGSIQ2OPTEmisDlAJd7u2NDOzgABWUjgGYVwfzlVbqyhT8EeLiyv/JGJrAvKtQ0on3czg6Q0o=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1757481850; c=relaxed/simple;
+	bh=4VptlxtALKSeGPwHcSWmQZXyu6v8EKXiviUiiXDOKR4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iAV3mB/8618dcLyb8yn9PAJHa9pXiA8EHGJq15gep0cMJON2FFurl1quBJlYuOyGgsKAvD3Gy2+7J779YKh3YU/EGSjFh0uTF7pBUZXqNeBjaopZXoRsiF7ka6xQkyTFv+igbumJQCvJpKeVUXfX/BqyLVUAhCafgH26uOF2wtc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B5UxE4Gy; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Kip4JBgG";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="xtR+NHvY"
-Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 589L0b1t004351;
-	Wed, 10 Sep 2025 01:50:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2025-04-25; bh=ax/Vek/NwA1fRNFrLo
-	x/1zBw3jkvhEt8qOPJhS0W/hE=; b=Kip4JBgGxgB9QnInkpB2EXdOapnippPSb4
-	59gbkS5W60iAX/G58kQYRGLInwizdBpAkGRwEd7pF9DkstdNvd3wiz0q2V4CWDrS
-	rE9bu6xUEOj73wOz819V+ucqlr3FRvsMfPKR5r7vR/QsLYyVSCA3YTNtvjUpS1ib
-	shr+tVqbjja31sdVjBwom1xraKV2Ay+RxKU2HCj+E/BXataSzQKqH7xcVIKlfd3f
-	91lz8P6+fuWgO0b9hYMl1DZMjk7ygZMUoQWVLKNkxGKL56qi+xTQ+JG7U/ktuG5r
-	EOrSv57+l3tW21iwYorqsj3VNXkYF3c2FZ5KnvUkCrW5QseQ/tZg==
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 492296361f-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 10 Sep 2025 01:50:23 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 58A08DZO012839;
-	Wed, 10 Sep 2025 01:50:23 GMT
-Received: from ch1pr05cu001.outbound.protection.outlook.com (mail-northcentralusazon11010024.outbound.protection.outlook.com [52.101.193.24])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 490bdakcke-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 10 Sep 2025 01:50:23 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=yLOBIebhh0C+jkZFe7KA7DNMoqPYmcYIGedL1CT34b1f4qlBoKf39SAXbJOm9AkT9mF3ePdEQBB4upSvyoG1JuG48wpzMcyt4HWUhwrDt/hfPn79+YC86zTY8t3hAiBK3QyeYW097kMlrOX06IXG03kDugd0CinLEs4YIG6PF36Sv/YH+wt9Nvfzl/ztaBX3c0YBzU9XnPDW3Xr6ebWCnUI6PCQdSBLcpJMJhNrEvg953gxccTNlTHSnmebWaNkyCMseCrtDQMG0f/Ty1Pnop1LSkEYBAMDnUodQ7AGfV02NKQ2afuhuGdu5OvR0y2YgkaOmxPxHhOP5opaadP8hHw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ax/Vek/NwA1fRNFrLox/1zBw3jkvhEt8qOPJhS0W/hE=;
- b=dwvPB6w+/XTYHBUVA/jV1B2G2Y86FsK2aqHYSepeW3riHnUAyRvO99CN5KbmGFPpssRe64+ueZ59zDr3UJoWkmAbWtoBk3vznpiMwxx7l7KBWugpgjLiiOE6ESZ2alSQAT7f3tGC1xZGB8hHD/9pg+pAv6ceWOb/rLnU1+38BAd5DXD6aLm/qBmUtukGm8nKTqDk+jjwJVFUJ4mOQxxKVZYd+6pMaqrZ0pDFbsfzAXKRNMruQSGkG0j+KeT9bdMQ0jgS8ibCjmkymOb6ajyKjSoVl9iAPLqAT3sy2HJSrfZNXHUjlSGNE0GuhMnPLisENaEkq7DWtaJ3Z9G1W8M+iA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B5UxE4Gy"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-24456ce0b96so2978885ad.0;
+        Tue, 09 Sep 2025 22:24:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ax/Vek/NwA1fRNFrLox/1zBw3jkvhEt8qOPJhS0W/hE=;
- b=xtR+NHvYI1u7+tjpzkXsPQEXSatwiBNVv9nUMvWnVSQFRUekZ7E2aRVrveseNZ0Yokhk5btdNPWLrzbva51qHkKwZqaOvfN/sGydYNf7MAPHto7dbuPOGb86DcKZxNMdE/VQlXVDPZNdmmQz1bGoTJ6LdHTgjoxyDdHjTNrJhdo=
-Received: from CH0PR10MB5338.namprd10.prod.outlook.com (2603:10b6:610:cb::8)
- by SA1PR10MB7588.namprd10.prod.outlook.com (2603:10b6:806:376::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9094.22; Wed, 10 Sep
- 2025 01:50:20 +0000
-Received: from CH0PR10MB5338.namprd10.prod.outlook.com
- ([fe80::5cca:2bcc:cedb:d9bf]) by CH0PR10MB5338.namprd10.prod.outlook.com
- ([fe80::5cca:2bcc:cedb:d9bf%6]) with mapi id 15.20.9094.021; Wed, 10 Sep 2025
- 01:50:19 +0000
-To: "Mario Limonciello (AMD)" <superm1@kernel.org>
-Cc: "Rafael J . Wysocki" <rafael@kernel.org>,
-        Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>,
-        Danilo Krummrich <dakr@kernel.org>,
-        Bjorn
- Helgaas <bhelgaas@google.com>, Pavel Machek <pavel@kernel.org>,
-        Len
- Brown <lenb@kernel.org>,
-        Christian =?utf-8?Q?K=C3=B6nig?=
- <christian.koenig@amd.com>,
-        "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Steven Rostedt
- <rostedt@goodmis.org>,
-        linux-pm@vger.kernel.org (open list:HIBERNATION
- (aka Software Suspend, aka swsusp)),
-        amd-gfx@lists.freedesktop.org (open
- list:RADEON and AMDGPU DRM DRIVERS),
-        dri-devel@lists.freedesktop.org (open list:DRM DRIVERS),
-        linux-pci@vger.kernel.org (open list:PCI
- SUBSYSTEM),
-        linux-scsi@vger.kernel.org (open list:SCSI SUBSYSTEM),
-        linux-usb@vger.kernel.org (open list:USB SUBSYSTEM),
-        linux-trace-kernel@vger.kernel.org (open list:TRACING),
-        AceLan Kao
- <acelan.kao@canonical.com>,
-        Kai-Heng Feng <kaihengf@nvidia.com>,
-        Mark
- Pearson <mpearson-lenovo@squebb.ca>,
-        Merthan =?utf-8?Q?Karaka=C5=9F?=
- <m3rthn.k@gmail.com>,
-        Eric Naim <dnaim@cachyos.org>,
-        "Guilherme G .
- Piccoli" <gpiccoli@igalia.com>
-Subject: Re: [PATCH v7 02/12] scsi: Add PM_EVENT_POWEROFF into suspend
- callbacks
-From: "Martin K. Petersen" <martin.petersen@oracle.com>
-In-Reply-To: <20250909191619.2580169-3-superm1@kernel.org> (Mario
-	Limonciello's message of "Tue, 9 Sep 2025 14:16:09 -0500")
-Organization: Oracle Corporation
-Message-ID: <yq18qin6pqg.fsf@ca-mkp.ca.oracle.com>
-References: <20250909191619.2580169-1-superm1@kernel.org>
-	<20250909191619.2580169-3-superm1@kernel.org>
-Date: Tue, 09 Sep 2025 21:50:17 -0400
-Content-Type: text/plain
-X-ClientProxiedBy: YQBP288CA0041.CANP288.PROD.OUTLOOK.COM
- (2603:10b6:c01:9d::16) To CH0PR10MB5338.namprd10.prod.outlook.com
- (2603:10b6:610:cb::8)
+        d=gmail.com; s=20230601; t=1757481848; x=1758086648; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=cftv6dbe1p8dhP2DYhCN2AZkHpit5y+1p22q3P/B8ik=;
+        b=B5UxE4GyWupM/uLm+2bPC+ptu6QY3wVNIjP+WQLDzpvcFam/8IxYNsYBz1z7Z9KE8I
+         nUw3zsD2+jSb58iOLUfzXF+toUjATWuHAgGLRNA3bp5/RGOvAMDxFrwrNauc3rnVYzyK
+         lb6KwNCPm6Ifm43Qh9iHSzi29GOqGMjHm76APcm7cHJIJqJa0vfzp4gcN9HGFkG8YtZT
+         cMeefU1FsWiGKqo5qn7C3l1d1z9gudzAIhFUjLGt7txhisYJf/tSKTCtHnBRVgIoPN4p
+         GHIrlrkUiNSKkVmbFTYF2nfdfUeoKlPW0i4lMptTPU5kNSlqvf7PizM/KpwqIwQlxGnI
+         tSPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757481848; x=1758086648;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=cftv6dbe1p8dhP2DYhCN2AZkHpit5y+1p22q3P/B8ik=;
+        b=DXQHSdHTNCDLU8cIzj4lUdBfAfoXAkwE/xF6Rc9oy0xA6AuMdVNcY8XplHbW77ORR8
+         wcM8wKb/pyIVnUPDqrzpVBOS0+N/8fUZpLBuBkhTfW4H3uuM6ULYtZ8G0TJsiLRZbeRH
+         Gx8Hty9akQUPNXoXUFme9LyXr+vMWLL02Gv0LKwoynjzRhOCsNCiQsVxES9WlVX8xvVZ
+         RoLfr1JyvkooHTiSYUNrCfSqaTI/XFehVuvlUvy3MBAa8cmqUmys0ke7yX3Q/N/bd2SS
+         eaVG+5EsGIQq0fMIjJT9eGW6LSwH8azff949AH0r0GHYF2UvlGZGZrY3vWKMaSlWRAnt
+         +NkQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUKsMa9QSVsginvbBMRGyeWKsEUVQT6TO1rTG2ypMO4PZckNBQ2tYof/y4HMLl4b8jaaFYE00PWYFpLMPtG+uH+28OY@vger.kernel.org, AJvYcCUnEfQov6bq2rp/mlfeI4NrWKO0r4idRvPMiiLPPQ0edAJR2mZbeWYlXOhVksJoyy33ZIOLgEc9HYh4pfYiOjav@vger.kernel.org
+X-Gm-Message-State: AOJu0YzXQ1ng1tsH9NjBXc4RQUYT7K0m3gGr9spuPj56xoCnWly8qnF3
+	Nug98hyZj+Bpkea0z6SGzUcGeYBbcd+1l/XA9hcaYzQG3mZpo7I3D1M6DnblUma2QRFkhQ==
+X-Gm-Gg: ASbGncuNDpeMpLBjOFK+D3O6zbvfX5r8kzeSX1v7glCMjC3Vp7eP9n7TDSaeDqQqj1P
+	XI37oLEm3AhRJBCihvsCbxn7dqsUilJoM77E1kSbqHmnaIxOSLC29gAUhDVTbxd8ShWgBeyhPzM
+	ATHpuKzpPqJE884a/Ndla2038wp9xqv9xBTSpkKhFD5SR4JauDDJg+ZDNRZW5KTK347jxIQcDlc
+	Q4Z7Tb5nTAB1yObJd2LpK0jyRiENHMVlSfWxkivg15+3qwd1aNgoYUcPFVuayhtAqvCOpfG0tR7
+	LhfvbXkk8cQpAKj3pBGNIkvKVqM9qyMv8etmvpJtwJmJCFvK2jPdBkz4J623iajjgHycwgpk1f9
+	aj7RgWpZQj24HaaMFRglDC/Py6axTe0n5Rw==
+X-Google-Smtp-Source: AGHT+IFuloiwaEGV/DNI2axiJL2dsg2gHw5eX6v8DVF0szm1gYxcXDzTuZF1jNHa7zPM4+MQqK3LqQ==
+X-Received: by 2002:a17:903:986:b0:240:417d:8166 with SMTP id d9443c01a7336-251788fd271mr178360345ad.19.1757481848399;
+        Tue, 09 Sep 2025 22:24:08 -0700 (PDT)
+Received: from localhost.localdomain ([2403:2c80:17::10:4007])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-25a27422ebcsm14815125ad.29.2025.09.09.22.23.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Sep 2025 22:24:07 -0700 (PDT)
+From: Jinchao Wang <wangjinchao600@gmail.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	"Naveen N . Rao" <naveen@kernel.org>,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Alexander Potapenko <glider@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	kasan-dev@googlegroups.com,
+	"David S. Miller" <davem@davemloft.net>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Jinchao Wang <wangjinchao600@gmail.com>
+Subject: [PATCH v3 00/19] mm/ksw: Introduce real-time Kernel Stack Watch debugging tool
+Date: Wed, 10 Sep 2025 13:23:09 +0800
+Message-ID: <20250910052335.1151048-1-wangjinchao600@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH0PR10MB5338:EE_|SA1PR10MB7588:EE_
-X-MS-Office365-Filtering-Correlation-Id: 03451a65-a69c-4a96-a264-08ddf00c658d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?wf/1cUZ/pFy5I/aXgurdwHqog4I5xtQg23enMKeSVAgVD7hJY7qEv2XXjr2a?=
- =?us-ascii?Q?phvXCDWsTQIZhJ1FCe3hj7qqdsc/UK5S3Kes+uVNAQDftXysseTdP69+gXvW?=
- =?us-ascii?Q?c1Z3d261gzL0Jlf9MHfxlnFroo5ulKKbTQ/Jv9N5M0vxKW35AznCRmqVo8/A?=
- =?us-ascii?Q?6g4C+tG6D7Xp0fn/Ws7Z9uX7/KNJSTYA53dNIh/0UWHwUulkXYhkPvdpHNDv?=
- =?us-ascii?Q?wdtizprH29Z1+kt4IwO8YSEOY75YkqvK9Z2Iu0CYUgfMixR9OMIoBEXRmu6N?=
- =?us-ascii?Q?1nwfKHk7lTrSWvChDpCMJD7iGpY2ds63ArdQVxHP+w8//iHnWxr9YlGsJwsw?=
- =?us-ascii?Q?GdQSy8Idd0hKlTiFG9wftD2rDt1CHEpsOmWpGiBt15wP0pvjWr2mUa5d29a1?=
- =?us-ascii?Q?cOHCIDpyTVkbA8taWHUrfwUn6Dz+iLCGT3uUKeg3KEkhVexPdJFCySKilgi1?=
- =?us-ascii?Q?3UjPTW6YJ5mK+TZ9JVabGpHxEQRqbNxP2ECKc/AluKF9aQ9bf30cyRxut3/z?=
- =?us-ascii?Q?ufbWIgTZv7w3GA9feLaGT1Kunsw8HX3QJfFxHIPphUCskW8i66tvSvj2au9i?=
- =?us-ascii?Q?qBT4ub/glM49JJFf3dfh+PSvFVoIGb6W4YdpaFwpu9jnfIYIUmGQS61odL12?=
- =?us-ascii?Q?Hb617P0iJjwSSgGRnfbOZ2DwjtIlMBUXA1JmOcOIQKnaiXFyEr58RQkx5qeb?=
- =?us-ascii?Q?9hAe9aKAHfKctVwo1ndAGqCft7Nr1hPZCEiLV3rBgz/Ugrk9WeOi45Vd5Q++?=
- =?us-ascii?Q?KgHsfkciwO6jI01GrgSzk3jQkTxW0ZTqBeritFzbLA9qL5Wwc6lk3z2NJv2F?=
- =?us-ascii?Q?ozVbwkRsUozbQRDl5ClPV38iRlPHjTrh1KwcSYBPpYXYXLX7P3JcWnBeYI/0?=
- =?us-ascii?Q?bqO8cLu9zfMeA6OwCf/LvpXchJ0COuUpXoVMY8Rr36IJN2aq6jsuWId/I7Eq?=
- =?us-ascii?Q?N83Ejo21FG9PIQcZdisUS1zZhlbReC6r+sg1MlGC2tNljFBbD8WGaI1oAbr+?=
- =?us-ascii?Q?TI/wNu+IHC1LxErAjiNv3wqnYaggK3lM6rGlJDi6BPqfj16FEuT5BVGb2nIv?=
- =?us-ascii?Q?DwK3OITt/xIwJDfOLBEFxBkEVesPJc1BvmPyIMGp4EFnHTKlD0IIQitpRndy?=
- =?us-ascii?Q?FZ+MJWpPKLeQ9VUoYDZBYtqsj2P+so96RVdaKlhH3K/tmEtd8pwY0V+ZDYMX?=
- =?us-ascii?Q?dekSNiEqYCi2/dROtcTLEB50jrhLcDWeGk/pbj9pg7RfeuzkHIqp9aQzno9t?=
- =?us-ascii?Q?Tk8yNf++NKdOjz29GSmk+PgZQdoo2nowvLf/mmZ6jeFsOWmO8z4x49aKpVsr?=
- =?us-ascii?Q?p89naCkE7dOYRtZdCAiyetQcKORkwFS77ZyAD94FdLdCiDewy7McrWLvaHGa?=
- =?us-ascii?Q?tw7aEBTrRQPqBZVILtzXpQ93IXknFWG4nrBlWCrlbEqjJiSMsjrolPhoURZ1?=
- =?us-ascii?Q?DCQm7taLLvs=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR10MB5338.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?JuiYM2iK48lnPYPHCw2ITX7btavse4tB79G3Ou66zvf8pm+yxLkH+A1jaklq?=
- =?us-ascii?Q?MOsqb/KJrdzJBDvvvamiTvHOvZgQXFUARRVnMluY8sHguOxuifiBCaJxf16J?=
- =?us-ascii?Q?NVU7LrjR3O6yIcPE2Qm/ICdVdalQI+BfCnOukRyqpfl+ftv5OOXfX7FCPQZ4?=
- =?us-ascii?Q?ddLRky5BSpdVNycxAapFxelTkJihtuyhOR45kCGrRBrYJ7KY6jegAkq3l/2e?=
- =?us-ascii?Q?lRTAufMQvw1mjTleQUQF/Jqqj+9WsPwb4poGN604ikNkSAPlDjj4BK2a+mu7?=
- =?us-ascii?Q?4jcmj2nwwIAt0gQjTKnFRGvgDoe+/YaznI0KO+6Aizqn665w8miDemZtSz1o?=
- =?us-ascii?Q?rm5UYKld7LhCyaVYCoW/BeLlbXLTuDb3yFuWpzghQL2uX0WIJNLJ4dLYByph?=
- =?us-ascii?Q?v1PTcv9Ik/F8i+JeFjveP+BX43Nfr91DBYF8ZIBpX0gZLYXsJ1jtAf0R3PlF?=
- =?us-ascii?Q?d+5/qEjFOuu/6DIFBWeWdDaG6nN1cZIdesgYCV6um0KOpdki645lQdoAMunq?=
- =?us-ascii?Q?RfIitG+6lFphptzX+9OPdSw/ExpEzLcnQbfcmdxt9IwZ9+UPY1fUBtc+iYoc?=
- =?us-ascii?Q?sPQH8MsJ6X9du1lN+oiC7ck/387KUp+XebIwZ2sYYM4Fq3LzqcIAXz1vs3rX?=
- =?us-ascii?Q?c5nng2dtrCHE/JKbGxf4sxYUK3wLnheFMh2Lo2EeqqJag+BIjf1mclTZ421c?=
- =?us-ascii?Q?i+WgZhj10t6m6bJIWYX1MmtMBgMpcUJuhqMWlb/zdy2PZOJy6JrfpmAOFD8J?=
- =?us-ascii?Q?bEXPJMvQpw9LLkAbQgimHjcuOly4nQzReQCXEIaZUkzcfw+/J4r2BpjqaX3h?=
- =?us-ascii?Q?K/FgRB+urKboJTdhCmxEblb+U0K66XvismbPNoYmbpdCr8in8cQvjE9r76oP?=
- =?us-ascii?Q?ncMDwAutumLRRXvkf49ILkKgsORsKHGurJsWtzbHyBGvjEKlpRf4iNiMv3dv?=
- =?us-ascii?Q?DIu2/CZAmgTFALjaZGEfFvbAzk3nn8deYFBsQZVei6qNnmngVFKnFAIiqDjD?=
- =?us-ascii?Q?qj/AvDOLXCsJIJsRlnL1gKfg8dVbypaKPUZHBciF+NkSDh5ZN9IZubodYN2y?=
- =?us-ascii?Q?vah0JT4etRzfH4Zp8YsXQ7mXasaak7+wL8xz/hccpiH+D1sJupFMXdePx9rp?=
- =?us-ascii?Q?KYuPaEY1NlfAYo5LmRmTXTuOrFaDAzk4rPBmmCT6AtIraCW3YIRb52OadRyN?=
- =?us-ascii?Q?TAFH7hoF4SbGiQMUGHnKh4FKz6Gg3RStVwz9zru1iaERgL/O/FhSOZ6kvu3L?=
- =?us-ascii?Q?9ZHGQHfDWcvTrsVrEFaTKDZnjtNvUY1LNeQ/fBoRXi6w6qqfAtLg77fzbGIh?=
- =?us-ascii?Q?rl9MKaXlseih938qH1cZt9VcpwVQ7jSsPmQBrN027f/DlZbTXOQv+1CVrv1n?=
- =?us-ascii?Q?slJli/ovLeQsJvut7igMMMJcRibry94jtm/dTXtl/8Jc0HT+A5yLjaDNmxZ0?=
- =?us-ascii?Q?xhEH/6ozQ2qdUPQOF6K+0GOCsIrFOqkegXllyHef6asGWXfdT+87hJ+MIg+v?=
- =?us-ascii?Q?IFcKHEzu53kMxWJn0qIVhpT0DUvOcZfs4f0gjuZtQIXhC+dRi0aTwZdHBhc8?=
- =?us-ascii?Q?zdRTPWJEFjdE1uFQP0cys/4YmB8Yu2BRa+4J7U/MbcyvjT6/CHey0kKlHNlY?=
- =?us-ascii?Q?nA=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	puyrHrGdr6L0Gc7pMFbH8nxNufnTLhDDaxkJWsPOwbExwa65ayRnBU+hA/fQ7/wK3jpaiObOGwKHm14EdMqgduRErbgEpsnDxGVk+Zju+6U1O2wGMpvpEE1H32ADlUBqxdmVzOgLK7nzUf3OsGS13BA0ppZav73vJbSqZ2GaUsm4gpz8iU6SGjAdYWC7eUsAM87yGfY9u/M/xzORf7B3Lwr407f6ASPOx/UF988K7kOZcCdoNX9m6+ZUTcksP4cEEXeKHHH+6dX1bpIp9uisuMVLC9svO2/Piv9S5Xra0hp+6F7dK+vBypvI7iYEPnPqaCTnC10tu5YaUxhXRbzTfw0oyHRC+aLScRMRjXw99VUV1Vad7qv6i8r0+heMeUPDZKDLDAskmp/xil2eO1jtyQdiW4WpXgNzYzyNFXgwWMUseq6iVh00N/vDlH+zq4Hdsmwhw1YAB+DXyiU+tMRCRj2HeZXaolUM40VU06ylxvxe01Jwk9sIBT3kJsiNk/UC7hKLO+PuMGPz835UVXavJal1gvzO/lTsLhwA+vH6Q0XtfoSf7N7/3I0z0hNPsKE7rrVTZ3vSOR19wml6Nv/031g0yGbFSSW08DRz3IFpG9Q=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 03451a65-a69c-4a96-a264-08ddf00c658d
-X-MS-Exchange-CrossTenant-AuthSource: CH0PR10MB5338.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Sep 2025 01:50:19.2513
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 2dHue4iujP+SO00Zx4MnCMwl2OB4Qm1bl9N9tXwZZXzFJwJMZh7HJ4BSMP4CTfUUQ2cuCscYCPZ/oEF5onpdU+WWOim34f3jodFvaij2OTo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR10MB7588
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-09-09_03,2025-09-08_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0 mlxscore=0
- mlxlogscore=999 adultscore=0 phishscore=0 bulkscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2508110000
- definitions=main-2509100012
-X-Proofpoint-GUID: ShdCcH2jxD5FL7FyrBQR904lCzYyrm9h
-X-Authority-Analysis: v=2.4 cv=CPEqXQrD c=1 sm=1 tr=0 ts=68c0d95f b=1 cx=c_pps
- a=WeWmnZmh0fydH62SvGsd2A==:117 a=WeWmnZmh0fydH62SvGsd2A==:17
- a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
- a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
- a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=yJojWOMRYYMA:10
- a=GoEa3M9JfhUA:10 a=yPCof4ZbAAAA:8 a=Ua9zekmsM4hb7iqvQB8A:9
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTA4MDE1OSBTYWx0ZWRfXwghUkWToHKCT
- ccbh6PN2pAOCQInj3+VieoumxxHWaLdG8be1xGpdWZEUhg2LNhhEiEmWe8XBaXjmPGk71INqBiR
- GJmIoMMWjsqQnFh6k29q3n9KKw3Emv13dKal6bbvKS+CNW0b9Y+r2iUrOGqRJuHr+FlZqDAgpnb
- nAZDFXz3wMFLqzWIcM1Ipf+IfLmV0e777O8ALU60VYvXEmzhWKhau/U+OSZkFn02D58aoPRqDLg
- 5unNnxDFLOaPiYyeGFiSFm/YjiFn4ocolbJsWJiw9CXo9oyAgbPC9U2GjBuBXQLhfJy0UKIbumq
- uT8fJBLbe0hNFsR0dAOTHXXjCyXH7NCvI8VEDy6EH+h6dgOoNdhCL6s0IHMeGdaJoG2JJu1jgR0
- YELhekIu
-X-Proofpoint-ORIG-GUID: ShdCcH2jxD5FL7FyrBQR904lCzYyrm9h
+Content-Transfer-Encoding: 8bit
+
+This patch series introduces **KStackWatch**, a lightweight kernel debugging tool
+for detecting kernel stack corruption in real time.
+
+The motivation comes from scenarios where corruption occurs silently in one function
+but manifests later as a crash in another. Using KASAN may not reproduce the issue due
+to its heavy overhead. with no direct call trace linking the two. Such bugs are often
+extremely hard to debug with existing tools.
+I demonstrate this scenario in **test2 (silent corruption test)**.
+
+KStackWatch works by combining a hardware breakpoint with kprobe and fprobe.
+It can watch a stack canary or a selected local variable and detects the moment the
+corruption actually occurs. This allows developers to pinpoint the real source rather
+than only observing the final crash.
+
+Key features include:
+
+  - Lightweight overhead with minimal impact on bug reproducibility
+  - Real-time detection of stack corruption
+  - Simple configuration through `/proc/kstackwatch`
+  - Support for recursive depth filter
+
+To validate the approach, the patch includes a test module and a test script.
+
+---
+Changelog
+
+V3:
+  Main changes:
+    * Use modify_wide_hw_breakpoint_local() (from Masami)
+    * Add atomic flag to restrict /proc/kstackwatch to a single opener
+    * Protect stack probe with an atomic PID flag
+    * Handle CPU hotplug for watchpoints
+    * Add preempt_disable/enable in ksw_watch_on_local_cpu()
+    * Introduce const struct ksw_config *ksw_get_config(void) and use it
+    * Switch to global watch_attr, remove struct watch_info
+    * Validate local_var_len in parser()
+    * Handle case when canary is not found
+    * Use dump_stack() instead of show_regs() to allow module build
+
+  Cleanups:
+    * Reduce logging and comments
+    * Format logs with KBUILD_MODNAME
+    * Remove unused headers
+
+  Documentation:
+    * Add new document
+
+V2:
+  https://lore.kernel.org/all/20250904002126.1514566-1-wangjinchao600@gmail.com/
+  * Make hardware breakpoint and stack operations architecture-independent.
+
+V1:
+  https://lore.kernel.org/all/20250828073311.1116593-1-wangjinchao600@gmail.com/
+  Core Implementation
+    *   Replaced kretprobe with fprobe for function exit hooking, as suggested
+        by Masami Hiramatsu
+    *   Introduced per-task depth logic to track recursion across scheduling
+    *   Removed the use of workqueue for a more efficient corruption check
+    *   Reordered patches for better logical flow
+    *   Simplified and improved commit messages throughout the series
+    *   Removed initial archcheck which should be improved later
 
 
-Mario,
+  Testing and Architecture
 
-> When the ACPI core uses hibernation callbacks for shutdown drivers
-> will receive PM_EVENT_POWEROFF and should handle it the same as
-> PM_EVENT_HIBERNATE would have been used.
+    *   Replaced the multiple-thread test with silent corruption test
+    *   Split self-tests into a separate patch to improve clarity.
 
-No objections from me wrt. the SCSI changes.
+  Maintenance
+    *   Added a new entry for KStackWatch to the MAINTAINERS file.
 
-Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
+RFC:
+  https://lore.kernel.org/lkml/20250818122720.434981-1-wangjinchao600@gmail.com/
+---
+
+The series is structured as follows:
+
+Jinchao Wang (18):
+  x86/hw_breakpoint: introduce arch_reinstall_hw_breakpoint() for atomic
+    context
+  mm/ksw: add build system support
+  mm/ksw: add ksw_config struct and parser
+  mm/ksw: add /proc/kstackwatch interface
+  mm/ksw: add HWBP pre-allocation
+  mm/ksw: add atomic watch on/off operations
+  mm/ksw: support CPU hotplug
+  mm/ksw: add probe management helpers
+  mm/ksw: resolve stack watch addr and len
+  mm/ksw: add recursive depth tracking
+  mm/ksw: manage start/stop of stack watching
+  mm/ksw: add self-debug helpers
+  mm/ksw: add test module
+  mm/ksw: add stack overflow test
+  mm/ksw: add silent corruption test case
+  mm/ksw: add recursive stack corruption test
+  tools/ksw: add test script
+  docs: add KStackWatch document
+
+Masami Hiramatsu (Google) (1):
+  HWBP: Add modify_wide_hw_breakpoint_local() API
+
+ Documentation/dev-tools/kstackwatch.rst |  94 ++++++++
+ MAINTAINERS                             |   7 +
+ arch/Kconfig                            |  10 +
+ arch/x86/Kconfig                        |   1 +
+ arch/x86/include/asm/hw_breakpoint.h    |   1 +
+ arch/x86/kernel/hw_breakpoint.c         |  50 +++++
+ include/linux/hw_breakpoint.h           |   6 +
+ kernel/events/hw_breakpoint.c           |  36 ++++
+ mm/Kconfig.debug                        |  21 ++
+ mm/Makefile                             |   1 +
+ mm/kstackwatch/Makefile                 |   8 +
+ mm/kstackwatch/kernel.c                 | 239 ++++++++++++++++++++
+ mm/kstackwatch/kstackwatch.h            |  53 +++++
+ mm/kstackwatch/stack.c                  | 276 ++++++++++++++++++++++++
+ mm/kstackwatch/test.c                   | 259 ++++++++++++++++++++++
+ mm/kstackwatch/watch.c                  | 205 ++++++++++++++++++
+ tools/kstackwatch/kstackwatch_test.sh   |  40 ++++
+ 17 files changed, 1307 insertions(+)
+ create mode 100644 Documentation/dev-tools/kstackwatch.rst
+ create mode 100644 mm/kstackwatch/Makefile
+ create mode 100644 mm/kstackwatch/kernel.c
+ create mode 100644 mm/kstackwatch/kstackwatch.h
+ create mode 100644 mm/kstackwatch/stack.c
+ create mode 100644 mm/kstackwatch/test.c
+ create mode 100644 mm/kstackwatch/watch.c
+ create mode 100755 tools/kstackwatch/kstackwatch_test.sh
 
 -- 
-Martin K. Petersen
+2.43.0
+
