@@ -1,64 +1,64 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23CEB314A6A
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 10 Sep 2025 09:45:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 991EF23D7C8
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 10 Sep 2025 09:47:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757497513; cv=none; b=RVoDVYuLceYhXg4rH47/Q61VjHJMJ4eErPv8XpQeo5v63VcFsz0JzL5SkeMfGqmReEblXPAa7cEe8eIo5LIvnAnG76bs/cPo1C4eaVFEFxNZDSGCuPwrLAE8QzsyrB34qY5Y9z/Rp6X6KEDYcayPKXpYKYZ2MrxWyW5f+JiNOyE=
+	t=1757497681; cv=none; b=k6q2EHVGdn39YyWhVgZkzOD4tIoO5jGqHrQ/MbxgA18B73FQypgJNLIaRQbWe/ZWMEPEYWHO5dHMQU+4FdatUqgJaOi9HaFjvViIZXcH+p16GFc1U+qtcLFG4NuTT1X+sMeeJ0OF1Eu89bk1FfTRzrmJgRzgP95Cmsnh8pYsz2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757497513; c=relaxed/simple;
-	bh=GCwe8Dko3jDOXji8AdD72nwYCErq8l4yfDoJj7Gnt6A=;
+	s=arc-20240116; t=1757497681; c=relaxed/simple;
+	bh=0V31LUAQineHaHR+Zk1fa1rB++gkt0nxE0bE4w2NcJ8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZFUV8k0tLALtn5FQ3vzutNfQF3tRvkyvKv8kZlwkjNGhFO9UsHtNcwwTt8blJiMVJDXdX/bkjURuNatv1z9mFyxyVpfPDuuFemP4QcbFZY/vQK4RBoVjmVddNgHNhMBa4MjGGlCdCCrpfLHS+kLWc3LNIutEpc/sFFQhMYBxSlc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=19cAUI34; arc=none smtp.client-ip=209.85.128.43
+	 Content-Type:Content-Disposition:In-Reply-To; b=H/WEqh6r4lOMrgi36Z8/G7OpRc0G8W0LiFcFVtkTWWxeWVnwy/Jo2h3JjUPPbKvdZbAqDYtbYqu9Xs08WN72z/l4zaLLHj+wEAR+5YazYWCGGFzXoHQmJ1tJXOOFMsDVqppFr/NA/uvCY0VAZ5MqcbGfu2P24yux3jBBPH8j2o4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cIM8hENk; arc=none smtp.client-ip=209.85.128.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="19cAUI34"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-45cb6180b60so41925295e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 10 Sep 2025 02:45:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cIM8hENk"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-45b4d89217aso43146625e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 10 Sep 2025 02:47:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1757497509; x=1758102309; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1757497678; x=1758102478; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=c1kBDy0sA3BYfIdWlr+hjUo0vDal9CsK0/fCdjzti6o=;
-        b=19cAUI34sfYJbTjYGCPpJRZggcSidg2jKJyAfwr7F+ZoZW/Lw3KwWQ0bY09/mVtQ9w
-         J62kIZ/tuB0k8gbnxeAUWphBf+O2khUq2WHWetIzKOaF/9yicq0NhPMngCcaLfjo5d2e
-         P7BqpS6+509izV/NWbg8SSs2RpRrKkxKH20uCUGrvjI/NzxtjAeURVbL1r82lNJuuGzC
-         6vuzcLe6q2NMkrOGjl52VML6yp+hbrAJrjfAHp9v07KPPSgL77T8dqg1e7U3Dpn5HRav
-         gvMfgOueFK6H1mTGPTyQiSJqK6uyaWsjh7lzV9lHmOrI4Md825RoxNegkr2smqhdTTbI
-         qPvw==
+        bh=uvtu3uafbueZeizVaV/6mc7Nfku5GeAYQMpYTXLT+4o=;
+        b=cIM8hENksTTCHyw1JeXkRiSgdc4nODT2WcuLF3WBdoxMQUfE0T6KxW1DNWymmpwybx
+         WFn9EXr+4pNb/4PBKoQwyOpCO6HDz6adWEH4v8c6lLBXSVrEw2ZmHsK5JLRM+sdULtsp
+         jgogPgKa8XXcOziL6pMsbVczEyFc2shjm7bjhJq1oShzuBeb6twBUOvJGo0GeYu70XSK
+         bKzg14dfbh/+P93qFNAklo3vhNoPe0WHLJlgNhplbJoyttroPV/JmXRZmeV4XvTzZTEn
+         OJUDMnbl4pydzVfyBN4K4RbLAGI4m2Qe7RxWQVdjvxn8qag2hu47EUJyOc7CQAZGh1vp
+         zC6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757497509; x=1758102309;
+        d=1e100.net; s=20230601; t=1757497678; x=1758102478;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=c1kBDy0sA3BYfIdWlr+hjUo0vDal9CsK0/fCdjzti6o=;
-        b=kcXbNeGbFAriiQCpcgIjaRcRTPCfyV0mtUQ+ryqTSBLfN7U2x0ku5M1yHpgkUdNksJ
-         RboIQ3O09e9oOZwbIxcRQzITDYslmAIS9xMEUjgXO59SHgCdHyyCZTypb5kA1X05rfSy
-         58nLYhoZvCNjqzGL7aEAENKGOGMbggQKP/oWs057S/uIrmBBSaFK7DoBuLUJJEHTI6fj
-         CRZvRADYPrZWpceXvUCm/6BRVE3TPDCrkMwaGwB+CWbAGZq87pOOSNnDUev/AJ+6gFRB
-         QBSPaZskHuVWH9IsGEPXNQSlnGWryvKrhpUf71Vt/3jTY9cg8Ha/1hvSQo6NeOW8k07i
-         1SZw==
-X-Forwarded-Encrypted: i=1; AJvYcCUH3IVfnxz4iPWpdQcyBDt7iJ5z1+O2fQzqTAlREyzJyeZ3ZxxFt9koD0c49H/Cst/inrVs1V5i9NZ8m71NY1Vdsik=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz9SHDkeAOThGz59nMKLw4fYYUqss7GW5tgkIvFVDWUadfShRcG
-	CxLO4MjkUPhFPKQEdVQLpkWk22d8DRZEu+a7pUHnB8UYYtAAq2OgQAyeNsnW8ygA5A==
-X-Gm-Gg: ASbGncsk0qKnssf/AkJd2XvtRmBhkTIbFSRi6nNSzOtJtu248RYIc5FOITqQHIFW2Kg
-	ZKbW5wAZhTbY31FE5ke4FuGYkNa5tjEf4L2AcAbU4JxFAo5fW5tBFEvn4lHDo+9hkD9bERBqwJG
-	B1bBLJwf/OK6v0EtjZcP3JimyVuZEd36TL+tSxtcM0HRCFiAF+RSTECYMvIRdnRpA5H/rTIAZpM
-	FnE99N/2RpreJblgByxGXxIpGOd8GaRJY+xYnkCcvFM/Xf5lyz0MREhwSk2KygDI62UXvndApZe
-	9s1mwkItOCJPuwSL35jxDY/lU6KFiKKdLgaSlfH9iu+VWM0u+YJL5oDJ2qnSfGgmCwuVo5lwqCA
-	B1mKemFAqLWUOVUYbKU6AgQsDoIL6eZsTEziFkBz19n4JJtDBpnjKBcioLpCNvGpGVOZkKItupW
-	NrAKaz
-X-Google-Smtp-Source: AGHT+IENXjSZ9eYxIcTPb1KA8MslU7Gkmmzo6eN91GvxyARG/yRPq8gJbKV+SVFiPMHX+dA+S+OktA==
-X-Received: by 2002:a05:600c:3b1d:b0:45d:84ca:8a7 with SMTP id 5b1f17b1804b1-45dddeba3e5mr124414255e9.14.1757497509275;
-        Wed, 10 Sep 2025 02:45:09 -0700 (PDT)
+        bh=uvtu3uafbueZeizVaV/6mc7Nfku5GeAYQMpYTXLT+4o=;
+        b=kWRcvfEeTYk3JxsWU6reuStFTGxzRSRZPPoAVlthFCLWcsMYaFZufOpcw1B+E0dtbl
+         CfmFOVfNK8f8pseaRiZqhaC1BsjXkNNpt9Y9tTD5QpNX3dtBLqrh9YYVyz5MU21mI6US
+         QVT67zg/wndK67kQJcdUAmbNgp/r/iuK+gMn6bBVT4OhV5eMy4nCAXg5e9iGOSmMzXFt
+         6pWS0SW9N7fRcULx3EnqwUYfNmklCeD2TpfyWp4JUvUfMLMIU2Ka6WDsfPPCaLDwy/mJ
+         NIpxJpvx5T+K+7Dr6B4pKZ+yTTlVlGb3FzUNMjfcq+05ojakAvzWKRB3YfA2Lk4xrwbs
+         qfNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWmWtJ6mPQgAuHIwpsexHWFu621YPmXvWyykpEfwKbOZoLlzXPefl7Tj6jG+aUZtNYag0GPZalbDwCW9jknY/Bt9zw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywuw8xOn2TJ2QOP3pbsrqGsqF6qlLjlNn+vXCWomBZXGz1To3hH
+	yCkpAXigwd5dIxQYKoosZk5QmfggLUZ+eoRx4Z8o8DJ8DqvKiW7RWzcxAwXfqssCng==
+X-Gm-Gg: ASbGnctxWcUP0peD8ijNfE79bKO2OwqZOIEUb9TP3HJTrvQVn8eZuOxrmVJWoTLRv1R
+	dKYiN7O69JlA73UI1RTCJahQ0DSXHVioMPfTYi1VddjEkzXRyYfrIsu4F9SoMmfffo/ilK+mOwA
+	Ynwp97vcdpujGU9RsbtpvEqZDX/xxz1kRJAEMZLwrPYZWxot7Jrh1EyQyuokdxRKsvqxtXV/g9r
+	ksYModh5W/DfYzRa05e9cm23wqcuF0A3LJQ3uKSZR/xYZBY9uwhdeJBHHAaVZ544UxqWxzihHcq
+	Fg0DaBr7yqUmyXobEikHAHygRO28rU/xHGoNvB9FLm8XGlpAVSmwvsj7rCwgS4V3RKqL9uPcImz
+	k8Gpsd5MGukqXId796GZQ0xjKnK+lTOrpaAbw5JSx1MsmgCoe3E4lZgxmZbDkYnVm3iHRsXEuGU
+	VwakJ+
+X-Google-Smtp-Source: AGHT+IFWWYfR8ORYSi5S/6yVLRSE1Vl7ci8b3o8skMEhA51akRxc13pv3ScUUN6gVKKYUtaBgf3yww==
+X-Received: by 2002:a05:600c:8b43:b0:45d:d718:3b9e with SMTP id 5b1f17b1804b1-45ddde92627mr142163035e9.10.1757497677772;
+        Wed, 10 Sep 2025 02:47:57 -0700 (PDT)
 Received: from google.com (211.29.195.35.bc.googleusercontent.com. [35.195.29.211])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3e7532f90e6sm5750475f8f.6.2025.09.10.02.45.08
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3e752238832sm6017788f8f.31.2025.09.10.02.47.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Sep 2025 02:45:08 -0700 (PDT)
-Date: Wed, 10 Sep 2025 10:45:05 +0100
+        Wed, 10 Sep 2025 02:47:57 -0700 (PDT)
+Date: Wed, 10 Sep 2025 10:47:54 +0100
 From: Vincent Donnefort <vdonnefort@google.com>
 To: Steven Rostedt <rostedt@goodmis.org>
 Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
@@ -68,16 +68,11 @@ Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
 	linux-arm-kernel@lists.infradead.org, jstultz@google.com,
 	qperret@google.com, will@kernel.org, aneesh.kumar@kernel.org,
 	kernel-team@android.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 04/24] tracing: Add reset to trace remotes
-Message-ID: <aMFIoY5yfQa2Mzgk@google.com>
+Subject: Re: [PATCH v6 10/24] tracing: Introduce simple_ring_buffer
+Message-ID: <aMFJSlbHRsvzYKaF@google.com>
 References: <20250821081412.1008261-1-vdonnefort@google.com>
- <20250821081412.1008261-5-vdonnefort@google.com>
- <20250908193757.079aae76@gandalf.local.home>
- <aMAZMaZJ1_Eny5Ku@google.com>
- <20250909094028.3265b751@gandalf.local.home>
- <aMBSa29ev0BNgr5R@google.com>
- <20250909143948.420bfb1c@gandalf.local.home>
- <20250909145236.69192cd0@gandalf.local.home>
+ <20250821081412.1008261-11-vdonnefort@google.com>
+ <20250909182644.092b3e85@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -86,55 +81,64 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250909145236.69192cd0@gandalf.local.home>
+In-Reply-To: <20250909182644.092b3e85@gandalf.local.home>
 
-On Tue, Sep 09, 2025 at 02:52:36PM -0400, Steven Rostedt wrote:
-> On Tue, 9 Sep 2025 14:39:48 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
-> 
-> > But anyway, I think it should work for the remote buffers too. Let me go
-> > and fix the current iterator.
-> 
-> I thought it was broken but it isn't ;-) I did it properly, I just didn't
-> look deep enough.
-> 
-> So yeah, look at the rb_iter_head_event() code. The ring buffer iterator
-> has a copy of the event. It has:
-> 
-> 	if ((iter->head + length) > commit || length > iter->event_size)
-> 		/* Writer corrupted the read? */
-> 		goto reset;
-> 
-> 	memcpy(iter->event, event, length);
-> 	/*
-> 	 * If the page stamp is still the same after this rmb() then the
-> 	 * event was safely copied without the writer entering the page.
-> 	 */
-> 	smp_rmb();
-> 
-> 	/* Make sure the page didn't change since we read this */
-> 	if (iter->page_stamp != iter_head_page->page->time_stamp ||
-> 	    commit > rb_page_commit(iter_head_page))
-> 		goto reset;
-> 
-> It first checks before copying that the data it's about to copy hasn't been
-> touched by the writer.
-> 
-> It then copies the event into the iter->event temp buffer.
-> 
-> Then it checks again that the data hasn't been touched. If it has, then
-> consider the data corrupt and end the iteration. This is how the "trace"
-> file works. I believe you could do the same for the remote code.
-> 
-> If we are gonna keep the "trace" file, let's make sure it's fully
-> implemented.
+[...]
 
-I was more worry about the ring-buffer page order that can be reshuffled on each
-swap_reader_page(), making the page links useless in the kernel. Ideally, the
-meta-page would keep the page ID order somewhere.
+> > +static struct ring_buffer_event *
+> > +simple_rb_reserve_next(struct simple_rb_per_cpu *cpu_buffer, unsigned long length, u64 timestamp)
+> > +{
+> > +	unsigned long ts_ext_size = 0, event_size = rb_event_size(length);
+> > +	struct simple_buffer_page *tail = cpu_buffer->tail_page;
+> > +	struct ring_buffer_event *event;
+> > +	u32 write, prev_write;
+> > +	u64 time_delta;
+> > +
+> > +	time_delta = timestamp - cpu_buffer->write_stamp;
+> 
+> The remote buffers never get preempted do they?
+> 
+> That is, it doesn't need to handle different contexts like the normal
+> kernel does? (normal, softirq, irq, NMI, etc).
 
-Alternatively, we could walk all the buffer pages to read the timestamp and
-re-create the order but that sounds quite cumbersome.
+No, luckily, we don't need to support any of that.
 
 > 
 > -- Steve
+> 
+> > +
+> > +	if (test_time_stamp(time_delta))
+> > +		ts_ext_size = 8;
+> > +
+> > +	prev_write = tail->write;
+> > +	write = prev_write + event_size + ts_ext_size;
+> > +
+> > +	if (unlikely(write > (PAGE_SIZE - BUF_PAGE_HDR_SIZE)))
+> > +		tail = simple_rb_move_tail(cpu_buffer);
+> > +
+> > +	if (!tail->entries) {
+> > +		tail->page->time_stamp = timestamp;
+> > +		time_delta = 0;
+> > +		ts_ext_size = 0;
+> > +		write = event_size;
+> > +		prev_write = 0;
+> > +	}
+> > +
+> > +	tail->write = write;
+> > +	tail->entries++;
+> > +
+> > +	cpu_buffer->write_stamp = timestamp;
+> > +
+> > +	event = (struct ring_buffer_event *)(tail->page->data + prev_write);
+> > +	if (ts_ext_size) {
+> > +		event = rb_event_add_ts_extend(event, time_delta);
+> > +		time_delta = 0;
+> > +	}
+> > +
+> > +	event->type_len = 0;
+> > +	event->time_delta = time_delta;
+> > +	event->array[0] = event_size - RB_EVNT_HDR_SIZE;
+> > +
+> > +	return event;
+> > +}
+> > +
