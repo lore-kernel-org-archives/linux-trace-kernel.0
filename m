@@ -1,130 +1,91 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95B5E1863E;
-	Wed, 10 Sep 2025 14:30:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD820334733;
+	Wed, 10 Sep 2025 14:46:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757514655; cv=none; b=VyTeLiq8IKGnk+19MoTgSX/kHSJDGLXErVrPvWHzAXt09d7UCnFDcCcWEZyFnzhh248LSaKhxygMP3J7KFjNoEFYp+XnmZhYOATGxvdWkpJ+98VMZJpLNaB4SBaHVWfLfXcgMXfM9bcZj6v7dAKI2biuEwAq/vLkEsp12r0ZVKk=
+	t=1757515601; cv=none; b=HI9NTD7lxjwO74UTyuBiDtCYZMh2Vgs+wtTL6LhNl9K0HsWVGCkYuHCU+rJmyCZzw8mUWFy0W24JU6U61F/jjvy+dG7vg7Ob3NV1S/41IEn3ziikxpZ1hO094JTq3rK8u3AmusQbtO++rolE0slb9pUCBr9/chVq0hiEG61cFJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757514655; c=relaxed/simple;
-	bh=Q5JQwy5iVhfba4PDMTkG83RMB/eStM9/LUOcXOEGAew=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YOvaC8YxJXtnRiLHquHw7TP0V/xyBON/uZ3snayy0YqirYgiPr1MXLTFAfm5XyQ2NWv1aYQcHGskc/eouiSz2+8jhK7D3ZjRVQzD7ZLvKnbwC/Vv/iddpzNI3hvqnNv/ibBllJvjqE575EmDUMdfLfbP/hoMEiZoYEHU39DYFE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MAtVOB1N; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1757515601; c=relaxed/simple;
+	bh=84vkiPKqSEhuvDni8XCaT6y5jo/x6VM2Y2bOu716BLQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=jKiOC8JxrriFW786cbyiID7YT3hQUow7fBOXIKKT0ICCpEpuZHspPEDSv9Yhan6hLPml7C9AhKTMyNOJZ7ng+WEPmubkuNpzYl2a3GM0bYjfRYoRzIioozehzJAc3X0uQ73a3Ia35UHg94+7U+firlCoQyirs+ICWxPto6CNUO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KW5pM2Fu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MAtVOB1N"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-32c54c31ed9so4210839a91.3;
-        Wed, 10 Sep 2025 07:30:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1757514653; x=1758119453; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/wYpny2eAiLj7phFAVb8K9lZatmDsPErPszMysbW8mQ=;
-        b=MAtVOB1NKnKz6geac9nzuy//9A/G44ULZVNzAfLa0nLITKltddgFRavnw65QrFbJwv
-         0lMcg9Rcuh47AA0l8vSO4GqukrathxA035EAmjf9bI97XNcFRJPxb8iA5BpAdIHSNN6V
-         IA/ZGwxpOJFLARTb7F7MxOOLmgCiKa7vJYpwB/0UCVrdevJmEunKYN+jjilVAe11h6Lg
-         mjpNObCDTu3yK4OuGywR77JcZht4AyOZOZSSGirKZBWW7f0iE/OjR9LZW0H4AxV+LslW
-         vs5DjvekbIQWl3aw7xAcP9so2CZWAwIE5q/SqWmb5GbUpcHgGg2TipqulpIYZKfx/kum
-         WlqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757514653; x=1758119453;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/wYpny2eAiLj7phFAVb8K9lZatmDsPErPszMysbW8mQ=;
-        b=pXCeGdJyUXp/uD2Kt7ToZwWkmivAhEgKJVxkd9XTUyuKLZqJ5XuDxP5Oc6dQC9Texn
-         XJHAhZ0hSymcyntx8aVv5sRrqLiCWq6iyC1/v8NQ4Sofzm5gcm5phyPGEpxohsCezFKv
-         BLlvOJ10UmtbMI3VXUQqyK+A443kpSJT4VnvCW8PCpqNvhLmHEeB9mwL0VSXd9cWqVQn
-         hqEqW1r20AOdnPByWreGqvCxjom8iVvTtUR7/RgrvXQDxru+W+r7W4pxeqdt+tL7DFS/
-         AlvfD7Xfy/xcXkwDZyRHTxD2Pr5ESyQnqaDz0qWThvOrGuh1HdVxzTHMNIYnrBwg0KIE
-         rWnw==
-X-Forwarded-Encrypted: i=1; AJvYcCU28MgcY6MYYWCKBvIlOJ8Jk/kqNNB0S+VeYaoLw4yppQF4bRbg3icG7SAwRuht7+LgETY=@vger.kernel.org, AJvYcCUMCkF0gyNQ3PLZcuXZGub+UAy12G8+tOtrkHbTpd45pcFn3NUWDnbhgqnayp8i56zYR0LMT+JWsQdZktvf@vger.kernel.org, AJvYcCVPK36cgllN0vSWkHx9l0TCD7mbQtCxDrepORxJOrJZFQPRy1duyy9vnga8b1dKKJWBNwgJNLdOVbWhAppFGKkUU/Fd@vger.kernel.org
-X-Gm-Message-State: AOJu0YwvdgMc2+98wu9wwRXnVNeFM2UAIpYkJoAqeLv/YMaeMTaDT8qZ
-	bMQ20E1YjF6y2Bl/bPJv4F93YN4Z2Y0X7L5GtwPMROumfm8eRmWCGO1Ge9qpN9u+iqyXXfgzAQ7
-	PI00C/V8hFn8b5Pbu8AuDmKhQLKHTuYY=
-X-Gm-Gg: ASbGncvavKaLmxTMbTJc5R7aGl8TjNmbt8xj1MGnOgAj1tF3Q5GlC+7YGnHgmzWK1YZ
-	mQ1mgpR8Gk/0U8pp/y1LGK/It7V5KISDp1ahNGNSlrngfuF7WIKsrdAuKYeQZRDfwDAzCmF3c+S
-	/5sXXbMhSuTJQWwJuSx9Haqqzy3Ad4xJ3rp3zXXTnv5qDnSdM2teuaQqX9GARkyCCyWc0FubFhr
-	R9ZxAKdg7QqULKjeq05bYc=
-X-Google-Smtp-Source: AGHT+IHPs0H+Nl6iUhu9rYC0Wlyk8tBA3VNM2+wR0NhG/M+6OrnQbgCQG795h4/ENIUQDSSHEOVK6c7HZ0cQlc+zNJA=
-X-Received: by 2002:a17:90a:ec85:b0:32b:4c71:f423 with SMTP id
- 98e67ed59e1d1-32d43f81c16mr18840924a91.32.1757514652864; Wed, 10 Sep 2025
- 07:30:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KW5pM2Fu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 316D6C4CEEB;
+	Wed, 10 Sep 2025 14:46:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757515600;
+	bh=84vkiPKqSEhuvDni8XCaT6y5jo/x6VM2Y2bOu716BLQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=KW5pM2FuSjJKYJW2gxcET8OcAb1Rldc9NmgcN9qu9VVRmQY8OImBUUUXcix8cQckW
+	 jSNVyqFL7amGmUf7wkuDldCw34x5vfC4fs3T9gVytGVRFENaEVt04KcarnAzlwVANz
+	 EZZVR3K9PvKcjR66/8+wda4Gbh22mxm1+1b02Io3rjhsYSpJ0yuZ6X2Mlh0Wlx9OKE
+	 UPYmMZFP2kT+2NusOrtQtR6VBmSZKiLAp0YARN/j0AEH/x1N4414csaGNJAQKkeTZS
+	 xVJ9pFYae9xPnC0wRLL3zV7z/6Tev21LW3sqB5+UN4uprUuhHM9oNAf6/Lx+6uGzIF
+	 Pjs15lLPM32qQ==
+Date: Wed, 10 Sep 2025 09:46:38 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: "Mario Limonciello (AMD)" <superm1@kernel.org>
+Cc: "Rafael J . Wysocki" <rafael@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Pavel Machek <pavel@kernel.org>, Len Brown <lenb@kernel.org>,
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	"open list:HIBERNATION (aka Software Suspend, aka swsusp)" <linux-pm@vger.kernel.org>,
+	"open list:RADEON and AMDGPU DRM DRIVERS" <amd-gfx@lists.freedesktop.org>,
+	"open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+	"open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+	"open list:SCSI SUBSYSTEM" <linux-scsi@vger.kernel.org>,
+	"open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>,
+	"open list:TRACING" <linux-trace-kernel@vger.kernel.org>,
+	AceLan Kao <acelan.kao@canonical.com>,
+	Kai-Heng Feng <kaihengf@nvidia.com>,
+	Mark Pearson <mpearson-lenovo@squebb.ca>,
+	Merthan =?utf-8?Q?Karaka=C5=9F?= <m3rthn.k@gmail.com>,
+	Eric Naim <dnaim@cachyos.org>,
+	"Guilherme G . Piccoli" <gpiccoli@igalia.com>
+Subject: Re: [PATCH v7 06/12] PCI/PM: Split out code from
+ pci_pm_suspend_noirq() into helper
+Message-ID: <20250910144638.GA1535343@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250720112133.244369-10-jolsa@kernel.org> <CAEf4BzaxtW_W1M94e3q0Qw4vM_heHqU7zFeH-fFHOQBwy5+7LQ@mail.gmail.com>
- <aLlKJWRs5etuvFuK@krava> <CAEf4BzYUyOP_ziQjXshVeKmiocLjtWH+8LVHSaFNN1p=sp2rNg@mail.gmail.com>
- <20250904203511.GB4067720@noisy.programming.kicks-ass.net>
- <CAEf4BzZ6xSc7cFy7rF=G2+gPAfK+5cvZ0eDhnd5eP5m1t9EK-A@mail.gmail.com>
- <20250904205210.GQ3245006@noisy.programming.kicks-ass.net>
- <CAEf4BzY216jgetzA_TBY7_jSkcw-TGCj64s96ijoi3iAhcyHuw@mail.gmail.com>
- <20250904215617.GR3245006@noisy.programming.kicks-ass.net>
- <20250904215826.GP4068168@noisy.programming.kicks-ass.net> <20250905082447.GQ4068168@noisy.programming.kicks-ass.net>
-In-Reply-To: <20250905082447.GQ4068168@noisy.programming.kicks-ass.net>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Wed, 10 Sep 2025 10:30:39 -0400
-X-Gm-Features: Ac12FXyq3p703r3UwDyOpTo5nqGiR2kP5WHNyX8x7vM4ABOKKe20-gT57SVI1hg
-Message-ID: <CAEf4BzaHcs2wa_F4ro4Lg31WX-7+uo=CGpUKUD_2MfhGEAvazQ@mail.gmail.com>
-Subject: Re: nop5-optimized USDTs WAS: Re: [PATCHv6 perf/core 09/22]
- uprobes/x86: Add uprobe syscall to speed up uprobe
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Jiri Olsa <olsajiri@gmail.com>, Oleg Nesterov <oleg@redhat.com>, 
-	Andrii Nakryiko <andrii@kernel.org>, bpf <bpf@vger.kernel.org>, 
-	open list <linux-kernel@vger.kernel.org>, 
-	Linux trace kernel <linux-trace-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>, 
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
-	John Fastabend <john.fastabend@gmail.com>, Hao Luo <haoluo@google.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Alan Maguire <alan.maguire@oracle.com>, David Laight <David.Laight@aculab.com>, 
-	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>, 
-	Ingo Molnar <mingo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250909191619.2580169-7-superm1@kernel.org>
 
-On Fri, Sep 5, 2025 at 4:24=E2=80=AFAM Peter Zijlstra <peterz@infradead.org=
-> wrote:
->
-> On Thu, Sep 04, 2025 at 11:58:26PM +0200, Peter Zijlstra wrote:
-> > On Thu, Sep 04, 2025 at 11:56:17PM +0200, Peter Zijlstra wrote:
-> >
-> > > Ooh, that suggests we do something like so:
-> >
-> > N/m, I need to go sleep, that doesn't work right for the 32bit nops tha=
-t
-> > use lea instead of nopl. I'll see if I can come up with something more
-> > sensible.
->
-> Something like this. Can someone please look very critical at this fancy
-> insn_is_nop()?
+On Tue, Sep 09, 2025 at 02:16:13PM -0500, Mario Limonciello (AMD) wrote:
+> In order to unify suspend and hibernate codepaths without code duplication
+> the common code should be in common helpers.  Move it from
+> pci_pm_suspend_noirq() into a helper.  No intended functional changes.
+> 
+> Tested-by: Eric Naim <dnaim@cachyos.org>
+> Signed-off-by: Mario Limonciello (AMD) <superm1@kernel.org>
 
-Can't truly review that low-level instruction decoding logic (and you
-seem to have found an issue yourself), but superficially the cases
-that are claimed to be handled seem like legit no-op instructions. And
-the overall logic of nop handling in can_optimize and emulation seems
-to be intact as well.
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
-Thanks for generalizing all this!
+If you have other reason to repost this, ...
 
-To the extent that this means anything:
+> +	if (pci_dev->current_state == PCI_D0) {
+> +		pci_dev->skip_bus_pm = true;
 
-Acked-by: Andrii Nakryiko <andrii@kernel.org>
+Add a blank line here.
 
->
-> ---
->  arch/x86/include/asm/insn-eval.h |  2 +
->  arch/x86/kernel/alternative.c    | 20 +--------
->  arch/x86/kernel/uprobes.c        | 32 ++------------
->  arch/x86/lib/insn-eval.c         | 92 ++++++++++++++++++++++++++++++++++=
-++++++
->  4 files changed, 98 insertions(+), 48 deletions(-)
->
-
-[...]
+> +		/*
+> +		 * Per PCI PM r1.2, table 6-1, a bridge must be in D0 if any
+> +		 * downstream device is in D0, so avoid changing the power state
+> +		 * of the parent bridge by setting the skip_bus_pm flag for it.
+> +		 */
+> +		if (pci_dev->bus->self)
+> +			pci_dev->bus->self->skip_bus_pm = true;
+> +	}
