@@ -1,182 +1,224 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2058.outbound.protection.outlook.com [40.107.94.58])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E06EA316900;
-	Wed, 10 Sep 2025 11:58:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.58
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757505525; cv=fail; b=Ag5mG3hWo5IuXknetv8IhE9SbBxnLUI10gy1ne1jOZ6ejNo1iIRjE5CA2z8OUR1WNmQno6CGpYTn2093+HNp3r9W6WamyzIoOKeVFmlIxlQwdcqmxuQThnJKvEjFdSHNwZfTORLxUgOefxym042Mkm43tag5uSbJvTU6MbwlUVk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757505525; c=relaxed/simple;
-	bh=D0diukIneuBxxsZ+gaEgXn6zfxuX17JD8EjqTvzBrTQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=YRD7aRkjnkjq+Ut/heqyjdsAAHO+DeeaI6HSNOJGYxe0kf7PRcxYXhbYATG0FBvoPti1H/+YSBUMeTJztmbUGsw1qGfHNPoJ4dDCPvVtLNRofYt+GYzeUIG5b9p71YUshDULwBL0wEpG+MlGOkYM4QjwvFATkvT2yilPyRSvbDM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=DCGX5i1w; arc=fail smtp.client-ip=40.107.94.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 393B7320A3E;
+	Wed, 10 Sep 2025 13:58:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1757512735; cv=none; b=JgJ2sajg0sB/KmxC4X6Rn2MrwFdcBBCZR2uCblf5pU1wYOMpw8QhqMXkQgN/C0HwrZyhL/uYvORwSgMGyugi6VOEqO6SrCh8SKznMO7vRTt8k2yUqdEVnKK7qRBf7NGNb68nsKpZBecspe8YzI3TGnN1iECg6BVHZTzJEAtLdtc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1757512735; c=relaxed/simple;
+	bh=3519NgJS5af1Ajj9Vhlr8KZ7E/Y4HYs8va70a7vghxc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ctT40cuOADklYwQ8DXAuVJp0f4EAahciThD64Sg2ckwyK6JZp5nx2IerTkF3c6JmRI4VMIZf1YRCTpfPjmVkCP8kza17UeVoBv2e2NlqB6aNtXXqYDFL9z7mVJQP8zV3L5DFPzc3EbDZxgYCcLzeYmc2YOoCVpMAkKtGIe4pHL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P9FWv5d5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="DCGX5i1w"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Sn3V7oELjkrT+Ex+wYuTTfJd3WsUwYgnJmnkM+tItOpmbM+J8qovkAPHYt/A7PKdAxoWGlisZ5TesXjmIXvOHKWcNXtA1O3Hg9SA6mAhfrHEezRPKmMCSHIRBmSiBgsvZgxaw6V0hH4pbdO54/Yd5q5EIYBFKZuN7d/8WIw+zLxloBetM/UCcYtcIc6GW5rH0jBKwge7a0m4jPykaBH8Y8sKHehJQWlDdKdUNpkCp2evYTZ7lvgs+TsiTWScPuI24eLlp6TrdOL+hleedbJyK+OJ4SytpZZpW4FYO/j3zVP4FD60hiKyFc9ZB4/0Ery3tfckBgfq1QXuqElNvsjftw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=M2CRGJWbvgTRAKQCpQVq3CvW0DQ/ZyYML+xgjXHDleo=;
- b=tB2vXc4aLG7Xvj/iBdZSvwn5l5BDP6C+4bz1pIRIWCRgMWFDDbhmT5qJwttomGtb8BHCznSs1U/3u4v6DHTHmWC/I6z+Xr6vluxXtIpc3nRzQiDjGvtecnGkPUr8uW7zs/hJWBGP80S7Nc1dUlCLFh9qUOu5jO987pSlHgXoT/P1w6NsT3FQBwOILLwl3So1eAjWPEjg3x9jiy8sN7xCZqAPkDZVJitbvd8ChCDhycviaJq9+sQzjix1CUYwDf9us224wMfxwnVp/LXMt9t30uAoOeFS7X2kQZFGh8Eg3ciqLaMSqi0Ur/Kgqry1mm4HqC3j/XfupYGVGiT8b2TLaA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=M2CRGJWbvgTRAKQCpQVq3CvW0DQ/ZyYML+xgjXHDleo=;
- b=DCGX5i1wV1JzbNNAuAK46B1FTzUqbIWJJr1k/xRxSeDUhzU9om62gERPuNF9zaGeSw3Z47iVGhqjLYvnnpANarQksVzq5onyjKQEa/uqx4+QH9ptjWiYcpUBJuCKrMO21J8C5gZEzPW3uZshpwp8TsczXFauxzksXuc9pJwioRUTXudhdy6L2hUGfrzW6zFhm7ermfbnA+frN//qvdI/SL4Ye+KQ/MfEcYEEtrj13319OvercvtIa+jAK7pRYfUZPJwYgn+rUmDsHPM/wcOgja0mFu5Tjb6neURlaC8VFX+tVNuwHJvJyj+If2Ypv4p2rx/AJA7xTfLlNTPx9BllEA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from PH7PR12MB5757.namprd12.prod.outlook.com (2603:10b6:510:1d0::13)
- by CH3PR12MB8709.namprd12.prod.outlook.com (2603:10b6:610:17c::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9094.22; Wed, 10 Sep
- 2025 11:58:41 +0000
-Received: from PH7PR12MB5757.namprd12.prod.outlook.com
- ([fe80::f012:300c:6bf4:7632]) by PH7PR12MB5757.namprd12.prod.outlook.com
- ([fe80::f012:300c:6bf4:7632%2]) with mapi id 15.20.9094.021; Wed, 10 Sep 2025
- 11:58:40 +0000
-Date: Wed, 10 Sep 2025 08:58:39 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Leon Romanovsky <leon@kernel.org>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
-	Abdiel Janulgue <abdiel.janulgue@gmail.com>,
-	Alexander Potapenko <glider@google.com>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Christoph Hellwig <hch@lst.de>, Danilo Krummrich <dakr@kernel.org>,
-	David Hildenbrand <david@redhat.com>, iommu@lists.linux.dev,
-	Jason Wang <jasowang@redhat.com>, Jens Axboe <axboe@kernel.dk>,
-	Joerg Roedel <joro@8bytes.org>, Jonathan Corbet <corbet@lwn.net>,
-	Juergen Gross <jgross@suse.com>, kasan-dev@googlegroups.com,
-	Keith Busch <kbusch@kernel.org>, linux-block@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, linux-nvme@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org, linux-trace-kernel@vger.kernel.org,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>, rust-for-linux@vger.kernel.org,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	virtualization@lists.linux.dev, Will Deacon <will@kernel.org>,
-	xen-devel@lists.xenproject.org
-Subject: Re: [PATCH v6 03/16] dma-debug: refactor to use physical addresses
- for page mapping
-Message-ID: <20250910115839.GT789684@nvidia.com>
-References: <cover.1757423202.git.leonro@nvidia.com>
- <56d1a6769b68dfcbf8b26a75a7329aeb8e3c3b6a.1757423202.git.leonro@nvidia.com>
- <20250909193748.GG341237@unreal>
- <20250910052618.GH341237@unreal>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250910052618.GH341237@unreal>
-X-ClientProxiedBy: YT4PR01CA0498.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:10c::6) To PH7PR12MB5757.namprd12.prod.outlook.com
- (2603:10b6:510:1d0::13)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P9FWv5d5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8684C113CF;
+	Wed, 10 Sep 2025 13:58:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757512733;
+	bh=3519NgJS5af1Ajj9Vhlr8KZ7E/Y4HYs8va70a7vghxc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=P9FWv5d5a8NYpbSbgR7Ik8dp74uUr4fNWCQpXBHcctk/mkG0E1DvOINiwc1soE4jg
+	 +BAa7Ud7DObaRmnvBvmQzi0/kpjzlbK2hW9oN9n0vpFM9L5xQ9djr2wuE921sodxEx
+	 WgA0plNJGmVfalbNkjdqpQGLM54PiOIikmBPUA/6lcJa+k/PegVPG6Tstzawxbxcym
+	 +JfOZale0lcvdD1/9K4pK4rksymUyVQ2WLCvpaM2g1bKSmlxq3S2mGA+3oTUDDgPKN
+	 o2H2tmjphxvcy4BVnlh43b3VDrX4EC2Y8ORT05YlhsB98jGNErvFFjT3LDyTRVT1nj
+	 nXGjYQ6RsCMbw==
+Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-74595f3852cso4259627a34.0;
+        Wed, 10 Sep 2025 06:58:53 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUCbi+h/e82gg0kHa/bCGe4eGvBo/MujUnhhSuU/4u0/SNC+8v31efMzulF/Y5eI8bqZLUfJANntPZ2nA==@vger.kernel.org, AJvYcCV5Hm+/F3mLOyWzbqNz2OS/PPuZRADDTjGhQR0eBMN4cYb9FdjxfexSVKLFn+vd3ZC0JOahHV6STF2W@vger.kernel.org, AJvYcCVAgZOuL/8fqAQLCX9r6F8g5RF1zyi/KeTvuQQGhMsakA5GmO6CcYZtOHcjLfDki/eB0KLVWQ+6P4GFnebs5fZ5vnGg@vger.kernel.org, AJvYcCWvn8wgzwKI62oyN9ROCtI0uxzqJI/s5tQzVNApXeP3NsDmRqpAJjP1UCTYwaB1ut0pXXVinDiGc70=@vger.kernel.org, AJvYcCXn5L3M6CXrKx7Kt2UEbagRJZtSg/ytOaKvQPblXA8LTEGoMxsR2G8oRemUbu9j+hpCrZOlxpNrh3s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwlU9qZyDojHQWvd3v3oKND/XL5tNf5h4t8ct5HHwDQNvxltw++
+	Up2XWN1wFg9LYn18/jC5XQYhUXatSikp/YG0tYiU3vmDkD2XmkYhGEiuYMAqonFFMZ1HlcQpLQF
+	IuBh6ZliiClE3vwU7gy4hADu0vIub49I=
+X-Google-Smtp-Source: AGHT+IH7BCb6LYGInN6fRifU1PN2pCzvvU+aj27/RQrKYfBGkk+A//ewx0ANkkYnwGiqVgrG/auhpbNo5qaSgs9mrTo=
+X-Received: by 2002:a05:6830:67fb:b0:746:d9af:6664 with SMTP id
+ 46e09a7af769-74c74ec0cb2mr7381703a34.20.1757512732743; Wed, 10 Sep 2025
+ 06:58:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB5757:EE_|CH3PR12MB8709:EE_
-X-MS-Office365-Filtering-Correlation-Id: d3d1beeb-870b-4064-522c-08ddf0616235
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|1800799024|376014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?FzIxhCTl/DFGFmaXIkSJW43QRlHeUwrObkzUBGOXZlpW5TknvixiA4gDQdO0?=
- =?us-ascii?Q?Y/Q2AqArhV3Ean+ESTnkZr/fvpBX2nkWxFKLLH4g5CA9C8G475Hr3gb3OOjv?=
- =?us-ascii?Q?6uJVbcwr9hyVssPYNNIHf4cHbHNfa1FcsJ0EkEfNXG98vrQPHF/sWCvG8QI/?=
- =?us-ascii?Q?COGsWCNfWUGpIWeBBcktY7eFttSjXnJa/fCDlR5M7SnWvVHjP09ct5kmeZoH?=
- =?us-ascii?Q?SAYNOPDNskcy46Em8ly9RRUNfqYG4XoPucVxFGwyPQt0cGYV/RAX2nuBRLnY?=
- =?us-ascii?Q?oDenFOddnolaVnUlfh0CImgVZFr/tUkfCle8aamRAftKGcs67gzyutBwvoDi?=
- =?us-ascii?Q?dNUaAWRksh0OpZeDtOzS+yUixVU6iF6zuAgdtdJ+/SJw1dzFDkGfm80wGCoH?=
- =?us-ascii?Q?pckzkDSveUd+iwi2lfDzjyPVQ9yj0CiH/xxWs9md9M1AQSc3NZiJU1hLjeKm?=
- =?us-ascii?Q?aAY8FuT7mkNTvmr+F8IaY1xbUkqwDE0/IWF1EmvaP2B2COuQ7wMj4RNUjEOc?=
- =?us-ascii?Q?O/AhbcPzLAMyP9dJTa4ojajfgOMtdCIXx/Rxry4yk0Rx2rZ2fjSA6M+C0jit?=
- =?us-ascii?Q?E4yYm3ZocgAEqqYDdafANBeHp39vXTx87t0jZIqiUkS+AeC6ISIHwD9hDxkj?=
- =?us-ascii?Q?3NKmejdUiaLbjH+sBCgqd206gGNFVcc0Zt98Oozys1GBZXwHRLMY812uQPYE?=
- =?us-ascii?Q?uyHrhpRnGAIYWFfAHefw01QVwryhLl4F/p2FxxZ5WJ2mJk8iLma6uzFa9nse?=
- =?us-ascii?Q?KDIQcCRrG9o4DskmRPMDf1PaNxx8TvwULUPJB0jwTMsE0RkZQnTZYU69eX3J?=
- =?us-ascii?Q?DTJiamg3E5I0LV9zQ7KUNLWj7+scC2fn2wUO2D+w6NK2kvcb0lvj02l6UkTc?=
- =?us-ascii?Q?X7jKgFI4/1/bAGQetuBuvx+ircaAenX1Iq6FMnRYQcgdor2MWhUDTqFKizIA?=
- =?us-ascii?Q?vJmD0Pht5I+lSm+VVTECa5eMOZE6H/UwUgnXBgFiR+SdXv8DEnEnO9a+9Ujl?=
- =?us-ascii?Q?fTzsLsC/NZI0DsiAFIBO+4w+7SMolqtyX9A00a9XgVJOp0yXxu2QqO44FHlF?=
- =?us-ascii?Q?F5kOApjBfLOwHK4UEafL48ADf1hzQpNZPMIk6R2fhwlKEIUMoSNqHn4cTPxl?=
- =?us-ascii?Q?znJlbuU5Ch+3Eejo3q7yZqrX3ozlPCo0nBxc8d/f9Cr9yddhddHSyXN4+eBq?=
- =?us-ascii?Q?1K8vM06RHw5aht/nrdIYWUbgLh/jYAL7eVKdCjw67lWNVVQn+anrn3l19WdD?=
- =?us-ascii?Q?BSnlzXwqrv/YfQoqXhsDx+EYQ9FcwydQzXtPK0D5bSt8yOGcjkm9NRk++zQ6?=
- =?us-ascii?Q?K5aUj8NJxT+OVBPsX2TS4htXjJaFpFkDZIIIo3/5K+GVBWGmqOwVOybPuki7?=
- =?us-ascii?Q?iI62pGuhOEA82Yro5WGvlkvleuez4YsUAy/C9hO+W3hCWvzy7fg3ZN0wgqkG?=
- =?us-ascii?Q?ptHYclhyF3Q=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5757.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?9YO2VNtN7/AVkNY5N+N6bpbx5DVFYyJdxIshjK2kTpMeuaOdcSF5l7noHEF1?=
- =?us-ascii?Q?s+lB5UEncua+s5Drg3oPC44ZKgxdHC7EQ1mmSbi+XEq4qFKNNVBpiRWSIfc/?=
- =?us-ascii?Q?8ywQrj440x8YBHiXj4uZB0QE+J1KktuhiJc4bflyorZLYXXCNTQlvOTv371c?=
- =?us-ascii?Q?ASDGOoCEv3wTgUSySdjTbUQQGWvJC0NQpKSsq2qJNstew84LYBuDpBk3uV4o?=
- =?us-ascii?Q?vBenXfKllbuWTEDAUQSxwockvdu2HZ5HxpgplNGCWZ7znKBO2Us7KIHdhBAe?=
- =?us-ascii?Q?TCX53Fa2wFwLETR5Ho0D0sOXqpILTIZlgHisolBKChaVQ1AKIqqsvk1hmIgd?=
- =?us-ascii?Q?YE6/iB4CEGVROiDFPAO5TfADkkrbbKpGKD5A/XCbSSUrHrrkqIUnPM/LzYXQ?=
- =?us-ascii?Q?WGT0sXGTpAAVusd7OCVZF7nEWNxNPvf9OafKMixxZg+5lm9hMrGaDiXZ7U/0?=
- =?us-ascii?Q?bWiQu0xeLBXSVpmNEob1HkW8KfUJ1e3A8+quycFN8fJOn5cfpnSW3FEqOAjC?=
- =?us-ascii?Q?JgfkhIRa6APiEb2G4je21c6BWKbOX5cOHZDHFENP3jL5g+YoyyU1LJz0NoX8?=
- =?us-ascii?Q?mASc/SCKxHdg3dyOiFa2V+Xpjd+N2LutqqAwhQg4IORPN9sNWSwzKWeX8TPJ?=
- =?us-ascii?Q?OYNp+31ak76mDNFtIe0GgR/CPpX7wrNktItOo5t05HaCglof/SdPTIbMFvnQ?=
- =?us-ascii?Q?dIlVEWzu0f1mZZgQUsT1aBY9Hx24N4Kx5QcmLxuijEYIEebO87J8trQkpOC6?=
- =?us-ascii?Q?5HvTn80xxmbnBR4Z8s48Qux7dO4liJ+EP9gA8N10i8HYKFz6FU5y6aWdKBDu?=
- =?us-ascii?Q?F2nCo6aUF13uff4b9pX53OdttabCsWvQhcMi73AjQz70ijVhIZRi5rD81caI?=
- =?us-ascii?Q?qzAmnxy0fXs8ZFjYivEVLHNmcYoWZVTCFLm9h9ZlCYQajTaL3WZ2b4bBYqGY?=
- =?us-ascii?Q?mE3YlmZLwZtHu8pjWIHa8Vu9ugDe14ebg5WRs5a83zohvO7s4Sb4LfCpMic1?=
- =?us-ascii?Q?IpBv8kPo4agNFbf1H2TyXz5QyQaAkHqbPjJgR2bgQJ8ELYUjejyvmEhrmoEJ?=
- =?us-ascii?Q?cle6p7D1vIfzHtVjImdzimXsTUYCsAKTGPmt140QMNxPK7rxy96x1wl3+GfE?=
- =?us-ascii?Q?2QmAUir2xSQdsVPQXgP+rTTiGOpzo02zLXIOySsQlKBQPfcSP0MVBNdZmxpU?=
- =?us-ascii?Q?KY1LAWASYTztVwsHLEbLnBvuORa0/G0/n1GbQA1BBOj9PkqnwENbff4O7HYX?=
- =?us-ascii?Q?n/06d/f2gFt8Gr7mnZ6gme2FoyHeKWUKi0gX2Yeoawx+x9szqxzDkBmWGxM8?=
- =?us-ascii?Q?R24cd960+95kkj5RLQyuLq+qQSfIut3CnDpnavZuMCT8M7VanWjlKpxbVBmH?=
- =?us-ascii?Q?9ZdLMvbeCVO22byX6zJ/TqPCtJxTr4zQCRF5JSAHjnClMwsB+zPNa8RuDdCD?=
- =?us-ascii?Q?ozo2sXZqvbCbHoDATIse33PWDM4HV99uQGVFvcLv2sGGvcSNU4Qq3K73wuEo?=
- =?us-ascii?Q?rAyxsA9mNo4oh0K+wFkx6BNR032gCcNqav90jaUAoi5RrDp9pRWy4nuuK/ZR?=
- =?us-ascii?Q?TKRZ0lKjkgxNLtP0ngU=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d3d1beeb-870b-4064-522c-08ddf0616235
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5757.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Sep 2025 11:58:40.8152
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: NOBo5qiUePOEw1x7YNat0KXcE5eLDbKYD5g/dL+or0XOWmfL8YpjCGLIZSmZwreP
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8709
+References: <20250909191619.2580169-1-superm1@kernel.org> <20250909191619.2580169-2-superm1@kernel.org>
+In-Reply-To: <20250909191619.2580169-2-superm1@kernel.org>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 10 Sep 2025 15:58:41 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0i6+UaTHDnJE6z-VFuJrXbmfiAr7Gs=z9-xaX9mS7NqGA@mail.gmail.com>
+X-Gm-Features: Ac12FXxslvL9eXXrmgBCzhpzNxr-VzxsKkb6k4uN3mry0ap06Tvs7qCSO374gMM
+Message-ID: <CAJZ5v0i6+UaTHDnJE6z-VFuJrXbmfiAr7Gs=z9-xaX9mS7NqGA@mail.gmail.com>
+Subject: Re: [PATCH v7 01/12] PM: Introduce new PMSG_POWEROFF event
+To: "Mario Limonciello (AMD)" <superm1@kernel.org>
+Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Pavel Machek <pavel@kernel.org>, 
+	Len Brown <lenb@kernel.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>, 
+	"Martin K . Petersen" <martin.petersen@oracle.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	"open list:HIBERNATION (aka Software Suspend, aka swsusp)" <linux-pm@vger.kernel.org>, 
+	"open list:RADEON and AMDGPU DRM DRIVERS" <amd-gfx@lists.freedesktop.org>, 
+	"open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>, 
+	"open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>, 
+	"open list:SCSI SUBSYSTEM" <linux-scsi@vger.kernel.org>, 
+	"open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>, 
+	"open list:TRACING" <linux-trace-kernel@vger.kernel.org>, AceLan Kao <acelan.kao@canonical.com>, 
+	Kai-Heng Feng <kaihengf@nvidia.com>, Mark Pearson <mpearson-lenovo@squebb.ca>, 
+	=?UTF-8?Q?Merthan_Karaka=C5=9F?= <m3rthn.k@gmail.com>, 
+	Eric Naim <dnaim@cachyos.org>, "Guilherme G . Piccoli" <gpiccoli@igalia.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Sep 10, 2025 at 08:26:18AM +0300, Leon Romanovsky wrote:
->  #define PageHighMem(__p) is_highmem_idx(page_zonenum(__p))
-> -#define PhysHighMem(__p) (PageHighMem(phys_to_page(__p)))
->  #define folio_test_highmem(__f)        is_highmem_idx(folio_zonenum(__f))
->  #else
->  PAGEFLAG_FALSE(HighMem, highmem)
->  #endif
-> +#define PhysHighMem(__p) (PageHighMem(phys_to_page(__p)))
+On Tue, Sep 9, 2025 at 9:16=E2=80=AFPM Mario Limonciello (AMD)
+<superm1@kernel.org> wrote:
+>
+> PMSG_POWEROFF will be used for the PM core to allow differentiating betwe=
+en
+> a hibernation or shutdown sequence when re-using callbacks.
+>
+> This event should not have wakeups enabled
 
-Yeah, that's what I imagined, and I'd make it a static inline
+Why?
 
-static inline bool PhysHighMem(phys_addr_t phys)
+It surely is valid to wake up the system while it is being powered
+off, especially in the hibernation case.
 
-These existing macros are old fashioned imho.
+The "poweroff" transition is generally not recoverable, however, so it
+may be better to complete it and trigger a reboot if wakeup has been
+signaled.
 
-Jason
+> so update PMSG_NO_WAKEUP() to match it as well.
+
+No, please.
+
+> Tested-by: Eric Naim <dnaim@cachyos.org>
+> Signed-off-by: Mario Limonciello (AMD) <superm1@kernel.org>
+> ---
+> v7:
+>  * Reword commit
+> v5:
+>  * Re-order and split
+>  * Add tags
+> v4:
+>  * https://lore.kernel.org/linux-pci/20250616175019.3471583-1-superm1@ker=
+nel.org/
+> ---
+>  drivers/base/power/main.c    | 7 +++++++
+>  include/linux/pm.h           | 5 ++++-
+>  include/trace/events/power.h | 3 ++-
+>  3 files changed, 13 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/base/power/main.c b/drivers/base/power/main.c
+> index 2ea6e05e6ec90..86661c94e8cef 100644
+> --- a/drivers/base/power/main.c
+> +++ b/drivers/base/power/main.c
+> @@ -99,6 +99,8 @@ static const char *pm_verb(int event)
+>                 return "restore";
+>         case PM_EVENT_RECOVER:
+>                 return "recover";
+> +       case PM_EVENT_POWEROFF:
+> +               return "poweroff";
+>         default:
+>                 return "(unknown PM event)";
+>         }
+> @@ -369,6 +371,7 @@ static pm_callback_t pm_op(const struct dev_pm_ops *o=
+ps, pm_message_t state)
+>         case PM_EVENT_FREEZE:
+>         case PM_EVENT_QUIESCE:
+>                 return ops->freeze;
+> +       case PM_EVENT_POWEROFF:
+>         case PM_EVENT_HIBERNATE:
+>                 return ops->poweroff;
+>         case PM_EVENT_THAW:
+> @@ -403,6 +406,7 @@ static pm_callback_t pm_late_early_op(const struct de=
+v_pm_ops *ops,
+>         case PM_EVENT_FREEZE:
+>         case PM_EVENT_QUIESCE:
+>                 return ops->freeze_late;
+> +       case PM_EVENT_POWEROFF:
+>         case PM_EVENT_HIBERNATE:
+>                 return ops->poweroff_late;
+>         case PM_EVENT_THAW:
+> @@ -437,6 +441,7 @@ static pm_callback_t pm_noirq_op(const struct dev_pm_=
+ops *ops, pm_message_t stat
+>         case PM_EVENT_FREEZE:
+>         case PM_EVENT_QUIESCE:
+>                 return ops->freeze_noirq;
+> +       case PM_EVENT_POWEROFF:
+>         case PM_EVENT_HIBERNATE:
+>                 return ops->poweroff_noirq;
+>         case PM_EVENT_THAW:
+> @@ -1370,6 +1375,8 @@ static pm_message_t resume_event(pm_message_t sleep=
+_state)
+>                 return PMSG_RECOVER;
+>         case PM_EVENT_HIBERNATE:
+>                 return PMSG_RESTORE;
+> +       case PM_EVENT_POWEROFF:
+> +               return PMSG_ON;
+>         }
+>         return PMSG_ON;
+>  }
+> diff --git a/include/linux/pm.h b/include/linux/pm.h
+> index cc7b2dc28574c..892bd93f13dad 100644
+> --- a/include/linux/pm.h
+> +++ b/include/linux/pm.h
+> @@ -507,6 +507,7 @@ const struct dev_pm_ops name =3D { \
+>   * RECOVER     Creation of a hibernation image or restoration of the mai=
+n
+>   *             memory contents from a hibernation image has failed, call
+>   *             ->thaw() and ->complete() for all devices.
+> + * POWEROFF    System will poweroff, call ->poweroff() for all devices.
+>   *
+>   * The following PM_EVENT_ messages are defined for internal use by
+>   * kernel subsystems.  They are never issued by the PM core.
+> @@ -537,6 +538,7 @@ const struct dev_pm_ops name =3D { \
+>  #define PM_EVENT_USER          0x0100
+>  #define PM_EVENT_REMOTE                0x0200
+>  #define PM_EVENT_AUTO          0x0400
+> +#define PM_EVENT_POWEROFF      0x0800
+>
+>  #define PM_EVENT_SLEEP         (PM_EVENT_SUSPEND | PM_EVENT_HIBERNATE)
+>  #define PM_EVENT_USER_SUSPEND  (PM_EVENT_USER | PM_EVENT_SUSPEND)
+> @@ -551,6 +553,7 @@ const struct dev_pm_ops name =3D { \
+>  #define PMSG_QUIESCE   ((struct pm_message){ .event =3D PM_EVENT_QUIESCE=
+, })
+>  #define PMSG_SUSPEND   ((struct pm_message){ .event =3D PM_EVENT_SUSPEND=
+, })
+>  #define PMSG_HIBERNATE ((struct pm_message){ .event =3D PM_EVENT_HIBERNA=
+TE, })
+> +#define PMSG_POWEROFF  ((struct pm_message){ .event =3D PM_EVENT_POWEROF=
+F, })
+>  #define PMSG_RESUME    ((struct pm_message){ .event =3D PM_EVENT_RESUME,=
+ })
+>  #define PMSG_THAW      ((struct pm_message){ .event =3D PM_EVENT_THAW, }=
+)
+>  #define PMSG_RESTORE   ((struct pm_message){ .event =3D PM_EVENT_RESTORE=
+, })
+> @@ -568,7 +571,7 @@ const struct dev_pm_ops name =3D { \
+>
+>  #define PMSG_IS_AUTO(msg)      (((msg).event & PM_EVENT_AUTO) !=3D 0)
+>  #define PMSG_NO_WAKEUP(msg)    (((msg).event & \
+> -                               (PM_EVENT_FREEZE | PM_EVENT_QUIESCE)) !=
+=3D 0)
+> +                               (PM_EVENT_FREEZE | PM_EVENT_QUIESCE | PM_=
+EVENT_POWEROFF)) !=3D 0)
+>  /*
+>   * Device run-time power management status.
+>   *
+> diff --git a/include/trace/events/power.h b/include/trace/events/power.h
+> index 82904291c2b81..370f8df2fdb4b 100644
+> --- a/include/trace/events/power.h
+> +++ b/include/trace/events/power.h
+> @@ -179,7 +179,8 @@ TRACE_EVENT(pstate_sample,
+>                 { PM_EVENT_HIBERNATE, "hibernate" }, \
+>                 { PM_EVENT_THAW, "thaw" }, \
+>                 { PM_EVENT_RESTORE, "restore" }, \
+> -               { PM_EVENT_RECOVER, "recover" })
+> +               { PM_EVENT_RECOVER, "recover" }, \
+> +               { PM_EVENT_POWEROFF, "poweroff" })
+>
+>  DEFINE_EVENT(cpu, cpu_frequency,
+>
+> --
+> 2.43.0
+>
