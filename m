@@ -1,188 +1,109 @@
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FDA92EDD44;
-	Thu, 11 Sep 2025 22:25:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50648156F45;
+	Thu, 11 Sep 2025 23:19:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757629547; cv=none; b=u6EiosywlU1KHTdNOGlMKqyH6Q+5mLwYiyIj0ja7V/jbfRazxKvRvNxFbB4cVubkJTg1C/V0KEYVL7q99ZehRKM2QVLior39qcWA99PRzVXwjUPaRliDnEhZhgYyRnTntSbNU5mwAqFoqhYlXa6+jhpvuypcwGQXbVOwyX5+d70=
+	t=1757632796; cv=none; b=X6xS+zJxcaWv/+Q8nC6V1Qpk1wIJO7/R5MLWl5zlFzIgaJQrjgdA9skaa2wI+LeFvHC+qvdh57LHoigb+Hom9fvNnOnRbqp7App+TfkfphTta6H41cO4peyJtmnp3tNj4rLZ6C9TXmsip36dWP85BNE3V0M+xu2diHR13+dSHGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757629547; c=relaxed/simple;
-	bh=VhTUKknuQKZIQNlc9FeAjofdR8C1UbnCNE3GysWSRWM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=kj6PVMy+saLBv0GxbND4Kr6Qw2KkX98ULYrXDHWBjpJ5nHv8jCcVFpnVDatWMmILxTcGfsr8J+mbAYl1hBRQLtvqMpB44H2R26X9x1sqxD/tRpNeLm6qgFWbc4jxie1kP+6zKxKIRaqx9IDffvWlqMeGrxN5cRr9Z2MDY0PQV+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=TYzap3cs; arc=none smtp.client-ip=210.118.77.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="TYzap3cs"
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250911222543euoutp0181a9340dd64dc67c6339e0a47181ebf4~kWsHnYW5E2610126101euoutp01U;
-	Thu, 11 Sep 2025 22:25:43 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250911222543euoutp0181a9340dd64dc67c6339e0a47181ebf4~kWsHnYW5E2610126101euoutp01U
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1757629543;
-	bh=pKZpcAmq/bht8ZKkJqtZPTgOAGANcQvA5kKLVuXifcI=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=TYzap3cszLDOEgEsqU6EupJ7Zu8ir86kgd0ybK+4ACWZaOiATyvZFbUDShQ8MbR85
-	 SejzQ/ANTvod+crbxkB+bIskmGYNCRGJfAnTK7Wx3EUgGfsfp9YrG/QNqAamMubhrs
-	 7HS78hSROwDaJIS7uPVpylvDm+iDdZwL3r/+voe4=
-Received: from eusmtip1.samsung.com (unknown [203.254.199.221]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250911222542eucas1p1fd99b15e46362a0af4417b04fa0c831b~kWsHKwmS41727217272eucas1p1e;
-	Thu, 11 Sep 2025 22:25:42 +0000 (GMT)
-Received: from [106.210.134.192] (unknown [106.210.134.192]) by
-	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20250911222538eusmtip17e16b44d9939848958cad6696cc3414c~kWsDGpMzk2282122821eusmtip1T;
-	Thu, 11 Sep 2025 22:25:38 +0000 (GMT)
-Message-ID: <0db9bce5-40df-4cf5-85ab-f032c67d5c71@samsung.com>
-Date: Fri, 12 Sep 2025 00:25:38 +0200
+	s=arc-20240116; t=1757632796; c=relaxed/simple;
+	bh=uod826s70yyCvC1XsHR+nFj3UJnMt9c9pTrRfcjC6sQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=L09sjATE9PAtHQSYdJ0xPgL+9GuiWMG1r7KYCsyOCySOsjQ2DGSLt8woQ7YPo5PgwV5HZP7Gzv6CRquoeUS1KJDAw4GDHJAuLKN7dgSy63Zr35X4GRtNfywc8m1VALk6ioXoLVQV9GsN4QOHVAdBIc9iN+7MUD8ZRiwaLZj2Izk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf05.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id 33F75BA470;
+	Thu, 11 Sep 2025 23:19:51 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf05.hostedemail.com (Postfix) with ESMTPA id EFAD42000D;
+	Thu, 11 Sep 2025 23:19:47 +0000 (UTC)
+Date: Thu, 11 Sep 2025 19:20:40 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Steven Rostedt <rostedt@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>,
+ Namhyung Kim <namhyung@kernel.org>, Takaya Saeki <takayas@google.com>, Tom
+ Zanussi <zanussi@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ian
+ Rogers <irogers@google.com>, aahringo@redhat.com, Douglas Raillard
+ <douglas.raillard@arm.com>
+Subject: Re: [PATCH 1/7] tracing: Replace syscall RCU pointer assignment
+ with READ/WRITE_ONCE()
+Message-ID: <20250911192040.6c5ccb51@gandalf.local.home>
+In-Reply-To: <e7d9ecb7-8bdb-4c91-b727-375a2c5a190e@paulmck-laptop>
+References: <20250805192646.328291790@kernel.org>
+	<20250805193234.745705874@kernel.org>
+	<e7d9ecb7-8bdb-4c91-b727-375a2c5a190e@paulmck-laptop>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Betterbird (Windows)
-Subject: Re: [PATCH v6 00/16] dma-mapping: migrate to physical address-based
- API
-To: Leon Romanovsky <leon@kernel.org>
-Cc: Leon Romanovsky <leonro@nvidia.com>, Jason Gunthorpe <jgg@nvidia.com>,
-	Abdiel Janulgue <abdiel.janulgue@gmail.com>, Alexander Potapenko
-	<glider@google.com>, Alex Gaynor <alex.gaynor@gmail.com>, Andrew Morton
-	<akpm@linux-foundation.org>, Christoph Hellwig <hch@lst.de>, Danilo
-	Krummrich <dakr@kernel.org>, David Hildenbrand <david@redhat.com>,
-	iommu@lists.linux.dev, Jason Wang <jasowang@redhat.com>, Jens Axboe
-	<axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>, Jonathan Corbet
-	<corbet@lwn.net>, Juergen Gross <jgross@suse.com>,
-	kasan-dev@googlegroups.com, Keith Busch <kbusch@kernel.org>,
-	linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	linux-nvme@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-	linux-trace-kernel@vger.kernel.org, Madhavan Srinivasan
-	<maddy@linux.ibm.com>, Masami Hiramatsu <mhiramat@kernel.org>, Michael
-	Ellerman <mpe@ellerman.id.au>, "Michael S. Tsirkin" <mst@redhat.com>, Miguel
-	Ojeda <ojeda@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-	rust-for-linux@vger.kernel.org, Sagi Grimberg <sagi@grimberg.me>, Stefano
-	Stabellini <sstabellini@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
-	virtualization@lists.linux.dev, Will Deacon <will@kernel.org>,
-	xen-devel@lists.xenproject.org
-Content-Language: en-US
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-In-Reply-To: <cover.1757423202.git.leonro@nvidia.com>
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-CMS-MailID: 20250911222542eucas1p1fd99b15e46362a0af4417b04fa0c831b
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250909132821eucas1p1051ce9e0270ddbf520e105c913fa8db6
-X-EPHeader: CA
-X-CMS-RootMailID: 20250909132821eucas1p1051ce9e0270ddbf520e105c913fa8db6
-References: <CGME20250909132821eucas1p1051ce9e0270ddbf520e105c913fa8db6@eucas1p1.samsung.com>
-	<cover.1757423202.git.leonro@nvidia.com>
+X-Stat-Signature: j69ngrk3k3cwoteu3qpdqyxwn9994qpc
+X-Rspamd-Server: rspamout03
+X-Rspamd-Queue-Id: EFAD42000D
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18Jc5T7+knTA84TUSWHIrdOpuy4N+vyd1U=
+X-HE-Tag: 1757632787-331222
+X-HE-Meta: U2FsdGVkX18sRJI2pFkyN/C99yBs64fIGEOlwhwlaWmUGEXdRsRmOotiVjq6Gnx1kyy2p030rRxkBf8QZKa6+KQkfR6fFVCPwA/C5OALou8NULq5pO0luSfPzVq/42cCbsdjBga3maMjILaMrz0GFLySC9i1s+2Nl20NLamnda+kKkCT7U/TneLOdAFtgEmyEqAf9z3C6KPbpseRx5vNZziyvW5xwaND2N9/39gw9kM06VqGyDHitONHwLxtuGdTvWKM5Q0DVPWhb1Y1AH5QGvIJ01mFNq9lqc4aJwTPE5V3Wn6EYerSH+lm+c4jgHCqBML5/5cQf6JrYCIjRHBaKAxJ+tK+G01m4yv2GUf3vh0U6IoG52rp5Gruxgz0AtRqDOH5KcZFAuaBWQJ0XAxFEw==
 
-On 09.09.2025 15:27, Leon Romanovsky wrote:
-> From: Leon Romanovsky <leonro@nvidia.com>
->
-> Changelog:
-> v6:
->   * Based on "dma-debug: don't enforce dma mapping check on noncoherent
->     allocations" patch.
->   * Removed some unused variables from kmsan conversion.
->   * Fixed missed ! in dma check.
-> v5: https://lore.kernel.org/all/cover.1756822782.git.leon@kernel.org
->   * Added Jason's and Keith's Reviewed-by tags
->   * Fixed DMA_ATTR_MMIO check in dma_direct_map_phys
->   * Jason's cleanup suggestions
-> v4: https://lore.kernel.org/all/cover.1755624249.git.leon@kernel.org/
->   * Fixed kbuild error with mismatch in kmsan function declaration due to
->     rebase error.
-> v3: https://lore.kernel.org/all/cover.1755193625.git.leon@kernel.org
->   * Fixed typo in "cacheable" word
->   * Simplified kmsan patch a lot to be simple argument refactoring
-> v2: https://lore.kernel.org/all/cover.1755153054.git.leon@kernel.org
->   * Used commit messages and cover letter from Jason
->   * Moved setting IOMMU_MMIO flag to dma_info_to_prot function
->   * Micro-optimized the code
->   * Rebased code on v6.17-rc1
-> v1: https://lore.kernel.org/all/cover.1754292567.git.leon@kernel.org
->   * Added new DMA_ATTR_MMIO attribute to indicate
->     PCI_P2PDMA_MAP_THRU_HOST_BRIDGE path.
->   * Rewrote dma_map_* functions to use thus new attribute
-> v0: https://lore.kernel.org/all/cover.1750854543.git.leon@kernel.org/
-> ------------------------------------------------------------------------
->
-> This series refactors the DMA mapping to use physical addresses
-> as the primary interface instead of page+offset parameters. This
-> change aligns the DMA API with the underlying hardware reality where
-> DMA operations work with physical addresses, not page structures.
->
-> The series maintains export symbol backward compatibility by keeping
-> the old page-based API as wrapper functions around the new physical
-> address-based implementations.
->
-> This series refactors the DMA mapping API to provide a phys_addr_t
-> based, and struct-page free, external API that can handle all the
-> mapping cases we want in modern systems:
->
->   - struct page based cacheable DRAM
->   - struct page MEMORY_DEVICE_PCI_P2PDMA PCI peer to peer non-cacheable
->     MMIO
->   - struct page-less PCI peer to peer non-cacheable MMIO
->   - struct page-less "resource" MMIO
->
-> Overall this gets much closer to Matthew's long term wish for
-> struct-pageless IO to cacheable DRAM. The remaining primary work would
-> be in the mm side to allow kmap_local_pfn()/phys_to_virt() to work on
-> phys_addr_t without a struct page.
->
-> The general design is to remove struct page usage entirely from the
-> DMA API inner layers. For flows that need to have a KVA for the
-> physical address they can use kmap_local_pfn() or phys_to_virt(). This
-> isolates the struct page requirements to MM code only. Long term all
-> removals of struct page usage are supporting Matthew's memdesc
-> project which seeks to substantially transform how struct page works.
->
-> Instead make the DMA API internals work on phys_addr_t. Internally
-> there are still dedicated 'page' and 'resource' flows, except they are
-> now distinguished by a new DMA_ATTR_MMIO instead of by callchain. Both
-> flows use the same phys_addr_t.
->
-> When DMA_ATTR_MMIO is specified things work similar to the existing
-> 'resource' flow. kmap_local_pfn(), phys_to_virt(), phys_to_page(),
-> pfn_valid(), etc are never called on the phys_addr_t. This requires
-> rejecting any configuration that would need swiotlb. CPU cache
-> flushing is not required, and avoided, as ATTR_MMIO also indicates the
-> address have no cacheable mappings. This effectively removes any
-> DMA API side requirement to have struct page when DMA_ATTR_MMIO is
-> used.
->
-> In the !DMA_ATTR_MMIO mode things work similarly to the 'page' flow,
-> except on the common path of no cache flush, no swiotlb it never
-> touches a struct page. When cache flushing or swiotlb copying
-> kmap_local_pfn()/phys_to_virt() are used to get a KVA for CPU
-> usage. This was already the case on the unmap side, now the map side
-> is symmetric.
->
-> Callers are adjusted to set DMA_ATTR_MMIO. Existing 'resource' users
-> must set it. The existing struct page based MEMORY_DEVICE_PCI_P2PDMA
-> path must also set it. This corrects some existing bugs where iommu
-> mappings for P2P MMIO were improperly marked IOMMU_CACHE.
->
-> Since ATTR_MMIO is made to work with all the existing DMA map entry
-> points, particularly dma_iova_link(), this finally allows a way to use
-> the new DMA API to map PCI P2P MMIO without creating struct page. The
-> VFIO DMABUF series demonstrates how this works. This is intended to
-> replace the incorrect driver use of dma_map_resource() on PCI BAR
-> addresses.
->
-> This series does the core code and modern flows. A followup series
-> will give the same treatment to the legacy dma_ops implementation.
 
-Applied patches 1-13 into dma-mapping-for-next branch. Let's check if it 
-works fine in linux-next.
+Finally have time to get back to these patches.
 
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+On Wed, 6 Aug 2025 11:39:57 -0700
+"Paul E. McKenney" <paulmck@kernel.org> wrote:
 
+> On Tue, Aug 05, 2025 at 03:26:47PM -0400, Steven Rostedt wrote:
+> > From: Steven Rostedt <rostedt@goodmis.org>
+> > 
+> > The syscall events are pseudo events that hook to the raw syscalls. The
+> > ftrace_syscall_enter/exit() callback is called by the raw_syscall
+> > enter/exit tracepoints respectively whenever any of the syscall events are
+> > enabled.
+> > 
+> > The trace_array has an array of syscall "files" that correspond to the
+> > system calls based on their __NR_SYSCALL number. The array is read and if
+> > there's a pointer to a trace_event_file then it is considered enabled and
+> > if it is NULL that syscall event is considered disabled.
+> > 
+> > Currently it uses an rcu_dereference_sched() to get this pointer and a
+> > rcu_assign_ptr() or RCU_INIT_POINTER() to write to it. This is unnecessary
+> > as the file pointer will not go away outside the synchronization of the
+> > tracepoint logic itself. And this code adds no extra RCU synchronization
+> > that uses this.
+> > 
+> > Replace these functions with a simple READ_ONCE() and WRITE_ONCE() which
+> > is all they need. This will also allow this code to not depend on
+> > preemption being disabled as system call tracepoints are now allowed to
+> > fault.
+> > 
+> > Cc: "Paul E. McKenney" <paulmck@kernel.org>
+> > Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>  
+> 
+> >From an RCU-removal viewpoint:  
+> 
+> Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
+
+Thanks for the review. I'm also removing the __rcu that triggered the bot.
+
+> 
+> But is it possible to give some sort of warning just in case some creative
+> future developer figures out how to make the file pointer go away outside
+> of the synchronization of the tracepoint logic itself?
+
+That would be quite a big change, and since this is the core code to it,
+that future change should fix up this code as well. All the modification
+happens in this file so nothing should be hidden.
+
+If they do get it wrong, it should crash pretty amazingly if there's any
+testing ;-)
+
+-- Steve
