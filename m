@@ -1,39 +1,33 @@
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
+Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9771C2D130A;
-	Thu, 11 Sep 2025 14:04:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E514327A36;
+	Thu, 11 Sep 2025 14:40:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757599447; cv=none; b=eGIVWe3DJBeFMltzm6buqewshur9Ufj77apxfa18G06Q0VASPrplozt5bs+IVuOWj5jtO88sl2MF/oT1HUIsu2razqG9HGhUHQJX6E5QzU/hK83ec1nn6ym7TgM5hdjcwOsqRZxwS2OqjxeF3q7ag9KkFJ/GR6NHeytGwbEA70Y=
+	t=1757601651; cv=none; b=dZ/NrkaTpkARebIqlkXlXqJlAYgHUjbboQSrljS2zp+D9iE4V3e5qIiHx6lCVZrN3AnDTLAx8LZNWn4b3m7LHB3ltoLsWC/sVRhAH/0Ij4hj0PrnUox9mq3byxWNp9wc2dLZfkPj6nCtu8NvKd7tRrlwsYrADMNIZnyTExScHfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757599447; c=relaxed/simple;
-	bh=tqI20KcrF1915HcKwwUWQYY7UjVDMfBrvy90nCsN7l8=;
+	s=arc-20240116; t=1757601651; c=relaxed/simple;
+	bh=hOsnU96Duj7H4bPDhf52O/jlQhb37T2g9azDqZMBjWQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IPML1vYxqsk4HZoereNDILDJz+4g954/JBZBlsc93F/8C5r08Sx4mAWJuADAFDLDDIB5zkh0bPkPo4WDacy/34f2hU+2I/K1ZoGNndXmNADkhLE9jMOgV9ejjX8yfP7sZcPVVbkou7uL19YL+hCIFQnP02tdhrFxzcFJGNLDJPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
+	 MIME-Version:Content-Type; b=K3KvboCF+MA6DEcEEVVryBNBEwtgl597o0PNj/zYqNOKEnIfemyMLx75Xsas40x5OJeiy9rvndMXC8GLU6LL11gr/+T9R374ksHYUFPCHiojZxfxZHPlBgD1N6D+UcuOAd7APDlB5LXSp4u4uUQALtJLPS2T0b5DI6vdtMKjghw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf07.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay04.hostedemail.com (Postfix) with ESMTP id ADA5B1A0219;
-	Thu, 11 Sep 2025 14:04:02 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf07.hostedemail.com (Postfix) with ESMTPA id 91DA320024;
-	Thu, 11 Sep 2025 14:04:00 +0000 (UTC)
-Date: Thu, 11 Sep 2025 10:04:52 -0400
+Received: from omf02.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay08.hostedemail.com (Postfix) with ESMTP id B789214021E;
+	Thu, 11 Sep 2025 14:40:47 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf02.hostedemail.com (Postfix) with ESMTPA id 03B0E80012;
+	Thu, 11 Sep 2025 14:40:45 +0000 (UTC)
+Date: Thu, 11 Sep 2025 10:41:38 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Oliver Sang <oliver.sang@intel.com>
-Cc: Pu Lehui <pulehui@huaweicloud.com>, <oe-lkp@lists.linux.dev>,
- <lkp@intel.com>, <linux-kernel@vger.kernel.org>,
- <linux-trace-kernel@vger.kernel.org>, <mhiramat@kernel.org>,
- <mathieu.desnoyers@efficios.com>, <pulehui@huawei.com>
-Subject: Re: [PATCH] tracing: Fix missing errno when zero parser->idx in
- trace_pid_write
-Message-ID: <20250911100452.15fb74d4@gandalf.local.home>
-In-Reply-To: <aMKHBwzgqHOhILUQ@xsang-OptiPlex-9020>
-References: <20250821071721.3609109-1-pulehui@huaweicloud.com>
-	<202509022339.ae20a8bb-lkp@intel.com>
-	<20250905150312.02bef848@gandalf.local.home>
-	<aMKHBwzgqHOhILUQ@xsang-OptiPlex-9020>
+To: Vladimir Riabchun <ferr.lambarginio@gmail.com>
+Cc: mhiramat@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] ftrace: Fix softlockup in ftrace_module_enable
+Message-ID: <20250911104138.2830f60b@gandalf.local.home>
+In-Reply-To: <aMLPm__QGrQCwz1t@vova-pc>
+References: <aMLPm__QGrQCwz1t@vova-pc>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -43,28 +37,111 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: majb6bh3sxp9qjj3i5jd65p8acnth5un
-X-Rspamd-Server: rspamout08
-X-Rspamd-Queue-Id: 91DA320024
+X-Stat-Signature: hi6f91d6okink33npqhpi3e7caan7557
+X-Rspamd-Server: rspamout01
+X-Rspamd-Queue-Id: 03B0E80012
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+y1z96nmL7bBDJnNaMyrFZJFjb8YeQLbk=
-X-HE-Tag: 1757599440-802295
-X-HE-Meta: U2FsdGVkX19nT89Y4OfCtAhbVEPZISwHxBiWSohK2bdRoFHveLIWwXkAaYe2FgooIT+63m3dc1MNMUmJLpI+Q0FYtQTLfQn6s8KfaH9ffKT/96jfj5XEmMvSProRgxYExS/oLUrtJn9Zg/NmeBx537NgI8UcJs1C/UjmUL8XHeIasbDwn0eO2ocY55v/zH+hOEUMJmcRhROkSEowZNlSWKHoluwY3tMLc+zsWKQ2ZSQHvZpNtJV7Ba6+ONzEPJZV2VcOJMS4bfWNxzpHLNn1yZ/7eknAC7l/cI04t0HbeQSevRddWgfMo8Y7WX15gujlLSCc2kZHrV83LohL+mEYzFrARrwwTXu6adRqg09YpkRgCBmGAOyyNcRoKt1TS+3vBLkzxvTXskI=
+X-Session-ID: U2FsdGVkX1+OOMtyr7KDu/cgNi/2DzXP8bE2weFBwgw=
+X-HE-Tag: 1757601645-820143
+X-HE-Meta: U2FsdGVkX19ZShW5iPu+9iFzhpbRyHXteCdIPZGoi0/VqS5aVBfzITW1SLiALf/hghAVjavrpChJyB7VLo64KWK+Xd5L83Vrh0HP1UB/RFVc6A8DuITunnZ7FY2WmHz5SxouPd2OPHD+baJpikvArBJu3IlQden+hjeGnd7+m+0NuIHb60QtkfrmTmJAjLL5vsC77y2xBew9ZeGR/Vhg1bNx6Wc3+dPkjhjbE0jMvVpdmuIo+ZwNNW77h1ZtWMVwrt8uMxGFTvucOh2cMj+uYgBJ4Aw6ujRwf8bwFylYN3+3yhMAGTi6XveDn1ssGwDc6TdWNtH8bqhO8nTxlIl8pHrioMDok+CZ
 
-On Thu, 11 Sep 2025 16:23:35 +0800
-Oliver Sang <oliver.sang@intel.com> wrote:
+On Thu, 11 Sep 2025 15:33:15 +0200
+Vladimir Riabchun <ferr.lambarginio@gmail.com> wrote:
 
-> > I have no idea where this "perf_test.sh" is supposed to come from, and why
-> > it doesn't exist :-p  
-> 
-> sorry for inconvenience. for this "perf_test.sh" issue, we pushed a fix
-> https://github.com/intel/lkp-tests/commit/3ab6496813796e537d277242d220c4571790a363
-> 
-> however, we found there are other issues which block reproducer to work out of
-> our cluster env that we can not resolve shortly.
-> 
-> but if you have any debug/fix patch, we'll be very glad to test/verify.
+> A soft lockup was observed when loading amdgpu module,
 
-Nope, I just gave up on trying to make it work.
+I'd like to see more about that soft lockup.
+
+> this is the same issue that was fixed in
+> commit d0b24b4e91fc ("ftrace: Prevent RCU stall on PREEMPT_VOLUNTARY
+> kernels") and commit 42ea22e754ba ("ftrace: Add cond_resched() to
+> ftrace_graph_set_hash()").
+
+The above cond_resched() is in the loop of all records that actually look
+at all records! And that can be pretty big. On my server, it shows on boot:
+
+
+[    1.934175] ftrace: allocating 45706 entries in 180 pages
+[    1.934177] ftrace: allocated 180 pages with 4 groups
+
+That means the loop will go through 45,706 entries. That's quite a lot and
+a cond_resched() makes perfect sense.
+
+> 
+> Fix it the same way by adding cond_resched() in ftrace_module_enable.
+> 
+> Signed-off-by: Vladimir Riabchun <ferr.lambarginio@gmail.com>
+> ---
+>  kernel/trace/ftrace.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index a69067367c29..23c4d37c7bcd 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -7526,6 +7526,9 @@ void ftrace_module_enable(struct module *mod)
+>  
+>  	do_for_each_ftrace_rec(pg, rec) {
+>  		int cnt;
+> +
+> +		cond_resched();
+> +
+>  		/*
+>  		 * do_for_each_ftrace_rec() is a double loop.
+>  		 * module text shares the pg. If a record is
+
+This loop is different. Let me show a bit more context:
+
+	do_for_each_ftrace_rec(pg, rec) {
+		int cnt;
+		/*
+		 * do_for_each_ftrace_rec() is a double loop.
+		 * module text shares the pg. If a record is
+		 * not part of this module, then skip this pg,
+		 * which the "break" will do.
+		 */
+		if (!within_module(rec->ip, mod))
+			break;
+
+See this "if (!within_module(rec->ip, mod))" break?
+
+Look at the dmesg output again, and you'll see "groups" mentioned.
+
+[    1.934177] ftrace: allocated 180 pages with 4 groups
+
+That "4 groups" means there are 4 "page groups". That's the "pg" in the
+do_for_each_ftrace_recr() function.
+
+This means in my scenario, it loops 4 times. And then it will loop through
+each module.
+
+How big is the amdgpu driver? How many functions does it have?
+
+ # grep amdgpu /sys/kernel/tracing/available_filter_functions | wc -l
+
+And I'm guessing that this is only an issue when ftrace is enabled:
+
+		if (ftrace_start_up && cnt) {
+			int failed = __ftrace_replace_code(rec, 1);
+			if (failed) {
+				ftrace_bug(failed, rec);
+				goto out_loop;
+			}
+		}
+
+As that could slow things down.
+
+If this is all the case, then the cond_resched() should be with the
+ftrace_start_up code and not in the open like you have it.
+
+		if (ftrace_start_up && cnt) {
+			int failed = __ftrace_replace_code(rec, 1);
+			if (failed) {
+				ftrace_bug(failed, rec);
+				goto out_loop;
+			}
++			cond_resched();
+		}
+
 
 -- Steve
