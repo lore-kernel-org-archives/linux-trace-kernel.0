@@ -1,311 +1,150 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from SHSQR01.spreadtrum.com (unknown [222.66.158.135])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E88639ACF
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 11 Sep 2025 01:02:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4D8B329F21
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 11 Sep 2025 03:32:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757552530; cv=none; b=nnJS8VKpP+aQ1zCOLwKopf18WLg9FfE8OKi63h8GUcF2MvxUuiRcuQ974cinGfhl/8vLzSnMDd2ESqQ0UVHjiesD8Y1UKKfgUr0FiMswvwlbFMxagOKLceTlN7lFnofTB1Zzv2Gx4lcgqhi+VVWmj16cBYe+GmYOqxCeItQ/Eq0=
+	t=1757561573; cv=none; b=JSGjErGbvITA9yin+7MxgZnLykrHq/MISgyWGrH2l79metvbS2ii2k3EsuwJYm99iLFRZ7HHkfbr+CxkJYxcmqcobDPVNA1zI2muBPAzvBrXD0abTpYgyGhAzsSd5Cej+Tj+gp1bS9DXgJLYRWBpiK1PCgU7IZkT++OZ+hpr4nk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757552530; c=relaxed/simple;
-	bh=5VBENt6A2Kmu9jGrmuhcVeNNjnb+1k9AjSplBpQiApo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bW7bgpJlUJWQgL1U/myKqd1jcEOcN/akL1ECOiSwEdPAj9Z/4yhQPEtyo0ExaAUZyc9RPtdtMI13hWHMJeNMEkU3PTI6ejxjnuJX7eHXLYmjbXyyPLqNSx/vTWMFBM3+Kny+GtIHlbGA7Vw7zTXjQrm3FTSUfw6WWUNjZr+CSc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AlHfvm4/; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1757561573; c=relaxed/simple;
+	bh=qCzaKRorJQePW/uhpqRSRFI0E9oF/wPtqDWBdpBhkNQ=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jYhKBApz/C2TldYKU9BEIErv0wMg3O/4wcZyOYVBls4l2p0VsZ1N8mcbof8P93hT3bcKRrGkDfFuGvFTRSpu9N1u7g5ezVAQdUty+s7SNeKnWKGntez9/ZsTdo/YD1dpb2SMy/VbGYn8CeHz5soQimO1nv9j4UjNgusTW/bxjYw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; dkim=pass (2048-bit key) header.d=unisoc.com header.i=@unisoc.com header.b=n1IVZ1aF; arc=none smtp.client-ip=222.66.158.135
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=unisoc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AlHfvm4/"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-76e6cbb991aso151452b3a.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 10 Sep 2025 18:02:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1757552528; x=1758157328; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=c6RyKxrXBphbUIxCwH62JzKN1u04ZKF0pThPVVL+cJk=;
-        b=AlHfvm4/1BbBv6RsZr79XTSPdZvbg0wNCU+iGFXaCMrjkor1QovGUftbE6fYELjsTw
-         Ff8PVTuMAleN+WofHSO2JIEzJ8PAb67lMpHTKgF1sEvAimcwr7glpfAYxUiTumDjxAuo
-         nA4xqIj6hJifw1zBoYodfrTZgBN1VQirCl6Fsq8nCfkrvnSZ2fS4GilWT4LZNsvDPPXN
-         NyO9gNBa7fyAyX9F0jQDCplThw8mWw7yFafloPGrWpoG8zTvWPHG4oNwAgjtYSJNwjFr
-         IbOiPsyaJgZKTPvQo3UctjfU4Nq2Q80a94IjE8rtUQZ9LddITgasqvROxv7/EFoF96tD
-         246Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757552528; x=1758157328;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=c6RyKxrXBphbUIxCwH62JzKN1u04ZKF0pThPVVL+cJk=;
-        b=Kp2BqTf5Y1et4hF2svjkcswWjDmqNmFE3T2KEQs/80nMjEnWEGk+O/n85Z8EIDZpwx
-         SivmZnhreREtVbrTFU7gVPqHAfvT9LXvX6pusF7XS4+rDARTsztW1/Lv2IMIvWRscc2B
-         nsqqLbNK4rdXdchiq+Y3KgvkR6FxxGi+r/gG+m8q4wtGf6q86Dg0ARCxjCvH6NIHN2er
-         gmw+FLT9kwrOY4prZ3/bLRIt4//IZ0rQkHmF+L4aGlxfB6U3one7MRsV7gc/00zVdDDm
-         7zuD8MZobsgwjGOxaWMnuSdmctg9hATNfhGSfRzCStYPEeQBQv/5sbP5JYULh52+2mRZ
-         5vpw==
-X-Forwarded-Encrypted: i=1; AJvYcCWnAsqdhPWQ7I0sBXGHRHdOX1QJxd5HInEvy4f0ES+layvihkWdTfc19r3vP7J02fIpLr4ckn42gunFefrU9NJdX7U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzObFRJiCwTmkRo6UEImcGLE3vEqhvuTBqeDcl1JxTjd7fx0Drs
-	lKsc6LEJG5DuC339bSkI/Pz8yFSKWfelONFttoHf7QxfTjbWkhVXFr5/
-X-Gm-Gg: ASbGncs7wx2jPD9xtwunlINEaukYTohQWS6qQC7XvuPu1E0lEsJvG8qR5qeZvX555h9
-	VHOZZo8vM4hNuKXRNuy/qe0YnjOaxaWr/dftsTCfGl7SPSsO+lgYMunYiAlU73ELjkhx1TjLeFb
-	MXSBq9Ax6OWomATlwgz6+94qpHlVxkKYzn8liFqNw3C7mKWtDjzcIhz1Z2GzCNHBE2rmSSo0Ypk
-	8jykoMuO2VwDLYEVlLLkhpxRkfMJWdPFnjKki29Po33kTa3Xc1tHbgljH88V07MbygUu/Qsm0oA
-	igAWtZdjntPEzTV3+f2yLAf8dt2pKBVSArNET137qG0ZOfzzDF26nOh98oPAp9hlu6J8OgMBHWp
-	J48+FryXtb0HoU9Zy5O0ToilXxsc=
-X-Google-Smtp-Source: AGHT+IHWKYeBfZHFw5wp0lGo2/j/+43qoXRd/Q4Cw1fK4Uyl50WB09aLvc51pAjyyTCeRnBJqpSTow==
-X-Received: by 2002:a05:6a00:4652:b0:772:5ba4:d75 with SMTP id d2e1a72fcca58-7742dd1270emr21626263b3a.4.1757552527499;
-        Wed, 10 Sep 2025 18:02:07 -0700 (PDT)
-Received: from [127.0.0.1] ([2a11:3:200::20f3])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-77607b34254sm122807b3a.75.2025.09.10.18.01.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Sep 2025 18:02:06 -0700 (PDT)
-Message-ID: <5ed43490-6894-4780-8faf-52d5f25bf3cc@gmail.com>
-Date: Thu, 11 Sep 2025 09:01:49 +0800
+	dkim=pass (2048-bit key) header.d=unisoc.com header.i=@unisoc.com header.b="n1IVZ1aF"
+Received: from SHSQR01.spreadtrum.com (localhost [127.0.0.2] (may be forged))
+	by SHSQR01.spreadtrum.com with ESMTP id 58B3Wkxm038732
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 11 Sep 2025 11:32:46 +0800 (+08)
+	(envelope-from Xuewen.Yan@unisoc.com)
+Received: from dlp.unisoc.com ([10.29.3.86])
+	by SHSQR01.spreadtrum.com with ESMTP id 58B3Ski4015183;
+	Thu, 11 Sep 2025 11:28:46 +0800 (+08)
+	(envelope-from Xuewen.Yan@unisoc.com)
+Received: from SHDLP.spreadtrum.com (BJMBX01.spreadtrum.com [10.0.64.7])
+	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4cMjfq6Y3Fz2K85Cv;
+	Thu, 11 Sep 2025 11:27:31 +0800 (CST)
+Received: from BJ10918NBW01.spreadtrum.com (10.0.73.73) by
+ BJMBX01.spreadtrum.com (10.0.64.7) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.48; Thu, 11 Sep 2025 11:28:43 +0800
+From: Xuewen Yan <xuewen.yan@unisoc.com>
+To: <surenb@google.com>, <hannes@cmpxchg.org>,
+        <mathieu.desnoyers@efficios.com>, <mhiramat@kernel.org>,
+        <peterz@infradead.org>
+CC: <rostedt@goodmis.org>, <mingo@redhat.com>, <vincent.guittot@linaro.org>,
+        <dietmar.eggemann@arm.com>, <bsegall@google.com>, <mgorman@suse.de>,
+        <vschneid@redhat.com>, <linux-kernel@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>, <ke.wang@unisoc.com>,
+        <yuming.han@unisoc.com>, <xuewen.yan94@gmail.com>
+Subject: [RFC PATCH V3] sched: psi: Add psi events trace point
+Date: Thu, 11 Sep 2025 11:28:23 +0800
+Message-ID: <20250911032823.19064-1-xuewen.yan@unisoc.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 01/19] x86/hw_breakpoint: introduce
- arch_reinstall_hw_breakpoint() for atomic context
-Content-Language: en-US
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Peter Zijlstra <peterz@infradead.org>, Mike Rapoport <rppt@kernel.org>,
- "Naveen N . Rao" <naveen@kernel.org>,
- Andrey Ryabinin <ryabinin.a.a@gmail.com>,
- Alexander Potapenko <glider@google.com>,
- Andrey Konovalov <andreyknvl@gmail.com>, Dmitry Vyukov <dvyukov@google.com>,
- Vincenzo Frascino <vincenzo.frascino@arm.com>, kasan-dev@googlegroups.com,
- "David S. Miller" <davem@davemloft.net>, Steven Rostedt
- <rostedt@goodmis.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>,
- Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, linux-mm@kvack.org,
- linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250910052335.1151048-1-wangjinchao600@gmail.com>
- <20250910052335.1151048-2-wangjinchao600@gmail.com>
- <20250911094609.5f30e9767ffc3040068ed052@kernel.org>
-From: Jinchao Wang <wangjinchao600@gmail.com>
-In-Reply-To: <20250911094609.5f30e9767ffc3040068ed052@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
+ BJMBX01.spreadtrum.com (10.0.64.7)
+X-MAIL:SHSQR01.spreadtrum.com 58B3Ski4015183
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=unisoc.com;
+	s=default; t=1757561338;
+	bh=vUM8qbMYMuAVqYzJMiNpNcIBhZeou0MfXEpjzcgC13o=;
+	h=From:To:CC:Subject:Date;
+	b=n1IVZ1aFuTHcdswfK0xToD2rap5v73klslzto/+OsmK4vB+ucB/jjmgkRd76U6Vdb
+	 +ADIsfdvtTkICSxkneXz4PCx/nBDRlhLni9hvVJpFQye/pESUJHI751Q8Gx0siQbex
+	 VTVz8oG461S8wuG2vhvf4rCIUQPx/nB1PVhcl175iRf9hSDalvcTRRL9emArWT1K8+
+	 2TU1IyV7CksYBj9//Jgqo5t9JzC6nF8RTwKsZkYeiimf9l6rZeJmvDmCIY9zEPvhPy
+	 vQ+VyuLMDUGAXT/flDTupF1Mda+7L8BFjZZYJHjmNjwmC3AnMJGckTGXhTM+h5ENp3
+	 kBm/4CB4itGPQ==
 
+Add trace point to psi triggers. This is useful to
+observe the psi events in the kernel space.
 
-On 9/11/25 08:46, Masami Hiramatsu (Google) wrote:
-> Hi Jinchao,
->
-> On Wed, 10 Sep 2025 13:23:10 +0800
-> Jinchao Wang <wangjinchao600@gmail.com> wrote:
->
->> Introduce arch_reinstall_hw_breakpoint() to update hardware breakpoint
->> parameters (address, length, type) without freeing and reallocating the
->> debug register slot.
->>
->> This allows atomic updates in contexts where memory allocation is not
->> permitted, such as kprobe handlers.
->>
->> Signed-off-by: Jinchao Wang <wangjinchao600@gmail.com>
->> ---
->>   arch/x86/include/asm/hw_breakpoint.h |  1 +
->>   arch/x86/kernel/hw_breakpoint.c      | 50 ++++++++++++++++++++++++++++
->>   2 files changed, 51 insertions(+)
->>
->> diff --git a/arch/x86/include/asm/hw_breakpoint.h b/arch/x86/include/asm/hw_breakpoint.h
->> index 0bc931cd0698..bb7c70ad22fe 100644
->> --- a/arch/x86/include/asm/hw_breakpoint.h
->> +++ b/arch/x86/include/asm/hw_breakpoint.h
->> @@ -59,6 +59,7 @@ extern int hw_breakpoint_exceptions_notify(struct notifier_block *unused,
->>   
->>   
->>   int arch_install_hw_breakpoint(struct perf_event *bp);
->> +int arch_reinstall_hw_breakpoint(struct perf_event *bp);
->>   void arch_uninstall_hw_breakpoint(struct perf_event *bp);
->>   void hw_breakpoint_pmu_read(struct perf_event *bp);
->>   void hw_breakpoint_pmu_unthrottle(struct perf_event *bp);
->> diff --git a/arch/x86/kernel/hw_breakpoint.c b/arch/x86/kernel/hw_breakpoint.c
->> index b01644c949b2..89135229ed21 100644
->> --- a/arch/x86/kernel/hw_breakpoint.c
->> +++ b/arch/x86/kernel/hw_breakpoint.c
->> @@ -132,6 +132,56 @@ int arch_install_hw_breakpoint(struct perf_event *bp)
->>   	return 0;
->>   }
->>   
->> +/*
->> + * Reinstall a hardware breakpoint on the current CPU.
->> + *
->> + * This function is used to re-establish a perf counter hardware breakpoint.
->> + * It finds the debug address register slot previously allocated for the
->> + * breakpoint and re-enables it by writing the address to the debug register
->> + * and setting the corresponding bits in the debug control register (DR7).
->> + *
->> + * It is expected that the breakpoint's event context lock is already held
->> + * and interrupts are disabled, ensuring atomicity and safety from other
->> + * event handlers.
->> + */
->> +int arch_reinstall_hw_breakpoint(struct perf_event *bp)
->> +{
->> +	struct arch_hw_breakpoint *info = counter_arch_bp(bp);
->> +	unsigned long *dr7;
->> +	int i;
->> +
->> +	lockdep_assert_irqs_disabled();
->> +
->> +	for (i = 0; i < HBP_NUM; i++) {
->> +		struct perf_event **slot = this_cpu_ptr(&bp_per_reg[i]);
->> +
->> +		if (*slot == bp)
->> +			break;
->> +	}
->> +
->> +	if (WARN_ONCE(i == HBP_NUM, "Can't find a matching breakpoint slot"))
->> +		return -EINVAL;
->> +
->> +	set_debugreg(info->address, i);
->> +	__this_cpu_write(cpu_debugreg[i], info->address);
->> +
->> +	dr7 = this_cpu_ptr(&cpu_dr7);
->> +	*dr7 |= encode_dr7(i, info->len, info->type);
->> +
->> +	/*
->> +	 * Ensure we first write cpu_dr7 before we set the DR7 register.
->> +	 * This ensures an NMI never see cpu_dr7 0 when DR7 is not.
->> +	 */
->> +	barrier();
->> +
->> +	set_debugreg(*dr7, 7);
->> +	if (info->mask)
->> +		amd_set_dr_addr_mask(info->mask, i);
->> +
->> +	return 0;
->> +}
->> +EXPORT_SYMBOL_GPL(arch_reinstall_hw_breakpoint);
-> Please do not expose the arch dependent symbol. Instead, you should
-> expose an arch independent wrapper.
->
-> Anyway, you also need to share the same code with arch_install_hw_breakpoint()
-> like below;
->
-> Thanks,
+One use of this is to monitor memory pressure.
+When the pressure is too high, we can kill the process
+in the kernel space to prevent OOM.
 
-You are right. The arch-dependent symbol has been removed and the code 
-is shared
+Signed-off-by: Xuewen Yan <xuewen.yan@unisoc.com>
+---
+V3:
+-export it in the tracefs;
+---
+v2:
+-fix compilation error;
+-export the tp;
+-add more commit message;
+---
+ include/trace/events/sched.h | 27 +++++++++++++++++++++++++++
+ kernel/sched/psi.c           |  4 ++++
+ 2 files changed, 31 insertions(+)
 
-with arch_install_hw_breakpoint() in the next version of the patch.
-
-https://lore.kernel.org/lkml/20250910093951.1330637-1-wangjinchao600@gmail.com
-
-
->
-> diff --git a/arch/x86/kernel/hw_breakpoint.c b/arch/x86/kernel/hw_breakpoint.c
-> index 89135229ed21..2f3c5406999e 100644
-> --- a/arch/x86/kernel/hw_breakpoint.c
-> +++ b/arch/x86/kernel/hw_breakpoint.c
-> @@ -84,6 +84,28 @@ int decode_dr7(unsigned long dr7, int bpnum, unsigned *len, unsigned *type)
->   	return (dr7 >> (bpnum * DR_ENABLE_SIZE)) & 0x3;
->   }
->   
-> +static void __arch_install_hw_breakpoint(struct perf_event *bp, int regno)
-> +{
-> +	struct arch_hw_breakpoint *info = counter_arch_bp(bp);
-> +	unsigned long *dr7;
-> +
-> +	set_debugreg(info->address, regno);
-> +	__this_cpu_write(cpu_debugreg[i], info->address);
-> +
-> +	dr7 = this_cpu_ptr(&cpu_dr7);
-> +	*dr7 |= encode_dr7(i, info->len, info->type);
-> +
-> +	/*
-> +	 * Ensure we first write cpu_dr7 before we set the DR7 register.
-> +	 * This ensures an NMI never see cpu_dr7 0 when DR7 is not.
-> +	 */
-> +	barrier();
-> +
-> +	set_debugreg(*dr7, 7);
-> +	if (info->mask)
-> +		amd_set_dr_addr_mask(info->mask, i);
-> +}
-> +
->   /*
->    * Install a perf counter breakpoint.
->    *
-> @@ -95,8 +117,6 @@ int decode_dr7(unsigned long dr7, int bpnum, unsigned *len, unsigned *type)
->    */
->   int arch_install_hw_breakpoint(struct perf_event *bp)
->   {
-> -	struct arch_hw_breakpoint *info = counter_arch_bp(bp);
-> -	unsigned long *dr7;
->   	int i;
->   
->   	lockdep_assert_irqs_disabled();
-> @@ -113,22 +133,7 @@ int arch_install_hw_breakpoint(struct perf_event *bp)
->   	if (WARN_ONCE(i == HBP_NUM, "Can't find any breakpoint slot"))
->   		return -EBUSY;
->   
-> -	set_debugreg(info->address, i);
-> -	__this_cpu_write(cpu_debugreg[i], info->address);
-> -
-> -	dr7 = this_cpu_ptr(&cpu_dr7);
-> -	*dr7 |= encode_dr7(i, info->len, info->type);
-> -
-> -	/*
-> -	 * Ensure we first write cpu_dr7 before we set the DR7 register.
-> -	 * This ensures an NMI never see cpu_dr7 0 when DR7 is not.
-> -	 */
-> -	barrier();
-> -
-> -	set_debugreg(*dr7, 7);
-> -	if (info->mask)
-> -		amd_set_dr_addr_mask(info->mask, i);
-> -
-> +	__arch_install_hw_breakpoint(bp, i);
->   	return 0;
->   }
->   
-> @@ -146,8 +151,6 @@ int arch_install_hw_breakpoint(struct perf_event *bp)
->    */
->   int arch_reinstall_hw_breakpoint(struct perf_event *bp)
->   {
-> -	struct arch_hw_breakpoint *info = counter_arch_bp(bp);
-> -	unsigned long *dr7;
->   	int i;
->   
->   	lockdep_assert_irqs_disabled();
-> @@ -162,22 +165,7 @@ int arch_reinstall_hw_breakpoint(struct perf_event *bp)
->   	if (WARN_ONCE(i == HBP_NUM, "Can't find a matching breakpoint slot"))
->   		return -EINVAL;
->   
-> -	set_debugreg(info->address, i);
-> -	__this_cpu_write(cpu_debugreg[i], info->address);
-> -
-> -	dr7 = this_cpu_ptr(&cpu_dr7);
-> -	*dr7 |= encode_dr7(i, info->len, info->type);
-> -
-> -	/*
-> -	 * Ensure we first write cpu_dr7 before we set the DR7 register.
-> -	 * This ensures an NMI never see cpu_dr7 0 when DR7 is not.
-> -	 */
-> -	barrier();
-> -
-> -	set_debugreg(*dr7, 7);
-> -	if (info->mask)
-> -		amd_set_dr_addr_mask(info->mask, i);
-> -
-> +	__arch_install_hw_breakpoint(bp, i);
->   	return 0;
->   }
->   EXPORT_SYMBOL_GPL(arch_reinstall_hw_breakpoint);
->
+diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
+index 7b2645b50e78..db8b8f25466e 100644
+--- a/include/trace/events/sched.h
++++ b/include/trace/events/sched.h
+@@ -826,6 +826,33 @@ TRACE_EVENT(sched_wake_idle_without_ipi,
+ 	TP_printk("cpu=%d", __entry->cpu)
+ );
+ 
++#ifdef CONFIG_PSI
++TRACE_EVENT(psi_event,
++
++	TP_PROTO(int aggregator, int state, u64 threshold, u64 win_size),
++
++	TP_ARGS(aggregator, state, threshold, win_size),
++
++	TP_STRUCT__entry(
++		__field(int,	aggregator)
++		__field(int,	state)
++		__field(u64,	threshold)
++		__field(u64,	win_size)
++	),
++
++	TP_fast_assign(
++		__entry->aggregator	= aggregator;
++		__entry->state		= state;
++		__entry->threshold	= threshold;
++		__entry->win_size	= win_size;
++	),
++
++	TP_printk("aggregator=%d state=%d threshold=%llu window_size=%llu",
++		__entry->aggregator, __entry->state, __entry->threshold,
++		__entry->win_size)
++);
++#endif /* CONFIG_PSI */
++
+ /*
+  * Following tracepoints are not exported in tracefs and provide hooking
+  * mechanisms only for testing and debugging purposes.
+diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
+index 59fdb7ebbf22..5b7954b653ed 100644
+--- a/kernel/sched/psi.c
++++ b/kernel/sched/psi.c
+@@ -141,6 +141,8 @@
+ #include <linux/psi.h>
+ #include "sched.h"
+ 
++EXPORT_TRACEPOINT_SYMBOL_GPL(psi_event);
++
+ static int psi_bug __read_mostly;
+ 
+ DEFINE_STATIC_KEY_FALSE(psi_disabled);
+@@ -509,6 +511,8 @@ static void update_triggers(struct psi_group *group, u64 now,
+ 		if (now < t->last_event_time + t->win.size)
+ 			continue;
+ 
++		trace_psi_event(aggregator, t->state, t->threshold, t->win.size);
++
+ 		/* Generate an event */
+ 		if (cmpxchg(&t->event, 0, 1) == 0) {
+ 			if (t->of)
 -- 
-Thanks,
-Jinchao
+2.25.1
 
