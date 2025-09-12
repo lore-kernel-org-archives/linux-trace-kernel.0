@@ -1,108 +1,118 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E312270EA5
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 12 Sep 2025 05:51:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECD952848A9
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 12 Sep 2025 06:42:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757656311; cv=none; b=hR6kNsaUPJpw6MXMvn0nd12ZPXT9D7xkfueyAAFHHBIM/nURRMG1U8nxIurTFfvDJu+9MH0c6dxWyhlMnfq4uKmp1OQsrFmUjADBYsRyTjkt4lnmg8boPOjwvO95srKxmIVmZcHLegDWEiHfaE1tyfBxizqNrVeW3GtZni9afpM=
+	t=1757659354; cv=none; b=p7SuaAvTS7fG3PhahasrMVmMCtOVA8RaTY51WLOHwBzZevBfLrUaXc/MjTW6dTi6YkbKArA3P2MD9CAJcEq4Zn/4zTWa9FgMONPnttzlLRaxIEKQ3u7NjsQ2gS7SJitdRHMnXN4ZDFxdyFFE3CuD9BM6dj3k08tGY6ZLxgbBQOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757656311; c=relaxed/simple;
-	bh=7i6b0HQZmpItcoHiRjDWPxsI+KEN2RjAWI+wYkI2Gzs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ND9OpVrdjGrS+KK7mqtAb3q9hLkS9/7BBeWQRG5DuVkHAdCLRpzytqEbyjIx0z4kh8IXTlI/tm/UiFwS9rosLg2U5RXo+/brw6fjAQeClNcquRRsQiIExbrljF+B2Sr+fZ4+19s6bn8L+vO+I9BtR87NyYyiiKuf0Nv6zMDMizA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hooFbfX9; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1757659354; c=relaxed/simple;
+	bh=NiDw3YhiRCuiqX3s8Sx2YRwxOWOYND2WGqxePm5DDYE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dZrIShStbq0jXD9Ip83ZchyrdVgJeIEHs2CMHejrKCBvrjO1V85yBZlBpiq0c6EHfv1fOaex304Rh4aughBm5enrDG9vOfzgngpy19KoShiXtdoWakacOd8XWUme4GTP9vTOCwUJ8P4vcGrGw3/2V3utJ6z1b7TjbW4LwjTBv6w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=py/X9XdG; arc=none smtp.client-ip=209.85.219.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hooFbfX9"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-77251d7cca6so1506820b3a.3
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 11 Sep 2025 22:51:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="py/X9XdG"
+Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-726ee1a6af3so17474026d6.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 11 Sep 2025 23:42:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1757656309; x=1758261109; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Wwxrf7orhL2KYO0iCZZdsGPUWyavjuMuxgjcqzj0tsA=;
-        b=hooFbfX9qGIPRouDdpxKBh+VC5sYTXZliz4PmWvxPCKl127AIagsLLtwPvzPQBXWHP
-         s4ekyjZzE1pcGPnQ0s5HDN/8EHEH4Vm4cCTG6oPTDCBSuu2ZdF16Zq2IqYg2/iKHJ7nI
-         4IwiiHRCcKEiujfc8bI18/8dED7qymMVGHMAHCFHcO5V3hIyrrE+dU/BGvOHbNYJsGHa
-         WfHh4XrwKEWttPfNv5Nw9NE7cfEfvp/vXkwGzC/TdDX7emiY5122jLuF9EdigCoNkO8Y
-         4Su5s+5Rl6OMi23xBHWUrE9UiE4W5DSA4YCBfNaQR1X0D04uRrqtGVobhP4cr32bOK4Z
-         lNRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757656309; x=1758261109;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1757659352; x=1758264152; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Wwxrf7orhL2KYO0iCZZdsGPUWyavjuMuxgjcqzj0tsA=;
-        b=I1YYWXM9ORQxagcRKhxXu1UGKBTtGPyVlEmzgRvZqJmGZVk63gUbz++wwy0VNpPg6E
-         mZxLcRpta9dVAvhBt49kVwKwJ3eq6lo0RiuilJr7ftjxbVXDqS8sU4FzbunWB71fN8vq
-         NkFOY4JQVSLjPCCdorF48NBEvRyhXZdSe01ZjxvQxLoAay6B++EyJbEHnlMM6bWb4eUW
-         PJDUNJ/M1beTiaIjQ0Qc7/dqvbyyDW5NjjKO9VG0Ks5q1Xesi9a5twi/AQ8mLkeXbAbd
-         8mVujIvK/II0tKHBgggXKYQMZfKrP0tLClNSpZPGcTzx6FLg1J8Ymv97dAFxj4on7Q61
-         n2ag==
-X-Forwarded-Encrypted: i=1; AJvYcCUUNR4Pdu1MwJdMSAnvUCUCVwyELNCzzi2KDTA/kAki8UZHdFnnv5cAKJy8I8Pd1dNZKE9ZSincaAi2KURrFkWYrXQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFjSFzeFtL8uOeeK1I5Hgr+JyZQvsmZ6b4MOtYeqraclcGFyP4
-	npaKkSpJzEv0e3DFLC0o7LN0pP5dRyn3bvbxaWeqmDElV5PxeneVA60g
-X-Gm-Gg: ASbGncuJfI9GD21cDtxX0T1vW7ZwJQR+fWrLECMGk6rZBi7heZxXNSpou4aiaxpc7kl
-	IxdxxaxBGCuA+8eLlvZ5Mhhtmg8l46rX528uCUr3rF+15LWrnCleijkh1SJdXDl9I0bRay4oFUw
-	D+T9mSm0V+qf+vclmTkRhebflGgRe0an2Pwadfr1UpEAzfXVajKHoI6otEJbj1Tqda79xMHT1oQ
-	kto6p2TACR/z14hSlllczYsCUQ8Bpeg0NJ1B7BXXfrlQRtgxZQKKQq04f5bYBwALINhPLoLMySO
-	TDmzqQE3uRUhHqJ+TOj7J6Xp4jBdvpgIxy0gijLxQglgZ5b3xxmuqKDaC8Pzf4Xexs9wGcWr2nl
-	9z9b6pRatP9XkGE6+JvxJAkW2oWlH6DsuWoWgQopQfsKgrA==
-X-Google-Smtp-Source: AGHT+IGzJaB63wIa8y1WxrhARLk2qyeDzg2l8cffF9pjyL26hVSSSTlaS01B7UHtSYXcq7zGWNVPeg==
-X-Received: by 2002:a05:6a20:7f9c:b0:249:467e:ba68 with SMTP id adf61e73a8af0-2602c90cda4mr2342631637.50.1757656309414;
-        Thu, 11 Sep 2025 22:51:49 -0700 (PDT)
-Received: from localhost ([45.90.208.139])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7761853866bsm450111b3a.95.2025.09.11.22.51.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Sep 2025 22:51:48 -0700 (PDT)
-Date: Fri, 12 Sep 2025 13:51:43 +0800
-From: Jinchao Wang <wangjinchao600@gmail.com>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Mike Rapoport <rppt@kernel.org>,
-	"Naveen N . Rao" <naveen@kernel.org>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Alexander Potapenko <glider@google.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	kasan-dev@googlegroups.com, "David S. Miller" <davem@davemloft.net>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 00/19] mm/ksw: Introduce real-time Kernel Stack Watch
- debugging tool
-Message-ID: <aMO07xMDpDdDc1zm@mdev>
-References: <20250910052335.1151048-1-wangjinchao600@gmail.com>
+        bh=NiDw3YhiRCuiqX3s8Sx2YRwxOWOYND2WGqxePm5DDYE=;
+        b=py/X9XdG3CpLIJmbtrlx9qUjems+Qc7ksjzpDBoJfTUDlQ/q86HjPVcrNWB3emvnN/
+         0gIDzaY6CqJeP5rUF/0Le1MwTEkQB49kz0AQKyRJajNNZ71mgWnsaEZDmUqnk9h0UAcq
+         z1XK76Nmm5BggXIN0SIbEzNmUKC/iUaESM8PN02RKhYtVf7FlISRVwdh16vu6XsbS+g1
+         0AgWwwJlWjud7XM1n0eG9xSi8PzwAooUrIRDsAVSBZJbc42wiSywO9CCeWhd6nwXcq8i
+         QPXGs/fvTk6qRpHKWjpkHUmY6yqKRa16bB+Sqfri8JMGPjN72iouigBdKBZA3tO4vqIq
+         6mqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757659352; x=1758264152;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NiDw3YhiRCuiqX3s8Sx2YRwxOWOYND2WGqxePm5DDYE=;
+        b=rO3D+xWXSImocbkIU6y6xVW6cX5fwughuswibviy+eQnbayq++qzHCilJ+ojIt8mes
+         hL1cpS/WRk8m/JaB4TUznuyUOU6xUqSdoGmg2xSVp9HrWL7Jx8dVdSObY9ZclCDZKmhw
+         wICMcrpZDcVwe9IzhROlbxJ4m4RfdnDeK8n8F1I1/fc2xCcgR0UrF7fqjr+1uPrtDH/S
+         JHxNe2w098ZVdlb/keoZrk2wQ9SGDc4UAMqKOCc1gL0vuT0yO9pXjmUn4k9Jqh961wCE
+         cQLU0T/6ZtGd9hXv9MSheH88m/8AQZIjUvZ1IxY4tFaKAcLT8cLdOhUeXK4RdfQ1fwKm
+         aDkg==
+X-Forwarded-Encrypted: i=1; AJvYcCV2/sNWtcfKi55jNYyhLZms7D6JdaZfHkM8mEZJuEpCgWXxJWDemfwvJh2OL7M+Xj8bLI8CMtvTdtS5n8zsTd6A9qM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy9XDhmNkxKNOcfKLCJdlpOJUjVOp9MPo77FD4ebcgeAElYSLqz
+	4U2RiS1XgsJFaRmfhUr8FrvmbwTHPsBhE5d8FX6rq3RZiNB9d1DpEKZOhMIa+qQaimywk17+Olr
+	9pzYNxlCZzGtDWiHuzKf7kHxIgb+aZ2FeEnFFZYQu
+X-Gm-Gg: ASbGncs3v/s2sqNsbPj7qwKcApwqGE3zo06WY1aamDvccABoIqj1yth5a8/cx+MNwD8
+	bDUVkyaAx5m/KLMeOg1AAUuua/jworHXn8xTY+CPTDrH7Td+SWkWuksV78hCRnxw+epc69hbZo2
+	m2hTXRpUSGfCtWnWi4VlpQ+3X6JHM6vmOISVpZjfhOWBuZbJ5k6GdymAFJFvvan5Wu8htbqJyW7
+	XY86FRarVnTopCqMh6dsXXHO3QTyalVt9EczuNdsDrkTDCYYZKWjxAyt69btft30A==
+X-Google-Smtp-Source: AGHT+IEySOSJPa6hD6RP73UcA+EVycB47r1tHjCeHNXYQHml1cj7aZJMRHV/AJ60ELcB5pCg7c1N2toT6ZWS7YO29Ps=
+X-Received: by 2002:a05:6214:410d:b0:742:1ea2:b5fa with SMTP id
+ 6a1803df08f44-767beaa719cmr24286056d6.27.1757659351417; Thu, 11 Sep 2025
+ 23:42:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250910052335.1151048-1-wangjinchao600@gmail.com>
+References: <20250910052335.1151048-1-wangjinchao600@gmail.com> <aMO07xMDpDdDc1zm@mdev>
+In-Reply-To: <aMO07xMDpDdDc1zm@mdev>
+From: Alexander Potapenko <glider@google.com>
+Date: Fri, 12 Sep 2025 08:41:54 +0200
+X-Gm-Features: AS18NWC5FlcfxTDi4nqpRg0jzSdo_HN5yk0SuuDRYsNBfDIot3LDMm7TkcnabIg
+Message-ID: <CAG_fn=V5LUhQQeCo9cNBKX1ys3OivB49TuSeWoPN-MPT=YTG6g@mail.gmail.com>
+Subject: Re: [PATCH v3 00/19] mm/ksw: Introduce real-time Kernel Stack Watch
+ debugging tool
+To: Jinchao Wang <wangjinchao600@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Mike Rapoport <rppt@kernel.org>, 
+	"Naveen N . Rao" <naveen@kernel.org>, Andrey Ryabinin <ryabinin.a.a@gmail.com>, 
+	Andrey Konovalov <andreyknvl@gmail.com>, Dmitry Vyukov <dvyukov@google.com>, 
+	Vincenzo Frascino <vincenzo.frascino@arm.com>, kasan-dev@googlegroups.com, 
+	"David S. Miller" <davem@davemloft.net>, Steven Rostedt <rostedt@goodmis.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	"Liang, Kan" <kan.liang@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-FYI: The current patchset contains lockdep issues due to the kprobe handler
-running in NMI context. Please do not spend time reviewing this version.
-Thanks.
--- 
-Jinchao
+On Fri, Sep 12, 2025 at 7:51=E2=80=AFAM Jinchao Wang <wangjinchao600@gmail.=
+com> wrote:
+>
+> FYI: The current patchset contains lockdep issues due to the kprobe handl=
+er
+> running in NMI context. Please do not spend time reviewing this version.
+> Thanks.
+> --
+> Jinchao
+
+Hi Jinchao,
+
+In the next version, could you please elaborate more on the user
+workflow of this tool?
+It occurs to me that in order to detect the corruption the user has to
+know precisely in which function the corruption is happening, which is
+usually the hardest part.
+
+--=20
+Alexander Potapenko
+Software Engineer
+
+Google Germany GmbH
+Erika-Mann-Stra=C3=9Fe, 33
+80636 M=C3=BCnchen
+
+Gesch=C3=A4ftsf=C3=BChrer: Paul Manicle, Liana Sebastian
+Registergericht und -nummer: Hamburg, HRB 86891
+Sitz der Gesellschaft: Hamburg
