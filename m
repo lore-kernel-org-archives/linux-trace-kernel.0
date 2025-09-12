@@ -1,124 +1,222 @@
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12F26219E8C
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 12 Sep 2025 02:55:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A27322FAFD
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 12 Sep 2025 03:29:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757645721; cv=none; b=rx9xTk8TMI2hUEo0XU76kXN3e5D6eqNWzi8UtWQPVWP344ghuFAy/vZnrjbBB3nl+vE9lv2UHoPqVq4xpTXrZOpCHptjyz5qCJxo1d5/DsDfHrW7zNI1+q+MiRqjKIQHnaESU5g4SJu00KdecOOWvcaLrmjsq1AWtAxJKnBA+g8=
+	t=1757647778; cv=none; b=UFL9lSoIwpDX3lzeB+mWscxkzbVBNaW9/tl7kDjflcWEDBfPYS4uhMmZ3lJLW5g1A04hejitHTAZ28rYMGrVCXijjXEWQhBHLRLtlWePSvNJHzl0O78I9BsfYHB2rT98C2E+lv9ZBFCAsxOY/VpSteSZfUhjpSD4Gz6xjsbwBNE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757645721; c=relaxed/simple;
-	bh=8dUblNqD+QvR3lypM6+6pgQKaz5acFHh70UWBGlz9eA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZmLY8HHc/Bz8HQNM+vlo0nTW0/jMHBwZNlqLeDDGmYApNbcp2VBep+yi4cuDzZsWNHO6zcSiuXeO6T/E0acuF/mDBug0FNn3Zmw6R4+HVUygD6xv9A9goKqfypTW0uVz0eZkaG9kCpOTdSZywcvc9d4BtXKC9ZEeY2/pHCY61/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VKoIXlND; arc=none smtp.client-ip=209.85.215.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1757647778; c=relaxed/simple;
+	bh=Hg03KZxxsk+1MYt3WijA1FrqtyCaQoAa06lPJceCr1I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GvgR2dT6QvKCIGGfzOKDFZfnhLIasHaDdQpiwEZqT5Iklx3cpAW6hTZ6l+uJkEJxpLMYvpllBEonJu8kW+YNHa7OQqveIXXnisddsSHFwuwAnXXAYlBNoq65fVD/N8L466tAoJUfKhfQN0lNB/YfdyMXbbbeVWZH19bk7QZn8e4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ALXlPibO; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VKoIXlND"
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-b4fb8d3a2dbso1050761a12.3
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 11 Sep 2025 19:55:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1757645719; x=1758250519; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8dUblNqD+QvR3lypM6+6pgQKaz5acFHh70UWBGlz9eA=;
-        b=VKoIXlNDVjjQcM0nV8J6JZHH10HMkxnCiF5gnIodzWTX5ioxi3aujvaz4MP4X1JgaE
-         gMg3L0M4m5Ykn4sFNfDpBvLAijNPWD44+UVuscgXpHhJn4lJfPIGnvxIedOYeS/9S800
-         qiA0A7DDRCTduJa5zK7HqOBc1dv8EeKJUKMqvrH3WJ3FXiUMqZ4ObrA/PHTEE3ntiTjQ
-         CfSkB1+OuOl84NrRiTB7BPkMGo2Kt0Eku4xt4znS20bqfufpJdSc7TadRbgcUq2OVSyd
-         wMdGS81EkZuHLxsXzB+e1DQAEEY6csky8ch9I4XocMIjQG1Aepm1Hd/CUTXkFOzoMwRw
-         lS7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757645719; x=1758250519;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8dUblNqD+QvR3lypM6+6pgQKaz5acFHh70UWBGlz9eA=;
-        b=BXubN2CUI9y4A26RbdnXTOzPx8uU/C2ImXJY6AYtQGG6mIAWRpMz+DiGk3oO+uCVse
-         UVGysVKTlYKzx3gJyjO9I4VS9zXIwYyBCca2EZNCDz/V8LdQATbZqVTa8GsUWWdGjHdL
-         tDICFtaFOBYV7ey270NgRSs0qupScDgANv6qOkW5drFjd+5VnO89Zfsk8gy5ijqXNhq5
-         VTU5arOYDWw2w60BLPVBiAsuFczkimJDlt+NxNILW7aMGQuYVFf+bl16PV93rO/72oRu
-         xJac48B87AYySWFY5+zyffkCBGDCd+pLeVb5wnMGblEZora3zcdyv3fToRJ0EsNGRZef
-         BzLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWVkfmteFymfDHdGdvF9M9quM8O3YTYaZ22aVU9bu+k4WUH3u7dYUAfwLnfFVhBcc/JPvqHdpFjVrm6QsoqSVqc0YE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz4Y4lwuOjbC8karAxMFCnmrk6z08xzVzu2Iix4prDYGT1rdwyS
-	La3Ga77Ho72oDGulwuwwUfjE1f9FmdWQi1SFXA/cbJwvmwNvpz9PFjQ/JIBCDQ==
-X-Gm-Gg: ASbGncuPSk6P4ceFfn02F3ur+s6QxwD+lUl1JsYVUAoqs9E8qgnTimFdmiiYTBuhzlH
-	w01g/KrxgeKltclWzXn8y1O/MFK3N+/yk+I1ijIBNjvRZKX5a/sW2D6V0tSpR1wfdkFBRbkyrzf
-	1F5cyZfWliwitkS5a9pGCjINNI/PXYTLoSbVOS1XNa4Qfo3XZFz+HerjOUSqB2+gPD5FCX7gG73
-	ypJkcVFUC7r0aqJedGJhH8UnYiQRb9eYKbjjagOPak97Caq5+hG3p5JGkMJod9kIuEWkvnXkIik
-	tWhfq+iczfPqYqd0tbqZoAnaF7XV49OrH0mcr6p6hvqJ5ZhnKl5pL5BLAVFuNuY/jPF1LheShAr
-	gb6jR55CVg9YrdCM0vXDsEIywnA==
-X-Google-Smtp-Source: AGHT+IH5JN5qNkoNcsYWg6dw0fXdbfeF5sEn0cts8H3wCmJnWb9B3BmToRmZiDopftsOn3Mj7ikpQw==
-X-Received: by 2002:a17:90b:17d2:b0:32d:8eb1:4e26 with SMTP id 98e67ed59e1d1-32de5144a8fmr1650790a91.30.1757645719140;
-        Thu, 11 Sep 2025 19:55:19 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-32dd632692bsm4479084a91.25.2025.09.11.19.55.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Sep 2025 19:55:18 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id 1BF0941FA3A0; Fri, 12 Sep 2025 09:55:15 +0700 (WIB)
-Date: Fri, 12 Sep 2025 09:55:15 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Documentation <linux-doc@vger.kernel.org>,
-	Linux Kernel Tracing <linux-trace-kernel@vger.kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Jonathan Corbet <corbet@lwn.net>, Tom Zanussi <zanussi@kernel.org>
-Subject: Re: [PATCH 5/5] Documentation: trace: histogram: Link to ftrace docs
-Message-ID: <aMOLk7SAOrjogIy-@archie.me>
-References: <20250911042527.22573-1-bagasdotme@gmail.com>
- <20250911042527.22573-6-bagasdotme@gmail.com>
- <20250912095827.3d5a3feb80d5c6c44667328f@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ALXlPibO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1757647774;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=XS6u33nxOdz8zmIuHpnx05q90XDI86YR6KQOnGvzeFk=;
+	b=ALXlPibOkCTUp7iUcs0umasaR3/IxrWteJWzC4CzABncWKvf11hx0YhdPfjF9dRmUDNb+k
+	bewXJSO+1F5xDfUdPWdb+gWV/SR1jZqVNIDX7Gi374wCCg3BlCQfwukmMZj/LsuRNU/gOf
+	zS9p07RHcpWY8lKjcQig/3kWebAtCK0=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-149-3TICFVZ8MR6u5KpFCsMWKg-1; Thu,
+ 11 Sep 2025 23:29:28 -0400
+X-MC-Unique: 3TICFVZ8MR6u5KpFCsMWKg-1
+X-Mimecast-MFC-AGG-ID: 3TICFVZ8MR6u5KpFCsMWKg_1757647759
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B15661955E88;
+	Fri, 12 Sep 2025 03:29:17 +0000 (UTC)
+Received: from h1.redhat.com (unknown [10.22.80.28])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 25C571800451;
+	Fri, 12 Sep 2025 03:29:03 +0000 (UTC)
+From: Nico Pache <npache@redhat.com>
+To: linux-mm@kvack.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: david@redhat.com,
+	ziy@nvidia.com,
+	baolin.wang@linux.alibaba.com,
+	lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com,
+	ryan.roberts@arm.com,
+	dev.jain@arm.com,
+	corbet@lwn.net,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	akpm@linux-foundation.org,
+	baohua@kernel.org,
+	willy@infradead.org,
+	peterx@redhat.com,
+	wangkefeng.wang@huawei.com,
+	usamaarif642@gmail.com,
+	sunnanyong@huawei.com,
+	vishal.moola@gmail.com,
+	thomas.hellstrom@linux.intel.com,
+	yang@os.amperecomputing.com,
+	kas@kernel.org,
+	aarcange@redhat.com,
+	raquini@redhat.com,
+	anshuman.khandual@arm.com,
+	catalin.marinas@arm.com,
+	tiwai@suse.de,
+	will@kernel.org,
+	dave.hansen@linux.intel.com,
+	jack@suse.cz,
+	cl@gentwo.org,
+	jglisse@google.com,
+	surenb@google.com,
+	zokeefe@google.com,
+	hannes@cmpxchg.org,
+	rientjes@google.com,
+	mhocko@suse.com,
+	rdunlap@infradead.org,
+	hughd@google.com,
+	richard.weiyang@gmail.com,
+	lance.yang@linux.dev,
+	vbabka@suse.cz,
+	rppt@kernel.org,
+	jannh@google.com,
+	pfalcato@suse.de
+Subject: [PATCH v11 00/15] khugepaged: mTHP support
+Date: Thu, 11 Sep 2025 21:27:55 -0600
+Message-ID: <20250912032810.197475-1-npache@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="0lyQ/UvkQaG+h1EJ"
-Content-Disposition: inline
-In-Reply-To: <20250912095827.3d5a3feb80d5c6c44667328f@kernel.org>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
+The following series provides khugepaged with the capability to collapse
+anonymous memory regions to mTHPs.
 
---0lyQ/UvkQaG+h1EJ
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+To achieve this we generalize the khugepaged functions to no longer depend
+on PMD_ORDER. Then during the PMD scan, we use a bitmap to track individual
+pages that are occupied (!none/zero). After the PMD scan is done, we do
+binary recursion on the bitmap to find the optimal mTHP sizes for the PMD
+range. The restriction on max_ptes_none is removed during the scan, to make
+sure we account for the whole PMD range. When no mTHP size is enabled, the
+legacy behavior of khugepaged is maintained. max_ptes_none will be scaled
+by the attempted collapse order to determine how full a mTHP must be to be
+eligible for the collapse to occur. If a mTHP collapse is attempted, but
+contains swapped out, or shared pages, we don't perform the collapse. It is
+now also possible to collapse to mTHPs without requiring the PMD THP size
+to be enabled.
 
-On Fri, Sep 12, 2025 at 09:58:27AM +0900, Masami Hiramatsu wrote:
-> On Thu, 11 Sep 2025 11:25:27 +0700
-> Bagas Sanjaya <bagasdotme@gmail.com> wrote:
->=20
-> > In brief "Extended error information" section, details on error
-> > condition is referred to ftrace docs. Add the link to it.
->=20
-> It seems this does not add the link. Can you make a tag and
-> link to it?
+When enabling (m)THP sizes, if max_ptes_none >= HPAGE_PMD_NR/2 (255 on
+4K page size), it will be automatically capped to HPAGE_PMD_NR/2 - 1 for
+mTHP collapses to prevent collapse "creep" behavior. This prevents
+constantly promoting mTHPs to the next available size, which would occur
+because a collapse introduces more non-zero pages that would satisfy the
+promotion condition on subsequent scans.
 
-Nope.
+Patch 1:     Refactor/rename hpage_collapse
+Patch 2:     Refactoring to combine madvise_collapse and khugepaged
+Patch 3-7:   Generalize khugepaged functions for arbitrary orders
+Patch 8:     skip collapsing mTHP to smaller orders
+Patch 9-10:  Add per-order mTHP statistics and tracepoints
+Patch 11:    Introduce collapse_allowable_orders
+Patch 12-14: Introduce bitmap and mTHP collapse support
+Patch 15:    Documentation
 
-What the patch does instead is to convert :file: markup to proper
-cross-reference. I will fix the patch description in v2.
+---------
+ Testing
+---------
+- Built for x86_64, aarch64, ppc64le, and s390x
+- selftests mm
+- I created a test script that I used to push khugepaged to its limits
+   while monitoring a number of stats and tracepoints. The code is
+   available here[1] (Run in legacy mode for these changes and set mthp
+   sizes to inherit)
+   The summary from my testings was that there was no significant
+   regression noticed through this test. In some cases my changes had
+   better collapse latencies, and was able to scan more pages in the same
+   amount of time/work, but for the most part the results were consistent.
+- redis testing. I tested these changes along with my defer changes
+  (see followup [2] post for more details). We've decided to get the mTHP
+  changes merged first before attempting the defer series.
+- some basic testing on 64k page size.
+- lots of general use.
 
-Thanks.
+V11 Changes:
+- Minor nits and cleanup/refactoring
+- commit messages updates
+- split patches to make them easier to review
+- added helper functions for checking allowable orders and max_ptes_none
+- simplified anon_vma locking tracking to improve code readability
+- Added automatic cap to max_ptes_none for mTHP collapse to prevent "creep"
+- changed bitmap tracking to use page-level granularity instead of
+  chunk-based this removes inaccuracies/complexity
+- Improved documentation and comments throughout the series
+- Refactored collapse_single_pmd() for better readability
+- Added proper WARN_ON_ONCE() instead of BUG_ON() for better error handling
+- reordered patches to make them easier to review
+- merge Baolins patch to run khugepaged for all orders now that
+  collapse_allowable_orders is available
 
---=20
-An old man doll... just what I always wanted! - Clara
+V10: https://lore.kernel.org/lkml/20250819134205.622806-1-npache@redhat.com/
+V9 : https://lore.kernel.org/lkml/20250714003207.113275-1-npache@redhat.com/
+V8 : https://lore.kernel.org/lkml/20250702055742.102808-1-npache@redhat.com/
+V7 : https://lore.kernel.org/lkml/20250515032226.128900-1-npache@redhat.com/
+V6 : https://lore.kernel.org/lkml/20250515030312.125567-1-npache@redhat.com/
+V5 : https://lore.kernel.org/lkml/20250428181218.85925-1-npache@redhat.com/
+V4 : https://lore.kernel.org/lkml/20250417000238.74567-1-npache@redhat.com/
+V3 : https://lore.kernel.org/lkml/20250414220557.35388-1-npache@redhat.com/
+V2 : https://lore.kernel.org/lkml/20250211003028.213461-1-npache@redhat.com/
+V1 : https://lore.kernel.org/lkml/20250108233128.14484-1-npache@redhat.com/
 
---0lyQ/UvkQaG+h1EJ
-Content-Type: application/pgp-signature; name=signature.asc
+A big thanks to everyone that has reviewed, tested, and participated in
+the development process. Its been a great experience working with all of
+you on this long endeavour.
 
------BEGIN PGP SIGNATURE-----
+[1] - https://gitlab.com/npache/khugepaged_mthp_test
+[2] - https://lore.kernel.org/lkml/20250515033857.132535-1-npache@redhat.com/
 
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaMOLkAAKCRD2uYlJVVFO
-o+jSAQDIDumTK8LVsSWKsUI3RUgdsGDqRYt2dirDbpbLNSnz0wEAhsnSBv69gyj9
-k5kn7BpHmEuJjj63nZFMXRa0UbXj8Ao=
-=+PaU
------END PGP SIGNATURE-----
+Baolin Wang (1):
+  khugepaged: run khugepaged for all orders
 
---0lyQ/UvkQaG+h1EJ--
+Dev Jain (1):
+  khugepaged: generalize alloc_charge_folio()
+
+Nico Pache (13):
+  khugepaged: rename hpage_collapse_* to collapse_*
+  introduce collapse_single_pmd to unify khugepaged and madvise_collapse
+  khugepaged: generalize hugepage_vma_revalidate for mTHP support
+  khugepaged: generalize __collapse_huge_page_* for mTHP support
+  khugepaged: introduce collapse_max_ptes_none helper function
+  khugepaged: generalize collapse_huge_page for mTHP collapse
+  khugepaged: skip collapsing mTHP to smaller orders
+  khugepaged: add per-order mTHP collapse failure statistics
+  khugepaged: improve tracepoints for mTHP orders
+  khugepaged: introduce collapse_allowable_orders helper function
+  khugepaged: Introduce mTHP collapse support
+  khugepaged: avoid unnecessary mTHP collapse attempts
+  Documentation: mm: update the admin guide for mTHP collapse
+
+ Documentation/admin-guide/mm/transhuge.rst |  91 ++-
+ include/linux/huge_mm.h                    |   5 +
+ include/linux/khugepaged.h                 |   2 +
+ include/trace/events/huge_memory.h         |  34 +-
+ mm/huge_memory.c                           |  11 +
+ mm/khugepaged.c                            | 612 ++++++++++++++-------
+ mm/mremap.c                                |   2 +-
+ 7 files changed, 535 insertions(+), 222 deletions(-)
+
+-- 
+2.51.0
+
