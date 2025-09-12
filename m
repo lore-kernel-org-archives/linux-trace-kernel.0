@@ -1,113 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9D312AE66;
-	Fri, 12 Sep 2025 01:07:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12F26219E8C
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 12 Sep 2025 02:55:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757639249; cv=none; b=h+2h9ytysy3Gs7fDDs34IJx7e1pLmMAjNwGYby4IKAEOE3zxlsZVods5/dPreSFeMh71c46SwMuk7eT05eabb7Q8hkRszmHZYQDvRBN0kBB+yUWsHW8ofIswMPvheaMttc664C+P0shynl+/HLnKldOLQQ/DiYubVHrQ7/alh6o=
+	t=1757645721; cv=none; b=rx9xTk8TMI2hUEo0XU76kXN3e5D6eqNWzi8UtWQPVWP344ghuFAy/vZnrjbBB3nl+vE9lv2UHoPqVq4xpTXrZOpCHptjyz5qCJxo1d5/DsDfHrW7zNI1+q+MiRqjKIQHnaESU5g4SJu00KdecOOWvcaLrmjsq1AWtAxJKnBA+g8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757639249; c=relaxed/simple;
-	bh=PXuMJATVT4V0Y16Ka+lqtvBlfX81tB2vy3KhW0U7yNw=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=rFy91xpFZ7NefJiOToOQq3B0STEChovQll3jGUJiaEVf0/qeaR+O2Wv4RPry0giKnDkp3JhiptzVg2AKF3E4uIZgYvhGI621e6+/ZGR+oZ4keX6AD/M728si8DtDJadhJ2nC5OtC0rYfD3KewOAR8rJcJSBssCaJMfHgGhuBhD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dLrXaBU9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1757645721; c=relaxed/simple;
+	bh=8dUblNqD+QvR3lypM6+6pgQKaz5acFHh70UWBGlz9eA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZmLY8HHc/Bz8HQNM+vlo0nTW0/jMHBwZNlqLeDDGmYApNbcp2VBep+yi4cuDzZsWNHO6zcSiuXeO6T/E0acuF/mDBug0FNn3Zmw6R4+HVUygD6xv9A9goKqfypTW0uVz0eZkaG9kCpOTdSZywcvc9d4BtXKC9ZEeY2/pHCY61/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VKoIXlND; arc=none smtp.client-ip=209.85.215.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dLrXaBU9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EA00C4CEF0;
-	Fri, 12 Sep 2025 01:07:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757639247;
-	bh=PXuMJATVT4V0Y16Ka+lqtvBlfX81tB2vy3KhW0U7yNw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=dLrXaBU9sm6JjTx7yMnrAWHzGggmPl9ChW3HUUfCJfPQ1RupdUGBZupZevzvrNAnj
-	 qqWKh9IbNcZOots0tCo95xxx38IqCC5RLsHH+wgRArii+KRrvzl9hivVoGr0Qp7Mdj
-	 e6JIb3kknNcn8VC1kJf3GL6WzF9Zu/3FatptpsAQjwFcfw6BasZKVrhcMcCRTXgsKs
-	 bj0uLjCJNYkas6NBhgR6Sup+5dN6l79ufOCpZ+TcaeYVhLsRtLmLFz4uAF6rYYP3VB
-	 mBwt859ZmB4c1FCaydz731HnFwNvP3RJpzinCL6N042yJBgpiazhbYOpwywUejcy5V
-	 f6EcX6h9WVWdQ==
-Date: Fri, 12 Sep 2025 10:07:23 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Linus Torvalds
- <torvalds@linux-foundation.org>, linux-mm@kvack.org, Kees Cook
- <keescook@chromium.org>, Aleksa Sarai <cyphar@cyphar.com>, Al Viro
- <viro@ZenIV.linux.org.uk>
-Subject: Re: [PATCH] uaccess: Comment that copy to/from inatomic requires
- page fault disabled
-Message-Id: <20250912100723.4fce2b29c4d77f3a89c0b636@kernel.org>
-In-Reply-To: <20250910161820.247f526a@gandalf.local.home>
-References: <20250910161820.247f526a@gandalf.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VKoIXlND"
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-b4fb8d3a2dbso1050761a12.3
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 11 Sep 2025 19:55:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1757645719; x=1758250519; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=8dUblNqD+QvR3lypM6+6pgQKaz5acFHh70UWBGlz9eA=;
+        b=VKoIXlNDVjjQcM0nV8J6JZHH10HMkxnCiF5gnIodzWTX5ioxi3aujvaz4MP4X1JgaE
+         gMg3L0M4m5Ykn4sFNfDpBvLAijNPWD44+UVuscgXpHhJn4lJfPIGnvxIedOYeS/9S800
+         qiA0A7DDRCTduJa5zK7HqOBc1dv8EeKJUKMqvrH3WJ3FXiUMqZ4ObrA/PHTEE3ntiTjQ
+         CfSkB1+OuOl84NrRiTB7BPkMGo2Kt0Eku4xt4znS20bqfufpJdSc7TadRbgcUq2OVSyd
+         wMdGS81EkZuHLxsXzB+e1DQAEEY6csky8ch9I4XocMIjQG1Aepm1Hd/CUTXkFOzoMwRw
+         lS7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757645719; x=1758250519;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8dUblNqD+QvR3lypM6+6pgQKaz5acFHh70UWBGlz9eA=;
+        b=BXubN2CUI9y4A26RbdnXTOzPx8uU/C2ImXJY6AYtQGG6mIAWRpMz+DiGk3oO+uCVse
+         UVGysVKTlYKzx3gJyjO9I4VS9zXIwYyBCca2EZNCDz/V8LdQATbZqVTa8GsUWWdGjHdL
+         tDICFtaFOBYV7ey270NgRSs0qupScDgANv6qOkW5drFjd+5VnO89Zfsk8gy5ijqXNhq5
+         VTU5arOYDWw2w60BLPVBiAsuFczkimJDlt+NxNILW7aMGQuYVFf+bl16PV93rO/72oRu
+         xJac48B87AYySWFY5+zyffkCBGDCd+pLeVb5wnMGblEZora3zcdyv3fToRJ0EsNGRZef
+         BzLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWVkfmteFymfDHdGdvF9M9quM8O3YTYaZ22aVU9bu+k4WUH3u7dYUAfwLnfFVhBcc/JPvqHdpFjVrm6QsoqSVqc0YE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4Y4lwuOjbC8karAxMFCnmrk6z08xzVzu2Iix4prDYGT1rdwyS
+	La3Ga77Ho72oDGulwuwwUfjE1f9FmdWQi1SFXA/cbJwvmwNvpz9PFjQ/JIBCDQ==
+X-Gm-Gg: ASbGncuPSk6P4ceFfn02F3ur+s6QxwD+lUl1JsYVUAoqs9E8qgnTimFdmiiYTBuhzlH
+	w01g/KrxgeKltclWzXn8y1O/MFK3N+/yk+I1ijIBNjvRZKX5a/sW2D6V0tSpR1wfdkFBRbkyrzf
+	1F5cyZfWliwitkS5a9pGCjINNI/PXYTLoSbVOS1XNa4Qfo3XZFz+HerjOUSqB2+gPD5FCX7gG73
+	ypJkcVFUC7r0aqJedGJhH8UnYiQRb9eYKbjjagOPak97Caq5+hG3p5JGkMJod9kIuEWkvnXkIik
+	tWhfq+iczfPqYqd0tbqZoAnaF7XV49OrH0mcr6p6hvqJ5ZhnKl5pL5BLAVFuNuY/jPF1LheShAr
+	gb6jR55CVg9YrdCM0vXDsEIywnA==
+X-Google-Smtp-Source: AGHT+IH5JN5qNkoNcsYWg6dw0fXdbfeF5sEn0cts8H3wCmJnWb9B3BmToRmZiDopftsOn3Mj7ikpQw==
+X-Received: by 2002:a17:90b:17d2:b0:32d:8eb1:4e26 with SMTP id 98e67ed59e1d1-32de5144a8fmr1650790a91.30.1757645719140;
+        Thu, 11 Sep 2025 19:55:19 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-32dd632692bsm4479084a91.25.2025.09.11.19.55.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Sep 2025 19:55:18 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id 1BF0941FA3A0; Fri, 12 Sep 2025 09:55:15 +0700 (WIB)
+Date: Fri, 12 Sep 2025 09:55:15 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Documentation <linux-doc@vger.kernel.org>,
+	Linux Kernel Tracing <linux-trace-kernel@vger.kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Jonathan Corbet <corbet@lwn.net>, Tom Zanussi <zanussi@kernel.org>
+Subject: Re: [PATCH 5/5] Documentation: trace: histogram: Link to ftrace docs
+Message-ID: <aMOLk7SAOrjogIy-@archie.me>
+References: <20250911042527.22573-1-bagasdotme@gmail.com>
+ <20250911042527.22573-6-bagasdotme@gmail.com>
+ <20250912095827.3d5a3feb80d5c6c44667328f@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-
-On Wed, 10 Sep 2025 16:18:20 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> From: Steven Rostedt <rostedt@goodmis.org>
-> 
-> The functions __copy_from_user_inatomic() and __copy_to_user_inatomic()
-> both require that either the user space memory is pinned, or that page
-> faults are disabled when they are called. If page faults are not disabled,
-> and the memory is not present, the fault handling of reading or writing to
-> that memory may cause the kernel to schedule. That would be bad in an
-> atomic context.
-> 
-> Link: https://lore.kernel.org/all/20250819105152.2766363-1-luogengkun@huaweicloud.com/
-> 
-
-Looks good to me.
-
-Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Thanks,
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="0lyQ/UvkQaG+h1EJ"
+Content-Disposition: inline
+In-Reply-To: <20250912095827.3d5a3feb80d5c6c44667328f@kernel.org>
 
 
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->  include/linux/uaccess.h | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
-> index 1beb5b395d81..add99fa9b656 100644
-> --- a/include/linux/uaccess.h
-> +++ b/include/linux/uaccess.h
-> @@ -86,6 +86,12 @@
->   * as usual) and both source and destination can trigger faults.
->   */
->  
-> +/*
-> + * __copy_from_user_inatomic() is safe to use in an atomic context but
-> + * the user space memory must either be pinned in memory, or page faults
-> + * must be disabled, otherwise the page fault handling may cause the function
-> + * to schedule.
-> + */
->  static __always_inline __must_check unsigned long
->  __copy_from_user_inatomic(void *to, const void __user *from, unsigned long n)
->  {
-> @@ -124,7 +130,8 @@ __copy_from_user(void *to, const void __user *from, unsigned long n)
->   * Copy data from kernel space to user space.  Caller must check
->   * the specified block with access_ok() before calling this function.
->   * The caller should also make sure he pins the user space address
-> - * so that we don't result in page fault and sleep.
-> + * or call page_fault_disable() so that we don't result in a page fault
-> + * and sleep.
->   */
->  static __always_inline __must_check unsigned long
->  __copy_to_user_inatomic(void __user *to, const void *from, unsigned long n)
-> -- 
-> 2.50.1
-> 
-> 
+--0lyQ/UvkQaG+h1EJ
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, Sep 12, 2025 at 09:58:27AM +0900, Masami Hiramatsu wrote:
+> On Thu, 11 Sep 2025 11:25:27 +0700
+> Bagas Sanjaya <bagasdotme@gmail.com> wrote:
+>=20
+> > In brief "Extended error information" section, details on error
+> > condition is referred to ftrace docs. Add the link to it.
+>=20
+> It seems this does not add the link. Can you make a tag and
+> link to it?
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Nope.
+
+What the patch does instead is to convert :file: markup to proper
+cross-reference. I will fix the patch description in v2.
+
+Thanks.
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--0lyQ/UvkQaG+h1EJ
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaMOLkAAKCRD2uYlJVVFO
+o+jSAQDIDumTK8LVsSWKsUI3RUgdsGDqRYt2dirDbpbLNSnz0wEAhsnSBv69gyj9
+k5kn7BpHmEuJjj63nZFMXRa0UbXj8Ao=
+=+PaU
+-----END PGP SIGNATURE-----
+
+--0lyQ/UvkQaG+h1EJ--
