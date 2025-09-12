@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FEF917D2;
-	Fri, 12 Sep 2025 00:59:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69E57168BD;
+	Fri, 12 Sep 2025 01:01:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757638778; cv=none; b=YSZvsmczmbrv7DYz+vR48DLEy/5ARskyzA3WgzyEwskzsrArPFXeFzRwRJIPVyLCDGFtWFwNtndeKYTtwUxVpxhJNUDRvxzpOz13WTNOE2c/1JIRpgQCgP93Bd7WZ+vDkItBXTGl9h6Tk8sOtDXgb++kIqSRfmnwkek36RHkqKc=
+	t=1757638912; cv=none; b=Swj6qlAiXw3ArelUFCZ79W4YTS7y5k0vDNUG3rpEvxR/6o559TfG4ElnR5Fx0aJK2mrWoGCpHNZS3nPaq0DvXYB6RZnnlAinssD/R8duTWXJ1yljyMX+a2GNJcqhTveq5UGWgIxdikOMHngONdLSBCC9TiS2AHliluUYcE1yo3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757638778; c=relaxed/simple;
-	bh=Y0hEhUFysEMi8sX74VGSpdf0sMJvMTy+m9KyRq0xdl4=;
+	s=arc-20240116; t=1757638912; c=relaxed/simple;
+	bh=cwIa3L6pVeCvHlXrMetDwmrNPir3lOVlkQuzvO85JGk=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=s+zo1E2esT0nLVODkwu+jg1lhvO9RHJ2rjWaZhg8xgv6VR82kfsgjwd0eISerRt2iCd6PWve3GoBiI9gH0cYERpqnGaKEzYbw1OnSZ/5DqPhP5nAhpwiHAwpf01t+RrXheU+pmP5xY2a97I3ai5E0jg6SqzvsOGdUiu2sfArOjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d/LkZt//; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=uWHdn7carOcVqry6V6j3BRGOlOvGbmERTzlJoq/auQ7HuX05A/2zwPF7pQvRqJolFB3SCX1pRBaCpLhSFYvHrkGtMYNdnxj8WLOp34tHGPFOW4tKJtzKHg/ZQXug6uLgasnJsD6sex2wdrFQ2ssEzVXKKs/8k/P7/PYISr3eJtw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SUMdew4p; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d/LkZt//"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B999C4CEF0;
-	Fri, 12 Sep 2025 00:59:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SUMdew4p"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B984FC4CEF0;
+	Fri, 12 Sep 2025 01:01:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757638777;
-	bh=Y0hEhUFysEMi8sX74VGSpdf0sMJvMTy+m9KyRq0xdl4=;
+	s=k20201202; t=1757638911;
+	bh=cwIa3L6pVeCvHlXrMetDwmrNPir3lOVlkQuzvO85JGk=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=d/LkZt//Svr3B1k8Vx/cx+eR7v+6CSpXeVwDcn5UVCyF57DopReBZ2kNUwodSyfmf
-	 4ZYYEQDGGUzeDuYWJbTjev2oqY6K0P2GEn072173p0iRHcBtY3ks/EeIv98kXB6yQO
-	 q4j2oQ8QMTGKcxtwNfI0f4OhRJsOMrAwC6KOS8srexz9fQ9ZmqgcSEXT6Fpfz2GHnW
-	 ysjgqNGPOeJxPaDnNO2VsWBDTkjx1SqBTExOJje3JzWXjRx27WHdTRof8XAmcTeCNv
-	 r7ttAcl/dMZvB8EbyfjdTBFl3DDqeQO9c7Zjl9F0ET62nGRV7X55g8wyUwWD0nLbqJ
-	 +uQ4h8PTcak2w==
-Date: Fri, 12 Sep 2025 09:59:33 +0900
+	b=SUMdew4plSbUY5QynvTzsVb3n3bnrwK1nAMmwDZ4EH7sCq1rDcDYNzP6b5q1t588x
+	 G9fFJUiFoiklXBDTw7E8PyTeANwOLqtibvBw6+XIUds73Mb3Q4XIhTkFfgVOwqfLWD
+	 OaPj06TN1xIACUUQyNiyOaALQ2a2rb6uHDCxMUe5OCCyGu0CdMursFMUw8dJAeiX4k
+	 NR3D0M1iAai1efrefv8vAGT5OR1xhFjL5TFvKoJ/YN9DhQfL+TSEv2QI4BQyezGmBR
+	 njPkdDSN/g62jCOfZoNYU4/GX2xXMcs9BSzpcR5Pz9WwZPZl2z3E0eOqd3LDA+xGrl
+	 YBO39nfHwYtKw==
+Date: Fri, 12 Sep 2025 10:01:46 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 To: Bagas Sanjaya <bagasdotme@gmail.com>
 Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux
@@ -35,12 +35,12 @@ Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux
  Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
  <mathieu.desnoyers@efficios.com>, Jonathan Corbet <corbet@lwn.net>, Tom
  Zanussi <zanussi@kernel.org>
-Subject: Re: [PATCH 1/5] Documentation: trace: histogram: Fix histogram
- trigger subsection number order
-Message-Id: <20250912095933.79a4d8b71031310b310de173@kernel.org>
-In-Reply-To: <20250911042527.22573-2-bagasdotme@gmail.com>
+Subject: Re: [PATCH 2/5] Documentation: trace: histogram-design: Trim
+ trailing vertices in diagram explanation text
+Message-Id: <20250912100146.0e9948c812985ca45bfee087@kernel.org>
+In-Reply-To: <20250911042527.22573-3-bagasdotme@gmail.com>
 References: <20250911042527.22573-1-bagasdotme@gmail.com>
-	<20250911042527.22573-2-bagasdotme@gmail.com>
+	<20250911042527.22573-3-bagasdotme@gmail.com>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -51,128 +51,206 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu, 11 Sep 2025 11:25:23 +0700
+On Thu, 11 Sep 2025 11:25:24 +0700
 Bagas Sanjaya <bagasdotme@gmail.com> wrote:
 
-> Section numbering in subsections of "Histogram Trigger Command" sections
-> is inconsistent in order. In particular, "'hist' trigger examples" is
-> erroneously numbered as 6.2, which is a leftover from  b8df4a3634e08a
-> ("tracing: Move hist trigger Documentation to histogram.txt").
+> Diagram explanation text is supposed to be interleaved commentary
+> between diagram parts that are spread out, but it outputs ugly in
+> htmldocs due to trailing vertices as if both the explanation and the
+> diagram are in the same literal code block.
 > 
-> Fix the order.
+> Trim trailing vertices.
 
-Thanks for fixing. This looks good to me.
+I got it (e.g. https://docs.kernel.org/trace/histogram-design.html),
+yeah it should be removed.
+
+Looks good to me.
 
 Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Thanks,
 
 > 
 > Signed-off-by: Bagas Sanjaya <bagasdotme@gmail.com>
 > ---
->  Documentation/trace/histogram.rst | 34 +++++++++++++++----------------
->  1 file changed, 17 insertions(+), 17 deletions(-)
+>  Documentation/trace/histogram-design.rst | 138 +++++++++++------------
+>  1 file changed, 69 insertions(+), 69 deletions(-)
 > 
-> diff --git a/Documentation/trace/histogram.rst b/Documentation/trace/histogram.rst
-> index af6d2e15568ebd..d158dadaa42447 100644
-> --- a/Documentation/trace/histogram.rst
-> +++ b/Documentation/trace/histogram.rst
-> @@ -186,8 +186,8 @@ Documentation written by Tom Zanussi
->    The examples below provide a more concrete illustration of the
->    concepts and typical usage patterns discussed above.
+> diff --git a/Documentation/trace/histogram-design.rst b/Documentation/trace/histogram-design.rst
+> index 5765eb3e9efa78..231a12bd7d461c 100644
+> --- a/Documentation/trace/histogram-design.rst
+> +++ b/Documentation/trace/histogram-design.rst
+> @@ -142,30 +142,30 @@ elements for a couple hypothetical keys and values.::
+>                               +--------------+                            |  |
+>                                              n_keys = n_fields - n_vals   |  |
 >  
-> -'special' event fields
-> -------------------------
-> +2.1. 'special' event fields
-> +---------------------------
+> -The hist_data n_vals and n_fields delineate the extent of the fields[]   |  |
+> -array and separate keys from values for the rest of the code.            |  |
+> +The hist_data n_vals and n_fields delineate the extent of the fields[]
+> +array and separate keys from values for the rest of the code.
 >  
->    There are a number of 'special event fields' available for use as
->    keys or values in a hist trigger.  These look like and behave as if
-> @@ -204,16 +204,16 @@ Documentation written by Tom Zanussi
->      common_cpu             int  the cpu on which the event occurred.
->      ====================== ==== =======================================
+> -Below is a run-time representation of the tracing_map part of the        |  |
+> -histogram, with pointers from various parts of the fields[] array        |  |
+> -to corresponding parts of the tracing_map.                               |  |
+> +Below is a run-time representation of the tracing_map part of the
+> +histogram, with pointers from various parts of the fields[] array
+> +to corresponding parts of the tracing_map.
 >  
-> -Extended error information
-> ---------------------------
-> +2.2. Extended error information
-> +-------------------------------
+> -The tracing_map consists of an array of tracing_map_entrys and a set     |  |
+> -of preallocated tracing_map_elts (abbreviated below as map_entry and     |  |
+> -map_elt).  The total number of map_entrys in the hist_data.map array =   |  |
+> -map->max_elts (actually map->map_size but only max_elts of those are     |  |
+> -used.  This is a property required by the map_insert() algorithm).       |  |
+> +The tracing_map consists of an array of tracing_map_entrys and a set
+> +of preallocated tracing_map_elts (abbreviated below as map_entry and
+> +map_elt).  The total number of map_entrys in the hist_data.map array =
+> +map->max_elts (actually map->map_size but only max_elts of those are
+> +used.  This is a property required by the map_insert() algorithm).
 >  
->    For some error conditions encountered when invoking a hist trigger
->    command, extended error information is available via the
->    tracing/error_log file.  See Error Conditions in
->    :file:`Documentation/trace/ftrace.rst` for details.
+> -If a map_entry is unused, meaning no key has yet hashed into it, its     |  |
+> -.key value is 0 and its .val pointer is NULL.  Once a map_entry has      |  |
+> -been claimed, the .key value contains the key's hash value and the       |  |
+> -.val member points to a map_elt containing the full key and an entry     |  |
+> -for each key or value in the map_elt.fields[] array.  There is an        |  |
+> -entry in the map_elt.fields[] array corresponding to each hist_field     |  |
+> -in the histogram, and this is where the continually aggregated sums      |  |
+> -corresponding to each histogram value are kept.                          |  |
+> +If a map_entry is unused, meaning no key has yet hashed into it, its
+> +.key value is 0 and its .val pointer is NULL.  Once a map_entry has
+> +been claimed, the .key value contains the key's hash value and the
+> +.val member points to a map_elt containing the full key and an entry
+> +for each key or value in the map_elt.fields[] array.  There is an
+> +entry in the map_elt.fields[] array corresponding to each hist_field
+> +in the histogram, and this is where the continually aggregated sums
+> +corresponding to each histogram value are kept.
 >  
-> -6.2 'hist' trigger examples
-> ----------------------------
-> +2.3. 'hist' trigger examples
-> +----------------------------
+> -The diagram attempts to show the relationship between the                |  |
+> -hist_data.fields[] and the map_elt.fields[] with the links drawn         |  |
+> +The diagram attempts to show the relationship between the
+> +hist_data.fields[] and the map_elt.fields[] with the links drawn
+>  between diagrams::
 >  
->    The first set of examples creates aggregations using the kmalloc
->    event.  The fields that can be used for the hist trigger are listed
-> @@ -1608,8 +1608,8 @@ Extended error information
->          Entries: 7
->          Dropped: 0
+>    +-----------+		                                                 |  |
+> @@ -440,31 +440,31 @@ sched_waking histogram
+>                                               n_keys = n_fields - n_vals   | | |
+>                                                                            | | |
 >  
-> -2.2 Inter-event hist triggers
-> ------------------------------
-> +2.4. Inter-event hist triggers
-> +------------------------------
+> -This is very similar to the basic case.  In the above diagram, we can     | | |
+> -see a new .flags member has been added to the struct hist_field           | | |
+> -struct, and a new entry added to hist_data.fields representing the ts0    | | |
+> -variable.  For a normal val hist_field, .flags is just 0 (modulo          | | |
+> -modifier flags), but if the value is defined as a variable, the .flags    | | |
+> -contains a set FL_VAR bit.                                                | | |
+> +This is very similar to the basic case.  In the above diagram, we can
+> +see a new .flags member has been added to the struct hist_field
+> +struct, and a new entry added to hist_data.fields representing the ts0
+> +variable.  For a normal val hist_field, .flags is just 0 (modulo
+> +modifier flags), but if the value is defined as a variable, the .flags
+> +contains a set FL_VAR bit.
 >  
->  Inter-event hist triggers are hist triggers that combine values from
->  one or more other events and create a histogram using that data.  Data
-> @@ -1685,8 +1685,8 @@ pseudo-file.
+> -As you can see, the ts0 entry's .var.idx member contains the index        | | |
+> -into the tracing_map_elts' .vars[] array containing variable values.      | | |
+> -This idx is used whenever the value of the variable is set or read.       | | |
+> -The map_elt.vars idx assigned to the given variable is assigned and       | | |
+> -saved in .var.idx by create_tracing_map_fields() after it calls           | | |
+> -tracing_map_add_var().                                                    | | |
+> +As you can see, the ts0 entry's .var.idx member contains the index
+> +into the tracing_map_elts' .vars[] array containing variable values.
+> +This idx is used whenever the value of the variable is set or read.
+> +The map_elt.vars idx assigned to the given variable is assigned and
+> +saved in .var.idx by create_tracing_map_fields() after it calls
+> +tracing_map_add_var().
 >  
->  These features are described in more detail in the following sections.
+> -Below is a representation of the histogram at run-time, which             | | |
+> -populates the map, along with correspondence to the above hist_data and   | | |
+> -hist_field data structures.                                               | | |
+> +Below is a representation of the histogram at run-time, which
+> +populates the map, along with correspondence to the above hist_data and
+> +hist_field data structures.
 >  
-> -2.2.1 Histogram Variables
-> --------------------------
-> +2.5. Histogram Variables
-> +------------------------
+> -The diagram attempts to show the relationship between the                 | | |
+> -hist_data.fields[] and the map_elt.fields[] and map_elt.vars[] with       | | |
+> -the links drawn between diagrams.  For each of the map_elts, you can      | | |
+> -see that the .fields[] members point to the .sum or .offset of a key      | | |
+> -or val and the .vars[] members point to the value of a variable.  The     | | |
+> -arrows between the two diagrams show the linkages between those           | | |
+> -tracing_map members and the field definitions in the corresponding        | | |
+> +The diagram attempts to show the relationship between the
+> +hist_data.fields[] and the map_elt.fields[] and map_elt.vars[] with
+> +the links drawn between diagrams.  For each of the map_elts, you can
+> +see that the .fields[] members point to the .sum or .offset of a key
+> +or val and the .vars[] members point to the value of a variable.  The
+> +arrows between the two diagrams show the linkages between those
+> +tracing_map members and the field definitions in the corresponding
+>  hist_data fields[] members.::
 >  
->  Variables are simply named locations used for saving and retrieving
->  values between matching events.  A 'matching' event is defined as an
-> @@ -1789,8 +1789,8 @@ or assigned to a variable and referenced in a subsequent expression::
+>    +-----------+		                                                  | | |
+> @@ -565,40 +565,40 @@ hist_data fields[] members.::
+>                                                        |               |     | |
+>                                                        +---------------+     | |
 >  
->  Variables can even hold stacktraces, which are useful with synthetic events.
+> -For each used map entry, there's a map_elt pointing to an array of          | |
+> -.vars containing the current value of the variables associated with         | |
+> -that histogram entry.  So in the above, the timestamp associated with       | |
+> -pid 999 is 113345679876, and the timestamp variable in the same             | |
+> -.var.idx for pid 4444 is 213499240729.                                      | |
+> +For each used map entry, there's a map_elt pointing to an array of
+> +.vars containing the current value of the variables associated with
+> +that histogram entry.  So in the above, the timestamp associated with
+> +pid 999 is 113345679876, and the timestamp variable in the same
+> +.var.idx for pid 4444 is 213499240729.
 >  
-> -2.2.2 Synthetic Events
-> -----------------------
-> +2.6. Synthetic Events
-> +---------------------
+> -sched_switch histogram                                                      | |
+> -----------------------                                                      | |
+> +sched_switch histogram
+> +----------------------
 >  
->  Synthetic events are user-defined events generated from hist trigger
->  variables or fields associated with one or more other events.  Their
-> @@ -1846,7 +1846,7 @@ the command that defined it with a '!'::
->  At this point, there isn't yet an actual 'wakeup_latency' event
->  instantiated in the event subsystem - for this to happen, a 'hist
->  trigger action' needs to be instantiated and bound to actual fields
-> -and variables defined on other events (see Section 2.2.3 below on
-> +and variables defined on other events (see Section 2.7. below on
->  how that is done using hist trigger 'onmatch' action). Once that is
->  done, the 'wakeup_latency' synthetic event instance is created.
+> -The sched_switch histogram paired with the above sched_waking               | |
+> -histogram is shown below.  The most important aspect of the                 | |
+> -sched_switch histogram is that it references a variable on the              | |
+> -sched_waking histogram above.                                               | |
+> +The sched_switch histogram paired with the above sched_waking
+> +histogram is shown below.  The most important aspect of the
+> +sched_switch histogram is that it references a variable on the
+> +sched_waking histogram above.
 >  
-> @@ -2094,8 +2094,8 @@ histogram::
->      Entries: 7
->      Dropped: 0
+> -The histogram diagram is very similar to the others so far displayed,       | |
+> -but it adds variable references.  You can see the normal hitcount and       | |
+> -key fields along with a new wakeup_lat variable implemented in the          | |
+> -same way as the sched_waking ts0 variable, but in addition there's an       | |
+> -entry with the new FL_VAR_REF (short for HIST_FIELD_FL_VAR_REF) flag.       | |
+> +The histogram diagram is very similar to the others so far displayed,
+> +but it adds variable references.  You can see the normal hitcount and
+> +key fields along with a new wakeup_lat variable implemented in the
+> +same way as the sched_waking ts0 variable, but in addition there's an
+> +entry with the new FL_VAR_REF (short for HIST_FIELD_FL_VAR_REF) flag.
 >  
-> -2.2.3 Hist trigger 'handlers' and 'actions'
-> --------------------------------------------
-> +2.7. Hist trigger 'handlers' and 'actions'
-> +------------------------------------------
+> -Associated with the new var ref field are a couple of new hist_field        | |
+> -members, var.hist_data and var_ref_idx.  For a variable reference, the      | |
+> -var.hist_data goes with the var.idx, which together uniquely identify       | |
+> -a particular variable on a particular histogram.  The var_ref_idx is        | |
+> -just the index into the var_ref_vals[] array that caches the values of      | |
+> -each variable whenever a hist trigger is updated.  Those resulting          | |
+> -values are then finally accessed by other code such as trace action         | |
+> -code that uses the var_ref_idx values to assign param values.               | |
+> +Associated with the new var ref field are a couple of new hist_field
+> +members, var.hist_data and var_ref_idx.  For a variable reference, the
+> +var.hist_data goes with the var.idx, which together uniquely identify
+> +a particular variable on a particular histogram.  The var_ref_idx is
+> +just the index into the var_ref_vals[] array that caches the values of
+> +each variable whenever a hist trigger is updated.  Those resulting
+> +values are then finally accessed by other code such as trace action
+> +code that uses the var_ref_idx values to assign param values.
 >  
->  A hist trigger 'action' is a function that's executed (in most cases
->  conditionally) whenever a histogram entry is added or updated.
-> @@ -2526,8 +2526,8 @@ The following commonly-used handler.action pairs are available:
->           kworker/3:2-135   [003] d..3    49.823123: sched_switch: prev_comm=kworker/3:2 prev_pid=135 prev_prio=120 prev_state=T ==> next_comm=swapper/3 next_pid=0 next_prio=120
->                <idle>-0     [004] ..s7    49.823798: tcp_probe: src=10.0.0.10:54326 dest=23.215.104.193:80 mark=0x0 length=32 snd_nxt=0xe3ae2ff5 snd_una=0xe3ae2ecd snd_cwnd=10 ssthresh=2147483647 snd_wnd=28960 srtt=19604 rcv_wnd=29312
+> -The diagram below describes the situation for the sched_switch              | |
+> +The diagram below describes the situation for the sched_switch
+>  histogram referred to before::
 >  
-> -3. User space creating a trigger
-> ---------------------------------
-> +2.8. User space creating a trigger
-> +----------------------------------
->  
->  Writing into /sys/kernel/tracing/trace_marker writes into the ftrace
->  ring buffer. This can also act like an event, by writing into the trigger
+> -  # echo 'hist:keys=next_pid:wakeup_lat=common_timestamp.usecs-$ts0' >>     | |
+> -          events/sched/sched_switch/trigger                                 | |
+> +  # echo 'hist:keys=next_pid:wakeup_lat=common_timestamp.usecs-$ts0' >>
+> +          events/sched/sched_switch/trigger
+>                                                                              | |
+>    +------------------+                                                      | |
+>    | hist_data        |                                                      | |
 > -- 
 > An old man doll... just what I always wanted! - Clara
 > 
