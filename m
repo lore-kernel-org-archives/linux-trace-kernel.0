@@ -1,46 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C47FE168BD;
-	Fri, 12 Sep 2025 01:03:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9D312AE66;
+	Fri, 12 Sep 2025 01:07:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757639024; cv=none; b=kYJxhvFM6DawQqlrkCxnpBMB5yebhM3gcMZXMzrQyy4cEHYDc5Z6KnjExdOql6d5/K3Bb8+Zm5iCFqUk9yYj5okVsgrpbd5Lgv4MSd13xcvIkjJ0zklBIs+u0S+EcqzWReRNUHt2MFD4x0QE4G8IIcAGMUc09yj4fwxt3UoxvpU=
+	t=1757639249; cv=none; b=h+2h9ytysy3Gs7fDDs34IJx7e1pLmMAjNwGYby4IKAEOE3zxlsZVods5/dPreSFeMh71c46SwMuk7eT05eabb7Q8hkRszmHZYQDvRBN0kBB+yUWsHW8ofIswMPvheaMttc664C+P0shynl+/HLnKldOLQQ/DiYubVHrQ7/alh6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757639024; c=relaxed/simple;
-	bh=UupyoFE7SnAlsffL4fmvxHr7u5yI/7mpAQ9gZ/SiWEo=;
+	s=arc-20240116; t=1757639249; c=relaxed/simple;
+	bh=PXuMJATVT4V0Y16Ka+lqtvBlfX81tB2vy3KhW0U7yNw=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=KL1GXl0fqakfE7f0WyysG/iXTiFlie7eqRJrEOwZqkmBjYSjxgaSFRAjQaSPDaDraZMgvx0LOXtXKxjdJBSl69QyaUVAnOdxq6CIGJn7pBiaAt1NWO2QJFelautj0H1dYDceEQ6rvvjpeapCMRt4X7zrRHJiD0IaLS7duU+8VCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=htZH4rWZ; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=rFy91xpFZ7NefJiOToOQq3B0STEChovQll3jGUJiaEVf0/qeaR+O2Wv4RPry0giKnDkp3JhiptzVg2AKF3E4uIZgYvhGI621e6+/ZGR+oZ4keX6AD/M728si8DtDJadhJ2nC5OtC0rYfD3KewOAR8rJcJSBssCaJMfHgGhuBhD4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dLrXaBU9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="htZH4rWZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEB87C4CEF0;
-	Fri, 12 Sep 2025 01:03:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dLrXaBU9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EA00C4CEF0;
+	Fri, 12 Sep 2025 01:07:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757639024;
-	bh=UupyoFE7SnAlsffL4fmvxHr7u5yI/7mpAQ9gZ/SiWEo=;
+	s=k20201202; t=1757639247;
+	bh=PXuMJATVT4V0Y16Ka+lqtvBlfX81tB2vy3KhW0U7yNw=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=htZH4rWZF0hXTnA2KtZ0qwz8xfhw/zUMoL7xbSJLovLmAZm+ScgSRZUNXi/AbEbOW
-	 0nA6QmCTuc4q+lPuxrzV25Ym1FlBnc5Wt0ikuidiLSu7mPC4J9JgLzgD8eBU2JG6u/
-	 e46CjUiQZBl0EdlWn4HphIDg5t1vRWoyFqON9ZYhnzBfxURT/wRv3DkUjHOR9+FwED
-	 yiHSKAhI4xOcbDSOYANFAoGRhmUdjudoBpeRICFg0AtB1q+TFZF3QmIsFjNTdNN8vI
-	 mw7SewA037OQHw5BhEASdJraBdgnKjgoTFEWu91dtSW8PXeNXsY3G6vJ6btV9jqB9W
-	 nlu4ydPbGmLtQ==
-Date: Fri, 12 Sep 2025 10:03:39 +0900
+	b=dLrXaBU9sm6JjTx7yMnrAWHzGggmPl9ChW3HUUfCJfPQ1RupdUGBZupZevzvrNAnj
+	 qqWKh9IbNcZOots0tCo95xxx38IqCC5RLsHH+wgRArii+KRrvzl9hivVoGr0Qp7Mdj
+	 e6JIb3kknNcn8VC1kJf3GL6WzF9Zu/3FatptpsAQjwFcfw6BasZKVrhcMcCRTXgsKs
+	 bj0uLjCJNYkas6NBhgR6Sup+5dN6l79ufOCpZ+TcaeYVhLsRtLmLFz4uAF6rYYP3VB
+	 mBwt859ZmB4c1FCaydz731HnFwNvP3RJpzinCL6N042yJBgpiazhbYOpwywUejcy5V
+	 f6EcX6h9WVWdQ==
+Date: Fri, 12 Sep 2025 10:07:23 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux
- Documentation <linux-doc@vger.kernel.org>, Linux Kernel Tracing
- <linux-trace-kernel@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Jonathan Corbet <corbet@lwn.net>, Tom
- Zanussi <zanussi@kernel.org>
-Subject: Re: [PATCH 4/5] Documentation: trace: histogram-design: Wrap
- introductory note in note:: directive
-Message-Id: <20250912100339.d9456de2783cdc67b01cfec7@kernel.org>
-In-Reply-To: <20250911042527.22573-5-bagasdotme@gmail.com>
-References: <20250911042527.22573-1-bagasdotme@gmail.com>
-	<20250911042527.22573-5-bagasdotme@gmail.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Linus Torvalds
+ <torvalds@linux-foundation.org>, linux-mm@kvack.org, Kees Cook
+ <keescook@chromium.org>, Aleksa Sarai <cyphar@cyphar.com>, Al Viro
+ <viro@ZenIV.linux.org.uk>
+Subject: Re: [PATCH] uaccess: Comment that copy to/from inatomic requires
+ page fault disabled
+Message-Id: <20250912100723.4fce2b29c4d77f3a89c0b636@kernel.org>
+In-Reply-To: <20250910161820.247f526a@gandalf.local.home>
+References: <20250910161820.247f526a@gandalf.local.home>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -51,50 +49,63 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu, 11 Sep 2025 11:25:26 +0700
-Bagas Sanjaya <bagasdotme@gmail.com> wrote:
+On Wed, 10 Sep 2025 16:18:20 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> Use Sphinx note:: directive for the introductory note at the beginning
-> of docs, instead of aligned-text paragraph that renders as definition
-> list.
+> From: Steven Rostedt <rostedt@goodmis.org>
+> 
+> The functions __copy_from_user_inatomic() and __copy_to_user_inatomic()
+> both require that either the user space memory is pinned, or that page
+> faults are disabled when they are called. If page faults are not disabled,
+> and the memory is not present, the fault handling of reading or writing to
+> that memory may cause the kernel to schedule. That would be bad in an
+> atomic context.
+> 
+> Link: https://lore.kernel.org/all/20250819105152.2766363-1-luogengkun@huaweicloud.com/
 > 
 
-Looks good change ;)
+Looks good to me.
 
 Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Thank you!
+Thanks,
 
-> Signed-off-by: Bagas Sanjaya <bagasdotme@gmail.com>
+
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 > ---
->  Documentation/trace/histogram-design.rst | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
+>  include/linux/uaccess.h | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/trace/histogram-design.rst b/Documentation/trace/histogram-design.rst
-> index 4faff1669b77bd..ae71b5bf97c6c7 100644
-> --- a/Documentation/trace/histogram-design.rst
-> +++ b/Documentation/trace/histogram-design.rst
-> @@ -11,13 +11,14 @@ histograms work and how the individual pieces map to the data
->  structures used to implement them in trace_events_hist.c and
->  tracing_map.c.
+> diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
+> index 1beb5b395d81..add99fa9b656 100644
+> --- a/include/linux/uaccess.h
+> +++ b/include/linux/uaccess.h
+> @@ -86,6 +86,12 @@
+>   * as usual) and both source and destination can trigger faults.
+>   */
 >  
-> -Note: All the ftrace histogram command examples assume the working
-> -      directory is the ftrace /tracing directory. For example::
-> +.. note::
-> +   All the ftrace histogram command examples assume the working
-> +   directory is the ftrace /tracing directory. For example::
->  
->  	# cd /sys/kernel/tracing
->  
-> -Also, the histogram output displayed for those commands will be
-> -generally be truncated - only enough to make the point is displayed.
-> +   Also, the histogram output displayed for those commands will be
-> +   generally be truncated - only enough to make the point is displayed.
->  
->  'hist_debug' trace event files
->  ==============================
+> +/*
+> + * __copy_from_user_inatomic() is safe to use in an atomic context but
+> + * the user space memory must either be pinned in memory, or page faults
+> + * must be disabled, otherwise the page fault handling may cause the function
+> + * to schedule.
+> + */
+>  static __always_inline __must_check unsigned long
+>  __copy_from_user_inatomic(void *to, const void __user *from, unsigned long n)
+>  {
+> @@ -124,7 +130,8 @@ __copy_from_user(void *to, const void __user *from, unsigned long n)
+>   * Copy data from kernel space to user space.  Caller must check
+>   * the specified block with access_ok() before calling this function.
+>   * The caller should also make sure he pins the user space address
+> - * so that we don't result in page fault and sleep.
+> + * or call page_fault_disable() so that we don't result in a page fault
+> + * and sleep.
+>   */
+>  static __always_inline __must_check unsigned long
+>  __copy_to_user_inatomic(void __user *to, const void *from, unsigned long n)
 > -- 
-> An old man doll... just what I always wanted! - Clara
+> 2.50.1
+> 
 > 
 
 
