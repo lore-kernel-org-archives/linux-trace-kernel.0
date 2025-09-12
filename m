@@ -1,31 +1,31 @@
-Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D00727EFE3;
-	Fri, 12 Sep 2025 09:24:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.111
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9580D27A465;
+	Fri, 12 Sep 2025 09:40:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757669101; cv=none; b=pn7SlpOXJ+T5MHoCPSjTttvD4Cj3uaUPCNrG8Qcf4hTbdfn1//Yx74YCfQlfjzkCmjOPf1iexa+KhlFARhQKtx3mDCVwni8XV0isdU4pE4cw78mtSjHir+odK9yqtxVbImwdozCl820eS3BWuBzQoEyVug6YSdycsXY1L8LZK9A=
+	t=1757670061; cv=none; b=hYqwYP2XWD5x4oPil2bCBnd5/GTh+ZEP7ttBJu5udbtQNvnNFaE8enLaVTJlC24p0cyxsps6rBnNzJQcDQCigvxbQbTtUHrS0jfIb/jOc3sD7X9nsaD319NIcOshJuZJj4K4B1yrWTTssJ+JO1NJY8j8G/MApZfYVPDOFQSNlvY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757669101; c=relaxed/simple;
-	bh=GmEAPbFMXpczpVM7DQb8d28PRbScKAo5q6THwLy4XlM=;
+	s=arc-20240116; t=1757670061; c=relaxed/simple;
+	bh=lJ36e+t/tg8LmpoQ6endDbrNr7eRgy5K+DROEoJYN0s=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=d2AqHL2w2cUPLiLLEt9f46h7dxrdBaGwfGIRQHiNiBbYZII5OvfAx/VChP7qdLYm9PG8LiJ3bgHkvXDezc2SrDWhvYo9wbZuoN/YVw2dfL87kXVLEpPyGnZCOKtKZvQv8I5BndGdFqFEFSdGlEaJcjOg6y3ooJ0th/AWbdnLeqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=FC5rw6ix; arc=none smtp.client-ip=115.124.30.111
+	 In-Reply-To:Content-Type; b=sUl9gPGtqqknMPzwYLARIV3SsOKXgZwcxHYRmvg43RlRD1AF5aPWmB6Ge4d2D1LHz+IeSOt0atGAHv/GCQwRiIChUxEi9h9COXpDEpQ32VIm1s6PGeHH6RAQbxs6uOozo79gOz4CljYEceCgtsfHfvQ496Flmry/sb0REMP1aGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Xt6HyY9g; arc=none smtp.client-ip=115.124.30.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="FC5rw6ix"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Xt6HyY9g"
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1757669095; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=yeQuxM0fjpmIe4g0xUTHddlrE41HXqCqb25Ih/uw2qU=;
-	b=FC5rw6ixR5LazE+N3z4/dTcrJQMWug331XVyZltsj007wwaIMcbYk1MIz7HngLF0s48iJ7+quRnMaADJDkw5FAgDSKcC/7EV7t1PcFZAU7rVMv77wrKs5veqVYDtymV6+emOeD/vU/Fp/dzr9mc5ojNrdmEOPVrDVkd25W2SiMw=
-Received: from 30.74.144.122(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WnqpgPM_1757669090 cluster:ay36)
+	t=1757670055; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=8wqlXppzbfyIOcS8BfKoIJCpvoAzpjciPU1+yNHw35A=;
+	b=Xt6HyY9gswY87UdAPCE6BA83evTUJGamPqQrffh1bPmucYESaMAp1YO7dpWY00k08ZipzcHOZeuS348ILcdMcFfFbzGeW4liQnegRPvzQ447HhLpix+iwk/K3fVXjRCFPk1UiCKuyR+wjMFAGAPjH7TB7VSKp4uCZxpL66KbBoo=
+Received: from 30.74.144.122(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WnqpLMs_1757669731 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Fri, 12 Sep 2025 17:24:52 +0800
-Message-ID: <50305e9f-ad03-4ce9-9ae7-0c657bd87ef0@linux.alibaba.com>
-Date: Fri, 12 Sep 2025 17:24:50 +0800
+          Fri, 12 Sep 2025 17:35:32 +0800
+Message-ID: <068a41eb-3a5c-4749-a8f6-c1bda1fb6a4b@linux.alibaba.com>
+Date: Fri, 12 Sep 2025 17:35:31 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -33,8 +33,8 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v11 11/15] khugepaged: introduce collapse_allowable_orders
- helper function
+Subject: Re: [PATCH v11 09/15] khugepaged: add per-order mTHP collapse failure
+ statistics
 To: Nico Pache <npache@redhat.com>, linux-mm@kvack.org,
  linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -54,78 +54,39 @@ Cc: david@redhat.com, ziy@nvidia.com, lorenzo.stoakes@oracle.com,
  lance.yang@linux.dev, vbabka@suse.cz, rppt@kernel.org, jannh@google.com,
  pfalcato@suse.de
 References: <20250912032810.197475-1-npache@redhat.com>
- <20250912032810.197475-12-npache@redhat.com>
+ <20250912032810.197475-10-npache@redhat.com>
 From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <20250912032810.197475-12-npache@redhat.com>
+In-Reply-To: <20250912032810.197475-10-npache@redhat.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 
 On 2025/9/12 11:28, Nico Pache wrote:
-> Add collapse_allowable_orders() to generalize THP order eligibility. The
-> function determines which THP orders are permitted based on collapse
-> context (khugepaged vs madv_collapse).
+> Add three new mTHP statistics to track collapse failures for different
+> orders when encountering swap PTEs, excessive none PTEs, and shared PTEs:
 > 
-> This consolidates collapse configuration logic and provides a clean
-> interface for future mTHP collapse support where the orders may be
-> different.
+> - collapse_exceed_swap_pte: Increment when mTHP collapse fails due to swap
+> 	PTEs
+> 
+> - collapse_exceed_none_pte: Counts when mTHP collapse fails due to
+>    	exceeding the none PTE threshold for the given order
+> 
+> - collapse_exceed_shared_pte: Counts when mTHP collapse fails due to shared
+>    	PTEs
+> 
+> These statistics complement the existing THP_SCAN_EXCEED_* events by
+> providing per-order granularity for mTHP collapse attempts. The stats are
+> exposed via sysfs under
+> `/sys/kernel/mm/transparent_hugepage/hugepages-*/stats/` for each
+> supported hugepage size.
+> 
+> As we currently dont support collapsing mTHPs that contain a swap or
+> shared entry, those statistics keep track of how often we are
+> encountering failed mTHP collapses due to these restrictions.
 > 
 > Signed-off-by: Nico Pache <npache@redhat.com>
+> ---
 
 LGTM.
 Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-
-> ---
->   mm/khugepaged.c | 15 ++++++++++++---
->   1 file changed, 12 insertions(+), 3 deletions(-)
-> 
-> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> index 5b45ef575446..d224fa97281a 100644
-> --- a/mm/khugepaged.c
-> +++ b/mm/khugepaged.c
-> @@ -485,7 +485,16 @@ static int collapse_max_ptes_none(unsigned int order)
->   	else
->   		max_ptes_none = khugepaged_max_ptes_none;
->   	return max_ptes_none >> (HPAGE_PMD_ORDER - order);
-> +}
-> +
-> +/* Check what orders are allowed based on the vma and collapse type */
-> +static unsigned long collapse_allowable_orders(struct vm_area_struct *vma,
-> +			vm_flags_t vm_flags, bool is_khugepaged)
-> +{
-> +	enum tva_type tva_flags = is_khugepaged ? TVA_KHUGEPAGED : TVA_FORCED_COLLAPSE;
-> +	unsigned long orders = BIT(HPAGE_PMD_ORDER);
->   
-> +	return thp_vma_allowable_orders(vma, vm_flags, tva_flags, orders);
->   }
->   
->   void khugepaged_enter_vma(struct vm_area_struct *vma,
-> @@ -493,7 +502,7 @@ void khugepaged_enter_vma(struct vm_area_struct *vma,
->   {
->   	if (!mm_flags_test(MMF_VM_HUGEPAGE, vma->vm_mm) &&
->   	    hugepage_pmd_enabled()) {
-> -		if (thp_vma_allowable_order(vma, vm_flags, TVA_KHUGEPAGED, PMD_ORDER))
-> +		if (collapse_allowable_orders(vma, vm_flags, true))
->   			__khugepaged_enter(vma->vm_mm);
->   	}
->   }
-> @@ -2557,7 +2566,7 @@ static unsigned int collapse_scan_mm_slot(unsigned int pages, int *result,
->   			progress++;
->   			break;
->   		}
-> -		if (!thp_vma_allowable_order(vma, vma->vm_flags, TVA_KHUGEPAGED, PMD_ORDER)) {
-> +		if (!collapse_allowable_orders(vma, vma->vm_flags, true)) {
->   skip:
->   			progress++;
->   			continue;
-> @@ -2865,7 +2874,7 @@ int madvise_collapse(struct vm_area_struct *vma, unsigned long start,
->   	BUG_ON(vma->vm_start > start);
->   	BUG_ON(vma->vm_end < end);
->   
-> -	if (!thp_vma_allowable_order(vma, vma->vm_flags, TVA_FORCED_COLLAPSE, PMD_ORDER))
-> +	if (!collapse_allowable_orders(vma, vma->vm_flags, false))
->   		return -EINVAL;
->   
->   	cc = kmalloc(sizeof(*cc), GFP_KERNEL);
-
