@@ -1,123 +1,148 @@
-Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D39B2DC796;
-	Fri, 12 Sep 2025 14:30:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D44FF30DEB7
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 12 Sep 2025 14:35:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757687404; cv=none; b=Hv0csuwA8JQQicHCsjffiDPYMz/WZLdj6gM95xADqRHm0XiFLqbpT1KcRTBS/JwEkXU4KzJmtQ+1WuUn/oL3c2r4s/PNlI6Bohs2SKPwbEQT5fcdLj3jDbozf3PnUVrnT9LhdrvUkGfzjzRN107nCn8h5CeFqZ7cDLk8huwSKLg=
+	t=1757687733; cv=none; b=njahGxyV9nNg5N7n8soHTdp7jvKgQEi8TY+iKZokhIZG/Wz3Q2WhggsmA5Sr4CLNcfCtGePwYfmWJ+PCdW/CDdppiztsG6oENft0El9zHpt6aoGxeJ7m6TIzfa30ai0qEYGe2Ra636Ch7d+CQt49Av1QtHaoeFyeAA7IAsBndWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757687404; c=relaxed/simple;
-	bh=PzXy3J+sljkaF9/qM0Z9jTDMC2pKfDUjU75OFzOan50=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cOavYElzssKsLxd+tX6keL3bzDcyVToKvDEYXl+XT4801X4mH1QSa+Gb3e5HnLJ8Kxxa5SM4GYWM7U2z804Bq52G4lbtVgpCd8MHPQpRBB4zOaaV6U3Wc67wUyeMCYFS0S7a7WKAKz3RKtxQ2QMQNwxSzjP718Xg8LJlXJu5OTY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf08.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay08.hostedemail.com (Postfix) with ESMTP id 04AB014085C;
-	Fri, 12 Sep 2025 14:29:58 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id C2E6520027;
-	Fri, 12 Sep 2025 14:29:55 +0000 (UTC)
-Date: Fri, 12 Sep 2025 10:30:50 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Xiang Gao <gxxa03070307@gmail.com>
-Cc: mhiramat@kernel.org, mingo@redhat.com, peterz@infradead.org,
- juri.lelli@redhat.com, vincent.guittot@linaro.org,
- mathieu.desnoyers@efficios.com, andrii@kernel.org, mingo@kernel.org,
- oleg@redhat.com, akpm@linux-foundation.org, gmonaco@redhat.com,
- ricardo.neri-calderon@linux.intel.com, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, gaoxiang17 <gaoxiang17@xiaomi.com>
-Subject: Re: [PATCH v2 1/1] tracing/sched: add 'next_policy' to
- trace_sched_switch
-Message-ID: <20250912103050.5bf82967@gandalf.local.home>
-In-Reply-To: <c2894f9b0c5116eeffdc19947529aef5c5d1db4c.1756212396.git.gaoxiang17@xiaomi.com>
-References: <cover.1756212396.git.gaoxiang17@xiaomi.com>
-	<c2894f9b0c5116eeffdc19947529aef5c5d1db4c.1756212396.git.gaoxiang17@xiaomi.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1757687733; c=relaxed/simple;
+	bh=ZS7rP4uNGEsC6E4oWHILrKqyLsgRXKFtB76mAodhYY8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GwU+7v+QGjnkWgNMbiHgYEmDrxUjdYzksEJeYQbxboqvG9fc767Awl+ndupPcg3av5XkMWFL4t5NKLvHvQcs4hZKtlWEEHVVsu+TEaWQijJ0urvVj4LvE/6KnraTFJLSafZ0v8OT2y/gSIN2i6pf8S2O9ERcJ/xg9+gkbQsDlN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q7vmE2K4; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q7vmE2K4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D76FC4CEFD;
+	Fri, 12 Sep 2025 14:35:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757687733;
+	bh=ZS7rP4uNGEsC6E4oWHILrKqyLsgRXKFtB76mAodhYY8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Q7vmE2K4bX8N4hatiQwkjb/A3dnxO6r3RYDHOnmoRcnVH8MSeDYmmQhqTWe0jt4sp
+	 oLLiUuP4twMzEVJQb4D+SIl9qvAcelBWBXY7XiqHwFKHjrdr0wfoPlmj0D24PNgodj
+	 1dM/nmfb8uj3E+I1kkIhH9GoIc5bP3e+saZHcvpSezPCvqxv2TGEhQ5BPeb+yCmI/J
+	 bEnABSTTni9UnToepTcSg0itrqhujlpQrL9bJsbOVyAO8ACm4e3KOH0wivYWDNjABf
+	 EIcsTRlYyIfE0iNaxARye2jNVj08XEHIYxxE5Jnt6pL6CahB4FJaS6UBfOooKIPZ+E
+	 Pq9JMrcWLS+gA==
+Received: from phl-compute-08.internal (phl-compute-08.internal [10.202.2.48])
+	by mailfauth.phl.internal (Postfix) with ESMTP id D1459F40067;
+	Fri, 12 Sep 2025 10:35:31 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-08.internal (MEProxy); Fri, 12 Sep 2025 10:35:31 -0400
+X-ME-Sender: <xms:sy_EaIOFVP8TFbUVTr3M1hLM62MVAOKgDByS_aczWYuKrY66etkvQA>
+    <xme:sy_EaMw-CYop6ykTCd7xbwny6NtaPItW2sfRBJsD2AqEeyBakCiyiq9sSD4I2ZrZ8
+    0EOX8rSQyNgOwk0O90>
+X-ME-Received: <xmr:sy_EaNEE_dt9BsbRhcSnetlFx8viyIF2X-cR9O_4RQejA7BzgjEZNxGcPjXMeg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddvleeftdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpeffhffvvefukfhfgggtuggjsehttdfstddttddvnecuhfhrohhmpefmihhrhihlucfu
+    hhhuthhsvghmrghuuceokhgrsheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrh
+    hnpeehieekueevudehvedtvdffkefhueefhfevtdduheehkedthfdtheejveelueffgeen
+    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehkihhrih
+    hllhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudeiudduiedvieehhedq
+    vdekgeeggeejvdekqdhkrghspeepkhgvrhhnvghlrdhorhhgsehshhhuthgvmhhovhdrnh
+    grmhgvpdhnsggprhgtphhtthhopeelkedpmhhouggvpehsmhhtphhouhhtpdhrtghpthht
+    ohepuggrvhhiugesrhgvughhrghtrdgtohhmpdhrtghpthhtohepnhhprggthhgvsehrvg
+    guhhgrthdrtghomhdprhgtphhtthhopehlihhnuhigqdhmmheskhhvrggtkhdrohhrghdp
+    rhgtphhtthhopehlihhnuhigqdguohgtsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtg
+    hpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhr
+    tghpthhtoheplhhinhhugidqthhrrggtvgdqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvg
+    hlrdhorhhgpdhrtghpthhtohepiihihiesnhhvihguihgrrdgtohhmpdhrtghpthhtohep
+    sggrohhlihhnrdifrghngheslhhinhhugidrrghlihgsrggsrgdrtghomhdprhgtphhtth
+    hopehlohhrvghniihordhsthhorghkvghssehorhgrtghlvgdrtghomh
+X-ME-Proxy: <xmx:sy_EaAmxvA8o9_BHxY-OQnobzIiZhPsKsPuNtnqReZ5bOGcvwh474g>
+    <xmx:sy_EaKp3BAE6_gjy-zS7AYs7Bj7CZV5N_FJtGJNQVJ9t5qw1AikzVA>
+    <xmx:sy_EaDLqBIhr9fE2udYB0c4LPnib3YjCh9yEomGSqm0hV0dg8fzlNQ>
+    <xmx:sy_EaAVLrTry_swTdUTik2eWBdy0SXF2Of3dstHY8M8jzbt4H_u2oQ>
+    <xmx:sy_EaIpOoTWlPsROLlgNbu1iSSSKPIivBreFLf3igkQmOpWorIzzL6ol>
+Feedback-ID: i10464835:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 12 Sep 2025 10:35:30 -0400 (EDT)
+Date: Fri, 12 Sep 2025 15:35:28 +0100
+From: Kiryl Shutsemau <kas@kernel.org>
+To: David Hildenbrand <david@redhat.com>
+Cc: Nico Pache <npache@redhat.com>, linux-mm@kvack.org,
+ 	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, 	ziy@nvidia.com,
+ baolin.wang@linux.alibaba.com, lorenzo.stoakes@oracle.com,
+ 	Liam.Howlett@oracle.com, ryan.roberts@arm.com, dev.jain@arm.com,
+ corbet@lwn.net, 	rostedt@goodmis.org, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, 	akpm@linux-foundation.org,
+ baohua@kernel.org, willy@infradead.org, peterx@redhat.com,
+ 	wangkefeng.wang@huawei.com, usamaarif642@gmail.com,
+ sunnanyong@huawei.com, 	vishal.moola@gmail.com,
+ thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com,
+ 	aarcange@redhat.com, raquini@redhat.com, anshuman.khandual@arm.com,
+ 	catalin.marinas@arm.com, tiwai@suse.de, will@kernel.org,
+ dave.hansen@linux.intel.com, 	jack@suse.cz, cl@gentwo.org,
+ jglisse@google.com, surenb@google.com, 	zokeefe@google.com,
+ hannes@cmpxchg.org, rientjes@google.com, mhocko@suse.com,
+ 	rdunlap@infradead.org, hughd@google.com, richard.weiyang@gmail.com,
+ 	lance.yang@linux.dev, vbabka@suse.cz, rppt@kernel.org, jannh@google.com,
+ 	pfalcato@suse.de
+Subject: Re: [PATCH v11 00/15] khugepaged: mTHP support
+Message-ID: <rapl4xr55zv2nq3jh5ulk4wvfyxa2kmbnnb4uram6q43y4cbwn@dv5m52ocyqne>
+References: <20250912032810.197475-1-npache@redhat.com>
+ <ppzgohmkll7dbf2aiwhw7f4spf6kxjtwwe3djkx26pwy4ekrnd@mgeantq5sn2z>
+ <43f42d9d-f814-4b54-91a6-3073f7c7cedf@redhat.com>
+ <ab8c2e03-53fb-402c-a674-c2c6ab11f54e@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout04
-X-Rspamd-Queue-Id: C2E6520027
-X-Stat-Signature: 95jo8ccmhhjmhg39hwgka5nywg7ob9ps
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/HcNQwkKSYWfiQu92jxe3bnbMF4m9VtHY=
-X-HE-Tag: 1757687395-783471
-X-HE-Meta: U2FsdGVkX1/n5zk81QSwQrrD/DdxaLvSp913YGxMVAbDHQyrPaTXrYwCJTLkx89nalPdTY/TInEq8ueaLYxpCY2HLSbBCsk0FZZmHd8nNHEzip38/Fr7akMADa3WaqFX39Vz87OnVnjjTcJp9AB+wL8Zlq+VCKQEobghfZ7GSdoy4KSS0d6GqBV1p50mKYZPtOyKyGibv+XMJczW39GnX0JZlO4VxzUyW9cpn30w1Yvg0SsmyyF/aw7VBXQO0NMtuN+shWOVD/JyvUDP/qaMhRZOUAAeQmChnZWZ65/THR2BPvhx1vSR2yIe1ptmOHFf9MDaJCMfKvJ0Bs9MxHkFNKysPEE/1rVY/oP/zJ9xSmfKvFf+hyYQD1nOqEW1HdPTbEI6vKmbK9eXAUqkOyP67CwePYNWaQkO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ab8c2e03-53fb-402c-a674-c2c6ab11f54e@redhat.com>
 
-On Tue, 26 Aug 2025 20:48:54 +0800
-Xiang Gao <gxxa03070307@gmail.com> wrote:
-
-> From: gaoxiang17 <gaoxiang17@xiaomi.com>
+On Fri, Sep 12, 2025 at 04:28:09PM +0200, David Hildenbrand wrote:
+> On 12.09.25 15:47, David Hildenbrand wrote:
+> > On 12.09.25 14:19, Kiryl Shutsemau wrote:
+> > > On Thu, Sep 11, 2025 at 09:27:55PM -0600, Nico Pache wrote:
+> > > > The following series provides khugepaged with the capability to collapse
+> > > > anonymous memory regions to mTHPs.
+> > > > 
+> > > > To achieve this we generalize the khugepaged functions to no longer depend
+> > > > on PMD_ORDER. Then during the PMD scan, we use a bitmap to track individual
+> > > > pages that are occupied (!none/zero). After the PMD scan is done, we do
+> > > > binary recursion on the bitmap to find the optimal mTHP sizes for the PMD
+> > > > range. The restriction on max_ptes_none is removed during the scan, to make
+> > > > sure we account for the whole PMD range. When no mTHP size is enabled, the
+> > > > legacy behavior of khugepaged is maintained. max_ptes_none will be scaled
+> > > > by the attempted collapse order to determine how full a mTHP must be to be
+> > > > eligible for the collapse to occur. If a mTHP collapse is attempted, but
+> > > > contains swapped out, or shared pages, we don't perform the collapse. It is
+> > > > now also possible to collapse to mTHPs without requiring the PMD THP size
+> > > > to be enabled.
+> > > > 
+> > > > When enabling (m)THP sizes, if max_ptes_none >= HPAGE_PMD_NR/2 (255 on
+> > > > 4K page size), it will be automatically capped to HPAGE_PMD_NR/2 - 1 for
+> > > > mTHP collapses to prevent collapse "creep" behavior. This prevents
+> > > > constantly promoting mTHPs to the next available size, which would occur
+> > > > because a collapse introduces more non-zero pages that would satisfy the
+> > > > promotion condition on subsequent scans.
+> > > 
+> > > Hm. Maybe instead of capping at HPAGE_PMD_NR/2 - 1 we can count
+> > > all-zeros 4k as none_or_zero? It mirrors the logic of shrinker.
+> > 
+> > BTW, I thought further about this and I agree: if we count zero-filled
+> > pages towards none_or_zero one we can avoid the "creep" problem.
+> > 
+> > The scanning-for-zero part is rather nasty, though.
 > 
-> Sometimes, when analyzing some real-time process issues, it is necessary to know the sched policy.
+> Aaand, thinking again from the other direction, this would mean that just
+> because pages became zero after some time that we would no longer collapse
+> because none_or_zero would then be higher. Hm ....
 > 
-> Show up in the trace as:
-> 
-> 	 72.267374: sched_switch: prev_comm=grep prev_pid=67 prev_prio=19 prev_state=S ==> next_comm=cat next_pid=66 next_prio=120 next_policy=normal
-> 	 72.267594: sched_switch: prev_comm=cat prev_pid=66 prev_prio=120 prev_state=R+ ==> next_comm=grep next_pid=67 next_prio=19 next_policy=RR
-> 	562.192567: sched_switch: prev_comm=grep prev_pid=85 prev_prio=19 prev_state=S ==> next_comm=cat next_pid=84 next_prio=120 next_policy=normal
-> 	562.192944: sched_switch: prev_comm=cat prev_pid=84 prev_prio=120 prev_state=R+ ==> next_comm=grep next_pid=85 next_prio=19 next_policy=FIFO
-> 
+> How I hate all of this so very very much :)
 
-Peter,
+This is not new. Shrinker has the same problem: it cannot distinguish
+between hot 4k that happened to be zero from the 4k that is there just
+because of we faulted in 2M a time.
 
-Are you OK with extending the sched switch tracepoint?
-
--- Steve
-
-> Signed-off-by: gaoxiang17 <gaoxiang17@xiaomi.com>
-> ---
->  include/trace/events/sched.h | 15 +++++++++++++--
->  1 file changed, 13 insertions(+), 2 deletions(-)
-> 
-> diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
-> index 7b2645b50e78..00336211aca6 100644
-> --- a/include/trace/events/sched.h
-> +++ b/include/trace/events/sched.h
-> @@ -234,6 +234,7 @@ TRACE_EVENT(sched_switch,
->  		__array(	char,	next_comm,	TASK_COMM_LEN	)
->  		__field(	pid_t,	next_pid			)
->  		__field(	int,	next_prio			)
-> +		__field(	unsigned int,	next_policy	)
->  	),
->  
->  	TP_fast_assign(
-> @@ -244,10 +245,11 @@ TRACE_EVENT(sched_switch,
->  		memcpy(__entry->next_comm, next->comm, TASK_COMM_LEN);
->  		__entry->next_pid	= next->pid;
->  		__entry->next_prio	= next->prio;
-> +		__entry->next_policy	= next->policy;
->  		/* XXX SCHED_DEADLINE */
->  	),
->  
-> -	TP_printk("prev_comm=%s prev_pid=%d prev_prio=%d prev_state=%s%s ==> next_comm=%s next_pid=%d next_prio=%d",
-> +	TP_printk("prev_comm=%s prev_pid=%d prev_prio=%d prev_state=%s%s ==> next_comm=%s next_pid=%d next_prio=%d next_policy=%s",
->  		__entry->prev_comm, __entry->prev_pid, __entry->prev_prio,
->  
->  		(__entry->prev_state & (TASK_REPORT_MAX - 1)) ?
-> @@ -263,7 +265,16 @@ TRACE_EVENT(sched_switch,
->  		  "R",
->  
->  		__entry->prev_state & TASK_REPORT_MAX ? "+" : "",
-> -		__entry->next_comm, __entry->next_pid, __entry->next_prio)
-> +		__entry->next_comm, __entry->next_pid, __entry->next_prio,
-> +		__print_symbolic(__entry->next_policy,
-> +				{ SCHED_NORMAL,         "normal" },
-> +				{ SCHED_FIFO,           "FIFO" },
-> +				{ SCHED_RR,             "RR" },
-> +				{ SCHED_BATCH,          "batch" },
-> +				{ SCHED_IDLE,           "idle" },
-> +				{ SCHED_DEADLINE,       "deadline" },
-> +				{ SCHED_EXT,            "sched_ext"})
-> +	)
->  );
->  
->  /*
-
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
