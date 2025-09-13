@@ -1,284 +1,118 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C796B1BC58
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 13 Sep 2025 00:29:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87E9935968;
+	Sat, 13 Sep 2025 04:07:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757723366; cv=none; b=TcTZVHS8RNPMjgxhxOXpJwEIg+zSkCOnimaW7zbvgjWV5NvoMY2eAnmxxoEKjFU/WkXGmSVM38H7z7+nHBoPw37Oop4x9s+8mKQZMUYGaY7r8I0HP3LHRxb/6SSzFV10aLGI9tbCP01WW/vx4JjTKgoL9EZiY3JBDJeYSUmdUXc=
+	t=1757736470; cv=none; b=a40kHDTc1CUdRoaw7jYIuKPN2mfPtR3Vq3wJ6UwBIdFttwlHSmf2j+O0sjxG3xx1BdAP3etWEevwYOPeuAQ0bC2AuTDNzORMwUCpJ/tdgFA/qjdtlTL6tqQE2XqlRCQU45IB64eWgIWRf9p/CZzkPURvmFe9srWpLLn/XupVVR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757723366; c=relaxed/simple;
-	bh=s1fdhbuUsD9MQP0PGb9Ytw8aU7X4xbIFZ9UR7PMXzJY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uhpFY/tvDElmgmgUEJjJ9/iHYWhSUgxU+tXxX/x0M//79KpFLzRouIMoP/V0oDR53yxMBa3a3j8W512r+ani21lS45PBX8yPFN+QLLiQP6nRuNWlHyuDbJfB98ZkATH83mkDcqh3ZUI2DwSdCZk/ptoXhQZjbybh6UQaea3t/ck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iX2X6w4g; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1757736470; c=relaxed/simple;
+	bh=bzsI36RMc40NVQUbrU8x0jkLVmvncWaugvL4iQIAccU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=KQTb4wel1AMHpvEzk2ene8+rTsIjJxUYZfnQnsN9E2FuNxo63SmV+EazmyT11B0oI/2b96lxEg7MpbFcn7pUKGRittBESIPfnawMkD98Jk/A6bCht3Qb/MXrHsqNDmZUL/zuCUo2yxNkVop2GdTje1tw0bKNyZE75ynX+hkhzNI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Zvj7+2VJ; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iX2X6w4g"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1757723363;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=s1fdhbuUsD9MQP0PGb9Ytw8aU7X4xbIFZ9UR7PMXzJY=;
-	b=iX2X6w4gjuXKOOQ+5fcoA0ODrO0NP/0QoP0JDErFiVay3YkcVj7/TTP4RmuwpEmJBsYgin
-	ml9U5g9zbfZUTLJxPP8HjEptDffBvciFSP1AMLUDblc0vS5jFb77YUHYFIjV5pYI9Adai/
-	vY3gP7LtY5yPzpx8l9AQR44ara71OgI=
-Received: from mail-yw1-f200.google.com (mail-yw1-f200.google.com
- [209.85.128.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-99-WtSn8ujgMxqttB_VItSMDg-1; Fri, 12 Sep 2025 20:29:22 -0400
-X-MC-Unique: WtSn8ujgMxqttB_VItSMDg-1
-X-Mimecast-MFC-AGG-ID: WtSn8ujgMxqttB_VItSMDg_1757723362
-Received: by mail-yw1-f200.google.com with SMTP id 00721157ae682-724c9c43dd2so25899527b3.3
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 12 Sep 2025 17:29:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757723362; x=1758328162;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=s1fdhbuUsD9MQP0PGb9Ytw8aU7X4xbIFZ9UR7PMXzJY=;
-        b=b3XCF5kLbtNvfEty8jOCayYxO3o/DwPGlYaN2f9KN+4noPDmCgurQKwhxXLXV/njjq
-         7ruUALSz73KRqYQcod4YAvJvJEt+0vFm/KBvaz89CBnYzWRD+awOpBBoobB8hY2MOJMa
-         bu73lrlIDnfm7JBndcag6+FzdPzrGEsGGjvjGcU+TpKQvDHuksasUEhyObMbsJDCLm20
-         Rd7uEH+FpXJ7/ssuneQpYK4xEIuFRgYO1Vpd5qIgdXXIkdTeOI1QtefjIETcI+q33/oB
-         olL7Y1vt7Z6It0kLZYZe3/kBUlL472/rnXLA6u/3JjHQBB1gPqU1v6byrjnMZcbEGjpS
-         WkOw==
-X-Forwarded-Encrypted: i=1; AJvYcCVp0AFQ5yzl9SMcEgzHH6A2gNoKNvSZwnNoZ2xdW3kC+t0rR3Ek2EXFPuXdnXOlz0bEyrJxYTbXJD4xGIHv4yMoMrU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzKVZxNVhkevRkl6Eu/T78HhydUJ/K87Dtnyni2ox/0qcLRgFiQ
-	MvG5SxkLLG/hw0btHvW7QYoCf7T77rIhU6IQINIgohXasWen7ABRGvj3y3QgWTplA2JcL4Dl1Aw
-	u7xbIqkCMLv318moADm8obqGnsMr1Ug1J6Y5iQ21iPR0CNq45wyYOeZRmxUfe8hEa4f5Cu7u7XQ
-	qK7Vk2v1ftuFtEMGBHj8t0uOJhVuh+ElWH0xyzBKKMEDpFhk0M
-X-Gm-Gg: ASbGnctKTAI3LpPRndwsemZ2zhFau6rrYVqZTNeidEdXNcxD/s0P8lmX9d9Mr2upLf4
-	2u88rJ9eAAW3z/hkrYY75ZHtXxoHrOAK6SOgC0sw4Tmt3Kt/74E9M9N/zcMqtH2VbnIslleVWkS
-	ZLTQ/AwFL4AOuYc778oFdlisalC6nbnRzkuUc=
-X-Received: by 2002:a05:690c:260a:b0:723:b6c4:3f1c with SMTP id 00721157ae682-730623e2925mr43228667b3.5.1757723361814;
-        Fri, 12 Sep 2025 17:29:21 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGP1ODcsVeOBTo/o3/Af/Xr6qV4tedAzQFkTLbisgc33kkPWRX3CWYPLhnD2DHm/8atuDvj5iDMrMVSvY62shE=
-X-Received: by 2002:a05:690c:260a:b0:723:b6c4:3f1c with SMTP id
- 00721157ae682-730623e2925mr43228427b3.5.1757723361261; Fri, 12 Sep 2025
- 17:29:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Zvj7+2VJ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Cc:Content-ID:Content-Description;
+	bh=ZkZpc5dBMnXI4POCZ2TCFFqEd7xijX/+QZHk6h+vWnA=; b=Zvj7+2VJQP1AUrM1oc0jI4D0df
+	kZLbrgoF6tWC1TSXrQCzaRwf64BcIFqWM9jqgctShxRWwA64Z3cH3ZJp9xtz/vExBAcClQcmfIZn7
+	yCcLB+AesJzDmEPSjA8I8PqMwPg+QtoHLtCCGQwR4t8mmkzazK/OjVldlPQMX7eK39OikaYuiFAkS
+	f3j34JKAUXKzXllob2T5kCBHPFSR85WlWQfJBGW6vvdYMXS8Z3QXIbkl5YsAeQ69QGvyvU6VGYXVL
+	zapYbucIouJWo+hLXEvQIBUIuwgelZEWHzU6JUYSd+NcP/fFDMoT6FMSctoEiTHXQLnPtkJJ7TQUx
+	RnGJ92cg==;
+Received: from [50.53.25.54] (helo=[192.168.254.17])
+	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uxHXd-0000000D5gz-1paw;
+	Sat, 13 Sep 2025 04:07:13 +0000
+Message-ID: <69198449-411b-4374-900a-16dc6cb91178@infradead.org>
+Date: Fri, 12 Sep 2025 21:07:11 -0700
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250912032810.197475-1-npache@redhat.com> <ppzgohmkll7dbf2aiwhw7f4spf6kxjtwwe3djkx26pwy4ekrnd@mgeantq5sn2z>
- <43f42d9d-f814-4b54-91a6-3073f7c7cedf@redhat.com> <ab8c2e03-53fb-402c-a674-c2c6ab11f54e@redhat.com>
- <rapl4xr55zv2nq3jh5ulk4wvfyxa2kmbnnb4uram6q43y4cbwn@dv5m52ocyqne>
- <80c50bf4-27b1-483c-9977-2519369c2630@redhat.com> <7ri4u7uxsv6elyohqiq2w5oxv4yhk2tyniwglfxtiueiyofb3n@l4exlmlf5ty4>
- <59641180-a0d9-400c-aaeb-0c9e93954bf5@redhat.com> <c5bcecb8-13e7-4db5-849e-2120c69b2af5@lucifer.local>
- <ed784d6c-6c2a-4e0b-ad2f-e953bf310ce8@redhat.com> <dcfc7e27-d3c8-4fd0-8b7b-ce8f5051d597@lucifer.local>
-In-Reply-To: <dcfc7e27-d3c8-4fd0-8b7b-ce8f5051d597@lucifer.local>
-From: Nico Pache <npache@redhat.com>
-Date: Fri, 12 Sep 2025 18:28:55 -0600
-X-Gm-Features: Ac12FXwNur65Nm5OvErIVCDdmRDdfURv-x3te_kyR-KK-IxwM19Wyqk2iaWoTIE
-Message-ID: <CAA1CXcDyTR64jdhZPae2HPYOwsUxU1R1tj1hMeE=vV_ey9GXsg@mail.gmail.com>
-Subject: Re: [PATCH v11 00/15] khugepaged: mTHP support
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: David Hildenbrand <david@redhat.com>, Kiryl Shutsemau <kas@kernel.org>, linux-mm@kvack.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, ziy@nvidia.com, 
-	baolin.wang@linux.alibaba.com, Liam.Howlett@oracle.com, ryan.roberts@arm.com, 
-	dev.jain@arm.com, corbet@lwn.net, rostedt@goodmis.org, mhiramat@kernel.org, 
-	mathieu.desnoyers@efficios.com, akpm@linux-foundation.org, baohua@kernel.org, 
-	willy@infradead.org, peterx@redhat.com, wangkefeng.wang@huawei.com, 
-	usamaarif642@gmail.com, sunnanyong@huawei.com, vishal.moola@gmail.com, 
-	thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com, 
-	aarcange@redhat.com, raquini@redhat.com, anshuman.khandual@arm.com, 
-	catalin.marinas@arm.com, tiwai@suse.de, will@kernel.org, 
-	dave.hansen@linux.intel.com, jack@suse.cz, cl@gentwo.org, jglisse@google.com, 
-	surenb@google.com, zokeefe@google.com, hannes@cmpxchg.org, 
-	rientjes@google.com, mhocko@suse.com, rdunlap@infradead.org, hughd@google.com, 
-	richard.weiyang@gmail.com, lance.yang@linux.dev, vbabka@suse.cz, 
-	rppt@kernel.org, jannh@google.com, pfalcato@suse.de
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: lIIG2K58EOhZtlLRBoZfSu82p60JCk_Rf6-yKy8xAkA_1757723362
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 15/21] mm/ksw: add test module
+To: Jinchao Wang <wangjinchao600@gmail.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Peter Zijlstra
+ <peterz@infradead.org>, Mike Rapoport <rppt@kernel.org>,
+ Alexander Potapenko <glider@google.com>, Jonathan Corbet <corbet@lwn.net>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+ Juri Lelli <juri.lelli@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
+ Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>,
+ David Hildenbrand <david@redhat.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
+ <vbabka@suse.cz>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ Kees Cook <kees@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+ Sami Tolvanen <samitolvanen@google.com>, Miguel Ojeda <ojeda@kernel.org>,
+ Masahiro Yamada <masahiroy@kernel.org>, Rong Xu <xur@google.com>,
+ Naveen N Rao <naveen@kernel.org>, David Kaplan <david.kaplan@amd.com>,
+ Andrii Nakryiko <andrii@kernel.org>, Jinjie Ruan <ruanjinjie@huawei.com>,
+ Nam Cao <namcao@linutronix.de>, workflows@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-mm@kvack.org, llvm@lists.linux.dev,
+ Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+ Andrey Konovalov <andreyknvl@gmail.com>, Dmitry Vyukov <dvyukov@google.com>,
+ Vincenzo Frascino <vincenzo.frascino@arm.com>, kasan-dev@googlegroups.com,
+ "David S. Miller" <davem@davemloft.net>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-trace-kernel@vger.kernel.org
+References: <20250912101145.465708-1-wangjinchao600@gmail.com>
+ <20250912101145.465708-16-wangjinchao600@gmail.com>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20250912101145.465708-16-wangjinchao600@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Sep 12, 2025 at 12:22=E2=80=AFPM Lorenzo Stoakes
-<lorenzo.stoakes@oracle.com> wrote:
->
-> On Fri, Sep 12, 2025 at 07:53:22PM +0200, David Hildenbrand wrote:
-> > On 12.09.25 17:51, Lorenzo Stoakes wrote:
-> > > With all this stuff said, do we have an actual plan for what we inten=
-d to do
-> > > _now_?
-> >
-> > Oh no, no I have to use my brain and it's Friday evening.
->
-> I apologise :)
->
-> >
-> > >
-> > > As Nico has implemented a basic solution here that we all seem to agr=
-ee is not
-> > > what we want.
-> > >
-> > > Without needing special new hardware or major reworks, what would thi=
-s parameter
-> > > look like?
-> > >
-> > > What would the heuristics be? What about the eagerness scales?
-> > >
-> > > I'm but a simple kernel developer,
-> >
-> > :)
-> >
-> > and interested in simple pragmatic stuff :)
-> > > do you have a plan right now David?
-> >
-> > Ehm, if you ask me that way ...
-> >
-> > >
-> > > Maybe we can start with something simple like a rough percentage per =
-eagerness
-> > > entry that then gets scaled based on utilisation?
-> >
-> > ... I think we should probably:
-> >
-> > 1) Start with something very simple for mTHP that doesn't lock us into =
-any particular direction.
->
-> Yes.
->
-> >
-> > 2) Add an "eagerness" parameter with fixed scale and use that for mTHP =
-as well
->
-> Yes I think we're all pretty onboard with that it seems!
->
-> >
-> > 3) Improve that "eagerness" algorithm using a dynamic scale or #whateve=
-r
->
-> Right, I feel like we could start with some very simple linear thing here=
- and
-> later maybe refine it?
 
-I agree, something like 0,32,64,128,255,511 seem to map well, and is
-not too different from what im doing with the scaling by
-(HPAGE_PMD_ORDER - order).
 
->
-> >
-> > 4) Solve world peace and world hunger
->
-> Yes! That would be pretty great ;)
-This should probably be a larger priority
->
-> >
-> > 5) Connect it all to memory pressure / reclaim / shrinker / heuristics =
-/ hw hotness / #whatever
->
-> I think these are TODOs :)
->
-> >
-> >
-> > I maintain my initial position that just using
-> >
-> > max_ptes_none =3D=3D 511 -> collapse mTHP always
-> > max_ptes_none !=3D 511 -> collapse mTHP only if we all PTEs are non-non=
-e/zero
-> >
-> > As a starting point is probably simple and best, and likely leaves room=
- for any
-> > changes later.
->
-> Yes.
->
-> >
-> >
-> > Of course, we could do what Nico is proposing here, as 1) and change it=
- all later.
->
-> Right.
->
-> But that does mean for mTHP we're limited to 256 (or 255 was it?) but I g=
-uess
-> given the 'creep' issue that's sensible.
+On 9/12/25 3:11 AM, Jinchao Wang wrote:
+> diff --git a/mm/Kconfig.debug b/mm/Kconfig.debug
+> index fdfc6e6d0dec..46c280280980 100644
+> --- a/mm/Kconfig.debug
+> +++ b/mm/Kconfig.debug
+> @@ -320,3 +320,13 @@ config KSTACK_WATCH
+>  	  the recursive depth of the monitored function.
+>  
+>  	  If unsure, say N.
+> +
+> +config KSTACK_WATCH_TEST
+> +	tristate "KStackWatch Test Module"
+> +	depends on KSTACK_WATCH
+> +	help
+> +	  This module provides controlled stack exhaustion and overflow scenarios
+> +	  to verify the functionality of KStackWatch. It is particularly useful
+> +	  for development and validation of the KStachWatch mechanism.
 
-I dont think thats much different to what david is trying to propose,
-given eagerness=3D9 would be 50%.
-at 10 or 511, no matter what, you will only ever collapse to the
-largest enabled order.
-The difference in my approach is that technically, with PMD disabled,
-and 511, you would still need 50% utilization to collapse, which is
-not ideal if you always want to collapse to some mTHP size even with 1
-page occupied. With davids solution this is solved by never allowing
-anything in between 255-511.
+typo:	                                        ^^^^^^^^^^^
 
->
-> >
-> > It's just when it comes to documenting all that stuff in patch #15 that=
- I feel like
-> > "alright, we shouldn't be doing it longterm like that, so let's not mak=
-e anybody
-> > depend on any weird behavior here by over-domenting it".
-> >
-> > I mean
-> >
-> > "
-> > +To prevent "creeping" behavior where collapses continuously promote to=
- larger
-> > +orders, if max_ptes_none >=3D HPAGE_PMD_NR/2 (255 on 4K page size), it=
- is
-> > +capped to HPAGE_PMD_NR/2 - 1 for mTHP collapses. This is due to the fa=
-ct
-> > +that introducing more than half of the pages to be non-zero it will al=
-ways
-> > +satisfy the eligibility check on the next scan and the region will be =
-collapse.
-> > "
-> >
-> > Is just way, way to detailed.
-> >
-> > I would just say "The kernel might decide to use a more conservative ap=
-proach
-> > when collapsing smaller THPs" etc.
-> >
-> >
-> > Thoughts?
->
-> Well I've sort of reviewed oppositely there :) well at least that it need=
-s to be
-> a hell of a lot clearer (I find that comment really compressed and I just=
- don't
-> really understand it).
+> +
+> +	  If unsure, say N.
 
-I think your review is still valid to improve the internal code
-comment. I think David is suggesting to not be so specific in the
-actual admin-guide docs as we move towards a more opaque tunable.
-
->
-> I guess I didn't think about people reading that and relying on it, so ma=
-ybe we
-> could alternatively make that succinct.
->
-> But I think it'd be better to say something like "mTHP collapse cannot cu=
-rrently
-> correctly function with half or more of the PTE entries empty, so we cap =
-at just
-> below this level" in this case.
-
-Some middle ground might be the best answer, not too specific, but
-also allude to the interworking a little.
-
-Cheers,
--- Nico
->
-> >
-> > --
-> > Cheers
-> >
-> > David / dhildenb
-> >
->
-> Cheers, Lorenzo
->
+-- 
+~Randy
 
