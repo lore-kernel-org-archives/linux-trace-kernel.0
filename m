@@ -1,118 +1,137 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E658A13AD05;
-	Sat, 13 Sep 2025 04:13:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 260281684B0;
+	Sun, 14 Sep 2025 09:18:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757736801; cv=none; b=Kkjuge7HR53z1NDlubOh2GtCXMMRPYALblRq0iVfA1Cu3/sTbpq4EHLepEg9qXuLqKvHbaOZGpkl8OuX+4xVbeWwlxvvzs9RBmhwydJip0Bd2/XPe7z80s/RUqtlY/7GYctLTOF2vU9mS0zhE9AeH99LsAj0rJ2/zDEzyHRuU+k=
+	t=1757841516; cv=none; b=XVdFRp95duoYfxf8LMF5ZaZ/oJBIHGpIo+ksfweZN9HNXkH+/retKVGt//iX80dSHXEsLbhmFaTf1+IbT/O8924Dx8i9sZFJhgNFacbVrCdHPsS4KTKpcIUYzlVarxNB4vNOuyFHas1exu4nMpg/vYc8hQWcf2h5z2Wzd3nJP8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757736801; c=relaxed/simple;
-	bh=U9kKsshevJqGszGf9fsgE68j9TrfFI4hVI82DPtJMYE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=BNmrP0addK4CP3H/iEFOIlC4+bIVxOWgcTrQIiWe9xC6eC1smiXzuZluCmV0yY6AdHa2IbiZ3TDqCKa/5ulxXKf/Hc0uyWl2+wXMNKPZ5dBmyG2pYh4MghILqz/cnvfWaAqpoiDaCSPS4zlX9sv5LJ9ExYzUrFpoeZ64FYNtljw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=xPzy07H5; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1757841516; c=relaxed/simple;
+	bh=q3IoJvqx4JW9jNqkMbSKv/nFIhhDIdi2nZRgRhdwL+8=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=apVpxgwZXK2Fsyu2LK5NHsXuGThnN0mQkt97E/KgLnsjDyVxWxLHAXMz/I1muCEGiGo4h4NPmo7k55dxeSYFfwK/uLR3Rhm15XWnHO5CUFdd99F4+LFRwqbh9E5XjI0TSjFlYAsJuXDjga0D5zJZUXrXvDbonsw2PEAfSBvEql0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M58e0Ex+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="xPzy07H5"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Cc:Content-ID:Content-Description;
-	bh=u7ndZnQxyXKvcCzhFli8oZf0PjWLBirdplU5n0FJmLw=; b=xPzy07H5oLyRzMkKUDnRYxRbA8
-	FB9s/mgtYrIEncNja4JJjGye+zGOM5arCPaXRnqY0vBLCsFj8oDAeoSE0UqBh4+bDiLKE1WlvVIGg
-	KVrxlIQZrGV8DB3SCKRdz/WridjNvy5CXv+SD1Va6LVYxjNBA+mGHiEbQRiwSEI+cHvjloDDoXglj
-	0dK5WfUej0zVDXKQOXKsr5DuKq3kr+d9vFJrusNVKTTSLwcsCky4pU6kPywtug6qim/3Nk3gXwtyf
-	vbw1VCU9MqDSbqZvzBQzA1VgqzMvxCdl5wn99ll+PJEWgdoqb2XafQieoBP+l+brAtdIBvxrTKifR
-	pUY01Pvg==;
-Received: from [50.53.25.54] (helo=[192.168.254.17])
-	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uxHdN-0000000D6om-3RkA;
-	Sat, 13 Sep 2025 04:13:09 +0000
-Message-ID: <6b5e5d3e-5db8-44f2-8dca-42f317be8e0d@infradead.org>
-Date: Fri, 12 Sep 2025 21:13:07 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M58e0Ex+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D59FC4CEF5;
+	Sun, 14 Sep 2025 09:18:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757841515;
+	bh=q3IoJvqx4JW9jNqkMbSKv/nFIhhDIdi2nZRgRhdwL+8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=M58e0Ex+WdT9CBB/uNZqIdhWAc8Dqwb7Ez1AldGs7Nl6ZWV3WPv5ojEU/RvvuzGXA
+	 aDO265BmZo7ElcIKe1D5LCTIojm4JDKaFhBJPXuxQ+7bYoGMFi+W6m5QJnV81AdyU/
+	 eWYg12V+O3iFc4G4hXbqvpLhFEQYuDrA5xKz5w0TXjvGEaHZhUSz/8Rj5soJDolhqm
+	 PK6M768IE4KgIR9DvkvxavnSd4hT376jTc2ilY3t8C6Cm3SRKs4ZaTijq9Hd2IrGw2
+	 ux9IKRa78FX25ReaHEBuPtt6HlYaWzDt06EB1MoVpC3luf3JKM5KL4ocywf7TlRQGR
+	 j4t1wvR6piiyg==
+Date: Sun, 14 Sep 2025 18:18:23 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Cc: Jens Axboe <axboe@kernel.dk>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-block@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-btrace@vger.kernel.org, John Garry <john.g.garry@oracle.com>, Hannes
+ Reinecke <hare@suse.de>, Damien Le Moal <dlemoal@kernel.org>, Christoph
+ Hellwig <hch@lst.de>, Naohiro Aota <naohiro.aota@wdc.com>, Shinichiro
+ Kawasaki <shinichiro.kawasaki@wdc.com>, Chaitanya Kulkarni
+ <chaitanyak@nvidia.com>, "Martin K . Petersen" <martin.petersen@oracle.com>
+Subject: Re: [PATCH 00/21] blktrace: Add user-space support for zoned
+ command tracing
+Message-Id: <20250914181823.a17382ac3a039dc4a8257578@kernel.org>
+In-Reply-To: <20250909110723.75676-1-johannes.thumshirn@wdc.com>
+References: <20250909110723.75676-1-johannes.thumshirn@wdc.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 03/21] HWBP: Add modify_wide_hw_breakpoint_local() API
-To: Jinchao Wang <wangjinchao600@gmail.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Masami Hiramatsu <mhiramat@kernel.org>, Peter Zijlstra
- <peterz@infradead.org>, Mike Rapoport <rppt@kernel.org>,
- Alexander Potapenko <glider@google.com>, Jonathan Corbet <corbet@lwn.net>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
- Juri Lelli <juri.lelli@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
- Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>,
- David Hildenbrand <david@redhat.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
- <vbabka@suse.cz>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>, Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- Kees Cook <kees@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
- Sami Tolvanen <samitolvanen@google.com>, Miguel Ojeda <ojeda@kernel.org>,
- Masahiro Yamada <masahiroy@kernel.org>, Rong Xu <xur@google.com>,
- Naveen N Rao <naveen@kernel.org>, David Kaplan <david.kaplan@amd.com>,
- Andrii Nakryiko <andrii@kernel.org>, Jinjie Ruan <ruanjinjie@huawei.com>,
- Nam Cao <namcao@linutronix.de>, workflows@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-mm@kvack.org, llvm@lists.linux.dev,
- Andrey Ryabinin <ryabinin.a.a@gmail.com>,
- Andrey Konovalov <andreyknvl@gmail.com>, Dmitry Vyukov <dvyukov@google.com>,
- Vincenzo Frascino <vincenzo.frascino@arm.com>, kasan-dev@googlegroups.com,
- "David S. Miller" <davem@davemloft.net>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-trace-kernel@vger.kernel.org
-References: <20250912101145.465708-1-wangjinchao600@gmail.com>
- <20250912101145.465708-4-wangjinchao600@gmail.com>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20250912101145.465708-4-wangjinchao600@gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
+Hi Johannes,
 
+On Tue,  9 Sep 2025 13:07:02 +0200
+Johannes Thumshirn <johannes.thumshirn@wdc.com> wrote:
 
-On 9/12/25 3:11 AM, Jinchao Wang wrote:
-> +/**
-> + * modify_wide_hw_breakpoint_local - update breakpoint config for local cpu
-> + * @bp: the hwbp perf event for this cpu
-> + * @attr: the new attribute for @bp
-> + *
-> + * This does not release and reserve the slot of HWBP, just reuse the current
+> This patch series extends the user-space blktrace tools to support the new
+> trace events for zoned block device commands introduced in the corresponding
+> kernel patch series.
 
-                                                 of a HWBP; it just reuses
+I guess this series are patches against for user-space blktrace tool
 
-and preferable s/cpu/CPU/ in comments.
+https://git.kernel.dk/?p=blktrace.git
 
-> + * slot on local CPU. So the users must update the other CPUs by themselves.
-> + * Also, since this does not release/reserve the slot, this can not change the
-> + * type to incompatible type of the HWBP.
-> + * Return err if attr is invalid or the cpu fails to update debug register
-> + * for new @attr.
-> + */
-> +#ifdef CONFIG_HAVE_REINSTALL_HW_BREAKPOINT
-> +int modify_wide_hw_breakpoint_local(struct perf_event *bp,
-> +				    struct perf_event_attr *attr)
-> +{
+And the updates depends on the kernel side update of your series;
+
+https://lore.kernel.org/all/20250909110611.75559-1-johannes.thumshirn@wdc.com/
+
+Right?
+I'm not sure how the blktrace tool development is managed, but please make
+sure this series is not for the kernel. (ah, both has blktrace: tag, hmmm)
+
+Thank you,
+
+> 
+> The updates include:
+> 
+> - Introduction of a new ioctl requesting the v2 version of the trace
+> - Definitions for new zoned operation trace events.
+> - Parsing support in blkparse for these events.
+> - Display of the new events with clear labeling (e.g., ZO, ZA, ZR).
+> - Backward-compatible changes that do not affect existing functionality.
+> 
+> These changes complement the kernel patches and allow full visibility into
+> zone management commands in blktrace output, enabling better analysis and
+> debugging of zoned storage workloads.
+> 
+> The updated blktrace utility will first issue the BLKTRACESETUP2 ioctl and if
+> it fails transpartently fall back to BLKTRACESETUP allowing backwards
+> compatibility.
+> 
+> Feedback and testing on additional device types are appreciated.
+> 
+> Johannes Thumshirn (21):
+>   fix comment for struct blk_trace_setup:
+>   add definitions for BLKTRACESETUP2
+>   call BLKTRACESETUP2 ioctl per default to setup a trace
+>   blktrace: change size of action to 64 bits
+>   blktrace: add definitions for blk_io_trace2
+>   blktrace: support protocol version 8
+>   blkparse: pass magic to get_magic
+>   blkparse: read 'magic' first
+>   blkparse: factor out reading of a singe blk_io_trace event
+>   blkparse: skip unsupported protocol versions
+>   blkparse: make get_pdulen() take the pdu_len
+>   blkiomon: read 'magic' first
+>   blktrace: pass magic to CHECK_MAGIC macro
+>   blktrace: pass magic to verify_trace
+>   blktrace: rename trace_to_cpu to bit_trace_to_cpu
+>   blkparse: use blk_io_trace2 internally
+>   blkparse: natively parse blk_io_trace2
+>   blkparse: parse zone (un)plug actions
+>   blkparse: add zoned commands to fill_rwbs()
+>   blkparse: parse zone management commands
+>   blkparse: parse zone append completions
+> 
+>  act_mask.c     |   4 +-
+>  blkiomon.c     |  15 +-
+>  blkparse.c     | 450 ++++++++++++++++++++++++++++++++++---------------
+>  blkparse_fmt.c | 105 +++++++++---
+>  blkrawverify.c |  14 +-
+>  blktrace.c     |  40 ++++-
+>  blktrace.h     |  64 +++++--
+>  blktrace_api.h |  54 +++++-
+>  8 files changed, 560 insertions(+), 186 deletions(-)
+> 
+> -- 
+> 2.51.0
+> 
+
 
 -- 
-~Randy
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
