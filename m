@@ -1,165 +1,113 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51E8F1D432D
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 15 Sep 2025 21:29:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9082426AF3;
+	Mon, 15 Sep 2025 22:34:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757971784; cv=none; b=bdBagrcME1UmhoJT4T6WLuN6qcKuqXbZ1lI4m2VBDuiXkLJP60OyfRqRN4he8y8ygG6ZMzkys+Hq2+AbA9MRUJB68gQv1IimFv5l8I86djXUhaCeorwrCM3KzlDKEKOgu2qYZwAnyXuPNw7grKM8olW+EuXtU4FBSDjd2RfUfp0=
+	t=1757975644; cv=none; b=fQ7GmxGCPb95qiGxCsaD9+I1JBdq30tAy90GozVDYhXoRqvSiOlyOdNiUUBpNUUHlJNY8RmVXB730WqW798UO24x2xVq85cRqnUjJXt3D0kgf8086f5OLTjSe6iurqfPo8DFYmAvmI40s8ePt3Y5m1XfQc9Gu+zO9fssmyZEfKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757971784; c=relaxed/simple;
-	bh=RUVduxfW+q1+xIpDUx9oew7SFp3YP2RX1oljyANBXE4=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hh40zyBjEACGU51XkaxgauSWY5yyK9dFkYXuZ2xbesOhAqupmbeIqQlSVuQyOAbDTEwi/T6oRZ5OeCZJJgKCnr+Gu8wgXSBhJvGijWIf6uv0fYjkeD1MSGkPuwtpM6iQHCl6a6M0cofiAgys/5KYPmJWne0RDwrQSEUof7ObXeY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VPFp6fa4; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1757975644; c=relaxed/simple;
+	bh=Stv7c8b21tAoRvHnLcswUUt7FKb98hyMbg/pjdBteec=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=fN+Cv5dfp9hqEI43PwHM34nmBwfu93/LLnSrUeMQP+bB5tQHxBcKt7zpMOdjuraRsFtniMuSz1uX6Zi3PgqwQOUyKV9iXFh8u26dijAFuFkerj/vgtx6G6xnFs8ywC+UE9gLCjC5Lw7jbOBMCnFAIzvelnAgRQTIRjb0HhB2WaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Rh6tW0PI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VPFp6fa4"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-b079c13240eso754283966b.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 15 Sep 2025 14:29:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1757971781; x=1758576581; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=QUas9F/ATYTJ0SX50S151v/GKp7Qx1ja4tfTxLpr0QY=;
-        b=VPFp6fa4lWuSnwBXuKEYb3/PH/ONtdheIf70Hf+TUw1LE6MaQoRXxtJhoBV5Ch9nXt
-         RZSGOFLeYwMLBne2M2oR7XAmP3nbV9ffl1CmYRCa/fEVww2Pj5Jt4NnTaVr7Vr4uwKvb
-         35A4bplk5pJ+q4r1lgo+vJjZI1L9m7mnrQvLL0hpbT9dbab3nleNog+3J4DaimlZ/COJ
-         z7brMKn594e5NgRfpndVXaq15IsEUCClHzl0ttPUHf6Mx+j23pUomUTj0QRlkKdbqA90
-         ci8GvEgEDyCp1q9wRqZsZ1cJxv9B7J2fpL5dxek5uMWHREkQTwFdTY0JYlUx96vD1ijX
-         sS5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757971781; x=1758576581;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QUas9F/ATYTJ0SX50S151v/GKp7Qx1ja4tfTxLpr0QY=;
-        b=bqFO+X3srUuR9O8Hmbb5M3YL4vIiO/mYYFiILKynn0rJCJYWXQxFiceOhr2YbcTkcB
-         vZQ+91DNWhIRSm6760zu76UikO0YkNn7Uazr4Ntma7Ns404035r9ywLWhO1gYoYHvLk9
-         V1JmmauK2yASJcXJG9/q2gMc6gmG2NQqoE93tIdKY25wXYTTcQOAwQyhyW4xFxAp/q22
-         sB4nEKWfOzy4ym35dt+pPcTGOO93c3Xr8wBWVkaEJ8DkMrh/ID0BtrSS/n5PIn3gLv/X
-         0MdKgC69duzQm4D7ye/26hCq0v3UyRS7tL6t3Wuu7ecfb1tzH538MxwBJQcYuCJxqx0/
-         /X6g==
-X-Forwarded-Encrypted: i=1; AJvYcCXmpV4AZssLrne0JC+tNXYkiSItiwWTk0D8mcMbkQZ3lrpx/BtqEzxnoGiJvj/eVjxdSmkKUvOI3m2zLgYsZpR6Lvg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyOfQHgB+8q0aBaKSnZbQDnfOwKZX/PlSVbp4MvSdhTRlrDXkmb
-	3l4pVFIAK/TkCptTldnk4qvxKBqYAN1qnDQTg/1nhP0eXs/vgRfzpm4T
-X-Gm-Gg: ASbGncuRIBS0BjjwjuBdOLQ0/hNnPQORAJPwe93B2/lufjLYgNukCURnaqpxNJCtx+0
-	OG0pOLWXOLoBXDB07IjQ9Rz5Bei3EJBy+rTExorCcy1JowS2tqJduu+1P5X8jwOTMKHrWw0K8x+
-	o4Dec0btgytTBaMbbUJlNEhY8Ez/IjBn3RqyNe7sa79YQZIN2sjGXRtER28/aWYDUTCBNvE2Kg0
-	puZfp2UONlqOHqPFu6R/pExGt2Ko/8B2l9bRGBiu2CdXyXdnF/vdKqIVPx/mdmyqcHgn1EtEdSM
-	Np88LE6b3WP9HnSIq/7TFDf7h3GkK7oaBjTbBtljbq2jbTrNXwvh/T0C+LtRRg4Yyv3EqTHEvla
-	x4i7JBtDgycc3es1Xb2bT0gHh3bKssIPRjwFChrY7kNLFUzWg9g==
-X-Google-Smtp-Source: AGHT+IG5wmhrzfoQv6frcbayV8TWGbdyF5my/3S+PId8ITD1HBtsuQZQe3hHDZN00pZEVUVkM/1bmw==
-X-Received: by 2002:a17:907:7e9a:b0:afe:ea93:ddbb with SMTP id a640c23a62f3a-b07c38673ccmr1371195966b.45.1757971780425;
-        Mon, 15 Sep 2025 14:29:40 -0700 (PDT)
-Received: from krava (89-40-234-69.wdsl.neomedia.it. [89.40.234.69])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b09fea706afsm550131766b.91.2025.09.15.14.29.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Sep 2025 14:29:40 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Mon, 15 Sep 2025 23:29:37 +0200
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Jiri Olsa <olsajiri@gmail.com>, Ihor Solodrai <ihor.solodrai@linux.dev>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	x86@kernel.org, Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCHv3 perf/core 0/6] uprobe,bpf: Allow to change app
- registers from uprobe registers
-Message-ID: <aMiFQRLP3w1APfbU@krava>
-References: <20250909123857.315599-1-jolsa@kernel.org>
- <CAEf4Bzb4ErWn=2SajBcyJxqGEYy0DXmtWuXKLskPGLG-Y9POFA@mail.gmail.com>
- <7f591ac9-d3e0-4404-987c-40eceaf51fbb@linux.dev>
- <aMSIr1oItIfWQd5R@krava>
- <CAEf4BzZ21xFq25Vs0xSmCfb1MSbdz_GLs8B6s+h0Q3kCTmnzSw@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Rh6tW0PI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95992C4CEF1;
+	Mon, 15 Sep 2025 22:34:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1757975644;
+	bh=Stv7c8b21tAoRvHnLcswUUt7FKb98hyMbg/pjdBteec=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Rh6tW0PI2bUr3YphPyaqLZMRahxrmrHJA4vmKG+cCDGnzQ5wdpxsjt30Ofyx7EOra
+	 XgccpGxXANJbzL3iUnHWy/wFP9bY80F8jPHHo3GMadzGP1bbBbS17S2C0iXHWDfbIC
+	 q+8BTw/8ahYs5HQFL/4BC19smyPMw5+optpIBBE8=
+Date: Mon, 15 Sep 2025 15:34:01 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Kalesh Singh <kaleshsingh@google.com>
+Cc: minchan@kernel.org, lorenzo.stoakes@oracle.com, david@redhat.com,
+ Liam.Howlett@oracle.com, rppt@kernel.org, pfalcato@suse.de,
+ kernel-team@android.com, android-mm@google.com, Alexander Viro
+ <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara
+ <jack@suse.cz>, Kees Cook <kees@kernel.org>, Vlastimil Babka
+ <vbabka@suse.cz>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko
+ <mhocko@suse.com>, Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Juri
+ Lelli <juri.lelli@redhat.com>, Vincent Guittot
+ <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Valentin
+ Schneider <vschneid@redhat.com>, Jann Horn <jannh@google.com>, Shuah Khan
+ <shuah@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+ linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v2 0/7] vma count: fixes, test and improvements
+Message-Id: <20250915153401.61cbd5120871ee7a4e5b9cae@linux-foundation.org>
+In-Reply-To: <20250915163838.631445-1-kaleshsingh@google.com>
+References: <20250915163838.631445-1-kaleshsingh@google.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEf4BzZ21xFq25Vs0xSmCfb1MSbdz_GLs8B6s+h0Q3kCTmnzSw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Sep 15, 2025 at 01:10:33PM -0700, Andrii Nakryiko wrote:
-> On Fri, Sep 12, 2025 at 1:55 PM Jiri Olsa <olsajiri@gmail.com> wrote:
-> >
-> > On Fri, Sep 12, 2025 at 01:28:55PM -0700, Ihor Solodrai wrote:
-> > > On 9/9/25 9:41 AM, Andrii Nakryiko wrote:
-> > > > On Tue, Sep 9, 2025 at 8:39 AM Jiri Olsa <jolsa@kernel.org> wrote:
-> > > > >
-> > > > > hi,
-> > > > > we recently had several requests for tetragon to be able to change
-> > > > > user application function return value or divert its execution through
-> > > > > instruction pointer change.
-> > > > >
-> > > > > This patchset adds support for uprobe program to change app's registers
-> > > > > including instruction pointer.
-> > > > >
-> > > > > v3 changes:
-> > > > > - deny attach of kprobe,multi with kprobe_write_ctx set [Alexei]
-> > > > > - added more tests for denied kprobe attachment
-> > > > >
-> > > > > thanks,
-> > > > > jirka
-> > > > >
-> > > > >
-> > > > > ---
-> > > > > Jiri Olsa (6):
-> > > > >        bpf: Allow uprobe program to change context registers
-> > > > >        uprobe: Do not emulate/sstep original instruction when ip is changed
-> > > > >        selftests/bpf: Add uprobe context registers changes test
-> > > > >        selftests/bpf: Add uprobe context ip register change test
-> > > > >        selftests/bpf: Add kprobe write ctx attach test
-> > > > >        selftests/bpf: Add kprobe multi write ctx attach test
-> > > > >
-> > > >
-> > > > For the series:
-> > > >
-> > > > Acked-by: Andrii Nakryiko <andrii@kernel.org>
-> > > >
-> > > > Question is which tree will this go through? Most changes are in BPF,
-> > > > so probably bpf-next, right?
-> > >
-> > > Hi Jiri.
-> > >
-> > > This series does not apply to current bpf-next, see below.
-> > >
-> > > Could you please respin it with bpf-next tag?
-> > > E.g. "[PATCH v4 bpf-next 0/6] ..."
-> > >
-> >
-> > hi,
-> > the uprobe change it needs to be on top of the optimized uprobes (tip/perf/core)
+On Mon, 15 Sep 2025 09:36:31 -0700 Kalesh Singh <kaleshsingh@google.com> wrote:
+
+> Hi all,
 > 
-> Is this what you happened to base it on (and thus diff context has
-> that arch_uprobe_optimize), or those changes are needed for correct
-> functioning?
-
-yes
-
+> This is v2 to the VMA count patch I previously posted at:
 > 
-> It seems like some conflict is inevitable, but on uprobe side it's two
-> lines of code that would need to be put after arch_uprobe_optimize
-> (instead of handler_chain), while on BPF side it's a bit more
-> invasive.
+> https://lore.kernel.org/r/20250903232437.1454293-1-kaleshsingh@google.com/
 > 
-> So unless tip/perf/core changes are mandatory for correct functioning,
-> I'd say let's rebase on top of bpf-next and handle that trivial merge
-> conflict during merge window?
+> 
+> I've split it into multiple patches to address the feedback.
+> 
+> The main changes in v2 are:
+> 
+> - Use a capacity-based check for VMA count limit, per Lorenzo.
+> - Rename map_count to vma_count, per David.
+> - Add assertions for exceeding the limit, per Pedro.
+> - Add tests for max_vma_count, per Liam.
+> - Emit a trace event for failure due to insufficient capacity for
+>   observability
+> 
+> Tested on x86_64 and arm64:
+> 
+> - Build test:
+>     - allyesconfig for rename
+> 
+> - Selftests:
+>       cd tools/testing/selftests/mm && \
+>           make && \
+>           ./run_vmtests.sh -t max_vma_count
+> 
+>        (With trace_max_vma_count_exceeded enabled)
+> 
+> - vma tests:
+>       cd tools/testing/vma && \
+>           make && \
+> 	  ./vma
 
-ok, sounds good, will rebase/resend
+fwiw, there's nothing in the above which is usable in a [0/N] overview.
 
-thanks,
-jirka
+While useful, the "what changed since the previous version" info isn't
+a suitable thing to carry in the permanent kernel record - it's
+short-term treansient stuff, not helpful to someone who is looking at
+the patchset in 2029.  
+
+Similarly, the "how it was tested" material is also useful, but it
+becomes irrelevant as soon as the code hits linux-next and mainline.
+
+
+Anyhow, this -rc cycle has been quite the firehose in MM and I'm
+feeling a need to slow things down for additional stabilization and so
+people hopefully get additional bandwidth to digest the material we've
+added this far.  So I think I'll just cherrypick [1/7] for now.  A
+great flood of positive review activity would probably make me revisit
+that ;)
+
