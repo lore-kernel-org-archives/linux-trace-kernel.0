@@ -1,82 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8B8A3019A0;
-	Mon, 15 Sep 2025 15:11:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AA8E2FFDC7
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 15 Sep 2025 15:18:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757949115; cv=none; b=IWZxu/G7dendqWCjz3SbhlaBOWLYvv4RWwGh8NNzpWz5fEbWu8vDtA7DC1W4cjlaSXuoN9RpcUGSXQvpI2Gr3/8WAADkYo8dX1MRms7maJ/h1a0b6qDGnIkQK3aZImipHurroIDfUP8cMauQ/TK/EdbaGuyGBFaRMVAk4oJf2mo=
+	t=1757949524; cv=none; b=aiVF49/IDGa2A7Au94yUXJOT79YPMv/8isExewzU4maDUmxylPGikRrj9ikg7irXHzS7NEiYLyRaBgahiPh/RSd7I49VPTeUcKy2cyxe4nH4DdxTNW/XrjjLixA28rNG9nTJGkuVrdbSaZs+Bvc7bxDYwW+q3bHcFzyzAbRgsRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757949115; c=relaxed/simple;
-	bh=nTXpQDVvV8j8rKPIT52IwtLs5XT4P3l3xVE00vGwQ+Q=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=oQw4deFqrEddELzURYKpS11jl+x7768vvHg14RYxiteQX2kZmsGUQr3s3cl8YL0rc19aBAqbume0ojdMDYcf7REjztKLjuzxnrpIXnS+UcU0FcSqNztni0A1CL2SFt2RtkiZqGVpidMEvb4Jl2/Q5SIgAfjSU/gboLLQEsGSwpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gn3Cicqu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1757949524; c=relaxed/simple;
+	bh=aPik9HGsvwOsfEqdkUh++N4ffckuAtgEBjJ9fPrDnzU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lrDIMEi4aocVcE8HtYh8shq3gYb3cNquAFHf69etTbWJbjA9v6Dgl5A9e9O2sBKf4AuI+1wNI0hz+Lz5b3p+9z2dpElzwHQqC7bpjIevmKL8TkC49W9e2b9c0kbeIKc525dg5O2RhGU0qjrOEHjmModX6rZmWGGYe3oGPrULuGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HKRYysDQ; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gn3Cicqu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 063EDC4CEF1;
-	Mon, 15 Sep 2025 15:11:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757949114;
-	bh=nTXpQDVvV8j8rKPIT52IwtLs5XT4P3l3xVE00vGwQ+Q=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=Gn3CicqumKez3duR++U1ozva7Mn2qarveuL1RqsCuvodOtMTVcDjrwjmbvi3TANR1
-	 990teqrISA6/K21EOHfaNBlNooiouW19f1+D4QPsv7W1f39UNZ9YmoexEfJAn8APdv
-	 7WvLlvTjepZ9+r4SDGKc9LZoWmmEJhXw9vj38X9ZNvyKRpA1IYe3sXGsaXk1NVDX6D
-	 aa8py9kQht7IGg2+V187f8+UUQHiaLVFAlrNhuTzmpmCTZElPixUzAkdEjqIF6QMy7
-	 060qzSFNLKw/MJc2IKcihoAwklZycqZ4dQbpBMJEFo/2UBPpUZWlQNzByvMdyiC0PK
-	 9J2oHkHGKp27A==
-Message-ID: <a7f481f21c8a70b44d9d067bde0d5d1b6ead36ed.camel@kernel.org>
-Subject: Re: [PATCH 5/5] Documentation: trace: histogram: Link to ftrace docs
-From: Tom Zanussi <zanussi@kernel.org>
-To: Bagas Sanjaya <bagasdotme@gmail.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Documentation
- <linux-doc@vger.kernel.org>,  Linux Kernel Tracing
- <linux-trace-kernel@vger.kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>,  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Jonathan Corbet <corbet@lwn.net>
-Date: Mon, 15 Sep 2025 10:11:53 -0500
-In-Reply-To: <20250911042527.22573-6-bagasdotme@gmail.com>
-References: <20250911042527.22573-1-bagasdotme@gmail.com>
-	 <20250911042527.22573-6-bagasdotme@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.3-0ubuntu1 
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HKRYysDQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1757949521;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=2SqFRyWFgIYBBvhgQxkTIZmI2czJO8LiS/YZgcmme88=;
+	b=HKRYysDQFr2/PbORyM2XI7NUd7BjWXSVPv3vau7781kAVMsZ3HODgY1vhaEGYInrc5Ik7t
+	kr/1KPbdqy8zX8UnRSYvi1atqoG8HYW7Jt/xz3Sxz1z5dYelKUekyn44Dic4RQGT6NbEs6
+	tb/L0B1pTWNOn0CFMYTz2YiH7UXkad4=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-67-bLfS603vM3m9PSr8ETAPHQ-1; Mon,
+ 15 Sep 2025 11:18:37 -0400
+X-MC-Unique: bLfS603vM3m9PSr8ETAPHQ-1
+X-Mimecast-MFC-AGG-ID: bLfS603vM3m9PSr8ETAPHQ_1757949516
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9BE591956096;
+	Mon, 15 Sep 2025 15:18:36 +0000 (UTC)
+Received: from wcosta-thinkpadt14gen4.rmtbr.csb (unknown [10.22.80.89])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id CF1811954126;
+	Mon, 15 Sep 2025 15:18:31 +0000 (UTC)
+From: Wander Lairson Costa <wander@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Tomas Glozar <tglozar@redhat.com>,
+	Wander Lairson Costa <wander@redhat.com>,
+	linux-trace-kernel@vger.kernel.org (open list:Real-time Linux Analysis (RTLA) tools),
+	linux-kernel@vger.kernel.org (open list)
+Cc: John Kacur <jkacur@redhat.com>,
+	Luis Goncalves <lgoncalv@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Chang Yin <cyin@redhat.com>,
+	Costa Shulyupin <costa.shul@redhat.com>,
+	Crystal Wood <crwood@redhat.com>,
+	Gabriele Monaco <gmonaco@redhat.com>
+Subject: [PATCH] rtla/actions: Fix condition for buffer reallocation
+Date: Mon, 15 Sep 2025 12:18:02 -0300
+Message-ID: <20250915151807.40851-1-wander@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On Thu, 2025-09-11 at 11:25 +0700, Bagas Sanjaya wrote:
-> In brief "Extended error information" section, details on error
-> condition is referred to ftrace docs. Add the link to it.
+The condition to check if the actions buffer needs to be resized was
+incorrect. The check `self->size >= self->len` would evaluate to
+true on almost every call to `actions_new()`, causing the buffer to
+be reallocated unnecessarily each time an action was added.
 
-Reviewed-by: Tom Zanussi <zanussi@kernel.org>
+This patch fixes the condition to `self->len >= self.size`, ensuring
+that the buffer is only resized when it is actually full.
 
->=20
-> Signed-off-by: Bagas Sanjaya <bagasdotme@gmail.com>
-> ---
-> =C2=A0Documentation/trace/histogram.rst | 4 ++--
-> =C2=A01 file changed, 2 insertions(+), 2 deletions(-)
->=20
-> diff --git a/Documentation/trace/histogram.rst
-> b/Documentation/trace/histogram.rst
-> index d158dadaa42447..340bcb5099e7a4 100644
-> --- a/Documentation/trace/histogram.rst
-> +++ b/Documentation/trace/histogram.rst
-> @@ -209,8 +209,8 @@ Documentation written by Tom Zanussi
-> =C2=A0
-> =C2=A0=C2=A0 For some error conditions encountered when invoking a hist t=
-rigger
-> =C2=A0=C2=A0 command, extended error information is available via the
-> -=C2=A0 tracing/error_log file.=C2=A0 See Error Conditions in
-> -=C2=A0 :file:`Documentation/trace/ftrace.rst` for details.
-> +=C2=A0 tracing/error_log file.=C2=A0 See "Error conditions" section in
-> +=C2=A0 Documentation/trace/ftrace.rst for details.
-> =C2=A0
-> =C2=A02.3. 'hist' trigger examples
-> =C2=A0----------------------------
+Fixes: 6ea082b171e00 ("rtla/timerlat: Add action on threshold feature")
+Signed-off-by: Wander Lairson Costa <wander@redhat.com>
+---
+ tools/tracing/rtla/src/actions.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/tracing/rtla/src/actions.c b/tools/tracing/rtla/src/actions.c
+index aaf0808125d72..af5f76bd1821b 100644
+--- a/tools/tracing/rtla/src/actions.c
++++ b/tools/tracing/rtla/src/actions.c
+@@ -49,7 +49,7 @@ actions_destroy(struct actions *self)
+ static struct action *
+ actions_new(struct actions *self)
+ {
+-	if (self->size >= self->len) {
++	if (self->len >= self->size) {
+ 		self->size *= 2;
+ 		self->list = realloc(self->list, self->size * sizeof(struct action));
+ 	}
+-- 
+2.51.0
 
