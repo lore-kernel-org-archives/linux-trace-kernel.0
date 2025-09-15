@@ -1,185 +1,161 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5CF7189F3B;
-	Mon, 15 Sep 2025 00:25:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 367551DF273
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 15 Sep 2025 02:03:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757895926; cv=none; b=IrHysMw8ru1lQgye9rRt+hE/r0ucFHPdz1rR+xKTvWA2inr3v/Z3WgsmfP+JNqiA8FDy1Jcbw7QE2ZYJszy+3Z9D2DnyulHFYK5ZL+ml6mRVV5/ZFy7yHGbFLI4ScMDlumyLEfNRK6HtAqt5b8lvsmb8pTUYDEKrBPUNjnGxB4U=
+	t=1757901796; cv=none; b=AsFC/wlOje6KJrqQyq6if+bs8+rpnDrb+Hz7OStu02ODzAz/QKoldc8s7i2GlF+TKaO0nGvMaqyXoiH69+YfRIt2VsoW7asL3jQxRCViY4AZtY8k85Z90colTqICWM74OKhL0kSRwglKolDK073QN5re8ltPvpogk0J+tFOpV9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757895926; c=relaxed/simple;
-	bh=zEoptxqfKZSCEk17+Y0MDsXZEX03H+Xf2g82b3gPamU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZhIr16kwvo/lIpYPiwwmAa9SPXMZcX8BEeaMl4m0f1mnaj9vAZXFLl6v0WNF86VEfYmcoYEwtJsXe56v8H8bdn2z/tPj0kUlXMoNTXL0xaHSYxUU34qYYhbWiHRXU4wZJqjaho8W9/UHNiUZVgG9YDDCbHIrXI2eyNz3Wmr3eOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=C4Vr9g9t; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1757901796; c=relaxed/simple;
+	bh=dwEnk+JUy+plSH589xKHA8fu3lw4UwydsjYzisg/b04=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Hwa2V16luiLWx60/7GJOaEKZ1T2vzfjabluFRZFcBQ5relmwLryYK+mYQE7d4gq/63oIAx0FJ+Dcc6/Z9EF46HnIscCmComlMcCzDJGOOlkn74+PbmZbobUFrlOifjWdc3SW2O/NiiO/iPERLL7HQ6aLHRSkguJ7NBdcyu6pEzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Rv6Idl0y; arc=none smtp.client-ip=209.85.215.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="C4Vr9g9t"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=u8zMQpdMOqIdURPi9uNy67Biru0axdnayB3aNUPVnFg=; b=C4Vr9g9tXs0Oc6zzKbFOONNmS8
-	eSq7F7barvctskieUIp02HEyGQ5xs95vT4cQdN8GL8v8pFooUt4jO90o9jRdZN2qTWgLbANdIQHVg
-	7yWqDbMse/xbhrClylogg0mkrBD+sfMojfAxlRUKqoUYxmVvZQhc49T5CYv+u4+BMbsZw1Mmn9hDt
-	QLFtLpVkchQJYQzd33HRUXm7OQC2+puMAgjlu+FJx10HXRXGHMPK1PZazbc18iKT52RKB5O5dIz3G
-	2tUV2HN5Ickg8XzW7+WYHGD4fWqQpAyB7ji5nbaGvb6R+RwmoHRSuvx8XxoDlqQJBsrG8uFyWfaTs
-	iVhfy0+w==;
-Received: from [50.53.25.54] (helo=[192.168.254.17])
-	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uxx20-00000002PjJ-0sg7;
-	Mon, 15 Sep 2025 00:25:20 +0000
-Message-ID: <fadb37f2-543a-4c4c-9cde-5ee7928edbe4@infradead.org>
-Date: Sun, 14 Sep 2025 17:25:19 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rv6Idl0y"
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-b523fb676efso2607110a12.3
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 14 Sep 2025 19:03:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1757901794; x=1758506594; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=JOygL22yeiI/c6chOsAL099+jLfX4ygYuBDAjkKbT5k=;
+        b=Rv6Idl0yeeUOlPmqKUtz99fVG07ZJdK2iN/x3ppIkVirqgGRBiGaAJsS/gnAgadRW0
+         2auYQj+tMxYTlIoF3pS6eG7e4fykWm070s/MSdZ/vDGvnpg956lXJVdmuhc4Wl9x7Wm9
+         p97QO3U7X2RALUZCRBXTtpvco+axu40xlvQX/k6D9rgIs4ontpY2Y+Wn9phfKhloIfZj
+         D4qOOF1XTJeACiU1dS9iPRHGY9FLSoiTd/iHGFQ9g7o5iJ0CzwZvxLWs5LtZ2yx7az1c
+         e3Lbn16MUqWOppXSDk+aAcgRD5/dzkXnBnkinscXYgLi4he3Gml1pJBGjnX6HSF+JgwA
+         8Xbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757901794; x=1758506594;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JOygL22yeiI/c6chOsAL099+jLfX4ygYuBDAjkKbT5k=;
+        b=du8h5SzEaBJx6qHY61qbQLAk5i1Bpf9Kdw+YnKLW6opyNU3pisFj7Q0UxrfWnbID+8
+         7IRfZY9ee4FHRAZKa2U+xoBcY+nKj8QZCkl0p0nvheBMkvfPMPRstVhb2jgWhT9KcLLj
+         RWjFsHNZmmqwGyeu8Ev3X04xWGoYaBVfQjeFUqJOrVwUOMryb62xXGe6hulU0F3WQEWe
+         yn02WB9T2wx8wxR9n3F7WATfHYxBj3ZtSSb7WbmxTrsphuuR9wJ+y1Pbta/Sb9uNkIbi
+         PQa3ENIhV5nNDTgcQhJzeENTJLmgSRe861HK4D6MyUGJVedVpBwmIsBxiasdcQCSmUcV
+         G9bA==
+X-Forwarded-Encrypted: i=1; AJvYcCWsp4/v7973ELHPvuIfR+bcNeSdMHoxwRmkn9ZW3hJ/hXWXoQ8WzB1z+t6kbIEcXefn/3b1fI1NrUouwD+/DchK8Kw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHKz+k3WZcOJXh4+4eWwvdogOpZfGXcJzm20e0Z2rexY6d3kX0
+	DghI7+/QLM4cfLEjnAByY1FCTqitCIRVT+eymuAW+z/VxRvNzfg0qxmz
+X-Gm-Gg: ASbGncsxSo+bEWrAL9kd8GNRh7qWB3Ig23gAWzZcZ1fbjtnFZa4fsaPTWkj2eRbE2Fb
+	55Nr6i+W3T6tepK9hfG5UpNX4EC7f66NhunQYZQ/xV4RN2Dz1pY4quwBcmeiDDmozRvkqBEl7sD
+	0X20rlugGeEMUQ3V/cJCKYGQVgUpPk0pn3lD4WHn131vBZN7gp+03SBkZfzaO3BIpxtWOmkmKNG
+	F+cSTJRZlmcpmd2aKuc0D1TNX651bveNwXDCeCJLIaPnnjCloOF7yA7+Q+gz/zS3d3f17KJbbTQ
+	zV1WOVFjBd2kf9Dh30SsscCfdEfrlz/FlEXbHGgf9aY+2R74E4tdTrBQfFGB8PrmhHYuSJDqbie
+	AbTrDVprY5n9YnBUJpYSqWEwZNOaW2UhuOr3T+qc=
+X-Google-Smtp-Source: AGHT+IEeqkh40QJM9zjJ8HL43W+1enVBlgkaCaBCrqZXNAUnxXXVQNA79eZr3zdQ3nIBlPPQ1opd6Q==
+X-Received: by 2002:a17:903:f85:b0:260:5bab:8cad with SMTP id d9443c01a7336-2605babb245mr90876965ad.29.1757901794287;
+        Sun, 14 Sep 2025 19:03:14 -0700 (PDT)
+Received: from localhost ([185.49.34.62])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-261333a972dsm51596705ad.75.2025.09.14.19.03.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 14 Sep 2025 19:03:13 -0700 (PDT)
+Date: Mon, 15 Sep 2025 10:03:06 +0800
+From: Jinchao Wang <wangjinchao600@gmail.com>
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Alexander Potapenko <glider@google.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	David Hildenbrand <david@redhat.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, Kees Cook <kees@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Masahiro Yamada <masahiroy@kernel.org>, Rong Xu <xur@google.com>,
+	Naveen N Rao <naveen@kernel.org>,
+	David Kaplan <david.kaplan@amd.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Jinjie Ruan <ruanjinjie@huawei.com>, Nam Cao <namcao@linutronix.de>,
+	workflows@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	linux-mm@kvack.org, llvm@lists.linux.dev,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	kasan-dev@googlegroups.com, "David S. Miller" <davem@davemloft.net>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 15/21] mm/ksw: add test module
+Message-ID: <aMdz2gMb5YC3G3md@mdev>
+References: <20250912101145.465708-1-wangjinchao600@gmail.com>
+ <20250912101145.465708-16-wangjinchao600@gmail.com>
+ <69198449-411b-4374-900a-16dc6cb91178@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 5/8] tracing: wprobe: Add wprobe event trigger
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
- Steven Rostedt <rostedt@goodmis.org>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@kernel.org>, x86@kernel.org
-Cc: Jinchao Wang <wangjinchao600@gmail.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin"
- <hpa@zytor.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-perf-users@vger.kernel.org
-References: <175785897434.234168.6798590787777427098.stgit@devnote2>
- <175785903073.234168.11080771050255081365.stgit@devnote2>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <175785903073.234168.11080771050255081365.stgit@devnote2>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <69198449-411b-4374-900a-16dc6cb91178@infradead.org>
 
-
-
-On 9/14/25 7:10 AM, Masami Hiramatsu (Google) wrote:
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Fri, Sep 12, 2025 at 09:07:11PM -0700, Randy Dunlap wrote:
 > 
-> Add wprobe event trigger to set and clear the watch event dynamically.
-> This allows us to set an watchpoint on a given local variables and
-> a slab object instead of static objects.
 > 
-> The trigger syntax is below;
-
-                        below:
-(just a nit :)
-
+> On 9/12/25 3:11 AM, Jinchao Wang wrote:
+> > diff --git a/mm/Kconfig.debug b/mm/Kconfig.debug
+> > index fdfc6e6d0dec..46c280280980 100644
+> > --- a/mm/Kconfig.debug
+> > +++ b/mm/Kconfig.debug
+> > @@ -320,3 +320,13 @@ config KSTACK_WATCH
+> >  	  the recursive depth of the monitored function.
+> >  
+> >  	  If unsure, say N.
+> > +
+> > +config KSTACK_WATCH_TEST
+> > +	tristate "KStackWatch Test Module"
+> > +	depends on KSTACK_WATCH
+> > +	help
+> > +	  This module provides controlled stack exhaustion and overflow scenarios
+> > +	  to verify the functionality of KStackWatch. It is particularly useful
+> > +	  for development and validation of the KStachWatch mechanism.
 > 
->   - set_wprobe:WPROBE:FIELD[+OFFSET] [if FILTER]
->   - clear_wprobe:WPROBE[:FIELD[+OFFSET]] [if FILTER]
+> typo:	                                        ^^^^^^^^^^^
+Thanks, will be fix in next version.
 > 
-> set_wprobe sets the address pointed by FIELD[+offset] to the WPROBE
-> event. The FIELD is the field name of trigger event.
-> clear_wprobe clears the watch address of WPROBE event. If the FIELD
-> option is specified, it clears only if the current watch address is
-> same as the given FIELD[+OFFSET] value.
+> > +
+> > +	  If unsure, say N.
 > 
-> The set_wprobe trigger do not change type and length. That should be
-
-                         does                             should be done
-?
-
-> set when a new wprobe is created.
+> -- 
+> ~Randy
 > 
-> Also, the WPROBE event must be disabled when setting the new trigger
-> and it will be busy afterwards. Recommended usage is to add a new
-> wprobe at NULL address and keep disabled.
-> 
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> ---
->  Changes in v3:
->   - Add FIELD option support for clear_wprobe and update document.
->   - Fix to unregister/free event_trigger_data on file correctly.
->   - Fix syntax comments.
->  Changes in v2:
->   - Getting local cpu perf_event from trace_wprobe directly.
->   - Remove trace_wprobe_local_perf() because it is conditionally unused.
->   - Make CONFIG_WPROBE_TRIGGERS a hidden config.
-> ---
->  Documentation/trace/wprobetrace.rst |   88 +++++++
->  include/linux/trace_events.h        |    1 
->  kernel/trace/Kconfig                |   10 +
->  kernel/trace/trace_wprobe.c         |  430 +++++++++++++++++++++++++++++++++++
->  4 files changed, 529 insertions(+)
-> 
-> diff --git a/Documentation/trace/wprobetrace.rst b/Documentation/trace/wprobetrace.rst
-> index 9774f57e2947..a1812a8ac491 100644
-> --- a/Documentation/trace/wprobetrace.rst
-> +++ b/Documentation/trace/wprobetrace.rst
-> @@ -67,3 +67,91 @@ Here is an example to add a wprobe event on a variable `jiffies`.
->             <idle>-0       [000] d.Z1.  717.026373: my_jiffies: (tick_do_update_jiffies64+0xbe/0x130)
->  
->  You can see the code which writes to `jiffies` is `do_timer()`.
-> +
-> +Combination with trigger action
-> +-------------------------------
-> +The event trigger action can extend the utilization of this wprobe.
-> +
-> +- set_wprobe:WPEVENT:FIELD[+|-ADJUST]
-> +- clear_wprobe:WPEVENT[:FIELD[+|-]ADJUST]
-> +
-> +Set these triggers to the target event, then the WPROBE event will be
-> +setup to trace the memory access at FIELD[+|-ADJUST] address.
-> +When clear_wprobe is hit, if FIELD is NOT specified, the WPEVENT is
-> +forcibly cleared. If FIELD[[+|-]ADJUST] is set, it clears WPEVENT only
-> +if its watching address is the same as the FIELD[[+|-]ADJUST] value.
-> +
-> +Notes:
-> +The set_wprobe trigger do not change type and length. That should be
-                          does not                          should be done
-
-
-> +set when a new wprobe is created.
-> +
-> +The WPROBE event must be disabled when setting the new trigger
-> +and it will be busy afterwards. Recommended usage is to add a new
-> +wprobe at NULL address and keep disabled.
-> +
-> +
-> +For example, trace the first 8 byte of the dentry data structure passed
-
-                                  bytes
-
-> +to do_truncate() until it is deleted by __dentry_kill().
-> +(Note: all tracefs setup uses '>>' so that it does not kick do_truncate())
-> +
-> +  # echo 'w:watch rw@0:8 address=$addr value=+0($addr)' > dynamic_events
-
-Just using '>' here is OK?
-
-> +
-> +  # echo 'f:truncate do_truncate dentry=$arg2' >> dynamic_events
-> +  # echo 'set_wprobe:watch:dentry' >> events/fprobes/truncate/trigger
-> +
-> +  # echo 'f:dentry_kill __dentry_kill dentry=$arg1' >> dynamic_events
-> +  # echo 'clear_wprobe:watch:dentry' >> events/fprobes/dentry_kill/trigger
-> +
-> +  # echo 1 >> events/fprobes/truncate/enable
-> +  # echo 1 >> events/fprobes/dentry_kill/enable
-> +
-> +  # echo aaa > /tmp/hoge
-> +  # echo bbb > /tmp/hoge
-> +  # echo ccc > /tmp/hoge
-> +  # rm /tmp/hoge
-> +
-> +Then, the trace data will show;
-
-Usually that should be:      show:
-
-but in .rst it might need to be    show::
-
-I don't know. Haven't tested it.
-
 
 -- 
-~Randy
-
+Jinchao
