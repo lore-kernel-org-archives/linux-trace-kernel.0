@@ -1,163 +1,125 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31189D2FB;
-	Tue, 16 Sep 2025 04:41:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D8B32D661A
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 16 Sep 2025 05:42:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757997679; cv=none; b=VSwjWHEBKmwrTX5H8TwV1w2yvnqhvmXBGOIRKO0+ZpsB/x6WsOpPdh8VtErtbqSREDQGem1Az/smCO3CRMWHflVCbxWbliYnaeb0YnYNKlZ892YOjQQ8vVxm3kYOpkYNMuqr3SAlatlh+q4rOSEYartIddAd65ubOMD69hSiYQI=
+	t=1758001345; cv=none; b=RJQ1uLsOjN8t0Ba9IFlm7MgUcm8ccMVqRf62oy+7os9/swquejyHGZD2+/ocE0njLCJ2pWmo3ijN+VyYYhm5pyylVzc7o5NT5wCd5wXlQUXXCDZjdvN716NnRlclsef2buxZCyBzUh0o6oQzvSGRJOGPVRjEaZ6Jw3jbbCQ9Msc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757997679; c=relaxed/simple;
-	bh=bYfqrxycnxV0HTrz1zQsr4bkM+LSPUuSRyUNXr4SpFE=;
+	s=arc-20240116; t=1758001345; c=relaxed/simple;
+	bh=d2Ks+Ez2kkiMgnmwiuOB1yzGYoU50hvL0gFy9bbawNs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MyLJuOFRRy19eTdEJhqmxTyzTYM9mFAyCK9yjwzBLULnP+g/Za25xM0xh3thKk3H90kYG5bJ7b7i+RcuEdCanCCiMQxFMGHB4NgpmMTY6jlbeebJZiNinvj+gOB+rjddA2DBK3dS0zUVNIT7qXRIuIfaud4+Kmyi91pydXb3lxA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=UIEjXAJb; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	 MIME-Version; b=S0+qgAOP6d4X7RsJHJ1n3j5S80ZT4zMwt7ebOsdvoA8glEeI5XE9CJGw6U2+CJtVWxOXwDv4lv93mMX5e/zYhuSOI7iWRc+lTalY/kDcx9EnpnB8pGJI3dxvJez4y3O1DOBPX0e1zrPjPoIXilGbAxU1N6OX1m5N6LtdIo2ozk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fLdtZX/c; arc=none smtp.client-ip=209.85.215.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="UIEjXAJb"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 58FI187D031553;
-	Tue, 16 Sep 2025 04:41:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=pAfgq7DC16Q2Tgxbp
-	JzO5Fd/wYYcfpRe1dodp200UJ4=; b=UIEjXAJbBmCKFmfotzZhPiLPTFVJcICZ+
-	/7jGioRiNYKHMSjwslYYAkf7MJEUnVYyr1dABMYvUG6LmcOHYJ2/OdovXOqrJuNd
-	gIRt+XELke2kVj9EClX2BFCFNex8sQhV7ML+Mc6f2PKHM8AV12+xf4ns//qE7I+7
-	BFxWapCIBK2+z9VMShVXf9uGNyQxAMxYnTbq9vnSmIUN7XzMBYqzMBksDDcMK4fL
-	8BtUB/LgvJqD2xOs5VDErmdTYs2P0j7ITfNBkrz0irdUMpJFwuoKwfPvuCMajyny
-	8anLSKE4E6r98zL+t7jgHZ1yRr8SI8hk15YuHT0pUn4KpKBwjvneg==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 494x1te9g8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Sep 2025 04:41:02 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 58G4f276011843;
-	Tue, 16 Sep 2025 04:41:02 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 494x1te9g2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Sep 2025 04:41:02 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 58G4DnUE009363;
-	Tue, 16 Sep 2025 04:41:01 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 495nn39r1v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Sep 2025 04:41:01 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 58G4etLT24052030
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 16 Sep 2025 04:40:55 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5DDAA20043;
-	Tue, 16 Sep 2025 04:40:55 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6E40F20040;
-	Tue, 16 Sep 2025 04:40:49 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.61.243.165])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 16 Sep 2025 04:40:48 +0000 (GMT)
-From: Aditya Bodkhe <adityab1@linux.ibm.com>
-To: linuxppc-dev@lists.ozlabs.org
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com,
-        christophe.leroy@csgroup.eu, rostedt@goodmis.org, mhiramat@kernel.org,
-        mark.rutland@arm.com, Hari Bathini <hbathini@linux.ibm.com>,
-        Venkat Rao Bagalkote <venkat88@linux.ibm.com>,
-        Aditya Bodkhe <aditya.b1@linux.ibm.com>
-Subject: [PATCH v4 2/2] powerpc/fprobe: fix updated fprobe for function-graph tracer
-Date: Tue, 16 Sep 2025 10:10:35 +0530
-Message-ID: <20250916044035.29033-2-adityab1@linux.ibm.com>
-X-Mailer: git-send-email 2.50.0
-In-Reply-To: <20250916044035.29033-1-adityab1@linux.ibm.com>
-References: <20250916044035.29033-1-adityab1@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fLdtZX/c"
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-b54acc8c96eso3379892a12.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 15 Sep 2025 22:42:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1758001343; x=1758606143; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5OrphTQTPcPloMHaTWuSR0TqiJdZDQyGVN8eE5nU/kg=;
+        b=fLdtZX/cIxnrc7ADRhhzQS1AQUgaMPH/yx69Cvr/3wJj7pAnYlP7BVb3vtFMmmtgD8
+         kG2qfDKXTf3Z9BISLpCcgHw3E6rHS87OexD93ed98M+1jd6zo47KSaz5WtnPhCYjElWc
+         wbWgqdcbVaShig0+q/FXrcNBMyu2O3an634R0YmPHaL/Y3NWciWfO1UsqkG8PqYmyMrX
+         5oj0u3anQocWmwX8OlvMcDB4cy3QHmBWrO7WB3cNR4ULh0yC3Xt+PWr0PyVV5oU4gmKi
+         vW2j3Vqp4nL19bzZZYwUkP+F7cFjhPFGS8JEqEXK9eA3ImWyHUAkTdv0fBYhI91DcNaV
+         BGag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758001343; x=1758606143;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5OrphTQTPcPloMHaTWuSR0TqiJdZDQyGVN8eE5nU/kg=;
+        b=LUPDNnW0O4l8GEsfkjq6+pyQWZGUQzJde0iUpl/alfT/zqrsmS/3lJkqkGAmVF/G0u
+         6nVSsWRKOOa5nDt1pf/AZtUxmMGQybGTZgjO3vaZW6YKvoz2YxV9gjvwhuwJC4YF2gLH
+         q6M8P0u2UZIXV50qdE41Er5ImSQVvmzQYVxkATLCkr/Ddd5EcoLzB4c3sPOBKEANIS9d
+         hSXOI6wbtsssV9JJdc34pGdZNkpxzOBoq/z4Pcc/1Urs+h/WCsmhX/HEMTgxMIdmy6NJ
+         bUwNaSJrFCfEYOxwhQmqkYgfOkXEBLLG8ASZly5fxQjJ8CQLjkPMR4INmw79dznLCrsH
+         qHAg==
+X-Forwarded-Encrypted: i=1; AJvYcCUlljj+RWb8jiZkEFiUzdxnTCPC8tkU7hapYCXObsLJKFy+/LsaoRnw+omtHY0b1t69zclERSyA/Yd/QM7sP15BRB0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzWPuplnAVZMagWDAOTRsVpNZ9Rb9dyNq0WRc8E5cghZEXVQPnL
+	1i8Wj4wijCuEyWJtWa3hiQXygI3biEb46cc2ZQ5tRa4vOjjaSVQCGeIs
+X-Gm-Gg: ASbGnctRr0j2oGa5uIOPFIJJUj8nsB4SG0yYTzHB2QvrqYiZYfu+vchSyWyoYc5BnZl
+	XCiuOrE8Wgeh1iPpgOUTEa0i9J75pfmVLKB8NU0snoqW+OYDhHBaUZYYMbAHT6m8jX2am3TwRJh
+	C9XfvULnR4WewZKg9gqRXwnZtfc/Aursh0J3Eu2AtEz+6exeMhi2uuZGs+ha2Yo0MdI0ZwU9vWd
+	3DSXylCi6aEf48evNH/O/zDNKX5zYU7FsPwRtezMruSy3M/1Md4WsDq7pLxS8Klw2J9YtVJgLo3
+	41+fahtPR3wlkqAjlNdv180GDNFJf+k6LBdijXTOdwmCiRjGBQQe1BYVk+wa4P4HKrM5vgExTz9
+	trrFbfSP0ryIlqdIK2lejht8eEg==
+X-Google-Smtp-Source: AGHT+IFjkDAeBD3m3VhlVk8jYHDU8nrvwEkAOBqjFcy5ibI78SkWM7xIqAKJtkrXYmtLfgV7adazMQ==
+X-Received: by 2002:a05:6a20:939e:b0:249:d3d:a506 with SMTP id adf61e73a8af0-2602ca077cbmr20640551637.57.1758001342621;
+        Mon, 15 Sep 2025 22:42:22 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-77654a55d08sm8626719b3a.77.2025.09.15.22.42.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Sep 2025 22:42:21 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id 817F84227236; Tue, 16 Sep 2025 12:42:19 +0700 (WIB)
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Documentation <linux-doc@vger.kernel.org>,
+	Linux Kernel Tracing <linux-trace-kernel@vger.kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Tom Zanussi <zanussi@kernel.org>,
+	Bagas Sanjaya <bagasdotme@gmail.com>
+Subject: [PATCH v2 4/5] Documentation: trace: histogram-design: Wrap introductory note in note:: directive
+Date: Tue, 16 Sep 2025 12:42:02 +0700
+Message-ID: <20250916054202.582074-6-bagasdotme@gmail.com>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20250916054202.582074-2-bagasdotme@gmail.com>
+References: <20250916054202.582074-2-bagasdotme@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1552; i=bagasdotme@gmail.com; h=from:subject; bh=d2Ks+Ez2kkiMgnmwiuOB1yzGYoU50hvL0gFy9bbawNs=; b=owGbwMvMwCX2bWenZ2ig32LG02pJDBknfpirH3M5u7rrglCKnIn7+0dSGWyln3SvTbzr6rjLs ke2dA5zRykLgxgXg6yYIsukRL6m07uMRC60r3WEmcPKBDKEgYtTACYiycrwP5Yv/PU6v5fdOt+8 b4b73JbunH4qInOCllbor/XsKwNX7GVkWMJ47OTmLQ1GPuXfZziWlzSuSPl91IG/8dll7j8xDzk F2QE=
+X-Developer-Key: i=bagasdotme@gmail.com; a=openpgp; fpr=701B806FDCA5D3A58FFB8F7D7C276C64A5E44A1D
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=OMsn3TaB c=1 sm=1 tr=0 ts=68c8ea5e cx=c_pps
- a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
- a=yJojWOMRYYMA:10 a=VnNF1IyMAAAA:8 a=VwQbUJbxAAAA:8 a=eJdZZeSqwtc_5qrUTOUA:9
-X-Proofpoint-ORIG-GUID: bhQoXvQwD7WJrUGm602XjEeZUkpTQq4u
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTEzMDAwMSBTYWx0ZWRfX9zRL0YAeXKdw
- M8bz4r564F3Jo6NHAfsJYYqjWo8u44HRh7NSYVOsZjQMxPOC9yx79JSzEehsS5/mP/+oyGgyXaE
- IJvNob4X9ccQpqcHjCCnU3CUpZb3lWodiFf+D3rSacpHFormfhAr7EKEeXN88hUpIYAzkHJLeqM
- zPpbXZS9b5ww6cjIM1u8lHsU8wsoUXqnF5BBWlVKWXBT2I6uz86OB4IzshJ7W+sEag/47KVdqFU
- PK+yIxBsjHwx3dWP0TPeKHV4c+HWNBIFCbo4MCoe137Riz/O/isSCFlyXTbv+IMmU5bVF8DG03n
- NSsh7hDVteLbnLbNJh/DUnFoYY1XsBFKipEfKfKfOAV3HmZsE362stwtNxO4eiUOm702regwoLe
- ALDV70ki
-X-Proofpoint-GUID: IePM3FrU7ydYMVXovTR2jtZ_DJ5IYsJp
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-09-16_01,2025-09-12_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 suspectscore=0 spamscore=0 priorityscore=1501 adultscore=0
- impostorscore=0 clxscore=1011 malwarescore=0 bulkscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2509130001
 
-From: Hari Bathini <hbathini@linux.ibm.com>
+Use Sphinx note:: directive for the introductory note at the beginning
+of docs, instead of aligned-text paragraph that renders as definition
+list.
 
-Since commit 4346ba160409 ("fprobe: Rewrite fprobe on function-graph
-tracer"), FPROBE depends on HAVE_FUNCTION_GRAPH_FREGS. With previous
-patch adding HAVE_FUNCTION_GRAPH_FREGS for powerpc, FPROBE can be
-enabled on powerpc. But with the commit b5fa903b7f7c ("fprobe: Add
-fprobe_header encoding feature"), asm/fprobe.h header is needed to
-define arch dependent encode/decode macros. The fprobe header MSB
-pattern on powerpc is not 0xf. So, define FPROBE_HEADER_MSB_PATTERN
-expected on powerpc.
-
-Also, commit 762abbc0d09f ("fprobe: Use ftrace_regs in fprobe exit
-handler") introduced HAVE_FTRACE_REGS_HAVING_PT_REGS for archs that
-have pt_regs in ftrace_regs. Advertise that on powerpc to reuse
-common definitions like ftrace_partial_regs().
-
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Tested-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
-Signed-off-by: Aditya Bodkhe <aditya.b1@linux.ibm.com>
+Reviewed-by: Tom Zanussi <zanussi@kernel.org>
+Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Signed-off-by: Bagas Sanjaya <bagasdotme@gmail.com>
 ---
- arch/powerpc/Kconfig              |  1 +
- arch/powerpc/include/asm/fprobe.h | 12 ++++++++++++
- 2 files changed, 13 insertions(+)
- create mode 100644 arch/powerpc/include/asm/fprobe.h
+ Documentation/trace/histogram-design.rst | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 449404d3932b..325c1171894d 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -243,6 +243,7 @@ config PPC
- 	select HAVE_EFFICIENT_UNALIGNED_ACCESS
- 	select HAVE_GUP_FAST
- 	select HAVE_FTRACE_GRAPH_FUNC
-+	select HAVE_FTRACE_REGS_HAVING_PT_REGS
- 	select HAVE_FUNCTION_ARG_ACCESS_API
- 	select HAVE_FUNCTION_DESCRIPTORS	if PPC64_ELF_ABI_V1
- 	select HAVE_FUNCTION_ERROR_INJECTION
-diff --git a/arch/powerpc/include/asm/fprobe.h b/arch/powerpc/include/asm/fprobe.h
-new file mode 100644
-index 000000000000..d64bc28fb3d3
---- /dev/null
-+++ b/arch/powerpc/include/asm/fprobe.h
-@@ -0,0 +1,12 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _ASM_PPC_FPROBE_H
-+#define _ASM_PPC_FPROBE_H
-+
-+#include <asm-generic/fprobe.h>
-+
-+#ifdef CONFIG_64BIT
-+#undef FPROBE_HEADER_MSB_PATTERN
-+#define FPROBE_HEADER_MSB_PATTERN	(PAGE_OFFSET & ~FPROBE_HEADER_MSB_MASK)
-+#endif
-+
-+#endif /* _ASM_PPC_FPROBE_H */
+diff --git a/Documentation/trace/histogram-design.rst b/Documentation/trace/histogram-design.rst
+index 4faff1669b77bd..ae71b5bf97c6c7 100644
+--- a/Documentation/trace/histogram-design.rst
++++ b/Documentation/trace/histogram-design.rst
+@@ -11,13 +11,14 @@ histograms work and how the individual pieces map to the data
+ structures used to implement them in trace_events_hist.c and
+ tracing_map.c.
+ 
+-Note: All the ftrace histogram command examples assume the working
+-      directory is the ftrace /tracing directory. For example::
++.. note::
++   All the ftrace histogram command examples assume the working
++   directory is the ftrace /tracing directory. For example::
+ 
+ 	# cd /sys/kernel/tracing
+ 
+-Also, the histogram output displayed for those commands will be
+-generally be truncated - only enough to make the point is displayed.
++   Also, the histogram output displayed for those commands will be
++   generally be truncated - only enough to make the point is displayed.
+ 
+ 'hist_debug' trace event files
+ ==============================
 -- 
-2.51.0
+An old man doll... just what I always wanted! - Clara
 
