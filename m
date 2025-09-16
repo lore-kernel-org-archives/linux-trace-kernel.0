@@ -1,116 +1,105 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DD302DE704
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 16 Sep 2025 05:42:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ECF122D4FF;
+	Tue, 16 Sep 2025 06:18:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758001350; cv=none; b=H4Y223i+y/QEZJdR+AMj9jiRHTiSOVCT4qzVZ4aUUTH0BPzT/BpQ+c6k/P4oF+UbQMHWzTHHT24Ftj6uyOpWzobFlzJQmquAumHHMOYpP77qYMbKmeNspis95Ma5jkZIl++1CeZTHZyTODMtyhAybAWJ6rRrG4tT9p8vLLw2/Uk=
+	t=1758003523; cv=none; b=DfUkswng7bj0PWcOyyKKG+qh1kNBv2TBVgAT8DOQjIG3NNeEH84osBLLoLmcNdSw/vbeydqWwe2gj8N4SGWOLwjHBIjYDhR9F8kt9QMSBzuWmIn1SP7rCIWGHljlekAVdxDt18SxFe9ReyQv75jL2K4FJbpq3ib+K1tBCqtlIdU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758001350; c=relaxed/simple;
-	bh=GCQf+fSlRoXWlrGzxejOS59aSKVCoeuvh+mZuQCTo+Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RaGi4foO53RoMa1RX5AyAT2iO48dxq0EBvCUCHcTEI/IhmwzwzTJxpcKbZjCM15nqF+MKwgBJnh/fod6ir6Naopf3CFzm/WsrkpkksSW5HoySUd9GFkq5HCCAOeGT8R0ah77Lw7jusBFl3TMmtCP1wFurHEEMNPisVoZLBhRO1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SM/fyGzH; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SM/fyGzH"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-7742adc1f25so3447972b3a.2
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 15 Sep 2025 22:42:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1758001348; x=1758606148; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5JEHaZ9jq/KrcjOhCPcE4D4fEK4s5Ukw4ZA9TW8oNXo=;
-        b=SM/fyGzHXgmiYo8u4kQIBGF1zOunDjnHlB0OV1kto4pyb22PEh3TdeSjIBESE6lGGu
-         KmtDez5WmcpwM6PL44HzTq7GcvBZNShAxgKpT+/siSPbxmH+AmF+mX9B9hoeKmHL9kKQ
-         rjCEn6OSXkvHWCZoqnq/U8gCy3inXT8GkRB02vrMPMIYnwnYpvpuhICILA66JAmjiDxV
-         AS8nwuAIEeKnHJBJh14O4J2dusk/UJ9Osy1lf/UlQWz+ohe/xw58zdrEP4m3mvwjaiF1
-         O6fNHfNGGY1jLuJBGzMLAN/p7qKvLphEaSlnWYaHKzv6mzPe18QLm6/W+7w/ggC+Hy7c
-         Vd8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758001348; x=1758606148;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5JEHaZ9jq/KrcjOhCPcE4D4fEK4s5Ukw4ZA9TW8oNXo=;
-        b=boQAZmGRBibyNjcyajiSQkl3/Wl2Z0iL64Ai+gggQ2h3fiiCcmUGJqJxk5oaynHdaq
-         LKxAPBlOsJL5zWXgHi/eu+mzxifM4B/HyySxZITKGvuPoHxbYtm3wWmqJKEe+Hf2KoWi
-         WWtO4aWCA/NB6AsQLIpFq0ICBRjBwFibSYS7diwBYCf9Md70vKBLgsaNcXM0bgp5oXW5
-         gBSSsEFp6X9qm3i++ivlleGzfT+4Pu6/7zlh12/tknppWYvG+xUbMJJr/0JdEzUqEUHm
-         KYLcU1U5qRoYjuOTvj1z2laTgwv2N2RE4lrGva1PAldgp8O6WLEhD/LSzo07aB3SJRvS
-         yZgA==
-X-Forwarded-Encrypted: i=1; AJvYcCXNKpoB9iFRTonKI7CQA/Qg4+kYTmw2vVPP/FkwnaPDzgLPNt6TF+QK3RhiG0c05FPRG+kafRcYzb4EEvGXWZP6Crw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwP3TqmH0nr7yHbN8b9C4XdGRejuG7rADFsOv1lnswbu9Svs7oH
-	4T+KxxTtYo4ugv3vKfNaUwTs0cSdKI06ug+Qu2HG2DTLfOXY1MvNzm02
-X-Gm-Gg: ASbGncscr78pTfzFhKxsMhPS4EZXC+OB7Rw/+GrwNATWGNfENCS/uNoW0o9wvp9TeiE
-	oPpCdho8Y8td+j7jJCoYn50yPRZkL8DeTS37id1Qd4fGYjtc70+LMK7CbdWAwVSdF+9d75i4eRs
-	AL3SJoZ9WitTdyjHyU/c7qdTlZ8eaSkVqN5mJyoYjVUvThAaUVx3JJ2jXQlhO7jWxWpqtQkDbUp
-	vkjNirvDLt7GpsF2VcbDsfgGp3Q8VkdgZrnas/dka52V/8BY+ACrP65fTTydXUQ+I+XHfSPFYiU
-	egFXDKsn8Skg1iBss0ZkNZtysy2YVcEx+GBq4Glgl/DBjkGeFWTweNafB3G+DSn0d4fzp9CQRzE
-	9HxgpCDRtbiY4ZxuVm+ewW6cQQw==
-X-Google-Smtp-Source: AGHT+IH2awkKQxguyzU/uwVtBqGOg3ZGaTcFUil9iVYCCLUicJLX7MvepKfcuJU+DXVC/gjlgfE9Zg==
-X-Received: by 2002:a05:6a20:14a4:b0:262:1611:6528 with SMTP id adf61e73a8af0-2621611681cmr9714164637.29.1758001347998;
-        Mon, 15 Sep 2025 22:42:27 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-32df315f9dfsm11822877a91.21.2025.09.15.22.42.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Sep 2025 22:42:26 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id 97AF54227237; Tue, 16 Sep 2025 12:42:19 +0700 (WIB)
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Documentation <linux-doc@vger.kernel.org>,
-	Linux Kernel Tracing <linux-trace-kernel@vger.kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Tom Zanussi <zanussi@kernel.org>,
-	Bagas Sanjaya <bagasdotme@gmail.com>
-Subject: [PATCH v2 5/5] Documentation: trace: histogram: Convert ftrace docs cross-reference
-Date: Tue, 16 Sep 2025 12:42:03 +0700
-Message-ID: <20250916054202.582074-7-bagasdotme@gmail.com>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20250916054202.582074-2-bagasdotme@gmail.com>
-References: <20250916054202.582074-2-bagasdotme@gmail.com>
+	s=arc-20240116; t=1758003523; c=relaxed/simple;
+	bh=DLpDdET4T6+Aw1hNjsryWVaNM/7lFQaDmC3nSTBUlas=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fNEJ4wCOP8vW0UmTzolzBm3daZFBiroaIhgQeVwmJvdHxJa4piYhyyFNsOBpx3BLufj6Z6bwjtuLlgtmE9bBeHOqPZjLaf+ezu69YoM89dpJP0RZ2ucUfiNQy393HVm0hhuroc21/ge71t0YpV9sIYkLY9K3Z2nReZjzRLRZ5vs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.194])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4cQsBl1Cp1ztTlB;
+	Tue, 16 Sep 2025 14:17:35 +0800 (CST)
+Received: from dggpemf500016.china.huawei.com (unknown [7.185.36.197])
+	by mail.maildlp.com (Postfix) with ESMTPS id 54F991402DA;
+	Tue, 16 Sep 2025 14:18:29 +0800 (CST)
+Received: from huawei.com (10.50.159.234) by dggpemf500016.china.huawei.com
+ (7.185.36.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 16 Sep
+ 2025 14:18:27 +0800
+From: Wang Liang <wangliang74@huawei.com>
+To: <rostedt@goodmis.org>, <mhiramat@kernel.org>,
+	<mathieu.desnoyers@efficios.com>, <tglozar@redhat.com>
+CC: <yuehaibing@huawei.com>, <zhangchangzhong@huawei.com>,
+	<wangliang74@huawei.com>, <linux-kernel@vger.kernel.org>,
+	<linux-trace-kernel@vger.kernel.org>
+Subject: [PATCH] tracing/osnoise: Fix slab-out-of-bounds in _parse_integer_limit()
+Date: Tue, 16 Sep 2025 14:39:48 +0800
+Message-ID: <20250916063948.3154627-1-wangliang74@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1144; i=bagasdotme@gmail.com; h=from:subject; bh=GCQf+fSlRoXWlrGzxejOS59aSKVCoeuvh+mZuQCTo+Y=; b=owGbwMvMwCX2bWenZ2ig32LG02pJDBknfpizHYkUTnk/IZ7D/nWJo3ycU5jjTR1Oo+W3/Tp9z j8UXlTUUcrCIMbFICumyDIpka/p9C4jkQvtax1h5rAygQxh4OIUgIsYMDI8rDyau8S8y1QvPens nXDVtwE2C3yYpl3XeLa3RdbnqPM1hv8FL6a/O23a1cgSsatpmhBnYYbvEf1Eb7f1mX+0951auIQ dAA==
-X-Developer-Key: i=bagasdotme@gmail.com; a=openpgp; fpr=701B806FDCA5D3A58FFB8F7D7C276C64A5E44A1D
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
+ dggpemf500016.china.huawei.com (7.185.36.197)
 
-In brief "Extended error information" section, details on error
-condition is referred to ftrace docs, which is written in :file:
-directive instead of a proper cross-reference. Convert it.
+When config osnoise cpus by write() syscall, the following KASAN splat may
+be observed:
 
-Reviewed-by: Tom Zanussi <zanussi@kernel.org>
-Signed-off-by: Bagas Sanjaya <bagasdotme@gmail.com>
+BUG: KASAN: slab-out-of-bounds in _parse_integer_limit+0x103/0x130
+Read of size 1 at addr ffff88810121e3a1 by task test/447
+CPU: 1 UID: 0 PID: 447 Comm: test Not tainted 6.17.0-rc6-dirty #288 PREEMPT(voluntary)
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x55/0x70
+ print_report+0xcb/0x610
+ kasan_report+0xb8/0xf0
+ _parse_integer_limit+0x103/0x130
+ bitmap_parselist+0x16d/0x6f0
+ osnoise_cpus_write+0x116/0x2d0
+ vfs_write+0x21e/0xcc0
+ ksys_write+0xee/0x1c0
+ do_syscall_64+0xa8/0x2a0
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+ </TASK>
+
+This issue can be reproduced by below code:
+
+const char *cpulist = "1";
+int fd=open("/sys/kernel/debug/tracing/osnoise/cpus", O_WRONLY);
+write(fd, cpulist, strlen(cpulist));
+
+Function bitmap_parselist() was called to parse cpulist, it require that
+the parameter 'buf' must be terminated with a '\0' or '\n'. Fix this issue
+by adding a '\0' to 'buf' in osnoise_cpus_write().
+
+Fixes: 17f89102fe23 ("tracing/osnoise: Allow arbitrarily long CPU string")
+Signed-off-by: Wang Liang <wangliang74@huawei.com>
 ---
- Documentation/trace/histogram.rst | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ kernel/trace/trace_osnoise.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/trace/histogram.rst b/Documentation/trace/histogram.rst
-index d158dadaa42447..340bcb5099e7a4 100644
---- a/Documentation/trace/histogram.rst
-+++ b/Documentation/trace/histogram.rst
-@@ -209,8 +209,8 @@ Documentation written by Tom Zanussi
+diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
+index 337bc0eb5d71..dc734867f0fc 100644
+--- a/kernel/trace/trace_osnoise.c
++++ b/kernel/trace/trace_osnoise.c
+@@ -2325,12 +2325,13 @@ osnoise_cpus_write(struct file *filp, const char __user *ubuf, size_t count,
+ 	if (count < 1)
+ 		return 0;
  
-   For some error conditions encountered when invoking a hist trigger
-   command, extended error information is available via the
--  tracing/error_log file.  See Error Conditions in
--  :file:`Documentation/trace/ftrace.rst` for details.
-+  tracing/error_log file.  See "Error conditions" section in
-+  Documentation/trace/ftrace.rst for details.
+-	buf = kmalloc(count, GFP_KERNEL);
++	buf = kmalloc(count + 1, GFP_KERNEL);
+ 	if (!buf)
+ 		return -ENOMEM;
  
- 2.3. 'hist' trigger examples
- ----------------------------
+ 	if (copy_from_user(buf, ubuf, count))
+ 		return -EFAULT;
++	buf[count] = '\0';
+ 
+ 	if (!zalloc_cpumask_var(&osnoise_cpumask_new, GFP_KERNEL))
+ 		return -ENOMEM;
 -- 
-An old man doll... just what I always wanted! - Clara
+2.34.1
 
