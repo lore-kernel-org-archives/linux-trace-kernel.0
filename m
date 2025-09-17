@@ -1,94 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42721247291
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 17 Sep 2025 20:03:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A386727E049
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 17 Sep 2025 20:31:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758139383; cv=none; b=gaqtVlQ8XV+ogTVLDiISK24WcQDdvPFUuwrw9S03KZByCMzrBcyeNGwI0SecUW38b1eN3u2pvHIh2744AmVCFscC+3OUeDW7CY6yNYXqq4ohrWYlcxJhG3b2zQx0DpIa7UaqPh9DuvdvVd03IhdkacRhYIjr6VFPIcaJIPFffZ0=
+	t=1758141112; cv=none; b=kIZ1KmSTjBPibSqxxvZFMB6HuiXWbfWljBFMhfdY+konD8/2CRBlgjg3tmAS8eOb9bq7+4CkZRzRQVDDaa1Hk38XmvP3dHmbcBYZLG8DINXeS18evg5xmNeUuzRN/80qcdiNYbSFeVT5bakjhLEkIqJ2XgYzwOVwNq5fXB6qenE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758139383; c=relaxed/simple;
-	bh=8RwCiCEqgS/oR9Wj+EYfIJapVjRPjFagO+/mW2BIcW8=;
+	s=arc-20240116; t=1758141112; c=relaxed/simple;
+	bh=5OBIs0bUsQlBfNz/o3OM/cckvzwG61wfY25aaGHql4M=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=itJ+tNRwPXVBkQXrH1XjlNvcixkx9oqwG46V1/EeRNoN3Fz1KZNtLavMlkIfLRkKCps7Sz8x4pqEAhpE/YbCePovoW8lEYePVNpy89iSL9CwzCd6pIbfQL9wjciCd62ZGIolsuTuVyQcBPWiwk64TKhnt16w2R2Xde4pYuPj0mc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fs8seP2s; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=sbK3i+jDaUFqp1R7d2XQOqD5uxu8hG9dDmgyBlX4HO4ohFcg41UvayUo0yLeNHd62T6p1KeTIZrXzzYahoyY5DnQUno5ky3/sTvQJ/1Ui4nbLSG4ZSM9VPkrPRc4mv+XgTDnkjq8EMzrp7YeqAzMiPZE1yN/pcjEoY9mGieHQdU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=iPRBHiBB; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fs8seP2s"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE148C116B1
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 17 Sep 2025 20:03:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758139382;
-	bh=8RwCiCEqgS/oR9Wj+EYfIJapVjRPjFagO+/mW2BIcW8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=fs8seP2smajGErdccqfjm/qBI73OZR07YbZ7EB5CfTXvZMxu23c8ilwPL4tCTJLuC
-	 AtWRwbNmXywMbpsZuIAjESMWLIlai3YyiQfX56Cyz+2s8gY33vqzxFHrORzfaGfAjL
-	 ++X+iZxkRMSv7rf6tcDj35RVmpICwlz4NVrst+qzAkVTZdiyI3mxpDi2Ag1jb254/8
-	 ffLwxGZuGXBZm/LXVQ8LlEaxjwJeYHEHjU6BxkwuE76T76LaTu9HQ/IId13djfD2/M
-	 jlESXMx6dho/5icGZhfmQXmm9HeM7kxvYkdW5d+jbD2HZwe3PWnrbrOYvtl9YvlOlW
-	 StWJBitBXOXbw==
-Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-8116af074e2so23854285a.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 17 Sep 2025 13:03:02 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVs2YlQy+O3KgobP1NaZyj1QXKwKK1hxvAALY29fLLbxu1gby6aHJ6wQeCbe6xZ6MfjSq2snUwIezzzc1IV6xUqzVs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzOwZqZnc+I6XHY6SDpukoZlJ3J5yfkd5BOzFaHgx0YPvjO/Alb
-	E+SQjUtnatvQuXqiUQVMcLy1vsS3a2UpJb4y86evj5Mluydfo59PusPinqWPEFjlUGnFT9uIA+w
-	wcrM5j4ZU9MOxsUBYi9Hfr4YFCVH3AiQ=
-X-Google-Smtp-Source: AGHT+IE//43LvVRRL9P+bNBPabqBCP+0kbkAEemFxudHgIYmZJyboCRGVcIniMVsONVy0SAWFjDYnlR/dKKofxkrt60=
-X-Received: by 2002:a05:620a:7081:b0:7fd:6709:f08d with SMTP id
- af79cd13be357-8311801ddcfmr445536185a.81.1758139381472; Wed, 17 Sep 2025
- 13:03:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iPRBHiBB"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-267c90c426dso13435ad.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 17 Sep 2025 13:31:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1758141110; x=1758745910; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5OBIs0bUsQlBfNz/o3OM/cckvzwG61wfY25aaGHql4M=;
+        b=iPRBHiBBNchRzIgeBGxAgEvAguVI4ofWDB2FMokbFInew0Tlx5LZZoHFSAy6xQje6G
+         LZHaNDddx8SucnH7T4p7gYxOSxd8UTRqQYDckmQpUaAeU8xW7XXMNc1/pVsnM3FuirPI
+         4oJVfSH82hK6IDsB2wGXcrlEEyMd4iMBRA7S7usUq8QL+m1RT7ZpzqDAMMSuw9qURSGp
+         99vh8TslRh4UeIuJjt/yVQsmUTcBKjoU0RSax47ut2vz/nQzpfPJyZR5UHsIJGEIz4Zg
+         dxm5CwPRCA70dUPQBbQO7ETbURshVyia+iI9t6lrLp8wZuyQJmTJgFDfnFqF/2iFMhJf
+         4/gA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758141110; x=1758745910;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5OBIs0bUsQlBfNz/o3OM/cckvzwG61wfY25aaGHql4M=;
+        b=sVr6OVa7CRcrytFv+1JjDfxVBClN3JTNeBdq0g6zpqE1KN4r+6kewZBP+Tmr/yyeGP
+         a+HX+IYUZiaacDT3QmwZGPYCXWTZ9cSVAFUmUcfVGIf828Gc3HHOeo8W89BLBQG7dXER
+         VDrjfJ4b+R/q0XtPXflBQHEixMbIi2eOtVHxbd+oIZi4GWhsu7Hdsb04T9fvUrkZ0o1q
+         smnCXUd3jNCp9F1PDFRpc/2pKqXk8iCn607EKA412tOT9fzlsUP2//G0FBnmtFZXW35V
+         5CLtQHPo0nTYxST/o2Spj+/a7+up4BwdQWrq+9WWT3bQpN2RanOWVACn6RsHRI86LMzx
+         dSUg==
+X-Forwarded-Encrypted: i=1; AJvYcCVlpeDuSWAhmAk8DerlLHzJm2MyZseL2LAVl7Gv6cSqeSLqY+QwTdGhgUJaLPIDDXSD2hGpwE8sTPULl81FNBRbBVo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx7P0K0nMQSgw3jdjrhLSytxklUdUSkCEysfq4gHmiPBvlMdCGw
+	8TmbenYGN2wqUuVx4RGrprxburZs0J7e0tAB9zGi8CF5uk5dyauku9scCLjzW7nj/EnLkLXALHT
+	8WnzF0z9JbvZ1GEw/I3zX8bDr44BnWPirtoIpK2Ql
+X-Gm-Gg: ASbGncsBH9F88j4bRZDIyLTu902z6trFuMQRlQDDdS+QdJD6cUpoxN7bKocBp7RnOGi
+	mCHkz/QgA72msaXWFGFiX+TUt8oVy+7LP1f0QzJObHM8xxMmIpkXX5c/zxZV/CwL5Q0lzJsqURi
+	zxwmFRZuUW86g9T+nLVP8+jTOkl09LZ2yCmIc61VFt/lbd8y/JkN+uLxqtSjVh6x4HOGmir8mFI
+	BRAPLtzKg5AUtjRGf9nya3SCc4zJRvlJIdZ4zFkq0bhINtiaFy2Vox7Y+CE3s8=
+X-Google-Smtp-Source: AGHT+IGi1Cl1cxLljbDRwITE9vfhwz+DrDPsOJguUQv2zzG51+QwzyCb4weDhywo5yliSwxcW6sHs7Lpaphswpsb2Ak=
+X-Received: by 2002:a17:902:e550:b0:24c:f4b1:baaf with SMTP id
+ d9443c01a7336-26808a33cc5mr6423875ad.1.1758141109587; Wed, 17 Sep 2025
+ 13:31:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250917072242.674528-1-zhaofuyu@vivo.com>
-In-Reply-To: <20250917072242.674528-1-zhaofuyu@vivo.com>
-From: Song Liu <song@kernel.org>
-Date: Wed, 17 Sep 2025 13:02:49 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW47BVGsszGU=27gKa1XOYLH+de1FgrHPVL4mftB2CvX9g@mail.gmail.com>
-X-Gm-Features: AS18NWBxIdANPrX03bLZsJtpTPm-ZgoF9PRFYS0o8-H5DTmZDbcviXZne_YxRys
-Message-ID: <CAPhsuW47BVGsszGU=27gKa1XOYLH+de1FgrHPVL4mftB2CvX9g@mail.gmail.com>
-Subject: Re: [RFC PATCH bpf-next v1 0/3] bpf: Add BPF program type for
- overriding tracepoint probes
-To: Fuyu Zhao <zhaofuyu@vivo.com>
-Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org, 
-	martin.lau@linux.dev, yonghong.song@linux.dev, haoluo@google.com, 
-	jolsa@kernel.org, eddyz87@gmail.com, kpsingh@kernel.org, sdf@fomichev.me, 
-	rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
-	shuah@kernel.org, willemb@google.com, kerneljasonxing@gmail.com, 
-	paul.chaignon@gmail.com, chen.dylane@linux.dev, memxor@gmail.com, 
-	martin.kelly@crowdstrike.com, ameryhung@gmail.com, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	yikai.lin@vivo.com
+References: <20250915163838.631445-1-kaleshsingh@google.com>
+ <20250915163838.631445-7-kaleshsingh@google.com> <eb7820ed-3351-4cb5-8341-d6a48ed7746f@redhat.com>
+ <CAC_TJvctkyGEKv8mVE83D2DzCd-HiXh9co_DuZfwuF86FJoiJw@mail.gmail.com> <322fd5d2-d7f4-40d8-8a06-6e7c5e9ef180@redhat.com>
+In-Reply-To: <322fd5d2-d7f4-40d8-8a06-6e7c5e9ef180@redhat.com>
+From: Kalesh Singh <kaleshsingh@google.com>
+Date: Wed, 17 Sep 2025 13:31:37 -0700
+X-Gm-Features: AS18NWACcEbm1lm4H8WkQEbyfcTpHlrzU-8yyCAEibl_VJPt8WSVNJn2mY9O19Y
+Message-ID: <CAC_TJvf84Zerwe7-UiRW3AYnC=_Zu3tVSSWTRcaEyoRGEnBHug@mail.gmail.com>
+Subject: Re: [PATCH v2 6/7] mm: add assertion for VMA count limit
+To: David Hildenbrand <david@redhat.com>
+Cc: akpm@linux-foundation.org, minchan@kernel.org, lorenzo.stoakes@oracle.com, 
+	Liam.Howlett@oracle.com, rppt@kernel.org, pfalcato@suse.de, 
+	kernel-team@android.com, android-mm@google.com, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Kees Cook <kees@kernel.org>, Vlastimil Babka <vbabka@suse.cz>, Suren Baghdasaryan <surenb@google.com>, 
+	Michal Hocko <mhocko@suse.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
+	Dietmar Eggemann <dietmar.eggemann@arm.com>, Ben Segall <bsegall@google.com>, 
+	Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>, Jann Horn <jannh@google.com>, 
+	Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Sep 17, 2025 at 12:23=E2=80=AFAM Fuyu Zhao <zhaofuyu@vivo.com> wrot=
-e:
+On Wed, Sep 17, 2025 at 11:34=E2=80=AFAM David Hildenbrand <david@redhat.co=
+m> wrote:
 >
-> Hi everyone,
+> >> Can't that fire when changing the max count from user space at just th=
+e
+> >> wrong time?
+> >
+> > You are right: technically it's possible if it was raised between the
+> > time of checking and when the new VMA is added.
+> >
+> >>
+> >> I assume we'll have to tolerated that and might just want to drop this
+> >> patch from the series.
+> >>
+> >
+> > It is compiled out in !CONFIG_VM_DEBUG builds, would we still want to d=
+rop it?
 >
-> This patchset introduces a new BPF program type that allows overriding
-> a tracepoint probe function registered via register_trace_*.
->
-> Motivation
-> ----------
-> Tracepoint probe functions registered via register_trace_* in the kernel
-> cannot be dynamically modified, changing a probe function requires recomp=
-iling
-> the kernel and rebooting. Nor can BPF programs change an existing
-> probe function.
->
-> Overiding tracepoint supports a way to apply patches into kernel quickly
-> (such as applying security ones), through predefined static tracepoints,
-> without waiting for upstream integration.
+> Due to the racy nature I think any kinds of assertions would be wrong.
+> Without any such races possible I would agree that the checks would be
+> nice to have.
 
-IIUC, this work solves the same problem as raw tracepoint (raw_tp) or raw
-tracepoint with btf (tp_btf).
-
-Did I miss something?
+Alright I'll drop this in the next revision.
 
 Thanks,
-Song
+Kalesh
+
+>
+> --
+> Cheers
+>
+> David / dhildenb
+>
