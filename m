@@ -1,131 +1,198 @@
-Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 577C332E2D3
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 16 Sep 2025 22:29:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A5DB77111
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 17 Sep 2025 00:17:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758061748; cv=none; b=bJKnhhhknX4MfhIcCeEYtp5y+Bq9IoE9Vm8Gy3U1ftGvoDu8uRnR5vvUtjX9HHLs1ysvMESmw7dcAYkNRCdfMy/d8JG2QBBsaECj0Wy1oJKUJn5kwLqAI4jlasvCi3sWftzZhCh422HhZ1qnxLHuz8317Xo6IXnyYdKsaOzGY2g=
+	t=1758068231; cv=none; b=UIQYwfFxPsMvzXGOI4eY7e7OyB4krxBrbF8sYNjwAG01IKAJrD4Ve5zzGnP4mTuE6Dzv4ueeIimYRh0oMlxmiS08a0b3uTnvH9Z6nCk/z/kcGBQQe8F7t67pt14pvkQSm4aolTpANpghpUKSkpM+pKAXm1Duoyg4V7O27ebgvqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758061748; c=relaxed/simple;
-	bh=GQRiMPLso4udFX4CB+sEYglBh5mmBczyDU9O0TBC65U=;
+	s=arc-20240116; t=1758068231; c=relaxed/simple;
+	bh=8bMaW+s8iABakKwgqc6w26p8Hw7d/FhUe28p51azdRg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=F8Aw3xlPO39b3djebjZDvosTa64aso5LqIBUzXCunBbc2ly6ZAqJ5P1fA+GDhJlAcEPocMwRydNkIPqAoHm7lY26QpMGo4vzgacMQ/NbhsSJAIh7SXHinPjMJOdfnJ4ZfO977b9OWZN2R0Hw4MCYBsZghXyjltdKg9oY1iV4Tnc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WSHnxAnm; arc=none smtp.client-ip=209.85.215.170
+	 To:Cc:Content-Type; b=F8I6Ijvc6QArZIF7hCH3UNx2M1EvicAbqPFIjKg4pRPk7CXtUHDC+oRrTu7xiyrCFP9d2rqOhvfxOQmu0Q+jyT56ET3NjFv3eyAnAqqQi64/osEsofSq04HZJJ3EKib7O2VWGxHgD5wkOPbSYkTopYF6M7RUR1cWbsRizr0e674=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R3lswAoh; arc=none smtp.client-ip=209.85.208.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WSHnxAnm"
-Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-b54b3cafdcaso3062778a12.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 16 Sep 2025 15:29:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R3lswAoh"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-6228de280a4so3677467a12.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 16 Sep 2025 17:17:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1758061747; x=1758666547; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1758068227; x=1758673027; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4WprOe5/M+42SgMOPYQkTmIUA2Q1389Nu0dnK2gJe/0=;
-        b=WSHnxAnmisQm9BwcqNhUrEh1Mb18UqZhLC3Umb/0KOoNk8zxCMQifaExiwN0eon23A
-         6lPiKFE+EL6UHzah3cpzGfV51V0swQiDYDNmnY+LAxMwkxFK4tpl20gQpSvBWmxG9JdN
-         mDFORNM6fZgmxVwdu42iY3Zc66DUXGMdTG8WxJXfVOEPUfLDbkqpbs81bKymEOo5a5N2
-         xkNsEys5ihXe2SDfxFiD2XK534u0I0ctuCcy/DzYpD0kAOEh13lIpLbvxE9rXBrRTLwy
-         BD9HVs4UeRVjX+0LNyEoN5aKvpEZq2hjo5nKlUJE4XLfohE5vroCKiCbCfoRPwFsuyav
-         ex6A==
+        bh=xXSGAh8chrKBAWdQa4v/8pOW/Kzc0QCjuDzlGtOmWtE=;
+        b=R3lswAohNyOMwWKwXZqGgP77g3sVJvV3/mg9TzComvE2dQRdy7tW7chcmxkZgXm5Pt
+         y8ShAYeveHS9l1YTNw5O33im160bqMNxYklewVHTmq3rbd0RGrrrEKQnTEBMbeGaXYw5
+         /9t/BxIp5x6YFECxH3FclY7u5KY4PbtZH6zaLOai03vO0gev+pPSHEaElrdTFmXcaWyc
+         QTS8iwW92mgHxfbuc18vaFp/5XWSypNuiQ0ebTp7bC+sVmNC7ZUfCgnRAIoiqtmsAEnR
+         1eJNoGEYG0GVdU7ROWlTd39kVc0mCpHRMJo29uGRqv8NNLmdOuXjSY3rWz0QCMxuy7U4
+         9MKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758061747; x=1758666547;
+        d=1e100.net; s=20230601; t=1758068227; x=1758673027;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=4WprOe5/M+42SgMOPYQkTmIUA2Q1389Nu0dnK2gJe/0=;
-        b=CfaLxAO16SLp/XeFYsx7LqlbInadolf+6sIZv5IGKWL2+wOtaWS9Xhso7dSQsTNGW6
-         OdLpWquxYps2Js6EJAXhBVgQHRu5gWCJSfjNA6TWJciLZZJD/EpJwVJ00KDLIQDABJRe
-         7Dd/LpyMxePZMXV/CtnLcLlzPG8q9BsG6RxipvrMyLBZuFFrRR9wZQnwWG3oZQEYyyjM
-         kr+1cKcjZNaonrDSYANz19eGKmo49Uf77IJ7d6NnkfpvVr440PFhIPGzqXGw4IMYZxMa
-         8EohQH7C/qH7VHnC6P8DqjqSe8nSCQVjAEdU8+3WL1eI44TQ+rbYnVNUa1Nnr7ES6yg9
-         sj8w==
-X-Forwarded-Encrypted: i=1; AJvYcCXRiYJRmnSpnDbfveSb+8TYubkuW2Hz8XfxujLfzzpNYjhZRd/hKVBRpHlIDuyStWr5IvZfjBTybcRTekyCs5vY3Oc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YztuPVbf8CJqqPSf+Nkc2FQyNNxUGoX6EsWfJ98ET+Am/9z7aiu
-	LEBiGSFZ9s8qJ/tgxPyXKTUgdiM/ly4fbC7S1WIJ1AkEXT4ziSVUqVfqQ/Chqpkj2izzMLJvR4K
-	qJLs8QD7r3zQr1mCfh/pnRH9PxwwTJHY=
-X-Gm-Gg: ASbGncvFMd7kw8gqGeTXnTdMjmDuFbrrFXS+yuUpoC6yrlyyE6Xx0fIYKLbmYjAvjkV
-	HGpP2v/fLZyS3FU7RpCHb7ak0aSQgeEqK1pO38HjsdAsBX8N10b499A0nrA7flnZCeUCoagNNZZ
-	bEDHf8q3e5PesMA1aI/8D00syfsrJg5rjh4yp650D2NwKHWqyB2Szq7BP+CnrqoP/XLxmEgPA9a
-	cHWHZ3RrqehaYZyETTS/WE=
-X-Google-Smtp-Source: AGHT+IHBOnFSbfOjCWswssFIXUYknwoi8bxg+YaSZ0NlMLbN3Szk7M4gcBk+o1k+eZZc+Hhru+MlV+o4dEFHedKtN1s=
-X-Received: by 2002:a17:903:2410:b0:24c:9a51:9a33 with SMTP id
- d9443c01a7336-25d24e9df3dmr201990295ad.22.1758061746563; Tue, 16 Sep 2025
- 15:29:06 -0700 (PDT)
+        bh=xXSGAh8chrKBAWdQa4v/8pOW/Kzc0QCjuDzlGtOmWtE=;
+        b=dG2cp80j8LtXkms9EiUx4hJ4u7iN5HlSUffBPnZ+oK7HbZm8cM4N3iwtyA1n9WDmPY
+         Dt764WtzDfXLpZROpC7EQ9j8ExvVlyJk2kfeyi/uFz+CwoRLlhQzphsG2T8sKLeGTBQj
+         DBxxY0hsSutoRluchrBuipD+gV3+XZh2vnYYNr0GJaZuf7EWi5KN4fDMVhxmixHqmVKI
+         aGE2r6TlgMToQ32YZcuEyMU2JdNZ50T28zzTlJcS8Q8QvJYI39WcKbkaDDyGCXd2Eo1/
+         OR5CrxG/BP5C1fghsXqx/L4eumyo5EXDxzuHkENRejtSggmZooco0kIHv5w3zbfW3Ovd
+         l/dQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVbutuegUvHM28b+m6yimujcNKh17g2kygFmT2hQGwVxBT+T6vdE1NM08vgI8Rb19RUfNtKwXLElwFGMpkuqFG6NTY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yycz2rTABBFjxir8B1Co3u6n8ORebmuhyO0gAxNzHTs74KJcpqG
+	CJWWab3wxX/UcKQYq9QxFYyVtDtYbtb3gtngYvBVw5MddrjK1Gko4j/MTHs1Wtx13vf3T6bD03x
+	tl6AGsyBqZaYB8BwYQYuxnjsg1I23O20=
+X-Gm-Gg: ASbGnct6ypf3uRRi96k9UU1WAKCNiFXyXwob2zJE+uVikLN+QCRy6qELzCom5jPvi0p
+	M6oSbNYO8Rh9OmGp8nIvoQjS4QQDbIbFKYjHqmYTbz+1bDar1Wae18RvKlWGpSXKTqNE/lSWwxx
+	Sz7K68IU16pcKRm6joBtoIVCQk4xsxOJ0Se0ajzUvnq43i4hVNVvtS07H2hXqMUwWvSmQx92eXo
+	7v6Ne8YPrtP4p/PnaPAGEZQp7BgJxOr9NDD85Y=
+X-Google-Smtp-Source: AGHT+IHkWc8z+1xTqfr6RJDMY4BcUWdUqKw6o2ECW5HvusjoalWjKeML6JPCAbs/M1LUcK6l6vjMuNB824YFNjkP4LM=
+X-Received: by 2002:a05:6402:26c3:b0:62f:2afa:60e6 with SMTP id
+ 4fb4d7f45d1cf-62f83c3f396mr486555a12.7.1758068227086; Tue, 16 Sep 2025
+ 17:17:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250916215301.664963-1-jolsa@kernel.org> <20250916215301.664963-3-jolsa@kernel.org>
-In-Reply-To: <20250916215301.664963-3-jolsa@kernel.org>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Tue, 16 Sep 2025 15:28:52 -0700
-X-Gm-Features: AS18NWDXq8G0jhAXIKx9oMvchpwy_wkQP4mw4ZzusEgUYtrbuckohtBJ2yrw2Bw
-Message-ID: <CAEf4BzYTJcq=Kk6W9Gz90gM=mw2fS2T-QBurUhdjBNinReDSjQ@mail.gmail.com>
-Subject: Re: [PATCHv4 bpf-next 2/6] uprobe: Do not emulate/sstep original
- instruction when ip is changed
-To: Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>
-Cc: Oleg Nesterov <oleg@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, x86@kernel.org, 
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
-	John Fastabend <john.fastabend@gmail.com>, Hao Luo <haoluo@google.com>, 
-	Steven Rostedt <rostedt@goodmis.org>
+References: <1eb2266f4408798a55bda00cb04545a3203aa572.1755012943.git.lorenzo.stoakes@oracle.com>
+ <20250916194915.1395712-1-clm@meta.com>
+In-Reply-To: <20250916194915.1395712-1-clm@meta.com>
+From: Mateusz Guzik <mjguzik@gmail.com>
+Date: Wed, 17 Sep 2025 02:16:54 +0200
+X-Gm-Features: AS18NWCoF9toVvfO2cO2nt5EYzoV_mx2NXf7z13bcCNBsYM4N3TAXw98oK0bZL0
+Message-ID: <CAGudoHE1GfgM-fX9pE-McqXH3dowPRoSPU9yHiGi+a3mk1hwnw@mail.gmail.com>
+Subject: Re: [PATCH 02/10] mm: convert core mm to mm_flags_*() accessors
+To: Chris Mason <clm@meta.com>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, 
+	Vasily Gorbik <gor@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Sven Schnelle <svens@linux.ibm.com>, "David S . Miller" <davem@davemloft.net>, 
+	Andreas Larsson <andreas@gaisler.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	"H . Peter Anvin" <hpa@zytor.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Kees Cook <kees@kernel.org>, 
+	David Hildenbrand <david@redhat.com>, Zi Yan <ziy@nvidia.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, 
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>, Nico Pache <npache@redhat.com>, 
+	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>, 
+	Xu Xin <xu.xin16@zte.com.cn>, Chengming Zhou <chengming.zhou@linux.dev>, 
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+	Michal Hocko <mhocko@suse.com>, David Rientjes <rientjes@google.com>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Oleg Nesterov <oleg@redhat.com>, Juri Lelli <juri.lelli@redhat.com>, 
+	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
+	Valentin Schneider <vschneid@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>, 
+	Peter Xu <peterx@redhat.com>, Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, 
+	Matthew Wilcox <willy@infradead.org>, linux-s390@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Sep 16, 2025 at 2:53=E2=80=AFPM Jiri Olsa <jolsa@kernel.org> wrote:
+On Wed, Sep 17, 2025 at 1:57=E2=80=AFAM Chris Mason <clm@meta.com> wrote:
 >
-> If uprobe handler changes instruction pointer we still execute single
-> step) or emulate the original instruction and increment the (new) ip
-> with its length.
+> On Tue, 12 Aug 2025 16:44:11 +0100 Lorenzo Stoakes <lorenzo.stoakes@oracl=
+e.com> wrote:
 >
-> This makes the new instruction pointer bogus and application will
-> likely crash on illegal instruction execution.
+> > As part of the effort to move to mm->flags becoming a bitmap field, con=
+vert
+> > existing users to making use of the mm_flags_*() accessors which will, =
+when
+> > the conversion is complete, be the only means of accessing mm_struct fl=
+ags.
+> >
+> > This will result in the debug output being that of a bitmap output, whi=
+ch
+> > will result in a minor change here, but since this is for debug only, t=
+his
+> > should have no bearing.
+> >
+> > Otherwise, no functional changes intended.
+> >
+> > Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 >
-> If user decided to take execution elsewhere, it makes little sense
-> to execute the original instruction, so let's skip it.
+> [ ... ]
 >
-> Acked-by: Oleg Nesterov <oleg@redhat.com>
-> Acked-by: Andrii Nakryiko <andrii@kernel.org>
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> ---
->  kernel/events/uprobes.c | 7 +++++++
->  1 file changed, 7 insertions(+)
+> > diff --git a/mm/oom_kill.c b/mm/oom_kill.c
+> > index 25923cfec9c6..17650f0b516e 100644
+> > --- a/mm/oom_kill.c
+> > +++ b/mm/oom_kill.c
 >
-> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> index 7ca1940607bd..2b32c32bcb77 100644
-> --- a/kernel/events/uprobes.c
-> +++ b/kernel/events/uprobes.c
-> @@ -2741,6 +2741,13 @@ static void handle_swbp(struct pt_regs *regs)
+> [ ... ]
 >
->         handler_chain(uprobe, regs);
+> > @@ -1251,7 +1251,7 @@ SYSCALL_DEFINE2(process_mrelease, int, pidfd, uns=
+igned int, flags)
+> >        * Check MMF_OOM_SKIP again under mmap_read_lock protection to en=
+sure
+> >        * possible change in exit_mmap is seen
+> >        */
+> > -     if (!test_bit(MMF_OOM_SKIP, &mm->flags) && !__oom_reap_task_mm(mm=
+))
+> > +     if (mm_flags_test(MMF_OOM_SKIP, mm) && !__oom_reap_task_mm(mm))
+> >               ret =3D -EAGAIN;
+> >       mmap_read_unlock(mm);
+> >
 >
-> +       /*
-> +        * If user decided to take execution elsewhere, it makes little s=
-ense
-> +        * to execute the original instruction, so let's skip it.
-> +        */
-> +       if (instruction_pointer(regs) !=3D bp_vaddr)
-> +               goto out;
-> +
+> Hi Lorzeno, I think we lost a ! here.
+>
+> claude found enough inverted logic in moved code that I did a new run wit=
+h
+> a more explicit prompt for it, but this was the only new hit.
+>
 
-Peter, Ingo,
+I presume conversion was done mostly manually?
 
-Are you guys ok with us routing this through the bpf-next tree? We'll
-have a tiny conflict because in perf/core branch there is
-arch_uprobe_optimize() call added after handler_chain(), so git merge
-will be a bit confused, probably. But it should be trivially
-resolvable.
+The way(tm) is to use coccinelle.
 
->         if (arch_uprobe_skip_sstep(&uprobe->arch, regs))
->                 goto out;
->
-> --
-> 2.51.0
->
+I whipped out the following real quick and results look good:
+
+@@
+expression mm, bit;
+@@
+
+- test_bit(bit, &mm->flags)
++ mm_flags_test(bit, mm)
+
+$ spatch --sp-file mmbit.cocci mm/oom_kill.c
+[snip]
+@@ -892,7 +892,7 @@ static bool task_will_free_mem(struct ta
+         * This task has already been drained by the oom reaper so there ar=
+e
+         * only small chances it will free some more
+         */
+-       if (test_bit(MMF_OOM_SKIP, &mm->flags))
++       if (mm_flags_test(MMF_OOM_SKIP, mm))
+                return false;
+
+        if (atomic_read(&mm->mm_users) <=3D 1)
+@@ -1235,7 +1235,7 @@ SYSCALL_DEFINE2(process_mrelease, int, p
+                reap =3D true;
+        else {
+                /* Error only if the work has not been done already */
+-               if (!test_bit(MMF_OOM_SKIP, &mm->flags))
++               if (!mm_flags_test(MMF_OOM_SKIP, mm))
+                        ret =3D -EINVAL;
+        }
+        task_unlock(p);
+@@ -1251,7 +1251,7 @@ SYSCALL_DEFINE2(process_mrelease, int, p
+         * Check MMF_OOM_SKIP again under mmap_read_lock protection to ensu=
+re
+         * possible change in exit_mmap is seen
+         */
+-       if (!test_bit(MMF_OOM_SKIP, &mm->flags) && !__oom_reap_task_mm(mm))
++       if (!mm_flags_test(MMF_OOM_SKIP, mm) && !__oom_reap_task_mm(mm))
+                ret =3D -EAGAIN;
+        mmap_read_unlock(mm);
