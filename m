@@ -1,74 +1,74 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA493319608
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 17 Sep 2025 13:38:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47ADD333AA1
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 17 Sep 2025 13:41:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758116328; cv=none; b=O39NS/L9zmIpPyQCTNDZkNAJg/BTmgknM+5UdQSE+XyswYl23i663qKKarYkdx1S7LOSUSfipfqlPM83Fg8sxrhkUAaThGSW0zisZlULjDSptyrns7NOMZGMgq0gi2Qe4PzbDlopWW54k4ZjCi89dU5g+vf8E5FgKhpGLXo8BcM=
+	t=1758116515; cv=none; b=rhReDP7ePkKyFz9MdjlXBXAoIZPFVsY3oc5QdWfHJno9ytCm8YWCg7Ue2ebnFMNB37XpRhWRKIh/rqwmdlHZ9vosmefDrBGcOjyJlHBy+aLs8ijieof9mMLFPv2CKYgOEVYsSnvulSDaA+2/R/+qOy1+cmiLz11/Yb4UwURbbZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758116328; c=relaxed/simple;
-	bh=t8l8bweHMpKGkJbfDFmvZ2Oxn3S78vXdaZqhk49KQPA=;
+	s=arc-20240116; t=1758116515; c=relaxed/simple;
+	bh=zX4lmKqHHvt6kg+FygaTZ78AhlYs4+hjvu2UKbDiG0k=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SF6gUKiGGbRWHdqPeQXyl62wxDaBE/NIl1LjdtFhIm/NjPllaOeJIcZyT2sL8R7F0QRrvFjVF8zOBCrqbsAHTm3LdHipEQGoJljaAIO0TAAptBIbTAg3TCiOe1uVRcxh0JCE3UuQzB3rnvq04gY9f+Y5Rjd4+n6iPqPjvqHqvvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=C0pKePJi; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=m9rpoXjyWZi4TB9wy/qmqTJTiJQC7+5OiBsxhYv8a/5pn9RF6OFUUnjRv9ndCe39oC+j9G7wDWglXwhSB/EcdMrlzKh4ZX1eNoj2RJkHvx/XIUwYFbDLJ07UQ8LNn4ntUWE/l5rGbz3aUoT8A30ocpdHFTknhA3CCTu299JlI6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ClH6Nm+s; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C0pKePJi"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ClH6Nm+s"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1758116324;
+	s=mimecast20190719; t=1758116512;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=rWpRpLIJcUNQ4TuuTh6GHYHjJ2Lxl5zf8mNwE4ByCqA=;
-	b=C0pKePJid28H+bXzbdwnnN6tpae+pvF29H14GkMzWhydFOVIQbzIRC9/wOML3s9kxXoSI0
-	nBoECGLeHLRAJ+N0Xfo38mHASMIPf1ZLqPS+UdXsBgpCQveU1hxCv+VKVbqggOfvwOHKXI
-	X0Nxgngma85jtMSeMY9T/fX/eCDVsfk=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=j9LMOchMMyRjRRzN+kT7nX+PgJH+lWPkOhHcYp1LpMc=;
+	b=ClH6Nm+ssW1NCSXvxrAEzuFeyuY7DrHujw7xalStL5Lm8ppSWRb5VlGdfKh/pSZANBWyr9
+	ck/NxgVeyFu6Dtj+qZMFvx80EEsHCbqhODSsSgEoM4nQGwwMHwZQg0JbZ5+YT0U6lOmrEO
+	nVrJXuzk5xE4uhN5kV/VwDyScEVcdPs=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-152-Uuvgd2G6OWCroGxdqRCYZQ-1; Wed, 17 Sep 2025 09:38:41 -0400
-X-MC-Unique: Uuvgd2G6OWCroGxdqRCYZQ-1
-X-Mimecast-MFC-AGG-ID: Uuvgd2G6OWCroGxdqRCYZQ_1758116320
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-45f2b9b958aso26837255e9.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 17 Sep 2025 06:38:40 -0700 (PDT)
+ us-mta-5-KoN5LMqsOsiPB5WroIlVeA-1; Wed, 17 Sep 2025 09:41:50 -0400
+X-MC-Unique: KoN5LMqsOsiPB5WroIlVeA-1
+X-Mimecast-MFC-AGG-ID: KoN5LMqsOsiPB5WroIlVeA_1758116509
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3ecdc9dbc5fso777161f8f.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 17 Sep 2025 06:41:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758116320; x=1758721120;
+        d=1e100.net; s=20230601; t=1758116509; x=1758721309;
         h=content-transfer-encoding:in-reply-to:autocrypt:content-language
          :from:references:cc:to:subject:user-agent:mime-version:date
          :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=rWpRpLIJcUNQ4TuuTh6GHYHjJ2Lxl5zf8mNwE4ByCqA=;
-        b=Hge34Elyq8SaCqPtJPB2CK0icGDQdB4ryJaTFwPbj0aoth2PyEGIi0Ndp5z5YvRt5f
-         yIGeznzk68B2HLa5xmyxz7K9RiCOC720pkdu/xuPnQ3QwCba8fLYzQg5kYxa9kQGoX3Z
-         XyxWpxq5N8zACL/YGLEIny8ejLCelfJ4xwc7EWSIJmTqi32yYLogxtz+SX7VB6eVEnIG
-         eRZkP2r6TLdF5CtM4aOkGgd79guPK18chCfl186L0MWWMTYwOUajWKTTJZPrQWJBH/FE
-         aGLElU3A/LmnUZpVv/jfQKDp6RcBARMGuKuEE0qn4q3rAZV4vaZGiU+Ev235Ewt89IZ7
-         AI7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVTeEuTf3lfYKdcySf2lJDJTVmNvpYHiqOXpo5QwYBDwT4jgDDbtU6xZXO8MD38o0nIvhxgmNaFmdPnEIK8LJzvgd8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz8/k9CuOzZPg3tSsMBLXRyRaiOXBcQot6cKlPnba5XOATxM3Ds
-	YIPZ+URkMbZI6enyGhUCr9FPnzxrZJDCTSrHweHw+kvcU/21F+Is4nA3JAOZyX7aeFqIQXkVVIB
-	EGFqL0aonvanYE/WHGGrpb7eBUyxMXX1YBbjXsjPwKH9YIUgHZuLglLQATdd308R2T3pHdLA33A
+        bh=j9LMOchMMyRjRRzN+kT7nX+PgJH+lWPkOhHcYp1LpMc=;
+        b=sWdeU+DAaKn4jvQiGezMNHqmsDoxhSA9swqmTRDge5UBK0lhjSKbmVmktVx+lPOFSq
+         7Q9o7I1AU3AsJ+MNwtLSY/N7aNogkrjKXhhCEXruxW0PfTxHmALl7sTJUUDvmBjIxKX8
+         xru2a6Prb/AFMkkyNvWLZRExUdK+8WCo7/6xo5OsNZxfKmUw8QUfiuz72xD4On8CbOdf
+         McsmjA2++L3m73WFhXoJKYToS6sSvCg18A7VJJd3dD2OApnJ7D7PcjPRBfNERMmEkxvY
+         ugkz3skH7/t2s8epg1jCk1Z3V7d8khvq6rWEI6vG2GdgjljywEHLGhxR9VBQt096imOP
+         G97Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV1yLAcZnds0uLqG03/y6ckVkyQpRCd4VI53rsFKoWfiD8oLkmKgeOdUxeu1ZQ+QJjZarlG5TqmWwhdnvxpthIUojY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzV61sqXENSRK/tFBbLAqqpgKM7yMDAYy/LNVs/wDIzihZG/pPW
+	nVNpHG4TwCRdFR4RRsEC/hNEPypLV0p8CuL/USPkGuFKoYDnjG3p3fQK0z0lLFKIWl2GSP+AUP8
+	oqRttcyCphHSMqgSYCRF1CJ8w3fRXyscjWz2Sk0kdox3pQT3T+/EC+dCtFTw/NoknNvSzgWt5Yw
 	==
-X-Gm-Gg: ASbGnctaK+aJjXWhnrWAtjgW9eUD45r//mHit8quIUppW3lfvMONnXYli+JlPNU9ssp
-	ULk736lHHUemxhZkUkLAJTqW3bgmyCcVCwtchTa/7zqF17luThmjbA4wgppL7yXO/4ZABc3SFeB
-	znmYxZIM//4u8lFwKysdTaa77AEgv6c9oy5r4DP1VwWV/i0sq050ncZiMp3QtbuJWx280hcUOWW
-	RjWX67KQvfRH7yA2XOGrHAXZAvZ7GS1c2LdtKeGVajk0xwssc8eczky/qnG3aX7ExG+/Hb8u9zn
-	kN21JNhPG7pD29LTnmlV21IQw/Hzv4GFthN9Q4gV+YewUmM1Ueh7TRhgVL+PTzcRjXUFgIm6aG5
-	w2nOO7+bLTiY0NugLkCKn88CAsREf9wf3vNKHlZaZkNs4XY0xkdKunMsAnwngzHhx
-X-Received: by 2002:a05:600c:4fcf:b0:45f:2805:e269 with SMTP id 5b1f17b1804b1-461fcb3c0d2mr22688445e9.0.1758116319575;
-        Wed, 17 Sep 2025 06:38:39 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFuvYWydvbyPpvj1AaR8P/P81WlSFuc3j+9G9hsVgOCA31SDwOQXwQpZgSSgyzLhp1LrsumRQ==
-X-Received: by 2002:a05:600c:4fcf:b0:45f:2805:e269 with SMTP id 5b1f17b1804b1-461fcb3c0d2mr22687815e9.0.1758116319039;
-        Wed, 17 Sep 2025 06:38:39 -0700 (PDT)
+X-Gm-Gg: ASbGnctuf3PLYysgfN7quLy5cCNNN7eNBwpQrTQXqZC974/eKKGrD+FQ28Y2gnBD7Ar
+	4Xk94KmxU9WlyudENBWgwCxGK0wc8im7LQ3Imh8S6YpwBrMYTtA0xFHyYnvr7ybZ1bW4w/YS0Jg
+	jm/dPf2N+7eD3AiSVdJmBwO/u84LgiLgtc509+XWlQFEnKNDBKsJ8L1maT9qLx1FWZ9kL8S4t5t
+	uozrAzR0WA8lSoh26ufTb5khYKhSR3Fo4lMOv0oLQbn+od4W2Bte5B5zP0wYsjVsNvPhDnRlFJK
+	VaA+1uqxbcYNV5OKAdK6Y5xqK9/P19AiMUWpmmXBnKiSs3E8FSL0D2Rz0jf/fWa2TeCXtxOZvN5
+	ePSVIWpt855r8YCK+juLh8I5zHWHDG7qbxnGW1sKuXEazfJ5cLwD4J6JZ9t1KJPNA
+X-Received: by 2002:a05:6000:178c:b0:3e7:615a:17de with SMTP id ffacd0b85a97d-3ecdfa1d446mr1736902f8f.47.1758116508687;
+        Wed, 17 Sep 2025 06:41:48 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH2wsn48aIbLhxRJMluX1pkl+z8XXGI8sJvZ1EmUT/hfsPa2xw9d1Th60HJN9iFrZKhSw2j9Q==
+X-Received: by 2002:a05:6000:178c:b0:3e7:615a:17de with SMTP id ffacd0b85a97d-3ecdfa1d446mr1736869f8f.47.1758116508254;
+        Wed, 17 Sep 2025 06:41:48 -0700 (PDT)
 Received: from ?IPV6:2003:d8:2f27:6d00:7b96:afc9:83d0:5bd? (p200300d82f276d007b96afc983d005bd.dip0.t-ipconnect.de. [2003:d8:2f27:6d00:7b96:afc9:83d0:5bd])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-46139122cb5sm36519695e9.8.2025.09.17.06.38.36
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3e98b439442sm15422825f8f.38.2025.09.17.06.41.46
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Sep 2025 06:38:38 -0700 (PDT)
-Message-ID: <c6eacb69-86f5-4bdb-9c6b-04e3f7ef7c29@redhat.com>
-Date: Wed, 17 Sep 2025 15:38:35 +0200
+        Wed, 17 Sep 2025 06:41:47 -0700 (PDT)
+Message-ID: <c955bff9-b4f5-4b93-b7e0-28473766dd2f@redhat.com>
+Date: Wed, 17 Sep 2025 15:41:45 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -76,7 +76,7 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/7] mm: introduce vma_count_remaining()
+Subject: Re: [PATCH v2 4/7] mm: rename mm_struct::map_count to vma_count
 To: Kalesh Singh <kaleshsingh@google.com>, akpm@linux-foundation.org,
  minchan@kernel.org, lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
  rppt@kernel.org, pfalcato@suse.de
@@ -97,7 +97,7 @@ Cc: kernel-team@android.com, android-mm@google.com,
  linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
  linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
 References: <20250915163838.631445-1-kaleshsingh@google.com>
- <20250915163838.631445-4-kaleshsingh@google.com>
+ <20250915163838.631445-5-kaleshsingh@google.com>
 From: David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; keydata=
  xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -143,46 +143,24 @@ Autocrypt: addr=david@redhat.com; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20250915163838.631445-4-kaleshsingh@google.com>
+In-Reply-To: <20250915163838.631445-5-kaleshsingh@google.com>
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: dkkJq7aClc2IfhorXaehMrTv-ek79zva9cjSLwIZmzg_1758116320
+X-Mimecast-MFC-PROC-ID: efJfMsBwkEM9mlKw_doPyUhTMesJmmTKk8Dj5DSTd-k_1758116509
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 15.09.25 18:36, Kalesh Singh wrote:
-> The checks against sysctl_max_map_count are open-coded in multiple
-> places. While simple checks are manageable, the logic in places like
-> mremap.c involves arithmetic with magic numbers that can be difficult
-> to reason about. e.g. ... >= sysctl_max_map_count - 3
+> A mechanical rename of the mm_struct->map_count field to
+> vma_count; no functional change is intended.
 > 
-> To improve readability and centralize the logic, introduce a new helper,
-> vma_count_remaining(). This function returns the VMA count headroom
-> available for a givine process.
-
-s/givine/given/
-
-s/process/mm/
-
+> The name "map_count" is ambiguous within the memory management subsystem,
+> as it can be confused with the folio/page->_mapcount field, which tracks
+> PTE references.
 > 
-> The most common case of checking for a single new VMA can be done with
-> the convenience helper has_vma_count_remaining():
-> 
->      if (!vma_count_remaining(mm))
-> 
-> And the complex checks in mremap.c become clearer by expressing the
-> required capacity directly:
-> 
->      if (vma_count_remaining(mm) <  4)
-> 
-> While a capacity-based function could be misused (e.g., with an
-> incorrect '<' vs '<=' comparison), the improved readability at the call
-> sites makes such errors less likely than with the previous open-coded
-> arithmetic.
-> 
-> As part of this change, sysctl_max_map_count is made static to
-> mm/mmap.c to improve encapsulation.
+> The new name, vma_count, is more precise as this field has always
+> counted the number of vm_area_structs associated with an mm_struct.
 > 
 > Cc: Andrew Morton <akpm@linux-foundation.org>
 > Cc: David Hildenbrand <david@redhat.com>
@@ -194,43 +172,24 @@ s/process/mm/
 > Signed-off-by: Kalesh Singh <kaleshsingh@google.com>
 > ---
 
+
 [...]
 
->   	/*
-> @@ -1504,6 +1504,25 @@ struct vm_area_struct *_install_special_mapping(
->   int sysctl_legacy_va_layout;
->   #endif
+> +++ b/mm/mmap.c
+> @@ -1308,7 +1308,7 @@ void exit_mmap(struct mm_struct *mm)
+>   		vma = vma_next(&vmi);
+>   	} while (vma && likely(!xa_is_zero(vma)));
 >   
-> +static int sysctl_max_map_count __read_mostly = DEFAULT_MAX_MAP_COUNT;
-> +
-> +/**
-> + * vma_count_remaining - Determine available VMA slots
-> + * @mm: The memory descriptor for the process.
-> + *
-> + * Check how many more VMAs can be created for the given @mm
-> + * before hitting the sysctl_max_map_count limit.
-> + *
-> + * Return: The number of new VMAs the process can accommodate.
-> + */
-> +int vma_count_remaining(const struct mm_struct *mm)
-> +{
-> +	const int map_count = mm->map_count;
-> +	const int max_count = sysctl_max_map_count;
+> -	BUG_ON(count != mm->map_count);
+> +	BUG_ON(count != mm->vma_count);
+>   
 
-If we worry about rare races (sysctl_max_map_count changing?) we should 
-probably force a single read through READ_ONCE()?
+While at it, best to change that to a WARN_ON_ONCE() or even a 
+VM_WARN_ON_ONCE().
 
-Otherwise one might trick vma_count_remaining() into returning a 
-negative number I assume.
+[ or remove it -- have we ever seen that firing? ]
 
-> +
-> +	return (max_count > map_count) ? (max_count - map_count) : 0;
-> +}
-
-Nothing else jumped at me.
-
-Not sure what the buildbot complains about but I'm sure you'll figure it 
-out :)
+Acked-by: David Hildenbrand <david@redhat.com>
 
 -- 
 Cheers
