@@ -1,188 +1,122 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1392729A310
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 17 Sep 2025 10:58:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44CFD3195E1;
+	Wed, 17 Sep 2025 12:58:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758106723; cv=none; b=JZp/ujR3aJeqoQtHMcRJBWRaq25kr3hYBoaZ3L2azzXDHTllVHLt3pk+hPVWBfuC7yRJ4yKeYPmtHA4HCJNWROUVFOdUoPm3NmboAiyjT0u1JU5Rw16GaAUKlMy+ri8TImYePnZAO17c2fZ7xQm6lA3U9gwUePUDQNOUQ1SifaY=
+	t=1758113892; cv=none; b=ixzR8R6VDQTxeioPLH1fRiKkF4KXO+SlLC42D589ra3UqGYQi7aTGATZRvmEUFh0LWf7kWu9P78yqMxF3HJRqBMikzCrwH7pLJ6EIYDL08jZbu1norx7u+JN6K9iePV7yV46J+jHpwtkEXkXiz1qQ+JwgzbSct1RoUqdeuAKzTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758106723; c=relaxed/simple;
-	bh=Izdcts6h65LPN1G5a3zTjxcIrlr+ukYYyT16tAVPvkQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=N9Sp8tmmpTtqS6pNpOQmtiMwcedRa1VLbrmf1jcHKz/AwGnqGziKVT5rWmy1JJ+E0+Qa9NDjPuYdCg/HAvdIQTU5atxfQeyBvUrmVI9G+EGdYQ+pu9eJK50H1sBI/vDvNIztPJWu+TQvYSblKQb9RIWXO85M4B8p6Vc6k9Qve24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gohQAgu+; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gohQAgu+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1758106721;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=7JkjtbRP7dMtBFUCBqCV1SQcXuhyJiXUoZv2gn/Tp1M=;
-	b=gohQAgu+Xl71BuVyh7mtMqDaDLwB4NwEMQsHmXViV+HWZwDsK8DaFm5DvRkcqo0Q++r0Sa
-	mEuT4vA7Z1yzKCEOAdyljutkCaNOpRJs2N0iHDl+aKkq3a9wv/P0y1TOoCS+VLMirLG7rv
-	Krc6SSQQD4fztR8QgdDWuierUkuut2I=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-210-4RN1yoFjO8SEBhYLomAKyQ-1; Wed, 17 Sep 2025 06:58:40 -0400
-X-MC-Unique: 4RN1yoFjO8SEBhYLomAKyQ-1
-X-Mimecast-MFC-AGG-ID: 4RN1yoFjO8SEBhYLomAKyQ_1758106719
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-45b990eb77cso6392345e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 17 Sep 2025 03:58:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758106719; x=1758711519;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7JkjtbRP7dMtBFUCBqCV1SQcXuhyJiXUoZv2gn/Tp1M=;
-        b=OF5QX1kaAaMR7qgfuR9vmonx8qvu+1A2XlPN1WwtvGjdg+WTA8KaPPfFkcnwa5Hvq/
-         SbPiBuENrxLks2xBdenGK3boFe8kBxC9s6GLTBsdALknsbiJTEkWzgNhp5daeUFZ0rKZ
-         ItB/9JTRdAplIJYJiJ1SeH4GGFb962/MC7rwhU36gF0nuveO4aHnyc+AqzfqFhPoLSb/
-         xAYwK1M+7IVIHien0kXHyEX7s0//wxINJFGkko3AFR7D1zTkxoFfwIZVZcXpwe1oGZef
-         YotUmFOCpPAftnoZZrJtX2ylZVWGDmzPs4W6fkteJ2vbljpWJcnNh9qTMufKxDi1qIDH
-         13ZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUiIPO2ig0wRoosbwA6OCR6RiZxUaC/Nz+ljXUg8F+LXzjbeJopGg9a/oSl6hWefYJlWxe774Fmd+7jKI+74DGQ/lA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzSnK1S6X/ZuRRn6g4fA1hz/MGJSUk3Bsn+lsqUDWQsN7afOvwZ
-	tZMuRF8oFtrtgc8Ni//ucLS2n/abbDwY/Xdccc7dcVwqSRqvSmsahoCdaI0cczHLOS0BY5FlaIM
-	cH9kLzbSjvPhX+V03qyWqGmclxd8bRD/ETs+4pzmjU6ov1s5iNvvyB8bdSeKqZCQNF8pO2WN+4w
-	==
-X-Gm-Gg: ASbGncty0kPYAKyrFQUYbKJfswdaIA1tRR9SV3Rc83ZaR+Bi7enyhuewJ2SQerkJxSD
-	cD6Ttsg/BCOf1i2DwWADx6/A2hObbawF8Pd5JQGxLE0AibB2Ny5Gj+Jph8V3/f3tOPHZWHEoBkF
-	h8/fQhOxONkkrhoubpSdMQnpLBzGFPtm0WubpdQeLqeQL+KSIgOK527C/aQg0Op2RpbZdwomAvx
-	jCaoiiPYUDGg2exv36JqyF1DzSSoG3jJF7BmoZgSCmwIyTD6kHoGzyQVb0pCpBqJxLHY7z5AJZi
-	5di6u0tbUxbHHDdQdgULO16S1ZTZ4+EPClwlqME+tHKJ+h7jrUDDkbDPqW1/vaF0mcJX1YrttE6
-	wFU5ShXU7FtbQVmRa8WUhuKuf+ilzbwImUBiIM/LVUxzJzN/YB4USV0DNeZuIjrfg
-X-Received: by 2002:a05:600c:608b:b0:45d:e775:d8b8 with SMTP id 5b1f17b1804b1-45f32d002bamr64516525e9.1.1758106718650;
-        Wed, 17 Sep 2025 03:58:38 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGYHfjJCnarL426rUzCpUmPlFf0QrjHqktYk5gtQG/LD4ICoTbUxGn3yS+4cVVuXKN0QVM+1w==
-X-Received: by 2002:a05:600c:608b:b0:45d:e775:d8b8 with SMTP id 5b1f17b1804b1-45f32d002bamr64516205e9.1.1758106718247;
-        Wed, 17 Sep 2025 03:58:38 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f27:6d00:7b96:afc9:83d0:5bd? (p200300d82f276d007b96afc983d005bd.dip0.t-ipconnect.de. [2003:d8:2f27:6d00:7b96:afc9:83d0:5bd])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3ece199ad24sm745170f8f.50.2025.09.17.03.58.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Sep 2025 03:58:37 -0700 (PDT)
-Message-ID: <1308de0e-bb5a-481f-a447-ee4440ffb419@redhat.com>
-Date: Wed, 17 Sep 2025 12:58:35 +0200
+	s=arc-20240116; t=1758113892; c=relaxed/simple;
+	bh=6xpiu7/YuXxFTFjFUcEaAMXSz9ao5hTEvRWvoz+R0L4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MuQQetJtN8bDFjja4pyMUkWGXwKHJo4oR5zj5ernRvQ/tdCEYSGXglUWwwKokSHt8Pcpu4fJAnOzoQd6vF46dmsaaeHoqVXgqkoQxWMpuY+7hmkeyVwPGEf3dWnnhc9c91ENIUuuEfz/KcbCOYEPDMUEuYo686o+j8PblNs5TCQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4cRf2Q5h4dzYQv6C;
+	Wed, 17 Sep 2025 20:58:06 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 6647E1A116A;
+	Wed, 17 Sep 2025 20:58:05 +0800 (CST)
+Received: from huaweicloud.com (unknown [7.192.34.199])
+	by APP4 (Coremail) with SMTP id gCh0CgC3TYpUsMpoUjRFCw--.43792S2;
+	Wed, 17 Sep 2025 20:58:05 +0800 (CST)
+From: Xiu Jianfeng <xiujianfeng@huaweicloud.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	gmonaco@redhat.com,
+	namcao@linutronix.de
+Cc: linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	nicolas.bouchinet@oss.cyber.gouv.fr,
+	xiujianfeng@huawei.com
+Subject: [PATCH] rv: Fix boot failure when kernel lockdown is active
+Date: Wed, 17 Sep 2025 12:57:33 +0000
+Message-ID: <20250917125733.2346923-1-xiujianfeng@huaweicloud.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/7] mm/selftests: add max_vma_count tests
-To: Kalesh Singh <kaleshsingh@google.com>, akpm@linux-foundation.org,
- minchan@kernel.org, lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
- rppt@kernel.org, pfalcato@suse.de
-Cc: kernel-team@android.com, android-mm@google.com,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- Kees Cook <kees@kernel.org>, Vlastimil Babka <vbabka@suse.cz>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- Juri Lelli <juri.lelli@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>, Ben Segall
- <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
- Valentin Schneider <vschneid@redhat.com>, Jann Horn <jannh@google.com>,
- Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
- linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-References: <20250915163838.631445-1-kaleshsingh@google.com>
- <20250915163838.631445-3-kaleshsingh@google.com>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- qIws/H2t
-In-Reply-To: <20250915163838.631445-3-kaleshsingh@google.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: ZUWdEEdwVp54NSVbQ1XiS78lvDfZ2B4Rh7zsiwX1vdE_1758106719
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgC3TYpUsMpoUjRFCw--.43792S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Aw1DWr48AryDCF1kCFyDJrb_yoW8uryUpF
+	4rG3y3Gr48J3yjvF42krn2kFy5A3WrGF9xCF97CryfAF4DGw4aqFZFqw429F1fKrWrAayS
+	vFsFqw4qvay0vw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUyCb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
+	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+	0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij
+	64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
+	8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE
+	2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42
+	xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF
+	7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07UAwIDUUUUU=
+X-CM-SenderInfo: x0lxyxpdqiv03j6k3tpzhluzxrxghudrp/
 
-> + * test_suite_setup - Set up the VMA layout for VMA count testing.
-> + *
-> + * Sets up the following VMA layout:
-> + *
-> + * +----- base_addr
-> + * |
-> + * V
-> + * +--------------+----------------------+--------------+----------------+--------------+----------------+--------------+-----+----------------+--------------+
-> + * |  Guard Page  |                      |  Guard Page  |  Extra Map 1   | Unmapped Gap |  Extra Map 2   | Unmapped Gap | ... |  Extra Map N   | Unmapped Gap |
-> + * |  (unmapped)  |      TEST_AREA       |  (unmapped)  | (mapped page)  |  (1 page)    | (mapped page)  |  (1 page)    | ... | (mapped page)  |  (1 page)    |
-> + * |   (1 page)   | (unmapped, 3 pages)  |   (1 page)   |    (1 page)    |              |    (1 page)    |              |     |    (1 page)    |              |
-> + * +--------------+----------------------+--------------+----------------+--------------+----------------+--------------+-----+----------------+--------------+
-> + * ^              ^                      ^              ^                                                                  ^
-> + * |              |                      |              |                                                                  |
-> + * +--GUARD_SIZE--+                      |              +-- EXTRA_MAPS points here             Sufficient EXTRA_MAPS to ---+
-> + *    (PAGE_SIZE) |                      |                                                         reach MAX_VMA_COUNT
-> + *                |                      |
-> + *                +--- TEST_AREA_SIZE ---+
-> + *                |   (3 * PAGE_SIZE)    |
-> + *                ^
-> + *                |
-> + *                +-- TEST_AREA starts here
-> + *
->
+From: Xiu Jianfeng <xiujianfeng@huawei.com>
 
-Just wondering if we could find a different name than "guard page" here, 
-to not confuse stuff with guard ptes
+When booting kernel with lockdown=confidentiality parameter, the system
+will hang at rv_register_reactor() due to waiting for rv_interface_lock,
+as shown in the following log,
 
-Will the current "guard page" we a valid vma or just a hole?
+INFO: task swapper/0:1 blocked for more than 122 seconds.
+      Not tainted 6.17.0-rc6-next-20250915+ #29
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+task:swapper/0       state:D stack:0     pid:1     tgid:1     ppid:0
+Call Trace:
+ <TASK>
+ __schedule+0x492/0x1600
+ schedule+0x27/0xf0
+ schedule_preempt_disabled+0x15/0x30
+ __mutex_lock.constprop.0+0x538/0x9e0
+ ? vprintk+0x18/0x50
+ ? _printk+0x5f/0x90
+ __mutex_lock_slowpath+0x13/0x20
+ mutex_lock+0x3b/0x50
+ rv_register_reactor+0x48/0xe0
+ ? __pfx_register_react_printk+0x10/0x10
+ register_react_printk+0x15/0x20
+ do_one_initcall+0x5d/0x340
+ kernel_init_freeable+0x351/0x540
+ ? __pfx_kernel_init+0x10/0x10
+ kernel_init+0x1b/0x200
+ ? __pfx_kernel_init+0x10/0x10
+ ret_from_fork+0x1fb/0x220
+ ? __pfx_kernel_init+0x10/0x10
+ ret_from_fork_asm+0x1a/0x30
 
+The root cause is that, when the kernel lockdown is in confidentiality
+mode, rv_create_dir(), which is essentially tracefs_create_dir(), will
+return NULL. This, in turn, causes create_monitor_dir() to return
+-ENOMEM, and finally leading to the mutex not being unlocked.
+
+Fixes: 24cbfe18d55a ("rv: Merge struct rv_monitor_def into struct rv_monitor")
+Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
+---
+ kernel/trace/rv/rv.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/trace/rv/rv.c b/kernel/trace/rv/rv.c
+index 1482e91c39f4..e35565dd2dc5 100644
+--- a/kernel/trace/rv/rv.c
++++ b/kernel/trace/rv/rv.c
+@@ -805,7 +805,7 @@ int rv_register_monitor(struct rv_monitor *monitor, struct rv_monitor *parent)
+ 
+ 	retval = create_monitor_dir(monitor, parent);
+ 	if (retval)
+-		return retval;
++		goto out_unlock;
+ 
+ 	/* keep children close to the parent for easier visualisation */
+ 	if (parent)
 -- 
-Cheers
-
-David / dhildenb
+2.43.0
 
