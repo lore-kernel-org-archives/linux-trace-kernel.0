@@ -1,122 +1,104 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44CFD3195E1;
-	Wed, 17 Sep 2025 12:58:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90F30319616;
+	Wed, 17 Sep 2025 13:36:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758113892; cv=none; b=ixzR8R6VDQTxeioPLH1fRiKkF4KXO+SlLC42D589ra3UqGYQi7aTGATZRvmEUFh0LWf7kWu9P78yqMxF3HJRqBMikzCrwH7pLJ6EIYDL08jZbu1norx7u+JN6K9iePV7yV46J+jHpwtkEXkXiz1qQ+JwgzbSct1RoUqdeuAKzTI=
+	t=1758116195; cv=none; b=Cxw/Rmex0uoMTeKaGOcQi63s96cRqlbSRoasLAZ/dccnOK28lOqlzRuSUnQeU7JC94ihCzGHhmfQLuPSuVGzIJC0eACRv4s94PQrVbwRsMVxbU6+mqkVvQbUWnLZ7fTpGu+B7+CaDJhR35G0CCWL55AphOVznv6Xv5ac2G2qOxg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758113892; c=relaxed/simple;
-	bh=6xpiu7/YuXxFTFjFUcEaAMXSz9ao5hTEvRWvoz+R0L4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MuQQetJtN8bDFjja4pyMUkWGXwKHJo4oR5zj5ernRvQ/tdCEYSGXglUWwwKokSHt8Pcpu4fJAnOzoQd6vF46dmsaaeHoqVXgqkoQxWMpuY+7hmkeyVwPGEf3dWnnhc9c91ENIUuuEfz/KcbCOYEPDMUEuYo686o+j8PblNs5TCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4cRf2Q5h4dzYQv6C;
-	Wed, 17 Sep 2025 20:58:06 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 6647E1A116A;
-	Wed, 17 Sep 2025 20:58:05 +0800 (CST)
-Received: from huaweicloud.com (unknown [7.192.34.199])
-	by APP4 (Coremail) with SMTP id gCh0CgC3TYpUsMpoUjRFCw--.43792S2;
-	Wed, 17 Sep 2025 20:58:05 +0800 (CST)
-From: Xiu Jianfeng <xiujianfeng@huaweicloud.com>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	gmonaco@redhat.com,
-	namcao@linutronix.de
-Cc: linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	nicolas.bouchinet@oss.cyber.gouv.fr,
-	xiujianfeng@huawei.com
-Subject: [PATCH] rv: Fix boot failure when kernel lockdown is active
-Date: Wed, 17 Sep 2025 12:57:33 +0000
-Message-ID: <20250917125733.2346923-1-xiujianfeng@huaweicloud.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1758116195; c=relaxed/simple;
+	bh=S9mXumzYte5Pst5IA96k4rhntC25b69jTUmGsPuAoM8=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=pXoZICkeVsrQQb048n/pSMvifpYamog7tl7Wbrxi9UGVqJtjey7K652TeyWADsegXnbgLf539ji9zlrGx/lv0WQ96wqFq1RQ04fovaWbtHJ/PIdX3QW/X/L+Nq8mhR/2rjxzXtlIx17cLwq7DcnSE2WpgCNxbVf+r10HNh7Gaig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XifFkS6V; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XifFkS6V"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2913BC4CEF7;
+	Wed, 17 Sep 2025 13:36:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758116195;
+	bh=S9mXumzYte5Pst5IA96k4rhntC25b69jTUmGsPuAoM8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=XifFkS6VVp607mqDbRvGRnDvsQIP4JYdMEn9cO0EJjIaJ8n5haZHK7wRbbTCxTJmD
+	 QXgkxYUV6l6W7XjplQu/+sOZbI8FwQRA8BOvA/ivvr5I9oIJhasMaQDuRLm3eSCLB7
+	 1ueydVAwr6FMjxirmjGsJH5tZmQSJUsy3sKjVWyYHuXG881Y0kBXEj4Zv5WF4+3O/9
+	 IltlruCSmUWdR8lnjfVh6bUCMVZJHIXyzDK+4raVr+h0JfjQirgLT9qscBfx1X/8Lh
+	 ndiVfRcY/ajSkTw+Z1hkvNEgkGVJjJ5uZyxEm47HLfojwU/JLYY1TpxdIbsSsLsCQX
+	 dgJlwcUFGUfOQ==
+Date: Wed, 17 Sep 2025 22:36:30 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Wang Liang <wangliang74@huawei.com>
+Cc: <rostedt@goodmis.org>, <mathieu.desnoyers@efficios.com>,
+ <yuehaibing@huawei.com>, <zhangchangzhong@huawei.com>,
+ <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>
+Subject: Re: [PATCH] tracing: kprobe-event: Fix null-ptr-deref in
+ trace_kprobe_create_internal()
+Message-Id: <20250917223630.f936f6e71964037f07a33838@kernel.org>
+In-Reply-To: <20250916075816.3181175-1-wangliang74@huawei.com>
+References: <20250916075816.3181175-1-wangliang74@huawei.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgC3TYpUsMpoUjRFCw--.43792S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7Aw1DWr48AryDCF1kCFyDJrb_yoW8uryUpF
-	4rG3y3Gr48J3yjvF42krn2kFy5A3WrGF9xCF97CryfAF4DGw4aqFZFqw429F1fKrWrAayS
-	vFsFqw4qvay0vw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUyCb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
-	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij
-	64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
-	8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE
-	2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42
-	xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF
-	7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07UAwIDUUUUU=
-X-CM-SenderInfo: x0lxyxpdqiv03j6k3tpzhluzxrxghudrp/
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Xiu Jianfeng <xiujianfeng@huawei.com>
+On Tue, 16 Sep 2025 15:58:16 +0800
+Wang Liang <wangliang74@huawei.com> wrote:
 
-When booting kernel with lockdown=confidentiality parameter, the system
-will hang at rv_register_reactor() due to waiting for rv_interface_lock,
-as shown in the following log,
+> A crash was observed with the following output:
+> 
+> Oops: general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] SMP KASAN PTI
+> KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
+> CPU: 1 UID: 0 PID: 2899 Comm: syz.2.399 Not tainted 6.17.0-rc5+ #5 PREEMPT(none)
+> RIP: 0010:trace_kprobe_create_internal+0x3fc/0x1440 kernel/trace/trace_kprobe.c:911
+> Call Trace:
+>  <TASK>
+>  trace_kprobe_create_cb+0xa2/0xf0 kernel/trace/trace_kprobe.c:1089
+>  trace_probe_create+0xf1/0x110 kernel/trace/trace_probe.c:2246
+>  dyn_event_create+0x45/0x70 kernel/trace/trace_dynevent.c:128
+>  create_or_delete_trace_kprobe+0x5e/0xc0 kernel/trace/trace_kprobe.c:1107
+>  trace_parse_run_command+0x1a5/0x330 kernel/trace/trace.c:10785
+>  vfs_write+0x2b6/0xd00 fs/read_write.c:684
+>  ksys_write+0x129/0x240 fs/read_write.c:738
+>  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+>  do_syscall_64+0x5d/0x2d0 arch/x86/entry/syscall_64.c:94
+>  </TASK>
+> 
+> Function kmemdup() may return NULL in trace_kprobe_create_internal(), add
+> check for it's return value.
 
-INFO: task swapper/0:1 blocked for more than 122 seconds.
-      Not tainted 6.17.0-rc6-next-20250915+ #29
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:swapper/0       state:D stack:0     pid:1     tgid:1     ppid:0
-Call Trace:
- <TASK>
- __schedule+0x492/0x1600
- schedule+0x27/0xf0
- schedule_preempt_disabled+0x15/0x30
- __mutex_lock.constprop.0+0x538/0x9e0
- ? vprintk+0x18/0x50
- ? _printk+0x5f/0x90
- __mutex_lock_slowpath+0x13/0x20
- mutex_lock+0x3b/0x50
- rv_register_reactor+0x48/0xe0
- ? __pfx_register_react_printk+0x10/0x10
- register_react_printk+0x15/0x20
- do_one_initcall+0x5d/0x340
- kernel_init_freeable+0x351/0x540
- ? __pfx_kernel_init+0x10/0x10
- kernel_init+0x1b/0x200
- ? __pfx_kernel_init+0x10/0x10
- ret_from_fork+0x1fb/0x220
- ? __pfx_kernel_init+0x10/0x10
- ret_from_fork_asm+0x1a/0x30
+Oops, thanks for fixing!
+Let me pick this!
 
-The root cause is that, when the kernel lockdown is in confidentiality
-mode, rv_create_dir(), which is essentially tracefs_create_dir(), will
-return NULL. This, in turn, causes create_monitor_dir() to return
--ENOMEM, and finally leading to the mutex not being unlocked.
+> 
+> Fixes: 33b4e38baa03 ("tracing: kprobe-event: Allocate string buffers from heap")
+> Signed-off-by: Wang Liang <wangliang74@huawei.com>
+> ---
+>  kernel/trace/trace_kprobe.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+> index ccae62d4fb91..fa60362a3f31 100644
+> --- a/kernel/trace/trace_kprobe.c
+> +++ b/kernel/trace/trace_kprobe.c
+> @@ -908,6 +908,8 @@ static int trace_kprobe_create_internal(int argc, const char *argv[],
+>  			return -EINVAL;
+>  		}
+>  		buf = kmemdup(&argv[0][1], len + 1, GFP_KERNEL);
+> +		if (!buf)
+> +			return -ENOMEM;
+>  		buf[len] = '\0';
+>  		ret = kstrtouint(buf, 0, &maxactive);
+>  		if (ret || !maxactive) {
+> -- 
+> 2.34.1
+> 
 
-Fixes: 24cbfe18d55a ("rv: Merge struct rv_monitor_def into struct rv_monitor")
-Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
----
- kernel/trace/rv/rv.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/trace/rv/rv.c b/kernel/trace/rv/rv.c
-index 1482e91c39f4..e35565dd2dc5 100644
---- a/kernel/trace/rv/rv.c
-+++ b/kernel/trace/rv/rv.c
-@@ -805,7 +805,7 @@ int rv_register_monitor(struct rv_monitor *monitor, struct rv_monitor *parent)
- 
- 	retval = create_monitor_dir(monitor, parent);
- 	if (retval)
--		return retval;
-+		goto out_unlock;
- 
- 	/* keep children close to the parent for easier visualisation */
- 	if (parent)
 -- 
-2.43.0
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
