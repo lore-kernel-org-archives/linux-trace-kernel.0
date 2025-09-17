@@ -1,74 +1,74 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47ADD333AA1
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 17 Sep 2025 13:41:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 364953161A7
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 17 Sep 2025 13:44:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758116515; cv=none; b=rhReDP7ePkKyFz9MdjlXBXAoIZPFVsY3oc5QdWfHJno9ytCm8YWCg7Ue2ebnFMNB37XpRhWRKIh/rqwmdlHZ9vosmefDrBGcOjyJlHBy+aLs8ijieof9mMLFPv2CKYgOEVYsSnvulSDaA+2/R/+qOy1+cmiLz11/Yb4UwURbbZ4=
+	t=1758116675; cv=none; b=JKMPZ8ad+/ZriqnxN01WP/9CX3wYWbJi/Wq9etuYxA4KNykSAtbMXFz2HnKZgJIEJJl6ju5QOiOO7bUmlZJDZHt9tyScvRceRw6Xp3wv5O2C3vY3fcun6oqIJznd12Q3N6MgYBPZJf/1UkPTqCWXDYza8DMW2Q6JmGrWWaY3jm4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758116515; c=relaxed/simple;
-	bh=zX4lmKqHHvt6kg+FygaTZ78AhlYs4+hjvu2UKbDiG0k=;
+	s=arc-20240116; t=1758116675; c=relaxed/simple;
+	bh=tVeaLOUcscUXh8ELuJYxqekBt4O2EaJZNoBmTkBToIw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=m9rpoXjyWZi4TB9wy/qmqTJTiJQC7+5OiBsxhYv8a/5pn9RF6OFUUnjRv9ndCe39oC+j9G7wDWglXwhSB/EcdMrlzKh4ZX1eNoj2RJkHvx/XIUwYFbDLJ07UQ8LNn4ntUWE/l5rGbz3aUoT8A30ocpdHFTknhA3CCTu299JlI6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ClH6Nm+s; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=oBXINmYtRfq7IRrymkbK5FRIeJkulbTn7HTwzzjtwpZYgnFra1EZH8jkWoqzORQ9agmfCcXy0MAFF1CDAL/ofYjYK5P+R1MNdEYMFkK7T0++ysEqBexng6blB5fBA2xkEjEKDSmoGS4PDOk4TwDKKECAjzetv0ah1UevaEvZwE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=chavE6w2; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ClH6Nm+s"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="chavE6w2"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1758116512;
+	s=mimecast20190719; t=1758116673;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=j9LMOchMMyRjRRzN+kT7nX+PgJH+lWPkOhHcYp1LpMc=;
-	b=ClH6Nm+ssW1NCSXvxrAEzuFeyuY7DrHujw7xalStL5Lm8ppSWRb5VlGdfKh/pSZANBWyr9
-	ck/NxgVeyFu6Dtj+qZMFvx80EEsHCbqhODSsSgEoM4nQGwwMHwZQg0JbZ5+YT0U6lOmrEO
-	nVrJXuzk5xE4uhN5kV/VwDyScEVcdPs=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=liGb+1uk63kwOPhDFfASvfeBl4VQTUkO45gHzPQGBUU=;
+	b=chavE6w2I6v3beCi6eOJ0woUJMyErGFvcIZUFOC0hzx9moYAjmQp/5vd3lalMH7HZzm6jX
+	IK6CGmxBPvgi+6oTLYOdxmcLQropVTOo0yAsJJnIRzURuV2b4dPSQMnqWMePnMNmUcnobe
+	YLM5vBrDc/+7Ai8xflwS1Z3Zk7mYLBU=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-5-KoN5LMqsOsiPB5WroIlVeA-1; Wed, 17 Sep 2025 09:41:50 -0400
-X-MC-Unique: KoN5LMqsOsiPB5WroIlVeA-1
-X-Mimecast-MFC-AGG-ID: KoN5LMqsOsiPB5WroIlVeA_1758116509
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3ecdc9dbc5fso777161f8f.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 17 Sep 2025 06:41:49 -0700 (PDT)
+ us-mta-213-3y08wHwwPkGHarHVFw6hIg-1; Wed, 17 Sep 2025 09:44:31 -0400
+X-MC-Unique: 3y08wHwwPkGHarHVFw6hIg-1
+X-Mimecast-MFC-AGG-ID: 3y08wHwwPkGHarHVFw6hIg_1758116670
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-45f2f15003aso21862485e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 17 Sep 2025 06:44:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758116509; x=1758721309;
+        d=1e100.net; s=20230601; t=1758116670; x=1758721470;
         h=content-transfer-encoding:in-reply-to:autocrypt:content-language
          :from:references:cc:to:subject:user-agent:mime-version:date
          :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=j9LMOchMMyRjRRzN+kT7nX+PgJH+lWPkOhHcYp1LpMc=;
-        b=sWdeU+DAaKn4jvQiGezMNHqmsDoxhSA9swqmTRDge5UBK0lhjSKbmVmktVx+lPOFSq
-         7Q9o7I1AU3AsJ+MNwtLSY/N7aNogkrjKXhhCEXruxW0PfTxHmALl7sTJUUDvmBjIxKX8
-         xru2a6Prb/AFMkkyNvWLZRExUdK+8WCo7/6xo5OsNZxfKmUw8QUfiuz72xD4On8CbOdf
-         McsmjA2++L3m73WFhXoJKYToS6sSvCg18A7VJJd3dD2OApnJ7D7PcjPRBfNERMmEkxvY
-         ugkz3skH7/t2s8epg1jCk1Z3V7d8khvq6rWEI6vG2GdgjljywEHLGhxR9VBQt096imOP
-         G97Q==
-X-Forwarded-Encrypted: i=1; AJvYcCV1yLAcZnds0uLqG03/y6ckVkyQpRCd4VI53rsFKoWfiD8oLkmKgeOdUxeu1ZQ+QJjZarlG5TqmWwhdnvxpthIUojY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzV61sqXENSRK/tFBbLAqqpgKM7yMDAYy/LNVs/wDIzihZG/pPW
-	nVNpHG4TwCRdFR4RRsEC/hNEPypLV0p8CuL/USPkGuFKoYDnjG3p3fQK0z0lLFKIWl2GSP+AUP8
-	oqRttcyCphHSMqgSYCRF1CJ8w3fRXyscjWz2Sk0kdox3pQT3T+/EC+dCtFTw/NoknNvSzgWt5Yw
+        bh=liGb+1uk63kwOPhDFfASvfeBl4VQTUkO45gHzPQGBUU=;
+        b=iBnC2pFxRPUdYts7z1IDOru5JGV/LDXfaikNuFdEYuf4c+lNCAEcIvMWC8apYQu4hi
+         y2+ZjbnHC4GTKoD1ISIlmtfmzK6QmpB/YSzlbVYG0jfGBDPDDRgML/+KSVv+keqclk8J
+         Nw50rTcRxEPF61hfo+lX4kRUHlZJcv1q8L5txKBtHPHTfTj9K7eTgvBIqlLlnrvsB58a
+         e2gcTuea9VMUItNofq72+j+cQNqY8tOPE5clzo2nQ1LqUaMRMb8bwA+gHYJPNrPFwL2J
+         9GgxPBDkSQL+D8obn/CSua6wFwmXhMOvsJmU9f+5Cv8CSsrMUFyNaJai/YIExRieAqAy
+         OXaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUsK29MITi8TvIbZp0qEoDqL7Pg3vNlpQK1qnyS9niGQEMZaIlHbE1f8FuWYp1P9YEPcAdhmMxuYX3nEVTbNX6ffXg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxagQaQblr0Kpq4fvEtah+JPsBZ6O1M6AfDRuTQVo7SKL2jqPZz
+	CkN8+gfy8W6ehstD1qOUCVQQi2Y4tsPW0oA2t8l0Oww4Obi66NbJCgAhX+T+QG6NPPfX2Vcp1vh
+	3Gm95iKWAuNh4XOFEO/Htss3sKGi76T/2IiXc7k0H+EMTk6fvf4g7NVUn/RoPeLrikA/qS9NjlQ
 	==
-X-Gm-Gg: ASbGnctuf3PLYysgfN7quLy5cCNNN7eNBwpQrTQXqZC974/eKKGrD+FQ28Y2gnBD7Ar
-	4Xk94KmxU9WlyudENBWgwCxGK0wc8im7LQ3Imh8S6YpwBrMYTtA0xFHyYnvr7ybZ1bW4w/YS0Jg
-	jm/dPf2N+7eD3AiSVdJmBwO/u84LgiLgtc509+XWlQFEnKNDBKsJ8L1maT9qLx1FWZ9kL8S4t5t
-	uozrAzR0WA8lSoh26ufTb5khYKhSR3Fo4lMOv0oLQbn+od4W2Bte5B5zP0wYsjVsNvPhDnRlFJK
-	VaA+1uqxbcYNV5OKAdK6Y5xqK9/P19AiMUWpmmXBnKiSs3E8FSL0D2Rz0jf/fWa2TeCXtxOZvN5
-	ePSVIWpt855r8YCK+juLh8I5zHWHDG7qbxnGW1sKuXEazfJ5cLwD4J6JZ9t1KJPNA
-X-Received: by 2002:a05:6000:178c:b0:3e7:615a:17de with SMTP id ffacd0b85a97d-3ecdfa1d446mr1736902f8f.47.1758116508687;
-        Wed, 17 Sep 2025 06:41:48 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH2wsn48aIbLhxRJMluX1pkl+z8XXGI8sJvZ1EmUT/hfsPa2xw9d1Th60HJN9iFrZKhSw2j9Q==
-X-Received: by 2002:a05:6000:178c:b0:3e7:615a:17de with SMTP id ffacd0b85a97d-3ecdfa1d446mr1736869f8f.47.1758116508254;
-        Wed, 17 Sep 2025 06:41:48 -0700 (PDT)
+X-Gm-Gg: ASbGncu6CromY+/CuwZ8MrIvDNkbY40ZhoD3Jr7cgDkz6gpGfq3olaXRTtGy6K6QmUU
+	VorH3Nht3JCisDL8RHTiQ9lW+0nsSvdPsTKY/4MqML+8qo1geyKRTJt5MA3Wue2u8wT2MIyOEYh
+	yasy31fnNcPyIZCxjOOLO0cL77cykxEbydHmA4b4JZczyAA72NmQI95U1D+dT1AwCUiK/FZpu+0
+	AM55iXCeXahB2L9Xf1NMpbb0X8Y8Nz6Zjdn3Q/Lofouo4fb1uL1+OGvzSM7b2feBWd7zfud4my+
+	3g9Y6+95UffWu8J+vfATIVwROezY1nhfUSgbo9yBv2FfudqiDaLlclfVLTm1WzGVVwy9HTS5mxT
+	LUieLMRQX3co05kXql7b/K63yYfYa2dKXX3Xjo0u1x/qg1bq7dv+PLk0rgfvUkfeh
+X-Received: by 2002:a05:600c:4ec8:b0:45f:2843:e76d with SMTP id 5b1f17b1804b1-46201f8a9f5mr21886245e9.4.1758116670346;
+        Wed, 17 Sep 2025 06:44:30 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFw1RIyEIK4TW5AJcprHmluKxUYcV6LPPbUme37h+GXCQZ40f8U9IBbOvKE8vFxsWYa4at8pA==
+X-Received: by 2002:a05:600c:4ec8:b0:45f:2843:e76d with SMTP id 5b1f17b1804b1-46201f8a9f5mr21885945e9.4.1758116669885;
+        Wed, 17 Sep 2025 06:44:29 -0700 (PDT)
 Received: from ?IPV6:2003:d8:2f27:6d00:7b96:afc9:83d0:5bd? (p200300d82f276d007b96afc983d005bd.dip0.t-ipconnect.de. [2003:d8:2f27:6d00:7b96:afc9:83d0:5bd])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3e98b439442sm15422825f8f.38.2025.09.17.06.41.46
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-46139122cb5sm36693815e9.8.2025.09.17.06.44.27
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Sep 2025 06:41:47 -0700 (PDT)
-Message-ID: <c955bff9-b4f5-4b93-b7e0-28473766dd2f@redhat.com>
-Date: Wed, 17 Sep 2025 15:41:45 +0200
+        Wed, 17 Sep 2025 06:44:29 -0700 (PDT)
+Message-ID: <eb7820ed-3351-4cb5-8341-d6a48ed7746f@redhat.com>
+Date: Wed, 17 Sep 2025 15:44:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -76,7 +76,7 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/7] mm: rename mm_struct::map_count to vma_count
+Subject: Re: [PATCH v2 6/7] mm: add assertion for VMA count limit
 To: Kalesh Singh <kaleshsingh@google.com>, akpm@linux-foundation.org,
  minchan@kernel.org, lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
  rppt@kernel.org, pfalcato@suse.de
@@ -97,7 +97,7 @@ Cc: kernel-team@android.com, android-mm@google.com,
  linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
  linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
 References: <20250915163838.631445-1-kaleshsingh@google.com>
- <20250915163838.631445-5-kaleshsingh@google.com>
+ <20250915163838.631445-7-kaleshsingh@google.com>
 From: David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; keydata=
  xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -143,24 +143,26 @@ Autocrypt: addr=david@redhat.com; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20250915163838.631445-5-kaleshsingh@google.com>
+In-Reply-To: <20250915163838.631445-7-kaleshsingh@google.com>
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: efJfMsBwkEM9mlKw_doPyUhTMesJmmTKk8Dj5DSTd-k_1758116509
+X-Mimecast-MFC-PROC-ID: zrHIIOVa-JSNaIBh9in-SDmc_uVhYsW297vyNBOej4s_1758116670
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 15.09.25 18:36, Kalesh Singh wrote:
-> A mechanical rename of the mm_struct->map_count field to
-> vma_count; no functional change is intended.
+> Building on the vma_count helpers, add a VM_WARN_ON_ONCE() to detect
+> cases where the VMA count exceeds the sysctl_max_map_count limit.
 > 
-> The name "map_count" is ambiguous within the memory management subsystem,
-> as it can be confused with the folio/page->_mapcount field, which tracks
-> PTE references.
+> This check will help catch future bugs or regressions where
+> the VMAs are allocated exceeding the limit.
 > 
-> The new name, vma_count, is more precise as this field has always
-> counted the number of vm_area_structs associated with an mm_struct.
+> The warning is placed in the main vma_count_*() helpers, while the
+> internal *_nocheck variants bypass it. _nocheck helpers are used to
+> ensure that the assertion does not trigger a false positive in
+> the legitimate case of a temporary VMA increase past the limit
+> by a VMA split in munmap().
 > 
 > Cc: Andrew Morton <akpm@linux-foundation.org>
 > Cc: David Hildenbrand <david@redhat.com>
@@ -171,25 +173,46 @@ On 15.09.25 18:36, Kalesh Singh wrote:
 > Cc: Pedro Falcato <pfalcato@suse.de>
 > Signed-off-by: Kalesh Singh <kaleshsingh@google.com>
 > ---
-
-
-[...]
-
-> +++ b/mm/mmap.c
-> @@ -1308,7 +1308,7 @@ void exit_mmap(struct mm_struct *mm)
->   		vma = vma_next(&vmi);
->   	} while (vma && likely(!xa_is_zero(vma)));
+> 
+> Changes in v2:
+>    - Add assertions if exceeding max_vma_count limit, per Pedro
+> 
+>   include/linux/mm.h               | 12 ++++++--
+>   mm/internal.h                    |  1 -
+>   mm/vma.c                         | 49 +++++++++++++++++++++++++-------
+>   tools/testing/vma/vma_internal.h |  7 ++++-
+>   4 files changed, 55 insertions(+), 14 deletions(-)
+> 
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index 8bad1454984c..3a3749d7015c 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -4219,19 +4219,27 @@ static inline bool snapshot_page_is_faithful(const struct page_snapshot *ps)
 >   
-> -	BUG_ON(count != mm->map_count);
-> +	BUG_ON(count != mm->vma_count);
+>   void snapshot_page(struct page_snapshot *ps, const struct page *page);
 >   
+> +int vma_count_remaining(const struct mm_struct *mm);
+> +
+>   static inline void vma_count_init(struct mm_struct *mm)
+>   {
+>   	ACCESS_PRIVATE(mm, __vma_count) = 0;
+>   }
+>   
+> -static inline void vma_count_add(struct mm_struct *mm, int nr_vmas)
+> +static inline void __vma_count_add_nocheck(struct mm_struct *mm, int nr_vmas)
+>   {
+>   	ACCESS_PRIVATE(mm, __vma_count) += nr_vmas;
+>   }
+>   
+> +static inline void vma_count_add(struct mm_struct *mm, int nr_vmas)
+> +{
+> +	VM_WARN_ON_ONCE(!vma_count_remaining(mm));
 
-While at it, best to change that to a WARN_ON_ONCE() or even a 
-VM_WARN_ON_ONCE().
+Can't that fire when changing the max count from user space at just the 
+wrong time?
 
-[ or remove it -- have we ever seen that firing? ]
-
-Acked-by: David Hildenbrand <david@redhat.com>
+I assume we'll have to tolerated that and might just want to drop this 
+patch from the series.
 
 -- 
 Cheers
