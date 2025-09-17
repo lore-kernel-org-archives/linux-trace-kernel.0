@@ -1,221 +1,173 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 364953161A7
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 17 Sep 2025 13:44:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 894B91C6FFA
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 17 Sep 2025 13:57:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758116675; cv=none; b=JKMPZ8ad+/ZriqnxN01WP/9CX3wYWbJi/Wq9etuYxA4KNykSAtbMXFz2HnKZgJIEJJl6ju5QOiOO7bUmlZJDZHt9tyScvRceRw6Xp3wv5O2C3vY3fcun6oqIJznd12Q3N6MgYBPZJf/1UkPTqCWXDYza8DMW2Q6JmGrWWaY3jm4=
+	t=1758117464; cv=none; b=WXFOj/V1IS+/bbMah/eTZ74wtjMchnrt4WQlGZsZrVvp66OQWBS1g1HehehU4ZqgX9+C3P8ARrU9mOOUSa3IrwZ25RZs71y4E2lodYie7SSNjyZYALDyLLctVWJ5J3AfbSbpArmCfd1LlTbW6LMyo0Jes4Rrxho/4Gjj8u1Rxvs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758116675; c=relaxed/simple;
-	bh=tVeaLOUcscUXh8ELuJYxqekBt4O2EaJZNoBmTkBToIw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oBXINmYtRfq7IRrymkbK5FRIeJkulbTn7HTwzzjtwpZYgnFra1EZH8jkWoqzORQ9agmfCcXy0MAFF1CDAL/ofYjYK5P+R1MNdEYMFkK7T0++ysEqBexng6blB5fBA2xkEjEKDSmoGS4PDOk4TwDKKECAjzetv0ah1UevaEvZwE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=chavE6w2; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1758117464; c=relaxed/simple;
+	bh=cnu/AlOq3yEvaOQmafeb++s6Qd9sABr4RnTPJGVFwlQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bqeCzTXD5Uvahfk0E6EaWOuNWNyZ1bgO2qfD92i0TjFKJXNlgeKk4Solu34LBmZj2ZDU/Tcoj3FY0nwwYgFVOtgYywbd5/BUMTZVrTcW7PHHVXcAhtf2qkmrNncsc5jzYNX4y9fQ3dw+v1vwRrROlc1OZ9/rgknsLJKPnqjPCfU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZVXMhOW3; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="chavE6w2"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZVXMhOW3"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1758116673;
+	s=mimecast20190719; t=1758117461;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=liGb+1uk63kwOPhDFfASvfeBl4VQTUkO45gHzPQGBUU=;
-	b=chavE6w2I6v3beCi6eOJ0woUJMyErGFvcIZUFOC0hzx9moYAjmQp/5vd3lalMH7HZzm6jX
-	IK6CGmxBPvgi+6oTLYOdxmcLQropVTOo0yAsJJnIRzURuV2b4dPSQMnqWMePnMNmUcnobe
-	YLM5vBrDc/+7Ai8xflwS1Z3Zk7mYLBU=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=cnu/AlOq3yEvaOQmafeb++s6Qd9sABr4RnTPJGVFwlQ=;
+	b=ZVXMhOW3ZwkmfwNGUNYAw8ZRNzbFJ6CvrZNWL4oZmlcqbZiaF6vzcr4a93w+gLKsRB/uc8
+	gpenHUiTxrB18mlQHOD5NNBz/gQqu3mlUNQXHy6qsNAnYV7EGHyxbDFtfC72qAtc16Dc2D
+	XnkI20CkBAQYe/efdcn6sFMS9sKjQhg=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-213-3y08wHwwPkGHarHVFw6hIg-1; Wed, 17 Sep 2025 09:44:31 -0400
-X-MC-Unique: 3y08wHwwPkGHarHVFw6hIg-1
-X-Mimecast-MFC-AGG-ID: 3y08wHwwPkGHarHVFw6hIg_1758116670
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-45f2f15003aso21862485e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 17 Sep 2025 06:44:31 -0700 (PDT)
+ us-mta-549-ShkMNKghOeqqJf39mbW7xg-1; Wed, 17 Sep 2025 09:57:40 -0400
+X-MC-Unique: ShkMNKghOeqqJf39mbW7xg-1
+X-Mimecast-MFC-AGG-ID: ShkMNKghOeqqJf39mbW7xg_1758117459
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3eb0a50a518so1176886f8f.3
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 17 Sep 2025 06:57:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758116670; x=1758721470;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=liGb+1uk63kwOPhDFfASvfeBl4VQTUkO45gHzPQGBUU=;
-        b=iBnC2pFxRPUdYts7z1IDOru5JGV/LDXfaikNuFdEYuf4c+lNCAEcIvMWC8apYQu4hi
-         y2+ZjbnHC4GTKoD1ISIlmtfmzK6QmpB/YSzlbVYG0jfGBDPDDRgML/+KSVv+keqclk8J
-         Nw50rTcRxEPF61hfo+lX4kRUHlZJcv1q8L5txKBtHPHTfTj9K7eTgvBIqlLlnrvsB58a
-         e2gcTuea9VMUItNofq72+j+cQNqY8tOPE5clzo2nQ1LqUaMRMb8bwA+gHYJPNrPFwL2J
-         9GgxPBDkSQL+D8obn/CSua6wFwmXhMOvsJmU9f+5Cv8CSsrMUFyNaJai/YIExRieAqAy
-         OXaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUsK29MITi8TvIbZp0qEoDqL7Pg3vNlpQK1qnyS9niGQEMZaIlHbE1f8FuWYp1P9YEPcAdhmMxuYX3nEVTbNX6ffXg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxagQaQblr0Kpq4fvEtah+JPsBZ6O1M6AfDRuTQVo7SKL2jqPZz
-	CkN8+gfy8W6ehstD1qOUCVQQi2Y4tsPW0oA2t8l0Oww4Obi66NbJCgAhX+T+QG6NPPfX2Vcp1vh
-	3Gm95iKWAuNh4XOFEO/Htss3sKGi76T/2IiXc7k0H+EMTk6fvf4g7NVUn/RoPeLrikA/qS9NjlQ
+        d=1e100.net; s=20230601; t=1758117459; x=1758722259;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vRrH1aSVxH9prBxDdrPIT+z71qgvJ3/IAVqgQ3ga1/g=;
+        b=Rk3n368XbI5x1vhCTnyht2P2Ml8JW117QBve3/hQsOa4mvfYOe+A03wbqDnSuSkGR9
+         rFoUPlXqryCcVxK8UNiRarJqKgPcRDihw6H5+Jx8xOx6LgX3zcXIlYUi8JJnn+XvyDtm
+         t8uWTgJGyl/64OLszhBGXTjRLwzWNqMCNQ5e0YS9/FAlslAm154OrR+yH6qzQywcrdiv
+         VpuRr/4m7ElhWem0RkqdpDjCXt4GJl8Yl7CczsXOhPcYuAjkLhxUARX7lHQxTwyuQaea
+         MuWd2etm37nMzk496yg8jKcv2/Qghq+I4tKvwlUoeSrxDtk0KJ4lp3rEJe+WquD6i2PN
+         ZkHQ==
+X-Gm-Message-State: AOJu0YxtRZYyo/PhLGDSCQUBSl1aj7wt2ZQQa6fnbwI5QQkwV+6g1zZr
+	/rQFgfH+L1H3Am7+Af57Y9lV3k8hTmSrhQSXlfPJGWvjXL6cRd1aPbdGoZyEyFlXEQFFIQImQW4
+	kFmzQlThctrFXEzcqV9RIJzHWkHvtv5I4PWu/nLLTH1qyA50Krurjan9QHzqDxdAQE28g/BsB2g
 	==
-X-Gm-Gg: ASbGncu6CromY+/CuwZ8MrIvDNkbY40ZhoD3Jr7cgDkz6gpGfq3olaXRTtGy6K6QmUU
-	VorH3Nht3JCisDL8RHTiQ9lW+0nsSvdPsTKY/4MqML+8qo1geyKRTJt5MA3Wue2u8wT2MIyOEYh
-	yasy31fnNcPyIZCxjOOLO0cL77cykxEbydHmA4b4JZczyAA72NmQI95U1D+dT1AwCUiK/FZpu+0
-	AM55iXCeXahB2L9Xf1NMpbb0X8Y8Nz6Zjdn3Q/Lofouo4fb1uL1+OGvzSM7b2feBWd7zfud4my+
-	3g9Y6+95UffWu8J+vfATIVwROezY1nhfUSgbo9yBv2FfudqiDaLlclfVLTm1WzGVVwy9HTS5mxT
-	LUieLMRQX3co05kXql7b/K63yYfYa2dKXX3Xjo0u1x/qg1bq7dv+PLk0rgfvUkfeh
-X-Received: by 2002:a05:600c:4ec8:b0:45f:2843:e76d with SMTP id 5b1f17b1804b1-46201f8a9f5mr21886245e9.4.1758116670346;
-        Wed, 17 Sep 2025 06:44:30 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFw1RIyEIK4TW5AJcprHmluKxUYcV6LPPbUme37h+GXCQZ40f8U9IBbOvKE8vFxsWYa4at8pA==
-X-Received: by 2002:a05:600c:4ec8:b0:45f:2843:e76d with SMTP id 5b1f17b1804b1-46201f8a9f5mr21885945e9.4.1758116669885;
-        Wed, 17 Sep 2025 06:44:29 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f27:6d00:7b96:afc9:83d0:5bd? (p200300d82f276d007b96afc983d005bd.dip0.t-ipconnect.de. [2003:d8:2f27:6d00:7b96:afc9:83d0:5bd])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-46139122cb5sm36693815e9.8.2025.09.17.06.44.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Sep 2025 06:44:29 -0700 (PDT)
-Message-ID: <eb7820ed-3351-4cb5-8341-d6a48ed7746f@redhat.com>
-Date: Wed, 17 Sep 2025 15:44:27 +0200
+X-Gm-Gg: ASbGncv3ueyJdChbcxyGX79utie9qMF2OSkAWDDHVDsEdTJBBlruI5BZmY0zQgHxEuK
+	e5HZgbBWvMG5IUJq5Z4GoQMWZFDf14Zri4N+eiZ4WquDH35QITaUbUNbrFhhv5pudbYjzxx+N90
+	EIrsTUJI9HfLIt4ZTlQNxqQ7l0QSRCOYAk5f5tmamnPtNjWG17MSp51UWRO5qivsIWu57AhZ1jB
+	AZ925ah7awv6wU+2gacaMeIA/9LPzcCowdj776An/mL9BTLa3SsLK7NYmQwqd8ECqn0NPt/s0Ig
+	g8ffAemyLwWyrzaxIThPoXbLMj+Gd82UfDyii8UThrRehdLB++KXOYWkPdQqeACrkw==
+X-Received: by 2002:a05:6000:2506:b0:3e7:5f26:f1d6 with SMTP id ffacd0b85a97d-3ecdf9af5b7mr2046912f8f.13.1758117459193;
+        Wed, 17 Sep 2025 06:57:39 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGuI6bOIzJVz42mHmQIDU0oQlOz0/AKrUJuaICSbonx63TdxAFqrJk7KpPJJTFucSos8pORGQ==
+X-Received: by 2002:a05:6000:2506:b0:3e7:5f26:f1d6 with SMTP id ffacd0b85a97d-3ecdf9af5b7mr2046886f8f.13.1758117458694;
+        Wed, 17 Sep 2025 06:57:38 -0700 (PDT)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.35])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-46139123102sm37927375e9.9.2025.09.17.06.57.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Sep 2025 06:57:38 -0700 (PDT)
+Message-ID: <b2c19df4c5036e956e4e892ac983d5488a8b9614.camel@redhat.com>
+Subject: Re: [PATCH] rv: Fix boot failure when kernel lockdown is active
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: Xiu Jianfeng <xiujianfeng@huaweicloud.com>, rostedt@goodmis.org, 
+	mhiramat@kernel.org, namcao@linutronix.de
+Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	nicolas.bouchinet@oss.cyber.gouv.fr, xiujianfeng@huawei.com
+Date: Wed, 17 Sep 2025 15:57:36 +0200
+In-Reply-To: <20250917125733.2346923-1-xiujianfeng@huaweicloud.com>
+References: <20250917125733.2346923-1-xiujianfeng@huaweicloud.com>
+Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
+ keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
+ 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
+ Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
+ cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
+ T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
+ eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
+ 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
+User-Agent: Evolution 3.56.2 (3.56.2-2.fc42)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 6/7] mm: add assertion for VMA count limit
-To: Kalesh Singh <kaleshsingh@google.com>, akpm@linux-foundation.org,
- minchan@kernel.org, lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
- rppt@kernel.org, pfalcato@suse.de
-Cc: kernel-team@android.com, android-mm@google.com,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- Kees Cook <kees@kernel.org>, Vlastimil Babka <vbabka@suse.cz>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- Juri Lelli <juri.lelli@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>, Ben Segall
- <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
- Valentin Schneider <vschneid@redhat.com>, Jann Horn <jannh@google.com>,
- Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
- linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-References: <20250915163838.631445-1-kaleshsingh@google.com>
- <20250915163838.631445-7-kaleshsingh@google.com>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- qIws/H2t
-In-Reply-To: <20250915163838.631445-7-kaleshsingh@google.com>
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: zrHIIOVa-JSNaIBh9in-SDmc_uVhYsW297vyNBOej4s_1758116670
+X-Mimecast-MFC-PROC-ID: IH9a-7W2G6S3H5LSPJs0Ye4JLPmCTXDL_Fdb3BqcqKw_1758117459
 X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 15.09.25 18:36, Kalesh Singh wrote:
-> Building on the vma_count helpers, add a VM_WARN_ON_ONCE() to detect
-> cases where the VMA count exceeds the sysctl_max_map_count limit.
-> 
-> This check will help catch future bugs or regressions where
-> the VMAs are allocated exceeding the limit.
-> 
-> The warning is placed in the main vma_count_*() helpers, while the
-> internal *_nocheck variants bypass it. _nocheck helpers are used to
-> ensure that the assertion does not trigger a false positive in
-> the legitimate case of a temporary VMA increase past the limit
-> by a VMA split in munmap().
-> 
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: David Hildenbrand <david@redhat.com>
-> Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>
-> Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> Cc: Mike Rapoport <rppt@kernel.org>
-> Cc: Minchan Kim <minchan@kernel.org>
-> Cc: Pedro Falcato <pfalcato@suse.de>
-> Signed-off-by: Kalesh Singh <kaleshsingh@google.com>
+On Wed, 2025-09-17 at 12:57 +0000, Xiu Jianfeng wrote:
+> From: Xiu Jianfeng <xiujianfeng@huawei.com>
+>=20
+> When booting kernel with lockdown=3Dconfidentiality parameter, the
+> system
+> will hang at rv_register_reactor() due to waiting for
+> rv_interface_lock,
+> as shown in the following log,
+>=20
+
+Thanks for finding this, the problem was already fixed in [1], which is
+on its way to getting merged.
+
+[1] -
+https://lore.kernel.org/all/20250903065112.1878330-1-zhen.ni@easystack.cn
+
+> INFO: task swapper/0:1 blocked for more than 122 seconds.
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Not tainted 6.17.0-rc6-next-20250915+ #29
+> "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this
+> message.
+> task:swapper/0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 state:D stack:0=C2=A0=
+=C2=A0=C2=A0=C2=A0 pid:1=C2=A0=C2=A0=C2=A0=C2=A0 tgid:1=C2=A0=C2=A0=C2=A0=
+=C2=A0 ppid:0
+> Call Trace:
+> =C2=A0<TASK>
+> =C2=A0__schedule+0x492/0x1600
+> =C2=A0schedule+0x27/0xf0
+> =C2=A0schedule_preempt_disabled+0x15/0x30
+> =C2=A0__mutex_lock.constprop.0+0x538/0x9e0
+> =C2=A0? vprintk+0x18/0x50
+> =C2=A0? _printk+0x5f/0x90
+> =C2=A0__mutex_lock_slowpath+0x13/0x20
+> =C2=A0mutex_lock+0x3b/0x50
+> =C2=A0rv_register_reactor+0x48/0xe0
+> =C2=A0? __pfx_register_react_printk+0x10/0x10
+> =C2=A0register_react_printk+0x15/0x20
+> =C2=A0do_one_initcall+0x5d/0x340
+> =C2=A0kernel_init_freeable+0x351/0x540
+> =C2=A0? __pfx_kernel_init+0x10/0x10
+> =C2=A0kernel_init+0x1b/0x200
+> =C2=A0? __pfx_kernel_init+0x10/0x10
+> =C2=A0ret_from_fork+0x1fb/0x220
+> =C2=A0? __pfx_kernel_init+0x10/0x10
+> =C2=A0ret_from_fork_asm+0x1a/0x30
+>=20
+> The root cause is that, when the kernel lockdown is in
+> confidentiality
+> mode, rv_create_dir(), which is essentially tracefs_create_dir(),
+> will
+> return NULL. This, in turn, causes create_monitor_dir() to return
+> -ENOMEM, and finally leading to the mutex not being unlocked.
+>=20
+> Fixes: 24cbfe18d55a ("rv: Merge struct rv_monitor_def into struct
+> rv_monitor")
+> Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
 > ---
-> 
-> Changes in v2:
->    - Add assertions if exceeding max_vma_count limit, per Pedro
-> 
->   include/linux/mm.h               | 12 ++++++--
->   mm/internal.h                    |  1 -
->   mm/vma.c                         | 49 +++++++++++++++++++++++++-------
->   tools/testing/vma/vma_internal.h |  7 ++++-
->   4 files changed, 55 insertions(+), 14 deletions(-)
-> 
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index 8bad1454984c..3a3749d7015c 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -4219,19 +4219,27 @@ static inline bool snapshot_page_is_faithful(const struct page_snapshot *ps)
->   
->   void snapshot_page(struct page_snapshot *ps, const struct page *page);
->   
-> +int vma_count_remaining(const struct mm_struct *mm);
-> +
->   static inline void vma_count_init(struct mm_struct *mm)
->   {
->   	ACCESS_PRIVATE(mm, __vma_count) = 0;
->   }
->   
-> -static inline void vma_count_add(struct mm_struct *mm, int nr_vmas)
-> +static inline void __vma_count_add_nocheck(struct mm_struct *mm, int nr_vmas)
->   {
->   	ACCESS_PRIVATE(mm, __vma_count) += nr_vmas;
->   }
->   
-> +static inline void vma_count_add(struct mm_struct *mm, int nr_vmas)
-> +{
-> +	VM_WARN_ON_ONCE(!vma_count_remaining(mm));
-
-Can't that fire when changing the max count from user space at just the 
-wrong time?
-
-I assume we'll have to tolerated that and might just want to drop this 
-patch from the series.
-
--- 
-Cheers
-
-David / dhildenb
+> =C2=A0kernel/trace/rv/rv.c | 2 +-
+> =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/kernel/trace/rv/rv.c b/kernel/trace/rv/rv.c
+> index 1482e91c39f4..e35565dd2dc5 100644
+> --- a/kernel/trace/rv/rv.c
+> +++ b/kernel/trace/rv/rv.c
+> @@ -805,7 +805,7 @@ int rv_register_monitor(struct rv_monitor
+> *monitor, struct rv_monitor *parent)
+> =C2=A0
+> =C2=A0=09retval =3D create_monitor_dir(monitor, parent);
+> =C2=A0=09if (retval)
+> -=09=09return retval;
+> +=09=09goto out_unlock;
+> =C2=A0
+> =C2=A0=09/* keep children close to the parent for easier
+> visualisation */
+> =C2=A0=09if (parent)
 
