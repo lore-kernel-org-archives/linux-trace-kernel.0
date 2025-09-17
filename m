@@ -1,104 +1,94 @@
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D11432F83B8;
-	Wed, 17 Sep 2025 19:30:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42721247291
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 17 Sep 2025 20:03:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758137405; cv=none; b=c9rq5t6oLxVSY7JSlR18gs5BZuZPekxJeOfOl9iFWsG8HU/q57/ZAH0Ty3jnidvyiiULml1USwzBQV/6AcMpMLMcWkgbzqIrwp0S0VnJSz0Q1J4MQOLj30EVdnTs5u5PkWgmn9ji3qNKeCp3+nPWaMr2DtLhE7dz0zK4MWAZEIo=
+	t=1758139383; cv=none; b=gaqtVlQ8XV+ogTVLDiISK24WcQDdvPFUuwrw9S03KZByCMzrBcyeNGwI0SecUW38b1eN3u2pvHIh2744AmVCFscC+3OUeDW7CY6yNYXqq4ohrWYlcxJhG3b2zQx0DpIa7UaqPh9DuvdvVd03IhdkacRhYIjr6VFPIcaJIPFffZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758137405; c=relaxed/simple;
-	bh=ZnMRKLn0qyUGROjH/cSGBvjzMuSNHc9RHc0rwxb6dFc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nxY0TItu0cQ8KlnJsfKrTAkC49XAM2QlwkBgG/DNVjmod7Ea9qyS/LCRl//74VVhWl/DFQ4i33vHZ7ut4ov1xyJibLdUtrOhhbXrF/JRhMuMW2HRT0qEwyd5Vatpc2y04EHZfC068UiKZUiTQcIPwSyZ4caOW+1OPkyGsDV2cyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf14.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay01.hostedemail.com (Postfix) with ESMTP id 7A5371DF3D5;
-	Wed, 17 Sep 2025 19:29:54 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf14.hostedemail.com (Postfix) with ESMTPA id 2316430;
-	Wed, 17 Sep 2025 19:29:49 +0000 (UTC)
-Date: Wed, 17 Sep 2025 15:30:55 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Fuyu Zhao <zhaofuyu@vivo.com>
-Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
- martin.lau@linux.dev, song@kernel.org, yonghong.song@linux.dev,
- haoluo@google.com, jolsa@kernel.org, eddyz87@gmail.com, kpsingh@kernel.org,
- sdf@fomichev.me, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- shuah@kernel.org, willemb@google.com, kerneljasonxing@gmail.com,
- paul.chaignon@gmail.com, chen.dylane@linux.dev, memxor@gmail.com,
- martin.kelly@crowdstrike.com, ameryhung@gmail.com,
- linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
- yikai.lin@vivo.com
-Subject: Re: [RFC PATCH bpf-next v1 0/3] bpf: Add BPF program type for
- overriding tracepoint probes
-Message-ID: <20250917153055.6fee814f@gandalf.local.home>
-In-Reply-To: <20250917072242.674528-1-zhaofuyu@vivo.com>
-References: <20250917072242.674528-1-zhaofuyu@vivo.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1758139383; c=relaxed/simple;
+	bh=8RwCiCEqgS/oR9Wj+EYfIJapVjRPjFagO+/mW2BIcW8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=itJ+tNRwPXVBkQXrH1XjlNvcixkx9oqwG46V1/EeRNoN3Fz1KZNtLavMlkIfLRkKCps7Sz8x4pqEAhpE/YbCePovoW8lEYePVNpy89iSL9CwzCd6pIbfQL9wjciCd62ZGIolsuTuVyQcBPWiwk64TKhnt16w2R2Xde4pYuPj0mc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fs8seP2s; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fs8seP2s"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE148C116B1
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 17 Sep 2025 20:03:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758139382;
+	bh=8RwCiCEqgS/oR9Wj+EYfIJapVjRPjFagO+/mW2BIcW8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=fs8seP2smajGErdccqfjm/qBI73OZR07YbZ7EB5CfTXvZMxu23c8ilwPL4tCTJLuC
+	 AtWRwbNmXywMbpsZuIAjESMWLIlai3YyiQfX56Cyz+2s8gY33vqzxFHrORzfaGfAjL
+	 ++X+iZxkRMSv7rf6tcDj35RVmpICwlz4NVrst+qzAkVTZdiyI3mxpDi2Ag1jb254/8
+	 ffLwxGZuGXBZm/LXVQ8LlEaxjwJeYHEHjU6BxkwuE76T76LaTu9HQ/IId13djfD2/M
+	 jlESXMx6dho/5icGZhfmQXmm9HeM7kxvYkdW5d+jbD2HZwe3PWnrbrOYvtl9YvlOlW
+	 StWJBitBXOXbw==
+Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-8116af074e2so23854285a.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 17 Sep 2025 13:03:02 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVs2YlQy+O3KgobP1NaZyj1QXKwKK1hxvAALY29fLLbxu1gby6aHJ6wQeCbe6xZ6MfjSq2snUwIezzzc1IV6xUqzVs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOwZqZnc+I6XHY6SDpukoZlJ3J5yfkd5BOzFaHgx0YPvjO/Alb
+	E+SQjUtnatvQuXqiUQVMcLy1vsS3a2UpJb4y86evj5Mluydfo59PusPinqWPEFjlUGnFT9uIA+w
+	wcrM5j4ZU9MOxsUBYi9Hfr4YFCVH3AiQ=
+X-Google-Smtp-Source: AGHT+IE//43LvVRRL9P+bNBPabqBCP+0kbkAEemFxudHgIYmZJyboCRGVcIniMVsONVy0SAWFjDYnlR/dKKofxkrt60=
+X-Received: by 2002:a05:620a:7081:b0:7fd:6709:f08d with SMTP id
+ af79cd13be357-8311801ddcfmr445536185a.81.1758139381472; Wed, 17 Sep 2025
+ 13:03:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout04
-X-Rspamd-Queue-Id: 2316430
-X-Stat-Signature: j94jtr56jpxuhefubu3apgodg8t3ptxb
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+RZLjwHcDXxmzAeVwGwIyEjGeUYjMsKY8=
-X-HE-Tag: 1758137389-399912
-X-HE-Meta: U2FsdGVkX18tGG5q2NUrL+YhIfzBLvn4G+9YbPhTQObhs83gjknkX3Ot3igWVxiVfemS6aF/Ot/6ACKrBVUGoLjjBFKZB3ojVCLifTdP8lEzl2ri3wo8XV0nLuDW7XhHmO2++q3hyT1axdSYO/pteHZAb7MKuqt16EO1MLxhlEVCV7SEJxpI6Sxxd9d/U+++AEokxAEAjNfEtKrTNFXEkATDN81n7jJvNMLvSNeRWJCqvQallPUZ5GiwzzY5LgCjWwOU6UGMdXBtS2dqHJ1PJaHwGDc/hDeh+zGKAdLGefuDTvvXFWGHxggfNj+MCbbz9Uek/VxvC/4O/+0M5sXPblUoMklB1YCq
+References: <20250917072242.674528-1-zhaofuyu@vivo.com>
+In-Reply-To: <20250917072242.674528-1-zhaofuyu@vivo.com>
+From: Song Liu <song@kernel.org>
+Date: Wed, 17 Sep 2025 13:02:49 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW47BVGsszGU=27gKa1XOYLH+de1FgrHPVL4mftB2CvX9g@mail.gmail.com>
+X-Gm-Features: AS18NWBxIdANPrX03bLZsJtpTPm-ZgoF9PRFYS0o8-H5DTmZDbcviXZne_YxRys
+Message-ID: <CAPhsuW47BVGsszGU=27gKa1XOYLH+de1FgrHPVL4mftB2CvX9g@mail.gmail.com>
+Subject: Re: [RFC PATCH bpf-next v1 0/3] bpf: Add BPF program type for
+ overriding tracepoint probes
+To: Fuyu Zhao <zhaofuyu@vivo.com>
+Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org, 
+	martin.lau@linux.dev, yonghong.song@linux.dev, haoluo@google.com, 
+	jolsa@kernel.org, eddyz87@gmail.com, kpsingh@kernel.org, sdf@fomichev.me, 
+	rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
+	shuah@kernel.org, willemb@google.com, kerneljasonxing@gmail.com, 
+	paul.chaignon@gmail.com, chen.dylane@linux.dev, memxor@gmail.com, 
+	martin.kelly@crowdstrike.com, ameryhung@gmail.com, 
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	yikai.lin@vivo.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 17 Sep 2025 15:22:39 +0800
-Fuyu Zhao <zhaofuyu@vivo.com> wrote:
-
+On Wed, Sep 17, 2025 at 12:23=E2=80=AFAM Fuyu Zhao <zhaofuyu@vivo.com> wrot=
+e:
+>
 > Hi everyone,
-> 
+>
 > This patchset introduces a new BPF program type that allows overriding
 > a tracepoint probe function registered via register_trace_*.
-> 
+>
 > Motivation
 > ----------
 > Tracepoint probe functions registered via register_trace_* in the kernel
-> cannot be dynamically modified, changing a probe function requires recompiling
+> cannot be dynamically modified, changing a probe function requires recomp=
+iling
 > the kernel and rebooting. Nor can BPF programs change an existing
 > probe function.
-
-I'm confused by what you mean by "tracepoint probe function"?
-
-You mean the function callback that gets called via the "register_trace_*()"?
-
-> 
+>
 > Overiding tracepoint supports a way to apply patches into kernel quickly
 > (such as applying security ones), through predefined static tracepoints,
 > without waiting for upstream integration.
 
-This sounds way out of scope for tracepoints. Please provide a solid
-example for this.
+IIUC, this work solves the same problem as raw tracepoint (raw_tp) or raw
+tracepoint with btf (tp_btf).
 
-> 
-> This patchset demonstrates the way to override probe functions by BPF program.
-> 
-> Overview
-> --------
-> This patchset adds BPF_PROG_TYPE_RAW_TRACEPOINT_OVERRIDE program type.
-> When this type of BPF program attaches, it overrides the target tracepoint
-> probe function.
-> 
-> And it also extends a new struct type "tracepoint_func_snapshot", which extends
-> the tracepoint structure. It is used to record the original probe function
-> registered by kernel after BPF program being attached and restore from it
-> after detachment. 
+Did I miss something?
 
-The tracepoint structure exists for every tracepoint in the kernel. By
-adding a pointer to it, you just increased the size of the tracepoint. I'm
-already complaining that each tracepoint causes around 5K of memory
-overhead, and I'd like to make it smaller.
-
--- Steve
-
+Thanks,
+Song
