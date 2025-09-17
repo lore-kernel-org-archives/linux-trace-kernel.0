@@ -1,37 +1,36 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C49B9B67A;
-	Wed, 17 Sep 2025 01:16:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52D131BC58;
+	Wed, 17 Sep 2025 02:16:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758071792; cv=none; b=uX+i7lSP0Ftd84FEqq9GIyBGHoa1Hl2IM77ptuWWCLd8Mjx6t5jWfSFG65QPHjVEsrMEkytK3wyUpg1w/70o4J2h4j4ftzTccBEv1p+5YgoW/+I/K1DR1R0yLbsEV1a+ysxnXPGkcCSxKQTDRLxUV21wevzZYdevFzPNGikKHvg=
+	t=1758075407; cv=none; b=r+64dN4NcRFD+v4J11Xs8ManyHOONGTYqseK9lNSXatwuZcd7bRUzD+3DFCeBAU+OAZMU6/P4NCsiGAawrdhiE5jIHTQvf/2vwGRfZGPBsHgYfQT5s41qvCa6AYms9yFQP/8GbuPl9dICl8HZdOtFvgqcbGXAd23ujK8eVinVQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758071792; c=relaxed/simple;
-	bh=wMm3CU8JnvqVu+XBAyCsMnDcqq+lr/aas70UKFC9ags=;
+	s=arc-20240116; t=1758075407; c=relaxed/simple;
+	bh=Y7E9FgWFmiluyPV1OTAKxPaUN0ogdOZyX5+tdyu3XVE=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=TiwzsTYT/hMWGilShy56NWMlJvYSIzGJMiztlDFDdVeDwmsjSclAlcSeuHBBQIXcckFVD951m7QxFHCa1Hz9j1k/B0zmEvMzq73KJgMRwQMpPBKcLw6caVNglJxsQAhECXRurlDRUPs9JA02tSNl88NFMigsyU5/F0FFqZgpqLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=jETLQ7fv; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=Q/vkwECJXugbp/pZmCk+tTj91vG+A7cj9WSryLsJxNx05QBdrRJ0HxrcRPsQd9r99B43fbZL6OJeMkMULo/JYq7Gaz/jsTgLeeKn34JqE38tCVF0O09Ee+Ni8ZoBIzarmoPK+wUMg+PTBprrWmce8hUnGe32nCAblruinuBJBUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=u5BIwCmk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="jETLQ7fv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38DDFC4CEF9;
-	Wed, 17 Sep 2025 01:16:30 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="u5BIwCmk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B84ACC4CEFB;
+	Wed, 17 Sep 2025 02:16:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1758071791;
-	bh=wMm3CU8JnvqVu+XBAyCsMnDcqq+lr/aas70UKFC9ags=;
+	s=korg; t=1758075406;
+	bh=Y7E9FgWFmiluyPV1OTAKxPaUN0ogdOZyX5+tdyu3XVE=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=jETLQ7fv1aaDH+T4cjF2zi7w8e/yIsJ/BiWWWJpQ/wXayVEQCqM/D3zjcfOQUfwhH
-	 p49MzSnmyun7d2WxTOPqMulSgILGL/hz7Tun5oCUrTA4WrU0yrgd+msqH4bHsbTu1Y
-	 86M3t/JpsPX2KUKJyQzPhzKNykBLXleqs1XAmRTg=
-Date: Tue, 16 Sep 2025 18:16:29 -0700
+	b=u5BIwCmk8zcWTJgkEDHluvpFKUJ+aQvEoMt5i7SU0M0JsqTjpt2DrYWLAnJKdQH6Z
+	 7dP4yqdgfiai+hLAEJW9o2X9KCuqnM3sRjwqylWH6wHaT1WnL3QPARHGYvjYGMeV2H
+	 7yZBaedhoZWKOqr6xIHnVhSligT+feIMD27ILX+s=
+Date: Tue, 16 Sep 2025 19:16:45 -0700
 From: Andrew Morton <akpm@linux-foundation.org>
-To: Jonathan Corbet <corbet@lwn.net>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 Cc: Kalesh Singh <kaleshsingh@google.com>, minchan@kernel.org,
- lorenzo.stoakes@oracle.com, david@redhat.com, Liam.Howlett@oracle.com,
- rppt@kernel.org, pfalcato@suse.de, kernel-team@android.com,
- android-mm@google.com, stable@vger.kernel.org, Alexander Viro
- <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara
- <jack@suse.cz>, Kees Cook <kees@kernel.org>, Vlastimil Babka
+ david@redhat.com, Liam.Howlett@oracle.com, rppt@kernel.org,
+ pfalcato@suse.de, kernel-team@android.com, android-mm@google.com, Alexander
+ Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan
+ Kara <jack@suse.cz>, Kees Cook <kees@kernel.org>, Vlastimil Babka
  <vbabka@suse.cz>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko
  <mhocko@suse.com>, Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
  <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
@@ -42,16 +41,13 @@ Cc: Kalesh Singh <kaleshsingh@google.com>, minchan@kernel.org,
  Schneider <vschneid@redhat.com>, Jann Horn <jannh@google.com>, Shuah Khan
  <shuah@kernel.org>, linux-kernel@vger.kernel.org,
  linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
- linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, Dave
- Hansen <dave.hansen@linux.intel.com>
-Subject: Re: [PATCH v2 1/7] mm: fix off-by-one error in VMA count limit
- checks
-Message-Id: <20250916181629.f4527e6e90d1e620e8d84abc@linux-foundation.org>
-In-Reply-To: <87v7lifpi9.fsf@trenco.lwn.net>
+ linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v2 0/7] vma count: fixes, test and improvements
+Message-Id: <20250916191645.15aae276992acafe7f7e723e@linux-foundation.org>
+In-Reply-To: <aa95777a-8012-4d08-abcf-7175f9e2691c@lucifer.local>
 References: <20250915163838.631445-1-kaleshsingh@google.com>
-	<20250915163838.631445-2-kaleshsingh@google.com>
-	<20250915153642.7f46974a536a3af635f49a89@linux-foundation.org>
-	<87v7lifpi9.fsf@trenco.lwn.net>
+	<20250915153401.61cbd5120871ee7a4e5b9cae@linux-foundation.org>
+	<aa95777a-8012-4d08-abcf-7175f9e2691c@lucifer.local>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -62,37 +58,46 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 16 Sep 2025 08:20:14 -0600 Jonathan Corbet <corbet@lwn.net> wrote:
+On Tue, 16 Sep 2025 11:12:03 +0100 Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
 
-> Andrew Morton <akpm@linux-foundation.org> writes:
-> 
-> > On Mon, 15 Sep 2025 09:36:32 -0700 Kalesh Singh <kaleshsingh@google.com> wrote:
+> On Mon, Sep 15, 2025 at 03:34:01PM -0700, Andrew Morton wrote:
+> > Anyhow, this -rc cycle has been quite the firehose in MM and I'm
+> > feeling a need to slow things down for additional stabilization and so
+> > people hopefully get additional bandwidth to digest the material we've
+> > added this far.  So I think I'll just cherrypick [1/7] for now.  A
+> > great flood of positive review activity would probably make me revisit
+> > that ;)
 > >
-> >> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-> >
-> > lol.
-> >
-> > x1:/usr/src/25> grep "Fixes.*1da177e4c3f4" ../gitlog|wc -l
-> > 661
-> >
-> > we really blew it that time!
 > 
-> A few years back I made a list of the most-fixed commits in the kernel
-> history; unsurprisingly that one (I call it the "original sin") came out
-> on top:
+> Kalesh - I do intend to look at this series when I have a chance. My review
+> workload has been insane so it's hard to keep up at the moment.
 > 
->   https://lwn.net/Articles/914632/
-> 
-> Perhaps the time has come to update that analysis.
-> 
+> Andrew - This cycle has been crazy, speaking from point of view of somebody
+> doing a lot of review, it's been very very exhausting from this side too,
+> and this kind of work can feel a little... thankless... sometimes :)
 
-Hah, thanks, that's a fun article.
+I hear you.  I'm shedding most everything now, to give us a couple of
+weeks to digest.
 
-It's a shame it's so recent.  I do recall back in maybe 2002 a fresh
-young developer popped up with a massive rework of the IDE drivers.  I
-promptly took this into my tree because I was having a hate on the IDE
-drivers at the time.  omfg, what a disaster - this was the buggiest
-bunch of junk conceivable and it went away after a few weeks.
+> I feel like we maybe need a way to ask people to slow down, sometimes at
+> least.
 
-I'm glad to say that the developer (email handle at the time was
-"haveblue") has become better since then.
+Yup, I'm sending submitters private emails explaining the situation.
+
+Maybe they should be public emails, I find it a hard call.
+
+> Perhaps being less accepting of patches during merge window is one aspect,
+> as the merge window leading up to this cycle was almost the same review
+> load as when the cycle started.
+
+I'm having trouble understanding what you said here?
+
+> Anyway, TL;DR: I think we need to be mindful of reviewer sanity as a factor
+> in all this too :)
+> 
+> (I am spekaing at Kernel Recipes then going on a very-badly-needed 2.5 week
+> vacataion afterwards over the merge window so I hope to stave off burnout
+> that way. Be good if I could keep mails upon return to 3 digits, but I have
+> my doubts :P)
+
+I'd blow that in three days ;)
