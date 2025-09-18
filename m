@@ -1,126 +1,73 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0778A14B06C;
-	Thu, 18 Sep 2025 17:32:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7669A34BA53;
+	Thu, 18 Sep 2025 18:20:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758216753; cv=none; b=ps0bC4Ts+fnS0IoiRAFDMu+BAnajJphNGK53cQ+kp90RM0MnTVRRhkjvhLwWCagRuTaZTkccpW+ODjH0118v2WcioOLQDKhcLUuk08P1t5mcnGsdVJiDod+Coyy02MWSm8V37XFxq4rSerH/msRQ/6JjtL1Fkk+eCNXm6lIzeQA=
+	t=1758219657; cv=none; b=Y6QFJ7W0axNHdpRD+1qOatfQr1TQQu0vpgk2w0P3Ws6ZCir/IL95Ddn5zKNfv3sSNt8cS7mNDbJ+rS+FxrgHIJaSIdAtHzk1KbXCYTreZoRJzsbM1yW4E/24Mi0LD8qEouowfHKkrgyLOYnpbYLaTkvbsO9rwmsNOv6Ttqx4CbY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758216753; c=relaxed/simple;
-	bh=fIyWLjYWYolK8kGtjGTSGMprnorrZ3sH2ZGKz6a6zIA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Sx6n9i1HEq3lUu2nWM5lIxG5Ns1W29xTtlkFckyCGb80mOTx9o80XgcTf5z9R3hGec/VVq/HWaTJYTGdvTIv+gVc1EyjCuCvC+c3iVKbQqYyr5rvBoi1AB4ibFO4EhfTbOV430iga3pEoAVKTRzW/TnWT1i6xXBdpi8WQJkwelQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=q2gNplf9; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1758219657; c=relaxed/simple;
+	bh=1uyYpaAqpKBLNg1Z0PaUZjOwJuwW+urmuFhvuTSAuuI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=LY5dr8nMnLHl4auOaTmKJ4QVcvLHCQ0/eGdGuxlhqbVYI/KRLk7hHG+/nFj4w06xk+98UE5PtiFc/aRmmoLMRseOZB5nfBbgQ3E5qHiOrILLlYyx0SjPljNKM/cuz8dTnTDno9+FGr/xXnZsfuhnw0+cm8Q/ZG5FUhg5DFxq8tE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=iwppwDwo; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="q2gNplf9"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=Ks+P0m4BW3azJD/lpZITgC4Oc94NZbotAXAdYynHzYA=; b=q2gNplf9YLRm7AXnfsuUzaAiIo
-	9Lk9KBjDgqyB+ZeMoMow0ZWYZM5t66q7CJe61AE4T5MSk/ADD/WLzhNgSnuC5bkp+TPnrwDvIxnx+
-	36hHpbn65CSuq7zD3F7G3tW0fgOElY3xvXnBir1y7fZPABK+ZAzmUnh0GjwswgWUP5XXlwUtlyrBv
-	/Hk3K2ZXEBtneFEaoU/bOWpbAXHvljm5qROQmx/032QauKy88+2oA60KCqbZwMetvd/fdlzGuhqZ5
-	s3hTYcquaS5gxZi9dYR87xrBAjTDdNuR5vqYEVHCEblL0wA7N3Gfdf7yRU3MWtfCXwl4XWpEQvcFk
-	BikYBTeQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uzIUW-00000007Tns-44Be;
-	Thu, 18 Sep 2025 17:32:21 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 8A5A5300125; Thu, 18 Sep 2025 19:32:20 +0200 (CEST)
-Date: Thu, 18 Sep 2025 19:32:20 +0200
-From: Peter Zijlstra <peterz@infradead.org>
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="iwppwDwo"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net A2F0A406FA
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1758219654; bh=1uyYpaAqpKBLNg1Z0PaUZjOwJuwW+urmuFhvuTSAuuI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=iwppwDwoKBd4AzCFIyHhExSmNIM5C5Ucg7eUcoDFD6Z3hXuPH5pWfXFfYTvjUBxOk
+	 ZOSCwoiihFscX/yVRNfgCv7NQoqQxvXQUfUalvWO+StWKpJblv8i+5wHIUT+k94oT8
+	 VeYnsHmEoAmAvlRUZR8iiYLkucLO7x7Cb+7Cux+sb/qPO3ekN/Z201mucrOmaf8WqV
+	 /xAvxNHQvUSp1qJtXrpMc6f59hGn+hvmDf0CELzsBPJrMtv3o/FQ1SqkcpN0mm433Q
+	 F7UVgMFBNSMZWUCqzkeILPCIaOGCqm/qzSBCsakUnHgg7Qu0vtHelBnbtylxZn2G5Z
+	 3eO37Dpaodw/Q==
+Received: from localhost (unknown [IPv6:2601:280:4600:2da9::1fe])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id A2F0A406FA;
+	Thu, 18 Sep 2025 18:20:54 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
 To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Steven Rostedt <rostedt@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	x86@kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Indu Bhagat <indu.bhagat@oracle.com>,
-	"Jose E. Marchesi" <jemarch@gnu.org>,
-	Beau Belgrave <beaub@linux.microsoft.com>,
-	Jens Remus <jremus@linux.ibm.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Florian Weimer <fweimer@redhat.com>, Sam James <sam@gentoo.org>,
-	Kees Cook <kees@kernel.org>, Carlos O'Donell <codonell@redhat.com>
-Subject: Re: [RESEND][PATCH v15 0/4] perf: Support the deferred unwinding
- infrastructure
-Message-ID: <20250918173220.GA3475922@noisy.programming.kicks-ass.net>
-References: <20250908171412.268168931@kernel.org>
- <20250918114610.GZ3419281@noisy.programming.kicks-ass.net>
- <20250918111853.5dc424df@gandalf.local.home>
- <20250918172414.GC3409427@noisy.programming.kicks-ass.net>
+Cc: Bagas Sanjaya <bagasdotme@gmail.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Documentation
+ <linux-doc@vger.kernel.org>, Linux Kernel Tracing
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Tom Zanussi <zanussi@kernel.org>
+Subject: Re: [PATCH v2 0/5] Histogram docs formatting cleanup
+In-Reply-To: <20250918130519.06294a16@batman.local.home>
+References: <20250916054202.582074-2-bagasdotme@gmail.com>
+ <871po390m7.fsf@trenco.lwn.net>
+ <20250918130519.06294a16@batman.local.home>
+Date: Thu, 18 Sep 2025 12:20:53 -0600
+Message-ID: <87h5wz7hbu.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250918172414.GC3409427@noisy.programming.kicks-ass.net>
+Content-Type: text/plain
 
-On Thu, Sep 18, 2025 at 07:24:14PM +0200, Peter Zijlstra wrote:
+Steven Rostedt <rostedt@goodmis.org> writes:
 
-> So we have:
-> 
-> do_syscall_64()
->   ... do stuff ...
->   syscall_exit_to_user_mode(regs)
->     syscall_exit_to_user_mode_work(regs)
->       syscall_exit_work()
->       exit_to_user_mode_prepare()
->         exit_to_user_mode_loop()
-> 	  retume_user_mode_work()
-> 	    task_work_run()
->     exit_to_user_mode()
->       unwind_reset_info();
->       user_enter_irqoff();
->       arch_exit_to_user_mode();
->       lockdep_hardirqs_on();
->   SYSRET/IRET
-> 
-> 
-> and
-> 
-> DEFINE_IDTENTRY*()
->   irqentry_enter();
->   ... stuff ...
->   irqentry_exit()
->     irqentry_exit_to_user_mode()
->       exit_to_user_mode_prepare()
->         exit_to_user_mode_loop();
-> 	  retume_user_mode_work()
-> 	    task_work_run()
->       exit_to_user_mode()
->         unwind_reset_info();
-> 	...
->   IRET
-> 
-> Now, task_work_run() is in the exit_to_user_mode_loop() which is notably
-> *before* exit_to_user_mode() which does the unwind_reset_info().
-> 
-> What happens if we get an NMI requesting an unwind after
-> unwind_reset_info() while still very much being in the kernel on the way
-> out?
+> On Thu, 18 Sep 2025 10:38:56 -0600
+> Jonathan Corbet <corbet@lwn.net> wrote:
+>
+>> Steve, will you pick these up, or should I grab them?
+>
+> Can you take them?
+>
+> Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+>
+> Thanks!
 
-AFAICT it will try and do a task_work_add(TWA_RESUME) from NMI context,
-and this will fail horribly.
+Done.
 
-If you do something like:
-
-	twa_mode = in_nmi() ? TWA_NMI_CURRENT : TWA_RESUME;
-	task_work_add(foo, twa_mode);
-
-it might actually work.
-
+jon
