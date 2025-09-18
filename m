@@ -1,64 +1,146 @@
-Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0F61255E27;
-	Thu, 18 Sep 2025 17:05:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B73DF31A7E1;
+	Thu, 18 Sep 2025 17:24:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758215133; cv=none; b=GLB3uFgEVDBakFKqw8d2HkS/N6H3MA+S7OdSajM1OfcJODLUFxvusuU4A+tpYYxGeu9B0LQmv9srXIuJf6VKygocj38O9Uq54m22mCzovTJMWuMZz0t3iX6GiKkT1IoyULt8GKCxtOw1jB39Fn7XojvwbrqBzYsxEOLtMzcPsIo=
+	t=1758216273; cv=none; b=uZ9U5Tb1ddVTH0begWa/c99ObZwf0Kw7imsA2mHeZJgeiPjQ4yCHbnAggqUyo92NMqchs7ZrwvuKEjxlDAXEzea4+oef30sKa8qsU9qqaun6ruU4I9X0DD7FzRw7jarjue20eqOrhWp8yNKdbY+ORptcG0a97M6dyxp5NH7dl+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758215133; c=relaxed/simple;
-	bh=X/POsIVTv8eNpfgINUCFzeDvZfWq0I5UrNuXSk5IxQU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZnHFl2+MNGl7itLT8q6t7JoSFSw3D5T6YsajU7Os3UJ2nldOW7rFVD3NPQzCaIvQ7RBOXx+J3ho0iIpdW75QoRMvCrLK1NcNZ41WEgJjA/X16A+2nJ2KHpSprINiHpKiqRrad33KlHpOiofpqksbG54CU+lMXtHMwby9FxrrVUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf14.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id 048B85830E;
-	Thu, 18 Sep 2025 17:05:22 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf14.hostedemail.com (Postfix) with ESMTPA id D4E073F;
-	Thu, 18 Sep 2025 17:05:20 +0000 (UTC)
-Date: Thu, 18 Sep 2025 13:05:19 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Jonathan Corbet <corbet@lwn.net>
-Cc: Bagas Sanjaya <bagasdotme@gmail.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Documentation
- <linux-doc@vger.kernel.org>, Linux Kernel Tracing
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Tom Zanussi <zanussi@kernel.org>
-Subject: Re: [PATCH v2 0/5] Histogram docs formatting cleanup
-Message-ID: <20250918130519.06294a16@batman.local.home>
-In-Reply-To: <871po390m7.fsf@trenco.lwn.net>
-References: <20250916054202.582074-2-bagasdotme@gmail.com>
-	<871po390m7.fsf@trenco.lwn.net>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1758216273; c=relaxed/simple;
+	bh=7zUIF4doMbyCpR2nzVRmsi7rEQhw/x7p/IcFKhdqYCE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LNmDCcm9NSKDiDGPiau+QrzeutY7Xwovf0h05ZQiWyUimxXJeUvYD+JK8/nMNartzFZQ3MhuzrjKCdBRQTomstKSLt5o38Ic+VH9hcXLr/umVyolkV95sJhT0/WJrOzQ43dofBJMivG4ofLoGSYr3bieWEwYMlsdqkH1PGeEcOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=sQ0wo1M3; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sQ0wo1M3"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=pX8hgFoPiMyFYee1qff/GbRGpxMGCd83byCgw7rNe+s=; b=sQ0wo1M3ipZBhGr1+5Pl2TV/5v
+	Ir3PiYGREY5KOhNnxm/AACaskE7a3vwAHnC7QB//zQ39mQOCTaVzv6FnHVm0kAIJH6xsnS+0joJVR
+	ixjl0jjs1QHh4SLHtwUl764UGgpBCZKu6SFDyL7AM3VIEMNdlyj4cOX7JyLdj+akMSKOhEgQNDI+Z
+	bbEIbfcX5xwTICRq5Ey+oS3Kp7tXPNEwGTvqBpxNeXDdhnElhi0uHes2DrbJJOPG5/qlvNI8u5QvP
+	K8YvUgDR2gGHOTbIMa1hXCRJarxRsuCSPHR3oyBQRg3pR1gjgcqyBKo9OAxH/Ah4aCkfhMIWObU5f
+	poxrbR6g==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uzIMh-00000007KAU-3mnE;
+	Thu, 18 Sep 2025 17:24:16 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 813E8300125; Thu, 18 Sep 2025 19:24:14 +0200 (CEST)
+Date: Thu, 18 Sep 2025 19:24:14 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Steven Rostedt <rostedt@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	x86@kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Indu Bhagat <indu.bhagat@oracle.com>,
+	"Jose E. Marchesi" <jemarch@gnu.org>,
+	Beau Belgrave <beaub@linux.microsoft.com>,
+	Jens Remus <jremus@linux.ibm.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Florian Weimer <fweimer@redhat.com>, Sam James <sam@gentoo.org>,
+	Kees Cook <kees@kernel.org>, Carlos O'Donell <codonell@redhat.com>
+Subject: Re: [RESEND][PATCH v15 0/4] perf: Support the deferred unwinding
+ infrastructure
+Message-ID: <20250918172414.GC3409427@noisy.programming.kicks-ass.net>
+References: <20250908171412.268168931@kernel.org>
+ <20250918114610.GZ3419281@noisy.programming.kicks-ass.net>
+ <20250918111853.5dc424df@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: 5jfb1czsre9tiux7xn8rq9sjan85h513
-X-Rspamd-Server: rspamout08
-X-Rspamd-Queue-Id: D4E073F
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19fs3V881gWiGm8PDl6FigPUw9X2RlD9Ow=
-X-HE-Tag: 1758215120-677576
-X-HE-Meta: U2FsdGVkX18qAq/L8Rsa+fhxL5hEE9MCOF613M9C6KOdcg+eh7NXkpJcD1Dz53GMS8IF3nhmmD1hxfuBTtmNImt6BAxJBwTMieg2gmp8nvXSXivLKgogERpDuyH/EEbdA3b24vGEmb9fIdyBPINn6H2PPWRT6XJmvJnMLMHkO5N4+0Q2wSCc3bl68yIS/NO0U9k+GJPjTtkcL8Rv7/+g8RcM7sZzvz5jDlmZPsnzIqZ3SSMj4qxlIMBuHejwrZarBeWlgDgusWwAU1sxfOw12NLus9RwfazT1WMrTR7LlE5pooYrrW2SLSo5gd23CHLa7srK5+1MjyPBg899rmuXVo+Ep4pHuv2glM0l+jqTJ8+OGfFuh7RjwqFfckBX/dB6npzCj3vpHA+g5RFxHY75ErCtQ1dmB41LvZa0SbhSahkm7u5kJfG60dLMXEZ2hllf2uwzaURgjpq64AzLZY7ECA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250918111853.5dc424df@gandalf.local.home>
 
-On Thu, 18 Sep 2025 10:38:56 -0600
-Jonathan Corbet <corbet@lwn.net> wrote:
+On Thu, Sep 18, 2025 at 11:18:53AM -0400, Steven Rostedt wrote:
+> On Thu, 18 Sep 2025 13:46:10 +0200
+> Peter Zijlstra <peterz@infradead.org> wrote:
+> 
+> > So I started looking at this, but given I never seen the deferred unwind
+> > bits that got merged I have to look at that first.
+> > 
+> > Headers want something like so.. Let me read the rest.
+> > 
+> > ---
+> >  include/linux/unwind_deferred.h       | 38 +++++++++++++++++++----------------
+> >  include/linux/unwind_deferred_types.h |  2 ++
+> >  2 files changed, 23 insertions(+), 17 deletions(-)
+> 
+> Would you like to send a formal patch with this? I'd actually break it into
+> two patches. One to clean up the long lines, and the other to change the
+> logic.
 
-> Steve, will you pick these up, or should I grab them?
+Sure, I'll collect the lot while I go through it and whip something up
+when I'm done. For now, I'll just shoot a few questions your way.
 
-Can you take them?
 
-Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+So we have:
 
-Thanks!
+do_syscall_64()
+  ... do stuff ...
+  syscall_exit_to_user_mode(regs)
+    syscall_exit_to_user_mode_work(regs)
+      syscall_exit_work()
+      exit_to_user_mode_prepare()
+        exit_to_user_mode_loop()
+	  retume_user_mode_work()
+	    task_work_run()
+    exit_to_user_mode()
+      unwind_reset_info();
+      user_enter_irqoff();
+      arch_exit_to_user_mode();
+      lockdep_hardirqs_on();
+  SYSRET/IRET
 
--- Steve
+
+and
+
+DEFINE_IDTENTRY*()
+  irqentry_enter();
+  ... stuff ...
+  irqentry_exit()
+    irqentry_exit_to_user_mode()
+      exit_to_user_mode_prepare()
+        exit_to_user_mode_loop();
+	  retume_user_mode_work()
+	    task_work_run()
+      exit_to_user_mode()
+        unwind_reset_info();
+	...
+  IRET
+
+Now, task_work_run() is in the exit_to_user_mode_loop() which is notably
+*before* exit_to_user_mode() which does the unwind_reset_info().
+
+What happens if we get an NMI requesting an unwind after
+unwind_reset_info() while still very much being in the kernel on the way
+out?
+
+
+What is the purpose of unwind_deferred_task_exit()? This is called from
+do_exit(), only slightly before it does exit_task_work(), which runs all
+pending task_work. Is there something that justifies the manual run and
+cancel instead of just leaving it sit in task_work an having it run
+naturally? If so, that most certainly deserves a comment.
+
+
+A similar question for unwind_task_free(), where exactly is it relevant?
+Where does it acquire a task_work that is not otherwise already ran on
+exit?
