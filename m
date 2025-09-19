@@ -1,320 +1,196 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from OS8PR02CU002.outbound.protection.outlook.com (mail-japanwestazon11012009.outbound.protection.outlook.com [40.107.75.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23F5131062E
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 19 Sep 2025 12:26:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758284780; cv=none; b=W3PHikXcJpSS8WvO3HHeN64RymqUPYTAMpecRdwWHKXh9ANRS+brHJtH2/7LEUIYxC9rKxwPGcmLZ8LdG3uaA0Sk9jEK3/rRsq4lSEu5yYF6XpFCrMofEsNP/4D1KLa482X/A5B+q1h7fI6rcDGyqFVNlLiveppNMRkizOSEHTM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758284780; c=relaxed/simple;
-	bh=d1sX/D+DcalmI4LfSMAzkuteep4cIgZVtw5NAwASs6I=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hzUSOKbOa28kMyX0gaeEu3EBdV3y2O6xhlmHUMpdrMp2Zj+eHBDlip61HJ2K2ri27IuvxAsOFB+mCuryAmG6wzctfRq+ZzgCEqmNRa8fZMdV+DVplAtsVnSvbbFNN6mEB94pyKWxKEW0KxvJuqsvY+ZJFBU69P+sq+nyu0Uga18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hU7sMltQ; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B17EA223DF1;
+	Fri, 19 Sep 2025 12:54:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.75.9
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1758286472; cv=fail; b=BWs7v337kqD5V8V3dbV7TSP6AtDTF1SNzWxfGV3zKlRgDbPsn+Nf//xKqG/67HhXuPPPQxr+qw84wpTiaSCO+BkyRiunhNqHJn47clJzHEy0yvB/yMaP1LNnPQ90AmbMezoYhNCxpe8FXduWN0hI42bFDaaY1FL2WOFR+qru6d8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1758286472; c=relaxed/simple;
+	bh=ZCV7LY8xlJU0wLxJoU2OinvQkN7xmZJS8gYnM45d7KQ=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=tz6brNn8Fg4vY4scTymIgpGSIHmuowAJF6KY0qGhXskjOurNimtmhBsSbpxhVANnDX/lYpoe+Ojlo83ZR3vAaUBEH21EuTZTaH4mi7a7bbIdAEYyelOFgHWiLEJJbozw/vbEhT5z3x84xi1YLGaFOtcvXaXigENS8rmKpxwEoZ8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=m5tCggpO; arc=fail smtp.client-ip=40.107.75.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hU7sMltQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1758284778;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=d1sX/D+DcalmI4LfSMAzkuteep4cIgZVtw5NAwASs6I=;
-	b=hU7sMltQYbWACjRS+h/V8Cv5nBHSt6jstfXUEmttqyE1gAlI5wpieJrT/oZwNHPRnC7Qj3
-	T/tXRxgU6WyWPjHgIgoFabajFLGTQmjgzmIgr4dne3KXBgXJVGx9kRuKlQhdW+blF3lAqM
-	VacoJewqR7CW9JeC7Yn3EaOdnr6aA7Q=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-407-a7nz0AQoP32uhcUqhQqZCA-1; Fri, 19 Sep 2025 08:26:16 -0400
-X-MC-Unique: a7nz0AQoP32uhcUqhQqZCA-1
-X-Mimecast-MFC-AGG-ID: a7nz0AQoP32uhcUqhQqZCA_1758284776
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-45f2b9b958aso20240535e9.3
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 19 Sep 2025 05:26:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758284776; x=1758889576;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=w2XSBYp5h1Vr225E++TG9Fqb3LLvB175rci2oqHmbHw=;
-        b=n6jrxijto/i4AbLFiHieuLWRbi0pyu0tc0uH5s2vOeNR+E9Dvs220dZoaKDPtS50lA
-         OW9h6nNnsPEwe6djSn9PErEIIgh4aUxH9UK46nbiDBRzIf9EHn1Q4C4mfy29W51aVQAA
-         6/VCoPHr+WDZclPEX2AAPxnOlvtYQBLsmYSd3dPqlrqlgmtB8dRR/Y53Kg+tIDjQuiD/
-         XB9a8FO7yhKc7B0shK+7mJh8d8KirK27X3M9kNQWs4P9djyM9uTolQbIMOdZdJ5YkAk1
-         CtLEkkP4d9wd9eOZdsmhknh4j7szf6DlY9zi1YuWW9qOvGZRBBFQjjbzoelY7Zpfw9eQ
-         YurA==
-X-Forwarded-Encrypted: i=1; AJvYcCWQtEc8A6LR0Yq3/DU84u24Pm44CLOwKLUp4ADRqy2Xn+3z4ifjZqjJhWpptCYBtMmOrjw5lvbkuZ/inPcTHvvJrSE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyMYMLR8ba6+jqGnp0Qxg/scMxQ+nH5CGY+/s1c8oxaBnuHvB3U
-	TPInFmm8mkycpe14WMA50ElQ7S7orItG19/GeqEC5thzpZFNjdmh6ZjRyDZbMzeFx/0a7tu+ySm
-	tfXEvYNJ5FIIJNBSO9sOgVTOAtafHiJS+okMwwxlU/QpREbk5jCK2zouU+TBL/I6y/hvJVd9ifg
-	==
-X-Gm-Gg: ASbGnct/XBkNEjs7OXnBBfvZc8GWBIWhuqM02jMvRac2jpKr3i9fRJ5ekqziSdX/Wop
-	7odY5zrthxT+Pgv8vbFzIP4QuW/7VKf4iuWq56Rxy4fuiUA5JE1Uqem5cA8853myDEAgliN47YA
-	CIpHnAPrB3Buc5TwAJS21b9oZT1YMYGwkJiYnao0nzPy85xEYBrntLmx43RFHvmGPM8URZlwQ4t
-	eetZ25VkLfpN/EnBookryODy2EmUvzb3xzcsjiGQQSvSMWgpsSVLs67SvmfgVE0+N2s0QU4UloG
-	gyiAsYwLoZG5bY1OsywuhpYXe+k+nSjI6LgTLKNs6Wne1EG+RbCOLw/5+8xSE41XVTFS
-X-Received: by 2002:a05:600c:45c9:b0:45d:d1a3:ba6a with SMTP id 5b1f17b1804b1-467f15d405emr26612485e9.33.1758284775634;
-        Fri, 19 Sep 2025 05:26:15 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IExVo5Bm/Gvq4znkAjNfJnMZLgqKOOOnEVHm6N4TjEKj5ArkEr2zku7wSBIOGTxDiXnA/4U1w==
-X-Received: by 2002:a05:600c:45c9:b0:45d:d1a3:ba6a with SMTP id 5b1f17b1804b1-467f15d405emr26612175e9.33.1758284775117;
-        Fri, 19 Sep 2025 05:26:15 -0700 (PDT)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([195.174.132.10])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4613d14d212sm141809075e9.12.2025.09.19.05.26.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Sep 2025 05:26:14 -0700 (PDT)
-Message-ID: <d0aaaf1f47f0d948b60b0575e179564e3c024188.camel@redhat.com>
-Subject: Re: [PATCH] rv: Add signal reactor
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Thomas =?ISO-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>, 
- Nam Cao <namcao@linutronix.de>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Steven
- Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers	 <mathieu.desnoyers@efficios.com>
-Date: Fri, 19 Sep 2025 14:26:12 +0200
-In-Reply-To: <20250919-rv-reactor-signal-v1-1-fb0012034158@linutronix.de>
-References: <20250919-rv-reactor-signal-v1-1-fb0012034158@linutronix.de>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
- cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
- T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
- eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
- 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
-User-Agent: Evolution 3.56.2 (3.56.2-2.fc42)
+	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="m5tCggpO"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=G34tHaGWnYWjqwwU0+30crkv5y5ZrCYLsMIKOdgJOA3FRwzdj3W2ywIDrly4KKK8CXgU/lCTDOK+2khnqytH6TWeoQ1tRbtfHRT0NeJuEvgORGPdNb5VSzpCzfDQLXMC8JDXYGHGoo/Av6X78aBgvBk2WimCYIUgx695Dk6iaoSpbMHS/WzzUIFlghjqBObClgz6c0Ns8dv3yMtKXm2fwrrWEW34dvYpIGKZYDu4DMwinvxJ80dnDEDqwlfherWMyv3YN/L1YAoaB5UJa5kKlg5LaAeTcvuNRHqwjaXZEUxRYlGiLDxCBLxgqFaocuTbXS5y2C+YrPXUsh6p6pFrvQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=DO867iXFZxUCgrYqdvFYvPzTFJqa4G8CNxZQYavv9qI=;
+ b=NGqCt4rSzxnlgP379piLO6qPIUZ/8pZJmo4K9vfqSXgGyJBb4Y56u7ruGL0Tu0SRlDbfvJpN+fsIbT5EqZoPHiPyGnkN1uXdG7ngCPv7pOxTAex8md+wWQHwG9cC34ejMXBRXOnFpBaj+nfnZ4jeqVLfyTnLIncQ+HEzQkLBTVoFZMb9nuOaX5kzt8Wp0WJIs2Mi94A6lHBq6vdwJ+U3Kc0efe9NrUQsXX4UP9pf1fcDI8AeymnEhEGyV8OFFKY4rLVoNOy43mQsaPC3XGlaQ0y6Lh5ysuPop1+MoLMyHXkbw7myHp959dN3Eudj83w7cKwRT2f8r0Xjli6NLf5RAw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
+ dkim=pass header.d=vivo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DO867iXFZxUCgrYqdvFYvPzTFJqa4G8CNxZQYavv9qI=;
+ b=m5tCggpODhbm+Eu8rBywz/znHmJTHbQZrjQz0Ow5RgB0bTyNV2tdnDr3MrCTdY3GDGo3O1ZhitbWzpLFEyRjh1RoI3wTxgnU0kBdZqdukpywAx+kY9B7MbPWDL56rIl+0Ur52iFoV161VrytO0IlCqB66iPZY6hZF9F+J0ODpBu83Gz3o1uCvdJvISTdd1westD5NvVapZbcGHXNcTvZLg6aK+doHZJHdTQXHo3HrOOdfErpUjtQe36v55pvxOEMSVfgZjBgqgELJ9e3j3tdEnKgGYv6puk9xVs9KoEAwr5/UICJbxqrNzDMp2vR9pDnEO5d21NaHWgabtt3UJ2Tcg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vivo.com;
+Received: from PUZPR06MB4742.apcprd06.prod.outlook.com (2603:1096:301:b5::13)
+ by TYSPR06MB6471.apcprd06.prod.outlook.com (2603:1096:400:480::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9137.13; Fri, 19 Sep
+ 2025 12:54:27 +0000
+Received: from PUZPR06MB4742.apcprd06.prod.outlook.com
+ ([fe80::206c:c661:9838:5571]) by PUZPR06MB4742.apcprd06.prod.outlook.com
+ ([fe80::206c:c661:9838:5571%4]) with mapi id 15.20.9137.015; Fri, 19 Sep 2025
+ 12:54:27 +0000
+Message-ID: <c4a62603-11bb-4e93-bc7e-75f8b4574c63@vivo.com>
+Date: Fri, 19 Sep 2025 20:54:19 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH bpf-next v1 0/3] bpf: Add BPF program type for
+ overriding tracepoint probes
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
+ martin.lau@linux.dev, song@kernel.org, yonghong.song@linux.dev,
+ haoluo@google.com, jolsa@kernel.org, eddyz87@gmail.com, kpsingh@kernel.org,
+ sdf@fomichev.me, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ shuah@kernel.org, willemb@google.com, kerneljasonxing@gmail.com,
+ paul.chaignon@gmail.com, chen.dylane@linux.dev, memxor@gmail.com,
+ martin.kelly@crowdstrike.com, ameryhung@gmail.com,
+ linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ yikai.lin@vivo.com
+References: <20250917072242.674528-1-zhaofuyu@vivo.com>
+ <20250917153055.6fee814f@gandalf.local.home>
+ <e8e8b5e2-35fe-43cc-ba41-c84ccba189f7@vivo.com>
+ <20250918112425.23d4d379@gandalf.local.home>
+From: Fuyu Zhao <zhaofuyu@vivo.com>
+In-Reply-To: <20250918112425.23d4d379@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SI2PR06CA0006.apcprd06.prod.outlook.com
+ (2603:1096:4:186::19) To PUZPR06MB4742.apcprd06.prod.outlook.com
+ (2603:1096:301:b5::13)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: j9PBJwzhJgpvjRJRPNyF2eE3nTlmX4QE8NXJ5-qBHGw_1758284776
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PUZPR06MB4742:EE_|TYSPR06MB6471:EE_
+X-MS-Office365-Filtering-Correlation-Id: 54defc9b-af17-4b9e-b30e-08ddf77baa25
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?MVkrRjJSOVowc0ovVmxQaGhDaUxKZVNkMFdYNmJJbWJSejE0SmZ4RFphaVV4?=
+ =?utf-8?B?blNZVnJockFDMEwyWHdtajVIMU8yTXBzeWpsQU16RmhKVGtwWDJRVktoMkJ0?=
+ =?utf-8?B?SXJFUG9ya2tzZFRHS2hUY0IwZlBPMUtCOUFWVXVkeGpyREFLeDQ3M0Fpcjc1?=
+ =?utf-8?B?elpGcEhJdXVKYXNXSVhXc21LSk8rdzd0Rlk4TW5tYnpNMkVhWTVlTkEyN3Bn?=
+ =?utf-8?B?Nk93ajB5YmhUMEhoZW9Vc205MjFId1FnREFpeUdDY0RUSm9rZThFRUpraWNY?=
+ =?utf-8?B?YnZDT2xRSVkvOHQ1dzdOVWJhRGJBT1k4amVJNXRXaW5uaTJRdEJNTmRFZmFl?=
+ =?utf-8?B?ZjZHZXBFZ1VWY1JxemJkbGd0VjNON3I0aW9rOXpVZUNJOFc0QXh2bXQ3VkxT?=
+ =?utf-8?B?WDdmYk5IYTg0MnZERG0ybTkrR0ZkZDkrTkVEQmF1R2djVFA3U1U2VE9ZOFZW?=
+ =?utf-8?B?YjMybjRTWS82N2ZXRm5GdWs4cEUrYTZtc01iOXdkUkZ0d1ZKNENIK243T2Np?=
+ =?utf-8?B?bzNDSDNscWNta3R4QjdCNHZmSy9IWUFxdVA0anNBeU1iQlZ5bXEzZEFXUVN0?=
+ =?utf-8?B?ZHo1bnpZSXl4dXhNTUdmeHl2ZVBDanFyYURJNDYyTkpqMFV4V09NbkZUc2tH?=
+ =?utf-8?B?NHdKaUIyOHdFbnoxTWhMSkZaNzRkbkhpcXJYVDBFZU5VQkY1aXQ3OFFTTjFi?=
+ =?utf-8?B?S0QyTUNHRzZBTW5JM2lQK0JLOHRhU21UNWhsaFJhNVJ1dlFMQzhQMDNNM0Ni?=
+ =?utf-8?B?bWlmRTdFU3c5U2s2WGk4UkdSVXhoNWNlOG8wS2EvUHhnaEloSnExY3dJV2pa?=
+ =?utf-8?B?VVlablArT2VLVkpFcklZbFoyK29FQURtWm9zdWxVUkwrdWdWZVRCSmwrMlNq?=
+ =?utf-8?B?THhGditqV1YrZlZhQVR4T0hvVXFHbE5QYjNFWEVFbkUweDZzS3gydTE0dzYv?=
+ =?utf-8?B?MFltcHNubS9jUitIVTk0TmtRai9yQjhKZmFFdmVHN2FRbUkvNFJ4OTZtRzNk?=
+ =?utf-8?B?MEhTRE0zV1BidXNSeGd0YUt2Zm5xaFpBMHdOS093MW80M21CMkExNXlZVkEr?=
+ =?utf-8?B?SjZuRHQ1dEpvRm1vK0FOTFhOMWI0d1hGTjFqaUxNa2twWldmK0grNFpaTlR4?=
+ =?utf-8?B?MlR4OXRVdVpsMDdUZHluN3FuSEtnRUF5VE1qVkRCK1l2WWtXQkk4VUFoUUY0?=
+ =?utf-8?B?YklUREZPL2pVMVZFUFN4cVhsYjRsaWRwdDBBTERNV09OTEpybnBlWnJiQlV5?=
+ =?utf-8?B?cnRJdFNhWEpWR0c1azdLcDZmREpnTld5K1hEVGF3VUlKYTFuY0wyRXdYa1Nt?=
+ =?utf-8?B?UEt6eHNYMlR1LzVvSThYQjJ2RUU3MVI1YmE5Ri8xc3pvRHpYWGtnNjM2K3Jx?=
+ =?utf-8?B?cnNORFNSa2p4TUtqRGlhVCs2dXdDc1pQUlNLTWRyaG93Y2JQYWs2T3VIQ0R2?=
+ =?utf-8?B?NDFXNGtHdXVKa3hZNjZwYTNaajkxS1hqWlNiTHB1RCtVdStKVVdOTHpFMnRY?=
+ =?utf-8?B?N2dEZ3NVWkpxUVNYa0F4MDRUQkN1TC84NmZDQVdUUk1IaC90aXBlWVU3S20x?=
+ =?utf-8?B?aTJiYmxMS1hhcFhwVHQ4dytZd2REckhCa2dQZDRSTllsRkVOdG1LMmIrdmZD?=
+ =?utf-8?B?OU9jQlRvWlJhV24xYlpJaUVMcUY0UTRlejdGVFZDeVZON0hQZXJac3pZWGJ2?=
+ =?utf-8?B?VEh0ZEtPbmtUZGV4czJNUVVoa3VIVEMzRVhUcHhXYWdDcTVRWW1hV00xYmts?=
+ =?utf-8?B?cmFmVHczOTEwL2Y3ZVdzazBFQmowQWU5dGs3cnNsK1Q2NXk2TXBEbDRrVHky?=
+ =?utf-8?B?eTNQUjFYdGgyNEdLV3JsVE5peEFEa2R3WlhvV3kzWm00YnVSS2hSamZ5MDZI?=
+ =?utf-8?B?d09mTisxenN5azB0MkxIVFl2bU9SQWVBM2Z5NFNqOUdVSWhVRFpYODdxVHFS?=
+ =?utf-8?Q?7iWhJ1nxeTo=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PUZPR06MB4742.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?eFZNb2JyUG44TnFQT1ljSWRQMWlGZ014eEg4Q0lJd3JSa3FSdHcyZjhQbFZu?=
+ =?utf-8?B?V0RMbStnQ1V0STdHNEVVUkdqZXhvVUQrVTlHYnF5K09INmVNek11U2lSQXJ5?=
+ =?utf-8?B?MTN2RGJ5cU5LaDlFeXdWV29DVFg2aW1xR3Bub29XWHJXN0JlbnprSTFKUkZw?=
+ =?utf-8?B?YVBhdmFsemM0VmFpa1pPdk1yT1NXWlp5WCtXWUVmcGtBcE14SnloakFGZFBR?=
+ =?utf-8?B?elBObDRKazJrd1I3RDk2aUdDWHhTS0JJdVJvaWlRSkF4V2g4TTRFYXB4WFBT?=
+ =?utf-8?B?YUJVWGQ3WWZYNU1Da2owcGNiUG1kUTNlZUdNeEQrL0o3cHRTWjcyUkFLVTVT?=
+ =?utf-8?B?QlRPRXA1Y0NnUEVVc2I4OWVCU2Y1RXBPZ1ZnSzUrUjdLTU5hY2JKUER4N2Ew?=
+ =?utf-8?B?a1c1THlLcGhZaTNJKzFzTDNybEJOeWNUaEozQXlMYTZ3cTgzZ0N1M1M2SVdJ?=
+ =?utf-8?B?Y0Jtc0RCMWlNRVI3TS8zb3FDaHVqUlhQZStNWjlHUmFqYUFwNzc5bWhlSGJq?=
+ =?utf-8?B?QzltbEZUSktnSzJ2Rk45emJHMkoxanVHUTZuWUNNQXh3bTM0bjAvd2dMTURG?=
+ =?utf-8?B?MUVLYXI1UWkydkgyN0srdi9CM3ZlbUhlc2tNdzZLcTJPVFE4RjBQQU5ySHJU?=
+ =?utf-8?B?WnVTNDJSUEZDVWV6MEZnQ1NndjhwRVVyRi81VkJEYnZrQUU5UGNpQUllTE9V?=
+ =?utf-8?B?NUZxeEdML0doWFNMdDlwVVdsVldXZXdFR2RtM1IzMFR4UThOS01zNjJKaHJS?=
+ =?utf-8?B?cGJhV2pBV0lGS2hpRE1neEhXYVVsdmpMN0hpckJKSk5Oa1NsQlliWFRSVnJ4?=
+ =?utf-8?B?bCt0d28yVktaK1lVeFJPSHd2NW5KQUkvN2M5eCs4M3MzSjJTaGxCdng4TzJM?=
+ =?utf-8?B?TzJXMDNQViswbW5ZZ2htTWF0YWwyZERlVzhxZC9KSHAveFFiRWt1dGt6RGZC?=
+ =?utf-8?B?SDcvQjVqMEJhNWRtZCs5UXhLVHJuNitZKytKc3UrMzhsZGdKU1QvMkM3U2ww?=
+ =?utf-8?B?c21UVExBaDR3c2x4Z21XbkFFOGxKNU9jdmJKWGVMdzhHekVWV250NWF0Wk41?=
+ =?utf-8?B?V2hmVDlNckZmUnNjUjVyT3hxcVppVXQybktkaVhjWTRHSk5oS3VJTG9CdTBC?=
+ =?utf-8?B?K3NaU1RuV1duZmc1NHh2R2V2M21pbTV1ZnRnZnI3ekJoWCtId1pqZXZ4ajBq?=
+ =?utf-8?B?YVcwVThTTm1Rd00yd3ByYW5hVmlmOWViNE5CSUpDN3hVQUoyclFiSjlQNVVt?=
+ =?utf-8?B?WTJSQitOMHV3ZTU1LytCQXZvY0MxUVBETHBYR0wya3Vsc3paTlZLVUFQUmtB?=
+ =?utf-8?B?NTEvT0k5YlFRallQYmFNQmxaT0FDOTZSRE9XdnNJYU55d05qY1IyNjhWTWl0?=
+ =?utf-8?B?V1VxQ244T0laaml5UlpoM2dCR1VrNkxlNVhrTFVjZEIrNjlLeGRIZTdJQmhK?=
+ =?utf-8?B?THJ6T2M5RUQ1Y0FEWXBrVnFoRTAvTWNweFdKelpWRVNxbjJPSFZFbG5TS29y?=
+ =?utf-8?B?dC9IcUt5WFRlbzdzZEZ3bndJUjNqZEVzVklQRkpRMjlYV1VFZ3lwT3lKOEtk?=
+ =?utf-8?B?TVRJNklJR2MvczJQNTkyV0xmb1lxK1pvZEFEbXRvV0VkVUxQbThHcUpwWVFI?=
+ =?utf-8?B?bFF1NXN6STVDYy9WOFROU3NpKzBOMlpKN1E3QlUxVGZZVDV1QW1ZdFVjZjdD?=
+ =?utf-8?B?OGNFN0oyVnlzVzhvWnJnR3FWdUpxTU1DT2lqd0NjdkIxSGlQZ2NST3o1OGZF?=
+ =?utf-8?B?Ui9GS3VCblFwTHZzNVkwQUVqMWJRVmlESHlKa0ttZm9HVDdPRjZ1Mno0VHZM?=
+ =?utf-8?B?cVg3VlI3R09JOWFKU2VwYzFwUk04NkhUdzRtMkhRcXJFUENHZEltUkNqd3g0?=
+ =?utf-8?B?V1l5RzYrL3RHOTc2VnRWYjFZcnROVWhTaWNkVWk1L2RkUjVTRGhIcnd1OGQ1?=
+ =?utf-8?B?VTAzUVRETmpiS2dMU25kSUdnK3dJZ3FocXlBUXVNeUVROWlaMGUwa2llZXJq?=
+ =?utf-8?B?Z3hoMG9FUXlvV3lERlBQNGdVT3ZlejV2NTE3cm5keThCRDkySFBNekVGVDJy?=
+ =?utf-8?B?MWhRZm1ZOUl1VjFBQTlHNm1sRmlEN3AvT3RNQy9MNFNaZndrYlhtc2VuQTRl?=
+ =?utf-8?Q?7+GfzqyeTX+t2u8ZEYYpGvoe7?=
+X-OriginatorOrg: vivo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 54defc9b-af17-4b9e-b30e-08ddf77baa25
+X-MS-Exchange-CrossTenant-AuthSource: PUZPR06MB4742.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Sep 2025 12:54:26.8244
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 3H/5nzeQrD1XSokxUBzKVt/MFj8vaE8DDS0e++jDKkUhaf4kK7gqXBN/2R2ZteIpnBZOQMKYfq05dmaXCdb2eQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYSPR06MB6471
 
-On Fri, 2025-09-19 at 12:49 +0200, Thomas Wei=C3=9Fschuh wrote:
-> Reactions of the existing reactors are not easily detectable from program=
-s
-> and also not easily attributable to the triggering task.
-> This makes it hard to test the monitors themselves programmatically.
->=20
-> The signal reactors allows applications to validate the correct operation=
-s
-> of monitors either by installing custom signal handlers or by forking a
-> child and waiting for the expected exit code.
 
-Thanks, this looks like a really nice addition!
 
-> For now only SIGBUS is supported, but additional signals can be added.
+On 9/18/2025 11:24 PM, Steven Rostedt wrote:
+> On Thu, 18 Sep 2025 20:33:22 +0800
+> Fuyu Zhao <zhaofuyu@vivo.com> wrote:
+> 
+>> At the moment, I don’t have a solid real-world example to provide.
+>> This work is still in an exploratory stage.
+> 
+> We shouldn't be in the business of "if you build it, they will come".
+> Unless there is a concrete use case now, I would not be adding anything.
+> 
+> My entire workflow for what I created in the tracing system was "I have a
+> need, I will implement it". The "need" came first. I then wrote code to
+> satisfy that need. It should not be the other way around.
+> 
+> -- Steve
 
-Curious choice of a default signal, is this specific to your use-case?
+Thanks a lot for the feedback and guidance.
 
-We may want to add some kind of reactors options in the future to allow
-configuring this, but I'd say it isn't needed for now.
+I understand your point that new functionality should be driven by real
+needs rather than exploratory ideas.
 
-> As the reactors are called from tracepoints they need to be able to run i=
-n
-> any context. To avoid taking any of the looks used during signal delivery
+I’ll keep looking into this. If I find a concrete use case that
+demonstrates clear value, I’ll bring it back for discussion.
 
-You probably meant "locks"
-
-> from an invalid context, schedule it through task_work. The delivery will
-> be delayed, for example when then sleep monitor detects an invalid sleep.
->=20
-> Signed-off-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
-> ---
-> =C2=A0kernel/trace/rv/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 |=C2=A0=C2=A0 8 +++
-> =C2=A0kernel/trace/rv/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 |=C2=A0=C2=A0 1 +
-> =C2=A0kernel/trace/rv/reactor_signal.c | 114
-> +++++++++++++++++++++++++++++++++++++++
-> =C2=A03 files changed, 123 insertions(+)
->=20
-> diff --git a/kernel/trace/rv/Kconfig b/kernel/trace/rv/Kconfig
-> index
-> 5b4be87ba59d3fa5123a64efa746320c9e8b73b1..dc7b546615a67c811ce94c43bb1db28=
-26cd0
-> 0c77 100644
-> --- a/kernel/trace/rv/Kconfig
-> +++ b/kernel/trace/rv/Kconfig
-> @@ -93,3 +93,11 @@ config RV_REACT_PANIC
-> =C2=A0=09help
-> =C2=A0=09=C2=A0 Enables the panic reactor. The panic reactor emits a prin=
-tk()
-> =C2=A0=09=C2=A0 message if an exception is found and panic()s the system.
-> +
-> +config RV_REACT_SIGNAL
-> +=09bool "Signal reactor"
-> +=09depends on RV_REACTORS
-> +=09default y
-> +=09help
-> +=09=C2=A0 Enables the signal reactor. The signal reactors sends a signal=
- to
-> the
-> +=09=C2=A0 task triggering an exception.
-
-This assumption is not always correct, imagine a failure in the sleep monit=
-or
-caused by the wakeup event. The offending task is not current but the wakee=
-.
-
-This is a bit tricky because reactors don't have access to that task, just =
-to
-keep the same implementation between per-cpu and per-task monitors.
-
-We may want to revise that, perhaps like Nam is doing with the monitor_targ=
-et
-thing [1].
-
-Besides, I'm assuming this reactor is only meaningful for monitors written =
-to
-validate userspace tasks (signals and TWA_RESUME are probably
-meaningless/dangerous for kernel threads).
-
-I'm fine with that but you should probably mention it here and/or in the re=
-actor
-itself, since we have also monitors validating kernel behaviour (see the sc=
-hed
-collection).
-
-[1] -
-https://lore.kernel.org/lkml/9a1b5a8c449fcb4f1a671016389c1e4fca49a351.17549=
-00299.git.namcao@linutronix.de
-
-> diff --git a/kernel/trace/rv/Makefile b/kernel/trace/rv/Makefile
-> index
-> 42ff5d5aa9dde3ed2964e0b8d4ab7b236f498319..adf56bbd03ffa0d48de1f0d86ca5fcc=
-e1628
-> bdba 100644
-> --- a/kernel/trace/rv/Makefile
-> +++ b/kernel/trace/rv/Makefile
-> @@ -23,3 +23,4 @@ obj-$(CONFIG_RV_MON_OPID) +=3D monitors/opid/opid.o
-> =C2=A0obj-$(CONFIG_RV_REACTORS) +=3D rv_reactors.o
-> =C2=A0obj-$(CONFIG_RV_REACT_PRINTK) +=3D reactor_printk.o
-> =C2=A0obj-$(CONFIG_RV_REACT_PANIC) +=3D reactor_panic.o
-> +obj-$(CONFIG_RV_REACT_SIGNAL) +=3D reactor_signal.o
-> diff --git a/kernel/trace/rv/reactor_signal.c
-> b/kernel/trace/rv/reactor_signal.c
-> new file mode 100644
-> index
-> 0000000000000000000000000000000000000000..e123786d94371a240beb63b2d1b2f30=
-44a46
-> 6404
-> --- /dev/null
-> +++ b/kernel/trace/rv/reactor_signal.c
-> @@ -0,0 +1,114 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2025 Thomas Wei=C3=9Fschuh, Linutronix GmbH
-> + *
-> + * Signal RV reactor:
-> + *=C2=A0=C2=A0 Prints the exception msg to the kernel message log and se=
-nds a signal to
-> the offending task.
-> + */
-> +
-> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> +
-> +#include <linux/cpumask.h>
-> +#include <linux/init.h>
-> +#include <linux/mempool.h>
-> +#include <linux/module.h>
-> +#include <linux/printk.h>
-> +#include <linux/rv.h>
-> +#include <linux/sched/signal.h>
-> +#include <linux/task_work.h>
-> +
-> +struct rv_signal_work {
-> +=09struct callback_head twork;
-> +=09int signal;
-> +=09char message[256];
-> +};
-> +
-> +static mempool_t *rv_signal_task_work_pool;
-> +
-> +static void rv_signal_force_sig(int signal, const char *message)
-> +{
-> +=09/* The message already contains a subsystem prefix, so use raw
-> printk() */
-> +=09printk(KERN_WARNING "%s", message);
-> +=09pr_warn("Killing PID %d with signal %d", task_pid_nr(current),
-> signal);
-> +=09force_sig(signal);
-> +}
-> +
-> +static void rv_signal_task_work(struct callback_head *cbh)
-> +{
-> +=09struct rv_signal_work *work =3D container_of_const(cbh, struct
-> rv_signal_work, twork);
-> +
-> +=09rv_signal_force_sig(work->signal, work->message);
-> +
-> +=09mempool_free(work, rv_signal_task_work_pool);
-> +}
-> +
-> +static void rv_reaction_signal(int signal, const char *fmt, va_list args=
-)
-> +{
-> +=09struct rv_signal_work *work;
-> +=09char message[256];
-> +
-> +=09work =3D mempool_alloc_preallocated(rv_signal_task_work_pool);
-> +=09if (!work) {
-> +=09=09pr_warn_ratelimited("Unable to signal through task_work,
-> sending directly\n");
-> +=09=09vsnprintf(message, sizeof(message), fmt, args);
-> +=09=09rv_signal_force_sig(signal, message);
-> +=09=09return;
-> +=09}
-
-Why do you use the task_work at all instead of signalling directly?
-If that's something not safe from a (any) tracepoint because it can sleep y=
-ou
-should definitely not call it if allocation fails.
-
-> +
-> +=09init_task_work(&work->twork, rv_signal_task_work);
-> +=09work->signal =3D signal;
-> +=09vsnprintf(work->message, sizeof(work->message), fmt, args);
-> +
-> +=09/*
-> +=09 * The reactor can be called from any context through tracepoints.
-> +=09 * To avoid any locking or other operations not usable from all
-> contexts, use TWA_RESUME.
-> +=09 * The signal might be delayed, but that shouldn't be an issue.
-> +=09 */
-> +=09task_work_add(current, &work->twork, TWA_RESUME);
-> +}
-> +
-> +__printf(1, 2)
-> +static void rv_reaction_sigbus(const char *fmt, ...)
-> +{
-> +=09va_list args;
-> +
-> +=09va_start(args, fmt);
-> +=09rv_reaction_signal(SIGBUS, fmt, args);
-> +=09va_end(args);
-> +}
-> +
-> +static struct rv_reactor rv_sigbus =3D {
-> +=09.name=09=09=3D "sigbus",
-> +=09.description=09=3D "Kill the current task with SIGBUS",
-> +=09.react=09=09=3D rv_reaction_sigbus,
-> +};
-
-Let's be consistent and call this reactor "signal", you can use SIGBUS only=
- in
-the description until/if we allow different signals.
-
-What do you think?
-
-Thanks,
-Gabriele
+Thanks again.
 
