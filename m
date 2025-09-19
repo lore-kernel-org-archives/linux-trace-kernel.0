@@ -1,139 +1,162 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87D7A23C4F3;
-	Fri, 19 Sep 2025 16:08:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D154F23BCF3
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 19 Sep 2025 17:07:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758298105; cv=none; b=jq7bWO0EBeqSSdueRBdq/Fbnu6RfoshKz3yaHLQg95gJN9v9BmoDvmGvRKPUAWtz8rjBmMCrvCUX6q7+NzjwbpiEZG8LdN/vGVtQIA47Mb0vwqpad14nmcZU/mcOqG+l1BUxkKs0TRFRV9+7DLpnV+QADkvvRBc/62fgNwr0fdE=
+	t=1758301667; cv=none; b=Z7L7XQwjbQhJXyleauiP/SqYx9ylySatjjJ/W1ngkFRWQO2HteG5BRElwwt5YIAzhAzAHrnCg0c2hfDd2F2KDceJrKi9SXkITgZYKdhoFgybB+o3vplzkSzAHlojvX5FXrsOWVHLeNorCvPRuGUPqeP9jwY8Ou524ugVgJT+tJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758298105; c=relaxed/simple;
-	bh=KR7+2nE82F6C0RiPmuqmiCYxfBNwhzjUQ6Re6K7PmkQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kP7hh39fxv0P9Ur5m66GUvw/XTGzMByZZsmW/tM7RXY/mOp1i+FjN5HY6nnWjW7kNP2Ee2CmM0JHrb5QLd+rw0A0BYGcw6Pcg+kplV7/ELLUufKYJKsuGclGCmG3adNlDzRblWYXb+95Y/eThf8Zea1AorOa8qe45sYo992glfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gxcwNWOd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1758301667; c=relaxed/simple;
+	bh=3qp6q9LRUoe6q3bo7J359SoUE/ClQLHaiAfa3bIxl3w=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=Ktq6RfD0lxfSFGOHduHGuB4sK3NmBUTUAkzP14T5tGp9bjNi7aB0l1L6NmYst8tb3od6eEu/emse7FBZdHciw6UcQ7dB/YK4eliuNWGZBO9dmcd5VtME8XpmSNObmr9/HBxhxX9vuMcjEjk0y77cRqP9MDUnAeyXHo/QA5bIpPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=e30Mbx90; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gxcwNWOd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76C8EC4CEF0;
-	Fri, 19 Sep 2025 16:08:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758298105;
-	bh=KR7+2nE82F6C0RiPmuqmiCYxfBNwhzjUQ6Re6K7PmkQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gxcwNWOdwyYYCt/Mr4IoNw/QjfiG4fCy9ykIixLtIZgzxpvEaTh0ZrsRzbEkVlnG2
-	 m8b1wOyRgj64SHlplGanM4IqWdr6Ywznq35IYlrDTPSiuH1HbSJA9OSV6F3cLQ0fmv
-	 gIfqZUpL6QTaZY7lchfgfbbV/HzPQ9GlWuIYB09YAq8LPsugW8lRkDPp3pD3pmqfjH
-	 MMDTa/BarqpIPeeM6zxgfbm5MTp42dkz6/ahu8QcAFUE+eO/S+U7a/1bN3BopMvk86
-	 +JRB492i+MxOTtI0yVlp8MJ781GY30PjuvtN+/6jEMPcnyQy8X2xhocLeJS5gf/FQl
-	 TeUW9JwC+yaOg==
-Date: Fri, 19 Sep 2025 10:08:21 -0600
-From: Keith Busch <kbusch@kernel.org>
-To: Leon Romanovsky <leon@kernel.org>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
-	Jason Gunthorpe <jgg@nvidia.com>,
-	Abdiel Janulgue <abdiel.janulgue@gmail.com>,
-	Alexander Potapenko <glider@google.com>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Christoph Hellwig <hch@lst.de>, Danilo Krummrich <dakr@kernel.org>,
-	David Hildenbrand <david@redhat.com>, iommu@lists.linux.dev,
-	Jason Wang <jasowang@redhat.com>, Jens Axboe <axboe@kernel.dk>,
-	Joerg Roedel <joro@8bytes.org>, Jonathan Corbet <corbet@lwn.net>,
-	Juergen Gross <jgross@suse.com>, kasan-dev@googlegroups.com,
-	linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	linux-nvme@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-	linux-trace-kernel@vger.kernel.org,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>, rust-for-linux@vger.kernel.org,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	virtualization@lists.linux.dev, Will Deacon <will@kernel.org>,
-	xen-devel@lists.xenproject.org
-Subject: Re: [PATCH v6 00/16] dma-mapping: migrate to physical address-based
- API
-Message-ID: <aM1_9cS_LGl4GFC5@kbusch-mbp>
-References: <CGME20250909132821eucas1p1051ce9e0270ddbf520e105c913fa8db6@eucas1p1.samsung.com>
- <cover.1757423202.git.leonro@nvidia.com>
- <0db9bce5-40df-4cf5-85ab-f032c67d5c71@samsung.com>
- <20250912090327.GU341237@unreal>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e30Mbx90"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1758301664;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3qp6q9LRUoe6q3bo7J359SoUE/ClQLHaiAfa3bIxl3w=;
+	b=e30Mbx90iu+dk6hEnF3mVaZ2+MFePXenkVm8J55FA7jq0Oy0S2vuOuG15H9VMF/JT/Y3hl
+	VP2HK4n/RXG/kbiW6shD1H/iFZVRLfX8t0PYNPS6WBM1HEm+q4Ig3u7hMSWBEB7SJHFN98
+	zVPlhFKDK/A13/EdRUa3i/YDLjOyrEY=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-310-xDmgwqvCPyGR7VMoEwynLQ-1; Fri, 19 Sep 2025 13:07:43 -0400
+X-MC-Unique: xDmgwqvCPyGR7VMoEwynLQ-1
+X-Mimecast-MFC-AGG-ID: xDmgwqvCPyGR7VMoEwynLQ_1758301662
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3ee1365964cso1667868f8f.2
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 19 Sep 2025 10:07:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758301662; x=1758906462;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=3qp6q9LRUoe6q3bo7J359SoUE/ClQLHaiAfa3bIxl3w=;
+        b=wmk7AAyzdoEFPKo1Nz7jDiN32P56cfQPaTStO/Ncy1WsUmJhkoW6DojWB4BX9jWTeA
+         FExFfAlHajP3vi84oN0bksjgD/rvWapzITasIBCLtGN9zHe6SdMe1ETG0btz2sD3ArV2
+         HZ/wOexKzPkesYYBqd9ExDnLx7lcN1ukl254a6y1+NlUrWX6Q1wbPwdIrgCCV7JFNCiu
+         1q8qid0wmRMVqrkuNM2R/4AUnAwLRWlovgl7XLIjWoDGbHUTCadQ5iMohY+I1Gy/uaUr
+         tP7gLEGkzhtqIT28WnZLVB1YnMASvje7wvgEyU6mCCrmyU2wMzGMlgZuAzT0l83W7Xae
+         hRkQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUTjNVTyFvh47w9Sg/rgBvxcwFIyE5XnZMlsYwuQZ06Zssa2H9HguO3yg1kXfOMogmxwnCl9IVQrHzW3Ty11KI0GYI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx3MJnChgePSfmM6H/jTuQfd53ebKcgY7fg1zIcJ4XbcOCEgz2Y
+	3LZtVmjFYIIY0xCzJvaJSAwb8lB5goOFhV5C4GqmHqM1IMTkW5sUHXpLOgSVpNn0+A02aR9gW5T
+	LnZqlEUya/LxmEG5WX8rkNHk6u1J3Mlns3DxPx5YdZ+NvhK4Wg6FNcXcgShSJvwx7+iITQHaHcQ
+	==
+X-Gm-Gg: ASbGncuq9ic3ZNRJ50PBKhw/1JSDcjDM59bijQScTK7f8fPWH7NyB4bJcUoNbfUsSIQ
+	Ca/mcQAIyMSCksvFvr6e4WePy4W8knCD8oMSgJ0AXxfmXPHANahUx3lbO41KNr8N01dbbiZmYPd
+	vFiOO0sXE3s9Oe5l5j3J4kLIZZukx1E4md8+hJ3AQMflZGPTmL3O+YYvw8siTEPr1mVHw/Fcqcv
+	PclCkjI5ZuXy2foCxOYx9ulTlQ7An+6fU4HbbcPHI0cmxlqIjt3OhCX22DSTeXZv0F8C+y+jXRJ
+	2tJfksWGuuy4nIBVeCqqPGPBk+uG44LhIWHC
+X-Received: by 2002:a5d:64e5:0:b0:3ea:ac25:b6b9 with SMTP id ffacd0b85a97d-3ee7da56ff7mr2979540f8f.11.1758301662188;
+        Fri, 19 Sep 2025 10:07:42 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFgsMyuWn2Qvd0H7mVqIwWFUhFqllortDrLxiWpPoSxTPoDr2zxCfkYtR+1fTUa0yG7RVSidw==
+X-Received: by 2002:a5d:64e5:0:b0:3ea:ac25:b6b9 with SMTP id ffacd0b85a97d-3ee7da56ff7mr2979510f8f.11.1758301661712;
+        Fri, 19 Sep 2025 10:07:41 -0700 (PDT)
+Received: from [127.0.0.1] ([195.174.132.10])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3ee073f4669sm8270429f8f.4.2025.09.19.10.07.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 19 Sep 2025 10:07:41 -0700 (PDT)
+Date: Fri, 19 Sep 2025 17:07:14 +0000 (UTC)
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Nam Cao <namcao@linutronix.de>, Tomas Glozar <tglozar@redhat.com>,
+	Juri Lelli <jlelli@redhat.com>, Clark Williams <williams@redhat.com>,
+	John Kacur <jkacur@redhat.com>, linux-trace-kernel@vger.kernel.org
+Message-ID: <7a446e09-4333-409f-bba1-246a27d91db8@redhat.com>
+In-Reply-To: <20250919113749.7ee1f249@gandalf.local.home>
+References: <20250919140954.104920-1-gmonaco@redhat.com> <20250919140954.104920-17-gmonaco@redhat.com> <20250919113749.7ee1f249@gandalf.local.home>
+Subject: Re: [PATCH v2 16/20] sched: Export hidden tracepoints to modules
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250912090327.GU341237@unreal>
+X-Correlation-ID: <7a446e09-4333-409f-bba1-246a27d91db8@redhat.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: FdvaUQ3AF2tgUVvWw62-XcLH4PHlqC4IWUJhJcdpFP4_1758301662
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Sep 12, 2025 at 12:03:27PM +0300, Leon Romanovsky wrote:
-> On Fri, Sep 12, 2025 at 12:25:38AM +0200, Marek Szyprowski wrote:
-> > >
-> > > This series does the core code and modern flows. A followup series
-> > > will give the same treatment to the legacy dma_ops implementation.
-> > 
-> > Applied patches 1-13 into dma-mapping-for-next branch. Let's check if it 
-> > works fine in linux-next.
-> 
-> Thanks a lot.
+2025-09-19T15:36:50Z Steven Rostedt <rostedt@goodmis.org>:
 
-Just fyi, when dma debug is enabled, we're seeing this new warning
-below. I have not had a chance to look into it yet, so I'm just
-reporting the observation.
+> On Fri, 19 Sep 2025 16:09:50 +0200
+> Gabriele Monaco <gmonaco@redhat.com> wrote:
+>
+>> The tracepoints sched_entry, sched_exit and sched_set_need_resched
+>> are not exported to tracefs as trace events, this allows only kernel
+>> code to access them. Helper modules like [1] can be used to still have
+>> the tracepoints available to ftrace for debugging purposes, but they do
+>> rely on the tracepoints being exported.
+>>
+>> Export the 3 not exported tracepoints.
+>> Note that sched_set_state is already exported as the macro is called
+>> from modules.
+>>
+>> [1] - https://github.com/qais-yousef/sched_tp.git
+>>
+>> Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
+>
+> Note, for all the scheduler changes, we need an acked-by from the schedul=
+er
+> maintainers.
+>
 
- DMA-API: nvme 0006:01:00.0: cacheline tracking EEXIST, overlapping mappings aren't supported
- WARNING: kernel/dma/debug.c:598 at add_dma_entry+0x26c/0x328, CPU#1: (udev-worker)/773
- Modules linked in: acpi_power_meter(E) loop(E) efivarfs(E) autofs4(E)
- CPU: 1 UID: 0 PID: 773 Comm: (udev-worker) Tainted: G            E    N  6.17.0-rc6-next-20250918-debug #6 PREEMPT(none)
- Tainted: [E]=UNSIGNED_MODULE, [N]=TEST
- pstate: 63400009 (nZCv daif +PAN -UAO +TCO +DIT -SSBS BTYPE=--)
- pc : add_dma_entry+0x26c/0x328
- lr : add_dma_entry+0x26c/0x328
- sp : ffff80009fe0f460
- x29: ffff80009fe0f470 x28: 0000000000000001 x27: 0000000000000001
- x26: ffff8000835d7f38 x25: ffff8000835d7000 x24: ffff8000835d7e60
- x23: 0000000000000000 x22: 0000000006e2cc00 x21: 0000000000000000
- x20: ffff800082e8f218 x19: ffff0000a908ff80 x18: 00000000ffffffff
- x17: ffff8000801972a0 x16: ffff800080197054 x15: 0000000000000000
- x14: 0000000000000000 x13: 0000000000000004 x12: 0000000000020006
- x11: 0000000030e4ef9f x10: ffff800083443358 x9 : ffff80008019499c
- x8 : 00000000fffeffff x7 : ffff800083443358 x6 : 0000000000000000
- x5 : 00000000000bfff4 x4 : 0000000000000000 x3 : ffff0000bb005ac0
- x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffff0000bb005ac0
- Call trace:
-  add_dma_entry+0x26c/0x328 (P)
-  debug_dma_map_phys+0xc4/0xf0
-  dma_map_phys+0xe0/0x410
-  dma_map_page_attrs+0x94/0xf8
-  blk_dma_map_direct.isra.0+0x64/0xb8
-  blk_rq_dma_map_iter_next+0x6c/0xc8
-  nvme_prep_rq+0x894/0xa98
-  nvme_queue_rqs+0xb0/0x1a0
-  blk_mq_dispatch_queue_requests+0x268/0x3b8
-  blk_mq_flush_plug_list+0x90/0x188
-  __blk_flush_plug+0x104/0x170
-  blk_finish_plug+0x38/0x50
-  read_pages+0x1a4/0x3b8
-  page_cache_ra_unbounded+0x1a0/0x400
-  force_page_cache_ra+0xa8/0xd8
-  page_cache_sync_ra+0xa0/0x3f8
-  filemap_get_pages+0x104/0x950
-  filemap_read+0xf4/0x498
-  blkdev_read_iter+0x88/0x180
-  vfs_read+0x214/0x310
-  ksys_read+0x70/0x110
-  __arm64_sys_read+0x20/0x30
-  invoke_syscall+0x4c/0x118
-  el0_svc_common.constprop.0+0xc4/0xf0
-  do_el0_svc+0x24/0x38
-  el0_svc+0x1a0/0x340
-  el0t_64_sync_handler+0x98/0xe0
-  el0t_64_sync+0x17c/0x180
- ---[ end trace 0000000000000000 ]---
+Alright got it.
+
+> After you have acks and are satisfied with the code (hopefully someone el=
+se
+> can review them), you can send me a pull request to be added into linux-n=
+ext.
+
+Usually Nam does a very good job reviewing them.
+
+> I'll still run them through my own tests.
+>
+> Which BTW, there should be a bunch of tests in:
+>
+> =C2=A0 tools/testing/selftests/verification/
+>
+> (which doesn't yet exist).
+
+Yeah that's the next thing in my imaginary list, or perhaps something inspi=
+red on what's done in rtla.
+
+Thanks,
+Gabriele
+
+>
+> -- Steve
+>
+>
+>> ---
+>> kernel/sched/core.c | 3 +++
+>> 1 file changed, 3 insertions(+)
+>>
+>> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+>> index ccba6fc3c3fe..334ff5b214d7 100644
+>> --- a/kernel/sched/core.c
+>> +++ b/kernel/sched/core.c
+>> @@ -117,6 +117,9 @@ EXPORT_TRACEPOINT_SYMBOL_GPL(sched_util_est_cfs_tp);
+>> EXPORT_TRACEPOINT_SYMBOL_GPL(sched_util_est_se_tp);
+>> EXPORT_TRACEPOINT_SYMBOL_GPL(sched_update_nr_running_tp);
+>> EXPORT_TRACEPOINT_SYMBOL_GPL(sched_compute_energy_tp);
+>> +EXPORT_TRACEPOINT_SYMBOL_GPL(sched_entry_tp);
+>> +EXPORT_TRACEPOINT_SYMBOL_GPL(sched_exit_tp);
+>> +EXPORT_TRACEPOINT_SYMBOL_GPL(sched_set_need_resched_tp);
+>>
+>> DEFINE_PER_CPU_SHARED_ALIGNED(struct rq, runqueues);
+>>
 
