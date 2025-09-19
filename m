@@ -1,87 +1,94 @@
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD759322764;
-	Fri, 19 Sep 2025 17:15:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12B60523A;
+	Fri, 19 Sep 2025 23:34:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758302122; cv=none; b=tERAMcxeC7VxQydPGI83FkyyGTEIMQwCMKAfH6EKB03JpisddII2LlXzQdCcLzAPuR+9tbafGZAYb24o6V9apHIRUCnI8Dyr6lfHuVcHqEouzrGOsknnA6jo8AcAhJiT+XPu3pMQUlQ+D6uCZ2PbFaBhveUzUVJKLdsHyeFnzm0=
+	t=1758324846; cv=none; b=ieKD+OBjBWN1wR31NoRWPzecWdjhY06yWDb9yauMMizcOvMJLPMJWE1U5lmOPrfcjJ+LNdUokrfEoXq7R6wlS42d6KnSCd6aUgkO30FErroKKczYjfpPM4m0Y484pyWlbBrmlVdmcMOo1lb+mS9eBw+Wdy1FQsOxbHSpeQInEOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758302122; c=relaxed/simple;
-	bh=6NJzYLwvu8nASPIPcrDCvyx2hqM3LYin66/94sR2rHM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=N7WQ/AJ609UB2iFc4RBIoyhKI8v0OkRRvafYFOrNDz4AHpqQD045S02SI+xCtaMrPwoUkr8M6NKf8UhwXdTI3RXvyu4wbgdl28157btlhatDo+PCIbYvScOKaJOWDI4XKCtyvnlUUDf9fcXopDm0TAgx5xoZiRe6XiuTJVpfKRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf17.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay01.hostedemail.com (Postfix) with ESMTP id 4FD3A1DFDC7;
-	Fri, 19 Sep 2025 17:15:13 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf17.hostedemail.com (Postfix) with ESMTPA id 5AAB319;
-	Fri, 19 Sep 2025 17:15:11 +0000 (UTC)
-Date: Fri, 19 Sep 2025 13:16:21 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: kernel test robot <lkp@intel.com>
-Cc: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
- oe-kbuild-all@lists.linux.dev, Mark Rutland <mark.rutland@arm.com>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] tracing: Add an option to show symbols in _text+offset
- for function profiler
-Message-ID: <20250919131621.093295c8@gandalf.local.home>
-In-Reply-To: <202509200000.EJ4InVti-lkp@intel.com>
-References: <175826135058.101165.7219957344129610147.stgit@devnote2>
-	<202509200000.EJ4InVti-lkp@intel.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1758324846; c=relaxed/simple;
+	bh=Kot04m3JebeuguS1IxyvQpD3d0BuR5ZYLFS9ssS3oQ0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lsSKFxoMfcbPb6YvPQAeIu3U7wTtSd8yf08ok70TX0NMZHtFtsH8copZawYW0oOLqP6CD0iKAvD5A3csGiyERqwd3yH7H21abtx4tHAZdZHETMK0x3FU0h7FhtvhXfztagzoPr7Czo1UjvD2zFo2TqIQ8Ug0MI71mNu2vKBl3d0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A01+nJEj; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A01+nJEj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35F8BC4CEF0;
+	Fri, 19 Sep 2025 23:34:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758324845;
+	bh=Kot04m3JebeuguS1IxyvQpD3d0BuR5ZYLFS9ssS3oQ0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=A01+nJEj6CRn7EQvzk6UHgBogoIdLUpBHREyHJZ/KzSIZy1k9D50tGm1OvjIhl5eD
+	 XBFDaWov4sydmsL2+x7xLx49d8qfyJ1YAf58inJcHUEUDbEO8Lt7dIbqFcaNBweEyp
+	 qyGyLp/8Ga3MjDehRlC6fXgCIjPV7ub2T6FWQULh7xgnQndbrhbwdbfafA0E/n829O
+	 ZjymGRxjFo1qkuvoqB2Umm75flLR2ZETV3zqET56Ks6dv520rGTnYYk691B75PCHV1
+	 /fYDjPahjdLZfhw9CmuFY+CiDKrI7gN7jDvNKG6WQtEH9YPzID0zEFAFErFvvspWAD
+	 reuTa7VtP/0xg==
+Date: Fri, 19 Sep 2025 16:34:02 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, 
+	Steven Rostedt <rostedt@kernel.org>, linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org, x86@kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, 
+	Indu Bhagat <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>, 
+	Beau Belgrave <beaub@linux.microsoft.com>, Jens Remus <jremus@linux.ibm.com>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Florian Weimer <fweimer@redhat.com>, Sam James <sam@gentoo.org>, Kees Cook <kees@kernel.org>, 
+	Carlos O'Donell <codonell@redhat.com>
+Subject: Re: [RESEND][PATCH v15 0/4] perf: Support the deferred unwinding
+ infrastructure
+Message-ID: <pde32olzdlqvbom5bya5exndcrfgsw7lmffy6uav5yoplonzj3@ddb2b5sihlpx>
+References: <20250908171412.268168931@kernel.org>
+ <20250918114610.GZ3419281@noisy.programming.kicks-ass.net>
+ <20250918111853.5dc424df@gandalf.local.home>
+ <20250918172414.GC3409427@noisy.programming.kicks-ass.net>
+ <20250918173220.GA3475922@noisy.programming.kicks-ass.net>
+ <20250918151018.7281647b@batman.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: meshqnsref5gf9mr6a5b3ehr6ya7yoe8
-X-Rspamd-Server: rspamout08
-X-Rspamd-Queue-Id: 5AAB319
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+PMwtFbp3f3WJHRIweYHLKnPG8l8MxpuE=
-X-HE-Tag: 1758302111-777223
-X-HE-Meta: U2FsdGVkX1+IMK7HCcPXzbQ7tsmWuxy9LUmDGU8+Agzv++ChVn4H+bFVQs4YnUHH1WXtXt5zD3aW0l1QfxhL1ATUgm7018n86XJKLbaboSjf6ko5yqpDQgVdmQP7ZYZINyqW40wQm2yqTrRFYp8OzWeIBnDJOn07iK4tNrwII7lwaZ8ReoXj7iSot/nu6zZBvOuyijuerFde4elPo8t3fDl4dzWCLTu42DOwjuzEQaPqaxLLiZgRwvNgMW8H1bIvfa0aSnNy1gVWAy69+apuau0mzVEmZ5jsqBlBJt8OpynpreSmy6lU73qjOKXWXWnI/zpIahtzTGMz/Qjy7W3yrrTMmtSsuAQWhyPasRgT0THHrfptxL6TPdjc7G/0mIiBU35aK/sHpkbwMk8nxnuU9Wq9DzaYKD19ITk/mDy3wX1qjZkNyx31ZwC+H0XLlj+zNOIvXRMTRwwoDfWeVj6K5r/OyVZxCfJD
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250918151018.7281647b@batman.local.home>
 
-On Sat, 20 Sep 2025 01:09:52 +0800
-kernel test robot <lkp@intel.com> wrote:
+On Thu, Sep 18, 2025 at 03:10:18PM -0400, Steven Rostedt wrote:
+> On Thu, 18 Sep 2025 19:32:20 +0200
+> Peter Zijlstra <peterz@infradead.org> wrote:
+> 
+> > > Now, task_work_run() is in the exit_to_user_mode_loop() which is notably
+> > > *before* exit_to_user_mode() which does the unwind_reset_info().
+> > > 
+> > > What happens if we get an NMI requesting an unwind after
+> > > unwind_reset_info() while still very much being in the kernel on the way
+> > > out?  
+> > 
+> > AFAICT it will try and do a task_work_add(TWA_RESUME) from NMI context,
+> > and this will fail horribly.
+> > 
+> > If you do something like:
+> > 
+> > 	twa_mode = in_nmi() ? TWA_NMI_CURRENT : TWA_RESUME;
+> > 	task_work_add(foo, twa_mode);
+> > 
+> > it might actually work.
+> 
+> Ah, the comment for TWA_RESUME didn't express this restriction.
+> 
+> That does look like that would work as the way I expected task_work to
+> handle this case.
 
-> Hi Masami,
-> 
-> kernel test robot noticed the following build errors:
-> 
-> [auto build test ERROR on trace/for-next]
-> [also build test ERROR on linus/master v6.17-rc6 next-20250918]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch#_base_tree_information]
-> 
-> url:    https://github.com/intel-lab-lkp/linux/commits/Masami-Hiramatsu-Google/tracing-Add-an-option-to-show-symbols-in-_text-offset-for-function-profiler/20250919-135733
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace for-next
-> patch link:    https://lore.kernel.org/r/175826135058.101165.7219957344129610147.stgit%40devnote2
-> patch subject: [PATCH] tracing: Add an option to show symbols in _text+offset for function profiler
-> config: x86_64-buildonly-randconfig-002-20250919 (https://download.01.org/0day-ci/archive/20250920/202509200000.EJ4InVti-lkp@intel.com/config)
-> compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
-> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250920/202509200000.EJ4InVti-lkp@intel.com/reproduce)
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202509200000.EJ4InVti-lkp@intel.com/
-> 
-> All error/warnings (new ones prefixed by >>):
-> 
->    In file included from kernel/trace/trace_sched_switch.c:15:
-> >> kernel/trace/trace.h:1422:37: warning: left shift count >= width of type [-Wshift-count-overflow]  
->     1422 | #define C(a, b) TRACE_ITER_##a = (1 << TRACE_ITER_##a##_BIT)
->          |                                     ^~
+BTW, I remember Peter had a fix for TWA_NMI_CURRENT, I guess it got lost
+in the shuffle or did something else happen in the meantime?
 
-Ouch! We need to make the option enum64 now!
+  https://lore.kernel.org/20250122124228.GO7145@noisy.programming.kicks-ass.net
 
--- Steve
+-- 
+Josh
