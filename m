@@ -1,50 +1,51 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94D76314A66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADFE4315D43
 	for <linux-trace-kernel@vger.kernel.org>; Fri, 19 Sep 2025 14:10:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758291060; cv=none; b=temBZLcRc38RFwmRTzd65TY0rWUYH6UlzmFsuAYU8sQh8V4OtriNiFPBnio1GJOlU4ICzUhGeSQ8ZUBx33MzJW6Pv5P8bTUI24TGeBH/+aUvL475g1nJAvnWUucJIz8ofkONlMs27N3fyrExZuXnrinlUDVAf0mOeY4BEbNiteE=
+	t=1758291061; cv=none; b=NIvzyvQKhihRylRbXcEg2fBQ/dfrWCq7a7Q+hFan4+h9HaTv5UCuXdkq0TK0pHN4vDPR0TH4WtH2dPp0vxzYamycnmNt3OfLmSOyo/EejeV+I4fjuQ8p1FY09V5jZjanvY8nCUcVzEFfsl17BEZ0bSmAlLsXhc2bUOmjwxo5tSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758291060; c=relaxed/simple;
-	bh=MOmACpdek2E3u4tO+qZ+5RnTnZZM+p2GztFDoML/iUg=;
+	s=arc-20240116; t=1758291061; c=relaxed/simple;
+	bh=UaqEeqUjhitCDEf7OGdAz7kL1+DSMklTo2/SPnymYuE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ntecoF8awjVtcL3qyi/ywcF8enU9QY7vO3XQORiXy8CXiO+N5it1qc5clB23R2wii+NoUKBAWFmsu3J3987/My+goBqJvx1YPCKK5TSJ3IPTd8tHET3vBg8D8NEgDymB46SV3ncq077s7dISrG82m3AE+U3H4kSQc7NqwNDmkqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ce6iwN5k; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=Ax2rbZ3nq/myDup3kTA3UX1jSuykLvXoyQs93bygXMzazTEcmwsmhuOs4FIumlA+4nt6JCkPHvG4JmNjLARF3FJNb2TID21MsiQE1PhzgPy8+FirxCt5OsjK6PG2huBxLeokNJXAZcQZbdN6YcPeldN/dg+0IVGlaeXUInxcmu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KjxATe2n; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ce6iwN5k"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KjxATe2n"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
 	s=mimecast20190719; t=1758291057;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=FdFDRKaens7ItTY1mAwlhagHLPXzGZoYgrUtrNXmcik=;
-	b=ce6iwN5k2OSkE+h9RKI1aFF59GQDggYegb0gsvycokF4lzCFlPTEP5r4bjp01vEkfDupO0
-	2y6YVNciMLFgB/TUApDA9FnlcPEbv1/T0tCByCMYk5Zoqw5jlQ+GOm3QYAT8gveHmXwYJL
-	CpNnzt42I19jD/6r31ylt6QYLbN+cVI=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	bh=PtWmA8tkZkaIta3To900fr4As/wmX2PmmfiiaxKrTIE=;
+	b=KjxATe2nSgpYQ4xjeMrWRYW2xswHvUX/JwQwR7hQoTIFkxgMfrwu/2F2NK4CFm/CrtYacU
+	605z6fere2BxTu2luKeXGHL4RR5YtCq1+65xnIs6gUhamzf4ywMVv5+Va/WnYhag8BXHP5
+	QoeF5O5M+sSgt/nGtqp1hLThcmemmH0=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-581-3k2PXnJbNBa4b1P-nmTa1A-1; Fri,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-643-oMLYolwrOWycuEj4qvSh0w-1; Fri,
  19 Sep 2025 10:10:54 -0400
-X-MC-Unique: 3k2PXnJbNBa4b1P-nmTa1A-1
-X-Mimecast-MFC-AGG-ID: 3k2PXnJbNBa4b1P-nmTa1A_1758291053
+X-MC-Unique: oMLYolwrOWycuEj4qvSh0w-1
+X-Mimecast-MFC-AGG-ID: oMLYolwrOWycuEj4qvSh0w_1758291053
 Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2E8D81830740;
-	Fri, 19 Sep 2025 14:10:41 +0000 (UTC)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 508F519560AF;
+	Fri, 19 Sep 2025 14:10:53 +0000 (UTC)
 Received: from gmonaco-thinkpadt14gen3.rmtit.csb (unknown [10.45.224.13])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A81801956048;
-	Fri, 19 Sep 2025 14:10:35 +0000 (UTC)
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id D1F6F1956045;
+	Fri, 19 Sep 2025 14:10:48 +0000 (UTC)
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
 	linux-trace-kernel@vger.kernel.org
 Cc: Gabriele Monaco <gmonaco@redhat.com>,
 	Nam Cao <namcao@linutronix.de>,
@@ -52,9 +53,9 @@ Cc: Gabriele Monaco <gmonaco@redhat.com>,
 	Juri Lelli <jlelli@redhat.com>,
 	Clark Williams <williams@redhat.com>,
 	John Kacur <jkacur@redhat.com>
-Subject: [PATCH v2 06/20] verification/rvgen: Annotate DA functions with types
-Date: Fri, 19 Sep 2025 16:09:40 +0200
-Message-ID: <20250919140954.104920-7-gmonaco@redhat.com>
+Subject: [PATCH v2 08/20] verification/dot2c: Remove superfluous enum assignment and add last comma
+Date: Fri, 19 Sep 2025 16:09:42 +0200
+Message-ID: <20250919140954.104920-9-gmonaco@redhat.com>
 In-Reply-To: <20250919140954.104920-1-gmonaco@redhat.com>
 References: <20250919140954.104920-1-gmonaco@redhat.com>
 Precedence: bulk
@@ -66,353 +67,761 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-Functions in automata.py, dot2c.py and dot2k.py don't have type
-annotations and it can get complicated to remember how to use them.
+The header files generated by dot2c currently create enums for states
+and events assigning the first element to 0. This is superfluous as it
+happens automatically if no value is specified.
+Also it doesn't add a comma to the last enum elements, which slightly
+complicates the diff if states or events are added.
 
-Add minimal type annotations.
+Remove the assignment to 0 and add a comma to last elements, this
+simplifies the logic for the code generator.
 
 Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 ---
- tools/verification/rvgen/rvgen/automata.py | 20 +++++------
- tools/verification/rvgen/rvgen/dot2c.py    | 42 +++++++++++-----------
- tools/verification/rvgen/rvgen/dot2k.py    | 20 +++++------
- 3 files changed, 41 insertions(+), 41 deletions(-)
+ kernel/trace/rv/monitors/nrp/nrp.h      | 20 +++++++-------
+ kernel/trace/rv/monitors/opid/opid.h    | 22 +++++++--------
+ kernel/trace/rv/monitors/sco/sco.h      | 12 ++++-----
+ kernel/trace/rv/monitors/scpd/scpd.h    | 12 ++++-----
+ kernel/trace/rv/monitors/snep/snep.h    | 16 +++++------
+ kernel/trace/rv/monitors/snroc/snroc.h  | 12 ++++-----
+ kernel/trace/rv/monitors/sssw/sssw.h    | 20 +++++++-------
+ kernel/trace/rv/monitors/sts/sts.h      | 26 +++++++++---------
+ kernel/trace/rv/monitors/wip/wip.h      | 12 ++++-----
+ kernel/trace/rv/monitors/wwnr/wwnr.h    | 12 ++++-----
+ tools/verification/rvgen/rvgen/dot2c.py | 36 +++++++++----------------
+ 11 files changed, 94 insertions(+), 106 deletions(-)
 
-diff --git a/tools/verification/rvgen/rvgen/automata.py b/tools/verification/rvgen/rvgen/automata.py
-index d9a3fe2b74bf..3f06aef8d4fd 100644
---- a/tools/verification/rvgen/rvgen/automata.py
-+++ b/tools/verification/rvgen/rvgen/automata.py
-@@ -28,7 +28,7 @@ class Automata:
-         self.function = self.__create_matrix()
-         self.events_start, self.events_start_run = self.__store_init_events()
+diff --git a/kernel/trace/rv/monitors/nrp/nrp.h b/kernel/trace/rv/monitors/nrp/nrp.h
+index c2ec83da2124..3270d4c0139f 100644
+--- a/kernel/trace/rv/monitors/nrp/nrp.h
++++ b/kernel/trace/rv/monitors/nrp/nrp.h
+@@ -8,21 +8,21 @@
+ #define MONITOR_NAME nrp
  
--    def __get_model_name(self):
-+    def __get_model_name(self) -> str:
-         basename = ntpath.basename(self.__dot_path)
-         if not basename.endswith(".dot") and not basename.endswith(".gv"):
-             print("not a dot file")
-@@ -40,7 +40,7 @@ class Automata:
+ enum states_nrp {
+-	preempt_irq_nrp = 0,
++	preempt_irq_nrp,
+ 	any_thread_running_nrp,
+ 	nested_preempt_nrp,
+ 	rescheduling_nrp,
+-	state_max_nrp
++	state_max_nrp,
+ };
  
-         return model_name
+ #define INVALID_STATE state_max_nrp
  
--    def __open_dot(self):
-+    def __open_dot(self) -> list[str]:
-         cursor = 0
-         dot_lines = []
-         try:
-@@ -60,13 +60,13 @@ class Automata:
-             cursor += 1
-         return dot_lines
+ enum events_nrp {
+-	irq_entry_nrp = 0,
++	irq_entry_nrp,
+ 	sched_need_resched_nrp,
+ 	schedule_entry_nrp,
+ 	schedule_entry_preempt_nrp,
+-	event_max_nrp
++	event_max_nrp,
+ };
  
--    def __get_cursor_begin_states(self):
-+    def __get_cursor_begin_states(self) -> int:
-         cursor = 0
-         while self.__dot_lines[cursor].split()[0] != "{node":
-             cursor += 1
-         return cursor
+ struct automaton_nrp {
+@@ -38,38 +38,38 @@ static const struct automaton_nrp automaton_nrp = {
+ 		"preempt_irq",
+ 		"any_thread_running",
+ 		"nested_preempt",
+-		"rescheduling"
++		"rescheduling",
+ 	},
+ 	.event_names = {
+ 		"irq_entry",
+ 		"sched_need_resched",
+ 		"schedule_entry",
+-		"schedule_entry_preempt"
++		"schedule_entry_preempt",
+ 	},
+ 	.function = {
+ 		{
+ 			preempt_irq_nrp,
+ 			preempt_irq_nrp,
+ 			nested_preempt_nrp,
+-			nested_preempt_nrp
++			nested_preempt_nrp,
+ 		},
+ 		{
+ 			any_thread_running_nrp,
+ 			rescheduling_nrp,
+ 			any_thread_running_nrp,
+-			INVALID_STATE
++			INVALID_STATE,
+ 		},
+ 		{
+ 			nested_preempt_nrp,
+ 			preempt_irq_nrp,
+ 			any_thread_running_nrp,
+-			any_thread_running_nrp
++			any_thread_running_nrp,
+ 		},
+ 		{
+ 			preempt_irq_nrp,
+ 			rescheduling_nrp,
+ 			any_thread_running_nrp,
+-			any_thread_running_nrp
++			any_thread_running_nrp,
+ 		},
+ 	},
+ 	.initial_state = preempt_irq_nrp,
+diff --git a/kernel/trace/rv/monitors/opid/opid.h b/kernel/trace/rv/monitors/opid/opid.h
+index 5014f1b85ecf..092992514970 100644
+--- a/kernel/trace/rv/monitors/opid/opid.h
++++ b/kernel/trace/rv/monitors/opid/opid.h
+@@ -8,25 +8,25 @@
+ #define MONITOR_NAME opid
  
--    def __get_cursor_begin_events(self):
-+    def __get_cursor_begin_events(self) -> int:
-         cursor = 0
-         while self.__dot_lines[cursor].split()[0] != "{node":
-             cursor += 1
-@@ -76,7 +76,7 @@ class Automata:
-         cursor += 1
-         return cursor
+ enum states_opid {
+-	disabled_opid = 0,
++	disabled_opid,
+ 	enabled_opid,
+ 	in_irq_opid,
+ 	irq_disabled_opid,
+ 	preempt_disabled_opid,
+-	state_max_opid
++	state_max_opid,
+ };
  
--    def __get_state_variables(self):
-+    def __get_state_variables(self) -> tuple[list[str], str, list[str]]:
-         # wait for node declaration
-         states = []
-         final_states = []
-@@ -116,7 +116,7 @@ class Automata:
+ #define INVALID_STATE state_max_opid
  
-         return states, initial_state, final_states
+ enum events_opid {
+-	irq_disable_opid = 0,
++	irq_disable_opid,
+ 	irq_enable_opid,
+ 	irq_entry_opid,
+ 	preempt_disable_opid,
+ 	preempt_enable_opid,
+ 	sched_need_resched_opid,
+ 	sched_waking_opid,
+-	event_max_opid
++	event_max_opid,
+ };
  
--    def __get_event_variables(self):
-+    def __get_event_variables(self) -> list[str]:
-         # here we are at the begin of transitions, take a note, we will return later.
-         cursor = self.__get_cursor_begin_events()
+ struct automaton_opid {
+@@ -43,7 +43,7 @@ static const struct automaton_opid automaton_opid = {
+ 		"enabled",
+ 		"in_irq",
+ 		"irq_disabled",
+-		"preempt_disabled"
++		"preempt_disabled",
+ 	},
+ 	.event_names = {
+ 		"irq_disable",
+@@ -52,7 +52,7 @@ static const struct automaton_opid automaton_opid = {
+ 		"preempt_disable",
+ 		"preempt_enable",
+ 		"sched_need_resched",
+-		"sched_waking"
++		"sched_waking",
+ 	},
+ 	.function = {
+ 		{
+@@ -62,7 +62,7 @@ static const struct automaton_opid automaton_opid = {
+ 			INVALID_STATE,
+ 			irq_disabled_opid,
+ 			disabled_opid,
+-			disabled_opid
++			disabled_opid,
+ 		},
+ 		{
+ 			irq_disabled_opid,
+@@ -71,7 +71,7 @@ static const struct automaton_opid automaton_opid = {
+ 			preempt_disabled_opid,
+ 			enabled_opid,
+ 			INVALID_STATE,
+-			INVALID_STATE
++			INVALID_STATE,
+ 		},
+ 		{
+ 			INVALID_STATE,
+@@ -80,7 +80,7 @@ static const struct automaton_opid automaton_opid = {
+ 			INVALID_STATE,
+ 			INVALID_STATE,
+ 			in_irq_opid,
+-			in_irq_opid
++			in_irq_opid,
+ 		},
+ 		{
+ 			INVALID_STATE,
+@@ -89,7 +89,7 @@ static const struct automaton_opid automaton_opid = {
+ 			disabled_opid,
+ 			INVALID_STATE,
+ 			irq_disabled_opid,
+-			INVALID_STATE
++			INVALID_STATE,
+ 		},
+ 		{
+ 			disabled_opid,
+@@ -98,7 +98,7 @@ static const struct automaton_opid automaton_opid = {
+ 			INVALID_STATE,
+ 			enabled_opid,
+ 			INVALID_STATE,
+-			INVALID_STATE
++			INVALID_STATE,
+ 		},
+ 	},
+ 	.initial_state = disabled_opid,
+diff --git a/kernel/trace/rv/monitors/sco/sco.h b/kernel/trace/rv/monitors/sco/sco.h
+index 06b1c420ce54..bac3beb51e72 100644
+--- a/kernel/trace/rv/monitors/sco/sco.h
++++ b/kernel/trace/rv/monitors/sco/sco.h
+@@ -8,18 +8,18 @@
+ #define MONITOR_NAME sco
  
-@@ -140,7 +140,7 @@ class Automata:
+ enum states_sco {
+-	thread_context_sco = 0,
++	thread_context_sco,
+ 	scheduling_context_sco,
+-	state_max_sco
++	state_max_sco,
+ };
  
-         return sorted(set(events))
+ #define INVALID_STATE state_max_sco
  
--    def __create_matrix(self):
-+    def __create_matrix(self) -> list[list[str]]:
-         # transform the array into a dictionary
-         events = self.events
-         states = self.states
-@@ -174,7 +174,7 @@ class Automata:
+ enum events_sco {
+-	sched_set_state_sco = 0,
++	sched_set_state_sco,
+ 	schedule_entry_sco,
+ 	schedule_exit_sco,
+-	event_max_sco
++	event_max_sco,
+ };
  
-         return matrix
+ struct automaton_sco {
+@@ -33,12 +33,12 @@ struct automaton_sco {
+ static const struct automaton_sco automaton_sco = {
+ 	.state_names = {
+ 		"thread_context",
+-		"scheduling_context"
++		"scheduling_context",
+ 	},
+ 	.event_names = {
+ 		"sched_set_state",
+ 		"schedule_entry",
+-		"schedule_exit"
++		"schedule_exit",
+ 	},
+ 	.function = {
+ 		{     thread_context_sco, scheduling_context_sco,          INVALID_STATE },
+diff --git a/kernel/trace/rv/monitors/scpd/scpd.h b/kernel/trace/rv/monitors/scpd/scpd.h
+index 4a725a68085a..d6329da2671b 100644
+--- a/kernel/trace/rv/monitors/scpd/scpd.h
++++ b/kernel/trace/rv/monitors/scpd/scpd.h
+@@ -8,19 +8,19 @@
+ #define MONITOR_NAME scpd
  
--    def __store_init_events(self):
-+    def __store_init_events(self) -> tuple[list[bool], list[bool]]:
-         events_start = [False] * len(self.events)
-         events_start_run = [False] * len(self.events)
-         for i, _ in enumerate(self.events):
-@@ -196,10 +196,10 @@ class Automata:
-                 events_start_run[i] = True
-         return events_start, events_start_run
+ enum states_scpd {
+-	cant_sched_scpd = 0,
++	cant_sched_scpd,
+ 	can_sched_scpd,
+-	state_max_scpd
++	state_max_scpd,
+ };
  
--    def is_start_event(self, event):
-+    def is_start_event(self, event: str) -> bool:
-         return self.events_start[self.events.index(event)]
+ #define INVALID_STATE state_max_scpd
  
--    def is_start_run_event(self, event):
-+    def is_start_run_event(self, event: str) -> bool:
-         # prefer handle_start_event if there
-         if any(self.events_start):
-             return False
+ enum events_scpd {
+-	preempt_disable_scpd = 0,
++	preempt_disable_scpd,
+ 	preempt_enable_scpd,
+ 	schedule_entry_scpd,
+ 	schedule_exit_scpd,
+-	event_max_scpd
++	event_max_scpd,
+ };
+ 
+ struct automaton_scpd {
+@@ -34,13 +34,13 @@ struct automaton_scpd {
+ static const struct automaton_scpd automaton_scpd = {
+ 	.state_names = {
+ 		"cant_sched",
+-		"can_sched"
++		"can_sched",
+ 	},
+ 	.event_names = {
+ 		"preempt_disable",
+ 		"preempt_enable",
+ 		"schedule_entry",
+-		"schedule_exit"
++		"schedule_exit",
+ 	},
+ 	.function = {
+ 		{     can_sched_scpd,     INVALID_STATE,     INVALID_STATE,     INVALID_STATE },
+diff --git a/kernel/trace/rv/monitors/snep/snep.h b/kernel/trace/rv/monitors/snep/snep.h
+index 753080dc5fa1..357520a5b3d1 100644
+--- a/kernel/trace/rv/monitors/snep/snep.h
++++ b/kernel/trace/rv/monitors/snep/snep.h
+@@ -8,19 +8,19 @@
+ #define MONITOR_NAME snep
+ 
+ enum states_snep {
+-	non_scheduling_context_snep = 0,
++	non_scheduling_context_snep,
+ 	scheduling_contex_snep,
+-	state_max_snep
++	state_max_snep,
+ };
+ 
+ #define INVALID_STATE state_max_snep
+ 
+ enum events_snep {
+-	preempt_disable_snep = 0,
++	preempt_disable_snep,
+ 	preempt_enable_snep,
+ 	schedule_entry_snep,
+ 	schedule_exit_snep,
+-	event_max_snep
++	event_max_snep,
+ };
+ 
+ struct automaton_snep {
+@@ -34,26 +34,26 @@ struct automaton_snep {
+ static const struct automaton_snep automaton_snep = {
+ 	.state_names = {
+ 		"non_scheduling_context",
+-		"scheduling_contex"
++		"scheduling_contex",
+ 	},
+ 	.event_names = {
+ 		"preempt_disable",
+ 		"preempt_enable",
+ 		"schedule_entry",
+-		"schedule_exit"
++		"schedule_exit",
+ 	},
+ 	.function = {
+ 		{
+ 			non_scheduling_context_snep,
+ 			non_scheduling_context_snep,
+ 			scheduling_contex_snep,
+-			INVALID_STATE
++			INVALID_STATE,
+ 		},
+ 		{
+ 			INVALID_STATE,
+ 			INVALID_STATE,
+ 			INVALID_STATE,
+-			non_scheduling_context_snep
++			non_scheduling_context_snep,
+ 		},
+ 	},
+ 	.initial_state = non_scheduling_context_snep,
+diff --git a/kernel/trace/rv/monitors/snroc/snroc.h b/kernel/trace/rv/monitors/snroc/snroc.h
+index ada5ee08bdab..88b7328ad31a 100644
+--- a/kernel/trace/rv/monitors/snroc/snroc.h
++++ b/kernel/trace/rv/monitors/snroc/snroc.h
+@@ -8,18 +8,18 @@
+ #define MONITOR_NAME snroc
+ 
+ enum states_snroc {
+-	other_context_snroc = 0,
++	other_context_snroc,
+ 	own_context_snroc,
+-	state_max_snroc
++	state_max_snroc,
+ };
+ 
+ #define INVALID_STATE state_max_snroc
+ 
+ enum events_snroc {
+-	sched_set_state_snroc = 0,
++	sched_set_state_snroc,
+ 	sched_switch_in_snroc,
+ 	sched_switch_out_snroc,
+-	event_max_snroc
++	event_max_snroc,
+ };
+ 
+ struct automaton_snroc {
+@@ -33,12 +33,12 @@ struct automaton_snroc {
+ static const struct automaton_snroc automaton_snroc = {
+ 	.state_names = {
+ 		"other_context",
+-		"own_context"
++		"own_context",
+ 	},
+ 	.event_names = {
+ 		"sched_set_state",
+ 		"sched_switch_in",
+-		"sched_switch_out"
++		"sched_switch_out",
+ 	},
+ 	.function = {
+ 		{      INVALID_STATE,  own_context_snroc,       INVALID_STATE },
+diff --git a/kernel/trace/rv/monitors/sssw/sssw.h b/kernel/trace/rv/monitors/sssw/sssw.h
+index 8409eaadc7e0..1a4b806061c3 100644
+--- a/kernel/trace/rv/monitors/sssw/sssw.h
++++ b/kernel/trace/rv/monitors/sssw/sssw.h
+@@ -8,17 +8,17 @@
+ #define MONITOR_NAME sssw
+ 
+ enum states_sssw {
+-	runnable_sssw = 0,
++	runnable_sssw,
+ 	signal_wakeup_sssw,
+ 	sleepable_sssw,
+ 	sleeping_sssw,
+-	state_max_sssw
++	state_max_sssw,
+ };
+ 
+ #define INVALID_STATE state_max_sssw
+ 
+ enum events_sssw {
+-	sched_set_state_runnable_sssw = 0,
++	sched_set_state_runnable_sssw,
+ 	sched_set_state_sleepable_sssw,
+ 	sched_switch_blocking_sssw,
+ 	sched_switch_in_sssw,
+@@ -27,7 +27,7 @@ enum events_sssw {
+ 	sched_switch_yield_sssw,
+ 	sched_wakeup_sssw,
+ 	signal_deliver_sssw,
+-	event_max_sssw
++	event_max_sssw,
+ };
+ 
+ struct automaton_sssw {
+@@ -43,7 +43,7 @@ static const struct automaton_sssw automaton_sssw = {
+ 		"runnable",
+ 		"signal_wakeup",
+ 		"sleepable",
+-		"sleeping"
++		"sleeping",
+ 	},
+ 	.event_names = {
+ 		"sched_set_state_runnable",
+@@ -54,7 +54,7 @@ static const struct automaton_sssw automaton_sssw = {
+ 		"sched_switch_suspend",
+ 		"sched_switch_yield",
+ 		"sched_wakeup",
+-		"signal_deliver"
++		"signal_deliver",
+ 	},
+ 	.function = {
+ 		{
+@@ -66,7 +66,7 @@ static const struct automaton_sssw automaton_sssw = {
+ 			INVALID_STATE,
+ 			runnable_sssw,
+ 			runnable_sssw,
+-			runnable_sssw
++			runnable_sssw,
+ 		},
+ 		{
+ 			INVALID_STATE,
+@@ -77,7 +77,7 @@ static const struct automaton_sssw automaton_sssw = {
+ 			INVALID_STATE,
+ 			signal_wakeup_sssw,
+ 			signal_wakeup_sssw,
+-			runnable_sssw
++			runnable_sssw,
+ 		},
+ 		{
+ 			runnable_sssw,
+@@ -88,7 +88,7 @@ static const struct automaton_sssw automaton_sssw = {
+ 			sleeping_sssw,
+ 			signal_wakeup_sssw,
+ 			runnable_sssw,
+-			sleepable_sssw
++			sleepable_sssw,
+ 		},
+ 		{
+ 			INVALID_STATE,
+@@ -99,7 +99,7 @@ static const struct automaton_sssw automaton_sssw = {
+ 			INVALID_STATE,
+ 			INVALID_STATE,
+ 			runnable_sssw,
+-			INVALID_STATE
++			INVALID_STATE,
+ 		},
+ 	},
+ 	.initial_state = runnable_sssw,
+diff --git a/kernel/trace/rv/monitors/sts/sts.h b/kernel/trace/rv/monitors/sts/sts.h
+index 3779d7f99404..6f7b2d9d72e6 100644
+--- a/kernel/trace/rv/monitors/sts/sts.h
++++ b/kernel/trace/rv/monitors/sts/sts.h
+@@ -8,26 +8,26 @@
+ #define MONITOR_NAME sts
+ 
+ enum states_sts {
+-	can_sched_sts = 0,
++	can_sched_sts,
+ 	cant_sched_sts,
+ 	disable_to_switch_sts,
+ 	enable_to_exit_sts,
+ 	in_irq_sts,
+ 	scheduling_sts,
+ 	switching_sts,
+-	state_max_sts
++	state_max_sts,
+ };
+ 
+ #define INVALID_STATE state_max_sts
+ 
+ enum events_sts {
+-	irq_disable_sts = 0,
++	irq_disable_sts,
+ 	irq_enable_sts,
+ 	irq_entry_sts,
+ 	sched_switch_sts,
+ 	schedule_entry_sts,
+ 	schedule_exit_sts,
+-	event_max_sts
++	event_max_sts,
+ };
+ 
+ struct automaton_sts {
+@@ -46,7 +46,7 @@ static const struct automaton_sts automaton_sts = {
+ 		"enable_to_exit",
+ 		"in_irq",
+ 		"scheduling",
+-		"switching"
++		"switching",
+ 	},
+ 	.event_names = {
+ 		"irq_disable",
+@@ -54,7 +54,7 @@ static const struct automaton_sts automaton_sts = {
+ 		"irq_entry",
+ 		"sched_switch",
+ 		"schedule_entry",
+-		"schedule_exit"
++		"schedule_exit",
+ 	},
+ 	.function = {
+ 		{
+@@ -63,7 +63,7 @@ static const struct automaton_sts automaton_sts = {
+ 			INVALID_STATE,
+ 			INVALID_STATE,
+ 			scheduling_sts,
+-			INVALID_STATE
++			INVALID_STATE,
+ 		},
+ 		{
+ 			INVALID_STATE,
+@@ -71,7 +71,7 @@ static const struct automaton_sts automaton_sts = {
+ 			cant_sched_sts,
+ 			INVALID_STATE,
+ 			INVALID_STATE,
+-			INVALID_STATE
++			INVALID_STATE,
+ 		},
+ 		{
+ 			INVALID_STATE,
+@@ -79,7 +79,7 @@ static const struct automaton_sts automaton_sts = {
+ 			in_irq_sts,
+ 			switching_sts,
+ 			INVALID_STATE,
+-			INVALID_STATE
++			INVALID_STATE,
+ 		},
+ 		{
+ 			enable_to_exit_sts,
+@@ -87,7 +87,7 @@ static const struct automaton_sts automaton_sts = {
+ 			enable_to_exit_sts,
+ 			INVALID_STATE,
+ 			INVALID_STATE,
+-			can_sched_sts
++			can_sched_sts,
+ 		},
+ 		{
+ 			INVALID_STATE,
+@@ -95,7 +95,7 @@ static const struct automaton_sts automaton_sts = {
+ 			in_irq_sts,
+ 			INVALID_STATE,
+ 			INVALID_STATE,
+-			INVALID_STATE
++			INVALID_STATE,
+ 		},
+ 		{
+ 			disable_to_switch_sts,
+@@ -103,7 +103,7 @@ static const struct automaton_sts automaton_sts = {
+ 			INVALID_STATE,
+ 			INVALID_STATE,
+ 			INVALID_STATE,
+-			INVALID_STATE
++			INVALID_STATE,
+ 		},
+ 		{
+ 			INVALID_STATE,
+@@ -111,7 +111,7 @@ static const struct automaton_sts automaton_sts = {
+ 			INVALID_STATE,
+ 			INVALID_STATE,
+ 			INVALID_STATE,
+-			INVALID_STATE
++			INVALID_STATE,
+ 		},
+ 	},
+ 	.initial_state = can_sched_sts,
+diff --git a/kernel/trace/rv/monitors/wip/wip.h b/kernel/trace/rv/monitors/wip/wip.h
+index cfdc52975354..b4c3eea94c86 100644
+--- a/kernel/trace/rv/monitors/wip/wip.h
++++ b/kernel/trace/rv/monitors/wip/wip.h
+@@ -8,18 +8,18 @@
+ #define MONITOR_NAME wip
+ 
+ enum states_wip {
+-	preemptive_wip = 0,
++	preemptive_wip,
+ 	non_preemptive_wip,
+-	state_max_wip
++	state_max_wip,
+ };
+ 
+ #define INVALID_STATE state_max_wip
+ 
+ enum events_wip {
+-	preempt_disable_wip = 0,
++	preempt_disable_wip,
+ 	preempt_enable_wip,
+ 	sched_waking_wip,
+-	event_max_wip
++	event_max_wip,
+ };
+ 
+ struct automaton_wip {
+@@ -33,12 +33,12 @@ struct automaton_wip {
+ static const struct automaton_wip automaton_wip = {
+ 	.state_names = {
+ 		"preemptive",
+-		"non_preemptive"
++		"non_preemptive",
+ 	},
+ 	.event_names = {
+ 		"preempt_disable",
+ 		"preempt_enable",
+-		"sched_waking"
++		"sched_waking",
+ 	},
+ 	.function = {
+ 		{ non_preemptive_wip,      INVALID_STATE,      INVALID_STATE },
+diff --git a/kernel/trace/rv/monitors/wwnr/wwnr.h b/kernel/trace/rv/monitors/wwnr/wwnr.h
+index 85d12e42a955..a28006512c9b 100644
+--- a/kernel/trace/rv/monitors/wwnr/wwnr.h
++++ b/kernel/trace/rv/monitors/wwnr/wwnr.h
+@@ -8,18 +8,18 @@
+ #define MONITOR_NAME wwnr
+ 
+ enum states_wwnr {
+-	not_running_wwnr = 0,
++	not_running_wwnr,
+ 	running_wwnr,
+-	state_max_wwnr
++	state_max_wwnr,
+ };
+ 
+ #define INVALID_STATE state_max_wwnr
+ 
+ enum events_wwnr {
+-	switch_in_wwnr = 0,
++	switch_in_wwnr,
+ 	switch_out_wwnr,
+ 	wakeup_wwnr,
+-	event_max_wwnr
++	event_max_wwnr,
+ };
+ 
+ struct automaton_wwnr {
+@@ -33,12 +33,12 @@ struct automaton_wwnr {
+ static const struct automaton_wwnr automaton_wwnr = {
+ 	.state_names = {
+ 		"not_running",
+-		"running"
++		"running",
+ 	},
+ 	.event_names = {
+ 		"switch_in",
+ 		"switch_out",
+-		"wakeup"
++		"wakeup",
+ 	},
+ 	.function = {
+ 		{       running_wwnr,      INVALID_STATE,   not_running_wwnr },
 diff --git a/tools/verification/rvgen/rvgen/dot2c.py b/tools/verification/rvgen/rvgen/dot2c.py
-index b9b6f14cc536..fd64174fcfad 100644
+index 24894411c3cd..06a26bf15a7e 100644
 --- a/tools/verification/rvgen/rvgen/dot2c.py
 +++ b/tools/verification/rvgen/rvgen/dot2c.py
-@@ -35,7 +35,7 @@ class Dot2c(Automata):
-         # cut off the last \n
-         return string[:-1]
+@@ -28,11 +28,11 @@ class Dot2c(Automata):
  
--    def __get_enum_states_content(self):
-+    def __get_enum_states_content(self) -> list[str]:
+     def __get_enum_states_content(self) -> list[str]:
          buff = []
-         buff.append("\t%s%s = 0," % (self.initial_state, self.enum_suffix))
+-        buff.append("\t%s%s = 0," % (self.initial_state, self.enum_suffix))
++        buff.append("\t%s%s," % (self.initial_state, self.enum_suffix))
          for state in self.states:
-@@ -49,7 +49,7 @@ class Dot2c(Automata):
-         buff = self.__get_enum_states_content()
-         return self.__buff_to_string(buff)
- 
--    def format_states_enum(self):
-+    def format_states_enum(self) -> list[str]:
-         buff = []
-         buff.append("enum %s {" % self.enum_states_def)
-         buff.append(self.get_enum_states_string())
-@@ -57,7 +57,7 @@ class Dot2c(Automata):
+             if state != self.initial_state:
+                 buff.append("\t%s%s," % (state, self.enum_suffix))
+-        buff.append("\tstate_max%s" % (self.enum_suffix))
++        buff.append("\tstate_max%s," % (self.enum_suffix))
  
          return buff
  
--    def __get_enum_events_content(self):
-+    def __get_enum_events_content(self) -> list[str]:
+@@ -46,15 +46,10 @@ class Dot2c(Automata):
+ 
+     def __get_enum_events_content(self) -> list[str]:
          buff = []
-         first = True
+-        first = True
          for event in self.events:
-@@ -75,7 +75,7 @@ class Dot2c(Automata):
-         buff = self.__get_enum_events_content()
-         return self.__buff_to_string(buff)
+-            if first:
+-                buff.append("\t%s%s = 0," % (event, self.enum_suffix))
+-                first = False
+-            else:
+-                buff.append("\t%s%s," % (event, self.enum_suffix))
++            buff.append("\t%s%s," % (event, self.enum_suffix))
  
--    def format_events_enum(self):
-+    def format_events_enum(self) -> list[str]:
-         buff = []
-         buff.append("enum %s {" % self.enum_events_def)
-         buff.append(self.get_enum_events_string())
-@@ -83,7 +83,7 @@ class Dot2c(Automata):
+-        buff.append("\tevent_max%s" % self.enum_suffix)
++        buff.append("\tevent_max%s," % self.enum_suffix)
  
          return buff
  
--    def get_minimun_type(self):
-+    def get_minimun_type(self) -> str:
-         min_type = "unsigned char"
- 
-         if self.states.__len__() > 255:
-@@ -97,7 +97,7 @@ class Dot2c(Automata):
- 
-         return min_type
- 
--    def format_automaton_definition(self):
-+    def format_automaton_definition(self) -> list[str]:
-         min_type = self.get_minimun_type()
-         buff = []
-         buff.append("struct %s {" % self.struct_automaton_def)
-@@ -109,12 +109,12 @@ class Dot2c(Automata):
-         buff.append("};\n")
-         return buff
- 
--    def format_aut_init_header(self):
-+    def format_aut_init_header(self) -> list[str]:
-         buff = []
+@@ -97,18 +92,11 @@ class Dot2c(Automata):
          buff.append("static const struct %s %s = {" % (self.struct_automaton_def, self.var_automaton_def))
          return buff
  
--    def __get_string_vector_per_line_content(self, buff):
-+    def __get_string_vector_per_line_content(self, buff: list[str]) -> str:
-         first = True
-         string = ""
-         for entry in buff:
-@@ -133,14 +133,14 @@ class Dot2c(Automata):
-     def get_aut_init_states_string(self):
-         return self.__get_string_vector_per_line_content(self.states)
+-    def __get_string_vector_per_line_content(self, buff: list[str]) -> str:
+-        first = True
+-        string = ""
+-        for entry in buff:
+-            if first:
+-                string = string + "\t\t\"" + entry
+-                first = False;
+-            else:
+-                string = string + "\",\n\t\t\"" + entry
+-        string = string + "\""
+-
+-        return string
++    def __get_string_vector_per_line_content(self, entries: list[str]) -> str:
++        buff = []
++        for entry in entries:
++            buff.append(f"\t\t\"{entry}\",")
++        return "\n".join(buff)
  
--    def format_aut_init_events_string(self):
-+    def format_aut_init_events_string(self) -> list[str]:
+     def format_aut_init_events_string(self) -> list[str]:
          buff = []
-         buff.append("\t.event_names = {")
-         buff.append(self.get_aut_init_events_string())
-         buff.append("\t},")
-         return buff
+@@ -152,7 +140,7 @@ class Dot2c(Automata):
+                 if y != nr_events-1:
+                     line += ",\n" if linetoolong else ", "
+                 else:
+-                    line += "\n\t\t}," if linetoolong else " },"
++                    line += ",\n\t\t}," if linetoolong else " },"
+             buff.append(line)
  
--    def format_aut_init_states_string(self):
-+    def format_aut_init_states_string(self) -> list[str]:
-         buff = []
-         buff.append("\t.state_names = {")
-         buff.append(self.get_aut_init_states_string())
-@@ -148,11 +148,11 @@ class Dot2c(Automata):
- 
-         return buff
- 
--    def __get_max_strlen_of_states(self):
-+    def __get_max_strlen_of_states(self) -> int:
-         max_state_name = max(self.states, key = len).__len__()
-         return max(max_state_name, self.invalid_state_str.__len__())
- 
--    def get_aut_init_function(self):
-+    def get_aut_init_function(self) -> str:
-         nr_states = self.states.__len__()
-         nr_events = self.events.__len__()
-         buff = []
-@@ -180,7 +180,7 @@ class Dot2c(Automata):
- 
-         return self.__buff_to_string(buff)
- 
--    def format_aut_init_function(self):
-+    def format_aut_init_function(self) -> list[str]:
-         buff = []
-         buff.append("\t.function = {")
-         buff.append(self.get_aut_init_function())
-@@ -188,17 +188,17 @@ class Dot2c(Automata):
- 
-         return buff
- 
--    def get_aut_init_initial_state(self):
-+    def get_aut_init_initial_state(self) -> str:
-         return self.initial_state
- 
--    def format_aut_init_initial_state(self):
-+    def format_aut_init_initial_state(self) -> list[str]:
-         buff = []
-         initial_state = self.get_aut_init_initial_state()
-         buff.append("\t.initial_state = " + initial_state + self.enum_suffix + ",")
- 
-         return buff
- 
--    def get_aut_init_final_states(self):
-+    def get_aut_init_final_states(self) -> str:
+         return '\n'.join(buff)
+@@ -179,12 +167,12 @@ class Dot2c(Automata):
          line = ""
          first = True
          for state in self.states:
-@@ -213,29 +213,29 @@ class Dot2c(Automata):
+-            if first == False:
++            if not first:
+                 line = line + ', '
+             else:
+                 first = False
+ 
+-            if self.final_states.__contains__(state):
++            if state in self.final_states:
+                 line = line + '1'
+             else:
                  line = line + '0'
-         return line
- 
--    def format_aut_init_final_states(self):
-+    def format_aut_init_final_states(self) -> list[str]:
-        buff = []
-        buff.append("\t.final_states = { %s }," % self.get_aut_init_final_states())
- 
-        return buff
- 
--    def __get_automaton_initialization_footer_string(self):
-+    def __get_automaton_initialization_footer_string(self) -> str:
-         footer = "};\n"
-         return footer
- 
--    def format_aut_init_footer(self):
-+    def format_aut_init_footer(self) -> list[str]:
-         buff = []
-         buff.append(self.__get_automaton_initialization_footer_string())
- 
-         return buff
- 
--    def format_invalid_state(self):
-+    def format_invalid_state(self) -> list[str]:
-         buff = []
-         buff.append("#define %s state_max%s\n" % (self.invalid_state_str, self.enum_suffix))
- 
-         return buff
- 
--    def format_model(self):
-+    def format_model(self) -> list[str]:
-         buff = []
-         buff += self.format_states_enum()
-         buff += self.format_invalid_state()
-diff --git a/tools/verification/rvgen/rvgen/dot2k.py b/tools/verification/rvgen/rvgen/dot2k.py
-index d618a842fc52..6128fe238430 100644
---- a/tools/verification/rvgen/rvgen/dot2k.py
-+++ b/tools/verification/rvgen/rvgen/dot2k.py
-@@ -21,10 +21,10 @@ class dot2k(Monitor, Dot2c):
-         Dot2c.__init__(self, file_path, extra_params.get("model_name"))
-         self.enum_suffix = "_%s" % self.name
- 
--    def fill_monitor_type(self):
-+    def fill_monitor_type(self) -> str:
-         return self.monitor_type.upper()
- 
--    def fill_tracepoint_handlers_skel(self):
-+    def fill_tracepoint_handlers_skel(self) -> str:
-         buff = []
-         for event in self.events:
-             buff.append("static void handle_%s(void *data, /* XXX: fill header */)" % event)
-@@ -45,19 +45,19 @@ class dot2k(Monitor, Dot2c):
-             buff.append("")
-         return '\n'.join(buff)
- 
--    def fill_tracepoint_attach_probe(self):
-+    def fill_tracepoint_attach_probe(self) -> str:
-         buff = []
-         for event in self.events:
-             buff.append("\trv_attach_trace_probe(\"%s\", /* XXX: tracepoint */, handle_%s);" % (self.name, event))
-         return '\n'.join(buff)
- 
--    def fill_tracepoint_detach_helper(self):
-+    def fill_tracepoint_detach_helper(self) -> str:
-         buff = []
-         for event in self.events:
-             buff.append("\trv_detach_trace_probe(\"%s\", /* XXX: tracepoint */, handle_%s);" % (self.name, event))
-         return '\n'.join(buff)
- 
--    def fill_model_h_header(self):
-+    def fill_model_h_header(self) -> list[str]:
-         buff = []
-         buff.append("/* SPDX-License-Identifier: GPL-2.0 */")
-         buff.append("/*")
-@@ -71,7 +71,7 @@ class dot2k(Monitor, Dot2c):
- 
-         return buff
- 
--    def fill_model_h(self):
-+    def fill_model_h(self) -> str:
-         #
-         # Adjust the definition names
-         #
-@@ -85,17 +85,17 @@ class dot2k(Monitor, Dot2c):
- 
-         return '\n'.join(buff)
- 
--    def fill_monitor_class_type(self):
-+    def fill_monitor_class_type(self) -> str:
-         if self.monitor_type == "per_task":
-             return "DA_MON_EVENTS_ID"
-         return "DA_MON_EVENTS_IMPLICIT"
- 
--    def fill_monitor_class(self):
-+    def fill_monitor_class(self) -> str:
-         if self.monitor_type == "per_task":
-             return "da_monitor_id"
-         return "da_monitor"
- 
--    def fill_tracepoint_args_skel(self, tp_type):
-+    def fill_tracepoint_args_skel(self, tp_type: str) -> str:
-         buff = []
-         tp_args_event = [
-                 ("char *", "state"),
-@@ -117,7 +117,7 @@ class dot2k(Monitor, Dot2c):
-         buff.append("	     TP_ARGS(%s)" % tp_args_c)
-         return '\n'.join(buff)
- 
--    def fill_main_c(self):
-+    def fill_main_c(self) -> str:
-         main_c = super().fill_main_c()
- 
-         min_type = self.get_minimun_type()
 -- 
 2.51.0
 
