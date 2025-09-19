@@ -1,192 +1,250 @@
-Received: from OS8PR02CU002.outbound.protection.outlook.com (mail-japanwestazon11012059.outbound.protection.outlook.com [40.107.75.59])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE8362AD16;
-	Fri, 19 Sep 2025 13:00:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.75.59
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758286840; cv=fail; b=UZeifjNWQ8cqV04zzN/0rEjCRSOf+ADjsMAWeNWx9t2EkPLXo4zwxwtoqSu/iDc+26yxeYfTQGfauslTsVgDr4NexDS6yWtWY2tlKoDFCey4XQA7b+hV/RSoh79LcKemTcizEaA+8puWlMMHVahY7LEWWzcQ8ns3dqLeqlOA8v0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758286840; c=relaxed/simple;
-	bh=nbICLxYsb07Nsg/g2T/4wwM4AZ8Jp/AxW2OPBbO1+h8=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=l5p24Jm24y2Lei6Jhz6LVPU3W/ueS3ATwR+mM4BC/SQIRn1//7rI6Kp5AOYTQMYlBlCCK6rV0Y2JUKvnlNJSEBYHkElony3zl+He8KAOi2VFb28jzYZfV4yFRPQcaTILYbGuZYrnAHQcs/16Coam/7vjvt00H/3dnyriWOqvUy4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=az82Dd22; arc=fail smtp.client-ip=40.107.75.59
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B15A530EF92
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 19 Sep 2025 14:10:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1758291009; cv=none; b=oAcwwPxFLY46Amaa7i1fAUf2PynDbT1KGxgVDBSnODohcUixddkoWdEc+IZe0PtWrZIi+ifKrf+lFg1AtL8+zB30Dzk6GUA5ssdLEYc/2/nV2dlewVR68MoygrCD64TXjIxJTMlsP9ibiCUqck8dxe+dStoS/+HI6klIid7r5Bg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1758291009; c=relaxed/simple;
+	bh=0EltuoPqNzvMo1NY5Azo+dpOx1Q0s2NSciyz5YNMU7k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UwOyu+xjGVkHmOKDv0NsIYjNLWbyBpFtZRVyf33jZe2JdbAsMJuv7FSftFBmv8E4Vkt4lgKskZZaheJiZvmzQAkTldTLB4Jc/FSGSVSBW+SEYtNHAEqnXRx/DWxZn6P33ILfEhl7uxqQyN1vwDtr/iPK4VpixXqSDK4xnWnBBBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YRp1Nwjr; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="az82Dd22"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=rrddnGM08nlwiPF3zLmqAYSi3+KmM6ES/9tQ/kg1lbHYs1N+h+DjDLjHjf7GKEtPGu6P06QqzbrBGyE1NwvqeMjTQw5z/Dmk3cvaIx91BJtNy4zgQjO9glwzQ88nXkfR5IwYzkVbuxUv0AfmTV1JIRqeIMQ0/1omfUbygLA9zCKhcsPdav3F+NvQhz5Xfpyd+PJtvIimHhgJUm702HEhI4y3VdHK5MueoV/No74K2pRTvavBufQ33ADi+rf9B4m31XvG3VROD+LMfTIRWUKjzFg4oiJPiBWNeskvcQBEoOYKCeDG95QYjwhZ7SuO7dKJMQ9RF7kCWja0b2b4YFju5A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=YcRmDNq6D0i2iIb8V9epm/MxX3Aqzx9heVLAUQJQEqc=;
- b=bjJyEE3hL71hsI1Y29YoQjiXpWvd1M4wcUSuDNtNF+2tXCB/RfXAQmHTuju7l2cTlROHla/IJI4uDJaVQejK0QZoLm5L65N7klWzVdN0pUmKbNFS7LnURhvPIu+mQSU1DWU0qGl3dD6iPGFqU5GkvHJV+fphPxJohjmf8fgQ34rJwUdQFV4zL4C5ppBzZeZwP7PA6nHqMHmzA3qKDJVwc+XaQNpEgC83UctcDuFVsGBxtyQO6EgCzIqyuOOrVYwTxsSUqnWuqZ2X7I9IeILvJck8p4lYgo2GMmMnSk1Mbvcv2MmgloNBcf7nyRv502y/M28q12sDbfQv5PssXYc4cg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
- dkim=pass header.d=vivo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YcRmDNq6D0i2iIb8V9epm/MxX3Aqzx9heVLAUQJQEqc=;
- b=az82Dd22vv+yfOlmltWk/DZ5e3dJplNqe94v3keQaCyW4MT0cBsKGG0qgPjMCyioaQjK0alcaJppyIFp7LNfv+eHn7eKdDW/C9U+BVImWvZq/Xbg1xVU/q/jtLLLROXpJQGugsk7pDST0TANt8xOyda0kDqVy/mzfSX91aYUPoG/ZZXkn/bCL9LZP24ibkquGzNBSzXw4E+kobYFAGwHeH5avHWMBkKylj0jj+gbRoXo5ymLqrcghqJn5U5M+G09D7KTNUaXpyqgYHpkgtSe9u30IVPP9C/Q6Nc0zfnUvGYZ0zDlY0/dKkl6fqvXy2njMvhLfQXmhRgBV3HG9SCXZQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=vivo.com;
-Received: from PUZPR06MB4742.apcprd06.prod.outlook.com (2603:1096:301:b5::13)
- by SE2PPF6DE20C888.apcprd06.prod.outlook.com (2603:1096:108:1::7d6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9115.19; Fri, 19 Sep
- 2025 13:00:34 +0000
-Received: from PUZPR06MB4742.apcprd06.prod.outlook.com
- ([fe80::206c:c661:9838:5571]) by PUZPR06MB4742.apcprd06.prod.outlook.com
- ([fe80::206c:c661:9838:5571%4]) with mapi id 15.20.9137.015; Fri, 19 Sep 2025
- 13:00:34 +0000
-Message-ID: <787f5dff-7ac0-4193-a5c9-5eafa9a7b4e5@vivo.com>
-Date: Fri, 19 Sep 2025 21:00:27 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH bpf-next v1 0/3] bpf: Add BPF program type for
- overriding tracepoint probes
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Jiri Olsa <olsajiri@gmail.com>, Song Liu <song@kernel.org>,
- ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
- martin.lau@linux.dev, yonghong.song@linux.dev, haoluo@google.com,
- eddyz87@gmail.com, kpsingh@kernel.org, sdf@fomichev.me, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, shuah@kernel.org, willemb@google.com,
- kerneljasonxing@gmail.com, paul.chaignon@gmail.com, chen.dylane@linux.dev,
- memxor@gmail.com, martin.kelly@crowdstrike.com, ameryhung@gmail.com,
- linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
- yikai.lin@vivo.com
-References: <20250917072242.674528-1-zhaofuyu@vivo.com>
- <CAPhsuW47BVGsszGU=27gKa1XOYLH+de1FgrHPVL4mftB2CvX9g@mail.gmail.com>
- <b23ef4e0-afa1-4d94-b4aa-28c02c3499c6@vivo.com> <aMvHE-iW5eAwf4km@krava>
- <9cb5b3d5-97bb-4165-9a84-394d3d45a20e@vivo.com>
- <20250918113234.3f9e556a@gandalf.local.home>
-From: Fuyu Zhao <zhaofuyu@vivo.com>
-In-Reply-To: <20250918113234.3f9e556a@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SI1PR02CA0014.apcprd02.prod.outlook.com
- (2603:1096:4:1f7::9) To PUZPR06MB4742.apcprd06.prod.outlook.com
- (2603:1096:301:b5::13)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YRp1Nwjr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1758291006;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=OaWr6E25CJRA33FRKDAgh6OBxD6XCC6gfVIgKz+gTQc=;
+	b=YRp1Nwjr3pq76fflmSnHZH0L/0Z25BYq2WBHK9tJF9AA9xFfIcvtfEjYfg2wM52eMy0zef
+	3iX1WV2fdbZQl2u1BXb7znSrWO0uHrQSbTl0cXiwRxvbDxDmaolnx2ESpXsByMOQU/836u
+	LPuHRZB0aSYK6CsfgO/AX+LH5xOSeDc=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-467-A1E3TNs9Nee7NpgTS98NNg-1; Fri,
+ 19 Sep 2025 10:10:03 -0400
+X-MC-Unique: A1E3TNs9Nee7NpgTS98NNg-1
+X-Mimecast-MFC-AGG-ID: A1E3TNs9Nee7NpgTS98NNg_1758291002
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4EF1F19560AE;
+	Fri, 19 Sep 2025 14:10:02 +0000 (UTC)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb (unknown [10.45.224.13])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 16C5C19560BB;
+	Fri, 19 Sep 2025 14:09:57 +0000 (UTC)
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: linux-kernel@vger.kernel.org,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Nam Cao <namcao@linutronix.de>
+Cc: Gabriele Monaco <gmonaco@redhat.com>,
+	Tomas Glozar <tglozar@redhat.com>,
+	Juri Lelli <jlelli@redhat.com>,
+	Clark Williams <williams@redhat.com>,
+	John Kacur <jkacur@redhat.com>,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH v2 00/20] rv: Add Hybrid Automata monitor type, per-object and deadline monitors
+Date: Fri, 19 Sep 2025 16:09:34 +0200
+Message-ID: <20250919140954.104920-1-gmonaco@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PUZPR06MB4742:EE_|SE2PPF6DE20C888:EE_
-X-MS-Office365-Filtering-Correlation-Id: d0e93ec4-4418-43c0-3baf-08ddf77c8509
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?d29NbjRoUHBVTWlYQ29CdVBUSy94c3BtU0JON1VPVG82ZUdzckRndkpnMlUz?=
- =?utf-8?B?cnM5Q3J4UitjWWdyZDJzeDJFWmsxZ2hIVFh3dTZZcGpWaVNsb21oTFdrTHZR?=
- =?utf-8?B?SDZlYzlZM1JVME10RFg3Wjc5YjZ4N3gvd0ozTTk2UUNxTm1oZDl3cE9WenpG?=
- =?utf-8?B?cTcrdWJGY0V2dXR3alM4NndwV2tVb090ZWdvOTJ1bFlvTkZTYWxiUk1Dc2hP?=
- =?utf-8?B?M3pXWFZrVzBqc0dPMHRkbXRuREZSY3JRZ1l5bTQyQ1dXTVJCVEdKVHd0cDFO?=
- =?utf-8?B?UENsOXdvYXg0Sm50aWJad3hva1dUc01uM2N6T1VrQkl5NWFFUHc3R3JHbFBt?=
- =?utf-8?B?VHM5a2twUU0xc2taUWFydnE4THk4RGo0U2xieTZZcmJNWjAwVjlPQVAyL2hT?=
- =?utf-8?B?U0NReVVpbzVXR2svdFRHVlNJbGNKN21KRjVlemRpSFdteDBYS2NYUGlFWThJ?=
- =?utf-8?B?QlArTVFKU1JRTFdvYU5tK1hYb1BSb1BJSUZaZnhrTnV0cWVjaVE0UHMyRHlm?=
- =?utf-8?B?cFpVaUlSMlh6ck1iaTBhMUpsWUdDdGFobnRhenNSZmZhWnY4Ly81OFVFemxC?=
- =?utf-8?B?UXl5enNzNDNqWTBHN3FsU3RkejhkMTNxUFhVWXRWRk4raENJY2s1ZE9HWmZo?=
- =?utf-8?B?akRRbi9pbUZYMXM0SGltOXRJU05rcnBtOGpod29PWGFUOHJZMVNmS0hrT3U2?=
- =?utf-8?B?V2VWMWpPVWRwOGZ1WjlBNE5LK3VtS2oybG92Q0tDaVMzSVYzeXZ0cXlXYTZ0?=
- =?utf-8?B?UlRtbmp4YUFBSmhBeHRSd3owanZ2Yk9sczBVNHBOcXZWOGlOaVg2RHN3ZVoz?=
- =?utf-8?B?dW1CUFRUakNMMGVKckpQTTZ1Y3NndnR1WGpGKzVaVytZOFFXclZoZi9HYzcw?=
- =?utf-8?B?MVdkcXJCMVZDTEIrY3ZxWmJkb0VMSi9uSVZ3aTJPbU9La1QrWmtZWjA0dERv?=
- =?utf-8?B?bnBjVG1ZZDNpVmtuTU1UVUNoakNoczJYalJMRTFPNjZIS2x5eW5xaENXazlo?=
- =?utf-8?B?TEM2NWJ0aWJ0dEJBbHY4VTZJZjdhVTRDbVpqVTRQL1BESGdHTTZaSTZmU1k5?=
- =?utf-8?B?V2hSYXhoUlZMMVdrZEJ4Z1FrQk45dk5aeVNrVG9ZazYvcjd6eGJGMHhrY2J4?=
- =?utf-8?B?UmhZUjRya2t2M0tCUEhIWlJNVTZzb3JGY3Y1Z2VicmlYeklFekJ0UUxtaHFz?=
- =?utf-8?B?MWYrVnFqM1VnYU5PRnA4dWt3N2RWYkV3d1Z0M2p6aXRlaWlvWTdmeFZaZ1lu?=
- =?utf-8?B?aXdiZmJBL2hDVjllQWxWNXIwMmJMdXFLTGlCbFJGSjkrY0M0ejFvN1o4UHVX?=
- =?utf-8?B?ZHhnT0RkOHpLMlBnS2xpL2xCQWgvTXJ2emZIbGhhZTVrZkhxSzFTeEhqcUJr?=
- =?utf-8?B?WVp2dkVhQ1QzajN1RTlweEtxbk1Vemh5YlF0TWZhK1ZTRk16T1NDZm9YcGxL?=
- =?utf-8?B?L0pubHpSUEJnZWg0WEhKOVpNbk81cjFoNWt6UWpYUFVKOWxobDdZZHdpSkhY?=
- =?utf-8?B?TmFtTVRUNFlVV0wvMGtDR2lEOGM5YW5SNnU3MURya3VCQ29QQlpFSkorbFFj?=
- =?utf-8?B?eW94M2lpREhrTFhGVEQrUkw5czZweHhEdzFsMWI4azEvdnhtcmE0a1Y1VmJX?=
- =?utf-8?B?ejhMaTAyTWhXSmJwYUlqTkVLZWU3WlNnWG40ckJSdmkzb0xpVFNPQVhjVitz?=
- =?utf-8?B?cVZYbytZc0hoN1JwZWI0MlFuei9vdG9JWGVWbVZZNEViQ09KNUpYVmhiVjNq?=
- =?utf-8?B?NFR5aUMrZFFTSUhmV1hPRllQbm5JMmZSMWRyYTM2dm0zMERuL1A2amZNdnY2?=
- =?utf-8?B?YlR2U3pEemhzNEU5Sk5GeUhsMFVPb2hNUGlPVUQ4cjZrRTZabTh2SisxbGFG?=
- =?utf-8?B?Mm1KbE5uQzUzUVlRWGRYbzhIczhkUmdkSnlrNzkrZUoyck9RTzA0a1FHRTR4?=
- =?utf-8?Q?BzyQ6ZYTXmw=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PUZPR06MB4742.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?dFd1OTNxRHJ1YmhDOXhxZU1kU3RKc3JXK09TR2RBbTJ5ODVlUjFidE8zNjcr?=
- =?utf-8?B?S280dDJpWHZYTy9IV2c4Y2R4WkpIcit5M0t2M3JzN3VmL1BEUEpSVWpPR3du?=
- =?utf-8?B?bU1yZVcyQkpQd0JnTGIzY1oxUE0zMFlGRVErUWl4ZDBnaFQxa0ZVSytFdWd6?=
- =?utf-8?B?UXFBRU9UU0NoellLdHlOQmFnWGZRTUxIMnJqL0U4Q2Q1ZWxBVDl6cGhleW9u?=
- =?utf-8?B?UStwcjNXWGhkV0ZtV0RON051YXFHY3hEejBaS2p6bkY1cW1lMXo2aW9WQ1U0?=
- =?utf-8?B?WlgzcWRyRmtXT3o5Z0pya1NPb2pWbnZpUjJzbkVWS1krWm8xN3RURWFWanVF?=
- =?utf-8?B?a0t5dXV2YVNlSnN3STNsN0ZkNG1aTU1pUndFM0VGRXZxeVE1eWRBUmMrN2tu?=
- =?utf-8?B?OWxZTlVkSG9uVVpIUEx5VU9IZGdtQ1hjUWJ3QmhBODdmMWYvOFZiUmR0U1p1?=
- =?utf-8?B?QlpGQUE1SmhGNnpSTUcxeU1RQ080RlByS3FBZ2ppYVhONzg2UjFMNkNpcXE5?=
- =?utf-8?B?TlFtSjh3MkFnM1FvRHQ3cmF3RllkcnR6Y1pNa0lxdjVRbkZ1NmlHQ2l3ZmRn?=
- =?utf-8?B?anVSMEVqUUd1elBCWFYwbTgwanlIUnhkcHNRcjNMU2RwNXdVQWRXaGJlM1Q4?=
- =?utf-8?B?SzZOMkt4RmFsaHNqcGxQakdpREVyQTBSUENBM0VGN2kwc3A5dUx2YldNbjRm?=
- =?utf-8?B?bitrZlhmQkRBZUdkTW8vbHRuVHY3Q3g0cENaZWtoYjVteDUxUWUxY3RmeTA4?=
- =?utf-8?B?czRzcmN0OTIwaGxpUlNyTHJMeXpZWk04MUl2VWxWY1dGNHdEZEl0TmQ4SmV6?=
- =?utf-8?B?Q3BWaFpaMDN5NmxXK2lMTTIrS3ZBbGM1eVhmMlBvcnJVL09CdmQ3OExrWFVq?=
- =?utf-8?B?eG1SSkJVam1XRG1abTNDcVFIdHZ3L3pmenhyY1VtNHJYVHFpejYrSmpzRVZV?=
- =?utf-8?B?aWwvRWF4VVhPWUlmWDFnOXcrQ2R2YktvSG9oTmM4bUoxS1FqQ3J0cWZncHY5?=
- =?utf-8?B?K3hjMXMrQ1N4MW8rbVVrWFg2Zmp6YzYyL0U0bFVrTFYxdTlmN1p4TXRWSi9Q?=
- =?utf-8?B?T2QxS09Oc3VEdlBMN3QwVWkydTFRYnRUYUt1UXpHaExYUGFQV21lNlg2UVpK?=
- =?utf-8?B?MkxoL05YSm1PcFJIWG1DZmhGL3RSVjk5V29BSC9URjR5RXFtRGN4ZW40VGpl?=
- =?utf-8?B?ZjF4Y1A2b1NrZkoxN3VDTjc5SUxJa0E0SHVXK3hIejIxcG50azF5RUdVV1ZR?=
- =?utf-8?B?YjdkaGlNcnVWYVlDUnRTTUtQWDNpZ2FGc2VHWW1JN2EwZk9NN3VOUm9Xb0xp?=
- =?utf-8?B?UEltWEcwTitJZkwzMkQrNjN4S1NBclFqSHpheVNPMisxTmc4cTlRVW8rRE83?=
- =?utf-8?B?aVBnaElyR21tN0x1Z01JKzlod3ZZYWh5cFdpT2M4ODRwNjlPQzJJUnRoMll3?=
- =?utf-8?B?WGpubkFDenJaR244YnVFZFZFZE5xT3Nha2Yra3Q3UWxYRzV3U0hlUWpNckgz?=
- =?utf-8?B?aHNseElGSVZpdnZwWHhJZjZmSGY1TnR1VEp0azVlNEZXY1psTVRkdHk5aXFD?=
- =?utf-8?B?RGt0NFFKekhSbUcvRWNQNlRMN245TlJBTWNRbUhmVDdkTE9tb09zWDhVUWhN?=
- =?utf-8?B?cmQxL2FtZmZsc0dNN2NMNGVUWDJpeWRwN0xERUErVDFHYUJZWkZLVzNIRSto?=
- =?utf-8?B?WU5XcDlYNkRWNlNuYTZlUFlPUmQ1K2tZZ3FmMFJxTTdhOVp6ZTM0dUNLM0dx?=
- =?utf-8?B?cFZzNm1TU0JUVHlDMU14RE80NXZ0WERxVys3QThlSnBoQkgvQk44Zk5YTWxs?=
- =?utf-8?B?WVVKWmNYcDZJYk5PMGxkTHUxcTJJOEhQdkFhVGdKOUxreHZPQUNxd1pNeElL?=
- =?utf-8?B?UUJOQUl1RjQ5Nm5qdVhVOE1waUs4QmN5VVpzMnhQNVNlVjI0MHA0aDIvWG9X?=
- =?utf-8?B?MzcyUFNCNVBiQkpOYktmc0hLcFVGVDZFV3BmT3pKM2MzNmFHNjRadjMvWTB2?=
- =?utf-8?B?cjZESmc4S2hldWZ2NzFsUDNOMVFzc1Z5UGJMUHFrU1F0ZE5aRXlnRFhHZEpB?=
- =?utf-8?B?QTZQeXF5RkJOZFhzTmcycTVpNnAvNndjeEY4TEg4VDFkOGRuMEkwTHVENnk4?=
- =?utf-8?Q?nQ5ryE9ia+WDT4zl9m97SSIkg?=
-X-OriginatorOrg: vivo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d0e93ec4-4418-43c0-3baf-08ddf77c8509
-X-MS-Exchange-CrossTenant-AuthSource: PUZPR06MB4742.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Sep 2025 13:00:33.8535
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: wVasHYJWu95iaWaPNN1jqfhjsCmN9BMYuDgrWF+NVr7XKxSTLPb1TgqsrhLNpHp6E2SwQJZBk+OqoGnJsWBkaA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SE2PPF6DE20C888
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+
+This RFC contains several related changes, I'm sending them together to
+give the full picture and get early feedback but I'm probably going to
+submit some of them separately.
+The main areas are:
+
+* DA monitor cleanup to remove macros
+
+* Hybrid automata
+
+    Hybrid automata are an extension of deterministic automata where each
+    state transition is validating a constraint on a finite number of
+    environment variables.
+
+    Hybrid automata can be used to implement timed automata, where the
+    environment variables are clocks.
+
+* per-object monitors
+
+    Define the generic per-object monitor allow RV monitors on any kind
+    of object where the user can specify how to get an id (e.g. pid for
+    tasks) and the data type for the monitor_target (e.g. struct
+    task_struct * for tasks).
+
+    The monitor storage (e.g. the rv monitor, pointer to the target, etc.)
+    is stored in a hash table indexed by id.
+
+* deadline monitors collection
+
+    Add the throttle and nomiss monitors to validate timing aspects of
+    the deadline scheduler, as they work for tasks and servers, their
+    inclusion requires also per-object monitors (for dl entities).
+
+Note: this series is NOT based on the changes in [1], the next version
+will integrate that and likely adapt models.
+
+Changes since V1 [2]:
+* Cleanup unused trace events definitions
+* Improve hybrid automata description about use of timers
+* Unify event handler internals across DA monitor types
+* Implement timer wheel alternative for invariants
+* Extend models to consider timing of task switches (in before deadline,
+  out after throttle)
+* Refactor tracepoints and per-object monitors to allow server events
+  from remote CPUs
+* Changed clock representation in case of invariants (time to expire vs
+  time since reset) and allow conversion without reset
+* Extend dot2k to understand the graph relations and suggest where
+  invariant conversions are needed
+* General cleanup of rvgen scripts
+
+[1] - https://lore.kernel.org/lkml/175817861437.709179.10913499403372809816.tip-bot2@tip-bot2
+[2] - https://lore.kernel.org/lkml/20250814150809.140739-1-gmonaco@redhat.com
+
+To: Steven Rostedt <rostedt@goodmis.org>
+To: Nam Cao <namcao@linutronix.de>
+Cc: Tomas Glozar <tglozar@redhat.com>
+Cc: Juri Lelli <jlelli@redhat.com>
+Cc: Clark Williams <williams@redhat.com>
+Cc: John Kacur <jkacur@redhat.com>
+Cc: linux-trace-kernel@vger.kernel.org
+
+Gabriele Monaco (20):
+  rv: Refactor da_monitor to minimise macros
+  rv: Cleanup da_monitor after refactor
+  rv: Unify DA event handling functions across monitor types
+  Documentation/rv: Adapt documentation after da_monitor refactoring
+  verification/rvgen: Adapt dot2k and templates after refactoring
+    da_monitor.h
+  verification/rvgen: Annotate DA functions with types
+  verification/dot2c: Remove __buff_to_string() and cleanup
+  verification/dot2c: Remove superfluous enum assignment and add last
+    comma
+  verification/rvgen: Remove unused variable declaration from containers
+  rv: Add Hybrid Automata monitor type
+  verification/rvgen: Allow spaces in and events strings
+  verification/rvgen: Add support for Hybrid Automata
+  Documentation/rv: Add documentation about hybrid automata
+  rv: Add sample hybrid monitors stall
+  rv: Convert the opid monitor to a hybrid automaton
+  sched: Export hidden tracepoints to modules
+  sched: Add deadline tracepoints
+  rv: Add support for per-object monitors in DA/HA
+  verification/rvgen: Add support for per-obj monitors
+  rv: Add deadline monitors
+
+ Documentation/tools/rv/index.rst              |    1 +
+ Documentation/tools/rv/rv-mon-stall.rst       |   44 +
+ .../trace/rv/deterministic_automata.rst       |    2 +-
+ Documentation/trace/rv/hybrid_automata.rst    |  340 +++++
+ Documentation/trace/rv/index.rst              |    3 +
+ Documentation/trace/rv/monitor_deadline.rst   |  151 ++
+ Documentation/trace/rv/monitor_sched.rst      |   62 +-
+ Documentation/trace/rv/monitor_stall.rst      |   43 +
+ Documentation/trace/rv/monitor_synthesis.rst  |  151 +-
+ include/linux/rv.h                            |   43 +
+ include/rv/automata.h                         |  132 +-
+ include/rv/da_monitor.h                       | 1289 ++++++++++-------
+ include/rv/ha_monitor.h                       |  472 ++++++
+ include/trace/events/sched.h                  |   16 +
+ kernel/sched/core.c                           |    7 +
+ kernel/sched/deadline.c                       |    9 +
+ kernel/trace/rv/Kconfig                       |   19 +
+ kernel/trace/rv/Makefile                      |    4 +
+ kernel/trace/rv/monitors/deadline/Kconfig     |   10 +
+ kernel/trace/rv/monitors/deadline/deadline.c  |   35 +
+ kernel/trace/rv/monitors/deadline/deadline.h  |  200 +++
+ kernel/trace/rv/monitors/nomiss/Kconfig       |   15 +
+ kernel/trace/rv/monitors/nomiss/nomiss.c      |  283 ++++
+ kernel/trace/rv/monitors/nomiss/nomiss.h      |  130 ++
+ .../trace/rv/monitors/nomiss/nomiss_trace.h   |   19 +
+ kernel/trace/rv/monitors/nrp/nrp.c            |   30 +-
+ kernel/trace/rv/monitors/nrp/nrp.h            |   22 +-
+ kernel/trace/rv/monitors/opid/Kconfig         |   11 +-
+ kernel/trace/rv/monitors/opid/opid.c          |  129 +-
+ kernel/trace/rv/monitors/opid/opid.h          |   94 +-
+ kernel/trace/rv/monitors/opid/opid_trace.h    |    4 +
+ kernel/trace/rv/monitors/rtapp/rtapp.c        |    2 -
+ kernel/trace/rv/monitors/sched/sched.c        |    2 -
+ kernel/trace/rv/monitors/sco/sco.c            |   26 +-
+ kernel/trace/rv/monitors/sco/sco.h            |   14 +-
+ kernel/trace/rv/monitors/scpd/scpd.c          |   28 +-
+ kernel/trace/rv/monitors/scpd/scpd.h          |   14 +-
+ kernel/trace/rv/monitors/snep/snep.c          |   28 +-
+ kernel/trace/rv/monitors/snep/snep.h          |   18 +-
+ kernel/trace/rv/monitors/snroc/snroc.c        |   26 +-
+ kernel/trace/rv/monitors/snroc/snroc.h        |   14 +-
+ kernel/trace/rv/monitors/sssw/sssw.c          |   38 +-
+ kernel/trace/rv/monitors/sssw/sssw.h          |   22 +-
+ kernel/trace/rv/monitors/stall/Kconfig        |   13 +
+ kernel/trace/rv/monitors/stall/stall.c        |  146 ++
+ kernel/trace/rv/monitors/stall/stall.h        |   64 +
+ kernel/trace/rv/monitors/stall/stall_trace.h  |   19 +
+ kernel/trace/rv/monitors/sts/sts.c            |   34 +-
+ kernel/trace/rv/monitors/sts/sts.h            |   28 +-
+ kernel/trace/rv/monitors/throttle/Kconfig     |   15 +
+ kernel/trace/rv/monitors/throttle/throttle.c  |  253 ++++
+ kernel/trace/rv/monitors/throttle/throttle.h  |  118 ++
+ .../rv/monitors/throttle/throttle_trace.h     |   19 +
+ kernel/trace/rv/monitors/wip/wip.c            |   26 +-
+ kernel/trace/rv/monitors/wip/wip.h            |   14 +-
+ kernel/trace/rv/monitors/wwnr/wwnr.c          |   28 +-
+ kernel/trace/rv/monitors/wwnr/wwnr.h          |   14 +-
+ kernel/trace/rv/rv_trace.h                    |   68 +-
+ tools/verification/models/deadline/nomiss.dot |   39 +
+ .../verification/models/deadline/throttle.dot |   44 +
+ tools/verification/models/sched/opid.dot      |   36 +-
+ tools/verification/models/stall.dot           |   20 +
+ tools/verification/rvgen/__main__.py          |    8 +-
+ tools/verification/rvgen/rvgen/automata.py    |  166 ++-
+ tools/verification/rvgen/rvgen/dot2c.py       |  160 +-
+ tools/verification/rvgen/rvgen/dot2k.py       |  506 ++++++-
+ tools/verification/rvgen/rvgen/generator.py   |    4 +-
+ .../rvgen/rvgen/templates/container/main.c    |    2 -
+ .../rvgen/rvgen/templates/dot2k/main.c        |   25 +-
+ .../rvgen/templates/dot2k/trace_hybrid.h      |   16 +
+ 70 files changed, 4717 insertions(+), 1170 deletions(-)
+ create mode 100644 Documentation/tools/rv/rv-mon-stall.rst
+ create mode 100644 Documentation/trace/rv/hybrid_automata.rst
+ create mode 100644 Documentation/trace/rv/monitor_deadline.rst
+ create mode 100644 Documentation/trace/rv/monitor_stall.rst
+ create mode 100644 include/rv/ha_monitor.h
+ create mode 100644 kernel/trace/rv/monitors/deadline/Kconfig
+ create mode 100644 kernel/trace/rv/monitors/deadline/deadline.c
+ create mode 100644 kernel/trace/rv/monitors/deadline/deadline.h
+ create mode 100644 kernel/trace/rv/monitors/nomiss/Kconfig
+ create mode 100644 kernel/trace/rv/monitors/nomiss/nomiss.c
+ create mode 100644 kernel/trace/rv/monitors/nomiss/nomiss.h
+ create mode 100644 kernel/trace/rv/monitors/nomiss/nomiss_trace.h
+ create mode 100644 kernel/trace/rv/monitors/stall/Kconfig
+ create mode 100644 kernel/trace/rv/monitors/stall/stall.c
+ create mode 100644 kernel/trace/rv/monitors/stall/stall.h
+ create mode 100644 kernel/trace/rv/monitors/stall/stall_trace.h
+ create mode 100644 kernel/trace/rv/monitors/throttle/Kconfig
+ create mode 100644 kernel/trace/rv/monitors/throttle/throttle.c
+ create mode 100644 kernel/trace/rv/monitors/throttle/throttle.h
+ create mode 100644 kernel/trace/rv/monitors/throttle/throttle_trace.h
+ create mode 100644 tools/verification/models/deadline/nomiss.dot
+ create mode 100644 tools/verification/models/deadline/throttle.dot
+ create mode 100644 tools/verification/models/stall.dot
+ create mode 100644 tools/verification/rvgen/rvgen/templates/dot2k/trace_hybrid.h
 
 
-
-On 9/18/2025 11:32 PM, Steven Rostedt wrote:
-> On Thu, 18 Sep 2025 21:15:57 +0800
-> Fuyu Zhao <zhaofuyu@vivo.com> wrote:
-> 
->> As for the reason not to unregister and register a new callback:
->> callbacks registered directly inside the kernel cannot be unregistered from
->> user space. From user space, we can only attach additional callbacks
->> with BPF programs, but can not remove or replace the ones already
->> registered in the kernel. Therefore, an override mechanism is needed.
-> 
-> The fact that user space cannot unregister or override the current
-> callbacks, to me is a feature and not a bug.
-> 
-> -- Steve
-
-I see, thank you for sharing your view — I’ll keep it in mind.
-
-Sincerely,
-Fuyu
-
+base-commit: 8b789f2b7602a818e7c7488c74414fae21392b63
+-- 
+2.51.0
 
