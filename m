@@ -1,53 +1,53 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A321321430;
-	Fri, 19 Sep 2025 17:10:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 537673218C9;
+	Fri, 19 Sep 2025 17:10:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758301806; cv=none; b=uyxMDEKY96GBS1TUBCqbohBOAoHodr1H31ZQOyS4jXtPjoipsU8RhClkUt2O7m0TIvEaj9IQQmxTmKXet3jRY3sEoM+wkiyaIY50jTaT2fuGJoQTrZOC9A7yp7OIFvF4z/Gj9SUwzbLJPzqxtK//bbzrOavHp3sl2Wewp+82eMY=
+	t=1758301807; cv=none; b=UiQrDaRxCrF5QIu1ogWBgy0f8xm08VaNrbVvUPxZl+Po9zspZJ9GhN2En+7GpnkHQP5VwBWGIrxDob/htDck1zEes7TOPtuiWKX8Uxaf6xsO+lQkF9G7pib0BHmAsZX5JfFeEs/2eDz9nilDcuIE2UcElrVISrrLA7zRjUAKKxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758301806; c=relaxed/simple;
-	bh=RIVTddaDHTeQgAHMyaATs+1LIv9y4+UzM0k7v4cBwEo=;
+	s=arc-20240116; t=1758301807; c=relaxed/simple;
+	bh=3nVGTP0/fZdnddm/qDL66fSIowau9y5iui5bnICxuoE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lL6UwwiMYvf8WCiAao6uDB5yN5b4MskqeKFaGOsx32Xm+uYYQqvHUsJe8hS9yCP1mz7exWHfC2HA99bJfPhQxF8X22+pPvY/UxJS/PMIGYOLIGmQzspv2zK0BBClHk06zrC4izPWZiJ2Dm+8yTdMwBDmYXYspTcPZFHTXquX7HU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=INK6DqN8; arc=none smtp.client-ip=198.175.65.17
+	 Content-Type:Content-Disposition:In-Reply-To; b=sqrxwUhBo4rsRMwqFMdZ/ArJ/5G+vApyrZaFstAAX8qBPe86nltGwsJZIvuQz0diEF6uTyZQxMrpa9bI01Wd60MfM3aaEvq+Z5BAM3djeTXcWhZpp4/XpDM5b0CEsSJKh8b1cR/fIG8eSDd4qLQUkFb+pDeAo0F1FNbAHEGha6w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TDsljbmc; arc=none smtp.client-ip=198.175.65.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="INK6DqN8"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TDsljbmc"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1758301804; x=1789837804;
+  t=1758301806; x=1789837806;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=RIVTddaDHTeQgAHMyaATs+1LIv9y4+UzM0k7v4cBwEo=;
-  b=INK6DqN8jYEPRE5FWuCLw3D8sJUBz+XEIJcgy18ZrAAhHtJsfPOUo6J0
-   B5p624ijwtGtrb3jORgCUDAGSVlSEE8RjaW0dd01seif07BOyY2GIOlr+
-   ThAlTsH1E/qVzwc9OMPjflT6Op+jGhQyb563ULHyiy2LBFYWGxgQ3o5Bk
-   eJbKwGqEnoi+etSAJJ23e+C6ZjwzmrkfW5bpnvJCy5C3jEBT+T7ao3SFz
-   7Gvn/FNEHYXzbJcHKu5+0RX2x/2HrhimfrGBqq/boEb1UyRstOmzw61RF
-   hAxmEtgi4QJfSPdcu0iT3y4Fiot3WDY8GPXHBkz+laCAWgOoTpuG3bUup
-   A==;
-X-CSE-ConnectionGUID: kuTG3r9JQiSV1CQgIo1LDw==
-X-CSE-MsgGUID: QIk9LML0TV+E8UU2YHEJLg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="60598198"
+  bh=3nVGTP0/fZdnddm/qDL66fSIowau9y5iui5bnICxuoE=;
+  b=TDsljbmcwbn0FqxOIGEC6EGXcF0udel2kD0tMCHBlfUt6cz/7f2Agrq2
+   qau5tUpQjRqag0yAB2x1l51ajB26x1vkxt2pKPrQsBaWnNYIWz5yhn4NI
+   zo8JhRZpZuPQSJMQGPmfT3RWrmV6qpIBKdm4CZlOF4f5jDAXOgzUF9utE
+   V/Gm9O927E6mL9GOaA2jgzxJHC0I1FYy0YjEJoo0e3GI3aIesBCeuiJSe
+   aJZQBqUCqD6x6aXKpJzr+2zE1bk6Kil3mZ0Q5KwJgAVNiAFYIEl5Id2sm
+   v4VKqPO8OI09MWqzUGV5/X06r7heMVfmlAIlhqY+WDOwbgDj9H2z5jtZj
+   w==;
+X-CSE-ConnectionGUID: ZCIprGYNQLKFi2IRHxkdOw==
+X-CSE-MsgGUID: qo8t+cYCQ/28DCyIO/fISw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="60598207"
 X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
-   d="scan'208";a="60598198"
+   d="scan'208";a="60598207"
 Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2025 10:10:03 -0700
-X-CSE-ConnectionGUID: 0XTU64C0ScaiG/e30x56hA==
-X-CSE-MsgGUID: AgjWt8pETEGyzUvWx1nL2g==
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2025 10:10:04 -0700
+X-CSE-ConnectionGUID: +iRlAc/qRFmsQ8D/KqdCjQ==
+X-CSE-MsgGUID: 6+mE80nkQuOnZezyjd7KmA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.18,278,1751266800"; 
-   d="scan'208";a="175805685"
+   d="scan'208";a="175805686"
 Received: from lkp-server01.sh.intel.com (HELO 84a20bd60769) ([10.239.97.150])
   by fmviesa006.fm.intel.com with ESMTP; 19 Sep 2025 10:10:01 -0700
 Received: from kbuild by 84a20bd60769 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1uzecR-0004ZZ-1H;
+	id 1uzecR-0004ZX-1E;
 	Fri, 19 Sep 2025 17:09:59 +0000
-Date: Sat, 20 Sep 2025 01:09:52 +0800
+Date: Sat, 20 Sep 2025 01:09:42 +0800
 From: kernel test robot <lkp@intel.com>
 To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
 	Steven Rostedt <rostedt@goodmis.org>
@@ -57,7 +57,7 @@ Cc: oe-kbuild-all@lists.linux.dev, Masami Hiramatsu <mhiramat@kernel.org>,
 	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
 Subject: Re: [PATCH] tracing: Add an option to show symbols in _text+offset
  for function profiler
-Message-ID: <202509200000.EJ4InVti-lkp@intel.com>
+Message-ID: <202509200025.UH0WU2Qw-lkp@intel.com>
 References: <175826135058.101165.7219957344129610147.stgit@devnote2>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -83,77 +83,50 @@ url:    https://github.com/intel-lab-lkp/linux/commits/Masami-Hiramatsu-Google/t
 base:   https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace for-next
 patch link:    https://lore.kernel.org/r/175826135058.101165.7219957344129610147.stgit%40devnote2
 patch subject: [PATCH] tracing: Add an option to show symbols in _text+offset for function profiler
-config: x86_64-buildonly-randconfig-002-20250919 (https://download.01.org/0day-ci/archive/20250920/202509200000.EJ4InVti-lkp@intel.com/config)
-compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250920/202509200000.EJ4InVti-lkp@intel.com/reproduce)
+config: arc-randconfig-001-20250919 (https://download.01.org/0day-ci/archive/20250920/202509200025.UH0WU2Qw-lkp@intel.com/config)
+compiler: arc-linux-gcc (GCC) 15.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250920/202509200025.UH0WU2Qw-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202509200000.EJ4InVti-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202509200025.UH0WU2Qw-lkp@intel.com/
 
-All error/warnings (new ones prefixed by >>):
+All errors (new ones prefixed by >>):
 
-   In file included from kernel/trace/trace_sched_switch.c:15:
->> kernel/trace/trace.h:1422:37: warning: left shift count >= width of type [-Wshift-count-overflow]
-    1422 | #define C(a, b) TRACE_ITER_##a = (1 << TRACE_ITER_##a##_BIT)
-         |                                     ^~
-   kernel/trace/trace.h:1358:17: note: in expansion of macro 'C'
-    1358 |                 C(PROF_TEXT_OFFSET,     "prof-text-offset"),
-         |                 ^
-   kernel/trace/trace.h:1402:17: note: in expansion of macro 'PROFILER_FLAGS'
-    1402 |                 PROFILER_FLAGS
-         |                 ^~~~~~~~~~~~~~
-   kernel/trace/trace.h:1424:29: note: in expansion of macro 'TRACE_FLAGS'
-    1424 | enum trace_iterator_flags { TRACE_FLAGS };
-         |                             ^~~~~~~~~~~
---
-   In file included from kernel/trace/trace.c:58:
->> kernel/trace/trace.h:1422:37: warning: left shift count >= width of type [-Wshift-count-overflow]
-    1422 | #define C(a, b) TRACE_ITER_##a = (1 << TRACE_ITER_##a##_BIT)
-         |                                     ^~
-   kernel/trace/trace.h:1358:17: note: in expansion of macro 'C'
-    1358 |                 C(PROF_TEXT_OFFSET,     "prof-text-offset"),
-         |                 ^
-   kernel/trace/trace.h:1402:17: note: in expansion of macro 'PROFILER_FLAGS'
-    1402 |                 PROFILER_FLAGS
-         |                 ^~~~~~~~~~~~~~
-   kernel/trace/trace.h:1424:29: note: in expansion of macro 'TRACE_FLAGS'
-    1424 | enum trace_iterator_flags { TRACE_FLAGS };
-         |                             ^~~~~~~~~~~
-   In file included from <command-line>:
-   In function 'tracer_alloc_buffers',
-       inlined from 'early_trace_init' at kernel/trace/trace.c:11144:2:
->> include/linux/compiler_types.h:572:45: error: call to '__compiletime_assert_557' declared with attribute error: BUILD_BUG_ON failed: TRACE_ITER_LAST_BIT > TRACE_FLAGS_MAX_SIZE
-     572 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-         |                                             ^
-   include/linux/compiler_types.h:553:25: note: in definition of macro '__compiletime_assert'
-     553 |                         prefix ## suffix();                             \
-         |                         ^~~~~~
-   include/linux/compiler_types.h:572:9: note: in expansion of macro '_compiletime_assert'
-     572 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-         |         ^~~~~~~~~~~~~~~~~~~
-   include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_assert'
-      39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-         |                                     ^~~~~~~~~~~~~~~~~~
-   include/linux/build_bug.h:50:9: note: in expansion of macro 'BUILD_BUG_ON_MSG'
-      50 |         BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
-         |         ^~~~~~~~~~~~~~~~
-   kernel/trace/trace.c:10983:9: note: in expansion of macro 'BUILD_BUG_ON'
-   10983 |         BUILD_BUG_ON(TRACE_ITER_LAST_BIT > TRACE_FLAGS_MAX_SIZE);
-         |         ^~~~~~~~~~~~
+   kernel/trace/trace.c: In function 'create_trace_options_dir':
+>> kernel/trace/trace.c:526:16: error: 'TRACE_ITER_PROF_TEXT_OFFSET' undeclared (first use in this function); did you mean 'TRACE_ITER_CONTEXT_INFO'?
+     526 |                TRACE_ITER_PROF_TEXT_OFFSET)
+         |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+   kernel/trace/trace.c:9316:34: note: in expansion of macro 'TOP_LEVEL_TRACE_FLAGS'
+    9316 |                     !((1 << i) & TOP_LEVEL_TRACE_FLAGS))
+         |                                  ^~~~~~~~~~~~~~~~~~~~~
+   kernel/trace/trace.c:526:16: note: each undeclared identifier is reported only once for each function it appears in
+     526 |                TRACE_ITER_PROF_TEXT_OFFSET)
+         |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+   kernel/trace/trace.c:9316:34: note: in expansion of macro 'TOP_LEVEL_TRACE_FLAGS'
+    9316 |                     !((1 << i) & TOP_LEVEL_TRACE_FLAGS))
+         |                                  ^~~~~~~~~~~~~~~~~~~~~
 
 
-vim +1422 kernel/trace/trace.h
+vim +526 kernel/trace/trace.c
 
-a3418a364ec3c8f Steven Rostedt (Red Hat  2015-09-29  1416) 
-a3418a364ec3c8f Steven Rostedt (Red Hat  2015-09-29  1417) /*
-a3418a364ec3c8f Steven Rostedt (Red Hat  2015-09-29  1418)  * By redefining C, we can make TRACE_FLAGS a list of masks that
-a3418a364ec3c8f Steven Rostedt (Red Hat  2015-09-29  1419)  * use the bits as defined above.
-a3418a364ec3c8f Steven Rostedt (Red Hat  2015-09-29  1420)  */
-a3418a364ec3c8f Steven Rostedt (Red Hat  2015-09-29  1421) #undef C
-a3418a364ec3c8f Steven Rostedt (Red Hat  2015-09-29 @1422) #define C(a, b) TRACE_ITER_##a = (1 << TRACE_ITER_##a##_BIT)
-a3418a364ec3c8f Steven Rostedt (Red Hat  2015-09-29  1423) 
+   512	
+   513	/* trace_flags holds trace_options default values */
+   514	#define TRACE_DEFAULT_FLAGS						\
+   515		(FUNCTION_DEFAULT_FLAGS |					\
+   516		 TRACE_ITER_PRINT_PARENT | TRACE_ITER_PRINTK |			\
+   517		 TRACE_ITER_ANNOTATE | TRACE_ITER_CONTEXT_INFO |		\
+   518		 TRACE_ITER_RECORD_CMD | TRACE_ITER_OVERWRITE |			\
+   519		 TRACE_ITER_IRQ_INFO | TRACE_ITER_MARKERS |			\
+   520		 TRACE_ITER_HASH_PTR | TRACE_ITER_TRACE_PRINTK |		\
+   521		 TRACE_ITER_COPY_MARKER)
+   522	
+   523	/* trace_options that are only supported by global_trace */
+   524	#define TOP_LEVEL_TRACE_FLAGS (TRACE_ITER_PRINTK |			\
+   525		       TRACE_ITER_PRINTK_MSGONLY | TRACE_ITER_RECORD_CMD |	\
+ > 526		       TRACE_ITER_PROF_TEXT_OFFSET)
+   527	
 
 -- 
 0-DAY CI Kernel Test Service
