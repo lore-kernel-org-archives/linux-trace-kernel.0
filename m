@@ -1,310 +1,126 @@
-Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B5692629D;
-	Sat, 20 Sep 2025 06:06:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D53B221FC6;
+	Sat, 20 Sep 2025 09:06:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758348419; cv=none; b=FeZ9oLJ7AKsEyuA0DfyUXcd5Qr44QbZHIr0L43j1nk6bbMrDe0hq0iTt+yPQLbj+vqylzsLFGa5TZYg0DqajLEjWk/96Nq/AdXaugCS4eHmYDsTEZktFkW9Ui/BqJVD8LJGLmQgkTVm+dHcIqJHi7SHGtBxuB2nyRuvZrKGguUY=
+	t=1758359216; cv=none; b=jnL5r8/gf0TbpKWCgk5VPNbt89PWLD/y7uvZinleLWTLaGMVbyEkK/upmSn18mlqMKoAZ0wlHPVNuJlZQ/CVYFMKo8tmZS3FQ8CeLeNGyH9pv0mRP39HRHrjeI/jR20VMKvLshRCiwl35xlfD6Dergn7unLYG/XL6yCXDNmBRIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758348419; c=relaxed/simple;
-	bh=2EPWXQTPLFrlpNDyEaIgSoxFAtt/g+MssXYZMtA09Cc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QMMRXrJPNDBjT3OKd4AHqIgUXS4nH9q+bxydthoLZL05+G0LdF76CbR/8uzy9UpjLRVzjQizuncjcukQlVgLis7kCD6kSvy/8ER8dSwlnVAeUukYkZBG7Ghu/Rk63MjYyUZdAY/2Avby1MHTU/jsMZPKNvXm5bXF5UkLSpTMkcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=LKJSZBvO; arc=none smtp.client-ip=115.124.30.119
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1758359216; c=relaxed/simple;
+	bh=adOKBhDT5s5o8PdZzlj1YMH0SYwmlznoPvinIas8Cec=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=IIsY5mLv421IRCgbj78wjc9wwaxaJ0aciXE9FPGuGN1PYrpSDBUy6S4wv7CJRdltkZ5PhRG7lztyumClfJINa2fiw/Om3cq8h45VpkOACfnsVtO4P9aGt4TaY5S27Ry2J0/AWvNPI1beOYb6y+5WwMNeryeS/GACoJAAe27ypzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ddRoUQXO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="LKJSZBvO"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1758348407; h=From:To:Subject:Date:Message-Id:MIME-Version:Content-Type;
-	bh=gEUGDmoExGXLvcHEzs0QOstMZP03ryhuORMmCkFNfto=;
-	b=LKJSZBvOFyuCtKTzTqy8SludRDzj6V+ld/+XlXXcovQrG99s+muPMVoY6Y92bg3nW2//ibbxUDK6yjHNKy1YMxIK/mQPg/qsZAob6xA20SjxzEsBSTTcMfFPF3Qf0shxBiZiD2aDHHwh7vA3Ug66UT4+zRNncNhK1yp/fHMzmkw=
-Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WoMFQsU_1758348081 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Sat, 20 Sep 2025 14:01:22 +0800
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-To: rostedt@goodmis.org,
-	lukas@wunner.de,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-edac@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	helgaas@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	mattc@purestorage.com,
-	Jonathan.Cameron@huawei.com
-Cc: bhelgaas@google.com,
-	tony.luck@intel.com,
-	bp@alien8.de,
-	xueshuai@linux.alibaba.com,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	oleg@redhat.com,
-	naveen@kernel.org,
-	davem@davemloft.net,
-	anil.s.keshavamurthy@intel.com,
-	mark.rutland@arm.com,
-	peterz@infradead.org,
-	tianruidong@linux.alibaba.com
-Subject: [PATCH v10 2/3] PCI: trace: Add a RAS tracepoint to monitor link speed changes
-Date: Sat, 20 Sep 2025 14:01:16 +0800
-Message-Id: <20250920060117.866-3-xueshuai@linux.alibaba.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
-In-Reply-To: <20250920060117.866-1-xueshuai@linux.alibaba.com>
-References: <20250920060117.866-1-xueshuai@linux.alibaba.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ddRoUQXO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05FA8C4CEEB;
+	Sat, 20 Sep 2025 09:06:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758359215;
+	bh=adOKBhDT5s5o8PdZzlj1YMH0SYwmlznoPvinIas8Cec=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ddRoUQXO3K7bdiMadtZUpOFC5/g4pkE5xPR3f1We76HOVkt2fBWsaaYeJ0m3KuVNx
+	 HDTSS07QfBGWb3iwys+2zR8KBVGnXMz1Rq4AQrqRMN0unkVlMmSAp05hHsV7WhwVPf
+	 oPpPHhxquMKj9ekM0nu6j2ThY+T9SNZol2IcDrWn5Jfysvsf8fNhXSZV6+eBTusNsf
+	 PGInrDs0bftgG43yp9W6UXSnwGkZk0l4kxUzLcAUqJ4PpN0+D0qglpCaUtWBC3ACJi
+	 mvzlSca2lVuXjx2cmisLaX5HIv81ZCimYTsD4EopPDaMSbq+OMkTYn2TVSWRZsuBcQ
+	 /6G17KEclnI8g==
+Date: Sat, 20 Sep 2025 18:06:51 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: kernel test robot <lkp@intel.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, oe-kbuild-all@lists.linux.dev,
+ Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing: Add an option to show symbols in _text+offset
+ for function profiler
+Message-Id: <20250920180651.fc561283df65b51a0c570793@kernel.org>
+In-Reply-To: <202509200025.UH0WU2Qw-lkp@intel.com>
+References: <175826135058.101165.7219957344129610147.stgit@devnote2>
+	<202509200025.UH0WU2Qw-lkp@intel.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-PCIe link speed degradation directly impacts system performance and
-often indicates hardware issues such as faulty devices, physical layer
-problems, or configuration errors.
+On Sat, 20 Sep 2025 01:09:42 +0800
+kernel test robot <lkp@intel.com> wrote:
 
-To this end, add a RAS tracepoint to monitor link speed changes,
-enabling proactive health checks and diagnostic analysis.
+> Hi Masami,
+> 
+> kernel test robot noticed the following build errors:
+> 
+> [auto build test ERROR on trace/for-next]
+> [also build test ERROR on linus/master v6.17-rc6 next-20250918]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> 
+> url:    https://github.com/intel-lab-lkp/linux/commits/Masami-Hiramatsu-Google/tracing-Add-an-option-to-show-symbols-in-_text-offset-for-function-profiler/20250919-135733
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace for-next
+> patch link:    https://lore.kernel.org/r/175826135058.101165.7219957344129610147.stgit%40devnote2
+> patch subject: [PATCH] tracing: Add an option to show symbols in _text+offset for function profiler
+> config: arc-randconfig-001-20250919 (https://download.01.org/0day-ci/archive/20250920/202509200025.UH0WU2Qw-lkp@intel.com/config)
+> compiler: arc-linux-gcc (GCC) 15.1.0
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250920/202509200025.UH0WU2Qw-lkp@intel.com/reproduce)
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202509200025.UH0WU2Qw-lkp@intel.com/
+> 
+> All errors (new ones prefixed by >>):
+> 
+>    kernel/trace/trace.c: In function 'create_trace_options_dir':
+> >> kernel/trace/trace.c:526:16: error: 'TRACE_ITER_PROF_TEXT_OFFSET' undeclared (first use in this function); did you mean 'TRACE_ITER_CONTEXT_INFO'?
+>      526 |                TRACE_ITER_PROF_TEXT_OFFSET)
+>          |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The following output is generated when a device is hotplugged:
+Aah, it should be defined always. OK, let me fix that in the next version.
 
-$ echo 1 > /sys/kernel/debug/tracing/events/pci/pcie_link_event/enable
-$ cat /sys/kernel/debug/tracing/trace_pipe
-   irq/51-pciehp-88      [001] .....   381.545386: pcie_link_event: 0000:00:02.0 type:4, reason:4, cur_bus_speed:2.5 GT/s PCIe, max_bus_speed:16.0 GT/s PCIe, width:1, flit_mode:0, status:DLLLA
+Thanks!
 
-Suggested-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Suggested-by: Matthew W Carlis <mattc@purestorage.com>
-Suggested-by: Lukas Wunner <lukas@wunner.de>
-Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
----
- drivers/pci/hotplug/pciehp_hpc.c |  3 +-
- drivers/pci/pci.c                |  2 +-
- drivers/pci/pci.h                | 22 +++++++++++--
- drivers/pci/pcie/bwctrl.c        |  4 +--
- drivers/pci/probe.c              |  9 +++--
- include/linux/pci.h              |  1 +
- include/trace/events/pci.h       | 56 ++++++++++++++++++++++++++++++++
- 7 files changed, 87 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-index bcc51b26d03d..ad5f28f6a8b1 100644
---- a/drivers/pci/hotplug/pciehp_hpc.c
-+++ b/drivers/pci/hotplug/pciehp_hpc.c
-@@ -320,7 +320,8 @@ int pciehp_check_link_status(struct controller *ctrl)
- 	}
- 
- 	pcie_capability_read_word(pdev, PCI_EXP_LNKSTA2, &linksta2);
--	__pcie_update_link_speed(ctrl->pcie->port->subordinate, lnk_status, linksta2);
-+	__pcie_update_link_speed(ctrl->pcie->port->subordinate, PCIE_HOTPLUG,
-+				 lnk_status, linksta2);
- 
- 	if (!found) {
- 		ctrl_info(ctrl, "Slot(%s): No device found\n",
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index b0f4d98036cd..96755ffd3841 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -4749,7 +4749,7 @@ int pcie_retrain_link(struct pci_dev *pdev, bool use_lt)
- 	 * Link Speed.
- 	 */
- 	if (pdev->subordinate)
--		pcie_update_link_speed(pdev->subordinate);
-+		pcie_update_link_speed(pdev->subordinate, PCIE_LINK_RETRAIN);
- 
- 	return rc;
- }
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index b8d364545e7d..422406a0695c 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -3,6 +3,7 @@
- #define DRIVERS_PCI_H
- 
- #include <linux/pci.h>
-+#include <trace/events/pci.h>
- 
- struct pcie_tlp_log;
- 
-@@ -455,16 +456,31 @@ static inline int pcie_dev_speed_mbps(enum pci_bus_speed speed)
- }
- 
- u8 pcie_get_supported_speeds(struct pci_dev *dev);
--const char *pci_speed_string(enum pci_bus_speed speed);
- void __pcie_print_link_status(struct pci_dev *dev, bool verbose);
- void pcie_report_downtraining(struct pci_dev *dev);
- 
--static inline void __pcie_update_link_speed(struct pci_bus *bus, u16 linksta, u16 linksta2)
-+enum pcie_link_change_reason {
-+	PCIE_LINK_RETRAIN,
-+	PCIE_ADD_BUS,
-+	PCIE_BWCTRL_ENABLE,
-+	PCIE_BWCTRL_IRQ,
-+	PCIE_HOTPLUG
-+};
-+
-+static inline void __pcie_update_link_speed(struct pci_bus *bus,
-+					    enum pcie_link_change_reason reason,
-+					    u16 linksta, u16 linksta2)
- {
- 	bus->cur_bus_speed = pcie_link_speed[linksta & PCI_EXP_LNKSTA_CLS];
- 	bus->flit_mode = (linksta2 & PCI_EXP_LNKSTA2_FLIT) ? 1 : 0;
-+
-+	trace_pcie_link_event(bus,
-+			     reason,
-+			     FIELD_GET(PCI_EXP_LNKSTA_NLW, linksta),
-+			     linksta & PCI_EXP_LNKSTA_LINK_STATUS_MASK);
- }
--void pcie_update_link_speed(struct pci_bus *bus);
-+
-+void pcie_update_link_speed(struct pci_bus *bus, enum pcie_link_change_reason reason);
- 
- /* Single Root I/O Virtualization */
- struct pci_sriov {
-diff --git a/drivers/pci/pcie/bwctrl.c b/drivers/pci/pcie/bwctrl.c
-index 36f939f23d34..32f1b30ecb84 100644
---- a/drivers/pci/pcie/bwctrl.c
-+++ b/drivers/pci/pcie/bwctrl.c
-@@ -199,7 +199,7 @@ static void pcie_bwnotif_enable(struct pcie_device *srv)
- 	 * Update after enabling notifications & clearing status bits ensures
- 	 * link speed is up to date.
- 	 */
--	pcie_update_link_speed(port->subordinate);
-+	pcie_update_link_speed(port->subordinate, PCIE_BWCTRL_ENABLE);
- }
- 
- static void pcie_bwnotif_disable(struct pci_dev *port)
-@@ -234,7 +234,7 @@ static irqreturn_t pcie_bwnotif_irq(int irq, void *context)
- 	 * speed (inside pcie_update_link_speed()) after LBMS has been
- 	 * cleared to avoid missing link speed changes.
- 	 */
--	pcie_update_link_speed(port->subordinate);
-+	pcie_update_link_speed(port->subordinate, PCIE_BWCTRL_IRQ);
- 
- 	return IRQ_HANDLED;
- }
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index f41128f91ca7..c4cae2664156 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -21,6 +21,7 @@
- #include <linux/irqdomain.h>
- #include <linux/pm_runtime.h>
- #include <linux/bitfield.h>
-+#include <trace/events/pci.h>
- #include "pci.h"
- 
- #define CARDBUS_LATENCY_TIMER	176	/* secondary latency timer */
-@@ -788,14 +789,16 @@ const char *pci_speed_string(enum pci_bus_speed speed)
- }
- EXPORT_SYMBOL_GPL(pci_speed_string);
- 
--void pcie_update_link_speed(struct pci_bus *bus)
-+void pcie_update_link_speed(struct pci_bus *bus,
-+			    enum pcie_link_change_reason reason)
- {
- 	struct pci_dev *bridge = bus->self;
- 	u16 linksta, linksta2;
- 
- 	pcie_capability_read_word(bridge, PCI_EXP_LNKSTA, &linksta);
- 	pcie_capability_read_word(bridge, PCI_EXP_LNKSTA2, &linksta2);
--	__pcie_update_link_speed(bus, linksta, linksta2);
-+
-+	__pcie_update_link_speed(bus, reason, linksta, linksta2);
- }
- EXPORT_SYMBOL_GPL(pcie_update_link_speed);
- 
-@@ -882,7 +885,7 @@ static void pci_set_bus_speed(struct pci_bus *bus)
- 		pcie_capability_read_dword(bridge, PCI_EXP_LNKCAP, &linkcap);
- 		bus->max_bus_speed = pcie_link_speed[linkcap & PCI_EXP_LNKCAP_SLS];
- 
--		pcie_update_link_speed(bus);
-+		pcie_update_link_speed(bus, PCIE_ADD_BUS);
- 	}
- }
- 
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 59876de13860..edd8a61ec44e 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -305,6 +305,7 @@ enum pci_bus_speed {
- 	PCI_SPEED_UNKNOWN		= 0xff,
- };
- 
-+const char *pci_speed_string(enum pci_bus_speed speed);
- enum pci_bus_speed pcie_get_speed_cap(struct pci_dev *dev);
- enum pcie_link_width pcie_get_width_cap(struct pci_dev *dev);
- 
-diff --git a/include/trace/events/pci.h b/include/trace/events/pci.h
-index 208609492c06..78e651b95cb3 100644
---- a/include/trace/events/pci.h
-+++ b/include/trace/events/pci.h
-@@ -57,6 +57,62 @@ TRACE_EVENT(pci_hp_event,
- 	)
- );
- 
-+#define PCI_EXP_LNKSTA_LINK_STATUS_MASK (PCI_EXP_LNKSTA_LBMS | \
-+					 PCI_EXP_LNKSTA_LABS | \
-+					 PCI_EXP_LNKSTA_LT | \
-+					 PCI_EXP_LNKSTA_DLLLA)
-+
-+#define LNKSTA_FLAGS					\
-+	{ PCI_EXP_LNKSTA_LT,	"LT"},			\
-+	{ PCI_EXP_LNKSTA_DLLLA,	"DLLLA"},		\
-+	{ PCI_EXP_LNKSTA_LBMS,	"LBMS"},		\
-+	{ PCI_EXP_LNKSTA_LABS,	"LABS"}
-+
-+TRACE_EVENT(pcie_link_event,
-+
-+	TP_PROTO(struct pci_bus *bus,
-+		  unsigned int reason,
-+		  unsigned int width,
-+		  unsigned int status
-+		),
-+
-+	TP_ARGS(bus, reason, width, status),
-+
-+	TP_STRUCT__entry(
-+		__string(	port_name,	pci_name(bus->self))
-+		__field(	unsigned int,	type		)
-+		__field(	unsigned int,	reason		)
-+		__field(	unsigned int,	cur_bus_speed	)
-+		__field(	unsigned int,	max_bus_speed	)
-+		__field(	unsigned int,	width		)
-+		__field(	unsigned int,	flit_mode	)
-+		__field(	unsigned int,	link_status	)
-+	),
-+
-+	TP_fast_assign(
-+		__assign_str(port_name);
-+		__entry->type			= pci_pcie_type(bus->self);
-+		__entry->reason			= reason;
-+		__entry->cur_bus_speed		= bus->cur_bus_speed;
-+		__entry->max_bus_speed		= bus->max_bus_speed;
-+		__entry->width			= width;
-+		__entry->flit_mode		= bus->flit_mode;
-+		__entry->link_status		= status;
-+	),
-+
-+	TP_printk("%s type:%d, reason:%d, cur_bus_speed:%s, max_bus_speed:%s, width:%u, flit_mode:%u, status:%s\n",
-+		__get_str(port_name),
-+		__entry->type,
-+		__entry->reason,
-+		pci_speed_string(__entry->cur_bus_speed),
-+		pci_speed_string(__entry->max_bus_speed),
-+		__entry->width,
-+		__entry->flit_mode,
-+		__print_flags((unsigned long)__entry->link_status, "|",
-+				LNKSTA_FLAGS)
-+	)
-+);
-+
- #endif /* _TRACE_HW_EVENT_PCI_H */
- 
- /* This part must be outside protection */
+>    kernel/trace/trace.c:9316:34: note: in expansion of macro 'TOP_LEVEL_TRACE_FLAGS'
+>     9316 |                     !((1 << i) & TOP_LEVEL_TRACE_FLAGS))
+>          |                                  ^~~~~~~~~~~~~~~~~~~~~
+>    kernel/trace/trace.c:526:16: note: each undeclared identifier is reported only once for each function it appears in
+>      526 |                TRACE_ITER_PROF_TEXT_OFFSET)
+>          |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+>    kernel/trace/trace.c:9316:34: note: in expansion of macro 'TOP_LEVEL_TRACE_FLAGS'
+>     9316 |                     !((1 << i) & TOP_LEVEL_TRACE_FLAGS))
+>          |                                  ^~~~~~~~~~~~~~~~~~~~~
+> 
+> 
+> vim +526 kernel/trace/trace.c
+> 
+>    512	
+>    513	/* trace_flags holds trace_options default values */
+>    514	#define TRACE_DEFAULT_FLAGS						\
+>    515		(FUNCTION_DEFAULT_FLAGS |					\
+>    516		 TRACE_ITER_PRINT_PARENT | TRACE_ITER_PRINTK |			\
+>    517		 TRACE_ITER_ANNOTATE | TRACE_ITER_CONTEXT_INFO |		\
+>    518		 TRACE_ITER_RECORD_CMD | TRACE_ITER_OVERWRITE |			\
+>    519		 TRACE_ITER_IRQ_INFO | TRACE_ITER_MARKERS |			\
+>    520		 TRACE_ITER_HASH_PTR | TRACE_ITER_TRACE_PRINTK |		\
+>    521		 TRACE_ITER_COPY_MARKER)
+>    522	
+>    523	/* trace_options that are only supported by global_trace */
+>    524	#define TOP_LEVEL_TRACE_FLAGS (TRACE_ITER_PRINTK |			\
+>    525		       TRACE_ITER_PRINTK_MSGONLY | TRACE_ITER_RECORD_CMD |	\
+>  > 526		       TRACE_ITER_PROF_TEXT_OFFSET)
+>    527	
+> 
+> -- 
+> 0-DAY CI Kernel Test Service
+> https://github.com/intel/lkp-tests/wiki
+
+
 -- 
-2.39.3
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
