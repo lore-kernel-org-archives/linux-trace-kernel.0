@@ -1,98 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7025E286A9;
-	Sat, 20 Sep 2025 01:00:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE91D202C5D
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 20 Sep 2025 02:56:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758330033; cv=none; b=gw4gw4SzuxJE/jBjXEWFpxKJF3LoE5mztAVs9KadBPtrFJndQmvgckNZD8SQZtvOT0JQoRtzD85omtAVGio6jjx05JhXnTXOlhBjpz0m3BxhemWdsvAjb4OZDOXScjiyf/ghQE8h90RP7U23118m6OuX3mQ6luSJrtpO9YLyaUM=
+	t=1758336994; cv=none; b=CUq5fqIsaNqi8NCpFSALrdUxc7HViENXXMPKX3rUBhpKJbW/ETbQQQqL03AXoersQzQlsWSL08jwC0uTmtRwMNFoL/h4aF28LvWEC/4DXitATzmZG9uGTKJCL5+BppPjlwnOfxfRdbBKadgW7ltqtxYxq84lnCn3pPj8lwwzGLE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758330033; c=relaxed/simple;
-	bh=152V8ABtwHHLogh3lVMMKtEoSOaUdwb1Bwq6vDnjQJM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iPbhUw5nwAhfEYY5GqQ2Qi/qCvLJ2pjebhR7GfvQvRnbAv4j4LSvyu2dS/crZBg4JRbJ5GUg1zfe7/TxegUDfm2uV/2iN0SeS5H3mI//LrZCwcXZe5paG007onGzh5nx/ihEnJVxYlpYeIwepPs35dOWEiEd3Z/DgD0Qdmhwa6c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lS6eI/FI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1758336994; c=relaxed/simple;
+	bh=SABrXAfD/yGBv4BOgjgu3huM+0XurmfkG7O4hOZ1p5I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gZhsPWYYIZef+HG55pVZ1Yv3TnRM6z+sCb2BkiSlwtSdTi9OLxQI9eeLLNqPRqazav0pvnXJCEH9EVImd/C+3jd0kk9FDjhaHQrGelKadrv4xECt97cBP7qdAgd0OG89HgyQwz1Tsf94eNtkIYo+IdQLPo2qQrA5whiYjdJ68z0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Myu2MLxj; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lS6eI/FI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D15EC4CEF0;
-	Sat, 20 Sep 2025 01:00:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758330033;
-	bh=152V8ABtwHHLogh3lVMMKtEoSOaUdwb1Bwq6vDnjQJM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lS6eI/FIk2sbh3fa9diFQxOFDsvm9zjkX1rboM2k4iklkn8jqM1ufFoTpfMwb/UMu
-	 As+5nT/P03SrogGhQzn2lvIzK5vIaHQFohCwvSOvZ7gQ9s4gN/LhDirii8ObOvs4Wi
-	 YikGN7E0LpoUJNJejAOl3+9fXwgL8fl9mb78atRsgx5e1/ia1BjrGJWb16KyGa/PC6
-	 OALgNH2lF6Pl8yVgBb5fEapjBeJiFFphhvDPmBUJnZIOBw7VME/D4/mADaXq5if58j
-	 dFux0TbdzjMcXFzKoB7vqlIDun6otOl5a6egA6L47tAdzQp4MH7OKaxJXeNuTO7m4C
-	 cO7FeEtwP1g0Q==
-Date: Fri, 19 Sep 2025 18:00:30 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Steven Rostedt <rostedt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, 
-	Indu Bhagat <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>, 
-	Beau Belgrave <beaub@linux.microsoft.com>, Jens Remus <jremus@linux.ibm.com>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Jens Axboe <axboe@kernel.dk>, Florian Weimer <fweimer@redhat.com>, Sam James <sam@gentoo.org>
-Subject: Re: [PATCH v16 06/10] unwind deferred: Use bitmask to determine
- which callbacks to call
-Message-ID: <vxdnyz3e6c5whsd4let47ms75a7kcjykzud6x7d6pwkfd4yd2z@odddgxwsst4d>
-References: <20250729182304.965835871@kernel.org>
- <20250729182405.822789300@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Myu2MLxj"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3ee13baf2e1so1870621f8f.3
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 19 Sep 2025 19:56:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1758336991; x=1758941791; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=K+JSfjQG3dPuPVsnceUeFZXrh8/X6Psk2dyqFGUkfL0=;
+        b=Myu2MLxjcSzKdG1GiIkbYLRZidy4/J7LYDYag/LWnxuos+0nMnEFdgPo2RnzSSspft
+         LmXzyixFRoPIYSgtrPOeGwYIYasE9MJvKO9lJRIJXJ2JIb2vYH5BTGktLgzOvd2N4NBF
+         GD/a13vnhh66UfJp1onuDSp0euLd2yvAr0XVMj/gy88OwoIZxNiobujLiXFSju9ieEbY
+         LO2zQWkgKfXP8gLaHqcryVe1/0xPr63pFai6zuzJrR4JtP+vvWITNt2L0XlqpVZZO7eI
+         ULGvv491ffJq0PJUz2fIVYuELvufogbb0x8b3nCOeQRs/ghzLlKtOAJRnti1Jo0Xw3Vu
+         fpAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758336991; x=1758941791;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=K+JSfjQG3dPuPVsnceUeFZXrh8/X6Psk2dyqFGUkfL0=;
+        b=TA5dq3LGGsemQQ0Y/xnQDDJ6npGVORnksX2z87ZzF8FQuoHIAoX/gbZRy9WBe8gom7
+         hDyAp3dJkvFX5rnWWROgVBM+rkHzwzQQBzqC/6LL6Xi6OGFzuLGjWLL2gj5D5WospvSq
+         LtqDkVmB5ztOzJ3jxvAmyEeavnBR0FUGGXDR/SQCHKTCTIbUYgl51I3WnTntUC+I6eW8
+         XziwRUNGzYQRjTLLvMlcfRAnlUgYAuhfVe+7qRDWIz3BSiqCcWaU8groZEt6yrRyIFah
+         jASAVUFthGeVW4C6PL+rob39JHNEw29OBAYPsvMKtMma8yv9cH4fg+sZmiLPC43WmJZS
+         HS0A==
+X-Forwarded-Encrypted: i=1; AJvYcCVG2RvU/9cYpgT4y8vDtHGo3sGTbxF/4U8aPOv9NFVlc/Vxnx/g8v46V0lrItrvoXNaiBmDZzRnoq/pRIIxUprz3AY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyBI0rvgUsc2eTIkEferfesibT8SeiBRThbNGv8E0JBWpZqidc9
+	FFuzLyoIFwVuUwS6vERbuskctqdDxoRZUF8+hOPWOBpGKlmAKntpBthjdwMqt8brM6X6pVCqKu4
+	sWkeg8CeseFA/epKUFjF4FxdJj37tlsE=
+X-Gm-Gg: ASbGncvZKUKMoZTb2yI8FPhZw4yAU1YPPWhRj/+WKA0qbq64vZ53+xg2IQ9Mxr+n1Fl
+	LGd1efgo4UPr5Rs+rnI1AWxQD6v11cccZ74b5BzVFB5uze/5JEbVeyy5zSoyvsYglmfksf3TirR
+	HxTvMVmSNZs378uvO7dJpsVuQL62zLEWewty0pOPHn2oG7YPgDvAEWIqaqcEbD3gC8eiU7QhKAB
+	PxA4rhYtfveyZYIPjq+yflFLWC/G9ZyENRf
+X-Google-Smtp-Source: AGHT+IERAcHZfTN6VLJmmNbMRxg87FE7AYDMD8mBCCmzVyFm3fyh8f+KisZCrkCo2ZtgOPFOA9so43qHA5KIJr1Z9YY=
+X-Received: by 2002:a05:6000:2c06:b0:3ec:e276:5f43 with SMTP id
+ ffacd0b85a97d-3ee7e1069c3mr3959667f8f.18.1758336991216; Fri, 19 Sep 2025
+ 19:56:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250729182405.822789300@kernel.org>
+References: <20250919071902.554223-1-yangfeng59949@163.com>
+In-Reply-To: <20250919071902.554223-1-yangfeng59949@163.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Fri, 19 Sep 2025 19:56:20 -0700
+X-Gm-Features: AS18NWC_zRwQ0ew3oT6b8x8FGxU5FvpZ1QgwjLnU8fS_VUvLw3WzNDgL7YILOro
+Message-ID: <CAADnVQKrnYCaUCd+BNvZQmR0-6CSu2GBa=TCCCjPLSNfb_Ddvg@mail.gmail.com>
+Subject: Re: [BUG] Failed to obtain stack trace via bpf_get_stackid on ARM64 architecture
+To: Feng Yang <yangfeng59949@163.com>
+Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	John Fastabend <john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
+	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jul 29, 2025 at 02:23:10PM -0400, Steven Rostedt wrote:
-> @@ -212,32 +225,59 @@ int unwind_deferred_request(struct unwind_work *work, u64 *cookie)
->  
->  	*cookie = get_cookie(info);
->  
-> -	/* callback already pending? */
-> -	pending = READ_ONCE(info->pending);
-> -	if (pending)
-> -		return 1;
-> +	old = READ_ONCE(info->unwind_mask);
->  
-> -	/* Claim the work unless an NMI just now swooped in to do so. */
-> -	if (!try_cmpxchg(&info->pending, &pending, 1))
-> +	/* Is this already queued or executed */
-> +	if (old & bit)
->  		return 1;
->  
-> +	/*
-> +	 * This work's bit hasn't been set yet. Now set it with the PENDING
-> +	 * bit and fetch the current value of unwind_mask. If ether the
-> +	 * work's bit or PENDING was already set, then this is already queued
-> +	 * to have a callback.
-> +	 */
-> +	bits = UNWIND_PENDING | bit;
-> +	old = atomic_long_fetch_or(bits, (atomic_long_t *)&info->unwind_mask);
-> +	if (old & bits) {
-> +		/*
-> +		 * If the work's bit was set, whatever set it had better
-> +		 * have also set pending and queued a callback.
-> +		 */
-> +		WARN_ON_ONCE(!(old & UNWIND_PENDING));
-> +		return old & bit;
+On Fri, Sep 19, 2025 at 12:19=E2=80=AFAM Feng Yang <yangfeng59949@163.com> =
+wrote:
+>
+> When I use bpf_program__attach_kprobe_multi_opts to hook a BPF program th=
+at contains the bpf_get_stackid function on the arm64 architecture,
+> I find that the stack trace cannot be obtained. The trace->nr in __bpf_ge=
+t_stackid is 0, and the function returns -EFAULT.
+>
+> For example:
+> diff --git a/tools/testing/selftests/bpf/progs/kprobe_multi.c b/tools/tes=
+ting/selftests/bpf/progs/kprobe_multi.c
+> index 9e1ca8e34913..844fa88cdc4c 100644
+> --- a/tools/testing/selftests/bpf/progs/kprobe_multi.c
+> +++ b/tools/testing/selftests/bpf/progs/kprobe_multi.c
+> @@ -36,6 +36,15 @@ __u64 kretprobe_test6_result =3D 0;
+>  __u64 kretprobe_test7_result =3D 0;
+>  __u64 kretprobe_test8_result =3D 0;
+>
+> +typedef __u64 stack_trace_t[2];
+> +
+> +struct {
+> +       __uint(type, BPF_MAP_TYPE_STACK_TRACE);
+> +       __uint(max_entries, 1024);
+> +       __type(key, __u32);
+> +       __type(value, stack_trace_t);
+> +} stacks SEC(".maps");
+> +
+>  static void kprobe_multi_check(void *ctx, bool is_return)
+>  {
+>         if (bpf_get_current_pid_tgid() >> 32 !=3D pid)
+> @@ -100,7 +109,9 @@ int test_kretprobe(struct pt_regs *ctx)
+>  SEC("kprobe.multi")
+>  int test_kprobe_manual(struct pt_regs *ctx)
+>  {
+> +       int id =3D bpf_get_stackid(ctx, &stacks, 0);
 
-Per the function comment, the function returns 0, 1, or negative.  So
-this should be 
+ftrace_partial_regs() supposed to work on x86 and arm64,
+but since multi-kprobe is the only user...
+I suspect the arm64 implementation wasn't really tested.
+Or maybe there is some other issue.
 
-		return !!(old & bit)
-
-right?
-
--- 
-Josh
+Masami, Jiri,
+thoughts?
