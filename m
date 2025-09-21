@@ -1,124 +1,83 @@
-Received: from fhigh-a6-smtp.messagingengine.com (fhigh-a6-smtp.messagingengine.com [103.168.172.157])
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8834D185955;
-	Sun, 21 Sep 2025 21:08:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C962019CC02;
+	Sun, 21 Sep 2025 23:33:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758488894; cv=none; b=urSu+/rMp7aRjF9TqGY003h7i3p/4EPQRn29GyoL0JO+1VZEi1epFNTmqYxkjEMtPWIPs3MNDbuJ5IejX6NRxxo3i9AXw8IAktm3du2OeIsqIfQoiOIRi498UxtNziBKklfyUy8uphQ+VFBOp+4q1WqW+QSCFoLpNN2ume5goV8=
+	t=1758497637; cv=none; b=PUXP1ak4fvpN7eeH435jeK1BCbPqHiS8+zUfZP9l0JDgpVn5SqxW1K+tqmZiibgz+a4xhiSHCbj+6Z09ShfIKaeGwy+4HMC8O+mhqBn4rLUri4bC2KzdMDsxPKro3w5Fz1MftgctzBeGjJnefbteYYP5m61w+6B26T6xWEmpYgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758488894; c=relaxed/simple;
-	bh=qOSGdF6leebqlCaCu8EDW3SnUS0vexy+XgNqzR/Dc08=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=nTMVjC4Rnr6PdThqdMkE1sf/4Y8m41/RNFHlgy1dQBr7TnK65ZlSRObPt/nvUqVTs3qmcQnO6kT3B3ga99OHqjNNcIOg7GrYJA+fym09HY6fgYrEYBbbYP26aoHdNR+YMj9lbzeDl1+oa5hz6WUjvntO+20iEfYV13i4SuPxN/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wolber.net; spf=pass smtp.mailfrom=wolber.net; dkim=pass (2048-bit key) header.d=wolber.net header.i=@wolber.net header.b=O+t5Okyi; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=J7OYAISj; arc=none smtp.client-ip=103.168.172.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wolber.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wolber.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wolber.net header.i=@wolber.net header.b="O+t5Okyi";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="J7OYAISj"
-Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 8EE8414000D0;
-	Sun, 21 Sep 2025 17:08:11 -0400 (EDT)
-Received: from phl-imap-03 ([10.202.2.93])
-  by phl-compute-02.internal (MEProxy); Sun, 21 Sep 2025 17:08:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wolber.net; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1758488891;
-	 x=1758575291; bh=qOSGdF6leebqlCaCu8EDW3SnUS0vexy+XgNqzR/Dc08=; b=
-	O+t5OkyishpEBU64ngGj2QXgDOaAOBeUbmgWUQMCmKwx1Npjnm180g3HpjbuJz7L
-	oOUmtHVzHzvR+TMPdjkII8WZK0ZQfH53fauABngziZI2MhaBq4mIy8qF0p1fQmiD
-	zYPYqP/TtXCzh+zkr0U19xV9bU0ytCbarD+/v9sEtxkhmyYY1dGwEGPblxgvkuhl
-	pcTacxOMfKnsjkE4MzHvMkKT9QIcdt6P+CL0Z2uzn7e8f1MouVLSEBfDq65mDwYY
-	UwGbCOFIb+zEXcQmRct/VdA6NGq+1r/Gwxb83mHEABwi8fEJrOkGZbkSWiNFjTzZ
-	WXdwdlD1mjbPjseDQufUQg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1758488891; x=
-	1758575291; bh=qOSGdF6leebqlCaCu8EDW3SnUS0vexy+XgNqzR/Dc08=; b=J
-	7OYAISjmKUZ/1/ExByetMJrNDQcvG1dVGu4Ls5/GrGeFO72phduhmnhjT0QErykQ
-	ZP3fO6ABW+uWhMvcpoWTwPfm74WObvU9bgLQQ+aim3VpwJsZAIdPtO76zJvtVxuk
-	VNl0Wr+8kPCCS0oxGUbOhnBmokETBMSjt6cxJVTxXnZZs4zDGaRmmnFZZ9HgwIny
-	ZpQgM9UdgvrAigul3WudCubZMq+ByvronsY7gXO8UlL2kZs2SB4+RfjsagZCset8
-	ssKtMikD7Yt++vKJrQVvdAGrtA58wm+PjTQTXbF3n03EdaAvfumBKlTv7EchTlSy
-	v5Eav4tf+LjvLjuIfygJg==
-X-ME-Sender: <xms:OmnQaCgCwMYVVEs2RoGBfACA1aOmnQMQJAmILe9dRRbiZVr5vrUcIQ>
-    <xme:OmnQaDD3hhanCV1noJMk8yjWE95fXSEB5uVNdvfsbs1Ys2RRR7XYbDMunsmLW4iVs
-    zEAhvdc9SLDjoWAed0>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggdehiedtudcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpefoggfgtgffkfevuffhvffofhgjsehtqhertdertdejnecuhfhrohhmpedfvehhuhgt
-    khcuhgholhgsvghrfdcuoegthhhutghkseifohhlsggvrhdrnhgvtheqnecuggftrfgrth
-    htvghrnhepgefhieelvdfgvedvfffgudehueeukefgfeefhfeiudejieevheekgffhtddt
-    udetnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheptg
-    hhuhgtkhesfiholhgsvghrrdhnvghtpdhnsggprhgtphhtthhopedvkedpmhhouggvpehs
-    mhhtphhouhhtpdhrtghpthhtohepmhgrrhhtihhnrdhkvghllhihsegtrhhofigushhtrh
-    hikhgvrdgtohhmpdhrtghpthhtohepmhgrthhhihgvuhdruggvshhnohihvghrshesvghf
-    fhhitghiohhsrdgtohhmpdhrtghpthhtohepshgufhesfhhomhhitghhvghvrdhmvgdprh
-    gtphhtthhopegrmhgvrhihhhhunhhgsehgmhgrihhlrdgtohhmpdhrtghpthhtohepvggu
-    ugihiiekjeesghhmrghilhdrtghomhdprhgtphhtthhopehkvghrnhgvlhhjrghsohhngi
-    hinhhgsehgmhgrihhlrdgtohhmpdhrtghpthhtohepmhgvmhigohhrsehgmhgrihhlrdgt
-    ohhmpdhrtghpthhtohepphgruhhlrdgthhgrihhgnhhonhesghhmrghilhdrtghomhdprh
-    gtphhtthhopehrohhsthgvughtsehgohhoughmihhsrdhorhhg
-X-ME-Proxy: <xmx:OmnQaGE5h0i6QZg9hxcX-SEfitPDqL5I_2ejrbQuP80ODAf8zwM2jw>
-    <xmx:OmnQaIl1OmCwuSDFd94Uvl7vNXRASMJTnG8AL5e8mCZXHDdKx0V9-Q>
-    <xmx:OmnQaJB07OP3kO9qObmlNkKBu3KTsOSCWw7EI-qchDkswFz8cMGYNA>
-    <xmx:OmnQaHHr4bXuh7fQYtHbKovrDNI14xD7pXyyDFjRY5qTJlN-WTIiUQ>
-    <xmx:O2nQaLrNsk7LQNO7Q0QB7jXw20IHlRLcR67HCtWbvzeFkSy3Gjgj8ayd>
-Feedback-ID: i5cf64821:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 86B6318E0069; Sun, 21 Sep 2025 17:08:10 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1758497637; c=relaxed/simple;
+	bh=Yf3UQklLmhe1vv51Dn6kgpYDqK6rXBdXw1BYHLIUJIw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PtKbkr0UrbiM3ANO36D2eLkvR4dW5cUVa8Xv1bdcCZWjJNg61KCDmBRTUL1oFBsrjVVDWA6bybrL0T9a27zOBEQYkXXkXtDRAx0vnsjdKWhgYp7MHo4vaetOLaCM8g3O8I2w1wWMx1UDef46IhAjfmk6Vuf99L6uXE79zjygUL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf05.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay10.hostedemail.com (Postfix) with ESMTP id 19965C0405;
+	Sun, 21 Sep 2025 23:33:46 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf05.hostedemail.com (Postfix) with ESMTPA id D2DBE20011;
+	Sun, 21 Sep 2025 23:33:41 +0000 (UTC)
+Date: Sun, 21 Sep 2025 19:33:40 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Steven Rostedt
+ <rostedt@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, x86@kernel.org,
+ Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Ingo Molnar <mingo@kernel.org>, Jiri Olsa
+ <jolsa@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung
+ Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Andrii
+ Nakryiko <andrii@kernel.org>, Indu Bhagat <indu.bhagat@oracle.com>, "Jose
+ E. Marchesi" <jemarch@gnu.org>, Beau Belgrave <beaub@linux.microsoft.com>,
+ Jens Remus <jremus@linux.ibm.com>, Linus Torvalds
+ <torvalds@linux-foundation.org>, Andrew Morton <akpm@linux-foundation.org>,
+ Florian Weimer <fweimer@redhat.com>, Sam James <sam@gentoo.org>, Kees Cook
+ <kees@kernel.org>, Carlos O'Donell <codonell@redhat.com>
+Subject: Re: [RESEND][PATCH v15 0/4] perf: Support the deferred unwinding
+ infrastructure
+Message-ID: <20250921190956.0709dfff@batman.local.home>
+In-Reply-To: <pde32olzdlqvbom5bya5exndcrfgsw7lmffy6uav5yoplonzj3@ddb2b5sihlpx>
+References: <20250908171412.268168931@kernel.org>
+ <20250918114610.GZ3419281@noisy.programming.kicks-ass.net>
+ <20250918111853.5dc424df@gandalf.local.home>
+ <20250918172414.GC3409427@noisy.programming.kicks-ass.net>
+ <20250918173220.GA3475922@noisy.programming.kicks-ass.net>
+ <20250918151018.7281647b@batman.local.home>
+ <pde32olzdlqvbom5bya5exndcrfgsw7lmffy6uav5yoplonzj3@ddb2b5sihlpx>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sun, 21 Sep 2025 21:08:09 +0000
-Message-Id: <DCYSABMLGCUG.3T4ZQDGWFW6KY@wolber.net>
-Cc: <ast@kernel.org>, <daniel@iogearbox.net>, <andrii@kernel.org>,
- <martin.lau@linux.dev>, <song@kernel.org>, <yonghong.song@linux.dev>,
- <haoluo@google.com>, <jolsa@kernel.org>, <eddyz87@gmail.com>,
- <kpsingh@kernel.org>, <sdf@fomichev.me>, <mhiramat@kernel.org>,
- <mathieu.desnoyers@efficios.com>, <shuah@kernel.org>, <willemb@google.com>,
- <kerneljasonxing@gmail.com>, <paul.chaignon@gmail.com>,
- <chen.dylane@linux.dev>, <memxor@gmail.com>,
- <martin.kelly@crowdstrike.com>, <ameryhung@gmail.com>,
- <linux-kernel@vger.kernel.org>, <bpf@vger.kernel.org>,
- <linux-trace-kernel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
- <yikai.lin@vivo.com>
-Subject: Re: [RFC PATCH bpf-next v1 0/3] bpf: Add BPF program type for
- overriding tracepoint probes
-From: "Chuck Wolber" <chuck@wolber.net>
-To: "Steven Rostedt" <rostedt@goodmis.org>, "Fuyu Zhao" <zhaofuyu@vivo.com>
-X-Mailer: aerc 0.21.0
-References: <20250917072242.674528-1-zhaofuyu@vivo.com>
- <20250917153055.6fee814f@gandalf.local.home>
- <e8e8b5e2-35fe-43cc-ba41-c84ccba189f7@vivo.com>
- <20250918112425.23d4d379@gandalf.local.home>
-In-Reply-To: <20250918112425.23d4d379@gandalf.local.home>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: mh6isozgpb7fnk9p8zx3hazq3uig46iq
+X-Rspamd-Server: rspamout07
+X-Rspamd-Queue-Id: D2DBE20011
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18+d36eC/qktbvrhxTA9YT6i/6m3FQ+OTM=
+X-HE-Tag: 1758497621-436331
+X-HE-Meta: U2FsdGVkX18yJnjfWuD4l8P/8kQQLBF7dpWHFBcLfLM7PszIA87E/ipUCOOv654S7jhQpIuL4mINNOnscFa2w2ZnVbx3VPvobiTSJLw0WkRpqM1YubmwCp9RflyzSlC9PkUcp7jKaNfl/Ph4qgx0JCh87EOmtwJx3ef1YfSAESQ34PIczQQDVX7m9416fLhjqn7HZ7CTO+AHkYr6DEcf8PQxK+7XhqRE2XF9Ludqww4bOjyC2n71nZT6pEhct6/6iML0im6izcWGhuNr2D5QAgLtQ8foUfzSWD//jKXgpWuucBvcWFEZvVILff/9TclOAyVkSSXvu0Np2Kk8yKMTHf7H2GVZP9mmhe/FBjmSFTQX97Q+FsvTOZe4LUc1akYMAPUOavgcuF/dnVNLLTOrWw==
 
-On Thu Sep 18, 2025 at 3:29 PM UTC, Steven Rostedt wrote:
->
-> My entire workflow for what I created in the tracing system was "I have a
-> need, I will implement it". The "need" came first. I then wrote code to
-> satisfy that need. It should not be the other way around.
+On Fri, 19 Sep 2025 16:34:02 -0700
+Josh Poimboeuf <jpoimboe@kernel.org> wrote:
 
-Tagging on to this sentiment - the kernel's design is emergent and will alw=
-ays
-remain so.
+> > That does look like that would work as the way I expected task_work to
+> > handle this case.  
+> 
+> BTW, I remember Peter had a fix for TWA_NMI_CURRENT, I guess it got lost
+> in the shuffle or did something else happen in the meantime?
+> 
+>   https://lore.kernel.org/20250122124228.GO7145@noisy.programming.kicks-ass.net
 
-Speculative features have a very low probability of reflecting the required
-design language. On the other hand, if someone needs a thing, the need will
-drive the use of conformal design language.
+Yeah, it did get lost in the shuffle. I took the code from your git
+tree, but missed the comments that were made to the patches you sent to
+the mailing list. :-p
 
-..Ch:W..
+Thanks for pointing this out!
 
+-- Steve
