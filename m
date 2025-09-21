@@ -1,102 +1,152 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 768D04C6E;
-	Sun, 21 Sep 2025 00:47:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD1E44A1A;
+	Sun, 21 Sep 2025 13:30:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758415654; cv=none; b=EN6Ukh0pMeVxnOit3hlWjZpz8p3Gtb4rr8RorzF+n0fAM+HCXyat7umCMAl6e9gzoHM3tkS1/ROknF8LcGuspF4rpPinSzf7LXiwMbe2L3aNd69Us4isa2Qi/El88Klr8hWkdV+FhSX/3RqCiosUMJ8Xv9Ok3FhvrtJtJmp95QA=
+	t=1758461443; cv=none; b=BOtqtFVVmyW59OZNWDB2AfWxdEN2MN0qhomf4N/e/JuTPfCeTkllrjzUaz2YlmvDYYBK5rDm7kDQJGA0Mv/F71M1SY2Pv7vz5qoYmLp0QOZfzKDexfQctgYCFN7rnjb+QzqBMR9NDxyd/2PY0VugT3wGG07Kt7TUA/UpW8xLOHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758415654; c=relaxed/simple;
-	bh=aFgKZNQUQCaJ2vrroedLHD+DNPOlwj6GGUlnWjzhG5w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H8cqd+3rQJtjPfDYmvqGjvEijsYtdgcEF2RtqhYNYac69UuPNDlcjVvudazsMs1Q6b2LV5/0mvOBuDbYf3YKe9iJNiVk0qneYHxhs/MMgSCn24qYSUvSypwLSZNvPyypPXolDjNgk9lvR6/IC0KAkLtBciZcQSmRbBkuFCFye1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fLUxwzDv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1758461443; c=relaxed/simple;
+	bh=Q5ISgQTInyGMIIkbNRX//rQ9mgpfag4Oxjgh8PZ56WA=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=lPcc3CyFTUenJS3yFaQGuAbCYF96LTAhPMCETLMbKAGz7997xgikhJgI3bO8XB+/dqOgsAPkm3yHH3SzuVo0UAgKb1VAfXDbmHFM6IaXXOFYkEfTcF6h6jS5NxgfsyXAvIx9kwamngF4YGkq96VXzYkQxsPoJMdEuS10dgXYjWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TA4srYKt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fLUxwzDv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F266C4CEEB;
-	Sun, 21 Sep 2025 00:47:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TA4srYKt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B27F1C4CEE7;
+	Sun, 21 Sep 2025 13:30:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758415652;
-	bh=aFgKZNQUQCaJ2vrroedLHD+DNPOlwj6GGUlnWjzhG5w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fLUxwzDvBQpVLTwxkVcEMGkM0isY6OG/nLB20SsNVXIRKxxZrAbNIPP/lH+JLvuUn
-	 Kib9NA0Qx8ucaR4Lud4LpP66fHzAfy4YMg/WGXGCNSBD/snmzPLJ/GJr5uZM4GRPA4
-	 FmPuCrywKU63yNMwT+i1LUerAAz4LYMUpnupPis0tcH13QBvBt9TCQlrhzdIw9AGje
-	 8PZjHxaN7jKNeL5CBfGmMNjS4nLwafvguDKC8M88c1TuvUDa7uTmWsQUU6EjD9ZRCh
-	 q7PhsUzYYnzKkPRC+D+A2gtlVl3c6gXMUqXDS+5w81SLBHHJjwyUZmv9q7TG8Bge2K
-	 OMtCSqZskSdHw==
-Date: Sat, 20 Sep 2025 18:47:27 -0600
-From: Keith Busch <kbusch@kernel.org>
-To: Leon Romanovsky <leon@kernel.org>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
-	Jason Gunthorpe <jgg@nvidia.com>,
-	Abdiel Janulgue <abdiel.janulgue@gmail.com>,
-	Alexander Potapenko <glider@google.com>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Christoph Hellwig <hch@lst.de>, Danilo Krummrich <dakr@kernel.org>,
-	David Hildenbrand <david@redhat.com>, iommu@lists.linux.dev,
-	Jason Wang <jasowang@redhat.com>, Jens Axboe <axboe@kernel.dk>,
-	Joerg Roedel <joro@8bytes.org>, Jonathan Corbet <corbet@lwn.net>,
-	Juergen Gross <jgross@suse.com>, kasan-dev@googlegroups.com,
-	linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	linux-nvme@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-	linux-trace-kernel@vger.kernel.org,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>, rust-for-linux@vger.kernel.org,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	virtualization@lists.linux.dev, Will Deacon <will@kernel.org>,
-	xen-devel@lists.xenproject.org
-Subject: Re: [PATCH v6 00/16] dma-mapping: migrate to physical address-based
- API
-Message-ID: <aM9LH6WSeOPGeleY@kbusch-mbp>
-References: <CGME20250909132821eucas1p1051ce9e0270ddbf520e105c913fa8db6@eucas1p1.samsung.com>
- <cover.1757423202.git.leonro@nvidia.com>
- <0db9bce5-40df-4cf5-85ab-f032c67d5c71@samsung.com>
- <20250912090327.GU341237@unreal>
- <aM1_9cS_LGl4GFC5@kbusch-mbp>
- <20250920155352.GH10800@unreal>
+	s=k20201202; t=1758461443;
+	bh=Q5ISgQTInyGMIIkbNRX//rQ9mgpfag4Oxjgh8PZ56WA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=TA4srYKtvIC+a6CIgbscsuIbC5mhGny/BH/tghF+oXcPmxysgVLwoLJtVlQiTTbi7
+	 fsVtBN+vy2wypH6i5KhSlXnjgYJaVgYylkppkz0zdwzxVnGLDub4IzS8Alp3EyiJ/b
+	 bzHwb8tc+t6BcpQ1OqxhAeG8YqRPnOyqU2wAOxLyPyatG/J/+phciiEPLJl/096Rl5
+	 7xrsgFXzvxU6h9sNJ8rreDtTOgNrtfjLACXAdVgph8YAXncfkr1bJlG8XZiH6q5EeP
+	 mJFfsE67SvyFL8ec39WWVZaPX8EBRW8u5q8r7858LZh5MICOA6Hmrgmm3gi/ixh4O2
+	 AQIeiFR+ZE5Eg==
+Date: Sun, 21 Sep 2025 22:30:37 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Feng Yang <yangfeng59949@163.com>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, John Fastabend
+ <john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, Martin
+ KaFai Lau <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>, Song Liu
+ <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, KP Singh
+ <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo
+ <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, bpf
+ <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+ linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>
+Subject: Re: [BUG] Failed to obtain stack trace via bpf_get_stackid on ARM64
+ architecture
+Message-Id: <20250921223037.f8df26b59d60b8b3f7cf2d53@kernel.org>
+In-Reply-To: <CAADnVQKrnYCaUCd+BNvZQmR0-6CSu2GBa=TCCCjPLSNfb_Ddvg@mail.gmail.com>
+References: <20250919071902.554223-1-yangfeng59949@163.com>
+	<CAADnVQKrnYCaUCd+BNvZQmR0-6CSu2GBa=TCCCjPLSNfb_Ddvg@mail.gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250920155352.GH10800@unreal>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Sat, Sep 20, 2025 at 06:53:52PM +0300, Leon Romanovsky wrote:
-> On Fri, Sep 19, 2025 at 10:08:21AM -0600, Keith Busch wrote:
-> > On Fri, Sep 12, 2025 at 12:03:27PM +0300, Leon Romanovsky wrote:
-> > > On Fri, Sep 12, 2025 at 12:25:38AM +0200, Marek Szyprowski wrote:
-> > > > >
-> > > > > This series does the core code and modern flows. A followup series
-> > > > > will give the same treatment to the legacy dma_ops implementation.
-> > > > 
-> > > > Applied patches 1-13 into dma-mapping-for-next branch. Let's check if it 
-> > > > works fine in linux-next.
-> > > 
-> > > Thanks a lot.
-> > 
-> > Just fyi, when dma debug is enabled, we're seeing this new warning
-> > below. I have not had a chance to look into it yet, so I'm just
-> > reporting the observation.
+On Fri, 19 Sep 2025 19:56:20 -0700
+Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
+
+> On Fri, Sep 19, 2025 at 12:19 AM Feng Yang <yangfeng59949@163.com> wrote:
+> >
+> > When I use bpf_program__attach_kprobe_multi_opts to hook a BPF program that contains the bpf_get_stackid function on the arm64 architecture,
+> > I find that the stack trace cannot be obtained. The trace->nr in __bpf_get_stackid is 0, and the function returns -EFAULT.
+> >
+> > For example:
+> > diff --git a/tools/testing/selftests/bpf/progs/kprobe_multi.c b/tools/testing/selftests/bpf/progs/kprobe_multi.c
+> > index 9e1ca8e34913..844fa88cdc4c 100644
+> > --- a/tools/testing/selftests/bpf/progs/kprobe_multi.c
+> > +++ b/tools/testing/selftests/bpf/progs/kprobe_multi.c
+> > @@ -36,6 +36,15 @@ __u64 kretprobe_test6_result = 0;
+> >  __u64 kretprobe_test7_result = 0;
+> >  __u64 kretprobe_test8_result = 0;
+> >
+> > +typedef __u64 stack_trace_t[2];
+> > +
+> > +struct {
+> > +       __uint(type, BPF_MAP_TYPE_STACK_TRACE);
+> > +       __uint(max_entries, 1024);
+> > +       __type(key, __u32);
+> > +       __type(value, stack_trace_t);
+> > +} stacks SEC(".maps");
+> > +
+> >  static void kprobe_multi_check(void *ctx, bool is_return)
+> >  {
+> >         if (bpf_get_current_pid_tgid() >> 32 != pid)
+> > @@ -100,7 +109,9 @@ int test_kretprobe(struct pt_regs *ctx)
+> >  SEC("kprobe.multi")
+> >  int test_kprobe_manual(struct pt_regs *ctx)
+> >  {
+> > +       int id = bpf_get_stackid(ctx, &stacks, 0);
 > 
-> Did you apply all patches or only Marek's branch?
-> I don't get this warning when I run my NVMe tests on current dmabuf-vfio branch.
+> ftrace_partial_regs() supposed to work on x86 and arm64,
+> but since multi-kprobe is the only user...
 
-This was the snapshot of linux-next from the 20250918 tag. It doesn't
-have the full patchset applied.
+It should be able to unwind stack. It saves sp, pc, lr, fp.
 
-One other thing to note, this was runing on arm64 platform using smmu
-configured with 64k pages. If your iommu granule is 4k instead, we
-wouldn't use the blk_dma_map_direct path.
+	regs->sp = afregs->sp;
+	regs->pc = afregs->pc;
+	regs->regs[29] = afregs->fp;
+	regs->regs[30] = afregs->lr;
+
+> I suspect the arm64 implementation wasn't really tested.
+> Or maybe there is some other issue.
+
+It depends on how bpf_get_stackid() works. Some registers for that
+function may not be saved.
+
+If it returns -EFAULT, the get_perf_callchain() returns NULL.
+
+struct perf_callchain_entry *
+get_perf_callchain(struct pt_regs *regs, u32 init_nr, bool kernel, bool user,
+		   u32 max_stack, bool crosstask, bool add_mark)
+{
+...
+	entry = get_callchain_entry(&rctx);
+	if (!entry)
+		return NULL;
+
+
+Thus the `get_callchain_entry(&rctx)` returns NULL. But if so,
+this does not related to the ftrace_partial_regs(), because
+get_callchain_entry() returns the per-cpu callchain woarking
+buffer for the context, not decoding stack.
+
+struct perf_callchain_entry *get_callchain_entry(int *rctx)
+{
+	int cpu;
+	struct callchain_cpus_entries *entries;
+
+	*rctx = get_recursion_context(this_cpu_ptr(callchain_recursion));
+	if (*rctx == -1)
+		return NULL;
+
+	entries = rcu_dereference(callchain_cpus_entries);
+	if (!entries) {
+		put_recursion_context(this_cpu_ptr(callchain_recursion), *rctx);
+		return NULL;
+	}
+
+	cpu = smp_processor_id();
+
+	return (((void *)entries->cpu_entries[cpu]) +
+		(*rctx * perf_callchain_entry__sizeof()));
+}
+
+What context does BPF expect, and how does it detect?
+
+Thank you,
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
