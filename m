@@ -1,50 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD1E44A1A;
-	Sun, 21 Sep 2025 13:30:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13A0234BA28;
+	Sun, 21 Sep 2025 14:14:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758461443; cv=none; b=BOtqtFVVmyW59OZNWDB2AfWxdEN2MN0qhomf4N/e/JuTPfCeTkllrjzUaz2YlmvDYYBK5rDm7kDQJGA0Mv/F71M1SY2Pv7vz5qoYmLp0QOZfzKDexfQctgYCFN7rnjb+QzqBMR9NDxyd/2PY0VugT3wGG07Kt7TUA/UpW8xLOHg=
+	t=1758464075; cv=none; b=t2YUhxhmAgxzLbs3a4uYQAhKXiirGQNqv+nTLvRi29BkbLLibdweNGXmJlCPsMtI4oZaVb5wB/DhrtnEdfgePqCdArrwY6YW1dSUwn7HAQRW6E5D8DIWo+JlU5EiiQJ1tPKmR6Vzct6y3kmc2+U/Dxyp86LPwUdHpO8C6mwZn4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758461443; c=relaxed/simple;
-	bh=Q5ISgQTInyGMIIkbNRX//rQ9mgpfag4Oxjgh8PZ56WA=;
+	s=arc-20240116; t=1758464075; c=relaxed/simple;
+	bh=yQe6GTyed+bf6gX5mLuOnWqpRoDA9ZC1uGgD1I1Q104=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=lPcc3CyFTUenJS3yFaQGuAbCYF96LTAhPMCETLMbKAGz7997xgikhJgI3bO8XB+/dqOgsAPkm3yHH3SzuVo0UAgKb1VAfXDbmHFM6IaXXOFYkEfTcF6h6jS5NxgfsyXAvIx9kwamngF4YGkq96VXzYkQxsPoJMdEuS10dgXYjWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TA4srYKt; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=uCPqbhVPdSjCEKnAw3aI/5HTmDcqHNY0s6CkrcsiXeRYiMmtLItVgL/Rw03RbdYs3h/faNs8kh0Oa4f6I2VUVrDJ2kVYk4DOUQ7RHOLL+k89OmRivQRl/qDEjfOHIbrNNKRiwseDeupJx1hyGozRGxMejuG1yGr/ik2G16T+kjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qPywV+G4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TA4srYKt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B27F1C4CEE7;
-	Sun, 21 Sep 2025 13:30:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qPywV+G4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C33D2C4CEE7;
+	Sun, 21 Sep 2025 14:14:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758461443;
-	bh=Q5ISgQTInyGMIIkbNRX//rQ9mgpfag4Oxjgh8PZ56WA=;
+	s=k20201202; t=1758464074;
+	bh=yQe6GTyed+bf6gX5mLuOnWqpRoDA9ZC1uGgD1I1Q104=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=TA4srYKtvIC+a6CIgbscsuIbC5mhGny/BH/tghF+oXcPmxysgVLwoLJtVlQiTTbi7
-	 fsVtBN+vy2wypH6i5KhSlXnjgYJaVgYylkppkz0zdwzxVnGLDub4IzS8Alp3EyiJ/b
-	 bzHwb8tc+t6BcpQ1OqxhAeG8YqRPnOyqU2wAOxLyPyatG/J/+phciiEPLJl/096Rl5
-	 7xrsgFXzvxU6h9sNJ8rreDtTOgNrtfjLACXAdVgph8YAXncfkr1bJlG8XZiH6q5EeP
-	 mJFfsE67SvyFL8ec39WWVZaPX8EBRW8u5q8r7858LZh5MICOA6Hmrgmm3gi/ixh4O2
-	 AQIeiFR+ZE5Eg==
-Date: Sun, 21 Sep 2025 22:30:37 +0900
+	b=qPywV+G4wS+ndT8c6+ueUmHmqMvzi6w18HQqkLC0K4CULoS/PCaQRsNcJdlh8gqts
+	 dFmh0mJZbN7xRR+MQfiiYnLVmttD6ODumIIPUKFXioYh+ypzsOKl84LaqcXeDWPlZw
+	 tdFlTsOCMfu5ikjqmbF5s6PosJNK1b4PLi69fNrVCnlfhbCSUD1BQO9br8uWvid5MA
+	 X0QIv0jkSVBGie3e5aEDLNoFDf92xRA+o7JHcJNpU6jKzHcu7xfKewsPOTRvtLrkif
+	 uB437Fr9O83EBpwprE1fzMET3T3soiBLTE5Zlo7InUTFBLHz0c7/K5usbfGi94OvWP
+	 jWPLR1rS0nJZg==
+Date: Sun, 21 Sep 2025 23:14:30 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Feng Yang <yangfeng59949@163.com>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, John Fastabend
- <john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, Martin
- KaFai Lau <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>, Song Liu
- <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, KP Singh
- <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo
- <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, bpf
- <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
- linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>
-Subject: Re: [BUG] Failed to obtain stack trace via bpf_get_stackid on ARM64
- architecture
-Message-Id: <20250921223037.f8df26b59d60b8b3f7cf2d53@kernel.org>
-In-Reply-To: <CAADnVQKrnYCaUCd+BNvZQmR0-6CSu2GBa=TCCCjPLSNfb_Ddvg@mail.gmail.com>
-References: <20250919071902.554223-1-yangfeng59949@163.com>
-	<CAADnVQKrnYCaUCd+BNvZQmR0-6CSu2GBa=TCCCjPLSNfb_Ddvg@mail.gmail.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: kernel test robot <lkp@intel.com>, "Masami Hiramatsu (Google)"
+ <mhiramat@kernel.org>, oe-kbuild-all@lists.linux.dev, Mark Rutland
+ <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing: Add an option to show symbols in _text+offset
+ for function profiler
+Message-Id: <20250921231430.66a0da9e185ea1084bc6d301@kernel.org>
+In-Reply-To: <20250919131621.093295c8@gandalf.local.home>
+References: <175826135058.101165.7219957344129610147.stgit@devnote2>
+	<202509200000.EJ4InVti-lkp@intel.com>
+	<20250919131621.093295c8@gandalf.local.home>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -52,101 +47,55 @@ List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, 19 Sep 2025 19:56:20 -0700
-Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
+On Fri, 19 Sep 2025 13:16:21 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> On Fri, Sep 19, 2025 at 12:19 AM Feng Yang <yangfeng59949@163.com> wrote:
-> >
-> > When I use bpf_program__attach_kprobe_multi_opts to hook a BPF program that contains the bpf_get_stackid function on the arm64 architecture,
-> > I find that the stack trace cannot be obtained. The trace->nr in __bpf_get_stackid is 0, and the function returns -EFAULT.
-> >
-> > For example:
-> > diff --git a/tools/testing/selftests/bpf/progs/kprobe_multi.c b/tools/testing/selftests/bpf/progs/kprobe_multi.c
-> > index 9e1ca8e34913..844fa88cdc4c 100644
-> > --- a/tools/testing/selftests/bpf/progs/kprobe_multi.c
-> > +++ b/tools/testing/selftests/bpf/progs/kprobe_multi.c
-> > @@ -36,6 +36,15 @@ __u64 kretprobe_test6_result = 0;
-> >  __u64 kretprobe_test7_result = 0;
-> >  __u64 kretprobe_test8_result = 0;
-> >
-> > +typedef __u64 stack_trace_t[2];
-> > +
-> > +struct {
-> > +       __uint(type, BPF_MAP_TYPE_STACK_TRACE);
-> > +       __uint(max_entries, 1024);
-> > +       __type(key, __u32);
-> > +       __type(value, stack_trace_t);
-> > +} stacks SEC(".maps");
-> > +
-> >  static void kprobe_multi_check(void *ctx, bool is_return)
-> >  {
-> >         if (bpf_get_current_pid_tgid() >> 32 != pid)
-> > @@ -100,7 +109,9 @@ int test_kretprobe(struct pt_regs *ctx)
-> >  SEC("kprobe.multi")
-> >  int test_kprobe_manual(struct pt_regs *ctx)
-> >  {
-> > +       int id = bpf_get_stackid(ctx, &stacks, 0);
+> On Sat, 20 Sep 2025 01:09:52 +0800
+> kernel test robot <lkp@intel.com> wrote:
 > 
-> ftrace_partial_regs() supposed to work on x86 and arm64,
-> but since multi-kprobe is the only user...
+> > Hi Masami,
+> > 
+> > kernel test robot noticed the following build errors:
+> > 
+> > [auto build test ERROR on trace/for-next]
+> > [also build test ERROR on linus/master v6.17-rc6 next-20250918]
+> > [If your patch is applied to the wrong git tree, kindly drop us a note.
+> > And when submitting patch, we suggest to use '--base' as documented in
+> > https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> > 
+> > url:    https://github.com/intel-lab-lkp/linux/commits/Masami-Hiramatsu-Google/tracing-Add-an-option-to-show-symbols-in-_text-offset-for-function-profiler/20250919-135733
+> > base:   https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace for-next
+> > patch link:    https://lore.kernel.org/r/175826135058.101165.7219957344129610147.stgit%40devnote2
+> > patch subject: [PATCH] tracing: Add an option to show symbols in _text+offset for function profiler
+> > config: x86_64-buildonly-randconfig-002-20250919 (https://download.01.org/0day-ci/archive/20250920/202509200000.EJ4InVti-lkp@intel.com/config)
+> > compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
+> > reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250920/202509200000.EJ4InVti-lkp@intel.com/reproduce)
+> > 
+> > If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> > the same patch/commit), kindly add following tags
+> > | Reported-by: kernel test robot <lkp@intel.com>
+> > | Closes: https://lore.kernel.org/oe-kbuild-all/202509200000.EJ4InVti-lkp@intel.com/
+> > 
+> > All error/warnings (new ones prefixed by >>):
+> > 
+> >    In file included from kernel/trace/trace_sched_switch.c:15:
+> > >> kernel/trace/trace.h:1422:37: warning: left shift count >= width of type [-Wshift-count-overflow]  
+> >     1422 | #define C(a, b) TRACE_ITER_##a = (1 << TRACE_ITER_##a##_BIT)
+> >          |                                     ^~
+> 
+> Ouch! We need to make the option enum64 now!
 
-It should be able to unwind stack. It saves sp, pc, lr, fp.
+Ah, it is an enum, not macro.
 
-	regs->sp = afregs->sp;
-	regs->pc = afregs->pc;
-	regs->regs[29] = afregs->fp;
-	regs->regs[30] = afregs->lr;
+Thanks!
 
-> I suspect the arm64 implementation wasn't really tested.
-> Or maybe there is some other issue.
+> 
+> -- Steve
+> 
 
-It depends on how bpf_get_stackid() works. Some registers for that
-function may not be saved.
-
-If it returns -EFAULT, the get_perf_callchain() returns NULL.
-
-struct perf_callchain_entry *
-get_perf_callchain(struct pt_regs *regs, u32 init_nr, bool kernel, bool user,
-		   u32 max_stack, bool crosstask, bool add_mark)
-{
-...
-	entry = get_callchain_entry(&rctx);
-	if (!entry)
-		return NULL;
-
-
-Thus the `get_callchain_entry(&rctx)` returns NULL. But if so,
-this does not related to the ftrace_partial_regs(), because
-get_callchain_entry() returns the per-cpu callchain woarking
-buffer for the context, not decoding stack.
-
-struct perf_callchain_entry *get_callchain_entry(int *rctx)
-{
-	int cpu;
-	struct callchain_cpus_entries *entries;
-
-	*rctx = get_recursion_context(this_cpu_ptr(callchain_recursion));
-	if (*rctx == -1)
-		return NULL;
-
-	entries = rcu_dereference(callchain_cpus_entries);
-	if (!entries) {
-		put_recursion_context(this_cpu_ptr(callchain_recursion), *rctx);
-		return NULL;
-	}
-
-	cpu = smp_processor_id();
-
-	return (((void *)entries->cpu_entries[cpu]) +
-		(*rctx * perf_callchain_entry__sizeof()));
-}
-
-What context does BPF expect, and how does it detect?
-
-Thank you,
 
 -- 
 Masami Hiramatsu (Google) <mhiramat@kernel.org>
