@@ -1,112 +1,83 @@
-Received: from mail-yb1-f194.google.com (mail-yb1-f194.google.com [209.85.219.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73C17191F9C
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 22 Sep 2025 14:11:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AA83191F66;
+	Mon, 22 Sep 2025 14:17:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758550262; cv=none; b=FOV8IKrmpgMmRuj0s4SB48qHtkpKdbSggME2orBJW0HFCqRP8yx7H+jEdZIG2PB8+Ej+TRR1YPmexu1AdLXnTdk+xOJDCg4FoSEVZT2IRdt5+72KmvWBXkFCIUauBJYVd22jKQPIs6IujzUL/yLMHihyVbQB+Gci7Wn6LDsWadY=
+	t=1758550644; cv=none; b=AAfANixkKRvGaKHqA5dr7x1KbuItQJkSdBTD6H3lelMxnV9GpDMRMDaCztrAkOH1yWyQ99hBqODo/7GzCJX2vLHtZPVcCXE1BplqNN3aVqXGCcRzG4G1KdZCNAIttcZjRmGn0vHnus3uPNH/e0wBSsjlhQ+kHXqWtkQgkVktQK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758550262; c=relaxed/simple;
-	bh=8XW2n2VhDigOuWDnayQlpettVtHAzkIB+llF2eI+Whk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Lt6Gtbg0cUxfs/ewTXQvrYPLRtIV0I2CCh++QCofoZ9K45ysg377aJKjrho1j5vWhbr3Ic1K16b3GiPwlmmhStmlureVNlxTXKWJa+EwzuWxaZvaNVZmE1yWOcS0VdQMPPdEsmUowJvDuQnaG9MLAr8KwJ4Yny1R0lZioSX80bQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XWMt7fj3; arc=none smtp.client-ip=209.85.219.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1758550644; c=relaxed/simple;
+	bh=gn8LLxkIVjhTNakRHlp3LSM2QyH8Sg2TELVlWw65SjQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SnKw4KrZn+lgiU4Cii9cYR2wXv0HZCPmYKE9nOTC4leAG5oGbSfore8LfxGLQA4ovZ4RT3CnVNWutrkyGoOAQrHGdfpytzMCj+oPTby3wUrNpWlB1+jh3E5zhWEoFomzI9ttptJCMeE6J9leVSekfM+s+IAsACJIpu4qBneDZ0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=fJVmMbFn; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XWMt7fj3"
-Received: by mail-yb1-f194.google.com with SMTP id 3f1490d57ef6-eaf8e85f66eso774373276.2
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 22 Sep 2025 07:11:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1758550259; x=1759155059; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8XW2n2VhDigOuWDnayQlpettVtHAzkIB+llF2eI+Whk=;
-        b=XWMt7fj39vU8t34Vq6XztEwf8qbKcfWyAIecuYVaApochod81YcP9nbSpq2eko3oJr
-         1N2MCr9gTFD947xt5sdBfyY2Zri7pLxi3hFw7TRqD4BzESw8W+HhHY8hGc4UOMX7qfoz
-         VjQkwbSSClk65dmnUjH5esFRXrrfRQ4gMAjuVLqGjQHrKiwJr0q3q4HUJJ5GOsE03I3I
-         GMeRYhSxDPkoERtX1+Zd0W/2vX81ePe3cQ+1BML63z6Nm1jw1AsgjIcIcQHVWC2hooFf
-         4VN4yDL4ZPQbtCb1zZ2KejOqrdgEHrzKUGWIviTanQmQBr3djhX2pHklYXc6V70PvBd1
-         W48w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758550259; x=1759155059;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8XW2n2VhDigOuWDnayQlpettVtHAzkIB+llF2eI+Whk=;
-        b=mb/Nm+3gbZKljGxPKgGr9fS202auh2tsgxNnOiMceXgrSll7s1y8wDCH9c3KlFyuz7
-         frYo0XSXUWqxGC1raaQVgLzZ6x84XEw5VDT+xSIQGNxqa6kJRo4rON3R1C84bXapRRtj
-         6+2V41ZnG6xH54f5EUZuqvRtIGhohjPwhbNulC33JR0vnXSE90ipzAW1jArOlBYQAo92
-         NBxQh0o0JQn8rvtLtjGxWwQTRKJyGqDkgZ9r6oAor3ALxJpIbR3CHvBGDEz85kIoArCA
-         SS4gGI+Y7zcbSjPGzsPRYWgeEG2auz5YduPf7QT0MdgXUD24IoO7dtytKfRKyGNcEbgF
-         OTZw==
-X-Forwarded-Encrypted: i=1; AJvYcCUUx73kCPEvoi1MiYhm6zF0DTXok608CgReQF3E6i/SWuYfV4HmpWwStpxsozsO1KV2Ystw4rRCbKKSuMXz0pTQz/Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyy2KA6x7gXVGSPYPylXQLuX+ycZ1faL7FHnEgCpGJ8saY8rNJL
-	GdUX2rVGkhz9KatUJdy1CIRJ/TKIMLxTbtHBV0mbXPSD3jynu57SLyd8hrqYcJX3gN7MlJWRfnq
-	mbEu7lkLpJjDqLZ3YewEMP5XiYqJdq78=
-X-Gm-Gg: ASbGnctvn38PE72Fo3Mv80NiWjkhFWUI44HwvRPz/XwJFH/HtDd1w4iX316jihgI7kI
-	C9jgrqWj758kdvhwqWOfUQgAoEfwMzWMOzP37wJEiwyw41I/lfVIi9FHeuD0tItBlAZdXyFrRKt
-	Cy4dw5mlmhraujcOv14gk01JSgU4Qp/uSGgCJGBXqX2eXL6tMkPrKC1d2aph1ijvidbxfXMug6p
-	sxYmO8=
-X-Google-Smtp-Source: AGHT+IFJzannJGdG0U/xTsTeep3q5OsJ2aVW353S/liXxsa4qbfagG/H+I3ZslMdOqGQa0hUJ2OFr0JeEIz8m/TPPLc=
-X-Received: by 2002:a05:6902:2b90:b0:eae:e869:7c1d with SMTP id
- 3f1490d57ef6-eaee8697e34mr4628048276.51.1758550259329; Mon, 22 Sep 2025
- 07:10:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fJVmMbFn"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=PgurSM8v6g4XqceJ5reSyG+7GSpIjEQay/9SsuDXPGA=; b=fJVmMbFn82hQOQlJn8i7wEAqMo
+	gIYPHmDMHX1ccIwKVsRyoMEEwEzsQxYo/VoQPeD/jPETtuusCXpyCo+vvUR+ORfz6Trv7m3sYvgdy
+	35nTRXyTUIC+muQVKIJxXk7Vl9ZPyWsu9P4y2/63nVyT4C4rPHTvJRf2pG3j0nLy66mRnN9thvT/y
+	92XzdLRjNlhsIHgkol5PbliP0vxmIq33BIzw4tGjLHKXlinDbGYa6af/45ZNCYTapl0FP072aiYnO
+	L1YhCXOmnmsQQfwaDs5VORIz4NoP9ssCD+piMYohzxsBZwUNhqYosCl1SE0dD9HvhjWh1bYkIrDyv
+	fxabBk5A==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1v0hLp-00000009Kva-36Qu;
+	Mon, 22 Sep 2025 14:17:09 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 4920F30057E; Mon, 22 Sep 2025 16:17:08 +0200 (CEST)
+Date: Mon, 22 Sep 2025 16:17:08 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Steven Rostedt <rostedt@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	x86@kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Indu Bhagat <indu.bhagat@oracle.com>,
+	"Jose E. Marchesi" <jemarch@gnu.org>,
+	Beau Belgrave <beaub@linux.microsoft.com>,
+	Jens Remus <jremus@linux.ibm.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Florian Weimer <fweimer@redhat.com>, Sam James <sam@gentoo.org>,
+	Kees Cook <kees@kernel.org>, Carlos O'Donell <codonell@redhat.com>
+Subject: Re: [RESEND][PATCH v15 0/4] perf: Support the deferred unwinding
+ infrastructure
+Message-ID: <20250922141708.GB70318@noisy.programming.kicks-ass.net>
+References: <20250908171412.268168931@kernel.org>
+ <20250918114610.GZ3419281@noisy.programming.kicks-ass.net>
+ <20250918111853.5dc424df@gandalf.local.home>
+ <20250918172414.GC3409427@noisy.programming.kicks-ass.net>
+ <20250918173220.GA3475922@noisy.programming.kicks-ass.net>
+ <20250918151018.7281647b@batman.local.home>
+ <pde32olzdlqvbom5bya5exndcrfgsw7lmffy6uav5yoplonzj3@ddb2b5sihlpx>
+ <20250922072307.GQ4067720@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250922095705.252519-1-dongml2@chinatelecom.cn> <CAPhsuW7THs9G+QV5_g+tMvXTAqVJ7jha-m70f675e9phK1Pryg@mail.gmail.com>
-In-Reply-To: <CAPhsuW7THs9G+QV5_g+tMvXTAqVJ7jha-m70f675e9phK1Pryg@mail.gmail.com>
-From: Menglong Dong <menglong8.dong@gmail.com>
-Date: Mon, 22 Sep 2025 22:10:48 +0800
-X-Gm-Features: AS18NWBlqc_FP-SWeeZCKNLtFTPzs5iuu6l_5C6HkEcL7Ve0M-pNng3gsAfS8eU
-Message-ID: <CADxym3b=hU4DuuhA_DAs6VYNUTp7spTsTWamMaxDGSxjoiuwbg@mail.gmail.com>
-Subject: Re: [PATCH bpf-next] bpf: remove is_return in struct bpf_session_run_ctx
-To: Song Liu <song@kernel.org>
-Cc: jolsa@kernel.org, kpsingh@kernel.org, mattbobrowski@google.com, 
-	ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev, 
-	eddyz87@gmail.com, yonghong.song@linux.dev, john.fastabend@gmail.com, 
-	sdf@fomichev.me, haoluo@google.com, rostedt@goodmis.org, mhiramat@kernel.org, 
-	mathieu.desnoyers@efficios.com, bpf@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250922072307.GQ4067720@noisy.programming.kicks-ass.net>
 
-On Mon, Sep 22, 2025 at 10:08=E2=80=AFPM Song Liu <song@kernel.org> wrote:
->
-> On Mon, Sep 22, 2025 at 11:57=E2=80=AFAM Menglong Dong <menglong8.dong@gm=
-ail.com> wrote:
-> >
-> > The "data" in struct bpf_session_run_ctx is always 8-bytes aligned.
-> > Therefore, we can store the "is_return" to the last bit of the "data",
-> > which can make bpf_session_run_ctx 8-bytes aligned and save memory.
->
-> Does this really save anything? AFAICT, bpf_session_run_ctx is
-> only allocated on the stack. Therefore, we don't save any memory
-> unless there is potential risk of stack overflow.
+On Mon, Sep 22, 2025 at 09:23:07AM +0200, Peter Zijlstra wrote:
 
-Hi, Song. My original intention is to save the usage of the
-stack to prevent potential stack overflow, especially when we
-trace all the kernel functions with kprobe-multi.
+> I'll go stick it in the pile. Thanks!
 
-The most thing for me is that the unaligned field in the struct
-looks very awkward, and it consumes 8-bytes only for a bit.
+  git://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git unwind/cleanup
 
->
-> OTOH, this last-bit logic is confusing and error prone. I would argue
-> against this type of optimization.
-
-Ah, you are right about this part. It does make the code more
-confusing :/
-
-Thanks!
-Menglong Dong
-
->
-> Thanks,
-> Song
+I'll let the robot have a chew and post tomorrow or so.
