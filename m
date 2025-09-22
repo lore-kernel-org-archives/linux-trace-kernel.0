@@ -1,143 +1,124 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B53632EDD53;
-	Mon, 22 Sep 2025 02:16:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE5E722DA08;
+	Mon, 22 Sep 2025 05:44:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758507393; cv=none; b=kuYmIA7IdgSo5ATX9tqiqq7gZCtsdycyGDOyfn0Oh/CgO0OE8J+uGVZo2ENErd8yNe+4I/ccnh2TFu+soNGHV5OgANNY9KLCEJ+PXOmMEJkSdFUo0HOdwT7yKCgVl+mRz5rvonvGuHGte8ozdzrVCtp2tqCByb73VAvOuuJCOas=
+	t=1758519876; cv=none; b=vDkrS1q1Ai5SU5/hvW5nzs9a28E6ZvsSMgXqqhrhDsw2pkWEh+IBSak2qhbqdj+l6YCpVtbQTKnpDHQkDpdxxR94t9ubywtk8gRMEC6xCm4sDej5ypOP8vr5HvFnHEw8CSblAhMtrp6SgoARuKmh8fsaLdyX8P2xxNIyxZJPSro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758507393; c=relaxed/simple;
-	bh=S+MrxK+D7iPGMmAzNAjmCE60veWJAjG6P4Xgv8bSqOI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=gK0vgAxXuVWxf6Ra8keXwYb+SzpKZscBnl+h96xuGZWzOu8uIYjh0mR/CdlFwmXRI9Y/YM2W02qtA9gDvckVZNb5dzurVCr/lDODJvePjowfLMuYyGcl93XWbUoJyQQkiUPVWlC0O2hyAp5YELz00wGIFdDlje5qaNVZk4S0rE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=LV1B0/r9; arc=none smtp.client-ip=220.197.31.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1758519876; c=relaxed/simple;
+	bh=+wdBvFncN66YpFBetbmAcr+kqGmkLQW3T1NqA9oUx5g=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MwAO1wBmGLXS4RFNGT8aXCzbADwdGNoo4c8gtptDWW25lpReOGauRulGpOO7oVwn4XmsQ9rOQQVKFfH2HL1Ldmu+femWx4FP11ONQMB9TglmjrGtwEifSO/0a6cmIHGYJb5VxWh92+w4OmyHB+s6E/6v/H71wG/2dB5eoEhzNSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=K1ER9r8Y; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="LV1B0/r9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=GI
-	Nukv/QL9unHjw23yOGGLZ/mpVpJgP94ErHeVgoy0A=; b=LV1B0/r9o066QDOKKX
-	vJrOUr+lmS3cUYjHSB8kvc/prrZKQmHwILPgunEMHjWG3BVf6j3nddYRoIZlATld
-	qk/npg8pxD6CiVAbBOFusXb1ddYmgAvlPRuYPJFcka3h1o7wY2QFzWJooUqIdClI
-	NqqW5iDWnjDw41J0VC4gAQgjk=
-Received: from localhost.localdomain (unknown [])
-	by gzsmtp3 (Coremail) with SMTP id PigvCgD3PyFDsdBo1NKIDw--.13102S2;
-	Mon, 22 Sep 2025 10:15:33 +0800 (CST)
-From: Feng Yang <yangfeng59949@163.com>
-To: mhiramat@kernel.org
-Cc: alexei.starovoitov@gmail.com,
-	andrii@kernel.org,
-	ast@kernel.org,
-	bpf@vger.kernel.org,
-	daniel@iogearbox.net,
-	eddyz87@gmail.com,
-	haoluo@google.com,
-	john.fastabend@gmail.com,
-	jolsa@kernel.org,
-	kpsingh@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	martin.lau@linux.dev,
-	sdf@fomichev.me,
-	song@kernel.org,
-	yangfeng59949@163.com,
-	yonghong.song@linux.dev
-Subject: Re: [BUG] Failed to obtain stack trace via bpf_get_stackid on ARM64 architecture
-Date: Mon, 22 Sep 2025 10:15:31 +0800
-Message-Id: <20250922021531.105670-1-yangfeng59949@163.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250921223037.f8df26b59d60b8b3f7cf2d53@kernel.org>
-References: <20250921223037.f8df26b59d60b8b3f7cf2d53@kernel.org>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="K1ER9r8Y"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 58LLScAe010687;
+	Mon, 22 Sep 2025 05:43:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=QbQ8d6
+	ZFPfmGcu+ol74QLLCNjXaKPp7g57kM44CXFvM=; b=K1ER9r8YnEI0hLdOqI3bNO
+	Sdgwj7AUyWeQGukSort8CZktqsCUXsAvxdipfwelXxUqDna01YJRpftfJDif2BvY
+	Su2SgJdBPrg/CJYatsrwcKVWcGorelpYhw+h22juD1epRcL13JwaiNlxEbSUrG2T
+	aiNLj7/pIfSSDtz6k89/Rc9wctOkWaY9ApOilti7/v4QIzimsYNvcMmqigeiQ+cV
+	6pV/E23ivyd0EIDIccW7qIOVyHo2ooBU+p360LgYU1lEfPIJiPt32EsmoAq0YNit
+	vFTZQO6N7ZYPrHNvqzQwfNo1f/7KLXRgYOIKkOCGDaCWiFChM2SF/5vtEp2Ty5Lg
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 499ksbgu29-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 22 Sep 2025 05:43:51 +0000 (GMT)
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 58M5eJcW021833;
+	Mon, 22 Sep 2025 05:43:51 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 499ksbgu26-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 22 Sep 2025 05:43:51 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 58M5Risj013605;
+	Mon, 22 Sep 2025 05:43:50 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 49a8tj4cjh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 22 Sep 2025 05:43:50 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 58M5hk3A30540206
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 22 Sep 2025 05:43:46 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 781B320043;
+	Mon, 22 Sep 2025 05:43:46 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E389620040;
+	Mon, 22 Sep 2025 05:43:43 +0000 (GMT)
+Received: from li-c439904c-24ed-11b2-a85c-b284a6847472.ibm.com.com (unknown [9.43.82.69])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 22 Sep 2025 05:43:43 +0000 (GMT)
+From: Madhavan Srinivasan <maddy@linux.ibm.com>
+To: linuxppc-dev@lists.ozlabs.org, Aditya Bodkhe <adityab1@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        mpe@ellerman.id.au, npiggin@gmail.com, christophe.leroy@csgroup.eu,
+        rostedt@goodmis.org, mhiramat@kernel.org, mark.rutland@arm.com,
+        Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+Subject: Re: [PATCH v4 1/2] powerpc/ftrace: support CONFIG_FUNCTION_GRAPH_RETVAL
+Date: Mon, 22 Sep 2025 11:13:42 +0530
+Message-ID: <175851974398.1538174.12018336075108815728.b4-ty@linux.ibm.com>
+X-Mailer: git-send-email 2.50.1
+In-Reply-To: <20250916044035.29033-1-adityab1@linux.ibm.com>
+References: <20250916044035.29033-1-adityab1@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:PigvCgD3PyFDsdBo1NKIDw--.13102S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxJw4fJFWDAFy8Kr1xCFW7Arb_yoW5XrWrpF
-	n0yF1ayrs5Zr47t3sFgr45XF1S9rs3ZryUCFyrKr1akFnrXr93XFyxKF1Y9Fn3urs09w4a
-	y3W2y3sIk395Za7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pROeOLUUUUU=
-X-CM-SenderInfo: p1dqww5hqjkmqzuzqiywtou0bp/1tbipQzPeGjP9KL64AABs0
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: raCoTZ1iYBpM5o1pOW0jmdzaXwbZekDA
+X-Proofpoint-GUID: f-UDlgEkKy2mO7OR_gMWkHxRBlYjWr57
+X-Authority-Analysis: v=2.4 cv=SdH3duRu c=1 sm=1 tr=0 ts=68d0e217 cx=c_pps
+ a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
+ a=IkcTkHD0fZMA:10 a=yJojWOMRYYMA:10 a=VwQbUJbxAAAA:8 a=rfBYtj7KzXE0Fmh1LW4A:9
+ a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTIwMDAyMCBTYWx0ZWRfX1aCLHuIUn9Cl
+ jCZO3jxQaH/syOSf58PZ6f0wRdtAnqekn0pB9yflwhmOhNCbf7kT4ZlOpLkh3hg5RXdFf2cLiWm
+ Tdzj61jdH+YvYttNthaR3Yjv7ujT/La8dOqSzSy1lnLtMdC1GwEaV9D5P+3AsYUHEb4NYcmCXHQ
+ FyMdmKK1b52DWgTJL+lMUSjYsnhT+2sVC8EKGy/BD30oknSt9gh7KsuH+teu7eJrO3vgf8PzfNJ
+ CGkvf2TGlLLnbzy7+Fi9pahQWuexvhlnJ761yWxTIQN2iDkyZWh/rHks2FrhgIdVV/jVIiJq7Rl
+ Meo3CinPzUZb4xyp8+3Hg9zcUQip2H0pmQn/Cfk7ztB9Akmvw46UY9qEieldH7VzAjZqc8qwIzj
+ ZVHrEKUs
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-09-21_10,2025-09-19_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 suspectscore=0 phishscore=0 spamscore=0 bulkscore=0
+ priorityscore=1501 clxscore=1015 adultscore=0 impostorscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2509200020
 
-On Sun, 21 Sep 2025 22:30:37 +0900 Masami Hiramatsu wrote:
+On Tue, 16 Sep 2025 10:10:34 +0530, Aditya Bodkhe wrote:
+> commit a1be9ccc57f0 ("function_graph: Support recording and printing the
+> return value of function") introduced support for function graph return
+> value tracing.
+> 
+> Additionally, commit a3ed4157b7d8 ("fgraph: Replace fgraph_ret_regs with
+> ftrace_regs") further refactored and optimized the implementation,
+> making `struct fgraph_ret_regs` unnecessary.
+> 
+> [...]
 
-> On Fri, 19 Sep 2025 19:56:20 -0700
-> Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
-> 
-> > On Fri, Sep 19, 2025 at 12:19 AM Feng Yang <yangfeng59949@163.com> wrote:
-> > >
-> > > When I use bpf_program__attach_kprobe_multi_opts to hook a BPF program that contains the bpf_get_stackid function on the arm64 architecture,
-> > > I find that the stack trace cannot be obtained. The trace->nr in __bpf_get_stackid is 0, and the function returns -EFAULT.
-> > >
-> > > For example:
-> > > diff --git a/tools/testing/selftests/bpf/progs/kprobe_multi.c b/tools/testing/selftests/bpf/progs/kprobe_multi.c
-> > > index 9e1ca8e34913..844fa88cdc4c 100644
-> > > --- a/tools/testing/selftests/bpf/progs/kprobe_multi.c
-> > > +++ b/tools/testing/selftests/bpf/progs/kprobe_multi.c
-> > > @@ -36,6 +36,15 @@ __u64 kretprobe_test6_result = 0;
-> > >  __u64 kretprobe_test7_result = 0;
-> > >  __u64 kretprobe_test8_result = 0;
-> > >
-> > > +typedef __u64 stack_trace_t[2];
-> > > +
-> > > +struct {
-> > > +       __uint(type, BPF_MAP_TYPE_STACK_TRACE);
-> > > +       __uint(max_entries, 1024);
-> > > +       __type(key, __u32);
-> > > +       __type(value, stack_trace_t);
-> > > +} stacks SEC(".maps");
-> > > +
-> > >  static void kprobe_multi_check(void *ctx, bool is_return)
-> > >  {
-> > >         if (bpf_get_current_pid_tgid() >> 32 != pid)
-> > > @@ -100,7 +109,9 @@ int test_kretprobe(struct pt_regs *ctx)
-> > >  SEC("kprobe.multi")
-> > >  int test_kprobe_manual(struct pt_regs *ctx)
-> > >  {
-> > > +       int id = bpf_get_stackid(ctx, &stacks, 0);
-> > 
-> > ftrace_partial_regs() supposed to work on x86 and arm64,
-> > but since multi-kprobe is the only user...
-> 
-> It should be able to unwind stack. It saves sp, pc, lr, fp.
-> 
-> 	regs->sp = afregs->sp;
-> 	regs->pc = afregs->pc;
-> 	regs->regs[29] = afregs->fp;
-> 	regs->regs[30] = afregs->lr;
-> 
-> > I suspect the arm64 implementation wasn't really tested.
-> > Or maybe there is some other issue.
-> 
-> It depends on how bpf_get_stackid() works. Some registers for that
-> function may not be saved.
-> 
-> If it returns -EFAULT, the get_perf_callchain() returns NULL.
-> 
+Applied to powerpc/next.
 
-During my test, the reason for returning -EFAULT was that trace->nr was 0.
+[1/2] powerpc/ftrace: support CONFIG_FUNCTION_GRAPH_RETVAL
+      https://git.kernel.org/powerpc/c/d733f18a6da6fb719450d5122162556d785ed580
+[2/2] powerpc/fprobe: fix updated fprobe for function-graph tracer
+      https://git.kernel.org/powerpc/c/7cec88bfdd33434d62d4d5ba664127fa175b50e7
 
-static long __bpf_get_stackid(struct bpf_map *map,
-			      struct perf_callchain_entry *trace, u64 flags)
-{
-	struct bpf_stack_map *smap = container_of(map, struct bpf_stack_map, map);
-	struct stack_map_bucket *bucket, *new_bucket, *old_bucket;
-	u32 skip = flags & BPF_F_SKIP_FIELD_MASK;
-	u32 hash, id, trace_nr, trace_len;
-	bool user = flags & BPF_F_USER_STACK;
-	u64 *ips;
-	bool hash_matches;
-
-	if (trace->nr <= skip)
-		/* skipping more than usable stack trace */
-		return -EFAULT;
-	......
-}
-
-thanks
-
+Thanks
