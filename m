@@ -1,161 +1,139 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBDB23112C3;
-	Mon, 22 Sep 2025 16:29:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0823A24C676
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 22 Sep 2025 20:48:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758558545; cv=none; b=aCsC5Uanwnk2dbov86KFUdCWiiH9OZwJrOKpk1LPWeteS+1RNn3y30IHGwuseZugyjI5F7skW6kwWjMrdWGQqEVvgIVPDebMhFsUKGIGXk0nyIEydi31pCXjztAyL7PfZKDTRGAjcV0/L9/0Rar4IiyeRvSsXIHbg5V199MjG1I=
+	t=1758574084; cv=none; b=OZehSDinU1Wjkp+3QqR9KQ2NyTMocwPCQ2cNBTQeOkX+PIT40YyRCjY1V5Ll07oHKUJ3v6rqgkOM3gQlbzBcFMpvJkHyOxDeEIi7qVGKGCBUMGqtiPpqsLHYoa3tJbxQMj+6GGmhmSDFNQBMLkIAGS6DoZJ7q+jmaoIA21s4bJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758558545; c=relaxed/simple;
-	bh=mgvFeTK4TM6IjKYriZlHqMRbdNwTUYyVt1ns/bRTkKk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=njc1h45AHwgwsV+3tkVNHWbjf9aTrNNi7yY1b3rlHL4Pk80cXbNId3H1dLM07WNN5uF1lJ7JGYBwjx2u1xYr8+M9lqZESu5rc211lvTwxyVvEcjVULtDy81q+NgW7gUC0L6CEUm/XQ4WuQQLHIHE6c/DGiHtgfHYzsUpckFdBeQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PFEyKmdW; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4AjFpTsP; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1758574084; c=relaxed/simple;
+	bh=pE10PShoxNlFwAuYiz+gEtT3x6OgXhVGNZoXiBF2uwg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=P30ORX57ISb0rPKDqPe6dEJ6nJ/RC9AcnlT5dne/ywxHC49626bqcJUJvy5v8LeeI8BtHdGLvQZFHVBqDXXdp87UPhAq3GhKO8lkPp3MnehVFXBvbD8vlQelOZxQxVmdgG2HjaVBilU/Vt37NQ8RpEf10nyiBPp60pfnvjT1mKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cBirfv6j; arc=none smtp.client-ip=209.85.215.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PFEyKmdW";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4AjFpTsP"
-Date: Mon, 22 Sep 2025 18:29:00 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1758558541;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zHg8+HkamnZm01xX5vs4eWwYS7Rr0huD8EUHR5N18h4=;
-	b=PFEyKmdWC2NlEKsvPKX7SE7QqKwBDa8zpu0rOZ1YnK6l07ZT+4L006gl2TQIsckGMoMlLP
-	yO6S4hTReLkOSEOAaCssTUuffpiFIHz6eS9+fLvOYdcqo7kMW1PkLSKtZl6h1B0grHOMlg
-	IhN6GLySvlK+NYbGFI2kjmJSdY83D4ileLV5+5l23DHqQFSUyZV1s9AXBkYd1b/SdLEjcU
-	3p+Jww1nH70MgMcxarjm3cLMowQLlebf032UfXMEb5CTmQ4VNuNBl57kWJ1bh3AB3APJd7
-	h9GduoOI7dLW6cLQiy2o0UCosFns+TaBNrS+7oH4yQ3lK6ASjL9CaxBQtyM2Zw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1758558541;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zHg8+HkamnZm01xX5vs4eWwYS7Rr0huD8EUHR5N18h4=;
-	b=4AjFpTsPKHirZXXkhZ2ilwCaFUppb2w3q/cVmRWIh2ZWnU4ASROoxnspSBbH76hyx/0Iyg
-	ROaDnu0WcxaUrDDA==
-From: Nam Cao <namcao@linutronix.de>
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH] rv: Add signal reactor
-Message-ID: <20250922162900.eNwI7CS0@linutronix.de>
-References: <20250919-rv-reactor-signal-v1-1-fb0012034158@linutronix.de>
- <d0aaaf1f47f0d948b60b0575e179564e3c024188.camel@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cBirfv6j"
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-b54a588ad96so3650500a12.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 22 Sep 2025 13:48:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1758574082; x=1759178882; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mRupgu2oLIRJ4YbwydOEX0rzUmWrxjSy6aJdxKz3zYU=;
+        b=cBirfv6jWy8u9WTREiNseQmsYvd1hKHw316OWDLFZrQIkhn5JVMyWeKBMUSmTv4Pn8
+         G+glio0whtwBlMqLPteSE7XoiHPtfOI1haargHIpgmA7q/UlbdNvGXUR7bn5bXUm3Usg
+         NQ3XE7Jpk0OE95rvfv8W8/s/vWtrSMWWxD5jAY/40o4ybM35QfnBFII3FWEXBwez3WHM
+         HMJzSNQyMqPrp2Htmdh91hX9Q6bQC2OFeJS0g3sBKAZ3o1Nz5tWbfJISM9pN6RP2LMHH
+         Fa97Ie8m2nbhxuxnFWdww2i4frkTBeW1ZTOfrTJE0Z14nqRJAJE9n6vXd4UVT/fM3K7N
+         Of3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758574082; x=1759178882;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mRupgu2oLIRJ4YbwydOEX0rzUmWrxjSy6aJdxKz3zYU=;
+        b=VhvJ0C3tO2/vhi8NUkNp43Za8LSUpbQuFpIgUvp1ICy4kWS/xnCCfqphhddEAGKBYV
+         2vvbgtjZnWT7nSdjw36n9sZR5uOKulF1JhpeotuB1P+6NKkeNpSeqvSmp0KdX3kGu1m8
+         HBefdrdwQDmrXVCtrec1RPf7qYOgGoPfr7hdjq+6xtykt6QNReMCaj/YcZ4dj06EoZJK
+         g7es5PafdlNgIIHM9AiGbDEE+OdrUDM37q85kNiXR2FCmt5CwzJgx8G+CM8M+tkz+mXm
+         ltikgtGLsAk0VSJKxLrkIMcMJix0yh6KRWmxBfZ3dE8fb67ooXpl9QgFgeqax8SzH+ar
+         6UnA==
+X-Forwarded-Encrypted: i=1; AJvYcCVTliw+8LXTLDLGx4DGv4YFlgSi9UMOBQN7NgtctJUNuuh80VcdkM2YnDUJ1x5w8hUM64BmV70HKoJt6HapCzykK5M=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxu0FVC4vyRGmkPs2bqQJwZZqmqKRQ2XjjYb9A82BXrwRwM7YLW
+	/5Qv0mTgl/9Adrg+paalDXkQVchg8Dwx0kPWToZZOCYxf1kpn5halzT44YtfHLkqKVGhNul6ScO
+	i1Z5zFHRlgnoBGk2fYKtSeWcff/9vcFA=
+X-Gm-Gg: ASbGnctnmCqrv8L8Ogh7fplVtq3HhMxsWZ56H9Xz1RDKYnF/89Z/yCXFff5CBXMM344
+	IPy9EwjoGwaJkIU6BNYpE849NS51An8ouMbMyfHsfePJyAoJMptiQqkDsNYKT6TI9e1gsFxfEhM
+	hummrZv1JTLfC2janV/1gpLz+wnkAoNpVcM6PnAmtr6k35fJsK0TRODQop4x5VGekHtbz8bOzsh
+	WjUazUcBeDn+gZ1k6rLEvo=
+X-Google-Smtp-Source: AGHT+IEUuRWAd6fG0rfybE+0nP/IJA4IiQhjz/jt+hdzGma+ca+nrEuDJjaAUdoxzJ1xY3vBRwKee/XUZdJVl1Lpshw=
+X-Received: by 2002:a17:902:f64f:b0:274:823c:8642 with SMTP id
+ d9443c01a7336-27cd7464367mr926955ad.10.1758574082268; Mon, 22 Sep 2025
+ 13:48:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <d0aaaf1f47f0d948b60b0575e179564e3c024188.camel@redhat.com>
+References: <20250916215301.664963-1-jolsa@kernel.org> <20250916215301.664963-3-jolsa@kernel.org>
+ <CAEf4BzYTJcq=Kk6W9Gz90gM=mw2fS2T-QBurUhdjBNinReDSjQ@mail.gmail.com>
+In-Reply-To: <CAEf4BzYTJcq=Kk6W9Gz90gM=mw2fS2T-QBurUhdjBNinReDSjQ@mail.gmail.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Mon, 22 Sep 2025 13:47:47 -0700
+X-Gm-Features: AS18NWDxAmgOz0mcGrQMXGNUADECY-kaOgTXybxwa3vFyGGUnDZr74-MswLax0s
+Message-ID: <CAEf4BzYfh_oqMOCq8G1S48Ym3th4+wQS1=ZTgRE3OTQrAJnCMQ@mail.gmail.com>
+Subject: Re: [PATCHv4 bpf-next 2/6] uprobe: Do not emulate/sstep original
+ instruction when ip is changed
+To: Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>
+Cc: Oleg Nesterov <oleg@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, x86@kernel.org, 
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
+	John Fastabend <john.fastabend@gmail.com>, Hao Luo <haoluo@google.com>, 
+	Steven Rostedt <rostedt@goodmis.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Sep 19, 2025 at 02:26:12PM +0200, Gabriele Monaco wrote:
-> On Fri, 2025-09-19 at 12:49 +0200, Thomas Weißschuh wrote:
-> > Reactions of the existing reactors are not easily detectable from programs
-> > and also not easily attributable to the triggering task.
-> > This makes it hard to test the monitors themselves programmatically.
-> > 
-> > The signal reactors allows applications to validate the correct operations
-> > of monitors either by installing custom signal handlers or by forking a
-> > child and waiting for the expected exit code.
-> 
-> Thanks, this looks like a really nice addition!
-
-Yeah, this will help us write KUnit or kselftest for the rtapp monitor.
-
-> > For now only SIGBUS is supported, but additional signals can be added.
-> 
-> Curious choice of a default signal, is this specific to your use-case?
-
-Any signal should do. Looking through the signal list, I think SIGTRAP is
-more appropriate.
-
-> > +config RV_REACT_SIGNAL
-> > +	bool "Signal reactor"
-> > +	depends on RV_REACTORS
-> > +	default y
-> > +	help
-> > +	  Enables the signal reactor. The signal reactors sends a signal to
-> > the
-> > +	  task triggering an exception.
-> 
-> This assumption is not always correct, imagine a failure in the sleep monitor
-> caused by the wakeup event. The offending task is not current but the wakee.
-> 
-> This is a bit tricky because reactors don't have access to that task, just to
-> keep the same implementation between per-cpu and per-task monitors.
-
-Yeah, this one is tricky. We probably need to pass the correct task_struct
-to reactor, but then I'm not sure how to handle the other monitor types,
-e.g. per-cpu monitors.
-
-I have no alternative to offer, let me give it some thought.
-
-> > +static void rv_signal_force_sig(int signal, const char *message)
-> > +{
-> > +	/* The message already contains a subsystem prefix, so use raw
-> > printk() */
-> > +	printk(KERN_WARNING "%s", message);
-> > +	pr_warn("Killing PID %d with signal %d", task_pid_nr(current),
-> > signal);
-
-RV reactors have to use printk_deferred() instead. See:
-https://lore.kernel.org/lkml/874k50hqmj.fsf@jogness.linutronix.de/
-
-But I suggest dropping the printk from this reactor. We already have a
-printk reactor for that.
-
-> > +	force_sig(signal);
-> > +}
+On Tue, Sep 16, 2025 at 3:28=E2=80=AFPM Andrii Nakryiko
+<andrii.nakryiko@gmail.com> wrote:
+>
+> On Tue, Sep 16, 2025 at 2:53=E2=80=AFPM Jiri Olsa <jolsa@kernel.org> wrot=
+e:
+> >
+> > If uprobe handler changes instruction pointer we still execute single
+> > step) or emulate the original instruction and increment the (new) ip
+> > with its length.
+> >
+> > This makes the new instruction pointer bogus and application will
+> > likely crash on illegal instruction execution.
+> >
+> > If user decided to take execution elsewhere, it makes little sense
+> > to execute the original instruction, so let's skip it.
+> >
+> > Acked-by: Oleg Nesterov <oleg@redhat.com>
+> > Acked-by: Andrii Nakryiko <andrii@kernel.org>
+> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> > ---
+> >  kernel/events/uprobes.c | 7 +++++++
+> >  1 file changed, 7 insertions(+)
+> >
+> > diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> > index 7ca1940607bd..2b32c32bcb77 100644
+> > --- a/kernel/events/uprobes.c
+> > +++ b/kernel/events/uprobes.c
+> > @@ -2741,6 +2741,13 @@ static void handle_swbp(struct pt_regs *regs)
+> >
+> >         handler_chain(uprobe, regs);
+> >
+> > +       /*
+> > +        * If user decided to take execution elsewhere, it makes little=
+ sense
+> > +        * to execute the original instruction, so let's skip it.
+> > +        */
+> > +       if (instruction_pointer(regs) !=3D bp_vaddr)
+> > +               goto out;
 > > +
-> > +static void rv_signal_task_work(struct callback_head *cbh)
-> > +{
-> > +	struct rv_signal_work *work = container_of_const(cbh, struct
-> > rv_signal_work, twork);
-> > +
-> > +	rv_signal_force_sig(work->signal, work->message);
-> > +
-> > +	mempool_free(work, rv_signal_task_work_pool);
-> > +}
-> > +
-> > +static void rv_reaction_signal(int signal, const char *fmt, va_list args)
-> > +{
-> > +	struct rv_signal_work *work;
-> > +	char message[256];
-> > +
-> > +	work = mempool_alloc_preallocated(rv_signal_task_work_pool);
-> > +	if (!work) {
-> > +		pr_warn_ratelimited("Unable to signal through task_work,
-> > sending directly\n");
-> > +		vsnprintf(message, sizeof(message), fmt, args);
-> > +		rv_signal_force_sig(signal, message);
-> > +		return;
-> > +	}
-> 
-> Why do you use the task_work at all instead of signalling directly?
-> If that's something not safe from a (any) tracepoint because it can sleep
+>
+> Peter, Ingo,
+>
+> Are you guys ok with us routing this through the bpf-next tree? We'll
+> have a tiny conflict because in perf/core branch there is
+> arch_uprobe_optimize() call added after handler_chain(), so git merge
+> will be a bit confused, probably. But it should be trivially
+> resolvable.
 
-If I remember correctly, sending signals requires a spinlock and therefore
-may sleep on PREEMPT_RT.
+Ping. Any objections for landing this patch in bpf-next?
 
-> you should definitely not call it if allocation fails.
-
-Yep.
-
-We probably can get away with not reacting at all if allocation fails, by
-crafting our tests such that only one reaction happens at a time, and
-allocation won't fail.
-
-Nam
+>
+> >         if (arch_uprobe_skip_sstep(&uprobe->arch, regs))
+> >                 goto out;
+> >
+> > --
+> > 2.51.0
+> >
