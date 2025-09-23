@@ -1,53 +1,35 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C941922ACEB;
-	Tue, 23 Sep 2025 09:35:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFFFB78F51;
+	Tue, 23 Sep 2025 09:38:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758620125; cv=none; b=mRLceCyS5mPwnUeC0R7Sbojav5m3QTfx5/+V9/0GsCTvBWbCw5kAFkLiBSsNO6C0ZFWw9AqOGw3gtJVPvATu9Nd1cXvduIK8b6f1Vk/k+l+gnZCrYSxhomuV9g+xic2Z4kc3NPJ1FRH3KhJ9bCv27/E6XDxvDl31cFqtJU4G6y4=
+	t=1758620300; cv=none; b=A0pYKFSrL5hwOZgw2AQKB1UunF5F0ZLzwdUAcNKCnSBZbPBa4rt/4/NJKf/Y1/m+95oQV6+oZtLiHpYX5Ivbh651/m99O+37w+lObKBwNIQ/EScsdQJc7VbkY6EtiJFac4bu544qhlSKmP8cRsfO/TU5n3qs0kMmM0gbYsUK+wY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758620125; c=relaxed/simple;
-	bh=sGTPjkogMZc7blO0QGcTSkETJ00J0BsNpZHH9yhP6Es=;
+	s=arc-20240116; t=1758620300; c=relaxed/simple;
+	bh=hhSdDPgeVXFdLc5At3Dqi7NuTmkDRjPmDyhTsE9ULBA=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lehFwBAb8U6JK0uxq4It/yPKzXVl80/rEqTZxPj6/pC3OAZVh5zh4/XW91en3la1lSdGMkgyYLdrbuUbs5fttlHvoNe43Oz8OwnfOsReWb3AyNUbF1buquo0LN811ocaJLzW06hnrJpRLESfALRg72YVx63Nqpcd+uqEKkfqRpg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FumE7SRj; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FumE7SRj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3951BC4CEF7;
-	Tue, 23 Sep 2025 09:35:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758620125;
-	bh=sGTPjkogMZc7blO0QGcTSkETJ00J0BsNpZHH9yhP6Es=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=FumE7SRjhoGU9CPgsFuEblsbdY5jwRLcFzAXKdD+bA93EQjki286fn9nDRouWmXof
-	 pchJ5+tW9jXl++u6lfhKme4z58TYOPxZaYyvHPVYJAqkuzttBQWj44hOPG0KcCRL6w
-	 o+qj4FINHy6bjXqjPGPjp33qAoYFT2qdbCp+fuANzMA9F/8/G57LZtvx3QDcnRf1o4
-	 Xt9sLqTN09p87/Bx5jGHranNhAgGVjX9LsGnCBessu8h7KHJAPn+/4NK9D2N5GHaGy
-	 M8YR0Kli81hpKJhhMlgKa8afnmGpbgftKrcwuLyRxmgYl1uHjrLQ0IJ35ZAu3s7u4A
-	 gZLjoLbA/a36w==
-Date: Tue, 23 Sep 2025 05:35:15 -0400
-From: Steven Rostedt <rostedt@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org, x86@kernel.org, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Josh Poimboeuf <jpoimboe@kernel.org>, Ingo Molnar <mingo@kernel.org>, Jiri
- Olsa <jolsa@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Andrii Nakryiko <andrii@kernel.org>, Indu Bhagat <indu.bhagat@oracle.com>,
- "Jose E. Marchesi" <jemarch@gnu.org>, Beau Belgrave
- <beaub@linux.microsoft.com>, Jens Remus <jremus@linux.ibm.com>, Linus
- Torvalds <torvalds@linux-foundation.org>, Andrew Morton
- <akpm@linux-foundation.org>, Florian Weimer <fweimer@redhat.com>, Sam James
- <sam@gentoo.org>, Kees Cook <kees@kernel.org>, Carlos O'Donell
- <codonell@redhat.com>
-Subject: Re: [RESEND][PATCH v15 2/4] perf: Support deferred user callchains
-Message-ID: <20250923053515.25a1713e@batman.local.home>
-In-Reply-To: <20250923091935.GA3419281@noisy.programming.kicks-ass.net>
-References: <20250908171412.268168931@kernel.org>
-	<20250908171524.605637238@kernel.org>
-	<20250923091935.GA3419281@noisy.programming.kicks-ass.net>
+	 MIME-Version:Content-Type; b=aiipKOReoEyg2lQBzRK/TpM6ls43ICG+u5ukdLzZcpGNjK9DH1VSfPeWHKFfyv57WkEGzjss/b5d9mYNJEJDARpFLKOwenfXwHko4Ohv94TJed/c+axSOa55KPAzJizSW89wncXnLan3ByFaC5q1KTfatwsfOsm3MgMI+dKBYNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf08.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay02.hostedemail.com (Postfix) with ESMTP id 7E8E213AE53;
+	Tue, 23 Sep 2025 09:38:09 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id 279C420027;
+	Tue, 23 Sep 2025 09:38:07 +0000 (UTC)
+Date: Tue, 23 Sep 2025 05:38:03 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Menglong Dong <menglong8.dong@gmail.com>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org
+Subject: Re: [PATCH 1/2] tracing: fprobe: rename fprobe_entry to
+ fprobe_fgraph_entry
+Message-ID: <20250923053803.0adee9a0@batman.local.home>
+In-Reply-To: <20250923092001.1087678-1-dongml2@chinatelecom.cn>
+References: <20250923092001.1087678-1-dongml2@chinatelecom.cn>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -57,86 +39,24 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Stat-Signature: 57cnhcjhjt5r5kffzjfkpjjukxg7qyc3
+X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: 279C420027
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19O4u4nSSCwymIDA7wqHMfAXLp/t6GK0Q4=
+X-HE-Tag: 1758620287-100015
+X-HE-Meta: U2FsdGVkX1+llrdTj9tfpUOCSxr85uTKc5SZbaQbF5Lj56YCGgBtdjMLGnMxlsd4/TC6lxc6nY0vGg/Jsz/UVKWImMy07KRL2pqIkaiFFyCo+k3cY398AAyX0VZS3jXHqRR+l9NUn8tGsn7y4URY39N9VMxzGK+DnI+q+8fhmnXcstEVHCRGJrcgpaxFriAtn6Uv68hY0TRBj1AjQKbEH8w63KfFMdTfLO6ZnvUmhyDpTxL2gpBtyCKGsohcVQ1vxJrVJT4L4i8yaz2olOT5+n3zbJcUCjoe827Iwk1ZdGTHjk6xis4pbEEBZKL1Wlmc8bujqfUe8t8huO0v2fyKWZM7oEwT/5xJ
 
-On Tue, 23 Sep 2025 11:19:35 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
+On Tue, 23 Sep 2025 17:20:00 +0800
+Menglong Dong <menglong8.dong@gmail.com> wrote:
 
-> On Mon, Sep 08, 2025 at 01:14:14PM -0400, Steven Rostedt wrote:
-> 
-> > +static void perf_event_callchain_deferred(struct callback_head *work)
-> > +{
-> > +	struct perf_event *event = container_of(work, struct perf_event, pending_unwind_work);
-> > +	struct perf_callchain_deferred_event deferred_event;
-> > +	u64 callchain_context = PERF_CONTEXT_USER;
-> > +	struct unwind_stacktrace trace;
-> > +	struct perf_output_handle handle;
-> > +	struct perf_sample_data data;
-> > +	u64 nr;
-> > +
-> > +	if (!event->pending_unwind_callback)
-> > +		return;
-> > +
-> > +	if (unwind_user_faultable(&trace) < 0)
-> > +		goto out;  
-> 
-> This is broken. Because:
-> 
-> > +
-> > +	/*
-> > +	 * All accesses to the event must belong to the same implicit RCU
-> > +	 * read-side critical section as the ->pending_unwind_callback reset.
-> > +	 * See comment in perf_pending_unwind_sync().
-> > +	 */
-> > +	guard(rcu)();  
-> 
-> Here you start a guard, that lasts until close of function..
-> 
-> > +
-> > +	if (current->flags & (PF_KTHREAD | PF_USER_WORKER))
-> > +		goto out;
-> > +
-> > +	nr = trace.nr + 1 ; /* '+1' == callchain_context */
-> > +
-> > +	deferred_event.header.type = PERF_RECORD_CALLCHAIN_DEFERRED;
-> > +	deferred_event.header.misc = PERF_RECORD_MISC_USER;
-> > +	deferred_event.header.size = sizeof(deferred_event) + (nr * sizeof(u64));
-> > +
-> > +	deferred_event.nr = nr;
-> > +	deferred_event.cookie = unwind_user_get_cookie();
-> > +
-> > +	perf_event_header__init_id(&deferred_event.header, &data, event);
-> > +
-> > +	if (perf_output_begin(&handle, &data, event, deferred_event.header.size))
-> > +		goto out;
-> > +
-> > +	perf_output_put(&handle, deferred_event);
-> > +	perf_output_put(&handle, callchain_context);
-> > +	/* trace.entries[] are not guaranteed to be 64bit */
-> > +	for (int i = 0; i < trace.nr; i++) {
-> > +		u64 entry = trace.entries[i];
-> > +		perf_output_put(&handle, entry);
-> > +	}
-> > +	perf_event__output_id_sample(event, &handle, &data);
-> > +
-> > +	perf_output_end(&handle);
-> > +
-> > +out:  
-> 
-> Which very much includes here, so your goto jumps into a scope, which is
-> not permitted.
+> The fprobe_entry() is used by fgraph_ops, so rename it to
+> fprobe_fgraph_entry to be more distinctive.
 
-Nice catch.
-
-> 
-> GCC can fail to warn on this, but clang will consistently fail to
-> compile this. Surely the robot would've told you by now -- even if
-> you're not using clang yourself.
-
-Unfortunately it hasn't :-(
-
-I need to start building with clang more often.
-
-I even pushed this to a git tree. Not sure why it didn't get flagged.
+The change log should be more specific and state that this will allow
+to have fprobes to use ftrace too. I didn't know why you did this until
+I saw the second patch. As change logs should be self contain, it
+should have enough information to not rely on knowing other commits to
+understand why the patch is made.
 
 -- Steve
-
