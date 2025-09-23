@@ -1,548 +1,437 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA8A61684B4;
-	Tue, 23 Sep 2025 02:25:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A1A019B5A7;
+	Tue, 23 Sep 2025 02:32:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758594330; cv=none; b=tNjTaIza3MVfaYe61RVVcG53Z/RfSSbG3MeKCMxLJtp8XVdSA5wDPqbQ3N6v3XdDACQ8xDh+knSxw1M+72i1q5K5pU7iGxf2pRhop/1+HcmCsn7ctSI9b5j/MgpJJH4XiBB28fcZ+MTpDtLG0Sb+ot3OSfQ9ikJm0WVeKQjsWTE=
+	t=1758594768; cv=none; b=P/rxOjnW28Aa3FgLByhbHhD8ISk/+J8cEzwMj5JMqxIIsfvC3OgbAJKQPt0sJD1f5glMoirAfeaudOhv69pY1PubZr7wNjSURidia2BshsfWkPQgeY6Gnfmu19o7b+VnCgCeH/vpAL5yB03tjp2+kW99tHDwceakbhvidq79W80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758594330; c=relaxed/simple;
-	bh=2VGnNnCAmL0teskFFxGlZCDUBIAb+tq/O9WCXCj+Ccg=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=FsYGEQ1PMqvIwHxm/gYkzn3T6gmFdXR+EcPFN6FlTpQndvhDE567nl14R2K6zw2KzO19kYdWvx+7vPuXa6Pe4eG0jhEU1srZn6jsJBbr5MLrZsf8n1CqDlQ3zx/VW6QuKzJo6CeeW2m14WS41jtm3LVd1/2z5ygCb2sqLK7VeFQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BtRx85jG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1758594768; c=relaxed/simple;
+	bh=zwnO3DFv/2ZlBbyBC/pvaBb8ZFlTIAr3kzKfA4XIrlQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cs4VsX5NvRA00VQxyLHW+hfOCrIfvMb2al0TEtYt3LGzk0I1feYaiKkmWi/mYA2OrbKBf2E/rrZMCYkejNbCp6sfb7cfTpuO+MHW9p7EGYKVOyTtBbQKZKZNNyBJ5JckkK/WSKoU4fNuvUKQ8kBC6fBdZRimZ27aoGoWD1suXW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YodKgCd6; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BtRx85jG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CC4CC4CEF0;
-	Tue, 23 Sep 2025 02:25:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758594330;
-	bh=2VGnNnCAmL0teskFFxGlZCDUBIAb+tq/O9WCXCj+Ccg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=BtRx85jGYdUbto7LsCJgzsg5ER13N/LzybgaQd5gs5d9O/N0BZWNqgD5F+u9F7zKK
-	 CXPZ7YKi7ICDP9NhOoxswaaLw9u4Jky/UjhSkm4nQu0aEg816Xe0tbUY/L8/wTMjGK
-	 GduMdKpjwdNo002a/EySfRQOVraLf4rNuOGwQ6UQXrSLzD86cpvaLgr3o41qBnOuut
-	 eHSVl8BxsXEuBezsZh+NrpDSi9YI7vWAkBp+AG1y2293mBNwrHPbF9S7L32Vx/P57z
-	 4i2222i/bfE59MAIYh3zi4lu1gkAXY1a4CdROx/NNtiflvPaCkrk7Qas/evUB/m8+q
-	 6zj48vxcqETnw==
-Date: Tue, 23 Sep 2025 11:25:26 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: kernel test robot <lkp@intel.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, oe-kbuild-all@lists.linux.dev,
- Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] tracing: Allow tracer to add more than 32
- options
-Message-Id: <20250923112526.020cd0768e19558ced4d9f76@kernel.org>
-In-Reply-To: <202509230952.UvKzcDdq-lkp@intel.com>
-References: <175854517136.353182.4018685864707176851.stgit@devnote2>
-	<202509230952.UvKzcDdq-lkp@intel.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YodKgCd6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1758594767; x=1790130767;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=zwnO3DFv/2ZlBbyBC/pvaBb8ZFlTIAr3kzKfA4XIrlQ=;
+  b=YodKgCd6XAlM0ab+7vKZ0vlZMrLivmjZZHy2Ue7RegvXOo5ll2sDP98Z
+   Uq4DFS9s+ZXGzQ38ev4/kzHRQPb370UewObyf5TdQLUxx1AQfFpI10Nxv
+   lEzvj1MYyFUHcciVmSTN44x0xixYv1P3j2nzGQwrZDlpq2NqlwDjlOWte
+   xIk+GIqAiVxEW9k4xiP47E/lEONfSOKIbXL3B04FjLPS2JxcM4/lAs0f3
+   Fximarpo4jayOZGIVzp+8K/URiA8St8YsVJWcV02QN++NTsT5PjnwNPap
+   X+VcQYNTQyngyKQ6+OGCm8+FJH3NDxLC7BHRQwHYVw6Jc1sXkyPUFKtf9
+   A==;
+X-CSE-ConnectionGUID: m4+lrco4T1S3fSUMxjMi+A==
+X-CSE-MsgGUID: 7oioIr04S8C1ui2jQse/ng==
+X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="64671494"
+X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
+   d="scan'208";a="64671494"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2025 19:32:46 -0700
+X-CSE-ConnectionGUID: NHekpOXvQ9WB3yH0VTJW1Q==
+X-CSE-MsgGUID: yLaRGaA2TXCbhciiVv/ImQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,286,1751266800"; 
+   d="scan'208";a="176238466"
+Received: from lkp-server02.sh.intel.com (HELO 84c55410ccf6) ([10.239.97.151])
+  by fmviesa007.fm.intel.com with ESMTP; 22 Sep 2025 19:32:43 -0700
+Received: from kbuild by 84c55410ccf6 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1v0spd-0002g5-0q;
+	Tue, 23 Sep 2025 02:32:41 +0000
+Date: Tue, 23 Sep 2025 10:32:06 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>
+Cc: oe-kbuild-all@lists.linux.dev, Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] tracing: Add an option to show symbols in
+ _text+offset for function profiler
+Message-ID: <202509231048.jmYoMkeW-lkp@intel.com>
+References: <175854518099.353182.11090224112128363620.stgit@devnote2>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <175854518099.353182.11090224112128363620.stgit@devnote2>
 
-On Tue, 23 Sep 2025 09:47:13 +0800
-kernel test robot <lkp@intel.com> wrote:
+Hi Masami,
 
-> Hi Masami,
-> 
-> kernel test robot noticed the following build warnings:
-> 
-> [auto build test WARNING on trace/for-next]
-> [also build test WARNING on linus/master v6.17-rc7 next-20250922]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch#_base_tree_information]
-> 
-> url:    https://github.com/intel-lab-lkp/linux/commits/Masami-Hiramatsu-Google/tracing-Allow-tracer-to-add-more-than-32-options/20250922-204945
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace for-next
-> patch link:    https://lore.kernel.org/r/175854517136.353182.4018685864707176851.stgit%40devnote2
-> patch subject: [PATCH v2 1/2] tracing: Allow tracer to add more than 32 options
-> config: sh-randconfig-001-20250923 (https://download.01.org/0day-ci/archive/20250923/202509230952.UvKzcDdq-lkp@intel.com/config)
-> compiler: sh4-linux-gcc (GCC) 15.1.0
-> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250923/202509230952.UvKzcDdq-lkp@intel.com/reproduce)
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202509230952.UvKzcDdq-lkp@intel.com/
-> 
+kernel test robot noticed the following build warnings:
 
-Hmm, even if it is 'static const', if it is not used, we will get warning.
+[auto build test WARNING on trace/for-next]
+[also build test WARNING on linus/master v6.17-rc7 next-20250922]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Maybe 
+url:    https://github.com/intel-lab-lkp/linux/commits/Masami-Hiramatsu-Google/tracing-Allow-tracer-to-add-more-than-32-options/20250922-204945
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace for-next
+patch link:    https://lore.kernel.org/r/175854518099.353182.11090224112128363620.stgit%40devnote2
+patch subject: [PATCH v2 2/2] tracing: Add an option to show symbols in _text+offset for function profiler
+config: i386-randconfig-014-20250923 (https://download.01.org/0day-ci/archive/20250923/202509231048.jmYoMkeW-lkp@intel.com/config)
+compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250923/202509231048.jmYoMkeW-lkp@intel.com/reproduce)
 
-#undef C(a, b)
-#define C(a, b) TRACE_ITER_##a |
-static const u64 trace_flags_defined =
-	TRACE_FLAGS 0;
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202509231048.jmYoMkeW-lkp@intel.com/
 
-And use this mask in the set_tracer_flag() to check given
-bit mask is correct.
+All warnings (new ones prefixed by >>):
 
-Thank you,
+   In file included from kernel/trace/trace_output.h:6,
+                    from kernel/trace/trace_export.c:15:
+>> kernel/trace/trace.h:1423:34: warning: 'TRACE_ITER_PROF_TEXT_OFFSET' defined but not used [-Wunused-const-variable=]
+    1423 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
+         |                                  ^~~~~~~~~~~
+   kernel/trace/trace.h:1358:17: note: in expansion of macro 'C'
+    1358 |                 C(PROF_TEXT_OFFSET,     "prof-text-offset")
+         |                 ^
+   kernel/trace/trace.h:1403:17: note: in expansion of macro 'PROFILER_FLAGS'
+    1403 |                 PROFILER_FLAGS
+         |                 ^~~~~~~~~~~~~~
+   kernel/trace/trace.h:1425:1: note: in expansion of macro 'TRACE_FLAGS'
+    1425 | TRACE_FLAGS
+         | ^~~~~~~~~~~
+   kernel/trace/trace.h:1423:34: warning: 'TRACE_ITER_STACKTRACE' defined but not used [-Wunused-const-variable=]
+    1423 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
+         |                                  ^~~~~~~~~~~
+   kernel/trace/trace.h:1351:17: note: in expansion of macro 'C'
+    1351 |                 C(STACKTRACE,           "stacktrace")
+         |                 ^
+   kernel/trace/trace.h:1401:17: note: in expansion of macro 'STACK_FLAGS'
+    1401 |                 STACK_FLAGS                                     \
+         |                 ^~~~~~~~~~~
+   kernel/trace/trace.h:1425:1: note: in expansion of macro 'TRACE_FLAGS'
+    1425 | TRACE_FLAGS
+         | ^~~~~~~~~~~
+   kernel/trace/trace.h:1423:34: warning: 'TRACE_ITER_FUNC_FORK' defined but not used [-Wunused-const-variable=]
+    1423 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
+         |                                  ^~~~~~~~~~~
+   kernel/trace/trace.h:1341:17: note: in expansion of macro 'C'
+    1341 |                 C(FUNC_FORK,            "function-fork")
+         |                 ^
+   kernel/trace/trace.h:1399:17: note: in expansion of macro 'FUNCTION_FLAGS'
+    1399 |                 FUNCTION_FLAGS                                  \
+         |                 ^~~~~~~~~~~~~~
+   kernel/trace/trace.h:1425:1: note: in expansion of macro 'TRACE_FLAGS'
+    1425 | TRACE_FLAGS
+         | ^~~~~~~~~~~
+   kernel/trace/trace.h:1423:34: warning: 'TRACE_ITER_FUNCTION' defined but not used [-Wunused-const-variable=]
+    1423 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
+         |                                  ^~~~~~~~~~~
+   kernel/trace/trace.h:1340:17: note: in expansion of macro 'C'
+    1340 |                 C(FUNCTION,             "function-trace")       \
+         |                 ^
+   kernel/trace/trace.h:1399:17: note: in expansion of macro 'FUNCTION_FLAGS'
+    1399 |                 FUNCTION_FLAGS                                  \
+         |                 ^~~~~~~~~~~~~~
+   kernel/trace/trace.h:1425:1: note: in expansion of macro 'TRACE_FLAGS'
+    1425 | TRACE_FLAGS
+         | ^~~~~~~~~~~
+   kernel/trace/trace.h:1423:34: warning: 'TRACE_ITER_HASH_PTR' defined but not used [-Wunused-const-variable=]
+    1423 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
+         |                                  ^~~~~~~~~~~
+   kernel/trace/trace.h:1398:17: note: in expansion of macro 'C'
+    1398 |                 C(HASH_PTR,             "hash-ptr")     /* Print hashed pointer */ \
+         |                 ^
+   kernel/trace/trace.h:1425:1: note: in expansion of macro 'TRACE_FLAGS'
+    1425 | TRACE_FLAGS
+         | ^~~~~~~~~~~
+   kernel/trace/trace.h:1423:34: warning: 'TRACE_ITER_PAUSE_ON_TRACE' defined but not used [-Wunused-const-variable=]
+    1423 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
+         |                                  ^~~~~~~~~~~
+   kernel/trace/trace.h:1397:17: note: in expansion of macro 'C'
+    1397 |                 C(PAUSE_ON_TRACE,       "pause-on-trace")       \
+         |                 ^
+   kernel/trace/trace.h:1425:1: note: in expansion of macro 'TRACE_FLAGS'
+    1425 | TRACE_FLAGS
+         | ^~~~~~~~~~~
+   kernel/trace/trace.h:1423:34: warning: 'TRACE_ITER_COPY_MARKER' defined but not used [-Wunused-const-variable=]
+    1423 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
+         |                                  ^~~~~~~~~~~
+   kernel/trace/trace.h:1396:17: note: in expansion of macro 'C'
+    1396 |                 C(COPY_MARKER,          "copy_trace_marker")\
+         |                 ^
+   kernel/trace/trace.h:1425:1: note: in expansion of macro 'TRACE_FLAGS'
+    1425 | TRACE_FLAGS
+         | ^~~~~~~~~~~
+   kernel/trace/trace.h:1423:34: warning: 'TRACE_ITER_TRACE_PRINTK' defined but not used [-Wunused-const-variable=]
+    1423 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
+         |                                  ^~~~~~~~~~~
+   kernel/trace/trace.h:1395:17: note: in expansion of macro 'C'
+    1395 |                 C(TRACE_PRINTK,         "trace_printk_dest")    \
+         |                 ^
+   kernel/trace/trace.h:1425:1: note: in expansion of macro 'TRACE_FLAGS'
+    1425 | TRACE_FLAGS
+         | ^~~~~~~~~~~
+   kernel/trace/trace.h:1423:34: warning: 'TRACE_ITER_EVENT_FORK' defined but not used [-Wunused-const-variable=]
+    1423 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
+         |                                  ^~~~~~~~~~~
+   kernel/trace/trace.h:1394:17: note: in expansion of macro 'C'
+    1394 |                 C(EVENT_FORK,           "event-fork")           \
+         |                 ^
+   kernel/trace/trace.h:1425:1: note: in expansion of macro 'TRACE_FLAGS'
+    1425 | TRACE_FLAGS
+         | ^~~~~~~~~~~
+   kernel/trace/trace.h:1423:34: warning: 'TRACE_ITER_MARKERS' defined but not used [-Wunused-const-variable=]
+    1423 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
+         |                                  ^~~~~~~~~~~
+   kernel/trace/trace.h:1393:17: note: in expansion of macro 'C'
+    1393 |                 C(MARKERS,              "markers")              \
+         |                 ^
+   kernel/trace/trace.h:1425:1: note: in expansion of macro 'TRACE_FLAGS'
+    1425 | TRACE_FLAGS
+--
+   In file included from kernel/trace/trace_output.h:6,
+                    from kernel/trace/trace_events.c:31:
+>> kernel/trace/trace.h:1423:34: warning: 'TRACE_ITER_PROF_TEXT_OFFSET' defined but not used [-Wunused-const-variable=]
+    1423 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
+         |                                  ^~~~~~~~~~~
+   kernel/trace/trace.h:1358:17: note: in expansion of macro 'C'
+    1358 |                 C(PROF_TEXT_OFFSET,     "prof-text-offset")
+         |                 ^
+   kernel/trace/trace.h:1403:17: note: in expansion of macro 'PROFILER_FLAGS'
+    1403 |                 PROFILER_FLAGS
+         |                 ^~~~~~~~~~~~~~
+   kernel/trace/trace.h:1425:1: note: in expansion of macro 'TRACE_FLAGS'
+    1425 | TRACE_FLAGS
+         | ^~~~~~~~~~~
+   kernel/trace/trace.h:1423:34: warning: 'TRACE_ITER_STACKTRACE' defined but not used [-Wunused-const-variable=]
+    1423 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
+         |                                  ^~~~~~~~~~~
+   kernel/trace/trace.h:1351:17: note: in expansion of macro 'C'
+    1351 |                 C(STACKTRACE,           "stacktrace")
+         |                 ^
+   kernel/trace/trace.h:1401:17: note: in expansion of macro 'STACK_FLAGS'
+    1401 |                 STACK_FLAGS                                     \
+         |                 ^~~~~~~~~~~
+   kernel/trace/trace.h:1425:1: note: in expansion of macro 'TRACE_FLAGS'
+    1425 | TRACE_FLAGS
+         | ^~~~~~~~~~~
+   kernel/trace/trace.h:1423:34: warning: 'TRACE_ITER_FUNC_FORK' defined but not used [-Wunused-const-variable=]
+    1423 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
+         |                                  ^~~~~~~~~~~
+   kernel/trace/trace.h:1341:17: note: in expansion of macro 'C'
+    1341 |                 C(FUNC_FORK,            "function-fork")
+         |                 ^
+   kernel/trace/trace.h:1399:17: note: in expansion of macro 'FUNCTION_FLAGS'
+    1399 |                 FUNCTION_FLAGS                                  \
+         |                 ^~~~~~~~~~~~~~
+   kernel/trace/trace.h:1425:1: note: in expansion of macro 'TRACE_FLAGS'
+    1425 | TRACE_FLAGS
+         | ^~~~~~~~~~~
+   kernel/trace/trace.h:1423:34: warning: 'TRACE_ITER_FUNCTION' defined but not used [-Wunused-const-variable=]
+    1423 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
+         |                                  ^~~~~~~~~~~
+   kernel/trace/trace.h:1340:17: note: in expansion of macro 'C'
+    1340 |                 C(FUNCTION,             "function-trace")       \
+         |                 ^
+   kernel/trace/trace.h:1399:17: note: in expansion of macro 'FUNCTION_FLAGS'
+    1399 |                 FUNCTION_FLAGS                                  \
+         |                 ^~~~~~~~~~~~~~
+   kernel/trace/trace.h:1425:1: note: in expansion of macro 'TRACE_FLAGS'
+    1425 | TRACE_FLAGS
+         | ^~~~~~~~~~~
+   kernel/trace/trace.h:1423:34: warning: 'TRACE_ITER_HASH_PTR' defined but not used [-Wunused-const-variable=]
+    1423 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
+         |                                  ^~~~~~~~~~~
+   kernel/trace/trace.h:1398:17: note: in expansion of macro 'C'
+    1398 |                 C(HASH_PTR,             "hash-ptr")     /* Print hashed pointer */ \
+         |                 ^
+   kernel/trace/trace.h:1425:1: note: in expansion of macro 'TRACE_FLAGS'
+    1425 | TRACE_FLAGS
+         | ^~~~~~~~~~~
+   kernel/trace/trace.h:1423:34: warning: 'TRACE_ITER_PAUSE_ON_TRACE' defined but not used [-Wunused-const-variable=]
+    1423 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
+         |                                  ^~~~~~~~~~~
+   kernel/trace/trace.h:1397:17: note: in expansion of macro 'C'
+    1397 |                 C(PAUSE_ON_TRACE,       "pause-on-trace")       \
+         |                 ^
+   kernel/trace/trace.h:1425:1: note: in expansion of macro 'TRACE_FLAGS'
+    1425 | TRACE_FLAGS
+         | ^~~~~~~~~~~
+   kernel/trace/trace.h:1423:34: warning: 'TRACE_ITER_COPY_MARKER' defined but not used [-Wunused-const-variable=]
+    1423 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
+         |                                  ^~~~~~~~~~~
+   kernel/trace/trace.h:1396:17: note: in expansion of macro 'C'
+    1396 |                 C(COPY_MARKER,          "copy_trace_marker")\
+         |                 ^
+   kernel/trace/trace.h:1425:1: note: in expansion of macro 'TRACE_FLAGS'
+    1425 | TRACE_FLAGS
+         | ^~~~~~~~~~~
+   kernel/trace/trace.h:1423:34: warning: 'TRACE_ITER_TRACE_PRINTK' defined but not used [-Wunused-const-variable=]
+    1423 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
+         |                                  ^~~~~~~~~~~
+   kernel/trace/trace.h:1395:17: note: in expansion of macro 'C'
+    1395 |                 C(TRACE_PRINTK,         "trace_printk_dest")    \
+         |                 ^
+   kernel/trace/trace.h:1425:1: note: in expansion of macro 'TRACE_FLAGS'
+    1425 | TRACE_FLAGS
+         | ^~~~~~~~~~~
+   kernel/trace/trace.h:1423:34: warning: 'TRACE_ITER_EVENT_FORK' defined but not used [-Wunused-const-variable=]
+    1423 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
+         |                                  ^~~~~~~~~~~
+   kernel/trace/trace.h:1394:17: note: in expansion of macro 'C'
+    1394 |                 C(EVENT_FORK,           "event-fork")           \
+         |                 ^
+   kernel/trace/trace.h:1425:1: note: in expansion of macro 'TRACE_FLAGS'
+    1425 | TRACE_FLAGS
+         | ^~~~~~~~~~~
+   kernel/trace/trace.h:1423:34: warning: 'TRACE_ITER_MARKERS' defined but not used [-Wunused-const-variable=]
+    1423 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
+         |                                  ^~~~~~~~~~~
+   kernel/trace/trace.h:1393:17: note: in expansion of macro 'C'
+    1393 |                 C(MARKERS,              "markers")              \
+         |                 ^
+   kernel/trace/trace.h:1425:1: note: in expansion of macro 'TRACE_FLAGS'
+    1425 | TRACE_FLAGS
+--
+   kernel/trace/bpf_trace.c: In function '____bpf_trace_printk':
+   kernel/trace/bpf_trace.c:378:9: warning: function '____bpf_trace_printk' might be a candidate for 'gnu_printf' format attribute [-Wsuggest-attribute=format]
+     378 |         ret = bstr_printf(data.buf, MAX_BPRINTF_BUF, fmt, data.bin_args);
+         |         ^~~
+   kernel/trace/bpf_trace.c: In function '____bpf_trace_vprintk':
+   kernel/trace/bpf_trace.c:434:9: warning: function '____bpf_trace_vprintk' might be a candidate for 'gnu_printf' format attribute [-Wsuggest-attribute=format]
+     434 |         ret = bstr_printf(data.buf, MAX_BPRINTF_BUF, fmt, data.bin_args);
+         |         ^~~
+   kernel/trace/bpf_trace.c: In function '____bpf_seq_printf':
+   kernel/trace/bpf_trace.c:476:9: warning: function '____bpf_seq_printf' might be a candidate for 'gnu_printf' format attribute [-Wsuggest-attribute=format]
+     476 |         seq_bprintf(m, fmt, data.bin_args);
+         |         ^~~~~~~~~~~
+   In file included from kernel/trace/trace_probe.h:31,
+                    from kernel/trace/bpf_trace.c:35:
+   kernel/trace/trace.h: At top level:
+>> kernel/trace/trace.h:1423:34: warning: 'TRACE_ITER_PROF_TEXT_OFFSET' defined but not used [-Wunused-const-variable=]
+    1423 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
+         |                                  ^~~~~~~~~~~
+   kernel/trace/trace.h:1358:17: note: in expansion of macro 'C'
+    1358 |                 C(PROF_TEXT_OFFSET,     "prof-text-offset")
+         |                 ^
+   kernel/trace/trace.h:1403:17: note: in expansion of macro 'PROFILER_FLAGS'
+    1403 |                 PROFILER_FLAGS
+         |                 ^~~~~~~~~~~~~~
+   kernel/trace/trace.h:1425:1: note: in expansion of macro 'TRACE_FLAGS'
+    1425 | TRACE_FLAGS
+         | ^~~~~~~~~~~
+   kernel/trace/trace.h:1423:34: warning: 'TRACE_ITER_STACKTRACE' defined but not used [-Wunused-const-variable=]
+    1423 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
+         |                                  ^~~~~~~~~~~
+   kernel/trace/trace.h:1351:17: note: in expansion of macro 'C'
+    1351 |                 C(STACKTRACE,           "stacktrace")
+         |                 ^
+   kernel/trace/trace.h:1401:17: note: in expansion of macro 'STACK_FLAGS'
+    1401 |                 STACK_FLAGS                                     \
+         |                 ^~~~~~~~~~~
+   kernel/trace/trace.h:1425:1: note: in expansion of macro 'TRACE_FLAGS'
+    1425 | TRACE_FLAGS
+         | ^~~~~~~~~~~
+   kernel/trace/trace.h:1423:34: warning: 'TRACE_ITER_FUNC_FORK' defined but not used [-Wunused-const-variable=]
+    1423 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
+         |                                  ^~~~~~~~~~~
+   kernel/trace/trace.h:1341:17: note: in expansion of macro 'C'
+    1341 |                 C(FUNC_FORK,            "function-fork")
+         |                 ^
+   kernel/trace/trace.h:1399:17: note: in expansion of macro 'FUNCTION_FLAGS'
+    1399 |                 FUNCTION_FLAGS                                  \
+         |                 ^~~~~~~~~~~~~~
+   kernel/trace/trace.h:1425:1: note: in expansion of macro 'TRACE_FLAGS'
+    1425 | TRACE_FLAGS
+         | ^~~~~~~~~~~
+   kernel/trace/trace.h:1423:34: warning: 'TRACE_ITER_FUNCTION' defined but not used [-Wunused-const-variable=]
+    1423 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
+         |                                  ^~~~~~~~~~~
+   kernel/trace/trace.h:1340:17: note: in expansion of macro 'C'
+    1340 |                 C(FUNCTION,             "function-trace")       \
+         |                 ^
+   kernel/trace/trace.h:1399:17: note: in expansion of macro 'FUNCTION_FLAGS'
+    1399 |                 FUNCTION_FLAGS                                  \
+         |                 ^~~~~~~~~~~~~~
+   kernel/trace/trace.h:1425:1: note: in expansion of macro 'TRACE_FLAGS'
+    1425 | TRACE_FLAGS
+         | ^~~~~~~~~~~
+   kernel/trace/trace.h:1423:34: warning: 'TRACE_ITER_HASH_PTR' defined but not used [-Wunused-const-variable=]
+    1423 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
+         |                                  ^~~~~~~~~~~
+   kernel/trace/trace.h:1398:17: note: in expansion of macro 'C'
+    1398 |                 C(HASH_PTR,             "hash-ptr")     /* Print hashed pointer */ \
+         |                 ^
+   kernel/trace/trace.h:1425:1: note: in expansion of macro 'TRACE_FLAGS'
+    1425 | TRACE_FLAGS
+         | ^~~~~~~~~~~
+   kernel/trace/trace.h:1423:34: warning: 'TRACE_ITER_PAUSE_ON_TRACE' defined but not used [-Wunused-const-variable=]
+    1423 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
+         |                                  ^~~~~~~~~~~
+   kernel/trace/trace.h:1397:17: note: in expansion of macro 'C'
+    1397 |                 C(PAUSE_ON_TRACE,       "pause-on-trace")       \
+         |                 ^
+   kernel/trace/trace.h:1425:1: note: in expansion of macro 'TRACE_FLAGS'
+    1425 | TRACE_FLAGS
+         | ^~~~~~~~~~~
+   kernel/trace/trace.h:1423:34: warning: 'TRACE_ITER_COPY_MARKER' defined but not used [-Wunused-const-variable=]
+    1423 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
+         |                                  ^~~~~~~~~~~
+   kernel/trace/trace.h:1396:17: note: in expansion of macro 'C'
+    1396 |                 C(COPY_MARKER,          "copy_trace_marker")\
+         |                 ^
+   kernel/trace/trace.h:1425:1: note: in expansion of macro 'TRACE_FLAGS'
+    1425 | TRACE_FLAGS
+         | ^~~~~~~~~~~
+   kernel/trace/trace.h:1423:34: warning: 'TRACE_ITER_TRACE_PRINTK' defined but not used [-Wunused-const-variable=]
+    1423 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
+         |                                  ^~~~~~~~~~~
+   kernel/trace/trace.h:1395:17: note: in expansion of macro 'C'
+    1395 |                 C(TRACE_PRINTK,         "trace_printk_dest")    \
+         |                 ^
+   kernel/trace/trace.h:1425:1: note: in expansion of macro 'TRACE_FLAGS'
+    1425 | TRACE_FLAGS
+         | ^~~~~~~~~~~
+   kernel/trace/trace.h:1423:34: warning: 'TRACE_ITER_EVENT_FORK' defined but not used [-Wunused-const-variable=]
+    1423 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
+         |                                  ^~~~~~~~~~~
+   kernel/trace/trace.h:1394:17: note: in expansion of macro 'C'
+    1394 |                 C(EVENT_FORK,           "event-fork")           \
+         |                 ^
+   kernel/trace/trace.h:1425:1: note: in expansion of macro 'TRACE_FLAGS'
+    1425 | TRACE_FLAGS
+         | ^~~~~~~~~~~
+   kernel/trace/trace.h:1423:34: warning: 'TRACE_ITER_MARKERS' defined but not used [-Wunused-const-variable=]
+    1423 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
+         |                                  ^~~~~~~~~~~
+   kernel/trace/trace.h:1393:17: note: in expansion of macro 'C'
+    1393 |                 C(MARKERS,              "markers")              \
+         |                 ^
+   kernel/trace/trace.h:1425:1: note: in expansion of macro 'TRACE_FLAGS'
+    1425 | TRACE_FLAGS
+..
 
-> All warnings (new ones prefixed by >>):
-> 
->    In file included from kernel/trace/fgraph.c:20:
->    kernel/trace/trace.h:1414:34: warning: 'TRACE_ITER_STACKTRACE' defined but not used [-Wunused-const-variable=]
->     1414 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
->          |                                  ^~~~~~~~~~~
->    kernel/trace/trace.h:1351:17: note: in expansion of macro 'C'
->     1351 |                 C(STACKTRACE,           "stacktrace")
->          |                 ^
->    kernel/trace/trace.h:1393:17: note: in expansion of macro 'STACK_FLAGS'
->     1393 |                 STACK_FLAGS                                     \
->          |                 ^~~~~~~~~~~
->    kernel/trace/trace.h:1416:1: note: in expansion of macro 'TRACE_FLAGS'
->     1416 | TRACE_FLAGS
->          | ^~~~~~~~~~~
-> >> kernel/trace/trace.h:1414:34: warning: 'TRACE_ITER_DISPLAY_GRAPH' defined but not used [-Wunused-const-variable=]
->     1414 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
->          |                                  ^~~~~~~~~~~
->    kernel/trace/trace.h:1326:17: note: in expansion of macro 'C'
->     1326 |                 C(DISPLAY_GRAPH,        "display-graph")
->          |                 ^
->    kernel/trace/trace.h:1392:17: note: in expansion of macro 'FGRAPH_FLAGS'
->     1392 |                 FGRAPH_FLAGS                                    \
->          |                 ^~~~~~~~~~~~
->    kernel/trace/trace.h:1416:1: note: in expansion of macro 'TRACE_FLAGS'
->     1416 | TRACE_FLAGS
->          | ^~~~~~~~~~~
->    kernel/trace/trace.h:1414:34: warning: 'TRACE_ITER_FUNC_FORK' defined but not used [-Wunused-const-variable=]
->     1414 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
->          |                                  ^~~~~~~~~~~
->    kernel/trace/trace.h:1341:17: note: in expansion of macro 'C'
->     1341 |                 C(FUNC_FORK,            "function-fork")
->          |                 ^
->    kernel/trace/trace.h:1391:17: note: in expansion of macro 'FUNCTION_FLAGS'
->     1391 |                 FUNCTION_FLAGS                                  \
->          |                 ^~~~~~~~~~~~~~
->    kernel/trace/trace.h:1416:1: note: in expansion of macro 'TRACE_FLAGS'
->     1416 | TRACE_FLAGS
->          | ^~~~~~~~~~~
->    kernel/trace/trace.h:1414:34: warning: 'TRACE_ITER_FUNCTION' defined but not used [-Wunused-const-variable=]
->     1414 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
->          |                                  ^~~~~~~~~~~
->    kernel/trace/trace.h:1340:17: note: in expansion of macro 'C'
->     1340 |                 C(FUNCTION,             "function-trace")       \
->          |                 ^
->    kernel/trace/trace.h:1391:17: note: in expansion of macro 'FUNCTION_FLAGS'
->     1391 |                 FUNCTION_FLAGS                                  \
->          |                 ^~~~~~~~~~~~~~
->    kernel/trace/trace.h:1416:1: note: in expansion of macro 'TRACE_FLAGS'
->     1416 | TRACE_FLAGS
->          | ^~~~~~~~~~~
->    kernel/trace/trace.h:1414:34: warning: 'TRACE_ITER_HASH_PTR' defined but not used [-Wunused-const-variable=]
->     1414 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
->          |                                  ^~~~~~~~~~~
->    kernel/trace/trace.h:1390:17: note: in expansion of macro 'C'
->     1390 |                 C(HASH_PTR,             "hash-ptr")     /* Print hashed pointer */ \
->          |                 ^
->    kernel/trace/trace.h:1416:1: note: in expansion of macro 'TRACE_FLAGS'
->     1416 | TRACE_FLAGS
->          | ^~~~~~~~~~~
->    kernel/trace/trace.h:1414:34: warning: 'TRACE_ITER_PAUSE_ON_TRACE' defined but not used [-Wunused-const-variable=]
->     1414 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
->          |                                  ^~~~~~~~~~~
->    kernel/trace/trace.h:1389:17: note: in expansion of macro 'C'
->     1389 |                 C(PAUSE_ON_TRACE,       "pause-on-trace")       \
->          |                 ^
->    kernel/trace/trace.h:1416:1: note: in expansion of macro 'TRACE_FLAGS'
->     1416 | TRACE_FLAGS
->          | ^~~~~~~~~~~
->    kernel/trace/trace.h:1414:34: warning: 'TRACE_ITER_COPY_MARKER' defined but not used [-Wunused-const-variable=]
->     1414 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
->          |                                  ^~~~~~~~~~~
->    kernel/trace/trace.h:1388:17: note: in expansion of macro 'C'
->     1388 |                 C(COPY_MARKER,          "copy_trace_marker")\
->          |                 ^
->    kernel/trace/trace.h:1416:1: note: in expansion of macro 'TRACE_FLAGS'
->     1416 | TRACE_FLAGS
->          | ^~~~~~~~~~~
->    kernel/trace/trace.h:1414:34: warning: 'TRACE_ITER_TRACE_PRINTK' defined but not used [-Wunused-const-variable=]
->     1414 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
->          |                                  ^~~~~~~~~~~
->    kernel/trace/trace.h:1387:17: note: in expansion of macro 'C'
->     1387 |                 C(TRACE_PRINTK,         "trace_printk_dest")    \
->          |                 ^
->    kernel/trace/trace.h:1416:1: note: in expansion of macro 'TRACE_FLAGS'
->     1416 | TRACE_FLAGS
->          | ^~~~~~~~~~~
->    kernel/trace/trace.h:1414:34: warning: 'TRACE_ITER_EVENT_FORK' defined but not used [-Wunused-const-variable=]
->     1414 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
->          |                                  ^~~~~~~~~~~
->    kernel/trace/trace.h:1386:17: note: in expansion of macro 'C'
->     1386 |                 C(EVENT_FORK,           "event-fork")           \
->          |                 ^
->    kernel/trace/trace.h:1416:1: note: in expansion of macro 'TRACE_FLAGS'
->     1416 | TRACE_FLAGS
->          | ^~~~~~~~~~~
->    kernel/trace/trace.h:1414:34: warning: 'TRACE_ITER_MARKERS' defined but not used [-Wunused-const-variable=]
->     1414 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
->          |                                  ^~~~~~~~~~~
->    kernel/trace/trace.h:1385:17: note: in expansion of macro 'C'
->     1385 |                 C(MARKERS,              "markers")              \
->          |                 ^
->    kernel/trace/trace.h:1416:1: note: in expansion of macro 'TRACE_FLAGS'
->     1416 | TRACE_FLAGS
->          | ^~~~~~~~~~~
->    kernel/trace/trace.h:1414:34: warning: 'TRACE_ITER_IRQ_INFO' defined but not used [-Wunused-const-variable=]
->     1414 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
->          |                                  ^~~~~~~~~~~
->    kernel/trace/trace.h:1384:17: note: in expansion of macro 'C'
->     1384 |                 C(IRQ_INFO,             "irq-info")             \
->          |                 ^
->    kernel/trace/trace.h:1416:1: note: in expansion of macro 'TRACE_FLAGS'
->     1416 | TRACE_FLAGS
->          | ^~~~~~~~~~~
->    kernel/trace/trace.h:1414:34: warning: 'TRACE_ITER_STOP_ON_FREE' defined but not used [-Wunused-const-variable=]
->     1414 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
-> --
->    In file included from kernel/trace/trace.c:58:
-> >> kernel/trace/trace.h:1414:34: warning: 'TRACE_ITER_DISPLAY_GRAPH' defined but not used [-Wunused-const-variable=]
->     1414 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
->          |                                  ^~~~~~~~~~~
->    kernel/trace/trace.h:1326:17: note: in expansion of macro 'C'
->     1326 |                 C(DISPLAY_GRAPH,        "display-graph")
->          |                 ^
->    kernel/trace/trace.h:1392:17: note: in expansion of macro 'FGRAPH_FLAGS'
->     1392 |                 FGRAPH_FLAGS                                    \
->          |                 ^~~~~~~~~~~~
->    kernel/trace/trace.h:1416:1: note: in expansion of macro 'TRACE_FLAGS'
->     1416 | TRACE_FLAGS
->          | ^~~~~~~~~~~
->    kernel/trace/trace.h:1414:34: warning: 'TRACE_ITER_USERSTACKTRACE' defined but not used [-Wunused-const-variable=]
->     1414 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
->          |                                  ^~~~~~~~~~~
->    kernel/trace/trace.h:1375:17: note: in expansion of macro 'C'
->     1375 |                 C(USERSTACKTRACE,       "userstacktrace")       \
->          |                 ^
->    kernel/trace/trace.h:1416:1: note: in expansion of macro 'TRACE_FLAGS'
->     1416 | TRACE_FLAGS
->          | ^~~~~~~~~~~
->    {standard input}: Assembler messages:
->    {standard input}:6792: Error: offset to unaligned destination
->    {standard input}:24045: Error: offset to unaligned destination
->    {standard input}:24422: Error: offset to unaligned destination
->    {standard input}:32500: Error: offset to unaligned destination
-> --
->    In file included from kernel/trace/trace_output.h:6,
->                     from kernel/trace/trace_events.c:31:
->    kernel/trace/trace.h:1414:34: warning: 'TRACE_ITER_STACKTRACE' defined but not used [-Wunused-const-variable=]
->     1414 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
->          |                                  ^~~~~~~~~~~
->    kernel/trace/trace.h:1351:17: note: in expansion of macro 'C'
->     1351 |                 C(STACKTRACE,           "stacktrace")
->          |                 ^
->    kernel/trace/trace.h:1393:17: note: in expansion of macro 'STACK_FLAGS'
->     1393 |                 STACK_FLAGS                                     \
->          |                 ^~~~~~~~~~~
->    kernel/trace/trace.h:1416:1: note: in expansion of macro 'TRACE_FLAGS'
->     1416 | TRACE_FLAGS
->          | ^~~~~~~~~~~
-> >> kernel/trace/trace.h:1414:34: warning: 'TRACE_ITER_DISPLAY_GRAPH' defined but not used [-Wunused-const-variable=]
->     1414 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
->          |                                  ^~~~~~~~~~~
->    kernel/trace/trace.h:1326:17: note: in expansion of macro 'C'
->     1326 |                 C(DISPLAY_GRAPH,        "display-graph")
->          |                 ^
->    kernel/trace/trace.h:1392:17: note: in expansion of macro 'FGRAPH_FLAGS'
->     1392 |                 FGRAPH_FLAGS                                    \
->          |                 ^~~~~~~~~~~~
->    kernel/trace/trace.h:1416:1: note: in expansion of macro 'TRACE_FLAGS'
->     1416 | TRACE_FLAGS
->          | ^~~~~~~~~~~
->    kernel/trace/trace.h:1414:34: warning: 'TRACE_ITER_FUNC_FORK' defined but not used [-Wunused-const-variable=]
->     1414 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
->          |                                  ^~~~~~~~~~~
->    kernel/trace/trace.h:1341:17: note: in expansion of macro 'C'
->     1341 |                 C(FUNC_FORK,            "function-fork")
->          |                 ^
->    kernel/trace/trace.h:1391:17: note: in expansion of macro 'FUNCTION_FLAGS'
->     1391 |                 FUNCTION_FLAGS                                  \
->          |                 ^~~~~~~~~~~~~~
->    kernel/trace/trace.h:1416:1: note: in expansion of macro 'TRACE_FLAGS'
->     1416 | TRACE_FLAGS
->          | ^~~~~~~~~~~
->    kernel/trace/trace.h:1414:34: warning: 'TRACE_ITER_FUNCTION' defined but not used [-Wunused-const-variable=]
->     1414 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
->          |                                  ^~~~~~~~~~~
->    kernel/trace/trace.h:1340:17: note: in expansion of macro 'C'
->     1340 |                 C(FUNCTION,             "function-trace")       \
->          |                 ^
->    kernel/trace/trace.h:1391:17: note: in expansion of macro 'FUNCTION_FLAGS'
->     1391 |                 FUNCTION_FLAGS                                  \
->          |                 ^~~~~~~~~~~~~~
->    kernel/trace/trace.h:1416:1: note: in expansion of macro 'TRACE_FLAGS'
->     1416 | TRACE_FLAGS
->          | ^~~~~~~~~~~
->    kernel/trace/trace.h:1414:34: warning: 'TRACE_ITER_HASH_PTR' defined but not used [-Wunused-const-variable=]
->     1414 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
->          |                                  ^~~~~~~~~~~
->    kernel/trace/trace.h:1390:17: note: in expansion of macro 'C'
->     1390 |                 C(HASH_PTR,             "hash-ptr")     /* Print hashed pointer */ \
->          |                 ^
->    kernel/trace/trace.h:1416:1: note: in expansion of macro 'TRACE_FLAGS'
->     1416 | TRACE_FLAGS
->          | ^~~~~~~~~~~
->    kernel/trace/trace.h:1414:34: warning: 'TRACE_ITER_PAUSE_ON_TRACE' defined but not used [-Wunused-const-variable=]
->     1414 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
->          |                                  ^~~~~~~~~~~
->    kernel/trace/trace.h:1389:17: note: in expansion of macro 'C'
->     1389 |                 C(PAUSE_ON_TRACE,       "pause-on-trace")       \
->          |                 ^
->    kernel/trace/trace.h:1416:1: note: in expansion of macro 'TRACE_FLAGS'
->     1416 | TRACE_FLAGS
->          | ^~~~~~~~~~~
->    kernel/trace/trace.h:1414:34: warning: 'TRACE_ITER_COPY_MARKER' defined but not used [-Wunused-const-variable=]
->     1414 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
->          |                                  ^~~~~~~~~~~
->    kernel/trace/trace.h:1388:17: note: in expansion of macro 'C'
->     1388 |                 C(COPY_MARKER,          "copy_trace_marker")\
->          |                 ^
->    kernel/trace/trace.h:1416:1: note: in expansion of macro 'TRACE_FLAGS'
->     1416 | TRACE_FLAGS
->          | ^~~~~~~~~~~
->    kernel/trace/trace.h:1414:34: warning: 'TRACE_ITER_TRACE_PRINTK' defined but not used [-Wunused-const-variable=]
->     1414 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
->          |                                  ^~~~~~~~~~~
->    kernel/trace/trace.h:1387:17: note: in expansion of macro 'C'
->     1387 |                 C(TRACE_PRINTK,         "trace_printk_dest")    \
->          |                 ^
->    kernel/trace/trace.h:1416:1: note: in expansion of macro 'TRACE_FLAGS'
->     1416 | TRACE_FLAGS
->          | ^~~~~~~~~~~
->    kernel/trace/trace.h:1414:34: warning: 'TRACE_ITER_EVENT_FORK' defined but not used [-Wunused-const-variable=]
->     1414 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
->          |                                  ^~~~~~~~~~~
->    kernel/trace/trace.h:1386:17: note: in expansion of macro 'C'
->     1386 |                 C(EVENT_FORK,           "event-fork")           \
->          |                 ^
->    kernel/trace/trace.h:1416:1: note: in expansion of macro 'TRACE_FLAGS'
->     1416 | TRACE_FLAGS
->          | ^~~~~~~~~~~
->    kernel/trace/trace.h:1414:34: warning: 'TRACE_ITER_MARKERS' defined but not used [-Wunused-const-variable=]
->     1414 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
->          |                                  ^~~~~~~~~~~
->    kernel/trace/trace.h:1385:17: note: in expansion of macro 'C'
->     1385 |                 C(MARKERS,              "markers")              \
->          |                 ^
->    kernel/trace/trace.h:1416:1: note: in expansion of macro 'TRACE_FLAGS'
->     1416 | TRACE_FLAGS
->          | ^~~~~~~~~~~
->    kernel/trace/trace.h:1414:34: warning: 'TRACE_ITER_IRQ_INFO' defined but not used [-Wunused-const-variable=]
->     1414 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
->          |                                  ^~~~~~~~~~~
->    kernel/trace/trace.h:1384:17: note: in expansion of macro 'C'
->     1384 |                 C(IRQ_INFO,             "irq-info")             \
->          |                 ^
->    kernel/trace/trace.h:1416:1: note: in expansion of macro 'TRACE_FLAGS'
->     1416 | TRACE_FLAGS
->          | ^~~~~~~~~~~
->    kernel/trace/trace.h:1414:34: warning: 'TRACE_ITER_STOP_ON_FREE' defined but not used [-Wunused-const-variable=]
->     1414 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
-> --
->    In file included from kernel/trace/ring_buffer.c:36:
->    kernel/trace/trace.h:1414:34: warning: 'TRACE_ITER_STACKTRACE' defined but not used [-Wunused-const-variable=]
->     1414 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
->          |                                  ^~~~~~~~~~~
->    kernel/trace/trace.h:1351:17: note: in expansion of macro 'C'
->     1351 |                 C(STACKTRACE,           "stacktrace")
->          |                 ^
->    kernel/trace/trace.h:1393:17: note: in expansion of macro 'STACK_FLAGS'
->     1393 |                 STACK_FLAGS                                     \
->          |                 ^~~~~~~~~~~
->    kernel/trace/trace.h:1416:1: note: in expansion of macro 'TRACE_FLAGS'
->     1416 | TRACE_FLAGS
->          | ^~~~~~~~~~~
-> >> kernel/trace/trace.h:1414:34: warning: 'TRACE_ITER_DISPLAY_GRAPH' defined but not used [-Wunused-const-variable=]
->     1414 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
->          |                                  ^~~~~~~~~~~
->    kernel/trace/trace.h:1326:17: note: in expansion of macro 'C'
->     1326 |                 C(DISPLAY_GRAPH,        "display-graph")
->          |                 ^
->    kernel/trace/trace.h:1392:17: note: in expansion of macro 'FGRAPH_FLAGS'
->     1392 |                 FGRAPH_FLAGS                                    \
->          |                 ^~~~~~~~~~~~
->    kernel/trace/trace.h:1416:1: note: in expansion of macro 'TRACE_FLAGS'
->     1416 | TRACE_FLAGS
->          | ^~~~~~~~~~~
->    kernel/trace/trace.h:1414:34: warning: 'TRACE_ITER_FUNC_FORK' defined but not used [-Wunused-const-variable=]
->     1414 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
->          |                                  ^~~~~~~~~~~
->    kernel/trace/trace.h:1341:17: note: in expansion of macro 'C'
->     1341 |                 C(FUNC_FORK,            "function-fork")
->          |                 ^
->    kernel/trace/trace.h:1391:17: note: in expansion of macro 'FUNCTION_FLAGS'
->     1391 |                 FUNCTION_FLAGS                                  \
->          |                 ^~~~~~~~~~~~~~
->    kernel/trace/trace.h:1416:1: note: in expansion of macro 'TRACE_FLAGS'
->     1416 | TRACE_FLAGS
->          | ^~~~~~~~~~~
->    kernel/trace/trace.h:1414:34: warning: 'TRACE_ITER_FUNCTION' defined but not used [-Wunused-const-variable=]
->     1414 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
->          |                                  ^~~~~~~~~~~
->    kernel/trace/trace.h:1340:17: note: in expansion of macro 'C'
->     1340 |                 C(FUNCTION,             "function-trace")       \
->          |                 ^
->    kernel/trace/trace.h:1391:17: note: in expansion of macro 'FUNCTION_FLAGS'
->     1391 |                 FUNCTION_FLAGS                                  \
->          |                 ^~~~~~~~~~~~~~
->    kernel/trace/trace.h:1416:1: note: in expansion of macro 'TRACE_FLAGS'
->     1416 | TRACE_FLAGS
->          | ^~~~~~~~~~~
->    kernel/trace/trace.h:1414:34: warning: 'TRACE_ITER_HASH_PTR' defined but not used [-Wunused-const-variable=]
->     1414 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
->          |                                  ^~~~~~~~~~~
->    kernel/trace/trace.h:1390:17: note: in expansion of macro 'C'
->     1390 |                 C(HASH_PTR,             "hash-ptr")     /* Print hashed pointer */ \
->          |                 ^
->    kernel/trace/trace.h:1416:1: note: in expansion of macro 'TRACE_FLAGS'
->     1416 | TRACE_FLAGS
->          | ^~~~~~~~~~~
->    kernel/trace/trace.h:1414:34: warning: 'TRACE_ITER_PAUSE_ON_TRACE' defined but not used [-Wunused-const-variable=]
->     1414 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
->          |                                  ^~~~~~~~~~~
->    kernel/trace/trace.h:1389:17: note: in expansion of macro 'C'
->     1389 |                 C(PAUSE_ON_TRACE,       "pause-on-trace")       \
->          |                 ^
->    kernel/trace/trace.h:1416:1: note: in expansion of macro 'TRACE_FLAGS'
->     1416 | TRACE_FLAGS
->          | ^~~~~~~~~~~
->    kernel/trace/trace.h:1414:34: warning: 'TRACE_ITER_COPY_MARKER' defined but not used [-Wunused-const-variable=]
->     1414 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
->          |                                  ^~~~~~~~~~~
->    kernel/trace/trace.h:1388:17: note: in expansion of macro 'C'
->     1388 |                 C(COPY_MARKER,          "copy_trace_marker")\
->          |                 ^
->    kernel/trace/trace.h:1416:1: note: in expansion of macro 'TRACE_FLAGS'
->     1416 | TRACE_FLAGS
->          | ^~~~~~~~~~~
->    kernel/trace/trace.h:1414:34: warning: 'TRACE_ITER_TRACE_PRINTK' defined but not used [-Wunused-const-variable=]
->     1414 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
->          |                                  ^~~~~~~~~~~
->    kernel/trace/trace.h:1387:17: note: in expansion of macro 'C'
->     1387 |                 C(TRACE_PRINTK,         "trace_printk_dest")    \
->          |                 ^
->    kernel/trace/trace.h:1416:1: note: in expansion of macro 'TRACE_FLAGS'
->     1416 | TRACE_FLAGS
->          | ^~~~~~~~~~~
->    kernel/trace/trace.h:1414:34: warning: 'TRACE_ITER_EVENT_FORK' defined but not used [-Wunused-const-variable=]
->     1414 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
->          |                                  ^~~~~~~~~~~
->    kernel/trace/trace.h:1386:17: note: in expansion of macro 'C'
->     1386 |                 C(EVENT_FORK,           "event-fork")           \
->          |                 ^
->    kernel/trace/trace.h:1416:1: note: in expansion of macro 'TRACE_FLAGS'
->     1416 | TRACE_FLAGS
->          | ^~~~~~~~~~~
->    kernel/trace/trace.h:1414:34: warning: 'TRACE_ITER_MARKERS' defined but not used [-Wunused-const-variable=]
->     1414 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
->          |                                  ^~~~~~~~~~~
->    kernel/trace/trace.h:1385:17: note: in expansion of macro 'C'
->     1385 |                 C(MARKERS,              "markers")              \
->          |                 ^
->    kernel/trace/trace.h:1416:1: note: in expansion of macro 'TRACE_FLAGS'
->     1416 | TRACE_FLAGS
->          | ^~~~~~~~~~~
->    kernel/trace/trace.h:1414:34: warning: 'TRACE_ITER_IRQ_INFO' defined but not used [-Wunused-const-variable=]
->     1414 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
->          |                                  ^~~~~~~~~~~
->    kernel/trace/trace.h:1384:17: note: in expansion of macro 'C'
->     1384 |                 C(IRQ_INFO,             "irq-info")             \
->          |                 ^
->    kernel/trace/trace.h:1416:1: note: in expansion of macro 'TRACE_FLAGS'
->     1416 | TRACE_FLAGS
->          | ^~~~~~~~~~~
->    kernel/trace/trace.h:1414:34: warning: 'TRACE_ITER_STOP_ON_FREE' defined but not used [-Wunused-const-variable=]
->     1414 | #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
-> ..
-> 
-> 
-> vim +/TRACE_ITER_DISPLAY_GRAPH +1414 kernel/trace/trace.h
-> 
->   1348	
->   1349	#ifdef CONFIG_STACKTRACE
->   1350	# define STACK_FLAGS				\
-> > 1351			C(STACKTRACE,		"stacktrace")
->   1352	#else
->   1353	# define STACK_FLAGS
->   1354	#endif
->   1355	
->   1356	/*
->   1357	 * trace_iterator_flags is an enumeration that defines bit
->   1358	 * positions into trace_flags that controls the output.
->   1359	 *
->   1360	 * NOTE: These bits must match the trace_options array in
->   1361	 *       trace.c (this macro guarantees it).
->   1362	 */
->   1363	#define TRACE_FLAGS						\
->   1364			C(PRINT_PARENT,		"print-parent")		\
->   1365			C(SYM_OFFSET,		"sym-offset")		\
->   1366			C(SYM_ADDR,		"sym-addr")		\
->   1367			C(VERBOSE,		"verbose")		\
->   1368			C(RAW,			"raw")			\
->   1369			C(HEX,			"hex")			\
->   1370			C(BIN,			"bin")			\
->   1371			C(BLOCK,		"block")		\
->   1372			C(FIELDS,		"fields")		\
->   1373			C(PRINTK,		"trace_printk")	\
->   1374			C(ANNOTATE,		"annotate")		\
->   1375			C(USERSTACKTRACE,	"userstacktrace")	\
->   1376			C(SYM_USEROBJ,		"sym-userobj")		\
->   1377			C(PRINTK_MSGONLY,	"printk-msg-only")	\
->   1378			C(CONTEXT_INFO,		"context-info")   /* Print pid/cpu/time */ \
->   1379			C(LATENCY_FMT,		"latency-format")	\
->   1380			C(RECORD_CMD,		"record-cmd")		\
->   1381			C(RECORD_TGID,		"record-tgid")		\
->   1382			C(OVERWRITE,		"overwrite")		\
->   1383			C(STOP_ON_FREE,		"disable_on_free")	\
->   1384			C(IRQ_INFO,		"irq-info")		\
->   1385			C(MARKERS,		"markers")		\
->   1386			C(EVENT_FORK,		"event-fork")		\
->   1387			C(TRACE_PRINTK,		"trace_printk_dest")	\
->   1388			C(COPY_MARKER,		"copy_trace_marker")\
->   1389			C(PAUSE_ON_TRACE,	"pause-on-trace")	\
->   1390			C(HASH_PTR,		"hash-ptr")	/* Print hashed pointer */ \
->   1391			FUNCTION_FLAGS					\
->   1392			FGRAPH_FLAGS					\
->   1393			STACK_FLAGS					\
->   1394			BRANCH_FLAGS
->   1395	
->   1396	/*
->   1397	 * By defining C, we can make TRACE_FLAGS a list of bit names
->   1398	 * that will define the bits for the flag masks.
->   1399	 */
->   1400	#undef C
->   1401	#define C(a, b) TRACE_ITER_##a##_BIT,
->   1402	
->   1403	enum trace_iterator_bits {
->   1404		TRACE_FLAGS
->   1405		/* Make sure we don't go more than we have bits for */
->   1406		TRACE_ITER_LAST_BIT
->   1407	};
->   1408	
->   1409	/*
->   1410	 * By redefining C, we can make TRACE_FLAGS a list of masks that
->   1411	 * use the bits as defined above.
->   1412	 */
->   1413	#undef C
-> > 1414	#define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
->   1415	
-> 
-> -- 
-> 0-DAY CI Kernel Test Service
-> https://github.com/intel/lkp-tests/wiki
 
+vim +/TRACE_ITER_PROF_TEXT_OFFSET +1423 kernel/trace/trace.h
+
+a3418a364ec3c8 Steven Rostedt (Red Hat   2015-09-29  1417) 
+a3418a364ec3c8 Steven Rostedt (Red Hat   2015-09-29  1418) /*
+a3418a364ec3c8 Steven Rostedt (Red Hat   2015-09-29  1419)  * By redefining C, we can make TRACE_FLAGS a list of masks that
+a3418a364ec3c8 Steven Rostedt (Red Hat   2015-09-29  1420)  * use the bits as defined above.
+a3418a364ec3c8 Steven Rostedt (Red Hat   2015-09-29  1421)  */
+a3418a364ec3c8 Steven Rostedt (Red Hat   2015-09-29  1422) #undef C
+7e017e0772184c Masami Hiramatsu (Google  2025-09-22 @1423) #define C(a, b) static const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
+a3418a364ec3c8 Steven Rostedt (Red Hat   2015-09-29  1424) 
 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
