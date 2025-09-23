@@ -1,275 +1,193 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from PH8PR06CU001.outbound.protection.outlook.com (mail-westus3azon11012039.outbound.protection.outlook.com [40.107.209.39])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B16730E82D;
-	Tue, 23 Sep 2025 21:53:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758664415; cv=none; b=lZuGaznuT9v70/McuBHi0NymrMz+0XtQK+ajskw4KHvhSWHqM6DwZ2/EJm3NrI2/qgg6fhNruopIYlgDSbA+vI7hOle8YpYxDiLXJjzPdtQc3ecwUuY6bCkYO9Ks+jyY/2g8pV3RZvRgg9xTmdmGGpoB4rluNkzEGdROOVNF32Q=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758664415; c=relaxed/simple;
-	bh=43T9HLopp5TSSfaS/PpEBs04jnF5DnlAwLGcj6tvQ8M=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bw5+c6M+t4iZhi6yWxSPk3N2z0WQrWxZpSDK9RTxAT/Uwcr4njGdqmOtpZBOUO1C7US5SNvjpybfacuxHbrygVoYVu3L+9cavlZFdFeW1NunwfS6sX036IBtB/G60SkG/UzDw+eRtG2n7xkONMKnQxlNCsn1AgTPM7HB6oIdHYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QFtdiphn; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D236A48;
+	Tue, 23 Sep 2025 22:22:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.209.39
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1758666144; cv=fail; b=gyGKYiRTec9EIu9pCsjsaWakLzjyxifV6wibYwnPaZCa7fkegDK4DXb9kGS1FtWDn9JLvfZangDW7GK/9Jh5evaIGDJZqsUxJeVW1xoSG1pRM4TmdxHHCGwAz+LYHqY9gWOSLdzAoIT2i/TPR4Y9xiIgKS7xybnxLXdpwc7RtcQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1758666144; c=relaxed/simple;
+	bh=6hQxSPueRjqivytB2WxD4yT9ZIay1EdItgh7HO++yOU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=MZVwsWy9QasZXzbBSVqGY6g4LigfdNMvjmYR98TFp7qLPt4UjYE5X5e5OnHn49ULImnVagP4/joQIVlly2WP2TYpp9ZjNil1BgzkSP2q9XQUWmLoI1HVsqZvMNuWndXHbGCBDPkMr5Dw0OBUkD3TS/7fn9+vKwBLfKYfIvi09eE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=o6lXNIV2; arc=fail smtp.client-ip=40.107.209.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QFtdiphn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D072C4CEF5;
-	Tue, 23 Sep 2025 21:53:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758664415;
-	bh=43T9HLopp5TSSfaS/PpEBs04jnF5DnlAwLGcj6tvQ8M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QFtdiphnN9U6PqfI4yB+FMCirtdRv+x4abZHcBByKq62QTC45K2gDopib2ulQNxDb
-	 w+HUWaDby+yb+VNyzwN+0gQrESBnT43VpPMATSYgc1DbjLs7r+YgDnxeIg0K8xfDdv
-	 pE5yM0R/CrUBYjye8s/9oNBEKYKWFdpsVUbaLuyWDfI3Tlq7DFt8sEn1o3fjG0psp3
-	 gflVn+TR38Tu5VPU5U+AwKXvQgdmNeUpOpFhr6Sc+Rz8+LNVSSSN/pI76pqzXROjDb
-	 YnuZUIIpmZMN4HAXlMmYj5gleREbbO7ujyhVDrMCjLTHukL9FRbMD9Y4w+gEWW5a/q
-	 kqq2AXN8Lgi5w==
-From: Jiri Olsa <jolsa@kernel.org>
-To: Steven Rostedt <rostedt@kernel.org>,
-	Florent Revest <revest@google.com>,
-	Mark Rutland <mark.rutland@arm.com>
-Cc: bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="o6lXNIV2"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=iAi4sSpYU9zuO+eSlj02D1mT2vZrlCE9aXEYDzIMmitSqBQN+2VX1ibr/mnZKWw3OrO8UObY54jLJ8nPhouBUlHrKK0TI/5UrLPi6iTMXVIMSDrwPXT54A/HWJST6s9TH8x4fuVHLPtNeQ/GPsgSm8G6Cxrm0oPjOp/dv4CQ2FIev4ns7z6x7ZSAqa/50wrjuoBY13BrPTMGIIvubM/9cKpAyI2F6Zb8ZiHjmKJKykdT6ZCs6cS1iCCfGtYQXg+uE12N+DopvzfWy7JkzScecOd/cT8esGFZZGJblulMzMY7qLbqcAgFogLzfmhiy8juUJnIyLO5vYIHPKdQx4SEBw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=6hQxSPueRjqivytB2WxD4yT9ZIay1EdItgh7HO++yOU=;
+ b=HvIek/lX0cBUYLNPcCkNtxHIxjUBoUl+vCN0NfSnVju3LMp/5msW9gaUGEMk5/HjQWrwPTvU+XIafpSQR75SjAXzCdycH2xD5Vo7bKXuWS3d6I6o7hXuO6lgfG/UrY1JiYp77HsUFLrqxGVq9z4Vb+SH9Q3OYbx4wSR67er4Fp6XCmObaF2iUzMgSxtdPrYx803AN9Pn1acmlVMd1vGI4t2mkGIw9plvILU4jU8XIgIj5o4cWItiXzHgn5+o/iohSI4ff//MX5KCr6Ds3GVi9FCNG5jJOyJgmIs+DqXz1JQI0S7uqoyfvYwo4O7QqfiLZtU1nU4iYSnmvum6bIq+ag==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6hQxSPueRjqivytB2WxD4yT9ZIay1EdItgh7HO++yOU=;
+ b=o6lXNIV2qcDbOVBz3hScRzhykjeJrAvH7uSY94JvgF+nxPIuz0abEbY8ZddkS1WLHE8Xj5MaFxug5Mn8T0Up/ObnQ01ZScIvPOLF/LI8trb/QBejrpCBAsKZXBny0IbHrhbe/p6FJgiesrH8kpLwKipC9Hqiy3t5qi5JIiGG2KOv1tcExgLAzKLXArBLQv2ck5tJtncJzhYxKwESG4lSQpaG1tpUCzf+5p6CloJTmHQBvMBH25Y8qSO84C8Mib4pJUIQeNAhMniB/ntJWYePSk40kipGvmTUOOL6iz3CpmaFQ5IxbBOy+hkdElhG352ld4WLKDZpkALEgbB2VuMWiw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from PH7PR12MB5757.namprd12.prod.outlook.com (2603:10b6:510:1d0::13)
+ by PH7PR12MB7353.namprd12.prod.outlook.com (2603:10b6:510:20c::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9115.22; Tue, 23 Sep
+ 2025 22:22:19 +0000
+Received: from PH7PR12MB5757.namprd12.prod.outlook.com
+ ([fe80::f012:300c:6bf4:7632]) by PH7PR12MB5757.namprd12.prod.outlook.com
+ ([fe80::f012:300c:6bf4:7632%2]) with mapi id 15.20.9137.018; Tue, 23 Sep 2025
+ 22:22:18 +0000
+Date: Tue, 23 Sep 2025 19:22:16 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Keith Busch <kbusch@kernel.org>
+Cc: Leon Romanovsky <leon@kernel.org>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Abdiel Janulgue <abdiel.janulgue@gmail.com>,
+	Alexander Potapenko <glider@google.com>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Christoph Hellwig <hch@lst.de>, Danilo Krummrich <dakr@kernel.org>,
+	David Hildenbrand <david@redhat.com>, iommu@lists.linux.dev,
+	Jason Wang <jasowang@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+	Joerg Roedel <joro@8bytes.org>, Jonathan Corbet <corbet@lwn.net>,
+	Juergen Gross <jgross@suse.com>, kasan-dev@googlegroups.com,
+	linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	linux-nvme@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
 	linux-trace-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Menglong Dong <menglong8.dong@gmail.com>
-Subject: [PATCH 9/9] bpf, x86: Use single ftrace_ops for direct calls
-Date: Tue, 23 Sep 2025 23:51:47 +0200
-Message-ID: <20250923215147.1571952-10-jolsa@kernel.org>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20250923215147.1571952-1-jolsa@kernel.org>
-References: <20250923215147.1571952-1-jolsa@kernel.org>
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>, rust-for-linux@vger.kernel.org,
+	Sagi Grimberg <sagi@grimberg.me>,
+	Stefano Stabellini <sstabellini@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	virtualization@lists.linux.dev, Will Deacon <will@kernel.org>,
+	xen-devel@lists.xenproject.org
+Subject: Re: [PATCH v6 00/16] dma-mapping: migrate to physical address-based
+ API
+Message-ID: <20250923222216.GC2617119@nvidia.com>
+References: <CGME20250909132821eucas1p1051ce9e0270ddbf520e105c913fa8db6@eucas1p1.samsung.com>
+ <cover.1757423202.git.leonro@nvidia.com>
+ <0db9bce5-40df-4cf5-85ab-f032c67d5c71@samsung.com>
+ <20250912090327.GU341237@unreal>
+ <aM1_9cS_LGl4GFC5@kbusch-mbp>
+ <20250920155352.GH10800@unreal>
+ <aM9LH6WSeOPGeleY@kbusch-mbp>
+ <20250923170936.GA2614310@nvidia.com>
+ <aNLnXwAJveHIqfz0@kbusch-mbp>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aNLnXwAJveHIqfz0@kbusch-mbp>
+X-ClientProxiedBy: SA9PR13CA0121.namprd13.prod.outlook.com
+ (2603:10b6:806:27::6) To PH7PR12MB5757.namprd12.prod.outlook.com
+ (2603:10b6:510:1d0::13)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5757:EE_|PH7PR12MB7353:EE_
+X-MS-Office365-Filtering-Correlation-Id: 52108b48-523e-4f64-a2fa-08ddfaefa842
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?HiFBaYaRi7DKEeQsmk6X/SYEgHfzNbu+M4du3xz9VIsxZ0oTPo570go6akJ4?=
+ =?us-ascii?Q?2Or3ISNvnQmC1mSqyVZmAV0T2v/xkUXeqZHTEw57a5SxJS8OEIZVRvbzA3M4?=
+ =?us-ascii?Q?zUeDxw3aXP1TqOHp/iiZ2FpshQBy2l8J+Nw9WjaXA/oolcCTguOEMyxKwMt1?=
+ =?us-ascii?Q?VQvnaXFAXLHFEtkOWiUc9U3JBFrQn626RugY1Kx9u1+zZsLfZwURSftiRyJ2?=
+ =?us-ascii?Q?AbRMek5TJ7C/C84eUmGjJf4cI3Fm03XZR7ptnfD76nofpP49hHMx7bOJwLf0?=
+ =?us-ascii?Q?AK87VzDSV2liyg0oxstJCPZJ6zjUzy+pFSI1LRXSIL1mEi2bipw1u0pIvevb?=
+ =?us-ascii?Q?21wu0KiRuiYmYHdR98L56KVV2qvGXUeT0OWnIrXpR6/tJnK0InA4JAK+q5YB?=
+ =?us-ascii?Q?+PNqDo6n/Dz+1BJEAop5huCiDGVdEMB6IUMbGBAAViw6vt+9DYyU+fARydRv?=
+ =?us-ascii?Q?VebmValwMPP+ipL63zSb+8coNQCLdhuzjejtPsEFbmo7sFWdRUHZ+SQicAB/?=
+ =?us-ascii?Q?by9BGvHbm8YEYES6o68SKe0MRz7M/8DLLJWiGy1FEsX08mAJClRA25ASHqOn?=
+ =?us-ascii?Q?9qbt998ToEEpx10C9M08G8UMWKk5IYX9hEmhM6W1XCF3FuIRhHlDniLnnyB/?=
+ =?us-ascii?Q?Y0OBUif48DiAy4Qgmx6adV5z4hqXyOAyDd6xu9HSAjwsEbMv7ebhagxAbaJ8?=
+ =?us-ascii?Q?tbqGDJJwMHSenWkE8Sp7/kTJx4UYgN1N7X6Pe+3Uw3P+yHCuKVhKmY2E+6Zk?=
+ =?us-ascii?Q?r3NpokqBnTBOt6qYL/QF1p/Z/x6u1sKKXW24wlsjStbZNcrk/Ic4iZTA0yp8?=
+ =?us-ascii?Q?Ado4kY7x1S6Ce+/bE9t5OGEIHKqSu1XJZaQY2/SC6J9sGb9xY6arvDY/e9yP?=
+ =?us-ascii?Q?RWMNN2GEO9PPVY7GQ5mGRFbNn9+jd5o2/Pvz+sPyLUjTtng+O5eji2+cuvtZ?=
+ =?us-ascii?Q?t68MCCJgoOVFIxQ4ClfY9/Yu+dqAGIa/AeO+mSDGiCjp4lL5TBWsZdWTubA8?=
+ =?us-ascii?Q?5TkQ1oa6XRJcZrXjCwA30d/52w/7HPD57aOxIeQElVE28aV2LTvn2L60eEb1?=
+ =?us-ascii?Q?X+ahd1MEFeQy+S/eh00gdgnBmIo5mwR+ubove1EtAoBvfJZQq8fJHRrmPQJu?=
+ =?us-ascii?Q?URGBj3q0D1/sVUM+qLwM+taVSl2Q7LWKpCL2sm7O6JkFMotz6AfTRpbA9Xtp?=
+ =?us-ascii?Q?R2sdQvjZ0ZX8/+XlV1oRvcz1DrFf2f+xbcy+McKo8J29DmvfmH+cKe1otjcU?=
+ =?us-ascii?Q?TmSTeKKjU1L1dBbqDD+Ku+EM5WV4FzyWYRDFGQ1b8mL1qdim6VFY0yN/TAcH?=
+ =?us-ascii?Q?DDRNlp83lJc+hT93VKW/mY0ScUrjh61HDhCiPtfRAB43+1vHo7KGLEwIMFwV?=
+ =?us-ascii?Q?vvVy7B2jYyZakP+T8+su0vdooier05WIvIUvvLxjdw5XvhJ/DbrG2Rv2rvUk?=
+ =?us-ascii?Q?aG+ybpQ9Iz8=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5757.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?eVGNJdmby9Ocx1dT6CLNPZSYywtZ5BQQPj0z919YXfiHa+uvZCqKScTu7K+h?=
+ =?us-ascii?Q?TEhVf3NybTrETxq9+DUNdWg6sUmVul7WgplkbHU8WxcPyscVyqucyWj39Iq9?=
+ =?us-ascii?Q?DIBRmS3r1wvzR+ThMQaAl9M3yWH4pN6WhLRib2oK1rlh4sIZv594wK3XES/i?=
+ =?us-ascii?Q?ppzmrzxmupDAqwLzMdIybgoOe4Q3FHGa1+jpzZQmCa1PqrEWAgXz8w1OxdMD?=
+ =?us-ascii?Q?RqiJd4P4iHVUuNPwNV61LALwTpaQ8wb43sdHVIGPh+WXBNVbn36vYHACN7Wh?=
+ =?us-ascii?Q?lEMAUmtTbu8hqVLBIZ727iR6GXDpGJy90XKuqQmGOTzfpqAKdH5s5nAVm68g?=
+ =?us-ascii?Q?gCekI4E+feogQTAbMMlwcIR8I5D/NvIhwo6poYenL0IgTSapHG5nXBtDBgy+?=
+ =?us-ascii?Q?hLp0loRIWvIQz2FsUDFcxkfGG158SXFVwEmQ7zyKcnwngO3FKZi3ghsoLqQJ?=
+ =?us-ascii?Q?h8Hb/47//9zgVehIZ57TYxVhDgNbwBGmJYxSn5ZPB15AUL2LzYZSqWaOaVVs?=
+ =?us-ascii?Q?1pH0qxN8vFtk8M0Z3zUjIs8wRAZ2ZnT460HWvYV1B0VGgeCFtU7BdJVfxR2P?=
+ =?us-ascii?Q?x4phMDLxNk8HiFuJTLkUvo4PYEeNnO1HWc2Kp6Vt/uQ6K4yuyRFhTO+x0FBf?=
+ =?us-ascii?Q?0IpY4BLkzsCYfaApAZtbvUQzIxbIojvg6D1JOBUoD3azc5mW0NKSrI197gYA?=
+ =?us-ascii?Q?GJBqME/8N/RhwtzSW/tU9Djna9U8SbbeOjM1A+z4ADhfzf4Tz5Y++RN58UQ1?=
+ =?us-ascii?Q?7BneyeEdGNqb3T9E1i4PsGbfTYOREYyhWED0aS4Af4zMcxxZx2yhGsa0hqqT?=
+ =?us-ascii?Q?jDFDoe3YmI5+6T8UAwCbiVMixiVSqn01f603+7MB9V76s3Vfyhw+XR8mVpvl?=
+ =?us-ascii?Q?NrFMuOvp4BECPmrykWHZzeyE6WKEGSxcZ/ES2liREp9ffszRLshxPBH+TC9A?=
+ =?us-ascii?Q?6m7h5pYOfEpB7IMYNxYWiPCtgJ9Gtee/Um9osjzrExO+me55q3Yag8zswFgZ?=
+ =?us-ascii?Q?we1jHVNJPK6WenRlpnFTpkW/mxoLeYL8gNcg6JWDNN6eZr1PEycYp8QIgCBV?=
+ =?us-ascii?Q?RjiWXfHybAR2sszZ58LyRJkQlICq5jDSB0d4ghx0FGv6J24o6O/DcxJS64Of?=
+ =?us-ascii?Q?C5eSS00vfQ/Ydb0l45BZ9TUED86C+Ikm2JIdhnzuuC3Qr4laf95QDbqzWuqH?=
+ =?us-ascii?Q?0kRFLVYcKLGqPsWFAM9ExzmqsaxNXvbAytZ2BvK3RdHvgfciBvrB+4csMTIz?=
+ =?us-ascii?Q?sQDOIiMdUjkn1dtEnC5Z7O5d142aAKRB/RlkMxYETjhYybWAS7qAvgql/Y4e?=
+ =?us-ascii?Q?FQhGrarH+Y0W9rSIm39edFyxw3IMIVAmJ276+/BQYroKqeQ0Swe1Ie87k032?=
+ =?us-ascii?Q?DZvlfF55aIXBy9F5zH57lQbqtVteAYQM1eN9kz2jVVXfTsuGiv2tZY/60JCo?=
+ =?us-ascii?Q?EagVYUGYoylHGbdohYaptXBcK92YyzJmWukOI7tEEIL0SHsClNhzvktkLOMy?=
+ =?us-ascii?Q?bLcjUSWcf6NJUoO+Nz7g3di1JPENGEj44yIOJtSxez3StVK2pe18DCj7Zcld?=
+ =?us-ascii?Q?ncLYB5SOSnXrQKAyoRZJT9Q9bI+rqWwmBAZlW0l2?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 52108b48-523e-4f64-a2fa-08ddfaefa842
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5757.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Sep 2025 22:22:18.6133
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: NGLYkxWEuDdqsEtURp8syALj/D+W0jy8uzr92XEQX0IUKCZEPeugcvMAO9ufQqtp
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7353
 
-Using single ftrace_ops for direct calls update instead of allocating
-ftrace_ops obejct for each trampoline.
+On Tue, Sep 23, 2025 at 12:30:55PM -0600, Keith Busch wrote:
+> I don't have a system in this state at the moment, so we checked
+> previous logs on machines running older kernels. It's extermely
+> uncommon, but this error was happening prior to this series, so I don't
+> think this introduced any new problem here. I'll keeping looking, but I
+> don't think we'll make much progress if I can't find a more reliable
+> reproducer.
 
-At the moment we can enable this only on x86 arch, because arm relies
-on ftrace_ops object representing just single trampoline image (stored
-in ftrace_ops::direct_call).
+Okay, that's great. It needs to get resolved but it is not this series
+at fault.
 
-Adding HAVE_SINGLE_FTRACE_DIRECT_OPS config option to be enabled on
-each arch that supports this.
+Very rare is a different perspective, I mis-thought it was happening
+reproducible all the time..
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- arch/x86/Kconfig        |  1 +
- kernel/bpf/trampoline.c | 85 +++++++++++++++++++++++++++++++++++------
- kernel/trace/Kconfig    |  3 ++
- kernel/trace/ftrace.c   | 15 +++++++-
- 4 files changed, 92 insertions(+), 12 deletions(-)
+It seems to me it is actually a legitimate thing for userspace to be
+able to trigger this cache line debug. If you do concurrent O_DIRECT
+to the very same memory it should trigger if I read it right..
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 52c8910ba2ef..bfc9115baa6f 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -330,6 +330,7 @@ config X86
- 	imply IMA_SECURE_AND_OR_TRUSTED_BOOT    if EFI
- 	select HAVE_DYNAMIC_FTRACE_NO_PATCHABLE
- 	select ARCH_SUPPORTS_PT_RECLAIM		if X86_64
-+	select HAVE_SINGLE_FTRACE_DIRECT_OPS	if X86_64 && DYNAMIC_FTRACE_WITH_DIRECT_CALLS
- 
- config INSTRUCTION_DECODER
- 	def_bool y
-diff --git a/kernel/bpf/trampoline.c b/kernel/bpf/trampoline.c
-index 3464859189a2..e3b721773dfb 100644
---- a/kernel/bpf/trampoline.c
-+++ b/kernel/bpf/trampoline.c
-@@ -33,12 +33,40 @@ static DEFINE_MUTEX(trampoline_mutex);
- #ifdef CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
- static int bpf_trampoline_update(struct bpf_trampoline *tr, bool lock_direct_mutex);
- 
-+#ifdef CONFIG_HAVE_SINGLE_FTRACE_DIRECT_OPS
-+static struct bpf_trampoline *direct_ops_ip_lookup(struct ftrace_ops *ops, unsigned long ip)
-+{
-+	struct hlist_head *head_ip;
-+	struct bpf_trampoline *tr;
-+
-+	mutex_lock(&trampoline_mutex);
-+	head_ip = &trampoline_ip_table[hash_64(ip, TRAMPOLINE_HASH_BITS)];
-+	hlist_for_each_entry(tr, head_ip, hlist_ip) {
-+		if (tr->func.addr == (void *) ip)
-+			goto out;
-+	}
-+	tr = NULL;
-+out:
-+	mutex_unlock(&trampoline_mutex);
-+	return tr;
-+}
-+#else
-+static struct bpf_trampoline *direct_ops_ip_lookup(struct ftrace_ops *ops, unsigned long ip)
-+{
-+	return ops->private;
-+}
-+#endif /* CONFIG_HAVE_SINGLE_FTRACE_DIRECT_OPS */
-+
- static int bpf_tramp_ftrace_ops_func(struct ftrace_ops *ops, unsigned long ip,
- 				     enum ftrace_ops_cmd cmd)
- {
--	struct bpf_trampoline *tr = ops->private;
-+	struct bpf_trampoline *tr;
- 	int ret = 0;
- 
-+	tr = direct_ops_ip_lookup(ops, ip);
-+	if (!tr)
-+		return -EINVAL;
-+
- 	if (cmd == FTRACE_OPS_CMD_ENABLE_SHARE_IPMODIFY_SELF) {
- 		/* This is called inside register_ftrace_direct_multi(), so
- 		 * tr->mutex is already locked.
-@@ -137,6 +165,48 @@ void bpf_image_ksym_del(struct bpf_ksym *ksym)
- 			   PAGE_SIZE, true, ksym->name);
- }
- 
-+#ifdef CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
-+#ifdef CONFIG_HAVE_SINGLE_FTRACE_DIRECT_OPS
-+struct ftrace_ops direct_ops = {
-+       .ops_func = bpf_tramp_ftrace_ops_func,
-+};
-+
-+static int direct_ops_get(struct bpf_trampoline *tr)
-+{
-+	tr->fops = &direct_ops;
-+	return 0;
-+}
-+static void direct_ops_clear(struct bpf_trampoline *tr) { }
-+static void direct_ops_free(struct bpf_trampoline *tr) { }
-+#else
-+static int direct_ops_get(struct bpf_trampoline *tr)
-+{
-+	tr->fops = kzalloc(sizeof(struct ftrace_ops), GFP_KERNEL);
-+	if (!tr->fops)
-+		return -1;
-+	tr->fops->private = tr;
-+	tr->fops->ops_func = bpf_tramp_ftrace_ops_func;
-+	return 0;
-+}
-+
-+static void direct_ops_clear(struct bpf_trampoline *tr)
-+{
-+	tr->fops->func = NULL;
-+	tr->fops->trampoline = 0;
-+}
-+
-+static void direct_ops_free(struct bpf_trampoline *tr)
-+{
-+	if (tr->fops) {
-+		ftrace_free_filter(tr->fops);
-+		kfree(tr->fops);
-+	}
-+}
-+#endif /* CONFIG_HAVE_SINGLE_FTRACE_DIRECT_OPS */
-+#else
-+static void direct_ops_free(struct bpf_trampoline *tr) { }
-+#endif /* CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS */
-+
- static struct bpf_trampoline *bpf_trampoline_lookup(u64 key, unsigned long ip)
- {
- 	struct bpf_trampoline *tr;
-@@ -155,14 +225,11 @@ static struct bpf_trampoline *bpf_trampoline_lookup(u64 key, unsigned long ip)
- 	if (!tr)
- 		goto out;
- #ifdef CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
--	tr->fops = kzalloc(sizeof(struct ftrace_ops), GFP_KERNEL);
--	if (!tr->fops) {
-+	if (direct_ops_get(tr)) {
- 		kfree(tr);
- 		tr = NULL;
- 		goto out;
- 	}
--	tr->fops->private = tr;
--	tr->fops->ops_func = bpf_tramp_ftrace_ops_func;
- #endif
- 
- 	tr->key = key;
-@@ -482,8 +549,7 @@ static int bpf_trampoline_update(struct bpf_trampoline *tr, bool lock_direct_mut
- 		 * trampoline again, and retry register.
- 		 */
- 		/* reset fops->func and fops->trampoline for re-register */
--		tr->fops->func = NULL;
--		tr->fops->trampoline = 0;
-+		direct_ops_clear(tr);
- 
- 		/* free im memory and reallocate later */
- 		bpf_tramp_image_free(im);
-@@ -864,10 +930,7 @@ void bpf_trampoline_put(struct bpf_trampoline *tr)
- 	 */
- 	hlist_del(&tr->hlist_key);
- 	hlist_del(&tr->hlist_ip);
--	if (tr->fops) {
--		ftrace_free_filter(tr->fops);
--		kfree(tr->fops);
--	}
-+	direct_ops_free(tr);
- 	kfree(tr);
- out:
- 	mutex_unlock(&trampoline_mutex);
-diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-index d2c79da81e4f..4bf5beb04a5b 100644
---- a/kernel/trace/Kconfig
-+++ b/kernel/trace/Kconfig
-@@ -50,6 +50,9 @@ config HAVE_DYNAMIC_FTRACE_WITH_REGS
- config HAVE_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
- 	bool
- 
-+config HAVE_SINGLE_FTRACE_DIRECT_OPS
-+	bool
-+
- config HAVE_DYNAMIC_FTRACE_WITH_CALL_OPS
- 	bool
- 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 2af1304d1a83..c4b969fb1010 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -2592,8 +2592,13 @@ unsigned long ftrace_find_rec_direct(unsigned long ip)
- static void call_direct_funcs(unsigned long ip, unsigned long pip,
- 			      struct ftrace_ops *ops, struct ftrace_regs *fregs)
- {
--	unsigned long addr = READ_ONCE(ops->direct_call);
-+	unsigned long addr;
- 
-+#ifdef CONFIG_HAVE_SINGLE_FTRACE_DIRECT_OPS
-+	addr = ftrace_find_rec_direct(ip);
-+#else
-+	addr = READ_ONCE(ops->direct_call);
-+#endif
- 	if (!addr)
- 		return;
- 
-@@ -5986,6 +5991,10 @@ int register_ftrace_direct(struct ftrace_ops *ops, unsigned long ip, unsigned lo
- 	if (!hash)
- 		return -ENOMEM;
- 
-+#ifndef CONFIG_HAVE_SINGLE_FTRACE_DIRECT_OPS
-+	ops->direct_call = addr;
-+#endif
-+
- 	err = register_ftrace_direct_hash(ops, hash);
- 	free_ftrace_hash(hash);
- 	return err;
-@@ -6050,6 +6059,10 @@ int modify_ftrace_direct(struct ftrace_ops *ops, unsigned long ip, unsigned long
- 		return -ENOMEM;
- 
- 	err = modify_ftrace_direct_hash(ops, hash, lock_direct_mutex);
-+#ifndef CONFIG_HAVE_SINGLE_FTRACE_DIRECT_OPS
-+	if (!err)
-+		ops->direct_call = addr;
-+#endif
- 	free_ftrace_hash(hash);
- 	return err;
- }
--- 
-2.51.0
+So it may not even be an actual bug???
 
+Jason
