@@ -1,104 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B14671D5146;
-	Tue, 23 Sep 2025 18:30:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3194826CE2E
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 23 Sep 2025 19:23:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758652259; cv=none; b=WZJqfUUL2IakVq+4oL4LUaP67BH94FZXZrValhIKrGP/4gHDzVrySWuwAfabyvZ+4djvXIeJAUP2aqvxltqq5xPLqAlC/7qXR/ZDUkvjdCYkQiSszxXH2mhbrdw4hTeOEOjQyFJvVvw4HCikcdaVAZcSqS5bGtUvelyAupXukyM=
+	t=1758655438; cv=none; b=ocYInRbPplR1cJqU9431nYZiPRNOg3G9trv+WzHamgJQdp//Q27vzasRayXRC89iq+7Ndw7JXfsSrtkU+q6yz5kINhaiRk6ptSv+FvxGls6prT9pMKkIWj9cYDnJ13ClX9je7J6kEFnVCZ4JP/lMw58IFl9sosD6gJkGI4eeNOI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758652259; c=relaxed/simple;
-	bh=gxKH7wZVbZJUgsdcRmV6yXRnCWQ9TqZ9bpedLe1yt7s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uVrFjialsgDG3tOimC/Btv70vsr7w9/2R83f4nqsInRSs4SXZWtaxGCpaHQ8vNJhXlEbazZGXaozHXLQxUMBtguJ3r+haVBUAgFuds+F0DCCBsYgzhdYHUYUaN2CBYA3EsZ83IhH25ctSe4ypkQDyig9QR2eYU3CRYY9i+n5zb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S4ZXIaWM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1758655438; c=relaxed/simple;
+	bh=LRBey+Wso4WI7nXLbVLoJP/j9B8XR/yd5YE842494Og=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iZEO7C355bO52kdexgV9apXrRHfHDF2NpJzcMllKXfu1pTzVtCW2o8M1Js9U9Yz/K85QUcn3si+hZSo3U0l5ON71ghcHFy7sgN8eQIXMdDCs/7C6hebSo52ZB/O3+PchsInZK15slF+TcB2nvt316OpiLrZsbeoNbKQUILK5CNc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WRuk6BEA; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S4ZXIaWM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB030C4CEF5;
-	Tue, 23 Sep 2025 18:30:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758652259;
-	bh=gxKH7wZVbZJUgsdcRmV6yXRnCWQ9TqZ9bpedLe1yt7s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=S4ZXIaWM41Ablw/mVVeAaJkiSYgUA1XjiTWt5LSH4qwLIacOxMZE3jScnz0xix1Wv
-	 SAp5BLuT2R2dCAYXxRdOCtJez17N/cBe9kv8+xOmcpzYoZ/UpcFkDX5GmNuOLJGCFV
-	 Bcs4RLVyhjVQyFhRGAbe1bDHxUFJbKgGu/3vW1Mt1BkujhZ/XZn25PIvUn5jT3S9nw
-	 YVX4n2lhWFpC/hhBuXD/s3h9/tXRxQArUIgc5V0sUKhDNiOC8ABgtjM7Q3+LQGe+ys
-	 cSfhtq2Jd52bcQy4LLrP2uqO++/e9zs0F7UgxrbinfFgheCfADXwZVzyKQ2yU+i53A
-	 XGP2nnt2Bp5Ig==
-Date: Tue, 23 Sep 2025 12:30:55 -0600
-From: Keith Busch <kbusch@kernel.org>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Leon Romanovsky <leon@kernel.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Abdiel Janulgue <abdiel.janulgue@gmail.com>,
-	Alexander Potapenko <glider@google.com>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Christoph Hellwig <hch@lst.de>, Danilo Krummrich <dakr@kernel.org>,
-	David Hildenbrand <david@redhat.com>, iommu@lists.linux.dev,
-	Jason Wang <jasowang@redhat.com>, Jens Axboe <axboe@kernel.dk>,
-	Joerg Roedel <joro@8bytes.org>, Jonathan Corbet <corbet@lwn.net>,
-	Juergen Gross <jgross@suse.com>, kasan-dev@googlegroups.com,
-	linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	linux-nvme@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-	linux-trace-kernel@vger.kernel.org,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>, rust-for-linux@vger.kernel.org,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	virtualization@lists.linux.dev, Will Deacon <will@kernel.org>,
-	xen-devel@lists.xenproject.org
-Subject: Re: [PATCH v6 00/16] dma-mapping: migrate to physical address-based
- API
-Message-ID: <aNLnXwAJveHIqfz0@kbusch-mbp>
-References: <CGME20250909132821eucas1p1051ce9e0270ddbf520e105c913fa8db6@eucas1p1.samsung.com>
- <cover.1757423202.git.leonro@nvidia.com>
- <0db9bce5-40df-4cf5-85ab-f032c67d5c71@samsung.com>
- <20250912090327.GU341237@unreal>
- <aM1_9cS_LGl4GFC5@kbusch-mbp>
- <20250920155352.GH10800@unreal>
- <aM9LH6WSeOPGeleY@kbusch-mbp>
- <20250923170936.GA2614310@nvidia.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WRuk6BEA"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3ee12807d97so5212158f8f.0
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 23 Sep 2025 12:23:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1758655435; x=1759260235; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LRBey+Wso4WI7nXLbVLoJP/j9B8XR/yd5YE842494Og=;
+        b=WRuk6BEAyG5qd/meHhAM7eAqaL4r5/fTvTQySSK8FWKMWz/phX3T8Bmp5q/Eq0P/Hy
+         BY01guXAPPgv8Ar/955Q2cy0dFp0spY0ubCvaE9qllh5ppuue09ewDd7vBAK9mEz9g/m
+         uZ+EFqLTh2Xh67Fcfj7u4QKfuDTUrpam5XWflOds4o9hSPM6vOsq2k3qyZjA0fIt0tF9
+         7AELidGe1q03KzEBdwXFv4J8PcdVHeYgXNc3Jr05WkF+L5uc8OUUb+MnCqyVgP9329BP
+         +2nJQ1cP+bM72QQOzpVnJ1v01Bp6QVcUiK4DvXykNtzaq2554VYieYn2d+d2rVPBis2S
+         6MOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758655435; x=1759260235;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LRBey+Wso4WI7nXLbVLoJP/j9B8XR/yd5YE842494Og=;
+        b=T4L1UPD/gFe9TTu1VIV3foyRsEPTcr5YHS02rhwioVFsNoCAOQntFrIBHFBryh4FVx
+         0ZWU2PI+PV2DV1gMH/2twJOPp7iU4zCkV16O+LiWoWIr+1cVOWk3LUEOVvnH3NVRtmu0
+         VwXObkgaYeHa39mhO+9eEZ0amoc7CHSetE0lexRLdI6uyT9ILAk6l0hGp3BX+K2SKTmQ
+         2o7oRhjd1rXsOAC56Jl9tGlWLpD0ULT1ddVPZEdzj+KWem1FXHRhsl1mlqG7/beud1qx
+         oryxK9OmD3dOdF7mntbLJwPfV8LSkwixKFqCQ0sE9gv7NshiwS3amn7t4XjH2T9JARdk
+         AUnA==
+X-Forwarded-Encrypted: i=1; AJvYcCUGQNng8drR3qaKmd+Y8joQZ1WNn5Sle8rCscWKHdQ8XbEkeUjQB5lTbAHew5Ub8F7wP7TIuFlHJNc3XVyUt5v9U4g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyhvTPHMWv7PBSAxXUCc3zlaRp7yEHXNVLqZ3Pq1IJI9RUJViI2
+	2cGm4UFujuwaurrt+6zo+wu+NczRXXu+ioSxFBrz5src3VGT6mytvOjaAzHjcPpzJY69vW+Alk7
+	dzZqfmd8FLM3buP4rvLKFQ5qS/01y08E=
+X-Gm-Gg: ASbGnctn9/r/ZZm5zQze3EJnGF8+Ev1MqgoHCinDbfOPtZnulFfyBLuuVkNQg/3pSKJ
+	e0a960gZIv56JEg+RP59+TXXaPnqqDrFMlwSphny18MQY2llGCd981dP3UTaqsf1vgmIeldS+2x
+	OVgTCCi3QMZ/GxIZ5suk5I/Zl1LIh+AxwwHuht60INacEPsjZsTlC+O+mPUTeG7XcA7cOBGcrjJ
+	KLjSQg=
+X-Google-Smtp-Source: AGHT+IEROyvN89zXwrTLvHEBfh+lTjpX1gLN5zjZ4UthmYExEG2GOLLm8ftHboFI82Own50+u3ZOPpnUc08RGvIFLxs=
+X-Received: by 2002:a05:6000:2f84:b0:3f7:b7ac:f3d2 with SMTP id
+ ffacd0b85a97d-405cb7bb76bmr3258549f8f.43.1758655435354; Tue, 23 Sep 2025
+ 12:23:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250923170936.GA2614310@nvidia.com>
+References: <20250922095705.252519-1-dongml2@chinatelecom.cn>
+ <CAPhsuW7THs9G+QV5_g+tMvXTAqVJ7jha-m70f675e9phK1Pryg@mail.gmail.com> <CADxym3b=hU4DuuhA_DAs6VYNUTp7spTsTWamMaxDGSxjoiuwbg@mail.gmail.com>
+In-Reply-To: <CADxym3b=hU4DuuhA_DAs6VYNUTp7spTsTWamMaxDGSxjoiuwbg@mail.gmail.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Tue, 23 Sep 2025 12:23:44 -0700
+X-Gm-Features: AS18NWASmv7blurpmrNo9VunWCEk5u9gzididl1CMRVq8cti29RRJ98n7ZkNCbQ
+Message-ID: <CAADnVQLZMwNUF0PwoCyLUC6tWVuyx80qJF692VgnGoJVm_M=eQ@mail.gmail.com>
+Subject: Re: [PATCH bpf-next] bpf: remove is_return in struct bpf_session_run_ctx
+To: Menglong Dong <menglong8.dong@gmail.com>
+Cc: Song Liu <song@kernel.org>, Jiri Olsa <jolsa@kernel.org>, KP Singh <kpsingh@kernel.org>, 
+	Matt Bobrowski <mattbobrowski@google.com>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, bpf <bpf@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Sep 23, 2025 at 02:09:36PM -0300, Jason Gunthorpe wrote:
-> On Sat, Sep 20, 2025 at 06:47:27PM -0600, Keith Busch wrote:
-> > 
-> > One other thing to note, this was runing on arm64 platform using smmu
-> > configured with 64k pages. If your iommu granule is 4k instead, we
-> > wouldn't use the blk_dma_map_direct path.
-> 
-> I spent some time looking to see if I could guess what this is and
-> came up empty. It seems most likely we are leaking a dma mapping
-> tracking somehow? The DMA API side is pretty simple here though..
+On Mon, Sep 22, 2025 at 7:11=E2=80=AFAM Menglong Dong <menglong8.dong@gmail=
+.com> wrote:
+>
+> On Mon, Sep 22, 2025 at 10:08=E2=80=AFPM Song Liu <song@kernel.org> wrote=
+:
+> >
+> > On Mon, Sep 22, 2025 at 11:57=E2=80=AFAM Menglong Dong <menglong8.dong@=
+gmail.com> wrote:
+> > >
+> > > The "data" in struct bpf_session_run_ctx is always 8-bytes aligned.
+> > > Therefore, we can store the "is_return" to the last bit of the "data"=
+,
+> > > which can make bpf_session_run_ctx 8-bytes aligned and save memory.
+> >
+> > Does this really save anything? AFAICT, bpf_session_run_ctx is
+> > only allocated on the stack. Therefore, we don't save any memory
+> > unless there is potential risk of stack overflow.
+>
+> Hi, Song. My original intention is to save the usage of the
+> stack to prevent potential stack overflow,
 
-Yeah, nothing stood out to me here either.
- 
-> Not sure the 64k/4k itself is a cause, but triggering the non-iova
-> flow is probably the issue.
-> 
-> Can you check the output of this debugfs:
+8 bytes won't matter, but wasting 8 bytes for 1 bit is indeed annoying.
 
-I don't have a system in this state at the moment, so we checked
-previous logs on machines running older kernels. It's extermely
-uncommon, but this error was happening prior to this series, so I don't
-think this introduced any new problem here. I'll keeping looking, but I
-don't think we'll make much progress if I can't find a more reliable
-reproducer.
+> especially when we
+> trace all the kernel functions with kprobe-multi.
 
-Thanks!
+What do you mean? kprobe-multi won't recurse,
+so tracing all or a few functions is the same concern
+from stack overflow pov, no ?
+
+> The most thing for me is that the unaligned field in the struct
+> looks very awkward, and it consumes 8-bytes only for a bit.
+
+let's keep it as-is. If stack overflow is indeed an issue we need
+a generic way to detect it and prevent it.
+We've been thinking whether vmap stack guard pages
+can become JIT's extable-like things, so when stack overflow
+happens we unwind stack and stop bpf prog instead of panicing.
