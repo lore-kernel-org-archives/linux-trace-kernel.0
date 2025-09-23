@@ -1,79 +1,86 @@
-Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFDBB2652A6
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 23 Sep 2025 10:27:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03E123595C;
+	Tue, 23 Sep 2025 10:28:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758623266; cv=none; b=fPv1tmkUGeTuMP55fTaKwohXUD7hiKP7fh2umVPz1Xc7/QSAMDMfDi8I4MhKSiv8vKmCUYWBbzbwixfJGRKOLcomJBlCuQ3uRkXB9BXmwIwLItQzgAs+f8T0cquI5dBrQdFD7jUawzim0rowUtBnKZnOE0pBMN+Qu/B0lW17jBU=
+	t=1758623338; cv=none; b=MZ8CcbJiaerxLlIeyPMF6XfWM//ruPE4tH+dthwRt8kkeamz/ntLxd5d4rEARtQTLIZAfD6Bypbzl10eu6UykYA6+qloZQFPt+LNaEHvRROJav/myXYDFeSrRTxAFpDa1krqXnyL0/QIuI3mLlqvVY+zft18mIiN0L1dr86dp/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758623266; c=relaxed/simple;
-	bh=jexzQQQoLvSXdpcAQ/tUipzJbucXb2RIxjwaKuZ4JnI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pHBtLSgMF3Cb9QwuOQrQFwtpcWVaGhzwH7dYw+uQoAZAydf1y4JckHmTSc6YqNIdpV188E19ZDPAafFw3CZ0EfzdQwAMw04QicSOJPdznZGuNDqFp/pPEhXUOm6ZXt8Swk+qSlSwZrEz934tTzGV7f6raN9LCeOJtnm4NYgTsko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=mRfASxma; arc=none smtp.client-ip=91.218.175.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1758623338; c=relaxed/simple;
+	bh=aandL0IO1TEN8UynBwUTcT5P8YA24LOKifzprqPZ8eA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Pcc23dDMJcLN6B2Vcw39u2otFPoh4nM7dDRyR9olsNdgqzE9QvsXUPq2BJlLoO9pMzpPpj2Tv76bM8iZouJB2N41j5ysKktPn8SRnqplrSut5lm01IpGAFqTsuNIWRm8w8KMF85Ev5Jg6/kZr8ZhnrQZVJ2U4eVvKoZ/yFH7Fkg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aejIdIAX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="mRfASxma"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1758623258;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rZEYM/d80C9hf06PGYbrd/Uuixtovw5a7O63NUD1VjU=;
-	b=mRfASxmag/YyxEsnyH+7p34fI3juvOwT7Eu5FLUewinwMct3vgW96QVifEUpDhuc9FCncU
-	5wDZRMV4FMBpKY/Y+dZN4I+tb28PG0QDfjXv5xvWYh11p/b+92UxSSRlV+1gLVkfv5w6ON
-	4qH0WoMc8yGpg6vi6adrfZagyBXoIzc=
-From: menglong.dong@linux.dev
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org
-Subject:
- Re: [PATCH 1/2] tracing: fprobe: rename fprobe_entry to fprobe_fgraph_entry
-Date: Tue, 23 Sep 2025 18:27:30 +0800
-Message-ID: <12748135.O9o76ZdvQC@7940hx>
-In-Reply-To: <20250923053803.0adee9a0@batman.local.home>
-References:
- <20250923092001.1087678-1-dongml2@chinatelecom.cn>
- <20250923053803.0adee9a0@batman.local.home>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aejIdIAX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E3DDC116B1;
+	Tue, 23 Sep 2025 10:28:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758623337;
+	bh=aandL0IO1TEN8UynBwUTcT5P8YA24LOKifzprqPZ8eA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=aejIdIAXP8cB8XbFVTn50JUyxMDaOme7tAshtuA32csDbVeYckRFJ0MIV8BSNOgXk
+	 gjtw0QpWBTnEB/jQ96GSWvDf9eeSVldqBRkPpucPML5Yjy1fn7PypC1ZYyqcqYfGe8
+	 UW65g3ee59xTiyAywusKQzlIR8xLjCrJ9BZkTyRhzM/MaqqqEzq/GvTljuxxJNDpkp
+	 Yk9ZaroKQYxXLXH2w6+1lBP1D9mZRpSaPvBc6VFVV6GXixeQYvVacQWN018LsgtA3M
+	 eVpOdtukynX9BX/yZ+brGDqfdMIyRh1f/Jc3hi7FmGMpbClTAX8pLxsGoibwM8vECa
+	 0hJjYEBF/2TyA==
+Date: Tue, 23 Sep 2025 06:28:48 -0400
+From: Steven Rostedt <rostedt@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, x86@kernel.org, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Josh Poimboeuf <jpoimboe@kernel.org>, Ingo Molnar <mingo@kernel.org>, Jiri
+ Olsa <jolsa@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Andrii Nakryiko <andrii@kernel.org>, Indu Bhagat <indu.bhagat@oracle.com>,
+ "Jose E. Marchesi" <jemarch@gnu.org>, Beau Belgrave
+ <beaub@linux.microsoft.com>, Jens Remus <jremus@linux.ibm.com>, Linus
+ Torvalds <torvalds@linux-foundation.org>, Andrew Morton
+ <akpm@linux-foundation.org>, Florian Weimer <fweimer@redhat.com>, Sam James
+ <sam@gentoo.org>, Kees Cook <kees@kernel.org>, Carlos O'Donell
+ <codonell@redhat.com>
+Subject: Re: [RESEND][PATCH v15 2/4] perf: Support deferred user
+ callchainshttps://lore.kernel.org/linux-trace-kernel/20250827193644.527334838@kernel.org/
+Message-ID: <20250923062848.0bc4ff2b@batman.local.home>
+In-Reply-To: <20250923093821.GB3419281@noisy.programming.kicks-ass.net>
+References: <20250908171412.268168931@kernel.org>
+	<20250908171524.605637238@kernel.org>
+	<20250923091935.GA3419281@noisy.programming.kicks-ass.net>
+	<20250923053515.25a1713e@batman.local.home>
+	<20250923093821.GB3419281@noisy.programming.kicks-ass.net>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 2025/9/23 17:38 Steven Rostedt <rostedt@goodmis.org> write:
-> On Tue, 23 Sep 2025 17:20:00 +0800
-> Menglong Dong <menglong8.dong@gmail.com> wrote:
+On Tue, 23 Sep 2025 11:38:21 +0200
+Peter Zijlstra <peterz@infradead.org> wrote:
+
+> On Tue, Sep 23, 2025 at 05:35:15AM -0400, Steven Rostedt wrote:
 > 
-> > The fprobe_entry() is used by fgraph_ops, so rename it to
-> > fprobe_fgraph_entry to be more distinctive.
+> > I even pushed this to a git tree. Not sure why it didn't get flagged.  
 > 
-> The change log should be more specific and state that this will allow
-> to have fprobes to use ftrace too. I didn't know why you did this until
-> I saw the second patch. As change logs should be self contain, it
-> should have enough information to not rely on knowing other commits to
-> understand why the patch is made.
+> I've been looking at this... how do I enable CONFIG_UWIND_USER ?
 
-Ah, you are right, the commit log of this patch is too simple.
-I'll add enough information on what it is for in the next version.
-
-Thanks!
-Menglong Dong
+Hmm, maybe that's why it wasn't flagged.
 
 > 
-> -- Steve
-> 
-> 
+> I suspect the problem is that its impossible to actually compile/use
+> this code.
 
+It needs an arch to enable it. Here's the x86 patches that I was hoping
+would get in too:
 
+  https://lore.kernel.org/linux-trace-kernel/20250827193644.527334838@kernel.org/
 
+Hmm, but I had a branch that applied all the necessary patches :-/
 
+-- Steve
