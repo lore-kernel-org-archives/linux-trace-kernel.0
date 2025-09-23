@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AFE31A9F90;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 515C330FC3D;
 	Tue, 23 Sep 2025 13:05:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758632754; cv=none; b=EhOtKdaBKjqN7NpZqzpbV5uovhNaIVRADfPtydyU60VwWGprmYVXRp9iYf+l1kEwlltz/A2eQG7sxLtDkW9pWlBnNmqawTVIHuFlnBe46bXWiiBExDUhyV98z7d62x844+qLfoCV0bJ9p0STwKuSyjQpL4AzR3uGVKJTAg826LU=
+	t=1758632754; cv=none; b=uHIvn16HKbJRzVCqdyWYfBFHGAyF7ArfWRZA7UOG097NsP0O1aCz239dbGIC8wuL3E33EpUVVO0K4uoW9cZB5tisfVmeFY78SbIH5h+BYi69sHDBvnL87mgQayg5gPsWxIKjDtOnDFfyvEllIf+uKgFvRDZAiXmMqtNXWBySuYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1758632754; c=relaxed/simple;
-	bh=Flt5aJNz1gfLnak7pHQFz0fCiVR4gaqzsAxMb+syYyg=;
+	bh=txOR/egCsh57GZfAXHNisq1KB0ET6MZ/gLsLbqj4Ck8=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=OmMSJZ4kxfxw4bbQODQ2KfhceCAhvX3RrZv7zd/f5KROlWiswh/grQ21VMvuuJPF423ZXatELFfd57qyA4WsYeknxv/UgsEwbZJ9DXlRlOgi57SftD7ehOeooCHqNl7FpWMK8OHrhCUhiuW1/T2kVvkYIgoqR4cPqU6DUuUR00Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HtNzpZ++; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type; b=q5xcEcdC4wdPwxcN3duaV7epfsPWXUcIGvIjQTvHZfKD1ANrIiB2Gv8jRTnuCwcLRTRxOGp5zIRHzpwhfHQcq1WWuD3x/qkezTFAUGqAl1Rsg/Er7vbGd0fCd/bnRX3LsGFjIiUZc7+8CibGmjcCRlv7AOMMV8mXn1H6+n0Bv5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PgFpVxRi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HtNzpZ++"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DB99C19421;
-	Tue, 23 Sep 2025 13:05:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PgFpVxRi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF462C113D0;
+	Tue, 23 Sep 2025 13:05:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1758632754;
-	bh=Flt5aJNz1gfLnak7pHQFz0fCiVR4gaqzsAxMb+syYyg=;
+	bh=txOR/egCsh57GZfAXHNisq1KB0ET6MZ/gLsLbqj4Ck8=;
 	h=Date:From:To:Cc:Subject:References:From;
-	b=HtNzpZ++JQ4yNTdsyG4pEdKYTqdsL60q1NGaGQFAUD6FMvkYEkZ5GaivBSQnKbx1G
-	 frcS0zklJldMYBosprmqNeQLoGkXGds2I4DLu9BAGCES4Tzz8ZxU+gDBC+YTApoJ1M
-	 kTfw6wE3TrkKn7xYbS2Py+5DfWCRhWHzopiUvpKAAO6JZRF+QFxjksucxbXzZcu4pE
-	 ZHmwMADMzhNX77weilt+Nvcaxj40n5PYmmExw0J3+r10sgSjCprPO+SUq6VUqnORQV
-	 1bzvwdeh22I0wHAlOnernQ9tq+F4gkhX8YKyoKqhmU+DhuMkZI5DqbKEwnVZR4vO+H
-	 7W4Rr5WDsspzQ==
+	b=PgFpVxRi5gnK2KZLq4QbtEGvm1eef3QblRmJFbLDKsCmc7By/OO9uoSr+nBEdvWRz
+	 PFN60eyzvhTJmdf1QyxEVuyvkVzVSE7PV8cRumuuWiQsfxQ2DBbEGmE3c+Fg5R+Mym
+	 8qDWF9geibUR7nyahBd6dC1nE5TsCwtwIAF44m1WExE9Vt3AOFDgE9vNSA6KeFdovn
+	 +nk4h3W6f0FwaaubKg9lCvubjb79cOlzo98URNsWhUnQcwCKur4N+T0iAtAvfgzVwD
+	 mKFj6DtlBMoa+SzBHzm6fir4XYwr4BRshQz1+7NKr7BPqUpxmyu4+P3xVTYuD37MBb
+	 C03iwcMHPmWFA==
 Received: from rostedt by gandalf with local (Exim 4.98.2)
 	(envelope-from <rostedt@kernel.org>)
-	id 1v12jh-0000000Copf-3q6T;
+	id 1v12jh-0000000Cop9-37nB;
 	Tue, 23 Sep 2025 09:07:13 -0400
-Message-ID: <20250923130713.764558957@kernel.org>
+Message-ID: <20250923130713.594320290@kernel.org>
 User-Agent: quilt/0.68
-Date: Tue, 23 Sep 2025 09:04:59 -0400
+Date: Tue, 23 Sep 2025 09:04:58 -0400
 From: Steven Rostedt <rostedt@kernel.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -46,9 +46,10 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Tom Zanussi <zanussi@kernel.org>,
  Thomas Gleixner <tglx@linutronix.de>,
  Ian Rogers <irogers@google.com>,
- Douglas Raillard <douglas.raillard@arm.com>
-Subject: [PATCH v2 2/8] tracing: Have syscall trace events show "0x" for values greater than
- 10
+ Douglas Raillard <douglas.raillard@arm.com>,
+ "Paul E. McKenney" <paulmck@kernel.org>
+Subject: [PATCH v2 1/8] tracing: Replace syscall RCU pointer assignment with
+ READ/WRITE_ONCE()
 References: <20250923130457.901085554@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -60,55 +61,114 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-Currently the syscall trace events show each value as hexadecimal, but
-without adding "0x" it can be confusing:
+The syscall events are pseudo events that hook to the raw syscalls. The
+ftrace_syscall_enter/exit() callback is called by the raw_syscall
+enter/exit tracepoints respectively whenever any of the syscall events are
+enabled.
 
-   sys_write(fd: 4, buf: 0x55c4a1fa9270, count: 44)
+The trace_array has an array of syscall "files" that correspond to the
+system calls based on their __NR_SYSCALL number. The array is read and if
+there's a pointer to a trace_event_file then it is considered enabled and
+if it is NULL that syscall event is considered disabled.
 
-Looks like the above write wrote 44 bytes, when in reality it wrote 68
-bytes.
+Currently it uses an rcu_dereference_sched() to get this pointer and a
+rcu_assign_ptr() or RCU_INIT_POINTER() to write to it. This is unnecessary
+as the file pointer will not go away outside the synchronization of the
+tracepoint logic itself. And this code adds no extra RCU synchronization
+that uses this.
 
-Add a "0x" for all values greater or equal to 10 to remove the ambiguity.
-For values less than 10, leave off the "0x" as that just adds noise to the
-output.
+Replace these functions with a simple READ_ONCE() and WRITE_ONCE() which
+is all they need. This will also allow this code to not depend on
+preemption being disabled as system call tracepoints are now allowed to
+fault.
 
-Also change the iterator to check if "i" is nonzero and print the ", "
-delimiter at the start, then adding the logic to the trace_seq_printf() at
-the end.
-
+Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/trace_syscalls.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+Changes since v1: https://lore.kernel.org/20250805193234.745705874@kernel.org
 
+- Removed __rcu annotation to the fields that do not need RCU to protect
+  them.
+
+ kernel/trace/trace.h          |  4 ++--
+ kernel/trace/trace_syscalls.c | 14 ++++++--------
+ 2 files changed, 8 insertions(+), 10 deletions(-)
+
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index 5f4bed5842f9..85eabb454bee 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -380,8 +380,8 @@ struct trace_array {
+ #ifdef CONFIG_FTRACE_SYSCALLS
+ 	int			sys_refcount_enter;
+ 	int			sys_refcount_exit;
+-	struct trace_event_file __rcu *enter_syscall_files[NR_syscalls];
+-	struct trace_event_file __rcu *exit_syscall_files[NR_syscalls];
++	struct trace_event_file	*enter_syscall_files[NR_syscalls];
++	struct trace_event_file	*exit_syscall_files[NR_syscalls];
+ #endif
+ 	int			stop_count;
+ 	int			clock_id;
 diff --git a/kernel/trace/trace_syscalls.c b/kernel/trace/trace_syscalls.c
-index 3a0b65f89130..0f932b22f9ec 100644
+index 46aab0ab9350..3a0b65f89130 100644
 --- a/kernel/trace/trace_syscalls.c
 +++ b/kernel/trace/trace_syscalls.c
-@@ -153,14 +153,20 @@ print_syscall_enter(struct trace_iterator *iter, int flags,
- 		if (trace_seq_has_overflowed(s))
- 			goto end;
+@@ -310,8 +310,7 @@ static void ftrace_syscall_enter(void *data, struct pt_regs *regs, long id)
+ 	if (syscall_nr < 0 || syscall_nr >= NR_syscalls)
+ 		return;
  
-+		if (i)
-+			trace_seq_puts(s, ", ");
-+
- 		/* parameter types */
- 		if (tr && tr->trace_flags & TRACE_ITER_VERBOSE)
- 			trace_seq_printf(s, "%s ", entry->types[i]);
+-	/* Here we're inside tp handler's rcu_read_lock_sched (__DO_TRACE) */
+-	trace_file = rcu_dereference_sched(tr->enter_syscall_files[syscall_nr]);
++	trace_file = READ_ONCE(tr->enter_syscall_files[syscall_nr]);
+ 	if (!trace_file)
+ 		return;
  
- 		/* parameter values */
--		trace_seq_printf(s, "%s: %lx%s", entry->args[i],
--				 trace->args[i],
--				 i == entry->nb_args - 1 ? "" : ", ");
-+		if (trace->args[i] < 10)
-+			trace_seq_printf(s, "%s: %lu", entry->args[i],
-+					 trace->args[i]);
-+		else
-+			trace_seq_printf(s, "%s: 0x%lx", entry->args[i],
-+					 trace->args[i]);
+@@ -356,8 +355,7 @@ static void ftrace_syscall_exit(void *data, struct pt_regs *regs, long ret)
+ 	if (syscall_nr < 0 || syscall_nr >= NR_syscalls)
+ 		return;
+ 
+-	/* Here we're inside tp handler's rcu_read_lock_sched (__DO_TRACE()) */
+-	trace_file = rcu_dereference_sched(tr->exit_syscall_files[syscall_nr]);
++	trace_file = READ_ONCE(tr->exit_syscall_files[syscall_nr]);
+ 	if (!trace_file)
+ 		return;
+ 
+@@ -393,7 +391,7 @@ static int reg_event_syscall_enter(struct trace_event_file *file,
+ 	if (!tr->sys_refcount_enter)
+ 		ret = register_trace_sys_enter(ftrace_syscall_enter, tr);
+ 	if (!ret) {
+-		rcu_assign_pointer(tr->enter_syscall_files[num], file);
++		WRITE_ONCE(tr->enter_syscall_files[num], file);
+ 		tr->sys_refcount_enter++;
  	}
- 
- 	trace_seq_putc(s, ')');
+ 	mutex_unlock(&syscall_trace_lock);
+@@ -411,7 +409,7 @@ static void unreg_event_syscall_enter(struct trace_event_file *file,
+ 		return;
+ 	mutex_lock(&syscall_trace_lock);
+ 	tr->sys_refcount_enter--;
+-	RCU_INIT_POINTER(tr->enter_syscall_files[num], NULL);
++	WRITE_ONCE(tr->enter_syscall_files[num], NULL);
+ 	if (!tr->sys_refcount_enter)
+ 		unregister_trace_sys_enter(ftrace_syscall_enter, tr);
+ 	mutex_unlock(&syscall_trace_lock);
+@@ -431,7 +429,7 @@ static int reg_event_syscall_exit(struct trace_event_file *file,
+ 	if (!tr->sys_refcount_exit)
+ 		ret = register_trace_sys_exit(ftrace_syscall_exit, tr);
+ 	if (!ret) {
+-		rcu_assign_pointer(tr->exit_syscall_files[num], file);
++		WRITE_ONCE(tr->exit_syscall_files[num], file);
+ 		tr->sys_refcount_exit++;
+ 	}
+ 	mutex_unlock(&syscall_trace_lock);
+@@ -449,7 +447,7 @@ static void unreg_event_syscall_exit(struct trace_event_file *file,
+ 		return;
+ 	mutex_lock(&syscall_trace_lock);
+ 	tr->sys_refcount_exit--;
+-	RCU_INIT_POINTER(tr->exit_syscall_files[num], NULL);
++	WRITE_ONCE(tr->exit_syscall_files[num], NULL);
+ 	if (!tr->sys_refcount_exit)
+ 		unregister_trace_sys_exit(ftrace_syscall_exit, tr);
+ 	mutex_unlock(&syscall_trace_lock);
 -- 
 2.50.1
 
