@@ -1,176 +1,210 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F113BE5E;
-	Tue, 23 Sep 2025 00:20:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AA0A34BA2E;
+	Tue, 23 Sep 2025 01:16:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758586809; cv=none; b=iniv7KRyYiLAPwfTztxywLudkjTtxpf6zv73apXrufKum+JNLz8eJd3hfnB4F2fIVqS+1p0F3wn3Muhc0z4A7+97mSduHfe92UDxc+qHvdW8skNM5f11lyYcf8flzHJGxzeBuR3DioPmjG7EuL/JzCAPhRlBp5FusRVpLXPXdb4=
+	t=1758590206; cv=none; b=f6P+md6lmSmkZSq8GgKt1Y9qrFKI7q3jLi4VTHsrCQBdJZ/Qr/cE2ze0ewH532MKrLegpS5rKQWH1BAZt3rQ5fSyNaO8LKdRZvt3ITwnm8BAEuNOEecQqRfasl1Y4y6gfstIws353/4UUvVjYtvRwnNc4WhHg4ubbxFYEgxvr6Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758586809; c=relaxed/simple;
-	bh=/YBR+R7LfGYnIdMOOdTLlGjgAGM0YwIAXCZB1PCXPHo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l2wDSbTiHs7kDMuyBe3l4rLOLozshajoK8OZdt831apsoJN012xuhvZGK5cTFSvMyZ4APO/We1/b7jWNd9NrtHbaJZIfKImvIcr8ztXNbGDyDuS94SjE/An7j0iU3X+9oe0oocSw2LXIvaRxWpYYK19JbzqyTcgVUcoeVaCSvhg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vII9/bnp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1758590206; c=relaxed/simple;
+	bh=8tXejbFW19KFrTWNnFD7AdnZF5VZAJlv5KEXs5SvnzM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=CSHmnHNkmNcFAoTlDzxHqbU+YUuZGkG2ivqRuCUlZ29D9zR2kwdnkGVwjCPAVtJ/Ei23VhWp0xIeZI5iHaYXeq+d3r5/PeOwbzE8wldJXtCT4YmOwIDH7qOmRmpuM8A16Z3SDN52Nw2IAIY66UquYyS+H6gc/SwCs5p901yZb3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qZZAwqwG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vII9/bnp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35AA2C4CEF0;
-	Tue, 23 Sep 2025 00:20:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qZZAwqwG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6A28C4CEF0;
+	Tue, 23 Sep 2025 01:16:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758586809;
-	bh=/YBR+R7LfGYnIdMOOdTLlGjgAGM0YwIAXCZB1PCXPHo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=vII9/bnpzWpioGSZ+2cDByaO4ZessAu6VxmjFltMYns07Rls7A8wbbyZHF1/bjJ02
-	 koohXi76kRLB7IK4L+eOiZzzgwHa+ruWeK3xlwVSE42zavkujpxJjXfE6ryrtcnGhy
-	 ZTvoRJaDo1aUiAtkOBaPgLZKjV5ywPjMnAMryNoPifDM2HgoaMkpjnMr6/vjmKeyVk
-	 0UexqKVtoSDX77iQKgC8JyM71ePPxSN8YKnv5+BgbFuVcZAoktl8z2ATpeMujz0k2i
-	 QQLbvr0X2A2IxAxzRKQzlhopS24Ku1Y/31bzbOzC4BS57ONvPDvjtZLHdUFj261K4H
-	 8h5WETmOROLUQ==
-Date: Mon, 22 Sep 2025 17:20:04 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Nam Cao <namcao@linutronix.de>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
+	s=k20201202; t=1758590205;
+	bh=8tXejbFW19KFrTWNnFD7AdnZF5VZAJlv5KEXs5SvnzM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=qZZAwqwGzRb3tAsxVTQ9BlVvu5fo1RFvvN6+J2T9E1BsmpYY/b+DdXSHNGBUPI5Bx
+	 +obMMXLe1wnYddPZHqFCdWTG9mfdUl7ZxHAvNCP1T8iOs5TGuut9Fj/cymTKDl7JMa
+	 B6loUasVzjwc/6v1viSgoaKsDdfhMsatRbB8tco73tjsCXPDK61F0PamCbLLQwTJTh
+	 xRcTd/dKHLpxbQtaL+ZoOy8MEVEGKz09R8Gg59mdvSjkzpnvuaCaLFy7iAcI19OeBJ
+	 46njZcZN0W/cKRqFfC2SpU5PaTV2V3+qU3j3mkkI8EiMlmICNM4a3xTlvmSy6QTz/K
+	 Cug+GkojmeTgA==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	x86@kernel.org
+Cc: Jinchao Wang <wangjinchao600@gmail.com>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rv: Fix wrong type cast in enabled_monitors_next()
-Message-ID: <20250923002004.GA2836051@ax162>
-References: <20250806120911.989365-1-namcao@linutronix.de>
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Ian Rogers <irogers@google.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH v5 0/8] tracing: wprobe: Add wprobe for watchpoint
+Date: Tue, 23 Sep 2025 10:16:39 +0900
+Message-ID: <175859019940.374439.7398451124225791618.stgit@devnote2>
+X-Mailer: git-send-email 2.43.0
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250806120911.989365-1-namcao@linutronix.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Nam,
+Hi,
 
-On Wed, Aug 06, 2025 at 02:09:11PM +0200, Nam Cao wrote:
-> Argument 'p' of enabled_monitors_next() is not a pointer to struct
-> rv_monitor, it is actually a pointer to the list_head inside struct
-> rv_monitor. Therefore it is wrong to cast 'p' to struct rv_monitor *.
-> 
-> This wrong type cast has been there since the beginning. But it still
-> worked because the list_head was the first field in struct rv_monitor_def.
-> This is no longer true since commit 24cbfe18d55a ("rv: Merge struct
-> rv_monitor_def into struct rv_monitor") moved the list_head, and this wrong
-> type cast became a functional problem.
-> 
-> Properly use container_of() instead.
-> 
-> Fixes: 24cbfe18d55a ("rv: Merge struct rv_monitor_def into struct rv_monitor")
-> Signed-off-by: Nam Cao <namcao@linutronix.de>
-> ---
->  kernel/trace/rv/rv.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/trace/rv/rv.c b/kernel/trace/rv/rv.c
-> index bd7d56dbf6c2..6ce3495164d8 100644
-> --- a/kernel/trace/rv/rv.c
-> +++ b/kernel/trace/rv/rv.c
-> @@ -495,7 +495,7 @@ static void *available_monitors_next(struct seq_file *m, void *p, loff_t *pos)
->   */
->  static void *enabled_monitors_next(struct seq_file *m, void *p, loff_t *pos)
->  {
-> -	struct rv_monitor *mon = p;
-> +	struct rv_monitor *mon = container_of(p, struct rv_monitor, list);
->  
->  	(*pos)++;
+Here is the 5th version of the series for adding new wprobe (watch probe)
+which provides memory access tracing event. Moreover, this can be used
+via event trigger. Thus it can trace memory access on a dynamically
+allocated objects too.
+The previous version is here:
 
-I am seeing a crash when reading from /sys/kernel/tracing/rv/enabled_monitors
-on a couple of my arm64 boxes running Fedora after this change, which
-landed in mainline in 6.17-rc7. I can reproduce this in QEMU pretty
-easily.
+https://lore.kernel.org/all/175785897434.234168.6798590787777427098.stgit@devnote2/
 
-  $ cat kernel/configs/repro.config
-  CONFIG_FTRACE=y
-  CONFIG_RV=y
-  CONFIG_RV_MON_WWNR=y
-  CONFIG_RV_PER_TASK_MONITORS=2
-  CONFIG_RV_REACTORS=y
-  CONFIG_RV_REACT_PANIC=y
-  CONFIG_RV_REACT_PRINTK=y
+This version updates the document about wprobe according to Randy's comment
+and modify config for test cases.
+This still include Jinchao's x86 HWBP patches[1][2] as [2/8][3/8].
 
-  $ git show -s --format='%h ("%s")'
-  097a6c336d00 ("Merge tag 'trace-rv-v6.17-rc5' of git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace")
+[1] https://lore.kernel.org/all/20250912101145.465708-2-wangjinchao600@gmail.com/
+[2] https://lore.kernel.org/all/20250912101145.465708-3-wangjinchao600@gmail.com/
 
-  $ make -skj"$(nproc)" ARCH=arm64 CROSS_COMPILE=aarch64-linux- clean virtconfig repro.config Image.gz
+Usage
+-----
 
-  $ curl -LSs https://github.com/ClangBuiltLinux/boot-utils/releases/download/20241120-044434/arm64-rootfs.cpio.zst | zstd -d >rootfs.cpio
+The basic usage of this wprobe is similar to other probes;
 
-  $ qemu-system-aarch64 \
-      -display none \
-      -nodefaults \
-      -cpu max,pauth-impdef=true \
-      -machine virt,gic-version=max,virtualization=true \
-      -append 'console=ttyAMA0 earlycon rdinit=/bin/sh'
-      -kernel arch/arm64/boot/Image.gz \
-      -initrd rootfs.cpio \
-      -m 512m \
-      -serial mon:stdio
-  ...
-  [    0.000000] Linux version 6.17.0-rc6-00143-g097a6c336d00 (nathan@aadp) (aarch64-linux-gcc (GCC) 15.2.0, GNU ld (GNU Binutils) 2.45) #1 SMP PREEMPT Mon Sep 22 17:03:48 MST 2025
-  ...
-  ~ # mount -t sysfs sysfs /sys &&
-  > mount -t tracefs tracing /sys/kernel/tracing &&
-  > cat /sys/kernel/tracing/rv/enabled_monitors
-  [  134.672494] Unable to handle kernel paging request at virtual address ffffffffffffffd0
-  [  134.675919] Mem abort info:
-  [  134.677233]   ESR = 0x0000000096000006
-  [  134.679118]   EC = 0x25: DABT (current EL), IL = 32 bits
-  [  134.680880]   SET = 0, FnV = 0
-  [  134.682180]   EA = 0, S1PTW = 0
-  [  134.683788]   FSC = 0x06: level 2 translation fault
-  [  134.685435] Data abort info:
-  [  134.687096]   ISV = 0, ISS = 0x00000006, ISS2 = 0x00000000
-  [  134.688973]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
-  [  134.690889]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
-  [  134.692687] swapper pgtable: 4k pages, 52-bit VAs, pgdp=00000000417a8000
-  [  134.694969] [ffffffffffffffd0] pgd=1000000041c8d003, p4d=0000000041bf2403, pud=0000000041bf3403, pmd=0000000000000000
-  [  134.700920] Internal error: Oops: 0000000096000006 [#1]  SMP
-  [  134.702603] Modules linked in:
-  [  134.703956] CPU: 0 UID: 0 PID: 53 Comm: cat Not tainted 6.17.0-rc6-00143-g097a6c336d00 #1 PREEMPT
-  [  134.705506] Hardware name: linux,dummy-virt (DT)
-  [  134.706481] pstate: a1402009 (NzCv daif +PAN -UAO -TCO +DIT -SSBS BTYPE=--)
-  [  134.707595] pc : enabled_monitors_start+0x6c/0xa0
-  [  134.709324] lr : enabled_monitors_start+0x24/0xa0
-  [  134.710047] sp : ffff80008043bbf0
-  [  134.710557] x29: ffff80008043bbf0 x28: fff0000002e58000 x27: 0000000000000000
-  [  134.711889] x26: ffff80008043bca0 x25: fff0000002b44038 x24: 0000000000000000
-  [  134.712965] x23: 0000000000000001 x22: 0000000000000000 x21: ffff80008043bcc8
-  [  134.714028] x20: ffffa8bf4243e000 x19: ffffa8bf4243ed00 x18: 0000000000000000
-  [  134.714994] x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000000
-  [  134.716046] x14: 0000000000000000 x13: 0000000000000000 x12: 0000000000000000
-  [  134.717110] x11: 0000000000000000 x10: 0000000000000000 x9 : 0000000000000000
-  [  134.718219] x8 : 0000000000000000 x7 : 0000000000000001 x6 : 0000000000000000
-  [  134.719246] x5 : 0000000000001000 x4 : fff000001fdea760 x3 : 0000000000000000
-  [  134.720195] x2 : 0000000000000000 x1 : fff0000002b44028 x0 : ffffffffffffffc0
-  [  134.721411] Call trace:
-  [  134.722173]  enabled_monitors_start+0x6c/0xa0 (P)
-  [  134.723088]  seq_read_iter+0xd4/0x47c
-  [  134.723752]  seq_read+0xec/0x12c
-  [  134.724200]  vfs_read+0xc4/0x33c
-  [  134.724791]  ksys_read+0x64/0x100
-  [  134.725255]  __arm64_sys_read+0x18/0x24
-  [  134.725860]  invoke_syscall.constprop.0+0x40/0xf0
-  [  134.726466]  el0_svc_common.constprop.0+0x38/0xd8
-  [  134.727092]  do_el0_svc+0x1c/0x28
-  [  134.727558]  el0_svc+0x34/0xe8
-  [  134.728112]  el0t_64_sync_handler+0xa0/0xe4
-  [  134.728763]  el0t_64_sync+0x198/0x19c
-  [  134.729790] Code: f9402001 d1010020 eb01027f 540000c0 (39404001)
-  [  134.731074] ---[ end trace 0000000000000000 ]---
-  Segmentation fault
+  w:[GRP/][EVENT] [r|w|rw]@<ADDRESS|SYMBOL[+OFFS]> [FETCHARGS]
 
-With this change reverted, there is no crash. As this change seems to
-have proper justification, is there some other latent bug here?
+This defines a new wprobe event. For example, to trace jiffies update,
+you can do;
 
-If there is any other information I can provide or patches I can test, I
-am more than happy to do so.
+ echo 'w:my_jiffies w@jiffies:8 value=+0($addr)' >> dynamic_events
+ echo 1 > events/wprobes/my_jiffies/enable
 
-Cheers,
-Nathan
+Moreover, this can be combined with event trigger to trace the memory
+accecss on slab objects. The trigger syntax is;
+
+  set_wprobe:WPROBE_EVENT:FIELD[+OFFSET] [if FILTER]
+  clear_wprobe:WPROBE_EVENT[:FIELD[+OFFSET]] [if FILTER]
+
+set_wprobe sets WPROBE_EVENT's watch address on FIELD[+OFFSET].
+clear_wprobe clears WPROBE_EVENT's watch address if it is set to
+FIELD[+OFFSET]. If FIELD is omitted, forcibly clear the watch address
+when trigger event is hit.
+
+For example, trace the first 8 byte of the dentry data structure passed
+to do_truncate() until it is deleted by __dentry_kill().
+(Note: all tracefs setup uses '>>' so that it does not kick do_truncate())
+
+  # echo 'w:watch rw@0:8 address=$addr value=+0($addr)' > dynamic_events
+
+  # echo 'f:truncate do_truncate dentry=$arg2' >> dynamic_events
+  # echo 'set_wprobe:watch:dentry' >> events/fprobes/truncate/trigger
+
+  # echo 'f:dentry_kill __dentry_kill dentry=$arg1' >> dynamic_events
+  # echo 'clear_wprobe:watch:dentry' >> events/fprobes/dentry_kill/trigger
+
+  # echo 1 >> events/fprobes/truncate/enable
+  # echo 1 >> events/fprobes/dentry_kill/enable
+
+  # echo aaa > /tmp/hoge
+  # echo bbb > /tmp/hoge
+  # echo ccc > /tmp/hoge
+  # rm /tmp/hoge
+
+Then, the trace data will show;
+
+# tracer: nop
+#
+# entries-in-buffer/entries-written: 16/16   #P:8
+#
+#                                _-----=> irqs-off/BH-disabled
+#                               / _----=> need-resched
+#                              | / _---=> hardirq/softirq
+#                              || / _--=> preempt-depth
+#                              ||| / _-=> migrate-disable
+#                              |||| /     delay
+#           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
+#              | |         |   |||||     |         |
+              sh-113     [004] .....     6.467444: truncate: (do_truncate+0x4/0x120) dentry=0xffff8880044f0fd8
+              sh-113     [004] ..Zff     6.468534: watch: (lookup_fast+0xaa/0x150) address=0xffff8880044f0fd8 value=0x200080
+              sh-113     [004] ..Zff     6.468542: watch: (step_into+0x82/0x360) address=0xffff8880044f0fd8 value=0x200080
+              sh-113     [004] ..Zff     6.468547: watch: (step_into+0x9f/0x360) address=0xffff8880044f0fd8 value=0x200080
+              sh-113     [004] ..Zff     6.468553: watch: (path_openat+0xb3a/0xe70) address=0xffff8880044f0fd8 value=0x200080
+              sh-113     [004] ..Zff     6.468557: watch: (path_openat+0xb9a/0xe70) address=0xffff8880044f0fd8 value=0x200080
+              sh-113     [004] .....     6.468563: truncate: (do_truncate+0x4/0x120) dentry=0xffff8880044f0fd8
+              sh-113     [004] ...1.     6.469826: dentry_kill: (__dentry_kill+0x0/0x220) dentry=0xffff8880044f0ea0
+              sh-113     [004] ...1.     6.469859: dentry_kill: (__dentry_kill+0x0/0x220) dentry=0xffff8880044f0d68
+              rm-118     [001] ..Zff     6.472360: watch: (lookup_fast+0xaa/0x150) address=0xffff8880044f0fd8 value=0x200080
+              rm-118     [001] ..Zff     6.472366: watch: (step_into+0x82/0x360) address=0xffff8880044f0fd8 value=0x200080
+              rm-118     [001] ..Zff     6.472370: watch: (step_into+0x9f/0x360) address=0xffff8880044f0fd8 value=0x200080
+              rm-118     [001] ..Zff     6.472386: watch: (lookup_fast+0xaa/0x150) address=0xffff8880044f0fd8 value=0x200080
+              rm-118     [001] ..Zff     6.472390: watch: (step_into+0x82/0x360) address=0xffff8880044f0fd8 value=0x200080
+              rm-118     [001] ..Zff     6.472394: watch: (step_into+0x9f/0x360) address=0xffff8880044f0fd8 value=0x200080
+              rm-118     [001] ..Zff     6.472415: watch: (lookup_one_qstr_excl+0x2c/0x150) address=0xffff8880044f0fd8 value=0x200080
+              rm-118     [001] ..Zff     6.472419: watch: (lookup_one_qstr_excl+0xd5/0x150) address=0xffff8880044f0fd8 value=0x200080
+              rm-118     [001] ..Zff     6.472424: watch: (may_delete+0x18/0x200) address=0xffff8880044f0fd8 value=0x200080
+              rm-118     [001] ..Zff     6.472428: watch: (may_delete+0x194/0x200) address=0xffff8880044f0fd8 value=0x200080
+              rm-118     [001] ..Zff     6.472446: watch: (vfs_unlink+0x63/0x1c0) address=0xffff8880044f0fd8 value=0x200080
+              rm-118     [001] d.Z..     6.472528: watch: (dont_mount+0x19/0x30) address=0xffff8880044f0fd8 value=0x200180
+              rm-118     [001] ..Zff     6.472533: watch: (vfs_unlink+0x11a/0x1c0) address=0xffff8880044f0fd8 value=0x200180
+              rm-118     [001] ..Zff     6.472538: watch: (vfs_unlink+0x12e/0x1c0) address=0xffff8880044f0fd8 value=0x200180
+              rm-118     [001] d.Z1.     6.472543: watch: (d_delete+0x61/0xa0) address=0xffff8880044f0fd8 value=0x200080
+              rm-118     [001] d.Z1.     6.472547: watch: (dentry_unlink_inode+0x14/0x110) address=0xffff8880044f0fd8 value=0x200080
+              rm-118     [001] d.Z1.     6.472551: watch: (dentry_unlink_inode+0x1e/0x110) address=0xffff8880044f0fd8 value=0x80
+              rm-118     [001] d.Z..     6.472563: watch: (fast_dput+0x8d/0x120) address=0xffff8880044f0fd8 value=0x80
+              rm-118     [001] ...1.     6.472567: dentry_kill: (__dentry_kill+0x0/0x220) dentry=0xffff8880044f0fd8
+              sh-113     [004] ...2.     6.473049: dentry_kill: (__dentry_kill+0x0/0x220) dentry=0xffff888006e383a8
+
+Thank you,
+
+---
+
+Jinchao Wang (2):
+      x86/hw_breakpoint: Unify breakpoint install/uninstall
+      x86/hw_breakpoint: Add arch_reinstall_hw_breakpoint
+
+Masami Hiramatsu (Google) (6):
+      tracing: wprobe: Add watchpoint probe event based on hardware breakpoint
+      HWBP: Add modify_wide_hw_breakpoint_local() API
+      tracing: wprobe: Add wprobe event trigger
+      selftests: tracing: Add a basic testcase for wprobe
+      selftests: tracing: Add syntax testcase for wprobe
+      selftests: ftrace: Add wprobe trigger testcase
+
+
+ Documentation/trace/index.rst                      |    1 
+ Documentation/trace/wprobetrace.rst                |  155 +++
+ arch/Kconfig                                       |   10 
+ arch/x86/Kconfig                                   |    1 
+ arch/x86/include/asm/hw_breakpoint.h               |    8 
+ arch/x86/kernel/hw_breakpoint.c                    |  148 ++-
+ include/linux/hw_breakpoint.h                      |    6 
+ include/linux/trace_events.h                       |    3 
+ kernel/events/hw_breakpoint.c                      |   37 +
+ kernel/trace/Kconfig                               |   23 
+ kernel/trace/Makefile                              |    1 
+ kernel/trace/trace.c                               |    9 
+ kernel/trace/trace.h                               |    5 
+ kernel/trace/trace_probe.c                         |   22 
+ kernel/trace/trace_probe.h                         |    8 
+ kernel/trace/trace_wprobe.c                        | 1115 ++++++++++++++++++++
+ tools/testing/selftests/ftrace/config              |    2 
+ .../ftrace/test.d/dynevent/add_remove_wprobe.tc    |   68 +
+ .../test.d/dynevent/wprobes_syntax_errors.tc       |   20 
+ .../ftrace/test.d/trigger/trigger-wprobe.tc        |   48 +
+ 20 files changed, 1625 insertions(+), 65 deletions(-)
+ create mode 100644 Documentation/trace/wprobetrace.rst
+ create mode 100644 kernel/trace/trace_wprobe.c
+ create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/add_remove_wprobe.tc
+ create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/wprobes_syntax_errors.tc
+ create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe.tc
+
+--
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
