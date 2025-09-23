@@ -1,172 +1,210 @@
-Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B71A10F1
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 23 Sep 2025 13:34:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB6982236E8;
+	Tue, 23 Sep 2025 15:32:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758634490; cv=none; b=V/AHdQ8I+gouUnhLnfWxfPRXIhHpqiNi1447/mZEq8VtE1+k5iVPynCRSXensO7MUlF+P97Pt8rPXVAT+Qrc8vCqG3lY0m14YL7iVOUZEEz3jn2mpogqOv6F0un3nCR8AxhZ/hmqi+Lb/wUtJMN94ll+MzlSb97tOGBkaZIJ6Xo=
+	t=1758641542; cv=none; b=QI15NKBRIv73w0XnW/RH1Gvrp2cZvZTw498RhkxP/0VUuwpVM2F03kRq47KvIV/gT1qiKmVtPrWzn6dZ0P4QAg5HeQWI2HBxlD0M+RKqqBGNRtbsdvtV9r34gOCqj/8TQGL3AsbEdQhrrVwMFcVReNdQcBwTsXibuJAfes1jM/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758634490; c=relaxed/simple;
-	bh=u7oEvXsps4gM6bLJm1v9nTNaPe+i34OPp3gcLJGAhHU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DLI0L1BXbuNm/GqK0GthK3+bswhUyZoiKYc5nWDQRqDunTk9BKO/eg/YC7T9AvEz3HzZlq042jGwRJo/rPKT0RuN5NXNMJjR7Rt6MmW8jBbGzJgdI9ey9ZxU0w8uc4MhUhtaopehtRwW04VV7EUjx1BAo/hN7dYsIFupw/i6dqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=aMCLsoip; arc=none smtp.client-ip=95.215.58.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1758641542; c=relaxed/simple;
+	bh=Ech0Y3Z2+FahOw7djsuUKCEMTU+S4YVglkVd+9aU4ns=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=NFHQ9X9Z0dlwOaq0sgbJfoNIhAorJHFw8pzkpC5/7MDjDwL+ZPhRaJOJL7jIiC8tgH0S/vGHF/6zpmGW5tFNdwFSYJHx/t3L7LdMg0AujhOKT+IEDijgNlHrS4x/OXSBoEvtEf+13pkoOemP+Q8WP3qROqePAk3UZKuFoWfgCg0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GHSLMlvH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="aMCLsoip"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1758634473;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kHfWCvv+MDYhkLFWkNZpUD65PMmDuEXuyHvDsjW9Fks=;
-	b=aMCLsoiplGJGCYSr2CEESBjyy3ZM0l6/cZLxDpGPBScX5ssxERBQFJFgSLM66REMYwJjEA
-	uyYWfkAxMY/B9aCPWZ6m0sw+XrENDJk8pqJgD42FEddeaj/PtPEBPM74iExgLlyrnfBZda
-	ACiFSCKnvF9PnLfUQSKC2Btk8gZUfXE=
-From: Menglong Dong <menglong.dong@linux.dev>
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Jiri Olsa <olsajiri@gmail.com>, mhiramat@kernel.org, rostedt@goodmis.org,
- mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH 2/2] tracing: fprobe: optimization for entry only case
-Date: Tue, 23 Sep 2025 21:34:20 +0800
-Message-ID: <5938379.DvuYhMxLoT@7950hx>
-In-Reply-To: <aNKRoKTAmKpafk4F@krava>
-References:
- <20250923092001.1087678-1-dongml2@chinatelecom.cn>
- <4681686.LvFx2qVVIh@7940hx> <aNKRoKTAmKpafk4F@krava>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GHSLMlvH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0292C4CEF5;
+	Tue, 23 Sep 2025 15:32:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758641541;
+	bh=Ech0Y3Z2+FahOw7djsuUKCEMTU+S4YVglkVd+9aU4ns=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=GHSLMlvH0uosxIJgWDv6lK+8YwlFOPA3LKVR344Wf1iAzXdw4rLp1v66Shbv41RDN
+	 OI7WN+5f2R3ZlrwwVOrhKanqag20uq8KTaqscVnuaY28VMyMzkuhveQ6lg8feiLjGQ
+	 N2TrsCLjiagO4vnGdZZTRHytXFXq4FSBczsIUKy1rCEk6c5W7bWt6wGtZ4/JtUtQDE
+	 s8Kc+ul6rWHn/Aogd1b1IAnr8mKoGghEiuPrlZ4cTD2XJcjSbSepRWELfEf0k6hbMI
+	 kQFdJhTQNaZSOMui7KCnuKHbyfrIG+h4w6egVP45tFRGwL5i3A29fezCfy0nCUD2aV
+	 /Qqgv4FZk6Jzg==
+Date: Wed, 24 Sep 2025 00:32:15 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Feng Yang <yangfeng59949@163.com>
+Cc: alexei.starovoitov@gmail.com, andrii@kernel.org, ast@kernel.org,
+ bpf@vger.kernel.org, daniel@iogearbox.net, eddyz87@gmail.com,
+ haoluo@google.com, john.fastabend@gmail.com, jolsa@kernel.org,
+ kpsingh@kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, martin.lau@linux.dev, sdf@fomichev.me,
+ song@kernel.org, yonghong.song@linux.dev
+Subject: Re: [BUG] Failed to obtain stack trace via bpf_get_stackid on ARM64
+ architecture
+Message-Id: <20250924003215.365db154e1fc79163d9d80fe@kernel.org>
+In-Reply-To: <20250922021531.105670-1-yangfeng59949@163.com>
+References: <20250921223037.f8df26b59d60b8b3f7cf2d53@kernel.org>
+	<20250922021531.105670-1-yangfeng59949@163.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
-X-Migadu-Flow: FLOW_OUT
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 2025/9/23 20:25, Jiri Olsa wrote:
-> On Tue, Sep 23, 2025 at 07:16:55PM +0800, menglong.dong@linux.dev wrote:
-> > On 2025/9/23 19:10 Jiri Olsa <olsajiri@gmail.com> write:
-> > > On Tue, Sep 23, 2025 at 05:20:01PM +0800, Menglong Dong wrote:
-> > > > For now, fgraph is used for the fprobe, even if we need trace the e=
-ntry
-> > > > only. However, the performance of ftrace is better than fgraph, and=
- we
-> > > > can use ftrace_ops for this case.
-> > > >=20
-> > > > Then performance of kprobe-multi increases from 54M to 69M. Before =
-this
-> > > > commit:
-> > > >=20
-> > > >   $ ./benchs/run_bench_trigger.sh kprobe-multi
-> > > >   kprobe-multi   :   54.663 =C2=B1 0.493M/s
-> > > >=20
-> > > > After this commit:
-> > > >=20
-> > > >   $ ./benchs/run_bench_trigger.sh kprobe-multi
-> > > >   kprobe-multi   :   69.447 =C2=B1 0.143M/s
-> > > >=20
-> > > > Mitigation is disable during the bench testing above.
-> > > >=20
-> > > > Signed-off-by: Menglong Dong <dongml2@chinatelecom.cn>
-> > > > ---
-> > > >  kernel/trace/fprobe.c | 88 +++++++++++++++++++++++++++++++++++++++=
-=2D---
-> > > >  1 file changed, 81 insertions(+), 7 deletions(-)
-> > > >=20
-> > > > diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-> > > > index 1785fba367c9..de4ae075548d 100644
-> > > > --- a/kernel/trace/fprobe.c
-> > > > +++ b/kernel/trace/fprobe.c
-> > > > @@ -292,7 +292,7 @@ static int fprobe_fgraph_entry(struct ftrace_gr=
-aph_ent *trace, struct fgraph_ops
-> > > >  				if (node->addr !=3D func)
-> > > >  					continue;
-> > > >  				fp =3D READ_ONCE(node->fp);
-> > > > -				if (fp && !fprobe_disabled(fp))
-> > > > +				if (fp && !fprobe_disabled(fp) && fp->exit_handler)
-> > > >  					fp->nmissed++;
-> > > >  			}
-> > > >  			return 0;
-> > > > @@ -312,11 +312,11 @@ static int fprobe_fgraph_entry(struct ftrace_=
-graph_ent *trace, struct fgraph_ops
-> > > >  		if (node->addr !=3D func)
-> > > >  			continue;
-> > > >  		fp =3D READ_ONCE(node->fp);
-> > > > -		if (!fp || fprobe_disabled(fp))
-> > > > +		if (unlikely(!fp || fprobe_disabled(fp) || !fp->exit_handler))
-> > > >  			continue;
-> > > > =20
-> > > >  		data_size =3D fp->entry_data_size;
-> > > > -		if (data_size && fp->exit_handler)
-> > > > +		if (data_size)
-> > > >  			data =3D fgraph_data + used + FPROBE_HEADER_SIZE_IN_LONG;
-> > > >  		else
-> > > >  			data =3D NULL;
-> > > > @@ -327,7 +327,7 @@ static int fprobe_fgraph_entry(struct ftrace_gr=
-aph_ent *trace, struct fgraph_ops
-> > > >  			ret =3D __fprobe_handler(func, ret_ip, fp, fregs, data);
-> > > > =20
-> > > >  		/* If entry_handler returns !0, nmissed is not counted but skips=
- exit_handler. */
-> > > > -		if (!ret && fp->exit_handler) {
-> > > > +		if (!ret) {
-> > > >  			int size_words =3D SIZE_IN_LONG(data_size);
-> > > > =20
-> > > >  			if (write_fprobe_header(&fgraph_data[used], fp, size_words))
-> > > > @@ -384,6 +384,70 @@ static struct fgraph_ops fprobe_graph_ops =3D {
-> > > >  };
-> > > >  static int fprobe_graph_active;
-> > > > =20
-> > > > +/* ftrace_ops backend (entry-only) */
-> > > > +static void fprobe_ftrace_entry(unsigned long ip, unsigned long pa=
-rent_ip,
-> > > > +	struct ftrace_ops *ops, struct ftrace_regs *fregs)
-> > > > +{
-> > > > +	struct fprobe_hlist_node *node;
-> > > > +	struct rhlist_head *head, *pos;
-> > > > +	struct fprobe *fp;
+On Mon, 22 Sep 2025 10:15:31 +0800
+Feng Yang <yangfeng59949@163.com> wrote:
+
+> On Sun, 21 Sep 2025 22:30:37 +0900 Masami Hiramatsu wrote:
+> 
+> > On Fri, 19 Sep 2025 19:56:20 -0700
+> > Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
+> > 
+> > > On Fri, Sep 19, 2025 at 12:19 AM Feng Yang <yangfeng59949@163.com> wrote:
+> > > >
+> > > > When I use bpf_program__attach_kprobe_multi_opts to hook a BPF program that contains the bpf_get_stackid function on the arm64 architecture,
+> > > > I find that the stack trace cannot be obtained. The trace->nr in __bpf_get_stackid is 0, and the function returns -EFAULT.
+> > > >
+> > > > For example:
+> > > > diff --git a/tools/testing/selftests/bpf/progs/kprobe_multi.c b/tools/testing/selftests/bpf/progs/kprobe_multi.c
+> > > > index 9e1ca8e34913..844fa88cdc4c 100644
+> > > > --- a/tools/testing/selftests/bpf/progs/kprobe_multi.c
+> > > > +++ b/tools/testing/selftests/bpf/progs/kprobe_multi.c
+> > > > @@ -36,6 +36,15 @@ __u64 kretprobe_test6_result = 0;
+> > > >  __u64 kretprobe_test7_result = 0;
+> > > >  __u64 kretprobe_test8_result = 0;
+> > > >
+> > > > +typedef __u64 stack_trace_t[2];
 > > > > +
-> > > > +	guard(rcu)();
-> > > > +	head =3D rhltable_lookup(&fprobe_ip_table, &ip, fprobe_rht_params=
-);
-> > >=20
-> > > hi,
-> > > so this is based on yout previous patch, right?
-> > >   fprobe: use rhltable for fprobe_ip_table
-> > >=20
-> > > would be better to mention that..  is there latest version of that so=
-mewhere?
-> >=20
-> > Yeah, this is based on that version. That patch is applied
-> > to: https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.g=
-it/log/?h=3Dprobes%2Ffor-next
-> >=20
-> > And I do the testing on that branches.
->=20
-> did you run 'test_progs -t kprobe_multi' ? it silently crashes the
-> kernel for me.. attaching config
+> > > > +struct {
+> > > > +       __uint(type, BPF_MAP_TYPE_STACK_TRACE);
+> > > > +       __uint(max_entries, 1024);
+> > > > +       __type(key, __u32);
+> > > > +       __type(value, stack_trace_t);
+> > > > +} stacks SEC(".maps");
+> > > > +
+> > > >  static void kprobe_multi_check(void *ctx, bool is_return)
+> > > >  {
+> > > >         if (bpf_get_current_pid_tgid() >> 32 != pid)
+> > > > @@ -100,7 +109,9 @@ int test_kretprobe(struct pt_regs *ctx)
+> > > >  SEC("kprobe.multi")
+> > > >  int test_kprobe_manual(struct pt_regs *ctx)
+> > > >  {
+> > > > +       int id = bpf_get_stackid(ctx, &stacks, 0);
+> > > 
+> > > ftrace_partial_regs() supposed to work on x86 and arm64,
+> > > but since multi-kprobe is the only user...
+> > 
+> > It should be able to unwind stack. It saves sp, pc, lr, fp.
+> > 
+> > 	regs->sp = afregs->sp;
+> > 	regs->pc = afregs->pc;
+> > 	regs->regs[29] = afregs->fp;
+> > 	regs->regs[30] = afregs->lr;
+> > 
+> > > I suspect the arm64 implementation wasn't really tested.
+> > > Or maybe there is some other issue.
+> > 
+> > It depends on how bpf_get_stackid() works. Some registers for that
+> > function may not be saved.
+> > 
+> > If it returns -EFAULT, the get_perf_callchain() returns NULL.
+> > 
+> 
+> During my test, the reason for returning -EFAULT was that trace->nr was 0.
+> 
+> static long __bpf_get_stackid(struct bpf_map *map,
+> 			      struct perf_callchain_entry *trace, u64 flags)
+> {
+> 	struct bpf_stack_map *smap = container_of(map, struct bpf_stack_map, map);
+> 	struct stack_map_bucket *bucket, *new_bucket, *old_bucket;
+> 	u32 skip = flags & BPF_F_SKIP_FIELD_MASK;
+> 	u32 hash, id, trace_nr, trace_len;
+> 	bool user = flags & BPF_F_USER_STACK;
+> 	u64 *ips;
+> 	bool hash_matches;
+> 
+> 	if (trace->nr <= skip)
+> 		/* skipping more than usable stack trace */
+> 		return -EFAULT;
+> 	......
 
-Hi. I have tested the whole test_progs and it passed.
+Hmm. The "trace" is returned from get_perf_callchain()
 
-In fact, your config will panic even without this patch.
-Please don't enable CONFIG_X86_KERNEL_IBT, the recursion
-of the is_endbr() still exist until this series apply:
+get_perf_callchain(struct pt_regs *regs, u32 init_nr, bool kernel, bool user,
+		   u32 max_stack, bool crosstask, bool add_mark)
+{
+...
 
-  tracing: fprobe: Protect return handler from recursion loop
+	if (kernel && !user_mode(regs)) {
+		if (add_mark)
+			perf_callchain_store_context(&ctx, PERF_CONTEXT_KERNEL);
+		perf_callchain_kernel(&ctx, regs);
+	}
 
-Thanks!
-Menglong Dong
+So this means `perf_callchain_kernel(&ctx, regs);` fails to unwind stack.
 
->=20
-> jirka
->=20
->=20
+perf_callchain_kernel() -> arch_stack_walk() -> kunwind_stack_walk()
 
+That is `kunwind_init_from_regs()` and `do_kunwind()`.
 
+	if (regs) {
+		if (task != current)
+			return -EINVAL;
+		kunwind_init_from_regs(&state, regs);
+	} else if (task == current) {
+		kunwind_init_from_caller(&state);
+	} else {
+		kunwind_init_from_task(&state, task);
+	}
 
+	return do_kunwind(&state, consume_state, cookie);
+
+For initialization, it should be OK because it only refers pc and 
+fp(regs[29]), which are recovered by ftrace_partial_regs().
+
+static __always_inline void
+kunwind_init_from_regs(struct kunwind_state *state,
+		       struct pt_regs *regs)
+{
+	kunwind_init(state, current);
+
+	state->regs = regs;
+	state->common.fp = regs->regs[29];
+	state->common.pc = regs->pc;
+	state->source = KUNWIND_SOURCE_REGS_PC;
+}
+
+And do_kunwind() should work increase trace->nr before return
+unless `kunwind_recover_return_address()` fails.
+
+static __always_inline int
+do_kunwind(struct kunwind_state *state, kunwind_consume_fn consume_state,
+	   void *cookie)
+{
+	int ret;
+
+	ret = kunwind_recover_return_address(state);
+	if (ret)
+		return ret;
+
+	while (1) {
+		if (!consume_state(state, cookie)) <--- this increases trace->nr (*).
+			return -EINVAL;
+		ret = kunwind_next(state);
+		if (ret == -ENOENT)
+			return 0;
+		if (ret < 0)
+			return ret;
+	}
+}
+
+(*) consume_state() == arch_kunwind_consume_entry() 
+  ->  data->consume_entry == callchain_trace() -> perf_callchain_store().
+
+Hmm, can you also dump the regs and insert pr_info() to find
+which function fails?
+
+Thanks,
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
