@@ -1,204 +1,172 @@
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83A082E92BC
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 23 Sep 2025 06:07:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86D1D2737E1;
+	Tue, 23 Sep 2025 06:46:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758607667; cv=none; b=obN+46ZgymEOB2cjGX95igIWRIHiWb6nwtHxZ9XDM4gDkPndtHlK1qCI9LuFwIyCeUdduxs/00AjKYAyyEuhP0A0HYfatKiKr5Sy8O2WeVM4uTSPlvWIi+R+yhLoyIOBfbR0iUCIjlZO0AfxMFKgsDQ24HLqmz3NOlcNFXXsxRs=
+	t=1758609987; cv=none; b=L9qp+U25cCMd5JV6d6GTw96EMTgrGPyGWT0cq6fzHtpVA6T0EEoy3WlIWQyeJWDffxrSznn4dDdFK0DHx5cuqR6AfBjiHNm/FrfESFstEeYBwLrRLE3KyBQfksmcw++Pq46iFNmEFwEHvgDHkcDQnc3iYNK3bbsuoNeLalZmJgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758607667; c=relaxed/simple;
-	bh=arDVeJ781a5JY4lU0Jvx71uXG6RVAnB7CUja4/NHmNM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qnv5gg4e9W9+LiX+Qq50ficGKbmPVkIwgrjrrbn4C/imA/rpJK5FHXi8A0+zdwFJ+q3IqS8uayZZOZZFHCZ0mQWxi5sBN50EoclFc5NWCZJdrtx66vDsOsgYxmGiH8xM4bz3DBlKHKDkcLi9XCMokDd3GjVt8TmEk01FFJBquPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HBjTZ4c/; arc=none smtp.client-ip=209.85.160.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1758609987; c=relaxed/simple;
+	bh=GCivlAy7lnrNCtJC//h3SqDfb5QdSrixCRyVp8er9jc=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Z+Z2xjQWRptjx+ql4Rvt2YPQgKknm2+VEjqqG1PmQNwp5km0jqR2wf/vS0W4OtWBrdPtZbHdu+EwkdFLMAxm5Z8AA76Mvlwd+q2CYSBMyfmKuyQxx7EPka3lVXCZJDx5zk3zyMCBqZjpiftCM7gvejDSw+DkjA16qOtXFsdIdKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nbZTJz3R; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HBjTZ4c/"
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-4b38d4de61aso61656401cf.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 22 Sep 2025 23:07:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1758607663; x=1759212463; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EBw+oV2t8lt0sCTnWqXxyFqdNrsWHoU6HwpFH6UzjX0=;
-        b=HBjTZ4c/qzYcvSyEi9LKjg52ue2hHwdUgyQGqe82Jyc6Jy1Lj4wtGwbNT9BSlksOTS
-         jbnNEAJlro0XWsh7t8iNTbEv4RVk2qIbPwCKpqgKkUvkOxWYcUuaSq5ZQ9bnZqogSRmV
-         SJHChwgJawFNo+dZWNyyIEK1awivlnFBojD1ttrnFbcUFJj7bbabj3kuKwyVpXXYD+m9
-         tWmSFErSCEZSWj5Fm6IgowXHW8Wstvzt1NDVrcMyQicL9v2mOm8u2iak7lGrsF+Y0prJ
-         OyNaQ987t+p9ZKqcjzOY/lV8xXk6RHozvI4cNhONiKwmiH/VQrfAn2FQrsIvhwaWHNIc
-         Asjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758607663; x=1759212463;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EBw+oV2t8lt0sCTnWqXxyFqdNrsWHoU6HwpFH6UzjX0=;
-        b=Y5clVnZrKLbm9em4+5lhachuc/Bx7G/oQJ1oDEjbnQx+BxnoOL6yoPAZR3jHF1rJtV
-         IwuxuWZWKennpo9F85J7D8M9pqXk3brixHYpgibld94JPgaulvTFUU9oMjWUZ1shNAFQ
-         L7CdLqegypcx8ai2tmIU1YYmuHETZByBDPV7WVe4fZgSFTsjtq7W1Yo14kaTqOyUUkLv
-         ca+p+nI1BDZKGHvdPBgXMME+e4tQKVe4o7uWw6chkqSLqP5u2wK5cEmHCBpFYRn2jvhJ
-         Q1R4xN8wSENKH3Cpfdx18BJNahWtI28Ja0pKGDjVuIpFwQmA8HZW8rpLHxNRzUxmkidM
-         upsQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVu7EU/C8YLurgeRB3RThiXAEu9Wc+tKKRevC0sW/bufLb2DneFkabNJBk2MH5X9lOvETEP5OpzfBWUUrbqRwgQvYc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzO/DQJP8BddoWhiym8Gz2IwAeHsmw+3XQn8bf7XFiB6Qldw7ek
-	qXnTGdfa0zTCVyKK3nT6oAY1lDdYBBv31BgCJxjn90efv86FxDp0/VIAk44VJWixXkw3tQiFm7U
-	zUCAKp5ALr+U9HYK0cOnPdqZh3ufVArI=
-X-Gm-Gg: ASbGncsiCJXU7Z5OnOx1xJL3h4xsGrfbBEFsBTPA6an4YaEkTnjO1eDRYsKkXgx+aBM
-	G5IMD/K4TdMLf1Ncmy1cw1XzTjIXOhdkDUmmg4XSUFxzez48DO09y/O+KRNN+l7NjRfimphyvPl
-	nmWDe9m4nhlBAEA3C9AASUxrpeGVHRhgyZNL91YP8AxZ5cOUgzsxt1RQDw1yQu3H33+AyQx4kXL
-	Db7oerL
-X-Google-Smtp-Source: AGHT+IHhWRqdPSNilQ7NDnUa+avCQNXPtnb6Fc5TbS5XEzojG+bYtzwzS9TIxtwMvX3/Xea6oZTCTsf/6qwe2opyx8s=
-X-Received: by 2002:ac8:7dc5:0:b0:4d1:89c4:822 with SMTP id
- d75a77b69052e-4d36fc044c4mr15282621cf.41.1758607663111; Mon, 22 Sep 2025
- 23:07:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nbZTJz3R"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1758609985; x=1790145985;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=GCivlAy7lnrNCtJC//h3SqDfb5QdSrixCRyVp8er9jc=;
+  b=nbZTJz3RgKhc0I6CWmnjXVmJPxkJ37xFo48QbOCtOxAQu/I0t39WMPiZ
+   DrvAhV2Kxoe70ZWMPOBgPjAqY9qYj8iDmL6hX8ChCy9ohegjb1TNtaqec
+   BertR8A2hlMCsX8wj4GqtO8awPecRtCdmEsojQ0eqWQmHEwTUOB0ldXy/
+   WqJRl3cTlpOXIJN5uNfPzs2isfWTivFN4sdgAMyB/ca1re5ejAU2eyjE9
+   EwZy/SyG61pumQfT6RgFickyZYTqoTvccMkNrfSepgAWvb1PoqjCZEEIa
+   Hi17pDnogv1Ii1EjvEGQyAyZ5wYVIFKziUJ6huCAqx2tOmnlz+qHTSznT
+   A==;
+X-CSE-ConnectionGUID: imHIr5R+T5Gf8LWyE7doyA==
+X-CSE-MsgGUID: 54GgKwt0RWK2UzNhR+hGrg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11561"; a="60937824"
+X-IronPort-AV: E=Sophos;i="6.18,287,1751266800"; 
+   d="scan'208";a="60937824"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2025 23:46:24 -0700
+X-CSE-ConnectionGUID: HEHvwpL6QY6plyx69U4fVQ==
+X-CSE-MsgGUID: 553CWKKJRqygRePCxseEtA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,287,1751266800"; 
+   d="scan'208";a="176615263"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.234])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2025 23:46:16 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 23 Sep 2025 09:46:13 +0300 (EEST)
+To: Shuai Xue <xueshuai@linux.alibaba.com>
+cc: rostedt@goodmis.org, Lukas Wunner <lukas@wunner.de>, 
+    linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    linux-edac@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+    helgaas@kernel.org, mattc@purestorage.com, Jonathan.Cameron@huawei.com, 
+    bhelgaas@google.com, tony.luck@intel.com, bp@alien8.de, 
+    mhiramat@kernel.org, mathieu.desnoyers@efficios.com, oleg@redhat.com, 
+    naveen@kernel.org, davem@davemloft.net, anil.s.keshavamurthy@intel.com, 
+    mark.rutland@arm.com, peterz@infradead.org, tianruidong@linux.alibaba.com
+Subject: Re: [PATCH v10 1/3] PCI: trace: Add a generic RAS tracepoint for
+ hotplug event
+In-Reply-To: <12c84bff-6863-4730-b08a-631df904aa12@linux.alibaba.com>
+Message-ID: <fe2abb10-3847-af1c-12c2-193c32befe0c@linux.intel.com>
+References: <20250920060117.866-1-xueshuai@linux.alibaba.com> <20250920060117.866-2-xueshuai@linux.alibaba.com> <6bab311a-d5ba-133c-fddd-52899959445c@linux.intel.com> <12c84bff-6863-4730-b08a-631df904aa12@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250911032823.19064-1-xuewen.yan@unisoc.com> <CAB8ipk-xqbsNh6EQ42JFV8CqPeJR0gjObOKvSs=-b=qcuLQxfg@mail.gmail.com>
- <CAJuCfpHVjDrng2=bCh=DBdn_LBK3-qVF46Jwm3_TFzCjQhn9CA@mail.gmail.com>
-In-Reply-To: <CAJuCfpHVjDrng2=bCh=DBdn_LBK3-qVF46Jwm3_TFzCjQhn9CA@mail.gmail.com>
-From: Xuewen Yan <xuewen.yan94@gmail.com>
-Date: Tue, 23 Sep 2025 14:07:32 +0800
-X-Gm-Features: AS18NWBffMFJu4JOI5B0Q8gjJRvpvqantKvpvb0ig8H71YWrBOUW7-N7WP6ubeI
-Message-ID: <CAB8ipk-cCLWUg8A6tSMZW43fHj10XAzBU2O4Ed5TbDk73J8QBw@mail.gmail.com>
-Subject: Re: [RFC PATCH V3] sched: psi: Add psi events trace point
-To: Suren Baghdasaryan <surenb@google.com>
-Cc: Xuewen Yan <xuewen.yan@unisoc.com>, hannes@cmpxchg.org, 
-	mathieu.desnoyers@efficios.com, mhiramat@kernel.org, peterz@infradead.org, 
-	rostedt@goodmis.org, mingo@redhat.com, vincent.guittot@linaro.org, 
-	dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de, 
-	vschneid@redhat.com, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, ke.wang@unisoc.com, yuming.han@unisoc.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/mixed; boundary="8323328-460974142-1758609973=:961"
 
-On Tue, Sep 23, 2025 at 11:31=E2=80=AFAM Suren Baghdasaryan <surenb@google.=
-com> wrote:
->
-> On Mon, Sep 22, 2025 at 7:58=E2=80=AFPM Xuewen Yan <xuewen.yan94@gmail.co=
-m> wrote:
-> >
-> > A very gentle ping on this patch.
-> > Best regards,
-> > Thanks!
->
-> Thanks! Sorry I missed it.
-Not at all, thanks for your reply:)
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
->
-> >
-> > On Thu, Sep 11, 2025 at 11:30=E2=80=AFAM Xuewen Yan <xuewen.yan@unisoc.=
-com> wrote:
-> > >
-> > > Add trace point to psi triggers. This is useful to
-> > > observe the psi events in the kernel space.
-> > >
-> > > One use of this is to monitor memory pressure.
-> > > When the pressure is too high, we can kill the process
-> > > in the kernel space to prevent OOM.
-> > >
-> > > Signed-off-by: Xuewen Yan <xuewen.yan@unisoc.com>
+--8323328-460974142-1758609973=:961
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+
+On Tue, 23 Sep 2025, Shuai Xue wrote:
+
+>=20
+>=20
+> =E5=9C=A8 2025/9/22 21:10, Ilpo J=C3=A4rvinen =E5=86=99=E9=81=93:
+> > On Sat, 20 Sep 2025, Shuai Xue wrote:
+> >=20
+> > > Hotplug events are critical indicators for analyzing hardware health,
+> > > and surprise link downs can significantly impact system performance a=
+nd
+> > > reliability.
+> > >=20
+> > > Define a new TRACING_SYSTEM named "pci", add a generic RAS tracepoint
+> > > for hotplug event to help health checks. Add enum pci_hotplug_event i=
+n
+> > > include/uapi/linux/pci.h so applications like rasdaemon can register
+> > > tracepoint event handlers for it.
+> > >=20
+> > > The following output is generated when a device is hotplugged:
+> > >=20
+> > > $ echo 1 > /sys/kernel/debug/tracing/events/pci/pci_hp_event/enable
+> > > $ cat /sys/kernel/debug/tracing/trace_pipe
+> > >     irq/51-pciehp-88      [001] .....  1311.177459: pci_hp_event:
+> > > 0000:00:02.0 slot:10, event:CARD_PRESENT
+> > >=20
+> > >     irq/51-pciehp-88      [001] .....  1311.177566: pci_hp_event:
+> > > 0000:00:02.0 slot:10, event:LINK_UP
+> > >=20
+> > > Suggested-by: Lukas Wunner <lukas@wunner.de>
+> > > Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+> > > Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+> > > Reviewed-by: Lukas Wunner <lukas@wunner.de>
+> > > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > > > ---
-> > > V3:
-> > > -export it in the tracefs;
-> > > ---
-> > > v2:
-> > > -fix compilation error;
-> > > -export the tp;
-> > > -add more commit message;
-> > > ---
-> > >  include/trace/events/sched.h | 27 +++++++++++++++++++++++++++
-> > >  kernel/sched/psi.c           |  4 ++++
-> > >  2 files changed, 31 insertions(+)
-> > >
-> > > diff --git a/include/trace/events/sched.h b/include/trace/events/sche=
-d.h
-> > > index 7b2645b50e78..db8b8f25466e 100644
-> > > --- a/include/trace/events/sched.h
-> > > +++ b/include/trace/events/sched.h
-> > > @@ -826,6 +826,33 @@ TRACE_EVENT(sched_wake_idle_without_ipi,
-> > >         TP_printk("cpu=3D%d", __entry->cpu)
-> > >  );
-> > >
-> > > +#ifdef CONFIG_PSI
-> > > +TRACE_EVENT(psi_event,
+> > >   drivers/pci/Makefile              |  2 +
+> > >   drivers/pci/hotplug/Makefile      |  3 +-
+> > >   drivers/pci/hotplug/pciehp_ctrl.c | 31 ++++++++++++---
+> > >   drivers/pci/trace.c               | 11 ++++++
+> > >   include/trace/events/pci.h        | 63 ++++++++++++++++++++++++++++=
++++
+> > >   include/uapi/linux/pci.h          |  7 ++++
+> > >   6 files changed, 110 insertions(+), 7 deletions(-)
+> > >   create mode 100644 drivers/pci/trace.c
+> > >   create mode 100644 include/trace/events/pci.h
+> > >=20
+> > > diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
+> > > index 67647f1880fb..bf389bc4dd3c 100644
+> > > --- a/drivers/pci/Makefile
+> > > +++ b/drivers/pci/Makefile
+> > > @@ -45,3 +45,5 @@ obj-y=09=09=09=09+=3D controller/
+> > >   obj-y=09=09=09=09+=3D switch/
+> > >     subdir-ccflags-$(CONFIG_PCI_DEBUG) :=3D -DDEBUG
 > > > +
-> > > +       TP_PROTO(int aggregator, int state, u64 threshold, u64 win_si=
-ze),
-> > > +
-> > > +       TP_ARGS(aggregator, state, threshold, win_size),
-> > > +
-> > > +       TP_STRUCT__entry(
-> > > +               __field(int,    aggregator)
-> > > +               __field(int,    state)
-> > > +               __field(u64,    threshold)
-> > > +               __field(u64,    win_size)
-> > > +       ),
-> > > +
-> > > +       TP_fast_assign(
-> > > +               __entry->aggregator     =3D aggregator;
-> > > +               __entry->state          =3D state;
-> > > +               __entry->threshold      =3D threshold;
-> > > +               __entry->win_size       =3D win_size;
-> > > +       ),
-> > > +
-> > > +       TP_printk("aggregator=3D%d state=3D%d threshold=3D%llu window=
-_size=3D%llu",
-> > > +               __entry->aggregator, __entry->state, __entry->thresho=
-ld,
-> > > +               __entry->win_size)
-> > > +);
-> > > +#endif /* CONFIG_PSI */
-> > > +
-> > >  /*
-> > >   * Following tracepoints are not exported in tracefs and provide hoo=
-king
-> > >   * mechanisms only for testing and debugging purposes.
-> > > diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
-> > > index 59fdb7ebbf22..5b7954b653ed 100644
-> > > --- a/kernel/sched/psi.c
-> > > +++ b/kernel/sched/psi.c
-> > > @@ -141,6 +141,8 @@
-> > >  #include <linux/psi.h>
-> > >  #include "sched.h"
-> > >
-> > > +EXPORT_TRACEPOINT_SYMBOL_GPL(psi_event);
-> > > +
-> > >  static int psi_bug __read_mostly;
-> > >
-> > >  DEFINE_STATIC_KEY_FALSE(psi_disabled);
-> > > @@ -509,6 +511,8 @@ static void update_triggers(struct psi_group *gro=
-up, u64 now,
-> > >                 if (now < t->last_event_time + t->win.size)
-> > >                         continue;
-> > >
-> > > +               trace_psi_event(aggregator, t->state, t->threshold, t=
-->win.size);
->
-> Again, this trace event should be generated only after cmpxchg()
-> passes the check. Otherwise trace events might be generated when
-> actual PSI events are not (false positives). That disconnect is not
-> acceptable.
+> > > +CFLAGS_trace.o :=3D -I$(src)
+> > > diff --git a/drivers/pci/hotplug/Makefile b/drivers/pci/hotplug/Makef=
+ile
+> > > index 40aaf31fe338..d41f7050b072 100644
+> > > --- a/drivers/pci/hotplug/Makefile
+> > > +++ b/drivers/pci/hotplug/Makefile
+> > > @@ -65,7 +65,8 @@ rpadlpar_io-objs=09:=3D=09rpadlpar_core.o \
+> > >   pciehp-objs=09=09:=3D=09pciehp_core.o=09\
+> > >   =09=09=09=09pciehp_ctrl.o=09\
+> > >   =09=09=09=09pciehp_pci.o=09\
+> > > -=09=09=09=09pciehp_hpc.o
+> > > +=09=09=09=09pciehp_hpc.o=09\
+> > > +=09=09=09=09../trace.o
+> >=20
+> > To make it useful for any PCI tracing, not juse hotplug, this object fi=
+le
+> > should be added in drivers/pci/Makefile, not here.
+>=20
+> Make sence. How about adding to the main CONFIG_PCI object:
+>=20
+> diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
+> index bf389bc4dd3c..d7f83d06351d 100644
+> --- a/drivers/pci/Makefile
+> +++ b/drivers/pci/Makefile
+> @@ -5,7 +5,7 @@
+>  obj-$(CONFIG_PCI)              +=3D access.o bus.o probe.o host-bridge.o=
+ \
+>                                    remove.o pci.o pci-driver.o search.o \
+>                                    rom.o setup-res.o irq.o vpd.o \
+> -                                  setup-bus.o vc.o mmap.o devres.o
+> +                                  setup-bus.o vc.o mmap.o devres.o trace=
+=2Eo
+>=20
+>  obj-$(CONFIG_PCI)              +=3D msi/
+>  obj-$(CONFIG_PCI)              +=3D pcie/
 
-You=E2=80=99re absolutely right. I=E2=80=99ll resolve it in the next patch.
+Yes, that's the right place to add it.
 
-Thanks!
 
-BR
----
-xuewen
+--=20
+ i.
 
->
-> > > +
-> > >                 /* Generate an event */
-> > >                 if (cmpxchg(&t->event, 0, 1) =3D=3D 0) {
-> > >                         if (t->of)
-> > > --
-> > > 2.25.1
-> > >
+--8323328-460974142-1758609973=:961--
