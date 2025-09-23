@@ -1,87 +1,106 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A7363126C2;
-	Tue, 23 Sep 2025 22:35:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D883830FC18;
+	Tue, 23 Sep 2025 23:07:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758666911; cv=none; b=o11DE4qh0n6OUQ/NVp3Ig3p5symG4/OKqGj7JNPZMKayj5yNkbNveOl6T+4YOyEPi8pZtDkS7gtEBT5l5sCDhZ8L11o6vfvgHL//1Lt/VOScc6dn2A6v0Jtg5iKHRsgvJAbWCmzzyhXeXOpIr8MA2ny5hjff0KG0BuFtdZxZuyE=
+	t=1758668846; cv=none; b=ZL+DoOZBPLCeHlXYJbuN4XN1/Rd2MrCt7hrwlvWE9GHxA5KaHK1icfaYJkRFWfEVWnTdjq1fyic7q5VD/FzFW+HvyJaTrHeGBFocJNXNL/GUMwUe3J1vTUoO6MUaZeQsUC1sHm8rTijbtmkMMcUK1QcCxBtLIWbhCamliZnjOPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758666911; c=relaxed/simple;
-	bh=K+REPAt7YGROMU060Sut8pDiJmmKCZ4JFkal1RQOmGs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SGVSv1ixIMK5NF8QkOFVTqi4vlcTY9kZ+CbdbS6Ls64tVmpulhVxdGnuuzgUOrGUbevDHdY62IdEQ+qzcbjrX7809l9kyqrFSbibe+L8kZA38nCeluQ8/XNofLElWEB0YH4u3CQud1OaWI/qE6vy+5H6x301CmSLDEo3GOpZmdE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NfvKLIEC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1758668846; c=relaxed/simple;
+	bh=/wwR3ED/mCbX9z2pdXihUtvGg8rUhL2CF0R+Fqf4BOw=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=kjf4hB0P95awsYKWe3g9JG/4cMIcjF85YGQihoSOH91XLMD3icxs9ezEZZhlt0BPoK1hfzcGjcOdF8szZ/e1+xEHKaRCNUAyOdV67LMZRJiQQccGawQz3ZA72CPYCYFdRJTFYRR/5tQtU+aA4C2ukt+jaeyDxyzf/m+QrUT8aj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M2Qew5BK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NfvKLIEC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68E0DC4CEF5;
-	Tue, 23 Sep 2025 22:35:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M2Qew5BK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A8B6C4CEF5;
+	Tue, 23 Sep 2025 23:07:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758666911;
-	bh=K+REPAt7YGROMU060Sut8pDiJmmKCZ4JFkal1RQOmGs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NfvKLIECePVJSfIsLMzuzmM3Lfkth90P9jpbucNQ1bDMKtxnUUxV5JFtKuhdhpmWb
-	 Cw3GZEX3eQpIT/PWZ/yXnZMG824R5TCQPjlm98ugF9huAG8DeaThH3gkBcbwr/TZuE
-	 vm/De9fznWxi8yL9W3hbwpzVsdSjYKdJINx4sFLGsP2083YAha5J9C5fBwD4MqMtXT
-	 ir+xFYNttlpYqZZmrRAZCSLQPAaJ5po2rCCjv7hee+rH9n2nEI6G7JOlhDYZQf0/X1
-	 1DkImokD6CqYRTWU50ZSiWc781Xdx+oofE6BqZqS50/4CeH67G98lYY+2B9ZA6UvmX
-	 2kJmK3McZDdRg==
-Date: Tue, 23 Sep 2025 16:35:07 -0600
-From: Keith Busch <kbusch@kernel.org>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Leon Romanovsky <leon@kernel.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Abdiel Janulgue <abdiel.janulgue@gmail.com>,
-	Alexander Potapenko <glider@google.com>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Christoph Hellwig <hch@lst.de>, Danilo Krummrich <dakr@kernel.org>,
-	David Hildenbrand <david@redhat.com>, iommu@lists.linux.dev,
-	Jason Wang <jasowang@redhat.com>, Jens Axboe <axboe@kernel.dk>,
-	Joerg Roedel <joro@8bytes.org>, Jonathan Corbet <corbet@lwn.net>,
-	Juergen Gross <jgross@suse.com>, kasan-dev@googlegroups.com,
-	linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	linux-nvme@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-	linux-trace-kernel@vger.kernel.org,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>, rust-for-linux@vger.kernel.org,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	virtualization@lists.linux.dev, Will Deacon <will@kernel.org>,
-	xen-devel@lists.xenproject.org
-Subject: Re: [PATCH v6 00/16] dma-mapping: migrate to physical address-based
- API
-Message-ID: <aNMgm33W7gh75h3t@kbusch-mbp>
-References: <CGME20250909132821eucas1p1051ce9e0270ddbf520e105c913fa8db6@eucas1p1.samsung.com>
- <cover.1757423202.git.leonro@nvidia.com>
- <0db9bce5-40df-4cf5-85ab-f032c67d5c71@samsung.com>
- <20250912090327.GU341237@unreal>
- <aM1_9cS_LGl4GFC5@kbusch-mbp>
- <20250920155352.GH10800@unreal>
- <aM9LH6WSeOPGeleY@kbusch-mbp>
- <20250923170936.GA2614310@nvidia.com>
- <aNLnXwAJveHIqfz0@kbusch-mbp>
- <20250923222216.GC2617119@nvidia.com>
+	s=k20201202; t=1758668845;
+	bh=/wwR3ED/mCbX9z2pdXihUtvGg8rUhL2CF0R+Fqf4BOw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=M2Qew5BKPl8vgTTp03c2TFtF+oT/irvjoCzuP/eAyhPGkodlTkPHVdZdDvz755lmg
+	 24hUdSdXgalh6pjYWt1ibMEoDcmaD7k3D9iRK4VHawGbxOxACr3B5DDq6KTCi44YCp
+	 RDbNBpaB4WB2Q6NyXYS37xJB+ge7+qBH+Ytm3WIZvEp3Mgf5LkohEErrnFZB7VZ5i+
+	 QxK1NKsWK8a1kPddgolmtjtFyiDZme/cpouqsWPJqh/O8I2HuV/HfMaHnLfOGFQbLZ
+	 d+fcqAG+l7OtcRcyzDCiIqNolzKuJbOQPWQorNA+JsUA5swgo2oxcvjE6yft/axhHY
+	 H0HvMBH99z6KQ==
+Date: Wed, 24 Sep 2025 08:07:22 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Menglong Dong <menglong8.dong@gmail.com>
+Cc: rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org
+Subject: Re: [PATCH 1/2] tracing: fprobe: rename fprobe_entry to
+ fprobe_fgraph_entry
+Message-Id: <20250924080722.c05ac758a018be619d01b6a9@kernel.org>
+In-Reply-To: <20250923092001.1087678-1-dongml2@chinatelecom.cn>
+References: <20250923092001.1087678-1-dongml2@chinatelecom.cn>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250923222216.GC2617119@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Sep 23, 2025 at 07:22:16PM -0300, Jason Gunthorpe wrote:
-> Very rare is a different perspective, I mis-thought it was happening
-> reproducible all the time..
+On Tue, 23 Sep 2025 17:20:00 +0800
+Menglong Dong <menglong8.dong@gmail.com> wrote:
 
-Yes, sorry for the false alarm. I think we got unlucky and hit it on one
-of the first boots from testing linux-next, so knee-jerk reaction was to
-suspect the new code that showed up in the stack.
+> The fprobe_entry() is used by fgraph_ops, so rename it to
+> fprobe_fgraph_entry to be more distinctive.
+
+Sorry, NAK. fprobe is based on fgraph by design.
+So "fprobe_fgraph" sounds redundant.
+
+Thanks,
+
+> 
+> Signed-off-by: Menglong Dong <dongml2@chinatelecom.cn>
+> ---
+>  kernel/trace/fprobe.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
+> index 6a205903b1ed..1785fba367c9 100644
+> --- a/kernel/trace/fprobe.c
+> +++ b/kernel/trace/fprobe.c
+> @@ -254,8 +254,8 @@ static inline int __fprobe_kprobe_handler(unsigned long ip, unsigned long parent
+>  	return ret;
+>  }
+>  
+> -static int fprobe_entry(struct ftrace_graph_ent *trace, struct fgraph_ops *gops,
+> -			struct ftrace_regs *fregs)
+> +static int fprobe_fgraph_entry(struct ftrace_graph_ent *trace, struct fgraph_ops *gops,
+> +			       struct ftrace_regs *fregs)
+>  {
+>  	unsigned long *fgraph_data = NULL;
+>  	unsigned long func = trace->func;
+> @@ -340,7 +340,7 @@ static int fprobe_entry(struct ftrace_graph_ent *trace, struct fgraph_ops *gops,
+>  	/* If any exit_handler is set, data must be used. */
+>  	return used != 0;
+>  }
+> -NOKPROBE_SYMBOL(fprobe_entry);
+> +NOKPROBE_SYMBOL(fprobe_fgraph_entry);
+>  
+>  static void fprobe_return(struct ftrace_graph_ret *trace,
+>  			  struct fgraph_ops *gops,
+> @@ -379,7 +379,7 @@ static void fprobe_return(struct ftrace_graph_ret *trace,
+>  NOKPROBE_SYMBOL(fprobe_return);
+>  
+>  static struct fgraph_ops fprobe_graph_ops = {
+> -	.entryfunc	= fprobe_entry,
+> +	.entryfunc	= fprobe_fgraph_entry,
+>  	.retfunc	= fprobe_return,
+>  };
+>  static int fprobe_graph_active;
+> -- 
+> 2.51.0
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
