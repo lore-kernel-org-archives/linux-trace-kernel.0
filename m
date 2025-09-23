@@ -1,128 +1,204 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DBEC194A6C;
-	Tue, 23 Sep 2025 05:28:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83A082E92BC
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 23 Sep 2025 06:07:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758605302; cv=none; b=YB03Jrh4/RR9xonmcq9TFSjSoo1XjEJ/+lOAz+sbfq89XICPY8iLzso0YC06qsLhtKjBCdna61+vd5qAlbnNg/lPtgxfgfSWEU3aDKLMhuaGlq6oXoQLzHsWByirw50HAw0Qtas4UB4YxR8z3/KX9kkTScEm2F4Bt9QHoQPDF2w=
+	t=1758607667; cv=none; b=obN+46ZgymEOB2cjGX95igIWRIHiWb6nwtHxZ9XDM4gDkPndtHlK1qCI9LuFwIyCeUdduxs/00AjKYAyyEuhP0A0HYfatKiKr5Sy8O2WeVM4uTSPlvWIi+R+yhLoyIOBfbR0iUCIjlZO0AfxMFKgsDQ24HLqmz3NOlcNFXXsxRs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758605302; c=relaxed/simple;
-	bh=oMyUQ1Jw7hmSS+yVktkef93mpaC3gOqtbbY8bboJJrE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=KquGG4cai9UyY85X4iZQoZ3Ed7+hfgzVOMJ1O3J7LbVU0OKjCBpEahyokS4wXbg34YwZfl11bkLzJIHjqSUK7PBc8CqnE/UCslqbuzyrOvs1UrhVKFcrfAJjZPhWVPZGRjLoomZmxHkylaVd6t50gw9waB5LOJs4Lgibr+4RLhE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=yiVCwiWg; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qwgYRp71; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1758607667; c=relaxed/simple;
+	bh=arDVeJ781a5JY4lU0Jvx71uXG6RVAnB7CUja4/NHmNM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qnv5gg4e9W9+LiX+Qq50ficGKbmPVkIwgrjrrbn4C/imA/rpJK5FHXi8A0+zdwFJ+q3IqS8uayZZOZZFHCZ0mQWxi5sBN50EoclFc5NWCZJdrtx66vDsOsgYxmGiH8xM4bz3DBlKHKDkcLi9XCMokDd3GjVt8TmEk01FFJBquPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HBjTZ4c/; arc=none smtp.client-ip=209.85.160.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yiVCwiWg";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qwgYRp71"
-From: Nam Cao <namcao@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1758605299;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vYQtq9XeaLI0p8KOqa5dhttLdUVs+XkHPdFghw3nLRY=;
-	b=yiVCwiWgnCvVsTwTSPMGdVcMrArUoMQB+GHBKJy+qj2b/HtTBfIbU5wdcjxftqmr7xiPJ0
-	9wKVU8jQBUsTE+oGAX0mrwfEFZKSoo/5lltECEbAeTuhT+u0NoHE3tWLRF08xGEmnC8sk4
-	4vKM1qC7lYQWMUoKgrLLUeExrAQ7kN+aFFToiaZbj43eEHoyz2TBWqbrnTHbiK3f2txKzA
-	wCd6vxvYkohd5y0Y1bB9SoEKaImawE50Xhr1Q7o/vQp2YfZ1c+nogqMhMEwhPxmwOCT7Eg
-	3g01yVFFRU2ONCwfhT8AVDEBvV8X5ytGlVlDissGQUPNpvtWnVBNrKTj+1EOnA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1758605299;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vYQtq9XeaLI0p8KOqa5dhttLdUVs+XkHPdFghw3nLRY=;
-	b=qwgYRp71gKHVestK+cZqn3eoW51RNKzLatEiVr5IfwGhUr4orqH3IZl4eZtetND4wk/wUe
-	0BGFPvXT9je4V2BA==
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Gabriele Monaco <gmonaco@redhat.com>, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rv: Fix wrong type cast in enabled_monitors_next()
-In-Reply-To: <20250923002004.GA2836051@ax162>
-References: <20250806120911.989365-1-namcao@linutronix.de>
- <20250923002004.GA2836051@ax162>
-Date: Tue, 23 Sep 2025 07:28:18 +0200
-Message-ID: <87tt0t4u19.fsf@yellow.woof>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HBjTZ4c/"
+Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-4b38d4de61aso61656401cf.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 22 Sep 2025 23:07:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1758607663; x=1759212463; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EBw+oV2t8lt0sCTnWqXxyFqdNrsWHoU6HwpFH6UzjX0=;
+        b=HBjTZ4c/qzYcvSyEi9LKjg52ue2hHwdUgyQGqe82Jyc6Jy1Lj4wtGwbNT9BSlksOTS
+         jbnNEAJlro0XWsh7t8iNTbEv4RVk2qIbPwCKpqgKkUvkOxWYcUuaSq5ZQ9bnZqogSRmV
+         SJHChwgJawFNo+dZWNyyIEK1awivlnFBojD1ttrnFbcUFJj7bbabj3kuKwyVpXXYD+m9
+         tWmSFErSCEZSWj5Fm6IgowXHW8Wstvzt1NDVrcMyQicL9v2mOm8u2iak7lGrsF+Y0prJ
+         OyNaQ987t+p9ZKqcjzOY/lV8xXk6RHozvI4cNhONiKwmiH/VQrfAn2FQrsIvhwaWHNIc
+         Asjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758607663; x=1759212463;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EBw+oV2t8lt0sCTnWqXxyFqdNrsWHoU6HwpFH6UzjX0=;
+        b=Y5clVnZrKLbm9em4+5lhachuc/Bx7G/oQJ1oDEjbnQx+BxnoOL6yoPAZR3jHF1rJtV
+         IwuxuWZWKennpo9F85J7D8M9pqXk3brixHYpgibld94JPgaulvTFUU9oMjWUZ1shNAFQ
+         L7CdLqegypcx8ai2tmIU1YYmuHETZByBDPV7WVe4fZgSFTsjtq7W1Yo14kaTqOyUUkLv
+         ca+p+nI1BDZKGHvdPBgXMME+e4tQKVe4o7uWw6chkqSLqP5u2wK5cEmHCBpFYRn2jvhJ
+         Q1R4xN8wSENKH3Cpfdx18BJNahWtI28Ja0pKGDjVuIpFwQmA8HZW8rpLHxNRzUxmkidM
+         upsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVu7EU/C8YLurgeRB3RThiXAEu9Wc+tKKRevC0sW/bufLb2DneFkabNJBk2MH5X9lOvETEP5OpzfBWUUrbqRwgQvYc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzO/DQJP8BddoWhiym8Gz2IwAeHsmw+3XQn8bf7XFiB6Qldw7ek
+	qXnTGdfa0zTCVyKK3nT6oAY1lDdYBBv31BgCJxjn90efv86FxDp0/VIAk44VJWixXkw3tQiFm7U
+	zUCAKp5ALr+U9HYK0cOnPdqZh3ufVArI=
+X-Gm-Gg: ASbGncsiCJXU7Z5OnOx1xJL3h4xsGrfbBEFsBTPA6an4YaEkTnjO1eDRYsKkXgx+aBM
+	G5IMD/K4TdMLf1Ncmy1cw1XzTjIXOhdkDUmmg4XSUFxzez48DO09y/O+KRNN+l7NjRfimphyvPl
+	nmWDe9m4nhlBAEA3C9AASUxrpeGVHRhgyZNL91YP8AxZ5cOUgzsxt1RQDw1yQu3H33+AyQx4kXL
+	Db7oerL
+X-Google-Smtp-Source: AGHT+IHhWRqdPSNilQ7NDnUa+avCQNXPtnb6Fc5TbS5XEzojG+bYtzwzS9TIxtwMvX3/Xea6oZTCTsf/6qwe2opyx8s=
+X-Received: by 2002:ac8:7dc5:0:b0:4d1:89c4:822 with SMTP id
+ d75a77b69052e-4d36fc044c4mr15282621cf.41.1758607663111; Mon, 22 Sep 2025
+ 23:07:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20250911032823.19064-1-xuewen.yan@unisoc.com> <CAB8ipk-xqbsNh6EQ42JFV8CqPeJR0gjObOKvSs=-b=qcuLQxfg@mail.gmail.com>
+ <CAJuCfpHVjDrng2=bCh=DBdn_LBK3-qVF46Jwm3_TFzCjQhn9CA@mail.gmail.com>
+In-Reply-To: <CAJuCfpHVjDrng2=bCh=DBdn_LBK3-qVF46Jwm3_TFzCjQhn9CA@mail.gmail.com>
+From: Xuewen Yan <xuewen.yan94@gmail.com>
+Date: Tue, 23 Sep 2025 14:07:32 +0800
+X-Gm-Features: AS18NWBffMFJu4JOI5B0Q8gjJRvpvqantKvpvb0ig8H71YWrBOUW7-N7WP6ubeI
+Message-ID: <CAB8ipk-cCLWUg8A6tSMZW43fHj10XAzBU2O4Ed5TbDk73J8QBw@mail.gmail.com>
+Subject: Re: [RFC PATCH V3] sched: psi: Add psi events trace point
+To: Suren Baghdasaryan <surenb@google.com>
+Cc: Xuewen Yan <xuewen.yan@unisoc.com>, hannes@cmpxchg.org, 
+	mathieu.desnoyers@efficios.com, mhiramat@kernel.org, peterz@infradead.org, 
+	rostedt@goodmis.org, mingo@redhat.com, vincent.guittot@linaro.org, 
+	dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de, 
+	vschneid@redhat.com, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, ke.wang@unisoc.com, yuming.han@unisoc.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Nathan,
+On Tue, Sep 23, 2025 at 11:31=E2=80=AFAM Suren Baghdasaryan <surenb@google.=
+com> wrote:
+>
+> On Mon, Sep 22, 2025 at 7:58=E2=80=AFPM Xuewen Yan <xuewen.yan94@gmail.co=
+m> wrote:
+> >
+> > A very gentle ping on this patch.
+> > Best regards,
+> > Thanks!
+>
+> Thanks! Sorry I missed it.
+Not at all, thanks for your reply:)
 
-Nathan Chancellor <nathan@kernel.org> writes:
-> I am seeing a crash when reading from /sys/kernel/tracing/rv/enabled_monitors
-> on a couple of my arm64 boxes running Fedora after this change, which
-> landed in mainline in 6.17-rc7. I can reproduce this in QEMU pretty
-> easily.
-...
-> With this change reverted, there is no crash. As this change seems to
-> have proper justification, is there some other latent bug here?
+>
+> >
+> > On Thu, Sep 11, 2025 at 11:30=E2=80=AFAM Xuewen Yan <xuewen.yan@unisoc.=
+com> wrote:
+> > >
+> > > Add trace point to psi triggers. This is useful to
+> > > observe the psi events in the kernel space.
+> > >
+> > > One use of this is to monitor memory pressure.
+> > > When the pressure is too high, we can kill the process
+> > > in the kernel space to prevent OOM.
+> > >
+> > > Signed-off-by: Xuewen Yan <xuewen.yan@unisoc.com>
+> > > ---
+> > > V3:
+> > > -export it in the tracefs;
+> > > ---
+> > > v2:
+> > > -fix compilation error;
+> > > -export the tp;
+> > > -add more commit message;
+> > > ---
+> > >  include/trace/events/sched.h | 27 +++++++++++++++++++++++++++
+> > >  kernel/sched/psi.c           |  4 ++++
+> > >  2 files changed, 31 insertions(+)
+> > >
+> > > diff --git a/include/trace/events/sched.h b/include/trace/events/sche=
+d.h
+> > > index 7b2645b50e78..db8b8f25466e 100644
+> > > --- a/include/trace/events/sched.h
+> > > +++ b/include/trace/events/sched.h
+> > > @@ -826,6 +826,33 @@ TRACE_EVENT(sched_wake_idle_without_ipi,
+> > >         TP_printk("cpu=3D%d", __entry->cpu)
+> > >  );
+> > >
+> > > +#ifdef CONFIG_PSI
+> > > +TRACE_EVENT(psi_event,
+> > > +
+> > > +       TP_PROTO(int aggregator, int state, u64 threshold, u64 win_si=
+ze),
+> > > +
+> > > +       TP_ARGS(aggregator, state, threshold, win_size),
+> > > +
+> > > +       TP_STRUCT__entry(
+> > > +               __field(int,    aggregator)
+> > > +               __field(int,    state)
+> > > +               __field(u64,    threshold)
+> > > +               __field(u64,    win_size)
+> > > +       ),
+> > > +
+> > > +       TP_fast_assign(
+> > > +               __entry->aggregator     =3D aggregator;
+> > > +               __entry->state          =3D state;
+> > > +               __entry->threshold      =3D threshold;
+> > > +               __entry->win_size       =3D win_size;
+> > > +       ),
+> > > +
+> > > +       TP_printk("aggregator=3D%d state=3D%d threshold=3D%llu window=
+_size=3D%llu",
+> > > +               __entry->aggregator, __entry->state, __entry->thresho=
+ld,
+> > > +               __entry->win_size)
+> > > +);
+> > > +#endif /* CONFIG_PSI */
+> > > +
+> > >  /*
+> > >   * Following tracepoints are not exported in tracefs and provide hoo=
+king
+> > >   * mechanisms only for testing and debugging purposes.
+> > > diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
+> > > index 59fdb7ebbf22..5b7954b653ed 100644
+> > > --- a/kernel/sched/psi.c
+> > > +++ b/kernel/sched/psi.c
+> > > @@ -141,6 +141,8 @@
+> > >  #include <linux/psi.h>
+> > >  #include "sched.h"
+> > >
+> > > +EXPORT_TRACEPOINT_SYMBOL_GPL(psi_event);
+> > > +
+> > >  static int psi_bug __read_mostly;
+> > >
+> > >  DEFINE_STATIC_KEY_FALSE(psi_disabled);
+> > > @@ -509,6 +511,8 @@ static void update_triggers(struct psi_group *gro=
+up, u64 now,
+> > >                 if (now < t->last_event_time + t->win.size)
+> > >                         continue;
+> > >
+> > > +               trace_psi_event(aggregator, t->state, t->threshold, t=
+->win.size);
+>
+> Again, this trace event should be generated only after cmpxchg()
+> passes the check. Otherwise trace events might be generated when
+> actual PSI events are not (false positives). That disconnect is not
+> acceptable.
 
-Thanks for the report.
+You=E2=80=99re absolutely right. I=E2=80=99ll resolve it in the next patch.
 
-Yes, this patch is broken, because argument 'p' of
-enabled_monitors_next() *is* a pointer to struct rv_monitor. I'm not
-sure how did I even test this patch... Steven is right, we really need
-something in kselftest for RV, another thing in my RV TODO list.
+Thanks!
 
-But reverting is not the real fix, because monitors_show() still expects
-a pointer to list_head. Changing monitors_show() is not an option,
-because it is shared with the 'available_monitors' interface.
+BR
+---
+xuewen
 
-So the real fix is completely changing the iterator to be list_head
-instead of rv_monitor.
-
-Best regards,
-Nam
-
-diff --git a/kernel/trace/rv/rv.c b/kernel/trace/rv/rv.c
-index 48338520376f..43e9ea473cda 100644
---- a/kernel/trace/rv/rv.c
-+++ b/kernel/trace/rv/rv.c
-@@ -501,7 +501,7 @@ static void *enabled_monitors_next(struct seq_file *m, void *p, loff_t *pos)
- 
- 	list_for_each_entry_continue(mon, &rv_monitors_list, list) {
- 		if (mon->enabled)
--			return mon;
-+			return &mon->list;
- 	}
- 
- 	return NULL;
-@@ -509,7 +509,7 @@ static void *enabled_monitors_next(struct seq_file *m, void *p, loff_t *pos)
- 
- static void *enabled_monitors_start(struct seq_file *m, loff_t *pos)
- {
--	struct rv_monitor *mon;
-+	struct list_head *head;
- 	loff_t l;
- 
- 	mutex_lock(&rv_interface_lock);
-@@ -517,15 +517,15 @@ static void *enabled_monitors_start(struct seq_file *m, loff_t *pos)
- 	if (list_empty(&rv_monitors_list))
- 		return NULL;
- 
--	mon = list_entry(&rv_monitors_list, struct rv_monitor, list);
-+	head = &rv_monitors_list;
- 
- 	for (l = 0; l <= *pos; ) {
--		mon = enabled_monitors_next(m, mon, &l);
--		if (!mon)
-+		head = enabled_monitors_next(m, head, &l);
-+		if (!head)
- 			break;
- 	}
- 
--	return mon;
-+	return head;
- }
- 
- /*
+>
+> > > +
+> > >                 /* Generate an event */
+> > >                 if (cmpxchg(&t->event, 0, 1) =3D=3D 0) {
+> > >                         if (t->of)
+> > > --
+> > > 2.25.1
+> > >
