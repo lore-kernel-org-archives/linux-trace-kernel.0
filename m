@@ -1,121 +1,163 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E39202594BD;
-	Tue, 23 Sep 2025 10:51:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29F1530DD00
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 23 Sep 2025 11:10:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758624698; cv=none; b=syHshpdFIcaDgIIwyn47i6aNFd/tLfaQJamnY+/QU7rnBmjtAuLi1JcNLq7thbE8AlHd6I5tdX5nXbqYE4mJndOalr3e3S6wvClodnRKXGezU9Etdt9b/hOBGIAcN1fC2p9ev/tE54Ivt/+lBMoow76jZlqupZyq16SrH2RhPR0=
+	t=1758625839; cv=none; b=emusxiowEg0oEdqnA2tyc7rROqJuCxfR7Lcv3QUfeJjKlhotZ+N4J0qjviHeoCgc7M6SsLw1Byi98MKfGAId2Hrlr8XLy3Z0YCFVDaIxjdHfChp7XLMufTl9Hrme1eHLnbhEDGlTfRO0J2Z0147unr169rYRY1QGbNiShKUH3Uw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758624698; c=relaxed/simple;
-	bh=HK7XH7Zdx42B1St/VmVmTEivRyAOokNd58xFAhZnBeE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Swii4myOI4C1qDUdORpZjxDr5LZalwTaROu0pRuByXQDaHdVhY6on7PpwyqukwWtQ/2FCYsfsarkZcsmL33SCQdmVAFfjBrozp8pH5Qx3KGISEMEaM5aTJe5DT42SsdE0xlXof6GMOvhTu8R0/Dqy5BxULABk++ap9q0MnInHw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Hxtp9JEG; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1758625839; c=relaxed/simple;
+	bh=wGRrexcrJiOYxex9LPSrvm70Gi0w/jmnAo5XesaOW1M=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GDKihsOz5WkSYQFBdDFtM9fU736loMRzUcsBsGJyUb0a971sri37boG1qlnIzQd7xDQFCl2XEjoc7S5Mo1kLqVshsAlhMB7syqlPsA913vZPMTn+sNSHE1U5w2rw0YwXIO1VpvGUPPNiXnxU7QBKphHPvR2pMUpIVCmUzc9nQ3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ae9YOFtj; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Hxtp9JEG"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=6niV9LF8ivGxzBwxlAX/aJR2l+FBxOoCnfdCxOKaYiU=; b=Hxtp9JEGYAZAcCjZ+GRNlF6lbm
-	pwVpZaao1LImFc10D3RqIjfXB29iqwZzvQu408AmgpEC+8yQJfBbHo6skgtXgKDfAHQ1hYZSZgUYW
-	M8BkIeYrAPq1pp1XzYO+gGpUWHMxMk7uhi+jPbKXyyI3Vji5D2LrWsWXswrQvYJaj/1UgyrkrFx17
-	CHIeI6ckEFTB0jBwfBRaHpX8konRIXFlxg0VasiyrahI8wQHgGM57X0Ep0uuZkewuwpStOppvL2Pa
-	BiXuw1RcSwo8hgL5h0wmyTdllzxxeW3a2n9xpm68DatJkYESE3TtIy7fvRszRtZdAIBU34CdO1mEb
-	n3q7c2hg==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v10cN-0000000AC75-0wKm;
-	Tue, 23 Sep 2025 10:51:31 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id C775330049C; Tue, 23 Sep 2025 12:51:30 +0200 (CEST)
-Date: Tue, 23 Sep 2025 12:51:30 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Steven Rostedt <rostedt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	x86@kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>
-Subject: Re: [PATCH v2 1/2] unwind_user/x86: Enable frame pointer unwinding
- on x86
-Message-ID: <20250923105130.GG3419281@noisy.programming.kicks-ass.net>
-References: <20250827193644.527334838@kernel.org>
- <20250827193828.347397433@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ae9YOFtj"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3fc36b99e92so1371887f8f.0
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 23 Sep 2025 04:10:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1758625836; x=1759230636; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=tUjJweEPB4TqONfwC9fpDlwaU6QM2qlfDS5A23MkLtU=;
+        b=Ae9YOFtjcOo9kCmzREoCWChl1wKvUdJjZlm+TsEylERaa1L4kkSYi+K4uNEbWmLv4K
+         XxmlPS0SsGU8mT51meZiuelPgpFr9j5DTe0ZuYhITHLvQQdjOpapgHuFPEUJE5Cfb5Ab
+         L32H9SewvMcaq18c7QfR5xDiFytSw5K8ZkY1sJewx77eVR9wLuxCSl9NLsJi1+zCT3X3
+         3IhXYZ/3XrZxcLudVDpJcGEWvGoOe0N7J6BLDsznSh1EIWBNtd3W7ZlBd3sBdPLU3M9F
+         DC7z4SPl1R2nk1S4iSqIfvNxFz+k2eb0mL4fqiI7ZDUwwYfzNSfr+/DOHpe7D74Mx4Bk
+         qo7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758625836; x=1759230636;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=tUjJweEPB4TqONfwC9fpDlwaU6QM2qlfDS5A23MkLtU=;
+        b=wuF4rVj2PRB3To4ZtcsQ4cZjGGRlgztDfaGSYW1Db6RvuaHYzgVrd5nzN7mfyOHc2f
+         VTH3azWMx2tjGhPQFfCf3Qzrt4ovjc4cdZzA1iyeM/qDNBIYk4Lsoc/czZRSSbp4Uazr
+         S1PYksBCzNc8PZc+Lt0r03UAU4yQzociIGfUW3a70yIgrmY7f7vhF606Xo1/RQxGAOxc
+         TKCnh0PGgFPivkW+9s4YtgPmw62ORUM2ao8pWz/oz20763wRVYfzEsMfqVg+wdgM0at9
+         gXtvfSvl9mJ9H46kvpFd1/OTA9h+Iu7a4fLaKUzVFNU4c7rxv7gwUaIEkwFChuYBWC0I
+         XyPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUzh5T87L894tMaglpHcp/qDqZ2bMtM6pQD3RjjcfPsap/ZUcynMXu70EnbXqnWgwN9bTNG4LCRW9V1MSg7SPtAG0k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyptCc8WL6sk3m6CTV8IjiVnFmoWZ7heCT7cEtVWvyfIG47fU4+
+	1hjJvJN+tAAjI0VoFPT9pzeiMNyBMIA4tL6j8utIfHO6sZ6owJZDQCXTHMeeDlPCxTI=
+X-Gm-Gg: ASbGncuvsnWmwA29vk4PXRb0mb9TBa3UJxriL0Wfnis151tnsWRAbhc4vCMn2l2/Log
+	cH5MNEg59Z3fV2fVMYCo9bbDb3KpvNBXilJflc8CpK9hajij3sg8R9BUWj3HQ1A6bMesmP5sT23
+	yvY3JC3KgxqVUexi8kg2nYZKeSeAddMt/fidsdf1GEKq79kvW9zUlrOJnKehdGwqKtTVT6a8ym7
+	NrExkbDFqJimhBbuQlcRINh0txs6RtXN/U7L1EU+Os45bxLNhN17+LoTcsdNe4TwkajOvFucydt
+	b1e6az11p9R+uJI6XUU+CccF82DFzztpWQ9SevLAZld5W4gOm1lDcaDTPfChiN1soD0laylM
+X-Google-Smtp-Source: AGHT+IHgMX3BiSNRvfrTGGdpNnaqqWvHnAmBH8PkRL8VnvuR0hyv/WFqY9PPvGGhOMcdRD/JvBVOdg==
+X-Received: by 2002:a05:6000:186f:b0:3e7:428f:d33 with SMTP id ffacd0b85a97d-405d090c6d0mr2107024f8f.16.1758625836201;
+        Tue, 23 Sep 2025 04:10:36 -0700 (PDT)
+Received: from krava ([2a02:8308:a00c:e200::31e0])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3ee07407fa3sm23503973f8f.21.2025.09.23.04.10.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Sep 2025 04:10:31 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Tue, 23 Sep 2025 13:10:26 +0200
+To: Menglong Dong <menglong8.dong@gmail.com>
+Cc: mhiramat@kernel.org, rostedt@goodmis.org,
+	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH 2/2] tracing: fprobe: optimization for entry only case
+Message-ID: <aNKAIsHQZySyrV4o@krava>
+References: <20250923092001.1087678-1-dongml2@chinatelecom.cn>
+ <20250923092001.1087678-2-dongml2@chinatelecom.cn>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20250827193828.347397433@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250923092001.1087678-2-dongml2@chinatelecom.cn>
 
-On Wed, Aug 27, 2025 at 03:36:45PM -0400, Steven Rostedt wrote:
-> From: Josh Poimboeuf <jpoimboe@kernel.org>
+On Tue, Sep 23, 2025 at 05:20:01PM +0800, Menglong Dong wrote:
+> For now, fgraph is used for the fprobe, even if we need trace the entry
+> only. However, the performance of ftrace is better than fgraph, and we
+> can use ftrace_ops for this case.
 > 
-> Use ARCH_INIT_USER_FP_FRAME to describe how frame pointers are unwound
-> on x86, and enable CONFIG_HAVE_UNWIND_USER_FP accordingly so the
-> unwind_user interfaces can be used.
+> Then performance of kprobe-multi increases from 54M to 69M. Before this
+> commit:
 > 
-> Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+>   $ ./benchs/run_bench_trigger.sh kprobe-multi
+>   kprobe-multi   :   54.663 ± 0.493M/s
+> 
+> After this commit:
+> 
+>   $ ./benchs/run_bench_trigger.sh kprobe-multi
+>   kprobe-multi   :   69.447 ± 0.143M/s
+> 
+> Mitigation is disable during the bench testing above.
+> 
+> Signed-off-by: Menglong Dong <dongml2@chinatelecom.cn>
 > ---
->  arch/x86/Kconfig                   |  1 +
->  arch/x86/include/asm/unwind_user.h | 11 +++++++++++
->  2 files changed, 12 insertions(+)
->  create mode 100644 arch/x86/include/asm/unwind_user.h
+>  kernel/trace/fprobe.c | 88 +++++++++++++++++++++++++++++++++++++++----
+>  1 file changed, 81 insertions(+), 7 deletions(-)
 > 
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index 58d890fe2100..8f94c58d4de8 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -299,6 +299,7 @@ config X86
->  	select HAVE_SYSCALL_TRACEPOINTS
->  	select HAVE_UACCESS_VALIDATION		if HAVE_OBJTOOL
->  	select HAVE_UNSTABLE_SCHED_CLOCK
-> +	select HAVE_UNWIND_USER_FP		if X86_64
->  	select HAVE_USER_RETURN_NOTIFIER
->  	select HAVE_GENERIC_VDSO
->  	select VDSO_GETRANDOM			if X86_64
-> diff --git a/arch/x86/include/asm/unwind_user.h b/arch/x86/include/asm/unwind_user.h
-> new file mode 100644
-> index 000000000000..8597857bf896
-> --- /dev/null
-> +++ b/arch/x86/include/asm/unwind_user.h
-> @@ -0,0 +1,11 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef _ASM_X86_UNWIND_USER_H
-> +#define _ASM_X86_UNWIND_USER_H
+> diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
+> index 1785fba367c9..de4ae075548d 100644
+> --- a/kernel/trace/fprobe.c
+> +++ b/kernel/trace/fprobe.c
+> @@ -292,7 +292,7 @@ static int fprobe_fgraph_entry(struct ftrace_graph_ent *trace, struct fgraph_ops
+>  				if (node->addr != func)
+>  					continue;
+>  				fp = READ_ONCE(node->fp);
+> -				if (fp && !fprobe_disabled(fp))
+> +				if (fp && !fprobe_disabled(fp) && fp->exit_handler)
+>  					fp->nmissed++;
+>  			}
+>  			return 0;
+> @@ -312,11 +312,11 @@ static int fprobe_fgraph_entry(struct ftrace_graph_ent *trace, struct fgraph_ops
+>  		if (node->addr != func)
+>  			continue;
+>  		fp = READ_ONCE(node->fp);
+> -		if (!fp || fprobe_disabled(fp))
+> +		if (unlikely(!fp || fprobe_disabled(fp) || !fp->exit_handler))
+>  			continue;
+>  
+>  		data_size = fp->entry_data_size;
+> -		if (data_size && fp->exit_handler)
+> +		if (data_size)
+>  			data = fgraph_data + used + FPROBE_HEADER_SIZE_IN_LONG;
+>  		else
+>  			data = NULL;
+> @@ -327,7 +327,7 @@ static int fprobe_fgraph_entry(struct ftrace_graph_ent *trace, struct fgraph_ops
+>  			ret = __fprobe_handler(func, ret_ip, fp, fregs, data);
+>  
+>  		/* If entry_handler returns !0, nmissed is not counted but skips exit_handler. */
+> -		if (!ret && fp->exit_handler) {
+> +		if (!ret) {
+>  			int size_words = SIZE_IN_LONG(data_size);
+>  
+>  			if (write_fprobe_header(&fgraph_data[used], fp, size_words))
+> @@ -384,6 +384,70 @@ static struct fgraph_ops fprobe_graph_ops = {
+>  };
+>  static int fprobe_graph_active;
+>  
+> +/* ftrace_ops backend (entry-only) */
+> +static void fprobe_ftrace_entry(unsigned long ip, unsigned long parent_ip,
+> +	struct ftrace_ops *ops, struct ftrace_regs *fregs)
+> +{
+> +	struct fprobe_hlist_node *node;
+> +	struct rhlist_head *head, *pos;
+> +	struct fprobe *fp;
 > +
-> +#define ARCH_INIT_USER_FP_FRAME							\
-> +	.cfa_off	= (s32)sizeof(long) *  2,				\
-> +	.ra_off		= (s32)sizeof(long) * -1,				\
-> +	.fp_off		= (s32)sizeof(long) * -2,				\
-> +	.use_fp		= true,
-> +
-> +#endif /* _ASM_X86_UNWIND_USER_H */
+> +	guard(rcu)();
+> +	head = rhltable_lookup(&fprobe_ip_table, &ip, fprobe_rht_params);
 
-Moo, and now you have me look at unwind/user.c:
+hi,
+so this is based on yout previous patch, right?
+  fprobe: use rhltable for fprobe_ip_table
 
-        /* Make sure that the address is word aligned */
-        shift = sizeof(long) == 4 ? 2 : 3;
-        if (cfa & ((1 << shift) - 1))
-                return -EINVAL;
+would be better to mention that..  is there latest version of that somewhere?
 
-Isn't that just:
-
-	if (cfa & (sizeof(long) - 1))
-
-?
-
-Let me go add a patch to clean that up...
+thanks,
+jirka
