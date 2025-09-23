@@ -1,188 +1,106 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 283C332128B
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 23 Sep 2025 16:25:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32DBE3294E4
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 23 Sep 2025 16:59:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758644758; cv=none; b=sdCGlRuP+n8i+aBXA4gv+kv+tDiq0gtEvN4vTGIYMkOk2Uux3hX5A3XTqincZ7WoNM2B+W83lh5NiQXocZ1cgQe0h6NYgYnvk/ya6G8H29l6eU4dvPWndQXOtiMzC9U14v4CuYwkaohANrep0esWMdtnyButFNeA4rGPNOkLNAk=
+	t=1758646762; cv=none; b=ha2pjNRxLgmEC9+PC6CsR4acoPheS1NgGO2P3NNo91e8GSdrfKlbQOn7qmgg3lSxy7bb/6bUGdWTH1ym+clbOlA1eA6W0BW+4wnpEsewA8UQ+VjTDEJ1kWtFnxmfs97Z6kXBmn5DfsC1WqrjNR20gwXHvmlflOUy6AUX5M8yyuI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758644758; c=relaxed/simple;
-	bh=N5mgVPRo+CPk2ySaxtFkjus+k/V2WydmtZQlE+k35h4=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q/2e5G0Fi5DZjnXfhlawjuojGLx/smJAIUNW5GOjNag8xNufNhbHZ165VSHmsMsh3iHwmLgPX493jc/Jy5dAoyiDJ4mKeCn8Zq3MuR6/z9ZC/uuZsoKajvGdhBEklXnbm83PRFBsqPb44AL9XnZm33aHSeHDyFeOq05B2Zs0iYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SwupfOZ0; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1758646762; c=relaxed/simple;
+	bh=YJlkXO/ZITWmEi69lauof1/RW6YMbUVumNSLKe5TqAE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gE9VyfWcWap3uzgDczfNfQXIT3Z97Xhuipz6HlruqndNPDKvLIp4I7wrW4z4c2Cv2cksbRcKN83CQ46yf6Q13F7z8WtB0qEaqFBq/OwXDNXeuYLwe8bfZ2PP6fqjddUg+uO60kyzeWVr2S5Lknwt8AHmsQz6BXrpyTHPSEh7sFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=fgyMez20; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SwupfOZ0"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3ee15b5435bso3104613f8f.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 23 Sep 2025 09:25:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="fgyMez20"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-45dd505a1dfso41745745e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 23 Sep 2025 09:59:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1758644754; x=1759249554; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=IvBR/uuNoM05F0Kk2G6oFxp0yBhFbfSrXeNiw0n2Ztw=;
-        b=SwupfOZ0T2gm1tYUiw7SBXyroHOI4oAqQrS7wKbxqu1fh9SGZBd+Bl/1JW7auj6sMn
-         IFqadrkhyItkwDeC33IfnQsF2+E9R2X3rAOvMmAaI1vzTVijHX8x89VQVMRG6kcD1JRj
-         9hoyGWNpZsJAqaTqBw5N1Svx22wEKif6aZ4DtJcVSmsVvlxFW71s/3kxCMoKsxFQfiwJ
-         xMgSTbhwEo/Qc0IjpgU5EsGnCaeB+qDYM7kYZKg+GmDG3kBd2Ddd/u0P0HEoLqCU7WB8
-         zQdGpRNadH+/R8v0pokBgY2yXOvBJY0e9otj/VJ3vmVKG9iVoqV5ykQ+yeB/dvE9uFxP
-         AbWw==
+        d=suse.com; s=google; t=1758646758; x=1759251558; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=TVJ0iQtlBKSgYr2iZSN1ZuLASEInLOEHg7PGBAMqWac=;
+        b=fgyMez20JRLSwWcli1Jk0ROBACIZjvnWelepnpaDUT2/0QfaA/I+/GLmQ3ICQH89Fa
+         cBIDizXdDuTbheA/BMS6DQym7S3U4I0hPT223ewd5rtWoMSHLM2hqsGmYikSQnpSJpfU
+         EuLUKqI4YXOFIRDJMqjIR2sgujj2pwQEImN80E9lly+tTwjwaHoSQ9QpJBazd3AEqgZq
+         DS8E986kKLRTfFf9Yn5+pgoRUTDBnc/cUt5ftnNcmr4aT8oU3VULdnpqYysHdTIbMwz9
+         C2emB0FWIDYSMHHEW0aMCnTvT86Bm4hAyS2GinO1tg92whWJM9g3Jd1SyEGuI8s1RS09
+         SUuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758644754; x=1759249554;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IvBR/uuNoM05F0Kk2G6oFxp0yBhFbfSrXeNiw0n2Ztw=;
-        b=SCYwdWSzW3bOcGljBssLElFBwK4I5O6Q5BosZktmmGlPjJ9HJe+0ZBjeOr3zg12SK8
-         abfaknvTVSghZvWF9XLm/SiCABN065aBrPhSiD5eSvsosKx8Y8pkFagSdKqLbT5onF9o
-         JgS2qdUe6UE80ku6x7MMWmCZnZWpeSqV29QOUhpKLZtWk/rwhuHz6gOqMEzDs7lj/CuS
-         y121SgaUWMdRB7J0Dl5dSEo+LhztwynDRtM5AEK/wo7IHVzjPvLd70WYZwwnpgalFOL6
-         dyWppGi/eDUEZU5HOBif8Vw3EDnMwAQhJOknY7oUuDVgbGM31MUYa3cx4TtwiO5I2FVc
-         6XcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWCLtxIAfqEdhwQ05Pof+J7BN8ZoSyQhZWlcgbYSeOyy+ClFlR4ZJlHhRcvW7AOpqUeZEEPbNmxY0oQnkDgorZO+xY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx44IPNWGVVZ90K+JurNozpwW/a5MP/mRky6f+tctfWC+wjjq2W
-	gd27SjAMFo9XXScBI44W+HA7uwiIVOGoQny0GDZPhGu9afD04jwvPKMp
-X-Gm-Gg: ASbGncvFJiAYxe/ppJOtTGYyPsx9dOER/65RyZEhB3XHNgw2wA6bsakNizyrsnhR3Ld
-	8EQkSh6Mu56S09D4OE3mfRRb/7WeeTzhfc4lsVB4Fuils4HTDgFXOsV7Kk06thBTeRct+r+Y33W
-	BCBoeYqxd5ccWixdup5HnhcyCwQm8jS10r0sb7AkmDQ/vORsCI84eebfDEjdb2CgXq5JsIwodz2
-	TJXveTS4IquuiBKbwXC2DwjAk4cPjbkN0qYDSnRFoCl0Ia8/GmBL6NK7O3Dg7y+xNNwPIgWOK3C
-	qMCmByjhaOh2jGKffSJyM0zKrbNxd2bJCZzH3BVjpPQZmuiji5sgh4i8ufBrGKYL3CQhO5MlFme
-	RES/jt4VBT0k=
-X-Google-Smtp-Source: AGHT+IHrFSATwyg3qRX5k56eKwBNcVQdxs7GBs4B3KV5AJlT4F8HQe8L3ySqDT1kugqd/sLfdFZJ1w==
-X-Received: by 2002:a05:6000:430c:b0:3f0:2ab8:710f with SMTP id ffacd0b85a97d-405c3c3e243mr2955512f8f.8.1758644754154;
-        Tue, 23 Sep 2025 09:25:54 -0700 (PDT)
-Received: from krava ([176.74.159.170])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3fd84338ca2sm9347726f8f.42.2025.09.23.09.25.53
+        d=1e100.net; s=20230601; t=1758646758; x=1759251558;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TVJ0iQtlBKSgYr2iZSN1ZuLASEInLOEHg7PGBAMqWac=;
+        b=RNWvRCKz7zENYBqTcabVTi2yJjzQGwF5EYmsErTBUmrKD69xZyNAzE5+lXtab9KGdM
+         xcFqCloPMcQuISeL56z3+0cVNbpBJ9nRc45ZMAd1CW+V0Z3nZUIxMhDHNUZJMWjioCYc
+         uVhfdWZT31pk/0LlS82f4M1EBq0DaHOqiXpUINh2TmVQ1Ff9j3yEtqJ8Ut8Nqj6PVz3U
+         APxfI+J5bQo0NJrI+1l8JSbZCFFH8uUSlR1+2jm9jCEUKmuvQUWHmTQNEwAEu4vftoAm
+         3ZeYpt16hNtbCXBnXUVo6GssoEIFzzVZNAqGlSnImuMr2bM2X4Di5NR0QDgm5uSmGEga
+         CQ5A==
+X-Forwarded-Encrypted: i=1; AJvYcCVxpvsDVBfoFIuLxhneDDTRok8X34i5I5XajvtYQS3Yt5IQs1wOtJhOszHPvPMd44WELtEix4FmXXdq//156Yvmq0k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxwqIpgxlTkQieJAiPnPq7TqJ6gnSy8figNakFjg0ykLCHlfhjw
+	lSqEalr8BWMdRAZ7nUtrJrNXYqOs7A2jIYwXcozXgYEHxALpb2EMy6JrBFSBNxaAU5Rb6uQdCVb
+	U2Be1
+X-Gm-Gg: ASbGncusFzyW30+S66A0A/79976002mkBhm1QI+IDNlTEyw8SonX0jXuMdMZo6yD4eK
+	/Nan/BPwmKPdBqjcPzz4/SqSwGOHZLSni4n/guFXaPbzaCBdOhnV3VDutW2My9En0ikibhGNAqd
+	vsvxsrTo3zPgqLrxF/BiJZZsglZkO5Kk2D8VoyYC1kwZf7FqJY5lTLLnlJKDuW1FyF+cOzwaf5D
+	uzMV2kZtMHw1kTHjKORqzkPUd7TC7+9w7RadKgyN/QNnadu43URcIn2455C1x4ZZPLu7aISQde5
+	0YwrkNmW18QAJQ8Nw+ONFeYSPUXQXZ8FqJG2KoCCmyFgwNm2aw1jHyKH5HKiNkOEPAZpxW0edDU
+	dpiQYMyKYMEaaHDmLggVKWPx2pYarJ/O7lmxepIHCvng=
+X-Google-Smtp-Source: AGHT+IH6FsdRHwPLQobQ/I7blfetgrGu9IWl79+904uwLjysCfsJwBxPJRmS0Ytnh5dlEiMpfJnu3Q==
+X-Received: by 2002:a05:600c:4515:b0:45c:4470:271c with SMTP id 5b1f17b1804b1-46e1daacdc1mr36741925e9.18.1758646758594;
+        Tue, 23 Sep 2025 09:59:18 -0700 (PDT)
+Received: from blackdock.suse.cz (nat2.prg.suse.com. [195.250.132.146])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3f00cc58b91sm18616483f8f.1.2025.09.23.09.59.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Sep 2025 09:25:53 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Tue, 23 Sep 2025 18:25:52 +0200
-To: Menglong Dong <menglong.dong@linux.dev>
-Cc: Jiri Olsa <olsajiri@gmail.com>, mhiramat@kernel.org,
-	rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: Re: [PATCH 2/2] tracing: fprobe: optimization for entry only case
-Message-ID: <aNLKEJc6Bh-dC3ab@krava>
-References: <20250923092001.1087678-1-dongml2@chinatelecom.cn>
- <4681686.LvFx2qVVIh@7940hx>
- <aNKRoKTAmKpafk4F@krava>
- <5938379.DvuYhMxLoT@7950hx>
+        Tue, 23 Sep 2025 09:59:18 -0700 (PDT)
+From: =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>
+To: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: [PATCH] tracing: Ensure optimized hashing works
+Date: Tue, 23 Sep 2025 18:59:07 +0200
+Message-ID: <20250923165908.2399256-1-mkoutny@suse.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <5938379.DvuYhMxLoT@7950hx>
 
-On Tue, Sep 23, 2025 at 09:34:20PM +0800, Menglong Dong wrote:
-> On 2025/9/23 20:25, Jiri Olsa wrote:
-> > On Tue, Sep 23, 2025 at 07:16:55PM +0800, menglong.dong@linux.dev wrote:
-> > > On 2025/9/23 19:10 Jiri Olsa <olsajiri@gmail.com> write:
-> > > > On Tue, Sep 23, 2025 at 05:20:01PM +0800, Menglong Dong wrote:
-> > > > > For now, fgraph is used for the fprobe, even if we need trace the entry
-> > > > > only. However, the performance of ftrace is better than fgraph, and we
-> > > > > can use ftrace_ops for this case.
-> > > > > 
-> > > > > Then performance of kprobe-multi increases from 54M to 69M. Before this
-> > > > > commit:
-> > > > > 
-> > > > >   $ ./benchs/run_bench_trigger.sh kprobe-multi
-> > > > >   kprobe-multi   :   54.663 ± 0.493M/s
-> > > > > 
-> > > > > After this commit:
-> > > > > 
-> > > > >   $ ./benchs/run_bench_trigger.sh kprobe-multi
-> > > > >   kprobe-multi   :   69.447 ± 0.143M/s
-> > > > > 
-> > > > > Mitigation is disable during the bench testing above.
-> > > > > 
-> > > > > Signed-off-by: Menglong Dong <dongml2@chinatelecom.cn>
-> > > > > ---
-> > > > >  kernel/trace/fprobe.c | 88 +++++++++++++++++++++++++++++++++++++++----
-> > > > >  1 file changed, 81 insertions(+), 7 deletions(-)
-> > > > > 
-> > > > > diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-> > > > > index 1785fba367c9..de4ae075548d 100644
-> > > > > --- a/kernel/trace/fprobe.c
-> > > > > +++ b/kernel/trace/fprobe.c
-> > > > > @@ -292,7 +292,7 @@ static int fprobe_fgraph_entry(struct ftrace_graph_ent *trace, struct fgraph_ops
-> > > > >  				if (node->addr != func)
-> > > > >  					continue;
-> > > > >  				fp = READ_ONCE(node->fp);
-> > > > > -				if (fp && !fprobe_disabled(fp))
-> > > > > +				if (fp && !fprobe_disabled(fp) && fp->exit_handler)
-> > > > >  					fp->nmissed++;
-> > > > >  			}
-> > > > >  			return 0;
-> > > > > @@ -312,11 +312,11 @@ static int fprobe_fgraph_entry(struct ftrace_graph_ent *trace, struct fgraph_ops
-> > > > >  		if (node->addr != func)
-> > > > >  			continue;
-> > > > >  		fp = READ_ONCE(node->fp);
-> > > > > -		if (!fp || fprobe_disabled(fp))
-> > > > > +		if (unlikely(!fp || fprobe_disabled(fp) || !fp->exit_handler))
-> > > > >  			continue;
-> > > > >  
-> > > > >  		data_size = fp->entry_data_size;
-> > > > > -		if (data_size && fp->exit_handler)
-> > > > > +		if (data_size)
-> > > > >  			data = fgraph_data + used + FPROBE_HEADER_SIZE_IN_LONG;
-> > > > >  		else
-> > > > >  			data = NULL;
-> > > > > @@ -327,7 +327,7 @@ static int fprobe_fgraph_entry(struct ftrace_graph_ent *trace, struct fgraph_ops
-> > > > >  			ret = __fprobe_handler(func, ret_ip, fp, fregs, data);
-> > > > >  
-> > > > >  		/* If entry_handler returns !0, nmissed is not counted but skips exit_handler. */
-> > > > > -		if (!ret && fp->exit_handler) {
-> > > > > +		if (!ret) {
-> > > > >  			int size_words = SIZE_IN_LONG(data_size);
-> > > > >  
-> > > > >  			if (write_fprobe_header(&fgraph_data[used], fp, size_words))
-> > > > > @@ -384,6 +384,70 @@ static struct fgraph_ops fprobe_graph_ops = {
-> > > > >  };
-> > > > >  static int fprobe_graph_active;
-> > > > >  
-> > > > > +/* ftrace_ops backend (entry-only) */
-> > > > > +static void fprobe_ftrace_entry(unsigned long ip, unsigned long parent_ip,
-> > > > > +	struct ftrace_ops *ops, struct ftrace_regs *fregs)
-> > > > > +{
-> > > > > +	struct fprobe_hlist_node *node;
-> > > > > +	struct rhlist_head *head, *pos;
-> > > > > +	struct fprobe *fp;
-> > > > > +
-> > > > > +	guard(rcu)();
-> > > > > +	head = rhltable_lookup(&fprobe_ip_table, &ip, fprobe_rht_params);
-> > > > 
-> > > > hi,
-> > > > so this is based on yout previous patch, right?
-> > > >   fprobe: use rhltable for fprobe_ip_table
-> > > > 
-> > > > would be better to mention that..  is there latest version of that somewhere?
-> > > 
-> > > Yeah, this is based on that version. That patch is applied
-> > > to: https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git/log/?h=probes%2Ffor-next
-> > > 
-> > > And I do the testing on that branches.
-> > 
-> > did you run 'test_progs -t kprobe_multi' ? it silently crashes the
-> > kernel for me.. attaching config
-> 
-> Hi. I have tested the whole test_progs and it passed.
-> 
-> In fact, your config will panic even without this patch.
-> Please don't enable CONFIG_X86_KERNEL_IBT, the recursion
-> of the is_endbr() still exist until this series apply:
-> 
->   tracing: fprobe: Protect return handler from recursion loop
+If ever PID_MAX_DEFAULT changes, it must be compatible with tracing
+hashmaps assumptions.
 
-ugh, I thought it's there already, thanks
+Link: https://lore.kernel.org/r/20240409110126.651e94cb@gandalf.local.home/
+Signed-off-by: Michal Koutn√Ω <mkoutny@suse.com>
+---
+ kernel/trace/trace_sched_switch.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-jirka
+Drive-by flushing an old idea. Take it or leave it.
+
+diff --git a/kernel/trace/trace_sched_switch.c b/kernel/trace/trace_sched_switch.c
+index cb49f7279dc80..aabae7daaac91 100644
+--- a/kernel/trace/trace_sched_switch.c
++++ b/kernel/trace/trace_sched_switch.c
+@@ -243,6 +243,8 @@ int trace_create_savedcmd(void)
+ int trace_save_cmdline(struct task_struct *tsk)
+ {
+ 	unsigned tpid, idx;
++	/* so that map_pid_to_cmdline indexing is efficient */
++	BUILD_BUG_ON(!is_power_of_2(PID_MAX_DEFAULT));
+ 
+ 	/* treat recording of idle task as a success */
+ 	if (!tsk->pid)
+-- 
+2.51.0
+
