@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73144313D48;
-	Tue, 23 Sep 2025 12:16:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CA53322DCC;
+	Tue, 23 Sep 2025 12:21:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758629803; cv=none; b=DqX6+MKGUUB+XV1Mf0j/qS3AkO3IqEksVoyd0jW1yzWPN97PeOfkh+FUxZvHSsBAEJxbFX23ypJNEuzAOtyBRDrDSkb+eq9HoVqPsplmM+bOzb19onU61/51IMpxIjr0QULWXhcUESWwq8bqWu9PVleG9OESq4YYz3ufxhf4c+8=
+	t=1758630067; cv=none; b=uYes0SxrRyg7dY/voKdkazuv0DPE2Inme2y38oNfle+1ILKJqR94zz1oVWJcVF2uRGsvq2qynWax7Gz4a4rQjb9dILOTZFrff5t50yUe8RQ592vPPHognMsUT/x2CwljJ+lm93LD/wEFtazFNMe1wea8wcffMQpaqQaJKmITyGk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758629803; c=relaxed/simple;
-	bh=LpPwgkPOFFj4f6p46yUHv3+NqbNrx5FI55W7uiJ7e3s=;
+	s=arc-20240116; t=1758630067; c=relaxed/simple;
+	bh=ABLo2jswb6oVMptEftv8ZsbLxy2tNSDg2uZzb2foPKI=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Pe4LJw3VUdMsbKfwp14vIQSbyGIQRnCCUrUMdScCae5yZFUYnw7H5Am0t+rQFpxuy5YatGNxncVZkeSMdTzJA7FNoVW06kMCGXdhtwcKVO/h6tiYLbO4ne3T+Ld0ADX/NejaaYfdqPMyP9wQaDxgkN+Sh3MOzkxHGAYL1AdFt18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YaY54zQw; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=i/jlHA9vN4xuQ7XxykJ/V2LAstezABuN8MEUcu6Eyt/pKjIjMTajv45u9PR59+p6oPMHH8RxECY79Z64usFQ4unHhTqvtV3L63fkruktUbsb9CZtM4JUHBG9wlDjsbOte12zddK+L1M/JdcRmMFyeo83ijvNg10ET2bnF9ecjkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bRXpU6AN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YaY54zQw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E23F0C4CEF5;
-	Tue, 23 Sep 2025 12:16:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bRXpU6AN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95A36C113D0;
+	Tue, 23 Sep 2025 12:21:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758629803;
-	bh=LpPwgkPOFFj4f6p46yUHv3+NqbNrx5FI55W7uiJ7e3s=;
+	s=k20201202; t=1758630066;
+	bh=ABLo2jswb6oVMptEftv8ZsbLxy2tNSDg2uZzb2foPKI=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=YaY54zQwHVs+wWZOk4fmHWhRWqXMCJSxicNnD+pdINd2vl2XOOgqkxA1ZzeUexF7m
-	 LBPvqPCnbrSB2bdCakQHumwGVp3npdw9eISfjQ6ZvtnhfUq3XeVpcU9oLYrA2iZNWX
-	 Haty5AiIuOTXdpqDafSRyWpI/391FYAWEYCL8JrEqrVFwIxe0DtgUycBYxsvx+8+1G
-	 yhewcwMk9o3ourwOAm4sFl65oM30KGcBL8PQ7WnSwnvtiJAPg5nQOB1rWJ0LrEZpZK
-	 OQiT+azwPA6rI7GzTiIY6hcIsEK1DVe1QyBsVoripFZDQPEPoq1VaADo9N1gTbUtRB
-	 vzp0EzgrG58bA==
-Date: Tue, 23 Sep 2025 08:16:34 -0400
+	b=bRXpU6ANnB781R/HoWY2ijE1V6SscU6ceJfwsdq2n0wLyZ02tPZWI1hMLNBO92udT
+	 VvzwAe5tw5TVPNG8O6zfHO/v+3okXetiZZsBlJSY+DPa5uBZLkCyxOIjdIpoKcj7Ek
+	 q4s6o/Y1MPVzI4rXsf/lGXLTSPIhqPDxUvS5V7I3lY03k+DzhxihWwplVgVSNpc6kJ
+	 rfDqHavPNTK8YABIMcW7L6DTxd6mxGh/UMub9n2ggVs8vm+aG1Ltg8Npw0eZZk6aND
+	 t8KhqXeeNPCpoU9H1AzhXpVn9V5tenTAmAudni+b4WR89hprP/QbeCzyu4iQHEbva2
+	 3UEps51yVTLlw==
+Date: Tue, 23 Sep 2025 08:20:59 -0400
 From: Steven Rostedt <rostedt@kernel.org>
 To: Peter Zijlstra <peterz@infradead.org>
 Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
@@ -36,13 +36,13 @@ Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
  <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
  <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, Linus Torvalds
  <torvalds@linux-foundation.org>, Josh Poimboeuf <jpoimboe@kernel.org>
-Subject: Re: [PATCH v2 2/2] unwind deferred/x86: Do not defer stack tracing
- for compat tasks
-Message-ID: <20250923081634.24ef8132@batman.local.home>
-In-Reply-To: <20250923104515.GF3419281@noisy.programming.kicks-ass.net>
+Subject: Re: [PATCH v2 1/2] unwind_user/x86: Enable frame pointer unwinding
+ on x86
+Message-ID: <20250923082059.15fc17bc@batman.local.home>
+In-Reply-To: <20250923105130.GG3419281@noisy.programming.kicks-ass.net>
 References: <20250827193644.527334838@kernel.org>
-	<20250827193828.514833400@kernel.org>
-	<20250923104515.GF3419281@noisy.programming.kicks-ass.net>
+	<20250827193828.347397433@kernel.org>
+	<20250923105130.GG3419281@noisy.programming.kicks-ass.net>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -53,27 +53,26 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 23 Sep 2025 12:45:15 +0200
+On Tue, 23 Sep 2025 12:51:30 +0200
 Peter Zijlstra <peterz@infradead.org> wrote:
 
-> Changelog seems to forget mentioning *why* we can't unwind compat.
+> Moo, and now you have me look at unwind/user.c:
 > 
-> I'm sure I've seen compat FP unwind support at some point in this
-> series. Did that go missing somewhere?
+>         /* Make sure that the address is word aligned */
+>         shift = sizeof(long) == 4 ? 2 : 3;
+>         if (cfa & ((1 << shift) - 1))
+>                 return -EINVAL;
 > 
-> Also, these two patches are in the wrong order, first you enable things,
-> including compat tasks, and then you go 'whoopsie, no compats'.
+> Isn't that just:
+> 
+> 	if (cfa & (sizeof(long) - 1))
+> 
+> ?
+> 
+> Let me go add a patch to clean that up...
 
-Sure, we can swap it. Yes, we had patches to support it, but they
-were a bit complicated and when I tested them, they didn't work. But
-then I also noticed that the current stack tracing didn't work on
-compat either. Instead of adding complicated code that wasn't working
-on my machine, I decided to remove the patches. But after I did that, I
-realized I needed to make sure it wasn't even tried, which is this
-patch.
+Sure, as long as it's commented.
 
-I'm not sure who needs profiling on compat code, and I figured we can
-not add the new deferred work to it if it's not needed. If in the
-future we need it, we can add it then.
+Thanks,
 
 -- Steve
