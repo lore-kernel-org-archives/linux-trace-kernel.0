@@ -1,131 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 039F95FDA7;
-	Wed, 24 Sep 2025 08:13:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F00DA3FC2;
+	Wed, 24 Sep 2025 08:50:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758701595; cv=none; b=TsQwY4MHh9sYSS2qIUS53a7cd+QUP9kj7KxWbTKsHUwBEHebd5+mD8rixWJnL7a1jYvT6aRXHBwlT6D/HKGRFEZnfJBVYnr6KSm8MK1cysCzbVWZlZTy+a4p+RrjmKGnzeVkAsFK5CDs7/6l7OzhIUbd/kUfVD3x9ZQns47Z0rg=
+	t=1758703805; cv=none; b=OSSbigFISlwyPwDWpITpfbT+HhcefX1d24gMotkmM2arTS76S6tg+XDtyd/AnC30I87otlE6JDX2UYkSToHde5RTyruLJwd42RyCzSHQqsGkee2pwwCBKc1+oPT2/HPKUyVszwJlAgMMFqAzYVOzaG/u+RMF6xG4xNAGiEiNMTo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758701595; c=relaxed/simple;
-	bh=bduhBxwlzkxiqK0p2rlEquqVgehvVIbz0epKgJvieeU=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=HA9q5F4riEnbAC/L0qVGrXkcWM7mz6844QXQ1xlP3rCNv5ncqVpK+IbvocjxfPTIY+/Cz24598550247cuTRYPoQPjcDreRm2DV48/rDVZOLPOF0FK3v5QtkcG3MCqazFWLXL0/Z5QpRj7GI7skNA4vhkgvVcJuRQBppY5TP48E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WibWyPVD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1758703805; c=relaxed/simple;
+	bh=bsmLWcYiAHZSyPjSOOw20xT5FXztSFu/4czDjVsvnA8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fWFFnPcmSPlkKPzSyQ87itjNY5MbL14Ci2ZK0nimJkDtWaFaJaSaOtI/PQTT+vHQ3fFdCGCNnoG5R3FJtLg3ZYJsgieshJtjm0AVAyhvP0RjxGdj7/sHnnE4AWU41Fw5iPBp5Uk9hSSFV+bj6RRD2R8jCdkf2eUpYgilkIoKbDc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Z1GLPm6/; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WibWyPVD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5075AC113CF;
-	Wed, 24 Sep 2025 08:13:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758701594;
-	bh=bduhBxwlzkxiqK0p2rlEquqVgehvVIbz0epKgJvieeU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=WibWyPVDE4S5ffXfVIaLUgJAm0sf8+xPMKr5SjU4IXRk7wDUEhh+eN6O0iFx5mYer
-	 Mc1uaTufmTeV9n/HY074Zcj3LEX0RgqShSHEeVt0+ioiZ7wMwxFOZpswd28n3+Qn2S
-	 ECNv3GIO5rSK0pwz7Jrw6wrlWexKeraxNw4uu30vv5ZVcUe61uUVlkAu8AXzeIkdfr
-	 T8jxzY+RyL+oKkyKEelF3fQzELhYBdJW0RD7OYRPSK4mrMJBPJan6piiBnSj1Txsow
-	 od25p0ED5s7voWtgRtBwv2qxMAVleASIwM/x1JIeVCnzqr13TuLKdjNzCmcwYQUd19
-	 FUSZIl8WhtqRA==
-Date: Wed, 24 Sep 2025 17:13:12 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Menglong Dong <menglong.dong@linux.dev>
-Cc: Menglong Dong <menglong8.dong@gmail.com>, rostedt@goodmis.org,
- mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH 1/2] tracing: fprobe: rename fprobe_entry to
- fprobe_fgraph_entry
-Message-Id: <20250924171312.5790795400c78d87d5309333@kernel.org>
-In-Reply-To: <5056228.31r3eYUQgx@7950hx>
-References: <20250923092001.1087678-1-dongml2@chinatelecom.cn>
-	<20250924080722.c05ac758a018be619d01b6a9@kernel.org>
-	<5056228.31r3eYUQgx@7950hx>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Z1GLPm6/"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=YS3z9Qyy+VZhDj43nkM+N+IZO/NYQl/mTzdy8B5TYcc=; b=Z1GLPm6/kKUoa5+mZe7N7JmnsK
+	6YbQyPdGjfab1Ji6MNZJQyKARUHxHVNgIS7M40pg2PnGmA2lj1nCCTo+WeqbBXUl5qVpiBOapihWi
+	TQ39gnRKqEfgdlqGSB0i5YKrOxMA8yGarbb7kh966GAezqUrbo3+9LYFLZTXqczqNmqxFCMZnBv9y
+	yVzAklEAqWnYmu5uA2MlFrbMQsqtOTK7Vnm0y/sFEHYEJRCPy90qEL7w++s2mi8npBROjIN3ZBZQb
+	u0lI+VWktW8+qGPuSVXVOOjGO+GWuPyDwTEddVb79dwNyaO68Wt/BTrvrgGwO873fqGe454H6+Uoz
+	K5GDKzOg==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1v1LCH-0000000CGzY-3vgC;
+	Wed, 24 Sep 2025 08:49:58 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id BD6EF30033D; Wed, 24 Sep 2025 10:49:56 +0200 (CEST)
+Date: Wed, 24 Sep 2025 10:49:56 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	x86@kernel.org, Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCHv4 bpf-next 2/6] uprobe: Do not emulate/sstep original
+ instruction when ip is changed
+Message-ID: <20250924084956.GW3245006@noisy.programming.kicks-ass.net>
+References: <20250916215301.664963-1-jolsa@kernel.org>
+ <20250916215301.664963-3-jolsa@kernel.org>
+ <CAEf4BzYTJcq=Kk6W9Gz90gM=mw2fS2T-QBurUhdjBNinReDSjQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4BzYTJcq=Kk6W9Gz90gM=mw2fS2T-QBurUhdjBNinReDSjQ@mail.gmail.com>
 
-On Wed, 24 Sep 2025 08:17:45 +0800
-Menglong Dong <menglong.dong@linux.dev> wrote:
+On Tue, Sep 16, 2025 at 03:28:52PM -0700, Andrii Nakryiko wrote:
+> On Tue, Sep 16, 2025 at 2:53 PM Jiri Olsa <jolsa@kernel.org> wrote:
+> >
+> > If uprobe handler changes instruction pointer we still execute single
+> > step) or emulate the original instruction and increment the (new) ip
+> > with its length.
+> >
+> > This makes the new instruction pointer bogus and application will
+> > likely crash on illegal instruction execution.
+> >
+> > If user decided to take execution elsewhere, it makes little sense
+> > to execute the original instruction, so let's skip it.
+> >
+> > Acked-by: Oleg Nesterov <oleg@redhat.com>
+> > Acked-by: Andrii Nakryiko <andrii@kernel.org>
+> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> > ---
+> >  kernel/events/uprobes.c | 7 +++++++
+> >  1 file changed, 7 insertions(+)
+> >
+> > diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> > index 7ca1940607bd..2b32c32bcb77 100644
+> > --- a/kernel/events/uprobes.c
+> > +++ b/kernel/events/uprobes.c
+> > @@ -2741,6 +2741,13 @@ static void handle_swbp(struct pt_regs *regs)
+> >
+> >         handler_chain(uprobe, regs);
+> >
+> > +       /*
+> > +        * If user decided to take execution elsewhere, it makes little sense
+> > +        * to execute the original instruction, so let's skip it.
+> > +        */
+> > +       if (instruction_pointer(regs) != bp_vaddr)
+> > +               goto out;
+> > +
+> 
+> Peter, Ingo,
+> 
+> Are you guys ok with us routing this through the bpf-next tree? We'll
+> have a tiny conflict because in perf/core branch there is
+> arch_uprobe_optimize() call added after handler_chain(), so git merge
+> will be a bit confused, probably. But it should be trivially
+> resolvable.
 
-> On 2025/9/24 07:07, Masami Hiramatsu wrote:
-> > On Tue, 23 Sep 2025 17:20:00 +0800
-> > Menglong Dong <menglong8.dong@gmail.com> wrote:
-> > 
-> > > The fprobe_entry() is used by fgraph_ops, so rename it to
-> > > fprobe_fgraph_entry to be more distinctive.
-> > 
-> > Sorry, NAK. fprobe is based on fgraph by design.
-> > So "fprobe_fgraph" sounds redundant.
-> 
-> Hi, Masami. Did you see my next patch that use ftrace
-> for the fprobe to obtain better performance?
-> 
-> Hmm, it seems that the cover-letter is necessary :/
-
-Yeah, I missed [2/2]. And anyway I think this should be
-merged to [2/2].
-
-Thank you,
-
-> 
-> Thanks!
-> Menglong Dong
-> 
-> > 
-> > Thanks,
-> > 
-> > > 
-> > > Signed-off-by: Menglong Dong <dongml2@chinatelecom.cn>
-> > > ---
-> > >  kernel/trace/fprobe.c | 8 ++++----
-> > >  1 file changed, 4 insertions(+), 4 deletions(-)
-> > > 
-> > > diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-> > > index 6a205903b1ed..1785fba367c9 100644
-> > > --- a/kernel/trace/fprobe.c
-> > > +++ b/kernel/trace/fprobe.c
-> > > @@ -254,8 +254,8 @@ static inline int __fprobe_kprobe_handler(unsigned long ip, unsigned long parent
-> > >  	return ret;
-> > >  }
-> > >  
-> > > -static int fprobe_entry(struct ftrace_graph_ent *trace, struct fgraph_ops *gops,
-> > > -			struct ftrace_regs *fregs)
-> > > +static int fprobe_fgraph_entry(struct ftrace_graph_ent *trace, struct fgraph_ops *gops,
-> > > +			       struct ftrace_regs *fregs)
-> > >  {
-> > >  	unsigned long *fgraph_data = NULL;
-> > >  	unsigned long func = trace->func;
-> > > @@ -340,7 +340,7 @@ static int fprobe_entry(struct ftrace_graph_ent *trace, struct fgraph_ops *gops,
-> > >  	/* If any exit_handler is set, data must be used. */
-> > >  	return used != 0;
-> > >  }
-> > > -NOKPROBE_SYMBOL(fprobe_entry);
-> > > +NOKPROBE_SYMBOL(fprobe_fgraph_entry);
-> > >  
-> > >  static void fprobe_return(struct ftrace_graph_ret *trace,
-> > >  			  struct fgraph_ops *gops,
-> > > @@ -379,7 +379,7 @@ static void fprobe_return(struct ftrace_graph_ret *trace,
-> > >  NOKPROBE_SYMBOL(fprobe_return);
-> > >  
-> > >  static struct fgraph_ops fprobe_graph_ops = {
-> > > -	.entryfunc	= fprobe_entry,
-> > > +	.entryfunc	= fprobe_fgraph_entry,
-> > >  	.retfunc	= fprobe_return,
-> > >  };
-> > >  static int fprobe_graph_active;
-> > 
-> > 
-> > 
-> 
-> 
-> 
-> 
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Nah, I suppose that'll be fine. Thanks!
