@@ -1,108 +1,100 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F00DA3FC2;
-	Wed, 24 Sep 2025 08:50:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3965A26D4E8;
+	Wed, 24 Sep 2025 09:04:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758703805; cv=none; b=OSSbigFISlwyPwDWpITpfbT+HhcefX1d24gMotkmM2arTS76S6tg+XDtyd/AnC30I87otlE6JDX2UYkSToHde5RTyruLJwd42RyCzSHQqsGkee2pwwCBKc1+oPT2/HPKUyVszwJlAgMMFqAzYVOzaG/u+RMF6xG4xNAGiEiNMTo=
+	t=1758704665; cv=none; b=IjgZEITKuiTDp4d53gBT10Fu0jBdwLBy0XxNcjDrRX0j93AeWyvLDwfCP28ZBTWDTz+aPmT8Ww5dFMp1TS9cENyTkDkn5u92YC3sRY0uAfBycOBSRwhd/ZeUyuY9qM9mqib8xi5jPDTS2qJJUKJ97w2R+l3e4U8bC55KTh7L0fg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758703805; c=relaxed/simple;
-	bh=bsmLWcYiAHZSyPjSOOw20xT5FXztSFu/4czDjVsvnA8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fWFFnPcmSPlkKPzSyQ87itjNY5MbL14Ci2ZK0nimJkDtWaFaJaSaOtI/PQTT+vHQ3fFdCGCNnoG5R3FJtLg3ZYJsgieshJtjm0AVAyhvP0RjxGdj7/sHnnE4AWU41Fw5iPBp5Uk9hSSFV+bj6RRD2R8jCdkf2eUpYgilkIoKbDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Z1GLPm6/; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1758704665; c=relaxed/simple;
+	bh=CUTT6hFM029zyjt/sjCwVOO+wqY+uTvnvdQD3tLQyrs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=e1hA11whNbj/uvdT+1P1n68bJh4k4pydBBLtm92o9hsOsWPpnYKMwvKQVmw2H0aRrZmgKLB4/ImW8y1sPoY4LUNNWHGjqbQZGy+s1WmTrIVtNGDrIT8UCDgGsp/gI/HdvxyO/FqP9D2ExIkxIGIo+bfWzgTneii48Qs2mHRB32A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LMp6Mazk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Z1GLPm6/"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=YS3z9Qyy+VZhDj43nkM+N+IZO/NYQl/mTzdy8B5TYcc=; b=Z1GLPm6/kKUoa5+mZe7N7JmnsK
-	6YbQyPdGjfab1Ji6MNZJQyKARUHxHVNgIS7M40pg2PnGmA2lj1nCCTo+WeqbBXUl5qVpiBOapihWi
-	TQ39gnRKqEfgdlqGSB0i5YKrOxMA8yGarbb7kh966GAezqUrbo3+9LYFLZTXqczqNmqxFCMZnBv9y
-	yVzAklEAqWnYmu5uA2MlFrbMQsqtOTK7Vnm0y/sFEHYEJRCPy90qEL7w++s2mi8npBROjIN3ZBZQb
-	u0lI+VWktW8+qGPuSVXVOOjGO+GWuPyDwTEddVb79dwNyaO68Wt/BTrvrgGwO873fqGe454H6+Uoz
-	K5GDKzOg==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v1LCH-0000000CGzY-3vgC;
-	Wed, 24 Sep 2025 08:49:58 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id BD6EF30033D; Wed, 24 Sep 2025 10:49:56 +0200 (CEST)
-Date: Wed, 24 Sep 2025 10:49:56 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	x86@kernel.org, Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCHv4 bpf-next 2/6] uprobe: Do not emulate/sstep original
- instruction when ip is changed
-Message-ID: <20250924084956.GW3245006@noisy.programming.kicks-ass.net>
-References: <20250916215301.664963-1-jolsa@kernel.org>
- <20250916215301.664963-3-jolsa@kernel.org>
- <CAEf4BzYTJcq=Kk6W9Gz90gM=mw2fS2T-QBurUhdjBNinReDSjQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LMp6Mazk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4455DC4CEE7;
+	Wed, 24 Sep 2025 09:04:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758704664;
+	bh=CUTT6hFM029zyjt/sjCwVOO+wqY+uTvnvdQD3tLQyrs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=LMp6MazkSQJXJ8I6WoKZonLwloDu1TlRBsxn2SISgTWfgor5fTzZqreXC0A178NQv
+	 2W6inYqft3xuBI0fLzDACrLF0fA5HUirKLtYR/YbdgEEdPbYovcu8ljb3gjmm7MvUc
+	 Pkx/GJiZlmjfpkc+GcC/JrybxeQOK6lzyVtz7HsZ4vYUz/+/c7dXvrAooWuHtT74hO
+	 RHdNe2/43+2iTmACINI9Hs/i9uAW84nINWExoheXn1JW0NI5fbytRm04rGjd4Oy+4w
+	 nE++ov9O8vM6lxDSWK84tD9mqNrp046b190IeOIeMceYsctEnE2mggUSfOzjAUCI44
+	 dQKIauozEc5Lg==
+Date: Wed, 24 Sep 2025 05:04:15 -0400
+From: Steven Rostedt <rostedt@kernel.org>
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Florent Revest <revest@google.com>, Mark Rutland <mark.rutland@arm.com>,
+ bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
+ <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, Menglong Dong
+ <menglong8.dong@gmail.com>
+Subject: Re: [PATCH 2/9] ftrace: Add register_ftrace_direct_hash function
+Message-ID: <20250924050415.4aefcb91@batman.local.home>
+In-Reply-To: <20250923215147.1571952-3-jolsa@kernel.org>
+References: <20250923215147.1571952-1-jolsa@kernel.org>
+	<20250923215147.1571952-3-jolsa@kernel.org>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEf4BzYTJcq=Kk6W9Gz90gM=mw2fS2T-QBurUhdjBNinReDSjQ@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Sep 16, 2025 at 03:28:52PM -0700, Andrii Nakryiko wrote:
-> On Tue, Sep 16, 2025 at 2:53 PM Jiri Olsa <jolsa@kernel.org> wrote:
-> >
-> > If uprobe handler changes instruction pointer we still execute single
-> > step) or emulate the original instruction and increment the (new) ip
-> > with its length.
-> >
-> > This makes the new instruction pointer bogus and application will
-> > likely crash on illegal instruction execution.
-> >
-> > If user decided to take execution elsewhere, it makes little sense
-> > to execute the original instruction, so let's skip it.
-> >
-> > Acked-by: Oleg Nesterov <oleg@redhat.com>
-> > Acked-by: Andrii Nakryiko <andrii@kernel.org>
-> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> > ---
-> >  kernel/events/uprobes.c | 7 +++++++
-> >  1 file changed, 7 insertions(+)
-> >
-> > diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> > index 7ca1940607bd..2b32c32bcb77 100644
-> > --- a/kernel/events/uprobes.c
-> > +++ b/kernel/events/uprobes.c
-> > @@ -2741,6 +2741,13 @@ static void handle_swbp(struct pt_regs *regs)
-> >
-> >         handler_chain(uprobe, regs);
-> >
-> > +       /*
-> > +        * If user decided to take execution elsewhere, it makes little sense
-> > +        * to execute the original instruction, so let's skip it.
-> > +        */
-> > +       if (instruction_pointer(regs) != bp_vaddr)
-> > +               goto out;
-> > +
-> 
-> Peter, Ingo,
-> 
-> Are you guys ok with us routing this through the bpf-next tree? We'll
-> have a tiny conflict because in perf/core branch there is
-> arch_uprobe_optimize() call added after handler_chain(), so git merge
-> will be a bit confused, probably. But it should be trivially
-> resolvable.
+On Tue, 23 Sep 2025 23:51:40 +0200
+Jiri Olsa <jolsa@kernel.org> wrote:
 
-Nah, I suppose that'll be fine. Thanks!
+> Adding register_ftrace_direct_hash function that registers
+> all entries (ip -> direct) provided in hash argument.
+> 
+> The difference to current register_ftrace_direct is
+>  - hash argument that allows to register multiple ip -> direct
+>    entries at once
+
+I'm a bit confused. How is this different? Doesn't
+register_ftrace_direct() register multiple ip -> direct entries at once
+too? But instead of using a passed in hash, it uses the hash from
+within the ftrace_ops.
+
+>  - we can call register_ftrace_direct_hash multiple times on the
+>    same ftrace_ops object, becase after first registration with
+>    register_ftrace_function_nolock, it uses ftrace_update_ops to
+>    update the ftrace_ops object
+
+OK, I don't like the name "register" here. "register" should be for the
+first instance and then it is registered. If you call it multiple times
+on the same ops without "unregister" it should give an error.
+
+Perhaps call this "update_ftrace_direct()" where it can update a direct
+ftrace_ops from?
+
+> 
+> This change will allow us to have simple ftrace_ops for all bpf
+> direct interface users in following changes.
+
+After applying all the patches, I have this:
+
+$ git grep register_ftrace_direct_hash
+include/linux/ftrace.h:int register_ftrace_direct_hash(struct ftrace_ops *ops, struct ftrace_hash *hash);
+include/linux/ftrace.h:int unregister_ftrace_direct_hash(struct ftrace_ops *ops, struct ftrace_hash *hash);
+include/linux/ftrace.h:int register_ftrace_direct_hash(struct ftrace_ops *ops, struct ftrace_hash *hash)
+include/linux/ftrace.h:int unregister_ftrace_direct_hash(struct ftrace_ops *ops, struct ftrace_hash *hash)
+kernel/trace/ftrace.c:  err = register_ftrace_direct_hash(ops, hash);
+kernel/trace/ftrace.c:  err = unregister_ftrace_direct_hash(ops, hash);
+kernel/trace/ftrace.c:int register_ftrace_direct_hash(struct ftrace_ops *ops, struct ftrace_hash *hash)
+kernel/trace/ftrace.c:EXPORT_SYMBOL_GPL(register_ftrace_direct_hash);
+kernel/trace/ftrace.c:int unregister_ftrace_direct_hash(struct ftrace_ops *ops, struct ftrace_hash *hash)
+kernel/trace/ftrace.c:EXPORT_SYMBOL_GPL(unregister_ftrace_direct_hash);
+
+Where I do not see it is used outside of ftrace.c. Why is it exported?
+
+-- Steve
