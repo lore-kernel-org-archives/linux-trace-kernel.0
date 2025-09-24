@@ -1,63 +1,63 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 414F730100B
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 24 Sep 2025 11:51:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D62D302162
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 24 Sep 2025 11:51:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758714711; cv=none; b=FW1NOLuWUGk543Ydio0kr08RTo31Ammor5zV8mPnOvAT+o93qrQdTZufV5uSSwqqVr5/xRlVHR+/i+r7aV35qEfRyIAvtGniOTLAQn+j5f6VMtlFrQdUwD9Z2yEUnnqwna3CjcOcJCbgG4QC9IDxKE7UN6XHMSkns/zM+fj+NEQ=
+	t=1758714716; cv=none; b=pT3HqvYLDhZOcaPp39ars7DXr64jUs4We8xP5CArt2b9gBnLexZ71nmdoj7Tqsm77rYHGfnWB5dDv0AM2mSvQQKViW39/VjuhsS+Ut4OwUeDtrfkF/Z/WjcOhEP1KLWJWvWXGUEc3PbBbllqiMPQUwdhsmJ6m4ltWcgOVwIWKGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758714711; c=relaxed/simple;
-	bh=JuRa9sqqB7Pb4oITEW69e6hBS72ry7/vRFUMRsXtE7E=;
+	s=arc-20240116; t=1758714716; c=relaxed/simple;
+	bh=Feu6QMw0Ju5Y4dTxQ53cERWbV/8rWQzq92gPB2aNeXU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=A1p76fKVACsV+SeYNQLmxYCWnKHQzY6b+aQQRpQ9Mnhfa37EPKQj3oHvQrS16CT3NzLHVlopdb5dtvQUZ2sEdI4JdqhfMcR3pfjlosvqGRe4nwM94ml1PB2YJx+INLS8Y9J7qAhRBdNJwPc2A9+rCVpQgTlyARMWKA1JpFQQkAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MDVcJXf0; arc=none smtp.client-ip=209.85.210.181
+	 MIME-Version; b=qgivDwyabj37VAEu4Bcy7EsnotoBa4gm9x1m1eM5zx++Ly1RUjKHffxvx3Wp92efBBOa4p8YDmUvvqDe6m+DDNG/AC07fn3x3aKGzq8AvbULB2ekFN2qoa1CvNrS2wzhFzIghUW1ts/QcdmqCUU/EuR9DmaujW9lXRjPJpYxC9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JjLf52oy; arc=none smtp.client-ip=209.85.215.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MDVcJXf0"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-780f6632e64so165522b3a.2
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 24 Sep 2025 04:51:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JjLf52oy"
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-b5506b28c98so4284957a12.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 24 Sep 2025 04:51:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1758714705; x=1759319505; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1758714713; x=1759319513; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=l9dguoBkY6LX1N0DOj75LxFoPgkZue82QF3pLTyVov0=;
-        b=MDVcJXf0o69BlqOAiLOKFiTRCsPMpixTpmoRwfpWlodam/IXXrIRWkdkrcxAm4G7ye
-         C+faCeeQQNG/TYBm5oScF87mRf0uU0QfAhqAUKOqf70Bo44+qzUO9dVyKNxpREgDwgIl
-         8JDmLpQXCTVjptpu6ouPdKuWVlCovQeGBxwamcfrwDNO6W0uVKUDpFk9EG1VtCjKolp2
-         vYqrlN+FQ9n7W6HrAx3ipldB5Ms46n3N9F+Jrf3T8FZ6g1sRtoQczlmWBgADHrdD5yd5
-         0cPPvA318b2UISUpi7upSxbnB8K75OHAWvoAJdD4FAZnPLrVKb/axuoBWxzRgyZqpmCa
-         FjSg==
+        bh=eGY4NXn9SYrwp2MIROIAsCXd8mHWC2w3iRZMJXUxzyw=;
+        b=JjLf52oyNMy0PVbma/IMjkr/0CHn7hlxemIPz9rqtb4L/YuHnVvE6f78/+NOhTVvrf
+         0AKM/ZzvrWvndcO6DYZKA5QLoZ7vfHBDRJSNJaEy4lVxVIIPVNMN0iK+b6UQPZMzTx3Z
+         GRII2WCQCl8wiqTTpiNnNzt0PIDKl9+akciy/wLWKoNzBmhiwPMAXfQ9XKoxRVms2e01
+         YVM1LqipjyLfZHoxLhtPEuRWYwSk0kFiRgHnTsjS65Gj1omUAk8v9Xckc6RJ4dMJ2cJv
+         VMYhwQzmnwH1Fllg5ohscne3ZMiNAxEEu+Qu10wEFPtaP6V3ED8qBIxB9x3IT+wPMYAR
+         Ev9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758714705; x=1759319505;
+        d=1e100.net; s=20230601; t=1758714713; x=1759319513;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=l9dguoBkY6LX1N0DOj75LxFoPgkZue82QF3pLTyVov0=;
-        b=MRAVHhDS0+zrH9I5w0qTFwZEhfAWDA9VMVbEMiZFIgYVqtQZ6D3quvR3Zk6FM3Bs4Y
-         tFRIiX/a5s3pPfaDwVm29JCWi9sF8/nqoOeslBLm0jhgXVhobUaylkgWBAq3Wk551Z79
-         6tsSXKw7xKSWf21WrNtX9YkrI1yjebziZaDNnaYcF0jkERMJsqyyxts1670mbecTb3OL
-         N1MtlOR2yuB/Spbpd2WWhfuDrhRLa7CfPbOP7vIDhD22pLmfgHHiXSwXQhaGI1gCBjOt
-         nySskGnDsKO2a/yH298dM4c1tnr+Cp2h5m0O8/mGYBEl+PvyjRojUWPCxUjSU7LLe6kY
-         9VOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWscn3auOOOqzG+ycDEhz2sUnMwcv3yPFgcaaI6srKKjwkMFbtQZb2t/uJSBYE+xm73EYsmg3mvMxHP8WjjQ6QFjtU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/qs0/awSI1tI0Qz1BEwWXD3xdUasJeliDVWoiu/tYLrGD7UOl
-	xwYgs27hvVN/64QJEPXKyVKPTGSQBv0rhN9vo6HtgzZhhCyKI4djeEnI
-X-Gm-Gg: ASbGncsB7ZudiV5FkrrbOvk1qGyKdKtQSk3PXwGhpic6K19xFs0aQdVpDMCLmeBvYXi
-	y91Pryvu90X+kL77pDNwUVW9Ew77QuPKdeezcpB0Tkel6rA9/bjnVjDFHWKhvTtJFER99w6OZ5W
-	cBjxqGqgIG0zmqaQYR/BJFzRm8WJX5xIoXaJ+wvhGPh9mzgQpiPbdDn5yXK8ENKLjyIO0YNYPUs
-	OkbWdGsvVu3ug3wifKwipuKUe5aIHZfSqn9RRcdsqkyljm0eHH9MLNUXpKTv5y6uadYOC6c78fJ
-	AA7XPsrnNtBtVMYOiCKBIhWc41nLX99NH/gxbP7ABjtp+VNDpn0XPIhgALc7luiIRsvtU4R+T4v
-	HZku/z5FD82cWU9dgxUnBRWj9Rw==
-X-Google-Smtp-Source: AGHT+IEasneXpiW3mfzS6InuZbVOqKXOEJYnqzt5bTMRV5lm54Ib2pRaVdJ4xzF5Ie29cXcRAIIxXQ==
-X-Received: by 2002:a05:6a00:228b:b0:77f:50df:df31 with SMTP id d2e1a72fcca58-77f53b0ed0cmr6348588b3a.20.1758714705264;
-        Wed, 24 Sep 2025 04:51:45 -0700 (PDT)
+        bh=eGY4NXn9SYrwp2MIROIAsCXd8mHWC2w3iRZMJXUxzyw=;
+        b=QGU0rMkB2crxAcTyxC2/PMSHp7vFQJXHh1KYLw6ilit4Ma4m4I6/BZFY7pbJG79U+m
+         klBF0VuECvRMJ6GVgROkgXTnhjdw+lr3e7fG3bwCNpLD089FOqSTgagkLjTcEpRS6dxT
+         rjeqo2rh2BehnOF0s9Sh7frOAZ/OcpncTdZAszzXmHdZX3So6IsebaJhsFWxfX7blJXF
+         6fnvAiOnPn2I+PupOv8pM0W6VxidKu1hR30Vvg/jFCSGHYOtknLSxXlrOoS+kBoUu92g
+         8mYThap3LoW7Odh8z/29EyA5UyZdSPF/+rYUyqj5UhNNyjB2B2QoJMePHMM3Ra0P57fx
+         ksHw==
+X-Forwarded-Encrypted: i=1; AJvYcCWYuZWnEEqd14f2LJTVhpCbjkwXSU63ONc4LezlVuCejKDwzPbp4M1RWNLp7Rv/96ERycwivFirBHxmMYg0ql/oxfA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywn0rrG567YkP29p3mNSo4klzo5UweK2OrUuw2MNOQlAxCLoz59
+	/W3uKm8Druyi0SCzZLVuM0op8SbBjH+Q+U0KeG6Y7KzWfdMenrdVxqrD
+X-Gm-Gg: ASbGncsaYjuAEnDAHKddjjNbW8/ZFarZmjvqk618dIfT7IT3+Mrjes6PNJKsuN9kelO
+	3lw7lQ14C4tQMjg0iJIHW2PonzjrDhLYWYQVwbzV6lf4mw6kOgvwqaegXtDp4EP3bvuGgnuu8vL
+	CyLUADP45a0wZZQTBQo6XEMgFiJmMohnv/0TyFCvn46P1E8MbcbCLdspeMXQDHyVNpvcWHJsAuv
+	RAZ76wHw0CJWezK3yvU9pAWi5/XYUIAah/1ZbAIMa0BTCJ3BUTqIdaLiIH5BdEuGdhIgQNG9ieg
+	irqfYiXj9p7P7h+VFrvSggquuOUrfCS1mcb90VeTPA+J7Sa1EKXC5fvUPSxMpobdammncVe13TD
+	qZ3Dsw7/6E6Z2Ci4TVTboZrRZ/HvswsnOM04O
+X-Google-Smtp-Source: AGHT+IFMNctGW9Lc2RuLDimMt82FyjBUd6I48axMdmkX53huq+gu8b3I4mIDqyHLSeX7qGzL0isVyA==
+X-Received: by 2002:a17:902:e885:b0:25e:5d83:2ddd with SMTP id d9443c01a7336-27cc678336emr76685615ad.45.1758714712744;
+        Wed, 24 Sep 2025 04:51:52 -0700 (PDT)
 Received: from localhost ([23.142.224.65])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-77cfc2490dcsm18664494b3a.36.2025.09.24.04.51.44
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-27ec0a7f443sm19635565ad.105.2025.09.24.04.51.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Sep 2025 04:51:44 -0700 (PDT)
+        Wed, 24 Sep 2025 04:51:52 -0700 (PDT)
 From: Jinchao Wang <wangjinchao600@gmail.com>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
@@ -123,9 +123,9 @@ To: Andrew Morton <akpm@linux-foundation.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-trace-kernel@vger.kernel.org
 Cc: Jinchao Wang <wangjinchao600@gmail.com>
-Subject: [PATCH v5 03/23] HWBP: Add modify_wide_hw_breakpoint_local() API
-Date: Wed, 24 Sep 2025 19:50:46 +0800
-Message-ID: <20250924115124.194940-4-wangjinchao600@gmail.com>
+Subject: [PATCH v5 05/23] mm/ksw: add ksw_config struct and parser
+Date: Wed, 24 Sep 2025 19:50:48 +0800
+Message-ID: <20250924115124.194940-6-wangjinchao600@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250924115124.194940-1-wangjinchao600@gmail.com>
 References: <20250924115124.194940-1-wangjinchao600@gmail.com>
@@ -137,128 +137,183 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Add struct ksw_config and ksw_parse_config() to parse user string.
 
-Add modify_wide_hw_breakpoint_local() arch-wide interface which allows
-hwbp users to update watch address on-line. This is available if the
-arch supports CONFIG_HAVE_REINSTALL_HW_BREAKPOINT.
-Note that this allows to change the type only for compatible types,
-because it does not release and reserve the hwbp slot based on type.
-For instance, you can not change HW_BREAKPOINT_W to HW_BREAKPOINT_X.
-
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Signed-off-by: Jinchao Wang <wangjinchao600@gmail.com>
 ---
- arch/Kconfig                  | 10 ++++++++++
- arch/x86/Kconfig              |  1 +
- include/linux/hw_breakpoint.h |  6 ++++++
- kernel/events/hw_breakpoint.c | 37 +++++++++++++++++++++++++++++++++++
- 4 files changed, 54 insertions(+)
+ mm/kstackwatch/kernel.c      | 112 +++++++++++++++++++++++++++++++++++
+ mm/kstackwatch/kstackwatch.h |  27 +++++++++
+ 2 files changed, 139 insertions(+)
 
-diff --git a/arch/Kconfig b/arch/Kconfig
-index d1b4ffd6e085..e4787fc814df 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -418,6 +418,16 @@ config HAVE_MIXED_BREAKPOINTS_REGS
- 	  Select this option if your arch implements breakpoints under the
- 	  latter fashion.
+diff --git a/mm/kstackwatch/kernel.c b/mm/kstackwatch/kernel.c
+index 78f1d019225f..3b7009033dd4 100644
+--- a/mm/kstackwatch/kernel.c
++++ b/mm/kstackwatch/kernel.c
+@@ -1,16 +1,128 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
  
-+config HAVE_REINSTALL_HW_BREAKPOINT
-+	bool
-+	depends on HAVE_HW_BREAKPOINT
-+	help
-+	  Depending on the arch implementation of hardware breakpoints,
-+	  some of them are able to update the breakpoint configuration
-+	  without release and reserve the hardware breakpoint register.
-+	  What configuration is able to update depends on hardware and
-+	  software implementation.
++#include <linux/kstrtox.h>
+ #include <linux/module.h>
++#include <linux/string.h>
 +
- config HAVE_USER_RETURN_NOTIFIER
- 	bool
- 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 52c8910ba2ef..4ea313ef3e82 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -247,6 +247,7 @@ config X86
- 	select HAVE_FUNCTION_TRACER
- 	select HAVE_GCC_PLUGINS
- 	select HAVE_HW_BREAKPOINT
-+	select HAVE_REINSTALL_HW_BREAKPOINT
- 	select HAVE_IOREMAP_PROT
- 	select HAVE_IRQ_EXIT_ON_IRQ_STACK	if X86_64
- 	select HAVE_IRQ_TIME_ACCOUNTING
-diff --git a/include/linux/hw_breakpoint.h b/include/linux/hw_breakpoint.h
-index db199d653dd1..ea373f2587f8 100644
---- a/include/linux/hw_breakpoint.h
-+++ b/include/linux/hw_breakpoint.h
-@@ -81,6 +81,9 @@ register_wide_hw_breakpoint(struct perf_event_attr *attr,
- 			    perf_overflow_handler_t triggered,
- 			    void *context);
- 
-+extern int modify_wide_hw_breakpoint_local(struct perf_event *bp,
-+					   struct perf_event_attr *attr);
++#include "kstackwatch.h"
 +
- extern int register_perf_hw_breakpoint(struct perf_event *bp);
- extern void unregister_hw_breakpoint(struct perf_event *bp);
- extern void unregister_wide_hw_breakpoint(struct perf_event * __percpu *cpu_events);
-@@ -124,6 +127,9 @@ register_wide_hw_breakpoint(struct perf_event_attr *attr,
- 			    perf_overflow_handler_t triggered,
- 			    void *context)		{ return NULL; }
- static inline int
-+modify_wide_hw_breakpoint_local(struct perf_event *bp,
-+				struct perf_event_attr *attr) { return -ENOSYS; }
-+static inline int
- register_perf_hw_breakpoint(struct perf_event *bp)	{ return -ENOSYS; }
- static inline void unregister_hw_breakpoint(struct perf_event *bp)	{ }
- static inline void
-diff --git a/kernel/events/hw_breakpoint.c b/kernel/events/hw_breakpoint.c
-index 8ec2cb688903..5ee1522a99c9 100644
---- a/kernel/events/hw_breakpoint.c
-+++ b/kernel/events/hw_breakpoint.c
-@@ -887,6 +887,43 @@ void unregister_wide_hw_breakpoint(struct perf_event * __percpu *cpu_events)
- }
- EXPORT_SYMBOL_GPL(unregister_wide_hw_breakpoint);
- 
-+/**
-+ * modify_wide_hw_breakpoint_local - update breakpoint config for local CPU
-+ * @bp: the hwbp perf event for this CPU
-+ * @attr: the new attribute for @bp
-+ *
-+ * This does not release and reserve the slot of a HWBP; it just reuses the
-+ * current slot on local CPU. So the users must update the other CPUs by
-+ * themselves.
-+ * Also, since this does not release/reserve the slot, this can not change the
-+ * type to incompatible type of the HWBP.
-+ * Return err if attr is invalid or the CPU fails to update debug register
-+ * for new @attr.
-+ */
-+#ifdef CONFIG_HAVE_REINSTALL_HW_BREAKPOINT
-+int modify_wide_hw_breakpoint_local(struct perf_event *bp,
-+				    struct perf_event_attr *attr)
++static struct ksw_config *ksw_config;
++
++struct param_map {
++	const char *name;       /* long name */
++	const char *short_name; /* short name (2 letters) */
++	size_t offset;          /* offsetof(struct ksw_config, field) */
++	bool is_string;         /* true for string */
++};
++
++/* macro generates both long and short name automatically */
++#define PMAP(field, short, is_str) \
++	{ #field, #short, offsetof(struct ksw_config, field), is_str }
++
++static const struct param_map ksw_params[] = {
++	PMAP(func_name,   fn, true),
++	PMAP(func_offset, fo, false),
++	PMAP(depth,       dp, false),
++	PMAP(max_watch,   mw, false),
++	PMAP(sp_offset,   so, false),
++	PMAP(watch_len,   wl, false),
++};
++
++static int ksw_parse_param(struct ksw_config *config, const char *key,
++			   const char *val)
 +{
++	const struct param_map *pm = NULL;
 +	int ret;
 +
-+	if (find_slot_idx(bp->attr.bp_type) != find_slot_idx(attr->bp_type))
++	for (int i = 0; i < ARRAY_SIZE(ksw_params); i++) {
++		if (strcmp(key, ksw_params[i].name) == 0 ||
++		    strcmp(key, ksw_params[i].short_name) == 0) {
++			pm = &ksw_params[i];
++			break;
++		}
++	}
++
++	if (!pm)
 +		return -EINVAL;
 +
-+	ret = hw_breakpoint_arch_parse(bp, attr, counter_arch_bp(bp));
-+	if (ret)
-+		return ret;
++	if (pm->is_string) {
++		char **dst = (char **)((char *)config + pm->offset);
++		*dst = kstrdup(val, GFP_KERNEL);
++		if (!*dst)
++			return -ENOMEM;
++	} else {
++		ret = kstrtou16(val, 0, (u16 *)((char *)config + pm->offset));
++		if (ret)
++			return ret;
++	}
 +
-+	return arch_reinstall_hw_breakpoint(bp);
++	return 0;
 +}
-+#else
-+int modify_wide_hw_breakpoint_local(struct perf_event *bp,
-+				    struct perf_event_attr *attr)
++
++/*
++ * Configuration string format:
++ *    param_name=<value> [param_name=<value> ...]
++ *
++ * Required parameters:
++ * - func_name  |fn (str) : target function name
++ * - func_offset|fo (u16) : instruction pointer offset
++ *
++ * Optional parameters:
++ * - depth      |dp (u16) : recursion depth
++ * - max_watch  |mw (u16) : maximum number of watchpoints
++ * - sp_offset  |so (u16) : offset from stack pointer at func_offset
++ * - watch_len  |wl (u16) : watch length (1,2,4,8)
++ */
++static int __maybe_unused ksw_parse_config(char *buf, struct ksw_config *config)
 +{
-+	return -EOPNOTSUPP;
-+}
-+#endif
-+EXPORT_SYMBOL_GPL(modify_wide_hw_breakpoint_local);
++	char *part, *key, *val;
++	int ret;
 +
- /**
-  * hw_breakpoint_is_used - check if breakpoints are currently used
-  *
++	kfree(config->func_name);
++	kfree(config->user_input);
++	memset(ksw_config, 0, sizeof(*ksw_config));
++
++	buf = strim(buf);
++	config->user_input = kstrdup(buf, GFP_KERNEL);
++	if (!config->user_input)
++		return -ENOMEM;
++
++	while ((part = strsep(&buf, " \t\n")) != NULL) {
++		if (*part == '\0')
++			continue;
++
++		key = strsep(&part, "=");
++		val = part;
++		if (!key || !val)
++			continue;
++		ret = ksw_parse_param(config, key, val);
++		if (ret)
++			pr_warn("unsupported param %s=%s", key, val);
++	}
++
++	if (!config->func_name || !config->func_offset) {
++		pr_err("Missing required parameters: function or func_offset\n");
++		return -EINVAL;
++	}
++
++	return 0;
++}
+ 
+ static int __init kstackwatch_init(void)
+ {
++	ksw_config = kzalloc(sizeof(*ksw_config), GFP_KERNEL);
++	if (!ksw_config)
++		return -ENOMEM;
++
+ 	pr_info("module loaded\n");
+ 	return 0;
+ }
+ 
+ static void __exit kstackwatch_exit(void)
+ {
++	kfree(ksw_config);
++
+ 	pr_info("module unloaded\n");
+ }
+ 
+diff --git a/mm/kstackwatch/kstackwatch.h b/mm/kstackwatch/kstackwatch.h
+index 0273ef478a26..a7bad207f863 100644
+--- a/mm/kstackwatch/kstackwatch.h
++++ b/mm/kstackwatch/kstackwatch.h
+@@ -2,4 +2,31 @@
+ #ifndef _KSTACKWATCH_H
+ #define _KSTACKWATCH_H
+ 
++#include <linux/types.h>
++
++#define MAX_CONFIG_STR_LEN 128
++
++struct ksw_config {
++	char *func_name;
++	u16 depth;
++
++	/*
++	 * watched variable info:
++	 * - func_offset : instruction offset in the function, typically the
++	 *                 assignment of the watched variable, where ksw
++	 *                 registers a kprobe post-handler.
++	 * - sp_offset   : offset from stack pointer at func_offset. Usually 0.
++	 * - watch_len   : size of the watched variable (1, 2, 4, or 8 bytes).
++	 */
++	u16 func_offset;
++	u16 sp_offset;
++	u16 watch_len;
++
++	/* max number of hwbps that can be used */
++	u16 max_watch;
++
++	/* save to show */
++	char *user_input;
++};
++
+ #endif /* _KSTACKWATCH_H */
 -- 
 2.43.0
 
