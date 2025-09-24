@@ -1,265 +1,289 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C28A3314DA;
-	Wed, 24 Sep 2025 18:08:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D6EF145B3F
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 24 Sep 2025 20:45:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758737307; cv=none; b=PDMVkJAjCSq1asix0U7JOgO2mies6XE4Vg1pCvhI6nZTe/k4yY6BqX/GsR05MAOtVvfwqR/dgqFWcMxksjkjDwPJoXapz4lKkw/B8jzlxXbmcZlh5hu0L7d76URxS4yMjHUyzhy5cjLM5RUZVmDDsUNvEos+edt2oOIt04Lrz0U=
+	t=1758746731; cv=none; b=r1m6L7YXTCJUmabsi1Qw5xo3y35EMZnwfg5cG0tgp80wf0aB7GUgC7kHAZ1w9MhFfuLwraAz00XK/qpuIX4URWdW7xTP6/oyrLO5mH4dDWcGYNa7nh7M9D4e+9jgISb0eXupfyOhILB/GHoOW0njxde9xEORwA61jYmURTh/dkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758737307; c=relaxed/simple;
-	bh=DtZNjRY8tWag4AeCcEA1EOe4uspRGmv4nqK/ItwGPj8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=nOD2YBm5L7gKX4NCiJrD0KNv6u/QWbppE05caGh9xonmOYilBQJm9TT9nOztllaGXF4Xc2LsdNH71FObH0lV9SNhzvnN+Nyx/JhUdGeeVS5xHjdbWvRzDOEl47RfhvE6rID0W1rpYIyTsCmO66FP3+CjTWO5UhE0Gq/d3aLmK3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WFDc1nVk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1758746731; c=relaxed/simple;
+	bh=dMmVqrBoJBy9oTGr/bRGNHBVw2Ky8S8Wn5lKYFL39Vw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ixGF/gLWarLQhL8NtLvGn1tONZparmHyQtGwJc+ieeE+4ieFEOSV4FUdtCOsyoLnrCKjHaAB+qM740vwKuDigs1xzUGen01hprYo/ZS/9O2yIYwTHTZcwuANBdz2bwW8Pn602l4y2BTtfQaV6JWkoAGThuLdkL5sMa9rm3Zn+RY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LII9TMNx; arc=none smtp.client-ip=209.85.216.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WFDc1nVk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF77BC4CEF4;
-	Wed, 24 Sep 2025 18:08:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758737307;
-	bh=DtZNjRY8tWag4AeCcEA1EOe4uspRGmv4nqK/ItwGPj8=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=WFDc1nVkBmwqQbbKuBTHa9ICj7hM4t5ur2SkXG6ru75jX0jQVcMxj/AgPuVMMKGEy
-	 2e2HjPErIEW6nxS/iAo3MpbytrdYJ6WxEVU979kYsqA3aTTt9BO8F2XwkzN6jZyDbr
-	 bgL0O9BvKoXENqUCBxfq+wV/RwdJRlmkzqEV/76LmsXUg5O+e2ZA9pX0C/B7/XUjKa
-	 zw9eNtUJxz77wPV1w35thXB78U0EPjBXSO5hHO3xH+hd2g4ZWxoDF2v7b2CLX9C/jZ
-	 DKpJ88YBI9T3i337zmP1uNdEngB9l6d/UeWURAkVozCUeUffjbjPKrcM+DZwxi8d7p
-	 ZW6w0xTLZTYew==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Wed, 24 Sep 2025 14:06:24 -0400
-Subject: [PATCH v3 38/38] nfsd: add support to CB_NOTIFY for dir attribute
- changes
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LII9TMNx"
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-3306eb96da1so249209a91.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 24 Sep 2025 13:45:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1758746729; x=1759351529; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=w1mp7LI1ysXg3EhsS9eEgLmna2zUSv012OjKVUUaPuY=;
+        b=LII9TMNxw4I1AmnyrOOkFro/CbidwadyImWCLMAzWT94XZyZdH6peLSmaonW0F2B+h
+         CWalYku0ka4Vn2b3q9WwKFEL11lnTUGF88UU57uA/WYm4FpscsEWngRlA8DKFvyie5ra
+         47ftfc1LELPNLZEqOLIj4T71nltE+v7C7TIai+YuhQwr2papbQGYrorZvacTVBUEGnkD
+         N5gRE5B2hJbQde+XGPVqHPqkJuJ7CM5UURUDqlT8I4PBTfgB7hFcqWZ3cUKjkZnKfUG4
+         zW8XnSL2PHqFjqP7P+ZVMJ6N4S0nXFh4PGsF568mkpGbwSNN8cJ4t+NHOvQnfYOcizdH
+         a2VQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758746729; x=1759351529;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=w1mp7LI1ysXg3EhsS9eEgLmna2zUSv012OjKVUUaPuY=;
+        b=DZ+JSoizg7Nc34nFNJyl6+/tJ6y3ZfUj78T1qgx9ByP8GBEfQ8qJ3xQkyR+b8oPubt
+         JMKgr3Y5Jzkzst8wHiB9JKfNm8CuE7KrzG5hM+JoK2p1wyQacmrte1+fZZQHwei6opYa
+         JECBPvvTiVz3y29jRYEpMsxVvzLLPFtXlGcp6s/0AiuKDLUGWmW4NOZVodxTUKs9FhUu
+         JNQS0CJmurMn+oLViCaToXP2BRERbgq5bQK6Ayt4YMEbzVCst7gdqrfo6fFXt8fAnvLd
+         sldAzLIQAT6uuYXrYeo3aRTJmyxCkts/6TGAvc5pMuAsdJM3cdei/FeYcU3UZKZ9gken
+         lGTg==
+X-Forwarded-Encrypted: i=1; AJvYcCWli5KE1qdJUhaGkATBua2cJpFgjQYwMvUOnfFAKmzcN5fzm3gk8UCAqH16D8bUz1mzt3QdWo9epL2Uj6BBuv9uJmU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywd3YYCGNPAU5KIQf+O3O+Sl54hlhcReOXfwN8Hznr0cmsiayQc
+	L/TGLS+mVuX1AvzaXXDxkXBoXF5L46LTy8y06mgUJuUHnre7RuNvGcas4eUHUWC7NhdgthVboJy
+	L9jURvVvCDwXk/E9jFiS/cN9y5VrlwLigEiXWD2kG
+X-Gm-Gg: ASbGnctoojPxqAhxQGz3IPNTA/4iCJYRqO81EfbHG2CR6GHzCw5lHR+VTJTc4q4ndR+
+	eOUHdYyD7nW/P9a/usKwZx+wSpqvlbcNm53FVMZpJmnSx+Ek4YQAyBmLHJLjV1g/RgTBX9FPFRd
+	yJQwxfJ3BUY4w8dCmgH7ISMv0clfonNKy22snqoGtyTeduXLm8FyGq/BwtvwRbPr2Nc0t2syEe8
+	vaH/QDA2/6Ctd1uJQOXtbeVZpeGLFyUICN+lHYi64TmVNMIfCrLu1s=
+X-Google-Smtp-Source: AGHT+IG5FWt7iq/CV/zlunKOA9NXinKsoKdyEfBdiOZJ0QuQFE99G9zMO7C0YiiJ5ESmkgWunqzf9iW2ydB6TJVee/I=
+X-Received: by 2002:a17:90b:2249:b0:32e:9da9:3e6c with SMTP id
+ 98e67ed59e1d1-3342a2f9230mr918488a91.23.1758746727946; Wed, 24 Sep 2025
+ 13:45:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250924-dir-deleg-v3-38-9f3af8bc5c40@kernel.org>
-References: <20250924-dir-deleg-v3-0-9f3af8bc5c40@kernel.org>
-In-Reply-To: <20250924-dir-deleg-v3-0-9f3af8bc5c40@kernel.org>
-To: Alexander Viro <viro@zeniv.linux.org.uk>, 
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
- Chuck Lever <chuck.lever@oracle.com>, 
- Alexander Aring <alex.aring@gmail.com>, 
- Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
- Steve French <sfrench@samba.org>, 
- Ronnie Sahlberg <ronniesahlberg@gmail.com>, 
- Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>, 
- Bharath SM <bharathsm@microsoft.com>, NeilBrown <neil@brown.name>, 
- Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
- Jonathan Corbet <corbet@lwn.net>, Amir Goldstein <amir73il@gmail.com>, 
- Miklos Szeredi <miklos@szeredi.hu>, Paulo Alcantara <pc@manguebit.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, 
- David Howells <dhowells@redhat.com>, Tyler Hicks <code@tyhicks.com>, 
- Namjae Jeon <linkinjeon@kernel.org>, Steve French <smfrench@gmail.com>, 
- Sergey Senozhatsky <senozhatsky@chromium.org>, 
- Carlos Maiolino <cem@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
- Paulo Alcantara <pc@manguebit.org>
-Cc: Rick Macklem <rick.macklem@gmail.com>, linux-fsdevel@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, 
- linux-cifs@vger.kernel.org, samba-technical@lists.samba.org, 
- linux-doc@vger.kernel.org, netfs@lists.linux.dev, ecryptfs@vger.kernel.org, 
- linux-unionfs@vger.kernel.org, linux-xfs@vger.kernel.org, 
- linux-trace-kernel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6207; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=DtZNjRY8tWag4AeCcEA1EOe4uspRGmv4nqK/ItwGPj8=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBo1DMSfXd0BviLX6qJkRP41buyrnysbMK9w9K9y
- DwJzGm/vqiJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaNQzEgAKCRAADmhBGVaC
- FaohEACxZHqZnw2iDMwJ8kGClGhlhVaf+EtTzN7McVX+Xuk9SaC06uawNefNeqUzWTt5YiIst7F
- /YV+tYmhXx3W1QKWJPxKNQitRjdBY1OeMIeg9Hy5VL7BfBw/vUgHwhQUJTz4+C+yTSyzyRpXktS
- uLTR/u6zq7LpqqEiZtFukvMZwxRROdE0uFY8Zzh1Kl1Jly7qQCqn8iWvgzrX9najUu1vKF5kW/A
- D3/cEOdZP4QXkq8Ni9o1Un+UgfNFq1emlEtRoJymOqLTyOt3byQkzjcHD0T2iud0lPYv4UvZ+kF
- lZ/GU86lOQjm4RbDo3RetS9sbGZon2mWVTpWXCm9nY677MhoWZzT4jScPKU1irMQInLiVjZvyEw
- HP2YdNcBp+8kMSxyTnpkJVSjedJzGn6gKvviF1EAK2DsYp8PVq/XzqD4iMF/YPbAdg8QkGDuRNR
- hcMMDuNJEcDRud3ucnlFiORJfop9We1jUKs5ZPkUtgWJMPLhieyPpKoWQUAFyIi0VfB8wjmj66w
- vmyPM9ahJEXU6gsE2DRJEVZ17AKq7UIdn0rF0MeAfkotZ0bRvqaDy99BaEgMIuksM6ScAw4DPUR
- GBBJh3zoTgvvbB5WnSKzz4ukX8+uA//4jaO52qa5xnMlPY8iwVDzul2Bh1elK2xsdpuCuZcZ/sJ
- z644ReF32RAM3lg==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
+References: <20250924115124.194940-1-wangjinchao600@gmail.com>
+ <20250924115931.197077-1-wangjinchao600@gmail.com> <20250924115931.197077-2-wangjinchao600@gmail.com>
+In-Reply-To: <20250924115931.197077-2-wangjinchao600@gmail.com>
+From: Marco Elver <elver@google.com>
+Date: Wed, 24 Sep 2025 22:44:50 +0200
+X-Gm-Features: AS18NWALn8StkZt7OAMLGvWBoEjnvi0uixTT5lbJc-ZUHb99wQUtu6-AQu7N2zA
+Message-ID: <CANpmjNNnVx3=dQsoHL+T-95Z_iprCd3FXeYpnHdmi4d06X-x_g@mail.gmail.com>
+Subject: Re: [PATCH v5 17/23] mm/ksw: add test module
+To: Jinchao Wang <wangjinchao600@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Mike Rapoport <rppt@kernel.org>, 
+	Alexander Potapenko <glider@google.com>, Randy Dunlap <rdunlap@infradead.org>, 
+	Jonathan Corbet <corbet@lwn.net>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Juri Lelli <juri.lelli@redhat.com>, 
+	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
+	Valentin Schneider <vschneid@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	"Liang, Kan" <kan.liang@linux.intel.com>, David Hildenbrand <david@redhat.com>, 
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, Kees Cook <kees@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Sami Tolvanen <samitolvanen@google.com>, 
+	Miguel Ojeda <ojeda@kernel.org>, Masahiro Yamada <masahiroy@kernel.org>, Rong Xu <xur@google.com>, 
+	Naveen N Rao <naveen@kernel.org>, David Kaplan <david.kaplan@amd.com>, 
+	Andrii Nakryiko <andrii@kernel.org>, Jinjie Ruan <ruanjinjie@huawei.com>, 
+	Nam Cao <namcao@linutronix.de>, workflows@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	linux-mm@kvack.org, llvm@lists.linux.dev, 
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>, Andrey Konovalov <andreyknvl@gmail.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, Vincenzo Frascino <vincenzo.frascino@arm.com>, 
+	kasan-dev@googlegroups.com, "David S. Miller" <davem@davemloft.net>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-If the client requested dir attribute change notifications, send those
-alongside any set of add/remove/rename events. Note that the server will
-still recall the delegation on a SETATTR, so these are only sent for
-changes to child entries.
+On Wed, 24 Sept 2025 at 14:00, Jinchao Wang <wangjinchao600@gmail.com> wrote:
+>
+> Introduce a separate test module to validate functionality in controlled
+> scenarios.
+>
+> The module provides a proc interface (/proc/kstackwatch_test) that allows
+> triggering specific test cases via simple commands:
+>
+>   echo test0 > /proc/kstackwatch_test
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- fs/nfsd/nfs4state.c | 25 ++++++++++++++++++++--
- fs/nfsd/nfs4xdr.c   | 60 +++++++++++++++++++++++++++++++++++++++++++++--------
- fs/nfsd/xdr4.h      |  1 +
- 3 files changed, 75 insertions(+), 11 deletions(-)
+This should not be in /proc/ - if anything, it should go into debugfs.
 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 2381dbb2e48290debf28bbd35d0b9a4bb677ac07..a411ffb5f208a2e4d9b55dd77226b4e1a24eaee2 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -3342,9 +3342,14 @@ nfsd4_cb_notify_prepare(struct nfsd4_callback *cb)
- 	struct nfsd_notify_event *events[NOTIFY4_EVENT_QUEUE_SIZE];
- 	struct xdr_buf xdr = { .buflen = PAGE_SIZE * NOTIFY4_PAGE_ARRAY_SIZE,
- 			       .pages  = ncn->ncn_pages };
-+	int limit = NOTIFY4_EVENT_QUEUE_SIZE;
- 	struct xdr_stream stream;
--	int count, i;
- 	bool error = false;
-+	int count, i;
-+
-+	/* Save a slot for dir attr update if requested */
-+	if (dp->dl_notify_mask & BIT(NOTIFY4_CHANGE_DIR_ATTRS))
-+		--limit;
- 
- 	xdr_init_encode_pages(&stream, &xdr);
- 
-@@ -3358,7 +3363,7 @@ nfsd4_cb_notify_prepare(struct nfsd4_callback *cb)
- 	}
- 
- 	/* we can't keep up! */
--	if (count > NOTIFY4_EVENT_QUEUE_SIZE) {
-+	if (count > limit) {
- 		spin_unlock(&ncn->ncn_lock);
- 		goto out_recall;
- 	}
-@@ -3396,6 +3401,22 @@ nfsd4_cb_notify_prepare(struct nfsd4_callback *cb)
- 		nfsd_notify_event_put(nne);
- 	}
- 	if (!error) {
-+		if (dp->dl_notify_mask & BIT(NOTIFY4_CHANGE_DIR_ATTRS)) {
-+			u32 *maskp = (u32 *)xdr_reserve_space(&stream, sizeof(*maskp));
-+
-+			if (maskp) {
-+				u8 *p = nfsd4_encode_dir_attr_change(&stream, dp);
-+
-+				if (p) {
-+					*maskp = BIT(NOTIFY4_CHANGE_DIR_ATTRS);
-+					ncn->ncn_nf[count].notify_mask.count = 1;
-+					ncn->ncn_nf[count].notify_mask.element = maskp;
-+					ncn->ncn_nf[count].notify_vals.data = p;
-+					ncn->ncn_nf[count].notify_vals.len = (u8 *)stream.p - p;
-+					++count;
-+				}
-+			}
-+		}
- 		ncn->ncn_nf_cnt = count;
- 		return true;
- 	}
-diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index 0c411c758279177837c078d393048aaebf31d46f..eca2b483e28397166d24756fcc97b5a1e0fdb9aa 100644
---- a/fs/nfsd/nfs4xdr.c
-+++ b/fs/nfsd/nfs4xdr.c
-@@ -3806,11 +3806,11 @@ nfsd4_setup_notify_entry4(struct notify_entry4 *ne, struct xdr_stream *xdr,
- 			  char *name, u32 namelen)
- {
- 	struct nfs4_file *fi = dp->dl_stid.sc_file;
--	struct path path =  { .mnt = fi->fi_deleg_file->nf_file->f_path.mnt,
--			      .dentry = dentry };
-+	struct path path = fi->fi_deleg_file->nf_file->f_path;
- 	struct nfsd4_fattr_args args = { };
- 	uint32_t *attrmask;
- 	__be32 status;
-+	bool parent;
- 	int ret;
- 
- 	/* Reserve space for attrmask */
-@@ -3822,6 +3822,9 @@ nfsd4_setup_notify_entry4(struct notify_entry4 *ne, struct xdr_stream *xdr,
- 	ne->ne_file.len = namelen;
- 	ne->ne_attrs.attrmask.element = attrmask;
- 
-+	parent = (dentry == path.dentry);
-+	path.dentry = dentry;
-+
- 	/* FIXME: d_find_alias for inode ? */
- 	if (!path.dentry || !d_inode(path.dentry))
- 		goto noattrs;
-@@ -3837,15 +3840,20 @@ nfsd4_setup_notify_entry4(struct notify_entry4 *ne, struct xdr_stream *xdr,
- 
- 	args.change_attr = nfsd4_change_attribute(&args.stat);
- 
--	attrmask[0] = dp->dl_child_attrs[0];
--	attrmask[1] = dp->dl_child_attrs[1];
--	attrmask[2] = 0;
-+	if (parent) {
-+		attrmask[0] = dp->dl_dir_attrs[0];
-+		attrmask[1] = dp->dl_dir_attrs[1];
-+	} else {
-+		attrmask[0] = dp->dl_child_attrs[0];
-+		attrmask[1] = dp->dl_child_attrs[1];
- 
--	if (!setup_notify_fhandle(dentry, fi, &args))
--		attrmask[0] &= ~FATTR4_WORD0_FILEHANDLE;
-+		if (!setup_notify_fhandle(dentry, fi, &args))
-+			attrmask[0] &= ~FATTR4_WORD0_FILEHANDLE;
- 
--	if (!(args.stat.result_mask & STATX_BTIME))
--		attrmask[1] &= ~FATTR4_WORD1_TIME_CREATE;
-+		if (!(args.stat.result_mask & STATX_BTIME))
-+			attrmask[1] &= ~FATTR4_WORD1_TIME_CREATE;
-+	}
-+	attrmask[2] = 0;
- 
- 	ne->ne_attrs.attrmask.count = 2;
- 	ne->ne_attrs.attr_vals.data = (u8 *)xdr->p;
-@@ -3936,6 +3944,40 @@ u8 *nfsd4_encode_notify_event(struct xdr_stream *xdr, struct nfsd_notify_event *
- 	return NULL;
- }
- 
-+/**
-+ * nfsd4_encode_dir_attr_change
-+ * @xdr: stream to which to encode the fattr4
-+ * @dp: delegation where the event occurred
-+ *
-+ * Encode a dir attr change event.
-+ */
-+u8 *nfsd4_encode_dir_attr_change(struct xdr_stream *xdr, struct nfs4_delegation *dp)
-+{
-+	struct nfs4_file *fi = dp->dl_stid.sc_file;
-+	struct dentry *dentry = fi->fi_deleg_file->nf_file->f_path.dentry;
-+	struct notify_attr4 na = { };
-+	struct name_snapshot n;
-+	bool ret;
-+	u8 *p = NULL;
-+
-+	if (!(dp->dl_notify_mask & BIT(NOTIFY4_CHANGE_DIR_ATTRS)))
-+		return NULL;
-+
-+	take_dentry_name_snapshot(&n, dentry);
-+	ret = nfsd4_setup_notify_entry4(&na.na_changed_entry, xdr,
-+					dentry, dp, (char *)n.name.name,
-+					n.name.len);
-+
-+	/* Don't bother with the event if we're not encoding attrs */
-+	if (ret && na.na_changed_entry.ne_attrs.attr_vals.len) {
-+		p = (u8 *)xdr->p;
-+		if (!xdrgen_encode_notify_attr4(xdr, &na))
-+			p = NULL;
-+	}
-+	release_dentry_name_snapshot(&n);
-+	return p;
-+}
-+
- static void svcxdr_init_encode_from_buffer(struct xdr_stream *xdr,
- 				struct xdr_buf *buf, __be32 *p, int bytes)
- {
-diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
-index 19f468b5bc54343dca928f0b8286c868f2133241..93a38b104fb425413f3d7a59fa029c760618559c 100644
---- a/fs/nfsd/xdr4.h
-+++ b/fs/nfsd/xdr4.h
-@@ -969,6 +969,7 @@ __be32 nfsd4_encode_fattr_to_buf(__be32 **p, int words,
- 		u32 *bmval, struct svc_rqst *, int ignore_crossmnt);
- u8 *nfsd4_encode_notify_event(struct xdr_stream *xdr, struct nfsd_notify_event *nne,
- 			      struct nfs4_delegation *dd, u32 *notify_mask);
-+u8 *nfsd4_encode_dir_attr_change(struct xdr_stream *xdr, struct nfs4_delegation *dp);
- extern __be32 nfsd4_setclientid(struct svc_rqst *rqstp,
- 		struct nfsd4_compound_state *, union nfsd4_op_u *u);
- extern __be32 nfsd4_setclientid_confirm(struct svc_rqst *rqstp,
-
--- 
-2.51.0
-
+> Test module is built with optimizations disabled to ensure predictable
+> behavior.
+>
+> Signed-off-by: Jinchao Wang <wangjinchao600@gmail.com>
+> ---
+>  mm/Kconfig.debug        |  10 ++++
+>  mm/kstackwatch/Makefile |   6 ++
+>  mm/kstackwatch/test.c   | 122 ++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 138 insertions(+)
+>  create mode 100644 mm/kstackwatch/test.c
+>
+> diff --git a/mm/Kconfig.debug b/mm/Kconfig.debug
+> index 89be351c0be5..291dd8a78b98 100644
+> --- a/mm/Kconfig.debug
+> +++ b/mm/Kconfig.debug
+> @@ -317,3 +317,13 @@ config KSTACK_WATCH
+>           A lightweight real-time debugging tool to detect stack corrupting.
+>
+>           If unsure, say N.
+> +
+> +config KSTACK_WATCH_TEST
+> +       tristate "KStackWatch Test Module"
+> +       depends on KSTACK_WATCH
+> +       help
+> +         This module provides controlled stack corruption scenarios to verify
+> +         the functionality of KStackWatch. It is useful for development and
+> +         validation of KStackWatch mechanism.
+> +
+> +         If unsure, say N.
+> diff --git a/mm/kstackwatch/Makefile b/mm/kstackwatch/Makefile
+> index 84a46cb9a766..d007b8dcd1c6 100644
+> --- a/mm/kstackwatch/Makefile
+> +++ b/mm/kstackwatch/Makefile
+> @@ -1,2 +1,8 @@
+>  obj-$(CONFIG_KSTACK_WATCH)     += kstackwatch.o
+>  kstackwatch-y := kernel.o stack.o watch.o
+> +
+> +obj-$(CONFIG_KSTACK_WATCH_TEST)        += kstackwatch_test.o
+> +kstackwatch_test-y := test.o
+> +CFLAGS_test.o := -fno-inline \
+> +               -fno-optimize-sibling-calls \
+> +               -fno-pic -fno-pie -O0 -Og
+> diff --git a/mm/kstackwatch/test.c b/mm/kstackwatch/test.c
+> new file mode 100644
+> index 000000000000..1ed98931cc51
+> --- /dev/null
+> +++ b/mm/kstackwatch/test.c
+> @@ -0,0 +1,122 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> +
+> +#include <linux/delay.h>
+> +#include <linux/kthread.h>
+> +#include <linux/list.h>
+> +#include <linux/module.h>
+> +#include <linux/prandom.h>
+> +#include <linux/printk.h>
+> +#include <linux/proc_fs.h>
+> +#include <linux/random.h>
+> +#include <linux/spinlock.h>
+> +#include <linux/string.h>
+> +#include <linux/uaccess.h>
+> +
+> +#include "kstackwatch.h"
+> +
+> +static struct proc_dir_entry *test_proc;
+> +
+> +#define BUFFER_SIZE 16
+> +#define MAX_DEPTH 6
+> +
+> +struct work_node {
+> +       ulong *ptr;
+> +       struct completion done;
+> +       struct list_head list;
+> +};
+> +
+> +static DECLARE_COMPLETION(work_res);
+> +static DEFINE_MUTEX(work_mutex);
+> +static LIST_HEAD(work_list);
+> +
+> +static void test_watch_fire(void)
+> +{
+> +       u64 buffer[BUFFER_SIZE] = { 0 };
+> +
+> +       pr_info("entry of %s\n", __func__);
+> +       ksw_watch_show();
+> +       ksw_watch_fire();
+> +       pr_info("buf[0]:%lld\n", buffer[0]);
+> +
+> +       barrier_data(buffer);
+> +       pr_info("exit of %s\n", __func__);
+> +}
+> +
+> +
+> +static ssize_t test_proc_write(struct file *file, const char __user *buffer,
+> +                              size_t count, loff_t *pos)
+> +{
+> +       char cmd[256];
+> +       int test_num;
+> +
+> +       if (count >= sizeof(cmd))
+> +               return -EINVAL;
+> +
+> +       if (copy_from_user(cmd, buffer, count))
+> +               return -EFAULT;
+> +
+> +       cmd[count] = '\0';
+> +       strim(cmd);
+> +
+> +       pr_info("received command: %s\n", cmd);
+> +
+> +       if (sscanf(cmd, "test%d", &test_num) == 1) {
+> +               switch (test_num) {
+> +               case 0:
+> +                       test_watch_fire();
+> +                       break;
+> +               default:
+> +                       pr_err("Unknown test number %d\n", test_num);
+> +                       return -EINVAL;
+> +               }
+> +       } else {
+> +               pr_err("invalid command format. Use 'testN'.\n");
+> +               return -EINVAL;
+> +       }
+> +
+> +       return count;
+> +}
+> +
+> +static ssize_t test_proc_read(struct file *file, char __user *buffer,
+> +                             size_t count, loff_t *pos)
+> +{
+> +       static const char usage[] = "KStackWatch Simplified Test Module\n"
+> +                                   "============ usage ==============\n"
+> +                                   "Usage:\n"
+> +                                   "echo test{i} > /proc/kstackwatch_test\n"
+> +                                   " test0 - test watch fire\n";
+> +
+> +       return simple_read_from_buffer(buffer, count, pos, usage,
+> +                                      strlen(usage));
+> +}
+> +
+> +static const struct proc_ops test_proc_ops = {
+> +       .proc_read = test_proc_read,
+> +       .proc_write = test_proc_write,
+> +};
+> +
+> +static int __init kstackwatch_test_init(void)
+> +{
+> +       test_proc = proc_create("kstackwatch_test", 0600, NULL, &test_proc_ops);
+> +       if (!test_proc) {
+> +               pr_err("Failed to create proc entry\n");
+> +               return -ENOMEM;
+> +       }
+> +       pr_info("module loaded\n");
+> +       return 0;
+> +}
+> +
+> +static void __exit kstackwatch_test_exit(void)
+> +{
+> +       if (test_proc)
+> +               remove_proc_entry("kstackwatch_test", NULL);
+> +       pr_info("module unloaded\n");
+> +}
+> +
+> +module_init(kstackwatch_test_init);
+> +module_exit(kstackwatch_test_exit);
+> +
+> +MODULE_AUTHOR("Jinchao Wang");
+> +MODULE_DESCRIPTION("Simple KStackWatch Test Module");
+> +MODULE_LICENSE("GPL");
+> --
+> 2.43.0
+>
+> --
+> You received this message because you are subscribed to the Google Groups "kasan-dev" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
+> To view this discussion visit https://groups.google.com/d/msgid/kasan-dev/20250924115931.197077-2-wangjinchao600%40gmail.com.
