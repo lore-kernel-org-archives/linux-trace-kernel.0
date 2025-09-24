@@ -1,286 +1,154 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A7AD30146E
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 24 Sep 2025 12:25:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30EDA305E00;
+	Wed, 24 Sep 2025 12:41:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758716706; cv=none; b=OIOhabonYCZtk0EwaF5Zgj3LWk7LcUn6ycr7Fvrbf59KX6Q5W3znvp2fbf1KvRjz4rB35MUF+ocYFfaD4LGUi7Xh+/A5+NJysMz+JNSq/jIpX+29QcKwuJN4wG2ZaLEAoZujkvO/nxneuuZMQMNHOh6k+Ucv/HDrr0pG29fn1jU=
+	t=1758717681; cv=none; b=skQGfBvSObBzWJgGyAfVD2/im17UVdETtnpd1O5lpqjOmv05ysdDgMOCmK40Kvx/GB3tc7JLnEk1TOa8iwevSpTyOlrRsRo1goJZmFAbJC4FedCyR29m1a6b2TfBDmfF0GVUEdZ0WU14ofX9d9DFzJwLjfIO52ely2igsFAlYHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758716706; c=relaxed/simple;
-	bh=nvDFxA5+kzzGy254IQd/07joD3bGnycuza2xxZ+JqIE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sQ59chwqmfLZaEIv3RdWJbELjT55Q3zmhSYpT+O/O5rZwkvHrpQR7umRsGA+RZIttl2lXXIeUPnFPMSwgzV+5kkUm+l5+aoOwmIPerEU6Ec+yN9SSW9Fep/Szdr2+U7XZC06MF/PfVq2A30mHMmi9ltB4bEMnEIFIG4NHlxWQ3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GzUPhSKb; arc=none smtp.client-ip=209.85.216.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1758717681; c=relaxed/simple;
+	bh=1TSFF/t03+mo3lI9t688Ky27M1IpdTRlH9C4J5A/8uM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=USKG9D0E+tkjCIucKvFYy/I7r1ldxYgKtxagf/0ePF77TAkFdSn8VK0LkppS8dKlpLQHw75mk9ZDnQsm1fgX+pSWIc6ayDrAB7umz86YeYyO+EvjDzpCQxaI1d/Yuf5e1W5mKZMc0OfrPxDiK35Gq0kSx5qTobuqzZlE2eD01v4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=R9XS8u6N; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GzUPhSKb"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-330b0bb4507so4350301a91.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 24 Sep 2025 05:25:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1758716704; x=1759321504; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5NW3rnfkFZjd7Zh69vJKiLybxjQ5f/0P49rVAWgM4UU=;
-        b=GzUPhSKbQ1UzFo+PCOInTRZQCVj3Jes6eDa+o1f+NH8MCke+qDTkXS75LfQgcvz0H/
-         rB0iQ0vXrQa3uR6/YGrZWtQijW3k1h0JHejITj4jDrTg0YkODhk5q+JV93EYFwpwHujt
-         6w/H4CVtRCMJC7tBtjqx8y7XeUI1KVblS6GefW5DSiqVzN1NnpctF/8rtMtW2aqhGLNJ
-         vC8XgTWRm9lvP1G8w7+oG8I1tvY4hb4GfmaBj+iCYPcvMAfHsBvZHnCvxM1bXc9bd1iM
-         SLN5nvR7ECF4oblI5pABWTqYLaelDLgofZ0VXrZ80IxcNA/dLGYUHpB9iMBnn8mKsrAi
-         3MPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758716704; x=1759321504;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5NW3rnfkFZjd7Zh69vJKiLybxjQ5f/0P49rVAWgM4UU=;
-        b=dxK9XyVq7+iGRL2MWUb/U3kvMrQs1IXvYaf1KpQm9RPfVdg8mxkA7kQVcU6Atq4/AY
-         ukhXsdrBbNM5FJeHAdR8lqpOvIdaeL89024zIRt8fEgI5jbP2gu1rgzHnD4WsfhoyEjx
-         MC4PWf5EvOji9IuS3Ta8mWZ3s8DpYMIqdYzER+aW+MfJqX5Ir6u34r+WIqkwriJTLS3x
-         2UEDhNfbrPn6kKQKe3Ra6ajk5MrJobI+Oz3g9003T+buv0aEyy59aIF760r6P8nWG3fY
-         f23a/htr07ZHgNvykfjIY2xd4PgE/LPZVIhg4yGnX3Uk3TmzrCCY8w/DGCG1HO2thrAG
-         CLLg==
-X-Forwarded-Encrypted: i=1; AJvYcCU9tqtwhGI5IzGBXHQaW9+xvr/SHNof7wTp62+dMd5W7KPeyuORP66T9msjJYFLoPmILjffaDtJuQxaOtGURqm18oo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFGeFYz2hqN0UD36XjkUht4RUlYn8U5Ylj67aei/gX4eloWjJV
-	RKcbrZ9zJ5fPL644yfAWf39jwUZ+l0CJEdtgwvXjceDH+TRMmmj13Wh/
-X-Gm-Gg: ASbGncuww0ASgvmTCKI7PiygLNrVasQGY1eNSRQVjQu4LawPD2ef/jXZJxuoPH7kjB8
-	N0O+ewbUxiffIgZd0H3RfJgDgtLzRfnVnEpKJHyHXehgDyg88zbn2XcEStev7r5pwxxwXYUU1eO
-	z7rQDDecGMxeoYCea4P89nsyAeKuIfYe1RwPoIVSrvBvLIKEBNOdIq0rfDa5OHPDg1VUu+5JUhw
-	Q0abt2KWnE9IbQSoKKSSHQoA4nLOsus8h1xWpeeoBiclxTekn8upr2A9WfyCayPGMPHilVi3N2v
-	KHCysh/AQsU5pb/4NrdrctUNatIiEZ03guZ+yY5FMUsCfW7MEEW+V7dKVASSAXzhMBb8MLZPUuN
-	7IkSenNczBQRWihB6ymYq3+V4igzdN4+RXA==
-X-Google-Smtp-Source: AGHT+IEamBzCLObwkiGLLGjo5JGU8d4itd/AyRlsHyvnDLGXoFlCi/QE16Hobk/uQUsVbow0Br5ksA==
-X-Received: by 2002:a17:90b:380e:b0:32e:d600:4fdb with SMTP id 98e67ed59e1d1-332a95c804cmr7926585a91.18.1758716702994;
-        Wed, 24 Sep 2025 05:25:02 -0700 (PDT)
-Received: from localhost ([103.88.46.62])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3341bdd63c1sm2285996a91.26.2025.09.24.05.25.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Sep 2025 05:25:02 -0700 (PDT)
-From: Jinchao Wang <wangjinchao600@gmail.com>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Mike Rapoport <rppt@kernel.org>,
-	Alexander Potapenko <glider@google.com>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>,
-	Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	David Hildenbrand <david@redhat.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Kees Cook <kees@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Rong Xu <xur@google.com>,
-	Naveen N Rao <naveen@kernel.org>,
-	David Kaplan <david.kaplan@amd.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Jinjie Ruan <ruanjinjie@huawei.com>,
-	Nam Cao <namcao@linutronix.de>,
-	workflows@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-mm@kvack.org,
-	llvm@lists.linux.dev,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	kasan-dev@googlegroups.com,
-	"David S. Miller" <davem@davemloft.net>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-trace-kernel@vger.kernel.org
-Cc: Jinchao Wang <wangjinchao600@gmail.com>
-Subject: [PATCH v5 07/23] mm/ksw: add HWBP pre-allocation
-Date: Wed, 24 Sep 2025 20:24:40 +0800
-Message-ID: <20250924122448.9101-1-wangjinchao600@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250924115124.194940-1-wangjinchao600@gmail.com>
-References: <20250924115124.194940-1-wangjinchao600@gmail.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="R9XS8u6N"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=75arEQaQmlwH+QtZOC67dtQpEq7DI3CYJT7DYuP84Y0=; b=R9XS8u6NQDTlySxAj4oJUbz1iq
+	CUyqbcPuY+EOI8rFpt1mlc3T+IcSukamU3hsOYRkz7yoMB9HPuazEBrVV+PCeQZRn2mjrHMoFmk7h
+	ofsTQUKWlXqow0cOQltecwD+g47284sBlUgTM+Mlkq0apR6/xja4TSB4mIUEHc3i15K0GlMwLiq07
+	3/Pb5nuu3tofUVBwnFWcbuIhX/9sLE2CxMoN1WkJWODwgSg9aQk6dMbUnw0YLNiBR+s6CV8Ekl1qg
+	lTrfD/+230OB7QltR3SqVZciRBeEnblAIJUm/dglIwZY6XuDkyTQY72ugJcZIrfyfxlPtZ8rsJpqE
+	NOhib5iw==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1v1Oo0-00000008jT1-0u6J;
+	Wed, 24 Sep 2025 12:41:08 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id C039B30050D; Wed, 24 Sep 2025 14:41:07 +0200 (CEST)
+Date: Wed, 24 Sep 2025 14:41:07 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Xiang Gao <gxxa03070307@gmail.com>, mhiramat@kernel.org,
+	mingo@redhat.com, juri.lelli@redhat.com, vincent.guittot@linaro.org,
+	mathieu.desnoyers@efficios.com, andrii@kernel.org, mingo@kernel.org,
+	oleg@redhat.com, akpm@linux-foundation.org, gmonaco@redhat.com,
+	ricardo.neri-calderon@linux.intel.com, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	gaoxiang17 <gaoxiang17@xiaomi.com>
+Subject: Re: [PATCH v2 1/1] tracing/sched: add 'next_policy' to
+ trace_sched_switch
+Message-ID: <20250924124107.GJ3419281@noisy.programming.kicks-ass.net>
+References: <cover.1756212396.git.gaoxiang17@xiaomi.com>
+ <c2894f9b0c5116eeffdc19947529aef5c5d1db4c.1756212396.git.gaoxiang17@xiaomi.com>
+ <20250912103050.5bf82967@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250912103050.5bf82967@gandalf.local.home>
 
-Pre-allocate per-CPU hardware breakpoints at init with a place holder
-address, which will be retargeted dynamically in kprobe handler.
-This avoids allocation in atomic context.
+On Fri, Sep 12, 2025 at 10:30:50AM -0400, Steven Rostedt wrote:
+> On Tue, 26 Aug 2025 20:48:54 +0800
+> Xiang Gao <gxxa03070307@gmail.com> wrote:
+> 
+> > From: gaoxiang17 <gaoxiang17@xiaomi.com>
+> > 
+> > Sometimes, when analyzing some real-time process issues, it is necessary to know the sched policy.
+> > 
+> > Show up in the trace as:
+> > 
+> > 	 72.267374: sched_switch: prev_comm=grep prev_pid=67 prev_prio=19 prev_state=S ==> next_comm=cat next_pid=66 next_prio=120 next_policy=normal
+> > 	 72.267594: sched_switch: prev_comm=cat prev_pid=66 prev_prio=120 prev_state=R+ ==> next_comm=grep next_pid=67 next_prio=19 next_policy=RR
+> > 	562.192567: sched_switch: prev_comm=grep prev_pid=85 prev_prio=19 prev_state=S ==> next_comm=cat next_pid=84 next_prio=120 next_policy=normal
+> > 	562.192944: sched_switch: prev_comm=cat prev_pid=84 prev_prio=120 prev_state=R+ ==> next_comm=grep next_pid=85 next_prio=19 next_policy=FIFO
+> > 
+> 
+> Peter,
+> 
+> Are you OK with extending the sched switch tracepoint?
 
-At most max_watch breakpoints are allocated (0 means no limit).
+I'm not convinced; this is a bit like whitespace patches, people will
+want their favourite field added and before you know it the thing will
+be fat as never before.
 
-Signed-off-by: Jinchao Wang <wangjinchao600@gmail.com>
----
- mm/kstackwatch/kstackwatch.h | 13 +++++
- mm/kstackwatch/watch.c       | 97 ++++++++++++++++++++++++++++++++++++
- 2 files changed, 110 insertions(+)
+OTOH changing it will be yet another opportunity to find people that are
+not following the recommended practise. Someone will come forward and go
+complain we broke their shit or something.
 
-diff --git a/mm/kstackwatch/kstackwatch.h b/mm/kstackwatch/kstackwatch.h
-index 983125d5cf18..4eac1be3b325 100644
---- a/mm/kstackwatch/kstackwatch.h
-+++ b/mm/kstackwatch/kstackwatch.h
-@@ -2,6 +2,9 @@
- #ifndef _KSTACKWATCH_H
- #define _KSTACKWATCH_H
- 
-+#include <linux/llist.h>
-+#include <linux/percpu.h>
-+#include <linux/perf_event.h>
- #include <linux/types.h>
- 
- #define MAX_CONFIG_STR_LEN 128
-@@ -32,4 +35,14 @@ struct ksw_config {
- // singleton, only modified in kernel.c
- const struct ksw_config *ksw_get_config(void);
- 
-+/* watch management */
-+struct ksw_watchpoint {
-+	struct perf_event *__percpu *event;
-+	struct perf_event_attr attr;
-+	struct llist_node node; // for atomic watch_on and off
-+	struct list_head list; // for cpu online and offline
-+};
-+int ksw_watch_init(void);
-+void ksw_watch_exit(void);
-+
- #endif /* _KSTACKWATCH_H */
-diff --git a/mm/kstackwatch/watch.c b/mm/kstackwatch/watch.c
-index cec594032515..1d8e24fede54 100644
---- a/mm/kstackwatch/watch.c
-+++ b/mm/kstackwatch/watch.c
-@@ -1 +1,98 @@
- // SPDX-License-Identifier: GPL-2.0
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
-+#include <linux/cpuhotplug.h>
-+#include <linux/hw_breakpoint.h>
-+#include <linux/irqflags.h>
-+#include <linux/mutex.h>
-+#include <linux/printk.h>
-+
-+#include "kstackwatch.h"
-+
-+static LLIST_HEAD(free_wp_list);
-+static LIST_HEAD(all_wp_list);
-+static DEFINE_MUTEX(all_wp_mutex);
-+
-+static ulong holder;
-+bool panic_on_catch;
-+module_param(panic_on_catch, bool, 0644);
-+MODULE_PARM_DESC(panic_on_catch, "panic immediately on corruption catch");
-+
-+static void ksw_watch_handler(struct perf_event *bp,
-+			      struct perf_sample_data *data,
-+			      struct pt_regs *regs)
-+{
-+	pr_err("========== KStackWatch: Caught stack corruption =======\n");
-+	pr_err("config %s\n", ksw_get_config()->user_input);
-+	dump_stack();
-+	pr_err("=================== KStackWatch End ===================\n");
-+
-+	if (panic_on_catch)
-+		panic("Stack corruption detected");
-+}
-+
-+static int ksw_watch_alloc(void)
-+{
-+	int max_watch = ksw_get_config()->max_watch;
-+	struct ksw_watchpoint *wp;
-+	int success = 0;
-+	int ret;
-+
-+	init_llist_head(&free_wp_list);
-+
-+	//max_watch=0 means at most
-+	while (!max_watch || success < max_watch) {
-+		wp = kzalloc(sizeof(*wp), GFP_KERNEL);
-+		if (!wp)
-+			return success > 0 ? success : -EINVAL;
-+
-+		hw_breakpoint_init(&wp->attr);
-+		wp->attr.bp_addr = (ulong)&holder;
-+		wp->attr.bp_len = sizeof(ulong);
-+		wp->attr.bp_type = HW_BREAKPOINT_W;
-+		wp->event = register_wide_hw_breakpoint(&wp->attr,
-+							ksw_watch_handler, wp);
-+		if (IS_ERR((void *)wp->event)) {
-+			ret = PTR_ERR((void *)wp->event);
-+			kfree(wp);
-+			return success > 0 ? success : ret;
-+		}
-+		llist_add(&wp->node, &free_wp_list);
-+		mutex_lock(&all_wp_mutex);
-+		list_add(&wp->list, &all_wp_list);
-+		mutex_unlock(&all_wp_mutex);
-+		success++;
-+	}
-+
-+	return success;
-+}
-+
-+static void ksw_watch_free(void)
-+{
-+	struct ksw_watchpoint *wp, *tmp;
-+
-+	mutex_lock(&all_wp_mutex);
-+	list_for_each_entry_safe(wp, tmp, &all_wp_list, list) {
-+		list_del(&wp->list);
-+		unregister_wide_hw_breakpoint(wp->event);
-+		kfree(wp);
-+	}
-+	mutex_unlock(&all_wp_mutex);
-+}
-+
-+int ksw_watch_init(void)
-+{
-+	int ret;
-+
-+	ret = ksw_watch_alloc();
-+	if (ret <= 0)
-+		return -EBUSY;
-+
-+
-+	return 0;
-+}
-+
-+void ksw_watch_exit(void)
-+{
-+	ksw_watch_free();
-+}
--- 
-2.43.0
+Anyway, if we go touch it, you might as well go do it right and move
+prev_prio, next_prio and the polcy things into a u8 [*].
 
+Also, I don't know why we have prev_prio, but if that is useful,
+shouldn't we also have prev_policy for consistenty sake?
+
+That said, you can mostly guess the policy from the prio, I mean the
+distinction between fair/batch and rr/fifo gets lots, but you can
+readily tell the difference between the fair and rt and deadline tasks.
+
+[*] I mean, we do use -1 for dl, and that'll map to 255 in u8, but we
+can't really use s8 since MAX_PRIO is 140. u8 is bits plenty, but just a
+bit weird *shurg*.
+
+this way the event shrinks by 4 bytes, which is at least somewhat of a
+reason to do this.
+
+> > Signed-off-by: gaoxiang17 <gaoxiang17@xiaomi.com>
+> > ---
+> >  include/trace/events/sched.h | 15 +++++++++++++--
+> >  1 file changed, 13 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
+> > index 7b2645b50e78..00336211aca6 100644
+> > --- a/include/trace/events/sched.h
+> > +++ b/include/trace/events/sched.h
+> > @@ -234,6 +234,7 @@ TRACE_EVENT(sched_switch,
+> >  		__array(	char,	next_comm,	TASK_COMM_LEN	)
+> >  		__field(	pid_t,	next_pid			)
+> >  		__field(	int,	next_prio			)
+> > +		__field(	unsigned int,	next_policy	)
+> >  	),
+> >  
+> >  	TP_fast_assign(
+> > @@ -244,10 +245,11 @@ TRACE_EVENT(sched_switch,
+> >  		memcpy(__entry->next_comm, next->comm, TASK_COMM_LEN);
+> >  		__entry->next_pid	= next->pid;
+> >  		__entry->next_prio	= next->prio;
+> > +		__entry->next_policy	= next->policy;
+> >  		/* XXX SCHED_DEADLINE */
+> >  	),
+> >  
+> > -	TP_printk("prev_comm=%s prev_pid=%d prev_prio=%d prev_state=%s%s ==> next_comm=%s next_pid=%d next_prio=%d",
+> > +	TP_printk("prev_comm=%s prev_pid=%d prev_prio=%d prev_state=%s%s ==> next_comm=%s next_pid=%d next_prio=%d next_policy=%s",
+> >  		__entry->prev_comm, __entry->prev_pid, __entry->prev_prio,
+> >  
+> >  		(__entry->prev_state & (TASK_REPORT_MAX - 1)) ?
+> > @@ -263,7 +265,16 @@ TRACE_EVENT(sched_switch,
+> >  		  "R",
+> >  
+> >  		__entry->prev_state & TASK_REPORT_MAX ? "+" : "",
+> > -		__entry->next_comm, __entry->next_pid, __entry->next_prio)
+> > +		__entry->next_comm, __entry->next_pid, __entry->next_prio,
+> > +		__print_symbolic(__entry->next_policy,
+> > +				{ SCHED_NORMAL,         "normal" },
+> > +				{ SCHED_FIFO,           "FIFO" },
+> > +				{ SCHED_RR,             "RR" },
+> > +				{ SCHED_BATCH,          "batch" },
+> > +				{ SCHED_IDLE,           "idle" },
+> > +				{ SCHED_DEADLINE,       "deadline" },
+> > +				{ SCHED_EXT,            "sched_ext"})
+> > +	)
+> >  );
+> >  
+> >  /*
+> 
