@@ -1,111 +1,137 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC5F33128BC
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 24 Sep 2025 16:00:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F4881A2C11;
+	Wed, 24 Sep 2025 17:06:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758729632; cv=none; b=MUG9Ol57X+gSiy1ZJ+pPjLBkaWIFEDiRA3KNDptRYdLiDOZawIcAYSA3QIlau54fvCoFGbTD7Qa7qs0Z2Bl7FHd3E5zSlVBwiz17LUNviHIASaOo0cQ/eo/iwccMbWooDXHVSHQMPuDCyVs2Gyt6kzKXevt/smo/5h1CfERA/OQ=
+	t=1758733593; cv=none; b=nd5Utn10XP8GmlDKnwMXV6IX6xYZBQupIey3EvcdVLvHgSsMoXbrHl8LOhRl2BIe93S+n0rjHyc9nYIrU43yofxoq9fpHbx8uU1HHYhT+EL81Vcl0C8eLmG5B9Hx+Kt4UlES7PclPFrKaq4xKDKSC2pv3RKC4NLAI0NluUXdMGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758729632; c=relaxed/simple;
-	bh=jEEjzmNz+gmk5ZgeibUNddmKR2RxdfJxzRrshLcdK0s=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iex8rOdQr1Pm+VguGJeByHYbpIROCAhtSr1Mccwu3rtIDMbEE3uglL4N6VnqMsnXLCwcnufoUCu7JDi64aTzVzjGCz/4F7I7pAaoAibCmSUvtXGP1izBfKgl13gXMJO3YTGmNp8oZ4BCRib1+mTNHv6w/s7z7tzyPSXqNaz6KIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lJxutCxs; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1758733593; c=relaxed/simple;
+	bh=UHknWmUfVJmkxwSKbBmantXcg7nJDEjwNFGWpWAZZfw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=QeYkqXClOvpqHK7p/vs5mauvrKWwk8nalUFAoR4ieJwsDRrMrlRgZ4Q+E83i/ZlNYCHjQuX1dL7QvhQlktmXxYQz9AaILnKJzpChtPvNF/nrkKvS7V8r2pjb/QEu9ZUnNkug8Rv0loNE0LDG6xKVcSlUV3aOmEWRFnZx+4AwLSo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=yMVBBGhb; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lJxutCxs"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-46cb53c5900so43179325e9.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 24 Sep 2025 09:00:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1758729629; x=1759334429; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=750rYEAHSQ0UWuveAndSH+YLhrYLDuMy4II+d7YdJQE=;
-        b=lJxutCxs3RZMFeCOOS2VTbsDXy7S9D/5OVh2iuo0bwAN3PJRKHX9n7hVerFj11aX3s
-         96KTehdHee/QXiBSGdzxgkdEAGsXVUyoGCjqjPmhdPsgnRAkD9NJ8FTuNhThGx4St3Wp
-         239cC1fzNJi9dWsrYcB+P8OKPOuxVfx9STNs6bOx2hrn5jlqvDVBJjhqiTt6SkEOjCbY
-         LiiYxml+zSh8kXr9uzJ3vk0ZlHzbcW5hJwlPfMONE7XDz8ACoiN0KhUes4o5yttog3oV
-         QkNNlNT/p0zo14xF3L8xD7CIW4yqlRHxNwqEjcNwZhS0L7QFLhmF0P9HGXX8IdLHmveB
-         ZPog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758729629; x=1759334429;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=750rYEAHSQ0UWuveAndSH+YLhrYLDuMy4II+d7YdJQE=;
-        b=w3DLs39xVWJGd8xawy/WYhMAS01yER9/mOWpuHsNMY6gmxsb3OQ2mavvrqOmpF4DPC
-         XVhEhfroBxm2sUxoxzzkALOAz0Fo88emOYVdlWCVs3OWebkGn3UM61qoV80T034VZ1Tc
-         WpPHDlaHVihdRDycuD4mO/EF8dzmbVFA7KkV+gt7pcyVr9Y4YVCxir/kV/OteCpEFHmG
-         DX/FogA2e+RKF+H9P+p54fTukhmy43shvqvyu9pHLRJuMA51X6dDPANOesZHUUIo2veo
-         Ch6kKfvfaW9LLAbO53OV+6nZtwyBfZUp8FH8mMxoKPrLiSs5aefmhLw20dLhu7dLBTf5
-         Dq7A==
-X-Forwarded-Encrypted: i=1; AJvYcCX6SHZqH+oWVK/BwH298j0d75dwzAvtKUngXWrMdvLm3y4PH9o2al+Mlpn2AzvGeRTQIIIGAL+xxg1IjfHqtZZpzRs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPNcqz/ica9KvR0Ot+qTnSIfbBpcUYCGsN8iByMqfMSSho+2jU
-	0WdIruGg7Wf1nq04Wat3eQu64J92b2PH33azSCeFcw2m3E9zVtzqeWH6HUYyCwRH8pE=
-X-Gm-Gg: ASbGncvhutH0+qe8ed3eT58nFtakdcpnrl7FULpJmIbwVjsZ3Eu2GwNFcUTSsosXO1B
-	kiLeUtScW5o7yIQt5H55DLptoblj78bznKMGowavecF9g7j4aBqXPlJY6GWj73X7WE8GyTEQJKU
-	aoiJBpVxooSkuSRT6xL1yU0SigaDO5he2ldxEjqA9F70tFXHfGyhgKgtb1myC/RG4OChIkeqfXd
-	LpayGAkyHbpeoscNS+MymcpdYMpQNkGins8VCBktcU+5krHOFCr7afAHHMY6pkzNkzYazU78fHy
-	xmdID8Ax9S5JDQZB23LtPKpFufrCwBZMdqLhBLlVuo7GBvnRNaORO0jPCins1492juEbcA53
-X-Google-Smtp-Source: AGHT+IGS1uVQdvHmWTJ9aInOCYB0BEj+cPbPcp0L0eplHLPsYT5p2wId+q3+D0Z2kfEz6FOGX5pf3g==
-X-Received: by 2002:a05:600c:1d16:b0:45d:f7cb:70f4 with SMTP id 5b1f17b1804b1-46e329bca25mr3761415e9.13.1758729629203;
-        Wed, 24 Sep 2025 09:00:29 -0700 (PDT)
-Received: from krava ([2a02:8308:a00c:e200::31e0])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3ee07407d33sm28837786f8f.18.2025.09.24.09.00.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Sep 2025 09:00:28 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Wed, 24 Sep 2025 18:00:26 +0200
-To: Steven Rostedt <rostedt@kernel.org>
-Cc: Jiri Olsa <olsajiri@gmail.com>, Florent Revest <revest@google.com>,
-	Mark Rutland <mark.rutland@arm.com>, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Menglong Dong <menglong8.dong@gmail.com>
-Subject: Re: [PATCH 2/9] ftrace: Add register_ftrace_direct_hash function
-Message-ID: <aNQVmrGCW08zF9Kp@krava>
-References: <20250923215147.1571952-1-jolsa@kernel.org>
- <20250923215147.1571952-3-jolsa@kernel.org>
- <20250924050415.4aefcb91@batman.local.home>
- <aNQCDwYcG0Qo00Vg@krava>
- <20250924110703.2a0ced1b@batman.local.home>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="yMVBBGhb"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Cc:Content-ID:Content-Description;
+	bh=IYQIoIaOKCIxSPFzuBjsQ4uTXQsp3WYZ5kAt8a5vPEc=; b=yMVBBGhbm0CLYR9iFKaFxB3NzJ
+	FXsEMYpXS5BwrQo17beyxJiRF2eVpGI37E9rSScck4hHw7aBHt5YlROsnbqzqNynVBbOpBK+bH4xA
+	d4oSxLXDN+d1N4dURwP2zisz/dR1m1MfYNw52WiMxW4vz4mLOMWOKB0Wa7U7jG3vPDZ/fDAtkynDe
+	/yChEJFGyaVg0aegV7Xclx32TR9w6OXlJSugh0eeEuBAmJUWTbXUouRNbYmBC26Ch6S9bG4KkD/JN
+	0sJx+0tCnHqSZtp844pJs4qAs3W/+Y2If0aodsX3aSvG4UBodN3W37nDPJ172u5zEg0HNdRMsOaW/
+	z06hMXNQ==;
+Received: from [50.53.25.54] (helo=[192.168.254.17])
+	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1v1SwW-00000001yYJ-3ITs;
+	Wed, 24 Sep 2025 17:06:12 +0000
+Message-ID: <3504b378-4360-4e55-b28d-74aabd4308d7@infradead.org>
+Date: Wed, 24 Sep 2025 10:06:10 -0700
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250924110703.2a0ced1b@batman.local.home>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 04/23] mm/ksw: add build system support
+To: Jinchao Wang <wangjinchao600@gmail.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Peter Zijlstra
+ <peterz@infradead.org>, Mike Rapoport <rppt@kernel.org>,
+ Alexander Potapenko <glider@google.com>, Jonathan Corbet <corbet@lwn.net>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+ Juri Lelli <juri.lelli@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
+ Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>,
+ David Hildenbrand <david@redhat.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
+ <vbabka@suse.cz>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ Kees Cook <kees@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+ Sami Tolvanen <samitolvanen@google.com>, Miguel Ojeda <ojeda@kernel.org>,
+ Masahiro Yamada <masahiroy@kernel.org>, Rong Xu <xur@google.com>,
+ Naveen N Rao <naveen@kernel.org>, David Kaplan <david.kaplan@amd.com>,
+ Andrii Nakryiko <andrii@kernel.org>, Jinjie Ruan <ruanjinjie@huawei.com>,
+ Nam Cao <namcao@linutronix.de>, workflows@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-mm@kvack.org, llvm@lists.linux.dev,
+ Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+ Andrey Konovalov <andreyknvl@gmail.com>, Dmitry Vyukov <dvyukov@google.com>,
+ Vincenzo Frascino <vincenzo.frascino@arm.com>, kasan-dev@googlegroups.com,
+ "David S. Miller" <davem@davemloft.net>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-trace-kernel@vger.kernel.org
+References: <20250924115124.194940-1-wangjinchao600@gmail.com>
+ <20250924115124.194940-5-wangjinchao600@gmail.com>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20250924115124.194940-5-wangjinchao600@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Sep 24, 2025 at 11:07:03AM -0400, Steven Rostedt wrote:
-> On Wed, 24 Sep 2025 16:37:03 +0200
-> Jiri Olsa <olsajiri@gmail.com> wrote:
+
+
+On 9/24/25 4:50 AM, Jinchao Wang wrote:
+> Add Kconfig and Makefile infrastructure.
 > 
-> > I have bpf changes using this that I did not post yet, but even with that
-> > there's probably no reason to export this.. will remove
+> The implementation is located under `mm/kstackwatch/`.
 > 
-> I'm interested in seeing these patches, as the ftrace hashes were
-> supposed to be opaque from other parts of the kernel.
+> Signed-off-by: Jinchao Wang <wangjinchao600@gmail.com>
+> ---
+>  mm/Kconfig.debug             |  8 ++++++++
+>  mm/Makefile                  |  1 +
+>  mm/kstackwatch/Makefile      |  2 ++
+>  mm/kstackwatch/kernel.c      | 23 +++++++++++++++++++++++
+>  mm/kstackwatch/kstackwatch.h |  5 +++++
+>  mm/kstackwatch/stack.c       |  1 +
+>  mm/kstackwatch/watch.c       |  1 +
+>  7 files changed, 41 insertions(+)
+>  create mode 100644 mm/kstackwatch/Makefile
+>  create mode 100644 mm/kstackwatch/kernel.c
+>  create mode 100644 mm/kstackwatch/kstackwatch.h
+>  create mode 100644 mm/kstackwatch/stack.c
+>  create mode 100644 mm/kstackwatch/watch.c
+> 
+> diff --git a/mm/Kconfig.debug b/mm/Kconfig.debug
+> index 32b65073d0cc..89be351c0be5 100644
+> --- a/mm/Kconfig.debug
+> +++ b/mm/Kconfig.debug
+> @@ -309,3 +309,11 @@ config PER_VMA_LOCK_STATS
+>  	  overhead in the page fault path.
+>  
+>  	  If in doubt, say N.
+> +
+> +config KSTACK_WATCH
+> +	bool "Kernel Stack Watch"
+> +	depends on HAVE_HW_BREAKPOINT && KPROBES && FPROBE && STACKTRACE
+> +	help
+> +	  A lightweight real-time debugging tool to detect stack corrupting.
 
-branch:
-  https://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git/log/?h=bpf/tracing_multi
+	                                                         corruption.
 
-used in this commit:
-  https://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git/commit/?h=bpf/tracing_multi&id=8814108949537edaae84fbeee1cbc28280590b7f
-
-background.. it's poc code for bpf tracing-multi attachment. Most likely we will
-go with Menglong change instead [1], but it could use this direct interface in a
-same way for speeding up the attachment
-
-jirka
+> +
+> +	  If unsure, say N.
 
 
-[1] https://lore.kernel.org/bpf/20250528034712.138701-1-dongml2@chinatelecom.cn/
+-- 
+~Randy
+
