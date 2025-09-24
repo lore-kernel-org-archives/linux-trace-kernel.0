@@ -1,94 +1,131 @@
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DB8C26FA6C;
-	Wed, 24 Sep 2025 08:11:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 039F95FDA7;
+	Wed, 24 Sep 2025 08:13:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758701502; cv=none; b=UsOXUWjzA4zoZpOtGHZJjiOt5W9wXHcBUA/vxAn92zYHEGUByktVjhkgtEz6QIO2PSbBOrVZaYUrSoo8+HvrPbZBOU0qN/RZyh8vVZbK2VyNmUdTOXKEKi+fAt7hY8MRrvpelLeoxLLBQvsDehm90NU5K2gwDPDUmwrIlaPnElA=
+	t=1758701595; cv=none; b=TsQwY4MHh9sYSS2qIUS53a7cd+QUP9kj7KxWbTKsHUwBEHebd5+mD8rixWJnL7a1jYvT6aRXHBwlT6D/HKGRFEZnfJBVYnr6KSm8MK1cysCzbVWZlZTy+a4p+RrjmKGnzeVkAsFK5CDs7/6l7OzhIUbd/kUfVD3x9ZQns47Z0rg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758701502; c=relaxed/simple;
-	bh=TuzfO1x5Qxp6XF6jkj6gG95IxepDneOJdR398+iRhxQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZFoGOC4QXAFahcLpctAMK0lkTJbwMaH0YDE27g8Gg07Z7yrmDxvGYrKPquA0El19FTas1YZMds0HeTMcuVkuziB6aL3xC7YqG8E7VHVCBQVWLhNo+/ut1+jUcWG1mGNKqL+N9sAJI0R+4akIurtNo/83SVdIJ6db+5nh/wiFgys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf04.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay04.hostedemail.com (Postfix) with ESMTP id CA9941A0765;
-	Wed, 24 Sep 2025 08:11:31 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf04.hostedemail.com (Postfix) with ESMTPA id AC1B820027;
-	Wed, 24 Sep 2025 08:11:29 +0000 (UTC)
-Date: Wed, 24 Sep 2025 04:11:25 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Michal =?UTF-8?B?S291dG7DvQ==?= <mkoutny@suse.com>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
- Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH] tracing: Ensure optimized hashing works
-Message-ID: <20250924041125.268a4ceb@batman.local.home>
-In-Reply-To: <20250923165908.2399256-1-mkoutny@suse.com>
-References: <20250923165908.2399256-1-mkoutny@suse.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1758701595; c=relaxed/simple;
+	bh=bduhBxwlzkxiqK0p2rlEquqVgehvVIbz0epKgJvieeU=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=HA9q5F4riEnbAC/L0qVGrXkcWM7mz6844QXQ1xlP3rCNv5ncqVpK+IbvocjxfPTIY+/Cz24598550247cuTRYPoQPjcDreRm2DV48/rDVZOLPOF0FK3v5QtkcG3MCqazFWLXL0/Z5QpRj7GI7skNA4vhkgvVcJuRQBppY5TP48E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WibWyPVD; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WibWyPVD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5075AC113CF;
+	Wed, 24 Sep 2025 08:13:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758701594;
+	bh=bduhBxwlzkxiqK0p2rlEquqVgehvVIbz0epKgJvieeU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=WibWyPVDE4S5ffXfVIaLUgJAm0sf8+xPMKr5SjU4IXRk7wDUEhh+eN6O0iFx5mYer
+	 Mc1uaTufmTeV9n/HY074Zcj3LEX0RgqShSHEeVt0+ioiZ7wMwxFOZpswd28n3+Qn2S
+	 ECNv3GIO5rSK0pwz7Jrw6wrlWexKeraxNw4uu30vv5ZVcUe61uUVlkAu8AXzeIkdfr
+	 T8jxzY+RyL+oKkyKEelF3fQzELhYBdJW0RD7OYRPSK4mrMJBPJan6piiBnSj1Txsow
+	 od25p0ED5s7voWtgRtBwv2qxMAVleASIwM/x1JIeVCnzqr13TuLKdjNzCmcwYQUd19
+	 FUSZIl8WhtqRA==
+Date: Wed, 24 Sep 2025 17:13:12 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Menglong Dong <menglong.dong@linux.dev>
+Cc: Menglong Dong <menglong8.dong@gmail.com>, rostedt@goodmis.org,
+ mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH 1/2] tracing: fprobe: rename fprobe_entry to
+ fprobe_fgraph_entry
+Message-Id: <20250924171312.5790795400c78d87d5309333@kernel.org>
+In-Reply-To: <5056228.31r3eYUQgx@7950hx>
+References: <20250923092001.1087678-1-dongml2@chinatelecom.cn>
+	<20250924080722.c05ac758a018be619d01b6a9@kernel.org>
+	<5056228.31r3eYUQgx@7950hx>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Stat-Signature: 46wzynmgsprcx5aojibikh3teuzyb7mp
-X-Rspamd-Server: rspamout05
-X-Rspamd-Queue-Id: AC1B820027
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+/kNzYB6rvvZIbAZjGtVGQq1VwbFnmtZs=
-X-HE-Tag: 1758701489-236507
-X-HE-Meta: U2FsdGVkX19mbeoVmhTTWc6VqZFPoy5nSWEa2XqlSSBUL23RJLqCcF8ZYYYpo5kRuEZNHW2EVx7e5z/SUGIaloXGzJJW6Gy1DhwmbaXV3/nFJYtTvzfrx71KBx3p6ET1693JCJa68KwlThSHk8OP/eA3MjOB4aLq71LOfhQKLQtJ+A+wcbgC5yQ0CpoCo7Y4xQy90/NnlcMRK2K4sFGg8u7C8Mjz91uasjEeNkjW+AoyaVggBwX858/MlB2n5N2CJtXlSawIjpRfxSIFFW3E/sp1EYU9IT/1FEqw93zkwN+IE8xDQYKlPObVS1jaLnt8q2B/Bq8L7YbNzIbHUgfdav/St3r+Y4kGFDo2GKzl3DCmmJ3ukLxhbyuU5U7GVfFy8Toz5YVPR3cHzC6dYj13Ew==
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, 23 Sep 2025 18:59:07 +0200
-Michal Koutn=C3=BD <mkoutny@suse.com> wrote:
+On Wed, 24 Sep 2025 08:17:45 +0800
+Menglong Dong <menglong.dong@linux.dev> wrote:
 
-> If ever PID_MAX_DEFAULT changes, it must be compatible with tracing
-> hashmaps assumptions.
->=20
-> Link: https://lore.kernel.org/r/20240409110126.651e94cb@gandalf.local.hom=
-e/
-> Signed-off-by: Michal Koutn=C3=BD <mkoutny@suse.com>
-> ---
->  kernel/trace/trace_sched_switch.c | 2 ++
->  1 file changed, 2 insertions(+)
->=20
-> Drive-by flushing an old idea. Take it or leave it.
->=20
-> diff --git a/kernel/trace/trace_sched_switch.c b/kernel/trace/trace_sched=
-_switch.c
-> index cb49f7279dc80..aabae7daaac91 100644
-> --- a/kernel/trace/trace_sched_switch.c
-> +++ b/kernel/trace/trace_sched_switch.c
-> @@ -243,6 +243,8 @@ int trace_create_savedcmd(void)
->  int trace_save_cmdline(struct task_struct *tsk)
->  {
->  	unsigned tpid, idx;
-> +	/* so that map_pid_to_cmdline indexing is efficient */
-> +	BUILD_BUG_ON(!is_power_of_2(PID_MAX_DEFAULT));
+> On 2025/9/24 07:07, Masami Hiramatsu wrote:
+> > On Tue, 23 Sep 2025 17:20:00 +0800
+> > Menglong Dong <menglong8.dong@gmail.com> wrote:
+> > 
+> > > The fprobe_entry() is used by fgraph_ops, so rename it to
+> > > fprobe_fgraph_entry to be more distinctive.
+> > 
+> > Sorry, NAK. fprobe is based on fgraph by design.
+> > So "fprobe_fgraph" sounds redundant.
+> 
+> Hi, Masami. Did you see my next patch that use ftrace
+> for the fprobe to obtain better performance?
+> 
+> Hmm, it seems that the cover-letter is necessary :/
 
-Please move this to just above the test. And it doesn't need a comment,
-as it's obvious for why it needs to be a power of two when it's above
-the test.
+Yeah, I missed [2/2]. And anyway I think this should be
+merged to [2/2].
 
-> =20
->  	/* treat recording of idle task as a success */
->  	if (!tsk->pid)
+Thank you,
 
-Like this:
+> 
+> Thanks!
+> Menglong Dong
+> 
+> > 
+> > Thanks,
+> > 
+> > > 
+> > > Signed-off-by: Menglong Dong <dongml2@chinatelecom.cn>
+> > > ---
+> > >  kernel/trace/fprobe.c | 8 ++++----
+> > >  1 file changed, 4 insertions(+), 4 deletions(-)
+> > > 
+> > > diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
+> > > index 6a205903b1ed..1785fba367c9 100644
+> > > --- a/kernel/trace/fprobe.c
+> > > +++ b/kernel/trace/fprobe.c
+> > > @@ -254,8 +254,8 @@ static inline int __fprobe_kprobe_handler(unsigned long ip, unsigned long parent
+> > >  	return ret;
+> > >  }
+> > >  
+> > > -static int fprobe_entry(struct ftrace_graph_ent *trace, struct fgraph_ops *gops,
+> > > -			struct ftrace_regs *fregs)
+> > > +static int fprobe_fgraph_entry(struct ftrace_graph_ent *trace, struct fgraph_ops *gops,
+> > > +			       struct ftrace_regs *fregs)
+> > >  {
+> > >  	unsigned long *fgraph_data = NULL;
+> > >  	unsigned long func = trace->func;
+> > > @@ -340,7 +340,7 @@ static int fprobe_entry(struct ftrace_graph_ent *trace, struct fgraph_ops *gops,
+> > >  	/* If any exit_handler is set, data must be used. */
+> > >  	return used != 0;
+> > >  }
+> > > -NOKPROBE_SYMBOL(fprobe_entry);
+> > > +NOKPROBE_SYMBOL(fprobe_fgraph_entry);
+> > >  
+> > >  static void fprobe_return(struct ftrace_graph_ret *trace,
+> > >  			  struct fgraph_ops *gops,
+> > > @@ -379,7 +379,7 @@ static void fprobe_return(struct ftrace_graph_ret *trace,
+> > >  NOKPROBE_SYMBOL(fprobe_return);
+> > >  
+> > >  static struct fgraph_ops fprobe_graph_ops = {
+> > > -	.entryfunc	= fprobe_entry,
+> > > +	.entryfunc	= fprobe_fgraph_entry,
+> > >  	.retfunc	= fprobe_return,
+> > >  };
+> > >  static int fprobe_graph_active;
+> > 
+> > 
+> > 
+> 
+> 
+> 
+> 
 
-	/* treat recording of idle task as a success */
-	if (!tsk->pid)
-		return 1;
 
-+	BUILD_BUG_ON(!is_power_of_2(PID_MAX_DEFAULT));
-+
-	tpid =3D tsk->pid & (PID_MAX_DEFAULT - 1);
-
--- Steve
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
