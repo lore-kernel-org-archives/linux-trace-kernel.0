@@ -1,292 +1,112 @@
-Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
+Received: from out-183.mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2598C2BB1D;
-	Wed, 24 Sep 2025 01:33:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BE8F78F3E
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 24 Sep 2025 01:55:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758677606; cv=none; b=u1yVK3zOmRc5Kt5m6cTJWoYBKRbGz8gHhDEFSFt4gPpu3Wkq2f1cq9DeubV7u2Ld3TheF1CPtSnHtRTtRV8FJzRhdFDOdqF+Lr0OULopUGhwwRAG3rOv9dEmHp9wa7fl9EfF/4yXzlTwSouRELpU2NYays+8D9m5PZl3u5tND/8=
+	t=1758678948; cv=none; b=q5FZoUd/4OIOVOVdxs18UI7EwiPHwXZNy59N8yg11hmiqRKdZTfIe63cSZrmHTZ4jYBpK46eYBzhVmuzMntSpeX8YN/JUgXjl0MtBeefM+zoPf/2G71hYKHVVuHBqY24ESA+I+Z3wxJ+e1d7pPhL4iXB1LBixDwZznc1vb82raE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758677606; c=relaxed/simple;
-	bh=Vj3xUyCFHtyTXr7KgSVRrGkymgpDPbT7OvsLsUslAPY=;
+	s=arc-20240116; t=1758678948; c=relaxed/simple;
+	bh=ZaxCTFxy5T1KCccizEL36oe3EUuXmHwQ1cfq8KHo+Fo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dzMr2G4yB6rjfIreJwiIiqTJ7UecYd9gQDl/QIQmvosjoRKKSBVVnRUOh9FeRj+WeudHuC/Lw5+VUsdlBlrxoguRs8mNUV3xMfulHzmY+d88JGSXaSE3tHRLPRmSvIRtrjHutgRAW20dEn4BEisTsM+oVjWExTyiHhA+EEwrNVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=H3B3cdKv; arc=none smtp.client-ip=91.218.175.184
+	 MIME-Version:Content-Type; b=aV6llBGAejHGvJt83gPHcND5GBJJLulDziYYK+JdmiDvLfUclfdac5q02OdI0sEV2GxogW6TRZ7DDZVK/ThlAD/H31ooJPmnGZjavOItmY1tgsfWCURjh1lX13cwIIHl8t9uPLPWyHvzJWtOtEawhFX5RbZaIL27yyupwJBc404=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=FAe01ahT; arc=none smtp.client-ip=95.215.58.183
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="H3B3cdKv"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="FAe01ahT"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1758677602;
+	t=1758678935;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Egwm0eZDG4seup0iJLZVoT51BkW2Sq+xzqgnbtZpCJk=;
-	b=H3B3cdKvhm4NRHyCHo9X3JKpiOa0RkNxDHdyhxyK1YE81ahk/03pQsB/+5/7d+WS78Ckt2
-	gSyYWVn2e+/XQ0zU1Rpw0LSLpRRm0QPQAjooG+UXDXPgOfxtystEID+wPDHkkGF+/GyKzh
-	+Q2OBOxqfks+HJFDY4q6uEmQRgz1tuk=
+	bh=ufAR0E8vWAJ7aKhSLbVugadd2N2E3jpqW0t2IuSnjKk=;
+	b=FAe01ahTk3V3zybi2WJwBOO/PwKj1tjY7PX6Jphkux/WnMCuj8d6q5GyD7fy6DGvFVuk2r
+	7szG/IgpIuUTlCDhjjeVR/kViNuI4ixDEqLwRGrcTVq6FI/6HjL3Mlwf1ovZZXGNeP5Ol9
+	psow99o5pELxwfctKOkcwLHefM1Ofj0=
 From: menglong.dong@linux.dev
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org
-Subject: Re: [PATCH 2/2] tracing: fprobe: optimization for entry only case
-Date: Wed, 24 Sep 2025 09:33:16 +0800
-Message-ID: <5014869.GXAFRqVoOG@7940hx>
-In-Reply-To: <20250924092314.4b790ff9fbdb7693717669c2@kernel.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject:
+ Re: [PATCH 2/2] tracing: fprobe: Fix to remove recorded module addresses from
+ filter
+Date: Wed, 24 Sep 2025 09:55:15 +0800
+Message-ID: <3379975.44csPzL39Z@7940hx>
+In-Reply-To: <175867359903.600222.10400702167171128567.stgit@devnote2>
 References:
- <20250923092001.1087678-1-dongml2@chinatelecom.cn>
- <20250923092001.1087678-2-dongml2@chinatelecom.cn>
- <20250924092314.4b790ff9fbdb7693717669c2@kernel.org>
+ <175867358989.600222.6175459620045800878.stgit@devnote2>
+ <175867359903.600222.10400702167171128567.stgit@devnote2>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="utf-8"
 X-Migadu-Flow: FLOW_OUT
 
-On 2025/9/24 08:23 Masami Hiramatsu <mhiramat@kernel.org> write:
-> Hi Menglong,
->=20
-> Please add a cover letter if you make a series of patches.
->=20
-> On Tue, 23 Sep 2025 17:20:01 +0800
-> Menglong Dong <menglong8.dong@gmail.com> wrote:
->=20
-> > For now, fgraph is used for the fprobe, even if we need trace the entry
-> > only. However, the performance of ftrace is better than fgraph, and we
-> > can use ftrace_ops for this case.
-> >=20
-> > Then performance of kprobe-multi increases from 54M to 69M. Before this
-> > commit:
-> >=20
-> >   $ ./benchs/run_bench_trigger.sh kprobe-multi
-> >   kprobe-multi   :   54.663 =C2=B1 0.493M/s
-> >=20
-> > After this commit:
-> >=20
-> >   $ ./benchs/run_bench_trigger.sh kprobe-multi
-> >   kprobe-multi   :   69.447 =C2=B1 0.143M/s
-> >=20
-> > Mitigation is disable during the bench testing above.
->=20
-> Hmm, indeed. If it is used only for entry, it can use ftrace.
->=20
-> Also, please merge [1/2] and [2/2]. [1/2] is meaningless (and do
-> nothing) without this change. Moreover, it changes the same file.
->=20
-> You can split the patch if "that cleanup is meaningful independently"
-> or "that changes different subsystem/component (thus you need an Ack
-> from another maintainer)".
+On 2025/9/24 08:26 Masami Hiramatsu (Google) <mhiramat@kernel.org> write:
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> Even if there is a memory allocation failure in fprobe_addr_list_add(),
+> there is a partial list of module addresses. So remove the recorded
+> addresses from filter if exists.
+> This also removes the redundant ret local variable.
 
-OK, I see now :)
+I think this is what you do in the previous patch?
 
->=20
-> But basically looks good to me. Just have some nits.
->=20
-> >=20
-> > Signed-off-by: Menglong Dong <dongml2@chinatelecom.cn>
-> > ---
-> >  kernel/trace/fprobe.c | 88 +++++++++++++++++++++++++++++++++++++++----
-> >  1 file changed, 81 insertions(+), 7 deletions(-)
-> >=20
-> > diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-> > index 1785fba367c9..de4ae075548d 100644
-> > --- a/kernel/trace/fprobe.c
-> > +++ b/kernel/trace/fprobe.c
-> > @@ -292,7 +292,7 @@ static int fprobe_fgraph_entry(struct ftrace_graph_=
-ent *trace, struct fgraph_ops
-> >  				if (node->addr !=3D func)
-> >  					continue;
-> >  				fp =3D READ_ONCE(node->fp);
-> > -				if (fp && !fprobe_disabled(fp))
-> > +				if (fp && !fprobe_disabled(fp) && fp->exit_handler)
-> >  					fp->nmissed++;
-> >  			}
-> >  			return 0;
-> > @@ -312,11 +312,11 @@ static int fprobe_fgraph_entry(struct ftrace_grap=
-h_ent *trace, struct fgraph_ops
-> >  		if (node->addr !=3D func)
-> >  			continue;
-> >  		fp =3D READ_ONCE(node->fp);
-> > -		if (!fp || fprobe_disabled(fp))
-> > +		if (unlikely(!fp || fprobe_disabled(fp) || !fp->exit_handler))
-> >  			continue;
-> > =20
-> >  		data_size =3D fp->entry_data_size;
-> > -		if (data_size && fp->exit_handler)
-> > +		if (data_size)
-> >  			data =3D fgraph_data + used + FPROBE_HEADER_SIZE_IN_LONG;
-> >  		else
-> >  			data =3D NULL;
-> > @@ -327,7 +327,7 @@ static int fprobe_fgraph_entry(struct ftrace_graph_=
-ent *trace, struct fgraph_ops
-> >  			ret =3D __fprobe_handler(func, ret_ip, fp, fregs, data);
-> > =20
-> >  		/* If entry_handler returns !0, nmissed is not counted but skips exi=
-t_handler. */
-> > -		if (!ret && fp->exit_handler) {
-> > +		if (!ret) {
-> >  			int size_words =3D SIZE_IN_LONG(data_size);
-> > =20
-> >  			if (write_fprobe_header(&fgraph_data[used], fp, size_words))
-> > @@ -384,6 +384,70 @@ static struct fgraph_ops fprobe_graph_ops =3D {
-> >  };
-> >  static int fprobe_graph_active;
-> > =20
->=20
-> > +/* ftrace_ops backend (entry-only) */
->                  ^ callback ?
+The rest looks good to me.
 
-ACK
+Reviewed-by: Menglong Dong <menglong8.dong@gmail.com>
 
->=20
-> Also, add similar comments on top of fprobe_fgraph_entry.=20
->=20
-> /* fgraph_ops callback, this processes fprobes which have exit_handler. */
-
-ACK
-
->=20
-> > +static void fprobe_ftrace_entry(unsigned long ip, unsigned long parent=
-_ip,
-> > +	struct ftrace_ops *ops, struct ftrace_regs *fregs)
-> > +{
-> > +	struct fprobe_hlist_node *node;
-> > +	struct rhlist_head *head, *pos;
-> > +	struct fprobe *fp;
-> > +
-> > +	guard(rcu)();
-> > +	head =3D rhltable_lookup(&fprobe_ip_table, &ip, fprobe_rht_params);
-> > +
-> > +	rhl_for_each_entry_rcu(node, pos, head, hlist) {
-> > +		if (node->addr !=3D ip)
-> > +			break;
-> > +		fp =3D READ_ONCE(node->fp);
-> > +		if (unlikely(!fp || fprobe_disabled(fp) || fp->exit_handler))
-> > +			continue;
-> > +		/* entry-only path: no exit_handler nor per-call data */
-> > +		if (fprobe_shared_with_kprobes(fp))
-> > +			__fprobe_kprobe_handler(ip, parent_ip, fp, fregs, NULL);
-> > +		else
-> > +			__fprobe_handler(ip, parent_ip, fp, fregs, NULL);
-> > +	}
-> > +}
-> > +NOKPROBE_SYMBOL(fprobe_ftrace_entry);
->=20
-> OK.
->=20
-> > +
-> > +static struct ftrace_ops fprobe_ftrace_ops =3D {
-> > +	.func	=3D fprobe_ftrace_entry,
-> > +	.flags	=3D FTRACE_OPS_FL_SAVE_REGS,
->=20
-> [OT] I just wonder we can have FTRACE_OPS_FL_SAVE_FTRACE_REGS instead.
-
-I'll give it a try.
+(I think I should use Reviewed-by here, rather than Acked-by,
+right?)
 
 Thanks!
 Menglong Dong
 
->=20
-> > +};
-> > +static int fprobe_ftrace_active;
-> > +
-> > +static int fprobe_ftrace_add_ips(unsigned long *addrs, int num)
-> > +{
-> > +	int ret;
-> > +
-> > +	lockdep_assert_held(&fprobe_mutex);
-> > +
-> > +	ret =3D ftrace_set_filter_ips(&fprobe_ftrace_ops, addrs, num, 0, 0);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	if (!fprobe_ftrace_active) {
-> > +		ret =3D register_ftrace_function(&fprobe_ftrace_ops);
-> > +		if (ret) {
-> > +			ftrace_free_filter(&fprobe_ftrace_ops);
-> > +			return ret;
-> > +		}
-> > +	}
-> > +	fprobe_ftrace_active++;
-> > +	return 0;
-> > +}
-> > +
-> > +static void fprobe_ftrace_remove_ips(unsigned long *addrs, int num)
-> > +{
-> > +	lockdep_assert_held(&fprobe_mutex);
-> > +
-> > +	fprobe_ftrace_active--;
-> > +	if (!fprobe_ftrace_active)
-> > +		unregister_ftrace_function(&fprobe_ftrace_ops);
-> > +	if (num)
-> > +		ftrace_set_filter_ips(&fprobe_ftrace_ops, addrs, num, 1, 0);
-> > +}
-> > +
-> >  /* Add @addrs to the ftrace filter and register fgraph if needed. */
-> >  static int fprobe_graph_add_ips(unsigned long *addrs, int num)
-> >  {
-> > @@ -500,9 +564,12 @@ static int fprobe_module_callback(struct notifier_=
-block *nb,
-> >  	} while (node =3D=3D ERR_PTR(-EAGAIN));
-> >  	rhashtable_walk_exit(&iter);
-> > =20
-> > -	if (alist.index < alist.size && alist.index > 0)
-> > +	if (alist.index < alist.size && alist.index > 0) {
->=20
-> Oops, here is my bug. Let me fix it.
->=20
-> Thank you,
->=20
-> >  		ftrace_set_filter_ips(&fprobe_graph_ops.ops,
-> >  				      alist.addrs, alist.index, 1, 0);
-> > +		ftrace_set_filter_ips(&fprobe_ftrace_ops,
-> > +				      alist.addrs, alist.index, 1, 0);
-> > +	}
-> >  	mutex_unlock(&fprobe_mutex);
-> > =20
-> >  	kfree(alist.addrs);
-> > @@ -735,7 +802,11 @@ int register_fprobe_ips(struct fprobe *fp, unsigne=
-d long *addrs, int num)
-> >  	mutex_lock(&fprobe_mutex);
-> > =20
-> >  	hlist_array =3D fp->hlist_array;
-> > -	ret =3D fprobe_graph_add_ips(addrs, num);
-> > +	if (fp->exit_handler)
-> > +		ret =3D fprobe_graph_add_ips(addrs, num);
-> > +	else
-> > +		ret =3D fprobe_ftrace_add_ips(addrs, num);
-> > +
-> >  	if (!ret) {
-> >  		add_fprobe_hash(fp);
-> >  		for (i =3D 0; i < hlist_array->size; i++) {
-> > @@ -831,7 +902,10 @@ int unregister_fprobe(struct fprobe *fp)
-> >  	}
-> >  	del_fprobe_hash(fp);
-> > =20
-> > -	fprobe_graph_remove_ips(addrs, count);
-> > +	if (fp->exit_handler)
-> > +		fprobe_graph_remove_ips(addrs, count);
-> > +	else
-> > +		fprobe_ftrace_remove_ips(addrs, count);
-> > =20
-> >  	kfree_rcu(hlist_array, rcu);
-> >  	fp->hlist_array =3D NULL;
-> > --=20
-> > 2.51.0
-> >=20
->=20
->=20
-> --=20
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
->=20
->=20
+> 
+> Fixes: a3dc2983ca7b ("tracing: fprobe: Cleanup fprobe hash when module unloading")
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> ---
+>  kernel/trace/fprobe.c |    7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+> 
+> diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
+> index 12ec194fdfed..95e43814b85b 100644
+> --- a/kernel/trace/fprobe.c
+> +++ b/kernel/trace/fprobe.c
+> @@ -434,8 +434,9 @@ static int fprobe_addr_list_add(struct fprobe_addr_list *alist, unsigned long ad
+>  {
+>  	unsigned long *addrs;
+>  
+> -	if (alist->index >= alist->size)
+> -		return -ENOMEM;
+> +	/* Previously we failed to expand the list. */
+> +	if (alist->index == alist->size)
+> +		return -ENOSPC;
+>  
+>  	alist->addrs[alist->index++] = addr;
+>  	if (alist->index < alist->size)
+> @@ -497,7 +498,7 @@ static int fprobe_module_callback(struct notifier_block *nb,
+>  	} while (node == ERR_PTR(-EAGAIN));
+>  	rhashtable_walk_exit(&iter);
+>  
+> -	if (alist.index < alist.size && alist.index > 0)
+> +	if (alist.index > 0)
+>  		ftrace_set_filter_ips(&fprobe_graph_ops.ops,
+>  				      alist.addrs, alist.index, 1, 0);
+>  	mutex_unlock(&fprobe_mutex);
+> 
+> 
+> 
 
 
 
