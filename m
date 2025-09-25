@@ -1,105 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E302FDDC3;
-	Thu, 25 Sep 2025 03:33:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 899CC219E8;
+	Thu, 25 Sep 2025 06:19:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.110
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758771216; cv=none; b=qM7pHryZMtxs8/yuNj/vZJM0gX542r92WddAxaYMIk9hh9XVk2FQ9uZ0KEnLw3lSjmK23rcR41YnpTUgAfe0yjicWbRBMy5qKIRmbrHudEbgHqFLtRdzMAeUUJQI8jJ36oEpExWvFBmR3MBgtJvVmkA9abOUgtZlt49zt1pt0p8=
+	t=1758781179; cv=none; b=uIgl1Jhg7bkM+boSeREn/L4cnfcokFiUbJL4AlJ+KsIHDIvxi1sBZE+3yQTTzUvwKpDb1b8jskgTnvFumL/Ul5+zNnHU7SpjVHwAIvq6IvSeDW58TN/FSBJeDdf8seTTofuA27x4uc+rhRbsZUogHQceGPg25YIrkfuDE54qFMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758771216; c=relaxed/simple;
-	bh=DWfe4aECbsuwyz8AkW6vviHZuLumZTzAPaTzGlzdesg=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=mHBAPBl6FkhKahKCZ1yrEK51ZExBcOTqFGPJFZ5rJ5YKOzUvmW+LcCezRCrr7vpdW9hOYe/1WbPDT9nG22FrBZ1E2FYxdOEWvJnMes5bRhflltuyv7M07vydzWMU+K93Q2vT1hPpc3V/V6dPEjpUbtoEDUINQTTp7Av4gaMnJpM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gpeIJVxS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1758781179; c=relaxed/simple;
+	bh=E3sIhDFIoW2A7mwTcqOC9i3/SpjE43lvtBHLOasoS0o=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=V1HA9izUcFUv4v6DE9YrfgxpP/LdsWrQgGaAuE1E+LIdJlKs4K/pAoV1kpBhKk51nSqZPVyIFATjZkZzkxmcPXe1ypuT5e079S5LqO5SLuntuEw8Ixg9UWPpflqbcY2pvBD8cszgRNdNHV4A+mJpWpnSyAN8szF3DbmfJMW7vuY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=SEh6nNnf; arc=none smtp.client-ip=115.124.30.110
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gpeIJVxS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85439C4CEF0;
-	Thu, 25 Sep 2025 03:33:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758771215;
-	bh=DWfe4aECbsuwyz8AkW6vviHZuLumZTzAPaTzGlzdesg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=gpeIJVxSOHjl/s2K8uNPyOH91Xr617pjQoR98gz6255BMQrq87DcqAlwrDI5mkwV1
-	 OwqJ/CFHdKfkUJ3wYO9bINfdIr0MHVaWR1+OSvggIr/hARfQiX+S4rcsReLDfEbD9q
-	 MKd8Xy5VfVA8CRV7N4KRVXVu6H9GssHI4m6v6mwTGO3cu4gsojzr2OSzoEryixJfjb
-	 NpZzaAOoJcIWx2/C0lx0Vqir9ub0YHAqj8w46XnMGx+tzuHKGuP6u/RPR5ZsQTvWiO
-	 0iaRHn+FkuAm9xJNxWkGXdwOGHb5h0nVLjor90w6cwsPHBpitKqEUbnoClLtbG9qy6
-	 Y7pyQyENmtwtg==
-Date: Thu, 25 Sep 2025 12:33:31 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Feng Yang <yangfeng59949@163.com>
-Cc: rostedt@goodmis.org, mark.rutland@arm.com, catalin.marinas@arm.com,
- will@kernel.org, revest@chromium.org, alexei.starovoitov@gmail.com,
- olsajiri@gmail.com, andrii@kernel.org, ast@kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, bpf@vger.kernel.org
-Subject: Re: [PATCH] tracing: Fix the bug where bpf_get_stackid returns
- -EFAULT on the ARM64
-Message-Id: <20250925123331.f4158581bd488ca0ba838d1c@kernel.org>
-In-Reply-To: <20250925020822.119302-1-yangfeng59949@163.com>
-References: <20250925020822.119302-1-yangfeng59949@163.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="SEh6nNnf"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1758781173; h=From:To:Subject:Date:Message-Id:MIME-Version:Content-Type;
+	bh=tt8kVT66d/MuViT91PtT0495oORqS0sRchNfOfeila8=;
+	b=SEh6nNnfopC5hzO+1xDuYOhg8qUoSv7vwsW/kkpHkJ0T8l+zvlThbxe/XlK5w7rx2SJ4iWf3ptnJafVgfKdbR+1q9+XC4Fjm/dFofNAprY1T4K7bznJWVonK3KBVgRKOHhJ4vLBseJak6BWT8oLdkxlOhj7syD6ZnmaHd3+VqIk=
+Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WomdUdW_1758781170 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Thu, 25 Sep 2025 14:19:32 +0800
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+To: rostedt@goodmis.org,
+	lukas@wunner.de,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-edac@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	helgaas@kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	mattc@purestorage.com,
+	Jonathan.Cameron@huawei.com
+Cc: bhelgaas@google.com,
+	tony.luck@intel.com,
+	bp@alien8.de,
+	xueshuai@linux.alibaba.com,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	oleg@redhat.com,
+	naveen@kernel.org,
+	davem@davemloft.net,
+	anil.s.keshavamurthy@intel.com,
+	mark.rutland@arm.com,
+	peterz@infradead.org,
+	tianruidong@linux.alibaba.com
+Subject: [PATCH v11 0/3] PCI: trace: Add a RAS tracepoint to monitor link speed changes
+Date: Thu, 25 Sep 2025 14:19:25 +0800
+Message-Id: <20250925061928.42758-1-xueshuai@linux.alibaba.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, 25 Sep 2025 10:08:22 +0800
-Feng Yang <yangfeng59949@163.com> wrote:
+changes since v10:
+- explicitly include header file per Ilpo
+- add comma on any non-terminator entry  per Ilpo
+- compile trace.o under CONFIG_TRACING per Ilpo
 
-> From: Feng Yang <yangfeng@kylinos.cn>
-> 
-> When using bpf_program__attach_kprobe_multi_opts on ARM64 to hook a BPF program
-> that contains the bpf_get_stackid function, the BPF program fails
-> to obtain the stack trace and returns -EFAULT.
-> 
-> This is because ftrace_partial_regs omits the configuration of the pstate register,
-> leaving pstate at the default value of 0. When get_perf_callchain executes,
-> it uses user_mode(regs) to determine whether it is in kernel mode.
-> This leads to a misjudgment that the code is in user mode,
-> so perf_callchain_kernel is not executed and the function returns directly.
-> As a result, trace->nr becomes 0, and finally -EFAULT is returned.
-> 
-> Therefore, the assignment of the pstate register is added here.
-> 
-> Fixes: b9b55c8912ce ("tracing: Add ftrace_partial_regs() for converting ftrace_regs to pt_regs")
-> Closes: https://lore.kernel.org/bpf/20250919071902.554223-1-yangfeng59949@163.com/
-> Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
+changes since v9:
+- add a documentation about PCI tracepoints per Bjorn
+- create a dedicated drivers/pci/trace.c that always defines the PCI tracepoints per Steve
+- move tracepoint callite into __pcie_update_link_speed() per Lukas and Bjorn
 
-Thanks for fixing!
+changes since v8:
+- rewrite commit log from Bjorn
+- move pci_hp_event to a common place (include/trace/events/pci.h) per Ilpo
+- rename hotplug event strings per Bjorn and Lukas
+- add PCIe link tracepoint per Bjorn, Lukas, and Ilpo
 
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Hotplug events are critical indicators for analyzing hardware health, and
+surprise link downs can significantly impact system performance and reliability.
+In addition, PCIe link speed degradation directly impacts system performance and
+often indicates hardware issues such as faulty devices, physical layer problems,
+or configuration errors.
 
-This is actually a fix for arm64. So I think it will be
-merged via arm64 tree, right?
+This patch set add PCI hotplug and PCIe link tracepoint to help analyze PCI
+hotplug events and PCIe link speed degradation.
 
-Thank you,
+Shuai Xue (3):
+  PCI: trace: Add a generic RAS tracepoint for hotplug event
+  PCI: trace: Add a RAS tracepoint to monitor link speed changes
+  Documentation: tracing: Add documentation about PCI tracepoints
 
-> ---
->  arch/arm64/include/asm/ftrace.h | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm64/include/asm/ftrace.h b/arch/arm64/include/asm/ftrace.h
-> index bfe3ce9df197..ba7cf7fec5e9 100644
-> --- a/arch/arm64/include/asm/ftrace.h
-> +++ b/arch/arm64/include/asm/ftrace.h
-> @@ -153,6 +153,7 @@ ftrace_partial_regs(const struct ftrace_regs *fregs, struct pt_regs *regs)
->  	regs->pc = afregs->pc;
->  	regs->regs[29] = afregs->fp;
->  	regs->regs[30] = afregs->lr;
-> +	regs->pstate = PSR_MODE_EL1h;
->  	return regs;
->  }
->  
-> -- 
-> 2.25.1
-> 
-
+ Documentation/trace/events-pci.rst |  74 ++++++++++++++++++
+ drivers/pci/Makefile               |   3 +
+ drivers/pci/hotplug/pciehp_ctrl.c  |  31 ++++++--
+ drivers/pci/hotplug/pciehp_hpc.c   |   3 +-
+ drivers/pci/pci.c                  |   2 +-
+ drivers/pci/pci.h                  |  22 +++++-
+ drivers/pci/pcie/bwctrl.c          |   4 +-
+ drivers/pci/probe.c                |   9 ++-
+ drivers/pci/trace.c                |  11 +++
+ include/linux/pci.h                |   1 +
+ include/trace/events/pci.h         | 120 +++++++++++++++++++++++++++++
+ include/uapi/linux/pci.h           |   7 ++
+ 12 files changed, 271 insertions(+), 16 deletions(-)
+ create mode 100644 Documentation/trace/events-pci.rst
+ create mode 100644 drivers/pci/trace.c
+ create mode 100644 include/trace/events/pci.h
 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.39.3
+
