@@ -1,317 +1,478 @@
-Received: from SA9PR02CU001.outbound.protection.outlook.com (mail-southcentralusazon11013015.outbound.protection.outlook.com [40.93.196.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21CA223C516;
-	Thu, 25 Sep 2025 10:18:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.196.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758795496; cv=fail; b=IOyq1RHG+Wwn5PlnWtS82yc7szPhc61E7oIG8A5OUVIV0MJ7opnDu7nQH1MmQFB/TNTuyK7LdDaB1RKS2JgKVjHu54cc3M0vw7WLDdcagKDjRYqC2ZochTtxv4yykqbNAoy11O8wVM7JrVbF3IUyWC5pJD4MrKSlE0bgd6ATF1w=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758795496; c=relaxed/simple;
-	bh=uetRFSApREvkjcajVabJlfOeHlcAM+mnExrgNgj0VMw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=rXVYpUjHxNOxFcnIIFGBeqRRhYvVTgQRyxiPL7A/XQVvb0gMrHv5cNowPO9IRUvmyKRB0tEU0cNYZfJvFsLBCuL3/lchVLLn24BjyIUWibc5ZwK2rCCVHMK8BxNtsNEkwDqQE+sk5L0oD4jSiZPITLQVBFM6owDTt6PMO7w7Tow=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=OgDAUrM1; arc=fail smtp.client-ip=40.93.196.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B87F2EB5A9
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 25 Sep 2025 10:45:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1758797132; cv=none; b=M3b9YiLcVGypSxBtvtj6wtDhnzeLhj4/2Al3e/v4fvTS0JUBtlCdrxeG22COcJf4bKNl/XOUCQdmrA95U6iIC7i25eMGJyelpcuZkrjJYuWDjI9yqO0GKWwQ4VMnNv8kcM6E55Ud+tgW1aeASwkLRzIxHKW/19zNkkm5JUqzPek=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1758797132; c=relaxed/simple;
+	bh=2Y/Etx7wsAJuNVlBBeFuTxyOUrSl8OleFgQbVZG+ERY=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=pu86auMfIxHbCl0bQTHd3Ky7RcPZx5kbyEryXU4dKUfrihcLJDRDXJ+hokx5cFf5h4UeN1ltKl44WRk+uSIoYKWBEOUEDFyaES+rKsQacOb0DAj4x7Dob850GP+eUQyex2k3+fhuryzqLhkvXKe0i5xU9DBomrH7FgDBFpL9YrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=PerBj9k2; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ionos.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="OgDAUrM1"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=MXSc/cvLZQyV6ZoNuwKMyX8KpxHn9QIdRqsQlsUK3/XcfxvICRFfVFiJB8Dljye5WIkXvIjKYYK+xY9EIqnKfh5TE0GwkWXwDuQoMkHZJHi9VJTJKDTD9I/cpUKFn4ib67j/spiibtNXXE44fl68daPqgWKQTtz9/da0qnU3KElLy1nlft+Ldg5J9KhCKffjne0Wcx6tBkk8PmQ8+ySFZZOJIw8fBaKG3/xrCIe7sMO1px+cn4OFY1URs9GR3aaympaAVE+zCqDo0d6SEimBnct7sakVQcIXv4OqHGn8euFGvY+CtXaq/5Qv5D/iP8Q7VwpGiipOdRNklEV7Q5jAGQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FnM03fidm3+aynXbMzePNi/boqkIryUjLWZfGcM8f7A=;
- b=vGobLOuQFS+VJdH4xpwGC1EEqku7C8GtlkbxZa1MVJ0IphIaRDGaU67TLZq4hWill4HaHDSacQ5zQmyYJcqMka2WiHU8MNKxEt6S2qlzY7R2N+ekiPCRD51TD3noJFdMAWdGYNrQ6dyadRoTVeHLLHBvo0Jpghvxv45/qgbC73n3T2h7AQfH6U1z6zE24lgfWvfEbpTjfUTgCSUZiTXugQHfdYeKGXlVPt2E6FJMAuypZdYPtkC+XTl/ZLYS7aNHK25m4/BxYshsjd9d+tH5CwVAwgSw57/Cewmlmt9yVBIEeLsImbdIAVcxL3KDQyIpjWCbGgP0PUYt92DmeJyE7g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FnM03fidm3+aynXbMzePNi/boqkIryUjLWZfGcM8f7A=;
- b=OgDAUrM1lJDCJrjFULB6h4xJy5f3EgeziseUkpkPEZKzWr7+HYhuBnyumqunxiJINb9mlbcktXX8NGyXueBM0ezIWqwf5ZF9ItnuRgxxDoa53x7jHx5oSiV22nHEi5KgoIMECkzCrfgbaym9Qfhf/P9rf5e+6gpLRY1kkjMWqeBk4X5lS4SMXP/1ZH4sXhTNPEpUBNBbz3TVJT2bU9BQXK+FOwvmpB3qzZYoBb4K6oYQbCkXhgnBK56VfZ4HoQjHCiJF8AGfGFOcYef7Knj1h/SKvxAcyvBmJ2X1NFuAq0qjVOce14O74OLDni3j+BgiqemCZuy9vgTm/eEyiS4P/Q==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from LV8PR12MB9620.namprd12.prod.outlook.com (2603:10b6:408:2a1::19)
- by IA1PR12MB6092.namprd12.prod.outlook.com (2603:10b6:208:3ec::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9160.10; Thu, 25 Sep
- 2025 10:18:10 +0000
-Received: from LV8PR12MB9620.namprd12.prod.outlook.com
- ([fe80::1b59:c8a2:4c00:8a2c]) by LV8PR12MB9620.namprd12.prod.outlook.com
- ([fe80::1b59:c8a2:4c00:8a2c%3]) with mapi id 15.20.9160.008; Thu, 25 Sep 2025
- 10:18:10 +0000
-Date: Thu, 25 Sep 2025 12:17:57 +0200
-From: Andrea Righi <arighi@nvidia.com>
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: "Paul E. McKenney" <paulmck@kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="PerBj9k2"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3ee13baf2e1so723471f8f.3
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 25 Sep 2025 03:45:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ionos.com; s=google; t=1758797127; x=1759401927; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=rD5bRVS4j89IYhbkqtvwQE1tWcEcavfJ8B+snILPpnk=;
+        b=PerBj9k2eLBk54O4yxN4q+etTdHjV8pImoynQo5XJutfbJFWirX5lKz0qRskLZHxvd
+         Ufv2LDMc5QHmy6CONNM3t9WadmEZoU20bwZdUwL5MKXc7JzDlRBZKISU8zac1yZj+7wi
+         zC1QfZlTcougW4R0KoueDUqLkNB/X3w5GuaqSxdaJ0NjJoeErKQcEnXERF9YKuV15yPD
+         WN7kcD6mKIRRnBnOQyQVG1Ci4zToDzign5lgW7W9Zngkb8M+eYexBvVU6YF6bOyL3Ho2
+         2Wvk4OIO8KDvxkmrFkRkgDdIM/8riJhf9jGoexYxEYx+CBBRDG7rWkUIK07rnu5I44xG
+         D5Zg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758797127; x=1759401927;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rD5bRVS4j89IYhbkqtvwQE1tWcEcavfJ8B+snILPpnk=;
+        b=kc31roxQh/sw9WvfruSuzeIAM/M6En2GsfL1ivzn8WfItNn+PJdo7kodeTSBfhAFae
+         FCKzfpxl/QJ+3e19JYlUbVZLgY/tE+ZlKjuNZebE/WV9NaJoZEURVIxeJmV885BRecfq
+         KFt5CJkaNfYG8wGoexXUyC6V9sC6cwXrSQKvMo6bOIjxhc6zUyw8Q7sOgXckG42e2O5B
+         rHYx+aAquYOfFGG2KekaCTIZ4d8kbvFPKwhWPj9XLegGp8xjZrERTiYAngenugYlh6kG
+         x9wAZTiBm3eXnkoVXhKQaLmWk86zs0rQ8f+tbh4PAV2AcKTIXXFwz0NbZo/BYxFvDnwH
+         gsyA==
+X-Forwarded-Encrypted: i=1; AJvYcCVdAm05Q4oh9X+sje1w4xdY8P6KEbtbMmAWljtZJn9XYort46s0yZjM9WSXPftQ8ZpXxZV+Fo1nj1vUKqxF4Fmop9Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw5FRI3dK4lmzjcnZ20YzWhorrKAkvCvAPxg9I6ec3w5lUDP9zi
+	wR+/ZA3ZCB9fPSsbsaFLqlb6JqG1D6oCnFNrg+xE8+JJqsdKKVk3b7rLRy9dGzkJ79E=
+X-Gm-Gg: ASbGncvkvTKK21rw+xroU5aZak1dau0DAEGVqf5OasjIx0EeY2AVS/6J0YDvnT4Vv3M
+	HTSq3OsGlnc3MC2L5qnXD/tXM5Ge/3svvGdspbPikfqgRX3r4hvcnD9tzv9OajdsM8A9B9VhjdU
+	x74+iJwE10uZB8Ang3buSM9cRjNGjhUjHa341knOsHxDEAiV07RAIVirQ51USjRszfmSOSmQ7un
+	F/Y58Xx4z4dLTLnkEoMuLFX4YCWYp1qiMq5YHEkagYgDnppTV7z59IKYw8kIRDHfZuw6MlMw9K2
+	hX9uLFck1ZHJLvLTo4WIPsv/Cgl5JEFELlPrwONuE46jFDGtTPhrn00M+VEhk9wujY3EQzb0Hwm
+	ywFWp2KTq0IkTqDuSOCSxJsuVQ4cblijt2gJvzdpTSM6V0CMUA0DADY1Row0MjAcYb1qeLgNdMd
+	lPicSNmzEir3Be6Ayq+Io7XQ==
+X-Google-Smtp-Source: AGHT+IHT1KVxlBNxyFDCaHu545shG2L21DrIcoORWPTFR8KKA/HztsEYb06C5+5BWMpDJhnIrFGDBA==
+X-Received: by 2002:a05:6000:2891:b0:3ea:80ec:8552 with SMTP id ffacd0b85a97d-40e4ce4bc13mr2854165f8f.57.1758797126522;
+        Thu, 25 Sep 2025 03:45:26 -0700 (PDT)
+Received: from raven.intern.cm-ag (p200300dc6f090200023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f09:200:230:64ff:fe74:809])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-46e32b4f336sm16058985e9.0.2025.09.25.03.45.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Sep 2025 03:45:25 -0700 (PDT)
+From: Max Kellermann <max.kellermann@ionos.com>
+To: Xiubo Li <xiubli@redhat.com>,
+	Ilya Dryomov <idryomov@gmail.com>,
 	Steven Rostedt <rostedt@goodmis.org>,
-	Menglong Dong <dongml2@chinatelecom.cn>,
-	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	kernel test robot <oliver.sang@intel.com>, tgraf@suug.ch,
-	linux-crypto@vger.kernel.org
-Subject: Re: [v2 PATCH] rhashtable: Use rcu_dereference_all and
- rcu_dereference_all_check
-Message-ID: <aNUW1ZRt_pcR8eV7@gpd4>
-References: <20250829021436.19982-1-dongml2@chinatelecom.cn>
- <20250828222357.55fab4c2@batman.local.home>
- <d1da3939-62e6-4ad1-afcc-5710ce3f6cbd@paulmck-laptop>
- <20250901170655.0757884ad7c2afb63ced3230@kernel.org>
- <615da75d-cb2f-4e7e-9e11-6b19f03fea6c@paulmck-laptop>
- <aLlflTV_SDwMB7mq@gondor.apana.org.au>
- <c3ada9ab-0676-4d73-9feb-9f401a031a4e@paulmck-laptop>
- <aL_4gCJibYMW0J98@gondor.apana.org.au>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aL_4gCJibYMW0J98@gondor.apana.org.au>
-X-ClientProxiedBy: PR1P264CA0038.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:102:2cb::10) To LV8PR12MB9620.namprd12.prod.outlook.com
- (2603:10b6:408:2a1::19)
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Max Kellermann <max.kellermann@ionos.com>,
+	linux-kernel@vger.kernel.org,
+	ceph-devel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH] ceph: add trace points to the MDS client
+Date: Thu, 25 Sep 2025 12:45:12 +0200
+Message-ID: <20250925104522.3501812-1-max.kellermann@ionos.com>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV8PR12MB9620:EE_|IA1PR12MB6092:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0cc4d70c-5c95-4cbd-507f-08ddfc1cd3d8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|376014|7416014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?K0lC0dwW7BSY5bR/GENInWffI1RYNmyjhfTGF7A99p6I3GXAAHEAjRLluwly?=
- =?us-ascii?Q?2ReCusw3EyYc3m1e/ALLPETa46GbJRsDIJTvuKoCIf0Ywyg+NrcrncgnaWu6?=
- =?us-ascii?Q?3jsaqF43xU1HwV824aO2eBtZiy5KI0Z2xmBmBDuWSuWD9N7frb5H46AbUytJ?=
- =?us-ascii?Q?ablwP5YR3rSBm7pc4QanMlDf6J1MlOFxyxZqsu+LZBJtoAVzt2NWdw2mzhYr?=
- =?us-ascii?Q?/tbIJDkbdbFecobAgSCd/RmJPDXQVcbty+x/glGijPQn7NW0imYt++Y4hQ/T?=
- =?us-ascii?Q?vu9D/ioWJOuhXQmuOHEss6/BjPT1/XobN/tkW2YFgVjGcU/DKTj2qbGRAAOF?=
- =?us-ascii?Q?wxUGYtbnsxhppjOUlEK6DNo72+vOTGiS6nRVH9Gl1vXDLV6aNus3/WaTCreG?=
- =?us-ascii?Q?llqajKXVyUedHEE0xTqnXTM2m7NyomgGzUP9vBxRYSuCkypZV9fsRT6kzJbN?=
- =?us-ascii?Q?R+p4POqaa7OSqLp3FeKK823GfsYdhNUEanDhj9Q7cWbEhYMhHkFUJxPEe1iD?=
- =?us-ascii?Q?wGr8w0lzM6Wq5goYKB6U6/y/yGAeUa6u3cP8Sr3JDCL8VBk9qfoE0B6IuT5D?=
- =?us-ascii?Q?IXV6xwU4a8tJY+Rhie45NJhD7wz1bmYpiZl87SbSu/N0qvsQmons866dD3QK?=
- =?us-ascii?Q?rUSf08Ufs4qlJsYLpkGEKWMJY484I/CrWYrFK5gZFEewfFKa5n/LzVPTWBkP?=
- =?us-ascii?Q?lZr0rD8nSlIskWmisRI4cX0dr33pzTa7QwYJDtKDCWpWTYV147ypF4JWoCSO?=
- =?us-ascii?Q?UVBzSpt7UPVNFcscKhv1zML6V/H6toOY9K1eoMq9FUu02Mo03pj5HRowaEdv?=
- =?us-ascii?Q?4Fa4/a96VgEiLQHYAq5TtOHRXnd+468F6N6wh1JTan3yX1rZsoMHAtD9tyzW?=
- =?us-ascii?Q?FU6YBdgfghN7OpXVuxlD3x13mr+cSO1sfXhmn/H/GoD9AINTx2TUuV/Ms3te?=
- =?us-ascii?Q?/lszmGJvNUVf2VUGWsAmXx9uAAG0RKc7q4Na+5EucVDmbkfHmkEhyaC0FouP?=
- =?us-ascii?Q?JzW+dqW6HOmCpfq5M5Q5LKxrbc9y5RvrkJ6wztWQSqLyPCchdW/g5+yY2YYK?=
- =?us-ascii?Q?xzkJp/qaY54J91++VjUIJw7uXD3pMDCCZ6uIdcO77WIpTfiGK/gIRqYEKH1R?=
- =?us-ascii?Q?cEfvC1KyKno4u3buCuXKDeoiaVaMFRVkBZmeTrGTcsDgHzvFm0KWHswLxhFO?=
- =?us-ascii?Q?ZboSbr4XRyVDvdW6tbcTYOIgvW4YOBdHyWH+7qG8Qp2slLRZVRTRVE8Ez0an?=
- =?us-ascii?Q?tFrna7m/Hj1Qgo6/vG8zsoTp/qJP3yy6yvzcjL7HAOmekR3QLXj0so9UpPfN?=
- =?us-ascii?Q?iambxfz8BTjcNZDSfAP0UKI13SXsXJS/PcyastzRE742TvYJGAl5XwK//gVC?=
- =?us-ascii?Q?nm2EtlJc1bFautsajTvksMaDYaMDpuev40wy9utShz7mTalViEVcZFhuA2x8?=
- =?us-ascii?Q?OdqTnG+y4qaZCqVMR5ftLXzqOt0Un4xt8JXMqSJI+E+vrjCk7Kv0PA=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR12MB9620.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Pk6A1N5qCnDJJ0dBHTg1nO0Gg1NVI7JOX3V28h/XhUPNh0pDYRk8h0jMNCG/?=
- =?us-ascii?Q?jQkYNKItsaHWf7F86HZE5/4xAEan70PhEwXQa+8TXs1cX5dLZ7THzODmRD4W?=
- =?us-ascii?Q?Ece9lDMi5jVdvtTptOeVJ3eeyaPsSSyVIs/Y4wUoZJmw0r5gJkylDZiUWUo0?=
- =?us-ascii?Q?UbS84esysmskImy8iCUvRT2H5aV3OOZLSqmcSzKhwl9aOukeber8Nn3rZehe?=
- =?us-ascii?Q?AW2FUm2ix7r6VPcPaAzX4kOVt6i8HwHhUw+MZrOIEBc4OoxNFwu2VNZUULip?=
- =?us-ascii?Q?5av14/jD8XXn56MroVgRcakaIBlYGUmraRg0AOCYfezIjawo5rTnq93FHWKs?=
- =?us-ascii?Q?TlTxMb7rTYLpqHKQeO5iwmFpbYrXUG5liOqiHQmiZJS7P8B3AAy5ANfWWhCS?=
- =?us-ascii?Q?e/+OELoy2NJzxCVBCBEp4E7XTtw5RtmA7KoKdcF+pxudMxyVwI05O9XhrQ/F?=
- =?us-ascii?Q?Nygz/zOhjJaLr8h2A1EpAtjV40Id/+lc2ESZdX4gBFzE+hGNA61Of1VpIlwV?=
- =?us-ascii?Q?x118OhniBAvesvTtsq/TD7i0ZwcZoU2YRLwbzmoqCm/izn+MCeRClIhlenLg?=
- =?us-ascii?Q?tPQVkBzrY8FrKnhQdDXRRSDNNuvmfAadCmYnx01fpJxRBLLzrAKCgfn2eJID?=
- =?us-ascii?Q?8eCnji9ml83Faqn+NiEbRupAnRY17RIBnTKrConFvsNps+2vrDwObhge8yWN?=
- =?us-ascii?Q?lZf1KCxmJVML1IsAw8pIKG66VJ6WLvTrSbyfWMo1kwRIFqNZHqU4hPBucYts?=
- =?us-ascii?Q?3PJvofh/DesKJOJFKO5rLsImUuX3GViMIuuXhov9Zk4weuhQR3niSbV7hHk8?=
- =?us-ascii?Q?/dP31N7kuLSAaYO6udaEVV0E0eq7t+cAc8mMlT6c5tVaT8KQbqCr1qLGjlFJ?=
- =?us-ascii?Q?ARan1D/nPbASwisgGBPY3CVjfxBFXFGrYGLs7yKPsk2XKTwGg9cGw//jgZCp?=
- =?us-ascii?Q?YHLY/3lzwYCWWzWguXFwFO+96o6HB6Ep0q9EKr+s+5IdO+fjl41aMZVGJiIb?=
- =?us-ascii?Q?ArOM73VAOJ4MB0hCccC9yYdthLrDMX5Tz4tdxfRL2TuZ77jJJta32ERmDruD?=
- =?us-ascii?Q?auW0nfvH+0dVdCfm5bl/gxLxnJXpCwc98IpoPFlAGh41FCzMHdNF0LoibJxh?=
- =?us-ascii?Q?62hfFRj673RxiaQEdKkC55UsKkTSUkZDglbgS8Wk03e9X4vuSeuOOOxGHbK6?=
- =?us-ascii?Q?JihNEtOf1v2c61HQtUJ1/LfUdHvG2oMM33+A1uzmDsOHlVTqVnemj42Pu12L?=
- =?us-ascii?Q?avRKkNJ38cNnH/954wFW52YuVNuk0tm2pbMqpcFJ3PiTjXoQlMTeW4JPJLrL?=
- =?us-ascii?Q?h+5B4pAsISK62NI1iSAIB//7+RwzpuHIt+95pQyIZmb2SpGeJUklRExR3h/O?=
- =?us-ascii?Q?6BEKqhxYHoRRhh3VYob+17k4M0n9LHwQrTqNRmxvG+Z2bgMIJTG3qA8F0eLh?=
- =?us-ascii?Q?qilbkSoKHJKoNHUmCvQXEEse+cZafdduYcpDWdLuf2QbwXuMGohyjmuYij0h?=
- =?us-ascii?Q?08cpXGMs4sLEepx7irgkTfqfOcWh8SQmccZWQZPfmjAhdCyQlvolK0ZTN+rd?=
- =?us-ascii?Q?sjFkAvEftZ24FMxooE8qoR8ykFbVo/xlQEQ/keqD?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0cc4d70c-5c95-4cbd-507f-08ddfc1cd3d8
-X-MS-Exchange-CrossTenant-AuthSource: LV8PR12MB9620.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Sep 2025 10:18:10.3684
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 6tGig/NjSn82JAUZ4ikFjOJnck7Ct9G2HQ/2sdkFmvla+qgHy7wFnA8w9Z1p1MqSXGI56yoAJydwAEkQRAyk/A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6092
+Content-Transfer-Encoding: 8bit
 
-Hi Herbert,
+This patch adds trace points to the Ceph filesystem MDS client:
 
-On Tue, Sep 09, 2025 at 05:50:56PM +0800, Herbert Xu wrote:
-> On Mon, Sep 08, 2025 at 08:23:27AM -0700, Paul E. McKenney wrote:
-> >
-> > I am guessing that you want to send this up via the rhashtable path.
-> 
-> Yes I could push that along.
-> 
-> >  * This is similar to rcu_dereference_check(), but allows protection
-> >  * by all forms of vanilla RCU readers, including preemption disabled,
-> >  * bh-disabled, and interrupt-disabled regions of code.  Note that "vanilla
-> >  * RCU" excludes SRCU and the various Tasks RCU flavors.  Please note
-> >  * that this macro should not be backported to any Linux-kernel version
-> >  * preceding v5.0 due to changes in synchronize_rcu() semantics prior
-> >  * to that version.
-> > 
-> > The "should not" vs. "can not" accounts for the possibility of people
-> > using synchronize_rcu_mult(), but someone wanting to do that best know
-> > what they are doing.  ;-)
-> 
-> Thanks! I've incorported that into the patch:
-> 
-> ---8<---
-> Add rcu_dereference_all and rcu_dereference_all_check so that
-> library code such as rhashtable can be used with any RCU variant.
-> 
-> As it stands rcu_dereference is used within rashtable, which
-> creates false-positive warnings if the user calls it from another
-> RCU context, such as preempt_disable().
-> 
-> Use the rcu_dereference_all and rcu_dereference_all_check calls
-> in rhashtable to suppress these warnings.
-> 
-> Also replace the rcu_dereference_raw calls in the list iterators
-> with rcu_dereference_all to uncover buggy calls.
-> 
-> Reported-by: Menglong Dong <dongml2@chinatelecom.cn>
-> Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-> Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
+- request submission (CEPH_MSG_CLIENT_REQUEST) and completion
+  (CEPH_MSG_CLIENT_REPLY)
+- capabilities (CEPH_MSG_CLIENT_CAPS)
 
-We hit the same issue in sched_ext and with this applied lockep seems
-happy. FWIW:
+These are the central pieces that are useful for analyzing MDS
+latency/performance problems from the client's perspective.
 
-Tested-by: Andrea Righi <arighi@nvidia.com>
+In the long run, all doutc() calls should be replaced with
+tracepoints.  This way, the Ceph filesystem can be traced at any time
+(without spamming the kernel log).  Additionally, trace points can be
+used in BPF programs (which can even deference the pointer parameters
+and extract more values).
 
-Thanks,
--Andrea
+Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
+---
+ fs/ceph/caps.c              |   4 +
+ fs/ceph/mds_client.c        |  20 ++-
+ fs/ceph/super.c             |   3 +
+ include/trace/events/ceph.h | 234 ++++++++++++++++++++++++++++++++++++
+ 4 files changed, 259 insertions(+), 2 deletions(-)
+ create mode 100644 include/trace/events/ceph.h
 
-> 
-> diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
-> index 120536f4c6eb..448eb1f0cb48 100644
-> --- a/include/linux/rcupdate.h
-> +++ b/include/linux/rcupdate.h
-> @@ -713,6 +713,24 @@ do {									      \
->  				(c) || rcu_read_lock_sched_held(), \
->  				__rcu)
->  
-> +/**
-> + * rcu_dereference_all_check() - rcu_dereference_all with debug checking
-> + * @p: The pointer to read, prior to dereferencing
-> + * @c: The conditions under which the dereference will take place
-> + *
-> + * This is similar to rcu_dereference_check(), but allows protection
-> + * by all forms of vanilla RCU readers, including preemption disabled,
-> + * bh-disabled, and interrupt-disabled regions of code.  Note that "vanilla
-> + * RCU" excludes SRCU and the various Tasks RCU flavors.  Please note
-> + * that this macro should not be backported to any Linux-kernel version
-> + * preceding v5.0 due to changes in synchronize_rcu() semantics prior
-> + * to that version.
-> + */
-> +#define rcu_dereference_all_check(p, c) \
-> +	__rcu_dereference_check((p), __UNIQUE_ID(rcu), \
-> +				(c) || rcu_read_lock_any_held(), \
-> +				__rcu)
-> +
->  /*
->   * The tracing infrastructure traces RCU (we want that), but unfortunately
->   * some of the RCU checks causes tracing to lock up the system.
-> @@ -767,6 +785,14 @@ do {									      \
->   */
->  #define rcu_dereference_sched(p) rcu_dereference_sched_check(p, 0)
->  
-> +/**
-> + * rcu_dereference_all() - fetch RCU-all-protected pointer for dereferencing
-> + * @p: The pointer to read, prior to dereferencing
-> + *
-> + * Makes rcu_dereference_check() do the dirty work.
-> + */
-> +#define rcu_dereference_all(p) rcu_dereference_all_check(p, 0)
-> +
->  /**
->   * rcu_pointer_handoff() - Hand off a pointer from RCU to other mechanism
->   * @p: The pointer to hand off
-> diff --git a/include/linux/rhashtable.h b/include/linux/rhashtable.h
-> index e740157f3cd7..05a221ce79a6 100644
-> --- a/include/linux/rhashtable.h
-> +++ b/include/linux/rhashtable.h
-> @@ -272,13 +272,13 @@ struct rhash_lock_head __rcu **rht_bucket_nested_insert(
->  	rcu_dereference_protected(p, lockdep_rht_mutex_is_held(ht))
->  
->  #define rht_dereference_rcu(p, ht) \
-> -	rcu_dereference_check(p, lockdep_rht_mutex_is_held(ht))
-> +	rcu_dereference_all_check(p, lockdep_rht_mutex_is_held(ht))
->  
->  #define rht_dereference_bucket(p, tbl, hash) \
->  	rcu_dereference_protected(p, lockdep_rht_bucket_is_held(tbl, hash))
->  
->  #define rht_dereference_bucket_rcu(p, tbl, hash) \
-> -	rcu_dereference_check(p, lockdep_rht_bucket_is_held(tbl, hash))
-> +	rcu_dereference_all_check(p, lockdep_rht_bucket_is_held(tbl, hash))
->  
->  #define rht_entry(tpos, pos, member) \
->  	({ tpos = container_of(pos, typeof(*tpos), member); 1; })
-> @@ -373,7 +373,7 @@ static inline struct rhash_head *__rht_ptr(
->  static inline struct rhash_head *rht_ptr_rcu(
->  	struct rhash_lock_head __rcu *const *bkt)
->  {
-> -	return __rht_ptr(rcu_dereference(*bkt), bkt);
-> +	return __rht_ptr(rcu_dereference_all(*bkt), bkt);
->  }
->  
->  static inline struct rhash_head *rht_ptr(
-> @@ -497,7 +497,7 @@ static inline void rht_assign_unlock(struct bucket_table *tbl,
->  	for (({barrier(); }),						\
->  	     pos = head;						\
->  	     !rht_is_a_nulls(pos);					\
-> -	     pos = rcu_dereference_raw(pos->next))
-> +	     pos = rcu_dereference_all(pos->next))
->  
->  /**
->   * rht_for_each_rcu - iterate over rcu hash chain
-> @@ -513,7 +513,7 @@ static inline void rht_assign_unlock(struct bucket_table *tbl,
->  	for (({barrier(); }),					\
->  	     pos = rht_ptr_rcu(rht_bucket(tbl, hash));		\
->  	     !rht_is_a_nulls(pos);				\
-> -	     pos = rcu_dereference_raw(pos->next))
-> +	     pos = rcu_dereference_all(pos->next))
->  
->  /**
->   * rht_for_each_entry_rcu_from - iterated over rcu hash chain from given head
-> @@ -560,7 +560,7 @@ static inline void rht_assign_unlock(struct bucket_table *tbl,
->   * list returned by rhltable_lookup.
->   */
->  #define rhl_for_each_rcu(pos, list)					\
-> -	for (pos = list; pos; pos = rcu_dereference_raw(pos->next))
-> +	for (pos = list; pos; pos = rcu_dereference_all(pos->next))
->  
->  /**
->   * rhl_for_each_entry_rcu - iterate over rcu hash table list of given type
-> @@ -574,7 +574,7 @@ static inline void rht_assign_unlock(struct bucket_table *tbl,
->   */
->  #define rhl_for_each_entry_rcu(tpos, pos, list, member)			\
->  	for (pos = list; pos && rht_entry(tpos, pos, member);		\
-> -	     pos = rcu_dereference_raw(pos->next))
-> +	     pos = rcu_dereference_all(pos->next))
->  
->  static inline int rhashtable_compare(struct rhashtable_compare_arg *arg,
->  				     const void *obj)
-> -- 
-> Email: Herbert Xu <herbert@gondor.apana.org.au>
-> Home Page: http://gondor.apana.org.au/~herbert/
-> PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
+index b1a8ff612c41..2f663972da99 100644
+--- a/fs/ceph/caps.c
++++ b/fs/ceph/caps.c
+@@ -18,6 +18,7 @@
+ #include "crypto.h"
+ #include <linux/ceph/decode.h>
+ #include <linux/ceph/messenger.h>
++#include <trace/events/ceph.h>
+ 
+ /*
+  * Capability management
+@@ -4452,6 +4453,9 @@ void ceph_handle_caps(struct ceph_mds_session *session,
+ 	      session->s_mds, ceph_cap_op_name(op), vino.ino, vino.snap, inode,
+ 	      seq, issue_seq, mseq);
+ 
++	trace_ceph_handle_caps(mdsc, session, op, &vino, ceph_inode(inode),
++			       seq, issue_seq, mseq);
++
+ 	mutex_lock(&session->s_mutex);
+ 
+ 	if (!inode) {
+diff --git a/fs/ceph/mds_client.c b/fs/ceph/mds_client.c
+index 3bc72b47fe4d..90e4268b24f9 100644
+--- a/fs/ceph/mds_client.c
++++ b/fs/ceph/mds_client.c
+@@ -24,6 +24,7 @@
+ #include <linux/ceph/pagelist.h>
+ #include <linux/ceph/auth.h>
+ #include <linux/ceph/debugfs.h>
++#include <trace/events/ceph.h>
+ 
+ #define RECONNECT_MAX_SIZE (INT_MAX - PAGE_SIZE)
+ 
+@@ -3282,6 +3283,8 @@ static void complete_request(struct ceph_mds_client *mdsc,
+ {
+ 	req->r_end_latency = ktime_get();
+ 
++	trace_ceph_mdsc_complete_request(mdsc, req);
++
+ 	if (req->r_callback)
+ 		req->r_callback(mdsc, req);
+ 	complete_all(&req->r_completion);
+@@ -3413,6 +3416,8 @@ static int __send_request(struct ceph_mds_session *session,
+ {
+ 	int err;
+ 
++	trace_ceph_mdsc_send_request(session, req);
++
+ 	err = __prepare_send_request(session, req, drop_cap_releases);
+ 	if (!err) {
+ 		ceph_msg_get(req->r_request);
+@@ -3464,6 +3469,8 @@ static void __do_request(struct ceph_mds_client *mdsc,
+ 		}
+ 		if (mdsc->mdsmap->m_epoch == 0) {
+ 			doutc(cl, "no mdsmap, waiting for map\n");
++			trace_ceph_mdsc_suspend_request(mdsc, session, req,
++							ceph_mdsc_suspend_reason_no_mdsmap);
+ 			list_add(&req->r_wait, &mdsc->waiting_for_map);
+ 			return;
+ 		}
+@@ -3485,6 +3492,8 @@ static void __do_request(struct ceph_mds_client *mdsc,
+ 			goto finish;
+ 		}
+ 		doutc(cl, "no mds or not active, waiting for map\n");
++		trace_ceph_mdsc_suspend_request(mdsc, session, req,
++						ceph_mdsc_suspend_reason_no_active_mds);
+ 		list_add(&req->r_wait, &mdsc->waiting_for_map);
+ 		return;
+ 	}
+@@ -3530,9 +3539,11 @@ static void __do_request(struct ceph_mds_client *mdsc,
+ 		 * it to the mdsc queue.
+ 		 */
+ 		if (session->s_state == CEPH_MDS_SESSION_REJECTED) {
+-			if (ceph_test_mount_opt(mdsc->fsc, CLEANRECOVER))
++			if (ceph_test_mount_opt(mdsc->fsc, CLEANRECOVER)) {
++				trace_ceph_mdsc_suspend_request(mdsc, session, req,
++								ceph_mdsc_suspend_reason_rejected);
+ 				list_add(&req->r_wait, &mdsc->waiting_for_map);
+-			else
++			} else
+ 				err = -EACCES;
+ 			goto out_session;
+ 		}
+@@ -3546,6 +3557,8 @@ static void __do_request(struct ceph_mds_client *mdsc,
+ 			if (random)
+ 				req->r_resend_mds = mds;
+ 		}
++		trace_ceph_mdsc_suspend_request(mdsc, session, req,
++						ceph_mdsc_suspend_reason_session);
+ 		list_add(&req->r_wait, &session->s_waiting);
+ 		goto out_session;
+ 	}
+@@ -3646,6 +3659,7 @@ static void __wake_requests(struct ceph_mds_client *mdsc,
+ 		list_del_init(&req->r_wait);
+ 		doutc(cl, " wake request %p tid %llu\n", req,
+ 		      req->r_tid);
++		trace_ceph_mdsc_resume_request(mdsc, req);
+ 		__do_request(mdsc, req);
+ 	}
+ }
+@@ -3672,6 +3686,7 @@ static void kick_requests(struct ceph_mds_client *mdsc, int mds)
+ 		    req->r_session->s_mds == mds) {
+ 			doutc(cl, " kicking tid %llu\n", req->r_tid);
+ 			list_del_init(&req->r_wait);
++			trace_ceph_mdsc_resume_request(mdsc, req);
+ 			__do_request(mdsc, req);
+ 		}
+ 	}
+@@ -3718,6 +3733,7 @@ int ceph_mdsc_submit_request(struct ceph_mds_client *mdsc, struct inode *dir,
+ 	doutc(cl, "submit_request on %p for inode %p\n", req, dir);
+ 	mutex_lock(&mdsc->mutex);
+ 	__register_request(mdsc, req, dir);
++	trace_ceph_mdsc_submit_request(mdsc, req);
+ 	__do_request(mdsc, req);
+ 	err = req->r_err;
+ 	mutex_unlock(&mdsc->mutex);
+diff --git a/fs/ceph/super.c b/fs/ceph/super.c
+index c3eb651862c5..f119d7260496 100644
+--- a/fs/ceph/super.c
++++ b/fs/ceph/super.c
+@@ -30,6 +30,9 @@
+ 
+ #include <uapi/linux/magic.h>
+ 
++#define CREATE_TRACE_POINTS
++#include <trace/events/ceph.h>
++
+ static DEFINE_SPINLOCK(ceph_fsc_lock);
+ static LIST_HEAD(ceph_fsc_list);
+ 
+diff --git a/include/trace/events/ceph.h b/include/trace/events/ceph.h
+new file mode 100644
+index 000000000000..08cb0659fbfc
+--- /dev/null
++++ b/include/trace/events/ceph.h
+@@ -0,0 +1,234 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++/* Ceph filesystem support module tracepoints
++ *
++ * Copyright (C) 2025 IONOS SE. All Rights Reserved.
++ * Written by Max Kellermann (max.kellermann@ionos.com)
++ */
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM ceph
++
++#if !defined(_TRACE_CEPH_H) || defined(TRACE_HEADER_MULTI_READ)
++#define _TRACE_CEPH_H
++
++#include <linux/tracepoint.h>
++
++#define ceph_mdsc_suspend_reasons						\
++	EM(ceph_mdsc_suspend_reason_no_mdsmap,		"no-mdsmap")		\
++	EM(ceph_mdsc_suspend_reason_no_active_mds,	"no-active-mds")	\
++	EM(ceph_mdsc_suspend_reason_rejected,		"rejected")		\
++	E_(ceph_mdsc_suspend_reason_session,		"session")
++
++#ifndef __NETFS_DECLARE_TRACE_ENUMS_ONCE_ONLY
++#define __NETFS_DECLARE_TRACE_ENUMS_ONCE_ONLY
++
++#undef EM
++#undef E_
++#define EM(a, b) a,
++#define E_(a, b) a
++
++enum ceph_mdsc_suspend_reason { ceph_mdsc_suspend_reasons } __mode(byte);
++
++#endif
++
++/*
++ * Export enum symbols via userspace.
++ */
++#undef EM
++#undef E_
++#define EM(a, b) TRACE_DEFINE_ENUM(a);
++#define E_(a, b) TRACE_DEFINE_ENUM(a);
++
++ceph_mdsc_suspend_reasons;
++
++/*
++ * Now redefine the EM() and E_() macros to map the enums to the strings that
++ * will be printed in the output.
++ */
++#undef EM
++#undef E_
++#define EM(a, b)	{ a, b },
++#define E_(a, b)	{ a, b }
++
++TRACE_EVENT(ceph_mdsc_submit_request,
++	TP_PROTO(struct ceph_mds_client *mdsc,
++		 struct ceph_mds_request *req),
++
++	TP_ARGS(mdsc, req),
++
++	TP_STRUCT__entry(
++		__field(u64,	tid)
++		__field(int,	op)
++		__field(u64,	ino)
++		__field(u64,	snap)
++	),
++
++	TP_fast_assign(
++		struct inode *inode;
++
++		__entry->tid = req->r_tid;
++		__entry->op = req->r_op;
++
++		inode = req->r_inode;
++		if (inode == NULL && req->r_dentry)
++			inode = d_inode(req->r_dentry);
++
++		if (inode) {
++			__entry->ino = ceph_ino(inode);
++			__entry->snap = ceph_snap(inode);
++		} else {
++			__entry->ino = __entry->snap = 0;
++		}
++	),
++
++	TP_printk("R=%llu op=%s ino=%llx,%llx",
++		  __entry->tid,
++		  ceph_mds_op_name(__entry->op),
++		  __entry->ino, __entry->snap)
++);
++
++TRACE_EVENT(ceph_mdsc_suspend_request,
++	TP_PROTO(struct ceph_mds_client *mdsc,
++		     struct ceph_mds_session *session,
++		     struct ceph_mds_request *req,
++		     enum ceph_mdsc_suspend_reason reason),
++
++	TP_ARGS(mdsc, session, req, reason),
++
++	TP_STRUCT__entry(
++		__field(u64,				tid)
++		__field(int,				op)
++		__field(int,				mds)
++		__field(enum ceph_mdsc_suspend_reason,	reason)
++	),
++
++	TP_fast_assign(
++		__entry->tid = req->r_tid;
++		__entry->op = req->r_op;
++		__entry->mds = session ? session->s_mds : -1;
++		__entry->reason = reason;
++	),
++
++	TP_printk("R=%llu op=%s reason=%s",
++		  __entry->tid,
++		  ceph_mds_op_name(__entry->op),
++		  __print_symbolic(__entry->reason, ceph_mdsc_suspend_reasons))
++);
++
++TRACE_EVENT(ceph_mdsc_resume_request,
++	TP_PROTO(struct ceph_mds_client *mdsc,
++		 struct ceph_mds_request *req),
++
++	TP_ARGS(mdsc, req),
++
++	TP_STRUCT__entry(
++		__field(u64,				tid)
++		__field(int,				op)
++	),
++
++	TP_fast_assign(
++		__entry->tid = req->r_tid;
++		__entry->op = req->r_op;
++	),
++
++	TP_printk("R=%llu op=%s",
++		  __entry->tid,
++		  ceph_mds_op_name(__entry->op))
++);
++
++TRACE_EVENT(ceph_mdsc_send_request,
++	TP_PROTO(struct ceph_mds_session *session,
++		 struct ceph_mds_request *req),
++
++	TP_ARGS(session, req),
++
++	TP_STRUCT__entry(
++		__field(u64,		tid)
++		__field(int,		op)
++		__field(int,		mds)
++	),
++
++	TP_fast_assign(
++		__entry->tid = req->r_tid;
++		__entry->op = req->r_op;
++		__entry->mds = session->s_mds;
++	),
++
++	TP_printk("R=%llu op=%s mds=%d",
++		  __entry->tid,
++		  ceph_mds_op_name(__entry->op),
++		  __entry->mds)
++);
++
++TRACE_EVENT(ceph_mdsc_complete_request,
++	TP_PROTO(struct ceph_mds_client *mdsc,
++		     struct ceph_mds_request *req),
++
++	TP_ARGS(mdsc, req),
++
++	TP_STRUCT__entry(
++		__field(u64,			tid)
++		__field(int,			op)
++		__field(int,			err)
++		__field(unsigned long,		latency_ns)
++	),
++
++	TP_fast_assign(
++		__entry->tid = req->r_tid;
++		__entry->op = req->r_op;
++		__entry->err = req->r_err;
++		__entry->latency_ns = req->r_end_latency - req->r_start_latency;
++	),
++
++	TP_printk("R=%llu op=%s err=%d latency_ns=%lu",
++		  __entry->tid,
++		  ceph_mds_op_name(__entry->op),
++		  __entry->err,
++		  __entry->latency_ns)
++);
++
++TRACE_EVENT(ceph_handle_caps,
++	TP_PROTO(struct ceph_mds_client *mdsc,
++		 struct ceph_mds_session *session,
++		 int op,
++		 const struct ceph_vino *vino,
++		 struct ceph_inode_info *inode,
++		 u32 seq, u32 mseq, u32 issue_seq),
++
++	TP_ARGS(mdsc, session, op, vino, inode, seq, mseq, issue_seq),
++
++	TP_STRUCT__entry(
++		__field(int,	mds)
++		__field(int,	op)
++		__field(u64,	ino)
++		__field(u64,	snap)
++		__field(u32,	seq)
++		__field(u32,	mseq)
++		__field(u32,	issue_seq)
++	),
++
++	TP_fast_assign(
++		__entry->mds = session->s_mds;
++		__entry->op = op;
++		__entry->ino = vino->ino;
++		__entry->snap = vino->snap;
++		__entry->seq = seq;
++		__entry->mseq = mseq;
++		__entry->issue_seq = issue_seq;
++	),
++
++	TP_printk("mds=%d op=%s vino=%llx.%llx seq=%u iseq=%u mseq=%u",
++		  __entry->mds,
++		  ceph_cap_op_name(__entry->op),
++		  __entry->ino,
++		  __entry->snap,
++		  __entry->seq,
++		  __entry->issue_seq,
++		  __entry->mseq)
++);
++
++#undef EM
++#undef E_
++#endif /* _TRACE_CEPH_H */
++
++/* This part must be outside protection */
++#include <trace/define_trace.h>
+-- 
+2.47.3
+
