@@ -1,96 +1,105 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2DB725487A;
-	Thu, 25 Sep 2025 02:09:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E302FDDC3;
+	Thu, 25 Sep 2025 03:33:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758766150; cv=none; b=WEgBCKDsh1+N1rJV/JHpMLHlubYNypwSZldhtQis0M4O1t2UUszccT32e/RhKDtz/vtMUzek6Y8zT9oIn6mA1dy0vp9hkgFCo4YZeDOdSQIzluNcEdr6RjxVgQmOeJFkJVTE0PIbHYXeNcvpCy+SFkBx76MVClgmNIwmATAJMkc=
+	t=1758771216; cv=none; b=qM7pHryZMtxs8/yuNj/vZJM0gX542r92WddAxaYMIk9hh9XVk2FQ9uZ0KEnLw3lSjmK23rcR41YnpTUgAfe0yjicWbRBMy5qKIRmbrHudEbgHqFLtRdzMAeUUJQI8jJ36oEpExWvFBmR3MBgtJvVmkA9abOUgtZlt49zt1pt0p8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758766150; c=relaxed/simple;
-	bh=dvEeJZpALUXHQn8Map8RbBvlT9jD/7M8DMbRjpo3D4w=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nE26DM0Uqumfpr7C61Kg5il8ItwPnfS9L/YGHWzvgAQLDHoBjauk7yMgnO9qV/Ia7x2JKJdegv2Irv2L75dz4ulIQ6iWrAF87rgShy2/utEDk8kNIQq6aax02gEoJaXBR0gBuFfEWQ6moH9B/QzPF6vfO+3YMIX70ZRIVkhVl5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=WjzIx70L; arc=none smtp.client-ip=117.135.210.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1758771216; c=relaxed/simple;
+	bh=DWfe4aECbsuwyz8AkW6vviHZuLumZTzAPaTzGlzdesg=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=mHBAPBl6FkhKahKCZ1yrEK51ZExBcOTqFGPJFZ5rJ5YKOzUvmW+LcCezRCrr7vpdW9hOYe/1WbPDT9nG22FrBZ1E2FYxdOEWvJnMes5bRhflltuyv7M07vydzWMU+K93Q2vT1hPpc3V/V6dPEjpUbtoEDUINQTTp7Av4gaMnJpM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gpeIJVxS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="WjzIx70L"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=ad
-	iBphAPScR6QQjh2KwjN5aarvz+PskpFpyHr3Y87gs=; b=WjzIx70LpoyMNUwCIh
-	ePB4aB07F7rsQrRR/e9WPkjqZgFTnVXn+ilrjtG3btzPXzxyt4Bw3Bch3tRw3RgX
-	G8/lxsmodMkMGGdq8UqCKLDF6EtEsIXwhwzs2JtslgNJ4+d7EEX5x48n62Gq/osK
-	wYuql/ibaoeh7FrMobRX80/gI=
-Received: from localhost.localdomain (unknown [])
-	by gzsmtp3 (Coremail) with SMTP id PigvCgDnEQkXpNRowQcHEQ--.9650S2;
-	Thu, 25 Sep 2025 10:08:24 +0800 (CST)
-From: Feng Yang <yangfeng59949@163.com>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mark.rutland@arm.com,
-	catalin.marinas@arm.com,
-	will@kernel.org,
-	revest@chromium.org,
-	alexei.starovoitov@gmail.com,
-	olsajiri@gmail.com,
-	andrii@kernel.org,
-	ast@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	bpf@vger.kernel.org
-Subject: [PATCH] tracing: Fix the bug where bpf_get_stackid returns -EFAULT on the ARM64
-Date: Thu, 25 Sep 2025 10:08:22 +0800
-Message-Id: <20250925020822.119302-1-yangfeng59949@163.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gpeIJVxS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85439C4CEF0;
+	Thu, 25 Sep 2025 03:33:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758771215;
+	bh=DWfe4aECbsuwyz8AkW6vviHZuLumZTzAPaTzGlzdesg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=gpeIJVxSOHjl/s2K8uNPyOH91Xr617pjQoR98gz6255BMQrq87DcqAlwrDI5mkwV1
+	 OwqJ/CFHdKfkUJ3wYO9bINfdIr0MHVaWR1+OSvggIr/hARfQiX+S4rcsReLDfEbD9q
+	 MKd8Xy5VfVA8CRV7N4KRVXVu6H9GssHI4m6v6mwTGO3cu4gsojzr2OSzoEryixJfjb
+	 NpZzaAOoJcIWx2/C0lx0Vqir9ub0YHAqj8w46XnMGx+tzuHKGuP6u/RPR5ZsQTvWiO
+	 0iaRHn+FkuAm9xJNxWkGXdwOGHb5h0nVLjor90w6cwsPHBpitKqEUbnoClLtbG9qy6
+	 Y7pyQyENmtwtg==
+Date: Thu, 25 Sep 2025 12:33:31 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Feng Yang <yangfeng59949@163.com>
+Cc: rostedt@goodmis.org, mark.rutland@arm.com, catalin.marinas@arm.com,
+ will@kernel.org, revest@chromium.org, alexei.starovoitov@gmail.com,
+ olsajiri@gmail.com, andrii@kernel.org, ast@kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, bpf@vger.kernel.org
+Subject: Re: [PATCH] tracing: Fix the bug where bpf_get_stackid returns
+ -EFAULT on the ARM64
+Message-Id: <20250925123331.f4158581bd488ca0ba838d1c@kernel.org>
+In-Reply-To: <20250925020822.119302-1-yangfeng59949@163.com>
+References: <20250925020822.119302-1-yangfeng59949@163.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:PigvCgDnEQkXpNRowQcHEQ--.9650S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7tFyxur1kWF4xJrW8tr4xZwb_yoW8XFWkp3
-	9F9rykGFWDWFs0kw47WrsxXr15Cws3ArWrCry8Cw1akF4DZFyUCr9FkFWjkF1xA34Du3yx
-	uF1avry5Cws8ZFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jjuWLUUUUU=
-X-CM-SenderInfo: p1dqww5hqjkmqzuzqiywtou0bp/1tbiVhrSeGjUYEjeAQABss
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Feng Yang <yangfeng@kylinos.cn>
+On Thu, 25 Sep 2025 10:08:22 +0800
+Feng Yang <yangfeng59949@163.com> wrote:
 
-When using bpf_program__attach_kprobe_multi_opts on ARM64 to hook a BPF program
-that contains the bpf_get_stackid function, the BPF program fails
-to obtain the stack trace and returns -EFAULT.
+> From: Feng Yang <yangfeng@kylinos.cn>
+> 
+> When using bpf_program__attach_kprobe_multi_opts on ARM64 to hook a BPF program
+> that contains the bpf_get_stackid function, the BPF program fails
+> to obtain the stack trace and returns -EFAULT.
+> 
+> This is because ftrace_partial_regs omits the configuration of the pstate register,
+> leaving pstate at the default value of 0. When get_perf_callchain executes,
+> it uses user_mode(regs) to determine whether it is in kernel mode.
+> This leads to a misjudgment that the code is in user mode,
+> so perf_callchain_kernel is not executed and the function returns directly.
+> As a result, trace->nr becomes 0, and finally -EFAULT is returned.
+> 
+> Therefore, the assignment of the pstate register is added here.
+> 
+> Fixes: b9b55c8912ce ("tracing: Add ftrace_partial_regs() for converting ftrace_regs to pt_regs")
+> Closes: https://lore.kernel.org/bpf/20250919071902.554223-1-yangfeng59949@163.com/
+> Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
 
-This is because ftrace_partial_regs omits the configuration of the pstate register,
-leaving pstate at the default value of 0. When get_perf_callchain executes,
-it uses user_mode(regs) to determine whether it is in kernel mode.
-This leads to a misjudgment that the code is in user mode,
-so perf_callchain_kernel is not executed and the function returns directly.
-As a result, trace->nr becomes 0, and finally -EFAULT is returned.
+Thanks for fixing!
 
-Therefore, the assignment of the pstate register is added here.
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Fixes: b9b55c8912ce ("tracing: Add ftrace_partial_regs() for converting ftrace_regs to pt_regs")
-Closes: https://lore.kernel.org/bpf/20250919071902.554223-1-yangfeng59949@163.com/
-Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
----
- arch/arm64/include/asm/ftrace.h | 1 +
- 1 file changed, 1 insertion(+)
+This is actually a fix for arm64. So I think it will be
+merged via arm64 tree, right?
 
-diff --git a/arch/arm64/include/asm/ftrace.h b/arch/arm64/include/asm/ftrace.h
-index bfe3ce9df197..ba7cf7fec5e9 100644
---- a/arch/arm64/include/asm/ftrace.h
-+++ b/arch/arm64/include/asm/ftrace.h
-@@ -153,6 +153,7 @@ ftrace_partial_regs(const struct ftrace_regs *fregs, struct pt_regs *regs)
- 	regs->pc = afregs->pc;
- 	regs->regs[29] = afregs->fp;
- 	regs->regs[30] = afregs->lr;
-+	regs->pstate = PSR_MODE_EL1h;
- 	return regs;
- }
- 
+Thank you,
+
+> ---
+>  arch/arm64/include/asm/ftrace.h | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm64/include/asm/ftrace.h b/arch/arm64/include/asm/ftrace.h
+> index bfe3ce9df197..ba7cf7fec5e9 100644
+> --- a/arch/arm64/include/asm/ftrace.h
+> +++ b/arch/arm64/include/asm/ftrace.h
+> @@ -153,6 +153,7 @@ ftrace_partial_regs(const struct ftrace_regs *fregs, struct pt_regs *regs)
+>  	regs->pc = afregs->pc;
+>  	regs->regs[29] = afregs->fp;
+>  	regs->regs[30] = afregs->lr;
+> +	regs->pstate = PSR_MODE_EL1h;
+>  	return regs;
+>  }
+>  
+> -- 
+> 2.25.1
+> 
+
+
 -- 
-2.25.1
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
