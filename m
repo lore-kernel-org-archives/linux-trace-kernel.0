@@ -1,113 +1,180 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E13C14658D;
-	Wed, 24 Sep 2025 22:00:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A5EE2DF718
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 25 Sep 2025 02:05:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758751228; cv=none; b=k/RCBDSQJSgWNdRQCoCyI0TCyi0EZxw95v4fgyOrYxDpyBNc3NpGHCnOm2F2vT2eZxqykw1oeb9YwmVqyoBRho+CFApXD+HUjFn+Kq82c4yAHTxcuSWBcFgr6q67Vk+b8K+GwxMgp/Xd4mrdfbn9UWVloG2IzQ0/uUS+xKQ8J5Y=
+	t=1758765936; cv=none; b=SqflYgu6TZ0NyTz0mJyP694is7fVlY+k2wrulYaVZS0Q3bHPPSfncPvkUHu7Kh3lD1ZmZ/TIMtvxvxGyAN1USIfJnssXl2KmT4eu0kgupU0rFSvP/I1l9CRf6S8pdCfQoCkIuGsVTaC+eWmNgWRo3WCLoCPUHSL6jb8qglHHzUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758751228; c=relaxed/simple;
-	bh=6nsdrp/oNxfmTedGHJyCptTjEQF4jfMWqCgFHC0AW0c=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=Xe6KYAUDzZW386gyYRJz3iKjo/GuuDx5zdLksWPYIxnMnMIR3PoM2Msu3tXZOSLsHH6p2vTgQJ0UjeAhbAtatDhl2BrSFwfeofxEunwEDhkEbVV13eyaC2dVstmPWTaXNxicN3BKBnyB9HzF0qeOGGnyaTNghz2MEqshgt0x0+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=neZTQ2RJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1758765936; c=relaxed/simple;
+	bh=c7OOe7lcw1oi9g6/DwjJWKSlU0/KgpD3/2hH1JCaeIg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TmQyQMZBh4ZikEq3f5xckbmWseh/04O6TGY/iuPXXN20PAVV9MzpzmBwn14sfZgXOK+o6GHMGbjMktTeobuvbOCc8CZxSKiife6gtl7Buad0vt41qzcJEQWiQn+K7/Low+crt/Jzgv3JDP2MZ6hfHggdKZDa7nXCh4kdrcdE/WE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=imZee1bp; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="neZTQ2RJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89829C4CEE7;
-	Wed, 24 Sep 2025 22:00:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758751227;
-	bh=6nsdrp/oNxfmTedGHJyCptTjEQF4jfMWqCgFHC0AW0c=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=neZTQ2RJyR1L1WE/Cmcheu2WwBC+tY+fvrDUrwBxO+FirmJGl6NWIBcv/iefmwkVL
-	 NUTcRKGN9UvvWfJFl+Y35Uw5v/P4oqVNctqRtwZ95xnxOsaZcXmxJ/3y4FbVof6Ijw
-	 2+jQj2rtBJ9vB1HjwbWb7PVMvw7Y3GWOvoeEVS69pGre2UCurfcrxYFC9GWRN6MZp8
-	 ncgku5SQ55aqInuk6er7NkhW7gy6GHfH/41wfhIcCiNiTOHB6TIHht4VIUu5POH8jk
-	 pmMoFWdNH+PjlcO1Zz2CscR3lRA4XqEEcBP+vk51AL8UCwRBX/pzvcqMdHuIFW1Jt+
-	 XrSlU509deNHQ==
-Date: Thu, 25 Sep 2025 07:00:22 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Feng Yang <yangfeng59949@163.com>
-Cc: alexei.starovoitov@gmail.com, andrii@kernel.org, ast@kernel.org,
- bpf@vger.kernel.org, daniel@iogearbox.net, eddyz87@gmail.com,
- haoluo@google.com, john.fastabend@gmail.com, jolsa@kernel.org,
- kpsingh@kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, martin.lau@linux.dev, sdf@fomichev.me,
- song@kernel.org, yonghong.song@linux.dev
-Subject: Re: [BUG] Failed to obtain stack trace via bpf_get_stackid on ARM64
- architecture
-Message-Id: <20250925070022.42ef1398e0f61c797222679c@kernel.org>
-In-Reply-To: <20250924105353.840865-1-yangfeng59949@163.com>
-References: <20250924170416.0874e56c2ce99a4de92e05b8@kernel.org>
-	<20250924105353.840865-1-yangfeng59949@163.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="imZee1bp"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2445805aa2eso4633995ad.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 24 Sep 2025 19:05:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1758765934; x=1759370734; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=JHHL33LsFFZTfiqVPHubJTFh9Ll2HmMvlyBTNdInq0Y=;
+        b=imZee1bppeV7lQeuJ63deUwCVif2AxKlwsUK8w6ovlwZ13BKv6xN5dzPtekCjtwSnL
+         n0dPq0n84+Hi9ehqzipvh8a2WuGxBHkeNIXCmgN4+c7E6+RB8SXYehwaZDbdUZXRnHt+
+         lTOb8heTuyOMaVoEFex4hTVpfiy82YYnXuwKz3yODJWQuPqehf+xbFTVPsRx54qqgRLf
+         V8qprIzqmu4ViwChP1OHEPFwWYQhST9tg79FGDrux6R3zUJNvS/34S+d5kRqdHMXC41u
+         VcnI0CJnGSAxbo6FZLFKlYYPYDO6dRWO6SqlFlmaOqw7PKlmT0Eql0ErzVPMHdSu0ohJ
+         g2Qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758765934; x=1759370734;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JHHL33LsFFZTfiqVPHubJTFh9Ll2HmMvlyBTNdInq0Y=;
+        b=Jo+Qd/EUdje0FtI7HFKddgZLNPN08XR6+YdMj+jSRoUwTLv5w+EK62WLTieM0+ROhD
+         WT+snO7Ok+2gYXcMRuOJn+dv1Nf7KwY71NL/8cC81CXqcMiO1HWr9re/ZmquXz5OgmlM
+         MqE09z40Yat4nNNtH4psuk2ex3uOWVf/F6AyuzRJEr9DhDC3t2zdNqwKmGMMwysZHX1N
+         F6IDfSpyVGcAEv07pqMSyz0sjfDRKiCKdhyt4f6/M47kgriw7wcjsv2lzX29o77xb/mr
+         zG3YRNpTjpDjKKvNv6yztkejft4RlbnrRfKyueA9fDKrV6+tJZfRbv/s1sZf3wryEu6G
+         vHpg==
+X-Forwarded-Encrypted: i=1; AJvYcCV+DiVtoF6zV/mTylzHSFbkTtISN7v8KBJ7CwHC/igmEQ7BsrkJzXpllE/gGcOY+QdccwfZTtiVaASIve8Ob4pH4H4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyX+m//mrd0mZ3yn7QX5JmTbJtygz1yzbpsdmChALfMhZqhQXVM
+	BDsfXbRUxpLbyEZTZwqjRgGmRnGnxleiJ7ztbdd0xF0285hiY+spLGc0
+X-Gm-Gg: ASbGncvkdpmUmSG/3WwJ79D0HD2ePF4R1R0Gb6U8KXaSoTgrmuA56WHTBasddMLWuu4
+	qfDyDgDZhchdRvyVwlOEYLNLM4nCNFIINfFyIuR/dgJG4ey9Vyb5T4MBgnrahv7hwU7KUFQOKyY
+	SSB+7qBr4ZyZJAKdWbR8WFIoJtxb0WPtkcYkxH7zt3wjc/vIpRGf48xC8Ij7UUOat4Xjf+Jkw9R
+	BCPKenCWiX+yMsBbfv4Sug2Z7hM6Oqg601v7AAAX4CdD0EZsAbNAzGAwykl0rHrvHfqQMd1qQ1Q
+	hatBeqc91Xrdl1M4HNa/5Yo6ISDssOKsTA8z/Qszg0B1BrgwPdZ34EhBDG5VUaHnYtrD2Hmu5tv
+	XfJ9dYExr3DStPqG7Ly9myLS1Ye6tRznGSg==
+X-Google-Smtp-Source: AGHT+IH7ui9TJXKQ2pJIcwuIZvxvX8PqduYqo+2cQ68cM5ywCGeSLrO3GT6IefQ6CqCfyu2awBs3nA==
+X-Received: by 2002:a17:902:d50a:b0:267:da75:e0f with SMTP id d9443c01a7336-27ed4a06dd7mr20974665ad.11.1758765934070;
+        Wed, 24 Sep 2025 19:05:34 -0700 (PDT)
+Received: from localhost ([103.88.46.62])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-78102c26faasm387777b3a.93.2025.09.24.19.05.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Sep 2025 19:05:33 -0700 (PDT)
+Date: Thu, 25 Sep 2025 10:05:22 +0800
+From: Jinchao Wang <wangjinchao600@gmail.com>
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Alexander Potapenko <glider@google.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	David Hildenbrand <david@redhat.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, Kees Cook <kees@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Masahiro Yamada <masahiroy@kernel.org>, Rong Xu <xur@google.com>,
+	Naveen N Rao <naveen@kernel.org>,
+	David Kaplan <david.kaplan@amd.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Jinjie Ruan <ruanjinjie@huawei.com>, Nam Cao <namcao@linutronix.de>,
+	workflows@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	linux-mm@kvack.org, llvm@lists.linux.dev,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	kasan-dev@googlegroups.com, "David S. Miller" <davem@davemloft.net>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 04/23] mm/ksw: add build system support
+Message-ID: <aNSjYrXXO2BjYA87@mdev>
+References: <20250924115124.194940-1-wangjinchao600@gmail.com>
+ <20250924115124.194940-5-wangjinchao600@gmail.com>
+ <3504b378-4360-4e55-b28d-74aabd4308d7@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3504b378-4360-4e55-b28d-74aabd4308d7@infradead.org>
 
-On Wed, 24 Sep 2025 18:53:53 +0800
-Feng Yang <yangfeng59949@163.com> wrote:
-
-> On Wed, 24 Sep 2025 17:04:16 +0900 Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+On Wed, Sep 24, 2025 at 10:06:10AM -0700, Randy Dunlap wrote:
 > 
-> > > After testing, it was found that the stack could not be obtained because user_mode(regs) returned 1. 
-> > > Referring to the arch_ftrace_fill_perf_regs function in your email 
-> > > (https://lore.kernel.org/all/173518997908.391279.15910334347345106424.stgit@devnote2/), 
-> > > I made the following modification: by setting the value of pstate, the stack can now be obtained successfully.
-> > > 
-> > > diff --git a/arch/arm64/include/asm/ftrace.h b/arch/arm64/include/asm/ftrace.h
-> > > index 058a99aa44bd..f2814175e958 100644
-> > > --- a/arch/arm64/include/asm/ftrace.h
-> > > +++ b/arch/arm64/include/asm/ftrace.h
-> > > @@ -159,11 +159,13 @@ ftrace_partial_regs(const struct ftrace_regs *fregs, struct pt_regs *regs)
-> > >  {
-> > >         struct __arch_ftrace_regs *afregs = arch_ftrace_regs(fregs);
-> > >  
-> > >         memcpy(regs->regs, afregs->regs, sizeof(afregs->regs));
-> > >         regs->sp = afregs->sp;
-> > >         regs->pc = afregs->pc;
-> > >         regs->regs[29] = afregs->fp;
-> > >         regs->regs[30] = afregs->lr;
-> > > +       regs->pstate = PSR_MODE_EL1h;
-> > 
-> > Good catch! 
 > 
-> Should I submit this patch, or will you carry out a more complete fix?
-
-
-Yes, please send a fix. I think this is enoguh. Please add,
-
-Fixes: b9b55c8912ce ("tracing: Add ftrace_partial_regs() for converting ftrace_regs to pt_regs")
-
-Thank you,
-
+> On 9/24/25 4:50 AM, Jinchao Wang wrote:
+> > Add Kconfig and Makefile infrastructure.
+> > 
+> > The implementation is located under `mm/kstackwatch/`.
+> > 
+> > Signed-off-by: Jinchao Wang <wangjinchao600@gmail.com>
+> > ---
+> >  mm/Kconfig.debug             |  8 ++++++++
+> >  mm/Makefile                  |  1 +
+> >  mm/kstackwatch/Makefile      |  2 ++
+> >  mm/kstackwatch/kernel.c      | 23 +++++++++++++++++++++++
+> >  mm/kstackwatch/kstackwatch.h |  5 +++++
+> >  mm/kstackwatch/stack.c       |  1 +
+> >  mm/kstackwatch/watch.c       |  1 +
+> >  7 files changed, 41 insertions(+)
+> >  create mode 100644 mm/kstackwatch/Makefile
+> >  create mode 100644 mm/kstackwatch/kernel.c
+> >  create mode 100644 mm/kstackwatch/kstackwatch.h
+> >  create mode 100644 mm/kstackwatch/stack.c
+> >  create mode 100644 mm/kstackwatch/watch.c
+> > 
+> > diff --git a/mm/Kconfig.debug b/mm/Kconfig.debug
+> > index 32b65073d0cc..89be351c0be5 100644
+> > --- a/mm/Kconfig.debug
+> > +++ b/mm/Kconfig.debug
+> > @@ -309,3 +309,11 @@ config PER_VMA_LOCK_STATS
+> >  	  overhead in the page fault path.
+> >  
+> >  	  If in doubt, say N.
+> > +
+> > +config KSTACK_WATCH
+> > +	bool "Kernel Stack Watch"
+> > +	depends on HAVE_HW_BREAKPOINT && KPROBES && FPROBE && STACKTRACE
+> > +	help
+> > +	  A lightweight real-time debugging tool to detect stack corrupting.
 > 
-> > > By the way, during my testing, I also noticed that when executing bpf_get_stackid via kprobes or tracepoints, 
-> > > the command bpftrace -e 'kprobe:bpf_get_stackid {printf("bpf_get_stackid\n");}' produces no output. 
-> > 
-> > I think this is because the bpf_get_stackid is a kind of recursive
-> > event from kprobes. Kprobe handler can not be reentered.
-> > 
-> > > However, it does output something when bpf_get_stackid is invoked via uprobes. 
-> > > This phenomenon also occurs on the x86 architecture, could this be a bug as well?
-> > 
-> > Maybe if bpf_get_stackid() is kicked from uprobes, it is not recursive
-> > call from kprobes, so it works.
-> > 
-> > So it is expected behavior, not a bug. Sorry for confusion.
-> > 
-> > 
-> > Thank you,
+> 	                                                         corruption.
+Thanks, will fix in next version.
 > 
-> Thank you very much for your explanation.
+> > +
+> > +	  If unsure, say N.
 > 
-
+> 
+> -- 
+> ~Randy
+> 
 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Jinchao
