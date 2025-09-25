@@ -1,135 +1,135 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from esa5.hgst.iphmx.com (esa5.hgst.iphmx.com [216.71.153.144])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 611C32DE702;
-	Thu, 25 Sep 2025 14:39:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C95F91DE4EF;
+	Thu, 25 Sep 2025 15:02:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.71.153.144
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758811167; cv=none; b=F63EnkuSM1MxlN9jzIFK1lMYner/Md/MUtWv+Togl77hq/Y9mCH+3P2zhCwNwcMuT8G9S4wjQ2VLTbU486TZxsegcdSEukt2+EcCEuctDD+RwCGZRJ/qKy8fm207/5o6JR+0cSiCbIN7nZOcMrOr12kp5pUrjWzDzOaBm56CTA4=
+	t=1758812565; cv=none; b=B0XwhQvGSlqLqXmruBqxS+YqE71RuCPhTKEQjGH/D5Mz6S+IMBJE6MS5yrZZgLaWEpiuhbIWwjGOnRHbWz0BE30k9G2jguPTChD0Tl3HGgp95eRm8Rpmzef/HhBbQTHYHsWH1uTwWWjkfNQn+MgHMBOt9Q8ElaH9B5vwMLUcD78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758811167; c=relaxed/simple;
-	bh=KnjfQLJD3s3IWHONb8K9H+RKdyMPO0YV1Hhif4rJMAA=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=DEX27IG+iI+fUp2dtpWqM9g1itFpuQgdF00r2BCyg1NUfeW/dkceamqX3/b0Ge5QSrh9EAX8IAlugPbSG+yEiY05v19vMWtytqZtCo3G3yvetJq5b6/mMH3ZQ8dM2LS0zoUI31fM8X+V55dehj47gXWKnODUSoAR9c1HHoOuezo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZGthc295; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=CpGVnkjC; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1758812565; c=relaxed/simple;
+	bh=+d6LqvxvOyA5QrNNpnhsaaZJfZ2boT2CGXN4kc0lyBE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cKdcqZw+urNOnPd+ZzdqlB7ZyJu8bZVxOOaBe8FVbR81unbu6UZaKAHs5tV/MWImP0d9R+hlRS9kXv4m191dr92BdPY2fHCzHuWaw5TFDMW6T1oYiqvXXll/Xb1of95/BqgC1BwOkaz+G3z8N9fYukne4FnSBva+yqK16hSEUbM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=QS1QVJN9; arc=none smtp.client-ip=216.71.153.144
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZGthc295";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="CpGVnkjC"
-Date: Thu, 25 Sep 2025 16:39:18 +0200 (GMT+02:00)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1758811164;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KnjfQLJD3s3IWHONb8K9H+RKdyMPO0YV1Hhif4rJMAA=;
-	b=ZGthc295HZ47YWeuNoepvmlgQDhdTUmNXO4LmkvLCTWZ03sK/oA0ogBAA1NBz8Ho0lO7n4
-	mcuo+3LHR0aPX3VLs9ezhRN10faEA8aSiTYQQwugKRwDku0zSohinysdBD6v3PchN/qJqA
-	oDX4Zk0Oo0XmVXCNQUlIiIs25jZMIaWYG3jYz36kP/0ZZ7Kz9vLKv+iK2JLjqhrhOwDSlQ
-	kUZvU4HRsamNH7FXSCuIxU16c0DBnh7W6PdxEW6AVsVUfQ64F0riyXmrR32oLa6S15uZ8j
-	pq2ijyJEsFzjxJ2wsAS2pjBkJGnUYPKuVOnBBNTX5egstaFcXm373JRh/vqUgQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1758811164;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KnjfQLJD3s3IWHONb8K9H+RKdyMPO0YV1Hhif4rJMAA=;
-	b=CpGVnkjC6Tm3kwhb52A8t15B07L3QpV+CVUsHSzQPZsFBkk5EM/Fu4dWJwmfp/eOgTaPgO
-	8HMCgW+7FLao8/Ag==
-From: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-To: Gabriele Monaco <gmonaco@redhat.com>, Nam Cao <namcao@linutronix.de>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	Steven Rostedt <rostedt@goodmis.org>,
+	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="QS1QVJN9"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1758812563; x=1790348563;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=+d6LqvxvOyA5QrNNpnhsaaZJfZ2boT2CGXN4kc0lyBE=;
+  b=QS1QVJN9LvWZwtQLfdd/Z2t1wpWZFkSy1huqFrR4IoNw0z9F4qVKGe3y
+   0Q4AinOQujRx2SQxVh4gLZyxuexj1b7IUwH1/j1fmsjxYSloKBqlXSI+T
+   TR7xsnx72k8fzKI7mFlb3yjkBkKRrM5WGAB35VpVBE7q68vy9vmzS8Uyp
+   Gkc1huXcGYnZ1B0V2CpxOe5PqcdSF86TMuXF0br5oJjxjpPL37IPwZtpw
+   h0+7yqm2Qb0APqtDNrNVC0VvGWFtr8F/WyChb8Fbu5bWXvuFkQV2PzZ/R
+   6w+OM7tyBsSvSA+RMMEwRn0WGlG4g1IZeZ2dd3bla0NyhQQ3SOTaRgl/H
+   A==;
+X-CSE-ConnectionGUID: pCIXRGq4RLaQlMfuzz7Z0A==
+X-CSE-MsgGUID: PzjpbetARuy+IkghyZ5AGQ==
+X-IronPort-AV: E=Sophos;i="6.18,292,1751212800"; 
+   d="scan'208";a="130347466"
+Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 25 Sep 2025 23:02:38 +0800
+IronPort-SDR: 68d5598e_j4OH3DPNfAaURVIMPgMwPq/qz2xPSDPJnpwLHWqG2MZsiAO
+ 2Lk58YM3Gepp0M+/COXRbtwTAIcIOIE/ZwrdmtA==
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 25 Sep 2025 08:02:38 -0700
+WDCIronportException: Internal
+Received: from c02g55f6ml85.ad.shared (HELO C02G55F6ML85.wdc.com) ([10.224.183.46])
+  by uls-op-cesaip02.wdc.com with ESMTP; 25 Sep 2025 08:02:35 -0700
+From: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Message-ID: <6a5fde33-b3e3-44e2-8ea5-5f4cf350cf35@linutronix.de>
-In-Reply-To: <ced1cdde298d105ba2d789e4e4704caac8dec518.camel@redhat.com>
-References: <20250919-rv-reactor-signal-v1-1-fb0012034158@linutronix.de> <d0aaaf1f47f0d948b60b0575e179564e3c024188.camel@redhat.com> <20250922162900.eNwI7CS0@linutronix.de> <ced1cdde298d105ba2d789e4e4704caac8dec518.camel@redhat.com>
-Subject: Re: [PATCH] rv: Add signal reactor
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-btrace@vger.kernel.org,
+	John Garry <john.g.garry@oracle.com>,
+	Hannes Reinecke <hare@suse.de>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Christoph Hellwig <hch@lst.de>,
+	Naohiro Aota <naohiro.aota@wdc.com>,
+	Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
+	Chaitanya Kulkarni <chaitanyak@nvidia.com>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>,
+	Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Subject: [PATCH v2 00/15] block: add blktrace support for zoned block device commands
+Date: Thu, 25 Sep 2025 17:02:16 +0200
+Message-ID: <20250925150231.67342-1-johannes.thumshirn@wdc.com>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Correlation-ID: <6a5fde33-b3e3-44e2-8ea5-5f4cf350cf35@linutronix.de>
+Content-Transfer-Encoding: 8bit
 
-Hi Gabriele and Nam,
+This patch series extends the kernel blktrace infrastructure to support
+tracing zoned block device commands. Zoned block devices (e.g., ZAC/ZBC and
+ZNS) introduce command types such as zone open, close, reset, finish, and
+zone append. These are currently not visible in blktrace, making it difficult
+to debug and analyze I/O workloads on zoned devices.
 
-Sep 23, 2025 09:43:05 Gabriele Monaco <gmonaco@redhat.com>:
+The patches in this series utilize the new trace points for these zone
+management operations, and propagate the necessary context to the blktrace
+logging path. These additions are designed to be backward-compatible, and are
+only active when zoned devices are in use.
 
-> On Mon, 2025-09-22 at 18:29 +0200, Nam Cao wrote:
->> On Fri, Sep 19, 2025 at 02:26:12PM +0200, Gabriele Monaco wrote:
->>> On Fri, 2025-09-19 at 12:49 +0200, Thomas Wei=C3=9Fschuh wrote:
->>>> +static void rv_reaction_signal(int signal, const char *fmt, va_list a=
-rgs)
->>>> +{
->>>> +=C2=A0=C2=A0 struct rv_signal_work *work;
->>>> +=C2=A0=C2=A0 char message[256];
->>>> +
->>>> +=C2=A0=C2=A0 work =3D mempool_alloc_preallocated(rv_signal_task_work_=
-pool);
->>>> +=C2=A0=C2=A0 if (!work) {
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pr_warn_ratelimited("Unable to s=
-ignal through task_work,
->>>> sending directly\n");
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vsnprintf(message, sizeof(messag=
-e), fmt, args);
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 rv_signal_force_sig(signal, mess=
-age);
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return;
->>>> +=C2=A0=C2=A0 }
->>>
->>> Why do you use the task_work at all instead of signalling directly?
->>> If that's something not safe from a (any) tracepoint because it can sle=
-ep
->>
->> If I remember correctly, sending signals requires a spinlock and therefo=
-re
->> may sleep on PREEMPT_RT.
->
-> Yeah that's what I quickly glanced at. Which seems to be the case also fo=
-r
-> mempool_alloc_preallocated by the way, so I'm not sure that's safer than
-> signalling directly on PREEMPT_RT.
->
-> Thomas, did you test your reactor on PREEMPT_RT? I'd expect a few fat war=
-nings
-> when this is called from sched tracepoints. Unless you're lucky and never=
- get
-> contention. Lockdep (CONFIG_PROVE_LOCKING) may help here.
+In order to not break the user-space ABI, a new ioctl was introduced to request
+the new version of the blk_io_trace with extended 'action' field.
 
-I trusted the documentation, which promised not to sleep.
-I'll rework it for v2.
+The user-space tools in the blktrace suite are updated in a separate patch
+series to interpret and display the new trace events.This patch series extends the kernel blktrace infrastructure to support
+tracing zoned block device commands. Zoned block devices (e.g., ZAC/ZBC and
+ZNS) introduce command types such as zone open, close, reset, finish, and
+zone append. These are currently not visible in blktrace, making it difficult
+to debug and analyze I/O workloads on zoned devices.
 
-> Thanks,
-> Gabriele
->
->>
->>> you should definitely not call it if allocation fails.
->>
->> Yep.
+The patches in this series utilize the new trace points for these zone
+management operations, and propagate the necessary context to the blktrace
+logging path. These additions are designed to be backward-compatible, and are
+only active when zoned devices are in use.
 
-Ack.
+In order to not break the user-space ABI, a new ioctl was introduced to request
+the new version of the blk_io_trace with extended 'action' field.
 
->>
->> We probably can get away with not reacting at all if allocation fails, b=
-y
->> crafting our tests such that only one reaction happens at a time, and
->> allocation won't fail.
+The user-space tools in the blktrace suite are updated in a separate patch
+series to interpret and display the new trace events.
 
-Ack.
+Changes to v1:
+- Incroporate feedback from Christoph
 
+Johannes Thumshirn (15):
+  blktrace: only calculate trace length once
+  blktrace: factor out recording a blktrace event
+  blktrace: split out relaying a blktrace event
+  blktrace: untangle if/else sequence in __blk_add_trace
+  blktrace: change the internal action to 64bit
+  blktrace: split do_blk_trace_setup into two functions
+  blktrace: add definitions for blk_user_trace_setup2
+  blktrace: pass blk_user_trace2 to setup functions
+  blktrace: add definitions for struct blk_io_trace2
+  blktrace: differentiate between blk_io_trace versions
+  blktrace: add block trace commands for zone operations
+  blktrace: expose ZONE APPEND completions to blktrace
+  blktrace: trace zone management operations
+  blktrace: trace zone write plugging operations
+  blktrace: handle BLKTRACESETUP2 ioctl
 
-I am wondering if it would make sense to add a new tracepoint that fires in=
- addition of the reactors.
-That would allow multiple simultaneous consumers and also bespoke handlers =
-in userspace.
+ block/ioctl.c                     |   1 +
+ include/linux/blktrace_api.h      |   3 +-
+ include/uapi/linux/blktrace_api.h |  54 +++-
+ include/uapi/linux/fs.h           |   1 +
+ kernel/trace/blktrace.c           | 458 +++++++++++++++++++++++-------
+ 5 files changed, 407 insertions(+), 110 deletions(-)
 
+-- 
+2.51.0
 
-Thomas
