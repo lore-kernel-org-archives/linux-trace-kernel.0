@@ -1,62 +1,83 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1C06219E8;
-	Thu, 25 Sep 2025 07:14:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 151FA2E1C7B;
+	Thu, 25 Sep 2025 07:26:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758784492; cv=none; b=hksJkdRNbl365kiYh9XsdhvVUmAInf9Ddq/lfE3T9gGqwta/mNFstyoFxFDO5qBR7XlGL++GH/x9X9UK2Z4Jp5Yhv4X2Q2qbSoYj72yih+FQb7UClKZhkfHplWN2RoOPl3NKlSwa79v2owFOXXGS85tmhyWJ0ytMPr2xJKDk+Go=
+	t=1758785187; cv=none; b=NnfEKG2LiaWvkJhmPG89nJdBB6+xKIHTJjgJG1JLwL2WY8mmRmPZGp1k0bBPpfUaKilZUkzvd6YkZURaUsfRLPCFiuC6oV2UOUP72+3KxrL1gT24cy/miCyE3J8Uu8gPtMI5t7CXKaJxQSQfQ0J4QrJsaeuwFIN7xIgGZPf6qZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758784492; c=relaxed/simple;
-	bh=7NcxTOwDekTgL2GhgwOZjxKvQwx1/iFkog9wKBVaUZ8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AZUMyQ7TTBeUKyMJ6xjeFiak0pfOmAidchRl8YMWdtn6Mt8FMfaxE1JVrr2oXl/j9ClnflrrBL7x2ctXAN288CVzEED3rP9BU0pGWEsYO8koEomwvP+rxvwSI6jCwtn6RgFS5SmKHP2uGhIQcdZ5Z7ib0vZNjlncv4F5GkPzHEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf09.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay07.hostedemail.com (Postfix) with ESMTP id 2633D160354;
-	Thu, 25 Sep 2025 07:14:42 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf09.hostedemail.com (Postfix) with ESMTPA id 7E35C20031;
-	Thu, 25 Sep 2025 07:14:38 +0000 (UTC)
-Date: Thu, 25 Sep 2025 03:14:35 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Feng Yang <yangfeng59949@163.com>, mark.rutland@arm.com,
- catalin.marinas@arm.com, will@kernel.org, revest@chromium.org,
- alexei.starovoitov@gmail.com, olsajiri@gmail.com, andrii@kernel.org,
- ast@kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- bpf@vger.kernel.org
-Subject: Re: [PATCH] tracing: Fix the bug where bpf_get_stackid returns
- -EFAULT on the ARM64
-Message-ID: <20250925031435.64f54ca0@batman.local.home>
-In-Reply-To: <20250925123331.f4158581bd488ca0ba838d1c@kernel.org>
-References: <20250925020822.119302-1-yangfeng59949@163.com>
-	<20250925123331.f4158581bd488ca0ba838d1c@kernel.org>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1758785187; c=relaxed/simple;
+	bh=SVO+RJygcgJvp2Jegwed4omZG0pEp6kOknD7au5J3Qc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ch1i4MdAhzioB5W9pN+pbIJpKvw+PEYdtBTwa9PoeuAWXkkzeYQP4KJXxcSel/6wfMo/IuWx6GhBulqnpQFKq2yZWIUFnbJeFGLClUgD6dYzpELHYh+0B+53CmzjshH/x/QJwbFotXTZC2b52OAYYufBRaqhF56tfjFEVDhi76Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=D+FT4rt6; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="D+FT4rt6"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=Ka9ph0LAuyJVkaL1ah3rnWDOfvHTmklrLGkQl8UFMNc=; b=D+FT4rt6zbKsX21lgKDfaTqeIW
+	Ka60A+egf06e/2rlo8wLBv/XGo+LGOhaApSQzAbjNL1GJIobCOwYgydzfLyvycZFBX1jj9HsOYwet
+	nnj6jNRT89mRER1onC2V21OZ6uF/uiCCgicQ5mRRKwQ/u0LmACGq1yGEnK/uwbT9AiLIbkaJBgaXZ
+	PXG4dfpeEgcZ9/JNmkxxpdGJ++2r5lBoswVZScW1kIlAaowyz94nVe1ohkikwZusdHQGLACOnus3e
+	PMinZazQ0EWj4OA4a7LqteQBQw9aogYydVADhs00VWc2CVttgicJ1kyAMMSBu+Pq8ziA9ccWCI7Jx
+	0Cje2XAA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1v1gMk-0000000Beum-3oqM;
+	Thu, 25 Sep 2025 07:26:10 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 6D6F330043D; Thu, 25 Sep 2025 09:26:09 +0200 (CEST)
+Date: Thu, 25 Sep 2025 09:26:09 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Steven Rostedt <rostedt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Takaya Saeki <takayas@google.com>, Tom Zanussi <zanussi@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ian Rogers <irogers@google.com>,
+	Douglas Raillard <douglas.raillard@arm.com>
+Subject: Re: [PATCH v2 3/8] tracing: Have syscall trace events read user
+ space string
+Message-ID: <20250925072609.GU4067720@noisy.programming.kicks-ass.net>
+References: <20250923130457.901085554@kernel.org>
+ <20250923130713.936188500@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 7E35C20031
-X-Stat-Signature: a4mr1i9f1s1f1ursbn1t6s3w14841sug
-X-Rspamd-Server: rspamout02
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19p+72UpTwl1SL3DLMeRJ+8sjZlK+VlD3g=
-X-HE-Tag: 1758784478-716288
-X-HE-Meta: U2FsdGVkX1/Og0jSkahwE0JXw3mOt8HgK/ymsHjHzYQJ+FMYHp8u7q/cbR+5f0WoD0ewLCaBEPf2Ohmx7olIKIvarMmzWShR4irKtrqG3vRQbkFmZNrBjJ3XQ0lv5tFcXv5jPeZm1f2HaPu5Hbtfn9+6N2ivgosLuA1+vBubCSZoGlfhovNzi9k4QlZB1tZqfXHSqwg8LwnwF3/uVB5uGb0359N3KP/9AIi3rXH3cq+sJfKdPYrV3B566i/o+35AMnIekigSk6Y8N0TYTGd0HmRU+mBZIZBzOybxCeEVGtXUBjLvIkZWwuTvZFuBui5sU97LahsRyiHK47ZfklEeC4pJOyfYad44Kr2lxeX6FYx3QJzvqoIbUQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250923130713.936188500@kernel.org>
 
-On Thu, 25 Sep 2025 12:33:31 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+On Tue, Sep 23, 2025 at 09:05:00AM -0400, Steven Rostedt wrote:
+> From: Steven Rostedt <rostedt@goodmis.org>
+> 
+> As of commit 654ced4a1377 ("tracing: Introduce tracepoint_is_faultable()")
+> system call trace events allow faulting in user space memory. Have some of
+> the system call trace events take advantage of this.
+> 
+> Introduce a way to read strings that are nul terminated into the trace
+> event. The way this is accomplished is by creating a per CPU temporary
+> buffer that is used to read unsafe user memory.
+> 
+> When a syscall trace event needs to read user memory, it reads the per CPU
+> schedule switch counter. It then disables migration and enables
+> preemption, copies the user space memory into this buffer, then disables
+> preemption again. It reads the per CPU schedule switch counter again and
+> if it matches it considers the buffer is valid.  Otherwise it needs to try
+> again. This is similar to how seqcount works, but uses the per CPU context
+> switch counter as the sequence counter.
 
-> This is actually a fix for arm64. So I think it will be
-> merged via arm64 tree, right?
-
-Correct.
-
--- Steve
+And you can't just allocate memory and not bother with the
+migrate_disable() and retry stuff because?
