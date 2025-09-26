@@ -1,109 +1,135 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15D512B2DA;
-	Fri, 26 Sep 2025 00:19:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E32862BD015
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 26 Sep 2025 09:46:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758845989; cv=none; b=XM0c9PiyrJ1mcO5nJvs8SDbiNeEh5Qg+UqIxSpSeto175ztXYIJExxjfrnBFzg1AFv/0MABFDtjEKItVmF8ByHZp7CdZVIE0hd7f9yo7db1yIKMnWR2UfupxnL8EcvQmqTfaQdwA+aq4R2AjXbigv796M7VlEDpZcTF9OWcDisE=
+	t=1758879997; cv=none; b=SlXx/tHSSuAzDuPCX5pjO0lIhEOTYBFgiLFkK1jgySEOfJUY2EIEcV5fnC0vOmMSLp5Kai0IKSBvQJW/78/52UDKLToGRsKehpa3k5kX6ayXWTp+Q9NtSTqdZqvKCnOk/wPj+6VOTbx3w8Fo1MieBG+BczHGlLkKG2mlAHamd34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758845989; c=relaxed/simple;
-	bh=n8M7Lv3wfpL1GX/MJgDEmNfO0OV9bNtF1FjVkjFNdY8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rJPF3LjwNb04ZOnZwthB0AnFtrXiqQrKdbmM57bLIPTEUN6oyDeTHqhr3CMQzaqpoyTlytDKlZUcQ1VZVUNOCewIC8gGQi07F7q2RnwLL8XUUI+Cz3CdBSsnut6Hfopclq0V+uWQEXdseKy4zNf85iScDyATOvMuKlPVmwsecis=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Hy7IHfoE; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1758879997; c=relaxed/simple;
+	bh=kfIi6VrIE2lEa92dIkJL1fhpPaEmO6naVvpOiV6YbKc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YF+odPrpNLS0O7WuvqFPXFmQH1RL5Vo7DmHzpekBqJJzR+T3wdhiZBmhEILP52U1k8w4kIBEnrx1dlpH6mh5j9qQ4qMjb5UVG8fEp3o90chszp4Wx8ZVKyiklqfjZNRaegE1d6mkdfD4Dhffhuzr3x3nwWzlKNdtaQCS1X3Pgpc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Bz2IN1Ug; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Hy7IHfoE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1758845987; x=1790381987;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=n8M7Lv3wfpL1GX/MJgDEmNfO0OV9bNtF1FjVkjFNdY8=;
-  b=Hy7IHfoEDTcJWcAxaek2AJDsenMl5aVNP0hr1mxVWSaLy8CQLF+GLWif
-   hTjSwSRQdTFmuP/c7Zx+PGjMR8vejuVHGlpxdnMln+MOzMlg16lPrPOxt
-   c4Q+B2YuzFHKO9E7jCO1G7Np+7iMaEbCnJNEPlbL1qeqbMmZRwm9nK+rp
-   WQUVM94ERRUItYj7Vu4N+P/ffGxZPRG9jO6Jopdh5YSGyA0vg7PiczH56
-   5iIu3iRSgilzhiaHJxgG/Yryy5SPGNOC2m24cNke71aYMS6+aywcAXCKA
-   Yl4F4Y8O/ZbflpEuPJyIex+2KfNejWp3KCFkgDiwzaqQqErbpx8bLkdEt
-   Q==;
-X-CSE-ConnectionGUID: jnLo8pGQRQ6Lm1lMpPVoOw==
-X-CSE-MsgGUID: d6yvK09UQ92VP+N2bznLCw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11564"; a="60875623"
-X-IronPort-AV: E=Sophos;i="6.18,293,1751266800"; 
-   d="scan'208";a="60875623"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2025 17:19:46 -0700
-X-CSE-ConnectionGUID: 0NCXSoKiRwKHXpULZw+g2g==
-X-CSE-MsgGUID: FS9MS3pjSbmmFlKr2kBDNQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,293,1751266800"; 
-   d="scan'208";a="178227175"
-Received: from lkp-server02.sh.intel.com (HELO 84c55410ccf6) ([10.239.97.151])
-  by fmviesa010.fm.intel.com with ESMTP; 25 Sep 2025 17:19:40 -0700
-Received: from kbuild by 84c55410ccf6 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1v1wBW-0005kL-1h;
-	Fri, 26 Sep 2025 00:19:38 +0000
-Date: Fri, 26 Sep 2025 08:18:55 +0800
-From: kernel test robot <lkp@intel.com>
-To: Shuai Xue <xueshuai@linux.alibaba.com>, rostedt@goodmis.org,
-	lukas@wunner.de, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, helgaas@kernel.org,
-	ilpo.jarvinen@linux.intel.com, mattc@purestorage.com,
-	Jonathan.Cameron@huawei.com
-Cc: oe-kbuild-all@lists.linux.dev, bhelgaas@google.com, tony.luck@intel.com,
-	bp@alien8.de, xueshuai@linux.alibaba.com, mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com, oleg@redhat.com, naveen@kernel.org,
-	davem@davemloft.net, mark.rutland@arm.com, peterz@infradead.org,
-	tianruidong@linux.alibaba.com
-Subject: Re: [PATCH v11 2/3] PCI: trace: Add a RAS tracepoint to monitor link
- speed changes
-Message-ID: <202509260804.F13FDt4V-lkp@intel.com>
-References: <20250925061928.42758-3-xueshuai@linux.alibaba.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Bz2IN1Ug"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1758879994;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=rSya+H0jA/G4MDTH6lvX00akKIqMxNianJVPL7t72DQ=;
+	b=Bz2IN1UgKQQ3AdNu9/4OZxh/fNfMR4IWUjVUiyurRfUc29otjw/Tv8EsHJ6KBD++rmwxQK
+	5fnSc5UKlUDac/voap29RSaBdsvfW6EHSlCOuz1XRvPLbj9WAeqxxniiWwWPJN0FFS9Nx4
+	iT3pgmPusw4BygBklARLv36cc0sy824=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-63-e4MAtEV7Mj2HfGs7lxr5tA-1; Fri,
+ 26 Sep 2025 05:46:32 -0400
+X-MC-Unique: e4MAtEV7Mj2HfGs7lxr5tA-1
+X-Mimecast-MFC-AGG-ID: e4MAtEV7Mj2HfGs7lxr5tA_1758879991
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 70856195609F;
+	Fri, 26 Sep 2025 09:46:31 +0000 (UTC)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb (unknown [10.45.225.225])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 84B9318003FC;
+	Fri, 26 Sep 2025 09:46:27 +0000 (UTC)
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: linux-kernel@vger.kernel.org,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Nam Cao <namcao@linutronix.de>
+Cc: Gabriele Monaco <gmonaco@redhat.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	John Kacur <jkacur@redhat.com>,
+	Waylon Cude <wcude@redhat.com>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH 0/2] selftests/verification: Add initial RV tests
+Date: Fri, 26 Sep 2025 11:46:11 +0200
+Message-ID: <20250926094613.34030-1-gmonaco@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250925061928.42758-3-xueshuai@linux.alibaba.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-Hi Shuai,
+Add a series of tests to validate the RV tracefs API and basic
+functionality.
 
-kernel test robot noticed the following build errors:
+* available monitors:
+    Check that all monitors (from the monitors folder) appear as
+    available and have a description. Works with nested monitors.
 
-[auto build test ERROR on pci/for-linus]
-[also build test ERROR on trace/for-next linus/master v6.17-rc7 next-20250925]
-[cannot apply to pci/next]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+* enable/disable:
+    Enable and disable all monitors and validate both the enabled file
+    and the enabled_monitors. Check that enabling container monitors
+    enables all nested monitors.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Shuai-Xue/PCI-trace-Add-a-generic-RAS-tracepoint-for-hotplug-event/20250925-142250
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git for-linus
-patch link:    https://lore.kernel.org/r/20250925061928.42758-3-xueshuai%40linux.alibaba.com
-patch subject: [PATCH v11 2/3] PCI: trace: Add a RAS tracepoint to monitor link speed changes
-config: x86_64-buildonly-randconfig-006-20250926 (https://download.01.org/0day-ci/archive/20250926/202509260804.F13FDt4V-lkp@intel.com/config)
-compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250926/202509260804.F13FDt4V-lkp@intel.com/reproduce)
+* reactors:
+    Set all reactors and validate the setting, also for nested monitors.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202509260804.F13FDt4V-lkp@intel.com/
+* wwnr with printk:
+    wwnr is broken on purpose, run it with a load and check that the
+    printk reactor works. Also validate disabling reacting_on or
+    monitoring_on prevents reactions.
 
-All errors (new ones prefixed by >>):
+These tests use the ftracetest suite. The first patch of the series
+adapts ftracetest to make this possible.
 
-   ld: vmlinux.o: in function `trace_raw_output_pcie_link_event':
-   trace.c:(.text+0x91792a): undefined reference to `pci_speed_string'
->> ld: trace.c:(.text+0x917935): undefined reference to `pci_speed_string'
+The enable/disable test cannot pass on upstream without the application
+of the fix in [1].
 
+[1] - https://lore.kernel.org/lkml/87tt0t4u19.fsf@yellow.woof
+
+To: Steven Rostedt <rostedt@goodmis.org>
+To: Nam Cao <namcao@linutronix.de>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: John Kacur <jkacur@redhat.com>
+Cc: Waylon Cude <wcude@redhat.com>
+Cc: linux-trace-kernel@vger.kernel.org
+Cc: linux-kselftest@vger.kernel.org
+
+Gabriele Monaco (2):
+  selftest/ftrace: Generalise ftracetest to use with RV
+  selftests/verification: Add initial RV tests
+
+ MAINTAINERS                                   |  1 +
+ tools/testing/selftests/ftrace/ftracetest     | 34 ++++++---
+ .../ftrace/test.d/00basic/mount_options.tc    |  2 +-
+ .../testing/selftests/ftrace/test.d/functions |  6 +-
+ .../testing/selftests/verification/.gitignore |  2 +
+ tools/testing/selftests/verification/Makefile |  8 ++
+ tools/testing/selftests/verification/config   |  1 +
+ tools/testing/selftests/verification/settings |  1 +
+ .../selftests/verification/test.d/functions   | 39 ++++++++++
+ .../test.d/rv_monitor_enable_disable.tc       | 75 +++++++++++++++++++
+ .../verification/test.d/rv_monitor_reactor.tc | 68 +++++++++++++++++
+ .../test.d/rv_monitors_available.tc           | 18 +++++
+ .../verification/test.d/rv_wwnr_printk.tc     | 29 +++++++
+ .../verification/verificationtest-ktap        |  8 ++
+ 14 files changed, 278 insertions(+), 14 deletions(-)
+ create mode 100644 tools/testing/selftests/verification/.gitignore
+ create mode 100644 tools/testing/selftests/verification/Makefile
+ create mode 100644 tools/testing/selftests/verification/config
+ create mode 100644 tools/testing/selftests/verification/settings
+ create mode 100644 tools/testing/selftests/verification/test.d/functions
+ create mode 100644 tools/testing/selftests/verification/test.d/rv_monitor_enable_disable.tc
+ create mode 100644 tools/testing/selftests/verification/test.d/rv_monitor_reactor.tc
+ create mode 100644 tools/testing/selftests/verification/test.d/rv_monitors_available.tc
+ create mode 100644 tools/testing/selftests/verification/test.d/rv_wwnr_printk.tc
+ create mode 100644 tools/testing/selftests/verification/verificationtest-ktap
+
+
+base-commit: cec1e6e5d1ab33403b809f79cd20d6aff124ccfe
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.51.0
+
