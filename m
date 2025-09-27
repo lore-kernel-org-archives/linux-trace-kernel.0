@@ -1,35 +1,37 @@
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D1791F541E;
-	Sat, 27 Sep 2025 09:59:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 044BC2D8791
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 27 Sep 2025 10:10:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758967177; cv=none; b=bIb7xEEcNb3Ilrdaf4zzaxpT82WH4oNvmRmF3849BipWV79xBoo8rtjCSjL9T2f4PbxjRKTVp1fNxHAS/pW0uux3PqWVlEX3dMXgtmdben+JQ4MjRN6WlOSPlgNkCIRDpX+DBnoVqtu2qjmpXo1JdLx3rHONEUYCpaZZjMecc5E=
+	t=1758967806; cv=none; b=nEwBgRMKvoF7j1suyYWgB4XzzVjcAZqwWTsL0DJCA8cT/KwtqyHd5FwWDA1DaCbx5HSAbBmm41D4kcQZoajZ5N9NXGgpyCTVPBIG4/nMFU3M3X5iH4l0NCah/MV6EUH2CK4PIIaLYSyH933HK6D3gFEjoaiXvpMP8syr9WHqqV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758967177; c=relaxed/simple;
-	bh=fO3nSZSSiqaLLzXsOhX7igmuCudDiWZKHARGLOnekhs=;
+	s=arc-20240116; t=1758967806; c=relaxed/simple;
+	bh=qAdhUfnZ/jiMqb3IdJhzEatRlvzazXfUyK5ae3jGYoY=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=B1oibeMg2N2iSRoD+6FIABO7WWI7d0tQbRSzLmeA+Nis/Qesv0ZCEjqH8iK3hQDcKCGu82dYiSiuuq54R/TNZZFyQFEhSDGQ/KP9EPx++pAf/98aS+dRoM/9NPQagaLhiwbo+nD9N77+kDG0+LUtq9BwcULNHYdinphGTv/dVm8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
+	 MIME-Version:Content-Type; b=lyB8UqgJ5wHTzqoTtU4a16H6YFSDaZN/WpUwvM5c0TKT0SvQC74hVGF8oyc8BObzRm10is00RT/YaIZ5Z1txLVbtTZst2lBCunnOKCYirCbYGfsQSKzATPTYx0hjslRxxB2d8Rc57vmvEN+a3Z5YOSx13URx/IeMpNfvn2N8TZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf04.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id 2E6AD13AEA3;
-	Sat, 27 Sep 2025 09:59:34 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf04.hostedemail.com (Postfix) with ESMTPA id E3A7420027;
-	Sat, 27 Sep 2025 09:59:31 +0000 (UTC)
-Date: Sat, 27 Sep 2025 05:59:27 -0400
+Received: from omf14.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay01.hostedemail.com (Postfix) with ESMTP id 079161DFA91;
+	Sat, 27 Sep 2025 10:09:54 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf14.hostedemail.com (Postfix) with ESMTPA id BFC052D;
+	Sat, 27 Sep 2025 10:09:52 +0000 (UTC)
+Date: Sat, 27 Sep 2025 06:09:49 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: Tomas Glozar <tglozar@redhat.com>
-Cc: Ivan Pravdin <ipravdin.official@gmail.com>,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/3] rtla: fix buffer overflow in actions_parse
-Message-ID: <20250927055927.2db5aa50@batman.local.home>
-In-Reply-To: <CAP4=nvRPXq=_WterXhaxk1ZwDSPwkJbVJP0L+ze-Cjw1foqK+Q@mail.gmail.com>
-References: <cover.1757034919.git.ipravdin.official@gmail.com>
-	<164ffc2ec8edacaf1295789dad82a07817b6263d.1757034919.git.ipravdin.official@gmail.com>
-	<CAP4=nvRPXq=_WterXhaxk1ZwDSPwkJbVJP0L+ze-Cjw1foqK+Q@mail.gmail.com>
+Cc: Crystal Wood <crwood@redhat.com>, linux-trace-kernel@vger.kernel.org,
+ John Kacur <jkacur@redhat.com>, Costa Shulyupin <costa.shul@redhat.com>
+Subject: Re: [PATCH v2 0/7] tools/rtla: Code consolidation and osnoise
+ actions
+Message-ID: <20250927060949.45f53940@batman.local.home>
+In-Reply-To: <20250927054741.10e22942@batman.local.home>
+References: <20250907022325.243930-1-crwood@redhat.com>
+	<CAP4=nvQR3YDNVhka9QCNQVB=QEytxLPdFrx_nNJbNm7-r9ujDg@mail.gmail.com>
+	<20250927044454.0525d39c@batman.local.home>
+	<20250927054741.10e22942@batman.local.home>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -39,30 +41,24 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: 1rdinnz9fxinrjjr1iyffd9z9oekye8j
+X-Stat-Signature: 8smihz7x15mqryb4xpfzwupqsoqwmqmm
 X-Rspamd-Server: rspamout07
-X-Rspamd-Queue-Id: E3A7420027
+X-Rspamd-Queue-Id: BFC052D
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19bzIHE6O6+HhuldinUylDUmYfvUvPbMgQ=
-X-HE-Tag: 1758967171-670296
-X-HE-Meta: U2FsdGVkX18yEDxk/iBRbuWzmRDZr7kRHa2UK2z2hfaXOSSqLkfy3sL992L1TPoMnST+SDCm6t2MxNBk7gSkwFz5L9a1+Miqh6Jv8kDglgaqQkJJt8rV9TscLZhH21g7ZC3mkPvjTWP084YkU43IvQ1NTu7EKtTwHVqEMGojedSGNDWcJSeSUr+45WvCHn/KGj/TmI1cnaDVqivKtBn+p/93jQXpM7aTuedMKe0I6Pa62fuF1Tbona23yEKqC+giA8RgORYpdz1lJxTSQaw+aZB9uylzntwNWTGvExCd91nb2cEWEltPbxkEncnAWKa+0w+NDW6+7HJjGXK/JFYqzqAMlQWJl3wk2pEGhkekKGXbAQy/0AwfTg==
+X-Session-ID: U2FsdGVkX1/qbntRCGfJgmmfjmZBLiYe8nAzZoiLwNg=
+X-HE-Tag: 1758967792-794367
+X-HE-Meta: U2FsdGVkX18At+FMienZ6i3KuZeUqWJbG0m1tX1BMdG0bkkeovWtxbZEylqmQUfoUuQfWqe/42LcJ7EA4MUIdKN61NnGMyXIlGMm2xHT0u100P28XRplEJSnD6UB8NI32RHBfKijPUrSiWmHza+miM4jHOJz70KSYpDxHePEV0v3qJ4lNipLYrxNoJaTIn16YlK5QWZBSuYMWtDexeEsDifYyHoMwDznEYpsj/7a7aIpFEDqKkgHNZLXFwZIWrL6ganbGw2ErPMHHS5WSUU3ncs34TH4PeGopHpU53jY23w6xmzrDYOSl4J9CD/TU41sGXSBIP0eUEPaLIntIe7Qr+u5XSFgEYO3TUS60yqkeHAaqnqr6q6yTAww7wPIE0yC
 
-On Fri, 26 Sep 2025 16:32:52 +0200
-Tomas Glozar <tglozar@redhat.com> wrote:
+On Sat, 27 Sep 2025 05:47:41 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-
-> Could you take this simple fix? (Might require tweaking the starting
-> letter "fix" -> "Fix", I don't care that much about it, but as you
-> said, tracing requires capital letters there :) )
-
-Yeah, I can update it.
-
+> I applied the patches and then ran "make check" and triggered this:
 > 
-> The rest of the patchset conflicts with [1] but this one doesn't and
-> is also more important.
-> 
-> [1] https://patchwork.kernel.org/project/linux-trace-kernel/list/?series=999703
+> tests/osnoise.t ... 13/17 
+> not ok 13 - top stop at failed action
+> # Output match failed: "^abc"
+> # Output non-match failed: "defgh"
 
-Should I expect a v4 on patches 2 and 3?
+Hmm, after applying the two fixes this appears to go away.
 
 -- Steve
