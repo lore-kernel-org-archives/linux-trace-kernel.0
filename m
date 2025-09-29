@@ -1,40 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D679C1A239A;
-	Mon, 29 Sep 2025 11:32:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ED124414;
+	Mon, 29 Sep 2025 12:52:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759145561; cv=none; b=Y75KZfMsNJvkjfXUeCB3GTFZ5hW8kqgO3tM0nZUqO9ulAWaq9UhwwVYm9OCxrEpwKcZ66iAWpBIDTTiIgG8lhR+pdJJIBLNYRmyLhQXURAYYgB8Zo3CTwIffqGUpWnzpUl9EKx+pj9nBLV8wahhHWFvbRieNHGJ0Nq79JAXIU08=
+	t=1759150331; cv=none; b=mm7t1ldmkqAs5Pe/y0F0buv5ulK4dglVAI0foyDSqhwH592xWG5vEJR/JoTOvfhinfZaOd3WW6zBbJ771cl2m2yz6QuTof1HFRhVGwWtCOXlpYElyiuqsadIAYIwPH2S0JaxHQzdDX8pHM+KLv6BSCwz1dm5qRuX8ghZ3VVwh8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759145561; c=relaxed/simple;
-	bh=g77QlILLHxVB4H6N7j+BSgLkE4s9ILeEklCcbzxdCXo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ukHSeL0d4GtyBn9sNxZGRGu0SHwMDWtBtEBq5YHi9zhzvZKLGD61R92DpX5gfmN7APHlMu67AtPplpbdBRYJEg+SenPNo+GlGDWNs/Rbo4IJxXlc+CJciQjC+SieU2wRohFfwQZvWDBOS6PwwfcHsh7b6BDsP4jXZcX9X3stIgs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PyNt+cBC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1759150331; c=relaxed/simple;
+	bh=0Y61i2/JPEtUs4NHRT+GM+hnsD0LgG6qA2wjrd3lTdw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oV67qlxnRvtUY7Oom2E2wOIzKKtUwT2UUp5V4Vhi+YCzM2GnM3+/0LSymsXSegrp/t8w2Ytzjd51Vw2xOFnaO7wAuwsl8xQbjszXjjz4xIi84Y414CzFg6/F31Vz7HQJJcH1iXPYCWcRtx0ZyT/2XRvh/v1T1q0eSPlZKRSxhno=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TTOoWGtf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PyNt+cBC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18DBDC113D0;
-	Mon, 29 Sep 2025 11:32:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TTOoWGtf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26A9DC4CEF4;
+	Mon, 29 Sep 2025 12:52:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759145561;
-	bh=g77QlILLHxVB4H6N7j+BSgLkE4s9ILeEklCcbzxdCXo=;
+	s=k20201202; t=1759150330;
+	bh=0Y61i2/JPEtUs4NHRT+GM+hnsD0LgG6qA2wjrd3lTdw=;
 	h=From:To:Cc:Subject:Date:From;
-	b=PyNt+cBCXzm38zwIkm9Stf8zzlISDPShDruCdy9370J5alm4Bo9FFYs/G/IScvgNu
-	 tXqeYZcoLF05cXU0cuR38O4A9p187w+vI0OgDdl+bZQpy0qSVKhfYwpmMe8qLgSgN+
-	 o4VQ6R+kcq1Yp062CVEMz5jJV0+kB85vuSwY9RU90jCLYTtMltEqpBijMwKghdJ0mf
-	 s1WLUS03g8F06M8SHm9pvrqAviBmoo8wdN/F67LDQ3K+Z7FfO6JT7r/vHHa3iTV9+r
-	 x+kBdVppytRgedum0YQGNvzef5iZT8TVQCdkJZrSPctjpx3aFfzgPKm/9HJJHpezRo
-	 UkmBKSJxZeTZQ==
-From: Sasha Levin <sashal@kernel.org>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com
-Cc: linux-kernel@vger.kernel.org,
+	b=TTOoWGtfLzIViMofMiKTOBaMYo4vdcZ5Le555tRYfUJIvy3nO0AVatNIdB6y1Iann
+	 g5MtWX3R3zKGVxDoC2nwwIoP3pIAwS+pHjFYSPuvNUU8nDQLcoHo3Kjpf3+I0gZ81+
+	 Qp73BRJ0aZU7++a0xKDGRleaTIW+g+Kb2ZoaBA6ucxqYmayiHiwsq+n+dbWY0lbFUA
+	 h8Wx0GQR5hwhs1v481AgY2dhAm2J/03ybrjt6QnwjL700H0Mg7rdbKDcnVDjeoTvSA
+	 uU4b770Xoxi6I4LBRAjYdnSu2G/lkRTwrBgZi+JRR9p26wc9ay+uh+bjeZXrJ3DefR
+	 GWoJ7chLnMBCw==
+From: Jiri Olsa <jolsa@kernel.org>
+To: Song Liu <songliubraving@fb.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Peter Zijlstra <peterz@infradead.org>
+Cc: bpf@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH] tracing: Fix lock imbalance in s_start() memory allocation failure path
-Date: Mon, 29 Sep 2025 07:32:38 -0400
-Message-ID: <20250929113238.3722055-1-sashal@kernel.org>
+	Yonghong Song <yhs@fb.com>,
+	Andrii Nakryiko <andrii@kernel.org>
+Subject: [RFC] Revert "perf/x86: Always store regs->ip in perf_callchain_kernel()"
+Date: Mon, 29 Sep 2025 14:51:58 +0200
+Message-ID: <20250929125158.2488188-1-jolsa@kernel.org>
 X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -44,48 +47,56 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When s_start() fails to allocate memory for set_event_iter, it returns NULL
-before acquiring event_mutex. However, the corresponding s_stop() function
-always tries to unlock the mutex, causing a lock imbalance warning:
+This reverts commit 83f44ae0f8afcc9da659799db8693f74847e66b3.
 
-  WARNING: bad unlock balance detected!
-  6.17.0-rc7-00175-g2b2e0c04f78c #7 Not tainted
-  -------------------------------------
-  syz.0.85611/376514 is trying to release lock (event_mutex) at:
-  [<ffffffff8dafc7a4>] traverse.part.0.constprop.0+0x2c4/0x650 fs/seq_file.c:131
-  but there are no more locks to release!
+hi,
+non hw events store first stack trace entry twice:
 
-The issue was introduced by commit b355247df104 ("tracing: Cache ':mod:'
-events for modules not loaded yet") which added the kzalloc() allocation before
-the mutex lock, creating a path where s_start() could return without locking
-the mutex while s_stop() would still try to unlock it.
+        bpf_prog_2beb79c650d605dd_rawtracepoint_sched_process_exec_1+324
+        bpf_prog_2beb79c650d605dd_rawtracepoint_sched_process_exec_1+324
+        bpf_trace_run3+138
+        bprm_execve+1191
+        do_execveat_common.isra.0+404
+        __x64_sys_execve+56
+        do_syscall_64+130
+        entry_SYSCALL_64_after_hwframe+118
 
-Fix this by unconditionally acquiring the mutex immediately after allocation,
-regardless of whether the allocation succeeded.
+I traced it to [1] from 2019, which stores regs->ip implicitly to fix
+raw tracepoints stacktrace. Revert does not seem to break raw tp
+stacktrace for me. Song, any idea? I know it's long time ;-)
 
-Fixes: b355247df104 ("tracing: Cache ":mod:" events for modules not loaded yet")
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+thanks,
+jirka
+
+
+[1] 83f44ae0f8af ("perf/x86: Always store regs->ip in perf_callchain_kernel()")
 ---
- kernel/trace/trace_events.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/x86/events/core.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 9f3e9537417d5..e00da4182deb7 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -1629,11 +1629,10 @@ static void *s_start(struct seq_file *m, loff_t *pos)
- 	loff_t l;
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index 7610f26dfbd9..38f7102e2dac 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -2787,13 +2787,13 @@ perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *re
+ 		return;
+ 	}
  
- 	iter = kzalloc(sizeof(*iter), GFP_KERNEL);
-+	mutex_lock(&event_mutex);
- 	if (!iter)
- 		return NULL;
- 
--	mutex_lock(&event_mutex);
+-	if (perf_callchain_store(entry, regs->ip))
+-		return;
 -
- 	iter->type = SET_EVENT_FILE;
- 	iter->file = list_entry(&tr->events, struct trace_event_file, list);
+-	if (perf_hw_regs(regs))
++	if (perf_hw_regs(regs)) {
++		if (perf_callchain_store(entry, regs->ip))
++			return;
+ 		unwind_start(&state, current, regs, NULL);
+-	else
++	} else {
+ 		unwind_start(&state, current, NULL, (void *)regs->sp);
++	}
  
+ 	for (; !unwind_done(&state); unwind_next_frame(&state)) {
+ 		addr = unwind_get_return_address(&state);
 -- 
 2.51.0
 
