@@ -1,95 +1,91 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F41982D5436;
-	Mon, 29 Sep 2025 10:13:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D679C1A239A;
+	Mon, 29 Sep 2025 11:32:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759140793; cv=none; b=g3XgW+ziWGDj4mUOp9qFIncgMlAPDXFJXycLGhIPNCU7fJJI9gvOErOEIdjlGEkvr4tE0ps9lVFwbg7upJ5hLCJjrbQbXrjtC3VFmpqLJnWUyHyD6Nr3E2ymNr8dkSQAplUQXWYN3dYgaiDyBaUXYPzUEFOdnmZ9Xm8BPItQ2Bw=
+	t=1759145561; cv=none; b=Y75KZfMsNJvkjfXUeCB3GTFZ5hW8kqgO3tM0nZUqO9ulAWaq9UhwwVYm9OCxrEpwKcZ66iAWpBIDTTiIgG8lhR+pdJJIBLNYRmyLhQXURAYYgB8Zo3CTwIffqGUpWnzpUl9EKx+pj9nBLV8wahhHWFvbRieNHGJ0Nq79JAXIU08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759140793; c=relaxed/simple;
-	bh=5TJ7rXc9PceY5+Uq+nP+sm9j3Ynhc3o6j6tQt62kVEs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dhB/sWz/YuuWmFQeSvMbinVyKWXhmabxYmD5vRx+JSFO7HcaGPltrVIbayTzwxvjaQQPjEiutOQPc27Dz+cqbek9c/e3iVwf4wKWcINH4n9A8r0+dW8OG7EP8TVJALpDVdx5wKtnwDLpKhm0RQwFSEtPdCzrScFRCp1hW81FYHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=drTFvnbL; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1759145561; c=relaxed/simple;
+	bh=g77QlILLHxVB4H6N7j+BSgLkE4s9ILeEklCcbzxdCXo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ukHSeL0d4GtyBn9sNxZGRGu0SHwMDWtBtEBq5YHi9zhzvZKLGD61R92DpX5gfmN7APHlMu67AtPplpbdBRYJEg+SenPNo+GlGDWNs/Rbo4IJxXlc+CJciQjC+SieU2wRohFfwQZvWDBOS6PwwfcHsh7b6BDsP4jXZcX9X3stIgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PyNt+cBC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="drTFvnbL"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=tXmRHJ8HqJUwPcuCeHwLbY1HiJTJxK6IF+F+zlaEzHU=; b=drTFvnbL+hJI5lOYlNL2eHaO9X
-	WnQws3KA0w2wuerQ7uvB08r/SHgYh9x0EjnEUb4I1HrPp7TD8Ws//UsPvAvkeibZ8/rzy8Js4hZso
-	tJ0qYFR6HpXGnYHGEha6KzCRy9ThyAigfdiVwyIqHJY9ra3gFGOtVB0S1Fm2UsI0rrgpOEP09wmt7
-	6Vg8wrUokt8dwL8KdyjjELyZwlRGBz4Rxo1Om3xtyjatNdrsdwtrVf2KUcm7nRUvTK06Eg7fQCwHk
-	kUQsePcvUbwA9k+bLeIi5aMymMN+fcLBKFsDPz50oEfPMel5/GcVYxdQdC383EYEe3g4OnAK8VAmq
-	POj5K4cA==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v3AsQ-0000000BzB0-3paa;
-	Mon, 29 Sep 2025 10:13:03 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id D4280300359; Mon, 29 Sep 2025 12:12:59 +0200 (CEST)
-Date: Mon, 29 Sep 2025 12:12:59 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: John Ogness <john.ogness@linutronix.de>
-Cc: Steven Rostedt <rostedt@goodmis.org>, chenyuan_fl@163.com,
-	mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	Yuan Chen <chenyuan@kylinos.cn>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: Re: [PATCH v2] tracing: Fix race condition in kprobe initialization
- causing NULL pointer dereference
-Message-ID: <20250929101259.GE3245006@noisy.programming.kicks-ass.net>
-References: <20250929143916.5984441b32e6f84618b4deb8@kernel.org>
- <20250929065731.1351028-1-chenyuan_fl@163.com>
- <20250929044836.7169d5be@batman.local.home>
- <84seg5d2p3.fsf@jogness.linutronix.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PyNt+cBC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18DBDC113D0;
+	Mon, 29 Sep 2025 11:32:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1759145561;
+	bh=g77QlILLHxVB4H6N7j+BSgLkE4s9ILeEklCcbzxdCXo=;
+	h=From:To:Cc:Subject:Date:From;
+	b=PyNt+cBCXzm38zwIkm9Stf8zzlISDPShDruCdy9370J5alm4Bo9FFYs/G/IScvgNu
+	 tXqeYZcoLF05cXU0cuR38O4A9p187w+vI0OgDdl+bZQpy0qSVKhfYwpmMe8qLgSgN+
+	 o4VQ6R+kcq1Yp062CVEMz5jJV0+kB85vuSwY9RU90jCLYTtMltEqpBijMwKghdJ0mf
+	 s1WLUS03g8F06M8SHm9pvrqAviBmoo8wdN/F67LDQ3K+Z7FfO6JT7r/vHHa3iTV9+r
+	 x+kBdVppytRgedum0YQGNvzef5iZT8TVQCdkJZrSPctjpx3aFfzgPKm/9HJJHpezRo
+	 UkmBKSJxZeTZQ==
+From: Sasha Levin <sashal@kernel.org>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH] tracing: Fix lock imbalance in s_start() memory allocation failure path
+Date: Mon, 29 Sep 2025 07:32:38 -0400
+Message-ID: <20250929113238.3722055-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <84seg5d2p3.fsf@jogness.linutronix.de>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Sep 29, 2025 at 11:38:08AM +0206, John Ogness wrote:
+When s_start() fails to allocate memory for set_event_iter, it returns NULL
+before acquiring event_mutex. However, the corresponding s_stop() function
+always tries to unlock the mutex, causing a lock imbalance warning:
 
-> >> Problem:
-> >> 1. CPU0 executes (1) assigning tp_event->perf_events = list
-> 
-> smp_wmb()
-> 
-> >> 2. CPU0 executes (2) enabling kprobe functionality via class->reg()
-> >> 3. CPU1 triggers and reaches kprobe_dispatcher
-> >> 4. CPU1 checks TP_FLAG_PROFILE - condition passes (step 2 completed)
-> 
-> smp_rmb()
-> 
-> >> 5. CPU1 calls kprobe_perf_func() and crashes at (3) because
-> >>    call->perf_events is still NULL
-> >> 
-> >> The issue: Assignment in step 1 may not be visible to CPU1 due to
-> >> missing memory barriers before step 2 sets TP_FLAG_PROFILE flag.
-> 
-> A better explanation of the issue would be: CPU1 sees that kprobe
-> functionality is enabled but does not see that perf_events has been
-> assigned.
-> 
-> Add pairing read and write memory barriers to guarantee that if CPU1
-> sees that kprobe functionality is enabled, it must also see that
-> perf_events has been assigned.
-> 
-> Note that this could also be done more efficiently using a store_release
-> when setting the flag (in step 2) and a load_acquire when loading the
-> flag (in step 4).
+  WARNING: bad unlock balance detected!
+  6.17.0-rc7-00175-g2b2e0c04f78c #7 Not tainted
+  -------------------------------------
+  syz.0.85611/376514 is trying to release lock (event_mutex) at:
+  [<ffffffff8dafc7a4>] traverse.part.0.constprop.0+0x2c4/0x650 fs/seq_file.c:131
+  but there are no more locks to release!
 
-The RELEASE+ACQUIRE is a better pattern for these cases. 
+The issue was introduced by commit b355247df104 ("tracing: Cache ':mod:'
+events for modules not loaded yet") which added the kzalloc() allocation before
+the mutex lock, creating a path where s_start() could return without locking
+the mutex while s_stop() would still try to unlock it.
 
-And I'll argue the barrier should be in 2 not 1, since it is 2 that sets
-the flag checked in 4.  Any store before that flag might be affected,
-not just the ->perf_events list.
+Fix this by unconditionally acquiring the mutex immediately after allocation,
+regardless of whether the allocation succeeded.
+
+Fixes: b355247df104 ("tracing: Cache ":mod:" events for modules not loaded yet")
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ kernel/trace/trace_events.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index 9f3e9537417d5..e00da4182deb7 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -1629,11 +1629,10 @@ static void *s_start(struct seq_file *m, loff_t *pos)
+ 	loff_t l;
+ 
+ 	iter = kzalloc(sizeof(*iter), GFP_KERNEL);
++	mutex_lock(&event_mutex);
+ 	if (!iter)
+ 		return NULL;
+ 
+-	mutex_lock(&event_mutex);
+-
+ 	iter->type = SET_EVENT_FILE;
+ 	iter->file = list_entry(&tr->events, struct trace_event_file, list);
+ 
+-- 
+2.51.0
+
