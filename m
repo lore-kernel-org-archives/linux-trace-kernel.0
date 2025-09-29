@@ -1,78 +1,151 @@
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from SHSQR01.spreadtrum.com (mx1.unisoc.com [222.66.158.135])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DB0E6D1A7
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 28 Sep 2025 20:12:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B3D11A316C
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Sep 2025 01:46:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759090324; cv=none; b=L8X5OXhjoCR7ogi9x+g1fRKFY2LQSKv90I17NFGIqBQzQoH+kEassW+GUbq7UIVQ9UgPSGuiqDUmngKahlsTvwd1vpqxI+A0rcKkMsyEVw+Xy3ZYcF00ASTFFfogzx+SEbyLAfQ4RfJ0Ig8i7Sayb6pra8FnHZCbvHmBFSDJEFg=
+	t=1759110398; cv=none; b=Ia/nyfIWnyJKjskInqhf/qxahg9fuV5bBIK6CSAzDgI2wkYck0SeCtV7+X9FXI1gxxQ7jAhWYRWLWcyN/umw7ufzobJejKtWjVuaHM02r6mEifE4syM659wqdZphqjMcU/K6jlTIEA+xqD3g0EGAPHGbMmSIcdLYrI5HCeQ6ZKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759090324; c=relaxed/simple;
-	bh=0RbFeTDokiBIDFXYwXhTqeTngrPJxIKeMT9v6nJhPYk=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=u+3NE+3aAOAwkT86NO/gq40iU9sLNzCJ2Cp0f8H/hkh/fQ/+pCbx8xskVr+N2QWbLlIoqI289ShIhBEb85Ch4i+d8rA+nJ2SoqcLHk2lA4hSB5aVh8pe5HPYDFHM6KcRBRgbbdc1YJScQTC0+h664zH+Mxl+MlvkpHMMSG0FwA8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-8875a8663d0so422418239f.1
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 28 Sep 2025 13:12:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759090322; x=1759695122;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DaduVv8+j9xG9g2Olc4KfHdOBiR7JfOMthlP5Ksd0K8=;
-        b=ud5aIjZS75kWVWcvqVc3q/FNhBLPNsYrAj9vhUcoiX0da+GwIerMgrMPJPcSZXCs+Y
-         ND3N79CvO3aMNkkWtq1G+5ecbWa0meiKzd99r124YJIp62Pt5rKvSYjg33CazZcQ60NG
-         XoVMb7qZX9V5F8OjwOSaXTQ4x1MA3/79T4f0VuIouwR0qHc0Jzh3Ys7Iy/vRUv58XMDI
-         BPc8K7v+YkPVm8We0rBrm5luMUWmNOZiKACTWRB2kEJXOt32TSmy5WVA5j5Ezd9MIFAv
-         ApRmPumrfL6184euAzqAyrVq5svO87vab7A/OqiR/P1hn4NRBy7xfqyxeENTz75Li154
-         uT7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUALqYOy6bo1oSFFj2pGZLadkX2LNEtfbepmQLJZN/llPpJfxYjig48JHHax7YsabtRafkUg+hLv02dWPbJETLMWKU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyK9JjaBvHut/ZlZ4VlhhX/PDFKe2rEFFvbWAinzSD1LuquZ/X5
-	5EV/c4NhYmAS3y8/dXQ8s5FDAEFF8kveibiorRFmv5hMOaw1+ArEBaba0OJtXH42h50VZi859m7
-	so/FuAcw4IGahTRpVs76c6Q2wYCgM/ldaIryrgD0TG0oKcS5/Kqct3K9j+u8=
-X-Google-Smtp-Source: AGHT+IFe1cPN5hHZibJvP6cJECKOPK7CIGqP3ONZivzTbEMVJkCeWmbblnq11+o6oAttzrZ2589qumHKCObY7OyIrrC974/LLSD2
+	s=arc-20240116; t=1759110398; c=relaxed/simple;
+	bh=tPsQTvM+eiwlyUIt2YhLixQTyW//Bg+Wlvfv24oXcKo=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=kwOL+huUT+yydNIhyZQgevt23+IMXEmTYNOy3zl0xFlbq2BorS0aZx3BG/osWYTvXTM25xRqpaarKSIOiVTdD3tcSUsAX7YGaAvbCZ4op7dwtsecPf8t9HQ/cM+zfLlauMF3VClmwG54fQfAvLU3d9XeuHGXyd2Rf2YkFhdcA8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; dkim=pass (2048-bit key) header.d=unisoc.com header.i=@unisoc.com header.b=gd4XdedU; arc=none smtp.client-ip=222.66.158.135
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=unisoc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=unisoc.com header.i=@unisoc.com header.b="gd4XdedU"
+Received: from dlp.unisoc.com ([10.29.3.86])
+	by SHSQR01.spreadtrum.com with ESMTP id 58T1gX0t005260;
+	Mon, 29 Sep 2025 09:42:33 +0800 (+08)
+	(envelope-from Xuewen.Yan@unisoc.com)
+Received: from SHDLP.spreadtrum.com (BJMBX01.spreadtrum.com [10.0.64.7])
+	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4cZkRG21pQz2MZcn3;
+	Mon, 29 Sep 2025 09:40:42 +0800 (CST)
+Received: from BJ10918NBW01.spreadtrum.com (10.0.73.73) by
+ BJMBX01.spreadtrum.com (10.0.64.7) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.48; Mon, 29 Sep 2025 09:42:29 +0800
+From: Xuewen Yan <xuewen.yan@unisoc.com>
+To: <surenb@google.com>, <hannes@cmpxchg.org>,
+        <mathieu.desnoyers@efficios.com>, <mhiramat@kernel.org>,
+        <rostedt@goodmis.org>, <peterz@infradead.org>
+CC: <mingo@redhat.com>, <juri.lelli@redhat.com>, <vincent.guittot@linaro.org>,
+        <dietmar.eggemann@arm.com>, <bsegall@google.com>, <mgorman@suse.de>,
+        <vschneid@redhat.com>, <xuewen.yan@unisoc.com>,
+        <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+        <ke.wang@unisoc.com>, <yuming.han@unisoc.com>,
+        <xuewen.yan94@gmail.com>
+Subject: [RFC PATCH V4] sched: psi: Add psi events trace point
+Date: Mon, 29 Sep 2025 09:42:27 +0800
+Message-ID: <20250929014227.430-1-xuewen.yan@unisoc.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:3c83:b0:426:c373:25db with SMTP id
- e9e14a558f8ab-426c3732a86mr162405485ab.4.1759090322279; Sun, 28 Sep 2025
- 13:12:02 -0700 (PDT)
-Date: Sun, 28 Sep 2025 13:12:02 -0700
-In-Reply-To: <68769347.a70a0220.693ce.0013.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68d99692.a70a0220.10c4b.0027.GAE@google.com>
-Subject: Re: [syzbot] [block?] [trace?] INFO: task hung in blk_trace_setup (4)
-From: syzbot <syzbot+9c1ebb9957045e00ac63@syzkaller.appspotmail.com>
-To: axboe@kernel.dk, davem@davemloft.net, jiri@nvidia.com, kuba@kernel.org, 
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com, 
-	mhiramat@kernel.org, netdev@vger.kernel.org, pabeni@redhat.com, 
-	rostedt@goodmis.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SHCAS01.spreadtrum.com (10.0.1.201) To
+ BJMBX01.spreadtrum.com (10.0.64.7)
+X-MAIL:SHSQR01.spreadtrum.com 58T1gX0t005260
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=unisoc.com;
+	s=default; t=1759110162;
+	bh=PYak0UliuFkoAGMykxnjYwa4GAB9iIqJIebJ8+Y2eTA=;
+	h=From:To:CC:Subject:Date;
+	b=gd4XdedUZmAXz2NHQGd+jI3JOJ4bLn1uDiJ8hSyY7x1Q/mSowI247mnBcBTUnl9bA
+	 M9BOj77qOr4XKC3Ohk5doE/PP44ZY3CJWPS0zGihyG43zBOFQoQJiBwgy0mF6P/TQZ
+	 p/PSKuSvqU65df2QTpW7JJKV7v9sEZxFKEqwaf3gcK1WIbMhmGyAr5dhzT+h0BxKvH
+	 F9yAHedAYpo5DB6yWb462p5UrCRgkH/4xV8UOd+fUVHEmEt14TFSZS8NeF6BHz4j8/
+	 /hUx0wHbD4G7dzgJTdM9ylP9NPW8cJP86GYdQIcneW7UvbdXv/y+MLZ7AOtPEVzOG7
+	 7o+7wiavboyhQ==
 
-syzbot has bisected this issue to:
+Add trace point to psi triggers. This is useful to
+observe the psi events in the kernel space.
 
-commit c2368b19807affd7621f7c4638cd2e17fec13021
-Author: Jiri Pirko <jiri@nvidia.com>
-Date:   Fri Jul 29 07:10:35 2022 +0000
+One use of this is to monitor memory pressure.
+When the pressure is too high, we can kill the process
+in the kernel space to prevent OOM.
 
-    net: devlink: introduce "unregistering" mark and use it during devlinks iteration
+Signed-off-by: Xuewen Yan <xuewen.yan@unisoc.com>
+---
+V4:
+-generate the event only after cmpxchg() passes the check
+---
+V3:
+-export it in the tracefs;
+---
+v2:
+-fix compilation error;
+-export the tp;
+-add more commit message;
+---
+ include/trace/events/sched.h | 27 +++++++++++++++++++++++++++
+ kernel/sched/psi.c           |  5 +++++
+ 2 files changed, 32 insertions(+)
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=12620ae2580000
-start commit:   347e9f5043c8 Linux 6.16-rc6
-git tree:       upstream
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=11620ae2580000
-console output: https://syzkaller.appspot.com/x/log.txt?x=16620ae2580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f62a2ef17395702a
-dashboard link: https://syzkaller.appspot.com/bug?extid=9c1ebb9957045e00ac63
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=138dfd82580000
+diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
+index 7b2645b50e78..db8b8f25466e 100644
+--- a/include/trace/events/sched.h
++++ b/include/trace/events/sched.h
+@@ -826,6 +826,33 @@ TRACE_EVENT(sched_wake_idle_without_ipi,
+ 	TP_printk("cpu=%d", __entry->cpu)
+ );
+ 
++#ifdef CONFIG_PSI
++TRACE_EVENT(psi_event,
++
++	TP_PROTO(int aggregator, int state, u64 threshold, u64 win_size),
++
++	TP_ARGS(aggregator, state, threshold, win_size),
++
++	TP_STRUCT__entry(
++		__field(int,	aggregator)
++		__field(int,	state)
++		__field(u64,	threshold)
++		__field(u64,	win_size)
++	),
++
++	TP_fast_assign(
++		__entry->aggregator	= aggregator;
++		__entry->state		= state;
++		__entry->threshold	= threshold;
++		__entry->win_size	= win_size;
++	),
++
++	TP_printk("aggregator=%d state=%d threshold=%llu window_size=%llu",
++		__entry->aggregator, __entry->state, __entry->threshold,
++		__entry->win_size)
++);
++#endif /* CONFIG_PSI */
++
+ /*
+  * Following tracepoints are not exported in tracefs and provide hooking
+  * mechanisms only for testing and debugging purposes.
+diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
+index 59fdb7ebbf22..e8a7fd04ba9f 100644
+--- a/kernel/sched/psi.c
++++ b/kernel/sched/psi.c
+@@ -141,6 +141,8 @@
+ #include <linux/psi.h>
+ #include "sched.h"
+ 
++EXPORT_TRACEPOINT_SYMBOL_GPL(psi_event);
++
+ static int psi_bug __read_mostly;
+ 
+ DEFINE_STATIC_KEY_FALSE(psi_disabled);
+@@ -515,6 +517,9 @@ static void update_triggers(struct psi_group *group, u64 now,
+ 				kernfs_notify(t->of->kn);
+ 			else
+ 				wake_up_interruptible(&t->event_wait);
++
++			trace_psi_event(aggregator, t->state, t->threshold,
++					t->win.size);
+ 		}
+ 		t->last_event_time = now;
+ 		/* Reset threshold breach flag once event got generated */
+-- 
+2.25.1
 
-Reported-by: syzbot+9c1ebb9957045e00ac63@syzkaller.appspotmail.com
-Fixes: c2368b19807a ("net: devlink: introduce "unregistering" mark and use it during devlinks iteration")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
