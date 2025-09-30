@@ -1,105 +1,142 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7386223B62C;
-	Tue, 30 Sep 2025 10:11:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4E252628D;
+	Tue, 30 Sep 2025 14:18:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759227063; cv=none; b=n0IwDzkuAdgFsYj3wCK0QCPd36EKvB5YRi4alxhsojCDajtUENz/jw9XqbBqg9vWD0GjvbOzjFHSR5sOJnE0YbM+qkxyxO7YAJOfVcocVwt25Qka5SSvcusEgEuS7zUButGd+NkZYEAKs+LF7C8mA/Qz677aOXtlSK2g1BSdtOc=
+	t=1759241918; cv=none; b=CBhCW3TeVMio1YtRaOqXIKw+XueitCNszGxgTSz4AHvZGd9VLv8ZGQl9SswKJpEgzx1FYFcYaCfo539s17mM3egAbS0I95yEI98qVRdmCbwPzNeuqTFcFxJcsWJ9C9KjMdghOCOkLiKu3SbO0p8/s/DXA8q1rttsDU6mIRto9yo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759227063; c=relaxed/simple;
-	bh=h9HgIoGBQjSi1XCoAKCIhO9bF1dgTIEXPdad4STGnNA=;
+	s=arc-20240116; t=1759241918; c=relaxed/simple;
+	bh=/Z9vHgFitGnywr0evX36Ur856Ith0O06Y1XN/TLpmFw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eYjSg+tneyz9jpgik6lZTtRCgX07Fi7WDrpu1XziL2vSfyA9NrS+piudwIFDIATa3T6QAiusixtgZZku2lONKxEclHFbaoep/rLaZs6nyVk+UnKtJNe8Lih6eTPef32FIFoZKp3sqo/3eu6oeZRvq1E8ZO23FjU9SowuJAzl9Jw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=SlJR6dls; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=WG3RErY8zqPgURg78E2LCSRqqw/cB7WW4BmbC3JzHTb43iu0skV/DA76Ak+VSq+jjBzqxoEr1qv5mvOz1+5U/UXN/wcg4rb9z2DCgk0TyrJneYKE5zL75jbOWOAZfP5byXN7Y4q9PSx3y2W7hLJGGd3oRPTZ/HnoeYRjkbqicIc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=hCTMaLnt; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=O9YuYWYc; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SlJR6dls"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=D+CZAypiGvBv9t3fET4ytZsgqVELs1pifW7X4YTcTJQ=; b=SlJR6dlsigYezhyVby0mOit/K/
-	+CikGgD4DrX+HJwfKMjhny/YGlgT70/lWDYgxuJbkBgqBFmt7R0LigpJ4VmL3R3gvLYkjkSjGLOWC
-	2R5sjL+XBeCx7td0YcwdBb2Vhtwee7RmwuawlTAVK33hniSJhoTSWM1w+r1BzN93NnXhhMT4l2Isk
-	+56cHMrv6SescNMwPTMP3dKyMz+ppP+BwTEDANA7IL6NGZiaImiiUKrJ3jLAXuQYZ9QgynRMmPJ4g
-	UlASvc3H2B+gGl8pbUab8NmLSlRVzrk8efrbs3juJCGAZelT14pvz6smLZ9G5vZhAYcrQpn7MX5v2
-	OzJUMV8Q==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v3XJr-00000009toO-1vf2;
-	Tue, 30 Sep 2025 10:10:52 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 4173F300220; Tue, 30 Sep 2025 12:10:52 +0200 (CEST)
-Date: Tue, 30 Sep 2025 12:10:52 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: John Ogness <john.ogness@linutronix.de>,
-	Steven Rostedt <rostedt@goodmis.org>, chenyuan_fl@163.com,
-	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, Yuan Chen <chenyuan@kylinos.cn>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: Re: [PATCH v2] tracing: Fix race condition in kprobe initialization
- causing NULL pointer dereference
-Message-ID: <20250930101052.GL3245006@noisy.programming.kicks-ass.net>
-References: <20250929143916.5984441b32e6f84618b4deb8@kernel.org>
- <20250929065731.1351028-1-chenyuan_fl@163.com>
- <20250929044836.7169d5be@batman.local.home>
- <84seg5d2p3.fsf@jogness.linutronix.de>
- <20250929101259.GE3245006@noisy.programming.kicks-ass.net>
- <20250930175826.52b58b7a502b215e3d226f9b@kernel.org>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hCTMaLnt";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="O9YuYWYc"
+Date: Tue, 30 Sep 2025 16:18:32 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1759241914;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AUa3P5BA7Ar6Emm+p460eFkGleUa0VHRFnVxjlOnyUU=;
+	b=hCTMaLntdwlggOSyv9hkSECLvqBMw10QA9tj1urT5JtfSD5e1Zp0WHkWDXkDEM8wfjStlZ
+	0O7ekQeT/PwmtEvrfbngfoX3CHcqwfSxtwEVxVT9EvCFSmp8JIFA0kSUABT/wMYZJRhVu8
+	B3Cag+ffToUw6j6MxyKU1FYdXQAvr/2c1PEeQpfvuwK1MsDPQxqssZpqxvI5nPUJFVBjNp
+	DD4eCdATiyHRcWka+QiGQob+OkI/yT1xrQcjrPFQxZ30V+X9PBo69iZtRGk5j7dXHbfmZX
+	9NclbWHngx3avhu1KNe3nQijnZAb2o5UCS6FcIKNunkPlE6SbhPTas863ehtPw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1759241914;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AUa3P5BA7Ar6Emm+p460eFkGleUa0VHRFnVxjlOnyUU=;
+	b=O9YuYWYcW/AwG7x6bM5tYChRYRjSPkkgFuA29+zfYUfMTG82dbT5DG501xc0ia70CXzl2e
+	Yj5rebxnQPkiZ7Bw==
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+To: Nam Cao <namcao@linutronix.de>, Gabriele Monaco <gmonaco@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH] rv: Add signal reactor
+Message-ID: <20250930161252-ea116bda-293e-4f81-ab0f-075dd03dee52@linutronix.de>
+References: <20250919-rv-reactor-signal-v1-1-fb0012034158@linutronix.de>
+ <d0aaaf1f47f0d948b60b0575e179564e3c024188.camel@redhat.com>
+ <20250922162900.eNwI7CS0@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20250930175826.52b58b7a502b215e3d226f9b@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250922162900.eNwI7CS0@linutronix.de>
 
-On Tue, Sep 30, 2025 at 05:58:26PM +0900, Masami Hiramatsu wrote:
-> On Mon, 29 Sep 2025 12:12:59 +0200
-> Peter Zijlstra <peterz@infradead.org> wrote:
-> 
-> > On Mon, Sep 29, 2025 at 11:38:08AM +0206, John Ogness wrote:
-> > 
-> > > >> Problem:
-> > > >> 1. CPU0 executes (1) assigning tp_event->perf_events = list
-> > > 
-> > > smp_wmb()
-> > > 
-> > > >> 2. CPU0 executes (2) enabling kprobe functionality via class->reg()
-> > > >> 3. CPU1 triggers and reaches kprobe_dispatcher
-> > > >> 4. CPU1 checks TP_FLAG_PROFILE - condition passes (step 2 completed)
-> > > 
-> > > smp_rmb()
-> > > 
-> > > >> 5. CPU1 calls kprobe_perf_func() and crashes at (3) because
-> > > >>    call->perf_events is still NULL
-> > > >> 
-> > > >> The issue: Assignment in step 1 may not be visible to CPU1 due to
-> > > >> missing memory barriers before step 2 sets TP_FLAG_PROFILE flag.
-> > > 
-> > > A better explanation of the issue would be: CPU1 sees that kprobe
-> > > functionality is enabled but does not see that perf_events has been
-> > > assigned.
-> > > 
-> > > Add pairing read and write memory barriers to guarantee that if CPU1
-> > > sees that kprobe functionality is enabled, it must also see that
-> > > perf_events has been assigned.
-> > > 
-> > > Note that this could also be done more efficiently using a store_release
-> > > when setting the flag (in step 2) and a load_acquire when loading the
-> > > flag (in step 4).
-> > 
-> > The RELEASE+ACQUIRE is a better pattern for these cases. 
-> > 
-> > And I'll argue the barrier should be in 2 not 1, since it is 2 that sets
-> > the flag checked in 4.  Any store before that flag might be affected,
-> > not just the ->perf_events list.
-> 
-> RELEASE+ACQUIRE ensures the memory ordering on the `same` CPU, so do we still need smp_rmb() and smp_wmb()? e.g.
+On Mon, Sep 22, 2025 at 06:29:00PM +0200, Nam Cao wrote:
+> On Fri, Sep 19, 2025 at 02:26:12PM +0200, Gabriele Monaco wrote:
+> > On Fri, 2025-09-19 at 12:49 +0200, Thomas Weißschuh wrote:
 
-Eh, no, that's wrong. RELEASE and ACQUIRE are SMP barriers.
+(...)
+
+> > > For now only SIGBUS is supported, but additional signals can be added.
+> > 
+> > Curious choice of a default signal, is this specific to your use-case?
+> 
+> Any signal should do. Looking through the signal list, I think SIGTRAP is
+> more appropriate.
+
+Indeed. Thanks for the hint.
+
+> > > +config RV_REACT_SIGNAL
+> > > +	bool "Signal reactor"
+> > > +	depends on RV_REACTORS
+> > > +	default y
+> > > +	help
+> > > +	  Enables the signal reactor. The signal reactors sends a signal to
+> > > the
+> > > +	  task triggering an exception.
+> > 
+> > This assumption is not always correct, imagine a failure in the sleep monitor
+> > caused by the wakeup event. The offending task is not current but the wakee.
+> > 
+> > This is a bit tricky because reactors don't have access to that task, just to
+> > keep the same implementation between per-cpu and per-task monitors.
+> 
+> Yeah, this one is tricky. We probably need to pass the correct task_struct
+> to reactor, but then I'm not sure how to handle the other monitor types,
+> e.g. per-cpu monitors.
+> 
+> I have no alternative to offer, let me give it some thought.
+
+Thanks.
+
+> > > +static void rv_signal_force_sig(int signal, const char *message)
+> > > +{
+> > > +	/* The message already contains a subsystem prefix, so use raw
+> > > printk() */
+> > > +	printk(KERN_WARNING "%s", message);
+> > > +	pr_warn("Killing PID %d with signal %d", task_pid_nr(current),
+> > > signal);
+> 
+> RV reactors have to use printk_deferred() instead. See:
+> https://lore.kernel.org/lkml/874k50hqmj.fsf@jogness.linutronix.de/
+
+When the direct-call path is removed, this will only be used through task_work.
+For that direct printk() should be fine, right?
+
+> But I suggest dropping the printk from this reactor. We already have a
+> printk reactor for that.
+
+Works for me.
+
+(...)
+
+> > Why do you use the task_work at all instead of signalling directly?
+> > If that's something not safe from a (any) tracepoint because it can sleep
+> 
+> If I remember correctly, sending signals requires a spinlock and therefore
+> may sleep on PREEMPT_RT.
+> 
+> > you should definitely not call it if allocation fails.
+> 
+> Yep.
+> 
+> We probably can get away with not reacting at all if allocation fails, by
+> crafting our tests such that only one reaction happens at a time, and
+> allocation won't fail.
+
+It would be nice if the reactor works without having to worry about its
+implementation in the testcases or even general users. In 6.18 we will get
+kmalloc_nolock() which is meant to be usable from tracepoint context. My
+plan is to use that for the next revision.
+
+
+Thomas
