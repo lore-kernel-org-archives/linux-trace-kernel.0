@@ -1,64 +1,64 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0202D1FC7C5
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Sep 2025 02:44:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A2B2228CBC
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Sep 2025 02:44:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759200277; cv=none; b=PpabRUM6llUvZsg65MyMX05/sBYfhz67OOUqDrUp2AV8ih6SIIngd/K1H3w5B+jER/4dTI54smO5KVKCRbVnSKxu+qZUkECieEGvaRh4AsknH8LRXQ6wlonanFAPVTcVYI5Z4jtEH0DumvY4iEFdzKYKv23Keic6ZL75dQcq/Bw=
+	t=1759200287; cv=none; b=an7oNjTZosi/Gyybqi6qBhdCFkxsV9u89MCd6ZgXZDjLvv3uMZGB9KJsaWzrOYl4WdpU+AW6AIOaAFK4NjjovxF8atSLzioWB1WlAiWDYOSE0Xb2KtolUoNkFqZLNfPe7KDA/8AJ34ziZZiQ4s8rw2TQI+b80L/6Vn6yX+IXIQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759200277; c=relaxed/simple;
-	bh=boxEQn+lY/C6jkvJZFjK01G2rW6t0U2zmcOwIq1YIoI=;
+	s=arc-20240116; t=1759200287; c=relaxed/simple;
+	bh=Feu6QMw0Ju5Y4dTxQ53cERWbV/8rWQzq92gPB2aNeXU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NPZgej8XCILJMdgHxUVzYeGXueWqYOBfdgEaADdAX6Ru40tfYA2nJKfovZnPLwFaWT9vrjrot1CpdIxsXpAAZMPOLpS9BXZ5Eri7iSNJTJt4fGeHhRhS03oS8brv8/V0t8Ygd8t03XcGpSaYsAM9ZayScZfTGg6Nb5ezDZfjEOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bC2DSGZK; arc=none smtp.client-ip=209.85.210.182
+	 MIME-Version; b=f85Q2/5Y45gA9tMK+XSn+S69HLzGXsAonYA/L/299+g35Srgpttez4MT4M9kgk98XIEPge5QVDD7wTR+Tp8b0vT2rTGpSX27nNlbq+Lw6Epkt/t4yOchqwT7tsVItX9B1pkirvCGkjMuHIXdIAIm4ZnG9l68KkqGU0B4fntTeq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cD9UsyAP; arc=none smtp.client-ip=209.85.210.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bC2DSGZK"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-76e6cbb991aso4612724b3a.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Sep 2025 19:44:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cD9UsyAP"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-7833765433cso3271059b3a.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Sep 2025 19:44:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1759200275; x=1759805075; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1759200285; x=1759805085; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=DLL9szq8LgdVljgQmrpuYN0dKjRbhwJ4oBDbEm6eF/Y=;
-        b=bC2DSGZK64bV0V4VwYrPhZ87NyeXrn4N1/gDgu1QEAOXxYyoDSWwqTIgW99eX8D002
-         ebw+gg2ofPjgYVxo6cmu0TKU6yEwfgV6lPJUNynSobkRUUfzwwH/jWcXpZME4rEhNruv
-         o1ENNjwOKRbZttzLmaSAspqTNbeUqc6p72F57f2qpAf7P0cbk1FqS+NYLJTlNdOBS42z
-         dGsJDosoIATTiqmpD5NerWCnQSqE8nhPEHMW2fJS+GsNInj7jmXDr2KT6wgyWqvptTbR
-         O37aE88YOo/Q3Ul9XUCYjzzosK7dAjZPiauwMt9Nwsowbb8VAP6KJR/yjsHTeUzR56mc
-         9gMg==
+        bh=eGY4NXn9SYrwp2MIROIAsCXd8mHWC2w3iRZMJXUxzyw=;
+        b=cD9UsyAP5k2wj4gs9yH53Z5F0evW6nvZeYep6U0kGGBeOq22iMBGQ10fM4HLmh6GoF
+         ibawQ7frk+355kuKbgNVplNh2RBpcejEqPqp8ekEoIAd/nN0lrc8n7zGmNOu1PNXZjSl
+         i+jMW7vO3nhuGEKYovvsy+1U+FVTZv+u3oxyDCVIa/7HagNJvsc63RMlohld5WAoArmv
+         WsgKXvDy2bkVe6dLS1kaRSdoMxVgyyN6+EzILqOlGDHRWQGxakjNwT9P4VnSx5ENfSZL
+         ezdf4YzogQO0TaQ5Ji79Dh7FUajDGZcrv7mkd4HnUmIAz22USLvwRkj2cQKWmYxQirj/
+         X4vQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759200275; x=1759805075;
+        d=1e100.net; s=20230601; t=1759200285; x=1759805085;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=DLL9szq8LgdVljgQmrpuYN0dKjRbhwJ4oBDbEm6eF/Y=;
-        b=ZOOIErNc/5PdFlL/DorzKmvt4REKLOu5AYgNkHhe5SNXWq8hlFDnq99NoJqZ2fbGrK
-         18LXcnLkhhCLQP+ZcANbzYkxuZH9/qDE/gIfPZSohuxxlkRvyrLoXLy1mLOI6bf8fG/9
-         rmmiOWhYxhzL6EUFx9TRdObRBzReaweRD0cX+GufXO8mlDH9IdVXQcwW+t/It0VPfIfd
-         5rfUGG0hhStbvVAcASF5aUwNvOyNOw4Z9mWfvt2CF/eHce5xK9lVrhKHJxfnTizI0+mZ
-         B4jdO6WqDmAxyeGzyyMvVqTZkw8E3hkR7I2q3C9eRzMme5k8TW4q/VXzt2bb1e6fVT0u
-         cW5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWbDa7A4B1bBg6gVISiAs/zAoCbvise8YMazV9BW9EWDyanI/ah4Q+NCUw7qZgOLPqeCmJHCU9eSWImSEHXxXBl0y0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzQ8ARc8F1o1ihXu/VL5oJX2vHe8Y8c0COg1zh/WLNlXt1hBNRQ
-	H3HbeED66exl2S/a5JmqqrCE3qselOHn+NRnmeJgWNuLN+o9TRXHAKIB
-X-Gm-Gg: ASbGncuM+K4YC+NCQ/jH2yDHJYR+7oPwMPGxko0iPU9u0+0wETjUbusPdMlGgOVf1w7
-	Y4mNbmSvF0CxrPXkhJFKB3mPaCrDdYk7Z0UDiKK40PMTZTh/izHEdw7YMVt1eV9XefulAbHQtug
-	WyiebXptSuBZQ285ENtwDj3GgD4h+Lf03b9uD1CCzHOz+y48515Kn7KKl1fsuyoGw9+ga4NGZ2W
-	FWCUT55CKSbfT+91HHdVzH2areH2QEYCWnrc0zvYMdI/kiEzr/Vu1RucfTMsxa7nt4nP6t/Zi0z
-	tukl1BQCeJ2PqfWxKxGWFLaJd5DHtsQMdYYZLelQ3UgJdv9Ig3rQfam3iB2Ti0Nr8JcD4g5U+mB
-	d2yTB8Skgrc7Srglhi9aIm7LFOvByVw2Sj3nlhSsJIfm/cRC3r91zoi+q+G2wmQW3RV94USxqPO
-	dD
-X-Google-Smtp-Source: AGHT+IFKAUJd50skyQZezOIyRCzitP2KYWlsYqho8uHybu50MFOQdhfyrcEbVkIiLwip8Qb7gZ0ySg==
-X-Received: by 2002:a05:6a00:4b46:b0:77f:416e:de8e with SMTP id d2e1a72fcca58-780fceb5040mr19851033b3a.26.1759200274983;
-        Mon, 29 Sep 2025 19:44:34 -0700 (PDT)
+        bh=eGY4NXn9SYrwp2MIROIAsCXd8mHWC2w3iRZMJXUxzyw=;
+        b=qQM3VVwJX8/JNtNLjKNGXfQlII/cWqpqjGD8Gckdz+pGYJocFGkK+xgm0CoubSa5+Y
+         3Fmcp+tXlj797gFb0MYDQy4nG4qwPY287VxWpCOyX3N1VL/op5J7fbqlbO/KkkIIhPOj
+         fCrPYU5ijQt6VdyauvZ4uB43xG3W/Jn+nh4U2uMTAFvjei4goXHsJh0Li1a93Qz5sEdK
+         yxTfiqm6vRc7vi8ozbh+kFNLOMgDTGksnJHnutiAqONcHUw3P/PWcUUkWKpBWAVtA0AZ
+         FlmdpcJZ70xVC1Z+8HbWuBQm0Vu9s13XtWP6mewW2ZDVhop3iECABfLhSaOODaciOGuW
+         IpEw==
+X-Forwarded-Encrypted: i=1; AJvYcCXiUMx7girJ/iCbcHY67+LDrniR70C7a1bsguLb42EHlRyhZ5CPPEztM4IqE3SBfrpDh+JuxPkq94Z0Q1k0GrNYBjU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwEVZC2MBJoYTWZZk1vOICrI5xx1ria/syl2bXlvQ5WTX6QHP6y
+	6mokqFecaClybQS/T8+04eIdgpoNFPZwtJsaGwLI7x7GkD9EOpEHq2tM
+X-Gm-Gg: ASbGnctuTLU0w2FOwO6Ud8nrgFV5f5TAKQX2ynXhijAvBbFEYFrgCUTJWd6r2zoHJvW
+	jGHrdL9e9iUMopYRvLabglC9ww8eMXEPtvpixTAOeJStZiKJzhOpQeFvaUIlV69eReVl7i+COA3
+	uYEX0tJDfLsfhnZ45GQp/KZCCm8eIuEssUVJ6PPH6GRM9enVsnSgGzGaI4+Vcve8k7DtC/owwM5
+	V77RMCMz6Gy15vvb04onZU3V4T6oaIEQBpa8o00B7aafo/lm04SgryekQzWMQqTke52t2GHAtwB
+	z31Mz95R21oc0FC905g/FvHSPo/2uCkJwl+ZCed6cX+4NV3BOo/PaCJyrlbytzXdBAquRR/20iv
+	binTBjvFDmAV7b97CvYMYA6FP767CtiasbIcJnSzlcWGvW+yMgaJ11ls634BcRP0KB7fYascBRQ
+	uO
+X-Google-Smtp-Source: AGHT+IFCIxJ+f2ZP7/SRGQLtykJQ9skkyS5Xc4YM8nOS80KRWl9hYAY1JbghIyfFVwcemJPxzbxqqQ==
+X-Received: by 2002:a17:90b:1347:b0:330:6edd:9cf with SMTP id 98e67ed59e1d1-3342a2b0f1fmr20209339a91.22.1759200285220;
+        Mon, 29 Sep 2025 19:44:45 -0700 (PDT)
 Received: from localhost ([45.142.167.196])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7810238f11esm12449091b3a.19.2025.09.29.19.44.34
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3341bdac46bsm18593679a91.12.2025.09.29.19.44.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Sep 2025 19:44:34 -0700 (PDT)
+        Mon, 29 Sep 2025 19:44:44 -0700 (PDT)
 From: Jinchao Wang <wangjinchao600@gmail.com>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
@@ -125,9 +125,9 @@ To: Andrew Morton <akpm@linux-foundation.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-trace-kernel@vger.kernel.org
 Cc: Jinchao Wang <wangjinchao600@gmail.com>
-Subject: [PATCH v6 04/23] mm/ksw: add build system support
-Date: Tue, 30 Sep 2025 10:43:25 +0800
-Message-ID: <20250930024402.1043776-5-wangjinchao600@gmail.com>
+Subject: [PATCH v6 05/23] mm/ksw: add ksw_config struct and parser
+Date: Tue, 30 Sep 2025 10:43:26 +0800
+Message-ID: <20250930024402.1043776-6-wangjinchao600@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250930024402.1043776-1-wangjinchao600@gmail.com>
 References: <20250930024402.1043776-1-wangjinchao600@gmail.com>
@@ -139,116 +139,183 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add Kconfig and Makefile infrastructure.
-
-The implementation is located under `mm/kstackwatch/`.
+Add struct ksw_config and ksw_parse_config() to parse user string.
 
 Signed-off-by: Jinchao Wang <wangjinchao600@gmail.com>
 ---
- mm/Kconfig.debug             |  8 ++++++++
- mm/Makefile                  |  1 +
- mm/kstackwatch/Makefile      |  2 ++
- mm/kstackwatch/kernel.c      | 23 +++++++++++++++++++++++
- mm/kstackwatch/kstackwatch.h |  5 +++++
- mm/kstackwatch/stack.c       |  1 +
- mm/kstackwatch/watch.c       |  1 +
- 7 files changed, 41 insertions(+)
- create mode 100644 mm/kstackwatch/Makefile
- create mode 100644 mm/kstackwatch/kernel.c
- create mode 100644 mm/kstackwatch/kstackwatch.h
- create mode 100644 mm/kstackwatch/stack.c
- create mode 100644 mm/kstackwatch/watch.c
+ mm/kstackwatch/kernel.c      | 112 +++++++++++++++++++++++++++++++++++
+ mm/kstackwatch/kstackwatch.h |  27 +++++++++
+ 2 files changed, 139 insertions(+)
 
-diff --git a/mm/Kconfig.debug b/mm/Kconfig.debug
-index 32b65073d0cc..24f4c4254f01 100644
---- a/mm/Kconfig.debug
-+++ b/mm/Kconfig.debug
-@@ -309,3 +309,11 @@ config PER_VMA_LOCK_STATS
- 	  overhead in the page fault path.
- 
- 	  If in doubt, say N.
-+
-+config KSTACK_WATCH
-+	bool "Kernel Stack Watch"
-+	depends on HAVE_HW_BREAKPOINT && KPROBES && FPROBE && STACKTRACE
-+	help
-+	  A lightweight real-time debugging tool to detect stack corruption.
-+
-+	  If unsure, say N.
-diff --git a/mm/Makefile b/mm/Makefile
-index ef54aa615d9d..665c9f2bf987 100644
---- a/mm/Makefile
-+++ b/mm/Makefile
-@@ -92,6 +92,7 @@ obj-$(CONFIG_PAGE_POISONING) += page_poison.o
- obj-$(CONFIG_KASAN)	+= kasan/
- obj-$(CONFIG_KFENCE) += kfence/
- obj-$(CONFIG_KMSAN)	+= kmsan/
-+obj-$(CONFIG_KSTACK_WATCH)	+= kstackwatch/
- obj-$(CONFIG_FAILSLAB) += failslab.o
- obj-$(CONFIG_FAIL_PAGE_ALLOC) += fail_page_alloc.o
- obj-$(CONFIG_MEMTEST)		+= memtest.o
-diff --git a/mm/kstackwatch/Makefile b/mm/kstackwatch/Makefile
-new file mode 100644
-index 000000000000..84a46cb9a766
---- /dev/null
-+++ b/mm/kstackwatch/Makefile
-@@ -0,0 +1,2 @@
-+obj-$(CONFIG_KSTACK_WATCH)	+= kstackwatch.o
-+kstackwatch-y := kernel.o stack.o watch.o
 diff --git a/mm/kstackwatch/kernel.c b/mm/kstackwatch/kernel.c
-new file mode 100644
-index 000000000000..78f1d019225f
---- /dev/null
+index 78f1d019225f..3b7009033dd4 100644
+--- a/mm/kstackwatch/kernel.c
 +++ b/mm/kstackwatch/kernel.c
-@@ -0,0 +1,23 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+@@ -1,16 +1,128 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+ 
++#include <linux/kstrtox.h>
+ #include <linux/module.h>
++#include <linux/string.h>
 +
-+#include <linux/module.h>
++#include "kstackwatch.h"
 +
-+static int __init kstackwatch_init(void)
++static struct ksw_config *ksw_config;
++
++struct param_map {
++	const char *name;       /* long name */
++	const char *short_name; /* short name (2 letters) */
++	size_t offset;          /* offsetof(struct ksw_config, field) */
++	bool is_string;         /* true for string */
++};
++
++/* macro generates both long and short name automatically */
++#define PMAP(field, short, is_str) \
++	{ #field, #short, offsetof(struct ksw_config, field), is_str }
++
++static const struct param_map ksw_params[] = {
++	PMAP(func_name,   fn, true),
++	PMAP(func_offset, fo, false),
++	PMAP(depth,       dp, false),
++	PMAP(max_watch,   mw, false),
++	PMAP(sp_offset,   so, false),
++	PMAP(watch_len,   wl, false),
++};
++
++static int ksw_parse_param(struct ksw_config *config, const char *key,
++			   const char *val)
 +{
-+	pr_info("module loaded\n");
++	const struct param_map *pm = NULL;
++	int ret;
++
++	for (int i = 0; i < ARRAY_SIZE(ksw_params); i++) {
++		if (strcmp(key, ksw_params[i].name) == 0 ||
++		    strcmp(key, ksw_params[i].short_name) == 0) {
++			pm = &ksw_params[i];
++			break;
++		}
++	}
++
++	if (!pm)
++		return -EINVAL;
++
++	if (pm->is_string) {
++		char **dst = (char **)((char *)config + pm->offset);
++		*dst = kstrdup(val, GFP_KERNEL);
++		if (!*dst)
++			return -ENOMEM;
++	} else {
++		ret = kstrtou16(val, 0, (u16 *)((char *)config + pm->offset));
++		if (ret)
++			return ret;
++	}
++
 +	return 0;
 +}
 +
-+static void __exit kstackwatch_exit(void)
++/*
++ * Configuration string format:
++ *    param_name=<value> [param_name=<value> ...]
++ *
++ * Required parameters:
++ * - func_name  |fn (str) : target function name
++ * - func_offset|fo (u16) : instruction pointer offset
++ *
++ * Optional parameters:
++ * - depth      |dp (u16) : recursion depth
++ * - max_watch  |mw (u16) : maximum number of watchpoints
++ * - sp_offset  |so (u16) : offset from stack pointer at func_offset
++ * - watch_len  |wl (u16) : watch length (1,2,4,8)
++ */
++static int __maybe_unused ksw_parse_config(char *buf, struct ksw_config *config)
 +{
-+	pr_info("module unloaded\n");
++	char *part, *key, *val;
++	int ret;
++
++	kfree(config->func_name);
++	kfree(config->user_input);
++	memset(ksw_config, 0, sizeof(*ksw_config));
++
++	buf = strim(buf);
++	config->user_input = kstrdup(buf, GFP_KERNEL);
++	if (!config->user_input)
++		return -ENOMEM;
++
++	while ((part = strsep(&buf, " \t\n")) != NULL) {
++		if (*part == '\0')
++			continue;
++
++		key = strsep(&part, "=");
++		val = part;
++		if (!key || !val)
++			continue;
++		ret = ksw_parse_param(config, key, val);
++		if (ret)
++			pr_warn("unsupported param %s=%s", key, val);
++	}
++
++	if (!config->func_name || !config->func_offset) {
++		pr_err("Missing required parameters: function or func_offset\n");
++		return -EINVAL;
++	}
++
++	return 0;
 +}
+ 
+ static int __init kstackwatch_init(void)
+ {
++	ksw_config = kzalloc(sizeof(*ksw_config), GFP_KERNEL);
++	if (!ksw_config)
++		return -ENOMEM;
 +
-+module_init(kstackwatch_init);
-+module_exit(kstackwatch_exit);
+ 	pr_info("module loaded\n");
+ 	return 0;
+ }
+ 
+ static void __exit kstackwatch_exit(void)
+ {
++	kfree(ksw_config);
 +
-+MODULE_AUTHOR("Jinchao Wang");
-+MODULE_DESCRIPTION("Kernel Stack Watch");
-+MODULE_LICENSE("GPL");
-+
+ 	pr_info("module unloaded\n");
+ }
+ 
 diff --git a/mm/kstackwatch/kstackwatch.h b/mm/kstackwatch/kstackwatch.h
-new file mode 100644
-index 000000000000..0273ef478a26
---- /dev/null
+index 0273ef478a26..a7bad207f863 100644
+--- a/mm/kstackwatch/kstackwatch.h
 +++ b/mm/kstackwatch/kstackwatch.h
-@@ -0,0 +1,5 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _KSTACKWATCH_H
-+#define _KSTACKWATCH_H
+@@ -2,4 +2,31 @@
+ #ifndef _KSTACKWATCH_H
+ #define _KSTACKWATCH_H
+ 
++#include <linux/types.h>
 +
-+#endif /* _KSTACKWATCH_H */
-diff --git a/mm/kstackwatch/stack.c b/mm/kstackwatch/stack.c
-new file mode 100644
-index 000000000000..cec594032515
---- /dev/null
-+++ b/mm/kstackwatch/stack.c
-@@ -0,0 +1 @@
-+// SPDX-License-Identifier: GPL-2.0
-diff --git a/mm/kstackwatch/watch.c b/mm/kstackwatch/watch.c
-new file mode 100644
-index 000000000000..cec594032515
---- /dev/null
-+++ b/mm/kstackwatch/watch.c
-@@ -0,0 +1 @@
-+// SPDX-License-Identifier: GPL-2.0
++#define MAX_CONFIG_STR_LEN 128
++
++struct ksw_config {
++	char *func_name;
++	u16 depth;
++
++	/*
++	 * watched variable info:
++	 * - func_offset : instruction offset in the function, typically the
++	 *                 assignment of the watched variable, where ksw
++	 *                 registers a kprobe post-handler.
++	 * - sp_offset   : offset from stack pointer at func_offset. Usually 0.
++	 * - watch_len   : size of the watched variable (1, 2, 4, or 8 bytes).
++	 */
++	u16 func_offset;
++	u16 sp_offset;
++	u16 watch_len;
++
++	/* max number of hwbps that can be used */
++	u16 max_watch;
++
++	/* save to show */
++	char *user_input;
++};
++
+ #endif /* _KSTACKWATCH_H */
 -- 
 2.43.0
 
