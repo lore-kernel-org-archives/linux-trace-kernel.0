@@ -1,169 +1,199 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F152327057D
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Sep 2025 02:46:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD2202940D
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Sep 2025 03:19:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759200372; cv=none; b=YsWfkQkEacM6wyC1dehv+p/6JtLHISgNF8LJKxQhkmkQVIvf4scAx6npZ3CFaS7+vhYdzCK9ABWGqzriPzyy63ssmoMetW+82/nxuvYSSbmM8yitFFMnPNGc12rjVS3stYBXwBstkOipv0MjKYDViYQ0NnqQHVbQnycNm4lTJmQ=
+	t=1759202368; cv=none; b=ePOnkIhDYgh3QbAbXhEwEVkCGDBGcMeU9xwcsJUjheP2JSaRNW6gJ3HcQBvYbpMb2PVj8m38wuLK/yPrIESZ/klDXSk1fomE+mqDF8AkmRWF5E6ntmypONmwzlUjSwcesNbvYULG93zODa/fqqVY4dRFQEQx9bv1IUMi8wyLmMU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759200372; c=relaxed/simple;
-	bh=1x1tZkclSlUAFkeAbCTbg9ur9vKYhrQAjAn0c+iWPHU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hvHO6j9Ubu6fLCvhDULQMONFkLsMJqe3IK7c4giUz1iyJ8G4qe/WNQAsg80p1TXZoLujf9Pbecou/iO5FCBHvbq5GG69u+0fA6vSx9pzsgLo/EG+2pYDIBT9vm7uQTH6CiaNdQbjYkdQgIdO5P/w/UWtr2W8TVaoJ/AgQ1hGpdE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GD+28C8I; arc=none smtp.client-ip=209.85.215.174
+	s=arc-20240116; t=1759202368; c=relaxed/simple;
+	bh=EWb9mcMhPLwVON+FMrosPILezBfZreUUY4XVEf2hUEI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Iv0eVcIDJyApW/cj1roUig87zldcebTa64RLdY89HUw2cZ1nLPx2CZ97L5THHBrGrUdS67BMAKcyO0ZwSq/nI5vlmmaYTNpLSOoKt+XvAh/x/cBrRxoMu+mvrB4vb3tpyWSdsWMsDAGGAXOOSA9XFQQyeyeebDsk0vQOfkFMAEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iho6XU27; arc=none smtp.client-ip=209.85.160.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GD+28C8I"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-b57f361a8fdso2437899a12.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Sep 2025 19:46:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iho6XU27"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-4e06163d9e9so18736451cf.3
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Sep 2025 20:19:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1759200370; x=1759805170; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1759202366; x=1759807166; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=6dXdR7Vr7GvNxroOAYy+aBhMqtIGh2YpUvjEzBf0MIg=;
-        b=GD+28C8IUPvPybTav2nSS/vfj11laS+g6x4FMtRKDrg3QGJgVIb6VedaPqMxB3SpB0
-         3gTNvyiTrJIg6YqhoHZgmnXsd1WHyDJrUrPuAjVQLkuAHt5Ez8sZ2gbP1Q/Y0+8fkpnE
-         w6rHB1gdgfhM5iJfg+xpCr3uT+K2D7kVhWikJum0aAbMyVnQClxJJDuIpPQUy2bEUeUb
-         3c/LPOFfuLI3+gzDMRGqmPn5AfOY0N9A2uDReaMBYHslN1Tp/vHVAwso7qTYFkFZd9ao
-         8fQKAYcL+5FuME8Ha8G1FwAgZ3TeTKWIbMg6nT8+BZGTJmos1M/W0pwoJ8rHf54otuNH
-         xmWQ==
+        bh=7gLvWskKO9NISSvH7QfBj9yELCdtGhaDVZxapYCTDYM=;
+        b=iho6XU27U1+lTVPV80ALwhC0dbbgdlJ7AmZ2q9Kx6mIgCivadXEHmkObO11ILNuPc1
+         /kS+/B+8zKOmJm2qYwbBfKThGo3Mw9YWdXOyvxdQqPZ1M//vzHMOMHsDGS/75UeFHf6Y
+         mspJ+V/jpNdvAz7S79uGDPWBCLR7XB4CySWTEkv2qupr0k1ar1jUiSTEX72x2h5ndOxx
+         hJcwqAkTV356IcSjg4rbAXbwAqY60YtqJBjJ+guhZEVbUiXZLsuS7oJOoo3NDDP80MQh
+         SnfoBOKnDMO4ZPhG6DNeP4XhqC1MGE7dTDpAKrgblDtDEpL1fAsjBExKF9g6Jyle+u2N
+         wtFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759200370; x=1759805170;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1759202366; x=1759807166;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=6dXdR7Vr7GvNxroOAYy+aBhMqtIGh2YpUvjEzBf0MIg=;
-        b=wtPyk8Y5LK29qayEaGhIVCGOAw8KISv+ZYHS4Wbeox0AM1M14015eK5PkP2vFgPmTc
-         KnBqbCEjfMIcgWbecc/qKRVq6GN+Qz4RHELtsdZKE0Y9V5q9HlXAeyvdsMjj/IFVbB22
-         5k1I+mHQ/fz4+o/v8DOMav9RAHB7DZtBWFFv2TN0iweHQEu35YEy0oinSn4bBW/E33lG
-         oevv2esM8U1db07HHNeONcxZlfN+BXJXSne8szgGqJmruLyUvrwjP47Gh5g97dno2Lpr
-         kuoh/Jyfz6pCrcTpC22PR5XJxGp1bz+2rOux+iR+LTdZITpcjhEdF69bWGOYr1Stc8cQ
-         h/Iw==
-X-Forwarded-Encrypted: i=1; AJvYcCWn49TTONagGWlxd5zy6on1KphnKJJUdpa4hobVxkNc2EKwjAE/RFtmuLVZUTRJMM9OqYOISWq++EfI9jrOmpDrS/I=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyeb5beG4NJLz/mratf0I914C1KCy4wXcqOrxkvXGS74/eBykSS
-	mHKEQPKx/VqI/QjMWWWNSEGRJ5d0ihbF5FivlYKY2CuJheGeQ+GVJhW9
-X-Gm-Gg: ASbGnctKPU2kwRNd0Bcg7CoIltmLQMnOEj+456FKNznkRK9rNIeTbJ0qbxitukXTe3f
-	2+oC4JYTmU3uosPot1wpdhEoDLwwegWv99GqEgYvfja392h+SGEPlokZ9ZX5b1eT4CqIOXpRJPg
-	s/inAaw4EUF5LqUnsluQQrAk7yv+HU8Jt4VmqZ4tcNCCRHzGo/ZUGchX3u6ITb80b9sc9B09ZV5
-	XOw/qRp32AEKFnXu8hc/+mUp3ftaGUh32Lk93LHecX6mlqao1GTDlkB1B47rLLnXc7zvvxkzbtp
-	k/dHDHL4eSegc/vfMF4S7KCWJqqc9fxxmHVp7PAp9tZ++EMewOekF5I5xhOi+EPnEIZnGtQ/9sb
-	DDZIPSlqvIYk7RgQlR8ku9fQl3sFS8MuboJzr5rwQNgHvbrqAq4M/BoTvx3zzQcBiWw==
-X-Google-Smtp-Source: AGHT+IEoEe43JjNKdWndUwta+OzzU/8noer3nQDRA4tPEoZN9FB7in6q7dddTrTKlJfmrNdEMUXFZw==
-X-Received: by 2002:a17:902:f9c6:b0:275:2aac:fef8 with SMTP id d9443c01a7336-27ed4a78d81mr138634555ad.38.1759200370200;
-        Mon, 29 Sep 2025 19:46:10 -0700 (PDT)
-Received: from localhost ([45.142.167.196])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-27ed6715f0esm144277015ad.52.2025.09.29.19.46.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Sep 2025 19:46:09 -0700 (PDT)
-From: Jinchao Wang <wangjinchao600@gmail.com>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Mike Rapoport <rppt@kernel.org>,
-	Alexander Potapenko <glider@google.com>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Marco Elver <elver@google.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>,
-	Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	David Hildenbrand <david@redhat.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Kees Cook <kees@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Rong Xu <xur@google.com>,
-	Naveen N Rao <naveen@kernel.org>,
-	David Kaplan <david.kaplan@amd.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Jinjie Ruan <ruanjinjie@huawei.com>,
-	Nam Cao <namcao@linutronix.de>,
-	workflows@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-mm@kvack.org,
-	llvm@lists.linux.dev,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	kasan-dev@googlegroups.com,
-	"David S. Miller" <davem@davemloft.net>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-trace-kernel@vger.kernel.org
-Cc: Jinchao Wang <wangjinchao600@gmail.com>
-Subject: [PATCH v6 23/23] MAINTAINERS: add entry for KStackWatch
-Date: Tue, 30 Sep 2025 10:43:44 +0800
-Message-ID: <20250930024402.1043776-24-wangjinchao600@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250930024402.1043776-1-wangjinchao600@gmail.com>
-References: <20250930024402.1043776-1-wangjinchao600@gmail.com>
+        bh=7gLvWskKO9NISSvH7QfBj9yELCdtGhaDVZxapYCTDYM=;
+        b=UR0nrUq45JM8vsG5uTGN8+N5CR6Oe9jtcEEmVuJ2WSOAoSDUD6n2EAWLdRfIH+Ih0N
+         T12eqDk/OCJi6qcS6SP7m7J8+gQSJ1oYEqR7mJxFJMP/ZDuzlVaEZfhINX+Z4OBzQCvG
+         usDCIcMI4TgleefZmF5bnMa77bbcx+0NeMBeE8CTGBwHHn1QACERmGEh2BP9LZWOpz9H
+         zC+ztVBBZbUJZCX3VNcxvTtY81MfXFEbyrprx509ql+TKG53/easTvH1XV4J54L+Jpqm
+         4C9Q3Po0DSnBruOc0olUrUvD/3Npcer7ZPrIyX2iWmxL42gmvIFmbfQYaDMBTjQHaqEf
+         j11A==
+X-Forwarded-Encrypted: i=1; AJvYcCVHcnUm0CXl19oDtPJ9/XV7kjcug8m/Fe07T3zmLWi3SG1uXpfgJEK9DYLE4p0Ud460KjKAI8wFGlbjG7jugUBvWEc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyCLTjlIzzkIdKYch7+7OPN5w4M2jI/th+n4gdITxYALozi03NO
+	dUC2QJ25uz0B3uumz8FA3lN3gaMScRYJPQa4SXgAoyUKiv5ADNWJzs6ipTQEPn4iBpo6NMogvAd
+	/NvqCSeh2eAuFXQsIoHqJJ04hIV/OHGc=
+X-Gm-Gg: ASbGncue9BGhIayS7D4+bx75BCpxHBGneJsayhGfI/XC/zno89k+7L9Rpz+EufDcI3Z
+	t5hkD0LsUr2MphLQXVVMRJ/K0zfBTEdDp5ogykjdFpZK9ASMPBQH9wIVEwYHc4iO3ynMGmwwsTB
+	tZZlK3lbUHIZbJFxq/8U7a2XuaPhMqTd1nzRwDkk940XROz1Zu62RiNGIO7Xg7tfWPDXtCCoW8b
+	RKwZmh1mW5dcDlILW854gQMwZa/ZjhD
+X-Google-Smtp-Source: AGHT+IGd4Yt2CfWqJpq73k06OIwopaib1H87KJ3xzxIVLa34fX7JZb5rHIKDJ+TX2zdm4gbM+lnCpPq/Chw0xggLkGQ=
+X-Received: by 2002:ac8:580d:0:b0:4da:3218:e8da with SMTP id
+ d75a77b69052e-4da478290d2mr252791301cf.17.1759202365587; Mon, 29 Sep 2025
+ 20:19:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250929014227.430-1-xuewen.yan@unisoc.com> <CAJuCfpE_aZKFB8O=KPq5uTv=WeJf6TCmneMnr8pp88SNWy3K-Q@mail.gmail.com>
+In-Reply-To: <CAJuCfpE_aZKFB8O=KPq5uTv=WeJf6TCmneMnr8pp88SNWy3K-Q@mail.gmail.com>
+From: Xuewen Yan <xuewen.yan94@gmail.com>
+Date: Tue, 30 Sep 2025 11:19:14 +0800
+X-Gm-Features: AS18NWBcqZ0NvhkmG_UM6sVIJIDnxhwqtC9zPgp_yOox7W3dyUMwGXcx07PRGdA
+Message-ID: <CAB8ipk-xw-wcCB=rSv5-aEANefww_JiB4nKRW1iFXxGOA3tW-Q@mail.gmail.com>
+Subject: Re: [RFC PATCH V4] sched: psi: Add psi events trace point
+To: Suren Baghdasaryan <surenb@google.com>
+Cc: Xuewen Yan <xuewen.yan@unisoc.com>, hannes@cmpxchg.org, 
+	mathieu.desnoyers@efficios.com, mhiramat@kernel.org, rostedt@goodmis.org, 
+	peterz@infradead.org, mingo@redhat.com, juri.lelli@redhat.com, 
+	vincent.guittot@linaro.org, dietmar.eggemann@arm.com, bsegall@google.com, 
+	mgorman@suse.de, vschneid@redhat.com, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, ke.wang@unisoc.com, yuming.han@unisoc.com, 
+	Roman Gushchin <roman.gushchin@linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add a maintainer entry for Kernel Stack Watch.
+On Tue, Sep 30, 2025 at 7:17=E2=80=AFAM Suren Baghdasaryan <surenb@google.c=
+om> wrote:
+>
+> On Sun, Sep 28, 2025 at 6:43=E2=80=AFPM Xuewen Yan <xuewen.yan@unisoc.com=
+> wrote:
+> >
+> > Add trace point to psi triggers. This is useful to
+> > observe the psi events in the kernel space.
+> >
+> > One use of this is to monitor memory pressure.
+> > When the pressure is too high, we can kill the process
+> > in the kernel space to prevent OOM.
+>
+> Just FYI, Roman is working on a BPF-based oom-killer solution [1]
+> which might be also interesting for you and this tracepoint might be
+> useful for Roman as well. CC'ing him here.
+>
+> [1] https://lore.kernel.org/all/20250818170136.209169-1-roman.gushchin@li=
+nux.dev/
 
-Signed-off-by: Jinchao Wang <wangjinchao600@gmail.com>
+Thanks for the review and the bpf patch, I'm interested in these.
+> >
+> > Signed-off-by: Xuewen Yan <xuewen.yan@unisoc.com>
+>
+> Acked-by: Suren Baghdasaryan <surenb@google.com>
+
+Thanks!
 ---
- MAINTAINERS | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 520fb4e379a3..3d4811ff3631 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13362,6 +13362,14 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest.git
- F:	Documentation/dev-tools/kselftest*
- F:	tools/testing/selftests/
- 
-+KERNEL STACK WATCH
-+M:	Jinchao Wang <wangjinchao600@gmail.com>
-+S:	Maintained
-+F:	Documentation/dev-tools/kstackwatch.rst
-+F:	include/linux/kstackwatch_types.h
-+F:	mm/kstackwatch/
-+F:	tools/kstackwatch/
-+
- KERNEL SMB3 SERVER (KSMBD)
- M:	Namjae Jeon <linkinjeon@kernel.org>
- M:	Namjae Jeon <linkinjeon@samba.org>
--- 
-2.43.0
-
+BR
+>
+> > ---
+> > V4:
+> > -generate the event only after cmpxchg() passes the check
+> > ---
+> > V3:
+> > -export it in the tracefs;
+> > ---
+> > v2:
+> > -fix compilation error;
+> > -export the tp;
+> > -add more commit message;
+> > ---
+> >  include/trace/events/sched.h | 27 +++++++++++++++++++++++++++
+> >  kernel/sched/psi.c           |  5 +++++
+> >  2 files changed, 32 insertions(+)
+> >
+> > diff --git a/include/trace/events/sched.h b/include/trace/events/sched.=
+h
+> > index 7b2645b50e78..db8b8f25466e 100644
+> > --- a/include/trace/events/sched.h
+> > +++ b/include/trace/events/sched.h
+> > @@ -826,6 +826,33 @@ TRACE_EVENT(sched_wake_idle_without_ipi,
+> >         TP_printk("cpu=3D%d", __entry->cpu)
+> >  );
+> >
+> > +#ifdef CONFIG_PSI
+> > +TRACE_EVENT(psi_event,
+> > +
+> > +       TP_PROTO(int aggregator, int state, u64 threshold, u64 win_size=
+),
+> > +
+> > +       TP_ARGS(aggregator, state, threshold, win_size),
+> > +
+> > +       TP_STRUCT__entry(
+> > +               __field(int,    aggregator)
+> > +               __field(int,    state)
+> > +               __field(u64,    threshold)
+> > +               __field(u64,    win_size)
+> > +       ),
+> > +
+> > +       TP_fast_assign(
+> > +               __entry->aggregator     =3D aggregator;
+> > +               __entry->state          =3D state;
+> > +               __entry->threshold      =3D threshold;
+> > +               __entry->win_size       =3D win_size;
+> > +       ),
+> > +
+> > +       TP_printk("aggregator=3D%d state=3D%d threshold=3D%llu window_s=
+ize=3D%llu",
+> > +               __entry->aggregator, __entry->state, __entry->threshold=
+,
+> > +               __entry->win_size)
+> > +);
+> > +#endif /* CONFIG_PSI */
+> > +
+> >  /*
+> >   * Following tracepoints are not exported in tracefs and provide hooki=
+ng
+> >   * mechanisms only for testing and debugging purposes.
+> > diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
+> > index 59fdb7ebbf22..e8a7fd04ba9f 100644
+> > --- a/kernel/sched/psi.c
+> > +++ b/kernel/sched/psi.c
+> > @@ -141,6 +141,8 @@
+> >  #include <linux/psi.h>
+> >  #include "sched.h"
+> >
+> > +EXPORT_TRACEPOINT_SYMBOL_GPL(psi_event);
+> > +
+> >  static int psi_bug __read_mostly;
+> >
+> >  DEFINE_STATIC_KEY_FALSE(psi_disabled);
+> > @@ -515,6 +517,9 @@ static void update_triggers(struct psi_group *group=
+, u64 now,
+> >                                 kernfs_notify(t->of->kn);
+> >                         else
+> >                                 wake_up_interruptible(&t->event_wait);
+> > +
+> > +                       trace_psi_event(aggregator, t->state, t->thresh=
+old,
+> > +                                       t->win.size);
+> >                 }
+> >                 t->last_event_time =3D now;
+> >                 /* Reset threshold breach flag once event got generated=
+ */
+> > --
+> > 2.25.1
+> >
+> >
