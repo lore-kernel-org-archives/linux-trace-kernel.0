@@ -1,142 +1,131 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4E252628D;
-	Tue, 30 Sep 2025 14:18:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE1E8155C82;
+	Tue, 30 Sep 2025 15:37:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759241918; cv=none; b=CBhCW3TeVMio1YtRaOqXIKw+XueitCNszGxgTSz4AHvZGd9VLv8ZGQl9SswKJpEgzx1FYFcYaCfo539s17mM3egAbS0I95yEI98qVRdmCbwPzNeuqTFcFxJcsWJ9C9KjMdghOCOkLiKu3SbO0p8/s/DXA8q1rttsDU6mIRto9yo=
+	t=1759246635; cv=none; b=CjIMHKrU/3xMz4seT5sjRII16kSeBgxoJBzJBRmHWi28lqlgVAsSFotO3Mm9fWc22t8IWk/SWBhz0tc84WIuLkNFfcSmBBGFlj1tWG2MssAGjcSL3svTP/LJeAqNPbYRvDena3nW1TVsmInh/eZ0VaM1p58kmE3ieY+m0M6j/go=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759241918; c=relaxed/simple;
-	bh=/Z9vHgFitGnywr0evX36Ur856Ith0O06Y1XN/TLpmFw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WG3RErY8zqPgURg78E2LCSRqqw/cB7WW4BmbC3JzHTb43iu0skV/DA76Ak+VSq+jjBzqxoEr1qv5mvOz1+5U/UXN/wcg4rb9z2DCgk0TyrJneYKE5zL75jbOWOAZfP5byXN7Y4q9PSx3y2W7hLJGGd3oRPTZ/HnoeYRjkbqicIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=hCTMaLnt; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=O9YuYWYc; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1759246635; c=relaxed/simple;
+	bh=5DuPgpFSR3GAaGmfZh+tB5vtmwFDS1xeVJTwvCEB07g=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=oQlPI7V4LOzpQaePz0EBWHy9O+TfCpiGyRtqdXkQeIPQpHKRT4V9p3pql6DMbJJ4Mddz9aoY8DWXLaevBy0NDKfFxcIF0j+brGV9BLQi6RC3SzRbPdoUYkhW5buS3Su23bCQHGPNhUSXMBL5DUh/w2WM5V6SjE5l28/dqBKn1DQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B5uJtS84; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hCTMaLnt";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="O9YuYWYc"
-Date: Tue, 30 Sep 2025 16:18:32 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1759241914;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AUa3P5BA7Ar6Emm+p460eFkGleUa0VHRFnVxjlOnyUU=;
-	b=hCTMaLntdwlggOSyv9hkSECLvqBMw10QA9tj1urT5JtfSD5e1Zp0WHkWDXkDEM8wfjStlZ
-	0O7ekQeT/PwmtEvrfbngfoX3CHcqwfSxtwEVxVT9EvCFSmp8JIFA0kSUABT/wMYZJRhVu8
-	B3Cag+ffToUw6j6MxyKU1FYdXQAvr/2c1PEeQpfvuwK1MsDPQxqssZpqxvI5nPUJFVBjNp
-	DD4eCdATiyHRcWka+QiGQob+OkI/yT1xrQcjrPFQxZ30V+X9PBo69iZtRGk5j7dXHbfmZX
-	9NclbWHngx3avhu1KNe3nQijnZAb2o5UCS6FcIKNunkPlE6SbhPTas863ehtPw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1759241914;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AUa3P5BA7Ar6Emm+p460eFkGleUa0VHRFnVxjlOnyUU=;
-	b=O9YuYWYcW/AwG7x6bM5tYChRYRjSPkkgFuA29+zfYUfMTG82dbT5DG501xc0ia70CXzl2e
-	Yj5rebxnQPkiZ7Bw==
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-To: Nam Cao <namcao@linutronix.de>, Gabriele Monaco <gmonaco@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH] rv: Add signal reactor
-Message-ID: <20250930161252-ea116bda-293e-4f81-ab0f-075dd03dee52@linutronix.de>
-References: <20250919-rv-reactor-signal-v1-1-fb0012034158@linutronix.de>
- <d0aaaf1f47f0d948b60b0575e179564e3c024188.camel@redhat.com>
- <20250922162900.eNwI7CS0@linutronix.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B5uJtS84"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96BD7C4CEF0;
+	Tue, 30 Sep 2025 15:37:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1759246633;
+	bh=5DuPgpFSR3GAaGmfZh+tB5vtmwFDS1xeVJTwvCEB07g=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=B5uJtS84NykHnYCJNaUW1fXs55P1U2DN1k8p3BjH/PGHPfOJP8mvIpFjPsvm7kckJ
+	 hdxkoiY3pzv56L765SeHGvFXskjyrPQ/kIJZhesmtNWoAvOKAvX545dBlrWt16KEsF
+	 N6dGJDMXgIwBKou2UIHY7gXSWzRKF0rmEMK+4GBpT3v6WbizQd/hqIu0wEWUNM7An/
+	 GgCs/6QsWTV4yFaOpoqAaEnX2Ize6HWIEolvbhw/2o6u1pJR5NtjCwscCiCZ9LLIFN
+	 fE7974C14/J4iProCbSPgLUKfGVuy+fHJwegpSeeyXdT7mfdlLWnMief+iv/RlzTM2
+	 YZ2gDvC25tyzg==
+Date: Wed, 1 Oct 2025 00:37:07 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: chenyuan_fl@163.com, john.ogness@linutronix.de, rostedt@goodmis.org,
+ bigeasy@linutronix.de, chenyuan@kylinos.cn, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
+ mhiramat@kernel.org
+Subject: Re: [PATH v3] tracing: Fix race condition in kprobe initialization
+ causing NULL pointer dereference
+Message-Id: <20251001003707.3eaf9ad062d5cad96f49b9ba@kernel.org>
+In-Reply-To: <20250930084645.GJ3245006@noisy.programming.kicks-ass.net>
+References: <84seg5d2p3.fsf@jogness.linutronix.de>
+	<20250930081848.433648-1-chenyuan_fl@163.com>
+	<20250930084645.GJ3245006@noisy.programming.kicks-ass.net>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250922162900.eNwI7CS0@linutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Sep 22, 2025 at 06:29:00PM +0200, Nam Cao wrote:
-> On Fri, Sep 19, 2025 at 02:26:12PM +0200, Gabriele Monaco wrote:
-> > On Fri, 2025-09-19 at 12:49 +0200, Thomas Weiﬂschuh wrote:
+On Tue, 30 Sep 2025 10:46:45 +0200
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-(...)
-
-> > > For now only SIGBUS is supported, but additional signals can be added.
-> > 
-> > Curious choice of a default signal, is this specific to your use-case?
+> On Tue, Sep 30, 2025 at 09:18:48AM +0100, chenyuan_fl@163.com wrote:
 > 
-> Any signal should do. Looking through the signal list, I think SIGTRAP is
-> more appropriate.
-
-Indeed. Thanks for the hint.
-
-> > > +config RV_REACT_SIGNAL
-> > > +	bool "Signal reactor"
-> > > +	depends on RV_REACTORS
-> > > +	default y
-> > > +	help
-> > > +	† Enables the signal reactor. The signal reactors sends a signal to
-> > > the
-> > > +	† task triggering an exception.
-> > 
-> > This assumption is not always correct, imagine a failure in the sleep monitor
-> > caused by the wakeup event. The offending task is not current but the wakee.
-> > 
-> > This is a bit tricky because reactors don't have access to that task, just to
-> > keep the same implementation between per-cpu and per-task monitors.
+> > diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
+> > index 842383fbc03b..98b838591edc 100644
+> > --- a/kernel/trace/trace_probe.h
+> > +++ b/kernel/trace/trace_probe.h
+> > @@ -274,19 +274,19 @@ struct event_file_link {
+> >  static inline bool trace_probe_test_flag(struct trace_probe *tp,
+> >  					 unsigned int flag)
+> >  {
+> > -	return !!(tp->event->flags & flag);
+> > +	return !!(smp_load_acquire(&tp->event->flags) & flag);
+> >  }
+> >  
+> >  static inline void trace_probe_set_flag(struct trace_probe *tp,
+> >  					unsigned int flag)
+> >  {
+> > -	tp->event->flags |= flag;
+> > +	smp_store_release(&tp->event->flags, tp->event->flags | flag);
+> >  }
+> >  
+> >  static inline void trace_probe_clear_flag(struct trace_probe *tp,
+> >  					  unsigned int flag)
+> >  {
+> > -	tp->event->flags &= ~flag;
+> > +	smp_store_release(&tp->event->flags, tp->event->flags & ~flag);
+> >  }
 > 
-> Yeah, this one is tricky. We probably need to pass the correct task_struct
-> to reactor, but then I'm not sure how to handle the other monitor types,
-> e.g. per-cpu monitors.
 > 
-> I have no alternative to offer, let me give it some thought.
-
-Thanks.
-
-> > > +static void rv_signal_force_sig(int signal, const char *message)
-> > > +{
-> > > +	/* The message already contains a subsystem prefix, so use raw
-> > > printk() */
-> > > +	printk(KERN_WARNING "%s", message);
-> > > +	pr_warn("Killing PID %d with signal %d", task_pid_nr(current),
-> > > signal);
+> I _think_ the clear one is superfluous. Is there anything that cares
+> about stores done before the clear when the flag is found not set?
 > 
-> RV reactors have to use printk_deferred() instead. See:
-> https://lore.kernel.org/lkml/874k50hqmj.fsf@jogness.linutronix.de/
-
-When the direct-call path is removed, this will only be used through task_work.
-For that direct printk() should be fine, right?
-
-> But I suggest dropping the printk from this reactor. We already have a
-> printk reactor for that.
-
-Works for me.
-
-(...)
-
-> > Why do you use the task_work at all instead of signalling directly?
-> > If that's something not safe from a (any) tracepoint because it can sleep
+> Also, code like:
 > 
-> If I remember correctly, sending signals requires a spinlock and therefore
-> may sleep on PREEMPT_RT.
+> static int fentry_dispatcher(struct fprobe *fp, unsigned long entry_ip,
+> 			     unsigned long ret_ip, struct ftrace_regs *fregs,
+> 			     void *entry_data)
+> {
+> 	struct trace_fprobe *tf = container_of(fp, struct trace_fprobe, fp);
+> 	int ret = 0;
 > 
-> > you should definitely not call it if allocation fails.
+> 	if (trace_probe_test_flag(&tf->tp, TP_FLAG_TRACE))
+> 		fentry_trace_func(tf, entry_ip, fregs);
 > 
-> Yep.
+> #ifdef CONFIG_PERF_EVENTS
+> 	if (trace_probe_test_flag(&tf->tp, TP_FLAG_PROFILE))
+> 		ret = fentry_perf_func(tf, entry_ip, fregs);
+> #endif
+> 	return ret;
+> }
 > 
-> We probably can get away with not reacting at all if allocation fails, by
-> crafting our tests such that only one reaction happens at a time, and
-> allocation won't fail.
+> 
+> Will now have two barriers; where one would suffice, eg.
+> 
+> 	flags = smp_load_acquire(&tp->event->flags);
+> 
+> 	if (flags & TP_FLAG_TRACE)
+> 		fentry_trace_func(...);
+> 
+> 	if (flags & TP_FLAG_PROFILE)
+> 		fentry_perf_func(...);
+> 
+> Should be just fine afaict.
 
-It would be nice if the reactor works without having to worry about its
-implementation in the testcases or even general users. In 6.18 we will get
-kmalloc_nolock() which is meant to be usable from tracepoint context. My
-plan is to use that for the next revision.
+Looks good to me. We should replace trace_probe_test_flag()
+with trace_probe_load_flag().
+
+Thanks,
+
+> 
+> 
+> Is this something anybody cares about?
 
 
-Thomas
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
