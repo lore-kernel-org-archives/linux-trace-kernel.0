@@ -1,187 +1,195 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 295352BCF45
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Sep 2025 06:49:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C323923BF9E;
+	Tue, 30 Sep 2025 08:19:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759214975; cv=none; b=rwmbLkGsdEdvBlMVWTGm0fsWpDk0srjuQbHe/FT7S5Kt9hB6XSyIiFLfmR5PBCHvQpztf9/wg6sfG3xqSa/URinFYY9nByPHGYr2igaeT3JEBNFjmPQTrC96vfMtnpnbnfbZFon+GJTIev1HdRlYYXyVf7zqs/C7T0+6vsJKUow=
+	t=1759220395; cv=none; b=qFh3JY4IXPyuqmIP1inu10Q+7MGWCzJqGOZwU0sHWGIyMXAIXWWWUeCiv0SB2lqkdJB4zDvlaoemreK6Yu01D7SB0PuG7nWfYr6WwvFsZVgzfiwYHWxIRnbZl02dXmKttHrdp1yh5i3CD7P22d7w/aOYyCGBjrc+IU3aL9GLPZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759214975; c=relaxed/simple;
-	bh=qtCxdLAk5RxSyoau0wBFHmkETSWtB4mi0PWwaVQ2zUA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=PGuq319H+YnjeIpR06JF1FAwV0/MN0cK2hi4RvIVlE6w1IQoY8GN4siTM4l5fxhKcLq0P5STIOCGzCCy1oTU4CaytuCUbFjFUc7oHRBPMt4D4YLBngX9J/q1qGPYxLjM4rfbrMFREkxRNVMgI69aF0nbi5UfOIYn9Oz5tHIa8hI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cWPn/YHw; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1759220395; c=relaxed/simple;
+	bh=AveBoPeCQXV32YAl+mI+vpT/h0p2ee4rPM0ZMDaIq9U=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Lf0apfw1LebtJbTCGZ0teM+rAB5O+a21oX5kQ5fkHFWKh8Vy1uFkAGcuAsZHOnJdPNG4KpPemiL56CLnNdmSSxkLlsEKhAO3A0oiXoRx+stxmkblvaGGW5nNwb5CUyixfO5hgdhsPZGGhZ0mHQcZ+ne49JPnn42K/x+C/wcJrk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=XpcPNZ2X; arc=none smtp.client-ip=117.135.210.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cWPn/YHw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1759214973;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=mqRlzhy6X/OCGXbjhJnXJHWuco4CEjpdGpSoiDLw9OM=;
-	b=cWPn/YHwPd2B4yFiIEeGg9p+l507dxYRKoRh8m9Z2afCMhlT5iLmjLKkI9zU0i6jBK3xO1
-	jTsiwSFIT6MxARK9fGgAhMyOTK7UOlB4SIRVEsG+3jeF3mcYLOPXppHovCvOZu7Wr02J8j
-	BvHYWel8OO4c7H3TaGe5RTRhY+hzZpk=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-513-Psjkp9UEM6ebAJQb28_oWA-1; Tue, 30 Sep 2025 02:49:32 -0400
-X-MC-Unique: Psjkp9UEM6ebAJQb28_oWA-1
-X-Mimecast-MFC-AGG-ID: Psjkp9UEM6ebAJQb28_oWA_1759214971
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3ed9557f976so3626700f8f.3
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Sep 2025 23:49:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759214971; x=1759819771;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mqRlzhy6X/OCGXbjhJnXJHWuco4CEjpdGpSoiDLw9OM=;
-        b=mdhumQIVQv+USMaZDdBrzAA0s6FiKZCbVPUouZBPZ30Qk6hsYTSlFH7Jbdb+0HNr18
-         aOkGMB2L+xtm29tk9wUEzbzEJg4mUbqxRm1YawQXxJvBsY+verXMFpIzRiQu9PyolpZ+
-         cQfX0E8vM2BCkbdGYZfDQTL4lJFB0yp1zOmLrgWLupEqT3JIfmoGH8axgHMqpPFnZE53
-         zud/nIU8usHB7QcP07AKEmUkKeiWITC/6DTuqlj5W8JfvhPzN2XOVcDrgAoRSvrEwqRA
-         BIns8W7iNB0vKG5Z1bxnRyCU7NL6Jz5Sy4yiupuxveZg7oDLKAHMwixnJX82BP+HjJ/g
-         HHJA==
-X-Forwarded-Encrypted: i=1; AJvYcCX3Cj2mR8klI2cM/YR5gfzPNOLsZV15Ij0twghAguDFXjMo7HW3xSeJKCQALbAfehI/DnNqT+AR5OVdiSkrJDl85to=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyltETghrlFBalUmjB56+vpvnocGYEBe2rGLBtQXOaXR3dTxUsW
-	2kHkBjGJoEFX/LvWpU4FyyMc4kIjhtYjCoI5TT2DKuUn17HqnHYWzvwGpIQQccpZ+5f/RSe3vCe
-	lLRVPwcgmzOjEDHKaRTY+3EotoSOhTTVKr0Z4J8vCn0yn8SkLI0LKX9hgcSXcPLCUzcvkmNNOFw
-	==
-X-Gm-Gg: ASbGncvop08lKab/uKWpF05elR3xqx2PzJ4UIdQTzaDCjURzENIQnieM+OnBmaLZ08J
-	7m1DSV+soCRfdSxJQYFP4E0xDYxDpGSzJDAu7bY0Cd+s1x8fsc5g6Hayc/BwBK3OXrLuwgLsfFR
-	rGj7Bmvisjz93Jbg9g5gCluY7OYs06m9i/pzN1osLIMN5S5hfQ83kThnurYgeGuTnDrfQmy1o4b
-	EVpEandCG5+kML8lbToD+zL1iKfWu6SVGYZXKrtPQzHQdp9h47F8+2ta1/spgvyt5HflJCVWTXA
-	M3Wse1Wi+6kXnDJJkGY7GYnUyF5rUmx3RirxpmiSQlblD/8ro9X5QpGDdQ+VofIFV7FR2EUdhsv
-	sWahj/ZXU
-X-Received: by 2002:a5d:5c84:0:b0:3ea:15cd:ac3b with SMTP id ffacd0b85a97d-40e480ca367mr13436900f8f.30.1759214970674;
-        Mon, 29 Sep 2025 23:49:30 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFjJ1kh+gHGKjhm8s7ngHlJgKibrCLfy9i3c10QH8wYWazuNRp/0yTM4Ql0YUWytAaTC1Wp7w==
-X-Received: by 2002:a5d:5c84:0:b0:3ea:15cd:ac3b with SMTP id ffacd0b85a97d-40e480ca367mr13436821f8f.30.1759214970148;
-        Mon, 29 Sep 2025 23:49:30 -0700 (PDT)
-Received: from ?IPV6:2a01:599:901:4a65:f2e2:845:f3d2:404d? ([2a01:599:901:4a65:f2e2:845:f3d2:404d])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-46e5b5e4922sm7544255e9.1.2025.09.29.23.49.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Sep 2025 23:49:29 -0700 (PDT)
-Message-ID: <3ed8a6a5-9983-4b9e-bae1-4c433568de16@redhat.com>
-Date: Tue, 30 Sep 2025 08:49:23 +0200
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="XpcPNZ2X"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version:
+	Content-Type; bh=48VZrtj5TS9S03BHiRfBNP7TTsWHh6rjB/NRgnK1MUg=;
+	b=XpcPNZ2XvYshacdfg3W26lWS0J8AMoRfW6TPOekUb46jzPAvXuRkjaEgoFolwX
+	usIfLndDGtQrBzjtYgMjWcum1f5dSAu+B+8bZp2EeXQpS4bTdpvGa582kKaFwm9M
+	crZtalINrYpKvUoUJFDq2ZViZkKwdNeQlVZyU357CCTik=
+Received: from 163.com (unknown [])
+	by gzga-smtp-mtada-g0-3 (Coremail) with SMTP id _____wA37t9pkttooAdtBA--.5066S2;
+	Tue, 30 Sep 2025 16:18:51 +0800 (CST)
+From: chenyuan_fl@163.com
+To: john.ogness@linutronix.de,
+	rostedt@goodmis.org,
+	peterz@infradead.org
+Cc: bigeasy@linutronix.de,
+	chenyuan@kylinos.cn,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	mathieu.desnoyers@efficios.com,
+	mhiramat@kernel.org
+Subject: [PATH v3] tracing: Fix race condition in kprobe initialization causing NULL pointer dereference
+Date: Tue, 30 Sep 2025 09:18:48 +0100
+Message-Id: <20250930081848.433648-1-chenyuan_fl@163.com>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <84seg5d2p3.fsf@jogness.linutronix.de>
+References: <84seg5d2p3.fsf@jogness.linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 21/23] tools/ksw: add test script
-To: Jinchao Wang <wangjinchao600@gmail.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Masami Hiramatsu <mhiramat@kernel.org>, Peter Zijlstra
- <peterz@infradead.org>, Mike Rapoport <rppt@kernel.org>,
- Alexander Potapenko <glider@google.com>, Randy Dunlap
- <rdunlap@infradead.org>, Marco Elver <elver@google.com>,
- Jonathan Corbet <corbet@lwn.net>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, Juri Lelli <juri.lelli@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
- Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
- <vbabka@suse.cz>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>, Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- Kees Cook <kees@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
- Sami Tolvanen <samitolvanen@google.com>, Miguel Ojeda <ojeda@kernel.org>,
- Masahiro Yamada <masahiroy@kernel.org>, Rong Xu <xur@google.com>,
- Naveen N Rao <naveen@kernel.org>, David Kaplan <david.kaplan@amd.com>,
- Andrii Nakryiko <andrii@kernel.org>, Jinjie Ruan <ruanjinjie@huawei.com>,
- Nam Cao <namcao@linutronix.de>, workflows@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-mm@kvack.org, llvm@lists.linux.dev,
- Andrey Ryabinin <ryabinin.a.a@gmail.com>,
- Andrey Konovalov <andreyknvl@gmail.com>, Dmitry Vyukov <dvyukov@google.com>,
- Vincenzo Frascino <vincenzo.frascino@arm.com>, kasan-dev@googlegroups.com,
- "David S. Miller" <davem@davemloft.net>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-trace-kernel@vger.kernel.org
-References: <20250930024402.1043776-1-wangjinchao600@gmail.com>
- <20250930024402.1043776-22-wangjinchao600@gmail.com>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- qIws/H2t
-In-Reply-To: <20250930024402.1043776-22-wangjinchao600@gmail.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: OP_J0CBSF-VKsZgJhynsedLovsidSTe60_Cb0SHTGak_1759214971
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wA37t9pkttooAdtBA--.5066S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW3Jw48AF13XFy8XF1ftr4UCFg_yoW7Xw1fpa
+	nrKws8Kw4kJFyjvrWrtr1Ut3WxtFyfAFWDJryUGw45ZF4UKr1jyF1xXFWUAF13JFWqvFyf
+	t3Waqr10vry7JaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jn5r7UUUUU=
+X-CM-SenderInfo: xfkh05pxdqswro6rljoofrz/1tbiJwLYvWjbkIEzQAAAsR
 
-On 30.09.25 04:43, Jinchao Wang wrote:
-> Provide a shell script to trigger test cases.
-> 
-> Signed-off-by: Jinchao Wang <wangjinchao600@gmail.com>
-> ---
+From: Yuan Chen <chenyuan@kylinos.cn>
 
-Do you think there could be a way to convert this into an automated 
-selftests, living in tool/testing/selftests/TBD ?
+There is a critical race condition in kprobe initialization that can lead to
+NULL pointer dereference and kernel crash.
 
+[1135630.084782] Unable to handle kernel paging request at virtual address 0000710a04630000
+...
+[1135630.260314] pstate: 404003c9 (nZcv DAIF +PAN -UAO)
+[1135630.269239] pc : kprobe_perf_func+0x30/0x260
+[1135630.277643] lr : kprobe_dispatcher+0x44/0x60
+[1135630.286041] sp : ffffaeff4977fa40
+[1135630.293441] x29: ffffaeff4977fa40 x28: ffffaf015340e400
+[1135630.302837] x27: 0000000000000000 x26: 0000000000000000
+[1135630.312257] x25: ffffaf029ed108a8 x24: ffffaf015340e528
+[1135630.321705] x23: ffffaeff4977fc50 x22: ffffaeff4977fc50
+[1135630.331154] x21: 0000000000000000 x20: ffffaeff4977fc50
+[1135630.340586] x19: ffffaf015340e400 x18: 0000000000000000
+[1135630.349985] x17: 0000000000000000 x16: 0000000000000000
+[1135630.359285] x15: 0000000000000000 x14: 0000000000000000
+[1135630.368445] x13: 0000000000000000 x12: 0000000000000000
+[1135630.377473] x11: 0000000000000000 x10: 0000000000000000
+[1135630.386411] x9 : 0000000000000000 x8 : 0000000000000000
+[1135630.395252] x7 : 0000000000000000 x6 : 0000000000000000
+[1135630.403963] x5 : 0000000000000000 x4 : 0000000000000000
+[1135630.412545] x3 : 0000710a04630000 x2 : 0000000000000006
+[1135630.421021] x1 : ffffaeff4977fc50 x0 : 0000710a04630000
+[1135630.429410] Call trace:
+[1135630.434828]  kprobe_perf_func+0x30/0x260
+[1135630.441661]  kprobe_dispatcher+0x44/0x60
+[1135630.448396]  aggr_pre_handler+0x70/0xc8
+[1135630.454959]  kprobe_breakpoint_handler+0x140/0x1e0
+[1135630.462435]  brk_handler+0xbc/0xd8
+[1135630.468437]  do_debug_exception+0x84/0x138
+[1135630.475074]  el1_dbg+0x18/0x8c
+[1135630.480582]  security_file_permission+0x0/0xd0
+[1135630.487426]  vfs_write+0x70/0x1c0
+[1135630.493059]  ksys_write+0x5c/0xc8
+[1135630.498638]  __arm64_sys_write+0x24/0x30
+[1135630.504821]  el0_svc_common+0x78/0x130
+[1135630.510838]  el0_svc_handler+0x38/0x78
+[1135630.516834]  el0_svc+0x8/0x1b0
+
+kernel/trace/trace_kprobe.c: 1308
+0xffff3df8995039ec <kprobe_perf_func+0x2c>:     ldr     x21, [x24,#120]
+include/linux/compiler.h: 294
+0xffff3df8995039f0 <kprobe_perf_func+0x30>:     ldr     x1, [x21,x0]
+
+kernel/trace/trace_kprobe.c
+1308: head = this_cpu_ptr(call->perf_events);
+1309: if (hlist_empty(head))
+1310: 	return 0;
+
+crash> struct trace_event_call -o
+struct trace_event_call {
+  ...
+  [120] struct hlist_head *perf_events;  //(call->perf_event)
+  ...
+}
+
+crash> struct trace_event_call ffffaf015340e528
+struct trace_event_call {
+  ...
+  perf_events = 0xffff0ad5fa89f088, //this value is correct, but x21 = 0
+  ...
+}
+
+Race Condition Analysis:
+
+The race occurs between kprobe activation and perf_events initialization:
+
+  CPU0                                    CPU1
+  ====                                    ====
+  perf_kprobe_init
+    perf_trace_event_init
+      tp_event->perf_events = list;(1)
+      tp_event->class->reg (2)← KPROBE ACTIVE
+                                          Debug exception triggers
+                                          ...
+                                          kprobe_dispatcher
+                                            kprobe_perf_func (tk->tp.flags & TP_FLAG_PROFILE)
+                                              head = this_cpu_ptr(call->perf_events)(3)
+                                              (perf_events is still NULL)
+
+Problem:
+1. CPU0 executes (1) assigning tp_event->perf_events = list
+2. CPU0 executes (2) enabling kprobe functionality via class->reg()
+3. CPU1 triggers and reaches kprobe_dispatcher
+4. CPU1 checks TP_FLAG_PROFILE - condition passes (step 2 completed)
+5. CPU1 calls kprobe_perf_func() and crashes at (3) because
+   call->perf_events is still NULL
+
+CPU1 sees that kprobe functionality is enabled but does not see that
+perf_events has been assigned.
+
+Add pairing read and write memory barriers to guarantee that if CPU1
+sees that kprobe functionality is enabled, it must also see that
+perf_events has been assigned.
+
+v1->v2: Fix race analysis (per Masami) - kprobe arms in class->reg().
+v2->v3: Adopt RELEASE/ACQUIRE semantics per Peter/John's suggestions,
+        aligning with Steven's clarification on barrier purposes.
+
+Signed-off-by: Yuan Chen <chenyuan@kylinos.cn>
+---
+ kernel/trace/trace_probe.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
+index 842383fbc03b..98b838591edc 100644
+--- a/kernel/trace/trace_probe.h
++++ b/kernel/trace/trace_probe.h
+@@ -274,19 +274,19 @@ struct event_file_link {
+ static inline bool trace_probe_test_flag(struct trace_probe *tp,
+ 					 unsigned int flag)
+ {
+-	return !!(tp->event->flags & flag);
++	return !!(smp_load_acquire(&tp->event->flags) & flag);
+ }
+ 
+ static inline void trace_probe_set_flag(struct trace_probe *tp,
+ 					unsigned int flag)
+ {
+-	tp->event->flags |= flag;
++	smp_store_release(&tp->event->flags, tp->event->flags | flag);
+ }
+ 
+ static inline void trace_probe_clear_flag(struct trace_probe *tp,
+ 					  unsigned int flag)
+ {
+-	tp->event->flags &= ~flag;
++	smp_store_release(&tp->event->flags, tp->event->flags & ~flag);
+ }
+ 
+ static inline bool trace_probe_is_enabled(struct trace_probe *tp)
 -- 
-Cheers
-
-David / dhildenb
+2.39.5
 
