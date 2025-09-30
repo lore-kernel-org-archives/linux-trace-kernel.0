@@ -1,95 +1,89 @@
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0D0B242D84;
-	Tue, 30 Sep 2025 21:27:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 648F529E0ED
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Sep 2025 22:53:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759267637; cv=none; b=UTyBQi2UIGBl0lc2q4WgfkQJtKaIWoMirf5RUMxLPNFanvXgtlyhNu9vuEB1Jkcn5FjO1todrrkIHoPglq1EUfVVOHyZzKZ0TtvuqzKkhrIuIyz9riJth0oUIbNPBJTCd1GL3gmAgQ1DnCaX/x1Ms9WRH4WJxmwdmNNmO6E6bbk=
+	t=1759272806; cv=none; b=f8Z4959apOc62VzUkzJfMi18ZgGoWistDm3b/Cm8JH2Q9rGqJnsja6LFQKJ8miThCrCmBZrLkyW2HEpTJXhn+dIYakz1UOWXW0asYF2SkbRpcn2cRp3KcttiD3NelZy5ECFCoSJ5XTnflBMpwnBEhtlCrmuwqlR/QSpiPU/tcoM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759267637; c=relaxed/simple;
-	bh=mMUfzHN2HyNIMKXk45Ywxth4hNgq+z/fTFUOp2BaSDM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Rja+LmtZMwpkrDVvs0eZg8mSkj4vj4jRGMhskFwNoKbWqWogPrmhv3hfeKzrza9cVynoZn6EafMcCBPCfF8a3MVSD791uGjsO0X4PtAKIB8knBN+Os4y+ZgEa18DEOxHWomw9VxIk1nCS7wM+b+BXHyvgzCg93TdrFm6c/JmOSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf19.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id BDAB05B893;
-	Tue, 30 Sep 2025 21:27:07 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf19.hostedemail.com (Postfix) with ESMTPA id F3D6420025;
-	Tue, 30 Sep 2025 21:27:05 +0000 (UTC)
-Date: Tue, 30 Sep 2025 17:28:41 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] tracing/osnoise: Replace kmalloc + copy_from_user
- with memdup_user
-Message-ID: <20250930172841.63dc86b5@gandalf.local.home>
-In-Reply-To: <20250925211736.81737-1-thorsten.blum@linux.dev>
-References: <20250925211736.81737-1-thorsten.blum@linux.dev>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1759272806; c=relaxed/simple;
+	bh=ftaJsDi1cTHdr3a6B+UCkg7tIDNZrC/w6D2aQacxCc0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sGcYhBCJna3iCADnVmrvIHdZsSQl1oA42lump5NQKSl7irwEO5yqiIvtp/vrGC47pevqA+l8R7IPCpYKaYuYtfeQam+1BmiIEJ77LlZmqtcrSPPWqH1b21Iaod43L+U/Spm04nrGOTCjotkfkybu5r5SosPrkrF7mwOi6HhXj+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WNUyFLHo; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WNUyFLHo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6616C4AF09
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Sep 2025 22:53:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1759272805;
+	bh=ftaJsDi1cTHdr3a6B+UCkg7tIDNZrC/w6D2aQacxCc0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=WNUyFLHohpsl2ThU8cgH6OWAKn4k+OHoRoerLI8xW9KJThOiITa5Rmyn8haj457w0
+	 sRQC8vPr0R7t1iWJCoZ8Fk6aYUZcZ1r+0KAz/ap7ti7HzNdCt6H4y1gMVlWbl/t27D
+	 Pxd6+N9BHBNg5baXp0T82YObEEGt9kp/1K+EBmGfCv3ax3R8h35eaPEa7SJqeUMI0e
+	 GytIMNhRI3A/aDP+7J7FLif/2R8X6udwHtACYCwULp7HvkjJdApbVDuEGNcIPIhZmC
+	 BlZBVMZghqRLGCv7FBaflZXouQFn2PqROLoXhzDWHwn/hPg/l4mcQE8yx54vhuayjU
+	 tnjUU9QbrmZdg==
+Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-856222505eeso706068185a.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Sep 2025 15:53:25 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWyVAPVVVrUJXd9kMgFmnf32sSyNlvbNkArlMcYUxZtjpXWJZxp+f/U8hvQODMoKdDzmRs8Cfk5pSe0FswJjcRneXQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywxv4hZSUUspJNfQsEYRqteoZ81VoNYhIAyKeXEkZl1av7E4F8w
+	tQzq9G+PgrPKj6yE8JxGd4sR0mRt+VwungGHCfdaVSUwisZ39KXcMkT4KBoFdmk0l3jCDtTsoIm
+	5GvVhnBy/Gl2fMaV96ftAzValhdR/sj0=
+X-Google-Smtp-Source: AGHT+IEcn44kGGuAkmfWg5LVPItA0vXao+JmpHbijNNt3uLu5DIz4+XEUDkslfIRHHrGXzU6pndt4RW8UsDh25ymIf4=
+X-Received: by 2002:ad4:5b8e:0:b0:802:ef74:d792 with SMTP id
+ 6a1803df08f44-873a8c18ce7mr22955726d6.67.1759272805006; Tue, 30 Sep 2025
+ 15:53:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: jsxow6d5638k5yy6gar5fs134aayipcz
-X-Rspamd-Server: rspamout05
-X-Rspamd-Queue-Id: F3D6420025
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/oDUrXoqCXdRNl+2WQvLrI0sL3RVE6m2Q=
-X-HE-Tag: 1759267625-90581
-X-HE-Meta: U2FsdGVkX19tNMzzii2Enil6Oh3uU3yu55Hwr638oUhBq1U72Bck8BQ3krzRNz6p4VLdOWbO5gOHBTaD2lO2UdunxtCR3rK59dZaUzzGXW8TAcLxwb3DIwGpvr2asXE/jCgno+O136q9kdfuqzZyLx3fzdU0BZKXUC5H39DXmJpazHs1BssPyn755VnQBIEu7B7fYZLMN9G3DONT1jjx5DQ8bhYytdPZGxacBzUOJuC/R22sAxLmeU0Mg72yxJGZ0q10yWgOHLrQLOw5vwjL3HreGeJW2soG3HdHqqVQ43H5X5OmJotJMCZmzVr5NI01
+References: <20250929125158.2488188-1-jolsa@kernel.org>
+In-Reply-To: <20250929125158.2488188-1-jolsa@kernel.org>
+From: Song Liu <song@kernel.org>
+Date: Tue, 30 Sep 2025 15:53:13 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW4QQG0x_5XUHa6LUqG_voWUii=_8+m=YG7REGsEQVyAeg@mail.gmail.com>
+X-Gm-Features: AS18NWBdMSrS7l90Zd2j6V1Kr8cgP4R-o0xIF2Nsx6RnG6WbSbxX-pYGAjbIr_U
+Message-ID: <CAPhsuW4QQG0x_5XUHa6LUqG_voWUii=_8+m=YG7REGsEQVyAeg@mail.gmail.com>
+Subject: Re: [RFC] Revert "perf/x86: Always store regs->ip in perf_callchain_kernel()"
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Song Liu <songliubraving@fb.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Peter Zijlstra <peterz@infradead.org>, bpf@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Yonghong Song <yhs@fb.com>, Andrii Nakryiko <andrii@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 25 Sep 2025 23:17:36 +0200
-Thorsten Blum <thorsten.blum@linux.dev> wrote:
+On Tue, Sep 30, 2025 at 6:29=E2=80=AFAM Jiri Olsa <jolsa@kernel.org> wrote:
+>
+> This reverts commit 83f44ae0f8afcc9da659799db8693f74847e66b3.
+>
+> hi,
+> non hw events store first stack trace entry twice:
+>
+>         bpf_prog_2beb79c650d605dd_rawtracepoint_sched_process_exec_1+324
+>         bpf_prog_2beb79c650d605dd_rawtracepoint_sched_process_exec_1+324
+>         bpf_trace_run3+138
+>         bprm_execve+1191
+>         do_execveat_common.isra.0+404
+>         __x64_sys_execve+56
+>         do_syscall_64+130
+>         entry_SYSCALL_64_after_hwframe+118
+>
+> I traced it to [1] from 2019, which stores regs->ip implicitly to fix
+> raw tracepoints stacktrace. Revert does not seem to break raw tp
+> stacktrace for me. Song, any idea? I know it's long time ;-)
 
+I cannot recall the original issue.
 
->  #ifdef CONFIG_X86_LOCAL_APIC
-> @@ -2325,12 +2326,9 @@ osnoise_cpus_write(struct file *filp, const char __user *ubuf, size_t count,
->  	if (count < 1)
->  		return 0;
->  
-> -	buf = kmalloc(count, GFP_KERNEL);
-> -	if (!buf)
-> -		return -ENOMEM;
-> -
-> -	if (copy_from_user(buf, ubuf, count))
-> -		return -EFAULT;
-> +	buf = memdup_user(ubuf, count);
-> +	if (IS_ERR(buf))
-> +		return PTR_ERR(buf);
+I tried the revert with multiple different tests. Everything seems to
+work fine. I guess we can ship this revert.
 
-After adding this to my for-next branch, it failed to merge with upstream.
-That's because a bug was found that if user space did not have a '\0'
-terminator, reading this as a string could cause the read to go off the
-allocated buffer and crash the machine.
+Thanks for the fix!
+Song
 
->  
->  	if (!zalloc_cpumask_var(&osnoise_cpumask_new, GFP_KERNEL))
->  		return -ENOMEM;
-
-The above was changed to this:
-
-	if (count < 1)
-		return 0;
-
-	buf = kmalloc(count + 1, GFP_KERNEL);
-	if (!buf)
-		return -ENOMEM;
-
-	if (copy_from_user(buf, ubuf, count))
-		return -EFAULT;
-	buf[count] = '\0';
-
-Which makes your change not quite compatible.
-
-I'm going to rebase and remove your change for now.
-
--- Steve
+Acked-by: Song Liu <song@kernel.org>
