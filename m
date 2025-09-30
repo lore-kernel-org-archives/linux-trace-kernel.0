@@ -1,109 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2349223A562;
-	Tue, 30 Sep 2025 15:37:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0D0B242D84;
+	Tue, 30 Sep 2025 21:27:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759246673; cv=none; b=DKsWgfof4QZmh5XEPAw6x5NdAGCGQO59dWM+73bBsuOG+DcPXTolhtscNo4Qw+HU4NHmu3lNwgNt8ZEwroNUhgrnFDi0jehMG4CBYPOMTnlIQPPdzrdSmUzA5+LG0icQZQ23PSeDE87iCM0OD+sIUzYriSfyg1PNyfCkgUdujas=
+	t=1759267637; cv=none; b=UTyBQi2UIGBl0lc2q4WgfkQJtKaIWoMirf5RUMxLPNFanvXgtlyhNu9vuEB1Jkcn5FjO1todrrkIHoPglq1EUfVVOHyZzKZ0TtvuqzKkhrIuIyz9riJth0oUIbNPBJTCd1GL3gmAgQ1DnCaX/x1Ms9WRH4WJxmwdmNNmO6E6bbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759246673; c=relaxed/simple;
-	bh=YEfqHcG7rtOg5roYLPENQHhUVqQRuHQbD+L94SwyPPs=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=hL4haRsoFR9IKeCmLCPIZW3C+nkCA4KEeYYcOBnY6bgV7JB4AK3BmhfSHP3W9K1OBoYXhu/C8xlUHH38/sdZ8PwoQPooteqSnpUUY4b9vb7MuXxDiVj15ItRfXdjb+3hQSv/4t7ORkDBb+/9vpEr8W3UM+HZyXBAooPQ7R1jSD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hhMVZTD5; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hhMVZTD5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38960C4CEF0;
-	Tue, 30 Sep 2025 15:37:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759246672;
-	bh=YEfqHcG7rtOg5roYLPENQHhUVqQRuHQbD+L94SwyPPs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=hhMVZTD5fTFi2NNwHKU0GYrvfN9kk/QGy2P7l15gxwZAyA8MJTNqCfsgAWFeYwkB7
-	 riEHjfLvFcUTESCvmX7x/2j2oUdxc+IUo7zxe7d/igeK810y+RLsJZv9u8uasN2O8/
-	 q7J7vSin7WLJcYZJkctjrmeerw3RlHYHDyz2LIZw0EsPFg64QtQbHARfTCXmlPtOFK
-	 aZWVy3RoT3R90ZwIflUBSbK9FPFDT/uiFVW7F0MiQE6C7gP2IJCWRdhO4okeBNbJ7c
-	 9uy9/w7KTu3mKtxktVO6OJwnQtjrcyqg6Cz+8ZNrHjGY025PocGsi7sdys7TJKNO4e
-	 V2tRL+XCZM83w==
-Date: Wed, 1 Oct 2025 00:37:47 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: John Ogness <john.ogness@linutronix.de>, Steven Rostedt
- <rostedt@goodmis.org>, chenyuan_fl@163.com, mathieu.desnoyers@efficios.com,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Yuan Chen
- <chenyuan@kylinos.cn>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: Re: [PATCH v2] tracing: Fix race condition in kprobe initialization
- causing NULL pointer dereference
-Message-Id: <20251001003747.7e987dd73076a01e9e0eb172@kernel.org>
-In-Reply-To: <20250930101052.GL3245006@noisy.programming.kicks-ass.net>
-References: <20250929143916.5984441b32e6f84618b4deb8@kernel.org>
-	<20250929065731.1351028-1-chenyuan_fl@163.com>
-	<20250929044836.7169d5be@batman.local.home>
-	<84seg5d2p3.fsf@jogness.linutronix.de>
-	<20250929101259.GE3245006@noisy.programming.kicks-ass.net>
-	<20250930175826.52b58b7a502b215e3d226f9b@kernel.org>
-	<20250930101052.GL3245006@noisy.programming.kicks-ass.net>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1759267637; c=relaxed/simple;
+	bh=mMUfzHN2HyNIMKXk45Ywxth4hNgq+z/fTFUOp2BaSDM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Rja+LmtZMwpkrDVvs0eZg8mSkj4vj4jRGMhskFwNoKbWqWogPrmhv3hfeKzrza9cVynoZn6EafMcCBPCfF8a3MVSD791uGjsO0X4PtAKIB8knBN+Os4y+ZgEa18DEOxHWomw9VxIk1nCS7wM+b+BXHyvgzCg93TdrFm6c/JmOSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf19.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay05.hostedemail.com (Postfix) with ESMTP id BDAB05B893;
+	Tue, 30 Sep 2025 21:27:07 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf19.hostedemail.com (Postfix) with ESMTPA id F3D6420025;
+	Tue, 30 Sep 2025 21:27:05 +0000 (UTC)
+Date: Tue, 30 Sep 2025 17:28:41 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Thorsten Blum <thorsten.blum@linux.dev>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] tracing/osnoise: Replace kmalloc + copy_from_user
+ with memdup_user
+Message-ID: <20250930172841.63dc86b5@gandalf.local.home>
+In-Reply-To: <20250925211736.81737-1-thorsten.blum@linux.dev>
+References: <20250925211736.81737-1-thorsten.blum@linux.dev>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Stat-Signature: jsxow6d5638k5yy6gar5fs134aayipcz
+X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: F3D6420025
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/oDUrXoqCXdRNl+2WQvLrI0sL3RVE6m2Q=
+X-HE-Tag: 1759267625-90581
+X-HE-Meta: U2FsdGVkX19tNMzzii2Enil6Oh3uU3yu55Hwr638oUhBq1U72Bck8BQ3krzRNz6p4VLdOWbO5gOHBTaD2lO2UdunxtCR3rK59dZaUzzGXW8TAcLxwb3DIwGpvr2asXE/jCgno+O136q9kdfuqzZyLx3fzdU0BZKXUC5H39DXmJpazHs1BssPyn755VnQBIEu7B7fYZLMN9G3DONT1jjx5DQ8bhYytdPZGxacBzUOJuC/R22sAxLmeU0Mg72yxJGZ0q10yWgOHLrQLOw5vwjL3HreGeJW2soG3HdHqqVQ43H5X5OmJotJMCZmzVr5NI01
 
-On Tue, 30 Sep 2025 12:10:52 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
-
-> On Tue, Sep 30, 2025 at 05:58:26PM +0900, Masami Hiramatsu wrote:
-> > On Mon, 29 Sep 2025 12:12:59 +0200
-> > Peter Zijlstra <peterz@infradead.org> wrote:
-> > 
-> > > On Mon, Sep 29, 2025 at 11:38:08AM +0206, John Ogness wrote:
-> > > 
-> > > > >> Problem:
-> > > > >> 1. CPU0 executes (1) assigning tp_event->perf_events = list
-> > > > 
-> > > > smp_wmb()
-> > > > 
-> > > > >> 2. CPU0 executes (2) enabling kprobe functionality via class->reg()
-> > > > >> 3. CPU1 triggers and reaches kprobe_dispatcher
-> > > > >> 4. CPU1 checks TP_FLAG_PROFILE - condition passes (step 2 completed)
-> > > > 
-> > > > smp_rmb()
-> > > > 
-> > > > >> 5. CPU1 calls kprobe_perf_func() and crashes at (3) because
-> > > > >>    call->perf_events is still NULL
-> > > > >> 
-> > > > >> The issue: Assignment in step 1 may not be visible to CPU1 due to
-> > > > >> missing memory barriers before step 2 sets TP_FLAG_PROFILE flag.
-> > > > 
-> > > > A better explanation of the issue would be: CPU1 sees that kprobe
-> > > > functionality is enabled but does not see that perf_events has been
-> > > > assigned.
-> > > > 
-> > > > Add pairing read and write memory barriers to guarantee that if CPU1
-> > > > sees that kprobe functionality is enabled, it must also see that
-> > > > perf_events has been assigned.
-> > > > 
-> > > > Note that this could also be done more efficiently using a store_release
-> > > > when setting the flag (in step 2) and a load_acquire when loading the
-> > > > flag (in step 4).
-> > > 
-> > > The RELEASE+ACQUIRE is a better pattern for these cases. 
-> > > 
-> > > And I'll argue the barrier should be in 2 not 1, since it is 2 that sets
-> > > the flag checked in 4.  Any store before that flag might be affected,
-> > > not just the ->perf_events list.
-> > 
-> > RELEASE+ACQUIRE ensures the memory ordering on the `same` CPU, so do we still need smp_rmb() and smp_wmb()? e.g.
-> 
-> Eh, no, that's wrong. RELEASE and ACQUIRE are SMP barriers.
-
-OK, thanks for confirmation!
+On Thu, 25 Sep 2025 23:17:36 +0200
+Thorsten Blum <thorsten.blum@linux.dev> wrote:
 
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+>  #ifdef CONFIG_X86_LOCAL_APIC
+> @@ -2325,12 +2326,9 @@ osnoise_cpus_write(struct file *filp, const char __user *ubuf, size_t count,
+>  	if (count < 1)
+>  		return 0;
+>  
+> -	buf = kmalloc(count, GFP_KERNEL);
+> -	if (!buf)
+> -		return -ENOMEM;
+> -
+> -	if (copy_from_user(buf, ubuf, count))
+> -		return -EFAULT;
+> +	buf = memdup_user(ubuf, count);
+> +	if (IS_ERR(buf))
+> +		return PTR_ERR(buf);
+
+After adding this to my for-next branch, it failed to merge with upstream.
+That's because a bug was found that if user space did not have a '\0'
+terminator, reading this as a string could cause the read to go off the
+allocated buffer and crash the machine.
+
+>  
+>  	if (!zalloc_cpumask_var(&osnoise_cpumask_new, GFP_KERNEL))
+>  		return -ENOMEM;
+
+The above was changed to this:
+
+	if (count < 1)
+		return 0;
+
+	buf = kmalloc(count + 1, GFP_KERNEL);
+	if (!buf)
+		return -ENOMEM;
+
+	if (copy_from_user(buf, ubuf, count))
+		return -EFAULT;
+	buf[count] = '\0';
+
+Which makes your change not quite compatible.
+
+I'm going to rebase and remove your change for now.
+
+-- Steve
