@@ -1,126 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0658D2C08BA;
-	Tue, 30 Sep 2025 08:58:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A04129ACF0;
+	Tue, 30 Sep 2025 09:14:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759222710; cv=none; b=fSN5svQVH6woEyG4A+fyLdOEkjH7c+Ht3YZBz7PWh0OgMzgrU7KV78r4relwzKU7MT+MOh8gPtXoY1nocp3UPvtxtas043UenWEEFZgSebY5yHyGSoGtzB9Z7JEk3BDvPaXVIdYn+D+k8SBvZaFR25l+jInB5Hx9UNvVrl7W1Mc=
+	t=1759223643; cv=none; b=oaQFnjeDKTerradimbm5HZ2+fhnvsO0w9Nau4NdwsBKXUCegZSjJ360scsI0aetf99KnbM2PTE9HTwb9/Xl3kERA2d4IiIIpTU+a9Ttp63C/1cNtpbGQ3WtuNeFHqwwarAOMgGxnae/2H7Avq7Br8XC4bQRdO1EhxZgvQ/fOv9g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759222710; c=relaxed/simple;
-	bh=4efOYhltetw6slyQVH9lme/4VEV7xmJUuIjJq1TJpkA=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=uhJhvK2qF6+4tMNJptd+R2o5zU9mv9oU/JgOvmWirsMIr2BjMhVV9J+z8KZoR9sbeCg89v0HCX16Ml+PgkcaEliP07Z9MCIr4joZdGiSRk8Y18Jxmlcm704mb1548grM3XeKxg7LpnGuPRfZQWqBG/aqF4sTFBzmgXpnWSZm8W0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V30Fvt34; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1759223643; c=relaxed/simple;
+	bh=2AF9XmCmborZIjFa2MSxcTy1qyOu3e5IKKtUqbruAVY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=FIOFXK6RJXf1ctq+BYE0Xo+DtE8E/eTVwGmO1JQ3ymPi2E5O2unzVeuN2KaeNMXdmGdhC1g5mQQq3NDO8EcPMtgt/8eXtsQ+OEBZWmakW6BRe6MShf8sdZsLIjYxfAZV0QCUiyNI8X1HGp2j5SjM1PvzAXkU8Ai2evt9jwGDUxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=RwOFnm72; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZHI2I/ya; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V30Fvt34"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29DCCC4CEF0;
-	Tue, 30 Sep 2025 08:58:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759222709;
-	bh=4efOYhltetw6slyQVH9lme/4VEV7xmJUuIjJq1TJpkA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=V30Fvt34jdn+QCj2hYE5jsUtKKi/63nkVzbb3bMOoUPRyKNM47H4KXovzE+Sc2DKq
-	 UQjvXPbC9JmFEY8P5XEk6ZSoyLgUodtNDnMAO78aVMYRl7OY/TqgAvWYJjfwkQq7kR
-	 83MnR1VmyfUllsWEvFtypgx5PMgqs6UAyl8+UMouStqiuP/zeRNGaGUvaOQP9j9Dsx
-	 0vUAAl1vNQ+Gm78GCgn/wekElngofzzpVWQA8IQhl42X3+zMA2WeI/4aYkfEw4bCLt
-	 ec6l4L/MnBNy3D5YMO1QGOpfD+r3GTiAUdSQKxeAbcAQwSKGSkb6brk1sP78BlT7tx
-	 JULmit+lTjEvQ==
-Date: Tue, 30 Sep 2025 17:58:26 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: John Ogness <john.ogness@linutronix.de>, Steven Rostedt
- <rostedt@goodmis.org>, chenyuan_fl@163.com, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Yuan Chen <chenyuan@kylinos.cn>,
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: Re: [PATCH v2] tracing: Fix race condition in kprobe initialization
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RwOFnm72";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZHI2I/ya"
+From: John Ogness <john.ogness@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1759223636;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=//Nm6NvANAQn8ZCCRHsf+r3RS6FduiUteertKQI+Jg4=;
+	b=RwOFnm72h8xT2eqA0X1mIjQZ6lm/9utrTjmxQxc7i1VdAnekjd4QtJFiBUmG9twiKzaXMt
+	g+QTqha1FpFcv40mF2m2qMCy0GWGFam28VsB8XFQdhSoaMnsJUq6IBwhHOFuQdzCbp+uFF
+	ej+cvnAdTHMKQqrSW3dfoCxvBr02Sf0lgXHnuLk2BdfLsxyfQdOVOLLUJW5ewXDwglwkU7
+	7uANUTotWR/FZmuwQaNHLX8DhKJs/roWbFN46GDjAqVv5IN+Z1iezXIUTnulCIAlBnKfyw
+	SYiRv0emT7hoaABrTLUdEe+5gHGpy1dGSiOhFC97/lJ3TAA+VPrqeMH2uRjwUw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1759223636;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=//Nm6NvANAQn8ZCCRHsf+r3RS6FduiUteertKQI+Jg4=;
+	b=ZHI2I/yajMiYYGj1Puj5W+rvhPLxfenLhRk6oRbi24fJPlJdm7fVopqeF07xmSCswrjKXT
+	anA8C66c8PylApCg==
+To: chenyuan_fl@163.com, rostedt@goodmis.org, peterz@infradead.org
+Cc: bigeasy@linutronix.de, chenyuan@kylinos.cn,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ mathieu.desnoyers@efficios.com, mhiramat@kernel.org
+Subject: Re: [PATH v3] tracing: Fix race condition in kprobe initialization
  causing NULL pointer dereference
-Message-Id: <20250930175826.52b58b7a502b215e3d226f9b@kernel.org>
-In-Reply-To: <20250929101259.GE3245006@noisy.programming.kicks-ass.net>
-References: <20250929143916.5984441b32e6f84618b4deb8@kernel.org>
-	<20250929065731.1351028-1-chenyuan_fl@163.com>
-	<20250929044836.7169d5be@batman.local.home>
-	<84seg5d2p3.fsf@jogness.linutronix.de>
-	<20250929101259.GE3245006@noisy.programming.kicks-ass.net>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+In-Reply-To: <20250930081848.433648-1-chenyuan_fl@163.com>
+References: <84seg5d2p3.fsf@jogness.linutronix.de>
+ <20250930081848.433648-1-chenyuan_fl@163.com>
+Date: Tue, 30 Sep 2025 11:19:56 +0206
+Message-ID: <843484l2uj.fsf@jogness.linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain
 
-On Mon, 29 Sep 2025 12:12:59 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
+On 2025-09-30, chenyuan_fl@163.com wrote:
+> diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
+> index 842383fbc03b..98b838591edc 100644
+> --- a/kernel/trace/trace_probe.h
+> +++ b/kernel/trace/trace_probe.h
+> @@ -274,19 +274,19 @@ struct event_file_link {
+>  static inline bool trace_probe_test_flag(struct trace_probe *tp,
+>  					 unsigned int flag)
+>  {
+> -	return !!(tp->event->flags & flag);
+> +	return !!(smp_load_acquire(&tp->event->flags) & flag);
+>  }
+>  
+>  static inline void trace_probe_set_flag(struct trace_probe *tp,
+>  					unsigned int flag)
+>  {
+> -	tp->event->flags |= flag;
+> +	smp_store_release(&tp->event->flags, tp->event->flags | flag);
+>  }
+>  
+>  static inline void trace_probe_clear_flag(struct trace_probe *tp,
+>  					  unsigned int flag)
+>  {
+> -	tp->event->flags &= ~flag;
+> +	smp_store_release(&tp->event->flags, tp->event->flags & ~flag);
+>  }
+>  
+>  static inline bool trace_probe_is_enabled(struct trace_probe *tp)
 
-> On Mon, Sep 29, 2025 at 11:38:08AM +0206, John Ogness wrote:
-> 
-> > >> Problem:
-> > >> 1. CPU0 executes (1) assigning tp_event->perf_events = list
-> > 
-> > smp_wmb()
-> > 
-> > >> 2. CPU0 executes (2) enabling kprobe functionality via class->reg()
-> > >> 3. CPU1 triggers and reaches kprobe_dispatcher
-> > >> 4. CPU1 checks TP_FLAG_PROFILE - condition passes (step 2 completed)
-> > 
-> > smp_rmb()
-> > 
-> > >> 5. CPU1 calls kprobe_perf_func() and crashes at (3) because
-> > >>    call->perf_events is still NULL
-> > >> 
-> > >> The issue: Assignment in step 1 may not be visible to CPU1 due to
-> > >> missing memory barriers before step 2 sets TP_FLAG_PROFILE flag.
-> > 
-> > A better explanation of the issue would be: CPU1 sees that kprobe
-> > functionality is enabled but does not see that perf_events has been
-> > assigned.
-> > 
-> > Add pairing read and write memory barriers to guarantee that if CPU1
-> > sees that kprobe functionality is enabled, it must also see that
-> > perf_events has been assigned.
-> > 
-> > Note that this could also be done more efficiently using a store_release
-> > when setting the flag (in step 2) and a load_acquire when loading the
-> > flag (in step 4).
-> 
-> The RELEASE+ACQUIRE is a better pattern for these cases. 
-> 
-> And I'll argue the barrier should be in 2 not 1, since it is 2 that sets
-> the flag checked in 4.  Any store before that flag might be affected,
-> not just the ->perf_events list.
+I don't have any feedback about the correctness with regards to tracing
+and kprobes. However, I recommend writing a comment at each necessary
+memory barrier site. The comment should mention the pairing memory
+barrier and the ordering it is guaranteeing.
 
-RELEASE+ACQUIRE ensures the memory ordering on the `same` CPU, so do we still need smp_rmb() and smp_wmb()? e.g.
-
-perf_trace_event_init()
------
-tp_event->perf_events = list
-/*(1)*/
-smp_store_release(&tp->event->flags, newflag);
------
-
-kprobe_dispatcher()
------
-smp_load_acquire(&tk->tp.flags);
-/*(2)*/
-this_cpu_ptr(call->perf_events);
------
-
-This ensures
- - the flags update is shown on other CPUs
- - perf_events update is done before the flags update on the same CPU
- - perf_events load is done after the flags load on the same CPU
-
-But we are still not sure the perf_events update is shown on other CPUs?
-
-To ensure that we still need smp_wmb() and smp_rmb() at (1) and (2).
-
-Or we don't need smp_*mb()?
-
-Thank you,
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+John
