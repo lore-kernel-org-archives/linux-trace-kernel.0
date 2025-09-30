@@ -1,89 +1,63 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 648F529E0ED
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Sep 2025 22:53:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0EB1433B3
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Sep 2025 23:03:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759272806; cv=none; b=f8Z4959apOc62VzUkzJfMi18ZgGoWistDm3b/Cm8JH2Q9rGqJnsja6LFQKJ8miThCrCmBZrLkyW2HEpTJXhn+dIYakz1UOWXW0asYF2SkbRpcn2cRp3KcttiD3NelZy5ECFCoSJ5XTnflBMpwnBEhtlCrmuwqlR/QSpiPU/tcoM=
+	t=1759273426; cv=none; b=TdohRMkE9zaHa55sItL8O1/oMsXHn4zaYpj13FYCcAzliIwwmcDTOnzoJJj73W9uy/RGJtHnFV/tUCKz4sYxx1llvknjyc/atz+9Am7egW11nDGKVjqU1ozcUHgOoKtEi7suPHFWPzLMt7xk3ZbzvP+w1sLaMf6VAXD3vPi1nJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759272806; c=relaxed/simple;
-	bh=ftaJsDi1cTHdr3a6B+UCkg7tIDNZrC/w6D2aQacxCc0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sGcYhBCJna3iCADnVmrvIHdZsSQl1oA42lump5NQKSl7irwEO5yqiIvtp/vrGC47pevqA+l8R7IPCpYKaYuYtfeQam+1BmiIEJ77LlZmqtcrSPPWqH1b21Iaod43L+U/Spm04nrGOTCjotkfkybu5r5SosPrkrF7mwOi6HhXj+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WNUyFLHo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1759273426; c=relaxed/simple;
+	bh=MwsxlnZczU/bnB3A4SBELGbj2o2bz3EsiwhVQvoMcVE=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=YXws5MMMbUPX3GixUbx42tJTgln3q6wZUOfBE7deGKK4LEp6IkCV6v4WP/mlszljOhdhfu2Vuuq46so9LxedYYJ/baMk4nP8PN1xV5KZQLBNqRRbWdzApfFiTahhpn2/Hoj5UkS6iUptVEn6Zf20WOk62AWCDdyp66f1F2EjA24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=p7YZ+bt6; arc=none smtp.client-ip=91.218.175.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WNUyFLHo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6616C4AF09
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Sep 2025 22:53:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759272805;
-	bh=ftaJsDi1cTHdr3a6B+UCkg7tIDNZrC/w6D2aQacxCc0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=WNUyFLHohpsl2ThU8cgH6OWAKn4k+OHoRoerLI8xW9KJThOiITa5Rmyn8haj457w0
-	 sRQC8vPr0R7t1iWJCoZ8Fk6aYUZcZ1r+0KAz/ap7ti7HzNdCt6H4y1gMVlWbl/t27D
-	 Pxd6+N9BHBNg5baXp0T82YObEEGt9kp/1K+EBmGfCv3ax3R8h35eaPEa7SJqeUMI0e
-	 GytIMNhRI3A/aDP+7J7FLif/2R8X6udwHtACYCwULp7HvkjJdApbVDuEGNcIPIhZmC
-	 BlZBVMZghqRLGCv7FBaflZXouQFn2PqROLoXhzDWHwn/hPg/l4mcQE8yx54vhuayjU
-	 tnjUU9QbrmZdg==
-Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-856222505eeso706068185a.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Sep 2025 15:53:25 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWyVAPVVVrUJXd9kMgFmnf32sSyNlvbNkArlMcYUxZtjpXWJZxp+f/U8hvQODMoKdDzmRs8Cfk5pSe0FswJjcRneXQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywxv4hZSUUspJNfQsEYRqteoZ81VoNYhIAyKeXEkZl1av7E4F8w
-	tQzq9G+PgrPKj6yE8JxGd4sR0mRt+VwungGHCfdaVSUwisZ39KXcMkT4KBoFdmk0l3jCDtTsoIm
-	5GvVhnBy/Gl2fMaV96ftAzValhdR/sj0=
-X-Google-Smtp-Source: AGHT+IEcn44kGGuAkmfWg5LVPItA0vXao+JmpHbijNNt3uLu5DIz4+XEUDkslfIRHHrGXzU6pndt4RW8UsDh25ymIf4=
-X-Received: by 2002:ad4:5b8e:0:b0:802:ef74:d792 with SMTP id
- 6a1803df08f44-873a8c18ce7mr22955726d6.67.1759272805006; Tue, 30 Sep 2025
- 15:53:25 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="p7YZ+bt6"
+Content-Type: text/plain;
+	charset=us-ascii
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1759273421;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yKvcQaGiIXcyV92n6d4ZDbACEVruTCAsYgqJlCgePMc=;
+	b=p7YZ+bt6dp/z/krOPJz2NtGQHfALZgapKqlhaKr/R2k0nieOPyMHUy42HV7SZah75yiZ5k
+	ji5mDaIr7Xl6wzsDcSif7V3jLA0eXSDjRUPWI2y+vSNLsl3c/SR2I6HwHCgcEavoMPd4Pu
+	QA/rb/p9xf+Od9nzmqXpPRPTj5IgKHo=
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250929125158.2488188-1-jolsa@kernel.org>
-In-Reply-To: <20250929125158.2488188-1-jolsa@kernel.org>
-From: Song Liu <song@kernel.org>
-Date: Tue, 30 Sep 2025 15:53:13 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW4QQG0x_5XUHa6LUqG_voWUii=_8+m=YG7REGsEQVyAeg@mail.gmail.com>
-X-Gm-Features: AS18NWBdMSrS7l90Zd2j6V1Kr8cgP4R-o0xIF2Nsx6RnG6WbSbxX-pYGAjbIr_U
-Message-ID: <CAPhsuW4QQG0x_5XUHa6LUqG_voWUii=_8+m=YG7REGsEQVyAeg@mail.gmail.com>
-Subject: Re: [RFC] Revert "perf/x86: Always store regs->ip in perf_callchain_kernel()"
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Song Liu <songliubraving@fb.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Peter Zijlstra <peterz@infradead.org>, bpf@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Yonghong Song <yhs@fb.com>, Andrii Nakryiko <andrii@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.700.81\))
+Subject: Re: [PATCH v2] tracing/osnoise: Replace kmalloc + copy_from_user with
+ memdup_user
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Thorsten Blum <thorsten.blum@linux.dev>
+In-Reply-To: <20250930172841.63dc86b5@gandalf.local.home>
+Date: Wed, 1 Oct 2025 01:03:29 +0200
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Message-Id: <76B6CC10-1C0A-42D0-83E8-8CA8A7790BF0@linux.dev>
+References: <20250925211736.81737-1-thorsten.blum@linux.dev>
+ <20250930172841.63dc86b5@gandalf.local.home>
+To: Steven Rostedt <rostedt@goodmis.org>
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, Sep 30, 2025 at 6:29=E2=80=AFAM Jiri Olsa <jolsa@kernel.org> wrote:
->
-> This reverts commit 83f44ae0f8afcc9da659799db8693f74847e66b3.
->
-> hi,
-> non hw events store first stack trace entry twice:
->
->         bpf_prog_2beb79c650d605dd_rawtracepoint_sched_process_exec_1+324
->         bpf_prog_2beb79c650d605dd_rawtracepoint_sched_process_exec_1+324
->         bpf_trace_run3+138
->         bprm_execve+1191
->         do_execveat_common.isra.0+404
->         __x64_sys_execve+56
->         do_syscall_64+130
->         entry_SYSCALL_64_after_hwframe+118
->
-> I traced it to [1] from 2019, which stores regs->ip implicitly to fix
-> raw tracepoints stacktrace. Revert does not seem to break raw tp
-> stacktrace for me. Song, any idea? I know it's long time ;-)
+On 30. Sep 2025, at 23:28, Steven Rostedt wrote:
+> Which makes your change not quite compatible.
+> 
+> I'm going to rebase and remove your change for now.
 
-I cannot recall the original issue.
+No worries, I'll send a v3 tomorrow using memdup_user_nul() instead.
 
-I tried the revert with multiple different tests. Everything seems to
-work fine. I guess we can ship this revert.
+Thanks,
+Thorsten
 
-Thanks for the fix!
-Song
-
-Acked-by: Song Liu <song@kernel.org>
