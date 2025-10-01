@@ -1,61 +1,127 @@
-Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3201949620;
-	Wed,  1 Oct 2025 14:30:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 038B226A0A7
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  1 Oct 2025 16:39:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759329018; cv=none; b=fl7q/zsLuioe/HOW4iV11oeb5MKXFMKsg6xaWI3Ju1Jyhm7KYoNHopVI5wKBmm394Gu63K0r069VYPHfB7rhOU16TjWxtI75+qcx1mzO+FhhsEO2v0+piagNCQDnr8iVgRJQ+AJ7zcRTkGILhUedsdhmUv44I9ccIqGH8t9apvU=
+	t=1759336784; cv=none; b=Azy+iW7FVwJMGlWXxT9g0w8ZdvM8FV5SS7hySXQ0K6hlRR0eVvCnjE8C3eHj7w9rf4TPc+0LKP+zKaojkFkYI7BpEbqybS0aJedSs0DcIM7V0CfbeseOi7xE7MDQf78B0fEGDdeaDPdezLtPMEEAzOX2xLGEa89GnNpv2b0sSOA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759329018; c=relaxed/simple;
-	bh=T2lPMlHjBYAZPQbbcozUq1XCXnjWfG+6KdtxqqLS5K8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QCE7U+dELLusWLfBVnbE7f/GL8Shqa2jalOj+P42mCdL3eCR1nGSRYyhaQInvHU4fiuDVteSVvTuLDX1/eeh9KXOOV5m0wg+KzbAuoSa3lY2PMQoY9eepVNJiaAS3MYxAo7CjlIDSPJElHPcg4pZx3HQoiihspK6b9Zim+/lZ2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf02.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay06.hostedemail.com (Postfix) with ESMTP id 31E6E11B230;
-	Wed,  1 Oct 2025 14:30:14 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf02.hostedemail.com (Postfix) with ESMTPA id 01C9C80009;
-	Wed,  1 Oct 2025 14:30:11 +0000 (UTC)
-Date: Wed, 1 Oct 2025 10:31:49 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: chenyuan_fl@163.com, mhiramat@kernel.org, bigeasy@linutronix.de,
- chenyuan@kylinos.cn, john.ogness@linutronix.de,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- mathieu.desnoyers@efficios.com
-Subject: Re: [PATCH v4] tracing: Fix race condition in kprobe initialization
- causing NULL pointer dereference
-Message-ID: <20251001103149.2d52d03f@gandalf.local.home>
-In-Reply-To: <20251001123200.GN4067720@noisy.programming.kicks-ass.net>
-References: <20251001003707.3eaf9ad062d5cad96f49b9ba@kernel.org>
-	<20251001022025.44626-1-chenyuan_fl@163.com>
-	<20251001123200.GN4067720@noisy.programming.kicks-ass.net>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1759336784; c=relaxed/simple;
+	bh=5pOEezS/qP6F4jEWoeOm7Fz3N7TCVGrsBiLzB3qwz1w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qDu+phQiC1ul3HObycKtZz0lT1OcDYFhWteKRxMn6TdV4mVlJhuBFEnUomIYNMyQDHzr8Ozi2lYTJ3cwh77hI6l/ykY97E+pnoHcN1Dw+hTKGCSPPgP/LVraABMYQHeGmcewr6IR2Vjbg4FcBgp1ZkJ0pcq51i5Rsw/KM0X2n9o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LVaUbinE; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LVaUbinE"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-3324523dfb2so136876a91.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 01 Oct 2025 09:39:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1759336782; x=1759941582; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RmGKlN/jBsVenanHceP4S7aQlFVvNQtOwGJQtiqwWbA=;
+        b=LVaUbinEuK4XM9JBMP2MiBggPrSFpDlqa1rFmwMq79/y5Mse9lUi5GCYJ5Ag3oqV+q
+         iyfZ/sKixrbEpRWGx4d+1xq+7NWAzgKwvWOoG0AP8hmSCXR0GtEm7PkLWxtQsH/wo2T1
+         ZY1wuvPwuihxocXt27fu6e+wNI48FTpXtE6QhAIv8TNZFtawES2WKj7LXk2l+nkMDZHW
+         YOkcVOFUr7MJji4vN7g5g+8p3Se/MCLg+BRr02S0DprzdSBT641P0YAV+30AYtHsUnfK
+         Wri1ogMSLCXK1cpBpvs4GaO4sHfuktCXpR/iwWXUWD7g3t40h1oKlO+DHsOf7FRHfNwp
+         zSaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1759336782; x=1759941582;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RmGKlN/jBsVenanHceP4S7aQlFVvNQtOwGJQtiqwWbA=;
+        b=Qzj9XYsYpwMAZ7cMXd54SwcckStR+CzT8tKHUmeorZZq9ck8GwrG6ta5iB5DhiOeyN
+         qbFQ2lEyywfF5bH75FzSM8e5kyspu4gH2ddytfsgswUmz6ijNLF/DgNAEOpwexC6eXJL
+         Y/j187gvB/T+Z9Hf2Btu3mg2o1bjsyBKAroSAVugiXPQRbh0L8jbcFpSCF2p/yAKYQLD
+         R3HoIll4hxKfVBnQxslRHHA359DVMtOmpzYeR0sbaR0fpL/K83Km5PB3iyfaLilGMSag
+         ZeK2Yr4iGmk/3cP8IgsGkMKsNDyoGetnhUNcH9Ebb1jsrPKli/JfuIf9BRQRbl1fAyj8
+         Chqw==
+X-Forwarded-Encrypted: i=1; AJvYcCUyc0SDg49QJZXc2wSgovzk19y2GOMo6YrDCzAXLdJQ2j4IxO8WMxNqjkhp5q2rfxE8IfjmJFqTOciQriKKwaExEzA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxAt58H3x3xYKQqW7GAmZq6yaS6jhTqL5loADKbSEiy98LpPIdo
+	h2MdWiMRcKC1GwyDkw1cMh1wJTwiPGNuC1N87Ea3sx32NquWbcoXmvv43f7GoGOkV8cdveAuPg8
+	kWSQ/WhredObhut9AAR9bhbAaLTZlWNg=
+X-Gm-Gg: ASbGncvlONA7syPKxyEfcxxD7/dsb+gK4zgP2Na0TFE+xxI+HKBJ57TSoKfXgB9Ad/j
+	2MrfnM5K6AHMIdDbd8MX3cmlp/3TsGg2gtcmdCf+QyJneCGVREkPexm5sk4RQR79abUSMObx+jh
+	cHKDDfUBHbVSCZgIU6kkuaQVl4LKVxTI6OptsYeBz9XtvSJHRaLRtBDznx4HOvspD9E4mQD/Aly
+	F7DxGlsFT2Ekft/rlK9/RvRnn4E0GgMO5YySx+1KU/dQKg=
+X-Google-Smtp-Source: AGHT+IE9y4z9vj8j7yKhBcDb2apGorlG7PINT4jHURs+aWjIj8z/pwVAMIEXfRoJqNuQ3Mw/cwz7seK+Az+n+Pf6vm4=
+X-Received: by 2002:a17:90b:1e0e:b0:330:7a11:f111 with SMTP id
+ 98e67ed59e1d1-339a6f84d53mr4930805a91.35.1759336781992; Wed, 01 Oct 2025
+ 09:39:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: 8b7qyexcz4ufrgntfonswjidaugw7uni
-X-Rspamd-Server: rspamout03
-X-Rspamd-Queue-Id: 01C9C80009
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/O2eYo98dLMe9XO+5oalOG54NXO+Xl11g=
-X-HE-Tag: 1759329011-379951
-X-HE-Meta: U2FsdGVkX1+JotVA9HyKXqq3WYdBOF5KBykD7Ex9bOZJYMgom0OvJWajolCo2hblSz7Co05pSEpE4dimNJ8qp+rES/fkMB8PBIEtFn3eU+ci+INLnECeUabXlbd2B6QosFbLaRXB46wZXqkTixPBvJLQZZnrN7BHbbz0zWkiz1F4hfa41tevLStU+5rFMz4Nu0DGbx28Lkxib4koiSgOiYe4Ss3VkgZa11A/qwuQQvpANVNqpJ62aJAAHwZVB5MGTR4bFjD9oKtTSAYpwEuYWSIgdNHincnLMXEGBh9EwDmgVy0nhSyoDQAUgMed1IjFnreda4IsJALNsH6aXpohpfcJ561mbbzIkrVWU1syMPj1K1Z53kUE1/E3K/ZWydZ/Kflg/nJbHfVdKWYEuztgjg==
+References: <20251001132449.178759-1-jolsa@kernel.org>
+In-Reply-To: <20251001132449.178759-1-jolsa@kernel.org>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Wed, 1 Oct 2025 09:39:27 -0700
+X-Gm-Features: AS18NWBXWfduYxqUtnH1tABDYMsrbfqkNZtEA8ABmNwPyaBnTu4oL0vq-aat2Hk
+Message-ID: <CAEf4BzYMDgo2JQEkV7e6rnX1Jwu4QMFdqEsnRcxL2J0ukLxU=Q@mail.gmail.com>
+Subject: Re: [PATCH] uprobe: Move arch_uprobe_optimize right after handlers execution
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Andrii Nakryiko <andrii@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, bpf@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	x86@kernel.org, Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
+	John Fastabend <john.fastabend@gmail.com>, Hao Luo <haoluo@google.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Alan Maguire <alan.maguire@oracle.com>, David Laight <David.Laight@aculab.com>, 
+	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>, 
+	Ingo Molnar <mingo@kernel.org>, Jann Horn <jannh@google.com>, Alejandro Colomar <alx@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 1 Oct 2025 14:32:00 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
+On Wed, Oct 1, 2025 at 6:25=E2=80=AFAM Jiri Olsa <jolsa@kernel.org> wrote:
+>
+> It's less confusing to optimize uprobe right after handlers execution
+> and before we do the check for changed ip register to avoid situations
+> where changed ip register would skip uprobe optimization.
+>
+> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+>  kernel/events/uprobes.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
 
-> Anyway, patch looks reasonable now. Rest is up to Steve, this is his
-> code.
+makes sense
 
-Actually, it's Masami's ;-)  And it's up to him.
+Acked-by: Andrii Nakryiko <andrii@kernel.org>
 
--- Steve
+> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> index 5dcf927310fd..c14ec27b976d 100644
+> --- a/kernel/events/uprobes.c
+> +++ b/kernel/events/uprobes.c
+> @@ -2765,6 +2765,9 @@ static void handle_swbp(struct pt_regs *regs)
+>
+>         handler_chain(uprobe, regs);
+>
+> +       /* Try to optimize after first hit. */
+> +       arch_uprobe_optimize(&uprobe->arch, bp_vaddr);
+> +
+>         /*
+>          * If user decided to take execution elsewhere, it makes little s=
+ense
+>          * to execute the original instruction, so let's skip it.
+> @@ -2772,9 +2775,6 @@ static void handle_swbp(struct pt_regs *regs)
+>         if (instruction_pointer(regs) !=3D bp_vaddr)
+>                 goto out;
+>
+> -       /* Try to optimize after first hit. */
+> -       arch_uprobe_optimize(&uprobe->arch, bp_vaddr);
+> -
+>         if (arch_uprobe_skip_sstep(&uprobe->arch, regs))
+>                 goto out;
+>
+> --
+> 2.51.0
+>
