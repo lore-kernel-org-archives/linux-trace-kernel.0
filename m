@@ -1,115 +1,73 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7382423C8A0
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  1 Oct 2025 06:16:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA11A2405E3;
+	Wed,  1 Oct 2025 06:19:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759299380; cv=none; b=bPzNU10BOJ+LeIDEWf10MYb/UC3EleNqLI/qfbu/rHkrxNMtASo0ocUauNQYKxwcSq+5+D5gg+ZLhUBBBtHFYjtPVj33381hrUkW1igllDK/rFm1/1pAHiSUlBZy9eIdMCRxOK7H/dR7j6xXnnmvFlWS3viUMscL5X41U1DK6bQ=
+	t=1759299554; cv=none; b=YZiaT15VdI655yI55Cl63kb4hqTGxT/8mO8X2mauRNOflvEm2/FMvHqF5sq9+dylV+MDqxxjZYVBxU5kY+wlYQQRQ/NGS6ZTPvTRkMJehEd08Ae4bIAw1ut/nWZfgrmYJHuW96Po/wz2SLGUgjaItCKQUY3lW72fXn9oD3JXlJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759299380; c=relaxed/simple;
-	bh=EsZHnwMiJYPfidoSqF4cLJPZLMaFXC7b5B5xbjHh7PY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DTIRxQWllGx90kttpnm7+rolyRROvHnkbvX6sMau5aS52mz2/LyqVOd+1b/mJ60TR2naCQBrWaXpC1K7A4kthXbXh+Qnq4p59rGVUyHPpqpjfMEZV6aJ1w9YnY9WJBkwEKzN9Ebyle1uvLYuvzVZQfantVQTwteCdj8xppjepV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=BlqlWdUp; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1759299554; c=relaxed/simple;
+	bh=vGoNSaKouqF0DmdtOE+YsWzH9vurYXHj5mwYZnXoP4M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MU4lfWSSuRSrheGRawqE8mhm3SVH65oemjHh0C0Adi92M7y3mS8xlT0BdMf8VfLld8ASJCAG/FfKLsObbLDHeNI0Pe/k05CLFHOWdMUsecqba1/30QAKrUDRJqgLkwQZmesoyvv6E0snhYPrgP2u+Ay0iAEn2ue6h+68e/3bC3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JY7PtjwU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="BlqlWdUp"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-62f973b37c5so1066485a12.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Sep 2025 23:16:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1759299377; x=1759904177; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=F2mgRUvHIwDUBa1m0CHFDPXrUsPClCypgfwL+/TQDD4=;
-        b=BlqlWdUpTt1i0e9rEdsqx42INF5MhP5s32JHeZBPn6O2TJQTkHG1QQwSpKNP8ZBzbM
-         XvA5dOAmKjlx+nHD7PEGcimFsFDZOxMeYd8aXo3QT+yDtkIJGzY9TXlyji5fk6pGvN2q
-         ZZ00vkxuVnJj/T62MYTED9aONJZ2cwLJa+jrmqxE4BNWbuDAVXErOQ29JklFE+3l47/4
-         pkGKVHqEDEMo+dNC4MWkp2nqD07mq1+jB1av7ypGYAF6qUNwvF4RiHgzpoHSANOduaPx
-         1CF8TlkZ8HRke9SfL2zw+Yobr/YHl1X5eq5GlPsqegdTNNF6/MLgqKY8kwYEeH9SwLLw
-         FzQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759299377; x=1759904177;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=F2mgRUvHIwDUBa1m0CHFDPXrUsPClCypgfwL+/TQDD4=;
-        b=dsuVL8M7ulyvm/E3EZErVfv4GdKUZeF9N8vU0h+OO9i1CjapdwZ3QZ2SA0oxbHhwI8
-         ABb/KYyRKdjqPTdPL6P6mwwJsY05/v5tag/fYq08V5cCbptsBM3nHqmYVsTxcOFiDQuK
-         m2FqiWQPkmdjwnTKY6Is88fyZm5Yb1g8d2zsJ9cdtN9Et/HWU+frL9koLOyk+u4ZANUd
-         qRM1JjImytwBzmtpBfIeAiS3xq7R9JoYHpKg2gWBL98oFAQml0+WEaLQ5naRJt5eJq1Q
-         7EVR8wjGDkUB6gyXw9ApIoD3CiH274bDvb+bA5btZT22Wul/tNINhjfP8kcp2rPszS9X
-         X8jA==
-X-Gm-Message-State: AOJu0YxQ5ShfsdnXz/e0Q6L2sVkF0Vo0xRBGmzXCzDPJ12CR6qKyAzJc
-	5mPZCWBuWYNDfHPwaACEiaERpbp9d2uqJUCEth0FZmlRgNd/CX4Q3/eKeTGN8JeM77o=
-X-Gm-Gg: ASbGnctx2EgEm8Xz4iYkmlcAlXWqqiLw8ygF9W5Bry6PiO5/Fyls/IyY8pnjn8CtkOP
-	J5VxCACoKLTYe22ACbKvR9GElORHSaAQzRoO4GFDatlv+yilnfkm26cVX/jwl8hjrrkqmFHWZ59
-	icL29CUqfrzJW4GrnhCV+mW5sQMCBKdjjwOTglbc0gXuF172SyG03PvKtZG4NLEKFMoVhQAAr1f
-	G3kYVcR2uAKEqXcMNsCyKl3l47lFEE7+2cofr5eO6lmVuBKLAAGEfVqjzrmrgltzprAzz8CMB3h
-	id754H/Nl2Ow8XlnzXOW9EXIECEQ+/512v8ZoYl+YBRL8rBb+q8yJqrfDmLef6TH0vCZBlj34D7
-	w4GK9eoj8A82doUEVht6odxdfdDS/3Dh5v5ZP7TZskX9hskcxIPkXHPOsipuFqUIMJ4Z9HgwrdN
-	VnD9UUiFkpSUN75L4mDXkvwS7/HW4M5I6BQGExiTOiMujG5C+Au07N
-X-Google-Smtp-Source: AGHT+IFQWcwToJXtlmVcxmZdWqb+p7usl4TzaktlGgv885VDmhxQ95bwd+azkuh9E8Say4Z2rE5kaw==
-X-Received: by 2002:a05:6402:348a:b0:634:cc8a:5428 with SMTP id 4fb4d7f45d1cf-63678c4357dmr1386965a12.2.1759299376749;
-        Tue, 30 Sep 2025 23:16:16 -0700 (PDT)
-Received: from mordecai.tesarici.cz (dynamic-2a00-1028-83b8-1e7a-3010-3bd6-8521-caf1.ipv6.o2.cz. [2a00:1028:83b8:1e7a:3010:3bd6:8521:caf1])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-634c4b96ff6sm8623357a12.46.2025.09.30.23.16.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Sep 2025 23:16:16 -0700 (PDT)
-Date: Wed, 1 Oct 2025 08:16:05 +0200
-From: Petr Tesarik <ptesarik@suse.com>
-To: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Sean Anderson <sean.anderson@linux.dev>, Marek Szyprowski
- <m.szyprowski@samsung.com>, Robin Murphy <robin.murphy@arm.com>
-Cc: linux-trace-kernel@vger.kernel.org, iommu@lists.linux.dev,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] dma-mapping: fix direction in dma_alloc direction
- traces
-Message-ID: <20251001081605.4f86a6cf@mordecai.tesarici.cz>
-In-Reply-To: <20251001061028.412258-1-ptesarik@suse.com>
-References: <20251001061028.412258-1-ptesarik@suse.com>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.50; x86_64-suse-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JY7PtjwU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24C95C4CEF4;
+	Wed,  1 Oct 2025 06:19:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1759299554;
+	bh=vGoNSaKouqF0DmdtOE+YsWzH9vurYXHj5mwYZnXoP4M=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=JY7PtjwUokXr3FyxZ0x2Fg2GvvHstL2N5dmwwI3PSz/wfrlkDGkKzKU5zV3SujQqD
+	 wsYYALS/PP8IMCa9ICxucBvB3ZjVYb670moZfeRSGv5U9piel47l/iWuZbSqb2uWb4
+	 J3hHhjQo/a1RRid3F2QYS+HcO1h4/0Lo3z5X/MjVJPq/88RQoVPYfAepc+X6BVkV1+
+	 8/T5l0eZ09gau1kVCiyqjGvnEKiG3sQg6cGHfD4XmZ+AxE1MHSFfbTPeQJTsAuRsrv
+	 zOA/AZuWZbYCHtAC9iC4zgCV5pyamZU4+VV5UNNdEMFiO68bNDT/UmVXouyrMk7hJI
+	 ATDHnkiRMkcVQ==
+Message-ID: <255669b4-05fe-421c-898d-9649cf637187@kernel.org>
+Date: Wed, 1 Oct 2025 15:19:04 +0900
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 03/15] blktrace: split out relaying a blktrace event
+To: Johannes Thumshirn <johannes.thumshirn@wdc.com>,
+ Jens Axboe <axboe@kernel.dk>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-btrace@vger.kernel.org,
+ John Garry <john.g.garry@oracle.com>, Hannes Reinecke <hare@suse.de>,
+ Christoph Hellwig <hch@lst.de>, Naohiro Aota <naohiro.aota@wdc.com>,
+ Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
+ Chaitanya Kulkarni <chaitanyak@nvidia.com>,
+ "Martin K . Petersen" <martin.petersen@oracle.com>
+References: <20250925150231.67342-1-johannes.thumshirn@wdc.com>
+ <20250925150231.67342-4-johannes.thumshirn@wdc.com>
+From: Damien Le Moal <dlemoal@kernel.org>
+Content-Language: en-US
+Organization: Western Digital Research
+In-Reply-To: <20250925150231.67342-4-johannes.thumshirn@wdc.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Cc: stable@vger.kernel.org
-
-(One day, I'll finally remember, I promise.)
-
-Petr T
-
-On Wed,  1 Oct 2025 08:10:28 +0200
-Petr Tesarik <ptesarik@suse.com> wrote:
-
-> Set __entry->dir to the actual "dir" parameter of all trace events
-> in dma_alloc_class. This struct member was left uninitialized by
-> mistake.
+On 9/26/25 00:02, Johannes Thumshirn wrote:
+> Split out the code relaying a blktrace event to user-space using relayfs.
 > 
-> Signed-off-by: Petr Tesarik <ptesarik@suse.com>
-> Fixes: 3afff779a725 ("dma-mapping: trace dma_alloc/free direction")
-> ---
->  include/trace/events/dma.h | 1 +
->  1 file changed, 1 insertion(+)
+> This enables adding a second version supporting a new version of the
+> protocol.
 > 
-> diff --git a/include/trace/events/dma.h b/include/trace/events/dma.h
-> index d8ddc27b6a7c8..945fcbaae77e9 100644
-> --- a/include/trace/events/dma.h
-> +++ b/include/trace/events/dma.h
-> @@ -134,6 +134,7 @@ DECLARE_EVENT_CLASS(dma_alloc_class,
->  		__entry->dma_addr = dma_addr;
->  		__entry->size = size;
->  		__entry->flags = flags;
-> +		__entry->dir = dir;
->  		__entry->attrs = attrs;
->  	),
->  
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> Signed-off-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
 
+Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
+
+-- 
+Damien Le Moal
+Western Digital Research
