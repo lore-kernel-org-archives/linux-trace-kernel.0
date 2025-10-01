@@ -1,97 +1,61 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54DE32EDD58;
-	Wed,  1 Oct 2025 13:25:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3201949620;
+	Wed,  1 Oct 2025 14:30:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759325104; cv=none; b=LU3y02ba2y7OUPKqXUoBjeZVXkUFSw2aHBnQSKmET99CvSW++NobVbe0QsDuNXkHSGimc99bpZ/xcNNM5fGeqQGubXg4qVtWcw06wx/GtdSJLqvMkphXIngfoloJulf70c5yr03j33IXqF93f0qpoHZ1spr78pNvsgMZNrfjgTY=
+	t=1759329018; cv=none; b=fl7q/zsLuioe/HOW4iV11oeb5MKXFMKsg6xaWI3Ju1Jyhm7KYoNHopVI5wKBmm394Gu63K0r069VYPHfB7rhOU16TjWxtI75+qcx1mzO+FhhsEO2v0+piagNCQDnr8iVgRJQ+AJ7zcRTkGILhUedsdhmUv44I9ccIqGH8t9apvU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759325104; c=relaxed/simple;
-	bh=rYRmOvRAy3y6trXdNjOAD8/jcxxPvin79sxszfYgSHw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SUHe1da9xROfNlChv2cur/KRWfpLd2Gzu+5O4sOw/1VKdkui+X0kmdsHQxED41lHvPibN/nFuJKiCxRv6XUwsiRnL9HZIQY0dT8T4nO4PkOKSTKLgKfPWdoRyU/2fmJma0Lkqpa5UcK/w7v4VrznEATm7NRRe2kNaBhK7erfyl4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kGgJx34f; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kGgJx34f"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F121C4CEF4;
-	Wed,  1 Oct 2025 13:24:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759325103;
-	bh=rYRmOvRAy3y6trXdNjOAD8/jcxxPvin79sxszfYgSHw=;
-	h=From:To:Cc:Subject:Date:From;
-	b=kGgJx34fBTBXASzijvpxyYx1/WPJYi5J1P/i77kiz0DWCgVgvPC3LnnXiOG0lKhaF
-	 5I2g/cv7LsrLIlo9P+p4eQkA1+/Yq/fh3Gm4ODQ4lrXLmLaA/sC3lfR0YV858I6eTw
-	 CA7QnbLV8C7/UhLBgq4uaEBie8bBEeZDolrA5KcYrcTsI7lyd9zsY8BdtEpA/q6wZc
-	 myLF12gigeHJa99zvfGziMvkg7mVZmcnGArZZjBeVATZmZ5eEW9PHeL2LAGfAzHRQb
-	 dnej4iBl1/ngejhmcjwunNdEEP52c42s7MknGPpDSVHq4oi/wNXEebiq1vd7af/pwu
-	 MkoP1gnb/fz0g==
-From: Jiri Olsa <jolsa@kernel.org>
-To: Oleg Nesterov <oleg@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Andrii Nakryiko <andrii@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	x86@kernel.org,
-	Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	David Laight <David.Laight@ACULAB.COM>,
-	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas@t-8ch.de>,
-	Ingo Molnar <mingo@kernel.org>,
-	Jann Horn <jannh@google.com>,
-	Alejandro Colomar <alx@kernel.org>
-Subject: [PATCH] uprobe: Move arch_uprobe_optimize right after handlers execution
-Date: Wed,  1 Oct 2025 15:24:49 +0200
-Message-ID: <20251001132449.178759-1-jolsa@kernel.org>
-X-Mailer: git-send-email 2.51.0
+	s=arc-20240116; t=1759329018; c=relaxed/simple;
+	bh=T2lPMlHjBYAZPQbbcozUq1XCXnjWfG+6KdtxqqLS5K8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QCE7U+dELLusWLfBVnbE7f/GL8Shqa2jalOj+P42mCdL3eCR1nGSRYyhaQInvHU4fiuDVteSVvTuLDX1/eeh9KXOOV5m0wg+KzbAuoSa3lY2PMQoY9eepVNJiaAS3MYxAo7CjlIDSPJElHPcg4pZx3HQoiihspK6b9Zim+/lZ2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf02.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay06.hostedemail.com (Postfix) with ESMTP id 31E6E11B230;
+	Wed,  1 Oct 2025 14:30:14 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf02.hostedemail.com (Postfix) with ESMTPA id 01C9C80009;
+	Wed,  1 Oct 2025 14:30:11 +0000 (UTC)
+Date: Wed, 1 Oct 2025 10:31:49 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: chenyuan_fl@163.com, mhiramat@kernel.org, bigeasy@linutronix.de,
+ chenyuan@kylinos.cn, john.ogness@linutronix.de,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ mathieu.desnoyers@efficios.com
+Subject: Re: [PATCH v4] tracing: Fix race condition in kprobe initialization
+ causing NULL pointer dereference
+Message-ID: <20251001103149.2d52d03f@gandalf.local.home>
+In-Reply-To: <20251001123200.GN4067720@noisy.programming.kicks-ass.net>
+References: <20251001003707.3eaf9ad062d5cad96f49b9ba@kernel.org>
+	<20251001022025.44626-1-chenyuan_fl@163.com>
+	<20251001123200.GN4067720@noisy.programming.kicks-ass.net>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: 8b7qyexcz4ufrgntfonswjidaugw7uni
+X-Rspamd-Server: rspamout03
+X-Rspamd-Queue-Id: 01C9C80009
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/O2eYo98dLMe9XO+5oalOG54NXO+Xl11g=
+X-HE-Tag: 1759329011-379951
+X-HE-Meta: U2FsdGVkX1+JotVA9HyKXqq3WYdBOF5KBykD7Ex9bOZJYMgom0OvJWajolCo2hblSz7Co05pSEpE4dimNJ8qp+rES/fkMB8PBIEtFn3eU+ci+INLnECeUabXlbd2B6QosFbLaRXB46wZXqkTixPBvJLQZZnrN7BHbbz0zWkiz1F4hfa41tevLStU+5rFMz4Nu0DGbx28Lkxib4koiSgOiYe4Ss3VkgZa11A/qwuQQvpANVNqpJ62aJAAHwZVB5MGTR4bFjD9oKtTSAYpwEuYWSIgdNHincnLMXEGBh9EwDmgVy0nhSyoDQAUgMed1IjFnreda4IsJALNsH6aXpohpfcJ561mbbzIkrVWU1syMPj1K1Z53kUE1/E3K/ZWydZ/Kflg/nJbHfVdKWYEuztgjg==
 
-It's less confusing to optimize uprobe right after handlers execution
-and before we do the check for changed ip register to avoid situations
-where changed ip register would skip uprobe optimization.
+On Wed, 1 Oct 2025 14:32:00 +0200
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- kernel/events/uprobes.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+> Anyway, patch looks reasonable now. Rest is up to Steve, this is his
+> code.
 
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 5dcf927310fd..c14ec27b976d 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -2765,6 +2765,9 @@ static void handle_swbp(struct pt_regs *regs)
- 
- 	handler_chain(uprobe, regs);
- 
-+	/* Try to optimize after first hit. */
-+	arch_uprobe_optimize(&uprobe->arch, bp_vaddr);
-+
- 	/*
- 	 * If user decided to take execution elsewhere, it makes little sense
- 	 * to execute the original instruction, so let's skip it.
-@@ -2772,9 +2775,6 @@ static void handle_swbp(struct pt_regs *regs)
- 	if (instruction_pointer(regs) != bp_vaddr)
- 		goto out;
- 
--	/* Try to optimize after first hit. */
--	arch_uprobe_optimize(&uprobe->arch, bp_vaddr);
--
- 	if (arch_uprobe_skip_sstep(&uprobe->arch, regs))
- 		goto out;
- 
--- 
-2.51.0
+Actually, it's Masami's ;-)  And it's up to him.
 
+-- Steve
