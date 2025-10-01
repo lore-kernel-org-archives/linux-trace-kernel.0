@@ -1,40 +1,55 @@
-Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 868B32EC54D
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  1 Oct 2025 13:09:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54DE32EDD58;
+	Wed,  1 Oct 2025 13:25:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759324189; cv=none; b=h9OL8Wm9iriwou50VaOzXEHhy5icpMJGzpl+Lj3jRChyomwry94sRZh/GxN7AzQP+/T/SCInRg5HvYLBOOG7FqZcxjNsoWUVWwtdnUK7f4kGSEE/0ITUqejIlE4fnyfJQTkU+HCppsls0WVpQoaetMQdWAwn+rlKz/w9VvvsZwY=
+	t=1759325104; cv=none; b=LU3y02ba2y7OUPKqXUoBjeZVXkUFSw2aHBnQSKmET99CvSW++NobVbe0QsDuNXkHSGimc99bpZ/xcNNM5fGeqQGubXg4qVtWcw06wx/GtdSJLqvMkphXIngfoloJulf70c5yr03j33IXqF93f0qpoHZ1spr78pNvsgMZNrfjgTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759324189; c=relaxed/simple;
-	bh=SlsGcKn94cKwOpOeiRAUGFtV6V4m7TLuSa4h3z5bfoY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jd4+Cnjo6XzbVekTjb8jJJnKCmUBpyE3d3xN4tc4YbLXVPkkul/4Lh7lqF/vaJ+Fe36A9i9CJnMvL5kWL4bKCPgtOEvE5NL7rUZSU/9yfzeMiaxPWX9MYOPHR5noJUumrlO54omHFC9XMuzMWan6C10TeqredMo3rYBnOkBzY8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Vr4LmgH3; arc=none smtp.client-ip=91.218.175.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1759325104; c=relaxed/simple;
+	bh=rYRmOvRAy3y6trXdNjOAD8/jcxxPvin79sxszfYgSHw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SUHe1da9xROfNlChv2cur/KRWfpLd2Gzu+5O4sOw/1VKdkui+X0kmdsHQxED41lHvPibN/nFuJKiCxRv6XUwsiRnL9HZIQY0dT8T4nO4PkOKSTKLgKfPWdoRyU/2fmJma0Lkqpa5UcK/w7v4VrznEATm7NRRe2kNaBhK7erfyl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kGgJx34f; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Vr4LmgH3"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1759324184;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=jQ2vxUuusUzPFZ6c9hhAoRIgWPBIwaTDhcjuiNNYLdA=;
-	b=Vr4LmgH3ZGMXT4VGTlPJsq67IEo3030yK04nIbMiOiM5MNZ2MV4n1hHnwC4dWujXseiXjq
-	meIOg20eL1IXpb78H+6C4zybc27lpKmfIuCRisNn4Ruq6fB7LF0p3/9+ZuPz4k3ilRWTE+
-	m5SKKZc4Xx6pXW3LBQtjsyn5ZVpLxNA=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kGgJx34f"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F121C4CEF4;
+	Wed,  1 Oct 2025 13:24:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1759325103;
+	bh=rYRmOvRAy3y6trXdNjOAD8/jcxxPvin79sxszfYgSHw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=kGgJx34fBTBXASzijvpxyYx1/WPJYi5J1P/i77kiz0DWCgVgvPC3LnnXiOG0lKhaF
+	 5I2g/cv7LsrLIlo9P+p4eQkA1+/Yq/fh3Gm4ODQ4lrXLmLaA/sC3lfR0YV858I6eTw
+	 CA7QnbLV8C7/UhLBgq4uaEBie8bBEeZDolrA5KcYrcTsI7lyd9zsY8BdtEpA/q6wZc
+	 myLF12gigeHJa99zvfGziMvkg7mVZmcnGArZZjBeVATZmZ5eEW9PHeL2LAGfAzHRQb
+	 dnej4iBl1/ngejhmcjwunNdEEP52c42s7MknGPpDSVHq4oi/wNXEebiq1vd7af/pwu
+	 MkoP1gnb/fz0g==
+From: Jiri Olsa <jolsa@kernel.org>
+To: Oleg Nesterov <oleg@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andrii Nakryiko <andrii@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	bpf@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v3] tracing/osnoise: Replace kmalloc + copy_from_user with memdup_user_nul
-Date: Wed,  1 Oct 2025 15:09:07 +0200
-Message-ID: <20251001130907.364673-2-thorsten.blum@linux.dev>
+	linux-trace-kernel@vger.kernel.org,
+	x86@kernel.org,
+	Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Hao Luo <haoluo@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	David Laight <David.Laight@ACULAB.COM>,
+	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas@t-8ch.de>,
+	Ingo Molnar <mingo@kernel.org>,
+	Jann Horn <jannh@google.com>,
+	Alejandro Colomar <alx@kernel.org>
+Subject: [PATCH] uprobe: Move arch_uprobe_optimize right after handlers execution
+Date: Wed,  1 Oct 2025 15:24:49 +0200
+Message-ID: <20251001132449.178759-1-jolsa@kernel.org>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -42,58 +57,41 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-Replace kmalloc() followed by copy_from_user() with memdup_user_nul() to
-simplify and improve osnoise_cpus_write(). Remove the manual
-NUL-termination.
+It's less confusing to optimize uprobe right after handlers execution
+and before we do the check for changed ip register to avoid situations
+where changed ip register would skip uprobe optimization.
 
-No functional changes intended.
-
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 ---
-Changes in v3:
-- Use memdup_user_nul() instead of memdup_user() because of the fix a2501032de0d
-  ("tracing/osnoise: Fix slab-out-of-bounds in _parse_integer_limit()")
-- Link to v2: https://lore.kernel.org/lkml/20250925211736.81737-1-thorsten.blum@linux.dev/
+ kernel/events/uprobes.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Changes in v2:
-- Rebase to apply to master and linux-next
-- Explicitly include linux/string.h
-- Link to v1: https://lore.kernel.org/lkml/20250905192116.554018-2-thorsten.blum@linux.dev/
----
- kernel/trace/trace_osnoise.c | 11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
-
-diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
-index dc734867f0fc..26d0c99125f5 100644
---- a/kernel/trace/trace_osnoise.c
-+++ b/kernel/trace/trace_osnoise.c
-@@ -24,6 +24,7 @@
- #include <linux/sched/clock.h>
- #include <uapi/linux/sched/types.h>
- #include <linux/sched.h>
-+#include <linux/string.h>
- #include "trace.h"
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index 5dcf927310fd..c14ec27b976d 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -2765,6 +2765,9 @@ static void handle_swbp(struct pt_regs *regs)
  
- #ifdef CONFIG_X86_LOCAL_APIC
-@@ -2325,13 +2326,9 @@ osnoise_cpus_write(struct file *filp, const char __user *ubuf, size_t count,
- 	if (count < 1)
- 		return 0;
+ 	handler_chain(uprobe, regs);
  
--	buf = kmalloc(count + 1, GFP_KERNEL);
--	if (!buf)
--		return -ENOMEM;
++	/* Try to optimize after first hit. */
++	arch_uprobe_optimize(&uprobe->arch, bp_vaddr);
++
+ 	/*
+ 	 * If user decided to take execution elsewhere, it makes little sense
+ 	 * to execute the original instruction, so let's skip it.
+@@ -2772,9 +2775,6 @@ static void handle_swbp(struct pt_regs *regs)
+ 	if (instruction_pointer(regs) != bp_vaddr)
+ 		goto out;
+ 
+-	/* Try to optimize after first hit. */
+-	arch_uprobe_optimize(&uprobe->arch, bp_vaddr);
 -
--	if (copy_from_user(buf, ubuf, count))
--		return -EFAULT;
--	buf[count] = '\0';
-+	buf = memdup_user_nul(ubuf, count);
-+	if (IS_ERR(buf))
-+		return PTR_ERR(buf);
+ 	if (arch_uprobe_skip_sstep(&uprobe->arch, regs))
+ 		goto out;
  
- 	if (!zalloc_cpumask_var(&osnoise_cpumask_new, GFP_KERNEL))
- 		return -ENOMEM;
 -- 
 2.51.0
 
