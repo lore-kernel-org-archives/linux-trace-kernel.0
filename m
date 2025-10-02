@@ -1,143 +1,236 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1B1B34BA29
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  2 Oct 2025 02:03:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E744223185E;
+	Thu,  2 Oct 2025 05:25:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759370641; cv=none; b=RUGgbPkaHfgns7bkAVq4wMltbVGhDyOxvMwD5gFUnc0j75TRzEmfYvEJ+ZaGDVbv6g2u3JlCeFxYoTZSbJ+FxswSVWHd0+yPB3U41s8tUUMqQpmBdbVSLEp69NWpIuv0hl8fHuiIoNY4abZhw9yv16Axmzz2aI9k6MucswMT4kI=
+	t=1759382719; cv=none; b=PUFp4TQGwumfBpkskCszRMcp0RzmOoBrwyxCqRaECX1d4n7IS+Ri0gPIh3dvvv8oJE7Mo3/1ccYo4zxwHqpBpZG0FKXz64xJw9UOFS6G5yjNXpcaC21TkncI0N9ukQTI1JeJDmyHRZCQCJgp0KhlXmLwlz6FcuaMCL919KwF2bE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759370641; c=relaxed/simple;
-	bh=qfkFykX9oT8Wwuwz9nMEAGfjVD2TjbyMyEw20I8aMuE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PP4XN15MerT1PowljN6b2xbqeVmS8LKedPRtfK5r/3WOIF7iVc6hGTHQZeFg0JNiXj82TcJ91rQ9q2ld3QmBA0NbOuXfS5wFwLFUiL7io3O3NHH04lspJ4Cp2FsTu6BedONLj4qQdjX3V5pIWliTWzYCbStFm31oMZGR/RizZuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wr2wBhLC; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1759382719; c=relaxed/simple;
+	bh=x8HvEcs+oLC7jU4coBWjaCsP4o/Bq4sMyUBpi/kgQSw=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=AFqcjMpGFRp8lmAA+2D2Tg3kDdlFbvRqyEHFS569TlQcQqHCCbjQ6iOjcVH4O6oM7ifmGEu5kkRWCHF69kRHw4HCg+luN7irdtAjqXPASheFzN/QtNsLQ3PI0vfknmA0GXsEVZ+3Y/NC3gjdc0pMirTulkQiF2puOxvuJifZPoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ottd6Ske; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wr2wBhLC"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-46e37d10f3eso3242655e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 01 Oct 2025 19:03:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1759370638; x=1759975438; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VRu4pkeN/m6CBPtrxw2JgG5G5rjbyuAY3nSK+8JNtOA=;
-        b=Wr2wBhLCb9KAcstbRD8WZVPcHVVRupu/I/grut1lBo2efdmkJ739z0NKviX9nwmjV0
-         mbqELmlQjTk3PNOjAbLgRF0+HcDnDwF3dmoSnHr6KFTcdgcYpOPH2/cjCLO2aR3MEFGy
-         ZysFRmLeVPWVK+DndDOnV0k5WM4Xi/O1MJgVD9f7KWfArOElOnX1nK1cmfXaZSVwH5ui
-         7Tt1Xg1edChuxygWdQGAbR9i5yS34GGlBWJSCTo+ZhCbEBfwa1Ti5B8YXQ4n9XR5bcjP
-         ylwOmarkrCGJjYtB91erLKyvSU/B4nJNHNq26X+DJnobRJ1w/uLXg2e5RMHcRxPL7RTf
-         vj5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759370638; x=1759975438;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VRu4pkeN/m6CBPtrxw2JgG5G5rjbyuAY3nSK+8JNtOA=;
-        b=hQ9NBzEUmaIQKpKOOUX5vogtBmb05/CqWaVt4aoHP2+JtqYO7N1xB+w6xRlLTa+2c2
-         Q6FnreLRo0kuiNfdlooNgCF4ZdyCWbFKzlM9QMK4uX4AANXSLrH7E9Wf2Z7eGYhqmHgF
-         OMKrKDFudVmbq1f8qaqqs6DGIc6awBaS60c3Tuk+CVHVEHgkmIrC4d0Dz4SXvHlMogfd
-         Vj1lHCLKUHYSkFhgrHger7S1QVqgT5YUh4bUKm61jHr77llS5H+XyZqAsuc81unZCH21
-         oAMyAi65n87q3zBZpPmkZhWasVdeZToHOoM43O4kL1AiWG5ENKvvl4XSqwkFo5Ul78qz
-         B9qA==
-X-Forwarded-Encrypted: i=1; AJvYcCU9oBdQDlu+iUKw6sm5/xmXHctrpq7T+QtsZ8GUHZNmIGv5B9CNsYr4weNgBU4sTjiKH0E7ioVAn+1zZJ1SunESt8Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzvsPP+SPEQhaHoTIdpqemvyH3vLAalvkiuEsP3wCt8SyIDlNTb
-	BezWztyu81NhAzR0MsptO20h+SRQKWQ5yUSZ6Y3BpwHwGfgzmPMJg0YdOM5AludgwXwT0Ux7WVY
-	uALQ7Via8LyMiL7E7DHMyB35Jgad+9Hk=
-X-Gm-Gg: ASbGncuFnRmimZ5i2+38puo7ahB5KzHBj4j695ddeoqZ/CDOsEPRiE6BFgxYzvyESlY
-	TqNf/0TAzAM0wGp1GA/eQLSP5xfN3Pk5ib5cjWEc9WRiTVykSRh14uEB3rPrG1CEH8YnkWnaZes
-	q25wWANTaDFwAsSvUTQ2ZLa1IfIt2F0c20r76gtG9m3H95HWf9DkCw7BRjocnxKmMpkSjhFQquM
-	mKlon08Ow3Oust/FCbK0PxdVsTy/ajCiCWG5YWEemxxxX3qQM/de3e1odSz
-X-Google-Smtp-Source: AGHT+IEOsHDrAriPQ5ccIWk1a9ocxN8KZjRUxjEFjc8SwZX/NB0bSLRxrd32X+av/aKdyuNLHStG3LqxQMA5k6kn1yI=
-X-Received: by 2002:a05:6000:4013:b0:3ec:b384:322b with SMTP id
- ffacd0b85a97d-42557a149f4mr3761821f8f.46.1759370637917; Wed, 01 Oct 2025
- 19:03:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ottd6Ske"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4253CC4CEF4;
+	Thu,  2 Oct 2025 05:25:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1759382718;
+	bh=x8HvEcs+oLC7jU4coBWjaCsP4o/Bq4sMyUBpi/kgQSw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ottd6Ske24FWzCHbYkKgWMGeQr52Ok8f7wDqWY6uffQNP7SrqaLBRV2B+2b8BawTq
+	 gu2z85KGmAwhW5otYwboitGjP0h59Yz8g+dHPLrT0oLNuVnYKkjeu9JLJoMo9M6JX4
+	 wfJi6tHh++SfJaaXofU8dAVUnXKI0aj28i+jDgL6wz26aeAXgbyd3RLTVTkpLWgXD/
+	 ezZJULpncgXEb0Kr3Fal8hQ1QfTyLJvL9b6urRI/EnP3/dmw8N7vm/1r2e9Qg5+Oz2
+	 xqW8jtadPzZc921gvqqYMz+hHJ3w5Hum2dclR5brzc0X7HwS3mlmAypJ6wAUur30g5
+	 Bt2/P+l+U+qYQ==
+Date: Thu, 2 Oct 2025 14:25:15 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: kernel test robot <oliver.sang@intel.com>
+Cc: Menglong Dong <menglong8.dong@gmail.com>, <oe-lkp@lists.linux.dev>,
+ <lkp@intel.com>, Masami Hiramatsu <mhiramat@kernel.org>, Menglong Dong
+ <dongml2@chinatelecom.cn>, <linux-kernel@vger.kernel.org>,
+ <linux-trace-kernel@vger.kernel.org>
+Subject: Re: [linux-next:master] [tracing]  e5a4cc28a0:
+ BUG:spinlock_bad_magic_on_CPU
+Message-Id: <20251002142515.ebfcc03ba5490d0d63bec05e@kernel.org>
+In-Reply-To: <202509301440.be4b3631-lkp@intel.com>
+References: <202509301440.be4b3631-lkp@intel.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250927061210.194502-1-menglong.dong@linux.dev> <20250927061210.194502-2-menglong.dong@linux.dev>
-In-Reply-To: <20250927061210.194502-2-menglong.dong@linux.dev>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Wed, 1 Oct 2025 19:03:46 -0700
-X-Gm-Features: AS18NWAHYLA9oCGA8Iamn1bDZUfApRX46uDAtbLK0AvoaC3mAs81FWBgd1QEVe4
-Message-ID: <CAADnVQJAdAxEOWT6avzwq6ZrXhEdovhx3yibgA6T8wnMEnnAjg@mail.gmail.com>
-Subject: Re: [PATCH RFC bpf-next 1/3] bpf: report probe fault to BPF stderr
-To: Menglong Dong <menglong8.dong@gmail.com>
-Cc: Alexei Starovoitov <ast@kernel.org>, bpf <bpf@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, jiang.biao@linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Sep 26, 2025 at 11:12=E2=80=AFPM Menglong Dong <menglong8.dong@gmai=
-l.com> wrote:
->
-> Introduce the function bpf_prog_report_probe_violation(), which is used
-> to report the memory probe fault to the user by the BPF stderr.
->
-> Signed-off-by: Menglong Dong <menglong.dong@linux.dev>
-> ---
->  include/linux/bpf.h      |  1 +
->  kernel/trace/bpf_trace.c | 18 ++++++++++++++++++
->  2 files changed, 19 insertions(+)
->
-> diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-> index 6338e54a9b1f..a31c5ce56c32 100644
-> --- a/include/linux/bpf.h
-> +++ b/include/linux/bpf.h
-> @@ -2902,6 +2902,7 @@ void bpf_dynptr_init(struct bpf_dynptr_kern *ptr, v=
-oid *data,
->  void bpf_dynptr_set_null(struct bpf_dynptr_kern *ptr);
->  void bpf_dynptr_set_rdonly(struct bpf_dynptr_kern *ptr);
->  void bpf_prog_report_arena_violation(bool write, unsigned long addr, uns=
-igned long fault_ip);
-> +void bpf_prog_report_probe_violation(bool write, unsigned long fault_ip)=
-;
->
->  #else /* !CONFIG_BPF_SYSCALL */
->  static inline struct bpf_prog *bpf_prog_get(u32 ufd)
-> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> index 8f23f5273bab..9bd03a9f53db 100644
-> --- a/kernel/trace/bpf_trace.c
-> +++ b/kernel/trace/bpf_trace.c
-> @@ -2055,6 +2055,24 @@ void bpf_put_raw_tracepoint(struct bpf_raw_event_m=
-ap *btp)
->         module_put(mod);
->  }
->
-> +void bpf_prog_report_probe_violation(bool write, unsigned long fault_ip)
-> +{
-> +       struct bpf_stream_stage ss;
-> +       struct bpf_prog *prog;
-> +
-> +       rcu_read_lock();
-> +       prog =3D bpf_prog_ksym_find(fault_ip);
-> +       rcu_read_unlock();
-> +       if (!prog)
-> +               return;
-> +
-> +       bpf_stream_stage(ss, prog, BPF_STDERR, ({
-> +               bpf_stream_printk(ss, "ERROR: Probe %s access faule, insn=
-=3D0x%lx\n",
-> +                                 write ? "WRITE" : "READ", fault_ip);
-> +               bpf_stream_dump_stack(ss);
-> +       }));
+On Tue, 30 Sep 2025 14:48:27 +0800
+kernel test robot <oliver.sang@intel.com> wrote:
 
-Interesting idea, but the above message is not helpful.
-Users cannot decipher a fault_ip within a bpf prog.
-It's just a random number.
+> 
+> 
+> Hello,
+> 
+> kernel test robot noticed "BUG:spinlock_bad_magic_on_CPU" on:
+> 
+> commit: e5a4cc28a052369b6e56b0a9ac05d9b9d5607b06 ("tracing: fprobe: use rhltable for fprobe_ip_table")
+> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
+> 
+> in testcase: boot
+> 
+> config: x86_64-randconfig-072-20250929
+> compiler: gcc-14
+> test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 16G
+> 
+> (please refer to attached dmesg/kmsg for entire log/backtrace)
+> 
+> 
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <oliver.sang@intel.com>
+> | Closes: https://lore.kernel.org/oe-lkp/202509301440.be4b3631-lkp@intel.com
+> 
+> 
+> [   30.894986][   T66] BUG: spinlock bad magic on CPU#0, modprobe/66
+> [ 30.896030][ T66] lock: fprobe_ip_table+0x110/0x180, .magic: 00000000, .owner: <none>/-1, .owner_cpu: 0 
+> [   30.898263][   T66] CPU: 0 UID: 0 PID: 66 Comm: modprobe Not tainted 6.17.0-rc6-00004-ge5a4cc28a052 #1 NONE  5e106928d64815a8c70ffa200d16301537e1528f
+> [   30.898799][   T66] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+> [   30.898799][   T66] Call Trace:
+> [   30.898799][   T66]  <TASK>
+> [ 30.898799][ T66] show_stack (arch/x86/kernel/dumpstack.c:319) 
+> [ 30.898799][ T66] dump_stack_lvl (lib/dump_stack.c:122) 
+> [ 30.898799][ T66] dump_stack (lib/dump_stack.c:130) 
+> [ 30.898799][ T66] spin_dump (kernel/locking/spinlock_debug.c:71) 
+> [ 30.898799][ T66] do_raw_spin_lock.cold (kernel/locking/spinlock_debug.c:78 kernel/locking/spinlock_debug.c:86 kernel/locking/spinlock_debug.c:115) 
+> [ 30.898799][ T66] _raw_spin_lock (kernel/locking/spinlock.c:155) 
+> [ 30.898799][ T66] ? rhashtable_walk_enter (lib/rhashtable.c:687) 
+> [ 30.898799][ T66] rhashtable_walk_enter (lib/rhashtable.c:687) 
+> [ 30.898799][ T66] fprobe_module_callback (kernel/trace/fprobe.c:478) 
 
-But stepping back... just faults are common in tracing.
-If we start printing them we will just fill the stream to the max,
-but users won't know that the message is there, since no one
-expects it. arena and lock errors are rare and arena faults
-were specifically requested by folks who develop progs that use arena.
-This one is different. These faults have been around for a long time
-and I don't recall people asking for more verbosity.
-We can add them with an extra flag specified at prog load time,
-but even then. Doesn't feel that useful.
+It seems that fprobe_module_callback() is called before
+initializing spinlock (in rhltable?). It should be
+initialized earlier.
+
+Maybe this free_module() is called before late_initcall()?
+
+static int __init fprobe_initcall(void)
+{
+	rhltable_init(&fprobe_ip_table, &fprobe_rht_params);
+	return 0;
+}
+late_initcall(fprobe_initcall);
+
+
+Thank you,
+
+> [ 30.898799][ T66] ? _mutex_trylock_nest_lock (kernel/locking/mutex.c:916) 
+> [ 30.898799][ T66] ? fprobe_addr_list_add+0x4a0/0x4a0 
+> [ 30.898799][ T66] ? mutex_unlock (kernel/locking/mutex.c:537) 
+> [ 30.898799][ T66] notifier_call_chain (kernel/notifier.c:85) 
+> [ 30.898799][ T66] blocking_notifier_call_chain (kernel/notifier.c:381 kernel/notifier.c:368) 
+> [ 30.898799][ T66] do_init_module (kernel/module/main.c:3134) 
+> [ 30.898799][ T66] ? free_module (kernel/module/main.c:3011) 
+> [ 30.898799][ T66] load_module (kernel/module/main.c:3509) 
+> [ 30.898799][ T66] init_module_from_file (kernel/module/main.c:3701) 
+> [ 30.898799][ T66] ? __ia32_sys_init_module (kernel/module/main.c:3677) 
+> [ 30.898799][ T66] ? ftrace_likely_update (arch/x86/include/asm/smap.h:53 kernel/trace/trace_branch.c:223) 
+> [ 30.898799][ T66] ? do_raw_spin_unlock (kernel/locking/spinlock_debug.c:103 (discriminator 4) kernel/locking/spinlock_debug.c:141 (discriminator 4)) 
+> [ 30.898799][ T66] idempotent_init_module (kernel/module/main.c:3636 kernel/module/main.c:3714) 
+> [ 30.898799][ T66] ? tracer_hardirqs_on (kernel/trace/trace_irqsoff.c:643) 
+> [ 30.898799][ T66] ? init_module_from_file (kernel/module/main.c:3705) 
+> [ 30.898799][ T66] ? ftrace_likely_update (arch/x86/include/asm/smap.h:53 kernel/trace/trace_branch.c:223) 
+> [ 30.898799][ T66] __x64_sys_finit_module (include/linux/file.h:62 (discriminator 3) include/linux/file.h:83 (discriminator 3) kernel/module/main.c:3736 (discriminator 3) kernel/module/main.c:3723 (discriminator 3) kernel/module/main.c:3723 (discriminator 3)) 
+> [ 30.898799][ T66] x64_sys_call (arch/x86/entry/syscall_64.c:41) 
+> [ 30.898799][ T66] do_syscall_64 (arch/x86/entry/syscall_64.c:63 (discriminator 1) arch/x86/entry/syscall_64.c:94 (discriminator 1)) 
+> [ 30.898799][ T66] ? ksys_read (fs/read_write.c:705) 
+> [ 30.898799][ T66] ? vfs_write (fs/read_write.c:705) 
+> [ 30.898799][ T66] ? build_open_flags (fs/open.c:1420) 
+> [ 30.898799][ T66] ? ftrace_likely_update (arch/x86/include/asm/smap.h:53 kernel/trace/trace_branch.c:223) 
+> [ 30.898799][ T66] ? tracer_hardirqs_on (kernel/trace/trace_irqsoff.c:643) 
+> [ 30.898799][ T66] ? lockdep_hardirqs_on_prepare (kernel/locking/lockdep.c:4678) 
+> [ 30.898799][ T66] ? do_syscall_64 (arch/x86/entry/syscall_64.c:113) 
+> [ 30.898799][ T66] ? __x64_sys_openat (fs/open.c:1461) 
+> [ 30.898799][ T66] ? __x64_sys_open (fs/open.c:1461) 
+> [ 30.898799][ T66] ? ftrace_likely_update (arch/x86/include/asm/smap.h:53 kernel/trace/trace_branch.c:223) 
+> [ 30.898799][ T66] ? tracer_hardirqs_on (kernel/trace/trace_irqsoff.c:643) 
+> [ 30.898799][ T66] ? lockdep_hardirqs_on_prepare (kernel/locking/lockdep.c:4678) 
+> [ 30.898799][ T66] ? do_syscall_64 (arch/x86/entry/syscall_64.c:113) 
+> [ 30.898799][ T66] ? tracer_hardirqs_on (kernel/trace/trace_irqsoff.c:643) 
+> [ 30.898799][ T66] ? lockdep_hardirqs_on_prepare (kernel/locking/lockdep.c:4678) 
+> [ 30.898799][ T66] ? do_syscall_64 (arch/x86/entry/syscall_64.c:113) 
+> [ 30.898799][ T66] ? irqentry_exit (kernel/entry/common.c:210) 
+> [ 30.898799][ T66] ? exc_page_fault (arch/x86/mm/fault.c:1536) 
+> [ 30.898799][ T66] entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:130) 
+> [   30.898799][   T66] RIP: 0033:0x7f46bce10719
+> [ 30.898799][ T66] Code: 08 89 e8 5b 5d c3 66 2e 0f 1f 84 00 00 00 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d b7 06 0d 00 f7 d8 64 89 01 48
+> All code
+> ========
+>    0:	08 89 e8 5b 5d c3    	or     %cl,-0x3ca2a418(%rcx)
+>    6:	66 2e 0f 1f 84 00 00 	cs nopw 0x0(%rax,%rax,1)
+>    d:	00 00 00 
+>   10:	90                   	nop
+>   11:	48 89 f8             	mov    %rdi,%rax
+>   14:	48 89 f7             	mov    %rsi,%rdi
+>   17:	48 89 d6             	mov    %rdx,%rsi
+>   1a:	48 89 ca             	mov    %rcx,%rdx
+>   1d:	4d 89 c2             	mov    %r8,%r10
+>   20:	4d 89 c8             	mov    %r9,%r8
+>   23:	4c 8b 4c 24 08       	mov    0x8(%rsp),%r9
+>   28:	0f 05                	syscall
+>   2a:*	48 3d 01 f0 ff ff    	cmp    $0xfffffffffffff001,%rax		<-- trapping instruction
+>   30:	73 01                	jae    0x33
+>   32:	c3                   	ret
+>   33:	48 8b 0d b7 06 0d 00 	mov    0xd06b7(%rip),%rcx        # 0xd06f1
+>   3a:	f7 d8                	neg    %eax
+>   3c:	64 89 01             	mov    %eax,%fs:(%rcx)
+>   3f:	48                   	rex.W
+> 
+> Code starting with the faulting instruction
+> ===========================================
+>    0:	48 3d 01 f0 ff ff    	cmp    $0xfffffffffffff001,%rax
+>    6:	73 01                	jae    0x9
+>    8:	c3                   	ret
+>    9:	48 8b 0d b7 06 0d 00 	mov    0xd06b7(%rip),%rcx        # 0xd06c7
+>   10:	f7 d8                	neg    %eax
+>   12:	64 89 01             	mov    %eax,%fs:(%rcx)
+>   15:	48                   	rex.W
+> [   30.898799][   T66] RSP: 002b:00007ffc679745b8 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
+> [   30.898799][   T66] RAX: ffffffffffffffda RBX: 00005640c34b9160 RCX: 00007f46bce10719
+> [   30.898799][   T66] RDX: 0000000000000000 RSI: 00005640aa9b74a0 RDI: 0000000000000004
+> [   30.898799][   T66] RBP: 00005640aa9b74a0 R08: 0000000000000000 R09: 00005640c34ba430
+> [   30.898799][   T66] R10: 0000000000000004 R11: 0000000000000246 R12: 0000000000040000
+> [   30.898799][   T66] R13: 0000000000000000 R14: 00005640c34b83a0 R15: 0000000000000000
+> [   30.898799][   T66]  </TASK>
+> [   30.963748][   T66] Oops: general protection fault, probably for non-canonical address 0xdffffc0000000002: 0000 [#1] KASAN
+> [   30.964694][   T66] KASAN: null-ptr-deref in range [0x0000000000000010-0x0000000000000017]
+> [   30.964694][   T66] CPU: 0 UID: 0 PID: 66 Comm: modprobe Not tainted 6.17.0-rc6-00004-ge5a4cc28a052 #1 NONE  5e106928d64815a8c70ffa200d16301537e1528f
+> [   30.964694][   T66] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+> [ 30.964694][ T66] RIP: 0010:rhashtable_walk_enter (include/linux/list.h:169 lib/rhashtable.c:688) 
+> [ 30.964694][ T66] Code: c1 ea 03 80 3c 02 00 0f 85 2b 02 00 00 4d 89 77 28 4d 8d 6e 10 48 b8 00 00 00 00 00 fc ff df 4d 8d 67 18 4c 89 ea 48 c1 ea 03 <80> 3c 02 00 0f 85 f7 01 00 00 49 8b 5e 10 48 8d 43 08 48 89 c2 48
+> All code
+> ========
+>    0:	c1 ea 03             	shr    $0x3,%edx
+>    3:	80 3c 02 00          	cmpb   $0x0,(%rdx,%rax,1)
+>    7:	0f 85 2b 02 00 00    	jne    0x238
+>    d:	4d 89 77 28          	mov    %r14,0x28(%r15)
+>   11:	4d 8d 6e 10          	lea    0x10(%r14),%r13
+>   15:	48 b8 00 00 00 00 00 	movabs $0xdffffc0000000000,%rax
+>   1c:	fc ff df 
+>   1f:	4d 8d 67 18          	lea    0x18(%r15),%r12
+>   23:	4c 89 ea             	mov    %r13,%rdx
+>   26:	48 c1 ea 03          	shr    $0x3,%rdx
+>   2a:*	80 3c 02 00          	cmpb   $0x0,(%rdx,%rax,1)		<-- trapping instruction
+>   2e:	0f 85 f7 01 00 00    	jne    0x22b
+>   34:	49 8b 5e 10          	mov    0x10(%r14),%rbx
+>   38:	48 8d 43 08          	lea    0x8(%rbx),%rax
+>   3c:	48 89 c2             	mov    %rax,%rdx
+>   3f:	48                   	rex.W
+> 
+> Code starting with the faulting instruction
+> ===========================================
+>    0:	80 3c 02 00          	cmpb   $0x0,(%rdx,%rax,1)
+>    4:	0f 85 f7 01 00 00    	jne    0x201
+>    a:	49 8b 5e 10          	mov    0x10(%r14),%rbx
+>    e:	48 8d 43 08          	lea    0x8(%rbx),%rax
+>   12:	48 89 c2             	mov    %rax,%rdx
+>   15:	48                   	rex.W
+> 
+> 
+> The kernel config and materials to reproduce are available at:
+> https://download.01.org/0day-ci/archive/20250930/202509301440.be4b3631-lkp@intel.com
+> 
+> 
+> 
+> -- 
+> 0-DAY CI Kernel Test Service
+> https://github.com/intel/lkp-tests/wiki
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
