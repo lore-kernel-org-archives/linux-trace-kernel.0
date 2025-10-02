@@ -1,82 +1,82 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A726826F2BF
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  2 Oct 2025 11:17:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 309A21A3165
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  2 Oct 2025 11:30:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759403835; cv=none; b=UqR00gprXi6QzwQtXFbPE5wCD0Denyxp0ZmLEpxuiXjNJi1+vn9z5YLBSzVnbJsIXpNj7fEtwbKkp8R7A6bX8cH8ls8R9+PJs7uOh7t8BZAXCqZ4qzQJvV1Ar4EFCWW7VixuufH0Qj/P3IthT923rKsuHuwI86aVsaPI5y9jdoM=
+	t=1759404652; cv=none; b=hnaFlylsbcKAaYLxwrJHA9n/kArOAMB/l+LW5nYLhEX90zDWr1mmT5qeZdZVslRxOqLjFMiScvUimWWM4yIFooqQLLzY6+VnzloN3ZnGXyTxQifKQEggHxxlSnKaV4o52O2DHr670ClGEB6htr4tH5J75nM4naPDV3pctYafbO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759403835; c=relaxed/simple;
-	bh=Q77oJzKKU3yE1nwn1ezBB6bK11QxjZntnGjkk9VN77o=;
+	s=arc-20240116; t=1759404652; c=relaxed/simple;
+	bh=vG2+ZptMubD68MvcsbqOeaoxJCqaY9G6AXJT9ec+wjM=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nHo1yd+iQyDYaJr4P913vBfk0PrcBkTruoaYx9DYv01M66WVqeTKUGVhMN0buVuomnT3/hL/emXzC21MBA1g9PKADuTBcKqkJix33wlZ+XubQLEcefeFj++OHelMzU99TyHxjGA2uK8l4HRIOuSLnzW52CK5cXjZb4dzIDUpmyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MID6D+uH; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:Content-Type; b=oBjGOdaq/hy+JH6n0Or8k1m/CRgOeMxbHDYHha2J7icWGcL0yXGeygmFHcwsnRTr3J8cByW1daXinYBDX0ktNzuSUrO27z7wvnUzeYoyswN596ns3g+S61ZYiLs+59UdZrbLvD3CgBIXfdOY2DW4Kkd+QMtsxHoou08U4ii0B7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QU21bd0u; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MID6D+uH"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QU21bd0u"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1759403832;
+	s=mimecast20190719; t=1759404644;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Q77oJzKKU3yE1nwn1ezBB6bK11QxjZntnGjkk9VN77o=;
-	b=MID6D+uHSbOmjBVgN5tsnwUcolZCuPaQp/y9655U+wxBXbTG5hYXOi1D3F5cOA1lVU/D5h
-	Rx1Oc1xx70r9DXGf2DWJG/TTa+RWu4g4eBzDHd6zRml2GRYrORIhQFatxIVpBkyrCXOikj
-	KbnTffzl2kWeqRaPP1oBn5A6IRExvSk=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=vG2+ZptMubD68MvcsbqOeaoxJCqaY9G6AXJT9ec+wjM=;
+	b=QU21bd0uGWu2ICmBxZiVuZ7zuCD2+cSmx45W3ukoKRNP7l69ez3R1ydBaOP3IDHpwxXfN5
+	uHU1Hukm0rWuWxNSuhVjE2WZjVHPaYu5uGej1pc6Nb0FQz7wsd8ixWkfTeqCdQoIVuTkWw
+	mmJFFve2KEfdZPGuQ1qeUI6r+BPQPSw=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-623-seuZTbj0MCeAvjBwSc0NIQ-1; Thu, 02 Oct 2025 07:17:10 -0400
-X-MC-Unique: seuZTbj0MCeAvjBwSc0NIQ-1
-X-Mimecast-MFC-AGG-ID: seuZTbj0MCeAvjBwSc0NIQ_1759403829
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3f44000639fso535525f8f.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 02 Oct 2025 04:17:10 -0700 (PDT)
+ us-mta-623-_bV-ZVhCNneLxwOV0CRfnw-1; Thu, 02 Oct 2025 07:30:43 -0400
+X-MC-Unique: _bV-ZVhCNneLxwOV0CRfnw-1
+X-Mimecast-MFC-AGG-ID: _bV-ZVhCNneLxwOV0CRfnw_1759404642
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-42421b15185so1064917f8f.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 02 Oct 2025 04:30:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759403829; x=1760008629;
+        d=1e100.net; s=20230601; t=1759404640; x=1760009440;
         h=mime-version:user-agent:content-transfer-encoding:autocrypt
          :references:in-reply-to:date:cc:to:from:subject:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Q77oJzKKU3yE1nwn1ezBB6bK11QxjZntnGjkk9VN77o=;
-        b=Ec4xMKcILx3J+vrx3my5v48B5vDmlHfTHi3OKRVV79Z+levn1QLe4/bM9nFQGcW19C
-         Zlo61t37D7P5ZbrakiDFZjS5PhBnWeFpXzbBixNGcPGW0Q73eUWS9OoncMK1f18jEXmy
-         Y2MY4Hw4Sj6xyZua4QYsaaIiHuAGnHDcpMbqdJL3FWC4ivK10rp+RMvD00m/isTDhCm/
-         RDJVG3BD4nKcJ9B+783mQyllD62ilFL9r1cABAshfXUgZIol0s47LygpKQGmQ+YqBge0
-         SbrD1GVB7+TCJh0PHYf5TRPYRy6qypMjkhX0RHDFWz8T56a1NrEKUwVVNxsC3Kh+GChp
-         iDyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUrD6DmhuQonSUA5WJKPhJsE+mHf75T+ZRy3/G1utloWpULQM/i4bkDwnKuNZSLRnHomt+xTTKbvGtq7k1RlDhng/k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxAEyPxggYqplM8w8u4qwDHfWGR3KKwePsAfD4fkvxemlRaRR5j
-	+ZjwEF9evSwf+PPwVQUynyubGfohcS8wXfWbKZMwkepHXWQJuT2klnmyHXb1bCHJweg3PZ141Nv
-	hSXbas2cpxSb+Xy/kDkz3Mxz9783H0L4gbyXRddkiTHlppjidV6Vrh700cUeGsxHuGANlr2Zg2g
+        bh=vgnKlLoouS3JtpeFvZfGtYcXm2a9bedZ8zcilOwZLtg=;
+        b=eVtRWKYpboh9qofGh/hq+mEJET7n40UHOe06G+do8mVHWrWRJUHOS7YICiGS9zmscS
+         bdbPK0XbRuEDsafxpR0AKMD7uz9DKrMOa34NcBeOEiPvcvFLg38dDw13bHwcCFGHjHrO
+         JRmx+p+NtaNGShVbtLaBTmeaJUADrfdOZk7e4WBfPlU7P1YCPzMqhZqKHk6VUpFhnNDb
+         zwsj1GIP1CuQr4HCAMSJGUX64vdoKLAMKPH+cF5vHi+jAmXxoe1DjCCIc3Kf+E93Uj88
+         WyC0whEJ2ARfbchTgQnLHyePSimG0iOGvE+3V/gBdaGr8fYNkinhFQmBZk8A3/Pf+MEh
+         DXzg==
+X-Forwarded-Encrypted: i=1; AJvYcCXCczYbvG7VNijkW9tGin8OvMhoW39ge6P5b+52aWpvxCKDeDRJyiP3kyJUU7W1r9DYZqBnfLTvb/thd1Wf/LSko7Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzwXIDbNn/7Y+EhGbxkAkCUOecJuxlu3TcmOPbT8BHh0iJDWnE+
+	ws/pP/WWeaSFbVDgB9iB0xgeZVXHj5/JUC7bQFbwCT4i6JACmj7k5nIKd3bS8eOYFZdTZMgC4zl
+	ztyMgczXOzip5IfYhbSsgGgpiJInAmNG8jJhm7r6QmnRdo2onSWbDwYoPyeojWBIbfSAVBjuNKA
 	==
-X-Gm-Gg: ASbGncuO1A2g8NV7g3+j/Ncbkh/yTK7be3bRjEi5JYHDF8+F2HiDLfcBGXP+iOI/+zp
-	nmCfjQg5lb7BMG9HsJTMs6hdtwHx9pA5NPxjnIBWFLrW5thq+XZNJvWSfBAVP1gtyMjGr57J9ZN
-	aq8WtWYi8+4az/TqI51omWjytdoSAM8XKXeXKSc7qt9t9ahADvTbw7ziFgMkkZcVyymmtq8fZ8e
-	brY8xv3rxcTBI//eHvhkC2z85zfZzuLhDAYnBSINymOJySvzUf029HMucgdLpFswZC18Catg1eV
-	1W3amuaLnFlArDyOpgGE1iKcIbR1g/8F+vC1D6AWJEFtFKF3Vy7xq+Vv35sYZE2PPnbZp4c=
-X-Received: by 2002:a05:600c:1f86:b0:45f:28d2:bd38 with SMTP id 5b1f17b1804b1-46e612bef22mr49128235e9.18.1759403829242;
-        Thu, 02 Oct 2025 04:17:09 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFb8dml5vciNP6tQjqRhGREi9kZK4uoaYdLf160JpRfikuws22jqCWavi5Dapn7jZSLafssRQ==
-X-Received: by 2002:a05:600c:1f86:b0:45f:28d2:bd38 with SMTP id 5b1f17b1804b1-46e612bef22mr49127955e9.18.1759403828766;
-        Thu, 02 Oct 2025 04:17:08 -0700 (PDT)
+X-Gm-Gg: ASbGncuowmL96sQ6e3VvK3sg3/QWaoHWqgRsbrHD+V+6EFaBvSVNyukcEh//VpCwA36
+	wSgXfvtH5yB3o4g0Xa3922L2xQTSAPvVbajafxMcMs06AsYdNuc+hP7PvIkNfHlLULc2L0gXKQp
+	a9qj0OHmKGCgendQTW46WhTQdCRJh9I1L8jqh3Vo98YjEAV9rpMS9rCsNW67i4i0glkxRDDA5JL
+	TR1Fr+Usy4FVeC51UO9P4S+WdBdSfVaD1ws/O3WqNBjY5X+jo4+I+WJXP4pZVLcMXtza4Du3MnN
+	ptWCqfGEdf6ejgvDzQnqUnuW3x/pL2uBZ8LdeuqVOdg8hQpFLEOyXDEwZ4wPo8zc9KG8MnQ=
+X-Received: by 2002:a5d:5849:0:b0:3e7:4265:66de with SMTP id ffacd0b85a97d-425577e4a34mr3854408f8f.8.1759404640422;
+        Thu, 02 Oct 2025 04:30:40 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEg/p/3A3WClXyVi0cI2vseaqGhsWcOe/0Q7yc6NHO0UegG/kY8kVpI8noqmlGXEPJcWATvzQ==
+X-Received: by 2002:a5d:5849:0:b0:3e7:4265:66de with SMTP id ffacd0b85a97d-425577e4a34mr3854386f8f.8.1759404639960;
+        Thu, 02 Oct 2025 04:30:39 -0700 (PDT)
 Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.30])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-46e637f7c00sm67120645e9.22.2025.10.02.04.17.07
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4255d8a8542sm3262416f8f.9.2025.10.02.04.30.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Oct 2025 04:17:08 -0700 (PDT)
-Message-ID: <b2eccf79b5ab2b0d4b2f02e048938e923aa6e619.camel@redhat.com>
-Subject: Re: [PATCH v2 11/20] verification/rvgen: Allow spaces in and events
- strings
+        Thu, 02 Oct 2025 04:30:39 -0700 (PDT)
+Message-ID: <58243003fdba1c06d90576fcfec5096012318a27.camel@redhat.com>
+Subject: Re: [PATCH v2 03/20] rv: Unify DA event handling functions across
+ monitor types
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: Nam Cao <namcao@linutronix.de>, linux-kernel@vger.kernel.org, Steven
  Rostedt <rostedt@goodmis.org>, linux-trace-kernel@vger.kernel.org
 Cc: Tomas Glozar <tglozar@redhat.com>, Juri Lelli <jlelli@redhat.com>, Clark
  Williams <williams@redhat.com>, John Kacur <jkacur@redhat.com>
-Date: Thu, 02 Oct 2025 13:17:06 +0200
-In-Reply-To: <87v7kxr2fr.fsf@yellow.woof>
+Date: Thu, 02 Oct 2025 13:30:38 +0200
+In-Reply-To: <87a5297jij.fsf@yellow.woof>
 References: <20250919140954.104920-1-gmonaco@redhat.com>
-	 <20250919140954.104920-12-gmonaco@redhat.com> <87v7kxr2fr.fsf@yellow.woof>
+	 <20250919140954.104920-4-gmonaco@redhat.com> <87a5297jij.fsf@yellow.woof>
 Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
  keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
  1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
@@ -94,48 +94,50 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: yL734IPvidvZm_9TRAs9gjzfQh-6O7iTVpDxqziwQQw_1759403829
+X-Mimecast-MFC-PROC-ID: RB8F8H70CCMIXnBgRwgcLk7u7qWiavhn--ghTj1oRRs_1759404642
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2025-10-02 at 13:03 +0200, Nam Cao wrote:
+On Thu, 2025-10-02 at 11:14 +0200, Nam Cao wrote:
 > Gabriele Monaco <gmonaco@redhat.com> writes:
+> > +/*
+> > + * da_get_task - return the task associated to the monitor
+> > + */
+> > +static inline struct task_struct *da_get_task(struct da_monitor *da_mo=
+n)
+> > +{
+> > +=09return container_of(da_mon, struct task_struct,
+> > rv[task_mon_slot].da_mon);
+> > +}
 >=20
-> > Currently the automata parser assumes event strings don't have any
-> > space, this stands true for event names, but can be a wrong assumption
-> > if we want to store other information in the event strings (e.g.
-> > constraints for hybrid automata).
-> >=20
-> > Adapt the parser logic to allow spaces in the event strings.
+> This function is not used? Maybe later in the series, let me keep looking=
+..
+
+Right, this doesn't belong here, I should add it later..
+
 >=20
-> I probably misunderstand something, but isn't the description
-> misleading? After reading this description, I expect the patch to ignore
-> spaces or something similar. But from my understanding, the script only
-> allowed a single event, and this patch allows conditions as well.
+> > =C2=A0static inline bool da_handle_start_event(enum events event)
+> > =C2=A0{
+> > -=09struct da_monitor *da_mon;
+> > -
+> > =C2=A0=09if (!da_monitor_enabled())
+> > =C2=A0=09=09return 0;
+>=20
+> Can't this part be shared between different monitor types?
+>=20
+> Same for the other handle functions.
 
-The script allows multiple events, all separated by \n, strictly speaking t=
-here
-is nothing saying spaces are not allowed in event names, but the parser bre=
-aks
-if there's any space.
+Mmh good point, I left it separate because the per-object monitors (later i=
+n the
+series) do a bit more before calling the __da_handle_* functions (like some
+potential allocation).
 
-This patch allows spaces in event names, conditions (separated by a ; ) are=
- not
-supported yet.
-
-> Shouldn't this be squashed to the next patch?
-
-I kept it separated to avoid pushing too many changes in the next one, whic=
-h
-mostly adds new functionality (and lines) instead of changing the current o=
-nes.
-
-Apparently that didn't make it any clearer, and there isn't really any use =
-case
-needing event names with spaces, so if it looks cleaner to you I can just s=
-quash
-it.
+But it's probably not a big deal to let them do that in any case, consideri=
+ng
+da_monitor_enabled() is false only during teardown or with monitoring off, =
+and
+in neither case a superfluous allocation should cause problems.
 
 Thanks,
 Gabriele
