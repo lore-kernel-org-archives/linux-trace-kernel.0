@@ -1,119 +1,76 @@
-Received: from mail-yw1-f194.google.com (mail-yw1-f194.google.com [209.85.128.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0394B2F3C10
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  2 Oct 2025 10:00:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23AB12EC099;
+	Thu,  2 Oct 2025 11:03:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759399239; cv=none; b=IFRFt2JNFVzZFkNxi+5vsF6L0bbqPlgwWELyEZNXezyMVlmv/W2MepZE3ZHUt/h1u/9dNmAzmIa0PtJIIuCWHeRYSmPpM2LH1JjyK+u54qJer9uY2EVdODQlhtDbbf7ih4LjTW76yeIwFqRh+28veRZ5hAMjF7j9Vr/5lfyrafU=
+	t=1759402989; cv=none; b=ZjOj6IZt8dDzKD/XO6Ajpa9f2XCqhP0zPXnkitgTsUZGm69n64eCH5zN1Ie+UflviEVZplXL73w2btU48VO0bHy32TRY2Xizfk16W2vhgvnns0j6xseB6a1Qd2d49yaGHjmoPrVau+rOGgLrbq2HIikjk9BPVXoWvcBQK+7CIFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759399239; c=relaxed/simple;
-	bh=kvBtZ5H0yMb1sHBkzmafyNsm72le/pCF3bDpS4vPEkI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BPZn+UeOfgeExcNACAk8FkotA7Yzzav466792L4VAApbGTngil6RdB9qdddKGgRRkMGLzh+m3ntMDOm5Vrq9j6G2rG7VPzXVYJV8yzPCuR9MUY3HnxWnnHHVlrZdpQDj95oi8ydlZvurJO6f37U8N+qtmPxWySDm0HMhVRlp3uA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H8UCpdFs; arc=none smtp.client-ip=209.85.128.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1759402989; c=relaxed/simple;
+	bh=8NYUepfs/ARQb10GiGuRLU3X3En1i9nrdZTxw7phox0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=qZJMMOiQHaTcmwpVYFyPQNEGbYNUfHvjSQt66DNKqe/0Zbzsm/+hxDdIm1Ymiu+FpoqRH2egnMgpnfKzwbwpLi+PxkiHaJzyfQ9kHYhYEAiqMhxgnmZ43kz8F7bkZqcRrVgmWABxFR38kii65DyWPjH40bys+X6DJaY4ZUJJhos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=rbnzu7ka; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=neSAJyLr; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H8UCpdFs"
-Received: by mail-yw1-f194.google.com with SMTP id 00721157ae682-749399349ddso11611317b3.3
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 02 Oct 2025 03:00:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1759399236; x=1760004036; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ggd4i7mZ/t/cf8PkCM63gkDCoT9fe+zu6ukHr28sMTA=;
-        b=H8UCpdFsvnVnh0xww0trcddlM7QbbxyywG6LqOeWlMMi3EzfLWTIMiwnmRjtdN8i/O
-         kABnFj/hVN0PwCcCOBdb3XVe1dduEcX6p7i4HxDO5cze09pR0yI0titTCTgyliqE9f4K
-         RTzQ9AGfV0PzBxG1qisajk8d5+UQAwPRRCsi0es1aBnBEP2O8oJrhYf2gOBrrcuMcgaJ
-         rSCOfxiPGYB8obpKUjBzBC0kUzCZVLF60x7oENOIQyfrZDh7aZbQMhr7oEwBKIPPvYf+
-         t13bWPFX39/tIvuE7+LkWxGzwaiE1c9KS8LNUYcBvrnjCA6YJSJbnaZ9+w+EtxXp0aXV
-         UbBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759399236; x=1760004036;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ggd4i7mZ/t/cf8PkCM63gkDCoT9fe+zu6ukHr28sMTA=;
-        b=EcH28+/h6IUgHDID5cTRajieXhO8Jg2EpnQweAwyAfRuFRUIQ0XUbhMl1LU5Acgi2P
-         /509DrC20/JEhPYVNjH90pM0drtrfNWuc2Y1Jfjpk1GFKriApz1TAOFJrtiv6+tP5t2M
-         c4NIA9Nhong/OqU2obHGppfgMm6zx9iSjNHBpvAtObGhj4vhhZET4JXfFtkpVQeHMGFJ
-         xgiGh4273TkTpSKDv/IJGZ2s5I4yl4rD9Xl34HSDCuqXO/JAOo1Hgg+KuTJBPHmHcP3c
-         xSALQWxtkpZoSubG1VjarWAJXTNGYE1yTdEAXwoij71KBulZnJ+UhhSZoly3ih+QS+Ei
-         r15Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWEUmRDKFc+l3gYzXLeeUQ6Eg1t0nn/2S36FIbcdzysyOzUG6OJ/sk2mXPEILHfKx9oxH45QK/wQ6dAqYW4ZBmwhm0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz0Dt/PEJiLazf0PDsNSfZ631CC9RU/irQ0LdmEAvPyTLi1Vm8l
-	eL8BxGeg6/UR9y4bN+DBZReq4rH+EUKyAV4yPLPldNu8w8WARXZVUfjpx9+Dd1kzFqLrFemSWlR
-	/fmaoYGyOBpunVQTvKuSgLn0gCIuaG3c=
-X-Gm-Gg: ASbGncsW25xcDePhV2icQphqAnwlN13q+5VhM7vO+wRmJRaHmkHNfCmEa99Zg9bBcXj
-	GTLoNwbJ+q+qAD5XBtkMvJcw1bkaHTxMxx5nS/ScE0qgPpSX/+MR6L4R1g2fge7ji59iGL4aKu5
-	6TrheQ4oSFwxPmJcSdbAVfGUq2+CdtN16tNyeFZ2Ry6Fm6wUUvbDIHqRPLi+LQUcoKVW1T8nQ9+
-	LPNoZomSS0LXSIi5DbfX2OKS8W7leg=
-X-Google-Smtp-Source: AGHT+IGPjmDa+p+JXkYrK4U7Drro29gMSq+s0PLirIthnlMC8Nj4y2IUGNweizhJltL5z8aWjl8za6dOxfIgKduP+Zc=
-X-Received: by 2002:a53:b789:0:b0:636:fd5:ed02 with SMTP id
- 956f58d0204a3-63b6ff67009mr6288246d50.45.1759399235643; Thu, 02 Oct 2025
- 03:00:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rbnzu7ka";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="neSAJyLr"
+From: Nam Cao <namcao@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1759402984;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8NYUepfs/ARQb10GiGuRLU3X3En1i9nrdZTxw7phox0=;
+	b=rbnzu7ka3AOA5YL82MSdhuabD1IotwnsPvy5LajOFlb6Rn/Mbx8VQM1fzRzpK3SNAM5LsB
+	tpmoMc4RMnNG3SElFPmCtgTgzo+4IDgEFt6QSyDKo7slXuEaRHlMh578/FzXXAANt60TqO
+	WEnMEj0o1cnU/kUF2u+0mcRdghDQ7117hBSdOvpcVyrGQ0ngPBqgjW64PZrfA0rEzocmmT
+	ocym/F3BOwsHb1YJ5oAzf8jAvOz31OTiLJ0qaQPZNwmRSaUNlDcw5g6A3GdKoARQ43D86h
+	bCHWg2Hk7zvtwy2BtksjNmhy1bbegABQl2Q4h3asX20Bk99a/Af+JiKltVcc/A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1759402984;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8NYUepfs/ARQb10GiGuRLU3X3En1i9nrdZTxw7phox0=;
+	b=neSAJyLrx0LQ+jRiH2PdB4zI1AJETWwMhL/tDLrILA3uS+pFNZWKPqFsPxUlQxT4JHxQFa
+	opsRcWxku5rPCAAQ==
+To: Gabriele Monaco <gmonaco@redhat.com>, linux-kernel@vger.kernel.org,
+ Steven Rostedt <rostedt@goodmis.org>, linux-trace-kernel@vger.kernel.org
+Cc: Gabriele Monaco <gmonaco@redhat.com>, Tomas Glozar <tglozar@redhat.com>,
+ Juri Lelli <jlelli@redhat.com>, Clark Williams <williams@redhat.com>, John
+ Kacur <jkacur@redhat.com>
+Subject: Re: [PATCH v2 11/20] verification/rvgen: Allow spaces in and events
+ strings
+In-Reply-To: <20250919140954.104920-12-gmonaco@redhat.com>
+References: <20250919140954.104920-1-gmonaco@redhat.com>
+ <20250919140954.104920-12-gmonaco@redhat.com>
+Date: Thu, 02 Oct 2025 13:03:04 +0200
+Message-ID: <87v7kxr2fr.fsf@yellow.woof>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <175939434403.3665022.13030530757238556332.stgit@mhiramat.tok.corp.google.com>
-In-Reply-To: <175939434403.3665022.13030530757238556332.stgit@mhiramat.tok.corp.google.com>
-From: Menglong Dong <menglong8.dong@gmail.com>
-Date: Thu, 2 Oct 2025 18:00:24 +0800
-X-Gm-Features: AS18NWBjYLUQRhHxBX7o9MqHB-Y5s8B_5X81UFNPqNMaPI9zxkO2nfjXdBQVtng
-Message-ID: <CADxym3Yvxs_Z6a1-EPziz79SBRsYHcaOH-CtvUhngYy3bJ71iA@mail.gmail.com>
-Subject: Re: [PATCH] tracing: fprobe: Fix to init fprobe_ip_table earlier
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	oliver.sang@intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On Thu, Oct 2, 2025 at 4:39=E2=80=AFPM Masami Hiramatsu (Google)
-<mhiramat@kernel.org> wrote:
->
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
->
-> Since the fprobe_ip_table is used from module unloading in
-> the failure path of load_module(), it must be initialized in
-> the earlier timing than late_initcall(). Unless that, the
-> fprobe_module_callback() will use an uninitialized spinlock of
-> fprobe_ip_table.
->
-> Initialize fprobe_ip_table in core_initcall which is the same
-> timing as ftrace.
->
-> Reported-by: kernel test robot <oliver.sang@intel.com>
-> Closes: https://lore.kernel.org/oe-lkp/202509301440.be4b3631-lkp@intel.co=
-m
+Gabriele Monaco <gmonaco@redhat.com> writes:
 
-Don't we need a Fixes tag here?
-
-The other part of this patch is LGTM.
-
-Reviewed-by: Menglong Dong <menglong8.dong@gmail.com>
-
-Thanks!
-Menglong Dong
-
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> ---
->  kernel/trace/fprobe.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Currently the automata parser assumes event strings don't have any
+> space, this stands true for event names, but can be a wrong assumption
+> if we want to store other information in the event strings (e.g.
+> constraints for hybrid automata).
 >
-> diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-> index 95e43814b85b..99d83c08b9e2 100644
-> --- a/kernel/trace/fprobe.c
-> +++ b/kernel/trace/fprobe.c
-> @@ -847,4 +847,4 @@ static int __init fprobe_initcall(void)
->         rhltable_init(&fprobe_ip_table, &fprobe_rht_params);
->         return 0;
->  }
-> -late_initcall(fprobe_initcall);
-> +core_initcall(fprobe_initcall);
->
+> Adapt the parser logic to allow spaces in the event strings.
+
+I probably misunderstand something, but isn't the description
+misleading? After reading this description, I expect the patch to ignore
+spaces or something similar. But from my understanding, the script only
+allowed a single event, and this patch allows conditions as well.
+
+Shouldn't this be squashed to the next patch?
+
+Nam
