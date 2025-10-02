@@ -1,60 +1,64 @@
 Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5953C28641F
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  2 Oct 2025 12:36:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B9FD28641F
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  2 Oct 2025 12:36:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759408572; cv=none; b=qFQWs1DzcTrgqJDjTQMCqv5UpOGLegX0sa1oqt/xPedIPTn4yQL+AinuMq+3MuQdxxchde78bADOdVH1ts9lGSA0bqD189Bmwhjxjg8cSwaO23Q6OJI2ojiU4ML0zpcXVSFr/YsNUBDFM9yR1CpiwDLF9Yzv/oD7Mxx69wo6Tms=
+	t=1759408582; cv=none; b=ZCMEbmwTuGCL633st/nc2kht25za+QOTbY4MpDg21QN+54uI3N64ZDevTSOjHAjPPKOvI4PZ/mwUK4FxwgMJfw7dP75/vhKkc29lg1ExF7K7O7t2jbpPjucbIuoAQn1+oVmtBp7x3LW/wy553dFrMfa86msPT7cZEdeAp1EsdPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759408572; c=relaxed/simple;
-	bh=Tju1grRPgRjIwOw8Hb9bnDgMQM1wWtnIOLV+NzozbwI=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=durUGZ1kpXbHh1M4XZbrwEl+gHgHuL7lwkjg7UN4HCJN2vvrlsR3h19n+jyra/i9GLuRGvLazJMz3dxlBvisCiOjJHtWpvZE2PjCA+uBlYqf3pJAAOYHr5hrn2Yfb5p1TlNGMwpxOnNfsi0r1Wafs66GqA+VkOYvsZGguqgDLPc=
+	s=arc-20240116; t=1759408582; c=relaxed/simple;
+	bh=K1ZN9t3MdWMg4kJzpTOCTOC/yGyvTS4NMdf0NiQkp9U=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=jTBPevZz8sqkFgiyxEdYyWP/No9rjKTbOcIwZqOZlqkFxgpV+J8ZrdaDEvIIBpQx/aL5vKMLBr+d0cvZGVyb4jW6RyRShDTfSzXyDjgiiXx9N3x7UzbqBIRBaY6kt4uSOQ/moPLRBbZCOI3dOEzy9M3M0tZZNeR6JTYwLMqFroM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-46b303f7469so6174625e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 02 Oct 2025 05:36:10 -0700 (PDT)
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-46e29d65728so6133295e9.3
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 02 Oct 2025 05:36:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759408568; x=1760013368;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qQQFYDEO2PrKkMHz7aHq73gVixuOAgPEENPnpuPmN/k=;
-        b=iYKAortemF2DyJbPcJlsbpT0UKZSwt6TitZd8meMjdrBNMSWeaPNnLy9DbY3E5yCgd
-         1L247/BgQyRNQ4zgDqEoysVqoLRn8nM5kPiy4nepSyyZFWUDKuefKALPKHzQaIGDonwu
-         V6m+2QRc/Z1MniPj02cpndOXfwTSMoOD98WonnMgVv95Jl15JDm52rfKYtHXaNOdJpbR
-         CrBZftqUIISms9BtHg7jx0U/TA5yzO9WsJAA8sX8wV+G+UgRG5g5YyYliis1hp9O7Ddo
-         KH2WXR8L7V9XLlhQ7eBirvOfd9Ch2ep3cfO9yGLToF7gTPCqVmT3bZDQ9vkyzqvJ4avh
-         NxyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU0mYFX3DLc/b6d6VDiXwPdo9GWtmuuisfrzPqf/fk6hPmSgClMp3L5qcYCuo3LP8cUG4hIx3crAhRUrS5ctI0PqT0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFyZ4RsBzpOtbExxCbkPvjFbYOra/YpohWKBpZQpTGymt9XEHl
-	Pi4s5J6y2kvpacAtuEFkHpPSjipvSRnsvuHSxBoK6Yl8f9pT+TUWKdDD
-X-Gm-Gg: ASbGnctuoIUp4m4HW7GEQX5ZG7Z70c+PwF6wHLEQ+fJLjVDKpJ6SJC5Uh67yVM5nUY9
-	nOOFMuOAGF3Okayib5c9yH48+aMAV2Yuuzf6xar5RS/PowmiaxtSh8yBjtdxG3+bEIjr2khxqjI
-	/M7OenpE/tU7pjYgqVr9iFOiha25TIfgPHPf7LmNocMvciHOnnHLIyelVZfYifjwPE1ZjkPEQr+
-	jsrKpUfYWcmpc1G8qeQPTrVlc9KBlkUWkyalBhfisexpOSRP53r5OIiqL98VSFlta04HM2O0xvo
-	XNN/4aSpYmjJioyc/M2OpBECJ/D5RwcHIQPpim6E/CzWUNkxsLrpoA/dLtXJ/vManpasohWWUoM
-	QMS7TrlOs8xgG+QalknoTsyBxtbrAhY+4S7s1qSqOCyi4VK72sPT2eHD+xrsR+Ki7
-X-Google-Smtp-Source: AGHT+IEpP2Ro8/lRQq3RIlzDW2fG/yYAl/ri4ta7GQdD6Oa14SiEUNVHwT+6CtjhdaRNMNpucVcS8w==
-X-Received: by 2002:a05:600c:3b28:b0:46b:932f:9201 with SMTP id 5b1f17b1804b1-46e611dd1c9mr57148965e9.0.1759408568302;
-        Thu, 02 Oct 2025 05:36:08 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1759408579; x=1760013379;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LBlodwS+anVQZ01YfkUn1gudQWI1rvI4IORZ7L6X7l0=;
+        b=id+Nh/zS1HAhr2StIrv19LScTsdiFciKRQF4QIQjbwrG8QJf7SfKvt3whTS+wyRWG2
+         Aj12NCf7p6EfBzpaLNN69rD+yZO9my3DHVhVzLCJ8ZX88ftxdWBqhJIS0ZqyjAW0+qiN
+         gutgrLlS0JHyHrq3sV5AO9eEZKTpVpHbtLlW0E6Ey+MsY8ToJ55En8rthu9ZgVYAeDOZ
+         JLipjgUoGj2D01tXyzSThRyztJ/Q1ac2bA98OMeEAYmf0F7THuqtg4JAtAHy4WfQ6+cs
+         prANfRhO3HvHcKW5tlTc3wJx+fPCfYNH7uXcr1NopCT+tLrvs3t9AiNZrhlHb2JXfcwh
+         vvvw==
+X-Forwarded-Encrypted: i=1; AJvYcCUIzyZesS/qNZ0NjxdK6wveki9iKeITKHAvnCW9k+aARrQVy4E8hAvr0zn1oD/QKOxWeRR0FQ3Bo0nUn9NiBypEWwo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywhk5jkL7OICLNlhjbNkWST0YdbLKa6JKYw4J3wsvN2CTzZE/M5
+	mhBugQRE3dAmWiG3AvZzJ0l/fj6wcofoX8Y9ojLXPku4LtJIvlQVdgGBCbxI6Uv66p8=
+X-Gm-Gg: ASbGncu+HF4Xu5PW+x3Chu3NJlEmTTSNFSAep+jFY4WeF8S0O5w0Unh0AysYy5dnGxp
+	zfkktksxrR74pYXoj0T6eMJbysPu8LAXUFYaikKF74zUqC60frtFgnX49qMB6uTA1wNuoqersD1
+	NbNGhT9qTkkeCv0mnbjr4/zomy8YTfjbHJCGElZQrTL0V4UbQAP2acgulIQatR/Kpx225yU1VJ5
+	C0sUUqOaGx2YIBBwkLwq+jG3X/ld59LLvUjR+j6QaArZhb2EoRgcohz2hZuZoyjB2EdN8yYgdqx
+	dS8HVsDoAs88c03aUPez8Lxu68O+NSe7TISC4k8fcw40slLSedt7d9lHURfoCkjhsSxZVV0uxIq
+	rHWxxo8S2+CwKNUQBJwkVZfS6RhkfiOchvM778QPQ6sqEAVt7rQ91x5zJKK/l4Nfa
+X-Google-Smtp-Source: AGHT+IGVheM6RSlx3YE6NvwcvVuLtj6nTKyzR3btS5SvDL3E/dJ2MMO9/HKo8LarFebhRVCcSrUQng==
+X-Received: by 2002:a05:600c:c4a4:b0:46d:996b:826f with SMTP id 5b1f17b1804b1-46e612dcfd0mr58976855e9.25.1759408578482;
+        Thu, 02 Oct 2025 05:36:18 -0700 (PDT)
 Received: from costa-tp.redhat.com ([2a00:a041:e2eb:5500:8728:d68a:a687:c89b])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-46e693c33adsm32449075e9.18.2025.10.02.05.36.06
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-46e693c33adsm32449075e9.18.2025.10.02.05.36.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Oct 2025 05:36:07 -0700 (PDT)
+        Thu, 02 Oct 2025 05:36:18 -0700 (PDT)
 From: Costa Shulyupin <costa.shul@redhat.com>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Tomas Glozar <tglozar@redhat.com>,
-	Crystal Wood <crwood@redhat.com>,
 	Costa Shulyupin <costa.shul@redhat.com>,
+	Crystal Wood <crwood@redhat.com>,
 	John Kacur <jkacur@redhat.com>,
 	Eder Zulian <ezulian@redhat.com>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 1/2] tools/rtla: Add for_each_monitored_cpu() helper
-Date: Thu,  2 Oct 2025 15:35:38 +0300
-Message-ID: <20251002123553.389467-1-costa.shul@redhat.com>
+Subject: [PATCH v1 2/2] tools/rtla: Remove unused optional option_index
+Date: Thu,  2 Oct 2025 15:35:39 +0300
+Message-ID: <20251002123553.389467-2-costa.shul@redhat.com>
 X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20251002123553.389467-1-costa.shul@redhat.com>
+References: <20251002123553.389467-1-costa.shul@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -63,267 +67,88 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The rtla tools have many instances of iterating over CPUs while
-checking if they are monitored.
+The longindex argument of getopt_long() is optional
+and tied to the unused local variable option_index.
 
-Add a for_each_monitored_cpu() helper macro to make the code
-more readable and reduce code duplication.
+Remove it to shorten the four longest functions
+and make the code neater.
 
 Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
 ---
- tools/tracing/rtla/src/common.h        |  4 ++++
- tools/tracing/rtla/src/osnoise_hist.c  | 28 ++++++----------------
- tools/tracing/rtla/src/osnoise_top.c   |  4 +---
- tools/tracing/rtla/src/timerlat.c      |  9 ++------
- tools/tracing/rtla/src/timerlat_hist.c | 32 +++++++-------------------
- tools/tracing/rtla/src/timerlat_top.c  |  4 +---
- 6 files changed, 23 insertions(+), 58 deletions(-)
+ tools/tracing/rtla/src/osnoise_hist.c  | 5 +----
+ tools/tracing/rtla/src/osnoise_top.c   | 5 +----
+ tools/tracing/rtla/src/timerlat_hist.c | 5 +----
+ tools/tracing/rtla/src/timerlat_top.c  | 5 +----
+ 4 files changed, 4 insertions(+), 16 deletions(-)
 
-diff --git a/tools/tracing/rtla/src/common.h b/tools/tracing/rtla/src/common.h
-index 355f113a14a3..68cf1c20cb5c 100644
---- a/tools/tracing/rtla/src/common.h
-+++ b/tools/tracing/rtla/src/common.h
-@@ -107,6 +107,10 @@ struct common_params {
- 	struct timerlat_u_params user;
- };
- 
-+#define for_each_monitored_cpu(cpu, nr_cpus, common) \
-+	for (cpu = 0; cpu < nr_cpus; cpu++) \
-+		if (!(common)->cpus || CPU_ISSET(cpu, &(common)->monitored_cpus))
-+
- struct tool_ops;
- 
- /*
 diff --git a/tools/tracing/rtla/src/osnoise_hist.c b/tools/tracing/rtla/src/osnoise_hist.c
-index dffb6d0a98d7..844f0468953c 100644
+index 844f0468953c..df0657b78980 100644
 --- a/tools/tracing/rtla/src/osnoise_hist.c
 +++ b/tools/tracing/rtla/src/osnoise_hist.c
-@@ -247,9 +247,7 @@ static void osnoise_hist_header(struct osnoise_tool *tool)
- 	if (!params->common.hist.no_index)
- 		trace_seq_printf(s, "Index");
+@@ -524,11 +524,8 @@ static struct common_params
+ 			{0, 0, 0, 0}
+ 		};
  
--	for (cpu = 0; cpu < data->nr_cpus; cpu++) {
--		if (params->common.cpus && !CPU_ISSET(cpu, &params->common.monitored_cpus))
--			continue;
-+	for_each_monitored_cpu(cpu, data->nr_cpus, &params->common) {
+-		/* getopt_long stores the option index here. */
+-		int option_index = 0;
+-
+ 		c = getopt_long(argc, argv, "a:c:C::b:d:e:E:DhH:p:P:r:s:S:t::T:01234:5:6:7:",
+-				 long_options, &option_index);
++				 long_options, NULL);
  
- 		if (!data->hist[cpu].count)
- 			continue;
-@@ -278,9 +276,7 @@ osnoise_print_summary(struct osnoise_params *params,
- 	if (!params->common.hist.no_index)
- 		trace_seq_printf(trace->seq, "count:");
- 
--	for (cpu = 0; cpu < data->nr_cpus; cpu++) {
--		if (params->common.cpus && !CPU_ISSET(cpu, &params->common.monitored_cpus))
--			continue;
-+	for_each_monitored_cpu(cpu, data->nr_cpus, &params->common) {
- 
- 		if (!data->hist[cpu].count)
- 			continue;
-@@ -292,9 +288,7 @@ osnoise_print_summary(struct osnoise_params *params,
- 	if (!params->common.hist.no_index)
- 		trace_seq_printf(trace->seq, "min:  ");
- 
--	for (cpu = 0; cpu < data->nr_cpus; cpu++) {
--		if (params->common.cpus && !CPU_ISSET(cpu, &params->common.monitored_cpus))
--			continue;
-+	for_each_monitored_cpu(cpu, data->nr_cpus, &params->common) {
- 
- 		if (!data->hist[cpu].count)
- 			continue;
-@@ -307,9 +301,7 @@ osnoise_print_summary(struct osnoise_params *params,
- 	if (!params->common.hist.no_index)
- 		trace_seq_printf(trace->seq, "avg:  ");
- 
--	for (cpu = 0; cpu < data->nr_cpus; cpu++) {
--		if (params->common.cpus && !CPU_ISSET(cpu, &params->common.monitored_cpus))
--			continue;
-+	for_each_monitored_cpu(cpu, data->nr_cpus, &params->common) {
- 
- 		if (!data->hist[cpu].count)
- 			continue;
-@@ -325,9 +317,7 @@ osnoise_print_summary(struct osnoise_params *params,
- 	if (!params->common.hist.no_index)
- 		trace_seq_printf(trace->seq, "max:  ");
- 
--	for (cpu = 0; cpu < data->nr_cpus; cpu++) {
--		if (params->common.cpus && !CPU_ISSET(cpu, &params->common.monitored_cpus))
--			continue;
-+	for_each_monitored_cpu(cpu, data->nr_cpus, &params->common) {
- 
- 		if (!data->hist[cpu].count)
- 			continue;
-@@ -362,9 +352,7 @@ osnoise_print_stats(struct osnoise_tool *tool)
- 			trace_seq_printf(trace->seq, "%-6d",
- 					 bucket * data->bucket_size);
- 
--		for (cpu = 0; cpu < data->nr_cpus; cpu++) {
--			if (params->common.cpus && !CPU_ISSET(cpu, &params->common.monitored_cpus))
--				continue;
-+		for_each_monitored_cpu(cpu, data->nr_cpus, &params->common) {
- 
- 			if (!data->hist[cpu].count)
- 				continue;
-@@ -400,9 +388,7 @@ osnoise_print_stats(struct osnoise_tool *tool)
- 	if (!params->common.hist.no_index)
- 		trace_seq_printf(trace->seq, "over: ");
- 
--	for (cpu = 0; cpu < data->nr_cpus; cpu++) {
--		if (params->common.cpus && !CPU_ISSET(cpu, &params->common.monitored_cpus))
--			continue;
-+	for_each_monitored_cpu(cpu, data->nr_cpus, &params->common) {
- 
- 		if (!data->hist[cpu].count)
- 			continue;
+ 		/* detect the end of the options. */
+ 		if (c == -1)
 diff --git a/tools/tracing/rtla/src/osnoise_top.c b/tools/tracing/rtla/src/osnoise_top.c
-index 95418f7ecc96..defa1eb63bee 100644
+index defa1eb63bee..1b5181e66b17 100644
 --- a/tools/tracing/rtla/src/osnoise_top.c
 +++ b/tools/tracing/rtla/src/osnoise_top.c
-@@ -243,9 +243,7 @@ osnoise_print_stats(struct osnoise_tool *top)
+@@ -376,11 +376,8 @@ struct common_params *osnoise_top_parse_args(int argc, char **argv)
+ 			{0, 0, 0, 0}
+ 		};
  
- 	osnoise_top_header(top);
+-		/* getopt_long stores the option index here. */
+-		int option_index = 0;
+-
+ 		c = getopt_long(argc, argv, "a:c:C::d:De:hH:p:P:qr:s:S:t::T:0:1:2:3:",
+-				 long_options, &option_index);
++				 long_options, NULL);
  
--	for (i = 0; i < nr_cpus; i++) {
--		if (params->common.cpus && !CPU_ISSET(i, &params->common.monitored_cpus))
--			continue;
-+	for_each_monitored_cpu(i, nr_cpus, &params->common) {
- 		osnoise_top_print(top, i);
- 	}
- 
-diff --git a/tools/tracing/rtla/src/timerlat.c b/tools/tracing/rtla/src/timerlat.c
-index b69212874127..28ea4f6710c1 100644
---- a/tools/tracing/rtla/src/timerlat.c
-+++ b/tools/tracing/rtla/src/timerlat.c
-@@ -126,9 +126,7 @@ int timerlat_enable(struct osnoise_tool *tool)
- 
- 		nr_cpus = sysconf(_SC_NPROCESSORS_CONF);
- 
--		for (i = 0; i < nr_cpus; i++) {
--			if (params->common.cpus && !CPU_ISSET(i, &params->common.monitored_cpus))
--				continue;
-+		for_each_monitored_cpu(i, nr_cpus, &params->common) {
- 			if (save_cpu_idle_disable_state(i) < 0) {
- 				err_msg("Could not save cpu idle state.\n");
- 				return -1;
-@@ -221,10 +219,7 @@ void timerlat_free(struct osnoise_tool *tool)
- 	if (dma_latency_fd >= 0)
- 		close(dma_latency_fd);
- 	if (params->deepest_idle_state >= -1) {
--		for (i = 0; i < nr_cpus; i++) {
--			if (params->common.cpus &&
--			    !CPU_ISSET(i, &params->common.monitored_cpus))
--				continue;
-+		for_each_monitored_cpu(i, nr_cpus, &params->common) {
- 			restore_cpu_idle_disable_state(i);
- 		}
- 	}
+ 		/* Detect the end of the options. */
+ 		if (c == -1)
 diff --git a/tools/tracing/rtla/src/timerlat_hist.c b/tools/tracing/rtla/src/timerlat_hist.c
-index 606c1688057b..02d3ffd2cf4b 100644
+index 02d3ffd2cf4b..c432ef5f59e7 100644
 --- a/tools/tracing/rtla/src/timerlat_hist.c
 +++ b/tools/tracing/rtla/src/timerlat_hist.c
-@@ -305,9 +305,7 @@ static void timerlat_hist_header(struct osnoise_tool *tool)
- 	if (!params->common.hist.no_index)
- 		trace_seq_printf(s, "Index");
+@@ -840,11 +840,8 @@ static struct common_params
+ 			{0, 0, 0, 0}
+ 		};
  
--	for (cpu = 0; cpu < data->nr_cpus; cpu++) {
--		if (params->common.cpus && !CPU_ISSET(cpu, &params->common.monitored_cpus))
--			continue;
-+	for_each_monitored_cpu(cpu, data->nr_cpus, &params->common) {
+-		/* getopt_long stores the option index here. */
+-		int option_index = 0;
+-
+ 		c = getopt_long(argc, argv, "a:c:C::b:d:e:E:DhH:i:knp:P:s:t::T:uU0123456:7:8:9\1\2:\3:",
+-				 long_options, &option_index);
++				 long_options, NULL);
  
- 		if (!data->hist[cpu].irq_count && !data->hist[cpu].thread_count)
- 			continue;
-@@ -359,9 +357,7 @@ timerlat_print_summary(struct timerlat_params *params,
- 	if (!params->common.hist.no_index)
- 		trace_seq_printf(trace->seq, "count:");
- 
--	for (cpu = 0; cpu < data->nr_cpus; cpu++) {
--		if (params->common.cpus && !CPU_ISSET(cpu, &params->common.monitored_cpus))
--			continue;
-+	for_each_monitored_cpu(cpu, data->nr_cpus, &params->common) {
- 
- 		if (!data->hist[cpu].irq_count && !data->hist[cpu].thread_count)
- 			continue;
-@@ -383,9 +379,7 @@ timerlat_print_summary(struct timerlat_params *params,
- 	if (!params->common.hist.no_index)
- 		trace_seq_printf(trace->seq, "min:  ");
- 
--	for (cpu = 0; cpu < data->nr_cpus; cpu++) {
--		if (params->common.cpus && !CPU_ISSET(cpu, &params->common.monitored_cpus))
--			continue;
-+	for_each_monitored_cpu(cpu, data->nr_cpus, &params->common) {
- 
- 		if (!data->hist[cpu].irq_count && !data->hist[cpu].thread_count)
- 			continue;
-@@ -413,9 +407,7 @@ timerlat_print_summary(struct timerlat_params *params,
- 	if (!params->common.hist.no_index)
- 		trace_seq_printf(trace->seq, "avg:  ");
- 
--	for (cpu = 0; cpu < data->nr_cpus; cpu++) {
--		if (params->common.cpus && !CPU_ISSET(cpu, &params->common.monitored_cpus))
--			continue;
-+	for_each_monitored_cpu(cpu, data->nr_cpus, &params->common) {
- 
- 		if (!data->hist[cpu].irq_count && !data->hist[cpu].thread_count)
- 			continue;
-@@ -443,9 +435,7 @@ timerlat_print_summary(struct timerlat_params *params,
- 	if (!params->common.hist.no_index)
- 		trace_seq_printf(trace->seq, "max:  ");
- 
--	for (cpu = 0; cpu < data->nr_cpus; cpu++) {
--		if (params->common.cpus && !CPU_ISSET(cpu, &params->common.monitored_cpus))
--			continue;
-+	for_each_monitored_cpu(cpu, data->nr_cpus, &params->common) {
- 
- 		if (!data->hist[cpu].irq_count && !data->hist[cpu].thread_count)
- 			continue;
-@@ -490,9 +480,7 @@ timerlat_print_stats_all(struct timerlat_params *params,
- 	sum.min_thread = ~0;
- 	sum.min_user = ~0;
- 
--	for (cpu = 0; cpu < data->nr_cpus; cpu++) {
--		if (params->common.cpus && !CPU_ISSET(cpu, &params->common.monitored_cpus))
--			continue;
-+	for_each_monitored_cpu(cpu, data->nr_cpus, &params->common) {
- 
- 		if (!data->hist[cpu].irq_count && !data->hist[cpu].thread_count)
- 			continue;
-@@ -639,9 +627,7 @@ timerlat_print_stats(struct osnoise_tool *tool)
- 			trace_seq_printf(trace->seq, "%-6d",
- 					 bucket * data->bucket_size);
- 
--		for (cpu = 0; cpu < data->nr_cpus; cpu++) {
--			if (params->common.cpus && !CPU_ISSET(cpu, &params->common.monitored_cpus))
--				continue;
-+		for_each_monitored_cpu(cpu, data->nr_cpus, &params->common) {
- 
- 			if (!data->hist[cpu].irq_count && !data->hist[cpu].thread_count)
- 				continue;
-@@ -679,9 +665,7 @@ timerlat_print_stats(struct osnoise_tool *tool)
- 	if (!params->common.hist.no_index)
- 		trace_seq_printf(trace->seq, "over: ");
- 
--	for (cpu = 0; cpu < data->nr_cpus; cpu++) {
--		if (params->common.cpus && !CPU_ISSET(cpu, &params->common.monitored_cpus))
--			continue;
-+	for_each_monitored_cpu(cpu, data->nr_cpus, &params->common) {
- 
- 		if (!data->hist[cpu].irq_count && !data->hist[cpu].thread_count)
- 			continue;
+ 		/* detect the end of the options. */
+ 		if (c == -1)
 diff --git a/tools/tracing/rtla/src/timerlat_top.c b/tools/tracing/rtla/src/timerlat_top.c
-index fc479a0dcb59..607b57f2f231 100644
+index 607b57f2f231..82e227d27af7 100644
 --- a/tools/tracing/rtla/src/timerlat_top.c
 +++ b/tools/tracing/rtla/src/timerlat_top.c
-@@ -459,9 +459,7 @@ timerlat_print_stats(struct osnoise_tool *top)
+@@ -604,11 +604,8 @@ static struct common_params
+ 			{0, 0, 0, 0}
+ 		};
  
- 	timerlat_top_header(params, top);
+-		/* getopt_long stores the option index here. */
+-		int option_index = 0;
+-
+ 		c = getopt_long(argc, argv, "a:c:C::d:De:hH:i:knp:P:qs:t::T:uU0:1:2:345:6:7:",
+-				 long_options, &option_index);
++				 long_options, NULL);
  
--	for (i = 0; i < nr_cpus; i++) {
--		if (params->common.cpus && !CPU_ISSET(i, &params->common.monitored_cpus))
--			continue;
-+	for_each_monitored_cpu(i, nr_cpus, &params->common) {
- 		timerlat_top_print(top, i);
- 		timerlat_top_update_sum(top, i, &summary);
- 	}
+ 		/* detect the end of the options. */
+ 		if (c == -1)
 -- 
 2.51.0
 
