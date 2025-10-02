@@ -1,83 +1,107 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B429B8634F;
-	Thu,  2 Oct 2025 14:56:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D792942A99
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  2 Oct 2025 17:09:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759416979; cv=none; b=T6IZVZunErBetFIAg74u7sdOSWOVfkmn0rm3dGAu5KWYgsrk5uWq4vj9rRbMgdfHEZ5wWB2g2QUdAxrJZY4kdDgXevi4CLcZ28oeNqcgBbs4GnXtG+iRp7eIlW65QT7MvsmsYG8XNBJPtXZ3GVccYvZBtfT80c3bCXNWKv9Rr8I=
+	t=1759424986; cv=none; b=ThFZwl1Ef/bYR2OIjLdlZiXot+7h0K80Fl/y0TqgrVPI1Go9+cWU1sq2AzLpZevh2USYUpffk991YpqFYV/SZ3gWwyQtZh0KwryDVUmffolyYG2dAHh5kQdIXh6KEVR//Lj5DbgehQHgWfMiTv9ptHriLxNBRpuXc3L9RRqdNd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759416979; c=relaxed/simple;
-	bh=JVBa0Hdha2soHLO1LtZQ3Bhv0Tp/23q2HRVgvFMM4eU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=rX+E29SJ9Y76vcGuMHQP/GekeEyGhMPlfTFBpewxot3+9LuOYy/FNwMB8Ph0RAiqIvA4LIPiOEs3Wh/WZLp1g1uCNs9jdp/1ryvPHPbtBhziHNefM8kUQ4glozotlLP18JiPTJlbkHtSQie1a+/6Ct1BCJVA0Xp6u9zM3KLvgjo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Ie3YCFrw; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=vuO9LZZe; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ie3YCFrw";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vuO9LZZe"
-From: Nam Cao <namcao@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1759416970;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JVBa0Hdha2soHLO1LtZQ3Bhv0Tp/23q2HRVgvFMM4eU=;
-	b=Ie3YCFrwZmmncUHhOgPYLIK5UHH1f00sNRzJI+ntG58L12sqQVIw859uRViaGAkVBauKQJ
-	Jb0lYBEcmAZ4aBTRxQfuOlLG7r0MoaEZIcOvnsx1PC2r4W8JkV11UpztSJxYq11kG/Ta72
-	Dl3WHz3eDylCu5QgAz7YpmD+twlsQgm/XUYJoPwsDC699zk128iJ2ePel6VWo0FPPeSktK
-	Y2qGctzbri+GzNVWkGxttya4USO8M3aZQ1QBUg8YLDj4pCdbCj6y+MANrzBiQwHtbzhx4l
-	/UYGrLlBcZX9U1WFFafFY10gPfMAnDblwLl0PSHq/P1pHQ4/BDrrC3kJtnLo1g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1759416970;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JVBa0Hdha2soHLO1LtZQ3Bhv0Tp/23q2HRVgvFMM4eU=;
-	b=vuO9LZZeHclUp1uBDUiPj56XJOSWIPxlbhU14QYS+sI6HNA0EPqAw2PLAdC/A+odJkbTxH
-	cpggEDjxCMU/6PBA==
-To: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
- Gabriele Monaco
- <gmonaco@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Steven
- Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH] rv: Add signal reactor
-In-Reply-To: <6a5fde33-b3e3-44e2-8ea5-5f4cf350cf35@linutronix.de>
-References: <20250919-rv-reactor-signal-v1-1-fb0012034158@linutronix.de>
- <d0aaaf1f47f0d948b60b0575e179564e3c024188.camel@redhat.com>
- <20250922162900.eNwI7CS0@linutronix.de>
- <ced1cdde298d105ba2d789e4e4704caac8dec518.camel@redhat.com>
- <6a5fde33-b3e3-44e2-8ea5-5f4cf350cf35@linutronix.de>
-Date: Thu, 02 Oct 2025 16:56:09 +0200
-Message-ID: <87ikgxqrna.fsf@yellow.woof>
+	s=arc-20240116; t=1759424986; c=relaxed/simple;
+	bh=wV3apveSRN76n364Q4Xgge6Ku/7v8/2U94tI1XcIKwU=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=A3m6i+rdo9kZ59/JLkp8OmFB2k4OyVRtNB3b+w5MapRrqRINsNnfxELCswtO3is+4mqlwIStBSlVHAHcSnZrCAbTwz+897v3VCfKo7k7cNNvFbOGRF7Y1D2XySI5j5PsaPKiq8qdEcZybkKS8vs68Bd2pMBQNMpGf3TnOegWBMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-46e2c3b6d4cso10724065e9.3
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 02 Oct 2025 10:09:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1759424983; x=1760029783;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ALhMC3B+HG9RzOr8Fvsyhus8tagwxCMBXxlTBDad21U=;
+        b=mrgjs/cA6v7TBTVz1f61YDj5STJQU3WsZLph7LLmWc65K256rwxO4cSDAAvRrtXkZy
+         J6F5EFKtWCoWwIwCebkDUX8JwIgc17Tnq1nzTjqWSoLpinY8YdedNJwhdFPNC51xQ7Xt
+         ltPAiJEEVaATyoTScsluN0RnPtYb4Iu28EP3+ZrWCcZOyhf3dY39jF67hdhNF03NEWWp
+         nJbBRUAoaeujrwXI/hDi3UkU38S5jNWeDN85vYXlOqmh2bSZVYBbQ/8YDOrcZVJLDN0O
+         6yuSWm4vXdc5Rn/LtD9Zm03839+3UV9klIcVCNLeNMlP2uUrUn6XRbZet7x7wiQBTcxW
+         cOBg==
+X-Forwarded-Encrypted: i=1; AJvYcCXDqgJpGBCk1kBs1nfXyC4H2+rNbyINyxQebX5aobN8od9RUzGBb/PdprpkZ1EVOntY4DgE116Xr+wgu30k5c5C73c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxATiGXZ/g0y079Bf4tOo8YJ34fsivls8zvAQILDsOvuOVvhkq1
+	AKtgQKWBGS2whA6cMIRO45XbbA5vNeBTO+pZ+qNc0NZ6xDXdihiFFnAa
+X-Gm-Gg: ASbGncu4f+HRT8RLttXQDD2PQs0DPDyUv4WEzr8eJ9jWc/+bhVlgq5FXkgw6m/H7jCO
+	4zR/Nxhju4K8p9ODQw2ClkqChdfnaksE1dvMzVEimlzgtaywlusgJfshhkuPfqAmfetGQkyJtOF
+	QbR8JAl9TtzObiBvLZfWPlvquwDzmCrBKF7wvjWitOKcffIZvXK3tbDsV8+AclixlMeHyBGMUI5
+	rorIuOL99dB5snStMYmuxDVD97v50ZY8gT3sM99KdtfQT+Ue6THOzxMDaRMXr7EHj2GSCnBegij
+	A2+AeNraN1o3GmP+qgASM1TfzGPPlLaMuMS/uTRNgDbTnwoily5sPdmcmu7K/N/QPEBaVGHYiYa
+	sIouEqmLAG8QwTwiokEZJuOcDGNTgeJVMuzgoFT6X+vJZSbySqzc=
+X-Google-Smtp-Source: AGHT+IEYZDN8Vs/SGTNR8tAG0UxJGfa0XX0wxDzajLCBKTWIabOxTdsv/uzzOyq0NfdbKIuezVvROA==
+X-Received: by 2002:a05:600c:3556:b0:46e:4004:a296 with SMTP id 5b1f17b1804b1-46e71109df8mr282575e9.9.1759424982964;
+        Thu, 02 Oct 2025 10:09:42 -0700 (PDT)
+Received: from localhost ([2a00:a041:e2eb:5500:8728:d68a:a687:c89b])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4255d8abe90sm4407649f8f.23.2025.10.02.10.09.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Oct 2025 10:09:42 -0700 (PDT)
+From: Costa Shulyupin <costa.shul@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Tomas Glozar <tglozar@redhat.com>,
+	Crystal Wood <crwood@redhat.com>,
+	Costa Shulyupin <costa.shul@redhat.com>,
+	John Kacur <jkacur@redhat.com>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v1] tools/rtla: Fix unassigned nr_cpus
+Date: Thu,  2 Oct 2025 20:08:45 +0300
+Message-ID: <20251002170846.437888-1-costa.shul@redhat.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de> writes:
-> I am wondering if it would make sense to add a new tracepoint that
-> fires in addition of the reactors. That would allow multiple
-> simultaneous consumers and also bespoke handlers in userspace.
+In recently introduced timerlat_free(),
+the variable 'nr_cpus' is not assigned.
 
-We do have tracepoints for each monitor in: kernel/trace/rv/rv_trace.h
+Assign it with sysconf(_SC_NPROCESSORS_CONF) as done elsewhere.
+Remove the culprit: -Wno-maybe-uninitialized. The rest of the
+code is clean.
 
-And yeah, I think it is a nice idea for all the consumers to use these
-tracepoints intead (that includes rtapp testing, and also the existing
-reactors). It would simplify things, as the monitors do not have to
-worry about the reactors, they only need to invoke tracepoints.
+Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
+---
+ tools/tracing/rtla/Makefile.rtla  | 2 +-
+ tools/tracing/rtla/src/timerlat.c | 3 ++-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-But this also makes me think about the necessity of the existing
-reactors. What do they offer that tracepoints do not? Myself I almost
-never use the reactors, so I'm thinking about removing them. But maybe
-@Gabriele has objections?
+diff --git a/tools/tracing/rtla/Makefile.rtla b/tools/tracing/rtla/Makefile.rtla
+index 08c1b40883d3..1743d91829d4 100644
+--- a/tools/tracing/rtla/Makefile.rtla
++++ b/tools/tracing/rtla/Makefile.rtla
+@@ -18,7 +18,7 @@ export CC AR STRIP PKG_CONFIG LD_SO_CONF_PATH LDCONFIG
+ FOPTS		:= -flto=auto -ffat-lto-objects -fexceptions -fstack-protector-strong	\
+ 		-fasynchronous-unwind-tables -fstack-clash-protection
+ WOPTS		:= -O -Wall -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2		\
+-		-Wp,-D_GLIBCXX_ASSERTIONS -Wno-maybe-uninitialized
++		-Wp,-D_GLIBCXX_ASSERTIONS
+ 
+ ifeq ($(CC),clang)
+   FOPTS		:= $(filter-out -flto=auto -ffat-lto-objects, $(FOPTS))
+diff --git a/tools/tracing/rtla/src/timerlat.c b/tools/tracing/rtla/src/timerlat.c
+index 28ea4f6710c1..df4f9bfe3433 100644
+--- a/tools/tracing/rtla/src/timerlat.c
++++ b/tools/tracing/rtla/src/timerlat.c
+@@ -213,7 +213,8 @@ void timerlat_analyze(struct osnoise_tool *tool, bool stopped)
+ void timerlat_free(struct osnoise_tool *tool)
+ {
+ 	struct timerlat_params *params = to_timerlat_params(tool->params);
+-	int nr_cpus, i;
++	int nr_cpus = sysconf(_SC_NPROCESSORS_CONF);
++	int i;
+ 
+ 	timerlat_aa_destroy();
+ 	if (dma_latency_fd >= 0)
+-- 
+2.51.0
 
-Nam
