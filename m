@@ -1,105 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01FEE30CDA4;
-	Thu,  2 Oct 2025 14:05:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B429B8634F;
+	Thu,  2 Oct 2025 14:56:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759413940; cv=none; b=QubY4HuaKsVLc4mFUDGC+6lmvTg1PCkiGXUfVzoTvLkx9pwE9dstIR7jxpe2blgoUKA68mKp39p3kUR1EegVkkMMzA8asSTXJ+FM7W3WWSlMkSOb4lwG0Fcq2ox7UxKLT9QRUTLe20ieIfkIbbt28i7wxdmvSGi48M18jimi8PI=
+	t=1759416979; cv=none; b=T6IZVZunErBetFIAg74u7sdOSWOVfkmn0rm3dGAu5KWYgsrk5uWq4vj9rRbMgdfHEZ5wWB2g2QUdAxrJZY4kdDgXevi4CLcZ28oeNqcgBbs4GnXtG+iRp7eIlW65QT7MvsmsYG8XNBJPtXZ3GVccYvZBtfT80c3bCXNWKv9Rr8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759413940; c=relaxed/simple;
-	bh=w/6ukFnSIf3xFHi/LDem9ERkn1jLezN2X7IbgT7Mg98=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=DkdIT9Ttx08kp2difXOkrjhOmBPo0KJrAl3mkQvSoAJ/ZtOkeXlb0KqjdF0TCGhgoyUJ5uL1KFAZSEM3/9oOOFCXc2YcMxtDlQ/AQzVduiFkhYW0IKB7CDd7TN+2LE7LilpFG0AHtiSuhYXnmhiJ+kjE3jZ8aGUZl9hq3FyYVQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s1R9as0r; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1759416979; c=relaxed/simple;
+	bh=JVBa0Hdha2soHLO1LtZQ3Bhv0Tp/23q2HRVgvFMM4eU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=rX+E29SJ9Y76vcGuMHQP/GekeEyGhMPlfTFBpewxot3+9LuOYy/FNwMB8Ph0RAiqIvA4LIPiOEs3Wh/WZLp1g1uCNs9jdp/1ryvPHPbtBhziHNefM8kUQ4glozotlLP18JiPTJlbkHtSQie1a+/6Ct1BCJVA0Xp6u9zM3KLvgjo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Ie3YCFrw; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=vuO9LZZe; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s1R9as0r"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EA8FC4CEF4;
-	Thu,  2 Oct 2025 14:05:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759413939;
-	bh=w/6ukFnSIf3xFHi/LDem9ERkn1jLezN2X7IbgT7Mg98=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=s1R9as0rPJejr5crZ8buPFO9viDB/UW1/TKbHoovyjtGQ7Ta++SyOtnDBFBF4MM1D
-	 D+GlwXKbpv39wKWkARYvagfHTxRbOW667IxWKTvR6hNn9VT4CBG9RfBpplSE2Q2n2K
-	 6b9Lbxsfys+BjTmMHa3SwlHE+PhEgPigzk4vorX+2B9zcO8z2tSg9gFun+61YRXZMa
-	 9QMkLyKSGxEVhsXrl0sprHNumxP6h+PvkRXdMkdYozhP+b+5J5c2LE23d2weh1XHcG
-	 4aUN29vf3toEiaBpazhd01Gs91IYhgpquBX/kBVSLe0whmK/iQQXH4Pz07v+Z5tA1h
-	 uod0rE7UnH0cw==
-Date: Thu, 2 Oct 2025 23:05:36 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Menglong Dong <menglong8.dong@gmail.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, oliver.sang@intel.com
-Subject: Re: [PATCH] tracing: fprobe: Fix to init fprobe_ip_table earlier
-Message-Id: <20251002230536.a0e15f3b016782c3bb9e5e9d@kernel.org>
-In-Reply-To: <CADxym3Yvxs_Z6a1-EPziz79SBRsYHcaOH-CtvUhngYy3bJ71iA@mail.gmail.com>
-References: <175939434403.3665022.13030530757238556332.stgit@mhiramat.tok.corp.google.com>
-	<CADxym3Yvxs_Z6a1-EPziz79SBRsYHcaOH-CtvUhngYy3bJ71iA@mail.gmail.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ie3YCFrw";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vuO9LZZe"
+From: Nam Cao <namcao@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1759416970;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JVBa0Hdha2soHLO1LtZQ3Bhv0Tp/23q2HRVgvFMM4eU=;
+	b=Ie3YCFrwZmmncUHhOgPYLIK5UHH1f00sNRzJI+ntG58L12sqQVIw859uRViaGAkVBauKQJ
+	Jb0lYBEcmAZ4aBTRxQfuOlLG7r0MoaEZIcOvnsx1PC2r4W8JkV11UpztSJxYq11kG/Ta72
+	Dl3WHz3eDylCu5QgAz7YpmD+twlsQgm/XUYJoPwsDC699zk128iJ2ePel6VWo0FPPeSktK
+	Y2qGctzbri+GzNVWkGxttya4USO8M3aZQ1QBUg8YLDj4pCdbCj6y+MANrzBiQwHtbzhx4l
+	/UYGrLlBcZX9U1WFFafFY10gPfMAnDblwLl0PSHq/P1pHQ4/BDrrC3kJtnLo1g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1759416970;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JVBa0Hdha2soHLO1LtZQ3Bhv0Tp/23q2HRVgvFMM4eU=;
+	b=vuO9LZZeHclUp1uBDUiPj56XJOSWIPxlbhU14QYS+sI6HNA0EPqAw2PLAdC/A+odJkbTxH
+	cpggEDjxCMU/6PBA==
+To: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
+ Gabriele Monaco
+ <gmonaco@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Steven
+ Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH] rv: Add signal reactor
+In-Reply-To: <6a5fde33-b3e3-44e2-8ea5-5f4cf350cf35@linutronix.de>
+References: <20250919-rv-reactor-signal-v1-1-fb0012034158@linutronix.de>
+ <d0aaaf1f47f0d948b60b0575e179564e3c024188.camel@redhat.com>
+ <20250922162900.eNwI7CS0@linutronix.de>
+ <ced1cdde298d105ba2d789e4e4704caac8dec518.camel@redhat.com>
+ <6a5fde33-b3e3-44e2-8ea5-5f4cf350cf35@linutronix.de>
+Date: Thu, 02 Oct 2025 16:56:09 +0200
+Message-ID: <87ikgxqrna.fsf@yellow.woof>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2 Oct 2025 18:00:24 +0800
-Menglong Dong <menglong8.dong@gmail.com> wrote:
+Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de> writes:
+> I am wondering if it would make sense to add a new tracepoint that
+> fires in addition of the reactors. That would allow multiple
+> simultaneous consumers and also bespoke handlers in userspace.
 
-> On Thu, Oct 2, 2025 at 4:39 PM Masami Hiramatsu (Google)
-> <mhiramat@kernel.org> wrote:
-> >
-> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> >
-> > Since the fprobe_ip_table is used from module unloading in
-> > the failure path of load_module(), it must be initialized in
-> > the earlier timing than late_initcall(). Unless that, the
-> > fprobe_module_callback() will use an uninitialized spinlock of
-> > fprobe_ip_table.
-> >
-> > Initialize fprobe_ip_table in core_initcall which is the same
-> > timing as ftrace.
-> >
-> > Reported-by: kernel test robot <oliver.sang@intel.com>
-> > Closes: https://lore.kernel.org/oe-lkp/202509301440.be4b3631-lkp@intel.com
-> 
-> Don't we need a Fixes tag here?
+We do have tracepoints for each monitor in: kernel/trace/rv/rv_trace.h
 
-OK, I'll add it too.
+And yeah, I think it is a nice idea for all the consumers to use these
+tracepoints intead (that includes rtapp testing, and also the existing
+reactors). It would simplify things, as the monitors do not have to
+worry about the reactors, they only need to invoke tracepoints.
 
-> 
-> The other part of this patch is LGTM.
-> 
-> Reviewed-by: Menglong Dong <menglong8.dong@gmail.com>
+But this also makes me think about the necessity of the existing
+reactors. What do they offer that tracepoints do not? Myself I almost
+never use the reactors, so I'm thinking about removing them. But maybe
+@Gabriele has objections?
 
-Thank you!
-
-
-> 
-> Thanks!
-> Menglong Dong
-> 
-> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > ---
-> >  kernel/trace/fprobe.c |    2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-> > index 95e43814b85b..99d83c08b9e2 100644
-> > --- a/kernel/trace/fprobe.c
-> > +++ b/kernel/trace/fprobe.c
-> > @@ -847,4 +847,4 @@ static int __init fprobe_initcall(void)
-> >         rhltable_init(&fprobe_ip_table, &fprobe_rht_params);
-> >         return 0;
-> >  }
-> > -late_initcall(fprobe_initcall);
-> > +core_initcall(fprobe_initcall);
-> >
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Nam
