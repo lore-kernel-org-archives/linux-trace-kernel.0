@@ -1,168 +1,102 @@
-Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A15AF2F0C7E
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  3 Oct 2025 13:39:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD2A61E9B0D;
+	Fri,  3 Oct 2025 19:55:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759498769; cv=none; b=V5vB9emYUSZKQox2PgoWq5KpXnOqxR11RUFqfQboZ/HQ6ekiecwYpI6HYmSncgofsBu6Q6MhPb1ZetQ7XTJDTyuLw2CXTQUUYpxXyx+NvX4DN2BXfJZOJfrRFs6PoUcr8/KKcfOlfqioE9UWqh25K7atQntAxuXWUYKNMcNHY+4=
+	t=1759521316; cv=none; b=cAlq49v6hrfmXrskejWytCKozx9IfvnHgaCyjtUq4ctc1g65HeRvL1RGaAZewwzrF9PTjXtbNG3xpmPm15Y0CxjXKCrSJ22Krbz+IM9dne+ZB4uAAiBtkit1t484S09aJ3ELTHQ4gkXi8HrqenwcBpcirUKSPh5y9kzHbW/sWAM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759498769; c=relaxed/simple;
-	bh=EhJlCtUGcSeWQktaiM83P9YNtXVSdRR4pDoNVCpu5bk=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=mgv69hAQRUq8eIr9zLRWR37dqI8x/Eh4kITWh7W+AAJyxxIElF6kbPOLvyNMf1gOGwuYN8wOInJumL67v4eoxsZLYexeoK/aMbNX9fGHyhj091QxZTGch4fpP2MsX+vALBrpuzhbHth3UsChBBvCzz4swRgb91I1+bCIgwCSHx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wgeU7H9s; arc=none smtp.client-ip=209.85.128.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wgeU7H9s"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-46e4cc8ed76so8148605e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 03 Oct 2025 06:39:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1759498763; x=1760103563; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=9UM3bjOGfRXsiIqNoVQZ3XTLMtvfmMCHhcAES2xrn08=;
-        b=wgeU7H9sSbsrjdJ3kHLO/aKVcmAegzUy/xfLFaWHfe+rLIfmkIkDxnh3nar4ajBVA9
-         AjjZgt+gIq+P18hFGbDKF4YchbyAShj5kMOBTQESUQRrjI410WQp9Osdm7tnUniCFruL
-         /CtpA97GZHe5EBtY89CaJKEH0s9dm3gdunWjQQmRg2lvtqCwClkT6LSSOAsR9upS5+yW
-         EecikaBye/FAYxcB8CcYPpVwBv7NNOKfXQqlqBDzxsXSo+Nwta4gfSy1JHV1O8D3EL5e
-         KEb6NtBsTDKpc+4A5egb8wWIofq126Qn54RHpWa3FhngkZt4vlxJeG+vocDTX9VFb3da
-         miAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759498763; x=1760103563;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9UM3bjOGfRXsiIqNoVQZ3XTLMtvfmMCHhcAES2xrn08=;
-        b=Uom+860vkVcGnlWZjHNelSZiM6AJXhOrBY6bXWcNy8XbNpMkmM2tE6WKu1oY3rQTxa
-         HZr3Uw3nIjcJIDVWK/uKea2sO1BxsIoEpARy69VBBaZaQ281nQ6aslRGZx0Q2P35mfSc
-         9KvN5FTpF8Kzizwk9jzJqQ7pJCxzPUjf3Gg4gscs6t8psv1yS4LIIOoGgNb0/ict3WU7
-         QdqfMpTAlGcUNAdMDQdMiEYrWoGd5YnIClJDsmDpWBUsRbbng/xbJfGfCKrj8JrpM5cf
-         Ahtjlt6VSbkaBlgdEPm5a9fa+zrRijedfNanbOsOkNBTYOfJMWe9zGbV1j0QYz9BRmiz
-         F2AA==
-X-Forwarded-Encrypted: i=1; AJvYcCUChKJzTCDl1cLJ+ee9Yza4FsIY+pIjk+OpSdVGh1p/YqegHqNrBqZmMztV+WkNQWnCy0dZ9dzonGik7UzJtGTpHpY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/Uj97e+ECtU2giw4YxkYXSSqgBKGLTB5Mg77VauKP2Y9Ztffj
-	v7VwYidpNZjbMj1nFaQ1TbQO/xQMdWeqNdkYkwB+oJBHr2b6bGVV96M+W6WpQ4p1p6P1CGKIyrk
-	qmbcdE15O93RUNQnVLMelXQ==
-X-Google-Smtp-Source: AGHT+IH69tFTi6ZXKv+400BRPyLOvUgxD9vIa5eZfePSc6PtEn5y2PQMqER0DyOBvI5qOTvfVEhXP1sn9nPiGRc7
-X-Received: from wmco6.prod.google.com ([2002:a05:600c:a306:b0:45d:cfa4:ce0d])
- (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:4447:b0:46e:3dad:31ea with SMTP id 5b1f17b1804b1-46e7113ceddmr26045525e9.17.1759498763415;
- Fri, 03 Oct 2025 06:39:23 -0700 (PDT)
-Date: Fri,  3 Oct 2025 14:38:25 +0100
-In-Reply-To: <20251003133825.2068970-1-vdonnefort@google.com>
+	s=arc-20240116; t=1759521316; c=relaxed/simple;
+	bh=7pB+HiVazOC8+Uhf3ApKYcMMp113PQkrr83WDVsAmmQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=b6dfKLraFK+g91NG52NeGyq5bDKQ8bd1mgReZQewcAltc+uNcGq4UstkbR9ORPODa6XHB4XCiQ0dJMvgcXgkpaVT7h9BRKu9RVTuWIPxWT9y6tytDTPGo55+0uv3ke02EKhNVfyTvypmsuStoJOZcU3bMLvDEhLdvzvB7+NKHw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf09.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay07.hostedemail.com (Postfix) with ESMTP id BE5C4160906;
+	Fri,  3 Oct 2025 19:55:04 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf09.hostedemail.com (Postfix) with ESMTPA id D011720024;
+	Fri,  3 Oct 2025 19:54:59 +0000 (UTC)
+Date: Fri, 3 Oct 2025 15:56:42 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Steven Rostedt <rostedt@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, x86@kernel.org,
+ Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
+ Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Arnaldo
+ Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>,
+ Indu Bhagat <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>,
+ Beau Belgrave <beaub@linux.microsoft.com>, Jens Remus
+ <jremus@linux.ibm.com>, Linus Torvalds <torvalds@linux-foundation.org>,
+ Andrew Morton <akpm@linux-foundation.org>, Florian Weimer
+ <fweimer@redhat.com>, Sam James <sam@gentoo.org>, Kees Cook
+ <kees@kernel.org>, Carlos O'Donell <codonell@redhat.com>
+Subject: Re: [RESEND][PATCH v15 2/4] perf: Support deferred user callchains
+Message-ID: <20251003155642.370b0953@gandalf.local.home>
+In-Reply-To: <20250923103213.GD3419281@noisy.programming.kicks-ass.net>
+References: <20250908171412.268168931@kernel.org>
+	<20250908171524.605637238@kernel.org>
+	<20250923103213.GD3419281@noisy.programming.kicks-ass.net>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20251003133825.2068970-1-vdonnefort@google.com>
-X-Mailer: git-send-email 2.51.0.618.g983fd99d29-goog
-Message-ID: <20251003133825.2068970-29-vdonnefort@google.com>
-Subject: [PATCH v7 28/28] tracing: selftests: Add pKVM trace remote tests
-From: Vincent Donnefort <vdonnefort@google.com>
-To: rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
-	linux-trace-kernel@vger.kernel.org, maz@kernel.org, oliver.upton@linux.dev, 
-	joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com
-Cc: kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	jstultz@google.com, qperret@google.com, will@kernel.org, 
-	aneesh.kumar@kernel.org, kernel-team@android.com, 
-	linux-kernel@vger.kernel.org, Vincent Donnefort <vdonnefort@google.com>, 
-	Shuah Khan <skhan@linuxfoundation.org>, linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: g5nknu876pd6ggwoqsamxmzcoy14398p
+X-Rspamd-Server: rspamout03
+X-Rspamd-Queue-Id: D011720024
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/yWTU57gIy/HMFvQkWcmsu15QgC8o7GQI=
+X-HE-Tag: 1759521299-102347
+X-HE-Meta: U2FsdGVkX1+IlwL7q5g8ZfhdQ1wr9ZONT9FLUuMKTzJaXTzlXEN9fusU3HAqA7JagvK1hElcOctVB2riE0nQu+lWbg8OmZmS7LNa5cCv54y++hRd/qa65XAd4+oaLiuB0iHImGsjAN4eBze8U0r3HKtQmRVpYfEeCbZFgAi6Xpft4yBUUf09NmIY7MPs36thdfLheKxOgEIMYgE4CwMQWaNRSphwrIdiisFQpsbm9Ry05K9hSxunhbcl2rYYUIrnNVxkBhbxyity/tstltrfX+EfKCG76pfjsahpeVSYtReBr2gdQjgTDiMp4dwrBqe94LqSu3bAk+T2MhKTlPTpGnIDEif+N/xViaOfNm6cucwU9KpJcrp84PK7OdUlDoyN
 
-Run the trace remote selftests with the pKVM trace remote "hypervisor".
+On Tue, 23 Sep 2025 12:32:13 +0200
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-Cc: Shuah Khan <skhan@linuxfoundation.org>
-Cc: linux-kselftest@vger.kernel.org
-Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+> I'm also not much of a fan of nr_no_switch_fast, and the fact that this
+> patch is limited to per-task events, and you're then adding another 300+
+> lines of code to support per-cpu events later on.
 
-diff --git a/tools/testing/selftests/ftrace/test.d/remotes/pkvm/buffer_size.tc b/tools/testing/selftests/ftrace/test.d/remotes/pkvm/buffer_size.tc
-new file mode 100644
-index 000000000000..2de07e4d72fe
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/remotes/pkvm/buffer_size.tc
-@@ -0,0 +1,11 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+# description: Test pkvm hypervisor trace buffer size
-+# requires: remotes/hypervisor/write_event
-+
-+SOURCE_REMOTE_TEST=1
-+. $TEST_DIR/remotes/buffer_size.tc
-+
-+set -e
-+setup_remote "hypervisor"
-+test_buffer_size
-diff --git a/tools/testing/selftests/ftrace/test.d/remotes/pkvm/reset.tc b/tools/testing/selftests/ftrace/test.d/remotes/pkvm/reset.tc
-new file mode 100644
-index 000000000000..48afc51627e8
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/remotes/pkvm/reset.tc
-@@ -0,0 +1,11 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+# description: Test pkvm hypervisor trace buffer reset
-+# requires: remotes/hypervisor/write_event
-+
-+SOURCE_REMOTE_TEST=1
-+. $TEST_DIR/remotes/reset.tc
-+
-+set -e
-+setup_remote "hypervisor"
-+test_reset
-diff --git a/tools/testing/selftests/ftrace/test.d/remotes/pkvm/trace.tc b/tools/testing/selftests/ftrace/test.d/remotes/pkvm/trace.tc
-index 49dca7c3861a..00aed1c2e650 100644
---- a/tools/testing/selftests/ftrace/test.d/remotes/pkvm/trace.tc
-+++ b/tools/testing/selftests/ftrace/test.d/remotes/pkvm/trace.tc
-@@ -1,9 +1,10 @@
- #!/bin/sh
- # SPDX-License-Identifier: GPL-2.0
--# description: Test pkvm hypervisor tracing pipe
-+# description: Test pkvm hypervisor non-consuming trace read
-+# requires: remotes/hypervisor/write_event
- 
- SOURCE_REMOTE_TEST=1
--. $TEST_DIR/remotes/trace_pipe.tc
-+. $TEST_DIR/remotes/trace.tc
- 
- set -e
- setup_remote "hypervisor"
-diff --git a/tools/testing/selftests/ftrace/test.d/remotes/pkvm/trace_pipe.tc b/tools/testing/selftests/ftrace/test.d/remotes/pkvm/trace_pipe.tc
-new file mode 100644
-index 000000000000..b63339aca380
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/remotes/pkvm/trace_pipe.tc
-@@ -0,0 +1,11 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+# description: Test pkvm hypervisor consuming trace read
-+# requires: remotes/hypervisor/write_event
-+
-+SOURCE_REMOTE_TEST=1
-+. $TEST_DIR/remotes/trace_pipe.tc
-+
-+set -e
-+setup_remote "hypervisor"
-+test_trace_pipe
-diff --git a/tools/testing/selftests/ftrace/test.d/remotes/pkvm/unloading.tc b/tools/testing/selftests/ftrace/test.d/remotes/pkvm/unloading.tc
-new file mode 100644
-index 000000000000..eb1640a927cc
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/remotes/pkvm/unloading.tc
-@@ -0,0 +1,11 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+# description: Test pkvm hypervisor trace buffer unloading
-+# requires: remotes/hypervisor/write_event
-+
-+SOURCE_REMOTE_TEST=1
-+. $TEST_DIR/remotes/unloading.tc
-+
-+set -e
-+setup_remote "hypervisor"
-+test_unloading
--- 
-2.51.0.618.g983fd99d29-goog
+BTW, I'm not exactly sure what the purpose of the "nr_no_switch_fast" is
+for. Josh had it in his patches and I kept it.
 
+I'm almost done with my next version that moved a lot of the "follow task"
+work into the deferred unwind infrastructure, which drastically simplified
+this patch.
+
+But I still have this "nr_no_switch_fast" increment when a request is
+successfully made and decremented when the stacktrace is executed. In the
+task switch perf code there's:
+
+			/* PMIs are disabled; ctx->nr_no_switch_fast is stable. */
+			if (local_read(&ctx->nr_no_switch_fast) ||
+			    local_read(&next_ctx->nr_no_switch_fast)) {
+				/*
+				 * Must not swap out ctx when there's pending
+				 * events that rely on the ctx->task relation.
+				 *
+				 * Likewise, when a context contains inherit +
+				 * SAMPLE_READ events they should be switched
+				 * out using the slow path so that they are
+				 * treated as if they were distinct contexts.
+				 */
+				raw_spin_unlock(&next_ctx->lock);
+				rcu_read_unlock();
+				goto inside_switch;
+			}
+
+Is this mostly to do with PMU counters? Here there is a relation to the
+task and the event, but that's just that the task is going to have a
+deferred stack trace.
+
+Can I safely drop this counter?
+
+-- Steve
