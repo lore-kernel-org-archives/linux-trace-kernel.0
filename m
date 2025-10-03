@@ -1,153 +1,99 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F8CB1F5858
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  3 Oct 2025 06:30:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A14E91FBC8C
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  3 Oct 2025 07:00:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759473020; cv=none; b=Vv75B+6gyUw051bFGnJSTnhbvvUpcXvwOBxLOdEwlKJ+UZY1k3dzfKtz2NvDPTr2zgIgKyh3fo2JaphgVrEqWqUcDvC946aBfYw1C/8YE3xfqFD3hZzolMyW1sZGPVSpu7OWJfvkrsqYBkCtBoTyz/HhcH0IDrxqRkVjTNjlS38=
+	t=1759474826; cv=none; b=SiNSUOWbj2iKMBaHRKUjmRzDsJ1SYeFCpMaOClHHHmFOlypKz9oq3lC5XToCEU1AYsTCKv2V1USIBJOSfjB18ybt1XIbmY4TA+TaHpJuDovMnesaFhLRtoCVOlJ8m23BpweDTo1NzA4gLmMZ6eHwOPnKZQ3MMAwR+US6uLgvhOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759473020; c=relaxed/simple;
-	bh=eMBSmpZnqrRnkDKn+p2xZ6jv4I9lQldCRuwyBBKDowg=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=U2M0SNwuaFB4pLf7IPBKlDQ0hjX+sweMGw3DpT+ZdO/EtiRpZkCkOynW8nD/n/eSttSsv8PO2KXSVkweTFwuEQ2/aiNMTD/JcLCtl2XKAIg3BEoMBk88jKIC9WFm0iiDmO1gUEvQmofvjcWLNy6BJhZLv3bCa0bsD9//TQZA6D0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=V2xhv1zi; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1759474826; c=relaxed/simple;
+	bh=boKwQQTvvSbv4t+73ZXF28R6yCtMpd5mDWoNlD9rM/M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=kPynwCIDVfh3+Ad19ynfbi22uEbJHsfF6ErxBphOsNxVnI/kvdr8xSoAOlUsTGmsBCdDv/OyVZxIE2O1c1bWKEE+60uPCU2qZ0N1rSmNHSJNL12keSNE7wsE2f1s9KkX3IQ6nqAAo73TKInzbcOPByzJF9nCNYpC+SpYLKFP1pU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=e/KK7viQ; arc=none smtp.client-ip=210.118.77.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V2xhv1zi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1759473017;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=eMBSmpZnqrRnkDKn+p2xZ6jv4I9lQldCRuwyBBKDowg=;
-	b=V2xhv1ziFWnvdB08mNe2VHnkYZGUgk7EqbpZKqvsCpis7dIjU2n3l43z/MOVUGi5Z9hQch
-	F+BWfZszRtNaPxnkdaoe2A0KSQEuBQSWqZEWc4sjKu2/x5zgbrNw8UlwvPpdMG3TsU37u8
-	+lgCteXQXWH8F7BJ58F5H2pd1papFEk=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-150-iCaT4xC-OayiARCdQ9GT3w-1; Fri, 03 Oct 2025 02:30:14 -0400
-X-MC-Unique: iCaT4xC-OayiARCdQ9GT3w-1
-X-Mimecast-MFC-AGG-ID: iCaT4xC-OayiARCdQ9GT3w_1759473013
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3ecdd80ea44so1448522f8f.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 02 Oct 2025 23:30:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759473013; x=1760077813;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=eMBSmpZnqrRnkDKn+p2xZ6jv4I9lQldCRuwyBBKDowg=;
-        b=amnGPVXfxIfmH/WrvDS26Ioyy9syK1VKfusB5EPtDyXipGP3c+v8HlXo39I1xCjuTa
-         syUyXmWPZrgQ/wH22Ru5kKKp4g+hYFFw+ZLI/RCRs95q5fY7f7sRehX7dRL6AeXdtoLc
-         /f5Eb0dtT2UgPTWBpn3J96uiE4bK4n5nwv+Yhidi+jy5WvPJePJeDT14EngtnMFA/Glv
-         0tJi3rIlP/K455c2TTgJjSjc0slZ9JlS38ebqvwWrP3sGKo/N8zNgyf4j8g5uMxyr8Ux
-         UyNgfDKmLv3P4FYNz/Zc+DcYeiqoAj+yEF+8HNTLTUvD5feOAarlEwzMEbvntM4tklOq
-         glrw==
-X-Forwarded-Encrypted: i=1; AJvYcCXAuqiRVMIZhrQwCYmc5cBPwAqMxIbhXbajqXL9MdiX601bVRbJQL0Az6jn7QOri3b/RFwDxuyCPg2l9H+Dj3+h+J0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw18mKhQXplnig71tDQzT5/jG/XMKG2P+FkRr64Ocovss3089F3
-	jpzwrmQZZ8wKGBOyfet6TSktRysfWkCRpg81kBFRgg2gGFQZ4+hULdIKmHuADP0CRbf6Oh5sj03
-	k1UBq/CjiyKodUbwGInD2KXGmRpAFyZzPYtoxsg1zgsPeRkmkWzUlvEMhkw0LcH33rzlKUwsi3A
-	==
-X-Gm-Gg: ASbGncvC8vKcc3UIuVOyLaZ5TorZh6qt23+G/VjEBki0N51uXotw+GSgbTjXjRFOkJy
-	tDajtlqJ7iGc8sW4PdVw+VdQCwElnAXApyMc6UaCgBA/bgd4Cqqo40TcPuNWTTyk0R2uvcJwYp7
-	7Am1QT852h8tkn6uOopbclUNpEWayeW6hd7gBnBU1dd0zn5ax7bAcR8IBIO2PwunruY3Yv9CNwW
-	MPulH2NMCgENDC6+9wplWtgff9LkEKbhgjHAjB+wBzMbZzYPBerOqaSAE3IMRJkTjMMhRoq8nNi
-	3xw1hQPErY3x89ejVU0Z3rqqGL4v3TZAIdDs2bhGILwvJ6fpeH2fUS/VAps16aMBMBKnqCE=
-X-Received: by 2002:a05:6000:40dc:b0:3ec:dd27:dfa3 with SMTP id ffacd0b85a97d-42566c5354dmr1300947f8f.25.1759473012853;
-        Thu, 02 Oct 2025 23:30:12 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IELR1JYmclf4EKUfrFyht98SyMCf4qSX9xmzaypmk8A7lQqrolOq939RWKtbUXsUaroq0t3UA==
-X-Received: by 2002:a05:6000:40dc:b0:3ec:dd27:dfa3 with SMTP id ffacd0b85a97d-42566c5354dmr1300929f8f.25.1759473012477;
-        Thu, 02 Oct 2025 23:30:12 -0700 (PDT)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.40])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4255d8a6b40sm6443426f8f.2.2025.10.02.23.30.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Oct 2025 23:30:12 -0700 (PDT)
-Message-ID: <3c55441187b869b5bb07b74ef88c10bfd51f9fb1.camel@redhat.com>
-Subject: Re: [PATCH] rv: Add signal reactor
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Nam Cao <namcao@linutronix.de>
-Cc: Thomas =?ISO-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Steven
- Rostedt	 <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Date: Fri, 03 Oct 2025 08:30:10 +0200
-In-Reply-To: <87ikgxqrna.fsf@yellow.woof>
-References: <20250919-rv-reactor-signal-v1-1-fb0012034158@linutronix.de>
-	 <d0aaaf1f47f0d948b60b0575e179564e3c024188.camel@redhat.com>
-	 <20250922162900.eNwI7CS0@linutronix.de>
-	 <ced1cdde298d105ba2d789e4e4704caac8dec518.camel@redhat.com>
-	 <6a5fde33-b3e3-44e2-8ea5-5f4cf350cf35@linutronix.de>
-	 <87ikgxqrna.fsf@yellow.woof>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
- cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
- T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
- eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
- 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
-User-Agent: Evolution 3.56.2 (3.56.2-2.fc42)
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="e/KK7viQ"
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20251003070015euoutp024a1277ae4583da3de60ab174ce0511c3~q6QXWp_-E2779927799euoutp02g
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  3 Oct 2025 07:00:15 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20251003070015euoutp024a1277ae4583da3de60ab174ce0511c3~q6QXWp_-E2779927799euoutp02g
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1759474815;
+	bh=LSGPDYp4xyAWC832iPznscRm+XYwz1Gfb+Q2HoGidkk=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=e/KK7viQmpNxw3W+nPiQFLEo7KfiUm/Wdcem3LzvjEi0RgpGIsS4Jr6G5vqigNmcC
+	 IkYuXFpTzPlmViynbA5JrA9NIJXuUvr9iK670edeJxwSOFQjcGr5uQuLwj5QUN91ap
+	 UPcSgkBqG7Be9/Fs7Ge7OOZ6FzrQWfFSJmuTNw2c=
+Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20251003070015eucas1p13319bcc33f480b5b5f27054c21b4c018~q6QW2j5bi2697726977eucas1p10;
+	Fri,  3 Oct 2025 07:00:15 +0000 (GMT)
+Received: from [106.210.134.192] (unknown [106.210.134.192]) by
+	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20251003070014eusmtip2580963f80bd4896a98960b2d4b2ac4fe~q6QV_npGR2697326973eusmtip2o;
+	Fri,  3 Oct 2025 07:00:14 +0000 (GMT)
+Message-ID: <9505e149-29e3-4fc2-ac71-898e88492667@samsung.com>
+Date: Fri, 3 Oct 2025 09:00:13 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 62A7MQ0JIk9i-66V8fFx3t1Xg0u6p5D-KJtEr6qIt2A_1759473013
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Betterbird (Windows)
+Subject: Re: [PATCH] dma-mapping: fix direction in dma_alloc direction
+ traces
+To: Petr Tesarik <ptesarik@suse.com>, Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+	<mathieu.desnoyers@efficios.com>, Sean Anderson <sean.anderson@linux.dev>,
+	Robin Murphy <robin.murphy@arm.com>
+Cc: linux-trace-kernel@vger.kernel.org, iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Content-Language: en-US
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+In-Reply-To: <20251001061028.412258-1-ptesarik@suse.com>
+Content-Transfer-Encoding: 7bit
+X-CMS-MailID: 20251003070015eucas1p13319bcc33f480b5b5f27054c21b4c018
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20251001061047eucas1p1f96a848ff2643b48179dd3e55959da7e
+X-EPHeader: CA
+X-CMS-RootMailID: 20251001061047eucas1p1f96a848ff2643b48179dd3e55959da7e
+References: <CGME20251001061047eucas1p1f96a848ff2643b48179dd3e55959da7e@eucas1p1.samsung.com>
+	<20251001061028.412258-1-ptesarik@suse.com>
 
-2025-10-02T14:56:23Z Nam Cao <namcao@linutronix.de>:
-
-> Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de> writes:
->> I am wondering if it would make sense to add a new tracepoint that
->> fires in addition of the reactors. That would allow multiple
->> simultaneous consumers and also bespoke handlers in userspace.
+On 01.10.2025 08:10, Petr Tesarik wrote:
+> Set __entry->dir to the actual "dir" parameter of all trace events
+> in dma_alloc_class. This struct member was left uninitialized by
+> mistake.
 >
-> We do have tracepoints for each monitor in: kernel/trace/rv/rv_trace.h
+> Signed-off-by: Petr Tesarik <ptesarik@suse.com>
+> Fixes: 3afff779a725 ("dma-mapping: trace dma_alloc/free direction")
+
+Applied to dma-mapping-for-next (for v6.18-rc1) branch. Thanks!
+
+> ---
+>   include/trace/events/dma.h | 1 +
+>   1 file changed, 1 insertion(+)
 >
-> And yeah, I think it is a nice idea for all the consumers to use these
-> tracepoints intead (that includes rtapp testing, and also the existing
-> reactors). It would simplify things, as the monitors do not have to
-> worry about the reactors, they only need to invoke tracepoints.
->
-> But this also makes me think about the necessity of the existing
-> reactors. What do they offer that tracepoints do not? Myself I almost
-> never use the reactors, so I'm thinking about removing them. But maybe
-> @Gabriele has objections?
+> diff --git a/include/trace/events/dma.h b/include/trace/events/dma.h
+> index d8ddc27b6a7c8..945fcbaae77e9 100644
+> --- a/include/trace/events/dma.h
+> +++ b/include/trace/events/dma.h
+> @@ -134,6 +134,7 @@ DECLARE_EVENT_CLASS(dma_alloc_class,
+>   		__entry->dma_addr = dma_addr;
+>   		__entry->size = size;
+>   		__entry->flags = flags;
+> +		__entry->dir = dir;
+>   		__entry->attrs = attrs;
+>   	),
+>   
 
-Well, many use cases might be better off with tracepoints, but reactors do
-things tracepoints cannot really do.
-Printk is much faster (and perhaps more reliable) than the trace buffer for
-printing, panic can be used to gather a kernel dump.
-One may just attach to tracepoints via libtracefs/BPF and do most of the th=
-ings
-you'd want to do with a new reactor, but I see reactors much easier to use =
-from
-scripts, for instance.
-
-LTLs don't benefit as much as they don't print any additional information v=
-ia
-reactors, but DA/HA give hints on what's wrong.
-
-I wouldn't get rid of reactors until they become a huge maintenance burden,=
- but
-probably we could think about it twice before extending or making them more
-complex.
-
-For instance, what's the exact use case of the signal reactor? Isn't it sim=
-pler
-to do everything in BPF? Is the signal needed at all or something else (e.g=
-.
-perf) would do the job?
-
-Thoughts?
-
-Gabriele
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
