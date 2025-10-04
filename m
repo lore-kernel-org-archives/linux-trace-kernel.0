@@ -1,126 +1,142 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BFCB253B40;
-	Fri,  3 Oct 2025 20:51:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AD4E16132F
+	for <linux-trace-kernel@vger.kernel.org>; Sat,  4 Oct 2025 23:50:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759524666; cv=none; b=ihjNQWrNKjhHS2PEqT+nJXA+18HL67c64WfueG1/r7SxXCWW/cwPpHc3uleIlse8/vVAfXgK+CvvG5C8f+fsaOzqvcKCH4if/1OktBpzW89+/rq5MOtC9RfkqBQKupbwWhiZJYXEGDg8he1tZhnrzxQE4RuoNXvBjayVEdZGt7c=
+	t=1759621815; cv=none; b=SE6qClCWkKgknl5fmvpdnvVd3X8E6pI11tYdJiyXfZ3bFbiUd49t99RnBxmiazCI3EAhhj6fbZcczSC9M53p7BAgF0fVnt5dFBgEQ4rMeVyQT73edyS6Rux0JoNQ8yiXOgEhYY2hZwsjvYhkEbSIRjT/QJ85L6zRV3hzLYLxHmg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759524666; c=relaxed/simple;
-	bh=bZr+Lvkb5M6Ufx0akrIYv+VR8dkYeZRAOvoeF3RPvsg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=ArnWUhXLUdvRaJOD1J2q2n6uL+3EDuWDBk3lcB4ZdorhZv5xvImhhD+vK1Cr7o60sGAv9gqlIHwuHWKOchkNqVDUHY+ZhddyGtxZZgraHq0kMrEUYFb9JDr5SP2o5JIEN+B1cRLV4FCNiysNQYEoZKz6XrwC5NAr3TzsuKoO0q0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Lrx+Opa8; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1759621815; c=relaxed/simple;
+	bh=WtMoMSeSoC/p1iM5dJqIjQogzGbr6NxYCI0Aqh4nLC4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=N7g+Gn783273aQxdp+7VckRzQwWsIRmNTgJ/IAEt3XJp6KBWuqu8fFRGHT6SVaDiHRJRelMRTWwnGPEJwXV4q16LuaEq1T++ixy5DdVIFZCLiUkxhf1B9y953wa1g5Bs96VObd8VduDAVZFm8myOoLO/waC5PFAXMOW0Qxo1t7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Njbcudxe; arc=none smtp.client-ip=209.85.219.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Lrx+Opa8"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Cc:Content-ID:Content-Description;
-	bh=oIs3ppVLk6gw/qZXypZLZcOfa+yCn//X21VZFkDaLYU=; b=Lrx+Opa8kAlfEXuyu8nZrskDYS
-	RMEVW1K3EtHWtp/TNPMDl4+TZidS8rII6LOpnPv0qEvXnZn1PtaWNoVRLLHkzUnhbCR3Tfh1MpEHf
-	ZkZd/NEu3t0eSIf0IaCZTwNSp4G961ZaVD/mJjLljb3ViiQ31g8H8jJABJOEx687ZtuOQgxZ+AsqI
-	LmC9fUttLZOzjyJF2FAdnCTKBCeWjOa6Rmq3x9FU9+hZojGWXCUyKadvy1un7W8qu/DrpcU76pUyT
-	OX6o9m0+7SucZJP87UviQ0UOsMWHeilEIIYasmiArPjulk9Jci/3QFC7WnJj9QL3uPYwy+SzCuC2Q
-	D0kAwH9A==;
-Received: from [50.53.25.54] (helo=[192.168.254.34])
-	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v4mjl-0000000D7bQ-0Z25;
-	Fri, 03 Oct 2025 20:50:45 +0000
-Message-ID: <3913273d-12e2-426f-aec7-263b7f49008a@infradead.org>
-Date: Fri, 3 Oct 2025 13:50:43 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Njbcudxe"
+Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-795773ac2a2so31969396d6.1
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 04 Oct 2025 16:50:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1759621811; x=1760226611; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=269GcBnSB1zX6TbhiOc5c+3UO/jzniuzx6nJANrBz9Q=;
+        b=NjbcudxeOa81OotuJg3GZWFzjf0x/Kw5vUjfhuzbdoPzYXmguL0ywLnbDEsA4skWsf
+         Icc6uveLUU0dNrJza9D9b+feLVUN06EzWGyQvh9mq4l/sqysudzQHOESFCJyvUxQQyAM
+         lIcPPgIfWw/YdlBxfJKJXdWXKKpdndH6/M/RRL4pQg0dVdYYfDMFABtZqIDqB+3fY25O
+         43bYwax4blSW5gCzwXxjeGxBc6ZRcDq+tSoSrfaF88/MkdWcliBhMqVpLpHAxRfhFedl
+         hy1mnexFsq3mJ05WZaNcLqyD5CGZIP+mahBCSkjsOoJ/9smmyAZjYoorq0/LHaI+50fR
+         HpuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1759621811; x=1760226611;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=269GcBnSB1zX6TbhiOc5c+3UO/jzniuzx6nJANrBz9Q=;
+        b=ndxtU1z6bfwj5vhYgzupRTsFD4AdGhnlJsYW3Bpt6GwUNX1UNWGL6NoVobzUNCwUcK
+         LfAneCy4t/886v28Q+Clnrz8QdvQayXxp1thsqgdYuzvknlKFUTYijkYCf4NDaI2EQGy
+         5r4zX3se+PaSfLeOYR2LY8Gjoqat4kFQrKqsDR972VBUVxhii6pgPvkSiHwYLDeTlgWF
+         /loc/ULjgwL6Sxm3Z14fqgAGceaQvVBuTq6/rPknJt6ZDgiCaRg3HFE8iyku4jAkeqyh
+         sG/H/Z8h/5tah2q0gRqDc4HrkYvsGFRL/urdqPUUwFzkMigI8/WAZ+ljqg8Ij6D0NDOI
+         9XyA==
+X-Forwarded-Encrypted: i=1; AJvYcCX4t9RnY1lT0nTkxmbV54rCj/0kD92V3LqIobdzzxk2zRh+mmU0A76LbT7BUJNwBYdFdC61jkMg5IVm6q1JD/uHgwc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwIw1cHUM703iBGoPs0WlUPP6IbSYfG1CZslvdGMHRMezDiNdGg
+	LcMDUT3fmIZKVhO6GisucknqQS/nXE2snZzHg3onPSHkL0e/owspi9il
+X-Gm-Gg: ASbGncu5d4V0eaMEZW7iNbnczzqzux7q1S6DHsSiUx7ttjBUh2K+1tYP9CiR6mOaJ6X
+	x67fp+TmM4QyMMJFdnJ8kA11Yfw4C/mBe9PS2/Ac+F/P54YwlY9516CttYcIxFIVmlkwgUIERlw
+	DDSJ+qFLDIaBp2Z6Kdq+DxlqG6/kfmfgSO3xBB8xIkU65JAbDbdGql8/HPlgEtKFaDTcoNfavGA
+	oKCLITUtYRhrAwiSEZAH7UR4tEtAKpc1d7vOb283nI+38QyMt6WKvW9hrTHcmtPqNUaZ3K0LwEL
+	ooQD5WGoUHOYAIFfxKmQ0NDb4uvPIIxKMunSCgrKi0IctvE8irPf93ayxckvERvx6PV3c5Hub0F
+	839VbCLb7VjwXF5UrcvVwgbMVQO/VzJwUPs8vxRuC3nUjKXes+9c2TP9VxUZ9N9FS3/c93NJfiI
+	CmskCrGPGwr/IoOZQUQ3e7j4MGLw==
+X-Google-Smtp-Source: AGHT+IFqA7ZihIIUPOeSck5FmUA+oqsyZIZgooAId33OvSZXAT8OnHtHAdLcjnfGO2sYAio1j2XwAQ==
+X-Received: by 2002:a05:6214:4009:b0:7c6:bbaf:11b4 with SMTP id 6a1803df08f44-879dc882898mr106998946d6.54.1759621811013;
+        Sat, 04 Oct 2025 16:50:11 -0700 (PDT)
+Received: from seokw-960QHA.mynetworksettings.com ([2600:4041:4491:2000:dd54:e5ff:d4b7:cf43])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-878bdf5383fsm76180216d6.56.2025.10.04.16.50.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 04 Oct 2025 16:50:10 -0700 (PDT)
+From: Ryan Chung <seokwoo.chung130@gmail.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org
+Cc: mathieu.desnoyers@efficios.com,
+	shuah@kernel.org,
+	hca@linux.ibm.com,
+	corbet@lwn.net,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	seokwoo.chung130@gmail.com
+Subject: [PATCH v3 0/5] tracing: fprobe: list-style filters,
+Date: Sun,  5 Oct 2025 08:46:54 +0900
+Message-ID: <20251004235001.133111-1-seokwoo.chung130@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 23/23] MAINTAINERS: add entry for KStackWatch
-To: Jinchao Wang <wangjinchao600@gmail.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Masami Hiramatsu <mhiramat@kernel.org>, Peter Zijlstra
- <peterz@infradead.org>, Mike Rapoport <rppt@kernel.org>,
- Alexander Potapenko <glider@google.com>, Marco Elver <elver@google.com>,
- Jonathan Corbet <corbet@lwn.net>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, Juri Lelli <juri.lelli@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
- Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>,
- David Hildenbrand <david@redhat.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
- <vbabka@suse.cz>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>, Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- Kees Cook <kees@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
- Sami Tolvanen <samitolvanen@google.com>, Miguel Ojeda <ojeda@kernel.org>,
- Masahiro Yamada <masahiroy@kernel.org>, Rong Xu <xur@google.com>,
- Naveen N Rao <naveen@kernel.org>, David Kaplan <david.kaplan@amd.com>,
- Andrii Nakryiko <andrii@kernel.org>, Jinjie Ruan <ruanjinjie@huawei.com>,
- Nam Cao <namcao@linutronix.de>, workflows@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-mm@kvack.org, llvm@lists.linux.dev,
- Andrey Ryabinin <ryabinin.a.a@gmail.com>,
- Andrey Konovalov <andreyknvl@gmail.com>, Dmitry Vyukov <dvyukov@google.com>,
- Vincenzo Frascino <vincenzo.frascino@arm.com>, kasan-dev@googlegroups.com,
- "David S. Miller" <davem@davemloft.net>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-trace-kernel@vger.kernel.org
-References: <20250930024402.1043776-1-wangjinchao600@gmail.com>
- <20250930024402.1043776-24-wangjinchao600@gmail.com>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20250930024402.1043776-24-wangjinchao600@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi,
+This series aims to extend fprobe with list-style filters and a clear
+entry/exist qualifier. Users can now specify a comma-separated symbol
+list with ! exclusions, and use a spec-level suffix to select probe
+type:
 
-On 9/29/25 7:43 PM, Jinchao Wang wrote:
-> Add a maintainer entry for Kernel Stack Watch.
-> 
-> Signed-off-by: Jinchao Wang <wangjinchao600@gmail.com>
-> ---
->  MAINTAINERS | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 520fb4e379a3..3d4811ff3631 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -13362,6 +13362,14 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest.git
->  F:	Documentation/dev-tools/kselftest*
->  F:	tools/testing/selftests/
->  
-> +KERNEL STACK WATCH
-> +M:	Jinchao Wang <wangjinchao600@gmail.com>
-> +S:	Maintained
-> +F:	Documentation/dev-tools/kstackwatch.rst
-> +F:	include/linux/kstackwatch_types.h
-> +F:	mm/kstackwatch/
-> +F:	tools/kstackwatch/
-> +
+- funcA*, !funcAB, funcC -> entry probes
+- funcA*, !funcAB, funcC:entry -> explicit entry
+- funcA*, !funcAB, funcC:exit -> return/exit across the whole list
 
-Add entries in alphabetical order, please.
+For compatibility, %return remains supported for single, literal
+symbols. When a list or wildcard is used, an explicit [GROUP/EVENT is
+required and autogeneration is disabled. Autogen names are kept for
+single-symbol specs, with wildcard sanitization. For list/wildcard forms
+we set ctx->funcname = NULL so BTF lookups are not attempted.
 
->  KERNEL SMB3 SERVER (KSMBD)
->  M:	Namjae Jeon <linkinjeon@kernel.org>
->  M:	Namjae Jeon <linkinjeon@samba.org>
+The series moves parsing to the parse path, documents the new syntax,
+and adds selftests that accept valid list cases and reject empty tokens,
+stray commas, and %return mixed with lists or wildcards. Selftests also
+verify enable/disable flow and that entry+exit on the same set do not
+double-count attached functions.
+
+Help wanted: This is my first time contributing ftrace selftests. I
+would appreciate comments and recommendations on test structure and
+coverage.
+
+Basic coverage is included, but this likely needs broader testing across
+architectures. Feedback and additional test ideas are welcome.
+
+Changes since v2:
+- Introduce spec-level: :entry/:exit; reject %return with
+  lists/wildcards
+- Require explict [GROUP/]EVENT for list/wildcard; keep autogen only for
+  single literal.
+- Sanitize autogen names for single-symbol wildcards
+- Set ctx->funcname = NULL for list/wildcard to bypass BTF
+- Move list parsing out of __register_trace_fprobe() and into the parse
+  path
+- Update docs and tracefs README and add dynevent selftests for
+  accept/reject and enable/disable flow
+
+Link: https://lore.kernel.org/lkml/20250904103219.f4937968362bfff1ecd3f004@kernel.org/
+
+Ryan Chung (5):
+  docs: tracing: fprobe: document list filters and :entry/:exit
+  tracing: fprobe: require explicit [GROUP/]EVENT for list/wildcard
+  tracing: fprobe: support comma-separated symbols and :entry/:exit
+  selftests/ftrace: dynevent: add reject cases for list/:entry/:exit
+  selftests/ftrace: dynevent: add reject cases
+
+ Documentation/trace/fprobetrace.rst           |  27 +-
+ kernel/trace/trace.c                          |   3 +-
+ kernel/trace/trace_fprobe.c                   | 247 ++++++++++++++----
+ .../test.d/dynevent/add_remove_fprobe.tc      | 121 +++++++++
+ .../test.d/dynevent/fprobe_syntax_errors.tc   |  13 +
+ 5 files changed, 349 insertions(+), 62 deletions(-)
 
 -- 
-~Randy
+2.43.0
 
