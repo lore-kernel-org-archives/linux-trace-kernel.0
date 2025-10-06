@@ -1,47 +1,45 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDE632D5932
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  6 Oct 2025 14:28:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B6EA2D063B
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  6 Oct 2025 14:31:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759760889; cv=none; b=XvZUM3d5kBjPvza2eepBDR2CEjKn9NaM2deYKJUYWXRtwamFQiFjwODsK5M7/SGt3YhTuemUD2Fq4nKLdOnh08qenbGDj0APpJLolGxa0K6fmlNMx0qVmkXZ0eH+xl4938HZU13c5X5cVX/oksh0/ApozEKJdrUpWOW0/3vLKJQ=
+	t=1759761076; cv=none; b=Q4cKUHiXxwWAEYQ79sBEkbzl0glpgIkRAqsRY+RGEGJcLwFdsKV4g6EAoMeiL/H9v+1jf0Ukg+b3rET2FM3llCEL17axQAkKGyTNoGlCrdlbO3xXb8prvCHNeB8hZbnZF8ei5CX9fHWbK+RUdhx5tLzQcK9M5yMqTVwksDTxxcw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759760889; c=relaxed/simple;
-	bh=36M0MNbgV00Pqi5+l51V9XYis+XFYGG0olx3EDkVhg0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IySC2hhfOWjDt6VvsYLixI3hiPOlKmBeZ6F2L8GAFVBRVoecXcGRuHt2C0NDG2wyORX2yX6gI3j2mdk+RGzfGcGsfMzuXwMa/IFNLhF4/u1NquhcDL7YTwF3vmldduu4CeQrJg+z3j2BGqsZnBh7WB//yfvlXW9k77xpuddGS38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Q8vbR7MY; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1759761076; c=relaxed/simple;
+	bh=xXvB05+JXWunM/ZZ7+8SH3cVZRqU/GJnOV4tEaSXfi0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aW+87qoElcYnc0HtImKQUaRo9/+gtzeowySlQuWnfg3uLwIor2xWxLCenUhvs+V5eML/+Q4lZI0aHgv6uZnU2rWtu5jO2uk6OYPZH/+x+Bq1Ixzt0nkjSNv3uATJo8Wofa//JhNbatJCMz732YU/6L/dPyUvKcUG6XqamKs846k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JYgT77uM; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q8vbR7MY"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JYgT77uM"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1759760884;
+	s=mimecast20190719; t=1759761073;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pG62RW4qXh/xHnupCaMWDYV5gWCoTE5hgP0ELuR9B7s=;
-	b=Q8vbR7MYRbHz9MDzh7J8gOpeRA4x1hWXlBvNQDraJAtz/hQ06K6JQKpA1b5baoy+5l4M3i
-	rbT5lM9bTUvsBWIDh1wKfROyzU08EPaWfQttmhqjPa7FtfbQDK9M0FP2bLYYsA/iD0lqPW
-	xLW0kHRJzkVQiSae3z+6SvAJc/8DNxw=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=WG6rfa392OPZRww4x0r3OSF9GJZW1H33YuysnWkj2NU=;
+	b=JYgT77uM3HJ8U3Kwq3BwdI/tkuAX2ItZTT0hr2apQ3PZ+/6t99zPiqyvcbb1r0KcL5oBgk
+	CTAReVBAJmw6Ng/vfmCO5KHDFGJU0E5Lc5m5kQtUHARvKc5CD/sUD+e8FgTxuxGbMrNF3I
+	KIwNO1d5SYZe/TGGqHLzWjbTi4GrJhw=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-674-jBEpJYMKOe65fpJr5IJDzA-1; Mon,
- 06 Oct 2025 10:28:03 -0400
-X-MC-Unique: jBEpJYMKOe65fpJr5IJDzA-1
-X-Mimecast-MFC-AGG-ID: jBEpJYMKOe65fpJr5IJDzA_1759760882
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-75-0KhC7PTiM0mByPq9ZE3GDQ-1; Mon,
+ 06 Oct 2025 10:31:10 -0400
+X-MC-Unique: 0KhC7PTiM0mByPq9ZE3GDQ-1
+X-Mimecast-MFC-AGG-ID: 0KhC7PTiM0mByPq9ZE3GDQ_1759761068
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 82DD31800447;
-	Mon,  6 Oct 2025 14:28:02 +0000 (UTC)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1903A195608F;
+	Mon,  6 Oct 2025 14:31:08 +0000 (UTC)
 Received: from fedora.redhat.com (unknown [10.44.32.125])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6B25418004D8;
-	Mon,  6 Oct 2025 14:27:59 +0000 (UTC)
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 5D9B81955F19;
+	Mon,  6 Oct 2025 14:31:04 +0000 (UTC)
 From: Tomas Glozar <tglozar@redhat.com>
 To: Steven Rostedt <rostedt@goodmis.org>
 Cc: LKML <linux-kernel@vger.kernel.org>,
@@ -51,12 +49,11 @@ Cc: LKML <linux-kernel@vger.kernel.org>,
 	Costa Shulyupin <costa.shul@redhat.com>,
 	Crystal Wood <crwood@redhat.com>,
 	Wander Lairson Costa <wander@redhat.com>,
-	Tomas Glozar <tglozar@redhat.com>
-Subject: [PATCH 2/2] rtla/tests: Extend action tests to 5s
-Date: Mon,  6 Oct 2025 16:26:15 +0200
-Message-ID: <20251006142616.136296-2-tglozar@redhat.com>
-In-Reply-To: <20251006142616.136296-1-tglozar@redhat.com>
-References: <20251006142616.136296-1-tglozar@redhat.com>
+	Tomas Glozar <tglozar@redhat.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] rtla/timerlat_bpf: Stop tracing on user latency
+Date: Mon,  6 Oct 2025 16:31:00 +0200
+Message-ID: <20251006143100.137255-1-tglozar@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -64,57 +61,39 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-In non-BPF mode, it takes up to 1 second for RTLA to notice that tracing
-has been stopped. That means that action tests cannot have a 1 second
-duration, as the SIGALRM will be racing with the threshold overflow.
+rtla-timerlat allows a *thread* latency threshold to be set via the
+-T/--thread option. However, the timerlat tracer calls this *total*
+latency (stop_tracing_total_us), and stops tracing also when the
+return-to-user latency is over the threshold.
 
-Previously, non-BPF mode actions were buggy and always executed
-the action, even when stopping on duration or SIGINT, preventing
-this issue from manifesting. Now that this has been fixed, the tests
-have become flaky, and this has to be adjusted.
+Change the behavior of the timerlat BPF program to reflect what the
+timerlat tracer is doing, to avoid discrepancy between stopping
+collecting data in the BPF program and stopping tracing in the timerlat
+tracer.
 
-Fixes: 4e26f84abfb ("rtla/tests: Add tests for actions")
-Fixes: 05b7e10687c ("tools/rtla: Add remaining support for osnoise actions")
+Cc: stable@vger.kernel.org
+Fixes: e34293ddcebd ("rtla/timerlat: Add BPF skeleton to collect samples")
 Signed-off-by: Tomas Glozar <tglozar@redhat.com>
 ---
- tools/tracing/rtla/tests/osnoise.t  | 4 ++--
- tools/tracing/rtla/tests/timerlat.t | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ tools/tracing/rtla/src/timerlat.bpf.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/tools/tracing/rtla/tests/osnoise.t b/tools/tracing/rtla/tests/osnoise.t
-index e3c89d45a6bb..08196443fef1 100644
---- a/tools/tracing/rtla/tests/osnoise.t
-+++ b/tools/tracing/rtla/tests/osnoise.t
-@@ -39,9 +39,9 @@ check "hist stop at failed action" \
- check "top stop at failed action" \
- 	"timerlat top -T 2 --on-threshold shell,command='echo -n abc; false' --on-threshold shell,command='echo -n defgh'" 2 "^abc" "defgh"
- check "hist with continue" \
--	"osnoise hist -S 2 -d 1s --on-threshold shell,command='echo TestOutput' --on-threshold continue" 0 "^TestOutput$"
-+	"osnoise hist -S 2 -d 5s --on-threshold shell,command='echo TestOutput' --on-threshold continue" 0 "^TestOutput$"
- check "top with continue" \
--	"osnoise top -q -S 2 -d 1s --on-threshold shell,command='echo TestOutput' --on-threshold continue" 0 "^TestOutput$"
-+	"osnoise top -q -S 2 -d 5s --on-threshold shell,command='echo TestOutput' --on-threshold continue" 0 "^TestOutput$"
- check "hist with trace output at end" \
- 	"osnoise hist -d 1s --on-end trace" 0 "^  Saving trace to osnoise_trace.txt$"
- check "top with trace output at end" \
-diff --git a/tools/tracing/rtla/tests/timerlat.t b/tools/tracing/rtla/tests/timerlat.t
-index b5d1e7260a9b..b550a6ae2445 100644
---- a/tools/tracing/rtla/tests/timerlat.t
-+++ b/tools/tracing/rtla/tests/timerlat.t
-@@ -60,9 +60,9 @@ check "hist stop at failed action" \
- check "top stop at failed action" \
- 	"timerlat top -T 2 --on-threshold shell,command='echo -n 1; false' --on-threshold shell,command='echo -n 2'" 2 "^1ALL"
- check "hist with continue" \
--	"timerlat hist -T 2 -d 1s --on-threshold shell,command='echo TestOutput' --on-threshold continue" 0 "^TestOutput$"
-+	"timerlat hist -T 2 -d 5s --on-threshold shell,command='echo TestOutput' --on-threshold continue" 0 "^TestOutput$"
- check "top with continue" \
--	"timerlat top -q -T 2 -d 1s --on-threshold shell,command='echo TestOutput' --on-threshold continue" 0 "^TestOutput$"
-+	"timerlat top -q -T 2 -d 5s --on-threshold shell,command='echo TestOutput' --on-threshold continue" 0 "^TestOutput$"
- check "hist with trace output at end" \
- 	"timerlat hist -d 1s --on-end trace" 0 "^  Saving trace to timerlat_trace.txt$"
- check "top with trace output at end" \
+diff --git a/tools/tracing/rtla/src/timerlat.bpf.c b/tools/tracing/rtla/src/timerlat.bpf.c
+index 084cd10c21fc..e2265b5d6491 100644
+--- a/tools/tracing/rtla/src/timerlat.bpf.c
++++ b/tools/tracing/rtla/src/timerlat.bpf.c
+@@ -148,6 +148,9 @@ int handle_timerlat_sample(struct trace_event_raw_timerlat_sample *tp_args)
+ 	} else {
+ 		update_main_hist(&hist_user, bucket);
+ 		update_summary(&summary_user, latency, bucket);
++
++		if (thread_threshold != 0 && latency_us >= thread_threshold)
++			set_stop_tracing();
+ 	}
+ 
+ 	return 0;
 -- 
 2.51.0
 
