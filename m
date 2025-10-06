@@ -1,102 +1,137 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8B0027F727;
-	Mon,  6 Oct 2025 13:21:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D64DC2D5948
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  6 Oct 2025 14:28:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759756866; cv=none; b=DkvN7lbOlFMHBcOdQir5jYBfNcL9jSnxcHW4MS1cNK79CH3W5UjyZpQp01bJLCACHCGA6KqDeYMtjDNU0SFA44dkVafS+Oa35UxAgM4HTUiFLNRwZa8AO+4HJMF3me2giTGnBEJYs8tplQYNbZiRPrst+CKexml3VFJt5RH8Y84=
+	t=1759760884; cv=none; b=pk4uZ+TIww53E60SLFjNtQhZx/tppDWSqgauvO/CAB7rTLphozp7G4b1ajQCMBaC6bbL/Vd1zR59uMwDtkFaqaXkCtzUC4md9T8TilFmcJwnNPgyKTJNr5jDxIzDtwrQy02Ouo315Y4Eqe9B3AvYNeTNTV5XeABLlMuaxiaOcSM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759756866; c=relaxed/simple;
-	bh=4EfBJirwXmHS9bKxnVpvP65VK3V8Y05OM0scvwvBAw4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=pg7dTbSstx4upt6VcrX8oDwzBrjwiwwws32X7wccAhvaRg94FpLJ7KPVC9h5uGM/+e24sGwbB18JPjH+LnVOv2u+Xk2hc4NMdrjRlaQ+MxP7fEmYkgauKsov1C0nU7LNJE25/Ou83QQtbhnYrjTjZ+jMLEokeFbs6Gi9gjlJKp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=WDSRahFl; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=i4a1m1JS; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1759760884; c=relaxed/simple;
+	bh=xVtfM3JRYSqC+SIoH93jwT1PFhhCKThPkZrcS1esKR0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Z0jherUc22DBlMJd87rUCClmshZNWs24htepaMppfL2Z79FUlXDlMa6Xp5uYDrGD3+U6K56aI4HyqQo7TjkhNX10eblLeQHFsKPoQkgWqdkatPp8Vy8fih1FIsi9c/z0p3kug22PbFszBeeRHNGh6PCK8Tjgbrpry0i7VVOTr8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WwrUHtCf; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WDSRahFl";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="i4a1m1JS"
-From: Nam Cao <namcao@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1759756861;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WwrUHtCf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1759760881;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TPC7moutDPDkHYlcUYs2BarEbILZKiCmd0pMpjL2jac=;
-	b=WDSRahFlku0Xyd0XNGlbkxHS4Lts0OFDAXPa6xi9Na2ebGzqLAjtqeXYULkrlaPJ+bHkLC
-	K5Yb8Mav/VWPDclJlLYsXsJwx5SahmCYCSBsM6JAzfj/BSSjODvRBYDvdGJ9v5M9l4DLEY
-	1CynoDFJwwpHS54dY7syUOb89BDZJ2nIuJ9ZavXO5UmD+v2M/awqcXHE1OBy9RHRnWRo3o
-	Rtt5HaLLu7uTE477C/bJn4TlTnWrlW+x4B+lp3sk1lszHRUU58wl85RG6bTT3i4YZZRDiQ
-	VRFUcvDN5JFATEFr9Zt/4R/OdFt5USGMLQK1xlmbpbU4+F8poRhf3/UXNy7Q4Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1759756861;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TPC7moutDPDkHYlcUYs2BarEbILZKiCmd0pMpjL2jac=;
-	b=i4a1m1JSUHEWvPwtw+Y5uRCx28PGwuFqoN6CmXYvRoTw/X2oD0R8iMzNVloPJIXfUc2peJ
-	QtsuhKxWArvgYMDQ==
-To: Gabriele Monaco <gmonaco@redhat.com>, linux-kernel@vger.kernel.org, Steven
- Rostedt <rostedt@goodmis.org>, linux-trace-kernel@vger.kernel.org
-Cc: Tomas Glozar <tglozar@redhat.com>, Juri Lelli <jlelli@redhat.com>, Clark
- Williams <williams@redhat.com>, John Kacur <jkacur@redhat.com>
-Subject: Re: [PATCH v2 11/20] verification/rvgen: Allow spaces in and events
- strings
-In-Reply-To: <b2eccf79b5ab2b0d4b2f02e048938e923aa6e619.camel@redhat.com>
-References: <20250919140954.104920-1-gmonaco@redhat.com>
- <20250919140954.104920-12-gmonaco@redhat.com> <87v7kxr2fr.fsf@yellow.woof>
- <b2eccf79b5ab2b0d4b2f02e048938e923aa6e619.camel@redhat.com>
-Date: Mon, 06 Oct 2025 15:20:59 +0200
-Message-ID: <87plb0jhdw.fsf@yellow.woof>
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=4YREhDhTKRj23jxYbDvCNJFLgooe91K9tKdJ9eclRr8=;
+	b=WwrUHtCfhk6NX/Xe+VWn2h9mlx78IhyAEHCFCKo3VzWO34HCY+5+5Hygtbl9YJKKz8I371
+	kc8uw8niw62Gc++jjOh2s6uTAz4Kchskw3hszSu2P8taPCVrzzvfzF4Yad0EHguXe34Xr+
+	k9LrWT7DWtZEwB5+jHs1vY4TEgbUcCA=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-107-fOwlC6smPGijgxE-Gr_kvA-1; Mon,
+ 06 Oct 2025 10:27:59 -0400
+X-MC-Unique: fOwlC6smPGijgxE-Gr_kvA-1
+X-Mimecast-MFC-AGG-ID: fOwlC6smPGijgxE-Gr_kvA_1759760878
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CF784180034A;
+	Mon,  6 Oct 2025 14:27:58 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.44.32.125])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B386A180035E;
+	Mon,  6 Oct 2025 14:27:55 +0000 (UTC)
+From: Tomas Glozar <tglozar@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+	John Kacur <jkacur@redhat.com>,
+	Luis Goncalves <lgoncalv@redhat.com>,
+	Costa Shulyupin <costa.shul@redhat.com>,
+	Crystal Wood <crwood@redhat.com>,
+	Wander Lairson Costa <wander@redhat.com>,
+	Tomas Glozar <tglozar@redhat.com>
+Subject: [PATCH 1/2] tools/rtla: Fix --on-threshold always triggering
+Date: Mon,  6 Oct 2025 16:26:14 +0200
+Message-ID: <20251006142616.136296-1-tglozar@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-Gabriele Monaco <gmonaco@redhat.com> writes:
-> On Thu, 2025-10-02 at 13:03 +0200, Nam Cao wrote:
->> Gabriele Monaco <gmonaco@redhat.com> writes:
->> 
->> > Currently the automata parser assumes event strings don't have any
->> > space, this stands true for event names, but can be a wrong assumption
->> > if we want to store other information in the event strings (e.g.
->> > constraints for hybrid automata).
->> > 
->> > Adapt the parser logic to allow spaces in the event strings.
->> 
->> I probably misunderstand something, but isn't the description
->> misleading? After reading this description, I expect the patch to ignore
->> spaces or something similar. But from my understanding, the script only
->> allowed a single event, and this patch allows conditions as well.
->
-> The script allows multiple events, all separated by \n, strictly speaking there
-> is nothing saying spaces are not allowed in event names, but the parser breaks
-> if there's any space.
->
-> This patch allows spaces in event names, conditions (separated by a ; ) are not
-> supported yet.
->
->> Shouldn't this be squashed to the next patch?
->
-> I kept it separated to avoid pushing too many changes in the next one, which
-> mostly adds new functionality (and lines) instead of changing the current ones.
->
-> Apparently that didn't make it any clearer, and there isn't really any use case
-> needing event names with spaces, so if it looks cleaner to you I can just squash
-> it.
+Commit 8d933d5c89e8 ("rtla/timerlat: Add continue action") moved the
+code performing on-threshold actions (enabled through --on-threshold
+option) to inside the RTLA main loop.
 
-Nah, you can keep it. I was just confused. Now I looked again, it starts
-to make sense.
+The condition in the loop does not check whether the threshold was
+actually exceeded or if stop tracing was requested by the user through
+SIGINT or duration. This leads to a bug where on-threshold actions are
+always performed, even when the threshold was not hit.
 
-Reviewed-by: Nam Cao <namcao@linutronix.de>
+(BPF mode is not affected, since it uses a different condition in the
+while loop.)
 
-I am thinking about converting the entire thing to be ply-based (after
-we are done with this series). It should make things easier to
-follow. Would you object that?
+Add a condition that checks for !stop_tracing before executing the
+actions. Also, fix incorrect brackets in hist_main_loop to match the
+semantics of top_main_loop.
 
-Nam
+Fixes: 8d933d5c89e8 ("rtla/timerlat: Add continue action")
+Fixes: 2f3172f9dd58 ("tools/rtla: Consolidate code between osnoise/timerlat and hist/top")
+Signed-off-by: Tomas Glozar <tglozar@redhat.com>
+---
+ tools/tracing/rtla/src/common.c | 24 +++++++++++++++---------
+ 1 file changed, 15 insertions(+), 9 deletions(-)
+
+diff --git a/tools/tracing/rtla/src/common.c b/tools/tracing/rtla/src/common.c
+index 2e6e3dac1897..b197037fc58b 100644
+--- a/tools/tracing/rtla/src/common.c
++++ b/tools/tracing/rtla/src/common.c
+@@ -268,6 +268,10 @@ int top_main_loop(struct osnoise_tool *tool)
+ 			tool->ops->print_stats(tool);
+ 
+ 		if (osnoise_trace_is_off(tool, record)) {
++			if (stop_tracing)
++				/* stop tracing requested, do not perform actions */
++				return 0;
++
+ 			actions_perform(&params->threshold_actions);
+ 
+ 			if (!params->threshold_actions.continue_flag)
+@@ -315,20 +319,22 @@ int hist_main_loop(struct osnoise_tool *tool)
+ 		}
+ 
+ 		if (osnoise_trace_is_off(tool, tool->record)) {
++			if (stop_tracing)
++				/* stop tracing requested, do not perform actions */
++				break;
++
+ 			actions_perform(&params->threshold_actions);
+ 
+-			if (!params->threshold_actions.continue_flag) {
++			if (!params->threshold_actions.continue_flag)
+ 				/* continue flag not set, break */
+ 				break;
+ 
+-				/* continue action reached, re-enable tracing */
+-				if (tool->record)
+-					trace_instance_start(&tool->record->trace);
+-				if (tool->aa)
+-					trace_instance_start(&tool->aa->trace);
+-				trace_instance_start(&tool->trace);
+-			}
+-			break;
++			/* continue action reached, re-enable tracing */
++			if (tool->record)
++				trace_instance_start(&tool->record->trace);
++			if (tool->aa)
++				trace_instance_start(&tool->aa->trace);
++			trace_instance_start(&tool->trace);
+ 		}
+ 
+ 		/* is there still any user-threads ? */
+-- 
+2.51.0
 
