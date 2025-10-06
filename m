@@ -1,64 +1,88 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8DFE24E4BD;
-	Mon,  6 Oct 2025 07:59:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D0AF126C05;
+	Mon,  6 Oct 2025 09:47:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759737558; cv=none; b=Ou8jF8Dyjr4HyHxWw81TR6Fz/bxpWRBRcPccf3o3jJje9L3osGwWqIvKQ/UQxID6hCuU/9zH25zHpcQj6xVZ5Cys/NBCQyMRsmCRgYf2Z4fiHQkqoDeye1DRf1zT6VoFVmBYZvD/37N0BC03XeSIQs4wkhGoKp5f8b5W5q9Kknw=
+	t=1759744038; cv=none; b=CL0xBRoUFIzlEnt0VI4vD1EdgW8kP4toboPqrr4c8vbAZlvkg+bCSHPAyZYXdkwYYOz73h6pC0D4VSDVHeKXsAiLTj2XosyPQXrn8ojoLH5yCrsjSSGGUcNSpzmvFAv5rEbqmGg8rg7Kt+LZ/lOqmxbdwTiqIcbcTLn7QvF7/LI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759737558; c=relaxed/simple;
-	bh=xR9H+rVXuSmCG/aFcq1+uRILqW8RGM2Gf7+XvYtCszI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UeOm9zCSF+a6BrwzVrYoPBaPGkm/dGXLlL+FiTu1AdO9XQfNOTa/JLo4IQXWdWT6J2oeCUJlWoOzrXmMFmcUpAP38bFkIJ5FNYwCYgA8nNKzHB14MWbA+R3b2ooAQFKE8D1jmTNj3qWR0hCuLQh0jWFJN//CftwX+h8GBbc0RvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Uh7FPxH4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1759744038; c=relaxed/simple;
+	bh=QhzIG03aHboFObiRBtxv27Nts9zZSF/gkbUUOv91YoA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jqicyFF/ZKVReZ0FcrHZXnvrs5H9UHY5TkZ0YfFaJTXFWyLSFdSeOIJMQZXbxX0aymwxsyy3ZCenKZcuOkGfTtleGz0+vBZWWN5WojUrLN1Emq+6PryxTqfLYccOps1LP9tp7Yyjaji0sGqtjKPUk7EWiZMJy5IKWlg2AOJg/Ro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kInQ3g7r; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Uh7FPxH4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4493C4CEF5;
-	Mon,  6 Oct 2025 07:59:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kInQ3g7r"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AFBBC4CEF5;
+	Mon,  6 Oct 2025 09:47:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759737557;
-	bh=xR9H+rVXuSmCG/aFcq1+uRILqW8RGM2Gf7+XvYtCszI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Uh7FPxH4RneVNbXICvn+i3fnzPJBXfNXPclLpaWSWSUYFgAM0jRULI27hyu1GhE8B
-	 7X6zKOe9S3wRUfQbjXZu4r8ihMaBthA9uu0Xmf+Sq27gzI3e/SQv5/u7jqcH9DWByR
-	 u1Sw7v4DFIOayWEr8mZvRlsy1ddEW5DubHbi3TCz4jkFiNJkPZ7hG2/0i0WmMxP48A
-	 vfva/6tK/IqPlfsGBInRmWXjY3FgA3UXuwdp5m5Bv4MwMg+dCx3gUYTUjqGpPtgrJq
-	 WgM4xJFHyEx6Y7EoXPZYxKUt3JT5T+QyBc+abbGgStqdYd1s9o66TTBpxCFlQizTa0
-	 NN9Ocjn78QDHg==
-Date: Mon, 6 Oct 2025 13:22:38 +0530
-From: Naveen N Rao <naveen@kernel.org>
-To: Hari Bathini <hbathini@linux.ibm.com>
-Cc: Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, bpf@vger.kernel.org, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Song Liu <songliubraving@fb.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Viktor Malik <vmalik@redhat.com>, live-patching@vger.kernel.org, 
-	Josh Poimboeuf <jpoimboe@kernel.org>, Joe Lawrence <joe.lawrence@redhat.com>, 
-	Jiri Kosina <jikos@kernel.org>, linux-trace-kernel@vger.kernel.org, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Shung-Hsi Yu <shung-hsi.yu@suse.com>
-Subject: Re: [PATCH] powerpc64/bpf: support direct_call on livepatch function
-Message-ID: <amwerofvasp7ssmq3zlrjakqj5aygyrgplcqzweno4ef42tiav@uex2ildqjvx2>
-References: <20251002192755.86441-1-hbathini@linux.ibm.com>
+	s=k20201202; t=1759744037;
+	bh=QhzIG03aHboFObiRBtxv27Nts9zZSF/gkbUUOv91YoA=;
+	h=From:To:Cc:Subject:Date:From;
+	b=kInQ3g7rmAPmJlKrHwBOT+EO6DFomMRjCDB1xhOjl+UTuHhoAgUFOtYfacsoy/fbx
+	 Mvi8z6wk2hlyxcxtBHvOqwkB8IZUB6mOAffoqbG1gHrD9tQ/BWwpaDFyEtsA1xCMWT
+	 058bjMrpx8Qk94S1obLFE3znGxvJ0uYg+qMPw/LhNMVl5BPkGL/eOj6tpMZK/wb0D4
+	 1TcrkZn5jT/6yktfDtzvWrcVPKdw+/eo9LJuBiEUFGRTK5ViLyDdqoh67rSmMjofML
+	 B9Voa3Ud+sdTgat6SwnysQu95EE3DFl/u+APycvloYjAMgnKRkstKkkdqHKS1dEQzA
+	 MaH4biIQdcElQ==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Mark Brown <broonie@kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Menglong Dong <menglong8.dong@gmail.com>,
+	Thorsten Blum <thorsten.blum@linux.dev>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH] tracing: wprobe: Fix to use IS_ERR_PCPU() for per-cpu pointer
+Date: Mon,  6 Oct 2025 18:47:12 +0900
+Message-ID: <175974403177.1372080.12078001360837326466.stgit@devnote2>
+X-Mailer: git-send-email 2.43.0
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251002192755.86441-1-hbathini@linux.ibm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Fri, Oct 03, 2025 at 12:57:54AM +0530, Hari Bathini wrote:
-> Today, livepatch takes precedence over direct_call. Instead, save the
-> state and make direct_call before handling livepatch.
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-If we call into the BPF trampoline first and if we have 
-BPF_TRAMP_F_CALL_ORIG set, does this result in the BPF trampoline 
-calling the new copy of the live-patched function or the old one?
+Since wprobe uses IS_ERR() for per-cpu pointer, it failed to build.
 
-- Naveen
+/tmp/next/build/kernel/trace/trace_wprobe.c: In function '__register_trace_wprobe':
+/tmp/next/build/kernel/trace/trace_wprobe.c:176:20: error: cast to generic address space pointer from disjoint '__seg_gs' address space pointer [-Werror]
+  176 |         if (IS_ERR((void * __force)tw->bp_event)) {
+      |                    ^
+/tmp/next/build/kernel/trace/trace_wprobe.c:177:35: error: cast to generic address space pointer from disjoint '__seg_gs' address space pointer [-Werror]
+  177 |                 int ret = PTR_ERR((void * __force)tw->bp_event);
+      |                                   ^
+
+Use IS_ERR_PCPU() instead.
+
+Reported-by: Mark Brown <broonie@kernel.org>
+Closes: https://lore.kernel.org/all/aN6fTmAjD7-SJsw2@sirena.org.uk/
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+---
+ - Confirmed that `make allmodconfig && make` passed on x86_64 and arm64.
+---
+ kernel/trace/trace_wprobe.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/trace/trace_wprobe.c b/kernel/trace/trace_wprobe.c
+index 4b00a8e917c1..aa8ef173528b 100644
+--- a/kernel/trace/trace_wprobe.c
++++ b/kernel/trace/trace_wprobe.c
+@@ -173,7 +173,7 @@ static int __register_trace_wprobe(struct trace_wprobe *tw)
+ 	attr.bp_type = tw->type;
+ 
+ 	tw->bp_event = register_wide_hw_breakpoint(&attr, wprobe_perf_handler, tw);
+-	if (IS_ERR((void * __force)tw->bp_event)) {
++	if (IS_ERR_PCPU((void * __force)tw->bp_event)) {
+ 		int ret = PTR_ERR((void * __force)tw->bp_event);
+ 
+ 		tw->bp_event = NULL;
 
