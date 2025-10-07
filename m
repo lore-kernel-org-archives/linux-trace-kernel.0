@@ -1,161 +1,192 @@
-Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D38F21CC4F
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  7 Oct 2025 06:14:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 938D72D481F
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  7 Oct 2025 08:32:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759817699; cv=none; b=qXTeOk8P0thd7pnnM5Mt2j9puTpU45tXQwMkCLgM+xROM3Drk5Ius4Wtm4/GLLL1LZM2IHhCsKonVIEHnVpSgjyCbwdVwIgQmMJxZkzcd9IMwty3J+BR3H3IHQMu7GODoHnVEesBVc1CXnottKAabOY5pA93yeEjznP6Q2acYlg=
+	t=1759825960; cv=none; b=Uke0B8WbyN3TYkWab568qFp/uWc3rxHFZkkQEEsVNX42BWBDNwZtYJPPkBeM2k16CCkhsJxEWUxUvfy7085xhCyCaU7+pmuR/WWTUELBD/bJYX73UaziV3+RUYcyheC/cXIIiT2I4DNTd7HJLnajhtCD6TbtelWCCzvEPrq9N14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759817699; c=relaxed/simple;
-	bh=F1u4iWMm+qcDMG+vr/1mGk7YuWuqcxw34EH+k+It1tI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Hlv6Nr6cFqRINX1PXuH5GJaW3tKVeWh0+LV1F+E9kVkPMHQ8KwYv8V9qd+e4jsSpov8s2xEOjHDbdhEEyU4Se7XgM13crnzQp/X7k6NzANTY2bqWUcUag/DZPjpHZ5M7hkezjRkmM4+N0lEqScuUfOb8b8r+UUX/Y+uiZK75p3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=v/AxOXC8; arc=none smtp.client-ip=91.218.175.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1759825960; c=relaxed/simple;
+	bh=UyXS0YiulfoICjWKVbZLAuV+X0gt4aJvE3oK8qyJ30E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BjOvDuUETMi6YC91Cl1dEA5hxCvejdA3BFJe3o1gLlK+4Y+ghkNnTOo7X+z5ylEHjoqB4cZ0FP3wjIXxgEvcnJ7aNz9N86+YogNo5K04p8Rnw3CRxYSNpKzyVLgUrDEA04WKEDOC9FNjf7o9syfZYFkjT5KAg3xJGovfQwZhsg4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XoU6ZAZO; arc=none smtp.client-ip=209.85.215.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="v/AxOXC8"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1759817685;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9krF6e/yQ7masYGUY5rb2IPLnZ63vNRajRMzQDojwQ0=;
-	b=v/AxOXC8xspU3EfvKkn8iOi7lVKw5gbna3dK8IanDYZbKs+Rd2FTYbXsD7zNPOXkN9VMOG
-	Ev598DhJZ67GFBZbP/xqoKCRZv+Is0PgTQ68R+1ZE5QMtwwXr+vn0LBnLvR7JoS3CmHI8o
-	jeiQGc9GU25B7N8WuCn6oqUjJVz7Piw=
-From: Menglong Dong <menglong.dong@linux.dev>
-To: Menglong Dong <menglong8.dong@gmail.com>,
- Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Alexei Starovoitov <ast@kernel.org>, bpf <bpf@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>,
- linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, jiang.biao@linux.dev
-Subject: Re: [PATCH RFC bpf-next 1/3] bpf: report probe fault to BPF stderr
-Date: Tue, 07 Oct 2025 14:14:35 +0800
-Message-ID: <3571660.QJadu78ljV@7950hx>
-In-Reply-To:
- <CAADnVQJAdAxEOWT6avzwq6ZrXhEdovhx3yibgA6T8wnMEnnAjg@mail.gmail.com>
-References:
- <20250927061210.194502-1-menglong.dong@linux.dev>
- <20250927061210.194502-2-menglong.dong@linux.dev>
- <CAADnVQJAdAxEOWT6avzwq6ZrXhEdovhx3yibgA6T8wnMEnnAjg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XoU6ZAZO"
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-b4fb8d3a2dbso4622278a12.3
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 07 Oct 2025 01:32:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1759825958; x=1760430758; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=HprILVmlCINZEM+NQvrClrUcjHEMUlllXqO7BPuLx90=;
+        b=XoU6ZAZO2m49XN1+y/2A/M2ZAltddjpHTRHuEyzKt7SYujeDozV9R+lZtcXwivtS8Q
+         aYX5GdTtVj5TkneEpWtZ4N3eBl7Ph2zOndVvZEQ4FSYV4OCdNVdQu0w5Gr9s8ZdQI0cp
+         tpE15928EVab++85xjbhvN5da9Sx/rEavxisbqg5UyFGPI/pSG6W0suuxGlLOAZdoHGQ
+         pGL7OrfwMNRzz/bgTqACZkRC76pS7oE7jxi3gvkWSQp9w+8srbzykdDWs4aJu29VRZNE
+         MKcxunczgINFyogyfZRJySZFynh4YrV9PBRTW4agGAuHx1BCMS8zqh3eVud9E2ktXKvl
+         NxiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1759825958; x=1760430758;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HprILVmlCINZEM+NQvrClrUcjHEMUlllXqO7BPuLx90=;
+        b=mpZL7hTfy7zrUIkUzfIDR9cU2QW7UKyi/MLlKJFulOlI+FeKKL+CM9DG2jmpJA7XAB
+         eJ0tSeSAGcQHW0W/lwzwgKdfsMNmgJvmUgZS8GoGEz5yRuNeB3u0/Bu120ERzCoQ+WDn
+         yGjAHhm2/nQ3n5IqcVptkkodpkswG06wQHfw9FiIq6f1o3aNvAMpxdFVOQGoVgp4NfFf
+         BG905Mu6/1Hf/EuADc4F2nn7yCzMlOq7/B6WTgyU7dD5fwetCCNil5UZF0eGL4lMpgD2
+         2j7SyTJ3THhOgZ9eB3hZaXK5hkvLm1BHQlhH3jJR1RoiCeVIbrjtV8hQut1s/YwAng/S
+         iKoA==
+X-Forwarded-Encrypted: i=1; AJvYcCVTRx2BDljl9XrDqXkzMTmVVn1lcG54N4AEta9DDd+4iWpIcH2hl+2oQf0z9Ct6sz2BCoavaM8fzZyhpeXvJ16WNms=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwQDVXDugD2wKnGoSQMPPA2Hcjvkg47Ng8wCu0wFCw0g7kS7YcL
+	R7b72z+tYq2ekzgMl1z8YlPCjjOSZTSHujuPGTAOPw+twnHazg4iseUb
+X-Gm-Gg: ASbGncvfs4acxdBohS1kDwLu8CjMbT6bksXNfbkWoXSqzBclnM7GEUWbUK+2nth1mRQ
+	dmtWUNNWaiToT3veDcxscS84sA48qTRKNHg/ph3Ewheo3tfcPQ40+eS07EnrxTgE1nSLLveMjdA
+	t3VEwQhifHUosxP8+9I74EhAzWxDdTeGWQUzecXpLa648kx8WObu+nsst2rcLn0lLpCEGjJhlQE
+	myodFxYs7td/1SX03tzSqanV30/7zny3jd4lCkFIQVmJ1RMyDORvFAxgLqgoA0xi/zA6OBJz5aW
+	gd6y5Bf2qzmDdxxUFU2c7t5SNZDGEB5F2wWQTc0DkUYA76UczbNhkR6ooXVGjtzgKlL3TP+pBEJ
+	bQHvCwFCJBKrxXOJ6DjQzJqoUv3d8u1P+1lKt4eSHGyBceh1Qt2Q3YDDLLG8ogp1nQQ==
+X-Google-Smtp-Source: AGHT+IEQinegNp0eryTjEE/PSB7WT+WxKJi2rEkoILL6p0tSCG8SZofKeGirNv90BH6Yz68RvHxRpw==
+X-Received: by 2002:a17:903:3c25:b0:28e:9427:68f6 with SMTP id d9443c01a7336-28e9a593d32mr183371865ad.27.1759825957801;
+        Tue, 07 Oct 2025 01:32:37 -0700 (PDT)
+Received: from kforge.gk.pfsense.com ([103.70.166.143])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-28e8d1d24aesm157032525ad.118.2025.10.07.01.32.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Oct 2025 01:32:37 -0700 (PDT)
+From: Gopi Krishna Menon <krishnagopi487@gmail.com>
+To: rostedt@goodmis.org,
+	corbet@lwn.net
+Cc: Gopi Krishna Menon <krishnagopi487@gmail.com>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	skhan@linuxfoundation.org,
+	david.hunter.linux@gmail.com,
+	khalid@kernel.org,
+	linux-kernel-mentees@lists.linux.dev
+Subject: [PATCH] Documentation/rtla: fix htmldocs build error by renaming common_options.rst
+Date: Tue,  7 Oct 2025 14:02:26 +0530
+Message-ID: <20251007083228.17319-1-krishnagopi487@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 
-On 2025/10/2 10:03, Alexei Starovoitov wrote:
-> On Fri, Sep 26, 2025 at 11:12=E2=80=AFPM Menglong Dong <menglong8.dong@gm=
-ail.com> wrote:
-> >
-> > Introduce the function bpf_prog_report_probe_violation(), which is used
-> > to report the memory probe fault to the user by the BPF stderr.
-> >
-> > Signed-off-by: Menglong Dong <menglong.dong@linux.dev>
-> > ---
-> >  include/linux/bpf.h      |  1 +
-> >  kernel/trace/bpf_trace.c | 18 ++++++++++++++++++
-> >  2 files changed, 19 insertions(+)
-> >
-> > diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-> > index 6338e54a9b1f..a31c5ce56c32 100644
-> > --- a/include/linux/bpf.h
-> > +++ b/include/linux/bpf.h
-> > @@ -2902,6 +2902,7 @@ void bpf_dynptr_init(struct bpf_dynptr_kern *ptr,=
- void *data,
-> >  void bpf_dynptr_set_null(struct bpf_dynptr_kern *ptr);
-> >  void bpf_dynptr_set_rdonly(struct bpf_dynptr_kern *ptr);
-> >  void bpf_prog_report_arena_violation(bool write, unsigned long addr, u=
-nsigned long fault_ip);
-> > +void bpf_prog_report_probe_violation(bool write, unsigned long fault_i=
-p);
-> >
-> >  #else /* !CONFIG_BPF_SYSCALL */
-> >  static inline struct bpf_prog *bpf_prog_get(u32 ufd)
-> > diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> > index 8f23f5273bab..9bd03a9f53db 100644
-> > --- a/kernel/trace/bpf_trace.c
-> > +++ b/kernel/trace/bpf_trace.c
-> > @@ -2055,6 +2055,24 @@ void bpf_put_raw_tracepoint(struct bpf_raw_event=
-_map *btp)
-> >         module_put(mod);
-> >  }
-> >
-> > +void bpf_prog_report_probe_violation(bool write, unsigned long fault_i=
-p)
-> > +{
-> > +       struct bpf_stream_stage ss;
-> > +       struct bpf_prog *prog;
-> > +
-> > +       rcu_read_lock();
-> > +       prog =3D bpf_prog_ksym_find(fault_ip);
-> > +       rcu_read_unlock();
-> > +       if (!prog)
-> > +               return;
-> > +
-> > +       bpf_stream_stage(ss, prog, BPF_STDERR, ({
-> > +               bpf_stream_printk(ss, "ERROR: Probe %s access faule, in=
-sn=3D0x%lx\n",
-> > +                                 write ? "WRITE" : "READ", fault_ip);
-> > +               bpf_stream_dump_stack(ss);
-> > +       }));
->=20
-> Interesting idea, but the above message is not helpful.
-> Users cannot decipher a fault_ip within a bpf prog.
-> It's just a random number.
+Running "make htmldocs" generates the following build errors for
+common_options.rst
 
-Yeah, I have noticed this too. What useful is the
-bpf_stream_dump_stack(), which will print the code
-line that trigger the fault.
+Documentation/tools/rtla/common_options.rst:58: ERROR: Undefined substitution referenced: "threshold".
+Documentation/tools/rtla/common_options.rst:88: ERROR: Undefined substitution referenced: "tool".
+Documentation/tools/rtla/common_options.rst:88: ERROR: Undefined substitution referenced: "thresharg".
+Documentation/tools/rtla/common_options.rst:88: ERROR: Undefined substitution referenced: "tracer".
+Documentation/tools/rtla/common_options.rst:92: ERROR: Undefined substitution referenced: "tracer".
+Documentation/tools/rtla/common_options.rst:98: ERROR: Undefined substitution referenced: "actionsperf".
+Documentation/tools/rtla/common_options.rst:113: ERROR: Undefined substitution referenced: "tool".
 
-> But stepping back... just faults are common in tracing.
-> If we start printing them we will just fill the stream to the max,
-> but users won't know that the message is there, since no one
+common_options.rst is intended to be included by other rtla documents
+and is not meant to be built as a standalone document. It contains
+substitutions that are only resolved by other documents, so building it
+independently results in 'undefined substitution referenced' errors.
 
-You are right, we definitely can't output this message
-to STDERR directly. We can add an extra flag for it, as you
-said below.
+Rename common_options.rst to common_options.txt to prevent Sphinx from
+building it as a standalone document and update the include references
+accordingly.
 
-Or, maybe we can introduce a enum stream_type, and
-the users can subscribe what kind of messages they
-want to receive.
+Signed-off-by: Gopi Krishna Menon <krishnagopi487@gmail.com>
+---
 
-> expects it. arena and lock errors are rare and arena faults
-> were specifically requested by folks who develop progs that use arena.
-> This one is different. These faults have been around for a long time
-> and I don't recall people asking for more verbosity.
-> We can add them with an extra flag specified at prog load time,
-> but even then. Doesn't feel that useful.
+Note: reStructuredText substitutions -
+https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html#substitutions
 
-Generally speaking, users can do invalid checking before
-they do the memory reading, such as NULL checking. And
-the pointer in function arguments that we hook is initialized
-in most case. So the fault is someting that can be prevented.
+Tested by running "make htmldocs" before and after the change,
+verifying that no substitution errors are generated and the 
+output renders correctly in browsers.
 
-I have a BPF tools which is writed for 4.X kernel and kprobe
-based BPF is used. Now I'm planing to migrate it to 6.X kernel
-and replace bpf_probe_read_kernel() with bpf_core_cast() to
-obtain better performance. Then I find that I can't check if the
-memory reading is success, which can lead to potential risk.
-So my tool will be happy to get such fault event :)
+ .../tools/rtla/{common_options.rst => common_options.txt}       | 0
+ Documentation/tools/rtla/rtla-hwnoise.rst                       | 2 +-
+ Documentation/tools/rtla/rtla-osnoise-hist.rst                  | 2 +-
+ Documentation/tools/rtla/rtla-osnoise-top.rst                   | 2 +-
+ Documentation/tools/rtla/rtla-timerlat-hist.rst                 | 2 +-
+ Documentation/tools/rtla/rtla-timerlat-top.rst                  | 2 +-
+ 6 files changed, 5 insertions(+), 5 deletions(-)
+ rename Documentation/tools/rtla/{common_options.rst => common_options.txt} (100%)
 
-Leon suggested to add a global errno for each BPF programs,
-and I haven't dig deeply on this idea yet.
-
-Thanks!
-Menglong Dong
-
->=20
->=20
-
-
-
+diff --git a/Documentation/tools/rtla/common_options.rst b/Documentation/tools/rtla/common_options.txt
+similarity index 100%
+rename from Documentation/tools/rtla/common_options.rst
+rename to Documentation/tools/rtla/common_options.txt
+diff --git a/Documentation/tools/rtla/rtla-hwnoise.rst b/Documentation/tools/rtla/rtla-hwnoise.rst
+index 3a7163c02ac8..cc2721315552 100644
+--- a/Documentation/tools/rtla/rtla-hwnoise.rst
++++ b/Documentation/tools/rtla/rtla-hwnoise.rst
+@@ -33,7 +33,7 @@ OPTIONS
+ 
+ .. include:: common_top_options.rst
+ 
+-.. include:: common_options.rst
++.. include:: common_options.txt
+ 
+ EXAMPLE
+ =======
+diff --git a/Documentation/tools/rtla/rtla-osnoise-hist.rst b/Documentation/tools/rtla/rtla-osnoise-hist.rst
+index 1fc60ef26106..a11c485f127a 100644
+--- a/Documentation/tools/rtla/rtla-osnoise-hist.rst
++++ b/Documentation/tools/rtla/rtla-osnoise-hist.rst
+@@ -28,7 +28,7 @@ OPTIONS
+ 
+ .. include:: common_hist_options.rst
+ 
+-.. include:: common_options.rst
++.. include:: common_options.txt
+ 
+ EXAMPLE
+ =======
+diff --git a/Documentation/tools/rtla/rtla-osnoise-top.rst b/Documentation/tools/rtla/rtla-osnoise-top.rst
+index b1cbd7bcd4ae..c7bc716b2899 100644
+--- a/Documentation/tools/rtla/rtla-osnoise-top.rst
++++ b/Documentation/tools/rtla/rtla-osnoise-top.rst
+@@ -30,7 +30,7 @@ OPTIONS
+ 
+ .. include:: common_top_options.rst
+ 
+-.. include:: common_options.rst
++.. include:: common_options.txt
+ 
+ EXAMPLE
+ =======
+diff --git a/Documentation/tools/rtla/rtla-timerlat-hist.rst b/Documentation/tools/rtla/rtla-timerlat-hist.rst
+index 4923a362129b..547dfc7ace58 100644
+--- a/Documentation/tools/rtla/rtla-timerlat-hist.rst
++++ b/Documentation/tools/rtla/rtla-timerlat-hist.rst
+@@ -29,7 +29,7 @@ OPTIONS
+ 
+ .. include:: common_hist_options.rst
+ 
+-.. include:: common_options.rst
++.. include:: common_options.txt
+ 
+ .. include:: common_timerlat_aa.rst
+ 
+diff --git a/Documentation/tools/rtla/rtla-timerlat-top.rst b/Documentation/tools/rtla/rtla-timerlat-top.rst
+index 50968cdd2095..3740fd386ea8 100644
+--- a/Documentation/tools/rtla/rtla-timerlat-top.rst
++++ b/Documentation/tools/rtla/rtla-timerlat-top.rst
+@@ -30,7 +30,7 @@ OPTIONS
+ 
+ .. include:: common_top_options.rst
+ 
+-.. include:: common_options.rst
++.. include:: common_options.txt
+ 
+ .. include:: common_timerlat_aa.rst
+ 
+-- 
+2.43.0
 
