@@ -1,124 +1,97 @@
-Received: from mail-yx1-f47.google.com (mail-yx1-f47.google.com [74.125.224.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99F4A24676C
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  7 Oct 2025 23:25:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06CB6241CB6;
+	Tue,  7 Oct 2025 23:57:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759879555; cv=none; b=gZQLFMgXCPpm43M32BWqNKiurR7Ek7keYlXwsvzF90yNDDw3u3bSxTyNpegAwSAdp3TlAiT6POyDMBbA8deh1v3m6AgprVvLO3P2IQzi5xJfwgb6UJLtU7Uaz1oZiMGfj1VRW9Fsu4UnSrm1/r9knGaafSGvYZfsCRlgIutTPTg=
+	t=1759881432; cv=none; b=BpkmVQ9l4ZbOqpaRVA75UNGmrO0y8QZuLseFEP1losD/VJEiazjGyckQQwjDiuAxJg+z7RWmyE3ajVTFQehgKXjpwTCHoNGo4HDvbN9RyRPaPKO3OTTI/Du2He9S5+qpSkg04YazrCs6TJnM2IA2rY8xOK2uLT7Y0+v6gE9Ne1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759879555; c=relaxed/simple;
-	bh=sM3A7QvmdBlfaZ/1cFm6HDZFBo8SVeKyCVvxoFkhzqM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RZZqUnqG8yww2el6k7RZrrtLMQo/ZZlxV7/bc1wzvtfacJ3nSh6YB7MuQQbEbAJn47U+f52M7SjHvaJIx7bgHTTtWrE1gCOY+iIKNrJUFkZYu86CIArddEUlwFq1yKQG3thSErCu44osoDPl/+0tWJjt62sJZz0hFd1QBc1JbLs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CTK8l4Kx; arc=none smtp.client-ip=74.125.224.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1759881432; c=relaxed/simple;
+	bh=1lt/GTVLCLNZSIET9CdCaV6qRR/vWL2EfdDCZp2fU48=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=cn+njngx34Mg6CLhkIP8Hg4+9qhtkKs1BA6wd7ySZB4mrB88kzBHQK35sE7UY57lnbJ7oNKpggDs6QguZ3coJRvde2h0pjUBoKoBQiZrW/S/VuACAORL6R02a90YpMgu/etvIQhb/JTunu2mq2kTXdlJyV3liNBazIee1fJdvdU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IN4k8QBy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CTK8l4Kx"
-Received: by mail-yx1-f47.google.com with SMTP id 956f58d0204a3-6353ff1a78dso6474367d50.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 07 Oct 2025 16:25:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1759879552; x=1760484352; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=znGzsSqOOr/r0H2h0VqSOL5mXrikH4XLgaNPq7VatkE=;
-        b=CTK8l4KxIipDZzDoHJM4LG8w9Q4GfR+TQDUkVHXXJUUJXjhvMl5YCGr3Yf3AepE+iv
-         dJYwW1u9Q3HMxr2kSBvu0IMyGxq7YSk6tCLTp6jyVFMCNTbKwYeFw1JPBRbPLnbYZUAY
-         4uzxre1D8nGF+WAEwvViW3fJnJOS6NF13n7b4hfqZ8QJoiP+jjGL8t4kVbq/XvmNL4gC
-         9lFCShhzvxqpGSS7ATavmPFXbkPqQCg+PREW7lHYkxv8QFyHlFAZaecGznNb4v/dG3FO
-         YOT5sj6BwTQ8D6HzOm7m1tNtsKs9vk8TQ2hffjJwYaTBr3UD8FlJHTPNiF7m2lIwfCwa
-         nHWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759879552; x=1760484352;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=znGzsSqOOr/r0H2h0VqSOL5mXrikH4XLgaNPq7VatkE=;
-        b=xDt8fVWZAvhajoOkFs9N7YSMWaIwjIuf2CPCrQ5Y5beAzPzrIL7ifXw52fpMMLczVB
-         3Lo9F4PPetv8eJR7LSGqnQYRAhgNemm1j10gxUNKuvG7Sy6CsY7C7KjDY6W3LPXOrK4G
-         kwGiaUIaff5CvhkJdI0hr0yyrgZbMBLhSQCXlBAfvOz/qsgQDMk64lyBKPTuadgcg33/
-         HvmD1yOiYRnZWYDP8RxYGMczhba1rAwDmUj4+gpeDr9hdDjgxhPikUiuP92i8oHpFfo3
-         8VFyjddgnG2BC7/kuzY0TBrOuMuPiWc8Ow7IYjb3T9ikHOmx+SFLkM7PB8xJ6dEM54QF
-         ajUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXSlXnpCGr1YR2yN8FNt6ezJz/c2vP2V9yza25+hltnLhAyeaGZRI9OufdB0GwxWG3qBKO5zQ++acuxCqmgT/rjzqM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwV/tRFLaJT4rdPVPCJT1HGdIPd6m1SG3Zd2Zztkmk1B3SD9/8U
-	/HIVok7vrRWfZPBomJpCCgL5qzjhSuY41rl/vFqHPYo2auAYHl0ZMWL2k5uxpy2ZreMlN+5h2Dh
-	r8zi7R/sJqW++dymrmt4ES3kGF4ackaHz9YOHrGy0
-X-Gm-Gg: ASbGncuTtpeBsJkJPbGrYzMfW1shS8U/vss02kDWJTwhRsCxrEP8h27w4284Im/PfXW
-	lAfILUaqVOMFPQq2v9Zu0b1BRQ/QdJNUsoA+r65o8PdC66xzCHDfxroze77WycPOFAlFk4WlLFn
-	OCYvlujpGktL73m3e30IsckRwVJQBEtLL7G1uw7AXDwoVnKRroJWQKAN1AnSsp9VgctuU5oPIb+
-	vNyI7ISuHU74NQpSGmCNYKAnAKiPr5yKFiJvxciDKYvjv8bmK7bOyt9jjE3lovV24HLJ+w4UPHp
-	LZI=
-X-Google-Smtp-Source: AGHT+IHwuI2DV/8i9wA+ftWDchHWoXcLhvoxkPYCx4wGBXD6hoJ3XwVMuh37n+yunlF2yMM+iZ57eZJG7up0SSWoOtM=
-X-Received: by 2002:a53:d811:0:b0:635:4ecd:75a2 with SMTP id
- 956f58d0204a3-63ccb8efe97mr1280678d50.48.1759879552427; Tue, 07 Oct 2025
- 16:25:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IN4k8QBy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81C2FC4CEF1;
+	Tue,  7 Oct 2025 23:57:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1759881431;
+	bh=1lt/GTVLCLNZSIET9CdCaV6qRR/vWL2EfdDCZp2fU48=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=IN4k8QBy1X/rmTBeABtwBwH/i7YVJQPMCxs68EIHfekm6+GpR0JTwAXZmorJeKDKQ
+	 vFCDHlI4m3FQ999udFeUMvUzwZA5ZKSZu18hkmE8zd3eUXVH8nfICAjHa/dkrCz+Tz
+	 N8G536fyGyZhxxsDO//IFuOUy6ni5ks9uJBBdikaEoNfb6oYMvuUhJX1Rb2iq7BRA+
+	 BI0dpf79EAXg2+zQ7rH/ylx/HmLgoccQ6GPM/B8pIeJqKwA0YbdJqDv5K/uEwUFALx
+	 mTJgN4kkigiWxA9LIgaZvDbsLoVZw9YRk+/fmLSFOryhCWv8y+E8mGjHn0bQx9pCQe
+	 p2EfmMeHlPHtg==
+Date: Wed, 8 Oct 2025 08:57:07 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-hardening@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing: probes: Replace strcpy() with memcpy() in
+ __trace_probe_log_err()
+Message-Id: <20251008085707.eb3cacb973269b94a8db4388@kernel.org>
+In-Reply-To: <20251007191415.01f9005e@gandalf.local.home>
+References: <20250820214717.778243-3-thorsten.blum@linux.dev>
+	<20250825160540.9a5272a8a93a789eb36a7098@kernel.org>
+	<635528D7-9B5F-4B7C-9568-87375BA866C3@linux.dev>
+	<20250909085308.15a7f4379b5d324051bbd383@kernel.org>
+	<20251007191415.01f9005e@gandalf.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20251007003417.3470979-2-runpinglai@google.com>
- <20251006221043.07cdb0fd@gandalf.local.home> <CABgk4RQwGsn4CdP0K+_7A0j7RVOiHNfoF1ESk17wEuzCea16pA@mail.gmail.com>
- <20251007154308.5b158d04@gandalf.local.home> <20251007163141.1034b120@gandalf.local.home>
- <20251007174208.11fd02da@gandalf.local.home>
-In-Reply-To: <20251007174208.11fd02da@gandalf.local.home>
-From: Runping Lai <runpinglai@google.com>
-Date: Tue, 7 Oct 2025 16:25:41 -0700
-X-Gm-Features: AS18NWAB9wq6H0aVv79GmfnejYGOzUl2Ly8MQJ4U2zAS6jGCp5V1hgXWT22LhFU
-Message-ID: <CABgk4RSxm8mNJcRn0HdNH3+Y=VDL5gNVvyhhR26wjBme+i5X-g@mail.gmail.com>
-Subject: Re: [PATCH v1] Revert "tracing: Fix tracing_marker may trigger page
- fault during preempt_disable"
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Wattson CI <wattson-external@google.com>, kernel-team@android.com, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Luo Gengkun <luogengkun@huaweicloud.com>, Linus Torvalds <torvalds@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Oct 7, 2025 at 2:40=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org>=
- wrote:
->
-> On Tue, 7 Oct 2025 16:31:41 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> > +static void trace_user_fault_buffer_free(struct trace_user_buf_info *t=
-info)
-> > +{
-> > +     char *buf;
-> > +     int cpu;
-> > +
-> > +     for_each_possible_cpu(cpu) {
-> > +             buf =3D per_cpu_ptr(tinfo->tbuf, cpu)->buf;
-> > +             kfree(buf);
-> > +     }
->
-> Oops, missed:
->
->         free_percpu(tinfo->tbuf);
->
-> here.
+On Tue, 7 Oct 2025 19:14:15 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Hey Steve,
+> On Tue, 9 Sep 2025 08:53:08 +0900
+> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+> 
+> > On Mon, 8 Sep 2025 12:13:23 +0200
+> > Thorsten Blum <thorsten.blum@linux.dev> wrote:
+> > 
+> > > Hi Masami,
+> > > 
+> > > On 25. Aug 2025, at 09:05, Masami Hiramatsu (Google) wrote:  
+> > > > On Wed, 20 Aug 2025 23:47:18 +0200
+> > > > Thorsten Blum <thorsten.blum@linux.dev> wrote:
+> > > >   
+> > > >> strcpy() is deprecated; use memcpy() instead.
+> > > >> 
+> > > >> Link: https://github.com/KSPP/linux/issues/88
+> > > >> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>  
+> > > > 
+> > > > OK, looks good to me.  
+> > > 
+> > > Did you forget to add a Reviewed-by: tag and/or to add it to your tree?  
+> > 
+> > Thanks for ping me. No problem, I will add my Signed-by when
+> > picking this to probes/for-next.
+> > Since I will be responsible for applying this patch and sending
+> > it to Linus, this includes the "Reviewed-by" as well.
+> > 
+> 
+> Was this ever sent to Linus?
 
-Thanks for providing the buffer-based solution. I tried it and it
-fixes the problem!
-However, the first experiment, adding pagefault_disable/enable()
-around copy_nofault()
-doesn't help. Still having the same problem. I suppose the issue is
-more than pagefault?
+Yeah, but rejected with other patches in probes/for-next.
+I thought it was a part of cleanup, or should I sent it urgently?
+Then I can move this to probes/fixes.
 
-Can you please suggest the next move? I can also do more tests if needed.
+Thank you,
 
-Best,
-Runping
-
->
+> 
 > -- Steve
->
-> > +     kfree(tinfo);
-> > +}
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
