@@ -1,173 +1,144 @@
-Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 929701FF7D7
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  7 Oct 2025 18:19:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F29601E50E
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  7 Oct 2025 18:55:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759861189; cv=none; b=ZZ+C25SAzOvpjXjRSA2FaJjIIf2484UK3rQ0csZjvL/CO9Ss0aXyFj1i328mZmxuY393cE76TSeLOAs8e/jQ9XCC3MpRkXfIlxCDiblPwYV7eDFnR2Oc+7G3mPcT2AqYXuTYjBQ5khrj19rbtuZ/fdecNsbLZFXR0yk+2qKgckY=
+	t=1759863324; cv=none; b=jO4iDPii8gbkyBQ9cQeW9xFqw2SlytO8Brp2KDnPwPt0oXZzR7wdJ30X3xb9CRnKkvrB/semWK8w78NTeGg4qL5KFpPmwmVLtnNscwRzPzAYK5WGOT15Aa3i/ya7scj4EXI81f/GIwKohR/8NRYNIvSivSR83ITJI0yV+7R4MwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759861189; c=relaxed/simple;
-	bh=IVqEvsVTUvX2jwOw2TI5EYYaO5oPHB99rIwU+g37kOU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hXsG+S9bT4me62ZJWhrpzM/+LZJKmxTYjCTQzJtsHcGVYkZCQ/sqJVSbMxuINRootOUS6qecA+nWJj4WF74W4LBWIStuzgmSLOiU2Nr0gqL0I+SdVyBcPkAa/9Vz3lbvEGyhQacpG+ZyvQBPX81zHmAvbTyDMi6K2CH6H+3Bo4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AOfahSZX; arc=none smtp.client-ip=209.85.128.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1759863324; c=relaxed/simple;
+	bh=KYaaNQMzTyncgQyqSCq4P2yL0PsSWqFZF+5bbRW1HLE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=LAlI7O55kk3Uzx7YKX4C0WhAu1MGnujP0tlweCjHgE2QE92DeSixsRKmpiAM5ujQnRTJAPcNZ3hFitfV1yO6XP1pZ+a7/1dPdjlfQXnPSp1Wq9sXNIPGoMwxsiB7TuPUqiNF/Zz3GeDApVr43z8xYS7b8sKCtmgISovKCzCGwxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k0HVGjNo; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AOfahSZX"
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-71d603a9cfaso71075677b3.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 07 Oct 2025 11:19:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k0HVGjNo"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-27c369f8986so64933485ad.3
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 07 Oct 2025 11:55:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1759861186; x=1760465986; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1759863322; x=1760468122; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=QpRN8feqqsElTzLcm8W2XosrV9uz7ywy4cSoDnu6iQU=;
-        b=AOfahSZX/OVO/qiBtcbWKTd23P7v6SJ+YQcWyRIcgwOERZuZerVpFkTo44CGuGBCoI
-         He7yWgbx3v9VtvSA1jlvpeGHsRtyaU3NIn4u8vmKbj3JhnWpykTOR9FE26T83kvq97Ur
-         m5p6D8gss2UcEI6I0DtKkkVsLwHTJF/mHyUWp7WaUmtpkLmVxNmkXzOjvwGUN1ntPAos
-         /OKPrt0PqidGP7PSaoV62EZxvop9Ro1r1BpUC0So+yfpC/iPyNpaCU3f7+z0sAI1UPRi
-         5o3SbK/rJ1FwFEEBQjc3Mr1CkHfVt2H8tzmYT5G4qCkggaT+Fw7xyEPViOymvTFk2tF3
-         +3Rw==
+        bh=gEWpi/vkQDymkY4TZuKIEKhri9YrajHYIJ3EVRMXvNM=;
+        b=k0HVGjNoxrv+cDkt0LCnj2jXFpQRPZXbJFCsqXO9RoWy/zpE/8hxzpZiJojck41jBS
+         Tobu6aRiz3BL9C5GfZSUWBE6PP+2s9twehK3hxawTgPD0nkYvitPQ/LrDPCT5rBYFiDA
+         jYfnw3jNMkegNPNb3o4db6vDVcaBgEqcVeWmNYt7BGMirl1bt7S3YvDiRqj5W0GfwlQn
+         r5OATYMhAnv6ympM+hbhWeyoAMIIVZ5GIB5JjY4jrCb282doXwyGP3j/SJo/91Pe8XRw
+         pNXu7qUrm7I/O19Eki6mpXAqecAYUaqN5LltNIaHEUOY+IFUSGEiNeH5UT4Lwjjq5CZi
+         fkjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759861186; x=1760465986;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1759863322; x=1760468122;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=QpRN8feqqsElTzLcm8W2XosrV9uz7ywy4cSoDnu6iQU=;
-        b=PWuoeaYO5+hMtlL8sd41mW0eA9etZpEmpOA+U2jjifHcupolrogkccu+x89arj6hvX
-         fBSU0K13RzOsL2yIPH+vvVHwz/cnfggO1BVSP7eol53F3iledDyZX47n0njGzhBN9enQ
-         T3iEvhxa9swgYbuUS63Sz/ZVey502NhCwC/Li8o1NVeeF4SI5+BdXyUoC28XZtfHwplH
-         s3fzC2eLWQiJaIyeKWOlouWGL8xx9KmCn7uKYYTri0rM22ccKXc7QlPSzmJ9d4U9PPWR
-         GZq4LUy8FlhkU9H7KGpMMCZxtf+9W7/O/TwuQoNaRoMGoh3Waby7XiAo9X/ErvRPh1h8
-         wIIg==
-X-Forwarded-Encrypted: i=1; AJvYcCXuRk41flQSWDiPQ2Jyp/cMKenw4jLDFdGe3jwO5Eda+Km0yPCs+wBBANcms6ftboI3GNByyC5YQQnRIsL1u1WFCjk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUiTck5596+w26ABhI3UBAQR7M8GhLpqQbY2EnDqppjDO+WMV9
-	sVSGrQkvJFk67sRGFYE+BnvyGzBStSBn9ni1PQhQyFl4audufCyjhseDOqzdoe/obujUdaWgwkW
-	Z+77I2igJePfNzcwUG8DjKISaLQQpVMk7/4FLSNQE
-X-Gm-Gg: ASbGncthmGvOdx//LxUO9IE5Xoo+TN7HzEowoYqiWp2dZcu8iK5labcZ52EY6Ictpkh
-	VdL9dMz27Bv/gwTnNxS1r6LbAqKRt5xsNYKds36XKA3RCRufcpMYALGViW740wvV1McXr1WRdmS
-	HWG/PbLW/i3YWc28EaXPYhxbSGU0SsE0pQFks4N19tlp1XLUdr0iwknDr4UR04+JqdAVicfy/xt
-	zQA7TQBQXMz2qS8zp3KWDSoSMk32QaDh2GGuk1lKH9kBGqG+i6FiRm0OJ4P7/nHDKsnjeV1LQL6
-	cezLi/MSZD6Nlw==
-X-Google-Smtp-Source: AGHT+IHmnWRPd1ss0ygaevLRNtl5Gxq2B+MPydv3Ris/6UTKaORAxfSjZgrqGsCx7T5ydjyxJGnOiVeVkgDs6SCCIy8=
-X-Received: by 2002:a53:bd52:0:b0:636:5bf:2e30 with SMTP id
- 956f58d0204a3-63ccb8dba95mr426506d50.38.1759861186047; Tue, 07 Oct 2025
- 11:19:46 -0700 (PDT)
+        bh=gEWpi/vkQDymkY4TZuKIEKhri9YrajHYIJ3EVRMXvNM=;
+        b=H4DDntyHwptNpdKf+ckR1vHWalCyonjItS9kevlUnvXHO6+OdKG7XteEhaPyrOQtJz
+         BmYQ1pyrrLhZ383CgMPy8pzvINxCTTdA4bC8ta0KIi0cy5/X1uKgTjOqsOoIuBfFNkur
+         WT3xIOodIXq3NfOU90j0iZNZ5G1EWXL5f5U6tHCG745H6XTM3yt9eGfVZjl4UbAoficw
+         q+rxmhhjFfjOaWB6DLt4wuq5U+dvOzjUSnImgHhyWrYOCZIqXwSCrLBimEBZZaAS9XBH
+         sJYUMN3U0wFlqO3ydZM84x5z0/Nho4dc99z4gADC3/LAOwXJnkmXRjW6UaY/NPLDvNvC
+         Ozhg==
+X-Forwarded-Encrypted: i=1; AJvYcCWo/WdwVykd/YIV1MECdt/Up1Vdq4J7ldQflioar6jIZo7OvZp3zxwXiK6Qwb+81QZHkgwhozmbch7bjkjqCpGq1m8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwrEJrFDbnEIE3yvfTX9MkNWrUvVBVlf4b5lEz9MqKImHpB3LJc
+	aFMw9wKbT87LHc1YU+5QQ0gzKNwPPJ9PD1ItbBp1ht5YLE5msC0bOpIijpr6y7+I
+X-Gm-Gg: ASbGncv2roTNaQKawqasq2cf+O4GbcFD8gtLWq+PUKrIyH5Aje7ycfZxQhOiSSwzXTE
+	/41jV/TKUKj2mczxpFmhz/vMdCQ+FoQN/1M606gHOD6Kog9mSsaWE2kQh1XL/I9++dub6V1bJlM
+	mXB9gBg27H8YBpNT7Yuef0E5iZ0cm3tOZUS9r4t86k8BNXsoAl7eWnNoEU0vRDR1VZjXytycT4O
+	TbeYBaE3tgvCYKMeccQaPOoTxxqEL6GYg/WKzwztuR3Cf8KfkeO4up3XIGW9gQunuYq2+IYMKt9
+	4AbfAnMkMf4sk8K93qpwdKnj+G1yuhu/wkrsP0dWS5qRVz0T8tTLjhPWaRWG4znb4qC1UmJRvP1
+	1KjZM7AtU59/MQM4NQOfM5cRS9S69cz6kd3bVaTfSX0DZNdn2PKzX0Xi+5+4x6TLo+A==
+X-Google-Smtp-Source: AGHT+IFkC90TrbmYWdFb8+Squ/yvNSbuyPw/2N1C/NN0bhPNNPcOuqO79tcCivw9Cvz+HmCkqLSG/w==
+X-Received: by 2002:a17:902:d607:b0:269:8f2e:e38 with SMTP id d9443c01a7336-29027356528mr10234435ad.6.1759863322179;
+        Tue, 07 Oct 2025 11:55:22 -0700 (PDT)
+Received: from kforge.gk.pfsense.com ([103.70.166.143])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-28e8d110cdfsm173529655ad.13.2025.10.07.11.55.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Oct 2025 11:55:21 -0700 (PDT)
+From: Gopi Krishna Menon <krishnagopi487@gmail.com>
+To: rostedt@goodmis.org,
+	corbet@lwn.net
+Cc: Gopi Krishna Menon <krishnagopi487@gmail.com>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	skhan@linuxfoundation.org,
+	david.hunter.linux@gmail.com,
+	khalid@kernel.org,
+	linux-kernel-mentees@lists.linux.dev,
+	crwood@redhat.com,
+	tglozar@redhat.com,
+	costa.shul@redhat.com,
+	jkacur@redhat.com
+Subject: [PATCH 0/8] Documentation/rtla: rename common_xxx.rst files to common_xxx.txt 
+Date: Wed,  8 Oct 2025 00:24:49 +0530
+Message-ID: <20251007185508.40908-1-krishnagopi487@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <aOUMyGvkibvOV0IS@archie.me>
+References: <aOUMyGvkibvOV0IS@archie.me>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251007003417.3470979-2-runpinglai@google.com> <20251006221043.07cdb0fd@gandalf.local.home>
-In-Reply-To: <20251006221043.07cdb0fd@gandalf.local.home>
-From: Runping Lai <runpinglai@google.com>
-Date: Tue, 7 Oct 2025 11:19:34 -0700
-X-Gm-Features: AS18NWCYZSrDjScKnxfB6EhPqKQ5Q-Y1_UuIogq3KVwEYQ9HtyLxCPJJqTTf_vU
-Message-ID: <CABgk4RQwGsn4CdP0K+_7A0j7RVOiHNfoF1ESk17wEuzCea16pA@mail.gmail.com>
-Subject: Re: [PATCH v1] Revert "tracing: Fix tracing_marker may trigger page
- fault during preempt_disable"
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Wattson CI <wattson-external@google.com>, kernel-team@android.com, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Luo Gengkun <luogengkun@huaweicloud.com>, Linus Torvalds <torvalds@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Oct 6, 2025 at 7:08=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org>=
- wrote:
->
-> On Tue,  7 Oct 2025 00:34:17 +0000
-> Runping Lai <runpinglai@google.com> wrote:
->
-> > This reverts commit 3d62ab32df065e4a7797204a918f6489ddb8a237.
-> >
-> > It's observed on Pixel 6 that this commit causes a severe functional
-> > regression: all user-space writes to trace_marker now fail. The write
-> > does not goes through at all. The error is observed in the shell as
-> > 'printf: write: Bad address'. This breaks a primary ftrace interface
-> > for user-space debugging and profiling. In kernel trace file, it's
-> > logged as 'tracing_mark_write: <faulted>'. After reverting this commit,
-> > functionality is restored.
->
-> This is very interesting. The copy is being done in an atomic context. If
-> the fault had to do anything other than update a page table, it is likely
-> not to do anything and return a fault.
->
-> What preemption model is Pixel 6 running in? CONFIG_PREEMPT_NONE?
+This series is a continuation of previous patch available at:
+https://lore.kernel.org/linux-kernel-mentees/20251007083228.17319-1-krishnagopi487@gmail.com/
 
-Hey Steve,
+As suggested by Bagas Sanjaya, this series renames all common_*.rst
+files under Documentation/tools/rtla to common_*.txt to maintain
+consistency with common_options.txt and to avoid building them as
+standalone documents, as they are intended to be included by other rtla
+documents only.
 
-On Pixel6, CONFIG_PREEMPT is set. And CONFIG_PREEMPT_NONE
-is not set. I'll paste the full PREEMPT configs:
+Each patch renames one file and updates the corrosponding include
+references.
 
-~/aosp_kernel > common/scripts/extract-ikconfig
-out/slider/dist/vmlinux | less | grep PREEMPT
-CONFIG_PREEMPT_BUILD=3Dy
-CONFIG_ARCH_HAS_PREEMPT_LAZY=3Dy
-# CONFIG_PREEMPT_NONE is not set
-# CONFIG_PREEMPT_VOLUNTARY is not set
-CONFIG_PREEMPT=3Dy
-# CONFIG_PREEMPT_LAZY is not set
-# CONFIG_PREEMPT_RT is not set
-CONFIG_PREEMPT_COUNT=3Dy
-CONFIG_PREEMPTION=3Dy
-# CONFIG_PREEMPT_DYNAMIC is not set
-CONFIG_PREEMPT_RCU=3Dy
-CONFIG_HAVE_PREEMPT_DYNAMIC=3Dy
-CONFIG_HAVE_PREEMPT_DYNAMIC_KEY=3Dy
-CONFIG_PREEMPT_NOTIFIERS=3Dy
-# CONFIG_DEBUG_PREEMPT is not set
-CONFIG_PREEMPTIRQ_TRACEPOINTS=3Dy
-# CONFIG_PREEMPT_TRACER is not set
-# CONFIG_PREEMPTIRQ_DELAY_TEST is not set
+Testing was done by running "make htmldocs" before and after the changes
+to verify that no build errors were produced and that the rendered
+output remained identical.
 
->
-> The original code is buggy, but if this is causing a regression, then we
-> likely need to do something else, like copy in a pre-allocated buffer?
+Gopi Krishna Menon (8):
+  Documentation/rtla: rename common_appendix.rst to common_appendix.txt
+  Documentation/rtla: rename common_hist_options.rst
+  Documentation/rtla: rename common_osnoise_description.rst
+  Documentation/rtla: rename common_timerlat_aa.rst
+  Documentation/rtla: rename common_timerlat_description.rst
+  Documentation/rtla: rename common_timerlat_options.rst
+  Documentation/rtla: rename common_top_options.rst
+  Documentation/rtla: rename common_osnoise_options.rst
 
-Sounds like a good plan. Before the long term fix, can we please
-revert this commit?
+ .../rtla/{common_appendix.rst => common_appendix.txt}  |  0
+ ...common_hist_options.rst => common_hist_options.txt} |  0
+ ..._description.rst => common_osnoise_description.txt} |  0
+ ..._osnoise_options.rst => common_osnoise_options.txt} |  0
+ .../{common_timerlat_aa.rst => common_timerlat_aa.txt} |  0
+ ...description.rst => common_timerlat_description.txt} |  0
+ ...imerlat_options.rst => common_timerlat_options.txt} |  0
+ .../{common_top_options.rst => common_top_options.txt} |  0
+ Documentation/tools/rtla/rtla-hwnoise.rst              |  6 +++---
+ Documentation/tools/rtla/rtla-osnoise-hist.rst         |  8 ++++----
+ Documentation/tools/rtla/rtla-osnoise-top.rst          |  8 ++++----
+ Documentation/tools/rtla/rtla-osnoise.rst              |  4 ++--
+ Documentation/tools/rtla/rtla-timerlat-hist.rst        | 10 +++++-----
+ Documentation/tools/rtla/rtla-timerlat-top.rst         | 10 +++++-----
+ Documentation/tools/rtla/rtla-timerlat.rst             |  4 ++--
+ Documentation/tools/rtla/rtla.rst                      |  2 +-
+ 16 files changed, 26 insertions(+), 26 deletions(-)
+ rename Documentation/tools/rtla/{common_appendix.rst => common_appendix.txt} (100%)
+ rename Documentation/tools/rtla/{common_hist_options.rst => common_hist_options.txt} (100%)
+ rename Documentation/tools/rtla/{common_osnoise_description.rst => common_osnoise_description.txt} (100%)
+ rename Documentation/tools/rtla/{common_osnoise_options.rst => common_osnoise_options.txt} (100%)
+ rename Documentation/tools/rtla/{common_timerlat_aa.rst => common_timerlat_aa.txt} (100%)
+ rename Documentation/tools/rtla/{common_timerlat_description.rst => common_timerlat_description.txt} (100%)
+ rename Documentation/tools/rtla/{common_timerlat_options.rst => common_timerlat_options.txt} (100%)
+ rename Documentation/tools/rtla/{common_top_options.rst => common_top_options.txt} (100%)
 
-Best,
-Runping
+-- 
+2.43.0
 
->
-> -- Steve
->
->
-> >
-> > Signed-off-by: Runping Lai <runpinglai@google.com>
-> > Reported-by: Wattson CI <wattson-external@google.com>
-> > ---
-> >  kernel/trace/trace.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> > index 156e7e0bf559..bb9a6284a629 100644
-> > --- a/kernel/trace/trace.c
-> > +++ b/kernel/trace/trace.c
-> > @@ -7213,7 +7213,7 @@ static ssize_t write_marker_to_buffer(struct trac=
-e_array *tr, const char __user
-> >       entry =3D ring_buffer_event_data(event);
-> >       entry->ip =3D ip;
-> >
-> > -     len =3D copy_from_user_nofault(&entry->buf, ubuf, cnt);
-> > +     len =3D __copy_from_user_inatomic(&entry->buf, ubuf, cnt);
-> >       if (len) {
-> >               memcpy(&entry->buf, FAULTED_STR, FAULTED_SIZE);
-> >               cnt =3D FAULTED_SIZE;
-> > @@ -7310,7 +7310,7 @@ static ssize_t write_raw_marker_to_buffer(struct =
-trace_array *tr,
-> >
-> >       entry =3D ring_buffer_event_data(event);
-> >
-> > -     len =3D copy_from_user_nofault(&entry->id, ubuf, cnt);
-> > +     len =3D __copy_from_user_inatomic(&entry->id, ubuf, cnt);
-> >       if (len) {
-> >               entry->id =3D -1;
-> >               memcpy(&entry->buf, FAULTED_STR, FAULTED_SIZE);
->
