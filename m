@@ -1,114 +1,75 @@
-Received: from mail-pj1-f66.google.com (mail-pj1-f66.google.com [209.85.216.66])
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 078E72E8B63
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  7 Oct 2025 17:13:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACB1A1F9F47
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  7 Oct 2025 17:45:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759857221; cv=none; b=ViznrZh3h/HDSxrXc8+zWsenSFpeHHxZ8k1Ujuc6LK56l7wYUDAZvdTt0CxFYc0A7xkHRDhyEmM7+FAWFF6VUgVtc/rjrYkNrdZ6KpO/oJojSDu4suCNDYmvfSV5l+p7ITgIIAeryXWs6vglmz1vf6UL/o90b1Vin54QvAnc6iU=
+	t=1759859105; cv=none; b=jcjb0RMqC5uByG5AA+D3x1C+4P/xbces6KdIr9+jhEkOehRqbvswAutmZVMp2ItFl3Gpxgu2E2NE5qgfkg9Y6zJtmY+mtzL/RPv5/5mUH5yDH6C+R4kylOK2pbzygodkMMupYjDvTBNa72UmmkVP57PSUV1PJdPPIzw4E/AIvK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759857221; c=relaxed/simple;
-	bh=6hkEXSoPQClBN9P+2M59L/xoo11QDhuwy3o/ItrIwug=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ys8qeMzFxmeoth8y1R2DbQT0SenitgXmNygbXWPmbn50M8kVyyrrfYVlPyqivx4fIL1ffcQbv+1SINo/HoLlFyGr25LyWCHEE8XYYCM58aLqzDMQlkcQb/AI03Jt0Cg2BrRQgEAP6+b7hviOcS6Y3huLdvGmaDdhZojhTW1PU/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BZx9VgAg; arc=none smtp.client-ip=209.85.216.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BZx9VgAg"
-Received: by mail-pj1-f66.google.com with SMTP id 98e67ed59e1d1-330b4739538so6612897a91.3
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 07 Oct 2025 10:13:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1759857219; x=1760462019; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ndiW8EiHjsJuqlvrDnKSTbKhst7QkkL0u0UDEfXrL54=;
-        b=BZx9VgAg4A2J/75tOqLJHhPNOJVQzQwaPA0t/+lD9GMt+4M+lBGisQpB+KWMsvYNpj
-         FK4WmeaPtjlowQeMmCPDgo/F44H0Kt1UtF0BK/6fw+TpXr6GC4EIxd6gBU0U9liFxQjN
-         kNoBl562iK46eU8ZD27cS7bF4alhQogjMs1GG7Jl8fz3chSdL4nGeobUmnQkM3IU1KEa
-         nKC1PyQeeTa58mmnt/7VZzQcnynIqQyCPLRxu9jqhilYVl8xtHwA+C/1314vufhzW7l8
-         ZVO05lvTt5bZeJvi4bv/gD5BvSWMBnD/dT6ZM+u027Y+71sBkOHuv6xv4hev0CIANcUf
-         C2JA==
+	s=arc-20240116; t=1759859105; c=relaxed/simple;
+	bh=iHVSASOMpEg/He/hoeH9kIEP14zS1QbDrqdwO1rPbLA=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=PP2U/bEGN2h72Qnjmnx8AHcQcAUm/Xr41OKl8SufktVbXIJa0+NhikCaHztUnRHJssuox9anNVy0e0mQxxvH6oHLbZg+z1RXsAeneRpYK03qJkIKXTsRMQgBXk8n/MFnooyHmNsypqJd/O7asUo4aY4bmGAAuFRxeyOqhvv5h0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-8870219dce3so691601439f.0
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 07 Oct 2025 10:45:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759857219; x=1760462019;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ndiW8EiHjsJuqlvrDnKSTbKhst7QkkL0u0UDEfXrL54=;
-        b=ZgLQ6VzYniSgmuykwNoTbDXZYeXh9rSYB2CHlGEautHLqrhL398YztbkqfQISysXQZ
-         SvxF4UIKF9hC01CQO/Cg8ruvOR1wB2hsdyAHXqAj9L40R/ji+tDz4N2MOzK2ogg+nz+Y
-         3DIysaNE1j/xZxVid5Qjam+GlxOyt7GnZCb2RGLMXQWV/uc4D7/lP35Jt6CAMdjjAkw7
-         3Z0TXGHQ2zErUXKUYkgm1VHiPZ2fbMPEEpbCPUFHSgODo653xO4FZ3/mfP6GolbUOYTT
-         img2OepwhYiS2Ft6vzas4ZmtAebGAO05F7yD2hkF4GLzf8Mqntcmc9/WB+OsbFHbT4r+
-         uwbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW97Fo2gGRVctQ5/Vy1mcKWVlzDNl2mjDcKKaEhNVzMJCHK6eIySEomq2eh3lohD76yHw0nAGsqypFEStiwx0ozKPs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YydO0C2A1I8glnTasOgocBE+cgcqMBlMH9VaOn80uf8suaMDC6n
-	AWVE/wvTtCYSbcG4Tp00ajbdQZXJyfA0GIesD9q4+w6f9NgS7g+koQxY
-X-Gm-Gg: ASbGncsucachqPoDmp2NzKHEwBXX4W1NeJCxzGemG7OAfR+ZRB7JZPQBv3JN2F3Lot4
-	v9K02nGqBHHXgRPFe/VH2zEHdJGnIPUcOm3bRtta/Wp5XWAxz7v3ZgkAK9qjyz9BjVt+ZOJo70h
-	oN1F9KIooNBPCCnDh/+PTWvyk3rnt2EgFM4dXOUDUGxNxmeBgfr0FSrkT68RJ9IHd43klTSxLb0
-	ghjRRBm0XL5EagYQ8/oHQd2BR6TgJl0V6mV64g855KsBa7fKORTvVWv2r1JZWbTkSH0BMwfPJsC
-	8azHy1SGKihLwXOQovEeRj2rVrNY2lF4sTC692nq1Pq3zzB6O+AWt4BtsagMgpXqDkIjkJfxIkR
-	cbO9zzLBeX+Zd+jcEFggqWfVJRDo3tgRRtxNgzBgrPTJjOGpc725xKJ968fhvofPjeQ==
-X-Google-Smtp-Source: AGHT+IEw8/ovBuazt3eXRnTgiJXDDXOaNSZGFtByXDec22X8YVk7CtYfnAhylw3oRk25QxNUr2BtOw==
-X-Received: by 2002:a17:90b:1d09:b0:32e:a59f:b25d with SMTP id 98e67ed59e1d1-33b513cfadbmr293892a91.30.1759857219077;
-        Tue, 07 Oct 2025 10:13:39 -0700 (PDT)
-Received: from fedora ([103.120.31.122])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-339edf4992dsm1906075a91.0.2025.10.07.10.13.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Oct 2025 10:13:38 -0700 (PDT)
-From: Ankit Khushwaha <ankitkhushwaha.linux@gmail.com>
-To: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: david.hunter.linux@gmail.com,
-	skhan@linuxfoundation.org,
-	linux-kernel-mentees@lists.linuxfoundation.org,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Ankit Khushwaha <ankitkhushwaha.linux@gmail.com>,
-	syzbot+ddc001b92c083dbf2b97@syzkaller.appspotmail.com
-Subject: [PATCH] ring buffer: propagate __rb_map_vma return value to caller
-Date: Tue,  7 Oct 2025 22:42:56 +0530
-Message-ID: <20251007171256.20884-1-ankitkhushwaha.linux@gmail.com>
-X-Mailer: git-send-email 2.51.0
+        d=1e100.net; s=20230601; t=1759859103; x=1760463903;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=AQ8LwJ2kllcnIjhbSb8t8QQLy2sXIVFfw/qICKEG1sY=;
+        b=kAF/Ly2TgeTHvz0XNpFPMjwvq/YxQCuwhpgC5mPRWK5lrEUG41fLoH0mOil/YK/vBw
+         fY+sYYmSLUUAU8ZkCz/a4TSUOo2sbI3ST26kpV4hZc9/oK9CyJhtyTYGUostZtcaY1fw
+         SEEhpNL9Fl0nnl0dRKsfNgT+dZeD2SgFAdMc8HkDRXM9+22cZ3VO8ZDOm0PI3dSXzujg
+         rQgLn393N3mIlDtCwPwCOHVRTd15HoVm9jQXiLHfn18NbdenLJ6wyqm0o9lPmHH120ek
+         PKSUZc982/TQy5XcC1xb59TH24IiKWUDNxPWCjV5IVRGU2dlPDfvdw+Y8nGtN2ddcEDS
+         JlJw==
+X-Forwarded-Encrypted: i=1; AJvYcCV+97tez6gow3pQuj0Cq+MbXqKJtgim41S/yRNW5vvfrpda+pf87X5nfubk4gO5rzpjzS+AK4gXUqxIpW7RqRDVQSg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzLjLsQtpeN9vOv/evs4k1/a2RmWVrFECymqH4R2OinsjQ1Z0/v
+	DVM4e7V8bYBhBe6EZ7IAbTCE36FSRa880LX4XQk8B/4gYjGnYv4b5MB8l09DcinlIUIcEtaX6sd
+	Vew2ext3dJtJvfFZDFtY7M8pQPJx++OUHAexTvaNUAgkxlYz7kJ5qIVXraOs=
+X-Google-Smtp-Source: AGHT+IFSDH+Kx4nFTO1p/Mgi17M1eo4iFNiAqnoTP2PGFKpeamxueHtLoiP1elV9Re0bzLbxiLZOEJw3X6kx1ZTxkY0Eqb3HK7Hg
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6602:2d8f:b0:922:6c20:45ef with SMTP id
+ ca18e2360f4ac-93bd18cbaa4mr17149539f.7.1759859102832; Tue, 07 Oct 2025
+ 10:45:02 -0700 (PDT)
+Date: Tue, 07 Oct 2025 10:45:02 -0700
+In-Reply-To: <20251007171256.20884-1-ankitkhushwaha.linux@gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68e5519e.a00a0220.298cc0.0482.GAE@google.com>
+Subject: Re: [syzbot] [trace?] WARNING in tracing_buffers_mmap_close
+From: syzbot <syzbot+ddc001b92c083dbf2b97@syzkaller.appspotmail.com>
+To: ankitkhushwaha.linux@gmail.com, david.hunter.linux@gmail.com, 
+	linux-kernel-mentees@lists.linuxfoundation.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com, 
+	mhiramat@kernel.org, rostedt@goodmis.org, skhan@linuxfoundation.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-The return value from `__rb_map_vma()`, which rejects writable or
-executable mappings (VM_WRITE, VM_EXEC, or !VM_MAYSHARE), was being
-ignored. As a result the caller of `__rb_map_vma` always returned 0 
-even when the mapping had actually failed, allowing it to proceed
-with an invalid VMA.
+Hello,
+
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
 Reported-by: syzbot+ddc001b92c083dbf2b97@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?id=194151be8eaebd826005329b2e123aecae714bdb
-Signed-off-by: Ankit Khushwaha <ankitkhushwaha.linux@gmail.com>
----
+Tested-by: syzbot+ddc001b92c083dbf2b97@syzkaller.appspotmail.com
 
-#syz test: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 4ff71af020ae
+Tested on:
 
----
- kernel/trace/ring_buffer.c | 2 ++
- 1 file changed, 2 insertions(+)
+commit:         4ff71af0 Merge tag 'net-6.17-rc8' of git://git.kernel...
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+console output: https://syzkaller.appspot.com/x/log.txt?x=17676892580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=595e5938a1dd5b4e
+dashboard link: https://syzkaller.appspot.com/bug?extid=ddc001b92c083dbf2b97
+compiler:       gcc (Debian 12.2.0-14+deb12u1) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=1249d1e2580000
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 43460949ad3f..4efb90364f48 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -7271,6 +7271,8 @@ int ring_buffer_map(struct trace_buffer *buffer, int cpu,
- 		cpu_buffer->subbuf_ids = NULL;
- 		rb_free_meta_page(cpu_buffer);
- 		atomic_dec(&cpu_buffer->resize_disabled);
-+		/* VM failed to be mapped */
-+		return err;
- 	}
- 
- 	return 0;
--- 
-2.51.0
-
+Note: testing is done by a robot and is best-effort only.
