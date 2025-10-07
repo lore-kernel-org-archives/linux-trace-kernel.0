@@ -1,109 +1,160 @@
-Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
+Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7262DDDD2
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  7 Oct 2025 03:12:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D38F21CC4F
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  7 Oct 2025 06:14:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759806764; cv=none; b=srE5Pw3+ruadkpWZE8FH63t3wHMPdbPhONHIiWpBhIp7e/ALRowmk8nZHlgR6wQ8GmIzvZmAaUUzZgIz4AwRu9wTGuHfwzswHYf17Z7yptyupV43KcAoOCU++TcQwwAM7hokh4AVvERoOHzpz0hQI6q8cIaDWAqS+pZMFkdlp9Y=
+	t=1759817699; cv=none; b=qXTeOk8P0thd7pnnM5Mt2j9puTpU45tXQwMkCLgM+xROM3Drk5Ius4Wtm4/GLLL1LZM2IHhCsKonVIEHnVpSgjyCbwdVwIgQmMJxZkzcd9IMwty3J+BR3H3IHQMu7GODoHnVEesBVc1CXnottKAabOY5pA93yeEjznP6Q2acYlg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759806764; c=relaxed/simple;
-	bh=JqLQ9GdGACLiotBrHerO2CE3M2BFiKN6dTWGtZDXT7M=;
+	s=arc-20240116; t=1759817699; c=relaxed/simple;
+	bh=F1u4iWMm+qcDMG+vr/1mGk7YuWuqcxw34EH+k+It1tI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cNZ4OcBM2PtPgiMu8vcMDsRv87670akU/uHJuJJUhAEmhqkf2R9hLeqdxBA2eAfiBDeoq8MXe+ZIU5SXtZ5/Aty1czOGECDI8ox7ooOaHZrFuPhAKAMNJZg1NzVYwNKxw7pQITJxuUJ5157VnlNmD8Tf9nePIrEhouuQ04oCmAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=awcmM1HL; arc=none smtp.client-ip=91.218.175.188
+	 MIME-Version:Content-Type; b=Hlv6Nr6cFqRINX1PXuH5GJaW3tKVeWh0+LV1F+E9kVkPMHQ8KwYv8V9qd+e4jsSpov8s2xEOjHDbdhEEyU4Se7XgM13crnzQp/X7k6NzANTY2bqWUcUag/DZPjpHZ5M7hkezjRkmM4+N0lEqScuUfOb8b8r+UUX/Y+uiZK75p3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=v/AxOXC8; arc=none smtp.client-ip=91.218.175.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="awcmM1HL"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="v/AxOXC8"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1759806759;
+	t=1759817685;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=SOOyWl5/zCiHJcE5VliB1ZHnaBHVoLSMy7X8ybhVYo0=;
-	b=awcmM1HLg037zcr9XZM9dbzpijUINxme/NaPHHC860h/hIP64D7wUyKLG51zY1PohwEPIX
-	CoJ+Z8+Ue3PPLjdMxOum4KzGmQuZP43LcSjPs5rhQn8Gkg6FER3K0tcbZrGwep1uWu/xvO
-	M+LL8On1npCd6jKxF5OkP5i8RkZjzQk=
+	bh=9krF6e/yQ7masYGUY5rb2IPLnZ63vNRajRMzQDojwQ0=;
+	b=v/AxOXC8xspU3EfvKkn8iOi7lVKw5gbna3dK8IanDYZbKs+Rd2FTYbXsD7zNPOXkN9VMOG
+	Ev598DhJZ67GFBZbP/xqoKCRZv+Is0PgTQ68R+1ZE5QMtwwXr+vn0LBnLvR7JoS3CmHI8o
+	jeiQGc9GU25B7N8WuCn6oqUjJVz7Piw=
 From: Menglong Dong <menglong.dong@linux.dev>
-To: Steven Rostedt <rostedt@goodmis.org>,
- "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Mark Brown <broonie@kernel.org>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Menglong Dong <menglong8.dong@gmail.com>,
- Thorsten Blum <thorsten.blum@linux.dev>,
- Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject:
- Re: [for-next PATCH v2] tracing: wprobe: Fix to use IS_ERR_PCPU() for per-cpu
- pointer
-Date: Tue, 07 Oct 2025 11:12:18 +0800
-Message-ID: <6198553.lOV4Wx5bFT@7950hx>
-In-Reply-To: <175979899246.1800846.1725245135731182727.stgit@devnote2>
-References: <175979899246.1800846.1725245135731182727.stgit@devnote2>
+To: Menglong Dong <menglong8.dong@gmail.com>,
+ Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Alexei Starovoitov <ast@kernel.org>, bpf <bpf@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>,
+ linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, jiang.biao@linux.dev
+Subject: Re: [PATCH RFC bpf-next 1/3] bpf: report probe fault to BPF stderr
+Date: Tue, 07 Oct 2025 14:14:35 +0800
+Message-ID: <3571660.QJadu78ljV@7950hx>
+In-Reply-To:
+ <CAADnVQJAdAxEOWT6avzwq6ZrXhEdovhx3yibgA6T8wnMEnnAjg@mail.gmail.com>
+References:
+ <20250927061210.194502-1-menglong.dong@linux.dev>
+ <20250927061210.194502-2-menglong.dong@linux.dev>
+ <CAADnVQJAdAxEOWT6avzwq6ZrXhEdovhx3yibgA6T8wnMEnnAjg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset="utf-8"
 X-Migadu-Flow: FLOW_OUT
 
-On 2025/10/7 09:03, Masami Hiramatsu (Google) wrote:
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> Since wprobe uses IS_ERR() for per-cpu pointer, it failed to build.
-> 
-> /tmp/next/build/kernel/trace/trace_wprobe.c: In function '__register_trace_wprobe':
-> /tmp/next/build/kernel/trace/trace_wprobe.c:176:20: error: cast to generic address space pointer from disjoint '__seg_gs' address space pointer [-Werror]
->   176 |         if (IS_ERR((void * __force)tw->bp_event)) {
->       |                    ^
-> /tmp/next/build/kernel/trace/trace_wprobe.c:177:35: error: cast to generic address space pointer from disjoint '__seg_gs' address space pointer [-Werror]
->   177 |                 int ret = PTR_ERR((void * __force)tw->bp_event);
->       |                                   ^
-> 
-> Use IS_ERR_PCPU() instead.
-> 
-> Reported-by: Mark Brown <broonie@kernel.org>
-> Closes: https://lore.kernel.org/all/aN6fTmAjD7-SJsw2@sirena.org.uk/
-> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> ---
->  - Confirmed that `make allmodconfig && make` passed on x86_64 and arm64.
->  Changes in v2:
->  - Remove unneeded casting.
->  - Use PTR_ERR_PCPU() too.
-> ---
->  kernel/trace/trace_wprobe.c |    4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/trace/trace_wprobe.c b/kernel/trace/trace_wprobe.c
-> index 4b00a8e917c1..98605b207f43 100644
-> --- a/kernel/trace/trace_wprobe.c
-> +++ b/kernel/trace/trace_wprobe.c
-> @@ -173,8 +173,8 @@ static int __register_trace_wprobe(struct trace_wprobe *tw)
->  	attr.bp_type = tw->type;
->  
->  	tw->bp_event = register_wide_hw_breakpoint(&attr, wprobe_perf_handler, tw);
-> -	if (IS_ERR((void * __force)tw->bp_event)) {
-> -		int ret = PTR_ERR((void * __force)tw->bp_event);
-> +	if (IS_ERR_PCPU(tw->bp_event)) {
-> +		int ret = PTR_ERR_PCPU(tw->bp_event);
+On 2025/10/2 10:03, Alexei Starovoitov wrote:
+> On Fri, Sep 26, 2025 at 11:12=E2=80=AFPM Menglong Dong <menglong8.dong@gm=
+ail.com> wrote:
+> >
+> > Introduce the function bpf_prog_report_probe_violation(), which is used
+> > to report the memory probe fault to the user by the BPF stderr.
+> >
+> > Signed-off-by: Menglong Dong <menglong.dong@linux.dev>
+> > ---
+> >  include/linux/bpf.h      |  1 +
+> >  kernel/trace/bpf_trace.c | 18 ++++++++++++++++++
+> >  2 files changed, 19 insertions(+)
+> >
+> > diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+> > index 6338e54a9b1f..a31c5ce56c32 100644
+> > --- a/include/linux/bpf.h
+> > +++ b/include/linux/bpf.h
+> > @@ -2902,6 +2902,7 @@ void bpf_dynptr_init(struct bpf_dynptr_kern *ptr,=
+ void *data,
+> >  void bpf_dynptr_set_null(struct bpf_dynptr_kern *ptr);
+> >  void bpf_dynptr_set_rdonly(struct bpf_dynptr_kern *ptr);
+> >  void bpf_prog_report_arena_violation(bool write, unsigned long addr, u=
+nsigned long fault_ip);
+> > +void bpf_prog_report_probe_violation(bool write, unsigned long fault_i=
+p);
+> >
+> >  #else /* !CONFIG_BPF_SYSCALL */
+> >  static inline struct bpf_prog *bpf_prog_get(u32 ufd)
+> > diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> > index 8f23f5273bab..9bd03a9f53db 100644
+> > --- a/kernel/trace/bpf_trace.c
+> > +++ b/kernel/trace/bpf_trace.c
+> > @@ -2055,6 +2055,24 @@ void bpf_put_raw_tracepoint(struct bpf_raw_event=
+_map *btp)
+> >         module_put(mod);
+> >  }
+> >
+> > +void bpf_prog_report_probe_violation(bool write, unsigned long fault_i=
+p)
+> > +{
+> > +       struct bpf_stream_stage ss;
+> > +       struct bpf_prog *prog;
+> > +
+> > +       rcu_read_lock();
+> > +       prog =3D bpf_prog_ksym_find(fault_ip);
+> > +       rcu_read_unlock();
+> > +       if (!prog)
+> > +               return;
+> > +
+> > +       bpf_stream_stage(ss, prog, BPF_STDERR, ({
+> > +               bpf_stream_printk(ss, "ERROR: Probe %s access faule, in=
+sn=3D0x%lx\n",
+> > +                                 write ? "WRITE" : "READ", fault_ip);
+> > +               bpf_stream_dump_stack(ss);
+> > +       }));
+>=20
+> Interesting idea, but the above message is not helpful.
+> Users cannot decipher a fault_ip within a bpf prog.
+> It's just a random number.
 
-This version LGTM.
+Yeah, I have noticed this too. What useful is the
+bpf_stream_dump_stack(), which will print the code
+line that trigger the fault.
 
-Reviewed-by: Menglong Dong <menglong8.dong@gmail.com>
+> But stepping back... just faults are common in tracing.
+> If we start printing them we will just fill the stream to the max,
+> but users won't know that the message is there, since no one
 
->  
->  		tw->bp_event = NULL;
->  		return ret;
-> 
-> 
-> 
+You are right, we definitely can't output this message
+to STDERR directly. We can add an extra flag for it, as you
+said below.
+
+Or, maybe we can introduce a enum stream_type, and
+the users can subscribe what kind of messages they
+want to receive.
+
+> expects it. arena and lock errors are rare and arena faults
+> were specifically requested by folks who develop progs that use arena.
+> This one is different. These faults have been around for a long time
+> and I don't recall people asking for more verbosity.
+> We can add them with an extra flag specified at prog load time,
+> but even then. Doesn't feel that useful.
+
+Generally speaking, users can do invalid checking before
+they do the memory reading, such as NULL checking. And
+the pointer in function arguments that we hook is initialized
+in most case. So the fault is someting that can be prevented.
+
+I have a BPF tools which is writed for 4.X kernel and kprobe
+based BPF is used. Now I'm planing to migrate it to 6.X kernel
+and replace bpf_probe_read_kernel() with bpf_core_cast() to
+obtain better performance. Then I find that I can't check if the
+memory reading is success, which can lead to potential risk.
+So my tool will be happy to get such fault event :)
+
+Leon suggested to add a global errno for each BPF programs,
+and I haven't dig deeply on this idea yet.
+
+Thanks!
+Menglong Dong
+
+>=20
+>=20
 
 
 
