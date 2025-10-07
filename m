@@ -1,74 +1,77 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CEB539FD9
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  7 Oct 2025 11:47:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C75C72DF3FD
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  7 Oct 2025 12:51:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759837641; cv=none; b=jdQZ6RZ83pASRz6yy1b1xHXW66361zkz4IZVzQ7poYNwAZTCU8mDN7B3y+s6xXWCeO/Y6TZKYxMBnNa+npb7F3gWpXWgJ55Uv3ZmbPay87BKmJaxbeoNKMrxu9mC6TDfl+htJ3c1ROiRackyD2UnLZNrrQjlqCMhFNFuQNlqOkU=
+	t=1759841487; cv=none; b=JmCffzUxWsYvtKuOjNh4+AcWl1CdKT1BrDWt4MH9rlCTFFiP1eFcwDVddYWNbBQ2H/d/VAuxb7ga5bVueUPtwESlqDoS+gi3R6GZD/2nuvHcKGcDDC9XPCkXLgwlLNF/ro+Op4EkE5oaXS8A7qteWTdLb2lA505BjMggD/nTMUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759837641; c=relaxed/simple;
-	bh=tHybA+sPs/+b+P0zGrwAATn7fve3huRWbNvhgJc3ask=;
+	s=arc-20240116; t=1759841487; c=relaxed/simple;
+	bh=Cva8F6I6vC8G5UAuRvxmhYK0EkV6IdIuOcxrR7JOX88=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HQUyHGGUkxW3m59CyyT8h4YEg67g4TETBjsDWD9KJ2WgET7EPfhkvH/CfPEDkrMuxGqGzBYMKmWurHLjof7fMJogPSgZ6tsupeWBEOoDAt/Ygi3SqSzx1SDxTqpzKKqk7j274ppIgbQ8atwdjz2XFElTWlVMgwocDoKIZ2dc4Yo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FALJvdlw; arc=none smtp.client-ip=209.85.210.172
+	 Content-Type:Content-Disposition:In-Reply-To; b=cHZBH1mYVX0nRsITJUY1ifyIFbZgerP3dsXGqwu58b5J19AUVnBo0vHC3PgyQmfqrryXSLxvvrAuPl+4YNkwKc0bRweNM2gwn0dgfNxGsY4cU+0+C57hwGCdgLpwOXoEFvI1SdB2wVQ5/bAhN8+1CRgvwmZodUYXjERLPy2HQSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Oj/LfUBT; arc=none smtp.client-ip=209.85.214.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FALJvdlw"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-7811a5ec5b6so5277206b3a.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 07 Oct 2025 04:47:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Oj/LfUBT"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-28e7cd34047so52130485ad.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 07 Oct 2025 05:51:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1759837639; x=1760442439; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1759841485; x=1760446285; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=CpCgxhORN6lEa4s+DNPc1Y/IXSmA220J4nQ7qgIWmeM=;
-        b=FALJvdlw0f6fzKMr7jGOs52hp5cx3iDizPSBm+MFhbWxTyGAtKKWoUBJ3vOl+XSlt+
-         FLEWhGCrxqFQAMK3Kf5M9njSA29MACI4m6OPcJ8upInIkLMsJd4ZN4VyOpYMpz+rptD8
-         ensBm8xczJrCLErPMhVUOXKyGiyrGML1q+8X4uSXJYr3Sl6BWLCf7Z4fL5Nq8bJBGmBD
-         vqIK35NOHrPLbf4AldCLcFdVXM1yumgz+y3hyn9mw1985uLxa/45PHAIoe5C7VgV1Ewc
-         FExDBn9o/NrdAWpsMktsvupJ6oXCOpwTzhujb2XcxLpyqq4osTiVOkVv1oBdc9AiUkv9
-         s6tw==
+        bh=Cva8F6I6vC8G5UAuRvxmhYK0EkV6IdIuOcxrR7JOX88=;
+        b=Oj/LfUBTKsgzoVoXOkEUIsvOmfq687BCB/dCoQn1tFxHBK+IrXkIf3oBm26//bDOCP
+         O27Usl0eynLvoWBNFeLaFTMcyd6V1Zcs3LG6UB2kV5QGZUzo3IccwYjH3BfvX62uogz2
+         crHnP9z75KnpoB4lv3e0JLoLHxKG1ojqVbAvlIZZas0l86j3wLvFhnd69IpCMXOBTeTK
+         msJ+6j1K8Tsbug34YWAgLblZa9jdkOpqV3pOiUI10uNVOTpvHWEZh8nd4v0NeGtwa9vy
+         0yQcKODNJRws3SEDyKaDAhNq5HX6rYeGEA9XHm2b1ix6g/gHTq2goqjAj/ly59utH/WD
+         i0mA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759837639; x=1760442439;
+        d=1e100.net; s=20230601; t=1759841485; x=1760446285;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=CpCgxhORN6lEa4s+DNPc1Y/IXSmA220J4nQ7qgIWmeM=;
-        b=QNZFfbQpC4a/27hc4dmtLxNiMreXcqJxDGrvqsmahJkNmawoNyG8QQLWpSYDBOqIhs
-         wZ3xMdKWUkBHQtNqSqD1KEX2L6dtDo0IVKebWFYq3yLgL7tUQqX7qh/boV4OEOy+2iQW
-         qqKvpx+0D0ZhursHMIzM+DizDcmLjo10vZSgIn67Nn62ulUMM1kSl01pIooFxqXxoRWF
-         bARX29MILLZONpz4cJKsXJLGNcP9O4Zhg22Wy7z9hIZ5Nsh2oKX6HbyVVpGFm/NdKLBf
-         vn+Pb+Sy7prc33CBfFopLS3L232NRpIOFuDkG0+Z7WbB2kpMgnigpzA7yHuqEgM6T/aP
-         6ZkQ==
-X-Gm-Message-State: AOJu0YzF5mdpkNLrJgeTcuxbOBqFLbZydeYYAVpJRrllreihUZgreFQY
-	/tQTb3WhJFEOvXeJTmzQpDWKIMmBC9I6UII94/jkimwXSBt3z/KUFGcL
-X-Gm-Gg: ASbGncsUolhGe6+Nq+tmx87/kAO3EK7yaN3jOYSHvUHmZDOzqMEESR8ctaScsbLf3sW
-	oXqyb7uSSc7NhjLs0x8n6HGNPmZCw2DUOzlWxn+HLiXFlnzKG9NvusW0vJYmo2BZzo5jr022nXo
-	a9oIPqq3mtXYA4r0/VBsScc1YB2PWqxaR6frhPwV6Hk9DSCyDJNjfROzhr7yXtc+w/jqpveRxXd
-	XXaLTriKZzhGvwKzwSgAFMfLWZajZhpebkFhoIxrOn4zAMfAi/hX2BDbv8PYETlDYLykjoPROOQ
-	pKtfXgtNP7rBOP0d07FnxB/UoHKl0rK8AD57q8SBFijwePSa+gCVI0y0jsduUr6hKp9b4lJA8pS
-	xT9zF0jMeHma4wF85ksmr+cUFpdwl4h/NHQGrkcAxTIQiVYmXbg==
-X-Google-Smtp-Source: AGHT+IH44vhk9d17Lw4GXZ5yzA6My6EceoSjc9zLI8SRcAEeP+70+Ts8xj+ACG9aEOYyI9bijbzveA==
-X-Received: by 2002:a17:902:ce0a:b0:26b:3cb5:a906 with SMTP id d9443c01a7336-28ec9c97565mr36083695ad.16.1759837639170;
-        Tue, 07 Oct 2025 04:47:19 -0700 (PDT)
+        bh=Cva8F6I6vC8G5UAuRvxmhYK0EkV6IdIuOcxrR7JOX88=;
+        b=VuqJafJPKafDelSQv4/YjopEySabDNCrb5AXWYoHzXOh6ABlhmYBNSwwf2pF/t3mHE
+         MlnDnr7vno4qYJpoELrc5deVQXCtAF6hL8RGQDFYwLQph0WayhOWdjSx3WpEj+y0EA7f
+         nw88M2MscDT3ZgEnY2DDYPL7ZCZEICq29yK+rqDLZT/H76mXj5QFlAJ/Cp6rbZSyy4VU
+         8tbpLDWStTN21ZbCcb0B81YrCabJgrLoSoMlMFnVAAFVY7b6GhSkfeNHf6UrejzNr5Gc
+         8oWRypA7XK3oqaqOgm1YI7isY3qzVYW+7TzOewyVqeP93gEfUFgoVEzrCaCFeOZSRL34
+         e57g==
+X-Gm-Message-State: AOJu0YyPYpTcXYPe/AoQZAojHMLWv7RKzJ7XzPPkeoLZgRTZvdd5mydU
+	Y7oO8F2tetnQeNaDZnADJKDRhenapSBiPY0jJJk+PFooHtAvh5zxk7xp
+X-Gm-Gg: ASbGnctqxnl7AwrAW2IcInY8umEX8wYkViozYC6s3/t5ndiDaFQTIBy7fibJGLzgA12
+	A4fxdlhpLtNscyka9PIrgV7tVTOa+L6MGiQdY0RgO4Y3GDJItz9Ui/IwvFbXhCpKTVptS9ONa3+
+	scDMisHQBA2wAql2xQBD/GdOqz/Lwx0uD/1rJJN+WmxNmGY9NpKT/qWcVKlYGSug2CYyIsn/qov
+	9Rj5sT/LFd0WCaJiXJf8iql0fXMUm+WV704e7WAxIajQmza30HlkV1qCMWqxcQe616BwLvtRtOe
+	SqDq2jU+cruHtWYka+MVBTBmVmz0MaUXMazdCmaXLhl5uGT+P2ihYd0ZhWhPbRjmPzM2IRAM1MD
+	oRoGb424geBoYhOGE7J3Qlj3/vqLEZsUrFw1t4Vu+5YOmdcgN+Q==
+X-Google-Smtp-Source: AGHT+IFTrYmtFtu6V1DCF12R/dF1cAY3Dw1DuL07n3gmGJkW3ViP+is1CMwAjywaqv3EDHY01fPzPw==
+X-Received: by 2002:a17:903:4b08:b0:27e:f06b:ae43 with SMTP id d9443c01a7336-28e9a649321mr194985855ad.53.1759841484702;
+        Tue, 07 Oct 2025 05:51:24 -0700 (PDT)
 Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-28e8d12608fsm164155715ad.33.2025.10.07.04.47.17
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-28e8d125e9fsm164605965ad.36.2025.10.07.05.51.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Oct 2025 04:47:18 -0700 (PDT)
+        Tue, 07 Oct 2025 05:51:23 -0700 (PDT)
 Received: by archie.me (Postfix, from userid 1000)
-	id 865214233431; Tue, 07 Oct 2025 18:47:15 +0700 (WIB)
-Date: Tue, 7 Oct 2025 18:47:14 +0700
+	id 6C85F4233431; Tue, 07 Oct 2025 19:51:20 +0700 (WIB)
+Date: Tue, 7 Oct 2025 19:51:20 +0700
 From: Bagas Sanjaya <bagasdotme@gmail.com>
 To: Gopi Krishna Menon <krishnagopi487@gmail.com>, rostedt@goodmis.org,
 	corbet@lwn.net
 Cc: linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org, skhan@linuxfoundation.org,
 	david.hunter.linux@gmail.com, khalid@kernel.org,
-	linux-kernel-mentees@lists.linux.dev
+	linux-kernel-mentees@lists.linux.dev,
+	Crystal Wood <crwood@redhat.com>, Tomas Glozar <tglozar@redhat.com>,
+	Costa Shulyupin <costa.shul@redhat.com>,
+	John Kacur <jkacur@redhat.com>
 Subject: Re: [PATCH] Documentation/rtla: fix htmldocs build error by renaming
  common_options.rst
-Message-ID: <aOT9wttB8cQvFDdj@archie.me>
+Message-ID: <aOUMyGvkibvOV0IS@archie.me>
 References: <20251007083228.17319-1-krishnagopi487@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -77,115 +80,61 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="YjlEHS0UDQisqRua"
+	protocol="application/pgp-signature"; boundary="aqWyVnMMiWmFfUQE"
 Content-Disposition: inline
 In-Reply-To: <20251007083228.17319-1-krishnagopi487@gmail.com>
 
 
---YjlEHS0UDQisqRua
+--aqWyVnMMiWmFfUQE
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
 On Tue, Oct 07, 2025 at 02:02:26PM +0530, Gopi Krishna Menon wrote:
-> diff --git a/Documentation/tools/rtla/common_options.rst b/Documentation/=
-tools/rtla/common_options.txt
-> similarity index 100%
-> rename from Documentation/tools/rtla/common_options.rst
-> rename to Documentation/tools/rtla/common_options.txt
-> diff --git a/Documentation/tools/rtla/rtla-hwnoise.rst b/Documentation/to=
-ols/rtla/rtla-hwnoise.rst
-> index 3a7163c02ac8..cc2721315552 100644
-> --- a/Documentation/tools/rtla/rtla-hwnoise.rst
-> +++ b/Documentation/tools/rtla/rtla-hwnoise.rst
-> @@ -33,7 +33,7 @@ OPTIONS
-> =20
->  .. include:: common_top_options.rst
-> =20
-> -.. include:: common_options.rst
-> +.. include:: common_options.txt
-> =20
->  EXAMPLE
->  =3D=3D=3D=3D=3D=3D=3D
-> diff --git a/Documentation/tools/rtla/rtla-osnoise-hist.rst b/Documentati=
-on/tools/rtla/rtla-osnoise-hist.rst
-> index 1fc60ef26106..a11c485f127a 100644
-> --- a/Documentation/tools/rtla/rtla-osnoise-hist.rst
-> +++ b/Documentation/tools/rtla/rtla-osnoise-hist.rst
-> @@ -28,7 +28,7 @@ OPTIONS
-> =20
->  .. include:: common_hist_options.rst
-> =20
-> -.. include:: common_options.rst
-> +.. include:: common_options.txt
+> Running "make htmldocs" generates the following build errors for
+> common_options.rst
+>=20
+> Documentation/tools/rtla/common_options.rst:58: ERROR: Undefined substitu=
+tion referenced: "threshold".
+> Documentation/tools/rtla/common_options.rst:88: ERROR: Undefined substitu=
+tion referenced: "tool".
+> Documentation/tools/rtla/common_options.rst:88: ERROR: Undefined substitu=
+tion referenced: "thresharg".
+> Documentation/tools/rtla/common_options.rst:88: ERROR: Undefined substitu=
+tion referenced: "tracer".
+> Documentation/tools/rtla/common_options.rst:92: ERROR: Undefined substitu=
+tion referenced: "tracer".
+> Documentation/tools/rtla/common_options.rst:98: ERROR: Undefined substitu=
+tion referenced: "actionsperf".
+> Documentation/tools/rtla/common_options.rst:113: ERROR: Undefined substit=
+ution referenced: "tool".
+>=20
+> common_options.rst is intended to be included by other rtla documents
+> and is not meant to be built as a standalone document. It contains
+> substitutions that are only resolved by other documents, so building it
+> independently results in 'undefined substitution referenced' errors.
+>=20
+> Rename common_options.rst to common_options.txt to prevent Sphinx from
+> building it as a standalone document and update the include references
+> accordingly.
 
-For consistency, though, you may want (in separate patches) also rename
-other common_*.rst files.
-
-> =20
->  EXAMPLE
->  =3D=3D=3D=3D=3D=3D=3D
-> diff --git a/Documentation/tools/rtla/rtla-osnoise-top.rst b/Documentatio=
-n/tools/rtla/rtla-osnoise-top.rst
-> index b1cbd7bcd4ae..c7bc716b2899 100644
-> --- a/Documentation/tools/rtla/rtla-osnoise-top.rst
-> +++ b/Documentation/tools/rtla/rtla-osnoise-top.rst
-> @@ -30,7 +30,7 @@ OPTIONS
-> =20
->  .. include:: common_top_options.rst
-> =20
-> -.. include:: common_options.rst
-> +.. include:: common_options.txt
-> =20
->  EXAMPLE
->  =3D=3D=3D=3D=3D=3D=3D
-> diff --git a/Documentation/tools/rtla/rtla-timerlat-hist.rst b/Documentat=
-ion/tools/rtla/rtla-timerlat-hist.rst
-> index 4923a362129b..547dfc7ace58 100644
-> --- a/Documentation/tools/rtla/rtla-timerlat-hist.rst
-> +++ b/Documentation/tools/rtla/rtla-timerlat-hist.rst
-> @@ -29,7 +29,7 @@ OPTIONS
-> =20
->  .. include:: common_hist_options.rst
-> =20
-> -.. include:: common_options.rst
-> +.. include:: common_options.txt
-> =20
->  .. include:: common_timerlat_aa.rst
-> =20
-> diff --git a/Documentation/tools/rtla/rtla-timerlat-top.rst b/Documentati=
-on/tools/rtla/rtla-timerlat-top.rst
-> index 50968cdd2095..3740fd386ea8 100644
-> --- a/Documentation/tools/rtla/rtla-timerlat-top.rst
-> +++ b/Documentation/tools/rtla/rtla-timerlat-top.rst
-> @@ -30,7 +30,7 @@ OPTIONS
-> =20
->  .. include:: common_top_options.rst
-> =20
-> -.. include:: common_options.rst
-> +.. include:: common_options.txt
-> =20
->  .. include:: common_timerlat_aa.rst
-> =20
-
-For this patch's scope, LGTM.
-
-Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
+Fixes: 05b7e10687c6 ("tools/rtla: Add remaining support for osnoise actions=
+")
 
 Thanks.
 
 --=20
 An old man doll... just what I always wanted! - Clara
 
---YjlEHS0UDQisqRua
+--aqWyVnMMiWmFfUQE
 Content-Type: application/pgp-signature; name=signature.asc
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaOT9uwAKCRD2uYlJVVFO
-o26DAPwO4e7EjANEwcmc6zau/qLSOmqV1xhe8ihZQO2SN2a7QgEA2X3LzAtWqe1I
-Kid1Ufu3MBRc5B/abDTix3q8NM7L6Q8=
-=FDcR
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaOUMxAAKCRD2uYlJVVFO
+o3YeAP9WdHh/AKliEi1H/a68qdAmPGP1E8E/I+1Uax3Rh/iTnAEAtEZNoEUlrDTD
+kmIkMjKutwIPwYQG3Yr/miznYMlg1gQ=
+=R3wE
 -----END PGP SIGNATURE-----
 
---YjlEHS0UDQisqRua--
+--aqWyVnMMiWmFfUQE--
