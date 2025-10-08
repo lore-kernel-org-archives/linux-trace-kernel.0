@@ -1,171 +1,114 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 173302EBB86
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  8 Oct 2025 14:41:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 508CE2EBBA8;
+	Wed,  8 Oct 2025 14:50:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759934464; cv=none; b=i6FhxuQxDIZxYjWKQ/89AwU3Ne3ZgNr+HH5qS8Rj26d5YgcKnfGex7zGthoUDzW8ci6p2i1aRh2t/Elaa894yAuOqiuGYFMvbwLOBKG1F7F1C95XIqxlfAfPcXSN4/LoTU8Ftq5kjbuyE4CZnWg0RVnDeolmIjQCALuxbgiZFvw=
+	t=1759935015; cv=none; b=LUnfkOz0fD5t3uwyupSAVNiyx96Y313nN++iY5eSiii/xr4HTNiw9U6zDl4JC7spf2uIORiwHGzdXHD8l+n0BQ0cqWqQ21vaczwqeHZ5CCpnli/p2ehilBUWjuAwMN7HGXpoFHSw8wkq+paMAhFSv61xjm7HnVNWgufDX3A7mT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759934464; c=relaxed/simple;
-	bh=vHtHumejN87ncgya2ViWzvqch41xHhCK9RHyEy9NXFM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aSH1ho5gt6WfDRfrpsC4B0i9v1CuZK/jllopjKnIhG8nIJ5w+mTINcUm+5stMKZ385FwP/BZi8r0f4mTx0OPdmB51EggaAzkyGpLdNZ/pps099+K6iqhiAaAa/8n/sPlQWnVfp5hN2dDUPpS5Ghm4M82hFwyX6dM3zvVdciJlNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RhaCNuNP; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RhaCNuNP"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-78af9ebe337so5095475b3a.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 08 Oct 2025 07:41:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1759934462; x=1760539262; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=XRgXZBDqFKfDqLPTjTiL4KlNwfATNNhaPH2ClvCy9+g=;
-        b=RhaCNuNPm/Daj/eJYGaVERBTnTuSQ0eH6665Yjtn5DNLtjLXZNmPyNJH8LeOC3AtKO
-         70UNXk8fY8KDtFJqOuHr/j7ALWn4cv2qhcZKLj8XLIKD3unlPu8H9uUiqxIc+Q06xzV6
-         /N1+gNXFCQ7sp6wAXASY9CAAyelrfGlEXrR2ghtf5RTB0zvEtDeQqvA2uz1AehobIlcc
-         jUV/v9gay/LfMbNRPiS+08CwHTTm9R7Lu/zGe9wGxpM8Vsi2LRB9qNMbtHWoU3Z2N1zG
-         AFMDE0L1xuif+R6u1ROneshCqVi7FdbNGOVwFFgfopxE7zwR4c0G8ZgagiIa2nQPFs3A
-         nftw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759934462; x=1760539262;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XRgXZBDqFKfDqLPTjTiL4KlNwfATNNhaPH2ClvCy9+g=;
-        b=Kc/leQTUcLSMZcGzj8LPlod3/ybdAmgxthBfpSQ92wwL0coCmPx+bTyj+ZbfJ7gh6P
-         hvF4a0sjc8Awo03C4new4msjWzPHZkTngr2daiLEziE9x5IDJYQYcJ9IbkuZ44cpc0gz
-         pO2EtncpxdMBcvIkVbn3HxpUWlUTlUR2NBijE5A5RzTYLs1BhDiAjof1m33X8ob+twiY
-         Kuir3g+b5TZV1PBO+wuLNSmgQ/R84H/TZTLHBpUQvoGx4AzJmwaUFLrWwTNEiP/bvCgK
-         XOO/hHpHqHgB0uS3YB4hFlTjW0coLaEdiI01r56VUSt33BbWfCmxMa7Mt1uLTDfPeWYJ
-         ACDA==
-X-Forwarded-Encrypted: i=1; AJvYcCUI3iinfG7SOXiVbmTMaoTrXW8iwVSDWBUmfMCYpd77dx2ZI/RZbAbr0ufOcXXOKASZ6lWVa5g6/MqnkS9jwbdsAL4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyVd53TjNf5x4NAD5aj1tEPbakAUgtHfB+ze7KwxzUK/rooLrI3
-	Bpx/zZA7VWuq+lGJ/oXz/2kk9Zy47we9cexyUA4ViYSpPrr/6xi9uFFu
-X-Gm-Gg: ASbGnctkDari8Ir0hJoWOl7naZhWjTtTQKD37pEavpqtDzhktObzFJ7q3ek08aDTDk6
-	UtZanVmmHXIpv6aW9zW5pBATi9AtRz8MubqZizgF4mmstOL5GrYm3AWyaMYvfjAxDVKfo3k+wUG
-	j/UQzznNys2MWJ0JLgHZpN5Gb3yHA3QGnp3bSpbm9UCrlqcclCLf3zpBlenDnKc8myHz+nfhzxH
-	Oyogd7V/jTgni6XZCcnjJl/wIVALTvkvc6C2yfhl54mO1j9mPj4tV0M0jM6Kbjxg8RwCfsa9qU4
-	AQxSUFGCPNwZ6FIU/MVsCmA3N5UkrcMdp2Ap7NNQhRhWkddhSmIOLq7lrEW7GvkoYbo6bQXmU57
-	PFsAPuZifUR/lx+J8h/PpA7hmOg2/UiqZVs0nbbBRX5mFK2AuG12R0TGh1WI=
-X-Google-Smtp-Source: AGHT+IGSyyuPMEa9ur5aJQiYNGUh201mREentuTgFoSL+6iYa1/r7WdugU0gxZJgmxiXoNAAFCxmjA==
-X-Received: by 2002:a05:6a20:2584:b0:2e5:655c:7f8f with SMTP id adf61e73a8af0-32da83e6319mr5293800637.46.1759934462272;
-        Wed, 08 Oct 2025 07:41:02 -0700 (PDT)
-Received: from [172.20.10.4] ([117.20.154.54])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-78b01f9daf3sm19043382b3a.8.2025.10.08.07.40.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Oct 2025 07:41:01 -0700 (PDT)
-Message-ID: <7f28937c-121a-4ea8-b66a-9da3be8bccad@gmail.com>
-Date: Wed, 8 Oct 2025 22:40:57 +0800
+	s=arc-20240116; t=1759935015; c=relaxed/simple;
+	bh=I+Ix3/P7afro3v8r060lBJrioBGGye6XHNz8d0HEiqE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hnz5gflN6WLf3LCv6yEDsHA/0JTpbmULUalm9mOKyJFJ7+DqwnS9MihXKAKMNZU454HbH/IoZpAdjrhC+gu9KLAXd6DscrujACmaI8pHz48v+oPWQBMIYuAD2flZVj3pwvr/1j9y762BUU+OQY7fWr2acEErrpdVURLGvGQrMXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf13.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay01.hostedemail.com (Postfix) with ESMTP id D0C3845E42;
+	Wed,  8 Oct 2025 14:50:11 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf13.hostedemail.com (Postfix) with ESMTPA id DDED020011;
+	Wed,  8 Oct 2025 14:50:09 +0000 (UTC)
+Date: Wed, 8 Oct 2025 10:52:03 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: ssrane_b23@ee.vjti.ac.in
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org,
+ syzbot+c530b4d95ec5cd4f33a7@syzkaller.appspotmail.com
+Subject: Re: [PATCH] trace/ring_buffer: Fix locking order in
+ ring_buffer_map()
+Message-ID: <20251008105203.75d521e9@gandalf.local.home>
+In-Reply-To: <20251005141636.12405-2-ssranevjti@gmail.com>
+References: <68dafe35.a00a0220.102ee.003f.GAE@google.com>
+	<20251005141636.12405-1-ssranevjti@gmail.com>
+	<20251005141636.12405-2-ssranevjti@gmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC bpf-next 1/3] bpf: report probe fault to BPF stderr
-To: Menglong Dong <menglong.dong@linux.dev>,
- Menglong Dong <menglong8.dong@gmail.com>,
- Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Alexei Starovoitov <ast@kernel.org>, bpf <bpf@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>,
- linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, jiang.biao@linux.dev
-References: <20250927061210.194502-1-menglong.dong@linux.dev>
- <20250927061210.194502-2-menglong.dong@linux.dev>
- <CAADnVQJAdAxEOWT6avzwq6ZrXhEdovhx3yibgA6T8wnMEnnAjg@mail.gmail.com>
- <3571660.QJadu78ljV@7950hx>
-Content-Language: en-US
-From: Leon Hwang <hffilwlqm@gmail.com>
-In-Reply-To: <3571660.QJadu78ljV@7950hx>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: hji9dkep61ne3emds8qut5smc7xonmgp
+X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: DDED020011
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/0Uv/06XvozQegR7umFXJnsm+hjJFMeQ0=
+X-HE-Tag: 1759935009-716078
+X-HE-Meta: U2FsdGVkX1+ALtxX8lahlqTALVJHlWK6aNP2TJ203FnP6ghg5xNbuxfz4g5fWhW7XkD0oDTNyK5pjbyZBZdfgwjgAoS3LZeJKU0eL/Ch55o096WGwZNA6DYvPZOczC6FliufJrVLI61ZsZEQOvtNj9fS4Teen8KxJJ7xz57vJM0mYQEg79CCp53bZrzj++v/rXH41DDy8P/n6vkpfYQXosBFaXVXQHOY6zCxfO54AVoVLpZNu0bA6ty11Ts9GhNM1Ii73aFmhzgrXNQ1qA7sNWKJMmo/bHZ75YmfPTetMTAz9WrWM2rV099o6MLkivq3U4kURfsUV4y/82qP8Bbj2Fnq32OY3Of3d48Pz2cZihVj+bpuCN+KDhOH/tZl3X3d
+
+On Sun,  5 Oct 2025 19:46:36 +0530
+ssrane_b23@ee.vjti.ac.in wrote:
+
+> From: Shaurya Rane <ssrane_b23@ee.vjti.ac.in>
+> 
+> The kernel's lockdep validator detected a circular locking dependency
+> in ring_buffer_map(). The function was acquiring the per-CPU
+> 'cpu_buffer->mapping_lock' before the global 'buffer->mutex'.
+> 
+
+You should either have a link to the email reporting the lockdep splat, or
+post it in the change log. I'd like to know exactly what the race was.
+
+> This violates the established locking hierarchy where 'buffer->mutex'
+> should be acquired first, leading to a potential deadlock.
+> 
+> Fix this by reordering the mutex acquisition to lock 'buffer->mutex'
+> before 'cpu_buffer->mapping_lock', satisfying the lockdep requirements
+> and preventing the deadlock.
+> 
+> Reported-by: syzbot+c530b4d95ec5cd4f33a7@syzkaller.appspotmail.com
+> 
+> Signed-off-by: Shaurya Rane <ssrane_b23@ee.vjti.ac.in>
+> ---
+>  kernel/trace/ring_buffer.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> index 43460949ad3f..82c3d5d2dcf6 100644
+> --- a/kernel/trace/ring_buffer.c
+> +++ b/kernel/trace/ring_buffer.c
+> @@ -7222,9 +7222,10 @@ int ring_buffer_map(struct trace_buffer *buffer, int cpu,
+>  
+>  	if (!cpumask_test_cpu(cpu, buffer->cpumask))
+>  		return -EINVAL;
+> -
+> +	
+
+Added white space?
+
+>  	cpu_buffer = buffer->buffers[cpu];
+> -
+> +	
+
+More added white space?
+
+> +	guard(mutex)(&buffer->mutex);
+>  	guard(mutex)(&cpu_buffer->mapping_lock);
+
+You state that you are reversing the order here, but all I see is you added
+taking the buffer->mutex lock. If there was a reverse order, then I'm
+assuming that later on in this function the buffer->mutex is taken again.
+That would cause a deadlock.
+
+What exactly are you reversing?
+
+-- Steve
 
 
+>  
+>  	if (cpu_buffer->user_mapped) {
 
-On 2025/10/7 14:14, Menglong Dong wrote:
-> On 2025/10/2 10:03, Alexei Starovoitov wrote:
->> On Fri, Sep 26, 2025 at 11:12 PM Menglong Dong <menglong8.dong@gmail.com> wrote:
->>>
->>> Introduce the function bpf_prog_report_probe_violation(), which is used
->>> to report the memory probe fault to the user by the BPF stderr.
->>>
->>> Signed-off-by: Menglong Dong <menglong.dong@linux.dev>
-
-[...]
-
->>
->> Interesting idea, but the above message is not helpful.
->> Users cannot decipher a fault_ip within a bpf prog.
->> It's just a random number.
->
-> Yeah, I have noticed this too. What useful is the
-> bpf_stream_dump_stack(), which will print the code
-> line that trigger the fault.
->
->> But stepping back... just faults are common in tracing.
->> If we start printing them we will just fill the stream to the max,
->> but users won't know that the message is there, since no one
->
-> You are right, we definitely can't output this message
-> to STDERR directly. We can add an extra flag for it, as you
-> said below.
->
-> Or, maybe we can introduce a enum stream_type, and
-> the users can subscribe what kind of messages they
-> want to receive.
->
->> expects it. arena and lock errors are rare and arena faults
->> were specifically requested by folks who develop progs that use arena.
->> This one is different. These faults have been around for a long time
->> and I don't recall people asking for more verbosity.
->> We can add them with an extra flag specified at prog load time,
->> but even then. Doesn't feel that useful.
->
-> Generally speaking, users can do invalid checking before
-> they do the memory reading, such as NULL checking. And
-> the pointer in function arguments that we hook is initialized
-> in most case. So the fault is someting that can be prevented.
->
-> I have a BPF tools which is writed for 4.X kernel and kprobe
-> based BPF is used. Now I'm planing to migrate it to 6.X kernel
-> and replace bpf_probe_read_kernel() with bpf_core_cast() to
-> obtain better performance. Then I find that I can't check if the
-> memory reading is success, which can lead to potential risk.
-> So my tool will be happy to get such fault event :)
->
-> Leon suggested to add a global errno for each BPF programs,
-> and I haven't dig deeply on this idea yet.
->
-
-Yeah, as we discussed, a global errno would be a much more lightweight
-approach for handling such faults.
-
-The idea would look like this:
-
-DEFINE_PER_CPU(int, bpf_errno);
-
-__bpf_kfunc void bpf_errno_clear(void);
-__bpf_kfunc void bpf_errno_set(int errno);
-__bpf_kfunc int bpf_errno_get(void);
-
-When a fault occurs, the kernel can simply call
-'bpf_errno_set(-EFAULT);'.
-
-If users want to detect whether a fault happened, they can do:
-
-bpf_errno_clear();
-header = READ_ONCE(skb->network_header);
-if (header == 0 && bpf_errno_get() == -EFAULT)
-        /* handle fault */;
-
-This way, users can identify faults immediately and handle them gracefully.
-
-Furthermore, these kfuncs can be inlined by the verifier, so there would
-be no runtime function call overhead.
-
-Thanks,
-Leon
