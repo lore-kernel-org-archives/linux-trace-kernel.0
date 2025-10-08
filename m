@@ -1,38 +1,33 @@
 Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 508CE2EBBA8;
-	Wed,  8 Oct 2025 14:50:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FAF72EBBA8;
+	Wed,  8 Oct 2025 15:22:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759935015; cv=none; b=LUnfkOz0fD5t3uwyupSAVNiyx96Y313nN++iY5eSiii/xr4HTNiw9U6zDl4JC7spf2uIORiwHGzdXHD8l+n0BQ0cqWqQ21vaczwqeHZ5CCpnli/p2ehilBUWjuAwMN7HGXpoFHSw8wkq+paMAhFSv61xjm7HnVNWgufDX3A7mT4=
+	t=1759936946; cv=none; b=ADQgEQODswgLlM4IxFf0Dlje2KHflcOdGfLLES+aUdW3R+0NNubqU12xsMeLDTX69aQRuyxPip8/GlMMHgrebj0UI671vIcXfxQuBcb05kASHAxKqcHkaVOEm3Y8MB0b0DlH58Roql1hJzf0dw8g3XXlq0u2z+57Z0hCtlUwxAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759935015; c=relaxed/simple;
-	bh=I+Ix3/P7afro3v8r060lBJrioBGGye6XHNz8d0HEiqE=;
+	s=arc-20240116; t=1759936946; c=relaxed/simple;
+	bh=uS3x5HWfAOiuRhFovDGOd4azvewpNkYCCS1T7U+icyc=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hnz5gflN6WLf3LCv6yEDsHA/0JTpbmULUalm9mOKyJFJ7+DqwnS9MihXKAKMNZU454HbH/IoZpAdjrhC+gu9KLAXd6DscrujACmaI8pHz48v+oPWQBMIYuAD2flZVj3pwvr/1j9y762BUU+OQY7fWr2acEErrpdVURLGvGQrMXQ=
+	 MIME-Version:Content-Type; b=h2jrS7EwOXs9CT9QxvIRM86SicQkPUp3YczhH/9uSYNgIsgXUv1MJsvt/roFr6faQlE9bmg6td5VFBaHATB2KZfp0VA/fQCkPdWG/bCpFdsoTv8R78OIQWX0UgTN0iKOtSTBtgYhf4N1fxznedliVGsuVwvyVGEN+8MWur74AEM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf13.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay01.hostedemail.com (Postfix) with ESMTP id D0C3845E42;
-	Wed,  8 Oct 2025 14:50:11 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf13.hostedemail.com (Postfix) with ESMTPA id DDED020011;
-	Wed,  8 Oct 2025 14:50:09 +0000 (UTC)
-Date: Wed, 8 Oct 2025 10:52:03 -0400
+Received: from omf08.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay05.hostedemail.com (Postfix) with ESMTP id 14B1059C33;
+	Wed,  8 Oct 2025 15:22:22 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id 60EE820027;
+	Wed,  8 Oct 2025 15:22:20 +0000 (UTC)
+Date: Wed, 8 Oct 2025 11:24:14 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: ssrane_b23@ee.vjti.ac.in
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org,
- syzbot+c530b4d95ec5cd4f33a7@syzkaller.appspotmail.com
-Subject: Re: [PATCH] trace/ring_buffer: Fix locking order in
- ring_buffer_map()
-Message-ID: <20251008105203.75d521e9@gandalf.local.home>
-In-Reply-To: <20251005141636.12405-2-ssranevjti@gmail.com>
-References: <68dafe35.a00a0220.102ee.003f.GAE@google.com>
-	<20251005141636.12405-1-ssranevjti@gmail.com>
-	<20251005141636.12405-2-ssranevjti@gmail.com>
+To: Sasha Levin <sashal@kernel.org>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] tracing/wakeup: Balance prolog on fgraph failure
+Message-ID: <20251008112414.03d5d803@gandalf.local.home>
+In-Reply-To: <20251006175848.1906912-1-sashal@kernel.org>
+References: <20251006175848.1906912-1-sashal@kernel.org>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -42,73 +37,86 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: hji9dkep61ne3emds8qut5smc7xonmgp
+X-Stat-Signature: 17kdbnhybw7bnke7y6eng9wjsuyocdu6
 X-Rspamd-Server: rspamout05
-X-Rspamd-Queue-Id: DDED020011
+X-Rspamd-Queue-Id: 60EE820027
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/0Uv/06XvozQegR7umFXJnsm+hjJFMeQ0=
-X-HE-Tag: 1759935009-716078
-X-HE-Meta: U2FsdGVkX1+ALtxX8lahlqTALVJHlWK6aNP2TJ203FnP6ghg5xNbuxfz4g5fWhW7XkD0oDTNyK5pjbyZBZdfgwjgAoS3LZeJKU0eL/Ch55o096WGwZNA6DYvPZOczC6FliufJrVLI61ZsZEQOvtNj9fS4Teen8KxJJ7xz57vJM0mYQEg79CCp53bZrzj++v/rXH41DDy8P/n6vkpfYQXosBFaXVXQHOY6zCxfO54AVoVLpZNu0bA6ty11Ts9GhNM1Ii73aFmhzgrXNQ1qA7sNWKJMmo/bHZ75YmfPTetMTAz9WrWM2rV099o6MLkivq3U4kURfsUV4y/82qP8Bbj2Fnq32OY3Of3d48Pz2cZihVj+bpuCN+KDhOH/tZl3X3d
+X-Session-ID: U2FsdGVkX188/wSdqsK8NGl+nzxPL4f8OR7UbtW6K1k=
+X-HE-Tag: 1759936940-26348
+X-HE-Meta: U2FsdGVkX1/kJOAgpGVnRSE9d8qFQiwJUCu0rhghrtYYotvpAia6E1zbI1Fsq00UUJGL0aMt1UUv+B1Q0y/6QnGS8kRpfRLjvHoKZb1Q8sskVOJOscRxVRSqxfOlcXOTvjow2xa/+6daFEynqCmgKR8NJg1BwxA1rTJCQX+1pL4eFaKWa8YaOsM+z+Gyuxx0hqsXQgs2PV53fb3lUAZ3oqTlA7ynk3B0DM1Jvab2ODG3XDp+iQc+H6Kdd7vcZSLWvnUf/mFbQ7vZkqixWnlI6b+Cd0zhTAFeKdHMb9lXSp3yP3eYINx+AuCW70aqvcUp+LW7rfhe6Nuyrf9CoOh6feUmboWLXRUu
 
-On Sun,  5 Oct 2025 19:46:36 +0530
-ssrane_b23@ee.vjti.ac.in wrote:
+On Mon,  6 Oct 2025 13:58:47 -0400
+Sasha Levin <sashal@kernel.org> wrote:
 
-> From: Shaurya Rane <ssrane_b23@ee.vjti.ac.in>
-> 
-> The kernel's lockdep validator detected a circular locking dependency
-> in ring_buffer_map(). The function was acquiring the per-CPU
-> 'cpu_buffer->mapping_lock' before the global 'buffer->mutex'.
-> 
-
-You should either have a link to the email reporting the lockdep splat, or
-post it in the change log. I'd like to know exactly what the race was.
-
-> This violates the established locking hierarchy where 'buffer->mutex'
-> should be acquired first, leading to a potential deadlock.
-> 
-> Fix this by reordering the mutex acquisition to lock 'buffer->mutex'
-> before 'cpu_buffer->mapping_lock', satisfying the lockdep requirements
-> and preventing the deadlock.
-> 
-> Reported-by: syzbot+c530b4d95ec5cd4f33a7@syzkaller.appspotmail.com
-> 
-> Signed-off-by: Shaurya Rane <ssrane_b23@ee.vjti.ac.in>
-> ---
->  kernel/trace/ring_buffer.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index 43460949ad3f..82c3d5d2dcf6 100644
-> --- a/kernel/trace/ring_buffer.c
-> +++ b/kernel/trace/ring_buffer.c
-> @@ -7222,9 +7222,10 @@ int ring_buffer_map(struct trace_buffer *buffer, int cpu,
+> diff --git a/kernel/trace/trace_sched_wakeup.c b/kernel/trace/trace_sched_wakeup.c
+> index bf1cb80742aed..fa48bbdf0851c 100644
+> --- a/kernel/trace/trace_sched_wakeup.c
+> +++ b/kernel/trace/trace_sched_wakeup.c
+> @@ -138,8 +138,11 @@ static int wakeup_graph_entry(struct ftrace_graph_ent *trace,
+>  		return 0;
 >  
->  	if (!cpumask_test_cpu(cpu, buffer->cpumask))
->  		return -EINVAL;
-> -
-> +	
+>  	calltime = fgraph_reserve_data(gops->idx, sizeof(*calltime));
+> -	if (!calltime)
+> +	if (!calltime) {
+> +		local_dec(&data->disabled);
+> +		preempt_enable_notrace();
+>  		return 0;
+> +	}
+>  
+>  	*calltime = trace_clock_local();
+>  
+> @@ -169,8 +172,11 @@ static void wakeup_graph_return(struct ftrace_graph_ret *trace,
+>  	rettime = trace_clock_local();
+>  
+>  	calltime = fgraph_retrieve_data(gops->idx, &size);
+> -	if (!calltime)
+> +	if (!calltime) {
+> +		local_dec(&data->disabled);
+> +		preempt_enable_notrace();
+>  		return;
+> +	}
+>  
+>  	__trace_graph_return(tr, trace, trace_ctx, *calltime, rettime);
+>  	local_dec(&data->disabled);
 
-Added white space?
+Technically correct, but this would look better:
 
->  	cpu_buffer = buffer->buffers[cpu];
-> -
-> +	
+diff --git a/kernel/trace/trace_sched_wakeup.c b/kernel/trace/trace_sched_wakeup.c
+index bf1cb80742ae..e3f2e4f56faa 100644
+--- a/kernel/trace/trace_sched_wakeup.c
++++ b/kernel/trace/trace_sched_wakeup.c
+@@ -138,12 +138,10 @@ static int wakeup_graph_entry(struct ftrace_graph_ent *trace,
+ 		return 0;
+ 
+ 	calltime = fgraph_reserve_data(gops->idx, sizeof(*calltime));
+-	if (!calltime)
+-		return 0;
+-
+-	*calltime = trace_clock_local();
+-
+-	ret = __trace_graph_entry(tr, trace, trace_ctx);
++	if (calltime) {
++		*calltime = trace_clock_local();
++		ret = __trace_graph_entry(tr, trace, trace_ctx);
++	}
+ 	local_dec(&data->disabled);
+ 	preempt_enable_notrace();
+ 
+@@ -169,12 +167,10 @@ static void wakeup_graph_return(struct ftrace_graph_ret *trace,
+ 	rettime = trace_clock_local();
+ 
+ 	calltime = fgraph_retrieve_data(gops->idx, &size);
+-	if (!calltime)
+-		return;
++	if (calltime)
++		__trace_graph_return(tr, trace, trace_ctx, *calltime, rettime);
+ 
+-	__trace_graph_return(tr, trace, trace_ctx, *calltime, rettime);
+ 	local_dec(&data->disabled);
+-
+ 	preempt_enable_notrace();
+ 	return;
+ }
 
-More added white space?
-
-> +	guard(mutex)(&buffer->mutex);
->  	guard(mutex)(&cpu_buffer->mapping_lock);
-
-You state that you are reversing the order here, but all I see is you added
-taking the buffer->mutex lock. If there was a reverse order, then I'm
-assuming that later on in this function the buffer->mutex is taken again.
-That would cause a deadlock.
-
-What exactly are you reversing?
 
 -- Steve
-
-
->  
->  	if (cpu_buffer->user_mapped) {
-
