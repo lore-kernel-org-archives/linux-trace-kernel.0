@@ -1,90 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 232E51E25F9;
-	Wed,  8 Oct 2025 22:41:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53D012C15AC
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  8 Oct 2025 23:19:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759963292; cv=none; b=lUBFDb8VoqwZlLeIFbZdj4HAm1Dv90qButtbIss6GUW6PWZsr6o0wjILTcxdPDppUP/Hw35aRbRLqOyN/8KcpGGzsz5+eBuie8P+1dwF1HCOmgABSOZNbnc7I2wE6OM9P5VSj0JibEuqe6BdncExCwIFONqwjlt6q6gOwjsCDkc=
+	t=1759965570; cv=none; b=jI81cRqI763X369lHweuW8zS+ORY43VqGrsmdx8PLH3VikJEpgjzAcTTeEQGWFeIuq5qYUmeQQGqrQvQNFj1Yf+EP1vn8su+oWZzdJ+tmJKq7q1EgwjvEOCZA6+hxbIQNy1cyq0OHHqNpyPPYyhVJJOpRVNklkT4UvYDAkuFsz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759963292; c=relaxed/simple;
-	bh=BmE5hJ8rbuCDGFjo8CBQ1PvsWoi7WyWjZG/68v+d69M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UNP5qc4+vJawxTqelxySOHW4BwNhuWW7VKFzWMbLJmATIrHMJpJUITQjcGeKNvgeFQQsHpltWem1K7Hii7q8WDsiggLxKDexwQZ1K7pn4VKCS76gV3MQrRSNxk4tGEEE0HYkjAMT6gYUeWCLK0k1hH47QgO2EJ9b3Qan63qhwSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xf3+5pqO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1759965570; c=relaxed/simple;
+	bh=CuUPOtIUJzTkfPFw0WgfFvYdrpTftUfYNdMNY5bK4H8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TwaMVq0DtOP9IwmoiI9uQ6FTjS+/zyRFEdo8rqVhMoxJcVPd+BNs5JQg1M6lFtfVAH1y2DhEv6XNcwrHG/vIhWB+yI4FCnKc0wND82Bcs5qxOHJoLj+qlMQoNM45GsmpWVeOu3jLm+TqwQrfOXST1+T46po6e7kmG8u1uQl8xFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D/ASQpGE; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xf3+5pqO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 407ACC4CEE7;
-	Wed,  8 Oct 2025 22:41:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759963291;
-	bh=BmE5hJ8rbuCDGFjo8CBQ1PvsWoi7WyWjZG/68v+d69M=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Xf3+5pqOvOpZP8s+tB3IRecNIw27RavRuHuU+RdeEQaju8YVWm8lHYhQLtU3Z4L6i
-	 z7vl5lXvSEvnUTRgDegnaJrduiieZBYOlXuwn3xP/STiYJIHstJBhrXEWQsDuaSRNM
-	 x5KvkO1dDXZHLRwIJ0rViUti64MS4zaMs2k2WJZ9ULIqTOz1iVv15A28mC58/XOREK
-	 e1UWCQ3McNK9mYwPVjFnKWV9h8MCKik3JKlNAtUqLtpNlYBgGOrFRmIEwVmoSlf4Pv
-	 aUKmAizrHh/gc62IAIr/ZZJYKvl8ZVOgcLAUuKcUIRYirgg+3J1bECWH4PaITN6VBb
-	 7UOJAHyNHkmYw==
-Message-ID: <45f8532e-5aa2-4b32-ae53-bdf588133a3e@kernel.org>
-Date: Thu, 9 Oct 2025 07:41:22 +0900
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D/ASQpGE"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-33082aed31dso436578a91.3
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 08 Oct 2025 16:19:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1759965566; x=1760570366; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=CuUPOtIUJzTkfPFw0WgfFvYdrpTftUfYNdMNY5bK4H8=;
+        b=D/ASQpGEh+CWc07gNlNa6TM3YTzwAOKp2sdR9JqJMl9W/lntdHMxp6zYboDBQCAG9g
+         27R76uTqp3dMDb0VvQ9bdDO0z6vg6cUuNi0S2Xb8nv3D77RrgzeQxbUqywNZ0CX9S6IG
+         +lq9WB+4/EfxPbOqKPmK5pJ3Yo4NShkQIQzbn+sy8TXUWulW9KFwzE1+3ex+4xUKS7mw
+         ojb1SRtj9bKCDu6NQ2lJe8U7RLSuHPc2yw1IrZ3brMFjXLDttoDPEvXRBf1vQ7et10ST
+         ish4aWcZEZTqatnVRrYqEh9JC9J1CMso89QLK6TiC3Rat3gKnAPon2m4SjuwMSNLo6Iq
+         vxMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1759965566; x=1760570366;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CuUPOtIUJzTkfPFw0WgfFvYdrpTftUfYNdMNY5bK4H8=;
+        b=R5JfltcIlirW68/PvvkTgQgBtZcYwi0RwT7Ib8mWTtQccOjnd5Auh2+JgTRghus6XT
+         JKeRcuZjGUkfmJhTY5HaqCwNTR/p6GZ7c050hS5MvQsUlpXTWKGj7ng/dDVylVYPlJpt
+         pMWJgorHBmOcT9S3LEyWGpgYmrz/hFbTb3CE7evuKQL2m7J5yZTcCbHvxRPCEHz8fjDR
+         W/9dRHDML1noo06syTGvQSe0TI6zU/lHZjYxawuP7gEIHuJAIurOVBlPVaj+hNaYu506
+         YC6h2RtyNWj1Agn9EoTDD5S/VgSmYy/r2Y5ozhvNmkl56HgmYvDEW4nvcc3s9DwaDitE
+         dwIg==
+X-Gm-Message-State: AOJu0YxbdvF8+5lV6Y0AI7NnNz/s6RZ6p78ICbxXLXMoO0PR0qgpDyLO
+	8d9VMHLyx8oKX8BzS74srUGXEiJNrK1TGTfXSv99kLtIvZ1ZEDSda3m1
+X-Gm-Gg: ASbGncvzMTzHW/g3AnMuV2cEb4XmMmssSFUEjVDFd1WWwj/W8itS55Zw950xx1Dvmr3
+	9b6mec4vVPJL8AwRA6CkWfWKXy79JXEhs5k93oPaMzT7icMvNnUY6sAOc1Pcu3maKt9iGG9l5cU
+	DnONgC72r3hs6xWqyiH9DmbjX0aptZN0yphozbxUFHGxV44xWiYLQBy+M6oPHWYyBzAEtnbF8qD
+	F85gVid4T/+DfXg0nQFp3jKJd7VjurAGeAvRnC6Siogo818GmFbU59aMHMG2kQtzx4SZV91ciN+
+	dv8GJJc/Zs9CO2O7GsMA2cJet799MZPGpRgw0DY/csl8cIIqZ4Xyz9PMT1hhoyQD8X/OeDVFdTk
+	LY+NNhzL3BLCGmToqTx1OG51OZJh5t1cL3o5Vwv0vduzdqG9yow==
+X-Google-Smtp-Source: AGHT+IEqQwohh35D8DAkh9yjSUR0i5+iZzIj3lrkntQw2k0Ckim3fwA3XU6urWopN5QyOgXBfW7pSQ==
+X-Received: by 2002:a17:90b:4b8c:b0:32b:6cf2:a2cf with SMTP id 98e67ed59e1d1-33b5111895amr7030812a91.14.1759965566295;
+        Wed, 08 Oct 2025 16:19:26 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b631e32a56bsm6005356a12.6.2025.10.08.16.19.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Oct 2025 16:19:25 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id 5B7904233432; Thu, 09 Oct 2025 06:19:22 +0700 (WIB)
+Date: Thu, 9 Oct 2025 06:19:22 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Gopi Krishna Menon <krishnagopi487@gmail.com>, rostedt@goodmis.org,
+	corbet@lwn.net, tglozar@redhat.com
+Cc: linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, skhan@linuxfoundation.org,
+	david.hunter.linux@gmail.com, khalid@kernel.org,
+	linux-kernel-mentees@lists.linux.dev, crwood@redhat.com,
+	costa.shul@redhat.com, jkacur@redhat.com
+Subject: Re: [PATCH v2] Documentation/rtla: rename common_xxx.rst files to
+ common_xxx.txt
+Message-ID: <aObxeg12WxHtNu7B@archie.me>
+References: <CAP4=nvTjauRawBPTnGEztZpdDSNhGpgSJtjoTFuq+cCQHP5oEg@mail.gmail.com>
+ <20251008184522.13201-1-krishnagopi487@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 13/15] blktrace: trace zone management operations
-To: Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
- Jens Axboe <axboe@kernel.dk>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
- "linux-btrace@vger.kernel.org" <linux-btrace@vger.kernel.org>,
- John Garry <john.g.garry@oracle.com>, Hannes Reinecke <hare@suse.de>,
- hch <hch@lst.de>, Naohiro Aota <Naohiro.Aota@wdc.com>,
- Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
- Chaitanya Kulkarni <chaitanyak@nvidia.com>,
- "Martin K . Petersen" <martin.petersen@oracle.com>
-References: <20250925150231.67342-1-johannes.thumshirn@wdc.com>
- <20250925150231.67342-14-johannes.thumshirn@wdc.com>
- <f5a5bc62-093b-4d4a-91ba-a7ec5718609f@kernel.org>
- <057c7e5f-6079-4451-829d-40c73c88fb60@wdc.com>
-Content-Language: en-US
-From: Damien Le Moal <dlemoal@kernel.org>
-Organization: Western Digital Research
-In-Reply-To: <057c7e5f-6079-4451-829d-40c73c88fb60@wdc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-
-On 10/8/25 22:29, Johannes Thumshirn wrote:
-> I'm not sure if it makes sense to do completion tracing here. At least 
-> we cannot do it in the endio handler as usual.
-> 
-> One thing to get the error and the duration would be the following:
-> 
-> int blkdev_zone_mgmt(struct block_device *bdev, enum req_op op,
->                       sector_t sector, sector_t nr_sectors)
-> {
-> 
->          /* [...] */
-> 
->          trace_blkdev_zone_mgmt(bio, nr_sectors);
->          ret = submit_bio_wait(bio);
-> 
-> +     trace_blkdev_zone_mgmt_completion(bio, nr_sectors, bio->bi_error);
->          bio_put(bio);
-
-That does seem OK to me. Maybe try and see how it looks ?
-Though the request alloc, insert, dispatch and completion for this BIO will
-still be traced, right ? If these events show correctly that this is a zone
-management command (and which one it is), then we should not need the above.
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="laywoOT544AkU5an"
+Content-Disposition: inline
+In-Reply-To: <20251008184522.13201-1-krishnagopi487@gmail.com>
 
 
--- 
-Damien Le Moal
-Western Digital Research
+--laywoOT544AkU5an
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Oct 09, 2025 at 12:14:27AM +0530, Gopi Krishna Menon wrote:
+> Running "make htmldocs" reports the following build errors for
+> common_options.rst:
+>=20
+> Documentation/tools/rtla/common_options.rst:58: ERROR: Undefined substitu=
+tion referenced: "threshold".
+> Documentation/tools/rtla/common_options.rst:88: ERROR: Undefined substitu=
+tion referenced: "tool".
+> Documentation/tools/rtla/common_options.rst:88: ERROR: Undefined substitu=
+tion referenced: "thresharg".
+> Documentation/tools/rtla/common_options.rst:88: ERROR: Undefined substitu=
+tion referenced: "tracer".
+> Documentation/tools/rtla/common_options.rst:92: ERROR: Undefined substitu=
+tion referenced: "tracer".
+> Documentation/tools/rtla/common_options.rst:98: ERROR: Undefined substitu=
+tion referenced: "actionsperf".
+> Documentation/tools/rtla/common_options.rst:113: ERROR: Undefined substit=
+ution referenced: "tool".
+>=20
+> common_*.rst files are intended to be included by other rtla documents
+> and are not meant to be built as a standalone document.
+> common_options.rst in particular contains substitutions that are only
+> resolved by other documents, so building it independently results in
+> 'undefined substitution referenced' errors.
+>=20
+> Rename all common_*.rst files to common_*.txt to prevent Sphinx from
+> building them as standalone documents and update all include references
+> accordingly.
+>=20
+
+Much better, thanks!
+
+Fixes: 05b7e10687c6 ("tools/rtla: Add remaining support for osnoise actions=
+")
+Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--laywoOT544AkU5an
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaObxegAKCRD2uYlJVVFO
+o/fiAQC0qRxBu2mn9qrpCb4+e9qDwMwy95k1B/6YiM0z2onj6gD/QV8GsID6JvYc
+EgEDoO4HFiznrFm+/0AEfEHho52DDQI=
+=oGsZ
+-----END PGP SIGNATURE-----
+
+--laywoOT544AkU5an--
