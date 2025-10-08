@@ -1,99 +1,143 @@
-Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFBC822B8B6;
-	Wed,  8 Oct 2025 00:19:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD80B2877C2;
+	Wed,  8 Oct 2025 00:51:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759882772; cv=none; b=LzBDDJ1A0CRa/Miq2VvYN8872vPGsXHrKMItk4nV1NmY/CCyk/uk4h/dRAdRpm+kiOa5hj/VuyGkGM3Hv/dw0dNpCKhzggP9zzQ7rpvkm3oFG+rGon6oV4gTIZuj1p9lRG1c3vqCQxvU4gVKn+tXLhe3lG2qO/Xc/dIpV5RfYZc=
+	t=1759884677; cv=none; b=BfE/zoZeAyLAYeXN1pFGrjy8p1jcSI+m1uMa5X49QLXjthN74Bnak7mDmv8MONLwUGm4+Zork3tSeq0B/vrrM0ihqq4rumbudlNlUmWX0cP/2N255bTphcKheURffsXjunRRWpXKD5eFF+SN6Px8eBG5KetVtuzmOZIqxLm0vN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759882772; c=relaxed/simple;
-	bh=BN8cuSEBg66C2lF8YtmhtyuvN4mkZSwQNm7AYTmbIB0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fmkqM95OLOVvgGdXJogNu1eci4Lq1tcNOT3jYgVq790JZNuM7O4WLBYT1UKMo2W8B0so+ZlhCD3pgM9LtnEeOFJKcraTyikHF4tSSUxt/YUgzmjVhfKK5fsMCv9fwGkVbUiX+4WnqLCyL9OwEMVqYVXefvTKS6K6iWh3eU+RZ/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf16.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay03.hostedemail.com (Postfix) with ESMTP id 3137FB8BB4;
-	Wed,  8 Oct 2025 00:19:23 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf16.hostedemail.com (Postfix) with ESMTPA id 2C8D020016;
-	Wed,  8 Oct 2025 00:19:21 +0000 (UTC)
-Date: Tue, 7 Oct 2025 20:21:13 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Runping Lai <runpinglai@google.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Wattson CI <wattson-external@google.com>,
- kernel-team@android.com, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Luo Gengkun
- <luogengkun@huaweicloud.com>, Linus Torvalds
- <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v1] Revert "tracing: Fix tracing_marker may trigger page
- fault during preempt_disable"
-Message-ID: <20251007202113.1ce212a9@gandalf.local.home>
-In-Reply-To: <CABgk4RSxm8mNJcRn0HdNH3+Y=VDL5gNVvyhhR26wjBme+i5X-g@mail.gmail.com>
-References: <20251007003417.3470979-2-runpinglai@google.com>
-	<20251006221043.07cdb0fd@gandalf.local.home>
-	<CABgk4RQwGsn4CdP0K+_7A0j7RVOiHNfoF1ESk17wEuzCea16pA@mail.gmail.com>
-	<20251007154308.5b158d04@gandalf.local.home>
-	<20251007163141.1034b120@gandalf.local.home>
-	<20251007174208.11fd02da@gandalf.local.home>
-	<CABgk4RSxm8mNJcRn0HdNH3+Y=VDL5gNVvyhhR26wjBme+i5X-g@mail.gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1759884677; c=relaxed/simple;
+	bh=ip9Z6xXZyARdKTzPzXZm8Lt9Os1E7qphGPd4Rh7D3s0=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=CuNxgpYiYl8Hgzy7jLhfmdWeiiZqUP6GqzKT8SVEXjwNZQTIpTppQac96ScESyD6/TNDy7/4T/RVKQuj6HnoMe9iJq7PXp1SXioA0p/6x0FFTu2RZ8XQ2M6sAz+6eNZnqvTo888JX6m/gNBmkUBDtMughnW4J+9uzfDw/Q98tyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PiNR8Ulr; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PiNR8Ulr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13E9CC4CEF1;
+	Wed,  8 Oct 2025 00:51:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1759884676;
+	bh=ip9Z6xXZyARdKTzPzXZm8Lt9Os1E7qphGPd4Rh7D3s0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=PiNR8Ulr/Nd31jm8jP7o4IVAlPCLO0zBrHyWBfo/fpazSBd4XAIH+pJh5CoWVZzTp
+	 FTHb/uOkDHl4tJatt/d9qoR7ga/upW5LFb7Tw17x3zD98v7T+WFPW9R9kTZQdNnXji
+	 rm6mhwXzpMPqbxYVjD+h4faxWJtxpyMT6g88Zwuq0R+bZtxiBjassjPdc0LTlCSxDK
+	 ++9sMELLQqIBPeq2wcRTN8wesRPMm4FRnq0/Dyd/AelLmiamVxVoHGIWaaKTG9nWql
+	 Ad4eNyck/ZO+M6qCgWO5RGQkfa0XMeTR7xFeyLG9FdOdUSo8MKvSBmoG28HfI2dems
+	 lH2mS8kJB9vyw==
+Date: Wed, 8 Oct 2025 09:51:11 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Ryan Chung <seokwoo.chung130@gmail.com>
+Cc: rostedt@goodmis.org, mathieu.desnoyers@efficios.com, shuah@kernel.org,
+ hca@linux.ibm.com, corbet@lwn.net, linux-trace-kernel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-doc@vger.kernel.org
+Subject: Re: [PATCH v3 0/5] tracing: fprobe: list-style filters,
+Message-Id: <20251008095111.5732b065dcebe53fc80063c5@kernel.org>
+In-Reply-To: <20251004235001.133111-1-seokwoo.chung130@gmail.com>
+References: <20251004235001.133111-1-seokwoo.chung130@gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Rspamd-Server: rspamout04
-X-Rspamd-Queue-Id: 2C8D020016
-X-Stat-Signature: rf5cg3xifex3t66bs9jw94qdiqjq6pbu
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18Rc+590qhmKGx8oRxPsAh+DI/ZSCruAn8=
-X-HE-Tag: 1759882761-301618
-X-HE-Meta: U2FsdGVkX19GlOxcxf6tQkRlJFy//VkzJRGPw+yeonaZjGjSxCkZNGrqaYnW7OkiliRr3vV4EWAzhhxMCTYJ2Kl4quFViXj8+IC0IVLevaIzctQ3GZPFwq7BUAyYIgTCksJgIXfbbrWSh8EXRqe8dLUlmRCtL/2XYrepW460cw1/2HnZuzP1vOl5CfKWxWjcSqqsEZk8hkPTmgUGc+dSRKnuVnfD6NW6NGMaHq4nMpkAC6YzblhL23pGt1OmeHheF2+zDq5pfwxGJABj+7mFG9+NQAq+WuBXRCvRhf50rn3ux9bOroiMx6+bEQUQWhtPJsVxKq29N1sRcsSBy1/U7g7o3Of81g85SvYfptJKiueTM5gh8+FhPG+67jcL/iXdIBW81v2XE4qG2TWQu6kflQ==
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, 7 Oct 2025 16:25:41 -0700
-Runping Lai <runpinglai@google.com> wrote:
+Hi Ryan,
 
-> On Tue, Oct 7, 2025 at 2:40=E2=80=AFPM Steven Rostedt <rostedt@goodmis.or=
-g> wrote:
-> >
-> > On Tue, 7 Oct 2025 16:31:41 -0400
-> > Steven Rostedt <rostedt@goodmis.org> wrote:
-> > =20
-> > > +static void trace_user_fault_buffer_free(struct trace_user_buf_info =
-*tinfo)
-> > > +{
-> > > +     char *buf;
-> > > +     int cpu;
-> > > +
-> > > +     for_each_possible_cpu(cpu) {
-> > > +             buf =3D per_cpu_ptr(tinfo->tbuf, cpu)->buf;
-> > > +             kfree(buf);
-> > > +     } =20
-> >
-> > Oops, missed:
-> >
-> >         free_percpu(tinfo->tbuf);
-> >
-> > here. =20
->=20
-> Hey Steve,
->=20
-> Thanks for providing the buffer-based solution. I tried it and it
-> fixes the problem!
-> However, the first experiment, adding pagefault_disable/enable()
-> around copy_nofault()
-> doesn't help. Still having the same problem. I suppose the issue is
-> more than pagefault?
->=20
-> Can you please suggest the next move? I can also do more tests if needed.
->=20
+Thanks for update!
 
-I may need to make this patch the official solution.
+On Sun,  5 Oct 2025 08:46:54 +0900
+Ryan Chung <seokwoo.chung130@gmail.com> wrote:
 
--- Steve
+> This series aims to extend fprobe with list-style filters and a clear
+> entry/exist qualifier. Users can now specify a comma-separated symbol
+> list with ! exclusions, and use a spec-level suffix to select probe
+> type:
+> 
+> - funcA*, !funcAB, funcC -> entry probes
+> - funcA*, !funcAB, funcC:entry -> explicit entry
+> - funcA*, !funcAB, funcC:exit -> return/exit across the whole list
+
+
+Just a note, it should not accept spaces in the list. The space
+is the highest level delimiter. I hope actual implementation
+does not accept spaces. So something like:
+
+ "funcA*,!funcAB,funcC"
+ "funcA*,!funcAB,funcC:entry"
+ "funcA*,!funcAB,funcC:exit"
+
+
+> 
+> For compatibility, %return remains supported for single, literal
+> symbols. When a list or wildcard is used, an explicit [GROUP/EVENT is
+> required and autogeneration is disabled. Autogen names are kept for
+> single-symbol specs, with wildcard sanitization. For list/wildcard forms
+> we set ctx->funcname = NULL so BTF lookups are not attempted.
+
+OK. So "funcA*%return" and "funcA,funcB%return" will fail.
+
+> 
+> The series moves parsing to the parse path, documents the new syntax,
+> and adds selftests that accept valid list cases and reject empty tokens,
+> stray commas, and %return mixed with lists or wildcards. Selftests also
+> verify enable/disable flow and that entry+exit on the same set do not
+> double-count attached functions.
+
+Thanks for adding selftests and document, that is important to maintain
+features.
+
+> 
+> Help wanted: This is my first time contributing ftrace selftests. I
+> would appreciate comments and recommendations on test structure and
+> coverage.
+
+OK, let me review it.
+
+Thanks,
+
+
+> 
+> Basic coverage is included, but this likely needs broader testing across
+> architectures. Feedback and additional test ideas are welcome.
+> 
+> Changes since v2:
+> - Introduce spec-level: :entry/:exit; reject %return with
+>   lists/wildcards
+> - Require explict [GROUP/]EVENT for list/wildcard; keep autogen only for
+>   single literal.
+> - Sanitize autogen names for single-symbol wildcards
+> - Set ctx->funcname = NULL for list/wildcard to bypass BTF
+> - Move list parsing out of __register_trace_fprobe() and into the parse
+>   path
+> - Update docs and tracefs README and add dynevent selftests for
+>   accept/reject and enable/disable flow
+> 
+> Link: https://lore.kernel.org/lkml/20250904103219.f4937968362bfff1ecd3f004@kernel.org/
+> 
+> Ryan Chung (5):
+>   docs: tracing: fprobe: document list filters and :entry/:exit
+>   tracing: fprobe: require explicit [GROUP/]EVENT for list/wildcard
+>   tracing: fprobe: support comma-separated symbols and :entry/:exit
+>   selftests/ftrace: dynevent: add reject cases for list/:entry/:exit
+>   selftests/ftrace: dynevent: add reject cases
+> 
+>  Documentation/trace/fprobetrace.rst           |  27 +-
+>  kernel/trace/trace.c                          |   3 +-
+>  kernel/trace/trace_fprobe.c                   | 247 ++++++++++++++----
+>  .../test.d/dynevent/add_remove_fprobe.tc      | 121 +++++++++
+>  .../test.d/dynevent/fprobe_syntax_errors.tc   |  13 +
+>  5 files changed, 349 insertions(+), 62 deletions(-)
+> 
+> -- 
+> 2.43.0
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
