@@ -1,153 +1,90 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF1F1266584
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  8 Oct 2025 21:55:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 232E51E25F9;
+	Wed,  8 Oct 2025 22:41:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759960559; cv=none; b=Rb0dqI9yH661Ft3XkloGYtmz7a6Z/kWHyHLKKTgNcEDaWCDO2EWnR/JufJ1WsBfEqS9rXJOxp51bVv+e7l+zyeRz5N8n8MJFWOLSNx63Ljacwel/v6IqXEtgOTh3AQGoHtGAyx/2l9K/vBcXI4YNcnsrgPULMUCbankXsgb20m4=
+	t=1759963292; cv=none; b=lUBFDb8VoqwZlLeIFbZdj4HAm1Dv90qButtbIss6GUW6PWZsr6o0wjILTcxdPDppUP/Hw35aRbRLqOyN/8KcpGGzsz5+eBuie8P+1dwF1HCOmgABSOZNbnc7I2wE6OM9P5VSj0JibEuqe6BdncExCwIFONqwjlt6q6gOwjsCDkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759960559; c=relaxed/simple;
-	bh=Rbto6BRK4mLJmqKxulBUQ1oDnZaa5BvKYSIYYck51t8=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HEIiEPm4xm+WAS4wSCk3avE4ktY74tpj+CEXGyixFo76WE0h+B7EYI9c86po/Y0enz3Ghjgt0k7swslVjT7JPdtt8vBST+s3URsy25yN9U4JSSKUTjXB4tcenvtmnEhrF5Uf8ACtWESTNZgzcRKvLYHMd3OQ5oqHN3CFLv1gV90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PacS8OCW; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1759963292; c=relaxed/simple;
+	bh=BmE5hJ8rbuCDGFjo8CBQ1PvsWoi7WyWjZG/68v+d69M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UNP5qc4+vJawxTqelxySOHW4BwNhuWW7VKFzWMbLJmATIrHMJpJUITQjcGeKNvgeFQQsHpltWem1K7Hii7q8WDsiggLxKDexwQZ1K7pn4VKCS76gV3MQrRSNxk4tGEEE0HYkjAMT6gYUeWCLK0k1hH47QgO2EJ9b3Qan63qhwSc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xf3+5pqO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PacS8OCW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1759960555;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1KR5OMrHjJj//dXDuew69pvJTmxiyouN9guJmDwy6g4=;
-	b=PacS8OCW8c4P47bugrdKj2OBxEwhQuQ2ztewEgNAaTHxW47HsFNBXYyXnEgzS5wd4Iuc73
-	BCOIypNOEw6sMrP135D2Q5K2ISkmSrIOUZqXPNYCPUl+bKRtBajzF/iDI2gNQW/3morCnp
-	Aqqvl2u23xUMaeMSYFwmMJLPbZpF6cc=
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
- [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-403-Wbwx_dZFMY-P9ryPKO-4lA-1; Wed, 08 Oct 2025 17:55:54 -0400
-X-MC-Unique: Wbwx_dZFMY-P9ryPKO-4lA-1
-X-Mimecast-MFC-AGG-ID: Wbwx_dZFMY-P9ryPKO-4lA_1759960554
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-88375756116so144583185a.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 08 Oct 2025 14:55:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759960554; x=1760565354;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=5Fb6inNO4ZYHk+tKoE55ZAUExgHgw8lZ1Jb7JHUHIP8=;
-        b=lKXeSmsf3RpFKoxvxBJP7dK4qfpB8W9h8ZRqiqQccWG4CqilyrfmahYAAWWE3nHIgY
-         1JmzKvTJJXMEpwDo7Ah0E/l6RCu3e09QAYl2mUoaBMYwAVKQCnUUiWgrw5RoP6ZsZckv
-         cfGzXKunkagzdC7zDhQrh0yrFY1J5Narm299WOXQMxd2oRlmEmk03IxRK6ItBCkq7v2d
-         0mo8a6gPpfYDEiZ/8+eUOXPX2qXGJm1ECDaj8ULKnDmGnso0lkV6J5fFBNTIXbOdALp3
-         bc7tF26RczjStU96Y7ZQG9xEPa2noDLNs95Va2z2QqHpcxvWWihjYMH/45sVZqRspYQE
-         hrLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVvlaLFeQtBVs6/icIHSO5wjQ0uEHxO/MbAuATEFTYpjJjrVIzJYUeNSWyS4M2pmCQJEXGfAGvRbZxW0+Uzm3vIQxQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy4Wrzm5KAHlbq5TgXQhDC7haK+gBsHlDfo+fFLXhZelbWf9/zj
-	lca+jwsUHUGQZSdD8w7d4Iv71ULxIkLRdgNCxm2A2wRV1u3qxT/KGGHHuAS+4W3tUD8wx3gAzq8
-	V2rxuqB4FONKItavbnCEPreBla7EB0jOxFGb5OinWo6jGqySIq54tghGpzGWSJIiqOW8ro+wUQQ
-	==
-X-Gm-Gg: ASbGncsyyamDP8HFPmGLdclZXDRp7Xij0nNt+88rKblNmLfU0SuVhE+5m63RQogDO71
-	ewCU2OxT66wU9g/8EcS0aUiO13rmN+QMVeQACIq/O2y3fGuQ53rIO387G5LciTRP5oekcx5fum9
-	CJXc/fJ3GxWN5G8LuUlcPNuCpn0s+XMm7uBGdZVpQFoczqdX+UR2CI5z9vIw7aomziJ4kBmTK5D
-	TTnOckv4mQptTnTC2S4ejpKcZgt4gjkZHOeR1TAov4KDepaBvxqy6laQkmodShSeOxC2oHMYcyb
-	nV8T65QIcCO5mU+I6nfQL+YGVYK79pzpGMdfJS5ZIu1I090fpgWK3yZzWJt8MhxkrJ5+iS289xo
-	ruA==
-X-Received: by 2002:a05:620a:444d:b0:81b:dd0:5877 with SMTP id af79cd13be357-88351de74demr750710185a.15.1759960554152;
-        Wed, 08 Oct 2025 14:55:54 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGyXJIObkdvCZoIJoDQaDDons28azkjFba719CWRdD+uDKH5oAPdKHT7+yBu+QOkrA2yszOgQ==
-X-Received: by 2002:a05:620a:444d:b0:81b:dd0:5877 with SMTP id af79cd13be357-88351de74demr750706985a.15.1759960553688;
-        Wed, 08 Oct 2025 14:55:53 -0700 (PDT)
-Received: from crwood-thinkpadp16vgen1.minnmso.csb ([2601:447:c680:2b50:ee6f:85c2:7e3e:ee98])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-884a1ca2f1bsm74263685a.33.2025.10.08.14.55.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Oct 2025 14:55:53 -0700 (PDT)
-Message-ID: <34afd8ffbb1c889e91fa536cf60369a697d86575.camel@redhat.com>
-Subject: Re: [PATCH v1 1/5] tools/rtla: Add fatal() and replace error
- handling pattern
-From: Crystal Wood <crwood@redhat.com>
-To: Costa Shulyupin <costa.shul@redhat.com>, Steven Rostedt
-	 <rostedt@goodmis.org>, Tomas Glozar <tglozar@redhat.com>, John Kacur
-	 <jkacur@redhat.com>, Jan Stancek <jstancek@redhat.com>, Tiezhu Yang
-	 <yangtiezhu@loongson.cn>, linux-trace-kernel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Date: Wed, 08 Oct 2025 16:55:52 -0500
-In-Reply-To: <20251008195905.333514-2-costa.shul@redhat.com>
-References: <20251008195905.333514-1-costa.shul@redhat.com>
-	 <20251008195905.333514-2-costa.shul@redhat.com>
-User-Agent: Evolution 3.56.2 (3.56.2-2.fc42)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xf3+5pqO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 407ACC4CEE7;
+	Wed,  8 Oct 2025 22:41:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1759963291;
+	bh=BmE5hJ8rbuCDGFjo8CBQ1PvsWoi7WyWjZG/68v+d69M=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Xf3+5pqOvOpZP8s+tB3IRecNIw27RavRuHuU+RdeEQaju8YVWm8lHYhQLtU3Z4L6i
+	 z7vl5lXvSEvnUTRgDegnaJrduiieZBYOlXuwn3xP/STiYJIHstJBhrXEWQsDuaSRNM
+	 x5KvkO1dDXZHLRwIJ0rViUti64MS4zaMs2k2WJZ9ULIqTOz1iVv15A28mC58/XOREK
+	 e1UWCQ3McNK9mYwPVjFnKWV9h8MCKik3JKlNAtUqLtpNlYBgGOrFRmIEwVmoSlf4Pv
+	 aUKmAizrHh/gc62IAIr/ZZJYKvl8ZVOgcLAUuKcUIRYirgg+3J1bECWH4PaITN6VBb
+	 7UOJAHyNHkmYw==
+Message-ID: <45f8532e-5aa2-4b32-ae53-bdf588133a3e@kernel.org>
+Date: Thu, 9 Oct 2025 07:41:22 +0900
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: OhACbV0nb75scQ8MNnm0ttBx0W0RJpxUT21o_ehBiXQ_1759960554
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 13/15] blktrace: trace zone management operations
+To: Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
+ Jens Axboe <axboe@kernel.dk>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+ "linux-btrace@vger.kernel.org" <linux-btrace@vger.kernel.org>,
+ John Garry <john.g.garry@oracle.com>, Hannes Reinecke <hare@suse.de>,
+ hch <hch@lst.de>, Naohiro Aota <Naohiro.Aota@wdc.com>,
+ Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
+ Chaitanya Kulkarni <chaitanyak@nvidia.com>,
+ "Martin K . Petersen" <martin.petersen@oracle.com>
+References: <20250925150231.67342-1-johannes.thumshirn@wdc.com>
+ <20250925150231.67342-14-johannes.thumshirn@wdc.com>
+ <f5a5bc62-093b-4d4a-91ba-a7ec5718609f@kernel.org>
+ <057c7e5f-6079-4451-829d-40c73c88fb60@wdc.com>
+Content-Language: en-US
+From: Damien Le Moal <dlemoal@kernel.org>
+Organization: Western Digital Research
+In-Reply-To: <057c7e5f-6079-4451-829d-40c73c88fb60@wdc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, 2025-10-08 at 22:59 +0300, Costa Shulyupin wrote:
-> The code contains some technical debt in error handling,
-> which complicates the consolidation of duplicated code.
->=20
-> Introduce an fatal() function to replace the common pattern of
-> err_msg() followed by exit(EXIT_FAILURE), reducing the length of an
-> already long function.
->=20
-> Further patches using fatal() follow.
->=20
-> Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
-> ---
->  tools/tracing/rtla/src/osnoise_hist.c  | 42 ++++++++--------------
->  tools/tracing/rtla/src/osnoise_top.c   | 42 ++++++++--------------
->  tools/tracing/rtla/src/timerlat_hist.c | 50 +++++++++-----------------
->  tools/tracing/rtla/src/timerlat_top.c  | 48 +++++++++----------------
->  tools/tracing/rtla/src/timerlat_u.c    | 12 +++----
->  tools/tracing/rtla/src/utils.c         | 14 ++++++++
->  tools/tracing/rtla/src/utils.h         |  1 +
->  7 files changed, 80 insertions(+), 129 deletions(-)
->=20
-> diff --git a/tools/tracing/rtla/src/osnoise_hist.c b/tools/tracing/rtla/s=
-rc/osnoise_hist.c
-> index dffb6d0a98d7..43c323521f55 100644
-> --- a/tools/tracing/rtla/src/osnoise_hist.c
-> +++ b/tools/tracing/rtla/src/osnoise_hist.c
-> @@ -592,10 +592,8 @@ static struct common_params
->  =09=09=09break;
->  =09=09case 'e':
->  =09=09=09tevent =3D trace_event_alloc(optarg);
-> -=09=09=09if (!tevent) {
-> -=09=09=09=09err_msg("Error alloc trace event");
-> -=09=09=09=09exit(EXIT_FAILURE);
-> -=09=09=09}
-> +=09=09=09if (!tevent)
-> +=09=09=09=09fatal("Error alloc trace event");
-> =20
->  =09=09=09if (params->common.events)
->  =09=09=09=09tevent->next =3D params->common.events;
-> @@ -615,10 +613,8 @@ static struct common_params
->  =09=09case 'H':
->  =09=09=09params->common.hk_cpus =3D 1;
->  =09=09=09retval =3D parse_cpu_set(optarg, &params->common.hk_cpu_set);
-> -=09=09=09if (retval) {
-> -=09=09=09=09err_msg("Error parsing house keeping CPUs\n");
-> -=09=09=09=09exit(EXIT_FAILURE);
-> -=09=09=09}
-> +=09=09=09if (retval)
-> +=09=09=09=09fatal("Error parsing house keeping CPUs\n");
+On 10/8/25 22:29, Johannes Thumshirn wrote:
+> I'm not sure if it makes sense to do completion tracing here. At least 
+> we cannot do it in the endio handler as usual.
+> 
+> One thing to get the error and the duration would be the following:
+> 
+> int blkdev_zone_mgmt(struct block_device *bdev, enum req_op op,
+>                       sector_t sector, sector_t nr_sectors)
+> {
+> 
+>          /* [...] */
+> 
+>          trace_blkdev_zone_mgmt(bio, nr_sectors);
+>          ret = submit_bio_wait(bio);
+> 
+> +     trace_blkdev_zone_mgmt_completion(bio, nr_sectors, bio->bi_error);
+>          bio_put(bio);
 
-Looks like there was existing inconsistency with newlines... maybe have
-fatal() include the newline automatically to simplify callers slightly?
-We're not going to print a continuation if we're exiting.
+That does seem OK to me. Maybe try and see how it looks ?
+Though the request alloc, insert, dispatch and completion for this BIO will
+still be traced, right ? If these events show correctly that this is a zone
+management command (and which one it is), then we should not need the above.
 
-Otherwise, for the whole series:
-Reviewed-by: Crystal Wood <crwood@redhat.com>
 
--Crystal
-
+-- 
+Damien Le Moal
+Western Digital Research
