@@ -1,520 +1,192 @@
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f68.google.com (mail-ej1-f68.google.com [209.85.218.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9541228FFF6;
-	Wed,  8 Oct 2025 16:43:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89BCC1E32D3
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  8 Oct 2025 17:09:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.68
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759941803; cv=none; b=UAwPNKZlxFToCREeaRtmHwukwXs8lBIb4puElREVVFBZmqnxW6fTXiUVe4zu1VjY43yu9ZKFxNmSpYeMuHQZ2T2+YsT6P1QHrLiKRwMzd2KaEpVQbLxGk65MN/d4xxQnL6lwR9GUyBHTkS+Mr+boSJN0UVUlkuplInq/JB4DEpM=
+	t=1759943373; cv=none; b=giOwCwuo747i59nPPXXPNCbpZR+JXSkGRkJ5LG2cUsYcoEKZEx50saeQC6o0/WU3HYvRIzUl0QvsU9pGA+qIbacn/vZDlTve48HH+XJxaFv4vXLe7fminLgXuf/gqTiYI9SYmawZ1bheNgg1MQjB3njbx6HImRNk1Fm1l+lNGgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759941803; c=relaxed/simple;
-	bh=gLmh2aSaxjnnQePYcPxSGkjcH8tlac8SA/LAD127HeQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=hL664qpYDbA9E+P5GPho16l9UbKuk+I0MBY53XhSxf/tOlezePGhROQUQkyLUKqOT628qb1YHM3IMus7MR+35t3lvTeUJv/N/be41kiDaM2UfqeyVJ1EU2D4dCyUUGHioFqtDwX5In5dTS3d/VuXFFdXl8oOd4rur4/jzwR4Jnc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf18.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay09.hostedemail.com (Postfix) with ESMTP id BC41588002;
-	Wed,  8 Oct 2025 16:43:18 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf18.hostedemail.com (Postfix) with ESMTPA id BB8EF31;
-	Wed,  8 Oct 2025 16:43:16 +0000 (UTC)
-Date: Wed, 8 Oct 2025 12:45:10 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Runping Lai <runpinglai@google.com>, Luo
- Gengkun <luogengkun@huaweicloud.com>, Wattson CI
- <wattson-external@google.com>, kernel-team@android.com, Linus Torvalds
- <torvalds@linux-foundation.org>
-Subject: [PATCH] tracing: Have trace_marker use per-cpu data to read user
- space
-Message-ID: <20251008124510.6dba541a@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1759943373; c=relaxed/simple;
+	bh=q0rNAxg4DjEP/hoHH/PTjQm+3uqQRVCpSz5pRz7Z0hM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IeW1Z5BmrX3C8q6x+ntLlmJo/tvJufe0bBKGsq5MeM5OfjScLS+GIOySjYd4gFcRNIr1kKkUMoWF3Dn36LDx05a0bC003piHzZYaKFbt9bId27ZZNiJ4JTl6e23M3dNZJBqUzjpx+jArxfI3YhgfIUzYuacCFX5CAP1XnK/jUeM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FgBEjyJz; arc=none smtp.client-ip=209.85.218.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FgBEjyJz"
+Received: by mail-ej1-f68.google.com with SMTP id a640c23a62f3a-b4539dddd99so7343966b.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 08 Oct 2025 10:09:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1759943370; x=1760548170; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jz9qwl9ylUOWf25zEeAiwwPcUX4IEwoawwp4R3pWXHk=;
+        b=FgBEjyJzNM9OGRqFNZpXFY0dBGMwEWd4ta6hRrvGKG9z7E1HAVdDubpHVJY5MfLbB8
+         P4JQfI5WLl2H7AojzD/DZ/XOJfHkc1wGucai4fgCqhp9lSGLmT82b70b05czoOq96mE/
+         kiHuYUvfyVHAk6uCjp96V2HEdV571X2kqShuwUvQvXEm6uy1WY/LqOzKb82SAPuntCng
+         M0bHef679eOa6qn8Fq7S3MfbM+Pc+p0TBTiFEN5cbOQsR0AGQeVIzMWSu1u68BTFnt+H
+         xsRLOsXHXeIXw+++gopYXn8js/kZM1Gl+aiVrImIZi1fHfsRPz2ex8DR950ru+2PFgUH
+         kItg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1759943370; x=1760548170;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jz9qwl9ylUOWf25zEeAiwwPcUX4IEwoawwp4R3pWXHk=;
+        b=P78jUykuD6HEyklblpfDc9VE/j9C9CfpiYmft8AvdJPqOVF2ptaef+dG/fiP2M52gH
+         6fJTOm43h2Q+Vu2QyOxQPeigpfeje7j3e50TrCqd73fRrsNP+zZ2BtOcKUqTqxHjGg2G
+         iJ00sE4L3Lz8/R0QXTKERNhSBmQSjc8dIU8TPiAKKBgn1DNZmuLSblPyJ6tbAtqsqt5d
+         kiD51Z7zNdTZntpJseSy9976yHDHChwVTeFz4CppdGjDKWVWeScEdIv9hDtgjw137zp8
+         1HWpXJPm5fwhCaEWHjW+7ZMxc+Tjb2EvwP35xQR1ZW8nckWafIuXpYhfHaCkj6b13J1D
+         44+g==
+X-Forwarded-Encrypted: i=1; AJvYcCUVYFX4+dqznZJhB1HQCDXctVEWYbhdxoJpFmSpRIhxI2wxE4bYjFE8uhYtSizXEL2B7F9//mzPHwAnxr0ONg1/D3Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxA6V3YEEO2CIla79dQS+7Ir/ivermxEame9IidyOA9nyB6WZNs
+	Mb4tacTwpxaCg5tpuVzwcVUMhV0al/+Zxw6rwAAS3QOnx9KXFJJxg77IQNjYnxL4su3wVYtQIgb
+	4Ho24UUfWKN14FIeKXSnZEjPjIx2qYqU=
+X-Gm-Gg: ASbGncsrMso+bO0LN/qL9G9oMPUBoMwCuZWqWdByAPpzbceh0PZtTDjKsaVtHE6zJwC
+	gjfSDlIMrGYNtKFFcDvW1lxNqAUmhunb5xlw11O94qG8SJ+DOX9JU01r3pxDJUuAV47dhEJ9zXe
+	PI26YZZOQuuRrmDTCBlHTq4h/oZocyWh20GqsJ2ouyexGQRzUSSYMTJhbnmu5l4Pv6gOLWFvyJ7
+	5GnHuilfHRT0pXWHX5+2+a1nDhOM05Pga9my3kOw1YMMsd0ssQSEAxfvBIjNdIh
+X-Google-Smtp-Source: AGHT+IGWKbwFn3pQh+oqiRBdGn/RoV710Mep4oesQYjLCtzVy294+wOH2skWT01UGyugGuSxO5vuBFKgvwJqzotX83w=
+X-Received: by 2002:a17:907:ea5:b0:b3f:f822:2db2 with SMTP id
+ a640c23a62f3a-b50a9c5b35emr469591566b.11.1759943369545; Wed, 08 Oct 2025
+ 10:09:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: ee8g3ofs4rg9zxd1ntii3cjo3m31wfa4
-X-Rspamd-Server: rspamout08
-X-Rspamd-Queue-Id: BB8EF31
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19xSVCS8cXzRf2SzX4rRKaRLZ/2/lhwQ5Q=
-X-HE-Tag: 1759941796-431918
-X-HE-Meta: U2FsdGVkX18OW2V6hH0U+K6uMVN5urPuPJU0gSChmRaf8lOpJSSZoOgWQRGl1VyCBO8yTlBoclrMgRA3HHh8qlqdvHAf88txIkKA0dGSYxy05FsVh/MWYKZxV7VNONdR//VMpmGIthk66Fb8kfJzogkVZITi9+ZCJbaNpSAzD/r1+nhPsa/NmizAhEQ5o+VJimd3pXyaobuITx+EZx94yUtOQQuFu1CXeU9Zvv/9L/W8v0aJsob9cLGiNc92qxBHz+/5bfDTOc2WPIwoOpxVme8ofG/Nvbnc0iPTdUcabcIjB0bqQvriOGI1RjUL9PLdGokpZ63U9eyqCHph/z2SIQyzoKxRg50m49Ajw8Y3qgnuvB3tZweDqLicmQS0+CLJ3swSX+E2RUuXF5KOjALxAGIgoaWkPkDzu2n7+hcfHd5nm5AFNbztN4HzCTAoFpucMttKNzhmEHE=
+References: <20250927061210.194502-1-menglong.dong@linux.dev>
+ <20250927061210.194502-2-menglong.dong@linux.dev> <CAADnVQJAdAxEOWT6avzwq6ZrXhEdovhx3yibgA6T8wnMEnnAjg@mail.gmail.com>
+ <3571660.QJadu78ljV@7950hx> <7f28937c-121a-4ea8-b66a-9da3be8bccad@gmail.com> <CAADnVQLxpUmjbsHeNizRMDkY1a4_gLD0VBFWS8QMYHzpYBs4EQ@mail.gmail.com>
+In-Reply-To: <CAADnVQLxpUmjbsHeNizRMDkY1a4_gLD0VBFWS8QMYHzpYBs4EQ@mail.gmail.com>
+From: Kumar Kartikeya Dwivedi <memxor@gmail.com>
+Date: Wed, 8 Oct 2025 19:08:51 +0200
+X-Gm-Features: AS18NWA7odH1HErK1kZmm5Nkkhj8jiRXGwc5vRm03R1MTC7gsrTHfFhzY-YDTH4
+Message-ID: <CAP01T75TegFO0DrZ=DvpNQBSnJqjn4HvM9OLsbJWFKJwzZeYXw@mail.gmail.com>
+Subject: Re: bpf_errno. Was: [PATCH RFC bpf-next 1/3] bpf: report probe fault
+ to BPF stderr
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Leon Hwang <hffilwlqm@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, 
+	Menglong Dong <menglong.dong@linux.dev>, Menglong Dong <menglong8.dong@gmail.com>, 
+	Alexei Starovoitov <ast@kernel.org>, bpf <bpf@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, jiang.biao@linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Wed, 8 Oct 2025 at 18:27, Alexei Starovoitov
+<alexei.starovoitov@gmail.com> wrote:
+>
+> On Wed, Oct 8, 2025 at 7:41=E2=80=AFAM Leon Hwang <hffilwlqm@gmail.com> w=
+rote:
+> >
+> >
+> >
+> > On 2025/10/7 14:14, Menglong Dong wrote:
+> > > On 2025/10/2 10:03, Alexei Starovoitov wrote:
+> > >> On Fri, Sep 26, 2025 at 11:12=E2=80=AFPM Menglong Dong <menglong8.do=
+ng@gmail.com> wrote:
+> > >>>
+> > >>> Introduce the function bpf_prog_report_probe_violation(), which is =
+used
+> > >>> to report the memory probe fault to the user by the BPF stderr.
+> > >>>
+> > >>> Signed-off-by: Menglong Dong <menglong.dong@linux.dev>
+> >
+> > [...]
+> >
+> > >>
+> > >> Interesting idea, but the above message is not helpful.
+> > >> Users cannot decipher a fault_ip within a bpf prog.
+> > >> It's just a random number.
+> > >
+> > > Yeah, I have noticed this too. What useful is the
+> > > bpf_stream_dump_stack(), which will print the code
+> > > line that trigger the fault.
+> > >
+> > >> But stepping back... just faults are common in tracing.
+> > >> If we start printing them we will just fill the stream to the max,
+> > >> but users won't know that the message is there, since no one
+> > >
+> > > You are right, we definitely can't output this message
+> > > to STDERR directly. We can add an extra flag for it, as you
+> > > said below.
+> > >
+> > > Or, maybe we can introduce a enum stream_type, and
+> > > the users can subscribe what kind of messages they
+> > > want to receive.
+> > >
+> > >> expects it. arena and lock errors are rare and arena faults
+> > >> were specifically requested by folks who develop progs that use aren=
+a.
+> > >> This one is different. These faults have been around for a long time
+> > >> and I don't recall people asking for more verbosity.
+> > >> We can add them with an extra flag specified at prog load time,
+> > >> but even then. Doesn't feel that useful.
+> > >
+> > > Generally speaking, users can do invalid checking before
+> > > they do the memory reading, such as NULL checking. And
+> > > the pointer in function arguments that we hook is initialized
+> > > in most case. So the fault is someting that can be prevented.
+> > >
+> > > I have a BPF tools which is writed for 4.X kernel and kprobe
+> > > based BPF is used. Now I'm planing to migrate it to 6.X kernel
+> > > and replace bpf_probe_read_kernel() with bpf_core_cast() to
+> > > obtain better performance. Then I find that I can't check if the
+> > > memory reading is success, which can lead to potential risk.
+> > > So my tool will be happy to get such fault event :)
+> > >
+> > > Leon suggested to add a global errno for each BPF programs,
+> > > and I haven't dig deeply on this idea yet.
+> > >
+> >
+> > Yeah, as we discussed, a global errno would be a much more lightweight
+> > approach for handling such faults.
+> >
+> > The idea would look like this:
+> >
+> > DEFINE_PER_CPU(int, bpf_errno);
+> >
+> > __bpf_kfunc void bpf_errno_clear(void);
+> > __bpf_kfunc void bpf_errno_set(int errno);
+> > __bpf_kfunc int bpf_errno_get(void);
+> >
+> > When a fault occurs, the kernel can simply call
+> > 'bpf_errno_set(-EFAULT);'.
+> >
+> > If users want to detect whether a fault happened, they can do:
+> >
+> > bpf_errno_clear();
+> > header =3D READ_ONCE(skb->network_header);
+> > if (header =3D=3D 0 && bpf_errno_get() =3D=3D -EFAULT)
+> >         /* handle fault */;
+> >
+> > This way, users can identify faults immediately and handle them gracefu=
+lly.
+> >
+> > Furthermore, these kfuncs can be inlined by the verifier, so there woul=
+d
+> > be no runtime function call overhead.
+>
+> Interesting idea, but errno as-is doesn't quite fit,
+> since we only have 2 (or 3 ?) cases without explicit error return:
+> probe_read_kernel above, arena read, arena write.
+> I guess we can add may_goto to this set as well.
+> But in all these cases we'll struggle to find an appropriate errno code,
+> so it probably should be a custom enum and not called "errno".
 
-It was reported that using __copy_from_user_inatomic() can actually
-schedule. Which is bad when preemption is disabled. Even though there's
-logic to check in_atomic() is set, but this is a nop when the kernel is
-configured with PREEMPT_NONE. This is due to page faulting and the code
-could schedule with preemption disabled.
-
-Link: https://lore.kernel.org/all/20250819105152.2766363-1-luogengkun@huaweicloud.com/
-
-The solution was to change the __copy_from_user_inatomic() to
-copy_from_user_nofault(). But then it was reported that this caused a
-regression in Android. There's several applications writing into
-trace_marker() in Android, but now instead of showing the expected data,
-it is showing:
-
-  tracing_mark_write: <faulted>
-
-After reverting the conversion to copy_from_user_nofault(), Android was
-able to get the data again.
-
-Writes to the trace_marker is a way to efficiently and quickly enter data
-into the Linux tracing buffer. It takes no locks and was designed to be as
-non-intrusive as possible. This means it cannot allocate memory, and must
-use pre-allocated data.
-
-A method that is actively being worked on to have faultable system call
-tracepoints read user space data is to allocate per CPU buffers, and use
-them in the callback. The method uses a technique similar to seqcount.
-That is something like this:
-
-	preempt_disable();
-	cpu = smp_processor_id();
-	buffer = this_cpu_ptr(&pre_allocated_cpu_buffers, cpu);
-	do {
-		cnt = nr_context_switches_cpu(cpu);
-		migrate_disable();
-		preempt_enable();
-		ret = copy_from_user(buffer, ptr, size);
-		preempt_disable();
-		migrate_enable();
-	} while (!ret && cnt != nr_context_switches_cpu(cpu));
-
-	if (!ret)
-		ring_buffer_write(buffer);
-	preempt_enable();
-
-It's a little more involved than that, but the above is the basic logic.
-The idea is to acquire the current CPU buffer, disable migration, and then
-enable preemption. At this moment, it can safely use copy_from_user().
-After reading the data from user space, it disables preemption again. It
-then checks to see if there was any new scheduling on this CPU. If there
-was, it must assume that the buffer was corrupted by another task. If
-there wasn't, then the buffer is still valid as only tasks in preemptable
-context can write to this buffer and only those that are running on the
-CPU.
-
-By using this method, where trace_marker open allocates the per CPU
-buffers, trace_marker writes can access user space and even fault it in,
-without having to allocate or take any locks of its own.
-
-Cc: stable@vger.kernel.org
-Fixes: 3d62ab32df065 ("tracing: Fix tracing_marker may trigger page fault during preempt_disable")
-Reported-by: Runping Lai <runpinglai@google.com>
-Tested-by: Runping Lai <runpinglai@google.com>
-Closes: https://lore.kernel.org/linux-trace-kernel/20251007003417.3470979-2-runpinglai@google.com/
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/trace.c | 268 +++++++++++++++++++++++++++++++++++--------
- 1 file changed, 220 insertions(+), 48 deletions(-)
-
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index b3c94fbaf002..0fd582651293 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -4791,12 +4791,6 @@ int tracing_single_release_file_tr(struct inode *inode, struct file *filp)
- 	return single_release(inode, filp);
- }
- 
--static int tracing_mark_open(struct inode *inode, struct file *filp)
--{
--	stream_open(inode, filp);
--	return tracing_open_generic_tr(inode, filp);
--}
--
- static int tracing_release(struct inode *inode, struct file *file)
- {
- 	struct trace_array *tr = inode->i_private;
-@@ -7163,7 +7157,7 @@ tracing_free_buffer_release(struct inode *inode, struct file *filp)
- 
- #define TRACE_MARKER_MAX_SIZE		4096
- 
--static ssize_t write_marker_to_buffer(struct trace_array *tr, const char __user *ubuf,
-+static ssize_t write_marker_to_buffer(struct trace_array *tr, const char *buf,
- 				      size_t cnt, unsigned long ip)
- {
- 	struct ring_buffer_event *event;
-@@ -7173,20 +7167,11 @@ static ssize_t write_marker_to_buffer(struct trace_array *tr, const char __user
- 	int meta_size;
- 	ssize_t written;
- 	size_t size;
--	int len;
--
--/* Used in tracing_mark_raw_write() as well */
--#define FAULTED_STR "<faulted>"
--#define FAULTED_SIZE (sizeof(FAULTED_STR) - 1) /* '\0' is already accounted for */
- 
- 	meta_size = sizeof(*entry) + 2;  /* add '\0' and possible '\n' */
-  again:
- 	size = cnt + meta_size;
- 
--	/* If less than "<faulted>", then make sure we can still add that */
--	if (cnt < FAULTED_SIZE)
--		size += FAULTED_SIZE - cnt;
--
- 	buffer = tr->array_buffer.buffer;
- 	event = __trace_buffer_lock_reserve(buffer, TRACE_PRINT, size,
- 					    tracing_gen_ctx());
-@@ -7196,9 +7181,6 @@ static ssize_t write_marker_to_buffer(struct trace_array *tr, const char __user
- 		 * make it smaller and try again.
- 		 */
- 		if (size > ring_buffer_max_event_size(buffer)) {
--			/* cnt < FAULTED size should never be bigger than max */
--			if (WARN_ON_ONCE(cnt < FAULTED_SIZE))
--				return -EBADF;
- 			cnt = ring_buffer_max_event_size(buffer) - meta_size;
- 			/* The above should only happen once */
- 			if (WARN_ON_ONCE(cnt + meta_size == size))
-@@ -7212,14 +7194,8 @@ static ssize_t write_marker_to_buffer(struct trace_array *tr, const char __user
- 
- 	entry = ring_buffer_event_data(event);
- 	entry->ip = ip;
--
--	len = copy_from_user_nofault(&entry->buf, ubuf, cnt);
--	if (len) {
--		memcpy(&entry->buf, FAULTED_STR, FAULTED_SIZE);
--		cnt = FAULTED_SIZE;
--		written = -EFAULT;
--	} else
--		written = cnt;
-+	memcpy(&entry->buf, buf, cnt);
-+	written = cnt;
- 
- 	if (tr->trace_marker_file && !list_empty(&tr->trace_marker_file->triggers)) {
- 		/* do not add \n before testing triggers, but add \0 */
-@@ -7243,6 +7219,169 @@ static ssize_t write_marker_to_buffer(struct trace_array *tr, const char __user
- 	return written;
- }
- 
-+struct trace_user_buf {
-+	char		*buf;
-+};
-+
-+struct trace_user_buf_info {
-+	struct trace_user_buf __percpu	*tbuf;
-+	int				ref;
-+};
-+
-+
-+static DEFINE_MUTEX(trace_user_buffer_mutex);
-+static struct trace_user_buf_info *trace_user_buffer;
-+
-+static void trace_user_fault_buffer_free(struct trace_user_buf_info *tinfo)
-+{
-+	char *buf;
-+	int cpu;
-+
-+	for_each_possible_cpu(cpu) {
-+		buf = per_cpu_ptr(tinfo->tbuf, cpu)->buf;
-+		kfree(buf);
-+	}
-+	free_percpu(tinfo->tbuf);
-+	kfree(tinfo);
-+}
-+
-+static int trace_user_fault_buffer_enable(void)
-+{
-+	struct trace_user_buf_info *tinfo;
-+	char *buf;
-+	int cpu;
-+
-+	guard(mutex)(&trace_user_buffer_mutex);
-+
-+	if (trace_user_buffer) {
-+		trace_user_buffer->ref++;
-+		return 0;
-+	}
-+
-+	tinfo = kmalloc(sizeof(*tinfo), GFP_KERNEL);
-+	if (!tinfo)
-+		return -ENOMEM;
-+
-+	tinfo->tbuf = alloc_percpu(struct trace_user_buf);
-+	if (!tinfo->tbuf) {
-+		kfree(tinfo);
-+		return -ENOMEM;
-+	}
-+
-+	tinfo->ref = 1;
-+
-+	/* Clear each buffer in case of error */
-+	for_each_possible_cpu(cpu) {
-+		per_cpu_ptr(tinfo->tbuf, cpu)->buf = NULL;
-+	}
-+
-+	for_each_possible_cpu(cpu) {
-+		buf = kmalloc_node(TRACE_MARKER_MAX_SIZE, GFP_KERNEL,
-+				   cpu_to_node(cpu));
-+		if (!buf) {
-+			trace_user_fault_buffer_free(tinfo);
-+			return -ENOMEM;
-+		}
-+		per_cpu_ptr(tinfo->tbuf, cpu)->buf = buf;
-+	}
-+
-+	trace_user_buffer = tinfo;
-+
-+	return 0;
-+}
-+
-+static void trace_user_fault_buffer_disable(void)
-+{
-+	struct trace_user_buf_info *tinfo;
-+
-+	guard(mutex)(&trace_user_buffer_mutex);
-+
-+	tinfo = trace_user_buffer;
-+
-+	if (WARN_ON_ONCE(!tinfo))
-+		return;
-+
-+	if (--tinfo->ref)
-+		return;
-+
-+	trace_user_fault_buffer_free(tinfo);
-+	trace_user_buffer = NULL;
-+}
-+
-+/* Must be called with preemption disabled */
-+static char *trace_user_fault_read(struct trace_user_buf_info *tinfo,
-+				   const char __user *ptr, size_t size,
-+				   size_t *read_size)
-+{
-+	int cpu = smp_processor_id();
-+	char *buffer = per_cpu_ptr(tinfo->tbuf, cpu)->buf;
-+	unsigned int cnt;
-+	int trys = 0;
-+	int ret;
-+
-+	if (size > TRACE_MARKER_MAX_SIZE)
-+		size = TRACE_MARKER_MAX_SIZE;
-+	*read_size = 0;
-+
-+	/*
-+	 * This acts similar to a seqcount. The per CPU context switches are
-+	 * recorded, migration is disabled and preemption is enabled. The
-+	 * read of the user space memory is copied into the per CPU buffer.
-+	 * Preemption is disabled again, and if the per CPU context switches count
-+	 * is still the same, it means the buffer has not been corrupted.
-+	 * If the count is different, it is assumed the buffer is corrupted
-+	 * and reading must be tried again.
-+	 */
-+
-+	do {
-+		/*
-+		 * If for some reason, copy_from_user() always causes a context
-+		 * switch, this would then cause an infinite loop.
-+		 * If this task is preempted by another user space task, it
-+		 * will cause this task to try again. But just in case something
-+		 * changes where the copying from user space causes another task
-+		 * to run, prevent this from going into an infinite loop.
-+		 * 100 tries should be plenty.
-+		 */
-+		if (WARN_ONCE(trys++ > 100, "Error: Too many tries to read user space"))
-+			return NULL;
-+
-+		/* Read the current CPU context switch counter */
-+		cnt = nr_context_switches_cpu(cpu);
-+
-+		/*
-+		 * Preemption is going to be enabled, but this task must
-+		 * remain on this CPU.
-+		 */
-+		migrate_disable();
-+
-+		/*
-+		 * Now preemption is being enabed and another task can come in
-+		 * and use the same buffer and corrupt our data.
-+		 */
-+		preempt_enable_notrace();
-+
-+		ret = __copy_from_user(buffer, ptr, size);
-+
-+		preempt_disable_notrace();
-+		migrate_enable();
-+
-+		/* if it faulted, no need to test if the buffer was corrupted */
-+		if (ret)
-+			return NULL;
-+
-+		/*
-+		 * Preemption is disabled again, now check the per CPU context
-+		 * switch counter. If it doesn't match, then another user space
-+		 * process may have schedule in and corrupted our buffer. In that
-+		 * case the copying must be retried.
-+		 */
-+	} while (nr_context_switches_cpu(cpu) != cnt);
-+
-+	*read_size = size;
-+	return buffer;
-+}
-+
- static ssize_t
- tracing_mark_write(struct file *filp, const char __user *ubuf,
- 					size_t cnt, loff_t *fpos)
-@@ -7250,6 +7389,8 @@ tracing_mark_write(struct file *filp, const char __user *ubuf,
- 	struct trace_array *tr = filp->private_data;
- 	ssize_t written = -ENODEV;
- 	unsigned long ip;
-+	size_t size;
-+	char *buf;
- 
- 	if (tracing_disabled)
- 		return -EINVAL;
-@@ -7263,6 +7404,16 @@ tracing_mark_write(struct file *filp, const char __user *ubuf,
- 	if (cnt > TRACE_MARKER_MAX_SIZE)
- 		cnt = TRACE_MARKER_MAX_SIZE;
- 
-+	/* Must have preemption disabled while having access to the buffer */
-+	guard(preempt_notrace)();
-+
-+	buf = trace_user_fault_read(trace_user_buffer, ubuf, cnt, &size);
-+	if (!buf)
-+		return -EFAULT;
-+
-+	if (cnt > size)
-+		cnt = size;
-+
- 	/* The selftests expect this function to be the IP address */
- 	ip = _THIS_IP_;
- 
-@@ -7270,32 +7421,27 @@ tracing_mark_write(struct file *filp, const char __user *ubuf,
- 	if (tr == &global_trace) {
- 		guard(rcu)();
- 		list_for_each_entry_rcu(tr, &marker_copies, marker_list) {
--			written = write_marker_to_buffer(tr, ubuf, cnt, ip);
-+			written = write_marker_to_buffer(tr, buf, cnt, ip);
- 			if (written < 0)
- 				break;
- 		}
- 	} else {
--		written = write_marker_to_buffer(tr, ubuf, cnt, ip);
-+		written = write_marker_to_buffer(tr, buf, cnt, ip);
- 	}
- 
- 	return written;
- }
- 
- static ssize_t write_raw_marker_to_buffer(struct trace_array *tr,
--					  const char __user *ubuf, size_t cnt)
-+					  const char *buf, size_t cnt)
- {
- 	struct ring_buffer_event *event;
- 	struct trace_buffer *buffer;
- 	struct raw_data_entry *entry;
- 	ssize_t written;
--	int size;
--	int len;
--
--#define FAULT_SIZE_ID (FAULTED_SIZE + sizeof(int))
-+	size_t size;
- 
- 	size = sizeof(*entry) + cnt;
--	if (cnt < FAULT_SIZE_ID)
--		size += FAULT_SIZE_ID - cnt;
- 
- 	buffer = tr->array_buffer.buffer;
- 
-@@ -7309,14 +7455,8 @@ static ssize_t write_raw_marker_to_buffer(struct trace_array *tr,
- 		return -EBADF;
- 
- 	entry = ring_buffer_event_data(event);
--
--	len = copy_from_user_nofault(&entry->id, ubuf, cnt);
--	if (len) {
--		entry->id = -1;
--		memcpy(&entry->buf, FAULTED_STR, FAULTED_SIZE);
--		written = -EFAULT;
--	} else
--		written = cnt;
-+	memcpy(&entry->id, buf, cnt);
-+	written = cnt;
- 
- 	__buffer_unlock_commit(buffer, event);
- 
-@@ -7329,8 +7469,8 @@ tracing_mark_raw_write(struct file *filp, const char __user *ubuf,
- {
- 	struct trace_array *tr = filp->private_data;
- 	ssize_t written = -ENODEV;
--
--#define FAULT_SIZE_ID (FAULTED_SIZE + sizeof(int))
-+	size_t size;
-+	char *buf;
- 
- 	if (tracing_disabled)
- 		return -EINVAL;
-@@ -7342,6 +7482,17 @@ tracing_mark_raw_write(struct file *filp, const char __user *ubuf,
- 	if (cnt < sizeof(unsigned int))
- 		return -EINVAL;
- 
-+	/* Must have preemption disabled while having access to the buffer */
-+	guard(preempt_notrace)();
-+
-+	buf = trace_user_fault_read(trace_user_buffer, ubuf, cnt, &size);
-+	if (!buf)
-+		return -EFAULT;
-+
-+	/* raw write is all or nothing */
-+	if (cnt > size)
-+		return -EINVAL;
-+
- 	/* The global trace_marker_raw can go to multiple instances */
- 	if (tr == &global_trace) {
- 		guard(rcu)();
-@@ -7357,6 +7508,27 @@ tracing_mark_raw_write(struct file *filp, const char __user *ubuf,
- 	return written;
- }
- 
-+static int tracing_mark_open(struct inode *inode, struct file *filp)
-+{
-+	int ret;
-+
-+	ret = trace_user_fault_buffer_enable();
-+	if (ret < 0)
-+		return ret;
-+
-+	stream_open(inode, filp);
-+	ret = tracing_open_generic_tr(inode, filp);
-+	if (ret < 0)
-+		trace_user_fault_buffer_disable();
-+	return ret;
-+}
-+
-+static int tracing_mark_release(struct inode *inode, struct file *file)
-+{
-+	trace_user_fault_buffer_disable();
-+	return tracing_release_generic_tr(inode, file);
-+}
-+
- static int tracing_clock_show(struct seq_file *m, void *v)
- {
- 	struct trace_array *tr = m->private;
-@@ -7764,13 +7936,13 @@ static const struct file_operations tracing_free_buffer_fops = {
- static const struct file_operations tracing_mark_fops = {
- 	.open		= tracing_mark_open,
- 	.write		= tracing_mark_write,
--	.release	= tracing_release_generic_tr,
-+	.release	= tracing_mark_release,
- };
- 
- static const struct file_operations tracing_mark_raw_fops = {
- 	.open		= tracing_mark_open,
- 	.write		= tracing_mark_raw_write,
--	.release	= tracing_release_generic_tr,
-+	.release	= tracing_mark_release,
- };
- 
- static const struct file_operations trace_clock_fops = {
--- 
-2.51.0
-
+Yeah, agreed that this would be useful, particularly in this case. I'm
+wondering how we'll end up implementing this.
+Sounds like it needs to be tied to the program's invocation, so it
+cannot be per-cpu per-program, since they nest. Most likely should be
+backed by run_ctx, but that is unavailable in all program types. Next
+best thing that comes to mind is reserving some space in the stack
+frame at a known offset in each subprog that invokes this helper, and
+use that to signal (by finding the program's bp and writing to the
+stack), the downside being it likely becomes yet-another arch-specific
+thing. Any other better ideas?
