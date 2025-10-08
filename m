@@ -1,105 +1,114 @@
-Received: from mail-yx1-f47.google.com (mail-yx1-f47.google.com [74.125.224.47])
+Received: from mail-pl1-f194.google.com (mail-pl1-f194.google.com [209.85.214.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7B492BEC5E
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  8 Oct 2025 17:12:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2838C20E030
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  8 Oct 2025 17:25:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759943572; cv=none; b=fv4Sbyulv/O0rRHS/XP4V7QMNxPXlhiG0PXm1NAwKz50LdjeRbfxS4X5ZA35IdHThL+HRODcUEZsC0TnxrlpI+i2FRijGHwmaVbjUjxEE4n7DCdP75FqyHQ1gapfd4jonRB2GH6eqOcD09s84PHHf2wC66l2K1MP2OewzTc9pFQ=
+	t=1759944332; cv=none; b=I/fNk777xJmjOTc4tlgyJIZpnrkBcg7DQm4t1fETBnC9Sd7Ws+T8R9SU/SRoCiEejxAtHeFm37YkJS0lOqiK2KK90Jb4T2sYvK69ik71yFs1bVkHxodPQQxFYDXU1seS9H9t5tSssfa+bzOP/SmVLHPcR7uRT3//0HKK5j0O00I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759943572; c=relaxed/simple;
-	bh=QXRXen/paY2I8AfimuUYl6aegwK5TnJBROTQaPpMH7o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cWAyBnyaOa1ZVIJGOM4YN6f5PToOZiE7MDBg9vL4Y4AbjSBAeMg2yWE90Y8wo32EbSr4sOaxiUhv5F5Ve02QkGbEeUGzm44tWCeEdryhbyts9UXrYJx2G59vzWlCww6CUbnvuUIH2s+7Fy7YdIy0iIa5dSeqPwZipaRU9v0Iv6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Bo71i0b+; arc=none smtp.client-ip=74.125.224.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1759944332; c=relaxed/simple;
+	bh=OBWc87pQeSBPnNP9Y6+pBUc5uvdElUQm6oastV3iVD0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=e/ufQR1Od/bN2lS5HLYSfcM8NySC/lkQoeQiiJkROmd3Qkqo2pmH6lj7ZNpivJwJgei1pNM6IhG72BHYA2B+FCI4PzuACd8AjCZMSDBmUQ0IGOw9tGJtlZDk6v86YLouL7miq7SbfoaCGlHaDi/LcfXtbxdns6sLCZTvSkeXfS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zh8LER0V; arc=none smtp.client-ip=209.85.214.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Bo71i0b+"
-Received: by mail-yx1-f47.google.com with SMTP id 956f58d0204a3-638d01a8719so127196d50.2
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 08 Oct 2025 10:12:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zh8LER0V"
+Received: by mail-pl1-f194.google.com with SMTP id d9443c01a7336-27eec33b737so865775ad.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 08 Oct 2025 10:25:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1759943569; x=1760548369; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QXRXen/paY2I8AfimuUYl6aegwK5TnJBROTQaPpMH7o=;
-        b=Bo71i0b+i59XE8ndqAGX+HyUNnuN9NvwMpvW4aTtrQSQlPpIMjH4u9QdyYNw9yP/5h
-         V4TAabAjATR5PWsYQiK7gl6V46/K15pWImSTeOpEEkD4veVu0Q9Tmyomue5Vz1MCrO78
-         EZ90Bns8SS34hTs3lz01GcMAAHy7wY3kruPjdcp+bkMVokj6l5JTB8BlpYBA86PneIEP
-         xo9nAzwQeJUS4nXZx8Pp9CsSIF3My4bkw/IHYnE1dsrY/gDcXpT5blHYBHKcNoSO4b4z
-         9GlfF5GwGCoZeCYPME5ILU+qvAjLW/LdfkcFan6nzbjQXi/58UgD8Y3DIMIgafPR7B7K
-         uJEQ==
+        d=gmail.com; s=20230601; t=1759944330; x=1760549130; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=41XZ0Nc+5i1FOapXe9kYQ/jcLvjFNXLmKvQlP4jYRDA=;
+        b=Zh8LER0VL2pk8CLUHU2JW5CnoxitNYIcMW0HDv57m5JYMvQQTw8G5vyUTwUmjk3Uft
+         eEZFz5rJ1fetqeBNG+WG5dreH10Kfl+KALeRjIicQsNF+nFanmcUSeMgjQEeBgqCMwhp
+         3tG5fU6VZhaz6WovP3N355qDqv0BsElmJI363l1tXc2JYsBQARuxUOW7+kXBGezaj2NP
+         hNfecoBeeINfSTzT8r4hhjAlx6QPaFhBOUhJ7GimwSdUa6yDCCD+PGpIzSup0nJ3wsnv
+         oZ2aQEJZMEPMQExuPVaeIxmOPB5dSlmfEBMOV+AB7EQ4PCv3U3kNHJjXNbJY76ZD+4AV
+         ZWXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759943569; x=1760548369;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QXRXen/paY2I8AfimuUYl6aegwK5TnJBROTQaPpMH7o=;
-        b=oMTgRrLvl1RlcE32Y/jqWGEu9/5fPlK008t1FgXH+qlEFgUXipzXyH3DIOhPDLw5yS
-         tUfn67OIVosB9ldY5yYpAGYGP7gYaWUkO6NQz7AIgHY3A9xE8z2rUaopdz5qTZOxzWkz
-         Etm0Rm5Of7VlGKX+2ubQSFzDwSHAfPBjYotpzei+widCZFjS/yf8DXZ0n96Q0BHQlKAy
-         F7vVK4OXXrNv1y/5Rpk0Ckazswp/8f3EUoIKGpxRBuiHp8/J8UvvklnO7N0yMYYoNJiN
-         fHnVgs44LwBIG+t8O8ktJtsaKkkRRGITYeMZ++9siLOjRQZvJJdbbfH+4dtgIIHUGaj6
-         uwaA==
-X-Forwarded-Encrypted: i=1; AJvYcCWHPC56HL6VgLRjIKmB7ktpBc6TOFeMXi2AemufyCYMziwxcqHPiWux5lZ1OuoU8SglYTWibZxi0j3cFoNvk0bXvdc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz7uoqUB9jHHVOMac+9+L/udyYLfvgaTmPDYNkMECeqN2xpvm9K
-	bTRuzuiuzcInI0h6wk7IVZzT717Tkgi+nAWqfBzVYTAs+0VO6G95ZDIywtbXajSJw1+H66327rK
-	iFkHgehzUHuQUqgqdaYuC8HXk+d/y8whitydYtMXm
-X-Gm-Gg: ASbGncvRoLBMmIiTvb6XehjKo2pbcJmWMCq7pxDE7eY0dVCL9ZBy4CKpZYgw5u9l4Rq
-	UQRXjrsIO5E1XfTIVL6tz8aDpIbQuLQxJKCUfnTd+Dw6+Ykkhb8R9/ovPdijnf8iKpVgdjisA81
-	OGNJ0k0zRdhan/EaWNYM62zvIJuqYMBYIpH7omElbFbF3N9RG5C12i6gJqtOUcbnYMwjn1ZShq8
-	ff3ZEODd0sXfS7I7lMYNwW96HX+HcJj6MLfCbTfY+DaRLepnnV8QnwVzBlciLgdZEM=
-X-Google-Smtp-Source: AGHT+IHC6J7ndh3GhjpBhSyUbtmgShHSwrKImun5tVKXinNrao1jet7Nrip5xHU4l1aWy75vzkCWg2jOpuWyhQsCFpY=
-X-Received: by 2002:a05:690e:4289:20b0:633:4a1d:f9d6 with SMTP id
- 956f58d0204a3-63ccb90536emr3975966d50.25.1759943568487; Wed, 08 Oct 2025
- 10:12:48 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1759944330; x=1760549130;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=41XZ0Nc+5i1FOapXe9kYQ/jcLvjFNXLmKvQlP4jYRDA=;
+        b=CUpvXomW+2mquu34tD3gtdCkCVjsh5BX2l0dEJxOrddk1ryhaBOS4jhU0oU9eJ45+a
+         2WxSzh08Nu7PaRZwrB93DqInUMmVNMB9N47OSrxjBPhU/L7XoC7OXuvtNowDtaQ0wFyQ
+         Oy76+PN07tz/6Y4NGcwXQntH5GdNo0KCy7apq9XUg/+Qm3WKlm0AOMtExVBPTBjuPacr
+         jZMYcsrH/+zJB760JbgjYfroX7zsV75+A/bd5fGuAJvZxCvh/38nJyHcc8UxhNX9A0vO
+         EEjhPOPtIXZeIgZ75mEbYtKeUMkDZsDT0Cbfp77GNFisiL276OFD1HFcLKEfm7Xx0O56
+         HaJw==
+X-Forwarded-Encrypted: i=1; AJvYcCV3jOBbapues4FLPKf2fZp2bpsqFjvQgCFtgf04yS+EtHtjyTQ7xFvinn7vSFJ9n1Vbgogdd0guR1z5FL10ALDbFPY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxyQR6/OKiro5rrwqCn5bYZWi0BOEi+Ru9eFgbQUr2VF5gwRNAY
+	cmM/JCOXRK+VS5bpvjmoEbUpO71yVW4kNsiq29FiI4IDUR48mYHeVhkU
+X-Gm-Gg: ASbGncvZcIyWp+D9CNOP9/re8ud9z12/gLfcXksRbHcKL+mNxwWztNBLs/eEn47vs74
+	Rs6asKRJfa53RxAQT6BLFzwSlpPlSm25jqONTejOQrCIUfv81xHiW3YQ5nHLZChkqt4xMj3dG0e
+	LusRLVLu8khCRk1rK69IEFsKHq8U2hVtxN+vWKhcRD22kFf421C7bqTVaS/YbDVBiTuA+NXVd6F
+	m5EHyhmgVYtW+UzLjp7Mb8CiGFZ38i/xtm7Ls/NTe8KG52wjVa7GJeSKF3sAeJClNNk8AcDAnv4
+	itbBrOYnJ/rMOOrvdrE57xBFEyQoIj0HNNkzwR8E8P2OYjM6EphWt1R41KQG4o0n2WP5w74FqiI
+	XSZvDnJ4nlCNGPUa7avPk/mlaXZu1QS6JSFk7XhxElHVU97CAXkAF+VFcmEc8nZUIuA==
+X-Google-Smtp-Source: AGHT+IElTiSwjjSnRQ2YldSSmOA7Pun5HHGSGRiphAnOm/twua0zyVb25UTGjox4glkPR20eg3ChWw==
+X-Received: by 2002:a17:903:3c30:b0:270:ea84:324a with SMTP id d9443c01a7336-290272c1898mr58357555ad.38.1759944330387;
+        Wed, 08 Oct 2025 10:25:30 -0700 (PDT)
+Received: from fedora ([103.120.31.122])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29034e2062fsm3039115ad.48.2025.10.08.10.25.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Oct 2025 10:25:30 -0700 (PDT)
+From: Ankit Khushwaha <ankitkhushwaha.linux@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: david.hunter.linux@gmail.com,
+	skhan@linuxfoundation.org,
+	linux-kernel-mentees@lists.linuxfoundation.org,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Ankit Khushwaha <ankitkhushwaha.linux@gmail.com>,
+	syzbot+ddc001b92c083dbf2b97@syzkaller.appspotmail.com
+Subject: [PATCH v2] ring buffer: Propagate __rb_map_vma return value to caller
+Date: Wed,  8 Oct 2025 22:55:16 +0530
+Message-ID: <20251008172516.20697-1-ankitkhushwaha.linux@gmail.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251007003417.3470979-2-runpinglai@google.com>
- <20251006221043.07cdb0fd@gandalf.local.home> <CABgk4RQwGsn4CdP0K+_7A0j7RVOiHNfoF1ESk17wEuzCea16pA@mail.gmail.com>
- <20251007154308.5b158d04@gandalf.local.home> <20251007163141.1034b120@gandalf.local.home>
- <20251007174208.11fd02da@gandalf.local.home> <CABgk4RSxm8mNJcRn0HdNH3+Y=VDL5gNVvyhhR26wjBme+i5X-g@mail.gmail.com>
- <20251008123259.1dfc621c@gandalf.local.home>
-In-Reply-To: <20251008123259.1dfc621c@gandalf.local.home>
-From: Runping Lai <runpinglai@google.com>
-Date: Wed, 8 Oct 2025 10:12:36 -0700
-X-Gm-Features: AS18NWBZ_2jIHsOqsd1oLxaaH4vYuG-AVzpDFpi_S9SaadhDzofyG-wP9wS95Gg
-Message-ID: <CABgk4RSb91kHHGG4hqyiSb7w1cOLQTXE1+TxCCu1WwSimQE5og@mail.gmail.com>
-Subject: Re: [PATCH v1] Revert "tracing: Fix tracing_marker may trigger page
- fault during preempt_disable"
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Wattson CI <wattson-external@google.com>, kernel-team@android.com, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Luo Gengkun <luogengkun@huaweicloud.com>, Linus Torvalds <torvalds@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Oct 8, 2025 at 9:31=E2=80=AFAM Steven Rostedt <rostedt@goodmis.org>=
- wrote:
->
-> On Tue, 7 Oct 2025 16:25:41 -0700
-> Runping Lai <runpinglai@google.com> wrote:
->
-> > Hey Steve,
-> >
-> > Thanks for providing the buffer-based solution. I tried it and it
-> > fixes the problem!
->
-> BTW, I'm about to post a real patch, and I'm adding:
->
-> Tested-by: Runping Lai <runpinglai@google.com>
->
-> -- Steve
+The return value from `__rb_map_vma()`, which rejects writable or
+executable mappings (VM_WRITE, VM_EXEC, or !VM_MAYSHARE), was being
+ignored. As a result the caller of `__rb_map_vma` always returned 0 
+even when the mapping had actually failed, allowing it to proceed
+with an invalid VMA.
 
-Thanks, Steve. I'll be looking at the new patch as well. I can also
-help test if
-there would be follow-up patches.
+Reported-by: syzbot+ddc001b92c083dbf2b97@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?id=194151be8eaebd826005329b2e123aecae714bdb
+Signed-off-by: Ankit Khushwaha <ankitkhushwaha.linux@gmail.com>
 
-Best,
-Runping
+Changes in v2:
+* applied minor cleanup suggested by Steve in v1
+
+---
+ kernel/trace/ring_buffer.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 43460949ad3f..1244d2c5c384 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -7273,7 +7273,7 @@ int ring_buffer_map(struct trace_buffer *buffer, int cpu,
+ 		atomic_dec(&cpu_buffer->resize_disabled);
+ 	}
+ 
+-	return 0;
++	return err;
+ }
+ 
+ int ring_buffer_unmap(struct trace_buffer *buffer, int cpu)
+-- 
+2.51.0
+
