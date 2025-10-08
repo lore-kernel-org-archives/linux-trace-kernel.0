@@ -1,32 +1,37 @@
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FBFC25486D;
-	Wed,  8 Oct 2025 15:47:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC7682BD029;
+	Wed,  8 Oct 2025 16:09:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759938474; cv=none; b=OonYmOZicDkzoTa5H3DlusSlZ5pyrq1Mm8G3X4IJKKTkjysSsaeZU7mT4AEypQjmjneTZRgh6pH/QcEtjZ2BqG5KXg7f1R/W8LmEOxcOnbmq1F/vC8qbZwcEitZ9UbPDA5BwnOiNpiZeX30cgZuzESAfdgrVuQHOIJk4DztUHlM=
+	t=1759939763; cv=none; b=JsRGdmjkjtEhphDHnwIrAOdG5BgXUiLMGc4+6DUsZ11Mgx12yKMMtCYpWjXBlToyBZM08f3GeilEuID3TekCaAnFsa0aR2Mlrk+U2mygZNyosJYzgLUICCUKeF3FmWSF6IxnrqwviywrEatfMxYqjvT6z3OM915X5cRsK3omw+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759938474; c=relaxed/simple;
-	bh=iTPbxraedZD3neNFGfY1HUmZOBnuTBKr9Z6Mu5jfHGE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=YpuQqslQZNT3+dZSjtp5pJLDHOqwRt0WDlV7ifcSwH14BB+nwQBtP2zl034YOxRBXTigrP/2jF0g77XMdhSRh2jjLyO45mGNUPQID0c0RPJnVdznxd2xaEbmosaixYXGiOaupTHsRzvkEgJE9vfiENFomZ54FU+HZBkqQZpmJwk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
+	s=arc-20240116; t=1759939763; c=relaxed/simple;
+	bh=7qG9+11u3mCpiyNEifUFS7i/al/DnxnwuP9mz9DKpxA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RByO7P1yGqATk9bYKbu2ypv3K2ELAh8bE6nN8EwPHWaun0NRh/PyOpR3ZsjwHa/3+gujHqgBElzmu5RurNBKzJcQMgJ4X0NeDMS57w7hDbgarWK/955pqzhFVPVuWkzPhuyaKzs2Ru9vxny/aMUU0lgaUyDM6vpXvhZSabvGvhQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf03.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id 5DB2613B347;
-	Wed,  8 Oct 2025 15:47:51 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf03.hostedemail.com (Postfix) with ESMTPA id 9EC056000D;
-	Wed,  8 Oct 2025 15:47:49 +0000 (UTC)
-Date: Wed, 8 Oct 2025 11:49:43 -0400
+Received: from omf16.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay04.hostedemail.com (Postfix) with ESMTP id 36FE71A05EE;
+	Wed,  8 Oct 2025 16:09:19 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf16.hostedemail.com (Postfix) with ESMTPA id 012A520016;
+	Wed,  8 Oct 2025 16:09:16 +0000 (UTC)
+Date: Wed, 8 Oct 2025 12:11:10 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH] tracing: Fix irqoff tracers on failure of acquiring
- calltime
-Message-ID: <20251008114943.6f60f30f@gandalf.local.home>
+To: Ankit Khushwaha <ankitkhushwaha.linux@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ david.hunter.linux@gmail.com, skhan@linuxfoundation.org,
+ linux-kernel-mentees@lists.linuxfoundation.org, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ syzbot+ddc001b92c083dbf2b97@syzkaller.appspotmail.com
+Subject: Re: [PATCH] ring buffer: propagate __rb_map_vma return value to
+ caller
+Message-ID: <20251008121110.4e7c3671@gandalf.local.home>
+In-Reply-To: <20251007171256.20884-1-ankitkhushwaha.linux@gmail.com>
+References: <20251007171256.20884-1-ankitkhushwaha.linux@gmail.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -36,85 +41,63 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 9EC056000D
-X-Stat-Signature: pkk4u41ktrogas6r3u5u1mycyheyho9d
-X-Rspamd-Server: rspamout02
+X-Rspamd-Server: rspamout04
+X-Rspamd-Queue-Id: 012A520016
+X-Stat-Signature: drgddpbyrfrhq5xtite7umqbhqhkufe1
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+rO6qzSFGfBADFEp/Zv/mePxJvGgyc4Zs=
-X-HE-Tag: 1759938469-557830
-X-HE-Meta: U2FsdGVkX1+Likmk7TE9ksRVH3n6t+YtPSlpLPvHiZ/hcW6eNgRNHNpypuG3xqUETUqQNsDUCdY2A/s6gWQHGdGKOTfnL1vVZG7FWF1fJG7ZmFBOhN6pbeThgi0yAgxkhdbWG0+S2AnLJ5DgMLrSTC5DkwlcNAO53UtllWbXXgBLjw0LZMiQUrwi6c6DRCYFtxcV70i8yK6qkNXWg4pc+lTT7LUa6kVaOwL4TYNfsUcoL0FLpFtOVftnky5USYcdVG0/ncUI7HoZCK3g2ojph8RKip6+3sZIEu8ai1D5p7fM7c0wwqIG0bDjQbqYfzNc6SG2xVq8YQy5JCrOHmdB/PXHv6OKy3zYPwA9w57zibhA++ruLjhzn92HgLcP8M+edrQDvwIWBFJbiYngmPDnkg==
+X-Session-ID: U2FsdGVkX18o0hnhvzZVrS/THusq5BDX3T986j69cyg=
+X-HE-Tag: 1759939756-70540
+X-HE-Meta: U2FsdGVkX19193Sv84va4CFxLEBUFYDcm2cRgLxlqYnUKTMjNK8HnR/ZYDaveYfvYTb13tR6o6O03VHrvePJNGOBik4UjEa/kSgtkM16OsUV0CgYpFWtaEdFtJzHm2sq4r0F3Aj4pDCcxtLohjoRLW7AKZUAhyjWAfoOUyY3UX4IZgcPwUDOQQu60rdMBUr38EW8wwANmllQR8/FpZQ6gNmMb82nnRq5Oi4DJPxDve/J6lkvBKJY6u5uP2aMh6kAPant6SCmUw9MdhGAzVwzmAygch1lbuzYc2mJwaDrU16c8Ve3fKsxT3KB4H/xQ+lOyNZI+OEBGDb0HJp/a3y+jff8jlzUz21P8cyIf5HMfEBuJcCTsCJDQsqe4GdBc6EpYLOxVnderg5C9qENSbewg1oOsqu8lhTaQRAxxaIzv/P0BlSf9TGi3kyTHW2h51JQByflRNbupKgqoGCfXtcFvQ493Llp9T+UBU8+CMZyesE=
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Tue,  7 Oct 2025 22:42:56 +0530
+Ankit Khushwaha <ankitkhushwaha.linux@gmail.com> wrote:
 
-The functions irqsoff_graph_entry() and irqsoff_graph_return() both call
-func_prolog_dec() that will test if the data->disable is already set and
-if not, increment it and return. If it was set, it returns false and the
-caller exits.
+Note, tracing subsystem expects the subject to start with a capital letter:
 
-The caller of this function must decrement the disable counter, but misses
-doing so if the calltime fails to be acquired.
+ ring buffer: Propagate __rb_map_vma return value to caller
 
-Instead of exiting out when calltime is NULL, change the logic to do the
-work if it is not NULL and still do the clean up at the end of the
-function if it is NULL.
+> The return value from `__rb_map_vma()`, which rejects writable or
+> executable mappings (VM_WRITE, VM_EXEC, or !VM_MAYSHARE), was being
+> ignored. As a result the caller of `__rb_map_vma` always returned 0 
+> even when the mapping had actually failed, allowing it to proceed
+> with an invalid VMA.
+> 
+> Reported-by: syzbot+ddc001b92c083dbf2b97@syzkaller.appspotmail.com
+> Closes: https://syzkaller.appspot.com/bug?id=194151be8eaebd826005329b2e123aecae714bdb
+> Signed-off-by: Ankit Khushwaha <ankitkhushwaha.linux@gmail.com>
+> ---
+> 
+> #syz test: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 4ff71af020ae
+> 
+> ---
+>  kernel/trace/ring_buffer.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> index 43460949ad3f..4efb90364f48 100644
+> --- a/kernel/trace/ring_buffer.c
+> +++ b/kernel/trace/ring_buffer.c
+> @@ -7271,6 +7271,8 @@ int ring_buffer_map(struct trace_buffer *buffer, int cpu,
+>  		cpu_buffer->subbuf_ids = NULL;
+>  		rb_free_meta_page(cpu_buffer);
+>  		atomic_dec(&cpu_buffer->resize_disabled);
+> +		/* VM failed to be mapped */
 
-Cc: stable@vger.kernel.org
-Fixes: a485ea9e3ef3 ("tracing: Fix irqsoff and wakeup latency tracers when using function graph")
-Reported-by: Sasha Levin <sashal@kernel.org>
-Closes: https://lore.kernel.org/linux-trace-kernel/20251006175848.1906912-2-sashal@kernel.org/
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/trace_irqsoff.c | 23 ++++++++++-------------
- 1 file changed, 10 insertions(+), 13 deletions(-)
+No need to add the comment. It's obvious what happened.
 
-diff --git a/kernel/trace/trace_irqsoff.c b/kernel/trace/trace_irqsoff.c
-index 5496758b6c76..4c45c49b06c8 100644
---- a/kernel/trace/trace_irqsoff.c
-+++ b/kernel/trace/trace_irqsoff.c
-@@ -184,7 +184,7 @@ static int irqsoff_graph_entry(struct ftrace_graph_ent *trace,
- 	unsigned long flags;
- 	unsigned int trace_ctx;
- 	u64 *calltime;
--	int ret;
-+	int ret = 0;
- 
- 	if (ftrace_graph_ignore_func(gops, trace))
- 		return 0;
-@@ -202,13 +202,11 @@ static int irqsoff_graph_entry(struct ftrace_graph_ent *trace,
- 		return 0;
- 
- 	calltime = fgraph_reserve_data(gops->idx, sizeof(*calltime));
--	if (!calltime)
--		return 0;
--
--	*calltime = trace_clock_local();
--
--	trace_ctx = tracing_gen_ctx_flags(flags);
--	ret = __trace_graph_entry(tr, trace, trace_ctx);
-+	if (calltime) {
-+		*calltime = trace_clock_local();
-+		trace_ctx = tracing_gen_ctx_flags(flags);
-+		ret = __trace_graph_entry(tr, trace, trace_ctx);
-+	}
- 	local_dec(&data->disabled);
- 
- 	return ret;
-@@ -233,11 +231,10 @@ static void irqsoff_graph_return(struct ftrace_graph_ret *trace,
- 
- 	rettime = trace_clock_local();
- 	calltime = fgraph_retrieve_data(gops->idx, &size);
--	if (!calltime)
--		return;
--
--	trace_ctx = tracing_gen_ctx_flags(flags);
--	__trace_graph_return(tr, trace, trace_ctx, *calltime, rettime);
-+	if (calltime) {
-+		trace_ctx = tracing_gen_ctx_flags(flags);
-+		__trace_graph_return(tr, trace, trace_ctx, *calltime, rettime);
-+	}
- 	local_dec(&data->disabled);
- }
- 
--- 
-2.51.0
+> +		return err;
 
+Don't return here.
+
+>  	}
+>  
+>  	return 0;
+
+Change this to:
+
+	return err;
+
+as after that if statement, err will be 0 on success or the value you want
+to return.
+
+-- Steve
