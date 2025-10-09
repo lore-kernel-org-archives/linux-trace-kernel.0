@@ -1,211 +1,297 @@
-Received: from esa4.hgst.iphmx.com (esa4.hgst.iphmx.com [216.71.154.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDC5828642B;
-	Thu,  9 Oct 2025 09:57:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=216.71.154.42
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760003832; cv=fail; b=MLD+9abq6atqLAsZPKe/GPdBOiklQ2Fr58UBDVskf5YgWS21v946sboRYlVLXllibnuRdNw1yslyUrWzx6OIgMLbE+5IsY1eYp10Kz295m64QjBeyZoauFCCaGn2Gb8BCPdFpO9Dr3aMd4cOyV0ohr9Dzs//os601O7bDR11xQ0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760003832; c=relaxed/simple;
-	bh=R75YqlVEpiqnQoxL7QHuz9taL65oKwca736tDoZcCgk=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=sOq8M/5kvbCVvXi2hld0FmNtotFJYYRX+mgdqkOo3WDDTs4F8dSxymeHSwzlEjJv3nijlnDyw6jNZGWghZSnZS/hrc22c42Pt3i738W+iDOv3qNEV3ic13KoNg0tW+G/8f+R59xjZnSG5VXcVFb5wJOkFC0OyA8Vn6aulIw0o4w=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=oOwTAISq; dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b=CQ148++B; arc=fail smtp.client-ip=216.71.154.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BA872DE200
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  9 Oct 2025 10:57:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1760007429; cv=none; b=NX0sXCQHWH00c+4jpG3B0gxoDwPCaeBYRKMlRFadx/HbcmMQp6kTtOF1bbosSghNjEch3xIKrxSBen++eAJJ0ygl98AogH7tg5d1IpvEWN9mRmQTL5pMsC3sz3C29NRpSXPahbSe/eBErvF96LlPZoj96GuETuHqsOSqttDCYPg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1760007429; c=relaxed/simple;
+	bh=D/cb+JmAMPxI+tby9AeftLayL7EBPhafkToHtKd0f8k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=GVAEvot9AjjO6i07oPyQXCc6b90BH32V6RFoANvPhcuVDHOn5qCH3vX9bqo7tZutmO/gNxpnHsozs5JRDrgn2gO67LXCXBQWK7Ogx3V1A4C/DAwM6h04WudS9mfKafQwaqZntmvz77k0oz47K1GRRm5TK4kJOMWVK6PdaSv6DqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b4oOtwJL; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="oOwTAISq";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="CQ148++B"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1760003831; x=1791539831;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=R75YqlVEpiqnQoxL7QHuz9taL65oKwca736tDoZcCgk=;
-  b=oOwTAISqJEBbkNXIQHK8G8st3nD5WbUFnuayXonftgyTbFyuD22Vf2QC
-   Nc0mufz2EXYT0tcT8vvtf1R59n/Qhr+yQ5o9A/sNooG9zAUUmixo+TqpH
-   M3xLFeidU/lKkBOao4RuUdGLeIVVa4lU/ZE2eX9zs+9r7oljRYMPdF1yz
-   CNznC4SGzVWsh0KSlDj/9B2M6h13hhUtxJ5Nr7IDJVMN0n2+ZfT/WTlLn
-   /DJFU1h3aJ5ofHMdVCBZDniHadbdTyHrErdTXMT99vgAfmk7PnBOdKqNl
-   Y8mydBLdvb8IlIguBdCbBpdYEtbeqDPb4gnyhEPgE5FaIXiBCd81NA2b4
-   A==;
-X-CSE-ConnectionGUID: l+OuwzCDTlCI2+yykX+gDg==
-X-CSE-MsgGUID: JKSBY8RnRkm49SexvDtnPg==
-X-IronPort-AV: E=Sophos;i="6.19,215,1754928000"; 
-   d="scan'208";a="129918450"
-Received: from mail-westcentralusazon11010033.outbound.protection.outlook.com (HELO CY7PR03CU001.outbound.protection.outlook.com) ([40.93.198.33])
-  by ob1.hgst.iphmx.com with ESMTP; 09 Oct 2025 17:57:07 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=aRjMep7eADt5PKj1ntTU6LMn1gxgoj7vTtMTyqeKf05aG/JpiZa6teEfw9Ft/ZGHr6luXHUSZWa3Fyrq7M+5E2wfy6KLDu9rmCSmviB1ww1QomnSNpwOWjLYJSTXa5a40/WpxBFM1yW5xlJLlmDf7/7gjR5PawTt0YLc4yyaxfxBmBMKR4kxnRqJw2rQrHdbUfmHHz2PILLPqVy5WSB56MY1OdwF5wtuenbWAZxXbuv+VsMcQfCk8pol3taT616qsixq8BMTLF+Hie9t17Y0h/m/jcy/IhTv7DkTi8DoV9VO5XhceXlHHplKuYbmmIXQ3CaGvlcXxVsrU+XcSxg0aA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=R75YqlVEpiqnQoxL7QHuz9taL65oKwca736tDoZcCgk=;
- b=pW4yR5BllS6S6X0+ImHMEzhghvDARO/DKO6ACUzKsgwUHysaHEXn/WcoFjXDCaeTt4RPJQ5cmtxiPXZMUVTmow8s0lrNge9e1N8NoNbcu7sViRTT8m0nJR17W/2jkyTNBU0uVelGozt13i9ucpekV5sdp03eEqi8JQVIHAfdqCS4d7geYIeA5D08t4/utenXr+kZj+DspMXQgeAb5LAo7BAecDaZxgKrBcriuoFT4NRGGl6naMKIq8MlyNfn6NOoICIb8TaKtKp4wrce+v8iAquCqBBMHxpj7CxW47pcMlduQQ+sCf/g4ma8inAKM4De6eMSX6Q9+M6W7t/okHOlzQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b4oOtwJL"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-781ea2cee3fso793287b3a.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 09 Oct 2025 03:57:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=R75YqlVEpiqnQoxL7QHuz9taL65oKwca736tDoZcCgk=;
- b=CQ148++BHjU3MSoTL/pGI492e8XQl1EXY4E1oR4/UE/60tNW9PStoB9fveKPKBLBJuEr7CJmFWZlle4pJT2NZula2Fozys/tyVePSTKk2M5dVnXtfE81rA64uuOAj5ojWrYp/59Z3GGR0k06eoB8OusUtwRI71kTKmEQMWlfSNc=
-Received: from PH0PR04MB7416.namprd04.prod.outlook.com (2603:10b6:510:12::17)
- by BL0PR04MB6498.namprd04.prod.outlook.com (2603:10b6:208:1c4::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9203.10; Thu, 9 Oct
- 2025 09:57:05 +0000
-Received: from PH0PR04MB7416.namprd04.prod.outlook.com
- ([fe80::ee22:5d81:bfcf:7969]) by PH0PR04MB7416.namprd04.prod.outlook.com
- ([fe80::ee22:5d81:bfcf:7969%5]) with mapi id 15.20.9203.009; Thu, 9 Oct 2025
- 09:57:05 +0000
-From: Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
-To: Damien Le Moal <dlemoal@kernel.org>, Jens Axboe <axboe@kernel.dk>
-CC: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
-	<mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	"linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
-	"linux-btrace@vger.kernel.org" <linux-btrace@vger.kernel.org>, John Garry
-	<john.g.garry@oracle.com>, Hannes Reinecke <hare@suse.de>, hch <hch@lst.de>,
-	Naohiro Aota <Naohiro.Aota@wdc.com>, Shinichiro Kawasaki
-	<shinichiro.kawasaki@wdc.com>, Chaitanya Kulkarni <chaitanyak@nvidia.com>,
-	"Martin K . Petersen" <martin.petersen@oracle.com>
-Subject: Re: [PATCH v2 13/15] blktrace: trace zone management operations
-Thread-Topic: [PATCH v2 13/15] blktrace: trace zone management operations
-Thread-Index: AQHcLi2QnkMZ62p08UWUCBM+3UyrlLSs7hCAgAtkuQCAAJozAIAAvMoA
-Date: Thu, 9 Oct 2025 09:57:04 +0000
-Message-ID: <c39bcbc7-2669-40d4-9644-6213a0653e09@wdc.com>
-References: <20250925150231.67342-1-johannes.thumshirn@wdc.com>
- <20250925150231.67342-14-johannes.thumshirn@wdc.com>
- <f5a5bc62-093b-4d4a-91ba-a7ec5718609f@kernel.org>
- <057c7e5f-6079-4451-829d-40c73c88fb60@wdc.com>
- <45f8532e-5aa2-4b32-ae53-bdf588133a3e@kernel.org>
-In-Reply-To: <45f8532e-5aa2-4b32-ae53-bdf588133a3e@kernel.org>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-user-agent: Mozilla Thunderbird
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=wdc.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PH0PR04MB7416:EE_|BL0PR04MB6498:EE_
-x-ms-office365-filtering-correlation-id: 1500a1d2-4745-4f19-49cd-08de071a33a1
-x-ld-processed: b61c8803-16f3-4c35-9b17-6f65f441df86,ExtAddr
-wdcipoutbound: EOP-TRUE
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|7416014|376014|1800799024|366016|19092799006|10070799003|38070700021;
-x-microsoft-antispam-message-info:
- =?utf-8?B?TStJb25yd2FVMWRKbFJaT1lPWkd6R2h2cW9PV2FlVjlzYlNGTUdyZy9OWlRY?=
- =?utf-8?B?MVFkKzZkb0tRR0ZzQ1RyN1lkUzhpbUpmWVNZZWhyS3NaMkV4QzNJcjAyRVFH?=
- =?utf-8?B?QUF0dmN0L1VvdUlTR2oyZTF0cjFIUTJvL1M3MEhnSkZxSUFsSHROR1pPa1FQ?=
- =?utf-8?B?WXllNzhmemhtNE1mbjh6K1p2cWlvZm8yUDZFeUtlWVFhNjdNaWhZVkExMnhz?=
- =?utf-8?B?YWdEL0JnM3ViVUswWEdMK3YzQzNwdDlVMWREanArT2JtbFRNSy9IMGplS1I5?=
- =?utf-8?B?VjVwZUxMT1VZNXR3dDNhdUhESWVYWjQ2a0kvNkZ5anhrREhnZ0FrNXAxdmhU?=
- =?utf-8?B?Q1I3K0I0K3k5UU9ER2VGSERMY1o0UlNyOUVyYnRSUzU3Mk51NXdwL2ZtTlhQ?=
- =?utf-8?B?Z3RCMEs5MU1oYkVCTmlMUWhSSVVzMy9GZ2ZjczZmT2lpM0tYZnhMa21rdTNG?=
- =?utf-8?B?SU1KTEJjWlZWQkE1Q1ZIMEV6aFhOZ2JLcFI3YTNTMU85UWVQWmY2bjdVQzRH?=
- =?utf-8?B?NmtvK2hCaTBhcWN5NjFFdUxkaHl3RFZrRXpSeEJzelJBWFprOUtjOEVlNVhz?=
- =?utf-8?B?M1ZRR2FKMW1meGtUVS9waXQxZ0NmOVZ2ZmpPUysyR1prT0FxeFY2NWF1S1Mx?=
- =?utf-8?B?MmRGM2JLZmlSQ3h1b0FPVUJhRXhzT29Vb2xTMVQ2SVdZU1E1d1pNNEFwb2Ra?=
- =?utf-8?B?ZGdpeHpHTmM0MjFha1Ezb1M3NGVidHNCSGUweXR5a3NEWWo0SmViN2sxZWVL?=
- =?utf-8?B?WGZhMFZhd1MxRkhreHVhZjRsTXV3YkpCbWhnKzJPTkFVMlowRFoyeWs1SWR1?=
- =?utf-8?B?WFNXU244WVMrWUpucXVodTYzMExtMUxkZndKMEVBOTRKam4rcWk3SXc0Y1BG?=
- =?utf-8?B?RTBRQWpsc3VLUnhYSVN6eWRwSmpSRkI0KzZiT3BiVjJzcHFlMXBia0l5RjhE?=
- =?utf-8?B?SWYvMWh3dGdZaHB1OTBiQ3c2aVN2QTU1Y1hYNG1qYy9BRHI1TkdKK2hWZzNl?=
- =?utf-8?B?SU5KVERnbDBkN3EyVlYxNW13QXd2cmU5c3ZTY2ZxeXk2M1ZNT1grdUxxcnlo?=
- =?utf-8?B?VC9XdVhNYlFFNGdEUE1ERWJ0OGRVMGp1QTRRT1JGODhzYmtaMmRFY01GYkRa?=
- =?utf-8?B?V2F6RXNRc3FQK09FY1h2VnYvaG5iT0V1dU9BWVJXc2hYNTY2K1FqZlNSNHRE?=
- =?utf-8?B?NVNMWVh6RVdvZDV1NnozWGNyZlB6SThQdElqbXFjYjJhMVM3ZEZoV21TWStC?=
- =?utf-8?B?Y2pRQTJzRmlrWWtxelJCcXMybzN3ZHQzM08rWHhSYWpkSU5OSE5LdHlyWkM4?=
- =?utf-8?B?dWFCYmdKZTZFNytmcXhCcElRdm5CSGkzSHBwR0hnSTc3Y2toLzFhMmt1YVBU?=
- =?utf-8?B?c00rellwSkZRK1owNHR4VEZoZVFVWVhneVZ1L0dpeWhZNktXOU1sM3d3azVv?=
- =?utf-8?B?eFN6YzQwS0ZmVEhMRzRFWk9zQ1lxd0xKTEtoemhrZVdRZmo4ZHNjcUJyZDBL?=
- =?utf-8?B?dTQ0VDZGZFdxZXdHNkNDeFVvZjd6enU4SUVtY0NXQmxUNCtIaGIwcmx6MWNK?=
- =?utf-8?B?MTdqa0hWOFpXaDIxazM2Y0FWSy9PNVhnTjRCV1RnTnVWSHEzR0p3akNSRFlO?=
- =?utf-8?B?Mmk2RXNDVTdUOXc0cVlla0JLRlkwRzdaam9tMUVPSHNCMzZiNWhIdTJQSktD?=
- =?utf-8?B?OFh4MXZDL1d1YTJLOVMyTnBEZjk2eEpCTGJsalp5cWUzQjV2SUtHclVDU1Zj?=
- =?utf-8?B?blM1REVoVmVVck5vNGQ4Ly93RDFUMXkyWUlWeXk3cEcrbmthSTNYckh6Z3FH?=
- =?utf-8?B?cFVYUlpWb3JuZlBiSFZURTNCdkpqTzRJZ3psbGdQUmM0bDRPMEtoS3JBU2Ns?=
- =?utf-8?B?RGg3bnkwU3U4WW5NS0s5VzI4WWVueC80eXRsMHNVdVJKcDFjTjNOc2RDT3RN?=
- =?utf-8?B?MkUwZEU5TDhuYnZPQjVhdDdpazFvbmhqenZuQ0ZKVDJRa25HZEZrZUd0Y0kw?=
- =?utf-8?B?SFhZNlJwK0dxUm1GZitTZElPTzZWdFQyY20rcWRlZjZIV09RbVNDVFZJMS9k?=
- =?utf-8?Q?rIeuoP?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR04MB7416.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(19092799006)(10070799003)(38070700021);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?WUJLend4c2NKdE93ejhZRk9JT0cweHQ1YnhoVTU4WWRZUDFxR1hXVkM4REQ2?=
- =?utf-8?B?eWpMblFiQjN4N3V0a1ZjTEh4V3FOYkNKUmM1L0hpN0hhUVdtRDdZZ0puRU12?=
- =?utf-8?B?RHdyc1paV2piMCtjdUltaEg3elBRUGRRelhzenNxeUFXcmtLMEJrbDFyVDV6?=
- =?utf-8?B?MW5OMlpGYS9qaHZBTUtveXFROEZmdS81UndaR0N0S1lMYTllQkZFTVNRdFRH?=
- =?utf-8?B?cHNSWGRHNkZXSGc3ejRyMUdtMmNHVnJoNmpaUmhzMkFHeFNQTUI1eFNVeGNl?=
- =?utf-8?B?Z1pKTkkxV1lObHhERjFudHRadmU2Z2drVU1uWXVLaHpkUzNVaW1QTWtqb1Rk?=
- =?utf-8?B?ZjdUSmFOOVFxSXN4QklOYjlQbHR6YXF6QlhNNTZtdlpJVW5VSW52WXZmemNt?=
- =?utf-8?B?WUh1cnhkajRGUU0yV2t4c3FjVHcyQnJhelpMRk1LWnlNU1RLVnZUNHpoM3pl?=
- =?utf-8?B?eFlqemtZRVJDeTZ1NmdHb0Q0aW93Wlg3K0FxTmtKM1hKR2c3OGJ4NEJjV2cr?=
- =?utf-8?B?QUVoalZFSmRZMjB6bXRjbDhTSzMxb0xWZkpZbzJLeTluRjF1TEc3UWNlTGwr?=
- =?utf-8?B?U3VGdmNuSlRzY2xUcUNLaHBlaGNyc3NieGlkeXlmaWwrZEdiTHlFbnFpMkNr?=
- =?utf-8?B?NGZVeml2dk5yaTNwUEFCNUJ6NFdpNHpieUludWF1Rm5rNWFZL1BZSmpiR3Zh?=
- =?utf-8?B?dkVneVFPNEFCeEk5Tldyb0NzeXFJZ3ZYNGt4OXo4dTkyTThCRXJYTHpMUCtT?=
- =?utf-8?B?QlBBeks4N282QXZLQUJIYjQ5OU9uYVpBSCtPL1FDbFowMkVSVE1aVHBHMko0?=
- =?utf-8?B?NmZRRUlBZE9VNHdNQXM5VHVQNGUyRE5saFhydkJ2SXhnWGpNSGdhTGVOcUpl?=
- =?utf-8?B?akhZT3V5eGllSHgrZXVYWldqUU90WU9jbk9zSjlnN3ZIZjlEL1E0TTU4RHk0?=
- =?utf-8?B?WmdTYkdWUEJyTzVYSzJhM1JxN1NPRTlMQnVncjdZWkRzVmR3RlR3TG04ZjRN?=
- =?utf-8?B?ejlVZkROTkZzYXNBT0pzVFFaWGdIcHpkVElSYUptQ3o0QTdBNzE2U3ljbUdM?=
- =?utf-8?B?UGtmdHlEWUhFd0cyTTBQcFRkVHBoRlgreXlFd0s5R2ZNMVUzMnhhRjlTcHVE?=
- =?utf-8?B?VFJKM05CUFNmYmFMbzNMM0ErVU8vTCtQa09Dbk9oU20wY1dqeFo2NlhOa240?=
- =?utf-8?B?NmF2cUJXYkU2VVhrRmpVbVpBRGpQNnBWZ3FOTWhOY29DYXNIWWJNUmhzV0hk?=
- =?utf-8?B?NktqNi9HTUlodFl2Yy9FOVNqd01JT3FKL08zZ2hyZXZjZXJBVXNXRUxKb1pq?=
- =?utf-8?B?Ulg3c0RwZUxwUHRjeHJoUlF3d1pnVENNMEI5RnZWT3Y1RkJwc0o3UXNMVFFR?=
- =?utf-8?B?QmlWQ01RdXBqMHVBbmlCMkxzWDNOZkk0aTFyV3dCZEJlL0tJRUxac00rM2hq?=
- =?utf-8?B?RGJ1U0dWMmVHTEtDeGUyRCtOblR4eGVkbXBFdHkyanRRU05odnZzRWJYU3Vu?=
- =?utf-8?B?b2lTRjBtblYvYUZBS01iVzhQa2diY1NiRlVMS1FVM0NISlREcUxwZi9admVw?=
- =?utf-8?B?OUlmSkFtNHltcDBPc1Vaa2gwM3hMSEhOakJIS3pFdUtWdTVVek5pMHk3SHVa?=
- =?utf-8?B?Mkd5bDM0TVpuVS9QOC8xZGxEVUZhWE0rdE55LzhBeVh2Sk80bE1DUEFOWVA2?=
- =?utf-8?B?N0FZWURyYXE1b2ZFY1RXZEgzY3NBVzAyQ0hIczZ4YnVvSzdhUlg3SGloN0tS?=
- =?utf-8?B?aVBFaXkraUJDblpLYmZtbGJ5MDJkaEZucFQyMkw5ZmRuTkNGSi9xNmJEUWxQ?=
- =?utf-8?B?aS9uOVFWN3gyUGkvQkx3RHY1YW9scHJiblVaNldsR05kd1NXcUFleU0zcG9U?=
- =?utf-8?B?MnJMTnltV3lFK2NPRUxEaU9MWHg0QjlSaXc4VGZZUU9tTUVMWnNFQmJ1ZE1m?=
- =?utf-8?B?RGxSL1IrOVlBdVJHNDVyc3Vnd2tqT0VxYm1xdkNnUHZrZGo4cjJJVk13RXo2?=
- =?utf-8?B?cFc3ZUVyd3VDcEhsd1U1TXVIL091dm11TmZnQld3dTlVcHB6TTZmcEhlTGNC?=
- =?utf-8?B?K1pDRngyT1k0RDZlUUgvb0dYNjl4d3NNUGZtZDh2VFBiODU1Wi9vdGx1MHVl?=
- =?utf-8?B?dnFzUS9QRFJnK2NyK2lPeXk3K1E5Nmw0L1hxaUlJdnU4K053SWxsSmo5VU1u?=
- =?utf-8?B?TDlDUEpjSWdjTHhQV0FzZEM4bC96Q1BLYTVka3p2eHY0MHpFaG5CQnplVUp0?=
- =?utf-8?B?WlZ5Y2s4aWZ3aXAybjA5NC9IM1ZRPT0=?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <41505E260D0ED946A80B9B87D5163D2C@namprd04.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20230601; t=1760007427; x=1760612227; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=r/KVNrCgkP/CpH67njDEKsgcguKTfOKueucBYEp6ELs=;
+        b=b4oOtwJLTUnsgzYr66fm5Iw+gqK2PSyF6Mgq87X68VDkYZMzbioEeFNoFsPshicWOK
+         TxwZvC3xfDsBf4D/9A021G7gZcsKpBpPT8k4hehtbDpFFSRgDeRRy7BrQOjkhSw+nyia
+         VW+ab40oUI5zg5AgsDVUj/HFV0gj8ya+zKxCwtDo1/yTVaNOWB3uXtWZETMLqfhbODpc
+         MKYxq45UaBGkjFkzeilV2JmRYlWFfd5E5mmOr6rTDeAe9VDyaKh0JLysX/cwVTpCNYxQ
+         GsA7K+EVPcw9sbr2tAs5jFoOt6Cs/NrDUu3OJVGirRvdg6R2yoNAVfnRt5v+Nc42hjEU
+         P4yw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760007427; x=1760612227;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=r/KVNrCgkP/CpH67njDEKsgcguKTfOKueucBYEp6ELs=;
+        b=VvBc1dB9mHk0N9cakrZVR9Pd2qx5oyXudLLeLqcawAx906smP3ebcsgetRmHhcisRU
+         is9B2AnrAj9qG6rpx/jspjlGJnieUSGMxKJagrJrn+saNcIaLwMFpeKn850Aj8WDR8TP
+         8T+qSgiBUP4JRhrCLeh1XVaUhpoxkkB74IDpNK28ZrTm7Y0myjJ282SuzxM9h9jgHwIY
+         7vmcwI7ubLjEsOXsDFxopjTHHsP9d2/tEFiCqxvifZx+MMtB1Jh+DvufxHYdP8qYcMM/
+         RmdZUW9TQXuA9pB3fLpLkDDgbJK3QRPUn/hdoK6duWjCQTQxBrRT2u37o6MPz6E9TzpH
+         15oQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUmUQPPjFO45k7QxCeAH8SsOqblNtmFoAbu2qZOHBaLpFyuIzMJOQpVQrOhOcnJOFXfeY5AMsqskTpByLDamkUHiBM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwL0mY0iw6KI4f/OaLgUR0uXP9kZ7og4FgSGyp4IIEgC1EGblr9
+	RcM2TpMh7MzfubchkYf+y5TV0lf0fhPDAk+a2UD6DmhyjJf9E1gTokm/
+X-Gm-Gg: ASbGncteI2W3uPszjjz9CfB0pmpAfidn0b2NTZ8eegxKwQ4RxQC/QU6yhyYpDJ9JF4y
+	tkhc9S3GuK7esFYKkVtq4iAyV1paSqI21v3P3yadrBtJrqJUgyu+tvfUPA+PVkNQHcS0mUnl1Gq
+	hy3CG3hUYaoJ3QjSWx12iwYGV4opHzGr6m3DBbrnUrExrIHN+lxDH6O9/OUHDThLsO+yPKoLDXO
+	uAo3lpSx2S653FWzz/uVXhxhKrgvXjSlL+GEslmTUi9tfhPmR8ujPprrrhcDKSnHBBGOtMm+GJt
+	8YZ+t+qWRkuFJXCHmjzFhfTfCA3aEuDQRBezv0ZOoporWw1T9sMv2eY0ckQ3x6aVMb6sZl5XIjI
+	2uxEKmLrSvKhmQnwi9dKXoXkKxzZ8fLT28ZNh2roTqicV/GBqyuJq2ecVzw7/
+X-Google-Smtp-Source: AGHT+IHegRF+cDkS8n8iN1wDSqYkCY6Z+zS+A83OBf5JKqfA2hExCY0UD9dxNTVbTqOQx/6S6nxYew==
+X-Received: by 2002:a05:6a20:914f:b0:2c4:c85a:7da5 with SMTP id adf61e73a8af0-32da81345e5mr10045407637.6.1760007426930;
+        Thu, 09 Oct 2025 03:57:06 -0700 (PDT)
+Received: from localhost ([45.142.165.62])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-794e34e6f17sm2514275b3a.82.2025.10.09.03.57.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Oct 2025 03:57:06 -0700 (PDT)
+From: Jinchao Wang <wangjinchao600@gmail.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Alexander Potapenko <glider@google.com>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Marco Elver <elver@google.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>,
+	Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	David Hildenbrand <david@redhat.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Kees Cook <kees@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Rong Xu <xur@google.com>,
+	Naveen N Rao <naveen@kernel.org>,
+	David Kaplan <david.kaplan@amd.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Jinjie Ruan <ruanjinjie@huawei.com>,
+	Nam Cao <namcao@linutronix.de>,
+	workflows@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-mm@kvack.org,
+	llvm@lists.linux.dev,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	kasan-dev@googlegroups.com,
+	"David S. Miller" <davem@davemloft.net>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-trace-kernel@vger.kernel.org
+Cc: Jinchao Wang <wangjinchao600@gmail.com>
+Subject: [PATCH v7 00/23] mm/ksw: Introduce real-time KStackWatch debugging tool
+Date: Thu,  9 Oct 2025 18:55:36 +0800
+Message-ID: <20251009105650.168917-1-wangjinchao600@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	bABO3elBUW04q9pUYJ9FVtZ1OfGJQC2fCvZZVcySou7K/rXLcI0jJDfe5pydWn8isQ2QVpVjgHrI2+pfSSFOEWlKCsRDjP22GyObxJoXEur+ZMB6UPoU5yx6Jf06Kc6Mqq/qd+9Rkk/w5FFU8HY7I6s2kdJsGOvzNKrb0mVieC1p3lYYzofc18QMM/N7wX6Rol46l7gNoPzDw4eOKyM8EQapE7eV3fqYCz5dY3cEbnhrPZSiThqPpsxru1FO0DSw89+WkHk/23gVazTW0GhuSARtEg6KrixggU1UiYDRUQRe/t04UM3tx7X+2lXkG3ETMo0CfOFkc/jm5AmI9QhuD2XrpSoIX5dHa/pkX/rD3f9QeSd5KoZc5SzVq8YNgFirnMmhCg+VrAqnD33vtFKNhSnhVUSJFZUQfZCU8iqzy8QNTNg6YY6XMFMRNXJHAcJLpS/d8deZrjqaSKm5Qr14JIB9BCycPGM5ckZTkRJbw0/AijkaYVNM4h0NLv25mb1d3PS2XJ3vDwLY1yZTFFKn/gNxjmedWVLNoJZuC92qrgW5H1U2VvTk598idIyqZuDyhep/Sw2nysd4UmPsXGRozSvI1Ns+5ysItdrq4IpW1ngpA56PGV9q8W1L2QaFzqYH
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR04MB7416.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1500a1d2-4745-4f19-49cd-08de071a33a1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Oct 2025 09:57:04.9361
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: G7pWItzpFcdMNkcY+FyCdJVOF/xWo4rNW6Fe/NUc762E7d+zKCV8c7mIS8HTFxU4BX9GJK6pJHl6TSuqgzNm9dbZ/n+e9wBcSt+dpek80kQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR04MB6498
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-T24gMTAvOS8yNSAxMjo0MSBBTSwgRGFtaWVuIExlIE1vYWwgd3JvdGU6DQo+IFRoYXQgZG9lcyBz
-ZWVtIE9LIHRvIG1lLiBNYXliZSB0cnkgYW5kIHNlZSBob3cgaXQgbG9va3MgPw0KPiBUaG91Z2gg
-dGhlIHJlcXVlc3QgYWxsb2MsIGluc2VydCwgZGlzcGF0Y2ggYW5kIGNvbXBsZXRpb24gZm9yIHRo
-aXMgQklPIHdpbGwNCj4gc3RpbGwgYmUgdHJhY2VkLCByaWdodCA/IElmIHRoZXNlIGV2ZW50cyBz
-aG93IGNvcnJlY3RseSB0aGF0IHRoaXMgaXMgYSB6b25lDQo+IG1hbmFnZW1lbnQgY29tbWFuZCAo
-YW5kIHdoaWNoIG9uZSBpdCBpcyksIHRoZW4gd2Ugc2hvdWxkIG5vdCBuZWVkIHRoZSBhYm92ZS4N
-Cg0KWWVzIEkgL3RoaW5rLyB0aGlzIGlzIGVub3VnaC4NCg0K
+This patch series introduces KStackWatch, a lightweight debugging tool to detect
+kernel stack corruption in real time. It installs a hardware breakpoint
+(watchpoint) at a function's specified offset using `kprobe.post_handler` and
+removes it in `fprobe.exit_handler`. This covers the full execution window and
+reports corruption immediately with time, location, and a call stack.
+
+The motivation comes from scenarios where corruption occurs silently in one
+function but manifests later in another, without a direct call trace linking
+the two. Such bugs are often extremely hard to debug with existing tools.
+These scenarios are demonstrated in test 3–5 (silent corruption test, patch 20).
+
+Key features include:
+
+* Immediate and precise corruption detection
+* Support multiple watchpoints for concurrently called functions
+* Lockless design, usable in any context
+* Depth filter for recursive calls
+* Minimal impact on reproducibility
+* Flexible procfs configuration with key=val syntax
+
+To validate the approach, the patch includes a test module and a test script.
+
+There is a workflow example described in detail in the documentation (patch 22).
+Please read the document first if you want an overview.
+
+---
+  Patches 1–3 of this series are also used in the wprobe work proposed by
+  Masami Hiramatsu, so there may be some overlap between our patches.
+  Patch 3 comes directly from Masami Hiramatsu (thanks).
+---
+Changelog
+
+V7:
+  * Fix maintainer entry to alphabetical position
+
+V6:
+  * Replace procfs with debugfs interface
+  * Fix typos
+
+V5:
+  * Support key=value input format
+  * Support multiple watchpoints
+  * Support watching instruction inside loop
+  * Support recursion depth tracking with generation
+  * Ignore triggers from fprobe trampoline
+  * Split watch_on into watch_get and watch_on to fail fast
+  * Handle ksw_stack_prepare_watch error
+  * Rewrite silent corruption test
+  * Add multiple watchpoints test
+  * Add an example in documentation
+
+V4:
+  https://lore.kernel.org/all/20250912101145.465708-1-wangjinchao600@gmail.com/
+  * Solve the lockdep issues with:
+    * per-task KStackWatch context to track depth
+    * atomic flag to protect watched_addr
+  * Use refactored version of arch_reinstall_hw_breakpoint
+
+V3:
+  https://lore.kernel.org/all/20250910052335.1151048-1-wangjinchao600@gmail.com/
+  * Use modify_wide_hw_breakpoint_local() (from Masami)
+  * Add atomic flag to restrict /proc/kstackwatch to a single opener
+  * Protect stack probe with an atomic PID flag
+  * Handle CPU hotplug for watchpoints
+  * Add preempt_disable/enable in ksw_watch_on_local_cpu()
+  * Introduce const struct ksw_config *ksw_get_config(void) and use it
+  * Switch to global watch_attr, remove struct watch_info
+  * Validate local_var_len in parser()
+  * Handle case when canary is not found
+  * Use dump_stack() instead of show_regs() to allow module build
+  * Reduce logging and comments
+  * Format logs with KBUILD_MODNAME
+  * Remove unused headers
+  * Add new document
+
+V2:
+  https://lore.kernel.org/all/20250904002126.1514566-1-wangjinchao600@gmail.com/
+  * Make hardware breakpoint and stack operations architecture-independent.
+
+V1:
+  https://lore.kernel.org/all/20250828073311.1116593-1-wangjinchao600@gmail.com/
+  * Replaced kretprobe with fprobe for function exit hooking, as suggested
+    by Masami Hiramatsu
+  * Introduced per-task depth logic to track recursion across scheduling
+  * Removed the use of workqueue for a more efficient corruption check
+  * Reordered patches for better logical flow
+  * Simplified and improved commit messages throughout the series
+  * Removed initial archcheck which should be improved later
+  * Replaced the multiple-thread test with silent corruption test
+  * Split self-tests into a separate patch to improve clarity.
+  * Added a new entry for KStackWatch to the MAINTAINERS file.
+
+RFC:
+  https://lore.kernel.org/lkml/20250818122720.434981-1-wangjinchao600@gmail.com/
+
+---
+
+The series is structured as follows:
+
+Jinchao Wang (22):
+  x86/hw_breakpoint: Unify breakpoint install/uninstall
+  x86/hw_breakpoint: Add arch_reinstall_hw_breakpoint
+  mm/ksw: add build system support
+  mm/ksw: add ksw_config struct and parser
+  mm/ksw: add singleton debugfs interface
+  mm/ksw: add HWBP pre-allocation
+  mm/ksw: Add atomic watchpoint management api
+  mm/ksw: ignore false positives from exit trampolines
+  mm/ksw: support CPU hotplug
+  sched: add per-task context
+  mm/ksw: add entry kprobe and exit fprobe management
+  mm/ksw: add per-task ctx tracking
+  mm/ksw: resolve stack watch addr and len
+  mm/ksw: manage probe and HWBP lifecycle via procfs
+  mm/ksw: add self-debug helpers
+  mm/ksw: add test module
+  mm/ksw: add stack overflow test
+  mm/ksw: add recursive depth test
+  mm/ksw: add multi-thread corruption test cases
+  tools/ksw: add test script
+  docs: add KStackWatch document
+  MAINTAINERS: add entry for KStackWatch
+
+Masami Hiramatsu (Google) (1):
+  HWBP: Add modify_wide_hw_breakpoint_local() API
+
+ Documentation/dev-tools/index.rst       |   1 +
+ Documentation/dev-tools/kstackwatch.rst | 314 ++++++++++++++++++++++
+ MAINTAINERS                             |   8 +
+ arch/Kconfig                            |  10 +
+ arch/x86/Kconfig                        |   1 +
+ arch/x86/include/asm/hw_breakpoint.h    |   8 +
+ arch/x86/kernel/hw_breakpoint.c         | 148 +++++-----
+ include/linux/hw_breakpoint.h           |   6 +
+ include/linux/kstackwatch_types.h       |  14 +
+ include/linux/sched.h                   |   5 +
+ kernel/events/hw_breakpoint.c           |  37 +++
+ mm/Kconfig.debug                        |  18 ++
+ mm/Makefile                             |   1 +
+ mm/kstackwatch/Makefile                 |   8 +
+ mm/kstackwatch/kernel.c                 | 292 ++++++++++++++++++++
+ mm/kstackwatch/kstackwatch.h            |  60 +++++
+ mm/kstackwatch/stack.c                  | 240 +++++++++++++++++
+ mm/kstackwatch/test.c                   | 343 ++++++++++++++++++++++++
+ mm/kstackwatch/watch.c                  | 305 +++++++++++++++++++++
+ tools/kstackwatch/kstackwatch_test.sh   |  52 ++++
+ 20 files changed, 1809 insertions(+), 62 deletions(-)
+ create mode 100644 Documentation/dev-tools/kstackwatch.rst
+ create mode 100644 include/linux/kstackwatch_types.h
+ create mode 100644 mm/kstackwatch/Makefile
+ create mode 100644 mm/kstackwatch/kernel.c
+ create mode 100644 mm/kstackwatch/kstackwatch.h
+ create mode 100644 mm/kstackwatch/stack.c
+ create mode 100644 mm/kstackwatch/test.c
+ create mode 100644 mm/kstackwatch/watch.c
+ create mode 100755 tools/kstackwatch/kstackwatch_test.sh
+
+-- 
+2.43.0
+
