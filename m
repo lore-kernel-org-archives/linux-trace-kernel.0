@@ -1,172 +1,169 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECF44AD4B;
-	Thu,  9 Oct 2025 05:50:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDD182D540D
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  9 Oct 2025 09:12:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759989030; cv=none; b=gEjFLTBS/DhBtdbue2DbK1IyR/lRC8I1+FHBvPQY/kE0lmA10WS09nT6TYwiQJfMY8l9bawlrQ7bwIGOLn0AudpeM8z+ve4jcDYdudnQG+KqLwl2XfanRw3jR852GuYPMsRJT+4dn4DMAaHVwycPrEJuWx+DyCr9vDo4c1zAluI=
+	t=1760001182; cv=none; b=KRsolbYSlOc0217KRTfLLbo5P/Ew1HpRlyczM4AnYjrixmNK5VkoA+ts30Mxsw2EnrXnK1nfz4rQsg3OW606K4KrzG2UmBkY6zJQENTfEZls+pyqIPcavx5bjUlo+rZ4iZl+F0Yrs803Ns3tQbBGxPnerP0MradyCGVhz9VYXNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759989030; c=relaxed/simple;
-	bh=98qv5gCVu0arT0WU/zbKp6K58lsyDxcHiEjm2yynPKg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dXHY/5TqZx7M0FS2Z5Au2OT+b5KpjxObF1+9kY8h89oyM/nP8i2L5Jx08Gt9r7thALaByMd0EiOQKHJo9SIoQG85Vz2JTDcqZspODcH1CPrPVoT2IFK0IvWm8TyRhi2EJImplxfcYwdVhC/R9nZ3PgzqshAlP/wrqnLIpRp8foY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=l70Aktyx; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1760001182; c=relaxed/simple;
+	bh=7ov7X+H76YZ2kZPkU1rlQnIlT1HTKwdYcsZHXhrLcLc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XpG97aONusI2xg9Z6dapC1V+mMEv/CaVwIHqFBFacOxbjmF0Wi4nHBZx5hyxSxvnKzZLksfHXcHqrESk664sWO9dG4GmL4UTwCg/t6zk8aEbUweuSyJGWHhM/y5eQPJeG3qoJd+muItpEVZtUgcqsoAD0oPRw4V4MX7a8ChHff8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nW4/S7E3; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="l70Aktyx"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5994KH1i002137;
-	Thu, 9 Oct 2025 05:49:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=/5cSbI
-	lTHivCoCjUL+gWdAZHt8AL5oHSUiVwv6sMvf0=; b=l70AktyxnXQwFM9irjndoO
-	CwzJCqr8QN9geIZivEu0D1z3ldjMn9twN0V3D7PbuIXoXvLwcLv4j4qsVSwTf37w
-	U49xkAIq/eVbWGEU0sB2ViYCEFBUv4/t8frQ8X1FjBm5J6HXcdBWkbZ7yyiuU/F8
-	lQFWpC1EcqMGGDTyCQ9rFQcerGlItTZCfU8nPe1EHFpWChl8/Xq5ZpieoW4BCm8T
-	/Ywz5lbHM+V1iz4HsuMjHqDyr4k5Dk08wGRaLOhQhxAasip9lR6UIELVC0hyktpx
-	cmfD0UF+lhTlBDTH31igSIIy2k6yCS/yhjNn9bONw2nXcwqtx1teGkeNph2hmC5w
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 49nv86tk9n-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 09 Oct 2025 05:49:54 +0000 (GMT)
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 5995lwZb006383;
-	Thu, 9 Oct 2025 05:49:53 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 49nv86tk9c-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 09 Oct 2025 05:49:53 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5991XAbr021040;
-	Thu, 9 Oct 2025 05:49:52 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 49nv8sjjyb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 09 Oct 2025 05:49:52 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5995npEc17563960
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 9 Oct 2025 05:49:51 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 082BD20049;
-	Thu,  9 Oct 2025 05:49:51 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7C47F20040;
-	Thu,  9 Oct 2025 05:49:47 +0000 (GMT)
-Received: from [9.78.106.240] (unknown [9.78.106.240])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu,  9 Oct 2025 05:49:47 +0000 (GMT)
-Message-ID: <42d72061-3d23-43db-bb02-d5f75333c924@linux.ibm.com>
-Date: Thu, 9 Oct 2025 11:19:45 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nW4/S7E3"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-271d1305ad7so11925195ad.2
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 09 Oct 2025 02:12:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1760001179; x=1760605979; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=noGJIDsEGpbT4mVPtLItOHBIizt5I7YMxK5vpTBOvYc=;
+        b=nW4/S7E3mJPgJ6jQdfxNFdKrAE20n0t2gB7AcVgIox9uLACU6iJgIHPZO+oPqwtKXE
+         s1SHyT8RJPJ6IqzyjYpr/aS1Y7/6wP9n9ZofH9QunBe8uVE7De/4g6pEc+jG3IYNNKBx
+         LlyFJ3EpJoUMYtr6SFRcbuisd1psr3+7y4lhCYh/IRELHsfyEQ7tn/GH8HzolaKSBjpX
+         wxyumOy/PhI4FwjHTsNBJV/kjPcFwMloZhZjpySdwyr3cJn4j9HMO+2ftCnvuJd3mRKU
+         P+JB08ekaTf08VpgDviak6LkMEQ5rsuOC6KcnEJ+hb7IbWu3HzPOlwo7IkYAGGz1WB+e
+         LzVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760001179; x=1760605979;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=noGJIDsEGpbT4mVPtLItOHBIizt5I7YMxK5vpTBOvYc=;
+        b=PKyBeSfvG2wb4uSlXRMhRqP4MVaQy9qnXGPDBHLLWNgK+rUM5Geu76V6v+F4zifaFm
+         jzJLJAgnZLbiOgZfobFoVQ6TGNXGvOrYb/lA2/PSORsU/eDhlngbQRBdQ0H3flLYXWNM
+         8bt9sGMNLS/U14Gw1anw1b1euaHLeFkKaLey+bScTTxVZm/W80a6Hyq7yK2nN0RN085m
+         yRbPkkJakecDw3U8L4LqbMWYSckWGvejjO22N8QpFD01YqDdcx4CAmMudr+/f7wqIv6z
+         yhJ2wnAi4dLYvsxR1ehGxf4i3EAOOFOa+QRzQtfZ/h79AhqMKXfv5Li9JGTwIh3n8k4r
+         7ogQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWMRC46NZ0q01lypJTJiL2dEd+iIYL3zHD6L7kCdwFMD/krQPyDFJa64y3WddEciHa6kqe90RTBTs/eJos1RKElZY0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxekNTAWTCcxWFEPdmwx3QMRDeadXumhLP/XhZlJT+xpI+/6AY7
+	NMEjnvsq5YVxHS42oYdNnlpaSXdYnibtQBVKqEsd/MqWtet+KL8d2ica
+X-Gm-Gg: ASbGncvuROn+zRn0MiqOwnnD2dpuK/UriYevm0jCJd4KBbGjFVgAy5EaJzK77VLP4Fs
+	IUglxbhddkr0BSYi/kpd4tRT2frqplvVASelC7k4gyFUk07h+Ji8BO8zvR1vvJtMMxTAsQq4uqs
+	o2A/s4V53gXbAzzqGiqRalZY057Dz37bfzRveonHOiy8Ok2f9r53jWyJzg+2JaLLweJ4MJTgnB1
+	ZbND9uBIxjj5scF/fSEnRiXhXC++knKI5vPPEajxB5fc6aoOnR2o6se0ERkPZJB1rklXurdPGJH
+	IJHcJPtNS9T/HeZJN0Bbs3KB6qOeCwxoQHvEgxBuy9h675e87dCz+GEeRj/P5hfJmgjb3OAGOBO
+	3h0gHKd9WWTPS0W9zvqfkOA7g44LLs/U3ll1rOEU+RbfftavjGBW3xm+3pFfcoQ==
+X-Google-Smtp-Source: AGHT+IGgc722wX6cnZ4WMCp7pNtwV85yDs1WMyb3Ue3/XLDo0+KBsbutwCUcBiVTue/uMgVkYBWZbg==
+X-Received: by 2002:a17:903:8cc:b0:267:9c2f:4655 with SMTP id d9443c01a7336-290273ffcf6mr78713905ad.41.1760001179036;
+        Thu, 09 Oct 2025 02:12:59 -0700 (PDT)
+Received: from localhost ([45.142.167.196])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29034f3de4asm22026565ad.92.2025.10.09.02.12.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Oct 2025 02:12:58 -0700 (PDT)
+Date: Thu, 9 Oct 2025 17:12:50 +0800
+From: Jinchao Wang <wangjinchao600@gmail.com>
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Alexander Potapenko <glider@google.com>,
+	Marco Elver <elver@google.com>, Jonathan Corbet <corbet@lwn.net>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	David Hildenbrand <david@redhat.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, Kees Cook <kees@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Masahiro Yamada <masahiroy@kernel.org>, Rong Xu <xur@google.com>,
+	Naveen N Rao <naveen@kernel.org>,
+	David Kaplan <david.kaplan@amd.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Jinjie Ruan <ruanjinjie@huawei.com>, Nam Cao <namcao@linutronix.de>,
+	workflows@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	linux-mm@kvack.org, llvm@lists.linux.dev,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	kasan-dev@googlegroups.com, "David S. Miller" <davem@davemloft.net>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 23/23] MAINTAINERS: add entry for KStackWatch
+Message-ID: <aOd8kvWYIROq99vx@mdev>
+References: <20250930024402.1043776-1-wangjinchao600@gmail.com>
+ <20250930024402.1043776-24-wangjinchao600@gmail.com>
+ <3913273d-12e2-426f-aec7-263b7f49008a@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] powerpc64/bpf: support direct_call on livepatch function
-To: Naveen N Rao <naveen@kernel.org>
-Cc: Madhavan Srinivasan <maddy@linux.ibm.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>, bpf@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>, Song Liu <songliubraving@fb.com>,
-        Jiri Olsa <jolsa@kernel.org>, Viktor Malik <vmalik@redhat.com>,
-        live-patching@vger.kernel.org, Josh Poimboeuf <jpoimboe@kernel.org>,
-        Joe Lawrence
- <joe.lawrence@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>, linux-trace-kernel@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shung-Hsi Yu <shung-hsi.yu@suse.com>
-References: <20251002192755.86441-1-hbathini@linux.ibm.com>
- <amwerofvasp7ssmq3zlrjakqj5aygyrgplcqzweno4ef42tiav@uex2ildqjvx2>
- <17f49a63-eccb-4075-91dd-b1f37aa762c7@linux.ibm.com>
- <unegysw3bihg32od7aham3npsdpm5govboo3uglorwsrjqfqfk@pbyzwwztmqtc>
-Content-Language: en-US
-From: Hari Bathini <hbathini@linux.ibm.com>
-In-Reply-To: <unegysw3bihg32od7aham3npsdpm5govboo3uglorwsrjqfqfk@pbyzwwztmqtc>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: vmzUx7Jj6cCsN4wLndwN3vVcZMSsNY-1
-X-Proofpoint-ORIG-GUID: _txk5zoJyP1dG6BShDodMjflf50oEsuh
-X-Authority-Analysis: v=2.4 cv=MKNtWcZl c=1 sm=1 tr=0 ts=68e74d02 cx=c_pps
- a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
- a=IkcTkHD0fZMA:10 a=x6icFKpwvdMA:10 a=RPo1N_Dm-bXGz9hhwcIA:9
- a=QEXdDO2ut3YA:10 a=nl4s5V0KI7Kw-pW0DWrs:22 a=pHzHmUro8NiASowvMSCR:22
- a=xoEH_sTeL_Rfw54TyV31:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDA4MDEyMSBTYWx0ZWRfX63z3IqBezQN+
- C81paXFCtrGEL+Iwuc77cQ41YfOapgJ2QPAn4UVzWbXghqF3hEpqCVAHiIJhKF0M/f05w7Lw+gG
- ff8ffvldnzoh8rvq2fNMiHmAQzkHiesAZ5+BI2QSsZy0J5GMm03gdq4cpOgySpl/HU9BOyj8hAV
- 4JEkAr2QgA6Qu3vmiHJ6GLTGmwjM5AAob2Xj4mIxgZ5RnA4X0ION/4HE9wA20fzm7fSv53sZgAS
- w3HOGKVydVjs4dzud0UNF6gToHe54UuFLftWTx3ODzY7OUebRuteTlI2zBUEyOd9ssevzr6eiy3
- PtT9OPxLNo8REsbkPPDOeWA1p56Xzk6eb7sKmb2QgAzbuSyrsER3GgGc6Dx9h7TiZnW4ghFca5I
- YeanlSHdIhip6nb4qt6LtAbUY2YzIA==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-10-09_01,2025-10-06_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 phishscore=0 malwarescore=0 bulkscore=0 spamscore=0
- priorityscore=1501 suspectscore=0 lowpriorityscore=0 clxscore=1015
- impostorscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2510020000
- definitions=main-2510080121
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3913273d-12e2-426f-aec7-263b7f49008a@infradead.org>
 
-
-
-On 08/10/25 1:43 pm, Naveen N Rao wrote:
-> On Mon, Oct 06, 2025 at 06:50:20PM +0530, Hari Bathini wrote:
->>
->>
->> On 06/10/25 1:22 pm, Naveen N Rao wrote:
->>> On Fri, Oct 03, 2025 at 12:57:54AM +0530, Hari Bathini wrote:
->>>> Today, livepatch takes precedence over direct_call. Instead, save the
->>>> state and make direct_call before handling livepatch.
->>>
->>> If we call into the BPF trampoline first and if we have
->>> BPF_TRAMP_F_CALL_ORIG set, does this result in the BPF trampoline
->>> calling the new copy of the live-patched function or the old one?
->>
->> Naveen, calls the new copy of the live-patched function..
+On Fri, Oct 03, 2025 at 01:50:43PM -0700, Randy Dunlap wrote:
+> Hi,
 > 
-> Hmm... I'm probably missing something.
+> On 9/29/25 7:43 PM, Jinchao Wang wrote:
+> > Add a maintainer entry for Kernel Stack Watch.
+> > 
+> > Signed-off-by: Jinchao Wang <wangjinchao600@gmail.com>
+> > ---
+> >  MAINTAINERS | 8 ++++++++
+> >  1 file changed, 8 insertions(+)
+> > 
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 520fb4e379a3..3d4811ff3631 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -13362,6 +13362,14 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest.git
+> >  F:	Documentation/dev-tools/kselftest*
+> >  F:	tools/testing/selftests/
+> >  
+> > +KERNEL STACK WATCH
+> > +M:	Jinchao Wang <wangjinchao600@gmail.com>
+> > +S:	Maintained
+> > +F:	Documentation/dev-tools/kstackwatch.rst
+> > +F:	include/linux/kstackwatch_types.h
+> > +F:	mm/kstackwatch/
+> > +F:	tools/kstackwatch/
+> > +
 > 
-> With ftrace OOL stubs, what I recall is that BPF trampoline derives the
-> original function address from the OOL stub (which would be associated
-> with the original function, not the livepatch one).
+> Add entries in alphabetical order, please.
+> 
+> >  KERNEL SMB3 SERVER (KSMBD)
+> >  M:	Namjae Jeon <linkinjeon@kernel.org>
+> >  M:	Namjae Jeon <linkinjeon@samba.org>
+> 
+Thanks, will be fixed in next version.
+> -- 
+> ~Randy
+> 
 
-Trampoline derives the address from LR. The below snippet
-in livepatch_handler ensures the trampoline jumps to '1f'
-label instead of the original function with LR updated:
-
-+	/* Jump to the direct_call */
-+	bnectrl	cr1
-+
-+	/*
-+	 * The address to jump after direct call is deduced based on ftrace 
-OOL stub sequence.
-+	 * The seemingly insignificant couple of instructions below is to 
-mimic that here to
-+	 * jump back to the livepatch handler code below.
-+	 */
-+	nop
-+	b	1f
-+
-+	/*
-+	 * Restore the state for livepatching from the livepatch stack.
-+	 * Before that, check if livepatch stack is intact. Use r0 for it.
-+	 */
-+1:	mtctr	r0
-
-
-- Hari
+-- 
+Jinchao
