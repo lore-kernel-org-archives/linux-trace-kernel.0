@@ -1,117 +1,172 @@
-Received: from mail-pg1-f194.google.com (mail-pg1-f194.google.com [209.85.215.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0927E25B311
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  9 Oct 2025 04:54:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECF44AD4B;
+	Thu,  9 Oct 2025 05:50:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759985675; cv=none; b=SAXt6JHHOMjB/uOQEqXJPRBcnfUn/lfrVgxKIEB5YT/bBGBkoNLRdDqH3UUlcdct9NNmN+sfgtOPgQjA5Vsv0CyTXwAUcxWgmW3nmoSUUFqyCF//Alf18TEWn+hmw+tTQTnA+NFihr4+JooQWVBM0UUO1WahpB4wpgGKHSA+KKo=
+	t=1759989030; cv=none; b=gEjFLTBS/DhBtdbue2DbK1IyR/lRC8I1+FHBvPQY/kE0lmA10WS09nT6TYwiQJfMY8l9bawlrQ7bwIGOLn0AudpeM8z+ve4jcDYdudnQG+KqLwl2XfanRw3jR852GuYPMsRJT+4dn4DMAaHVwycPrEJuWx+DyCr9vDo4c1zAluI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759985675; c=relaxed/simple;
-	bh=w+Kuafgc44tEvaLcNgVbY1Detnyn1TP+rsKy11PWdGA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JvkE5UzUfI7Rx8VaIJ2Zx8Q5rHrSJmeYygFwkxmmbgqmvNxqDl7GIfsCRuouSi8hV3z+jLueNFqPvyWRMa9GAMl2yKZHLCqVK7lDz8U5ZF6e54JbszFClgR4Caib1vhHjY33gs6ivLPQGk62q1fu7Eunoevz0sp3pxaeOujoELI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BobXPTxC; arc=none smtp.client-ip=209.85.215.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1759989030; c=relaxed/simple;
+	bh=98qv5gCVu0arT0WU/zbKp6K58lsyDxcHiEjm2yynPKg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dXHY/5TqZx7M0FS2Z5Au2OT+b5KpjxObF1+9kY8h89oyM/nP8i2L5Jx08Gt9r7thALaByMd0EiOQKHJo9SIoQG85Vz2JTDcqZspODcH1CPrPVoT2IFK0IvWm8TyRhi2EJImplxfcYwdVhC/R9nZ3PgzqshAlP/wrqnLIpRp8foY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=l70Aktyx; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BobXPTxC"
-Received: by mail-pg1-f194.google.com with SMTP id 41be03b00d2f7-b4ee87cc81eso436041a12.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 08 Oct 2025 21:54:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1759985673; x=1760590473; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=0Tfw9ZfkVYbFeFtQQO2RdnGi20hC7pdXgzL0TwKkXK4=;
-        b=BobXPTxCYgu9Jp78A4hBylz1ia+ra6VKxVHTQXFYbNZnjwC4uSmqo62zsvGKb60+JY
-         dqEiGJNjndK7okyynbvnKYg2sVTQ8i4BGikV4ttrayFCDy34fEAKKKFHx1WAXWdj4pQu
-         RC/2N2GTGiovJvM6s47/5oPn3LYkM4S2Lw2RF+O+zWuxix5n1ZlJjZeCJCUbSAJn8JC1
-         SafpedmoKncblsu7uVI3TIPPfeolaF5ALVu4ZKB6g1AvhZZAAhp0/NqcJpZ0ECHUNVpC
-         EmKXX5dnjK+GN1S92DGUVau4G7QGMrX24Je+wVX06jJxnHzMRDRSymF0sD3ZEwUNj3kx
-         gV3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759985673; x=1760590473;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0Tfw9ZfkVYbFeFtQQO2RdnGi20hC7pdXgzL0TwKkXK4=;
-        b=l47cPCxFRZ6yCzGAPGB27fm+MugzgdmzdrX2OS2BDq19lJ7aeHneLh4a4fjLMHwi9R
-         Yl4vA1O/LAjoIqJzfyyOZz8FmgB17l+krPiqeKcgHgMAq00unuiYPydSufiu4DJiuwCr
-         wbQMnOPezQl6ploEQHXjLnMCHsqSDYmF1o+aiNFYxpNOkP05lH4rL9PXCRtevuDtA8be
-         l71TqPBa78Uqe8C+PcJHI7nU6dEr+0iziTwuu7nIr4iajFCfe48XhZ5dm/VfjdGy0QuR
-         pIzpju8ca9ZRtQRDzjmITT6igJy2uuZ9+7wfolQ7aPSGhj9ptZUbFkmjlQAeZdDv+fXC
-         SK1A==
-X-Forwarded-Encrypted: i=1; AJvYcCWcQDhkracHPjZJnn5h1AdH6j5VXY4GZq6/ojuo8PnySoz2vNsQFofh80VWrubl4elHn4BIFIblR47rh0NIAkOIbu8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YytMvOh8QPbiEcsOgVXjk19PVf5WrsWB2FoJLgir5ll0ZLdDCV6
-	gvBE44FWUNGJo/D9tenmKNSjpeXeh93O3C9OH7A1Jo5ZnuUtRHyxz53jFYlBXtXLCJ4=
-X-Gm-Gg: ASbGncsYhgYNlkmRk4d5fAO9lAnMv2Wr4HZKi/L/syQHXG79fNKfOse+cFEXZICdYDI
-	pYymoQ6uvmvPb8y5T1SKva+8ZlQAziEGnNr9E/yCrhkCPjZQfBN+KOEDqjsNJcbX4qLTLQHdrrR
-	Kep3KZn6YysPfXd0VvzMswE52Sbko/BWw8Zcm2TYfdUJZ3l1WCgEm1WDNjjLpFEd4GWxmfavUxL
-	BW94Y7NLLsNyWOdwxWbhOSvkAErHLnLMhDUXaAFndbO/+dQutQ4RrPOqLwpOsQ1FkN9+SZO0i2c
-	+YLxVAF5IWjMSlA7cEvyomDd53bAWy/XbXzxK6v5v+tY22DQC8Gu/2tFRhOPvWCBt5iuAYviNvq
-	TpQeUOcybdcsGbEraAUH7hXq89FTAsnfD1VnODc202t30WNn2sRPJ6BnA31PWKI1icg==
-X-Google-Smtp-Source: AGHT+IHs5oQxzgPYgvjhGgUXIMHAfemFYJF0eBPmSz+QPLzUbxC4cmQvyXqohxlvHOS0JXDY4GoQVg==
-X-Received: by 2002:a17:903:2d0:b0:265:604c:17e7 with SMTP id d9443c01a7336-2902741f0b1mr68383795ad.60.1759985673202;
-        Wed, 08 Oct 2025 21:54:33 -0700 (PDT)
-Received: from fedora ([103.120.31.122])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29034f36cb1sm14161475ad.100.2025.10.08.21.54.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Oct 2025 21:54:32 -0700 (PDT)
-From: Ankit Khushwaha <ankitkhushwaha.linux@gmail.com>
-To: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: david.hunter.linux@gmail.com,
-	skhan@linuxfoundation.org,
-	linux-kernel-mentees@lists.linuxfoundation.org,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Ankit Khushwaha <ankitkhushwaha.linux@gmail.com>,
-	syzbot+ddc001b92c083dbf2b97@syzkaller.appspotmail.com
-Subject: [PATCH v3] ring buffer: Propagate __rb_map_vma return value to caller
-Date: Thu,  9 Oct 2025 10:23:45 +0530
-Message-ID: <20251009045345.8954-1-ankitkhushwaha.linux@gmail.com>
-X-Mailer: git-send-email 2.51.0
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="l70Aktyx"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5994KH1i002137;
+	Thu, 9 Oct 2025 05:49:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=/5cSbI
+	lTHivCoCjUL+gWdAZHt8AL5oHSUiVwv6sMvf0=; b=l70AktyxnXQwFM9irjndoO
+	CwzJCqr8QN9geIZivEu0D1z3ldjMn9twN0V3D7PbuIXoXvLwcLv4j4qsVSwTf37w
+	U49xkAIq/eVbWGEU0sB2ViYCEFBUv4/t8frQ8X1FjBm5J6HXcdBWkbZ7yyiuU/F8
+	lQFWpC1EcqMGGDTyCQ9rFQcerGlItTZCfU8nPe1EHFpWChl8/Xq5ZpieoW4BCm8T
+	/Ywz5lbHM+V1iz4HsuMjHqDyr4k5Dk08wGRaLOhQhxAasip9lR6UIELVC0hyktpx
+	cmfD0UF+lhTlBDTH31igSIIy2k6yCS/yhjNn9bONw2nXcwqtx1teGkeNph2hmC5w
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 49nv86tk9n-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 09 Oct 2025 05:49:54 +0000 (GMT)
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 5995lwZb006383;
+	Thu, 9 Oct 2025 05:49:53 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 49nv86tk9c-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 09 Oct 2025 05:49:53 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5991XAbr021040;
+	Thu, 9 Oct 2025 05:49:52 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 49nv8sjjyb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 09 Oct 2025 05:49:52 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5995npEc17563960
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 9 Oct 2025 05:49:51 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 082BD20049;
+	Thu,  9 Oct 2025 05:49:51 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7C47F20040;
+	Thu,  9 Oct 2025 05:49:47 +0000 (GMT)
+Received: from [9.78.106.240] (unknown [9.78.106.240])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu,  9 Oct 2025 05:49:47 +0000 (GMT)
+Message-ID: <42d72061-3d23-43db-bb02-d5f75333c924@linux.ibm.com>
+Date: Thu, 9 Oct 2025 11:19:45 +0530
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] powerpc64/bpf: support direct_call on livepatch function
+To: Naveen N Rao <naveen@kernel.org>
+Cc: Madhavan Srinivasan <maddy@linux.ibm.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>, bpf@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>, Song Liu <songliubraving@fb.com>,
+        Jiri Olsa <jolsa@kernel.org>, Viktor Malik <vmalik@redhat.com>,
+        live-patching@vger.kernel.org, Josh Poimboeuf <jpoimboe@kernel.org>,
+        Joe Lawrence
+ <joe.lawrence@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>, linux-trace-kernel@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shung-Hsi Yu <shung-hsi.yu@suse.com>
+References: <20251002192755.86441-1-hbathini@linux.ibm.com>
+ <amwerofvasp7ssmq3zlrjakqj5aygyrgplcqzweno4ef42tiav@uex2ildqjvx2>
+ <17f49a63-eccb-4075-91dd-b1f37aa762c7@linux.ibm.com>
+ <unegysw3bihg32od7aham3npsdpm5govboo3uglorwsrjqfqfk@pbyzwwztmqtc>
+Content-Language: en-US
+From: Hari Bathini <hbathini@linux.ibm.com>
+In-Reply-To: <unegysw3bihg32od7aham3npsdpm5govboo3uglorwsrjqfqfk@pbyzwwztmqtc>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: vmzUx7Jj6cCsN4wLndwN3vVcZMSsNY-1
+X-Proofpoint-ORIG-GUID: _txk5zoJyP1dG6BShDodMjflf50oEsuh
+X-Authority-Analysis: v=2.4 cv=MKNtWcZl c=1 sm=1 tr=0 ts=68e74d02 cx=c_pps
+ a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
+ a=IkcTkHD0fZMA:10 a=x6icFKpwvdMA:10 a=RPo1N_Dm-bXGz9hhwcIA:9
+ a=QEXdDO2ut3YA:10 a=nl4s5V0KI7Kw-pW0DWrs:22 a=pHzHmUro8NiASowvMSCR:22
+ a=xoEH_sTeL_Rfw54TyV31:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDA4MDEyMSBTYWx0ZWRfX63z3IqBezQN+
+ C81paXFCtrGEL+Iwuc77cQ41YfOapgJ2QPAn4UVzWbXghqF3hEpqCVAHiIJhKF0M/f05w7Lw+gG
+ ff8ffvldnzoh8rvq2fNMiHmAQzkHiesAZ5+BI2QSsZy0J5GMm03gdq4cpOgySpl/HU9BOyj8hAV
+ 4JEkAr2QgA6Qu3vmiHJ6GLTGmwjM5AAob2Xj4mIxgZ5RnA4X0ION/4HE9wA20fzm7fSv53sZgAS
+ w3HOGKVydVjs4dzud0UNF6gToHe54UuFLftWTx3ODzY7OUebRuteTlI2zBUEyOd9ssevzr6eiy3
+ PtT9OPxLNo8REsbkPPDOeWA1p56Xzk6eb7sKmb2QgAzbuSyrsER3GgGc6Dx9h7TiZnW4ghFca5I
+ YeanlSHdIhip6nb4qt6LtAbUY2YzIA==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-10-09_01,2025-10-06_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ adultscore=0 phishscore=0 malwarescore=0 bulkscore=0 spamscore=0
+ priorityscore=1501 suspectscore=0 lowpriorityscore=0 clxscore=1015
+ impostorscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2510020000
+ definitions=main-2510080121
 
-The return value from __rb_map_vma(), which rejects writable or
-executable mappings (VM_WRITE, VM_EXEC, or !VM_MAYSHARE), was being
-ignored.  As a result the caller of `__rb_map_vma` always returned 0 even when the
-mapping had actually failed, allowing it to proceed with an invalid VMA.
 
-Reported-by: syzbot+ddc001b92c083dbf2b97@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?id=194151be8eaebd826005329b2e123aecae714bdb
-Signed-off-by: Ankit Khushwaha <ankitkhushwaha.linux@gmail.com>
----
 
-Changes in v3: https://lore.kernel.org/linux-trace-kernel/20251008172516.20697-1-ankitkhushwaha.linux@gmail.com/
-* Same as v2:)
+On 08/10/25 1:43 pm, Naveen N Rao wrote:
+> On Mon, Oct 06, 2025 at 06:50:20PM +0530, Hari Bathini wrote:
+>>
+>>
+>> On 06/10/25 1:22 pm, Naveen N Rao wrote:
+>>> On Fri, Oct 03, 2025 at 12:57:54AM +0530, Hari Bathini wrote:
+>>>> Today, livepatch takes precedence over direct_call. Instead, save the
+>>>> state and make direct_call before handling livepatch.
+>>>
+>>> If we call into the BPF trampoline first and if we have
+>>> BPF_TRAMP_F_CALL_ORIG set, does this result in the BPF trampoline
+>>> calling the new copy of the live-patched function or the old one?
+>>
+>> Naveen, calls the new copy of the live-patched function..
+> 
+> Hmm... I'm probably missing something.
+> 
+> With ftrace OOL stubs, what I recall is that BPF trampoline derives the
+> original function address from the OOL stub (which would be associated
+> with the original function, not the livepatch one).
 
-Changes in v2: https://lore.kernel.org/linux-trace-kernel/20251007171256.20884-1-ankitkhushwaha.linux@gmail.com/
-* applied minor cleanup suggested by Steve in v1
+Trampoline derives the address from LR. The below snippet
+in livepatch_handler ensures the trampoline jumps to '1f'
+label instead of the original function with LR updated:
 
----
- kernel/trace/ring_buffer.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
++	/* Jump to the direct_call */
++	bnectrl	cr1
++
++	/*
++	 * The address to jump after direct call is deduced based on ftrace 
+OOL stub sequence.
++	 * The seemingly insignificant couple of instructions below is to 
+mimic that here to
++	 * jump back to the livepatch handler code below.
++	 */
++	nop
++	b	1f
++
++	/*
++	 * Restore the state for livepatching from the livepatch stack.
++	 * Before that, check if livepatch stack is intact. Use r0 for it.
++	 */
++1:	mtctr	r0
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 43460949ad3f..1244d2c5c384 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -7273,7 +7273,7 @@ int ring_buffer_map(struct trace_buffer *buffer, int cpu,
- 		atomic_dec(&cpu_buffer->resize_disabled);
- 	}
- 
--	return 0;
-+	return err;
- }
- 
- int ring_buffer_unmap(struct trace_buffer *buffer, int cpu)
--- 
-2.51.0
 
+- Hari
