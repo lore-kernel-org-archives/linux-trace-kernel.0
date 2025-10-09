@@ -1,96 +1,148 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B28A02EB5CF
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  9 Oct 2025 14:46:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A9AE34BA44
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  9 Oct 2025 15:15:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760021173; cv=none; b=ojg/PmxtJ5Bws4j5li5i9Y7JCZD97BVOIIvHlOf1rlVQQ+zHylJaVufHQ+NNjKKF6ThSX/7xhJVRI/PhxjfdqLDEiwmbXRH0ant+DzlBX8kSGIAlt8jF+eVPetHPMCPNCYmmLMAmTz0D4aaBckSvZRXkHZpPGBevbwUTCSjT9Cs=
+	t=1760022948; cv=none; b=aaRyM6moPfcyl7XwTu7ZMQ6OI8JrXzJbH8Joj5IdGr6kDfWFLTvy6ZW+fLvMC/PApM8ciKcfva3iSOqFMTJF2erY2dBWsVDTZKaoUBfdRuV3qHmo23X9IsvVETkbCQQ1kzLvtaFJO5SDDLmQi977OfceqsoiCIu8OpxqpNfXekU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760021173; c=relaxed/simple;
-	bh=1YF/kfrhlYkqcLi1GXYGGuwKlO6FjjUxn/YQCxguAYc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Eu0lmnPYPMtoN3+PgBhJ91gf7O4vPFDZX4J1tGp2lVgskdrXDJEzy8zpmXgpKMUoOw8AtORS+y2KJCPBS5RBtkpxPi1rsyycciiaDN1fN6On6Bm84727OfIZJ78IZZj03QhxJHskvh/nJ6FvzOEWoxqanL9l/VRIe5pu2aezPP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l/skoLTt; arc=none smtp.client-ip=209.85.221.51
+	s=arc-20240116; t=1760022948; c=relaxed/simple;
+	bh=qshWedy9zOFfj4S/MRqOfZgJWqZsXgvtsuKhKKMr4zs=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=fGWreNAxlSpBLR3NrVLFnbEp7heGN8gyuSw7GXcv/XbMbIl61LFr6fc2g873grgsSkKr1tGrdgCiSGeW9Lg4eJTuGBSRz4WceiD5hXosA1Ikpi1whi8FYxjADAE+16umhhMOjGyiVgi3yZ34LaE3LeNfEqDKy5DAxEhrS4yEtH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JySqrzpB; arc=none smtp.client-ip=209.85.210.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l/skoLTt"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3ed20bdfdffso1116314f8f.2
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 09 Oct 2025 07:46:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JySqrzpB"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-781997d195aso777137b3a.3
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 09 Oct 2025 08:15:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1760021170; x=1760625970; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1YF/kfrhlYkqcLi1GXYGGuwKlO6FjjUxn/YQCxguAYc=;
-        b=l/skoLTtsSA/UucDQVOiNHWgsEYQRCcS8ZWkc1mASOSqv71aYtwFAo6ksTccoWzYug
-         amOJ1P/8mPT4NyxzR+gFcl8iqWBPsb6zDsNDOB+nKSoSLuu46i/FKa+M3Hx8eSc1AT+4
-         ilRN2Zl4DapRlxp8w9Sp0fRsuf7gnEddd893M38CXJs4Jv4QzOP+5vG1ELbSepxF30nM
-         7jmTEnGX7MwTA/03p/IRive3bLnAKvwF++uv9k/p9b1yK3Bk0S2OT39SzpMywoq956G/
-         TfN4GFfC/3AWg3AU3QSdrl/XCYKSog+STmZWpEajdH5E7lFh+FwgfjoAd8yW499Xifjb
-         LZjg==
+        d=gmail.com; s=20230601; t=1760022947; x=1760627747; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=QW3441uRfgKwaWkCvF0+xgoQHEkKkpXbASbo2YsQ298=;
+        b=JySqrzpBKWSQvVdv4mP/Ji3WoJcaqqnP7i8wF1hAogeKz7ra+/+RSMJzFKDblZLoxm
+         kFjQsIeKsyV5envbsisrA4QatiWY+AaCTwSloE4YVAXGRGncre8Et2UZfNdS5YA90Xb4
+         GL7168efjd+JP9hduygeWil2mox4I9CMvQ2jYH5jf7T7FREgcXotIoSzJIrkWLFW/y/y
+         XIeOUsmEbm3IW8bMM6BEf+N16Wp91W4I+DAohQZE90vswMnoDHvYbahSCrDT1Hq7egwe
+         QU7ucfTRnyDMWwJSIswRY0rnimQPj5vOOS+CdtP6PSff2vHJR+YG36V0iDVUv042h4Zk
+         8GoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760021170; x=1760625970;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1YF/kfrhlYkqcLi1GXYGGuwKlO6FjjUxn/YQCxguAYc=;
-        b=ULBZwjnzeEkZurPCMaCqvtA7JLHDKTYA3yhfzyb6IbaqAu7MjztqwCQz20pNwZyq8G
-         w6kSX7tEZGnc+TmNZ22vadyOb6KGDdtuPObDzWDLEzV6V/cmqfvC0OUZ7pRtmFJzrW7H
-         RikjBeAqyLcuHDVE4Am/mYzLxYvR8UturPyw5YcgdcRn+netgMHGkPoVfevR3mc8BWwo
-         17bIFzZ+U4pq6Uvd2HHQhocIQGlS67dmphzLQ6rkGHl4b9zQPnl5QwJxTzyx8m4scrgN
-         5AWrardQGyVwKtLFAeLqXFVDmlAHXnEju2Wlg1avmkst85G+Dxyzudd+HCybBj8Tdxyo
-         KcwA==
-X-Forwarded-Encrypted: i=1; AJvYcCU/D3kAVwa+3UCbsVOlytyGIF3nnT8jLjHiyhw1Or5N9vV2a8i0dFe9jZiUaOeCGqH63VI2iVPPQ3cLQUfjwpp7zXM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxW/D6Gvw6GCoO3W2/njKuk4D7ycQd6q8dXC3Y3vxNYSTv8gxx5
-	3KHXXS9zamZ7gBkFrDlsz0QMvS8uqEEZgZ9E4sI4K9NDDQLGfTXLsT6WhOJBwy8AdZQJ2cxN/SK
-	eClTQsD+Ne4IXlFhRxNYC+8Fn3i1TvGM=
-X-Gm-Gg: ASbGncvWgoPNryFIsAeLOnXES2BDJlNgBq4uvFdYqxpLnMCmO5tzCgu+mLi4+h8HUJk
-	A50Tra2ghbfjU8t/yydmf69Zc+hcR9xlQgytm3gb9d5Kcew3T+VToXfZ7hShHKW527B9+7r4POM
-	Z3dIssPD5jpuOTB3EQ/whGOPlce9h+D5O286L9PV7hteXVVXFOUviKw39BlZg7/dy8VmIQzAdgF
-	s9Ivajwa8/FGhshZFgyv62Rcqx7TsnKieoagQYk0mahc8NtLneqFh826A6CxIxZuYJ90mso+aE=
-X-Google-Smtp-Source: AGHT+IECWjhaZNmV1ojdHkxqbAFOmHEINNvUEgcQdI2hfmscAMsefgN2+U5CxgJIIoAua19jxGu56fLuuqU2fY9/gjg=
-X-Received: by 2002:a05:6000:26cc:b0:425:7590:6a1f with SMTP id
- ffacd0b85a97d-4266e8d9301mr5195008f8f.49.1760021169790; Thu, 09 Oct 2025
- 07:46:09 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1760022947; x=1760627747;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QW3441uRfgKwaWkCvF0+xgoQHEkKkpXbASbo2YsQ298=;
+        b=cIDScmZVSae+6HcbE22RchimmyaFYNHFC2K5iGLcRhJdkjkV4bAaoB0UCfwu/YlAcN
+         K7Bve4shIIBE2F4vmoMPXi3/YO/WLnjVVXvQ0Hw3B+XOudUwwbeHlVkzybVnVq+YHih2
+         8vbYgs0LsyoSePwtVbtdvBKTc80vxu5ysswmjzYPTGJiAUNUp54GMFPdK9FUXjun0FEk
+         eSFDuKPWmLKVqEiSudqhulJnBGnMkcPlaGbZsrltIFq6EqjEKc7I3+uOoYc923rtLZ20
+         irTwmKs8fRgzWu0NiXyYt6KMTcmAB2AuG9GBSEzOKKMdJGhXD81uld3fUSsYKGVTlzij
+         w2RQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUlDePL0wfC838ygrBsDAZFay2+t4//i0DHYZ9y9KfSsmaaqY6QszBK5MrhlmSC/n9N0YS3heqBEwGPbHdNaiyfcAA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxMQVS1iMyhGb/h3mSqCAHYGR5BuVU8A3rjw+Ji7AzsTfjx1q/i
+	ZR3fWC/pq66uhBAoP/7BqYLWv6in7ohcQnnJ9jFI5/ujvGvQHOZsALRs
+X-Gm-Gg: ASbGncsB1i0cXjXCTAg0PREII/sPdw8JSLU4MPojigJUpOGCsV7gu5VV7FAQor+Wfe2
+	dPcu+MGM5wyAL/zuwa4U4oY/HnY2/VFyBPDQYM0/t5jXUmUyyyX9+bo8WH9iOFMJdHUUwHrOw12
+	JmRbHO2tKKfMfsGqeT3vpzFqMNn0Ubciy6XLyUhY+HSXl/VTsmHxAYGzo9dzDAyhkLvmfdAMdAt
+	oYZzLbSgh2hQPpaqRebJkdLvw09yxXtS6vg+TMBDs0fST+RDNRD2NK8WikD82zIAF8vZJ/nNggZ
+	vlDvxEjQkoQBBiVKd/Nzgaz8YLr50aI5ErZXmnk0ZXkJMwJcFJ2ho94O7m37y1OhQmDKIDawvzE
+	0f94o9s9TJgOpGjeRPWYhgOnLTU/REO2Im6zNEYc6YG4gnIcgXiO+MQs6TSWPw4n4fFShrg==
+X-Google-Smtp-Source: AGHT+IGzWj2f7GE9unACisTFXTIm/6m0yZrlPKrykcpQ5kEtz/hxMKqimFAb0PWKVC9eCmlcr6WDoA==
+X-Received: by 2002:a05:6a00:464f:b0:781:15b0:bed9 with SMTP id d2e1a72fcca58-79387052040mr11267934b3a.17.1760022946316;
+        Thu, 09 Oct 2025 08:15:46 -0700 (PDT)
+Received: from [172.20.10.4] ([117.20.154.54])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7992d09a87asm2637b3a.46.2025.10.09.08.15.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Oct 2025 08:15:45 -0700 (PDT)
+Message-ID: <6485d7de-2af6-48d6-b427-66d3697ec2b2@gmail.com>
+Date: Thu, 9 Oct 2025 23:15:40 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250927061210.194502-1-menglong.dong@linux.dev>
- <20250927061210.194502-2-menglong.dong@linux.dev> <CAADnVQJAdAxEOWT6avzwq6ZrXhEdovhx3yibgA6T8wnMEnnAjg@mail.gmail.com>
- <3571660.QJadu78ljV@7950hx> <7f28937c-121a-4ea8-b66a-9da3be8bccad@gmail.com>
- <CAADnVQLxpUmjbsHeNizRMDkY1a4_gLD0VBFWS8QMYHzpYBs4EQ@mail.gmail.com> <405caf71-315d-46a4-af35-c1fd53470b91@gmail.com>
-In-Reply-To: <405caf71-315d-46a4-af35-c1fd53470b91@gmail.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Thu, 9 Oct 2025 07:45:58 -0700
-X-Gm-Features: AS18NWBEI8kqkZPKzG96GE2ZCLB20iemRBfaDjOtbeNUARLINqO3dUs7B56pY3o
-Message-ID: <CAADnVQK8Rw19Z6ib0CfK0cMHUsYBuhEv8_464knZ4qFZ6Gfv2g@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
 Subject: Re: bpf_errno. Was: [PATCH RFC bpf-next 1/3] bpf: report probe fault
  to BPF stderr
-To: Leon Hwang <hffilwlqm@gmail.com>
-Cc: Andrii Nakryiko <andrii@kernel.org>, Kumar Kartikeya Dwivedi <memxor@gmail.com>, 
-	Menglong Dong <menglong.dong@linux.dev>, Menglong Dong <menglong8.dong@gmail.com>, 
-	Alexei Starovoitov <ast@kernel.org>, bpf <bpf@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, jiang.biao@linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+From: Leon Hwang <hffilwlqm@gmail.com>
+To: Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+ Eduard Zingerman <eddyz87@gmail.com>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+ Andrii Nakryiko <andrii@kernel.org>, Menglong Dong
+ <menglong.dong@linux.dev>, Menglong Dong <menglong8.dong@gmail.com>,
+ Alexei Starovoitov <ast@kernel.org>, bpf <bpf@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>,
+ linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, jiang.biao@linux.dev
+References: <20250927061210.194502-1-menglong.dong@linux.dev>
+ <20250927061210.194502-2-menglong.dong@linux.dev>
+ <CAADnVQJAdAxEOWT6avzwq6ZrXhEdovhx3yibgA6T8wnMEnnAjg@mail.gmail.com>
+ <3571660.QJadu78ljV@7950hx> <7f28937c-121a-4ea8-b66a-9da3be8bccad@gmail.com>
+ <CAADnVQLxpUmjbsHeNizRMDkY1a4_gLD0VBFWS8QMYHzpYBs4EQ@mail.gmail.com>
+ <CAP01T75TegFO0DrZ=DvpNQBSnJqjn4HvM9OLsbJWFKJwzZeYXw@mail.gmail.com>
+ <0adc5d8a299483004f4796a418420fe1c69f24bc.camel@gmail.com>
+ <CAP01T77agpqQWY7zaPt9kb6+EmbUucGkgJ_wEwkPFpFNfxweBg@mail.gmail.com>
+ <5766a834-3b21-47b0-8793-2673c25ab6b0@gmail.com>
+Content-Language: en-US
+In-Reply-To: <5766a834-3b21-47b0-8793-2673c25ab6b0@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Oct 9, 2025 at 7:15=E2=80=AFAM Leon Hwang <hffilwlqm@gmail.com> wro=
-te:
->
->
-> The verifier can rewrite 'bpf_reg_aux()' into the following instructions:
->
-> dst_reg =3D BPF_REG_AUX;
-> BPF_REG_AUX =3D 0; /* clear BPF_REG_AUX */
->
-> As for the architecture-specific implementation, BPF_REG_AUX can be
-> mapped to an appropriate register per arch =E2=80=94 for example, r11 on =
-x86_64.
 
-it's taken. There are no free registers.
+>>
+>> Since we're piling on ideas, one of the other things that I think
+>> could be useful in general (and maybe should be done orthogonally to
+>> bpf_errno)
+>> is making some empty nop function and making it not traceable reliably
+>> across arches and invoke it in the bpf exception handler.
+> 
+> No new traceable function is needed, since ex_handler_bpf itself can
+> already be traced via fentry.
+> 
+> If users really want to detect whether a fault occurred, they could
+> attach a program to ex_handler_bpf and record fault events into a map.
+> However, this approach would be too heavyweight just to check for a
+> simple fault condition.
+> 
+
+As ex_handler_bpf can already be traced using fentry, a potential
+approach without modifying the kernel would be:
+
+1. In the fentry program:
+
+int is_fault SEC(".percpu.fault");
+
+SEC("fentry/ex_handler_bpf")
+int BPF_PROG(f__ex, const struct exception_table_entry *x, struct
+pt_regs *regs)
+{
+    is_fault = 1;
+    return 0;
+}
+
+2. In the main program:
+
+int is_fault SEC(".percpu.fault");
+
+is_fault = 0;
+/* probe read */
+if (is_fault)
+    /* handle fault */;
+
+The main idea is that both programs share the same ".percpu.fault" map,
+so the variable 'is_fault' can be accessed from both sides.
+
+Here, ".percpu.fault" represents a percpu_array map section, which is
+expected to be supported in the future.
+In the meantime, it can simply be replaced with a regular percpu_array map.
+
+Finally, this approach is conceptually similar to the idea of using a
+global errno.
+
+Thanks,
+Leon
+
