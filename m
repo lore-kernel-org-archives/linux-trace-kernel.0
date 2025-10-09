@@ -1,148 +1,190 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A9AE34BA44
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  9 Oct 2025 15:15:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2418229B18;
+	Thu,  9 Oct 2025 15:59:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760022948; cv=none; b=aaRyM6moPfcyl7XwTu7ZMQ6OI8JrXzJbH8Joj5IdGr6kDfWFLTvy6ZW+fLvMC/PApM8ciKcfva3iSOqFMTJF2erY2dBWsVDTZKaoUBfdRuV3qHmo23X9IsvVETkbCQQ1kzLvtaFJO5SDDLmQi977OfceqsoiCIu8OpxqpNfXekU=
+	t=1760025556; cv=none; b=ZpeUZQ5q3fsTOQ3ZUkmIgmuU9C/kOZwJPJwHLdb0owTRiX1I9ByniykLQeAhZ2WhbmeEjDDFzDuT+AghQYD/wrEGiaHmoZ28qyhuk+ilp4XL5oCMaVYewX7Xkfk/I0Dd6hbJGzx8ppC8BIL5A5FCgpGfGh4DsUweLsETnC7bPd8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760022948; c=relaxed/simple;
-	bh=qshWedy9zOFfj4S/MRqOfZgJWqZsXgvtsuKhKKMr4zs=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=fGWreNAxlSpBLR3NrVLFnbEp7heGN8gyuSw7GXcv/XbMbIl61LFr6fc2g873grgsSkKr1tGrdgCiSGeW9Lg4eJTuGBSRz4WceiD5hXosA1Ikpi1whi8FYxjADAE+16umhhMOjGyiVgi3yZ34LaE3LeNfEqDKy5DAxEhrS4yEtH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JySqrzpB; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1760025556; c=relaxed/simple;
+	bh=lNQnHAsxUtANRW3ozb1ZTyH7qL2Wmh9+WYA8WvvuQto=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=F0AZx/mBf9XlinWxTU7gc+d9q2xqnCUX6jbFOlv2czV/uVa3gAedETfzmzEOXbdXmNOW4mdbegaRu5caiMZ1NdU0FOrDUT9M6eBa2CXoQeldqoKzKhZB/x7wuA5VVAMEj2E/Ir7Hfg9qZZh1Citk1/S68LPfWcfB5SObyw5YaDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E/xFlAvx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JySqrzpB"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-781997d195aso777137b3a.3
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 09 Oct 2025 08:15:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1760022947; x=1760627747; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=QW3441uRfgKwaWkCvF0+xgoQHEkKkpXbASbo2YsQ298=;
-        b=JySqrzpBKWSQvVdv4mP/Ji3WoJcaqqnP7i8wF1hAogeKz7ra+/+RSMJzFKDblZLoxm
-         kFjQsIeKsyV5envbsisrA4QatiWY+AaCTwSloE4YVAXGRGncre8Et2UZfNdS5YA90Xb4
-         GL7168efjd+JP9hduygeWil2mox4I9CMvQ2jYH5jf7T7FREgcXotIoSzJIrkWLFW/y/y
-         XIeOUsmEbm3IW8bMM6BEf+N16Wp91W4I+DAohQZE90vswMnoDHvYbahSCrDT1Hq7egwe
-         QU7ucfTRnyDMWwJSIswRY0rnimQPj5vOOS+CdtP6PSff2vHJR+YG36V0iDVUv042h4Zk
-         8GoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760022947; x=1760627747;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QW3441uRfgKwaWkCvF0+xgoQHEkKkpXbASbo2YsQ298=;
-        b=cIDScmZVSae+6HcbE22RchimmyaFYNHFC2K5iGLcRhJdkjkV4bAaoB0UCfwu/YlAcN
-         K7Bve4shIIBE2F4vmoMPXi3/YO/WLnjVVXvQ0Hw3B+XOudUwwbeHlVkzybVnVq+YHih2
-         8vbYgs0LsyoSePwtVbtdvBKTc80vxu5ysswmjzYPTGJiAUNUp54GMFPdK9FUXjun0FEk
-         eSFDuKPWmLKVqEiSudqhulJnBGnMkcPlaGbZsrltIFq6EqjEKc7I3+uOoYc923rtLZ20
-         irTwmKs8fRgzWu0NiXyYt6KMTcmAB2AuG9GBSEzOKKMdJGhXD81uld3fUSsYKGVTlzij
-         w2RQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUlDePL0wfC838ygrBsDAZFay2+t4//i0DHYZ9y9KfSsmaaqY6QszBK5MrhlmSC/n9N0YS3heqBEwGPbHdNaiyfcAA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxMQVS1iMyhGb/h3mSqCAHYGR5BuVU8A3rjw+Ji7AzsTfjx1q/i
-	ZR3fWC/pq66uhBAoP/7BqYLWv6in7ohcQnnJ9jFI5/ujvGvQHOZsALRs
-X-Gm-Gg: ASbGncsB1i0cXjXCTAg0PREII/sPdw8JSLU4MPojigJUpOGCsV7gu5VV7FAQor+Wfe2
-	dPcu+MGM5wyAL/zuwa4U4oY/HnY2/VFyBPDQYM0/t5jXUmUyyyX9+bo8WH9iOFMJdHUUwHrOw12
-	JmRbHO2tKKfMfsGqeT3vpzFqMNn0Ubciy6XLyUhY+HSXl/VTsmHxAYGzo9dzDAyhkLvmfdAMdAt
-	oYZzLbSgh2hQPpaqRebJkdLvw09yxXtS6vg+TMBDs0fST+RDNRD2NK8WikD82zIAF8vZJ/nNggZ
-	vlDvxEjQkoQBBiVKd/Nzgaz8YLr50aI5ErZXmnk0ZXkJMwJcFJ2ho94O7m37y1OhQmDKIDawvzE
-	0f94o9s9TJgOpGjeRPWYhgOnLTU/REO2Im6zNEYc6YG4gnIcgXiO+MQs6TSWPw4n4fFShrg==
-X-Google-Smtp-Source: AGHT+IGzWj2f7GE9unACisTFXTIm/6m0yZrlPKrykcpQ5kEtz/hxMKqimFAb0PWKVC9eCmlcr6WDoA==
-X-Received: by 2002:a05:6a00:464f:b0:781:15b0:bed9 with SMTP id d2e1a72fcca58-79387052040mr11267934b3a.17.1760022946316;
-        Thu, 09 Oct 2025 08:15:46 -0700 (PDT)
-Received: from [172.20.10.4] ([117.20.154.54])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7992d09a87asm2637b3a.46.2025.10.09.08.15.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Oct 2025 08:15:45 -0700 (PDT)
-Message-ID: <6485d7de-2af6-48d6-b427-66d3697ec2b2@gmail.com>
-Date: Thu, 9 Oct 2025 23:15:40 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E/xFlAvx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B74F3C4CEF8;
+	Thu,  9 Oct 2025 15:59:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1760025556;
+	bh=lNQnHAsxUtANRW3ozb1ZTyH7qL2Wmh9+WYA8WvvuQto=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=E/xFlAvxv2rs71Kcn1NvRM79NveaPjIFaf0OOpk0QD+hj7Zi22tV3di55P26QPxM4
+	 70HCZtlD4bxCdWLkcj4aJjtW3Ggq0aKxFUTHTjXY9sAfQrS8CAADWYVH6sAFcGV/YC
+	 YmJuSUa9I64Dxr4YcwydpQP+U44oLNXhO7tvG5lBen/Ie4P1slX4wZk3bElG7qDSnH
+	 GY/XDCdYhmDXvEclA/GnwVO0/lgWtrlmgCMhWFXO8MTI6OvBk+emauO9iKYMwYCQBh
+	 gs2EoQx5P2an42NdmCtUBzX4BmAj/mV+YpEho3GezxZWryzOFVcXnOIS7WqLf3XToH
+	 IG4enfqzBk8RQ==
+From: Sasha Levin <sashal@kernel.org>
+To: patches@lists.linux.dev,
+	stable@vger.kernel.org
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mhiramat@kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.17-5.4] uprobe: Do not emulate/sstep original instruction when ip is changed
+Date: Thu,  9 Oct 2025 11:55:11 -0400
+Message-ID: <20251009155752.773732-45-sashal@kernel.org>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20251009155752.773732-1-sashal@kernel.org>
+References: <20251009155752.773732-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: bpf_errno. Was: [PATCH RFC bpf-next 1/3] bpf: report probe fault
- to BPF stderr
-From: Leon Hwang <hffilwlqm@gmail.com>
-To: Kumar Kartikeya Dwivedi <memxor@gmail.com>,
- Eduard Zingerman <eddyz87@gmail.com>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
- Andrii Nakryiko <andrii@kernel.org>, Menglong Dong
- <menglong.dong@linux.dev>, Menglong Dong <menglong8.dong@gmail.com>,
- Alexei Starovoitov <ast@kernel.org>, bpf <bpf@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>,
- linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, jiang.biao@linux.dev
-References: <20250927061210.194502-1-menglong.dong@linux.dev>
- <20250927061210.194502-2-menglong.dong@linux.dev>
- <CAADnVQJAdAxEOWT6avzwq6ZrXhEdovhx3yibgA6T8wnMEnnAjg@mail.gmail.com>
- <3571660.QJadu78ljV@7950hx> <7f28937c-121a-4ea8-b66a-9da3be8bccad@gmail.com>
- <CAADnVQLxpUmjbsHeNizRMDkY1a4_gLD0VBFWS8QMYHzpYBs4EQ@mail.gmail.com>
- <CAP01T75TegFO0DrZ=DvpNQBSnJqjn4HvM9OLsbJWFKJwzZeYXw@mail.gmail.com>
- <0adc5d8a299483004f4796a418420fe1c69f24bc.camel@gmail.com>
- <CAP01T77agpqQWY7zaPt9kb6+EmbUucGkgJ_wEwkPFpFNfxweBg@mail.gmail.com>
- <5766a834-3b21-47b0-8793-2673c25ab6b0@gmail.com>
-Content-Language: en-US
-In-Reply-To: <5766a834-3b21-47b0-8793-2673c25ab6b0@gmail.com>
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.17.1
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+From: Jiri Olsa <jolsa@kernel.org>
 
->>
->> Since we're piling on ideas, one of the other things that I think
->> could be useful in general (and maybe should be done orthogonally to
->> bpf_errno)
->> is making some empty nop function and making it not traceable reliably
->> across arches and invoke it in the bpf exception handler.
-> 
-> No new traceable function is needed, since ex_handler_bpf itself can
-> already be traced via fentry.
-> 
-> If users really want to detect whether a fault occurred, they could
-> attach a program to ex_handler_bpf and record fault events into a map.
-> However, this approach would be too heavyweight just to check for a
-> simple fault condition.
-> 
+[ Upstream commit 4363264111e1297fa37aa39b0598faa19298ecca ]
 
-As ex_handler_bpf can already be traced using fentry, a potential
-approach without modifying the kernel would be:
+If uprobe handler changes instruction pointer we still execute single
+step) or emulate the original instruction and increment the (new) ip
+with its length.
 
-1. In the fentry program:
+This makes the new instruction pointer bogus and application will
+likely crash on illegal instruction execution.
 
-int is_fault SEC(".percpu.fault");
+If user decided to take execution elsewhere, it makes little sense
+to execute the original instruction, so let's skip it.
 
-SEC("fentry/ex_handler_bpf")
-int BPF_PROG(f__ex, const struct exception_table_entry *x, struct
-pt_regs *regs)
-{
-    is_fault = 1;
-    return 0;
-}
+Acked-by: Oleg Nesterov <oleg@redhat.com>
+Acked-by: Andrii Nakryiko <andrii@kernel.org>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Link: https://lore.kernel.org/r/20250916215301.664963-3-jolsa@kernel.org
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
 
-2. In the main program:
+LLM Generated explanations, may be completely bogus:
 
-int is_fault SEC(".percpu.fault");
+YES
 
-is_fault = 0;
-/* probe read */
-if (is_fault)
-    /* handle fault */;
+Summary
+- This is a small, well-scoped bug fix in the generic uprobes core that
+  prevents executing or emulating the original instruction when a uprobe
+  consumer handler has redirected the instruction pointer (IP). The
+  previous behavior could corrupt the new IP and crash the traced
+  application. The change is minimal (7 lines), does not add features,
+  and aligns with expected semantics. It is suitable for stable
+  backport.
 
-The main idea is that both programs share the same ".percpu.fault" map,
-so the variable 'is_fault' can be accessed from both sides.
+What changed
+- In `handle_swbp()`, after running consumer handlers, the patch adds an
+  early exit if the handler changed IP away from the breakpoint address:
+  - New check added: `kernel/events/uprobes.c:2772`
+  - Surrounding context:
+    - Handler invocation: `kernel/events/uprobes.c:2769`
+    - Emulation/single-step path: `kernel/events/uprobes.c:2778` (arch
+      emulation) and `kernel/events/uprobes.c:2781` (XOL single-step
+      prep).
+- The key addition is:
+  - `kernel/events/uprobes.c:2772`: `if (instruction_pointer(regs) !=
+    bp_vaddr) goto out;`
 
-Here, ".percpu.fault" represents a percpu_array map section, which is
-expected to be supported in the future.
-In the meantime, it can simply be replaced with a regular percpu_array map.
+Why the bug happens
+- Before this change, `handle_swbp()` always proceeded to emulate
+  (`arch_uprobe_skip_sstep`) or to prepare out-of-line single-step
+  (`pre_ssout`) of the original instruction even if the handler altered
+  IP. On x86 and other arches, instruction emulation/step advances IP by
+  the probed instruction’s length; doing that after a handler-set new IP
+  advances the wrong address, making the IP bogus and often leading to
+  SIGILL.
+  - Where emulation executes: `kernel/events/uprobes.c:2778`
+  - Where XOL single-step is prepared: `kernel/events/uprobes.c:2781`
+- The patch fixes this by skipping the emulate/sstep path if IP was
+  changed by the handler, which is the correct intent when a handler
+  redirects control flow.
 
-Finally, this approach is conceptually similar to the idea of using a
-global errno.
+Evidence in current/mainline and in stable
+- This exact fix is present in mainline commit 4363264111e12 (“uprobe:
+  Do not emulate/sstep original instruction when ip is changed”) and
+  adds only the early-out check in `handle_swbp()` (see
+  `kernel/events/uprobes.c:2769`–`2785` in the current tree).
+- Affected stable trees (e.g., 6.1/6.6/6.10/6.17) lack this check and
+  will incorrectly emulate/step even after IP changes. In your 6.17
+  workspace, `handle_swbp()` calls `handler_chain()` and then proceeds
+  directly to emulation/step without guarding against an IP change:
+  - Handler call: `kernel/events/uprobes.c:2742`
+  - Emulation call: `kernel/events/uprobes.c:2744`
+  - Single-step prep: `kernel/events/uprobes.c:2747`
 
-Thanks,
-Leon
+Risk and side effects
+- Scope: Single function (`handle_swbp()`), 7 insertions, no API or
+  architectural change.
+- Behavior change: Only when a handler changes IP; in that case, we skip
+  executing the original instruction. This matches handler intent and
+  prevents crashes.
+- Concurrency/locking: The check reads `instruction_pointer(regs)` and
+  compares to `bp_vaddr` under the same conditions as the rest of the
+  function; no new locking or ordering requirements.
+- Cross-arch impact: Safe and correct. All arches’
+  `arch_uprobe_skip_sstep()` implementations emulate or adjust IP
+  assuming execution should continue at the original site; skipping this
+  when IP was redirected avoids incorrect behavior.
+- No dependency on unrelated features (e.g., the
+  `arch_uprobe_optimize()` call that exists in some newer trees is not
+  part of this change and isn’t required for correctness).
+
+Stable tree criteria
+- Fixes a user-visible crash-causing bug in uprobes
+  (tracing/instrumentation).
+- Minimal, contained change with clear intent and low regression risk.
+- No new features or ABI changes.
+- Acked by maintainers and merged into mainline.
+
+Conclusion
+- This is a clear, low-risk bug fix preventing incorrect
+  emulation/single-step after handlers redirect IP. It should be
+  backported to stable kernels.
+
+ kernel/events/uprobes.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index 7ca1940607bd8..2b32c32bcb776 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -2741,6 +2741,13 @@ static void handle_swbp(struct pt_regs *regs)
+ 
+ 	handler_chain(uprobe, regs);
+ 
++	/*
++	 * If user decided to take execution elsewhere, it makes little sense
++	 * to execute the original instruction, so let's skip it.
++	 */
++	if (instruction_pointer(regs) != bp_vaddr)
++		goto out;
++
+ 	if (arch_uprobe_skip_sstep(&uprobe->arch, regs))
+ 		goto out;
+ 
+-- 
+2.51.0
 
