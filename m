@@ -1,72 +1,228 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 383C3274650;
-	Fri, 10 Oct 2025 07:32:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51629274B29
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 10 Oct 2025 07:58:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760081579; cv=none; b=TOBg/H1hnmo8t4UvSkiyjFYOJVax2ADAlfcyJLvrcb8AfleZh5G6gdbgBNrB9zI0ClyER1JTYcb3GfNuppO/+aLZDJOqUNl1seTuPKRsgadX1aVRb1/hRJcn4m8zi6hVAGtgPBKRD/AzI27V08tCqzQElzHSqdUI3CHF+dAhgsY=
+	t=1760083093; cv=none; b=Q2E8LSJBMqptJLfUJYIK9z5nf6xM3tmT8NlVC7LWnlFf7FCjtLQ6ur/dO+PLpALDmk2y1yT/QuhPhZj0HnOCf08uTj2HWDDG8Y6qRtJwYLQ4e4yJdx+lRmy95ubVE9qdWiPbXIie4R4nsXAKS2RHlpioPUVjiz/TUs7EdlPtF5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760081579; c=relaxed/simple;
-	bh=nofhwUUz64GodE7x24JZ6dCxrChQBdDGUxwWpDaEuMs=;
+	s=arc-20240116; t=1760083093; c=relaxed/simple;
+	bh=/EqQHNRDCS2YqzBq0RkItK1pvs5vi0KLmvOMTFqnmTo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UakwaJi/istg0Yn++60bnIKczddPlbxbG463WmaZ0ZIl9g7R5JUuNnQI8ybw2iX+61IQwNyQ+puWkyFIC04J4WmCOiA7xcm6CNTRVbT2rkz/oHBhKhtfUmwuWPEsskaR3pXk9zizDHkZwIOBwSw3dkdpLX3kZCi3weaz9KBIDTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id E2D4F227AAA; Fri, 10 Oct 2025 09:32:52 +0200 (CEST)
-Date: Fri, 10 Oct 2025 09:32:52 +0200
-From: hch <hch@lst.de>
-To: Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
-Cc: hch <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=fzL+xLt/tl8sT9UAo9VBAl4K2jKWoXdVgWbOT1itYUxCA96Zkn5xX+UP0ptzEwGepPhSf1aTUaZc/qRrZ2HtlEHJEwjecPFT+BGdGH9+0FZMvv2eOmY54p2IM94Tib97IegAaPDdJjyu/WoVJaoF4FyYVmsUcEsRPiTO/ShWDIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LnpTac5Z; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LnpTac5Z"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-27eceb38eb1so19678315ad.3
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 10 Oct 2025 00:58:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1760083091; x=1760687891; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=2Nucw4E7LkwzxjCbFb3F737DKijbeBN9zMwZ0PDOoZQ=;
+        b=LnpTac5ZvTS/UYEVB7W5KdB+cWLKdYtewYzALu7433gOuYAcGX1oFy0Q19ip8xcFCa
+         VPvqP8SCUx+/XjNgHL8vB33TujuA0mC2YoXnFFaGf/K6hmYJQSStvsPkmYHDHvwWGBB9
+         H25tihr2gvHnD9+QUe7VqDsb4j4ikRlvsXp8WF71t3vbG8l1ehFojIQi9pYHpBP7W6/A
+         vqU5elROKHmEcCx+LOrpJDHvz4jqYqj6ZObpvjQ2rw6SyAsHiWwVY1K5mSEmwywqFgpO
+         xN/78d3SCni1185cDyOSCn+FmZXFwCwbuKfofh82uNWMtcsHZ4vfgd8JPfiDTxs1PC8C
+         1iDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760083091; x=1760687891;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2Nucw4E7LkwzxjCbFb3F737DKijbeBN9zMwZ0PDOoZQ=;
+        b=YdVf2s22ISu9lFp6vsBFlekGZIWlbyiQnMzwDqsxBz0Ff1HDvuLChz9Ef0WA0BHSBo
+         NUciwZjNghZwqtydvJ4sEpDMhokvm4Q/q3oLNpMXDfch5g0s+PMezQXzOq0/GLH3nbTb
+         KIWhuVk3M7kKFBZ2AUVIPzLFaJO813eZ2d/mHI1NHTuYQaZvh+n/HyVAn5IIIjAUNr+Y
+         E+LcVng/QZThjIaJA1wYPg/vkc3VCwHmHHC/k8ClIIcFE1uRFbflSytGcY3wiMq+Kofw
+         Ao5C848J8zDCHagOVktfiiHjBm9lbjuXKJijSGZGw7WGfYxrrw/57r2VJKd/fKMbxNuB
+         y5KQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVfSfVrqKTKVwPMZa3khGE584bBJVFGIRzwaA2MvMYPPkezTbWJqXXXs628jv1gMx0HrygGivZY6ma6R8GDPeFoG3g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwiAiYcsU2UOVZ+bUhAQcZkC1pf7gXUJFZmNM5DnsDTvFpIBtU6
+	6Lct7Wadi5ICuPp2PW5jZaNabHUIoKi+awFQt9WaOyHiOI/z1dacDJg1
+X-Gm-Gg: ASbGncupkQNdSudyEmPbbHe7L4epdM10UPpu5stXoMg9gEo4oRpVceHMb7HkBIfTtHJ
+	+lKEjTcbxgEsY9dCaJzvxhUFgXt1yaWUs0UKo9zhTVyGgH98sXK1YgIEosjkSF57ojViTRArdFh
+	4Lv+S1Nvwacqti4QeLz6E41Fu+/0cyx3H9nNlG/wZ/UumqcA7BjspmFLsidVM/aDQpUkeaUGIdA
+	83kgnr1/LxKIbT9yrmR4hdJFQiLjLee9ZQIBPxYYvh+9+EfdcrJR2rznqDZ+iXd2nZZFaoF4pdQ
+	gPCFcXt2/bZbp+h++4kA1m4ioAnkkhc56OEDT/v75UYQbGw8frWVwib57QukasAVklBY5p4bny+
+	/kk/voy+96ui6a46nTsJJjYNbC9s+Rk77W4sUmBulVr1nnOAGRLzMUuuOZnLelS+r2DQ=
+X-Google-Smtp-Source: AGHT+IFeywA6gB4/SQbmJGvT2KY5YTMhXWywBtcaIqaAsauF4r7EzLqcGRXLsSas3aRqscvIRrL6Qg==
+X-Received: by 2002:a17:903:298e:b0:28e:756c:7082 with SMTP id d9443c01a7336-29027374b38mr134966335ad.15.1760083090502;
+        Fri, 10 Oct 2025 00:58:10 -0700 (PDT)
+Received: from localhost ([103.121.208.62])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29034f070ecsm49587725ad.60.2025.10.10.00.58.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Oct 2025 00:58:09 -0700 (PDT)
+Date: Fri, 10 Oct 2025 15:58:03 +0800
+From: Jinchao Wang <wangjinchao600@gmail.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Alexander Potapenko <glider@google.com>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Marco Elver <elver@google.com>, Jonathan Corbet <corbet@lwn.net>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
 	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	David Hildenbrand <david@redhat.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, Kees Cook <kees@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Masahiro Yamada <masahiroy@kernel.org>, Rong Xu <xur@google.com>,
+	Naveen N Rao <naveen@kernel.org>,
+	David Kaplan <david.kaplan@amd.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Jinjie Ruan <ruanjinjie@huawei.com>, Nam Cao <namcao@linutronix.de>,
+	workflows@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	linux-mm@kvack.org, llvm@lists.linux.dev,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	kasan-dev@googlegroups.com, "David S. Miller" <davem@davemloft.net>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	"linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
-	"linux-btrace@vger.kernel.org" <linux-btrace@vger.kernel.org>,
-	John Garry <john.g.garry@oracle.com>,
-	Hannes Reinecke <hare@suse.de>, Damien Le Moal <dlemoal@kernel.org>,
-	Naohiro Aota <Naohiro.Aota@wdc.com>,
-	Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
-	Chaitanya Kulkarni <chaitanyak@nvidia.com>,
-	"Martin K . Petersen" <martin.petersen@oracle.com>
-Subject: Re: [PATCH v2 11/15] blktrace: add block trace commands for zone
- operations
-Message-ID: <20251010073252.GA17940@lst.de>
-References: <20250925150231.67342-1-johannes.thumshirn@wdc.com> <20250925150231.67342-12-johannes.thumshirn@wdc.com> <20251003073257.GE12624@lst.de> <4638c185-ac5c-41e3-8c79-5c995228ec0e@wdc.com> <20251008061403.GA13979@lst.de> <99edea66-957c-4804-97e3-c88b615e54f0@wdc.com>
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 00/23] mm/ksw: Introduce real-time KStackWatch
+ debugging tool
+Message-ID: <aOi8i1Y0decaamaX@mdev>
+References: <20251009105650.168917-1-wangjinchao600@gmail.com>
+ <20251009175107.ee07228e3253afca5b487316@linux-foundation.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <99edea66-957c-4804-97e3-c88b615e54f0@wdc.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20251009175107.ee07228e3253afca5b487316@linux-foundation.org>
 
-On Thu, Oct 09, 2025 at 11:17:21AM +0000, Johannes Thumshirn wrote:
-> On 10/8/25 8:14 AM, hch wrote:
-> > On Tue, Oct 07, 2025 at 01:08:00PM +0000, Johannes Thumshirn wrote:
-> >> Sure for the old commands everything is still in the lower 32bits, this
-> >> has the nice property that we don't need to duplicate all the code for
-> >> v1 and v2.
-> > I don't think you need to duplicate anything, just have a little
-> > function that maps from the free-form v2 commands and flags to the
-> > v1 field.  Preferably including a mapping of all unsupported ones to
-> > a catchall unsupported command and flag each to indicate that the
-> > trace includes something only visible with v2.
+On Thu, Oct 09, 2025 at 05:51:07PM -0700, Andrew Morton wrote:
+> On Thu,  9 Oct 2025 18:55:36 +0800 Jinchao Wang <wangjinchao600@gmail.com> wrote:
 > 
-> So I've tried making a translation function (which is the trivial part) 
-> but then it's a game of whack-a-mole to unbreak compilation, ftrace, etc..
+> > This patch series introduces KStackWatch, a lightweight debugging tool to detect
+> > kernel stack corruption in real time. It installs a hardware breakpoint
+> > (watchpoint) at a function's specified offset using `kprobe.post_handler` and
+> > removes it in `fprobe.exit_handler`. This covers the full execution window and
+> > reports corruption immediately with time, location, and a call stack.
+> > 
+> > The motivation comes from scenarios where corruption occurs silently in one
+> > function but manifests later in another, without a direct call trace linking
+> > the two. Such bugs are often extremely hard to debug with existing tools.
+> > These scenarios are demonstrated in test 3–5 (silent corruption test, patch 20).
+> > 
+> > ...
+> >
+> >  20 files changed, 1809 insertions(+), 62 deletions(-)
+> 
+> It's obviously a substantial project.  We need to decide whether to add
+> this to Linux.
+> 
+> There are some really important [0/N] changelog details which I'm not
+> immediately seeing:
 
-What's the problem?
+Thanks for the review and questions.
 
-> I think it's not really worth the effort.
+> 
+> Am I correct in thinking that it's x86-only?  If so, what's involved in
+> enabling other architectures?  Is there any such work in progress?
 
-Why?  We really want a clean slate going forward.  Creating a permanent
-split into legacy vs new commands seems very unfortunate.
+Currently yes.
+There are two architecture-specific dependencies:
 
+- Hardware breakpoint (HWPB) modification in atomic context.
+  This has been implemented for x86 in patches 1–3.
+  I think it is not a big problem for other architectures.
+
+- Stack canary locating mechanism, which does not work on parisc:
+  - Automatic canary discovery scans from the stack base to high memory.
+  - This feature is optional; a stack offset address can be provided instead.
+
+Future work could include enabling support for other architectures such
+as arm64 and riscv once their hardware breakpoint implementations allow
+safe modification in atomic context. I do not currently have the
+environment to test those architectures, but the framework was designed
+to be generic and can be extended by contributors familiar with them.
+
+> What motivated the work?  Was there some particular class of failures
+> which you were persistently seeing and wished to fix more efficiently?
+> 
+> Has this code (or something like it) been used in production systems? 
+> If so, by whom and with what results?
+
+The motivation came from silent stack corruption issues. They occur
+rarely but are extremely difficult to debug. I personally encountered
+two such bugs which each took weeks to isolate, and I know similar
+issues exist in other environments. KStackWatch was developed as a
+result of those debugging efforts. It has been used mainly in my own
+debugging environment and verified with controlled test cases
+(patches 17–21). If it had existed earlier, similar bugs could have
+been resolved much faster.
+
+> 
+> Has it actually found some kernel bugs yet?  If so, details please.
+
+It was designed to help diagnose bugs whose existence was already known
+but whose root cause was difficult to locate. So far it has been used
+in my personal environment and can be validated with controlled test
+cases in patches 17–21.
+
+> 
+> Can this be enabled on production systems?  If so, what is the
+> measured runtime overhead?
+
+I believe it can.  The overhead is summarized below.
+
+Without watching:
+  - Per-task context: 2 * sizeof(ulong) + 4 bytes (≈20 bytes on x86_64)
+
+With watching:
+  - Same per-task context as above
+  - One or more preallocated HWBPs (configurable, at least one)
+  - Small additional memory for managing HWBP and context state
+  - Runtime overhead (measured on x86_64):
+
+       Type                 |   Time (ns)  |  Cycles
+       -----------------------------------------------
+       entry with watch     |     10892    |   32620
+       entry without watch  |       159    |     466
+       exit  with watch     |     12541    |   37556
+       exit  without watch  |       124    |     369
+
+Would you prefer that I include the measurement code (used to collect the
+timing and cycle statistics shown above) in the next version of the patch
+set, or submit it separately as an additional patch?
+
+-- 
+Jinchao
