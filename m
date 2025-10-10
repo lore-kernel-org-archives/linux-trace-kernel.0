@@ -1,65 +1,79 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 602D6262FE7;
-	Fri, 10 Oct 2025 15:53:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22D9A201278
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 10 Oct 2025 17:48:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760111583; cv=none; b=fhOyQMo23IWNM5njXLyqks4NNy86IgZVxcRqpaUBIqtFelb3EN7+9O7xp1kwnYF+Nudct8Z+eVYIYL/ymxAfNgUXolwBhVTqHIpSejixgBT9rugxhdy66VBfZ6anjkLWmoE+MlNq3loiF9HdE1eZ7WyR7lOWgHZxkm7Mt1F7YSM=
+	t=1760118497; cv=none; b=nmFUWVGLgokHcCGWbiCQ3IgqiMVu21eHTKVBKkriKQygJjRJ/xH8WWEPLLi7MLoxl4MhKiDuQsaH0w9FkeBHCZbT5K8o6pkaV6dzyCU3PYqENtIqck/0T6zpSzkeg8Oq5t2o+2Xk4ZvDngC10JmMXc7AblZo1/6GThmsiF3baCc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760111583; c=relaxed/simple;
-	bh=DD/abvJw2ItDqp3cRU9yINzo4b8UTYCdngAKkF58aDY=;
+	s=arc-20240116; t=1760118497; c=relaxed/simple;
+	bh=XfqhlII4PjtW4or6k7WVcAjehOR0VEsfSVEyAm2tvpY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WsHZceHo2fNTeRsa5Mr8jlwLoag6WcU7+HhWzXycht8qziKYJ1u9oE1XvnAkYvk0mI9WBDYZ4FbBWoR3d220QTpWUHBxAiKfmBJ7/UsN89of6CTXFeCYfNTbtdkj0zOKS/MFV9UxhwgPcMsAd+I9aQYyA0xWvhEJMvjSFOWn89g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q+NAGFBW; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=DaejyqC6Nmj+LNbFz3cbovkgDEtsiueCqmE32nsS+iPf5/+FsId3Ar04wiNphkwzA5D47+P94I/hj5xn7WRKML1PyZPx9mJJGG7QdL/kTu+GK+Ij67GLQAQEzT0gQVN93c2UKuhf3v96u4t3tot1vxPJsR9nYH6ea+4AE04uplQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U2n2i0DD; arc=none smtp.client-ip=209.85.219.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q+NAGFBW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1760111581; x=1791647581;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=DD/abvJw2ItDqp3cRU9yINzo4b8UTYCdngAKkF58aDY=;
-  b=Q+NAGFBWwIV25qPsKPhjDSvhA/npadGEAwd9Mz10asWcLZ4+Rftqn3DW
-   mUpbwMH8QCb96+R3nb2cK224azR8PI2ywQRqiBeaDXJg6ePe81ylPpD+w
-   UWc+epVtd03t7vZHayDk+mpw82cXUf0Eg/sIcPqEmV2p6Axuyvn2Wv/D3
-   wfm6Ik8Xw0aRaI13kZLuTbyuRkbbviv6rQqwTvOdgkPXcz6OtCYJFsh/i
-   YIMYKbPOZ9DSRC70PT7LlTpr4qxG84jLbwXve66I5jIJPHvAcz3VugicM
-   8MbCX0dHUIFrGJzqRlaohvpG6EFPJs3r8BcyjlY76mmgnOdK6TZ1TLPM0
-   A==;
-X-CSE-ConnectionGUID: QlQpxAwtSYOCUYRvMDHOPQ==
-X-CSE-MsgGUID: x9AF91tQS7SDZY5aaf2C1Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11578"; a="65986451"
-X-IronPort-AV: E=Sophos;i="6.19,219,1754982000"; 
-   d="scan'208";a="65986451"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Oct 2025 08:52:58 -0700
-X-CSE-ConnectionGUID: Z82LRwkHS2OR8R6OHAvESA==
-X-CSE-MsgGUID: ezsRcgzBQwOn6ubOlZuqPg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,219,1754982000"; 
-   d="scan'208";a="186143528"
-Received: from lkp-server01.sh.intel.com (HELO 6a630e8620ab) ([10.239.97.150])
-  by orviesa005.jf.intel.com with ESMTP; 10 Oct 2025 08:52:55 -0700
-Received: from kbuild by 6a630e8620ab with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1v7FQL-0002vZ-1Y;
-	Fri, 10 Oct 2025 15:52:53 +0000
-Date: Fri, 10 Oct 2025 23:52:52 +0800
-From: kernel test robot <lkp@intel.com>
-To: Ryan Chung <seokwoo.chung130@gmail.com>, rostedt@goodmis.org,
-	mhiramat@kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, mathieu.desnoyers@efficios.com,
-	shuah@kernel.org, hca@linux.ibm.com, corbet@lwn.net,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, linux-doc@vger.kernel.org,
-	seokwoo.chung130@gmail.com
-Subject: Re: [PATCH v3 3/5] tracing: fprobe: support comma-separated symbols
- and :entry/:exit
-Message-ID: <202510102331.y36ENO9m-lkp@intel.com>
-References: <20251004235001.133111-4-seokwoo.chung130@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U2n2i0DD"
+Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-80ff41475cdso37522666d6.2
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 10 Oct 2025 10:48:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1760118495; x=1760723295; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=0HDKcRyh3PZKdHNMvnRZkTba9f0/5qU6T/Ayx2+vV5I=;
+        b=U2n2i0DD8pIrZWeBPvIrK0fZ04579t9mXVSX1TOlUvBxlNbI9cnuv9Ts/NwZxbYFc2
+         3HZmc3aqo/nqiXpwOOGJjciyFYGBT4n8y6GnSRbdtVWfYCgwaRO+BoRMrfatVdQCOshA
+         oSN0KgHEqVVutHFAoIhwNSMIKsGuZT1vTz/ptk4/S8ht3wDQkFajhsJQMFOS5l9nTEXa
+         FdE5ia29LDkJQATn1rWS8OauHc7YjriM8QIt2HLTbXO2B/quycPWrv4KuDV0MyAzNRLP
+         jI4SEpOo+iSLGcMtp8DMYK6QxeHVlOJuLWI5LaR8QDqJdrNRpoP4v9bsVnNijffPUDWE
+         Q84w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760118495; x=1760723295;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0HDKcRyh3PZKdHNMvnRZkTba9f0/5qU6T/Ayx2+vV5I=;
+        b=t6Op1LFWPjCCrhbIGnYzbm2x5XyyVwJoCVDR5WjTSpXmP7mR0/MVvUGcVNeBTcYFyE
+         s6LWWQrwwUKhCH7sR8Ncpte6GTDcxfgAa6jm2Dyq3rojRAIqnj2/qTNXVohRCEOUCMwh
+         RVUV3Dv8a/c2gNYypDpqJwbGW6bgr4tdb8Af24cX65g0sXYrZR7qpdraM7rdmOjX5GQx
+         BJJ7uyNccH3YcFIJOGvbd2LJIPDvNNhBht81m6jDpcpdI2EASAiwb+Zi/058IyteCqnU
+         ia3dJWZDa/DNdDEOgF2BLZ3XRvXksNMaZx5lyquXB+PVV1tJzj/4WaqvLsRaip12qlK4
+         p/0g==
+X-Forwarded-Encrypted: i=1; AJvYcCX+YKg/yQ5kMNtPbgGTFYtAlvVTWOXLwF817ETMwPajtIBeHpHx7IUQSHcwNQk3SumJz7p+bsX2QkELGJXULEMSTBU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/giEegisll6xWST7ZW2vXOLiR5rjWbxHbf94xRZGlVataRIYm
+	WoJY63yIpoWjUQ99RaDAyb1BVXrQPpMh1/Htp4QXJ9jPjCnTYeRDNqev
+X-Gm-Gg: ASbGncvDifMM/hgDCXoLcfEM3P/QbydTp6rDn3OBt4G6137Fql+mTksQfAtUKg62FS3
+	fWpeoAhnPHwQl+T2ypzPgwaJsc6sJtV61mI+Qkw2KCG/MK9eSZqv0pdvTBdHJs8Hfkl6WK/PwFq
+	teKPNfwedVD2ns3sgdcarl5W6GGMYxVgSrTYr+95VIo4D4p+hVD3zOOygKtfvJlbfhdkL4GjOL+
+	GTJMFN+yGq0cVYWH/gVjqaYopJ6tC91dhvC5VnwgWX2efrlLseXRlzWWhQUhrXnTXwzdQJzacgD
+	j6kFFfXh92qUbCWKosKZxEGuMG7vq1Tyz0vN5bReoySLJtxThvQZqEDSgCKY8qtL8/rcO/iKi9M
+	941DlTiGrSoIhrtNgj4GaJebYioLBAwDoog2TI78WkljMkiqQ
+X-Google-Smtp-Source: AGHT+IHt1fltqSOQNAwaJvgXJiJNUt/Iy268/HwGtU21DjWYu9BdYiR8Fuy0ro1CN7LEJs+CaTZBBA==
+X-Received: by 2002:ac8:5751:0:b0:4de:74f8:b2a4 with SMTP id d75a77b69052e-4e6ead7789cmr174443161cf.53.1760118494834;
+        Fri, 10 Oct 2025 10:48:14 -0700 (PDT)
+Received: from localhost ([12.22.141.131])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-87bc3574e7esm20215986d6.41.2025.10.10.10.48.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Oct 2025 10:48:14 -0700 (PDT)
+Date: Fri, 10 Oct 2025 13:48:12 -0400
+From: Yury Norov <yury.norov@gmail.com>
+To: Yunhui Cui <cuiyunhui@bytedance.com>
+Cc: paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+	alex@ghiti.fr, rostedt@goodmis.org, mhiramat@kernel.org,
+	mark.rutland@arm.com, peterz@infradead.org, jpoimboe@kernel.org,
+	jbaron@akamai.com, ardb@kernel.org, willy@infradead.org,
+	guoren@kernel.org, ziy@nvidia.com, akpm@linux-foundation.org,
+	bjorn@rivosinc.com, ajones@ventanamicro.com, parri.andrea@gmail.com,
+	cleger@rivosinc.com, yongxuan.wang@sifive.com, inochiama@gmail.com,
+	samuel.holland@sifive.com, charlie@rivosinc.com,
+	conor.dooley@microchip.com, yikming2222@gmail.com,
+	andybnac@gmail.com, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC] riscv: add support for Ziccid
+Message-ID: <aOlG3Mb6_vN4uuA7@yury>
+References: <20251009134514.8549-1-cuiyunhui@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -68,159 +82,208 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251004235001.133111-4-seokwoo.chung130@gmail.com>
+In-Reply-To: <20251009134514.8549-1-cuiyunhui@bytedance.com>
 
-Hi Ryan,
+On Thu, Oct 09, 2025 at 09:45:14PM +0800, Yunhui Cui wrote:
+> The Ziccid extension provides hardware synchronization between
+> Dcache and Icache. With this hardware support, there's no longer
+> a need to trigger remote hart execution of fence.i via IPI.
+> 
+> Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
+> ---
+>  arch/riscv/include/asm/cacheflush.h |  4 ++--
+>  arch/riscv/include/asm/hwcap.h      |  1 +
+>  arch/riscv/include/asm/switch_to.h  | 10 ++++++++++
+>  arch/riscv/kernel/cpufeature.c      |  1 +
+>  arch/riscv/kernel/ftrace.c          |  2 +-
+>  arch/riscv/kernel/hibernate.c       |  2 +-
+>  arch/riscv/kernel/jump_label.c      |  2 +-
+>  arch/riscv/mm/cacheflush.c          | 16 ++++++++++++++--
+>  8 files changed, 31 insertions(+), 7 deletions(-)
+> 
+> diff --git a/arch/riscv/include/asm/cacheflush.h b/arch/riscv/include/asm/cacheflush.h
+> index 0092513c3376c..3a8cdf30bb4b1 100644
+> --- a/arch/riscv/include/asm/cacheflush.h
+> +++ b/arch/riscv/include/asm/cacheflush.h
+> @@ -68,7 +68,7 @@ static inline void flush_cache_vmap(unsigned long start, unsigned long end)
+>  
+>  #else /* CONFIG_SMP */
+>  
+> -void flush_icache_all(void);
+> +void flush_icache_all(bool force);
+>  void flush_icache_mm(struct mm_struct *mm, bool local);
+>  
+>  #endif /* CONFIG_SMP */
+> @@ -80,7 +80,7 @@ void flush_icache_mm(struct mm_struct *mm, bool local);
+>  #define flush_icache_range flush_icache_range
+>  static inline void flush_icache_range(unsigned long start, unsigned long end)
+>  {
+> -	flush_icache_all();
+> +	flush_icache_all(false);
+>  }
+>  
+>  extern unsigned int riscv_cbom_block_size;
+> diff --git a/arch/riscv/include/asm/hwcap.h b/arch/riscv/include/asm/hwcap.h
+> index affd63e11b0a3..ad97d8955b501 100644
+> --- a/arch/riscv/include/asm/hwcap.h
+> +++ b/arch/riscv/include/asm/hwcap.h
+> @@ -106,6 +106,7 @@
+>  #define RISCV_ISA_EXT_ZAAMO		97
+>  #define RISCV_ISA_EXT_ZALRSC		98
+>  #define RISCV_ISA_EXT_ZICBOP		99
+> +#define RISCV_ISA_EXT_ZICCID		100
+>  
+>  #define RISCV_ISA_EXT_XLINUXENVCFG	127
+>  
+> diff --git a/arch/riscv/include/asm/switch_to.h b/arch/riscv/include/asm/switch_to.h
+> index 0e71eb82f920c..b8a9e455efe9e 100644
+> --- a/arch/riscv/include/asm/switch_to.h
+> +++ b/arch/riscv/include/asm/switch_to.h
+> @@ -98,7 +98,17 @@ static inline bool switch_to_should_flush_icache(struct task_struct *task)
+>  	bool stale_thread = task->thread.force_icache_flush;
+>  	bool thread_migrated = smp_processor_id() != task->thread.prev_cpu;
+>  
+> +	asm goto(ALTERNATIVE("nop", "j %l[ziccid]", 0, RISCV_ISA_EXT_ZICCID, 1)
+> +		 : : : : ziccid);
+> +
 
-kernel test robot noticed the following build errors:
+Instead of opencoded 'asm goto', can you try the riscv_has_extension() here
+and everywhere?
 
-[auto build test ERROR on v6.17]
-[also build test ERROR on linus/master next-20251010]
-[cannot apply to trace/for-next]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+	if (riscv_has_extension_likely(RISCV_ISA_EXT_ZICCID))
+          	return thread_migrated && (stale_mm || stale_thread);
+        else
+        	return thread_migrated && stale_thread;
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Ryan-Chung/docs-tracing-fprobe-document-list-filters-and-entry-exit/20251010-111713
-base:   v6.17
-patch link:    https://lore.kernel.org/r/20251004235001.133111-4-seokwoo.chung130%40gmail.com
-patch subject: [PATCH v3 3/5] tracing: fprobe: support comma-separated symbols and :entry/:exit
-config: x86_64-rhel-9.4 (https://download.01.org/0day-ci/archive/20251010/202510102331.y36ENO9m-lkp@intel.com/config)
-compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251010/202510102331.y36ENO9m-lkp@intel.com/reproduce)
+Thanks,
+Yury
+                
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202510102331.y36ENO9m-lkp@intel.com/
-
-All error/warnings (new ones prefixed by >>):
-
-   kernel/trace/trace_fprobe.c: In function 'parse_fprobe_spec':
->> kernel/trace/trace_fprobe.c:274:28: error: assignment of read-only location '*p'
-     274 |                         *p = '\0';
-         |                            ^
-   kernel/trace/trace_fprobe.c:276:28: error: assignment of read-only location '*p'
-     276 |                         *p = '\0';
-         |                            ^
-   kernel/trace/trace_fprobe.c: In function 'parse_symbol_and_return':
->> kernel/trace/trace_fprobe.c:1281:31: error: 'nofilter' undeclared (first use in this function); did you mean 'filter'?
-    1281 |         char *filter = NULL; *nofilter = NULL;
-         |                               ^~~~~~~~
-         |                               filter
-   kernel/trace/trace_fprobe.c:1281:31: note: each undeclared identifier is reported only once for each function it appears in
-   kernel/trace/trace_fprobe.c: In function 'trace_fprobe_create_internal':
-   kernel/trace/trace_fprobe.c:1355:14: warning: unused variable 'has_wild' [-Wunused-variable]
-    1355 |         bool has_wild = false;
-         |              ^~~~~~~~
-   kernel/trace/trace_fprobe.c: At top level:
->> kernel/trace/trace_fprobe.c:1275:12: warning: 'parse_symbol_and_return' defined but not used [-Wunused-function]
-    1275 | static int parse_symbol_and_return(int argc, const char *argv[],
-         |            ^~~~~~~~~~~~~~~~~~~~~~~
-
-
-vim +274 kernel/trace/trace_fprobe.c
-
-   233	
-   234	static int parse_fprobe_spec(const char *in, bool is_tracepoint,
-   235			char **base, bool *is_return, bool *list_mode,
-   236			char **filter, char **nofilter)
-   237	{
-   238		const char *p;
-   239		char *work = NULL;
-   240		char *b = NULL, *f = NULL, *nf = NULL;
-   241		bool legacy_ret = false;
-   242		bool list = false;
-   243		int ret = 0;
-   244	
-   245		if (!in || !base || !is_return || !list_mode || !filter || !nofilter)
-   246			return -EINVAL;
-   247	
-   248		*base = NULL; *filter = NULL; *nofilter = NULL;
-   249		*is_return = false; *list_mode = false;
-   250	
-   251		if (is_tracepoint) {
-   252			if (strchr(in, ',') || strchr(in, ':'))
-   253				return -EINVAL;
-   254			if (strstr(in, "%return"))
-   255				return -EINVAL;
-   256			for (p = in; *p; p++)
-   257				if (!isalnum(*p) && *p != '_')
-   258					return -EINVAL;
-   259			b = kstrdup(in, GFP_KERNEL);
-   260			if (!b)
-   261				return -ENOMEM;
-   262			*base = b;
-   263			return 0;
-   264		}
-   265	
-   266		work = kstrdup(in, GFP_KERNEL);
-   267		if (!work)
-   268			return -ENOMEM;
-   269	
-   270		p = strstr(work, "%return");
-   271		if (p) {
-   272			if (!strcmp(p, ":exit")) {
-   273				*is_return = true;
- > 274				*p = '\0';
-   275			} else if (!strcmp(p, ":entry")) {
-   276				*p = '\0';
-   277			} else {
-   278				ret = -EINVAL;
-   279				goto out;
-   280			}
-   281		}
-   282	
-   283		list = !!strchr(work, ',') || has_wildcard(work);
-   284		if (legacy_ret)
-   285			*is_return = true;
-   286	
-   287		b = kstrdup(work, GFP_KERNEL);
-   288		if (!b) {
-   289			ret = -ENOMEM;
-   290			goto out;
-   291		}
-   292	
-   293		if (list) {
-   294			char *tmp = b, *tok;
-   295			size_t fsz = strlen(b) + 1, nfsz = strlen(b) + 1;
-   296	
-   297			f = kzalloc(fsz, GFP_KERNEL);
-   298			nf = kzalloc(nfsz, GFP_KERNEL);
-   299			if (!f || !nf) {
-   300				ret = -ENOMEM;
-   301				goto out;
-   302			}
-   303	
-   304			while ((tok = strsep(&tmp, ",")) != NULL) {
-   305				char *dst;
-   306				bool neg = (*tok == '!');
-   307	
-   308				if (*tok == '\0')
-   309					continue;
-   310				if (neg)
-   311					tok++;
-   312				dst = neg ? nf : f;
-   313				if (dst[0] != '\0')
-   314					strcat(dst, ",");
-   315				strcat(dst, tok);
-   316			}
-   317			*list_mode = true;
-   318		}
-   319	
-   320		*base = b; b = NULL;
-   321		*filter = f; f = NULL;
-   322		*nofilter = nf; nf = NULL;
-   323	
-   324	out:
-   325		kfree(work);
-   326		kfree(b);
-   327		kfree(f);
-   328		kfree(nf);
-   329		return ret;
-   330	}
-   331	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+>  	return thread_migrated && (stale_mm || stale_thread);
+> +
+> +ziccid:
+> +	/*
+> +	 * Process switching writes to SATP, which flushes the pipeline,
+> +	 * so only the thread scenario is considered.
+> +	 */
+> +	return thread_migrated && stale_thread;
+>  #else
+>  	return false;
+>  #endif
+> diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
+> index 67b59699357da..2da82aa2dbf0a 100644
+> --- a/arch/riscv/kernel/cpufeature.c
+> +++ b/arch/riscv/kernel/cpufeature.c
+> @@ -540,6 +540,7 @@ const struct riscv_isa_ext_data riscv_isa_ext[] = {
+>  	__RISCV_ISA_EXT_DATA(svnapot, RISCV_ISA_EXT_SVNAPOT),
+>  	__RISCV_ISA_EXT_DATA(svpbmt, RISCV_ISA_EXT_SVPBMT),
+>  	__RISCV_ISA_EXT_DATA(svvptc, RISCV_ISA_EXT_SVVPTC),
+> +	__RISCV_ISA_EXT_DATA(ziccid, RISCV_ISA_EXT_ZICCID),
+>  };
+>  
+>  const size_t riscv_isa_ext_count = ARRAY_SIZE(riscv_isa_ext);
+> diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
+> index 8d18d6727f0fc..431448e818363 100644
+> --- a/arch/riscv/kernel/ftrace.c
+> +++ b/arch/riscv/kernel/ftrace.c
+> @@ -43,7 +43,7 @@ void arch_ftrace_update_code(int command)
+>  {
+>  	command |= FTRACE_MAY_SLEEP;
+>  	ftrace_modify_all_code(command);
+> -	flush_icache_all();
+> +	flush_icache_all(false);
+>  }
+>  
+>  static int __ftrace_modify_call(unsigned long source, unsigned long target, bool validate)
+> diff --git a/arch/riscv/kernel/hibernate.c b/arch/riscv/kernel/hibernate.c
+> index 671b686c01587..388f10e187bae 100644
+> --- a/arch/riscv/kernel/hibernate.c
+> +++ b/arch/riscv/kernel/hibernate.c
+> @@ -153,7 +153,7 @@ int swsusp_arch_suspend(void)
+>  	} else {
+>  		suspend_restore_csrs(hibernate_cpu_context);
+>  		flush_tlb_all();
+> -		flush_icache_all();
+> +		flush_icache_all(true);
+>  
+>  		/*
+>  		 * Tell the hibernation core that we've just restored the memory.
+> diff --git a/arch/riscv/kernel/jump_label.c b/arch/riscv/kernel/jump_label.c
+> index b4c1a6a3fbd28..680b29f4c09c4 100644
+> --- a/arch/riscv/kernel/jump_label.c
+> +++ b/arch/riscv/kernel/jump_label.c
+> @@ -51,5 +51,5 @@ bool arch_jump_label_transform_queue(struct jump_entry *entry,
+>  
+>  void arch_jump_label_transform_apply(void)
+>  {
+> -	flush_icache_all();
+> +	flush_icache_all(false);
+>  }
+> diff --git a/arch/riscv/mm/cacheflush.c b/arch/riscv/mm/cacheflush.c
+> index d83a612464f6c..01f9f7a45e8d2 100644
+> --- a/arch/riscv/mm/cacheflush.c
+> +++ b/arch/riscv/mm/cacheflush.c
+> @@ -12,19 +12,24 @@
+>  #ifdef CONFIG_SMP
+>  
+>  #include <asm/sbi.h>
+> +#include <asm/alternative-macros.h>
+>  
+>  static void ipi_remote_fence_i(void *info)
+>  {
+>  	return local_flush_icache_all();
+>  }
+>  
+> -void flush_icache_all(void)
+> +void flush_icache_all(bool force)
+>  {
+>  	local_flush_icache_all();
+>  
+>  	if (num_online_cpus() < 2)
+>  		return;
+>  
+> +	if (!force)
+> +		asm goto(ALTERNATIVE("nop", "j %l[ziccid]", 0,
+> +			RISCV_ISA_EXT_ZICCID, 1)
+> +			: : : : ziccid);
+>  	/*
+>  	 * Make sure all previous writes to the D$ are ordered before making
+>  	 * the IPI. The RISC-V spec states that a hart must execute a data fence
+> @@ -41,6 +46,7 @@ void flush_icache_all(void)
+>  		sbi_remote_fence_i(NULL);
+>  	else
+>  		on_each_cpu(ipi_remote_fence_i, NULL, 1);
+> +ziccid:;
+>  }
+>  EXPORT_SYMBOL(flush_icache_all);
+>  
+> @@ -61,13 +67,17 @@ void flush_icache_mm(struct mm_struct *mm, bool local)
+>  
+>  	preempt_disable();
+>  
+> +	local_flush_icache_all();
+> +
+> +	asm goto(ALTERNATIVE("nop", "j %l[ziccid]", 0, RISCV_ISA_EXT_ZICCID, 1)
+> +		 : : : : ziccid);
+> +
+>  	/* Mark every hart's icache as needing a flush for this MM. */
+>  	mask = &mm->context.icache_stale_mask;
+>  	cpumask_setall(mask);
+>  	/* Flush this hart's I$ now, and mark it as flushed. */
+>  	cpu = smp_processor_id();
+>  	cpumask_clear_cpu(cpu, mask);
+> -	local_flush_icache_all();
+>  
+>  	/*
+>  	 * Flush the I$ of other harts concurrently executing, and mark them as
+> @@ -91,6 +101,8 @@ void flush_icache_mm(struct mm_struct *mm, bool local)
+>  		on_each_cpu_mask(&others, ipi_remote_fence_i, NULL, 1);
+>  	}
+>  
+> +ziccid:;
+> +
+>  	preempt_enable();
+>  }
+>  
+> -- 
+> 2.39.5
