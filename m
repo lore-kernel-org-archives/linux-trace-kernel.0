@@ -1,47 +1,47 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96A272FB08D
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 10 Oct 2025 15:41:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B79822FB095
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 10 Oct 2025 15:41:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760110890; cv=none; b=R9l9kX7sMnypZGh64w5+y5umXIX9kcPD6e72QLGDzhhDWMAENCqZwmIF0469hlh9CHiF05O6+JO48QfEerS/wnTlf1EPt7O1F3aiurpj4nTZ5VbxEmA2tJ4V+MSoM8FgDVw131JqVILzVPWMbuJy9GnT2a/ZXaPDDQidsAGgkCA=
+	t=1760110901; cv=none; b=ROarzEWGF+KRUB77LAMoCV9p1WDUdISI/HyfcsexM3kUgCMptjd5N/H6gPfa+oc6qfeIuDYqXWMdnzqs9zL8VIT2/Eu+gHI7nMxrnEjOUc8BjyrpGa5hUqdFwfTi7RQ/lEUD9DoIQjlxw6PhUpxNogkpoFgxQrUCojGpMkNBWZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760110890; c=relaxed/simple;
-	bh=Vmp9UofPiLoCmfrecHPI/o6bW4hlO4l5DZzCrBrwtF8=;
+	s=arc-20240116; t=1760110901; c=relaxed/simple;
+	bh=MXaUkaUEuE4uWCCUTHZ1NY8rHU0uR53SWhSpjfmVb28=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=vAtpaG+llVochhrFX+9ARLaUApUi5GmJRKZVXe32cPB0nu/IXcz7zxAzUmFjOQ+JCxI/F+eeeVI2CvZGMhw6QLqyLmnqhIgOPmuIm9t6drzOqiCAhyuBoo+Oud+FGE7OpwtDyzN0dGBJ7xXOB8ZQZj37xRfZmiG1Pa1E7IcvVho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CIEyHMZ2; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=TnwO/6eAW8XCPmb+7x6HFNi0PTCutGJMZysLOEw5npFUzIfrFaj+Cr1nxZnCOC4fwzegqllZ1UylF2FB8ijIR7Cr7fzdd5tu6wYNtOo6f5jGzv3FpYIZZL5Vk4n8qKEn9ieDJHGO4RX2xkCytTNa2Vd99t3xXHJhMrcIPKUntgg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BcB2GuUt; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CIEyHMZ2"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BcB2GuUt"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1760110887;
+	s=mimecast20190719; t=1760110899;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=me4lML/uc32hdzY1DEhxwzrAH42jFfLe3M5aQyxycsw=;
-	b=CIEyHMZ2XxW7AVtAZSvbRO6XKzxXCJE7qze2u8UEslk7tQfXec5lOB1/hEQiJhoWVZQniv
-	2uMdfomjgHFDXiGoxl9NQvolehEG5rxviSb9tBFMNhS2H6xozVaPS9nZNuWMVUKWq6nyAA
-	4MQ89gfc+9oIIJLqyF7dBRO0LFBSjA8=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	bh=1HcZccm+EFWDfH2vO39s4AfZQgOMomacAD6OZP6p42M=;
+	b=BcB2GuUt6UH3B3HJba82SIuEwSn4s2EttO+cEAci0zW+D/ePnmGMQBHNJKFC+hyvQintAl
+	hcIQFlsWSYde7f7J2m3nkqO2NllceMJCFEmq0CgEq6AtF4A3g2zczyBl/imGjifQcpzvUU
+	euuHFdDYtySEgcvKdLWO65qDcDcHxQM=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-443-fGVpFfnMMJu9yBgKyRgzVg-1; Fri,
- 10 Oct 2025 11:41:24 -0400
-X-MC-Unique: fGVpFfnMMJu9yBgKyRgzVg-1
-X-Mimecast-MFC-AGG-ID: fGVpFfnMMJu9yBgKyRgzVg_1760110877
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-583-zXwbd8ArM3KVjfpSaoTGFw-1; Fri,
+ 10 Oct 2025 11:41:36 -0400
+X-MC-Unique: zXwbd8ArM3KVjfpSaoTGFw-1
+X-Mimecast-MFC-AGG-ID: zXwbd8ArM3KVjfpSaoTGFw_1760110892
 Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 56F051800366;
-	Fri, 10 Oct 2025 15:41:16 +0000 (UTC)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B3CB21944F11;
+	Fri, 10 Oct 2025 15:41:31 +0000 (UTC)
 Received: from vschneid-thinkpadt14sgen2i.remote.csb (unknown [10.45.224.29])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id ED43B18004D8;
-	Fri, 10 Oct 2025 15:41:00 +0000 (UTC)
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D5F991800576;
+	Fri, 10 Oct 2025 15:41:16 +0000 (UTC)
 From: Valentin Schneider <vschneid@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org,
@@ -52,7 +52,8 @@ To: linux-kernel@vger.kernel.org,
 	linux-riscv@lists.infradead.org,
 	linux-arch@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>,
+Cc: "Paul E. McKenney" <paulmck@kernel.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Ingo Molnar <mingo@redhat.com>,
 	Borislav Petkov <bp@alien8.de>,
@@ -61,10 +62,9 @@ Cc: Josh Poimboeuf <jpoimboe@kernel.org>,
 	Andy Lutomirski <luto@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
 	Paolo Bonzini <pbonzini@redhat.com>,
 	Arnd Bergmann <arnd@arndb.de>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
 	Jason Baron <jbaron@akamai.com>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Ard Biesheuvel <ardb@kernel.org>,
@@ -90,9 +90,9 @@ Cc: Josh Poimboeuf <jpoimboe@kernel.org>,
 	Marcelo Tosatti <mtosatti@redhat.com>,
 	Daniel Wagner <dwagner@suse.de>,
 	Petr Tesarik <ptesarik@suse.com>
-Subject: [PATCH v6 02/29] objtool: Flesh out warning related to pv_ops[] calls
-Date: Fri, 10 Oct 2025 17:38:12 +0200
-Message-ID: <20251010153839.151763-3-vschneid@redhat.com>
+Subject: [PATCH v6 03/29] rcu: Add a small-width RCU watching counter debug option
+Date: Fri, 10 Oct 2025 17:38:13 +0200
+Message-ID: <20251010153839.151763-4-vschneid@redhat.com>
 In-Reply-To: <20251010153839.151763-1-vschneid@redhat.com>
 References: <20251010153839.151763-1-vschneid@redhat.com>
 Precedence: bulk
@@ -104,28 +104,112 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-I had to look into objtool itself to understand what this warning was
-about; make it more explicit.
+A later commit will reduce the size of the RCU watching counter to free up
+some bits for another purpose. Paul suggested adding a config option to
+test the extreme case where the counter is reduced to its minimum usable
+width for rcutorture to poke at, so do that.
 
+Make it only configurable under RCU_EXPERT. While at it, add a comment to
+explain the layout of context_tracking->state.
+
+Link: http://lore.kernel.org/r/4c2cb573-168f-4806-b1d9-164e8276e66a@paulmck-laptop
+Suggested-by: Paul E. McKenney <paulmck@kernel.org>
 Signed-off-by: Valentin Schneider <vschneid@redhat.com>
-Acked-by: Josh Poimboeuf <jpoimboe@kernel.org>
+Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
 ---
- tools/objtool/check.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/context_tracking_state.h | 44 ++++++++++++++++++++++----
+ kernel/rcu/Kconfig.debug               | 15 +++++++++
+ 2 files changed, 52 insertions(+), 7 deletions(-)
 
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 5f574ab163cb2..fa9e64a38b2b6 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -3361,7 +3361,7 @@ static bool pv_call_dest(struct objtool_file *file, struct instruction *insn)
+diff --git a/include/linux/context_tracking_state.h b/include/linux/context_tracking_state.h
+index 7b8433d5a8efe..0b81248aa03e2 100644
+--- a/include/linux/context_tracking_state.h
++++ b/include/linux/context_tracking_state.h
+@@ -18,12 +18,6 @@ enum ctx_state {
+ 	CT_STATE_MAX		= 4,
+ };
  
- 	list_for_each_entry(target, &file->pv_ops[idx].targets, pv_target) {
- 		if (!target->sec->noinstr) {
--			WARN("pv_ops[%d]: %s", idx, target->name);
-+			WARN("pv_ops[%d]: indirect call to %s() leaves .noinstr.text section", idx, target->name);
- 			file->pv_ops[idx].clean = false;
- 		}
- 	}
+-/* Odd value for watching, else even. */
+-#define CT_RCU_WATCHING CT_STATE_MAX
+-
+-#define CT_STATE_MASK (CT_STATE_MAX - 1)
+-#define CT_RCU_WATCHING_MASK (~CT_STATE_MASK)
+-
+ struct context_tracking {
+ #ifdef CONFIG_CONTEXT_TRACKING_USER
+ 	/*
+@@ -44,9 +38,45 @@ struct context_tracking {
+ #endif
+ };
+ 
++/*
++ * We cram two different things within the same atomic variable:
++ *
++ *                     CT_RCU_WATCHING_START  CT_STATE_START
++ *                                |                |
++ *                                v                v
++ *     MSB [ RCU watching counter ][ context_state ] LSB
++ *         ^                       ^
++ *         |                       |
++ * CT_RCU_WATCHING_END        CT_STATE_END
++ *
++ * Bits are used from the LSB upwards, so unused bits (if any) will always be in
++ * upper bits of the variable.
++ */
+ #ifdef CONFIG_CONTEXT_TRACKING
++#define CT_SIZE (sizeof(((struct context_tracking *)0)->state) * BITS_PER_BYTE)
++
++#define CT_STATE_WIDTH bits_per(CT_STATE_MAX - 1)
++#define CT_STATE_START 0
++#define CT_STATE_END   (CT_STATE_START + CT_STATE_WIDTH - 1)
++
++#define CT_RCU_WATCHING_MAX_WIDTH (CT_SIZE - CT_STATE_WIDTH)
++#define CT_RCU_WATCHING_WIDTH     (IS_ENABLED(CONFIG_RCU_DYNTICKS_TORTURE) ? 2 : CT_RCU_WATCHING_MAX_WIDTH)
++#define CT_RCU_WATCHING_START     (CT_STATE_END + 1)
++#define CT_RCU_WATCHING_END       (CT_RCU_WATCHING_START + CT_RCU_WATCHING_WIDTH - 1)
++#define CT_RCU_WATCHING           BIT(CT_RCU_WATCHING_START)
++
++#define CT_STATE_MASK        GENMASK(CT_STATE_END,        CT_STATE_START)
++#define CT_RCU_WATCHING_MASK GENMASK(CT_RCU_WATCHING_END, CT_RCU_WATCHING_START)
++
++#define CT_UNUSED_WIDTH (CT_RCU_WATCHING_MAX_WIDTH - CT_RCU_WATCHING_WIDTH)
++
++static_assert(CT_STATE_WIDTH        +
++	      CT_RCU_WATCHING_WIDTH +
++	      CT_UNUSED_WIDTH       ==
++	      CT_SIZE);
++
+ DECLARE_PER_CPU(struct context_tracking, context_tracking);
+-#endif
++#endif	/* CONFIG_CONTEXT_TRACKING */
+ 
+ #ifdef CONFIG_CONTEXT_TRACKING_USER
+ static __always_inline int __ct_state(void)
+diff --git a/kernel/rcu/Kconfig.debug b/kernel/rcu/Kconfig.debug
+index 12e4c64ebae15..625d75392647b 100644
+--- a/kernel/rcu/Kconfig.debug
++++ b/kernel/rcu/Kconfig.debug
+@@ -213,4 +213,19 @@ config RCU_STRICT_GRACE_PERIOD
+ 	  when looking for certain types of RCU usage bugs, for example,
+ 	  too-short RCU read-side critical sections.
+ 
++
++config RCU_DYNTICKS_TORTURE
++	bool "Minimize RCU dynticks counter size"
++	depends on RCU_EXPERT && !COMPILE_TEST
++	default n
++	help
++	  This option sets the width of the dynticks counter to its
++	  minimum usable value.  This minimum width greatly increases
++	  the probability of flushing out bugs involving counter wrap,
++	  but it also increases the probability of extending grace period
++	  durations.  This Kconfig option should therefore be avoided in
++	  production due to the consequent increased probability of OOMs.
++
++	  This has no value for production and is only for testing.
++
+ endmenu # "RCU Debugging"
 -- 
 2.51.0
 
