@@ -1,55 +1,56 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DDF317597;
-	Fri, 10 Oct 2025 14:23:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CD5A2F5339;
+	Fri, 10 Oct 2025 14:29:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760106227; cv=none; b=fdZY1KcmRRsu+wClCrDoKe+uuGuCMUCqrJP+vf4LQJO8V9NwdCAISaHtFVSTkWcr4VBbOHn+fJaJSGZKtd8HDbSoOfjimcYDWfdnyn2E88lEhLze381+BDrqxXdu+hNWmDNt0eNLUbRWKBnFxHJ6LjH+eY9P8vo5pXJY8XCeq5s=
+	t=1760106558; cv=none; b=et/+c2iG+wIeIE2sd/FjO0Dq9iqTozEtpcJ5x9Lqu2uWcvrsvVqQX7TxsNLwxJKHPw7LlBabomnZ/CtVlSArKPasoZlBJEqZNQqbj9fETF9+9QvhHqXXAkV+ZQuLRtVqzoyeqhstlk58UehWLXvfu3jWAaXjf0VALtVGgm7rt3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760106227; c=relaxed/simple;
-	bh=vC/N7IozNJkARanX5/Ha8AZGYMhKJmuSp0KN3cJmk9A=;
+	s=arc-20240116; t=1760106558; c=relaxed/simple;
+	bh=QlsZDipxHrbViEEbVVqOtsSC9AZw1QPkMgOMNzC2mh4=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=nS6M2xnrWVxWWTibdhmOucqd+Pe4uZA6QKUtmveXaXD9sRbGgx3cFjG2B9x5i+0UKBXTkS2bOIajl++/cJxNVw1lzas6MQBitNpQ9Z3o2T3vij8SseQn6ODrtgCr+3APpx1N7KLJWXxsUhRWkHi2gDuED4e6cbm1YE8S52/HV60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bzKXwADA; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Pxduouzo; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version:Content-Type; b=LADox/bX9msg1jsClWVWVzWF3XYQWbO3kpJK6YDea55NeiVAwPsZH+Uv2HIKG3y64Z+ptJZs2gAXW+Yw/cfrtjHtsAUfl6mnACMg9YLGXfAzSAmmNzuDbfeUa+a2Uv2EnkUEWU39vJ8e2sAB925dctRgXjR5JVkL7fnK8HRLwBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=TPUz/1N3; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NALgCIVO; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bzKXwADA";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Pxduouzo"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TPUz/1N3";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NALgCIVO"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1760106223;
+	s=2020; t=1760106555;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=VOutbgETX+ROuc8lXZhUEXkf+F2qnmvgorpg8EXYRRk=;
-	b=bzKXwADA2IX/HfUYgOVYJVMYa5gyD+CVsBgJsmhN60xyVfPxN0ccpVbKn+4hNZA8f7GrB8
-	OFtP883iNNQ4oa7jbeAn8Q+r6roqoVEQ4DummwsLkzpEVSEQgvwx4pPz1KNHMFAGN0bI4i
-	Xv4D8ktk7jFQ5bL+ja18XhBIFQmUVKewydHfRtCaZEUtp4Z2JJaht7jLrG5I9Olcem7Azf
-	s8kBhDbGQijDYIs1zg6KvexiUrsViOrLOQmr6XjWnZdaDxCYXcCVs7zL2tKJLJ6iQf08UW
-	1c8R0E3bX8ay8OpD3XndLG9gAMEcbjmclL3+a/7vz/6BqMwM/itvRoS/3YtwbQ==
+	bh=Wpu4coQ327PAjnrLaKBz1LUEuWSOE3u8pf8NdZvuXoY=;
+	b=TPUz/1N3rGzLGmIJBeNWSgnvQ1/5gcH8Yc9mwEeBCVn0XuuhIgLbiSEsViWsewIBjNWRXi
+	J0IDpILvmsqfxJcKhwRs9RL1OlkQMoEcCR5g3sftygPMmcBkYzLA3pCu2J16Sbq207x9ir
+	Yr2SLTHKiFW5tC4icF0iykYf8cnD/k7vasuf+MONkrtv+yHlMXPmvE0toxrLrZxV30x7Rm
+	zHPW/3fcI4jTYwU8I2q2UZmC40FcImQsY88WblQmI319lINkpfuJqBclMe5HUH8rB67S7b
+	SdxwLKCEof5noJIKp9r/mhbuzopBs/rCUJh/UTQ8aXJF4UXBboNrfzeZipd0Jw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1760106223;
+	s=2020e; t=1760106555;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=VOutbgETX+ROuc8lXZhUEXkf+F2qnmvgorpg8EXYRRk=;
-	b=PxduouzorCoRjzUmQE3nqwB8g7AJrHUOnJRvUGn6EgW1ACPHIsiKdwkaEeZFuE/Jc30X+e
-	OwfZgEaLx7mVUcBQ==
+	bh=Wpu4coQ327PAjnrLaKBz1LUEuWSOE3u8pf8NdZvuXoY=;
+	b=NALgCIVOvwFqFkii50DTrxs9Xp+V/Qd5UPq0hdYipoOIOPZv+f5WCjPW02G0+VEEqHVgVL
+	NoJyANpefuQAFkBQ==
 To: Gabriele Monaco <gmonaco@redhat.com>, linux-kernel@vger.kernel.org,
- Jonathan Corbet <corbet@lwn.net>, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>, linux-doc@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
+ Steven Rostedt <rostedt@goodmis.org>, Jonathan Corbet <corbet@lwn.net>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org
 Cc: Gabriele Monaco <gmonaco@redhat.com>, Tomas Glozar <tglozar@redhat.com>,
  Juri Lelli <jlelli@redhat.com>, Clark Williams <williams@redhat.com>, John
  Kacur <jkacur@redhat.com>
-Subject: Re: [PATCH v2 14/20] rv: Add sample hybrid monitors stall
-In-Reply-To: <20250919140954.104920-15-gmonaco@redhat.com>
+Subject: Re: [PATCH v2 15/20] rv: Convert the opid monitor to a hybrid
+ automaton
+In-Reply-To: <20250919140954.104920-16-gmonaco@redhat.com>
 References: <20250919140954.104920-1-gmonaco@redhat.com>
- <20250919140954.104920-15-gmonaco@redhat.com>
-Date: Fri, 10 Oct 2025 16:23:42 +0200
-Message-ID: <87frbqygwh.fsf@yellow.woof>
+ <20250919140954.104920-16-gmonaco@redhat.com>
+Date: Fri, 10 Oct 2025 16:29:14 +0200
+Message-ID: <87cy6uygn9.fsf@yellow.woof>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -59,45 +60,66 @@ MIME-Version: 1.0
 Content-Type: text/plain
 
 Gabriele Monaco <gmonaco@redhat.com> writes:
-> +- Name: stall - wakeup in preemptive
-                   ^^^^^^^^^^^^^^^^^^^^
-                   copy-paste mistake?
-
-> +- Type: per-task hybrid automaton
-> +- Author: Gabriele Monaco <gmonaco@redhat.com>
+> -                 |                     sched_need_resched
+> -                 |                     sched_waking
+> -                 |                     irq_entry
+> -                 |                   +--------------------+
+> -                 v                   v                    |
+> -               +------------------------------------------------------+
+> -  +----------- |                     disabled                         | <+
+> -  |            +------------------------------------------------------+  |
+> -  |              |                 ^                                     |
+> -  |              |          preempt_disable      sched_need_resched      |
+> -  |       preempt_enable           |           +--------------------+    |
+> -  |              v                 |           v                    |    |
+> -  |            +------------------------------------------------------+  |
+> -  |            |                   irq_disabled                       |  |
+> -  |            +------------------------------------------------------+  |
+> -  |                              |             |        ^                |
+> -  |     irq_entry            irq_entry         |        |                |
+> -  |     sched_need_resched       v             |   irq_disable           |
+> -  |     sched_waking +--------------+          |        |                |
+> -  |           +----- |              |     irq_enable    |                |
+> -  |           |      |    in_irq    |          |        |                |
+> -  |           +----> |              |          |        |                |
+> -  |                  +--------------+          |        |          irq_disable
+> -  |                     |                      |        |                |
+> -  | irq_enable          | irq_enable           |        |                |
+> -  |                     v                      v        |                |
+> -  |            #======================================================#  |
+> -  |            H                     enabled                          H  |
+> -  |            #======================================================#  |
+> -  |              |                   ^         ^ preempt_enable     |    |
+> -  |       preempt_disable     preempt_enable   +--------------------+    |
+> -  |              v                   |                                   |
+> -  |            +------------------+  |                                   |
+> -  +----------> | preempt_disabled | -+                                   |
+> -               +------------------+                                      |
+> -                 |                                                       |
+> -                 +-------------------------------------------------------+
+> -
 > +
-> +Description
-> +-----------
-> +
-> +The stalled task (stall) monitor is a sample per-task timed monitor that checks
-> +if tasks are scheduled within a defined threshold after they are ready::
-> +
-> +                        |
-> +                        |
-> +                        v
-> +                      #==================================#
-> +                      H             dequeued             H <+
-> +                      #==================================#  |
-> +                        |                                   |
-> +                        | sched_wakeup;reset(clk)           |
-> +                        v                                   |
-> +                      +----------------------------------+  |
-> +                      |             enqueued             |  |
-> +                      |     clk < threshold_jiffies      |  | sched_switch_wait
-> +                      +----------------------------------+  |
-> +                        |                                   |
-> +                        | sched_switch_in                   |
-> +    sched_switch_in     v                                   |
-> +    sched_wakeup      +----------------------------------+  |
-> +  +------------------ |                                  |  |
-> +  |                   |             running              |  |
-> +  +-----------------> |                                  | -+
-> +                      +----------------------------------+
+> +   |
+> +   |
+> +   v
+> + #=========#   sched_need_resched;irq_off == 1
+> + H         H   sched_waking;irq_off == 1 && preempt_off == 1
+> + H   any   H ------------------------------------------------+
+> + H         H                                                 |
+> + H         H <-----------------------------------------------+
+> + #=========#
 
-I think this monitor does not detect if a task get preempted, but then
-never get scheduled again?
+Nice!
 
-This sample monitor does not have to cover everything obviously, but I'm
-curious if I understand it correct.
+> +		 * If CONFIG_PREEMPTION is enabled, then the tracepoint itself disables
+> +		 * preemption (adding one to the preempt_count). Since we are
+> +		 * interested in the preempt_count at the time the tracepoint was
+> +		 * hit, we consider 1 as still enabled.
+> +		 */
+> +		if (IS_ENABLED(CONFIG_PREEMPTION))
+> +			return (preempt_count() & PREEMPT_MASK) > 1;
+
+FYI, there is plan to keep preemption enabled during tracepoint
+handling. So keep that in mind when this monitor breaks.
 
 Nam
