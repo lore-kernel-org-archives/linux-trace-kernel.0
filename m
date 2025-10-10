@@ -1,455 +1,124 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E6C8748F;
-	Fri, 10 Oct 2025 13:46:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54C8E16A956
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 10 Oct 2025 14:22:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760103981; cv=none; b=O864qx4gy/uYah1n1goCJimHkEmdQz8lmZcdgygZDM8rvYSChWVwkcUKmedDn4C66BTwxKQ3Ut4ZvauJW6aVjTjrhfrte/scW5ahLdHe75ry4XuuBlRfygoz08HolmA127cV4PDsYMifKsckh4lgWsql0BDqIAwwl7OASC4McYY=
+	t=1760106154; cv=none; b=kBBM4rD67sdrj981buJ8GNaFKLbN/mHuSCCBuz5JLrUqswcF87+uv0O3odlu085mRh5Uoqto/b/aVrElHP+YAZ96QYhlFZzNz5hufi+p9qdtCBhv4egKmARnHME8sYZiRgO9mrHn58ZcaJpCcX0qaV6rIAVSZNQhBsTW7Twe5mY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760103981; c=relaxed/simple;
-	bh=kPNz+wVO35rfTqGmyu2J4j0ZFT6HKfYTFOrvglMjJiE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=IB9N/iE9zgY82CEfSZSt/kg1Dri5gQh0/BHSQbED3Ef2dtgLPVA/4vWwpGR7US/Isw0DH/jx3JO+qa+O1krdWxU2lpiNkHNAjKEr6FDoX+plisZA3AnJWWtZKSS3vMVWZMONF/2e4ix6oraGVNpl3qCe3AFYe85oaJE7ELBKv5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=aJcHDJr1; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FtT9nFNK; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1760106154; c=relaxed/simple;
+	bh=7dndPtRevbITE9ffdTBKfJlBf/TdoDeFhl4O+Fj03Os=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CiY4zVTnD43Vh9LnOY62jL3/SlqC1uxICX4lv7OG2INd+so4l6MV7EnTGOp8etjkoy4MK/8hZnpou4E7I5jQQV4f1O9oQcM0lrz+fkq1oe1k2ucZJVPO9ag+V2M0Hf7C/+Fi5UEjTD2MQ6Gv9gRYtlw7ZuQYWA/F8FfTGUJgEwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i0pDKvYp; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aJcHDJr1";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FtT9nFNK"
-From: Nam Cao <namcao@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1760103976;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oqNUuPWLIGP8jGR5s0wYFlz1UpDW74k2GWO4cRG27qE=;
-	b=aJcHDJr1qbTFxAaf8TbH4do2Mw2HjqwtRZYZUQnbgtzfJYqjoFADUIiyNF0Ip439/rSblP
-	l9RhOJnvJdEdpDklXoz9w9H5/E3U/GMxMM09O8A1KK4gufQm1CyF4d7BUZ8hTxuo07d/14
-	OVT2FnMKzAS87RGaBvOsD4zaCSEeZ4oBcu91qlz+dNoYd31oZBkcCEMftaOY67WlVgCy+/
-	tYffV1sGHfpU/t5BTeRZ0mHLV9AwBpP/LLTKXGublFPVXz14voQkHF4DJ+eeJtc7qpYl+R
-	0uMa1nrJ8tQIAXBTqpUmpFniYq2lpWgcMNeW91iCCtVLCZ21c1s0aUA1FRwBtQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1760103976;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oqNUuPWLIGP8jGR5s0wYFlz1UpDW74k2GWO4cRG27qE=;
-	b=FtT9nFNKqbySE5mR/YFeaPYq34jh1KI2bn61tKgZ69yZJCdlg8lQGPukXCyOlK8zLdGExB
-	hwKYMCe/iOVtHvAg==
-To: Gabriele Monaco <gmonaco@redhat.com>, linux-kernel@vger.kernel.org,
- Steven Rostedt <rostedt@goodmis.org>, Jonathan Corbet <corbet@lwn.net>,
- linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Cc: Gabriele Monaco <gmonaco@redhat.com>, Tomas Glozar <tglozar@redhat.com>,
- Juri Lelli <jlelli@redhat.com>, Clark Williams <williams@redhat.com>, John
- Kacur <jkacur@redhat.com>
-Subject: Re: [PATCH v2 13/20] Documentation/rv: Add documentation about
- hybrid automata
-In-Reply-To: <20250919140954.104920-14-gmonaco@redhat.com>
-References: <20250919140954.104920-1-gmonaco@redhat.com>
- <20250919140954.104920-14-gmonaco@redhat.com>
-Date: Fri, 10 Oct 2025 15:46:15 +0200
-Message-ID: <87jz12yimw.fsf@yellow.woof>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i0pDKvYp"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-7841da939deso1954519b3a.2
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 10 Oct 2025 07:22:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1760106152; x=1760710952; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9CuwuYd6rsM2ZdZipwD4GPWKHOfizRXrtv5NCir+9FI=;
+        b=i0pDKvYprOqKTUOvlTb0+Kwemaf4fSwtBs0seoQFE0Utg5Sr+RMW8UILA/0c3A98ji
+         9RNY51cIh+lXObvmkLfZC+62DbEOQudHH3I3jzbC8KlAK3cRYauXcUQJwUz/UY+HLSGG
+         cfjAWYUZ/ptTnnqO1stxYZq/fQzxSncXvVJkPS+WgeWpkeTFif7vkbrzjBYNnps3/x/Y
+         zahLYrbRNKe4zU6dUP9d1IfRGImscJ6QkWvi6zdUjKBZp2ftW3uZjkyjSObad42b8syh
+         JF8Av+bJcGJqs8/9LZQbbGeAgI6kdKS2WKtk3WY62/MqRJ1Tow3yv/MLHFGmD5SAEYeC
+         BI3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760106152; x=1760710952;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9CuwuYd6rsM2ZdZipwD4GPWKHOfizRXrtv5NCir+9FI=;
+        b=r77P7p6qlGJP1ycWvnubl5FWVYqclhK6XYfkJb+8f/32Spi/QLPD1AX4GvaDoZfvGv
+         NiaZV8oIuNGCokFRh7Q6/aiR1IWNZ8sXE08TeLKmbX3XDo969qbEmQVMLPXbwW/ridjj
+         aVNthkaIWSLrkLWRQv8R/uT7VsVUMO1IRSkdMaHg9YgCCNJW4VZqXSjzGHVTFVMn5tDE
+         7HhsN+W9dbCM+TERvqKExmD/SmJkhxTHi9aZ9PAhl2ZOHq3bpqwnc/WzXo6Hr6tl7C+E
+         B6gxTNy+cWDZJU8GY6/YOkg89F2IOYZBn6Ja0Q6GrWF2uQyVKd/KzGe+my7ho1Mg7cwA
+         D29w==
+X-Forwarded-Encrypted: i=1; AJvYcCVFYTTATql1EB5V1VDUZK2XlghLj38gjomFk46/RqPMuAYd6mSmqaQ0gamkGnCnhkxw6k2l+W5292GPZ3vltj+7X2g=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxu9JdvrjfGcxqf34Rs+TRX3oqAV3h3/K0YCIPAaV58mMuAJ2Dp
+	CC6781nFFjD0IGyP00iuMh6EB82m/p/gDYhwYUYMmYnChwPunQnWm/oF
+X-Gm-Gg: ASbGncsU3OcdsguGaRwJp3dTit8DqvYhlM+uYLGj5I1rUDGFsiUcMY2Gm5sITZPIn7G
+	dTqUehkXtSOfMAwwLEgqY0i+WAxe31HG/EfYvPCKtfg5tgxSuJ5yll29sMmhzCoQcQ4P+6wWFp+
+	XAheC7RhIok8BnLIH5AbXYkoyeoTkWBTUMOcbjtplJynzIr3m0ZfKAnBiEATP70B0PyUSIs9fuI
+	myGtxOMnUU0zV0hNwJskCAMr2lJv9OQuL5RgV+100LlaiLjuu9aXdK5IN7q55pI+L0chDpHms/u
+	Mlx/Aq6F3XynpZSXwztjqyJpGtg64+s25z8QQtwDybgTit0ZVO3PicnnIE7UeOL+eA0AfU3CjfE
+	w38Ya5a9MNmV4qhzgEs8hCVZ8gaivJ6+g7LW+3WMJYoTGN2vK2WMHJYnwGeZ2dnahjFqr6rGEYg
+	w=
+X-Google-Smtp-Source: AGHT+IH1+iBy8nFHwk58M7adbDk6CNfAFBIzVimB+kebnYyWU9N7MoWT9usmV/V05WE/d2nIHvMYkQ==
+X-Received: by 2002:a17:903:4b50:b0:246:a543:199 with SMTP id d9443c01a7336-2902741e471mr151973715ad.54.1760106152226;
+        Fri, 10 Oct 2025 07:22:32 -0700 (PDT)
+Received: from [172.20.10.4] ([117.20.154.54])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29034f8f9bbsm58596885ad.121.2025.10.10.07.22.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 Oct 2025 07:22:31 -0700 (PDT)
+Message-ID: <5c68715e-d851-44cc-ba14-0886e515ef45@gmail.com>
+Date: Fri, 10 Oct 2025 22:22:18 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: bpf_errno. Was: [PATCH RFC bpf-next 1/3] bpf: report probe fault
+ to BPF stderr
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Andrii Nakryiko <andrii@kernel.org>,
+ Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+ Menglong Dong <menglong.dong@linux.dev>,
+ Menglong Dong <menglong8.dong@gmail.com>, Alexei Starovoitov
+ <ast@kernel.org>, bpf <bpf@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>,
+ linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, jiang.biao@linux.dev
+References: <20250927061210.194502-1-menglong.dong@linux.dev>
+ <20250927061210.194502-2-menglong.dong@linux.dev>
+ <CAADnVQJAdAxEOWT6avzwq6ZrXhEdovhx3yibgA6T8wnMEnnAjg@mail.gmail.com>
+ <3571660.QJadu78ljV@7950hx> <7f28937c-121a-4ea8-b66a-9da3be8bccad@gmail.com>
+ <CAADnVQLxpUmjbsHeNizRMDkY1a4_gLD0VBFWS8QMYHzpYBs4EQ@mail.gmail.com>
+ <405caf71-315d-46a4-af35-c1fd53470b91@gmail.com>
+ <CAADnVQK8Rw19Z6ib0CfK0cMHUsYBuhEv8_464knZ4qFZ6Gfv2g@mail.gmail.com>
+Content-Language: en-US
+From: Leon Hwang <hffilwlqm@gmail.com>
+In-Reply-To: <CAADnVQK8Rw19Z6ib0CfK0cMHUsYBuhEv8_464knZ4qFZ6Gfv2g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Gabriele Monaco <gmonaco@redhat.com> writes:
-> Describe theory and implementation of hybrid automata in the dedicated
-> page hybrid_automata.rst
-> Include a section on how to integrate a hybrid automaton in
-> monitor_synthesis.rst
-> Also remove a hanging $ in deterministic_automata.rst
->
-> Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
-> ---
->  .../trace/rv/deterministic_automata.rst       |   2 +-
->  Documentation/trace/rv/hybrid_automata.rst    | 340 ++++++++++++++++++
->  Documentation/trace/rv/index.rst              |   1 +
->  Documentation/trace/rv/monitor_synthesis.rst  | 107 ++++++
->  4 files changed, 449 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/trace/rv/hybrid_automata.rst
->
-> diff --git a/Documentation/trace/rv/deterministic_automata.rst b/Documentation/trace/rv/deterministic_automata.rst
-> index d0638f95a455..7a1c2b20ec72 100644
-> --- a/Documentation/trace/rv/deterministic_automata.rst
-> +++ b/Documentation/trace/rv/deterministic_automata.rst
-> @@ -11,7 +11,7 @@ where:
->  - *E* is the finite set of events;
->  - x\ :subscript:`0` is the initial state;
->  - X\ :subscript:`m` (subset of *X*) is the set of marked (or final) states.
-> -- *f* : *X* x *E* -> *X* $ is the transition function. It defines the state
-> +- *f* : *X* x *E* -> *X* is the transition function. It defines the state
->    transition in the occurrence of an event from *E* in the state *X*. In the
->    special case of deterministic automata, the occurrence of the event in *E*
->    in a state in *X* has a deterministic next state from *X*.
-> diff --git a/Documentation/trace/rv/hybrid_automata.rst b/Documentation/trace/rv/hybrid_automata.rst
-> new file mode 100644
-> index 000000000000..ea701114c54d
-> --- /dev/null
-> +++ b/Documentation/trace/rv/hybrid_automata.rst
-> @@ -0,0 +1,340 @@
-> +Hybrid Automata
-> +===============
-> +
-> +Hybrid automata are an extension of deterministic automata, there are several
-> +definitions of hybrid automata in the literature. The adaptation implemented
-> +here is formally denoted by G and defined as a 7-tuple:
-> +
-> +        *G* = { *X*, *E*, *V*, *f*, x\ :subscript:`0`, X\ :subscript:`m`, *i* }
-> +
-> +- *X* is the set of states;
-> +- *E* is the finite set of events;
-> +- *V* is the finite set of environment variables;
-> +- x\ :subscript:`0` is the initial state;
-> +- X\ :subscript:`m` (subset of *X*) is the set of marked (or final) states.
-> +- *f* : *X* x *E* x *C(V)* -> *X* is the transition function.
-> +  It defines the state transition in the occurrence of an event from *E* in the
-> +  state *X*. Unlike deterministic automata, the transition function also
-> +  includes guards from the set of all possible constraints (defined as *C(V)*).
-> +  Guards can be true or false with the valuation of *V* when the event occurs,
-> +  and the transition is possible only when constraints are true. Similarly to
-> +  deterministic automata, the occurrence of the event in *E* in a state in *X*
-> +  has a deterministic next state from *X*, if the guard is true.
-> +- *i* : *X* -> *C'(V)* is the invariant assignment function, this is a
-> +  constraint assigned to each state in *X*, every state in *X* must be left
-> +  before the invariant turns to false. We can omit the representation of
-> +  invariants whose value is true regardless of the valuation of *V*.
 
-This brings back bad memories from university..
 
-> +
-> +The set of all possible constraints *C(V)* is defined according to the
-> +following grammar:
-> +
-> +        g = v < c | v > c | v <= c | v >= c | v == c | v != c | g && g | true
-> +
-> +With v a variable in *V* and c a numerical value.
-> +
-> +We define the special case of hybrid automata whose variables grow with uniform
-> +rates as timed automata. In this case, the variables are called clocks.
-> +As the name implies, timed automata can be used to describe real time.
-> +Additionally, clocks support another type of guard which always evaluates to true:
-> +
-> +        reset(v)
-> +
-> +The reset constraint is used to set the value of a clock to 0.
-> +
-> +The set of invariant constraints *C'(V)* is a subset of *C(V)* including only
-> +constraint of the form:
-> +
-> +        g = v < c | true
-> +
-> +This simplifies the implementation as a clock expiration is a necessary and
-> +sufficient condition for the violation of invariants while still allowing more
-> +complex constraints to be specified as guards.
-> +
-> +It is important to note that any valid hybrid automaton is a valid
-> +deterministic automaton with additional guards and invariants. Those can only
-> +further constrain what transitions are valid but it is not possible to define
-> +transition functions starting from the same state in *X* and the same event in
-> +*E* but ending up in different states in *X* based on the valuation of *V*.
+On 2025/10/9 22:45, Alexei Starovoitov wrote:
+> On Thu, Oct 9, 2025 at 7:15 AM Leon Hwang <hffilwlqm@gmail.com> wrote:
+>>
+>>
+>> The verifier can rewrite 'bpf_reg_aux()' into the following instructions:
+>>
+>> dst_reg = BPF_REG_AUX;
+>> BPF_REG_AUX = 0; /* clear BPF_REG_AUX */
+>>
+>> As for the architecture-specific implementation, BPF_REG_AUX can be
+>> mapped to an appropriate register per arch — for example, r11 on x86_64.
+> 
+> it's taken. There are no free registers.
 
-Perhaps remove the double "valid". Usually people use the phrase "any
-valid A is a valid B" to say that B is a superset of A, but it is
-opposite here.
+Understood.
 
-> +
-> +Examples
-> +--------
-> +
-> +Wip as hybrid automaton
-> +~~~~~~~~~~~~~~~~~~~~~~~
-> +
-> +The 'wip' (wakeup in preemptive) example introduced as a deterministic automaton
-> +can also be described as:
-> +
-> +- *X* = { ``any_thread_running`` }
-> +- *E* = { ``sched_waking`` }
-> +- *V* = { ``preemptive`` }
-> +- x\ :subscript:`0` = ``any_thread_running``
-> +- X\ :subscript:`m` = {``any_thread_running``}
-> +- *f* =
-> +   - *f*\ (``any_thread_running``, ``sched_waking``, ``preemptive==0``) = ``any_thread_running``
-> +- *i* =
-> +   - *i*\ (``any_thread_running``) = ``true``
-> +
-> +Which can be represented graphically as::
-> +
-> +     |
-> +     |
-> +     v
-> +   #====================#   sched_waking;preemptive==0
-> +   H                    H ------------------------------+
-> +   H any_thread_running H                               |
-> +   H                    H <-----------------------------+
-> +   #====================#
-> +
-> +In this example, by using the preemptive state of the system as an environment
-> +variable, we can assert this constraint on ``sched_waking`` without requiring
-> +preemption events (as we would in a deterministic automaton), which can be
-> +useful in case those events are not available or not reliable on the system.
-> +
-> +Since all the invariants in *i* are true, we can omit them from the representation.
-> +
-> +Stall model with guards (iteration 1)
-> +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> +
-> +As a sample timed automaton we can define 'stall' as:
-> +
-> +- *X* = { ``dequeued``, ``enqueued``, ``running``}
-> +- *E* = { ``enqueue``, ``dequeue``, ``switch_in``}
-> +- *V* = { ``clk`` }
-> +- x\ :subscript:`0` = ``dequeue``
-> +- X\ :subscript:`m` = {``dequeue``}
-> +- *f* =
-> +   - *f*\ (``enqueued``, ``switch_in``, ``clk < threshold``) = ``running``
-> +   - *f*\ (``running``, ``dequeue``) = ``dequeued``
-> +   - *f*\ (``dequeued``, ``enqueue``, ``reset(clk)``) = ``enqueued``
-> +- *i* = *omitted as all true*
-> +
-> +Graphically represented as::
-> +
-> +       |
-> +       |
-> +       v
-> +     #============================#
-> +     H          dequeued          H <+
-> +     #============================#  |
-> +       |                             |
-> +       | enqueue; reset(clk)         |
-> +       v                             |
-> +     +----------------------------+  |
-> +     |          enqueued          |  | dequeue
-> +     +----------------------------+  |
-> +       |                             |
-> +       | switch_in; clk < threshold  |
-> +       v                             |
-> +     +----------------------------+  |
-> +     |          running           | -+
-> +     +----------------------------+
-> +
-> +This model imposes that the time between when a task is enqueued (it becomes
-> +runnable) and when the task gets to run must be lower than a certain threshold.
-> +A failure in this model means that the task is starving.
-> +One problem in using guards on the edges in this case is that the model will
-> +not report a failure until the ``switch_in`` event occurs. This means that,
-> +according to the model, it is valid for the task never to run.
-> +
-> +Stall model with invariants (iteration 2)
-> +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> +
-> +The first iteration isn't exactly what was intended, we can change the model as:
-> +
-> +- *X* = { ``dequeued``, ``enqueued``, ``running``}
-> +- *E* = { ``enqueue``, ``dequeue``, ``switch_in``}
-> +- *V* = { ``clk`` }
-> +- x\ :subscript:`0` = ``dequeue``
-> +- X\ :subscript:`m` = {``dequeue``}
-> +- *f* =
-> +   - *f*\ (``enqueued``, ``switch_in``) = ``running``
-> +   - *f*\ (``running``, ``dequeue``) = ``dequeued``
-> +   - *f*\ (``dequeued``, ``enqueue``, ``reset(clk)``) = ``enqueued``
-> +- *i* =
-> +   - *i*\ (``enqueued``) = ``clk < threshold``
-> +
-> +Graphically::
-> +
-> +    |
-> +    |
-> +    v
-> +  #=========================#
-> +  H        dequeued         H <+
-> +  #=========================#  |
-> +    |                          |
-> +    | enqueue; reset(clk)      |
-> +    v                          |
-> +  +-------------------------+  |
-> +  |        enqueued         |  |
-> +  |    clk < threshold      |  | dequeue
-> +  +-------------------------+  |
-> +    |                          |
-> +    | switch_in                |
-> +    v                          |
-> +  +-------------------------+  |
-> +  |         running         | -+
-> +  +-------------------------+
-> +
-> +In this case, we moved the guard as an invariant to the ``enqueued`` state,
-> +this means we not only forbid the occurrence of ``switch_in`` when ``clk`` is
-> +past the threshold but also mark as invalid in case we are *still* in
-> +``enqueued`` after the threshold. This model is effectively in an invalid state
-> +as soon as a task is starving, rather than when the starving task finally runs.
-> +
-> +Hybrid Automaton in C
-> +---------------------
-> +
-> +The definition of hybrid automata in C is heavily based on the deterministic
-> +automata one. Specifically, we add the set of environment variables and the
-> +constraints (both guards on transitions and invariants on states) as follows.
-> +This is a combination of both iterations of the stall example::
-> +
-> +  /* enum representation of X (set of states) to be used as index */
-> +  enum states {
-> +	dequeued = 0,
+It would certainly be beneficial if there were available registers on
+x86_64, as that would enable certain optimizations and improvements.
 
-I think you already removed this " = 0" in an earlier patch?
+In a similar direction, I have been exploring the idea of introducing a
+dedicated BPF_REG_TAIL_CALL register to unify the handling of
+tail_call_cnt in the verifier. This could help standardize the logic
+across architectures, particularly for those that already employ a
+dedicated register for tail calls, and allow JIT backends to simplify
+their tail call implementations accordingly.
 
-> +	enqueued,
-> +	running,
-> +	state_max
-> +  };
-> +
-> +  #define INVALID_STATE state_max
-> +
-> +  /* enum representation of E (set of events) to be used as index */
-> +  enum events {
-> +	dequeue = 0,
-> +	enqueue,
-> +	switch_in,
-> +	event_max
-> +  };
-> +
-> +  /* enum representation of V (set of environment variables) to be used as index */
-> +  enum envs {
-> +	clk = 0,
-> +	env_max,
-> +	env_max_stored = env_max
-> +  };
-> +
-> +  struct automaton {
-> +	char *state_names[state_max];                  // X: the set of states
-> +	char *event_names[event_max];                  // E: the finite set of events
-> +	char *env_names[env_max];                      // V: the finite set of env vars
-> +	unsigned char function[state_max][event_max];  // f: transition function
-> +	unsigned char initial_state;                   // x_0: the initial state
-> +	bool final_states[state_max];                  // X_m: the set of marked states
-> +  };
-> +
-> +  struct automaton aut = {
-> +	.state_names = {
-> +		"dequeued",
-> +		"enqueued",
-> +		"running"
-> +	},
-> +	.event_names = {
-> +		"dequeue",
-> +		"enqueue",
-> +		"switch_in"
-> +	},
-> +	.env_names = {
-> +		"clk"
-> +	},
-> +	.function = {
-> +		{ INVALID_STATE,      enqueued, INVALID_STATE },
-> +		{ INVALID_STATE, INVALID_STATE,       running },
-> +		{      dequeued, INVALID_STATE, INVALID_STATE },
-> +	},
-> +	.initial_state = dequeued,
-> +	.final_states = { 1, 0, 0 },
-> +  };
-> +
-> +  static bool verify_constraint(enum states curr_state, enum events event,
-> +                                enum states next_state)
-> +  {
-> +	bool res = true;
-> +
-> +	/* Validate guards as part of f */
-> +	if (curr_state == enqueued && event == sched_switch_in)
-> +		res = get_env(clk) < threshold;
-> +	else if (curr_state == dequeued && event == sched_wakeup)
-> +		reset_env(clk);
-> +
-> +	/* Validate invariants in i */
-> +    if (next_state == curr_state || !res)
-   ^^^^
-   indentation error ;)
+Thanks,
+Leon
 
-> +		return res;
-> +	if (next_state == enqueued)
-> +		ha_start_timer_jiffy(ha_mon, clk, threshold_jiffies);
-> +	else if (curr_state == enqueued)
-> +		res = !ha_cancel_timer(ha_mon);
-> +	return res;
-> +  }
-> +
-> +The function ``verify_constraint``, here reported as simplified, checks guards,
-> +performs resets and starts timers to validate invariants according to
-> +specification.
-> +Due to the complex nature of environment variables, the user needs to provide
-> +functions to get and reset environment variables, although we provide some
-> +helpers for common types (e.g. clocks with ns or jiffy granularity).
-
-Is there theoretical reason that functions to get/set variables cannot
-be generated? Or you just do not have time for it yet?
-
-> +Since invariants are only defined as clock expirations (e.g. *clk <
-> +threshold*), the callback for timers armed when entering the state is in fact a
-> +failure in the model and triggers a reaction. Leaving the state stops the timer
-> +and checks for its expiration, in case the callback was late.
-
-"callback for timers armed when entering the state is in fact a failure
-in the model and triggers a reaction." - I have problem parsing this
-sentence. How can "callback for timers" be armed? Or do you mean arming
-timers while entering a state is a failure in the model? What is it a failure?
-
-> +It is important to note that timers introduce overhead, if the monitor has
-> +several instances (e.g. all tasks) this can become an issue.
-> +If the monitor is guaranteed to *eventually* leave the state and the incurred
-> +delay to wait for the next event is acceptable, guards can be use to lower the
-> +monitor's overhead.
-
-How about having some sort of a "background task" which periodically
-verifies the invariants?
-
-> +For instance in the stall example, if we are only interested in reporting
-> +stalled tasks, rather than reacting as soon as a task is stalled, and
-> +``switch_in`` is eventually going to occur, we can use the first iteration.
-> +
-> +Graphviz .dot format
-> +--------------------
-> +
-> +Also the Graphviz representation of hybrid automata is an extension of the
-> +deterministic automata one. Specifically, guards can be provided in the event
-> +name separated by ``;``::
-> +
-> +    "state_start" -> "state_dest" [ label = "sched_waking;preemptible==0;reset(clk)" ];
-> +
-> +Invariant can be specified in the state label (not the node name!) separated by ``\n``::
-> +
-> +    "enqueued" [label = "enqueued\nclk < threshold_jiffies"];
-> +
-> +Constraints can be specified as valid C comparisons and allow spaces, the first
-> +element of the comparison must be the clock while the second is a numerical or
-> +parametrised value. Guards allow comparisons to be combined with boolean
-> +operations (``&&`` and ``||``), resets must be separated from other constraints.
-> +
-> +This is the full example of the last version of the 'stall' model in DOT::
-> +
-> +  digraph state_automaton {
-> +      {node [shape = circle] "enqueued"};
-> +      {node [shape = plaintext, style=invis, label=""] "__init_dequeued"};
-> +      {node [shape = doublecircle] "dequeued"};
-> +      {node [shape = circle] "running"};
-> +      "__init_dequeued" -> "dequeued";
-> +      "enqueued" [label = "enqueued\nclk < threshold_jiffies"];
-> +      "running" [label = "running"];
-> +      "dequeued" [label = "dequeued"];
-> +      "enqueued" -> "running" [ label = "switch_in" ];
-> +      "running" -> "dequeued" [ label = "dequeue" ];
-> +      "dequeued" -> "enqueued" [ label = "enqueue;reset(clk)" ];
-> +      { rank = min ;
-> +          "__init_dequeued";
-> +          "dequeued";
-> +      }
-
-Btw, the last block (rank = min) doesn't seem to serve any purpose. But
-the last time I checked months ago, the parser explodes if it is
-removed, not sure if it still does now. But this is another reason that
-I would like a rewrite.
-
-Nam
