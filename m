@@ -1,222 +1,194 @@
-Received: from mail-pf1-f193.google.com (mail-pf1-f193.google.com [209.85.210.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 686E3273810
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 10 Oct 2025 03:39:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04B2E1D6193;
+	Fri, 10 Oct 2025 07:19:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760067544; cv=none; b=W6266I6wYuPFrj1TqexbaG5D1L6QkAED3LOI8qAjV6njsmg+y5yIKdZbX2xtbLyZQ8CzKZbJh8aDXF+EkvHEjXYhEEEN+pTDeh8Y9GDYgZR8wWqs6GyZUJbJSdyrff2h009gwMI4mbpsaRFFaRZ56kw+RiHNaqFTMYjxj+QagPk=
+	t=1760080758; cv=none; b=TsRwX0uA9hqq4HXyCGyMTKXrqeCt3SV7oMMigz8IKxUBJ/kmiC5fdJMHpAMU/iVwLSVRHYgfxA07X7Bc81x+eF4NGU3i9GAKTBEO6sVq2kPRcsHYgMrgjOvwvz8B0UsMxB7eZ+pErHMf9JSDBKjzTtvsWcEK4kUxo1zjsHp68Ek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760067544; c=relaxed/simple;
-	bh=KXynVc/l4z0I/0afxLQ1qgxkhnxUen6TcUANd7bwj6s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TzXCvSUNt2EYUf73412riUl6AsWkA/FW0g0S2jkZXXyjELdMePlsPUT1qHbGvx5lv0pDBn04Jgd8n7t0jHI2z83TKD4M9+jFkiIy83El+2WAvm6PcRzTwlMPXshSr58vYuo55xxMxYUPaKYEk6fXCCkpIOD5XzaYEkYX3CZTdEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N91YdqeG; arc=none smtp.client-ip=209.85.210.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1760080758; c=relaxed/simple;
+	bh=dZmPVpX92Pj11sLiBzxN+17J/+bOnrKtfahRS7r2Y1M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=urn2Mz9mkR3Nktm4tHIui7+NwGuI2blaPQ5ZKR/dnrFCZrQwKYXNJwAdg4jrJaUBmOqdTPjxnnAM1l/yVh37LizGeul3on4Kqt/QVKaq9yUeWFefGkFWJOp+IXRXMbgbx38pE4xZKXl6WWzkYEmLy4tFV4pwtx6rfshMW9Xin4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=SeM57uc8; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N91YdqeG"
-Received: by mail-pf1-f193.google.com with SMTP id d2e1a72fcca58-782e93932ffso1512524b3a.3
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 09 Oct 2025 20:39:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1760067542; x=1760672342; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aBZqKJ/asg/RWAeGZDfmIrxp30oaYR/dgJdIlWzmC0w=;
-        b=N91YdqeGK7Nj2b2+WeiVh5z+Vi8lO4a+1AQxa2tWA0FXf9BMTdaTzpWDd0pAQEGTeR
-         xb5r32XgsneiG3uZ8/DnC3ULjYAw2uwrgtviHWPWvHGGCQ3ATrranhLBaOnS3is4t9Uy
-         41KlBVDbAKrFpyETmVKPM1QJ2WuK0zxSv72PsJZDTZNF6WrtZHYtSqWkVnTqa42uSHwW
-         f+ohqj04AYtSMCeLFfd+kJk3x2xrD6bbc/FbOHpH0iFSN7SlW8wiZfWfC4FKugyBBIyr
-         XG6oYccxEZzFtkZMTxfiewpUFB0I+YmyOPqo3go43/Ui+cAxjcwTQk9GpBmW/ZRlg/af
-         RiaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760067542; x=1760672342;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aBZqKJ/asg/RWAeGZDfmIrxp30oaYR/dgJdIlWzmC0w=;
-        b=E6+3cymwqxBJHfT//e4n6OzeHnM1Cl8Dcm6Yz56571SwdkbC4ShVgJP0geJjC/n7oT
-         Ckfss0l/VYyylqiPkbNKL4/Sv3YRMzRRiA7lcUvUSLi70ZoWHwcU6VbmLfIWe179ay0M
-         LuSWJqItRow3jiGSWTMr1WJo0gKNmHQtkUiptRn4COnNSaMxiYJXVupwY6Zj4Qnmq+ul
-         sVsazO6tRXTplaxJtORKJCHOh8s1GBxxONs3VVwcmWbhmUdE3svKVpQSiXfQKErgxsBI
-         e5Lgu2P9T8ve2RobUpVj0GbdkfmgCSpdkkaxAr72b/U1bCOsu7018frO2bo+JyU0EkYg
-         5OFA==
-X-Forwarded-Encrypted: i=1; AJvYcCXBOMPJMCxclI+bRzr8w67hUg2EIW9Tpt/iSYHUByCSUgYXb6lFzgSNeBVovnY8D4k7xnr3RasLgMw5+32+qkVPhkI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy3R+aBIRS5a5KO/ZpvqwpZ+S9brdc0Pb/YXSNHj9B2mDVMmljP
-	EOgp84InyQaEiw69sZvTRfCXUNR7Bs6S25BjjDew2/BEJunijk5e/c7rP2zRyWbwrkg=
-X-Gm-Gg: ASbGncu1g9wY+yF0QnP2qLIjIob+gV9ifcf9ykX5EIcTbPgvgEVrZu//X/Vu9x+RqED
-	RPlOFa5bjdmUy/BCh5LPhBd9IwM1IaI0aHp7EXuEkuVmUs7vR78nF+/aIbaLa2WYT+I5BzbbQiQ
-	MfqOmcWoAXixPJ/iuu8HCYD5Yuu5foH4OYUMNfBYzJ8OH4d2ex92K3hpT5/kiqS50hfaqHpg+eG
-	w9Pz9cQwLn4poAetA4tsRRI4L+G9SPeWlR8l3TWP0nzidtONx3WVzM928Xanp5KysdZVmwfxF+4
-	AIwP4jXcRq/PDpT7z8cRyIZp4EzIwviUDcjLICN35ou42XsjKWko6M3AZt/q9T9w/Eg9Ow7QLOC
-	Awn93zIPwxNlk098CHIH11Z7fGDyimj9Hxn/FZQ==
-X-Google-Smtp-Source: AGHT+IG1pii1a/6UxHO3ZsdaqVmhRYM3KeTUX2lb00NzJ4iCKSEU4O/XYpU3GYBm0sSAc3AywoQaSQ==
-X-Received: by 2002:a05:6a20:938e:b0:309:99e3:c6f5 with SMTP id adf61e73a8af0-32da83e68a9mr14172182637.48.1760067542542;
-        Thu, 09 Oct 2025 20:39:02 -0700 (PDT)
-Received: from 7940hx ([43.129.244.20])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7992d993853sm1260148b3a.74.2025.10.09.20.38.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Oct 2025 20:39:02 -0700 (PDT)
-From: Menglong Dong <menglong8.dong@gmail.com>
-X-Google-Original-From: Menglong Dong <dongml2@chinatelecom.cn>
-To: mhiramat@kernel.org
-Cc: rostedt@goodmis.org,
-	mathieu.desnoyers@efficios.com,
-	jiang.biao@linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: [PATCH v2 2/2] lib/test_fprobe: add testcase for mixed fprobe
-Date: Fri, 10 Oct 2025 11:38:47 +0800
-Message-ID: <20251010033847.31008-3-dongml2@chinatelecom.cn>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20251010033847.31008-1-dongml2@chinatelecom.cn>
-References: <20251010033847.31008-1-dongml2@chinatelecom.cn>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="SeM57uc8"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 599JTYvg012205;
+	Fri, 10 Oct 2025 07:17:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=8NSNiF
+	sBW58bMpvfBw6u6e82XSmQJRrNFyDoqKUgEsc=; b=SeM57uc8bnAoZNCI9CTzrP
+	wJ3mf6WRZD1xbN/V9Mk6cg5TI/q1z7ZTagbbrKY4dW8+hbKA4O2T2jWXCamHLn15
+	boxTYcHL1aiX2qmLk0Zwz3siRTkZ/bTjRF8vu0KX/VdhD1RSCDrtYDJSMTEVe4H+
+	S70t7nkoNzG3b69kH5CYk9fyTOpVrxeFJnN0lMo2mLBEz52zP8uyXl+lHG5e7y9U
+	Uvy1mi9EwkA5oHeiWzVZr4DLHdj5GSyyFWL+kck0jkIaZ9609kxc3vD8I9CbIuWM
+	v4SQX+GnGVvkjjZD7iWF43xwVC8TvDMGsmuGlVaaGFyuOzwxpLz2AjXeThKZEjIw
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 49nv7yhaa4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 10 Oct 2025 07:17:42 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 59A7Aceb025936;
+	Fri, 10 Oct 2025 07:17:41 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 49nv7yha9y-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 10 Oct 2025 07:17:41 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 59A3bR1l020971;
+	Fri, 10 Oct 2025 07:17:40 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 49nv9n0nbp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 10 Oct 2025 07:17:40 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 59A7HcGO51183908
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 10 Oct 2025 07:17:38 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id CF75020204;
+	Fri, 10 Oct 2025 07:17:26 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9D6C920206;
+	Fri, 10 Oct 2025 07:17:22 +0000 (GMT)
+Received: from [9.78.106.240] (unknown [9.78.106.240])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 10 Oct 2025 07:17:22 +0000 (GMT)
+Message-ID: <79946463-4742-4919-9d56-927a0a6f1c7c@linux.ibm.com>
+Date: Fri, 10 Oct 2025 12:47:21 +0530
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] powerpc64/bpf: support direct_call on livepatch function
+To: Naveen N Rao <naveen@kernel.org>
+Cc: Madhavan Srinivasan <maddy@linux.ibm.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>, bpf@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>, Song Liu <songliubraving@fb.com>,
+        Jiri Olsa <jolsa@kernel.org>, Viktor Malik <vmalik@redhat.com>,
+        live-patching@vger.kernel.org, Josh Poimboeuf <jpoimboe@kernel.org>,
+        Joe Lawrence
+ <joe.lawrence@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>, linux-trace-kernel@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shung-Hsi Yu <shung-hsi.yu@suse.com>
+References: <20251002192755.86441-1-hbathini@linux.ibm.com>
+ <amwerofvasp7ssmq3zlrjakqj5aygyrgplcqzweno4ef42tiav@uex2ildqjvx2>
+ <17f49a63-eccb-4075-91dd-b1f37aa762c7@linux.ibm.com>
+ <unegysw3bihg32od7aham3npsdpm5govboo3uglorwsrjqfqfk@pbyzwwztmqtc>
+ <42d72061-3d23-43db-bb02-d5f75333c924@linux.ibm.com>
+ <dvvv5cytyak2iquer7d6g57ttum3qcckupyahsqsmvpzfjbyni@wbsr77swnrcl>
+Content-Language: en-US
+From: Hari Bathini <hbathini@linux.ibm.com>
+In-Reply-To: <dvvv5cytyak2iquer7d6g57ttum3qcckupyahsqsmvpzfjbyni@wbsr77swnrcl>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: pYLSquh4ZIkQZb5wIRM6lSn3LVYuqdhV
+X-Proofpoint-ORIG-GUID: qHtgOYHeiHKhlNUjhBuOnuAh19VFb8xY
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDA4MDEyMSBTYWx0ZWRfX6yj8xu1EemA4
+ RvjxPaq881ftUtrEBrFFd6UU/nqT5VtIxgwqFfHn/TiKxXbt1sNYDAqQ0uEUDIojvMZ43wx/awU
+ G2UuB1aW4fXCCFr6g9Q2SPqZfJsnLiEvScre/OWxoLqhiZokkjWImMq9GYElMf8Uj/PqmAlNjWq
+ 6VdzamwAzocAMTad0PFJptUiSb76JMXu9HvWDrsC9pPukpIUJCX4GxERqfunur2nIF1Dwqygqz1
+ toszBQwqSgemd/WaVSnseQn3TAzy8mcVTLJPk9Z5syrekQNxCME9U7DNHOdaJuRCfZgkLqBfTaF
+ I4wa6ZAvLx/g9g7EIGzWuh5D7BX4UZDpcWxGy4x4FiCFYQwdcPUwaKkLc59fH34bgZVyQorFKrP
+ WHj9DgGBCRwCiDVZMgtdpEv0U7g92w==
+X-Authority-Analysis: v=2.4 cv=FtwIPmrq c=1 sm=1 tr=0 ts=68e8b316 cx=c_pps
+ a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+ a=IkcTkHD0fZMA:10 a=x6icFKpwvdMA:10 a=S1Tq6YvCFwAA3lmGF84A:9
+ a=QEXdDO2ut3YA:10 a=nl4s5V0KI7Kw-pW0DWrs:22 a=pHzHmUro8NiASowvMSCR:22
+ a=xoEH_sTeL_Rfw54TyV31:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-10-10_01,2025-10-06_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 malwarescore=0 clxscore=1015 phishscore=0 spamscore=0
+ bulkscore=0 priorityscore=1501 adultscore=0 lowpriorityscore=0 suspectscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2510020000 definitions=main-2510080121
 
-Add the testcase for the fprobe, which will hook the same target with two
-fprobe: entry, entry+exit. And the two fprobes will be registered with
-different order.
 
-fgraph and ftrace are both used for the fprobe, and this testcase is for
-the mixed situation.
 
-Signed-off-by: Menglong Dong <dongml2@chinatelecom.cn>
----
- lib/tests/test_fprobe.c | 99 ++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 98 insertions(+), 1 deletion(-)
+On 09/10/25 4:57 pm, Naveen N Rao wrote:
+> On Thu, Oct 09, 2025 at 11:19:45AM +0530, Hari Bathini wrote:
+>>
+>>
+>> On 08/10/25 1:43 pm, Naveen N Rao wrote:
+>>> On Mon, Oct 06, 2025 at 06:50:20PM +0530, Hari Bathini wrote:
+>>>>
+>>>>
+>>>> On 06/10/25 1:22 pm, Naveen N Rao wrote:
+>>>>> On Fri, Oct 03, 2025 at 12:57:54AM +0530, Hari Bathini wrote:
+>>>>>> Today, livepatch takes precedence over direct_call. Instead, save the
+>>>>>> state and make direct_call before handling livepatch.
+>>>>>
+>>>>> If we call into the BPF trampoline first and if we have
+>>>>> BPF_TRAMP_F_CALL_ORIG set, does this result in the BPF trampoline
+>>>>> calling the new copy of the live-patched function or the old one?
+>>>>
+>>>> Naveen, calls the new copy of the live-patched function..
+>>>
+>>> Hmm... I'm probably missing something.
+>>>
+>>> With ftrace OOL stubs, what I recall is that BPF trampoline derives the
+>>> original function address from the OOL stub (which would be associated
+>>> with the original function, not the livepatch one).
+>>
+>> Trampoline derives the address from LR.
+> 
+> Does it? I'm referring to BPF_TRAMP_F_CALL_ORIG handling in
+> __arch_prepare_bpf_trampoline().
 
-diff --git a/lib/tests/test_fprobe.c b/lib/tests/test_fprobe.c
-index cf92111b5c79..108c7aa33cb4 100644
---- a/lib/tests/test_fprobe.c
-+++ b/lib/tests/test_fprobe.c
-@@ -12,7 +12,8 @@
- 
- static struct kunit *current_test;
- 
--static u32 rand1, entry_val, exit_val;
-+static u32 rand1, entry_only_val, entry_val, exit_val;
-+static u32 entry_only_count, entry_count, exit_count;
- 
- /* Use indirect calls to avoid inlining the target functions */
- static u32 (*target)(u32 value);
-@@ -190,6 +191,101 @@ static void test_fprobe_skip(struct kunit *test)
- 	KUNIT_EXPECT_EQ(test, 0, unregister_fprobe(&fp));
- }
- 
-+/* Handler for fprobe entry only case */
-+static notrace int entry_only_handler(struct fprobe *fp, unsigned long ip,
-+				      unsigned long ret_ip,
-+				      struct ftrace_regs *fregs, void *data)
-+{
-+	KUNIT_EXPECT_FALSE(current_test, preemptible());
-+	KUNIT_EXPECT_EQ(current_test, ip, target_ip);
-+
-+	entry_only_count++;
-+	entry_only_val = (rand1 / div_factor);
-+
-+	return 0;
-+}
-+
-+static notrace int fprobe_entry_multi_handler(struct fprobe *fp, unsigned long ip,
-+					      unsigned long ret_ip,
-+					      struct ftrace_regs *fregs,
-+					      void *data)
-+{
-+	KUNIT_EXPECT_FALSE(current_test, preemptible());
-+	KUNIT_EXPECT_EQ(current_test, ip, target_ip);
-+
-+	entry_count++;
-+	entry_val = (rand1 / div_factor);
-+
-+	return 0;
-+}
-+
-+static notrace void fprobe_exit_multi_handler(struct fprobe *fp, unsigned long ip,
-+					      unsigned long ret_ip,
-+					      struct ftrace_regs *fregs,
-+					      void *data)
-+{
-+	unsigned long ret = ftrace_regs_get_return_value(fregs);
-+
-+	KUNIT_EXPECT_FALSE(current_test, preemptible());
-+	KUNIT_EXPECT_EQ(current_test, ip, target_ip);
-+	KUNIT_EXPECT_EQ(current_test, ret, (rand1 / div_factor));
-+
-+	exit_count++;
-+	exit_val = ret;
-+}
-+
-+static void check_fprobe_multi(struct kunit *test)
-+{
-+	entry_only_count = entry_count = exit_count = 0;
-+	entry_only_val = entry_val = exit_val = 0;
-+
-+	target(rand1);
-+
-+	/* Verify all handlers were called */
-+	KUNIT_EXPECT_EQ(test, 1, entry_only_count);
-+	KUNIT_EXPECT_EQ(test, 1, entry_count);
-+	KUNIT_EXPECT_EQ(test, 1, exit_count);
-+
-+	/* Verify values are correct */
-+	KUNIT_EXPECT_EQ(test, (rand1 / div_factor), entry_only_val);
-+	KUNIT_EXPECT_EQ(test, (rand1 / div_factor), entry_val);
-+	KUNIT_EXPECT_EQ(test, (rand1 / div_factor), exit_val);
-+}
-+
-+/* Test multiple fprobes hooking the same target function */
-+static void test_fprobe_multi(struct kunit *test)
-+{
-+	struct fprobe fp1 = {
-+		.entry_handler = fprobe_entry_multi_handler,
-+		.exit_handler = fprobe_exit_multi_handler,
-+	};
-+	struct fprobe fp2 = {
-+		.entry_handler = entry_only_handler,
-+	};
-+
-+	current_test = test;
-+
-+	/* Test Case 1: Register in order 1 -> 2 */
-+	KUNIT_EXPECT_EQ(test, 0, register_fprobe(&fp1, "fprobe_selftest_target", NULL));
-+	KUNIT_EXPECT_EQ(test, 0, register_fprobe(&fp2, "fprobe_selftest_target", NULL));
-+
-+	check_fprobe_multi(test);
-+
-+	/* Unregister all */
-+	KUNIT_EXPECT_EQ(test, 0, unregister_fprobe(&fp1));
-+	KUNIT_EXPECT_EQ(test, 0, unregister_fprobe(&fp2));
-+
-+	/* Test Case 2: Register in order 2 -> 1 */
-+	KUNIT_EXPECT_EQ(test, 0, register_fprobe(&fp2, "fprobe_selftest_target", NULL));
-+	KUNIT_EXPECT_EQ(test, 0, register_fprobe(&fp1, "fprobe_selftest_target", NULL));
-+
-+	check_fprobe_multi(test);
-+
-+	/* Unregister all */
-+	KUNIT_EXPECT_EQ(test, 0, unregister_fprobe(&fp1));
-+	KUNIT_EXPECT_EQ(test, 0, unregister_fprobe(&fp2));
-+}
-+
- static unsigned long get_ftrace_location(void *func)
- {
- 	unsigned long size, addr = (unsigned long)func;
-@@ -217,6 +313,7 @@ static struct kunit_case fprobe_testcases[] = {
- 	KUNIT_CASE(test_fprobe_syms),
- 	KUNIT_CASE(test_fprobe_data),
- 	KUNIT_CASE(test_fprobe_skip),
-+	KUNIT_CASE(test_fprobe_multi),
- 	{}
- };
- 
--- 
-2.51.0
 
+> LR at BPF trampoline entry points at
+> the ftrace OOL stub. We recover the "real LR" pointing to the function
+> being traced from there so that we can call into it from within the BPF
+> trampoline.
+
+Naveen, from the snippet in livepatch_handler code shared below,
+the LR at BPF trmapoline entry points at the 'nop' after the call
+to trampoline with 'bnectrl cr1' in the updated livepatch_handler.
+
+Mimic'ing ftrace OOL branch instruction in livepatch_handler
+with 'b	1f' (the instruction after nop) to ensure the trmapoline
+derives the real LR to '1f' and jumps back into the livepatch_handler..
+
++       /* Jump to the direct_call */
++       bnectrl cr1
++
++       /*
++        * The address to jump after direct call is deduced based on 
+ftrace OOL stub sequence.
++        * The seemingly insignificant couple of instructions below is 
+to mimic that here to
++        * jump back to the livepatch handler code below.
++        */
++       nop
++       b       1f
++
++       /*
++        * Restore the state for livepatching from the livepatch stack.
++        * Before that, check if livepatch stack is intact. Use r0 for it.
++        */
++1:     mtctr   r0
+
+
+I should probably improve my comments for better readability..
+
+- Hari
