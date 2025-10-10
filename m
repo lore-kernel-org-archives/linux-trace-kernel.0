@@ -1,47 +1,47 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A2B1266B6C
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 10 Oct 2025 08:34:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE8ED26CE2D
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 10 Oct 2025 08:34:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760085286; cv=none; b=L+r6Dsg3UrQpQoKP3OnlMlM7VdZBxUK7i0LrxQNxvn+HA1VdZxtx9W4j65fE5Td/NQmK6SYIun/e2JWTbQM3o3rwbdTRgh+tZdNp2yZEQmIfLwAZUDYrpAfAzFcrGFlSjg17Yn5WTDBlwPzP36gXE5juB8/wh7fDSnqgZPGv+HA=
+	t=1760085289; cv=none; b=GeT3v7AAGaxt6SZjuQXhb8Ou70afO0updTpzvdQzt0gkBNOQ6K5onEmP9lFzw405kz2/dupoH9nhtlbu1KiIipbe7dmyiND43lRlXUjSXZVWFEWjZ/uOD44dhpD9sGRc+nLBOG6ckwVbJ29OdSw8urDEptzT0v21MaxM3D6vE8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760085286; c=relaxed/simple;
-	bh=lAM1OCRdCkIbXWLfPoZpdYZ+SIeHc968B6VtBUf7nJc=;
+	s=arc-20240116; t=1760085289; c=relaxed/simple;
+	bh=x3ZAIwU3EySXOjOfbCRjkR7NcX5xAst2DMDxwnlM/gA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OVkcZZw9N4fc1Bm6EbKyiUO3Q7S970U3Gkg933zyiQ67rB2wMWJOWw09zn1VM7CRgEnjW/lFHwy+f9qEJBIR3FASjTTZjAxmvZwc2qOpEyILcNFTVRGOEXw5foir6hWuAxq5uUmqDTBydn/iTtU5XF4ZISm+g1ABi7povpsYVzs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Qm2Kiwgq; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=Pa5NUDkArt2s1ED20K6aiPsrkTbdZptbQaqnr7NqSRVVks3+nfXTEK2qJnN2YuKcYDNsX7lgbWck30mXW7ivbv9MNZTOn30opKtPjKboc1QkTZYkGmudNUbD//1GHxdmcTJjI7QiajUF5b1KsA2inPRBOQ14AkHn6SNbjwNoENk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VqNrol9/; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Qm2Kiwgq"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VqNrol9/"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1760085283;
+	s=mimecast20190719; t=1760085287;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Z/V9PCnlmfXMNU9IVcL16oTLGCKpj8jIKEGtxCINH5U=;
-	b=Qm2KiwgqmApp+M9GsnGQg3kICu04BSlh+7iMhBFdYEQmL8TAL91fJPdIGy9zUJZQYMAsyH
-	067LB4DlVzSbREoRLtjq6vPflw8EAvsysFKeheDHx5BRxDZvrHg6UduoM0X5T3ovMvOOyw
-	0s7rO647oXqnfgah6dQxENs3+t4mglo=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+	bh=IMS00EfNi3tjOPOk//dUn2mDkbD2GiWaIk33bzl+TJc=;
+	b=VqNrol9/o9fcnZM4JSQm0jsHHkD6wmNE0qJb4cLC/PybbJx+oPW8X/NrPqIF3Q9zvXekRf
+	s8ZpxAwfNtQsLVxnsg3NreJdo60IubtXUvKslP+tzDMOmxBE9bOHqAp/1YpWmNox07SjwJ
+	1SATmg3kISxFcFIHkE7Qvhi8l3RSKyI=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-352-jNBY_WpNPVWnwk9Wmrqs1Q-1; Fri,
- 10 Oct 2025 04:34:38 -0400
-X-MC-Unique: jNBY_WpNPVWnwk9Wmrqs1Q-1
-X-Mimecast-MFC-AGG-ID: jNBY_WpNPVWnwk9Wmrqs1Q_1760085277
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-374-nIu6KRYxO9aTQMka6MOPkw-1; Fri,
+ 10 Oct 2025 04:34:43 -0400
+X-MC-Unique: nIu6KRYxO9aTQMka6MOPkw-1
+X-Mimecast-MFC-AGG-ID: nIu6KRYxO9aTQMka6MOPkw_1760085281
 Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BF61019560AE;
-	Fri, 10 Oct 2025 08:34:36 +0000 (UTC)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id AA77E19560AE;
+	Fri, 10 Oct 2025 08:34:41 +0000 (UTC)
 Received: from fedora.redhat.com (unknown [10.44.32.197])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 2C41919560BB;
-	Fri, 10 Oct 2025 08:34:31 +0000 (UTC)
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 41D8619560BB;
+	Fri, 10 Oct 2025 08:34:37 +0000 (UTC)
 From: Tomas Glozar <tglozar@redhat.com>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
@@ -56,9 +56,9 @@ Cc: linux-trace-kernel@vger.kernel.org,
 	Crystal Wood <crwood@redhat.com>,
 	Attila Fazekas <afazekas@redhat.com>,
 	Tomas Glozar <tglozar@redhat.com>
-Subject: [PATCH 5/9] Documentation/rtla: Correct tracer name for common options
-Date: Fri, 10 Oct 2025 10:33:34 +0200
-Message-ID: <20251010083338.478961-6-tglozar@redhat.com>
+Subject: [PATCH 6/9] Documentation/rtla: Mention default priority
+Date: Fri, 10 Oct 2025 10:33:35 +0200
+Message-ID: <20251010083338.478961-7-tglozar@redhat.com>
 In-Reply-To: <20251010083338.478961-1-tglozar@redhat.com>
 References: <20251010083338.478961-1-tglozar@redhat.com>
 Precedence: bulk
@@ -70,38 +70,31 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-Several options in common_options.rst say "osnoise tracer" for both
-osnoise and timerlat.
+RTLA allows the priority of workload threads to be set using the -P
+option. This is covered in docs, but the default state for RTLA's own
+user workload (implemented in timerlat_u.c) is not mentioned.
 
-Use |tool| variable so that the correct tool name is used.
+Add mention of the default user workload priority as well as a reference
+to osnoise and timerlat tracers for kernel workload priority.
 
-Fixes: b1be48307de4 ("rtla: Add rtla osnoise top documentation")
 Signed-off-by: Tomas Glozar <tglozar@redhat.com>
 ---
- Documentation/tools/rtla/common_options.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ Documentation/tools/rtla/common_options.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/Documentation/tools/rtla/common_options.txt b/Documentation/tools/rtla/common_options.txt
-index 8ca424ab0faf..a2f9c03810b9 100644
+index a2f9c03810b9..b842f065c8f6 100644
 --- a/Documentation/tools/rtla/common_options.txt
 +++ b/Documentation/tools/rtla/common_options.txt
-@@ -1,6 +1,6 @@
- **-c**, **--cpus** *cpu-list*
+@@ -42,6 +42,8 @@
+         - *f:prio* - use SCHED_FIFO with *prio*;
+         - *d:runtime[us|ms|s]:period[us|ms|s]* - use SCHED_DEADLINE with *runtime* and *period* in nanoseconds.
  
--        Set the osnoise tracer to run the sample threads in the cpu-list.
-+        Set the |tool| tracer to run the sample threads in the cpu-list.
++        If not set, tracer threads keep their default priority. For rtla user threads, it is set to SCHED_FIFO with priority 95. For kernel threads, see *osnoise* and *timerlat* tracer documentation for the running kernel version.
++
+ **-C**, **--cgroup**\[*=cgroup*]
  
- **-H**, **--house-keeping** *cpu-list*
- 
-@@ -35,7 +35,7 @@
- 
- **-P**, **--priority** *o:prio|r:prio|f:prio|d:runtime:period*
- 
--        Set scheduling parameters to the osnoise tracer threads, the format to set the priority are:
-+        Set scheduling parameters to the |tool| tracer threads, the format to set the priority are:
- 
-         - *o:prio* - use SCHED_OTHER with *prio*;
-         - *r:prio* - use SCHED_RR with *prio*;
+         Set a *cgroup* to the tracer's threads. If the **-C** option is passed without arguments, the tracer's thread will inherit **rtla**'s *cgroup*. Otherwise, the threads will be placed on the *cgroup* passed to the option.
 -- 
 2.51.0
 
