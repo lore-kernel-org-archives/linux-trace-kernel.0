@@ -1,75 +1,75 @@
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 736B12836B4
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 12 Oct 2025 14:19:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0018C2882D4
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 12 Oct 2025 14:32:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760278787; cv=none; b=HzH67rG0+K7lsvjBE4jcRV7KR+jF0ySG75WU1cBmZlfbCJFe7cYF+P//C5l0ASfVdVnc5Ac75Je5kahkrRh6sRGkpdDx0f5lQKv3n/NArqQ41nUtYSgeslwtcSyIekaGJc/At4NEzhMSFq+HTqWtetkZf3Gezs0ZxVEaPWtCWIg=
+	t=1760279531; cv=none; b=qj+pWlPOgImiobmoa4yyavoIhqjGgdXrncdGeH5p6lHrWWX18kAvPHifKBdwwS7IUA7ErLPqPK5pzp3QsA7Mf6YYSTIWZe+AW+pYkW6BOZYucGECkIiUOmvygVW45sNitq5a0Rz6WLJ3+keHFO2xY+ZX2xYMYJDOsMGix7+AEVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760278787; c=relaxed/simple;
-	bh=S0RjN53FhosHFqH1eQVEkBO1CL2bCSvSztX6fZqueyc=;
+	s=arc-20240116; t=1760279531; c=relaxed/simple;
+	bh=exVDaTCv2o9KGqW9+Cgff31C7B8DfZakECaMCpf1bfE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QgeL5U9VMnHUteR3LU2GyfgRUnayHjcG1EDo+LzFKhfnTwqxLJPIwLe2k19KEMjF1+ty9GXsWws4iXeZ77TDJTB8yFKnR6ymASWaxob8Xtozin+yIZ9umTzPvFmizlNfaUkFlyB+YeVHRdrHaoBmKwvyFIfpxPpzy10wWGuTv20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PI/1u+4c; arc=none smtp.client-ip=209.85.219.51
+	 Content-Type:Content-Disposition:In-Reply-To; b=CvR3UxkPFjkwnV6UGJNhMRkUAtZyoRYMIP5HQl5ShRodm0KyOrmMciKHkZ2Rja+0B1Anw+ttyTl0q4nMe1JZaNBIZkzPSpcY7hyESvKNrfTIlw5YgswItiY8zu/M2XFUMmu4kC9gqGWoCeH2tAno+5NHhN7TQ60iGw/2odAxJlA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K1s89k26; arc=none smtp.client-ip=209.85.219.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PI/1u+4c"
-Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-796d68804a0so52756556d6.3
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 12 Oct 2025 07:19:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K1s89k26"
+Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-799572d92b0so44059496d6.3
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 12 Oct 2025 07:32:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1760278783; x=1760883583; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1760279528; x=1760884328; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=c/781Ye50yRSfgbM0sVXYJ3EacOElPA86Mq2WbSzU9U=;
-        b=PI/1u+4c7HEONsZ5wqMM8v1aHnrW7P10BCfBFYxIWQ2HTH6z5WDB0TC+mhHr6pQrRw
-         xYwjYwQ8pkDNgvg2GQqKRuSs7CcmiWml36RqtQdwuWej3EsGi8JolLi64nLN1FRXlRuG
-         aAIbKpzIN5S0EqYv47oe1M5NRzXWc5JeIHeRxwDRctmo0vQUjV+zP3VvKuDRdzD2f4aM
-         jp1KIaKjF9eYBOLCR4l6/gsdqFLpcvxVSkFarizWtiJ1lY+sCkK2PVpipqkyPCwCYf1l
-         GoPinO9ujj6yjabGBI5/CenkyoXngcOKwSQnDlO0yPNSbIyaEqTUJnTbEiF3/tPbqzOD
-         vwrA==
+        bh=lafAVcrEHvdofnatEPGKT/Xtct7Xl7DSjL6fT41f0Sw=;
+        b=K1s89k26nbYzSwwGw7yMYiYrRjewHFeqMCWTkxii0Kk1TGe8AJjnPIhBf9DswDh9AP
+         Pc8PZkqx8PU/oLLaaseQlS2cn+adpK50u3OR+RUldZVfZbHOgIHTkf2j22hZCKR1/bY8
+         K+WzATCb/aJGKL21QkWActjsYo1QICYWvUqnwm7Y23ReLGJMDnVIHhQ2nCvoLuAZDF4k
+         MFpNBR0+2pc6q0LW7u3kXC9ZmsMz65gusX7+PngKjBo7pwiyG8Q3ip7uRmtL6kKVKXvC
+         P35XoF+hOLRCfEMQFis3zy8k4eGD4BO0dwAafZG96RutusvGhhC7+CY8MhB04M5dSkS+
+         lJbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760278783; x=1760883583;
+        d=1e100.net; s=20230601; t=1760279528; x=1760884328;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=c/781Ye50yRSfgbM0sVXYJ3EacOElPA86Mq2WbSzU9U=;
-        b=I292M7APkYjlJT6p/gFT2AIZR3PK8l6Fb5y73toJL+Q7bcmOeCmcifOGdg+QT1TuTf
-         PcXL2eV7A9YUWk5mDN1+M6Bd/Bnh7fN0O/Bl2JHeAURWHP0VzRmSYlmzXCLHDJdfpE1I
-         xmPOXkbuRD/PBlDHNkwpdGyzRmI9ylgFJcrMSp7ZWaFq3vW0pFTSPA+jJJRVLJhKgn8h
-         K0UEjdrWDPmtF3ZJdqNDLi+zhFYAl/cyD730wvRYvL0BNlvQKTGpakkTq9gdfFZm3L1m
-         2cU1ohsseFtpLqEvb64yw4fRdX9YPSJPy6v1vObSjHYmf7iKFsEQdQjuw4qLUauvs3Xv
-         usRg==
-X-Forwarded-Encrypted: i=1; AJvYcCUyHk/cnZatH7/nOw3DpMhpFw6mGCNVvN9whlGbOLd3r8emn+QQg0LJVvrXTcxaUaptD8p+BiPUMVuTvjCdlsH21ns=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy2Pa7K0TRf5rN57dDAw7yCe379xtyFxkMjvDALIfM+ACrg0KHE
-	jFdTNUzMmuojX9nkUJlgAbVE2tGgyqeO4Q188MeFy3n68wb+Up3E5udw
-X-Gm-Gg: ASbGncthD0htAiGjWXHCHdQqHY0GOoysGrbAzzTEKJs2OGWZBEQITJfkizDR2iV4Dtv
-	LwOxKnCIahUwN2MXdsUqEX0bl1Q7Q0n2VcLCYh8xoGukZljFCiQ+hYiSULYed8EsLqqUl5ikjD+
-	ugfgwyHzU8RxhuqY+cbSfMduttWEJtLb2+kEoxkDRbsfTNAWa7j6imy6mDStL3+PYexWWg3swLK
-	6AswcLMWlVWPG2gl+8Z1FY1Zjcfyf/TGAshYFiG1qpeuQIKlGipPM8hsJl255ENqV3U2o3PUNDR
-	f5SJqWKk7VateIKS6zCqDK0es/yVJDFQ0GkhzH8b7v5UQR1EX+M8jUrkK9abhbwB6u4jf/j0qVF
-	do/4Y2FXyhSLPO2kfyZ/sdGvcM8XdHuAeriYuIQsftJG1nICtQjLJ
-X-Google-Smtp-Source: AGHT+IFAXQttV0gVKtNIYGQh3pzgscmaOrpvGng16uvi0C8x1olqSjkESlIelbf97EwdfKqOZ27z7A==
-X-Received: by 2002:a05:622a:14c6:b0:4da:21ee:247b with SMTP id d75a77b69052e-4e6ead768e6mr242310381cf.47.1760278783042;
-        Sun, 12 Oct 2025 07:19:43 -0700 (PDT)
+        bh=lafAVcrEHvdofnatEPGKT/Xtct7Xl7DSjL6fT41f0Sw=;
+        b=BpjAmMpSIxtR2fXuPId1jeGEOcEwzFuACocrKqi8EeBK6W/vBZO5G/cUw083YGy51n
+         ztr42Rm4fcVg8tI9kCjii0Vs922Nd0PIvlF7mDYNcERtN3kKclJ0n2d/DA/CHRaic8pa
+         8hc69Zsm2bnkR9FsXSMTob5rNL5brX1I19lqHMswgz5bVt6T9FF6j9xn7jjOABpCtoWx
+         U++6lPZZvCwf19nLEtGiKHgZ3XRFlYnrOGJETy6WC19/IAJP51gUAdNZSCl7wOUQszrj
+         jvfU/nYW6SRxG4UDX67b99jS8pfqsyhNtCr5aYtyRjJbcS/oeOujGXOw+VtfCCymvy2h
+         gPhg==
+X-Forwarded-Encrypted: i=1; AJvYcCUlW6gKwchckA84rNscdt0vNWhGE0uKQnlEnZmeIB8cySLQofXbzkjGNGYyK9fGBNvHbUVWrBZ0HetovsaRWlmSuqs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz6Rq9lZh0zSOaXpOxabYcZY/ku56ukK/BMAjCjSV1n2ew/tMdM
+	571PxMqmlCVSRW3iMB6DGMZMUpjmPvI1ARYPW06wV+xovqksY8SD3eXl
+X-Gm-Gg: ASbGncs56PF5LlHG8xvjvM9uDUTuMdmeGOwByG6Bi9dZK1E87ifjTJ341aW1u27kXZb
+	1BbvNcOttF0hITCp7y5hNDhYdQ3IAP2l/E9ArfQKBEctCxr3/FJzxfaqDD+3HHhLjYIgJECZee4
+	uXZ9XR3VLv21TkebxqWLOa5mko3Q/HKjCAFctL6QRENLjN/xDXnxDP5FVcS3tpThQNTWUkUMymL
+	S4bEYk4GjlTZpbsZfKOJRJtQnO7AQexnh87j4ObtCJ2dQiPDx285R25D7LdZj/XRmRTgRE8NoQ8
+	0QPwJDWYJgHWm8mWWNOGJw/8W7ggOtikN1Bmf6gb+lMG2HTfIXnYmylpIs3O8fmFDRHNBiohHk5
+	wUO2O+6FnEKK8BbMULuPeY2/9JP853aqxYJ/TtYYsZzg2xkgtcwsC
+X-Google-Smtp-Source: AGHT+IGylxeC57G3HP7/1vZXTCP0woc3CF/bb9piQD8YyNw88k6+Ampz6Ayo2XWXeOakyOz8ZMmEgA==
+X-Received: by 2002:a05:622a:30f:b0:4e7:222e:6725 with SMTP id d75a77b69052e-4e7222e7357mr20155591cf.8.1760279527640;
+        Sun, 12 Oct 2025 07:32:07 -0700 (PDT)
 Received: from gmail.com ([2600:4041:4491:2000:f887:3bb2:9bc6:cbb0])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4e721452e03sm14285111cf.4.2025.10.12.07.19.41
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-87bc35930f3sm54042686d6.43.2025.10.12.07.32.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Oct 2025 07:19:41 -0700 (PDT)
-Date: Sun, 12 Oct 2025 23:19:39 +0900
+        Sun, 12 Oct 2025 07:32:07 -0700 (PDT)
+Date: Sun, 12 Oct 2025 23:32:05 +0900
 From: Ryan Chung <seokwoo.chung130@gmail.com>
 To: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: rostedt@goodmis.org, mathieu.desnoyers@efficios.com, shuah@kernel.org,
 	hca@linux.ibm.com, corbet@lwn.net,
 	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
 	linux-kselftest@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v3 3/5] tracing: fprobe: support comma-separated symbols
- and :entry/:exit
-Message-ID: <aOu4-3QNhJi8kVXb@gmail.com>
+Subject: Re: [PATCH v3 2/5] tracing: fprobe: require explicit [GROUP/]EVENT
+ for list/wildcard
+Message-ID: <aOu75evMUGF8pBxE@gmail.com>
 References: <20251004235001.133111-1-seokwoo.chung130@gmail.com>
- <20251004235001.133111-4-seokwoo.chung130@gmail.com>
- <20251008190937.c7c992e41b4397fecbc8176e@kernel.org>
+ <20251004235001.133111-3-seokwoo.chung130@gmail.com>
+ <20251008095316.cf24f13a84a454ddbf530120@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -78,539 +78,44 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251008190937.c7c992e41b4397fecbc8176e@kernel.org>
+In-Reply-To: <20251008095316.cf24f13a84a454ddbf530120@kernel.org>
 
-Hi. Thanks for the quick review and comments. Here are my responses to
-the remaining points.
+On Wed, Oct 08, 2025 at 09:53:16AM +0900, Masami Hiramatsu wrote:
+> This should be a part of [3/5], because when bisecting, the test will check the
+> README file and check the feature.
+> 
+> Thank you,
+> 
 
-On Wed, Oct 08, 2025 at 07:09:37PM +0900, Masami Hiramatsu wrote:
-> On Sun,  5 Oct 2025 08:46:57 +0900
+Ok. I will fold the readme_msg change in [3/5] (the patch that
+introduces :entry|:exit and keeps %return for single-symbol input) so
+the tracefs README matches the feature during bisection and for tests.
+
+> On Sun,  5 Oct 2025 08:46:56 +0900
 > Ryan Chung <seokwoo.chung130@gmail.com> wrote:
 > 
-> Please describe what this patch adds, for what reason.
-> 
-
-This is my mistake; I forgot to do so. I will make sure to include it
-next time.
-
 > > Signed-off-by: Ryan Chung <seokwoo.chung130@gmail.com>
 > > ---
-> >  kernel/trace/trace_fprobe.c | 247 ++++++++++++++++++++++++++++--------
-> >  1 file changed, 192 insertions(+), 55 deletions(-)
+> >  kernel/trace/trace.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
 > > 
-> > diff --git a/kernel/trace/trace_fprobe.c b/kernel/trace/trace_fprobe.c
-> > index b36ade43d4b3..ec5b6e1c1a1b 100644
-> > --- a/kernel/trace/trace_fprobe.c
-> > +++ b/kernel/trace/trace_fprobe.c
-> > @@ -191,6 +191,9 @@ struct trace_fprobe {
-> >  	bool			tprobe;
-> >  	struct tracepoint_user	*tuser;
-> >  	struct trace_probe	tp;
-> > +	char			*filter;
-> > +	char			*nofilter;
-> > +	bool			list_mode;
-> >  };
-> >  
-> >  static bool is_trace_fprobe(struct dyn_event *ev)
-> > @@ -203,14 +206,10 @@ static struct trace_fprobe *to_trace_fprobe(struct dyn_event *ev)
-> >  	return container_of(ev, struct trace_fprobe, devent);
-> >  }
-> >  
-> > -/**
-> > - * for_each_trace_fprobe - iterate over the trace_fprobe list
-> > - * @pos:	the struct trace_fprobe * for each entry
-> > - * @dpos:	the struct dyn_event * to use as a loop cursor
-> > - */
-> > -#define for_each_trace_fprobe(pos, dpos)	\
-> > -	for_each_dyn_event(dpos)		\
-> > -		if (is_trace_fprobe(dpos) && (pos = to_trace_fprobe(dpos)))
-> 
-> Why remove this? This is for finding all fprobes.
-> 
-
-I will revert this and keep for_each_trace_fprobe as is. 
-
-> > +static struct trace_fprobe *trace_fprobe_from_dyn(struct dyn_event *ev)
-> > +{
-> > +	return is_trace_fprobe(ev) ? to_trace_fprobe(ev) : NULL;
-> > +}
-> >  
-> >  static bool trace_fprobe_is_return(struct trace_fprobe *tf)
-> >  {
-> > @@ -227,6 +226,109 @@ static const char *trace_fprobe_symbol(struct trace_fprobe *tf)
-> >  	return tf->symbol ? tf->symbol : "unknown";
-> >  }
-> >  
-> > +static bool has_wildcard(const char *s)
-> > +{
-> > +	return s && (strchr(s, '*') || strchr(s, '?'));
-> > +}
-> > +
-> > +static int parse_fprobe_spec(const char *in, bool is_tracepoint,
-> > +		char **base, bool *is_return, bool *list_mode,
-> > +		char **filter, char **nofilter)
-> > +{
-> > +	const char *p;
-> > +	char *work = NULL;
-> > +	char *b = NULL, *f = NULL, *nf = NULL;
-> 
-> See below (out: label)
-> 
-
-I will switch those temporaries to __free(kfree) and drop the goto that
-existed only to kfree. This addresses the cleanup pattern comment.
-
-> > +	bool legacy_ret = false;
-> > +	bool list = false;
-> > +	int ret = 0;
-> 
-> nit: sort local variable by line length. (longer to shorter)
-> 
-
-Ok. I will sort locals longest -> shortest and fix a few initializations
-(char *filter = NULL, char *nofilter = Null;).
-
-> > +
-> > +	if (!in || !base || !is_return || !list_mode || !filter || !nofilter)
-> > +		return -EINVAL;
-> > +
-> > +	*base = NULL; *filter = NULL; *nofilter = NULL;
-> > +	*is_return = false; *list_mode = false;
-> > +
-> > +	if (is_tracepoint) {
-> > +		if (strchr(in, ',') || strchr(in, ':'))
-> > +			return -EINVAL;
-> > +		if (strstr(in, "%return"))
-> > +			return -EINVAL;
-> 
-> It seems below loop checks all above cases.
-> 
-
-I will remove the redundant pre-checks and rely on the validation loop,
-with precise rules. 
-
-> > +		for (p = in; *p; p++)
-> > +			if (!isalnum(*p) && *p != '_')
-> > +				return -EINVAL;
-> 
-> This only allows that the @in must be a symbol name.
-> 
-
-Just to clarify: should tracepoint arguments support the subsystem:event
-format (e.g., "sched:sched_switch"), or should they remain restricted to
-simple symbol names only? The current validation enforces
-symbol-name-only, but I wanted to confirm this is the intended behavior
-before next version.
-
-> > +		b = kstrdup(in, GFP_KERNEL);
-> > +		if (!b)
-> > +			return -ENOMEM;
-> > +		*base = b;
-> > +		return 0;
-> > +	}
-> > +
-> > +	work = kstrdup(in, GFP_KERNEL);
-> > +	if (!work)
-> > +		return -ENOMEM;
-> > +
-> > +	p = strstr(work, "%return");
-> 
-> Note that strstr does not care it ends with given string.
-> 
-
-Good catch. I will replace it with explicit end-of-string checks so we
-accept only a single terminal suffix: %return, :entry, or :exit.
-Partial/embedded matches will be rejected.
-
-> > +	if (p) {
-> > +		if (!strcmp(p, ":exit")) {
-> > +			*is_return = true;
-> > +			*p = '\0';
-> > +		} else if (!strcmp(p, ":entry")) {
-> > +			*p = '\0';
-> > +		} else {
-> > +			ret = -EINVAL;
-> > +			goto out;
-> > +		}
-> > +	}
-> > +
-> > +	list = !!strchr(work, ',') || has_wildcard(work);
-> 
-> Wildcard is OK for legacy.
-> 
-
-I will keep the wildcard acceptance for the legacy string, and treat
-presence of "," or wildcard as "list mode" that builds filter/nofilter
-for register_fprobe(); otherwise it remains single-symbol legacy.
-
-> > +	if (legacy_ret)
-> > +		*is_return = true;
-> > +
-> > +	b = kstrdup(work, GFP_KERNEL);
-> > +	if (!b) {
-> > +		ret = -ENOMEM;
-> > +		goto out;
-> > +	}
-> > +
-> > +	if (list) {
-> > +		char *tmp = b, *tok;
-> > +		size_t fsz = strlen(b) + 1, nfsz = strlen(b) + 1;
-> 
-> size_t fsz, nfsz;
-> 
-> fsz = nfsz = strlen(b) + 1;
-> 
-
-I will adopt the above style.
-
-> > +
-> > +		f = kzalloc(fsz, GFP_KERNEL);
-> > +		nf = kzalloc(nfsz, GFP_KERNEL);
-> > +		if (!f || !nf) {
-> > +			ret = -ENOMEM;
-> > +			goto out;
-> > +		}
-> > +
-> > +		while ((tok = strsep(&tmp, ",")) != NULL) {
-> > +			char *dst;
-> > +			bool neg = (*tok == '!');
-> > +
-> > +			if (*tok == '\0')
-> > +				continue;
-> > +			if (neg)
-> > +				tok++;
-> > +			dst = neg ? nf : f;
-> > +			if (dst[0] != '\0')
-> > +				strcat(dst, ",");
-> > +			strcat(dst, tok);
-> > +		}
-> > +		*list_mode = true;
-> > +	}
-> > +
-> > +	*base = b; b = NULL;
-> > +	*filter = f; f = NULL;
-> > +	*nofilter = nf; nf = NULL;
-> > +
-> > +out:
-> > +	kfree(work);
-> > +	kfree(b);
-> > +	kfree(f);
-> > +	kfree(nf);
-> 
-> Instead of using goto only for kfree(), use __free(kfree)
-> to clean those up automatically.
-> 
-
-Ok. As mentioned above, I will convert all such temporaries to
-__free(kfree) and remove the goto cleanup.
-
-> > +	return ret;
-> > +}
-> > +
-> >  static bool trace_fprobe_is_busy(struct dyn_event *ev)
-> >  {
-> >  	struct trace_fprobe *tf = to_trace_fprobe(ev);
-> > @@ -556,13 +658,17 @@ static void free_trace_fprobe(struct trace_fprobe *tf)
-> >  		trace_probe_cleanup(&tf->tp);
-> >  		if (tf->tuser)
-> >  			tracepoint_user_put(tf->tuser);
-> > +		kfree(tf->filter);
-> > +		kfree(tf->nofilter);
-> >  		kfree(tf->symbol);
-> >  		kfree(tf);
-> >  	}
-> >  }
-> >  
-> >  /* Since alloc_trace_fprobe() can return error, check the pointer is ERR too. */
-> > -DEFINE_FREE(free_trace_fprobe, struct trace_fprobe *, if (!IS_ERR_OR_NULL(_T)) free_trace_fprobe(_T))
-> > +DEFINE_FREE(free_trace_fprobe, struct trace_fprobe *,
-> > +	if (!IS_ERR_OR_NULL(_T))
-> > +		free_trace_fprobe(_T))
-> 
-> OK, it looks good to clean up. But please do it separated patch.
-> Do not touch if it is not related to your change.
-> 
-
-Do you want this to be in a separate series or for this patch series?
-
-> >  
-> >  /*
-> >   * Allocate new trace_probe and initialize it (including fprobe).
-> > @@ -605,10 +711,16 @@ static struct trace_fprobe *find_trace_fprobe(const char *event,
-> >  	struct dyn_event *pos;
-> >  	struct trace_fprobe *tf;
-> >  
-> > -	for_each_trace_fprobe(tf, pos)
-> > +	list_for_each_entry(pos, &dyn_event_list, list) {
-> > +		tf = trace_fprobe_from_dyn(pos);
-> > +		if (!tf)
-> > +			continue;
-> > +
-> >  		if (strcmp(trace_probe_name(&tf->tp), event) == 0 &&
-> >  		    strcmp(trace_probe_group_name(&tf->tp), group) == 0)
-> >  			return tf;
-> > +	}
-> > +
-> 
-> Ditto and there is no need to change.
-> 
-
-Ok. I will revert those sites to the existing macro-based iteration.
-
-> >  	return NULL;
-> >  }
-> >  
-> > @@ -835,7 +947,12 @@ static int __register_trace_fprobe(struct trace_fprobe *tf)
-> >  	if (trace_fprobe_is_tracepoint(tf))
-> >  		return __regsiter_tracepoint_fprobe(tf);
-> >  
-> > -	/* TODO: handle filter, nofilter or symbol list */
-> > +	/* Registration path:
-> > +	 *  - list_mode: pass filter/nofilter
-> > +	 *  - single: pass symbol only (legacy)
-> > +	 */
-> > +	if (tf->list_mode)
-> > +		return register_fprobe(&tf->fp, tf->filter, tf->nofilter);
-> >  	return register_fprobe(&tf->fp, tf->symbol, NULL);
-> >  }
-> >  
-> > @@ -1114,7 +1231,11 @@ static int __tprobe_event_module_cb(struct notifier_block *self,
-> >  		return NOTIFY_DONE;
-> >  
-> >  	mutex_lock(&event_mutex);
-> > -	for_each_trace_fprobe(tf, pos) {
-> > +	list_for_each_entry(pos, &dyn_event_list, list) {
-> > +		tf = trace_fprobe_from_dyn(pos);
-> > +		if (!tf)
-> > +			continue;
-> > +
-> >  		/* Skip fprobe and disabled tprobe events. */
-> >  		if (!trace_fprobe_is_tracepoint(tf) || !tf->tuser)
-> >  			continue;
-> > @@ -1155,55 +1276,35 @@ static int parse_symbol_and_return(int argc, const char *argv[],
-> >  				   char **symbol, bool *is_return,
-> >  				   bool is_tracepoint)
-> >  {
-> > -	char *tmp = strchr(argv[1], '%');
-> > -	int i;
-> > -
-> > -	if (tmp) {
-> > -		int len = tmp - argv[1];
-> > -
-> > -		if (!is_tracepoint && !strcmp(tmp, "%return")) {
-> > -			*is_return = true;
-> > -		} else {
-> > -			trace_probe_log_err(len, BAD_ADDR_SUFFIX);
-> > -			return -EINVAL;
-> > -		}
-> > -		*symbol = kmemdup_nul(argv[1], len, GFP_KERNEL);
-> > -	} else
-> > -		*symbol = kstrdup(argv[1], GFP_KERNEL);
-> > -	if (!*symbol)
-> > -		return -ENOMEM;
-> > -
-> > -	if (*is_return)
-> > -		return 0;
-> > +	int i, ret;
-> > +	bool list_mode = false;
-> > +	char *filter = NULL; *nofilter = NULL;
-> 
-> Sort it as other functions. longer line to shorter.
-> 
-
-I did not know this. I will fix the ordering (and see next item about
-the function's role).
-
-> >  
-> > -	if (is_tracepoint) {
-> > -		tmp = *symbol;
-> > -		while (*tmp && (isalnum(*tmp) || *tmp == '_'))
-> > -			tmp++;
-> > -		if (*tmp) {
-> > -			/* find a wrong character. */
-> > -			trace_probe_log_err(tmp - *symbol, BAD_TP_NAME);
-> > -			kfree(*symbol);
-> > -			*symbol = NULL;
-> > -			return -EINVAL;
-> > -		}
-> > -	}
-> > +	ret = parse_fprobe_spec(argv[1], is_tracepoint, symbol, is_return,
-> > +			&list_mode, &filter, &nofilter);
-> > +	if (ret)
-> > +		return ret;
-> >  
-> > -	/* If there is $retval, this should be a return fprobe. */
-> >  	for (i = 2; i < argc; i++) {
-> > -		tmp = strstr(argv[i], "$retval");
-> > +		char *tmp = strstr(argv[i], "$retval");
-> > +
-> >  		if (tmp && !isalnum(tmp[7]) && tmp[7] != '_') {
-> >  			if (is_tracepoint) {
-> >  				trace_probe_log_set_index(i);
-> >  				trace_probe_log_err(tmp - argv[i], RETVAL_ON_PROBE);
-> >  				kfree(*symbol);
-> >  				*symbol = NULL;
-> > +				kfree(filter);
-> > +				kfree(nofilter);
-> >  				return -EINVAL;
-> >  			}
-> >  			*is_return = true;
-> >  			break;
-> >  		}
-> >  	}
-> > +
-> > +	kfree(filter);
-> > +	kfree(nofilter);
-> >  	return 0;
-> >  }
-> >  
-> > @@ -1247,6 +1348,11 @@ static int trace_fprobe_create_internal(int argc, const char *argv[],
-> >  	int i, new_argc = 0, ret = 0;
-> >  	bool is_tracepoint = false;
-> >  	bool is_return = false;
-> > +	bool list_mode = false;
-> > +
-> 
-> Do not split local variable definitions with empty lines.
-> 
-
-I will collapse those blocks.
-
-> > +	char *parsed_filter __free(kfree) = NULL;
-> > +	char *parsed_nofilter __free(kfree) = NULL;
-> > +	bool has_wild = false;
-> 
-> Please sort.
-> 
-
-I will sort and group them, so no empty line splits.
-
-> >  
-> >  	if ((argv[0][0] != 'f' && argv[0][0] != 't') || argc < 2)
-> >  		return -ECANCELED;
-> > @@ -1267,8 +1373,9 @@ static int trace_fprobe_create_internal(int argc, const char *argv[],
-> >  
-> >  	trace_probe_log_set_index(1);
-> >  
-> > -	/* a symbol(or tracepoint) must be specified */
-> > -	ret = parse_symbol_and_return(argc, argv, &symbol, &is_return, is_tracepoint);
-> > +	/* Parse spec early (single vs list, suffix, base symbol) */
-> > +	ret = parse_fprobe_spec(argv[1], is_tracepoint, &symbol, &is_return,
-> > +			&list_mode, &parsed_filter, &parsed_nofilter);
-> 
-> Hmm, if so, where is the parse_symbol_and_return() called?
-> I think you can pick the $retval search loop from the 
-> parse_symbol_and_return() for updating is_return (or make
-> it failure if is_tracepoint == true).
-> 
-
-Makes sense. I will fold the $retval scan into the new parser so there's
-a single source of truth. $retval will remain rejected for tracepoints
-with a proper error index. parse_symbol_and_return() can then be removed
-or turned into a thin wrapper if still referenced.
-
-> >  	if (ret < 0)
-> >  		return -EINVAL;
-> >  
-> > @@ -1283,10 +1390,16 @@ static int trace_fprobe_create_internal(int argc, const char *argv[],
-> >  			return -EINVAL;
-> >  	}
-> >  
-> > -	if (!event) {
-> > -		ebuf = kmalloc(MAX_EVENT_NAME_LEN, GFP_KERNEL);
-> > -		if (!ebuf)
-> > -			return -ENOMEM;
-> > +		if (!event) {
-> > +		/*
-> > +		 * Event name rules:
-> > +		 * - For list/wildcard: require explicit [GROUP/]EVENT
-> > +		 * - For single literal: autogenerate symbol__entry/symbol__exit
-> > +		 */
-> 
-> nit: to avoid confusing, comment should be indented as same as the
-> code. Or, put the comment right before the `if`.
-> 
-
-I will move the comment above the if and align indentation. 
-
-> > +			if (list_mode || has_wildcard(symbol)) {
-> > +				trace_probe_log_err(0, NO_GROUP_NAME);
-> > +			return -EINVAL;
-> > +		}
-> >  		/* Make a new event name */
-> >  		if (is_tracepoint)
-> >  			snprintf(ebuf, MAX_EVENT_NAME_LEN, "%s%s",
-> > @@ -1319,7 +1432,8 @@ static int trace_fprobe_create_internal(int argc, const char *argv[],
-> >  							NULL, NULL, NULL, sbuf);
-> >  		}
-> >  	}
-> > -	if (!ctx->funcname)
-> > +
-> > +	if (!list_mode && !has_wildcard(symbol) && !is_tracepoint)
-> >  		ctx->funcname = symbol;
-> >  
-> >  	abuf = kmalloc(MAX_BTF_ARGS_LEN, GFP_KERNEL);
-> > @@ -1353,6 +1467,21 @@ static int trace_fprobe_create_internal(int argc, const char *argv[],
-> >  		return ret;
-> >  	}
-> >  
-> > +	/* carry list parsing result into tf */
-> > +	if (!is_tracepoint) {
-> > +		tf->list_mode = list_mode;
-> > +			if (parsed_filter) {
-> > +				tf->filter = kstrdup(parsed_filter, GFP_KERNEL);
-> > +				if (!tf->filter)
-> > +					return -ENOMEM;
-> > +			}
-> > +			if (parsed_nofilter) {
-> > +				tf->nofilter = kstrdup(parsed_nofilter, GFP_KERNEL);
-> > +				if (!tf->nofilter)
-> > +					return -ENOMEM;
-> > +			}
-> > +		}
-> 
-> Odd indentation. Please fix.
-> 
-
-My mistake. I will fix the indentation here.
-
-> > +
-> >  	/* parse arguments */
-> >  	for (i = 0; i < argc; i++) {
-> >  		trace_probe_log_set_index(i + 2);
-> > @@ -1439,8 +1568,16 @@ static int trace_fprobe_show(struct seq_file *m, struct dyn_event *ev)
-> >  	seq_printf(m, ":%s/%s", trace_probe_group_name(&tf->tp),
-> >  				trace_probe_name(&tf->tp));
-> >  
-> > -	seq_printf(m, " %s%s", trace_fprobe_symbol(tf),
-> > -			       trace_fprobe_is_return(tf) ? "%return" : "");
-> > +	seq_printf(m, "%s", trace_fprobe_symbol(tf));
-> > +	if (!trace_fprobe_is_tracepoint(tf)) {
-> > +		if (tf->list_mode) {
-> > +			if (trace_fprobe_is_return(tf))
-> > +				seq_puts(m, ":exit");
-> 
-> In both cases, we can use ":exit" suffix. This means we will
-> accept legacy "%return" for backward compatibility, but
-> shows ":exit" always.
-> 
-
-I will make show always print :exit for return probes, regardless of the
-input form, and never print %return.
-
-> > +		} else {
-> > +			if (trace_fprobe_is_return(tf))
-> > +				seq_puts(m, "%return");
-> > +		}
-> > +	}
-> >  
-> >  	for (i = 0; i < tf->tp.nr_args; i++)
-> >  		seq_printf(m, " %s=%s", tf->tp.args[i].name, tf->tp.args[i].comm);
+> > diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> > index b3c94fbaf002..ac0d3acc337e 100644
+> > --- a/kernel/trace/trace.c
+> > +++ b/kernel/trace/trace.c
+> > @@ -5524,7 +5524,8 @@ static const char readme_msg[] =
+> >  	"\t           r[maxactive][:[<group>/][<event>]] <place> [<args>]\n"
+> >  #endif
+> >  #ifdef CONFIG_FPROBE_EVENTS
+> > -	"\t           f[:[<group>/][<event>]] <func-name>[%return] [<args>]\n"
+> > +	"\t           f[:[<group>/][<event>]] <func-name>[:entry|:exit] [<args>]\n"
+> > +	"\t                (single symbols still accept %return)\n"
+> >  	"\t           t[:[<group>/][<event>]] <tracepoint> [<args>]\n"
+> >  #endif
+> >  #ifdef CONFIG_HIST_TRIGGERS
 > > -- 
 > > 2.43.0
 > > 
-> 
-> Thank you,
 > 
 > 
 > -- 
