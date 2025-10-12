@@ -1,41 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2FBD1D86FF;
-	Sun, 12 Oct 2025 03:26:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1593E286A9;
+	Sun, 12 Oct 2025 03:34:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760239613; cv=none; b=Gc3L3HKb87GrhrQqI20nuwJ0c0ytCyb3vzXC+nC4ZJX4bLJqfYPf1XjETxItNNR4ZcmKlhdKEiTROId5Ror+uKp65CLs2UOTq64rW9S+Nhg0kUA7xEwhuaDPB859yGyJSFn7aupMKUcLamh8x4QoWnCN8TAtZ6bTCmPpG9HQiMI=
+	t=1760240054; cv=none; b=hWIsNe/a5+/jdpoRoXYYlzUzebB6n8JEJMxUAgOKIoJ6xBcheutVrS50rtkHkW5djckkxnaJlDDF5dMPPh4/o8gvqynJCxhmK1dMs4tMMz23fDOK9t7uhDpYf/VTg45uCzQJ6k4+4izq0GN9NwWQ9ksVkmJxGKSMmdjy1yOj3/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760239613; c=relaxed/simple;
-	bh=hmpKvvJnF/u4D2UEAsYNRteDpX+9tDZCPdRWNpkWycM=;
+	s=arc-20240116; t=1760240054; c=relaxed/simple;
+	bh=z2OYcA3V2me4qlj2emP9p1AWMNG3Zl5eQHSowZFmIHs=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=Fax2KvkUpvlj1YJGSdgSXLG99BIX85Tdq5m056xhsdRRmgtbppl0MuK4tNMg0kylp0pUtdJfWvBgc2VTzXSIbdEpNkprsJyGp1rdKuJzwSavs1fwwMsssdJ1v02E7mKUYtJzR5ThMcf4q9xZUSbthsI4cilOe/Zw2B3UF+kClhI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ov2euuR5; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=lVi+hYCX1D5OM14bncDvHbeUqTpBOGq+uWiAleEJB5+8A/hs5KsBFiyj+JgKBdvoGnKWzNTKG9mayDtMrd2Pu5w5PhiMJAGNT5zW5WorEFF69Xsmp2AGnnK5fbnoDVbOT8TMiLkTNS/JENu9qmGB+0lRuKNXI01qiCoaQWb4tDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mRPqo80Q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ov2euuR5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 857A9C4CEE7;
-	Sun, 12 Oct 2025 03:26:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mRPqo80Q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 440B3C4CEE7;
+	Sun, 12 Oct 2025 03:34:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760239613;
-	bh=hmpKvvJnF/u4D2UEAsYNRteDpX+9tDZCPdRWNpkWycM=;
+	s=k20201202; t=1760240053;
+	bh=z2OYcA3V2me4qlj2emP9p1AWMNG3Zl5eQHSowZFmIHs=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Ov2euuR5vcyePyIcKmrkeL+xiWlvOf7D+01p1JSK6QEBs2WeHXGfpYIYscmSrMnX7
-	 2V4Xh8yRRZ87h3WVNirgO0yjPAh4Udus31ZPQWRpdMh4EKzC+2IsgfGHYuIEQ41/0I
-	 4m+84lq5NeViQCeAlgZmwRKWg3wiWQvRhT4PU/LEg6GbiaTxA45hMdSVWhhlT5w9Zh
-	 kkKSAZuzvBaWszxHhcIPwpTNHXvYwGGLD4mXqxKNz4xKeXQR8DdRgd8mYTkj61gCbs
-	 DJCPxvSwBXjE8Ba7ouNEttLeGL///4icaZ+N0I5KRyHinyo/mAIMklQp1BySnSPGGM
-	 +PO1gzGiaBJdg==
-Date: Sun, 12 Oct 2025 12:26:48 +0900
+	b=mRPqo80QHVXULRxzudeHJWmO4uI5hmWsN4m0nFZMrLHl2pWnQSEBH1DqNWFPpBB7i
+	 Q9mmcHipRCh/pj1K4meMk2nr9hAddOlEPgIIYzeAMjyUUcMnmPwG3sZzDIb1FQ/IYh
+	 WucogYEyaBC/eL0rdLpnf3mi0mypKM5y3IYQjhVMeVKjBF5UAf//nCd6exxlhK0ex/
+	 MwF5GfSiCuEE6INrHL/JU4kRpgRb0gGo1ICIyc1f34uKuep0N+giLU6Le6r7x8izN5
+	 bOF6u8w2Ui7G9/oUZXqgNduz/XWTnUy3+5hchtfRJ5N/nmHBMX4aO8GN1/Cf9G74pE
+	 LwfFzUh+gFiGA==
+Date: Sun, 12 Oct 2025 12:34:08 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: syzbot <syzbot+9a2ede1643175f350105@syzkaller.appspotmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- mathieu.desnoyers@efficios.com, rostedt@goodmis.org,
- syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [trace?] WARNING in write_raw_marker_to_buffer
-Message-Id: <20251012122648.d6ca8923c4ef5bc9fc483e9f@kernel.org>
-In-Reply-To: <68e973f5.050a0220.1186a4.0010.GAE@google.com>
-References: <68e973f5.050a0220.1186a4.0010.GAE@google.com>
+To: Steven Rostedt <rostedt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, stable@vger.kernel.org,
+ syzbot+9a2ede1643175f350105@syzkaller.appspotmail.com
+Subject: Re: [PATCH 2/2] tracing: Stop fortify-string from warning in
+ tracing_mark_raw_write()
+Message-Id: <20251012123408.b50aad1b5abb8a63565067f5@kernel.org>
+In-Reply-To: <20251011035243.552866788@kernel.org>
+References: <20251011035141.552201166@kernel.org>
+	<20251011035243.552866788@kernel.org>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -46,97 +50,116 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-Hi,
+On Fri, 10 Oct 2025 23:51:43 -0400
+Steven Rostedt <rostedt@kernel.org> wrote:
 
-
-This happens because we replaced (non field size check)
-copy_from_user_nofault() to memcpy. So I think we need a cast
-to void * there.
-
-On Fri, 10 Oct 2025 14:00:37 -0700
-syzbot <syzbot+9a2ede1643175f350105@syzkaller.appspotmail.com> wrote:
-
-> Hello,
+> From: Steven Rostedt <rostedt@goodmis.org>
 > 
-> syzbot found the following issue on:
+> The way tracing_mark_raw_write() records its data is that it has the
+> following structure:
 > 
-> HEAD commit:    5472d60c129f Merge tag 'trace-v6.18-2' of git://git.kernel..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=1239b458580000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=e7dba95d4cdd903c
-> dashboard link: https://syzkaller.appspot.com/bug?extid=9a2ede1643175f350105
-> compiler:       gcc (Debian 12.2.0-14+deb12u1) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15eec52f980000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=122e9892580000
+>   struct {
+> 	struct trace_entry;
+> 	int id;
+> 	char dynamic_array[];
+>   };
 > 
-> Downloadable assets:
-> disk image: https://storage.googleapis.com/syzbot-assets/fbf444614257/disk-5472d60c.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/f129612e3b8b/vmlinux-5472d60c.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/8095ae997ffa/bzImage-5472d60c.xz
+> But memcpy(&entry->id, buf, size) triggers the following warning when the
+> size is greater than the id:
 > 
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+>  ------------[ cut here ]------------
+>  memcpy: detected field-spanning write (size 6) of single field "&entry->id" at kernel/trace/trace.c:7458 (size 4)
+>  WARNING: CPU: 7 PID: 995 at kernel/trace/trace.c:7458 write_raw_marker_to_buffer.isra.0+0x1f9/0x2e0
+>  Modules linked in:
+>  CPU: 7 UID: 0 PID: 995 Comm: bash Not tainted 6.17.0-test-00007-g60b82183e78a-dirty #211 PREEMPT(voluntary)
+>  Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.17.0-debian-1.17.0-1 04/01/2014
+>  RIP: 0010:write_raw_marker_to_buffer.isra.0+0x1f9/0x2e0
+>  Code: 04 00 75 a7 b9 04 00 00 00 48 89 de 48 89 04 24 48 c7 c2 e0 b1 d1 b2 48 c7 c7 40 b2 d1 b2 c6 05 2d 88 6a 04 01 e8 f7 e8 bd ff <0f> 0b 48 8b 04 24 e9 76 ff ff ff 49 8d 7c 24 04 49 8d 5c 24 08 48
+>  RSP: 0018:ffff888104c3fc78 EFLAGS: 00010292
+>  RAX: 0000000000000000 RBX: 0000000000000006 RCX: 0000000000000000
+>  RDX: 0000000000000000 RSI: 1ffffffff6b363b4 RDI: 0000000000000001
+>  RBP: ffff888100058a00 R08: ffffffffb041d459 R09: ffffed1020987f40
+>  R10: 0000000000000007 R11: 0000000000000001 R12: ffff888100bb9010
+>  R13: 0000000000000000 R14: 00000000000003e3 R15: ffff888134800000
+>  FS:  00007fa61d286740(0000) GS:ffff888286cad000(0000) knlGS:0000000000000000
+>  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>  CR2: 0000560d28d509f1 CR3: 00000001047a4006 CR4: 0000000000172ef0
+>  Call Trace:
+>   <TASK>
+>   tracing_mark_raw_write+0x1fe/0x290
+>   ? __pfx_tracing_mark_raw_write+0x10/0x10
+>   ? security_file_permission+0x50/0xf0
+>   ? rw_verify_area+0x6f/0x4b0
+>   vfs_write+0x1d8/0xdd0
+>   ? __pfx_vfs_write+0x10/0x10
+>   ? __pfx_css_rstat_updated+0x10/0x10
+>   ? count_memcg_events+0xd9/0x410
+>   ? fdget_pos+0x53/0x5e0
+>   ksys_write+0x182/0x200
+>   ? __pfx_ksys_write+0x10/0x10
+>   ? do_user_addr_fault+0x4af/0xa30
+>   do_syscall_64+0x63/0x350
+>   entry_SYSCALL_64_after_hwframe+0x76/0x7e
+>  RIP: 0033:0x7fa61d318687
+>  Code: 48 89 fa 4c 89 df e8 58 b3 00 00 8b 93 08 03 00 00 59 5e 48 83 f8 fc 74 1a 5b c3 0f 1f 84 00 00 00 00 00 48 8b 44 24 10 0f 05 <5b> c3 0f 1f 80 00 00 00 00 83 e2 39 83 fa 08 75 de e8 23 ff ff ff
+>  RSP: 002b:00007ffd87fe0120 EFLAGS: 00000202 ORIG_RAX: 0000000000000001
+>  RAX: ffffffffffffffda RBX: 00007fa61d286740 RCX: 00007fa61d318687
+>  RDX: 0000000000000006 RSI: 0000560d28d509f0 RDI: 0000000000000001
+>  RBP: 0000560d28d509f0 R08: 0000000000000000 R09: 0000000000000000
+>  R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000000006
+>  R13: 00007fa61d4715c0 R14: 00007fa61d46ee80 R15: 0000000000000000
+>   </TASK>
+>  ---[ end trace 0000000000000000 ]---
+> 
+> This is because fortify string sees that the size of entry->id is only 4
+> bytes, but it is writing more than that. But this is OK as the
+> dynamic_array is allocated to handle that copy.
+> 
+> Use a void pointer and get the offset via offsetof() to keep fortify
+> string from warning about this copy.
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: 64cf7d058a00 ("tracing: Have trace_marker use per-cpu data to read user space")
 > Reported-by: syzbot+9a2ede1643175f350105@syzkaller.appspotmail.com
-> 
-> ------------[ cut here ]------------
-> memcpy: detected field-spanning write (size 2655) of single field "&entry->id" at kernel/trace/trace.c:7458 (size 4)
-> WARNING: CPU: 0 PID: 6004 at kernel/trace/trace.c:7458 write_raw_marker_to_buffer.isra.0+0x2d4/0x330 kernel/trace/trace.c:7458
-> Modules linked in:
-> CPU: 0 UID: 0 PID: 6004 Comm: syz.0.17 Not tainted syzkaller #0 PREEMPT(full) 
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 10/02/2025
-> RIP: 0010:write_raw_marker_to_buffer.isra.0+0x2d4/0x330 kernel/trace/trace.c:7458
-> Code: ff e8 30 74 fa ff c6 05 b4 7e aa 0e 01 90 b9 04 00 00 00 48 c7 c2 e0 1e 93 8b 4c 89 e6 48 c7 c7 40 1f 93 8b e8 6d fc b8 ff 90 <0f> 0b 90 90 e9 d7 fe ff ff e8 6e 04 62 00 e9 da fd ff ff e8 64 04
-> RSP: 0018:ffffc90003837c40 EFLAGS: 00010282
-> RAX: 0000000000000000 RBX: ffff88813ff34018 RCX: ffffffff817a5e58
-> RDX: ffff888031d73c80 RSI: ffffffff817a5e65 RDI: 0000000000000001
-> RBP: ffff88813ff34010 R08: 0000000000000001 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000001 R12: 0000000000000a5f
-> R13: ffff88813ff18c00 R14: 0000000000000000 R15: 0000200000000040
-> FS:  000055558e5ff500(0000) GS:ffff8881249e6000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 0000001b30263fff CR3: 0000000034638000 CR4: 00000000003526f0
-> Call Trace:
->  <TASK>
->  tracing_mark_raw_write+0x2da/0x4a0 kernel/trace/trace.c:7500
->  vfs_write+0x2a0/0x11d0 fs/read_write.c:684
->  ksys_write+0x1f8/0x250 fs/read_write.c:738
->  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
->  do_syscall_64+0xcd/0xfa0 arch/x86/entry/syscall_64.c:94
->  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> RIP: 0033:0x7f18a0b8eec9
-> Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-> RSP: 002b:00007fff2b2d2c28 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-> RAX: ffffffffffffffda RBX: 00007f18a0de5fa0 RCX: 00007f18a0b8eec9
-> RDX: 0000000000000a5f RSI: 0000200000000040 RDI: 0000000000000003
-> RBP: 00007f18a0c11f91 R08: 0000000000000000 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-> R13: 00007f18a0de5fa0 R14: 00007f18a0de5fa0 R15: 0000000000000003
->  </TASK>
-> 
-> 
+> Closes: https://lore.kernel.org/all/68e973f5.050a0220.1186a4.0010.GAE@google.com/
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+
+Ah, fixed already.
+
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
 > ---
-> This report is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>  kernel/trace/trace.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
 > 
-> syzbot will keep track of this issue. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index bbb89206a891..27855fc9e0f2 100644
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+> @@ -7440,6 +7440,7 @@ static ssize_t write_raw_marker_to_buffer(struct trace_array *tr,
+>  	struct raw_data_entry *entry;
+>  	ssize_t written;
+>  	size_t size;
+> +	void *ptr;
+>  
+>  	size = sizeof(*entry) + cnt;
+>  
+> @@ -7455,7 +7456,10 @@ static ssize_t write_raw_marker_to_buffer(struct trace_array *tr,
+>  		return -EBADF;
+>  
+>  	entry = ring_buffer_event_data(event);
+> -	memcpy(&entry->id, buf, cnt);
+> +	/* Do not let fortify-string warn copying to &entry->id */
+> +	ptr = (void *)entry;
+> +	ptr += offsetof(typeof(*entry), id);
+> +	memcpy(ptr, buf, cnt);
+>  	written = cnt;
+>  
+>  	__buffer_unlock_commit(buffer, event);
+> -- 
+> 2.51.0
 > 
-> If the report is already addressed, let syzbot know by replying with:
-> #syz fix: exact-commit-title
 > 
-> If you want syzbot to run the reproducer, reply with:
-> #syz test: git://repo/address.git branch-or-commit-hash
-> If you attach or paste a git patch, syzbot will apply it before testing.
-> 
-> If you want to overwrite report's subsystems, reply with:
-> #syz set subsystems: new-subsystem
-> (See the list of subsystem names on the web dashboard)
-> 
-> If the report is a duplicate of another one, reply with:
-> #syz dup: exact-subject-of-another-report
-> 
-> If you want to undo deduplication, reply with:
-> #syz undup
 
 
 -- 
