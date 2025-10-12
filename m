@@ -1,286 +1,617 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F11432494D8
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 12 Oct 2025 11:23:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 736B12836B4
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 12 Oct 2025 14:19:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760268210; cv=none; b=Tmq9TDrPTUFNx8Mj+bHUE8qeKppmwGw6+tW+R7e1FRlD2qJZ8AL8Arx/gOI6iB6T1sca2BRTc2ykgqDTi5pBY250pVQhf7R34vIpFHI6OSowwWt5YPxqrll2kBJ9Ctm2OrosWF1DywIXfd57J62ZMtTyNeV62plWu6gyAHlf9Pk=
+	t=1760278787; cv=none; b=HzH67rG0+K7lsvjBE4jcRV7KR+jF0ySG75WU1cBmZlfbCJFe7cYF+P//C5l0ASfVdVnc5Ac75Je5kahkrRh6sRGkpdDx0f5lQKv3n/NArqQ41nUtYSgeslwtcSyIekaGJc/At4NEzhMSFq+HTqWtetkZf3Gezs0ZxVEaPWtCWIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760268210; c=relaxed/simple;
-	bh=T76ciC7MvD6Uq6qKE1gKRXHkh8/nQlep+GS6D4H+5gU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=O23AQY/Ropgnqk9rHWv78aro1IefdmyhKVfueH/lhhNQ8Q6cUiWQhN3/qXxFJ7gL5yqhdxWKswzzqls1QCuaBWgdjG5i/SDkWkS88NMPid0sL6sR8IlPBKysXdxrUbXYHrTgpkGbn6jIK51eLGLNVGrM4hBS0ujTBa4lHYWWh/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BiYwTjA1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1760278787; c=relaxed/simple;
+	bh=S0RjN53FhosHFqH1eQVEkBO1CL2bCSvSztX6fZqueyc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QgeL5U9VMnHUteR3LU2GyfgRUnayHjcG1EDo+LzFKhfnTwqxLJPIwLe2k19KEMjF1+ty9GXsWws4iXeZ77TDJTB8yFKnR6ymASWaxob8Xtozin+yIZ9umTzPvFmizlNfaUkFlyB+YeVHRdrHaoBmKwvyFIfpxPpzy10wWGuTv20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PI/1u+4c; arc=none smtp.client-ip=209.85.219.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BiYwTjA1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61D6EC2BC87
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 12 Oct 2025 11:23:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760268209;
-	bh=T76ciC7MvD6Uq6qKE1gKRXHkh8/nQlep+GS6D4H+5gU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=BiYwTjA1WXiDDZ6k1pLc0b+PVyq6vXvaXJOZF4TiaEg3k2huYIgxz5uiIWihe7xx0
-	 argw5VZRtvF7yvFH0XbmOvh0rZc5EIGTsLQphvKJutV+Re/G93hVAnGO/5Vd5s/oV9
-	 BpVI41JFcsEueP3VZuSaN5D1ccT/o0TFTic9XbmluMz1UuFcuYBBBwteLFMr+aqlHW
-	 1ddfWukU9fy6Xto3ZNWKhaDND0UbOc23zwq/V6B3oWgI4q8NIj9J3LJ5Uhc8IKvH5F
-	 0/hDSffDn5lByMu0/A6fKW6w/j0c0gjpfd5s+MEWpAB9/vhUnj99cOFfrDLdMa3mmb
-	 8b438qCPpYpnw==
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-46b303f755aso27765545e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 12 Oct 2025 04:23:29 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXwOy1/RvHu9eMCN5VoDPsF1y1ivC2xWdt2o5RdI4EL4je5hcs5KY3aBetYYpM6TO/6uqaugjy7Uuc5atR9bWd713Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwTdTNp8dbeOEJjLgQVPUlRLNz0bC2DgL9nRW1hwMwpu5LB/noQ
-	45jTEvL2zTeNanW3meV2MeMF/tCHJXDTpo0DHgfjCyhGymSrCViNYUx3Pa5kIGQgfvXsW+NF0F7
-	AEC9zGCO5Y4HHYBISL3g8mY70mFPej+Y=
-X-Google-Smtp-Source: AGHT+IHWkSwxpRdIU93ruDljUo6L3O36dcwVKmHU88EIC562kkwkQS6D3HE2q9MMHT5O3SbUtodlQg41kAKRXUo7tRc=
-X-Received: by 2002:a05:600c:1c23:b0:45b:6b57:5308 with SMTP id
- 5b1f17b1804b1-46fa9a892a0mr122801735e9.7.1760268207732; Sun, 12 Oct 2025
- 04:23:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PI/1u+4c"
+Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-796d68804a0so52756556d6.3
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 12 Oct 2025 07:19:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1760278783; x=1760883583; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=c/781Ye50yRSfgbM0sVXYJ3EacOElPA86Mq2WbSzU9U=;
+        b=PI/1u+4c7HEONsZ5wqMM8v1aHnrW7P10BCfBFYxIWQ2HTH6z5WDB0TC+mhHr6pQrRw
+         xYwjYwQ8pkDNgvg2GQqKRuSs7CcmiWml36RqtQdwuWej3EsGi8JolLi64nLN1FRXlRuG
+         aAIbKpzIN5S0EqYv47oe1M5NRzXWc5JeIHeRxwDRctmo0vQUjV+zP3VvKuDRdzD2f4aM
+         jp1KIaKjF9eYBOLCR4l6/gsdqFLpcvxVSkFarizWtiJ1lY+sCkK2PVpipqkyPCwCYf1l
+         GoPinO9ujj6yjabGBI5/CenkyoXngcOKwSQnDlO0yPNSbIyaEqTUJnTbEiF3/tPbqzOD
+         vwrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760278783; x=1760883583;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=c/781Ye50yRSfgbM0sVXYJ3EacOElPA86Mq2WbSzU9U=;
+        b=I292M7APkYjlJT6p/gFT2AIZR3PK8l6Fb5y73toJL+Q7bcmOeCmcifOGdg+QT1TuTf
+         PcXL2eV7A9YUWk5mDN1+M6Bd/Bnh7fN0O/Bl2JHeAURWHP0VzRmSYlmzXCLHDJdfpE1I
+         xmPOXkbuRD/PBlDHNkwpdGyzRmI9ylgFJcrMSp7ZWaFq3vW0pFTSPA+jJJRVLJhKgn8h
+         K0UEjdrWDPmtF3ZJdqNDLi+zhFYAl/cyD730wvRYvL0BNlvQKTGpakkTq9gdfFZm3L1m
+         2cU1ohsseFtpLqEvb64yw4fRdX9YPSJPy6v1vObSjHYmf7iKFsEQdQjuw4qLUauvs3Xv
+         usRg==
+X-Forwarded-Encrypted: i=1; AJvYcCUyHk/cnZatH7/nOw3DpMhpFw6mGCNVvN9whlGbOLd3r8emn+QQg0LJVvrXTcxaUaptD8p+BiPUMVuTvjCdlsH21ns=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy2Pa7K0TRf5rN57dDAw7yCe379xtyFxkMjvDALIfM+ACrg0KHE
+	jFdTNUzMmuojX9nkUJlgAbVE2tGgyqeO4Q188MeFy3n68wb+Up3E5udw
+X-Gm-Gg: ASbGncthD0htAiGjWXHCHdQqHY0GOoysGrbAzzTEKJs2OGWZBEQITJfkizDR2iV4Dtv
+	LwOxKnCIahUwN2MXdsUqEX0bl1Q7Q0n2VcLCYh8xoGukZljFCiQ+hYiSULYed8EsLqqUl5ikjD+
+	ugfgwyHzU8RxhuqY+cbSfMduttWEJtLb2+kEoxkDRbsfTNAWa7j6imy6mDStL3+PYexWWg3swLK
+	6AswcLMWlVWPG2gl+8Z1FY1Zjcfyf/TGAshYFiG1qpeuQIKlGipPM8hsJl255ENqV3U2o3PUNDR
+	f5SJqWKk7VateIKS6zCqDK0es/yVJDFQ0GkhzH8b7v5UQR1EX+M8jUrkK9abhbwB6u4jf/j0qVF
+	do/4Y2FXyhSLPO2kfyZ/sdGvcM8XdHuAeriYuIQsftJG1nICtQjLJ
+X-Google-Smtp-Source: AGHT+IFAXQttV0gVKtNIYGQh3pzgscmaOrpvGng16uvi0C8x1olqSjkESlIelbf97EwdfKqOZ27z7A==
+X-Received: by 2002:a05:622a:14c6:b0:4da:21ee:247b with SMTP id d75a77b69052e-4e6ead768e6mr242310381cf.47.1760278783042;
+        Sun, 12 Oct 2025 07:19:43 -0700 (PDT)
+Received: from gmail.com ([2600:4041:4491:2000:f887:3bb2:9bc6:cbb0])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4e721452e03sm14285111cf.4.2025.10.12.07.19.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 12 Oct 2025 07:19:41 -0700 (PDT)
+Date: Sun, 12 Oct 2025 23:19:39 +0900
+From: Ryan Chung <seokwoo.chung130@gmail.com>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: rostedt@goodmis.org, mathieu.desnoyers@efficios.com, shuah@kernel.org,
+	hca@linux.ibm.com, corbet@lwn.net,
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v3 3/5] tracing: fprobe: support comma-separated symbols
+ and :entry/:exit
+Message-ID: <aOu4-3QNhJi8kVXb@gmail.com>
+References: <20251004235001.133111-1-seokwoo.chung130@gmail.com>
+ <20251004235001.133111-4-seokwoo.chung130@gmail.com>
+ <20251008190937.c7c992e41b4397fecbc8176e@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251009134514.8549-1-cuiyunhui@bytedance.com>
-In-Reply-To: <20251009134514.8549-1-cuiyunhui@bytedance.com>
-From: Guo Ren <guoren@kernel.org>
-Date: Sun, 12 Oct 2025 19:23:15 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTTJD3G1gyh8ucf6OSp2Y0=xHKGRLQakrTwqiLbzG+G0uw@mail.gmail.com>
-X-Gm-Features: AS18NWD6MJ72Wu3veu27hAB-l8__trDKgDBlFxv_dFmO-FnASlGZT1S2onigZrQ
-Message-ID: <CAJF2gTTJD3G1gyh8ucf6OSp2Y0=xHKGRLQakrTwqiLbzG+G0uw@mail.gmail.com>
-Subject: Re: [PATCH RFC] riscv: add support for Ziccid
-To: Yunhui Cui <cuiyunhui@bytedance.com>
-Cc: paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
-	alex@ghiti.fr, rostedt@goodmis.org, mhiramat@kernel.org, mark.rutland@arm.com, 
-	peterz@infradead.org, jpoimboe@kernel.org, jbaron@akamai.com, ardb@kernel.org, 
-	willy@infradead.org, ziy@nvidia.com, akpm@linux-foundation.org, 
-	bjorn@rivosinc.com, ajones@ventanamicro.com, parri.andrea@gmail.com, 
-	cleger@rivosinc.com, yongxuan.wang@sifive.com, inochiama@gmail.com, 
-	samuel.holland@sifive.com, charlie@rivosinc.com, conor.dooley@microchip.com, 
-	yikming2222@gmail.com, andybnac@gmail.com, yury.norov@gmail.com, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251008190937.c7c992e41b4397fecbc8176e@kernel.org>
 
-On Thu, Oct 9, 2025 at 9:45=E2=80=AFPM Yunhui Cui <cuiyunhui@bytedance.com>=
- wrote:
->
-> The Ziccid extension provides hardware synchronization between
-> Dcache and Icache. With this hardware support, there's no longer
-> a need to trigger remote hart execution of fence.i via IPI.
-Ziccid only means I/D $ coherent, we still need "fence.i" & IPI to
-flush the instructions stalled in the pipeline.
+Hi. Thanks for the quick review and comments. Here are my responses to
+the remaining points.
 
->
-> Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
-> ---
->  arch/riscv/include/asm/cacheflush.h |  4 ++--
->  arch/riscv/include/asm/hwcap.h      |  1 +
->  arch/riscv/include/asm/switch_to.h  | 10 ++++++++++
->  arch/riscv/kernel/cpufeature.c      |  1 +
->  arch/riscv/kernel/ftrace.c          |  2 +-
->  arch/riscv/kernel/hibernate.c       |  2 +-
->  arch/riscv/kernel/jump_label.c      |  2 +-
->  arch/riscv/mm/cacheflush.c          | 16 ++++++++++++++--
->  8 files changed, 31 insertions(+), 7 deletions(-)
->
-> diff --git a/arch/riscv/include/asm/cacheflush.h b/arch/riscv/include/asm=
-/cacheflush.h
-> index 0092513c3376c..3a8cdf30bb4b1 100644
-> --- a/arch/riscv/include/asm/cacheflush.h
-> +++ b/arch/riscv/include/asm/cacheflush.h
-> @@ -68,7 +68,7 @@ static inline void flush_cache_vmap(unsigned long start=
-, unsigned long end)
->
->  #else /* CONFIG_SMP */
->
-> -void flush_icache_all(void);
-> +void flush_icache_all(bool force);
->  void flush_icache_mm(struct mm_struct *mm, bool local);
->
->  #endif /* CONFIG_SMP */
-> @@ -80,7 +80,7 @@ void flush_icache_mm(struct mm_struct *mm, bool local);
->  #define flush_icache_range flush_icache_range
->  static inline void flush_icache_range(unsigned long start, unsigned long=
- end)
->  {
-> -       flush_icache_all();
-> +       flush_icache_all(false);
->  }
->
->  extern unsigned int riscv_cbom_block_size;
-> diff --git a/arch/riscv/include/asm/hwcap.h b/arch/riscv/include/asm/hwca=
-p.h
-> index affd63e11b0a3..ad97d8955b501 100644
-> --- a/arch/riscv/include/asm/hwcap.h
-> +++ b/arch/riscv/include/asm/hwcap.h
-> @@ -106,6 +106,7 @@
->  #define RISCV_ISA_EXT_ZAAMO            97
->  #define RISCV_ISA_EXT_ZALRSC           98
->  #define RISCV_ISA_EXT_ZICBOP           99
-> +#define RISCV_ISA_EXT_ZICCID           100
->
->  #define RISCV_ISA_EXT_XLINUXENVCFG     127
->
-> diff --git a/arch/riscv/include/asm/switch_to.h b/arch/riscv/include/asm/=
-switch_to.h
-> index 0e71eb82f920c..b8a9e455efe9e 100644
-> --- a/arch/riscv/include/asm/switch_to.h
-> +++ b/arch/riscv/include/asm/switch_to.h
-> @@ -98,7 +98,17 @@ static inline bool switch_to_should_flush_icache(struc=
-t task_struct *task)
->         bool stale_thread =3D task->thread.force_icache_flush;
->         bool thread_migrated =3D smp_processor_id() !=3D task->thread.pre=
-v_cpu;
->
-> +       asm goto(ALTERNATIVE("nop", "j %l[ziccid]", 0, RISCV_ISA_EXT_ZICC=
-ID, 1)
-> +                : : : : ziccid);
-> +
->         return thread_migrated && (stale_mm || stale_thread);
-> +
-> +ziccid:
-> +       /*
-> +        * Process switching writes to SATP, which flushes the pipeline,
-> +        * so only the thread scenario is considered.
-> +        */
-> +       return thread_migrated && stale_thread;
->  #else
->         return false;
->  #endif
-> diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeatur=
-e.c
-> index 67b59699357da..2da82aa2dbf0a 100644
-> --- a/arch/riscv/kernel/cpufeature.c
-> +++ b/arch/riscv/kernel/cpufeature.c
-> @@ -540,6 +540,7 @@ const struct riscv_isa_ext_data riscv_isa_ext[] =3D {
->         __RISCV_ISA_EXT_DATA(svnapot, RISCV_ISA_EXT_SVNAPOT),
->         __RISCV_ISA_EXT_DATA(svpbmt, RISCV_ISA_EXT_SVPBMT),
->         __RISCV_ISA_EXT_DATA(svvptc, RISCV_ISA_EXT_SVVPTC),
-> +       __RISCV_ISA_EXT_DATA(ziccid, RISCV_ISA_EXT_ZICCID),
->  };
->
->  const size_t riscv_isa_ext_count =3D ARRAY_SIZE(riscv_isa_ext);
-> diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
-> index 8d18d6727f0fc..431448e818363 100644
-> --- a/arch/riscv/kernel/ftrace.c
-> +++ b/arch/riscv/kernel/ftrace.c
-> @@ -43,7 +43,7 @@ void arch_ftrace_update_code(int command)
->  {
->         command |=3D FTRACE_MAY_SLEEP;
->         ftrace_modify_all_code(command);
-> -       flush_icache_all();
-> +       flush_icache_all(false);
->  }
->
->  static int __ftrace_modify_call(unsigned long source, unsigned long targ=
-et, bool validate)
-> diff --git a/arch/riscv/kernel/hibernate.c b/arch/riscv/kernel/hibernate.=
-c
-> index 671b686c01587..388f10e187bae 100644
-> --- a/arch/riscv/kernel/hibernate.c
-> +++ b/arch/riscv/kernel/hibernate.c
-> @@ -153,7 +153,7 @@ int swsusp_arch_suspend(void)
->         } else {
->                 suspend_restore_csrs(hibernate_cpu_context);
->                 flush_tlb_all();
-> -               flush_icache_all();
-> +               flush_icache_all(true);
->
->                 /*
->                  * Tell the hibernation core that we've just restored the=
- memory.
-> diff --git a/arch/riscv/kernel/jump_label.c b/arch/riscv/kernel/jump_labe=
-l.c
-> index b4c1a6a3fbd28..680b29f4c09c4 100644
-> --- a/arch/riscv/kernel/jump_label.c
-> +++ b/arch/riscv/kernel/jump_label.c
-> @@ -51,5 +51,5 @@ bool arch_jump_label_transform_queue(struct jump_entry =
-*entry,
->
->  void arch_jump_label_transform_apply(void)
->  {
-> -       flush_icache_all();
-> +       flush_icache_all(false);
->  }
-> diff --git a/arch/riscv/mm/cacheflush.c b/arch/riscv/mm/cacheflush.c
-> index d83a612464f6c..01f9f7a45e8d2 100644
-> --- a/arch/riscv/mm/cacheflush.c
-> +++ b/arch/riscv/mm/cacheflush.c
-> @@ -12,19 +12,24 @@
->  #ifdef CONFIG_SMP
->
->  #include <asm/sbi.h>
-> +#include <asm/alternative-macros.h>
->
->  static void ipi_remote_fence_i(void *info)
->  {
->         return local_flush_icache_all();
->  }
->
-> -void flush_icache_all(void)
-> +void flush_icache_all(bool force)
->  {
->         local_flush_icache_all();
->
->         if (num_online_cpus() < 2)
->                 return;
->
-> +       if (!force)
-> +               asm goto(ALTERNATIVE("nop", "j %l[ziccid]", 0,
-> +                       RISCV_ISA_EXT_ZICCID, 1)
-> +                       : : : : ziccid);
->         /*
->          * Make sure all previous writes to the D$ are ordered before mak=
-ing
->          * the IPI. The RISC-V spec states that a hart must execute a dat=
-a fence
-> @@ -41,6 +46,7 @@ void flush_icache_all(void)
->                 sbi_remote_fence_i(NULL);
->         else
->                 on_each_cpu(ipi_remote_fence_i, NULL, 1);
-> +ziccid:;
->  }
->  EXPORT_SYMBOL(flush_icache_all);
->
-> @@ -61,13 +67,17 @@ void flush_icache_mm(struct mm_struct *mm, bool local=
-)
->
->         preempt_disable();
->
-> +       local_flush_icache_all();
-> +
-> +       asm goto(ALTERNATIVE("nop", "j %l[ziccid]", 0, RISCV_ISA_EXT_ZICC=
-ID, 1)
-> +                : : : : ziccid);
-> +
->         /* Mark every hart's icache as needing a flush for this MM. */
->         mask =3D &mm->context.icache_stale_mask;
->         cpumask_setall(mask);
->         /* Flush this hart's I$ now, and mark it as flushed. */
->         cpu =3D smp_processor_id();
->         cpumask_clear_cpu(cpu, mask);
-> -       local_flush_icache_all();
->
->         /*
->          * Flush the I$ of other harts concurrently executing, and mark t=
-hem as
-> @@ -91,6 +101,8 @@ void flush_icache_mm(struct mm_struct *mm, bool local)
->                 on_each_cpu_mask(&others, ipi_remote_fence_i, NULL, 1);
->         }
->
-> +ziccid:;
-> +
->         preempt_enable();
->  }
->
-> --
-> 2.39.5
->
+On Wed, Oct 08, 2025 at 07:09:37PM +0900, Masami Hiramatsu wrote:
+> On Sun,  5 Oct 2025 08:46:57 +0900
+> Ryan Chung <seokwoo.chung130@gmail.com> wrote:
+> 
+> Please describe what this patch adds, for what reason.
+> 
 
+This is my mistake; I forgot to do so. I will make sure to include it
+next time.
 
---=20
-Best Regards
- Guo Ren
+> > Signed-off-by: Ryan Chung <seokwoo.chung130@gmail.com>
+> > ---
+> >  kernel/trace/trace_fprobe.c | 247 ++++++++++++++++++++++++++++--------
+> >  1 file changed, 192 insertions(+), 55 deletions(-)
+> > 
+> > diff --git a/kernel/trace/trace_fprobe.c b/kernel/trace/trace_fprobe.c
+> > index b36ade43d4b3..ec5b6e1c1a1b 100644
+> > --- a/kernel/trace/trace_fprobe.c
+> > +++ b/kernel/trace/trace_fprobe.c
+> > @@ -191,6 +191,9 @@ struct trace_fprobe {
+> >  	bool			tprobe;
+> >  	struct tracepoint_user	*tuser;
+> >  	struct trace_probe	tp;
+> > +	char			*filter;
+> > +	char			*nofilter;
+> > +	bool			list_mode;
+> >  };
+> >  
+> >  static bool is_trace_fprobe(struct dyn_event *ev)
+> > @@ -203,14 +206,10 @@ static struct trace_fprobe *to_trace_fprobe(struct dyn_event *ev)
+> >  	return container_of(ev, struct trace_fprobe, devent);
+> >  }
+> >  
+> > -/**
+> > - * for_each_trace_fprobe - iterate over the trace_fprobe list
+> > - * @pos:	the struct trace_fprobe * for each entry
+> > - * @dpos:	the struct dyn_event * to use as a loop cursor
+> > - */
+> > -#define for_each_trace_fprobe(pos, dpos)	\
+> > -	for_each_dyn_event(dpos)		\
+> > -		if (is_trace_fprobe(dpos) && (pos = to_trace_fprobe(dpos)))
+> 
+> Why remove this? This is for finding all fprobes.
+> 
+
+I will revert this and keep for_each_trace_fprobe as is. 
+
+> > +static struct trace_fprobe *trace_fprobe_from_dyn(struct dyn_event *ev)
+> > +{
+> > +	return is_trace_fprobe(ev) ? to_trace_fprobe(ev) : NULL;
+> > +}
+> >  
+> >  static bool trace_fprobe_is_return(struct trace_fprobe *tf)
+> >  {
+> > @@ -227,6 +226,109 @@ static const char *trace_fprobe_symbol(struct trace_fprobe *tf)
+> >  	return tf->symbol ? tf->symbol : "unknown";
+> >  }
+> >  
+> > +static bool has_wildcard(const char *s)
+> > +{
+> > +	return s && (strchr(s, '*') || strchr(s, '?'));
+> > +}
+> > +
+> > +static int parse_fprobe_spec(const char *in, bool is_tracepoint,
+> > +		char **base, bool *is_return, bool *list_mode,
+> > +		char **filter, char **nofilter)
+> > +{
+> > +	const char *p;
+> > +	char *work = NULL;
+> > +	char *b = NULL, *f = NULL, *nf = NULL;
+> 
+> See below (out: label)
+> 
+
+I will switch those temporaries to __free(kfree) and drop the goto that
+existed only to kfree. This addresses the cleanup pattern comment.
+
+> > +	bool legacy_ret = false;
+> > +	bool list = false;
+> > +	int ret = 0;
+> 
+> nit: sort local variable by line length. (longer to shorter)
+> 
+
+Ok. I will sort locals longest -> shortest and fix a few initializations
+(char *filter = NULL, char *nofilter = Null;).
+
+> > +
+> > +	if (!in || !base || !is_return || !list_mode || !filter || !nofilter)
+> > +		return -EINVAL;
+> > +
+> > +	*base = NULL; *filter = NULL; *nofilter = NULL;
+> > +	*is_return = false; *list_mode = false;
+> > +
+> > +	if (is_tracepoint) {
+> > +		if (strchr(in, ',') || strchr(in, ':'))
+> > +			return -EINVAL;
+> > +		if (strstr(in, "%return"))
+> > +			return -EINVAL;
+> 
+> It seems below loop checks all above cases.
+> 
+
+I will remove the redundant pre-checks and rely on the validation loop,
+with precise rules. 
+
+> > +		for (p = in; *p; p++)
+> > +			if (!isalnum(*p) && *p != '_')
+> > +				return -EINVAL;
+> 
+> This only allows that the @in must be a symbol name.
+> 
+
+Just to clarify: should tracepoint arguments support the subsystem:event
+format (e.g., "sched:sched_switch"), or should they remain restricted to
+simple symbol names only? The current validation enforces
+symbol-name-only, but I wanted to confirm this is the intended behavior
+before next version.
+
+> > +		b = kstrdup(in, GFP_KERNEL);
+> > +		if (!b)
+> > +			return -ENOMEM;
+> > +		*base = b;
+> > +		return 0;
+> > +	}
+> > +
+> > +	work = kstrdup(in, GFP_KERNEL);
+> > +	if (!work)
+> > +		return -ENOMEM;
+> > +
+> > +	p = strstr(work, "%return");
+> 
+> Note that strstr does not care it ends with given string.
+> 
+
+Good catch. I will replace it with explicit end-of-string checks so we
+accept only a single terminal suffix: %return, :entry, or :exit.
+Partial/embedded matches will be rejected.
+
+> > +	if (p) {
+> > +		if (!strcmp(p, ":exit")) {
+> > +			*is_return = true;
+> > +			*p = '\0';
+> > +		} else if (!strcmp(p, ":entry")) {
+> > +			*p = '\0';
+> > +		} else {
+> > +			ret = -EINVAL;
+> > +			goto out;
+> > +		}
+> > +	}
+> > +
+> > +	list = !!strchr(work, ',') || has_wildcard(work);
+> 
+> Wildcard is OK for legacy.
+> 
+
+I will keep the wildcard acceptance for the legacy string, and treat
+presence of "," or wildcard as "list mode" that builds filter/nofilter
+for register_fprobe(); otherwise it remains single-symbol legacy.
+
+> > +	if (legacy_ret)
+> > +		*is_return = true;
+> > +
+> > +	b = kstrdup(work, GFP_KERNEL);
+> > +	if (!b) {
+> > +		ret = -ENOMEM;
+> > +		goto out;
+> > +	}
+> > +
+> > +	if (list) {
+> > +		char *tmp = b, *tok;
+> > +		size_t fsz = strlen(b) + 1, nfsz = strlen(b) + 1;
+> 
+> size_t fsz, nfsz;
+> 
+> fsz = nfsz = strlen(b) + 1;
+> 
+
+I will adopt the above style.
+
+> > +
+> > +		f = kzalloc(fsz, GFP_KERNEL);
+> > +		nf = kzalloc(nfsz, GFP_KERNEL);
+> > +		if (!f || !nf) {
+> > +			ret = -ENOMEM;
+> > +			goto out;
+> > +		}
+> > +
+> > +		while ((tok = strsep(&tmp, ",")) != NULL) {
+> > +			char *dst;
+> > +			bool neg = (*tok == '!');
+> > +
+> > +			if (*tok == '\0')
+> > +				continue;
+> > +			if (neg)
+> > +				tok++;
+> > +			dst = neg ? nf : f;
+> > +			if (dst[0] != '\0')
+> > +				strcat(dst, ",");
+> > +			strcat(dst, tok);
+> > +		}
+> > +		*list_mode = true;
+> > +	}
+> > +
+> > +	*base = b; b = NULL;
+> > +	*filter = f; f = NULL;
+> > +	*nofilter = nf; nf = NULL;
+> > +
+> > +out:
+> > +	kfree(work);
+> > +	kfree(b);
+> > +	kfree(f);
+> > +	kfree(nf);
+> 
+> Instead of using goto only for kfree(), use __free(kfree)
+> to clean those up automatically.
+> 
+
+Ok. As mentioned above, I will convert all such temporaries to
+__free(kfree) and remove the goto cleanup.
+
+> > +	return ret;
+> > +}
+> > +
+> >  static bool trace_fprobe_is_busy(struct dyn_event *ev)
+> >  {
+> >  	struct trace_fprobe *tf = to_trace_fprobe(ev);
+> > @@ -556,13 +658,17 @@ static void free_trace_fprobe(struct trace_fprobe *tf)
+> >  		trace_probe_cleanup(&tf->tp);
+> >  		if (tf->tuser)
+> >  			tracepoint_user_put(tf->tuser);
+> > +		kfree(tf->filter);
+> > +		kfree(tf->nofilter);
+> >  		kfree(tf->symbol);
+> >  		kfree(tf);
+> >  	}
+> >  }
+> >  
+> >  /* Since alloc_trace_fprobe() can return error, check the pointer is ERR too. */
+> > -DEFINE_FREE(free_trace_fprobe, struct trace_fprobe *, if (!IS_ERR_OR_NULL(_T)) free_trace_fprobe(_T))
+> > +DEFINE_FREE(free_trace_fprobe, struct trace_fprobe *,
+> > +	if (!IS_ERR_OR_NULL(_T))
+> > +		free_trace_fprobe(_T))
+> 
+> OK, it looks good to clean up. But please do it separated patch.
+> Do not touch if it is not related to your change.
+> 
+
+Do you want this to be in a separate series or for this patch series?
+
+> >  
+> >  /*
+> >   * Allocate new trace_probe and initialize it (including fprobe).
+> > @@ -605,10 +711,16 @@ static struct trace_fprobe *find_trace_fprobe(const char *event,
+> >  	struct dyn_event *pos;
+> >  	struct trace_fprobe *tf;
+> >  
+> > -	for_each_trace_fprobe(tf, pos)
+> > +	list_for_each_entry(pos, &dyn_event_list, list) {
+> > +		tf = trace_fprobe_from_dyn(pos);
+> > +		if (!tf)
+> > +			continue;
+> > +
+> >  		if (strcmp(trace_probe_name(&tf->tp), event) == 0 &&
+> >  		    strcmp(trace_probe_group_name(&tf->tp), group) == 0)
+> >  			return tf;
+> > +	}
+> > +
+> 
+> Ditto and there is no need to change.
+> 
+
+Ok. I will revert those sites to the existing macro-based iteration.
+
+> >  	return NULL;
+> >  }
+> >  
+> > @@ -835,7 +947,12 @@ static int __register_trace_fprobe(struct trace_fprobe *tf)
+> >  	if (trace_fprobe_is_tracepoint(tf))
+> >  		return __regsiter_tracepoint_fprobe(tf);
+> >  
+> > -	/* TODO: handle filter, nofilter or symbol list */
+> > +	/* Registration path:
+> > +	 *  - list_mode: pass filter/nofilter
+> > +	 *  - single: pass symbol only (legacy)
+> > +	 */
+> > +	if (tf->list_mode)
+> > +		return register_fprobe(&tf->fp, tf->filter, tf->nofilter);
+> >  	return register_fprobe(&tf->fp, tf->symbol, NULL);
+> >  }
+> >  
+> > @@ -1114,7 +1231,11 @@ static int __tprobe_event_module_cb(struct notifier_block *self,
+> >  		return NOTIFY_DONE;
+> >  
+> >  	mutex_lock(&event_mutex);
+> > -	for_each_trace_fprobe(tf, pos) {
+> > +	list_for_each_entry(pos, &dyn_event_list, list) {
+> > +		tf = trace_fprobe_from_dyn(pos);
+> > +		if (!tf)
+> > +			continue;
+> > +
+> >  		/* Skip fprobe and disabled tprobe events. */
+> >  		if (!trace_fprobe_is_tracepoint(tf) || !tf->tuser)
+> >  			continue;
+> > @@ -1155,55 +1276,35 @@ static int parse_symbol_and_return(int argc, const char *argv[],
+> >  				   char **symbol, bool *is_return,
+> >  				   bool is_tracepoint)
+> >  {
+> > -	char *tmp = strchr(argv[1], '%');
+> > -	int i;
+> > -
+> > -	if (tmp) {
+> > -		int len = tmp - argv[1];
+> > -
+> > -		if (!is_tracepoint && !strcmp(tmp, "%return")) {
+> > -			*is_return = true;
+> > -		} else {
+> > -			trace_probe_log_err(len, BAD_ADDR_SUFFIX);
+> > -			return -EINVAL;
+> > -		}
+> > -		*symbol = kmemdup_nul(argv[1], len, GFP_KERNEL);
+> > -	} else
+> > -		*symbol = kstrdup(argv[1], GFP_KERNEL);
+> > -	if (!*symbol)
+> > -		return -ENOMEM;
+> > -
+> > -	if (*is_return)
+> > -		return 0;
+> > +	int i, ret;
+> > +	bool list_mode = false;
+> > +	char *filter = NULL; *nofilter = NULL;
+> 
+> Sort it as other functions. longer line to shorter.
+> 
+
+I did not know this. I will fix the ordering (and see next item about
+the function's role).
+
+> >  
+> > -	if (is_tracepoint) {
+> > -		tmp = *symbol;
+> > -		while (*tmp && (isalnum(*tmp) || *tmp == '_'))
+> > -			tmp++;
+> > -		if (*tmp) {
+> > -			/* find a wrong character. */
+> > -			trace_probe_log_err(tmp - *symbol, BAD_TP_NAME);
+> > -			kfree(*symbol);
+> > -			*symbol = NULL;
+> > -			return -EINVAL;
+> > -		}
+> > -	}
+> > +	ret = parse_fprobe_spec(argv[1], is_tracepoint, symbol, is_return,
+> > +			&list_mode, &filter, &nofilter);
+> > +	if (ret)
+> > +		return ret;
+> >  
+> > -	/* If there is $retval, this should be a return fprobe. */
+> >  	for (i = 2; i < argc; i++) {
+> > -		tmp = strstr(argv[i], "$retval");
+> > +		char *tmp = strstr(argv[i], "$retval");
+> > +
+> >  		if (tmp && !isalnum(tmp[7]) && tmp[7] != '_') {
+> >  			if (is_tracepoint) {
+> >  				trace_probe_log_set_index(i);
+> >  				trace_probe_log_err(tmp - argv[i], RETVAL_ON_PROBE);
+> >  				kfree(*symbol);
+> >  				*symbol = NULL;
+> > +				kfree(filter);
+> > +				kfree(nofilter);
+> >  				return -EINVAL;
+> >  			}
+> >  			*is_return = true;
+> >  			break;
+> >  		}
+> >  	}
+> > +
+> > +	kfree(filter);
+> > +	kfree(nofilter);
+> >  	return 0;
+> >  }
+> >  
+> > @@ -1247,6 +1348,11 @@ static int trace_fprobe_create_internal(int argc, const char *argv[],
+> >  	int i, new_argc = 0, ret = 0;
+> >  	bool is_tracepoint = false;
+> >  	bool is_return = false;
+> > +	bool list_mode = false;
+> > +
+> 
+> Do not split local variable definitions with empty lines.
+> 
+
+I will collapse those blocks.
+
+> > +	char *parsed_filter __free(kfree) = NULL;
+> > +	char *parsed_nofilter __free(kfree) = NULL;
+> > +	bool has_wild = false;
+> 
+> Please sort.
+> 
+
+I will sort and group them, so no empty line splits.
+
+> >  
+> >  	if ((argv[0][0] != 'f' && argv[0][0] != 't') || argc < 2)
+> >  		return -ECANCELED;
+> > @@ -1267,8 +1373,9 @@ static int trace_fprobe_create_internal(int argc, const char *argv[],
+> >  
+> >  	trace_probe_log_set_index(1);
+> >  
+> > -	/* a symbol(or tracepoint) must be specified */
+> > -	ret = parse_symbol_and_return(argc, argv, &symbol, &is_return, is_tracepoint);
+> > +	/* Parse spec early (single vs list, suffix, base symbol) */
+> > +	ret = parse_fprobe_spec(argv[1], is_tracepoint, &symbol, &is_return,
+> > +			&list_mode, &parsed_filter, &parsed_nofilter);
+> 
+> Hmm, if so, where is the parse_symbol_and_return() called?
+> I think you can pick the $retval search loop from the 
+> parse_symbol_and_return() for updating is_return (or make
+> it failure if is_tracepoint == true).
+> 
+
+Makes sense. I will fold the $retval scan into the new parser so there's
+a single source of truth. $retval will remain rejected for tracepoints
+with a proper error index. parse_symbol_and_return() can then be removed
+or turned into a thin wrapper if still referenced.
+
+> >  	if (ret < 0)
+> >  		return -EINVAL;
+> >  
+> > @@ -1283,10 +1390,16 @@ static int trace_fprobe_create_internal(int argc, const char *argv[],
+> >  			return -EINVAL;
+> >  	}
+> >  
+> > -	if (!event) {
+> > -		ebuf = kmalloc(MAX_EVENT_NAME_LEN, GFP_KERNEL);
+> > -		if (!ebuf)
+> > -			return -ENOMEM;
+> > +		if (!event) {
+> > +		/*
+> > +		 * Event name rules:
+> > +		 * - For list/wildcard: require explicit [GROUP/]EVENT
+> > +		 * - For single literal: autogenerate symbol__entry/symbol__exit
+> > +		 */
+> 
+> nit: to avoid confusing, comment should be indented as same as the
+> code. Or, put the comment right before the `if`.
+> 
+
+I will move the comment above the if and align indentation. 
+
+> > +			if (list_mode || has_wildcard(symbol)) {
+> > +				trace_probe_log_err(0, NO_GROUP_NAME);
+> > +			return -EINVAL;
+> > +		}
+> >  		/* Make a new event name */
+> >  		if (is_tracepoint)
+> >  			snprintf(ebuf, MAX_EVENT_NAME_LEN, "%s%s",
+> > @@ -1319,7 +1432,8 @@ static int trace_fprobe_create_internal(int argc, const char *argv[],
+> >  							NULL, NULL, NULL, sbuf);
+> >  		}
+> >  	}
+> > -	if (!ctx->funcname)
+> > +
+> > +	if (!list_mode && !has_wildcard(symbol) && !is_tracepoint)
+> >  		ctx->funcname = symbol;
+> >  
+> >  	abuf = kmalloc(MAX_BTF_ARGS_LEN, GFP_KERNEL);
+> > @@ -1353,6 +1467,21 @@ static int trace_fprobe_create_internal(int argc, const char *argv[],
+> >  		return ret;
+> >  	}
+> >  
+> > +	/* carry list parsing result into tf */
+> > +	if (!is_tracepoint) {
+> > +		tf->list_mode = list_mode;
+> > +			if (parsed_filter) {
+> > +				tf->filter = kstrdup(parsed_filter, GFP_KERNEL);
+> > +				if (!tf->filter)
+> > +					return -ENOMEM;
+> > +			}
+> > +			if (parsed_nofilter) {
+> > +				tf->nofilter = kstrdup(parsed_nofilter, GFP_KERNEL);
+> > +				if (!tf->nofilter)
+> > +					return -ENOMEM;
+> > +			}
+> > +		}
+> 
+> Odd indentation. Please fix.
+> 
+
+My mistake. I will fix the indentation here.
+
+> > +
+> >  	/* parse arguments */
+> >  	for (i = 0; i < argc; i++) {
+> >  		trace_probe_log_set_index(i + 2);
+> > @@ -1439,8 +1568,16 @@ static int trace_fprobe_show(struct seq_file *m, struct dyn_event *ev)
+> >  	seq_printf(m, ":%s/%s", trace_probe_group_name(&tf->tp),
+> >  				trace_probe_name(&tf->tp));
+> >  
+> > -	seq_printf(m, " %s%s", trace_fprobe_symbol(tf),
+> > -			       trace_fprobe_is_return(tf) ? "%return" : "");
+> > +	seq_printf(m, "%s", trace_fprobe_symbol(tf));
+> > +	if (!trace_fprobe_is_tracepoint(tf)) {
+> > +		if (tf->list_mode) {
+> > +			if (trace_fprobe_is_return(tf))
+> > +				seq_puts(m, ":exit");
+> 
+> In both cases, we can use ":exit" suffix. This means we will
+> accept legacy "%return" for backward compatibility, but
+> shows ":exit" always.
+> 
+
+I will make show always print :exit for return probes, regardless of the
+input form, and never print %return.
+
+> > +		} else {
+> > +			if (trace_fprobe_is_return(tf))
+> > +				seq_puts(m, "%return");
+> > +		}
+> > +	}
+> >  
+> >  	for (i = 0; i < tf->tp.nr_args; i++)
+> >  		seq_printf(m, " %s=%s", tf->tp.args[i].name, tf->tp.args[i].comm);
+> > -- 
+> > 2.43.0
+> > 
+> 
+> Thank you,
+> 
+> 
+> -- 
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
