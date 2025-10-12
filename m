@@ -1,188 +1,143 @@
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B82A11547CC
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 12 Oct 2025 01:50:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2FBD1D86FF;
+	Sun, 12 Oct 2025 03:26:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760233803; cv=none; b=Dzq0PX/BERwRVbtDMSgVR972+uwydHcceq7xJ/qSb8yZBvBAmEB9WGNBLzA0s1lek+nQ6q6WcyUbsK08o1V5Csob1WeHrjn7CH8nmUMKBLFFbF1v6nJoq5Tfexy/lwJ82JIjKzplYef5fdh0EC7Us636I2LZj2G0WTKcBkusKRE=
+	t=1760239613; cv=none; b=Gc3L3HKb87GrhrQqI20nuwJ0c0ytCyb3vzXC+nC4ZJX4bLJqfYPf1XjETxItNNR4ZcmKlhdKEiTROId5Ror+uKp65CLs2UOTq64rW9S+Nhg0kUA7xEwhuaDPB859yGyJSFn7aupMKUcLamh8x4QoWnCN8TAtZ6bTCmPpG9HQiMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760233803; c=relaxed/simple;
-	bh=GwEwPqxRUTg7MFQelyNf4d+Vw8oD9w/6xNdsusLFnAs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U5XY0GBYvDRNPVvIbno0KrbfvDDjchxo1gDhbQD3nvVALOX9LCckyGDkeEisKyrAPaSQYf0jkiblERZt9mdhAL6httI1YTbyQBezM8dORQ/Qr/t2dRUZW4jwfMopJCdQDHDpjTP3aPsEABN4K+kJ7virO+DlSSVR3nX8FLJ12lk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ef3GKUQJ; arc=none smtp.client-ip=209.85.219.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1760239613; c=relaxed/simple;
+	bh=hmpKvvJnF/u4D2UEAsYNRteDpX+9tDZCPdRWNpkWycM=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=Fax2KvkUpvlj1YJGSdgSXLG99BIX85Tdq5m056xhsdRRmgtbppl0MuK4tNMg0kylp0pUtdJfWvBgc2VTzXSIbdEpNkprsJyGp1rdKuJzwSavs1fwwMsssdJ1v02E7mKUYtJzR5ThMcf4q9xZUSbthsI4cilOe/Zw2B3UF+kClhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ov2euuR5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ef3GKUQJ"
-Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-795773ac2a2so35126716d6.1
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 11 Oct 2025 18:50:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1760233799; x=1760838599; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pXc8uJoaf03/WrAtzQqCEQN2vdeh87i/2lbcZm6q1bg=;
-        b=Ef3GKUQJp2HQKhHd62GInU5p2GvxWiMemGJPMjxYprfBqqtYPT3bV26rF7WFWFzTFe
-         4EjLC6V5PrDiXaOaQQA6y9TNORlhuNI1T1nEsFzrXViv0pKHHfJdWvEscVi+Jz6ex+uE
-         fz9PrWE7VX42SgjYP9LhX3mQmweUDMVC0qY1cwLEo/Hg0UnZ61IM94jnHrHHwNLQmB8m
-         Ht49cJZjdttFvZGedefV2bAVqilphEq4k88FqNN6brJokn6UHo+fL6Xh8JhY3M0CC8Hk
-         EKfRQfR6wnFQIoOx4EqLNZkhqPZM2rIFd20p64OxoBF04oTQDqwAnWKBHhFTwwZWoq+p
-         69CQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760233800; x=1760838600;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pXc8uJoaf03/WrAtzQqCEQN2vdeh87i/2lbcZm6q1bg=;
-        b=M2vQYNTxxzLuYSg/zDCfKC7vGPun23HEm7HVxUhoM6YgYO0dMHgxaZBFedyRc4ryt0
-         b/FbcTsb6QNXlUMOd2cGYcQMb/kFZLffc9ki5LjUzIQ76Ez3Dw52dKVl7LHY6V/z+hma
-         dlfq1wKp9EOUWIqXP4Dyws+hs9nD2oRh9TtO3DuD0ZNgGCnOTxeW4lClqur7nSjWsh9Z
-         OgJ+D9FZnqctU5WMifIg1/2rWNtKJNNQMl2dxT6wJAGHP69EqVYa6Ev+UVDxHuuEwyzp
-         s+Sp42atgp82JctIIC0OxGW4V8/vkNcHDeP2hTL6bxf1REnD+dtopT3Ir/TYWiiHHoEh
-         FJ2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXV9n+DDnspyL2rC6f89bP4ZW3TePRuMg0VYqkO6M1DR/UcLfgx+jMM99IPQdoItWep2ssaJy8AEmC5g/JVVrR2pRM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxcITaf9WGNdVPeUHzMxoM72YV9GiY+NZqI7kbWzb4c2+7V34TY
-	6uxXUx8SNs9rPPpUn2OLa8LZ5rPR16iNJfUpxSCZ0ljXJ40mfKUIrSMD
-X-Gm-Gg: ASbGnctKOgpDKLUT9cB0CN1yRpQNf0XDptuED7MA34/0UCQ9KmqfLkVPwsLTvEfA11o
-	xadt9YjXM0MxiRlSDsNXbCoRyTFMEtm28GCUp9oGnnL3W+kKqgELJ3sLOWYrn4MMdZyhVjZbpq5
-	2BQY7V9TyRXnJyxo/URBdxKKhD2Sp9GvrDzkQECmCNLhaRlHWtZtZeku5h/uAdGsLiFrDQLs7NL
-	vmmG1AZDjlryMH1ptn+fDljwoZoa9caY1lhR4o30qQ8OXfsZlycpbjSw0xYmB1mQ4CcE6MYjBR0
-	ugRKy5uXTMrESi8aGhxxDwJKZEH3bPjgUxa3ZzJ140Yg1e5AIVQDLfQPd3WtrNxw0fKzvNmLnBY
-	TTtOzPALa7dxKLSNB/G5uFWJ+ZpYTGAAyYynDCJyQO1WbvPfKhRWFN092hgYI
-X-Google-Smtp-Source: AGHT+IE9eDjN8qiC2CBml63k30/pJPBpkqgYgHXrbEQP5D/Xfz4Ph8hYr31jfcSgiLzmPEPGXHXV9w==
-X-Received: by 2002:a05:622a:1828:b0:4e5:6f10:5aec with SMTP id d75a77b69052e-4e6ead5afcfmr225132761cf.63.1760233799442;
-        Sat, 11 Oct 2025 18:49:59 -0700 (PDT)
-Received: from gmail.com ([2600:4041:4491:2000:4a9:9d37:4046:41e])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4e706d5f704sm49290051cf.26.2025.10.11.18.49.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 11 Oct 2025 18:49:58 -0700 (PDT)
-Date: Sun, 12 Oct 2025 10:49:55 +0900
-From: Ryan Chung <seokwoo.chung130@gmail.com>
-To: Masami Hiramatsu <mhiramat@kernel.org>, g@gmail.com
-Cc: rostedt@goodmis.org, mathieu.desnoyers@efficios.com, shuah@kernel.org,
-	hca@linux.ibm.com, corbet@lwn.net,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v3 0/5] tracing: fprobe: list-style filters,
-Message-ID: <aOsJQ3gMcg5oKy94@gmail.com>
-References: <20251004235001.133111-1-seokwoo.chung130@gmail.com>
- <20251008095111.5732b065dcebe53fc80063c5@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ov2euuR5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 857A9C4CEE7;
+	Sun, 12 Oct 2025 03:26:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1760239613;
+	bh=hmpKvvJnF/u4D2UEAsYNRteDpX+9tDZCPdRWNpkWycM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Ov2euuR5vcyePyIcKmrkeL+xiWlvOf7D+01p1JSK6QEBs2WeHXGfpYIYscmSrMnX7
+	 2V4Xh8yRRZ87h3WVNirgO0yjPAh4Udus31ZPQWRpdMh4EKzC+2IsgfGHYuIEQ41/0I
+	 4m+84lq5NeViQCeAlgZmwRKWg3wiWQvRhT4PU/LEg6GbiaTxA45hMdSVWhhlT5w9Zh
+	 kkKSAZuzvBaWszxHhcIPwpTNHXvYwGGLD4mXqxKNz4xKeXQR8DdRgd8mYTkj61gCbs
+	 DJCPxvSwBXjE8Ba7ouNEttLeGL///4icaZ+N0I5KRyHinyo/mAIMklQp1BySnSPGGM
+	 +PO1gzGiaBJdg==
+Date: Sun, 12 Oct 2025 12:26:48 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: syzbot <syzbot+9a2ede1643175f350105@syzkaller.appspotmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ mathieu.desnoyers@efficios.com, rostedt@goodmis.org,
+ syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [trace?] WARNING in write_raw_marker_to_buffer
+Message-Id: <20251012122648.d6ca8923c4ef5bc9fc483e9f@kernel.org>
+In-Reply-To: <68e973f5.050a0220.1186a4.0010.GAE@google.com>
+References: <68e973f5.050a0220.1186a4.0010.GAE@google.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251008095111.5732b065dcebe53fc80063c5@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi. Thanks for the review.
+Hi,
 
-On Wed, Oct 08, 2025 at 09:51:11AM +0900, Masami Hiramatsu wrote:
-> Hi Ryan,
-> 
-> Thanks for update!
-> 
-> On Sun,  5 Oct 2025 08:46:54 +0900
-> Ryan Chung <seokwoo.chung130@gmail.com> wrote:
-> 
-> > This series aims to extend fprobe with list-style filters and a clear
-> > entry/exist qualifier. Users can now specify a comma-separated symbol
-> > list with ! exclusions, and use a spec-level suffix to select probe
-> > type:
-> > 
-> > - funcA*, !funcAB, funcC -> entry probes
-> > - funcA*, !funcAB, funcC:entry -> explicit entry
-> > - funcA*, !funcAB, funcC:exit -> return/exit across the whole list
-> 
-> 
-> Just a note, it should not accept spaces in the list. The space
-> is the highest level delimiter. I hope actual implementation
-> does not accept spaces. So something like:
-> 
->  "funcA*,!funcAB,funcC"
->  "funcA*,!funcAB,funcC:entry"
->  "funcA*,!funcAB,funcC:exit"
-> 
-> 
-I see. I will adjust the code so that the parser reject any whitespace.
 
-> > 
-> > For compatibility, %return remains supported for single, literal
-> > symbols. When a list or wildcard is used, an explicit [GROUP/EVENT is
-> > required and autogeneration is disabled. Autogen names are kept for
-> > single-symbol specs, with wildcard sanitization. For list/wildcard forms
-> > we set ctx->funcname = NULL so BTF lookups are not attempted.
-> 
-> OK. So "funcA*%return" and "funcA,funcB%return" will fail.
-> 
+This happens because we replaced (non field size check)
+copy_from_user_nofault() to memcpy. So I think we need a cast
+to void * there.
 
-Yes. %return is only accepted for a single literal symbol.
+On Fri, 10 Oct 2025 14:00:37 -0700
+syzbot <syzbot+9a2ede1643175f350105@syzkaller.appspotmail.com> wrote:
 
-> > 
-> > The series moves parsing to the parse path, documents the new syntax,
-> > and adds selftests that accept valid list cases and reject empty tokens,
-> > stray commas, and %return mixed with lists or wildcards. Selftests also
-> > verify enable/disable flow and that entry+exit on the same set do not
-> > double-count attached functions.
+> Hello,
 > 
-> Thanks for adding selftests and document, that is important to maintain
-> features.
+> syzbot found the following issue on:
 > 
-> > 
-> > Help wanted: This is my first time contributing ftrace selftests. I
-> > would appreciate comments and recommendations on test structure and
-> > coverage.
+> HEAD commit:    5472d60c129f Merge tag 'trace-v6.18-2' of git://git.kernel..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=1239b458580000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=e7dba95d4cdd903c
+> dashboard link: https://syzkaller.appspot.com/bug?extid=9a2ede1643175f350105
+> compiler:       gcc (Debian 12.2.0-14+deb12u1) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15eec52f980000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=122e9892580000
 > 
-> OK, let me review it.
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/fbf444614257/disk-5472d60c.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/f129612e3b8b/vmlinux-5472d60c.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/8095ae997ffa/bzImage-5472d60c.xz
 > 
-> Thanks,
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+9a2ede1643175f350105@syzkaller.appspotmail.com
 > 
+> ------------[ cut here ]------------
+> memcpy: detected field-spanning write (size 2655) of single field "&entry->id" at kernel/trace/trace.c:7458 (size 4)
+> WARNING: CPU: 0 PID: 6004 at kernel/trace/trace.c:7458 write_raw_marker_to_buffer.isra.0+0x2d4/0x330 kernel/trace/trace.c:7458
+> Modules linked in:
+> CPU: 0 UID: 0 PID: 6004 Comm: syz.0.17 Not tainted syzkaller #0 PREEMPT(full) 
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 10/02/2025
+> RIP: 0010:write_raw_marker_to_buffer.isra.0+0x2d4/0x330 kernel/trace/trace.c:7458
+> Code: ff e8 30 74 fa ff c6 05 b4 7e aa 0e 01 90 b9 04 00 00 00 48 c7 c2 e0 1e 93 8b 4c 89 e6 48 c7 c7 40 1f 93 8b e8 6d fc b8 ff 90 <0f> 0b 90 90 e9 d7 fe ff ff e8 6e 04 62 00 e9 da fd ff ff e8 64 04
+> RSP: 0018:ffffc90003837c40 EFLAGS: 00010282
+> RAX: 0000000000000000 RBX: ffff88813ff34018 RCX: ffffffff817a5e58
+> RDX: ffff888031d73c80 RSI: ffffffff817a5e65 RDI: 0000000000000001
+> RBP: ffff88813ff34010 R08: 0000000000000001 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000001 R12: 0000000000000a5f
+> R13: ffff88813ff18c00 R14: 0000000000000000 R15: 0000200000000040
+> FS:  000055558e5ff500(0000) GS:ffff8881249e6000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 0000001b30263fff CR3: 0000000034638000 CR4: 00000000003526f0
+> Call Trace:
+>  <TASK>
+>  tracing_mark_raw_write+0x2da/0x4a0 kernel/trace/trace.c:7500
+>  vfs_write+0x2a0/0x11d0 fs/read_write.c:684
+>  ksys_write+0x1f8/0x250 fs/read_write.c:738
+>  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+>  do_syscall_64+0xcd/0xfa0 arch/x86/entry/syscall_64.c:94
+>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> RIP: 0033:0x7f18a0b8eec9
+> Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+> RSP: 002b:00007fff2b2d2c28 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+> RAX: ffffffffffffffda RBX: 00007f18a0de5fa0 RCX: 00007f18a0b8eec9
+> RDX: 0000000000000a5f RSI: 0000200000000040 RDI: 0000000000000003
+> RBP: 00007f18a0c11f91 R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+> R13: 00007f18a0de5fa0 R14: 00007f18a0de5fa0 R15: 0000000000000003
+>  </TASK>
+> 
+> 
+> ---
+> This report is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> syzbot will keep track of this issue. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> 
+> If the report is already addressed, let syzbot know by replying with:
+> #syz fix: exact-commit-title
+> 
+> If you want syzbot to run the reproducer, reply with:
+> #syz test: git://repo/address.git branch-or-commit-hash
+> If you attach or paste a git patch, syzbot will apply it before testing.
+> 
+> If you want to overwrite report's subsystems, reply with:
+> #syz set subsystems: new-subsystem
+> (See the list of subsystem names on the web dashboard)
+> 
+> If the report is a duplicate of another one, reply with:
+> #syz dup: exact-subject-of-another-report
+> 
+> If you want to undo deduplication, reply with:
+> #syz undup
 
-Thank you.
 
-> 
-> > 
-> > Basic coverage is included, but this likely needs broader testing across
-> > architectures. Feedback and additional test ideas are welcome.
-> > 
-> > Changes since v2:
-> > - Introduce spec-level: :entry/:exit; reject %return with
-> >   lists/wildcards
-> > - Require explict [GROUP/]EVENT for list/wildcard; keep autogen only for
-> >   single literal.
-> > - Sanitize autogen names for single-symbol wildcards
-> > - Set ctx->funcname = NULL for list/wildcard to bypass BTF
-> > - Move list parsing out of __register_trace_fprobe() and into the parse
-> >   path
-> > - Update docs and tracefs README and add dynevent selftests for
-> >   accept/reject and enable/disable flow
-> > 
-> > Link: https://lore.kernel.org/lkml/20250904103219.f4937968362bfff1ecd3f004@kernel.org/
-> > 
-> > Ryan Chung (5):
-> >   docs: tracing: fprobe: document list filters and :entry/:exit
-> >   tracing: fprobe: require explicit [GROUP/]EVENT for list/wildcard
-> >   tracing: fprobe: support comma-separated symbols and :entry/:exit
-> >   selftests/ftrace: dynevent: add reject cases for list/:entry/:exit
-> >   selftests/ftrace: dynevent: add reject cases
-> > 
-> >  Documentation/trace/fprobetrace.rst           |  27 +-
-> >  kernel/trace/trace.c                          |   3 +-
-> >  kernel/trace/trace_fprobe.c                   | 247 ++++++++++++++----
-> >  .../test.d/dynevent/add_remove_fprobe.tc      | 121 +++++++++
-> >  .../test.d/dynevent/fprobe_syntax_errors.tc   |  13 +
-> >  5 files changed, 349 insertions(+), 62 deletions(-)
-> > 
-> > -- 
-> > 2.43.0
-> > 
-> 
-> 
-> -- 
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Best regards,
-Ryan Chung
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
