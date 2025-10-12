@@ -1,131 +1,286 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAA741EEA54
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 12 Oct 2025 07:13:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F11432494D8
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 12 Oct 2025 11:23:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760253198; cv=none; b=V9jD4p8ki6ua8JxWZwa+N1ZsHJwZ+EEY1B15viVVGOL9oR468lsLHzpMRmVlNLnWLs+xC9daDvXEOBfIszTJpUYEAiM9gsBlRJv/wQ2nUbra/KqvEgwrETLiijBOngBuhIG7OpX8r0zPaFSLPfoe+6Tr1Lrz9Ykh3PqRMwTTH9M=
+	t=1760268210; cv=none; b=Tmq9TDrPTUFNx8Mj+bHUE8qeKppmwGw6+tW+R7e1FRlD2qJZ8AL8Arx/gOI6iB6T1sca2BRTc2ykgqDTi5pBY250pVQhf7R34vIpFHI6OSowwWt5YPxqrll2kBJ9Ctm2OrosWF1DywIXfd57J62ZMtTyNeV62plWu6gyAHlf9Pk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760253198; c=relaxed/simple;
-	bh=dq5XPpWQTqVeWFkmnGSkYSvTd/fKLsCFTZToTBBOTOw=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:content-type; b=tT0UbrEb9IWbNnc38o9K5+UxjKSTeMXzYNfd5TjP3yaMpiAs92iKY7MkFhaNfwT0l1hME1mYmQ3iaCCixsSsfmfe2RuM7uHoc7GR07xKOCyMtqpzWgF4gqomeRI/xertcV36IlKG5MnxygHGg2lFp+q9hQ5W28HLN8BmN4R57/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OB2TGr4t; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1760268210; c=relaxed/simple;
+	bh=T76ciC7MvD6Uq6qKE1gKRXHkh8/nQlep+GS6D4H+5gU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=O23AQY/Ropgnqk9rHWv78aro1IefdmyhKVfueH/lhhNQ8Q6cUiWQhN3/qXxFJ7gL5yqhdxWKswzzqls1QCuaBWgdjG5i/SDkWkS88NMPid0sL6sR8IlPBKysXdxrUbXYHrTgpkGbn6jIK51eLGLNVGrM4hBS0ujTBa4lHYWWh/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BiYwTjA1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OB2TGr4t"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1760253195;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=3dh6DzbfDhE6jtBd8N1O7na8tQoQioGI90EhyrkbVps=;
-	b=OB2TGr4t2/0WtmiSp7P8wjKSjZcoGQy96Rfvc6274J0PP5FeVnxpVqwBWuuK8brM3CrE/G
-	a+5t4cfGehAjbT5Rlhb6UyZGUHNKpcncVsWBNdI0F6puQmxEVi1lDuAsMtw1IJCiezSEce
-	Y70yR5CBswDhL1A2cYkqeavL7e3jANQ=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-287-kaxCcSHYPLyVMX6qJKytFg-1; Sun, 12 Oct 2025 03:13:14 -0400
-X-MC-Unique: kaxCcSHYPLyVMX6qJKytFg-1
-X-Mimecast-MFC-AGG-ID: kaxCcSHYPLyVMX6qJKytFg_1760253193
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3efa77de998so2938210f8f.0
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 12 Oct 2025 00:13:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760253193; x=1760857993;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3dh6DzbfDhE6jtBd8N1O7na8tQoQioGI90EhyrkbVps=;
-        b=w4H+ozuldQG22i3wEk1Cn5er5EPpKVyaiNFjtcR3g+OImQk5JJ74boDt7GFk6bU1dO
-         JSVf7sc/riH3FsT4Cv8WCot1ir483l/4RP9WzEQPWjWr4fpf1xtcv0IiH0Y+Wb8Ge3AI
-         L1naM3xTPKUt4R0t1p5rYSAc/g55qcJruvGv7rSdMTTv1OWiN8MPpSP7KDXxxIolM/zt
-         GFs7Xznh52gq+Ofw6pkU4L7HOOHJy2PvKDfVk1FnipDK/jFpuAsEyQbtqeVRxgv+5Xok
-         UT2QkOpovKrTEoC56dvC1bFmWTaIX06d1R7KhmAEjsdMmmQSh/tr3x3mw3hjMcRU5Tzk
-         R5fQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU3DTdPjqlpIx0KQIJuVnkCpN3Wm/33chAfDPG4Pcv8LXejdTWEvpz3wVE8vaJKkiQEK7ZyQ+WatTVJp4fKv3qE4qY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0XQHmEZ9xyPjbbg+stVR5tC6By04HDPnRunTlugIYKh4pXtc/
-	vrmuCIY4FGkojcmGB8SR0lw4JcFPaoQc0ukbv4swJV+HypTncHd94GO1ZDg18DhiRI01aTYdv4k
-	MkmUpAzgqsOFcDuzf4rtNwQ3Qz9VfeZmhM5CwPY/7RVZbrN6Lr3KUdKOdic/Qa/22mHg3xtdaMg
-	==
-X-Gm-Gg: ASbGncuJhmR05LqsN7Sm55ouR6R0MsqqnbS5P7Mbz2KGTO/GkHO5IyVS7rUFvzevjku
-	+0KWlfJna5x4lNJ1P+kxNUrFviN8EOdwI235P5IObqioOLcxFEUDXEVHNwDfGXyPNK00aCcQJwn
-	ud8arxqa+y/AGPLNF+/sAWeaUhDrIc/ZlaVUiwzxem7dBQU7zUGbb8jKThoOVG7XMgg1BZJ161X
-	3Ub0U4zelKga+pzcFMV/568B56gE54GKZjUj/gtlgd2FYCXIgYCTLmPpPJeeLn2DSv2sgWaWCeg
-	4tb+YDz2KyGp8QGjEoPmSF9HwLwrNuY/UZeE+Mxua2Ji
-X-Received: by 2002:a05:6000:3111:b0:40e:31a2:7efe with SMTP id ffacd0b85a97d-42667177d9fmr11209007f8f.14.1760253193074;
-        Sun, 12 Oct 2025 00:13:13 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHSnULVC4RtP3jhP2wpaC2RxEg1kofWPk7jIyzNCabwbJaYfRGXjLljv/qa0jpgkSz1lBvR3w==
-X-Received: by 2002:a05:6000:3111:b0:40e:31a2:7efe with SMTP id ffacd0b85a97d-42667177d9fmr11208990f8f.14.1760253192719;
-        Sun, 12 Oct 2025 00:13:12 -0700 (PDT)
-Received: from localhost ([2a00:a041:e2eb:5500:8728:d68a:a687:c89b])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-426ce5e8141sm11824513f8f.48.2025.10.12.00.13.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Oct 2025 00:13:12 -0700 (PDT)
-From: Costa Shulyupin <costa.shul@redhat.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Tomas Glozar <tglozar@redhat.com>,
-	Crystal Wood <crwood@redhat.com>,
-	Costa Shulyupin <costa.shul@redhat.com>,
-	John Kacur <jkacur@redhat.com>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1] tools/rtla: Remove unused function declarations
-Date: Sun, 12 Oct 2025 10:11:30 +0300
-Message-ID: <20251012071133.290225-1-costa.shul@redhat.com>
-X-Mailer: git-send-email 2.51.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BiYwTjA1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61D6EC2BC87
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 12 Oct 2025 11:23:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1760268209;
+	bh=T76ciC7MvD6Uq6qKE1gKRXHkh8/nQlep+GS6D4H+5gU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=BiYwTjA1WXiDDZ6k1pLc0b+PVyq6vXvaXJOZF4TiaEg3k2huYIgxz5uiIWihe7xx0
+	 argw5VZRtvF7yvFH0XbmOvh0rZc5EIGTsLQphvKJutV+Re/G93hVAnGO/5Vd5s/oV9
+	 BpVI41JFcsEueP3VZuSaN5D1ccT/o0TFTic9XbmluMz1UuFcuYBBBwteLFMr+aqlHW
+	 1ddfWukU9fy6Xto3ZNWKhaDND0UbOc23zwq/V6B3oWgI4q8NIj9J3LJ5Uhc8IKvH5F
+	 0/hDSffDn5lByMu0/A6fKW6w/j0c0gjpfd5s+MEWpAB9/vhUnj99cOFfrDLdMa3mmb
+	 8b438qCPpYpnw==
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-46b303f755aso27765545e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 12 Oct 2025 04:23:29 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXwOy1/RvHu9eMCN5VoDPsF1y1ivC2xWdt2o5RdI4EL4je5hcs5KY3aBetYYpM6TO/6uqaugjy7Uuc5atR9bWd713Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwTdTNp8dbeOEJjLgQVPUlRLNz0bC2DgL9nRW1hwMwpu5LB/noQ
+	45jTEvL2zTeNanW3meV2MeMF/tCHJXDTpo0DHgfjCyhGymSrCViNYUx3Pa5kIGQgfvXsW+NF0F7
+	AEC9zGCO5Y4HHYBISL3g8mY70mFPej+Y=
+X-Google-Smtp-Source: AGHT+IHWkSwxpRdIU93ruDljUo6L3O36dcwVKmHU88EIC562kkwkQS6D3HE2q9MMHT5O3SbUtodlQg41kAKRXUo7tRc=
+X-Received: by 2002:a05:600c:1c23:b0:45b:6b57:5308 with SMTP id
+ 5b1f17b1804b1-46fa9a892a0mr122801735e9.7.1760268207732; Sun, 12 Oct 2025
+ 04:23:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: KqZZo3kgO9ktOict3pAFOoq3JWBMpZBpwVaQcDLXm8Q_1760253193
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
+References: <20251009134514.8549-1-cuiyunhui@bytedance.com>
+In-Reply-To: <20251009134514.8549-1-cuiyunhui@bytedance.com>
+From: Guo Ren <guoren@kernel.org>
+Date: Sun, 12 Oct 2025 19:23:15 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTTJD3G1gyh8ucf6OSp2Y0=xHKGRLQakrTwqiLbzG+G0uw@mail.gmail.com>
+X-Gm-Features: AS18NWD6MJ72Wu3veu27hAB-l8__trDKgDBlFxv_dFmO-FnASlGZT1S2onigZrQ
+Message-ID: <CAJF2gTTJD3G1gyh8ucf6OSp2Y0=xHKGRLQakrTwqiLbzG+G0uw@mail.gmail.com>
+Subject: Re: [PATCH RFC] riscv: add support for Ziccid
+To: Yunhui Cui <cuiyunhui@bytedance.com>
+Cc: paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
+	alex@ghiti.fr, rostedt@goodmis.org, mhiramat@kernel.org, mark.rutland@arm.com, 
+	peterz@infradead.org, jpoimboe@kernel.org, jbaron@akamai.com, ardb@kernel.org, 
+	willy@infradead.org, ziy@nvidia.com, akpm@linux-foundation.org, 
+	bjorn@rivosinc.com, ajones@ventanamicro.com, parri.andrea@gmail.com, 
+	cleger@rivosinc.com, yongxuan.wang@sifive.com, inochiama@gmail.com, 
+	samuel.holland@sifive.com, charlie@rivosinc.com, conor.dooley@microchip.com, 
+	yikming2222@gmail.com, andybnac@gmail.com, yury.norov@gmail.com, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Historically four function declarations remain orphaned or duplicated.
+On Thu, Oct 9, 2025 at 9:45=E2=80=AFPM Yunhui Cui <cuiyunhui@bytedance.com>=
+ wrote:
+>
+> The Ziccid extension provides hardware synchronization between
+> Dcache and Icache. With this hardware support, there's no longer
+> a need to trigger remote hart execution of fence.i via IPI.
+Ziccid only means I/D $ coherent, we still need "fence.i" & IPI to
+flush the instructions stalled in the pipeline.
 
-Remove them to keep the source clean.
+>
+> Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
+> ---
+>  arch/riscv/include/asm/cacheflush.h |  4 ++--
+>  arch/riscv/include/asm/hwcap.h      |  1 +
+>  arch/riscv/include/asm/switch_to.h  | 10 ++++++++++
+>  arch/riscv/kernel/cpufeature.c      |  1 +
+>  arch/riscv/kernel/ftrace.c          |  2 +-
+>  arch/riscv/kernel/hibernate.c       |  2 +-
+>  arch/riscv/kernel/jump_label.c      |  2 +-
+>  arch/riscv/mm/cacheflush.c          | 16 ++++++++++++++--
+>  8 files changed, 31 insertions(+), 7 deletions(-)
+>
+> diff --git a/arch/riscv/include/asm/cacheflush.h b/arch/riscv/include/asm=
+/cacheflush.h
+> index 0092513c3376c..3a8cdf30bb4b1 100644
+> --- a/arch/riscv/include/asm/cacheflush.h
+> +++ b/arch/riscv/include/asm/cacheflush.h
+> @@ -68,7 +68,7 @@ static inline void flush_cache_vmap(unsigned long start=
+, unsigned long end)
+>
+>  #else /* CONFIG_SMP */
+>
+> -void flush_icache_all(void);
+> +void flush_icache_all(bool force);
+>  void flush_icache_mm(struct mm_struct *mm, bool local);
+>
+>  #endif /* CONFIG_SMP */
+> @@ -80,7 +80,7 @@ void flush_icache_mm(struct mm_struct *mm, bool local);
+>  #define flush_icache_range flush_icache_range
+>  static inline void flush_icache_range(unsigned long start, unsigned long=
+ end)
+>  {
+> -       flush_icache_all();
+> +       flush_icache_all(false);
+>  }
+>
+>  extern unsigned int riscv_cbom_block_size;
+> diff --git a/arch/riscv/include/asm/hwcap.h b/arch/riscv/include/asm/hwca=
+p.h
+> index affd63e11b0a3..ad97d8955b501 100644
+> --- a/arch/riscv/include/asm/hwcap.h
+> +++ b/arch/riscv/include/asm/hwcap.h
+> @@ -106,6 +106,7 @@
+>  #define RISCV_ISA_EXT_ZAAMO            97
+>  #define RISCV_ISA_EXT_ZALRSC           98
+>  #define RISCV_ISA_EXT_ZICBOP           99
+> +#define RISCV_ISA_EXT_ZICCID           100
+>
+>  #define RISCV_ISA_EXT_XLINUXENVCFG     127
+>
+> diff --git a/arch/riscv/include/asm/switch_to.h b/arch/riscv/include/asm/=
+switch_to.h
+> index 0e71eb82f920c..b8a9e455efe9e 100644
+> --- a/arch/riscv/include/asm/switch_to.h
+> +++ b/arch/riscv/include/asm/switch_to.h
+> @@ -98,7 +98,17 @@ static inline bool switch_to_should_flush_icache(struc=
+t task_struct *task)
+>         bool stale_thread =3D task->thread.force_icache_flush;
+>         bool thread_migrated =3D smp_processor_id() !=3D task->thread.pre=
+v_cpu;
+>
+> +       asm goto(ALTERNATIVE("nop", "j %l[ziccid]", 0, RISCV_ISA_EXT_ZICC=
+ID, 1)
+> +                : : : : ziccid);
+> +
+>         return thread_migrated && (stale_mm || stale_thread);
+> +
+> +ziccid:
+> +       /*
+> +        * Process switching writes to SATP, which flushes the pipeline,
+> +        * so only the thread scenario is considered.
+> +        */
+> +       return thread_migrated && stale_thread;
+>  #else
+>         return false;
+>  #endif
+> diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeatur=
+e.c
+> index 67b59699357da..2da82aa2dbf0a 100644
+> --- a/arch/riscv/kernel/cpufeature.c
+> +++ b/arch/riscv/kernel/cpufeature.c
+> @@ -540,6 +540,7 @@ const struct riscv_isa_ext_data riscv_isa_ext[] =3D {
+>         __RISCV_ISA_EXT_DATA(svnapot, RISCV_ISA_EXT_SVNAPOT),
+>         __RISCV_ISA_EXT_DATA(svpbmt, RISCV_ISA_EXT_SVPBMT),
+>         __RISCV_ISA_EXT_DATA(svvptc, RISCV_ISA_EXT_SVVPTC),
+> +       __RISCV_ISA_EXT_DATA(ziccid, RISCV_ISA_EXT_ZICCID),
+>  };
+>
+>  const size_t riscv_isa_ext_count =3D ARRAY_SIZE(riscv_isa_ext);
+> diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
+> index 8d18d6727f0fc..431448e818363 100644
+> --- a/arch/riscv/kernel/ftrace.c
+> +++ b/arch/riscv/kernel/ftrace.c
+> @@ -43,7 +43,7 @@ void arch_ftrace_update_code(int command)
+>  {
+>         command |=3D FTRACE_MAY_SLEEP;
+>         ftrace_modify_all_code(command);
+> -       flush_icache_all();
+> +       flush_icache_all(false);
+>  }
+>
+>  static int __ftrace_modify_call(unsigned long source, unsigned long targ=
+et, bool validate)
+> diff --git a/arch/riscv/kernel/hibernate.c b/arch/riscv/kernel/hibernate.=
+c
+> index 671b686c01587..388f10e187bae 100644
+> --- a/arch/riscv/kernel/hibernate.c
+> +++ b/arch/riscv/kernel/hibernate.c
+> @@ -153,7 +153,7 @@ int swsusp_arch_suspend(void)
+>         } else {
+>                 suspend_restore_csrs(hibernate_cpu_context);
+>                 flush_tlb_all();
+> -               flush_icache_all();
+> +               flush_icache_all(true);
+>
+>                 /*
+>                  * Tell the hibernation core that we've just restored the=
+ memory.
+> diff --git a/arch/riscv/kernel/jump_label.c b/arch/riscv/kernel/jump_labe=
+l.c
+> index b4c1a6a3fbd28..680b29f4c09c4 100644
+> --- a/arch/riscv/kernel/jump_label.c
+> +++ b/arch/riscv/kernel/jump_label.c
+> @@ -51,5 +51,5 @@ bool arch_jump_label_transform_queue(struct jump_entry =
+*entry,
+>
+>  void arch_jump_label_transform_apply(void)
+>  {
+> -       flush_icache_all();
+> +       flush_icache_all(false);
+>  }
+> diff --git a/arch/riscv/mm/cacheflush.c b/arch/riscv/mm/cacheflush.c
+> index d83a612464f6c..01f9f7a45e8d2 100644
+> --- a/arch/riscv/mm/cacheflush.c
+> +++ b/arch/riscv/mm/cacheflush.c
+> @@ -12,19 +12,24 @@
+>  #ifdef CONFIG_SMP
+>
+>  #include <asm/sbi.h>
+> +#include <asm/alternative-macros.h>
+>
+>  static void ipi_remote_fence_i(void *info)
+>  {
+>         return local_flush_icache_all();
+>  }
+>
+> -void flush_icache_all(void)
+> +void flush_icache_all(bool force)
+>  {
+>         local_flush_icache_all();
+>
+>         if (num_online_cpus() < 2)
+>                 return;
+>
+> +       if (!force)
+> +               asm goto(ALTERNATIVE("nop", "j %l[ziccid]", 0,
+> +                       RISCV_ISA_EXT_ZICCID, 1)
+> +                       : : : : ziccid);
+>         /*
+>          * Make sure all previous writes to the D$ are ordered before mak=
+ing
+>          * the IPI. The RISC-V spec states that a hart must execute a dat=
+a fence
+> @@ -41,6 +46,7 @@ void flush_icache_all(void)
+>                 sbi_remote_fence_i(NULL);
+>         else
+>                 on_each_cpu(ipi_remote_fence_i, NULL, 1);
+> +ziccid:;
+>  }
+>  EXPORT_SYMBOL(flush_icache_all);
+>
+> @@ -61,13 +67,17 @@ void flush_icache_mm(struct mm_struct *mm, bool local=
+)
+>
+>         preempt_disable();
+>
+> +       local_flush_icache_all();
+> +
+> +       asm goto(ALTERNATIVE("nop", "j %l[ziccid]", 0, RISCV_ISA_EXT_ZICC=
+ID, 1)
+> +                : : : : ziccid);
+> +
+>         /* Mark every hart's icache as needing a flush for this MM. */
+>         mask =3D &mm->context.icache_stale_mask;
+>         cpumask_setall(mask);
+>         /* Flush this hart's I$ now, and mark it as flushed. */
+>         cpu =3D smp_processor_id();
+>         cpumask_clear_cpu(cpu, mask);
+> -       local_flush_icache_all();
+>
+>         /*
+>          * Flush the I$ of other harts concurrently executing, and mark t=
+hem as
+> @@ -91,6 +101,8 @@ void flush_icache_mm(struct mm_struct *mm, bool local)
+>                 on_each_cpu_mask(&others, ipi_remote_fence_i, NULL, 1);
+>         }
+>
+> +ziccid:;
+> +
+>         preempt_enable();
+>  }
+>
+> --
+> 2.39.5
+>
 
-Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
----
- tools/tracing/rtla/src/osnoise.h | 3 ---
- tools/tracing/rtla/src/utils.h   | 1 -
- 2 files changed, 4 deletions(-)
 
-diff --git a/tools/tracing/rtla/src/osnoise.h b/tools/tracing/rtla/src/osnoise.h
-index 895687030c0b..75de0d5c706a 100644
---- a/tools/tracing/rtla/src/osnoise.h
-+++ b/tools/tracing/rtla/src/osnoise.h
-@@ -58,8 +58,6 @@ int osnoise_set_irq_disable(struct osnoise_context *context, bool onoff);
- void osnoise_report_missed_events(struct osnoise_tool *tool);
- int osnoise_apply_config(struct osnoise_tool *tool, struct osnoise_params *params);
- 
--int osnoise_hist_main(int argc, char *argv[]);
--int osnoise_top_main(int argc, char **argv);
- int osnoise_enable(struct osnoise_tool *tool);
- int osnoise_main(int argc, char **argv);
- int hwnoise_main(int argc, char **argv);
-@@ -68,4 +66,3 @@ extern struct tool_ops timerlat_top_ops, timerlat_hist_ops;
- extern struct tool_ops osnoise_top_ops, osnoise_hist_ops;
- 
- int run_tool(struct tool_ops *ops, int argc, char *argv[]);
--int hist_main_loop(struct osnoise_tool *tool);
-diff --git a/tools/tracing/rtla/src/utils.h b/tools/tracing/rtla/src/utils.h
-index a2a6f89f342d..6086e246bd85 100644
---- a/tools/tracing/rtla/src/utils.h
-+++ b/tools/tracing/rtla/src/utils.h
-@@ -23,7 +23,6 @@ void err_msg(const char *fmt, ...);
- long parse_seconds_duration(char *val);
- void get_duration(time_t start_time, char *output, int output_size);
- 
--int parse_cpu_list(char *cpu_list, char **monitored_cpus);
- long long get_llong_from_str(char *start);
- 
- static inline void
--- 
-2.51.0
-
+--=20
+Best Regards
+ Guo Ren
