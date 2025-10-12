@@ -1,45 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1593E286A9;
-	Sun, 12 Oct 2025 03:34:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3817413635C;
+	Sun, 12 Oct 2025 04:07:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760240054; cv=none; b=hWIsNe/a5+/jdpoRoXYYlzUzebB6n8JEJMxUAgOKIoJ6xBcheutVrS50rtkHkW5djckkxnaJlDDF5dMPPh4/o8gvqynJCxhmK1dMs4tMMz23fDOK9t7uhDpYf/VTg45uCzQJ6k4+4izq0GN9NwWQ9ksVkmJxGKSMmdjy1yOj3/U=
+	t=1760242037; cv=none; b=YwZsRBRdo6kuXRLKMkZBOdNBFPEIVsukxGBUOXjHr538SWWsP+heQd/zDEN43do4CjCMwvuB1PDQ0x/GF0yPHW1mfXCITxI2l+vbFs2w5ybb3/7zmIsZscXQWWC9B6ONn2x9QB8DmQxb4EN/iMIC66u4gD02nc7+5I36rS1bGkk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760240054; c=relaxed/simple;
-	bh=z2OYcA3V2me4qlj2emP9p1AWMNG3Zl5eQHSowZFmIHs=;
+	s=arc-20240116; t=1760242037; c=relaxed/simple;
+	bh=/UMxQdx/gWs1AItzfIRruowFpZD/XTJl3spYEPThPc4=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=lVi+hYCX1D5OM14bncDvHbeUqTpBOGq+uWiAleEJB5+8A/hs5KsBFiyj+JgKBdvoGnKWzNTKG9mayDtMrd2Pu5w5PhiMJAGNT5zW5WorEFF69Xsmp2AGnnK5fbnoDVbOT8TMiLkTNS/JENu9qmGB+0lRuKNXI01qiCoaQWb4tDw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mRPqo80Q; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=OlZylbSf/unf8wk1+L85Yv3ZCXbeCZTjYqsRNWqJngbiQl30IK1wjHagVVgvkVb4wfIf7I4VkI7TmDp7R8goMBf8xJcvDOjebdaZ6i5EfYSpBosq+S90bZvpzH8TI2hrfTvbdTiVNGeylFnCA9jrn1w+eXzvkcvKR4ENaSmmWCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ewb1yZ9f; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mRPqo80Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 440B3C4CEE7;
-	Sun, 12 Oct 2025 03:34:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ewb1yZ9f"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6F5DC4CEE7;
+	Sun, 12 Oct 2025 04:07:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760240053;
-	bh=z2OYcA3V2me4qlj2emP9p1AWMNG3Zl5eQHSowZFmIHs=;
+	s=k20201202; t=1760242035;
+	bh=/UMxQdx/gWs1AItzfIRruowFpZD/XTJl3spYEPThPc4=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=mRPqo80QHVXULRxzudeHJWmO4uI5hmWsN4m0nFZMrLHl2pWnQSEBH1DqNWFPpBB7i
-	 Q9mmcHipRCh/pj1K4meMk2nr9hAddOlEPgIIYzeAMjyUUcMnmPwG3sZzDIb1FQ/IYh
-	 WucogYEyaBC/eL0rdLpnf3mi0mypKM5y3IYQjhVMeVKjBF5UAf//nCd6exxlhK0ex/
-	 MwF5GfSiCuEE6INrHL/JU4kRpgRb0gGo1ICIyc1f34uKuep0N+giLU6Le6r7x8izN5
-	 bOF6u8w2Ui7G9/oUZXqgNduz/XWTnUy3+5hchtfRJ5N/nmHBMX4aO8GN1/Cf9G74pE
-	 LwfFzUh+gFiGA==
-Date: Sun, 12 Oct 2025 12:34:08 +0900
+	b=ewb1yZ9fXQjGRG6PhrNskTFHNZDTSg50OclEHFs4xR94Jd5r+6xgu4iTZ6l54GUqa
+	 hWiiZ2CUF3G7jeR2arVYjcf0LJwhN6j5dZXboy+msj7tSx/6h05LsvbF+MSxznQX2z
+	 mDi7LRRaCIx6P5+Ha1bYJpc6CsfFkqaPmUHvXHDx1d1LVbCvmH2YZTrNgdk6hAH9HU
+	 3a2mX/vtZH9pqkGZRXryd1m5/xroIZmvqFyY0MBM1PPAZSnOkU+YcQL8qCcwTOMN30
+	 PbUrYuouxykZ51SE4J8nBdAPwkPchy4pH0w42x4ONa6btJAkhOn/jKSoE/lrQSzq7e
+	 eSoTVR+zacN+w==
+Date: Sun, 12 Oct 2025 13:07:11 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
- Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, stable@vger.kernel.org,
- syzbot+9a2ede1643175f350105@syzkaller.appspotmail.com
-Subject: Re: [PATCH 2/2] tracing: Stop fortify-string from warning in
- tracing_mark_raw_write()
-Message-Id: <20251012123408.b50aad1b5abb8a63565067f5@kernel.org>
-In-Reply-To: <20251011035243.552866788@kernel.org>
-References: <20251011035141.552201166@kernel.org>
-	<20251011035243.552866788@kernel.org>
+To: Menglong Dong <menglong8.dong@gmail.com>
+Cc: rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
+ jiang.biao@linux.dev, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] tracing: fprobe: optimization for entry only
+ case
+Message-Id: <20251012130711.0ea063ac467cb5833a81bd54@kernel.org>
+In-Reply-To: <20251010033847.31008-2-dongml2@chinatelecom.cn>
+References: <20251010033847.31008-1-dongml2@chinatelecom.cn>
+	<20251010033847.31008-2-dongml2@chinatelecom.cn>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -47,118 +45,174 @@ List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, 10 Oct 2025 23:51:43 -0400
-Steven Rostedt <rostedt@kernel.org> wrote:
+Hi Menglong,
 
-> From: Steven Rostedt <rostedt@goodmis.org>
-> 
-> The way tracing_mark_raw_write() records its data is that it has the
-> following structure:
-> 
->   struct {
-> 	struct trace_entry;
-> 	int id;
-> 	char dynamic_array[];
->   };
-> 
-> But memcpy(&entry->id, buf, size) triggers the following warning when the
-> size is greater than the id:
-> 
->  ------------[ cut here ]------------
->  memcpy: detected field-spanning write (size 6) of single field "&entry->id" at kernel/trace/trace.c:7458 (size 4)
->  WARNING: CPU: 7 PID: 995 at kernel/trace/trace.c:7458 write_raw_marker_to_buffer.isra.0+0x1f9/0x2e0
->  Modules linked in:
->  CPU: 7 UID: 0 PID: 995 Comm: bash Not tainted 6.17.0-test-00007-g60b82183e78a-dirty #211 PREEMPT(voluntary)
->  Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.17.0-debian-1.17.0-1 04/01/2014
->  RIP: 0010:write_raw_marker_to_buffer.isra.0+0x1f9/0x2e0
->  Code: 04 00 75 a7 b9 04 00 00 00 48 89 de 48 89 04 24 48 c7 c2 e0 b1 d1 b2 48 c7 c7 40 b2 d1 b2 c6 05 2d 88 6a 04 01 e8 f7 e8 bd ff <0f> 0b 48 8b 04 24 e9 76 ff ff ff 49 8d 7c 24 04 49 8d 5c 24 08 48
->  RSP: 0018:ffff888104c3fc78 EFLAGS: 00010292
->  RAX: 0000000000000000 RBX: 0000000000000006 RCX: 0000000000000000
->  RDX: 0000000000000000 RSI: 1ffffffff6b363b4 RDI: 0000000000000001
->  RBP: ffff888100058a00 R08: ffffffffb041d459 R09: ffffed1020987f40
->  R10: 0000000000000007 R11: 0000000000000001 R12: ffff888100bb9010
->  R13: 0000000000000000 R14: 00000000000003e3 R15: ffff888134800000
->  FS:  00007fa61d286740(0000) GS:ffff888286cad000(0000) knlGS:0000000000000000
->  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->  CR2: 0000560d28d509f1 CR3: 00000001047a4006 CR4: 0000000000172ef0
->  Call Trace:
->   <TASK>
->   tracing_mark_raw_write+0x1fe/0x290
->   ? __pfx_tracing_mark_raw_write+0x10/0x10
->   ? security_file_permission+0x50/0xf0
->   ? rw_verify_area+0x6f/0x4b0
->   vfs_write+0x1d8/0xdd0
->   ? __pfx_vfs_write+0x10/0x10
->   ? __pfx_css_rstat_updated+0x10/0x10
->   ? count_memcg_events+0xd9/0x410
->   ? fdget_pos+0x53/0x5e0
->   ksys_write+0x182/0x200
->   ? __pfx_ksys_write+0x10/0x10
->   ? do_user_addr_fault+0x4af/0xa30
->   do_syscall_64+0x63/0x350
->   entry_SYSCALL_64_after_hwframe+0x76/0x7e
->  RIP: 0033:0x7fa61d318687
->  Code: 48 89 fa 4c 89 df e8 58 b3 00 00 8b 93 08 03 00 00 59 5e 48 83 f8 fc 74 1a 5b c3 0f 1f 84 00 00 00 00 00 48 8b 44 24 10 0f 05 <5b> c3 0f 1f 80 00 00 00 00 83 e2 39 83 fa 08 75 de e8 23 ff ff ff
->  RSP: 002b:00007ffd87fe0120 EFLAGS: 00000202 ORIG_RAX: 0000000000000001
->  RAX: ffffffffffffffda RBX: 00007fa61d286740 RCX: 00007fa61d318687
->  RDX: 0000000000000006 RSI: 0000560d28d509f0 RDI: 0000000000000001
->  RBP: 0000560d28d509f0 R08: 0000000000000000 R09: 0000000000000000
->  R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000000006
->  R13: 00007fa61d4715c0 R14: 00007fa61d46ee80 R15: 0000000000000000
->   </TASK>
->  ---[ end trace 0000000000000000 ]---
-> 
-> This is because fortify string sees that the size of entry->id is only 4
-> bytes, but it is writing more than that. But this is OK as the
-> dynamic_array is allocated to handle that copy.
-> 
-> Use a void pointer and get the offset via offsetof() to keep fortify
-> string from warning about this copy.
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: 64cf7d058a00 ("tracing: Have trace_marker use per-cpu data to read user space")
-> Reported-by: syzbot+9a2ede1643175f350105@syzkaller.appspotmail.com
-> Closes: https://lore.kernel.org/all/68e973f5.050a0220.1186a4.0010.GAE@google.com/
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+On Fri, 10 Oct 2025 11:38:46 +0800
+Menglong Dong <menglong8.dong@gmail.com> wrote:
 
-Ah, fixed already.
-
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-> ---
->  kernel/trace/trace.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
+> For now, fgraph is used for the fprobe, even if we need trace the entry
+> only. However, the performance of ftrace is better than fgraph, and we
+> can use ftrace_ops for this case.
 > 
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index bbb89206a891..27855fc9e0f2 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -7440,6 +7440,7 @@ static ssize_t write_raw_marker_to_buffer(struct trace_array *tr,
->  	struct raw_data_entry *entry;
->  	ssize_t written;
->  	size_t size;
-> +	void *ptr;
+> Then performance of kprobe-multi increases from 54M to 69M. Before this
+> commit:
+> 
+>   $ ./benchs/run_bench_trigger.sh kprobe-multi
+>   kprobe-multi   :   54.663 ± 0.493M/s
+> 
+> After this commit:
+> 
+>   $ ./benchs/run_bench_trigger.sh kprobe-multi
+>   kprobe-multi   :   69.447 ± 0.143M/s
+> 
+> Mitigation is disable during the bench testing above.
+> 
+
+Thanks for updating!
+
+This looks good to me. Just a nit comment below;
+
+[...]
+> @@ -379,11 +380,82 @@ static void fprobe_return(struct ftrace_graph_ret *trace,
+>  NOKPROBE_SYMBOL(fprobe_return);
 >  
->  	size = sizeof(*entry) + cnt;
+>  static struct fgraph_ops fprobe_graph_ops = {
+> -	.entryfunc	= fprobe_entry,
+> +	.entryfunc	= fprobe_fgraph_entry,
+>  	.retfunc	= fprobe_return,
+>  };
+>  static int fprobe_graph_active;
 >  
-> @@ -7455,7 +7456,10 @@ static ssize_t write_raw_marker_to_buffer(struct trace_array *tr,
->  		return -EBADF;
+> +/* ftrace_ops callback, this processes fprobes which have only entry_handler. */
+> +static void fprobe_ftrace_entry(unsigned long ip, unsigned long parent_ip,
+> +	struct ftrace_ops *ops, struct ftrace_regs *fregs)
+> +{
+> +	struct fprobe_hlist_node *node;
+> +	struct rhlist_head *head, *pos;
+> +	struct fprobe *fp;
+> +	int bit;
+> +
+> +	bit = ftrace_test_recursion_trylock(ip, parent_ip);
+> +	if (bit < 0)
+> +		return;
+> +
+
+nit: We'd better to explain why we need this here too;
+
+	/*
+	 * ftrace_test_recursion_trylock() disables preemption, but
+	 * rhltable_lookup() checks whether rcu_read_lcok is held.
+	 * So we take rcu_read_lock() here.
+	 */
+
+> +	rcu_read_lock();
+> +	head = rhltable_lookup(&fprobe_ip_table, &ip, fprobe_rht_params);
+> +
+> +	rhl_for_each_entry_rcu(node, pos, head, hlist) {
+> +		if (node->addr != ip)
+> +			break;
+> +		fp = READ_ONCE(node->fp);
+> +		if (unlikely(!fp || fprobe_disabled(fp) || fp->exit_handler))
+> +			continue;
+> +
+> +		if (fprobe_shared_with_kprobes(fp))
+> +			__fprobe_kprobe_handler(ip, parent_ip, fp, fregs, NULL);
+> +		else
+> +			__fprobe_handler(ip, parent_ip, fp, fregs, NULL);
+> +	}
+> +	rcu_read_unlock();
+> +	ftrace_test_recursion_unlock(bit);
+> +}
+> +NOKPROBE_SYMBOL(fprobe_ftrace_entry);
+
+Thank you,
+
+> +
+> +static struct ftrace_ops fprobe_ftrace_ops = {
+> +	.func	= fprobe_ftrace_entry,
+> +	.flags	= FTRACE_OPS_FL_SAVE_REGS,
+> +};
+> +static int fprobe_ftrace_active;
+> +
+> +static int fprobe_ftrace_add_ips(unsigned long *addrs, int num)
+> +{
+> +	int ret;
+> +
+> +	lockdep_assert_held(&fprobe_mutex);
+> +
+> +	ret = ftrace_set_filter_ips(&fprobe_ftrace_ops, addrs, num, 0, 0);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (!fprobe_ftrace_active) {
+> +		ret = register_ftrace_function(&fprobe_ftrace_ops);
+> +		if (ret) {
+> +			ftrace_free_filter(&fprobe_ftrace_ops);
+> +			return ret;
+> +		}
+> +	}
+> +	fprobe_ftrace_active++;
+> +	return 0;
+> +}
+> +
+> +static void fprobe_ftrace_remove_ips(unsigned long *addrs, int num)
+> +{
+> +	lockdep_assert_held(&fprobe_mutex);
+> +
+> +	fprobe_ftrace_active--;
+> +	if (!fprobe_ftrace_active)
+> +		unregister_ftrace_function(&fprobe_ftrace_ops);
+> +	if (num)
+> +		ftrace_set_filter_ips(&fprobe_ftrace_ops, addrs, num, 1, 0);
+> +}
+> +
+>  /* Add @addrs to the ftrace filter and register fgraph if needed. */
+>  static int fprobe_graph_add_ips(unsigned long *addrs, int num)
+>  {
+> @@ -498,9 +570,12 @@ static int fprobe_module_callback(struct notifier_block *nb,
+>  	} while (node == ERR_PTR(-EAGAIN));
+>  	rhashtable_walk_exit(&iter);
 >  
->  	entry = ring_buffer_event_data(event);
-> -	memcpy(&entry->id, buf, cnt);
-> +	/* Do not let fortify-string warn copying to &entry->id */
-> +	ptr = (void *)entry;
-> +	ptr += offsetof(typeof(*entry), id);
-> +	memcpy(ptr, buf, cnt);
->  	written = cnt;
+> -	if (alist.index > 0)
+> +	if (alist.index > 0) {
+>  		ftrace_set_filter_ips(&fprobe_graph_ops.ops,
+>  				      alist.addrs, alist.index, 1, 0);
+> +		ftrace_set_filter_ips(&fprobe_ftrace_ops,
+> +				      alist.addrs, alist.index, 1, 0);
+> +	}
+>  	mutex_unlock(&fprobe_mutex);
 >  
->  	__buffer_unlock_commit(buffer, event);
+>  	kfree(alist.addrs);
+> @@ -733,7 +808,11 @@ int register_fprobe_ips(struct fprobe *fp, unsigned long *addrs, int num)
+>  	mutex_lock(&fprobe_mutex);
+>  
+>  	hlist_array = fp->hlist_array;
+> -	ret = fprobe_graph_add_ips(addrs, num);
+> +	if (fp->exit_handler)
+> +		ret = fprobe_graph_add_ips(addrs, num);
+> +	else
+> +		ret = fprobe_ftrace_add_ips(addrs, num);
+> +
+>  	if (!ret) {
+>  		add_fprobe_hash(fp);
+>  		for (i = 0; i < hlist_array->size; i++) {
+> @@ -829,7 +908,10 @@ int unregister_fprobe(struct fprobe *fp)
+>  	}
+>  	del_fprobe_hash(fp);
+>  
+> -	fprobe_graph_remove_ips(addrs, count);
+> +	if (fp->exit_handler)
+> +		fprobe_graph_remove_ips(addrs, count);
+> +	else
+> +		fprobe_ftrace_remove_ips(addrs, count);
+>  
+>  	kfree_rcu(hlist_array, rcu);
+>  	fp->hlist_array = NULL;
 > -- 
 > 2.51.0
-> 
 > 
 
 
