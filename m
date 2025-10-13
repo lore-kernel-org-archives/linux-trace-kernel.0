@@ -1,172 +1,235 @@
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E49428D836
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 12 Oct 2025 14:40:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 008022153E7
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 13 Oct 2025 01:21:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760280027; cv=none; b=bY6YjnaU/2ngMx1jQS3KSS8RFto318dcVCQrAd8N8xb2XSkbTTd9I4FOjRXlEuIGpihsZ1374QJAB8W2QN6z9oIZlyxJ+axPxs9MLoonfrFrF5suQTr9AN189Gb88lKemvnKCrKW50L0HT7yVDTW7miGAM4fOaYeYfNjmsyHjxs=
+	t=1760318468; cv=none; b=bYrew+PgakYrkbUnujiSgkByjEd0TNuKqbVonsZj4iNHo+pUCJO+pRg8WJF0pxqFZ308F/nxy4v2J1PCjnsByeNWuyMH7hs3vrP/ZBEAX/VSxTM9jlvAe/cA/PSWVRkw9xT07dKWVPV7eP73D/RSuVL5gzFpeeU2b/OPPKpwnRI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760280027; c=relaxed/simple;
-	bh=Wh5h8R4i6wbyblid+ANW0qxMSJzl7sw5qOnKstak05k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JGPPVbUnsqRRjlYHFB3p6jZuRvs+YTcb1CNtSBVQXbg0rxXkrJJwzukhYvgtVRYYsh+5RtnzMf+GLz5L1qRg0f0XxCeCjfAMbgByfJswbBNsIpGJKhPAUFFX7hmQxWc/56J5+CVJi0DUN44Hlg4ujTmd/WmomCDPAgjQdgAYfLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jnns5v6s; arc=none smtp.client-ip=209.85.222.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1760318468; c=relaxed/simple;
+	bh=u73qErM8gG9rcmN+2xK2j3Afp4fY/KgmP4XQxXROrz0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=i/jodZA45IzwaVsbJapU4nGSpmwazWZ/jDEdsw+A2BSSZeb2H3SuGraWVsAZCCL1HEqP6mMYgJYoq3ptd5/NkXKOEyhbrxxm7KmD+6zt2T6h87vTWlmUvpZ3sz4hwSOiuapihRWN7DWXXyUCZj/m7BUj0N9Pkg2KP9fa1dhvgMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=XV4Fj88C; arc=none smtp.client-ip=95.215.58.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jnns5v6s"
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-85b94fe19e2so460142385a.3
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 12 Oct 2025 07:40:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1760280024; x=1760884824; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=rESNqBlm01rEUHeI+dW4BfRZdaJiZNLBgBxLi9o7AK8=;
-        b=jnns5v6smfiu+Q4Mb6oBYc/TSGlQSrShm0RHUTkRgmwwmVxnUd0GaD8hWcIdoYmY1K
-         UGiIW4gAb/eCfhw+xQ6lporwUgJgVnIh7Mad67sBhMLcZ2lj1cst/IkncdZx/cdphg5b
-         7pH67Cid42kmHEwhEMgiBLX+nwFjvjZlx95LSJGkiDv9YK0JpmY0X17ADNQWfawJJV0H
-         9dhEtMrGeExZVtDXNClYx8nuqq2rgFE/cZDlEuI9Qn2jHzqXCLU6j6SeoMpkKLE9sBhV
-         GCGtKJsI7dBvDueEi4tImtG1j+Amga+FFUcpUm9WmQmiDiaCzW7hYjP9bCcATkz/OcdQ
-         XBOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760280024; x=1760884824;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rESNqBlm01rEUHeI+dW4BfRZdaJiZNLBgBxLi9o7AK8=;
-        b=iblDzvLeiiH0PKy/fp8xachKtfB1YcLlyNH69HP+B+6dJ3NXDoTPRES+YpnJQzA3sB
-         gpoJL+pZm64UZBRWdz9hT8NeRCrAKDvWTjJX/byQtERkJfhZNWG1Ehp8+zI64i3mobck
-         tQEHd5ktscqjW5isKh8QYWquZH8NmaFjW0TrCLWvodZzCKfCHbf2U0cJoJmIN7te4wZg
-         Q0l08HHl6MnblTj707YsY0P09Vmv6e3mf/KMWQBARbZGfzI7rWa6giuebJfKLRnfBQvX
-         HQS089lYpSCbKyj/UPsyXfQYqoVbLzJ3SmNH7pQw5RhXmXQ43iw9zZJ+uq1D7pJSiCuG
-         hJuw==
-X-Forwarded-Encrypted: i=1; AJvYcCWMNHRlKTHjLfu5UM06mzjVacYufZwvUzOmGBNU6e0SpCfzdUEtTcwrmi0awP/z6KVprlmio8d9q9fhADp/KXTeNxQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyGaR0uiosEkMRs3GGZa12uuwl02mSgLEitjHCWoydg0LPHY+VQ
-	NuZhE9QtRzGhzweyc0EG2b8bUWmdYIAqgza2J43cA7kNbgdu5AbXCt81
-X-Gm-Gg: ASbGncsRe6gNL2HiqHFnY/eq6YMNCrirR8otzAty/f/2mApqDvMXKJosJwUUcWakQE9
-	5HmAOlYJz+3EazXWyWaSaEV8csx7y73Ik4mGAMKxqsvuAaBztssBy+SriNhvSvTGnyL/glkc23+
-	0FPqrLyFzKo+ElX7jpkicvJOuNvbFWZQtfS8lg+YlTH+e5R+ufAQr21YbSpLatXj3ULqWsrgCvx
-	zz6D6eIZeJIv0IlrGpaBElcuLD/CmgSTHii85cr4eejn4308WNLqPjAPm9WdxP8CiYVoGYkdlMe
-	qtfY340x5/tWd5OrJxcurKQvmeyMBoZYE8+u43RjNXgB1EHXv45KK9cycjp7+c9D/0g/F91LR9c
-	x4HooYOgn4Njp2zyq1O/n/w6AV5Gzk+HQDzizGTyjK4c91zcwJoka
-X-Google-Smtp-Source: AGHT+IHuKrB+wtc9CHezkXO5L4byllrdW5vET8rdYYUSuvOOINFBAia4TK1dY6/MsIv8M0S8kDpO5A==
-X-Received: by 2002:a05:620a:31a2:b0:85b:e8ca:8ac7 with SMTP id af79cd13be357-88350a7c13fmr2517732685a.31.1760280024215;
-        Sun, 12 Oct 2025 07:40:24 -0700 (PDT)
-Received: from gmail.com ([2600:4041:4491:2000:f887:3bb2:9bc6:cbb0])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-884a23693a0sm797498485a.53.2025.10.12.07.40.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Oct 2025 07:40:23 -0700 (PDT)
-Date: Sun, 12 Oct 2025 23:40:21 +0900
-From: Ryan Chung <seokwoo.chung130@gmail.com>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: rostedt@goodmis.org, mathieu.desnoyers@efficios.com, shuah@kernel.org,
-	hca@linux.ibm.com, corbet@lwn.net,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v3 1/5] docs: tracing: fprobe: document list filters and
- :entry/:exit
-Message-ID: <aOu91W3GegRiK8Pg@gmail.com>
-References: <20251004235001.133111-1-seokwoo.chung130@gmail.com>
- <20251004235001.133111-2-seokwoo.chung130@gmail.com>
- <20251008100611.6fb5f0b9d49c9d0c403e2670@kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="XV4Fj88C"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1760318454;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0GOTA7JJb9rPGd8nAb0miSTZ1zK684lf0RfbpiyY6Zc=;
+	b=XV4Fj88CuejHfTEFsvb6vnVdWatnQlsyAf2jllYL1b+lYYqPcmKO8IPwkBXQRsmLwL50rP
+	5toDvX0UWQOuNOGX5faM92PB75qhVRCXsOZy9zNA+EzKEUZPfit1VFHc13WG6Cid5nkaQU
+	ZRyj0eeR7EIg0qlt1ryaKdsB6QC9zlE=
+From: Menglong Dong <menglong.dong@linux.dev>
+To: Menglong Dong <menglong8.dong@gmail.com>,
+ Masami Hiramatsu <mhiramat@kernel.org>
+Cc: rostedt@goodmis.org, mathieu.desnoyers@efficios.com, jiang.biao@linux.dev,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] tracing: fprobe: optimization for entry only case
+Date: Mon, 13 Oct 2025 09:20:42 +0800
+Message-ID: <2802160.mvXUDI8C0e@7950hx>
+In-Reply-To: <20251012130711.0ea063ac467cb5833a81bd54@kernel.org>
+References:
+ <20251010033847.31008-1-dongml2@chinatelecom.cn>
+ <20251010033847.31008-2-dongml2@chinatelecom.cn>
+ <20251012130711.0ea063ac467cb5833a81bd54@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251008100611.6fb5f0b9d49c9d0c403e2670@kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, Oct 08, 2025 at 10:06:11AM +0900, Masami Hiramatsu wrote:
-> On Sun,  5 Oct 2025 08:46:55 +0900
-> Ryan Chung <seokwoo.chung130@gmail.com> wrote:
-> 
-> > Signed-off-by: Ryan Chung <seokwoo.chung130@gmail.com>
-> > ---
-> >  Documentation/trace/fprobetrace.rst | 27 +++++++++++++++++++++------
-> >  1 file changed, 21 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/Documentation/trace/fprobetrace.rst b/Documentation/trace/fprobetrace.rst
-> > index b4c2ca3d02c1..629e2d7402bd 100644
-> > --- a/Documentation/trace/fprobetrace.rst
-> > +++ b/Documentation/trace/fprobetrace.rst
-> > @@ -25,21 +25,36 @@ Synopsis of fprobe-events
-> >  -------------------------
-> >  ::
-> >  
-> > -  f[:[GRP1/][EVENT1]] SYM [FETCHARGS]                       : Probe on function entry
-> > -  f[MAXACTIVE][:[GRP1/][EVENT1]] SYM%return [FETCHARGS]     : Probe on function exit
-> > -  t[:[GRP2/][EVENT2]] TRACEPOINT [FETCHARGS]                : Probe on tracepoint
-> > +  # fprobe (function entry/exit)
-> > +  f[:[GRP1/][EVENT1]] SYM_OR_LIST[:entry|:exit] [FETCHARGS]
+On 2025/10/12 12:07, Masami Hiramatsu wrote:
+> Hi Menglong,
+>=20
+> On Fri, 10 Oct 2025 11:38:46 +0800
+> Menglong Dong <menglong8.dong@gmail.com> wrote:
+>=20
+> > For now, fgraph is used for the fprobe, even if we need trace the entry
+> > only. However, the performance of ftrace is better than fgraph, and we
+> > can use ftrace_ops for this case.
+> >=20
+> > Then performance of kprobe-multi increases from 54M to 69M. Before this
+> > commit:
+> >=20
+> >   $ ./benchs/run_bench_trigger.sh kprobe-multi
+> >   kprobe-multi   :   54.663 =C2=B1 0.493M/s
+> >=20
+> > After this commit:
+> >=20
+> >   $ ./benchs/run_bench_trigger.sh kprobe-multi
+> >   kprobe-multi   :   69.447 =C2=B1 0.143M/s
+> >=20
+> > Mitigation is disable during the bench testing above.
+> >=20
+>=20
+> Thanks for updating!
+>=20
+> This looks good to me. Just a nit comment below;
+>=20
+> [...]
+> > @@ -379,11 +380,82 @@ static void fprobe_return(struct ftrace_graph_ret=
+ *trace,
+> >  NOKPROBE_SYMBOL(fprobe_return);
+> > =20
+> >  static struct fgraph_ops fprobe_graph_ops =3D {
+> > -	.entryfunc	=3D fprobe_entry,
+> > +	.entryfunc	=3D fprobe_fgraph_entry,
+> >  	.retfunc	=3D fprobe_return,
+> >  };
+> >  static int fprobe_graph_active;
+> > =20
+> > +/* ftrace_ops callback, this processes fprobes which have only entry_h=
+andler. */
+> > +static void fprobe_ftrace_entry(unsigned long ip, unsigned long parent=
+_ip,
+> > +	struct ftrace_ops *ops, struct ftrace_regs *fregs)
+> > +{
+> > +	struct fprobe_hlist_node *node;
+> > +	struct rhlist_head *head, *pos;
+> > +	struct fprobe *fp;
+> > +	int bit;
 > > +
-> > +  # legacy single-symbol exit
-> > +  f[MAXACTIVE][:[GRP1/][EVENT1]] SYM%return [FETCHARGS]
+> > +	bit =3D ftrace_test_recursion_trylock(ip, parent_ip);
+> > +	if (bit < 0)
+> > +		return;
 > > +
-> > +  # Probe on tracepoint
-> > +  t[:[GRP2/][EVENT2]] TRACEPOINT [FETCHARGS]
-> >  
-> >   GRP1           : Group name for fprobe. If omitted, use "fprobes" for it.
-> >   GRP2           : Group name for tprobe. If omitted, use "tracepoints" for it.
-> > - EVENT1         : Event name for fprobe. If omitted, the event name is
-> > -                  "SYM__entry" or "SYM__exit".
-> > + EVENT1         : Event name for fprobe. If omitted,
-> > +                  - For a single literal symbol, the event name is
-> > +                    "SYM__entry" or "SYM__exit".
-> > +                  - For a *list or any wildcard*, an explicit [GRP1/][EVENT1]
-> > +                    is required; otherwise the parser rejects it.
-> >   EVENT2         : Event name for tprobe. If omitted, the event name is
-> >                    the same as "TRACEPOINT", but if the "TRACEPOINT" starts
-> >                    with a digit character, "_TRACEPOINT" is used.
-> >   MAXACTIVE      : Maximum number of instances of the specified function that
-> >                    can be probed simultaneously, or 0 for the default value
-> >                    as defined in Documentation/trace/fprobe.rst
-> > -
-> > + SYM_OR_LIST    : Either a single symbol, or a comma-separated list of
-> > +                  include/exclude patterns:
-> > +                  - Tokens are matched as symbols; wildcards may be used.
-> > +                  - Tokens prefixed with '!' are exclusions.
-> > +                  - Examples:
-> > +                        foo             # single literal (entry)
-> > +                        foo:exit        # single literal exit
-> > +                        foo%return      # legacy single-symbol exit
-> 
-> So you can explain it in syntax formats:
-> 
-> Single function (including wildcard):
-> 
->   f[:[GRP1/][EVENT1]] SYM[%return] [FETCHARGS]
-> 
-> Multiple functions:
-> 
->   f[:[GRP1/]EVENT3 SYM[,[!]SYM[,...]][:entry|:exit] [FETCHARGS]
-> 
-> Where,
->  - SYM prefixed with '!' are exclusions.
->  - ":entry" suffix means it probes entry of given symbols. (default)
->  - ":exit" suffix means it probes exit of given symbols.
->  - "%return" suffix means it probes exit of SYM (single symbol).
-> 
+>=20
+> nit: We'd better to explain why we need this here too;
+>=20
+> 	/*
+> 	 * ftrace_test_recursion_trylock() disables preemption, but
+> 	 * rhltable_lookup() checks whether rcu_read_lcok is held.
+> 	 * So we take rcu_read_lock() here.
+> 	 */
+
+It's very nice! I'll send a V3 now.
+
+Thanks!
+Menglong Dong
+
+>=20
+> > +	rcu_read_lock();
+> > +	head =3D rhltable_lookup(&fprobe_ip_table, &ip, fprobe_rht_params);
+> > +
+> > +	rhl_for_each_entry_rcu(node, pos, head, hlist) {
+> > +		if (node->addr !=3D ip)
+> > +			break;
+> > +		fp =3D READ_ONCE(node->fp);
+> > +		if (unlikely(!fp || fprobe_disabled(fp) || fp->exit_handler))
+> > +			continue;
+> > +
+> > +		if (fprobe_shared_with_kprobes(fp))
+> > +			__fprobe_kprobe_handler(ip, parent_ip, fp, fregs, NULL);
+> > +		else
+> > +			__fprobe_handler(ip, parent_ip, fp, fregs, NULL);
+> > +	}
+> > +	rcu_read_unlock();
+> > +	ftrace_test_recursion_unlock(bit);
+> > +}
+> > +NOKPROBE_SYMBOL(fprobe_ftrace_entry);
+>=20
 > Thank you,
-> 
-> 
-> >   FETCHARGS      : Arguments. Each probe can have up to 128 args.
-> >    ARG           : Fetch "ARG" function argument using BTF (only for function
-> >                    entry or tracepoint.) (\*1)
-> > -- 
-> > 2.43.0
-> > 
-> 
-> 
-> -- 
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>o
+>=20
+> > +
+> > +static struct ftrace_ops fprobe_ftrace_ops =3D {
+> > +	.func	=3D fprobe_ftrace_entry,
+> > +	.flags	=3D FTRACE_OPS_FL_SAVE_REGS,
+> > +};
+> > +static int fprobe_ftrace_active;
+> > +
+> > +static int fprobe_ftrace_add_ips(unsigned long *addrs, int num)
+> > +{
+> > +	int ret;
+> > +
+> > +	lockdep_assert_held(&fprobe_mutex);
+> > +
+> > +	ret =3D ftrace_set_filter_ips(&fprobe_ftrace_ops, addrs, num, 0, 0);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	if (!fprobe_ftrace_active) {
+> > +		ret =3D register_ftrace_function(&fprobe_ftrace_ops);
+> > +		if (ret) {
+> > +			ftrace_free_filter(&fprobe_ftrace_ops);
+> > +			return ret;
+> > +		}
+> > +	}
+> > +	fprobe_ftrace_active++;
+> > +	return 0;
+> > +}
+> > +
+> > +static void fprobe_ftrace_remove_ips(unsigned long *addrs, int num)
+> > +{
+> > +	lockdep_assert_held(&fprobe_mutex);
+> > +
+> > +	fprobe_ftrace_active--;
+> > +	if (!fprobe_ftrace_active)
+> > +		unregister_ftrace_function(&fprobe_ftrace_ops);
+> > +	if (num)
+> > +		ftrace_set_filter_ips(&fprobe_ftrace_ops, addrs, num, 1, 0);
+> > +}
+> > +
+> >  /* Add @addrs to the ftrace filter and register fgraph if needed. */
+> >  static int fprobe_graph_add_ips(unsigned long *addrs, int num)
+> >  {
+> > @@ -498,9 +570,12 @@ static int fprobe_module_callback(struct notifier_=
+block *nb,
+> >  	} while (node =3D=3D ERR_PTR(-EAGAIN));
+> >  	rhashtable_walk_exit(&iter);
+> > =20
+> > -	if (alist.index > 0)
+> > +	if (alist.index > 0) {
+> >  		ftrace_set_filter_ips(&fprobe_graph_ops.ops,
+> >  				      alist.addrs, alist.index, 1, 0);
+> > +		ftrace_set_filter_ips(&fprobe_ftrace_ops,
+> > +				      alist.addrs, alist.index, 1, 0);
+> > +	}
+> >  	mutex_unlock(&fprobe_mutex);
+> > =20
+> >  	kfree(alist.addrs);
+> > @@ -733,7 +808,11 @@ int register_fprobe_ips(struct fprobe *fp, unsigne=
+d long *addrs, int num)
+> >  	mutex_lock(&fprobe_mutex);
+> > =20
+> >  	hlist_array =3D fp->hlist_array;
+> > -	ret =3D fprobe_graph_add_ips(addrs, num);
+> > +	if (fp->exit_handler)
+> > +		ret =3D fprobe_graph_add_ips(addrs, num);
+> > +	else
+> > +		ret =3D fprobe_ftrace_add_ips(addrs, num);
+> > +
+> >  	if (!ret) {
+> >  		add_fprobe_hash(fp);
+> >  		for (i =3D 0; i < hlist_array->size; i++) {
+> > @@ -829,7 +908,10 @@ int unregister_fprobe(struct fprobe *fp)
+> >  	}
+> >  	del_fprobe_hash(fp);
+> > =20
+> > -	fprobe_graph_remove_ips(addrs, count);
+> > +	if (fp->exit_handler)
+> > +		fprobe_graph_remove_ips(addrs, count);
+> > +	else
+> > +		fprobe_ftrace_remove_ips(addrs, count);
+> > =20
+> >  	kfree_rcu(hlist_array, rcu);
+> >  	fp->hlist_array =3D NULL;
+>=20
+>=20
+>=20
 
-Hi Masami. Thank you for your coments. I will fold this into v4 and make
-sure examples and naming rules match the behavior. Thanks for the
-guidance.
 
-Best regards,
-Ryan Chung
+
+
