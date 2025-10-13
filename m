@@ -1,165 +1,110 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7A502E9EC2
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 13 Oct 2025 07:30:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2006220F08E
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 13 Oct 2025 07:49:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760340633; cv=none; b=hrT17CKBtJxZRz2ZmTlaA8lfIwxqaCe+E0IlJVzpuB+/BWFdA8yiZqo32x6OhyjSL2vjBoMXC2BNc2XX2bjw9pwSCxTGQRUXvItsGu09eD3urwFv+CnRY05teEFPamYmgJY/6gIxg3ufybF1yzL2OOKS2FuhvQKhMyjOtFceaPA=
+	t=1760341750; cv=none; b=RbGrswav6+3w1ZoRAczwJhk425peLkk1TFbaHLubyqcycaNcimsuiVEZyoz+wq3u3fP7T6y7NTEJeRqa0bZbsULfKrmH0Ys+eerYCEKKCZFAgcPiQ70QcWbRqKIR1KNWF+heu5U047+CjWX3YGchxST7HrBw9DK6YIbnsW8QqGk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760340633; c=relaxed/simple;
-	bh=D1eFUuam1cYs9U7/aNjqT6bbyRqFFlkxOA0Boid2Crk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cK88gtDCola+TtTTwWwe3m4q60LoB1rKDKH4LD6GT1nfFhXkB/qWqBn8RWu9z42AANN2BkVfpR1PC+wM+Yxq3BmLW+QETMTWV8FONpNfjppaLAboaDulyfuTBnEGNlOyX9Cj11PAk2xIVhjMgbBg8sDZMlVJa0rZLDPD88+E39c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eoukNKY2; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1760341750; c=relaxed/simple;
+	bh=jX3zGRqZI4Jml0uk5ubCHiZ727gZMt/y0Ls1cBpk+ZQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LEsQnEm5e5lOEuIBBpWpmbAZyJ/0yBgqmaqvBsKdxnHukgMTOmzZsiRapH263+6ex8MUvGzvq3rfXVNhbfX3C4sUtwvNuOQL8OmVdJH2G6HTyBJzbKPMw0eUGpU+dL74DNz/u/ckgdMXZT96KjofHWSIPDZSie/8dvSi2vJryBs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dS4uuKbS; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eoukNKY2"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dS4uuKbS"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1760340630;
+	s=mimecast20190719; t=1760341748;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=D1eFUuam1cYs9U7/aNjqT6bbyRqFFlkxOA0Boid2Crk=;
-	b=eoukNKY22VtsYBzr4/W6qX1jN5tvjKCMIPm9jc6oboO8bqBFmI9mBmvuR7Ge08TQzbaJYz
-	uC51rj5hrW5QXT2k1sOqlRqKt5xEbM3axuegwZTBwZahysDizrWxPNrvWIu+f1KvsbkZ8n
-	YT0FssW9VMKggcJxCki9pfPOENYukzU=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	 in-reply-to:in-reply-to:references:references;
+	bh=jX3zGRqZI4Jml0uk5ubCHiZ727gZMt/y0Ls1cBpk+ZQ=;
+	b=dS4uuKbSm6ZXMG+HnEvDA9GuBQfEXuN/Bh52YWtc+LHyyrVMZ5YQpNupUDdpYgJLVxoSuL
+	xCOVR4qW6j0ve/qxzXXPGqYBQt0D05aViK0BqyZ/J7rqzJkOEjtCXAz6U7GbGJvYL5yxIw
+	fL1RSntjMi5Njpb92yvDNnkENdAzmqY=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-63-cJRxYRIMMsmsf4PMUSFF1w-1; Mon, 13 Oct 2025 03:30:29 -0400
-X-MC-Unique: cJRxYRIMMsmsf4PMUSFF1w-1
-X-Mimecast-MFC-AGG-ID: cJRxYRIMMsmsf4PMUSFF1w_1760340628
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-46e4cb3e4deso14494485e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 13 Oct 2025 00:30:28 -0700 (PDT)
+ us-mta-365-jRElyvArNymPvdW3Jcprtw-1; Mon, 13 Oct 2025 03:49:06 -0400
+X-MC-Unique: jRElyvArNymPvdW3Jcprtw-1
+X-Mimecast-MFC-AGG-ID: jRElyvArNymPvdW3Jcprtw_1760341746
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-b3d21b18e8fso327504766b.2
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 13 Oct 2025 00:49:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760340628; x=1760945428;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jvcrm6KIUPUNpc7xmiZElApRSjY4cVtEn4dAkTy/70Q=;
-        b=K8lrkVWmJ6GcVaefyANNIKQXWCfHDs/T7a2cPJF+YrzRBbxJF67DXMBJa8RWgAM/dd
-         RkQGBxe0wpGYOxneSA2vJyOOkPe5qIwHDxdmtmMR07Lv1YxK6QZ8pDsasIj+QM4lBQ13
-         jazYvHvxQq3SxSa7TWDIaeEQqZh3eqZAZPCFtMJrKMaI9hrHtqvqCR0XRs+BL9r5NxsQ
-         nPvsq+xyP0y9UtDBjfTbtfeD5qgmier2DjwN15e6/oySecOzKiwRkvhmKE3LSezx5Y4o
-         w/BidXZ0+3PaWNMHLxy0BHvxHnPTTqdlh7tMONS8tn4eauBpMM7n3nSXjtbLZb4/0UZA
-         VjmA==
-X-Forwarded-Encrypted: i=1; AJvYcCUGGzAnaZnnPLTc9+ua8i64B1vq9YPAXyqoNCEEMYdW9VuavH/MjcOcbKzbcoYhbeyJxMcqKotKQuTvl5UnVBGDn94=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxet+OWWvX6CZvxUzwIqjA/+Qr19ZF9ocgzOJbxHwh9kRzFWrKN
-	th8i9haALYpUuzMXL/7+VtxqiQZuzQ7GxJ4i8qTYDchfs8+Qn7BqLL+YiwptvlqrSUdWZ0Doqhc
-	mFnHvPH+s9qXXzhhNa6+TwzLKuQ2Ag5PaiO7vYykEOpP0P842OdZeZeoXJ5LLGBt+C8qPCd7I+g
-	==
-X-Gm-Gg: ASbGncsrvNedq7Om91PlxFD2XaWzxbrioH514k9+6LuNjxdpOSo/gqMOre47uNL68oP
-	5vTQ9meqcdkzr3JwA/39I+uv7htPOFjGyeOUmHJvc9RKSlWWbeKSiC6h8//4KB/J80SrFZ+VwCR
-	sc95buewKhqHTdsCm2Ob0rsFMisVD4XG7LNhjceVhiboX8r+ofExijGPgJbCy7uY2L+Xtbb6Xdv
-	wtTxMZFg2CVQJBFBYAOI5kj0pYN4LryZttqG8maNbDeMi8i5JC6IDPPF0mB3E/DZd2EpuZiLKrM
-	DZvSEE27AUiw+dEIH29+uP154kU7gFdwLpaK+2vV8kRD2+R/rMM6qXU9wOd65W+8XQ==
-X-Received: by 2002:a05:600d:824b:b0:46f:c55e:a687 with SMTP id 5b1f17b1804b1-46fc55ea6f7mr15279295e9.7.1760340627732;
-        Mon, 13 Oct 2025 00:30:27 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEC/F6R+8hlK3CtQbemkFUUvDibbdW2qqB3BO9HixY7B8LvjUh+PY8O3sgUpuovPDwK9I3d/A==
-X-Received: by 2002:a05:600d:824b:b0:46f:c55e:a687 with SMTP id 5b1f17b1804b1-46fc55ea6f7mr15279035e9.7.1760340627301;
-        Mon, 13 Oct 2025 00:30:27 -0700 (PDT)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.30])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-46fab3d2c1asm121363435e9.1.2025.10.13.00.30.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Oct 2025 00:30:26 -0700 (PDT)
-Message-ID: <646db9e9d956f009d53bfabf8b8287c034279066.camel@redhat.com>
-Subject: Re: [PATCH v2 20/20] rv: Add deadline monitors
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Nam Cao <namcao@linutronix.de>, linux-kernel@vger.kernel.org, Steven
- Rostedt <rostedt@goodmis.org>, Jonathan Corbet <corbet@lwn.net>, Masami
- Hiramatsu	 <mhiramat@kernel.org>, linux-trace-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org
-Cc: Tomas Glozar <tglozar@redhat.com>, Juri Lelli <jlelli@redhat.com>, Clark
- Williams <williams@redhat.com>, John Kacur <jkacur@redhat.com>
-Date: Mon, 13 Oct 2025 09:30:24 +0200
-In-Reply-To: <87a51yyf0o.fsf@yellow.woof>
-References: <20250919140954.104920-1-gmonaco@redhat.com>
-	 <20250919140954.104920-21-gmonaco@redhat.com> <87a51yyf0o.fsf@yellow.woof>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
- cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
- T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
- eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
- 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
-User-Agent: Evolution 3.56.2 (3.56.2-2.fc42)
+        d=1e100.net; s=20230601; t=1760341745; x=1760946545;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jX3zGRqZI4Jml0uk5ubCHiZ727gZMt/y0Ls1cBpk+ZQ=;
+        b=V8Z83ztgN3B/173NifWojAcbDFYGkE9nnImQWqum3Yg8NMrtWdC0Y7NuVGYFUKqoN/
+         8F19x5nWJ24fw+FN/P68TQfI0nOl7VVpdSHf6b8HZKVjBWQU4oN4DcpOGiRLyGpu4muD
+         983RLYhRaVJJYuqOJ/YiDgaOsokJ4trjpzNAfwQpCPruNQk0DKBplQDq3EAZxJWGzUam
+         xg4OoBC693+kPKoaOdDCgeVRTp0GuxfUh1hObQK8GwjAzFtL9JDdjCfSOEWyw31WETxX
+         9iO1jco/vJyj8HMckze4HqMeAybcsXlYmItUYbE4s4PTlTrtfDtA4+8QkvuCCa6co/0L
+         btzg==
+X-Forwarded-Encrypted: i=1; AJvYcCUDyB8nkuOJ2wl2VETX0OsmaUHj01qcDECbwl2UFMvvKOQXS1farcKqpqvyQ5CbYguWoULAki6reUdH+AeCvvMD87E=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7XWgNm2o2JLY2GRKMcSOPtX2hSybzSPflsZDxheTOrO/FINqc
+	05rod1eW86AwoyHnhYmXNdxTfd7XBL+xg9VDR2KyTCohdkKKtBQedth691bz+UFII6mEY+gN2vq
+	3Tfin/RzinJ1XcOYUmRLNTJhDGMhyhGu7Xjqz+gzOdWottiCBecKy7WLf/ZmJzY6Y8aah/peytw
+	zrrTZBVJuR1qwHcA1F5pAp8dvesJTyxWIXl9cxqL/ejnTW33PVrallTiZfc9Q=
+X-Gm-Gg: ASbGncumPIoNnUBEfiiMB6LEPpcz8iM+5vyKClrHLvdYcg7bJtEycx9UNhsIau4kjVO
+	gBTCC2HBlYppxSuOEFOlgD8XtXlsjYP/pRyamwrXXVnGF4nD/kT29RXd+33s0TrHu7RzsNS7v6E
+	9bKbk0msCf3tsYcsgjuI5B8YnvQeBn9Yz4G/lOwLOReIDzw14cm5w=
+X-Received: by 2002:a17:907:3e84:b0:b45:b078:c52f with SMTP id a640c23a62f3a-b50acc2155emr2001868766b.61.1760341745276;
+        Mon, 13 Oct 2025 00:49:05 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGqhrIMBzv7FVKIJZY7pAeTJyHF93qi5Y95G5zE6lbLfCze/pnMZ8A5PNK3mFI88ZP8uZpaMEUlkIjGra4JkTw=
+X-Received: by 2002:a17:907:3e84:b0:b45:b078:c52f with SMTP id
+ a640c23a62f3a-b50acc2155emr2001866666b.61.1760341744888; Mon, 13 Oct 2025
+ 00:49:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20251012071133.290225-1-costa.shul@redhat.com>
+In-Reply-To: <20251012071133.290225-1-costa.shul@redhat.com>
+From: Tomas Glozar <tglozar@redhat.com>
+Date: Mon, 13 Oct 2025 09:48:53 +0200
+X-Gm-Features: AS18NWB8lS_HxhSgQA3ExX7TS8082JQF5u-zIBQhVjx3OB8WMoHRJEDOv7TxcbI
+Message-ID: <CAP4=nvSou70FUBF=GTKUziBfV5tXFKLcwgyDwcLmyA4y0PdS9Q@mail.gmail.com>
+Subject: Re: [PATCH v1] tools/rtla: Remove unused function declarations
+To: Costa Shulyupin <costa.shul@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Crystal Wood <crwood@redhat.com>, 
+	John Kacur <jkacur@redhat.com>, linux-trace-kernel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: KpQzf0U166u_OXizOPMWGjgO_yemEez1C9nhbye44yA_1760340628
+X-Mimecast-MFC-PROC-ID: 8KVAA-pWZg99JFpbH7XT5C_wimBK3sfrB8f2_MFk27Q_1760341746
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2025-10-10 at 17:04 +0200, Nam Cao wrote:
-> Gabriele Monaco <gmonaco@redhat.com> writes:
-> > +/*
-> > + * Dummy values if not available
-> > + */
-> > +#ifndef __NR_sched_setscheduler
-> > +#define __NR_sched_setscheduler -1
-> > +#endif
-> > +#ifndef __NR_sched_setattr
-> > +#define __NR_sched_setattr -2
-> > +#endif
->=20
-> You can use __COUNTER__ intead, would make it easier to add to or remove
-> from this list later on.
+ne 12. 10. 2025 v 9:13 odes=C3=ADlatel Costa Shulyupin
+<costa.shul@redhat.com> napsal:
+>
+> Historically four function declarations remain orphaned or duplicated.
+>
 
-Right, good point.
+For future reference, it is helpful to include where exactly and why
+those were removed, especially considering that three of those four
+were only removed in the most recent tag (6.18-rc1). For this case:
 
-> > +static void handle_syscall(void *data, struct pt_regs *regs, long id)
-> > +{
-> > +=09struct task_struct *p;
-> > +=09int new_policy =3D -1;
-> > +
-> > +=09new_policy =3D extract_params(regs, id, &p);
-> > +=09if (new_policy < 0 || new_policy =3D=3D p->policy)
-> > +=09=09return;
-> > +=09if (p->policy =3D=3D SCHED_DEADLINE)
-> > +=09=09da_reset(EXPAND_ID(&p->dl, DL_TASK));
-> > +=09else if (new_policy =3D=3D SCHED_DEADLINE)
-> > +=09=09da_create_conditional(EXPAND_ID(&p->dl, DL_TASK),
-> > GFP_NOWAIT);
-> > +}
->=20
-> What if the syscall fails for any reason? Wouldn't the monitor stores
-> incorrect information?
+Commit 2f3172f9dd5 ("tools/rtla: Consolidate code between
+osnoise/timerlat and hist/top") removed
+{osnoise,timerlat}_{hist,top}_main() functions in favor of a common
+function, run_tool(). Remove also their declarations to keep with
+source clean, along with parse_cpu_list(), which was replaced by
+parse_cpu_set() in commit 894c29c76b2b ("rtla: Change monitored_cpus
+from char * to cpu_set_t").
 
-Yes, that could happen, this seems an issue only in the throttle monitor wh=
-en
-failing a DEADLINE->NORMAL, other cases are at most resetting the monitor.
+> Remove them to keep the source clean.
+>
+> Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
+> ---
 
-In this case, the monitor is really saying: a deadline task is no longer
-deadline, so its runtime should be counted as fair server. If the syscall d=
-oes
-fail, we are assuming the fair server as armed (not running) for a bit more=
-.
-
-Here I couldn't find a nice way to handle this: if I attach only to the sys=
-call
-return, I see if it succeeded but I lost the previous policy, attaching to =
-both
-(and keep a per-cpu storage just for this process) seems a bit overcomplica=
-ted.
-I see this can potentially lead to errors in the monitor, but I'm not sure =
-the
-extra complexity is worth it here, considering this failure might only happ=
-en if
-a user really makes wrong calls.
-I tried to avoid creating a new tracepoint on a successful policy change.
-
-What do you think?
-
-Thanks,
-Gabriele
+Tomas
 
