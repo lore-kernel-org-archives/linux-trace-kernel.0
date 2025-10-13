@@ -1,125 +1,108 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EEB3246BD8
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 13 Oct 2025 14:14:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2300330E0F8
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 13 Oct 2025 14:36:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760364861; cv=none; b=nLZH2MdCqTbFVA0wksf4ofyr4017jE8V2htN0CNqWtsSv+AvfTwpPEa/LhgOVEdfL5rVkbgaQgV6IwWrZwaqDoMY99WHlwCQ6j7yJWW1YT0h5P3izJ5ASP9QxCSgGIcC955W9mX32NAz0PlN8bXi2FrxcpbP9okztzxsF3jg0IQ=
+	t=1760366171; cv=none; b=HEqYh0i119COSHWZybcIBQu4hSjROyJLXHgukhEZO/fw+HDiGvdfcdszf8Fnj3lnObrsIlAl5vv9ZGfkWcsXWhuw4XqSePL20XpQClG35hQlGICVmm2uDLmP9qjr7hEiJA9SqMFlB02m3BfbJM1f0RioOLsjYlFibPIzGRB+IN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760364861; c=relaxed/simple;
-	bh=+LRmnraze8UDOeYVprNNNeH/pLRixbzyDjuRBKZ/5Ak=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=P4qX3dAzElH9Lx35Yy48wxGxVQokJUKchSNkD792UoKtyPADhPP47gg1dc0EELapRvcyEy0T21kNNjPkj13JSedR2zHPHg0fLArco9BzyBMG1Cgm7IUkrLjoy6m/gNQPxKRRVVLBN7vyon6YdzSwFN7E8nY0SsEtVpYkqXjKseY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WTUA8r5v; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1760366171; c=relaxed/simple;
+	bh=x5cR/bWZX4q4NmLZideyvdFIjgN6iJuAET2ETwNeMGk=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=X1y5uhXg4DFJxznjEAEJOt/SgkwZCFQfwlTbs/oyq9DVKfyKvAzi+csT/WmLVBk32/Q2WGQYCaXuGpXhnsfs7kKdyK5Z+GvcNP9+8hI6vo9NJ+7E+892y+pCzAr2lPYm+xSpcBK7Xy0ygkfyacZLsOXHLx6ZDo8SIVbQI86P648=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FwCcQnEN; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WTUA8r5v"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1760364858;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=+LRmnraze8UDOeYVprNNNeH/pLRixbzyDjuRBKZ/5Ak=;
-	b=WTUA8r5vDV72cBmaB/iudSUmlCfrVm+2h/5nAR7kcRaEy/IjyfPFKv5oY7B9UfVK4joffN
-	kB4elTBRYJt+Fyk83ZEq3byFasgZbTlDBvNvoyS1Pgl/ghXSkbN4hv8IJJ8VvnhP2gDzXg
-	/uRDBWhe4fa2IFY/jco/aBP6AQDOsus=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-57-tDq6AXqpPmiBAg7YhE4a-g-1; Mon, 13 Oct 2025 10:14:17 -0400
-X-MC-Unique: tDq6AXqpPmiBAg7YhE4a-g-1
-X-Mimecast-MFC-AGG-ID: tDq6AXqpPmiBAg7YhE4a-g_1760364856
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-46e4d34ff05so23381895e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 13 Oct 2025 07:14:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FwCcQnEN"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-b2e0513433bso163365566b.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 13 Oct 2025 07:36:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1760366168; x=1760970968; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=L8bp7JJD4tNO45pMRU9GuVCvWfU7WngDRput1R9LznU=;
+        b=FwCcQnENF8wnyyhYNqZVDpyXcSDcU8niCWrlvWkNPePEieXpRYly3z0cWbSvyBIQzP
+         1v8js7Ftd/gVKl0+/XODpF+5U5CrEvoIC6Ldxrd27DpHSjE4AFCBcimzeyFXEVGhmJM5
+         87ZYh2AN8Yx9bpxbzzJIlS1hCNsU39QPsSjffV81q/66xbgho/PPqrJgwB81mcRD3m0F
+         fY/1MdZllluAc3J83SJxzICrwd/i61Q9on63hIshSh9dAohYJX3rJQfuFf3nOSkRSH/F
+         uyqK9+ZmTK80MUV8sar+L3hna97j/s/+JeqDFntYWcV0rHfeUzEqzo9dvtviByg+mqKS
+         iaig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760364856; x=1760969656;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=avtB/MLVqaqYb6cJjOOoguTOP3UV8Btzs9wLIrHJUWA=;
-        b=l9urtmP9q2X7uPyMLUwHIpE24ZCY60sv46P2flK5zGjLc0bSK92cu8ugjEgTOB6ENq
-         c8zLFiZF/1tOsIAOhpVP4mS70XIreTKUibTMYDvXaxko3iKW1qgdxHGhkDZZ+La6TKaW
-         wJz/gRXy1utA948+rsI7OWoAwdykd/hd6HIbjk/UCzOoF7K9Nfc2zAl086+Hs5s7Xkji
-         /QW27tazKBfrgfOHfcDW3qBvevrcDMYoouILYNC1qEt4pKkiHDN0Cwsbn9VngzK5C1EC
-         Vh/wLs815U0jyeZvsPZ8H6ufDv7VKMNiIzv+dUFIDQu3NrepImPVHGbLyiMZvseVwBdV
-         dY/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUAEyiMhweegko3tbHiBGqpGKDTwuOZCe1n/UTuRlRzPK8Vpla0n2fmVLSAa5o+Dmh0w8MiEHDBQKxp/4aULX1gFeI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzMQJP0qjf0iC7h9cysu3egGOvWXqOzXL/Z7TDbYlGD/jaAeh3Y
-	ddxnOdMElyjLX4nIsUZK4md44K7lGB1EOxqmf2wC1yHS4DURFo3DOxjnjJWdC6n+hZAMn93Z7L5
-	NppHf/tipqnNkgnsQsymEx1FGciEdCkVB7z6oxrYaYTLZttIpY1GjUNSUSQ9z+i4WzYfOmdtEog
-	==
-X-Gm-Gg: ASbGncsQ5YRicylG5Qm8ACDaN94B8jkH2dr8kNP9i+nrbdYPQxj1D6fZoagzbUgVz3J
-	/IzenoPzJM7DcCLO0s/f/NK08/tLHUD2cmfDuZT0Q4vv4oBFR1RVbrSZvKhciJF5Qvo0v7utrmL
-	eOaNX7vNVLfoq6p58RslT1jg3SPlodNn+SvmPmC/SwwJgP2TY9EyhSosLhEwoyZ9U41+7eHpdKU
-	vAbOrqBOqqy58OLaRji/fqV23wyX3azC0kspXKXANmWJXebTuZdQZrX9sEqgLUb7IoaAqJRiOQH
-	S6J3/Pk+Xu0aOzJguloJLy2su3A0dVtp+OHFqM8qhLFbQMSi1wMttnDrBJCHDOMX0A==
-X-Received: by 2002:a05:600c:628e:b0:46e:38f7:625f with SMTP id 5b1f17b1804b1-46fa9aa2123mr128366615e9.10.1760364856215;
-        Mon, 13 Oct 2025 07:14:16 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFHETg7OzrKPGssdxOk4Xay7k9qUcbXQBRsqtLsD0xpqB63fcoVeQyDZ4FRhiiS3UOs6njcyA==
-X-Received: by 2002:a05:600c:628e:b0:46e:38f7:625f with SMTP id 5b1f17b1804b1-46fa9aa2123mr128366395e9.10.1760364855797;
-        Mon, 13 Oct 2025 07:14:15 -0700 (PDT)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.35])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-46fab3d2d65sm126639365e9.2.2025.10.13.07.14.14
+        d=1e100.net; s=20230601; t=1760366168; x=1760970968;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=L8bp7JJD4tNO45pMRU9GuVCvWfU7WngDRput1R9LznU=;
+        b=GkTnNrywpYEkbLfD+soowZKmEFCF84ANLlkfShX3QvR9RH30zyI0qKN9Vibh8S7zt+
+         /NdPp+yAG4iK8KVPXug4oCH9lqLvK5sVgcJwHs61zAIOMH0c1j0Jl/iaIOHLm3nUdFOX
+         tD7VHcZWKxhsvXPpmQteUQ4knoHSGEHS7xhnorKgj9fHeh7AAGv5836ppUr+HN1xHSJN
+         d4vGPQ6s4jtG7XYc87cuOnCjkqF+Jtt2In8ezP8Kf8Fx2pDvudI2WitbDTIaF4vjHkGX
+         PgUJPUOxja5v6vjCtLvhrn1l1YpH7VRtbtgO0wJWImFCZtpcWVJq8KakM+LmdbL6hQUh
+         UCVw==
+X-Forwarded-Encrypted: i=1; AJvYcCUJAZdxJqfuSgJUy80OjHESI86jaj3Wsxr9pE216Iqysp2nV6+9x1XQNwc9cBhndF7YHSUxdk9IbmSx0rrXjZ2S2eY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy0NvMz8Q0CWEHvgPT123GXHt4t8NxTvcu9cOAgCSJ7L4Ioqu6m
+	KrAGxkdlk5QTxWpCsSGbVpU1Ml7+vIlsUgms4eYwq/1IygdUzdFbDC7V
+X-Gm-Gg: ASbGnctj5dADy8bB54IboctxKz15CwzYqXm/YkFVkTXXpk9u66ihQRNZSJ0MyTp+Epp
+	U4+E70ToqUaSzobYH71Ewq81X8es67FH+nTXmn+KHXDuvEudjrKAohTANL4fiW0mdXRI4JekvPA
+	qlc5N1HJThVH9P5d7Yxdu3bn80qxVp+XXDbsGltBLam+sxlZKf0qXojynSMEmPOPJdXuTntr4e3
+	GG5v+UT+9CYELr0Yvpfc67rwv4RPLlaAvogAGpZX48aNhdI02BZU4DKtQ0+IFb7o+KDmUFgCAyG
+	mWYuwPfPlyXrv2h/BrXUyzwNlfZyZ8bviJlQCeP+d1efmEeZ8yd1Z3QLhrafMk5Uh/lggA2Jlyr
+	MhdF+/0LSJZNCJaWh+MPNqFWw84qFHRVRgqSBTSkl
+X-Google-Smtp-Source: AGHT+IHkgr8MUe7DN7d82dgADvSgzkYPwDabRlFEQQq/C/tyKiLifrmlOII1t+fib5ZHhhZ6qnmJhw==
+X-Received: by 2002:a17:906:ef04:b0:b3c:8b25:ab74 with SMTP id a640c23a62f3a-b50aa393c32mr2417040266b.10.1760366168174;
+        Mon, 13 Oct 2025 07:36:08 -0700 (PDT)
+Received: from krava ([176.74.159.170])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b55d5cad8adsm955648966b.7.2025.10.13.07.36.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Oct 2025 07:14:15 -0700 (PDT)
-Message-ID: <db32cd9db7168a28e6d16d16b3bbe905a6c2c9f9.camel@redhat.com>
-Subject: Re: [PATCH v2 15/20] rv: Convert the opid monitor to a hybrid
- automaton
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Nam Cao <namcao@linutronix.de>, linux-kernel@vger.kernel.org, Steven
- Rostedt <rostedt@goodmis.org>, Jonathan Corbet <corbet@lwn.net>, Masami
- Hiramatsu	 <mhiramat@kernel.org>, linux-trace-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org
-Cc: Tomas Glozar <tglozar@redhat.com>, Juri Lelli <jlelli@redhat.com>, Clark
- Williams <williams@redhat.com>, John Kacur <jkacur@redhat.com>
-Date: Mon, 13 Oct 2025 16:14:13 +0200
-In-Reply-To: <87cy6uygn9.fsf@yellow.woof>
-References: <20250919140954.104920-1-gmonaco@redhat.com>
-	 <20250919140954.104920-16-gmonaco@redhat.com> <87cy6uygn9.fsf@yellow.woof>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
- cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
- T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
- eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
- 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
-User-Agent: Evolution 3.56.2 (3.56.2-2.fc42)
+        Mon, 13 Oct 2025 07:36:07 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Mon, 13 Oct 2025 16:36:06 +0200
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Jiri Olsa <olsajiri@gmail.com>, Steven Rostedt <rostedt@goodmis.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, x86@kernel.org,
+	Yonghong Song <yhs@fb.com>
+Subject: Re: [BUG] no ORC stacktrace from kretprobe.multi bpf program
+Message-ID: <aO0OVlfH-wVQvy0c@krava>
+References: <aObSyt3qOnS_BMcy@krava>
+ <20251012130931.f2ffee08b23b6c1b17dc7af5@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: VriPPjYUz1YVGWr6lns6ebOIm4Doq4u89Fwy_sjl_Dc_1760364856
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251012130931.f2ffee08b23b6c1b17dc7af5@kernel.org>
 
-On Fri, 2025-10-10 at 16:29 +0200, Nam Cao wrote:
-> > +=09=09 * If CONFIG_PREEMPTION is enabled, then the tracepoint
-> > itself disables
-> > +=09=09 * preemption (adding one to the preempt_count). Since we
-> > are
-> > +=09=09 * interested in the preempt_count at the time the
-> > tracepoint was
-> > +=09=09 * hit, we consider 1 as still enabled.
-> > +=09=09 */
-> > +=09=09if (IS_ENABLED(CONFIG_PREEMPTION))
-> > +=09=09=09return (preempt_count() & PREEMPT_MASK) > 1;
->=20
-> FYI, there is plan to keep preemption enabled during tracepoint
-> handling. So keep that in mind when this monitor breaks.
+On Sun, Oct 12, 2025 at 01:09:31PM +0900, Masami Hiramatsu wrote:
+> On Wed, 8 Oct 2025 23:08:26 +0200
+> Jiri Olsa <olsajiri@gmail.com> wrote:
+> 
+> > hi,
+> > I'm getting no stacktrace from bpf program attached on kretprobe.multi probe
+> > (which means on top of return fprobe) on x86.
+> > 
+> > I think we need some kind of treatment we do for rethook, AFAICS the ORC unwind
+> > stops on return_to_handler, because the stack and the function itself are not
+> > adjusted for unwind_recover_ret_addr call
+> > 
+> > If it's any help I pushed the bpf/selftest for that in here:
+> >   https://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git/log/?h=stacktrace_test
+> > 
+> > just execute:
+> >   # test_progs -t stacktrace_map/kretprobe_multi
+> 
+> Hmm, curious. as far as we are using fgraph, stacktrace should work.
+> May this happen if function-graph tracer is enabled too?
 
-Right, I've heard of it, thanks for the heads up. I'll adapt the monitors o=
-nce
-that happens.
+that tests is just simple kretprobe so there should be no function-graph
+tracer in the way.. I plan to check on this again later this week
 
-Thanks,
-Gabriele
-
+jirka
