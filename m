@@ -1,171 +1,97 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FEEF30BB89
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 14 Oct 2025 04:53:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D8F752F88;
+	Tue, 14 Oct 2025 05:52:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760417634; cv=none; b=hczg+OODvC11v1g3D8RFsNMRFQU6h2a7KgKP0F/R8tUo28cuJKFgW0RggGcwgiTBvrM3eXF0ftOMf3dv0WBy7GGPPw0sLDBRR5pcshBZHD4YbJn3678o5mU56iX1y+T8fE6OUBeH6/yej6681Q81jai9+vpxKlv8cw6EvSp7vPg=
+	t=1760421129; cv=none; b=GSQ4iF2fSR82Fc4UMX69yV7RD1I+yOKgiGhSLPJRvMVSuoS1TANyvQ1ASyiCzPQ3KdJI3H7F+sYX2zZaoFa58cFVTEX5IHG+A1NqBPugwuHSFj7Sz7AEFvppVXzEuBOOahKjsdkWHq/gffK1e+WCTfyADPsMmb0he5+ndXEO3UA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760417634; c=relaxed/simple;
-	bh=a4xoUFMwYk684k5JYg2VpNN7CFXbHuQ0VdyeOTINjuw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EnnrHxNOeKMdx2z525yH2UQCGkPgcBOrWQ1/aNy4v2WH+jfqzlka0rwN7+H+CoVLsNafXQL/hn0aJPvZmOSQog2xI4877+CbzfTSBLSf3OrzAGEonIaW8BuFafzheljfMBVeLhAq0JgeK8x0KcYaLaSbuGlGn5MTv4bkcZV2hR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aznXbLcg; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1760421129; c=relaxed/simple;
+	bh=rbGY7hsNZW/Gi92aeoA6ZkT6cOMkgjgAqpGxtROcp2U=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=pBF/v2rZFxZRC5o1WlB9S2bW90UwQx1V4Y1ICjLdtGIJxA1PCFPkw1MqXep/2zMB0lJ61S6lqsohCQgkwtHywr36/2cVEI+u9bnUsPOd6B8EmWqNjDPCnjstNOOYUUUcCGVV0EWJ9d8b6TXHWrhoxBc5e/pi0n2fqfNpsWXj578=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ycq5VY40; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=k5wjehNw; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aznXbLcg"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-6399706fd3cso7186129a12.2
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 13 Oct 2025 21:53:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1760417631; x=1761022431; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KfQyCyE+XPfPYrrByTwKDtcCs6GmIeb9aW4FmXsJ1IU=;
-        b=aznXbLcgXjHxPtXEW5ecJk+ZyMPLyVdCJoBMWGzWXF+AJO0LGO96KOWl9mM/ok2sbT
-         bgxldsiqlSyJmSLIxYvBhzbsWxeqvyZ/nqZtHl/cOCgpwIMJzz4G5jlFv6cRaV/nIrGS
-         Xmf2WL4PcetmZcLtNSgnF2T0TkJhmnsVVITrOrpeNk0BQUHomytLzTPE/eO4VG4/7gr2
-         R6HTScfgjjstN2R4/tc0gEjE1r3MII0ab5XJg5rhB8/JJdOiWUyvl4Uqbj7D44JGJHYm
-         6Xs7bYWkHqigveaGGr/jQMX9VF4967cf1nW9DkNc18ZgnBARtjAqd8uyA5v3MNhvycCN
-         7SAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760417631; x=1761022431;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KfQyCyE+XPfPYrrByTwKDtcCs6GmIeb9aW4FmXsJ1IU=;
-        b=p4sqq0mneq8f3vMFdxp9TpnBJCRQcwhg2wUtgfOGrPTM/1+QHlb+NMHiD8X6SnKfy6
-         9IZlEttcNN0ICbKvbyLByKGUHar9hcfuRxPcD3PfMJQt47cNSVc4jLqtRK38SjJ9RYuM
-         9Z0+MuPUNlFrS+Isb33SCrYfrcN8okWvP83kTY1wEDotfobpGnGg+GnUVC9r5NhjRtIz
-         q7agGQGTzFyG79V9dvNKGncAW2mwQFY7c/Do7rwAlyH5y8SBupmC3bRJ2Go1a11kH0Rg
-         moMYWS+WTe4OBC1tIibKf20/t/7RaglEDSN6Hv8mcKJ+cgj+pVpC5JPRtnWicpbNzqCi
-         LMAA==
-X-Forwarded-Encrypted: i=1; AJvYcCU9R3kCVVDab43q0+TK4eauMrHfJQ8IKaEVYS7ApFPfG3bUIRDuiifSvDex7Rd3E3zavQEfNiaW4YdE2u7A02EMYK0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzuMWxUStWfgzV/ixzIduXljurxPnuXCAffyRe9b/RxfuXfHJ6N
-	k/bjNTr3FmCKgaf8XGQ1Z0rWEBteG6O6AmnOdjtKee8f+autXnPI/FqORbF13yFKVf+qgOKkXTC
-	3xcZbPPQwdAIai843Eh53YmnH3evJN/w=
-X-Gm-Gg: ASbGncuVmsJReJmvXxzKzNS5YhVlp48UhuuJzI4Ql3zkR9oISbGvtQ/bW+xSddweftQ
-	dtUJqpu7JC7wNRuvdXV197ayyUpn77aOd6UAXteHTPZvouv4omJOuqqZLOQhzxeWP8jtf8hG4bA
-	3+qbOWAVM5RxdBAw3NLU+bXPtznt+vRbBarnS7USGBfWYZaBKYAFSd+9vWPR3AlqlTDnGOpF5Dd
-	Bd2GAJRwJIloZSfS8ysQ4oSRGd89QaX1K4XjA==
-X-Google-Smtp-Source: AGHT+IHycdhxq/9uyp9yKAAL3r9oERFUtH+HAFOLwQI4pevZSkF66rxnEvWd1Bw49lAHp9HOueRaVLiXkkjNr0qGtHc=
-X-Received: by 2002:a05:6402:2744:b0:637:dfb1:33a8 with SMTP id
- 4fb4d7f45d1cf-639d5b64901mr22616488a12.3.1760417630759; Mon, 13 Oct 2025
- 21:53:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ycq5VY40";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="k5wjehNw"
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1760421124;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Cbrizgz6WPfeMwj+czbdKF5T2U16SbmHYGAnizEg+vY=;
+	b=ycq5VY40KUWYbIc/AX+OEXq33R4g6FFkD8rF7w4TJAo7vN7wy00Oi6AJHWe9CF6hjg4r++
+	7ijo5+zPv5F/j5CLbc460PL+N4SN5SO2LzTNcFJHIn8YzFCgdhiuIpsp9/NguePNebEG0g
+	Tu/Wb2dB0nZPbtYVcpNBK8KrJKKtuA5HHxDMj85vRI1is24jwzZPibGbjZFXEB4Cz241g1
+	aOSJ9FhlsAPBwJ90i8FBzqNiStsAjXNn/t4H+1xXK+qiYwsLA8AOPILVWRjNiX9Vc3SbPT
+	RPYhHjQ7oT7gXfHjx3hb81STL543bFmCphxMVvmLybvgxx9VjPBoDgiOSoMpTg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1760421124;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Cbrizgz6WPfeMwj+czbdKF5T2U16SbmHYGAnizEg+vY=;
+	b=k5wjehNwvQAXpyuVzwofHCnAvKBVYGv9jNAsmIz7UHNzIT+HtgCte7OkVMtBeMrfdcwA8u
+	FvrtdvtB7s1rKUCw==
+Subject: [PATCH 0/3] rv: Add explicit lockdep context for reactors
+Date: Tue, 14 Oct 2025 07:51:55 +0200
+Message-Id: <20251014-rv-lockdep-v1-0-0b9e51919ea8@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251013131537.1927035-1-dolinux.peng@gmail.com>
- <CAEf4BzbABZPNJL6_rtpEhMmHFdO5pNbFTGzL7sXudqb5qkmjpg@mail.gmail.com>
- <CAADnVQJN7TA-HNSOV3LLEtHTHTNeqWyBWb+-Gwnj0+MLeF73TQ@mail.gmail.com>
- <CAEf4BzaZ=UC9Hx_8gUPmJm-TuYOouK7M9i=5nTxA_3+=H5nEiQ@mail.gmail.com>
- <CAADnVQLC22-RQmjH3F+m3bQKcbEH_i_ukRULnu_dWvtN+2=E-Q@mail.gmail.com>
- <CAErzpmtCxPvWU03fn1+1abeCXf8KfGA+=O+7ZkMpQd-RtpM6UA@mail.gmail.com> <CAADnVQ+2JSxb7Uca4hOm7UQjfP48RDTXf=g1a4syLpRjWRx9qg@mail.gmail.com>
-In-Reply-To: <CAADnVQ+2JSxb7Uca4hOm7UQjfP48RDTXf=g1a4syLpRjWRx9qg@mail.gmail.com>
-From: Donglin Peng <dolinux.peng@gmail.com>
-Date: Tue, 14 Oct 2025 12:53:39 +0800
-X-Gm-Features: AS18NWBzhlnxQ9UDKq0PMeKLqmLwp_jZVc21fUyToJv8XAqRPenRlWCmVKYbt5s
-Message-ID: <CAErzpmu0Zjo0+_r-iBWoAOUiqbC9=sJmJDtLtAANVRU9P-pytg@mail.gmail.com>
-Subject: Re: [RFC PATCH v1] btf: Sort BTF types by name and kind to optimize
- btf_find_by_name_kind lookup
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Alexei Starovoitov <ast@kernel.org>, Song Liu <song@kernel.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	pengdonglin <pengdonglin@xiaomi.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAPvk7WgC/x2MQQqAIBAAvyJ7TlAjD30lOsi61VKoKEgg/j3pO
+ AMzDQplpgKraJCpcuEYBuhJAF4unCTZDwajzKKVnmWu8ol4e0rSOvQ4rLHKwQhSpoPff7btvX+
+ okYcCXAAAAA==
+X-Change-ID: 20251013-rv-lockdep-6acdc510260a
+To: Steven Rostedt <rostedt@goodmis.org>, 
+ Gabriele Monaco <gmonaco@redhat.com>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ Nam Cao <namcao@linutronix.de>
+Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1760421123; l=1144;
+ i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
+ bh=rbGY7hsNZW/Gi92aeoA6ZkT6cOMkgjgAqpGxtROcp2U=;
+ b=OWXRZxtpRS5N6vHKBEn+fGBPCt2eQH5ywoIhglpcmAQbdPX2za5gXvDVJItlCcECAyyvgPzMo
+ zxNZjUvfiLCAZ/XonWfOOLpyPiuMchOBpv7fnVE3JmWKMNId/u2lOsJ
+X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
+ pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-On Tue, Oct 14, 2025 at 10:48=E2=80=AFAM Alexei Starovoitov
-<alexei.starovoitov@gmail.com> wrote:
->
-> On Mon, Oct 13, 2025 at 6:54=E2=80=AFPM Donglin Peng <dolinux.peng@gmail.=
-com> wrote:
-> >
-> > On Tue, Oct 14, 2025 at 8:22=E2=80=AFAM Alexei Starovoitov
-> > <alexei.starovoitov@gmail.com> wrote:
-> > >
-> > > On Mon, Oct 13, 2025 at 5:15=E2=80=AFPM Andrii Nakryiko
-> > > <andrii.nakryiko@gmail.com> wrote:
-> > > >
-> > > > On Mon, Oct 13, 2025 at 4:53=E2=80=AFPM Alexei Starovoitov
-> > > > <alexei.starovoitov@gmail.com> wrote:
-> > > > >
-> > > > > On Mon, Oct 13, 2025 at 4:40=E2=80=AFPM Andrii Nakryiko
-> > > > > <andrii.nakryiko@gmail.com> wrote:
-> > > > > >
-> > > > > > Just a few observations (if we decide to do the sorting of BTF =
-by name
-> > > > > > in the kernel):
-> > > > >
-> > > > > iirc we discussed it in the past and decided to do sorting in pah=
-ole
-> > > > > and let the kernel verify whether it's sorted or not.
-> > > > > Then no extra memory is needed.
-> > > > > Or was that idea discarded for some reason?
-> > > >
-> > > > Don't really remember at this point, tbh. Pre-sorting should work
-> > > > (though I'd argue that then we should only sort by name to make thi=
-s
-> > > > sorting universally useful, doing linear search over kinds is fast,
-> > > > IMO). Pre-sorting won't work for program BTFs, don't know how
-> > > > important that is. This indexing on demand approach would be
-> > > > universal. =C2=AF\_(=E3=83=84)_/=C2=AF
-> > > >
-> > > > Overall, paying 300KB for sorted index for vmlinux BTF for cases wh=
-ere
-> > > > we repeatedly need this seems ok to me, tbh.
-> > >
-> > > If pahole sorting works I don't see why consuming even 300k is ok.
-> > > kallsyms are sorted during the build too.
-> >
-> > Thanks. We did discuss pre-sorting in pahole in the threads:
-> >
-> > https://lore.kernel.org/all/CAADnVQLMHUNE95eBXdy6=3D+gHoFHRsihmQ75GZvGy=
--hSuHoaT5A@mail.gmail.com/
-> > https://lore.kernel.org/all/CAEf4BzaXHrjoEWmEcvK62bqKuT3de__+juvGctR3=
-=3De8avRWpMQ@mail.gmail.com/
-> >
-> > However, since that approach depends on newer pahole features and
-> > btf_find_by_name_kind is already being called quite frequently, I sugge=
-st
-> > we first implement sorting within the kernel, and subsequently add pre-=
-sorting
-> > support in pahole.
->
-> and then what? Remove it from the kernel when pahole is newer?
-> I'd rather not do this churn in the first place.
+Reactors can be called from any context through tracepoints.
+When developing reactors care needs to be taken to only call APIs which
+are safe. As the tracepoints used during testing may not actually be
+called from restrictive contexts lockdep may not be helpful.
 
-Apologies for the formatting issues in my previous email=E2=80=94sending th=
-is again
- for clarity.
+Add explicit overrides to help lockdep find invalid code patterns.
 
-Thank you for your feedback. Your concerns are completely valid.
+Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+---
+Thomas Weißschuh (3):
+      rv: Pass va_list to reactors
+      rv: Make rv_reacting_on() static
+      rv: Add explicit lockdep context for reactors
 
-I=E2=80=99d like to suggest a dual-mechanism approach:
-1. If BTF is generated by a newer pahole (with pre-sorting support), the
-    kernel would use the pre-sorted data directly.
-2. For BTF from older pahole versions, the kernel would handle sorting
-    at load time or later.
+ include/linux/rv.h               | 11 ++++++-----
+ include/rv/da_monitor.h          | 35 ++++++++++-------------------------
+ include/rv/ltl_monitor.h         | 18 +++++-------------
+ kernel/trace/rv/reactor_panic.c  |  6 +-----
+ kernel/trace/rv/reactor_printk.c |  6 +-----
+ kernel/trace/rv/rv_reactors.c    | 22 ++++++++++++++++++++--
+ 6 files changed, 43 insertions(+), 55 deletions(-)
+---
+base-commit: 3a8660878839faadb4f1a6dd72c3179c1df56787
+change-id: 20251013-rv-lockdep-6acdc510260a
 
-This would provide performance benefits immediately while preserving
- backward compatibility. The kernel-side sorting would remain intact
-moving forward, avoiding future churn.
+Best regards,
+-- 
+Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 
->
-> Since you revived that thread from 2024 and did not
-> follow up with pahole changes since then, I don't believe that
-> you will do them if we land kernel changes first.
-
-Regarding the pahole changes: this is now my highest priority. I=E2=80=99ve
-already incorporated it into my development plan and will begin
-working on the patches shortly.
-
-What do you think about this approach? Would this be acceptable?
