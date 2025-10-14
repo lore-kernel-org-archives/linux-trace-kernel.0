@@ -1,104 +1,104 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1822D1862
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 14 Oct 2025 00:02:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 583F628C006
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 14 Oct 2025 00:15:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760400172; cv=none; b=nL5yRoXD6/cxVie8byoIsTkGjONExBDD6JeaTBWoBfJc6akyoL+nYxxx4lW8vW7qFV0TBNHcuC/73XkSeUFECRWp+hj/3qbunqFrCbJsTKHGmnwiK4G2/0QCWETCwfgRmB2th1ncarX0S5R3eGUmj94GxpI7CwuDZEU8omTV914=
+	t=1760400917; cv=none; b=R5ENibPYB9c+1STNoh0b0WR2Du+o90IHY/2aiUFcctyOcqnuzMfP3fMspPsX5nBOoDOcgmimdU2P5KSmsbpOLyV1SSuHfHRmUAg5je7lWFSE1YkcK8dwYZzeXKWWJHsdmTG9qtj3rcZpy6tuAIxfyxdyGZ28heIcvh1xUziON6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760400172; c=relaxed/simple;
-	bh=LLOVlwAfJOO/6dIvSHatLzz1DYqRKk528EsxcLVUzvg=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=JFJkCsfoFuZ8xF5MTdBtF7HIu08y+PbPap2DXH9DBQp0wk47teSdIwbKZmOcEuewRc2JfKz6v5jtKDdQ2AnHrh5eQkh83/WHf3p54YNLtcJOYGniPUV0GHzsiJg9Vmtqjbr7eUnGOI44hytC+QTX+Qtrbqr4oszkx+XcJMj7IsY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JD8oKD+N; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1760400917; c=relaxed/simple;
+	bh=vbtIGUm7hDdWO8OPCXJs9MmT4PDfOXY/wBQB8dWOQGc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sTaJiKqHrORQLQJ+derJ5mzaN6nvRAgXBTwC4gDUsTbq9aNxpxEuGWhKPwKD1k8uyAMN7CwO/5PDOTU0NEtynKccqkPRlwImMtQMEEKXsQpepoaKLd0ovRYZux9PYAWzosUrDIv6571iCPT1UjrUd1Sokvzvv+ybLnxWaTX2iVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HeCSFKGw; arc=none smtp.client-ip=209.85.216.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JD8oKD+N"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-334b0876195so10678255a91.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 13 Oct 2025 17:02:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HeCSFKGw"
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-3306d93e562so4790760a91.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 13 Oct 2025 17:15:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1760400170; x=1761004970; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=gbMLU0DBTTE4ZUI3tpJtNUcx/FkgYHD5aLH5yKQ0ecU=;
-        b=JD8oKD+NJ3FkLOgbvK1sNL9dzwSNKL7TANNwuqWE6HqfiH28V5nOBMtLZCa97Cw380
-         o1+RK+pYsYsE7CKot3wknqNtCHx0BdJatgmjRVwHGB/AwiaP0pnXHV7KSvzOpJlILniz
-         17g0GQAO2+vz8Dx7pXrYxzXkZWIdyP1yyQBtDGODJj1fecW2arJm8ypZK0hh7FxqG+Bp
-         bZhHmlsPSD0crstYbRRzwIATpTr4OplqAZPGrA2K7qSvWLh5F9ZzCJLQZFhNmqrt/uTX
-         EeZQsRMS1zMDf+PauZFLipU5KUd8TUmFOIxkpy7lsZZ3aPnf0+LbZeo3Hcl3P4Gfug/e
-         4eIQ==
+        d=gmail.com; s=20230601; t=1760400915; x=1761005715; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vbtIGUm7hDdWO8OPCXJs9MmT4PDfOXY/wBQB8dWOQGc=;
+        b=HeCSFKGwr7E8XCLsM7jqGL0sUNJPfKMJ+gySIOCB2J/36RUowrNa+BlAhRId3/X4Yu
+         m+Y/FwbXAp1RI8X8nqranpfLed2kZ5IH8fTU1ML4B/fo59bwwnrDl5aLHSPeSQlhxXQv
+         4QxYjzxRfKkU1nHEmzuh0+fbHMLi15dl/YKD7o92zuk76nKvlkVf0ON8+YVysvnQOrhf
+         XPnCSsQEnK8lsuT3K5OREbbdZrFsj+SrITDOoEU8RjkhmGQ+a3sEu3gJ0rtHAFmi9Q4D
+         mTlk0wahXasBfbKRsjw2FmeimJgIlzcOU1dPcEz0jXFkgFjJuCDZIm7X2z6OzwEwQunw
+         Wg7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760400170; x=1761004970;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gbMLU0DBTTE4ZUI3tpJtNUcx/FkgYHD5aLH5yKQ0ecU=;
-        b=VqvO06vpuNA13V8uZRTFV1O2G3EXPPyiDId8aX6OZiHNt1LYW1IgxE2S2jf/2cTl+C
-         y9fRBsW6KgvJnWhAHhepkUUGJdKYwyxqX8Re/PiSHbYpKsKX9bSDSJIj+MOtkscQPaH1
-         zi32os36F2KthBag5ElLgHzwepf/JKcqWfM74KDge3ekchiNqFCbwNDvKe3sth6+zVN6
-         Ccr0CGvIOATHsNwALf2ki28vPpF8Ywz7yk7deDSxkzJ3GTBxjWtBspgmIb2BnP8A/2S8
-         uh3QDmhjOLN2koja+jCWMet0et/3Fk7wFCyr0jJyDk2q+O5I1Dh29eo+jXyEIpbJxhtw
-         UXKw==
-X-Forwarded-Encrypted: i=1; AJvYcCWgK26Qm6mVXLMSVu8f+0yYIrzLFI7dwtsTr3A9U+dHl3ZfeT5y1Yh6RLI6cHj+XbdjpNzVnFDTPBKFq/0rwwixVts=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yztqi1XJo2KBRNOaTjkeVRTBgPps6KIo4HDw0EU8+e1ogyo/d1a
-	Gv7bISYYiG0QCvakUTTl03CGAPYLbkeH5etPMIVh0xzjCmsqMYcpopDYlLlWVhu5RJrUyeworwm
-	H2hkuwQ==
-X-Google-Smtp-Source: AGHT+IFj7XEk3dTkPnLos5082VprjEOkbmDHEla6HA+8/jfX0ozELV9F0rEtoGCDSVNCkEzGlN6/hN7WXyk=
-X-Received: from pjzm8.prod.google.com ([2002:a17:90b:688:b0:33b:51fe:1a75])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4c89:b0:321:9366:5865
- with SMTP id 98e67ed59e1d1-33b513b4afemr31472790a91.33.1760400170137; Mon, 13
- Oct 2025 17:02:50 -0700 (PDT)
-Date: Mon, 13 Oct 2025 17:02:48 -0700
-In-Reply-To: <20251010153839.151763-17-vschneid@redhat.com>
+        d=1e100.net; s=20230601; t=1760400915; x=1761005715;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vbtIGUm7hDdWO8OPCXJs9MmT4PDfOXY/wBQB8dWOQGc=;
+        b=sg97Z83knxY2SA4EkLvlKXxg/aj+cFgViGzQQEtBOktCzO0MKHIn0cxa69eV5iU7XT
+         HMdfZkZNKtO1hw1+5B+gkN0BbuFFDNFtZanrKwFQzEpmlTblkSYKsBtbbn2DpelXUdGX
+         rSQKYYsIZSvE0PSu1SE8SwUNex41WHGGgwuWEMel8Zev8c8WlZQel+rvteZUOkCQ+Z3q
+         hQGa04GpCngFWxq09tAh+jKDA/OCNPYj9QM/BSe11po5HLGOAp9eFkAHZ31Sh3W2Y9kz
+         j0RnCoqzjxAdJZUUpiWOeFiQBDwOswIkDJNe75A7BW9lwBPfTxP7Rkg/v3JWsaJMFzJ3
+         F5og==
+X-Forwarded-Encrypted: i=1; AJvYcCV4heaGXjfO1z6h6YEYe6LDj5Wta7R6PXPRCdxsI0gdtlLORvo/77SIZ1TkEAJ7GudsYB+9a4Zrykyte8AmH55gPIM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9ZAzNR5BvFEu3+Hr5q66a3ssOHm5x0BGfJMKC4xJpK6OLV58l
+	TGnzpx1n/MALDPpZMolFDEQ2U5qXGCsl6iS04bm197eCNU3CrZrS9eXr7tNEfWDz7YNUuxQfA4k
+	WaxonPfouaZTq9QC4gRFXIItxSlpkxFA=
+X-Gm-Gg: ASbGncvUcElxkX+9tkha4JQO7rxt2FfDKAIo9E0FpO3OOdEBIo0ck1r/K2Noy8eYKd1
+	3Q+RFogoUBJM5IZxMfjowTWKtUvcA1b55W8ZdizfRGpHWjOJCeBfRQi8LpcE5XD4L6aT56XKuVN
+	lZczpVH/jMmcRHJOVTHW2vp6VMzN/01TudJviouDbMObugQ9XiVDJC6zpD2n1uFtZDtRFe79kfJ
+	zdPFCh14dCC0s0D5T8mpe//FbXUcKVbku7SMtkLjQ==
+X-Google-Smtp-Source: AGHT+IHARnLdlryg1PhvKDEi7oBisiWZjKWZuSu8vpVm+0nfd2Qp81tXbKk1PVPW5Er2+jS8pPs2aKsNpGBsv4cI6g0=
+X-Received: by 2002:a17:90b:4a52:b0:332:84c1:31de with SMTP id
+ 98e67ed59e1d1-33b513ced6emr28797119a91.25.1760400915524; Mon, 13 Oct 2025
+ 17:15:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20251010153839.151763-1-vschneid@redhat.com> <20251010153839.151763-17-vschneid@redhat.com>
-Message-ID: <aO2TKOY5JV9OoRUg@google.com>
-Subject: Re: [PATCH v6 16/29] KVM: VMX: Mark __kvm_is_using_evmcs static key
- as __ro_after_init
-From: Sean Christopherson <seanjc@google.com>
-To: Valentin Schneider <vschneid@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, rcu@vger.kernel.org, 
-	x86@kernel.org, linux-arm-kernel@lists.infradead.org, 
-	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org, 
-	linux-arch@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Frederic Weisbecker <frederic@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, 
-	Jason Baron <jbaron@akamai.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Ard Biesheuvel <ardb@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, 
-	"David S. Miller" <davem@davemloft.net>, Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, 
-	Joel Fernandes <joelagnelf@nvidia.com>, Josh Triplett <josh@joshtriplett.org>, 
-	Boqun Feng <boqun.feng@gmail.com>, Uladzislau Rezki <urezki@gmail.com>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Mel Gorman <mgorman@suse.de>, 
-	Andrew Morton <akpm@linux-foundation.org>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Han Shen <shenhan@google.com>, Rik van Riel <riel@surriel.com>, Jann Horn <jannh@google.com>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Oleg Nesterov <oleg@redhat.com>, 
-	Juri Lelli <juri.lelli@redhat.com>, Clark Williams <williams@redhat.com>, 
-	Yair Podemsky <ypodemsk@redhat.com>, Marcelo Tosatti <mtosatti@redhat.com>, 
-	Daniel Wagner <dwagner@suse.de>, Petr Tesarik <ptesarik@suse.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+References: <20251013131537.1927035-1-dolinux.peng@gmail.com>
+ <CAEf4BzbABZPNJL6_rtpEhMmHFdO5pNbFTGzL7sXudqb5qkmjpg@mail.gmail.com> <CAADnVQJN7TA-HNSOV3LLEtHTHTNeqWyBWb+-Gwnj0+MLeF73TQ@mail.gmail.com>
+In-Reply-To: <CAADnVQJN7TA-HNSOV3LLEtHTHTNeqWyBWb+-Gwnj0+MLeF73TQ@mail.gmail.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Mon, 13 Oct 2025 17:15:00 -0700
+X-Gm-Features: AS18NWC8zop_0pqhOu3uFzZiyqIm33mL5cLx3lr7v0iVW2czeb3AtY-0ka9aqwc
+Message-ID: <CAEf4BzaZ=UC9Hx_8gUPmJm-TuYOouK7M9i=5nTxA_3+=H5nEiQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v1] btf: Sort BTF types by name and kind to optimize
+ btf_find_by_name_kind lookup
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: pengdonglin <dolinux.peng@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Alexei Starovoitov <ast@kernel.org>, Song Liu <song@kernel.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	pengdonglin <pengdonglin@xiaomi.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Oct 10, 2025, Valentin Schneider wrote:
-> The static key is only ever enabled in
-> 
->   __init hv_init_evmcs()
-> 
-> so mark it appropriately as __ro_after_init.
-> 
-> Reported-by: Sean Christopherson <seanjc@google.com>
-> Signed-off-by: Valentin Schneider <vschneid@redhat.com>
-> ---
+On Mon, Oct 13, 2025 at 4:53=E2=80=AFPM Alexei Starovoitov
+<alexei.starovoitov@gmail.com> wrote:
+>
+> On Mon, Oct 13, 2025 at 4:40=E2=80=AFPM Andrii Nakryiko
+> <andrii.nakryiko@gmail.com> wrote:
+> >
+> > Just a few observations (if we decide to do the sorting of BTF by name
+> > in the kernel):
+>
+> iirc we discussed it in the past and decided to do sorting in pahole
+> and let the kernel verify whether it's sorted or not.
+> Then no extra memory is needed.
+> Or was that idea discarded for some reason?
 
-Acked-by: Sean Christopherson <seanjc@google.com>
+Don't really remember at this point, tbh. Pre-sorting should work
+(though I'd argue that then we should only sort by name to make this
+sorting universally useful, doing linear search over kinds is fast,
+IMO). Pre-sorting won't work for program BTFs, don't know how
+important that is. This indexing on demand approach would be
+universal. =C2=AF\_(=E3=83=84)_/=C2=AF
 
-Holler if you want me to grab this for 6.19.  I assume the plan is to try and
-take the whole series through tip?
+Overall, paying 300KB for sorted index for vmlinux BTF for cases where
+we repeatedly need this seems ok to me, tbh.
