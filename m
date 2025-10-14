@@ -1,180 +1,136 @@
-Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7304327979A;
-	Tue, 14 Oct 2025 18:51:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1EE5238C1B
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 14 Oct 2025 19:06:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760467916; cv=none; b=Q6z6qZQhhXmzpOCY6ewGnd5KNyZUV9Sd5Ve7YMuaY8jnXQbxg9dVQe2l5eLkwsLynOPE2UpI1QYhxIWZAq775QOnv2Irvh+9FLyJ8ASB4Q+f5kXgmzGb5m7Khu+W9uFKbht3mdRdI++DOBQlt4jTD0QUwPL8R/+qKQwJGDKlF7M=
+	t=1760468796; cv=none; b=ZNcvY9gWRuAFwP1IF5i3MLNKDPCZAes2xS+0oHLY6re9TBvnpTy85zV3HXuimpI3K3VLwdYct02jswOu+QHd9g5tBwObM9JFZgzK9HeU/MTj3RKFO8rRD2gHxwgIbznuBlK3uuJVk+ci1TIxDUUnRFF0J3tScWFOisOq+UDLKLw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760467916; c=relaxed/simple;
-	bh=QPziPp2Y/4S3ux1cLbRCxq0EGdLI32mUmWMci0N66Tk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=bSJjBd59Zyd/j/34PQ5mu0KCE3T8baqjPVINWWLyTEfVZLRnbHX5r/0EDtg/ABp9Z4ilbB5ukB+VGkuX7tAneSr+gFL3ERtr8/+WLTbehgDO0GfAPXXsW5VksOhSxAoMJsbKAKPzfREEXr1YoPjsWIdNYbVmtL4O+eTcByLRH8I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf15.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay04.hostedemail.com (Postfix) with ESMTP id 10CFE1A0A0E;
-	Tue, 14 Oct 2025 18:51:46 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf15.hostedemail.com (Postfix) with ESMTPA id 4472F1D;
-	Tue, 14 Oct 2025 18:51:44 +0000 (UTC)
-Date: Tue, 14 Oct 2025 14:51:49 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, linux-kselftest@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Shuah Khan <skhan@linuxfoundation.org>,
- Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH] selftests/tracing: Add basic test for trace_marker_raw file
-Message-ID: <20251014145149.3e3c1033@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1760468796; c=relaxed/simple;
+	bh=YHkoBXMGobkLQ8o+PhxXHefddsG1ieCfaB2d71pVtoU=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=rjJNuepkyonJ56TPSDwJ/p6VOaCmZMI0TxA8atV3eJ04C0KZBe8q6pLdY/wHIaJJFkOmagYeqZ2/QFiM2UQE7WqPthHNBfsMXcuKK7x9SwuuE54nWaVeXclrs6ipfncaSPG6uKwofhOvLXthSyNVvcMS5JBCzjW32K7nWeor4zY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=c9mTlzH3; arc=none smtp.client-ip=209.85.215.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="c9mTlzH3"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b5edecdf94eso15587229a12.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 14 Oct 2025 12:06:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1760468794; x=1761073594; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=NJxlV+oNDwXk+z+h9rw/7gmtAEVoUIc/lNQpO7FKflY=;
+        b=c9mTlzH33TKdq7MgxgmTSkLCArSuZg7B4e0qDn3gZNHjLLvsabhQeY6mzURYf+WPgU
+         U5647dVwI4KzZYLv9uRGibfg6//ulkcGUwpkewXvmBp0ti2ZSUhZZt4Q21c0qwyRqJ82
+         xH93ynUJSLEwrYwZJHpUa9kS/B9OpxVbHi6GPzsPwo4FJbawEnCwPPqnNLfFRLM72280
+         GuEdjZ+duAelDUVm7l4HTRBCPcKwPwfFyRYHGzO4jfuRnNcAI8H7uugBYKRRe1A3LC0T
+         JvPeqkkloEWlAOFkXO1ADiaKT4lsbmdrsQx6ptNtgnT51oOA0TZXe9CTALm9IR5uyo0V
+         BMXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760468794; x=1761073594;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=NJxlV+oNDwXk+z+h9rw/7gmtAEVoUIc/lNQpO7FKflY=;
+        b=vOhKotliYKCnlz0TO93j8eIMBveH1h4+4pVcGjmxXmgxe1D8cMsCrQ46jErpyI6siO
+         kFMEf3YZG26c/evaHaW4Cxzo89SGxesDIbdo73sLXBD7P4UPbeXycrvJOM3LNQuGaq7R
+         TKj9o/7Luvl3hhqTzYVpVf74DFcJfhtMsJ/bZfc+Fj4tQ/38Hwk68xXVhjtu1/yU1MDz
+         lgmibDNElzCDV/Bk7JZnaG1fDyScHazGHXtHoZ6oe+Fx/HT+ghZi5B19VkCy9an4U9/z
+         Bllgp2mRqQwdWaaRGlhTQX/oaHDOU2MRsL/mNFwOMsEPAB7/axcHKQ7FOJU3qquUTcIe
+         dgTg==
+X-Forwarded-Encrypted: i=1; AJvYcCVRyUr6sMLn64v5QrZLwnrwZmvJgzQFO/aJ9VE1a8rZ8ko67HNyXTYyG8olDA7P1FYFDezw/uVnRzxVNH/BgLO+LSM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwQSolTWcu+/8YDmEOd9VC9v8OtdYVgH50XaJge4BziRL9N7h2U
+	0RNJeAJUxv6rqtBPwyDrpZfPbvB0mV1XjyY1l4zCsB7rAWQkRcnWIDmupy1ljaem6/MHjiwXkyG
+	YJGqw6A==
+X-Google-Smtp-Source: AGHT+IG9Zd3t+86XRNhfr6MOl3z2x5n36Sr6uReq0nGSm2P7jNviBzkfzWGC0x9bWFlsxNGdGfsNX6JxluA=
+X-Received: from pjuj14.prod.google.com ([2002:a17:90a:d00e:b0:32b:95bb:dbc])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3ec5:b0:327:e018:204a
+ with SMTP id 98e67ed59e1d1-33b50f85081mr35201870a91.0.1760468794156; Tue, 14
+ Oct 2025 12:06:34 -0700 (PDT)
+Date: Tue, 14 Oct 2025 12:06:32 -0700
+In-Reply-To: <xhsmhwm4xpwyt.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: pi796r5gp5a9dyokoteerb7q33mg895o
-X-Rspamd-Server: rspamout07
-X-Rspamd-Queue-Id: 4472F1D
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX188w3gjNYMIg9igDGwdo5voCscms+OlKYU=
-X-HE-Tag: 1760467904-669601
-X-HE-Meta: U2FsdGVkX1948sCl9BJdloqdJfA/6qYieyXUsiZ7JKyudSU7UQLD+/aRHiDdijP3AHy8vWjDDsx6kc5XTnQ/c7xBfKvHbog83HoVoWjq8Z1n4CTxFDF2zMP+4M6OtJi97032hQP4Puu4rJFzMuErSbVhn0Re4uncC7MP1Zxyi9VHMxelgbdK9L8KjHkj7ivtoOj7kVW7KAnPIWlbC9+2v1kPkghiKe8W3JGeo1Vr8ztdEWztVuSdokwToXR4qQ7FiTMQSiZ6/0lqqkpYufcIYT+lnrB6smDGgtWdDc4yhQRaaWXlAR8dEba/g5MMzLusI4zl9ZeBmCU9EmwizA3a5amzCDZGm0vB/1MLff2/9koYwhTT3ovHBURSmJo3Z8+lMTyh4M926Fmr8lg471A0JKCUWnxzps68
+Mime-Version: 1.0
+References: <20251010153839.151763-1-vschneid@redhat.com> <20251010153839.151763-20-vschneid@redhat.com>
+ <aO2S3oZwOW_UgAci@google.com> <xhsmhwm4xpwyt.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+Message-ID: <aO6fOM-XydknM6NJ@google.com>
+Subject: Re: [PATCH v6 19/29] KVM: VMX: Mark vmx_l1d_should flush and
+ vmx_l1d_flush_cond keys as allowed in .noinstr
+From: Sean Christopherson <seanjc@google.com>
+To: Valentin Schneider <vschneid@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, rcu@vger.kernel.org, 
+	x86@kernel.org, linux-arm-kernel@lists.infradead.org, 
+	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org, 
+	linux-arch@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Frederic Weisbecker <frederic@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, 
+	Jason Baron <jbaron@akamai.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Ard Biesheuvel <ardb@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, 
+	"David S. Miller" <davem@davemloft.net>, Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, 
+	Joel Fernandes <joelagnelf@nvidia.com>, Josh Triplett <josh@joshtriplett.org>, 
+	Boqun Feng <boqun.feng@gmail.com>, Uladzislau Rezki <urezki@gmail.com>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Mel Gorman <mgorman@suse.de>, 
+	Andrew Morton <akpm@linux-foundation.org>, Masahiro Yamada <masahiroy@kernel.org>, 
+	Han Shen <shenhan@google.com>, Rik van Riel <riel@surriel.com>, Jann Horn <jannh@google.com>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Oleg Nesterov <oleg@redhat.com>, 
+	Juri Lelli <juri.lelli@redhat.com>, Clark Williams <williams@redhat.com>, 
+	Yair Podemsky <ypodemsk@redhat.com>, Marcelo Tosatti <mtosatti@redhat.com>, 
+	Daniel Wagner <dwagner@suse.de>, Petr Tesarik <ptesarik@suse.com>
+Content-Type: text/plain; charset="us-ascii"
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Tue, Oct 14, 2025, Valentin Schneider wrote:
+> On 13/10/25 17:01, Sean Christopherson wrote:
+> > On Fri, Oct 10, 2025, Valentin Schneider wrote:
+> >> Later commits will cause objtool to warn about static keys being used in
+> >> .noinstr sections in order to safely defer instruction patching IPIs
+> >> targeted at NOHZ_FULL CPUs.
+> >>
+> >> These keys are used in .noinstr code, and can be modified at runtime
+> >> (/proc/kernel/vmx* write). However it is not expected that they will be
+> >> flipped during latency-sensitive operations, and thus shouldn't be a source
+> >> of interference wrt the text patching IPI.
+> >>
+> >> Mark it to let objtool know not to warn about it.
+> >
+> > Can you elaborate in the changelog on what will happen if the key is toggle?
+> > IIUC, smp_text_poke_batch_finish() will force IPIs if noinstr code is being
+> > patched.
+> 
+> Right!
+> 
+> > Even just a small footnote like this:
+> >
+> >   Note, smp_text_poke_batch_finish() never defers IPIs if noinstr code is
+> >   being patched, i.e. this is purely about silencing objtool warnings.
+> >
+> > to make it clear that there's no bug/race being introduced.
+> 
+> Good point. How about:
+> 
+> """
+> Later commits will cause objtool to warn about static keys being used in
+> .noinstr sections in order to safely defer instruction patching IPIs
+> targeted at NOHZ_FULL CPUs.
+> 
+> The VMX keys are used in .noinstr code, and can be modified at runtime
+> (/proc/kernel/vmx* write). However it is not expected that they will be
+> flipped during latency-sensitive operations, and thus shouldn't be a source
+> of interference for NOHZ_FULL CPUs wrt the text patching IPI.
+> 
+> Note, smp_text_poke_batch_finish() never defers IPIs if noinstr code is
+> being patched, i.e. this is purely to tell objtool we're okay with updates
+> to that key causing IPIs and to silence the associated objtool warning.
+> """
 
-Commit 64cf7d058a00 ("tracing: Have trace_marker use per-cpu data to read
-user space") made an update that fixed both trace_marker and
-trace_marker_raw. But the small difference made to trace_marker_raw had a
-blatant bug in it that any basic testing would have uncovered.
-Unfortunately, the self tests have tests for trace_marker but nothing for
-trace_marker_raw which allowed the bug to get upstream.
+LGTM.  With the updated changelog,
 
-Add basic selftests to test trace_marker_raw so that this doesn't happen
-again.
-
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- .../ftrace/test.d/00basic/trace_marker_raw.tc | 107 ++++++++++++++++++
- 1 file changed, 107 insertions(+)
- create mode 100644 tools/testing/selftests/ftrace/test.d/00basic/trace_marker_raw.tc
-
-diff --git a/tools/testing/selftests/ftrace/test.d/00basic/trace_marker_raw.tc b/tools/testing/selftests/ftrace/test.d/00basic/trace_marker_raw.tc
-new file mode 100644
-index 000000000000..7daf7292209e
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/00basic/trace_marker_raw.tc
-@@ -0,0 +1,107 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+# description: Basic tests on writing to trace_marker_raw
-+# requires: trace_marker_raw
-+# flags: instance
-+
-+is_little_endian() {
-+	if lscpu | grep -q 'Little Endian'; then
-+		echo 1;
-+	else
-+		echo 0;
-+	fi
-+}
-+
-+little=`is_little_endian`
-+
-+make_str() {
-+	id=$1
-+	cnt=$2
-+
-+	if [ $little -eq 1 ]; then
-+		val=`printf "\\%03o\\%03o\\%03o\\%03o" \
-+			$(($id & 0xff)) \
-+			$((($id >> 8) & 0xff)) \
-+			$((($id >> 16) & 0xff)) \
-+			$((($id >> 24) & 0xff))`
-+	else
-+		val=`printf "\\%03o\\%03o\\%03o\\%03o" \
-+			$((($id >> 24) & 0xff)) \
-+			$((($id >> 16) & 0xff)) \
-+			$((($id >> 8) & 0xff)) \
-+			$(($id & 0xff))`
-+	fi
-+
-+	data=`printf -- 'X%.0s' $(seq $cnt)`
-+
-+	printf "${val}${data}"
-+}
-+
-+write_buffer() {
-+	id=$1
-+	size=$2
-+
-+	# write the string into the raw marker
-+	make_str $id $size > trace_marker_raw
-+}
-+
-+
-+test_multiple_writes() {
-+
-+	# Write a bunch of data where the id is the count of
-+	# data to write
-+	for i in `seq 1 10` `seq 101 110` `seq 1001 1010`; do
-+		write_buffer $i $i
-+	done
-+
-+	# add a little buffer
-+	echo stop > trace_marker
-+
-+	# Check to make sure the number of entries is the id (rounded up by 4)
-+	awk '/.*: # [0-9a-f]* / {
-+			print;
-+			cnt = -1;
-+			for (i = 0; i < NF; i++) {
-+				# The counter is after the "#" marker
-+				if ( $i == "#" ) {
-+					i++;
-+					cnt = strtonum("0x" $i);
-+					num = NF - (i + 1);
-+					# The number of items is always rounded up by 4
-+					cnt2 = int((cnt + 3) / 4) * 4;
-+					if (cnt2 != num) {
-+						exit 1;
-+					}
-+					break;
-+				}
-+			}
-+		}
-+	// { if (NR > 30) { exit 0; } } ' trace_pipe;
-+}
-+
-+
-+get_buffer_data_size() {
-+	sed -ne 's/^.*data.*size:\([0-9][0-9]*\).*/\1/p' events/header_page
-+}
-+
-+test_buffer() {
-+
-+	# The id must be four bytes, test that 3 bytes fails a write
-+	if echo -n abc > ./trace_marker_raw ; then
-+		echo "Too small of write expected to fail but did not"
-+		exit_fail
-+	fi
-+
-+	size=`get_buffer_data_size`
-+	echo size = $size
-+
-+	# Now add a little more than what it can handle
-+
-+	if write_buffer 0xdeadbeef $size ; then
-+		echo "Too big of write expected to fail but did not"
-+		exit_fail
-+	fi
-+}
-+
-+test_buffer
-+test_multiple_writes
--- 
-2.51.0
-
+Acked-by: Sean Christopherson <seanjc@google.com>
