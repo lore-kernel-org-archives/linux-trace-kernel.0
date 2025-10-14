@@ -1,106 +1,179 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C32319F135;
-	Tue, 14 Oct 2025 12:51:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88044308F1D
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 14 Oct 2025 12:58:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760446320; cv=none; b=ZsjnIHUfDWQcW9TV8Gq3SQvvOZ1Ow8cCLhlpOPpvbOSwy9h24fx0iMUJzCvNXees3W5+HSeV5rnCQo+A4H4d3tC9uyvci+0WcVbjieVDD4F16ms+DmY/rGm3Pe9yD16MeMoJWkiPtWNtnaW1QUG+q7Voweiu6BWjKKeN4cnSj6g=
+	t=1760446691; cv=none; b=eMCuQUWgF5BHTjQK3yzg5E02jB6oN18XC5JbxY/9oQVDAWYFiPv/a3e3gCc+r2vlPW1kgBg6cOGPb+8S4UOB+gg+lW5CS3eQQbLVT4rIK6hvFOdeMDRORNLSetZgKHtJFXy2gXaCw3NTDO8j+v338J4JLbRAv2JWIU8RnmYCb4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760446320; c=relaxed/simple;
-	bh=1BgVSKTIPh3PbrgvXaumugE5ruYDfbmNXsoXkbmvnMw=;
+	s=arc-20240116; t=1760446691; c=relaxed/simple;
+	bh=K2g5fcbeoiLEypmxm4zdDfAPkL/Zn3ngXE1+qFzQ0Oc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E5e12BECKuYriiPzUMQ5En47RTRhPpG98lFCQJkbYcc+Trnn5xZ+VhZ7pJkDKaqZ6MOFa16OAdKDP1Kc+TWCIXaRhNHwYRshm6SUCv9QZUFTzIuheeOfgbqiB4DOqlJNoR3B4JUSnCzdASq8/34Hi+vV0bPVt7P/IFadig71IYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=nwkkb4Yi; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=m6us4LAw; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	 In-Reply-To:Content-Type:Content-Disposition; b=X6uMlXEp7FKjRDSmBRnnYgB70baAPzHJuXYd0Zxb31ojV9sADqRUuP9bYgGFua8FbF4WGWXOZVAfG/ut2EmRs8rKDxcdArqKPYd9sMtVXjPzy95X8qqcikh1EjS8NOkQ15TzN8FwmCf88gS/GF0uYsAq9CSaGUgnR4/763daZXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=F25wjcbo; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nwkkb4Yi";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="m6us4LAw"
-Date: Tue, 14 Oct 2025 14:51:56 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1760446317;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F25wjcbo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1760446688;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=xsJoAKiqi88a0RwGzaTiXEJCJvOKGck4/f88vgZqoRI=;
-	b=nwkkb4Yika0U5j9MNfts6f/gTvPriOETYqmsaw0LUYaMOy8x+FbzQoLNCe/HeUhyM6T/1E
-	TYy12t1oRTVN4KizNQZ2yInhhCg35cR/iluUg4ezsc3ZuLBLjWKEU3Bf3yknNfI2cMhRtC
-	0Fl0aZdu3t5Qgade0Z4dlKnl5Cc8ZJczI5mi8zfpBTLtfffF77Kvei+5Hpm2sJWX0Bpc8H
-	pxioEI1glP3pB09EFwa3XlGvr6scBTlTz8GR64noPTekCzIIAHnBkPiAGUJ0UqHUDz8bcL
-	Xp2VDHnuhGqORfKmRFfL5TAijYlljvkxND0EVpEtApbsRDy1OGzMODe+J3y91g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1760446317;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xsJoAKiqi88a0RwGzaTiXEJCJvOKGck4/f88vgZqoRI=;
-	b=m6us4LAwqVFQIs7per9EFs9EkbZ31M2t0BtQmuom5PE/WefER45zi6H3rVaG7sxglJ2ZZf
-	Y2TB0iYxNkPH4TBw==
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: Nam Cao <namcao@linutronix.de>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] rv: Add explicit lockdep context for reactors
-Message-ID: <20251014140813-692b312f-67d8-4f11-99f9-73d5d8d34c87@linutronix.de>
-References: <20251014-rv-lockdep-v1-0-0b9e51919ea8@linutronix.de>
- <20251014-rv-lockdep-v1-3-0b9e51919ea8@linutronix.de>
- <87qzv6szku.fsf@yellow.woof>
- <20251014094206-80eb5d6c-e4dd-4704-a40a-e2d0461c2185@linutronix.de>
- <4d0467cf03f4b818a40344b6ec8142582c26a876.camel@redhat.com>
+	bh=o+P2Dsj3XLhA6fMrQYgh8OLSwYB2MUOQP3SbJkXqJVA=;
+	b=F25wjcbomtI84IuH63y3uCwMe59HV5IiwauKpiD0sHsUdXIpr1gs8FLbLTlt7g7NNTucDn
+	pxXrgcizjcEAVg5AzEb65bkVPcHPq0tEww1Mu2shf//a/rTUEZQSXBZS3zxgeS0OdkZFag
+	2sqexAC7GHWcCfQQUcgenQ5DS7xbtiM=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-683-N5rbdZWsM2eZYIstjL5x-g-1; Tue, 14 Oct 2025 08:58:07 -0400
+X-MC-Unique: N5rbdZWsM2eZYIstjL5x-g-1
+X-Mimecast-MFC-AGG-ID: N5rbdZWsM2eZYIstjL5x-g_1760446686
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3f030846a41so3894281f8f.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 14 Oct 2025 05:58:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760446686; x=1761051486;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=o+P2Dsj3XLhA6fMrQYgh8OLSwYB2MUOQP3SbJkXqJVA=;
+        b=LwHaX3V+RSP5Am+U2ImS4+yB3L0JFweYc+ONtNfUUB3jCrx7FbYIYk1H1DTRr8pQlG
+         +GqSGNApel4rYoT3eLLhPE7BfByce66Ar27zU2dLa4Q+cj4NQAn/EgGKLJCCtXn0QuWH
+         lAvrmk/+5dVCrhwnPWIdw0i1dH3qf0H1dgaxBSByfFkQF5LfkDdgGH1Y15wvej5Abt6O
+         QeWae3s/UOG9xS5ZwpoFv92dEN/TDf2W8fHZHl8LWHnx9DZPp3bJmW3Z4xbgkItlMy3f
+         IgMHL4ODqbkO8ODLmBVzcsOLK5pQcmTm207jgTP7q+rWXB8t6ekuCPacXqZHJ/jDDEur
+         kS4w==
+X-Forwarded-Encrypted: i=1; AJvYcCXx/HUWuCQDDRrLJi+t63flsMK3mT0fGILOD4G8vMm9QOMNJdkT8fGJfMyJ+qdxsx8kY1hNPAsCLQtoMheEvZmCi+o=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy4QTReJWc6e+yDi4JQYgrFRUAD/UNEChrmEjVspftK1SH9/uqQ
+	P6UkRiERzhJRHp1z/0KB+hoWaH4X7O3TFVAAzB5K44vtiio58gzautfQmZs3PG5VWvjWBx8EscS
+	EbrSvc9GBSqrXu+wZBrLfFSKwdjOW9UXhvjLMHoQb4cuUHEahW2+dOArTY3tkoqies081vhVT+g
+	==
+X-Gm-Gg: ASbGncuKDX2aujtCTmn9gwMov4f/TtX3l1dlUVH35+69HQY+j5laD6yzYopbxKrOiRG
+	H3IFDaK00Ab5pfIUbH28zcBLYWrMr0yFL/RMbvlL26FAvWdloeGLsP0pDvi9A4B8a+dkkosgwWH
+	rRoc1TsqiktRUi54Zsw1rJ7gCPlYhuUkF/M20uuTe4g+S9QwXUBnN8x6/ApXeDdz3C+f4fwhCYA
+	vIkDRaty2UDlpCfzkL6xvpLRphdy9PNgXccm2TUtC8UatkW/yBLc4VM8cn3s/bmE18LKQ7V3vce
+	sxxFRwYo26OQhVmcHn/trSTqJRZVhHeYm/cvI9f0K0GEXr777eFvWGXojrdAfoVM72Pi5l94
+X-Received: by 2002:a05:6000:1888:b0:401:c52f:62de with SMTP id ffacd0b85a97d-42666ac39fdmr14487404f8f.12.1760446686041;
+        Tue, 14 Oct 2025 05:58:06 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHAh3YZ5oKpPdr7WASiDkPJn2IILu8/Rh+37A13TS4n2FwBRRVC0ByNWYf0Uu33Aqxt+5Ldeg==
+X-Received: by 2002:a05:6000:1888:b0:401:c52f:62de with SMTP id ffacd0b85a97d-42666ac39fdmr14487377f8f.12.1760446685024;
+        Tue, 14 Oct 2025 05:58:05 -0700 (PDT)
+Received: from jlelli-thinkpadt14gen4.remote.csb ([176.206.13.103])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-426ce582abcsm23624651f8f.17.2025.10.14.05.58.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Oct 2025 05:58:04 -0700 (PDT)
+Date: Tue, 14 Oct 2025 14:58:01 +0200
+From: Juri Lelli <juri.lelli@redhat.com>
+To: Valentin Schneider <vschneid@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, rcu@vger.kernel.org,
+	x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+	linux-arch@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Paolo Bonzini <pbonzini@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Jason Baron <jbaron@akamai.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Mel Gorman <mgorman@suse.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Han Shen <shenhan@google.com>, Rik van Riel <riel@surriel.com>,
+	Jann Horn <jannh@google.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Clark Williams <williams@redhat.com>,
+	Yair Podemsky <ypodemsk@redhat.com>,
+	Marcelo Tosatti <mtosatti@redhat.com>,
+	Daniel Wagner <dwagner@suse.de>, Petr Tesarik <ptesarik@suse.com>
+Subject: Re: [PATCH v6 00/29] context_tracking,x86: Defer some IPIs until a
+ user->kernel transition
+Message-ID: <aO5I2WGtXqSPYFmH@jlelli-thinkpadt14gen4.remote.csb>
+References: <20251010153839.151763-1-vschneid@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+In-Reply-To: <20251010153839.151763-1-vschneid@redhat.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: Zzh0rIrxZspNgYT47AzuILAtjcrPWcR6dlqsoW2SC7Y_1760446686
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <4d0467cf03f4b818a40344b6ec8142582c26a876.camel@redhat.com>
 
-On Tue, Oct 14, 2025 at 12:22:06PM +0200, Gabriele Monaco wrote:
-> On Tue, 2025-10-14 at 11:46 +0200, Thomas Weißschuh wrote:
-> > On Tue, Oct 14, 2025 at 09:38:09AM +0200, Nam Cao wrote:
-> > > The reactors are invoked in tracepoints' handlers, thus they must not
-> > > trigger another tracepoint, otherwise we may be stuck in an infinite loop.
-> > > (this is why preempt_enable_notrace() exists alongside preempt_enable()).
+Hello,
 
-(...)
+On 10/10/25 17:38, Valentin Schneider wrote:
 
-> > > I'm not familiar with the internal lockdep. But I think these would
-> > > trigger trace_lock_acquire() and trace_lock_release().
-> > 
-> > Indeed. Right now no monitor attaches to those tracepoints. We could
-> > prevent monitors from attaching to certain "well-known" tracepoints.
-> > But then we still need to manually track which those are, which is ugly.
-> > Or we move the invocation of the reactor to a workqueue/task_work.
+...
+
+> Performance
+> +++++++++++
 > 
-> I'm afraid also workqueues might open a rabbit-hole (waking up a task fights
-> with locks in many scheduling tracepoints).
-> At a quick glance task_works also do some IPI/wakeups that are traced.
-> If I get it correctly we are looking for something absolutely lock-free/trace-
-> free, I can't really think of much at the moment, maybe abusing RCU callbacks
-> but those would have their set of problems too.
+> Tested by measuring the duration of 10M `syscall(SYS_getpid)` calls on
+> NOHZ_FULL CPUs, with rteval (hackbench + kernel compilation) running on the
+> housekeeping CPUs:
+> 
+> o Xeon E5-2699:   base avg 770ns,  patched avg 1340ns (74% increase)
+> o Xeon E7-8890:   base avg 1040ns, patched avg 1320ns (27% increase)
+> o Xeon Gold 6248: base avg 270ns,  patched avg 273ns  (.1% increase)
+> 
+> I don't get that last one, I did spend a ridiculous amount of time making sure
+> the flush was being executed, and AFAICT yes, it was. What I take out of this is
+> that it can be a pretty massive increase in the entry overhead (for NOHZ_FULL
+> CPUs), and that's something I want to hear thoughts on
+> 
+> Noise
+> +++++
+> 
+> Xeon E5-2699 system with SMToff, NOHZ_FULL, isolated CPUs.
+> RHEL10 userspace.
+> 
+> Workload is using rteval (kernel compilation + hackbench) on housekeeping CPUs
+> and a dummy stay-in-userspace loop on the isolated CPUs. The main invocation is:
+> 
+> $ trace-cmd record -e "ipi_send_cpumask" -f "cpumask & CPUS{$ISOL_CPUS}" \
+> 	           -e "ipi_send_cpu"     -f "cpu & CPUS{$ISOL_CPUS}" \
+> 		   rteval --onlyload --loads-cpulist=$HK_CPUS \
+> 		   --hackbench-runlowmem=True --duration=$DURATION
+> 
+> This only records IPIs sent to isolated CPUs, so any event there is interference
+> (with a bit of fuzz at the start/end of the workload when spawning the
+> processes). All tests were done with a duration of 6 hours.
+> 
+> v6.17
+> o ~5400 IPIs received, so about ~200 interfering IPI per isolated CPU
+> o About one interfering IPI just shy of every 2 minutes
+> 
+> v6.17 + patches
+> o Zilch!
 
-Agreed.
+Nice. :)
 
-> As much as it might be interesting to write monitors on lockdep tracepoints,
-> this seems challenging.
+About performance, can we assume housekeeping CPUs are not affected by
+the change (they don't seem to use the trick anyway) or do we want/need
+to collect some numbers on them as well just in case (maybe more
+throughput oriented)?
 
-> We could opt for a foolproof Kconfig solution and prevent reactors if lockdep is
-> active (leaving only the error tracepoints that are hopefully still safe).
+Thanks,
+Juri
 
-I can't follow here. lockdep can indicate problems, but it should not introduce
-problems on its own. So preventing the usage together with lockdep would be the
-proverbial head in the sand. If the tracepoints called by lockdep are an issue
-then we would just not call into lockdep in the first place. lockdep triggering
-these tracepoints should not be an issue in practice. I don't see a bulletproof
-way to prevent a tracepoint handler from calling another tracepoint, except
-maybe extending lockdep to also track that.
-
-
-Thomas
