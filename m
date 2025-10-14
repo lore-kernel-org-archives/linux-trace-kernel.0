@@ -1,85 +1,104 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 989922ED14B
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 14 Oct 2025 10:22:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3949C2EB85B
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 14 Oct 2025 11:02:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760437334; cv=none; b=V7Yi3eZLZjnb2jTpzwOFlpXrONQ0m+/E7TbeGnTVloG6SCXEjE0J6KYXWimbYGDlW/MhX1UVwntbx9d69v0fmiYp1e3vFGb9E2o+7LBU6idyBq8MaCQ4yje8XHJP+QBETfSt3AhMX7sHg1yy/Ija0jl2Qf8NpVeUFBd5bJifu1k=
+	t=1760439780; cv=none; b=XRKtIlHTGVzCJ3OBI48TptReaTMrCeBAHPqn0+6n1khSCwE9InyVLx6+xtuuD14ANyReRC6DK15N0dgbrQg2VtVWr0w6xAnFJDO/zkGR3EjJZT1c2J8Bro07POTZ8uqK1xrop8xZElBwQGVCfeFV+12CWFQTfeojmZIGzNzUKqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760437334; c=relaxed/simple;
-	bh=8L1RGzt7soJt9IKppmbflYl6y+ueOV8Q0zaTAUUOegE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=B2red/73hLoTxveK7spk9J4QKPyKTbUn+JpjKQFaGABjpCRypHdQd4/TbqMG6esgwGGcNGYZqXPjOFJ/CGQ0RSbv1dfAiQVJ2e4WAIf90dcgJ/8VlXs7rDXztOStDeh3naWI8yH74b0D/31MIsNev0W/F1XMQ+x5yss7xF7S9x4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bDz9KSu+; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1760439780; c=relaxed/simple;
+	bh=/u5e/qJ2sRdwo1224SVU8XP3U/yMMEn1jbJARlu70Tk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=O7bugU8ahEDUGiYCq0JfY+S2Kvz1iIsxMH+NhUPUlsg2clVkW4W52KbuDXde1LlLzSyNC/nLcAjj9pROnPcfMnbzijDgWfXNHy+H5g4DRsmtl8ka8l0MLOmKgBr3X4sJ73V46LpXBxj7lk4ovOpi9t48He4fb3B2w1T1oWQrSIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Aiwx98kC; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bDz9KSu+"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Aiwx98kC"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1760437331;
+	s=mimecast20190719; t=1760439778;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=8L1RGzt7soJt9IKppmbflYl6y+ueOV8Q0zaTAUUOegE=;
-	b=bDz9KSu+3wrJj7urkwROd88Off118U2OGrVhwUMDjU8RN1P7zp7PpqK8zGJUHy6YdToHza
-	tQjQEOEtz4tTTtYyQb0PizzdzlP3QeTjS+sBwGv64UktrbYhQ+etMOyBWh4QBzCSKUnNHj
-	vqeXoAv9ddFzYrf80vWmg7nSi7y+te4=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=s2r/L8/q4C9e2I164NDxUGdYhK/0nvlG6dMGzaNBqVg=;
+	b=Aiwx98kCkH0m4vY0bP8NkMDPpsAlZjSL/yM2pxNm725ZwL2F2X1KqAbrMfmRnDeuVBEoMm
+	0qNZra7t4U5X7E2Ti3cxc6gEEAXIQbv07RcUXBdUN1itnHiHAkwhaifdC/M+NEPPQ3jHep
+	roIdiuHP+297Pg+pptVuRHOaE+NlCvc=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-426-gQeN9eqwNK6BWRhr92ZpTQ-1; Tue, 14 Oct 2025 06:22:09 -0400
-X-MC-Unique: gQeN9eqwNK6BWRhr92ZpTQ-1
-X-Mimecast-MFC-AGG-ID: gQeN9eqwNK6BWRhr92ZpTQ_1760437329
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3ee130237e1so2642660f8f.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 14 Oct 2025 03:22:09 -0700 (PDT)
+ us-mta-576-JzKA5gYcOJS1NqtH-6_YTw-1; Tue, 14 Oct 2025 07:02:57 -0400
+X-MC-Unique: JzKA5gYcOJS1NqtH-6_YTw-1
+X-Mimecast-MFC-AGG-ID: JzKA5gYcOJS1NqtH-6_YTw_1760439775
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-46e47d14dceso29787005e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 14 Oct 2025 04:02:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760437329; x=1761042129;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=8L1RGzt7soJt9IKppmbflYl6y+ueOV8Q0zaTAUUOegE=;
-        b=G3PCNJFvg62SCfd8a9/fHJZTTJug4fNscdbE35k3rFPeOa6k/Iq/8bbQCvF32oIndF
-         p2qXWaTD7UAn7Gqqs72GfuxXVutqPEOPcX84Ci5uBiYDnZCFwc9rJ9Et5oHPcS/E4Z7L
-         Rz8LUexQNQaLaQEq8T681XsJDKTBlxSZkeEbUoOpV1Ff18mh+UqtztC+p+FW1I/I1CO4
-         dDk7V5tZl1h2GGHJvOOPo42VyVJ8aZd1nN+B6v+F+3XGjoPlMqRtyOFCki5HavpUFnEa
-         r/+lz4akaf8RgtF7NT1DfYfIU+ssd7qliMXuBKMhWG77+BQg9l2RsXsKWWVNJt9e9N+4
-         l5FQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXfcTRI6VEVBgRgk52IP3vbONaEO8QyZ6MOchOmU7Wzo+O7ul/k3SI5Kkwi5bECJ9X0I4uf96QsJLp4GJS52RBCAM4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyRjrKXH2G5y3AIx9Jzl4JXjQPSbHpl6QXXSc3Hpjq6T+H/jH+n
-	rM+1Ia1uK1RqtBG/jUNSFeLOD4EPKmS018mftYzeNnx++kFOUq5XpSGPi89IhXcSVm8agPCXicq
-	tC4qIWE1SkkeHp3xmB1+s6IFabZxcubqp1KIet4LZenRRcawyzjRtIeTFG1S0tv0JLteDqTkFMQ
+        d=1e100.net; s=20230601; t=1760439775; x=1761044575;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=s2r/L8/q4C9e2I164NDxUGdYhK/0nvlG6dMGzaNBqVg=;
+        b=QSIzgFG6BiyBfoEAWw4KAAAX39qK4rt2KSfdfWTduIqDdqjXkvPRIHyvVtrXzXZtHc
+         3kaGCoidwvkypCTMBqj8oKab/OxpIhdEk84LTHgyglAkSxqsn+cHFojGgwme3tXI/VjN
+         PNbJk0ki9/QR0oLbW3j8T6o6ePjMr4V+KE8d2X2iev+774o23FwbpUBBdlsHBoxZDbkD
+         5K4XEvAPOccWJxRQzkq3W853yfoAwqQ0owyKPnm2U5k3Pxj0rAGdqmCrMsEgOSvWEY9i
+         0H8oUZsQBHYPF+CUfaeJd4J1j/s8N0ktmrSEO+JxzLnj70b6Z+XA/HPKXyxK+7ptvVIr
+         d6/g==
+X-Forwarded-Encrypted: i=1; AJvYcCVtKgWTVPD5M94KZGLmwoS6AFEhpe3ztrIcgEl7fFd81NTT4+ocelIKrc5NbAXSPw4LCz5owsUDOtrHT32RYRVhGuI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywcm9xoq+8YHLny9p3lvQJ6ohyVQkot68t1zsQCt7CQK2h3hpnI
+	qvjPDPDRTKrqiqGtILxNUGE+QmA9gq52LZIDbfvT9xisr/gqTEhe3ZWIg2MyW+mS83VcoiGWMJQ
+	3M0FFwAwU476cj5MGZjBJKv0WmxT+oXE4hYfxz+U/dQYvNH+iBx1ILctMAYPFzJasc8SZFRvUyg
 	==
-X-Gm-Gg: ASbGncvOYfDhiD7fzr3+GPn8q6Pu1UbMpWbSsm39dHzFdMhbJVN1C3/MYWM22tkv/fG
-	pfA0EXUFOdtB3h0cnRRyyQme/DYUb6qNnOnm6UkdRPY5U/zRq0EIJows3zhNswNdzNxy7lcAN35
-	z+76yuu4vjfScgBnXQmw6TbByHokCJpctYKZm4HlGTzh/35TR+6t9L+GkivjpIjvt4CJSuIF4pU
-	Zoq2GJ7VTurewUewFQ1d54XoOiEo/Z4I2ZguBjTfy95I4asgaIgR9v/tFgZ7O9nPusaQiYW5ITl
-	7sneSxwOF/nMQh6l7bbHafCAvt32Y5ZQD5zGWi1eCiZOtzgjAtJncGRhiBqfDEyFMg==
-X-Received: by 2002:a05:6000:2c0c:b0:3f0:2ab8:710f with SMTP id ffacd0b85a97d-42666ac39afmr12909543f8f.8.1760437328624;
-        Tue, 14 Oct 2025 03:22:08 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHI8UJI60MTklfSrxiStm/XC5egkna5mdYCP8ifnCsQpxVWUiBUgX/rrIY4dwlcC95NJb48vQ==
-X-Received: by 2002:a05:6000:2c0c:b0:3f0:2ab8:710f with SMTP id ffacd0b85a97d-42666ac39afmr12909529f8f.8.1760437328184;
-        Tue, 14 Oct 2025 03:22:08 -0700 (PDT)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.42])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-426ce5e1284sm22705271f8f.45.2025.10.14.03.22.07
+X-Gm-Gg: ASbGncukd4Q01TqiK3fSHB5MVKz/MuPdBIFf+4Itl6Scz0PE5EqwCpqIKLSbiH3bZBq
+	bwtpw4ejqRMXJIKfDkuD+k8WAwfCjGDYmOYha/JrkLnILdZA4ys7duw81QHm14O2RtSNxl3s8NG
+	8uXRuOmLGp5EYhD0Q9dYiS10P4BlSLp8zMA5aBaTt4PAjTQ+IWo7g/dH6sS47w54XPP7PEkk62/
+	WfDb7lL9xATbP4bZ5QSxbQRiy88HBboxyi+6RZNwm9SGRNCrrsmJuH/ezIVqVBTlWFCPOuw2sd9
+	tPfvd60O7OL49VCHkYkxTWCOC9gwlJ67V2lWKXGXQDQ519VInvKzXShd1tklwrwmpiLkRerfUgh
+	0c83SwtPm2MIRrPTzrhiR1sYrwA==
+X-Received: by 2002:a05:600c:4752:b0:46e:3dad:31ea with SMTP id 5b1f17b1804b1-46fa9af8fb0mr181929195e9.17.1760439774550;
+        Tue, 14 Oct 2025 04:02:54 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGCodl08uTX0ubswP5nTiGxebtIpD1Qw4JnrqS3e+W7M5qhx4w6eQs0AuIjitoXX5t0l6/vwQ==
+X-Received: by 2002:a05:600c:4752:b0:46e:3dad:31ea with SMTP id 5b1f17b1804b1-46fa9af8fb0mr181928825e9.17.1760439774097;
+        Tue, 14 Oct 2025 04:02:54 -0700 (PDT)
+Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-135-146.abo.bbox.fr. [213.44.135.146])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-426f2f72e18sm1737515f8f.0.2025.10.14.04.02.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Oct 2025 03:22:07 -0700 (PDT)
-Message-ID: <4d0467cf03f4b818a40344b6ec8142582c26a876.camel@redhat.com>
-Subject: Re: [PATCH 3/3] rv: Add explicit lockdep context for reactors
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Thomas =?ISO-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>, 
- Nam Cao <namcao@linutronix.de>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>,  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Tue, 14 Oct 2025 12:22:06 +0200
-In-Reply-To: <20251014094206-80eb5d6c-e4dd-4704-a40a-e2d0461c2185@linutronix.de>
-References: <20251014-rv-lockdep-v1-0-0b9e51919ea8@linutronix.de>
-	 <20251014-rv-lockdep-v1-3-0b9e51919ea8@linutronix.de>
-	 <87qzv6szku.fsf@yellow.woof>
-	 <20251014094206-80eb5d6c-e4dd-4704-a40a-e2d0461c2185@linutronix.de>
-User-Agent: Evolution 3.56.2 (3.56.2-2.fc42)
+        Tue, 14 Oct 2025 04:02:52 -0700 (PDT)
+From: Valentin Schneider <vschneid@redhat.com>
+To: Sean Christopherson <seanjc@google.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, rcu@vger.kernel.org,
+ x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+ loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+ linux-arch@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Josh
+ Poimboeuf <jpoimboe@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
+ Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Paolo Bonzini
+ <pbonzini@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Frederic Weisbecker
+ <frederic@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, Jason
+ Baron <jbaron@akamai.com>, Steven Rostedt <rostedt@goodmis.org>, Ard
+ Biesheuvel <ardb@kernel.org>, Sami Tolvanen <samitolvanen@google.com>,
+ "David S. Miller" <davem@davemloft.net>, Neeraj Upadhyay
+ <neeraj.upadhyay@kernel.org>, Joel Fernandes <joelagnelf@nvidia.com>, Josh
+ Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
+ Uladzislau Rezki <urezki@gmail.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Mel Gorman <mgorman@suse.de>, Andrew
+ Morton <akpm@linux-foundation.org>, Masahiro Yamada
+ <masahiroy@kernel.org>, Han Shen <shenhan@google.com>, Rik van Riel
+ <riel@surriel.com>, Jann Horn <jannh@google.com>, Dan Carpenter
+ <dan.carpenter@linaro.org>, Oleg Nesterov <oleg@redhat.com>, Juri Lelli
+ <juri.lelli@redhat.com>, Clark Williams <williams@redhat.com>, Yair
+ Podemsky <ypodemsk@redhat.com>, Marcelo Tosatti <mtosatti@redhat.com>,
+ Daniel Wagner <dwagner@suse.de>, Petr Tesarik <ptesarik@suse.com>
+Subject: Re: [PATCH v6 19/29] KVM: VMX: Mark vmx_l1d_should flush and
+ vmx_l1d_flush_cond keys as allowed in .noinstr
+In-Reply-To: <aO2S3oZwOW_UgAci@google.com>
+References: <20251010153839.151763-1-vschneid@redhat.com>
+ <20251010153839.151763-20-vschneid@redhat.com>
+ <aO2S3oZwOW_UgAci@google.com>
+Date: Tue, 14 Oct 2025 13:02:50 +0200
+Message-ID: <xhsmhwm4xpwyt.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -87,54 +106,50 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: hfKmOH_lou9yNN6zhqU-xhRHUJelMhX7J_mcU8bdvbg_1760437329
+X-Mimecast-MFC-PROC-ID: FvP-8nXv6Rmwd6yyfSqs4DqQQCbFC7VvRDG55th2BD0_1760439775
 X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On Tue, 2025-10-14 at 11:46 +0200, Thomas Wei=C3=9Fschuh wrote:
-> On Tue, Oct 14, 2025 at 09:38:09AM +0200, Nam Cao wrote:
-> > The reactors are invoked in tracepoints' handlers, thus they must not
-> > trigger another tracepoint, otherwise we may be stuck in an infinite lo=
-op.
-> > (this is why preempt_enable_notrace() exists alongside preempt_enable()=
-).
->=20
-> Sounds reasonable. However today not even the printk reactor satisfies th=
-is
-> rule as it transitively calls trace_console().
+On 13/10/25 17:01, Sean Christopherson wrote:
+> On Fri, Oct 10, 2025, Valentin Schneider wrote:
+>> Later commits will cause objtool to warn about static keys being used in
+>> .noinstr sections in order to safely defer instruction patching IPIs
+>> targeted at NOHZ_FULL CPUs.
+>>
+>> These keys are used in .noinstr code, and can be modified at runtime
+>> (/proc/kernel/vmx* write). However it is not expected that they will be
+>> flipped during latency-sensitive operations, and thus shouldn't be a source
+>> of interference wrt the text patching IPI.
+>>
+>> Mark it to let objtool know not to warn about it.
+>
+> Can you elaborate in the changelog on what will happen if the key is toggle?
+> IIUC, smp_text_poke_batch_finish() will force IPIs if noinstr code is being
+> patched.
 
-That's a valid concern, I assume it would become a problem also if we wante=
-d to
-use locks inside event handlers, as it was discussed some time ago to bette=
-r
-handle concurrency.
+Right!
 
-> > I'm not familiar with the internal lockdep. But I think these would
-> > trigger trace_lock_acquire() and trace_lock_release().
->=20
-> Indeed. Right now no monitor attaches to those tracepoints. We could
-> prevent monitors from attaching to certain "well-known" tracepoints.
-> But then we still need to manually track which those are, which is ugly.
-> Or we move the invocation of the reactor to a workqueue/task_work.
+> Even just a small footnote like this:
+>
+>   Note, smp_text_poke_batch_finish() never defers IPIs if noinstr code is
+>   being patched, i.e. this is purely about silencing objtool warnings.
+>
+> to make it clear that there's no bug/race being introduced.
 
-I'm afraid also workqueues might open a rabbit-hole (waking up a task fight=
-s
-with locks in many scheduling tracepoints).
-At a quick glance task_works also do some IPI/wakeups that are traced.
-If I get it correctly we are looking for something absolutely lock-free/tra=
-ce-
-free, I can't really think of much at the moment, maybe abusing RCU callbac=
-ks
-but those would have their set of problems too.
+Good point. How about:
 
-As much as it might be interesting to write monitors on lockdep tracepoints=
-,
-this seems challenging.
+"""
+Later commits will cause objtool to warn about static keys being used in
+.noinstr sections in order to safely defer instruction patching IPIs
+targeted at NOHZ_FULL CPUs.
 
-We could opt for a foolproof Kconfig solution and prevent reactors if lockd=
-ep is
-active (leaving only the error tracepoints that are hopefully still safe).
+The VMX keys are used in .noinstr code, and can be modified at runtime
+(/proc/kernel/vmx* write). However it is not expected that they will be
+flipped during latency-sensitive operations, and thus shouldn't be a source
+of interference for NOHZ_FULL CPUs wrt the text patching IPI.
 
-Gabriele
+Note, smp_text_poke_batch_finish() never defers IPIs if noinstr code is
+being patched, i.e. this is purely to tell objtool we're okay with updates
+to that key causing IPIs and to silence the associated objtool warning.
+"""
 
