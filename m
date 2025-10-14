@@ -1,298 +1,140 @@
 Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F1772FBE18
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 13 Oct 2025 23:56:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8597A927
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 14 Oct 2025 00:01:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760399793; cv=none; b=YjE5ZuUHYHqGEs61mjZ6/e8brVut2xJ4zsQd9ILafwm92q8FCOfkApU1xX816fSlDasGoUcGwJd2zmz62cCe288gB/LfQcUO6CO46E5HKdUxrHVad5DioPy1kFc9UL4mRXzVrU/FioQlf0ClMH3l9dxkM0z2+POa3ccOd3AHMdk=
+	t=1760400098; cv=none; b=DB8A3PD0I4arwOQw8iwv8ePzQn5biiLt56Aba9NcpfQtQwMifjVWrF+Dhg9IfMQZGzkoDFhxNVj6eTT+sdJiN+m1Isx+MbeZq7G9jklH57j4GKDxIuU+olCtiQQ6RG8NhNcDZs+M9GPBHE1exJFEtls4iKalxaYdNiW4CDh+qsg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760399793; c=relaxed/simple;
-	bh=Kd2/Hp8IfybPGmt1qPw68IvwiXdoH0oRA5Q2aXe5ddI=;
+	s=arc-20240116; t=1760400098; c=relaxed/simple;
+	bh=30EZppTfWymzd62I2Q/lqosIjvmCAwH24sBiTejyFlw=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=OTnn/v/r9c+r33RXj8sK9HdSeZD1HtCJ6apg32v6cm3eAkL/nKFYAibehDo7sD+VMqLHkheU6rnUAZzGsvs5k7HneLCkLejRBfYcsO33gaEU+alDF8aoq5GjsFumaAwO4UzSfnbSBqHvHKMmBn4AX4492M7+u4FvkPuw+QEYRgw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--kaleshsingh.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Em8FOyen; arc=none smtp.client-ip=209.85.216.74
+	 To:Cc:Content-Type; b=pN3T6EWyaPBIYoqoA7g43pODY+R7iOCq0O3ni3wLH7pHhvlH4QM2lGLg61LmFBM0OASRLS8w2FnaNAd6bMSPv13Gi+wORHB+f4z+5Ek4ixGOdPzamEYp+WnG+CioVoBaIbQyNXXyoGb2nuQieQMI9vqfowNyeu2+feWPltMtvX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NFSvjMUq; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--kaleshsingh.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Em8FOyen"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-339ee7532b9so24349881a91.3
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 13 Oct 2025 16:56:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NFSvjMUq"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-33428befbbaso11341192a91.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 13 Oct 2025 17:01:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1760399791; x=1761004591; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1760400096; x=1761004896; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=nPYU+2umQYN0e1OeO8X1leEMEVeMTLGsEK2ETVKaSgA=;
-        b=Em8FOyen0R8j3jNigIoTe3oLSaZ3z5VepioaRyEiP1FO+VScyY0R5kMn/31w/qU1Qo
-         UdxFKTuQFILYMggp35zyiiojfj9jUZYOWFIxWgF6jmO0CpbH8YKhoNKrpHp4JRieTgfC
-         JOhvUujhtZVNHdiv2tusV1lgc0Nhv7ywF9rXHwfmyShA6aL6KOBPaqx+I7hzhEmxCob9
-         Cdlxq/s8tS5YAT0nDMnYlKuzJqTyPWiVDV9gRZSYTYfHey29paIws6ceczdG8aLq1NG4
-         oTl9vo9166xQe4n9fs1PB8c7RbJMFEdMtSm5FbGlJRyL8hs7rUYZc9MicIiNtV8PBsXr
-         1SQA==
+        bh=60W7dGApFCGXHKlXBRGDaLpu3YLgl4WyK3JcN6QaedU=;
+        b=NFSvjMUq2klOBCTmti7DH4DcdNC7CMOJwlSo1RjpkXxF3R9H69Ct/dTvIZwFVQR2Xf
+         Whf+5fsmbl0P/2Ko+cWUas9w/xZNychL9Ym3NMchbnNtiycj3rh23wYzvURitxbU+DvA
+         1rcm65Iu341qU2bQ+gPG1BqmbbCyWc+a2/bn8LPA6JeVxRLWCJdwSBTJbK8qluUXjCk0
+         jh5r1YJEpu4ReFUtYHiaKdrkxvn2ppxU6Ws5tRRmX58ukcrReJ3NbCa04Wegu45U+1GP
+         0ZXRnOtkDweU4ipy7pGneBjobiANtQ8wLPP0ls3FmwPm2tQ8af0nE4dqKEhXCIPoUzTN
+         YOVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760399791; x=1761004591;
+        d=1e100.net; s=20230601; t=1760400096; x=1761004896;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nPYU+2umQYN0e1OeO8X1leEMEVeMTLGsEK2ETVKaSgA=;
-        b=KVGjuEVQamW+F9KeZyhnfDqHSvt66O/oU/jLoVQLQep3t+nlttn7HfNWHObsPb3xIX
-         s5nPmaj3FOikslc4ttqkuiMnyzxWUJ2ZUTS9kG8FV/fte5325X0/CHYiYz41V/KheKwV
-         mnsuxX/c1hvWO3iSMxT+7bWxcGlt3Gpply3CVfLjfskfBRj20NHWlzB2gJ71tXEpAnQI
-         xIJNCmJBu86lDchb31e42+V1GNHgyKicmUm/RfbltecTikDj5XEBXZv+J+tZk95gcNG0
-         Kd6NNiYv2DNTi1i7VOI0uIhd7AgIIvpP12yojcWaQfX33mfc4L8ZmZ55ti7RrMEtLfAF
-         t8BQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVszBP9ghwgbbITJcu367TL1WjKOxUG5+zyIJJwEjVdzfZFpWMDk701OjaXNKf2xleZ4qFv1ofLlXSR6BCm7e6B0IU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw79Zv94Nv9ylBdj2m5uMN2aR9oFRnlFOAk3Ah/3mEVGvLYCs1V
-	HIn9ESew/hmIY16UN0WcZsRiewdKWd5S8UMntLnklQEKtw/oxmhpzu+jXec/+jIp8xC5hFEc0Kk
-	T2HTLJBybVkLapwJQLKTvSNIy7w==
-X-Google-Smtp-Source: AGHT+IG8lrB7VX+K9dIOGBRbbEFaAljZfdwJaT5C/S0Dp/zoN1fe4Txo8ye3OLt4nWf6mVkw5tVIPzsscYSebRBbqg==
-X-Received: from pjuu4.prod.google.com ([2002:a17:90b:5864:b0:33b:51fe:1a78])
- (user=kaleshsingh job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90b:4b8c:b0:338:3dca:e0a3 with SMTP id 98e67ed59e1d1-33b51118f99mr34203500a91.16.1760399791496;
- Mon, 13 Oct 2025 16:56:31 -0700 (PDT)
-Date: Mon, 13 Oct 2025 16:51:56 -0700
-In-Reply-To: <20251013235259.589015-1-kaleshsingh@google.com>
+        bh=60W7dGApFCGXHKlXBRGDaLpu3YLgl4WyK3JcN6QaedU=;
+        b=Os3uEu596tK4B0nMsDORBQYRUbOiVQFsUZ719RfTDkWcsCbXLItukDUwSGkqoY6fde
+         E2blcLStzoqyYOf/dZCzzhfTwrFWVLDnXaDA56OC3yVZJ0lh32LJo3srKiMuJh4vbq6n
+         mgi/X3GMJQftMWT19zOl2SxL2l5BHaDMP1YRNoeVuauB3M+qR4Iw5iLs8NojBmLp8IAl
+         k7i+iCLk6W1JKaN8iIDuiW/ssPthV7atEHgGISDJ2YXP5hAnTYa0GoTRAK6DKyb2jgV2
+         SMgqjt3Z0H0DFo1vplpcr2v/4W4tiCYsLWJwPd5eUQZGSBTC3Zlo+V2YhsyeXCWJ5MiH
+         v9AA==
+X-Forwarded-Encrypted: i=1; AJvYcCUpq0JEuKeePtjsfvsk28/h+8S+eojrkj/rCPZKatQbh6p0Sg39smETqDAswFkjhrBEBhbTRE91CIk69xWFsLt+5ZM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YykceISHVXOTqTwlIAf58oT5PsjngoO8gSuaY+sahruwBKLMNbN
+	jdnT9x0XUBg3q3LpDw36Kde04TUUchVYDHjFOtSpOpo60mwnS5Uub+pAZLhxJtPH4GToyyJleCx
+	E2OS4JA==
+X-Google-Smtp-Source: AGHT+IHFYfnmFjxjbFQp7BMqqD83h/lwfyE6WGt5bwyArJ6H0ox9P/tbWn8NIGRGgabEk9PVFSZMkd4SLvs=
+X-Received: from pjbbk16.prod.google.com ([2002:a17:90b:810:b0:339:dc19:ae5d])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:38d2:b0:335:2eee:19dc
+ with SMTP id 98e67ed59e1d1-33b5138401amr31287086a91.28.1760400096074; Mon, 13
+ Oct 2025 17:01:36 -0700 (PDT)
+Date: Mon, 13 Oct 2025 17:01:34 -0700
+In-Reply-To: <20251010153839.151763-20-vschneid@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20251013235259.589015-1-kaleshsingh@google.com>
-X-Mailer: git-send-email 2.51.0.760.g7b8bcc2412-goog
-Message-ID: <20251013235259.589015-6-kaleshsingh@google.com>
-Subject: [PATCH v3 5/5] mm/tracing: introduce trace_mm_insufficient_vma_slots event
-From: Kalesh Singh <kaleshsingh@google.com>
-To: akpm@linux-foundation.org, minchan@kernel.org, lorenzo.stoakes@oracle.com, 
-	david@redhat.com, Liam.Howlett@oracle.com, rppt@kernel.org, pfalcato@suse.de
-Cc: kernel-team@android.com, android-mm@google.com, 
-	Kalesh Singh <kaleshsingh@google.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Kees Cook <kees@kernel.org>, 
-	Vlastimil Babka <vbabka@suse.cz>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
-	Jann Horn <jannh@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Ben Segall <bsegall@google.com>, 
-	Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>, Shuah Khan <shuah@kernel.org>, 
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+References: <20251010153839.151763-1-vschneid@redhat.com> <20251010153839.151763-20-vschneid@redhat.com>
+Message-ID: <aO2S3oZwOW_UgAci@google.com>
+Subject: Re: [PATCH v6 19/29] KVM: VMX: Mark vmx_l1d_should flush and
+ vmx_l1d_flush_cond keys as allowed in .noinstr
+From: Sean Christopherson <seanjc@google.com>
+To: Valentin Schneider <vschneid@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, rcu@vger.kernel.org, 
+	x86@kernel.org, linux-arm-kernel@lists.infradead.org, 
+	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org, 
+	linux-arch@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Frederic Weisbecker <frederic@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, 
+	Jason Baron <jbaron@akamai.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Ard Biesheuvel <ardb@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, 
+	"David S. Miller" <davem@davemloft.net>, Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, 
+	Joel Fernandes <joelagnelf@nvidia.com>, Josh Triplett <josh@joshtriplett.org>, 
+	Boqun Feng <boqun.feng@gmail.com>, Uladzislau Rezki <urezki@gmail.com>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Mel Gorman <mgorman@suse.de>, 
+	Andrew Morton <akpm@linux-foundation.org>, Masahiro Yamada <masahiroy@kernel.org>, 
+	Han Shen <shenhan@google.com>, Rik van Riel <riel@surriel.com>, Jann Horn <jannh@google.com>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Oleg Nesterov <oleg@redhat.com>, 
+	Juri Lelli <juri.lelli@redhat.com>, Clark Williams <williams@redhat.com>, 
+	Yair Podemsky <ypodemsk@redhat.com>, Marcelo Tosatti <mtosatti@redhat.com>, 
+	Daniel Wagner <dwagner@suse.de>, Petr Tesarik <ptesarik@suse.com>
+Content-Type: text/plain; charset="us-ascii"
 
-Needed observability on in field devices can be collected with minimal
-overhead and can be toggled on and off. Event driven telemetry can be
-done with tracepoint BPF programs.
+On Fri, Oct 10, 2025, Valentin Schneider wrote:
+> Later commits will cause objtool to warn about static keys being used in
+> .noinstr sections in order to safely defer instruction patching IPIs
+> targeted at NOHZ_FULL CPUs.
+> 
+> These keys are used in .noinstr code, and can be modified at runtime
+> (/proc/kernel/vmx* write). However it is not expected that they will be
+> flipped during latency-sensitive operations, and thus shouldn't be a source
+> of interference wrt the text patching IPI.
+>
+> Mark it to let objtool know not to warn about it.
 
-The process comm is provided for aggregation across devices and tgid is
-to enable per-process aggregation per device.
+Can you elaborate in the changelog on what will happen if the key is toggle?
+IIUC, smp_text_poke_batch_finish() will force IPIs if noinstr code is being
+patched.  Even just a small footnote like this:
 
-This allows for observing the distribution of such problems in the
-field, to deduce if there are legitimate bugs or if a bump to the limit is
-warranted.
+  Note, smp_text_poke_batch_finish() never defers IPIs if noinstr code is
+  being patched, i.e. this is purely about silencing objtool warnings.
 
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>
-Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Mike Rapoport <rppt@kernel.org>
-Cc: Minchan Kim <minchan@kernel.org>
-Cc: Pedro Falcato <pfalcato@suse.de>
-Signed-off-by: Kalesh Singh <kaleshsingh@google.com>
+to make it clear that there's no bug/race being introduced.
 
----
-
-Changes in v3:
-- capture the mm pointer as the unique identifier and capture
-  the vma_count as well, instead of current task tgid, per Steve
-- Add include/trace/events/vma.h to MEMORY MAPPING section in
-  MAINTAINERS, per Lorenzo
-- rename trace_max_vma_count_exceeded() to
-  trace_mm_insufficient_vma_slots(), since this is a preemptive
-  check, per Lorenzo
-- Fix tools/testing/vma build errors, per Lorenzo
-
- MAINTAINERS                      |  1 +
- include/trace/events/vma.h       | 32 ++++++++++++++++++++++++++++++++
- mm/mmap.c                        |  5 ++++-
- mm/mremap.c                      | 10 ++++++++--
- mm/vma.c                         |  9 +++++++--
- mm/vma_internal.h                |  2 ++
- tools/testing/vma/vma_internal.h |  5 +++++
- 7 files changed, 59 insertions(+), 5 deletions(-)
- create mode 100644 include/trace/events/vma.h
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index aa83e5893e16..d37215a8a829 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -16566,6 +16566,7 @@ S:	Maintained
- W:	http://www.linux-mm.org
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
- F:	include/trace/events/mmap.h
-+F:	include/trace/events/vma.h
- F:	mm/interval_tree.c
- F:	mm/mincore.c
- F:	mm/mlock.c
-diff --git a/include/trace/events/vma.h b/include/trace/events/vma.h
-new file mode 100644
-index 000000000000..4540fa607f66
---- /dev/null
-+++ b/include/trace/events/vma.h
-@@ -0,0 +1,32 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM vma
-+
-+#if !defined(_TRACE_VMA_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_VMA_H
-+
-+#include <linux/tracepoint.h>
-+
-+TRACE_EVENT(mm_insufficient_vma_slots,
-+
-+	TP_PROTO(struct mm_struct *mm),
-+
-+	TP_ARGS(mm),
-+
-+	TP_STRUCT__entry(
-+		__field(void *,	mm)
-+		__field(int,	vma_count)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->mm		= mm;
-+		__entry->vma_count	= mm->vma_count;
-+	),
-+
-+	TP_printk("mm=%p vma_count=%d", __entry->mm, __entry->vma_count)
-+);
-+
-+#endif /*  _TRACE_VMA_H */
-+
-+/* This part must be outside protection */
-+#include <trace/define_trace.h>
-diff --git a/mm/mmap.c b/mm/mmap.c
-index b4eda47b88d8..4035f49ac963 100644
---- a/mm/mmap.c
-+++ b/mm/mmap.c
-@@ -56,6 +56,7 @@
- 
- #define CREATE_TRACE_POINTS
- #include <trace/events/mmap.h>
-+#include <trace/events/vma.h>
- 
- #include "internal.h"
- 
-@@ -374,8 +375,10 @@ unsigned long do_mmap(struct file *file, unsigned long addr,
- 		return -EOVERFLOW;
- 
- 	/* Too many mappings? */
--	if (!vma_count_remaining(mm))
-+	if (!vma_count_remaining(mm)) {
-+		trace_mm_insufficient_vma_slots(mm);
- 		return -ENOMEM;
-+	}
- 
- 	/*
- 	 * addr is returned from get_unmapped_area,
-diff --git a/mm/mremap.c b/mm/mremap.c
-index 14d35d87e89b..a7f440a3737f 100644
---- a/mm/mremap.c
-+++ b/mm/mremap.c
-@@ -30,6 +30,8 @@
- #include <asm/tlb.h>
- #include <asm/pgalloc.h>
- 
-+#include <trace/events/vma.h>
-+
- #include "internal.h"
- 
- /* Classify the kind of remap operation being performed. */
-@@ -1040,8 +1042,10 @@ static unsigned long prep_move_vma(struct vma_remap_struct *vrm)
- 	 * We'd prefer to avoid failure later on in do_munmap:
- 	 * which may split one vma into three before unmapping.
- 	 */
--	if (vma_count_remaining(current->mm) < 4)
-+	if (vma_count_remaining(current->mm) < 4) {
-+		trace_mm_insufficient_vma_slots(current->mm);
- 		return -ENOMEM;
-+	}
- 
- 	if (vma->vm_ops && vma->vm_ops->may_split) {
- 		if (vma->vm_start != old_addr)
-@@ -1817,8 +1821,10 @@ static unsigned long check_mremap_params(struct vma_remap_struct *vrm)
- 	 * the threshold. In other words, is the current map count + 6 at or
- 	 * below the threshold? Otherwise return -ENOMEM here to be more safe.
- 	 */
--	if (vma_count_remaining(current->mm) < 6)
-+	if (vma_count_remaining(current->mm) < 6) {
-+		trace_mm_insufficient_vma_slots(current->mm);
- 		return -ENOMEM;
-+	}
- 
- 	return 0;
- }
-diff --git a/mm/vma.c b/mm/vma.c
-index b35a4607cde4..6d8cef7f4d5f 100644
---- a/mm/vma.c
-+++ b/mm/vma.c
-@@ -592,8 +592,10 @@ __split_vma(struct vma_iterator *vmi, struct vm_area_struct *vma,
- static int split_vma(struct vma_iterator *vmi, struct vm_area_struct *vma,
- 		     unsigned long addr, int new_below)
- {
--	if (!vma_count_remaining(vma->vm_mm))
-+	if (!vma_count_remaining(vma->vm_mm)) {
-+		trace_mm_insufficient_vma_slots(vma->vm_mm);
- 		return -ENOMEM;
-+	}
- 
- 	return __split_vma(vmi, vma, addr, new_below);
- }
-@@ -1346,6 +1348,7 @@ static int vms_gather_munmap_vmas(struct vma_munmap_struct *vms,
- 		 */
- 		if (vms->end < vms->vma->vm_end &&
- 		    !vma_count_remaining(vms->vma->vm_mm)) {
-+			trace_mm_insufficient_vma_slots(vms->vma->vm_mm);
- 			error = -ENOMEM;
- 			goto vma_count_exceeded;
- 		}
-@@ -2797,8 +2800,10 @@ int do_brk_flags(struct vma_iterator *vmi, struct vm_area_struct *vma,
- 	if (!may_expand_vm(mm, vm_flags, len >> PAGE_SHIFT))
- 		return -ENOMEM;
- 
--	if (!vma_count_remaining(mm))
-+	if (!vma_count_remaining(mm)) {
-+		trace_mm_insufficient_vma_slots(mm);
- 		return -ENOMEM;
-+	}
- 
- 	if (security_vm_enough_memory_mm(mm, len >> PAGE_SHIFT))
- 		return -ENOMEM;
-diff --git a/mm/vma_internal.h b/mm/vma_internal.h
-index 2f05735ff190..86823ca6857b 100644
---- a/mm/vma_internal.h
-+++ b/mm/vma_internal.h
-@@ -52,4 +52,6 @@
- 
- #include "internal.h"
- 
-+#include <trace/events/vma.h>
-+
- #endif	/* __MM_VMA_INTERNAL_H */
-diff --git a/tools/testing/vma/vma_internal.h b/tools/testing/vma/vma_internal.h
-index 84760d901656..57e36d82b4c8 100644
---- a/tools/testing/vma/vma_internal.h
-+++ b/tools/testing/vma/vma_internal.h
-@@ -1493,4 +1493,9 @@ static int vma_count_remaining(const struct mm_struct *mm)
- 	return (max_count > vma_count) ? (max_count - vma_count) : 0;
- }
- 
-+/* Stub for trace_mm_insufficient_vma_slots */
-+static inline void trace_mm_insufficient_vma_slots(struct mm_struct *mm)
-+{
-+}
-+
- #endif	/* __MM_VMA_INTERNAL_H */
--- 
-2.51.0.760.g7b8bcc2412-goog
-
+> Reported-by: Josh Poimboeuf <jpoimboe@kernel.org>
+> Signed-off-by: Valentin Schneider <vschneid@redhat.com>
+> ---
+>  arch/x86/kvm/vmx/vmx.c | 11 +++++++++--
+>  1 file changed, 9 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index aa157fe5b7b31..dce2bd7375ec8 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -204,8 +204,15 @@ module_param(pt_mode, int, S_IRUGO);
+>  
+>  struct x86_pmu_lbr __ro_after_init vmx_lbr_caps;
+>  
+> -static DEFINE_STATIC_KEY_FALSE(vmx_l1d_should_flush);
+> -static DEFINE_STATIC_KEY_FALSE(vmx_l1d_flush_cond);
+> +/*
+> + * Both of these static keys end up being used in .noinstr sections, however
+> + * they are only modified:
+> + * - at init
+> + * - from a /proc/kernel/vmx* write
+> + * thus during latency-sensitive operations they should remain stable.
+> + */
+> +static DEFINE_STATIC_KEY_FALSE_NOINSTR(vmx_l1d_should_flush);
+> +static DEFINE_STATIC_KEY_FALSE_NOINSTR(vmx_l1d_flush_cond);
+>  static DEFINE_MUTEX(vmx_l1d_flush_mutex);
+>  
+>  /* Storage for pre module init parameter parsing */
+> -- 
+> 2.51.0
+> 
