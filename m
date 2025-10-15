@@ -1,123 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54F893090FD;
-	Wed, 15 Oct 2025 20:39:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 845ED2475CB;
+	Wed, 15 Oct 2025 21:20:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760560756; cv=none; b=GCzyMo0tPGzTXvHN4/1flzYZ+N522Sh/dLGH173FgBjZImN0s9Ybxc/iEmfqL87cQUjk4HNqAp8hkq8kkCouACSyk8kG0roEHxMgOjNMVO0JGZjS1hlQ+p/9Bado172APrn0Ly8tvawUxYrFTman/ej5bBlUDAkZXUF3nUAU3GA=
+	t=1760563224; cv=none; b=WiLayn16M6kCZX2bqYq9Ms+fWhv2HStqDS/gRHOgqTMnLVifqHqps6c/Vk43JegdEAlKHbDvbmBA+P4kQhzB2NspytotndRFHEvgcgEgHPLppMEkoyXQ8OK9JJserMItKPMz9/i6N3NpDS2qcBceWg2WzrUP4mL1sVJcU5/sp4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760560756; c=relaxed/simple;
-	bh=tVjs23gqUgAWE2MiXamRYt9GT6XjakZVzHOuxPBxOr4=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=tWRAG4vK8IRrQkr+cWUDiVjcocBx3+xyG/B2yujMVumn4eKDoWljT++C4lGFfx6InfyTuk91nXap/Hc5ijpv3mkdu05nY3QXpys+0+Se08FYEHE799OnQ2e7TjNr23q3l/tlWjJiOuLf2odGbK8YqIhruU3ydEbpFy632VrDTko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PNiyQX1K; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PNiyQX1K"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 018F8C116B1;
-	Wed, 15 Oct 2025 20:39:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760560756;
-	bh=tVjs23gqUgAWE2MiXamRYt9GT6XjakZVzHOuxPBxOr4=;
-	h=Date:From:To:Cc:Subject:References:From;
-	b=PNiyQX1KChfAgBcM2t+5mFDcQLmHnsgmwgPnmTzyjYqnydteqldbYk0D/HF5j+ihB
-	 kCsTXyQysyyUFAcpuAd2HTJ5BEyI5DpPOTfv+242qD/W/hCVWSUoWhQzA8Fp8Myd2E
-	 P4v75W/XDqVFgz+o4/fXwkDdGns4TGBf+MU637DvoF7Ge+ywYKOfKo6rOXmjqUaB4z
-	 7uvFNvs1hy7IkW+JkZ94qU7Cl22Ym9hqAOfZpvWVEyHmiBMPCRrDptyE8XY8EGChUg
-	 RVgKethMlEj8g4uQd0GZ3OJ58Nb9sF8J+IrxtWY3644ykWP8P5dpCQyEIBNFyz6ZRa
-	 n8cuPq0E5FrkA==
-Received: from rostedt by gandalf with local (Exim 4.98.2)
-	(envelope-from <rostedt@kernel.org>)
-	id 1v98HM-000000015ws-3fH6;
-	Wed, 15 Oct 2025 16:39:24 -0400
-Message-ID: <20251015203924.731213165@kernel.org>
-User-Agent: quilt/0.68
-Date: Wed, 15 Oct 2025 16:38:46 -0400
-From: Steven Rostedt <rostedt@kernel.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org,
- linux-kbuild@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Arnd Bergmann <arnd@arndb.de>,
- Masahiro Yamada <masahiroy@kernel.org>,
- Nathan Chancellor <nathan@kernel.org>,
- Nicolas Schier <nicolas.schier@linux.dev>,
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
- Catalin Marinas <catalin.marinas@arm.com>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Randy Dunlap <rdunlap@infradead.org>,
- Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: [PATCH v9 4/4] tracing: Add warnings for unused tracepoints for modules
-References: <20251015203842.618059565@kernel.org>
+	s=arc-20240116; t=1760563224; c=relaxed/simple;
+	bh=EOxifxp6BWGJCSPE+t53wdqzeFijrm/u/4LqfvO1BIc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Qqz3AE8HQIYUkff+pvYi8RO6cQ03Ny/w7VZfRHyJbKUT481cPnfNyP6bQseZiED7cLgcmhAHKu0g6Ld9LBpEBA4zapkgkolhdyNWEkvIhVa7xdhw2F5Qi2UoiVD0CVn/Qh1l5/kuy7gl/Fc3PxTExgoNo3x4CESj6F3qz548XBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf16.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id C6D7CB953A;
+	Wed, 15 Oct 2025 21:20:13 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf16.hostedemail.com (Postfix) with ESMTPA id F34E02000E;
+	Wed, 15 Oct 2025 21:20:11 +0000 (UTC)
+Date: Wed, 15 Oct 2025 17:20:20 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] tracing: Allow tracer to add more than 32
+ options
+Message-ID: <20251015172020.5966beaf@gandalf.local.home>
+In-Reply-To: <175918529300.65920.15856373929947126262.stgit@devnote2>
+References: <175918528341.65920.10238038992631012350.stgit@devnote2>
+	<175918529300.65920.15856373929947126262.stgit@devnote2>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: oj795q6u9q9iu85od7rb7oc8eszdpre1
+X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: F34E02000E
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19FhodM+VZGak7x5DFU+TTZTy9PHWLL5AE=
+X-HE-Tag: 1760563211-601402
+X-HE-Meta: U2FsdGVkX19lh7rtuHgALC7BeoYzF4V+Nz1FFo8Nz7c9cuEnyAwiTw9GA4JBwe/+LLvNKlzehfDn/q9I8Ads+fgCFw2qXJWOkRX0qLwyPPOJnYq6INo6ENYYm/idTe9xnBOc4+bxlKZua3OgdpWa+h7KZ/v5ZjjY6nQU8rPUxUfq6lb2XOu3KgT/+LzNg+oKJr+gsWj+wiYm9S8+7JJAsauPjub/p/BsnmVSqH3crR6Dewl7bWqrKz2Z9i/Q7IOXeOPvwVujbkFQ/ixXLMx7irbtbWvcFJwLgO3m+nuTPqbSZiAaDqpnrHa//w06vRToHu7BvS0Lbq/BaXI/rpWJB9d51XT6tH3W
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Tue, 30 Sep 2025 07:34:53 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-If a modules has TRACE_EVENT() but does not use it, add a warning about it
-at build time.
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+> @@ -86,6 +86,11 @@ void __init disable_tracing_selftest(const char *reason)
+>  #define tracing_selftest_disabled	0
+>  #endif
+>  
+> +/* Define TRACE_ITER_* flags. */
+> +#undef C
+> +#define C(a, b) const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
+> +TRACE_FLAGS
+> +
 
-Currently, the build must be made by adding "UT=1" to the make command
-line in order for this to trigger.
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- scripts/Makefile.modfinal   | 7 +++++++
- scripts/tracepoint-update.c | 7 +++++++
- 2 files changed, 14 insertions(+)
 
-diff --git a/scripts/Makefile.modfinal b/scripts/Makefile.modfinal
-index 542ba462ed3e..6f909979af91 100644
---- a/scripts/Makefile.modfinal
-+++ b/scripts/Makefile.modfinal
-@@ -28,6 +28,12 @@ ccflags-remove-y := $(CC_FLAGS_CFI)
- .module-common.o: $(srctree)/scripts/module-common.c FORCE
- 	$(call if_changed_rule,cc_o_c)
- 
-+ifneq ($(WARN_ON_UNUSED_TRACEPOINTS),"")
-+cmd_check_tracepoint = ${objtree}/scripts/tracepoint-update $<;
-+else
-+cmd_check_tracepoint =
-+endif
-+
- quiet_cmd_ld_ko_o = LD [M]  $@
-       cmd_ld_ko_o =							\
- 	$(LD) -r $(KBUILD_LDFLAGS)					\
-@@ -57,6 +63,7 @@ if_changed_except = $(if $(call newer_prereqs_except,$(2))$(cmd-check),      \
- ifdef CONFIG_DEBUG_INFO_BTF_MODULES
- 	+$(if $(newer-prereqs),$(call cmd,btf_ko))
- endif
-+	+$(call cmd,check_tracepoint)
- 
- targets += $(modules:%.o=%.ko) $(modules:%.o=%.mod.o) .module-common.o
- 
-diff --git a/scripts/tracepoint-update.c b/scripts/tracepoint-update.c
-index 6ec30f39d0ad..7e068de9c7f1 100644
---- a/scripts/tracepoint-update.c
-+++ b/scripts/tracepoint-update.c
-@@ -188,6 +188,13 @@ static int process_tracepoints(void *addr, char const *const fname)
- 		}
- 	}
- 
-+	/*
-+	 * Modules may not have either section. But if it has one section,
-+	 * it should have both of them.
-+	 */
-+	if (!check_data_sec && !tracepoint_data_sec)
-+		return 0;
-+
- 	if (!check_data_sec) {
- 		fprintf(stderr,	"no __tracepoint_check in file: %s\n", fname);
- 		return -1;
--- 
-2.51.0
+>  #undef C
+> -#define C(a, b) TRACE_ITER_##a = (1 << TRACE_ITER_##a##_BIT)
+> +#define C(a, b) extern const u64 TRACE_ITER_##a;
+>  
+> -enum trace_iterator_flags { TRACE_FLAGS };
+> +TRACE_FLAGS
+> +#undef C
 
+Why all this work when this could have been simply fixed with a:
+
+-enum trace_iterator_flags { TRACE_FLAGS };
++enum64 trace_iterator_flags { TRACE_FLAGS };
+
+  ?
+
+Not to mention, using const u64 requires saving these numbers in an address
+and referencing them, instead of doing it inlined in text. That is, using
+u64 instead of enum64 is both slower and wastes more memory.
+
+-- Steve
 
