@@ -1,72 +1,71 @@
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2223E14EC73;
-	Wed, 15 Oct 2025 14:37:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79EC0251793;
+	Wed, 15 Oct 2025 16:06:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760539080; cv=none; b=Kq7yhQVeTPlidkxUs6VA/cSCJBnDfydgLxPPb5o/AXOYqmAk9hfVvsxLZO+yEW4gZVDoB6A8hZeX19k9U73rypadyr5VJXiUouVjb35SCSnvivy2hVznj0W14Y4zfFurkg0vw2nqjmPHh1nUXe/qHweejIJY+um0q0fFuogLzc4=
+	t=1760544376; cv=none; b=ILrQ//4u67GSdjd460WTmeF1VWuyLstS8NRJ5JffnZ9YGJMmuoRNxAkXljb1zZQ8BH+WdyoR0GfqnDTc1xG21v/tUqlSXm9b811qiZOLjUxXTt3t5t4qOaC+onuEbnAtzMW0RgWFTia3Qewi2T/kJwBvPAXCGMrtwUEDcc9uCfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760539080; c=relaxed/simple;
-	bh=7+N5SWsjXq7OvvmdSpCwATxCuNTmb8GbyyWKfzzTEsw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bzDrqh9vSStA3qpVDYWwk+INd+9sPsY27eTTYPrwPXbNLWwSHXaUbgZkdEGVjxWys3ZKS0Uxmbb5uagXaSxhqyHESZuZpvLZQK/e/jP2InCxyuNb7zkeqgoFdirC3KMm6dUhsbOKUH+DorvS6WzWRd1DvZc5iIVa/RYiBdPyDpQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf01.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay04.hostedemail.com (Postfix) with ESMTP id B7E6A1A0172;
-	Wed, 15 Oct 2025 14:37:53 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf01.hostedemail.com (Postfix) with ESMTPA id 45CEE6000F;
-	Wed, 15 Oct 2025 14:37:49 +0000 (UTC)
-Date: Wed, 15 Oct 2025 10:37:57 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Shuai Xue <xueshuai@linux.alibaba.com>
-Cc: lukas@wunner.de, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, helgaas@kernel.org,
- ilpo.jarvinen@linux.intel.com, mattc@purestorage.com,
- Jonathan.Cameron@huawei.com, bhelgaas@google.com, tony.luck@intel.com,
- bp@alien8.de, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- oleg@redhat.com, naveen@kernel.org, davem@davemloft.net,
- anil.s.keshavamurthy@intel.com, mark.rutland@arm.com, peterz@infradead.org,
- tianruidong@linux.alibaba.com
-Subject: Re: [PATCH v12 1/3] PCI: trace: Add a generic RAS tracepoint for
- hotplug event
-Message-ID: <20251015103757.3d6f6cf7@gandalf.local.home>
-In-Reply-To: <b6353617-048a-4e12-a1d4-6d1484619927@linux.alibaba.com>
-References: <20251014123159.57764-1-xueshuai@linux.alibaba.com>
-	<20251014123159.57764-2-xueshuai@linux.alibaba.com>
-	<20251014114029.4c59bb1a@gandalf.local.home>
-	<b6353617-048a-4e12-a1d4-6d1484619927@linux.alibaba.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1760544376; c=relaxed/simple;
+	bh=C/N/NtfPmuyxAj5lAzPLaqfB56MOMHHwsLP7fdrBHU8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HlaXJGXS0hPA7iqhT8rknVyD9Mr4qbQ27xH+e8Ts733c3j1obR/cUwFmeiM+MMwWfXQm49yJvdosOVo6TJ56v6EHmo3C1Q+k3/Sc7nioDp/LSQZJ+pketkYkYh0d/SePTCV00eN1H2bWlozFiKV/XBz3wvpV64zo3Bi6XJ86cIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JL42Blju; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JL42Blju"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 461DAC4CEF8;
+	Wed, 15 Oct 2025 16:06:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1760544376;
+	bh=C/N/NtfPmuyxAj5lAzPLaqfB56MOMHHwsLP7fdrBHU8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JL42BljuSYvWrT4+9nK+FJZJ6TDUarvYIdGnoZByI/qGSxbGKjoT2shkuqIdrY2IG
+	 0uxT9+CH0+8LRjWq0Ih5G2gWSVXI+ijQwbe3LBqSXZxvs2pftEUU5VEysUuqAcIG1J
+	 g5IpPcRNkNCwk7SxHeshQ3bHm1XKf1lJ5aFD2piqiPbnppyXhDR6CTT7eIEiPLBRHe
+	 YWnzTMVm2ynjGGYsRmnGli3Y5YIvi0eRy97fcHdO8xOmcBsmGr2Quo1HAo0AXokGOv
+	 EZQv40IQ2PNkDh+bJBhSKisbZjCTtX3yxBFhJHZJ09Rz8bzdcfXO4lIid5dnbItj39
+	 cCVQf9z5FA28Q==
+Date: Wed, 15 Oct 2025 09:06:12 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Jiri Olsa <olsajiri@gmail.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, x86@kernel.org, Yonghong Song <yhs@fb.com>
+Subject: Re: [BUG] no ORC stacktrace from kretprobe.multi bpf program
+Message-ID: <wh4eq2iw3qwiuaivz67ygyd2zvafaqrq7i6eakvbdurrbbrcg5@jjfbagedoybk>
+References: <aObSyt3qOnS_BMcy@krava>
+ <20251013131055.441e7d08@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: fgnor9rjjpcii9s886naip5wzh8wghtr
-X-Rspamd-Server: rspamout05
-X-Rspamd-Queue-Id: 45CEE6000F
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/FTVt6E7UMjnFa3gZkkgvObqEHUxcIBNI=
-X-HE-Tag: 1760539069-379651
-X-HE-Meta: U2FsdGVkX18owMZos1tJOGdmmegpdG3PengPH+NiaoyOZSXWF9nvdJ9nseJ2U0CCiy5P2nJ+7GHWsBkHlDQUpV+kst3thccxO61gYx4lN9Ewvz/zCp18HxJaM6JHuNZ+6t/A/QJFd2B6Vq1LkS2jFUKmnJ3dzwI5a6s2mQJ77mKF8+RoQD07QPbuZFuIcaIjXjJgAWiJwWoXDVx4JecuJ5ffNeIsT/mDnwzs3qqfyK69Al/K/5301vqjf35FEAWgvL0P/+S9mJgyuk5FcFwJ33/KiKG+gEhTWH6T/cshRj0rpoFYOuh1d9Th4NeW/+b8+2bFYsfRK1zhJoOax0yOB+XK99utHzLf
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20251013131055.441e7d08@gandalf.local.home>
 
-On Wed, 15 Oct 2025 14:29:07 +0800
-Shuai Xue <xueshuai@linux.alibaba.com> wrote:
-
-> Hi, Steve,
+On Mon, Oct 13, 2025 at 01:10:55PM -0400, Steven Rostedt wrote:
+> On Wed, 8 Oct 2025 23:08:26 +0200
+> Jiri Olsa <olsajiri@gmail.com> wrote:
 > 
-> Thank you for your suggestion about passing the controller directly to
-> the trace event. I investigated this approach, but unfortunately we
-> cannot implement it due to structural limitations in the PCI hotplug
-> subsystem.
+> > hi,
+> > I'm getting no stacktrace from bpf program attached on kretprobe.multi probe
+> > (which means on top of return fprobe) on x86.
+> > 
+> > I think we need some kind of treatment we do for rethook, AFAICS the ORC unwind
+> > stops on return_to_handler, because the stack and the function itself are not
+> > adjusted for unwind_recover_ret_addr call
+> 
+> Hmm, we do have a way to retrieve the actual return caller from a location
+> for return_to_handler:
+> 
+>   See kernel/trace/fgraph.c: ftrace_graph_get_ret_stack()
+> 
+> Hmm, I think the x86 ORC unwinder needs to use this.
 
-Ah, that makes sense. Perhaps add a comment about this by the TRACE_EVENT()
-so that I don't recommend this again ;-)
+I'm confused, is that not what ftrace_graph_ret_addr() already does?
 
--- Steve
+-- 
+Josh
