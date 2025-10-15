@@ -1,59 +1,60 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 883A92F6176
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 15 Oct 2025 01:13:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B416257AD1
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 15 Oct 2025 01:54:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760490782; cv=none; b=Wdpdqxa5g0LahWOjsm9o9XhGyqtTegxcUjXvWlGy51TyLr43WpoqzBJ5e7QITLhksotwbgDKK0RtCp1Seoax/CPoQ7Yu8OJxoo6e2kk4HeC1umtARV49+bFN892jskZvPm7x6y4jhIkZU/gsfKjsvP6rZ/zPejAUMPs82BgS4/0=
+	t=1760493298; cv=none; b=m0qpBmXDaZbqCoMvOCd2gLHHcYaOPgNrYouUaIvyJ1amNlcQlaiB0b9gtiDePFpZQcv4FZEZgOedIbTtVqAXCHERRksof8REhDq+8fXC9Ra+Pb5T0kzU7EKoDll/tpft7enRoiFQzejr/oIbzu9v2YXe5sRnk+5iqIlYYCCCTcE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760490782; c=relaxed/simple;
-	bh=5W2+85pd06ZV1M+prtFXZf89M0U1ODNJHDrAbYVfZbU=;
+	s=arc-20240116; t=1760493298; c=relaxed/simple;
+	bh=XurOG7TpFv0gfvogsJdszOTmGbj6A3F6k9kfoi2F3GA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KalsxMaqrqdNg5fEF9o6ckM3QkYxFTpA8UpP5OVVv0nXZu/cQoKGzGGhz1j2WkTXwkK3g4m+xGs4noU+WBanIojKzdx7S8OHbULYVTDHLgOKzW21Mk3tPEqpjm3bYgY0PU/HBSqKW5X3lkud0BDdwh8tdPpYlAm6Bdty+kTKd8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FSbdghoN; arc=none smtp.client-ip=209.85.208.44
+	 To:Cc:Content-Type; b=qgv++HytTexxwoyJfkG4nvw/7xa8GOMnNjwu9hipqH8mzh4+PMBMxK1wdeajHqw87yeHw+ZtAvMcd71LeNNihS2prQm/g9ZwJgYi3nYDruJu/ctByhtr4EvTWR6iOe4CLzt4lIMbuskxEecEMgCXL++8JcmPw+3iuwxzAdHjKPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=czvnqr0N; arc=none smtp.client-ip=209.85.128.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FSbdghoN"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-639102bba31so3361857a12.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 14 Oct 2025 18:13:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="czvnqr0N"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-46e29d65728so35671135e9.3
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 14 Oct 2025 18:54:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1760490779; x=1761095579; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1760493292; x=1761098092; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=HIFg9Y651C6jYHMRNt/SIA9hUcF2F84+cqC9exRdD80=;
-        b=FSbdghoNHTUpCFOAMeJqrcZqqJDgr9P1/ErK4bPUmj01c9dLJPOWedDg8DQQnsqpwd
-         Kz8riTAL5TbjEWkDHmsqw9CL922KYh4POKILk3Laraycb9/+0Cf/sg3IbhypxKXorpmb
-         vJ9Lo8QwghHDO0j/vy9nzAO8WvPpwi8BcMLcj4fa60FP8enUP3RgDaN+azHSRTddS3nl
-         Y+coSrkz7GpE+oQl+MIOOtebmgH7Vvpn/FdWjRdlJogrZ+bo+Pt7iWqvSMjfuVU5rzMf
-         +7M2K82tngIJLbhNO3/32pevBDfwO9tfuf9stJhHc/M5R8yresTwewLaiA6aFmNe7sS5
-         li8Q==
+        bh=26KQWOidOOOMncfnnCBb0/0PyMIloM67l5dPnBfFpNI=;
+        b=czvnqr0N+eerJQJje/D9zgReXoCqNulL2VXNWGCfXQVudLbXRhpBBF7YmuXQPPZsX/
+         gwqPz+dRamW8b0IrM7qXvag9sTtTB2Kinrl5LVOlkK0Pd410p1o083PYQyoRp7Hyik5Y
+         6IzUg42K36rOajl5Mo72GBm0excCb2CflRNcpQVCAxGzfeId4zFPyKW9uJG7w5ktjiEl
+         UTBQyVVaNNzheeSZe7o7Z+7c5JNRTT8cT0FEptwWGE/WsANYHPdXXxbuy9IM7NAMw6cX
+         Oy8MR0Snt33xXmbduFw6CcYDhWw5eO2VPXkGnZL0zTdrkDrv6hUWxeXQsmLhBf3RDocf
+         bfrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760490779; x=1761095579;
+        d=1e100.net; s=20230601; t=1760493292; x=1761098092;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=HIFg9Y651C6jYHMRNt/SIA9hUcF2F84+cqC9exRdD80=;
-        b=ZmjwNZIryfJbbYzCFlAbfaHf7CtNr7sLy9jofNKmTyJ1niBvWoHiLAcESSx11Oi/iI
-         Pqdop1tsrs6BUvYm+L970z7TgUlVzLunP9QitjkW4VioGhftbJZqk1W+N8rVuCHTWFRw
-         KnoytDhHk4vGDADaodbGfdLhr+j4tQNLsVmRlzwcjt+7GwBwj1s0shDnCmJqYl2RyjIv
-         F7rd0srp7gbUqp3kZvWJJuPnVABKzPTOfi40N0XdkYL2RDh0hJB54CWhqgYYkk9j6IXG
-         pJQkNhdwZdSvszguFNRSUpILsMlizTh4FMugv9oAq1amnpok2xXDkIjLSngEy3lkdFCr
-         WjOw==
-X-Forwarded-Encrypted: i=1; AJvYcCWS7rYy8rMkyNrdNjGlJ46jKaXIY8zgYisTtiAs6reIKc91sG30faD7EjzPc7vNPSoMYEgnWhEpaf5CKqoRffHHZAg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyMMjlDYFyZYGCWZ0jhmngsAPCTzD3prG3zqQLYOoXl5PfJ6EMM
-	Ef8VREZG+++D+JUuM0UUmuw+vNsT5776h+sXyE3xgkpfNCDYPJqf6bPtVICtcR3x3op84mAVRIy
-	HkNyZouMtGWVgnNvJfz/Th4AcHxp/UZs=
-X-Gm-Gg: ASbGncumxJEBCGVKbofNc88hhRM8RCRcRguY4j78PSUbGg1KFaLltUkbulsoqtYH831
-	4gPYdIPCSh/TVnJ4tQNG9IrWrenS6a/avCMNW+lorAy/ZRzWQ0S2yhGtrf4S8akl4+FEvooeGvL
-	VRqwRzMxUR9BIEqhnJMgHRuSDq0gtCD/E16ZCQBhJF6Mdm/VweJ1Km4bgBgGkbCgi5iJwOipvdd
-	4dC5DOstdGOSzl1a1vYjEZS4Kw+QijQ8u2RlWWPr8tg3yjr
-X-Google-Smtp-Source: AGHT+IEMqjPapD9eRQP/uxVQXUUIw7oKODkqd8+sXPMIUZbAd8hTgbXCVRklJtg/rXMz7OFgPnLe7Y2s5OJF7DIXxLc=
-X-Received: by 2002:a05:6402:13d1:b0:626:4774:2420 with SMTP id
- 4fb4d7f45d1cf-639d5c320c0mr24548232a12.20.1760490778582; Tue, 14 Oct 2025
- 18:12:58 -0700 (PDT)
+        bh=26KQWOidOOOMncfnnCBb0/0PyMIloM67l5dPnBfFpNI=;
+        b=XHYo1RKV/0veyCB96c5yOqJo0JP4okG2r+Vq3bHD8JSkWmvYFk9ZdFTdmgBFE+KZNX
+         UMS08Zb2IWnnIBejToFXtnf4SCc48K1LD150jFKyGkSUdn2f2FVeM4ly452xyNwnSVry
+         MjYxaMeEYQqhfodf6ndZs5zd629W1Q79gMhhLN4gYBnoAACoNjZXLXanMxdf/tqTjitN
+         gXxfcx4MPgv4NwxNRE75qf9+LD7/I/2mFYTSEJsXpgXvPrArbOZfZbB7GXgN/wC0ox5W
+         v1L1Xii2oqXS28MW7Q1THQtE5qgIlP2e2/4hZoxJDwcr5qdoPb6aw4idBaInnk1hxtMi
+         Xd0A==
+X-Forwarded-Encrypted: i=1; AJvYcCWSwYgBNOgsqvcbWatuRM+GOPgEF5jPhR41UEmWk7AmIgKjFYKbRkiKWy7wsJKMsGu4zDaYTdhkAnpp7Me0MmgQtl8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw413wt0QhEnx76zCBbfIPP1/beRVkXEwiEIjoFlEdra2RP5Grl
+	N5Y9sU31vIIKrcN3RwoQH3gKiAHKGIQYVd9po8eWx5YaxhqY+7PvrBnbCwcoJYqxFcr4+c2Xe5v
+	8GVmboQl/qXx9pKIZtL8vEWmgJ5rWlKytliF7
+X-Gm-Gg: ASbGncs2z/ko7OvrogwTWxBrcJSkMt8kI0N9Q6CkECATeN4rsdFEbKeR2NmS6LZtawB
+	NdgdzpyKNVagsv4wMO4fByTwhiV2G8DqgNSTK3MPOgSk0u/cPX/JS9TtLp+FzHXl/8MY445Wn4C
+	e2p8bMCyKDRelgidmDKH53qjG2Mqc/EU3KNpGLZ4IXYEaFPD0waYWC6dNv6ykSIKGvZrcOQF5L5
+	tbu7wwGQsqzct7BaM0ehE3ED9z8mVnhfm3Yr8U3T+rrqjPpI7JDwg6TkUqes5ftiF9s5A6wCHZC
+	Gt0m
+X-Google-Smtp-Source: AGHT+IFwtktUuLWBY0+rVfzsz1di7iWK0c6AtHOqKHIJNThUvRz/7fvIWwgTANA7fSwebNkxx9UvlZXTBs5LRF3356I=
+X-Received: by 2002:a05:600c:529a:b0:46e:4912:d02a with SMTP id
+ 5b1f17b1804b1-46fa9aef4cbmr167355365e9.23.1760493291529; Tue, 14 Oct 2025
+ 18:54:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -66,18 +67,16 @@ References: <20251013131537.1927035-1-dolinux.peng@gmail.com>
  <CAEf4BzaZ=UC9Hx_8gUPmJm-TuYOouK7M9i=5nTxA_3+=H5nEiQ@mail.gmail.com>
  <CAADnVQLC22-RQmjH3F+m3bQKcbEH_i_ukRULnu_dWvtN+2=E-Q@mail.gmail.com>
  <CAErzpmtCxPvWU03fn1+1abeCXf8KfGA+=O+7ZkMpQd-RtpM6UA@mail.gmail.com>
- <CAADnVQ+2JSxb7Uca4hOm7UQjfP48RDTXf=g1a4syLpRjWRx9qg@mail.gmail.com>
- <CAErzpmu0Zjo0+_r-iBWoAOUiqbC9=sJmJDtLtAANVRU9P-pytg@mail.gmail.com> <7f770a27-6ca6-463f-9145-5c795e0b3f40@oracle.com>
-In-Reply-To: <7f770a27-6ca6-463f-9145-5c795e0b3f40@oracle.com>
-From: Donglin Peng <dolinux.peng@gmail.com>
-Date: Wed, 15 Oct 2025 09:12:47 +0800
-X-Gm-Features: AS18NWC2l2vIG6SIpnIJhDffpTLpm2QvUXu3kXYxlJNoEm_ngJOG4oOMkQlG3Ic
-Message-ID: <CAErzpmvKtM5Abb9jKUg4KV0zwOpJL5Yy4nWEnxUpjRFUeeci3Q@mail.gmail.com>
+ <CAADnVQ+2JSxb7Uca4hOm7UQjfP48RDTXf=g1a4syLpRjWRx9qg@mail.gmail.com> <CAErzpmu0Zjo0+_r-iBWoAOUiqbC9=sJmJDtLtAANVRU9P-pytg@mail.gmail.com>
+In-Reply-To: <CAErzpmu0Zjo0+_r-iBWoAOUiqbC9=sJmJDtLtAANVRU9P-pytg@mail.gmail.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Tue, 14 Oct 2025 18:54:40 -0700
+X-Gm-Features: AS18NWCKhuwcHSlUElwUIAzX8T7zdY15gvsdXmPJO09MLBADQKHWSXQwuUBXyho
+Message-ID: <CAADnVQLr0iSzV24Cyis0pconxyhZJKAuw-YQVoahxy-AvdNTvQ@mail.gmail.com>
 Subject: Re: [RFC PATCH v1] btf: Sort BTF types by name and kind to optimize
  btf_find_by_name_kind lookup
-To: Alan Maguire <alan.maguire@oracle.com>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, 
-	Andrii Nakryiko <andrii.nakryiko@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, 
+To: Donglin Peng <dolinux.peng@gmail.com>
+Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, 
 	LKML <linux-kernel@vger.kernel.org>, 
 	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
 	Eduard Zingerman <eddyz87@gmail.com>, Alexei Starovoitov <ast@kernel.org>, Song Liu <song@kernel.org>, 
@@ -86,97 +85,27 @@ Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Oct 14, 2025 at 4:06=E2=80=AFPM Alan Maguire <alan.maguire@oracle.c=
-om> wrote:
+On Mon, Oct 13, 2025 at 9:53=E2=80=AFPM Donglin Peng <dolinux.peng@gmail.co=
+m> wrote:
 >
-> On 14/10/2025 05:53, Donglin Peng wrote:
-> > On Tue, Oct 14, 2025 at 10:48=E2=80=AFAM Alexei Starovoitov
-> > <alexei.starovoitov@gmail.com> wrote:
-> >>
-> >> On Mon, Oct 13, 2025 at 6:54=E2=80=AFPM Donglin Peng <dolinux.peng@gma=
-il.com> wrote:
-> >>>
-> >>> On Tue, Oct 14, 2025 at 8:22=E2=80=AFAM Alexei Starovoitov
-> >>> <alexei.starovoitov@gmail.com> wrote:
-> >>>>
-> >>>> On Mon, Oct 13, 2025 at 5:15=E2=80=AFPM Andrii Nakryiko
-> >>>> <andrii.nakryiko@gmail.com> wrote:
-> >>>>>
-> >>>>> On Mon, Oct 13, 2025 at 4:53=E2=80=AFPM Alexei Starovoitov
-> >>>>> <alexei.starovoitov@gmail.com> wrote:
-> >>>>>>
-> >>>>>> On Mon, Oct 13, 2025 at 4:40=E2=80=AFPM Andrii Nakryiko
-> >>>>>> <andrii.nakryiko@gmail.com> wrote:
-> >>>>>>>
-> >>>>>>> Just a few observations (if we decide to do the sorting of BTF by=
- name
-> >>>>>>> in the kernel):
-> >>>>>>
-> >>>>>> iirc we discussed it in the past and decided to do sorting in paho=
-le
-> >>>>>> and let the kernel verify whether it's sorted or not.
-> >>>>>> Then no extra memory is needed.
-> >>>>>> Or was that idea discarded for some reason?
-> >>>>>
-> >>>>> Don't really remember at this point, tbh. Pre-sorting should work
-> >>>>> (though I'd argue that then we should only sort by name to make thi=
-s
-> >>>>> sorting universally useful, doing linear search over kinds is fast,
-> >>>>> IMO). Pre-sorting won't work for program BTFs, don't know how
-> >>>>> important that is. This indexing on demand approach would be
-> >>>>> universal. =C2=AF\_(=E3=83=84)_/=C2=AF
-> >>>>>
-> >>>>> Overall, paying 300KB for sorted index for vmlinux BTF for cases wh=
-ere
-> >>>>> we repeatedly need this seems ok to me, tbh.
-> >>>>
-> >>>> If pahole sorting works I don't see why consuming even 300k is ok.
-> >>>> kallsyms are sorted during the build too.
-> >>>
-> >>> Thanks. We did discuss pre-sorting in pahole in the threads:
-> >>>
-> >>> https://lore.kernel.org/all/CAADnVQLMHUNE95eBXdy6=3D+gHoFHRsihmQ75GZv=
-Gy-hSuHoaT5A@mail.gmail.com/
-> >>> https://lore.kernel.org/all/CAEf4BzaXHrjoEWmEcvK62bqKuT3de__+juvGctR3=
-=3De8avRWpMQ@mail.gmail.com/
-> >>>
-> >>> However, since that approach depends on newer pahole features and
-> >>> btf_find_by_name_kind is already being called quite frequently, I sug=
-gest
-> >>> we first implement sorting within the kernel, and subsequently add pr=
-e-sorting
-> >>> support in pahole.
-> >>
-> >> and then what? Remove it from the kernel when pahole is newer?
-> >> I'd rather not do this churn in the first place.
-> >
-> > Apologies for the formatting issues in my previous email=E2=80=94sendin=
-g this again
-> >  for clarity.
-> >
-> > Thank you for your feedback. Your concerns are completely valid.
-> >
-> > I=E2=80=99d like to suggest a dual-mechanism approach:
-> > 1. If BTF is generated by a newer pahole (with pre-sorting support), th=
-e
-> >     kernel would use the pre-sorted data directly.
-> > 2. For BTF from older pahole versions, the kernel would handle sorting
-> >     at load time or later.
-> >
-> > This would provide performance benefits immediately while preserving
-> >  backward compatibility. The kernel-side sorting would remain intact
-> > moving forward, avoiding future churn.
-> >
->
-> If you're taking the approach of doing both - which is best I think -
-> I'd suggest it might be helpful to look at the bpf_relocate.c code; it's
-> shared between libbpf and kernel, so you could potentially add shared
-> code to do sorting in libbpf (which pahole would use) and the kernel
-> would use too; this would help ensure the behaviour is identical.
->
-> Maybe for pahole/libbpf sorting could be done via a new BTF dedup()
-> option, since dedup is the time we finalize the BTF representation?
+> I=E2=80=99d like to suggest a dual-mechanism approach:
+> 1. If BTF is generated by a newer pahole (with pre-sorting support), the
+>     kernel would use the pre-sorted data directly.
+> 2. For BTF from older pahole versions, the kernel would handle sorting
+>     at load time or later.
 
-Thanks for the suggestion. I'll look into that.
->
-> Alan
+The problem with 2 is extra memory consumption for narrow
+use case. The "time cat trace" example shows that search
+is in critical path, but I suspect ftrace can do it differently.
+I don't know why it's doing the search so much.
+Everyelse in bpf we don't call it that often.
+So optimizing the search is nice, but not at the expense
+of so much extra memory.
+Hence I don't think 2 is worth doing.
+
+> Regarding the pahole changes: this is now my highest priority. I=E2=80=99=
+ve
+> already incorporated it into my development plan and will begin
+> working on the patches shortly.
+
+let's land pahole changes first.
