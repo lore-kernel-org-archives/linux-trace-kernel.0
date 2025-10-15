@@ -1,88 +1,81 @@
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 845ED2475CB;
-	Wed, 15 Oct 2025 21:20:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14CC531579B;
+	Wed, 15 Oct 2025 23:12:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760563224; cv=none; b=WiLayn16M6kCZX2bqYq9Ms+fWhv2HStqDS/gRHOgqTMnLVifqHqps6c/Vk43JegdEAlKHbDvbmBA+P4kQhzB2NspytotndRFHEvgcgEgHPLppMEkoyXQ8OK9JJserMItKPMz9/i6N3NpDS2qcBceWg2WzrUP4mL1sVJcU5/sp4U=
+	t=1760569945; cv=none; b=bGFhxzP4CAgsbcPQ3RyGJuyOzZIC07FStncfZzG/0o2z061hM6WBhY75vYUnYmcHVl0x7sflAwNO0jbMBj0sLqNCQZvjSNwm+Y6ii8PnsuhpOHq7OWGQT8/S7Dz7B3PFrlqnadwuCld6seUat3HkzeRV26LdHic9ddkfElgZwVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760563224; c=relaxed/simple;
-	bh=EOxifxp6BWGJCSPE+t53wdqzeFijrm/u/4LqfvO1BIc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Qqz3AE8HQIYUkff+pvYi8RO6cQ03Ny/w7VZfRHyJbKUT481cPnfNyP6bQseZiED7cLgcmhAHKu0g6Ld9LBpEBA4zapkgkolhdyNWEkvIhVa7xdhw2F5Qi2UoiVD0CVn/Qh1l5/kuy7gl/Fc3PxTExgoNo3x4CESj6F3qz548XBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf16.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay03.hostedemail.com (Postfix) with ESMTP id C6D7CB953A;
-	Wed, 15 Oct 2025 21:20:13 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf16.hostedemail.com (Postfix) with ESMTPA id F34E02000E;
-	Wed, 15 Oct 2025 21:20:11 +0000 (UTC)
-Date: Wed, 15 Oct 2025 17:20:20 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] tracing: Allow tracer to add more than 32
- options
-Message-ID: <20251015172020.5966beaf@gandalf.local.home>
-In-Reply-To: <175918529300.65920.15856373929947126262.stgit@devnote2>
-References: <175918528341.65920.10238038992631012350.stgit@devnote2>
-	<175918529300.65920.15856373929947126262.stgit@devnote2>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1760569945; c=relaxed/simple;
+	bh=S2Ya2yQzemibr6HZsTuRgiLf/45RF5wC6HtSHNrxObo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U3ep5p3HnIq4u7PG1bphYKHpnLyGDaYK22QZshWxLzqd4ufZBskBgjQKnR9hgWFOALre0pWPuSxTZuVAWJqv3vkJTi2Ogi1UGHf987CLh0IUU2kX8AVDZ09LEqk8kmtOOSVC1agXPD5bGf165GVlHV2HRIspkze3npDLHtw1TBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r742GAJH; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r742GAJH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C785CC4CEFB;
+	Wed, 15 Oct 2025 23:12:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1760569944;
+	bh=S2Ya2yQzemibr6HZsTuRgiLf/45RF5wC6HtSHNrxObo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=r742GAJH0x3PFoSz2u60+EnecSdHVlG5+/hwlpXx6Z5BQ44im3nIWt9VTEQ9RrHwn
+	 7puv4r1qnWrVlFuodBmLjK7eiT2TqkUQW3lmD3p6aQ5+vlKgDXNAcurVfgXZttBqot
+	 SMPtuvJM1yHec/D+6oBfEjcFo0KzDxWf8Jl754O2vQ2ESnK5yvpe/5ZMa5dLbkh+Pw
+	 Q2om1jkn6R57ieEeI7B6xFcbvuTkaVn1Rddm8i/i9m/VAy9UK9mIIRPVR0MUaBygFZ
+	 qg5zLYHCtNMZ35FDOXTBPChiN8Vd4unTG3AdOox09mbGoqEYlWairA0RXfG+i8syQb
+	 qtAUB5O3trU/Q==
+Date: Wed, 15 Oct 2025 16:12:19 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Steven Rostedt <rostedt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-kbuild@vger.kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nicolas Schier <nicolas.schier@linux.dev>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: Re: [PATCH v9 2/4] tracing: Add a tracepoint verification check at
+ build time
+Message-ID: <20251015231219.GB3943617@ax162>
+References: <20251015203842.618059565@kernel.org>
+ <20251015203924.391455037@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: oj795q6u9q9iu85od7rb7oc8eszdpre1
-X-Rspamd-Server: rspamout05
-X-Rspamd-Queue-Id: F34E02000E
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19FhodM+VZGak7x5DFU+TTZTy9PHWLL5AE=
-X-HE-Tag: 1760563211-601402
-X-HE-Meta: U2FsdGVkX19lh7rtuHgALC7BeoYzF4V+Nz1FFo8Nz7c9cuEnyAwiTw9GA4JBwe/+LLvNKlzehfDn/q9I8Ads+fgCFw2qXJWOkRX0qLwyPPOJnYq6INo6ENYYm/idTe9xnBOc4+bxlKZua3OgdpWa+h7KZ/v5ZjjY6nQU8rPUxUfq6lb2XOu3KgT/+LzNg+oKJr+gsWj+wiYm9S8+7JJAsauPjub/p/BsnmVSqH3crR6Dewl7bWqrKz2Z9i/Q7IOXeOPvwVujbkFQ/ixXLMx7irbtbWvcFJwLgO3m+nuTPqbSZiAaDqpnrHa//w06vRToHu7BvS0Lbq/BaXI/rpWJB9d51XT6tH3W
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251015203924.391455037@kernel.org>
 
-On Tue, 30 Sep 2025 07:34:53 +0900
-"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+Hi Steve,
 
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -86,6 +86,11 @@ void __init disable_tracing_selftest(const char *reason)
->  #define tracing_selftest_disabled	0
->  #endif
->  
-> +/* Define TRACE_ITER_* flags. */
-> +#undef C
-> +#define C(a, b) const u64 TRACE_ITER_##a = (1ULL << TRACE_ITER_##a##_BIT);
-> +TRACE_FLAGS
-> +
+The kbuild portions of this seem fine, as they mirror existing patterns.
 
+On Wed, Oct 15, 2025 at 04:38:44PM -0400, Steven Rostedt wrote:
+> diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+> index 8a9a2e732a65..08ca759fb992 100644
+> --- a/include/asm-generic/vmlinux.lds.h
+> +++ b/include/asm-generic/vmlinux.lds.h
+> @@ -1048,6 +1048,7 @@ defined(CONFIG_AUTOFDO_CLANG) || defined(CONFIG_PROPELLER_CLANG)
+>  	*(.no_trim_symbol)						\
+>  	/* ld.bfd warns about .gnu.version* even when not emitted */	\
+>  	*(.gnu.version*)						\
+> +	*(__tracepoint_check)
 
+Please add a trailing slash like the other lines so that one does not
+need to be added when someone else needs to grow this macro (also helps
+with 'git blame').
 
->  #undef C
-> -#define C(a, b) TRACE_ITER_##a = (1 << TRACE_ITER_##a##_BIT)
-> +#define C(a, b) extern const u64 TRACE_ITER_##a;
->  
-> -enum trace_iterator_flags { TRACE_FLAGS };
-> +TRACE_FLAGS
-> +#undef C
-
-Why all this work when this could have been simply fixed with a:
-
--enum trace_iterator_flags { TRACE_FLAGS };
-+enum64 trace_iterator_flags { TRACE_FLAGS };
-
-  ?
-
-Not to mention, using const u64 requires saving these numbers in an address
-and referencing them, instead of doing it inlined in text. That is, using
-u64 instead of enum64 is both slower and wastes more memory.
-
--- Steve
-
+Cheers,
+Nathan
