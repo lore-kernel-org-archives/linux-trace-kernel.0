@@ -1,154 +1,304 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95E1230DECC;
-	Wed, 15 Oct 2025 06:19:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F78326FD84;
+	Wed, 15 Oct 2025 06:29:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760509178; cv=none; b=YNHUel6m4wsLiHYPeqXy6jcUQAyxF5uK2XQXzLHtZZDFT2BZoJ9znRF7Fp0Wb4wPEUvGLmM6kdHupilFVzNm1SU5srOo+ci2QTfGML/0f8FU/4qOZ7coTch3aTRj90xV50NLFUsM8UaXfERxftXwVYLhFixzMVRYinw8ftVOlok=
+	t=1760509762; cv=none; b=qyXtu7osgs3CoZu2OtzhkS1aM3b4IB3IbVtfTH9mzvsV74hD31tOqpTqOWo/Fhn/Tq2y9F3A0X7J3JNheyibHzCpfRTq0b93Ix4ehpRTaCnlyaWcU54nfJ0UfkbMzbbvusRn4youbycnTVZKm3MiQN37AnRs2lG6498Aa+r8sMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760509178; c=relaxed/simple;
-	bh=575+wvXoKm0wSCqMEWqtmPWHwk3ClafWmET/hcBbNmY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Nod2dpBlr2Whw5dkXwygSU2pitwpXaMUfA0FuUKZZ6vjfSfp8sHSQ8FWSQTUZGW/AjL2jb2JuYmu1NwCajwcv7OkDb+MF7jveGP17yJum8rK67cVaGpjFQdCg+5EaRh2ql1Kv/vpPk52HTmYZFPwMe0OLIT9jcAtdw+Jq0/ql14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hsNNLVEz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1760509762; c=relaxed/simple;
+	bh=iezWRS8yvUvdTBT7iwBhic4M/CXdCiQL0UFtWijk8LM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QfTSSCIgp3tq/yy3Lsz9yiKFm2MMpWt/TqDiomaEJmzB/jMY/XsJn1Zc2himZIN4awogEw0ruhdC+UIzB8BLOyqoiNZ0wNieFlOOKKYpdAoCc2tFWdy9O42LTBAkHUIU+CeJw1/bXg6nxV1m673LnsfQ9LTmzIiZ596TW3JWvfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=A0mQOTUw; arc=none smtp.client-ip=115.124.30.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hsNNLVEz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85D25C4CEF8;
-	Wed, 15 Oct 2025 06:19:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760509177;
-	bh=575+wvXoKm0wSCqMEWqtmPWHwk3ClafWmET/hcBbNmY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hsNNLVEzfzWz7dR7//VOQ7HBra/IIKK2TJb+uHsLg9lLGv1xXVYod7dbxtejsTMHb
-	 vvXynatD9q9yBFtQkzQE2SqRJhFB+9NpMD2/LMeADWReV63RNC/ugzjMMtiKOpR9ZI
-	 Z234DnezMu4QVa5hzU7wwUYj1wpxXr9mHrL362hgck6uc8/8PNjzpLMlkVD7Zd5rle
-	 xngjHIYJeT9N//BZB6XWLTT4RYKf71SPeektAn/4kpxT1lUh5GB/oOe1XGfLi2+8+W
-	 astWLyu9y7M06lsXx0eRd/9UU7edQVgQd0fdIaahhK4O3UrrylNkifDDiUgwX2NiEN
-	 bFaD8HCYYaFOw==
-Date: Wed, 15 Oct 2025 11:48:45 +0530
-From: Naveen N Rao <naveen@kernel.org>
-To: Hari Bathini <hbathini@linux.ibm.com>
-Cc: Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, bpf@vger.kernel.org, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Song Liu <songliubraving@fb.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Viktor Malik <vmalik@redhat.com>, live-patching@vger.kernel.org, 
-	Josh Poimboeuf <jpoimboe@kernel.org>, Joe Lawrence <joe.lawrence@redhat.com>, 
-	Jiri Kosina <jikos@kernel.org>, linux-trace-kernel@vger.kernel.org, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Shung-Hsi Yu <shung-hsi.yu@suse.com>
-Subject: Re: [PATCH] powerpc64/bpf: support direct_call on livepatch function
-Message-ID: <nuinyo7o7uniemqqmoboctwrkkwkuv77nt7yk6td6eb3x43hv2@2lukfuvcmcko>
-References: <20251002192755.86441-1-hbathini@linux.ibm.com>
- <amwerofvasp7ssmq3zlrjakqj5aygyrgplcqzweno4ef42tiav@uex2ildqjvx2>
- <17f49a63-eccb-4075-91dd-b1f37aa762c7@linux.ibm.com>
- <unegysw3bihg32od7aham3npsdpm5govboo3uglorwsrjqfqfk@pbyzwwztmqtc>
- <42d72061-3d23-43db-bb02-d5f75333c924@linux.ibm.com>
- <dvvv5cytyak2iquer7d6g57ttum3qcckupyahsqsmvpzfjbyni@wbsr77swnrcl>
- <79946463-4742-4919-9d56-927a0a6f1c7c@linux.ibm.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="A0mQOTUw"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1760509750; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=bbP6wfltIs9nIK3nD5iSabINDJ6NIt6iMczHxBUfYUU=;
+	b=A0mQOTUwa+qs9fLoqAZllb5fY5OEsoEPkaSOzLN/xv43TH7G8795Dq/uYNPDUPK+cPL3OaF4fRm441FYRH96G5M55c5u+qVOFDUo6xKayXvAtXE2h7MWCHeeFN2zv8L79Pu1baEwao7hKZoWcxrRB2T7ZdJpqgmEeoqTDxlCHiI=
+Received: from 30.246.161.241(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WqF7sLp_1760509747 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 15 Oct 2025 14:29:08 +0800
+Message-ID: <b6353617-048a-4e12-a1d4-6d1484619927@linux.alibaba.com>
+Date: Wed, 15 Oct 2025 14:29:07 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <79946463-4742-4919-9d56-927a0a6f1c7c@linux.ibm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v12 1/3] PCI: trace: Add a generic RAS tracepoint for
+ hotplug event
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: lukas@wunner.de, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-edac@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ helgaas@kernel.org, ilpo.jarvinen@linux.intel.com, mattc@purestorage.com,
+ Jonathan.Cameron@huawei.com, bhelgaas@google.com, tony.luck@intel.com,
+ bp@alien8.de, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ oleg@redhat.com, naveen@kernel.org, davem@davemloft.net,
+ anil.s.keshavamurthy@intel.com, mark.rutland@arm.com, peterz@infradead.org,
+ tianruidong@linux.alibaba.com
+References: <20251014123159.57764-1-xueshuai@linux.alibaba.com>
+ <20251014123159.57764-2-xueshuai@linux.alibaba.com>
+ <20251014114029.4c59bb1a@gandalf.local.home>
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <20251014114029.4c59bb1a@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri, Oct 10, 2025 at 12:47:21PM +0530, Hari Bathini wrote:
-> 
-> 
-> On 09/10/25 4:57 pm, Naveen N Rao wrote:
-> > On Thu, Oct 09, 2025 at 11:19:45AM +0530, Hari Bathini wrote:
-> > > 
-> > > 
-> > > On 08/10/25 1:43 pm, Naveen N Rao wrote:
-> > > > On Mon, Oct 06, 2025 at 06:50:20PM +0530, Hari Bathini wrote:
-> > > > > 
-> > > > > 
-> > > > > On 06/10/25 1:22 pm, Naveen N Rao wrote:
-> > > > > > On Fri, Oct 03, 2025 at 12:57:54AM +0530, Hari Bathini wrote:
-> > > > > > > Today, livepatch takes precedence over direct_call. Instead, save the
-> > > > > > > state and make direct_call before handling livepatch.
-> > > > > > 
-> > > > > > If we call into the BPF trampoline first and if we have
-> > > > > > BPF_TRAMP_F_CALL_ORIG set, does this result in the BPF trampoline
-> > > > > > calling the new copy of the live-patched function or the old one?
-> > > > > 
-> > > > > Naveen, calls the new copy of the live-patched function..
-> > > > 
-> > > > Hmm... I'm probably missing something.
-> > > > 
-> > > > With ftrace OOL stubs, what I recall is that BPF trampoline derives the
-> > > > original function address from the OOL stub (which would be associated
-> > > > with the original function, not the livepatch one).
-> > > 
-> > > Trampoline derives the address from LR.
-> > 
-> > Does it? I'm referring to BPF_TRAMP_F_CALL_ORIG handling in
-> > __arch_prepare_bpf_trampoline().
-> 
-> 
-> > LR at BPF trampoline entry points at
-> > the ftrace OOL stub. We recover the "real LR" pointing to the function
-> > being traced from there so that we can call into it from within the BPF
-> > trampoline.
-> 
-> Naveen, from the snippet in livepatch_handler code shared below,
-> the LR at BPF trmapoline entry points at the 'nop' after the call
-> to trampoline with 'bnectrl cr1' in the updated livepatch_handler.
-> 
-> Mimic'ing ftrace OOL branch instruction in livepatch_handler
-> with 'b	1f' (the instruction after nop) to ensure the trmapoline
-> derives the real LR to '1f' and jumps back into the livepatch_handler..
-> 
-> +       /* Jump to the direct_call */
-> +       bnectrl cr1
-> +
-> +       /*
-> +        * The address to jump after direct call is deduced based on ftrace
-> OOL stub sequence.
-> +        * The seemingly insignificant couple of instructions below is to
-> mimic that here to
-> +        * jump back to the livepatch handler code below.
-> +        */
-> +       nop
-> +       b       1f
-> +
-> +       /*
-> +        * Restore the state for livepatching from the livepatch stack.
-> +        * Before that, check if livepatch stack is intact. Use r0 for it.
-> +        */
-> +1:     mtctr   r0
 
-Ah, so you are faking a ftrace OOL stub here. But, won't this mean that 
-bpf_get_func_ip() won't return the function address anymore?
 
-One of the other thoughts I had was if we could stuff the function 
-address into the ftrace OOL stub. I had considered this back when I 
-implemented the OOL stubs, but didn't do it due to the extra memory 
-requirement. However, given the dance we're having to do, I'm now 
-thinking that may make sense and can simplify the code. If we can also 
-hook into livepatch, then we should be able to update the function 
-address in the stub to point to the new address and the trampoline 
-should then "just work" since it already saves/restores the TOC [We may 
-additionally have to update the function IP in _R12, but that would be a 
-minor change overall]
-
-We will still need a way to restore livepatch TOC if the BPF trampoline 
-doesn't itself call into the function, but we may be able to handle that 
-if we change the return address to jump to a stub that restores the TOC 
-from the livepatch stack.
-
+在 2025/10/14 23:40, Steven Rostedt 写道:
+> On Tue, 14 Oct 2025 20:31:57 +0800
+> Shuai Xue <xueshuai@linux.alibaba.com> wrote:
 > 
+>> Hotplug events are critical indicators for analyzing hardware health,
+>> and surprise link downs can significantly impact system performance and
+>> reliability.
+>>
+>> Define a new TRACING_SYSTEM named "pci", add a generic RAS tracepoint
+>> for hotplug event to help health checks. Add enum pci_hotplug_event in
+>> include/uapi/linux/pci.h so applications like rasdaemon can register
+>> tracepoint event handlers for it.
+>>
+>> The following output is generated when a device is hotplugged:
+>>
+>> $ echo 1 > /sys/kernel/debug/tracing/events/pci/pci_hp_event/enable
+>> $ cat /sys/kernel/debug/tracing/trace_pipe
+>>     irq/51-pciehp-88      [001] .....  1311.177459: pci_hp_event: 0000:00:02.0 slot:10, event:CARD_PRESENT
+>>
+>>     irq/51-pciehp-88      [001] .....  1311.177566: pci_hp_event: 0000:00:02.0 slot:10, event:LINK_UP
+>>
+>> Suggested-by: Lukas Wunner <lukas@wunner.de>
+>> Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+>> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+>> Reviewed-by: Lukas Wunner <lukas@wunner.de>
+>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>> ---
+>>   drivers/pci/Makefile              |  3 ++
+>>   drivers/pci/hotplug/pciehp_ctrl.c | 31 ++++++++++++---
+>>   drivers/pci/trace.c               | 11 ++++++
+>>   include/trace/events/pci.h        | 63 +++++++++++++++++++++++++++++++
+>>   include/uapi/linux/pci.h          |  7 ++++
+>>   5 files changed, 109 insertions(+), 6 deletions(-)
+>>   create mode 100644 drivers/pci/trace.c
+>>   create mode 100644 include/trace/events/pci.h
+>>
+>> diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
+>> index 67647f1880fb..58a4e4ea76b0 100644
+>> --- a/drivers/pci/Makefile
+>> +++ b/drivers/pci/Makefile
+>> @@ -45,3 +45,6 @@ obj-y				+= controller/
+>>   obj-y				+= switch/
+>>   
+>>   subdir-ccflags-$(CONFIG_PCI_DEBUG) := -DDEBUG
+>> +
+>> +CFLAGS_trace.o := -I$(src)
+>> +obj-$(CONFIG_TRACING)		+= trace.o
+>> diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
+>> index bcc938d4420f..7805f697a02c 100644
+>> --- a/drivers/pci/hotplug/pciehp_ctrl.c
+>> +++ b/drivers/pci/hotplug/pciehp_ctrl.c
+>> @@ -19,6 +19,7 @@
+>>   #include <linux/types.h>
+>>   #include <linux/pm_runtime.h>
+>>   #include <linux/pci.h>
+>> +#include <trace/events/pci.h>
+>>   
+>>   #include "../pci.h"
+>>   #include "pciehp.h"
+>> @@ -244,12 +245,20 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
+>>   	case ON_STATE:
+>>   		ctrl->state = POWEROFF_STATE;
+>>   		mutex_unlock(&ctrl->state_lock);
+>> -		if (events & PCI_EXP_SLTSTA_DLLSC)
+>> +		if (events & PCI_EXP_SLTSTA_DLLSC) {
+>>   			ctrl_info(ctrl, "Slot(%s): Link Down\n",
+>>   				  slot_name(ctrl));
+>> -		if (events & PCI_EXP_SLTSTA_PDC)
+>> +			trace_pci_hp_event(pci_name(ctrl->pcie->port),
+>> +					   slot_name(ctrl),
+>> +					   PCI_HOTPLUG_LINK_DOWN);
 > 
-> I should probably improve my comments for better readability..
+> I know this is v12 and I don't remember if I suggested this before and you
+> gave me a reason already, but why not simply pass in "ctrl" and have the
+> TRACE_EVENT() denote the names?
+> 
+>> +		}
+>> +		if (events & PCI_EXP_SLTSTA_PDC) {
+>>   			ctrl_info(ctrl, "Slot(%s): Card not present\n",
+>>   				  slot_name(ctrl));
+>> +			trace_pci_hp_event(pci_name(ctrl->pcie->port),
+>> +					   slot_name(ctrl),
+>> +					   PCI_HOTPLUG_CARD_NOT_PRESENT);
+>> +		}
+>>   		pciehp_disable_slot(ctrl, SURPRISE_REMOVAL);
+>>   		break;
+>>   	default:
+>> @@ -269,6 +278,9 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
+>>   					      INDICATOR_NOOP);
+>>   			ctrl_info(ctrl, "Slot(%s): Card not present\n",
+>>   				  slot_name(ctrl));
+>> +			trace_pci_hp_event(pci_name(ctrl->pcie->port),
+>> +					   slot_name(ctrl),
+>> +					   PCI_HOTPLUG_CARD_NOT_PRESENT);
+>>   		}
+>>   		mutex_unlock(&ctrl->state_lock);
+>>   		return;
+>> @@ -281,12 +293,19 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
+>>   	case OFF_STATE:
+>>   		ctrl->state = POWERON_STATE;
+>>   		mutex_unlock(&ctrl->state_lock);
+>> -		if (present)
+>> +		if (present) {
+>>   			ctrl_info(ctrl, "Slot(%s): Card present\n",
+>>   				  slot_name(ctrl));
+>> -		if (link_active)
+>> -			ctrl_info(ctrl, "Slot(%s): Link Up\n",
+>> -				  slot_name(ctrl));
+>> +			trace_pci_hp_event(pci_name(ctrl->pcie->port),
+>> +					   slot_name(ctrl),
+>> +					   PCI_HOTPLUG_CARD_PRESENT);
+>> +		}
+>> +		if (link_active) {
+>> +			ctrl_info(ctrl, "Slot(%s): Link Up\n", slot_name(ctrl));
+>> +			trace_pci_hp_event(pci_name(ctrl->pcie->port),
+>> +					   slot_name(ctrl),
+>> +					   PCI_HOTPLUG_LINK_UP);
+>> +		}
+>>   		ctrl->request_result = pciehp_enable_slot(ctrl);
+>>   		break;
+>>   	default:
+>> diff --git a/drivers/pci/trace.c b/drivers/pci/trace.c
+>> new file mode 100644
+>> index 000000000000..cf11abca8602
+>> --- /dev/null
+>> +++ b/drivers/pci/trace.c
+>> @@ -0,0 +1,11 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +/*
+>> + * Tracepoints for PCI system
+>> + *
+>> + * Copyright (C) 2025 Alibaba Corporation
+>> + */
+>> +
+>> +#include <linux/pci.h>
+>> +
+>> +#define CREATE_TRACE_POINTS
+>> +#include <trace/events/pci.h>
+>> diff --git a/include/trace/events/pci.h b/include/trace/events/pci.h
+>> new file mode 100644
+>> index 000000000000..208609492c06
+>> --- /dev/null
+>> +++ b/include/trace/events/pci.h
+>> @@ -0,0 +1,63 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +#undef TRACE_SYSTEM
+>> +#define TRACE_SYSTEM pci
+>> +
+>> +#if !defined(_TRACE_HW_EVENT_PCI_H) || defined(TRACE_HEADER_MULTI_READ)
+>> +#define _TRACE_HW_EVENT_PCI_H
+>> +
+>> +#include <linux/tracepoint.h>
+>> +
+>> +#define PCI_HOTPLUG_EVENT						\
+>> +	EM(PCI_HOTPLUG_LINK_UP,			"LINK_UP")		\
+>> +	EM(PCI_HOTPLUG_LINK_DOWN,		"LINK_DOWN")		\
+>> +	EM(PCI_HOTPLUG_CARD_PRESENT,		"CARD_PRESENT")		\
+>> +	EMe(PCI_HOTPLUG_CARD_NOT_PRESENT,	"CARD_NOT_PRESENT")
+>> +
+>> +/* Enums require being exported to userspace, for user tool parsing */
+>> +#undef EM
+>> +#undef EMe
+>> +#define EM(a, b)	TRACE_DEFINE_ENUM(a);
+>> +#define EMe(a, b)	TRACE_DEFINE_ENUM(a);
+>> +
+>> +PCI_HOTPLUG_EVENT
+>> +
+>> +/*
+>> + * Now redefine the EM() and EMe() macros to map the enums to the strings
+>> + * that will be printed in the output.
+>> + */
+>> +#undef EM
+>> +#undef EMe
+>> +#define EM(a, b)	{a, b},
+>> +#define EMe(a, b)	{a, b}
+>> +
+>> +TRACE_EVENT(pci_hp_event,
+>> +
+>> +	TP_PROTO(const char *port_name,
+>> +		 const char *slot,
+>> +		 const int event),
+>> +
+>> +	TP_ARGS(port_name, slot, event),
+>> +
+>> +	TP_STRUCT__entry(
+>> +		__string(	port_name,	port_name	)
+>> +		__string(	slot,		slot		)
+>> +		__field(	int,		event	)
+>> +	),
+> 
+> 	TP_PROTO(struct controller *ctrl, int event),
+> 
+> 	TP_ARGS(ctrl, event),
+> 
+> 	TP_STRUCT__entry(
+> 		__string(	port_name,	pci_name(ctrl->pcie->port)	)
+> 		__string(	slot,		slot_name(ctrl)			)
+> 		__field(	int,		event				)
+> 	),
+> 
+> It would move the work out of the calling path.
+> 
+> -- Steve
+> 
 
-Yes, please. I would also split the changes converting some of the hard 
-coded offsets into macros into a separate patch.
+Hi, Steve,
 
-- Naveen
+Thank you for your suggestion about passing the controller directly to
+the trace event. I investigated this approach, but unfortunately we
+cannot implement it due to structural limitations in the PCI hotplug
+subsystem.
 
+The issue is that `struct controller` is not standardized across
+different PCI hotplug drivers. Each driver defines its own version:
+
+- pciehp has its own struct controller
+- cpqphp has a different struct controller
+- ibmphp and shpchp also have their own variants
+
+This leads to naming conflicts. For example, both pciehp and cpqphp
+define a slot_name() function, but with different signatures:
+
+// In pciehp:
+static inline const char *slot_name(struct controller *ctrl)
+{
+     return hotplug_slot_name(&ctrl->hotplug_slot);
+}
+
+// In cpqphp:
+static inline const char *slot_name(struct slot *slot)
+
+Additionally, `struct hotplug_slot` is not a common field across all
+controller variants, making it impossible to have a unified way to
+extract the slot name from a generic controller pointer in the trace
+event.
+
+Since we want these trace events to be generic and usable across all PCI
+hotplug drivers (not just pciehp), we need to pass the already-resolved
+strings rather than driver-specific structures. This ensures
+compatibility and avoids the complexity of handling multiple controller
+types within the trace infrastructure.
+
+I understand this means doing the name resolution in the calling path,
+but it's necessary to maintain a generic interface that works across all
+PCI hotplug implementations.
+
+Best Regards,
+Shuai
