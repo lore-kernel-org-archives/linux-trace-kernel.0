@@ -1,233 +1,173 @@
-Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2091B322DB7
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 15 Oct 2025 11:49:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BADA17597
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 15 Oct 2025 13:16:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760529000; cv=none; b=f5kXORVyJy9HanaIqW/jBA06HgiiZFJlM71LO9MaqBmvfUesbfJ2jGbW15SKK20j0RGuUfQGlLZftPOdZMG0gYXeKlFhm+bYrAlVODdluHz7ojzNDKgmLUlx6+HjumN8NawIWGLymQx8vidHG/vOAohBIO1rcF2bX6rHwChAsfc=
+	t=1760534183; cv=none; b=ZAh4ySsj3kBhQlVxPYOaoV2SHJZwMvR3hDknJkFMNQPp3JlJfoRJZJMf8ZGVbUDdSnmrUMAwvOt6bld1R9hDZPXn7GXJUPy2sdSp2efXydY6LNf6b0vyb1ga2PxT2Z+CE+HcFvaPmYepFpp40qu/+pPs8BnwMXVrdxcgO0QJK6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760529000; c=relaxed/simple;
-	bh=67bPLpk4XtiM2chNuj/NIzxAtVYUBkPeAY7FycKz6x8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HeVWoPQfcVdzuZoZqUteo58fQOlJ6JgSvcvo++YHiiJdREUDh1F7FGIQ+2r8qdlF8ySEJvLlb/FkmhpItMuJnxDtUc+a+9QnIsx0bk4z0bm8DFVGXK5GtHxxo0qiRGcconuYpjGUDzjPflQAdbHbyWHe5QTzP7eiY63uikRsJzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hk/tktpQ; arc=none smtp.client-ip=209.85.215.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1760534183; c=relaxed/simple;
+	bh=M7sveWIwSyElJMftUtieF2H/cZGlYIv8nec0oGZVR9w=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=hSNiG/rDP/PC6IvzQ2WjBvsVa1dQyXl2yV9ZYL/Ke/pkP4I6Pxh8QtWGfxGfa4lbuxV4omYYN1C99iMyEGHIu94L9/HZu2CNbJ3iofQnLoA4pJnb0NX3/Fs4s+yLE9+d5SlJg7smgkgwEGmKxTEpxLYU7dUdPeXPr7qq+GAXKQk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OR0F3Rd1; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hk/tktpQ"
-Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-b555ab7fabaso5944868a12.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 15 Oct 2025 04:49:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1760528998; x=1761133798; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=o7DX/MsjusdVTQDdPxzEiOw94/h8+AXMbc90Y8BQxVw=;
-        b=hk/tktpQXkqqHRT7an5sKJ65tB4T2xXnYJz6ktReFg7+0UR6ndpyr3Ld6K1JnI4YW8
-         dKJchGk1WPnPrIkypO2+GG+DYc3xEW/ALRkMgME9b3YOvmy+M+YvQizzCN3DQTNfNfEt
-         5fNOHtip/toozfFzzNj9TQum3yED16IFUZkMPZvHypHccBb/8vCNKs/C2Rz0cV5j8H/P
-         GIiD+pi8/PuN0httHMaO87M6SPVGw0jnISAoR0+SMWPL7DACV5lmzWmrDh321SDNM1LO
-         fwqtTNda8+643ySqhWjBWJrAyk3R0x63PGj1W6fqIYv9DPHZmFVq4K9YRGazVHRXR3pC
-         D7YQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OR0F3Rd1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1760534180;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yD6dvIl7J8wWJkas/YONpCBWDBu3WvjIWx4zsxh951U=;
+	b=OR0F3Rd18+UXyS/ur6I8fgwRmdEiRYxrMTXOkYqtRytU9ouhAtC8UH26QlGdqvgXFeJppJ
+	IQkA7GCJAB1qGi+Nh5Rb911P4iicIptHyWaEnQca9KHpjMbRHRlqKmjohv4ZhnCUQzkw1f
+	xx1lGccBp0u1AiUu/w0gSwcnXcrbjng=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-515-6O9gqVF3PcivejrzvTaA-w-1; Wed, 15 Oct 2025 09:16:19 -0400
+X-MC-Unique: 6O9gqVF3PcivejrzvTaA-w-1
+X-Mimecast-MFC-AGG-ID: 6O9gqVF3PcivejrzvTaA-w_1760534177
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3ee13baf21dso5281229f8f.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 15 Oct 2025 06:16:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760528998; x=1761133798;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=o7DX/MsjusdVTQDdPxzEiOw94/h8+AXMbc90Y8BQxVw=;
-        b=QslSDyjLPC2itDYXqh53IRehtuWk763+hcaX67lTIR5h3FDpxTDeq3t66NOOmK1yPd
-         lngoFEZYUevbE6oj0rWGTasXApdMWvdr/qC8FNMD4OVkUpSl1T3xNWONlpZlp7eu/s8R
-         0B1ysXVmJn574OnepMRz454r8mkK23cf3yUKF48KFxIsaYB7GKaG6r1nlqHRazwntZKr
-         H8aFsGaTSnsynyfktrOXHWi9flm3BIkTNzuKd9eJkA61fRJVGjCNW8JmQ/pP5NLCur23
-         oMZAdxBs5/7MhIQdaHqbGZeX845W3YtjqDb8MypQFWx1uQpx+9PrchYnx62I+vpCgb9D
-         5V/w==
-X-Forwarded-Encrypted: i=1; AJvYcCVCcDzaQK+mJKMtfPzcGTw5e5S8Us5nzozCU9T5uCpncVtRlrd8vHxwBqeAO6jIkrp8sB3VgfnTnIy89XeZMSOGsMM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzcNAKo3P+gsvzHudnyCTQAwA9gDyipYP2CtpCAqZCKtxhJk7Wg
-	tQwBkKQiatxa4JiJuRyedz2Ao3DNyKnG3jf/i+iAXEbo8HyM294qMUNb/1kTfvvL
-X-Gm-Gg: ASbGncvy5JiCUn6FS7gkYvdQ88abMPbIFibOsPsNMQiaol+3h9XlMKtGxefxYnK78sr
-	kh4tJK1uvWAp0JBXGiajFa/tTxpgUjxBunhtv+sqjcgwwAxcrqbZeR2JQu8iyOIFMgyzzNzqLSs
-	mXkV7MRl15Us/EpUr1jU4KtJRyrbF/nTFyXHsXS8DKJ6XqmLurQocrt2VykCWuAmHv0aLHy+UyR
-	X1pWGEF/KQNFjU6B+y72SszNDdyfPg57j0OPm3L2Vr6WPulkVNJj7ZAv3aoz7RNYSvtZhjHw7HU
-	1TM96XV43JNdA+h80OnGSJiUeVV6wyPFhaijcyCyv8kMky0PGvuUrK7TTqJwWJMoflvqGvmZ+d1
-	jUt/UWScYpP97dcowhBNQINWpeFznl2yk409Xb3q06+5KGFtF1+JjtO3jHqyOfzrY3teb9sN8rQ
-	idSasP5L7y4Vr/+YA=
-X-Google-Smtp-Source: AGHT+IHA7jmacf+2jyZ8effG47uhvpwUPR/qPm49iok5/wykenkm7y4wr4qNXbSUS6lRbQH9DgwwKA==
-X-Received: by 2002:a17:90b:33d1:b0:339:d1f0:c740 with SMTP id 98e67ed59e1d1-33b51149673mr39484383a91.1.1760528998341;
-        Wed, 15 Oct 2025 04:49:58 -0700 (PDT)
-Received: from VM-119-80-tencentos.localdomain ([14.22.11.162])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-33b52a4f8bfsm9632658a91.10.2025.10.15.04.49.55
+        d=1e100.net; s=20230601; t=1760534177; x=1761138977;
+        h=content-transfer-encoding:mime-version:message-id:date:references
+         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yD6dvIl7J8wWJkas/YONpCBWDBu3WvjIWx4zsxh951U=;
+        b=QVTKcZZwD7PoqKf6mKMZ0Ttlmvf95Z32MAaiVrScPV+tzYsxnCx5l8hrmnrNuqHJyk
+         5d5eUGTeun+I/iYjUueB5gtanrlvRRrfw1ikDTS01xjhJHwt5MDj0UajBQOteANES7My
+         FZxnyHadabHQuqe+a+EihiksRavhLSKlhHhQoHQgeUuZWGgocbedqqtHPOfnCzL65nwt
+         6laksOC25dWGjLDkqsnGMkG/ucvtsl4LCCpPzGLW8kdLkSysJsgeuM7vCSwuGlJllmHy
+         LjnglgW8AjBUnVIPejxhEp/5YFKnT+BTHRVj9cKbz3qCY6QD/yRF9NNbO5Bv0Arpku2g
+         g+Jg==
+X-Forwarded-Encrypted: i=1; AJvYcCXNOxY3QTsZV+2tzjX1Tdc4M7rsEQVMrccPv1I1u/7pW7ucPuRo5awAInKACf0HFAyE8/A/hGutvN0qFelpd+CzV9M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzIbQ1YozTquUR943REqavuBgJvOXzotO41ocpABTi2to+Irs2M
+	Vv9pq2+npuWG0t5MqHfSEoEecn/HRHboKEoNBO6DCJdnnChi4Ywxmfp5fcWZptlvZTO6iLYT+oQ
+	yPzekzFSlaaALs6blKhjTucDwjA3AOXOc5ChkUFPBhyrSJ7zZLch8jKPCL3Nz3BMD06zaDLCZZQ
+	==
+X-Gm-Gg: ASbGnctJ4sTcFdJplDa57HGt85AUxlHz0K6BYojVC/0Bu4mQHlmq5Bgo2R9B/gjBIu/
+	in7BwSYDsn8MM6kXZoHGXzqbK2vJkVjb2l00n9HqAZWUlBWCrBVNUESeyRY7PUmYB4/s9VLeFdk
+	10F/7N3NspH6HkF5MQ76CJdHsIIpbvYEtI7bha6F/Y5F7k+5ZvQyfUnN5IUuohY0hSA0eHxpica
+	F18Vf/wmrUxEje6OEri0oawnoU7AUlMQQZStof2ib2s8WZkIMO1JfbpxVtSnaGd0JxDyn3ai7S6
+	twzOzn+jIHG6Y/6fsAJPBeAkvvNvOPUvgfHoOV9AJEJl4f16Sf3H7/tfQV55KeYuu03rDPTNJAI
+	TPX+aeIuy6rHvKkGllRTkqpMfhg==
+X-Received: by 2002:a05:6000:248a:b0:3f2:dc6e:6a89 with SMTP id ffacd0b85a97d-4266e8e4c29mr18416305f8f.57.1760534177088;
+        Wed, 15 Oct 2025 06:16:17 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHcUjf8Yi428dP9FWOn2X364zzJqp12CDvIxSjruyz4UDGZF5I3K12BFelQ7PlgEZWXYUZIhg==
+X-Received: by 2002:a05:6000:248a:b0:3f2:dc6e:6a89 with SMTP id ffacd0b85a97d-4266e8e4c29mr18416272f8f.57.1760534176503;
+        Wed, 15 Oct 2025 06:16:16 -0700 (PDT)
+Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-135-146.abo.bbox.fr. [213.44.135.146])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-426ce57ccb1sm28976327f8f.8.2025.10.15.06.16.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Oct 2025 04:49:57 -0700 (PDT)
-From: Yongliang Gao <leonylgao@gmail.com>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Yongliang Gao <leonylgao@tencent.com>,
-	Huang Cun <cunhuang@tencent.com>
-Subject: [PATCH] trace/pid_list: optimize pid_list->lock contention
-Date: Wed, 15 Oct 2025 19:49:52 +0800
-Message-ID: <20251015114952.4014352-1-leonylgao@gmail.com>
-X-Mailer: git-send-email 2.43.5
+        Wed, 15 Oct 2025 06:16:15 -0700 (PDT)
+From: Valentin Schneider <vschneid@redhat.com>
+To: Juri Lelli <juri.lelli@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, rcu@vger.kernel.org,
+ x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+ loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+ linux-arch@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Thomas
+ Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav
+ Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, "H.
+ Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, Peter
+ Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo
+ <acme@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>, Paolo Bonzini
+ <pbonzini@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Frederic Weisbecker
+ <frederic@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, Jason
+ Baron <jbaron@akamai.com>, Steven Rostedt <rostedt@goodmis.org>, Ard
+ Biesheuvel <ardb@kernel.org>, Sami Tolvanen <samitolvanen@google.com>,
+ "David S. Miller" <davem@davemloft.net>, Neeraj Upadhyay
+ <neeraj.upadhyay@kernel.org>, Joel Fernandes <joelagnelf@nvidia.com>, Josh
+ Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
+ Uladzislau Rezki <urezki@gmail.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Mel Gorman <mgorman@suse.de>, Andrew
+ Morton <akpm@linux-foundation.org>, Masahiro Yamada <masahiroy@kernel.org>,
+ Han Shen <shenhan@google.com>, Rik van Riel <riel@surriel.com>, Jann Horn
+ <jannh@google.com>, Dan Carpenter <dan.carpenter@linaro.org>, Oleg
+ Nesterov <oleg@redhat.com>, Clark
+ Williams <williams@redhat.com>, Yair Podemsky <ypodemsk@redhat.com>,
+ Marcelo Tosatti <mtosatti@redhat.com>, Daniel Wagner <dwagner@suse.de>,
+ Petr Tesarik <ptesarik@suse.com>
+Subject: Re: [PATCH v6 00/29] context_tracking,x86: Defer some IPIs until a
+ user->kernel transition
+In-Reply-To: <xhsmhzf9tld2r.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+References: <20251010153839.151763-1-vschneid@redhat.com>
+ <aO5I2WGtXqSPYFmH@jlelli-thinkpadt14gen4.remote.csb>
+ <xhsmhzf9tld2r.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+Date: Wed, 15 Oct 2025 15:16:13 +0200
+Message-ID: <xhsmhwm4wl2zm.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: Z9Di3cOmTZkKTz7_u5cODT0vGcLa35a2_Ju9dOsCCd0_1760534177
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-From: Yongliang Gao <leonylgao@tencent.com>
+On 14/10/25 17:26, Valentin Schneider wrote:
+> On 14/10/25 14:58, Juri Lelli wrote:
+>>> Noise
+>>> +++++
+>>>
+>>> Xeon E5-2699 system with SMToff, NOHZ_FULL, isolated CPUs.
+>>> RHEL10 userspace.
+>>>
+>>> Workload is using rteval (kernel compilation + hackbench) on housekeepi=
+ng CPUs
+>>> and a dummy stay-in-userspace loop on the isolated CPUs. The main invoc=
+ation is:
+>>>
+>>> $ trace-cmd record -e "ipi_send_cpumask" -f "cpumask & CPUS{$ISOL_CPUS}=
+" \
+>>>                 -e "ipi_send_cpu"     -f "cpu & CPUS{$ISOL_CPUS}" \
+>>>                 rteval --onlyload --loads-cpulist=3D$HK_CPUS \
+>>>                 --hackbench-runlowmem=3DTrue --duration=3D$DURATION
+>>>
+>>> This only records IPIs sent to isolated CPUs, so any event there is int=
+erference
+>>> (with a bit of fuzz at the start/end of the workload when spawning the
+>>> processes). All tests were done with a duration of 6 hours.
+>>>
+>>> v6.17
+>>> o ~5400 IPIs received, so about ~200 interfering IPI per isolated CPU
+>>> o About one interfering IPI just shy of every 2 minutes
+>>>
+>>> v6.17 + patches
+>>> o Zilch!
+>>
+>> Nice. :)
+>>
+>> About performance, can we assume housekeeping CPUs are not affected by
+>> the change (they don't seem to use the trick anyway) or do we want/need
+>> to collect some numbers on them as well just in case (maybe more
+>> throughput oriented)?
+>>
+>
+> So for the text_poke IPI yes, because this is all done through
+> context_tracking which doesn't imply housekeeping CPUs.
+>
+> For the TLB flush faff the HK CPUs get two extra writes per kernel entry
+> cycle (one at entry and one at exit, for that stupid signal) which I expe=
+ct
+> to be noticeable but small-ish. I can definitely go and measure that.
+>
 
-When the system has many cores and task switching is frequent,
-setting set_ftrace_pid can cause frequent pid_list->lock contention
-and high system sys usage.
+On that same Xeon E5-2699 system with the same tuning, the average time
+taken for 300M gettid syscalls on housekeeping CPUs is
+  v6.17:          698.64ns =C2=B1 2.35ns
+  v6.17 + series: 702.60ns =C2=B1 3.43ns
 
-For example, in a vmcore environment with 288 cores, We found 267
-CPUs are in pid_list->lock contention.
+So noticeable (~.6% worse) but not horrible?
 
- #4 [ffffa6226fb4bc70] native_queued_spin_lock_slowpath at ffffffff99cd4b7e
- #5 [ffffa6226fb4bc90] _raw_spin_lock_irqsave at ffffffff99cd3e36
- #6 [ffffa6226fb4bca0] trace_pid_list_is_set at ffffffff99267554
- #7 [ffffa6226fb4bcc0] trace_ignore_this_task at ffffffff9925c288
- #8 [ffffa6226fb4bcd8] ftrace_filter_pid_sched_switch_probe at ffffffff99246efe
- #9 [ffffa6226fb4bcf0] __schedule at ffffffff99ccd161
-
-Signed-off-by: Yongliang Gao <leonylgao@tencent.com>
-Reviewed-by: Huang Cun <cunhuang@tencent.com>
----
- kernel/trace/pid_list.c | 26 +++++++++++++-------------
- kernel/trace/pid_list.h |  2 +-
- 2 files changed, 14 insertions(+), 14 deletions(-)
-
-diff --git a/kernel/trace/pid_list.c b/kernel/trace/pid_list.c
-index 090bb5ea4a19..62082a4f60db 100644
---- a/kernel/trace/pid_list.c
-+++ b/kernel/trace/pid_list.c
-@@ -138,14 +138,14 @@ bool trace_pid_list_is_set(struct trace_pid_list *pid_list, unsigned int pid)
- 	if (pid_split(pid, &upper1, &upper2, &lower) < 0)
- 		return false;
- 
--	raw_spin_lock_irqsave(&pid_list->lock, flags);
-+	read_lock_irqsave(&pid_list->lock, flags);
- 	upper_chunk = pid_list->upper[upper1];
- 	if (upper_chunk) {
- 		lower_chunk = upper_chunk->data[upper2];
- 		if (lower_chunk)
- 			ret = test_bit(lower, lower_chunk->data);
- 	}
--	raw_spin_unlock_irqrestore(&pid_list->lock, flags);
-+	read_unlock_irqrestore(&pid_list->lock, flags);
- 
- 	return ret;
- }
-@@ -177,7 +177,7 @@ int trace_pid_list_set(struct trace_pid_list *pid_list, unsigned int pid)
- 	if (pid_split(pid, &upper1, &upper2, &lower) < 0)
- 		return -EINVAL;
- 
--	raw_spin_lock_irqsave(&pid_list->lock, flags);
-+	write_lock_irqsave(&pid_list->lock, flags);
- 	upper_chunk = pid_list->upper[upper1];
- 	if (!upper_chunk) {
- 		upper_chunk = get_upper_chunk(pid_list);
-@@ -199,7 +199,7 @@ int trace_pid_list_set(struct trace_pid_list *pid_list, unsigned int pid)
- 	set_bit(lower, lower_chunk->data);
- 	ret = 0;
-  out:
--	raw_spin_unlock_irqrestore(&pid_list->lock, flags);
-+	write_unlock_irqrestore(&pid_list->lock, flags);
- 	return ret;
- }
- 
-@@ -229,7 +229,7 @@ int trace_pid_list_clear(struct trace_pid_list *pid_list, unsigned int pid)
- 	if (pid_split(pid, &upper1, &upper2, &lower) < 0)
- 		return -EINVAL;
- 
--	raw_spin_lock_irqsave(&pid_list->lock, flags);
-+	write_lock_irqsave(&pid_list->lock, flags);
- 	upper_chunk = pid_list->upper[upper1];
- 	if (!upper_chunk)
- 		goto out;
-@@ -250,7 +250,7 @@ int trace_pid_list_clear(struct trace_pid_list *pid_list, unsigned int pid)
- 		}
- 	}
-  out:
--	raw_spin_unlock_irqrestore(&pid_list->lock, flags);
-+	write_unlock_irqrestore(&pid_list->lock, flags);
- 	return 0;
- }
- 
-@@ -282,7 +282,7 @@ int trace_pid_list_next(struct trace_pid_list *pid_list, unsigned int pid,
- 	if (pid_split(pid, &upper1, &upper2, &lower) < 0)
- 		return -EINVAL;
- 
--	raw_spin_lock_irqsave(&pid_list->lock, flags);
-+	read_lock_irqsave(&pid_list->lock, flags);
- 	for (; upper1 <= UPPER_MASK; upper1++, upper2 = 0) {
- 		upper_chunk = pid_list->upper[upper1];
- 
-@@ -302,7 +302,7 @@ int trace_pid_list_next(struct trace_pid_list *pid_list, unsigned int pid,
- 	}
- 
-  found:
--	raw_spin_unlock_irqrestore(&pid_list->lock, flags);
-+	read_unlock_irqrestore(&pid_list->lock, flags);
- 	if (upper1 > UPPER_MASK)
- 		return -1;
- 
-@@ -339,10 +339,10 @@ static void pid_list_refill_irq(struct irq_work *iwork)
- 	int lcnt = 0;
- 
-  again:
--	raw_spin_lock(&pid_list->lock);
-+	write_lock(&pid_list->lock);
- 	upper_count = CHUNK_ALLOC - pid_list->free_upper_chunks;
- 	lower_count = CHUNK_ALLOC - pid_list->free_lower_chunks;
--	raw_spin_unlock(&pid_list->lock);
-+	write_unlock(&pid_list->lock);
- 
- 	if (upper_count <= 0 && lower_count <= 0)
- 		return;
-@@ -369,7 +369,7 @@ static void pid_list_refill_irq(struct irq_work *iwork)
- 		lcnt++;
- 	}
- 
--	raw_spin_lock(&pid_list->lock);
-+	write_lock(&pid_list->lock);
- 	if (upper) {
- 		*upper_next = pid_list->upper_list;
- 		pid_list->upper_list = upper;
-@@ -380,7 +380,7 @@ static void pid_list_refill_irq(struct irq_work *iwork)
- 		pid_list->lower_list = lower;
- 		pid_list->free_lower_chunks += lcnt;
- 	}
--	raw_spin_unlock(&pid_list->lock);
-+	write_unlock(&pid_list->lock);
- 
- 	/*
- 	 * On success of allocating all the chunks, both counters
-@@ -418,7 +418,7 @@ struct trace_pid_list *trace_pid_list_alloc(void)
- 
- 	init_irq_work(&pid_list->refill_irqwork, pid_list_refill_irq);
- 
--	raw_spin_lock_init(&pid_list->lock);
-+	rwlock_init(&pid_list->lock);
- 
- 	for (i = 0; i < CHUNK_ALLOC; i++) {
- 		union upper_chunk *chunk;
-diff --git a/kernel/trace/pid_list.h b/kernel/trace/pid_list.h
-index 62e73f1ac85f..da200834f4ad 100644
---- a/kernel/trace/pid_list.h
-+++ b/kernel/trace/pid_list.h
-@@ -76,7 +76,7 @@ union upper_chunk {
- };
- 
- struct trace_pid_list {
--	raw_spinlock_t			lock;
-+	rwlock_t			lock;
- 	struct irq_work			refill_irqwork;
- 	union upper_chunk		*upper[UPPER1_SIZE]; // 1 or 2K in size
- 	union upper_chunk		*upper_list;
--- 
-2.43.5
+>> Thanks,
+>> Juri
 
