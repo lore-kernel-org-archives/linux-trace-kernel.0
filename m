@@ -1,99 +1,116 @@
-Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F01731328A
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 15 Oct 2025 07:25:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C73B0304BBA;
+	Wed, 15 Oct 2025 07:37:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760513140; cv=none; b=gAvOKh6JN/qpBcqqwsMFftDCIk6KUEcSvi/3ScsU2159ZCUcW92eyRoSFmWENWLd38ilHV7Zfv09E4AkyowXzKCR4QCJvszdXAyDsYWQakBOnXpph0HqaVuGInEPlegg4pD0TUC6y1yyMH76LseClbmBxIumxVZWi3KVgZcPcyY=
+	t=1760513846; cv=none; b=ju6EqBgwG1IhddvFXEayJq90848Zseu1azkj76c9eDFENbm418EzFUBPFMMIkMYDxlnO65aCDdJhjT8eRm5yRHfuyQDS/ovE5LHZeyBu+7HBr4bDQtAojeSFK4hmvwN/i1aKD5Mj+ecPscMZSk6CD+vWhlf1qjQJ34ZO9L99SRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760513140; c=relaxed/simple;
-	bh=BYd06zXNWJAWVsC42sA7TNqo7aIoHecPhYgrtsCvFDk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ozIwyZ0Wc6FS9XJLoA8L8c6mOU9NDb3g+LjmxiK/cT7Efgn63I2WCHZSRVLI62exg9G6HVF72l4Z0fMXFZ4W+xw8Nz1+Pr61HJexehKWuF8M3v1yzvXtdIldM03GdaJp3SKZ7pB6GY3EWPTW2CdBdt3rOReVJaqMjNdtA8+6Erw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=avjmYPc9; arc=none smtp.client-ip=91.218.175.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1760513846; c=relaxed/simple;
+	bh=usd1O1gWSARVzS39vvkdNKA/0m34I6mskKXhBcUW4JE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cjTSi33AVhOeDBqS79Ku9N6IvAhEaoCVqUNWtPx68g8b6GVSstyoMp+NsMK9wA5F2f4xHw2+CHHyWUI51Q5kSIqeoqG1MvT6WKP7zmMaCrZcZeje/zAyaGCgh4+pm6f3iepR4iV13zOILDZUn3laTNvu+/1/dVeGfHHvAfzvoxs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=MqmgDj7S; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="avjmYPc9"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1760513126;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qRsEDmLBtMEKaQR4y6sp1pKVNHv635qhRHMthSlRzFQ=;
-	b=avjmYPc9E7j9ny8g+ObpSyXGMAeIAcYXqbTZfumaf4q9CbesrR8jIlqrtVK0uO2rhEq3mU
-	lLs4d3kzKgLppX9K4s2beo4X0UDTx6l3nwpBcUcsGEPC9v1X8OeNxUxnGzJ0Y20QZPEv4W
-	OMbfa7KIThlEeaIVOuT8ov8ffna5qcw=
-From: Menglong Dong <menglong.dong@linux.dev>
-To: Menglong Dong <menglong8.dong@gmail.com>,
- Masami Hiramatsu <mhiramat@kernel.org>
-Cc: rostedt@goodmis.org, mathieu.desnoyers@efficios.com, jiang.biao@linux.dev,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] tracing: fprobe: optimization for entry only case
-Date: Wed, 15 Oct 2025 15:25:18 +0800
-Message-ID: <5930027.DvuYhMxLoT@7950hx>
-In-Reply-To: <20251014235159.fdfc2444582ea15de822c0b4@kernel.org>
-References:
- <20251010033847.31008-1-dongml2@chinatelecom.cn>
- <20251010033847.31008-2-dongml2@chinatelecom.cn>
- <20251014235159.fdfc2444582ea15de822c0b4@kernel.org>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MqmgDj7S"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=K0Byfm25HAm+hkuPU/+MWl6Aww3n7DOCSkjI/zRPF4w=; b=MqmgDj7SwmG2m7iemtBBl9O0WI
+	ICtTPOLnsUcUEE4QyBZjiakIuKfaL+DI/SdBoajINUi8s4JFhUj8jouZ2qRnSmxvH8zv4QrAgQwJz
+	sOml5c8u2hWLB+BaJgIfH8xYKmDE847NLIBewcea/0pgau3GjKmrVc+9OzvXNxsSM/XoMk/dz3nRg
+	exDTpN2rGq5/7FPem/jALj6GOaYzvaUXXbxh0DYGbV0COAW1BETkq/VNK9VRhQESH23SGL/Im0QA3
+	aGidDeS4PVbzj8jqZEoaUBqx0iYkA5zpd+f52FuSEaKjF7v6HxMkp56PwgFA/7wBrC3VGjf5uXwY9
+	VQcd+Z4g==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1v8w4D-0000000A8y5-3wOB;
+	Wed, 15 Oct 2025 07:37:03 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id A4D59300325; Wed, 15 Oct 2025 09:37:01 +0200 (CEST)
+Date: Wed, 15 Oct 2025 09:37:01 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Sasha Levin <sashal@kernel.org>
+Cc: nathan@kernel.org, Matt.Kelly2@boeing.com, akpm@linux-foundation.org,
+	andrew.j.oppelt@boeing.com, anton.ivanov@cambridgegreys.com,
+	ardb@kernel.org, arnd@arndb.de, bhelgaas@google.com, bp@alien8.de,
+	chuck.wolber@boeing.com, dave.hansen@linux.intel.com,
+	dvyukov@google.com, hpa@zytor.com, jinghao7@illinois.edu,
+	johannes@sipsolutions.net, jpoimboe@kernel.org,
+	justinstitt@google.com, kees@kernel.org, kent.overstreet@linux.dev,
+	linux-arch@vger.kernel.org, linux-efi@vger.kernel.org,
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-um@lists.infradead.org,
+	llvm@lists.linux.dev, luto@kernel.org, marinov@illinois.edu,
+	masahiroy@kernel.org, maskray@google.com,
+	mathieu.desnoyers@efficios.com, matthew.l.weber3@boeing.com,
+	mhiramat@kernel.org, mingo@redhat.com, morbo@google.com,
+	ndesaulniers@google.com, oberpar@linux.ibm.com, paulmck@kernel.org,
+	richard@nod.at, rostedt@goodmis.org, samitolvanen@google.com,
+	samuel.sarkisian@boeing.com, steven.h.vanderleest@boeing.com,
+	tglx@linutronix.de, tingxur@illinois.edu, tyxu@illinois.edu,
+	wentaoz5@illinois.edu, x86@kernel.org
+Subject: Re: [RFC PATCH 0/4] Enable Clang's Source-based Code Coverage and
+ MC/DC for x86-64
+Message-ID: <20251015073701.GZ3419281@noisy.programming.kicks-ass.net>
+References: <20250829181007.GA468030@ax162>
+ <20251014232639.673260-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251014232639.673260-1-sashal@kernel.org>
 
-On 2025/10/14 22:51, Masami Hiramatsu wrote:
-> Hi Menglong,
+On Tue, Oct 14, 2025 at 07:26:35PM -0400, Sasha Levin wrote:
+> This series adds support for Clang's Source-based Code Coverage to the
+> Linux kernel, enabling more accurate coverage measurement at the source
+> level compared to gcov. This is particularly valuable for safety-critical
+> use cases (automotive, medical, aerospace) where MC/DC coverage is required
+> for certification.
 > 
-> I remember why I haven't implement this.
+> Changes since previous patchset [1]:
+> - Rebased on v6.18-rc1
+> - Adapted to lib/crypto reorganization (curve25519 exclusion moved to
+>   lib/crypto/Makefile)
+> - Minor correctness fixes throughout the codebase
 > 
-> On Fri, 10 Oct 2025 11:38:46 +0800
-> Menglong Dong <menglong8.dong@gmail.com> wrote:
+> The implementation has been tested with a kernel build using Clang 18+ and
+> boots successfully in a KVM environment with instrumentation enabled.
 > 
-> > +
-> > +static struct ftrace_ops fprobe_ftrace_ops = {
-> > +	.func	= fprobe_ftrace_entry,
-> > +	.flags	= FTRACE_OPS_FL_SAVE_REGS,
+> [1] https://lore.kernel.org/all/20240905043245.1389509-1-wentaoz5@illinois.edu/
 > 
-> Actually, this flag is the problem. This can fail fprobe on architecture
-> which does not support CONFIG_DYNAMIC_FTRACE_WITH_REGS (e.g. arm64, riscv)
+> Wentao Zhang (4):
+>   llvm-cov: add Clang's Source-based Code Coverage support
+>   llvm-cov: add Clang's MC/DC support
+>   x86: disable llvm-cov instrumentation
+>   x86: enable llvm-cov support
 > 
->  * SAVE_REGS - The ftrace_ops wants regs saved at each function called
->  *            and passed to the callback. If this flag is set, but the
->  *            architecture does not support passing regs
->  *            (CONFIG_DYNAMIC_FTRACE_WITH_REGS is not defined), then the
->  *            ftrace_ops will fail to register, unless the next flag
->  *            is set.
-> 
-> fgraph has a special entry code for saving ftrace_regs.
-> So at least we need to fail back to fgraph if arch does not
-> support CONFIG_DYNAMIC_FTRACE_WITH_REGS.
+>  Makefile                          |   9 ++
+>  arch/Kconfig                      |   1 +
+>  arch/x86/Kconfig                  |   2 +
+>  arch/x86/crypto/Makefile          |   1 +
+>  arch/x86/kernel/vmlinux.lds.S     |   2 +
+>  include/asm-generic/vmlinux.lds.h |  36 +++++
+>  kernel/Makefile                   |   1 +
+>  kernel/llvm-cov/Kconfig           | 121 ++++++++++++++
+>  kernel/llvm-cov/Makefile          |   8 +
+>  kernel/llvm-cov/fs.c              | 253 ++++++++++++++++++++++++++++++
+>  kernel/llvm-cov/llvm-cov.h        | 157 ++++++++++++++++++
+>  lib/crypto/Makefile               |   3 +-
+>  scripts/Makefile.lib              |  23 +++
+>  scripts/mod/modpost.c             |   2 +
 
-Ah, I have be working on x86_64 and didn't notice it. You are
-right, we do need fallback if CONFIG_DYNAMIC_FTRACE_WITH_REGS
-not supported. I'll send a V4 later.
+I'm thinking I'm going to NAK this based on the fact that I'm not
+interested in playing file based games. As long as this thing doesn't
+honour noinstr I don't want this near x86.
 
-BTW, is the FTRACE_OPS_FL_SAVE_REGS necessary here? I guess
-not all architectures save the function argument regs in
-fentry_caller() like x86_64, that's why we need it here :/
-
-Thanks!
-Menglong Dong
-
-> 
-> Thank you,
-> 
-> 
-
-
-
-
+And we have kcov support, and gcov and now llvm-cov, surely 3 coverage
+solutions is like 2 too many?
