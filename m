@@ -1,113 +1,110 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EA5C318125;
-	Wed, 15 Oct 2025 09:22:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1F1631815E;
+	Wed, 15 Oct 2025 10:08:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760520147; cv=none; b=H6Avf8kD59oiZXs+O/HehHyTof1GlGChixFH3hrSborJT73Ug0ucFtXKZ2MbrloqA8+I4xa6IZl86zyMkzvWnAnOskHqKuLrX7jNZaj8n2vp7L7zcl9kB+ZYBvFZxp77aAYRYcrbHBExfzJ2zSaB8XKQj5jFNJC6yWrq0OagMfM=
+	t=1760522887; cv=none; b=BEBrgFiwOiNsCg1obH4b+NQnOSXb2eOosAsKoDW9EoaQ0Ywi54Lys82SKIDx4Z1wKDIh73BqQ+voZIE/Lmjk0u1yAbJ2VHsY98yPIjXld0JBYu56Nfncxl12wxoG+3XuioLlTKzE+H8R4O/jYl5OgSou7IXF+acWv0+x0nvZJHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760520147; c=relaxed/simple;
-	bh=T+NkUjHjrIC/rIL+g0Kbk7elL0crIb8dQBvDa7nxczM=;
+	s=arc-20240116; t=1760522887; c=relaxed/simple;
+	bh=tX6dRWPtnSFDvBJeGpVATS0oadDPcur/wTBZZ/4DhfY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J1B/Pq/4tek5Krmqa7gzDmLITvjoBq+ST88hL+ALde32paQc1gJGwhKMG8qLdAXlLeSvY9cOu4nulxQogNKqzOwAPQt9mx04LXYp0VY1QGSGQj1CGvUB27BrKdG2uLvV1YPlNItCdFntGiNI+My+/bRHOPmyTeTikbfsMcb18ac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=gQ7f+QQE; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=SJc4W5C53ZzEyq2iu5cTi/GxEEykE4fp8tL299z/EyhIrAtl2vccBXNdmKjaeNFN/lgghF+yNGbI7C/uCkE9+nMcRk/fK02MS3AoiVmx3MKRYD9nGq3HJznWa7Zds93DgXdhuoRUldn2DxN3LbvrzNNzUI9wmsOMsq7o4fmvwGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fTBpvPOI; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sqvU9ZSB; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gQ7f+QQE"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=RzAJqImAFXPtQRa+izbRdXNFcNgNneDg6snhyJLARfw=; b=gQ7f+QQEXR9jwM/d7euARKANnR
-	Pl7HGvQ+PjKR+DKxcXVQ8jytXdadLRhoUnRTlgSN4/K9dxCX62Fl3/NMSRhDRQk/HYzo40c/lMxEj
-	KqqakksiWddbk34tYahH07XUwoHNm/HXghjo9pRqTiU+VCM7TvkHN1bwreXXHyfFKSmnrPMeAIISD
-	EggtC7w4olWcIPtbJoUGx7ov9ZeuIHu1yT8PioDggiYxXQox92oHXzIdYGA9mG5OMppjdwSS7QPPk
-	x3DROZahohXxPYEnFK2U3AvTMmRGI5jUE9Ratv+s1inESd9fj7C7lM7Darvvzl8HHL0Mr6gAn6pOw
-	pG3rie1A==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v8xha-00000005py6-3tkW;
-	Wed, 15 Oct 2025 09:21:47 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id DFB4630023C; Wed, 15 Oct 2025 11:21:45 +0200 (CEST)
-Date: Wed, 15 Oct 2025 11:21:45 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Chuck Wolber <chuck@wolber.net>
-Cc: Sasha Levin <sashal@kernel.org>, nathan@kernel.org,
-	Matt.Kelly2@boeing.com, akpm@linux-foundation.org,
-	andrew.j.oppelt@boeing.com, anton.ivanov@cambridgegreys.com,
-	ardb@kernel.org, arnd@arndb.de, bhelgaas@google.com, bp@alien8.de,
-	chuck.wolber@boeing.com, dave.hansen@linux.intel.com,
-	dvyukov@google.com, hpa@zytor.com, jinghao7@illinois.edu,
-	johannes@sipsolutions.net, jpoimboe@kernel.org,
-	justinstitt@google.com, kees@kernel.org, kent.overstreet@linux.dev,
-	linux-arch@vger.kernel.org, linux-efi@vger.kernel.org,
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-um@lists.infradead.org,
-	llvm@lists.linux.dev, luto@kernel.org, marinov@illinois.edu,
-	masahiroy@kernel.org, maskray@google.com,
-	mathieu.desnoyers@efficios.com, matthew.l.weber3@boeing.com,
-	mhiramat@kernel.org, mingo@redhat.com, morbo@google.com,
-	ndesaulniers@google.com, oberpar@linux.ibm.com, paulmck@kernel.org,
-	richard@nod.at, rostedt@goodmis.org, samitolvanen@google.com,
-	samuel.sarkisian@boeing.com, steven.h.vanderleest@boeing.com,
-	tglx@linutronix.de, tingxur@illinois.edu, tyxu@illinois.edu,
-	wentaoz5@illinois.edu, x86@kernel.org
-Subject: Re: [RFC PATCH 0/4] Enable Clang's Source-based Code Coverage and
- MC/DC for x86-64
-Message-ID: <20251015092145.GB3419281@noisy.programming.kicks-ass.net>
-References: <20250829181007.GA468030@ax162>
- <20251014232639.673260-1-sashal@kernel.org>
- <20251015073701.GZ3419281@noisy.programming.kicks-ass.net>
- <DDIR4HE5C74G.1U5TA0KDN9O5J@wolber.net>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fTBpvPOI";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sqvU9ZSB"
+Date: Wed, 15 Oct 2025 12:07:55 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1760522877;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=p+olsH6Bix+Xu/kjcbtzJkLw5J+oNjtziXup8TlzvXM=;
+	b=fTBpvPOIi0p0eWg6RlD6AUm4kNQKd4KWfjspEYDpsxq0ImqM1vSnNBBZiZKOcZMSrxQ5gb
+	0DYmtH4FEM6iExQho9pp/SkgizWFXqVROF5NMIu0aqvOdHziOC94UwZssmDnVj+mV7Zo7L
+	yeS12y81kGHt33Xhsf0Qv/f44SxbFg4QYdB/ce5ZgVL+cx75smlCyG5S1oaKlL0BwgAzuk
+	V2aGOZamFRI1zw16AWyNDG1aWpkicicrPUIYHpix2T55HQ9/bLVjpx2EO6hJdfKonWeN9H
+	77caL6k9GxqTrfOyjKwFIHFu1qKEy19eXLXUyzgG83DfwXeQAJBQR2fBeenGQg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1760522877;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=p+olsH6Bix+Xu/kjcbtzJkLw5J+oNjtziXup8TlzvXM=;
+	b=sqvU9ZSBMM96C4GJC3LDWzK5toeE4fkewMZzfiqacGKGcwazyl/6++NHPO2AtEzOCYF5Q9
+	V1uyFpA+hPtyjTDw==
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+To: Gabriele Monaco <gmonaco@redhat.com>
+Cc: Nam Cao <namcao@linutronix.de>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] rv: Add explicit lockdep context for reactors
+Message-ID: <20251015115714-e8e69ed8-a5e4-4139-8d6d-7f2487674e68@linutronix.de>
+References: <20251014-rv-lockdep-v1-0-0b9e51919ea8@linutronix.de>
+ <20251014-rv-lockdep-v1-3-0b9e51919ea8@linutronix.de>
+ <87qzv6szku.fsf@yellow.woof>
+ <20251014094206-80eb5d6c-e4dd-4704-a40a-e2d0461c2185@linutronix.de>
+ <4d0467cf03f4b818a40344b6ec8142582c26a876.camel@redhat.com>
+ <20251014140813-692b312f-67d8-4f11-99f9-73d5d8d34c87@linutronix.de>
+ <ef1503b097e6113cec24f2c20684635fe1337260.camel@redhat.com>
+ <20251014160719-f5a075fa-7cdf-4367-8551-05cf7715a3e7@linutronix.de>
+ <1014118845296ead20fc1f8ae64c4fa610d06bc0.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <DDIR4HE5C74G.1U5TA0KDN9O5J@wolber.net>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1014118845296ead20fc1f8ae64c4fa610d06bc0.camel@redhat.com>
 
-On Wed, Oct 15, 2025 at 08:26:50AM +0000, Chuck Wolber wrote:
+On Tue, Oct 14, 2025 at 04:50:18PM +0200, Gabriele Monaco wrote:
+> On Tue, 2025-10-14 at 16:18 +0200, Thomas Weißschuh wrote:
+> > On Tue, Oct 14, 2025 at 03:45:39PM +0200, Gabriele Monaco wrote:
+> > > On Tue, 2025-10-14 at 14:51 +0200, Thomas Weißschuh wrote:
 
-> > I'm thinking I'm going to NAK this based on the fact that I'm not
-> > interested in playing file based games. As long as this thing doesn't
-> > honour noinstr I don't want this near x86.
-> 
-> I am working on a noinstr patchset that will precede this pachset. As it turns
-> out there are several areas of the kernel (128 that I have found so far) that
-> are missing the noinstr attribute macro.
-> 
-> Example:
-> 
-> kernel/locking/lockdep.c:
-> 	void noinstr lockdep_hardirqs_off(unsigned long ip)
-> include/linux/irqflags.h:
-> 	static inline void lockdep_hardirqs_off(unsigned long ip) { }
-> 
-> The latter version is intended to be optimized out if the kernel is not
-> configured to use this feature. However when the kernel is instrumented for
-> profiling, the stub is not optimized out and ends up in the .text section
-> rather than the .noinstr.text section.
+(...)
 
-Typically we switch to __always_inline when this happens. Ideally
-though, compilers should strive to not be stupid and instrument dead
-code to the point where DCE will fail.
+> > > Leaving for a moment concurrency quirks aside, a monitor that is reacting
+> > > should be done for a while and can be marked as not monitoring before
+> > > reacting, instead of after.
+> > > Trace handlers triggered in the same tracepoints should, in principle, be
+> > > able to tell they are not supposed to run. This at least stands for DA
+> > > monitors, but the same idea could work on LTL as well.
+> > > 
+> > > Of course this gets more complicated in practice, but perhaps suspending
+> > > monitors during reaction can be enough to allow these lockdep calls without
+> > > risking infinite loops.
+> > 
+> > What would it mean to suspend a monitor? In my opinion we shouldn't sacrifice
+> > the accuracy of the monitors or the reliability of the reactors while trying
+> > to mitigate a theoretical problem.
+> 
+> I don't mean to really sacrifice accuracy, DA monitors are disabled after a
+> reaction. This comes from the assumption that the model becomes invalid, so
+> whatever comes after might be meaningless. Monitors restart as soon as we are
+> sure we reached the initial state.
+> In this case, it already doesn't make sense to monitor events triggered by
+> reactors.
+>
+> LTL is a bit more complex, so it might make sense to continue monitoring just
+> after a reaction, but I'm not sure how useful that is.
 
-> > And we have kcov support, and gcov and now llvm-cov, surely 3 coverage
-> > solutions is like 2 too many?
-> 
-> Optimization makes it nearly impossible to correlate GCov results back to
-> actual lines of source. llvm-cov instruments at the AST level which enables
-> precise mapping back to source code regardless of optimization level.
-> 
-> 
-> A detailed rundown on this issue can be found here[1], with the most relevant
-> excerpt reproduced here:
+Ack.
 
-Yes read and understand this, but that doesn't mean you have to have 3
-different kernel interfaces for all of this, right?
+It is still possible to manually re-enable all monitors through sysfs, correct?
+That is needed for the kind of testing I have in mind.
+
+Do we still consider these hypothetical tracepoint loops a blocker for this
+patch series? In my opinion the usage of lockdep does not exacerbate the risk.
+
+
+Thomas
