@@ -1,144 +1,108 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39D68273804
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 15 Oct 2025 03:43:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3E922FF644;
+	Wed, 15 Oct 2025 04:50:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760499835; cv=none; b=u9162RBoIjUjGTFCvqOGB/fTNQ69Yda7wXQtahf0uUyM6lJnK+fL8KWqFATXL2Cz+jWM6erMzO+Ni1R4mG7uLjPEjXKXXGyeHykhKbobPzT1jtClM8bkkdJ6a6XH3og8kflG8RSNSKgu7sFOM6FXQAQnHk/sxFPya8I9SXcOHd8=
+	t=1760503827; cv=none; b=ARDXPixxj9zwVwsLJnc/85qRepQHfsBzVTxxxhFHGxxS0bcfaUwe/j/NWfj33YCSq1I62cmRmpyth05nSKLM83zXRgJBw6fU2Vg90ISKk6ARGeHpCB2a4RQmSlEpi2KIrdpB/u+o7Tz8DTsmU6HlM8DeZu/ofGG67DIyLuSqEbo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760499835; c=relaxed/simple;
-	bh=bs90N2O+OfC6gLko2I5pK5Mj0nzh9Cy2JeQklp9uugI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mGFpswmMsfuTgdbNS6nbKhSUTuIOChQEVQGx+uMWXzrxdvqDVTkOtmnSEbFUA6PfcsoKckFAr1qowL/cOfUZpiAiY4hGDuaCFzEnqyaBeLyyUm1ESgmOmnFp1E/NKwfBIBThVDFpnuJgkudbznObuGmHVu2eh46QskmUHzV13EM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Rkl2QKBo; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1760503827; c=relaxed/simple;
+	bh=1c3Jqm3wVNb92Z5FJcsFkBXhJiXPQVjq/7phEiXgND8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZZ9yIzdHHu4wv5M0WsLdfF9DzVuAjeAfclrQDrgIR1w0poKByAszVhkplde9oBv2Cnor9QtD853Wm9iKoJwZMFZ4WpRJebzSzfr9xMVjO3Xkcfk5v2PDhljjGPhCK8awIhoIdYRxhwGRopk0JNJPmJPYJAy2mlKER5OSGbhlw9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iGTOqGbf; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rkl2QKBo"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-63bea08a326so692959a12.3
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 14 Oct 2025 20:43:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1760499831; x=1761104631; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hfc4SAo3RtJQzNNs5jnSQ+Q9K+JBZBw8RgeC7sKo9ZU=;
-        b=Rkl2QKBo5LalZE7Imy1VpelU9WuhNB0jHrtxDItWoEcR1d+Odt0b6PHzyPw9Ye5zHS
-         nfFBcsySIgcIhYWlB6cwVxjMfVWBf8/fDVV4/5LyiGH/5VHVCWwfwYwDq+OT0I4MY+v5
-         4YdEOk9b/U7SsTBssOSTlJCGT/qmrTweZZZwDQ14W5kngy5lTVs2Erd3PBtfnp12C//u
-         /naHa/CUwM1pMXrew188cLbDMkHXtMOIyz3FYiUW9fMB7N7xkRNJ2mrJhrjxq6S9p9D/
-         En5sLnZK/qFB1ewBWYgn3g3n51loZyXuRjEjcIOI1w4lzpu0x4HNWk9uv4a37SvhnWLo
-         avHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760499831; x=1761104631;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hfc4SAo3RtJQzNNs5jnSQ+Q9K+JBZBw8RgeC7sKo9ZU=;
-        b=oSe0Y7hwWo2ShFSfKenDprhB2tL7j968aIZTkfrRqWQjsPTiyhgdC0v3hU9zRdfPfX
-         EBEsiucx/LJQguVMN6oqA/DSauMkazRwfvMo9JKRG+qedEwSn4Z7naU0LptuSlCjeYIL
-         oFR8aMOzk3y5H8dc5+wGRl+QSxXIvekcsY8HIBrosECFyqZOB6BMEBSfmLYi2FoFL9lO
-         CIHT6Gwrl4Mkce3MtVCIlzgTm/fGEml/Uw+fV0kyCIJWMSowuui6CZ/4rtBZ4mdfqE+U
-         P/I4zYXHPeNhCtnpxWfmonqT6frTbW22beYCMSRwx9wvFl+CYQQNzl2r4Vbe/z4I2FMM
-         jSXA==
-X-Forwarded-Encrypted: i=1; AJvYcCXWLV0LpamWhZhVQ4dV5i0GQbRgqzT94+5MwTsDFr0ZIM7JMfMIC3n2b63vJTHvNWcjc773OJcoclxiFizIhLYCpA8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YygXl9v8OlXR/MZgGofF1VkdpT/BzrRUVf+r/U+tL19TFbYKdvn
-	2OPvM8xXlhaIuiB8NS9YXHBD4/c0NPM2TkMDMKHU+LXGYqeqRy+JWc+QXiu33b5FV7+8evlcjup
-	1OqcGjcfneddHUgrKknL9I9d8gO3cB3I=
-X-Gm-Gg: ASbGnctl5doRBqBnJ8l+r85Yfkgh2Te418EOP+kWw9q+BeuSZZsqDq7i8UDdGcbfLjK
-	5gk/geP4CsptSf88Yz1+O8XqhxXjsY599N3roQnPu1+rNq4RFEiix/D5GwZ+G4dzqk8E57qMqD3
-	madZS8ymHmIKwSBSEGZEcmcMuAdOtsYht8rppfwtf3pd83R/3n1VxqSceUK6oKROLAtTL5EqiZk
-	AjA428mOGeowLPqpSclhlPCvFE=
-X-Google-Smtp-Source: AGHT+IE6TnwD6hq0Re2T7im/kHETcd6MPtGzgcgnLxoxTNSpQ/ViTKt6MEV9EaAHO9G2MXSzT574vzKZUEkEeX96PYA=
-X-Received: by 2002:a05:6402:51d0:b0:62f:be4f:23f9 with SMTP id
- 4fb4d7f45d1cf-639d5c371abmr25287716a12.20.1760499831009; Tue, 14 Oct 2025
- 20:43:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iGTOqGbf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1760503826; x=1792039826;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=1c3Jqm3wVNb92Z5FJcsFkBXhJiXPQVjq/7phEiXgND8=;
+  b=iGTOqGbfxBzeb6KNkXvx1W8hfK+V+Kb50jM/2qZdw+SVpKNm8hvadJys
+   kvjmHm2WqDjEZP5q1lRD1RPPn/32J7/17vtJLCbgBcJBBXnwsQiWplTK8
+   YSiEJ13S/JN7vpdnZnjFCgwH4iwJ2fYeatFTZZBUOWWrYle94k6lOOxpZ
+   Kx+/5BaytbaGq10eCMyubBZrL7fyA+ZF2/ioA3hlD2wtTk4yLmVY7XlJc
+   BGOYIricWwIKXND8VDiaJp6wV4JggRnYZr0jn/8GzOv+sftLwJwrSqrqj
+   KY/xNEXxMQcTyk+bQ+uRB1crnTLxAStwemZb66CehndSnR7g0WmjY+TmP
+   w==;
+X-CSE-ConnectionGUID: dvfOls04RN+gLwMyihhF0Q==
+X-CSE-MsgGUID: 1fFmc6DuQm2bW0cojv7HzA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11582"; a="62378065"
+X-IronPort-AV: E=Sophos;i="6.19,230,1754982000"; 
+   d="scan'208";a="62378065"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2025 21:50:25 -0700
+X-CSE-ConnectionGUID: vTqsBFKDSgWS/FFl8+cgaA==
+X-CSE-MsgGUID: 1H+yDRUmRGWpZov5tgERsg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,230,1754982000"; 
+   d="scan'208";a="181625697"
+Received: from lkp-server02.sh.intel.com (HELO 66d7546c76b2) ([10.239.97.151])
+  by orviesa009.jf.intel.com with ESMTP; 14 Oct 2025 21:50:20 -0700
+Received: from kbuild by 66d7546c76b2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1v8tSr-0003SB-1X;
+	Wed, 15 Oct 2025 04:50:17 +0000
+Date: Wed, 15 Oct 2025 12:49:24 +0800
+From: kernel test robot <lkp@intel.com>
+To: Shuai Xue <xueshuai@linux.alibaba.com>, rostedt@goodmis.org,
+	lukas@wunner.de, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, helgaas@kernel.org,
+	ilpo.jarvinen@linux.intel.com, mattc@purestorage.com,
+	Jonathan.Cameron@huawei.com
+Cc: oe-kbuild-all@lists.linux.dev, bhelgaas@google.com, tony.luck@intel.com,
+	bp@alien8.de, xueshuai@linux.alibaba.com, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, oleg@redhat.com, naveen@kernel.org,
+	davem@davemloft.net, mark.rutland@arm.com, peterz@infradead.org,
+	tianruidong@linux.alibaba.com
+Subject: Re: [PATCH v12 2/3] PCI: trace: Add a RAS tracepoint to monitor link
+ speed changes
+Message-ID: <202510151212.ifOhr1Ak-lkp@intel.com>
+References: <20251014123159.57764-3-xueshuai@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251013131537.1927035-1-dolinux.peng@gmail.com>
- <CAEf4BzbABZPNJL6_rtpEhMmHFdO5pNbFTGzL7sXudqb5qkmjpg@mail.gmail.com>
- <CAADnVQJN7TA-HNSOV3LLEtHTHTNeqWyBWb+-Gwnj0+MLeF73TQ@mail.gmail.com>
- <CAEf4BzaZ=UC9Hx_8gUPmJm-TuYOouK7M9i=5nTxA_3+=H5nEiQ@mail.gmail.com>
- <CAADnVQLC22-RQmjH3F+m3bQKcbEH_i_ukRULnu_dWvtN+2=E-Q@mail.gmail.com>
- <CAErzpmtCxPvWU03fn1+1abeCXf8KfGA+=O+7ZkMpQd-RtpM6UA@mail.gmail.com>
- <CAADnVQ+2JSxb7Uca4hOm7UQjfP48RDTXf=g1a4syLpRjWRx9qg@mail.gmail.com>
- <CAErzpmu0Zjo0+_r-iBWoAOUiqbC9=sJmJDtLtAANVRU9P-pytg@mail.gmail.com> <CAADnVQLr0iSzV24Cyis0pconxyhZJKAuw-YQVoahxy-AvdNTvQ@mail.gmail.com>
-In-Reply-To: <CAADnVQLr0iSzV24Cyis0pconxyhZJKAuw-YQVoahxy-AvdNTvQ@mail.gmail.com>
-From: Donglin Peng <dolinux.peng@gmail.com>
-Date: Wed, 15 Oct 2025 11:43:39 +0800
-X-Gm-Features: AS18NWANkwOTjhB-W70pOiuQNrvHLxvDN7jDGm-MLw9rdBqq6PCmK5-U3JHN08w
-Message-ID: <CAErzpmvdvDFWyKXiqAxZHQTEArCKCPZ1FFqKx99Nwu6CG1sfqQ@mail.gmail.com>
-Subject: Re: [RFC PATCH v1] btf: Sort BTF types by name and kind to optimize
- btf_find_by_name_kind lookup
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Alexei Starovoitov <ast@kernel.org>, Song Liu <song@kernel.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	pengdonglin <pengdonglin@xiaomi.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251014123159.57764-3-xueshuai@linux.alibaba.com>
 
-On Wed, Oct 15, 2025 at 9:54=E2=80=AFAM Alexei Starovoitov
-<alexei.starovoitov@gmail.com> wrote:
->
-> On Mon, Oct 13, 2025 at 9:53=E2=80=AFPM Donglin Peng <dolinux.peng@gmail.=
-com> wrote:
-> >
-> > I=E2=80=99d like to suggest a dual-mechanism approach:
-> > 1. If BTF is generated by a newer pahole (with pre-sorting support), th=
-e
-> >     kernel would use the pre-sorted data directly.
-> > 2. For BTF from older pahole versions, the kernel would handle sorting
-> >     at load time or later.
->
-> The problem with 2 is extra memory consumption for narrow
-> use case. The "time cat trace" example shows that search
-> is in critical path, but I suspect ftrace can do it differently.
-> I don't know why it's doing the search so much.
+Hi Shuai,
 
-Thanks. The reason is that ftrace supports outputting parameters of traced
-functions through funcgraph-args, like this:
+kernel test robot noticed the following build errors:
 
- 0)                    |  vfs_write(file=3D0xffff888102b17380,
-buf=3D0x7ffd1e9faaf7, count=3D0x1, pos=3D0xffffc90006f83ef0) {
- 0)                    |    rw_verify_area(read_write=3D1,
-file=3D0xffff888102b17380, ppos=3D0xffffc90006f83ef0, count=3D0x1) {
- 0)                    |
-security_file_permission(file=3D0xffff888102b17380, mask=3D2) {
- 0)                    |
-selinux_file_permission(file=3D0xffff888102b17380, mask=3D2) {
- 0)   0.111 us    |          avc_policy_seqno();
- 0)   0.380 us    |        }
- 0)   0.585 us    |      }
- 0)   0.782 us    |    }
+[auto build test ERROR on pci/next]
+[also build test ERROR on pci/for-linus linus/master v6.18-rc1 next-20251014]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-which requires obtaining function parameter names and types from BTF.
-However, there is currently no direct mapping from function addresses to
-btf_type index information. Therefore, it first obtains the function name f=
-rom
-the function address, and then searches the BTF file by the function name
-to get the corresponding btf_type.
+url:    https://github.com/intel-lab-lkp/linux/commits/Shuai-Xue/PCI-trace-Add-a-generic-RAS-tracepoint-for-hotplug-event/20251014-203432
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+patch link:    https://lore.kernel.org/r/20251014123159.57764-3-xueshuai%40linux.alibaba.com
+patch subject: [PATCH v12 2/3] PCI: trace: Add a RAS tracepoint to monitor link speed changes
+config: sparc-randconfig-001-20251015 (https://download.01.org/0day-ci/archive/20251015/202510151212.ifOhr1Ak-lkp@intel.com/config)
+compiler: sparc64-linux-gcc (GCC) 8.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251015/202510151212.ifOhr1Ak-lkp@intel.com/reproduce)
 
-> Everyelse in bpf we don't call it that often.
-> So optimizing the search is nice, but not at the expense
-> of so much extra memory.
-> Hence I don't think 2 is worth doing.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202510151212.ifOhr1Ak-lkp@intel.com/
 
-Thanks, I agree.
+All errors (new ones prefixed by >>):
 
->
-> > Regarding the pahole changes: this is now my highest priority. I=E2=80=
-=99ve
-> > already incorporated it into my development plan and will begin
-> > working on the patches shortly.
->
-> let's land pahole changes first.
+   sparc64-linux-ld: drivers/pci/trace.o: in function `trace_raw_output_pcie_link_event':
+   trace.c:(.text+0x1dc): undefined reference to `pci_speed_string'
+>> sparc64-linux-ld: trace.c:(.text+0x1ec): undefined reference to `pci_speed_string'
 
-Understood, thanks
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
