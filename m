@@ -1,71 +1,74 @@
-Received: from esa6.hgst.iphmx.com (esa6.hgst.iphmx.com [216.71.154.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E17DD3233E8;
-	Wed, 15 Oct 2025 10:58:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.71.154.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2091B322DB7
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 15 Oct 2025 11:49:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760525919; cv=none; b=Xf5qSdcaHRUsl3NrmbMGZG1Vyu8Sq9hZOX/ExQ2LPNi+LuWIh+PvUvcVWuB4Gdu36M00rRDpFdYk9CGJba9QlaMed2cOIsHtI7z2oJNGMiGkGTfVU32H9L9z0qap6dGshLKD57/KKsfRKXCM1CU6n29BFSTRMkpjGoYQNc+Mlno=
+	t=1760529000; cv=none; b=f5kXORVyJy9HanaIqW/jBA06HgiiZFJlM71LO9MaqBmvfUesbfJ2jGbW15SKK20j0RGuUfQGlLZftPOdZMG0gYXeKlFhm+bYrAlVODdluHz7ojzNDKgmLUlx6+HjumN8NawIWGLymQx8vidHG/vOAohBIO1rcF2bX6rHwChAsfc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760525919; c=relaxed/simple;
-	bh=2H5LFMNPaYyglNMEHb+f7AgkaPYbc1RUaom07P26U+A=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EP50M9vqCNOPIJQOnUlJKjwdyulw87DwUPP2qZ1DMGnQJ/s96t+8lfaxNNbHoU4ZqL7mO/2Kg4wVjFWezuMCQdV25XDif3hMhygef6CMqX5icJqYFRmQgO1xeSJN6CXkwWkgGX5wIGlKz0sCKq0BIrSSoEiZ3CKvHJ0tedzsN88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=rCG6bhFc; arc=none smtp.client-ip=216.71.154.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
+	s=arc-20240116; t=1760529000; c=relaxed/simple;
+	bh=67bPLpk4XtiM2chNuj/NIzxAtVYUBkPeAY7FycKz6x8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HeVWoPQfcVdzuZoZqUteo58fQOlJ6JgSvcvo++YHiiJdREUDh1F7FGIQ+2r8qdlF8ySEJvLlb/FkmhpItMuJnxDtUc+a+9QnIsx0bk4z0bm8DFVGXK5GtHxxo0qiRGcconuYpjGUDzjPflQAdbHbyWHe5QTzP7eiY63uikRsJzA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hk/tktpQ; arc=none smtp.client-ip=209.85.215.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="rCG6bhFc"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1760525917; x=1792061917;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=2H5LFMNPaYyglNMEHb+f7AgkaPYbc1RUaom07P26U+A=;
-  b=rCG6bhFcA7DW2cU/gAFQy7+iMMLBlaSrpcOzE4l3pVWb/ATVP1szFxXP
-   DmJh+OQRz/xNNoOgmjh7E0B6D7JlmGEwXBePUS7aMGwdJo8TLHgDVwzGu
-   Z/to9Adf7gnGQ3K4PeXY32dZ/5J+siy5PIowW+vPXXx/VeCUtfTNGcH9S
-   HtXeCmnyek4VErsHisfnauVyWROZf+NdKQ9W8R1NNrDqHkuEhx3TH+g8S
-   gU2ujxWOHo5OTITF7bG7ara70dUjX/FdEGuTwMy1Jy87EKyEWXYsjMHJm
-   PvR6s7uq6fBqu721yI5RWGp2i3VaaEwYru6kncadyL11DWTbLgc0qHAev
-   g==;
-X-CSE-ConnectionGUID: FAeD6Hi4Rae0JDcgS6++AQ==
-X-CSE-MsgGUID: OKXP52c2RkqiqSkjqx2xkA==
-X-IronPort-AV: E=Sophos;i="6.19,231,1754928000"; 
-   d="scan'208";a="132935428"
-Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 15 Oct 2025 18:58:37 +0800
-IronPort-SDR: 68ef7e5d_v4mgOAv+euj3JcQIQsuWloXTgmJUG2dtPDUj8kf4Co1Madu
- 9FujGPt8xkSR1Mv5pe6+YIfyO8Zo8HA2S9WQY/g==
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 15 Oct 2025 03:58:37 -0700
-WDCIronportException: Internal
-Received: from unknown (HELO neo.fritz.box) ([10.224.28.35])
-  by uls-op-cesaip02.wdc.com with ESMTP; 15 Oct 2025 03:58:34 -0700
-From: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-To: axboe@kernel.dk
-Cc: chaitanyak@nvidia.com,
-	dlemoal@kernel.org,
-	hare@suse.de,
-	hch@lst.de,
-	john.g.garry@oracle.com,
-	linux-block@vger.kernel.org,
-	linux-btrace@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	martin.petersen@oracle.com,
-	mathieu.desnoyers@efficios.com,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hk/tktpQ"
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-b555ab7fabaso5944868a12.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 15 Oct 2025 04:49:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1760528998; x=1761133798; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=o7DX/MsjusdVTQDdPxzEiOw94/h8+AXMbc90Y8BQxVw=;
+        b=hk/tktpQXkqqHRT7an5sKJ65tB4T2xXnYJz6ktReFg7+0UR6ndpyr3Ld6K1JnI4YW8
+         dKJchGk1WPnPrIkypO2+GG+DYc3xEW/ALRkMgME9b3YOvmy+M+YvQizzCN3DQTNfNfEt
+         5fNOHtip/toozfFzzNj9TQum3yED16IFUZkMPZvHypHccBb/8vCNKs/C2Rz0cV5j8H/P
+         GIiD+pi8/PuN0httHMaO87M6SPVGw0jnISAoR0+SMWPL7DACV5lmzWmrDh321SDNM1LO
+         fwqtTNda8+643ySqhWjBWJrAyk3R0x63PGj1W6fqIYv9DPHZmFVq4K9YRGazVHRXR3pC
+         D7YQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760528998; x=1761133798;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=o7DX/MsjusdVTQDdPxzEiOw94/h8+AXMbc90Y8BQxVw=;
+        b=QslSDyjLPC2itDYXqh53IRehtuWk763+hcaX67lTIR5h3FDpxTDeq3t66NOOmK1yPd
+         lngoFEZYUevbE6oj0rWGTasXApdMWvdr/qC8FNMD4OVkUpSl1T3xNWONlpZlp7eu/s8R
+         0B1ysXVmJn574OnepMRz454r8mkK23cf3yUKF48KFxIsaYB7GKaG6r1nlqHRazwntZKr
+         H8aFsGaTSnsynyfktrOXHWi9flm3BIkTNzuKd9eJkA61fRJVGjCNW8JmQ/pP5NLCur23
+         oMZAdxBs5/7MhIQdaHqbGZeX845W3YtjqDb8MypQFWx1uQpx+9PrchYnx62I+vpCgb9D
+         5V/w==
+X-Forwarded-Encrypted: i=1; AJvYcCVCcDzaQK+mJKMtfPzcGTw5e5S8Us5nzozCU9T5uCpncVtRlrd8vHxwBqeAO6jIkrp8sB3VgfnTnIy89XeZMSOGsMM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzcNAKo3P+gsvzHudnyCTQAwA9gDyipYP2CtpCAqZCKtxhJk7Wg
+	tQwBkKQiatxa4JiJuRyedz2Ao3DNyKnG3jf/i+iAXEbo8HyM294qMUNb/1kTfvvL
+X-Gm-Gg: ASbGncvy5JiCUn6FS7gkYvdQ88abMPbIFibOsPsNMQiaol+3h9XlMKtGxefxYnK78sr
+	kh4tJK1uvWAp0JBXGiajFa/tTxpgUjxBunhtv+sqjcgwwAxcrqbZeR2JQu8iyOIFMgyzzNzqLSs
+	mXkV7MRl15Us/EpUr1jU4KtJRyrbF/nTFyXHsXS8DKJ6XqmLurQocrt2VykCWuAmHv0aLHy+UyR
+	X1pWGEF/KQNFjU6B+y72SszNDdyfPg57j0OPm3L2Vr6WPulkVNJj7ZAv3aoz7RNYSvtZhjHw7HU
+	1TM96XV43JNdA+h80OnGSJiUeVV6wyPFhaijcyCyv8kMky0PGvuUrK7TTqJwWJMoflvqGvmZ+d1
+	jUt/UWScYpP97dcowhBNQINWpeFznl2yk409Xb3q06+5KGFtF1+JjtO3jHqyOfzrY3teb9sN8rQ
+	idSasP5L7y4Vr/+YA=
+X-Google-Smtp-Source: AGHT+IHA7jmacf+2jyZ8effG47uhvpwUPR/qPm49iok5/wykenkm7y4wr4qNXbSUS6lRbQH9DgwwKA==
+X-Received: by 2002:a17:90b:33d1:b0:339:d1f0:c740 with SMTP id 98e67ed59e1d1-33b51149673mr39484383a91.1.1760528998341;
+        Wed, 15 Oct 2025 04:49:58 -0700 (PDT)
+Received: from VM-119-80-tencentos.localdomain ([14.22.11.162])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-33b52a4f8bfsm9632658a91.10.2025.10.15.04.49.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Oct 2025 04:49:57 -0700 (PDT)
+From: Yongliang Gao <leonylgao@gmail.com>
+To: rostedt@goodmis.org,
 	mhiramat@kernel.org,
-	naohiro.aota@wdc.com,
-	rostedt@goodmis.org,
-	shinichiro.kawasaki@wdc.com,
-	Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Subject: [PATCH blktrace v3 20/20] blktrace: call BLKTRACESETUP2 ioctl per default to setup a trace
-Date: Wed, 15 Oct 2025 12:56:58 +0200
-Message-ID: <20251015105658.527262-21-johannes.thumshirn@wdc.com>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20251015105658.527262-1-johannes.thumshirn@wdc.com>
-References: <20251015105658.527262-1-johannes.thumshirn@wdc.com>
+	mathieu.desnoyers@efficios.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Yongliang Gao <leonylgao@tencent.com>,
+	Huang Cun <cunhuang@tencent.com>
+Subject: [PATCH] trace/pid_list: optimize pid_list->lock contention
+Date: Wed, 15 Oct 2025 19:49:52 +0800
+Message-ID: <20251015114952.4014352-1-leonylgao@gmail.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -74,79 +77,157 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Call BLKTRACESETUP2 ioctl per default and if the kernel does not support
-this ioctl because it is too old, fall back to calling BLKTRACESETUP.
+From: Yongliang Gao <leonylgao@tencent.com>
 
-Signed-off-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+When the system has many cores and task switching is frequent,
+setting set_ftrace_pid can cause frequent pid_list->lock contention
+and high system sys usage.
+
+For example, in a vmcore environment with 288 cores, We found 267
+CPUs are in pid_list->lock contention.
+
+ #4 [ffffa6226fb4bc70] native_queued_spin_lock_slowpath at ffffffff99cd4b7e
+ #5 [ffffa6226fb4bc90] _raw_spin_lock_irqsave at ffffffff99cd3e36
+ #6 [ffffa6226fb4bca0] trace_pid_list_is_set at ffffffff99267554
+ #7 [ffffa6226fb4bcc0] trace_ignore_this_task at ffffffff9925c288
+ #8 [ffffa6226fb4bcd8] ftrace_filter_pid_sched_switch_probe at ffffffff99246efe
+ #9 [ffffa6226fb4bcf0] __schedule at ffffffff99ccd161
+
+Signed-off-by: Yongliang Gao <leonylgao@tencent.com>
+Reviewed-by: Huang Cun <cunhuang@tencent.com>
 ---
- blktrace.c | 40 ++++++++++++++++++++++++++++++++++++----
- 1 file changed, 36 insertions(+), 4 deletions(-)
+ kernel/trace/pid_list.c | 26 +++++++++++++-------------
+ kernel/trace/pid_list.h |  2 +-
+ 2 files changed, 14 insertions(+), 14 deletions(-)
 
-diff --git a/blktrace.c b/blktrace.c
-index 038b2cb..72562fd 100644
---- a/blktrace.c
-+++ b/blktrace.c
-@@ -279,7 +279,7 @@ static int max_cpus;
- static int ncpus;
- static cpu_set_t *online_cpus;
- static int pagesize;
--static int act_mask = ~0U;
-+static unsigned long long act_mask = ~0U;
- static int kill_running_trace;
- static int stop_watch;
- static int piped_output;
-@@ -1067,6 +1067,36 @@ static void close_client_connections(void)
+diff --git a/kernel/trace/pid_list.c b/kernel/trace/pid_list.c
+index 090bb5ea4a19..62082a4f60db 100644
+--- a/kernel/trace/pid_list.c
++++ b/kernel/trace/pid_list.c
+@@ -138,14 +138,14 @@ bool trace_pid_list_is_set(struct trace_pid_list *pid_list, unsigned int pid)
+ 	if (pid_split(pid, &upper1, &upper2, &lower) < 0)
+ 		return false;
+ 
+-	raw_spin_lock_irqsave(&pid_list->lock, flags);
++	read_lock_irqsave(&pid_list->lock, flags);
+ 	upper_chunk = pid_list->upper[upper1];
+ 	if (upper_chunk) {
+ 		lower_chunk = upper_chunk->data[upper2];
+ 		if (lower_chunk)
+ 			ret = test_bit(lower, lower_chunk->data);
  	}
+-	raw_spin_unlock_irqrestore(&pid_list->lock, flags);
++	read_unlock_irqrestore(&pid_list->lock, flags);
+ 
+ 	return ret;
+ }
+@@ -177,7 +177,7 @@ int trace_pid_list_set(struct trace_pid_list *pid_list, unsigned int pid)
+ 	if (pid_split(pid, &upper1, &upper2, &lower) < 0)
+ 		return -EINVAL;
+ 
+-	raw_spin_lock_irqsave(&pid_list->lock, flags);
++	write_lock_irqsave(&pid_list->lock, flags);
+ 	upper_chunk = pid_list->upper[upper1];
+ 	if (!upper_chunk) {
+ 		upper_chunk = get_upper_chunk(pid_list);
+@@ -199,7 +199,7 @@ int trace_pid_list_set(struct trace_pid_list *pid_list, unsigned int pid)
+ 	set_bit(lower, lower_chunk->data);
+ 	ret = 0;
+  out:
+-	raw_spin_unlock_irqrestore(&pid_list->lock, flags);
++	write_unlock_irqrestore(&pid_list->lock, flags);
+ 	return ret;
  }
  
-+static int setup_buts2(void)
-+{
-+	struct list_head *p;
-+	int ret = 0;
-+
-+	__list_for_each(p, &devpaths) {
-+		struct blk_user_trace_setup2 buts2;
-+		struct devpath *dpp = list_entry(p, struct devpath, head);
-+
-+		memset(&buts2, 0, sizeof(buts2));
-+		buts2.buf_size = buf_size;
-+		buts2.buf_nr = buf_nr;
-+		buts2.act_mask = act_mask;
-+
-+		if (ioctl(dpp->fd, BLKTRACESETUP2, &buts2) >= 0) {
-+			dpp->ncpus = max_cpus;
-+			dpp->buts_name = strdup(buts2.name);
-+			dpp->setup_done = 1;
-+			if (dpp->stats)
-+				free(dpp->stats);
-+			dpp->stats = calloc(dpp->ncpus, sizeof(*dpp->stats));
-+			memset(dpp->stats, 0, dpp->ncpus * sizeof(*dpp->stats));
-+		} else {
-+			ret++;
-+		}
-+	}
-+
-+	return ret;
-+}
-+
- static int setup_buts(void)
- {
- 	struct list_head *p;
-@@ -2684,9 +2714,11 @@ static int run_tracers(void)
- 	if (net_mode == Net_client)
- 		printf("blktrace: connecting to %s\n", hostname);
+@@ -229,7 +229,7 @@ int trace_pid_list_clear(struct trace_pid_list *pid_list, unsigned int pid)
+ 	if (pid_split(pid, &upper1, &upper2, &lower) < 0)
+ 		return -EINVAL;
  
--	if (setup_buts()) {
--		done = 1;
--		return 1;
-+	if (setup_buts2()) {
-+		if (setup_buts()) {
-+			done = 1;
-+			return 1;
-+		}
+-	raw_spin_lock_irqsave(&pid_list->lock, flags);
++	write_lock_irqsave(&pid_list->lock, flags);
+ 	upper_chunk = pid_list->upper[upper1];
+ 	if (!upper_chunk)
+ 		goto out;
+@@ -250,7 +250,7 @@ int trace_pid_list_clear(struct trace_pid_list *pid_list, unsigned int pid)
+ 		}
+ 	}
+  out:
+-	raw_spin_unlock_irqrestore(&pid_list->lock, flags);
++	write_unlock_irqrestore(&pid_list->lock, flags);
+ 	return 0;
+ }
+ 
+@@ -282,7 +282,7 @@ int trace_pid_list_next(struct trace_pid_list *pid_list, unsigned int pid,
+ 	if (pid_split(pid, &upper1, &upper2, &lower) < 0)
+ 		return -EINVAL;
+ 
+-	raw_spin_lock_irqsave(&pid_list->lock, flags);
++	read_lock_irqsave(&pid_list->lock, flags);
+ 	for (; upper1 <= UPPER_MASK; upper1++, upper2 = 0) {
+ 		upper_chunk = pid_list->upper[upper1];
+ 
+@@ -302,7 +302,7 @@ int trace_pid_list_next(struct trace_pid_list *pid_list, unsigned int pid,
  	}
  
- 	if (use_tracer_devpaths()) {
+  found:
+-	raw_spin_unlock_irqrestore(&pid_list->lock, flags);
++	read_unlock_irqrestore(&pid_list->lock, flags);
+ 	if (upper1 > UPPER_MASK)
+ 		return -1;
+ 
+@@ -339,10 +339,10 @@ static void pid_list_refill_irq(struct irq_work *iwork)
+ 	int lcnt = 0;
+ 
+  again:
+-	raw_spin_lock(&pid_list->lock);
++	write_lock(&pid_list->lock);
+ 	upper_count = CHUNK_ALLOC - pid_list->free_upper_chunks;
+ 	lower_count = CHUNK_ALLOC - pid_list->free_lower_chunks;
+-	raw_spin_unlock(&pid_list->lock);
++	write_unlock(&pid_list->lock);
+ 
+ 	if (upper_count <= 0 && lower_count <= 0)
+ 		return;
+@@ -369,7 +369,7 @@ static void pid_list_refill_irq(struct irq_work *iwork)
+ 		lcnt++;
+ 	}
+ 
+-	raw_spin_lock(&pid_list->lock);
++	write_lock(&pid_list->lock);
+ 	if (upper) {
+ 		*upper_next = pid_list->upper_list;
+ 		pid_list->upper_list = upper;
+@@ -380,7 +380,7 @@ static void pid_list_refill_irq(struct irq_work *iwork)
+ 		pid_list->lower_list = lower;
+ 		pid_list->free_lower_chunks += lcnt;
+ 	}
+-	raw_spin_unlock(&pid_list->lock);
++	write_unlock(&pid_list->lock);
+ 
+ 	/*
+ 	 * On success of allocating all the chunks, both counters
+@@ -418,7 +418,7 @@ struct trace_pid_list *trace_pid_list_alloc(void)
+ 
+ 	init_irq_work(&pid_list->refill_irqwork, pid_list_refill_irq);
+ 
+-	raw_spin_lock_init(&pid_list->lock);
++	rwlock_init(&pid_list->lock);
+ 
+ 	for (i = 0; i < CHUNK_ALLOC; i++) {
+ 		union upper_chunk *chunk;
+diff --git a/kernel/trace/pid_list.h b/kernel/trace/pid_list.h
+index 62e73f1ac85f..da200834f4ad 100644
+--- a/kernel/trace/pid_list.h
++++ b/kernel/trace/pid_list.h
+@@ -76,7 +76,7 @@ union upper_chunk {
+ };
+ 
+ struct trace_pid_list {
+-	raw_spinlock_t			lock;
++	rwlock_t			lock;
+ 	struct irq_work			refill_irqwork;
+ 	union upper_chunk		*upper[UPPER1_SIZE]; // 1 or 2K in size
+ 	union upper_chunk		*upper_list;
 -- 
-2.51.0
+2.43.5
 
