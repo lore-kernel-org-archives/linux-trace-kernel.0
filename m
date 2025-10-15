@@ -1,37 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66F96221DAD;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96C1B2EB5D2;
 	Wed, 15 Oct 2025 17:35:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760549740; cv=none; b=eXBw3QZDQI9Lpo+NB7tpBSPLHFT9r+sq+TomqxWmNuYygnS6of9QZUJgEYjiagF5o7MGCAh8fZpujFudMvqw5tX+oTejYjvrBK71FPM2f0GEuKTpVnz6MVabOKsvs2tZopZbSva1oEMu8xzO4ulYS99JAD35JY6yJX2L1Yl1cPo=
+	t=1760549740; cv=none; b=i5h4jmScsh5ZitQTRsrS0Bkhr8WrddD9qctFD7dUBw94y75zbs31gKnNNbvAMKMScJKII7zRzkWHW8SlIgL3xld9xo5Z9Sm96sE8/P+upXdaB2LLwOc/Gih19F7SWopXTkwmFovw5NjABPMnXB6K6QtkQEcCQ9QL79egtPg/oGk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1760549740; c=relaxed/simple;
-	bh=qfx41YB9T3o7PD3L98qTAStSf6+JXp7lI57F7Kpmibg=;
-	h=Message-ID:Date:From:To:Cc:Subject; b=r5dl+giZYu1noWHCeqFZ/iRoym30Z43U0cy4ePZQ5WpD/Lbl5wwzE9mHAp+fO53h599Cq/CFb0RUGpsXY3PdeQOQg6I2BJDB2L3Zg76FmkltniaOAZY9HN1bbzjf8L2qP0eYGojccbKqZAo5R5mjTSg5fFsfkHnLK+TGJ6/CUcQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hhn9g1gL; arc=none smtp.client-ip=10.30.226.201
+	bh=T+2SuhOA2afglVFTHOYDaZhsu+gmgdjZWQxw8xZEfCE=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=hA5DJ4ngDQ/DI1W0pS+4BKi4pf2LbCxWzOcWw/l531Zlzyvz60IhwiYSDDr1OB9RJD70PidzLNzroCBR3vkNZ3Bq57xo5DCj4loN3T4Ok48xHlDCTTvx9wtsAy0Ta5p3tR4QKKVdRRHUw2DKPdZQjBG03Cz6qghWN4/7DxkOs1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RvPu7RbG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hhn9g1gL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC066C4CEFB;
-	Wed, 15 Oct 2025 17:35:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RvPu7RbG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EA28C19422;
+	Wed, 15 Oct 2025 17:35:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1760549740;
-	bh=qfx41YB9T3o7PD3L98qTAStSf6+JXp7lI57F7Kpmibg=;
-	h=Date:From:To:Cc:Subject:From;
-	b=Hhn9g1gLXr9IeqSAtLbuBAeMEBeMTudsICeSbizLOQQuGMvib/fUiZ1EOEpFx4aOp
-	 AITgxED3uw76yIXZxGateMQHfDElWj9dSod1uONDJEExN1Oc+rJJ6MzKWEx3+FWUDS
-	 vRtCKuU3eWLH2OZyePhZz7Twrm8esI9Xg4JOxicKo3U+hbrrYc8s0M2jL7vr8IZBZB
-	 9yO29WL0I1xDMs9N1+3VT3nT1iMDymWa950rP4chTquxZzA7SNW6is69mhLmuzWPsC
-	 XHBy6bqdCdmNIosTDq64o2mUhJqJ5Zk1iq+gB+8CTasjg1y+UaeSYxoqB5KUDZWpj+
-	 thkqrdofl6SSw==
+	bh=T+2SuhOA2afglVFTHOYDaZhsu+gmgdjZWQxw8xZEfCE=;
+	h=Date:From:To:Cc:Subject:References:From;
+	b=RvPu7RbGBeVBCcmUojsDP2Ekoamnkw+e+bjHJzBT2lmdXwLJ6tZzJWRqG36Fmi7gm
+	 1A6f0287JMoqcQTJDBnrmStBYnTHQbL+Fiy4+cIzSqjYK72cgsB7zbMhW467lXMQVG
+	 3roTlH19dCKXpWnIoc2zkzI2GkvT1WWTAd7jp5DQnCzqVLZtQeTZ4DfXEF9CXsEiZq
+	 mPoZ1hywnoG+gY5GODtBiRW8ijok8jrQnQsXFZFhLpOweL0N+RvhYz8gpsevvYpu7q
+	 DJ6gMpDLdXo1i27mAfOTfBRyC80XdP/O0gXIo7vBnyGSUM3KAUfaI1JJpJ9tkkje7p
+	 LKs/RzAE5g/3Q==
 Received: from rostedt by gandalf with local (Exim 4.98.2)
 	(envelope-from <rostedt@kernel.org>)
-	id 1v95Pg-000000011uz-0lVY;
+	id 1v95Pg-000000011wT-2tb2;
 	Wed, 15 Oct 2025 13:35:48 -0400
-Message-ID: <20251015173214.760495866@kernel.org>
+Message-ID: <20251015173548.540984239@kernel.org>
 User-Agent: quilt/0.68
-Date: Wed, 15 Oct 2025 13:32:14 -0400
+Date: Wed, 15 Oct 2025 13:32:17 -0400
 From: Steven Rostedt <rostedt@kernel.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org,
@@ -51,84 +52,123 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Jiri Olsa <jolsa@kernel.org>,
  Adrian Hunter <adrian.hunter@intel.com>,
  Ingo Molnar <mingo@redhat.com>
-Subject: [PATCH v3 00/13] tracing: Show contents of syscall trace event user space fields
+Subject: [PATCH v3 03/13] perf: tracing: Simplify perf_sysenter_enable/disable() with guards
+References: <20251015173214.760495866@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 
-As of commit 654ced4a1377 ("tracing: Introduce tracepoint_is_faultable()")
-system call trace events allow faulting in user space memory. Have some of
-the system call trace events take advantage of this.
+From: Steven Rostedt <rostedt@goodmis.org>
 
-Also, commit 64cf7d058a00 ("tracing: Have trace_marker use per-cpu data to
-read user space") added the method to use per CPU buffers to read data from
-user space in critical sections. Instead of recreating that code, make that
-code generic so that the system calls can utilize it as well.
+Use guard(mutex)(&syscall_trace_lock) for perf_sysenter_enable() and
+perf_sysenter_disable() as well as for the perf_sysexit_enable() and
+perf_sysexit_disable(). This will make it easier to update these functions
+with other code that has early exit handling.
 
-Update the system call trace events to read user space for various system
-calls (like openat, execve, etc).
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/trace_syscalls.c | 42 +++++++++++++++++------------------
+ 1 file changed, 20 insertions(+), 22 deletions(-)
 
-A new file is created in the tracefs directory (and also per instance) that
-allows the user to shorten the amount copied from user space. It can be
-completely disabled if set to zero (it will only display "" or (, ...)
-but no copying from user space will be performed). The max size to copy is
-hard coded to 165, which should be enough for this purpose. The default
-size is 63 bytes.
+diff --git a/kernel/trace/trace_syscalls.c b/kernel/trace/trace_syscalls.c
+index 98670006ebeb..8f3432014da4 100644
+--- a/kernel/trace/trace_syscalls.c
++++ b/kernel/trace/trace_syscalls.c
+@@ -1009,21 +1009,21 @@ static void perf_syscall_enter(void *ignore, struct pt_regs *regs, long id)
+ 
+ static int perf_sysenter_enable(struct trace_event_call *call)
+ {
+-	int ret = 0;
++	int ret;
+ 	int num;
+ 
+ 	num = ((struct syscall_metadata *)call->data)->syscall_nr;
+ 
+-	mutex_lock(&syscall_trace_lock);
+-	if (!sys_perf_refcount_enter)
++	guard(mutex)(&syscall_trace_lock);
++	if (!sys_perf_refcount_enter) {
+ 		ret = register_trace_sys_enter(perf_syscall_enter, NULL);
+-	if (ret) {
+-		pr_info("event trace: Could not activate syscall entry trace point");
+-	} else {
+-		set_bit(num, enabled_perf_enter_syscalls);
+-		sys_perf_refcount_enter++;
++		if (ret) {
++			pr_info("event trace: Could not activate syscall entry trace point");
++			return ret;
++		}
+ 	}
+-	mutex_unlock(&syscall_trace_lock);
++	set_bit(num, enabled_perf_enter_syscalls);
++	sys_perf_refcount_enter++;
+ 	return ret;
+ }
+ 
+@@ -1033,12 +1033,11 @@ static void perf_sysenter_disable(struct trace_event_call *call)
+ 
+ 	num = ((struct syscall_metadata *)call->data)->syscall_nr;
+ 
+-	mutex_lock(&syscall_trace_lock);
++	guard(mutex)(&syscall_trace_lock);
+ 	sys_perf_refcount_enter--;
+ 	clear_bit(num, enabled_perf_enter_syscalls);
+ 	if (!sys_perf_refcount_enter)
+ 		unregister_trace_sys_enter(perf_syscall_enter, NULL);
+-	mutex_unlock(&syscall_trace_lock);
+ }
+ 
+ static int perf_call_bpf_exit(struct trace_event_call *call, struct pt_regs *regs,
+@@ -1115,21 +1114,21 @@ static void perf_syscall_exit(void *ignore, struct pt_regs *regs, long ret)
+ 
+ static int perf_sysexit_enable(struct trace_event_call *call)
+ {
+-	int ret = 0;
++	int ret;
+ 	int num;
+ 
+ 	num = ((struct syscall_metadata *)call->data)->syscall_nr;
+ 
+-	mutex_lock(&syscall_trace_lock);
+-	if (!sys_perf_refcount_exit)
++	guard(mutex)(&syscall_trace_lock);
++	if (!sys_perf_refcount_exit) {
+ 		ret = register_trace_sys_exit(perf_syscall_exit, NULL);
+-	if (ret) {
+-		pr_info("event trace: Could not activate syscall exit trace point");
+-	} else {
+-		set_bit(num, enabled_perf_exit_syscalls);
+-		sys_perf_refcount_exit++;
++		if (ret) {
++			pr_info("event trace: Could not activate syscall exit trace point");
++			return ret;
++		}
+ 	}
+-	mutex_unlock(&syscall_trace_lock);
++	set_bit(num, enabled_perf_exit_syscalls);
++	sys_perf_refcount_exit++;
+ 	return ret;
+ }
+ 
+@@ -1139,12 +1138,11 @@ static void perf_sysexit_disable(struct trace_event_call *call)
+ 
+ 	num = ((struct syscall_metadata *)call->data)->syscall_nr;
+ 
+-	mutex_lock(&syscall_trace_lock);
++	guard(mutex)(&syscall_trace_lock);
+ 	sys_perf_refcount_exit--;
+ 	clear_bit(num, enabled_perf_exit_syscalls);
+ 	if (!sys_perf_refcount_exit)
+ 		unregister_trace_sys_exit(perf_syscall_exit, NULL);
+-	mutex_unlock(&syscall_trace_lock);
+ }
+ 
+ #endif /* CONFIG_PERF_EVENTS */
+-- 
+2.51.0
 
-This allows the output to look like this:
 
- sys_access(filename: 0x7f8c55368470 "/etc/ld.so.preload", mode: 4)
- sys_execve(filename: 0x564ebcf5a6b8 "/usr/bin/emacs", argv: 0x7fff357c0300, envp: 0x564ebc4a4820)
- sys_write(fd: 1, buf: 0x56430f353be0 (2f:72:6f:6f:74:0a) "/root.", count: 6)
- sys_sethostname(name: 0x5584310eb2a0 "debian", len: 6)
- sys_renameat2(olddfd: 0xffffff9c, oldname: 0x7ffe02facdff "/tmp/x", newdfd: 0xffffff9c, newname: 0x7ffe02face06 "/tmp/y", flags: 1)
-
-Perf system call logic is also updated to take advantage of this work.
-
-The openat system call was updated to show the flags as well:
-
-  sys_openat(dfd: 18446744073709551516, filename: 140733603151330 "/tmp/x", flags: O_WRONLY|O_CREAT|O_NOCTTY|O_NONBLOCK, mode: 0666)
-
-Changes since v2: https://lore.kernel.org/linux-trace-kernel/20250923130457.901085554@kernel.org
-
-- Now that trace_marker uses the per CPU read method for reading user
-  space, make that code generic so that the system call logic can
-  use it as well.
-
-- Update perf system calls to read user space as well.
-
-- Make openat() show what the flags are. Instead of a number, use the
-  actual flag names.
-
-- Show printable characters in the data dumps (like the write system call).
-
-- Allow persistent ring buffer to parse system calls appropriately.
-
-Steven Rostedt (13):
-      tracing: Make trace_user_fault_read() exposed to rest of tracing
-      tracing: Have syscall trace events read user space string
-      perf: tracing: Simplify perf_sysenter_enable/disable() with guards
-      perf: tracing: Have perf system calls read user space
-      tracing: Have system call events record user array data
-      tracing: Display some syscall arrays as strings
-      tracing: Allow syscall trace events to read more than one user parameter
-      tracing: Add a config and syscall_user_buf_size file to limit amount written
-      tracing: Show printable characters in syscall arrays
-      tracing: Add trace_seq_pop() and seq_buf_pop()
-      tracing: Add parsing of flags to the sys_enter_openat trace event
-      tracing: Check for printable characters when printing field dyn strings
-      tracing: Have persistent ring buffer print syscalls normally
-
-----
- Documentation/trace/ftrace.rst |   8 +
- include/linux/seq_buf.h        |  17 +
- include/linux/trace_seq.h      |  13 +
- include/trace/syscall.h        |   8 +-
- kernel/trace/Kconfig           |  14 +
- kernel/trace/trace.c           | 312 ++++++++++++---
- kernel/trace/trace.h           |  20 +
- kernel/trace/trace_output.c    |  27 +-
- kernel/trace/trace_syscalls.c  | 886 ++++++++++++++++++++++++++++++++++++++---
- 9 files changed, 1188 insertions(+), 117 deletions(-)
