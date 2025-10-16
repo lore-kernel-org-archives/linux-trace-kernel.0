@@ -1,88 +1,181 @@
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AA5B334694;
-	Thu, 16 Oct 2025 17:28:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D39B28A3F2
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 16 Oct 2025 19:15:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760635724; cv=none; b=V2/AFaCVtlk0lYrSXn8lJDbF9z0IdhRABfDUwO7IELM7FE1jKn/ILMmLecHy+dUYpQCFZRNkxCJaelTDig1DOEKW1H12iR875GvbHGZTQDcP17H301jJo/1Mj+KnBNjm8aId4fuCR6e2khV6tlWvJJcQaR6QUBSZ9Acfgc1hSlc=
+	t=1760642115; cv=none; b=nxYcrqlCvHAo3NH+XBanxSfcW5eDuFFJizMO3pQ3DslVQrNl/AyvWipH5R9s3ZdyWdxTGnanHMy722vvtllrZzuABoMBxNLFavQvKp95QgcbaXIgCK6zb/aOnIflbn5Y4ieyra8sh/an5cobZ/st3zW9vDgEt/s7S5Eix50DMKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760635724; c=relaxed/simple;
-	bh=R/q/AKN2X8TLTOQ+04qUt9yLcp9CCbLu8xq3N5p6yXo=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=WXSnCeRnoA4mHkEeGaGIdGNWu1+wkoU2hpkrn/z3qeUttrWYISxVy57o7Jx3UJj3s7Qk7COnXbDg0Km5cJSXjkwzFX87xHYvcoQ6Tax821t/+S7HGoQkdvEa4cTTMPjwhs19xx45ngTaj8KHYYZUrtC6j4e67VmV00O26bZWjfo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf07.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay01.hostedemail.com (Postfix) with ESMTP id B7FDE1DFFC0;
-	Thu, 16 Oct 2025 17:28:39 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf07.hostedemail.com (Postfix) with ESMTPA id 1069B20030;
-	Thu, 16 Oct 2025 17:28:37 +0000 (UTC)
-Date: Thu, 16 Oct 2025 13:28:48 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Vincent Donnefort <vdonnefort@google.com>
-Subject: [PATCH] ring-buffer: Do not warn in ring_buffer_map_get_reader()
- when reader catches up
-Message-ID: <20251016132848.1b11bb37@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1760642115; c=relaxed/simple;
+	bh=2wIoqQOKViyJzI5mST31nnZOq2eejB4i2v9JaxIh2po=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RLfjOZR8aFgFrgyIgHH72VqsqaHlBn9dCZJ0uWU6eml4TOhyOttyThI9wQsK9CTPiFanfgZexSn6962LXo5pUlguoRm8WHj4BnH2B0RwdoHIpRiwrO2wHlv1k7HiHvAXHFCRiRTxCywHRdWFzNMH3OS42ww0fJkthGeWbxyVv/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NZe5ucb0; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NZe5ucb0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1760642112;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=hVHh5PR4TvqqguUhfaerHBEOYknHgUGYrVSqECH8sUI=;
+	b=NZe5ucb0anFxd6ULMBrIhFY/3xPGK7D7XTRNwyKTntLXi4p7nNbcV1RwCAl8IPjWz44/f3
+	oygYgB77GXcYDGMZGkWlthrmh1TYv1mCuKAxd7ZVZRdCp86pTQBJsbBahZr6nVGI5tdQa9
+	6/0BiU8rMNFQmwnBXi/ADa6pDfDTLrU=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-180-4CSEgrSeP2mUiF6pnoOjqg-1; Thu, 16 Oct 2025 15:15:10 -0400
+X-MC-Unique: 4CSEgrSeP2mUiF6pnoOjqg-1
+X-Mimecast-MFC-AGG-ID: 4CSEgrSeP2mUiF6pnoOjqg_1760642109
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3f4fbdf144dso646174f8f.2
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 16 Oct 2025 12:15:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760642109; x=1761246909;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hVHh5PR4TvqqguUhfaerHBEOYknHgUGYrVSqECH8sUI=;
+        b=pKLCQ66vzoh0+WRA42BSxsbld57GmE6+8E91kGV0+2TZnzO82s14icKXGv8fibSWdY
+         wFCWgz2a7ree7WjsmFA4VtdN4g5zDL993m/j7gt0HPybvm0A/FvIA7H2l5vDFmMNYwIn
+         3Li80eNeVZ17ZLzTI/DIlbxzZmWh2U0k6HBrdj2dcsnX1AUJcNG53Sasac2vUlYF7Q4H
+         IswuhemnSVisw2jV6beUIyHRj+sety06PWOXRilmPFqxY6PNmuTXk32c5ju90ovzobTY
+         nCyNl6DerKotfwkpY0kavtro9oJzLGPOSjORIJgy4ja/VIS2LXdam3Q7mO4WOsp3lDE1
+         sfKg==
+X-Forwarded-Encrypted: i=1; AJvYcCWaRgGMwjrwIjHIjySaSftxlyo0PMW+M5aMTocayfAaXi9Bc8XCNm9XCuzIuFRuJYHM9iya+vrRW3CKJ4swuWH3go0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyWAF3ePottn+SsqQLhJwNe8oDwK+dIuEHRI3pIEYInR3CEgkAZ
+	k4BJr77cggux+bYwceVyaRyYSRA3ka0waGvUMCon6hR0mn8uTto7WHbHspFaWH7VS81sY1lpCAP
+	rl7J9f8vOpOaoMt3r3VkdQgmZ8uIVmxFVdPvkCTMroGmUXtQjmkcy6MM7zjiVIAIG7vwCDEkEAw
+	==
+X-Gm-Gg: ASbGncvn/qH65etUYYaZyjdyLrQXRCRpvzrrfn4VwW64FQMLc016nU9SPtwtZD8pz0e
+	a67POZWU8Y+iTNnglJje2dKFIAsqJ6hJgZ9CkNEcJ6OC8ZPMSnijBi6dyc5VaYNjrxyN7K7M1sj
+	gPojIgOtz2cSrkLBUkniUtS+0RAkXgwavutZQJYUZfdpwTv7dEE4OB4ZXFLbNBvI44AX8A0QDDV
+	C6Yh3ONrAAVNdl0XXgwBgXccIuKS4sksGcMYifx9zij7uVF7jbetqB3AIcMh12C1JK+sJTDIMN7
+	IsOGX7VmtFhYx96/DSY5ILh1Y8jDj6V4E7WXmYVQiHAEfJ2eGNqU/jdeSwmNB6q/vwAgLDoxynD
+	+8ea+Sx06sL6fUbmNWpr+azYgIDAt2b4EcFxa24lLoAsRLjk2goW0g6hYkQv+2ct7/13cr5OzO0
+	3iSOZE4MOtNxwdEcZXsV/YbgMq8js=
+X-Received: by 2002:a05:6000:1446:b0:40b:c42e:fe39 with SMTP id ffacd0b85a97d-42704d963b3mr855953f8f.40.1760642109064;
+        Thu, 16 Oct 2025 12:15:09 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFTwjlQtEo8QmL86bVhgI5H+nKBsihjFtBhqqdNCCeLESucnFPVLdDF1Syd2/2TIS9wcEA8jg==
+X-Received: by 2002:a05:6000:1446:b0:40b:c42e:fe39 with SMTP id ffacd0b85a97d-42704d963b3mr855922f8f.40.1760642108544;
+        Thu, 16 Oct 2025 12:15:08 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f0c:c200:fa4a:c4ff:1b32:21ce? (p200300d82f0cc200fa4ac4ff1b3221ce.dip0.t-ipconnect.de. [2003:d8:2f0c:c200:fa4a:c4ff:1b32:21ce])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-471144239bdsm64839695e9.3.2025.10.16.12.15.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Oct 2025 12:15:08 -0700 (PDT)
+Message-ID: <dc14c183-d93e-405a-831a-dca69ede3cd2@redhat.com>
+Date: Thu, 16 Oct 2025 21:15:05 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/5] mm: fix off-by-one error in VMA count limit checks
+To: Kalesh Singh <kaleshsingh@google.com>, Hugh Dickins <hughd@google.com>
+Cc: akpm@linux-foundation.org, minchan@kernel.org,
+ lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, rppt@kernel.org,
+ pfalcato@suse.de, kernel-team@android.com, android-mm@google.com,
+ stable@vger.kernel.org, SeongJae Park <sj@kernel.org>,
+ Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ Kees Cook <kees@kernel.org>, Vlastimil Babka <vbabka@suse.cz>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ Jann Horn <jannh@google.com>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ Juri Lelli <juri.lelli@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>, Ben Segall
+ <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+ Valentin Schneider <vschneid@redhat.com>, Shuah Khan <shuah@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org
+References: <20251013235259.589015-1-kaleshsingh@google.com>
+ <20251013235259.589015-2-kaleshsingh@google.com>
+ <144f3ee6-1a5f-57fc-d5f8-5ce54a3ac139@google.com>
+ <CAC_TJvdLxPRC5r+Ae+h2Zmc68B5+s40+413Xo4SjvXH2x2F6hg@mail.gmail.com>
+ <af0618c0-03c5-9133-bb14-db8ddb72b8de@google.com>
+ <CAC_TJvdy4qCaLAW09ViC5vPbj4XC7_P+9Jjj_kYSU6d+=r70yw@mail.gmail.com>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <CAC_TJvdy4qCaLAW09ViC5vPbj4XC7_P+9Jjj_kYSU6d+=r70yw@mail.gmail.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: 7SWS8VumPC1bbRurjVd4yY1bTb2u7JKT44jk1bzidG0_1760642109
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: jrtpowyrq4rwezqzezthq81roqzfrgix
-X-Rspamd-Server: rspamout03
-X-Rspamd-Queue-Id: 1069B20030
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19CXbz7v81C56kjBpRUdeWMNvKgDKnoavs=
-X-HE-Tag: 1760635717-439770
-X-HE-Meta: U2FsdGVkX18Mrtb3j9AjBTGApz6ZsHMt0y6PVr3shpzIvHXVMudSXck/SZMExRm5CHXnXz9sdZrSl875wtC+awQnY71bHJkek7XfjfqJvTmUCgaH0JNHBgTQ1llsjS/LPbf65pUigkEfz6w3VeXuqAANu1ow2zSDAjUCsmeC6oNydFfHo0ZS3dkA/QCPdCtVEFmzRvgHrXXMVVapM8R4MGecVAUZ9M1LqKYIjAfJR19LOAE8+60JCEoRUpapOeih9Jji7Ub9TpD0sGwtXHmSIGg5stPLKbfDof1RFcpuITOu5coB7+k6rAHQ5XP95CYTY3/9eQJ/7d7ieZ3bVchyOq5sKXSwCfkGNrvvMpbYiaIAzhAalTnnPEIlI1UBk3VZWBjzhWN4S51aRwCypnNmzA==
 
-From: Steven Rostedt <rostedt@goodmis.org>
+>>> Would this be an acceptable path forward?
+>>
+>> Possibly, if others like it: my concern was to end a misunderstanding
+>> (I'm generally much too slow to get involved in cleanups).
+>>
+>> Though given that the sysctl is named "max_map_count", I'm not very
+>> keen on renaming everything else from map_count to vma_count
+>> (and of course I'm not suggesting to rename the sysctl).
+> 
+> I still believe vma_count is a clearer name for the field, given some
+> existing comments already refer to it as vma count. The inconsistency
+> between vma_count and sysctl_max_map_count can be abstracted away; and
+> the sysctl made non-global.
 
-The function ring_buffer_map_get_reader() is a bit more strict than the
-other get reader functions, and except for certain situations the
-rb_get_reader_page() should not return NULL. If it does, it triggers a
-warning.
+Yes, to me that part makes perfect sense (taste differs as we know).
 
-This warning was triggering but after looking at why, it was because
-another acceptable situation was happening and it wasn't checked for.
-
-If the reader catches up to the writer and there's still data to be read
-on the reader page, then the rb_get_reader_page() will return NULL as
-there's no new page to get.
-
-In this situation, the reader page should not be updated and no warning
-should trigger.
-
-Cc: stable@vger.kernel.org
-Fixes: 117c39200d9d7 ("ring-buffer: Introducing ring-buffer mapping functions")
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/ring_buffer.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 1244d2c5c384..afcd3747264d 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -7344,6 +7344,10 @@ int ring_buffer_map_get_reader(struct trace_buffer *buffer, int cpu)
- 		goto out;
- 	}
- 
-+	/* Did the reader catch up with the writer? */
-+	if (cpu_buffer->reader_page == cpu_buffer->commit_page)
-+		goto out;
-+
- 	reader = rb_get_reader_page(cpu_buffer);
- 	if (WARN_ON(!reader))
- 		goto out;
 -- 
-2.51.0
+Cheers
+
+David / dhildenb
 
