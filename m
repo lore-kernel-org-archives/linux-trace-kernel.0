@@ -1,224 +1,88 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18B8621A453
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 16 Oct 2025 17:20:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AA5B334694;
+	Thu, 16 Oct 2025 17:28:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760635203; cv=none; b=TAZtJMKYHfEIA3GrA8Lk6G2h9q7zg+NRQcT0Bh1KjzSoTAgDFkYP4iWutuwTR5EVArtZxPWDnT34ocb0n481RDGN4+DkvVpwyPTlBhvFQZsoktAszYBnye3Uq2rrD90cidhV4AVFZ5YlYHeUE1gQHM3jkR5Bp3rcgs39fI9/1rM=
+	t=1760635724; cv=none; b=V2/AFaCVtlk0lYrSXn8lJDbF9z0IdhRABfDUwO7IELM7FE1jKn/ILMmLecHy+dUYpQCFZRNkxCJaelTDig1DOEKW1H12iR875GvbHGZTQDcP17H301jJo/1Mj+KnBNjm8aId4fuCR6e2khV6tlWvJJcQaR6QUBSZ9Acfgc1hSlc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760635203; c=relaxed/simple;
-	bh=wV2nVp2Z9PJTYtTI61t8QluhPdPzWwIOzCfvg/vaIN0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LyRo9RRLCa0/nAoMBcAxzkQkPW2XwqiLnLaCV/rhaEBFqbyRs7q4aHqlgjo26R4t5kcXUuj5BDQbhe7UJ58nSBM76ZwmctYeE14bukhgo9DBfWP/4pIaWVyp9TiP1AzmQ8diFivvCnm6chz7yqE3+/HpJV+RkEi31tH5esh/v1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TZSpIPKv; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TZSpIPKv"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2681645b7b6so8755ad.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 16 Oct 2025 10:20:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1760635201; x=1761240001; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Oar3IC5PlLSvEtc/2ze2EFC5XBWzyZXV5aWJayEgfz0=;
-        b=TZSpIPKvNpdslBjEAaZl5W97OupDyI51RAShrrXS97pg4qWeap0CwdqU3Jhcpd3YOU
-         gcsVvfCDKILWBgULXDTTX9VhweX6SZpjeIbzrgD4j0txWrX+3ZfseO6mxdON8LxwtUUP
-         6KE0uBkDU84GhqerujnaGBlNaETib59Xx6+kbRkamDgmMgDRfdeZTtYfhA/XZiSSSgrr
-         3x4VPjvd1Y4xafRSMshayDoufRlMALXi4TX4fDrCkD3M/6fvXP58hKk5FqKtdfzh7oUy
-         ZlTPAfCqEZU0ha+hmDD4W9wwPT8GzqKcRviAnNlI07iV6O4O7IKULndcclNnBpCRIkOh
-         pyNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760635201; x=1761240001;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Oar3IC5PlLSvEtc/2ze2EFC5XBWzyZXV5aWJayEgfz0=;
-        b=QGdVdpy6+SiNrFDVhANQOt4eAidJrmpdwPwFey2bCkzYengDoovGUY5rxuiZOVrm+M
-         DNBRYKcnHPJmKVD2xi0ghCehpU1SNjspELk3/LYokwFqoPBehSyV19RtReewcXvBiCh8
-         syAD/Cs+6/tIfFXhPRkn4z18fJvPqE/VrQH+FD20R07JGVSvaCqS9gRzbzr/04h4CCXM
-         c+kMAoxS6qjA/YWDbo1bUqfvKy9yMnjyIoo4tkYKR7SxsI4lmGIKwsFJ2oM/pCny3ZrM
-         j5pxtEGC8qvuryomasMpXB6H5RiHGM/Un3ad4LwHhpUgaSjO+j1g7RqxMcRGHCaj5uQT
-         Ea4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUr+BiaVMEBnSMDYfg5Xgv/J8lyLMc6DGTEDcelDLfM/Apnd9m5Zuv1X9BCp74VkFFODF/TxL8YPNhBf8rRCoXKKRk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyj/r4wSDc281Zg+Q8E1fZEhCueDo6u7ZShepFKzf58N5qJfOJu
-	RlmvB4GyXNR40ukjrkvgdoOoTkatxmnweGcGYsToYPYcyNVxNXRJYt7Vndky2itYdroqMzXV8sR
-	Ty//hFaoYSMA/mYiIdyDYhKobXhtzSzChkQXOJHNf
-X-Gm-Gg: ASbGncuH3sW642p1knvQEe5UQ0TEL010ZjDfCh98sHH6vzbPdzucJz0ufbA/fdX3pph
-	XvoIg2zBuxf0ilr3jy/BwA6T4Rvo3ZBXMXMNQxZgR5Cx8HU72LGyOjWaQCva2ukqAHCXFom4ZCR
-	S8iqPsU3/QausDsL7uPxSncHStrv9S0IKpbeLGIA/TEZ/diLzTOwuoAaI+37d1X+hdil6f8PluW
-	Wx/kvIYqWnUfmmqwPmMgcbVRlqzFLDoSUk+XkJdQUhDSA9Ozvgy2sHZcNNgouskwW33MnrcU5xr
-	aV94N3VzCOX1MtGnyYz81c4/
-X-Google-Smtp-Source: AGHT+IGaLBYMUVA3dp2bngz8sd3zdctlajyDpg4Q5ej9rYFdWUESUT7d4RcwGFB4ciRjNT7T8e6kC8pvy75+YgR2Dh8=
-X-Received: by 2002:a17:902:fc87:b0:290:cd63:e922 with SMTP id
- d9443c01a7336-290cd63eff9mr828755ad.15.1760635200981; Thu, 16 Oct 2025
- 10:20:00 -0700 (PDT)
+	s=arc-20240116; t=1760635724; c=relaxed/simple;
+	bh=R/q/AKN2X8TLTOQ+04qUt9yLcp9CCbLu8xq3N5p6yXo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=WXSnCeRnoA4mHkEeGaGIdGNWu1+wkoU2hpkrn/z3qeUttrWYISxVy57o7Jx3UJj3s7Qk7COnXbDg0Km5cJSXjkwzFX87xHYvcoQ6Tax821t/+S7HGoQkdvEa4cTTMPjwhs19xx45ngTaj8KHYYZUrtC6j4e67VmV00O26bZWjfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf07.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay01.hostedemail.com (Postfix) with ESMTP id B7FDE1DFFC0;
+	Thu, 16 Oct 2025 17:28:39 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf07.hostedemail.com (Postfix) with ESMTPA id 1069B20030;
+	Thu, 16 Oct 2025 17:28:37 +0000 (UTC)
+Date: Thu, 16 Oct 2025 13:28:48 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Vincent Donnefort <vdonnefort@google.com>
+Subject: [PATCH] ring-buffer: Do not warn in ring_buffer_map_get_reader()
+ when reader catches up
+Message-ID: <20251016132848.1b11bb37@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251013235259.589015-1-kaleshsingh@google.com>
- <20251013235259.589015-2-kaleshsingh@google.com> <144f3ee6-1a5f-57fc-d5f8-5ce54a3ac139@google.com>
- <CAC_TJvdLxPRC5r+Ae+h2Zmc68B5+s40+413Xo4SjvXH2x2F6hg@mail.gmail.com> <af0618c0-03c5-9133-bb14-db8ddb72b8de@google.com>
-In-Reply-To: <af0618c0-03c5-9133-bb14-db8ddb72b8de@google.com>
-From: Kalesh Singh <kaleshsingh@google.com>
-Date: Thu, 16 Oct 2025 10:19:49 -0700
-X-Gm-Features: AS18NWDUcYhiaJ_iuWpblZjVBlLRKBf3hDw80qWBei6Spqkt0F1pWUwG8jn-Ias
-Message-ID: <CAC_TJvdy4qCaLAW09ViC5vPbj4XC7_P+9Jjj_kYSU6d+=r70yw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/5] mm: fix off-by-one error in VMA count limit checks
-To: Hugh Dickins <hughd@google.com>
-Cc: akpm@linux-foundation.org, minchan@kernel.org, lorenzo.stoakes@oracle.com, 
-	david@redhat.com, Liam.Howlett@oracle.com, rppt@kernel.org, pfalcato@suse.de, 
-	kernel-team@android.com, android-mm@google.com, stable@vger.kernel.org, 
-	SeongJae Park <sj@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Kees Cook <kees@kernel.org>, 
-	Vlastimil Babka <vbabka@suse.cz>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
-	Jann Horn <jannh@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Ben Segall <bsegall@google.com>, 
-	Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>, Shuah Khan <shuah@kernel.org>, 
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: jrtpowyrq4rwezqzezthq81roqzfrgix
+X-Rspamd-Server: rspamout03
+X-Rspamd-Queue-Id: 1069B20030
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19CXbz7v81C56kjBpRUdeWMNvKgDKnoavs=
+X-HE-Tag: 1760635717-439770
+X-HE-Meta: U2FsdGVkX18Mrtb3j9AjBTGApz6ZsHMt0y6PVr3shpzIvHXVMudSXck/SZMExRm5CHXnXz9sdZrSl875wtC+awQnY71bHJkek7XfjfqJvTmUCgaH0JNHBgTQ1llsjS/LPbf65pUigkEfz6w3VeXuqAANu1ow2zSDAjUCsmeC6oNydFfHo0ZS3dkA/QCPdCtVEFmzRvgHrXXMVVapM8R4MGecVAUZ9M1LqKYIjAfJR19LOAE8+60JCEoRUpapOeih9Jji7Ub9TpD0sGwtXHmSIGg5stPLKbfDof1RFcpuITOu5coB7+k6rAHQ5XP95CYTY3/9eQJ/7d7ieZ3bVchyOq5sKXSwCfkGNrvvMpbYiaIAzhAalTnnPEIlI1UBk3VZWBjzhWN4S51aRwCypnNmzA==
 
-On Wed, Oct 15, 2025 at 10:05=E2=80=AFPM Hugh Dickins <hughd@google.com> wr=
-ote:
->
-> On Tue, 14 Oct 2025, Kalesh Singh wrote:
-> > On Mon, Oct 13, 2025 at 11:28=E2=80=AFPM Hugh Dickins <hughd@google.com=
-> wrote:
-> > >
-> > > Sorry for letting you go so far before speaking up (I had to test wha=
-t
-> > > I believed to be true, and had hoped that meanwhile one of your many
-> > > illustrious reviewers would say so first, but no): it's a NAK from me=
-.
-> > >
-> > > These are not off-by-ones: at the point of these checks, it is not
-> > > known whether an additional map/vma will have to be added, or the
-> > > addition will be merged into an existing map/vma.  So the checks
-> > > err on the lenient side, letting you get perhaps one more than the
-> > > sysctl said, but not allowing any more than that.
-> > >
-> > > Which is all that matters, isn't it? Limiting unrestrained growth.
-> > >
-> > > In this patch you're proposing to change it from erring on the
-> > > lenient side to erring on the strict side - prohibiting merges
-> > > at the limit which have been allowed for many years.
-> > >
-> > > Whatever one thinks about the merits of erring on the lenient versus
-> > > erring on the strict side, I see no reason to make this change now,
-> > > and most certainly not with a Fixes Cc: stable. There is no danger
-> > > in the current behaviour; there is danger in prohibiting what was
-> > > allowed before.
-> > >
-> > > As to the remainder of your series: I have to commend you for doing
-> > > a thorough and well-presented job, but I cannot myself see the point =
-in
-> > > changing 21 files for what almost amounts to a max_map_count subsyste=
-m.
-> > > I call it misdirected effort, not at all to my taste, which prefers t=
-he
-> > > straightforward checks already there; but accept that my taste may be
-> > > out of fashion, so won't stand in the way if others think it worthwhi=
-le.
-> >
-> > Hi Hugh,
-> >
-> > Thanks for the detailed review and for taking the time to test the beha=
-vior.
-> >
-> > You've raised a valid point. I wasn't aware of the history behind the
-> > lenient check for merges. The lack of a comment, like the one that
-> > exists for exceeding the limit in munmap(), led me to misinterpret
-> > this as an off-by-one bug. The convention makes sense if we consider
-> > potential merges.
->
-> Yes, a comment there would be helpful (and I doubt it's worth more
-> than adding a comment); but I did not understand at all, Liam's
-> suggestion for the comment "to state that the count may not change".
->
-> >
-> > If it was in-fact the intended behavior, then I agree we should keep
-> > it lenient. It would mean though, that munmap() being able to free a
-> > VMA if a split is required (by permitting exceeding the limit by 1)
-> > would not work in the case where we have already exceeded the limit. I
-> > find this to be inconsistent but this is also the current behavior ...
->
-> You're saying that once we go one over the limit, say with a new mmap,
-> an munmap check makes it impossible to munmap that or any other vma?
->
-> If that's so, I do agree with you, that's nasty, and I would hate any
-> new code to behave that way.  In code that's survived as long as this
-> without troubling anyone, I'm not so sure: but if it's easily fixed
-> (a more lenient check at the munmap end?) that would seem worthwhile.
->
-> Ah, but reading again, you say "if a split is required": I guess
-> munmapping the whole vma has no problem; and it's fine for a middle
-> munmap, splitting into three before munmapping the middle, to fail.
-> I suppose it would be nicer if munmaping start or end succeeeded,
-> but I don't think that matters very much in this case.
->
+From: Steven Rostedt <rostedt@goodmis.org>
 
-Yes, your understanding is correct. I meant that currently, we allow
-for an munmap() requiring a single split to succeed even if it will
-temporarily exceed the limit by one, as immediately after we will be
-removing one of those VMAs. However, if the process has already
-exceeded the limit, say, due to a non-merging mmap(), then an munmap()
-requiring a split will fail. It's not a big issue, but I found it
-inconsistent that this succeeds in some cases and not in others.
+The function ring_buffer_map_get_reader() is a bit more strict than the
+other get reader functions, and except for certain situations the
+rb_get_reader_page() should not return NULL. If it does, it triggers a
+warning.
 
-> >
-> > I will drop this patch and the patch that introduces the
-> > vma_count_remaining() helper, as I see your point about it potentially
-> > being unnecessary overhead.
-> >
-> > Regarding your feedback on the rest of the series, I believe the 3
-> > remaining patches are still valuable on their own.
-> >
-> >  - The selftest adds a comprehensive tests for VMA operations at the
-> > sysctl_max_map_count limit. This will self-document the exact behavior
-> > expected, including the leniency for potential merges that you
-> > highlighted, preventing the kind of misunderstanding that led to my
-> > initial patch.
-> >
-> >  - The rename of mm_struct->map_count to vma_count, is a
-> > straightforward cleanup for code clarity that makes the purpose of the
-> > field more explicit.
-> >
-> >  - The tracepoint adds needed observability for telemetry, allowing us
-> > to see when processes are failing in the field due to VMA count limit.
-> >
-> > The  selftest, is what  makes up a large portion of the diff you
-> > sited, and with vma_count_remaining() gone the series will not touch
-> > nearly as many files.
-> >
-> > Would this be an acceptable path forward?
->
-> Possibly, if others like it: my concern was to end a misunderstanding
-> (I'm generally much too slow to get involved in cleanups).
->
-> Though given that the sysctl is named "max_map_count", I'm not very
-> keen on renaming everything else from map_count to vma_count
-> (and of course I'm not suggesting to rename the sysctl).
+This warning was triggering but after looking at why, it was because
+another acceptable situation was happening and it wasn't checked for.
 
-I still believe vma_count is a clearer name for the field, given some
-existing comments already refer to it as vma count. The inconsistency
-between vma_count and sysctl_max_map_count can be abstracted away; and
-the sysctl made non-global.
-I'll wait for feedback form others on how to proceed.
+If the reader catches up to the writer and there's still data to be read
+on the reader page, then the rb_get_reader_page() will return NULL as
+there's no new page to get.
 
-Thanks for the thorough review and discussion.
+In this situation, the reader page should not be updated and no warning
+should trigger.
 
--- Kalesh
+Cc: stable@vger.kernel.org
+Fixes: 117c39200d9d7 ("ring-buffer: Introducing ring-buffer mapping functions")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/ring_buffer.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
->
-> Hugh
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 1244d2c5c384..afcd3747264d 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -7344,6 +7344,10 @@ int ring_buffer_map_get_reader(struct trace_buffer *buffer, int cpu)
+ 		goto out;
+ 	}
+ 
++	/* Did the reader catch up with the writer? */
++	if (cpu_buffer->reader_page == cpu_buffer->commit_page)
++		goto out;
++
+ 	reader = rb_get_reader_page(cpu_buffer);
+ 	if (WARN_ON(!reader))
+ 		goto out;
+-- 
+2.51.0
+
