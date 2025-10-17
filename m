@@ -1,72 +1,78 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9489B2D6E4B;
-	Fri, 17 Oct 2025 09:14:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 689D221B185;
+	Fri, 17 Oct 2025 09:37:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760692469; cv=none; b=LnT4jQdhjSWKXo692K6RuNAQY2zl+autEOtOtgXXN3xct3XzUAAYRjB7sTzU/TeDvUJIn7SKLJZ+NB0vjKu9ujcyqj9NtgvMGyOiQ+o3b614Zel32F3NFkgBVapIOO6zqKr7zE9sziDAnDGGRwWTVo+51ZVA/n8620ibhW5DGfQ=
+	t=1760693837; cv=none; b=EuVErt550M4pMiimBUCVWngIYosDT5QTug1YNcJllMwAIzrX5XfErrgHm7cIH/nwZ6Fd5vIpV4jmwIyvEcI4+pIlCuL7G6alDuF2mU82JsLh5kULGa6P6HG+v+WIbrA8DxYNUCygzUIOWmIjMK3D8KRsVDZJHOgx+ujEtn7GSng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760692469; c=relaxed/simple;
-	bh=Sv4CXxzBJOfq1rxpt8Hzc6D60+L/r/E/RubWex6YyyQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mlXTZawA+aGQeCw11AV3dmtzRnxcZ/kEu14Gdu2sZg4zzBwle+uBW6TkBlM97QTj/9LMGAGP/zZ9YaiIcziirUL30nrCLr5NO7Ik3yISr5dnuNLyp4ikBSuSiZRm8sgJJXOkZSlcrHySEXoZmQ2JAc6YACDtHSFp5Ya+NfFirFA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf03.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id 9ADC313B655;
-	Fri, 17 Oct 2025 09:14:19 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf03.hostedemail.com (Postfix) with ESMTPA id 569996000E;
-	Fri, 17 Oct 2025 09:14:16 +0000 (UTC)
-Date: Fri, 17 Oct 2025 05:14:14 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Vincent Donnefort <vdonnefort@google.com>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- linux-trace-kernel@vger.kernel.org, maz@kernel.org, oliver.upton@linux.dev,
- joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com,
- kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- jstultz@google.com, qperret@google.com, will@kernel.org,
- aneesh.kumar@kernel.org, kernel-team@android.com,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 14/28] tracing: Add a trace remote module for testing
-Message-ID: <20251017051414.7a6e10b5@batman.local.home>
-In-Reply-To: <aPIAC0WEVg1pVr0H@google.com>
-References: <20251003133825.2068970-1-vdonnefort@google.com>
-	<20251003133825.2068970-15-vdonnefort@google.com>
-	<20251016170645.15416c8a@gandalf.local.home>
-	<20251016171155.0d871fc3@gandalf.local.home>
-	<aPIAC0WEVg1pVr0H@google.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1760693837; c=relaxed/simple;
+	bh=0zxVCCLSKYEJ9MFiUmZTlkExtnbAcidKE9azgZvpVQA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=fb0nc0k35EkMnyixCIXi6s9c7HzoFF5Nj3kmkaijiILhsHXtglmHEMQEB9tJX6EogFJ1aPk6qCD2okGvfF1CKMXvjNV0XxrT5yDxUw1eT4Vs+gOX+JBuZhALRwT7zVM5z+9wCGqUrF9Fx5p05piZC7lNspfwHNyfhTFeomMt/2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=J1sxqMSo; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sgjhlAJB; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="J1sxqMSo";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sgjhlAJB"
+From: Nam Cao <namcao@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1760693834;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AMBhtsatbX/1a6Y9dAaC1Mra9IEVObiajnh+VSzVjng=;
+	b=J1sxqMSoDl/C3rQLYE8oHzxqEN9Dc962p2/jIvAwWPRagbwQMZ4KZruuk24ZbL8xPtALJu
+	9HfQM30AX19gsMgY7TWx7B6SulSltSrqmE2QWQeVtEPDTJPA9q27glFaIDsfzn7wcxrRNl
+	IOVfz2PJXVD0GMd1RSeZDmhxi3prGi6g3T5SbQrLSsZ3+vpJkNqUhRHYBHZpbx6fJr/Xig
+	wHdFFjRn2zuws/KA6VUl5UzjRTMgBwpmzqk+C0R/9wOyL+BsFIjUYI95L/rOqP/4h6jJc6
+	Cap+jte7NHcu9DQIegp456AcHGp1wjCDcOnWAxw6b2kizlDzohZl9gcF2/58Mg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1760693834;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AMBhtsatbX/1a6Y9dAaC1Mra9IEVObiajnh+VSzVjng=;
+	b=sgjhlAJBtFyS40nLLzMZkBVCSngFa1Iq9hDTLvn67GMuvpiWmJTSMoaUOr+xD53QIVUe9n
+	IJNV/om0o7BZRKCw==
+To: Gabriele Monaco <gmonaco@redhat.com>, linux-kernel@vger.kernel.org,
+ Steven Rostedt <rostedt@goodmis.org>, linux-trace-kernel@vger.kernel.org
+Cc: Gabriele Monaco <gmonaco@redhat.com>, Tomas Glozar <tglozar@redhat.com>,
+ Juri Lelli <jlelli@redhat.com>, Clark Williams <williams@redhat.com>, John
+ Kacur <jkacur@redhat.com>
+Subject: Re: [PATCH v2 12/20] verification/rvgen: Add support for Hybrid
+ Automata
+In-Reply-To: <20250919140954.104920-13-gmonaco@redhat.com>
+References: <20250919140954.104920-1-gmonaco@redhat.com>
+ <20250919140954.104920-13-gmonaco@redhat.com>
+Date: Fri, 17 Oct 2025 11:37:14 +0200
+Message-ID: <87ikgdx41h.fsf@yellow.woof>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: 7hdhsjnkap11w1smo8kwhj531mpabhxq
-X-Rspamd-Server: rspamout05
-X-Rspamd-Queue-Id: 569996000E
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19h6oOCw3PyeGtOXOG42FQa1CMRVS20sbo=
-X-HE-Tag: 1760692456-794409
-X-HE-Meta: U2FsdGVkX1++vc5wBG8SikSMLzHf4VoFfGg/rJahcryGkvvI9ElFZtxshtAU59/M6z3zeCiupurKvfqBqVpSi9QON0MvxuRjp4x7WAAW/t6bCxIWs7+vT043I5yRJPCh/hVBPfsZaR2hD8NBu1/dJv0+xVmELEl3z9yzwFe2Hf/UCce5cJSFpZIxGfZUzQ36jn6dIZdzH10+D56ZyCGdVBRte7xZK+d/L8Sk1ajc7miz5RzyeNYY8JHRttu3FzjX0F4hJ0sgRTUQ15iYylJNxbSUWpj4SDuFjtdTUDOuS82yx15qiOe9W4jPa+HAyqcIxqrGX1YXMa8nvL28UOsX4e3ItypVwivk
+Content-Type: text/plain
 
-On Fri, 17 Oct 2025 09:36:27 +0100
-Vincent Donnefort <vdonnefort@google.com> wrote:
+Gabriele Monaco <gmonaco@redhat.com> writes:
+> +            if any(u in self.env_types.values() for u in ["ns", "us", "ms", "s"]):
+> +                buff.append("#define HA_CLK_NS")
 
-> And of course, I forgot to check CONFIG_REMOTE_TEST=M ...
+That any() twisted my brain. Does the following work?
 
-It also needs to export symbols.
+    if not {"ns", "us", "ms", "s"}.isdisjoint(self.env_types.values())
 
-> 
-> The following snippet should do.
-> 
-> Do you want a v8 now (and with your previous comment) or shall I wait a bit more?
+> +        match unit:
+> +            case "us":
+> +                value *= 1000
+> +            case "ms":
+> +                value *= 1000000
+> +            case "s":
+> +                value *= 1000000000
 
-Wait a little more. I'm currently taking a long weekend and will likely
-play with it a bit more next week.
+Use 10**9 instead, so that we don't have to count the zeroes.
 
--- Steve
+Nam
