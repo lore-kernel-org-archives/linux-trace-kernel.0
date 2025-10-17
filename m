@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B391C285406;
-	Fri, 17 Oct 2025 16:15:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16FA52C029A;
+	Fri, 17 Oct 2025 16:15:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760717745; cv=none; b=oDWcXmsulAZ3+5d7QjNZ0JyFz1tn5Krfxpr+PlOwDzWAZQSXme/BKN/84q0wA1omT69LmZQltiBotNMLs0ums5Bx48VikyAb3xDfEl17Hyg83Uphsa5GpgKdSDmlagcPhbLlhaaD3y/3iQ4CWnBkPgWAILaOygP9OuPAwm/567c=
+	t=1760717756; cv=none; b=MAh4WARoAKcoYluWghq+jQEl/3NgaUToBABpF0zNWE+vmhQYIHaNl/ZmuHzDGv5i7Lt03FmSZLpaG42ZewrNCly0mGrWixYicH54v6toSAdwuiufHAGqE9z5btloDuM6+YhDmFZphRIhqor60naHFp/mjhx3zwK1DiMQmEQoUxg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760717745; c=relaxed/simple;
-	bh=4cvVL4IFJ70nn5sLgf+do2jK+w7Uh0UpstqAKSxIB3Y=;
+	s=arc-20240116; t=1760717756; c=relaxed/simple;
+	bh=iN9QxgdL5sM1aHqGKMzcz8sT8xP19Pb9eUWgXg1nfKI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=V2JYrPxWn6retLXIz2Sd1UDABkjxATFW90TBCYFiq9RJj5OoPuWL3UXLNX1janc+rfz88PbYgh9RURlma7gTU68QjzRO6G6MzROvROeVz2gAQe9VRDYV/JxNSinxxKD3ZbYGL4c7l1OG7fBJg9QUmFsbvRiAQ1lWKINGuXPfGi0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VaQG34U7; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=hAFfYk8ql8EZ8VS3JAw9ZYvUy510i5oeeSXoQty03WpgCp0fyWUPtty6Bs59rjWMBb+IH1+XtQuZ0PE5HCyiGKJsdCtOXWm7G6ZOJpu0N3KGU1FeMX5bgBrFlGtjlN9gfJEOwSOM1whpsy9FqZQxzUlhZ3YxGOKssbrZZJEJROA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S+p3BAVb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VaQG34U7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A75C1C4CEE7;
-	Fri, 17 Oct 2025 16:15:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S+p3BAVb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CFD7C113D0;
+	Fri, 17 Oct 2025 16:15:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760717745;
-	bh=4cvVL4IFJ70nn5sLgf+do2jK+w7Uh0UpstqAKSxIB3Y=;
+	s=k20201202; t=1760717755;
+	bh=iN9QxgdL5sM1aHqGKMzcz8sT8xP19Pb9eUWgXg1nfKI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=VaQG34U7HoAwFgMVGt2PiyhnNnvX+hXBh0MPFKc2jZikC7TdKWOwP6OOHkRK6G8hR
-	 mGr1DwrAugLUSHMXCPVEdqLFWy/S5mCNuYqnQz2v3z0yUIsk61C9cDh3l88yq0HRg4
-	 BwTjFRaODxYEAZ/PQ4ituYQ8WTlAp1VkB1QsjFzizDnfHg/i7nx2k48VtgVW5YZ0DH
-	 TCsP4MRTfmmuNrtnvDBDZyvxOZL8vkAW0c6l8JJnYNZu9O7bwoztnCQlY/b/C5V1gK
-	 W7edP5vTrj8wUPYXdh06rfL5Y+NgCEiqFitMJ3Syv/B7uLW4gTAwMblCBOSJKIiS4b
-	 RzoQdZPjWq/vg==
+	b=S+p3BAVbFYGVjyj1/5eJ59fJTBHTH74pSYvEFU8RBBYNrvFSnJwQSUSOslz3OBEEi
+	 LNjZ47mxlszLJ4gjbHCHwdq7drsAmi4zfzAJ2sBBMuPWAgbWFLE962dme/LuQWTYB/
+	 B9NKliXf2SC5CjoM4N/13vO7CLiEkbOcHYr4nf0IsBU12TqznFYgWqKNIMAafJ+qKZ
+	 sN24tAa7mLR1wi+/NZGYeFKDWLXM91jRd1eoIxWQHUHsf98your/HZo1PQ0FGUpeKd
+	 qjaNY0RFLFpWRpuqM8yTShmr4Ua0/h+KR0Xc4WNtIsr5KGnjJOg3mYCvaa0TtYTqnU
+	 kF6hIuEsLbX2w==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
@@ -33,9 +33,9 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v4 1/2] tracing: Allow tracer to add more than 32 options
-Date: Sat, 18 Oct 2025 01:15:41 +0900
-Message-ID: <176071774097.175601.10233017390618260565.stgit@devnote2>
+Subject: [PATCH v4 2/2] tracing: Add an option to show symbols in _text+offset for function profiler
+Date: Sat, 18 Oct 2025 01:15:50 +0900
+Message-ID: <176071775059.175601.3827350589430991963.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <176071773144.175601.17884676964675287059.stgit@devnote2>
 References: <176071773144.175601.17884676964675287059.stgit@devnote2>
@@ -51,188 +51,133 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Since enum trace_iterator_flags is 32bit, the max number of the
-option flags is limited to 32 and it is fully used now. To add
-a new option, we need to expand it.
+Function profiler shows the hit count of each function using its symbol
+name. However, there are some same-name local symbols, which we can not
+distinguish.
+To solve this issue, this introduces an option to show the symbols
+in "_text+OFFSET" format. This can avoid exposing the random shift of
+KASLR. The functions in modules are shown as "MODNAME+OFFSET" where the
+offset is from ".text".
 
-Use enum ... : uint64_t {...} syntax which is introduced by
-C++11 and GCC/Clang extensions.
+E.g. for the kernel text symbols, specify vmlinux and the output to
+ addr2line, you can find the actual function and source info;
 
+  $ addr2line -fie vmlinux _text+3078208
+  __balance_callbacks
+  kernel/sched/core.c:5064
+
+for modules, specify the module file and .text+OFFSET;
+
+  $ addr2line -fie samples/trace_events/trace-events-sample.ko .text+8224
+  do_simple_thread_func
+  samples/trace_events/trace-events-sample.c:23
+
+Suggested-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- Changes in v4:
-  - Use enum ... : type {} instead of const variables.
- Changes in v3:
-  - Make TRACE_ITER_* to global.
+ Changes in v2:
+  - Define a dummy TRACE_ITER_PROF_TEXT_OFFSET if CONFIG_FUNCTION_PROFILER=n.
 ---
- kernel/trace/trace.c              |   17 +++++++++--------
- kernel/trace/trace.h              |   14 +++++++-------
- kernel/trace/trace_irqsoff.c      |    2 +-
- kernel/trace/trace_sched_wakeup.c |    2 +-
- 4 files changed, 18 insertions(+), 17 deletions(-)
+ kernel/trace/ftrace.c |   26 +++++++++++++++++++++++++-
+ kernel/trace/trace.c  |    5 +++--
+ kernel/trace/trace.h  |   11 ++++++++++-
+ 3 files changed, 38 insertions(+), 4 deletions(-)
 
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 00b76d450a89..d4802bb93793 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -534,7 +534,9 @@ static int function_stat_headers(struct seq_file *m)
+ 
+ static int function_stat_show(struct seq_file *m, void *v)
+ {
++	struct trace_array *tr = trace_get_global_array();
+ 	struct ftrace_profile *rec = v;
++	const char *refsymbol = NULL;
+ 	char str[KSYM_SYMBOL_LEN];
+ #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+ 	static struct trace_seq s;
+@@ -554,7 +556,29 @@ static int function_stat_show(struct seq_file *m, void *v)
+ 		return 0;
+ #endif
+ 
+-	kallsyms_lookup(rec->ip, NULL, NULL, NULL, str);
++	if (tr->trace_flags & TRACE_ITER_PROF_TEXT_OFFSET) {
++		long offset;
++
++		if (core_kernel_text(rec->ip)) {
++			refsymbol = "_text";
++			offset = rec->ip - (unsigned long)_text;
++		} else {
++			struct module *mod;
++
++			guard(rcu)();
++			mod = __module_text_address(rec->ip);
++			if (mod) {
++				refsymbol = mod->name;
++				/* Calculate offset from module's text entry address. */
++				offset = rec->ip - (unsigned long)mod->mem[MOD_TEXT].base;
++			}
++		}
++		if (refsymbol)
++			snprintf(str, sizeof(str), "  %s%+ld", refsymbol, offset);
++	}
++	if (!refsymbol)
++		kallsyms_lookup(rec->ip, NULL, NULL, NULL, str);
++
+ 	seq_printf(m, "  %-30.30s  %10lu", str, rec->counter);
+ 
+ #ifdef CONFIG_FUNCTION_GRAPH_TRACER
 diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 4283ed4e8f59..2b3fe0a30c7d 100644
+index 2b3fe0a30c7d..9f254c290bcd 100644
 --- a/kernel/trace/trace.c
 +++ b/kernel/trace/trace.c
-@@ -5144,7 +5144,7 @@ static int tracing_trace_options_show(struct seq_file *m, void *v)
- 	trace_opts = tr->current_trace->flags->opts;
+@@ -522,7 +522,8 @@ EXPORT_SYMBOL_GPL(unregister_ftrace_export);
  
- 	for (i = 0; trace_options[i]; i++) {
--		if (tr->trace_flags & (1 << i))
-+		if (tr->trace_flags & (1ULL << i))
- 			seq_printf(m, "%s\n", trace_options[i]);
- 		else
- 			seq_printf(m, "no%s\n", trace_options[i]);
-@@ -5197,7 +5197,7 @@ static int set_tracer_option(struct trace_array *tr, char *cmp, int neg)
- }
+ /* trace_options that are only supported by global_trace */
+ #define TOP_LEVEL_TRACE_FLAGS (TRACE_ITER_PRINTK |			\
+-	       TRACE_ITER_PRINTK_MSGONLY | TRACE_ITER_RECORD_CMD)
++	       TRACE_ITER_PRINTK_MSGONLY | TRACE_ITER_RECORD_CMD |	\
++	       TRACE_ITER_PROF_TEXT_OFFSET)
  
- /* Some tracers require overwrite to stay enabled */
--int trace_keep_overwrite(struct tracer *tracer, u32 mask, int set)
-+int trace_keep_overwrite(struct tracer *tracer, u64 mask, int set)
+ /* trace_flags that are default zero for instances */
+ #define ZEROED_TRACE_FLAGS \
+@@ -11106,7 +11107,7 @@ __init static int tracer_alloc_buffers(void)
+ 
+ #ifdef CONFIG_FUNCTION_TRACER
+ /* Used to set module cached ftrace filtering at boot up */
+-__init struct trace_array *trace_get_global_array(void)
++struct trace_array *trace_get_global_array(void)
  {
- 	if (tracer->enabled && (mask & TRACE_ITER_OVERWRITE) && !set)
- 		return -1;
-@@ -5205,7 +5205,7 @@ int trace_keep_overwrite(struct tracer *tracer, u32 mask, int set)
- 	return 0;
+ 	return &global_trace;
  }
- 
--int set_tracer_flag(struct trace_array *tr, unsigned int mask, int enabled)
-+int set_tracer_flag(struct trace_array *tr, u64 mask, int enabled)
- {
- 	if ((mask == TRACE_ITER_RECORD_TGID) ||
- 	    (mask == TRACE_ITER_RECORD_CMD) ||
-@@ -5307,7 +5307,7 @@ int trace_set_options(struct trace_array *tr, char *option)
- 	if (ret < 0)
- 		ret = set_tracer_option(tr, cmp, neg);
- 	else
--		ret = set_tracer_flag(tr, 1 << ret, !neg);
-+		ret = set_tracer_flag(tr, 1ULL << ret, !neg);
- 
- 	mutex_unlock(&trace_types_lock);
- 	mutex_unlock(&event_mutex);
-@@ -9119,7 +9119,7 @@ trace_options_core_read(struct file *filp, char __user *ubuf, size_t cnt,
- 
- 	get_tr_index(tr_index, &tr, &index);
- 
--	if (tr->trace_flags & (1 << index))
-+	if (tr->trace_flags & (1ULL << index))
- 		buf = "1\n";
- 	else
- 		buf = "0\n";
-@@ -9148,7 +9148,7 @@ trace_options_core_write(struct file *filp, const char __user *ubuf, size_t cnt,
- 
- 	mutex_lock(&event_mutex);
- 	mutex_lock(&trace_types_lock);
--	ret = set_tracer_flag(tr, 1 << index, val);
-+	ret = set_tracer_flag(tr, 1ULL << index, val);
- 	mutex_unlock(&trace_types_lock);
- 	mutex_unlock(&event_mutex);
- 
-@@ -9312,8 +9312,9 @@ static void create_trace_options_dir(struct trace_array *tr)
- 
- 	for (i = 0; trace_options[i]; i++) {
- 		if (top_level ||
--		    !((1 << i) & TOP_LEVEL_TRACE_FLAGS))
-+		    !((1ULL << i) & TOP_LEVEL_TRACE_FLAGS)) {
- 			create_trace_option_core_file(tr, trace_options[i], i);
-+		}
- 	}
- }
- 
-@@ -9997,7 +9998,7 @@ static int __remove_instance(struct trace_array *tr)
- 	/* Disable all the flags that were enabled coming in */
- 	for (i = 0; i < TRACE_FLAGS_MAX_SIZE; i++) {
- 		if ((1 << i) & ZEROED_TRACE_FLAGS)
--			set_tracer_flag(tr, 1 << i, 0);
-+			set_tracer_flag(tr, 1ULL << i, 0);
- 	}
- 
- 	if (printk_trace == tr)
 diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 1dbf1d3cf2f1..caec534072e7 100644
+index caec534072e7..3d034dd753c6 100644
 --- a/kernel/trace/trace.h
 +++ b/kernel/trace/trace.h
-@@ -216,7 +216,7 @@ struct array_buffer {
- 	int				cpu;
- };
+@@ -1353,6 +1353,14 @@ extern int trace_get_user(struct trace_parser *parser, const char __user *ubuf,
+ # define STACK_FLAGS
+ #endif
  
--#define TRACE_FLAGS_MAX_SIZE		32
-+#define TRACE_FLAGS_MAX_SIZE		64
- 
- struct trace_options {
- 	struct tracer			*tracer;
-@@ -390,7 +390,7 @@ struct trace_array {
- 	int			buffer_percent;
- 	unsigned int		n_err_log_entries;
- 	struct tracer		*current_trace;
--	unsigned int		trace_flags;
-+	u64			trace_flags;
- 	unsigned char		trace_flags_index[TRACE_FLAGS_MAX_SIZE];
- 	unsigned int		flags;
- 	raw_spinlock_t		start_lock;
-@@ -631,7 +631,7 @@ struct tracer {
- 					    u32 old_flags, u32 bit, int set);
- 	/* Return 0 if OK with change, else return non-zero */
- 	int			(*flag_changed)(struct trace_array *tr,
--						u32 mask, int set);
-+						u64 mask, int set);
- 	struct tracer		*next;
- 	struct tracer_flags	*flags;
- 	int			enabled;
-@@ -1385,7 +1385,7 @@ extern int trace_get_user(struct trace_parser *parser, const char __user *ubuf,
- 		C(MARKERS,		"markers"),		\
- 		C(EVENT_FORK,		"event-fork"),		\
- 		C(TRACE_PRINTK,		"trace_printk_dest"),	\
--		C(COPY_MARKER,		"copy_trace_marker"),\
-+		C(COPY_MARKER,		"copy_trace_marker"),	\
- 		C(PAUSE_ON_TRACE,	"pause-on-trace"),	\
- 		C(HASH_PTR,		"hash-ptr"),	/* Print hashed pointer */ \
++#ifdef CONFIG_FUNCTION_PROFILER
++# define PROFILER_FLAGS					\
++		C(PROF_TEXT_OFFSET,	"prof-text-offset"),
++#else
++# define PROFILER_FLAGS
++# define TRACE_ITER_PROF_TEXT_OFFSET	0UL
++#endif
++
+ /*
+  * trace_iterator_flags is an enumeration that defines bit
+  * positions into trace_flags that controls the output.
+@@ -1391,7 +1399,8 @@ extern int trace_get_user(struct trace_parser *parser, const char __user *ubuf,
  		FUNCTION_FLAGS					\
-@@ -1413,7 +1413,7 @@ enum trace_iterator_bits {
- #undef C
- #define C(a, b) TRACE_ITER_##a = (1 << TRACE_ITER_##a##_BIT)
- 
--enum trace_iterator_flags { TRACE_FLAGS };
-+enum trace_iterator_flags : uint64_t { TRACE_FLAGS };
+ 		FGRAPH_FLAGS					\
+ 		STACK_FLAGS					\
+-		BRANCH_FLAGS
++		BRANCH_FLAGS					\
++		PROFILER_FLAGS
  
  /*
-  * TRACE_ITER_SYM_MASK masks the options in trace_flags that
-@@ -2058,8 +2058,8 @@ extern const char *__stop___tracepoint_str[];
- 
- void trace_printk_control(bool enabled);
- void trace_printk_start_comm(void);
--int trace_keep_overwrite(struct tracer *tracer, u32 mask, int set);
--int set_tracer_flag(struct trace_array *tr, unsigned int mask, int enabled);
-+int trace_keep_overwrite(struct tracer *tracer, u64 mask, int set);
-+int set_tracer_flag(struct trace_array *tr, u64 mask, int enabled);
- 
- /* Used from boot time tracer */
- extern int trace_set_options(struct trace_array *tr, char *option);
-diff --git a/kernel/trace/trace_irqsoff.c b/kernel/trace/trace_irqsoff.c
-index 5496758b6c76..1a65f9f1075c 100644
---- a/kernel/trace/trace_irqsoff.c
-+++ b/kernel/trace/trace_irqsoff.c
-@@ -539,7 +539,7 @@ static inline int irqsoff_function_set(struct trace_array *tr, u32 mask, int set
- }
- #endif /* CONFIG_FUNCTION_TRACER */
- 
--static int irqsoff_flag_changed(struct trace_array *tr, u32 mask, int set)
-+static int irqsoff_flag_changed(struct trace_array *tr, u64 mask, int set)
- {
- 	struct tracer *tracer = tr->current_trace;
- 
-diff --git a/kernel/trace/trace_sched_wakeup.c b/kernel/trace/trace_sched_wakeup.c
-index bf1cb80742ae..45865b4f753f 100644
---- a/kernel/trace/trace_sched_wakeup.c
-+++ b/kernel/trace/trace_sched_wakeup.c
-@@ -328,7 +328,7 @@ __trace_function(struct trace_array *tr,
- 		trace_function(tr, ip, parent_ip, trace_ctx, NULL);
- }
- 
--static int wakeup_flag_changed(struct trace_array *tr, u32 mask, int set)
-+static int wakeup_flag_changed(struct trace_array *tr, u64 mask, int set)
- {
- 	struct tracer *tracer = tr->current_trace;
- 
+  * By defining C, we can make TRACE_FLAGS a list of bit names
 
