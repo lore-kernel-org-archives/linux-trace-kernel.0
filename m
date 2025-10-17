@@ -1,102 +1,138 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EBBF332EB5
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 17 Oct 2025 11:33:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E866280331
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 17 Oct 2025 11:52:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760700824; cv=none; b=rzb0V2AamADeGKSRNqXs1TqNaf6WjvidXUSSWFc/LizVJGlpaEjEYfyAJWk/lwvn1HPBosN8VwLIEeQSBBjQ+xLPbMq0RvqwmP2d7AslXBpYZybKOfxmKVJchLJKqbtqdKVbyBv2+bclK857cv03lJXXhF+hLVanNtha1Sd6PKY=
+	t=1760701939; cv=none; b=oxb3h6p1YkSfr6MYi6gbC7a9Ekempj3BZ7OYnjm3jKkqjixu2PMzoGj75zW/HeMfSV4EYp3sLm0rGccQ3jA+KVGUOJgsjE6RyqP+7KuculgkDVMM3auFV5iSA+nNq4GBug0XQLm7ZjcjqYOGyusvj9wVWVdl2WdVPyvL9zsEscA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760700824; c=relaxed/simple;
-	bh=UdTwS/dExcvw2xhiAcwl5dXsykAuEk55HCu7Gxo/fHk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o/1CgnLE29rx9dCx4+ZNTAfAua+ybIf7QktogVSHSMFn7l6jbNFPUqlrivTZulrrF+ZYbpvBeJX42iCTAPA+gpV+8g1kHXfz3rvjFzGzW8Qc7VB39xDgtSsnIcbYdw1+6E6c73qBvlgR5BJ1Qy/huNUiLZ3iOirXhCZ5cVANsZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=I375PCkY; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1760701939; c=relaxed/simple;
+	bh=FOca5tTbFWcePAHAl7Eifc2AqcyrN6pW9+HT0gDqUKQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jckLeIv1pd6wqUDOuedAdbv4zGT0o9zFp/dtDNxts+lsjWRxVy41ypgFiuE4qkTXa5jVGjZYWTYOzgVAYh7BAZQa7is9MSPiyOL0d3MSwcrQ2ZXV+u0zam8yiu7N2WHATxvDy+/zunziEuzTiX5mIbU8YfRUcn7up8jIT/gTA+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MZBqarfl; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="I375PCkY"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MZBqarfl"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1760700821;
+	s=mimecast20190719; t=1760701936;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qgJNG0+kfyblCxEFNQal2jyX2sK0ET1Tz4uKuV9Ge9k=;
-	b=I375PCkYZhnGeHCCaoI3jnoPxOUF39kywQ1m8/YuQ/3f2HkzCjUAJdsnUhkMG7cSgycjv0
-	w9xUhAry7VfV0MFNRdG9nSztktnwQOI94x42wXAe3tjtbCePH8WzLjw1Ga9b5fuCHkQw26
-	yLlRaEoHV/ood4xKzSoXO+WdB/krPrI=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=OG8S2hI/eYRMbUZLperrVpe30F/q5Fz9fS8hkEhL7K0=;
+	b=MZBqarfl4OeLo0bxtUH8yuWvJvwe7WBk5l3WgSYsiVY8GPZM8k7g6x+9ptucdEp2sVBUsb
+	8Nw6WkmScSuY8tAKg++YD0Bu69c5DwSe+DE1E60G/MSIB9b1NAu43qYVazd6FnimtCDqzJ
+	rRnowcQub81jl0HWvmO1PYWl25E5VUQ=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-41-mYiih6jrOn-FzZqigFdGZg-1; Fri,
- 17 Oct 2025 07:33:38 -0400
-X-MC-Unique: mYiih6jrOn-FzZqigFdGZg-1
-X-Mimecast-MFC-AGG-ID: mYiih6jrOn-FzZqigFdGZg_1760700817
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-616-RYk5Gup1OZWjnU9IFjMxUg-1; Fri,
+ 17 Oct 2025 07:52:13 -0400
+X-MC-Unique: RYk5Gup1OZWjnU9IFjMxUg-1
+X-Mimecast-MFC-AGG-ID: RYk5Gup1OZWjnU9IFjMxUg_1760701932
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 27C511800345;
-	Fri, 17 Oct 2025 11:33:37 +0000 (UTC)
-Received: from wcosta-thinkpadt14gen4.rmtbr.csb (unknown [10.22.64.136])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 36C1419560AD;
-	Fri, 17 Oct 2025 11:33:32 +0000 (UTC)
-Date: Fri, 17 Oct 2025 08:33:31 -0300
-From: Wander Lairson Costa <wander@redhat.com>
-To: Tomas Glozar <tglozar@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, 
-	LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>, 
-	John Kacur <jkacur@redhat.com>, Luis Goncalves <lgoncalv@redhat.com>, 
-	Costa Shulyupin <costa.shul@redhat.com>, Crystal Wood <crwood@redhat.com>, stable@vger.kernel.org
-Subject: Re: [PATCH] rtla/timerlat_bpf: Stop tracing on user latency
-Message-ID: <6iu2f3qpxuqsjq4vxygokmmppiuwj32kkxiv57ir524h2xgsxp@wmf5d4vckgvl>
-References: <20251006143100.137255-1-tglozar@redhat.com>
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C21DD195608A;
+	Fri, 17 Oct 2025 11:52:11 +0000 (UTC)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb (unknown [10.44.33.41])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 8549A30001A2;
+	Fri, 17 Oct 2025 11:52:08 +0000 (UTC)
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: linux-kernel@vger.kernel.org,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Nam Cao <namcao@linutronix.de>
+Cc: Gabriele Monaco <gmonaco@redhat.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	John Kacur <jkacur@redhat.com>,
+	Waylon Cude <wcude@redhat.com>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH v2 0/2] selftests/verification: Add initial RV tests
+Date: Fri, 17 Oct 2025 13:52:01 +0200
+Message-ID: <20251017115203.140080-1-gmonaco@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251006143100.137255-1-tglozar@redhat.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-On Mon, Oct 06, 2025 at 04:31:00PM +0200, Tomas Glozar wrote:
-> rtla-timerlat allows a *thread* latency threshold to be set via the
-> -T/--thread option. However, the timerlat tracer calls this *total*
-> latency (stop_tracing_total_us), and stops tracing also when the
-> return-to-user latency is over the threshold.
-> 
-> Change the behavior of the timerlat BPF program to reflect what the
-> timerlat tracer is doing, to avoid discrepancy between stopping
-> collecting data in the BPF program and stopping tracing in the timerlat
-> tracer.
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: e34293ddcebd ("rtla/timerlat: Add BPF skeleton to collect samples")
-> Signed-off-by: Tomas Glozar <tglozar@redhat.com>
-> ---
->  tools/tracing/rtla/src/timerlat.bpf.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/tools/tracing/rtla/src/timerlat.bpf.c b/tools/tracing/rtla/src/timerlat.bpf.c
-> index 084cd10c21fc..e2265b5d6491 100644
-> --- a/tools/tracing/rtla/src/timerlat.bpf.c
-> +++ b/tools/tracing/rtla/src/timerlat.bpf.c
-> @@ -148,6 +148,9 @@ int handle_timerlat_sample(struct trace_event_raw_timerlat_sample *tp_args)
->  	} else {
->  		update_main_hist(&hist_user, bucket);
->  		update_summary(&summary_user, latency, bucket);
-> +
-> +		if (thread_threshold != 0 && latency_us >= thread_threshold)
-> +			set_stop_tracing();
->  	}
->  
->  	return 0;
-> -- 
-> 2.51.0
-> 
+Add a series of tests to validate the RV tracefs API and basic
+functionality.
 
-Reviewed-by: Wander Lairson Costa <wander@redhat.com>
+* available monitors:
+    Check that all monitors (from the monitors folder) appear as
+    available and have a description. Works with nested monitors.
+
+* enable/disable:
+    Enable and disable all monitors and validate both the enabled file
+    and the enabled_monitors. Check that enabling container monitors
+    enables all nested monitors.
+
+* reactors:
+    Set all reactors and validate the setting, also for nested monitors.
+
+* wwnr with printk:
+    wwnr is broken on purpose, run it with a load and check that the
+    printk reactor works. Also validate disabling reacting_on or
+    monitoring_on prevents reactions.
+
+These tests use the ftracetest suite. The first patch of the series
+adapts ftracetest to make this possible.
+
+The enable/disable test cannot pass on upstream without the application
+of the fix in [1].
+
+Changes since V1:
+- run stressors based on the cpu count on the wwnr/printk test
+
+[1] - https://lore.kernel.org/lkml/87tt0t4u19.fsf@yellow.woof
+
+To: Steven Rostedt <rostedt@goodmis.org>
+To: Nam Cao <namcao@linutronix.de>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: John Kacur <jkacur@redhat.com>
+Cc: Waylon Cude <wcude@redhat.com>
+Cc: linux-trace-kernel@vger.kernel.org
+Cc: linux-kselftest@vger.kernel.org
+
+Gabriele Monaco (2):
+  selftest/ftrace: Generalise ftracetest to use with RV
+  selftests/verification: Add initial RV tests
+
+ MAINTAINERS                                   |  1 +
+ tools/testing/selftests/ftrace/ftracetest     | 34 ++++++---
+ .../ftrace/test.d/00basic/mount_options.tc    |  2 +-
+ .../testing/selftests/ftrace/test.d/functions |  6 +-
+ .../testing/selftests/verification/.gitignore |  2 +
+ tools/testing/selftests/verification/Makefile |  8 ++
+ tools/testing/selftests/verification/config   |  1 +
+ tools/testing/selftests/verification/settings |  1 +
+ .../selftests/verification/test.d/functions   | 39 ++++++++++
+ .../test.d/rv_monitor_enable_disable.tc       | 75 +++++++++++++++++++
+ .../verification/test.d/rv_monitor_reactor.tc | 68 +++++++++++++++++
+ .../test.d/rv_monitors_available.tc           | 18 +++++
+ .../verification/test.d/rv_wwnr_printk.tc     | 30 ++++++++
+ .../verification/verificationtest-ktap        |  8 ++
+ 14 files changed, 279 insertions(+), 14 deletions(-)
+ create mode 100644 tools/testing/selftests/verification/.gitignore
+ create mode 100644 tools/testing/selftests/verification/Makefile
+ create mode 100644 tools/testing/selftests/verification/config
+ create mode 100644 tools/testing/selftests/verification/settings
+ create mode 100644 tools/testing/selftests/verification/test.d/functions
+ create mode 100644 tools/testing/selftests/verification/test.d/rv_monitor_enable_disable.tc
+ create mode 100644 tools/testing/selftests/verification/test.d/rv_monitor_reactor.tc
+ create mode 100644 tools/testing/selftests/verification/test.d/rv_monitors_available.tc
+ create mode 100644 tools/testing/selftests/verification/test.d/rv_wwnr_printk.tc
+ create mode 100644 tools/testing/selftests/verification/verificationtest-ktap
+
+
+base-commit: 3a8660878839faadb4f1a6dd72c3179c1df56787
+-- 
+2.51.0
 
