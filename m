@@ -1,36 +1,42 @@
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95A4132ED20;
-	Fri, 17 Oct 2025 09:11:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9489B2D6E4B;
+	Fri, 17 Oct 2025 09:14:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760692313; cv=none; b=pFbrMR+HkgDSMhXotaXOYsh9yowYJAr7PFWu1xQdSE+QUfGXKY28M/wqGCOY2TOvwYjeiyDUj3CnWrC2D/fIs4u+otaufSYGyulUCF4gOF4SvIlgJKCRUAfVbc3WcsgtWp55jizOEVu+3OA9JX4n1Pcd8Yha3BR6mub+thhCJbM=
+	t=1760692469; cv=none; b=LnT4jQdhjSWKXo692K6RuNAQY2zl+autEOtOtgXXN3xct3XzUAAYRjB7sTzU/TeDvUJIn7SKLJZ+NB0vjKu9ujcyqj9NtgvMGyOiQ+o3b614Zel32F3NFkgBVapIOO6zqKr7zE9sziDAnDGGRwWTVo+51ZVA/n8620ibhW5DGfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760692313; c=relaxed/simple;
-	bh=uYC2wxwAVvGgTVDNiX1Ux3FSlpVHASHy/4GGzQUT5Ms=;
+	s=arc-20240116; t=1760692469; c=relaxed/simple;
+	bh=Sv4CXxzBJOfq1rxpt8Hzc6D60+L/r/E/RubWex6YyyQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cRt4PRDIhv227OyTaQKvD6goSXXjQTcVd85KBnC596zgWsjbKVkUbUiaKJzp7SDVDbXVA93AePSlDRj0bPRhFFuGssttrxWnhdMw7I87P0Tes1s7HzX8wXR8fQN99ZJjLGXIstAEeIygc0vZp6QG+krK6LBG34JWa8W0mLOouyc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
+	 MIME-Version:Content-Type; b=mlXTZawA+aGQeCw11AV3dmtzRnxcZ/kEu14Gdu2sZg4zzBwle+uBW6TkBlM97QTj/9LMGAGP/zZ9YaiIcziirUL30nrCLr5NO7Ik3yISr5dnuNLyp4ikBSuSiZRm8sgJJXOkZSlcrHySEXoZmQ2JAc6YACDtHSFp5Ya+NfFirFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf20.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay03.hostedemail.com (Postfix) with ESMTP id 1922DACBCB;
-	Fri, 17 Oct 2025 09:11:49 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf20.hostedemail.com (Postfix) with ESMTPA id 266B220026;
-	Fri, 17 Oct 2025 09:11:47 +0000 (UTC)
-Date: Fri, 17 Oct 2025 05:11:46 -0400
+Received: from omf03.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay02.hostedemail.com (Postfix) with ESMTP id 9ADC313B655;
+	Fri, 17 Oct 2025 09:14:19 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf03.hostedemail.com (Postfix) with ESMTPA id 569996000E;
+	Fri, 17 Oct 2025 09:14:16 +0000 (UTC)
+Date: Fri, 17 Oct 2025 05:14:14 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Tomas Glozar <tglozar@redhat.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, John Kacur <jkacur@redhat.com>, Luis
- Goncalves <lgoncalv@redhat.com>, Costa Shulyupin <costa.shul@redhat.com>,
- Crystal Wood <crwood@redhat.com>, Wander Lairson Costa <wander@redhat.com>
-Subject: Re: [PATCH v2 1/3] tools/rtla: Fix --on-threshold always triggering
-Message-ID: <20251017051146.5f6a8901@batman.local.home>
-In-Reply-To: <CAP4=nvSmJOdoO8q125sdzvR7ix1oVsNobSRtWb7ADUADdzEPiw@mail.gmail.com>
-References: <20251007095341.186923-1-tglozar@redhat.com>
-	<CAP4=nvSmJOdoO8q125sdzvR7ix1oVsNobSRtWb7ADUADdzEPiw@mail.gmail.com>
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ linux-trace-kernel@vger.kernel.org, maz@kernel.org, oliver.upton@linux.dev,
+ joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com,
+ kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ jstultz@google.com, qperret@google.com, will@kernel.org,
+ aneesh.kumar@kernel.org, kernel-team@android.com,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 14/28] tracing: Add a trace remote module for testing
+Message-ID: <20251017051414.7a6e10b5@batman.local.home>
+In-Reply-To: <aPIAC0WEVg1pVr0H@google.com>
+References: <20251003133825.2068970-1-vdonnefort@google.com>
+	<20251003133825.2068970-15-vdonnefort@google.com>
+	<20251016170645.15416c8a@gandalf.local.home>
+	<20251016171155.0d871fc3@gandalf.local.home>
+	<aPIAC0WEVg1pVr0H@google.com>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -40,29 +46,27 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 266B220026
-X-Stat-Signature: 5zu4637dqwbigrce7tz44t9zi7po7orh
-X-Rspamd-Server: rspamout06
+X-Stat-Signature: 7hdhsjnkap11w1smo8kwhj531mpabhxq
+X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: 569996000E
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18JqUHJ7tYvqNpnB7K/4WNZqdbys4aWpzc=
-X-HE-Tag: 1760692307-524040
-X-HE-Meta: U2FsdGVkX19UZ1LNtvfFurFTE7TZxISoxjyIuoNA6zajS1JWop0iJKFqJeH8IJWnxlrT1wMI9fqLNTZls8I5RitgDAK7vpSetWeaq0Mw/6xmj0TAbu8+c3yvCpCxyHz2aNI7SnESjFjude2+whM1F+x2OXLzNdxK+eMYQQqNf6um/52eoDVXxHIv2OetnSu93qvKAzNeGKglyX/Xiy3RTslJjer7tFRsqI/qaVmN82L4HP1NY/24tUk8LByZ7+hSlVYeZmDDTxkzsUK8P1wXl4XDp1p6eZiuRqR9cEOkf46u2cTDDzmZPsKkK24U2/8mhmsyy2Pj3EvaDGmMybMuqrHxD1biSzYnkodpgTIXwPK5qybDkcHJdw==
+X-Session-ID: U2FsdGVkX19h6oOCw3PyeGtOXOG42FQa1CMRVS20sbo=
+X-HE-Tag: 1760692456-794409
+X-HE-Meta: U2FsdGVkX1++vc5wBG8SikSMLzHf4VoFfGg/rJahcryGkvvI9ElFZtxshtAU59/M6z3zeCiupurKvfqBqVpSi9QON0MvxuRjp4x7WAAW/t6bCxIWs7+vT043I5yRJPCh/hVBPfsZaR2hD8NBu1/dJv0+xVmELEl3z9yzwFe2Hf/UCce5cJSFpZIxGfZUzQ36jn6dIZdzH10+D56ZyCGdVBRte7xZK+d/L8Sk1ajc7miz5RzyeNYY8JHRttu3FzjX0F4hJ0sgRTUQ15iYylJNxbSUWpj4SDuFjtdTUDOuS82yx15qiOe9W4jPa+HAyqcIxqrGX1YXMa8nvL28UOsX4e3ItypVwivk
 
-On Fri, 17 Oct 2025 09:38:04 +0200
-Tomas Glozar <tglozar@redhat.com> wrote:
+On Fri, 17 Oct 2025 09:36:27 +0100
+Vincent Donnefort <vdonnefort@google.com> wrote:
+
+> And of course, I forgot to check CONFIG_REMOTE_TEST=M ...
+
+It also needs to export symbols.
+
 > 
-> It seems that this patchset containing fixes for recently merged RTLA
-> code consolidation [1] has no further comments. Could you take it?
-> (Unless you have any comments, of course.)
+> The following snippet should do.
 > 
-> [1] https://lore.kernel.org/linux-trace-kernel/20250907022325.243930-1-crwood@redhat.com/T/
+> Do you want a v8 now (and with your previous comment) or shall I wait a bit more?
 
-I'll take a look at it next week. I added it to my "delegate" in Patchwork:
-
-  https://patchwork.kernel.org/project/linux-trace-kernel/list/?series=1008975
-
-So hopefully, I don't forget.
-
-We need to start making you the maintainer too ;-)
+Wait a little more. I'm currently taking a long weekend and will likely
+play with it a bit more next week.
 
 -- Steve
