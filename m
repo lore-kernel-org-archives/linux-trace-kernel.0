@@ -1,132 +1,108 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD0C42DE713;
-	Fri, 17 Oct 2025 13:05:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ACC22F12A4
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 17 Oct 2025 14:47:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760706348; cv=none; b=l1yob46mKyTmSiCKPrvyNyGQ6noARmebN93mtQA97nBlB3JgBbKxOBdN5bvwZKiLp0F99V+B9XT5YuXAYMbz8fEKyRQ+/XcGhZKb/Ma8RkL8uI+4RHLh2AwjxONS2GkwdaDE4n+YpsW/PRKkJPkiqWqc/tgLpvhk01haGBT2kwM=
+	t=1760712437; cv=none; b=QVv95fmIRzMODm4rf1qH4mKyQYqAFdohJmED5o4UZCnlPHOCTMLiahxwtYzAgQ26YgJhblEXfwe6+rETFbFAK/E9kJ7pNAoMaVYzMS06gTAgXCosx59lrb5MOWuJ9OKVSlBN+eanRcwSVVwk/ZLRoDusqQIJFaQKWy5xHh0uCgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760706348; c=relaxed/simple;
-	bh=zEz9ga+C3NjrrB+uajYQC/2V9em72t3wQWjrmGwWgyE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=dl9Whw7Y8g5Xe8B1Nsz8AXO188MJgsQAE5Azyh+5OLUz4uWVIv0M6YZ6NCBUkp+xo2+awPm4W2spi8tnOUIf03CCI7/OOGfFjBdUkh0CxR850i3xnSiqe4Q69OncMuWFI3xPhiZmawJOnUlRXEmZHJ+Xas6wX5sJsARBL/SE9Ds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=tMDLw6cH; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DWuiRtD9; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1760712437; c=relaxed/simple;
+	bh=75vKCfL3ezS+cf5WDh89YciSjSMKCTJsfcb1LDcqE2Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hjnouNQ55QJyulbulF91oEMKKEKZQfx7U6vIGbOYrN68V6ES3APb5hZdFS8HCl2v0YGHcULGQ8W2o7vc+k4/VlBLC+sBNm45G9PVsAu52fN6kzTrrfHuOkNmU26+jtftLF5MP0eE5d5GmRtavhDi0b0xsVZP4zHTjWVu/xSnet8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=R3YrMqze; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tMDLw6cH";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DWuiRtD9"
-From: Nam Cao <namcao@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1760706345;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R3YrMqze"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1760712435;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hPtEh82id2JnaP5JMh/vbCgClw5ZFVRwFNHrSzBjt1M=;
-	b=tMDLw6cHx2JEMIytXTYHequZeGQSavqZnuyx2RiVKGr3QbmobXCb9DfmPyPvlHzahvLEgg
-	LtQxqNUYasgpfkE1fkXCyx3FiL7jVJJaBm8Eik+56H4sgfjZPoOfgVgdDjzsmstFdW3rBB
-	qZTFix9vLUy+kOmLyTV6d0eQ5ZimXv4epxqYN2rTK2dMkW2dYbBJInyOwAP32D2ci5uKHc
-	CpJIXOBsbIaAJ674NPJ/nHzFop9E4HOZgsY21HSTdEkGson6e/0Z5zPF3sZVIEEYzqoT1N
-	qKfi2b+CVWJsFOEa8Vb3MVQ2KCAawBchzODnOqjksQQCVj1RbgDLuVqr1g/K5A==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1760706345;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hPtEh82id2JnaP5JMh/vbCgClw5ZFVRwFNHrSzBjt1M=;
-	b=DWuiRtD97Bun9qnHe9Qehx7Rf5DsXdqkJAcpPEWlhBIs2pUDJ4jWkGMaoWPPth2XW86csp
-	4HIBpvjemIyMLQCg==
-To: Gabriele Monaco <gmonaco@redhat.com>, linux-kernel@vger.kernel.org, Steven
- Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- linux-trace-kernel@vger.kernel.org
-Cc: Tomas Glozar <tglozar@redhat.com>, Juri Lelli <jlelli@redhat.com>, Clark
- Williams <williams@redhat.com>, John Kacur <jkacur@redhat.com>
-Subject: Re: [PATCH v2 10/20] rv: Add Hybrid Automata monitor type
-In-Reply-To: <4d27225b5a38210a40efcdb8eb778ca0ec3808f1.camel@redhat.com>
-References: <20250919140954.104920-1-gmonaco@redhat.com>
- <20250919140954.104920-11-gmonaco@redhat.com> <87ldl9x6h7.fsf@yellow.woof>
- <4d27225b5a38210a40efcdb8eb778ca0ec3808f1.camel@redhat.com>
-Date: Fri, 17 Oct 2025 15:05:44 +0200
-Message-ID: <87frbhwudz.fsf@yellow.woof>
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=blFtHsrz91GSUOxatWU6Sim8/yxuJYJjoWm4023zsuY=;
+	b=R3YrMqze9Caay+rHxFmhkO2ZhSzC0iAXoQ7DnocCs/8TFt3WnDCfbUtmFfK7L4KCi/+Vcb
+	7Eh7vMOqivfG0OAdluT8Gp8PVMMn3ZqvXw3baJvFcU00vNKLZZLTFVNmbPZhZ/Db/FmnoO
+	wKUkVLtP2MEwQz310sr1zXIZQsB/E/U=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-654-KPUfwbanP-CWDkAiOyElsg-1; Fri,
+ 17 Oct 2025 10:47:12 -0400
+X-MC-Unique: KPUfwbanP-CWDkAiOyElsg-1
+X-Mimecast-MFC-AGG-ID: KPUfwbanP-CWDkAiOyElsg_1760712431
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D938B19560AD;
+	Fri, 17 Oct 2025 14:47:10 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.44.32.24])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 87AF81800452;
+	Fri, 17 Oct 2025 14:47:07 +0000 (UTC)
+From: Tomas Glozar <tglozar@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+	John Kacur <jkacur@redhat.com>,
+	Luis Goncalves <lgoncalv@redhat.com>,
+	Costa Shulyupin <costa.shul@redhat.com>,
+	Crystal Wood <crwood@redhat.com>,
+	Wander Lairson Costa <wander@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Tomas Glozar <tglozar@redhat.com>
+Subject: [PATCH 0/4] rtla/timerlat: Add --bpf-action option
+Date: Fri, 17 Oct 2025 16:46:46 +0200
+Message-ID: <20251017144650.663238-1-tglozar@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-Gabriele Monaco <gmonaco@redhat.com> writes:
-> Alright, this is the simplest way I could think to represent clocks, still it
-> seems confusing.
->
-> Let's start from guards (invariants are not special but I'm trying to do
-> something to keep precision), the value of a clock is the time that passed since
-> the last reset, as that's when the value is set to 0. Storing that timestamp and
-> just comparing the difference whenever you need to know the valuation of said
-> clock seemed the most straightforward thing to me. The clock representation
-> doesn't include the guard constraint, that is validated during the event using
-> the current valuation (i.e. now - reset_time).
->
-> What is important to note is that, at time of reset, you don't know what guard
-> is going to fire, you may as well have a state with event A asking for clk<10
-> and event B requiring clk<20, also the guard may be in a later state and may
-> depend on the path.
->
-> Invariants are bound to the form clk < N, and get "armed" when we reach the
-> state, from there we know exactly when the invariant is going to expire, so we
-> can save that (very important when using the timer wheel). Note here that the
-> expiration isn't exactly N from now, but it's the valuation of the clock (reset
-> might have occurred a few states earlier, see the nomiss case) subtracted by N,
-> this is what the "passed" means later.
->
-> That said, I couldn't think of a simpler implementation but any suggestion is
-> welcome, of course.
+This patchset extends rtla-timerlat's BPF support with the option of
+executing a user-supplied BPF program on latency threshold overflow.
 
-Ok, now things start to make sense. Thanks for the explanation.
+See the supplied example and documentation for how to create a program.
+bpf_tail_call() is used to chain the program with the built-in BPF
+sample collection program, if the threshold is hit.
 
-At least to me, using the same variable to store different time values
-is a bit confusing.
+The feature can be used for both in-kernel data collection and sending
+signals to userspace directly from the kernel, if the kernel version
+allows it.
 
-Is it possible that we always store the timestamp of the last clock reset?
+Note: The patchset will have to be rebased on top of [1], or vice versa,
+since they both touch stop_tracing() ([1] adds one call of it, and this
+patchset adds an extra argument to it).
 
-The invariant bound value (N) is fixed for each state, so we can have
-the bound value in ha_verify_invariants() instead. For example, the
-Python script can generate something like
+I have contemplated adding this as --on-threshold bpf,... but it does
+not fit the existing actions infrastructure very well, since the action
+happens in the BPF program, not in RTLA, and only one BPF action is
+supported.
 
-static inline bool ha_verify_invariants(struct ha_monitor *ha_mon,
-                                       enum states curr_state, enum events event,
-                                       enum states next_state, u64 time_ns)
-{
-       if (curr_state == enqueued_stall)
-               return ha_check_invariant_jiffy(ha_mon, threshold_jiffies, time_ns);
-       return true;
-}
+[1] https://lore.kernel.org/linux-trace-kernel/20251006143100.137255-1-tglozar@redhat.com/
 
-Is that possible?
+Tomas Glozar (4):
+  rtla/timerlat: Support tail call from BPF program
+  rtla/timerlat: Add --bpf-action option
+  rtla/timerlat: Add example for BPF action program
+  Documentation/rtla: Document --bpf-action option
 
-> Kinda, it would solve the problem for this specific subtraction, but racing
-> handlers could still lead to problems although the subtraction is "correct".
->
-> Since this is the only time the env storage needs to be an atomic_t and it's
-> fairly rare (only complicated models require calling this function at all,
-> others are happy with READ_ONCE/WRITE_ONCE) I didn't want to change the storage
-> implementation for some perceived safety.
->
-> I wrote that comment exactly to motivate why we aren't using atomic_t, but I
-> should probably reword that. Does this make sense to you?
+ .../tools/rtla/common_timerlat_options.rst    | 18 +++++
+ .../tracing/rtla/sample/timerlat_bpf_action.c | 16 +++++
+ tools/tracing/rtla/src/timerlat.bpf.c         | 23 ++++++-
+ tools/tracing/rtla/src/timerlat.c             | 11 +++
+ tools/tracing/rtla/src/timerlat.h             |  2 +-
+ tools/tracing/rtla/src/timerlat_bpf.c         | 67 +++++++++++++++++++
+ tools/tracing/rtla/src/timerlat_bpf.h         |  7 +-
+ tools/tracing/rtla/src/timerlat_hist.c        |  5 ++
+ tools/tracing/rtla/src/timerlat_top.c         |  5 ++
+ 9 files changed, 149 insertions(+), 5 deletions(-)
+ create mode 100644 tools/tracing/rtla/sample/timerlat_bpf_action.c
 
-I think if we always store the timestamp since last reset, we can get
-rid of this function. Let's see how that discussion go..
+-- 
+2.51.0
 
-> As mentioned before, this is true for the stall case, where the reset occurred
-> when reaching the state with the invariant (passed is close to 0), if you look
-> at the nomiss case, reset happens before being ready (its invariant would have
-> passed close to 0), but the same invariant is enforced in running, here we will
-> see a passed far from 0 and need to take that into account when setting the
-> invariant.
-
-Make sense, thanks!
-
-Nam
