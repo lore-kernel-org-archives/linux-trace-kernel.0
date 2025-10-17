@@ -1,63 +1,67 @@
 Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C9FB332EA4
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 17 Oct 2025 20:12:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 060F9332ED8
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 17 Oct 2025 20:12:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760731952; cv=none; b=g84I1wXOx2VCkp6v5Bjld292/GuPK15tVCRKT/mM7yyeye2ejeOJ73pKLkb2cHG2b/Ar/tKEub2dTsiKh4SVVQ8HbT6LMyDoiB1Ozgcec3jByaDwaVdrT1HkJe164oe2x0N12v/5PRlSLl2K/R3Gc2bmbGoBVSs9heoO8JW0Abo=
+	t=1760731953; cv=none; b=up6+9tCoJhpiRQImT+eYPTwy6JVAgLlTV+J5r2S9MQVT02wj5XREFjbXgP43Qa1pQADm9XV/yS0i2Q2LkOBczfW8G1ZDCPOqZLkMCfnZaGkECFzWQYDGTjg812iqr0Ak7haGGrHaUR5/rI78gQp0CqM+ldWbFfyiqe+hFdw2cRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760731952; c=relaxed/simple;
-	bh=siWpafnUKoLg4oB+hPXsnce7fcIsRgiCopc1fvAbvC8=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=B4Ih0H3E3UKNkIh/H9dsx2BfXp8NNhOoV9Kx2Qj5DEXMYqeIjm+L6f7InQRskNG2+TVMK0g9LEsYgf6sxTwNhYDyuv/MgtEFGsZG/LKIPlc1NzwLptlkwMbr4nToZhbuXOT3gHXW0UpnuMURc/wmYs3QX3y7rs+8cQF6sX5GCrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3iktQPFY; arc=none smtp.client-ip=209.85.216.73
+	s=arc-20240116; t=1760731953; c=relaxed/simple;
+	bh=tH33FMwwajM7pnR5j/vOU4w7VfKG/h8B1dO52nFfMS4=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=sfElbR57n80jy3brJsrCuzPg7ok6mv9+nVwvLU0RepfvvygU8wCEkA7Vp/HcaIk4jeYZ+pFHNs9bfGe7EEYafxn2B9sD8HhxEnYRYkpKI173AtJz8nuD6su8CXCQLrrDhbCq+dpgGBmHMkFxytw1M2b9dbBLhoPSzEtpaAn7gTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dhhE/XHm; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3iktQPFY"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-33ba91f1660so2536582a91.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 17 Oct 2025 13:12:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dhhE/XHm"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-33bbbb41a84so4081616a91.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 17 Oct 2025 13:12:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1760731949; x=1761336749; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=MvNEuSw58UwdjUzqQehycSdzJ+PYeq3LWgjQi3Vxd7A=;
-        b=3iktQPFYRvpQB02J7IsxLgzetTDdC4IfsafK0tnpmojWN4z09ctQkKghFpdWLCFEZm
-         jwC8QIhkztQq9jTLx1dkDq+IQT4V0op7FiD6qw7vCwD/7C1WKcz5IIypiEtddQMUyrry
-         XT9Ic+sHfM+RT/2/qh6eEjRlTC6/XsPgHFaRh4cdJZZrnSPFloueN6Cg8chErztytpg9
-         fKHZ+ZQSMsK5w1P5t9FYGo2VsfQJLynOwKlZz3tDsA8qESr56A0ipqPPoT8Tq3/Kwzs3
-         r5tfgMICeBBfB+/gqKoV8VlM7hm6SU/RxqBsL9a+JCrDF0Hf1k+/q//Rzli2xEn2jrco
-         pklA==
+        d=google.com; s=20230601; t=1760731950; x=1761336750; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=23h18nOdPjrep9qeiUX9eD9XykFWLhPvQkHoEMjMhTg=;
+        b=dhhE/XHmDcg4pTugNFXXcR4mIZt34wPuKmms7+f0cLoLmsxKR4PZkfAo5XqikvFKNC
+         mHSdQco0iWZZwh3PCscrJGRsCUJzNlMhAioWpukGZkHCLcBM/JOHx5Fcxr7jG11AgcIC
+         82cqH9VirPhAazspg6B5u/gkM4mKe72uL7QQEzr+oQDo3ZOXNCKzZNjoGliu6kObL4oU
+         BkEJ/iYJBZ5o51RfXbJYAKlJtMzBM+HLBxNQlomRAHRwn4a960paaZsk+0vZ+RU3gSTY
+         twlNtUA0unQJj8waR7urAJOc5UjGAVZy2lTb5E8OPyMAhVhnhJ3SROhEWwkfZn4VfJiZ
+         fZJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760731949; x=1761336749;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=MvNEuSw58UwdjUzqQehycSdzJ+PYeq3LWgjQi3Vxd7A=;
-        b=utWVbpAyiUzSG0FaCwrqzsllQslohEOOq3z75k0xgIpNxlSiZxrAZxGf17aO7JGNly
-         b2Ejhe/Ts26dKTbVxu/IKlUb7WWBuiNhM8q5f+2JOeEwi2hCHvtOcFZu14Y2dfxa9eUN
-         kDM3NrlHOLjHAsTm0CWJW0nNvMY5ZkrJVHEb8YkZ2eMsYz+DlZ75xPbgwuoYt7PZ2CIJ
-         s+EeHcdSIhiCpMg+cY3nvVFgjFr6k5GLHD874qnUFpt/qFi6HGqVqt/Ssg1W4d/ref7M
-         6+oz6YTRSh51NcgKCcwmfBn1PM+6SnClLrgcki+8qJIKjjayv8s+owXkzvFtPOkjSb0H
-         5SOA==
-X-Forwarded-Encrypted: i=1; AJvYcCVXud6Nz3SYQnuqiEErvZkYdIpVzmetdkHjuwmP2YI4/6ca0pxLutpJnVbitIYs2xV2a7VnexLbO7SGQO1uDkKmS7U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLO+s8NshtlFQ1Q90j5mVzuObCciFxuYOrDUvXBOPEum1aHYr7
-	MB1TdH8VEyvJrwmW0BwnFmnAgR7FJYugkeq1K1aLWjCPktLhake1PVvDxkyKgDO2G9lJ+JK7YCu
-	7+D4lOGD5bEwGmHjy55jUQzpTxA==
-X-Google-Smtp-Source: AGHT+IGm0uDnlmmvVqLxeQbS/GkNVcVJ1vJxluasBXbGw+YdYIXcsi2a/48HhtEUh6v1e/OBtWieEkqS8C8YBg1I5A==
-X-Received: from pjbpm17.prod.google.com ([2002:a17:90b:3c51:b0:33b:b692:47b0])
+        d=1e100.net; s=20230601; t=1760731950; x=1761336750;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=23h18nOdPjrep9qeiUX9eD9XykFWLhPvQkHoEMjMhTg=;
+        b=r6qDuR11ThMoCMUaWSKNpdMJX2udodbkRmA2405W8wfZysw6slarLSs5ZDDI2rKrne
+         Bp7KhslqdYYtIGiEIQ5GicWjkqOvzZufgFQW/8VBNrJ6hO2keNUf3v7ipto8h85m+Q/z
+         UlAVIvMJfj08KBO/QoxNHFLvsmI7gJM17bQnJAAaTR9TVsBj7mGT9mGNRoJ73h/jCIoU
+         KuUSVQWgzrkPD7skfkCABHaBJdYo8e2y1FHq5ZL9hqOVSIJCCG3W/Dq2qOt/hcuFGH8T
+         0jsnxXx5ckaVsVNlGMHcghmbxjIYa5iaPs2FLoQ99DPZ4jg+JMtzF1ZDDO2Hx5ngZXMW
+         SEcw==
+X-Forwarded-Encrypted: i=1; AJvYcCWzvyDWRFHQbMM1JCKLOBcFfzCFtEUvIRTi9xOAEUJUTQGbX3fhHTmqI99mMFsX2LrKYzW41tusFL3Szck6dLBfTKk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxuz1MrL3qC2w/OmZnhaB+KW2Nc7As3vEfGRH4WIcpaSHR0jzI7
+	SGWziAIaT/Gr6eg9NaYtqCmxzYC0bw9KXjVT/cQ4UcT5kIGOq4SVABKeinWiGU97/QXPT3OgsSV
+	XhaIDjkjw5NtCMmUuKIZvZRE1EA==
+X-Google-Smtp-Source: AGHT+IGzIMHx5sxfwAd/ggf5vwDMz3obOs3omuhPz2fGRAWX79j+Sw8ihvoUsiE28s/7yqNKxtqfmUfdmtv/upqGpA==
+X-Received: from pjto24.prod.google.com ([2002:a17:90a:c718:b0:33b:51fe:1a81])
  (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90b:4c4e:b0:32e:6019:5d19 with SMTP id 98e67ed59e1d1-33bcf921526mr5690604a91.34.1760731948481;
- Fri, 17 Oct 2025 13:12:28 -0700 (PDT)
-Date: Fri, 17 Oct 2025 13:11:41 -0700
+ 2002:a17:90b:35cc:b0:32e:43ae:e7e9 with SMTP id 98e67ed59e1d1-33bcf8ec899mr6732034a91.17.1760731950177;
+ Fri, 17 Oct 2025 13:12:30 -0700 (PDT)
+Date: Fri, 17 Oct 2025 13:11:42 -0700
+In-Reply-To: <cover.1760731772.git.ackerleytng@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <cover.1760731772.git.ackerleytng@google.com>
 X-Mailer: git-send-email 2.51.0.858.gf9c4a03a3a-goog
-Message-ID: <cover.1760731772.git.ackerleytng@google.com>
-Subject: [RFC PATCH v1 00/37] guest_memfd: In-place conversion support
+Message-ID: <638600e19c6e23959bad60cf61582f387dff6445.1760731772.git.ackerleytng@google.com>
+Subject: [RFC PATCH v1 01/37] KVM: guest_memfd: Introduce per-gmem attributes,
+ use to guard user mappings
 From: Ackerley Tng <ackerleytng@google.com>
 To: cgroups@vger.kernel.org, kvm@vger.kernel.org, linux-doc@vger.kernel.org, 
 	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
@@ -93,141 +97,224 @@ Cc: ackerleytng@google.com, akpm@linux-foundation.org,
 	yuzenghui@huawei.com, zhiquan1.li@intel.com
 Content-Type: text/plain; charset="UTF-8"
 
-Hello,
+From: Sean Christopherson <seanjc@google.com>
 
-IIUC this is the first independent patch series for guest_memfd's in-place
-conversion series! Happy to finally bring this out on its own.
+Start plumbing in guest_memfd support for in-place private<=>shared
+conversions by tracking attributes via a maple tree.  KVM currently tracks
+private vs. shared attributes on a per-VM basis, which made sense when a
+guest_memfd _only_ supported private memory, but tracking per-VM simply
+can't work for in-place conversions as the shareability of a given page
+needs to be per-gmem_inode, not per-VM.
 
-Previous versions of this feature, part of other series, are available at
-[1][2][3].
+Use the filemap invalidation lock to protect the maple tree, as taking the
+lock for read when faulting in memory (for userspace or the guest) isn't
+expected to result in meaningful contention, and using a separate lock
+would add significant complexity (avoid deadlock is quite difficult).
 
-Many prior discussions have led up to these main features of this series, and
-these are the main points I'd like feedback on.
+Signed-off-by: Sean Christopherson <seanjc@google.com>
+Co-developed-by: Ackerley Tng <ackerleytng@google.com>
+Signed-off-by: Ackerley Tng <ackerleytng@google.com>
+Co-developed-by: Vishal Annapurve <vannapurve@google.com>
+Signed-off-by: Vishal Annapurve <vannapurve@google.com>
+Co-developed-by: Fuad Tabba <tabba@google.com>
+Signed-off-by: Fuad Tabba <tabba@google.com>
+---
+ virt/kvm/guest_memfd.c | 119 +++++++++++++++++++++++++++++++++++------
+ 1 file changed, 103 insertions(+), 16 deletions(-)
 
-1. Having private/shared status stored in a maple tree (Thanks Michael for your
-   support of using maple trees over xarrays for performance! [4]).
-2. Having a new guest_memfd ioctl (not a vm ioctl) that performs conversions.
-3. Using ioctls/structs/input attribute similar to the existing vm ioctl
-   KVM_SET_MEMORY_ATTRIBUTES to perform conversions.
-4. Storing requested attributes directly in the maple tree.
-5. Using a KVM module-wide param to toggle between setting memory attributes via
-   vm and guest_memfd ioctls (making them mututally exclusive - a single loaded
-   KVM module can only do one of the two.)
-6. Skipping LRU in guest_memfd folios - make guest_memfd folios not participate
-   in LRU to avoid LRU refcounts from interfering with conversions.
+diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
+index b22caa8b530ab..26cec833766c3 100644
+--- a/virt/kvm/guest_memfd.c
++++ b/virt/kvm/guest_memfd.c
+@@ -4,6 +4,7 @@
+ #include <linux/falloc.h>
+ #include <linux/fs.h>
+ #include <linux/kvm_host.h>
++#include <linux/maple_tree.h>
+ #include <linux/mempolicy.h>
+ #include <linux/pseudo_fs.h>
+ #include <linux/pagemap.h>
+@@ -32,6 +33,7 @@ struct gmem_inode {
+ 	struct inode vfs_inode;
 
-This series is based on kvm/next, followed by
+ 	u64 flags;
++	struct maple_tree attributes;
+ };
 
-+ v12 of NUMA mempolicy support patches [5]
-+ 3 cleanup patches from Sean [6][7][8]
+ static __always_inline struct gmem_inode *GMEM_I(struct inode *inode)
+@@ -54,6 +56,23 @@ static inline kvm_pfn_t folio_file_pfn(struct folio *folio, pgoff_t index)
+ 	return folio_pfn(folio) + (index & (folio_nr_pages(folio) - 1));
+ }
 
-Everything is stitched together here for your convenience
++static u64 kvm_gmem_get_attributes(struct inode *inode, pgoff_t index)
++{
++	void *entry = mtree_load(&GMEM_I(inode)->attributes, index);
++
++	return WARN_ON_ONCE(!entry) ? 0 : xa_to_value(entry);
++}
++
++static bool kvm_gmem_is_private_mem(struct inode *inode, pgoff_t index)
++{
++	return kvm_gmem_get_attributes(inode, index) & KVM_MEMORY_ATTRIBUTE_PRIVATE;
++}
++
++static bool kvm_gmem_is_shared_mem(struct inode *inode, pgoff_t index)
++{
++	return !kvm_gmem_is_private_mem(inode, index);
++}
++
+ static int __kvm_gmem_prepare_folio(struct kvm *kvm, struct kvm_memory_slot *slot,
+ 				    pgoff_t index, struct folio *folio)
+ {
+@@ -415,10 +434,13 @@ static vm_fault_t kvm_gmem_fault_user_mapping(struct vm_fault *vmf)
+ 	if (((loff_t)vmf->pgoff << PAGE_SHIFT) >= i_size_read(inode))
+ 		return VM_FAULT_SIGBUS;
 
-https://github.com/googleprodkernel/linux-cc/commits/guest_memfd-inplace-conversion-v1
+-	if (!(GMEM_I(inode)->flags & GUEST_MEMFD_FLAG_INIT_SHARED))
+-		return VM_FAULT_SIGBUS;
++	filemap_invalidate_lock_shared(inode->i_mapping);
++	if (kvm_gmem_is_shared_mem(inode, vmf->pgoff))
++		folio = kvm_gmem_get_folio(inode, vmf->pgoff);
++	else
++		folio = ERR_PTR(-EACCES);
++	filemap_invalidate_unlock_shared(inode->i_mapping);
 
-Thank you all for helping with this series!
+-	folio = kvm_gmem_get_folio(inode, vmf->pgoff);
+ 	if (IS_ERR(folio)) {
+ 		if (PTR_ERR(folio) == -EAGAIN)
+ 			return VM_FAULT_RETRY;
+@@ -572,6 +594,46 @@ bool __weak kvm_arch_supports_gmem_init_shared(struct kvm *kvm)
+ 	return true;
+ }
 
-If I missed out your comment from a previous series, it's not intentional!
-Please do raise it again.
++static int kvm_gmem_init_inode(struct inode *inode, loff_t size, u64 flags)
++{
++	struct gmem_inode *gi = GMEM_I(inode);
++	MA_STATE(mas, &gi->attributes, 0, (size >> PAGE_SHIFT) - 1);
++	u64 attrs;
++	int r;
++
++	inode->i_op = &kvm_gmem_iops;
++	inode->i_mapping->a_ops = &kvm_gmem_aops;
++	inode->i_mode |= S_IFREG;
++	inode->i_size = size;
++	mapping_set_gfp_mask(inode->i_mapping, GFP_HIGHUSER);
++	mapping_set_inaccessible(inode->i_mapping);
++	/* Unmovable mappings are supposed to be marked unevictable as well. */
++	WARN_ON_ONCE(!mapping_unevictable(inode->i_mapping));
++
++	gi->flags = flags;
++
++	mt_set_external_lock(&gi->attributes,
++			     &inode->i_mapping->invalidate_lock);
++
++	/*
++	 * Store default attributes for the entire gmem instance. Ensuring every
++	 * index is represented in the maple tree at all times simplifies the
++	 * conversion and merging logic.
++	 */
++	attrs = gi->flags & GUEST_MEMFD_FLAG_INIT_SHARED ? 0 : KVM_MEMORY_ATTRIBUTE_PRIVATE;
++
++	/*
++	 * Acquire the invalidation lock purely to make lockdep happy. There
++	 * should be no races at this time since the inode hasn't yet been fully
++	 * created.
++	 */
++	filemap_invalidate_lock(inode->i_mapping);
++	r = mas_store_gfp(&mas, xa_mk_value(attrs), GFP_KERNEL);
++	filemap_invalidate_unlock(inode->i_mapping);
++
++	return r;
++}
++
+ static int __kvm_gmem_create(struct kvm *kvm, loff_t size, u64 flags)
+ {
+ 	static const char *name = "[kvm-gmem]";
+@@ -602,16 +664,9 @@ static int __kvm_gmem_create(struct kvm *kvm, loff_t size, u64 flags)
+ 		goto err_fops;
+ 	}
 
-TODOs:
+-	inode->i_op = &kvm_gmem_iops;
+-	inode->i_mapping->a_ops = &kvm_gmem_aops;
+-	inode->i_mode |= S_IFREG;
+-	inode->i_size = size;
+-	mapping_set_gfp_mask(inode->i_mapping, GFP_HIGHUSER);
+-	mapping_set_inaccessible(inode->i_mapping);
+-	/* Unmovable mappings are supposed to be marked unevictable as well. */
+-	WARN_ON_ONCE(!mapping_unevictable(inode->i_mapping));
+-
+-	GMEM_I(inode)->flags = flags;
++	err = kvm_gmem_init_inode(inode, size, flags);
++	if (err)
++		goto err_inode;
 
-+ There might be an issue with memory failure handling because when guest_memfd
-  folios stop participating in LRU. From a preliminary analysis,
-  HWPoisonHandlable() is only true if PageLRU() is true. This needs further
-  investigation.
+ 	file = alloc_file_pseudo(inode, kvm_gmem_mnt, name, O_RDWR, &kvm_gmem_fops);
+ 	if (IS_ERR(file)) {
+@@ -798,9 +853,13 @@ int kvm_gmem_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
+ 	if (!file)
+ 		return -EFAULT;
 
-[1] https://lore.kernel.org/all/bd163de3118b626d1005aa88e71ef2fb72f0be0f.1726009989.git.ackerleytng@google.com/
-[2] https://lore.kernel.org/all/20250117163001.2326672-6-tabba@google.com/
-[3] https://lore.kernel.org/all/b784326e9ccae6a08388f1bf39db70a2204bdc51.1747264138.git.ackerleytng@google.com/
-[4] https://lore.kernel.org/all/20250529054227.hh2f4jmyqf6igd3i@amd.com/
-[5] https://lore.kernel.org/all/20251007221420.344669-1-seanjc@google.com/T/
-[6] https://lore.kernel.org/all/20250924174255.2141847-1-seanjc@google.com/
-[7] https://lore.kernel.org/all/20251007224515.374516-1-seanjc@google.com/
-[8] https://lore.kernel.org/all/20251007223625.369939-1-seanjc@google.com/
++	filemap_invalidate_lock_shared(file_inode(file)->i_mapping);
++
+ 	folio = __kvm_gmem_get_pfn(file, slot, index, pfn, &is_prepared, max_order);
+-	if (IS_ERR(folio))
+-		return PTR_ERR(folio);
++	if (IS_ERR(folio)) {
++		r = PTR_ERR(folio);
++		goto out;
++	}
 
-Ackerley Tng (19):
-  KVM: guest_memfd: Update kvm_gmem_populate() to use gmem attributes
-  KVM: Introduce KVM_SET_MEMORY_ATTRIBUTES2
-  KVM: guest_memfd: Don't set FGP_ACCESSED when getting folios
-  KVM: guest_memfd: Skip LRU for guest_memfd folios
-  KVM: guest_memfd: Add support for KVM_SET_MEMORY_ATTRIBUTES
-  KVM: selftests: Update framework to use KVM_SET_MEMORY_ATTRIBUTES2
-  KVM: selftests: guest_memfd: Test basic single-page conversion flow
-  KVM: selftests: guest_memfd: Test conversion flow when INIT_SHARED
-  KVM: selftests: guest_memfd: Test indexing in guest_memfd
-  KVM: selftests: guest_memfd: Test conversion before allocation
-  KVM: selftests: guest_memfd: Convert with allocated folios in
-    different layouts
-  KVM: selftests: guest_memfd: Test precision of conversion
-  KVM: selftests: guest_memfd: Test that truncation does not change
-    shared/private status
-  KVM: selftests: guest_memfd: Test conversion with elevated page
-    refcount
-  KVM: selftests: Reset shared memory after hole-punching
-  KVM: selftests: Provide function to look up guest_memfd details from
-    gpa
-  KVM: selftests: Make TEST_EXPECT_SIGBUS thread-safe
-  KVM: selftests: Update private_mem_conversions_test to mmap()
-    guest_memfd
-  KVM: selftests: Add script to exercise private_mem_conversions_test
+ 	if (!is_prepared)
+ 		r = kvm_gmem_prepare_folio(kvm, slot, gfn, folio);
+@@ -812,6 +871,8 @@ int kvm_gmem_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
+ 	else
+ 		folio_put(folio);
 
-Sean Christopherson (18):
-  KVM: guest_memfd: Introduce per-gmem attributes, use to guard user
-    mappings
-  KVM: Rename KVM_GENERIC_MEMORY_ATTRIBUTES to KVM_VM_MEMORY_ATTRIBUTES
-  KVM: Enumerate support for PRIVATE memory iff kvm_arch_has_private_mem
-    is defined
-  KVM: Stub in ability to disable per-VM memory attribute tracking
-  KVM: guest_memfd: Wire up kvm_get_memory_attributes() to per-gmem
-    attributes
-  KVM: guest_memfd: Enable INIT_SHARED on guest_memfd for x86 Coco VMs
-  KVM: Move KVM_VM_MEMORY_ATTRIBUTES config definition to x86
-  KVM: Let userspace disable per-VM mem attributes, enable per-gmem
-    attributes
-  KVM: selftests: Create gmem fd before "regular" fd when adding memslot
-  KVM: selftests: Rename guest_memfd{,_offset} to gmem_{fd,offset}
-  KVM: selftests: Add support for mmap() on guest_memfd in core library
-  KVM: selftests: Add helpers for calling ioctls on guest_memfd
-  KVM: selftests: guest_memfd: Test that shared/private status is
-    consistent across processes
-  KVM: selftests: Add selftests global for guest memory attributes
-    capability
-  KVM: selftests: Provide common function to set memory attributes
-  KVM: selftests: Check fd/flags provided to mmap() when setting up
-    memslot
-  KVM: selftests: Update pre-fault test to work with per-guest_memfd
-    attributes
-  KVM: selftests: Update private memory exits test work with per-gmem
-    attributes
++out:
++	filemap_invalidate_unlock_shared(file_inode(file)->i_mapping);
+ 	return r;
+ }
+ EXPORT_SYMBOL_FOR_KVM_INTERNAL(kvm_gmem_get_pfn);
+@@ -925,13 +986,39 @@ static struct inode *kvm_gmem_alloc_inode(struct super_block *sb)
 
- Documentation/virt/kvm/api.rst                |  72 ++-
- arch/x86/include/asm/kvm_host.h               |   2 +-
- arch/x86/kvm/Kconfig                          |  15 +-
- arch/x86/kvm/mmu/mmu.c                        |   4 +-
- arch/x86/kvm/x86.c                            |  13 +-
- include/linux/kvm_host.h                      |  44 +-
- include/trace/events/kvm.h                    |   4 +-
- include/uapi/linux/kvm.h                      |  17 +
- mm/filemap.c                                  |   1 +
- mm/memcontrol.c                               |   2 +
- tools/testing/selftests/kvm/.gitignore        |   1 +
- tools/testing/selftests/kvm/Makefile.kvm      |   1 +
- .../kvm/guest_memfd_conversions_test.c        | 498 ++++++++++++++++++
- .../testing/selftests/kvm/include/kvm_util.h  | 127 ++++-
- .../testing/selftests/kvm/include/test_util.h |  29 +-
- tools/testing/selftests/kvm/lib/kvm_util.c    | 128 +++--
- tools/testing/selftests/kvm/lib/test_util.c   |   7 -
- .../selftests/kvm/pre_fault_memory_test.c     |   2 +-
- .../kvm/x86/private_mem_conversions_test.c    |  55 +-
- .../kvm/x86/private_mem_conversions_test.py   | 159 ++++++
- .../kvm/x86/private_mem_kvm_exits_test.c      |  36 +-
- virt/kvm/Kconfig                              |   4 +-
- virt/kvm/guest_memfd.c                        | 414 +++++++++++++--
- virt/kvm/kvm_main.c                           | 104 +++-
- 24 files changed, 1554 insertions(+), 185 deletions(-)
- create mode 100644 tools/testing/selftests/kvm/guest_memfd_conversions_test.c
- create mode 100755 tools/testing/selftests/kvm/x86/private_mem_conversions_test.py
+ 	mpol_shared_policy_init(&gi->policy, NULL);
 
++	/*
++	 * Memory attributes are protected the filemap invalidation lock, but
++	 * the lock structure isn't available at this time.  Immediately mark
++	 * maple tree as using external locking so that accessing the tree
++	 * before its fully initialized results in NULL pointer dereferences
++	 * and not more subtle bugs.
++	 */
++	mt_init_flags(&gi->attributes, MT_FLAGS_LOCK_EXTERN);
++
+ 	gi->flags = 0;
+ 	return &gi->vfs_inode;
+ }
+
+ static void kvm_gmem_destroy_inode(struct inode *inode)
+ {
+-	mpol_free_shared_policy(&GMEM_I(inode)->policy);
++	struct gmem_inode *gi = GMEM_I(inode);
++
++	mpol_free_shared_policy(&gi->policy);
++
++	/*
++	 * Note!  Checking for an empty tree is functionally necessary to avoid
++	 * explosions if the tree hasn't been initialized, i.e. if the inode is
++	 * being destroyed before guest_memfd can set the external lock.
++	 */
++	if (!mtree_empty(&gi->attributes)) {
++		/*
++		 * Acquire the invalidation lock purely to make lockdep happy,
++		 * the inode is unreachable at this point.
++		 */
++		filemap_invalidate_lock(inode->i_mapping);
++		__mt_destroy(&gi->attributes);
++		filemap_invalidate_unlock(inode->i_mapping);
++	}
+ }
+
+ static void kvm_gmem_free_inode(struct inode *inode)
 --
 2.51.0.858.gf9c4a03a3a-goog
