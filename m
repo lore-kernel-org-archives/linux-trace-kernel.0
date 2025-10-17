@@ -1,442 +1,147 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 804DC2D97B0
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 17 Oct 2025 11:52:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 816ED332EC5
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 17 Oct 2025 12:21:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760701954; cv=none; b=g/bhlL0dpe9+aW+g795LM4AGhoqhvYbQE5OpcdktIsdM8eVNaGSQ6sqKH+9cnuKnyRUZcVAOLZ3yVypNCWXSQc4LvaGLslrnAoAo2/c1TIW6pRNiMZNBXiZF1AXV1sIKK9Hau2xdFMPMvAVYTLVlo4jsMM3ulxzypq2Wi8ZdMGA=
+	t=1760703678; cv=none; b=BszQ+8HJ5A6Um2yFpVdM0GDI9+YY/ug0GfaTZ2Vngxgb3mbkVmA/R9w/uuH0/92VEx8IaDEk9hNcaMh9VW1lU4XDMTHAOcByWkr4i7WkDNp038lf/M4/H2UkTWY0JoMBKRQYjYFinEzJwkn+UJGViyUZJBBj50iD7Xw+4aYzO/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760701954; c=relaxed/simple;
-	bh=m//mjqj+vbQR/MISwhlDlLOEcHm6WRgw6yxCNdP3AuA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ju02E3WCd7QPt0XX5yTkBU4BpbqFbCnHI/C7fAi/YqTDyvOMd/YFNpZPe39ClkZgMkfShytIJI0YWadBrWvIHTYULMrfp/OgQ6INT2RjYiLVdLxdqH+ObIjR6Fg89Bc9aLiQ8N/d2GKmpchE8OhqSJbmWif2e3/8FKGaEneX5Do=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TSoFhgnR; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1760703678; c=relaxed/simple;
+	bh=hQZkWL4FYwonkErogwq5cv3EFiJxqaYBqYJl7G+MmDM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dO46KJiZYgiRbUnuQcMxvyKDuMj5RrG5TP+XVsx1iubZcujEzN0k4qjMKJ2wEJ0mLP/NPXjyKCnmRgB9pZCw7mZUd6VXiaC4m5T8jBu/6GX5Suz6Mlbe6fiDTtvH6aPkQBVJFvZTRovRUY7C4QDVadbXnDmSbPE+TmNAtaX0gA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bJeOsVgx; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TSoFhgnR"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bJeOsVgx"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1760701951;
+	s=mimecast20190719; t=1760703674;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=2hmSDTOp3mrmmxO8me9DuqVFwAsqK96Mi9i6W+5UmK0=;
-	b=TSoFhgnRL+XP02qSPqhtxHjcByFeZVm/ok8hqzikXMepZg7jpVPslfXAC5ekhZQ/zFh+t1
-	XKIKZjChgRASYXX6y1DLJeKXNj7yxx+/9VgFhB08AFvgOBzCpGFi+KcekI0GM6TvH/sbA8
-	qp7ID5E5b43zHwxF0UUE0DSEV51PaAE=
+	bh=7tcPfFXHvy4uKB1MSRdLttHRim/63XVrXgZtcwVzV+g=;
+	b=bJeOsVgxnXXrOW5vIsoS1L3J1kng/FJK7RKCJTXtF0qsqB0X/W2AdaU6aE8hhBynT2lwms
+	SYvZVO2eeEKg36Vl2NPqzdj6hxzTOTPh5B4t4o+LNzMlXismfeuo1E5dzs3K8sl7itCXZI
+	0I/GQ6CF5V0Rv6agXbKKaSts5WlTNR0=
 Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-582-mXoU5f0jNje7R1F_Xg6TAQ-1; Fri,
- 17 Oct 2025 07:52:28 -0400
-X-MC-Unique: mXoU5f0jNje7R1F_Xg6TAQ-1
-X-Mimecast-MFC-AGG-ID: mXoU5f0jNje7R1F_Xg6TAQ_1760701947
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-494-OVLXnGEaMkObmzZab8mAaA-1; Fri,
+ 17 Oct 2025 08:21:11 -0400
+X-MC-Unique: OVLXnGEaMkObmzZab8mAaA-1
+X-Mimecast-MFC-AGG-ID: OVLXnGEaMkObmzZab8mAaA_1760703670
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E0F8518CB73D;
-	Fri, 17 Oct 2025 11:52:22 +0000 (UTC)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb (unknown [10.44.33.41])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 987A73000229;
-	Fri, 17 Oct 2025 11:52:18 +0000 (UTC)
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: linux-kernel@vger.kernel.org,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Nam Cao <namcao@linutronix.de>,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	Shuah Khan <shuah@kernel.org>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	John Kacur <jkacur@redhat.com>,
-	Waylon Cude <wcude@redhat.com>
-Subject: [PATCH v2 2/2] selftests/verification: Add initial RV tests
-Date: Fri, 17 Oct 2025 13:52:03 +0200
-Message-ID: <20251017115203.140080-3-gmonaco@redhat.com>
-In-Reply-To: <20251017115203.140080-1-gmonaco@redhat.com>
-References: <20251017115203.140080-1-gmonaco@redhat.com>
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 501481800451;
+	Fri, 17 Oct 2025 12:21:10 +0000 (UTC)
+Received: from wcosta-thinkpadt14gen4.rmtbr.csb (unknown [10.22.64.136])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 95F3019560AD;
+	Fri, 17 Oct 2025 12:21:06 +0000 (UTC)
+Date: Fri, 17 Oct 2025 09:21:05 -0300
+From: Wander Lairson Costa <wander@redhat.com>
+To: Tomas Glozar <tglozar@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, 
+	LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>, 
+	John Kacur <jkacur@redhat.com>, Luis Goncalves <lgoncalv@redhat.com>, 
+	Costa Shulyupin <costa.shul@redhat.com>, Crystal Wood <crwood@redhat.com>
+Subject: Re: [PATCH v2 1/3] tools/rtla: Fix --on-threshold always triggering
+Message-ID: <gwophnr3qcjvhe4wt2th5idkidjhejt2pei6swol7pwtsfpnhb@qjjwghig7wlt>
+References: <20251007095341.186923-1-tglozar@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251007095341.186923-1-tglozar@redhat.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-Add a series of tests to validate the RV tracefs API and basic
-functionality.
+On Tue, Oct 07, 2025 at 11:53:39AM +0200, Tomas Glozar wrote:
+> Commit 8d933d5c89e8 ("rtla/timerlat: Add continue action") moved the
+> code performing on-threshold actions (enabled through --on-threshold
+> option) to inside the RTLA main loop.
+> 
+> The condition in the loop does not check whether the threshold was
+> actually exceeded or if stop tracing was requested by the user through
+> SIGINT or duration. This leads to a bug where on-threshold actions are
+> always performed, even when the threshold was not hit.
+> 
+> (BPF mode is not affected, since it uses a different condition in the
+> while loop.)
+> 
+> Add a condition that checks for !stop_tracing before executing the
+> actions. Also, fix incorrect brackets in hist_main_loop to match the
+> semantics of top_main_loop.
+> 
+> Fixes: 8d933d5c89e8 ("rtla/timerlat: Add continue action")
+> Fixes: 2f3172f9dd58 ("tools/rtla: Consolidate code between osnoise/timerlat and hist/top")
+> Signed-off-by: Tomas Glozar <tglozar@redhat.com>
+> Reviewed-by: Crystal Wood <crwood@redhat.com>
+> ---
+> v2:
+> - add one more patch fixing a bug noticed by Crystal in context of
+> the following one (doing v2 just to avoid conflicts, the first two
+> patches were not changed)
+> 
+>  tools/tracing/rtla/src/common.c | 24 +++++++++++++++---------
+>  1 file changed, 15 insertions(+), 9 deletions(-)
+> 
+> diff --git a/tools/tracing/rtla/src/common.c b/tools/tracing/rtla/src/common.c
+> index 2e6e3dac1897..b197037fc58b 100644
+> --- a/tools/tracing/rtla/src/common.c
+> +++ b/tools/tracing/rtla/src/common.c
+> @@ -268,6 +268,10 @@ int top_main_loop(struct osnoise_tool *tool)
+>  			tool->ops->print_stats(tool);
+>  
+>  		if (osnoise_trace_is_off(tool, record)) {
+> +			if (stop_tracing)
+> +				/* stop tracing requested, do not perform actions */
+> +				return 0;
+> +
+>  			actions_perform(&params->threshold_actions);
+>  
+>  			if (!params->threshold_actions.continue_flag)
+> @@ -315,20 +319,22 @@ int hist_main_loop(struct osnoise_tool *tool)
+>  		}
+>  
+>  		if (osnoise_trace_is_off(tool, tool->record)) {
+> +			if (stop_tracing)
+> +				/* stop tracing requested, do not perform actions */
+> +				break;
+> +
+>  			actions_perform(&params->threshold_actions);
+>  
+> -			if (!params->threshold_actions.continue_flag) {
+> +			if (!params->threshold_actions.continue_flag)
+>  				/* continue flag not set, break */
+>  				break;
+>  
+> -				/* continue action reached, re-enable tracing */
+> -				if (tool->record)
+> -					trace_instance_start(&tool->record->trace);
+> -				if (tool->aa)
+> -					trace_instance_start(&tool->aa->trace);
+> -				trace_instance_start(&tool->trace);
+> -			}
+> -			break;
+> +			/* continue action reached, re-enable tracing */
+> +			if (tool->record)
+> +				trace_instance_start(&tool->record->trace);
+> +			if (tool->aa)
+> +				trace_instance_start(&tool->aa->trace);
+> +			trace_instance_start(&tool->trace);
+>  		}
+>  
+>  		/* is there still any user-threads ? */
+> -- 
+> 2.51.0
+> 
 
-* available monitors:
-    Check that all monitors (from the monitors folder) appear as
-    available and have a description. Works with nested monitors.
-
-* enable/disable:
-    Enable and disable all monitors and validate both the enabled file
-    and the enabled_monitors. Check that enabling container monitors
-    enables all nested monitors.
-
-* reactors:
-    Set all reactors and validate the setting, also for nested monitors.
-
-* wwnr with printk:
-    wwnr is broken on purpose, run it with a load and check that the
-    printk reactor works. Also validate disabling reacting_on or
-    monitoring_on prevents reactions.
-
-These tests use the ftracetest suite.
-
-Acked-by: Nam Cao <namcao@linutronix.de>
-Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
----
- MAINTAINERS                                   |  1 +
- .../testing/selftests/verification/.gitignore |  2 +
- tools/testing/selftests/verification/Makefile |  8 ++
- tools/testing/selftests/verification/config   |  1 +
- tools/testing/selftests/verification/settings |  1 +
- .../selftests/verification/test.d/functions   | 39 ++++++++++
- .../test.d/rv_monitor_enable_disable.tc       | 75 +++++++++++++++++++
- .../verification/test.d/rv_monitor_reactor.tc | 68 +++++++++++++++++
- .../test.d/rv_monitors_available.tc           | 18 +++++
- .../verification/test.d/rv_wwnr_printk.tc     | 30 ++++++++
- .../verification/verificationtest-ktap        |  8 ++
- 11 files changed, 251 insertions(+)
- create mode 100644 tools/testing/selftests/verification/.gitignore
- create mode 100644 tools/testing/selftests/verification/Makefile
- create mode 100644 tools/testing/selftests/verification/config
- create mode 100644 tools/testing/selftests/verification/settings
- create mode 100644 tools/testing/selftests/verification/test.d/functions
- create mode 100644 tools/testing/selftests/verification/test.d/rv_monitor_enable_disable.tc
- create mode 100644 tools/testing/selftests/verification/test.d/rv_monitor_reactor.tc
- create mode 100644 tools/testing/selftests/verification/test.d/rv_monitors_available.tc
- create mode 100644 tools/testing/selftests/verification/test.d/rv_wwnr_printk.tc
- create mode 100644 tools/testing/selftests/verification/verificationtest-ktap
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 46126ce2f968..868f83ef6a28 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -22468,6 +22468,7 @@ F:	Documentation/trace/rv/
- F:	include/linux/rv.h
- F:	include/rv/
- F:	kernel/trace/rv/
-+F:	tools/testing/selftests/verification/
- F:	tools/verification/
- 
- RUST
-diff --git a/tools/testing/selftests/verification/.gitignore b/tools/testing/selftests/verification/.gitignore
-new file mode 100644
-index 000000000000..2659417cb2c7
---- /dev/null
-+++ b/tools/testing/selftests/verification/.gitignore
-@@ -0,0 +1,2 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+logs
-diff --git a/tools/testing/selftests/verification/Makefile b/tools/testing/selftests/verification/Makefile
-new file mode 100644
-index 000000000000..aa8790c22a71
---- /dev/null
-+++ b/tools/testing/selftests/verification/Makefile
-@@ -0,0 +1,8 @@
-+# SPDX-License-Identifier: GPL-2.0
-+all:
-+
-+TEST_PROGS := verificationtest-ktap
-+TEST_FILES := test.d settings
-+EXTRA_CLEAN := $(OUTPUT)/logs/*
-+
-+include ../lib.mk
-diff --git a/tools/testing/selftests/verification/config b/tools/testing/selftests/verification/config
-new file mode 100644
-index 000000000000..43072c1c38f4
---- /dev/null
-+++ b/tools/testing/selftests/verification/config
-@@ -0,0 +1 @@
-+CONFIG_RV=y
-diff --git a/tools/testing/selftests/verification/settings b/tools/testing/selftests/verification/settings
-new file mode 100644
-index 000000000000..e7b9417537fb
---- /dev/null
-+++ b/tools/testing/selftests/verification/settings
-@@ -0,0 +1 @@
-+timeout=0
-diff --git a/tools/testing/selftests/verification/test.d/functions b/tools/testing/selftests/verification/test.d/functions
-new file mode 100644
-index 000000000000..ec36a092f56e
---- /dev/null
-+++ b/tools/testing/selftests/verification/test.d/functions
-@@ -0,0 +1,39 @@
-+check_requires() { # Check required files, monitors and reactors
-+	for i in "$@" ; do
-+		p=${i%:program}
-+		m=${i%:monitor}
-+		r=${i%:reactor}
-+		if [ $p != $i ]; then
-+			if ! which $p ; then
-+				echo "Required program $p is not found."
-+				exit_unresolved
-+			fi
-+		elif [ $m != $i ]; then
-+			if ! grep -wq $m available_monitors ; then
-+				echo "Required monitor $m is not configured."
-+				exit_unsupported
-+			fi
-+		elif [ $r != $i ]; then
-+			if ! grep -wq $r available_reactors ; then
-+				echo "Required reactor $r is not configured."
-+				exit_unsupported
-+			fi
-+		elif [ ! -e $i ]; then
-+			echo "Required feature interface $i doesn't exist."
-+			exit_unsupported
-+		fi
-+	done
-+}
-+
-+initialize_system() { # Reset RV to initial-state
-+	echo > enabled_monitors
-+	for m in monitors/*; do
-+		echo nop > $m/reactors || true
-+	done
-+	echo 1 > monitoring_on
-+	echo 1 > reacting_on || true
-+}
-+
-+finish_system() {
-+	initialize_system
-+}
-diff --git a/tools/testing/selftests/verification/test.d/rv_monitor_enable_disable.tc b/tools/testing/selftests/verification/test.d/rv_monitor_enable_disable.tc
-new file mode 100644
-index 000000000000..f29236defb5a
---- /dev/null
-+++ b/tools/testing/selftests/verification/test.d/rv_monitor_enable_disable.tc
-@@ -0,0 +1,75 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+# description: Test monitor enable/disable
-+
-+test_simple_monitor() {
-+    local monitor="$1"
-+    local prefix="$2" # nested monitors
-+
-+    echo 1 > "monitors/$prefix$monitor/enable"
-+    grep -q "$monitor$" enabled_monitors
-+
-+    echo 0 > "monitors/$prefix$monitor/enable"
-+    ! grep -q "$monitor$" enabled_monitors
-+
-+    echo "$monitor" >> enabled_monitors
-+    grep -q 1 "monitors/$prefix$monitor/enable"
-+
-+    echo "!$monitor" >> enabled_monitors
-+    grep -q 0 "monitors/$prefix$monitor/enable"
-+}
-+
-+test_container_monitor() {
-+    local monitor="$1"
-+	local nested
-+
-+    echo 1 > "monitors/$monitor/enable"
-+    grep -q "^$monitor$" enabled_monitors
-+
-+    for nested_dir in "monitors/$monitor"/*; do
-+        [ -d "$nested_dir" ] || continue
-+        nested=$(basename "$nested_dir")
-+        grep -q "^$monitor:$nested$" enabled_monitors
-+    done
-+	test -n "$nested"
-+
-+    echo 0 > "monitors/$monitor/enable"
-+    ! grep -q "^$monitor$" enabled_monitors
-+
-+    for nested_dir in "monitors/$monitor"/*; do
-+        [ -d "$nested_dir" ] || continue
-+        nested=$(basename "$nested_dir")
-+        ! grep -q "^$monitor:$nested$" enabled_monitors
-+    done
-+
-+    echo "$monitor" >> enabled_monitors
-+    grep -q 1 "monitors/$monitor/enable"
-+
-+    for nested_dir in "monitors/$monitor"/*; do
-+        [ -d "$nested_dir" ] || continue
-+        nested=$(basename "$nested_dir")
-+        grep -q "^$monitor:$nested$" enabled_monitors
-+    done
-+
-+    echo "!$monitor" >> enabled_monitors
-+    grep -q 0 "monitors/$monitor/enable"
-+
-+    for nested_dir in "monitors/$monitor"/*; do
-+        [ -d "$nested_dir" ] || continue
-+        nested=$(basename "$nested_dir")
-+		test_simple_monitor "$nested" "$monitor/"
-+    done
-+}
-+
-+for monitor_dir in monitors/*; do
-+    monitor=$(basename "$monitor_dir")
-+
-+    if find "$monitor_dir" -mindepth 1 -type d | grep -q .; then
-+        test_container_monitor "$monitor"
-+    else
-+        test_simple_monitor "$monitor"
-+    fi
-+done
-+
-+! echo non_existent_monitor > enabled_monitors
-+! grep -q "^non_existent_monitor$" enabled_monitors
-diff --git a/tools/testing/selftests/verification/test.d/rv_monitor_reactor.tc b/tools/testing/selftests/verification/test.d/rv_monitor_reactor.tc
-new file mode 100644
-index 000000000000..2958bf849338
---- /dev/null
-+++ b/tools/testing/selftests/verification/test.d/rv_monitor_reactor.tc
-@@ -0,0 +1,68 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+# description: Test monitor reactor setting
-+# requires: available_reactors
-+
-+test_monitor_reactor() {
-+    local monitor="$1"
-+    local prefix="$2" # nested monitors
-+
-+    while read -r reactor; do
-+        [ "$reactor" = nop ] && continue
-+
-+        echo "$reactor" > "monitors/$prefix$monitor/reactors"
-+        grep -q "\\[$reactor\\]" "monitors/$prefix$monitor/reactors"
-+    done < available_reactors
-+
-+    echo nop > "monitors/$prefix$monitor/reactors"
-+    grep -q "\\[nop\\]" "monitors/$prefix$monitor/reactors"
-+}
-+
-+test_container_monitor() {
-+    local monitor="$1"
-+	local nested
-+
-+    while read -r reactor; do
-+        [ "$reactor" = nop ] && continue
-+
-+        echo "$reactor" > "monitors/$monitor/reactors"
-+        grep -q "\\[$reactor\\]" "monitors/$monitor/reactors"
-+
-+        for nested_dir in "monitors/$monitor"/*; do
-+            [ -d "$nested_dir" ] || continue
-+            nested=$(basename "$nested_dir")
-+            grep -q "\\[$reactor\\]" "monitors/$monitor/$nested/reactors"
-+        done
-+    done < available_reactors
-+	test -n "$nested"
-+
-+    echo nop > "monitors/$monitor/reactors"
-+    grep -q "\\[nop\\]" "monitors/$monitor/reactors"
-+
-+    for nested_dir in "monitors/$monitor"/*; do
-+        [ -d "$nested_dir" ] || continue
-+        nested=$(basename "$nested_dir")
-+        grep -q "\\[nop\\]" "monitors/$monitor/$nested/reactors"
-+    done
-+
-+    for nested_dir in "monitors/$monitor"/*; do
-+        [ -d "$nested_dir" ] || continue
-+        nested=$(basename "$nested_dir")
-+        test_monitor_reactor "$nested" "$monitor/"
-+    done
-+}
-+
-+for monitor_dir in monitors/*; do
-+    monitor=$(basename "$monitor_dir")
-+
-+    if find "$monitor_dir" -mindepth 1 -type d | grep -q .; then
-+        test_container_monitor "$monitor"
-+    else
-+        test_monitor_reactor "$monitor"
-+    fi
-+done
-+
-+monitor=$(ls /sys/kernel/tracing/rv/monitors -1 | head -n 1)
-+test -f "monitors/$monitor/reactors"
-+! echo non_existent_reactor > "monitors/$monitor/reactors"
-+! grep -q "\\[non_existent_reactor\\]" "monitors/$monitor/reactors"
-diff --git a/tools/testing/selftests/verification/test.d/rv_monitors_available.tc b/tools/testing/selftests/verification/test.d/rv_monitors_available.tc
-new file mode 100644
-index 000000000000..e6a4a1410690
---- /dev/null
-+++ b/tools/testing/selftests/verification/test.d/rv_monitors_available.tc
-@@ -0,0 +1,18 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+# description: Check available monitors
-+
-+for monitor_dir in monitors/*; do
-+    monitor=$(basename "$monitor_dir")
-+
-+    grep -q "^$monitor$" available_monitors
-+    grep -q . "$monitor_dir"/desc
-+
-+    for nested_dir in "$monitor_dir"/*; do
-+        [ -d "$nested_dir" ] || continue
-+        nested=$(basename "$nested_dir")
-+
-+        grep -q "^$monitor:$nested$" available_monitors
-+		grep -q . "$nested_dir"/desc
-+    done
-+done
-diff --git a/tools/testing/selftests/verification/test.d/rv_wwnr_printk.tc b/tools/testing/selftests/verification/test.d/rv_wwnr_printk.tc
-new file mode 100644
-index 000000000000..5a59432b1d93
---- /dev/null
-+++ b/tools/testing/selftests/verification/test.d/rv_wwnr_printk.tc
-@@ -0,0 +1,30 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+# description: Test wwnr monitor with printk reactor
-+# requires: available_reactors wwnr:monitor printk:reactor stress-ng:program
-+
-+load() { # returns true if there was a reaction
-+	local lines_before num
-+	num=$((($(nproc) + 1) / 2))
-+	lines_before=$(dmesg | wc -l)
-+	stress-ng --cpu-sched "$num" --timer "$num" -t 5 -q
-+	dmesg | tail -n $((lines_before + 1)) | grep -q "rv: monitor wwnr does not allow event"
-+}
-+
-+echo 1 > monitors/wwnr/enable
-+echo printk > monitors/wwnr/reactors
-+
-+load
-+
-+echo 0 > monitoring_on
-+! load
-+echo 1 > monitoring_on
-+
-+load
-+
-+echo 0 > reacting_on
-+! load
-+echo 1 > reacting_on
-+
-+echo nop > monitors/wwnr/reactors
-+echo 0 > monitors/wwnr/enable
-diff --git a/tools/testing/selftests/verification/verificationtest-ktap b/tools/testing/selftests/verification/verificationtest-ktap
-new file mode 100644
-index 000000000000..18f7fe324e2f
---- /dev/null
-+++ b/tools/testing/selftests/verification/verificationtest-ktap
-@@ -0,0 +1,8 @@
-+#!/bin/sh -e
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+# ftracetest-ktap: Wrapper to integrate ftracetest with the kselftest runner
-+#
-+# Copyright (C) Arm Ltd., 2023
-+
-+../ftrace/ftracetest -K -v --rv ../verification
--- 
-2.51.0
+Reviewed-by: Wander Lairson Costa <wander@redhat.com>
 
