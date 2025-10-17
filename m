@@ -1,55 +1,55 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A0313396E5
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 17 Oct 2025 20:12:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 719503064B7
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 17 Oct 2025 20:12:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760731967; cv=none; b=ZmDf3EbnB3V+WVAyd1PJ8f2T1jdUFS3D+JUUVDm0maet/4r82vqaWLq4wAUk2BGEmGaPDjUUp7dZprNzubhriae+9Jf/hrDPYeT69VNzSR1bUoKlUnPSIU9pxrhtwJ+fXodX1cHPsZik6UQCwA1Ccw+2LKEQIuuwj7c6ngxeJqE=
+	t=1760731969; cv=none; b=hdD1OdTQufW6a5k0Sa739jXoH9lY7DdwVTOTSxoXhZQgY5P5hIwZmVX9qRn2ISFmrZAqxCCAedQSUgb2KLNcoeBiTMNKJfb7BWaUwewE2RAwI1RdxiABm1/8Pv/amv+X5hMbuJIeAiknZ+77zXbsq0VMx2eo9e2dtzFB/5CfzlU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760731967; c=relaxed/simple;
-	bh=PrT4ou7XQfgOKQRqWqv9C6n4BMphf05VQOlhpJXtJ9U=;
+	s=arc-20240116; t=1760731969; c=relaxed/simple;
+	bh=cwrAgKoOfoFmDzsB8GfouVjdDaQE4lrV8AsgVEuqlvI=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=ryZNB5Sub3+asnShKxF2TSPmCjC3lImHpBExtXw5Y12PiwWiq2rv8byvS2ZsDJlQU/2xvgYupDNXY6pZYCDtt9b5biWjxd9zrLtpSbej5yumMWQQqc4BXaI7sLBwR+rAGyrp6m07Cjz4Dl9QPSGqN1sHf1/pQsuTJ9dvacmqPmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vCirA5dF; arc=none smtp.client-ip=209.85.216.74
+	 To:Cc:Content-Type; b=bl5qr3jWtGrVvPKkMR7rhkliSsGWD8FQZbKe5YRfd3G9BQtaFoEyt0fyAyrpLh7XpULWg7aTZUxGlhNCz9OR/zAeXnbXbz0JwFMBDXInuWMaQBUXKvtfjdgCmPzX7Om6itTB9vJ/MlYdXiHKuiNOKr89xKedNuv5U4ILyL5Ni9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MXn6fijT; arc=none smtp.client-ip=209.85.214.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vCirA5dF"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-33bba464b08so1791725a91.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 17 Oct 2025 13:12:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MXn6fijT"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-29085106b99so24174765ad.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 17 Oct 2025 13:12:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1760731962; x=1761336762; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1760731965; x=1761336765; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=4k+wUXHe9yzfzIaac4y4gtWpxK47yZCE3hgs7ubdV9A=;
-        b=vCirA5dFHQOlUFq8tqxQYA3tNiztzrjGCwf+nTYzGw8Q4M0+tRKSFA59dPO2MVCs+4
-         iYSF51zh8r5UPmbw/bSYVgCy4W/v0So7JfKq7rzJWb4d0SoVIm9wpwGNIMwvMh8p/FyR
-         QCTWAFIhq1W59e9bSjh/dhOxNkF/hgARQSHVPTaYKqbAIoS8MhjRZqpZ0YuErAVnuHve
-         W1xwEO3h0GnDU2q8WylRtebxY71rxNkZXeQw7mg3WPGdvbww0cNvCLKFNWe9dLnCgZ15
-         esRNwlioMZsnIaccvROlXQQSL0qTr2dNkJaAPcgWzFMl7FeFBCkmhSa11WLuukK8uQU/
-         T6Ow==
+        bh=kctxz4bkwPEMxjAo5uv7zMkhZ7DomPYpJw8TjHTwuwc=;
+        b=MXn6fijTk5zfppuhelhljX6A3t/1mAok4nn+OItA1YOiK7sNzRcgeMZam9Y3wAuO9x
+         DiXbL8Py+OICYKWM2mJQ9XiITrVZST62sEg+hVfxIBr9Q7Q4WesD8WU19UXwlFf/uhtS
+         9nFc7VIrLLcsMpA5iNIiPScP/NbPFM20N78M5CuMIJTDwdiIhBL3hqOZZLWPDebvDG4T
+         10J+dSm2KqBdWBsjM3maHkHIoLh8rWcDR3ZBFR/ypecLBbbKTQ4p8yh1aY0pTWIaBWJD
+         KSn/9zT2SgnYebDpEsOPirPIEBzP2OkZ55eZCZrIqS1YKgPy4xAamUvwfVCZU9crPKG/
+         PX8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760731962; x=1761336762;
+        d=1e100.net; s=20230601; t=1760731965; x=1761336765;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4k+wUXHe9yzfzIaac4y4gtWpxK47yZCE3hgs7ubdV9A=;
-        b=BhLM0xAIg1yTUyXMXNkPPsKkuJ3H4+CNAah0da9nAbPX0IFol7XQGsha7ozddbXYUC
-         XsfFG1MZJduYhRK93Jh7MJ2XFXlp31EBGVy7k2SAHHPBwdxJioypukGC9/jR25OHwnv3
-         kzSjWAkcCBv3t1/ubr8Qy+d+kYkJ8TQEjg41pFRY096tz6hElP85fYXRDQ6ydoUGe1p+
-         E2suWkdS4ZFn6i4rnzQpZWNPaQ0+RjqRRzj3uzR/XUnEFZxtzBzbupQtv/ruRSIGe/aw
-         RtVAR2GRjxJdNC+eLPadkFyKHSB10yZ02cUnI8GUaa5AJf+IPW9+v2imKiwy1GDZrorL
-         BrLA==
-X-Forwarded-Encrypted: i=1; AJvYcCXs/dlarvnbrQxW6PlFg/iQM/ZG7ic3GhCnHIRDTYNZ9k+fdMnlEMpVkkmnh2PRcvtIBMnoI+VkqJ5y6f9T0djybAI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1DF/PaqAhhuwXmo2b9BR9Udqy3ncx2AjJtjNcSR9960mTzQE2
-	SojXrvzprjCE9dyB56CXAnmlcnj+sCxbq/etspzQslaljhdOUAE/mc9eZjf6LPArJnZYSJIwPMO
-	nexK1yLaB/vOoW5IQT437g/XnAA==
-X-Google-Smtp-Source: AGHT+IGg5FDaopQnzU8E3MEM1vtMjI3mvE8ocZ5rZ8kLqVulK1tXCXVmLHJ4NfMXIzG1n1oaer7VJJObZU+ocU7zyg==
-X-Received: from pjrv8.prod.google.com ([2002:a17:90a:bb88:b0:32e:b34b:92eb])
+        bh=kctxz4bkwPEMxjAo5uv7zMkhZ7DomPYpJw8TjHTwuwc=;
+        b=bF4GglQNeYX06aotCOF+zte8UuQfZEq9qvplfDjrHLpBEVAMiWstk/o66s2WaOLZ0U
+         8Z8jK0nDR6mubp1VH9SpFwShDqCXaze9u6A6FYfZ7jHiLqDb/GnZ17A6rPyjExZd7JJu
+         eGjOi5b1725Az+WcagRk/zUfFgj1S5LncD7MHvfYR+ViyMrym7U+XJFa0xTMoE+2hBkO
+         OpC5yYcN4aFVOzzZaWk+9431ihYhKCO5Rpo8HojE/bhfb3bX9/gYPZoI8xyT9lM+vzX3
+         sHWYtNmdSFk8cTQrvilrjQEeMUMQXlzmwFy/LtyRBjrXbL6XHlFSX0G3EWClMAQs556a
+         3x1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXdq2AyI5YouHnM5dG8nQoA1ajS4NqwyvUtKhkXufS7u38J6BBLX2W7kDJ3HyghA5vzODBEM3OT93vA9Bqhh/spg9E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxltFJJ4E3KZVsbv/SoP1Xw2QQWNsMuKD9Q+DJdE1JaeU1TJfE2
+	LJHeWT5GvuOA3IY7PPUrgR1l2uqFC3AqC/nonLMvFmmDIIV2c07Rw94FLGNlmSx+28Eg8ZyzVcg
+	2BQtt73z6K6cnmPcanoij7frLtA==
+X-Google-Smtp-Source: AGHT+IFw3NgbtgTZNOENDz2gBk436xq9cSXbkfHKeXAn9g3NU8+yq1Zt0gAdx01FZUaxcKcWB1HdYR90j/8QeZ03Wg==
+X-Received: from plar10.prod.google.com ([2002:a17:902:c7ca:b0:27e:4187:b4d3])
  (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90b:48c8:b0:33b:ba55:f5dd with SMTP id 98e67ed59e1d1-33bcf93ab88mr4933500a91.37.1760731962171;
- Fri, 17 Oct 2025 13:12:42 -0700 (PDT)
-Date: Fri, 17 Oct 2025 13:11:49 -0700
+ 2002:a17:902:ce8d:b0:290:52aa:7291 with SMTP id d9443c01a7336-290cba41df2mr57184855ad.53.1760731965412;
+ Fri, 17 Oct 2025 13:12:45 -0700 (PDT)
+Date: Fri, 17 Oct 2025 13:11:51 -0700
 In-Reply-To: <cover.1760731772.git.ackerleytng@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -59,9 +59,9 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <cover.1760731772.git.ackerleytng@google.com>
 X-Mailer: git-send-email 2.51.0.858.gf9c4a03a3a-goog
-Message-ID: <dc5f58f5d3427b6291486a24061b6301761dda3d.1760731772.git.ackerleytng@google.com>
-Subject: [RFC PATCH v1 08/37] KVM: guest_memfd: Don't set FGP_ACCESSED when
- getting folios
+Message-ID: <98bee9fff5dcd28a378d81f8b52a561bca8e7362.1760731772.git.ackerleytng@google.com>
+Subject: [RFC PATCH v1 10/37] KVM: guest_memfd: Enable INIT_SHARED on
+ guest_memfd for x86 Coco VMs
 From: Ackerley Tng <ackerleytng@google.com>
 To: cgroups@vger.kernel.org, kvm@vger.kernel.org, linux-doc@vger.kernel.org, 
 	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
@@ -97,38 +97,43 @@ Cc: ackerleytng@google.com, akpm@linux-foundation.org,
 	yuzenghui@huawei.com, zhiquan1.li@intel.com
 Content-Type: text/plain; charset="UTF-8"
 
-guest_memfd folios don't care about accessed flags since the memory is
-unevictable and there is no storage to write back to, hence, cleanup the
-allocation path by not setting FGP_ACCESSED.
+From: Sean Christopherson <seanjc@google.com>
 
-Signed-off-by: Ackerley Tng <ackerleytng@google.com>
-[sean: split to separate patch, write changelog]
+Now that guest_memfd supports tracking private vs. shared within gmem
+itself, allow userspace to specify INIT_SHARED on a guest_memfd instance
+for x86 Confidential Computing (CoCo) VMs, so long as per-VM attributes
+are disabled, i.e. when it's actually possible for a guest_memfd instance
+to contain shared memory.
+
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- virt/kvm/guest_memfd.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ arch/x86/kvm/x86.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
-index 855e682041311..2a9e9220a48aa 100644
---- a/virt/kvm/guest_memfd.c
-+++ b/virt/kvm/guest_memfd.c
-@@ -167,14 +167,13 @@ static struct folio *kvm_gmem_get_folio(struct inode *inode, pgoff_t index)
- 	 * Fast-path: See if folio is already present in mapping to avoid
- 	 * policy_lookup.
- 	 */
--	folio = __filemap_get_folio(inode->i_mapping, index,
--				    FGP_LOCK | FGP_ACCESSED, 0);
-+	folio = filemap_lock_folio(inode->i_mapping, index);
- 	if (!IS_ERR(folio))
- 		return folio;
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 5e38c4c9cf63c..4ad451982380e 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -13941,14 +13941,13 @@ bool kvm_arch_no_poll(struct kvm_vcpu *vcpu)
+ }
  
- 	policy = kvm_gmem_get_folio_policy(GMEM_I(inode), index);
- 	folio = __filemap_get_folio_mpol(inode->i_mapping, index,
--					 FGP_LOCK | FGP_ACCESSED | FGP_CREAT,
-+					 FGP_LOCK | FGP_CREAT,
- 					 mapping_gfp_mask(inode->i_mapping), policy);
- 	mpol_cond_put(policy);
+ #ifdef CONFIG_KVM_GUEST_MEMFD
+-/*
+- * KVM doesn't yet support initializing guest_memfd memory as shared for VMs
+- * with private memory (the private vs. shared tracking needs to be moved into
+- * guest_memfd).
+- */
+ bool kvm_arch_supports_gmem_init_shared(struct kvm *kvm)
+ {
+-	return !kvm_arch_has_private_mem(kvm);
++	/*
++	 * INIT_SHARED isn't supported if the memory attributes are per-VM,
++	 * in which case guest_memfd can _only_ be used for private memory.
++	 */
++	return !vm_memory_attributes || !kvm_arch_has_private_mem(kvm);
+ }
  
+ #ifdef CONFIG_HAVE_KVM_ARCH_GMEM_PREPARE
 -- 
 2.51.0.858.gf9c4a03a3a-goog
 
