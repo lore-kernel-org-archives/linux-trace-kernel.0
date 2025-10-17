@@ -1,82 +1,186 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FB0B3203A9;
-	Fri, 17 Oct 2025 20:27:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11B2F354AC9;
+	Fri, 17 Oct 2025 20:46:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760732825; cv=none; b=sb6mlqorOf6GOE5NYXrgQCqlH+e5EjNByUelQgshzZiw1tGnS1sKBWx06VLm4+iGIR1zHPAEBn8PKa8D46ZE+I32OzVlvd4b30d8b9AqC2e8hyH2bU19C6nZ3L3bNDZ/L06JyWofDnecioQU3q3TCTEr8V+4lk/wppiKTXSymv8=
+	t=1760733989; cv=none; b=Yfn3zIdXSad7pA13wp/Ja15XuBtGYwOX58nxUN+dOfFcW8rNciF9HM99W8JN/bNUcThg3yBx60TIt7Qwj3NxAvcZqfdlmC5Q15n/92aKyNnkqOwC8xQg1j1PTjZVLeXKOxBIlF6H6O1guY6kJNhW7GVlo/3CNpQJZtd1dm5bXDQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760732825; c=relaxed/simple;
-	bh=H1fx5Ow92ImRO7PmOhwMOL9clNPkHgCSG+bUCh3LLUI=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=pTlKYusJl3/IWNTMF2FdFF540A71KrNGluLlJtrHKHXGqLB+L9g9+x3v4cd3XutCglx5k4VbeB24gjrD9SlrYD78OInPGtY5L903vd6H+9akB56nCTviOVcsh52D3cvuUVyEDsVMO1pt9/qrVNL0XhmIEJx3cxHeCPJOF2BaH8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=DzYaIxZa; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+	s=arc-20240116; t=1760733989; c=relaxed/simple;
+	bh=n5voMkpzvEXXvxmSXe4Ca95hjXPOO788xsJ2QkEupAg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FCWsBvVnzepFf/8KIVjG4iqQ3jPWvyoD2VQDhiJ5qMV/FGs9ybtcdEkNw4zzFko438VgZBqSNBPbnYll7zx5Ukl1facyI0TRBCYsl/aYX+7dsnzD/iF4MTObySvdQ4MDM400YdYAanVMdcvBLQGS/K5VycBG0dkQDiavtQWElaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k8UkHgKP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="DzYaIxZa"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 814E740B1F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1760732822; bh=H1fx5Ow92ImRO7PmOhwMOL9clNPkHgCSG+bUCh3LLUI=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=DzYaIxZa7md1iLrV3oBBZtKke92x6Ofxb7dguVi0Jg12p+Am0HU1Ehh8FYEfjHpr+
-	 lrVwCkOgriznqLzmv4CeIKoiPfCsddfFKvLGQ57xeeYX+0LnAok/7K3qvEKA6JOtUq
-	 o8asHa9E84nobacJI9VaxRD7nUSWHilReyWscZkJarWy4ilF8y4GNFh8cwVStmTTDF
-	 jQRKTITuoZjKjomBTRWus15KZFy/bDhAWlIFUWCsOKkzOzUi5DFlO/9a0ASFJSA1MK
-	 DCxWZLg51T8M2jse9llPvfSW2u6eeIrZn6z9mX00zSxxiyUDZGWU0GdTjFElM8CVdL
-	 nyHvnaFwP1TbA==
-Received: from localhost (unknown [IPv6:2601:280:4600:2da9::1fe])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 814E740B1F;
-	Fri, 17 Oct 2025 20:27:02 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Bagas Sanjaya <bagasdotme@gmail.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Documentation
- <linux-doc@vger.kernel.org>, Linux Kernel Tracing
- <linux-trace-kernel@vger.kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Tomas Glozar <tglozar@redhat.com>,
- Crystal Wood <crwood@redhat.com>, Bagas Sanjaya <bagasdotme@gmail.com>,
- Gopi Krishna Menon <krishnagopi487@gmail.com>
-Subject: Re: [PATCH] Documentation/rtla: rename common_xxx.rst files to
- common_xxx.txt
-In-Reply-To: <20251013092719.30780-2-bagasdotme@gmail.com>
-References: <20251013092719.30780-2-bagasdotme@gmail.com>
-Date: Fri, 17 Oct 2025 14:27:01 -0600
-Message-ID: <87zf9pz33e.fsf@trenco.lwn.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k8UkHgKP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B4C7C4CEE7;
+	Fri, 17 Oct 2025 20:46:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1760733988;
+	bh=n5voMkpzvEXXvxmSXe4Ca95hjXPOO788xsJ2QkEupAg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=k8UkHgKPu/CtQAbDWbYN1KU4OrS1W0ve82R+RDZ+C7wBvWiwrgzUjXwJXbTqmSCLK
+	 IBq4k/z3BmX7jINbxdF6jhVrSfTPXDJzZolYe0u3oTdHZ6QlIMppR7BSDibjdxSPZv
+	 4WmOJzUGyZ4kuFbr0TSlb7bzIMsBdqvZLo6+A793kEgckxmPdL6OzOY4GLPSlts+RG
+	 LUDXZVDqtBx7IQMziTKYGn4+lKQosA6Au3fk6P60vE2ANiQAswF4lgo4aa0sGwwuhc
+	 A6nTyAtOOCLdPF4i7Ha3qSWRd4vv6nudLlpRlxVfZC1e7Ybl48Gr3KRXuurHqLfO5V
+	 wxU467mKTUvNA==
+Date: Fri, 17 Oct 2025 22:15:20 +0200
+From: Nicolas Schier <nsc@kernel.org>
+To: Steven Rostedt <rostedt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-kbuild@vger.kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: Re: [PATCH v9 2/4] tracing: Add a tracepoint verification check at
+ build time
+Message-ID: <aPKj2Ilnq7F0xLFx@levanger>
+References: <20251015203842.618059565@kernel.org>
+ <20251015203924.391455037@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251015203924.391455037@kernel.org>
 
-Bagas Sanjaya <bagasdotme@gmail.com> writes:
+On Wed, Oct 15, 2025 at 04:38:44PM -0400, Steven Rostedt wrote:
+> From: Steven Rostedt <rostedt@goodmis.org>
+> 
+> If a tracepoint is defined via DECLARE_TRACE() or TRACE_EVENT() but never
+> called (via the trace_<tracepoint>() function), its metadata is still
+> around in memory and not discarded.
+> 
+> When created via TRACE_EVENT() the situation is worse because the
+> TRACE_EVENT() creates metadata that can be around 5k per trace event.
+> Having unused trace events causes several thousand of wasted bytes.
+> 
+> Add a verifier that injects a string of the name of the tracepoint it
+> calls that is added to the discarded section "__tracepoint_check".
+> For every builtin tracepoint, its name (which is saved in the in-memory
+> section "__tracepoint_strings") will have its name also in the
+> "__tracepoint_check" section if it is used.
+> 
+> Add a new program that is run on build called tracepoint-update. This is
+> executed on the vmlinux.o before the __tracepoint_check section is
+> discarded (the section is discarded before vmlinux is created). This
+> program will create an array of each string in the __tracepoint_check
+> section and then sort it. Then it will walk the strings in the
+> __tracepoint_strings section and do a binary search to check if its name
+> is in the __tracepoint_check section. If it is not, then it is unused and
+> a warning is printed.
+> 
+> Note, this currently only handles tracepoints that are builtin and not in
+> modules.
+> 
+> Enabling this currently with a given config produces:
+> 
+> warning: tracepoint 'sched_move_numa' is unused.
+> warning: tracepoint 'sched_stick_numa' is unused.
+> warning: tracepoint 'sched_swap_numa' is unused.
+> warning: tracepoint 'pelt_hw_tp' is unused.
+> warning: tracepoint 'pelt_irq_tp' is unused.
+> warning: tracepoint 'rcu_preempt_task' is unused.
+> warning: tracepoint 'rcu_unlock_preempted_task' is unused.
+> warning: tracepoint 'xdp_bulk_tx' is unused.
+> warning: tracepoint 'xdp_redirect_map' is unused.
+> warning: tracepoint 'xdp_redirect_map_err' is unused.
+> warning: tracepoint 'vma_mas_szero' is unused.
+> warning: tracepoint 'vma_store' is unused.
+> warning: tracepoint 'hugepage_set_pmd' is unused.
+> warning: tracepoint 'hugepage_set_pud' is unused.
+> warning: tracepoint 'hugepage_update_pmd' is unused.
+> warning: tracepoint 'hugepage_update_pud' is unused.
+> warning: tracepoint 'block_rq_remap' is unused.
+> warning: tracepoint 'xhci_dbc_handle_event' is unused.
+> warning: tracepoint 'xhci_dbc_handle_transfer' is unused.
+> warning: tracepoint 'xhci_dbc_gadget_ep_queue' is unused.
+> warning: tracepoint 'xhci_dbc_alloc_request' is unused.
+> warning: tracepoint 'xhci_dbc_free_request' is unused.
+> warning: tracepoint 'xhci_dbc_queue_request' is unused.
+> warning: tracepoint 'xhci_dbc_giveback_request' is unused.
+> warning: tracepoint 'tcp_ao_wrong_maclen' is unused.
+> warning: tracepoint 'tcp_ao_mismatch' is unused.
+> warning: tracepoint 'tcp_ao_key_not_found' is unused.
+> warning: tracepoint 'tcp_ao_rnext_request' is unused.
+> warning: tracepoint 'tcp_ao_synack_no_key' is unused.
+> warning: tracepoint 'tcp_ao_snd_sne_update' is unused.
+> warning: tracepoint 'tcp_ao_rcv_sne_update' is unused.
+> 
+> Some of the above is totally unused but others are not used due to their
+> "trace_" functions being inside configs, in which case, the defined
+> tracepoints should also be inside those same configs. Others are
+> architecture specific but defined in generic code, where they should
+> either be moved to the architecture or be surrounded by #ifdef for the
+> architectures they are for.
+> 
+> This tool could be updated to process modules in the future.
+> 
+> I'd like to thank Mathieu Desnoyers for suggesting using strings instead
+> of pointers, as using pointers in vmlinux.o required handling relocations
+> and it required implementing almost a full feature linker to do so.
+> 
+> To enable this check, run the build with: make UT=1
+> 
+> Link: https://lore.kernel.org/all/20250528114549.4d8a5e03@gandalf.local.home/
+> 
+> Suggested-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com> # for using strings instead of pointers
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+> Changes since v8: https://lore.kernel.org/20250828203741.401496225@kernel.org
+> 
+> - Instead of using a config option to enable this, enable it via: make UT=1
+>   This will allow it to go into linux-next without triggering all the
+>   current warnings but also allow people to find and fix current unused
+>   tracepoints.
+> 
+>  Makefile                          |  15 ++
+>  include/asm-generic/vmlinux.lds.h |   1 +
+>  include/linux/tracepoint.h        |  11 ++
+>  scripts/Makefile                  |   3 +
+>  scripts/link-vmlinux.sh           |   7 +
+>  scripts/tracepoint-update.c       | 232 ++++++++++++++++++++++++++++++
+>  6 files changed, 269 insertions(+)
+>  create mode 100644 scripts/tracepoint-update.c
+> 
+> diff --git a/Makefile b/Makefile
+> index 17cfa11ca716..a3141890f38f 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -157,6 +157,20 @@ endif
+>  
+>  export KBUILD_EXTRA_WARN
+>  
+> +# To check for unused tracepoints (tracepoints that are defined but never
+> +# called), run with:
+> +#
+> +# make UT=1
+> +#
+> +# Each unused tracepoints can take up to 5KB of memory in the running kernel.
+> +# It is best to remove any that are not used.
+> +
+> +ifeq ("$(origin UT)", "command line")
+> +  WARN_ON_UNUSED_TRACEPOINTS := $(UT)
+> +endif
+> +
+> +export WARN_ON_UNUSED_TRACEPOINTS
 
-> From: Gopi Krishna Menon <krishnagopi487@gmail.com>
->
-> Sphinx reports htmldocs errors:
->
-> Documentation/tools/rtla/common_options.rst:58: ERROR: Undefined substitution referenced: "threshold".
-> Documentation/tools/rtla/common_options.rst:88: ERROR: Undefined substitution referenced: "tool".
-> Documentation/tools/rtla/common_options.rst:88: ERROR: Undefined substitution referenced: "thresharg".
-> Documentation/tools/rtla/common_options.rst:88: ERROR: Undefined substitution referenced: "tracer".
-> Documentation/tools/rtla/common_options.rst:92: ERROR: Undefined substitution referenced: "tracer".
-> Documentation/tools/rtla/common_options.rst:98: ERROR: Undefined substitution referenced: "actionsperf".
-> Documentation/tools/rtla/common_options.rst:113: ERROR: Undefined substitution referenced: "tool".
->
-> common_*.rst files are snippets that are intended to be included by rtla
-> docs (rtla*.rst). common_options.rst in particular contains
-> substitutions which depend on other common_* includes, so building it
-> independently as reST source results in above errors.
->
-> Rename all common_*.rst files to common_*.txt to prevent Sphinx from
-> building these snippets as standalone reST source and update all include
-> references accordingly.
+Is there a special reason why you chose to introduce a new command-line
+variable instead of extending KBUILD_EXTRA_WARN / W ?
 
-Applied, thanks.
-
-jon
+Kind regards,
+Nicolas
