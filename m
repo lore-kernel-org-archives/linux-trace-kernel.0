@@ -1,47 +1,47 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78B4E2D8795
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 17 Oct 2025 14:47:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CC7D336EE7
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 17 Oct 2025 14:47:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760712447; cv=none; b=DIcDW5wvqMirzpEbLWTb+iAmqksx5h29F0pTt8NJiUkhfOMTan4LD4FK16iMzWhKorfrctuogV98k20LOc2+RzqZLmKGeESMyFtsMq7UEG0w1clTq626Z9wq8TogbjXa32AuFpqopuBwg18fbd8VeAI6ssrAsSEGYDZBhv9P6bI=
+	t=1760712452; cv=none; b=fv77skJ9PS13GpqtGe85GZVvZwUOb8Ad8p4DmTEzNeCdi49Cgb/mOarpP0EwFahcdVQKwDBudrEqlKZMEFNC5nCAO/54bVA2aym40JcIvadQLr2aG9LyeQ7pxcEXf7k8qYrO3UIyKurjiQQc1D7sTDGovOuwyy29K0Wh0jsYpx4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760712447; c=relaxed/simple;
-	bh=Srk+Fr4TqyjLD7nJUa5pnoyjK2m8oW4zuu6Kvh8HhdE=;
+	s=arc-20240116; t=1760712452; c=relaxed/simple;
+	bh=NwrBGbwiurA2rZyhLXqF+CXHY6SUzDcJCl6Zcy5y4pg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NTA8BvIUCA3YX/br4bvXaLI6nl71O54xKUDOFX9h2MvZpHVVcw3UWQlcIhbjnixXc4pS4jOTAuoZV48YTaZi6VAPKWPyyFeajRN3olwIvzMmUfsdG5gOFCo11/FVb6S2z+zpaC1KKIwmWLh8fNQEhJE/iuKitPy8l0gSmts5EJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EPZOmPVd; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=CQ7KRTgURZuBsDc3aESfm9HIFrNAFQT0HiQKyhyXwxKOJFtL1ijsXXCS4BAX1KoZX7CjGc3DWcK5+JGyK28+yfKd+vUEhGDEMHB3sHazn3bhXcsApWl5vuGxnkH7rcc3xwTqKUMuFxVqeL5GbBHSgfCiu3pcQqh4rc1UVrCWZKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=THuWFWuW; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EPZOmPVd"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="THuWFWuW"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1760712445;
+	s=mimecast20190719; t=1760712449;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=y+g39942jtLGJd3OsDmw3XB6JSqklKuGB9oYb6LS2jo=;
-	b=EPZOmPVdRwONp5oZKjXTPkjkv4bb1+fmqj3uc8Moyie1TaV2lzV0hQS6Z+TMaFryoeyccw
-	/HVUH/jlSKCF9uR30AcJ2aPiYQdOYV5X/FxR4dUkbg1OJwnU1CKkDpDauz57IkcGLNnHdb
-	UgIuUqS+PVFPJB8uUAJ6smxtGcFM284=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+	bh=0PTwm4egHkSEItopN4T5WsSS2MglJFP6Z4suby+DafY=;
+	b=THuWFWuWJy1e0EXfyHadP9cdEorPiLFnvuHbndYkAQjbBl4Qed3CLKvHSCDxL7nLuPKboZ
+	lUZgkLfb6XFI67VIVaYzWlVqn3/Sr4yFNfM3FbnUmv19KjtyyjokmUwhUBDe9xXSIZXheg
+	lIbd5fOLzHILrgDl4IHYMImXsgAdLas=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-93-v_DwCMsAPQeD3eKnXiuP3w-1; Fri,
- 17 Oct 2025 10:47:22 -0400
-X-MC-Unique: v_DwCMsAPQeD3eKnXiuP3w-1
-X-Mimecast-MFC-AGG-ID: v_DwCMsAPQeD3eKnXiuP3w_1760712441
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-441-Nq-NJnGhNa6jIMjQaMxiiQ-1; Fri,
+ 17 Oct 2025 10:47:26 -0400
+X-MC-Unique: Nq-NJnGhNa6jIMjQaMxiiQ-1
+X-Mimecast-MFC-AGG-ID: Nq-NJnGhNa6jIMjQaMxiiQ_1760712445
 Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C1CBB1954210;
-	Fri, 17 Oct 2025 14:47:21 +0000 (UTC)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 42E451956054;
+	Fri, 17 Oct 2025 14:47:25 +0000 (UTC)
 Received: from fedora.redhat.com (unknown [10.44.32.24])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 9D5601800452;
-	Fri, 17 Oct 2025 14:47:18 +0000 (UTC)
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 665C31800452;
+	Fri, 17 Oct 2025 14:47:21 +0000 (UTC)
 From: Tomas Glozar <tglozar@redhat.com>
 To: Steven Rostedt <rostedt@goodmis.org>
 Cc: LKML <linux-kernel@vger.kernel.org>,
@@ -53,9 +53,9 @@ Cc: LKML <linux-kernel@vger.kernel.org>,
 	Wander Lairson Costa <wander@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Tomas Glozar <tglozar@redhat.com>
-Subject: [PATCH 3/4] rtla/timerlat: Add example for BPF action program
-Date: Fri, 17 Oct 2025 16:46:49 +0200
-Message-ID: <20251017144650.663238-4-tglozar@redhat.com>
+Subject: [PATCH 4/4] Documentation/rtla: Document --bpf-action option
+Date: Fri, 17 Oct 2025 16:46:50 +0200
+Message-ID: <20251017144650.663238-5-tglozar@redhat.com>
 In-Reply-To: <20251017144650.663238-1-tglozar@redhat.com>
 References: <20251017144650.663238-1-tglozar@redhat.com>
 Precedence: bulk
@@ -67,37 +67,41 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-Add an example BPF action program that prints the measured latency to
-the tracefs buffer via bpf_printk().
+Add new option --bpf-action into common_timerlat_options.txt, including
+the format in which it takes the BPF program, and a reference to an
+example.
 
 Signed-off-by: Tomas Glozar <tglozar@redhat.com>
 ---
- tools/tracing/rtla/sample/timerlat_bpf_action.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
- create mode 100644 tools/tracing/rtla/sample/timerlat_bpf_action.c
+ .../tools/rtla/common_timerlat_options.rst     | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/tools/tracing/rtla/sample/timerlat_bpf_action.c b/tools/tracing/rtla/sample/timerlat_bpf_action.c
-new file mode 100644
-index 000000000000..ac1be049a848
---- /dev/null
-+++ b/tools/tracing/rtla/sample/timerlat_bpf_action.c
-@@ -0,0 +1,16 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/bpf.h>
-+#include <bpf/bpf_tracing.h>
+diff --git a/Documentation/tools/rtla/common_timerlat_options.rst b/Documentation/tools/rtla/common_timerlat_options.rst
+index 1f5d024b53aa..1b7293ebc897 100644
+--- a/Documentation/tools/rtla/common_timerlat_options.rst
++++ b/Documentation/tools/rtla/common_timerlat_options.rst
+@@ -65,3 +65,21 @@
+         Set timerlat to run without workload, waiting for the user to dispatch a per-cpu
+         task that waits for a new period on the tracing/osnoise/per_cpu/cpu$ID/timerlat_fd.
+         See linux/tools/rtla/sample/timerlat_load.py for an example of user-load code.
 +
-+char LICENSE[] SEC("license") = "GPL";
++**--bpf-action** *bpf-program*
 +
-+struct trace_event_raw_timerlat_sample {
-+	unsigned long long timer_latency;
-+} __attribute__((preserve_access_index));
++        Loads a BPF program from an ELF file and executes it when a latency threshold is exceeded.
 +
-+SEC("tp/timerlat_action")
-+int action_handler(struct trace_event_raw_timerlat_sample *tp_args)
-+{
-+	bpf_printk("Latency: %lld\n", tp_args->timer_latency);
-+	return 0;
-+}
++        The BPF program must be a valid ELF file loadable with libbpf. The program must contain
++        a function named ``action_handler``, declared with ``SEC("tp/timerlat_action")`` for libbpf
++        to correctly detect the program type.
++
++        The program receives a ``struct trace_event_raw_timerlat_sample`` parameter
++        containing timerlat sample data.
++
++        A sample BPF action program is provided in ``tools/tracing/rtla/sample/timerlat_bpf_action.c``.
++        This example demonstrates how to create a BPF program that prints latency information when
++        thresholds are exceeded.
++
++        **Note**: BPF actions require BPF support to be available. If BPF is not available or disabled,
++        the tool will fall back to tracefs mode and BPF actions will not be supported.
 -- 
 2.51.0
 
