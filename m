@@ -1,92 +1,141 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f193.google.com (mail-pf1-f193.google.com [209.85.210.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88D2B231836;
-	Sat, 18 Oct 2025 14:20:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57E0A3770B
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 18 Oct 2025 14:21:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760797243; cv=none; b=UW1MQ4mHOeym8MscW+g+9yAUTDUHW9YqSMp4JJKrj8AUx4eFDJsl/ad2UODHCiIOUVnQlTEsFDbXz/oBn8Qa7jk+odEj4tRIRIjrFBtAHNgb/urpsZcefmw2PRKS6nY0T+yt8qp60aUBfyn9GKt9LOEcgGW8JEmo3FnQ6/sJ97U=
+	t=1760797298; cv=none; b=X/GS/bjpTk/SJL19ZsjD7S9HwHkxMGwR3MZuJHaNsC2Y8h/I+lbGd+srXw2mIFr8rWAygbCwswDn/e5PU6GUunnQGayFqfftsEr3InwOCZr/nl38e9J9YNM6Wqyc5LfLJKzX1USdoVrc3S1jhh7kO57nftrTz6S4VfwZJQfBzLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760797243; c=relaxed/simple;
-	bh=TcTxC7aWOL3F2dwoqNA3hz7SM18cl7z32zpxJPcZOc4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=TFEIAIr9LiAhj7Zdckkvxq79H4TK9tNvZLb7JzdXmQLH9H9YxLUg1xEzshqHp3Wi62p+BBxOzyd86/0iSxrwudOqYiDrMDYcdCZulHYjP1P91e9tur5BQRQGjiYYB9Zo1qfOuhlftR8xKAbfPzL+eI1qVp7+gsDmdtZOTdf+7x4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=dGSENe8K; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+	s=arc-20240116; t=1760797298; c=relaxed/simple;
+	bh=UFACQNUcFGNUr3LbQlJ73ptXjK7M7y+BaajbPTYSAJ8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZL7n1cj1QVoYViNAJssfZ/l4cu7hdkmKtJXlRNu7YO9i9xYs2uiSGtykP0WP8amsBVI9iMbz64568PgzaO7oL4MeslGoJ6NoebHU2fWiI3Q5W7JoQmWybodp6IIEY4NovVbyazbXAJuZPddH5IyfitiDNRggmTKeyeq6Pb4CI3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U33tU0ss; arc=none smtp.client-ip=209.85.210.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="dGSENe8K"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 508FE40B21
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1760797235; bh=2lCCpJN4b+KjkcNYS++aN2uD7Z/WcJhUXmhd22yZzsc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=dGSENe8KyZ21nEMZj8VQrp/w9rq5SE/lYly8d8rvKOjN8xGURzJjh2ZrMecYAV2zM
-	 K6I1WZ2u9D9m1UUW/NBlA2/TdIeKHwpUSFDuMD3evFrepdLKNfKW7TH5zBJWjxaA8o
-	 Zo9f3OmSUVPJtDpZxb+GErFUs7uBUlB3T9Yx+JWngNB8+rny+VmDkOo2Jnnh8YLw+g
-	 bRb6tj6mBkIppSTKtVJS9uzxUhmzaVaWzjzW+Z+F++ia2GU+O6Hst8PxXcneMSvtgb
-	 uNyKc7hEifqFBNjq+0agyFgmgzOjhT4TcBet5AtIB5T5N0GOIBMpT/WlKIGoXvLvcu
-	 ghUXtD3qwLrTw==
-Received: from localhost (unknown [IPv6:2601:280:4600:2da9::1fe])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 508FE40B21;
-	Sat, 18 Oct 2025 14:20:35 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Bagas Sanjaya <bagasdotme@gmail.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Documentation
- <linux-doc@vger.kernel.org>, Linux Kernel Tracing
- <linux-trace-kernel@vger.kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Tomas Glozar <tglozar@redhat.com>,
- Crystal Wood <crwood@redhat.com>, Gopi Krishna Menon
- <krishnagopi487@gmail.com>
-Subject: Re: [PATCH] Documentation/rtla: rename common_xxx.rst files to
- common_xxx.txt
-In-Reply-To: <aPMqTSbPucoqNhA1@archie.me>
-References: <20251013092719.30780-2-bagasdotme@gmail.com>
- <87zf9pz33e.fsf@trenco.lwn.net> <aPMqTSbPucoqNhA1@archie.me>
-Date: Sat, 18 Oct 2025 08:20:34 -0600
-Message-ID: <87v7kcz3yl.fsf@trenco.lwn.net>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U33tU0ss"
+Received: by mail-pf1-f193.google.com with SMTP id d2e1a72fcca58-77f343231fcso1965173b3a.3
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 18 Oct 2025 07:21:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1760797297; x=1761402097; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=wdkh50aQpwH1ME0yDbaQNHLQF1BCMimilG3lPugeXHw=;
+        b=U33tU0ssJpu6X3LCm9p+k1g4w+oJNg1Upb/ixdRFZIBm4yRi3sgo3Nu60N0dePr2eT
+         7JpSHXZ2kNeEDvRgsnL8+arbGuUBBQLtUvqcTxRGt78kJpGVXbTiE9m5vTKP5ZOlrumE
+         rLC1d8B7d0lfy2Hs0JXV85aV8BqBNgwoHfUk64qxPRTMvGtn1zE01OynS8Ie/rhHGjIJ
+         cLSTUAbqJK8gPuGE+MrIHhAiNq+oulUbddLifPqhX/BQnDcw7s2jlkIcGaCe/eC76uXm
+         faD8LkBQn03tq/PebNzbvZdHg0wL2Es+1ItlCBDy9HSW+rStQJ5KL3GQwCE0ru50V4qM
+         hbEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760797297; x=1761402097;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wdkh50aQpwH1ME0yDbaQNHLQF1BCMimilG3lPugeXHw=;
+        b=Yo/d7KJ2UMUC2MxqHHl4biIrS+HFuiYGhCGtsYfa9iJmqoo0wNJ9BulF97r2Gr6x3y
+         aqv9MRd8oKCZh0UDCKh2U9u5uUZzQWGhuuvjhH3SbHmxKx7UaY7uUHQ6thN0FcTatqP/
+         cKsrLiUFDW0hVHOCOKEvRPD5IqmLAtzPLBzpAuUe62ZjfXRJk33DXAue0SUgv2wGEt0m
+         UbslSBqKzcn6dnXaJW3aL48Tp5CA4ztjuZPUCmnIry6v/ryZwoTm3xNoUb4BsrPztscg
+         E9E6FYN4cUf6Zk00NwPgl+okVCsV89QTJslZ8uMNyoKs8Uxk4dAlc1ZkiiMnPyWctCjg
+         16qw==
+X-Forwarded-Encrypted: i=1; AJvYcCWl0Eh/KOkmGrmcU3qShorFOeZzznIXzJO0KlVaJ1GVuXS+TqhjYdqcSb5411D0oqghW+z3fSMHQPH65g7X7oF77Xc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPXRocqvrqxfzjyESSoW3BydedyTYSCLTzHwnhjc5mcQ/eECu9
+	j4eHKCyXhpAxdpYSR/D65M9+5nUQvNFhcgepsBVF9nCCuoNrOZAnyyq9
+X-Gm-Gg: ASbGncux/oIjTpLCLlWr1QfSZSzb0R+kfR3TbSlH+3LiV13sDkEQq196EX98rAHzeM/
+	/8QWowHMcuUn9VaXR8NIF7wcxZAYRIT/nbOMsvPG8EUGdEwle1v3X9D0Zd9PXm26qkeHMvOZXXd
+	fRr0Ymj7guT0sHFdpTTeoZn+w4vqST2lBfsIQkPfHxKGEEtH2hxq36eZiXFa2xVVbflKIpULhnD
+	tzGJfNrYFmT2VS+FoDUvCrAL1ZS6d5Az6W+cpwFi2qKuG9W1fxaGCKYkMX2bEUwvNqlHggsNNdp
+	Hn1pCqMWcXbnfiY9umytokV+0x/zWL4MCzVYsJLWq/WZtyW8HQ9kXRdkMrKrYY8mP9y60tJalaJ
+	8sA/F5b6teLEglfXQ/n5uSFB36W68PWEEIMaEfNRtFgKE2Nl6SSwhkTWYOf5lxzF1fZQZ/Itb8c
+	hA
+X-Google-Smtp-Source: AGHT+IFwjUau4e7L7ur+mPitSfhfWL2QhmxUZ49vo3pktk9QgW3ghR615Qec4S+Rounyw7PCrdwbOA==
+X-Received: by 2002:a05:6a21:6da1:b0:324:b245:bb8e with SMTP id adf61e73a8af0-334a856e811mr11163187637.26.1760797296653;
+        Sat, 18 Oct 2025 07:21:36 -0700 (PDT)
+Received: from 7950hx ([43.129.244.20])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7a23010d818sm2913589b3a.53.2025.10.18.07.21.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 18 Oct 2025 07:21:36 -0700 (PDT)
+From: Menglong Dong <menglong8.dong@gmail.com>
+X-Google-Original-From: Menglong Dong <dongml2@chinatelecom.cn>
+To: ast@kernel.org,
+	jolsa@kernel.org
+Cc: daniel@iogearbox.net,
+	john.fastabend@gmail.com,
+	andrii@kernel.org,
+	martin.lau@linux.dev,
+	eddyz87@gmail.com,
+	song@kernel.org,
+	yonghong.song@linux.dev,
+	kpsingh@kernel.org,
+	sdf@fomichev.me,
+	haoluo@google.com,
+	mattbobrowski@google.com,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	leon.hwang@linux.dev,
+	bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH RFC bpf-next 0/5] bpf: tracing session supporting
+Date: Sat, 18 Oct 2025 22:21:19 +0800
+Message-ID: <20251018142124.783206-1-dongml2@chinatelecom.cn>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-Bagas Sanjaya <bagasdotme@gmail.com> writes:
+Sometimes, we need to hook both the entry and exit of a function with
+TRACING. Therefore, we need define a FENTRY and a FEXIT for the target
+function, which is not convenient.
 
-> On Fri, Oct 17, 2025 at 02:27:01PM -0600, Jonathan Corbet wrote:
->> Bagas Sanjaya <bagasdotme@gmail.com> writes:
->> 
->> > From: Gopi Krishna Menon <krishnagopi487@gmail.com>
->> >
->> > Sphinx reports htmldocs errors:
->> >
->> > Documentation/tools/rtla/common_options.rst:58: ERROR: Undefined substitution referenced: "threshold".
->> > Documentation/tools/rtla/common_options.rst:88: ERROR: Undefined substitution referenced: "tool".
->> > Documentation/tools/rtla/common_options.rst:88: ERROR: Undefined substitution referenced: "thresharg".
->> > Documentation/tools/rtla/common_options.rst:88: ERROR: Undefined substitution referenced: "tracer".
->> > Documentation/tools/rtla/common_options.rst:92: ERROR: Undefined substitution referenced: "tracer".
->> > Documentation/tools/rtla/common_options.rst:98: ERROR: Undefined substitution referenced: "actionsperf".
->> > Documentation/tools/rtla/common_options.rst:113: ERROR: Undefined substitution referenced: "tool".
->> >
->> > common_*.rst files are snippets that are intended to be included by rtla
->> > docs (rtla*.rst). common_options.rst in particular contains
->> > substitutions which depend on other common_* includes, so building it
->> > independently as reST source results in above errors.
->> >
->> > Rename all common_*.rst files to common_*.txt to prevent Sphinx from
->> > building these snippets as standalone reST source and update all include
->> > references accordingly.
->> 
->> Applied, thanks.
->
-> Shouldn't this more appropriate as a fix for current cycle (6.18)? I see
-> the warnings on Linus's tree, though.
+Therefore, we add a tracing session support for TRACING. Generally
+speaking, it's similar to kprobe session, which can hook both the entry
+and exit of a function with a single BPF program. Meanwhile, it can also
+control the execution of the fexit with the return value of the fentry.
+session cookie is not supported yet, and I'm not sure if it's necessary.
 
-As a general rule, I don't see warning fixes as being important enough
-to send outside of the merge window; the next cycle isn't that far away.
+For now, only x86_64 is supported. Other architectures will be supported
+later.
 
-jon
+Menglong Dong (5):
+  bpf: add tracing session support
+  bpf: add kfunc bpf_tracing_is_exit for TRACE_SESSION
+  bpf,x86: add tracing session supporting for x86_64
+  libbpf: add support for tracing session
+  selftests/bpf: add testcases for tracing session
+
+ arch/arm64/net/bpf_jit_comp.c                 |   3 +
+ arch/loongarch/net/bpf_jit.c                  |   3 +
+ arch/powerpc/net/bpf_jit_comp.c               |   3 +
+ arch/riscv/net/bpf_jit_comp64.c               |   3 +
+ arch/s390/net/bpf_jit_comp.c                  |   3 +
+ arch/x86/net/bpf_jit_comp.c                   | 115 ++++++++++-
+ include/linux/bpf.h                           |   1 +
+ include/uapi/linux/bpf.h                      |   1 +
+ kernel/bpf/btf.c                              |   2 +
+ kernel/bpf/syscall.c                          |   2 +
+ kernel/bpf/trampoline.c                       |   5 +-
+ kernel/bpf/verifier.c                         |  17 +-
+ kernel/trace/bpf_trace.c                      |  43 ++++-
+ net/bpf/test_run.c                            |   1 +
+ net/core/bpf_sk_storage.c                     |   1 +
+ tools/bpf/bpftool/common.c                    |   1 +
+ tools/include/uapi/linux/bpf.h                |   1 +
+ tools/lib/bpf/bpf.c                           |   2 +
+ tools/lib/bpf/libbpf.c                        |   3 +
+ .../selftests/bpf/prog_tests/fsession_test.c  | 132 +++++++++++++
+ .../selftests/bpf/progs/fsession_test.c       | 178 ++++++++++++++++++
+ 21 files changed, 511 insertions(+), 9 deletions(-)
+ create mode 100644 tools/testing/selftests/bpf/prog_tests/fsession_test.c
+ create mode 100644 tools/testing/selftests/bpf/progs/fsession_test.c
+
+-- 
+2.51.0
+
