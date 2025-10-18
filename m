@@ -1,168 +1,133 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E09B42065;
-	Sat, 18 Oct 2025 12:17:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AF66450F2
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 18 Oct 2025 13:04:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760789842; cv=none; b=K2J6bGpg7gf2PnBuPx9qjFjhijqPBmKKE3lV9GTfWu0iZF8idvbexUiHEz6dcCzhZgut8AY5oUbmteT0IgMGh5+9rj/rfn9S+IHlntkpMYLuNNHBRCrjzng/JeCHGdHZgJwntB+MmkrXBeHibFvojT4+s4gSavK0nLP0H+T6AMg=
+	t=1760792685; cv=none; b=LI6e02eLp0VmX5qnlagDcYFCwoKE1Xq7myBPZM+NAw7jvZQQXXw32YEj49tDBES2iTN4oCi4e/iU76seSX2z3CirR3nOdsl5wuIhHkUMen0ks7oIK3w+lQA83iP5muXyPOrMfX5229PM+JU8r4b2nfALHjba+djC3C2b8mBvA5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760789842; c=relaxed/simple;
-	bh=NVgGAPwwrLSCwbHx+kIcEztaGnNRLWNphzvMd9GtKb4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QMwXh8wpY+iSs7uVpjskDJkz0TXi3ZAl5LY4lcJea85a2tOghiGjCmPwdLpADeOD5p2bft0Ph/h4Fowx0Qp6a3A+XtSXcOEzNrqi1PgOkjmJ2r+6z1JOIcxoOvdw9C1TOA+nMmyldh29HQ0SOXdvWXTtihdRkuMHUGUsxwd/9sw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EsBoq2FC; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1760792685; c=relaxed/simple;
+	bh=R+KaKUoTMbS3qGkwBTJDmbjeQcTDbiGE1Vr8NkGkL/o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AdFPP17APrgopc7RRHSsMlvha7iWEExYlKT2BrQ3Sd8KdAJfTkPvc+iWqmYzUQjRj6fImnQ46izK09hzG8gCEOro7ShNNzOCgbjn7X3LeVoS02agg0/xdoQg8aB9FCKDOmz7dttPhUVaaxsqOrbeWpEBWaavimmxCkGeEbI5Mj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bxgQBC/a; arc=none smtp.client-ip=209.85.219.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EsBoq2FC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1760789841; x=1792325841;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=NVgGAPwwrLSCwbHx+kIcEztaGnNRLWNphzvMd9GtKb4=;
-  b=EsBoq2FCNNWf4NbWJC2fTHdjPA1KmmbioRKD/Cvn07AzB2U+TUyMyuyQ
-   4w2t+MdBLhoKLWJCDWqVIdTKr/dKr8EykXACyXMC9Kpj6X4k4dWOtaj+C
-   pDAwLfhfHaXoIS4Fa8ROJnXhvL7mhiypRsHCnyPc95MoEotZG/qhOUn/C
-   +fOxn+EP4BlLfnFy8FfyW/IiYi3X27cZpHfg1WEjYRkNjK/8GZSw7nVzu
-   YaR1tLc4XI1mt0cV2E5l4POAbwzVbDj2siM0AFFlm5R1G8jw6DluVgTQ1
-   NL6dxPuKdB6mbWUEAcf1HqvgeO5O64Edb4Zo3NU3mgGz0cmID1TmzPQlX
-   w==;
-X-CSE-ConnectionGUID: DGVCFJP7RqSJl1CoBmf1HQ==
-X-CSE-MsgGUID: NpRGHkLOSVOPcvfIFS771g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11585"; a="73589141"
-X-IronPort-AV: E=Sophos;i="6.19,238,1754982000"; 
-   d="scan'208";a="73589141"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2025 05:17:20 -0700
-X-CSE-ConnectionGUID: 7pe2GAzGR+qZ0MPAOZtUHA==
-X-CSE-MsgGUID: 9nY2xmu0SZWwn7mBDZKc5A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,238,1754982000"; 
-   d="scan'208";a="188253747"
-Received: from lkp-server02.sh.intel.com (HELO 66d7546c76b2) ([10.239.97.151])
-  by fmviesa004.fm.intel.com with ESMTP; 18 Oct 2025 05:17:18 -0700
-Received: from kbuild by 66d7546c76b2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1vA5rZ-0008Gv-2C;
-	Sat, 18 Oct 2025 12:16:49 +0000
-Date: Sat, 18 Oct 2025 20:16:08 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>
-Cc: oe-kbuild-all@lists.linux.dev, Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/2] tracing: Add an option to show symbols in
- _text+offset for function profiler
-Message-ID: <202510181934.DYd8mdHX-lkp@intel.com>
-References: <176071775059.175601.3827350589430991963.stgit@devnote2>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bxgQBC/a"
+Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-7f7835f4478so31553266d6.1
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 18 Oct 2025 06:04:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1760792682; x=1761397482; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=trCRqXRfBn/yxKdZHJTPwmyQCvgYCCi0gPBNAdqxdVM=;
+        b=bxgQBC/a2DjERNkm7/nDtx1+7oZElydCVRwThzApZ9S81f5WJrC/iS7XOzONDxn/XI
+         yPKpGl2pbOiyr+v1yJHJW1TeDH/A7CcyJlGOj0zHAh/HuaDzIEThTvxh1Ck8zu3X0KxV
+         XaTcik3kXkBhp0YnU0cuntz9IivyhLlULDz4m61kGNKOyMASCjOGGOZMMqapznsbn5VM
+         U9d9Pn4VxEqYSIIgJumlslpWibxow1ee+sZ2a2SkjfvVBo6CtViXLKztM2W8C/e9qRa5
+         K3uSSCZa8qiCRETmW1hUPqwppISNwUNhCIHUKx8byZjLjqGUuVvC4iCOwPF+REx0TyAw
+         ZOZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760792682; x=1761397482;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=trCRqXRfBn/yxKdZHJTPwmyQCvgYCCi0gPBNAdqxdVM=;
+        b=hhVCyTAUbFNwzY3tg3vW3TF92cMKy9jmjg8MnwYKWtu5wEwRRJg/Xo+wVMVhnAx1mx
+         Lnqw1n0iePpcLYrwVIOh7Fd/re8xsVQJG0lmBCLMYsWMhvPhvMIY6iQPaGJp/CC1Fdx4
+         C6GICl2EHHRv1Tlor0hf11g6qihtVL/Cz2chMeW3cNshuwkfVzzoz1w0M6ToqT4e/meI
+         997sxI1VJZ/wvfyTAvsiY1VAX/c1yzHMOwvNYqcDUrpbJGN8+a8Tkn2Ok4v98CD/1kLC
+         4a9mJuVKBOg0xDXdF51HbG5WNIoNE8VtZHXn8hNT/Otk/0TsbfkIbP+s5rVaoAA6Hmvt
+         MpMg==
+X-Forwarded-Encrypted: i=1; AJvYcCX1jYMpnq81x+1TqAJaZ0svfhp6GXEmRNjOTsLIbORFlHX9gDW6JZbjyI0pMiGOXX/To2tXEpcNM1EWqjhCNzUYpSQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZxSKg2UHeYRN72DGL+Ym8vEfLiMGS8dSKkh82iG6M7s0ujEJ3
+	FGvYfCxYd5VvtOO+yrQiFAyP2wmecp8w0k+DTIbS20Q6aTeu6Njq2RGd
+X-Gm-Gg: ASbGnctFIgniCf7LTmiFe+wqJaedsC3k0LGi0WmbtCQ+rPCwFggA202ielTXQgFoH0j
+	NTRZbVV1Locd62ThO68QIVX4KtfC+IDOTA2JW24NfGE8Iizb0dc/StcLQJ56CnelcncosuuBHgh
+	P4X4g64qLNrFqDDMqMKtBe6NOMesiNmPz+QBNtlUPLKgu5LyzBG6MEC9W0JDFfn6PH7qk7vv87J
+	ILE1kkXOI6kJIaux7zRSK0/Lq6UHvOuzVinV4NnTgQiG7oaZHn+9NZdB63mSUJhuGIdK61F3UFX
+	RnyXqcLxjfq/Gy4D4YwxmUqNP0PYI8LaoPGTQ9exRypNDYGqQfm59sddvgO3QL+arZRZu0wZ6RR
+	hgDEFNe9uP5/Wq5Q6fM2EM1T2lvVni37KLKNs7632qsB3JzVW5hxQ4wDDX6oFWND4LtPbAGkDxx
+	GDNb7iLFTC0ks2rQPR+Wtn4HteMYJ0OIbSmOoo
+X-Google-Smtp-Source: AGHT+IE7kX32IxJFAb9JSe9/i8fvfeClIEH20D/LplyGFeMenVVt53YG8UVPIv0JZpwN4q0Ac2LjXQ==
+X-Received: by 2002:a05:6214:5287:b0:87c:d60:1017 with SMTP id 6a1803df08f44-87c2057f338mr107476366d6.21.1760792682181;
+        Sat, 18 Oct 2025 06:04:42 -0700 (PDT)
+Received: from ideapad.mynetworksettings.com ([2600:4040:5304:d300:275f:6229:da5:6a60])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-87d028966fasm15840596d6.33.2025.10.18.06.04.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 18 Oct 2025 06:04:41 -0700 (PDT)
+From: Ivan Pravdin <ipravdin.official@gmail.com>
+To: rostedt@goodmis.org,
+	tglozar@redhat.com,
+	linux-trace-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Ivan Pravdin <ipravdin.official@gmail.com>
+Subject: [PATCH v4 0/2] rtla: fix cgroup and trace options parsing
+Date: Sat, 18 Oct 2025 09:04:29 -0400
+Message-ID: <cover.1760791697.git.ipravdin.official@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <176071775059.175601.3827350589430991963.stgit@devnote2>
+Content-Transfer-Encoding: 8bit
 
-Hi Masami,
+This series fixes 2 issue in rtla timerlat and osnoise parsing.
 
-kernel test robot noticed the following build errors:
+1. Make -C/--cgroup option more user-friendly. Currently rtla timerlat
+   and osnoise parses does not allow to specify tracer's threads cgroup
+   name as `-C [cgroup]` or `--cgroup [cgroup]`. Second patch fixes this
+   by allowing users to specify cgroup in the aforementioned manner.
 
-[auto build test ERROR on trace/for-next]
-[also build test ERROR on linus/master v6.18-rc1 next-20251017]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+2. When specifying `-t/--trace` before `-a/--auto`, trace filename is
+   override to default <osnoise|timerlat>_trace.txt. For example, when
+   running rtla as
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Masami-Hiramatsu-Google/tracing-Allow-tracer-to-add-more-than-32-options/20251018-004104
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace for-next
-patch link:    https://lore.kernel.org/r/176071775059.175601.3827350589430991963.stgit%40devnote2
-patch subject: [PATCH v4 2/2] tracing: Add an option to show symbols in _text+offset for function profiler
-config: x86_64-rhel-9.4 (https://download.01.org/0day-ci/archive/20251018/202510181934.DYd8mdHX-lkp@intel.com/config)
-compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251018/202510181934.DYd8mdHX-lkp@intel.com/reproduce)
+       `rtla timerlat top -t custom_file.txt -a 100`
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202510181934.DYd8mdHX-lkp@intel.com/
+   when the threshold is reached, timerlat_trace.txt file is created
+   instead of specified custom_file.txt. Third patch addresses this
+   issue.
 
-All errors (new ones prefixed by >>):
+changes v3 -> v4:
+   - Removed patch [1] as it has been mainlined
+   - Resolved merge conflicts with [2]
 
-   In file included from kernel/trace/trace_output.h:6,
-                    from kernel/trace/ftrace.c:45:
->> kernel/trace/trace.h:1434:34: error: enumerator value outside the range of underlying type
-    1434 | #define C(a, b) TRACE_ITER_##a = (1 << TRACE_ITER_##a##_BIT)
-         |                                  ^
-   kernel/trace/trace.h:1369:17: note: in expansion of macro 'C'
-    1369 |                 C(PROF_TEXT_OFFSET,     "prof-text-offset"),
-         |                 ^
-   kernel/trace/trace.h:1414:17: note: in expansion of macro 'PROFILER_FLAGS'
-    1414 |                 PROFILER_FLAGS
-         |                 ^~~~~~~~~~~~~~
-   kernel/trace/trace.h:1436:40: note: in expansion of macro 'TRACE_FLAGS'
-    1436 | enum trace_iterator_flags : uint64_t { TRACE_FLAGS };
-         |                                        ^~~~~~~~~~~
---
-   In file included from kernel/trace/trace_probe.h:31,
-                    from kernel/trace/bpf_trace.c:35:
->> kernel/trace/trace.h:1434:34: error: enumerator value outside the range of underlying type
-    1434 | #define C(a, b) TRACE_ITER_##a = (1 << TRACE_ITER_##a##_BIT)
-         |                                  ^
-   kernel/trace/trace.h:1369:17: note: in expansion of macro 'C'
-    1369 |                 C(PROF_TEXT_OFFSET,     "prof-text-offset"),
-         |                 ^
-   kernel/trace/trace.h:1414:17: note: in expansion of macro 'PROFILER_FLAGS'
-    1414 |                 PROFILER_FLAGS
-         |                 ^~~~~~~~~~~~~~
-   kernel/trace/trace.h:1436:40: note: in expansion of macro 'TRACE_FLAGS'
-    1436 | enum trace_iterator_flags : uint64_t { TRACE_FLAGS };
-         |                                        ^~~~~~~~~~~
-   kernel/trace/bpf_trace.c: In function '____bpf_trace_printk':
-   kernel/trace/bpf_trace.c:378:9: warning: function '____bpf_trace_printk' might be a candidate for 'gnu_printf' format attribute [-Wsuggest-attribute=format]
-     378 |         ret = bstr_printf(data.buf, MAX_BPRINTF_BUF, fmt, data.bin_args);
-         |         ^~~
-   kernel/trace/bpf_trace.c: In function '____bpf_trace_vprintk':
-   kernel/trace/bpf_trace.c:434:9: warning: function '____bpf_trace_vprintk' might be a candidate for 'gnu_printf' format attribute [-Wsuggest-attribute=format]
-     434 |         ret = bstr_printf(data.buf, MAX_BPRINTF_BUF, fmt, data.bin_args);
-         |         ^~~
-   kernel/trace/bpf_trace.c: In function '____bpf_seq_printf':
-   kernel/trace/bpf_trace.c:476:9: warning: function '____bpf_seq_printf' might be a candidate for 'gnu_printf' format attribute [-Wsuggest-attribute=format]
-     476 |         seq_bprintf(m, fmt, data.bin_args);
-         |         ^~~~~~~~~~~
---
-   In file included from kernel/trace/rv/rv.h:9,
-                    from kernel/trace/rv/rv.c:151:
->> kernel/trace/rv/../trace.h:1434:34: error: enumerator value outside the range of underlying type
-    1434 | #define C(a, b) TRACE_ITER_##a = (1 << TRACE_ITER_##a##_BIT)
-         |                                  ^
-   kernel/trace/rv/../trace.h:1369:17: note: in expansion of macro 'C'
-    1369 |                 C(PROF_TEXT_OFFSET,     "prof-text-offset"),
-         |                 ^
-   kernel/trace/rv/../trace.h:1414:17: note: in expansion of macro 'PROFILER_FLAGS'
-    1414 |                 PROFILER_FLAGS
-         |                 ^~~~~~~~~~~~~~
-   kernel/trace/rv/../trace.h:1436:40: note: in expansion of macro 'TRACE_FLAGS'
-    1436 | enum trace_iterator_flags : uint64_t { TRACE_FLAGS };
-         |                                        ^~~~~~~~~~~
+changes v2 -> v3:
+   - Combined common logic into a utility function to parse optional
+     argument value
+   - Removed change that removed `clear_terminal` 
 
+changes v1 -> v2:
+   - Moved removing clear_terminal from `fix -C/--cgroup interface`
+     patch to `fix -a overriding -t argument` patch
+   - Added clarification why to remove clear_terminal
+   - Added `Fixes:` tag to the `fix -C/--cgroup interface` patch
 
-vim +1434 kernel/trace/trace.h
+v3: https://lore.kernel.org/all/cover.1757034919.git.ipravdin.official@gmail.com/
+v2: https://lore.kernel.org/all/cover.1755018581.git.ipravdin.official@gmail.com/
+v1: https://lore.kernel.org/all/cover.1755014784.git.ipravdin.official@gmail.com/
 
-a3418a364ec3c8 Steven Rostedt (Red Hat  2015-09-29  1428) 
-a3418a364ec3c8 Steven Rostedt (Red Hat  2015-09-29  1429) /*
-a3418a364ec3c8 Steven Rostedt (Red Hat  2015-09-29  1430)  * By redefining C, we can make TRACE_FLAGS a list of masks that
-a3418a364ec3c8 Steven Rostedt (Red Hat  2015-09-29  1431)  * use the bits as defined above.
-a3418a364ec3c8 Steven Rostedt (Red Hat  2015-09-29  1432)  */
-a3418a364ec3c8 Steven Rostedt (Red Hat  2015-09-29  1433) #undef C
-a3418a364ec3c8 Steven Rostedt (Red Hat  2015-09-29 @1434) #define C(a, b) TRACE_ITER_##a = (1 << TRACE_ITER_##a##_BIT)
-a3418a364ec3c8 Steven Rostedt (Red Hat  2015-09-29  1435) 
+[1] https://lore.kernel.org/all/164ffc2ec8edacaf1295789dad82a07817b6263d.1757034919.git.ipravdin.official@gmail.com/
+[2] https://patchwork.kernel.org/project/linux-trace-kernel/list/?series=999703
+
+Ivan Pravdin (2):
+  rtla: fix -C/--cgroup interface
+  rtla: fix -a overriding -t argument
+
+ Documentation/tools/rtla/common_options.rst |  2 +-
+ tools/tracing/rtla/src/osnoise_hist.c       | 29 +++++++--------------
+ tools/tracing/rtla/src/osnoise_top.c        | 28 +++++++-------------
+ tools/tracing/rtla/src/timerlat_hist.c      | 29 +++++++--------------
+ tools/tracing/rtla/src/timerlat_top.c       | 29 +++++++--------------
+ tools/tracing/rtla/src/utils.c              | 26 ++++++++++++++++++
+ tools/tracing/rtla/src/utils.h              |  1 +
+ 7 files changed, 64 insertions(+), 80 deletions(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.48.1
+
