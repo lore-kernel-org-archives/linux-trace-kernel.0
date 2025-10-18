@@ -1,144 +1,195 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3C7621ABDC
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 18 Oct 2025 05:49:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6F31285C8C;
+	Sat, 18 Oct 2025 10:10:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760766548; cv=none; b=rstKeBl6eFNZjpgRwf5v/2Ey3R16diB+pWNjOlrWzM8Lw830P6o70XJ56eIOv9ukikSOxYnR4vCZb6sW9Ctvvom8U5RWaoLe9n/8aYX9AwNNlXJQdQOlCF2Vw+MC5QTfKV0LGZDfyNLkGRkZ1nlQUEPoDexiTovQobKwNoM2KK4=
+	t=1760782215; cv=none; b=GJQF1Fa5D/91fa/adZmQ3TpXuFJGJJmaqC1DtVtyVOsfeSz13el2s8UU6CJiKGJbrqlQqsAAAKf03mr1wAXqOBaD8u0hmaZOM2x2cW6PsIl5BCK4AMsmU3GrfzaQMDf9mSWsMO+hu/HOuYmcc2QQn6bHJhPMmKqrYiC0u2skkBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760766548; c=relaxed/simple;
-	bh=1Vv6tHhTnCUCOqqa0sQAoxcLS2MLC5PRxzjfcelt2PM=;
+	s=arc-20240116; t=1760782215; c=relaxed/simple;
+	bh=9GBDpmBli+4dcWpzmocu7ImRqmP28MXZDVF3ALI9+KA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Fqf1T+eRfawn7+5R19X8IRXyy7yut+8/VgEQ42OIdqyy/lDZ2kwPmGl0RWu9IAJSqPpWl8tywNuaa4dN4SDyECC6lhclvhVmjIFq3KLoD+hWyXtcfBTIh1GK8o+DR6/rX+7jzI/gB5wWVVMcSwDIDVGyBp9pJBFckxEvXnXRvt8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VmaLjMen; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=AQNilGMgLU31ZgbkQhPBl+SBXvFtwYGSRalrIHKpCQ9sbQ2jIiQKRpLIyerY9tijnfN07ZuEVjyQOH3Oil6sLOtSuz/sjNndxZLqO6ch0AHIYGK9cfR4iL2fj0voYjS7q4mlDyx7BzurbU9T3cefV/8pVLopLIwvck6yFY0cuP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UUA8iLUP; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VmaLjMen"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-279e2554c8fso25107085ad.2
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 17 Oct 2025 22:49:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1760766546; x=1761371346; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1Vv6tHhTnCUCOqqa0sQAoxcLS2MLC5PRxzjfcelt2PM=;
-        b=VmaLjMenvYjtMGE+sxS5Hf7p7iAAvSGw7cJzqDVL/p2IPJeZKtvUzF0KcoChzVwo6R
-         z5BLBWO4ZbUqmguiAGHe2qfyvrmgftjApF3+ecl2YpYcdA9sIOfgjLZwYOlwkaMAq2aI
-         0rQdYzGtD9vSwinVOCE9Iu/gd8lOnzPq+VtqD3Nvk32lPP99GSJbhUtHJGHXqk7OrnzR
-         xrsmRg3scZByh/oy8W+VTtoHX5kDfuO3TA/WmuFbe4aDxenR8VMsqPqYMNFvAOVjtZJY
-         ec664tUkf1l7pfMM0FClgLxEW9AMdamjGiV70ACBtpW1TI9QsfZeWf27CcxDi2kJXjx9
-         rU4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760766546; x=1761371346;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1Vv6tHhTnCUCOqqa0sQAoxcLS2MLC5PRxzjfcelt2PM=;
-        b=A2Wbrp7o6EuWch6EmK6Fp/3A9YJLzZA7W+9ZsDv956unWMx0RGfsRQhhB5DHVXNYjS
-         68IhMeVmSM29XZ53o5tttKhUx0kh1Xs8T3qMYQnHoib4EuxCGB9dhCJ4NzbOk3kE/Gjm
-         s2AbRKm6xOfEIlai5KpOywAjx6vTYtTOLdtjECuRT8Yc9hnC/Lbmk6h/BdsW4/93Plrk
-         73u+XSbf1ocv2qw8BAxLGVGs8EVBCWHhAr0JgMkj65oycCHZFWK6mH5Wo3lXU9BdsR33
-         IBHl99BU9c3gJor2tvFW8e6DpdFSs3mfZPP6t8YbPVjMqztRUJNWI+2hxjeQXi/UHSKA
-         zEVA==
-X-Forwarded-Encrypted: i=1; AJvYcCVR/A9pOWe/ykVhpMU+ZtlIxpSeEcbZZagm2YXDdGnF9ghYkSLmkT4X7ygVdGEF1+AYvex8PJKTc9THxXLw6Tgpelc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzsw+XtIFTrOyJ17eGYDQnb4kTqSkxNnT5MQJyLpP0qnIU5Ws8R
-	rrtuIDCpEAVJnhC3kEbRRk2q6AahE0KkKKSTDWvnVlLzbCuom5V9DoVs
-X-Gm-Gg: ASbGncvkvYPOOmC+Xe329IH9G5wLiMw86t2S5L/9vFvVhcY2kDxDA2BkjvaEj/9B650
-	3+pbGvbmH7+R4HJjNCW+4tv1rrEZGBtaEe8xjpNF0qKwv7QaPXEePV5WfXG8+sRxUgFjqhTotzP
-	3d5RoRNysCHsAAlqjDzwE3kR7jxfCFqE+MQIffFYtPw40Fr6cRfh9EIH46qwM9uymxtk/KqbL50
-	yr3pvunhlmBSygacDM6A7EUiXBWu9plPI1/isUGqixdHmhDA0FLDXH3rUCKG5F3j0Y9vL14a8NS
-	FfBHHLkjKEE5JEWV2SWvlqHDsrxksUCQPki0+4yAo3KZqFhm7SK3SYbAS5Pm1vKaOiD4L4zNyw8
-	/mJWIpx+VLsJUqEJFXQH4dCL4EwF738NGVQO8B97TPXzpy0I+iLljG2Q8wPe9x7mPqvb07oElzo
-	VURHk=
-X-Google-Smtp-Source: AGHT+IEiDLeHEpWWG0W0/Txk7ybCtD0aFk0wRSHlk2Qyr7r4KJqzeEy+3Um8q3Il5qclHZ1JNtVeYQ==
-X-Received: by 2002:a17:903:3bce:b0:269:aba0:f0a7 with SMTP id d9443c01a7336-290c9c8977amr74813915ad.2.1760766545842;
-        Fri, 17 Oct 2025 22:49:05 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29246fd8fbcsm14454955ad.41.2025.10.17.22.49.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Oct 2025 22:49:04 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id 0C5AA40995BC; Sat, 18 Oct 2025 12:49:01 +0700 (WIB)
-Date: Sat, 18 Oct 2025 12:49:01 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Jonathan Corbet <corbet@lwn.net>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Documentation <linux-doc@vger.kernel.org>,
-	Linux Kernel Tracing <linux-trace-kernel@vger.kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Tomas Glozar <tglozar@redhat.com>,
-	Crystal Wood <crwood@redhat.com>,
-	Gopi Krishna Menon <krishnagopi487@gmail.com>
-Subject: Re: [PATCH] Documentation/rtla: rename common_xxx.rst files to
- common_xxx.txt
-Message-ID: <aPMqTSbPucoqNhA1@archie.me>
-References: <20251013092719.30780-2-bagasdotme@gmail.com>
- <87zf9pz33e.fsf@trenco.lwn.net>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UUA8iLUP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1760782212; x=1792318212;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=9GBDpmBli+4dcWpzmocu7ImRqmP28MXZDVF3ALI9+KA=;
+  b=UUA8iLUP0B7j3Z9RzaXfMLd41V4dJ/q9G8qtYG8lk1GCaJmMYhSXfSW0
+   1m/o+LUiHQIkptumv57Bl+rGf1gKG43m3pAUsmPBkdNoiJBwp/PUGWF3k
+   Fgx9f/cVPvZj74gHpD+9ftHgdkeHKVxBjnlxG9Nv0kbdzlRt7vlIlydQO
+   F5T5oCHkOhiQwk6/bL8v+WoPE9FEc+yv/H639hekNXgr1xePlswKIn8ua
+   H2UV59zPt8dq345IfQpzEI2updf7qEwPcimkJGSc577mS2LgQiLS68Dhj
+   V8zcmD2XS6bAEP0Pk8WztnILVHNZ9TM5D5S7DuOT7O5/pzEiz5BnbbsOK
+   A==;
+X-CSE-ConnectionGUID: GL+2bkMHTWOr/MKo5okJAQ==
+X-CSE-MsgGUID: 9NU55yt2S/amoHluJyh1hw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11585"; a="88454461"
+X-IronPort-AV: E=Sophos;i="6.19,238,1754982000"; 
+   d="scan'208";a="88454461"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2025 03:10:11 -0700
+X-CSE-ConnectionGUID: UbMZ9dhURbW2f9VQVxfeMw==
+X-CSE-MsgGUID: +Qkb8nJXR9eb6S0mUfIq2Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,238,1754982000"; 
+   d="scan'208";a="206649296"
+Received: from lkp-server02.sh.intel.com (HELO 66d7546c76b2) ([10.239.97.151])
+  by fmviesa002.fm.intel.com with ESMTP; 18 Oct 2025 03:10:11 -0700
+Received: from kbuild by 66d7546c76b2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1vA3t3-0008D7-0D;
+	Sat, 18 Oct 2025 10:10:09 +0000
+Date: Sat, 18 Oct 2025 18:10:01 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>
+Cc: oe-kbuild-all@lists.linux.dev, Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/2] tracing: Allow tracer to add more than 32 options
+Message-ID: <202510181711.rxbGAQu7-lkp@intel.com>
+References: <176071774097.175601.10233017390618260565.stgit@devnote2>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="AA1YS2D2c75ozhj7"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87zf9pz33e.fsf@trenco.lwn.net>
+In-Reply-To: <176071774097.175601.10233017390618260565.stgit@devnote2>
+
+Hi Masami,
+
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on trace/for-next]
+[also build test ERROR on linus/master v6.18-rc1 next-20251017]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Masami-Hiramatsu-Google/tracing-Allow-tracer-to-add-more-than-32-options/20251018-004104
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace for-next
+patch link:    https://lore.kernel.org/r/176071774097.175601.10233017390618260565.stgit%40devnote2
+patch subject: [PATCH v4 1/2] tracing: Allow tracer to add more than 32 options
+config: parisc-randconfig-001-20251018 (https://download.01.org/0day-ci/archive/20251018/202510181711.rxbGAQu7-lkp@intel.com/config)
+compiler: hppa-linux-gcc (GCC) 10.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251018/202510181711.rxbGAQu7-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202510181711.rxbGAQu7-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from kernel/trace/trace_probe.h:31,
+                    from kernel/trace/trace_events_synth.c:20:
+   kernel/trace/trace.h:1427:27: error: expected identifier or '(' before ':' token
+    1427 | enum trace_iterator_flags : uint64_t { TRACE_FLAGS };
+         |                           ^
+   kernel/trace/trace_events_synth.c: In function 'print_synth_event':
+>> kernel/trace/trace_events_synth.c:362:31: error: 'TRACE_ITER_VERBOSE' undeclared (first use in this function); did you mean 'TRACE_ITER_VERBOSE_BIT'?
+     362 |   if (tr && tr->trace_flags & TRACE_ITER_VERBOSE)
+         |                               ^~~~~~~~~~~~~~~~~~
+         |                               TRACE_ITER_VERBOSE_BIT
+   kernel/trace/trace_events_synth.c:362:31: note: each undeclared identifier is reported only once for each function it appears in
 
 
---AA1YS2D2c75ozhj7
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+vim +362 kernel/trace/trace_events_synth.c
 
-On Fri, Oct 17, 2025 at 02:27:01PM -0600, Jonathan Corbet wrote:
-> Bagas Sanjaya <bagasdotme@gmail.com> writes:
->=20
-> > From: Gopi Krishna Menon <krishnagopi487@gmail.com>
-> >
-> > Sphinx reports htmldocs errors:
-> >
-> > Documentation/tools/rtla/common_options.rst:58: ERROR: Undefined substi=
-tution referenced: "threshold".
-> > Documentation/tools/rtla/common_options.rst:88: ERROR: Undefined substi=
-tution referenced: "tool".
-> > Documentation/tools/rtla/common_options.rst:88: ERROR: Undefined substi=
-tution referenced: "thresharg".
-> > Documentation/tools/rtla/common_options.rst:88: ERROR: Undefined substi=
-tution referenced: "tracer".
-> > Documentation/tools/rtla/common_options.rst:92: ERROR: Undefined substi=
-tution referenced: "tracer".
-> > Documentation/tools/rtla/common_options.rst:98: ERROR: Undefined substi=
-tution referenced: "actionsperf".
-> > Documentation/tools/rtla/common_options.rst:113: ERROR: Undefined subst=
-itution referenced: "tool".
-> >
-> > common_*.rst files are snippets that are intended to be included by rtla
-> > docs (rtla*.rst). common_options.rst in particular contains
-> > substitutions which depend on other common_* includes, so building it
-> > independently as reST source results in above errors.
-> >
-> > Rename all common_*.rst files to common_*.txt to prevent Sphinx from
-> > building these snippets as standalone reST source and update all include
-> > references accordingly.
->=20
-> Applied, thanks.
+726721a51838e3 Tom Zanussi             2020-05-28  337  
+726721a51838e3 Tom Zanussi             2020-05-28  338  static enum print_line_t print_synth_event(struct trace_iterator *iter,
+726721a51838e3 Tom Zanussi             2020-05-28  339  					   int flags,
+726721a51838e3 Tom Zanussi             2020-05-28  340  					   struct trace_event *event)
+726721a51838e3 Tom Zanussi             2020-05-28  341  {
+726721a51838e3 Tom Zanussi             2020-05-28  342  	struct trace_array *tr = iter->tr;
+726721a51838e3 Tom Zanussi             2020-05-28  343  	struct trace_seq *s = &iter->seq;
+726721a51838e3 Tom Zanussi             2020-05-28  344  	struct synth_trace_event *entry;
+726721a51838e3 Tom Zanussi             2020-05-28  345  	struct synth_event *se;
+887f92e09ef34a Sven Schnelle           2023-08-16  346  	unsigned int i, j, n_u64;
+726721a51838e3 Tom Zanussi             2020-05-28  347  	char print_fmt[32];
+726721a51838e3 Tom Zanussi             2020-05-28  348  	const char *fmt;
+726721a51838e3 Tom Zanussi             2020-05-28  349  
+726721a51838e3 Tom Zanussi             2020-05-28  350  	entry = (struct synth_trace_event *)iter->ent;
+726721a51838e3 Tom Zanussi             2020-05-28  351  	se = container_of(event, struct synth_event, call.event);
+726721a51838e3 Tom Zanussi             2020-05-28  352  
+726721a51838e3 Tom Zanussi             2020-05-28  353  	trace_seq_printf(s, "%s: ", se->name);
+726721a51838e3 Tom Zanussi             2020-05-28  354  
+726721a51838e3 Tom Zanussi             2020-05-28  355  	for (i = 0, n_u64 = 0; i < se->n_fields; i++) {
+726721a51838e3 Tom Zanussi             2020-05-28  356  		if (trace_seq_has_overflowed(s))
+726721a51838e3 Tom Zanussi             2020-05-28  357  			goto end;
+726721a51838e3 Tom Zanussi             2020-05-28  358  
+726721a51838e3 Tom Zanussi             2020-05-28  359  		fmt = synth_field_fmt(se->fields[i]->type);
+726721a51838e3 Tom Zanussi             2020-05-28  360  
+726721a51838e3 Tom Zanussi             2020-05-28  361  		/* parameter types */
+726721a51838e3 Tom Zanussi             2020-05-28 @362  		if (tr && tr->trace_flags & TRACE_ITER_VERBOSE)
+726721a51838e3 Tom Zanussi             2020-05-28  363  			trace_seq_printf(s, "%s ", fmt);
+726721a51838e3 Tom Zanussi             2020-05-28  364  
+726721a51838e3 Tom Zanussi             2020-05-28  365  		snprintf(print_fmt, sizeof(print_fmt), "%%s=%s%%s", fmt);
+726721a51838e3 Tom Zanussi             2020-05-28  366  
+726721a51838e3 Tom Zanussi             2020-05-28  367  		/* parameter values */
+726721a51838e3 Tom Zanussi             2020-05-28  368  		if (se->fields[i]->is_string) {
+bd82631d7ccdc8 Tom Zanussi             2020-10-04  369  			if (se->fields[i]->is_dynamic) {
+ddeea494a16f32 Sven Schnelle           2023-08-16  370  				union trace_synth_field *data = &entry->fields[n_u64];
+bd82631d7ccdc8 Tom Zanussi             2020-10-04  371  
+bd82631d7ccdc8 Tom Zanussi             2020-10-04  372  				trace_seq_printf(s, print_fmt, se->fields[i]->name,
+ddeea494a16f32 Sven Schnelle           2023-08-16  373  						 (char *)entry + data->as_dynamic.offset,
+bd82631d7ccdc8 Tom Zanussi             2020-10-04  374  						 i == se->n_fields - 1 ? "" : " ");
+bd82631d7ccdc8 Tom Zanussi             2020-10-04  375  				n_u64++;
+bd82631d7ccdc8 Tom Zanussi             2020-10-04  376  			} else {
+726721a51838e3 Tom Zanussi             2020-05-28  377  				trace_seq_printf(s, print_fmt, se->fields[i]->name,
+8db4d6bfbbf920 Steven Rostedt (VMware  2020-10-04  378) 						 STR_VAR_LEN_MAX,
+ddeea494a16f32 Sven Schnelle           2023-08-16  379  						 (char *)&entry->fields[n_u64].as_u64,
+726721a51838e3 Tom Zanussi             2020-05-28  380  						 i == se->n_fields - 1 ? "" : " ");
+726721a51838e3 Tom Zanussi             2020-05-28  381  				n_u64 += STR_VAR_LEN_MAX / sizeof(u64);
+bd82631d7ccdc8 Tom Zanussi             2020-10-04  382  			}
+00cf3d672a9dd4 Steven Rostedt (Google  2023-01-17  383) 		} else if (se->fields[i]->is_stack) {
+ddeea494a16f32 Sven Schnelle           2023-08-16  384  			union trace_synth_field *data = &entry->fields[n_u64];
+887f92e09ef34a Sven Schnelle           2023-08-16  385  			unsigned long *p = (void *)entry + data->as_dynamic.offset;
+00cf3d672a9dd4 Steven Rostedt (Google  2023-01-17  386) 
+00cf3d672a9dd4 Steven Rostedt (Google  2023-01-17  387) 			trace_seq_printf(s, "%s=STACK:\n", se->fields[i]->name);
+887f92e09ef34a Sven Schnelle           2023-08-16  388  			for (j = 1; j < data->as_dynamic.len / sizeof(long); j++)
+887f92e09ef34a Sven Schnelle           2023-08-16  389  				trace_seq_printf(s, "=> %pS\n", (void *)p[j]);
+00cf3d672a9dd4 Steven Rostedt (Google  2023-01-17  390) 			n_u64++;
+726721a51838e3 Tom Zanussi             2020-05-28  391  		} else {
+726721a51838e3 Tom Zanussi             2020-05-28  392  			struct trace_print_flags __flags[] = {
+726721a51838e3 Tom Zanussi             2020-05-28  393  			    __def_gfpflag_names, {-1, NULL} };
+726721a51838e3 Tom Zanussi             2020-05-28  394  			char *space = (i == se->n_fields - 1 ? "" : " ");
+726721a51838e3 Tom Zanussi             2020-05-28  395  
+726721a51838e3 Tom Zanussi             2020-05-28  396  			print_synth_event_num_val(s, print_fmt,
+726721a51838e3 Tom Zanussi             2020-05-28  397  						  se->fields[i]->name,
+726721a51838e3 Tom Zanussi             2020-05-28  398  						  se->fields[i]->size,
+ddeea494a16f32 Sven Schnelle           2023-08-16  399  						  &entry->fields[n_u64],
+726721a51838e3 Tom Zanussi             2020-05-28  400  						  space);
+726721a51838e3 Tom Zanussi             2020-05-28  401  
+726721a51838e3 Tom Zanussi             2020-05-28  402  			if (strcmp(se->fields[i]->type, "gfp_t") == 0) {
+726721a51838e3 Tom Zanussi             2020-05-28  403  				trace_seq_puts(s, " (");
+726721a51838e3 Tom Zanussi             2020-05-28  404  				trace_print_flags_seq(s, "|",
+ddeea494a16f32 Sven Schnelle           2023-08-16  405  						      entry->fields[n_u64].as_u64,
+726721a51838e3 Tom Zanussi             2020-05-28  406  						      __flags);
+726721a51838e3 Tom Zanussi             2020-05-28  407  				trace_seq_putc(s, ')');
+726721a51838e3 Tom Zanussi             2020-05-28  408  			}
+726721a51838e3 Tom Zanussi             2020-05-28  409  			n_u64++;
+726721a51838e3 Tom Zanussi             2020-05-28  410  		}
+726721a51838e3 Tom Zanussi             2020-05-28  411  	}
+726721a51838e3 Tom Zanussi             2020-05-28  412  end:
+726721a51838e3 Tom Zanussi             2020-05-28  413  	trace_seq_putc(s, '\n');
+726721a51838e3 Tom Zanussi             2020-05-28  414  
+726721a51838e3 Tom Zanussi             2020-05-28  415  	return trace_handle_return(s);
+726721a51838e3 Tom Zanussi             2020-05-28  416  }
+726721a51838e3 Tom Zanussi             2020-05-28  417  
 
-Shouldn't this more appropriate as a fix for current cycle (6.18)? I see
-the warnings on Linus's tree, though.
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---AA1YS2D2c75ozhj7
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaPMqSQAKCRD2uYlJVVFO
-o4puAP9fICYO7e25rwE88sCE9s3B9E8bGfkqdqV8T+iWzpplOgEAxE7vJYfQ8DHo
-G3ggxu0+rFveZJhSJqd1VejNrPNTQAo=
-=rk8l
------END PGP SIGNATURE-----
-
---AA1YS2D2c75ozhj7--
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
