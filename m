@@ -1,102 +1,85 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3A029443;
-	Mon, 20 Oct 2025 01:00:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F17D6381C4;
+	Mon, 20 Oct 2025 01:33:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760922042; cv=none; b=TV2Jkj1wiAltQ/VuKldoA6oRnZv6xQ2m6yhfv2EMwOdTh1zD+rVkppWxOhZHB33qmeeKY+0wVsQmaSspyavHfOTYFCz2poRjuzwc9B49DVH31/0t7TxSLwTKIHlY6Gnb1dm87Xf41tblS3Q9Ak83HJDfgWutqF1zRAKELXEOFlo=
+	t=1760923998; cv=none; b=Qfd/2rSwTKQbLpC4HMSi9mo7AG/oec6b5LVNINxljvaJoxSnaBlsga2eIAXvDdC/CtMp4MJ7H8QlxfzZacYbB73QZ4aF9aGuAhGC5lqUd/yINxrab7QM2/jrEFHr8QeoYTqci/LtvHRpiH7fR+p5EQP5rgtaJAhc3CX8DOgngJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760922042; c=relaxed/simple;
-	bh=lIXhujf2LnoQiqD2pBSflelyn0Ixc4SaTHhJhUSDojE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jPSYXqJQirBnshiHgbPglR7nUgQEiGAfs3dBE4piAuU1ECh5mWFqyygJ7O9LyhYhBeniWMDkThNteEWaaevR3nbVmMwyDRe8Hc5PVR9RgBEuXXbIFJP0MrnYS1bL7q+ueCo3K+bPTJ1dBRgu1VIDdo2avhjYjy/ELenItGF/7X4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=w6pch+N/; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1760923998; c=relaxed/simple;
+	bh=ofk02Di0z7QJ5R5tyn++24FCaI4zjVFa0YuHthRB/eU=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:References:Cc:
+	 In-Reply-To:Content-Type; b=Mk4z0E7hbknRtfvmU/DYliMGH/KvnrNmYak+6xqzytdaE/mRJp8J7oE7ieP1al8gJeX6v6VMLIrO9u1GhpgBRe13QIYGMNVBZQWXqMLBCqrhLufAV2Ivg5mCKLkCWiYByaicMQUfCEZSi6HUcNrWCFErG3jbHsbfAPphZLlE43M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=A/I4KpPu; arc=none smtp.client-ip=115.124.30.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="w6pch+N/"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=IHhlDbpDR/uarsdX4/s6LAyO9lfPS7eMYByG4wX7hD8=; b=w6pch+N/4FXIFhu0iKsY9R3eos
-	G65tG4E2ESdxg3BX6aAjl75VWfloLHguObs6/feZbzJpQ+MpTXLnHVTLlURvJ3hQGZmRf4/fYr4GL
-	hRDL7UcB0jILAOV5Hm5BUKqTJ/ZTLDoeJ8L41K7VZ2mO/Od65SiOFMogwdCnCI+SGquHSI0q7Yqs6
-	4xmYqn55gABdO/Km8+GRecLrswTrw3DNScXCwJ+kYVxAsTAt+cjME/dnp+CRGf+oyyOQ/TErRWBGi
-	KDADDr6p7OPjoYvv8jRwsABQTTauI8boYabNNd4yNuczvXaRIdjF7c8dDPR6AGnd5MAXarXUSqVf4
-	NsLIHZvw==;
-Received: from [50.53.43.113] (helo=bombadil.infradead.org)
-	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vAeGM-0000000Bbcb-336O;
-	Mon, 20 Oct 2025 01:00:38 +0000
-From: Randy Dunlap <rdunlap@infradead.org>
-To: linux-kernel@vger.kernel.org
-Cc: Randy Dunlap <rdunlap@infradead.org>,
-	Lai Jiangshan <laijs@cn.fujitsu.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v2] ring-buffer: fix kernel-doc format to avoid a warning
-Date: Sun, 19 Oct 2025 18:00:37 -0700
-Message-ID: <20251020010037.2681824-1-rdunlap@infradead.org>
-X-Mailer: git-send-email 2.51.0
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="A/I4KpPu"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1760923986; h=Message-ID:Date:MIME-Version:From:Subject:To:Content-Type;
+	bh=8HtiQ1/6jPC4jIfRpjGfQyv2Kxh6q4GRK1n+lo+1Quc=;
+	b=A/I4KpPuM66y0Yb1pPQDHerJgcSpO+wJSU5F+VFgGfQLO+bDfs9IhWnJsCcR0OjIhNKaNNTnYPXJCK5Z/xL1Wov7T9tkyH2+BBeOQ967KRKuO7F/DkeRbo+eMr/JL+YIw//J3RVlwiKU9m/8lr2HqEO5s1xLB86vdJzXCKt+EuM=
+Received: from 30.246.161.241(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WqVPDBo_1760923983 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 20 Oct 2025 09:33:04 +0800
+Message-ID: <82098b0d-d460-4657-9db6-3721dcc9a162@linux.alibaba.com>
+Date: Mon, 20 Oct 2025 09:32:59 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+Subject: Re: [PATCH v12 1/3] PCI: trace: Add a generic RAS tracepoint for
+ hotplug event
+To: Steven Rostedt <rostedt@goodmis.org>
+References: <20251014123159.57764-1-xueshuai@linux.alibaba.com>
+ <20251014123159.57764-2-xueshuai@linux.alibaba.com>
+ <20251014114029.4c59bb1a@gandalf.local.home>
+ <b6353617-048a-4e12-a1d4-6d1484619927@linux.alibaba.com>
+ <20251015103757.3d6f6cf7@gandalf.local.home>
+Cc: lukas@wunner.de, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-edac@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ helgaas@kernel.org, ilpo.jarvinen@linux.intel.com, mattc@purestorage.com,
+ Jonathan.Cameron@huawei.com, bhelgaas@google.com, tony.luck@intel.com,
+ bp@alien8.de, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ oleg@redhat.com, naveen@kernel.org, davem@davemloft.net,
+ anil.s.keshavamurthy@intel.com, mark.rutland@arm.com, peterz@infradead.org,
+ tianruidong@linux.alibaba.com
+In-Reply-To: <20251015103757.3d6f6cf7@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Format the kernel-doc for RINGBUF_TYPE_DATA_TYPE_LEN_MAX correctly
-to prevent a kernel-doc warning:
 
-Warning: include/linux/ring_buffer.h:61 Enum value
- 'RINGBUF_TYPE_DATA_TYPE_LEN_MAX' not described in enum 'ring_buffer_type'
 
-Fixes: 334d4169a659 ("ring_buffer: compressed event header")
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
----
-v2: reformat based on comments from Steven;
-    add more enum types to aid with comments;
+在 2025/10/15 22:37, Steven Rostedt 写道:
+> On Wed, 15 Oct 2025 14:29:07 +0800
+> Shuai Xue <xueshuai@linux.alibaba.com> wrote:
+> 
+>> Hi, Steve,
+>>
+>> Thank you for your suggestion about passing the controller directly to
+>> the trace event. I investigated this approach, but unfortunately we
+>> cannot implement it due to structural limitations in the PCI hotplug
+>> subsystem.
+> 
+> Ah, that makes sense. Perhaps add a comment about this by the TRACE_EVENT()
+> so that I don't recommend this again ;-)
+> 
 
-Cc: Lai Jiangshan <laijs@cn.fujitsu.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: linux-trace-kernel@vger.kernel.org
----
- include/linux/ring_buffer.h |   13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+Hi Steve,
 
---- linux-next-20251016.orig/include/linux/ring_buffer.h
-+++ linux-next-20251016/include/linux/ring_buffer.h
-@@ -43,18 +43,23 @@ struct ring_buffer_event {
-  *				 array[0] = top (28 .. 59) bits
-  *				 size = 8 bytes
-  *
-- * <= @RINGBUF_TYPE_DATA_TYPE_LEN_MAX:
-- *				Data record
-- *				 If type_len is zero:
-+ * @RINGBUF_TYPE_DATA:		Data record
-  *				  array[0] holds the actual length
-  *				  array[1..(length+3)/4] holds data
-  *				  size = 4 + length (bytes)
-- *				 else
-+ *
-+ * @RINGBUF_TYPE_DATA_TYPE_LEN_MIN:
-+ * 				Data record with length and data as below
-+ * . . .
-+ * @RINGBUF_TYPE_DATA_TYPE_LEN_MAX:
-+ *				Data record
-  *				  length = type_len << 2
-  *				  array[0..(length+3)/4-1] holds data
-  *				  size = 4 + length (bytes)
-  */
- enum ring_buffer_type {
-+	RINGBUF_TYPE_DATA = 0,
-+	RINGBUF_TYPE_DATA_TYPE_LEN_MIN = 1,
- 	RINGBUF_TYPE_DATA_TYPE_LEN_MAX = 28,
- 	RINGBUF_TYPE_PADDING,
- 	RINGBUF_TYPE_TIME_EXTEND,
+Got it, will add a comment.
+
+If you don't have any other concerns with this patch, would you mind
+adding your Reviewed-by tag?
+
+> -- Steve
+
+Best Regards,
+Shuai
+
