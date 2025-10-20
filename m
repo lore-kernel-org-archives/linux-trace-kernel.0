@@ -1,128 +1,150 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC9C7303A27;
-	Mon, 20 Oct 2025 12:19:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from esa3.hgst.iphmx.com (esa3.hgst.iphmx.com [216.71.153.141])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 175502D593E;
+	Mon, 20 Oct 2025 13:41:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.71.153.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760962794; cv=none; b=SF5yXY27zwdAxWfUWAkqhjxUW0+s2wfX9vsCRrMDHz/drJvpd63oFpV8pJXYJm0EWfDV6A7Ditgae3hSUnN6il29tFOX8C5VRUgiprW7UFpD+Rt6I8UodhU3afxxAAfr5qfeFc5ydNsVy0bEmFm3TNBapa04f7VS+MkLUu44MC4=
+	t=1760967693; cv=none; b=NJvVBG1rRDO1R8XuArJgE+SS6HCntLCuv6I/ao8WI+dcmkgP5StQs8muQU5d9z0fO2GkUdGtoGfOpFRNsU7SQEoZ2nen2PiAKKlZm1bNR9zXmwTZ+pKr3GL2yIhNN8/JOasdFGClF7HnQUq7vCbX8v230t/uczRb+pOb4VG34qI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760962794; c=relaxed/simple;
-	bh=xiucUNFP5MWuohojeRMYflL1g5SM9B4vl+aqFxwQbHU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gjp1USBcqhX2XLYjEFTAg4wXdOomWIr4JhFb4ovzNHMsy5fteAPnMti4AIcUs2s3Ux0aJTz6MlWOKksXZNbVKOJ4+K6m9KkmIbIJCOScnhSueYTlA2ToqKkGydi7Rss/VuMljZM/kMiHvyaQF4uUwY48etIPcUNa3yU71H7zt6E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2EF421007;
-	Mon, 20 Oct 2025 05:19:44 -0700 (PDT)
-Received: from [10.1.26.49] (e132430.arm.com [10.1.26.49])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A55443F63F;
-	Mon, 20 Oct 2025 05:19:48 -0700 (PDT)
-Message-ID: <8d15e5a6-e80a-4707-a43a-4cbb6d810222@arm.com>
-Date: Mon, 20 Oct 2025 13:19:46 +0100
+	s=arc-20240116; t=1760967693; c=relaxed/simple;
+	bh=FM+4CKgTqEHgRlGR+4+oa8m0FN4419G5jVgSyaZsHYs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rNFZ2t9YrHcp90gjPW1CG7PHFXmk+W++VueNOLW4lcnoOnTeTervRL6rwRGEOaccZ4Aa35g13n1x+gKYDoLNlVar2vjW7pNk+/hjct5n8SeK8f/SeRBGE4DUXbyBq6gRG6iJ8zxXxWiOiZq77buqhq4nhWK4VdcHZGz5PiAystk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=I4ISK769; arc=none smtp.client-ip=216.71.153.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="I4ISK769"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1760967691; x=1792503691;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=FM+4CKgTqEHgRlGR+4+oa8m0FN4419G5jVgSyaZsHYs=;
+  b=I4ISK769rsobIuUzBImx6VMH7OEig23aoFYlFRkM4yQe40spDMc/OpUu
+   hnaRkX8rSToQHnemfvdD+NG19WlAIAyAWf7N+uxRbm2JATwP6ua/tCdRk
+   ZyODzpN83+Vd5WrwEF6H+Jov1Vu4U+9DAFPiTpMdGWN+lytO6AW3AuzIk
+   BV5I7FEIadZmR6updM4R0mhzfgZ9LF7sM09Hej7jqWqU2VaRUrlvbplSB
+   4kCCypid05EmyrpZ9tKYAxIuz2ImuTssFy80a4zGauyfoHAiH4MusVj4F
+   5FD+ked9RG9eBv0tfjEQoxfY2O3yPb2/BFSElsbBNmWWOV0cTEIN1BoHN
+   w==;
+X-CSE-ConnectionGUID: Sb/BBNxbTFG2ZT2YFUXHfQ==
+X-CSE-MsgGUID: cnXYDQm2TUWVsenM5wIZQQ==
+X-IronPort-AV: E=Sophos;i="6.19,242,1754928000"; 
+   d="scan'208";a="134518608"
+Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep03.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 20 Oct 2025 21:41:31 +0800
+IronPort-SDR: 68f63c0a_IoWQddeiqbDJaFXlc8AbWPq7TqIbb9ZZ5mJAvL8pTnxYTDe
+ RW86HDyxiGF6yj5k7X8PnLs2HW2gUSS3sepaqCQ==
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep03.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 20 Oct 2025 06:41:30 -0700
+WDCIronportException: Internal
+Received: from 1pgdl13.ad.shared (HELO neo.fritz.box) ([10.224.28.46])
+  by uls-op-cesaip02.wdc.com with ESMTP; 20 Oct 2025 06:41:26 -0700
+From: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+To: axboe@kernel.dk
+Cc: chaitanyak@nvidia.com,
+	dlemoal@kernel.org,
+	hare@suse.de,
+	hch@lst.de,
+	john.g.garry@oracle.com,
+	linux-block@vger.kernel.org,
+	linux-btrace@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	martin.petersen@oracle.com,
+	mathieu.desnoyers@efficios.com,
+	mhiramat@kernel.org,
+	naohiro.aota@wdc.com,
+	rostedt@goodmis.org,
+	shinichiro.kawasaki@wdc.com,
+	Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Subject: [PATCH v4 00/16]  block: add blktrace support for zoned block devies
+Date: Mon, 20 Oct 2025 15:41:07 +0200
+Message-ID: <20251020134123.119058-1-johannes.thumshirn@wdc.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 12/13] tracing: Check for printable characters when
- printing field dyn strings
-To: Steven Rostedt <rostedt@kernel.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Peter Zijlstra <peterz@infradead.org>, Namhyung Kim <namhyung@kernel.org>,
- Takaya Saeki <takayas@google.com>, Tom Zanussi <zanussi@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>, Ian Rogers <irogers@google.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
- Adrian Hunter <adrian.hunter@intel.com>, Ingo Molnar <mingo@redhat.com>
-References: <20251015173214.760495866@kernel.org>
- <20251015173550.062240695@kernel.org>
-Content-Language: en-US
-From: Douglas Raillard <douglas.raillard@arm.com>
-In-Reply-To: <20251015173550.062240695@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Steve,
+This patch series extends the kernel blktrace infrastructure to support
+tracing zoned block device commands. Zoned block devices (e.g., ZAC/ZBC and
+ZNS) introduce command types such as zone open, close, reset, finish, and zone
+append. These are currently not visible in blktrace, making it difficult to
+debug and analyze I/O workloads on zoned devices.
 
-On 15-10-2025 18:32, Steven Rostedt wrote:
-> From: Steven Rostedt <rostedt@goodmis.org>
-> 
-> When the "fields" option is enabled, it prints each trace event field
-> based on its type. But a dynamic array and a dynamic string can both have
-> a "char *" type. Printing it as a string can cause escape characters to be
-> printed and mess up the output of the trace.
+The patches in this series utilize the new trace points for these zone
+management operations, and propagate the necessary context to the blktrace
+logging path. These additions are designed to be backward-compatible, and are
+only active when zoned devices are in use.
 
-We faced the same issue when converting trace.dat to other formats that distinguish
-between a byte buffer and an actual string. The current solution we have is to
-reserve "char []" for actual string and use "u8 []"/"uint8_t []" for byte buffers.
+In order to not break the user-space ABI, a new ioctl was introduced to
+request the new version of the blk_io_trace with extended 'action' field.
 
-Obviously it does not solve the problem for existing events but that could be worth
-establishing a convention like that for new code and support it in trace_output.c ?
-Most uses of trace data beyond direct printing would require knowing the data schema
-from the header info, so value-based criteria are typically not suitable for that.
+The user-space tools in the blktrace suite are updated in a separate patch
+series to interpret and display the new trace events.This patch series extends
+the kernel blktrace infrastructure to support tracing zoned block device
+commands. Zoned block devices (e.g., ZAC/ZBC and ZNS) introduce command types
+such as zone open, close, reset, finish, and zone append. These are currently
+not visible in blktrace, making it difficult to debug and analyze I/O
+workloads on zoned devices.
 
-> For dynamic strings, test if there are any non-printable characters, and
-> if so, print both the string with the non printable characters as '.', and
-> the print the hex value of the array.
-> 
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->   kernel/trace/trace_output.c | 27 +++++++++++++++++++++++++--
->   1 file changed, 25 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
-> index 97db0b0ccf3e..718b255b6fd8 100644
-> --- a/kernel/trace/trace_output.c
-> +++ b/kernel/trace/trace_output.c
-> @@ -950,7 +950,9 @@ static void print_fields(struct trace_iterator *iter, struct trace_event_call *c
->   	int offset;
->   	int len;
->   	int ret;
-> +	int i;
->   	void *pos;
-> +	char *str;
->   
->   	list_for_each_entry_reverse(field, head, link) {
->   		trace_seq_printf(&iter->seq, " %s=", field->name);
-> @@ -977,8 +979,29 @@ static void print_fields(struct trace_iterator *iter, struct trace_event_call *c
->   				trace_seq_puts(&iter->seq, "<OVERFLOW>");
->   				break;
->   			}
-> -			pos = (void *)iter->ent + offset;
-> -			trace_seq_printf(&iter->seq, "%.*s", len, (char *)pos);
-> +			str = (char *)iter->ent + offset;
-> +			/* Check if there's any non printable strings */
-> +			for (i = 0; i < len; i++) {
-> +				if (str[i] && !(isascii(str[i]) && isprint(str[i])))
-> +					break;
-> +			}
-> +			if (i < len) {
-> +				for (i = 0; i < len; i++) {
-> +					if (isascii(str[i]) && isprint(str[i]))
-> +						trace_seq_putc(&iter->seq, str[i]);
-> +					else
-> +						trace_seq_putc(&iter->seq, '.');
-> +				}
-> +				trace_seq_puts(&iter->seq, " (");
-> +				for (i = 0; i < len; i++) {
-> +					if (i)
-> +						trace_seq_putc(&iter->seq, ':');
-> +					trace_seq_printf(&iter->seq, "%02x", str[i]);
-> +				}
-> +				trace_seq_putc(&iter->seq, ')');
-> +			} else {
-> +				trace_seq_printf(&iter->seq, "%.*s", len, str);
-> +			}
->   			break;
->   		case FILTER_PTR_STRING:
->   			if (!iter->fmt_size)
+The patches in this series utilize the new trace points for these zone
+management operations, and propagate the necessary context to the blktrace
+logging path. These additions are designed to be backward-compatible, and are
+only active when zoned devices are in use.
 
---
+In order to not break the user-space ABI, a new ioctl was introduced to
+request the new version of the blk_io_trace with extended 'action' field.
 
-Douglas
+The user-space tools in the blktrace suite are updated in a separate patch
+series to interpret and display the new trace events.
+
+I've tested on SMR drives, TCMU emulated SMR drives and zloop, with both XFS
+and BTRFS as filesystems on top of the hardwdare. Testing of different
+hardware/setups is highly encouraged.
+
+Changes to v3:
+- Collect Reviewed-bys
+- Add WARN_ON_ONCE() in case a too big command is passed in v1
+- Use 'if (copy_from_user())'
+
+Changes to v2:
+- Collect Reviewed-bys
+- Convert trace_note and ftrace's blk_io_tracer to blk_io_trace2
+- Don't play games with the layout of the 'action' field
+- Fix structure alignments
+- Drop Zone Management trace action, it's a command not an action
+
+Johannes Thumshirn (16):
+  blktrace: only calculate trace length once
+  blktrace: factor out recording a blktrace event
+  blktrace: split out relaying a blktrace event
+  blktrace: untangle if/else sequence in __blk_add_trace
+  blktrace: change the internal action to 64bit
+  blktrace: split do_blk_trace_setup into two functions
+  blktrace: add definitions for blk_user_trace_setup2
+  blktrace: pass blk_user_trace2 to setup functions
+  blktrace: add definitions for struct blk_io_trace2
+  blktrace: differentiate between blk_io_trace versions
+  blktrace: move trace_note to blk_io_trace2
+  blktrace: move ftrace blk_io_tracer to blk_io_trace2
+  blktrace: add block trace commands for zone operations
+  blktrace: expose ZONE APPEND completions to blktrace
+  blktrace: trace zone write plugging operations
+  blktrace: handle BLKTRACESETUP2 ioctl
+
+ block/ioctl.c                     |   1 +
+ include/linux/blktrace_api.h      |   3 +-
+ include/uapi/linux/blktrace_api.h |  53 +++-
+ include/uapi/linux/fs.h           |   1 +
+ kernel/trace/blktrace.c           | 467 ++++++++++++++++++++++--------
+ 5 files changed, 404 insertions(+), 121 deletions(-)
+
+-- 
+2.51.0
+
