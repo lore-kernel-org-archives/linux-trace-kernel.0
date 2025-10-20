@@ -1,82 +1,102 @@
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF1BB18FDDB;
-	Sun, 19 Oct 2025 17:46:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3A029443;
+	Mon, 20 Oct 2025 01:00:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760896019; cv=none; b=AlK6LnFGx0yxhdyoJ6PTboWM/P3vvo7b8wPUdl3aAYjy2zUHPiQtSLwXDkSu9gBODe874Q5v5N8urvWQm6FLFnOvBq7ECt4LzxFYsRmLPTjClnVD2jbVyU7poYnbhHG7qL1+KtM1N8TsjOEt6BPLR8mlfYL0jfkV8znAszxvch4=
+	t=1760922042; cv=none; b=TV2Jkj1wiAltQ/VuKldoA6oRnZv6xQ2m6yhfv2EMwOdTh1zD+rVkppWxOhZHB33qmeeKY+0wVsQmaSspyavHfOTYFCz2poRjuzwc9B49DVH31/0t7TxSLwTKIHlY6Gnb1dm87Xf41tblS3Q9Ak83HJDfgWutqF1zRAKELXEOFlo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760896019; c=relaxed/simple;
-	bh=iBrjG+mJpNWJvcAM9eoZJjaPCJi7C0ctS5AIbIXK6QE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YBrN/AQcm7d+eZxvzATvDs+VtT2zBlJbWRE2/uYuX4zXd9xoXv1XPKORVzB6Hs0kFawh/j9qGFrQVgUgrCQJDSg4TkogVmfn/Kjlszj9gZiumj5kpfnvxBKAD1HQYXJ4BjA/bJVt6bgQA7e4fHRomIsK22uqHD8lib0i5bfAGUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf05.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id 6946613B6F8;
-	Sun, 19 Oct 2025 17:46:49 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf05.hostedemail.com (Postfix) with ESMTPA id D81F520015;
-	Sun, 19 Oct 2025 17:46:47 +0000 (UTC)
-Date: Sun, 19 Oct 2025 13:46:46 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] tracing: Allow tracer to add more than 32
- options
-Message-ID: <20251019134646.6d6f683d@batman.local.home>
-In-Reply-To: <20251018000130.aa69bd5b6670715b1c52d387@kernel.org>
-References: <175918528341.65920.10238038992631012350.stgit@devnote2>
-	<175918529300.65920.15856373929947126262.stgit@devnote2>
-	<20251015172020.5966beaf@gandalf.local.home>
-	<20251018000130.aa69bd5b6670715b1c52d387@kernel.org>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1760922042; c=relaxed/simple;
+	bh=lIXhujf2LnoQiqD2pBSflelyn0Ixc4SaTHhJhUSDojE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jPSYXqJQirBnshiHgbPglR7nUgQEiGAfs3dBE4piAuU1ECh5mWFqyygJ7O9LyhYhBeniWMDkThNteEWaaevR3nbVmMwyDRe8Hc5PVR9RgBEuXXbIFJP0MrnYS1bL7q+ueCo3K+bPTJ1dBRgu1VIDdo2avhjYjy/ELenItGF/7X4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=w6pch+N/; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="w6pch+N/"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=IHhlDbpDR/uarsdX4/s6LAyO9lfPS7eMYByG4wX7hD8=; b=w6pch+N/4FXIFhu0iKsY9R3eos
+	G65tG4E2ESdxg3BX6aAjl75VWfloLHguObs6/feZbzJpQ+MpTXLnHVTLlURvJ3hQGZmRf4/fYr4GL
+	hRDL7UcB0jILAOV5Hm5BUKqTJ/ZTLDoeJ8L41K7VZ2mO/Od65SiOFMogwdCnCI+SGquHSI0q7Yqs6
+	4xmYqn55gABdO/Km8+GRecLrswTrw3DNScXCwJ+kYVxAsTAt+cjME/dnp+CRGf+oyyOQ/TErRWBGi
+	KDADDr6p7OPjoYvv8jRwsABQTTauI8boYabNNd4yNuczvXaRIdjF7c8dDPR6AGnd5MAXarXUSqVf4
+	NsLIHZvw==;
+Received: from [50.53.43.113] (helo=bombadil.infradead.org)
+	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vAeGM-0000000Bbcb-336O;
+	Mon, 20 Oct 2025 01:00:38 +0000
+From: Randy Dunlap <rdunlap@infradead.org>
+To: linux-kernel@vger.kernel.org
+Cc: Randy Dunlap <rdunlap@infradead.org>,
+	Lai Jiangshan <laijs@cn.fujitsu.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH v2] ring-buffer: fix kernel-doc format to avoid a warning
+Date: Sun, 19 Oct 2025 18:00:37 -0700
+Message-ID: <20251020010037.2681824-1-rdunlap@infradead.org>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: 4nky5dtycpti38in66aecbg6ctrdkbkt
-X-Rspamd-Server: rspamout08
-X-Rspamd-Queue-Id: D81F520015
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/xTXzLG1bigaj/8ief4UXLMYw1TgiDtqI=
-X-HE-Tag: 1760896007-974800
-X-HE-Meta: U2FsdGVkX18Rq9DtklkLlXJJaE4ju4AQ85IvNzblxh6lj6yjIHV3wnzXOqzqcvF0TfoCRckQsZcHtI9X1gSvoox0gwSxGPWFk+bcK92ZahMOcCrS9JHkcYQGLyMAJvaBnms1Clc66K5hK/I+BliUIHzKD4ZRKKQ6mg+FfoJCOo0VCjPRPr/7PJbOWpsHkcpiJ7EcTeF6MRVMDsF3ektyZDP+ltbbj3HOvMQ2STsUWzaDNfAqnRQ9vZAXe34Jgyfn5HCgUvb8XGgbJ1ONRBTzOllQdJNkfhyUhxSF5ZjhugL7xvCr2MEJZS9xN7IkHy/wYFsI4ldAnSh7zldxe0kp1eZBQ+IihPnrxvTp6YUu+Oqd2/NTjzUMJ3lA2PTkdsPOmjR+GRrMYZgT6Ac7r7gmwA==
+Content-Transfer-Encoding: 8bit
 
-On Sat, 18 Oct 2025 00:01:30 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+Format the kernel-doc for RINGBUF_TYPE_DATA_TYPE_LEN_MAX correctly
+to prevent a kernel-doc warning:
 
-> On Wed, 15 Oct 2025 17:20:20 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
-> 
-> I could not find any other enum64 usage, so I doubt it is
-> available. (Does it depend on compiler?)
-> It seems C23 standard support it...
+Warning: include/linux/ring_buffer.h:61 Enum value
+ 'RINGBUF_TYPE_DATA_TYPE_LEN_MAX' not described in enum 'ring_buffer_type'
 
-Bah, I thought I saw it used, but it appears it's BPF that does
-something special.
+Fixes: 334d4169a659 ("ring_buffer: compressed event header")
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+---
+v2: reformat based on comments from Steven;
+    add more enum types to aid with comments;
 
+Cc: Lai Jiangshan <laijs@cn.fujitsu.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: linux-trace-kernel@vger.kernel.org
+---
+ include/linux/ring_buffer.h |   13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-> 
-> > 
-> > Not to mention, using const u64 requires saving these numbers in an address
-> > and referencing them, instead of doing it inlined in text. That is, using
-> > u64 instead of enum64 is both slower and wastes more memory.  
-> 
-> Yeah, I expected that the compiler could easily optimize correctly, but
-> maybe not?
-
-I doubt it. The values are exported to be allowed to be used in other
-files, so I doubt it can optimize it.
-
-The only thing I can think of is to unravel the enum into a bunch of
-#defines, that have the bit shifts.
-
--- Steve
+--- linux-next-20251016.orig/include/linux/ring_buffer.h
++++ linux-next-20251016/include/linux/ring_buffer.h
+@@ -43,18 +43,23 @@ struct ring_buffer_event {
+  *				 array[0] = top (28 .. 59) bits
+  *				 size = 8 bytes
+  *
+- * <= @RINGBUF_TYPE_DATA_TYPE_LEN_MAX:
+- *				Data record
+- *				 If type_len is zero:
++ * @RINGBUF_TYPE_DATA:		Data record
+  *				  array[0] holds the actual length
+  *				  array[1..(length+3)/4] holds data
+  *				  size = 4 + length (bytes)
+- *				 else
++ *
++ * @RINGBUF_TYPE_DATA_TYPE_LEN_MIN:
++ * 				Data record with length and data as below
++ * . . .
++ * @RINGBUF_TYPE_DATA_TYPE_LEN_MAX:
++ *				Data record
+  *				  length = type_len << 2
+  *				  array[0..(length+3)/4-1] holds data
+  *				  size = 4 + length (bytes)
+  */
+ enum ring_buffer_type {
++	RINGBUF_TYPE_DATA = 0,
++	RINGBUF_TYPE_DATA_TYPE_LEN_MIN = 1,
+ 	RINGBUF_TYPE_DATA_TYPE_LEN_MAX = 28,
+ 	RINGBUF_TYPE_PADDING,
+ 	RINGBUF_TYPE_TIME_EXTEND,
