@@ -1,84 +1,127 @@
-Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 751152C2368;
-	Mon, 20 Oct 2025 18:47:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF978218827;
+	Mon, 20 Oct 2025 19:01:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760986042; cv=none; b=OGd2sqJOyrWzPUFmwT5qB1J989T6VbyaZRumW+uwm+zDN6Z78CaL5rZiNPm4CzRFrtE82eyQmm/FiQSvpNUg+e53OnJJVGruQOC6RPCC1fbj3c5aD3AKzAVC9cZw5+a9i3kgMbE2CfJ/VtZroiaJhKFxqdjn02M+VjsuAHHJ4JY=
+	t=1760986870; cv=none; b=Y9w2+67D5V50wJzrwATv3zVuvdRRgMxFOIWShqlOLMJzw+AiYxnKiJvzDJ/iMuSRMAHGSba7hONbmDDK6bnIZGIXw6DPFSLwbkGd9j8UlxAai63yJwcJ9EWqfZJzQ9I9ZBszPzvWXGaXC9Todl2sYK4Hepbsc3Hy5RW5v9hy+4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760986042; c=relaxed/simple;
-	bh=GseQrDC+hgXaA3u5o1V86eCA9a9iaRLuWbK9V9imRq4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FuEEKfKSZPPiFyM0pqKYaXnkTyM7m2hpsgPkcpcEVfsi58ea6Cfa/VF7kSyPyetLBKI+Laz2H7ioAfYeZOMvSi4AKlxYUQ0tKIbJSzhqlDFfx9VcofXQdFmmzghwCqX2x+M4DlJLtiZ3mvOqhspJUgT3sJVR8XT2GO2pnnDVjaU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf02.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay09.hostedemail.com (Postfix) with ESMTP id DE37E86065;
-	Mon, 20 Oct 2025 18:47:16 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf02.hostedemail.com (Postfix) with ESMTPA id BD97D80009;
-	Mon, 20 Oct 2025 18:47:12 +0000 (UTC)
-Date: Mon, 20 Oct 2025 14:47:32 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Douglas Raillard <douglas.raillard@arm.com>
-Cc: Steven Rostedt <rostedt@kernel.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>, Peter Zijlstra
- <peterz@infradead.org>, Namhyung Kim <namhyung@kernel.org>, Takaya Saeki
- <takayas@google.com>, Tom Zanussi <zanussi@kernel.org>, Thomas Gleixner
- <tglx@linutronix.de>, Ian Rogers <irogers@google.com>, Arnaldo Carvalho de
- Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Adrian Hunter
- <adrian.hunter@intel.com>, Ingo Molnar <mingo@redhat.com>
-Subject: Re: [PATCH v3 12/13] tracing: Check for printable characters when
- printing field dyn strings
-Message-ID: <20251020144732.308326bb@gandalf.local.home>
-In-Reply-To: <8d15e5a6-e80a-4707-a43a-4cbb6d810222@arm.com>
-References: <20251015173214.760495866@kernel.org>
-	<20251015173550.062240695@kernel.org>
-	<8d15e5a6-e80a-4707-a43a-4cbb6d810222@arm.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1760986870; c=relaxed/simple;
+	bh=gAXla/m4eXeEBqFU21t865dnowv54sn9SH5X0IqQ/zU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qNVgXL5diZKVVQx8zRt/q+I28RqizT5FU4kpW80vmk+2p7+7MehOSYFLHVg8skkckcnaJE2aXo+vzWXsNn5/a0YrKjPB5eifeRCBz56ukopYpGyrQr2nhLUQ8CJpMyWGPRW1Xk9BcY3MgHPxIrIPvmrvgO/qub52YhLm80IT/Zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=JEiuM7uM; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JEiuM7uM"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=zafnlX6TNyUlNl32UJtICMfxmtfFofA1UryFBxmHom4=; b=JEiuM7uMHkAZQC1CbSuwwRR/jl
+	1MfOQ0ljk5RbuGl0M9eOadY+jetNbT9l0TuE81uPkZlMy4LCVNIzXd9woMBdSM1XwXsSPE3ncvDwA
+	FdudihaGJ42MbrGqbgS54Ak4i6QDwZbIe+9yQm8a6xMr6Tc/RuV3GF52iJQ2hpKMeIle2DsWfgqtU
+	VVMv86BxV+J902BRQiggA+4CPvlRcGGwQSPUnqiusBViTx86GB9D5VxlHRsBTevOpYtEy0GTWIZ9E
+	KsggCPLJpW2xqxvX1t9tRF6omMXzOO3rrGd8en515l0EpBIK9rVb7/45sHSrXrcL7Pt7/FWYQrm6n
+	8hqIQ1qA==;
+Received: from [50.53.43.113] (helo=[192.168.254.34])
+	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vAv7v-0000000Ehec-3oYA;
+	Mon, 20 Oct 2025 19:01:04 +0000
+Message-ID: <d7576aee-7d2d-4703-952d-f0924bfc49c5@infradead.org>
+Date: Mon, 20 Oct 2025 12:01:02 -0700
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] ring-buffer: fix kernel-doc format to avoid a warning
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, Lai Jiangshan <laijs@cn.fujitsu.com>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-trace-kernel@vger.kernel.org
+References: <20251020010037.2681824-1-rdunlap@infradead.org>
+ <20251020143332.732ae92d@gandalf.local.home>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20251020143332.732ae92d@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: BD97D80009
-X-Stat-Signature: sbjaw5o7kk6o76brmheyatft4xe4ot9g
-X-Rspamd-Server: rspamout02
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18PUk132oYyzOAbICIfWGFSdVhhBgPwPhk=
-X-HE-Tag: 1760986032-109600
-X-HE-Meta: U2FsdGVkX1/m4n2fxNMsNlQWzyyVqHwVelvAwc6in/iT58zHlFRObzHBfGG1u2E44NjuJ97tXfUkhWrOweptcVdBB2L7wbM1FvSsmnONqh+5S+f5jUoicPAg5dFfl/MQpdcIvgUmXPJu8gMfUqx+QMS2GYerDsyiopeARI1K7MS1t1QyP8IDJ7c3oW5XaoPxAkIyylBq42na8RmxCGJ+M+8tM7crFzms3ZD9+ca4oD5CJMm7L7hs7pcVozXSN6x63SLYVsu2NZGKaVOWCZoubHeQiRS2u8uUHDgkbpBxDA/pL6fPJowOdYR4wJJdqBAAKYyUfWh5tfyjk2l+EeBCKCyAJhoPMJgH1qybs3NHTlcwKJ18/QvPj6Mnbn9o7T2D7/Ah77rYR8/+8+8hP0cY4abq4/CeLIvWHixWqdKdl23WDgmG9bXlQlvNQs02qI8L
 
-On Mon, 20 Oct 2025 13:19:46 +0100
-Douglas Raillard <douglas.raillard@arm.com> wrote:
 
-> Hi Steve,
+
+On 10/20/25 11:33 AM, Steven Rostedt wrote:
+> On Sun, 19 Oct 2025 18:00:37 -0700
+> Randy Dunlap <rdunlap@infradead.org> wrote:
 > 
-> On 15-10-2025 18:32, Steven Rostedt wrote:
-> > From: Steven Rostedt <rostedt@goodmis.org>
-> > 
-> > When the "fields" option is enabled, it prints each trace event field
-> > based on its type. But a dynamic array and a dynamic string can both have
-> > a "char *" type. Printing it as a string can cause escape characters to be
-> > printed and mess up the output of the trace.  
+>> Format the kernel-doc for RINGBUF_TYPE_DATA_TYPE_LEN_MAX correctly
+>> to prevent a kernel-doc warning:
+>>
+>> Warning: include/linux/ring_buffer.h:61 Enum value
+>>  'RINGBUF_TYPE_DATA_TYPE_LEN_MAX' not described in enum 'ring_buffer_type'
+>>
+>> Fixes: 334d4169a659 ("ring_buffer: compressed event header")
+>> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+>> ---
+>> v2: reformat based on comments from Steven;
+>>     add more enum types to aid with comments;
+>>
+>> Cc: Lai Jiangshan <laijs@cn.fujitsu.com>
+>> Cc: Steven Rostedt <rostedt@goodmis.org>
+>> Cc: Masami Hiramatsu <mhiramat@kernel.org>
+>> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+>> Cc: linux-trace-kernel@vger.kernel.org
+>> ---
+>>  include/linux/ring_buffer.h |   13 +++++++++----
+>>  1 file changed, 9 insertions(+), 4 deletions(-)
+>>
+>> --- linux-next-20251016.orig/include/linux/ring_buffer.h
+>> +++ linux-next-20251016/include/linux/ring_buffer.h
+>> @@ -43,18 +43,23 @@ struct ring_buffer_event {
+>>   *				 array[0] = top (28 .. 59) bits
+>>   *				 size = 8 bytes
+>>   *
+>> - * <= @RINGBUF_TYPE_DATA_TYPE_LEN_MAX:
+>> - *				Data record
+>> - *				 If type_len is zero:
+>> + * @RINGBUF_TYPE_DATA:		Data record
+>>   *				  array[0] holds the actual length
+>>   *				  array[1..(length+3)/4] holds data
+>>   *				  size = 4 + length (bytes)
+>> - *				 else
+>> + *
+>> + * @RINGBUF_TYPE_DATA_TYPE_LEN_MIN:
+>> + * 				Data record with length and data as below
+>> + * . . .
+>> + * @RINGBUF_TYPE_DATA_TYPE_LEN_MAX:
+>> + *				Data record
+>>   *				  length = type_len << 2
+>>   *				  array[0..(length+3)/4-1] holds data
+>>   *				  size = 4 + length (bytes)
+>>   */
+>>  enum ring_buffer_type {
+>> +	RINGBUF_TYPE_DATA = 0,
+>> +	RINGBUF_TYPE_DATA_TYPE_LEN_MIN = 1,
 > 
-> We faced the same issue when converting trace.dat to other formats that distinguish
-> between a byte buffer and an actual string. The current solution we have is to
-> reserve "char []" for actual string and use "u8 []"/"uint8_t []" for byte buffers.
+> Adding this just to satisfy kerneldoc seems a bit much.
 > 
-> Obviously it does not solve the problem for existing events but that could be worth
-> establishing a convention like that for new code and support it in trace_output.c ?
-> Most uses of trace data beyond direct printing would require knowing the data schema
-> from the header info, so value-based criteria are typically not suitable for that.
+> If this is going to be added, then it should be used in the code.
+> 
+> The RINGBUF_TYPE_DATA should probably be called RINGBUF_TYPE_DATA_LARGE, as
+> it is zero when it is a large event (bigger than 112 bytes).
+> 
+>>  	RINGBUF_TYPE_DATA_TYPE_LEN_MAX = 28,
+>>  	RINGBUF_TYPE_PADDING,
+>>  	RINGBUF_TYPE_TIME_EXTEND,
 
-Well, what the types are is not quite controlled by me, but by whoever
-writes a trace event. Thus, it's not going to be something I can control in trace_output.c
 
--- Steve
+Fine, I'll drop it.  :)
+
+-- 
+~Randy
+
