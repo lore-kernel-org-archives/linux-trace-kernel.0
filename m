@@ -1,32 +1,32 @@
-Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
+Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23D131F1517;
-	Mon, 20 Oct 2025 08:41:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B72A02EBDF2
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 20 Oct 2025 08:55:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760949668; cv=none; b=kwVSVv8l8xTWxZ6ljdCavttSBbmn3ZtqA24cmj+xK/gvJYq0XLzxIk1rvPWHt0jToX+Zi7Y9PbLi3Ka9EU37iiW9ygA3BgjZReRTZW+q7oQaXSzGe+PAkkuvaSB487O1Bcyg10UQYR+DhovQ7xJRqsOVKD8s8pc7j8AfU4FhmLI=
+	t=1760950548; cv=none; b=gNAXpvYyboQfzp8swov2YcL0FZ1x9WAOB5Z5ELeoXO3SrvgJe5YjO/KwJFGyPyRsJvbFwIZx/uUJI+fJSziQcXfW7hYxJJVRGA9saybPWuR5gWyJtGy9/g2VKiBW0K92fxaO7AQobnHxmshhMFlb9vQzDyhdatDg84wcKAMO00Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760949668; c=relaxed/simple;
-	bh=j9yEkHBaZTQHcGD0XBLUbfsvIwG+WLkyVW8M9OqBigQ=;
+	s=arc-20240116; t=1760950548; c=relaxed/simple;
+	bh=DYoMtqXAd1bYjN9ifJuuyABxTo2xM9ZgqMGXjS6AdLg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DohddONyk4EhEOqXrroaoQd+jo2fKWGxy/fgtsgnOCeWPIDSZ+P9SETucbR+uzOCgAf6xcou44DpFEp3WvtxwP8QMWP9u0NfQiSx0Jh3nH/4hgLIYWGc6r9vLs3VXjk98g06B6aEfPQmUD0m+TuZQcu++EnfBZg9vAtqt1acV8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=g++C1C8v; arc=none smtp.client-ip=95.215.58.174
+	 MIME-Version:Content-Type; b=BVltSGZdDDET5wJpESs0XJMJUTFd4+tPOU9XTGrDzsIm0liVMRzzIP0abzV/yVws1WqGl/NNmAlVyjETs99KuSrGEPSOumYhg3BKLBR9laQSSK9FWzZibKqfIb7qus2yvMBJ1L88X6qiiDyf57ppC/qJmx9qhfwQCZuM8omc1YM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=AlB9iHNE; arc=none smtp.client-ip=91.218.175.189
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="g++C1C8v"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="AlB9iHNE"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1760949654;
+	t=1760950534;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=d2ASlFl8CZjWKl3AeuWdFgcOERTPwTmFTKMyRlTsQbM=;
-	b=g++C1C8v24WDqr9GGUDcKFTgHO62v13d1uXca2eTAfV2jsuIKtdL6Sp8stnwi1co7315ns
-	452UZnaNonN8zXG1+PhwXHGmsLgfLofrzOQEz6PWN7CFenNk6y31Tw2EigaSYxxuM1vIaY
-	oLe+eh5TC1SsUc5rMjohqwnTB1v0Rv8=
+	bh=hlNK4xzyZp6bH52zfvmLf5/eAknw81lWxyjNV/nWbvQ=;
+	b=AlB9iHNEuWsJwo5qdj8hjVlzG2TtJrknazorNxtB3iL8DXqfvte/6Q9QxQE1QepvgU6gDe
+	ER7ddtUdLldUBN/OicP/pAeLl4IXE9j7cZ16lZgSKlrtMAVgd9JXi//nqC8aCsIK4GuBNR
+	z7mv8QWctiIfTRaODpd9nfvTVz2JssI=
 From: Menglong Dong <menglong.dong@linux.dev>
 To: Menglong Dong <menglong8.dong@gmail.com>, Jiri Olsa <olsajiri@gmail.com>
 Cc: ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
@@ -36,14 +36,12 @@ Cc: ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
  mhiramat@kernel.org, mathieu.desnoyers@efficios.com, leon.hwang@linux.dev,
  bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
-Subject:
- Re: [PATCH RFC bpf-next 5/5] selftests/bpf: add testcases for tracing session
-Date: Mon, 20 Oct 2025 16:40:17 +0800
-Message-ID: <2243183.irdbgypaU6@7950hx>
-In-Reply-To: <aPXwo0puQI3t0CXC@krava>
+Subject: Re: [PATCH RFC bpf-next 0/5] bpf: tracing session supporting
+Date: Mon, 20 Oct 2025 16:55:22 +0800
+Message-ID: <3379104.aeNJFYEL58@7950hx>
+In-Reply-To: <aPXwbQgGOqAQfxbq@krava>
 References:
- <20251018142124.783206-1-dongml2@chinatelecom.cn>
- <20251018142124.783206-6-dongml2@chinatelecom.cn> <aPXwo0puQI3t0CXC@krava>
+ <20251018142124.783206-1-dongml2@chinatelecom.cn> <aPXwbQgGOqAQfxbq@krava>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -54,162 +52,65 @@ Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="utf-8"
 X-Migadu-Flow: FLOW_OUT
 
-On 2025/10/20 16:19, Jiri Olsa wrote:
-> On Sat, Oct 18, 2025 at 10:21:24PM +0800, Menglong Dong wrote:
+On 2025/10/20 16:18, Jiri Olsa wrote:
+> On Sat, Oct 18, 2025 at 10:21:19PM +0800, Menglong Dong wrote:
+> > Sometimes, we need to hook both the entry and exit of a function with
+> > TRACING. Therefore, we need define a FENTRY and a FEXIT for the target
+> > function, which is not convenient.
+> > 
+> > Therefore, we add a tracing session support for TRACING. Generally
+> > speaking, it's similar to kprobe session, which can hook both the entry
+> > and exit of a function with a single BPF program. Meanwhile, it can also
+> > control the execution of the fexit with the return value of the fentry.
+> > session cookie is not supported yet, and I'm not sure if it's necessary.
 > 
-> SNIP
-> 
-> > +static void test_fsession_reattach(void)
-> > +{
-> > +	struct fsession_test *skel = NULL;
-> > +	int err, prog_fd;
-> > +	LIBBPF_OPTS(bpf_test_run_opts, topts);
-> > +
-> > +	skel = fsession_test__open_and_load();
-> > +	if (!ASSERT_OK_PTR(skel, "fsession_test__open_and_load"))
-> > +		goto cleanup;
-> > +
-> > +	/* First attach */
-> > +	err = fsession_test__attach(skel);
-> > +	if (!ASSERT_OK(err, "fsession_first_attach"))
-> > +		goto cleanup;
-> > +
-> > +	/* Trigger test function calls */
-> > +	prog_fd = bpf_program__fd(skel->progs.test1);
-> > +	err = bpf_prog_test_run_opts(prog_fd, &topts);
-> > +	if (!ASSERT_OK(err, "test_run_opts err"))
-> > +		return;
-> 
-> goto cleanup
+> hi,
+> I think it'd be useful to have support for cookie, people that use kprobe
+> session because of multi attach, could easily migrate to trampolines once
+> we have fast multi attach for trampolines
 
-ACK.
-
-> 
-> > +	if (!ASSERT_OK(topts.retval, "test_run_opts retval"))
-> > +		return;
-> 
-> goto cleanup
-
-ACK.
-
-> 
-> > +
-> > +	/* Verify first call */
-> > +	ASSERT_EQ(skel->bss->test1_entry_called, 1, "test1_entry_first");
-> > +	ASSERT_EQ(skel->bss->test1_exit_called, 1, "test1_exit_first");
-> > +
-> > +	/* Detach */
-> > +	fsession_test__detach(skel);
-> > +
-> > +	/* Reset counters */
-> > +	memset(skel->bss, 0, sizeof(*skel->bss));
-> > +
-> > +	/* Second attach */
-> > +	err = fsession_test__attach(skel);
-> > +	if (!ASSERT_OK(err, "fsession_second_attach"))
-> > +		goto cleanup;
-> > +
-> > +	err = bpf_prog_test_run_opts(prog_fd, &topts);
-> > +	if (!ASSERT_OK(err, "test_run_opts err"))
-> > +		return;
-> 
-> goto cleanup
-
-ACK.
-
-> 
-> > +	if (!ASSERT_OK(topts.retval, "test_run_opts retval"))
-> > +		return;
-> 
-> goto cleanup
-
-ACK.
-
-> 
-> > +
-> > +	/* Verify second call */
-> > +	ASSERT_EQ(skel->bss->test1_entry_called, 1, "test1_entry_second");
-> > +	ASSERT_EQ(skel->bss->test1_exit_called, 1, "test1_exit_second");
-> > +
-> > +cleanup:
-> > +	fsession_test__destroy(skel);
-> > +}
-> > +
-> > +void test_fsession_test(void)
-> > +{
-> > +#if !defined(__x86_64__)
-> > +	test__skip();
-> > +	return;
-> > +#endif
-> > +	if (test__start_subtest("fsession_basic"))
-> > +		test_fsession_basic();
-> > +	if (test__start_subtest("fsession_reattach"))
-> > +		test_fsession_reattach();
-> > +}
-> > diff --git a/tools/testing/selftests/bpf/progs/fsession_test.c b/tools/testing/selftests/bpf/progs/fsession_test.c
-> > new file mode 100644
-> > index 000000000000..cce2b32f7c2c
-> > --- /dev/null
-> > +++ b/tools/testing/selftests/bpf/progs/fsession_test.c
-> > @@ -0,0 +1,178 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/* Copyright (c) 2025 ChinaTelecom */
-> > +#include <vmlinux.h>
-> > +#include <bpf/bpf_helpers.h>
-> > +#include <bpf/bpf_tracing.h>
-> > +
-> > +char _license[] SEC("license") = "GPL";
-> > +
-> > +__u64 test1_entry_result = 0;
-> > +__u64 test1_exit_result = 0;
-> > +__u64 test1_entry_called = 0;
-> > +__u64 test1_exit_called = 0;
-> > +
-> > +SEC("fsession/bpf_fentry_test1")
-> > +int BPF_PROG(test1, int a)
-> > +{
-> 
-> I guess we can access return argument directly but it makes sense only
-> for exit session program, or we could use bpf_get_func_ret
-
-Yeah, we can access the return value directly here or use
-bpf_get_func_ret(). For fentry, it is also allow to access the return value.
-It makes no sense to obtain the return value in the fentry, and
-what it gets is just the previous fsession-fentry returned.
-And it needs more effort in the verifier to forbid such operation.
-
-The testcases is not complete, and I'll add more testcases in the
-next version to cover more cases.
-
-Thanks!
-Menglong Dong
+OK, I'll implement it in the next version.
 
 > 
 > jirka
 > 
 > 
-> > +	bool is_exit = bpf_tracing_is_exit(ctx);
-> > +
-> > +	if (!is_exit) {
-> > +		/* This is entry */
-> > +		test1_entry_called = 1;
-> > +		test1_entry_result = a == 1;
-> > +		return 0; /* Return 0 to allow exit to be called */
-> > +	}
-> > +
-> > +	/* This is exit */
-> > +	test1_exit_called = 1;
-> > +	test1_exit_result = a == 1;
-> > +	return 0;
-> > +}
-> > +
-> > +__u64 test2_entry_result = 0;
-> > +__u64 test2_exit_result = 0;
-> > +__u64 test2_entry_called = 0;
-> > +__u64 test2_exit_called = 0;
-> > +
-> 
-> SNIP
+> > 
+> > For now, only x86_64 is supported. Other architectures will be supported
+> > later.
+> > 
+> > Menglong Dong (5):
+> >   bpf: add tracing session support
+> >   bpf: add kfunc bpf_tracing_is_exit for TRACE_SESSION
+> >   bpf,x86: add tracing session supporting for x86_64
+> >   libbpf: add support for tracing session
+> >   selftests/bpf: add testcases for tracing session
+> > 
+> >  arch/arm64/net/bpf_jit_comp.c                 |   3 +
+> >  arch/loongarch/net/bpf_jit.c                  |   3 +
+> >  arch/powerpc/net/bpf_jit_comp.c               |   3 +
+> >  arch/riscv/net/bpf_jit_comp64.c               |   3 +
+> >  arch/s390/net/bpf_jit_comp.c                  |   3 +
+> >  arch/x86/net/bpf_jit_comp.c                   | 115 ++++++++++-
+> >  include/linux/bpf.h                           |   1 +
+> >  include/uapi/linux/bpf.h                      |   1 +
+> >  kernel/bpf/btf.c                              |   2 +
+> >  kernel/bpf/syscall.c                          |   2 +
+> >  kernel/bpf/trampoline.c                       |   5 +-
+> >  kernel/bpf/verifier.c                         |  17 +-
+> >  kernel/trace/bpf_trace.c                      |  43 ++++-
+> >  net/bpf/test_run.c                            |   1 +
+> >  net/core/bpf_sk_storage.c                     |   1 +
+> >  tools/bpf/bpftool/common.c                    |   1 +
+> >  tools/include/uapi/linux/bpf.h                |   1 +
+> >  tools/lib/bpf/bpf.c                           |   2 +
+> >  tools/lib/bpf/libbpf.c                        |   3 +
+> >  .../selftests/bpf/prog_tests/fsession_test.c  | 132 +++++++++++++
+> >  .../selftests/bpf/progs/fsession_test.c       | 178 ++++++++++++++++++
+> >  21 files changed, 511 insertions(+), 9 deletions(-)
+> >  create mode 100644 tools/testing/selftests/bpf/prog_tests/fsession_test.c
+> >  create mode 100644 tools/testing/selftests/bpf/progs/fsession_test.c
+> > 
 > 
 > 
 
