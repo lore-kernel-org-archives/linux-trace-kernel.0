@@ -1,92 +1,87 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 865A32DF123
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 21 Oct 2025 15:54:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD8D0342CA2
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 21 Oct 2025 15:58:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761062096; cv=none; b=sUmNtTadPcduMCLJYcqPJE+I3fQw7ndVMjNRftSFR0aHMRfQAGhqVQiDfMKCtnpzmgroJkfUu2PFE9hT+42lwazZ+D4ApAXKOFCQAkbUu3OfqMRZvX3LM0nOSwZY6/edBM44KuhKvU4AqMEibR6OjGKCcrZjEtfb7SwjmfYrhFU=
+	t=1761062293; cv=none; b=Hik+G/R25GVWhiX6SZQPmjnVjTHOBDPiryCrc+/gUub7YLVD7BI5v+/CvxSHjltNQzKUj4K8dVGqwBTxUUWF0/lib4TyeqKLYW7s/G4JT9HWNFNn6Fg41Gobnkzmq+Upa3YCL3t31IbKQIEm89AkTjZNk7fjc2VEbEzfwq14N00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761062096; c=relaxed/simple;
-	bh=KJ/pfMx3qXdVsVcloZNfkQKmFrIgt4xIyNBdn4ZsLjA=;
+	s=arc-20240116; t=1761062293; c=relaxed/simple;
+	bh=zd+ArKte7lBSnCcvbJeEFtoxHRPUAR2nsc5ee9j+mGU=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NhDT5vF8q/TnxF/z5uq+WqCBs6U84/SDVoYhRz5N9GwTaIOyFLQaPUUZs7Vyjrh1jCW6baBh5MMa/hLvIcEKWb+SDCggdQ0rkEaqNLAwKOfZOz9dPQ/H5jAbN5GtOJk2rL2EZddTB0gAEaK2DWmw9e8N4xPD4clQPbghpBfa1P0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fAerbMOL; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:Content-Type; b=W6XJFPp2s+7H0UG32rtjGCYUbexnK191gzdBLMMKShFJWpviuIsJQv/JUtlugfww5mw6CTIPiJCoFaxBfvY0GGChg1BtN9LjnQH5leQmqffSPaxX+V4RGwXwDGAKWJ3hfdQRHj2HnsKIhv7HoJ+TFxKjEbZY5AqQmRIpNu/iJKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=D2CtZBHz; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fAerbMOL"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D2CtZBHz"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1761062093;
+	s=mimecast20190719; t=1761062290;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=KJ/pfMx3qXdVsVcloZNfkQKmFrIgt4xIyNBdn4ZsLjA=;
-	b=fAerbMOLXRO6xkHLy8octqJoTNYflfBuE6605a0Ln6KkGrJaaLYqal6s/6L0Pb0DcAQIeq
-	5IKr+iazp7YKMHUVlNY6ZgSQipa3McBg0N1v3E5G8g5II12rid4309wztzIoIe+3WZWXTH
-	MM5atIOxCVYKL1mo6rW8BxUxW6sWCwg=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	 in-reply-to:in-reply-to:references:references;
+	bh=zd+ArKte7lBSnCcvbJeEFtoxHRPUAR2nsc5ee9j+mGU=;
+	b=D2CtZBHzU65O2ya+oRymHL8Cl+OY3I9PAVk44+sdbXoMzX1X0uC9JzafUfOulhLpfOifpB
+	yHGbXvxhlr+cbUQ6lse71iiUZAYTuy6wUKOC2mQVcVhv5bblp1M7go1f44zKx0uVB/iJLW
+	6Me91cX4nswnpiReuyRIlZbxN9NieS0=
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
+ [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-94-_vLn_t4VMjyFD1tTVQ05SQ-1; Tue, 21 Oct 2025 11:54:52 -0400
-X-MC-Unique: _vLn_t4VMjyFD1tTVQ05SQ-1
-X-Mimecast-MFC-AGG-ID: _vLn_t4VMjyFD1tTVQ05SQ_1761062091
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-471125c8bc1so62896735e9.3
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 21 Oct 2025 08:54:52 -0700 (PDT)
+ us-mta-477-uH9PdHDFMZyA8AsZ-QzwCA-1; Tue, 21 Oct 2025 11:58:09 -0400
+X-MC-Unique: uH9PdHDFMZyA8AsZ-QzwCA-1
+X-Mimecast-MFC-AGG-ID: uH9PdHDFMZyA8AsZ-QzwCA_1761062289
+Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-4e8b33c1d8eso1111291cf.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 21 Oct 2025 08:58:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761062091; x=1761666891;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KICcCCzwh6CAD3LYQzTxrECTgISFOrla0fpaF0z/dPc=;
-        b=jXdGCsvUTm/azzgxgh7P9Re7IFDHBtsAaO2rF7rqRIg8qIdy+yy7+NYST9nF/L06Sc
-         35yCsiDsXJo4Nhx0YYwIPXp7X21x8e6P/x+xcXDaYd09YnFFUko5S0gijDTlT3sJXK2E
-         2J7xeGKU02raSwRbqUppNubwLdhO1C5clGnlpuiepfMcEuuRO8RlHpIV5OjZRtsWJV8G
-         /UFibgDDGnzX5OdbWfxdqhdUI/iCVlqfjRsEZ3z4X7Uhzt47od7zFUYZcIFsv3F100zA
-         o1vO6rUKi55wfVkzcgDSbaLe9Uy/tzkquAEGl/3Sx6Rxdi3ZWmi3ZlyWl4aI9gWf/AxI
-         hnLg==
-X-Forwarded-Encrypted: i=1; AJvYcCXLyi8k0mebsTxhc7qikQiu31nUZa8E651YAs1OIzSnBuZEefFLaxFBgJuvqCMoi9LK5z/AxaB/yXkyZE2Q7D9dVMw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywh2iQngtuxWm8yxDIhGErIkql2ZfZdlEzAFGNlV2EUDbrbIyWt
-	Oc3m4BilfCcOYzxeM3ZmIIgKltUkr8uAiVXdyICw7saRz7rOE+wP+fwOIDmEFbx0rUJ6phtVXi1
-	ASC/MsgjlucuKnCre1SX/AFcqEmn9hR8MRnr8Iagtwa4TKLqhKKbLQuPz6PEHLaOmlOnn021qAA
+        d=1e100.net; s=20230601; t=1761062289; x=1761667089;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=zd+ArKte7lBSnCcvbJeEFtoxHRPUAR2nsc5ee9j+mGU=;
+        b=S1aTIJa6GBAcqgaFs94MIgW1/2vSrfDJKR0fSJL5uLEafnh5XrufEtYssaARyT3xrG
+         Tn0BxA7UyfNd7jNmuyEcn4+Mvuv0kY0oQngKy2WaDbMw5MLQjEivm92SEWieNpq3NNcl
+         QXYPs1ru/TZhi5TW69SoZOfGDFRZIQ/G8eTBNqcJJA+qUUZDw6UaDnvXN+JfeLHfPsH0
+         5IaybviCcslifFu0Vr547ruUuF1IvFHrkl5cAtvaTxxIENUC4/2l5VuOr5tCQZjoFUST
+         ej6DQYFKgvoZQFeE4gEJX99x8SlonURVdE39l9gdFzWqzNWWHwHwz4g6i2TYP7FneA9K
+         DPKA==
+X-Forwarded-Encrypted: i=1; AJvYcCV5asHE7WOZy4aIXtbWghGLYYWOzSuW1zS+r9yv8mfiCTUsn/Gu6dLURjr3rUlW+RHQS+c39bEY+0cxHn3vGzGdOIc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyL/eFWU1U89FBM5HYqsrAL2QQwYq33mdzvxrVafKyzhvTwPVAL
+	hFPbUEk5cQxp6HW9l9wG0f9p8r8Nfamrw/dSzy8yYKwbFsXtyTR1xyJMZ0Ea3k/sdU7FWlSfS46
+	a0wnhkEtNcXlU0seBx7LWWjAd0B3iYaac1pomT0nbZ92DUOuRzQhPvlD7hKbsmS1gUoD9iHYvOA
 	==
-X-Gm-Gg: ASbGncsWqWrdCXjcqXP2gu0QvOsUHpb7xndnFK82+0ZzQD3zWhg1LoyngAKTSzA0X89
-	NgE7NFJZZKPRuyCpOSio46iVnIyRW6DzILhn9kzI0Bn8XJGEw4fr0noQncEksNTtwDl96nq6n/c
-	Rb3RnQU0OykXoSjOLHrdsEBiBH00JZ2iaE8LSd5fNY6pjdJDwhLRqZpZtWHTPBn4SF43d5zugku
-	7hgiUXvz9qXPKoSJwJ0Wt68DRZRMnTmbJtwqVW9rNBzdBNGqpzt68gttDOL4bChZTsf6LZdAVq+
-	TUhkOBGGS6KP88G8lZUZ9+nM1chXHjQd9LTpw0zuXPRa7c9YmfdBD0zjIFOQvQ6KSC8GDavoG4R
-	xfP+VdE8GxBUC6ZuBeI0FeCXj
-X-Received: by 2002:a05:600c:64cf:b0:46e:3b81:c3f9 with SMTP id 5b1f17b1804b1-471178a80f7mr121691105e9.17.1761062090903;
-        Tue, 21 Oct 2025 08:54:50 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE8lxM/JFIrZe0gCiI3+DDDOAAYMMzRvDvH3Q6BMXVzzLrqfeZc4/96Yrfb6Kg7hAmNU9XU/w==
-X-Received: by 2002:a05:600c:64cf:b0:46e:3b81:c3f9 with SMTP id 5b1f17b1804b1-471178a80f7mr121690965e9.17.1761062090495;
-        Tue, 21 Oct 2025 08:54:50 -0700 (PDT)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.42])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47496d4b923sm18092205e9.14.2025.10.21.08.54.49
+X-Gm-Gg: ASbGncsB2kHaZdVc3yjLr3+M/G4nfQa0fnLKBwrmnSmvVfJvKaFAmryaCoXqjSChVQ/
+	zR0P9ar9wg+/oet9PZ+NQ9X1tdnwKfzR/KI51hLSUgHtMP+5w10PPQX7ou95Kp5hTep8KQI0Y8n
+	f0rwIvhuGz02mBAirO9y9EfZHewIIEZcbQJSuQGn/mFwg2zlnqqSM1X4nTEUxDAyxhSZ0+Y8DkW
+	9k6ieYsnAcBosZlIE0Q1t7LfmwbZunvK1HWXp5wy2VqhYn3WcHe/x0o7hOzpq+HJ2ruHRDstpl+
+	TIKeU1eqj8woS0ZFgwzypifcrK6/MVRuVbqfsMhjkF8mtsbZ5Igk8GA5zeGDt5vbvjsNNNJtJYV
+	5UD68vxOd/N0jacAnjCiwvuTD9cS2J3k=
+X-Received: by 2002:ac8:5a4f:0:b0:4d4:a43d:316c with SMTP id d75a77b69052e-4e89d3de63dmr217194191cf.62.1761062288882;
+        Tue, 21 Oct 2025 08:58:08 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE5szTseO6I4FG2HD0vTjKdNDMZmPXaowNDyBlk3/ojACBLUbgg83sr1esbAzDc5Vj05+rEPg==
+X-Received: by 2002:ac8:5a4f:0:b0:4d4:a43d:316c with SMTP id d75a77b69052e-4e89d3de63dmr217193701cf.62.1761062288301;
+        Tue, 21 Oct 2025 08:58:08 -0700 (PDT)
+Received: from crwood-thinkpadp16vgen1.minnmso.csb ([2601:447:c680:2b50:ee6f:85c2:7e3e:ee98])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-891cc8d5edasm794643985a.7.2025.10.21.08.58.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Oct 2025 08:54:50 -0700 (PDT)
-Message-ID: <866f10440f9edde8acd34e5a5d2965719ae5d723.camel@redhat.com>
-Subject: Re: [PATCH v2 18/20] rv: Add support for per-object monitors in
- DA/HA
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Nam Cao <namcao@linutronix.de>, linux-kernel@vger.kernel.org, Steven
- Rostedt <rostedt@goodmis.org>, linux-trace-kernel@vger.kernel.org
-Cc: Tomas Glozar <tglozar@redhat.com>, Juri Lelli <jlelli@redhat.com>, Clark
- Williams <williams@redhat.com>, John Kacur <jkacur@redhat.com>
-Date: Tue, 21 Oct 2025 17:54:48 +0200
-In-Reply-To: <87plag1nb6.fsf@yellow.woof>
-References: <20250919140954.104920-1-gmonaco@redhat.com>
-	 <20250919140954.104920-19-gmonaco@redhat.com> <87plag1nb6.fsf@yellow.woof>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
- cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
- T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
- eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
- 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
+        Tue, 21 Oct 2025 08:58:07 -0700 (PDT)
+Message-ID: <aa0bbfeec78bc90966e660af91eb39acccb77d73.camel@redhat.com>
+Subject: Re: [PATCH 3/4] rtla/timerlat: Add example for BPF action program
+From: Crystal Wood <crwood@redhat.com>
+To: Tomas Glozar <tglozar@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, LKML
+ <linux-kernel@vger.kernel.org>,  Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, John Kacur <jkacur@redhat.com>, Luis
+ Goncalves	 <lgoncalv@redhat.com>, Costa Shulyupin <costa.shul@redhat.com>,
+ Wander Lairson Costa <wander@redhat.com>, Arnaldo Carvalho de Melo
+ <acme@kernel.org>
+Date: Tue, 21 Oct 2025 10:58:06 -0500
+In-Reply-To: <CAP4=nvT8VGpYrqQDztmB1WJPEb6JXvUuL201ksWq6eSV7kn-oA@mail.gmail.com>
+References: <20251017144650.663238-1-tglozar@redhat.com>
+	 <20251017144650.663238-4-tglozar@redhat.com>
+	 <c52490c9c2f682fd3c30d6f8a198be2ba408c4fe.camel@redhat.com>
+	 <CAP4=nvT8VGpYrqQDztmB1WJPEb6JXvUuL201ksWq6eSV7kn-oA@mail.gmail.com>
 User-Agent: Evolution 3.56.2 (3.56.2-2.fc42)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -95,76 +90,33 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: wS_q6HClKjf6f64Oj4leokyWM-VDmUs9WSJILP6SBp0_1761062091
+X-Mimecast-MFC-PROC-ID: 6vfn2NtOR5zEapXDmvaH3ok_Kp7c8BmP5y_MXUUuKEg_1761062289
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2025-10-21 at 13:55 +0200, Nam Cao wrote:
-> Gabriele Monaco <gmonaco@redhat.com> writes:
-> > +static inline struct da_monitor *da_create_storage(da_id_type id,
-> > +=09=09=09=09=09=09=C2=A0=C2=A0 monitor_target target,
-> > +=09=09=09=09=09=09=C2=A0=C2=A0 struct da_monitor
-> > *da_mon,
-> > +=09=09=09=09=09=09=C2=A0=C2=A0 gfp_t flags)
-> > +{
-> > +=09struct da_monitor_storage *mon_storage;
-> > +
-> > +=09if (da_mon)
-> > +=09=09return da_mon;
+On Tue, 2025-10-21 at 16:54 +0200, Tomas Glozar wrote:
+> po 20. 10. 2025 v 19:53 odes=C3=ADlatel Crystal Wood <crwood@redhat.com> =
+napsal:
+> >=20
+> > We should have the makefile build this, and add a test that uses it.
+> >=20
 >=20
-> I think this 'if' should be moved to da_create_conditional() instead,
-> because the "conditional" part should be implemented in the function
-> whose name includes "conditional". I think that would make the code
-> easier to follow, because one would already have a good guess what the
-> function does without looking into the details.
-
-I get this is confusing and poorly documented, also the _conditional functi=
-on is
-not more conditional than the other, so I'd really need to rethink the name=
- (if
-it really needs to stay).
-
-The main purpose of the functions under da_monitor_start_hook is to return =
-a
-(possibly new) storage, it's perfectly possible, even likely, that the da_m=
-on is
-not null, in such case we don't do any further allocation.
-
-Ignoring the vagueness of the name, the two implementations of this hook ar=
-e to
-call an allocation (yes, always conditionally) or just assign the target to=
- a
-pre-allocated storage.
-Your suggestion of da_monitor_prepare_storage might fit both descriptions.
-
-In fact, having something like kmalloc_nolock (if it works as I expect it w=
-ould)
-might save this gymnastics as we may not even care about pre-allocating, I'=
-m
-going to try it out and perhaps re-think this entire mess.
-
-> > +static inline bool da_handle_start_event(da_id_type id, monitor_target
-> > target,
-> > +=09=09=09=09=09 enum events event)
-> > +{
-> > +=09struct da_monitor *da_mon;
-> > +
-> > +=09if (!da_monitor_enabled())
-> > +=09=09return 0;
-> > +=09guard(rcu)();
-> > +=09da_mon =3D da_get_monitor(id, target);
-> > +=09da_mon =3D da_monitor_start_hook(id, target, da_mon);
+> I agree. I tried to use the example, but it would be also good to
+> check if the BPF program was actually executed.
 >=20
-> Do you plan this da_monitor_start_hook() macro to do anything other than
-> storage preparation? If not, perhaps it is better to name it
-> da_monitor_prepare_storage() or something like that, so that this is
-> easier to follow.
+> That is hard to do reliably for the current example, as it writes into
+> the global tracefs instance, which might conflict with another user of
+> the same instance. I will write another BPF program that will create a
+> map instead, and a script that will check the map value via
+> --on-threshold in the test.
 
-That's a good point, this appears already only in per-object code, the gene=
-ral
-name is really just pointless.
+Huh, so I guess BPF is an exception to the "no generic printk to the
+global trace instance except for debugging that generates a big boot
+splat" rule?
 
-Thanks,
-Gabriele
+Speaking of which, why doesn't trace_osnoise.c call
+trace_array_init_printk() given that it uses trace_array_printk_buf()?
+
+-Crystal
 
