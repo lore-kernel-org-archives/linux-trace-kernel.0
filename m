@@ -1,91 +1,92 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-y-209.mailbox.org (mout-y-209.mailbox.org [91.198.250.237])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88AA72EC09A
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 21 Oct 2025 08:02:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A90A42E1C6F;
+	Tue, 21 Oct 2025 09:20:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.198.250.237
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761033747; cv=none; b=cNpQ4XoUy6mdy+5QgpC245oFVj+0szPaAMO+IagWWJDPbAQeGtlSkot8t8Gd/GcQtFQDXL+F7aX2WJJWj/hG1vtbCHjPBxVbiypGX4nUlzk9Uv/G4/AjYVXMR61XLF+3X74BlxGJViT31oRGu3iQcmQ4xzkMFDuYO/wyZTj8kOU=
+	t=1761038415; cv=none; b=oRH2Gvz7WxMvU2SRqHRd8VSO9+m3Aq6PGlZ+YNTM1PVYnXaE145fqpe3VZCqXGSzrMKEI2yi6oLkx1PIssiggE34wBF0WY5S62NtSwPDx4y5WAjWoYTYoB+VLsKEvQrnt/cGinVI/CxdxzELs8M/+QpUBTicrx40jMj7FE2Zwb8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761033747; c=relaxed/simple;
-	bh=hL2gB1q0VDI1syvgqzalY45oVF7hQIYm3mMV4Q8i8f8=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=mVqi3JjoUmQ/ugEyvZvgPBXCa8ptpbB+G/Z8gS5FakjLMI9dLlZ8A9eZ1ZEgAS+3ld6RGUwoaNxm7weZm9xpnrttt+lpAt2dSOjR6fZP91ZQF0Wdk5Atew7gusPHVc1+WD94m2hb1Z0bc3ENPI9ff0wiJOCEJ2Sk0fXJD/3acMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-430db6d36c6so82363615ab.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 21 Oct 2025 01:02:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761033744; x=1761638544;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=BVojPbmDd8gpKG50KykZMIwE1cqFIKnT3dH0bMxWekQ=;
-        b=tMsFqWt/ymGOhx8HuGatFmJH8Vc3Tja6UxgTtsIzgLTVGxBPllZ0app88SnI+c16+v
-         OxdFcYiFlnMVgrEfC5D9jRD5YIRz4MoKorE4SGkBm6xXGZZxii0RsPQthGybLsc0oakg
-         /xjMeOi0+WPnRf+0pEDtBD6JD4qYTgH+/QGHU0U7U5ARD+s444VzBx3bWJaY8qvNrulv
-         5v8ib4moBTeXHP5uRZCYpRPm+tfkf0AjEFrXHOjVK5Ty24tayPZtNT5qakiYgx39XgEj
-         kHlp6QHe0lxMFsoI8E+ItT8/l7wvq6+TqvS3n2KXE0nQecp3Ive/DmVqNGtZkIesmvFb
-         wRNA==
-X-Forwarded-Encrypted: i=1; AJvYcCXWFL2znsqW3T5/4MTN2cN0ZYxtnXGYP7PzPWD8VzZ7uQGIZK2BCZiPCefNFmWT8F5hJkoqRL7yFT7tkbazZS+r/SQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy47ph35bbvQSQsGLqhhzL8m4aTlHNXOdE28ktE2zQm96SgFRzu
-	eSgp1z6pfSh2LJd11cbX0d7f4WzO89Ebz1XrtD0bJ8ZhU8MvJzH4Stjx6fMP2J2cXDEwcw3ZfSl
-	Apu1NyeDqNCfkR7LK9/JDWIKER8ltaL4srS8BD3XBOwRR+Gopu7x2JepxkbA=
-X-Google-Smtp-Source: AGHT+IGWFogsWiEGXpT6LEkD/wmRqVt7qt+7Dl9ZTxt72m86e+M9GYYLMuJv4FX7L4/87earjVxjJqLGdKGMzgpGFHd2FsY0U2UJ
+	s=arc-20240116; t=1761038415; c=relaxed/simple;
+	bh=gt8QTpigXYJ1n64pcQZkB3vjbpNTcKFzI6KwGNk8iLs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=o29aI6DK1xwlsOPwVigaV7UK2vbLMfRy/A9EIsOssf33W2YDzGczkftQrXbj0WGRRHQ3lTw0hqHUBHLqL1ExwKNnHK7TkNsbbDtvM7lgur+912jxGUgANuSHu+ROhtMkOw1415pDtphXhtUaa+nPqW1GvDn5kVoXKeYsKgcwiVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mssola.com; spf=fail smtp.mailfrom=mssola.com; dkim=pass (2048-bit key) header.d=mssola.com header.i=@mssola.com header.b=bs7huozD; arc=none smtp.client-ip=91.198.250.237
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mssola.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=mssola.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=mssola.com header.i=@mssola.com header.b="bs7huozD"
+Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-y-209.mailbox.org (Postfix) with ESMTPS id 4crRPT2RH0zB0hT;
+	Tue, 21 Oct 2025 11:11:41 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mssola.com; s=MBO0001;
+	t=1761037901;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=p3RxAUKQ9gm37DDQ5FvmzUhdsilQPRCwahlHic7b+Cw=;
+	b=bs7huozDuXZcGzwVEPlTjGVjs2xXBKjvgPUk/MVF5SHIZBlQbSNjZ6YqEGNaB8nw2yw94Z
+	AOCkztG1oBtIXP6NNPyqt/Z/qyrICiQ/Q23aqpQDGRojaj42GpnTzErqFcBZ/bO3D9aRmU
+	kFhcB3BWQFIFDPiSTfFIrBonTw4VkGU/RwDfJheZff4cuZIWxXojDb82RFGQ9xlcym4EDH
+	I4Il+ErPZ5XryjlM0ioHIiAlM0jURQeN2ZxotGn8RnQkcO9tmeWaMB8TKC7gMeJ3gpJg7r
+	T9MKC+P1/tnvCPr4LMu0TaJnodq+tHkeV89hR4mLcNLR40qbo58ibSM/pvljnA==
+From: =?UTF-8?q?Miquel=20Sabat=C3=A9=20Sol=C3=A0?= <mssola@mssola.com>
+To: linux-btrfs@vger.kernel.org
+Cc: clm@fb.com,
+	dsterba@suse.com,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	=?UTF-8?q?Miquel=20Sabat=C3=A9=20Sol=C3=A0?= <mssola@mssola.com>,
+	syzbot+d991fea1b4b23b1f6bf8@syzkaller.appspotmail.com
+Subject: [PATCH] btrfs: fix NULL dereference on root when tracing inode eviction
+Date: Tue, 21 Oct 2025 11:11:25 +0200
+Message-ID: <20251021091125.259500-1-mssola@mssola.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1a29:b0:423:fcd6:5488 with SMTP id
- e9e14a558f8ab-430c5223fe8mr250787785ab.12.1761033744757; Tue, 21 Oct 2025
- 01:02:24 -0700 (PDT)
-Date: Tue, 21 Oct 2025 01:02:24 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68f73e10.a70a0220.3bf6c6.0002.GAE@google.com>
-Subject: [syzbot] Monthly trace report (Oct 2025)
-From: syzbot <syzbot+list8aaabda4014edfca824f@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	mhiramat@kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hello trace maintainers/developers,
+When evicting an inode the first thing we do is to setup tracing for it,
+which implies fetching the root's id. But in btrfs_evict_inode() the
+root might be NULL, as implied in the next check that we do in
+btrfs_evict_inode().
 
-This is a 31-day syzbot report for the trace subsystem.
-All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/trace
+Hence, we either should set the ->root_objectid to 0 in case the root is
+NULL, or we move tracing setup after checking that the root is not
+NULL. Setting the rootid to 0 at least gives us the possibility to trace
+this call even in the case when the root is NULL, so that's the solution
+taken here.
 
-During the period, 2 new issues were detected and 2 were fixed.
-In total, 13 issues are still open and 58 have already been fixed.
-
-Some of the still happening issues:
-
-Ref Crashes Repro Title
-<1> 144     Yes   BUG: soft lockup in mac80211_hwsim_beacon (2)
-                  https://syzkaller.appspot.com/bug?extid=7e51ea277ea81fe6935d
-<2> 85      Yes   WARNING in blk_register_tracepoints
-                  https://syzkaller.appspot.com/bug?extid=c54ded83396afee31eb1
-<3> 70      Yes   WARNING in tracepoint_probe_unregister (3)
-                  https://syzkaller.appspot.com/bug?extid=a1d25e53cd4a10f7f2d3
-<4> 58      Yes   INFO: task hung in blk_trace_ioctl (4)
-                  https://syzkaller.appspot.com/bug?extid=ed812ed461471ab17a0c
-<5> 53      Yes   INFO: task hung in blk_trace_remove (2)
-                  https://syzkaller.appspot.com/bug?extid=2373f6be3e6de4f92562
-<6> 9       Yes   INFO: task hung in blk_trace_setup (4)
-                  https://syzkaller.appspot.com/bug?extid=9c1ebb9957045e00ac63
-<7> 1       No    BUG: stack guard page was hit in br_handle_frame
-                  https://syzkaller.appspot.com/bug?extid=593efacb260a29c44abc
-
+Fixes: 1abe9b8a138c ("Btrfs: add initial tracepoint support for btrfs")
+Reported-by: syzbot+d991fea1b4b23b1f6bf8@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=d991fea1b4b23b1f6bf8
+Signed-off-by: Miquel Sabaté Solà <mssola@mssola.com>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ include/trace/events/btrfs.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-To disable reminders for individual bugs, reply with the following command:
-#syz set <Ref> no-reminders
+diff --git a/include/trace/events/btrfs.h b/include/trace/events/btrfs.h
+index 7e418f065b94..f17ee9ba2cf6 100644
+--- a/include/trace/events/btrfs.h
++++ b/include/trace/events/btrfs.h
+@@ -224,7 +224,8 @@ DECLARE_EVENT_CLASS(btrfs__inode,
+ 		__entry->generation = BTRFS_I(inode)->generation;
+ 		__entry->last_trans = BTRFS_I(inode)->last_trans;
+ 		__entry->logged_trans = BTRFS_I(inode)->logged_trans;
+-		__entry->root_objectid = btrfs_root_id(BTRFS_I(inode)->root);
++		__entry->root_objectid =
++			     BTRFS_I(inode)->root ? btrfs_root_id(BTRFS_I(inode)->root) : 0;
+ 	),
 
-To change bug's subsystems, reply with:
-#syz set <Ref> subsystems: new-subsystem
-
-You may send multiple commands in a single email message.
+ 	TP_printk_btrfs("root=%llu(%s) gen=%llu ino=%llu blocks=%llu "
+--
+2.51.1
