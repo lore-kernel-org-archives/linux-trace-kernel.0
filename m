@@ -1,159 +1,110 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7B402848A0;
-	Tue, 21 Oct 2025 20:58:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D476527BF7C;
+	Tue, 21 Oct 2025 21:21:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761080280; cv=none; b=G1XcxRAAZM3b1GbSGpsuVYLM5L05JbTpH44NopB7uebT1EAgr7h1HfvOcT9SRqekmOhegz9LWmF1HNTK0eEaFMI0eu2EyImdPAsXYYf1VrSuiQkrg/MzIJ+yKq5tSLBfGIO8eTRpZxGk45ffQ4N1FVxOqAC1xfWES+NsoglRrMQ=
+	t=1761081692; cv=none; b=azC7h5nlgc1WEF7HwmIAESwG/pcsL6a8nglba4ThOwo6C1/xLgzNfFb8EcGIF71KVDGtJ2Zy+JhbdCYmV07laZrPyOCcEUxAR4XrnR2FERAKccZbc7qSJds1QTjjH689E6EHehWoYhJLX2yoLE9mEjk/xp3QRcJPNzTyrecvqTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761080280; c=relaxed/simple;
-	bh=Vhn4F7seFPjyyQ1YTdO1XOJMZPnKBBBpIfyFDjuBGPs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BUHrFYE9ufw1dhQKpZuOVQNagBnpn0pDgt7li3ns1luM0r2eyEuM1IzCwKLmFVT+b+GWfAvmNQFaKmN8gHLBSbUn1USnjXNqzCav8aIomd/9Jhd6C3AZ6gMrvzh9oSp+4xROYvjuEyrfss00LDy95mJvZ0gjd8tx+S0/TqtaFKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a+mP1zT9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1761081692; c=relaxed/simple;
+	bh=qlFUOSDCpv5Vk45f8TeWwUOHvvUhZJo7QoIYDia+ISE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PmtkGGga/vo30/+CTrlhEpBounSTFSAwXJI5mP/D+hv3UVoFgXnsN/TcNlpZUEtZBLc8Gld4G4g2NUnKnoeYMW34nBU7cgPVh/7po7AoQPpK7Yxdh1R+La2RSO8RTi2LyQkS41hcE7eiC9ivGVIpdJthAZXMrZzChqSHiOy04VI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ffTyfdad; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a+mP1zT9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D25ABC4CEF7;
-	Tue, 21 Oct 2025 20:57:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ffTyfdad"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08174C4CEF1;
+	Tue, 21 Oct 2025 21:21:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761080280;
-	bh=Vhn4F7seFPjyyQ1YTdO1XOJMZPnKBBBpIfyFDjuBGPs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=a+mP1zT9T4vUkaMyA3dfabnk54wBMqRK+xfwukEKC4AjoWuE+oczt7MF7k4PAYokg
-	 loBSw05Bb+x7+FwAM6tLwjea8mPpOTs6an5oIXAFyowTU4g26yUSsjMxCuh99iGy+U
-	 dT1RJx7EMqUiSFHn1q/mOlXz8YY6EKazYP37CsmLw4x4LyIyF7KnQnFsYaZ0rD33TW
-	 FwsyIgLsEC3Q5L7UVvufnTo/crTjQhzB9MskkRsY5xyxTNUdVGEEua0R1XNIDkkoob
-	 ly7D+TGj1vQofN7D3MjPWCSVuD43aAJE3WyZDpGLPYCWHraSvrm+awt/6A4S3vYCIX
-	 U8EKyVBl87IOA==
-Message-ID: <cc2b4fda-9e7c-4b97-b83b-1297ea931aea@kernel.org>
-Date: Wed, 22 Oct 2025 05:57:59 +0900
+	s=k20201202; t=1761081692;
+	bh=qlFUOSDCpv5Vk45f8TeWwUOHvvUhZJo7QoIYDia+ISE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ffTyfdadAlq85eK0DEDZfwxO9AXJ771s11UzEGvWpmmzUshBCZb4wTOZP4X2Pde33
+	 /iNe2nz5KxG4j/q79qcLH0Ab7V3NLZbXqczUyuvrNgbtRNUMNC87+GqVe1QmDITpfj
+	 uBKXKGsjkDdwyvzUFx2YnSafFmAzzDDvT2WugjRzb6Pcw1dKGAJrsf7JDKrEe41uxg
+	 aYRumPgimTeOc6+ImUlmtpnR+9ce4npH+64JIAy/Qjs9T/oTSFjMB3PnDZoZg4Ctbh
+	 U5MX0ZiHOAfCH6MsVfW/ljJuarAeYNe0Sk/GbEkUjn2JZZhYVlsCCJ4xABp24NlNV7
+	 khwcrXbHTrw5Q==
+Date: Tue, 21 Oct 2025 23:21:17 +0200
+From: Nicolas Schier <nsc@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Steven Rostedt <rostedt@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: Re: [PATCH v9 2/4] tracing: Add a tracepoint verification check at
+ build time
+Message-ID: <aPf5TVismRLkQQOE@levanger>
+References: <20251015203842.618059565@kernel.org>
+ <20251015203924.391455037@kernel.org>
+ <aPKj2Ilnq7F0xLFx@levanger>
+ <20251021154737.77377790@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 13/16] blktrace: add block trace commands for zone
- operations
-To: Johannes Thumshirn <johannes.thumshirn@wdc.com>, axboe@kernel.dk
-Cc: chaitanyak@nvidia.com, hare@suse.de, hch@lst.de, john.g.garry@oracle.com,
- linux-block@vger.kernel.org, linux-btrace@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- martin.petersen@oracle.com, mathieu.desnoyers@efficios.com,
- mhiramat@kernel.org, naohiro.aota@wdc.com, rostedt@goodmis.org,
- shinichiro.kawasaki@wdc.com
-References: <20251020134123.119058-1-johannes.thumshirn@wdc.com>
- <20251020134123.119058-14-johannes.thumshirn@wdc.com>
-From: Damien Le Moal <dlemoal@kernel.org>
-Content-Language: en-US
-Organization: Western Digital Research
-In-Reply-To: <20251020134123.119058-14-johannes.thumshirn@wdc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251021154737.77377790@gandalf.local.home>
 
-On 10/20/25 22:41, Johannes Thumshirn wrote:
-> Add block trace commands for zone operations. These commands can only be
-> handled with version 2 of the blktrace protocol. For version 1, warn if a
-> command that does not fit into the 16 bits reserved for the command in
-> this version is passed in.
+On Tue, Oct 21, 2025 at 03:47:37PM -0400, Steven Rostedt wrote:
+> On Fri, 17 Oct 2025 22:15:20 +0200
+> Nicolas Schier <nsc@kernel.org> wrote:
 > 
-> Signed-off-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-> ---
->  include/uapi/linux/blktrace_api.h | 13 +++++++++++--
->  kernel/trace/blktrace.c           | 28 ++++++++++++++++++++++++----
->  2 files changed, 35 insertions(+), 6 deletions(-)
+> > > +# To check for unused tracepoints (tracepoints that are defined but never
+> > > +# called), run with:
+> > > +#
+> > > +# make UT=1
+> > > +#
+> > > +# Each unused tracepoints can take up to 5KB of memory in the running kernel.
+> > > +# It is best to remove any that are not used.
+> > > +
+> > > +ifeq ("$(origin UT)", "command line")
+> > > +  WARN_ON_UNUSED_TRACEPOINTS := $(UT)
+> > > +endif
+> > > +
+> > > +export WARN_ON_UNUSED_TRACEPOINTS  
+> > 
+> > Is there a special reason why you chose to introduce a new command-line
+> > variable instead of extending KBUILD_EXTRA_WARN / W ?
 > 
-> diff --git a/include/uapi/linux/blktrace_api.h b/include/uapi/linux/blktrace_api.h
-> index 3a771b9802aa..925f78af939e 100644
-> --- a/include/uapi/linux/blktrace_api.h
-> +++ b/include/uapi/linux/blktrace_api.h
-> @@ -26,11 +26,20 @@ enum blktrace_cat {
->  	BLK_TC_DRV_DATA	= 1 << 14,	/* binary per-driver data */
->  	BLK_TC_FUA	= 1 << 15,	/* fua requests */
->  
-> -	BLK_TC_END	= 1 << 15,	/* we've run out of bits! */
-> +	BLK_TC_END_V1	= 1 << 15,	/* we've run out of bits! */
-> +
-> +	BLK_TC_ZONE_APPEND	= 1ull << 16,  	/* zone append */
-> +	BLK_TC_ZONE_RESET	= 1ull << 17,	/* zone reset */
-> +	BLK_TC_ZONE_RESET_ALL	= 1ull << 18,	/* zone reset all */
-> +	BLK_TC_ZONE_FINISH	= 1ull << 19,	/* zone finish */
-> +	BLK_TC_ZONE_OPEN	= 1ull << 20,	/* zone open */
-> +	BLK_TC_ZONE_CLOSE	= 1ull << 21,	/* zone close */
-> +
-> +	BLK_TC_END_V2		= 1ull << 21,
->  };
->  
->  #define BLK_TC_SHIFT		(16)
-> -#define BLK_TC_ACT(act)		((act) << BLK_TC_SHIFT)
-> +#define BLK_TC_ACT(act)		((u64)(act) << BLK_TC_SHIFT)
->  
->  /*
->   * Basic trace actions
-> diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-> index 8ffb218e9fb7..e8effb6cb393 100644
-> --- a/kernel/trace/blktrace.c
-> +++ b/kernel/trace/blktrace.c
-> @@ -163,8 +163,8 @@ static void relay_blktrace_event(struct blk_trace *bt, unsigned long sequence,
->  					     bytes, what, error, cgid, cgid_len,
->  					     pdu_data, pdu_len);
->  	return relay_blktrace_event1(bt, sequence, pid, cpu, sector, bytes,
-> -				     lower_32_bits(what), error, cgid, cgid_len,
-> -				     pdu_data, pdu_len);
-> +				     what, error, cgid, cgid_len, pdu_data,
-> +				     pdu_len);
->  }
->  
->  /*
-> @@ -342,10 +342,31 @@ static void __blk_add_trace(struct blk_trace *bt, sector_t sector, int bytes,
->  	case REQ_OP_FLUSH:
->  		what |= BLK_TC_ACT(BLK_TC_FLUSH);
->  		break;
-> +	case REQ_OP_ZONE_APPEND:
-> +		what |= BLK_TC_ACT(BLK_TC_ZONE_APPEND);
-> +		break;
-> +	case REQ_OP_ZONE_RESET:
-> +		what |= BLK_TC_ACT(BLK_TC_ZONE_RESET);
-> +		break;
-> +	case REQ_OP_ZONE_RESET_ALL:
-> +		what |= BLK_TC_ACT(BLK_TC_ZONE_RESET_ALL);
-> +		break;
-> +	case REQ_OP_ZONE_FINISH:
-> +		what |= BLK_TC_ACT(BLK_TC_ZONE_FINISH);
-> +		break;
-> +	case REQ_OP_ZONE_OPEN:
-> +		what |= BLK_TC_ACT(BLK_TC_ZONE_OPEN);
-> +		break;
-> +	case REQ_OP_ZONE_CLOSE:
-> +		what |= BLK_TC_ACT(BLK_TC_ZONE_CLOSE);
-> +		break;
->  	default:
->  		break;
->  	}
->  
-> +	WARN_ON_ONCE(bt->version == 1 &&
-> +		     (what >> BLK_TC_SHIFT) > BLK_TC_END_V1);
+> Honestly, I didn't think about using KBUILD_EXTRA_WARN. I also want this
+> option to go away after we remove the current unused tracepoints so that
+> any new ones will always cause a warning.
+> 
+> The only reason not to make it always warn is because I don't want to add
+> warnings for the existing code. I'm working on having outreachy projects to
+> remove the currently unused tracepoints. Once that is done, then this
+> option is going to go away and the build will always warn on unused
+> tracepoints.
+> 
+> I thought it might be easier to remove it without any issues if it's a new
+> command line that goes away in the future.
+> 
+> Looking at EXTRA_WARN, it appears to be for basic issues with the code and
+> adds new C compiler warning flags. This isn't exactly the same.
+> 
+> If you think it makes sense to extend EXTRA_WARN, I can still go ahead and
+> do that.
 
-Shouldn't this be a "if (WARN_ON_ONCE())" and return doing nothing if true ?
+thanks for clarification!  For completeness: KBUILD_EXTRA_WARN is also
+used for non-C related checks (cp. scripts/misc-check).
+I somehow missed that UT= shall exist temporarily only - if this is
+still the plan, I don't see a strong reason to put to much work into
+integration in KBUILD_EXTRA_WARN.
 
-> +
->  	if (cgid)
->  		what |= __BLK_TA_CGROUP;
->  
-> @@ -386,8 +407,7 @@ static void __blk_add_trace(struct blk_trace *bt, sector_t sector, int bytes,
->  	sequence = per_cpu_ptr(bt->sequence, cpu);
->  	(*sequence)++;
->  	relay_blktrace_event(bt, *sequence, pid, cpu, sector, bytes,
-> -			     lower_32_bits(what), error, cgid, cgid_len,
-> -			     pdu_data, pdu_len);
-> +			     what, error, cgid, cgid_len, pdu_data, pdu_len);
->  	local_irq_restore(flags);
->  }
->  
-
-
--- 
-Damien Le Moal
-Western Digital Research
+Kind regards
+Nicolas
