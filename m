@@ -1,69 +1,80 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CB97355029;
-	Tue, 21 Oct 2025 12:05:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DC5B35505C;
+	Tue, 21 Oct 2025 12:11:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761048319; cv=none; b=mgBZSVnRHTuPPYL78oyr5BXPtuOW8WxvwYh5HRcZy8gMKfs78JVQgrk7XgcY+W9Sxr8KNSqjR8wp+WXFQZakHH5A9l/38zcEuH4avujxYzDH9fho8V4yDPr2B1WR1Xd9bhIdZzrkxxCbGRu0ccVcgImkq1TlZFAHNSgqBxD/ZSs=
+	t=1761048683; cv=none; b=f/N1ObJkmJxjOMAIJZZuxbVvzu4TBpeAsh4MNQJ+YCsDsl6mwjzckRjyw6LX4OLXJs5gaEPlNY/jAycKYUQLsLnodBBeQvVkczrfnJ2YwOXrJ+vXPOdwHlQayQPOkOmO+8a53v+6o47WNBvBKN+83Rjn78HtbRdsVRflm25s0g8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761048319; c=relaxed/simple;
-	bh=9gtXGABCKV5C8jBZJ0uyZGTM/sXQP5TWXUnHXdE9AJg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=pCIzl2ABO1kp2y6cZkdioN9yimhlyfrfE3rZCuI5xKvnqGJmE5+q0wtiQ0CumWwFEAU5HdY4+gI5Gq3K/SWzV30lVhrWYzn53s7BqPSQKPFkIucliuRQnEY6bj3JNFOxd1Qv38YswJ8LCpiYinh40h0Z3Qg9o9djfiPSeekFMg8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=wF9rS8m9; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=K5ZZt1Nz; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1761048683; c=relaxed/simple;
+	bh=kLm/IAQP2+kJWXKn3GmdAfEMaI+3CWV0wc71MhB6j5I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e0ZAnV2pN2lu+RB0rvITHi/ajhb7uoZXNHzvfO9A+A5FGNdO0ZXGvpxTLUBteqIMQaAXHgCeRe3hv9OSu5b36DW17sseuFQINVGh57VTOQymt533KaLHKzJOxISIhpHmJE2U62redh6Qb0b/kDnPdqprLz9Oyc3248CJUXhGin0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ILqRdPZS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wF9rS8m9";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="K5ZZt1Nz"
-From: Nam Cao <namcao@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1761048316;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9gtXGABCKV5C8jBZJ0uyZGTM/sXQP5TWXUnHXdE9AJg=;
-	b=wF9rS8m9WtM7JgxpjncZs01R6QMCSbn+rUj9j///YhUgmZsaJ0gU+vXxu2YhDvRm1z3U/m
-	V+f/dPA6kg5Ou7L+ZT8r5zQaYrCGdDXgyV/wUd/VCDnjJ+Lrd0YcBPYLMQuoXrTGYwJfA6
-	PeoPRHeBnHIPzhJARB7YtV0msigvROVllCvAadZAvN3ncX5kafIS+58vZYnfWwOdnEOdJb
-	06CmaKsE34bBYVtR2dhOTA16TcyJHFWdSdC6SjIiUcrUr5Huy09RobSuSsKoTzMPYCUy0k
-	Hv79WXt/AwQy7BsReyokMB3Mj8pJgPMJYtBakQb9haq4cYvq2CCc7coyATFxQw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1761048316;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9gtXGABCKV5C8jBZJ0uyZGTM/sXQP5TWXUnHXdE9AJg=;
-	b=K5ZZt1NzRTLoFp9t+RJB24PqKPU3L2PqTNoSb+monuxS2Z3B+/mpN/l5EvyQtzSI6QOZ+I
-	4lGfyEux9+ixfvBA==
-To: Gabriele Monaco <gmonaco@redhat.com>, linux-kernel@vger.kernel.org,
- Steven Rostedt <rostedt@goodmis.org>
-Cc: Gabriele Monaco <gmonaco@redhat.com>, Tomas Glozar <tglozar@redhat.com>,
- Juri Lelli <jlelli@redhat.com>, Clark Williams <williams@redhat.com>, John
- Kacur <jkacur@redhat.com>, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 00/20] rv: Add Hybrid Automata monitor type,
- per-object and deadline monitors
-In-Reply-To: <20250919140954.104920-1-gmonaco@redhat.com>
-References: <20250919140954.104920-1-gmonaco@redhat.com>
-Date: Tue, 21 Oct 2025 14:05:15 +0200
-Message-ID: <87ikg8bguc.fsf@yellow.woof>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ILqRdPZS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4FEFC4CEF5;
+	Tue, 21 Oct 2025 12:11:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761048683;
+	bh=kLm/IAQP2+kJWXKn3GmdAfEMaI+3CWV0wc71MhB6j5I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ILqRdPZSGiv4RjMFEJ/thBxR1tHDHW65PAZkzPNmqLQfCYDkPZx4KEf7B06l3J4Rx
+	 rkcFX46nHh5+hUcXCBR43GRmNeP2VM1IvSaU6yEdb/n5reiQnEXGtvFzFDx/Mt5tMR
+	 3EZLW8toxK7UnuSyl6KwbcLYoDDIDhxkyrjTGtvqOOBGyAZmxjtLV8fSL2NLCioQlE
+	 96dolgn4NH/5oAeWTKCwcHFBzH1CjVKumTHpWvSmdv8ec10vLokUmE+PiVnvMnn8NY
+	 /rxctelM3ejNYERHCNpaUoRjf69Apy5UrhhvrS88sAD/pCtLc+WBGxZH13hmeUuluE
+	 jPNPFxIg6AxUQ==
+Date: Tue, 21 Oct 2025 13:11:19 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Sean Anderson <sean.anderson@linux.dev>
+Cc: "open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	"open list:TRACING" <linux-trace-kernel@vger.kernel.org>
+Subject: Re: [PATCH] spi: spi-mem: Trace exec_op
+Message-ID: <5cdaba07-557a-4c19-bad5-a4c1547882e2@sirena.org.uk>
+References: <20251020190333.1431664-1-sean.anderson@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="xA1qrxQmEEAexbK7"
+Content-Disposition: inline
+In-Reply-To: <20251020190333.1431664-1-sean.anderson@linux.dev>
+X-Cookie: Accordion, n.:
 
-Gabriele Monaco <gmonaco@redhat.com> writes:
-> This RFC contains several related changes, I'm sending them together to
-> give the full picture and get early feedback but I'm probably going to
-> submit some of them separately.
 
-I'm done reviewing the series, sorry for taking forever (I have other
-urgent stuffs going on, and this series is not easy to digest).
+--xA1qrxQmEEAexbK7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Overall looks decent. Thank you for this work!
+On Mon, Oct 20, 2025 at 03:03:33PM -0400, Sean Anderson wrote:
+> The spi subsystem has tracing, which is very convenient when debugging
+> problems. Add tracing for spi-mem too so that accesses that skip the spi
+> subsystem can still be seen.
 
-Nam
+The change here looks reasonable FWIW.
+
+--xA1qrxQmEEAexbK7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmj3eGYACgkQJNaLcl1U
+h9Dmawf/RATxkvZsN8XZdUTYVUKp3hrtOyvJxLosnVTV0ysutXQlGserw2owslOE
+Kjd23n8rKnznqjMOcZqvqMKg5HZuKnuv3eCOVzQrD/b2owgpyXz7bo0OUBGEFQUd
+h4cL0UTdoy5n72M8CdOau+IDhe/mJZdrQW6MJByzG8zaZRUR30la1v9vA39jCAWP
+ERi0zwySuVLEQeUgdBBOWjinNJIZ+zuUZrTB4ICNiVV1ldgFX/EVfQWc1WntiyIp
+TY8fl/uKmBCemSzAFnNRdk1YFSPhGprsWdVkfF7D3jLdQUwnvXV6H7Py4FBMeOV9
+kdiYTgjRhLn3fEGM5E/hmcck4+qjoQ==
+=flUb
+-----END PGP SIGNATURE-----
+
+--xA1qrxQmEEAexbK7--
