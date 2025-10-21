@@ -1,188 +1,538 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1112AD5A;
-	Tue, 21 Oct 2025 00:11:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23D851E7C19;
+	Tue, 21 Oct 2025 00:52:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761005506; cv=none; b=AxMuP3e17o00GloKVwhJlVcPVB2ZvopjzZ/NqXCjxUEesPkIYCCxy4NVPI3+DD+fjpov1VjkiQtiqqD4ZI2iPt/tfopHp8AqiYB5ntMjJ622VGx+apCP2Aj/ySyasa9CC4+71ds8gJSy7zJsnknYIsucA8aevAQlpY+i8Hpuo9A=
+	t=1761007932; cv=none; b=fIyajd63uyT65FglOewk/mRi0YRmcVfMorDwalrhfJAo7KjXyJ+APG7YULbxtSdlQ+b2VZQwNfC6wmfkJluZonSdcWPU5vr9ixQ8FThEXldLAdGuR3vt+wZRV0h5Wqu0SlDYtVZcZYHGfRPvbOX1dpJ7DSJCSfHvpPx3Fu04+a0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761005506; c=relaxed/simple;
-	bh=cRfBZ9NU2Gz4NdX20TwqfIVAApecxkoo6KNlvx4Vdfo=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=Q3zRTS2jkPBq9CIe9/qhY+c2MFTqOGa3NzuR8k+Pkvu5Vy5MNzxDCE6mhxnrMXCRpsQlme8mzJcsO75NKUVbLUKJBAaObRfpWoFtu6bsvGtgtKDfjOJMvDmUxoT3ggCazUnXaSne4zvIkPozYHpBaGcAgftVnga9n1LjY8M9Bjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TLAVpcgM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1761007932; c=relaxed/simple;
+	bh=gpImYmddmWpDMEFMGThwcGsf1u5xb28cmOX36GHILGs=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=njsMwoHbtKrIHfmmUmOFsADx7eF+f1bOcrw6gIhJk5NJNBsf7kT5JCGTl7vY2rswIgnGsp/o+8mq3qJh5FaGP0jvMCbStBQhrAXXUqAEmcY03PS8pjVuvPMOsFgCwi26vffJy6FwvQAq/ymg6dHKBZds9qrN7b+HEvoUyAOMjsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WV6rEXoB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TLAVpcgM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32D92C4CEFB;
-	Tue, 21 Oct 2025 00:11:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WV6rEXoB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4380C4CEFB;
+	Tue, 21 Oct 2025 00:52:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761005506;
-	bh=cRfBZ9NU2Gz4NdX20TwqfIVAApecxkoo6KNlvx4Vdfo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=TLAVpcgMDNXhp8miYvNl2dSfoPbiakjpevEBNuW2cLv9UjiEIUa0yQUpxsWTMmtj/
-	 3WBWxO3pOQstQ89wKLkABSx7Ccmj7sqTeptN4AldcKCTemr9UV0bul2PEOneC+vUp8
-	 D7C3KhEgmUAJVibR3+FHgZtNHr1ZbHkAN/nDxnY/os4N5+N8u3lnRFHrxpWOgXycs5
-	 QJsclk11jbnmEf0kL0rc5meFpFLz2/iiT8ZRS6cnvyBok9/SfccEbrhmNHv4/cGoLr
-	 CC74vZ/CSEBtPApH3ByMW6FXL54AizizGiu7rkI8sXvnnaTozt9jclJHesjT2rFqxj
-	 y8HUAbP7V6e2Q==
-Date: Tue, 21 Oct 2025 09:11:43 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: kernel test robot <lkp@intel.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, oe-kbuild-all@lists.linux.dev,
- Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/2] tracing: Allow tracer to add more than 32
- options
-Message-Id: <20251021091143.ab00b202289c0c4207e7933c@kernel.org>
-In-Reply-To: <202510181711.rxbGAQu7-lkp@intel.com>
-References: <176071774097.175601.10233017390618260565.stgit@devnote2>
-	<202510181711.rxbGAQu7-lkp@intel.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=k20201202; t=1761007932;
+	bh=gpImYmddmWpDMEFMGThwcGsf1u5xb28cmOX36GHILGs=;
+	h=Date:From:To:Cc:Subject:References:From;
+	b=WV6rEXoBBczbIK/uHYFKqXIXfZqh+5RoqD+ygt0YYJjqHVTaleSye6HiIDn/cG64i
+	 HoDVYonABvg0moHHf0hpj2Tg9MWugF7/5PqeS37Zg8dMb/UZeIbAaJFZgXFGGP/sPZ
+	 eE3G37eeaVR5NrISFQircDDI/j+/uN7KZKon9q8+KZKHnBCsBeznuU+XeSJzFMJ6mI
+	 DAOKUHJF94DzNDvv0ioPEYmMQr+osjLdDS9HqlIm2nZ/gv+b5nCYcRZChBVC8aksWq
+	 TN3tLJgE+9q/yzSyL445FRCeQS7yc9MTEmNPfNhCBn7CeDOQ+3LH0huSwAgY2Jmut4
+	 xf4p6gxrz6kCw==
+Received: from rostedt by gandalf with local (Exim 4.98.2)
+	(envelope-from <rostedt@kernel.org>)
+	id 1vB0c4-0000000205P-2OQ7;
+	Mon, 20 Oct 2025 20:52:32 -0400
+Message-ID: <20251021005232.428221068@kernel.org>
+User-Agent: quilt/0.68
+Date: Mon, 20 Oct 2025 20:51:56 -0400
+From: Steven Rostedt <rostedt@kernel.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Namhyung Kim <namhyung@kernel.org>,
+ Takaya Saeki <takayas@google.com>,
+ Tom Zanussi <zanussi@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Ian Rogers <irogers@google.com>,
+ Douglas Raillard <douglas.raillard@arm.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Jiri Olsa <jolsa@kernel.org>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Ingo Molnar <mingo@redhat.com>
+Subject: [PATCH v4 01/13] tracing: Make trace_user_fault_read() exposed to rest of tracing
+References: <20251021005155.705735078@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 
-Hmm, so it is clear that we can not use C++11.
-So it should use another way to do that.
+From: Steven Rostedt <rostedt@goodmis.org>
 
-Thank you,
+The write to the trace_marker file is a critical section where it cannot
+take locks nor allocate memory. To read from user space, it allocates a per
+CPU buffer when the trace_marker file is opened, and then when the write
+system call is performed, it uses the following method to read from user
+space:
 
-On Sat, 18 Oct 2025 18:10:01 +0800
-kernel test robot <lkp@intel.com> wrote:
+	preempt_disable();
+	buffer = per_cpu_ptr(cpu_buffers, cpu);
+	do {
+		cnt = nr_context_switches_cpu();
+		migrate_disable();
+		preempt_enable();
+		ret = copy_from_user(buffer, ptr, len);
+		preempt_disable();
+		migrate_enable();
+	} while (!ret && cnt != nr_context_switches_cpu());
+	if (!ret)
+		ring_buffer_write(buffer);
+	preempt_enable();
 
-> Hi Masami,
-> 
-> kernel test robot noticed the following build errors:
-> 
-> [auto build test ERROR on trace/for-next]
-> [also build test ERROR on linus/master v6.18-rc1 next-20251017]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch#_base_tree_information]
-> 
-> url:    https://github.com/intel-lab-lkp/linux/commits/Masami-Hiramatsu-Google/tracing-Allow-tracer-to-add-more-than-32-options/20251018-004104
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace for-next
-> patch link:    https://lore.kernel.org/r/176071774097.175601.10233017390618260565.stgit%40devnote2
-> patch subject: [PATCH v4 1/2] tracing: Allow tracer to add more than 32 options
-> config: parisc-randconfig-001-20251018 (https://download.01.org/0day-ci/archive/20251018/202510181711.rxbGAQu7-lkp@intel.com/config)
-> compiler: hppa-linux-gcc (GCC) 10.5.0
-> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251018/202510181711.rxbGAQu7-lkp@intel.com/reproduce)
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202510181711.rxbGAQu7-lkp@intel.com/
-> 
-> All errors (new ones prefixed by >>):
-> 
->    In file included from kernel/trace/trace_probe.h:31,
->                     from kernel/trace/trace_events_synth.c:20:
->    kernel/trace/trace.h:1427:27: error: expected identifier or '(' before ':' token
->     1427 | enum trace_iterator_flags : uint64_t { TRACE_FLAGS };
->          |                           ^
->    kernel/trace/trace_events_synth.c: In function 'print_synth_event':
-> >> kernel/trace/trace_events_synth.c:362:31: error: 'TRACE_ITER_VERBOSE' undeclared (first use in this function); did you mean 'TRACE_ITER_VERBOSE_BIT'?
->      362 |   if (tr && tr->trace_flags & TRACE_ITER_VERBOSE)
->          |                               ^~~~~~~~~~~~~~~~~~
->          |                               TRACE_ITER_VERBOSE_BIT
->    kernel/trace/trace_events_synth.c:362:31: note: each undeclared identifier is reported only once for each function it appears in
-> 
-> 
-> vim +362 kernel/trace/trace_events_synth.c
-> 
-> 726721a51838e3 Tom Zanussi             2020-05-28  337  
-> 726721a51838e3 Tom Zanussi             2020-05-28  338  static enum print_line_t print_synth_event(struct trace_iterator *iter,
-> 726721a51838e3 Tom Zanussi             2020-05-28  339  					   int flags,
-> 726721a51838e3 Tom Zanussi             2020-05-28  340  					   struct trace_event *event)
-> 726721a51838e3 Tom Zanussi             2020-05-28  341  {
-> 726721a51838e3 Tom Zanussi             2020-05-28  342  	struct trace_array *tr = iter->tr;
-> 726721a51838e3 Tom Zanussi             2020-05-28  343  	struct trace_seq *s = &iter->seq;
-> 726721a51838e3 Tom Zanussi             2020-05-28  344  	struct synth_trace_event *entry;
-> 726721a51838e3 Tom Zanussi             2020-05-28  345  	struct synth_event *se;
-> 887f92e09ef34a Sven Schnelle           2023-08-16  346  	unsigned int i, j, n_u64;
-> 726721a51838e3 Tom Zanussi             2020-05-28  347  	char print_fmt[32];
-> 726721a51838e3 Tom Zanussi             2020-05-28  348  	const char *fmt;
-> 726721a51838e3 Tom Zanussi             2020-05-28  349  
-> 726721a51838e3 Tom Zanussi             2020-05-28  350  	entry = (struct synth_trace_event *)iter->ent;
-> 726721a51838e3 Tom Zanussi             2020-05-28  351  	se = container_of(event, struct synth_event, call.event);
-> 726721a51838e3 Tom Zanussi             2020-05-28  352  
-> 726721a51838e3 Tom Zanussi             2020-05-28  353  	trace_seq_printf(s, "%s: ", se->name);
-> 726721a51838e3 Tom Zanussi             2020-05-28  354  
-> 726721a51838e3 Tom Zanussi             2020-05-28  355  	for (i = 0, n_u64 = 0; i < se->n_fields; i++) {
-> 726721a51838e3 Tom Zanussi             2020-05-28  356  		if (trace_seq_has_overflowed(s))
-> 726721a51838e3 Tom Zanussi             2020-05-28  357  			goto end;
-> 726721a51838e3 Tom Zanussi             2020-05-28  358  
-> 726721a51838e3 Tom Zanussi             2020-05-28  359  		fmt = synth_field_fmt(se->fields[i]->type);
-> 726721a51838e3 Tom Zanussi             2020-05-28  360  
-> 726721a51838e3 Tom Zanussi             2020-05-28  361  		/* parameter types */
-> 726721a51838e3 Tom Zanussi             2020-05-28 @362  		if (tr && tr->trace_flags & TRACE_ITER_VERBOSE)
-> 726721a51838e3 Tom Zanussi             2020-05-28  363  			trace_seq_printf(s, "%s ", fmt);
-> 726721a51838e3 Tom Zanussi             2020-05-28  364  
-> 726721a51838e3 Tom Zanussi             2020-05-28  365  		snprintf(print_fmt, sizeof(print_fmt), "%%s=%s%%s", fmt);
-> 726721a51838e3 Tom Zanussi             2020-05-28  366  
-> 726721a51838e3 Tom Zanussi             2020-05-28  367  		/* parameter values */
-> 726721a51838e3 Tom Zanussi             2020-05-28  368  		if (se->fields[i]->is_string) {
-> bd82631d7ccdc8 Tom Zanussi             2020-10-04  369  			if (se->fields[i]->is_dynamic) {
-> ddeea494a16f32 Sven Schnelle           2023-08-16  370  				union trace_synth_field *data = &entry->fields[n_u64];
-> bd82631d7ccdc8 Tom Zanussi             2020-10-04  371  
-> bd82631d7ccdc8 Tom Zanussi             2020-10-04  372  				trace_seq_printf(s, print_fmt, se->fields[i]->name,
-> ddeea494a16f32 Sven Schnelle           2023-08-16  373  						 (char *)entry + data->as_dynamic.offset,
-> bd82631d7ccdc8 Tom Zanussi             2020-10-04  374  						 i == se->n_fields - 1 ? "" : " ");
-> bd82631d7ccdc8 Tom Zanussi             2020-10-04  375  				n_u64++;
-> bd82631d7ccdc8 Tom Zanussi             2020-10-04  376  			} else {
-> 726721a51838e3 Tom Zanussi             2020-05-28  377  				trace_seq_printf(s, print_fmt, se->fields[i]->name,
-> 8db4d6bfbbf920 Steven Rostedt (VMware  2020-10-04  378) 						 STR_VAR_LEN_MAX,
-> ddeea494a16f32 Sven Schnelle           2023-08-16  379  						 (char *)&entry->fields[n_u64].as_u64,
-> 726721a51838e3 Tom Zanussi             2020-05-28  380  						 i == se->n_fields - 1 ? "" : " ");
-> 726721a51838e3 Tom Zanussi             2020-05-28  381  				n_u64 += STR_VAR_LEN_MAX / sizeof(u64);
-> bd82631d7ccdc8 Tom Zanussi             2020-10-04  382  			}
-> 00cf3d672a9dd4 Steven Rostedt (Google  2023-01-17  383) 		} else if (se->fields[i]->is_stack) {
-> ddeea494a16f32 Sven Schnelle           2023-08-16  384  			union trace_synth_field *data = &entry->fields[n_u64];
-> 887f92e09ef34a Sven Schnelle           2023-08-16  385  			unsigned long *p = (void *)entry + data->as_dynamic.offset;
-> 00cf3d672a9dd4 Steven Rostedt (Google  2023-01-17  386) 
-> 00cf3d672a9dd4 Steven Rostedt (Google  2023-01-17  387) 			trace_seq_printf(s, "%s=STACK:\n", se->fields[i]->name);
-> 887f92e09ef34a Sven Schnelle           2023-08-16  388  			for (j = 1; j < data->as_dynamic.len / sizeof(long); j++)
-> 887f92e09ef34a Sven Schnelle           2023-08-16  389  				trace_seq_printf(s, "=> %pS\n", (void *)p[j]);
-> 00cf3d672a9dd4 Steven Rostedt (Google  2023-01-17  390) 			n_u64++;
-> 726721a51838e3 Tom Zanussi             2020-05-28  391  		} else {
-> 726721a51838e3 Tom Zanussi             2020-05-28  392  			struct trace_print_flags __flags[] = {
-> 726721a51838e3 Tom Zanussi             2020-05-28  393  			    __def_gfpflag_names, {-1, NULL} };
-> 726721a51838e3 Tom Zanussi             2020-05-28  394  			char *space = (i == se->n_fields - 1 ? "" : " ");
-> 726721a51838e3 Tom Zanussi             2020-05-28  395  
-> 726721a51838e3 Tom Zanussi             2020-05-28  396  			print_synth_event_num_val(s, print_fmt,
-> 726721a51838e3 Tom Zanussi             2020-05-28  397  						  se->fields[i]->name,
-> 726721a51838e3 Tom Zanussi             2020-05-28  398  						  se->fields[i]->size,
-> ddeea494a16f32 Sven Schnelle           2023-08-16  399  						  &entry->fields[n_u64],
-> 726721a51838e3 Tom Zanussi             2020-05-28  400  						  space);
-> 726721a51838e3 Tom Zanussi             2020-05-28  401  
-> 726721a51838e3 Tom Zanussi             2020-05-28  402  			if (strcmp(se->fields[i]->type, "gfp_t") == 0) {
-> 726721a51838e3 Tom Zanussi             2020-05-28  403  				trace_seq_puts(s, " (");
-> 726721a51838e3 Tom Zanussi             2020-05-28  404  				trace_print_flags_seq(s, "|",
-> ddeea494a16f32 Sven Schnelle           2023-08-16  405  						      entry->fields[n_u64].as_u64,
-> 726721a51838e3 Tom Zanussi             2020-05-28  406  						      __flags);
-> 726721a51838e3 Tom Zanussi             2020-05-28  407  				trace_seq_putc(s, ')');
-> 726721a51838e3 Tom Zanussi             2020-05-28  408  			}
-> 726721a51838e3 Tom Zanussi             2020-05-28  409  			n_u64++;
-> 726721a51838e3 Tom Zanussi             2020-05-28  410  		}
-> 726721a51838e3 Tom Zanussi             2020-05-28  411  	}
-> 726721a51838e3 Tom Zanussi             2020-05-28  412  end:
-> 726721a51838e3 Tom Zanussi             2020-05-28  413  	trace_seq_putc(s, '\n');
-> 726721a51838e3 Tom Zanussi             2020-05-28  414  
-> 726721a51838e3 Tom Zanussi             2020-05-28  415  	return trace_handle_return(s);
-> 726721a51838e3 Tom Zanussi             2020-05-28  416  }
-> 726721a51838e3 Tom Zanussi             2020-05-28  417  
-> 
-> -- 
-> 0-DAY CI Kernel Test Service
-> https://github.com/intel/lkp-tests/wiki
+It records the number of context switches for the current CPU, enables
+preemption, copies from user space, disable preemption and then checks if
+the number of context switches changed. If it did not, then the buffer is
+valid, otherwise the buffer may have been corrupted and the read from user
+space must be tried again.
 
+The system call trace events are now faultable and have the same
+restrictions as the trace_marker write. For system calls to read the user
+space buffer (for example to read the file of the openat system call), it
+needs the same logic. Instead of copying the code over to the system call
+trace events, make the code generic to allow the system call trace events to
+use the same code. The following API is added internally to the tracing sub
+system (these are only exposed within the tracing subsystem and not to be
+used outside of it):
 
+  trace_user_fault_init() - initializes a trace_user_buf_info descriptor
+       that will allocate the per CPU buffers to copy from user space into.
+
+  trace_user_fault_destroy() - used to free the allocations made by
+       trace_user_fault_init().
+
+  trace_user_fault_get() - update the ref count of the info descriptor to
+       allow more than one user to use the same descriptor.
+
+  trace_user_fault_put() - decrement the ref count.
+
+  trace_user_fault_read() - performs the above action to read user space
+      into the per CPU buffer. The preempt_disable() is expected before
+      calling this function and preemption must remain disabled while the
+      buffer returned is in use.
+
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/trace.c | 250 ++++++++++++++++++++++++++++++++-----------
+ kernel/trace/trace.h |  17 +++
+ 2 files changed, 205 insertions(+), 62 deletions(-)
+
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index d1e527cf2aae..50832411c5c0 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -7223,52 +7223,43 @@ struct trace_user_buf {
+ 	char		*buf;
+ };
+ 
+-struct trace_user_buf_info {
+-	struct trace_user_buf __percpu	*tbuf;
+-	int				ref;
+-};
+-
+-
+ static DEFINE_MUTEX(trace_user_buffer_mutex);
+ static struct trace_user_buf_info *trace_user_buffer;
+ 
+-static void trace_user_fault_buffer_free(struct trace_user_buf_info *tinfo)
++/**
++ * trace_user_fault_destroy - free up allocated memory of a trace user buffer
++ * @tinfo: The descriptor to free up
++ *
++ * Frees any data allocated in the trace info dsecriptor.
++ */
++void trace_user_fault_destroy(struct trace_user_buf_info *tinfo)
+ {
+ 	char *buf;
+ 	int cpu;
+ 
++	if (!tinfo || !tinfo->tbuf)
++		return;
++
+ 	for_each_possible_cpu(cpu) {
+ 		buf = per_cpu_ptr(tinfo->tbuf, cpu)->buf;
+ 		kfree(buf);
+ 	}
+ 	free_percpu(tinfo->tbuf);
+-	kfree(tinfo);
+ }
+ 
+-static int trace_user_fault_buffer_enable(void)
++static int user_fault_buffer_enable(struct trace_user_buf_info *tinfo, size_t size)
+ {
+-	struct trace_user_buf_info *tinfo;
+ 	char *buf;
+ 	int cpu;
+ 
+-	guard(mutex)(&trace_user_buffer_mutex);
+-
+-	if (trace_user_buffer) {
+-		trace_user_buffer->ref++;
+-		return 0;
+-	}
+-
+-	tinfo = kmalloc(sizeof(*tinfo), GFP_KERNEL);
+-	if (!tinfo)
+-		return -ENOMEM;
++	lockdep_assert_held(&trace_user_buffer_mutex);
+ 
+ 	tinfo->tbuf = alloc_percpu(struct trace_user_buf);
+-	if (!tinfo->tbuf) {
+-		kfree(tinfo);
++	if (!tinfo->tbuf)
+ 		return -ENOMEM;
+-	}
+ 
+ 	tinfo->ref = 1;
++	tinfo->size = size;
+ 
+ 	/* Clear each buffer in case of error */
+ 	for_each_possible_cpu(cpu) {
+@@ -7276,42 +7267,165 @@ static int trace_user_fault_buffer_enable(void)
+ 	}
+ 
+ 	for_each_possible_cpu(cpu) {
+-		buf = kmalloc_node(TRACE_MARKER_MAX_SIZE, GFP_KERNEL,
++		buf = kmalloc_node(size, GFP_KERNEL,
+ 				   cpu_to_node(cpu));
+-		if (!buf) {
+-			trace_user_fault_buffer_free(tinfo);
++		if (!buf)
+ 			return -ENOMEM;
+-		}
+ 		per_cpu_ptr(tinfo->tbuf, cpu)->buf = buf;
+ 	}
+ 
+-	trace_user_buffer = tinfo;
+-
+ 	return 0;
+ }
+ 
+-static void trace_user_fault_buffer_disable(void)
++/* For internal use. Free and reinitialize */
++static void user_buffer_free(struct trace_user_buf_info **tinfo)
+ {
+-	struct trace_user_buf_info *tinfo;
++	lockdep_assert_held(&trace_user_buffer_mutex);
+ 
+-	guard(mutex)(&trace_user_buffer_mutex);
++	trace_user_fault_destroy(*tinfo);
++	kfree(*tinfo);
++	*tinfo = NULL;
++}
++
++/* For internal use. Initialize and allocate */
++static int user_buffer_init(struct trace_user_buf_info **tinfo, size_t size)
++{
++	bool alloc = false;
++	int ret;
++
++	lockdep_assert_held(&trace_user_buffer_mutex);
++
++	if (!*tinfo) {
++		alloc = true;
++		*tinfo = kzalloc(sizeof(**tinfo), GFP_KERNEL);
++		if (!*tinfo)
++			return -ENOMEM;
++	}
+ 
+-	tinfo = trace_user_buffer;
++	ret = user_fault_buffer_enable(*tinfo, size);
++	if (ret < 0 && alloc)
++		user_buffer_free(tinfo);
+ 
+-	if (WARN_ON_ONCE(!tinfo))
++	return ret;
++}
++
++/* For internal use, derefrence and free if necessary */
++static void user_buffer_put(struct trace_user_buf_info **tinfo)
++{
++	guard(mutex)(&trace_user_buffer_mutex);
++
++	if (WARN_ON_ONCE(!*tinfo || !(*tinfo)->ref))
+ 		return;
+ 
+-	if (--tinfo->ref)
++	if (--(*tinfo)->ref)
+ 		return;
+ 
+-	trace_user_fault_buffer_free(tinfo);
+-	trace_user_buffer = NULL;
++	user_buffer_free(tinfo);
+ }
+ 
+-/* Must be called with preemption disabled */
+-static char *trace_user_fault_read(struct trace_user_buf_info *tinfo,
+-				   const char __user *ptr, size_t size,
+-				   size_t *read_size)
++/**
++ * trace_user_fault_init - Allocated or reference a per CPU buffer
++ * @tinfo: A pointer to the trace buffer descriptor
++ * @size: The size to allocate each per CPU buffer
++ *
++ * Create a per CPU buffer that can be used to copy from user space
++ * in a task context. When calling trace_user_fault_read(), preemption
++ * must be disabled, and it will enable preemption and copy user
++ * space data to the buffer. If any schedule switches occur, it will
++ * retry until it succeeds without a schedule switch knowing the buffer
++ * is still valid.
++ *
++ * Returns 0 on success, negative on failure.
++ */
++int trace_user_fault_init(struct trace_user_buf_info *tinfo, size_t size)
++{
++	int ret;
++
++	if (!tinfo)
++		return -EINVAL;
++
++	guard(mutex)(&trace_user_buffer_mutex);
++
++	ret = user_buffer_init(&tinfo, size);
++	if (ret < 0)
++		trace_user_fault_destroy(tinfo);
++
++	return ret;
++}
++
++/**
++ * trace_user_fault_get - up the ref count for the user buffer
++ * @tinfo: A pointer to a pointer to the trace buffer descriptor
++ *
++ * Ups the ref count of the trace buffer.
++ *
++ * Returns the new ref count.
++ */
++int trace_user_fault_get(struct trace_user_buf_info *tinfo)
++{
++	if (!tinfo)
++		return -1;
++
++	guard(mutex)(&trace_user_buffer_mutex);
++
++	tinfo->ref++;
++	return tinfo->ref;
++}
++
++/**
++ * trace_user_fault_put - dereference a per cpu trace buffer
++ * @tinfo: The @tinfo that was passed to trace_user_fault_get()
++ *
++ * Decrement the ref count of @tinfo.
++ *
++ * Returns the new refcount (negative on error).
++ */
++int trace_user_fault_put(struct trace_user_buf_info *tinfo)
++{
++	guard(mutex)(&trace_user_buffer_mutex);
++
++	if (WARN_ON_ONCE(!tinfo || !tinfo->ref))
++		return -1;
++
++	--tinfo->ref;
++	return tinfo->ref;
++}
++
++/**
++ * trace_user_fault_read - Read user space into a per CPU buffer
++ * @tinfo: The @tinfo allocated by trace_user_fault_get()
++ * @ptr: The user space pointer to read
++ * @size: The size of user space to read.
++ * @copy_func: Optional function to use to copy from user space
++ * @data: Data to pass to copy_func if it was supplied
++ *
++ * Preemption must be disabled when this is called, and must not
++ * be enabled while using the returned buffer.
++ * This does the copying from user space into a per CPU buffer.
++ *
++ * The @size must not be greater than the size passed in to
++ * trace_user_fault_init().
++ *
++ * If @copy_func is NULL, trace_user_fault_read() will use copy_from_user(),
++ * otherwise it will call @copy_func. It will call @copy_func with:
++ *
++ *   buffer: the per CPU buffer of the @tinfo.
++ *   ptr: The pointer @ptr to user space to read
++ *   size: The @size of the ptr to read
++ *   data: The @data parameter
++ *
++ * It is expected that @copy_func will return 0 on success and non zero
++ * if there was a fault.
++ *
++ * Returns a pointer to the buffer with the content read from @ptr.
++ *   Preemption must remain disabled while the caller accesses the
++ *   buffer returned by this function.
++ * Returns NULL if there was a fault, or the size passed in is
++ *   greater than the size passed to trace_user_fault_init().
++ */
++char *trace_user_fault_read(struct trace_user_buf_info *tinfo,
++			     const char __user *ptr, size_t size,
++			     trace_user_buf_copy copy_func, void *data)
+ {
+ 	int cpu = smp_processor_id();
+ 	char *buffer = per_cpu_ptr(tinfo->tbuf, cpu)->buf;
+@@ -7319,9 +7433,14 @@ static char *trace_user_fault_read(struct trace_user_buf_info *tinfo,
+ 	int trys = 0;
+ 	int ret;
+ 
+-	if (size > TRACE_MARKER_MAX_SIZE)
+-		size = TRACE_MARKER_MAX_SIZE;
+-	*read_size = 0;
++	lockdep_assert_preemption_disabled();
++
++	/*
++	 * It's up to the caller to not try to copy more than it said
++	 * it would.
++	 */
++	if (size > tinfo->size)
++		return NULL;
+ 
+ 	/*
+ 	 * This acts similar to a seqcount. The per CPU context switches are
+@@ -7361,7 +7480,14 @@ static char *trace_user_fault_read(struct trace_user_buf_info *tinfo,
+ 		 */
+ 		preempt_enable_notrace();
+ 
+-		ret = __copy_from_user(buffer, ptr, size);
++		/* Make sure preemption is enabled here */
++		lockdep_assert_preemption_enabled();
++
++		if (copy_func) {
++			ret = copy_func(buffer, ptr, size, data);
++		} else {
++			ret = __copy_from_user(buffer, ptr, size);
++		}
+ 
+ 		preempt_disable_notrace();
+ 		migrate_enable();
+@@ -7378,7 +7504,6 @@ static char *trace_user_fault_read(struct trace_user_buf_info *tinfo,
+ 		 */
+ 	} while (nr_context_switches_cpu(cpu) != cnt);
+ 
+-	*read_size = size;
+ 	return buffer;
+ }
+ 
+@@ -7389,7 +7514,6 @@ tracing_mark_write(struct file *filp, const char __user *ubuf,
+ 	struct trace_array *tr = filp->private_data;
+ 	ssize_t written = -ENODEV;
+ 	unsigned long ip;
+-	size_t size;
+ 	char *buf;
+ 
+ 	if (tracing_disabled)
+@@ -7407,13 +7531,10 @@ tracing_mark_write(struct file *filp, const char __user *ubuf,
+ 	/* Must have preemption disabled while having access to the buffer */
+ 	guard(preempt_notrace)();
+ 
+-	buf = trace_user_fault_read(trace_user_buffer, ubuf, cnt, &size);
++	buf = trace_user_fault_read(trace_user_buffer, ubuf, cnt, NULL, NULL);
+ 	if (!buf)
+ 		return -EFAULT;
+ 
+-	if (cnt > size)
+-		cnt = size;
+-
+ 	/* The selftests expect this function to be the IP address */
+ 	ip = _THIS_IP_;
+ 
+@@ -7473,7 +7594,6 @@ tracing_mark_raw_write(struct file *filp, const char __user *ubuf,
+ {
+ 	struct trace_array *tr = filp->private_data;
+ 	ssize_t written = -ENODEV;
+-	size_t size;
+ 	char *buf;
+ 
+ 	if (tracing_disabled)
+@@ -7486,17 +7606,17 @@ tracing_mark_raw_write(struct file *filp, const char __user *ubuf,
+ 	if (cnt < sizeof(unsigned int))
+ 		return -EINVAL;
+ 
++	/* raw write is all or nothing */
++	if (cnt > TRACE_MARKER_MAX_SIZE)
++		return -EINVAL;
++
+ 	/* Must have preemption disabled while having access to the buffer */
+ 	guard(preempt_notrace)();
+ 
+-	buf = trace_user_fault_read(trace_user_buffer, ubuf, cnt, &size);
++	buf = trace_user_fault_read(trace_user_buffer, ubuf, cnt, NULL, NULL);
+ 	if (!buf)
+ 		return -EFAULT;
+ 
+-	/* raw write is all or nothing */
+-	if (cnt > size)
+-		return -EINVAL;
+-
+ 	/* The global trace_marker_raw can go to multiple instances */
+ 	if (tr == &global_trace) {
+ 		guard(rcu)();
+@@ -7516,20 +7636,26 @@ static int tracing_mark_open(struct inode *inode, struct file *filp)
+ {
+ 	int ret;
+ 
+-	ret = trace_user_fault_buffer_enable();
+-	if (ret < 0)
+-		return ret;
++	scoped_guard(mutex, &trace_user_buffer_mutex) {
++		if (!trace_user_buffer) {
++			ret = user_buffer_init(&trace_user_buffer, TRACE_MARKER_MAX_SIZE);
++			if (ret < 0)
++				return ret;
++		} else {
++			trace_user_buffer->ref++;
++		}
++	}
+ 
+ 	stream_open(inode, filp);
+ 	ret = tracing_open_generic_tr(inode, filp);
+ 	if (ret < 0)
+-		trace_user_fault_buffer_disable();
++		user_buffer_put(&trace_user_buffer);
+ 	return ret;
+ }
+ 
+ static int tracing_mark_release(struct inode *inode, struct file *file)
+ {
+-	trace_user_fault_buffer_disable();
++	user_buffer_put(&trace_user_buffer);
+ 	return tracing_release_generic_tr(inode, file);
+ }
+ 
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index 85eabb454bee..8439fe3058cc 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -1531,6 +1531,23 @@ void trace_buffered_event_enable(void);
+ 
+ void early_enable_events(struct trace_array *tr, char *buf, bool disable_first);
+ 
++struct trace_user_buf;
++struct trace_user_buf_info {
++	struct trace_user_buf __percpu	*tbuf;
++	size_t				size;
++	int				ref;
++};
++
++typedef int (*trace_user_buf_copy)(char *dst, const char __user *src,
++				  size_t size, void *data);
++int trace_user_fault_init(struct trace_user_buf_info *tinfo, size_t size);
++int trace_user_fault_get(struct trace_user_buf_info *tinfo);
++int trace_user_fault_put(struct trace_user_buf_info *tinfo);
++void trace_user_fault_destroy(struct trace_user_buf_info *tinfo);
++char *trace_user_fault_read(struct trace_user_buf_info *tinfo,
++			    const char __user *ptr, size_t size,
++			    trace_user_buf_copy copy_func, void *data);
++
+ static inline void
+ __trace_event_discard_commit(struct trace_buffer *buffer,
+ 			     struct ring_buffer_event *event)
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.51.0
+
+
