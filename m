@@ -1,123 +1,98 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AC1A257821
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 21 Oct 2025 18:17:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C77125B1DA;
+	Tue, 21 Oct 2025 19:47:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761070631; cv=none; b=sLiqSFKpDrck0zLZOtRF41IQUDtKkNnDPajNM5ygdTCLRLBVczYq/eQFIhYzm4EBlyObxcWxkujDeDYrQ8yvYkuxz0pROF5OJOicvbhoTjfj3wi3DvmT93wVzpNZ9ro1lDAgVJS4H7MAZX40U8boDzbIG7XHSsM+tjyKUD729Ks=
+	t=1761076043; cv=none; b=aOOdWJGIchz/9PcU79KfTpbzrlWWsj3RaqbQF5oz/D2PlRkN1/UA9ctmAAM9TvANPPV6Dw/7R9sW3XlQx9lAZIsnt9FzMKTzBk86XyyRztkEb3aVpSQEzFmtz7C5NyEYJIBlfyfZwskw4wdDC3b2QVCq9c7BClfgxMJjaqSlwZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761070631; c=relaxed/simple;
-	bh=uHaCegWf7G1lsvdrseJq4v473UN4vezxPgOeKsQYQfw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=u/7GUWimExinmFFXAEvXpsaGYsmkaGJaEjhnZIzqBj/Ye720gcBByfjRdUE6GlArG/RUhkc+rtBbQv9DViZskV1BLk8rXehTzxi3n0xyL9gy5dqr7gbgfPywyEwpNd6cJ7Qr3u9lWxwsJrBd81EgKUty0Z9QHrPxuEo7xS9idoQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y2+NDogU; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y2+NDogU"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4710683a644so1602235e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 21 Oct 2025 11:17:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1761070628; x=1761675428; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RGD+FcEsW2FFxX+kG8Fzb0HeFi6smqsLpBgWiT17QWM=;
-        b=Y2+NDogUB0iETGhC4CXgQ31LdQqAqcvVAm4cv4Pw/8PDCNWVifZnlYrzqoKW4e4vTo
-         Srctj0xnbCDCBHoUhNqg2P4kyKOKh2qVA9cJnhfprMQbMt+Zt9c7/3Qm3KOPPXtHaVZo
-         khk/CooUbfKTw+aRkP2QK6w3GPWSBVAdLeOygn6dgnx6lc/VFOePQ1ZfDCJk54Jm5DY6
-         N7ukILX6OSpXOtC6JI+eu5dSfMkut8CnDEHnQiwgnMKlJ0hJ/6YzcXOV9i97w84Za4YI
-         WU/GyPc84CpJksd52Y9dZYI53JJVbe1AUczn1pE+vIOUcWcVJABPV6IIDSNuPlkjr0R7
-         yF2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761070628; x=1761675428;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RGD+FcEsW2FFxX+kG8Fzb0HeFi6smqsLpBgWiT17QWM=;
-        b=ks0t+XXuWYBcCrqimtS1oHZAs6cwjOdiz6DMT4QkXUL7JotZPK9A5YhmLWfYvF9019
-         Pz//1uHgx71Xf0w/j2MDMe3upztEAJjMIqxb13gWHJK8znNGlgMsDQKVdGpY1dAE/4HY
-         n9NXQCXQfPjeL7qSP1YTjhDXyZXVYSrGf+rlJFTHlQ5QvFfqcg7HB8rn3V4OznyKBwtX
-         Heiefb+VFQaNvpyAMyL/EdbDRziiEnBypn68hb9rZHPoMums6T1MKYYdsfjTZBqCZc3g
-         gSx3X2yIQUyEJmm9/K3DmiULTVjfbnfSxbH/RxqWQZ9SJkJiQD7IpjPmDTDa/TFX3Svx
-         OAFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXjNBr/P2lrluleRAZ5nSY/lqDcpBBlZcZxtZ0eiUSPs2UityxgEzyx7c/vwHBH/025vf6f7y8eji1MXl7keUz3c3U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwjgP3ImX+h49XSM/v5N5TN1tv265+7ZhUMvjFnIf7wQBhPa6dY
-	mOrDlmVrjHkptDGl74t0FfOYbT/zlPeR9MCJv8lyTYsVOB5DJ2kLWj/XLSzBM9EguBtcFz85cCj
-	wo40wuoAK2ydvPz36QbriPytYYDroXV8=
-X-Gm-Gg: ASbGnctSc0j9WZJz0xUmmTcQgl3+sSBV5L4x6nlyGI6/4vFb+5pErXnWy4BO66d71+j
-	In7hU2NBZfLvMt9rzbDHLdxrxdg+vJ6Ox+9ia0zH7K/AVXxEQPNAkd4I3L/Cn++FPnEeS7iQHqu
-	Th+TfOZnld2m+zVlG98OxjPnmoAW0rT2uBWSF1xEliXI2pTvUsdIowYrQMIMAZUjQDDykBP5H0P
-	38mc+S9wcRKhNg1QLSp1GxjHe8jP+AYfbDKJdUYQ/n9HkQOxBSHXgP5SB1drKg8qhStAsVgZPTb
-X-Google-Smtp-Source: AGHT+IHAL3TwL3lSrbbeuTOnvc5N+BYP3uS+YNImwOULyrDGTO3KCuxddBINXlS3GnAhet25AeUZNxliKcrwhe5LULc=
-X-Received: by 2002:a05:600c:5251:b0:471:846:80ac with SMTP id
- 5b1f17b1804b1-475c400151emr4658295e9.18.1761070627745; Tue, 21 Oct 2025
- 11:17:07 -0700 (PDT)
+	s=arc-20240116; t=1761076043; c=relaxed/simple;
+	bh=vjm3dE9/IKpod5P0ZC6/pXwY8a7TnoBYoU+Ea8E0nQU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=J7hGxjiORXMRLOaQawJGeu9pi6qN0wSrKRqJM+0U3pqvnChW62Rhl8PAHVndr9l5qVt6vsYG5Z5ypt9W781ufOCZ4Wo5siWYy/D0y3+oWy2pT1iew/jhSRVL90qquZ6+LEqYL0cpU/SsDmwyiV/imYmdfRGk3I9UL6lYmoEDZoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf14.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id 3E001B9E75;
+	Tue, 21 Oct 2025 19:47:18 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf14.hostedemail.com (Postfix) with ESMTPA id D1B7832;
+	Tue, 21 Oct 2025 19:47:14 +0000 (UTC)
+Date: Tue, 21 Oct 2025 15:47:37 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Nicolas Schier <nsc@kernel.org>
+Cc: Steven Rostedt <rostedt@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Masahiro Yamada
+ <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nick
+ Desaulniers <nick.desaulniers+lkml@gmail.com>, Catalin Marinas
+ <catalin.marinas@arm.com>, Linus Torvalds <torvalds@linux-foundation.org>,
+ Randy Dunlap <rdunlap@infradead.org>, Stephen Rothwell
+ <sfr@canb.auug.org.au>
+Subject: Re: [PATCH v9 2/4] tracing: Add a tracepoint verification check at
+ build time
+Message-ID: <20251021154737.77377790@gandalf.local.home>
+In-Reply-To: <aPKj2Ilnq7F0xLFx@levanger>
+References: <20251015203842.618059565@kernel.org>
+	<20251015203924.391455037@kernel.org>
+	<aPKj2Ilnq7F0xLFx@levanger>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251018142124.783206-1-dongml2@chinatelecom.cn> <20251018142124.783206-4-dongml2@chinatelecom.cn>
-In-Reply-To: <20251018142124.783206-4-dongml2@chinatelecom.cn>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Tue, 21 Oct 2025 11:16:53 -0700
-X-Gm-Features: AS18NWC-vk9wYK7_8tX_FVlBKQAbSU9jzlpKybVeQNDtOy8tuK9-TkGozXjUbPI
-Message-ID: <CAADnVQLN96WZd0eWWb=__62g49y_wPfjTPKXaB_=o5jdVE7uKQ@mail.gmail.com>
-Subject: Re: [PATCH RFC bpf-next 3/5] bpf,x86: add tracing session supporting
- for x86_64
-To: Menglong Dong <menglong8.dong@gmail.com>
-Cc: Alexei Starovoitov <ast@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>, 
-	Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
-	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Matt Bobrowski <mattbobrowski@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Leon Hwang <leon.hwang@linux.dev>, bpf <bpf@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: yjfsxrh3gy8g91p7nad311cbso9t3sbo
+X-Rspamd-Server: rspamout08
+X-Rspamd-Queue-Id: D1B7832
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/flYNkAmboTsYT3r6DHHdcV5Gz6/AmDAo=
+X-HE-Tag: 1761076034-53474
+X-HE-Meta: U2FsdGVkX18B9EjrayZv+hXuypmrQkGMt43qexIIwD10HRSDrWuiM0dBBByW7r7rd/wzdU6XcOVbtO9gJRYdLeLT7DbyNk6fyki8AzGh4Jk1tEXtPPHXt924rz0J6oVIiDRQnoU/V0jIkk5n45fOferJU+PSq9d6EDR1pMxDn3blFzZUd871dTWZagvmjwnQmZ0lMbOuJ8NS05+r6/1Ql1OBg2QWLUZ5EudeGfwyq6bhNk2VMoRtW7ARyqPwMs5vh8NpQKA5z/mZbGqCCJ7GB9clnQrNgtDUyORrcoylg9jKK6LAiw3ZqyLNptPofNGFk+SD44/ucNWKzOJXaw2lNi3ehsSJ0fZV
 
-On Sat, Oct 18, 2025 at 7:21=E2=80=AFAM Menglong Dong <menglong8.dong@gmail=
-.com> wrote:
->  /* mov rax, qword ptr [rbp - rounded_stack_depth - 8] */
->  #define LOAD_TRAMP_TAIL_CALL_CNT_PTR(stack)    \
->         __LOAD_TCC_PTR(-round_up(stack, 8) - 8)
-> @@ -3179,8 +3270,10 @@ static int __arch_prepare_bpf_trampoline(struct bp=
-f_tramp_image *im, void *rw_im
->                                          void *func_addr)
->  {
->         int i, ret, nr_regs =3D m->nr_args, stack_size =3D 0;
-> -       int regs_off, nregs_off, ip_off, run_ctx_off, arg_stack_off, rbx_=
-off;
-> +       int regs_off, nregs_off, session_off, ip_off, run_ctx_off,
-> +           arg_stack_off, rbx_off;
->         struct bpf_tramp_links *fentry =3D &tlinks[BPF_TRAMP_FENTRY];
-> +       struct bpf_tramp_links *session =3D &tlinks[BPF_TRAMP_SESSION];
->         struct bpf_tramp_links *fexit =3D &tlinks[BPF_TRAMP_FEXIT];
->         struct bpf_tramp_links *fmod_ret =3D &tlinks[BPF_TRAMP_MODIFY_RET=
-URN];
->         void *orig_call =3D func_addr;
-> @@ -3222,6 +3315,8 @@ static int __arch_prepare_bpf_trampoline(struct bpf=
-_tramp_image *im, void *rw_im
->          *
->          * RBP - nregs_off [ regs count      ]  always
->          *
-> +        * RBP - session_off [ session flags ] tracing session
-> +        *
->          * RBP - ip_off    [ traced function ]  BPF_TRAMP_F_IP_ARG flag
->          *
->          * RBP - rbx_off   [ rbx value       ]  always
-> @@ -3246,6 +3341,8 @@ static int __arch_prepare_bpf_trampoline(struct bpf=
-_tramp_image *im, void *rw_im
->         /* regs count  */
->         stack_size +=3D 8;
->         nregs_off =3D stack_size;
-> +       stack_size +=3D 8;
-> +       session_off =3D stack_size;
+On Fri, 17 Oct 2025 22:15:20 +0200
+Nicolas Schier <nsc@kernel.org> wrote:
 
-Unconditional stack increase? :(
+> > +# To check for unused tracepoints (tracepoints that are defined but never
+> > +# called), run with:
+> > +#
+> > +# make UT=1
+> > +#
+> > +# Each unused tracepoints can take up to 5KB of memory in the running kernel.
+> > +# It is best to remove any that are not used.
+> > +
+> > +ifeq ("$(origin UT)", "command line")
+> > +  WARN_ON_UNUSED_TRACEPOINTS := $(UT)
+> > +endif
+> > +
+> > +export WARN_ON_UNUSED_TRACEPOINTS  
+> 
+> Is there a special reason why you chose to introduce a new command-line
+> variable instead of extending KBUILD_EXTRA_WARN / W ?
+
+Honestly, I didn't think about using KBUILD_EXTRA_WARN. I also want this
+option to go away after we remove the current unused tracepoints so that
+any new ones will always cause a warning.
+
+The only reason not to make it always warn is because I don't want to add
+warnings for the existing code. I'm working on having outreachy projects to
+remove the currently unused tracepoints. Once that is done, then this
+option is going to go away and the build will always warn on unused
+tracepoints.
+
+I thought it might be easier to remove it without any issues if it's a new
+command line that goes away in the future.
+
+Looking at EXTRA_WARN, it appears to be for basic issues with the code and
+adds new C compiler warning flags. This isn't exactly the same.
+
+If you think it makes sense to extend EXTRA_WARN, I can still go ahead and
+do that.
+
+-- Steve
