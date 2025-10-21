@@ -1,92 +1,91 @@
-Received: from mout-y-209.mailbox.org (mout-y-209.mailbox.org [91.198.250.237])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A90A42E1C6F;
-	Tue, 21 Oct 2025 09:20:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.198.250.237
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 897AC3346A3;
+	Tue, 21 Oct 2025 11:55:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761038415; cv=none; b=oRH2Gvz7WxMvU2SRqHRd8VSO9+m3Aq6PGlZ+YNTM1PVYnXaE145fqpe3VZCqXGSzrMKEI2yi6oLkx1PIssiggE34wBF0WY5S62NtSwPDx4y5WAjWoYTYoB+VLsKEvQrnt/cGinVI/CxdxzELs8M/+QpUBTicrx40jMj7FE2Zwb8=
+	t=1761047746; cv=none; b=TPt1Hktv1ZEocoCEmL9+3OYo0pnu4Y1KaAt4BuNNBQHlj/OCBusdRqHm+AS0uYOxyqOA71q1/dIuilhE5+G1v/8TXW24/P3ciQeDOGc/auKr1sH6Ho8mD9w+l6iegeLrAJANDdoaLoNYNqxLKpbsjIaWY2enJQD0pLi49XMRByo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761038415; c=relaxed/simple;
-	bh=gt8QTpigXYJ1n64pcQZkB3vjbpNTcKFzI6KwGNk8iLs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=o29aI6DK1xwlsOPwVigaV7UK2vbLMfRy/A9EIsOssf33W2YDzGczkftQrXbj0WGRRHQ3lTw0hqHUBHLqL1ExwKNnHK7TkNsbbDtvM7lgur+912jxGUgANuSHu+ROhtMkOw1415pDtphXhtUaa+nPqW1GvDn5kVoXKeYsKgcwiVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mssola.com; spf=fail smtp.mailfrom=mssola.com; dkim=pass (2048-bit key) header.d=mssola.com header.i=@mssola.com header.b=bs7huozD; arc=none smtp.client-ip=91.198.250.237
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mssola.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=mssola.com
+	s=arc-20240116; t=1761047746; c=relaxed/simple;
+	bh=sfrIkGFyQJLVpjb8aEBzy44vnyD09WwLu3/8FRkPxP0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=O+xRTOGph/+/QC3qJe9w8fKpumwCJKYL2YNmzZ5qDuA+bTIP2vB0kWVhV//EkEXSfj4EGjdd96lZWBZFXsIJe0xMJSJ1DCxv39aGSBvECfkzIuxGgrjLlYYTzxEgr0jjSgiskdE6PhtTysZggM+EQoJKrBuT6ZZy8hxIYa6s0KI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lONiR806; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=14v32Wss; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mssola.com header.i=@mssola.com header.b="bs7huozD"
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-y-209.mailbox.org (Postfix) with ESMTPS id 4crRPT2RH0zB0hT;
-	Tue, 21 Oct 2025 11:11:41 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mssola.com; s=MBO0001;
-	t=1761037901;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lONiR806";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="14v32Wss"
+From: Nam Cao <namcao@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1761047742;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=p3RxAUKQ9gm37DDQ5FvmzUhdsilQPRCwahlHic7b+Cw=;
-	b=bs7huozDuXZcGzwVEPlTjGVjs2xXBKjvgPUk/MVF5SHIZBlQbSNjZ6YqEGNaB8nw2yw94Z
-	AOCkztG1oBtIXP6NNPyqt/Z/qyrICiQ/Q23aqpQDGRojaj42GpnTzErqFcBZ/bO3D9aRmU
-	kFhcB3BWQFIFDPiSTfFIrBonTw4VkGU/RwDfJheZff4cuZIWxXojDb82RFGQ9xlcym4EDH
-	I4Il+ErPZ5XryjlM0ioHIiAlM0jURQeN2ZxotGn8RnQkcO9tmeWaMB8TKC7gMeJ3gpJg7r
-	T9MKC+P1/tnvCPr4LMu0TaJnodq+tHkeV89hR4mLcNLR40qbo58ibSM/pvljnA==
-From: =?UTF-8?q?Miquel=20Sabat=C3=A9=20Sol=C3=A0?= <mssola@mssola.com>
-To: linux-btrfs@vger.kernel.org
-Cc: clm@fb.com,
-	dsterba@suse.com,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	=?UTF-8?q?Miquel=20Sabat=C3=A9=20Sol=C3=A0?= <mssola@mssola.com>,
-	syzbot+d991fea1b4b23b1f6bf8@syzkaller.appspotmail.com
-Subject: [PATCH] btrfs: fix NULL dereference on root when tracing inode eviction
-Date: Tue, 21 Oct 2025 11:11:25 +0200
-Message-ID: <20251021091125.259500-1-mssola@mssola.com>
+	 in-reply-to:in-reply-to:references:references;
+	bh=dK3mFQ3qr09kveAbbwewXdGK2hBD6okXrlQGLgqnl/k=;
+	b=lONiR806L655urbjQJ2Ze14m7dtIpn8SF0dLyGlzlKM7tvVcuiRox3/VBWxHfjkejZXVKW
+	+//1a5OzlX+DUheCfTS42oJjfxDZ0N7KU50tDi30qtWI8dR5UYpHPWJJTtcf5EfPA9JTXT
+	Yt0h2FmMB7N6XVsggAV1iXWW5qqD4vIHdPxcwLmmW0K2LNyDmTMrnz3UNOaV5ovTxA3BOr
+	ZZBCjaW6Ow8YFS8CVrPp0u9u7Y66ojg1lwMwELyYqdtziFrve6yZNZYNoYwsClCyWfoqkP
+	ccuo4P0kRZWLJF9xaH22FQ1PSYKcxC8YfuCiKA6Q8W6uCz5H2OONNNQQhBcYfw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1761047742;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dK3mFQ3qr09kveAbbwewXdGK2hBD6okXrlQGLgqnl/k=;
+	b=14v32WssVnj3AgaaBtLdBPsF7WD+DpWpLjPvyIvb2Or1YgtZQ5h1KlOjA1H11w2qzMmiFs
+	khxEhB/8nfPKyIAA==
+To: Gabriele Monaco <gmonaco@redhat.com>, linux-kernel@vger.kernel.org,
+ Steven Rostedt <rostedt@goodmis.org>, linux-trace-kernel@vger.kernel.org
+Cc: Gabriele Monaco <gmonaco@redhat.com>, Tomas Glozar <tglozar@redhat.com>,
+ Juri Lelli <jlelli@redhat.com>, Clark Williams <williams@redhat.com>, John
+ Kacur <jkacur@redhat.com>
+Subject: Re: [PATCH v2 18/20] rv: Add support for per-object monitors in DA/HA
+In-Reply-To: <20250919140954.104920-19-gmonaco@redhat.com>
+References: <20250919140954.104920-1-gmonaco@redhat.com>
+ <20250919140954.104920-19-gmonaco@redhat.com>
+Date: Tue, 21 Oct 2025 13:55:41 +0200
+Message-ID: <87plag1nb6.fsf@yellow.woof>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-When evicting an inode the first thing we do is to setup tracing for it,
-which implies fetching the root's id. But in btrfs_evict_inode() the
-root might be NULL, as implied in the next check that we do in
-btrfs_evict_inode().
+Gabriele Monaco <gmonaco@redhat.com> writes:
+> +static inline struct da_monitor *da_create_storage(da_id_type id,
+> +						   monitor_target target,
+> +						   struct da_monitor *da_mon,
+> +						   gfp_t flags)
+> +{
+> +	struct da_monitor_storage *mon_storage;
+> +
+> +	if (da_mon)
+> +		return da_mon;
 
-Hence, we either should set the ->root_objectid to 0 in case the root is
-NULL, or we move tracing setup after checking that the root is not
-NULL. Setting the rootid to 0 at least gives us the possibility to trace
-this call even in the case when the root is NULL, so that's the solution
-taken here.
+I think this 'if' should be moved to da_create_conditional() instead,
+because the "conditional" part should be implemented in the function
+whose name includes "conditional". I think that would make the code
+easier to follow, because one would already have a good guess what the
+function does without looking into the details.
+> +static inline bool da_handle_start_event(da_id_type id, monitor_target target,
+> +					 enum events event)
+> +{
+> +	struct da_monitor *da_mon;
+> +
+> +	if (!da_monitor_enabled())
+> +		return 0;
+> +	guard(rcu)();
+> +	da_mon = da_get_monitor(id, target);
+> +	da_mon = da_monitor_start_hook(id, target, da_mon);
 
-Fixes: 1abe9b8a138c ("Btrfs: add initial tracepoint support for btrfs")
-Reported-by: syzbot+d991fea1b4b23b1f6bf8@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=d991fea1b4b23b1f6bf8
-Signed-off-by: Miquel Sabaté Solà <mssola@mssola.com>
----
- include/trace/events/btrfs.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Do you plan this da_monitor_start_hook() macro to do anything other than
+storage preparation? If not, perhaps it is better to name it
+da_monitor_prepare_storage() or something like that, so that this is
+easier to follow.
 
-diff --git a/include/trace/events/btrfs.h b/include/trace/events/btrfs.h
-index 7e418f065b94..f17ee9ba2cf6 100644
---- a/include/trace/events/btrfs.h
-+++ b/include/trace/events/btrfs.h
-@@ -224,7 +224,8 @@ DECLARE_EVENT_CLASS(btrfs__inode,
- 		__entry->generation = BTRFS_I(inode)->generation;
- 		__entry->last_trans = BTRFS_I(inode)->last_trans;
- 		__entry->logged_trans = BTRFS_I(inode)->logged_trans;
--		__entry->root_objectid = btrfs_root_id(BTRFS_I(inode)->root);
-+		__entry->root_objectid =
-+			     BTRFS_I(inode)->root ? btrfs_root_id(BTRFS_I(inode)->root) : 0;
- 	),
-
- 	TP_printk_btrfs("root=%llu(%s) gen=%llu ino=%llu blocks=%llu "
---
-2.51.1
+Nam
