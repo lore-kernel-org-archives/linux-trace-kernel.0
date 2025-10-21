@@ -1,80 +1,221 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DC5B35505C;
-	Tue, 21 Oct 2025 12:11:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E946033F8BC;
+	Tue, 21 Oct 2025 14:47:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761048683; cv=none; b=f/N1ObJkmJxjOMAIJZZuxbVvzu4TBpeAsh4MNQJ+YCsDsl6mwjzckRjyw6LX4OLXJs5gaEPlNY/jAycKYUQLsLnodBBeQvVkczrfnJ2YwOXrJ+vXPOdwHlQayQPOkOmO+8a53v+6o47WNBvBKN+83Rjn78HtbRdsVRflm25s0g8=
+	t=1761058068; cv=none; b=NBPN8OfpK5p7quhCifuXTe/LYZo+tOkE83go8uwGoPbb3wRTMvSe0QluS6BRem0CvIrlOKLLx1Y6VgrXaSpwh4bRvZ6zR/ETo8o5D42EKWGpaq2TrJ+Gnm+4mh1Y53B5cbWkeCS8f2Ju9Av7PLxuRRfBQR8+ZyUzZCmp/M4tSfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761048683; c=relaxed/simple;
-	bh=kLm/IAQP2+kJWXKn3GmdAfEMaI+3CWV0wc71MhB6j5I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e0ZAnV2pN2lu+RB0rvITHi/ajhb7uoZXNHzvfO9A+A5FGNdO0ZXGvpxTLUBteqIMQaAXHgCeRe3hv9OSu5b36DW17sseuFQINVGh57VTOQymt533KaLHKzJOxISIhpHmJE2U62redh6Qb0b/kDnPdqprLz9Oyc3248CJUXhGin0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ILqRdPZS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1761058068; c=relaxed/simple;
+	bh=Jg6M0f7XRhApH6x+9NjP7QwJKVdkcz6DkQB07xhGfTE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lDOiSrHhaW7IMTRuA6Y++8Q3YqyhMrXyECzEGYHcovL6apxGbcm45/JiEPVRBVTKiJjQ6H67DWBgXFX4R5yEx8yQsz+Z+GC649XEpHsar2tXCQq2IfJhjHz6izH9DD30o5ra+Q4VC3DNU9xAYZnKjdHG1mKcV5xRBKaDqDOWF1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Mf+FgTQN; arc=none smtp.client-ip=95.215.58.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ILqRdPZS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4FEFC4CEF5;
-	Tue, 21 Oct 2025 12:11:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761048683;
-	bh=kLm/IAQP2+kJWXKn3GmdAfEMaI+3CWV0wc71MhB6j5I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ILqRdPZSGiv4RjMFEJ/thBxR1tHDHW65PAZkzPNmqLQfCYDkPZx4KEf7B06l3J4Rx
-	 rkcFX46nHh5+hUcXCBR43GRmNeP2VM1IvSaU6yEdb/n5reiQnEXGtvFzFDx/Mt5tMR
-	 3EZLW8toxK7UnuSyl6KwbcLYoDDIDhxkyrjTGtvqOOBGyAZmxjtLV8fSL2NLCioQlE
-	 96dolgn4NH/5oAeWTKCwcHFBzH1CjVKumTHpWvSmdv8ec10vLokUmE+PiVnvMnn8NY
-	 /rxctelM3ejNYERHCNpaUoRjf69Apy5UrhhvrS88sAD/pCtLc+WBGxZH13hmeUuluE
-	 jPNPFxIg6AxUQ==
-Date: Tue, 21 Oct 2025 13:11:19 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Sean Anderson <sean.anderson@linux.dev>
-Cc: "open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Mf+FgTQN"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1761058062;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=yY3MwM6PPbwVNDHHje8f1jkLGFaW4eG+o/AehBBBdrA=;
+	b=Mf+FgTQNlTWN2BuT5aIPxyznSSUry1mTUswx2N1/lqrV5NQDirgsq5uNWaUJ+x0LKo+jpS
+	kB9AUfHiDD3yWHqjsfNj1aKxeNlOZExQbZEMuu9fA8AUSzhf0vINWc0SBcFwcse4dyRbgh
+	IJo9ojFsUKkdzEih10Onnxv2H61DhIo=
+From: Sean Anderson <sean.anderson@linux.dev>
+To: Mark Brown <broonie@kernel.org>,
+	linux-spi@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org,
 	Steven Rostedt <rostedt@goodmis.org>,
-	"open list:TRACING" <linux-trace-kernel@vger.kernel.org>
-Subject: Re: [PATCH] spi: spi-mem: Trace exec_op
-Message-ID: <5cdaba07-557a-4c19-bad5-a4c1547882e2@sirena.org.uk>
-References: <20251020190333.1431664-1-sean.anderson@linux.dev>
+	linux-trace-kernel@vger.kernel.org,
+	Sean Anderson <sean.anderson@linux.dev>
+Subject: [PATCH v2] spi: spi-mem: Trace exec_op
+Date: Tue, 21 Oct 2025 10:47:03 -0400
+Message-Id: <20251021144702.1582397-1-sean.anderson@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="xA1qrxQmEEAexbK7"
-Content-Disposition: inline
-In-Reply-To: <20251020190333.1431664-1-sean.anderson@linux.dev>
-X-Cookie: Accordion, n.:
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
+The spi subsystem has tracing, which is very convenient when debugging
+problems. Add tracing for spi-mem too so that accesses that skip the spi
+subsystem can still be seen.
 
---xA1qrxQmEEAexbK7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+The format is roughly based on the existing spi tracing. We don't bother
+tracing the op's address because the tracing happens while the memory is
+locked, so there can be no confusion about the matching of start and
+stop. The conversion of cmd/addr/dummy to an array is directly analogous
+to the conversion in the latter half of spi_mem_exec_op.
 
-On Mon, Oct 20, 2025 at 03:03:33PM -0400, Sean Anderson wrote:
-> The spi subsystem has tracing, which is very convenient when debugging
-> problems. Add tracing for spi-mem too so that accesses that skip the spi
-> subsystem can still be seen.
+Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
+---
 
-The change here looks reasonable FWIW.
+Changes in v2:
+- Fix old use of __assign_str
 
---xA1qrxQmEEAexbK7
-Content-Type: application/pgp-signature; name="signature.asc"
+ MAINTAINERS                    |   1 +
+ drivers/spi/spi-mem.c          |   5 ++
+ include/trace/events/spi-mem.h | 106 +++++++++++++++++++++++++++++++++
+ 3 files changed, 112 insertions(+)
+ create mode 100644 include/trace/events/spi-mem.h
 
------BEGIN PGP SIGNATURE-----
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 545a4776795e..abad89f4ac4e 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -24237,6 +24237,7 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git
+ F:	Documentation/devicetree/bindings/spi/
+ F:	Documentation/spi/
+ F:	drivers/spi/
++F:	include/trace/events/spi*
+ F:	include/linux/spi/
+ F:	include/uapi/linux/spi/
+ F:	tools/spi/
+diff --git a/drivers/spi/spi-mem.c b/drivers/spi/spi-mem.c
+index 064b99204d9a..c8b2add2640e 100644
+--- a/drivers/spi/spi-mem.c
++++ b/drivers/spi/spi-mem.c
+@@ -12,6 +12,9 @@
+ #include <linux/spi/spi-mem.h>
+ #include <linux/sched/task_stack.h>
+ 
++#define CREATE_TRACE_POINTS
++#include <trace/events/spi-mem.h>
++
+ #include "internals.h"
+ 
+ #define SPI_MEM_MAX_BUSWIDTH		8
+@@ -403,7 +406,9 @@ int spi_mem_exec_op(struct spi_mem *mem, const struct spi_mem_op *op)
+ 		if (ret)
+ 			return ret;
+ 
++		trace_spi_mem_start_op(mem, op);
+ 		ret = ctlr->mem_ops->exec_op(mem, op);
++		trace_spi_mem_stop_op(mem, op);
+ 
+ 		spi_mem_access_end(mem);
+ 
+diff --git a/include/trace/events/spi-mem.h b/include/trace/events/spi-mem.h
+new file mode 100644
+index 000000000000..d13f0bcff5e7
+--- /dev/null
++++ b/include/trace/events/spi-mem.h
+@@ -0,0 +1,106 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM spi-mem
++
++#undef TRACE_SYSTEM_VAR
++#define TRACE_SYSTEM_VAR spi_mem
++
++#if !defined(_TRACE_SPI_MEM_H) || defined(TRACE_HEADER_MULTI_READ)
++#define _TRACE_SPI_MEM_H
++
++#include <linux/tracepoint.h>
++#include <linux/spi/spi-mem.h>
++
++#define decode_dtr(dtr) \
++	__print_symbolic(dtr, \
++		{ 0, "S" }, \
++		{ 1, "D" })
++
++TRACE_EVENT(spi_mem_start_op,
++	TP_PROTO(struct spi_mem *mem, const struct spi_mem_op *op),
++	TP_ARGS(mem, op),
++
++	TP_STRUCT__entry(
++		__string(name, mem->name)
++		__dynamic_array(u8, op, 1 + op->addr.nbytes + op->dummy.nbytes)
++		__dynamic_array(u8, data, op->data.dir == SPI_MEM_DATA_OUT ?
++					  min(op->data.nbytes, 64) : 0)
++		__field(u32, data_len)
++		__field(u32, max_freq)
++		__field(u8, cmd_buswidth)
++		__field(bool, cmd_dtr)
++		__field(u8, addr_buswidth)
++		__field(bool, addr_dtr)
++		__field(u8, dummy_nbytes)
++		__field(u8, data_buswidth)
++		__field(bool, data_dtr)
++	),
++
++	TP_fast_assign(
++		int i;
++
++		__assign_str(name);
++		__entry->max_freq = op->max_freq ?: mem->spi->max_speed_hz;
++
++		__entry->cmd_buswidth = op->cmd.buswidth;
++		__entry->cmd_dtr = op->cmd.dtr;
++		*((u8 *)__get_dynamic_array(op)) = op->cmd.opcode;
++
++		__entry->addr_buswidth = op->addr.buswidth;
++		__entry->addr_dtr = op->addr.dtr;
++		for (i = 0; i < op->addr.nbytes; i++)
++			((u8 *)__get_dynamic_array(op))[i + 1] =
++				op->addr.val >> (8 * (op->addr.nbytes - i - 1));
++
++		memset(((u8 *)__get_dynamic_array(op)) + op->addr.nbytes + 1,
++		       0xff, op->dummy.nbytes);
++
++		__entry->data_len = op->data.nbytes;
++		__entry->data_buswidth = op->data.buswidth;
++		__entry->data_dtr = op->data.dtr;
++		if (op->data.dir == SPI_MEM_DATA_OUT)
++			memcpy(__get_dynamic_array(data), op->data.buf.out,
++			       __get_dynamic_array_len(data));
++	),
++
++	TP_printk("%s %u%s-%u%s-%u%s @%u Hz op=[%*phD] len=%u tx=[%*phD]",
++		__get_str(name),
++		__entry->cmd_buswidth, decode_dtr(__entry->cmd_dtr),
++		__entry->addr_buswidth, decode_dtr(__entry->addr_dtr),
++		__entry->data_buswidth, decode_dtr(__entry->data_dtr),
++		__entry->max_freq,
++		__get_dynamic_array_len(op), __get_dynamic_array(op),
++		__entry->data_len,
++		__get_dynamic_array_len(data), __get_dynamic_array(data))
++);
++
++TRACE_EVENT(spi_mem_stop_op,
++	TP_PROTO(struct spi_mem *mem, const struct spi_mem_op *op),
++	TP_ARGS(mem, op),
++
++	TP_STRUCT__entry(
++		__string(name, mem->name)
++		__dynamic_array(u8, data, op->data.dir == SPI_MEM_DATA_IN ?
++					  min(op->data.nbytes, 64) : 0)
++		__field(u32, data_len)
++	),
++
++	TP_fast_assign(
++		__assign_str(name);
++		__entry->data_len = op->data.nbytes;
++		if (op->data.dir == SPI_MEM_DATA_IN)
++			memcpy(__get_dynamic_array(data), op->data.buf.in,
++			       __get_dynamic_array_len(data));
++	),
++
++	TP_printk("%s len=%u rx=[%*phD]",
++		__get_str(name),
++		__entry->data_len,
++		__get_dynamic_array_len(data), __get_dynamic_array(data))
++);
++
++
++#endif /* _TRACE_SPI_MEM_H */
++
++/* This part must be outside protection */
++#include <trace/define_trace.h>
+-- 
+2.35.1.1320.gc452695387.dirty
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmj3eGYACgkQJNaLcl1U
-h9Dmawf/RATxkvZsN8XZdUTYVUKp3hrtOyvJxLosnVTV0ysutXQlGserw2owslOE
-Kjd23n8rKnznqjMOcZqvqMKg5HZuKnuv3eCOVzQrD/b2owgpyXz7bo0OUBGEFQUd
-h4cL0UTdoy5n72M8CdOau+IDhe/mJZdrQW6MJByzG8zaZRUR30la1v9vA39jCAWP
-ERi0zwySuVLEQeUgdBBOWjinNJIZ+zuUZrTB4ICNiVV1ldgFX/EVfQWc1WntiyIp
-TY8fl/uKmBCemSzAFnNRdk1YFSPhGprsWdVkfF7D3jLdQUwnvXV6H7Py4FBMeOV9
-kdiYTgjRhLn3fEGM5E/hmcck4+qjoQ==
-=flUb
------END PGP SIGNATURE-----
-
---xA1qrxQmEEAexbK7--
