@@ -1,98 +1,179 @@
-Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E5ED2FABF0;
-	Wed, 22 Oct 2025 21:58:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84652303A2D;
+	Wed, 22 Oct 2025 21:59:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761170327; cv=none; b=DNCM05N8BiqQB9RJ7m7o5C1IdK5odUCpStiMsycQtBKRpqETHecKCfwiAM6/KCWXwqeVnpKDXExlV81w7ddgZLGrd+xHPuhHDHc0bBabpggH3Zq9XwhafT3Igk9lZh2mBaCDNftuHSklQu2SjJynYrh40VVVe+kxCWHZbQUOU4A=
+	t=1761170366; cv=none; b=HrfCbK/k0dZbX+lDQMgLwp/E2sSs84xHNiu7q5z/32pxlRmWm6Sos3zr67ODAEzKBt96KDFnykvHz39P5woanRMIQGAqtiP13FGRAiVT0hKcKrAXMLAnvynrqs2ZvuYRDVcOpuP+MUHChInNz96JgKzIrr3GQlka0rGW70PNBhA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761170327; c=relaxed/simple;
-	bh=R+7MM262PH/JVz87dey4sJwnUpOcNmwpRnabeIBO2ko=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WSRSixwUD/mGi4rgexTlYg+6/uOKKkqZMnLuujw347GFvcsif171x3hYm1JmGz39L9Hzve94vlr//tuyVOrrmgX5NKgyWxExrwR7GVP6tvdcd/EoMfe8OSyJeexqs+H7/nBuQ+HCFfxp7kcyTIwJCAvVietlP5B2pADRV48vD24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf10.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay07.hostedemail.com (Postfix) with ESMTP id BDC15160997;
-	Wed, 22 Oct 2025 21:58:39 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf10.hostedemail.com (Postfix) with ESMTPA id D10CA35;
-	Wed, 22 Oct 2025 21:58:30 +0000 (UTC)
-Date: Wed, 22 Oct 2025 17:58:55 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Jens Remus <jremus@linux.ibm.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, x86@kernel.org,
- linux-mm@kvack.org, Steven Rostedt <rostedt@kernel.org>, Josh Poimboeuf
- <jpoimboe@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jiri Olsa
- <jolsa@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung
- Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Andrii
- Nakryiko <andrii@kernel.org>, Indu Bhagat <indu.bhagat@oracle.com>, "Jose
- E. Marchesi" <jemarch@gnu.org>, Beau Belgrave <beaub@linux.microsoft.com>,
- Linus Torvalds <torvalds@linux-foundation.org>, Florian Weimer
- <fweimer@redhat.com>, Kees Cook <kees@kernel.org>, "Carlos O'Donell"
- <codonell@redhat.com>, Sam James <sam@gentoo.org>, Borislav Petkov
- <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, David
- Hildenbrand <david@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, "Liam R.
- Howlett" <Liam.Howlett@oracle.com>, Lorenzo Stoakes
- <lorenzo.stoakes@oracle.com>, Michal Hocko <mhocko@suse.com>, Mike Rapoport
- <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Vlastimil Babka
- <vbabka@suse.cz>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik
- <gor@linux.ibm.com>
-Subject: Re: [PATCH v11 00/15] unwind_deferred: Implement sframe handling
-Message-ID: <20251022175855.383f4148@gandalf.local.home>
-In-Reply-To: <20251022133932.5e8b419d3525da07453b137d@linux-foundation.org>
-References: <20251022144326.4082059-1-jremus@linux.ibm.com>
-	<20251022133932.5e8b419d3525da07453b137d@linux-foundation.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1761170366; c=relaxed/simple;
+	bh=YFd27wXix1IAPhDgICO/LKl4LrK5zPB9xb0D7M0YWlA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rFT2eJaxhFcWFMjFM6MDeOlVmTJY1tqY8aAlyz6U+JA/EPiKeupfX5GohhLPKihSBafdRxjqR4dsbu+Yu7nohNE/1L4tKtWG+ZwoS2Z3IpM3fdRcy6wWoRRUYStaPCXSG3G7IGIYAisn0ZbfCT9m5HxMX/7NcHVH9c3Rxq5D008=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UsTWniNa; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UsTWniNa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1761170365; x=1792706365;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=YFd27wXix1IAPhDgICO/LKl4LrK5zPB9xb0D7M0YWlA=;
+  b=UsTWniNaxZ26CAs694Mqy7v0lpvGqLtfU9JTUgsn5lKDhPsvaVWh898+
+   Jbd96g6erKKqGZPujQ8LSz7eEsTeZSNPruO2nAx8I/CuoMVp9VMVDxVkf
+   650i6fUnJ/hH/O4+Mmhv9FLwu8HzxfYIXT0MbmkE0kEk5uoIPgpTw6ANo
+   QGuRoT+bIYLxcHuMWEEzscasrT2uha5VmYtdKhm1BrBBPMz9zKwJQJLEh
+   Ixvhjpyp1HzpUuGqL5w25H9jQrOY43eCoE3eJf999sON5YLPr7gbX16Ud
+   i7jSxVmTTLpivv+PRJpylMZoxGbnR5Wn6uJGvzDgViw0xPJuJ/wbutqG/
+   g==;
+X-CSE-ConnectionGUID: ppwHXru+SvK35Yao5YeIrg==
+X-CSE-MsgGUID: YBXsQYO8TNKeLnKCrdL6ZQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="74678304"
+X-IronPort-AV: E=Sophos;i="6.19,248,1754982000"; 
+   d="scan'208";a="74678304"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2025 14:59:24 -0700
+X-CSE-ConnectionGUID: AllZI4W6S6Cnl2uyz4ZxwQ==
+X-CSE-MsgGUID: QEx1E6IIRSOFqgSfZybAJw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,248,1754982000"; 
+   d="scan'208";a="189258251"
+Received: from lkp-server02.sh.intel.com (HELO 66d7546c76b2) ([10.239.97.151])
+  by fmviesa004.fm.intel.com with ESMTP; 22 Oct 2025 14:59:20 -0700
+Received: from kbuild by 66d7546c76b2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1vBgrV-000Ckj-2p;
+	Wed, 22 Oct 2025 21:59:17 +0000
+Date: Thu, 23 Oct 2025 05:59:03 +0800
+From: kernel test robot <lkp@intel.com>
+To: Yingchao Deng <yingchao.deng@oss.qualcomm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Yingchao Deng <yingchao.deng@oss.qualcomm.com>,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org, quic_yingdeng@quicinc.com,
+	Tingwei Zhang <tingwei.zhang@oss.qualcomm.com>,
+	Yuanfang Zhang <yuanfang.zhang@oss.qualcomm.com>,
+	Jinlong Mao <jinlong.mao@oss.qualcomm.com>
+Subject: Re: [PATCH v3] stm: class: Add MIPI OST protocol support
+Message-ID: <202510230738.OD0OO0n6-lkp@intel.com>
+References: <20251022071834.1658684-1-yingchao.deng@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: bsfc6mitws67pox8hr1i96sxk1378s1t
-X-Rspamd-Server: rspamout07
-X-Rspamd-Queue-Id: D10CA35
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18I+F+bKdHr/1KWa9dV4J918j6i3JKGfmQ=
-X-HE-Tag: 1761170310-477037
-X-HE-Meta: U2FsdGVkX1+6Dwf/frnjEfjO+nympxtkiyuuKnisUQHr0Ev92Yu80CM0iT0usvlkaJZYGaIje1yrwxXmuC/2UwH2bLBFlm4aEftY60JIyC8Po8JN8XT+0XN9xMhK7T0Yc3dOEkK+DfC9KY0c8XFYcSLHVLGR/rPlrif/jrS7eiW/K4a5BqbVunBK4ORQ5r4o77YidFgjWtBjWG02uaglaCLPKbMNmlv70EX7LsB03TgsAleK8nBQOzgx3Dr5xk81Qq3N94MBUCR5kAGVuGm3DmJNBLoAdeykzbNvVJugFbhOt8fkmMkVkAkA/HVBssjta7TFaiiBrjbrpMnHdPNR9SvdxAqZSyzwa5E78Php+ZvqWajXvn4KcUbGfIlAtwcqbuaXmHDan4QPGEMhnQ0oTg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251022071834.1658684-1-yingchao.deng@oss.qualcomm.com>
 
-On Wed, 22 Oct 2025 13:39:32 -0700
-Andrew Morton <akpm@linux-foundation.org> wrote:
+Hi Yingchao,
 
-> On Wed, 22 Oct 2025 16:43:11 +0200 Jens Remus <jremus@linux.ibm.com> wrote:
-> 
-> > This is the implementation of parsing the SFrame section in an ELF file.  
-> 
-> Presently x86_64-only, it seems.  Can we expect to see this implemented
-> for other architectures?
+kernel test robot noticed the following build warnings:
 
-Yes, and Jens is here to port it to the s390 :-)
+[auto build test WARNING on atorgue-stm32/stm32-next]
+[also build test WARNING on linus/master v6.18-rc2 next-20251022]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Currently Peter Zijlstra and I are updating the deferred unwinder. Jens is
-working on getting sframes to work with it. His interest is getting it for
-s390 whereas ours is for x86.
+url:    https://github.com/intel-lab-lkp/linux/commits/Yingchao-Deng/stm-class-Add-MIPI-OST-protocol-support/20251022-152642
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/atorgue/stm32.git stm32-next
+patch link:    https://lore.kernel.org/r/20251022071834.1658684-1-yingchao.deng%40oss.qualcomm.com
+patch subject: [PATCH v3] stm: class: Add MIPI OST protocol support
+config: x86_64-randconfig-071-20251023 (https://download.01.org/0day-ci/archive/20251023/202510230738.OD0OO0n6-lkp@intel.com/config)
+compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251023/202510230738.OD0OO0n6-lkp@intel.com/reproduce)
 
-> 
-> Would a selftest for this be appropriate?  To give testers some way of
-> exercising the code and make to life better for people who are enabling
-> this on other architectures.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202510230738.OD0OO0n6-lkp@intel.com/
 
-Yes we should definitely have selftests. But we are far from getting there.
-One requirement is that the toolchain used to build the test must support
-adding sframes.
+All warnings (new ones prefixed by >>):
 
-> 
-> In what tree do you anticipate this project being carried?
-> 
+>> drivers/hwtracing/stm/p_ost.c:172:6: warning: unused variable 'i' [-Wunused-variable]
+     172 |         int i;
+         |             ^
+   1 warning generated.
 
-It will likely go between tip or my tree.
 
--- Steve
+vim +/i +172 drivers/hwtracing/stm/p_ost.c
+
+   154	
+   155	static ssize_t
+   156	notrace ost_write(struct stm_data *data, struct stm_output *output,
+   157			  unsigned int chan, const char *buf, size_t count,
+   158			  struct stm_source_data *source)
+   159	{
+   160		unsigned int c = output->channel + chan;
+   161		unsigned int m = output->master;
+   162		const unsigned char nil = 0;
+   163		u32 header = DATA_HEADER;
+   164		struct trc_hdr {
+   165			u16 version;
+   166			u16 magic;
+   167			u32 cpu;
+   168			u64 timestamp;
+   169			u64 tgid;
+   170		} hdr;
+   171		ssize_t sz;
+ > 172		int i;
+   173		struct ost_output *op = output->pdrv_private;
+   174	
+   175		/*
+   176		 * Identify the source by entity type.
+   177		 * If entity type is not set, return error value.
+   178		 */
+   179		if (op->node.entity_type)
+   180			header |= ost_entity_value[op->node.entity_type];
+   181		else
+   182			return -EINVAL;
+   183	
+   184		/*
+   185		 * STP framing rules for OST frames:
+   186		 *   * the first packet of the OST frame is marked;
+   187		 *   * the last packet is a FLAG with timestamped tag.
+   188		 */
+   189		/* Message layout: HEADER / DATA / TAIL */
+   190		/* HEADER */
+   191		sz = data->packet(data, m, c, STP_PACKET_DATA, STP_PACKET_MARKED,
+   192				  4, (u8 *)&header);
+   193		if (sz <= 0)
+   194			return sz;
+   195	
+   196		/* DATA */
+   197		hdr.version	= STM_MAKE_VERSION(0, 3);
+   198		hdr.magic	= STM_HEADER_MAGIC;
+   199		hdr.cpu		= raw_smp_processor_id();
+   200		hdr.timestamp = sched_clock();
+   201		hdr.tgid	= task_tgid_nr(current);
+   202		sz = stm_data_write(data, m, c, false, &hdr, sizeof(hdr));
+   203		if (sz <= 0)
+   204			return sz;
+   205	
+   206		sz = stm_data_write(data, m, c, false, buf, count);
+   207	
+   208		/* TAIL */
+   209		if (sz > 0)
+   210			data->packet(data, m, c, STP_PACKET_FLAG,
+   211				STP_PACKET_TIMESTAMPED, 0, &nil);
+   212	
+   213		return sz;
+   214	}
+   215	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
