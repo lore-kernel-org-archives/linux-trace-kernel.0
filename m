@@ -1,338 +1,286 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AD8A261B70
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 22 Oct 2025 22:45:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4FF122D4E9;
+	Wed, 22 Oct 2025 22:52:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761173132; cv=none; b=iKOKKK72RpDBToN8eQP/Z91Rxzc6WBl1BpgmnQGk550xcG0rRI6F1xHMEv2cpm0+ZKrw/LNkVpdywISoGXgEZahzg0vjphEYXhqT/dTxNHciSDwfYRwMlM3orQ/iXe6Lq30q/qZ54VDFAktGbDt2BysPyxOWJqJQl9851NV0qv4=
+	t=1761173563; cv=none; b=d+fodT5xtRRLCmc3IGa0WbUDUBcDc+dfK9S3SowP1hlP3AQZMUbpPy07YfBd/eQJO/Yqfc1lvqUx+damXvtdYBIx3JU1bHI6K1T/WCH1a4pV28oqAYdsgyMdgEWuCS+iZs+ndAIYV/tUY9DdVlN/Bt1ZVnPVqXm7kW79scvyt74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761173132; c=relaxed/simple;
-	bh=V5Zc0HlkBIosrLePMk48I+xG6HyK0OvSh8a8dnHIO80=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Rppi/iAenc84quj1e6V/nU189SQWCKT2h5+pMIDH5BA3sOXVVMYzCkEYubMX5Lbb40cqx1Bx+SXYqu8peR8EiBzLHGqnTageFB6WGfkjo7PtcsR9W/5w65c6JIzDmZze4wzP1lsC4OYthT0ScSzPlmX0zrhZVnba/32NUf6w5pM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ps5i16Lv; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
+	s=arc-20240116; t=1761173563; c=relaxed/simple;
+	bh=Wm/ckbgUKXf3zfHORTTggg4sYZPiF19095C/Ve2uhIk=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=pMAKX4XGYpoHMIlU9rjcGH8nguL8SYvwKQspmUgVZsAM2KWufjEz/MyuzLK37hC9ZgTY+ZVRjinXN2AUHV/Z7//qvpChOcaqsUHXGThbzTWHW5XMHIL0TkIm1bTj74a5Z7c1vcx09U8KQo227HNPRCKdobHKWDjjLulX92l5Opo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lASh8C+l; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ps5i16Lv"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-27356178876so657475ad.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 22 Oct 2025 15:45:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1761173130; x=1761777930; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=gGF3nY+bQhEuJksVeN/ApJVbDNkeBuYq31H02jFVpBo=;
-        b=ps5i16Lv1zKL9/XFMVts0n4wGDIzrh0w5Bb0iMcHwe17/Bn/MfXvNpfKwgxWyfyd3S
-         2WX0Wi5J15awVyYZb0IWIQAiUQsWCgsC656RbO04esie6zAWC88+HIJQq8Da7EDDmU3T
-         rn6VPN/jfAdNxFmF+wwRRxasVdFa8sE3JiCuYx8fywZXGYuwzvpZn7AKV5XKS1CeRFct
-         SV1o2HoGwwSTmB5jrKDu2uKEQhQZTvnyylFTASo/G3JAGNpqTkBAL9XgGcXpsbdohHKO
-         E8iqsSqnZUNBxWJzdY9AeeghbDFWU5rIIM4wGV/6xTzaQbuXvCY8LOJuEfJjXN2bG9br
-         q+XA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761173130; x=1761777930;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gGF3nY+bQhEuJksVeN/ApJVbDNkeBuYq31H02jFVpBo=;
-        b=HdLNbeFrRMaBhCIMhV7A6UQR8BOpJoG8jnHe3LYuFx/Y6LA5GzO3AE1H5VRTYqZDh1
-         qHobtpKYkSNVMBeJUXyNYwyXhdLaQ7a2ZzgA8rCDay7aTMg3qbnAvZPgliMh5EdIOrkD
-         DWUHf2WCuAHoa85xUVmdrEl1HxsRPGv981GU0yj0NRgdgeAnJKKmWMOEJHXrjwxl3x3q
-         MFRkK/QxvW3jCoRTGdQdmuUe8tX7P0+nLv4QvGZJvkCDEjtsEI0RtL6ljbVMsbu76An5
-         cQQUPCSJbHhyJu1yJNqmknMrkpWeYrzsb6dTChw3wultFbTwFRED+OdbPBqv3HI7bEZ0
-         L20w==
-X-Forwarded-Encrypted: i=1; AJvYcCUXYErUnMcmcNUOTn8ETDyhk6d8Q1mbBZ5jEDte1h14VlLLWFFejtkwb6Bivz4xytrUtnKCd+6Rvlqcoj3z3QGePdw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz88iiWOHUpSu2P3Q6F0eVbdwXxYdHMQzo7L3nJ+5dHS5uQdLo4
-	pXHdgmRv3Zd9IbeMCbel7ovffsaOxVt2YEYnbR+Nc+zDn9ZceS/8pKPupti3slbwJUTVlLKQ9UA
-	5NdRXfLJdP7I1mltCLi90nBFlVQ==
-X-Google-Smtp-Source: AGHT+IHD5TZ3PlH4BoXojkeR7Hq6pa25rPFAC44tSG4hp0SVSWugJiynOfGyj0/LVdH6RcIi4tLRlKxt4/SfCTBJBg==
-X-Received: from pjbfv10.prod.google.com ([2002:a17:90b:e8a:b0:33b:ab61:4f71])
- (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:902:f70b:b0:283:c950:a76f with SMTP id d9443c01a7336-290cc2f91d2mr289431935ad.43.1761173129640;
- Wed, 22 Oct 2025 15:45:29 -0700 (PDT)
-Date: Wed, 22 Oct 2025 15:45:28 -0700
-In-Reply-To: <diqz4irqg9qy.fsf@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lASh8C+l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB3B3C4CEE7;
+	Wed, 22 Oct 2025 22:52:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761173563;
+	bh=Wm/ckbgUKXf3zfHORTTggg4sYZPiF19095C/Ve2uhIk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=lASh8C+l/byala0UUt/I+eAp2W9jEZSw+d611+S66om1c8sz2Do+gdUo0dZPjjAZi
+	 Hvx8qdrIHxIif+Fpt7nGhhEvCXCjfTqpDTUn8X1GF/wBi9zHZgSLHAOeYtHDjau/uu
+	 pAS6GOVPjMvJKHL50WKdRxlw7+ef+fXjkVDETcvV+gdJuHgwOksZ/YMN+Kx1dzhT6K
+	 OZRx747NH7ksUrsqR41NSuYesD28QV3TILtVIFkHA/5JxPT26K4O5WUO2lKvNfnEQJ
+	 2KNUvtOTR2pY0PD82QO2+KkAmnNzgtD8Q7EL8epk196smccm++zmZqMauuGqm+rkyv
+	 ultVDajf6nORA==
+Date: Thu, 23 Oct 2025 07:52:39 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Menglong Dong <menglong8.dong@gmail.com>
+Cc: rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
+ jiang.biao@linux.dev, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/2] tracing: fprobe: optimization for entry only
+ case
+Message-Id: <20251023075239.12ec605954eda85c198f1e20@kernel.org>
+In-Reply-To: <20251015083238.2374294-2-dongml2@chinatelecom.cn>
+References: <20251015083238.2374294-1-dongml2@chinatelecom.cn>
+	<20251015083238.2374294-2-dongml2@chinatelecom.cn>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <cover.1760731772.git.ackerleytng@google.com> <8ee16fbf254115b0fd72cc2b5c06d2ccef66eca9.1760731772.git.ackerleytng@google.com>
- <2457cb3b-5dde-4ca1-b75d-174b5daee28a@arm.com> <diqz4irqg9qy.fsf@google.com>
-Message-ID: <diqzy0p2eet3.fsf@google.com>
-Subject: Re: [RFC PATCH v1 07/37] KVM: Introduce KVM_SET_MEMORY_ATTRIBUTES2
-From: Ackerley Tng <ackerleytng@google.com>
-To: Steven Price <steven.price@arm.com>, cgroups@vger.kernel.org, kvm@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, x86@kernel.org
-Cc: akpm@linux-foundation.org, binbin.wu@linux.intel.com, bp@alien8.de, 
-	brauner@kernel.org, chao.p.peng@intel.com, chenhuacai@kernel.org, 
-	corbet@lwn.net, dave.hansen@intel.com, dave.hansen@linux.intel.com, 
-	david@redhat.com, dmatlack@google.com, erdemaktas@google.com, 
-	fan.du@intel.com, fvdl@google.com, haibo1.xu@intel.com, hannes@cmpxchg.org, 
-	hch@infradead.org, hpa@zytor.com, hughd@google.com, ira.weiny@intel.com, 
-	isaku.yamahata@intel.com, jack@suse.cz, james.morse@arm.com, 
-	jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com, jhubbard@nvidia.com, 
-	jthoughton@google.com, jun.miao@intel.com, kai.huang@intel.com, 
-	keirf@google.com, kent.overstreet@linux.dev, liam.merwick@oracle.com, 
-	maciej.wieczor-retman@intel.com, mail@maciej.szmigiero.name, 
-	maobibo@loongson.cn, mathieu.desnoyers@efficios.com, maz@kernel.org, 
-	mhiramat@kernel.org, mhocko@kernel.org, mic@digikod.net, michael.roth@amd.com, 
-	mingo@redhat.com, mlevitsk@redhat.com, mpe@ellerman.id.au, 
-	muchun.song@linux.dev, nikunj@amd.com, nsaenz@amazon.es, 
-	oliver.upton@linux.dev, palmer@dabbelt.com, pankaj.gupta@amd.com, 
-	paul.walmsley@sifive.com, pbonzini@redhat.com, peterx@redhat.com, 
-	pgonda@google.com, prsampat@amd.com, pvorel@suse.cz, qperret@google.com, 
-	richard.weiyang@gmail.com, rick.p.edgecombe@intel.com, rientjes@google.com, 
-	rostedt@goodmis.org, roypat@amazon.co.uk, rppt@kernel.org, seanjc@google.com, 
-	shakeel.butt@linux.dev, shuah@kernel.org, suzuki.poulose@arm.com, 
-	tabba@google.com, tglx@linutronix.de, thomas.lendacky@amd.com, 
-	vannapurve@google.com, vbabka@suse.cz, viro@zeniv.linux.org.uk, 
-	vkuznets@redhat.com, will@kernel.org, willy@infradead.org, wyihan@google.com, 
-	xiaoyao.li@intel.com, yan.y.zhao@intel.com, yilun.xu@intel.com, 
-	yuzenghui@huawei.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Ackerley Tng <ackerleytng@google.com> writes:
+On Wed, 15 Oct 2025 16:32:37 +0800
+Menglong Dong <menglong8.dong@gmail.com> wrote:
 
-Found another issue with KVM_CAP_MEMORY_ATTRIBUTES2.
+> For now, fgraph is used for the fprobe, even if we need trace the entry
+> only. However, the performance of ftrace is better than fgraph, and we
+> can use ftrace_ops for this case.
+> 
+> Then performance of kprobe-multi increases from 54M to 69M. Before this
+> commit:
+> 
+>   $ ./benchs/run_bench_trigger.sh kprobe-multi
+>   kprobe-multi   :   54.663 ± 0.493M/s
+> 
+> After this commit:
+> 
+>   $ ./benchs/run_bench_trigger.sh kprobe-multi
+>   kprobe-multi   :   69.447 ± 0.143M/s
+> 
+> Mitigation is disable during the bench testing above.
+> 
 
-KVM_CAP_MEMORY_ATTRIBUTES2 was defined to do the same thing as
-KVM_CAP_MEMORY_ATTRIBUTES, but that's wrong since
-KVM_CAP_MEMORY_ATTRIBUTES2 should indicate the presence of
-KVM_SET_MEMORY_ATTRIBUTES2 and struct kvm_memory_attributes2.
+Looks good to me. Thanks!
 
-Usage is kind of weird and I hope to get feedback on this as
-well.
+> Signed-off-by: Menglong Dong <dongml2@chinatelecom.cn>
+> ---
+> v4:
+> - fallback to fgraph if FTRACE_OPS_FL_SAVE_REGS not supported
+> 
+> v3:
+> - add some comment to the rcu_read_lock() in fprobe_ftrace_entry()
+> 
+> v2:
+> - add some document for fprobe_fgraph_entry as Masami suggested
+> - merge the rename of fprobe_entry into current patch
+> - use ftrace_test_recursion_trylock() in fprobe_ftrace_entry()
+> ---
+>  kernel/trace/fprobe.c | 128 +++++++++++++++++++++++++++++++++++++++---
+>  1 file changed, 119 insertions(+), 9 deletions(-)
+> 
+> diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
+> index 99d83c08b9e2..ecd623eef68b 100644
+> --- a/kernel/trace/fprobe.c
+> +++ b/kernel/trace/fprobe.c
+> @@ -254,8 +254,106 @@ static inline int __fprobe_kprobe_handler(unsigned long ip, unsigned long parent
+>  	return ret;
+>  }
+>  
+> -static int fprobe_entry(struct ftrace_graph_ent *trace, struct fgraph_ops *gops,
+> -			struct ftrace_regs *fregs)
+> +#ifdef CONFIG_DYNAMIC_FTRACE_WITH_REGS
+> +/* ftrace_ops callback, this processes fprobes which have only entry_handler. */
+> +static void fprobe_ftrace_entry(unsigned long ip, unsigned long parent_ip,
+> +	struct ftrace_ops *ops, struct ftrace_regs *fregs)
+> +{
+> +	struct fprobe_hlist_node *node;
+> +	struct rhlist_head *head, *pos;
+> +	struct fprobe *fp;
+> +	int bit;
+> +
+> +	bit = ftrace_test_recursion_trylock(ip, parent_ip);
+> +	if (bit < 0)
+> +		return;
+> +
+> +	/*
+> +	 * ftrace_test_recursion_trylock() disables preemption, but
+> +	 * rhltable_lookup() checks whether rcu_read_lcok is held.
+> +	 * So we take rcu_read_lock() here.
+> +	 */
+> +	rcu_read_lock();
+> +	head = rhltable_lookup(&fprobe_ip_table, &ip, fprobe_rht_params);
+> +
+> +	rhl_for_each_entry_rcu(node, pos, head, hlist) {
+> +		if (node->addr != ip)
+> +			break;
+> +		fp = READ_ONCE(node->fp);
+> +		if (unlikely(!fp || fprobe_disabled(fp) || fp->exit_handler))
+> +			continue;
+> +
+> +		if (fprobe_shared_with_kprobes(fp))
+> +			__fprobe_kprobe_handler(ip, parent_ip, fp, fregs, NULL);
+> +		else
+> +			__fprobe_handler(ip, parent_ip, fp, fregs, NULL);
+> +	}
+> +	rcu_read_unlock();
+> +	ftrace_test_recursion_unlock(bit);
+> +}
+> +NOKPROBE_SYMBOL(fprobe_ftrace_entry);
+> +
+> +static struct ftrace_ops fprobe_ftrace_ops = {
+> +	.func	= fprobe_ftrace_entry,
+> +	.flags	= FTRACE_OPS_FL_SAVE_REGS,
+> +};
+> +static int fprobe_ftrace_active;
+> +
+> +static int fprobe_ftrace_add_ips(unsigned long *addrs, int num)
+> +{
+> +	int ret;
+> +
+> +	lockdep_assert_held(&fprobe_mutex);
+> +
+> +	ret = ftrace_set_filter_ips(&fprobe_ftrace_ops, addrs, num, 0, 0);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (!fprobe_ftrace_active) {
+> +		ret = register_ftrace_function(&fprobe_ftrace_ops);
+> +		if (ret) {
+> +			ftrace_free_filter(&fprobe_ftrace_ops);
+> +			return ret;
+> +		}
+> +	}
+> +	fprobe_ftrace_active++;
+> +	return 0;
+> +}
+> +
+> +static void fprobe_ftrace_remove_ips(unsigned long *addrs, int num)
+> +{
+> +	lockdep_assert_held(&fprobe_mutex);
+> +
+> +	fprobe_ftrace_active--;
+> +	if (!fprobe_ftrace_active)
+> +		unregister_ftrace_function(&fprobe_ftrace_ops);
+> +	if (num)
+> +		ftrace_set_filter_ips(&fprobe_ftrace_ops, addrs, num, 1, 0);
+> +}
+> +
+> +static bool fprobe_is_ftrace(struct fprobe *fp)
+> +{
+> +	return !fp->exit_handler;
+> +}
+> +#else
+> +static int fprobe_ftrace_add_ips(unsigned long *addrs, int num)
+> +{
+> +	return -ENOENT;
+> +}
+> +
+> +static void fprobe_ftrace_remove_ips(unsigned long *addrs, int num)
+> +{
+> +}
+> +
+> +static bool fprobe_is_ftrace(struct fprobe *fp)
+> +{
+> +	return false;
+> +}
+> +#endif
+> +
+> +/* fgraph_ops callback, this processes fprobes which have exit_handler. */
+> +static int fprobe_fgraph_entry(struct ftrace_graph_ent *trace, struct fgraph_ops *gops,
+> +			       struct ftrace_regs *fregs)
+>  {
+>  	unsigned long *fgraph_data = NULL;
+>  	unsigned long func = trace->func;
+> @@ -292,7 +390,7 @@ static int fprobe_entry(struct ftrace_graph_ent *trace, struct fgraph_ops *gops,
+>  				if (node->addr != func)
+>  					continue;
+>  				fp = READ_ONCE(node->fp);
+> -				if (fp && !fprobe_disabled(fp))
+> +				if (fp && !fprobe_disabled(fp) && !fprobe_is_ftrace(fp))
+>  					fp->nmissed++;
+>  			}
+>  			return 0;
+> @@ -312,7 +410,7 @@ static int fprobe_entry(struct ftrace_graph_ent *trace, struct fgraph_ops *gops,
+>  		if (node->addr != func)
+>  			continue;
+>  		fp = READ_ONCE(node->fp);
+> -		if (!fp || fprobe_disabled(fp))
+> +		if (unlikely(!fp || fprobe_disabled(fp) || fprobe_is_ftrace(fp)))
+>  			continue;
+>  
+>  		data_size = fp->entry_data_size;
+> @@ -340,7 +438,7 @@ static int fprobe_entry(struct ftrace_graph_ent *trace, struct fgraph_ops *gops,
+>  	/* If any exit_handler is set, data must be used. */
+>  	return used != 0;
+>  }
+> -NOKPROBE_SYMBOL(fprobe_entry);
+> +NOKPROBE_SYMBOL(fprobe_fgraph_entry);
+>  
+>  static void fprobe_return(struct ftrace_graph_ret *trace,
+>  			  struct fgraph_ops *gops,
+> @@ -379,7 +477,7 @@ static void fprobe_return(struct ftrace_graph_ret *trace,
+>  NOKPROBE_SYMBOL(fprobe_return);
+>  
+>  static struct fgraph_ops fprobe_graph_ops = {
+> -	.entryfunc	= fprobe_entry,
+> +	.entryfunc	= fprobe_fgraph_entry,
+>  	.retfunc	= fprobe_return,
+>  };
+>  static int fprobe_graph_active;
+> @@ -498,9 +596,14 @@ static int fprobe_module_callback(struct notifier_block *nb,
+>  	} while (node == ERR_PTR(-EAGAIN));
+>  	rhashtable_walk_exit(&iter);
+>  
+> -	if (alist.index > 0)
+> +	if (alist.index > 0) {
+>  		ftrace_set_filter_ips(&fprobe_graph_ops.ops,
+>  				      alist.addrs, alist.index, 1, 0);
+> +#ifdef CONFIG_DYNAMIC_FTRACE_WITH_REGS
+> +		ftrace_set_filter_ips(&fprobe_ftrace_ops,
+> +				      alist.addrs, alist.index, 1, 0);
+> +#endif
+> +	}
+>  	mutex_unlock(&fprobe_mutex);
+>  
+>  	kfree(alist.addrs);
+> @@ -733,7 +836,11 @@ int register_fprobe_ips(struct fprobe *fp, unsigned long *addrs, int num)
+>  	mutex_lock(&fprobe_mutex);
+>  
+>  	hlist_array = fp->hlist_array;
+> -	ret = fprobe_graph_add_ips(addrs, num);
+> +	if (fprobe_is_ftrace(fp))
+> +		ret = fprobe_ftrace_add_ips(addrs, num);
+> +	else
+> +		ret = fprobe_graph_add_ips(addrs, num);
+> +
+>  	if (!ret) {
+>  		add_fprobe_hash(fp);
+>  		for (i = 0; i < hlist_array->size; i++) {
+> @@ -829,7 +936,10 @@ int unregister_fprobe(struct fprobe *fp)
+>  	}
+>  	del_fprobe_hash(fp);
+>  
+> -	fprobe_graph_remove_ips(addrs, count);
+> +	if (fprobe_is_ftrace(fp))
+> +		fprobe_ftrace_remove_ips(addrs, count);
+> +	else
+> +		fprobe_graph_remove_ips(addrs, count);
+>  
+>  	kfree_rcu(hlist_array, rcu);
+>  	fp->hlist_array = NULL;
+> -- 
+> 2.51.0
+> 
 
-This describes the difference between the previous version of this patch
-and the one attached below.
 
-I also added this to the changelog
-
-  Add KVM_CAP_MEMORY_ATTRIBUTES2 to indicate that struct
-  kvm_memory_attributes2 exists and can be used either with
-  KVM_SET_MEMORY_ATTRIBUTES2 via the vm or guest_memfd ioctl.
-
-  Since KVM_SET_MEMORY_ATTRIBUTES2 is not limited to be used only with the vm
-  ioctl, return 1 for KVM_CAP_MEMORY_ATTRIBUTES2 as long as struct
-  kvm_memory_attributes2 and KVM_SET_MEMORY_ATTRIBUTES2 can be
-  used. KVM_CAP_MEMORY_ATTRIBUTES must still be used to actually get valid
-  attributes.
-
-  Handle KVM_CAP_MEMORY_ATTRIBUTES2 and return 1 regardless of
-  CONFIG_KVM_VM_MEMORY_ATTRIBUTES, since KVM_SET_MEMORY_ATTRIBUTES2 is not
-  limited to a vm ioctl and can also be used with the guest_memfd ioctl.
-
-
-Here's the entire patch so hopefully it's easy to swap out this entire
-patch over the original one.
-
-
-
-From 8887ba58f6fd97c529c8152d6f18e5e26651dbec Mon Sep 17 00:00:00 2001
-From: Ackerley Tng <ackerleytng@google.com>
-Date: Thu, 16 Oct 2025 11:48:01 -0700
-Subject: [PATCH] KVM: Introduce KVM_SET_MEMORY_ATTRIBUTES2
-
-Introduce a "version 2" of KVM_SET_MEMORY_ATTRIBUTES to support returning
-information back to userspace.
-
-This new ioctl and structure will, in a later patch, be shared as a
-guest_memfd ioctl, where the padding in the new kvm_memory_attributes2
-structure will be for writing the response from the guest_memfd ioctl to
-userspace.
-
-A new ioctl is necessary for these reasons:
-
-1. KVM_SET_MEMORY_ATTRIBUTES is currently a write-only ioctl and does not
-   allow userspace to read fields. There's nothing in code (yet?) that
-   validates this, but using _IOWR for consistency would be prudent.
-
-2. KVM_SET_MEMORY_ATTRIBUTES, when used as a guest_memfd ioctl, will need
-   an additional field to provide userspace with more error details.
-
-Alternatively, a completely new ioctl could be defined, unrelated to
-KVM_SET_MEMORY_ATTRIBUTES, but using the same ioctl number and struct for
-the vm and guest_memfd ioctls streamlines the interface for userspace. In
-addition, any memory attributes, implemented on the vm or guest_memfd
-ioctl, can be easily shared with the other.
-
-Add KVM_CAP_MEMORY_ATTRIBUTES2 to indicate that struct
-kvm_memory_attributes2 exists and can be used either with
-KVM_SET_MEMORY_ATTRIBUTES2 via the vm or guest_memfd ioctl.
-
-Since KVM_SET_MEMORY_ATTRIBUTES2 is not limited to be used only with the vm
-ioctl, return 1 for KVM_CAP_MEMORY_ATTRIBUTES2 as long as struct
-kvm_memory_attributes2 and KVM_SET_MEMORY_ATTRIBUTES2 can be
-used. KVM_CAP_MEMORY_ATTRIBUTES must still be used to actually get valid
-attributes.
-
-Handle KVM_CAP_MEMORY_ATTRIBUTES2 and return 1 regardless of
-CONFIG_KVM_VM_MEMORY_ATTRIBUTES, since KVM_SET_MEMORY_ATTRIBUTES2 is not
-limited to a vm ioctl and can also be used with the guest_memfd ioctl.
-
-Suggested-by: Sean Christopherson <seanjc@google.com>
-Change-Id: I50cd506d9a28bf68a90e659015603de579569bc1
-Signed-off-by: Ackerley Tng <ackerleytng@google.com>
----
- Documentation/virt/kvm/api.rst | 32 ++++++++++++++++++++++++++++++++
- include/uapi/linux/kvm.h       | 12 ++++++++++++
- virt/kvm/kvm_main.c            | 34 +++++++++++++++++++++++++++++++---
- 3 files changed, 75 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-index 754b662a453c3..a812769d79bf6 100644
---- a/Documentation/virt/kvm/api.rst
-+++ b/Documentation/virt/kvm/api.rst
-@@ -6355,6 +6355,8 @@ S390:
- Returns -EINVAL if the VM has the KVM_VM_S390_UCONTROL flag set.
- Returns -EINVAL if called on a protected VM.
- 
-+.. _KVM_SET_MEMORY_ATTRIBUTES:
-+
- 4.141 KVM_SET_MEMORY_ATTRIBUTES
- -------------------------------
- 
-@@ -6512,6 +6514,36 @@ the capability to be present.
- 
- `flags` must currently be zero.
- 
-+4.144 KVM_SET_MEMORY_ATTRIBUTES2
-+---------------------------------
-+
-+:Capability: KVM_CAP_MEMORY_ATTRIBUTES2
-+:Architectures: x86
-+:Type: vm ioctl
-+:Parameters: struct kvm_memory_attributes2 (in/out)
-+:Returns: 0 on success, <0 on error
-+
-+KVM_SET_MEMORY_ATTRIBUTES2 is an extension to
-+KVM_SET_MEMORY_ATTRIBUTES that supports returning (writing) values to
-+userspace.  The original (pre-extension) fields are shared with
-+KVM_SET_MEMORY_ATTRIBUTES identically.
-+
-+Attribute values are shared with KVM_SET_MEMORY_ATTRIBUTES.
-+
-+::
-+
-+  struct kvm_memory_attributes2 {
-+	__u64 address;
-+	__u64 size;
-+	__u64 attributes;
-+	__u64 flags;
-+	__u64 reserved[4];
-+  };
-+
-+  #define KVM_MEMORY_ATTRIBUTE_PRIVATE           (1ULL << 3)
-+
-+See also: :ref: `KVM_SET_MEMORY_ATTRIBUTES`.
-+
- 
- .. _kvm_run:
- 
-diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-index 52f6000ab0208..c300e38c7c9cd 100644
---- a/include/uapi/linux/kvm.h
-+++ b/include/uapi/linux/kvm.h
-@@ -963,6 +963,7 @@ struct kvm_enable_cap {
- #define KVM_CAP_RISCV_MP_STATE_RESET 242
- #define KVM_CAP_ARM_CACHEABLE_PFNMAP_SUPPORTED 243
- #define KVM_CAP_GUEST_MEMFD_FLAGS 244
-+#define KVM_CAP_MEMORY_ATTRIBUTES2 245
- 
- struct kvm_irq_routing_irqchip {
- 	__u32 irqchip;
-@@ -1617,4 +1618,15 @@ struct kvm_pre_fault_memory {
- 	__u64 padding[5];
- };
- 
-+/* Available with KVM_CAP_MEMORY_ATTRIBUTES2 */
-+#define KVM_SET_MEMORY_ATTRIBUTES2              _IOWR(KVMIO,  0xd6, struct kvm_memory_attributes2)
-+
-+struct kvm_memory_attributes2 {
-+	__u64 address;
-+	__u64 size;
-+	__u64 attributes;
-+	__u64 flags;
-+	__u64 reserved[4];
-+};
-+
- #endif /* __LINUX_KVM_H */
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 35166754a22b4..d083011744eba 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -2621,7 +2621,7 @@ static int kvm_vm_set_mem_attributes(struct kvm *kvm, gfn_t start, gfn_t end,
- 	return r;
- }
- static int kvm_vm_ioctl_set_mem_attributes(struct kvm *kvm,
--					   struct kvm_memory_attributes *attrs)
-+					   struct kvm_memory_attributes2 *attrs)
- {
- 	gfn_t start, end;
- 
-@@ -4957,6 +4957,7 @@ static int kvm_vm_ioctl_check_extension_generic(struct kvm *kvm, long arg)
- 	case KVM_CAP_BINARY_STATS_FD:
- 	case KVM_CAP_SYSTEM_EVENT_DATA:
- 	case KVM_CAP_DEVICE_CTRL:
-+	case KVM_CAP_MEMORY_ATTRIBUTES2:
- 		return 1;
- #ifdef CONFIG_KVM_VM_MEMORY_ATTRIBUTES
- 	case KVM_CAP_MEMORY_ATTRIBUTES:
-@@ -5184,6 +5185,14 @@ do {										\
- 		     sizeof_field(struct kvm_userspace_memory_region2, field));	\
- } while (0)
- 
-+#define SANITY_CHECK_MEMORY_ATTRIBUTES_FIELD(field)				\
-+do {										\
-+	BUILD_BUG_ON(offsetof(struct kvm_memory_attributes, field) !=		\
-+		     offsetof(struct kvm_memory_attributes2, field));		\
-+	BUILD_BUG_ON(sizeof_field(struct kvm_memory_attributes, field) !=	\
-+		     sizeof_field(struct kvm_memory_attributes2, field));	\
-+} while (0)
-+
- static long kvm_vm_ioctl(struct file *filp,
- 			   unsigned int ioctl, unsigned long arg)
- {
-@@ -5366,15 +5375,34 @@ static long kvm_vm_ioctl(struct file *filp,
- 	}
- #endif /* CONFIG_HAVE_KVM_IRQ_ROUTING */
- #ifdef CONFIG_KVM_VM_MEMORY_ATTRIBUTES
-+	case KVM_SET_MEMORY_ATTRIBUTES2:
- 	case KVM_SET_MEMORY_ATTRIBUTES: {
--		struct kvm_memory_attributes attrs;
-+		struct kvm_memory_attributes2 attrs;
-+		unsigned long size;
-+
-+		if (ioctl == KVM_SET_MEMORY_ATTRIBUTES) {
-+			/*
-+			 * Fields beyond struct kvm_userspace_memory_region shouldn't be
-+			 * accessed, but avoid leaking kernel memory in case of a bug.
-+			 */
-+			memset(&attrs, 0, sizeof(attrs));
-+			size = sizeof(struct kvm_memory_attributes);
-+		} else {
-+			size = sizeof(struct kvm_memory_attributes2);
-+		}
-+
-+		/* Ensure the common parts of the two structs are identical. */
-+		SANITY_CHECK_MEMORY_ATTRIBUTES_FIELD(address);
-+		SANITY_CHECK_MEMORY_ATTRIBUTES_FIELD(size);
-+		SANITY_CHECK_MEMORY_ATTRIBUTES_FIELD(attributes);
-+		SANITY_CHECK_MEMORY_ATTRIBUTES_FIELD(flags);
- 
- 		r = -ENOTTY;
- 		if (!vm_memory_attributes)
- 			goto out;
- 
- 		r = -EFAULT;
--		if (copy_from_user(&attrs, argp, sizeof(attrs)))
-+		if (copy_from_user(&attrs, argp, size))
- 			goto out;
- 
- 		r = kvm_vm_ioctl_set_mem_attributes(kvm, &attrs);
 -- 
-2.51.1.838.g19442a804e-goog
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
