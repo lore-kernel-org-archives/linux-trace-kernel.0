@@ -1,94 +1,353 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62F6B35B121;
-	Wed, 22 Oct 2025 16:32:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B208035B121
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 22 Oct 2025 16:51:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761150762; cv=none; b=HVaAD1DLjVFpKubYTly/kM2B+GBwZon7XqJk2KK23Gh3rfArSCWjqDmpYH5GUUsOQqOI0XSUCItILE7diXjhW/6rxECmIMieapPj2/W0Ixt69Xd0Z3mmgItdOLUg/zJ9c5kIeOmrE1A0yyrcqlW0HNcrDxyk7DjRoVRuxLziUKo=
+	t=1761151914; cv=none; b=ZGXSgh0XUP2KCZn/T5QR4WhbdLik2jmX3BNsjAyT1Jxv1HguZVsnU+dir0SuFJJAbdtLlX+sriWqOM1TeW9BMsWisv7j0rg1LiNOa0ve15PU3e9vQ5XY6efMb1WTQJuXpF7RXveR+A5Xr9h5lneNGasBdWIFhiMlq6x0ehwvhO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761150762; c=relaxed/simple;
-	bh=Rabe9jUuVL6lmA4d/LYRw8joJ8siQMuCn73qAvRcDYg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VGHPpEnO07TcPZU0f/7NWpzfxhHT3C9P2nlGIZnM8hLfLPi7Z0U9VdntP6/wjG7tip1tjc6EbcLVtOPcNrW9+jHO3QdLiESy2csUiuNGxzr4iG6zK6Bmc74LcsfJiK1EyhHOR9zo86tX5QFsox9daMAWaLvQZ6bMmdk+sy3ZUg8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf15.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay09.hostedemail.com (Postfix) with ESMTP id 2080788C98;
-	Wed, 22 Oct 2025 16:32:37 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf15.hostedemail.com (Postfix) with ESMTPA id 5A59F17;
-	Wed, 22 Oct 2025 16:32:35 +0000 (UTC)
-Date: Wed, 22 Oct 2025 12:32:59 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 2/2] tracing: Add an option to show symbols in
- _text+offset for function profiler
-Message-ID: <20251022123259.59ada139@gandalf.local.home>
-In-Reply-To: <176114749146.315239.7968358300215825393.stgit@devnote2>
-References: <176114747153.315239.6863821259073466010.stgit@devnote2>
-	<176114749146.315239.7968358300215825393.stgit@devnote2>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1761151914; c=relaxed/simple;
+	bh=ZA7nje4u8+QZXJw4GXGWPqWw+cfk8JcJt8Wa4NE0azQ=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=GHQm1ddz/lDXb/ATuHhfjklgevAifx+pjss6MqZ/hBLPgMgIh5ILQ1otBbg4w5I3MHj3tW+p74r/Hj5gw0rvV9mUWe8bUE0EqFtTy5Vhsw9VBl/00tC5kHZxNfqd1lTKem/Pd+6IhT8143u9TdHkBxZcP4B2DSQ4JlPriYIu7Qc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OX80Dl0z; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OX80Dl0z"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-33be4db19cfso11476685a91.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 22 Oct 2025 09:51:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1761151912; x=1761756712; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=lR6q3Jz4wEvNB1U/dBjL6AFCbuh1MpNj7/+QxukudLk=;
+        b=OX80Dl0zMNbTeDU0khi460DytX3OSC7bH/euG7VzjpUCZZAEs+rRgY24UErx2lSctW
+         soZ0k8yooG2GLEbc1lAKaKlRbnwtkZMQShD9iq4L4xf6dDeg/D2qXfwscFu6z4B5k4/I
+         tWqrsKPznnq1XUXwWnqAiltb4pV3KfhayqiF5R/DaPlwN9BlRm9F0bDYWedT2UR2F2dH
+         8FwIMcYwYiNe0afWV8CvlVh9NKSNuV/zwuSa0v8xW4Mbnn6UpWmM65cTJAwFR1MHDa+T
+         QWOyBZLYt6NYNT8ZDzkWOT8NfqdgCAw8GHR56qF/IsWjOABCvcRKnpdrofEcwoqRXGHF
+         d32A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761151912; x=1761756712;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lR6q3Jz4wEvNB1U/dBjL6AFCbuh1MpNj7/+QxukudLk=;
+        b=H1HAJG24ln5ImcsHOYEKr7B0KF/CwQPxQi2rhy+6eZB8zUy2h2iWC1iVT6BC4n4smR
+         0gHQPenR5lQ8pQn3bXbMlqyhoL9z8zpVKZvNY1y1wL9gaEtjdPpxWyj7wIMDkL+MBVeW
+         Tg1gpPNOkLlwx4PxuBHm1GCpuRA4tntiVIBXf6gpD+yin3z8xZofGRbbsI6Zto4pJaX1
+         Nb2xgOu3gvNGZS7CCooyfMoECL3h6wNMO83zrPwOwXK1twJoaWk2nLUiQVpZuRA6aCUU
+         +K3cfdvAf78YZ2puDlOLwoNFRG+ohqYr6FAMllvQH3LrAL/PHbmlfewduzhCy0E9tkQ3
+         Sypw==
+X-Forwarded-Encrypted: i=1; AJvYcCXGIdg+ipagxjyJ0OqVer+ZpesTtxs/trly7lOgdQXVGeOEAMAueOIpHv2rKODg+eCEGqas+SrndwB6QZVJrKzhLZs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz0MkX1hI0Gwy7/yX0qM3o8IU1Dv4Gl926Ckz2JJvZv4ZxXYsbR
+	RZWd4pOEV6+YsabeZxkkL+exgQPoz6S0lW0wo5dyzi5FpSJpzzKNZ0J3Hq8z2NTp+0oP1SDTBUr
+	Fg5aXACaC7kffn/aSj6sJMoQlWQ==
+X-Google-Smtp-Source: AGHT+IGwxAeNTPtzLvu/Zk8STiamMAryG8fKxvXZatC28J4mfBlAiSQlIt+hBpVpayKRInn/obOZc8kpR+KnyIdqIw==
+X-Received: from pjbiq12.prod.google.com ([2002:a17:90a:fb4c:b0:32b:ae4c:196c])
+ (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:90b:2d8b:b0:32e:23fe:fa51 with SMTP id 98e67ed59e1d1-33bcf867404mr28930141a91.9.1761151911659;
+ Wed, 22 Oct 2025 09:51:51 -0700 (PDT)
+Date: Wed, 22 Oct 2025 09:51:49 -0700
+In-Reply-To: <2457cb3b-5dde-4ca1-b75d-174b5daee28a@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: u5mptu14riymcqi7hzzpmo9o19uinth3
-X-Rspamd-Server: rspamout01
-X-Rspamd-Queue-Id: 5A59F17
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18uuuJWouDJhM0SKC4/KiNJCN4drf9VQ3I=
-X-HE-Tag: 1761150755-921461
-X-HE-Meta: U2FsdGVkX1//Qbs0RgUySDwaAPXDS8SNn6repQBp8bBiFvuHJIprS8dMO6gsOD6z4yPHWo+6moSoPK6AzhdRXffXUj337KLEuLvh6XQKB9oQ/aqyChoVy1iLbTR2jZJ0z1F+f3zhdCllygrmdwzxMqL8iFfr9GQVU4C+7nizWCV+jY0soaotXOBNV6qgW5+6KAlHM77DC71+T7rB5Dsjt4WkahZy99lkpkNnHOv+exfZi4fSvmIq+RAaLiPShi9TzUcEz7FPbFChP8Mbqc0jCzZOaD7/JMAhE8QFa/t41EmrMY2Kue4fWUSyeZ/Uevgalv3JDtNa2zVGgjWBn8iQiEa3qEvDejSf
+Mime-Version: 1.0
+References: <cover.1760731772.git.ackerleytng@google.com> <8ee16fbf254115b0fd72cc2b5c06d2ccef66eca9.1760731772.git.ackerleytng@google.com>
+ <2457cb3b-5dde-4ca1-b75d-174b5daee28a@arm.com>
+Message-ID: <diqz4irqg9qy.fsf@google.com>
+Subject: Re: [RFC PATCH v1 07/37] KVM: Introduce KVM_SET_MEMORY_ATTRIBUTES2
+From: Ackerley Tng <ackerleytng@google.com>
+To: Steven Price <steven.price@arm.com>, cgroups@vger.kernel.org, kvm@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, x86@kernel.org
+Cc: akpm@linux-foundation.org, binbin.wu@linux.intel.com, bp@alien8.de, 
+	brauner@kernel.org, chao.p.peng@intel.com, chenhuacai@kernel.org, 
+	corbet@lwn.net, dave.hansen@intel.com, dave.hansen@linux.intel.com, 
+	david@redhat.com, dmatlack@google.com, erdemaktas@google.com, 
+	fan.du@intel.com, fvdl@google.com, haibo1.xu@intel.com, hannes@cmpxchg.org, 
+	hch@infradead.org, hpa@zytor.com, hughd@google.com, ira.weiny@intel.com, 
+	isaku.yamahata@intel.com, jack@suse.cz, james.morse@arm.com, 
+	jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com, jhubbard@nvidia.com, 
+	jroedel@suse.de, jthoughton@google.com, jun.miao@intel.com, 
+	kai.huang@intel.com, keirf@google.com, kent.overstreet@linux.dev, 
+	liam.merwick@oracle.com, maciej.wieczor-retman@intel.com, 
+	mail@maciej.szmigiero.name, maobibo@loongson.cn, 
+	mathieu.desnoyers@efficios.com, maz@kernel.org, mhiramat@kernel.org, 
+	mhocko@kernel.org, mic@digikod.net, michael.roth@amd.com, mingo@redhat.com, 
+	mlevitsk@redhat.com, mpe@ellerman.id.au, muchun.song@linux.dev, 
+	nikunj@amd.com, nsaenz@amazon.es, oliver.upton@linux.dev, palmer@dabbelt.com, 
+	pankaj.gupta@amd.com, paul.walmsley@sifive.com, pbonzini@redhat.com, 
+	peterx@redhat.com, pgonda@google.com, prsampat@amd.com, pvorel@suse.cz, 
+	qperret@google.com, richard.weiyang@gmail.com, rick.p.edgecombe@intel.com, 
+	rientjes@google.com, rostedt@goodmis.org, roypat@amazon.co.uk, 
+	rppt@kernel.org, seanjc@google.com, shakeel.butt@linux.dev, shuah@kernel.org, 
+	steven.sistare@oracle.com, suzuki.poulose@arm.com, tabba@google.com, 
+	tglx@linutronix.de, thomas.lendacky@amd.com, vannapurve@google.com, 
+	vbabka@suse.cz, viro@zeniv.linux.org.uk, vkuznets@redhat.com, 
+	wei.w.wang@intel.com, will@kernel.org, willy@infradead.org, wyihan@google.com, 
+	xiaoyao.li@intel.com, yan.y.zhao@intel.com, yilun.xu@intel.com, 
+	yuzenghui@huawei.com, zhiquan1.li@intel.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 23 Oct 2025 00:38:11 +0900
-"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+Steven Price <steven.price@arm.com> writes:
 
-> @@ -554,7 +556,29 @@ static int function_stat_show(struct seq_file *m, void *v)
->  		return 0;
->  #endif
->  
-> -	kallsyms_lookup(rec->ip, NULL, NULL, NULL, str);
-> +	if (tr->trace_flags & TRACE_ITER(PROF_TEXT_OFFSET)) {
-> +		long offset;
-> +
-> +		if (core_kernel_text(rec->ip)) {
-> +			refsymbol = "_text";
-> +			offset = rec->ip - (unsigned long)_text;
-> +		} else {
-> +			struct module *mod;
-> +
-> +			guard(rcu)();
-> +			mod = __module_text_address(rec->ip);
-> +			if (mod) {
-> +				refsymbol = mod->name;
-> +				/* Calculate offset from module's text entry address. */
-> +				offset = rec->ip - (unsigned long)mod->mem[MOD_TEXT].base;
-> +			}
-> +		}
-> +		if (refsymbol)
-> +			snprintf(str, sizeof(str), "  %s%+ld", refsymbol, offset);
+> On 17/10/2025 21:11, Ackerley Tng wrote:
+>> 
+>> [...snip...]
+>> 
+>> @@ -5366,15 +5375,35 @@ static long kvm_vm_ioctl(struct file *filp,
+>>  	}
+>>  #endif /* CONFIG_HAVE_KVM_IRQ_ROUTING */
+>>  #ifdef CONFIG_KVM_VM_MEMORY_ATTRIBUTES
+>> +	case KVM_SET_MEMORY_ATTRIBUTES2:
+>>  	case KVM_SET_MEMORY_ATTRIBUTES: {
+>> -		struct kvm_memory_attributes attrs;
+>> +		struct kvm_memory_attributes2 attrs;
+>> +		unsigned long size;
+>> +
+>> +		if (ioctl == KVM_SET_MEMORY_ATTRIBUTES) {
+>> +			/*
+>> +			 * Fields beyond struct kvm_userspace_memory_region shouldn't be
+>> +			 * accessed, but avoid leaking kernel memory in case of a bug.
+>> +			 */
+>> +			memset(&mem, 0, sizeof(mem));
+>
+> s/mem/attrs/g
+>
+>> +			size = sizeof(struct kvm_set_memory_attributes);
+>> +		} else {
+>> +			size = sizeof(struct kvm_set_memory_attributes2);
+>
+> s/kvm_set_memory_attributes/kvm_memory_attributes/ (on both sizeof lines
+> above and in the SANITY_CHECK_MEMORY_ATTRIBUTES_FIELD macro).
+>
+>> +		}
+>> +
+>> +		/* Ensure the common parts of the two structs are identical. */
+>> +		SANITY_CHECK_MEMORY_ATTRIBUTES_FIELD(slot);
+>> +		SANITY_CHECK_MEMORY_ATTRIBUTES_FIELD(flags);
+>> +		SANITY_CHECK_MEMORY_ATTRIBUTES_FIELD(guest_phys_addr);
+>> +		SANITY_CHECK_MEMORY_ATTRIBUTES_FIELD(memory_size);
+>> +		SANITY_CHECK_MEMORY_ATTRIBUTES_FIELD(userspace_addr);
+>
+> The fields are:
+>   * address
+>   * size
+>   * attributes
+>   * flags
+>
+> The list you've got appears to match struct kvm_userspace_memory_region
+> - copy/paste error?
+>
 
-Let's be consistent as offsets are printed as hex every place else:
+Yes I did copy/paste this from KVM_SET_USER_MEMORY_REGION2.
 
-			snprintf(str, sizeof(str), "  %s+%#lx", refsymbol, offset);
+Thanks for catching this! I missed out build-testing this with
+CONFIG_KVM_VM_MEMORY_ATTRIBUTES.
 
-Also, did you mean to add the '+' after the '%'?
+I've done that and here's a replacement patch.
 
--- Steve
+> Thanks,
+> Steve
+>
+>> 
+>> [...snip...]
+>> 
 
+From 31283972574bde2ffa1960d30c80286f8467c594 Mon Sep 17 00:00:00 2001
+From: Ackerley Tng <ackerleytng@google.com>
+Date: Thu, 16 Oct 2025 11:48:01 -0700
+Subject: [PATCH] KVM: Introduce KVM_SET_MEMORY_ATTRIBUTES2
 
-> +	}
-> +	if (!refsymbol)
-> +		kallsyms_lookup(rec->ip, NULL, NULL, NULL, str);
-> +
->  	seq_printf(m, "  %-30.30s  %10lu", str, rec->counter);
->  
->  #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+Introduce a "version 2" of KVM_SET_MEMORY_ATTRIBUTES to support returning
+information back to userspace.
+
+This new ioctl and structure will, in a later patch, be shared as a
+guest_memfd ioctl, where the padding in the new kvm_memory_attributes2
+structure will be for writing the response from the guest_memfd ioctl to
+userspace.
+
+A new ioctl is necessary for these reasons:
+
+1. KVM_SET_MEMORY_ATTRIBUTES is currently a write-only ioctl and does not
+   allow userspace to read fields. There's nothing in code (yet?) that
+   validates this, but using _IOWR for consistency would be prudent.
+
+2. KVM_SET_MEMORY_ATTRIBUTES, when used as a guest_memfd ioctl, will need
+   an additional field to provide userspace with more error details.
+
+Alternatively, a completely new ioctl could be defined, unrelated to
+KVM_SET_MEMORY_ATTRIBUTES, but using the same ioctl number and struct for
+the vm and guest_memfd ioctls streamlines the interface for userspace. In
+addition, any memory attributes, implemented on the vm or guest_memfd
+ioctl, can be easily shared with the other.
+
+Suggested-by: Sean Christopherson <seanjc@google.com>
+Change-Id: I50cd506d9a28bf68a90e659015603de579569bc1
+Signed-off-by: Ackerley Tng <ackerleytng@google.com>
+---
+ Documentation/virt/kvm/api.rst | 32 ++++++++++++++++++++++++++++++++
+ include/uapi/linux/kvm.h       | 12 ++++++++++++
+ virt/kvm/kvm_main.c            | 34 +++++++++++++++++++++++++++++++---
+ 3 files changed, 75 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+index 754b662a453c3..a812769d79bf6 100644
+--- a/Documentation/virt/kvm/api.rst
++++ b/Documentation/virt/kvm/api.rst
+@@ -6355,6 +6355,8 @@ S390:
+ Returns -EINVAL if the VM has the KVM_VM_S390_UCONTROL flag set.
+ Returns -EINVAL if called on a protected VM.
+ 
++.. _KVM_SET_MEMORY_ATTRIBUTES:
++
+ 4.141 KVM_SET_MEMORY_ATTRIBUTES
+ -------------------------------
+ 
+@@ -6512,6 +6514,36 @@ the capability to be present.
+ 
+ `flags` must currently be zero.
+ 
++4.144 KVM_SET_MEMORY_ATTRIBUTES2
++---------------------------------
++
++:Capability: KVM_CAP_MEMORY_ATTRIBUTES2
++:Architectures: x86
++:Type: vm ioctl
++:Parameters: struct kvm_memory_attributes2 (in/out)
++:Returns: 0 on success, <0 on error
++
++KVM_SET_MEMORY_ATTRIBUTES2 is an extension to
++KVM_SET_MEMORY_ATTRIBUTES that supports returning (writing) values to
++userspace.  The original (pre-extension) fields are shared with
++KVM_SET_MEMORY_ATTRIBUTES identically.
++
++Attribute values are shared with KVM_SET_MEMORY_ATTRIBUTES.
++
++::
++
++  struct kvm_memory_attributes2 {
++	__u64 address;
++	__u64 size;
++	__u64 attributes;
++	__u64 flags;
++	__u64 reserved[4];
++  };
++
++  #define KVM_MEMORY_ATTRIBUTE_PRIVATE           (1ULL << 3)
++
++See also: :ref: `KVM_SET_MEMORY_ATTRIBUTES`.
++
+ 
+ .. _kvm_run:
+ 
+diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+index 52f6000ab0208..c300e38c7c9cd 100644
+--- a/include/uapi/linux/kvm.h
++++ b/include/uapi/linux/kvm.h
+@@ -963,6 +963,7 @@ struct kvm_enable_cap {
+ #define KVM_CAP_RISCV_MP_STATE_RESET 242
+ #define KVM_CAP_ARM_CACHEABLE_PFNMAP_SUPPORTED 243
+ #define KVM_CAP_GUEST_MEMFD_FLAGS 244
++#define KVM_CAP_MEMORY_ATTRIBUTES2 245
+ 
+ struct kvm_irq_routing_irqchip {
+ 	__u32 irqchip;
+@@ -1617,4 +1618,15 @@ struct kvm_pre_fault_memory {
+ 	__u64 padding[5];
+ };
+ 
++/* Available with KVM_CAP_MEMORY_ATTRIBUTES2 */
++#define KVM_SET_MEMORY_ATTRIBUTES2              _IOWR(KVMIO,  0xd6, struct kvm_memory_attributes2)
++
++struct kvm_memory_attributes2 {
++	__u64 address;
++	__u64 size;
++	__u64 attributes;
++	__u64 flags;
++	__u64 reserved[4];
++};
++
+ #endif /* __LINUX_KVM_H */
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index 35166754a22b4..95aa51b334a70 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -2621,7 +2621,7 @@ static int kvm_vm_set_mem_attributes(struct kvm *kvm, gfn_t start, gfn_t end,
+ 	return r;
+ }
+ static int kvm_vm_ioctl_set_mem_attributes(struct kvm *kvm,
+-					   struct kvm_memory_attributes *attrs)
++					   struct kvm_memory_attributes2 *attrs)
+ {
+ 	gfn_t start, end;
+ 
+@@ -4959,6 +4959,7 @@ static int kvm_vm_ioctl_check_extension_generic(struct kvm *kvm, long arg)
+ 	case KVM_CAP_DEVICE_CTRL:
+ 		return 1;
+ #ifdef CONFIG_KVM_VM_MEMORY_ATTRIBUTES
++	case KVM_CAP_MEMORY_ATTRIBUTES2:
+ 	case KVM_CAP_MEMORY_ATTRIBUTES:
+ 		if (!vm_memory_attributes)
+ 			return 0;
+@@ -5184,6 +5185,14 @@ do {										\
+ 		     sizeof_field(struct kvm_userspace_memory_region2, field));	\
+ } while (0)
+ 
++#define SANITY_CHECK_MEMORY_ATTRIBUTES_FIELD(field)				\
++do {										\
++	BUILD_BUG_ON(offsetof(struct kvm_memory_attributes, field) !=		\
++		     offsetof(struct kvm_memory_attributes2, field));		\
++	BUILD_BUG_ON(sizeof_field(struct kvm_memory_attributes, field) !=	\
++		     sizeof_field(struct kvm_memory_attributes2, field));	\
++} while (0)
++
+ static long kvm_vm_ioctl(struct file *filp,
+ 			   unsigned int ioctl, unsigned long arg)
+ {
+@@ -5366,15 +5375,34 @@ static long kvm_vm_ioctl(struct file *filp,
+ 	}
+ #endif /* CONFIG_HAVE_KVM_IRQ_ROUTING */
+ #ifdef CONFIG_KVM_VM_MEMORY_ATTRIBUTES
++	case KVM_SET_MEMORY_ATTRIBUTES2:
+ 	case KVM_SET_MEMORY_ATTRIBUTES: {
+-		struct kvm_memory_attributes attrs;
++		struct kvm_memory_attributes2 attrs;
++		unsigned long size;
++
++		if (ioctl == KVM_SET_MEMORY_ATTRIBUTES) {
++			/*
++			 * Fields beyond struct kvm_userspace_memory_region shouldn't be
++			 * accessed, but avoid leaking kernel memory in case of a bug.
++			 */
++			memset(&attrs, 0, sizeof(attrs));
++			size = sizeof(struct kvm_memory_attributes);
++		} else {
++			size = sizeof(struct kvm_memory_attributes2);
++		}
++
++		/* Ensure the common parts of the two structs are identical. */
++		SANITY_CHECK_MEMORY_ATTRIBUTES_FIELD(address);
++		SANITY_CHECK_MEMORY_ATTRIBUTES_FIELD(size);
++		SANITY_CHECK_MEMORY_ATTRIBUTES_FIELD(attributes);
++		SANITY_CHECK_MEMORY_ATTRIBUTES_FIELD(flags);
+ 
+ 		r = -ENOTTY;
+ 		if (!vm_memory_attributes)
+ 			goto out;
+ 
+ 		r = -EFAULT;
+-		if (copy_from_user(&attrs, argp, sizeof(attrs)))
++		if (copy_from_user(&attrs, argp, size))
+ 			goto out;
+ 
+ 		r = kvm_vm_ioctl_set_mem_attributes(kvm, &attrs);
+-- 
+2.51.0.915.g61a8936c21-goog
+
