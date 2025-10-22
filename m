@@ -1,47 +1,68 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
+Received: from esa6.hgst.iphmx.com (esa6.hgst.iphmx.com [216.71.154.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BE6430F7FA;
-	Wed, 22 Oct 2025 09:05:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9AE933EB01;
+	Wed, 22 Oct 2025 11:41:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.71.154.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761123918; cv=none; b=Z5a5QRKwdE/ztkoeUs4KAaeeLZmLSRTiG2OGE5QiLvisIlo22Gh16mIrhxRSBDPAcDdIyb7AcDMF79y4AgND6mQSHmz2BXtSU0iusbaBldPRQhk7lJI9+NCXZnBxkEGtKCq7wSZtHBb+LO0sFtTnaP4eOCZnRP6jpu9wceX27wU=
+	t=1761133286; cv=none; b=ggDo9lqTk0WoiaQWvZ+xQDdrkdOKEf7VU1LpbHrlEhnYV4KU1Afpw9A+EW+j8zomanxiMu0lcolc5buXLWGwP1C3q+Nb8dWfcvJRHYecJ+EeXnIr2vFiPjtg/2DzxDlbEXgUHFr3OAgOt043Vk/So7u6wLNiOYdyP74V6sHZNu0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761123918; c=relaxed/simple;
-	bh=DHXfpS9aswzlJwBEoWw7X4Zv+9/3m5MUqiLosCFMR7M=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=djA9HzkJKi+b8er8jyBDCZ/PEi3xHpdtwIQJ9YJVzCf2eItjZLUo94QquEoFmj1Q7uoS+obzMyVOy4BrTyMjO452L4qn30IXX2rz367I5Mt1nCStKC8VksHxPs9rvvMA+9p4pArDYcE3u/mwSS7qjJpF9cv5RhpU9gNtA4cH1jg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=mvo5GFQz; arc=none smtp.client-ip=117.135.210.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1761133286; c=relaxed/simple;
+	bh=Pycf+qTTqYqWAPp5ojlxbydUTMBdFmouHwknGtVpqS0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OZKA6WE5b9AA0bC3No9U4hkW2oMxuU2xjsYn1UO+uXZ1/3XJVLqxe11ZZJSdToM+iNVES1pArP5tnAN/Odp8kd9Xxjd90H9ycQqAHm4fd6od2CgVMNvuHJMjsTh3iB3n4WDx+itcVORHmgFho5GhCP5we4M/q1DI2mawoAOzbFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=GgOcD8lP; arc=none smtp.client-ip=216.71.154.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="mvo5GFQz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=Pd
-	nI4MEp0UYVRPKbdbYIQkMJ3KrGkN06ieOL071k4ws=; b=mvo5GFQzB3IifmVuMA
-	93hBsSIR9IskT1fLvOB9pZcna4DKjScg7c155RqOepGXR7ki4EMFpc7JlB6gkTVU
-	3vAOTgG77SWE+7aYOY7ZvfIo0X9ESayPAspHzKVb08bq+uzK0y3oYMVBmz9baY98
-	PeTkaqfnWl5aeD9TI7n/xHgB8=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g0-1 (Coremail) with SMTP id _____wDHFx8dnvhonGH4Bw--.20175S2;
-	Wed, 22 Oct 2025 17:04:30 +0800 (CST)
-From: Feng Yang <yangfeng59949@163.com>
-To: rostedt@goodmis.org
-Cc: andrii@kernel.org,
-	bpf@vger.kernel.org,
-	jpoimboe@kernel.org,
+	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="GgOcD8lP"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1761133284; x=1792669284;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Pycf+qTTqYqWAPp5ojlxbydUTMBdFmouHwknGtVpqS0=;
+  b=GgOcD8lPr58rf9PjWEu0p6GVPBMkGy0u8N2htglpoRVxe06IpgHlPqlb
+   yhiVACIol7o6LUvw18eAKvR3Ft1BM+K8FH9L6mzFBTnvvak8KM2voTw+G
+   zvkkMQ1aBqu9WdXSb8DJ9STfiJyZG8gI45ySS0LT+V2l5xdKR4ZDI2WcF
+   HhXXrNp4tVTktoEy8DjMvh6zyUlZCRS16Hd9nxFKuuTtfwCGFrr12o2EO
+   p+o/YJeLjxYHQh9BftKZRf6OczTO39GTFRy5DKcCiI/03B8KTfLDhHrTH
+   X/Anyq2POWFOqR5XtyKO6Al1k06u+LlgBIKTRQqkisCPpPO1YGGXcJ0v1
+   w==;
+X-CSE-ConnectionGUID: kGA3FXepSF+L8FdELoJ/+Q==
+X-CSE-MsgGUID: ph3o0JYPQ/aXxSsHJQ+Udw==
+X-IronPort-AV: E=Sophos;i="6.19,247,1754928000"; 
+   d="scan'208";a="133361397"
+Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep03.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 22 Oct 2025 19:41:23 +0800
+IronPort-SDR: 68f8c2e3_Rc2zOgfTVJFx4Alp5viqMbE+RyL0a0cB6IBLRlulGRRqIua
+ QrUiz2ufY/w0SEU1qgnXpZeGxQVBQhYGGbpqzfA==
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep03.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 22 Oct 2025 04:41:24 -0700
+WDCIronportException: Internal
+Received: from unknown (HELO neo.wdc.com) ([10.224.28.49])
+  by uls-op-cesaip02.wdc.com with ESMTP; 22 Oct 2025 04:41:18 -0700
+From: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+To: axboe@kernel.dk
+Cc: chaitanyak@nvidia.com,
+	dlemoal@kernel.org,
+	hare@suse.de,
+	hch@lst.de,
+	john.g.garry@oracle.com,
+	linux-block@vger.kernel.org,
+	linux-btrace@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
+	martin.petersen@oracle.com,
+	mathieu.desnoyers@efficios.com,
 	mhiramat@kernel.org,
-	olsajiri@gmail.com,
-	peterz@infradead.org,
-	x86@kernel.org,
-	yhs@fb.com
-Subject: Re: [BUG] no ORC stacktrace from kretprobe.multi bpf program
-Date: Wed, 22 Oct 2025 17:04:29 +0800
-Message-Id: <20251022090429.136755-1-yangfeng59949@163.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20251015121138.4190d046@gandalf.local.home>
-References: <20251015121138.4190d046@gandalf.local.home>
+	naohiro.aota@wdc.com,
+	rostedt@goodmis.org,
+	shinichiro.kawasaki@wdc.com,
+	Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Subject: [PATCH v5 00/16] block: add blktrace support for zoned block devies
+Date: Wed, 22 Oct 2025 13:40:59 +0200
+Message-ID: <20251022114115.213865-1-johannes.thumshirn@wdc.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -49,61 +70,86 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDHFx8dnvhonGH4Bw--.20175S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7Cry5CF1kXw43AF1Duw1rWFg_yoW8ZFy5pr
-	W8tFyYkr4kZFn2vr42vw48Kr1SyrWfCrW5GrWkArWrCwsIq343AryayFyjgFW0yryrWa4j
-	vF4YvrZ0kwn8ZaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zRe6w_UUUUU=
-X-CM-SenderInfo: p1dqww5hqjkmqzuzqiywtou0bp/1tbiTRjueGj4lf3kzwAAsQ
 
-On Wed, 15 Oct 2025 12:11:38 -0400 Steven Rostedt <rostedt@goodmis.org> wrote:
+This patch series extends the kernel blktrace infrastructure to support
+tracing zoned block device commands. Zoned block devices (e.g., ZAC/ZBC and
+ZNS) introduce command types such as zone open, close, reset, finish, and zone
+append. These are currently not visible in blktrace, making it difficult to
+debug and analyze I/O workloads on zoned devices.
 
-> > > Hmm, we do have a way to retrieve the actual return caller from a location
-> > > for return_to_handler:
-> > > 
-> > >   See kernel/trace/fgraph.c: ftrace_graph_get_ret_stack()
-> > > 
-> > > Hmm, I think the x86 ORC unwinder needs to use this.  
-> > 
-> > I'm confused, is that not what ftrace_graph_ret_addr() already does?
+The patches in this series utilize the new trace points for these zone
+management operations, and propagate the necessary context to the blktrace
+logging path. These additions are designed to be backward-compatible, and are
+only active when zoned devices are in use.
 
-> Ah yeah, that does it too. I just searched for the first function that did
-> the look up ;-)
+In order to not break the user-space ABI, a new ioctl was introduced to
+request the new version of the blk_io_trace with extended 'action' field.
 
-> Now I guess the question is, why is this not working?
+The user-space tools in the blktrace suite are updated in a separate patch
+series to interpret and display the new trace events.This patch series extends
+the kernel blktrace infrastructure to support tracing zoned block device
+commands. Zoned block devices (e.g., ZAC/ZBC and ZNS) introduce command types
+such as zone open, close, reset, finish, and zone append. These are currently
+not visible in blktrace, making it difficult to debug and analyze I/O
+workloads on zoned devices.
 
+The patches in this series utilize the new trace points for these zone
+management operations, and propagate the necessary context to the blktrace
+logging path. These additions are designed to be backward-compatible, and are
+only active when zoned devices are in use.
 
-I've also encountered this issue recently. It only outputs the stack trace of return_to_handler, for example:
+In order to not break the user-space ABI, a new ioctl was introduced to
+request the new version of the blk_io_trace with extended 'action' field.
 
-# bpftrace -e 'kretprobe:vfs_rea* {@[kstack]=count()}'
-Attaching 1 probe...
-^C
+The user-space tools in the blktrace suite are updated in a separate patch
+series to interpret and display the new trace events.
 
-@[
-    ksys_read+192
-    get_perf_callchain+211
-    bpf_get_stackid+101
-    cleanup_module+303100
-    kprobe_multi_link_prog_run+175
-    fprobe_return+265
-    __ftrace_return_to_handler.isra.0+433
-    return_to_handler+30
-]: 1
+I've tested on SMR drives, TCMU emulated SMR drives and zloop, with both XFS
+and BTRFS as filesystems on top of the hardwdare. Testing of different
+hardware/setups is highly encouraged.
 
-The return stack trace when directly executing samples/fprobe/fprobe_example.c is similar:
-[ 71.892353] return_to_handler: kernel_thread+0x71/0xa0
-[ 71.892356] sample_exit_handler: Return from <kernel_clone+0x4/0x470> ip = 0x000000000e0e2004 to rip = 0x00000000127e6d58 (kernel_thread+0x71/0xa0)
-[ 71.892361] __ftrace_return_to_handler.isra.0+0x1b1/0x280
-[ 71.892363] return_to_handler+0x1e/0x50
+Changes to v4:
+- Fix grammar mistake in comment
+- Remove unneeded formating churn in trace_note()
+- Return after WARN_ON_ONCE()
 
-No cases were found where the ret of the ftrace_graph_ret_addr function is equal to return_handler.
+Changes to v3:
+- Collect Reviewed-bys
+- Add WARN_ON_ONCE() in case a too big command is passed in v1
+- Use 'if (copy_from_user())'
 
-Additionally, I noticed that when the x86 architecture executes perf_callchain_kernel, perf_hw_regs(regs) is false,
-and it calls unwind_start(&state, current, NULL, (void *)regs->sp);
-which then proceeds to __unwind_start where the check task == current is performed.
-However, the ARM architecture executes kunwind_init_from_regs(&state, regs);
-instead of taking the second branch with the task == current check.
+Changes to v2:
+- Collect Reviewed-bys
+- Convert trace_note and ftrace's blk_io_tracer to blk_io_trace2
+- Don't play games with the layout of the 'action' field
+- Fix structure alignments
+- Drop Zone Management trace action, it's a command not an action
 
-I hope these phenomena can help you analyze the cause of this issue.
-Thanks.
+Johannes Thumshirn (16):
+  blktrace: only calculate trace length once
+  blktrace: factor out recording a blktrace event
+  blktrace: split out relaying a blktrace event
+  blktrace: untangle if/else sequence in __blk_add_trace
+  blktrace: change the internal action to 64bit
+  blktrace: split do_blk_trace_setup into two functions
+  blktrace: add definitions for blk_user_trace_setup2
+  blktrace: pass blk_user_trace2 to setup functions
+  blktrace: add definitions for struct blk_io_trace2
+  blktrace: differentiate between blk_io_trace versions
+  blktrace: move trace_note to blk_io_trace2
+  blktrace: move ftrace blk_io_tracer to blk_io_trace2
+  blktrace: add block trace commands for zone operations
+  blktrace: expose ZONE APPEND completions to blktrace
+  blktrace: trace zone write plugging operations
+  blktrace: handle BLKTRACESETUP2 ioctl
+
+ block/ioctl.c                     |   1 +
+ include/linux/blktrace_api.h      |   3 +-
+ include/uapi/linux/blktrace_api.h |  53 +++-
+ include/uapi/linux/fs.h           |   1 +
+ kernel/trace/blktrace.c           | 468 ++++++++++++++++++++++--------
+ 5 files changed, 405 insertions(+), 121 deletions(-)
+
+-- 
+2.51.0
 
