@@ -1,62 +1,64 @@
-Received: from mail-pl1-f194.google.com (mail-pl1-f194.google.com [209.85.214.194])
+Received: from mail-pl1-f195.google.com (mail-pl1-f195.google.com [209.85.214.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D71DE2FD7D3
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 22 Oct 2025 08:02:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFBC62FD682
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 22 Oct 2025 08:02:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761120133; cv=none; b=Kxirclf9WfeRlkICMj9HRwUlSZOpDQxnTG8eXHmNsaCsX6ytmGPoBvscgDckYNmJhBZ3nt2OovGJI9U90871Jj/Zy7TwWrCopMeXYlbjfR3IssQTCrlFgL7soHdLGRfYUsvRjc9yhRcIB2ptPA5aAdBVVbsrN+BK3J4SGa5aftQ=
+	t=1761120139; cv=none; b=gjCdhhW54mlb9svK7C6Xx4FbLXFG8Tf1/g02fNL+p4PNXxNBSKgAEvrCxiRI2NMZa6fVNJ6tn9nt447K55id6d3//PSSCsg2om7qj7fZgtVlL9LrgM/Vrjd2fjrcRNH9jbRjYokN6ygUOE0B0GfnRKy6nrISe1FKsQqXZqcsIp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761120133; c=relaxed/simple;
-	bh=KES1rqhhzVkWHCaQsx5xIA87TR29YUXJ/eVpvlSxQpY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YDykIhS7oOTMnFpMsY02XboQKPFA/3QR704mQrjSFzCqe+qrHF0BHsBDgRVXdkMBTNzob7W6h0dUfot0gFEg2SfUcYuccwHIpNDj+f8a4NmDbZG7+VZrAqwNsAW/vruPM5IiIXDF6Zz5kPQwLScjS4/+E9vv34XgsH4ynG59SvM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LNpOxUlk; arc=none smtp.client-ip=209.85.214.194
+	s=arc-20240116; t=1761120139; c=relaxed/simple;
+	bh=exu1mvnQm0kIn1FVfpxwss/HOq/X3Jlmc2D+MxgxLiw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=FDD0npV2RsHtLA8RT6aixxHAwQpNBKKjgO8Zwp2Ibw9hx9iTwmIzw++fjhl2kq7UOemW/BAZ6R8NsJQdwqjCQObPU7pjV1NKzXNEqulPj0/y4+vuCgQp9NSNNhW/weogyzRxdmXotWfyMDVwkgKgVa8e0wFg9h+GfVYdjXA59x4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C51GemWG; arc=none smtp.client-ip=209.85.214.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LNpOxUlk"
-Received: by mail-pl1-f194.google.com with SMTP id d9443c01a7336-290dc630a07so35525585ad.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 22 Oct 2025 01:02:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C51GemWG"
+Received: by mail-pl1-f195.google.com with SMTP id d9443c01a7336-2698d47e776so48732365ad.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 22 Oct 2025 01:02:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1761120129; x=1761724929; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=8IULEjah58/8/ttFr7hd4dbKkGYaqM5HUaRTvDTqwJA=;
-        b=LNpOxUlkLx6W9UIs/CKAvDGW1SsciwZUL0sK46l9oxL3wTNyFT6Z1End3h5mTQ8TX1
-         +7XeLsPXOXHed5O4WYtogL6Z5YB8aUJWEyna8m11RnxAD08qTbzXgDEHdwGTLj3Yrzuo
-         vBjcJv1SZM5poDElEVyC3y4nACyuwfUGkeLWDaBWuDuDtG95BsKz4a6zCssp+tYn0r/I
-         F0fK0VLZaTCWk9cWehJ8dFewGArLaiYZAmkTsJj1vc7GPTPwa3gftQE7MkdisIoVBY1U
-         Um+7HWtIUeKbD1Ekhu/z0t/lc3vtKBlsqS2CnKIySGX9XKfoZ4caET6HuaOXQpnLJZGW
-         1phg==
+        d=gmail.com; s=20230601; t=1761120135; x=1761724935; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cyLcSwWt/RyeJ0fqwSXrGKxxaJ4cRG7bePVSrf3PDAg=;
+        b=C51GemWGDO69r2ujKvp85HGNaLMjub/Hml33nCioN+ohEZyJMOnD7f1IdROO8mKzo+
+         DW4BdhLtZ0JwZqPyw8WTazPVwuUAXOMocPx8mDGBD2hJ8VT6fv+2qs1lvWZSavuYRUsz
+         f+jGrgiuXgYYDyc9iBD4+2lCYkeJ+otOCzvbKBU9uoV/1SGguqg/yvv9kjtaYiVHGzFo
+         fSl5KuoorvaVZ7rsH3amTsBhl99G2k2qrf+tVJ0C5LBLwbVwT9UCTlLSgkOGPOk4dKCU
+         uVjBMzmZnjlK7xM2/LHk6fgeLNEShCuD3FBmkdMjGQ8EwmUuqNUNRuoxS9nKFnWOwtAS
+         hzcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761120129; x=1761724929;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8IULEjah58/8/ttFr7hd4dbKkGYaqM5HUaRTvDTqwJA=;
-        b=bAexfUMGGss/1IcqsqPEAx/F80NY7++7FJqsFUkg8Xs19/dK0TqV20YaHrBLQ+bN9f
-         YC/NjWNg+N6vhuZRj0fqm5bcCfeZl5hZzsTn2+40w45gFW9t/pfaF48uasnGHT25641o
-         i69llLTm6YTXqNEgJyXOswhQJrPO37zzNf1faS8huuXP0KZC1pYfkq65TqyOoNm4Zv/o
-         9swZjazmm1gow3+Bag14YmglveVC7nJvDX7DGS2CCb88BzeVx0OkMbhot37Sv8gIOb0i
-         tIzXTTzBw2GEuLcgVZtqIHykCgWbdvNkoEuC7weHAxdkNBVAGNwALRMP4wG3ZlyMzzJz
-         sGUA==
-X-Forwarded-Encrypted: i=1; AJvYcCXGcFmFzDGi9LoyzxHFtJqurOORniUICttuUx0Ld9hLgZ1mys1k8t5sVunF0/ub/rp5CauoCdhE4FtFBbR80ykwFM0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzdPe4JvXzxMWFKfBaz1JjPO66kt9gbwB1lDVLM+KrrLKAt46pr
-	gehfv9kY36bISb/cOSiVbTv2yyAT2lTTg+rJPo3XcSozTYuZRNFbhXZY
-X-Gm-Gg: ASbGnctjxPJ9UhleULW7Qpv+lsJ/pe86D3+XSTPZUQ3kq+YSaPnBLyLzUZtR1gIZEf7
-	h3as9POUyt7MmlnzwZfQhFrriq7a6xcjW9iP+/YLJdKdUHRz5C7EHk63GkBwlAWlf1Mz/j/5GJ5
-	mfqsJMAZ6d+jcyQ7E/CTAncTvwng2ER+oPMMGwVcOUWrCfctdTp12BkaEc9A2s5vqrLuwxUa/pk
-	KsgGQ2mVn0vxkgQnnkvbpJyI3GCs6jRyfU/oLF6KlE8+lofC2m4pZjFV1G/hhUQKEn9cGqVlsuc
-	aoaAMSvNLS58LOsGSbzJHkdU3La/h4Qmxmx3y1MkHjQ4Zb5vTRsjRSu0KB0xE8Oc+5igDdvSjDN
-	MicdLtCWCXUba5A9hyK3IfZEBEt9GefLdoS6gJH7A71sURG+RRBJUCeBU9Krq9v6zCVKlDXU4rX
-	zuRgaJoag=
-X-Google-Smtp-Source: AGHT+IHUvFNEb8ueoRDJavJW321o3FS33gCYT8NQTFkfClnVpzJ7UDlFH8bs4uMSU13s5U8IClXzXw==
-X-Received: by 2002:a17:903:244f:b0:261:e1c0:1c44 with SMTP id d9443c01a7336-290cc2f83a5mr263831745ad.40.1761120128951;
-        Wed, 22 Oct 2025 01:02:08 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1761120135; x=1761724935;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cyLcSwWt/RyeJ0fqwSXrGKxxaJ4cRG7bePVSrf3PDAg=;
+        b=tbgGDgbhmVahRGrZQyXqzU/6pTh3B3dPyTQRreI7OO7bv2IgRxKGGJRgTtN3iRHPNy
+         6VBz7hPeIyinLbjFYjOIi0EiGhbWp345RMeDRUPyaxCL6iFYOneUlrQCyln8Sqp3t60Y
+         Mr9PXf9QlCxRMNUhQ1udbuk9KbDHNNLxGhuqyBsCXTbCy1bFeHXN6U4Ql0XusIrRAOrw
+         6PPgVzCXYfq8QXYPiyg5owjIbMW2BzdizcxXrq+tqyXnfSq8Atp98JNoNt96RaNWgT6K
+         bCEYfK36pZdO0nNzXA4kfp5Qmu6PXzv6yh7V4pABstDICnA1L2Uoy67OmP4FLBSI9ncJ
+         Y5ug==
+X-Forwarded-Encrypted: i=1; AJvYcCUrdxFHGzZr0dnEs6dZXVslB+3QYwCJByahq1r2ZKtXbs+alhUSDukbthV/Up8BZPUgEX0S6qEYajqUOPPOud8xAbY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxgegbSOnArJNE/ERrRaDucm5T+CHH+9zCLmPTaMyMrOFVA/YE/
+	OyqfQDZqwtvDS3bIXDTL1vnd0Kaph4BqaDVyX/92H+lu5I7wyOW2Xa7a
+X-Gm-Gg: ASbGncvusl2sRGCIdEBoMg9WVZzsyaOUfoULBdVPqxOUBzQ5ZHNrHLUU0s+to/unD09
+	R3WoK+n3Vb2O9QrXKegWAT/HUutCr6abxtPJIHTfzGjn6RQICuuOCtQ8sLPjjHMnC+V5Yrx+qQg
+	iiZu8kaRBLItIKjSeQrS4NAyJ6XSC8bkZUmhnqeuNdvehGdh1xSDAvVJ9geGbVqdGi6QLAleNom
+	7CG8hdMUNGzMIUVl4MjZ0yZ1tFgCsorwNPpNuSVRh5rw95wljqC8F+XrpYS6ZTPdPkgygFdDtP8
+	eiq9eh95JX6kM4RhVMWyYBN5NZSmiVR46Ceg6kCaH7z047UdTiUIwBy76W1sigfkFxpmb4md3Pi
+	ZEKjHAER62+yr5k3b1Zk+cX098m6wploOMozyDW/QHs5Xp+rgED/oRzdlCZVRrqh4qK3z2AnUSn
+	bR6ddczg4=
+X-Google-Smtp-Source: AGHT+IFX/jM0vnbQUgGJ/nXZFkQeysbaBfwzLdTss7L4EJDRkAcM12qHXUwOvdatEqwNfLv5tXDGmQ==
+X-Received: by 2002:a17:903:b90:b0:290:bd15:24a8 with SMTP id d9443c01a7336-290c9c89fa6mr247202645ad.11.1761120134699;
+        Wed, 22 Oct 2025 01:02:14 -0700 (PDT)
 Received: from 7950hx ([43.129.244.20])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-292471d7e41sm131947785ad.57.2025.10.22.01.02.03
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-292471d7e41sm131947785ad.57.2025.10.22.01.02.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Oct 2025 01:02:08 -0700 (PDT)
+        Wed, 22 Oct 2025 01:02:14 -0700 (PDT)
 From: Menglong Dong <menglong8.dong@gmail.com>
 X-Google-Original-From: Menglong Dong <dongml2@chinatelecom.cn>
 To: ast@kernel.org,
@@ -80,10 +82,12 @@ Cc: daniel@iogearbox.net,
 	bpf@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH bpf-next v2 00/10] bpf: tracing session supporting
-Date: Wed, 22 Oct 2025 16:01:49 +0800
-Message-ID: <20251022080159.553805-1-dongml2@chinatelecom.cn>
+Subject: [PATCH bpf-next v2 01/10] bpf: add tracing session support
+Date: Wed, 22 Oct 2025 16:01:50 +0800
+Message-ID: <20251022080159.553805-2-dongml2@chinatelecom.cn>
 X-Mailer: git-send-email 2.51.1.dirty
+In-Reply-To: <20251022080159.553805-1-dongml2@chinatelecom.cn>
+References: <20251022080159.553805-1-dongml2@chinatelecom.cn>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -92,85 +96,329 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Sometimes, we need to hook both the entry and exit of a function with
-TRACING. Therefore, we need define a FENTRY and a FEXIT for the target
-function, which is not convenient.
+The tracing session is something that similar to kprobe session. It allow
+to attach a single BPF program to both the entry and the exit of the
+target functions.
 
-Therefore, we add a tracing session support for TRACING. Generally
-speaking, it's similar to kprobe session, which can hook both the entry
-and exit of a function with a single BPF program. Meanwhile, it can also
-control the execution of the fexit with the return value of the fentry.
-Session cookie is also supported with the kfunc bpf_fsession_cookie().
+While a non-zero value is returned by the fentry, the fexit will be
+skipped, which is similar to kprobe session.
 
-The kfunc bpf_tracing_is_exit() and bpf_fsession_cookie() are both inlined
-in the verifier.
+Signed-off-by: Menglong Dong <dongml2@chinatelecom.cn>
+Co-developed-by: Leon Hwang <leon.hwang@linux.dev>
+Signed-off-by: Leon Hwang <leon.hwang@linux.dev>
+---
+ arch/arm64/net/bpf_jit_comp.c                        |  3 +++
+ arch/loongarch/net/bpf_jit.c                         |  3 +++
+ arch/powerpc/net/bpf_jit_comp.c                      |  3 +++
+ arch/riscv/net/bpf_jit_comp64.c                      |  3 +++
+ arch/s390/net/bpf_jit_comp.c                         |  3 +++
+ arch/x86/net/bpf_jit_comp.c                          |  3 +++
+ include/linux/bpf.h                                  |  1 +
+ include/uapi/linux/bpf.h                             |  1 +
+ kernel/bpf/btf.c                                     |  2 ++
+ kernel/bpf/syscall.c                                 |  2 ++
+ kernel/bpf/trampoline.c                              |  5 ++++-
+ kernel/bpf/verifier.c                                | 12 +++++++++---
+ net/bpf/test_run.c                                   |  1 +
+ net/core/bpf_sk_storage.c                            |  1 +
+ tools/include/uapi/linux/bpf.h                       |  1 +
+ .../selftests/bpf/prog_tests/tracing_failure.c       |  2 +-
+ 16 files changed, 41 insertions(+), 5 deletions(-)
 
-We allow the usage of bpf_get_func_ret() to get the return value in the
-fentry of the tracing session, as it will always get "0", which is safe
-enough and is OK.
-
-The while fsession stuff is arch related, so the -EOPNOTSUPP will be
-returned if it is not supported yet by the arch. In this series, we only
-support x86_64. And later, other arch will be implemented.
-
-Changes since v1:
-* session cookie support.
-  In this version, session cookie is implemented, and the kfunc
-  bpf_fsession_cookie() is added.
-
-* restructure the layout of the stack.
-  In this version, the session stuff that stored in the stack is changed,
-  and we locate them after the return value to not break
-  bpf_get_func_ip().
-
-* testcase enhancement.
-  Some nits in the testcase that suggested by Jiri is fixed. Meanwhile,
-  the testcase for get_func_ip and session cookie is added too.
-
-Menglong Dong (10):
-  bpf: add tracing session support
-  bpf: add kfunc bpf_tracing_is_exit for TRACE_SESSION
-  bpf: add kfunc bpf_fsession_cookie for TRACING SESSION
-  bpf,x86: add ret_off to invoke_bpf()
-  bpf,x86: add tracing session supporting for x86_64
-  libbpf: add support for tracing session
-  selftests/bpf: test get_func_ip for fsession
-  selftests/bpf: add testcases for tracing session
-  selftests/bpf: add session cookie testcase for fsession
-  selftests/bpf: add testcase for mixing fsession, fentry and fexit
-
- arch/arm64/net/bpf_jit_comp.c                 |   3 +
- arch/loongarch/net/bpf_jit.c                  |   3 +
- arch/powerpc/net/bpf_jit_comp.c               |   3 +
- arch/riscv/net/bpf_jit_comp64.c               |   3 +
- arch/s390/net/bpf_jit_comp.c                  |   3 +
- arch/x86/net/bpf_jit_comp.c                   | 214 ++++++++++++++++--
- include/linux/bpf.h                           |   2 +
- include/uapi/linux/bpf.h                      |   1 +
- kernel/bpf/btf.c                              |   2 +
- kernel/bpf/syscall.c                          |   2 +
- kernel/bpf/trampoline.c                       |   5 +-
- kernel/bpf/verifier.c                         |  45 +++-
- kernel/trace/bpf_trace.c                      |  59 ++++-
- net/bpf/test_run.c                            |   1 +
- net/core/bpf_sk_storage.c                     |   1 +
- tools/bpf/bpftool/common.c                    |   1 +
- tools/include/uapi/linux/bpf.h                |   1 +
- tools/lib/bpf/bpf.c                           |   2 +
- tools/lib/bpf/libbpf.c                        |   3 +
- .../selftests/bpf/prog_tests/fsession_test.c  | 161 +++++++++++++
- .../bpf/prog_tests/get_func_ip_test.c         |   2 +
- .../bpf/prog_tests/tracing_failure.c          |   2 +-
- .../selftests/bpf/progs/fsession_cookie.c     |  49 ++++
- .../selftests/bpf/progs/fsession_mixed.c      |  45 ++++
- .../selftests/bpf/progs/fsession_test.c       | 175 ++++++++++++++
- .../selftests/bpf/progs/get_func_ip_test.c    |  14 ++
- 26 files changed, 776 insertions(+), 26 deletions(-)
- create mode 100644 tools/testing/selftests/bpf/prog_tests/fsession_test.c
- create mode 100644 tools/testing/selftests/bpf/progs/fsession_cookie.c
- create mode 100644 tools/testing/selftests/bpf/progs/fsession_mixed.c
- create mode 100644 tools/testing/selftests/bpf/progs/fsession_test.c
-
+diff --git a/arch/arm64/net/bpf_jit_comp.c b/arch/arm64/net/bpf_jit_comp.c
+index ab83089c3d8f..06f4bd6c6755 100644
+--- a/arch/arm64/net/bpf_jit_comp.c
++++ b/arch/arm64/net/bpf_jit_comp.c
+@@ -2788,6 +2788,9 @@ int arch_prepare_bpf_trampoline(struct bpf_tramp_image *im, void *ro_image,
+ 	void *image, *tmp;
+ 	int ret;
+ 
++	if (tlinks[BPF_TRAMP_SESSION].nr_links)
++		return -EOPNOTSUPP;
++
+ 	/* image doesn't need to be in module memory range, so we can
+ 	 * use kvmalloc.
+ 	 */
+diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+index cbe53d0b7fb0..ad596341658a 100644
+--- a/arch/loongarch/net/bpf_jit.c
++++ b/arch/loongarch/net/bpf_jit.c
+@@ -1739,6 +1739,9 @@ int arch_prepare_bpf_trampoline(struct bpf_tramp_image *im, void *ro_image,
+ 	void *image, *tmp;
+ 	struct jit_ctx ctx;
+ 
++	if (tlinks[BPF_TRAMP_SESSION].nr_links)
++		return -EOPNOTSUPP;
++
+ 	size = ro_image_end - ro_image;
+ 	image = kvmalloc(size, GFP_KERNEL);
+ 	if (!image)
+diff --git a/arch/powerpc/net/bpf_jit_comp.c b/arch/powerpc/net/bpf_jit_comp.c
+index 88ad5ba7b87f..bcc0ce09f6fa 100644
+--- a/arch/powerpc/net/bpf_jit_comp.c
++++ b/arch/powerpc/net/bpf_jit_comp.c
+@@ -1017,6 +1017,9 @@ int arch_prepare_bpf_trampoline(struct bpf_tramp_image *im, void *image, void *i
+ 	void *rw_image, *tmp;
+ 	int ret;
+ 
++	if (tlinks[BPF_TRAMP_SESSION].nr_links)
++		return -EOPNOTSUPP;
++
+ 	/*
+ 	 * rw_image doesn't need to be in module memory range, so we can
+ 	 * use kvmalloc.
+diff --git a/arch/riscv/net/bpf_jit_comp64.c b/arch/riscv/net/bpf_jit_comp64.c
+index 45cbc7c6fe49..55b0284bf177 100644
+--- a/arch/riscv/net/bpf_jit_comp64.c
++++ b/arch/riscv/net/bpf_jit_comp64.c
+@@ -1286,6 +1286,9 @@ int arch_prepare_bpf_trampoline(struct bpf_tramp_image *im, void *ro_image,
+ 	struct rv_jit_context ctx;
+ 	u32 size = ro_image_end - ro_image;
+ 
++	if (tlinks[BPF_TRAMP_SESSION].nr_links)
++		return -EOPNOTSUPP;
++
+ 	image = kvmalloc(size, GFP_KERNEL);
+ 	if (!image)
+ 		return -ENOMEM;
+diff --git a/arch/s390/net/bpf_jit_comp.c b/arch/s390/net/bpf_jit_comp.c
+index cf461d76e9da..3f25bf55b150 100644
+--- a/arch/s390/net/bpf_jit_comp.c
++++ b/arch/s390/net/bpf_jit_comp.c
+@@ -2924,6 +2924,9 @@ int arch_prepare_bpf_trampoline(struct bpf_tramp_image *im, void *image,
+ 	struct bpf_tramp_jit tjit;
+ 	int ret;
+ 
++	if (tlinks[BPF_TRAMP_SESSION].nr_links)
++		return -EOPNOTSUPP;
++
+ 	/* Compute offsets, check whether the code fits. */
+ 	memset(&tjit, 0, sizeof(tjit));
+ 	ret = __arch_prepare_bpf_trampoline(im, &tjit, m, flags,
+diff --git a/arch/x86/net/bpf_jit_comp.c b/arch/x86/net/bpf_jit_comp.c
+index d4c93d9e73e4..389c3a96e2b8 100644
+--- a/arch/x86/net/bpf_jit_comp.c
++++ b/arch/x86/net/bpf_jit_comp.c
+@@ -3478,6 +3478,9 @@ int arch_prepare_bpf_trampoline(struct bpf_tramp_image *im, void *image, void *i
+ 	int ret;
+ 	u32 size = image_end - image;
+ 
++	if (tlinks[BPF_TRAMP_SESSION].nr_links)
++		return -EOPNOTSUPP;
++
+ 	/* rw_image doesn't need to be in module memory range, so we can
+ 	 * use kvmalloc.
+ 	 */
+diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+index 204f9c759a41..3f6cad5df2db 100644
+--- a/include/linux/bpf.h
++++ b/include/linux/bpf.h
+@@ -1270,6 +1270,7 @@ enum bpf_tramp_prog_type {
+ 	BPF_TRAMP_FENTRY,
+ 	BPF_TRAMP_FEXIT,
+ 	BPF_TRAMP_MODIFY_RETURN,
++	BPF_TRAMP_SESSION,
+ 	BPF_TRAMP_MAX,
+ 	BPF_TRAMP_REPLACE, /* more than MAX */
+ };
+diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
+index 6829936d33f5..79ba3023e8be 100644
+--- a/include/uapi/linux/bpf.h
++++ b/include/uapi/linux/bpf.h
+@@ -1133,6 +1133,7 @@ enum bpf_attach_type {
+ 	BPF_NETKIT_PEER,
+ 	BPF_TRACE_KPROBE_SESSION,
+ 	BPF_TRACE_UPROBE_SESSION,
++	BPF_TRACE_SESSION,
+ 	__MAX_BPF_ATTACH_TYPE
+ };
+ 
+diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
+index 0de8fc8a0e0b..2c1c3e0caff8 100644
+--- a/kernel/bpf/btf.c
++++ b/kernel/bpf/btf.c
+@@ -6107,6 +6107,7 @@ static int btf_validate_prog_ctx_type(struct bpf_verifier_log *log, const struct
+ 		case BPF_TRACE_FENTRY:
+ 		case BPF_TRACE_FEXIT:
+ 		case BPF_MODIFY_RETURN:
++		case BPF_TRACE_SESSION:
+ 			/* allow u64* as ctx */
+ 			if (btf_is_int(t) && t->size == 8)
+ 				return 0;
+@@ -6704,6 +6705,7 @@ bool btf_ctx_access(int off, int size, enum bpf_access_type type,
+ 			fallthrough;
+ 		case BPF_LSM_CGROUP:
+ 		case BPF_TRACE_FEXIT:
++		case BPF_TRACE_SESSION:
+ 			/* When LSM programs are attached to void LSM hooks
+ 			 * they use FEXIT trampolines and when attached to
+ 			 * int LSM hooks, they use MODIFY_RETURN trampolines.
+diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+index 8a129746bd6c..cb483701fe39 100644
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -3564,6 +3564,7 @@ static int bpf_tracing_prog_attach(struct bpf_prog *prog,
+ 	case BPF_PROG_TYPE_TRACING:
+ 		if (prog->expected_attach_type != BPF_TRACE_FENTRY &&
+ 		    prog->expected_attach_type != BPF_TRACE_FEXIT &&
++		    prog->expected_attach_type != BPF_TRACE_SESSION &&
+ 		    prog->expected_attach_type != BPF_MODIFY_RETURN) {
+ 			err = -EINVAL;
+ 			goto out_put_prog;
+@@ -4337,6 +4338,7 @@ attach_type_to_prog_type(enum bpf_attach_type attach_type)
+ 	case BPF_TRACE_RAW_TP:
+ 	case BPF_TRACE_FENTRY:
+ 	case BPF_TRACE_FEXIT:
++	case BPF_TRACE_SESSION:
+ 	case BPF_MODIFY_RETURN:
+ 		return BPF_PROG_TYPE_TRACING;
+ 	case BPF_LSM_MAC:
+diff --git a/kernel/bpf/trampoline.c b/kernel/bpf/trampoline.c
+index 5949095e51c3..f6d4dea3461e 100644
+--- a/kernel/bpf/trampoline.c
++++ b/kernel/bpf/trampoline.c
+@@ -111,7 +111,7 @@ bool bpf_prog_has_trampoline(const struct bpf_prog *prog)
+ 
+ 	return (ptype == BPF_PROG_TYPE_TRACING &&
+ 		(eatype == BPF_TRACE_FENTRY || eatype == BPF_TRACE_FEXIT ||
+-		 eatype == BPF_MODIFY_RETURN)) ||
++		 eatype == BPF_MODIFY_RETURN || eatype == BPF_TRACE_SESSION)) ||
+ 		(ptype == BPF_PROG_TYPE_LSM && eatype == BPF_LSM_MAC);
+ }
+ 
+@@ -418,6 +418,7 @@ static int bpf_trampoline_update(struct bpf_trampoline *tr, bool lock_direct_mut
+ 	tr->flags &= (BPF_TRAMP_F_SHARE_IPMODIFY | BPF_TRAMP_F_TAIL_CALL_CTX);
+ 
+ 	if (tlinks[BPF_TRAMP_FEXIT].nr_links ||
++	    tlinks[BPF_TRAMP_SESSION].nr_links ||
+ 	    tlinks[BPF_TRAMP_MODIFY_RETURN].nr_links) {
+ 		/* NOTE: BPF_TRAMP_F_RESTORE_REGS and BPF_TRAMP_F_SKIP_FRAME
+ 		 * should not be set together.
+@@ -515,6 +516,8 @@ static enum bpf_tramp_prog_type bpf_attach_type_to_tramp(struct bpf_prog *prog)
+ 		return BPF_TRAMP_MODIFY_RETURN;
+ 	case BPF_TRACE_FEXIT:
+ 		return BPF_TRAMP_FEXIT;
++	case BPF_TRACE_SESSION:
++		return BPF_TRAMP_SESSION;
+ 	case BPF_LSM_MAC:
+ 		if (!prog->aux->attach_func_proto->type)
+ 			/* The function returns void, we cannot modify its
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index 9b4f6920f79b..3ffdf2143f16 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -17281,6 +17281,7 @@ static int check_return_code(struct bpf_verifier_env *env, int regno, const char
+ 			break;
+ 		case BPF_TRACE_RAW_TP:
+ 		case BPF_MODIFY_RETURN:
++		case BPF_TRACE_SESSION:
+ 			return 0;
+ 		case BPF_TRACE_ITER:
+ 			break;
+@@ -22736,6 +22737,7 @@ static int do_misc_fixups(struct bpf_verifier_env *env)
+ 		if (prog_type == BPF_PROG_TYPE_TRACING &&
+ 		    insn->imm == BPF_FUNC_get_func_ret) {
+ 			if (eatype == BPF_TRACE_FEXIT ||
++			    eatype == BPF_TRACE_SESSION ||
+ 			    eatype == BPF_MODIFY_RETURN) {
+ 				/* Load nr_args from ctx - 8 */
+ 				insn_buf[0] = BPF_LDX_MEM(BPF_DW, BPF_REG_0, BPF_REG_1, -8);
+@@ -23677,7 +23679,8 @@ int bpf_check_attach_target(struct bpf_verifier_log *log,
+ 		if (tgt_prog->type == BPF_PROG_TYPE_TRACING &&
+ 		    prog_extension &&
+ 		    (tgt_prog->expected_attach_type == BPF_TRACE_FENTRY ||
+-		     tgt_prog->expected_attach_type == BPF_TRACE_FEXIT)) {
++		     tgt_prog->expected_attach_type == BPF_TRACE_FEXIT ||
++		     tgt_prog->expected_attach_type == BPF_TRACE_SESSION)) {
+ 			/* Program extensions can extend all program types
+ 			 * except fentry/fexit. The reason is the following.
+ 			 * The fentry/fexit programs are used for performance
+@@ -23692,7 +23695,7 @@ int bpf_check_attach_target(struct bpf_verifier_log *log,
+ 			 * beyond reasonable stack size. Hence extending fentry
+ 			 * is not allowed.
+ 			 */
+-			bpf_log(log, "Cannot extend fentry/fexit\n");
++			bpf_log(log, "Cannot extend fentry/fexit/session\n");
+ 			return -EINVAL;
+ 		}
+ 	} else {
+@@ -23776,6 +23779,7 @@ int bpf_check_attach_target(struct bpf_verifier_log *log,
+ 	case BPF_LSM_CGROUP:
+ 	case BPF_TRACE_FENTRY:
+ 	case BPF_TRACE_FEXIT:
++	case BPF_TRACE_SESSION:
+ 		if (!btf_type_is_func(t)) {
+ 			bpf_log(log, "attach_btf_id %u is not a function\n",
+ 				btf_id);
+@@ -23942,6 +23946,7 @@ static bool can_be_sleepable(struct bpf_prog *prog)
+ 		case BPF_TRACE_FEXIT:
+ 		case BPF_MODIFY_RETURN:
+ 		case BPF_TRACE_ITER:
++		case BPF_TRACE_SESSION:
+ 			return true;
+ 		default:
+ 			return false;
+@@ -24023,9 +24028,10 @@ static int check_attach_btf_id(struct bpf_verifier_env *env)
+ 			tgt_info.tgt_name);
+ 		return -EINVAL;
+ 	} else if ((prog->expected_attach_type == BPF_TRACE_FEXIT ||
++		   prog->expected_attach_type == BPF_TRACE_SESSION ||
+ 		   prog->expected_attach_type == BPF_MODIFY_RETURN) &&
+ 		   btf_id_set_contains(&noreturn_deny, btf_id)) {
+-		verbose(env, "Attaching fexit/fmod_ret to __noreturn function '%s' is rejected.\n",
++		verbose(env, "Attaching fexit/session/fmod_ret to __noreturn function '%s' is rejected.\n",
+ 			tgt_info.tgt_name);
+ 		return -EINVAL;
+ 	}
+diff --git a/net/bpf/test_run.c b/net/bpf/test_run.c
+index 73d5f0d9f5f4..f7f0fd5383c4 100644
+--- a/net/bpf/test_run.c
++++ b/net/bpf/test_run.c
+@@ -685,6 +685,7 @@ int bpf_prog_test_run_tracing(struct bpf_prog *prog,
+ 	switch (prog->expected_attach_type) {
+ 	case BPF_TRACE_FENTRY:
+ 	case BPF_TRACE_FEXIT:
++	case BPF_TRACE_SESSION:
+ 		if (bpf_fentry_test1(1) != 2 ||
+ 		    bpf_fentry_test2(2, 3) != 5 ||
+ 		    bpf_fentry_test3(4, 5, 6) != 15 ||
+diff --git a/net/core/bpf_sk_storage.c b/net/core/bpf_sk_storage.c
+index d3fbaf89a698..8da8834aa134 100644
+--- a/net/core/bpf_sk_storage.c
++++ b/net/core/bpf_sk_storage.c
+@@ -365,6 +365,7 @@ static bool bpf_sk_storage_tracing_allowed(const struct bpf_prog *prog)
+ 		return true;
+ 	case BPF_TRACE_FENTRY:
+ 	case BPF_TRACE_FEXIT:
++	case BPF_TRACE_SESSION:
+ 		return !!strncmp(prog->aux->attach_func_name, "bpf_sk_storage",
+ 				 strlen("bpf_sk_storage"));
+ 	default:
+diff --git a/tools/include/uapi/linux/bpf.h b/tools/include/uapi/linux/bpf.h
+index 6829936d33f5..79ba3023e8be 100644
+--- a/tools/include/uapi/linux/bpf.h
++++ b/tools/include/uapi/linux/bpf.h
+@@ -1133,6 +1133,7 @@ enum bpf_attach_type {
+ 	BPF_NETKIT_PEER,
+ 	BPF_TRACE_KPROBE_SESSION,
+ 	BPF_TRACE_UPROBE_SESSION,
++	BPF_TRACE_SESSION,
+ 	__MAX_BPF_ATTACH_TYPE
+ };
+ 
+diff --git a/tools/testing/selftests/bpf/prog_tests/tracing_failure.c b/tools/testing/selftests/bpf/prog_tests/tracing_failure.c
+index 10e231965589..58b02552507d 100644
+--- a/tools/testing/selftests/bpf/prog_tests/tracing_failure.c
++++ b/tools/testing/selftests/bpf/prog_tests/tracing_failure.c
+@@ -73,7 +73,7 @@ static void test_tracing_deny(void)
+ static void test_fexit_noreturns(void)
+ {
+ 	test_tracing_fail_prog("fexit_noreturns",
+-			       "Attaching fexit/fmod_ret to __noreturn function 'do_exit' is rejected.");
++			       "Attaching fexit/session/fmod_ret to __noreturn function 'do_exit' is rejected.");
+ }
+ 
+ void test_tracing_failure(void)
 -- 
 2.51.1.dirty
 
