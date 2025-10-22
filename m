@@ -1,112 +1,144 @@
-Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
+Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 573DC34887B
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 22 Oct 2025 14:11:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B955233F8DC;
+	Wed, 22 Oct 2025 14:27:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761142312; cv=none; b=YpQkKP5C3O7qDwxngzwC9P5AY8UxgWJzcSSlgU6MN8P7BDE6sNmYY8gFFCkaYtYh0YJXqjg4lOocEeyhrWq17xmlUbUM/FuV/IwgFbfMUBoJ/wiGd1WUwSlMOl4Fig2nuugsFplV9gH3lOl5SYmiqQCu1A4G+11Bz8ptBimE1xo=
+	t=1761143283; cv=none; b=WLGKtsxspshbEmP3Ru1k/9ki5P8YBE4I9wbTvX4i0i74RGW2qJlqS/T6PBduOUmWOibqZSqKKUGLu+EZW1YepO8GwJoGU/fuT/EKaQG9O8AgfG7VC04E7ErlcNrorNKp45M79tmcaujFEkU6KwYFrf3tMxjUjFaUQAvfTtulAOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761142312; c=relaxed/simple;
-	bh=HKERCs0/X58PIAEuo0fOh8DefQnZ03wa8TS06sVQNqo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SaKANXAqHNuLpLdXabe84Lf/5YCoNsNNd1X8h0GZdo8baTJ+NhwDPiICjuEzdrtL+pjg4e6Nh4F/2U3oj2gnhSiCD0dc+/ZeXN4DIkA+Nkg7snARmyCtgp7R1d1nrDxF7uumwoG6xwwhWHuXj0FLcwGIhN9tW5XouL+EiEB6oXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=HlHWlNEj; arc=none smtp.client-ip=95.215.58.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="HlHWlNEj"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1761142306;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=r/kbH6CnWKj5FbZWIMHjiro5IcUf/Mw/d63e1Fq2vhU=;
-	b=HlHWlNEjfmh9Wzf3BZjk5wPRNIiFQ+8SHLNzbf/Ejsptz70t88kp9ildu+PiiMuSeHPNWY
-	G7ARw4JIiS4a0jsq8SoycH1AN6rnUtWvcMh2gQP4twF309wJiBQguoIlNFMAeravBaIFrr
-	mtowp5d9Tnz/WcZzpCihDQSfSYZebns=
-From: Menglong Dong <menglong.dong@linux.dev>
-To: ast@kernel.org, jolsa@kernel.org, Menglong Dong <menglong8.dong@gmail.com>
-Cc: daniel@iogearbox.net, john.fastabend@gmail.com, andrii@kernel.org,
- martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org,
- yonghong.song@linux.dev, kpsingh@kernel.org, sdf@fomichev.me,
- haoluo@google.com, mattbobrowski@google.com, rostedt@goodmis.org,
- mhiramat@kernel.org, mathieu.desnoyers@efficios.com, leon.hwang@linux.dev,
- jiang.biao@linux.dev, bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject:
- Re: [PATCH bpf-next v2 07/10] selftests/bpf: test get_func_ip for fsession
-Date: Wed, 22 Oct 2025 22:11:23 +0800
-Message-ID: <5933395.DvuYhMxLoT@7950hx>
-In-Reply-To: <20251022080159.553805-8-dongml2@chinatelecom.cn>
-References:
- <20251022080159.553805-1-dongml2@chinatelecom.cn>
- <20251022080159.553805-8-dongml2@chinatelecom.cn>
+	s=arc-20240116; t=1761143283; c=relaxed/simple;
+	bh=2xGOWvo4ii83yOt9X6tjIYj4tuTGdBy0glwr7PkKXkM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=p/N1E+L5jLbuWwh0jQS7mh5nXQFOYuyBv2zHF5fzBcZA+NP6WOWyz+oBaJMweRBlaubIgfP9t1PqawxldQOmUirBiZ9Cshaq2+91OSpuwDsacVzamEsjDA/oSOhiCIIxL5mzDLt94oTxG3WN1nS+fA+6WewfQzRNAkQSMGPxlmA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf14.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay02.hostedemail.com (Postfix) with ESMTP id C5E0513B823;
+	Wed, 22 Oct 2025 14:27:57 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf14.hostedemail.com (Postfix) with ESMTPA id 9672D2F;
+	Wed, 22 Oct 2025 14:27:55 +0000 (UTC)
+Date: Wed, 22 Oct 2025 10:28:19 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Feng Yang <yangfeng59949@163.com>, andrii@kernel.org,
+ bpf@vger.kernel.org, jpoimboe@kernel.org,
+ linux-trace-kernel@vger.kernel.org, mhiramat@kernel.org,
+ peterz@infradead.org, x86@kernel.org, yhs@fb.com
+Subject: Re: [BUG] no ORC stacktrace from kretprobe.multi bpf program
+Message-ID: <20251022102819.7675ee7a@gandalf.local.home>
+In-Reply-To: <aPjO0yLCxPbUJP9r@krava>
+References: <20251015121138.4190d046@gandalf.local.home>
+	<20251022090429.136755-1-yangfeng59949@163.com>
+	<aPjO0yLCxPbUJP9r@krava>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: 4q7gbm3wtzdindmqqa3tx1oczef7fyss
+X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: 9672D2F
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19f6Oq3d1+RMkArEQKCrrnwNBdel1/ZWEk=
+X-HE-Tag: 1761143275-604607
+X-HE-Meta: U2FsdGVkX1+etYEHLOLCcbCNWR+cr2aKfp3VDNklIdE3kjgei4HZKrskc3smMOpojSjRI8lP2Wk0ycSSbbA0Q0JvTYm10GuDRCDzkaUKEnTdWofVEXTTFdC7JMUg/CNAxV5/xmb0NOkRD/VqEoU0plWcHRxoRHz+zG7CWL40eaLztyRp4/h76mv4PituurS+5OPuOvX48x+MaxlSR75soDsPzVr1q5b1AqYe7eAPOEYnwKg3igSY9h0MqL26x/adN7DG2u8IJCwmtl6MWL/LpQQBxO/8OTKhKA5eNmgB92/q8PxFPiKPzi5TcWNpN+LKjv6cObH5yoKIuZFXEj6fg+tgSZ3ZJYjG
 
-On 2025/10/22 16:01, Menglong Dong wrote:
-> As the layout of the stack changed for fsession, we'd better test
-> bpf_get_func_ip() for it.
+On Wed, 22 Oct 2025 14:32:19 +0200
+Jiri Olsa <olsajiri@gmail.com> wrote:
+
+> thanks for the report.. so above is from arm?
 > 
-> Signed-off-by: Menglong Dong <dongml2@chinatelecom.cn>
+> yes the x86_64 starts with:
+>   unwind_start(&state, current, NULL, (void *)regs->sp);
+> 
+> I seems to get reasonable stack traces on x86 with the change below,
+> which just initializes fields in regs that are used later on and sets
+> the stack so the ftrace_graph_ret_addr code is triggered during unwind
+> 
+> but I'm not familiar with this code, Masami, Josh, any idea?
+
+Oh! This is an issue with a stack trace happening from a callback of the
+exit handler?
+
+OK, that makes much more sense. As I don't think the code handles that
+properly.
+
+> 
+> thanks,
+> jirka
+> 
+> 
 > ---
->  .../selftests/bpf/prog_tests/get_func_ip_test.c    |  2 ++
->  .../testing/selftests/bpf/progs/get_func_ip_test.c | 14 ++++++++++++++
->  2 files changed, 16 insertions(+)
-> 
-> diff --git a/tools/testing/selftests/bpf/prog_tests/get_func_ip_test.c b/tools/testing/selftests/bpf/prog_tests/get_func_ip_test.c
-> index c40242dfa8fb..a9078a1dbb07 100644
-> --- a/tools/testing/selftests/bpf/prog_tests/get_func_ip_test.c
-> +++ b/tools/testing/selftests/bpf/prog_tests/get_func_ip_test.c
-> @@ -46,6 +46,8 @@ static void test_function_entry(void)
->  	ASSERT_EQ(skel->bss->test5_result, 1, "test5_result");
->  	ASSERT_EQ(skel->bss->test7_result, 1, "test7_result");
->  	ASSERT_EQ(skel->bss->test8_result, 1, "test8_result");
-> +	ASSERT_EQ(skel->bss->test9_result1, 1, "test9_result1");
-> +	ASSERT_EQ(skel->bss->test9_result2, 1, "test9_result2");
+> diff --git a/arch/x86/kernel/ftrace_64.S b/arch/x86/kernel/ftrace_64.S
+> index 367da3638167..2d2bb8c37b56 100644
+> --- a/arch/x86/kernel/ftrace_64.S
+> +++ b/arch/x86/kernel/ftrace_64.S
+> @@ -353,6 +353,8 @@ STACK_FRAME_NON_STANDARD_FP(__fentry__)
+>  SYM_CODE_START(return_to_handler)
+>  	UNWIND_HINT_UNDEFINED
 
-Oops, the fsession part should be factor out, and be skipped
-if not X86_64, which failed the CI for !X86_64 arch :(
+I believe the above UNWIND_HINT_UNDEFINED means that if ORC were to hit
+this, it should just give up.
 
-I'll fix it in the next version.
+This is because tracing the exit of the function really doesn't fit in the
+normal execution paradigm.
+
+The entry is easy. It's the same as if the callback was called by the
+function being traced. The exit is more difficult because the function
+being traced has already did its return. Now the callback is in this limbo
+area of being called between a return and the caller.
+
+>  	ANNOTATE_NOENDBR
+> +	push $return_to_handler
+> +	UNWIND_HINT_FUNC
+
+OK, so what happened here is that you put in the return_to_handle into the
+stack and told ORC that this is a normal function, and that when it
+triggers to do a lookup from the handler itself.
+
+I wonder if we could just add a new UNWIND_HINT that tells ORC to do that?
 
 >  
->  cleanup:
->  	get_func_ip_test__destroy(skel);
-> diff --git a/tools/testing/selftests/bpf/progs/get_func_ip_test.c b/tools/testing/selftests/bpf/progs/get_func_ip_test.c
-> index 2011cacdeb18..9acb79fc7537 100644
-> --- a/tools/testing/selftests/bpf/progs/get_func_ip_test.c
-> +++ b/tools/testing/selftests/bpf/progs/get_func_ip_test.c
-> @@ -103,3 +103,17 @@ int BPF_URETPROBE(test8, int ret)
->  	test8_result = (const void *) addr == (const void *) uprobe_trigger;
->  	return 0;
->  }
+>  	/* Save ftrace_regs for function exit context  */
+>  	subq $(FRAME_SIZE), %rsp
+> @@ -360,6 +362,9 @@ SYM_CODE_START(return_to_handler)
+>  	movq %rax, RAX(%rsp)
+>  	movq %rdx, RDX(%rsp)
+>  	movq %rbp, RBP(%rsp)
+> +	movq %rsp, RSP(%rsp)
+> +	movq $0, EFLAGS(%rsp)
+> +	movq $__KERNEL_CS, CS(%rsp)
+
+Is this simulating some kind of interrupt?
+
+>  	movq %rsp, %rdi
+>  
+>  	call ftrace_return_to_handler
+
+Now it gets tricky in the ftrace_return_to_handler as the first thing it
+does is to pop the shadow stack, which makes the return_to_handler lookup
+different, as its no longer on the stack that the unwinder will use.
+
+The return address will live in the "ret" variable of that function, which
+the unwinder will not have access to. Yeah, this will not be easy to solve.
+
+-- Steve
+
+
+> @@ -368,7 +373,8 @@ SYM_CODE_START(return_to_handler)
+>  	movq RDX(%rsp), %rdx
+>  	movq RAX(%rsp), %rax
+>  
+> -	addq $(FRAME_SIZE), %rsp
+> +	addq $(FRAME_SIZE) + 8, %rsp
 > +
-> +__u64 test9_result1 = 0;
-> +__u64 test9_result2 = 0;
-> +SEC("fsession/bpf_fentry_test1")
-> +int BPF_PROG(test9, int a)
-> +{
-> +	__u64 addr = bpf_get_func_ip(ctx);
-> +
-> +	if (bpf_tracing_is_exit(ctx))
-> +		test9_result1 = (const void *) addr == &bpf_fentry_test1;
-> +	else
-> +		test9_result2 = (const void *) addr == &bpf_fentry_test1;
-> +	return 0;
-> +}
-> 
-
-
-
+>  	/*
+>  	 * Jump back to the old return address. This cannot be JMP_NOSPEC rdi
+>  	 * since IBT would demand that contain ENDBR, which simply isn't so for
 
