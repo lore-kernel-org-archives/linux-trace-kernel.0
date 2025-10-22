@@ -1,148 +1,109 @@
-Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DB2F3081DC
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 22 Oct 2025 08:19:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BE6430F7FA;
+	Wed, 22 Oct 2025 09:05:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761121199; cv=none; b=LV/OdHtSZpPl4z1DTRXP+5QSL2212uK6Ed+OUWKyb6GrlMTYZ2NSFm96vLwzsBnEEV60CHPQSk1NFb71visIQkRaAVW9rxqBOgJQ1W8H7NK2XTTEAEys7qv4a0490yGkoJbfdVVPGGCb0hsXqlQ1QVIe1Cvne7DyCPmyo7H4qf0=
+	t=1761123918; cv=none; b=Z5a5QRKwdE/ztkoeUs4KAaeeLZmLSRTiG2OGE5QiLvisIlo22Gh16mIrhxRSBDPAcDdIyb7AcDMF79y4AgND6mQSHmz2BXtSU0iusbaBldPRQhk7lJI9+NCXZnBxkEGtKCq7wSZtHBb+LO0sFtTnaP4eOCZnRP6jpu9wceX27wU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761121199; c=relaxed/simple;
-	bh=AeBSiBDgwpOGCGWPswfsYos7CpkvHnSPMpBTKMI3s6k=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZNNiyyHHyWSEaMPioS+W6OcSS/9RUTT/QQZj1NR8+S55asfie1SLIM2SVIpScd1QRhvjuQ5voNof7XqihAvldj8Xo8Y55Zd7e9pEtfkk8dT66nPsDOZ3bAjEdCKS5EGjTus20Krszbz1gNm2fHrytxAozrD+aW9JW++CuMYJqvc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=bCkXj4FC; arc=none smtp.client-ip=95.215.58.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1761123918; c=relaxed/simple;
+	bh=DHXfpS9aswzlJwBEoWw7X4Zv+9/3m5MUqiLosCFMR7M=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=djA9HzkJKi+b8er8jyBDCZ/PEi3xHpdtwIQJ9YJVzCf2eItjZLUo94QquEoFmj1Q7uoS+obzMyVOy4BrTyMjO452L4qn30IXX2rz367I5Mt1nCStKC8VksHxPs9rvvMA+9p4pArDYcE3u/mwSS7qjJpF9cv5RhpU9gNtA4cH1jg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=mvo5GFQz; arc=none smtp.client-ip=117.135.210.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="bCkXj4FC"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1761121185;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bpy//4A7k0mbi8peB9EHLJq9FXO+mcernBj+cHoysX4=;
-	b=bCkXj4FCRTsFuSWTdzCO9l/y1V8g6EkIWkSW7RkPA5aA6w8xS6+THX9b97DHypTYKGsiHY
-	Z9+CHBFANqs5y/DhbCsbNFTbTU+z0Py4KfK4kXnMUhemF8gDdSt0uCbVpLcgie8kinKCQk
-	vtLfHpuOQuDgxCwfvELMNRwPsQ6jHGw=
-From: Menglong Dong <menglong.dong@linux.dev>
-To: ast@kernel.org, jolsa@kernel.org, Menglong Dong <menglong8.dong@gmail.com>
-Cc: daniel@iogearbox.net, john.fastabend@gmail.com, andrii@kernel.org,
- martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org,
- yonghong.song@linux.dev, kpsingh@kernel.org, sdf@fomichev.me,
- haoluo@google.com, mattbobrowski@google.com, rostedt@goodmis.org,
- mhiramat@kernel.org, mathieu.desnoyers@efficios.com, leon.hwang@linux.dev,
- jiang.biao@linux.dev, bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH bpf-next v2 00/10] bpf: tracing session supporting
-Date: Wed, 22 Oct 2025 16:19:27 +0800
-Message-ID: <5931958.DvuYhMxLoT@7950hx>
-In-Reply-To: <20251022080159.553805-1-dongml2@chinatelecom.cn>
-References: <20251022080159.553805-1-dongml2@chinatelecom.cn>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="mvo5GFQz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=Pd
+	nI4MEp0UYVRPKbdbYIQkMJ3KrGkN06ieOL071k4ws=; b=mvo5GFQzB3IifmVuMA
+	93hBsSIR9IskT1fLvOB9pZcna4DKjScg7c155RqOepGXR7ki4EMFpc7JlB6gkTVU
+	3vAOTgG77SWE+7aYOY7ZvfIo0X9ESayPAspHzKVb08bq+uzK0y3oYMVBmz9baY98
+	PeTkaqfnWl5aeD9TI7n/xHgB8=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g0-1 (Coremail) with SMTP id _____wDHFx8dnvhonGH4Bw--.20175S2;
+	Wed, 22 Oct 2025 17:04:30 +0800 (CST)
+From: Feng Yang <yangfeng59949@163.com>
+To: rostedt@goodmis.org
+Cc: andrii@kernel.org,
+	bpf@vger.kernel.org,
+	jpoimboe@kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	mhiramat@kernel.org,
+	olsajiri@gmail.com,
+	peterz@infradead.org,
+	x86@kernel.org,
+	yhs@fb.com
+Subject: Re: [BUG] no ORC stacktrace from kretprobe.multi bpf program
+Date: Wed, 22 Oct 2025 17:04:29 +0800
+Message-Id: <20251022090429.136755-1-yangfeng59949@163.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20251015121138.4190d046@gandalf.local.home>
+References: <20251015121138.4190d046@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wDHFx8dnvhonGH4Bw--.20175S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7Cry5CF1kXw43AF1Duw1rWFg_yoW8ZFy5pr
+	W8tFyYkr4kZFn2vr42vw48Kr1SyrWfCrW5GrWkArWrCwsIq343AryayFyjgFW0yryrWa4j
+	vF4YvrZ0kwn8ZaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zRe6w_UUUUU=
+X-CM-SenderInfo: p1dqww5hqjkmqzuzqiywtou0bp/1tbiTRjueGj4lf3kzwAAsQ
 
-On 2025/10/22 16:01, Menglong Dong wrote:
-> Sometimes, we need to hook both the entry and exit of a function with
-> TRACING. Therefore, we need define a FENTRY and a FEXIT for the target
-> function, which is not convenient.
-> 
-> Therefore, we add a tracing session support for TRACING. Generally
-> speaking, it's similar to kprobe session, which can hook both the entry
-> and exit of a function with a single BPF program. Meanwhile, it can also
-> control the execution of the fexit with the return value of the fentry.
-> Session cookie is also supported with the kfunc bpf_fsession_cookie().
-> 
-> The kfunc bpf_tracing_is_exit() and bpf_fsession_cookie() are both inlined
-> in the verifier.
+On Wed, 15 Oct 2025 12:11:38 -0400 Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Hmm......the gmail broken after it sent the 7th patch. So I sent
-the remained 3 patches again. However, they are not recognized
-together as a series. So awkward :/
+> > > Hmm, we do have a way to retrieve the actual return caller from a location
+> > > for return_to_handler:
+> > > 
+> > >   See kernel/trace/fgraph.c: ftrace_graph_get_ret_stack()
+> > > 
+> > > Hmm, I think the x86 ORC unwinder needs to use this.  
+> > 
+> > I'm confused, is that not what ftrace_graph_ret_addr() already does?
 
-Should I resend it?
+> Ah yeah, that does it too. I just searched for the first function that did
+> the look up ;-)
 
-Thanks!
-Menglong Dong
-
-> 
-> We allow the usage of bpf_get_func_ret() to get the return value in the
-> fentry of the tracing session, as it will always get "0", which is safe
-> enough and is OK.
-> 
-> The while fsession stuff is arch related, so the -EOPNOTSUPP will be
-> returned if it is not supported yet by the arch. In this series, we only
-> support x86_64. And later, other arch will be implemented.
-> 
-> Changes since v1:
-> * session cookie support.
->   In this version, session cookie is implemented, and the kfunc
->   bpf_fsession_cookie() is added.
-> 
-> * restructure the layout of the stack.
->   In this version, the session stuff that stored in the stack is changed,
->   and we locate them after the return value to not break
->   bpf_get_func_ip().
-> 
-> * testcase enhancement.
->   Some nits in the testcase that suggested by Jiri is fixed. Meanwhile,
->   the testcase for get_func_ip and session cookie is added too.
-> 
-> Menglong Dong (10):
->   bpf: add tracing session support
->   bpf: add kfunc bpf_tracing_is_exit for TRACE_SESSION
->   bpf: add kfunc bpf_fsession_cookie for TRACING SESSION
->   bpf,x86: add ret_off to invoke_bpf()
->   bpf,x86: add tracing session supporting for x86_64
->   libbpf: add support for tracing session
->   selftests/bpf: test get_func_ip for fsession
->   selftests/bpf: add testcases for tracing session
->   selftests/bpf: add session cookie testcase for fsession
->   selftests/bpf: add testcase for mixing fsession, fentry and fexit
-> 
->  arch/arm64/net/bpf_jit_comp.c                 |   3 +
->  arch/loongarch/net/bpf_jit.c                  |   3 +
->  arch/powerpc/net/bpf_jit_comp.c               |   3 +
->  arch/riscv/net/bpf_jit_comp64.c               |   3 +
->  arch/s390/net/bpf_jit_comp.c                  |   3 +
->  arch/x86/net/bpf_jit_comp.c                   | 214 ++++++++++++++++--
->  include/linux/bpf.h                           |   2 +
->  include/uapi/linux/bpf.h                      |   1 +
->  kernel/bpf/btf.c                              |   2 +
->  kernel/bpf/syscall.c                          |   2 +
->  kernel/bpf/trampoline.c                       |   5 +-
->  kernel/bpf/verifier.c                         |  45 +++-
->  kernel/trace/bpf_trace.c                      |  59 ++++-
->  net/bpf/test_run.c                            |   1 +
->  net/core/bpf_sk_storage.c                     |   1 +
->  tools/bpf/bpftool/common.c                    |   1 +
->  tools/include/uapi/linux/bpf.h                |   1 +
->  tools/lib/bpf/bpf.c                           |   2 +
->  tools/lib/bpf/libbpf.c                        |   3 +
->  .../selftests/bpf/prog_tests/fsession_test.c  | 161 +++++++++++++
->  .../bpf/prog_tests/get_func_ip_test.c         |   2 +
->  .../bpf/prog_tests/tracing_failure.c          |   2 +-
->  .../selftests/bpf/progs/fsession_cookie.c     |  49 ++++
->  .../selftests/bpf/progs/fsession_mixed.c      |  45 ++++
->  .../selftests/bpf/progs/fsession_test.c       | 175 ++++++++++++++
->  .../selftests/bpf/progs/get_func_ip_test.c    |  14 ++
->  26 files changed, 776 insertions(+), 26 deletions(-)
->  create mode 100644 tools/testing/selftests/bpf/prog_tests/fsession_test.c
->  create mode 100644 tools/testing/selftests/bpf/progs/fsession_cookie.c
->  create mode 100644 tools/testing/selftests/bpf/progs/fsession_mixed.c
->  create mode 100644 tools/testing/selftests/bpf/progs/fsession_test.c
-> 
-> 
+> Now I guess the question is, why is this not working?
 
 
+I've also encountered this issue recently. It only outputs the stack trace of return_to_handler, for example:
 
+# bpftrace -e 'kretprobe:vfs_rea* {@[kstack]=count()}'
+Attaching 1 probe...
+^C
+
+@[
+    ksys_read+192
+    get_perf_callchain+211
+    bpf_get_stackid+101
+    cleanup_module+303100
+    kprobe_multi_link_prog_run+175
+    fprobe_return+265
+    __ftrace_return_to_handler.isra.0+433
+    return_to_handler+30
+]: 1
+
+The return stack trace when directly executing samples/fprobe/fprobe_example.c is similar:
+[ 71.892353] return_to_handler: kernel_thread+0x71/0xa0
+[ 71.892356] sample_exit_handler: Return from <kernel_clone+0x4/0x470> ip = 0x000000000e0e2004 to rip = 0x00000000127e6d58 (kernel_thread+0x71/0xa0)
+[ 71.892361] __ftrace_return_to_handler.isra.0+0x1b1/0x280
+[ 71.892363] return_to_handler+0x1e/0x50
+
+No cases were found where the ret of the ftrace_graph_ret_addr function is equal to return_handler.
+
+Additionally, I noticed that when the x86 architecture executes perf_callchain_kernel, perf_hw_regs(regs) is false,
+and it calls unwind_start(&state, current, NULL, (void *)regs->sp);
+which then proceeds to __unwind_start where the check task == current is performed.
+However, the ARM architecture executes kunwind_init_from_regs(&state, regs);
+instead of taking the second branch with the task == current check.
+
+I hope these phenomena can help you analyze the cause of this issue.
+Thanks.
 
