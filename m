@@ -1,53 +1,53 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29EC829A2;
-	Thu, 23 Oct 2025 00:04:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E8C415E97;
+	Thu, 23 Oct 2025 04:16:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761177874; cv=none; b=fl4WiELQek+2MU/0jpTlxKXrKgBeTp7aKHzOjm/7PHW1bEhX2ed4zUHr0/NIM0eNGtCDcIhxGCLNZA0QHQY1O+sVa9EbWS4ugfnhxo3XTgUTeHgpMc41Lp+q0qz0Ck91rTfvcBajXqqGb73AFHyYnBkn04KCCC6QIRoxLmeKlBE=
+	t=1761192977; cv=none; b=QHerxskjtFxb7eDy5oJ56OImv3qZP70LZNRzUkNvEWDspHbOutQuPmRndGmeVApGw0cLc3ScNaX7RsUpULhaEtD4hLyGlwkYqI1mL6sXPN45MT1T8dzFxEmrb4kGFocLsErFOOR7lXSG7YUisnwB8tA6Pcp8bBrRY4haqWyeSIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761177874; c=relaxed/simple;
-	bh=R7sNaw4y/sEBbeMQ9YD6iGrdQApY+snp9f5pwr/so7s=;
+	s=arc-20240116; t=1761192977; c=relaxed/simple;
+	bh=6qjfKhCFpW3nxPdf3q9ksCTq53TGoLVq65HUGLHWQeQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QOjz2Y/o/F3waVUuKPLm4BiR2D5HZNXwSaIfJMkCTVuCVu60VdnOYfUQf0CEOoKf+oKrnKuZqQtKsBTyY6zLzIuZGxhUM4Btm+illBD6mtqvq66M/7fom9jj6pCvb3EVebqqAJeeLPUPwmBy/bjz3tkrfPqszwKNMsYhu6uOQc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h3jBWO5N; arc=none smtp.client-ip=192.198.163.15
+	 Content-Type:Content-Disposition:In-Reply-To; b=VWSZrbLiL072idt1GywkRqJWLDjYKLK7+KKBeHF2pGMQHpO40jI0V0OxXzU7jKZpz83FfqPSKNc+chPtB8K1HEHqvHQ5moQzCFVtIBwEKx9CW/6wsU0kPMjoeLQwnSw9iaB9NOfG3mjz+jFPyiJMKIT9xmwmjNY+S+pD/01Zgpg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WNR2LIJn; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h3jBWO5N"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WNR2LIJn"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761177873; x=1792713873;
+  t=1761192975; x=1792728975;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=R7sNaw4y/sEBbeMQ9YD6iGrdQApY+snp9f5pwr/so7s=;
-  b=h3jBWO5Nr21elAaaquD9VtwOU0FED2CjuiDurhmd32Enrpu8AstOo+pP
-   U0+1MVm566JInYp2z+ICcPe5IgsJhiMf8wScDEjhdIbJhif8Ge/DWpVO5
-   R4I5AT7HxW8OB2GJh/o8PXRd6IiryYFX0HLI3W9zTBCMLAlBiuXLI4l39
-   dVvFna2TG/pxVPs1W6PIq9m5vjyooD5nKCKemW/N6adNYS38/azgDSB0O
-   f0vDTVtsnPsTgFk1tE0VNdvhsY+wZS5+aMiZax9tNm6cnGkJ8HgEZwh5r
-   waPmdAJvhBu7wefDj9SKIqKna+joabx71wKZxjazctquFd3qy8hCqvw+w
+  bh=6qjfKhCFpW3nxPdf3q9ksCTq53TGoLVq65HUGLHWQeQ=;
+  b=WNR2LIJnc/GrKN8Id9SKK2MoQGYPdCUain6UPPkABBzN7HsmQhWv/Gjb
+   Dd4T/WAZomqCX/zReqWyXz/H5kRj/oh9hKO9hKy/EH48QuCESQ9W6MGCD
+   nmZgH48l+9ZkJgnudRzVOvcGLj14q5FumcZ6De25LmhIBdkvDGts7Nuq/
+   QNidBq65tqi5r9OdCllT7U53Rms9xcKm2zhlfnBr93SGkAabyFTEjdEj8
+   IhBeJH/L8o72Co7345kbRErEF9Km1669CERhw5/1Mbocj7VwZzvYHTxRd
+   IL9J6kEke1PqpkvkcJ0nR2UrZxaxv9Px/nK0Kc0UXJg4I/nkHh5O9OWDn
    A==;
-X-CSE-ConnectionGUID: 9p1xJsDKSauBDWIdZXhB9A==
-X-CSE-MsgGUID: Gultst/rS2qMsYrifdH/Kg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="63433945"
+X-CSE-ConnectionGUID: ISKqG3O3Rc6sAPjtlyZWwA==
+X-CSE-MsgGUID: F3a2OoIQQCSt6YbtN68Hxw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="66996528"
 X-IronPort-AV: E=Sophos;i="6.19,248,1754982000"; 
-   d="scan'208";a="63433945"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2025 17:04:32 -0700
-X-CSE-ConnectionGUID: RQ5X8IvDSJW+shKWJ/XzaQ==
-X-CSE-MsgGUID: SUBhFPknQIWpRfmqleoJzg==
+   d="scan'208";a="66996528"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2025 21:16:15 -0700
+X-CSE-ConnectionGUID: NVNLIeA3SvKuDnsRXMUh8w==
+X-CSE-MsgGUID: cKr3VAJ2Q3OI8L/aitKNqQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,248,1754982000"; 
-   d="scan'208";a="183179024"
+   d="scan'208";a="183945184"
 Received: from lkp-server02.sh.intel.com (HELO 66d7546c76b2) ([10.239.97.151])
-  by orviesa006.jf.intel.com with ESMTP; 22 Oct 2025 17:04:27 -0700
+  by orviesa007.jf.intel.com with ESMTP; 22 Oct 2025 21:16:10 -0700
 Received: from kbuild by 66d7546c76b2 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1vBiob-000CqZ-2B;
-	Thu, 23 Oct 2025 00:04:25 +0000
-Date: Thu, 23 Oct 2025 08:03:41 +0800
+	id 1vBmjU-000D0j-3C;
+	Thu, 23 Oct 2025 04:15:34 +0000
+Date: Thu, 23 Oct 2025 12:12:54 +0800
 From: kernel test robot <lkp@intel.com>
 To: Yingchao Deng <yingchao.deng@oss.qualcomm.com>,
 	Steven Rostedt <rostedt@goodmis.org>,
@@ -57,7 +57,7 @@ To: Yingchao Deng <yingchao.deng@oss.qualcomm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
 	Alexandre Torgue <alexandre.torgue@foss.st.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+Cc: oe-kbuild-all@lists.linux.dev,
 	Yingchao Deng <yingchao.deng@oss.qualcomm.com>,
 	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
 	linux-doc@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
@@ -66,7 +66,7 @@ Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
 	Yuanfang Zhang <yuanfang.zhang@oss.qualcomm.com>,
 	Jinlong Mao <jinlong.mao@oss.qualcomm.com>
 Subject: Re: [PATCH v3] stm: class: Add MIPI OST protocol support
-Message-ID: <202510230717.u8tTLt9x-lkp@intel.com>
+Message-ID: <202510231127.UFDSOpIQ-lkp@intel.com>
 References: <20251022071834.1658684-1-yingchao.deng@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -92,24 +92,24 @@ url:    https://github.com/intel-lab-lkp/linux/commits/Yingchao-Deng/stm-class-A
 base:   https://git.kernel.org/pub/scm/linux/kernel/git/atorgue/stm32.git stm32-next
 patch link:    https://lore.kernel.org/r/20251022071834.1658684-1-yingchao.deng%40oss.qualcomm.com
 patch subject: [PATCH v3] stm: class: Add MIPI OST protocol support
-config: i386-randconfig-013-20251023 (https://download.01.org/0day-ci/archive/20251023/202510230717.u8tTLt9x-lkp@intel.com/config)
-compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251023/202510230717.u8tTLt9x-lkp@intel.com/reproduce)
+config: m68k-allmodconfig (https://download.01.org/0day-ci/archive/20251023/202510231127.UFDSOpIQ-lkp@intel.com/config)
+compiler: m68k-linux-gcc (GCC) 15.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251023/202510231127.UFDSOpIQ-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202510230717.u8tTLt9x-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202510231127.UFDSOpIQ-lkp@intel.com/
 
 All errors (new ones prefixed by >>):
 
->> drivers/hwtracing/stm/p_ost.c:201:13: error: call to undeclared function 'task_tgid_nr'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+   drivers/hwtracing/stm/p_ost.c: In function 'ost_write':
+>> drivers/hwtracing/stm/p_ost.c:201:27: error: implicit declaration of function 'task_tgid_nr' [-Wimplicit-function-declaration]
      201 |         hdr.tgid        = task_tgid_nr(current);
-         |                           ^
-   drivers/hwtracing/stm/p_ost.c:172:6: warning: unused variable 'i' [-Wunused-variable]
+         |                           ^~~~~~~~~~~~
+   drivers/hwtracing/stm/p_ost.c:172:13: warning: unused variable 'i' [-Wunused-variable]
      172 |         int i;
          |             ^
-   1 warning and 1 error generated.
 
 
 vim +/task_tgid_nr +201 drivers/hwtracing/stm/p_ost.c
