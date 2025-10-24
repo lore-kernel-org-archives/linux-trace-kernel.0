@@ -1,214 +1,325 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4133F2264D6
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 24 Oct 2025 14:36:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73FDA26A1B6;
+	Fri, 24 Oct 2025 14:52:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761316616; cv=none; b=avv/cDQbOVr4duB0cYjnYBBY2uQFlJ+kgMumnbdc5MKh3Z3qZkq3DBZJ0LKcb/fhJRqHFG8EofL+EzspUvrzt19a8OD7QI/G7/33cVL7T8qLUzDIdLiowYR6cR+jWiiEFXd7tVIOE90QsxqZZNzMQap6UXWCccq6SuKYz0yFzRE=
+	t=1761317528; cv=none; b=tOdiZeGUCDbNqm/fLHMeN4b9971isrZUU7ZHb6WZSwsgewJJ6FSYMSWfQ22P5+wqz9bwIlFOnNIsv0qcUG6jyDryW/dHDNe8F0RgBjk/Ge/53cg/zXY5ZmknJqe8MUPm0m/wEmRJ9FoPMp/AnIsvVdvWMO+8VkTyx/Vr1LfSvrU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761316616; c=relaxed/simple;
-	bh=7POTLgOQMSvDxIjq1wqPOOdPmObt8KgLrizCHzkYhn0=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=lFHEdMN9TUmyhQTib3f0GgsLNy8C2TRsspAwy9+krmaUgwD+RBdnLy52MYd2TY/6s2muqC3SfKjIQgEfgKFFlXRhZK7hwfHw3hwk0qj6X1/gxHcfPjymhG3QiGfIz39L+vhSeDkeqY4vlb9JLpkIzyzMp4m4XKiNPqZoAK0u6KI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=f4LruAbw; arc=none smtp.client-ip=209.85.214.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
+	s=arc-20240116; t=1761317528; c=relaxed/simple;
+	bh=BCij+Hi25/ydA//h3z3RbncjJoIs3LzuZAEi5NEGqwc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BCt9DW+cjBuM9P/4FWLXWkhpWYKgKCUCpTNU45a1CRnGf5eCmYgHpywAVT04fG9up2HDdj9xWocNDjEmrSbs5TtH2IC3l7GXYdaDS5rn7NNL2sLCRtOQPhwmhmkWQbOzYCc6lYzVEpaHX9Mehn5xLhwfShCwbaJZj7pyvUq8i7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=C5xU06UQ; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="f4LruAbw"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-277f0ea6ee6so19593355ad.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 24 Oct 2025 07:36:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1761316614; x=1761921414; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8gWpJOPikpazVbpXRSUPMCcvrbTBk5c7sNdJD5ZAL5c=;
-        b=f4LruAbwGC7NvQfpfbN76Yj4wOdfUQMXmRa9yXRCYqVLCvpKM+DOcf8qKT+Cq5HmpF
-         eFGQ3Zs08aupJi37oT0laKXktHx9Hi/4GTGLFUSOFQEoa+8RL3W+oi8rjz2N97b8SulF
-         khZYHZdNmQHASNx7zXNnzE691sq0q9m1MBeN5oeldppylyeWbhR2ZjdULm8lPQBDMYTN
-         LqhZ69mvKkaBI53bmuDMu0e0bdTXp4uy5WsJRMXvmTuRz2+DEcMjUKilqSyCN1ACboLD
-         29ytfDZiogxJB0mhQ01wbrG89uPplqKmXe3BJUX/JxkMhigOzYgppF8cNvl2YODRER7r
-         2+Iw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761316614; x=1761921414;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8gWpJOPikpazVbpXRSUPMCcvrbTBk5c7sNdJD5ZAL5c=;
-        b=TZE3FZ/RrF4G2PxueyZZnTfqQueLj/1uVvPBd4AlY4mWEtIK19EV97tXyBmwAwfxVC
-         q7Nan9pS3xxICVcjXNgBSFLt+/HWWadxca7LmkWtx4xh6GL2W4bWHGgqorpBWiUuVrpR
-         mKZuHAxsu+2GJQvncaeuSNYgoIrsVEouK2dUuj/dtNtOx6xIP0YFnQgamrsRDS+s1Tur
-         SeVLVXn6c0mA2hHvzUdn4x40QxXNBLVhTWlXfS09gu61MWqbfck204KZfk+MAPUd12BI
-         QYZr6Ro2UZPcalYSelCR7qNN1vVZRTWBOCc1r873PP6vDbE8q3VvDRNeGGKM0f5ovI+M
-         OP4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVLCnPyjfuOf8HgcGOZ07Va2A9ZAdGISBaKH9uNYaVJF1WycrLi/s32PapPpIzY5b3AkwaWjmrq1Lp6oXspIMr3UhQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyldUBff1Jj5YQQiODJ7sKZWUgfTSr96vTqfoUSqb640Jwjp/Oe
-	hMwcaVSNQ7oxxjd7rOZCAeUINdcyVIwB7JUJqREbsUWuYUJXfqlXvcG73invbem/E3VcklrStYw
-	hBgR+/Vrv/G1KKfH78aykEE0wsw==
-X-Google-Smtp-Source: AGHT+IHpZZ9f9FI2oIDKJuatT8tIt0u+E9sskkPVtdG8cewdd4WM+aJNDiUGBZhPHxdPQPN/WAuNAtpnF8qjPR3V7w==
-X-Received: from plcq12.prod.google.com ([2002:a17:902:e30c:b0:290:28e2:ce4e])
- (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:902:f68c:b0:290:91d2:9304 with SMTP id d9443c01a7336-290c9c8a770mr324316695ad.4.1761316613376;
- Fri, 24 Oct 2025 07:36:53 -0700 (PDT)
-Date: Fri, 24 Oct 2025 07:36:51 -0700
-In-Reply-To: <aPpEPZ4YfrRHIkal@google.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="C5xU06UQ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=FI/WN7v2RklnKmQzu2cqn+e7+2+5pDjrh+VgvJvLgHY=; b=C5xU06UQuCVdgN/ugSNpkE54me
+	XcFfLLPr1zcj6LA5fmeYQS/PY173GVc7Cm/ThcLpCUVkSJsDBk6NUwTh3PUqkwGAAYrd1MEXFxckg
+	cLbAF23BNB6M+bY36sLdIcm3BUWvP3ObCSXlCeP0E7fopXV5VnZUO0AuY3PffMxenSVbIhK9nXsOE
+	lAUsuVYIBKtsL++NZActDsMKHe/ltbodv1MUALCzCLTeOHkxBr1dshuA8qVUQSGzh6+eYtyAJUqIQ
+	xVBoYu/50YdMgUVgtjOybVrFlDOoI7UTxSYKVbpz/EJz7EDuHz/D5nRpDOaR9Ur27EI9/OrGJlaXs
+	s2vW9NtA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vCJ92-00000003I0G-1n74;
+	Fri, 24 Oct 2025 14:51:57 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 9460A30039F; Fri, 24 Oct 2025 16:51:56 +0200 (CEST)
+Date: Fri, 24 Oct 2025 16:51:56 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Jens Remus <jremus@linux.ibm.com>
+Cc: Steven Rostedt <rostedt@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	x86@kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Indu Bhagat <indu.bhagat@oracle.com>,
+	"Jose E. Marchesi" <jemarch@gnu.org>,
+	Beau Belgrave <beaub@linux.microsoft.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Florian Weimer <fweimer@redhat.com>, Sam James <sam@gentoo.org>,
+	Kees Cook <kees@kernel.org>, Carlos O'Donell <codonell@redhat.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>
+Subject: Re: [PATCH v16 0/4] perf: Support the deferred unwinding
+ infrastructure
+Message-ID: <20251024145156.GM4068168@noisy.programming.kicks-ass.net>
+References: <20251007214008.080852573@kernel.org>
+ <20251023150002.GR4067720@noisy.programming.kicks-ass.net>
+ <20251024092926.GI4068168@noisy.programming.kicks-ass.net>
+ <20251024104119.GJ4068168@noisy.programming.kicks-ass.net>
+ <a59509f0-5888-4663-9e82-98e27fc3e813@linux.ibm.com>
+ <20251024140815.GE3245006@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <cover.1760731772.git.ackerleytng@google.com> <8ee16fbf254115b0fd72cc2b5c06d2ccef66eca9.1760731772.git.ackerleytng@google.com>
- <2457cb3b-5dde-4ca1-b75d-174b5daee28a@arm.com> <diqz4irqg9qy.fsf@google.com>
- <diqzy0p2eet3.fsf@google.com> <aPlpKbHGea90IebS@google.com>
- <diqzv7k5emza.fsf@google.com> <aPpEPZ4YfrRHIkal@google.com>
-Message-ID: <diqzqzuse58c.fsf@google.com>
-Subject: Re: [RFC PATCH v1 07/37] KVM: Introduce KVM_SET_MEMORY_ATTRIBUTES2
-From: Ackerley Tng <ackerleytng@google.com>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Steven Price <steven.price@arm.com>, cgroups@vger.kernel.org, kvm@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, x86@kernel.org, 
-	akpm@linux-foundation.org, binbin.wu@linux.intel.com, bp@alien8.de, 
-	brauner@kernel.org, chao.p.peng@intel.com, chenhuacai@kernel.org, 
-	corbet@lwn.net, dave.hansen@intel.com, dave.hansen@linux.intel.com, 
-	david@redhat.com, dmatlack@google.com, erdemaktas@google.com, 
-	fan.du@intel.com, fvdl@google.com, haibo1.xu@intel.com, hannes@cmpxchg.org, 
-	hch@infradead.org, hpa@zytor.com, hughd@google.com, ira.weiny@intel.com, 
-	isaku.yamahata@intel.com, jack@suse.cz, james.morse@arm.com, 
-	jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com, jhubbard@nvidia.com, 
-	jthoughton@google.com, jun.miao@intel.com, kai.huang@intel.com, 
-	keirf@google.com, kent.overstreet@linux.dev, liam.merwick@oracle.com, 
-	maciej.wieczor-retman@intel.com, mail@maciej.szmigiero.name, 
-	maobibo@loongson.cn, mathieu.desnoyers@efficios.com, maz@kernel.org, 
-	mhiramat@kernel.org, mhocko@kernel.org, mic@digikod.net, michael.roth@amd.com, 
-	mingo@redhat.com, mlevitsk@redhat.com, mpe@ellerman.id.au, 
-	muchun.song@linux.dev, nikunj@amd.com, nsaenz@amazon.es, 
-	oliver.upton@linux.dev, palmer@dabbelt.com, pankaj.gupta@amd.com, 
-	paul.walmsley@sifive.com, pbonzini@redhat.com, peterx@redhat.com, 
-	pgonda@google.com, prsampat@amd.com, pvorel@suse.cz, qperret@google.com, 
-	richard.weiyang@gmail.com, rick.p.edgecombe@intel.com, rientjes@google.com, 
-	rostedt@goodmis.org, roypat@amazon.co.uk, rppt@kernel.org, 
-	shakeel.butt@linux.dev, shuah@kernel.org, suzuki.poulose@arm.com, 
-	tabba@google.com, tglx@linutronix.de, thomas.lendacky@amd.com, 
-	vannapurve@google.com, vbabka@suse.cz, viro@zeniv.linux.org.uk, 
-	vkuznets@redhat.com, will@kernel.org, willy@infradead.org, wyihan@google.com, 
-	xiaoyao.li@intel.com, yan.y.zhao@intel.com, yilun.xu@intel.com, 
-	yuzenghui@huawei.com
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251024140815.GE3245006@noisy.programming.kicks-ass.net>
 
-Sean Christopherson <seanjc@google.com> writes:
+On Fri, Oct 24, 2025 at 04:08:15PM +0200, Peter Zijlstra wrote:
 
-> On Thu, Oct 23, 2025, Ackerley Tng wrote:
->> Sean Christopherson <seanjc@google.com> writes:
->> 
->> > On Wed, Oct 22, 2025, Ackerley Tng wrote:
->> >> Ackerley Tng <ackerleytng@google.com> writes:
->> >> 
->> >> Found another issue with KVM_CAP_MEMORY_ATTRIBUTES2.
->> >> 
->> >> KVM_CAP_MEMORY_ATTRIBUTES2 was defined to do the same thing as
->> >> KVM_CAP_MEMORY_ATTRIBUTES, but that's wrong since
->> >> KVM_CAP_MEMORY_ATTRIBUTES2 should indicate the presence of
->> >> KVM_SET_MEMORY_ATTRIBUTES2 and struct kvm_memory_attributes2.
->> >
->> > No?  If no attributes are supported, whether or not KVM_SET_MEMORY_ATTRIBUTES2
->> > exists is largely irrelevant.
->> 
->> That's true.
->> 
->> > We can even provide the same -ENOTTY errno by
->> > checking that _any_ attributes are supported, i.e. so that doing
->> > KVM_SET_MEMORY_ATTRIBUTES2 on KVM without any support whatsoever fails in the
->> > same way that KVM with code support but no attributes fails.
->> 
->> IIUC KVM_SET_MEMORY_ATTRIBUTES doesn't fail with -ENOTTY now when there
->> are no valid attributes.
->> 
->> Even if there's no valid attributes (as in
->> kvm_supported_mem_attributes() returns 0), it's possible to call
->> KVM_SET_MEMORY_ATTRIBUTES with .attributes set to 0, which will be a
->> no-op, but will return 0.
->> 
->> I think this is kind of correct behavior since .attributes = 0 is
->> actually a valid expression for "I want this range to be shared", and
->> for a VM that doesn't support private memory, it's a valid expression.
->> 
->> 
->> The other way that there are "no attributes" would be if there are no
->> /VM/ attributes, in which case KVM_SET_MEMORY_ATTRIBUTES, sent to as a
->> vm ioctl, will return -ENOTTY.
->
-> Ya, this is what I was trying to say with "_any_ attributes are supported".  I.e.
-> by "any" I meant "any attributes in KVM for VMs vs. gmems", not "any attributes
-> for this specific VM/gmem instance".
->
->> 
->> [...snip...]
->> 
+> Yeah, I suppose that should work. Let me rework things accordingly.
 
-I've been thinking more about this:
+---
+Subject: unwind_user/x86: Teach FP unwind about start of function
+From: Peter Zijlstra <peterz@infradead.org>
+Date: Fri Oct 24 12:31:10 CEST 2025
 
-  #ifdef CONFIG_KVM_VM_MEMORY_ATTRIBUTES
-  	case KVM_CAP_MEMORY_ATTRIBUTES2:
-  	case KVM_CAP_MEMORY_ATTRIBUTES:
-  		if (!vm_memory_attributes)
-  			return 0;
-  
-  		return kvm_supported_mem_attributes(kvm);
-  #endif
+When userspace is interrupted at the start of a function, before we
+get a chance to complete the frame, unwind will miss one caller.
 
-And the purpose of adding KVM_CAP_MEMORY_ATTRIBUTES2 is that
-KVM_CAP_MEMORY_ATTRIBUTES2 tells userspace that
-KVM_SET_MEMORY_ATTRIBUTES2 is available iff there are valid
-attributes.
+X86 has a uprobe specific fixup for this, add bits to the generic
+unwinder to support this.
 
-(So there's still a purpose)
+Suggested-by: Jens Remus <jremus@linux.ibm.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+ arch/x86/events/core.c             |   40 -------------------------------------
+ arch/x86/include/asm/unwind_user.h |   12 +++++++++++
+ arch/x86/include/asm/uprobes.h     |    9 ++++++++
+ arch/x86/kernel/uprobes.c          |   32 +++++++++++++++++++++++++++++
+ include/linux/unwind_user_types.h  |    1 
+ kernel/unwind/user.c               |   35 ++++++++++++++++++++++++--------
+ 6 files changed, 80 insertions(+), 49 deletions(-)
 
-Without valid attributes, userspace can't tell if it should use
-KVM_SET_MEMORY_ATTRIBUTES or the 2 version.
-
-I also added KVM_CAP_GUEST_MEMFD_MEMORY_ATTRIBUTES, which tells
-userspace the valid attributes when calling KVM_SET_MEMORY_ATTRIBUTES2
-on a guest_memfd:
-
-  #ifdef CONFIG_KVM_GUEST_MEMFD
-  	case KVM_CAP_GUEST_MEMFD:
-  		return 1;
-  	case KVM_CAP_GUEST_MEMFD_FLAGS:
-  		return kvm_gmem_get_supported_flags(kvm);
-  	case KVM_CAP_GUEST_MEMFD_MEMORY_ATTRIBUTES:
-  		if (vm_memory_attributes)
-  			return 0;
-  
-  		return kvm_supported_mem_attributes(kvm);
-  #endif
-  
-So to set memory attributes, userspace should
-
-  if (kvm_check_cap(KVM_CAP_GUEST_MEMFD_MEMORY_ATTRIBUTES) > 0)
-	use KVM_SET_MEMORY_ATTRIBUTES2 with guest_memfd
-  else if (kvm_check_cap(KVM_CAP_MEMORY_ATTRIBUTES2) > 0)
-        use KVM_SET_MEMORY_ATTRIBUTES2 with VM fd
-  else if (kvm_check_cap(KVM_CAP_MEMORY_ATTRIBUTES) > 0)
-	use KVM_SET_MEMORY_ATTRIBUTES with VM fd
-  else
-	can't set memory attributes
-
-Something like that?
-
-
-In selftests there's this, when KVM_SET_USER_MEMORY_REGION2 was
-introduced:
-
-  #define TEST_REQUIRE_SET_USER_MEMORY_REGION2()			\
-	__TEST_REQUIRE(kvm_has_cap(KVM_CAP_USER_MEMORY2),	\
-		       "KVM selftests now require KVM_SET_USER_MEMORY_REGION2 (introduced in v6.8)")
-
-But looks like there's no direct equivalent for the introduction of
-KVM_SET_MEMORY_ATTRIBUTES2?
-
-The closest would be to add a TEST_REQUIRE_VALID_ATTRIBUTES() which
-checks KVM_CAP_MEMORY_ATTRIBUTES2 or
-KVM_CAP_GUEST_MEMFD_MEMORY_ATTRIBUTES before making the vm or
-guest_memfd ioctl respsectively.
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -2845,46 +2845,6 @@ static unsigned long get_segment_base(un
+ 	return get_desc_base(desc);
+ }
+ 
+-#ifdef CONFIG_UPROBES
+-/*
+- * Heuristic-based check if uprobe is installed at the function entry.
+- *
+- * Under assumption of user code being compiled with frame pointers,
+- * `push %rbp/%ebp` is a good indicator that we indeed are.
+- *
+- * Similarly, `endbr64` (assuming 64-bit mode) is also a common pattern.
+- * If we get this wrong, captured stack trace might have one extra bogus
+- * entry, but the rest of stack trace will still be meaningful.
+- */
+-static bool is_uprobe_at_func_entry(struct pt_regs *regs)
+-{
+-	struct arch_uprobe *auprobe;
+-
+-	if (!current->utask)
+-		return false;
+-
+-	auprobe = current->utask->auprobe;
+-	if (!auprobe)
+-		return false;
+-
+-	/* push %rbp/%ebp */
+-	if (auprobe->insn[0] == 0x55)
+-		return true;
+-
+-	/* endbr64 (64-bit only) */
+-	if (user_64bit_mode(regs) && is_endbr((u32 *)auprobe->insn))
+-		return true;
+-
+-	return false;
+-}
+-
+-#else
+-static bool is_uprobe_at_func_entry(struct pt_regs *regs)
+-{
+-	return false;
+-}
+-#endif /* CONFIG_UPROBES */
+-
+ #ifdef CONFIG_IA32_EMULATION
+ 
+ #include <linux/compat.h>
+--- a/arch/x86/include/asm/unwind_user.h
++++ b/arch/x86/include/asm/unwind_user.h
+@@ -3,6 +3,7 @@
+ #define _ASM_X86_UNWIND_USER_H
+ 
+ #include <asm/ptrace.h>
++#include <asm/uprobes.h>
+ 
+ #define ARCH_INIT_USER_FP_FRAME(ws)			\
+ 	.cfa_off	=  2*(ws),			\
+@@ -10,6 +11,12 @@
+ 	.fp_off		= -2*(ws),			\
+ 	.use_fp		= true,
+ 
++#define ARCH_INIT_USER_FP_ENTRY_FRAME(ws)		\
++	.cfa_off	=  1*(ws),			\
++	.ra_off		= -1*(ws),			\
++	.fp_off		= 0,				\
++	.use_fp		= false,
++
+ static inline int unwind_user_word_size(struct pt_regs *regs)
+ {
+ 	/* We can't unwind VM86 stacks */
+@@ -22,4 +29,9 @@ static inline int unwind_user_word_size(
+ 	return sizeof(long);
+ }
+ 
++static inline bool unwind_user_at_function_start(struct pt_regs *regs)
++{
++	return is_uprobe_at_func_entry(regs);
++}
++
+ #endif /* _ASM_X86_UNWIND_USER_H */
+--- a/arch/x86/include/asm/uprobes.h
++++ b/arch/x86/include/asm/uprobes.h
+@@ -62,4 +62,13 @@ struct arch_uprobe_task {
+ 	unsigned int			saved_tf;
+ };
+ 
++#ifdef CONFIG_UPROBES
++extern bool is_uprobe_at_func_entry(struct pt_regs *regs);
++#else
++static bool is_uprobe_at_func_entry(struct pt_regs *regs)
++{
++	return false;
++}
++#endif /* CONFIG_UPROBES */
++
+ #endif	/* _ASM_UPROBES_H */
+--- a/arch/x86/kernel/uprobes.c
++++ b/arch/x86/kernel/uprobes.c
+@@ -1791,3 +1791,35 @@ bool arch_uretprobe_is_alive(struct retu
+ 	else
+ 		return regs->sp <= ret->stack;
+ }
++
++/*
++ * Heuristic-based check if uprobe is installed at the function entry.
++ *
++ * Under assumption of user code being compiled with frame pointers,
++ * `push %rbp/%ebp` is a good indicator that we indeed are.
++ *
++ * Similarly, `endbr64` (assuming 64-bit mode) is also a common pattern.
++ * If we get this wrong, captured stack trace might have one extra bogus
++ * entry, but the rest of stack trace will still be meaningful.
++ */
++bool is_uprobe_at_func_entry(struct pt_regs *regs)
++{
++	struct arch_uprobe *auprobe;
++
++	if (!current->utask)
++		return false;
++
++	auprobe = current->utask->auprobe;
++	if (!auprobe)
++		return false;
++
++	/* push %rbp/%ebp */
++	if (auprobe->insn[0] == 0x55)
++		return true;
++
++	/* endbr64 (64-bit only) */
++	if (user_64bit_mode(regs) && is_endbr((u32 *)auprobe->insn))
++		return true;
++
++	return false;
++}
+--- a/include/linux/unwind_user_types.h
++++ b/include/linux/unwind_user_types.h
+@@ -39,6 +39,7 @@ struct unwind_user_state {
+ 	unsigned int				ws;
+ 	enum unwind_user_type			current_type;
+ 	unsigned int				available_types;
++	bool					topmost;
+ 	bool					done;
+ };
+ 
+--- a/kernel/unwind/user.c
++++ b/kernel/unwind/user.c
+@@ -26,14 +26,12 @@ get_user_word(unsigned long *word, unsig
+ 	return get_user(*word, addr);
+ }
+ 
+-static int unwind_user_next_fp(struct unwind_user_state *state)
++static int unwind_user_next_common(struct unwind_user_state *state,
++				   const struct unwind_user_frame *frame)
+ {
+-	const struct unwind_user_frame frame = {
+-		ARCH_INIT_USER_FP_FRAME(state->ws)
+-	};
+ 	unsigned long cfa, fp, ra;
+ 
+-	if (frame.use_fp) {
++	if (frame->use_fp) {
+ 		if (state->fp < state->sp)
+ 			return -EINVAL;
+ 		cfa = state->fp;
+@@ -42,7 +40,7 @@ static int unwind_user_next_fp(struct un
+ 	}
+ 
+ 	/* Get the Canonical Frame Address (CFA) */
+-	cfa += frame.cfa_off;
++	cfa += frame->cfa_off;
+ 
+ 	/* stack going in wrong direction? */
+ 	if (cfa <= state->sp)
+@@ -53,19 +51,37 @@ static int unwind_user_next_fp(struct un
+ 		return -EINVAL;
+ 
+ 	/* Find the Return Address (RA) */
+-	if (get_user_word(&ra, cfa, frame.ra_off, state->ws))
++	if (get_user_word(&ra, cfa, frame->ra_off, state->ws))
+ 		return -EINVAL;
+ 
+-	if (frame.fp_off && get_user_word(&fp, cfa, frame.fp_off, state->ws))
++	if (frame->fp_off && get_user_word(&fp, cfa, frame->fp_off, state->ws))
+ 		return -EINVAL;
+ 
+ 	state->ip = ra;
+ 	state->sp = cfa;
+-	if (frame.fp_off)
++	if (frame->fp_off)
+ 		state->fp = fp;
++	state->topmost = false;
+ 	return 0;
+ }
+ 
++static int unwind_user_next_fp(struct unwind_user_state *state)
++{
++	struct pt_regs *regs = task_pt_regs(current);
++
++	const struct unwind_user_frame fp_frame = {
++		ARCH_INIT_USER_FP_FRAME(state->ws)
++	};
++	const struct unwind_user_frame fp_entry_frame = {
++		ARCH_INIT_USER_FP_ENTRY_FRAME(state->ws)
++	};
++
++	if (state->topmost && unwind_user_at_function_start(regs))
++		return unwind_user_next_common(state, &fp_entry_frame);
++
++	return unwind_user_next_common(state, &fp_frame);
++}
++
+ static int unwind_user_next(struct unwind_user_state *state)
+ {
+ 	unsigned long iter_mask = state->available_types;
+@@ -118,6 +134,7 @@ static int unwind_user_start(struct unwi
+ 		state->done = true;
+ 		return -EINVAL;
+ 	}
++	state->topmost = true;
+ 
+ 	return 0;
+ }
