@@ -1,180 +1,90 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 582CC34BA28
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 24 Oct 2025 18:19:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBF1330BF73;
+	Fri, 24 Oct 2025 18:29:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761329944; cv=none; b=rYNogmVgX/Mslyu+pd6B5WHKpbnK+Vl6HvmqvgduEiOm3GIOT3UVXOdHBbwBbMeF16cYD8jp2dzdfHbdyc8jlvLaf19EUB4GV5+JdPq0rJg3wl1KDXvzMAuncaOz4qUxztPHqfen6xq4gj7vJnOOfFeHRpYfFPXkR/8Uscd/lXw=
+	t=1761330550; cv=none; b=p5SGJRS7TWYba9+0QI6CvfIvQGysDbDfTLw3QO0kWIwDMf6d4pn/XlvdoAsswYL4Qf8AgCPiSTO32xxcvehG7U8WhCXrDxF3mMTxJesE4l4aR3+IOeMoT6hC32tQIwOF/VSFgHwISWU7es9wtidLohZg1Hfkr6rYnZzVhr8KvlY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761329944; c=relaxed/simple;
-	bh=/MLpG4k/snGbFR7n6naVcLBN24KEMektQ9HLEgX83ME=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=o+LFAJA5e2rJKzy4W1Hwh/97MdYHixYkGlCQZvHcc3j+qZ666EJht9kB1DKXbiYVkM/NR07ZJwoOBc5UVpEZhoiXwcQB+aWnSlbfqMAwtYtNMtxAVekIWWqFsQEVnQYETsw/KKypozhELtbetN9Z6Cz8x8F2ptJcnYC4MhQTcc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bb7LhUYc; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1761330550; c=relaxed/simple;
+	bh=bwkjI1Z6HoV6awRGzw93NVFkPh7LG4O7d4p3ZhdgmIM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rHuns0URGKsfyXQ7R79jQXfMVCxemzUKrDDIxRZqLWZ9PeupUEmpmOBymtY5hvk63UE5Zw5c9Hnbut2s8ZamUFfjKxO3SnsOMCvAWfdbVajY7IZ7EagzpjBuQxBQGk9//LDXlg2uLeemHNO5ztsW+rp7LSb3tgzjDHntqOPCl6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PeTiAe5w; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bb7LhUYc"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-33428befbbaso2603861a91.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 24 Oct 2025 11:19:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1761329940; x=1761934740; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=cdTxyUifw7MNQO0DnSkAJL4ChxKgMzzVSN+wxqVSJZ8=;
-        b=bb7LhUYc7dE1MlJ3hn4vSFw/3f96FJuo+jNnG7WwO5ZUBaMZUJ0Tfy37suXo4rj8Hq
-         GNJcqdfsLEWCouKJC/COnGEwC+7ohBE+e96qK40Fyy0hqKXmZsPkhtPuh7Xh1d+4J8gA
-         ktXwT/awnjJ9z0amxoHUcCpnNGpnr5AQ7Fu/JrKglgSTumQvK8egcyg/Q2hYeCLx7nNY
-         fomwoH72T/pflZECz6QDaBxf6LXwIJUi9qhGx+pf3ptByHW7qlBthw0T8HL4aYM2AQ2j
-         aS5NETrxHRoAsc7+sWpsbVQRRbc+iLLk6lwLpgOnLnqv/vBRiJAq/89SbRThBaE4/Xog
-         PkEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761329940; x=1761934740;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cdTxyUifw7MNQO0DnSkAJL4ChxKgMzzVSN+wxqVSJZ8=;
-        b=D9U/qSjUCPMEYukd7xK28h98XzTrWcyWR55Gh/IQfJfwdUiWIF1Z9Bpv8Elj2Hozx3
-         yJYjk7pK3HiD2OK9Dkl0tep3kFZo11KmtVZnj7k7oQsPCai1bzCcLd9S9sBEPU0SD2NN
-         ylzMGz/OMQ41H0RrDW4+w/cz5g/fyXBAyD7x3AFI6P5zsBGHTFpOrElDnsvlt/UL4CHU
-         N1BFROu6aFQQYXInrTvGbsxXertn9PhBaDd1SeZ1IEzqGxnlPZq27CXsiPp7cH45D6Yo
-         zCFtPZreRAn6UXXcL2cw0l1W8pOUZCKlEZzvW5reTgDoFw5mog2CxvJhBrzEyTrPhZVL
-         JOSw==
-X-Forwarded-Encrypted: i=1; AJvYcCUVXHhCzIJAvFfMkxKTMw3btyGcRIy38jhv6bPqiQcXQyDMnvO1sK5E9jLsCrdsVBQQOHdhAmQNXo59TEPIJgajpEs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx9/+81wiRFRPDvdwHXR2WbsVLFb+2+FM5rfiTtGZ/z+jiZh0rX
-	eL3V5EwA9PA0yWizA80z5nV67SvwdpPTgwDa1yQ1CwRPTpK0K8nuLN/Zku2dOJEJB2yLS6qsm4s
-	UcUhFxw==
-X-Google-Smtp-Source: AGHT+IEwU7cgqhi7yxcDGgJmntbDXrYh2S5Lt4c3VipRpyfkwWodcxupSfQzFuZEDCpb4LtVbKjpe2rZJEE=
-X-Received: from pjob9.prod.google.com ([2002:a17:90a:8c89:b0:33b:8aa1:75ed])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2247:b0:32d:e780:e9d5
- with SMTP id 98e67ed59e1d1-33bcf8e5f10mr38003967a91.22.1761329940388; Fri, 24
- Oct 2025 11:19:00 -0700 (PDT)
-Date: Fri, 24 Oct 2025 11:18:58 -0700
-In-Reply-To: <diqzldl0dz5f.fsf@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PeTiAe5w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8716BC4CEF1;
+	Fri, 24 Oct 2025 18:29:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761330549;
+	bh=bwkjI1Z6HoV6awRGzw93NVFkPh7LG4O7d4p3ZhdgmIM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=PeTiAe5wCr0bLREVlQvLBJp8mbjzwK47/LkLNfvhNyQLV5UwWPYUfO13fJ9AC0ARq
+	 XwgZhbuc2YBtpY0aNkyGDhcMRhkQOUsKr9L07Y55/dYtQxrNY3Y3h1njzonriYtS/H
+	 P9P4AUgyVUxLGlCMt7m1YDRh3+ogji5oie0P6Pa1EwdA5kMMht3Ke6S/FFBM7yceYK
+	 HJb2lywqG+AfHS8jagEYVhUpQxJgn580a+pMse7+0SNZKefW1efz27/TsNHNYeYz9L
+	 fcEHUQhR5BwKUXC7f2cMWqK6ryEJvt8od0igA/PDpN87iPzibgGJPfO5e/OpuJjU3s
+	 BWtzDSDWJ7lRg==
+From: Song Liu <song@kernel.org>
+To: bpf@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	live-patching@vger.kernel.org
+Cc: ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	rostedt@goodmis.org,
+	andrey.grodzovsky@crowdstrike.com,
+	mhiramat@kernel.org,
+	kernel-team@meta.com,
+	olsajiri@gmail.com,
+	Song Liu <song@kernel.org>
+Subject: [PATCH v2 bpf 0/3] Fix ftrace for livepatch + BPF fexit programs
+Date: Fri, 24 Oct 2025 11:28:58 -0700
+Message-ID: <20251024182901.3247573-1-song@kernel.org>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <cover.1760731772.git.ackerleytng@google.com> <727482ec42baa50cb1488ad89d02e732defda3db.1760731772.git.ackerleytng@google.com>
- <diqzldl0dz5f.fsf@google.com>
-Message-ID: <aPvDEl0kGdZfcAD9@google.com>
-Subject: Re: [RFC PATCH v1 16/37] KVM: selftests: Add support for mmap() on
- guest_memfd in core library
-From: Sean Christopherson <seanjc@google.com>
-To: Ackerley Tng <ackerleytng@google.com>
-Cc: cgroups@vger.kernel.org, kvm@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
-	linux-trace-kernel@vger.kernel.org, x86@kernel.org, akpm@linux-foundation.org, 
-	binbin.wu@linux.intel.com, bp@alien8.de, brauner@kernel.org, 
-	chao.p.peng@intel.com, chenhuacai@kernel.org, corbet@lwn.net, 
-	dave.hansen@intel.com, dave.hansen@linux.intel.com, david@redhat.com, 
-	dmatlack@google.com, erdemaktas@google.com, fan.du@intel.com, fvdl@google.com, 
-	haibo1.xu@intel.com, hannes@cmpxchg.org, hch@infradead.org, hpa@zytor.com, 
-	hughd@google.com, ira.weiny@intel.com, isaku.yamahata@intel.com, jack@suse.cz, 
-	james.morse@arm.com, jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com, 
-	jhubbard@nvidia.com, jroedel@suse.de, jthoughton@google.com, 
-	jun.miao@intel.com, kai.huang@intel.com, keirf@google.com, 
-	kent.overstreet@linux.dev, liam.merwick@oracle.com, 
-	maciej.wieczor-retman@intel.com, mail@maciej.szmigiero.name, 
-	maobibo@loongson.cn, mathieu.desnoyers@efficios.com, maz@kernel.org, 
-	mhiramat@kernel.org, mhocko@kernel.org, mic@digikod.net, michael.roth@amd.com, 
-	mingo@redhat.com, mlevitsk@redhat.com, mpe@ellerman.id.au, 
-	muchun.song@linux.dev, nikunj@amd.com, nsaenz@amazon.es, 
-	oliver.upton@linux.dev, palmer@dabbelt.com, pankaj.gupta@amd.com, 
-	paul.walmsley@sifive.com, pbonzini@redhat.com, peterx@redhat.com, 
-	pgonda@google.com, prsampat@amd.com, pvorel@suse.cz, qperret@google.com, 
-	richard.weiyang@gmail.com, rick.p.edgecombe@intel.com, rientjes@google.com, 
-	rostedt@goodmis.org, roypat@amazon.co.uk, rppt@kernel.org, 
-	shakeel.butt@linux.dev, shuah@kernel.org, steven.price@arm.com, 
-	steven.sistare@oracle.com, suzuki.poulose@arm.com, tabba@google.com, 
-	tglx@linutronix.de, thomas.lendacky@amd.com, vannapurve@google.com, 
-	vbabka@suse.cz, viro@zeniv.linux.org.uk, vkuznets@redhat.com, 
-	wei.w.wang@intel.com, will@kernel.org, willy@infradead.org, wyihan@google.com, 
-	xiaoyao.li@intel.com, yan.y.zhao@intel.com, yilun.xu@intel.com, 
-	yuzenghui@huawei.com, zhiquan1.li@intel.com
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Fri, Oct 24, 2025, Ackerley Tng wrote:
-> Ackerley Tng <ackerleytng@google.com> writes:
-> 
-> > From: Sean Christopherson <seanjc@google.com>
-> >
-> > Accept gmem_flags in vm_mem_add() to be able to create a guest_memfd within
-> > vm_mem_add().
-> >
-> > When vm_mem_add() is used to set up a guest_memfd for a memslot, set up the
-> > provided (or created) gmem_fd as the fd for the user memory region. This
-> > makes it available to be mmap()-ed from just like fds from other memory
-> > sources. mmap() from guest_memfd using the provided gmem_flags and
-> > gmem_offset.
-> >
-> > Add a kvm_slot_to_fd() helper to provide convenient access to the file
-> > descriptor of a memslot.
-> >
-> > Update existing callers of vm_mem_add() to pass 0 for gmem_flags to
-> > preserve existing behavior.
-> >
-> > Signed-off-by: Sean Christopherson <seanjc@google.com>
-> > [For guest_memfds, mmap() using gmem_offset instead of 0 all the time.]
-> > Signed-off-by: Ackerley Tng <ackerleytng@google.com>
-> > ---
-> >  tools/testing/selftests/kvm/include/kvm_util.h |  7 ++++++-
-> >  tools/testing/selftests/kvm/lib/kvm_util.c     | 18 ++++++++++--------
-> >  .../kvm/x86/private_mem_conversions_test.c     |  2 +-
-> >  3 files changed, 17 insertions(+), 10 deletions(-)
-> >
-> > 
-> > [...snip...]
-> > 
-> > @@ -1050,13 +1049,16 @@ void vm_mem_add(struct kvm_vm *vm, enum vm_mem_backing_src_type src_type,
-> >  	}
-> >  
-> >  	region->fd = -1;
-> > -	if (backing_src_is_shared(src_type))
-> > +	if (flags & KVM_MEM_GUEST_MEMFD && gmem_flags & GUEST_MEMFD_FLAG_MMAP)
-> > +		region->fd = kvm_dup(gmem_fd);
-> > +	else if (backing_src_is_shared(src_type))
-> >  		region->fd = kvm_memfd_alloc(region->mmap_size,
-> >  					     src_type == VM_MEM_SRC_SHARED_HUGETLB);
-> >  
-> 
-> Doing this makes it hard to test the legacy dual-backing case.
-> 
-> It actually broke x86/private_mem_conversions_test for the legacy
-> dual-backing case because there's no way to mmap or provide a
-> userspace_address from the memory provider that is not guest_memfd, as
-> determined by src_type.
+livepatch and BPF trampoline are two special users of ftrace. livepatch
+uses ftrace with IPMODIFY flag and BPF trampoline uses ftrace direct
+functions. When livepatch and BPF trampoline with fexit programs attach to
+the same kernel function, BPF trampoline needs to call into the patched
+version of the kernel function.
 
-Yes there is.  This patch is a giant nop.  The only thing that the core library
-doesn't support is mmap() on guest_memfd *and* the other src_type, and IMO that
-is big "don't care", because KVM doesn't even support that combination:
+1/3 and 2/3 of this patchset fix two issues with livepatch + fexit cases,
+one in the register_ftrace_direct path, the other in the
+modify_ftrace_direct path.
 
-	if (kvm_gmem_supports_mmap(inode))
-		slot->flags |= KVM_MEMSLOT_GMEM_ONLY;
+3/3 adds selftests for both cases.
 
-I mean, we _could_ test that KVM ignores the hva for mapping, but that's a
-different and unique test entirely.
+---
+Changes v1 => v2:
+1. Target bpf tree. (Alexei)
+2. Bring back the FTRACE_WARN_ON in __ftrace_hash_update_ipmodify
+   for valid code paths. (Steven)
+3. Update selftests with cleaner way to find livepatch-sample.ko.
+   (offlline discussion with Ihor)
 
-I did break x86/private_mem_conversions_test (I could have sworn I tested, *sigh*),
-but the bug is in:
+v1: https://lore.kernel.org/bpf/20251024071257.3956031-1-song@kernel.org/
 
-  KVM: selftests: Provide function to look up guest_memfd details from gpa
+Song Liu (3):
+  ftrace: Fix BPF fexit with livepatch
+  ftrace: bpf: Fix IPMODIFY + DIRECT in modify_ftrace_direct()
+  selftests/bpf: Add tests for livepatch + bpf trampoline
 
-not here.  And it's a trivial /facepalm-style fix:
+ kernel/bpf/trampoline.c                       |  12 +-
+ kernel/trace/ftrace.c                         |  42 +++++--
+ tools/testing/selftests/bpf/config            |   3 +
+ .../bpf/prog_tests/livepatch_trampoline.c     | 107 ++++++++++++++++++
+ .../bpf/progs/livepatch_trampoline.c          |  30 +++++
+ 5 files changed, 180 insertions(+), 14 deletions(-)
+ create mode 100644 tools/testing/selftests/bpf/prog_tests/livepatch_trampoline.c
+ create mode 100644 tools/testing/selftests/bpf/progs/livepatch_trampoline.c
 
-diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
-index ee5b63f7cb50..23a8676fee6d 100644
---- a/tools/testing/selftests/kvm/lib/kvm_util.c
-+++ b/tools/testing/selftests/kvm/lib/kvm_util.c
-@@ -1680,7 +1680,7 @@ int kvm_gpa_to_guest_memfd(struct kvm_vm *vm, vm_paddr_t gpa, off_t *fd_offset,
-        gpa_offset = gpa - region->region.guest_phys_addr;
-        *fd_offset = region->region.guest_memfd_offset + gpa_offset;
-        *nr_bytes = region->region.memory_size - gpa_offset;
--       return region->fd;
-+       return region->region.guest_memfd;
- }
- 
- /* Create an interrupt controller chip for the specified VM. */
+--
+2.47.3
