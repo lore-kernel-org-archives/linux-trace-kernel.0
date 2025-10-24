@@ -1,76 +1,65 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD5EE15DBC1
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 24 Oct 2025 11:43:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5ACC2E091C;
+	Fri, 24 Oct 2025 12:58:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761306196; cv=none; b=UUBuMF1l86KWzmcSsYS4pmtoo9cR8mnx8Vtmj3l4qjbBSksR3dCEL5XQK1WuMbaw1+mB7nV61btDX5ksjchwO76TjyANpAzfbasWkhSK9IFvhzqK/rUw4Tau0AWtqJwBs493nV5tCJSQbasc5GBOBUYy09+/VredSSpK7khuAxQ=
+	t=1761310740; cv=none; b=BrtR5hMsO6jOzFjjYAZdQBrio7XC3KlM9VXt5XCrjNp/A14+COV5hKl+QuRhvtzP4wjX1TL+vm4KmfSBh4FNRQ8smsI/HxlCzUPzqX/48bmiTEZQCRbKeoo3RnavRh5w1jIVboKGI63iO2YySB6Hbn4T4Z4w4XxSHkrHzdq/2RU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761306196; c=relaxed/simple;
-	bh=CZui3p+NqHREMsGpHs7m0KywPm9p3i9nKNibsoLTXQk=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Pd/QrHJrlvpEx7PWLtch0r+258Pyj5xNPJqb5cD0Nf7vA/gSJKHd959i3L0AQ/5eJhn/vIHkVoB63NLFJy1gza+SNXvgBoTT5wrWFCKduyDUe19zI6ppain9dm5IrCSODH1U2i+PtRE17Uw9cjcdbPxZttGvVgyTj9P0Jxl8BxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W2hd5zi8; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1761310740; c=relaxed/simple;
+	bh=QvQXlYjL/5HGuJ8prsjglpCUOG11dtLJYaWUIw75hs4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Gsco7F1hziqaw/GDpUlZVBZdrLbKHja+nOunfuZVh38DQ1ixwlbrERUkfHaop/GSnxptuHpGNXnTlcrTp28AuMxBORqNetcp+wipz6xY7j2SS45t6rkrJjAlI7jjmPjJ35pv8otE4pB9D/8W8TP3LvS5d2wN/CzDXA0BfYjXrxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=LTPNrRJT; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W2hd5zi8"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-47495477241so16402095e9.3
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 24 Oct 2025 04:43:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1761306193; x=1761910993; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=b18S4CmbOg3TG3MbWQlCwD9e5ZRL2nAAZ1ZNc6R+a5o=;
-        b=W2hd5zi8mg9GtsRG5T91H58HFZto2aJJx+TPEEcWinUhJfscrbebdirdaztL8iBBS2
-         mw/KUhLy4BG62nc8GorAjoQM1JoiZhCT2rpNnTc5ggz0eGyIPMgAD5evmWpC40TBV1SX
-         uqHnb7nMAb1dV8z5OpMGAkzPZOBKTf7ujwKGxsGgKItVNTKbirf/vAd3Q+OZer7yo51L
-         InjYzdk+yTBxIhOW/9utgvKaF7oubSHVA3Kseydg7Ad0iQVDAj+Dj4P99evsN6WFtxF+
-         iVZMpjv7stUYIBOjX4dqEcgxZPVJSsVkKAigz2/3Qt+98thKCW9szTMeNcOEUUU8iBC1
-         S9Gg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761306193; x=1761910993;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=b18S4CmbOg3TG3MbWQlCwD9e5ZRL2nAAZ1ZNc6R+a5o=;
-        b=LutQ/ubnFZzkpbtLA7w1ZAO8najRxAks0Yboj4kBCjViue0yKmMOP06zA3IT15XXN8
-         nCPXl6UdvOmuT4a0AwMJ1Pp1/duoo0OOLDvwVdJMDDHEoQW+SnasiD7EIuYvF+PKMbR3
-         DRoag6pDjqLQI4xRZsqtfaXgjqVG6gemk14eO1FE6xYJIkXro56Ts9cpxupkBTZGjWgJ
-         5AseC+8x2XPxIqcGXzjx4Xxc0K1H6P8s/oyHci/E1dHuQXgbsdQuYmL1qj4uNeU58A2R
-         MMXnTc7oxf1p4EwmM3JQSwWcbOR18GfJbGsKeMR+dAchEER3zgslJ0AkTAwQCNGsIAbc
-         MUlw==
-X-Forwarded-Encrypted: i=1; AJvYcCUgBkbLumPPHI/vFYA3eUBM02c/wKNZKKZJ4ueyW8xhPtQMZrCaAVWAZYUnkVPz0ETalYN2/L7wPVTDZGtmDnijllU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzrUOPn7uItb83dEnr7iX81zRzNIDdQ3jjQ+guPdDjAgSS+tnS0
-	c9uYqHCOxLf+LjGoMyOK2/YHF/xuJVl2agPN9b/qfygNxAsUDND2DhGX
-X-Gm-Gg: ASbGnctP4bjwjeHMmbtW3/rmEozdXte+QbO6DkVJk3teywG7LSGcdjBvqbWWzpjExW6
-	IA6huc7knv3NbQjuG9UplYfZmSEJ/t17FRcivuqsd0tZYBqqyLZ6Px0cXOFTAxuaAlmpxNW64C7
-	Qs+VWrfIK1EJN0LS00WFPpIaCpvkRvaMZJi9b/E0fxkGroxZHUg671x+ffCjTnXg/U1Hj2CzL7p
-	zR2Y7q38ZPSVBuzEh05W0yclXRiRVQdlYcl9cDNEdDJ43CzUAm7/2UMvh2+jST/dKkNqlR2WM5f
-	k4cfYtH+9jtOTT0Nkdf3qXpU5agytqynh9t/p32EL0QFgrbHvCjmajqY/8GA6UmdXHmz0LKNCm6
-	ygxG+tAPAICehvz+xCrjt8RB7ZxOWd29tP4CthUx9pb+JmOaETw==
-X-Google-Smtp-Source: AGHT+IHpcyD6w06WvdrfkL+V8Avu/JoPzLSg/RttGHw9HhPaiYsYuNKZcx58iYrmG4o++/6PM8eOHg==
-X-Received: by 2002:a05:600c:4f09:b0:471:a73:9c49 with SMTP id 5b1f17b1804b1-475caf930dfmr55560595e9.2.1761306192938;
-        Fri, 24 Oct 2025 04:43:12 -0700 (PDT)
-Received: from krava ([2a02:8308:a00c:e200::b44f])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47494ac30b4sm82187635e9.2.2025.10.24.04.43.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Oct 2025 04:43:12 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Fri, 24 Oct 2025 13:43:10 +0200
-To: Song Liu <song@kernel.org>
-Cc: bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	live-patching@vger.kernel.org, ast@kernel.org, daniel@iogearbox.net,
-	andrii@kernel.org, rostedt@goodmis.org,
-	andrey.grodzovsky@crowdstrike.com, mhiramat@kernel.org,
-	kernel-team@meta.com
-Subject: Re: [PATCH bpf-next 2/3] ftrace: bpf: Fix IPMODIFY + DIRECT in
- modify_ftrace_direct()
-Message-ID: <aPtmThVpiCrlKc0b@krava>
-References: <20251024071257.3956031-1-song@kernel.org>
- <20251024071257.3956031-3-song@kernel.org>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LTPNrRJT"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=KbeVfcyQZUP3kW1e2M7Vm/hShqmgI8Ihl8fZeTRvIi0=; b=LTPNrRJTbObElN6F0r7EtD/tzc
+	lrBzpm/IvXEVFsdCxCWIOMUBzTrltC9IzoSx+DnegjTgFIdbquDhaSPczA5Qv5A29S3ul9DbQYI9D
+	N0ZGu437Tf6K5eMhe3UHXpFykQzR60kAhnrOfVlT1ds8TpQuLGTacDdToIdmAQevrjGQBAOxQUqzH
+	ZSCpBR9gH3Sl/Qij0j98G/x5GZYZVBr7By2F5B9Gi3c3OLW66MK8cg7492HvLjsJhT396Fy6CbXnd
+	SYrWV5yxhCXWg1GQGxILt4XIgi6CNX2cfijp6Lbwt3Bed/nTNVNeJXI/QMzYjFSR3X+uzIjKVAYuW
+	R+9o/VAQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vCHNR-00000000ooe-18YF;
+	Fri, 24 Oct 2025 12:58:42 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 7E435300323; Fri, 24 Oct 2025 14:58:41 +0200 (CEST)
+Date: Fri, 24 Oct 2025 14:58:41 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Steven Rostedt <rostedt@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	x86@kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Indu Bhagat <indu.bhagat@oracle.com>,
+	"Jose E. Marchesi" <jemarch@gnu.org>,
+	Beau Belgrave <beaub@linux.microsoft.com>,
+	Jens Remus <jremus@linux.ibm.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Florian Weimer <fweimer@redhat.com>, Sam James <sam@gentoo.org>,
+	Kees Cook <kees@kernel.org>, Carlos O'Donell <codonell@redhat.com>
+Subject: Re: [PATCH v16 0/4] perf: Support the deferred unwinding
+ infrastructure
+Message-ID: <20251024125841.GK4068168@noisy.programming.kicks-ass.net>
+References: <20251007214008.080852573@kernel.org>
+ <20251023150002.GR4067720@noisy.programming.kicks-ass.net>
+ <20251023124057.2a6e793a@gandalf.local.home>
+ <20251024082656.GS4067720@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -79,115 +68,55 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251024071257.3956031-3-song@kernel.org>
+In-Reply-To: <20251024082656.GS4067720@noisy.programming.kicks-ass.net>
 
-On Fri, Oct 24, 2025 at 12:12:56AM -0700, Song Liu wrote:
-> ftrace_hash_ipmodify_enable() checks IPMODIFY and DIRECT ftrace_ops on
-> the same kernel function. When needed, ftrace_hash_ipmodify_enable()
-> calls ops->ops_func() to prepare the direct ftrace (BPF trampoline) to
-> share the same function as the IPMODIFY ftrace (livepatch).
-> 
-> ftrace_hash_ipmodify_enable() is called in register_ftrace_direct() path,
-> but not called in modify_ftrace_direct() path. As a result, the following
-> operations will break livepatch:
-> 
-> 1. Load livepatch to a kernel function;
-> 2. Attach fentry program to the kernel function;
-> 3. Attach fexit program to the kernel function.
-> 
-> After 3, the kernel function being used will not be the livepatched
-> version, but the original version.
-> 
-> Fix this by adding ftrace_hash_ipmodify_enable() to modify_ftrace_direct()
-> and adjust some logic around the call.
-> 
-> Signed-off-by: Song Liu <song@kernel.org>
-> ---
->  kernel/bpf/trampoline.c | 12 +++++++-----
->  kernel/trace/ftrace.c   | 12 ++++++++++--
->  2 files changed, 17 insertions(+), 7 deletions(-)
-> 
-> diff --git a/kernel/bpf/trampoline.c b/kernel/bpf/trampoline.c
-> index 5949095e51c3..8015f5dc3169 100644
-> --- a/kernel/bpf/trampoline.c
-> +++ b/kernel/bpf/trampoline.c
-> @@ -221,6 +221,13 @@ static int register_fentry(struct bpf_trampoline *tr, void *new_addr)
->  
->  	if (tr->func.ftrace_managed) {
->  		ftrace_set_filter_ip(tr->fops, (unsigned long)ip, 0, 1);
-> +		/*
-> +		 * Clearing fops->trampoline_mutex and fops->NULL is
 
-s/trampoline_mutex/trampoline/
+Arnaldo, Namhyung,
 
-> +		 * needed by the "goto again" case in
-> +		 * bpf_trampoline_update().
-> +		 */
-> +		tr->fops->trampoline = 0;
-> +		tr->fops->func = NULL;
+On Fri, Oct 24, 2025 at 10:26:56AM +0200, Peter Zijlstra wrote:
 
-IIUC you move this because if modify_fentry returns -EAGAIN
-we don't want to reset the trampoline, right?
-
->  		ret = register_ftrace_direct(tr->fops, (long)new_addr);
->  	} else {
->  		ret = bpf_arch_text_poke(ip, BPF_MOD_CALL, NULL, new_addr);
-> @@ -479,11 +486,6 @@ static int bpf_trampoline_update(struct bpf_trampoline *tr, bool lock_direct_mut
->  		 * BPF_TRAMP_F_SHARE_IPMODIFY is set, we can generate the
->  		 * trampoline again, and retry register.
->  		 */
-> -		/* reset fops->func and fops->trampoline for re-register */
-> -		tr->fops->func = NULL;
-> -		tr->fops->trampoline = 0;
-> -
-> -		/* free im memory and reallocate later */
->  		bpf_tramp_image_free(im);
->  		goto again;
->  	}
-> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> index 7f432775a6b5..370f620734cf 100644
-> --- a/kernel/trace/ftrace.c
-> +++ b/kernel/trace/ftrace.c
-> @@ -2020,8 +2020,6 @@ static int __ftrace_hash_update_ipmodify(struct ftrace_ops *ops,
->  				if (is_ipmodify)
->  					goto rollback;
->  
-> -				FTRACE_WARN_ON(rec->flags & FTRACE_FL_DIRECT);
-
-why is this needed?
-
-thanks,
-jirka
-
-> -
->  				/*
->  				 * Another ops with IPMODIFY is already
->  				 * attached. We are now attaching a direct
-> @@ -6128,6 +6126,15 @@ __modify_ftrace_direct(struct ftrace_ops *ops, unsigned long addr)
->  	if (err)
->  		return err;
->  
-> +	/*
-> +	 * Call ftrace_hash_ipmodify_enable() here, so that we can call
-> +	 * ops->ops_func for the ops. This is needed because the above
-> +	 * register_ftrace_function_nolock() worked on tmp_ops.
-> +	 */
-> +	err = ftrace_hash_ipmodify_enable(ops);
-> +	if (err)
-> +		goto out;
-> +
->  	/*
->  	 * Now the ftrace_ops_list_func() is called to do the direct callers.
->  	 * We can safely change the direct functions attached to each entry.
-> @@ -6149,6 +6156,7 @@ __modify_ftrace_direct(struct ftrace_ops *ops, unsigned long addr)
->  
->  	mutex_unlock(&ftrace_lock);
->  
-> +out:
->  	/* Removing the tmp_ops will add the updated direct callers to the functions */
->  	unregister_ftrace_function(&tmp_ops);
->  
-> -- 
-> 2.47.3
+> > So "perf_iterate_sb()" was the key point I was missing. I'm guessing it's
+> > basically a demultiplexer that distributes events to all the requestors?
 > 
+> A superset. Basically every event in the relevant context that 'wants'
+> it.
 > 
+> It is what we use for all traditional side-band events (hence the _sb
+> naming) like mmap, task creation/exit, etc.
+> 
+> I was under the impression the perf tool would create one software dummy
+> event to listen specifically for these events per buffer, but alas, when
+> I looked at the tool this does not appear to be the case.
+> 
+> As a result it is possible to receive these events multiple times. And
+> since that is a problem that needs to be solved anyway, I didn't think
+> it 'relevant' in this case.
+
+When I use:
+
+  perf record -ag -e cycles -e instructions
+
+I get:
+
+# event : name = cycles, , id = { }, type = 0 (PERF_TYPE_HARDWARE), size = 136, config = 0 (PERF_COUNT_HW_CPU_CYCLES), { sample_period, sample_freq } = 2000, sample_type = IP|TID|TIME|CALLCHAIN|CPU|PERIOD|IDENTIFIER, read_format = ID|LOST, disabled = 1, freq = 1, sample_id_all = 1, defer_callchain = 1
+# event : name = instructions, , id = { }, type = 0 (PERF_TYPE_HARDWARE), size = 136, config = 0x1 (PERF_COUNT_HW_INSTRUCTIONS), { sample_period, sample_freq } = 2000, sample_type = IP|TID|TIME|CALLCHAIN|CPU|PERIOD|IDENTIFIER, read_format = ID|LOST, disabled = 1, freq = 1, sample_id_all = 1, defer_callchain = 1
+# event : name = dummy:u, , id = { }, type = 1 (PERF_TYPE_SOFTWARE), size = 136, config = 0x9 (PERF_COUNT_SW_DUMMY), { sample_period, sample_freq } = 1, sample_type = IP|TID|TIME|CPU|IDENTIFIER, read_format = ID|LOST, exclude_kernel = 1, exclude_hv = 1, mmap = 1, comm = 1, task = 1, sample_id_all = 1, exclude_guest = 1, mmap2 = 1, comm_exec = 1, ksymbol = 1, bpf_event = 1, build_id = 1, defer_output = 1
+
+And we have this dummy event I spoke of above; and it has defer_output
+set, none of the others do. This is what I expected.
+
+*However*, when I use:
+
+  perf record -g -e cycles -e instruction
+
+I get:
+
+# event : name = cycles, , id = { }, type = 0 (PERF_TYPE_HARDWARE), size = 136, config = 0 (PERF_COUNT_HW_CPU_CYCLES), { sample_period, sample_freq } = 2000, sample_type = IP|TID|TIME|CALLCHAIN|ID|PERIOD, read_format = ID|LOST, disabled = 1, inherit = 1, mmap = 1, comm = 1, freq = 1, enable_on_exec = 1, task = 1, sample_id_all = 1, mmap2 = 1, comm_exec = 1, ksymbol = 1, bpf_event = 1, build_id = 1, defer_callchain = 1, defer_output = 1
+# event : name = instructions, , id = { }, type = 0 (PERF_TYPE_HARDWARE), size = 136, config = 0x1 (PERF_COUNT_HW_INSTRUCTIONS), { sample_period, sample_freq } = 2000, sample_type = IP|TID|TIME|CALLCHAIN|ID|PERIOD, read_format = ID|LOST, disabled = 1, inherit = 1, freq = 1, enable_on_exec = 1, sample_id_all = 1, defer_callchain = 1
+
+Which doesn't have a dummy event. Notably the first real event has
+defer_output set (and all the other sideband stuff like mmap, comm,
+etc.).
+
+Is there a reason the !cpu mode doesn't have the dummy event? Anyway, it
+should all work, just unexpected inconsistency that confused me. 
