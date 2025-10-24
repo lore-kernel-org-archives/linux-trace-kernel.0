@@ -1,96 +1,77 @@
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09CA21DF99C;
-	Fri, 24 Oct 2025 19:00:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B89352E973A
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 24 Oct 2025 20:16:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761332453; cv=none; b=YGvlLmBQtrMDZvnwSO4rHp68V/p1COhJp2rrPXLfYVuMgLI5QU+F5UZc/qe90mO76iOpW+IfCTweXBUotRgstWPnRah588u+4W0H7VcTXtiCT7bLpUBLzfD1uMtCQdejiIyS80KZPWIP5WL5TrTXePpX1N6o+6P9fsCx001Yg2A=
+	t=1761336971; cv=none; b=P2/S+DEVOryOtIumHf9IzFo+zzX3/2xmiB1Hk53ntfAk0glNdT8QSwPPzQGP74AeXT8/diQlkLPDOPnx42rUztz6WOFeYlXw0WJdmVr8ODX5J2/EIWUwuiD7G2quIRSE3rz1YstaTWqe1ZjJkS/hl21ufagz6otMp3TFnPzIL2U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761332453; c=relaxed/simple;
-	bh=diM7Qgw1ej98nx/rDfikI9dHJMDBcaE3lkFoDDXW2d0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=guiC1qj7o07N5FvpaXfct3zVIQA+LF9uas5jDpLxBTO7SSEufXnzbEgJvWWuFCOHJreNvnImn5P7fnNvYLY8v8YybCaVoNEa7fSSLtnXn4Hthe5F6hhACmVr6VtUHSh+0kOU3fuM8Ty/jBjpZH+5I/45WAXxl3/IYXQcXO2MYso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf08.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay03.hostedemail.com (Postfix) with ESMTP id E5BCBBE7B8;
-	Fri, 24 Oct 2025 19:00:25 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id B3CC720027;
-	Fri, 24 Oct 2025 19:00:16 +0000 (UTC)
-Date: Fri, 24 Oct 2025 15:00:45 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Jens Remus <jremus@linux.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Steven Rostedt
- <rostedt@kernel.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, x86@kernel.org,
- linux-mm@kvack.org, Josh Poimboeuf <jpoimboe@kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Arnaldo
- Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>,
- Indu Bhagat <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>,
- Beau Belgrave <beaub@linux.microsoft.com>, Linus Torvalds
- <torvalds@linux-foundation.org>, Andrew Morton <akpm@linux-foundation.org>,
- Florian Weimer <fweimer@redhat.com>, Kees Cook <kees@kernel.org>, "Carlos
- O'Donell" <codonell@redhat.com>, Sam James <sam@gentoo.org>, Borislav
- Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, David
- Hildenbrand <david@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, "Liam R.
- Howlett" <Liam.Howlett@oracle.com>, Lorenzo Stoakes
- <lorenzo.stoakes@oracle.com>, Michal Hocko <mhocko@suse.com>, Mike Rapoport
- <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Vlastimil Babka
- <vbabka@suse.cz>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik
- <gor@linux.ibm.com>
-Subject: Re: [PATCH v11 08/15] unwind_user/sframe: Wire up unwind_user to
- sframe
-Message-ID: <20251024150045.5fdbfb6a@gandalf.local.home>
-In-Reply-To: <6b5c0c64-c4da-416d-a103-8d6ec2f06a9b@linux.ibm.com>
-References: <20251022144326.4082059-1-jremus@linux.ibm.com>
-	<20251022144326.4082059-9-jremus@linux.ibm.com>
-	<20251024134415.GD3245006@noisy.programming.kicks-ass.net>
-	<6b5c0c64-c4da-416d-a103-8d6ec2f06a9b@linux.ibm.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1761336971; c=relaxed/simple;
+	bh=SF4/OIGoq+SA/inWwKHrusP8hMRhNnG8aILkLhBWIt0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pNHRHkmU4kcCESQM7chdMpCi67BMsfybpkE22gzQN5Wir+UVzys19vlfr1DN9jipkSnGd3iyubEFXSnT07UxbNXtZKUy4wsuPkkCS2AmwzxxDu40RoNVl7zxzjt6/CVaxPx6vyT+oiW1Pwfyxn8K9vRdzI+9jZZgahFHxdquiw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Sgk9NjcI; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=pQF3lMIU; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Sgk9NjcI";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pQF3lMIU"
+Date: Fri, 24 Oct 2025 22:16:06 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1761336968;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=InwECpYWk0gtdd4XFciQH/NgB15UGbEwuIKZwj3dGzo=;
+	b=Sgk9NjcInthr/pp2b2DsPK5rFmXega96DX/VymBC3ZVcETbQkJDFtHJO8+S4hzMB+wqfoG
+	EL9x9gvTJ72UL5ex5MOonWOWzgYmlShPuT0O5y6iqLy0Uu1zuHbzhsSlw1qNrBZFafQdB5
+	cB/49mrzSqhxEir76lcCjMpeKuX+NBmQ+56qvBT2yfEwfXNtBhzRM0QnX63I4nzw3P6D8/
+	goXKHclHHjphepJB12q+WB98sIkRnS0AoDdoQ89NO/mI4AjMQQqUKYgP1k96ALI8xhDmsM
+	StClHdzSEhnc8Pt/IMzTnBY5p5lWCSmKZaNzUdFo3gcsKMd+wkEtGa9SZ3MyXg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1761336968;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=InwECpYWk0gtdd4XFciQH/NgB15UGbEwuIKZwj3dGzo=;
+	b=pQF3lMIURGecnCNhLKSduUycrl4OPJ2jjhQGDsPycKdTzd6LiBW1V64Rp3kZaeoWM+S8IC
+	Z2xKNsVGJqh661Cw==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 07/13] tracing: Allow syscall trace events to read
+ more than one user parameter
+Message-ID: <20251024201606.Oi0U3kzG@linutronix.de>
+References: <20251021005233.417553389@kernel.org>
+ <202510241227.GegWrQL7-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: meot9n4skde9zpjhbqgjtfhxopiebfpq
-X-Rspamd-Server: rspamout01
-X-Rspamd-Queue-Id: B3CC720027
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19iy0relq0hsycahgoTlXBcrmF8ZC/GxZs=
-X-HE-Tag: 1761332416-792391
-X-HE-Meta: U2FsdGVkX18ubh822JQukhagA4rmyZ/kfFZ5e9GBo5bHGmEcFo3R5wrw+1cNrkalDAZsGy1EymjeMHOvmc+qfcEJjivdvmslflP/cCPZQm6vsoqHmDNgexfeEZWDP3fXLN/3PWR7NOuwSKK9Dgp69k8l/ZOb651Lci4jwPdj/HqW0nSyCxXm45JJSvokANbRiozVvP6p37v+DWjDJYxDZh9Vsk2YPQV1DGwEadcGYfQqRu7D+3A+8InWOYOqM3h+/JyWlkB4A4hRNJfCKGE4D6FHEGWpSqrdzugRjEFxubyS8zE0ycnMrulBlS+Z11oaDq2dZpehUVm8XCFSDafwZRLq3La1yEcZ4SWdRJvmXpCTybXp00PcB8acZ6q4VqPJcltalzuk0eKEIgDzyXQ9b77CWyR88irNcuRIF7Ky2OQ=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <202510241227.GegWrQL7-lkp@intel.com>
 
-On Fri, 24 Oct 2025 16:29:07 +0200
-Jens Remus <jremus@linux.ibm.com> wrote:
+On 2025-10-24 12:36:07 [+0800], kernel test robot wrote:
+>    kernel/trace/trace_syscalls.c:877:7: error: use of undeclared identifier '__NR_mq_timedsend'
+>      877 |         case __NR_mq_timedsend:
+>          |              ^
+>    kernel/trace/trace_syscalls.c:898:7: error: use of undeclared identifier '__NR_access'
+>      898 |         case __NR_access:
+>          |              ^
+>    kernel/trace/trace_syscalls.c:901:7: error: use of undeclared identifier '__NR_chown'
+>      901 |         case __NR_chown:
 
-> @Steven: Any idea why you added pt_regs?  Your v9 even had this other
-> instance of unused pt_regs:
-> 
-> +static struct unwind_user_frame *get_fp_frame(struct pt_regs *regs)
-> +{
-> +	return &fp_frame;
-> +}
+You need to exclude those if the numbers are not available. It does not
+compare about all of them, like it is fine with __NR_openat2.
 
-According to the history:
+Risc-V probably did not wire them all up. So they started to use
+__NR_faccessat2 in favour of __NR_access. "Current" glibc probably uses
+just the latest one so why bother.
+x86 supported it since day one so they need to keep supporting it. The
+newcomer just started with the last variant.
 
-  https://lore.kernel.org/linux-trace-kernel/20250717012848.927473176@kernel.org/
-
-Which has:
-
-  Changes since v8: https://lore.kernel.org/linux-trace-kernel/20250708021115.894007410@kernel.org/
-
-  - Rebased on the changes by Mathieu in the kernel/unwind/user.c file
-    https://lore.kernel.org/all/20250710164301.3094-2-mathieu.desnoyers@efficios.com/
-
-It looks like it came in from Mathieu's updates, which was trying to deal
-with compat. But then after noticing that compat wasn't working on my tests
-boxes, I removed it. The removal failed to notice that regs is now unused.
-
--- Steve
+Sebastian
