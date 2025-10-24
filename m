@@ -1,169 +1,235 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13B062F99AE;
-	Fri, 24 Oct 2025 16:21:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 198C82848AE
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 24 Oct 2025 16:41:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761322879; cv=none; b=npiSlZAoY8o1JJH4JfAh/pI6hT4GqKvIglmRTEy6dXWFR6y3IIVKLSZOrHILM2yqSaLgaMsNaIVNkN4kG7AqNylZa+EkYgY5npUGo7SrWd0dpQxcq1Cpxahnn5CpRwhe2XRP7kmfFqF0cxdGUInfWfTnAk9a2LGl7uCMmoRC8Rw=
+	t=1761324117; cv=none; b=D3UzmI9t0WDkvipwLtqjloHVT1HQ3nd+yTSuJh8YwPgVUN9lgCs+XTmS3k7xuHYvte6FTfTGuTGn6n0etmYbJGGucYICFSwgshtW+shSvpuSEDaWgRgZYs0U97QegL/Hn1g3bmOpvpXlyrDBLBo6Xl8ZECHCRXz1tvFyS2WDQNQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761322879; c=relaxed/simple;
-	bh=u+RABbfiDwB8KOWWfhGS5SuKdDxH0dOMfXQH4j/bYKc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=W039loaF82GXDayc4FWzYP8gH26V8vMJ5QyR9pfH569KZXBpTIJ+H+Z/b6/j7X/O5yG4hNyhLdsoU310gwJcxxKVyiGMEVAO954QAyS2ncwqU3I6V2meoigpqAfauxjdbtq3MdhzEI2iJ4g6vvevwokx0D1MA2d9/ALMRw+NzCk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf05.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay08.hostedemail.com (Postfix) with ESMTP id 4D584140D7F;
-	Fri, 24 Oct 2025 16:21:09 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf05.hostedemail.com (Postfix) with ESMTPA id B02C720011;
-	Fri, 24 Oct 2025 16:21:06 +0000 (UTC)
-Date: Fri, 24 Oct 2025 12:21:35 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Song Liu <songliubraving@meta.com>
-Cc: Jiri Olsa <olsajiri@gmail.com>, Song Liu <song@kernel.org>,
- "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
- "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
- "live-patching@vger.kernel.org" <live-patching@vger.kernel.org>,
- "ast@kernel.org" <ast@kernel.org>, "daniel@iogearbox.net"
- <daniel@iogearbox.net>, "andrii@kernel.org" <andrii@kernel.org>,
- "andrey.grodzovsky@crowdstrike.com" <andrey.grodzovsky@crowdstrike.com>,
- "mhiramat@kernel.org" <mhiramat@kernel.org>, Kernel Team
- <kernel-team@meta.com>
-Subject: Re: [PATCH bpf-next 2/3] ftrace: bpf: Fix IPMODIFY + DIRECT in
- modify_ftrace_direct()
-Message-ID: <20251024122135.3bc668e8@gandalf.local.home>
-In-Reply-To: <D4EEB2BC-E87F-4F85-B043-867D4E1ED573@meta.com>
-References: <20251024071257.3956031-1-song@kernel.org>
-	<20251024071257.3956031-3-song@kernel.org>
-	<aPtmThVpiCrlKc0b@krava>
-	<D4EEB2BC-E87F-4F85-B043-867D4E1ED573@meta.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1761324117; c=relaxed/simple;
+	bh=McfDafsoKZ0Qc/ftfxMbpecU+5qms1ggNuFPRrlly10=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=LULojmq0/J1dwUUbTIOn/VtvsaN+Sl9PFX2fpJXon1XIGG/pgMmXcM45R4Muyd7RJKqXjQWZpxdq0+0W7DhxOCGGI6P2qeOy47pEpxXmUpnOpLdvTFQnR9pL/MNki84mCevAXtALuZUq21cKpzBE0ZBFlcRGZUVkRp9phgQes6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tsctTBNU; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tsctTBNU"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2904e9e0ef9so44786015ad.3
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 24 Oct 2025 09:41:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1761324115; x=1761928915; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=t1RHFoPTdDvcwb/qkIe5JmQx1A2yObnl5+zva5BuXpw=;
+        b=tsctTBNUSZLhJdLijABuCYbdLPgyibjJHwSemEN+RLADY9F8zDG3CtohhrbugCEnqr
+         TwzkCU9u2J+GHaMYa+tqD4lvZWe6aB1dd5wTlWtA1ghCxpJclHAEon7ii+YbdJo78d1A
+         Ww+U3RfxAGKk539AN8Ks0MR88xu2nTmpK7AfEjOlRxtrfZTRtmCSzRKVjGddiPUaxIJM
+         qZgn5eqMIDTEjmTG9Ee12SlpR8ng8BfeDwndOaSBHwKMC4qETtX1Sx2MUN28tTQkz/T5
+         NkKuk0pjiAJjaH5K1nsW8GNMzHAcfOD1eaj/6vw4+laSEZaFJH21swpVvBz+ub52AZJS
+         gIgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761324115; x=1761928915;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=t1RHFoPTdDvcwb/qkIe5JmQx1A2yObnl5+zva5BuXpw=;
+        b=QSQdp7E1gfWnC4gEbHZHd/bUcA2Vrs7EXhyriEN8GkR5v3myXMTJ89Y40Wvqq1Mw+a
+         ezb4HQZi3yqnpghDVLpLoGRWUi1DR3ytyPq94E6Gs8AWD6wrB2iB/TvZliCMB4guDnHD
+         fiJmdWkse1Jls9jYE7nVWKUaY8GPUbQpKV+7iXBC/iK6EdXxHAT+xTEk5IlAlJ1JXAxA
+         VhrJHGQdnvEWlHbWv0xOfzTW/IxicJpiWb3xgdzmx/7888w4mKzbJ3Qwj5VFD8yt1ztL
+         cYQCIhSjI4aYXlpSAL8rlNWM74OBa4AfCKafZnTYEwBHHtNo2kVHh4t4vuEXTipUYdcT
+         LA4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVVQNSJAPVTwD+bzjj7TChhSCtF73Mhr2U63K2Isu5NLBlwNnPgKp98n/TJeOKkib0WbKUbUK3k/qhbUBj4r/7kUJ0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzEakwd2wopkisVqdUNMPTywM49LXngSitxD6RHvdYfr2J0NB2Y
+	OU+2lcOfvpyUbeZ201y7iiq28bxnR3Zq6rXOqd34+t1dwySSXcPH2rTNZ1fMRE9m8Pyhs4EiqmX
+	qFg4QR1RdKRfcHdTEoN7kmcx8hg==
+X-Google-Smtp-Source: AGHT+IEPuBDuGNsrppGmcrNT5qFipxZMZW83jV/EN44QaRv4+wQ0X1ZUm0/OOFjwazq9d0SG+iIXrpEvGj5fqDDiKg==
+X-Received: from pjn8.prod.google.com ([2002:a17:90b:5708:b0:31f:2a78:943])
+ (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:902:ea01:b0:267:d2f9:2327 with SMTP id d9443c01a7336-290c9cf2d88mr421610105ad.27.1761324115016;
+ Fri, 24 Oct 2025 09:41:55 -0700 (PDT)
+Date: Fri, 24 Oct 2025 09:41:53 -0700
+In-Reply-To: <aPuXCV0Aof0zihW9@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: 5iehismwuy7ybyeiup8rjx4kdg8831rb
-X-Rspamd-Server: rspamout07
-X-Rspamd-Queue-Id: B02C720011
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+8fP31qr3LzIq83PFv8zCS04TujMrhx5w=
-X-HE-Tag: 1761322866-466142
-X-HE-Meta: U2FsdGVkX1+Em1zzNVTn6iur8V5TXiUJQ/hQP/DD1sFZjYhCvQoCkvtlpRvySvFk+PnsbFyHgxy157nysWhS6DgSADSIDO5mJJMTqoaeNr0uCqT1Go2BhXQdXjF6vJOonzqt0dU2rInJnFalCAoOd/lZWXVPXD4ab/Ka2ETCf8vfYIZ5TJneAJ7lLLYTtRZfegjiWf/15QsLPyclNhcJmgF8J/5pXEFj+opXzQOqPsEr3XKq9Nisc1DqtElC8P/Hv8SPmB4Z1+TSNl+ytHBkLO7CGOLPf03DwuDnS2H5PF6Dquz7v6vU/PsdMOrBSV7IPVANMViCpSXVm3PvzWby5QnuXUkKW8oZfIByee6FqVXAfMuIGDp96iSBRcqlnbMQ
+Mime-Version: 1.0
+References: <cover.1760731772.git.ackerleytng@google.com> <8ee16fbf254115b0fd72cc2b5c06d2ccef66eca9.1760731772.git.ackerleytng@google.com>
+ <2457cb3b-5dde-4ca1-b75d-174b5daee28a@arm.com> <diqz4irqg9qy.fsf@google.com>
+ <diqzy0p2eet3.fsf@google.com> <aPlpKbHGea90IebS@google.com>
+ <diqzv7k5emza.fsf@google.com> <aPpEPZ4YfrRHIkal@google.com>
+ <diqzqzuse58c.fsf@google.com> <aPuXCV0Aof0zihW9@google.com>
+Message-ID: <diqzo6pwdzfy.fsf@google.com>
+Subject: Re: [RFC PATCH v1 07/37] KVM: Introduce KVM_SET_MEMORY_ATTRIBUTES2
+From: Ackerley Tng <ackerleytng@google.com>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Steven Price <steven.price@arm.com>, cgroups@vger.kernel.org, kvm@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, x86@kernel.org, 
+	akpm@linux-foundation.org, binbin.wu@linux.intel.com, bp@alien8.de, 
+	brauner@kernel.org, chao.p.peng@intel.com, chenhuacai@kernel.org, 
+	corbet@lwn.net, dave.hansen@intel.com, dave.hansen@linux.intel.com, 
+	david@redhat.com, dmatlack@google.com, erdemaktas@google.com, 
+	fan.du@intel.com, fvdl@google.com, haibo1.xu@intel.com, hannes@cmpxchg.org, 
+	hch@infradead.org, hpa@zytor.com, hughd@google.com, ira.weiny@intel.com, 
+	isaku.yamahata@intel.com, jack@suse.cz, james.morse@arm.com, 
+	jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com, jhubbard@nvidia.com, 
+	jthoughton@google.com, jun.miao@intel.com, kai.huang@intel.com, 
+	keirf@google.com, kent.overstreet@linux.dev, liam.merwick@oracle.com, 
+	maciej.wieczor-retman@intel.com, mail@maciej.szmigiero.name, 
+	maobibo@loongson.cn, mathieu.desnoyers@efficios.com, maz@kernel.org, 
+	mhiramat@kernel.org, mhocko@kernel.org, mic@digikod.net, michael.roth@amd.com, 
+	mingo@redhat.com, mlevitsk@redhat.com, mpe@ellerman.id.au, 
+	muchun.song@linux.dev, nikunj@amd.com, nsaenz@amazon.es, 
+	oliver.upton@linux.dev, palmer@dabbelt.com, pankaj.gupta@amd.com, 
+	paul.walmsley@sifive.com, pbonzini@redhat.com, peterx@redhat.com, 
+	pgonda@google.com, prsampat@amd.com, pvorel@suse.cz, qperret@google.com, 
+	richard.weiyang@gmail.com, rick.p.edgecombe@intel.com, rientjes@google.com, 
+	rostedt@goodmis.org, roypat@amazon.co.uk, rppt@kernel.org, 
+	shakeel.butt@linux.dev, shuah@kernel.org, suzuki.poulose@arm.com, 
+	tabba@google.com, tglx@linutronix.de, thomas.lendacky@amd.com, 
+	vannapurve@google.com, vbabka@suse.cz, viro@zeniv.linux.org.uk, 
+	vkuznets@redhat.com, will@kernel.org, willy@infradead.org, wyihan@google.com, 
+	xiaoyao.li@intel.com, yan.y.zhao@intel.com, yilun.xu@intel.com, 
+	yuzenghui@huawei.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, 24 Oct 2025 15:47:04 +0000
-Song Liu <songliubraving@meta.com> wrote:
+Sean Christopherson <seanjc@google.com> writes:
 
-> >> --- a/kernel/trace/ftrace.c
-> >> +++ b/kernel/trace/ftrace.c
-> >> @@ -2020,8 +2020,6 @@ static int __ftrace_hash_update_ipmodify(struct ftrace_ops *ops,
-> >> if (is_ipmodify)
-> >> goto rollback;
-> >> 
-> >> - FTRACE_WARN_ON(rec->flags & FTRACE_FL_DIRECT);  
-> > 
-> > why is this needed?  
-> 
-> This is needed for the modify_ftrace_direct case, because 
-> the record already have a direct function (BPF trampoline)
-> attached. 
+> On Fri, Oct 24, 2025, Ackerley Tng wrote:
+>> Sean Christopherson <seanjc@google.com> writes:
+>> >> 
+>> >> [...snip...]
+>> >> 
+>> 
+>> I've been thinking more about this:
+>> 
+>>   #ifdef CONFIG_KVM_VM_MEMORY_ATTRIBUTES
+>>   	case KVM_CAP_MEMORY_ATTRIBUTES2:
+>>   	case KVM_CAP_MEMORY_ATTRIBUTES:
+>>   		if (!vm_memory_attributes)
+>>   			return 0;
+>>   
+>>   		return kvm_supported_mem_attributes(kvm);
+>>   #endif
+>> 
+>> And the purpose of adding KVM_CAP_MEMORY_ATTRIBUTES2 is that
+>> KVM_CAP_MEMORY_ATTRIBUTES2 tells userspace that
+>> KVM_SET_MEMORY_ATTRIBUTES2 is available iff there are valid
+>> attributes.
+>> 
+>> (So there's still a purpose)
+>> 
+>> Without valid attributes, userspace can't tell if it should use
+>> KVM_SET_MEMORY_ATTRIBUTES or the 2 version.
+>
+> To do what?  If there are no attributes, userspace can't do anything useful anyways.
+>
+>> I also added KVM_CAP_GUEST_MEMFD_MEMORY_ATTRIBUTES, which tells
+>> userspace the valid attributes when calling KVM_SET_MEMORY_ATTRIBUTES2
+>> on a guest_memfd:
+>
+> Ya, and that KVM_SET_MEMORY_ATTRIBUTES2 is supported on guest_memfd.
+>
+>>   #ifdef CONFIG_KVM_GUEST_MEMFD
+>>   	case KVM_CAP_GUEST_MEMFD:
+>>   		return 1;
+>>   	case KVM_CAP_GUEST_MEMFD_FLAGS:
+>>   		return kvm_gmem_get_supported_flags(kvm);
+>>   	case KVM_CAP_GUEST_MEMFD_MEMORY_ATTRIBUTES:
+>>   		if (vm_memory_attributes)
+>>   			return 0;
+>>   
+>>   		return kvm_supported_mem_attributes(kvm);
+>>   #endif
+>>   
+>> So to set memory attributes, userspace should
+>
+> Userspace *can*.  User could also decide it only wants to support guest_memfd
+> attributes, e.g. because the platform admins controls the entire stack and built
+> their entire operation around in-place conversion.
+>
+>>   if (kvm_check_cap(KVM_CAP_GUEST_MEMFD_MEMORY_ATTRIBUTES) > 0)
+>> 	use KVM_SET_MEMORY_ATTRIBUTES2 with guest_memfd
+>>   else if (kvm_check_cap(KVM_CAP_MEMORY_ATTRIBUTES2) > 0)
+>>         use KVM_SET_MEMORY_ATTRIBUTES2 with VM fd
+>>   else if (kvm_check_cap(KVM_CAP_MEMORY_ATTRIBUTES) > 0)
+>> 	use KVM_SET_MEMORY_ATTRIBUTES with VM fd
+>>   else
+>> 	can't set memory attributes
+>> 
+>> Something like that?
+>
+> More or else, ya.
+>
+>> In selftests there's this, when KVM_SET_USER_MEMORY_REGION2 was
+>> introduced:
+>> 
+>>   #define TEST_REQUIRE_SET_USER_MEMORY_REGION2()			\
+>> 	__TEST_REQUIRE(kvm_has_cap(KVM_CAP_USER_MEMORY2),	\
+>> 		       "KVM selftests now require KVM_SET_USER_MEMORY_REGION2 (introduced in v6.8)")
+>> 
+>> But looks like there's no direct equivalent for the introduction of
+>> KVM_SET_MEMORY_ATTRIBUTES2?
+>
+> KVM_CAP_USER_MEMORY2 is the equivalent.
+>
+> There's was no need to enumerate anything beyond yes/no, because
+> SET_USER_MEMORY_REGION2 didn't introduce new flags, it expanded the size of the
+> structure passed in from userspace so that KVM_CAP_GUEST_MEMFD could be introduced
+> without breaking backwards compatibility.
+>
+>> The closest would be to add a TEST_REQUIRE_VALID_ATTRIBUTES() which
+>> checks KVM_CAP_MEMORY_ATTRIBUTES2 or
+>> KVM_CAP_GUEST_MEMFD_MEMORY_ATTRIBUTES before making the vm or
+>> guest_memfd ioctl respsectively.
+>
+> Yes.  This is what I did in my (never posted, but functional) version:
+>
+> @@ -486,6 +488,7 @@ struct kvm_vm *__vm_create(struct vm_shape shape, uint32_t nr_runnable_vcpus,
+>         }
+>         guest_rng = new_guest_random_state(guest_random_seed);
+>         sync_global_to_guest(vm, guest_rng);
+> +       sync_global_to_guest(vm, kvm_has_gmem_attributes);
 
-I don't like the fact that it's removing a check for other cases.
+I ported this [1] except for syncing this value to the guest, because I
+think the guest shouldn't need to know this information, the host should
+decide what to do. I think, if the guests really need to know this, the
+test itself can do the syncing.
 
-It needs to be denoted that this use case is "OK" where as other use cases
-are not. That way the check is still there for other cases and only "OK"
-for this use case.
+[1] https://lore.kernel.org/all/5656d432df1217c08da0cc2694fd79948bfd686f.1760731772.git.ackerleytng@google.com/
 
-Something like this:
-
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 370f620734cf..51b205bafe80 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -1971,7 +1971,8 @@ static void ftrace_hash_rec_enable_modify(struct ftrace_ops *ops)
-  */
- static int __ftrace_hash_update_ipmodify(struct ftrace_ops *ops,
- 					 struct ftrace_hash *old_hash,
--					 struct ftrace_hash *new_hash)
-+					 struct ftrace_hash *new_hash,
-+					 bool update)
- {
- 	struct ftrace_page *pg;
- 	struct dyn_ftrace *rec, *end = NULL;
-@@ -2020,6 +2021,16 @@ static int __ftrace_hash_update_ipmodify(struct ftrace_ops *ops,
- 				if (is_ipmodify)
- 					goto rollback;
- 
-+				/*
-+				 * If this is called by __modify_ftrace_direct()
-+				 * then it is only chaning where the direct
-+				 * pointer is jumping to, and the record already
-+				 * points to a direct trampoline. If it isn't
-+				 * then it is a bug to update ipmodify on a direct
-+				 * caller.
-+				 */
-+				FTRACE_WARN_ON(!update &&
-+					       (rec->flags & FTRACE_FL_DIRECT));
- 				/*
- 				 * Another ops with IPMODIFY is already
- 				 * attached. We are now attaching a direct
-@@ -2067,14 +2078,14 @@ static int __ftrace_hash_update_ipmodify(struct ftrace_ops *ops,
- 	return -EBUSY;
- }
- 
--static int ftrace_hash_ipmodify_enable(struct ftrace_ops *ops)
-+static int ftrace_hash_ipmodify_enable(struct ftrace_ops *ops, bool update)
- {
- 	struct ftrace_hash *hash = ops->func_hash->filter_hash;
- 
- 	if (ftrace_hash_empty(hash))
- 		hash = NULL;
- 
--	return __ftrace_hash_update_ipmodify(ops, EMPTY_HASH, hash);
-+	return __ftrace_hash_update_ipmodify(ops, EMPTY_HASH, hash, update);
- }
- 
- /* Disabling always succeeds */
-@@ -2085,7 +2096,7 @@ static void ftrace_hash_ipmodify_disable(struct ftrace_ops *ops)
- 	if (ftrace_hash_empty(hash))
- 		hash = NULL;
- 
--	__ftrace_hash_update_ipmodify(ops, hash, EMPTY_HASH);
-+	__ftrace_hash_update_ipmodify(ops, hash, EMPTY_HASH, false);
- }
- 
- static int ftrace_hash_ipmodify_update(struct ftrace_ops *ops,
-@@ -2099,7 +2110,7 @@ static int ftrace_hash_ipmodify_update(struct ftrace_ops *ops,
- 	if (ftrace_hash_empty(new_hash))
- 		new_hash = NULL;
- 
--	return __ftrace_hash_update_ipmodify(ops, old_hash, new_hash);
-+	return __ftrace_hash_update_ipmodify(ops, old_hash, new_hash, false);
- }
- 
- static void print_ip_ins(const char *fmt, const unsigned char *p)
-@@ -3059,7 +3070,7 @@ int ftrace_startup(struct ftrace_ops *ops, int command)
- 	 */
- 	ops->flags |= FTRACE_OPS_FL_ENABLED | FTRACE_OPS_FL_ADDING;
- 
--	ret = ftrace_hash_ipmodify_enable(ops);
-+	ret = ftrace_hash_ipmodify_enable(ops, false);
- 	if (ret < 0) {
- 		/* Rollback registration process */
- 		__unregister_ftrace_function(ops);
-@@ -6131,7 +6142,7 @@ __modify_ftrace_direct(struct ftrace_ops *ops, unsigned long addr)
- 	 * ops->ops_func for the ops. This is needed because the above
- 	 * register_ftrace_function_nolock() worked on tmp_ops.
- 	 */
--	err = ftrace_hash_ipmodify_enable(ops);
-+	err = ftrace_hash_ipmodify_enable(ops, true);
- 	if (err)
- 		goto out;
- 
-
--- Steve
+>  
+>         kvm_arch_vm_post_create(vm, nr_runnable_vcpus);
+>  
+> @@ -2319,6 +2333,8 @@ void __attribute((constructor)) kvm_selftest_init(void)
+>         guest_random_seed = last_guest_seed = random();
+>         pr_info("Random seed: 0x%x\n", guest_random_seed);
+>  
+> +       kvm_has_gmem_attributes = kvm_has_cap(KVM_CAP_GUEST_MEMFD_MEMORY_ATTRIBUTES);
+> +
+>         kvm_selftest_arch_init();
+>  }
+>  
+> That way the core library code can pivot on gmem vs. VM attributes without having
+> to rely on tests to define anything.  E.g.
+>
+> static inline void vm_mem_set_memory_attributes(struct kvm_vm *vm, uint64_t gpa,
+> 						uint64_t size, uint64_t attrs)
+> {
+> 	if (kvm_has_gmem_attributes) {
+> 		off_t fd_offset;
+> 		uint64_t len;
+> 		int fd;
+>
+> 		fd = kvm_gpa_to_guest_memfd(vm, gpa, &fd_offset, &len);
+> 		TEST_ASSERT(len >= size, "Setting attributes beyond the length of a guest_memfd");
+> 		gmem_set_memory_attributes(fd, fd_offset, size, attrs);
+> 	} else {
+> 		vm_set_memory_attributes(vm, gpa, size, attrs);
+> 	}
+> }
