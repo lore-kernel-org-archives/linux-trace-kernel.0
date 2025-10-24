@@ -1,197 +1,315 @@
-Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 370392F8BF1
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 24 Oct 2025 13:55:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ABBA31AF3C;
+	Fri, 24 Oct 2025 13:58:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761314125; cv=none; b=Do/8QTEiBupuDjeAEKCA9Ayb7DFky+UOkjpyEfeAY14XaXx3AiUW+4KVqUxL2FJlNhH2gdpMxosk833lOZX/74fKZBpbNYenCcm58ZxXrqxfTfLFFVm1oH4vscQcVVu4G3HrLQxKaWmB/3/yGe2hnfuuookV8OGpebE/lY++E8k=
+	t=1761314337; cv=none; b=d6/1UMuGfZVJAPOXqsQ/97PwIeAyoATQlkibt3rHN9Rwt+d8TxQyiB9RO0szAMywXZ1+F5z3Z+rQzkrQDPir9GFaQYWi9UGNBrixIGFzKXg9sX1EdfeBZtw0a7gZYx8pQNn8Ax+JPmYaqYTOdjQeYdPPPEJZbl/nJPdaUKiTuHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761314125; c=relaxed/simple;
-	bh=K2dIAtOUUWvG/eBKWjjuLXcfuya+SsNU788uetQyZls=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Nu2yAE8fZ0TbchVEn7hNH8m9pUSIYjLBztGDvD8U/38qW4D2/Gd5H+qU+uv5Ek95dN7NRKJsBPppETy/xnXLBhxWKN8MOx20n5jFIqtDPBEgi/631htg2xtMHbA3xLBTWJ1DEl9qqTw3rR/kYdN/REhm0BcvfYZaJtK7zyizI9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CgolRFh5; arc=none smtp.client-ip=209.85.166.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1761314337; c=relaxed/simple;
+	bh=ti2YlCdg7/IX3KwnAS6Sf4dgIxinxb5TfF+v7HA9BA8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DOZikqwrli0nHrhSc2RvMdy8jHys+RPAn6uZYXqyhMpq/lErZTkWtrDN1wMj73SVjssXBwZKBlD/Xya602Ay81YaRgrrxeqUePw62UDnS3HyDpYktnLR7zRQCO1SjkjjN0nXBTJT0gTZ4y5oJG3q8z7ZYq+dsSAVHzLXDhWZNUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=k2l2pBeZ; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CgolRFh5"
-Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-431d824c8cbso171255ab.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 24 Oct 2025 06:55:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1761314123; x=1761918923; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=K2dIAtOUUWvG/eBKWjjuLXcfuya+SsNU788uetQyZls=;
-        b=CgolRFh5StPMjne6il3OZQlxjVfJxpHd7cz3RgMbGROmHNEliJauP6zcSn8W91UnO9
-         hIsnXo6sZ3XQeuwiqtsxkR8X6magh9ZkS/G7eu67Txt8HOcHJwX8oBG4mG8MBUUSfpJI
-         GxS2N8zMV2OzasKy5WRBl6p82rk4oVJvzOs74DwtWXzqFA27Bm6Yv3Cy5EuHsc2SL3ko
-         pObqDu3oNon/u9/tACmEZqETEohZeGhHVKLVmGn157JFaW2xGNzI+IheyDbLryzpGCJV
-         VXDQNGjsX+Ov965dDM4xv26n7/WhLOFSjZD2Go0c+FvOdr6UIzL9iDC4qAXKV98A9duT
-         jG5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761314123; x=1761918923;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=K2dIAtOUUWvG/eBKWjjuLXcfuya+SsNU788uetQyZls=;
-        b=RZ166Hlbx3pKTXlTL9AWEQNT9Jy3Ilf6gtJYCGRoUxLB1du4kxJsrgfDmvsCIELcWE
-         UfQ2n0yOpXJkCFo5BHoW7+NPuUy9UkDF368MWLBBMe6pIewMkTc7tigvGmqduQonk5U3
-         1rClvFFNpYTDwTsMLsqIlPzcIouuIntyoUAEypooLy9aUUmOeZBRjdeeuYzV59Vo2pMO
-         zVPXi+yG11Tp5ltgrkwTFgqNsumooFQ/r/0Hrp9d1dq1Ckqi+0jJ+g64n5Je6OLvO+Jg
-         bvHugP+EJe3QgV6qs/7qs48IphjXMUphEw5NyRuXWRek5BT2zyzGnWsQDDFkotqEf/Y8
-         2YRg==
-X-Forwarded-Encrypted: i=1; AJvYcCVmXrk/UHuzpfzhZv9BJJhGCVfgX03Xi+MG7O7N15uP7+ih1MJxauTMswv875g3D9WiUqLkwvCtLshblSfz1i2K2YI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRGP/o49SD/5hnwD7jzX3MARahQvWM3WtEJTUEYxqsXx95fVIj
-	ZQZMcoPURmezifvpFmjzQ1UGRfp5OkKC75qPdhy61k48xWlidN56WlM1sup91mJb8ehFkKKOGAh
-	ZWMRmFamzd+qZ6MOPiffMzaTIu/iuCbc30soEFmb/
-X-Gm-Gg: ASbGnctU+/G6h8JVQLLvV/5kurf+oFjX8TLjuYAxuiH49RjrgZTMH+NrBhAJt6OACx4
-	Xj5b1AWvtnpxNuRe7S2d7Z8ROxZaoQ13xrRFvibUngBvPZNCHYSiviPwsn56AF44AfKA5MOC06H
-	OxJ8y9yO+8fVrKP+hPKk0wPZtMyfIGN8kgBL3iQxd5gkOfGrGNej/4jcQkx4vHTvZ/5bu5EO0RW
-	L1qHAzat9mQGDh93R1dSCZ2xnyBtWLdNhkflfOSMlobbRdmiy/4MGEOqNIgyg==
-X-Google-Smtp-Source: AGHT+IGzc6PICLpjn7p5NLgSZidgmsbQwDaACcRVkIv0mBWbrME7xDhdRFUQJbQIQQlqdF4IvQBdVfldvdcu5sVwfbE=
-X-Received: by 2002:a05:6e02:3046:b0:430:ab7b:d920 with SMTP id
- e9e14a558f8ab-431eb297a82mr6053455ab.2.1761314122159; Fri, 24 Oct 2025
- 06:55:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="k2l2pBeZ"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59O6L97P021232;
+	Fri, 24 Oct 2025 13:58:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=SBCmPs
+	cs3S5INCGzC8+i3ANW+h7O9UXTcpzHoDRgfLs=; b=k2l2pBeZIMEYzKH+cXrBtg
+	7Xhu6kw6FCS8z1SxjMlEKpnc3n425+Xyevk7DgtVFw06PUOvTQSab78QwWd58OJ9
+	ABOv5VqvCa1l8pmq7yfc4g7dAICWt1cnMNXdVwRrM0/lpbSQNK3pP6aZHc9FVWfA
+	fJW5gznSBogfRtzndPEtRIxX8WeKHO4GJAhQ0FgbqCmCpUKlwC/L212gizUqhbeA
+	SD3eLjeVCVUVz2BdSJ8G7NwMS+LqY5RsSt4pZz9L9rY7xoGfkMe2V6KvP7nvRQ+v
+	GApXVnZEa8Lv+l5g29WTYLxSzUbrI6Mqn+L6yrnZwEFs9d5oiyi0ULdhivlPNxFw
+	==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 49v31cp5an-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 24 Oct 2025 13:58:27 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 59OADM7D024953;
+	Fri, 24 Oct 2025 13:58:26 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 49vpqkb9pe-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 24 Oct 2025 13:58:26 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 59ODwMEW40304958
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 24 Oct 2025 13:58:22 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5D3A220043;
+	Fri, 24 Oct 2025 13:58:22 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E7BE620040;
+	Fri, 24 Oct 2025 13:58:20 +0000 (GMT)
+Received: from [9.111.177.85] (unknown [9.111.177.85])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 24 Oct 2025 13:58:20 +0000 (GMT)
+Message-ID: <a59509f0-5888-4663-9e82-98e27fc3e813@linux.ibm.com>
+Date: Fri, 24 Oct 2025 15:58:20 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251022183717.70829-1-npache@redhat.com> <20251022183717.70829-16-npache@redhat.com>
- <bba40f08-1b87-6b57-0e10-6e96e4d7bde6@gentwo.org> <ed0887eb-6124-44ab-9d1f-1e87e9640e14@redhat.com>
- <666ee834-396d-4a7c-be89-96c58b5c2ea8@lucifer.local> <c62m3tyr6co7jqdrwhtp7exnewhogxtife7g6yh4gve7gqecz6@b5xpocyvifxp>
-In-Reply-To: <c62m3tyr6co7jqdrwhtp7exnewhogxtife7g6yh4gve7gqecz6@b5xpocyvifxp>
-From: "Zach O'Keefe" <zokeefe@google.com>
-Date: Fri, 24 Oct 2025 06:54:44 -0700
-X-Gm-Features: AWmQ_bmYc3wxdngLfQ6jZCDpaFrV3lO1QrUvKg58p5eJGm6dxJta1c107ifDhio
-Message-ID: <CAAa6QmQBmZ-82PwzLao=gO-+1u=GFyPogmVOjAFQ-esVdo9tYQ@mail.gmail.com>
-Subject: Re: [PATCH v12 mm-new 15/15] Documentation: mm: update the admin
- guide for mTHP collapse
-To: Pedro Falcato <pfalcato@suse.de>
-Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, David Hildenbrand <david@redhat.com>, 
-	"Christoph Lameter (Ampere)" <cl@gentwo.org>, Nico Pache <npache@redhat.com>, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-doc@vger.kernel.org, ziy@nvidia.com, baolin.wang@linux.alibaba.com, 
-	Liam.Howlett@oracle.com, ryan.roberts@arm.com, dev.jain@arm.com, 
-	corbet@lwn.net, rostedt@goodmis.org, mhiramat@kernel.org, 
-	mathieu.desnoyers@efficios.com, akpm@linux-foundation.org, baohua@kernel.org, 
-	willy@infradead.org, peterx@redhat.com, wangkefeng.wang@huawei.com, 
-	usamaarif642@gmail.com, sunnanyong@huawei.com, vishal.moola@gmail.com, 
-	thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com, kas@kernel.org, 
-	aarcange@redhat.com, raquini@redhat.com, anshuman.khandual@arm.com, 
-	catalin.marinas@arm.com, tiwai@suse.de, will@kernel.org, 
-	dave.hansen@linux.intel.com, jack@suse.cz, jglisse@google.com, 
-	surenb@google.com, hannes@cmpxchg.org, rientjes@google.com, mhocko@suse.com, 
-	rdunlap@infradead.org, hughd@google.com, richard.weiyang@gmail.com, 
-	lance.yang@linux.dev, vbabka@suse.cz, rppt@kernel.org, jannh@google.com, 
-	Bagas Sanjaya <bagasdotme@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v16 0/4] perf: Support the deferred unwinding
+ infrastructure
+To: Peter Zijlstra <peterz@infradead.org>, Steven Rostedt <rostedt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, x86@kernel.org,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Indu Bhagat <indu.bhagat@oracle.com>,
+        "Jose E. Marchesi" <jemarch@gnu.org>,
+        Beau Belgrave <beaub@linux.microsoft.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Florian Weimer <fweimer@redhat.com>, Sam James <sam@gentoo.org>,
+        Kees Cook <kees@kernel.org>, "Carlos O'Donell" <codonell@redhat.com>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>
+References: <20251007214008.080852573@kernel.org>
+ <20251023150002.GR4067720@noisy.programming.kicks-ass.net>
+ <20251024092926.GI4068168@noisy.programming.kicks-ass.net>
+ <20251024104119.GJ4068168@noisy.programming.kicks-ass.net>
+Content-Language: en-US
+From: Jens Remus <jremus@linux.ibm.com>
+Organization: IBM Deutschland Research & Development GmbH
+In-Reply-To: <20251024104119.GJ4068168@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: YqzE08SslWcLdVlgQuKDR0Iho8i3YFD5
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDE4MDAyMiBTYWx0ZWRfX9Ot2KV0wySba
+ b0q234bJt151fWw9ksnBlWC/BXnl9SbFfqnBUCqGxzQbbhDMSMURkb0rulPA+bAKpnbX17OHGI8
+ SpTw6OZPn9YNPFVGZhvWlb0OnB9+ZF9vEaY+NilQHETjMWfJ5wv6jyU6rzKvli8ACPdKfkm8Vbl
+ TVjI+2YKH/OjXK9uHuN32CaeWryM8hK6thZa4kHRNszfutEsDvq3wZBkerrkfYnZ6E/LIwIQjPc
+ NecalS1FCmPSdUDPld7ONBgdD1fReViF++bfRhIrREzeqCxXQ+Stxi/DPirsqvmsEoMNdIvwXM0
+ uOkLHNEC7Upwz3Gr9oY5XH2Eey2E7RkrzHWY36y+S9NEboSh2x+5oSeJ9vwp2cpcHGedE2SE6hQ
+ C9/16obwvP3YoPWXCWwfskLEpIg4vw==
+X-Proofpoint-GUID: YqzE08SslWcLdVlgQuKDR0Iho8i3YFD5
+X-Authority-Analysis: v=2.4 cv=SKNPlevH c=1 sm=1 tr=0 ts=68fb8603 cx=c_pps
+ a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+ a=IkcTkHD0fZMA:10 a=x6icFKpwvdMA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=VnNF1IyMAAAA:8 a=AVpJfSmXYWXoPBcYQzwA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=nl4s5V0KI7Kw-pW0DWrs:22 a=pHzHmUro8NiASowvMSCR:22 a=xoEH_sTeL_Rfw54TyV31:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-10-24_02,2025-10-22_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 malwarescore=0 suspectscore=0 clxscore=1015 priorityscore=1501
+ spamscore=0 impostorscore=0 bulkscore=0 lowpriorityscore=0 adultscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2510020000 definitions=main-2510180022
 
-On Thu, Oct 23, 2025 at 1:44=E2=80=AFAM Pedro Falcato <pfalcato@suse.de> wr=
-ote:
->
-> On Thu, Oct 23, 2025 at 09:00:10AM +0100, Lorenzo Stoakes wrote:
-> > On Wed, Oct 22, 2025 at 10:22:08PM +0200, David Hildenbrand wrote:
-> > > On 22.10.25 21:52, Christoph Lameter (Ampere) wrote:
-> > > > On Wed, 22 Oct 2025, Nico Pache wrote:
-> > > >
-> > > > > Currently, madvise_collapse only supports collapsing to PMD-sized=
- THPs +
-> > > > > and does not attempt mTHP collapses. +
-> > > >
-> > > > madvise collapse is frequently used as far as I can tell from the T=
-HP
-> > > > loads being tested. Could we support madvise collapse for mTHP?
-> > >
-> > > The big question is still how user space can communicate the desired =
-order,
-> > > and how we can not break existing users.
-> >
->
-> Do we want to let userspace communicate order? It seems like an extremely
-> specific thing to do. A more simple&sane semantic could be something like=
-:
-> "MADV_COLLAPSE collapses a given [addr, addr+len] range into the highest
-> order THP it can/thinks it should.". The implementation details of PMD or
-> contpte or <...> are lost by the time we get to userspace.
->
-> The man page itself is pretty vaguely written to allow us to do whatever
-> we want. It sounds to me that allowing userspace to create arbitrary orde=
-r
-> mTHPs would be another pandora's box we shouldn't get into.
->
-> > Yes, and let's go one step at a time, this series still needs careful s=
-crutiny
-> > and we need to ensure the _fundamentals_ are in place for khugepaged be=
-fore we
-> > get into MADV_COLLAPSE :)
-> >
-> > >
-> > > So I guess there will definitely be some support to trigger collapse =
-to mTHP
-> > > in the future, the big question is through which interface. So it wil=
-l
-> > > happen after this series.
-> >
-> > Yes.
-> >
-> > >
-> > > Maybe through process_madvise() where we have an additional parameter=
-, I
-> > > think that was what people discussed in the past.
-> >
-> > I wouldn't absolutely love us doing that, given it is a general paramet=
-er so
-> > would seem applicable to any madvise() option and could lead to confusi=
-on, also
-> > process_madvise() was originally for cross-process madvise vector opera=
-tions.
->
-> For what it's worth, it would probably not be too hard to devise a generi=
-c
-> separation there between "generic flags" and "behavior-specific flags".
-> And then stuff the desired THP order into MADV_COLLAPSE-specific flags.
+Hello Peter!
 
-Yeah, this is how I envisioned the flags to be leveraged; reserve some
-number of bits for generic, and overload the others for
-advice-specific. I suspect once the seal is broken on this, more
-advice-specific flags will promptly follow.
+On 10/24/2025 12:41 PM, Peter Zijlstra wrote:
+> On Fri, Oct 24, 2025 at 11:29:26AM +0200, Peter Zijlstra wrote:
+>> On Thu, Oct 23, 2025 at 05:00:02PM +0200, Peter Zijlstra wrote:
+>>
+>>> Trouble is, pretty much every unwind is 510 entries long -- this cannot
+>>> be right. I'm sure there's a silly mistake in unwind/user.c but I'm too
+>>> tired to find it just now. I'll try again tomorrow.
+>>
+>> PEBKAC
+> 
+> Anyway, while staring at this, I noted that the perf userspace unwind
+> code has a few bits that are missing from the new shiny thing.
+> 
+> How about something like so? This add an optional arch specific unwinder
+> at the very highest priority (bit 0) and uses that to do a few extra
+> bits before disabling itself and falling back to whatever lower prio
+> unwinder to do the actual unwinding.
 
-> >
-> > I expanded this to make it applicable to the current process (and intro=
-duced
-> > PIDFD_SELF to make that more sane), and SJ has optimised it across vect=
-or
-> > operations (thanks SJ! :), but in general - it seems very weird to have
-> > madvise() provide an operation that process_madvise() providse another =
-version
-> > of that has an extra parameter.
-> >
-> > As usual we've painted ourselves into a corner with an API... :)
->
-> But yes, I agree it would feel weird.
->
-> >
-> > Perhaps we'll to accept the process_madvise() compromise and add
-> > MADV_COLLAPSE_MHTP that only works with it or something.
-> >
-> > Of course adding a new syscall isn't impossible... madvise2() not very =
-appealing
-> > however...
->
-> It is my impression that process_madvise() is already madvise2(), but
-> poorly named.
+unwind user sframe does not need any of this special handling, because
+it knows for each IP whether the SP or FP is the CFA base register
+and whether the FP and RA have been saved.
 
-+1
+Isn't this actually specific to unwind user fp?  If the IP is at
+function entry, then the FP has not been setup yet.  I think unwind user
+fp could handle this using an arch specific is_uprobe_at_func_entry() to
+determine whether to use a new frame_fp_entry instead of frame_fp.  For
+x86 the following frame_fp_entry should work, if I am not wrong:
 
-> >
-> > TL;DR I guess we'll deal with that when we come to it :)
->
-> Amen :)
->
-> --
-> Pedro
+#define ARCH_INIT_USER_FP_ENTRY_FRAME(ws)	\
+	.cfa_off	=  1*(ws),		\
+	.ra_off		= -1*(ws),		\
+	.fp_off		= 0,			\
+	.use_fp		= false,
+
+Following roughly outlines the required changes:
+
+diff --git a/kernel/unwind/user.c b/kernel/unwind/user.c
+
+-static int unwind_user_next_fp(struct unwind_user_state *state)
++static int unwind_user_next_common(struct unwind_user_state *state,
++                                  const struct unwind_user_frame *frame,
++                                  struct pt_regs *regs)
+
+@@ -71,6 +83,7 @@ static int unwind_user_next_common(struct unwind_user_state *state,
+        state->sp = sp;
+        if (frame->fp_off)
+                state->fp = fp;
++       state->topmost = false;
+        return 0;
+ }
+@@ -154,6 +167,7 @@ static int unwind_user_start(struct unwind_user_state *state)
+        state->sp = user_stack_pointer(regs);
+        state->fp = frame_pointer(regs);
+        state->ws = compat_user_mode(regs) ? sizeof(int) : sizeof(long);
++       state->topmost = true;
+
+        return 0;
+ }
+
+static int unwind_user_next_fp(struct unwind_user_state *state)
+{
+	const struct unwind_user_frame fp_frame = {
+		ARCH_INIT_USER_FP_FRAME(state->ws)
+	};
+	const struct unwind_user_frame fp_entry_frame = {
+		ARCH_INIT_USER_FP_ENTRY_FRAME(state->ws)
+	};
+	struct pt_regs *regs = task_pt_regs(current);
+
+	if (state->topmost && is_uprobe_at_func_entry(regs))
+		return unwind_user_next_common(state, &fp_entry_frame, regs);
+	else
+		return unwind_user_next_common(state, &fp_frame, regs);
+}
+
+diff --git a/include/linux/unwind_user_types.h b/include/linux/unwind_user_types.h
+@@ -43,6 +43,7 @@ struct unwind_user_state {
+        unsigned int                            ws;
+        enum unwind_user_type                   current_type;
+        unsigned int                            available_types;
++       bool                                    topmost;
+        bool                                    done;
+ };
+
+What do you think?
+
+> +++ b/arch/x86/kernel/unwind_user.c
+> @@ -0,0 +1,53 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +
+> +#include <linux/unwind_user.h>
+> +#include <linux/uprobes.h>
+> +#include <linux/uaccess.h>
+> +#include <linux/sched/task_stack.h>
+> +#include <asm/processor.h>
+> +#include <asm/tlbflush.h>
+> +
+> +int unwind_user_next_arch(struct unwind_user_state *state)
+> +{
+> +	struct pt_regs *regs = task_pt_regs(current);
+> +
+> +	/* only once, on the first iteration */
+> +	state->available_types &= ~UNWIND_USER_TYPE_ARCH;
+> +
+> +	/* We don't know how to unwind VM86 stacks. */
+> +	if (regs->flags & X86_VM_MASK) {
+> +		state->done = true;
+> +		return 0;
+> +	}
+> +
+> +	/*
+> +	 * If we are called from uprobe handler, and we are indeed at the very
+> +	 * entry to user function (which is normally a `push %rbp` instruction,
+> +	 * under assumption of application being compiled with frame pointers),
+> +	 * we should read return address from *regs->sp before proceeding
+> +	 * to follow frame pointers, otherwise we'll skip immediate caller
+> +	 * as %rbp is not yet setup.
+> +	 */
+> +	if (!is_uprobe_at_func_entry(regs))
+> +		return -EINVAL;
+> +
+> +#ifdef CONFIG_COMPAT
+> +	if (state->ws == sizeof(int)) {
+> +		unsigned int retaddr;
+> +		int ret = get_user(retaddr, (unsigned int __user *)regs->sp);
+> +		if (ret)
+> +			return ret;
+> +
+> +		state->ip = retaddr;
+> +		return 0;
+> +	}
+> +#endif
+> +	unsigned long retaddr;
+> +	int ret = get_user(retaddr, (unsigned long __user *)regs->sp);
+> +	if (ret)
+> +		return ret;
+> +
+> +	state->ip = retaddr;
+> +	return 0;
+> +}
+
+Above would then not be needed, as the unwind_user_next_fp() logic would
+do the right thing.
+
+> +++ b/arch/x86/kernel/uprobes.c
+> @@ -1791,3 +1791,35 @@ bool arch_uretprobe_is_alive(struct retu
+>  	else
+>  		return regs->sp <= ret->stack;
+>  }
+> +
+> +/*
+> + * Heuristic-based check if uprobe is installed at the function entry.
+> + *
+> + * Under assumption of user code being compiled with frame pointers,
+> + * `push %rbp/%ebp` is a good indicator that we indeed are.
+> + *
+> + * Similarly, `endbr64` (assuming 64-bit mode) is also a common pattern.
+> + * If we get this wrong, captured stack trace might have one extra bogus
+> + * entry, but the rest of stack trace will still be meaningful.
+> + */
+> +bool is_uprobe_at_func_entry(struct pt_regs *regs)
+> +{
+> +	struct arch_uprobe *auprobe;
+> +
+> +	if (!current->utask)
+> +		return false;
+> +
+> +	auprobe = current->utask->auprobe;
+> +	if (!auprobe)
+> +		return false;
+> +
+> +	/* push %rbp/%ebp */
+> +	if (auprobe->insn[0] == 0x55)
+> +		return true;
+> +
+> +	/* endbr64 (64-bit only) */
+> +	if (user_64bit_mode(regs) && is_endbr((u32 *)auprobe->insn))
+> +		return true;
+> +
+> +	return false;
+> +}
+Regards,
+Jens
+-- 
+Jens Remus
+Linux on Z Development (D3303)
++49-7031-16-1128 Office
+jremus@de.ibm.com
+
+IBM
+
+IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Böblingen; Registergericht: Amtsgericht Stuttgart, HRB 243294
+IBM Data Privacy Statement: https://www.ibm.com/privacy/
+
