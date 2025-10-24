@@ -1,43 +1,43 @@
 Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5ACC2E091C;
-	Fri, 24 Oct 2025 12:58:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 448C7306B3E;
+	Fri, 24 Oct 2025 13:01:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761310740; cv=none; b=BrtR5hMsO6jOzFjjYAZdQBrio7XC3KlM9VXt5XCrjNp/A14+COV5hKl+QuRhvtzP4wjX1TL+vm4KmfSBh4FNRQ8smsI/HxlCzUPzqX/48bmiTEZQCRbKeoo3RnavRh5w1jIVboKGI63iO2YySB6Hbn4T4Z4w4XxSHkrHzdq/2RU=
+	t=1761310878; cv=none; b=mbIGNwic6Ij9PcOu7+33/RoZyprTed0cWPLiQJ1r906mELIiXhqk4ztvlbJrbqCeLVb6kEtfHnJtwzBHG9Lzt67GWJsCQKH0sGAC2llwnPArGlzXEjvGi1XNjmhr4tgmoJ5fWNwCzIEG2++p/4nazCTbO1yc204+YHRMtr5XkwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761310740; c=relaxed/simple;
-	bh=QvQXlYjL/5HGuJ8prsjglpCUOG11dtLJYaWUIw75hs4=;
+	s=arc-20240116; t=1761310878; c=relaxed/simple;
+	bh=l1MEcFp/OGu3LphR4OJF9AFCdbSAPnHpk6BxRdwlwJA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Gsco7F1hziqaw/GDpUlZVBZdrLbKHja+nOunfuZVh38DQ1ixwlbrERUkfHaop/GSnxptuHpGNXnTlcrTp28AuMxBORqNetcp+wipz6xY7j2SS45t6rkrJjAlI7jjmPjJ35pv8otE4pB9D/8W8TP3LvS5d2wN/CzDXA0BfYjXrxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=LTPNrRJT; arc=none smtp.client-ip=90.155.50.34
+	 Content-Type:Content-Disposition:In-Reply-To; b=gMhnOY66g+2kuGmh27fMAhi543WIyVp/U/olDvItK8tArMWJQxKWiVKS+JW+Cy8RPD7HYjP7YKK+7udn/hK7Lsu7U4MOIIoO6ZwIAkjeaQXZ/x1RuzDaX0VjX4n0LXB7GEveMti2ez9ctEddh1ABqISaFgXSgYDbeNkrjfTpaD0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=dPR2QtJ9; arc=none smtp.client-ip=90.155.50.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LTPNrRJT"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dPR2QtJ9"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
 	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=KbeVfcyQZUP3kW1e2M7Vm/hShqmgI8Ihl8fZeTRvIi0=; b=LTPNrRJTbObElN6F0r7EtD/tzc
-	lrBzpm/IvXEVFsdCxCWIOMUBzTrltC9IzoSx+DnegjTgFIdbquDhaSPczA5Qv5A29S3ul9DbQYI9D
-	N0ZGu437Tf6K5eMhe3UHXpFykQzR60kAhnrOfVlT1ds8TpQuLGTacDdToIdmAQevrjGQBAOxQUqzH
-	ZSCpBR9gH3Sl/Qij0j98G/x5GZYZVBr7By2F5B9Gi3c3OLW66MK8cg7492HvLjsJhT396Fy6CbXnd
-	SYrWV5yxhCXWg1GQGxILt4XIgi6CNX2cfijp6Lbwt3Bed/nTNVNeJXI/QMzYjFSR3X+uzIjKVAYuW
-	R+9o/VAQ==;
+	bh=oLmXwixI0J2SyZ00m22yRqTkDayeJUXrIpJlJp7E7fU=; b=dPR2QtJ91UWUhHHUx2BRs5MXSA
+	RySmOP9YuKQS7uT0aPZQ786krePmifcPkDq8WLo7zxMHj2SwHJXwzrTafEFbcV4kdPt5bWQLjEPmp
+	wRIf26erKHHM/AhI4UGe8nEGOh3e+mfOX/470/mG2sP7PTpgaybgpNmKOj6gLH0OaC9uAlHJ9d51V
+	/SqnFpykmiiCogsfYXGVpTiLSGy1rGJlEfPC1kWDIeFDbGnH9/7UaazOAnL/b5obwudymtMVrtDRM
+	CIzDswhgcxFCxZW1r2OO1YsEARz6dNudWUrp4Hp2b2W6f5kH3kAK3cVbotUniGaVVRARy6+J2ADJp
+	vxVdhTYA==;
 Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
 	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vCHNR-00000000ooe-18YF;
-	Fri, 24 Oct 2025 12:58:42 +0000
+	id 1vCHPm-00000000rYf-3hcf;
+	Fri, 24 Oct 2025 13:01:08 +0000
 Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 7E435300323; Fri, 24 Oct 2025 14:58:41 +0200 (CEST)
-Date: Fri, 24 Oct 2025 14:58:41 +0200
+	id A3A52300323; Fri, 24 Oct 2025 15:01:07 +0200 (CEST)
+Date: Fri, 24 Oct 2025 15:01:07 +0200
 From: Peter Zijlstra <peterz@infradead.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Steven Rostedt <rostedt@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	x86@kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+To: Steven Rostedt <rostedt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	bpf@vger.kernel.org, x86@kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	Josh Poimboeuf <jpoimboe@kernel.org>,
 	Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
@@ -53,13 +53,10 @@ Cc: Steven Rostedt <rostedt@kernel.org>, linux-kernel@vger.kernel.org,
 	Andrew Morton <akpm@linux-foundation.org>,
 	Florian Weimer <fweimer@redhat.com>, Sam James <sam@gentoo.org>,
 	Kees Cook <kees@kernel.org>, Carlos O'Donell <codonell@redhat.com>
-Subject: Re: [PATCH v16 0/4] perf: Support the deferred unwinding
+Subject: Re: [PATCH v16 0/4] perf tool: Support the deferred unwinding
  infrastructure
-Message-ID: <20251024125841.GK4068168@noisy.programming.kicks-ass.net>
-References: <20251007214008.080852573@kernel.org>
- <20251023150002.GR4067720@noisy.programming.kicks-ass.net>
- <20251023124057.2a6e793a@gandalf.local.home>
- <20251024082656.GS4067720@noisy.programming.kicks-ass.net>
+Message-ID: <20251024130107.GB3245006@noisy.programming.kicks-ass.net>
+References: <20250908175319.841517121@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -68,55 +65,81 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251024082656.GS4067720@noisy.programming.kicks-ass.net>
+In-Reply-To: <20250908175319.841517121@kernel.org>
 
 
-Arnaldo, Namhyung,
 
-On Fri, Oct 24, 2025 at 10:26:56AM +0200, Peter Zijlstra wrote:
+Per the hackery I did:
 
-> > So "perf_iterate_sb()" was the key point I was missing. I'm guessing it's
-> > basically a demultiplexer that distributes events to all the requestors?
-> 
-> A superset. Basically every event in the relevant context that 'wants'
-> it.
-> 
-> It is what we use for all traditional side-band events (hence the _sb
-> naming) like mmap, task creation/exit, etc.
-> 
-> I was under the impression the perf tool would create one software dummy
-> event to listen specifically for these events per buffer, but alas, when
-> I looked at the tool this does not appear to be the case.
-> 
-> As a result it is possible to receive these events multiple times. And
-> since that is a problem that needs to be solved anyway, I didn't think
-> it 'relevant' in this case.
+  https://lkml.kernel.org/r/20251023150002.GR4067720@noisy.programming.kicks-ass.net
 
-When I use:
+The userspace bits need something like so on top..
 
-  perf record -ag -e cycles -e instructions
+---
+ tools/perf/util/callchain.c               |    2 +-
+ tools/perf/util/evsel.c                   |   10 +++++++---
+ tools/perf/util/perf_event_attr_fprintf.c |    1 +
+ 3 files changed, 9 insertions(+), 4 deletions(-)
 
-I get:
-
-# event : name = cycles, , id = { }, type = 0 (PERF_TYPE_HARDWARE), size = 136, config = 0 (PERF_COUNT_HW_CPU_CYCLES), { sample_period, sample_freq } = 2000, sample_type = IP|TID|TIME|CALLCHAIN|CPU|PERIOD|IDENTIFIER, read_format = ID|LOST, disabled = 1, freq = 1, sample_id_all = 1, defer_callchain = 1
-# event : name = instructions, , id = { }, type = 0 (PERF_TYPE_HARDWARE), size = 136, config = 0x1 (PERF_COUNT_HW_INSTRUCTIONS), { sample_period, sample_freq } = 2000, sample_type = IP|TID|TIME|CALLCHAIN|CPU|PERIOD|IDENTIFIER, read_format = ID|LOST, disabled = 1, freq = 1, sample_id_all = 1, defer_callchain = 1
-# event : name = dummy:u, , id = { }, type = 1 (PERF_TYPE_SOFTWARE), size = 136, config = 0x9 (PERF_COUNT_SW_DUMMY), { sample_period, sample_freq } = 1, sample_type = IP|TID|TIME|CPU|IDENTIFIER, read_format = ID|LOST, exclude_kernel = 1, exclude_hv = 1, mmap = 1, comm = 1, task = 1, sample_id_all = 1, exclude_guest = 1, mmap2 = 1, comm_exec = 1, ksymbol = 1, bpf_event = 1, build_id = 1, defer_output = 1
-
-And we have this dummy event I spoke of above; and it has defer_output
-set, none of the others do. This is what I expected.
-
-*However*, when I use:
-
-  perf record -g -e cycles -e instruction
-
-I get:
-
-# event : name = cycles, , id = { }, type = 0 (PERF_TYPE_HARDWARE), size = 136, config = 0 (PERF_COUNT_HW_CPU_CYCLES), { sample_period, sample_freq } = 2000, sample_type = IP|TID|TIME|CALLCHAIN|ID|PERIOD, read_format = ID|LOST, disabled = 1, inherit = 1, mmap = 1, comm = 1, freq = 1, enable_on_exec = 1, task = 1, sample_id_all = 1, mmap2 = 1, comm_exec = 1, ksymbol = 1, bpf_event = 1, build_id = 1, defer_callchain = 1, defer_output = 1
-# event : name = instructions, , id = { }, type = 0 (PERF_TYPE_HARDWARE), size = 136, config = 0x1 (PERF_COUNT_HW_INSTRUCTIONS), { sample_period, sample_freq } = 2000, sample_type = IP|TID|TIME|CALLCHAIN|ID|PERIOD, read_format = ID|LOST, disabled = 1, inherit = 1, freq = 1, enable_on_exec = 1, sample_id_all = 1, defer_callchain = 1
-
-Which doesn't have a dummy event. Notably the first real event has
-defer_output set (and all the other sideband stuff like mmap, comm,
-etc.).
-
-Is there a reason the !cpu mode doesn't have the dummy event? Anyway, it
-should all work, just unexpected inconsistency that confused me. 
+--- a/tools/perf/util/callchain.c
++++ b/tools/perf/util/callchain.c
+@@ -1832,7 +1832,7 @@ int sample__for_each_callchain_node(stru
+ int sample__merge_deferred_callchain(struct perf_sample *sample_orig,
+ 				     struct perf_sample *sample_callchain)
+ {
+-	u64 nr_orig = sample_orig->callchain->nr - PERF_DEFERRED_ITEMS;
++	u64 nr_orig = sample_orig->callchain->nr - 1;
+ 	u64 nr_deferred = sample_callchain->callchain->nr;
+ 	struct ip_callchain *callchain;
+ 
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -1520,6 +1520,7 @@ void evsel__config(struct evsel *evsel,
+ 	attr->mmap2    = track && !perf_missing_features.mmap2;
+ 	attr->comm     = track;
+ 	attr->build_id = track && opts->build_id;
++	attr->defer_output = track && !perf_missing_features.defer_callchain;
+ 
+ 	/*
+ 	 * ksymbol is tracked separately with text poke because it needs to be
+@@ -2206,8 +2207,10 @@ static int __evsel__prepare_open(struct
+ 
+ static void evsel__disable_missing_features(struct evsel *evsel)
+ {
+-	if (perf_missing_features.defer_callchain)
++	if (perf_missing_features.defer_callchain) {
+ 		evsel->core.attr.defer_callchain = 0;
++		evsel->core.attr.defer_output = 0;
++	}
+ 	if (perf_missing_features.inherit_sample_read && evsel->core.attr.inherit &&
+ 	    (evsel->core.attr.sample_type & PERF_SAMPLE_READ))
+ 		evsel->core.attr.inherit = 0;
+@@ -2489,6 +2492,7 @@ static bool evsel__detect_missing_featur
+ 	perf_missing_features.defer_callchain = true;
+ 	pr_debug2("switching off deferred callchain support\n");
+ 	attr.defer_callchain = false;
++	attr.defer_output = false;
+ 	attr.sample_type = 0;
+ 
+ 	attr.inherit = true;
+@@ -3255,8 +3259,8 @@ int evsel__parse_sample(struct evsel *ev
+ 			return -EFAULT;
+ 		sz = data->callchain->nr * sizeof(u64);
+ 		if (evsel->core.attr.defer_callchain &&
+-		    data->callchain->nr >= PERF_DEFERRED_ITEMS &&
+-		    data->callchain->ips[data->callchain->nr - PERF_DEFERRED_ITEMS] == PERF_CONTEXT_USER_DEFERRED) {
++		    data->callchain->nr >= 2 &&
++		    data->callchain->ips[data->callchain->nr - 2] == PERF_CONTEXT_USER_DEFERRED) {
+ 			data->deferred_callchain = true;
+ 			data->deferred_cookie = data->callchain->ips[data->callchain->nr - 1];
+ 		}
+--- a/tools/perf/util/perf_event_attr_fprintf.c
++++ b/tools/perf/util/perf_event_attr_fprintf.c
+@@ -344,6 +344,7 @@ int perf_event_attr__fprintf(FILE *fp, s
+ 	PRINT_ATTRf(remove_on_exec, p_unsigned);
+ 	PRINT_ATTRf(sigtrap, p_unsigned);
+ 	PRINT_ATTRf(defer_callchain, p_unsigned);
++	PRINT_ATTRf(defer_output, p_unsigned);
+ 
+ 	PRINT_ATTRn("{ wakeup_events, wakeup_watermark }", wakeup_events, p_unsigned, false);
+ 	PRINT_ATTRf(bp_type, p_unsigned);
