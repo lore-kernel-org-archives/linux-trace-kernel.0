@@ -1,255 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D17729C327;
-	Fri, 24 Oct 2025 07:13:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C23B30649F;
+	Fri, 24 Oct 2025 08:45:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761290003; cv=none; b=NyPL6HFdUI9ypYs8K6DDcr7lChSATWobD8QhydI7Mx5pe0kUndAl4gAJMDCL9hyWgVyHCy28CnhyEIQLirLj+j3tw8XRD8oyLI7kipazTfhccxFs1HRyi7/ZwCYKn06UG45rAkWdmWJh1bW4JNJrq+OzSyiP9EJArUJeeh8TxBw=
+	t=1761295507; cv=none; b=OF0PlYU3b8DRq0fD9LcegTGWn1HhM72kioSuhnI2r3wna83i1Sw8GRVvzTz17P21JL+zZrYcUbq9ckdDrzNBBy2XM7NoPeh3y4jZP/NhN9qUP6oyWrVSsDEanp4xbwJr4uefv2Z8CAYDfD9uW2Psh+YcK0fTxvSPqHRGIPPYYlQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761290003; c=relaxed/simple;
-	bh=euNXfmHSdLMS8YZpkPG5vNkUc0h98/CM2xKpVLwz8dA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NZfIH03qZkUJud0S91eGj239xE95egNb9+EUjxulXyHWrMhQf+8DkBfOjrNFvhm4GhReJHolnwA8vy9n964EwYeLpN3hyaOY2bWmkmwxDzoSgACG2zH62t+W6PyWDpWbwpYoYtH7HjBpm7+BKqUxyiYEtFgOX9Kf4e2ajfI3wJI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eE9dPGYl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1761295507; c=relaxed/simple;
+	bh=5WRKXr/s4dS5ied+yVXMNfNJW6eRvSH+xOfGJEEcBN4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cP3lf12lmUgPPi7KHC2kEchHwbSXcbCri1bzYPiADkE6264y5MvgtQrKK7wcaQPWhfMrmxuR3vB6K+ZYOSMR9FVsBjiUj8Tr6wS0IckNh9jH91epSlI561PxRKpM79RC4BmCuN7rSF+PG8Vsh9EE4UNC/AKmbR0MhXTMZlbnNZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=e0hazy2m; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eE9dPGYl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3910C4CEF1;
-	Fri, 24 Oct 2025 07:13:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761290002;
-	bh=euNXfmHSdLMS8YZpkPG5vNkUc0h98/CM2xKpVLwz8dA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=eE9dPGYlk5IdHIOGVkazj4pTfCGy1tXfT0umTTPanA/tJ/e6/bZhJMERzocVBIxC7
-	 ollgTfe8Z6ZIoeygzT/mUrj+nFTIUjbCcxPd2JW/M5IjsIXSHE2w+d3tYGuy317Fwx
-	 VO+wTAViaGkRzGQmJM5WuvjDhvRXqZG2ctR6rgrDBHP7olc7x5VTZlEbWVGqWfsWgp
-	 umm3oJ2npVk9OhSL3P+9iEMNY5OAwfaoCin+Bi//Qeno8t04Zibhqj3MWPSyWIm08r
-	 V/wfWfiGwPvLQ4wIv6pV5PTAvqPRPBaMRpGLOU0vc5rofzSo6qd8LhhmGoW5edmOS8
-	 0YG5DxfqRwT+w==
-From: Song Liu <song@kernel.org>
-To: bpf@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	live-patching@vger.kernel.org
-Cc: ast@kernel.org,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
-	rostedt@goodmis.org,
-	andrey.grodzovsky@crowdstrike.com,
-	mhiramat@kernel.org,
-	kernel-team@meta.com,
-	Song Liu <song@kernel.org>
-Subject: [PATCH bpf-next 3/3] selftests/bpf: Add tests for livepatch + bpf trampoline
-Date: Fri, 24 Oct 2025 00:12:57 -0700
-Message-ID: <20251024071257.3956031-4-song@kernel.org>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20251024071257.3956031-1-song@kernel.org>
-References: <20251024071257.3956031-1-song@kernel.org>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="e0hazy2m"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=K+lXc2trFeRORJCdrbLRdnsn5WXxpv1QGwVNva4aeSU=; b=e0hazy2mF00Finsa5zVtK3ono5
+	9hzGF22bXfr877SBfHF59FO0XD26xLrJ21W58PDvjn4wTyPINHPD45IM3YVOec4i45m2C9TaxKyif
+	SQiLqeX13XAZWATfafUrb1a85+gCqPeZh5kQuiBBFxy1jJeEQHIyblcmi6zXLFc08z88RRUI0FLcU
+	1SK33skLzDAZOOqEIpM6f3p6WTEMGlRczxNcUfgi0dTFspRbvHgtxsKtL2QC98xla1PGgzO8uUWOh
+	DGRSf4DF1F2H1FCDMJd8puleei2lHYsBWLU2/x8fLYscUne8mrOYXGMIdsmd5+k9RecQ0XdrkKsVw
+	qxJriPzw==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vCD8S-0000000CEiB-3QsI;
+	Fri, 24 Oct 2025 08:26:58 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id C578730029E; Fri, 24 Oct 2025 10:26:56 +0200 (CEST)
+Date: Fri, 24 Oct 2025 10:26:56 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Steven Rostedt <rostedt@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	x86@kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Indu Bhagat <indu.bhagat@oracle.com>,
+	"Jose E. Marchesi" <jemarch@gnu.org>,
+	Beau Belgrave <beaub@linux.microsoft.com>,
+	Jens Remus <jremus@linux.ibm.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Florian Weimer <fweimer@redhat.com>, Sam James <sam@gentoo.org>,
+	Kees Cook <kees@kernel.org>, Carlos O'Donell <codonell@redhat.com>
+Subject: Re: [PATCH v16 0/4] perf: Support the deferred unwinding
+ infrastructure
+Message-ID: <20251024082656.GS4067720@noisy.programming.kicks-ass.net>
+References: <20251007214008.080852573@kernel.org>
+ <20251023150002.GR4067720@noisy.programming.kicks-ass.net>
+ <20251023124057.2a6e793a@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251023124057.2a6e793a@gandalf.local.home>
 
-Both livepatch and BPF trampoline use ftrace. Special attention is needed
-when livepatch and fexit program touch the same function at the same
-time, because livepatch updates a kernel function and the BPF trampoline
-need to call into the right version of the kernel function.
+On Thu, Oct 23, 2025 at 12:40:57PM -0400, Steven Rostedt wrote:
+> On Thu, 23 Oct 2025 17:00:02 +0200
+> Peter Zijlstra <peterz@infradead.org> wrote:
+> 
+> > +/* Deferred unwinding callback for task specific events */
+> > +static void perf_unwind_deferred_callback(struct unwind_work *work,
+> > +					 struct unwind_stacktrace *trace, u64 cookie)
+> > +{
+> > +	struct perf_callchain_deferred_event deferred_event = {
+> > +		.trace = trace,
+> > +		.event = {
+> > +			.header = {
+> > +				.type = PERF_RECORD_CALLCHAIN_DEFERRED,
+> > +				.misc = PERF_RECORD_MISC_USER,
+> > +				.size = sizeof(deferred_event.event) +
+> > +					(trace->nr * sizeof(u64)),
+> > +			},
+> > +			.cookie = cookie,
+> > +			.nr = trace->nr,
+> > +		},
+> > +	};
+> > +
+> > +	perf_iterate_sb(perf_callchain_deferred_output, &deferred_event, NULL);
+> > +}
+> > +
+> 
+> So "perf_iterate_sb()" was the key point I was missing. I'm guessing it's
+> basically a demultiplexer that distributes events to all the requestors?
 
-Use samples/livepatch/livepatch-sample.ko for the test.
+A superset. Basically every event in the relevant context that 'wants'
+it.
 
-The test covers two cases:
-  1) When a fentry program is loaded first. This exercises the
-     modify_ftrace_direct code path.
-  2) When a fentry program is loaded first. This exercises the
-     register_ftrace_direct code path.
+It is what we use for all traditional side-band events (hence the _sb
+naming) like mmap, task creation/exit, etc.
 
-Signed-off-by: Song Liu <song@kernel.org>
----
- tools/testing/selftests/bpf/config            |   3 +
- .../bpf/prog_tests/livepatch_trampoline.c     | 113 ++++++++++++++++++
- .../bpf/progs/livepatch_trampoline.c          |  30 +++++
- 3 files changed, 146 insertions(+)
- create mode 100644 tools/testing/selftests/bpf/prog_tests/livepatch_trampoline.c
- create mode 100644 tools/testing/selftests/bpf/progs/livepatch_trampoline.c
+I was under the impression the perf tool would create one software dummy
+event to listen specifically for these events per buffer, but alas, when
+I looked at the tool this does not appear to be the case.
 
-diff --git a/tools/testing/selftests/bpf/config b/tools/testing/selftests/bpf/config
-index 70b28c1e653e..f2a2fd236ca8 100644
---- a/tools/testing/selftests/bpf/config
-+++ b/tools/testing/selftests/bpf/config
-@@ -50,6 +50,7 @@ CONFIG_IPV6_SIT=y
- CONFIG_IPV6_TUNNEL=y
- CONFIG_KEYS=y
- CONFIG_LIRC=y
-+CONFIG_LIVEPATCH=y
- CONFIG_LWTUNNEL=y
- CONFIG_MODULE_SIG=y
- CONFIG_MODULE_SRCVERSION_ALL=y
-@@ -111,6 +112,8 @@ CONFIG_IP6_NF_FILTER=y
- CONFIG_NF_NAT=y
- CONFIG_PACKET=y
- CONFIG_RC_CORE=y
-+CONFIG_SAMPLES=y
-+CONFIG_SAMPLE_LIVEPATCH=m
- CONFIG_SECURITY=y
- CONFIG_SECURITYFS=y
- CONFIG_SYN_COOKIES=y
-diff --git a/tools/testing/selftests/bpf/prog_tests/livepatch_trampoline.c b/tools/testing/selftests/bpf/prog_tests/livepatch_trampoline.c
-new file mode 100644
-index 000000000000..6326f957dbcd
---- /dev/null
-+++ b/tools/testing/selftests/bpf/prog_tests/livepatch_trampoline.c
-@@ -0,0 +1,113 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright (c) 2025 Meta Platforms, Inc. and affiliates. */
-+
-+#include <test_progs.h>
-+#include "testing_helpers.h"
-+#include "livepatch_trampoline.skel.h"
-+
-+static int load_livepatch(void)
-+{
-+	const char *livepatch_paths[] = {
-+		"../../../../samples/livepatch/livepatch-sample.ko",
-+		/* This is the path used by CI */
-+		"/tmp/work/bpf/bpf/kbuild-output/samples/livepatch/livepatch-sample.ko",
-+	};
-+	int ret, i;
-+
-+	for (i = 0; i < sizeof(livepatch_paths) / sizeof(char *); i++) {
-+		ret = load_module(livepatch_paths[i], env_verbosity > VERBOSE_NONE);
-+		if (!ret)
-+			break;
-+	}
-+	return ret;
-+}
-+
-+static void unload_livepatch(void)
-+{
-+	/* Disable the livepatch before unloading the module */
-+	system("echo 0 > /sys/kernel/livepatch/livepatch_sample/enabled");
-+
-+	unload_module("livepatch_sample", env_verbosity > VERBOSE_NONE);
-+}
-+
-+static void read_proc_cmdline(void)
-+{
-+	char buf[4096];
-+	int fd, ret;
-+
-+	fd = open("/proc/cmdline", O_RDONLY);
-+	if (!ASSERT_OK_FD(fd, "open /proc/cmdline"))
-+		return;
-+
-+	ret = read(fd, buf, sizeof(buf));
-+	if (!ASSERT_GT(ret, 0, "read /proc/cmdline"))
-+		goto out;
-+
-+	ASSERT_OK(strncmp(buf, "this has been live patched", 26), "strncmp");
-+
-+out:
-+	close(fd);
-+}
-+
-+static void __test_livepatch_trampoline(bool fexit_first)
-+{
-+	struct livepatch_trampoline *skel = NULL;
-+	int err;
-+
-+	skel = livepatch_trampoline__open_and_load();
-+	if (!ASSERT_OK_PTR(skel, "skel_open_and_load"))
-+		goto out;
-+
-+	skel->bss->my_pid = getpid();
-+
-+	if (!fexit_first) {
-+		/* fentry program is loaded first by default */
-+		err = livepatch_trampoline__attach(skel);
-+		if (!ASSERT_OK(err, "skel_attach"))
-+			goto out;
-+	} else {
-+		/* Manually load fexit program first. */
-+		skel->links.fexit_cmdline = bpf_program__attach(skel->progs.fexit_cmdline);
-+		if (!ASSERT_OK_PTR(skel->links.fexit_cmdline, "attach_fexit"))
-+			goto out;
-+
-+		skel->links.fentry_cmdline = bpf_program__attach(skel->progs.fentry_cmdline);
-+		if (!ASSERT_OK_PTR(skel->links.fentry_cmdline, "attach_fentry"))
-+			goto out;
-+	}
-+
-+	read_proc_cmdline();
-+
-+	ASSERT_EQ(skel->bss->fentry_hit, 1, "fentry_hit");
-+	ASSERT_EQ(skel->bss->fexit_hit, 1, "fexit_hit");
-+out:
-+	livepatch_trampoline__destroy(skel);
-+}
-+
-+void test_livepatch_trampoline(void)
-+{
-+	int retry_cnt = 0;
-+
-+retry:
-+	if (load_livepatch()) {
-+		if (retry_cnt) {
-+			ASSERT_OK(1, "load_livepatch");
-+			goto out;
-+		}
-+		/*
-+		 * Something else (previous run of the same test?) loaded
-+		 * the KLP module. Unload the KLP module and retry.
-+		 */
-+		unload_livepatch();
-+		retry_cnt++;
-+		goto retry;
-+	}
-+
-+	if (test__start_subtest("fentry_first"))
-+		__test_livepatch_trampoline(false);
-+
-+	if (test__start_subtest("fexit_first"))
-+		__test_livepatch_trampoline(true);
-+out:
-+	unload_livepatch();
-+}
-diff --git a/tools/testing/selftests/bpf/progs/livepatch_trampoline.c b/tools/testing/selftests/bpf/progs/livepatch_trampoline.c
-new file mode 100644
-index 000000000000..15579d5bcd91
---- /dev/null
-+++ b/tools/testing/selftests/bpf/progs/livepatch_trampoline.c
-@@ -0,0 +1,30 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright (c) 2025 Meta Platforms, Inc. and affiliates. */
-+
-+#include <linux/bpf.h>
-+#include <bpf/bpf_helpers.h>
-+#include <bpf/bpf_tracing.h>
-+
-+int fentry_hit;
-+int fexit_hit;
-+int my_pid;
-+
-+SEC("fentry/cmdline_proc_show")
-+int BPF_PROG(fentry_cmdline)
-+{
-+	if (my_pid != (bpf_get_current_pid_tgid() >> 32))
-+		return 0;
-+
-+	fentry_hit = 1;
-+	return 0;
-+}
-+
-+SEC("fexit/cmdline_proc_show")
-+int BPF_PROG(fexit_cmdline)
-+{
-+	if (my_pid != (bpf_get_current_pid_tgid() >> 32))
-+		return 0;
-+
-+	fexit_hit = 1;
-+	return 0;
-+}
--- 
-2.47.3
+As a result it is possible to receive these events multiple times. And
+since that is a problem that needs to be solved anyway, I didn't think
+it 'relevant' in this case.
 
+> If I had know this, I would have done it completely different.
+
+I did do mention it here:
+
+  https://lkml.kernel.org/r/20250923103213.GD3419281@noisy.programming.kicks-ass.net
+
+Anyway, no worries. Onwards to figuring out WTF the unwinder doesn't
+seem to terminate properly.
