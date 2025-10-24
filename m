@@ -1,122 +1,118 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C23B30649F;
-	Fri, 24 Oct 2025 08:45:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 295FF207A22
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 24 Oct 2025 09:20:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761295507; cv=none; b=OF0PlYU3b8DRq0fD9LcegTGWn1HhM72kioSuhnI2r3wna83i1Sw8GRVvzTz17P21JL+zZrYcUbq9ckdDrzNBBy2XM7NoPeh3y4jZP/NhN9qUP6oyWrVSsDEanp4xbwJr4uefv2Z8CAYDfD9uW2Psh+YcK0fTxvSPqHRGIPPYYlQ=
+	t=1761297637; cv=none; b=PP9S1SOP+A0DIFmpLnOCDAn7WOcXg+VSARHEHynvJLZMfzpFP/zMMEPLhHPk1SyRA8OghurkpV6wmqn2ZKonVMkUlFsg0CQHm6K872IfFx842IIM570K1JVf8GU9HMIodXGktUOByekLl/Qe7jMJbp1mUrXHvUibdbg0vLFu2s0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761295507; c=relaxed/simple;
-	bh=5WRKXr/s4dS5ied+yVXMNfNJW6eRvSH+xOfGJEEcBN4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cP3lf12lmUgPPi7KHC2kEchHwbSXcbCri1bzYPiADkE6264y5MvgtQrKK7wcaQPWhfMrmxuR3vB6K+ZYOSMR9FVsBjiUj8Tr6wS0IckNh9jH91epSlI561PxRKpM79RC4BmCuN7rSF+PG8Vsh9EE4UNC/AKmbR0MhXTMZlbnNZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=e0hazy2m; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1761297637; c=relaxed/simple;
+	bh=KRYLOMYrQ3kyftsmR2kiak9aO8LPXyN+XNVOuRc41dY=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ZBCfzFPAzEOdf/LvR+bCVHuRSdF0hRIJXo9txYeAUsX+onDgT/K0uGfqYLV526CUeYHfnmISvE0APZe0gQnR6ADAPs0aOiQzDrjKhQEuqIuz/wczt1G7s03y00oIARP77HCjbueqVLEWNZM9imMr4cK6GoVJ31JlgIxKoEZb8wA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BjUxcFk1; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="e0hazy2m"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=K+lXc2trFeRORJCdrbLRdnsn5WXxpv1QGwVNva4aeSU=; b=e0hazy2mF00Finsa5zVtK3ono5
-	9hzGF22bXfr877SBfHF59FO0XD26xLrJ21W58PDvjn4wTyPINHPD45IM3YVOec4i45m2C9TaxKyif
-	SQiLqeX13XAZWATfafUrb1a85+gCqPeZh5kQuiBBFxy1jJeEQHIyblcmi6zXLFc08z88RRUI0FLcU
-	1SK33skLzDAZOOqEIpM6f3p6WTEMGlRczxNcUfgi0dTFspRbvHgtxsKtL2QC98xla1PGgzO8uUWOh
-	DGRSf4DF1F2H1FCDMJd8puleei2lHYsBWLU2/x8fLYscUne8mrOYXGMIdsmd5+k9RecQ0XdrkKsVw
-	qxJriPzw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vCD8S-0000000CEiB-3QsI;
-	Fri, 24 Oct 2025 08:26:58 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id C578730029E; Fri, 24 Oct 2025 10:26:56 +0200 (CEST)
-Date: Fri, 24 Oct 2025 10:26:56 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Steven Rostedt <rostedt@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	x86@kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Indu Bhagat <indu.bhagat@oracle.com>,
-	"Jose E. Marchesi" <jemarch@gnu.org>,
-	Beau Belgrave <beaub@linux.microsoft.com>,
-	Jens Remus <jremus@linux.ibm.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Florian Weimer <fweimer@redhat.com>, Sam James <sam@gentoo.org>,
-	Kees Cook <kees@kernel.org>, Carlos O'Donell <codonell@redhat.com>
-Subject: Re: [PATCH v16 0/4] perf: Support the deferred unwinding
- infrastructure
-Message-ID: <20251024082656.GS4067720@noisy.programming.kicks-ass.net>
-References: <20251007214008.080852573@kernel.org>
- <20251023150002.GR4067720@noisy.programming.kicks-ass.net>
- <20251023124057.2a6e793a@gandalf.local.home>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BjUxcFk1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1761297635;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KRYLOMYrQ3kyftsmR2kiak9aO8LPXyN+XNVOuRc41dY=;
+	b=BjUxcFk1YByUiwbMMaATMl0JbLinKT6N2RU6VJ3AEg5lc6WJnM6d6p/YuUxRLN8qSPqTXv
+	tth0r3ozsdyJqPuWkjypnrd9AKPfULV4rdI64Cdl7Yd2Qoh8UKbmWYJnrGkTpC8jMLeJws
+	lVzaTdpb+1XUxM9b4Nd2mpc1Q4luRiY=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-84-moFfL20vMjOpivV_E8Ipow-1; Fri, 24 Oct 2025 05:20:33 -0400
+X-MC-Unique: moFfL20vMjOpivV_E8Ipow-1
+X-Mimecast-MFC-AGG-ID: moFfL20vMjOpivV_E8Ipow_1761297632
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-426d4f59cbcso2016176f8f.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 24 Oct 2025 02:20:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761297632; x=1761902432;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=KRYLOMYrQ3kyftsmR2kiak9aO8LPXyN+XNVOuRc41dY=;
+        b=ib1reewSSxH130V1fjSA8JSo75SzCzkM5aOkngbVx04C4WMQ8o4CoPjDeBQqVX4yaa
+         MQoD/fha/2lVnGGYhCEGuwviZ9vX+Vm7W41xIhY9+x/6ZU48Kxe0EmI/8u2KdU1EiIAM
+         E8ObC26FaGuqwakSdKxM/RME/1BxHDUbhI6uPFTwsWvset5MErtE+boSfvd8nvmF8NgZ
+         KyZSHtvfZEpY6ydkfmNQMLk3LMMp+As8VaMMae+lOD54XglbI208fl675v36m3J0pA5v
+         NURKKRYG4GM9Ora7OUUBizDVfersOo5sC9j7OkV028GzrxN4+CxE91YaEYoWRYaq5wfs
+         b38Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVIXBivWJ2t3Ldg/zSqDzns7zLpRbHZKtjAPxjDVSd7j9iTf0JLUY5UGNXW/h9QxVUGVdRU+lsi3zcUen6b83oQ1is=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/V/8DxEi7A1W9s/qP9i8eb2f9gQd/vLFk3u12AE3+I98xO44f
+	2TlWvsEgFpORFYPv1eD0H+EWtLHJHZ+2n3RJ99QnL6fTJ6sIH/s6Ue0hl2Kb3bGUuSb55ZN9kvb
+	YMNwJOObAcRHB914UdLgDniMwmPLGTGZwfLGyQvqQ4lo+s+8r9KgrQGMvoXRFWBLmGbsml1ysOQ
+	==
+X-Gm-Gg: ASbGncs2F7Jw+1OppkaRx2uouYxghxr3i4aBFKBJJT9+jFa6JDRJ6Ndm1XreaCBmrIQ
+	vzfLxdlarKvdt29PkkpY1c3jcWGqw0hlFetZ/wvZJAoTcc+lCJwZZLZmTAsUIAxSLxFQHGxAR8p
+	VFpmynTQOD9XYHgBve2mn75P/6+84hTLQcwBcYt2MA/YBTq4hrKE1PbhYSL1Zn73j6uOGzWOXKw
+	bz2Hv6B0rbC5WLJS3Yfoc/w9jkAcAWzFXR7aNIUYDkDr7epU9mFAKjR0yfTlAWwJBYqdryVTAIG
+	Yg71Qj2BMDdteRLey+8SHJUYe94Ld8MN6PXdUJTvVReyVl7que5XOtKOXjgqACbFFqDzOrLWAtD
+	JIADpFCV8GdfI87bYNEf8CXJb
+X-Received: by 2002:a05:6000:2209:b0:427:67b:b385 with SMTP id ffacd0b85a97d-4298f5284e0mr1475121f8f.11.1761297632388;
+        Fri, 24 Oct 2025 02:20:32 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IENJCKEMSHznuwRnoZo8gIjMg1xMxlZlosiTdgr3BzAFIk2sdQW9RZpNtz+ul6TzEjTgkBYBw==
+X-Received: by 2002:a05:6000:2209:b0:427:67b:b385 with SMTP id ffacd0b85a97d-4298f5284e0mr1475098f8f.11.1761297632034;
+        Fri, 24 Oct 2025 02:20:32 -0700 (PDT)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.40])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-429898ccd88sm9981862f8f.36.2025.10.24.02.20.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Oct 2025 02:20:31 -0700 (PDT)
+Message-ID: <89c01961393210e3623b6d556e722f145d6cd557.camel@redhat.com>
+Subject: Re: [PATCH v2 18/20] rv: Add support for per-object monitors in
+ DA/HA
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: Nam Cao <namcao@linutronix.de>, linux-kernel@vger.kernel.org, Steven
+ Rostedt <rostedt@goodmis.org>, linux-trace-kernel@vger.kernel.org
+Cc: Tomas Glozar <tglozar@redhat.com>, Juri Lelli <jlelli@redhat.com>, Clark
+ Williams <williams@redhat.com>, John Kacur <jkacur@redhat.com>
+Date: Fri, 24 Oct 2025 11:20:30 +0200
+In-Reply-To: <87bjlxokvx.fsf@yellow.woof>
+References: <20250919140954.104920-1-gmonaco@redhat.com>
+	 <20250919140954.104920-19-gmonaco@redhat.com> <87plag1nb6.fsf@yellow.woof>
+	 <866f10440f9edde8acd34e5a5d2965719ae5d723.camel@redhat.com>
+	 <87bjlxokvx.fsf@yellow.woof>
+User-Agent: Evolution 3.56.2 (3.56.2-2.fc42)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251023124057.2a6e793a@gandalf.local.home>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: HCSyU2wuqG7NSN1y9zJmeCiKSWHx7SV3KngVk-BUMl4_1761297632
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Oct 23, 2025 at 12:40:57PM -0400, Steven Rostedt wrote:
-> On Thu, 23 Oct 2025 17:00:02 +0200
-> Peter Zijlstra <peterz@infradead.org> wrote:
-> 
-> > +/* Deferred unwinding callback for task specific events */
-> > +static void perf_unwind_deferred_callback(struct unwind_work *work,
-> > +					 struct unwind_stacktrace *trace, u64 cookie)
-> > +{
-> > +	struct perf_callchain_deferred_event deferred_event = {
-> > +		.trace = trace,
-> > +		.event = {
-> > +			.header = {
-> > +				.type = PERF_RECORD_CALLCHAIN_DEFERRED,
-> > +				.misc = PERF_RECORD_MISC_USER,
-> > +				.size = sizeof(deferred_event.event) +
-> > +					(trace->nr * sizeof(u64)),
-> > +			},
-> > +			.cookie = cookie,
-> > +			.nr = trace->nr,
-> > +		},
-> > +	};
-> > +
-> > +	perf_iterate_sb(perf_callchain_deferred_output, &deferred_event, NULL);
-> > +}
-> > +
-> 
-> So "perf_iterate_sb()" was the key point I was missing. I'm guessing it's
-> basically a demultiplexer that distributes events to all the requestors?
+On Thu, 2025-10-23 at 14:36 +0200, Nam Cao wrote:
+> Gabriele Monaco <gmonaco@redhat.com> writes:
+> > Ignoring the vagueness of the name, the two implementations of this hoo=
+k are
+> > to call an allocation (yes, always conditionally) or just assign the ta=
+rget
+> > to a pre-allocated storage.
+> > Your suggestion of da_monitor_prepare_storage might fit both descriptio=
+ns.
+>=20
+> Now that I have grasped (or at least I think so) the patches, it is not
+> that important to me anymore. But still, having function names which
+> precisely describe what they do would help new people understand the code=
+.
 
-A superset. Basically every event in the relevant context that 'wants'
-it.
+Agree, I'm going to use more meaningful function names. Apparently the
+kmalloc_nolock is still getting lockdep complain on RT kernels so I'm going=
+ to
+keep this skip-preallocation logic as it is, hopefully just clearer.
 
-It is what we use for all traditional side-band events (hence the _sb
-naming) like mmap, task creation/exit, etc.
+Thanks,
+Gabriele
 
-I was under the impression the perf tool would create one software dummy
-event to listen specifically for these events per buffer, but alas, when
-I looked at the tool this does not appear to be the case.
-
-As a result it is possible to receive these events multiple times. And
-since that is a problem that needs to be solved anyway, I didn't think
-it 'relevant' in this case.
-
-> If I had know this, I would have done it completely different.
-
-I did do mention it here:
-
-  https://lkml.kernel.org/r/20250923103213.GD3419281@noisy.programming.kicks-ass.net
-
-Anyway, no worries. Onwards to figuring out WTF the unwinder doesn't
-seem to terminate properly.
