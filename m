@@ -1,45 +1,46 @@
 Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 378032AE8E;
-	Fri, 24 Oct 2025 13:02:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33BAD2F83D2;
+	Fri, 24 Oct 2025 13:44:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761310933; cv=none; b=olj7lTAqW1JPe8I6cnZ4e2Pnb16hxBW/3s7IlYnubRuspuIFL0zMEwi6XRREHDGLY+Ab/YfMjIeAe0ts8tHM9p0aY2/0M4z9ICzA3WW5UzZMgkSSdgPmlBRIt7pswcgIUmDjpSXI0M1OMt1vBdn3jDT/IKFNQgu/oZ/WU1d7bkE=
+	t=1761313478; cv=none; b=QFf0Vnef0mF4iBSNaJJix+QMmWbY26wt2e0UZeh5eESRzJUCmPkDF/JuQnSUowtHwYZ4FsHSVX8lb0xjLW6DPpPX33No+1Kgk/9bQHCS360ossr+/KKzpVe9kBObi/ETHC/qRk9gAmy3hJ1wmBVCVIzRkk87p+Gm9PAUjZpIaZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761310933; c=relaxed/simple;
-	bh=sWNapAQdiDgKyOmK1F9SQowPxHMep3JI7SQBHBeWmUE=;
+	s=arc-20240116; t=1761313478; c=relaxed/simple;
+	bh=F/p6ZO4UJcB+L6rsMxVdDJvv5GUBx34XWCIi8m4T6H0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LnLSpXiYFYrAoib9ZU2ZvGfbg1AQ4QwFLOGWAmcdgReMV1mzFbdnmP4Pdq0d3CpqYDF0SGvuYGAMZ0cG5NTLeOJ0yUTdpxqM/6h1J/PjEfrT9wBj4OKPOGXAJgYnY0Cg+g6TsXlQzzX/gmdhGhEoCfR6qF/M0dZM/7UKCkg5TEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ueTMeeYE; arc=none smtp.client-ip=90.155.50.34
+	 Content-Type:Content-Disposition:In-Reply-To; b=rZoLKIjfnBO5kwEpnjmzCqvR3GpLPsHXC2wgRwIKYwf1twIzFjRM+9pLT2qKBm9+zsc+81CMj454RpZ4CVzhZVnow8m06l2XxnsR9ZDmthCzdP9tilZOIiTbIs4zXb1L9LhauI3UWUHZLlwjUWQbY/BrMg7s7WpS6/xA70nRoPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=KHRd6md2; arc=none smtp.client-ip=90.155.50.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ueTMeeYE"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KHRd6md2"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
 	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=KIzxo1I8zroSVihAvyvbWPNv07jZePh2BUEf0mtEhks=; b=ueTMeeYEqebx8NRI0fTJD7ctYh
-	N6dJVOJoczHU3Z6e9VjrXI3DEYHcV4zcaAefAyyP6gSUzQlGP+oWEj3fF5wjFPqo47yrw3+P8SV2p
-	Ti9cS+SF1Iz+a2DW5GcukXJz7DQpyLVLKF8aEdcZdMozYStgnLh0jZ/2LozhRyTFaR4I/F7UiHCoj
-	A3NH8qjpKbOhIShkU8EilPT4wThJmBhVXlHuvRUTAuTOZ/bDcMHNr2pXkEUZ45MtOd5Sx8lrQV3uf
-	0c4M4COHxaYNRCsBoGtWuyGyONk1udDbE4D2Ey39PhpdPTetzHHu1mgX8Mf6+oTsDfwQcyDzIbrEr
-	TIm3oygA==;
+	bh=Ffcj2jilQV0mH7721aCemvuNywIj+ADnf9rulKDQShk=; b=KHRd6md2YVWeoXFeMmOWjQOBva
+	hh98PWr8MR1nG8zt+X/s6pNq8xiLExucjDp3JcN4aiatOzqJUNgvQ/KXmFQ7o8aCO6EU/gzmFHN4J
+	Be0zoP4ogk+i21sdK+niWsL0z7p50enlf4qEG8yQCXJHbDN6kAk7dVQfgziqyu7kPRpTlSqQt9E9Q
+	wGRNbOnpdhRIV1kmPH+hE+l9at4KY/wj1129/zMzH6nu0h3oFQ4glOQsKZgjAfDc4E3WoD9po659j
+	UNyIyGukE3AA/jCEbu384/JafPxkcxYI90Efy8nuNuLJoyK5IFbaVDRSf0vI4xv8IYuGNSSqNPKgb
+	J0+2JBww==;
 Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
 	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vCHQg-00000000sUc-1NtR;
-	Fri, 24 Oct 2025 13:02:03 +0000
+	id 1vCI5W-00000001uJu-3O11;
+	Fri, 24 Oct 2025 13:44:16 +0000
 Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 2745C300323; Fri, 24 Oct 2025 15:02:03 +0200 (CEST)
-Date: Fri, 24 Oct 2025 15:02:03 +0200
+	id 0A030300323; Fri, 24 Oct 2025 15:44:15 +0200 (CEST)
+Date: Fri, 24 Oct 2025 15:44:15 +0200
 From: Peter Zijlstra <peterz@infradead.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Steven Rostedt <rostedt@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	x86@kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+To: Jens Remus <jremus@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	bpf@vger.kernel.org, x86@kernel.org, linux-mm@kvack.org,
+	Steven Rostedt <rostedt@kernel.org>,
 	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Namhyung Kim <namhyung@kernel.org>,
@@ -48,16 +49,27 @@ Cc: Steven Rostedt <rostedt@kernel.org>, linux-kernel@vger.kernel.org,
 	Indu Bhagat <indu.bhagat@oracle.com>,
 	"Jose E. Marchesi" <jemarch@gnu.org>,
 	Beau Belgrave <beaub@linux.microsoft.com>,
-	Jens Remus <jremus@linux.ibm.com>,
 	Linus Torvalds <torvalds@linux-foundation.org>,
 	Andrew Morton <akpm@linux-foundation.org>,
-	Florian Weimer <fweimer@redhat.com>, Sam James <sam@gentoo.org>,
-	Kees Cook <kees@kernel.org>, Carlos O'Donell <codonell@redhat.com>
-Subject: Re: [PATCH v16 4/4] perf tools: Merge deferred user callchains
-Message-ID: <20251024130203.GC3245006@noisy.programming.kicks-ass.net>
-References: <20250908175319.841517121@kernel.org>
- <20250908175430.639412649@kernel.org>
- <20251002134938.756db4ef@gandalf.local.home>
+	Florian Weimer <fweimer@redhat.com>, Kees Cook <kees@kernel.org>,
+	Carlos O'Donell <codonell@redhat.com>, Sam James <sam@gentoo.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	David Hildenbrand <david@redhat.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Michal Hocko <mhocko@suse.com>, Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	"Steven Rostedt (Google)" <rostedt@goodmis.org>
+Subject: Re: [PATCH v11 08/15] unwind_user/sframe: Wire up unwind_user to
+ sframe
+Message-ID: <20251024134415.GD3245006@noisy.programming.kicks-ass.net>
+References: <20251022144326.4082059-1-jremus@linux.ibm.com>
+ <20251022144326.4082059-9-jremus@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -66,71 +78,84 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251002134938.756db4ef@gandalf.local.home>
+In-Reply-To: <20251022144326.4082059-9-jremus@linux.ibm.com>
 
-On Thu, Oct 02, 2025 at 01:49:38PM -0400, Steven Rostedt wrote:
-> On Mon, 08 Sep 2025 13:53:23 -0400
-> Steven Rostedt <rostedt@kernel.org> wrote:
-> 
-> > +static int evlist__deliver_deferred_samples(struct evlist *evlist,
-> > +					    const struct perf_tool *tool,
-> > +					    union  perf_event *event,
-> > +					    struct perf_sample *sample,
-> > +					    struct machine *machine)
-> > +{
-> > +	struct deferred_event *de, *tmp;
-> > +	struct evsel *evsel;
-> > +	int ret = 0;
-> > +
-> > +	if (!tool->merge_deferred_callchains) {
-> > +		evsel = evlist__id2evsel(evlist, sample->id);
-> > +		return tool->callchain_deferred(tool, event, sample,
-> > +						evsel, machine);
-> > +	}
-> > +
-> > +	list_for_each_entry_safe(de, tmp, &evlist->deferred_samples, list) {
-> > +		struct perf_sample orig_sample;
-> 
-> orig_sample is not initialized and can then contain junk.
-> 
-> > +
-> > +		ret = evlist__parse_sample(evlist, de->event, &orig_sample);
-> > +		if (ret < 0) {
-> > +			pr_err("failed to parse original sample\n");
-> > +			break;
-> > +		}
-> > +
-> > +		if (sample->tid != orig_sample.tid)
-> > +			continue;
-> > +
-> > +		if (event->callchain_deferred.cookie == orig_sample.deferred_cookie)
-> > +			sample__merge_deferred_callchain(&orig_sample, sample);
-> 
-> The sample__merge_deferred_callchain() initializes both
-> orig_sample.deferred_callchain and the callchain. But now that it's not
-> being called, it can cause the below free to happen with junk as the
-> callchain. This needs:
-> 
-> 		else
-> 			orig_sample.deferred_callchain = false;
+On Wed, Oct 22, 2025 at 04:43:19PM +0200, Jens Remus wrote:
 
-Ah, so I saw crashes from here and just deleted both free()s and got on
-with things ;-)
+> @@ -26,12 +27,10 @@ get_user_word(unsigned long *word, unsigned long base, int off, unsigned int ws)
+>  	return get_user(*word, addr);
+>  }
+>  
+> -static int unwind_user_next_fp(struct unwind_user_state *state)
+> +static int unwind_user_next_common(struct unwind_user_state *state,
+> +				   const struct unwind_user_frame *frame,
+> +				   struct pt_regs *regs)
+>  {
 
-> > +
-> > +		evsel = evlist__id2evsel(evlist, orig_sample.id);
-> > +		ret = evlist__deliver_sample(evlist, tool, de->event,
-> > +					     &orig_sample, evsel,> machine); +
-> > +		if (orig_sample.deferred_callchain)
-> > +			free(orig_sample.callchain);
-> > +
-> > +		list_del(&de->list);
-> > +		free(de);
-> > +
-> > +		if (ret)
-> > +			break;
-> > +	}
-> > +	return ret;
-> > +}
-> 
-> -- Steve
+What is pt_regs for? AFAICT it isn't actually used in any of the
+following patches.
+
+> -	const struct unwind_user_frame fp_frame = {
+> -		ARCH_INIT_USER_FP_FRAME(state->ws)
+> -	};
+> -	const struct unwind_user_frame *frame = &fp_frame;
+>  	unsigned long cfa, fp, ra;
+>  
+>  	if (frame->use_fp) {
+> @@ -67,6 +66,26 @@ static int unwind_user_next_fp(struct unwind_user_state *state)
+>  	return 0;
+>  }
+>  
+> +static int unwind_user_next_sframe(struct unwind_user_state *state)
+> +{
+> +	struct unwind_user_frame _frame, *frame;
+> +
+> +	/* sframe expects the frame to be local storage */
+> +	frame = &_frame;
+> +	if (sframe_find(state->ip, frame))
+> +		return -ENOENT;
+> +	return unwind_user_next_common(state, frame, task_pt_regs(current));
+> +}
+
+Would it not be simpler to write:
+
+static int unwind_user_next_sframe(struct unwind_user_state *state)
+{
+	struct unwind_user_frame frame;
+
+	/* sframe expects the frame to be local storage */
+	if (sframe_find(state->ip, &frame))
+		return -ENOENT;
+	return unwind_user_next_common(state, &frame, task_pt_regs(current));
+}
+
+hmm?
+
+> +static int unwind_user_next_fp(struct unwind_user_state *state)
+> +{
+> +	const struct unwind_user_frame fp_frame = {
+> +		ARCH_INIT_USER_FP_FRAME(state->ws)
+> +	};
+> +
+> +	return unwind_user_next_common(state, &fp_frame, task_pt_regs(current));
+> +}
+> +
+>  static int unwind_user_next(struct unwind_user_state *state)
+>  {
+>  	unsigned long iter_mask = state->available_types;
+> @@ -80,6 +99,16 @@ static int unwind_user_next(struct unwind_user_state *state)
+>  
+>  		state->current_type = type;
+>  		switch (type) {
+> +		case UNWIND_USER_TYPE_SFRAME:
+> +			switch (unwind_user_next_sframe(state)) {
+> +			case 0:
+> +				return 0;
+> +			case -ENOENT:
+> +				continue;	/* Try next method. */
+> +			default:
+> +				state->done = true;
+> +			}
+> +			break;
+
+Should it remove SFRAME from state->available_types at this point?
