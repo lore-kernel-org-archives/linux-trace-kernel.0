@@ -1,64 +1,75 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A80C7146585;
-	Fri, 24 Oct 2025 10:41:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEBD415DBC1
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 24 Oct 2025 11:42:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761302506; cv=none; b=u12PPbqHCNLdU0SkaZsAl/0yFvZVrl3VF3PKc0pY7w+eD4SOl6EvTqmlyuA79/Wl0Hq7X+S3exqebZkFfY+dsS55M1gWp4wMUH+7UdVRCloDgRulQxQe7IJkHu17mIymc2s2QZnMFWnudyITfj8VMtd1D/uXDyUePS/2PEa8Fw8=
+	t=1761306174; cv=none; b=iStZBdwrXcwldW8KeBbE6SPgkw1iV3U6w4KdQYoa93gFPZ3Jfdg+aXNLPyffkF9NtJr3xabZwS/q7dldNaBiGD5CZCOc7HcRpohMWK8eDo6GYO6WgG3N2FPReVZCFnWcH4JjTasEMbsb5XOyxZg+u8gfcpWECQ0zlD/VU7h+Np4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761302506; c=relaxed/simple;
-	bh=fXL/XYAKyPRWPyekI6E49EFt8QJxlnZtekWFaIU9Yeg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N+AzWEYKTBnkLpSrDEDoPKC/UXskhweo9Xxfypp8PLNALlG/Rov3PawiCSyHj6Nt4LjfxU+huRTYkuFtruWusf/GibDt3usZLWpfg0sy9iwnwrw6B5NKq7Rlk8LTED9Vp8EKP9bozveZfEq43vuTygfOM0tfVSAU4I1ZlqOK5E8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=f8SBe+CV; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1761306174; c=relaxed/simple;
+	bh=BSa+n0RHtBRMZcEWJek59r2Jv4nIb4dvimkE2lkcU5M=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PPwJjFuG0eEhJpbtx5ywTQwnf6BXbJrMHSbdiNjABMcawX0aiC520MxAr034rXoA7c0o+iccszIZxnvbXPpvYiGwL6sHuJqZfQTu5E3URY2jXby3Nr5MwfpS4uuo8gcecaKYyM5BEM8C3pW3M96lKovd7oNuw/3wiloBWCSbwCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=So529veH; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="f8SBe+CV"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=Er4bARwpXMjZqI0mWGWcvCvZFUERMQG43Oiv5EcZcgA=; b=f8SBe+CV3BMAK4ghr54SE+SpLC
-	+gVTsUS3+wRihhplqA5eA2ATGVPTheQgcWNdoP653YNPWw5S0okwwA2pg+SnJpibrwr7h8antvYJV
-	XbgtgyOYh9sQpobuigPaFCtJ1gFBN2D5G/sFmz6ESkt482ul60Wi5XrwiI1lY66Hya08wfqYx4T4b
-	nMW+xOyOn2WWBBW23fQ74mI7+VZ1zop7/HYVw3WjoeZZm9ASAfR9C0uUj3MDnWFo1hwHso4fmwOX0
-	pTXto9hi9Lg4gUMoI8MVNZVhl6dv5EE+YrSCCZ8A0KUEPDqQ3owDxjbSk7Xih97mSNy92CuozGP5T
-	PO37CfEg==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vCFEV-0000000FRAD-3qyi;
-	Fri, 24 Oct 2025 10:41:21 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 5FD6030023C; Fri, 24 Oct 2025 12:41:19 +0200 (CEST)
-Date: Fri, 24 Oct 2025 12:41:19 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Steven Rostedt <rostedt@kernel.org>, jremus@linux.ibm.com
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	bpf@vger.kernel.org, x86@kernel.org,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Indu Bhagat <indu.bhagat@oracle.com>,
-	"Jose E. Marchesi" <jemarch@gnu.org>,
-	Beau Belgrave <beaub@linux.microsoft.com>,
-	Jens Remus <jremus@linux.ibm.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Florian Weimer <fweimer@redhat.com>, Sam James <sam@gentoo.org>,
-	Kees Cook <kees@kernel.org>, Carlos O'Donell <codonell@redhat.com>
-Subject: Re: [PATCH v16 0/4] perf: Support the deferred unwinding
- infrastructure
-Message-ID: <20251024104119.GJ4068168@noisy.programming.kicks-ass.net>
-References: <20251007214008.080852573@kernel.org>
- <20251023150002.GR4067720@noisy.programming.kicks-ass.net>
- <20251024092926.GI4068168@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="So529veH"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-471b80b994bso27696415e9.3
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 24 Oct 2025 04:42:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1761306171; x=1761910971; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=dYSOpLWf0KKSMlI5IP80glPUH7vqI7+Tr3W3w2SASQg=;
+        b=So529veHjy38XsuZYlINGFEIeO+Brf0ht4wtROg2ZPr06pn5Tj2zewjpGottF/qylw
+         NLSS/MzfNONDrBHY1aTs7s0xiwj1EYeC2Aslh+Wh6AO3oqE58oNquIxD8IuYVoZMxP3K
+         txdHsSmh4st4vr+09ULp3XpJO7B7wjBmQrYX6A318YtmY3JSj/LAWgePlGL/weDcceIe
+         /FGmRjVc7vXLMMX+ruo78ScnrN2Ui8QpNeZ6bgUTJAoiMwmpurGLHjml6CSuVx1kE7jm
+         ynV0kbTs3hc/TE9dqBGnfliZ6uGf2b9qiqyyXUHKyCQhTYC6FkLuMLASkDdEYx10tHbs
+         sjVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761306171; x=1761910971;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dYSOpLWf0KKSMlI5IP80glPUH7vqI7+Tr3W3w2SASQg=;
+        b=iTTsm4y07y+Rvw5HA0lj8HW0pqWdplOuKI6LvM4FiTk2+hP2baWvTqvQvVe0TSABJL
+         I/Qz7swrIhT/ohse7Yzysomkk2+S4FZP8/r90sy6gbr7mKB2zUmqhQPKDgwc2UlsHcEu
+         +ItBRzT3r6MXFLRRMfdO9ba8dxTEkEHPX0mQd56dH6PYnWR2Mf33jEsMFKWgGXYe6W2D
+         2otQL+7lftesHQX9QdLdLpGBCI9KcegMJHW2+z0Ju0ysERzIa5LzpAGsB31uB6y1bQKU
+         ZwNNiJyNPBgfKupN09E9fSZOcNgBJqvbxT0py0DEPBMc0a7gAvFtRMyoDRwjnPCuPtXJ
+         Cw1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUi+8HkrAmXw+Tr2Aol8y2s5u9e90Pr833p6aZAb5jy2JptWNg8b3TISxB0ZKKibhEcT1+F+b1bltzvIcnbgvkpUGs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzhVTggqJJ/h6uLcXJN2Va4IzXHqlPXBdlZX5X2tawKOSGKgZ02
+	041CmbjHdJDNe4BzoKk1Ngcj1IElahTpZMkQc9G6r5VKdqlDhFi3H1mI
+X-Gm-Gg: ASbGncsN4FWvKYAmIg9GgClPhxuvZoQsWoWkeXP5+/WYdwwLsoJ6Jilh7AACnI+rDuD
+	vLTCBI7syZIOw5pd/wCInfiDzM46keib2Kp4Btx2Al/q/EEjDJiuahJZqoev8h2sitwVZf0xCJC
+	lSEPHRYHz9GHTyPS/SHl69+QWu7UxCy5FuX0B6XZm0ek6DqaXzfB3/DFePc4b8mO7pKfZ7saPns
+	xJDmPPVglDgFAI50oqGvIzwvix3uveoGI///xCuAyAlyM2Smd1YB2r3SO7asFQyemZa56mBdfAW
+	Epu/8MLJNjYza0rG1rQHT6/K3L0/42mZjQCNNC98MdUH9Xbp+v3sFU47S9CeNrezPhtuafEvzsl
+	YsnVzv6usjvR4ihaektnSUaPbO7dYE2Abo0eAFkCUNzWX03UcIUnB5rbR4L0r
+X-Google-Smtp-Source: AGHT+IFIUsw6TyOf0Ycr6/XFbQuoCfiAQ0G0a0V5A5EXttedAZG47NAs1I680hPCSVoLr15fOIrshA==
+X-Received: by 2002:a05:600c:3e12:b0:45b:7d77:b592 with SMTP id 5b1f17b1804b1-471178a74demr202375115e9.12.1761306171044;
+        Fri, 24 Oct 2025 04:42:51 -0700 (PDT)
+Received: from krava ([2a02:8308:a00c:e200::b44f])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-429898ecadbsm9269121f8f.45.2025.10.24.04.42.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Oct 2025 04:42:50 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Fri, 24 Oct 2025 13:42:48 +0200
+To: Song Liu <song@kernel.org>
+Cc: bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	live-patching@vger.kernel.org, ast@kernel.org, daniel@iogearbox.net,
+	andrii@kernel.org, rostedt@goodmis.org,
+	andrey.grodzovsky@crowdstrike.com, mhiramat@kernel.org,
+	kernel-team@meta.com, stable@vger.kernel.org
+Subject: Re: [PATCH bpf-next 1/3] ftrace: Fix BPF fexit with livepatch
+Message-ID: <aPtmOJ9jY3bGPvEq@krava>
+References: <20251024071257.3956031-1-song@kernel.org>
+ <20251024071257.3956031-2-song@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -67,252 +78,58 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251024092926.GI4068168@noisy.programming.kicks-ass.net>
+In-Reply-To: <20251024071257.3956031-2-song@kernel.org>
 
-On Fri, Oct 24, 2025 at 11:29:26AM +0200, Peter Zijlstra wrote:
-> On Thu, Oct 23, 2025 at 05:00:02PM +0200, Peter Zijlstra wrote:
+On Fri, Oct 24, 2025 at 12:12:55AM -0700, Song Liu wrote:
+> When livepatch is attached to the same function as bpf trampoline with
+> a fexit program, bpf trampoline code calls register_ftrace_direct()
+> twice. The first time will fail with -EAGAIN, and the second time it
+> will succeed. This requires register_ftrace_direct() to unregister
+> the address on the first attempt. Otherwise, the bpf trampoline cannot
+> attach. Here is an easy way to reproduce this issue:
 > 
-> > Trouble is, pretty much every unwind is 510 entries long -- this cannot
-> > be right. I'm sure there's a silly mistake in unwind/user.c but I'm too
-> > tired to find it just now. I'll try again tomorrow.
+>   insmod samples/livepatch/livepatch-sample.ko
+>   bpftrace -e 'fexit:cmdline_proc_show {}'
+>   ERROR: Unable to attach probe: fexit:vmlinux:cmdline_proc_show...
 > 
-> PEBKAC
+> Fix this by cleaning up the hash when register_ftrace_function_nolock hits
+> errors.
+> 
+> Fixes: d05cb470663a ("ftrace: Fix modification of direct_function hash while in use")
+> Cc: stable@vger.kernel.org # v6.6+
+> Reported-by: Andrey Grodzovsky <andrey.grodzovsky@crowdstrike.com>
+> Closes: https://lore.kernel.org/live-patching/c5058315a39d4615b333e485893345be@crowdstrike.com/
+> Cc: Steven Rostedt (Google) <rostedt@goodmis.org>
+> Cc: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> Acked-and-tested-by: Andrey Grodzovsky <andrey.grodzovsky@crowdstrike.com>
+> Signed-off-by: Song Liu <song@kernel.org>
+> ---
+>  kernel/trace/ftrace.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index 42bd2ba68a82..7f432775a6b5 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -6048,6 +6048,8 @@ int register_ftrace_direct(struct ftrace_ops *ops, unsigned long addr)
+>  	ops->direct_call = addr;
+>  
+>  	err = register_ftrace_function_nolock(ops);
+> +	if (err)
+> +		remove_direct_functions_hash(hash, addr);
 
-Anyway, while staring at this, I noted that the perf userspace unwind
-code has a few bits that are missing from the new shiny thing.
+should this be handled by the caller of the register_ftrace_direct?
+fops->hash is updated by ftrace_set_filter_ip in register_fentry
 
-How about something like so? This add an optional arch specific unwinder
-at the very highest priority (bit 0) and uses that to do a few extra
-bits before disabling itself and falling back to whatever lower prio
-unwinder to do the actual unwinding.
+seems like it's should be caller responsibility, also you could do that
+just for (err == -EAGAIN) case to address the use case directly
 
----
- arch/x86/events/core.c             |   40 ---------------------------
- arch/x86/include/asm/unwind_user.h |    4 ++
- arch/x86/include/asm/uprobes.h     |    9 ++++++
- arch/x86/kernel/unwind_user.c      |   53 +++++++++++++++++++++++++++++++++++++
- arch/x86/kernel/uprobes.c          |   32 ++++++++++++++++++++++
- include/linux/unwind_user_types.h  |    5 ++-
- kernel/unwind/user.c               |    7 ++++
- 7 files changed, 109 insertions(+), 41 deletions(-)
+jirka
 
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -2845,46 +2845,6 @@ static unsigned long get_segment_base(un
- 	return get_desc_base(desc);
- }
- 
--#ifdef CONFIG_UPROBES
--/*
-- * Heuristic-based check if uprobe is installed at the function entry.
-- *
-- * Under assumption of user code being compiled with frame pointers,
-- * `push %rbp/%ebp` is a good indicator that we indeed are.
-- *
-- * Similarly, `endbr64` (assuming 64-bit mode) is also a common pattern.
-- * If we get this wrong, captured stack trace might have one extra bogus
-- * entry, but the rest of stack trace will still be meaningful.
-- */
--static bool is_uprobe_at_func_entry(struct pt_regs *regs)
--{
--	struct arch_uprobe *auprobe;
--
--	if (!current->utask)
--		return false;
--
--	auprobe = current->utask->auprobe;
--	if (!auprobe)
--		return false;
--
--	/* push %rbp/%ebp */
--	if (auprobe->insn[0] == 0x55)
--		return true;
--
--	/* endbr64 (64-bit only) */
--	if (user_64bit_mode(regs) && is_endbr((u32 *)auprobe->insn))
--		return true;
--
--	return false;
--}
--
--#else
--static bool is_uprobe_at_func_entry(struct pt_regs *regs)
--{
--	return false;
--}
--#endif /* CONFIG_UPROBES */
--
- #ifdef CONFIG_IA32_EMULATION
- 
- #include <linux/compat.h>
---- a/arch/x86/include/asm/unwind_user.h
-+++ b/arch/x86/include/asm/unwind_user.h
-@@ -8,4 +8,8 @@
- 	.fp_off		= -2*(ws),			\
- 	.use_fp		= true,
- 
-+#define HAVE_UNWIND_USER_ARCH 1
-+
-+extern int unwind_user_next_arch(struct unwind_user_state *state);
-+
- #endif /* _ASM_X86_UNWIND_USER_H */
---- a/arch/x86/include/asm/uprobes.h
-+++ b/arch/x86/include/asm/uprobes.h
-@@ -62,4 +62,13 @@ struct arch_uprobe_task {
- 	unsigned int			saved_tf;
- };
- 
-+#ifdef CONFIG_UPROBES
-+extern bool is_uprobe_at_func_entry(struct pt_regs *regs);
-+#else
-+static bool is_uprobe_at_func_entry(struct pt_regs *regs)
-+{
-+	return false;
-+}
-+#endif /* CONFIG_UPROBES */
-+
- #endif	/* _ASM_UPROBES_H */
---- /dev/null
-+++ b/arch/x86/kernel/unwind_user.c
-@@ -0,0 +1,53 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+#include <linux/unwind_user.h>
-+#include <linux/uprobes.h>
-+#include <linux/uaccess.h>
-+#include <linux/sched/task_stack.h>
-+#include <asm/processor.h>
-+#include <asm/tlbflush.h>
-+
-+int unwind_user_next_arch(struct unwind_user_state *state)
-+{
-+	struct pt_regs *regs = task_pt_regs(current);
-+
-+	/* only once, on the first iteration */
-+	state->available_types &= ~UNWIND_USER_TYPE_ARCH;
-+
-+	/* We don't know how to unwind VM86 stacks. */
-+	if (regs->flags & X86_VM_MASK) {
-+		state->done = true;
-+		return 0;
-+	}
-+
-+	/*
-+	 * If we are called from uprobe handler, and we are indeed at the very
-+	 * entry to user function (which is normally a `push %rbp` instruction,
-+	 * under assumption of application being compiled with frame pointers),
-+	 * we should read return address from *regs->sp before proceeding
-+	 * to follow frame pointers, otherwise we'll skip immediate caller
-+	 * as %rbp is not yet setup.
-+	 */
-+	if (!is_uprobe_at_func_entry(regs))
-+		return -EINVAL;
-+
-+#ifdef CONFIG_COMPAT
-+	if (state->ws == sizeof(int)) {
-+		unsigned int retaddr;
-+		int ret = get_user(retaddr, (unsigned int __user *)regs->sp);
-+		if (ret)
-+			return ret;
-+
-+		state->ip = retaddr;
-+		return 0;
-+	}
-+#endif
-+	unsigned long retaddr;
-+	int ret = get_user(retaddr, (unsigned long __user *)regs->sp);
-+	if (ret)
-+		return ret;
-+
-+	state->ip = retaddr;
-+	return 0;
-+}
-+
---- a/arch/x86/kernel/uprobes.c
-+++ b/arch/x86/kernel/uprobes.c
-@@ -1791,3 +1791,35 @@ bool arch_uretprobe_is_alive(struct retu
- 	else
- 		return regs->sp <= ret->stack;
- }
-+
-+/*
-+ * Heuristic-based check if uprobe is installed at the function entry.
-+ *
-+ * Under assumption of user code being compiled with frame pointers,
-+ * `push %rbp/%ebp` is a good indicator that we indeed are.
-+ *
-+ * Similarly, `endbr64` (assuming 64-bit mode) is also a common pattern.
-+ * If we get this wrong, captured stack trace might have one extra bogus
-+ * entry, but the rest of stack trace will still be meaningful.
-+ */
-+bool is_uprobe_at_func_entry(struct pt_regs *regs)
-+{
-+	struct arch_uprobe *auprobe;
-+
-+	if (!current->utask)
-+		return false;
-+
-+	auprobe = current->utask->auprobe;
-+	if (!auprobe)
-+		return false;
-+
-+	/* push %rbp/%ebp */
-+	if (auprobe->insn[0] == 0x55)
-+		return true;
-+
-+	/* endbr64 (64-bit only) */
-+	if (user_64bit_mode(regs) && is_endbr((u32 *)auprobe->insn))
-+		return true;
-+
-+	return false;
-+}
---- a/include/linux/unwind_user_types.h
-+++ b/include/linux/unwind_user_types.h
-@@ -3,13 +3,15 @@
- #define _LINUX_UNWIND_USER_TYPES_H
- 
- #include <linux/types.h>
-+#include <linux/bits.h>
- 
- /*
-  * Unwind types, listed in priority order: lower numbers are attempted first if
-  * available.
-  */
- enum unwind_user_type_bits {
--	UNWIND_USER_TYPE_FP_BIT =		0,
-+	UNWIND_USER_TYPE_ARCH_BIT = 0,
-+	UNWIND_USER_TYPE_FP_BIT,
- 
- 	NR_UNWIND_USER_TYPE_BITS,
- };
-@@ -17,6 +19,7 @@ enum unwind_user_type_bits {
- enum unwind_user_type {
- 	/* Type "none" for the start of stack walk iteration. */
- 	UNWIND_USER_TYPE_NONE =			0,
-+	UNWIND_USER_TYPE_ARCH =			BIT(UNWIND_USER_TYPE_ARCH_BIT),
- 	UNWIND_USER_TYPE_FP =			BIT(UNWIND_USER_TYPE_FP_BIT),
- };
- 
---- a/kernel/unwind/user.c
-+++ b/kernel/unwind/user.c
-@@ -79,6 +79,10 @@ static int unwind_user_next(struct unwin
- 
- 		state->current_type = type;
- 		switch (type) {
-+		case UNWIND_USER_TYPE_ARCH:
-+			if (!unwind_user_next_arch(state))
-+				return 0;
-+			continue;
- 		case UNWIND_USER_TYPE_FP:
- 			if (!unwind_user_next_fp(state))
- 				return 0;
-@@ -107,6 +111,9 @@ static int unwind_user_start(struct unwi
- 		return -EINVAL;
- 	}
- 
-+	if (HAVE_UNWIND_USER_ARCH)
-+		state->available_types |= UNWIND_USER_TYPE_ARCH;
-+
- 	if (IS_ENABLED(CONFIG_HAVE_UNWIND_USER_FP))
- 		state->available_types |= UNWIND_USER_TYPE_FP;
- 
+>  
+>   out_unlock:
+>  	mutex_unlock(&direct_mutex);
+> -- 
+> 2.47.3
+> 
+> 
