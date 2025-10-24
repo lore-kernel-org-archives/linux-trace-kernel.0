@@ -1,240 +1,214 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD2C62D8DB9;
-	Fri, 24 Oct 2025 14:30:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4133F2264D6
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 24 Oct 2025 14:36:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761316208; cv=none; b=U5czRe0lgvEMx8TIVgW/70hJhV6zVHJAG43e2gFt5i8k4u4ZAYst86kF/dO6dYVPvP77IdwXBBmPqHPSN7I2vekZlpwQT6Spne2PINoZ/6U8PUwgbLno3pSuP4TT+ihTOcEk9zkDp+lP+LnSa8RZ5ktxOIBAGoUX77pNwZzl0fI=
+	t=1761316616; cv=none; b=avv/cDQbOVr4duB0cYjnYBBY2uQFlJ+kgMumnbdc5MKh3Z3qZkq3DBZJ0LKcb/fhJRqHFG8EofL+EzspUvrzt19a8OD7QI/G7/33cVL7T8qLUzDIdLiowYR6cR+jWiiEFXd7tVIOE90QsxqZZNzMQap6UXWCccq6SuKYz0yFzRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761316208; c=relaxed/simple;
-	bh=co3nQrBHS0v7JO+1VNEdd1IihFfn6mzVni/0vzfUvLs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=j0aMgnuledQmIqBbBexRj/MoENNi9yHWYxZAeXXdJIu3XO0gr4Ds/HZkulunAlc1AWTm9ug3KIQPlEMGh4+uZe5Iai0Xr8kAxrnzH1bIKx8WvNVimwuRpaPyh/Ns98/8FrhKwP+Emi9LIhygWLch4303M01ZEqFkji4MHG4J8/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=V04MSyAs; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1761316616; c=relaxed/simple;
+	bh=7POTLgOQMSvDxIjq1wqPOOdPmObt8KgLrizCHzkYhn0=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=lFHEdMN9TUmyhQTib3f0GgsLNy8C2TRsspAwy9+krmaUgwD+RBdnLy52MYd2TY/6s2muqC3SfKjIQgEfgKFFlXRhZK7hwfHw3hwk0qj6X1/gxHcfPjymhG3QiGfIz39L+vhSeDkeqY4vlb9JLpkIzyzMp4m4XKiNPqZoAK0u6KI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=f4LruAbw; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="V04MSyAs"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59O8VK8h010609;
-	Fri, 24 Oct 2025 14:29:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=v4oMNt
-	a2EA5ONs6LrrVjbXVDCb8udFX3XWucqebTej8=; b=V04MSyAstrmDLJINvm2cvh
-	VH4O7MmBLQ3A+6sq6zY+4LDsmeUvK2duNA0isw6qpilo4yeVMbE3+37QAxnkVVpJ
-	XfKdQkwZU3GHDE/jGuYXgNG3VM6Y8+guEtdgTgM4VkDzvUL82AEWk6fSmA+tmeLV
-	mxeoIz0imRO3xrMbRLyjVUGNYV67h4JOlzzG9PLz+5A/+Y95lj/J8MuX7Yuv4bCz
-	ZZA+L324/3yYOY7ZYODoWvAkpmtEHIxPpyvP5QPXKPFi2Omi7Ymcdih9YFKkShP/
-	RT9LDFDayJBr5zurxg+pCuU6j3FzCirFbY5/3XI7l0zM1paxidN/0/58y8GVDhLA
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 49v30w65vn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 24 Oct 2025 14:29:16 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 59OEPFuZ011350;
-	Fri, 24 Oct 2025 14:29:15 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 49v30w65vj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 24 Oct 2025 14:29:15 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 59OB8wi9002488;
-	Fri, 24 Oct 2025 14:29:14 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 49vqeju9tp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 24 Oct 2025 14:29:14 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 59OETADX38994314
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 24 Oct 2025 14:29:10 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 82A4720043;
-	Fri, 24 Oct 2025 14:29:10 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8233F20040;
-	Fri, 24 Oct 2025 14:29:08 +0000 (GMT)
-Received: from [9.111.177.85] (unknown [9.111.177.85])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 24 Oct 2025 14:29:08 +0000 (GMT)
-Message-ID: <6b5c0c64-c4da-416d-a103-8d6ec2f06a9b@linux.ibm.com>
-Date: Fri, 24 Oct 2025 16:29:07 +0200
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="f4LruAbw"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-277f0ea6ee6so19593355ad.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 24 Oct 2025 07:36:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1761316614; x=1761921414; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=8gWpJOPikpazVbpXRSUPMCcvrbTBk5c7sNdJD5ZAL5c=;
+        b=f4LruAbwGC7NvQfpfbN76Yj4wOdfUQMXmRa9yXRCYqVLCvpKM+DOcf8qKT+Cq5HmpF
+         eFGQ3Zs08aupJi37oT0laKXktHx9Hi/4GTGLFUSOFQEoa+8RL3W+oi8rjz2N97b8SulF
+         khZYHZdNmQHASNx7zXNnzE691sq0q9m1MBeN5oeldppylyeWbhR2ZjdULm8lPQBDMYTN
+         LqhZ69mvKkaBI53bmuDMu0e0bdTXp4uy5WsJRMXvmTuRz2+DEcMjUKilqSyCN1ACboLD
+         29ytfDZiogxJB0mhQ01wbrG89uPplqKmXe3BJUX/JxkMhigOzYgppF8cNvl2YODRER7r
+         2+Iw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761316614; x=1761921414;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8gWpJOPikpazVbpXRSUPMCcvrbTBk5c7sNdJD5ZAL5c=;
+        b=TZE3FZ/RrF4G2PxueyZZnTfqQueLj/1uVvPBd4AlY4mWEtIK19EV97tXyBmwAwfxVC
+         q7Nan9pS3xxICVcjXNgBSFLt+/HWWadxca7LmkWtx4xh6GL2W4bWHGgqorpBWiUuVrpR
+         mKZuHAxsu+2GJQvncaeuSNYgoIrsVEouK2dUuj/dtNtOx6xIP0YFnQgamrsRDS+s1Tur
+         SeVLVXn6c0mA2hHvzUdn4x40QxXNBLVhTWlXfS09gu61MWqbfck204KZfk+MAPUd12BI
+         QYZr6Ro2UZPcalYSelCR7qNN1vVZRTWBOCc1r873PP6vDbE8q3VvDRNeGGKM0f5ovI+M
+         OP4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVLCnPyjfuOf8HgcGOZ07Va2A9ZAdGISBaKH9uNYaVJF1WycrLi/s32PapPpIzY5b3AkwaWjmrq1Lp6oXspIMr3UhQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyldUBff1Jj5YQQiODJ7sKZWUgfTSr96vTqfoUSqb640Jwjp/Oe
+	hMwcaVSNQ7oxxjd7rOZCAeUINdcyVIwB7JUJqREbsUWuYUJXfqlXvcG73invbem/E3VcklrStYw
+	hBgR+/Vrv/G1KKfH78aykEE0wsw==
+X-Google-Smtp-Source: AGHT+IHpZZ9f9FI2oIDKJuatT8tIt0u+E9sskkPVtdG8cewdd4WM+aJNDiUGBZhPHxdPQPN/WAuNAtpnF8qjPR3V7w==
+X-Received: from plcq12.prod.google.com ([2002:a17:902:e30c:b0:290:28e2:ce4e])
+ (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:902:f68c:b0:290:91d2:9304 with SMTP id d9443c01a7336-290c9c8a770mr324316695ad.4.1761316613376;
+ Fri, 24 Oct 2025 07:36:53 -0700 (PDT)
+Date: Fri, 24 Oct 2025 07:36:51 -0700
+In-Reply-To: <aPpEPZ4YfrRHIkal@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v11 08/15] unwind_user/sframe: Wire up unwind_user to
- sframe
-To: Peter Zijlstra <peterz@infradead.org>, Steven Rostedt <rostedt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, x86@kernel.org, linux-mm@kvack.org,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Masami Hiramatsu
- <mhiramat@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Indu Bhagat <indu.bhagat@oracle.com>,
-        "Jose E. Marchesi" <jemarch@gnu.org>,
-        Beau Belgrave <beaub@linux.microsoft.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Florian Weimer <fweimer@redhat.com>, Kees Cook <kees@kernel.org>,
-        "Carlos O'Donell" <codonell@redhat.com>, Sam James <sam@gentoo.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        David Hildenbrand <david@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>,
-        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
-        Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-        Michal Hocko
- <mhocko@suse.com>, Mike Rapoport <rppt@kernel.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Vlastimil Babka <vbabka@suse.cz>, Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        "Steven Rostedt (Google)" <rostedt@goodmis.org>
-References: <20251022144326.4082059-1-jremus@linux.ibm.com>
- <20251022144326.4082059-9-jremus@linux.ibm.com>
- <20251024134415.GD3245006@noisy.programming.kicks-ass.net>
-Content-Language: en-US
-From: Jens Remus <jremus@linux.ibm.com>
-Organization: IBM Deutschland Research & Development GmbH
-In-Reply-To: <20251024134415.GD3245006@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: Ykpf61_8y0gZ-cwvoWdHTyYd4VO3jyTg
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDE4MDAyMiBTYWx0ZWRfX+6YJFqcIrYau
- FfAiginkKWCbTRDMMfI4es5x0Gv2LrIgpMT7B1DW1SUwfXR+r8YvBgLHibQikeToBe9tDf9Su8i
- SNe406UM1ZQHVDOOe7bQLmK3YmgyoFsKs3snpKHi1zjEdyPg/untiqR0sx8USLZ7DslJvwuVXtX
- 7uov274LjKqmA7OxgZlmpdrURUk0CEr7LGSOd39WYdiUPx6BHVrf74M9u86J8W6h2C5teh/wZnT
- LzpVbaclqQLW2t3ExBtkH2EeFZY8j3Kcro2vvFU8HWwqbKP+gaXumYanr19g8i8GnuKTvD5En7N
- CxKPz3S4KFbu+pLcYBRBXfeJa+wunvpVdCfE3NPMCJ4iUwiLX6zytmxsVam68rJax8xxt/LSz2L
- xwE2cVaqDY9a72MNQPfsV8L3ZSYvmg==
-X-Authority-Analysis: v=2.4 cv=MIJtWcZl c=1 sm=1 tr=0 ts=68fb8d3c cx=c_pps
- a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
- a=IkcTkHD0fZMA:10 a=x6icFKpwvdMA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=Z3Xqy3CnV3LH82Reu_wA:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10 a=DXsff8QfwkrTrK3sU8N1:22 a=Z5ABNNGmrOfJ6cZ5bIyy:22
- a=bWyr8ysk75zN3GCy5bjg:22
-X-Proofpoint-ORIG-GUID: T5WOf74hicSV-YNKqrY5feRRWuekCWRm
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-10-24_02,2025-10-22_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 spamscore=0 phishscore=0 lowpriorityscore=0 adultscore=0
- clxscore=1015 impostorscore=0 bulkscore=0 priorityscore=1501 suspectscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2510020000 definitions=main-2510180022
+Mime-Version: 1.0
+References: <cover.1760731772.git.ackerleytng@google.com> <8ee16fbf254115b0fd72cc2b5c06d2ccef66eca9.1760731772.git.ackerleytng@google.com>
+ <2457cb3b-5dde-4ca1-b75d-174b5daee28a@arm.com> <diqz4irqg9qy.fsf@google.com>
+ <diqzy0p2eet3.fsf@google.com> <aPlpKbHGea90IebS@google.com>
+ <diqzv7k5emza.fsf@google.com> <aPpEPZ4YfrRHIkal@google.com>
+Message-ID: <diqzqzuse58c.fsf@google.com>
+Subject: Re: [RFC PATCH v1 07/37] KVM: Introduce KVM_SET_MEMORY_ATTRIBUTES2
+From: Ackerley Tng <ackerleytng@google.com>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Steven Price <steven.price@arm.com>, cgroups@vger.kernel.org, kvm@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, x86@kernel.org, 
+	akpm@linux-foundation.org, binbin.wu@linux.intel.com, bp@alien8.de, 
+	brauner@kernel.org, chao.p.peng@intel.com, chenhuacai@kernel.org, 
+	corbet@lwn.net, dave.hansen@intel.com, dave.hansen@linux.intel.com, 
+	david@redhat.com, dmatlack@google.com, erdemaktas@google.com, 
+	fan.du@intel.com, fvdl@google.com, haibo1.xu@intel.com, hannes@cmpxchg.org, 
+	hch@infradead.org, hpa@zytor.com, hughd@google.com, ira.weiny@intel.com, 
+	isaku.yamahata@intel.com, jack@suse.cz, james.morse@arm.com, 
+	jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com, jhubbard@nvidia.com, 
+	jthoughton@google.com, jun.miao@intel.com, kai.huang@intel.com, 
+	keirf@google.com, kent.overstreet@linux.dev, liam.merwick@oracle.com, 
+	maciej.wieczor-retman@intel.com, mail@maciej.szmigiero.name, 
+	maobibo@loongson.cn, mathieu.desnoyers@efficios.com, maz@kernel.org, 
+	mhiramat@kernel.org, mhocko@kernel.org, mic@digikod.net, michael.roth@amd.com, 
+	mingo@redhat.com, mlevitsk@redhat.com, mpe@ellerman.id.au, 
+	muchun.song@linux.dev, nikunj@amd.com, nsaenz@amazon.es, 
+	oliver.upton@linux.dev, palmer@dabbelt.com, pankaj.gupta@amd.com, 
+	paul.walmsley@sifive.com, pbonzini@redhat.com, peterx@redhat.com, 
+	pgonda@google.com, prsampat@amd.com, pvorel@suse.cz, qperret@google.com, 
+	richard.weiyang@gmail.com, rick.p.edgecombe@intel.com, rientjes@google.com, 
+	rostedt@goodmis.org, roypat@amazon.co.uk, rppt@kernel.org, 
+	shakeel.butt@linux.dev, shuah@kernel.org, suzuki.poulose@arm.com, 
+	tabba@google.com, tglx@linutronix.de, thomas.lendacky@amd.com, 
+	vannapurve@google.com, vbabka@suse.cz, viro@zeniv.linux.org.uk, 
+	vkuznets@redhat.com, will@kernel.org, willy@infradead.org, wyihan@google.com, 
+	xiaoyao.li@intel.com, yan.y.zhao@intel.com, yilun.xu@intel.com, 
+	yuzenghui@huawei.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 10/24/2025 3:44 PM, Peter Zijlstra wrote:
-> On Wed, Oct 22, 2025 at 04:43:19PM +0200, Jens Remus wrote:
-> 
->> @@ -26,12 +27,10 @@ get_user_word(unsigned long *word, unsigned long base, int off, unsigned int ws)
->>  	return get_user(*word, addr);
->>  }
->>  
->> -static int unwind_user_next_fp(struct unwind_user_state *state)
->> +static int unwind_user_next_common(struct unwind_user_state *state,
->> +				   const struct unwind_user_frame *frame,
->> +				   struct pt_regs *regs)
->>  {
-> 
-> What is pt_regs for? AFAICT it isn't actually used in any of the
-> following patches.
+Sean Christopherson <seanjc@google.com> writes:
 
-Good catch!  No idea.  It started to appear in v9 of the series:
+> On Thu, Oct 23, 2025, Ackerley Tng wrote:
+>> Sean Christopherson <seanjc@google.com> writes:
+>> 
+>> > On Wed, Oct 22, 2025, Ackerley Tng wrote:
+>> >> Ackerley Tng <ackerleytng@google.com> writes:
+>> >> 
+>> >> Found another issue with KVM_CAP_MEMORY_ATTRIBUTES2.
+>> >> 
+>> >> KVM_CAP_MEMORY_ATTRIBUTES2 was defined to do the same thing as
+>> >> KVM_CAP_MEMORY_ATTRIBUTES, but that's wrong since
+>> >> KVM_CAP_MEMORY_ATTRIBUTES2 should indicate the presence of
+>> >> KVM_SET_MEMORY_ATTRIBUTES2 and struct kvm_memory_attributes2.
+>> >
+>> > No?  If no attributes are supported, whether or not KVM_SET_MEMORY_ATTRIBUTES2
+>> > exists is largely irrelevant.
+>> 
+>> That's true.
+>> 
+>> > We can even provide the same -ENOTTY errno by
+>> > checking that _any_ attributes are supported, i.e. so that doing
+>> > KVM_SET_MEMORY_ATTRIBUTES2 on KVM without any support whatsoever fails in the
+>> > same way that KVM with code support but no attributes fails.
+>> 
+>> IIUC KVM_SET_MEMORY_ATTRIBUTES doesn't fail with -ENOTTY now when there
+>> are no valid attributes.
+>> 
+>> Even if there's no valid attributes (as in
+>> kvm_supported_mem_attributes() returns 0), it's possible to call
+>> KVM_SET_MEMORY_ATTRIBUTES with .attributes set to 0, which will be a
+>> no-op, but will return 0.
+>> 
+>> I think this is kind of correct behavior since .attributes = 0 is
+>> actually a valid expression for "I want this range to be shared", and
+>> for a VM that doesn't support private memory, it's a valid expression.
+>> 
+>> 
+>> The other way that there are "no attributes" would be if there are no
+>> /VM/ attributes, in which case KVM_SET_MEMORY_ATTRIBUTES, sent to as a
+>> vm ioctl, will return -ENOTTY.
+>
+> Ya, this is what I was trying to say with "_any_ attributes are supported".  I.e.
+> by "any" I meant "any attributes in KVM for VMs vs. gmems", not "any attributes
+> for this specific VM/gmem instance".
+>
+>> 
+>> [...snip...]
+>> 
 
-[PATCH v8 06/12] unwind_user/sframe: Wire up unwind_user to sframe
-https://lore.kernel.org/all/20250708021159.386608979@kernel.org/
+I've been thinking more about this:
 
-[PATCH v9 06/11] unwind_user/sframe: Wire up unwind_user to sframe
-https://lore.kernel.org/all/20250717012936.619600891@kernel.org/
+  #ifdef CONFIG_KVM_VM_MEMORY_ATTRIBUTES
+  	case KVM_CAP_MEMORY_ATTRIBUTES2:
+  	case KVM_CAP_MEMORY_ATTRIBUTES:
+  		if (!vm_memory_attributes)
+  			return 0;
+  
+  		return kvm_supported_mem_attributes(kvm);
+  #endif
 
-My s390 support for unwind user sframe will make use of it, but it
-should better be introduced there then.
+And the purpose of adding KVM_CAP_MEMORY_ATTRIBUTES2 is that
+KVM_CAP_MEMORY_ATTRIBUTES2 tells userspace that
+KVM_SET_MEMORY_ATTRIBUTES2 is available iff there are valid
+attributes.
 
-@Steven: Any idea why you added pt_regs?  Your v9 even had this other
-instance of unused pt_regs:
+(So there's still a purpose)
 
-+static struct unwind_user_frame *get_fp_frame(struct pt_regs *regs)
-+{
-+	return &fp_frame;
-+}
+Without valid attributes, userspace can't tell if it should use
+KVM_SET_MEMORY_ATTRIBUTES or the 2 version.
 
->> @@ -67,6 +66,26 @@ static int unwind_user_next_fp(struct unwind_user_state *state)
->>  	return 0;
->>  }
->>  
->> +static int unwind_user_next_sframe(struct unwind_user_state *state)
->> +{
->> +	struct unwind_user_frame _frame, *frame;
->> +
->> +	/* sframe expects the frame to be local storage */
->> +	frame = &_frame;
->> +	if (sframe_find(state->ip, frame))
->> +		return -ENOENT;
->> +	return unwind_user_next_common(state, frame, task_pt_regs(current));
->> +}
-> 
-> Would it not be simpler to write:
-> 
-> static int unwind_user_next_sframe(struct unwind_user_state *state)
-> {
-> 	struct unwind_user_frame frame;
-> 
-> 	/* sframe expects the frame to be local storage */
-> 	if (sframe_find(state->ip, &frame))
-> 		return -ENOENT;
-> 	return unwind_user_next_common(state, &frame, task_pt_regs(current));
-> }
-> 
-> hmm?
+I also added KVM_CAP_GUEST_MEMFD_MEMORY_ATTRIBUTES, which tells
+userspace the valid attributes when calling KVM_SET_MEMORY_ATTRIBUTES2
+on a guest_memfd:
 
-I agree.  Must have been a leftover from changes from v8 to v9.
+  #ifdef CONFIG_KVM_GUEST_MEMFD
+  	case KVM_CAP_GUEST_MEMFD:
+  		return 1;
+  	case KVM_CAP_GUEST_MEMFD_FLAGS:
+  		return kvm_gmem_get_supported_flags(kvm);
+  	case KVM_CAP_GUEST_MEMFD_MEMORY_ATTRIBUTES:
+  		if (vm_memory_attributes)
+  			return 0;
+  
+  		return kvm_supported_mem_attributes(kvm);
+  #endif
+  
+So to set memory attributes, userspace should
 
->> @@ -80,6 +99,16 @@ static int unwind_user_next(struct unwind_user_state *state)
->>  
->>  		state->current_type = type;
->>  		switch (type) {
->> +		case UNWIND_USER_TYPE_SFRAME:
->> +			switch (unwind_user_next_sframe(state)) {
->> +			case 0:
->> +				return 0;
->> +			case -ENOENT:
->> +				continue;	/* Try next method. */
->> +			default:
->> +				state->done = true;
->> +			}
->> +			break;
-> 
-> Should it remove SFRAME from state->available_types at this point?
+  if (kvm_check_cap(KVM_CAP_GUEST_MEMFD_MEMORY_ATTRIBUTES) > 0)
+	use KVM_SET_MEMORY_ATTRIBUTES2 with guest_memfd
+  else if (kvm_check_cap(KVM_CAP_MEMORY_ATTRIBUTES2) > 0)
+        use KVM_SET_MEMORY_ATTRIBUTES2 with VM fd
+  else if (kvm_check_cap(KVM_CAP_MEMORY_ATTRIBUTES) > 0)
+	use KVM_SET_MEMORY_ATTRIBUTES with VM fd
+  else
+	can't set memory attributes
 
-In the -ENOENT case?  If the reason is that there was either no SFrame
-section or no SFrame information (SFrame FRE) for the IP, then SFRAME
-could potentially be successful with the next IP in the call chain.
-Provided the other unwind methods do correctly unwind both SP and FP.
+Something like that?
 
-@Steven: What is your opinion on this?
 
-Thanks and regards,
-Jens
--- 
-Jens Remus
-Linux on Z Development (D3303)
-+49-7031-16-1128 Office
-jremus@de.ibm.com
+In selftests there's this, when KVM_SET_USER_MEMORY_REGION2 was
+introduced:
 
-IBM
+  #define TEST_REQUIRE_SET_USER_MEMORY_REGION2()			\
+	__TEST_REQUIRE(kvm_has_cap(KVM_CAP_USER_MEMORY2),	\
+		       "KVM selftests now require KVM_SET_USER_MEMORY_REGION2 (introduced in v6.8)")
 
-IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Böblingen; Registergericht: Amtsgericht Stuttgart, HRB 243294
-IBM Data Privacy Statement: https://www.ibm.com/privacy/
+But looks like there's no direct equivalent for the introduction of
+KVM_SET_MEMORY_ATTRIBUTES2?
 
+The closest would be to add a TEST_REQUIRE_VALID_ATTRIBUTES() which
+checks KVM_CAP_MEMORY_ATTRIBUTES2 or
+KVM_CAP_GUEST_MEMFD_MEMORY_ATTRIBUTES before making the vm or
+guest_memfd ioctl respsectively.
