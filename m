@@ -1,153 +1,80 @@
-Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65A1F314D3C
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 25 Oct 2025 16:41:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B0EB2F7AB0;
+	Sat, 25 Oct 2025 19:25:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761410469; cv=none; b=pcCYlcY0KPmwePQFCrXXoLXJUUTjFVe6Bf2AOUepBjKTfF0/+vbNiKMMObMya6c2TElNltrJWxYMk/6pttYE6QFwlW9mV/mHpTtgcEmiLt24KmCY+so8IQete8t1HVcD9O0P6GF390yIQ2A/TR6+wTY0P+ms1q5GYngRW7BVvLA=
+	t=1761420358; cv=none; b=lYjTVX29Yt91PUvApWGgrAbdC745TloXGCx3XyJYUjPJ/aCzNDA3XT8w+j0MrsfCWCyBz+a9LM6zkkDKEIO6776pf1+WN/4tnXi8SmfjFPMqbzxStUiVku5SNg3FaWniOfkTqUKApfSDd6F+3S1x5ae6x4Hfmqa3spo505VYZeQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761410469; c=relaxed/simple;
-	bh=XhV4d6vVAyK94tJmHv/pzX7uso4PaLhZOAOHlwMKMkY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TULMSAl2H/lmEHZTexyhsyxxhm0laoNuHKBYOYC4fbKNJe/mQjXzpidk2exbdVnwwHhe7Tu8e8efwh5unubfXENuYhXxXhF72HGYmwI0CI71ErcjZwHsYQsg54dtHhUebhIHBzG18BUTlEKdtA+mVS/kvWiFbPDmpsnxFakI86Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aidmQ6Id; arc=none smtp.client-ip=209.85.219.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aidmQ6Id"
-Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-81efcad9c90so37003476d6.0
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 25 Oct 2025 09:41:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1761410466; x=1762015266; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ehiUcUt6iLCen11Ncs28J2yHpJNhGkVkWPyWS3jNXxY=;
-        b=aidmQ6Id21oJUCYTKFpnRu/3uu5cLBBKQfFHDg6UqHM+oQ3eIbMTasl4LFPnWNWWtb
-         TIaRe7dD6hA5zNu1nztSmKMu/rU3YMMGJgv8b5YD98SHeTOelHmCuQKj7A1M8R5kyYiE
-         yQXF2slqIhWD44xiLUEv/rQ023S1+ggrFQ54zucCz4vkMkqAl28fRLxX5urqY8m4ZRbw
-         6+qMPY1XoSUrKpBx6Cg7GuEdLBYV6/VsSvynH8BJwRWsI0QMeTzsyy0vCBWLNU3Qz2VT
-         lleVdUZyqpmqYsxhidB56+k6+/0FiKvBxcTpwzVqgV5pciVQhF2YmSs8MeW/Lrp5Yler
-         FwSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761410466; x=1762015266;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ehiUcUt6iLCen11Ncs28J2yHpJNhGkVkWPyWS3jNXxY=;
-        b=Psc4cC1hKX+4TrMF0HHQxEuUe+ua91s5xFqjBXwRlfSqPKHkVbAmR5ZDCoLP99ydxp
-         d0PsDScvquATakaPJga2aUH+16CCdj8CAJcwpjhX/Y2LeGHHZ2rEEA+Sp8tY/DlqO9R+
-         iJrMo3x4dFzbUzh+BAtJWgz/dqm7jg+g8+Re/67YnCXoBd6jv94lwyO0cAkOjZjN8I1d
-         jb+KcsWyM9xajMUZUyeHqKY8AMF5QfUUkqbar3h1nfDYXW9WM9C32aAo/WuQgcD8d1NG
-         U+1vj0RrbdIsYzAjX06NCw9szrQkZ1WrjhUnIMtpd7yfND38IWTKa8RvEi0bbFKZHZIg
-         ZrgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVeHMHo3rIqivScvF1cgucAnoFmTPdj8TcXBdyD2wLeAkYcsmkcqzmAqWD5a4oll7Kkj2jbLuDL2zDpOlJRg0U/ZaY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz9yPx+cWLjFXbO4zZ4Gx9cXjdc32i/2CW/m2qCHSHXKuHqQhFe
-	gfeph8Weqa5jK95rLWET+hXmgJkAD7Ob8OeANwqa1zikVm4fCtH4KtPH
-X-Gm-Gg: ASbGnctr5X0Ztb5rIuwIWhW7fmgOxLowniWUjgCCAqaoGvoASWcjRIPnhdqsfnz6t2S
-	NO8hDiNyFaOn0nInlvl6nR8YoSFiUOVFSjh1vv9mYLryC/qpbS95UFcDdVHh2McdflelYoXWSC3
-	c+tqlYfywMKsbaL3ATSipsdU4Y7JS4Fm2fRUQUwWSWHKnrtwvhSMHabfqtunqcZ/ZHyPkT3lZdo
-	7sWaz6lZz7NHfSmtx5i/jwDOIw7r/+M8Y3YPU4uw+EYWZeEGBdiRF6dmfqzo9qogYHNfmOQPq5e
-	9DWPeac/vJn7kbEMzyRJ8L+osG0tbaRY5bLBxHFlKJuXJ1h2RhCYytXna4z32VWHU6UkRvfbVOu
-	cKeWfMo+5NxMoLUEmLJiR5V2MqTBlHddnSPSq2AMqZ6ylymVngvJCs1i7craWgt4S72LJ+mN8ed
-	Ro+3bnLB4=
-X-Google-Smtp-Source: AGHT+IHdUbKQhz7684jsgoRDJdwRjaQ2Xzm+lx6YWL84J4FmuB+pEZxn/rvpLnFKlTlrkm8ZxkpTCg==
-X-Received: by 2002:ad4:5ca9:0:b0:87c:11cb:6d0c with SMTP id 6a1803df08f44-87c20573120mr383057026d6.17.1761410466214;
-        Sat, 25 Oct 2025 09:41:06 -0700 (PDT)
-Received: from localhost ([12.22.141.131])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-87fc49a9d92sm16338826d6.51.2025.10.25.09.41.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 25 Oct 2025 09:41:05 -0700 (PDT)
-From: "Yury Norov (NVIDIA)" <yury.norov@gmail.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: "Yury Norov (NVIDIA)" <yury.norov@gmail.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: [PATCH 13/21] trace: don't use GENMASK()
-Date: Sat, 25 Oct 2025 12:40:12 -0400
-Message-ID: <20251025164023.308884-14-yury.norov@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20251025164023.308884-1-yury.norov@gmail.com>
-References: <20251025164023.308884-1-yury.norov@gmail.com>
+	s=arc-20240116; t=1761420358; c=relaxed/simple;
+	bh=XMqi7Bh1BNLZKfN+KZrTPFp8zjrMA4E+wj7kNBhSdh8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=C0qiTV40rHTQl7u4sSxzx9s0OMzQbO8MwQi2f85irQP+1XdYYMM3hsvJtVsTt5WPQe1aEZEqTVW8ledrVtOg/rkEZJRUoXf/aS29P8+LfofWxVi6yuZmcDEFKk0NhAQsGw3OOLmCAS7asSqn2hgbsnk4/9CO+bRgtwWEYSMmhhU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf16.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay06.hostedemail.com (Postfix) with ESMTP id ACD0B129347;
+	Sat, 25 Oct 2025 19:25:48 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf16.hostedemail.com (Postfix) with ESMTPA id 7F4FC2000D;
+	Sat, 25 Oct 2025 19:25:46 +0000 (UTC)
+Date: Sat, 25 Oct 2025 15:25:45 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Sasha Levin <sashal@kernel.org>
+Cc: patches@lists.linux.dev, stable@vger.kernel.org, Vladimir Riabchun
+ <ferr.lambarginio@gmail.com>, mhiramat@kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 6.17-6.1] ftrace: Fix softlockup in
+ ftrace_module_enable
+Message-ID: <20251025152545.534cb450@batman.local.home>
+In-Reply-To: <20251025160905.3857885-385-sashal@kernel.org>
+References: <20251025160905.3857885-1-sashal@kernel.org>
+	<20251025160905.3857885-385-sashal@kernel.org>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout08
+X-Rspamd-Queue-Id: 7F4FC2000D
+X-Stat-Signature: 6yzqks5de9frsbsiwds9bwsbas7hfgd9
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19Xb9xl1QfjMzJ0FPDKue1X1sp4w9TAnjA=
+X-HE-Tag: 1761420346-248664
+X-HE-Meta: U2FsdGVkX18ELnPSb5L3NDlysnvw/R0s3/WOQlBy9kZTIosIrZ+9IV6rFjTPeDLJMTGvk5Y5PtiMLyuk1RFcckxgwX9jPYHWZ2Ybi13GKOwUpkQRYGORVb/WWVh4W0I7veCeBx188jIZqTU8qmUhWKRk0qPWi/TcHx6YtRfIcyOmMcYAAx5ELsUjxdM/QOnet7d+jdDa6Mh7+Fe09PXtSU4+yUa+peHpMQ8mlY0heTarLu4bX5IA71KcRe6z9yCRpEC4v8WYX4/rJJ0+w0/Kr5qTC8BFK4hpAoctCKWVtg4nwVRJ8eXWoocFK+elYX1wdpzFg0jWhQDwIbaPPLa+BLDsGdZHWFW8
 
-GENMASK(high, low) notation is confusing. FIRST_BITS() is more
-appropriate.
+On Sat, 25 Oct 2025 12:00:16 -0400
+Sasha Levin <sashal@kernel.org> wrote:
 
-Signed-off-by: Yury Norov (NVIDIA) <yury.norov@gmail.com>
----
- kernel/trace/fgraph.c      | 10 +++++-----
- kernel/trace/trace_probe.h |  2 +-
- 2 files changed, 6 insertions(+), 6 deletions(-)
+> - The change inserts `cond_resched()` inside the inner iteration over
+>   every ftrace record (`kernel/trace/ftrace.c:7538`). That loop holds
+>   the ftrace mutex and, for each record, invokes heavy helpers like
+>   `test_for_valid_rec()` which in turn calls `kallsyms_lookup()`
+>   (`kernel/trace/ftrace.c:4289`). On huge modules (e.g. amdgpu) this can
+>   run for tens of milliseconds with preemption disabled, triggering the
 
-diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
-index 484ad7a18463..4f21bd837055 100644
---- a/kernel/trace/fgraph.c
-+++ b/kernel/trace/fgraph.c
-@@ -106,10 +106,10 @@
-  *     (RESERVED or BITMAP)
-  */
- #define FGRAPH_FRAME_OFFSET_BITS	10
--#define FGRAPH_FRAME_OFFSET_MASK	GENMASK(FGRAPH_FRAME_OFFSET_BITS - 1, 0)
-+#define FGRAPH_FRAME_OFFSET_MASK	FIRST_BITS(FGRAPH_FRAME_OFFSET_BITS)
- 
- #define FGRAPH_TYPE_BITS	2
--#define FGRAPH_TYPE_MASK	GENMASK(FGRAPH_TYPE_BITS - 1, 0)
-+#define FGRAPH_TYPE_MASK	FIRST_BITS(FGRAPH_TYPE_BITS)
- #define FGRAPH_TYPE_SHIFT	FGRAPH_FRAME_OFFSET_BITS
- 
- enum {
-@@ -123,7 +123,7 @@ enum {
-  *   FGRAPH_INDEX (12-27) bits holding the gops index wanting return callback called
-  */
- #define FGRAPH_INDEX_BITS	16
--#define FGRAPH_INDEX_MASK	GENMASK(FGRAPH_INDEX_BITS - 1, 0)
-+#define FGRAPH_INDEX_MASK	FIRST_BITS(FGRAPH_INDEX_BITS)
- #define FGRAPH_INDEX_SHIFT	(FGRAPH_TYPE_SHIFT + FGRAPH_TYPE_BITS)
- 
- /*
-@@ -135,12 +135,12 @@ enum {
-  *  data_size == 0 means 1 word, and 31 (=2^5 - 1) means 32 words.
-  */
- #define FGRAPH_DATA_BITS	5
--#define FGRAPH_DATA_MASK	GENMASK(FGRAPH_DATA_BITS - 1, 0)
-+#define FGRAPH_DATA_MASK	FIRST_BITS(FGRAPH_DATA_BITS)
- #define FGRAPH_DATA_SHIFT	(FGRAPH_TYPE_SHIFT + FGRAPH_TYPE_BITS)
- #define FGRAPH_MAX_DATA_SIZE (sizeof(long) * (1 << FGRAPH_DATA_BITS))
- 
- #define FGRAPH_DATA_INDEX_BITS	4
--#define FGRAPH_DATA_INDEX_MASK	GENMASK(FGRAPH_DATA_INDEX_BITS - 1, 0)
-+#define FGRAPH_DATA_INDEX_MASK	FIRST_BITS(FGRAPH_DATA_INDEX_BITS)
- #define FGRAPH_DATA_INDEX_SHIFT	(FGRAPH_DATA_SHIFT + FGRAPH_DATA_BITS)
- 
- #define FGRAPH_MAX_INDEX	\
-diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
-index 08b5bda24da2..88de129dcde0 100644
---- a/kernel/trace/trace_probe.h
-+++ b/kernel/trace/trace_probe.h
-@@ -401,7 +401,7 @@ static inline int traceprobe_get_entry_data_size(struct trace_probe *tp)
- #define TPARG_FL_USER   BIT(4)
- #define TPARG_FL_FPROBE BIT(5)
- #define TPARG_FL_TPOINT BIT(6)
--#define TPARG_FL_LOC_MASK	GENMASK(4, 0)
-+#define TPARG_FL_LOC_MASK	FIRST_BITS(5)
- 
- static inline bool tparg_is_function_entry(unsigned int flags)
- {
--- 
-2.43.0
+It got the "preemption disabled" wrong. Well maybe when running
+PREEMPT_NONE it is, but the description doesn't imply that.
+
+-- Steve
+
+
+>   documented soft lockup/panic during module load.
+> - `ftrace_module_enable()` runs only in process context via
+>   `prepare_coming_module()` (`kernel/module/main.c:3279`), so adding a
+>   voluntary reschedule point is safe; the same pattern already exists in
+>   other long-running ftrace loops (see commits d0b24b4e91fc and
+>   42ea22e754ba), so this brings consistency without changing control
+>   flow or semantics.
+> - No data structures or interfaces change, and the code still executes
+>   under the same locking (`ftrace_lock`, `text_mutex` when the arch
+>   overrides `ftrace_arch_code_modify_prepare()`), so the risk of
+>   regression is minimal: the new call simply yields CPU if needed while
+>   keeping the locks held, preventing watchdog-induced crashes but
+>   otherwise behaving identically.
 
