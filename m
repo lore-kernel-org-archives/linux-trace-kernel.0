@@ -1,36 +1,37 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B0EB2F7AB0;
-	Sat, 25 Oct 2025 19:25:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06D4F30ACF7;
+	Sat, 25 Oct 2025 19:29:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761420358; cv=none; b=lYjTVX29Yt91PUvApWGgrAbdC745TloXGCx3XyJYUjPJ/aCzNDA3XT8w+j0MrsfCWCyBz+a9LM6zkkDKEIO6776pf1+WN/4tnXi8SmfjFPMqbzxStUiVku5SNg3FaWniOfkTqUKApfSDd6F+3S1x5ae6x4Hfmqa3spo505VYZeQ=
+	t=1761420603; cv=none; b=gokeoF8UJaSBYhfec8yHCWGR9eD7XzOmNk+bGAmy3tndIvzoXYSX4ZTtr8Jk7MEwhkIgFEESh6oUaPEbGhZJLdBmN1Bpz8i6UwUO/D5vsf7Z234Ft/f+3xGycoJCEyUE9CQCL10hXvvohRgoEEMc/zowNtv9OhMHiuUwrNDO5Kg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761420358; c=relaxed/simple;
-	bh=XMqi7Bh1BNLZKfN+KZrTPFp8zjrMA4E+wj7kNBhSdh8=;
+	s=arc-20240116; t=1761420603; c=relaxed/simple;
+	bh=HxU5s3ru08zv2uPbKB02UZQtR9vvfSn+Asv3Z0hMD28=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=C0qiTV40rHTQl7u4sSxzx9s0OMzQbO8MwQi2f85irQP+1XdYYMM3hsvJtVsTt5WPQe1aEZEqTVW8ledrVtOg/rkEZJRUoXf/aS29P8+LfofWxVi6yuZmcDEFKk0NhAQsGw3OOLmCAS7asSqn2hgbsnk4/9CO+bRgtwWEYSMmhhU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
+	 MIME-Version:Content-Type; b=Nx9SNHwDlA+6OK4PIsqRuFXp9Z2lmRCQH0HCTro/DpGW8pq9X457R9ZZXaYj21w3ENiUTGu8QO0Iqs9SIuPJVD3lokwr5i/nyfhm/se1hCeMDh2BB6M+RE2pECzPVpchMBBmpBTHeWJ+lwKnjk4QllqFKhHoTzdr13v+uItKNYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf16.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay06.hostedemail.com (Postfix) with ESMTP id ACD0B129347;
-	Sat, 25 Oct 2025 19:25:48 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf16.hostedemail.com (Postfix) with ESMTPA id 7F4FC2000D;
-	Sat, 25 Oct 2025 19:25:46 +0000 (UTC)
-Date: Sat, 25 Oct 2025 15:25:45 -0400
+Received: from omf04.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay05.hostedemail.com (Postfix) with ESMTP id 0869C55EA7;
+	Sat, 25 Oct 2025 19:29:57 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf04.hostedemail.com (Postfix) with ESMTPA id C28B72002B;
+	Sat, 25 Oct 2025 19:29:55 +0000 (UTC)
+Date: Sat, 25 Oct 2025 15:29:54 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Sasha Levin <sashal@kernel.org>
-Cc: patches@lists.linux.dev, stable@vger.kernel.org, Vladimir Riabchun
- <ferr.lambarginio@gmail.com>, mhiramat@kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 6.17-6.1] ftrace: Fix softlockup in
- ftrace_module_enable
-Message-ID: <20251025152545.534cb450@batman.local.home>
-In-Reply-To: <20251025160905.3857885-385-sashal@kernel.org>
-References: <20251025160905.3857885-1-sashal@kernel.org>
-	<20251025160905.3857885-385-sashal@kernel.org>
+To: "Yury Norov (NVIDIA)" <yury.norov@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee@kernel.org>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 13/21] trace: don't use GENMASK()
+Message-ID: <20251025152954.25807ec7@batman.local.home>
+In-Reply-To: <20251025163305.306787-6-yury.norov@gmail.com>
+References: <20251025162858.305236-1-yury.norov@gmail.com>
+	<20251025163305.306787-6-yury.norov@gmail.com>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -40,41 +41,34 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout08
-X-Rspamd-Queue-Id: 7F4FC2000D
-X-Stat-Signature: 6yzqks5de9frsbsiwds9bwsbas7hfgd9
+X-Rspamd-Queue-Id: C28B72002B
+X-Stat-Signature: 7zzn91j7x648w9ms1fi99hpmtm7pcm6c
+X-Rspamd-Server: rspamout06
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19Xb9xl1QfjMzJ0FPDKue1X1sp4w9TAnjA=
-X-HE-Tag: 1761420346-248664
-X-HE-Meta: U2FsdGVkX18ELnPSb5L3NDlysnvw/R0s3/WOQlBy9kZTIosIrZ+9IV6rFjTPeDLJMTGvk5Y5PtiMLyuk1RFcckxgwX9jPYHWZ2Ybi13GKOwUpkQRYGORVb/WWVh4W0I7veCeBx188jIZqTU8qmUhWKRk0qPWi/TcHx6YtRfIcyOmMcYAAx5ELsUjxdM/QOnet7d+jdDa6Mh7+Fe09PXtSU4+yUa+peHpMQ8mlY0heTarLu4bX5IA71KcRe6z9yCRpEC4v8WYX4/rJJ0+w0/Kr5qTC8BFK4hpAoctCKWVtg4nwVRJ8eXWoocFK+elYX1wdpzFg0jWhQDwIbaPPLa+BLDsGdZHWFW8
+X-Session-ID: U2FsdGVkX1/44D9yuHz9dVfvnBemYhEMxeRme8K4ZN8=
+X-HE-Tag: 1761420595-616211
+X-HE-Meta: U2FsdGVkX1+yPZXRQ7X8+V6Krgz8HOasdEpKO8wFjzn3Zvntb5fTNPZ2ZMx5ZcU8MevMlQ1P4y/SlhEF0Y+1iqWMcFwFXrVqo34BY1uoYfagq4CkrAxS7jLn6OFmM4K6lh9ZWCl/lkAjSuShL9ZhZc0h7RaOcS+nwwzQ1//n2sD/9zG30jTCQRUW/eUe675lCIcupxcJFnPDmgYyuICE4nnbPSEnHV8/8Z6UKATLL/6MAiYKVxCdyC6DIERgF2RnW4paQE3BWhw/ECzppRcZZHG0Z0h9FSSAroHcqxcJaTfh7a8kPQEDGQgF0XKasQWgO6riBOnhHj/BSsD//RdpJGGDhA8RJz8U
 
-On Sat, 25 Oct 2025 12:00:16 -0400
-Sasha Levin <sashal@kernel.org> wrote:
+On Sat, 25 Oct 2025 12:32:55 -0400
+"Yury Norov (NVIDIA)" <yury.norov@gmail.com> wrote:
 
-> - The change inserts `cond_resched()` inside the inner iteration over
->   every ftrace record (`kernel/trace/ftrace.c:7538`). That loop holds
->   the ftrace mutex and, for each record, invokes heavy helpers like
->   `test_for_valid_rec()` which in turn calls `kallsyms_lookup()`
->   (`kernel/trace/ftrace.c:4289`). On huge modules (e.g. amdgpu) this can
->   run for tens of milliseconds with preemption disabled, triggering the
+> GENMASK(high, low) notation is confusing. FIRST_BITS() is more
+> appropriate.
+> 
 
-It got the "preemption disabled" wrong. Well maybe when running
-PREEMPT_NONE it is, but the description doesn't imply that.
+I'm fine with this change as a clean up, but...
+
+> Signed-off-by: Yury Norov (NVIDIA) <yury.norov@gmail.com>
+> ---
+>  kernel/trace/fgraph.c      | 10 +++++-----
+>  kernel/trace/trace_probe.h |  2 +-
+
+Make this two different patches. trace_probe and fgraph go through
+different topic branches.
+
+Thanks,
 
 -- Steve
 
 
->   documented soft lockup/panic during module load.
-> - `ftrace_module_enable()` runs only in process context via
->   `prepare_coming_module()` (`kernel/module/main.c:3279`), so adding a
->   voluntary reschedule point is safe; the same pattern already exists in
->   other long-running ftrace loops (see commits d0b24b4e91fc and
->   42ea22e754ba), so this brings consistency without changing control
->   flow or semantics.
-> - No data structures or interfaces change, and the code still executes
->   under the same locking (`ftrace_lock`, `text_mutex` when the arch
->   overrides `ftrace_arch_code_modify_prepare()`), so the risk of
->   regression is minimal: the new call simply yields CPU if needed while
->   keeping the locks held, preventing watchdog-induced crashes but
->   otherwise behaving identically.
-
+>  2 files changed, 6 insertions(+), 6 deletions(-)
