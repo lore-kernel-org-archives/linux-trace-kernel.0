@@ -1,250 +1,110 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74DB1238178;
-	Sun, 26 Oct 2025 20:55:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98E8B1DFFC;
+	Mon, 27 Oct 2025 02:29:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761512106; cv=none; b=crz4lIYjP8GcF6PtulevtkHyZLtIghAfJj8RKu8BdcZci53dmpNZsizhVpu3o0qyxq7hsJgfdTlhmpj2vBLsJ788VvnKU8slUoFobAr8Vc35CqnZHhrZ7SktG1klN7qel8JDzbA9M1jHoPp8Q5itrAg6gfkAXX/l/6EL60y9I/Y=
+	t=1761532185; cv=none; b=kZg8oVdfTX4cAGs+NFBu3IgROLvTylrhA4HYIzq49e54Kp/UrLo2Mgyoxg2URULJ7LV6bgVlM8uZmfDZCBLnerJ+LyzY/sVlf9MGaF//UCThyZpX9qUm9EHxrKD2E1AXs0SxjVsYU1JrRmC0m/935vy8as9CGinSCEbA2dZM+b0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761512106; c=relaxed/simple;
-	bh=FdKjfQUkbsHQuQuH4GP6RLNRxDDenqqoHQY/8v93xLs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PwgtKDg4oOeyORmc2Db6M/c3RHenHUINYc2jsEmNlGZ+BccBbitzPA+VsVmCTlbWE/HLuvycmwO+zi3U/vYUGvBZ753S6CrcFsVpuF+gj7nOfOuOam1nixbfIpDRL2ze5x3QYT7dhms8MJLlV61iWR6IBoR//yvcJd1lrF4VHa8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t1X5/7BP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1761532185; c=relaxed/simple;
+	bh=Jv0StzLdkPw7Qg9z8uEgyVO5Bn1RJ64wxzXC6DVC2TY=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=VFB6eUN3fNkrQ1WSdNBA2sn7YX1goViWGPEUj5bcovR5FN72FutKfUTA1zAuq73tudgXmqgO0pby68UDO+HDtwkR4XOoksv3OCjl9stuURBD0IIPzJbVr9qXGUSKNv7xSvHn8NxrqAT2WZVPYnZQyisg0yGHg8uKobOZ8XYVbyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c9Vo/wKD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t1X5/7BP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B0EBC4CEE7;
-	Sun, 26 Oct 2025 20:55:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c9Vo/wKD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC2BFC4CEE7;
+	Mon, 27 Oct 2025 02:29:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761512106;
-	bh=FdKjfQUkbsHQuQuH4GP6RLNRxDDenqqoHQY/8v93xLs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=t1X5/7BPYXffrsGhgG/eMSvVcTuv7IQ5P8941H0RWLm+qS7/0hsrN2zdUMl8X5br3
-	 PO71SpMZ6SjRcP6BWfNC9fyqi9vXdHT6fpb67W6W3xAOK7TUi0FpYlscQBY7L8ZB7r
-	 z4jFSJ3TVgjMwMuavInWm//R+w0eXP15a5BzzxoHt+DxTyvZQm5QcF5RiuX2t7c7D8
-	 RGxyhRIQXJ/Byq7h8hXcByapu3+1gqzkOP9y9n3s2ODGJdeZWsKGUtJpe35gS3oO5a
-	 IiLupKNXnkr5aTt/Noee9aoUpo+humtfMXk1bIJR7WGFCw2JBwZ7DUOxrGXGJ+kdeN
-	 2916uMcSYxn6g==
-From: Song Liu <song@kernel.org>
-To: bpf@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	live-patching@vger.kernel.org
-Cc: ast@kernel.org,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
-	rostedt@goodmis.org,
-	andrey.grodzovsky@crowdstrike.com,
-	mhiramat@kernel.org,
-	kernel-team@meta.com,
-	olsajiri@gmail.com,
-	Song Liu <song@kernel.org>
-Subject: [PATCH v3 bpf 3/3] selftests/bpf: Add tests for livepatch + bpf trampoline
-Date: Sun, 26 Oct 2025 13:54:45 -0700
-Message-ID: <20251026205445.1639632-4-song@kernel.org>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20251026205445.1639632-1-song@kernel.org>
-References: <20251026205445.1639632-1-song@kernel.org>
+	s=k20201202; t=1761532185;
+	bh=Jv0StzLdkPw7Qg9z8uEgyVO5Bn1RJ64wxzXC6DVC2TY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=c9Vo/wKDewFAO95sAbUUfzBcIIrwLYXwl11n70C70LnH/SRsZG4SZKClOTqX7sNGg
+	 8muV+pnX0khJDJQzpbKarmehAOJcRb1x9dCkRM+mrpebzSDX71j0WM01OlCvVfjE+F
+	 t+bymSOZLVB+rK3B8YGxwlWIwGzvXfLkH9W/LTNJy3kGIiZWzw9grdlmseXOTKq2AJ
+	 rhbA77IeJVMSBU66HM6cFtYgAP96KgHOI7MOULEcqK+DPD8dodR4xEHUwqQEMWajm1
+	 68SIrV2b1jeuHiSHyhIpyu3RT0PgZuL7kL06uHXew6OZjU7enbK0Aw2LRBvTMKYpwI
+	 O8SmIOPPrRapQ==
+Date: Mon, 27 Oct 2025 11:29:38 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, x86@kernel.org,
+ Jinchao Wang <wangjinchao600@gmail.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H . Peter Anvin" <hpa@zytor.com>, Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, Aishwarya.TCV@arm.com
+Subject: Re: [PATCH v5 6/8] selftests: tracing: Add a basic testcase for
+ wprobe
+Message-Id: <20251027112938.bd34197bdbb5394bb2b220d9@kernel.org>
+In-Reply-To: <aPvwGhMBJqMKcC9D@finisterre.sirena.org.uk>
+References: <175859019940.374439.7398451124225791618.stgit@devnote2>
+	<175859026716.374439.14852239332989324292.stgit@devnote2>
+	<aPvwGhMBJqMKcC9D@finisterre.sirena.org.uk>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Both livepatch and BPF trampoline use ftrace. Special attention is needed
-when livepatch and fexit program touch the same function at the same
-time, because livepatch updates a kernel function and the BPF trampoline
-need to call into the right version of the kernel function.
+On Fri, 24 Oct 2025 22:31:06 +0100
+Mark Brown <broonie@kernel.org> wrote:
 
-Use samples/livepatch/livepatch-sample.ko for the test.
+> On Tue, Sep 23, 2025 at 10:17:47AM +0900, Masami Hiramatsu (Google) wrote:
+> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > 
+> > Add 'add_remove_wprobe.tc' testcase for testing wprobe event that
+> > tests adding and removing operations of the wprobe event.
+> 
+> Since this series has landed in -next we've been seeing hangs on a range
+> of arm64 platforms running the ftrace tests, it looks like it's all of
+> them.  Unfortunately the systems lock up with no output as soon as they
+> start trying to do something with wprobes:
 
-The test covers two cases:
-  1) When a fentry program is loaded first. This exercises the
-     modify_ftrace_direct code path.
-  2) When a fentry program is loaded first. This exercises the
-     register_ftrace_direct code path.
+Oh, thanks for reporting!
 
-Signed-off-by: Song Liu <song@kernel.org>
----
- tools/testing/selftests/bpf/config            |   3 +
- .../bpf/prog_tests/livepatch_trampoline.c     | 107 ++++++++++++++++++
- .../bpf/progs/livepatch_trampoline.c          |  30 +++++
- 3 files changed, 140 insertions(+)
- create mode 100644 tools/testing/selftests/bpf/prog_tests/livepatch_trampoline.c
- create mode 100644 tools/testing/selftests/bpf/progs/livepatch_trampoline.c
+> 
+> # ok 19 Generic dynamic event - add/remove kprobe events
+> # ok 20 Generic dynamic event - add/remove synthetic events
+> # ok 21 Generic dynamic event - add/remove tracepoint probe events
+> # ok 22 Generic dynamic event - add/remove tracepoint probe events on module
+> # ok 23 Generic dynamic event - add/remove/test uprobe events
 
-diff --git a/tools/testing/selftests/bpf/config b/tools/testing/selftests/bpf/config
-index 70b28c1e653e..f2a2fd236ca8 100644
---- a/tools/testing/selftests/bpf/config
-+++ b/tools/testing/selftests/bpf/config
-@@ -50,6 +50,7 @@ CONFIG_IPV6_SIT=y
- CONFIG_IPV6_TUNNEL=y
- CONFIG_KEYS=y
- CONFIG_LIRC=y
-+CONFIG_LIVEPATCH=y
- CONFIG_LWTUNNEL=y
- CONFIG_MODULE_SIG=y
- CONFIG_MODULE_SRCVERSION_ALL=y
-@@ -111,6 +112,8 @@ CONFIG_IP6_NF_FILTER=y
- CONFIG_NF_NAT=y
- CONFIG_PACKET=y
- CONFIG_RC_CORE=y
-+CONFIG_SAMPLES=y
-+CONFIG_SAMPLE_LIVEPATCH=m
- CONFIG_SECURITY=y
- CONFIG_SECURITYFS=y
- CONFIG_SYN_COOKIES=y
-diff --git a/tools/testing/selftests/bpf/prog_tests/livepatch_trampoline.c b/tools/testing/selftests/bpf/prog_tests/livepatch_trampoline.c
-new file mode 100644
-index 000000000000..72aa5376c30e
---- /dev/null
-+++ b/tools/testing/selftests/bpf/prog_tests/livepatch_trampoline.c
-@@ -0,0 +1,107 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright (c) 2025 Meta Platforms, Inc. and affiliates. */
-+
-+#include <test_progs.h>
-+#include "testing_helpers.h"
-+#include "livepatch_trampoline.skel.h"
-+
-+static int load_livepatch(void)
-+{
-+	char path[4096];
-+
-+	/* CI will set KBUILD_OUTPUT */
-+	snprintf(path, sizeof(path), "%s/samples/livepatch/livepatch-sample.ko",
-+		 getenv("KBUILD_OUTPUT") ? : "../../../..");
-+
-+	return load_module(path, env_verbosity > VERBOSE_NONE);
-+}
-+
-+static void unload_livepatch(void)
-+{
-+	/* Disable the livepatch before unloading the module */
-+	system("echo 0 > /sys/kernel/livepatch/livepatch_sample/enabled");
-+
-+	unload_module("livepatch_sample", env_verbosity > VERBOSE_NONE);
-+}
-+
-+static void read_proc_cmdline(void)
-+{
-+	char buf[4096];
-+	int fd, ret;
-+
-+	fd = open("/proc/cmdline", O_RDONLY);
-+	if (!ASSERT_OK_FD(fd, "open /proc/cmdline"))
-+		return;
-+
-+	ret = read(fd, buf, sizeof(buf));
-+	if (!ASSERT_GT(ret, 0, "read /proc/cmdline"))
-+		goto out;
-+
-+	ASSERT_OK(strncmp(buf, "this has been live patched", 26), "strncmp");
-+
-+out:
-+	close(fd);
-+}
-+
-+static void __test_livepatch_trampoline(bool fexit_first)
-+{
-+	struct livepatch_trampoline *skel = NULL;
-+	int err;
-+
-+	skel = livepatch_trampoline__open_and_load();
-+	if (!ASSERT_OK_PTR(skel, "skel_open_and_load"))
-+		goto out;
-+
-+	skel->bss->my_pid = getpid();
-+
-+	if (!fexit_first) {
-+		/* fentry program is loaded first by default */
-+		err = livepatch_trampoline__attach(skel);
-+		if (!ASSERT_OK(err, "skel_attach"))
-+			goto out;
-+	} else {
-+		/* Manually load fexit program first. */
-+		skel->links.fexit_cmdline = bpf_program__attach(skel->progs.fexit_cmdline);
-+		if (!ASSERT_OK_PTR(skel->links.fexit_cmdline, "attach_fexit"))
-+			goto out;
-+
-+		skel->links.fentry_cmdline = bpf_program__attach(skel->progs.fentry_cmdline);
-+		if (!ASSERT_OK_PTR(skel->links.fentry_cmdline, "attach_fentry"))
-+			goto out;
-+	}
-+
-+	read_proc_cmdline();
-+
-+	ASSERT_EQ(skel->bss->fentry_hit, 1, "fentry_hit");
-+	ASSERT_EQ(skel->bss->fexit_hit, 1, "fexit_hit");
-+out:
-+	livepatch_trampoline__destroy(skel);
-+}
-+
-+void test_livepatch_trampoline(void)
-+{
-+	int retry_cnt = 0;
-+
-+retry:
-+	if (load_livepatch()) {
-+		if (retry_cnt) {
-+			ASSERT_OK(1, "load_livepatch");
-+			goto out;
-+		}
-+		/*
-+		 * Something else (previous run of the same test?) loaded
-+		 * the KLP module. Unload the KLP module and retry.
-+		 */
-+		unload_livepatch();
-+		retry_cnt++;
-+		goto retry;
-+	}
-+
-+	if (test__start_subtest("fentry_first"))
-+		__test_livepatch_trampoline(false);
-+
-+	if (test__start_subtest("fexit_first"))
-+		__test_livepatch_trampoline(true);
-+out:
-+	unload_livepatch();
-+}
-diff --git a/tools/testing/selftests/bpf/progs/livepatch_trampoline.c b/tools/testing/selftests/bpf/progs/livepatch_trampoline.c
-new file mode 100644
-index 000000000000..15579d5bcd91
---- /dev/null
-+++ b/tools/testing/selftests/bpf/progs/livepatch_trampoline.c
-@@ -0,0 +1,30 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright (c) 2025 Meta Platforms, Inc. and affiliates. */
-+
-+#include <linux/bpf.h>
-+#include <bpf/bpf_helpers.h>
-+#include <bpf/bpf_tracing.h>
-+
-+int fentry_hit;
-+int fexit_hit;
-+int my_pid;
-+
-+SEC("fentry/cmdline_proc_show")
-+int BPF_PROG(fentry_cmdline)
-+{
-+	if (my_pid != (bpf_get_current_pid_tgid() >> 32))
-+		return 0;
-+
-+	fentry_hit = 1;
-+	return 0;
-+}
-+
-+SEC("fexit/cmdline_proc_show")
-+int BPF_PROG(fexit_cmdline)
-+{
-+	if (my_pid != (bpf_get_current_pid_tgid() >> 32))
-+		return 0;
-+
-+	fexit_hit = 1;
-+	return 0;
-+}
+OK, let me check.
+
+> 
+> the next test being add_remove_wprobe.tc, which doesn't seem to
+> complete.  Full log (for what little it's worth):
+> 
+>    https://lava.sirena.org.uk/scheduler/job/2000440#L1860
+> 
+> I turned on -vvv logging and that generated the rather spectacularly
+> more verbose:
+> 
+>    https://lava.sirena.org.uk/scheduler/job/2000676/log_file/plain
+> 
+> (in a somewhat processed format unfortunately.).  Looking at that log I
+> do notice a bunch of "unexpected operators" reported by the shell, these
+> systems are running dash not bash, though that doesn't seem related.  It
+> looks like the script hangs in reset_trigger_file while grepping the
+> trigger files rather than actually trying to do the test.
+
+Yeah, it seems do nothing on wprobe. Let me check why it happens.
+
+Thanks!
+
+> 
+> Sorry about the delay in reporting this.
+
+
 -- 
-2.47.3
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
