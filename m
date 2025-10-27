@@ -1,122 +1,81 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D08062D29CF;
-	Mon, 27 Oct 2025 02:44:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED9F22BCF4C;
+	Mon, 27 Oct 2025 03:25:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761533096; cv=none; b=ZuwDpZyIeAOZobN5+P0v4ImifBwzfQQbMsNK5rckAf+gIHGV0DHdtpVCsLfc0EoTn8G0FqAa02UZZ+dFM42XMIid+gprDxgGyKD5zfV/Z2uHGDsuLU56Lq4rIpNFbcr019jxnn7H/zvVmv30u2i7UyhvmP4+YLU95ElTaiMy//4=
+	t=1761535549; cv=none; b=sgnneWU9A3KYPEwKNw/bW+s2wNeW22kggLGm6VAlJWj1ZBHpXCxsF5m77UBIXVu79Y2BNTO7EI2htyVpxn9LuEyyFaHWytUO5gH1N9k6l3zfb18MpnRVcU+lqjax7XKfyBpgD/MUVLN3KjYorDU8ug+Jkc0qLmpgctFGPDzEyMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761533096; c=relaxed/simple;
-	bh=I4/28CIASlVF1RVtFs3YmpM9lnmWITQDZRqQedU2Gwk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LPAc+WOuS0IZoQOGJh3ereEcNMuzyunfg5rCh6WMxZESSAUG8nBaDDJwOUwBeiqh2EhgOyJDhCBpdNbdkKVJ1Ya/u8ZAt300femnBTJrLXHIvUKTUyYoXk9gWwI8Vh4wWH32T+EyegjZufuyK6+rYMzHDFLx2m6zE8lsCMW5+/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LOqoxVOW; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1761535549; c=relaxed/simple;
+	bh=AOcMq98EC8CGBYoVOSn6HcM2Q6moUQ8svsurgr3qy7E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bKyuxYWYwLT0ORJm3WfuElF+Br+XAZwc78bs4/H2XbLgITISsZQKADUOSIlQ9fY9cix18dt2VCbYkpwqeTqC0TGRMInnwXJG0g1qEUkZ6jQDUGTGWkVRFOAsLkLy4Xb3J4fU3afw1nkRoUVbKKH9zwO/uCgOf6kSByzi/B8eQaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=hkoi81s9; arc=none smtp.client-ip=115.124.30.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LOqoxVOW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761533095; x=1793069095;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=I4/28CIASlVF1RVtFs3YmpM9lnmWITQDZRqQedU2Gwk=;
-  b=LOqoxVOW6jKk4LlZlsHNiACb7zo4MxjBgWDg5pBgKDzxSE/pfGuCV5uX
-   E4GvIBMRnDtfgJkIKegklhbXokYqb5fEj14j6cbYdstHiYucDdx+9lgUF
-   Q1R1SXFc1ZQC/4sRJqI6+JvzBMcu8iHDu+JBBblqc/BXf8H3Zbsg62dv+
-   /q/Ebidl+SC6+n1R6dvN3GjSHtvOmwNdNlB7LYPB+Il3MlLjxp9JYgyhW
-   kdVB/rE0wO/0NZ2FrwgtjOZkI7CC42eR2fRhpsFHUyKwZDnd8UVY0eex7
-   BBj+SMATnYZVurQKNwx89n+oK6s7WmmF+z4yAooSduH2SuncXXWn1y48s
-   w==;
-X-CSE-ConnectionGUID: uX5DDFOgSGWnXTTOZ8yE2w==
-X-CSE-MsgGUID: vsEtVKUbTC6ROcKCLX529g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="74285879"
-X-IronPort-AV: E=Sophos;i="6.19,258,1754982000"; 
-   d="scan'208";a="74285879"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2025 19:44:54 -0700
-X-CSE-ConnectionGUID: HlzfkQqbSTGFPsG03Ui8lQ==
-X-CSE-MsgGUID: dsY0bqw5SGqOnb5Ykzf3Ow==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,258,1754982000"; 
-   d="scan'208";a="184824253"
-Received: from lkp-server02.sh.intel.com (HELO 66d7546c76b2) ([10.239.97.151])
-  by orviesa007.jf.intel.com with ESMTP; 26 Oct 2025 19:44:48 -0700
-Received: from kbuild by 66d7546c76b2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1vDDDx-000GTN-2p;
-	Mon, 27 Oct 2025 02:44:45 +0000
-Date: Mon, 27 Oct 2025 10:44:19 +0800
-From: kernel test robot <lkp@intel.com>
-To: Menglong Dong <menglong8.dong@gmail.com>, ast@kernel.org,
-	jolsa@kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, daniel@iogearbox.net,
-	john.fastabend@gmail.com, andrii@kernel.org, martin.lau@linux.dev,
-	eddyz87@gmail.com, song@kernel.org, yonghong.song@linux.dev,
-	kpsingh@kernel.org, sdf@fomichev.me, haoluo@google.com,
-	mattbobrowski@google.com, rostedt@goodmis.org, mhiramat@kernel.org,
-	leon.hwang@linux.dev, jiang.biao@linux.dev, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH bpf-next v3 2/7] bpf: add two kfunc for TRACE_SESSION
-Message-ID: <202510270955.mbxODFvZ-lkp@intel.com>
-References: <20251026030143.23807-3-dongml2@chinatelecom.cn>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="hkoi81s9"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1761535538; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=/jozjS1vRHTv6C7q6QJDKxw+pz3Pe2g0a97QFylnV28=;
+	b=hkoi81s9qdEt271lM2yx6wIz0Eszac/CbKqTBeqzvYpaxiAuoeXK03rJKtCEguo3QdjsV05KXxPBRmqWTzjdDbkRP1c8cM8isxrAcUfON3LkGlwd1akigWLdhLa0x8vZnB3BbZ4fwpwhu6MGpGVXqzfoZS09TR6QVqSi7cDTYGQ=
+Received: from 30.74.144.189(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0Wr-v7UX_1761535533 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 27 Oct 2025 11:25:34 +0800
+Message-ID: <ad974920-658a-4909-8160-c54f7ac9403a@linux.alibaba.com>
+Date: Mon, 27 Oct 2025 11:25:33 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251026030143.23807-3-dongml2@chinatelecom.cn>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v12 mm-new 07/15] khugepaged: generalize
+ collapse_huge_page for mTHP collapse
+To: Nico Pache <npache@redhat.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org,
+ linux-doc@vger.kernel.org
+Cc: david@redhat.com, ziy@nvidia.com, lorenzo.stoakes@oracle.com,
+ Liam.Howlett@oracle.com, ryan.roberts@arm.com, dev.jain@arm.com,
+ corbet@lwn.net, rostedt@goodmis.org, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, akpm@linux-foundation.org,
+ baohua@kernel.org, willy@infradead.org, peterx@redhat.com,
+ wangkefeng.wang@huawei.com, usamaarif642@gmail.com, sunnanyong@huawei.com,
+ vishal.moola@gmail.com, thomas.hellstrom@linux.intel.com,
+ yang@os.amperecomputing.com, kas@kernel.org, aarcange@redhat.com,
+ raquini@redhat.com, anshuman.khandual@arm.com, catalin.marinas@arm.com,
+ tiwai@suse.de, will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz,
+ cl@gentwo.org, jglisse@google.com, surenb@google.com, zokeefe@google.com,
+ hannes@cmpxchg.org, rientjes@google.com, mhocko@suse.com,
+ rdunlap@infradead.org, hughd@google.com, richard.weiyang@gmail.com,
+ lance.yang@linux.dev, vbabka@suse.cz, rppt@kernel.org, jannh@google.com,
+ pfalcato@suse.de
+References: <20251022183717.70829-1-npache@redhat.com>
+ <20251022183717.70829-8-npache@redhat.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <20251022183717.70829-8-npache@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Menglong,
 
-kernel test robot noticed the following build warnings:
 
-[auto build test WARNING on bpf-next/master]
+On 2025/10/23 02:37, Nico Pache wrote:
+> Pass an order and offset to collapse_huge_page to support collapsing anon
+> memory to arbitrary orders within a PMD. order indicates what mTHP size we
+> are attempting to collapse to, and offset indicates were in the PMD to
+> start the collapse attempt.
+> 
+> For non-PMD collapse we must leave the anon VMA write locked until after
+> we collapse the mTHP-- in the PMD case all the pages are isolated, but in
+> the mTHP case this is not true, and we must keep the lock to prevent
+> changes to the VMA from occurring.
+> 
+> Signed-off-by: Nico Pache <npache@redhat.com>
+> ---
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Menglong-Dong/bpf-add-tracing-session-support/20251026-110720
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git master
-patch link:    https://lore.kernel.org/r/20251026030143.23807-3-dongml2%40chinatelecom.cn
-patch subject: [PATCH bpf-next v3 2/7] bpf: add two kfunc for TRACE_SESSION
-config: i386-randconfig-061-20251027 (https://download.01.org/0day-ci/archive/20251027/202510270955.mbxODFvZ-lkp@intel.com/config)
-compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251027/202510270955.mbxODFvZ-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202510270955.mbxODFvZ-lkp@intel.com/
-
-sparse warnings: (new ones prefixed by >>)
-   kernel/trace/bpf_trace.c:833:41: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected void [noderef] __user *[addressable] [assigned] [usertype] sival_ptr @@     got void * @@
-   kernel/trace/bpf_trace.c:833:41: sparse:     expected void [noderef] __user *[addressable] [assigned] [usertype] sival_ptr
-   kernel/trace/bpf_trace.c:833:41: sparse:     got void *
-   kernel/trace/bpf_trace.c:3573:52: sparse: sparse: cast removes address space '__user' of expression
-   kernel/trace/bpf_trace.c:3587:56: sparse: sparse: cast removes address space '__user' of expression
-   kernel/trace/bpf_trace.c:3601:52: sparse: sparse: cast removes address space '__user' of expression
-   kernel/trace/bpf_trace.c:3608:56: sparse: sparse: cast removes address space '__user' of expression
-   kernel/trace/bpf_trace.c:3616:52: sparse: sparse: cast removes address space '__user' of expression
-   kernel/trace/bpf_trace.c:3624:56: sparse: sparse: cast removes address space '__user' of expression
-   kernel/trace/bpf_trace.c: note: in included file (through include/linux/rbtree.h, include/linux/mm_types.h, include/linux/mmzone.h, ...):
-   include/linux/rcupdate.h:895:9: sparse: sparse: context imbalance in 'uprobe_prog_run' - unexpected unlock
->> kernel/trace/bpf_trace.c:3379:35: sparse: sparse: non size-preserving integer to pointer cast
-
-vim +3379 kernel/trace/bpf_trace.c
-
-  3372	
-  3373	__bpf_kfunc u64 *bpf_fsession_cookie(void *ctx)
-  3374	{
-  3375		/* This helper call is inlined by verifier. */
-  3376		u64 nr_args = ((u64 *)ctx)[-1];
-  3377	
-  3378		/* ctx[nr_args + 2] is the session cookie address */
-> 3379		return (u64 *)((u64 *)ctx)[nr_args + 2];
-  3380	}
-  3381	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+LGTM. And passed my mTHP collapse testing cases. So:
+Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+Tested-by: Baolin Wang <baolin.wang@linux.alibaba.com>
