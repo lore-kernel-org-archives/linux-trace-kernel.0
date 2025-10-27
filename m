@@ -1,121 +1,131 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05DD5212562;
-	Mon, 27 Oct 2025 13:43:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DCA9302153;
+	Mon, 27 Oct 2025 13:52:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761572635; cv=none; b=NpNrmoZ/rXRtdt7k+zVM3aEy07wUSdKO6X/0XESbDTmkSmAT5uURgCqHTFVWB2UCF4Dt6w3DkjbcLXLxsG0ehWlrCZmB6ilF5oJemAFu84Y+uzlf5vChmQegAw3H19R5afm+EOXVq++XdrtXemaH17agWXcTQdM75Zuv+/FUHis=
+	t=1761573140; cv=none; b=evz0ATt1CAJVkVzhwKwBbY2akzIR+ZChqawKcuRAuACGyrPngA3s3whpEb2WsQmvaouuhkgl/Ss0VFT8+Z8Q+w5qxBL1Ul11L+qsmMjU834k9OT9C8/L0HJju7rsgNVXIXyQLn7Yd2eJ6PSEMJVG/N0XDe/9wrO43in25CskqYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761572635; c=relaxed/simple;
-	bh=igDNAhFHKqtSgQ0qZDaeaIsIItKRa96qIdeht8uHaII=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=BJarpINVzFOzVB4RRfZbnM0rz6JgpiSYyGCLrBO3kStMCD6RkqBW2GcLqFPNi9sGk9/s1k6BhcBwvOOwm800FvVSJBxyoCedHqq9Wo2wNYEkxJaIoGcVqqFPBb78kh4PbC7A6fqX2lfLOAyL9CvM1tlgc4b7jRi/dbpHLx/ohGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eOTrgcaT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1761573140; c=relaxed/simple;
+	bh=964A0S031oKo8PopELqRZPy7vrdlLfuZvsDRB1F8/tY=;
+	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
+	 Subject:From:To:Cc:Date; b=alLbiU2WeZbAsfazUrAMmZgDpk7mPfRyzcYy7NhebYUE4oDgcTsFVBlAYb1O6uo8y1j4O7N0zxK3DLaIefQYAgX/bEeYXPSTs/LjBwjjFi5/7p5uNw0x4Tg6fBCLhXQ8XVXfdgLtODeaXtITf1VW+XSQrH+e4HkWcoO8OvYuUxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GgZBf7Gj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eOTrgcaT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 401E8C4CEF1;
-	Mon, 27 Oct 2025 13:43:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GgZBf7Gj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEA2EC4CEF1;
+	Mon, 27 Oct 2025 13:52:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761572634;
-	bh=igDNAhFHKqtSgQ0qZDaeaIsIItKRa96qIdeht8uHaII=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=eOTrgcaTVMN3otzXTXqXybj2AvCx+1qQ6Yhz9GwBemKPHyBTESC4PYFXOYIfUGnIN
-	 pkji8zUTWYbxFsb/DGW9DET0slCXn7fH7jaFqt90XdltmDZ8WnVD283vGxX5Eo07wq
-	 ol/xSiCK+EcCRCA7oYhz24n9fiE01TWBhOPet39iAnqoqRbxkdLG4+iuGbCkLwC0R6
-	 RsXipc2z3N/XFPVOD/TjAly2T19Geg7TVM91gVIsrvMmutCOJCcRSyeSazpE7iGsqv
-	 BH+aHdixULzn4YwAyASxF/Bdv4DBapwURqY5G7ufNN25I6Fnav9vieA/iwVEHREgqp
-	 HnBi1IZYRCaXg==
-Date: Mon, 27 Oct 2025 22:43:47 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Mark Brown <broonie@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, x86@kernel.org,
- Jinchao Wang <wangjinchao600@gmail.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Thomas Gleixner <tglx@linutronix.de>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H . Peter Anvin" <hpa@zytor.com>, Alexander Shishkin
- <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, Aishwarya.TCV@arm.com
-Subject: Re: [PATCH v5 6/8] selftests: tracing: Add a basic testcase for
- wprobe
-Message-Id: <20251027224347.4c887cc956df63602f377550@kernel.org>
-In-Reply-To: <aPvwGhMBJqMKcC9D@finisterre.sirena.org.uk>
-References: <175859019940.374439.7398451124225791618.stgit@devnote2>
-	<175859026716.374439.14852239332989324292.stgit@devnote2>
-	<aPvwGhMBJqMKcC9D@finisterre.sirena.org.uk>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=k20201202; t=1761573140;
+	bh=964A0S031oKo8PopELqRZPy7vrdlLfuZvsDRB1F8/tY=;
+	h=In-Reply-To:References:Subject:From:To:Cc:Date:From;
+	b=GgZBf7GjZRfMQCWgbuFwyGZ7NBwGk1KjXKeMykH/D6GTmHNSqMXGauVjO3ogSBzAZ
+	 GJ2M94hVj720cVqii5lwceg2YIsLGKpcztk1Bawsa0Yt9q4GqOtXMxfCcJ6vrlUBmZ
+	 50jFqnT7XX+vn6U38dtBWEZr7DYkA1f4u9JikQNNyqUA+o0V8TPCqIJB8kc4CJCB8s
+	 meVYedAamN1AmB0CbdJJ64o7hgYZ+kvgAXQIoj2ocsrboCS9Ev4w7bT32DTl0GEYZa
+	 Mqwr63+lPFpsL5ad/kaOWLpf9fv81qIB9r55zzSHFJDcgPl6acseG706VOmi6eYiKF
+	 Jf4igkYNbwUyA==
+Content-Type: multipart/mixed; boundary="===============5490698179867115379=="
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+Message-Id: <8227ad3af501bb982231ef00ac5e970a0a12c9d64e07ea3f3d37100ec7e3f1cc@mail.kernel.org>
+In-Reply-To: <20251027131354.1984006-2-jolsa@kernel.org>
+References: <20251027131354.1984006-2-jolsa@kernel.org>
+Subject: Re: [PATCH 1/3] Revert "perf/x86: Always store regs->ip in perf_callchain_kernel()"
+From: bot+bpf-ci@kernel.org
+To: jolsa@kernel.org,mhiramat@kernel.org,rostedt@goodmis.org,jpoimboe@kernel.org
+Cc: song@kernel.org,peterz@infradead.org,bpf@vger.kernel.org,linux-trace-kernel@vger.kernel.org,x86@kernel.org,yhs@fb.com,songliubraving@fb.com,andrii@kernel.org,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,clm@meta.com,ihor.solodrai@linux.dev
+Date: Mon, 27 Oct 2025 13:52:18 +0000 (UTC)
+
+--===============5490698179867115379==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 
-On Fri, 24 Oct 2025 22:31:06 +0100
-Mark Brown <broonie@kernel.org> wrote:
 
-> On Tue, Sep 23, 2025 at 10:17:47AM +0900, Masami Hiramatsu (Google) wrote:
-> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > 
-> > Add 'add_remove_wprobe.tc' testcase for testing wprobe event that
-> > tests adding and removing operations of the wprobe event.
-> 
-> Since this series has landed in -next we've been seeing hangs on a range
-> of arm64 platforms running the ftrace tests, it looks like it's all of
-> them.  Unfortunately the systems lock up with no output as soon as they
-> start trying to do something with wprobes:
-> 
-> # ok 19 Generic dynamic event - add/remove kprobe events
-> # ok 20 Generic dynamic event - add/remove synthetic events
-> # ok 21 Generic dynamic event - add/remove tracepoint probe events
-> # ok 22 Generic dynamic event - add/remove tracepoint probe events on module
-> # ok 23 Generic dynamic event - add/remove/test uprobe events
-> 
-> the next test being add_remove_wprobe.tc, which doesn't seem to
-> complete.  Full log (for what little it's worth):
-> 
->    https://lava.sirena.org.uk/scheduler/job/2000440#L1860
-> 
-> I turned on -vvv logging and that generated the rather spectacularly
-> more verbose:
-> 
->    https://lava.sirena.org.uk/scheduler/job/2000676/log_file/plain
-> 
-> (in a somewhat processed format unfortunately.).  Looking at that log I
-> do notice a bunch of "unexpected operators" reported by the shell, these
-> systems are running dash not bash, though that doesn't seem related.  It
-> looks like the script hangs in reset_trigger_file while grepping the
-> trigger files rather than actually trying to do the test.
-> 
-> Sorry about the delay in reporting this.
+```
+commit 26b06def1956497a15eecf22787d5430fad2fed6
+Author: Jiri Olsa <jolsa@kernel.org>
 
-OK, eventually, I confirmed it is stopped on enabling wprobe
+Revert "perf/x86: Always store regs->ip in perf_callchain_kernel()"
 
-+ . /mnt/ftrace/test.d/dynevent/add_remove_wprobe.tc
-+ echo 0
-+ echo
-+ TARGET=jiffies
-+ echo 'w:my_wprobe w@jiffies'
-+ grep -q my_wprobe dynamic_events
-+ '[' 0 -ne 0 ]
-+ test -d events/wprobes/my_wprobe
-+ '[' 0 -ne 0 ]
-+ echo 1
+This commit reverts a 2019 fix that ensured regs->ip is stored when
+using non-HW regs (regs populated by perf_arch_fetch_caller_regs). The
+revert claims the IP is captured during unwinding, but analysis suggests
+otherwise.
 
-I also confirmed:
+> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+> index 745caa6c1..fa6c47b50 100644
+> --- a/arch/x86/events/core.c
+> +++ b/arch/x86/events/core.c
+> @@ -2789,13 +2789,13 @@ perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *re
+>  		return;
+>  	}
+>
+> -	if (perf_callchain_store(entry, regs->ip))
+> -		return;
+> -
+> -	if (perf_hw_regs(regs))
+> +	if (perf_hw_regs(regs)) {
+> +		if (perf_callchain_store(entry, regs->ip))
+> +			return;
+>  		unwind_start(&state, current, regs, NULL);
+> -	else
+> +	} else {
+>  		unwind_start(&state, current, NULL, (void *)regs->sp);
+> +	}
 
-~ # cd /sys/kernel/tracing/
-/sys/kernel/tracing # echo 'w:my_wprobe w@jiffies' >> dynamic_events 
-/sys/kernel/tracing # echo 1 > events/wprobes/my_wprobe/enable 
+When perf_hw_regs(regs) returns false (which happens when regs comes from
+perf_arch_fetch_caller_regs since it sets regs->flags=0), the else branch
+calls unwind_start with regs=NULL. Can this lose the regs->ip value?
 
-Freeze the machine.
+Looking at the code flow:
 
-Thank you,
+perf_arch_fetch_caller_regs() sets:
+  - regs->ip = CALLER_ADDR0 (the caller's instruction pointer)
+  - regs->flags = 0 (no X86_EFLAGS_FIXED)
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+perf_hw_regs() checks:
+  - returns (regs->flags & X86_EFLAGS_FIXED), which is false
+
+The else branch executes:
+  - unwind_start(&state, current, NULL, (void *)regs->sp)
+
+In __unwind_start() at arch/x86/kernel/unwind_orc.c, when regs=NULL:
+  - Takes the "else if (task == current)" path (line 711)
+  - Initializes state->ip via inline asm from current location
+  - This is __unwind_start's IP, not the original regs->ip
+  - Then advances to first_frame at regs->sp (lines 755-758)
+
+The original regs->ip value (captured by perf_arch_fetch_caller_regs) is
+never stored in the callchain. This was the exact issue fixed by commit
+83f44ae0f8af in 2019, which stated:
+
+  "The stacktrace_map_raw_tp BPF selftest is failing because the RIP
+   saved by perf_arch_fetch_caller_regs() isn't getting saved by
+   perf_callchain_kernel()."
+
+Does this revert re-introduce the BPF selftest failure that was fixed in
+2019? The test tools/testing/selftests/bpf/prog_tests/stacktrace_map_raw_tp.c
+still exists in the kernel tree.
+
+>
+>  	for (; !unwind_done(&state); unwind_next_frame(&state)) {
+>  		addr = unwind_get_return_address(&state);
+
+
+```
+
+---
+AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
+See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
+
+In-Reply-To-Subject: `Revert "perf/x86: Always store regs->ip in perf_callchain_kernel()"`
+CI run summary: https://github.com/kernel-patches/bpf/actions/runs/18842579839
+
+--===============5490698179867115379==--
