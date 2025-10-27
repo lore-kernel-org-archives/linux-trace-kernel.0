@@ -1,74 +1,75 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50D762FCC1E
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 27 Oct 2025 08:47:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E864430E0EB
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 27 Oct 2025 08:48:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761554835; cv=none; b=Er2zdwAx8PeLTJtw+9yoT9N7bR9F2D4pvmK2Nj0oaZWvRFiisWWPDbI3lJ9iidZA7b9PtNkK5EbL7aha/iN27bK4hC3sfDnYQiqeH8GVKsq5trWhNEN1VD6zSwL73De9mGuFfZqkVw7fG6xzt+8FUE5HlYBPHZ6PTwYObSyJXus=
+	t=1761554910; cv=none; b=SvPOgjlaZPMGH1Rn2HraIXWNp6edhOZKAbJbogVVd24/O7N0nM2cL//PAY1MHwxH1iD+e08wOw/8yVTH8QKJq2a7imrt+NVlltgS3dcUeSYW/kRDoRFNljGzTvi0QN8/s+jUsQX1epH0XOeduoS6vdku1id12lySSeSU8FcJ+Ns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761554835; c=relaxed/simple;
-	bh=L6yB8zi8REP/swCl7Av17BttU5r/j+BG5EnDaugEi4w=;
+	s=arc-20240116; t=1761554910; c=relaxed/simple;
+	bh=PmYS6PWxr9X5njumKahKuZHCdaqOv/MkOKIGh/4DVSQ=;
 	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KUaD1jFhGRUC1CryyxRupPamshNEMtuG9fnwxL/TJE5qdDVH5BvK+c1ybSy0HyoqLnaR8diExWfoZXTzyOwF1d+eyTnST15xphDs2subr6Q1Gmi8r28X1HkQpScR/AKu3YGL+407j9SleBVo1EmHZC6y1t430hTi2tgYJEEOUT0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HZYzh/uv; arc=none smtp.client-ip=209.85.221.50
+	 Content-Type:Content-Disposition:In-Reply-To; b=APhOUF6nV0LdNOpk4FzQMCMRo0oGskYpjgcCZ/F09bvI+PHpa1wKWn1azsIjPh2vwm6oO0Ebaq8SligJN+RMCXumxSmWvxcRWGwwMRdjC/ANTbIMHviY45mrkWwCY+5MawqEN3r4EF2+rhO/NTzBt82aPaodIBpD6YLAY5gFQuA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lwMTYGAW; arc=none smtp.client-ip=209.85.128.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HZYzh/uv"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-42966ce6dbdso3116359f8f.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 27 Oct 2025 01:47:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lwMTYGAW"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-474975af41dso30597095e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 27 Oct 2025 01:48:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1761554831; x=1762159631; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1761554907; x=1762159707; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=llxyMYDYDt1QJiOwvJpk6RQ31U8QgJmQ3C8aeyRJ80o=;
-        b=HZYzh/uvd8ptLT3acA7V+gfirFgNdQwK+XGqfAVEz+7C3TJgKhNumHg0JnbUaYyWYo
-         Ufq0GwI8eM3HX0yJh/JEzkhQQSAd8jvlQ28gLVJiyy5iB9ur+Y+dxWI6ZJ3bLeSmq0L0
-         kf7mHfCU0ybDQJRFD3Zyexq+7UuGoTfXPAHf58fxWLSiwMjGYfSOs0dlcErrGkryds4z
-         pCZ5klopXEDF1rff+41+66dSXPPZa+dIZsRlGsfBaqdPCc9cmXkjqzF3hf0fQ73HaLj5
-         lPT7U0i1PFbBOPVFkbiP0ISxnCGhPPUTizjsR6JSYR7IysF+OKPwkFnR/vZmzmc3avBJ
-         RUag==
+        bh=FHn4VCXJ8SziL5HVs3tOncztpHETMhRaig+hCm1znNA=;
+        b=lwMTYGAWb99TokaCQqpwCaBPW/gX12s6MlcZNow0YudLP8bl/uTaOyjhFrwsZXsiaZ
+         So7FIqDiFwJf0eF+Tre895PY+Ye0WT5iOeeyQ33RPLPCuzdigjV5ALXIDPvjiQLzi7tf
+         afh2Qk8BdqAwF5DA1PECXgT/qLFruyDnYI/axfe0nrs5L08bien/BESoXdTA3Z+n2vKi
+         zLPC/VhFQkiTk7uQxvuMfHd/qPLAGnxnZFIIUxKJiE3hi68uKeAB3TcHzgWwhk8DNXcQ
+         GoL0W5yj2YQh/7Ctyu3gLrOtIul+2ZfMdXsfgbE/yFXY0xQYDZs53xCrj4HhfMASG/Xi
+         5sFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761554831; x=1762159631;
+        d=1e100.net; s=20230601; t=1761554907; x=1762159707;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=llxyMYDYDt1QJiOwvJpk6RQ31U8QgJmQ3C8aeyRJ80o=;
-        b=vOxmI3m4vGazQ9uPXVEsp5Z46rCLAFjIUvdUjHJhvwmy4AuFyHknEwNLz3Wypf8CM6
-         W5l5oB5uebjve+YeWcZXtUcy+Jcvrnjg4+/STjZVjNuL4VxgjAtBIY9+TryCHi3nb5/6
-         dfqRcOQdMzd7QIM+/iheFXTzK53bOuGiDMW6UAxzhATfywb0Ug8c6GX9tKE7ccNxVsC/
-         3NeNg4rEJFTN75WJnYXNirL8auxDwg2sD07GbohXVMA9qOjyoO8vr90nstDMZjR2EtMh
-         U4EuDL9ToE9stIWglPMUQlOH9GVRtRRJ/TqSTRs8Tg++sApO/m5OA0oC2eAnc7+smoqt
-         AWTw==
-X-Forwarded-Encrypted: i=1; AJvYcCXro6ZwoIMbMXRd1XFhU4fFcNeq5thJeTnHT6EAR3zUo/bTGYmILomr5w37/Q8laCP1spid+lRsJpUvF9M+T62eJ5g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzqnsYyfxKbhNwBSAdUu5waPyg4/Z5qBputcXCZZ/qcjEpWfMAS
-	G5yOcJP34/aPNtfXCAEeQo9zOHfbRFvkL/gfbD4C73Bqvjk6Ek5RjLFS
-X-Gm-Gg: ASbGncu3vo0pbSUGtCr2uV7lWXaYWpoy8G5kPbWfz8UBjy2OgJV7ekrR5C3uFFbCMuU
-	YSmeo/8wdZToM46qDb4aAuZ4Y/mpvoHxBHIEJ2cbEAWPu7SdvK7+HkS9yYdFNMkZqjVhBwJ9kn6
-	e6oE4IVX6rNNhTyTgOUYfbR3yPlIeJYB3wI0/ZaQFARevWUlQRqGbLWeVU+opIQpBhQ+OklSqLR
-	kKTanveRZtgm2QKXZ+9gZKX6Hnn26jwcsaxZk87HnHBfCKtrx7EhfrJm+6fKBoepvDhFhRrKodg
-	4XBwCh9XglovREC8qgAgv+Ursd2CTmnzUZp6RABPO5NtiESqOYd4YsipAGoQK3wCGkMyG0UvXgK
-	Nh6OWb3QWE4LXiOrRCUfwk/y93/8mAd0Ncoi3d0PE2/qhZX+s92fe+jDogA9n
-X-Google-Smtp-Source: AGHT+IGmPorRwgMh/ycuOVlsCFCdyzLjqoKlJVftW4lXoTOXrfSlOItutS9zUJ6ECFW5IHrsQ38MIg==
-X-Received: by 2002:a05:6000:1884:b0:407:7a7:1cb6 with SMTP id ffacd0b85a97d-42704dc41bbmr25937090f8f.55.1761554831396;
-        Mon, 27 Oct 2025 01:47:11 -0700 (PDT)
+        bh=FHn4VCXJ8SziL5HVs3tOncztpHETMhRaig+hCm1znNA=;
+        b=mDskkyVRX097/q8vbYvaqTmgT3gG44JAXHHU9JYyPw6PW2ZPzErlnPBYAqitMZ8CT3
+         zq9gfVchLv4uSnOtd1pAL9dvPXXTu4Mc1q9/hSwBYKTKP7yUmDYuLXilSWSTtlYwFIHx
+         CinAJbheXDpsIGkdSnM/7tHJ9p2OOytak6g90JNtKZz9JTRIC8Sh6NY3yqgnAws70pWy
+         n3LDaRNqtLZ4RN1dP5pSlUsgsGDfAXsViW4qIXFufhy/Nzkpfk1L9pmSltWJFKL6BYPj
+         0Re9X9xL95TUHLKPdCLPBxNX8ml36rfqfV63gcp3VsvJi02mUUIUxVr/lK8U8kjm1lc+
+         QRYA==
+X-Forwarded-Encrypted: i=1; AJvYcCUgEv9WfEoW2P0fAYopdE5f1cAyP6PwGGLytjSWJcTZ/3Vk+dnsuKCes467U0xqrog2GpdnPf6iO15qZ6rmR0LQZ/I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzpY3zBohGo/YPA5akjprMm8BQ1P7jHFePYfrVAikvzXSJ7gwho
+	YkqQe6JxIqq+C1eqcl0mcsfkhP1MWnkihb51TOQU9BgStgcyhhf192/c
+X-Gm-Gg: ASbGncvbbIIiDXfUOOaEvLn9iZYcigTpw/ZlphfhR03jwJU1H0StOduIGsb0XoON3Gu
+	JbJZWAxOkd6qhQ53BCcH0BfJogN5mrqFmSiFWqSCtOq9HE9K/SOp7qwre8G1MvUsz5EfwNBKG35
+	e4R5Gxi/PzdpxDCGcy1BOLAQGi2eGxLAoFxdq0naxDfkDqqOIi8JXVoPcXNu/QVvmyWdNg60PxR
+	jNZa3IgXuZjWojVLua3nrwboYDLcGOpDhxoMYsB/xK3oPkjS2M1PiQ1hFu6dtKRzH8iVaisI9Eu
+	pNEGBuBdqV80rySrR6uDcp8goiWiFLvbS4qM7SMtTnA8ys0xZyTLwIYpq4MW4QiAuA7GcAhb/h+
+	fcFaBrDItMVq76Eaivt8jiduXK0iBjcFWtbeXuQtkAQgmNzsO6A==
+X-Google-Smtp-Source: AGHT+IHGcNgsZtpIZ/JkOF1/9PEl8oxrEAXu3mnuSHi1k7QQS73tGtoaR+vym+DbF4opCAfLJwPmKw==
+X-Received: by 2002:a05:600c:3548:b0:471:131f:85aa with SMTP id 5b1f17b1804b1-471178a74a2mr226893315e9.13.1761554907197;
+        Mon, 27 Oct 2025 01:48:27 -0700 (PDT)
 Received: from krava ([2a02:8308:a00c:e200::b44f])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-475dd489e6dsm123106415e9.6.2025.10.27.01.47.10
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-429952cbc16sm12690740f8f.15.2025.10.27.01.48.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Oct 2025 01:47:11 -0700 (PDT)
+        Mon, 27 Oct 2025 01:48:26 -0700 (PDT)
 From: Jiri Olsa <olsajiri@gmail.com>
 X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Mon, 27 Oct 2025 09:47:09 +0100
+Date: Mon, 27 Oct 2025 09:48:25 +0100
 To: Song Liu <song@kernel.org>
 Cc: bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
 	live-patching@vger.kernel.org, ast@kernel.org, daniel@iogearbox.net,
 	andrii@kernel.org, rostedt@goodmis.org,
 	andrey.grodzovsky@crowdstrike.com, mhiramat@kernel.org,
-	kernel-team@meta.com, olsajiri@gmail.com
-Subject: Re: [PATCH v3 bpf 0/3] Fix ftrace for livepatch + BPF fexit programs
-Message-ID: <aP8xjR_ct9kn9yuf@krava>
+	kernel-team@meta.com, olsajiri@gmail.com, stable@vger.kernel.org
+Subject: Re: [PATCH v3 bpf 1/3] ftrace: Fix BPF fexit with livepatch
+Message-ID: <aP8x2VthUhZf4QVv@krava>
 References: <20251026205445.1639632-1-song@kernel.org>
+ <20251026205445.1639632-2-song@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -77,58 +78,79 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251026205445.1639632-1-song@kernel.org>
+In-Reply-To: <20251026205445.1639632-2-song@kernel.org>
 
-On Sun, Oct 26, 2025 at 01:54:42PM -0700, Song Liu wrote:
-> livepatch and BPF trampoline are two special users of ftrace. livepatch
-> uses ftrace with IPMODIFY flag and BPF trampoline uses ftrace direct
-> functions. When livepatch and BPF trampoline with fexit programs attach to
-> the same kernel function, BPF trampoline needs to call into the patched
-> version of the kernel function.
+On Sun, Oct 26, 2025 at 01:54:43PM -0700, Song Liu wrote:
+> When livepatch is attached to the same function as bpf trampoline with
+> a fexit program, bpf trampoline code calls register_ftrace_direct()
+> twice. The first time will fail with -EAGAIN, and the second time it
+> will succeed. This requires register_ftrace_direct() to unregister
+> the address on the first attempt. Otherwise, the bpf trampoline cannot
+> attach. Here is an easy way to reproduce this issue:
 > 
-> 1/3 and 2/3 of this patchset fix two issues with livepatch + fexit cases,
-> one in the register_ftrace_direct path, the other in the
-> modify_ftrace_direct path.
+>   insmod samples/livepatch/livepatch-sample.ko
+>   bpftrace -e 'fexit:cmdline_proc_show {}'
+>   ERROR: Unable to attach probe: fexit:vmlinux:cmdline_proc_show...
 > 
-> 3/3 adds selftests for both cases.
+> Fix this by cleaning up the hash when register_ftrace_function_nolock hits
+> errors.
 > 
+> Also, move the code that resets ops->func and ops->trampoline to
+> the error path of register_ftrace_direct().
+> 
+> Fixes: d05cb470663a ("ftrace: Fix modification of direct_function hash while in use")
+> Cc: stable@vger.kernel.org # v6.6+
+> Reported-by: Andrey Grodzovsky <andrey.grodzovsky@crowdstrike.com>
+> Closes: https://lore.kernel.org/live-patching/c5058315a39d4615b333e485893345be@crowdstrike.com/
+> Cc: Steven Rostedt (Google) <rostedt@goodmis.org>
+> Cc: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> Acked-and-tested-by: Andrey Grodzovsky <andrey.grodzovsky@crowdstrike.com>
+> Signed-off-by: Song Liu <song@kernel.org>
 > ---
+>  kernel/bpf/trampoline.c | 5 -----
+>  kernel/trace/ftrace.c   | 6 ++++++
+>  2 files changed, 6 insertions(+), 5 deletions(-)
 > 
-> Changes v2 => v3:
-> 1. Incorporate feedback by AI, which also fixes build error reported by
->    Steven and kernel test robot.
+> diff --git a/kernel/bpf/trampoline.c b/kernel/bpf/trampoline.c
+> index 5949095e51c3..f2cb0b097093 100644
+> --- a/kernel/bpf/trampoline.c
+> +++ b/kernel/bpf/trampoline.c
+> @@ -479,11 +479,6 @@ static int bpf_trampoline_update(struct bpf_trampoline *tr, bool lock_direct_mut
+>  		 * BPF_TRAMP_F_SHARE_IPMODIFY is set, we can generate the
+>  		 * trampoline again, and retry register.
+>  		 */
+> -		/* reset fops->func and fops->trampoline for re-register */
+> -		tr->fops->func = NULL;
+> -		tr->fops->trampoline = 0;
+> -
+> -		/* free im memory and reallocate later */
+>  		bpf_tramp_image_free(im);
+>  		goto again;
+>  	}
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index 42bd2ba68a82..725c224fb4e6 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -6048,6 +6048,12 @@ int register_ftrace_direct(struct ftrace_ops *ops, unsigned long addr)
+>  	ops->direct_call = addr;
+>  
+>  	err = register_ftrace_function_nolock(ops);
+> +	if (err) {
+> +		/* cleanup for possible another register call */
+> +		ops->func = NULL;
+> +		ops->trampoline = 0;
 
-Reviewed-by: Jiri Olsa <jolsa@kernel.org>
+nit, we could cleanup also flags and direct_call just to be complete,
+but at the same time it does not seem to affect anything
 
-thanks,
 jirka
 
 
-> 
-> v2: https://lore.kernel.org/bpf/20251024182901.3247573-1-song@kernel.org/
-> 
-> Changes v1 => v2:
-> 1. Target bpf tree. (Alexei)
-> 2. Bring back the FTRACE_WARN_ON in __ftrace_hash_update_ipmodify
->    for valid code paths. (Steven)
-> 3. Update selftests with cleaner way to find livepatch-sample.ko.
->    (offlline discussion with Ihor)
-> 
-> v1: https://lore.kernel.org/bpf/20251024071257.3956031-1-song@kernel.org/
-> 
-> Song Liu (3):
->   ftrace: Fix BPF fexit with livepatch
->   ftrace: bpf: Fix IPMODIFY + DIRECT in modify_ftrace_direct()
->   selftests/bpf: Add tests for livepatch + bpf trampoline
-> 
->  kernel/bpf/trampoline.c                       |   5 -
->  kernel/trace/ftrace.c                         |  46 ++++++--
->  tools/testing/selftests/bpf/config            |   3 +
->  .../bpf/prog_tests/livepatch_trampoline.c     | 107 ++++++++++++++++++
->  .../bpf/progs/livepatch_trampoline.c          |  30 +++++
->  5 files changed, 177 insertions(+), 14 deletions(-)
->  create mode 100644 tools/testing/selftests/bpf/prog_tests/livepatch_trampoline.c
->  create mode 100644 tools/testing/selftests/bpf/progs/livepatch_trampoline.c
-> 
-> --
+> +		remove_direct_functions_hash(hash, addr);
+> +	}
+>  
+>   out_unlock:
+>  	mutex_unlock(&direct_mutex);
+> -- 
 > 2.47.3
+> 
