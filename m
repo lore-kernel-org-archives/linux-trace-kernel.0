@@ -1,110 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98E8B1DFFC;
-	Mon, 27 Oct 2025 02:29:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D08062D29CF;
+	Mon, 27 Oct 2025 02:44:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761532185; cv=none; b=kZg8oVdfTX4cAGs+NFBu3IgROLvTylrhA4HYIzq49e54Kp/UrLo2Mgyoxg2URULJ7LV6bgVlM8uZmfDZCBLnerJ+LyzY/sVlf9MGaF//UCThyZpX9qUm9EHxrKD2E1AXs0SxjVsYU1JrRmC0m/935vy8as9CGinSCEbA2dZM+b0=
+	t=1761533096; cv=none; b=ZuwDpZyIeAOZobN5+P0v4ImifBwzfQQbMsNK5rckAf+gIHGV0DHdtpVCsLfc0EoTn8G0FqAa02UZZ+dFM42XMIid+gprDxgGyKD5zfV/Z2uHGDsuLU56Lq4rIpNFbcr019jxnn7H/zvVmv30u2i7UyhvmP4+YLU95ElTaiMy//4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761532185; c=relaxed/simple;
-	bh=Jv0StzLdkPw7Qg9z8uEgyVO5Bn1RJ64wxzXC6DVC2TY=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=VFB6eUN3fNkrQ1WSdNBA2sn7YX1goViWGPEUj5bcovR5FN72FutKfUTA1zAuq73tudgXmqgO0pby68UDO+HDtwkR4XOoksv3OCjl9stuURBD0IIPzJbVr9qXGUSKNv7xSvHn8NxrqAT2WZVPYnZQyisg0yGHg8uKobOZ8XYVbyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c9Vo/wKD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1761533096; c=relaxed/simple;
+	bh=I4/28CIASlVF1RVtFs3YmpM9lnmWITQDZRqQedU2Gwk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LPAc+WOuS0IZoQOGJh3ereEcNMuzyunfg5rCh6WMxZESSAUG8nBaDDJwOUwBeiqh2EhgOyJDhCBpdNbdkKVJ1Ya/u8ZAt300femnBTJrLXHIvUKTUyYoXk9gWwI8Vh4wWH32T+EyegjZufuyK6+rYMzHDFLx2m6zE8lsCMW5+/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LOqoxVOW; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c9Vo/wKD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC2BFC4CEE7;
-	Mon, 27 Oct 2025 02:29:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761532185;
-	bh=Jv0StzLdkPw7Qg9z8uEgyVO5Bn1RJ64wxzXC6DVC2TY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=c9Vo/wKDewFAO95sAbUUfzBcIIrwLYXwl11n70C70LnH/SRsZG4SZKClOTqX7sNGg
-	 8muV+pnX0khJDJQzpbKarmehAOJcRb1x9dCkRM+mrpebzSDX71j0WM01OlCvVfjE+F
-	 t+bymSOZLVB+rK3B8YGxwlWIwGzvXfLkH9W/LTNJy3kGIiZWzw9grdlmseXOTKq2AJ
-	 rhbA77IeJVMSBU66HM6cFtYgAP96KgHOI7MOULEcqK+DPD8dodR4xEHUwqQEMWajm1
-	 68SIrV2b1jeuHiSHyhIpyu3RT0PgZuL7kL06uHXew6OZjU7enbK0Aw2LRBvTMKYpwI
-	 O8SmIOPPrRapQ==
-Date: Mon, 27 Oct 2025 11:29:38 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Mark Brown <broonie@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, x86@kernel.org,
- Jinchao Wang <wangjinchao600@gmail.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Thomas Gleixner <tglx@linutronix.de>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H . Peter Anvin" <hpa@zytor.com>, Alexander Shishkin
- <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, Aishwarya.TCV@arm.com
-Subject: Re: [PATCH v5 6/8] selftests: tracing: Add a basic testcase for
- wprobe
-Message-Id: <20251027112938.bd34197bdbb5394bb2b220d9@kernel.org>
-In-Reply-To: <aPvwGhMBJqMKcC9D@finisterre.sirena.org.uk>
-References: <175859019940.374439.7398451124225791618.stgit@devnote2>
-	<175859026716.374439.14852239332989324292.stgit@devnote2>
-	<aPvwGhMBJqMKcC9D@finisterre.sirena.org.uk>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LOqoxVOW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1761533095; x=1793069095;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=I4/28CIASlVF1RVtFs3YmpM9lnmWITQDZRqQedU2Gwk=;
+  b=LOqoxVOW6jKk4LlZlsHNiACb7zo4MxjBgWDg5pBgKDzxSE/pfGuCV5uX
+   E4GvIBMRnDtfgJkIKegklhbXokYqb5fEj14j6cbYdstHiYucDdx+9lgUF
+   Q1R1SXFc1ZQC/4sRJqI6+JvzBMcu8iHDu+JBBblqc/BXf8H3Zbsg62dv+
+   /q/Ebidl+SC6+n1R6dvN3GjSHtvOmwNdNlB7LYPB+Il3MlLjxp9JYgyhW
+   kdVB/rE0wO/0NZ2FrwgtjOZkI7CC42eR2fRhpsFHUyKwZDnd8UVY0eex7
+   BBj+SMATnYZVurQKNwx89n+oK6s7WmmF+z4yAooSduH2SuncXXWn1y48s
+   w==;
+X-CSE-ConnectionGUID: uX5DDFOgSGWnXTTOZ8yE2w==
+X-CSE-MsgGUID: vsEtVKUbTC6ROcKCLX529g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="74285879"
+X-IronPort-AV: E=Sophos;i="6.19,258,1754982000"; 
+   d="scan'208";a="74285879"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2025 19:44:54 -0700
+X-CSE-ConnectionGUID: HlzfkQqbSTGFPsG03Ui8lQ==
+X-CSE-MsgGUID: dsY0bqw5SGqOnb5Ykzf3Ow==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,258,1754982000"; 
+   d="scan'208";a="184824253"
+Received: from lkp-server02.sh.intel.com (HELO 66d7546c76b2) ([10.239.97.151])
+  by orviesa007.jf.intel.com with ESMTP; 26 Oct 2025 19:44:48 -0700
+Received: from kbuild by 66d7546c76b2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1vDDDx-000GTN-2p;
+	Mon, 27 Oct 2025 02:44:45 +0000
+Date: Mon, 27 Oct 2025 10:44:19 +0800
+From: kernel test robot <lkp@intel.com>
+To: Menglong Dong <menglong8.dong@gmail.com>, ast@kernel.org,
+	jolsa@kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, daniel@iogearbox.net,
+	john.fastabend@gmail.com, andrii@kernel.org, martin.lau@linux.dev,
+	eddyz87@gmail.com, song@kernel.org, yonghong.song@linux.dev,
+	kpsingh@kernel.org, sdf@fomichev.me, haoluo@google.com,
+	mattbobrowski@google.com, rostedt@goodmis.org, mhiramat@kernel.org,
+	leon.hwang@linux.dev, jiang.biao@linux.dev, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH bpf-next v3 2/7] bpf: add two kfunc for TRACE_SESSION
+Message-ID: <202510270955.mbxODFvZ-lkp@intel.com>
+References: <20251026030143.23807-3-dongml2@chinatelecom.cn>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251026030143.23807-3-dongml2@chinatelecom.cn>
 
-On Fri, 24 Oct 2025 22:31:06 +0100
-Mark Brown <broonie@kernel.org> wrote:
+Hi Menglong,
 
-> On Tue, Sep 23, 2025 at 10:17:47AM +0900, Masami Hiramatsu (Google) wrote:
-> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > 
-> > Add 'add_remove_wprobe.tc' testcase for testing wprobe event that
-> > tests adding and removing operations of the wprobe event.
-> 
-> Since this series has landed in -next we've been seeing hangs on a range
-> of arm64 platforms running the ftrace tests, it looks like it's all of
-> them.  Unfortunately the systems lock up with no output as soon as they
-> start trying to do something with wprobes:
+kernel test robot noticed the following build warnings:
 
-Oh, thanks for reporting!
+[auto build test WARNING on bpf-next/master]
 
-> 
-> # ok 19 Generic dynamic event - add/remove kprobe events
-> # ok 20 Generic dynamic event - add/remove synthetic events
-> # ok 21 Generic dynamic event - add/remove tracepoint probe events
-> # ok 22 Generic dynamic event - add/remove tracepoint probe events on module
-> # ok 23 Generic dynamic event - add/remove/test uprobe events
+url:    https://github.com/intel-lab-lkp/linux/commits/Menglong-Dong/bpf-add-tracing-session-support/20251026-110720
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git master
+patch link:    https://lore.kernel.org/r/20251026030143.23807-3-dongml2%40chinatelecom.cn
+patch subject: [PATCH bpf-next v3 2/7] bpf: add two kfunc for TRACE_SESSION
+config: i386-randconfig-061-20251027 (https://download.01.org/0day-ci/archive/20251027/202510270955.mbxODFvZ-lkp@intel.com/config)
+compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251027/202510270955.mbxODFvZ-lkp@intel.com/reproduce)
 
-OK, let me check.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202510270955.mbxODFvZ-lkp@intel.com/
 
-> 
-> the next test being add_remove_wprobe.tc, which doesn't seem to
-> complete.  Full log (for what little it's worth):
-> 
->    https://lava.sirena.org.uk/scheduler/job/2000440#L1860
-> 
-> I turned on -vvv logging and that generated the rather spectacularly
-> more verbose:
-> 
->    https://lava.sirena.org.uk/scheduler/job/2000676/log_file/plain
-> 
-> (in a somewhat processed format unfortunately.).  Looking at that log I
-> do notice a bunch of "unexpected operators" reported by the shell, these
-> systems are running dash not bash, though that doesn't seem related.  It
-> looks like the script hangs in reset_trigger_file while grepping the
-> trigger files rather than actually trying to do the test.
+sparse warnings: (new ones prefixed by >>)
+   kernel/trace/bpf_trace.c:833:41: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected void [noderef] __user *[addressable] [assigned] [usertype] sival_ptr @@     got void * @@
+   kernel/trace/bpf_trace.c:833:41: sparse:     expected void [noderef] __user *[addressable] [assigned] [usertype] sival_ptr
+   kernel/trace/bpf_trace.c:833:41: sparse:     got void *
+   kernel/trace/bpf_trace.c:3573:52: sparse: sparse: cast removes address space '__user' of expression
+   kernel/trace/bpf_trace.c:3587:56: sparse: sparse: cast removes address space '__user' of expression
+   kernel/trace/bpf_trace.c:3601:52: sparse: sparse: cast removes address space '__user' of expression
+   kernel/trace/bpf_trace.c:3608:56: sparse: sparse: cast removes address space '__user' of expression
+   kernel/trace/bpf_trace.c:3616:52: sparse: sparse: cast removes address space '__user' of expression
+   kernel/trace/bpf_trace.c:3624:56: sparse: sparse: cast removes address space '__user' of expression
+   kernel/trace/bpf_trace.c: note: in included file (through include/linux/rbtree.h, include/linux/mm_types.h, include/linux/mmzone.h, ...):
+   include/linux/rcupdate.h:895:9: sparse: sparse: context imbalance in 'uprobe_prog_run' - unexpected unlock
+>> kernel/trace/bpf_trace.c:3379:35: sparse: sparse: non size-preserving integer to pointer cast
 
-Yeah, it seems do nothing on wprobe. Let me check why it happens.
+vim +3379 kernel/trace/bpf_trace.c
 
-Thanks!
-
-> 
-> Sorry about the delay in reporting this.
-
+  3372	
+  3373	__bpf_kfunc u64 *bpf_fsession_cookie(void *ctx)
+  3374	{
+  3375		/* This helper call is inlined by verifier. */
+  3376		u64 nr_args = ((u64 *)ctx)[-1];
+  3377	
+  3378		/* ctx[nr_args + 2] is the session cookie address */
+> 3379		return (u64 *)((u64 *)ctx)[nr_args + 2];
+  3380	}
+  3381	
 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
