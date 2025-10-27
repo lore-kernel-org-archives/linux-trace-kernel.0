@@ -1,47 +1,47 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD0AE30C626
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 27 Oct 2025 15:34:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D861E30CDA9
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 27 Oct 2025 15:34:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761579267; cv=none; b=o+CCNXaI0kCjlfUIwRAfL3Rpxek3R4LF401e5s2usR4BObiWEotc/fK4kws1pDmzWbWZNi+lAYFWNsYnHngJ0TRBP+NaS5SEEpf24RIvZdL43KDuPu1zyB7xY1tKBBFz4pFmeFTbWctWCGqTgPmaOBFWER2VvAzF2JDPtWZANYo=
+	t=1761579269; cv=none; b=dEgQNkqMq9T3WQ/Blw5v0MhW+lQaUzZrMDnP5ijuaX5ImfR785stte4+OJrbGy/Wsu/06inNDbsGfvsz/XtTVMSGyBbCMnVAe/4GCp4Z9pRQulv/yvmzCfztXjX9l+LxnHO8fCAZlAOCqGUDmX6AyLyGjGJkWl+XsI/0/55iqbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761579267; c=relaxed/simple;
-	bh=DrtTcPaaONlvitINNzOtl7+O4J1J7ACmIWmosPpDBoo=;
+	s=arc-20240116; t=1761579269; c=relaxed/simple;
+	bh=H4YFI6jMBxuTfma66yvWdpil+xS6qySRpqzaahtkstw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HwMS7YUjsjvSBmGZKWRoyYGeoega8fmdnO0f8z/k/YzAqzSevExveen0zoudGgyQgwhSoQITvxbaqFEInjp4b+ygO3GhvzgETTRsjCv0zJglabx3iqKK0SGKE9n26YWRK+X1oO9Bi/OWfQVk6pKcV+sr201tlB5MDBvX3ycVVjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FpcqSJAA; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=W1bSd6MOw3qpLRee34jEMHt0Wr0fF7CcSyz/iwl7JwZpjOko6hRwUzBHb0gWPOvxKlsr/FYc3FcRPQmY/Jr++SmrHP5L6UIwyO44VtHhFQYgGuqxT2KgerI/+GQgBRYX0m+2N9o66pOa3dTnWO/O2MxdcXcMFVaWfKiBBpPm2K4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZqAqu4eg; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FpcqSJAA"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZqAqu4eg"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1761579263;
+	s=mimecast20190719; t=1761579266;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Qn9DAbDJZJluNE63oWsS31K29+gHzG8u9dg7ZIjAzuc=;
-	b=FpcqSJAApBN5YkQzCZBGMF19e9KZcZmX3qgZwv/LwhW795n7/daioNNHjgAkCLx8EDsy5E
-	RHil6UU4pW0Hfi+f0eUo9eI5EDrI3DnpeVXXPCP64SCfhtBdTi5Rqj40YAG3mXQYCxUiGU
-	ODaoYITcFXNDyBBp5NzF2uO5v4QUKhc=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	bh=dkdOfBoeQUK++FxdaoJ0VFHifIEmAE6q/udIJ/iSXRc=;
+	b=ZqAqu4egRFu5171uq1FZ5k0nVPaZuneRnQ2Zv4nLf5lPtiB88fx4L1Rewv+yQaCErc7678
+	iVtE9YOsjdQo9s4xvElH+Rh9KJNaJGBoD/QvAuujpq5pO+VZDFIQzougD1QAhs8DTOKaU/
+	bsyPKH6jnwsPY3ObrLUkKwM3pFpmG14=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-558-ZCuYrMX4OZuAiwV1GG7Yfg-1; Mon,
- 27 Oct 2025 11:34:19 -0400
-X-MC-Unique: ZCuYrMX4OZuAiwV1GG7Yfg-1
-X-Mimecast-MFC-AGG-ID: ZCuYrMX4OZuAiwV1GG7Yfg_1761579258
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-629-oP4RHh2zPC6ysJKkAhmKiw-1; Mon,
+ 27 Oct 2025 11:34:23 -0400
+X-MC-Unique: oP4RHh2zPC6ysJKkAhmKiw-1
+X-Mimecast-MFC-AGG-ID: oP4RHh2zPC6ysJKkAhmKiw_1761579262
 Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 983421800D88;
-	Mon, 27 Oct 2025 15:34:18 +0000 (UTC)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 45ABB19560B2;
+	Mon, 27 Oct 2025 15:34:22 +0000 (UTC)
 Received: from fedora.redhat.com (unknown [10.45.224.137])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 7EE6319540EB;
-	Mon, 27 Oct 2025 15:34:15 +0000 (UTC)
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 130AA1955F1B;
+	Mon, 27 Oct 2025 15:34:18 +0000 (UTC)
 From: Tomas Glozar <tglozar@redhat.com>
 To: Steven Rostedt <rostedt@goodmis.org>
 Cc: LKML <linux-kernel@vger.kernel.org>,
@@ -53,9 +53,9 @@ Cc: LKML <linux-kernel@vger.kernel.org>,
 	Wander Lairson Costa <wander@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Tomas Glozar <tglozar@redhat.com>
-Subject: [PATCH v3 2/7] rtla/timerlat: Add --bpf-action option
-Date: Mon, 27 Oct 2025 16:33:56 +0100
-Message-ID: <20251027153401.1039217-3-tglozar@redhat.com>
+Subject: [PATCH v3 3/7] rtla/timerlat: Add example for BPF action program
+Date: Mon, 27 Oct 2025 16:33:57 +0100
+Message-ID: <20251027153401.1039217-4-tglozar@redhat.com>
 In-Reply-To: <20251027153401.1039217-1-tglozar@redhat.com>
 References: <20251027153401.1039217-1-tglozar@redhat.com>
 Precedence: bulk
@@ -67,228 +67,80 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-Add option --bpf-action that allows the user to attach an external BPF
-program that will be executed via BPF tail call on latency threshold
-overflow.
+Add an example BPF action program that prints the measured latency to
+the tracefs buffer via bpf_printk().
 
-Executing additional BPF code on latency threshold overflow allows doing
-doing low-latency and in-kernel troubleshooting of the cause of the
-overflow.
+A new Makefile target, "examples", is added to build the example. In
+addition, "sample/" subfolder is renamed to "example".
 
-The option takes an argument, which is a path to a BPF ELF file
-expected to contain a function named "action_handler" in a section named
-"tp/timerlat_action" (the section is necessary for libbpf to assign the
-correct BPF program type to it).
+If BPF skeleton support is unavailable or disabled, a warning will be
+displayed when building the BPF action program example.
 
 Signed-off-by: Tomas Glozar <tglozar@redhat.com>
 ---
- tools/tracing/rtla/src/timerlat.c      | 11 ++++++
- tools/tracing/rtla/src/timerlat.h      |  2 +-
- tools/tracing/rtla/src/timerlat_bpf.c  | 53 ++++++++++++++++++++++++++
- tools/tracing/rtla/src/timerlat_bpf.h  |  6 ++-
- tools/tracing/rtla/src/timerlat_hist.c |  5 +++
- tools/tracing/rtla/src/timerlat_top.c  |  5 +++
- 6 files changed, 80 insertions(+), 2 deletions(-)
+ tools/tracing/rtla/Makefile                      |  9 ++++++++-
+ tools/tracing/rtla/example/timerlat_bpf_action.c | 16 ++++++++++++++++
+ .../rtla/{sample => example}/timerlat_load.py    |  0
+ 3 files changed, 24 insertions(+), 1 deletion(-)
+ create mode 100644 tools/tracing/rtla/example/timerlat_bpf_action.c
+ rename tools/tracing/rtla/{sample => example}/timerlat_load.py (100%)
 
-diff --git a/tools/tracing/rtla/src/timerlat.c b/tools/tracing/rtla/src/timerlat.c
-index b69212874127..6907a323f9ec 100644
---- a/tools/tracing/rtla/src/timerlat.c
-+++ b/tools/tracing/rtla/src/timerlat.c
-@@ -48,6 +48,17 @@ timerlat_apply_config(struct osnoise_tool *tool, struct timerlat_params *params)
- 		}
- 	}
+diff --git a/tools/tracing/rtla/Makefile b/tools/tracing/rtla/Makefile
+index 746ccf2f5808..5f1529ce3693 100644
+--- a/tools/tracing/rtla/Makefile
++++ b/tools/tracing/rtla/Makefile
+@@ -73,9 +73,15 @@ src/timerlat.bpf.o: src/timerlat.bpf.c
  
-+	/* Check if BPF action program is requested but BPF is not available */
-+	if (params->bpf_action_program) {
-+		if (params->mode == TRACING_MODE_TRACEFS) {
-+			err_msg("BPF actions are not supported in tracefs-only mode\n");
-+			goto out_err;
-+		}
+ src/timerlat.skel.h: src/timerlat.bpf.o
+ 	$(QUIET_GENSKEL)$(SYSTEM_BPFTOOL) gen skeleton $< > $@
 +
-+		if (timerlat_load_bpf_action_program(params->bpf_action_program))
-+			goto out_err;
-+	}
++example/timerlat_bpf_action.o: example/timerlat_bpf_action.c
++	$(QUIET_CLANG)$(CLANG) -g -O2 -target bpf -c $(filter %.c,$^) -o $@
+ else
+ src/timerlat.skel.h:
+ 	$(Q)echo '/* BPF skeleton is disabled */' > src/timerlat.skel.h
 +
- 	if (params->mode != TRACING_MODE_BPF) {
- 		/*
- 		 * In tracefs and mixed mode, timerlat tracer handles stopping
-diff --git a/tools/tracing/rtla/src/timerlat.h b/tools/tracing/rtla/src/timerlat.h
-index fd6065f48bb7..8dd5d134ce08 100644
---- a/tools/tracing/rtla/src/timerlat.h
-+++ b/tools/tracing/rtla/src/timerlat.h
-@@ -27,6 +27,7 @@ struct timerlat_params {
- 	int			dump_tasks;
- 	int			deepest_idle_state;
- 	enum timerlat_tracing_mode mode;
-+	const char		*bpf_action_program;
- };
++example/timerlat_bpf_action.o: example/timerlat_bpf_action.c
++	$(Q)echo "BPF skeleton support is disabled, skipping example/timerlat_bpf_action.o"
+ endif
  
- #define to_timerlat_params(ptr) container_of(ptr, struct timerlat_params, common)
-@@ -36,4 +37,3 @@ int timerlat_main(int argc, char *argv[]);
- int timerlat_enable(struct osnoise_tool *tool);
- void timerlat_analyze(struct osnoise_tool *tool, bool stopped);
- void timerlat_free(struct osnoise_tool *tool);
--
-diff --git a/tools/tracing/rtla/src/timerlat_bpf.c b/tools/tracing/rtla/src/timerlat_bpf.c
-index 1d619e502c65..05adf18303df 100644
---- a/tools/tracing/rtla/src/timerlat_bpf.c
-+++ b/tools/tracing/rtla/src/timerlat_bpf.c
-@@ -7,6 +7,10 @@
- 
- static struct timerlat_bpf *bpf;
- 
-+/* BPF object and program for action program */
-+static struct bpf_object *obj;
-+static struct bpf_program *prog;
+ $(RTLA): $(RTLA_IN)
+@@ -96,7 +102,8 @@ clean: doc_clean fixdep-clean
+ 	$(Q)find . -name '*.o' -delete -o -name '\.*.cmd' -delete -o -name '\.*.d' -delete
+ 	$(Q)rm -f rtla rtla-static fixdep FEATURE-DUMP rtla-*
+ 	$(Q)rm -rf feature
+-	$(Q)rm -f src/timerlat.bpf.o src/timerlat.skel.h
++	$(Q)rm -f src/timerlat.bpf.o src/timerlat.skel.h example/timerlat_bpf_action.o
+ check: $(RTLA)
+ 	RTLA=$(RTLA) prove -o -f tests/
++examples: example/timerlat_bpf_action.o
+ .PHONY: FORCE clean check
+diff --git a/tools/tracing/rtla/example/timerlat_bpf_action.c b/tools/tracing/rtla/example/timerlat_bpf_action.c
+new file mode 100644
+index 000000000000..ac1be049a848
+--- /dev/null
++++ b/tools/tracing/rtla/example/timerlat_bpf_action.c
+@@ -0,0 +1,16 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <linux/bpf.h>
++#include <bpf/bpf_tracing.h>
 +
- /*
-  * timerlat_bpf_init - load and initialize BPF program to collect timerlat data
-  */
-@@ -96,6 +100,11 @@ void timerlat_bpf_detach(void)
- void timerlat_bpf_destroy(void)
- {
- 	timerlat_bpf__destroy(bpf);
-+	bpf = NULL;
-+	if (obj)
-+		bpf_object__close(obj);
-+	obj = NULL;
-+	prog = NULL;
- }
- 
- static int handle_rb_event(void *ctx, void *data, size_t data_sz)
-@@ -190,4 +199,48 @@ int timerlat_bpf_get_summary_value(enum summary_field key,
- 			 bpf->maps.summary_user,
- 			 key, value_irq, value_thread, value_user, cpus);
- }
++char LICENSE[] SEC("license") = "GPL";
 +
-+/*
-+ * timerlat_load_bpf_action_program - load and register a BPF action program
-+ */
-+int timerlat_load_bpf_action_program(const char *program_path)
++struct trace_event_raw_timerlat_sample {
++	unsigned long long timer_latency;
++} __attribute__((preserve_access_index));
++
++SEC("tp/timerlat_action")
++int action_handler(struct trace_event_raw_timerlat_sample *tp_args)
 +{
-+	int err;
-+
-+	obj = bpf_object__open_file(program_path, NULL);
-+	if (!obj) {
-+		err_msg("Failed to open BPF action program: %s\n", program_path);
-+		goto out_err;
-+	}
-+
-+	err = bpf_object__load(obj);
-+	if (err) {
-+		err_msg("Failed to load BPF action program: %s\n", program_path);
-+		goto out_obj_err;
-+	}
-+
-+	prog = bpf_object__find_program_by_name(obj, "action_handler");
-+	if (!prog) {
-+		err_msg("BPF action program must have 'action_handler' function: %s\n",
-+			program_path);
-+		goto out_obj_err;
-+	}
-+
-+	err = timerlat_bpf_set_action(prog);
-+	if (err) {
-+		err_msg("Failed to register BPF action program: %s\n", program_path);
-+		goto out_prog_err;
-+	}
-+
++	bpf_printk("Latency: %lld\n", tp_args->timer_latency);
 +	return 0;
-+
-+out_prog_err:
-+	prog = NULL;
-+out_obj_err:
-+	bpf_object__close(obj);
-+	obj = NULL;
-+out_err:
-+	return 1;
 +}
-+
- #endif /* HAVE_BPF_SKEL */
-diff --git a/tools/tracing/rtla/src/timerlat_bpf.h b/tools/tracing/rtla/src/timerlat_bpf.h
-index b5009092c7a3..169abeaf4363 100644
---- a/tools/tracing/rtla/src/timerlat_bpf.h
-+++ b/tools/tracing/rtla/src/timerlat_bpf.h
-@@ -30,7 +30,7 @@ int timerlat_bpf_get_summary_value(enum summary_field key,
- 				   long long *value_thread,
- 				   long long *value_user,
- 				   int cpus);
--
-+int timerlat_load_bpf_action_program(const char *program_path);
- static inline int have_libbpf_support(void) { return 1; }
- #else
- static inline int timerlat_bpf_init(struct timerlat_params *params)
-@@ -58,6 +58,10 @@ static inline int timerlat_bpf_get_summary_value(enum summary_field key,
- {
- 	return -1;
- }
-+static inline int timerlat_load_bpf_action_program(const char *program_path)
-+{
-+	return -1;
-+}
- static inline int have_libbpf_support(void) { return 0; }
- #endif /* HAVE_BPF_SKEL */
- #endif /* __bpf__ */
-diff --git a/tools/tracing/rtla/src/timerlat_hist.c b/tools/tracing/rtla/src/timerlat_hist.c
-index 606c1688057b..5e639cc34f64 100644
---- a/tools/tracing/rtla/src/timerlat_hist.c
-+++ b/tools/tracing/rtla/src/timerlat_hist.c
-@@ -763,6 +763,7 @@ static void timerlat_hist_usage(char *usage)
- 		"	     --deepest-idle-state n: only go down to idle state n on cpus used by timerlat to reduce exit from idle latency",
- 		"	     --on-threshold <action>: define action to be executed at latency threshold, multiple are allowed",
- 		"	     --on-end <action>: define action to be executed at measurement end, multiple are allowed",
-+		"	     --bpf-action <program>: load and execute BPF program when latency threshold is exceeded",
- 		NULL,
- 	};
- 
-@@ -853,6 +854,7 @@ static struct common_params
- 			{"deepest-idle-state",	required_argument,	0, '\4'},
- 			{"on-threshold",	required_argument,	0, '\5'},
- 			{"on-end",		required_argument,	0, '\6'},
-+			{"bpf-action",		required_argument,	0, '\7'},
- 			{0, 0, 0, 0}
- 		};
- 
-@@ -1062,6 +1064,9 @@ static struct common_params
- 				exit(EXIT_FAILURE);
- 			}
- 			break;
-+		case '\7':
-+			params->bpf_action_program = optarg;
-+			break;
- 		default:
- 			timerlat_hist_usage("Invalid option");
- 		}
-diff --git a/tools/tracing/rtla/src/timerlat_top.c b/tools/tracing/rtla/src/timerlat_top.c
-index fc479a0dcb59..da5d5db1bc17 100644
---- a/tools/tracing/rtla/src/timerlat_top.c
-+++ b/tools/tracing/rtla/src/timerlat_top.c
-@@ -521,6 +521,7 @@ static void timerlat_top_usage(char *usage)
- 		"	     --deepest-idle-state n: only go down to idle state n on cpus used by timerlat to reduce exit from idle latency",
- 		"	     --on-threshold <action>: define action to be executed at latency threshold, multiple are allowed",
- 		"	     --on-end: define action to be executed at measurement end, multiple are allowed",
-+		"	     --bpf-action <program>: load and execute BPF program when latency threshold is exceeded",
- 		NULL,
- 	};
- 
-@@ -603,6 +604,7 @@ static struct common_params
- 			{"deepest-idle-state",	required_argument,	0, '8'},
- 			{"on-threshold",	required_argument,	0, '9'},
- 			{"on-end",		required_argument,	0, '\1'},
-+			{"bpf-action",		required_argument,	0, '\2'},
- 			{0, 0, 0, 0}
- 		};
- 
-@@ -798,6 +800,9 @@ static struct common_params
- 				exit(EXIT_FAILURE);
- 			}
- 			break;
-+		case '\2':
-+			params->bpf_action_program = optarg;
-+			break;
- 		default:
- 			timerlat_top_usage("Invalid option");
- 		}
+diff --git a/tools/tracing/rtla/sample/timerlat_load.py b/tools/tracing/rtla/example/timerlat_load.py
+similarity index 100%
+rename from tools/tracing/rtla/sample/timerlat_load.py
+rename to tools/tracing/rtla/example/timerlat_load.py
 -- 
 2.51.0
 
