@@ -1,47 +1,47 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD75830C600
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 27 Oct 2025 15:34:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10E5B30C635
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 27 Oct 2025 15:34:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761579277; cv=none; b=KQ1poge6rbD/tr14wFnpEjZMpGBoWyBTdh5/9AYHlhBqmAfcYSYkEMzDxybBOHSkkbbqkBIAdIuzrbQQst43LijE01O0rPpmHSmY0E2NROCE0Kb84bAHtvAwO4895FfbradnWlTswkuPaTX7iTmrQZGIv62lfOwUAPFm9TJ0DX0=
+	t=1761579282; cv=none; b=rVGHYKpAT/TQw0Y1QGkEA0mMzhn1HXkSyoCxGpYJtgzonT+MpJ2usb5D5Ixv0ZfcgR2ZwlA6DAzETwmCEDHtx/iZvokgzI2lVprF/ogvOmArSEfNff8fTXoXIG2NGH2g204r6+nv99CspRgVEgX0ny1L9GnyViwQNqMtLbzgsDA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761579277; c=relaxed/simple;
-	bh=YMf+9R/PB7Rn/nSanJ1qN6xwBpW1JxcXcqf/9NeCKjQ=;
+	s=arc-20240116; t=1761579282; c=relaxed/simple;
+	bh=E4UmDRrfK427SBmAu3QgG9274GYyOCRnkLTnbkQSZ48=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=eOSJs/yAusNFGeueQO7suoJPaoTieY/F4yCGSC79QIe7U0GaBjcL05w0M1C/neAgkoDpQvvcw8o7ewWmmBtros2evVbNYKGWaQZyMmXdeo9z6K/Rxk9AyfkROiyCSknzgDeptA0cuOvK0m50tqLHfOnVwqM7v2talp4TDhe2EsY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GnmvUMgd; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=Omxuyeah6dOLn7WazylFIu/Qt/1vmwWePSUk6X6qDLT8AlD7AmUmrFpszCIBHsFg5V6YYDZftvsFmRZtOj21QPgX7tNTVK3DLEZSqDAVstntVNCoiFS36x86YXNTOO5FWAG2fFD1QfSzsnlNTDMpDlMJT9U/hTHf7hvKHn8Txko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WrYQ70Xw; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GnmvUMgd"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WrYQ70Xw"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1761579274;
+	s=mimecast20190719; t=1761579279;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=RSN84v7pXU4iL2XOp2r81stsd6YXOv55W/nDN5c8mgU=;
-	b=GnmvUMgdakfxMxinpIhUaGKiFX+2je2eYwtAmsjXucxT57R20Tm/ShunIGEcKwLGoy+dr4
-	PW9vECID5/5o3NXENlSCGtfxbuu9iRgDse0o8Qh3E2VWt00F5wNyk7L5RvYZjsbU1zKOEU
-	NlMy7Vg0qj8Ibwn69rC9RTC9ZEjbGJo=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	bh=Z8kAhx3O+cWF32TZgKmRfF3DYFNfvgUR9bkHyjA8PvA=;
+	b=WrYQ70XwMpYnPaB1TEMbysTd8ORScEAd+gDSoFHWMS+0CulJItQourSvFwqpApetnlTqId
+	hhfYA9wRG0Q4qOzsROUEf5LHdfTQqFL2rHgEXthYwAM6ktcixsPJk3kxVdaO+/Rv30yv6f
+	SrdXLg9BW51ZwJvaHydR/HcQ+zXMVjU=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-304-xoKuXJJQM4CUYuUx_eblBQ-1; Mon,
- 27 Oct 2025 11:34:31 -0400
-X-MC-Unique: xoKuXJJQM4CUYuUx_eblBQ-1
-X-Mimecast-MFC-AGG-ID: xoKuXJJQM4CUYuUx_eblBQ_1761579270
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-624-NvjvoCvuOj2zeU0NjRNbkQ-1; Mon,
+ 27 Oct 2025 11:34:35 -0400
+X-MC-Unique: NvjvoCvuOj2zeU0NjRNbkQ-1
+X-Mimecast-MFC-AGG-ID: NvjvoCvuOj2zeU0NjRNbkQ_1761579274
 Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2E4D219540DF;
-	Mon, 27 Oct 2025 15:34:30 +0000 (UTC)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 40A4E180A224;
+	Mon, 27 Oct 2025 15:34:34 +0000 (UTC)
 Received: from fedora.redhat.com (unknown [10.45.224.137])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 5DD0E195398C;
-	Mon, 27 Oct 2025 15:34:26 +0000 (UTC)
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id CB21419539B2;
+	Mon, 27 Oct 2025 15:34:30 +0000 (UTC)
 From: Tomas Glozar <tglozar@redhat.com>
 To: Steven Rostedt <rostedt@goodmis.org>
 Cc: LKML <linux-kernel@vger.kernel.org>,
@@ -53,9 +53,9 @@ Cc: LKML <linux-kernel@vger.kernel.org>,
 	Wander Lairson Costa <wander@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Tomas Glozar <tglozar@redhat.com>
-Subject: [PATCH v3 5/7] rtla/tests: Run Test::Harness in verbose mode
-Date: Mon, 27 Oct 2025 16:33:59 +0100
-Message-ID: <20251027153401.1039217-6-tglozar@redhat.com>
+Subject: [PATCH v3 6/7] Documentation/rtla: Rename sample/ to example/
+Date: Mon, 27 Oct 2025 16:34:00 +0100
+Message-ID: <20251027153401.1039217-7-tglozar@redhat.com>
 In-Reply-To: <20251027153401.1039217-1-tglozar@redhat.com>
 References: <20251027153401.1039217-1-tglozar@redhat.com>
 Precedence: bulk
@@ -67,46 +67,26 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-Add -v flag to prove command to also print the names of tests that
-succeeded, not only those that failed, to allow easier debugging of the
-test suite.
+The sample/ directory in tools/tracing/rtla was renamed to example/ in
+an earlier commit.
 
-Also, drop printing the option and value to stdout in
-check_with_osnoise_options, which was a debugging print that was
-accidentally left in the final commit, and which would be otherwise now
-visible in make check output, as stdout is no longer suppressed.
+Rename it also in the documentation.
 
-Suggested-by: Crystal Wood <crwood@redhat.com>
 Signed-off-by: Tomas Glozar <tglozar@redhat.com>
 ---
- tools/tracing/rtla/Makefile        | 2 +-
- tools/tracing/rtla/tests/engine.sh | 1 -
- 2 files changed, 1 insertion(+), 2 deletions(-)
+ Documentation/tools/rtla/common_timerlat_options.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/tracing/rtla/Makefile b/tools/tracing/rtla/Makefile
-index aef814b639b7..2701256abaf3 100644
---- a/tools/tracing/rtla/Makefile
-+++ b/tools/tracing/rtla/Makefile
-@@ -110,6 +110,6 @@ clean: doc_clean fixdep-clean
- 	$(Q)rm -rf feature
- 	$(Q)rm -f src/timerlat.bpf.o src/timerlat.skel.h example/timerlat_bpf_action.o
- check: $(RTLA) tests/bpf/bpf_action_map.o
--	RTLA=$(RTLA) BPFTOOL=$(SYSTEM_BPFTOOL) prove -o -f tests/
-+	RTLA=$(RTLA) BPFTOOL=$(SYSTEM_BPFTOOL) prove -o -f -v tests/
- examples: example/timerlat_bpf_action.o
- .PHONY: FORCE clean check
-diff --git a/tools/tracing/rtla/tests/engine.sh b/tools/tracing/rtla/tests/engine.sh
-index c7de3d6ed6a8..ed261e07c6d9 100644
---- a/tools/tracing/rtla/tests/engine.sh
-+++ b/tools/tracing/rtla/tests/engine.sh
-@@ -105,7 +105,6 @@ check_with_osnoise_options() {
- 			[ "$1" == "" ] && continue
- 			option=$(echo $1 | cut -d '=' -f 1)
- 			value=$(echo $1 | cut -d '=' -f 2)
--			echo "option: $option, value: $value"
- 			echo "$value" > "/sys/kernel/tracing/osnoise/$option" || return 1
- 		done
- 	fi
+diff --git a/Documentation/tools/rtla/common_timerlat_options.rst b/Documentation/tools/rtla/common_timerlat_options.rst
+index 1f5d024b53aa..c6046fcf52dc 100644
+--- a/Documentation/tools/rtla/common_timerlat_options.rst
++++ b/Documentation/tools/rtla/common_timerlat_options.rst
+@@ -64,4 +64,4 @@
+ 
+         Set timerlat to run without workload, waiting for the user to dispatch a per-cpu
+         task that waits for a new period on the tracing/osnoise/per_cpu/cpu$ID/timerlat_fd.
+-        See linux/tools/rtla/sample/timerlat_load.py for an example of user-load code.
++        See linux/tools/rtla/example/timerlat_load.py for an example of user-load code.
 -- 
 2.51.0
 
