@@ -1,187 +1,149 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpbguseast1.qq.com (smtpbguseast1.qq.com [54.204.34.129])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DAA4251791
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 27 Oct 2025 12:51:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C0662472BA;
+	Mon, 27 Oct 2025 13:06:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.204.34.129
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761569475; cv=none; b=NlCtX+1+J8dXBPa/dRT1CXBmsrYjF9CJLIv2Fzsz5vA0fEXyeeSpDUKvJCu8g75kis1Eo6aUAeUlh/fFoFlQpX5U/RKbTZ1ZhSZrFi9AX7EptJm1YgYopxTY76HwLtZ3qoOYhRCtTYypap//zvz8aWkLkGiHfUvm/JkIbyVxD6k=
+	t=1761570399; cv=none; b=Qd1oa+NQOVc4GHrQpR5Xxqp+RZ2afWbCe0iA6mSXrzSYHhCnGhAtrCx7mAc0YvSGezdXXaSGroN+lDNxkGeavoI8babTdFlXOuVwqPa97Hr5bZ3PMyViNIIRomcWUxVWBIvs4cha0zOCQNiW+dxl4EJ11Q80VEZLVxGguFrx3mA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761569475; c=relaxed/simple;
-	bh=IdPC9YfGWevFoR/dZEXyXJZ/l9vGGOMt1FuwCMwOERE=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=MQetQKXKzwCjz3iCH5KyD3XKNRPKe79qOfkF97aGUGSft+iFdA2TYLkSFtoPRBxRYl1ANinSa526kl+6LVqmJUeAjnxtdAV53leDpjlbe0WAh+/OX6TXbVyhyYVWSNdK1DruQAsi8pCVbzo2ea7LhipaD9Rc3cXs1uiXv5eO0WI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=o+X/eNhL; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
+	s=arc-20240116; t=1761570399; c=relaxed/simple;
+	bh=1Ri9tuaEYe1o+uXAbO+nneWbFihzlLd5zFi/vArGwI8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lMN5oKXZit9z0sNJiJo9HQ26F2+Y4xcxQvtHavYQPqXMxEnJ4iHcQ4WSZMo5c3BxSwqw2BsqXQKzH5yde5XRKM246ZvmXXd/CMThYqXd1Ba2d5pmHfEOEXLfGdN5UvZWu9fc8bIBMLUrKX8pjBFvvf3490O0LaYdj5XHE0GM4Oc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=Xde0PFN1; arc=none smtp.client-ip=54.204.34.129
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="o+X/eNhL"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-32eb18b5659so3784451a91.2
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 27 Oct 2025 05:51:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1761569473; x=1762174273; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=AyFD6g3VBvR49cMfgS8niFKClPpT1OiUWbHICnlNzwM=;
-        b=o+X/eNhL+8Dze7uoRWYx5BwWklNaYiRtEDdNz8UjGzcESjQ1CWyjuWZmoXakGbGgQu
-         yOU2e24UqX011jKq+QwKdstbQDKkCTVW+TNDCVRCbZrwzD+rHRv+3qdNH2DJIjyXUh2H
-         VGoG7V26mZ5ji3jaXTA/+noNjeElwK+4sdKJcMYxCV57kM8Z2YwCICfgJ43b7BuWcNuo
-         3W4qn6uTm3qWnWOrGMWegQjeEvOUPgntJQt3JT2dT4/JtojgaMoIrt5JvzueFovc6E1G
-         bw/jgu8rahvFe51OEjGk+GGF4vPVoAha6QZ2+OZo5h5t+6dqSRpmNUn2STpeirQSbZ+q
-         FZIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761569473; x=1762174273;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=AyFD6g3VBvR49cMfgS8niFKClPpT1OiUWbHICnlNzwM=;
-        b=I2lsGcgJ30on8o6boD8iJIIOsFb8dbgMC6Pj5Y6m/ZWeMRKDPlq4MWTkOfAYQJhDnE
-         7aSAN91WFRWfRWjBDntxI7jtBiNNTmcGxPQ0XZD6hOcfe9dWajtRMXcbik6P2xh7sTpw
-         vs9dBEpbhTV2/PLDwIzlTSXF7gAw9+Z7/lkCeEutYcjywjntZKFBXipanzkW0RKOP0wk
-         KVCCTgDrHLv7TAghwGFLrbtF1zG7MR4gkqp0wgDqY4iQtNbGvqcUVrGqtwXmL+MVHX7t
-         Jg6+13ioXZaMiFCJf7NSFhATB6u8yvzkJKbijPgdDNAH0pmDCdyY/B9CXcSLpsMVOqrw
-         7trw==
-X-Forwarded-Encrypted: i=1; AJvYcCW8afsBx40ANp5XIHHW9brjttkg1l0iHVWIhAsds6uBo+YQ+Fg+q+AHA819rfksqimgL/qqeiIXYjZCHqucGZJ9oYQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxsTbZxYDyHYTd7gbZb6fXQfRUYUmSrn62Zhl0M7HR3GBYV0XLc
-	3Lz5C+wxnIG1+Luv52KiQHK08SRGVUWvQzGDSuhDOOHlmWQyiNqiyiFXL75UifI6BoqdOp7qI4t
-	Pq/SnIiUpAEePqLa2zrB75Tcb+A==
-X-Google-Smtp-Source: AGHT+IHpzLMnxvGPeWk8f7xz/g/ATtWvyisZTfCa5aljb0u8eC/vwPSWrWHsFNePjKreSc0j11QMICkHErRNy2JiYA==
-X-Received: from pjbcp12.prod.google.com ([2002:a17:90a:fb8c:b0:339:ee99:5e9b])
- (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90b:2d8f:b0:335:2eee:19dc with SMTP id 98e67ed59e1d1-33bcf8f94b6mr44662881a91.28.1761569472526;
- Mon, 27 Oct 2025 05:51:12 -0700 (PDT)
-Date: Mon, 27 Oct 2025 05:51:10 -0700
-In-Reply-To: <aPvDEl0kGdZfcAD9@google.com>
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="Xde0PFN1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1761570359;
+	bh=B5duYsCPkK8oa0cCny8J8MEAD0ZkSluVzWoA9pUDJxw=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=Xde0PFN1oI0O5ydpP0ZoRG2NJQQPtV7XkdZAk+3rINQknGQVRSr0oKtCn9zWTDSvF
+	 hXPzLAy450RMr3MekFvhANVwOk8eXN6VibBwJPzbdGZc8XGK67mmHVMx8VHs/Sj0/d
+	 TtNnpKTl8UuJ1H7fHTh577t9lXlTq2vudg9OJzbU=
+X-QQ-mid: zesmtpip2t1761570342t3c4c53a4
+X-QQ-Originating-IP: xn+d9YI6i5s0mfuGNgC+mIwtyxvbwxeqAS1waYQObro=
+Received: from localhost.localdomain ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Mon, 27 Oct 2025 21:05:37 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 107945356980905378
+EX-QQ-RecipientCnt: 7
+From: hongao <hongao@uniontech.com>
+To: naveen@kernel.org,
+	anil.s.keshavamurthy@intel.com,
+	davem@davemloft.net,
+	mhiramat@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	hongao <hongao@uniontech.com>
+Subject: [PATCH] kprobes: retry pending optprobe after freeing blocker
+Date: Mon, 27 Oct 2025 21:05:35 +0800
+Message-ID: <2B0BC73E9D190B7B+20251027130535.2296913-1-hongao@uniontech.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <cover.1760731772.git.ackerleytng@google.com> <727482ec42baa50cb1488ad89d02e732defda3db.1760731772.git.ackerleytng@google.com>
- <diqzldl0dz5f.fsf@google.com> <aPvDEl0kGdZfcAD9@google.com>
-Message-ID: <diqza51cjyo1.fsf@google.com>
-Subject: Re: [RFC PATCH v1 16/37] KVM: selftests: Add support for mmap() on
- guest_memfd in core library
-From: Ackerley Tng <ackerleytng@google.com>
-To: Sean Christopherson <seanjc@google.com>
-Cc: cgroups@vger.kernel.org, kvm@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
-	linux-trace-kernel@vger.kernel.org, x86@kernel.org, akpm@linux-foundation.org, 
-	binbin.wu@linux.intel.com, bp@alien8.de, brauner@kernel.org, 
-	chao.p.peng@intel.com, chenhuacai@kernel.org, corbet@lwn.net, 
-	dave.hansen@intel.com, dave.hansen@linux.intel.com, david@redhat.com, 
-	dmatlack@google.com, erdemaktas@google.com, fan.du@intel.com, fvdl@google.com, 
-	haibo1.xu@intel.com, hannes@cmpxchg.org, hch@infradead.org, hpa@zytor.com, 
-	hughd@google.com, ira.weiny@intel.com, isaku.yamahata@intel.com, jack@suse.cz, 
-	james.morse@arm.com, jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com, 
-	jhubbard@nvidia.com, jroedel@suse.de, jthoughton@google.com, 
-	jun.miao@intel.com, kai.huang@intel.com, keirf@google.com, 
-	kent.overstreet@linux.dev, liam.merwick@oracle.com, 
-	maciej.wieczor-retman@intel.com, mail@maciej.szmigiero.name, 
-	maobibo@loongson.cn, mathieu.desnoyers@efficios.com, maz@kernel.org, 
-	mhiramat@kernel.org, mhocko@kernel.org, mic@digikod.net, michael.roth@amd.com, 
-	mingo@redhat.com, mlevitsk@redhat.com, mpe@ellerman.id.au, 
-	muchun.song@linux.dev, nikunj@amd.com, nsaenz@amazon.es, 
-	oliver.upton@linux.dev, palmer@dabbelt.com, pankaj.gupta@amd.com, 
-	paul.walmsley@sifive.com, pbonzini@redhat.com, peterx@redhat.com, 
-	pgonda@google.com, prsampat@amd.com, pvorel@suse.cz, qperret@google.com, 
-	richard.weiyang@gmail.com, rick.p.edgecombe@intel.com, rientjes@google.com, 
-	rostedt@goodmis.org, roypat@amazon.co.uk, rppt@kernel.org, 
-	shakeel.butt@linux.dev, shuah@kernel.org, steven.price@arm.com, 
-	steven.sistare@oracle.com, suzuki.poulose@arm.com, tabba@google.com, 
-	tglx@linutronix.de, thomas.lendacky@amd.com, vannapurve@google.com, 
-	vbabka@suse.cz, viro@zeniv.linux.org.uk, vkuznets@redhat.com, 
-	wei.w.wang@intel.com, will@kernel.org, willy@infradead.org, wyihan@google.com, 
-	xiaoyao.li@intel.com, yan.y.zhao@intel.com, yilun.xu@intel.com, 
-	yuzenghui@huawei.com, zhiquan1.li@intel.com
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz6b-0
+X-QQ-XMAILINFO: NmbAG95z1FKVx867xqkdOP/zfVLXiVqAIR6jWlyNgLxupKVnpGBDY5Et
+	ZGV0+fuKvjFgABzRLwLGvJHZ+suOjM20gV75AZQhmCGeOWN+pmxAAXr4RjMRbE0pmWhvVAj
+	mUryJuPlLyoeOtjOsQU2dbwrPqWmxnDnNlJB+/tz5KT/LIeC9oGoBLoDKiTJPy1qpmpaxvF
+	lY9QM1nBohsi7EMCKdXS7/bbd+oKm63+NlrM+xFLeJxjLQYCfnciFAv/QBgVau9CfXrMXLl
+	vb291CBq3wynQEG5ii8wRBTZ6vSSkd7AKrBCgmuqOxbRzNVeP5nqhEdHF/y6j/etkc2BCOX
+	iwKss1dYDx50fsK91SCte4pxsknzKWp4AgBgR3V1beiaBMydegvcoO6NkRy0dYcb7gKGAgA
+	iEEh6sx/epiWBvb/SsAW/YGb8s3aWlBzJ/SZKoAw4SWiXcyi6RMxdylsD6NBhJwYmuIzN1l
+	hhzXAEvIMqnsecWSGmp50RhNRmeQkqfdv/D9h/6XOTMN7K7lmGW5AvO9M0VMtx1lGAz1GV8
+	R8Jfsyzuv7vY+7KMNzb5SUrXKzn56HO60S+fJ1OUbAm7e8FjBZ/omvfEILog8z71VVi5RFJ
+	dj76ShMpgLj/pIlBDmS9akPZyiIXlOrPRl7kDLVqY8LAqQ7cI5UZEvBIejI9d8vVJHpkmKo
+	l+KI6f+mmYAM74OQ4kinn+CmcgamQYVSZkn3VlRat8FTagtKlcOV3E+esDOSkpBGGb4KS4/
+	jota5V4ysJX3+3jTcSNIcRPjoNBAL3drpnS+SFVF3VF1VuPFBo6aTfNBJA+uqynDD8zM9kn
+	ijrTyLdALOunzykeOQeQd7Kf7+b2taa9eHS32r/KO8CHS12A+sIE8R/JTsSi7oF7CyrOsn/
+	wrvopcoREYCENHWYwboKDYUOg+rPPbv7v29JGosBDR/y5P++ujBtKMdI2VCvfCKgtjF2pkB
+	BU60EqH0oD3fvpZzaxwomrh+qpNyQj2irl+w0xeThZTkH1BnCValc6iJwZQnlwPp3crk+lJ
+	lRo+/nstUcMc/FS6+A54YJsSjBgrW0Tl32CIn7wcNzbPdTjtlK7qQj7Ek4nkvwo5BqlTEEx
+	AktnDou/wTnV6decFaiSzzU5Ym34EcIWi36REI5NZj9
+X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
+X-QQ-RECHKSPAM: 0
 
-Sean Christopherson <seanjc@google.com> writes:
+The freeing_list cleanup now retries optimizing any sibling probe that was
+deferred while this aggregator was being torn down.  Track the pending
+address in struct optimized_kprobe so __disarm_kprobe() can defer the
+retry until kprobe_optimizer() finishes disarming.
 
-> On Fri, Oct 24, 2025, Ackerley Tng wrote:
->> Ackerley Tng <ackerleytng@google.com> writes:
->> 
->> > From: Sean Christopherson <seanjc@google.com>
->> >
->> > Accept gmem_flags in vm_mem_add() to be able to create a guest_memfd within
->> > vm_mem_add().
->> >
->> > When vm_mem_add() is used to set up a guest_memfd for a memslot, set up the
->> > provided (or created) gmem_fd as the fd for the user memory region. This
->> > makes it available to be mmap()-ed from just like fds from other memory
->> > sources. mmap() from guest_memfd using the provided gmem_flags and
->> > gmem_offset.
->> >
->> > Add a kvm_slot_to_fd() helper to provide convenient access to the file
->> > descriptor of a memslot.
->> >
->> > Update existing callers of vm_mem_add() to pass 0 for gmem_flags to
->> > preserve existing behavior.
->> >
->> > Signed-off-by: Sean Christopherson <seanjc@google.com>
->> > [For guest_memfds, mmap() using gmem_offset instead of 0 all the time.]
->> > Signed-off-by: Ackerley Tng <ackerleytng@google.com>
->> > ---
->> >  tools/testing/selftests/kvm/include/kvm_util.h |  7 ++++++-
->> >  tools/testing/selftests/kvm/lib/kvm_util.c     | 18 ++++++++++--------
->> >  .../kvm/x86/private_mem_conversions_test.c     |  2 +-
->> >  3 files changed, 17 insertions(+), 10 deletions(-)
->> >
->> > 
->> > [...snip...]
->> > 
->> > @@ -1050,13 +1049,16 @@ void vm_mem_add(struct kvm_vm *vm, enum vm_mem_backing_src_type src_type,
->> >  	}
->> >  
->> >  	region->fd = -1;
->> > -	if (backing_src_is_shared(src_type))
->> > +	if (flags & KVM_MEM_GUEST_MEMFD && gmem_flags & GUEST_MEMFD_FLAG_MMAP)
->> > +		region->fd = kvm_dup(gmem_fd);
->> > +	else if (backing_src_is_shared(src_type))
->> >  		region->fd = kvm_memfd_alloc(region->mmap_size,
->> >  					     src_type == VM_MEM_SRC_SHARED_HUGETLB);
->> >  
->> 
->> Doing this makes it hard to test the legacy dual-backing case.
->> 
->> It actually broke x86/private_mem_conversions_test for the legacy
->> dual-backing case because there's no way to mmap or provide a
->> userspace_address from the memory provider that is not guest_memfd, as
->> determined by src_type.
->
-> Yes there is.  This patch is a giant nop.  The only thing that the core library
-> doesn't support is mmap() on guest_memfd *and* the other src_type, and IMO that
-> is big "don't care", because KVM doesn't even support that combination:
->
-> 	if (kvm_gmem_supports_mmap(inode))
-> 		slot->flags |= KVM_MEMSLOT_GMEM_ONLY;
->
+Signed-off-by: hongao <hongao@uniontech.com>
 
-Makes sense.
+diff --git a/include/linux/kprobes.h b/include/linux/kprobes.h
+index 8c4f3bb24..33d65b008 100644
+--- a/include/linux/kprobes.h
++++ b/include/linux/kprobes.h
+@@ -338,6 +338,7 @@ DEFINE_INSN_CACHE_OPS(insn);
+ struct optimized_kprobe {
+ 	struct kprobe kp;
+ 	struct list_head list;	/* list for optimizing queue */
++	kprobe_opcode_t *pending_reopt_addr;	/* addr that should trigger re-optimization */
+ 	struct arch_optimized_insn optinsn;
+ };
+ 
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index da59c68df..0976ab57d 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -514,6 +514,7 @@ static LIST_HEAD(freeing_list);
+ 
+ static void kprobe_optimizer(struct work_struct *work);
+ static DECLARE_DELAYED_WORK(optimizing_work, kprobe_optimizer);
++static void optimize_kprobe(struct kprobe *p);
+ #define OPTIMIZE_DELAY 5
+ 
+ /*
+@@ -591,6 +592,20 @@ static void do_free_cleaned_kprobes(void)
+ 			 */
+ 			continue;
+ 		}
++		if (op->pending_reopt_addr) {
++			struct kprobe *blocked;
++
++			/*
++			 * The aggregator was holding back another probe while it sat on the
++			 * unoptimizing/freeing lists.  Now that the aggregator has been fully
++			 * reverted we can safely retry the optimization of that sibling.
++			 */
++
++			blocked = get_optimized_kprobe(op->pending_reopt_addr);
++			if (unlikely(blocked))
++				optimize_kprobe(blocked);
++		}
++
+ 		free_aggr_kprobe(&op->kp);
+ 	}
+ }
+@@ -1009,13 +1024,13 @@ static void __disarm_kprobe(struct kprobe *p, bool reopt)
+ 		_p = get_optimized_kprobe(p->addr);
+ 		if (unlikely(_p) && reopt)
+ 			optimize_kprobe(_p);
++	} else if (reopt && kprobe_aggrprobe(p)) {
++		struct optimized_kprobe *op =
++			container_of(p, struct optimized_kprobe, kp);
++
++		/* Defer the re-optimization until the worker finishes disarming. */
++		op->pending_reopt_addr = p->addr;
+ 	}
+-	/*
+-	 * TODO: Since unoptimization and real disarming will be done by
+-	 * the worker thread, we can not check whether another probe are
+-	 * unoptimized because of this probe here. It should be re-optimized
+-	 * by the worker thread.
+-	 */
+ }
+ 
+ #else /* !CONFIG_OPTPROBES */
+-- 
+2.47.2
 
-> I mean, we _could_ test that KVM ignores the hva for mapping, but that's a
-> different and unique test entirely.
->
-> I did break x86/private_mem_conversions_test (I could have sworn I tested, *sigh*),
-> but the bug is in:
->
->   KVM: selftests: Provide function to look up guest_memfd details from gpa
->
-> not here.  And it's a trivial /facepalm-style fix:
->
-> diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
-> index ee5b63f7cb50..23a8676fee6d 100644
-> --- a/tools/testing/selftests/kvm/lib/kvm_util.c
-> +++ b/tools/testing/selftests/kvm/lib/kvm_util.c
-> @@ -1680,7 +1680,7 @@ int kvm_gpa_to_guest_memfd(struct kvm_vm *vm, vm_paddr_t gpa, off_t *fd_offset,
->         gpa_offset = gpa - region->region.guest_phys_addr;
->         *fd_offset = region->region.guest_memfd_offset + gpa_offset;
->         *nr_bytes = region->region.memory_size - gpa_offset;
-> -       return region->fd;
-> +       return region->region.guest_memfd;
->  }
->  
->  /* Create an interrupt controller chip for the specified VM. */
-
-This works. Thanks!
