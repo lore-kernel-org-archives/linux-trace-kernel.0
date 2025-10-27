@@ -1,102 +1,139 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B2FB32C952
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 27 Oct 2025 22:38:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F5302BE7A1;
+	Mon, 27 Oct 2025 23:42:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761604735; cv=none; b=WI0QErIFX6KJUWdgmHN7Nr2hXQe20GBbJZgh6y6V262tnT3LNOtlOybssWLWJTrLc+D8BODIA97DfC+PGOCFnLhnWDrVFjfjvUGYTLkPISqOOXuzqgLUax/oUII392pGerrqz6Qwh8q20bQhl0RUF9huIfpLTrqMPjhSvWyaURY=
+	t=1761608549; cv=none; b=T/jP0zLbO5dWxN2GtyHLSiCxtI3tmyycF+pI3SnuJtPIZnWBNnD1wXiQFH3LRIJ4cb3cbw8Ygy1F24xL3SmO5vAy2WMAfIV4/W4iBJHau9SeICqJjz8Wa+gbETZIvpLyXhkOeLweQHVZmIvmOwQX5BTu2QjoC/801YhH38Q0+gk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761604735; c=relaxed/simple;
-	bh=mZopSRQVUi4354yRGOImkW196b7/LGd3/FDZsbsQQ0Q=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qCZ+p1HA05zjyPW0faAlHqiL4eK5oPamwZlSnYTSFPtEWOhbYenr/6sfFgBc0dbx1H4QWx2i81ewZvNjbmgQead/+oi3U4V1orRikYwh8vU80oZHdoBZpX9kUYqI06ZqM15UpQMoqebXZzeyq4PrnQKwdXL1MNK4e3bT3uyWT9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WPIKQ7c+; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1761608549; c=relaxed/simple;
+	bh=gG2hH7WhbSVVnynsoyf11RN3a15KjJlc/LYqB/bQr6k=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=nYEH8FCsyMCVJVB6KkX2bstb89eY138wCNvF+oaNbomCX8DXD8HCpbO+v6S0AUn+BnopMJzjyzdFfwc7Oshl+Zriktt/96yc2ERgSbmNOybthFK31/YQ7ZrMGmA50/zOUj5vp8sz7mU9zUUFBtaAv278UH1c75gSXEsF3gON3BQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UQpSmeEg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WPIKQ7c+"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4710683a644so43643315e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 27 Oct 2025 15:38:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1761604732; x=1762209532; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=v2tPDXG/coalmGQ6BNmejw+0knfQZmINzdFwuhoTotE=;
-        b=WPIKQ7c+jry89ufIboEqbw6Vo9Xeq7CWNXYgGt9w4eSAvN2dvOeZJYLSlKvqv/Np8B
-         QifYKJMBE4BpkWqyf3bxE6RUHGXNPFjfp5LT3kYmmZYo6WBCe0220x8Czf0991re3SCo
-         gOADUa9r3CJ5VYcf8VvA/NsxZ5Iz0kq+6+8E6ZN5sK8Es/0X0xSLGy/tiMYucOZ10pt6
-         M1KPLUP0lzFUtX28FQQopZCKNwUvenPBDwQf3l/MII+YZT4Cxfw+FiLofOe5a2snhCW8
-         WjYfw2K9nWQPLFcG//MxoF0+sNeyGC5zH3ROhwaKU9kz8ZwEaRVrtYHT/XmXk5zcOffe
-         JD0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761604732; x=1762209532;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=v2tPDXG/coalmGQ6BNmejw+0knfQZmINzdFwuhoTotE=;
-        b=LSSXiNIdb/YJWJrwLP0qWlzOxFKTe3f/eHYLgRld+zFyiS/CDE/LLldoLLdObNc39w
-         dy9g7bS2/PPffReyO2mWmrRpRe4JtDHHygWoAe1H596Hv01PD/PS21Ar61pbTlQx1Pan
-         cBNV7AmKAknPhdr9yku6pnMPGa+cBwdRL3jUkHpVUj7nyAUkrYmbpdFeiKS9KgmMhgSx
-         VrrXVEzOJs8TEKpmXJDgK445qD7pTHpPV560sQr2XaEmX2Y+8s28QgkM89M+zgX6IAm3
-         +C8D/X4nIMbmAOk9RpxjkOlbDo319F61l3Pn5Wyi4Oi8tytFGl4EhG78Got+5yewMTd0
-         avyA==
-X-Forwarded-Encrypted: i=1; AJvYcCUdHmGIuGfByrWNwZgXuVFk/lT6is+WZYsWAp2pCvn6gA6eOz3ffQRvW6sJHKZJbv7PQK3dF9n/jD1GIJCaOU9fBLI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz2ZQQGdJ6K11f3lz2Vb/fAAbGU3NS4K86eLdkJEXv8Z8E/CTAb
-	hwb4M/mTOJwXDTrwk+zTvJE1oQq12OFPzKxWetLj8HYC5c0p+p+UAcDS
-X-Gm-Gg: ASbGncvinew5TtaE18nq0G3ZVjpyn7F0p3puKgV/RBUirUnn5hRmEJFPij9VIb5UL7f
-	kGGNseqInjeAD5u9ZR9YA+qBh3zTwgaFK02X1mkYpLtNobzg8nty9UPUZWHaWutxFf8D8Ly76y4
-	lE0/IUhai0OPhWx6AUOxnzijbkfg3cTCPKDvE0a99N6c9cZOve/wX163C91ReDbosXOt1VRp4gp
-	6rlU8Q1IRt7HjYyo0sBflq1hCuMeU3ZNOKKVAYBkvvhh4pEQITGesbWRFM5dwiM0unEfgbDmjB6
-	Cy4ihk5Rr72IVz35sUnbS5eT2QV0QQvqgYg5mPN0pz019KzOGOmn0NAoMd5jFAdgBn4wK8O1wDr
-	lnz8jwD/4KCuGKCP9dFIeOvLh0gMPPqTDPEr0rII+l03jKxxtxSP0oMwhj0UrOQ+TezEuCTZz+h
-	o=
-X-Google-Smtp-Source: AGHT+IFiCCMIf/Ghw+gRyN8J8phGReAHAwec4nlXGAJ5oIjeHM5dgNEnOqJddAzoxLYreIXmbyyrAg==
-X-Received: by 2002:a05:600c:4383:b0:471:793:e795 with SMTP id 5b1f17b1804b1-47718051848mr5826915e9.0.1761604732269;
-        Mon, 27 Oct 2025 15:38:52 -0700 (PDT)
-Received: from krava ([176.74.159.170])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47718fc0335sm4081905e9.2.2025.10.27.15.38.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Oct 2025 15:38:51 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Mon, 27 Oct 2025 23:38:50 +0100
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: bot+bpf-ci@kernel.org, mhiramat@kernel.org, rostedt@goodmis.org,
-	song@kernel.org, peterz@infradead.org, bpf@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, x86@kernel.org, yhs@fb.com,
-	songliubraving@fb.com, andrii@kernel.org, ast@kernel.org,
-	daniel@iogearbox.net, martin.lau@kernel.org, eddyz87@gmail.com,
-	yonghong.song@linux.dev, clm@meta.com, ihor.solodrai@linux.dev
-Subject: Re: [PATCH 1/3] Revert "perf/x86: Always store regs->ip in
- perf_callchain_kernel()"
-Message-ID: <aP_0eh7TH2f_ykhz@krava>
-References: <20251027131354.1984006-2-jolsa@kernel.org>
- <8227ad3af501bb982231ef00ac5e970a0a12c9d64e07ea3f3d37100ec7e3f1cc@mail.kernel.org>
- <v53j2leswscyunqmrj5zvr3bsdafxlze5z3yp4hvsd6epbvdvm@njx4yhpkqoiz>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UQpSmeEg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DC26C4CEF1;
+	Mon, 27 Oct 2025 23:42:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761608548;
+	bh=gG2hH7WhbSVVnynsoyf11RN3a15KjJlc/LYqB/bQr6k=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=UQpSmeEgbKeE7n0VTh1TeiAoBQeZG363+PEtwIjtQe3waPrX5COqSqnSB3dTl5zM7
+	 EhFzUbRu/xaFK9nfgaqPoI6GQustslioWdYRrTd2lTCVTdbpq4VHII9jKsRkYbM2Ed
+	 Tgx6d1sPvXCGeuk4i8ZD/VC/ykUd1mJs9kuqvB4ga89qztME1MkgXQK2BWsOAc2IO5
+	 0BOS2jSCzXb61VuE3MneYqCloavjOBJGeaQcWcj6SGl4eI+7yRXh9sfSCi9KDHE0AL
+	 /b27W35ABmF0Su1mqLITW45SMmGgGo5yRDwIKoy8DgmoqbkIuc7XXrP8xUXbbMBBzI
+	 TxDpfTeZqNkyw==
+Date: Tue, 28 Oct 2025 08:42:22 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Cc: Mark Brown <broonie@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+ x86@kernel.org, Jinchao Wang <wangjinchao600@gmail.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H . Peter Anvin" <hpa@zytor.com>, Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, Aishwarya.TCV@arm.com
+Subject: Re: [PATCH v5 6/8] selftests: tracing: Add a basic testcase for
+ wprobe
+Message-Id: <20251028084222.a3c1ae97d125d9bd88fc565b@kernel.org>
+In-Reply-To: <20251027224347.4c887cc956df63602f377550@kernel.org>
+References: <175859019940.374439.7398451124225791618.stgit@devnote2>
+	<175859026716.374439.14852239332989324292.stgit@devnote2>
+	<aPvwGhMBJqMKcC9D@finisterre.sirena.org.uk>
+	<20251027224347.4c887cc956df63602f377550@kernel.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <v53j2leswscyunqmrj5zvr3bsdafxlze5z3yp4hvsd6epbvdvm@njx4yhpkqoiz>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Oct 27, 2025 at 01:19:52PM -0700, Josh Poimboeuf wrote:
-> On Mon, Oct 27, 2025 at 01:52:18PM +0000, bot+bpf-ci@kernel.org wrote:
-> > Does this revert re-introduce the BPF selftest failure that was fixed in
-> > 2019? The test tools/testing/selftests/bpf/prog_tests/stacktrace_map_raw_tp.c
-> > still exists in the kernel tree.
+On Mon, 27 Oct 2025 22:43:47 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+
+> On Fri, 24 Oct 2025 22:31:06 +0100
+> Mark Brown <broonie@kernel.org> wrote:
 > 
-> I have the same question.  And note there may be subtle differences
-> between the frame pointer and ORC unwinders.  The testcase would need to
-> pass for both.
+> > On Tue, Sep 23, 2025 at 10:17:47AM +0900, Masami Hiramatsu (Google) wrote:
+> > > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > > 
+> > > Add 'add_remove_wprobe.tc' testcase for testing wprobe event that
+> > > tests adding and removing operations of the wprobe event.
+> > 
+> > Since this series has landed in -next we've been seeing hangs on a range
+> > of arm64 platforms running the ftrace tests, it looks like it's all of
+> > them.  Unfortunately the systems lock up with no output as soon as they
+> > start trying to do something with wprobes:
+> > 
+> > # ok 19 Generic dynamic event - add/remove kprobe events
+> > # ok 20 Generic dynamic event - add/remove synthetic events
+> > # ok 21 Generic dynamic event - add/remove tracepoint probe events
+> > # ok 22 Generic dynamic event - add/remove tracepoint probe events on module
+> > # ok 23 Generic dynamic event - add/remove/test uprobe events
+> > 
+> > the next test being add_remove_wprobe.tc, which doesn't seem to
+> > complete.  Full log (for what little it's worth):
+> > 
+> >    https://lava.sirena.org.uk/scheduler/job/2000440#L1860
+> > 
+> > I turned on -vvv logging and that generated the rather spectacularly
+> > more verbose:
+> > 
+> >    https://lava.sirena.org.uk/scheduler/job/2000676/log_file/plain
+> > 
+> > (in a somewhat processed format unfortunately.).  Looking at that log I
+> > do notice a bunch of "unexpected operators" reported by the shell, these
+> > systems are running dash not bash, though that doesn't seem related.  It
+> > looks like the script hangs in reset_trigger_file while grepping the
+> > trigger files rather than actually trying to do the test.
+> > 
+> > Sorry about the delay in reporting this.
+> 
+> OK, eventually, I confirmed it is stopped on enabling wprobe
+> 
+> + . /mnt/ftrace/test.d/dynevent/add_remove_wprobe.tc
+> + echo 0
+> + echo
+> + TARGET=jiffies
+> + echo 'w:my_wprobe w@jiffies'
+> + grep -q my_wprobe dynamic_events
+> + '[' 0 -ne 0 ]
+> + test -d events/wprobes/my_wprobe
+> + '[' 0 -ne 0 ]
+> + echo 1
+> 
 
-as I wrote in the other email that test does not check ips directly,
-it just compare stacks taken from bpf_get_stackid and bpf_get_stack
-helpers.. so it passes for both orc and frame pointer unwinder
+Interestingly, this stops in the cpu_function_call(). It does not call
+__perf_install_in_context().
 
-thanks,
-jirka
+~ # cd /sys/kernel/tracing/
+/sys/kernel/tracing # echo 'w:my_wprobe w@jiffies' >> dynamic_events 
+/sys/kernel/tracing # echo 1 > events/wprobes/my_wprobe/enable 
+[   54.942288] trace_wprobe: enable_trace_wprobe called
+[   54.945306] trace_wprobe: trying to register wprobes
+[   54.947367] trace_wprobe: __register_trace_wprobe called
+[   54.949586] trace_wprobe: registering wprobe at addr: 0xffffb6ce429fb200, len: 4, type: 2
+[   54.951639] Creating wide hw breakpoint on CPU 0
+[   54.966390] Creating kernel counter on CPU 0 for event type 5
+[   54.967758] perf_install_in_context: event 00000000736da1d9 ctx 000000005d4db900 cpu 0
+[   54.972015] perf_install_in_context2: event 00000000736da1d9 ctx set to 000000005d4db900
+[   54.976697] cpu_function_call: calling function on CPU 0, func: __perf_install_in_context+0x0/0x2c8
+
+What happen if the cpu calls function on itself by
+smp_call_function_single() on arm64?
+
+  smp_call_function_single(this_cpu, remote_function, &data, 1);
+
+Thank you,
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
