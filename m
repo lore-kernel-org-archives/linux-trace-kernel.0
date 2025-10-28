@@ -1,74 +1,74 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02A6134B419
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 28 Oct 2025 17:49:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3E03242D9F
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 28 Oct 2025 17:56:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761673799; cv=none; b=gd5+8n2kPGnQPMbTIYVr1ihU4uAWni5vXwMhUXczcOKwKIWFbOpI9ptCgn8yQOtLXiSvAr2pI7r55ABEJ84CzLPNvasOxyqtaMLMfjd81z6tPhs1YIRuOIQZ/Vk8fVcAflvHZoVxaXQ70zSLLsXSjXBvPochK86k33hP17ib07o=
+	t=1761674179; cv=none; b=QFcPRrWX3boo79iFrfUqaIsJbBVerN8RbTsrQXyhbjQU7DfFqFtrxl9UVyzzG5CJ+cwYA7NaELwCd10ejfURq7GMsvDawkRKAta8+hAIftWIxcbMCEklGcqqwLcrwuZFnlLY7g75er4K/RX6t7vGzHWJkv0CBuYmh2HU/Tlh0uU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761673799; c=relaxed/simple;
-	bh=HNDUMYeo/L/RCwN82toFe06UY4HVw5LK/Mt12pX+Xkg=;
+	s=arc-20240116; t=1761674179; c=relaxed/simple;
+	bh=ixAv4f+ol10qMkv/OLbSXev4ui1XzEtPKfJ3O1UP9lM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gYEh5Dhcs8NJTvseNaI/wg+XPz19mOWuWU/CJUefmRoQORgSlB6//FAY2yZWkXsM1yh6gZHqFzLPxHupVh+LzTzS8ZeMNOzChJA9zWOw4UAd/5lJqazTpoafLRJX7Ucll6D8XWMzE+uOHPsfgq+sjLf7H6m5pXSEd3A+o6KOeWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IuRHJVrh; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=LawgvYM93EIwCrRSnCTy4e7ahIQ7vlp5Sq6y7DvgrHcR5RjQHP/GoT3gaXudjZRX+Gm531oMhVOvcWiPttXZ0AAPiKPMBMhDKRopYgqBblwcJSRotUWnUuaKTaSNx/rSUGYCYhTRAZbSZeeVEWSfluGHBSZ9G2DTTu1hMRmqmqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=X66GGfap; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IuRHJVrh"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X66GGfap"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1761673797;
+	s=mimecast20190719; t=1761674176;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=0wjUs/xTYbM7Fdac3xo6xGaBum9uo0673qS9j9wmfiU=;
-	b=IuRHJVrhtFzGlySiVW3KmaaxDIa60D1vhHr4RYV9cklcjRUNIs1AARCyEW2QypOrUzyr+9
-	5HpF547tyEzKRB7Om6Mhl0IUSMUw3Zwe9EabLj6Vi3tf4lX68/KlCEUH0M3vfmBQLvLzwg
-	3urF7733UOC5PyfcaMfiLUKk9sVOI3k=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=g6eToIGweByE2pHgRfb2gPb2S77u3+GTDDQYyAyPH+k=;
+	b=X66GGfap36vwTToH/Exk/7JT6S3itPJhNsmSA2YEL02HooN1WH6G1Q6F1PdWYlQZPQ9CMW
+	SKOeY/MU0omxIMqPFRdZo5oR27Ifj+exSDc/uvCh7BloQey3vYuFJqLMFKW7M67enfjvLe
+	J0s8mcYa9BYBXZSrAnj7lOsj6Rx8MdY=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-612-AwgGyLEVNNyKxYPp7uJaNw-1; Tue, 28 Oct 2025 13:49:54 -0400
-X-MC-Unique: AwgGyLEVNNyKxYPp7uJaNw-1
-X-Mimecast-MFC-AGG-ID: AwgGyLEVNNyKxYPp7uJaNw_1761673793
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-47105bfcf15so35951325e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 28 Oct 2025 10:49:54 -0700 (PDT)
+ us-mta-172-GSW-9wy5OKGdZ4noIUIXbA-1; Tue, 28 Oct 2025 13:56:15 -0400
+X-MC-Unique: GSW-9wy5OKGdZ4noIUIXbA-1
+X-Mimecast-MFC-AGG-ID: GSW-9wy5OKGdZ4noIUIXbA_1761674175
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-427013eb71dso5762896f8f.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 28 Oct 2025 10:56:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761673793; x=1762278593;
+        d=1e100.net; s=20230601; t=1761674174; x=1762278974;
         h=content-transfer-encoding:in-reply-to:autocrypt:content-language
          :from:references:cc:to:subject:user-agent:mime-version:date
          :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=0wjUs/xTYbM7Fdac3xo6xGaBum9uo0673qS9j9wmfiU=;
-        b=jjPn6CVBGwPCBNc94aDYYybOsQuelnr7mje/MRDEEbAmq6smWif+iYRFXAv09rJpIi
-         OKN/nyGhXyMqlLFIiQmZkqEbL2l4Gs69TILT15QVhb5CeRBa2uA71Gr6z/kOXFN7tcn8
-         N5htWdHgaUryH7mkSescUPUiPp4R9KvTEsZkvr36+bFWUApLt7nV7vKN9feBYlRz8ND4
-         Gfc2Dw7eOnOZ+GxzzNzfBJu6vce2Mv2rwC8zpwD8aI1T1UN78v9rE3ZHtZBPhwQoDZ87
-         PWJX8HEKQir+8S9UN+eI5T2TOjDgc9iQ618KjOii1T8Vp9Xr4ShlwdI97v1yaQhfyP/Q
-         eZQA==
-X-Forwarded-Encrypted: i=1; AJvYcCUYRmUtD3Gp98Gf0jNzM8J+eG+dPZlWcUifvaT+Af1s2smh/aeP25dxP4qNvxUtssEGg/YPm5zR0T6pNS/1cbO2aMA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPFh5QFn5hi2XRSL9kX4CNiOHoGE7hBaqLBzF2eXbHjkSljDFj
-	c1lluegKVpwWkk0KOEHf4uBhRtUpwAICShAtrZmtreqoEvSvPfISY1vtZqIk3D8G1o6dXSVfKpr
-	AfbOAj/1EhuEq568OzdzIKou+Ffw9dNGqLccKqxJ/k8Sp9fe+VepwP9yiqeeleo62qubSz/dc6Q
+        bh=g6eToIGweByE2pHgRfb2gPb2S77u3+GTDDQYyAyPH+k=;
+        b=pcJA6buSPm21dSrBNYJIJcRD2KuApsFYCRPnijWJIGf6JtZGKtPeZj5X5vSsVA0RYn
+         yjmMOAo6cPe2bRr6W7EBgNvMrMUrLT48c5qungdqFApA2oukAlcQ2cT/A6ANfAt2ZSsx
+         IIlXkS+rGAqa1edGZRiYRLbSAYzPeqPhiJRDX03lJ752A8PjhO2Rq5sGF/Ixx7/DO7in
+         lVmhzDAZ8s+CyOnAkfHBw1XugpplCKvmPVC78TwYe5kMQFy8crUd4dlixeH73R2g6pRZ
+         6hUiSsduZYnrJ///KmurNap/pW1bLSalqoS2QRvS80B8MjgMnXOQpWQDr4bjThUZQ14u
+         cxZA==
+X-Forwarded-Encrypted: i=1; AJvYcCW9ARtr8hEp8RA/gJxYUN1Tqf0AGoYVVgUhns+fvMN6XpCv8AyNRLslzrQGh5pjDKHIPg8BHKmSoOXZkqG9JnY7ZvU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHOGQwt9RuETPxb4/BWYF4wEqpMyiryNyVtqRdHwarPk41AdiD
+	7BL/18Z5FPqjW+4g+Rxnewo7Cfcu1kdQotBctY48OIWOyPFGjno9b+Jf4CWvLKo6nFiImkdTQlb
+	S8oTdXfXt1u2a0LopWOnq+tPnqrTRL+s/UkW9jJw3WojMqRjPylgEWrXxw8kj2EhfIWg3UFK7rw
 	==
-X-Gm-Gg: ASbGncsYHTbbYNMuWG7277vXEhvRqHAQnsu6fsK6eNpNJ8O3ZZ8uZbIaZwIZ7bQmyd1
-	j1xBYVbwAjkPMXyfO+FaGNj2n9ANpNJ2g/zi8BqdGH95L2Wj5halue4pijWKePHgl+En9RzxWjM
-	QJ+xLU7nNEYlico2X/GLkSDRbnFZFStdXmVaaDMGmoagmQVuiy/vNC+2bUCSX131v9SKgmKnH9K
-	2FdXvvhK5Q0NFbSyQCgq83uHUew8+cj2M+P5VHO/+4ovhkL9NU7P9xcvUGjnvVrFPh+/qdE67Gb
-	x93IKpEFKMOLuNaEGutd7Elg2kJTFpCXUfpmJSWPoTtZsce3dCZKA2LM0PsaCV3LuyU1qZVT0sN
-	zmBTJTbqKa+GyOCUQEdjn0ytfvR1Hodnc+q47aPw=
-X-Received: by 2002:a05:600c:3f0d:b0:46e:2cfe:971c with SMTP id 5b1f17b1804b1-4771e283ed6mr2495585e9.0.1761673793417;
-        Tue, 28 Oct 2025 10:49:53 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEcx7klDKQsDly0rERnv58qXRJAfJupSMrXo3pXhmlMb1uRNgLUDuTQsDYYW7kLhyUZ6FSXvA==
-X-Received: by 2002:a05:600c:3f0d:b0:46e:2cfe:971c with SMTP id 5b1f17b1804b1-4771e283ed6mr2494955e9.0.1761673792961;
-        Tue, 28 Oct 2025 10:49:52 -0700 (PDT)
+X-Gm-Gg: ASbGncsVdKe+v52UvYQooozAplcr2nrC7N09IjVwKkoos0wYWzu4y4J2xwIyISNQ4KK
+	Bc8s41q9yZBhUtwSzVH4sAgLsvtq54GzLiDpUxqmokNg6aUCywnZ1ni+vLyuglF4fmW/AC9gd/M
+	cIK4f6er4W8LY7GM23HUMdfWWEazc07PxKxqt6my8Y0Wp2aUxpdfDJsOEuvna9obOaj/nJVIXSx
+	uN4wxeLcxcScqff6pIatT/T+1bUggn+dWEopx1bbQGwAXbRE3lYDXrl7R1ePx8bWS3BoCsevqQA
+	EWYl5QYxBCwVqpnQCCYqzMdLmETcZwfKRk7PvBy7YFydNoRwPy8n3OnhUr/Ci/tkZOOwquvTPh9
+	w4JHx8aNcRem/BgZ31pLFu66B7UXm649tqzTkKeQ=
+X-Received: by 2002:a05:600c:4e56:b0:471:989:9d7b with SMTP id 5b1f17b1804b1-4771e1de250mr3042745e9.21.1761674174512;
+        Tue, 28 Oct 2025 10:56:14 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEY4oqI01ymhTqStAjkQ0EYI9rwIiErh5/4NzRqUPCO8tW2HD5t4ifGkOgJh9RHOuRsKfElhQ==
+X-Received: by 2002:a05:600c:4e56:b0:471:989:9d7b with SMTP id 5b1f17b1804b1-4771e1de250mr3042165e9.21.1761674174052;
+        Tue, 28 Oct 2025 10:56:14 -0700 (PDT)
 Received: from [192.168.200.155] (host-80-81-2-50.customer.m-online.net. [80.81.2.50])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4771e387baesm2888955e9.2.2025.10.28.10.49.49
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-429952de4a1sm21724189f8f.37.2025.10.28.10.56.11
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Oct 2025 10:49:51 -0700 (PDT)
-Message-ID: <f36ba14b-f2e7-4efb-92c0-a4d4f58b1bfd@redhat.com>
-Date: Tue, 28 Oct 2025 18:49:48 +0100
+        Tue, 28 Oct 2025 10:56:13 -0700 (PDT)
+Message-ID: <e2a89e74-1533-4a83-8d0f-3f4821750e25@redhat.com>
+Date: Tue, 28 Oct 2025 18:56:10 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -79,10 +79,10 @@ User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v12 mm-new 06/15] khugepaged: introduce
  collapse_max_ptes_none helper function
 To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Nico Pache <npache@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-mm@kvack.org, linux-doc@vger.kernel.org, ziy@nvidia.com,
- baolin.wang@linux.alibaba.com, Liam.Howlett@oracle.com,
+ Baolin Wang <baolin.wang@linux.alibaba.com>
+Cc: Nico Pache <npache@redhat.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org,
+ linux-doc@vger.kernel.org, ziy@nvidia.com, Liam.Howlett@oracle.com,
  ryan.roberts@arm.com, dev.jain@arm.com, corbet@lwn.net, rostedt@goodmis.org,
  mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
  akpm@linux-foundation.org, baohua@kernel.org, willy@infradead.org,
@@ -100,8 +100,8 @@ Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
 References: <20251022183717.70829-1-npache@redhat.com>
  <20251022183717.70829-7-npache@redhat.com>
  <5f8c69c1-d07b-4957-b671-b37fccf729f1@lucifer.local>
- <CAA1CXcA4AcHrw18JfAoVygRgUZW3EzsN6RPZVrC=OJwSNu_9HA@mail.gmail.com>
- <2983c165-8c13-4bb9-b2f8-bfe8508cce43@lucifer.local>
+ <063f8369-96c7-4345-ab28-7265ed7214cb@linux.alibaba.com>
+ <9a3f2d8d-abd1-488c-8550-21cd12efff3e@lucifer.local>
 From: David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; keydata=
  xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -147,35 +147,43 @@ Autocrypt: addr=david@redhat.com; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <2983c165-8c13-4bb9-b2f8-bfe8508cce43@lucifer.local>
+In-Reply-To: <9a3f2d8d-abd1-488c-8550-21cd12efff3e@lucifer.local>
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: MTSGGCqv8G4sNALFWdukj6jaaWwUeUGTxjZO7i5BguE_1761673793
+X-Mimecast-MFC-PROC-ID: IwU4X6a50LNzuKITr39o3jaVXUjP6vtg2HykJcLVolk_1761674175
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
->> Hey Lorenzo,
->>
->>> I mean not to beat a dead horse re: v11 commentary, but I thought we were going
->>> to implement David's idea re: the new 'eagerness' tunable, and again we're now just
->>> implementing the capping at HPAGE_PMD_NR/2 - 1 thing again?
->>
->> I spoke to David and he said to continue forward with this series; the
->> "eagerness" tunable will take some time, and may require further
->> considerations/discussion.
+[...]
+
 > 
-> It would be good to communicate this in the patch, I wasn't aware he had said go
-> ahead with it. Maybe I missed the mail.
+>> towards David's earlier simplified approach:
+>> 	max_ptes_none == 511 -> collapse mTHP always
+>> 	max_ptes_none != 511 -> collapse mTHP only if all PTEs are non-none/zero
+> 
+> Pretty sure David's suggestion was that max_ptes_none would literally get set to
+> 511 if you specified 511, or 0 if you specified anything else.
 
-Just to clarify: yes, I think we should find a way to move forward with 
-this series without an eagerness toggle.
+We had multiple incarnations of this approach, but the first one really was:
 
-That doesn't imply that we'll be using the capping as proposed here (I 
-hate it, it's just tricky to work around it for now).
+max_ptes_none == 511 -> collapse mTHP always
+max_ptes_none == 0 -> collapse mTHP only if all non-none/zero
 
-And ideally, we can do that without any temporary tunables, because I'm 
-sure it is a problem we can solve internally long-term.
+And for the intermediate values
+
+(1) pr_warn() when mTHPs are enabled, stating that mTHP collapse is not 
+supported yet with other values
+(2) treat it like max_ptes_none == 0 or (maybe better?) just disable 
+mTHP collapse
+
+
+I still like that approach because it let's us defer solving the creep 
+problem later and doesn't add a silent capping.
+
+Using intermediate max_ptes_none values are really only reasonable with 
+the deferred shrinker today. And that one does not support mTHP even 
+with this series, so it's future work either way.
 
 -- 
 Cheers
