@@ -1,63 +1,66 @@
-Received: from mail-yx1-f74.google.com (mail-yx1-f74.google.com [74.125.224.74])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D32263570B8
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 28 Oct 2025 21:25:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77360357732
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 28 Oct 2025 21:25:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761686740; cv=none; b=Q1WuiHesbF1zl4PGmlmFClnxEuAxEVmbGKAxJYC0k2z9bDwZGlHK6KN3h1ccHchRmtUAGMhKi9CFViB+G6/dC2jAEEPMwI9jq1j+lzufU6mLf4kkiOUD7b7EcvT8Oje2NXi865OkIzvR6jyhJ4/FTIwYuPKCwQdNACkXS1TRSe0=
+	t=1761686750; cv=none; b=d334qgpMkxkWiyRmK2FcGjF2pYei+oLkHNJISQzcxkZ4jrS2TcZAiqbwGEd8vcyWpAK8J9DnezZ/nxhWxBZlueZdCPqvKpuEYVq9/DPGyTYc2+GCHTwJP/j8JOnrvG1GvbVzsCc7EFLk63mBS1my60HYZnKsVGhhASsk8PbsYgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761686740; c=relaxed/simple;
-	bh=VONa5+qGmceUz/WA5Ut4vRFxC2i/SKI2Ca9kKEHzbt8=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=JJZQ5o3YqGzTRniQyDoJr5Upnjk8SKLMoYGzMI1Yq6bmpkPxHrMOsPGUhtOsMbEiMwVHjCogePhpw1l2WTu7R1rgeIKms+5kCNq9J8Mdh0IWGZ1ssjZ8T9p7fbOYOX7TwJ6yEeTc6J7M4ZdvulAfVHCSPrwCAZJWRJ+1Q5xfjCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--kaleshsingh.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sRldQMR9; arc=none smtp.client-ip=74.125.224.74
+	s=arc-20240116; t=1761686750; c=relaxed/simple;
+	bh=LnE/ui7WPuI0tDOkrq07UPOVbHa6eIZOJkp43XDZ37A=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=WlmPkaWZZIczSsaS4j0mzyKHs2yMt6cwajAdC84gs02AZ4GfbvOwQXVqEMb57MupwHSq1yz6u+XAfOCT4uo5VwN+iOrSoenQJzWn5xoHC7j08h0c7I9ALtUBQreuK5KsD5/GRIj7Th/kAwbOUwITN0tlB0xAPp8WMPohpPxvVFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--kaleshsingh.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GYa3Qo5V; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--kaleshsingh.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sRldQMR9"
-Received: by mail-yx1-f74.google.com with SMTP id 956f58d0204a3-60fb0c64421so7869574d50.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 28 Oct 2025 14:25:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GYa3Qo5V"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-784adcfe127so93298287b3.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 28 Oct 2025 14:25:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1761686738; x=1762291538; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=U4p6kxOlNOG31wIDXmwy414BSQw9sWas+789Bv9fSts=;
-        b=sRldQMR9bGFZcTGpGR/kF50apQxspOQb9yLQuOgNfr+ScULM/dVFL7Q0WMYyjjW0Zm
-         djz2EpBg6SFifB+PTE4YWtAMQ5rNIh17w6gmIMidgJcSGWeUjUvOhBPigRu+bBP+pkq+
-         mdQeP0r1Z5nYZLx1EFYE2dIKFGduIeOxkEPc2cD72LAhZ5GdG3+7rBIullPFAEyBcZWp
-         fPBMF54Sp6JUS9P3oAbQDLzhTE3CaEe0piX1Yx4WuHSbcUtYf3DKfei+nGq7A7Qp/J6l
-         6ZDCjOS2Gm9DqDPYn//KQsGqT73IKp1iycZIXI8vwcmAU85wuy/HjUY+CNmp3aJLCQE/
-         9dOA==
+        d=google.com; s=20230601; t=1761686747; x=1762291547; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=S+zRclGCeCxZWGKiQ7HQS17pkEGlf1WyYG/KnmVF2Ow=;
+        b=GYa3Qo5VIWqmfphZ53KLeKKe0i2jZkaeQvJtIgEejVIHPAzdPV/Lu/oQkyUypGfvsm
+         QsBHQxSCJoxNPcfbQlweizgZlBp4tA9nITfGKWxS5A+KLg0xgPwTuKGqg0qcmczsAIVx
+         zaTjvFWeutTD8UZPsSlXju0kW78cZIkp5XwCB7+1E1wpPSicnEWVzD3zgjpJ7FFoVdBl
+         vZZ0qKuYyZpWf6txu+SO2RIwuvvBJoPD7J6HPYlhvn42PFT9zb/nIct4MymohNfm1ny8
+         3X6BzwqPvBsFdWra2nSDThCxejAIhY+mQgaXfdlTbj5jPwf9g7pMDbhFXISa7PtLBjks
+         FkVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761686738; x=1762291538;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=U4p6kxOlNOG31wIDXmwy414BSQw9sWas+789Bv9fSts=;
-        b=sj8PMoF/EqYXArscdlZaPdep3bUx9QLrg8SV7bmW6AGJTp0VaPfU/KRGCQ8aRxAdcd
-         uN7YduRNboOZzBCnkBFI3pYJJvpbkbeehw5fP8Li203I/X8SwuHW6k9obpcQW1NJcH6O
-         wIuko9Md/GG7pvjncPu7K/JwK1cImKXuLldBdMi92V1WVnjWx1DFM6vjkMGQFVErzz3e
-         gdFyR0yjrJyad6yAhWAiAyemyof+tYoFk9THIaByEqcPU72TlSZ1KPJ4Ae5fphXJ4y/A
-         E96mLioEgTlFcOsG1q6loxwnzEUPhOzDh4r1xDTLRLSrWAaTnJAuqAmKDYAQXHSXmKZm
-         zHbA==
-X-Forwarded-Encrypted: i=1; AJvYcCUgMUIOJOWRttd0vxhmNQEpXRAtabjAQ5S2Vo7303AZpQ6DPajvA3b9MigXQPRuOOZg6+83iiRqBEgS3thixde3bcc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YybzgptIYdKgqroPMqIRfkwGsCdFJ9nuDYYrwgOD17ZvCE8R60s
-	qvQk2pG4ZxRCOBb22Zofcz8BCPUPZpZa70wMmoueDrDNTKhBeLfRtiVExd91S7NV/IOqNKSykO+
-	9fVCCipHDHjBB/FvITTXR9lxDDw==
-X-Google-Smtp-Source: AGHT+IGJWNdmzr+80PlpfT/LLo3Pibom+vpVqtRUcL1zZ6uSsgkD1esTGCr9/87u9nvyfQFqt6WKW0iDTdv7HmQAjw==
-X-Received: from yxli18.prod.google.com ([2002:a53:c0d2:0:b0:63f:2d9a:6543])
+        d=1e100.net; s=20230601; t=1761686747; x=1762291547;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=S+zRclGCeCxZWGKiQ7HQS17pkEGlf1WyYG/KnmVF2Ow=;
+        b=qBZ3LOWh4QC3c/8YRR2MEWzUVAxu+zpSTn18B4hUdoFI+7fZYWibhxM1flZNZyYtl9
+         Ad6wAUTsNiN409XRut67GQX7n4dHhor4JczIMqjY2cw4ZWwgoc9ip1pxyPdQ0f/gLDPY
+         ks0pVGIlfZxf3jm7BKUZs/aUor/hwMw4pRit1T0Vi9VO5LR/cYq4LPirB02KVdiLbkuG
+         wlq8WnE+oXrnDjy6SarHQMwU+bJRAQkfSKUPB2gAXq1hRAMMkTDLAgj44EQdqzuDmAFy
+         a/Q98CRmW5gxtGXedIk/PnRS7Ae2ixc3R+FAOFrOA9gMbLQVdBHDr9vE92+Blr64NyX+
+         XhFw==
+X-Forwarded-Encrypted: i=1; AJvYcCVkcm3DSCtSiXsAFmIKEDo4UhVlEolydGjS8isz1QHKdcAbvp4qZggCIz7VdnPCrbrBle5KJvj8CQV8do7GWpGaDI4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw2fHPyyX0J0trd/pPFrqh1z1P0YH2+OdJzgvF0xwCxLNgD2Ku5
+	EgHTnPkIdHepYkegFr0vhfyp5OC3m4cUF5w5hm95xDJ2mvLfkxvc32KCDNyVIv/9T3bp4TGrsLp
+	kPeCU2Di3NzJmBJ+IqZqiTQ8SDA==
+X-Google-Smtp-Source: AGHT+IH21b8dTnDOMODyiAwwvvmg3HPg3LdlXgV0zvr0MUW3DPJaRaW0W9viFnaByL5fljhBttHAanw04I0ZoATTMA==
+X-Received: from ybbgj2.prod.google.com ([2002:a05:6902:4182:b0:eba:96f:2183])
  (user=kaleshsingh job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:690e:38c:b0:63e:1de4:7fc0 with SMTP id 956f58d0204a3-63f76df7854mr600821d50.66.1761686737742;
- Tue, 28 Oct 2025 14:25:37 -0700 (PDT)
-Date: Tue, 28 Oct 2025 14:24:31 -0700
+ 2002:a05:690c:4c0b:b0:781:64f:2b33 with SMTP id 00721157ae682-786290149fcmr7812607b3.69.1761686747446;
+ Tue, 28 Oct 2025 14:25:47 -0700 (PDT)
+Date: Tue, 28 Oct 2025 14:24:32 -0700
+In-Reply-To: <20251028212528.681081-1-kaleshsingh@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20251028212528.681081-1-kaleshsingh@google.com>
 X-Mailer: git-send-email 2.51.1.851.g4ebd6896fd-goog
-Message-ID: <20251028212528.681081-1-kaleshsingh@google.com>
-Subject: [PATCH v4 0/5] mm: Refactor and improve VMA count limit code
+Message-ID: <20251028212528.681081-2-kaleshsingh@google.com>
+Subject: [PATCH v4 1/5] mm: Document lenient map_count checks
 From: Kalesh Singh <kaleshsingh@google.com>
 To: akpm@linux-foundation.org, minchan@kernel.org, lorenzo.stoakes@oracle.com, 
 	david@redhat.com, Liam.Howlett@oracle.com, rppt@kernel.org, pfalcato@suse.de
@@ -76,100 +79,73 @@ Cc: rostedt@goodmis.org, hughd@google.com, kernel-team@android.com,
 	linux-kselftest@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Hi all,
+Add comments to the map_count limit checks in do_mmap() and
+do_brk_flags() to clarify their intended behavior.
 
-This series refactors the VMA count limit code to improve clarity,
-test coverage, and observability.
+The use of a strict inequality ('>') in these checks is intentional but
+non-obvious. It allows these functions to succeed when the VMA count is
+exactly at the sysctl_max_map_count limit. This historical behavior
+accounts for cases where the operation might not create a new VMA, but
+instead merge with or expand an existing one, in which case the VMA
+count does not increase.
 
-The VMA count limit, controlled by sysctl_max_map_count, is a safeguard
-that prevents a single process from consuming excessive kernel memory
-by creating too many memory mappings.
+These comments clarify the long-standing behavior and will help prevent
+future misinterpretation as an off-by-one error.
 
-A major change since v3 is the first patch in the series which instead of 
-attempting to fix overshooting the limit now documents that this is the
-intended behavior. As Hugh pointed out, the lenient check (>) in do_mmap()
-and do_brk_flags() is intentional to allow for potential VMA merges or
-expansions when the process is at the sysctl_max_map_count limit. 
-The consensus is that this historical behavior is correct but non-obvious.
+Signed-off-by: Kalesh Singh <kaleshsingh@google.com>
+---
 
-This series now focuses on making that behavior clear and the surrounding
-code more robust. Based on feedback from Lorenzo and David, this series
-retains the helper function and the rename of map_count.
+Changes in v4:
+ - Keep the existing lenient behavior, per Hugh
+ - Document this is intended, per Lorenzo
 
-The refined v4 series is now structured as follows:
+Changes in v3:
+ - Collect Reviewed-by and Acked-by tags.
 
-1.  Documents the lenient VMA count checks with comments to clarify
-    their purpose.
+Changes in v2:
+ - Fix mmap check, per Pedro
 
-2.  Adds a comprehensive selftest to codify the expected behavior at the
-    limit, including the lenient mmap case.
+ mm/mmap.c | 9 +++++++++
+ mm/vma.c  | 6 ++++++
+ 2 files changed, 15 insertions(+)
 
-3.  Introduces max_vma_count() to abstract the max map count sysctl,
-    making the sysctl static and converting all callers to use the new
-    helper.
-
-4.  Renames mm_struct->map_count to the more explicit vma_count for
-    better code clarity.
-
-5.  Adds a tracepoint for observability when a process fails to
-    allocate a VMA due to the count limit.
-
-Tested on x86_64 and arm64:
-
- 1. Build test:
-      allyesconfig for rename
-
- 2. Selftests:
-      cd tools/testing/selftests/mm && \
-          make && \
-          ./run_vmtests.sh -t max_vma_count
-
- 3. vma tests:
-      cd tools/testing/vma && \
-          make && \
-          ./vma
-
-Link to v3:
-https://lore.kernel.org/r/20251013235259.589015-1-kaleshsingh@google.com/
-
-Thanks to everyone for the valuable discussion on previous revisions.
-
--- Kalesh
-
-Kalesh Singh (5):
-  mm: Document lenient map_count checks
-  mm/selftests: add max_vma_count tests
-  mm: Introduce max_vma_count() to abstract the max map count sysctl
-  mm: rename mm_struct::map_count to vma_count
-  mm/tracing: introduce trace_mm_insufficient_vma_slots event
-
- MAINTAINERS                                   |   2 +
- fs/binfmt_elf.c                               |   2 +-
- fs/coredump.c                                 |   2 +-
- include/linux/mm.h                            |   2 -
- include/linux/mm_types.h                      |   2 +-
- include/trace/events/vma.h                    |  32 +
- kernel/fork.c                                 |   2 +-
- mm/debug.c                                    |   2 +-
- mm/internal.h                                 |   3 +
- mm/mmap.c                                     |  25 +-
- mm/mremap.c                                   |  13 +-
- mm/nommu.c                                    |   8 +-
- mm/util.c                                     |   1 -
- mm/vma.c                                      |  42 +-
- mm/vma_internal.h                             |   2 +
- tools/testing/selftests/mm/.gitignore         |   1 +
- tools/testing/selftests/mm/Makefile           |   1 +
- .../selftests/mm/max_vma_count_tests.c        | 716 ++++++++++++++++++
- tools/testing/selftests/mm/run_vmtests.sh     |   5 +
- tools/testing/vma/vma.c                       |  32 +-
- tools/testing/vma/vma_internal.h              |  13 +-
- 21 files changed, 856 insertions(+), 52 deletions(-)
- create mode 100644 include/trace/events/vma.h
- create mode 100644 tools/testing/selftests/mm/max_vma_count_tests.c
-
-
-base-commit: b227c04932039bccc21a0a89cd6df50fa57e4716
+diff --git a/mm/mmap.c b/mm/mmap.c
+index 644f02071a41..78843a2fae42 100644
+--- a/mm/mmap.c
++++ b/mm/mmap.c
+@@ -374,6 +374,15 @@ unsigned long do_mmap(struct file *file, unsigned long addr,
+ 		return -EOVERFLOW;
+ 
+ 	/* Too many mappings? */
++	/*
++	 * The check is intentionally lenient (>) to allow an mmap() at the limit
++	 * to succeed. This is for historical reasons, as the new mapping might
++	 * merge with an adjacent VMA and not increase the total VMA count.
++	 *
++	 * If a merge does not occur, the process is allowed to exceed the
++	 * sysctl_max_map_count limit by one. This behavior is preserved to
++	 * avoid breaking existing applications.
++	 */
+ 	if (mm->map_count > sysctl_max_map_count)
+ 		return -ENOMEM;
+ 
+diff --git a/mm/vma.c b/mm/vma.c
+index 919d1fc63a52..d0bb3127280e 100644
+--- a/mm/vma.c
++++ b/mm/vma.c
+@@ -2813,6 +2813,12 @@ int do_brk_flags(struct vma_iterator *vmi, struct vm_area_struct *vma,
+ 	if (!may_expand_vm(mm, vm_flags, len >> PAGE_SHIFT))
+ 		return -ENOMEM;
+ 
++	/*
++	 * The check is intentionally lenient (>) to allow brk() to succeed at
++	 * the limit. This is for historical reasons, as expanding the heap
++	 * typically extends the existing brk VMA rather than creating a new one.
++	 * See also the comment in do_mmap().
++	 */
+ 	if (mm->map_count > sysctl_max_map_count)
+ 		return -ENOMEM;
+ 
 -- 
 2.51.1.851.g4ebd6896fd-goog
 
