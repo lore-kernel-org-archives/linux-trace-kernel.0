@@ -1,155 +1,165 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B36211662E7;
-	Tue, 28 Oct 2025 01:55:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1CC5156237
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 28 Oct 2025 02:46:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761616556; cv=none; b=YFa57RKFoTdmsyeBaMFZOqqRsULOrFrESuPDVb32seFtv6X3Bl1aFIohRelljloBpNW/zRZD62+NB9CPHuARB7v1x3QYJuU29iXEt/6hihZs8+EVIAGfm73sQA1C5mCYkublunJf9/U0eEZtapp65lsEclqSwThhBVwYFTKjNoY=
+	t=1761619585; cv=none; b=svgfZ3Qk6yZQ6WPKMcDyj6Ydiw3F62DpBX20fVUYk3WIad9uMAjATuL7M566z2bczHcE1Lqb9zgyfsoKoAJ+ghGmtNT2eaj/DcRkuQ6VrAk075FLLYHitt/R0B7+ygpatl5R0Y3NPl1TCwIB/u0fdrJksa+S39JwJdme1qQ0u+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761616556; c=relaxed/simple;
-	bh=6IlL0RD/b1cmQ2o28E1LFzW/+KMUWhpSmqh1P0RR74k=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=sHEf8SKDY4L/8SrYQ164Ic25dapc1c0U/+29Xc+fM0EP7bt5L1QLlUzVNPRX35hZrU6dr7+0fd5jtTGPTNbfFFwWDaLkfrRFvb4l/gNvvYnT4urhSZnhK/yj384cZEMCrvLRncPW78gyZ5qFITbdf2UBZeWX3CuRmPiNX23Z+Ks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jdza6PTp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1761619585; c=relaxed/simple;
+	bh=UOYJw/eVspCjjDJ5cTEEfQXvffJLvGWWPI1fMjR2cuw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=aCAXp71Vv58yY6HU9NXZx+uQyuEDf9/40dnfXXFDT/7ZcS5vzNp0UVG1sThIKom/tbAZnOGhqQJar2YVfaU95IqcAWXgwXbTK6ocyp9nqIAemOkj74SVv0p5rnvinHfnaV87rI+SgF/LwFjl874D8jUmAr8gkGMuvGa0Lu2iL3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l2lSq/gu; arc=none smtp.client-ip=209.85.215.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jdza6PTp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B62A1C4CEF1;
-	Tue, 28 Oct 2025 01:55:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761616556;
-	bh=6IlL0RD/b1cmQ2o28E1LFzW/+KMUWhpSmqh1P0RR74k=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=jdza6PTpVIv54MadO3APb4bau5qFddYhcpvXjSTnjv2TfyE08Z4O4glutGY6oaVhu
-	 nYR75QQXC3SO8VyxMdcwoAVaMYw8Xy0BUdy3xJCg64/2eBMukdCrYKZS6TtEKR2ChL
-	 vK6A0SuB/mo+5xJJ3XLIYsS+pZRZJ0Abcr6Ni1a6iO1CXyo7+YarkUnsfxILXhESBQ
-	 qxbWXagybJU32oddPCU3AnViWYCTgv6gDWtsfwN0AqpXQwRHEO+9YyEUqA2nDm/xxy
-	 Vfju0PPjbRwyhvg21/4c5JIrFUZoBKyycNEa44C5NEQq7MuSbeO1+/2kWuELXZDfVL
-	 TJcr1Hh5zEHlA==
-Date: Tue, 28 Oct 2025 10:55:49 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Masami Hiramatsu (Google) <mhiramat@kernel.org>, Catalin Marinas
- <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-Cc: Mark Brown <broonie@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
- x86@kernel.org, Jinchao Wang <wangjinchao600@gmail.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Thomas Gleixner <tglx@linutronix.de>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H . Peter Anvin" <hpa@zytor.com>, Alexander Shishkin
- <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, Aishwarya.TCV@arm.com
-Subject: Re: [PATCH v5 6/8] selftests: tracing: Add a basic testcase for
- wprobe
-Message-Id: <20251028105549.ae94e8eeb42f4efc183d2807@kernel.org>
-In-Reply-To: <20251028084222.a3c1ae97d125d9bd88fc565b@kernel.org>
-References: <175859019940.374439.7398451124225791618.stgit@devnote2>
-	<175859026716.374439.14852239332989324292.stgit@devnote2>
-	<aPvwGhMBJqMKcC9D@finisterre.sirena.org.uk>
-	<20251027224347.4c887cc956df63602f377550@kernel.org>
-	<20251028084222.a3c1ae97d125d9bd88fc565b@kernel.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l2lSq/gu"
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-b550eff972eso3657821a12.3
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 27 Oct 2025 19:46:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1761619583; x=1762224383; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=62+T33sdSoeClcfbGu1+JvoKnh15kO/tZybU0Fphus8=;
+        b=l2lSq/guxhDABCC/+S2O3B69TcHRI8wW0+oP1VsAfV79GZ6sLOEOdko+nklbF/m3YC
+         syzAoF4SMv/J85HUxUI8TNShNljaopspEBbxZKeEtZdqDHevckyZ76+6FQKVWYivSSuB
+         Sm4kQO3ahZ10tDrNK6yHACx4iAajMP0ai5cU4dNA/EW8QW+qAf47ba2FIKM3koYlxbX3
+         OLom4OfWahMtjiVX3XhqdrtTatiqyW7B9wtFEC7VeBxCfSiYzAukM7CAZh8XVG25OZ8F
+         fbI9gKXqY/s6GuuHrMpmqtSTmp2mt71v3L1pVxiQsEvtFsW41FzbXu0Xrw2tqgpu8iay
+         C06w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761619583; x=1762224383;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=62+T33sdSoeClcfbGu1+JvoKnh15kO/tZybU0Fphus8=;
+        b=eBQi7e5YIdfpI1MlOiXeFpPtV13oQrfFyeiF2kXRmPTWujYxjrbH5PtoWosjOHMBE5
+         p99wn+Ncv91wzF1A9ybgzoQh94XrzKVny+iVlDjXZIM2x77zEJJ56Y+2fBQmdP82o3XT
+         XVlzeYfrvHqVqD7v6EEpIZWyppdsdP3+3Z9hCKsPlehzViKGFe+K6+8juda9W5HMxBHe
+         w9nk9OkQ2guSOMe1pJpj7Y865koRhA457Sk52EZV5WXpCamDfGtz302jCGafQjlQRmOh
+         CWvoQmDTBCG/7eOALSdinSIYaWE+1rC/u1rrgTuU+MDLyGizbeHjsfvZFMtQVw4tUkdj
+         v/qQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWyQ/ONFor+MUdbnMIcNBiI56w6r+YDmPRKrU+EbumV8HoRYDCUtMmkrd54C7PYyBmPpS67kKPw5gAzP4vP59WF1MQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YystMpaRHPxmmiA136FJPdn6DOBiJj3vsVnaP/sTgxkVgk/EGGK
+	R+cq1llrto78DOsFtQC2jx7RFe+F7nD7zMEHKtAMk6ABrY9BF4B88CXn
+X-Gm-Gg: ASbGncsNeI8jAsbWv08LiCDZx91Pg5hTAI+sgc7x0GkhQ3RLrIGCxzuBQvOp1k8ZOb+
+	7xaFqHag3HyEfmhZqHtGdSRnyqZOYbsJWzRIGScwpjskuFRzPGSSQfDdL65fS3M3RNV9Z1qTGVF
+	0KM6yh9oWxgxqDQ52OQS0m2CnshJa4KnOxT90xaPivUqQHmG7hc6a/MIDHR+l7yS9ShAHbouQyW
+	hq3WxFbnaoX46o2c6uddzQ7Dd0IACqzu+AgskZwot70/zDMorvWE4oN/1f/3kxYbq2t5zwZms0j
+	ZEd81KAArVq7+dV75OaQmTFEbImWyElJ+fpei+pM6486Gaw7/7mMrdjbHgUMgEIABePevP0ZKq8
+	HkfNWBrH9l2MXCEgz+jTOyBed2nmfgRO7CiUU/JuJ959lcLuK3BaGrgfBtuYNqQxI
+X-Google-Smtp-Source: AGHT+IHjDra+n/Y/5rpgwd2IMljqC2H80LYbMEG8/KLghcmrk07q4zSyHxZmNxEExoDWDcVO4ATGOw==
+X-Received: by 2002:a17:902:da8f:b0:26d:353c:75cd with SMTP id d9443c01a7336-294cb381901mr28107345ad.21.1761619582838;
+        Mon, 27 Oct 2025 19:46:22 -0700 (PDT)
+Received: from localhost ([2600:8802:b00:9ce0::f9da])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29498d0a60fsm97375305ad.39.2025.10.27.19.46.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Oct 2025 19:46:22 -0700 (PDT)
+From: Chaitanya Kulkarni <ckulkarnilinux@gmail.com>
+To: Johannes.Thumshirn@wdc.com
+Cc: linux-block@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	martin.petersen@oracle.com,
+	dlemoal@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	mhiramat@kernel.org,
+	rostedt@goodmis.org,
+	axboe@kernel.dk,
+	Chaitanya Kulkarni <ckulkarnilinux@gmail.com>,
+	syzbot+153e64c0aa875d7e4c37@syzkaller.appspotmail.com
+Subject: [PATCH] blktrace: use debug print to report dropped events
+Date: Mon, 27 Oct 2025 19:46:19 -0700
+Message-Id: <20251028024619.2906-1-ckulkarnilinux@gmail.com>
+X-Mailer: git-send-email 2.40.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Tue, 28 Oct 2025 08:42:22 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+The WARN_ON_ONCE introduced in
+commit f9ee38bbf70f ("blktrace: add block trace commands for zone operations") 
+triggers kernel warnings when zone operations are traced with blktrace
+version 1. This can spam the kernel log during normal operation with
+zoned block devices when userspace is using the legacy blktrace
+protocol.
 
-> ~ # cd /sys/kernel/tracing/
-> /sys/kernel/tracing # echo 'w:my_wprobe w@jiffies' >> dynamic_events 
-> /sys/kernel/tracing # echo 1 > events/wprobes/my_wprobe/enable 
-> [   54.942288] trace_wprobe: enable_trace_wprobe called
-> [   54.945306] trace_wprobe: trying to register wprobes
-> [   54.947367] trace_wprobe: __register_trace_wprobe called
-> [   54.949586] trace_wprobe: registering wprobe at addr: 0xffffb6ce429fb200, len: 4, type: 2
-> [   54.951639] Creating wide hw breakpoint on CPU 0
-> [   54.966390] Creating kernel counter on CPU 0 for event type 5
-> [   54.967758] perf_install_in_context: event 00000000736da1d9 ctx 000000005d4db900 cpu 0
-> [   54.972015] perf_install_in_context2: event 00000000736da1d9 ctx set to 000000005d4db900
-> [   54.976697] cpu_function_call: calling function on CPU 0, func: __perf_install_in_context+0x0/0x2c8
-> 
-> What happen if the cpu calls function on itself by
-> smp_call_function_single() on arm64?
-> 
->   smp_call_function_single(this_cpu, remote_function, &data, 1);
+Currently blktrace implementation drops newly added REQ_OP_ZONE_XXX
+when blktrace userspce version is set to 1.
 
-Sorry, that was printk buffering issue. I used trace_printk() instead
-and persistent ring buffer[1] to trace it.
+Remove the WARN_ON_ONCE and quietly filter these events. Add a
+rate-limited debug message to help diagnose potential issues without
+flooding the kernel log. The debug message can be enabled via dynamic
+debug when needed for troubleshooting.
 
-[1] https://docs.kernel.org/trace/debugging.html#persistent-buffers-across-boots
+This approach is more appropriate as encountering zone operations with
+blktrace v1 is an expected condition that should be handled gracefully
+rather than warned about, since users may be running older blktrace
+userspace tools that only support version 1 of the protocol.
 
-~ # echo 1 > /sys/kernel/tracing/instances/boot_map/options/trace_printk_dest
-~ # echo 'w:my_wprobe w@jiffies' >> /sys/kernel/tracing/dynamic_events 
-~ # echo 1 > /sys/kernel/tracing/events/wprobes/my_wprobe/enable 
-QEMU 8.2.2 monitor - type 'help' for more information
-(qemu) system_reset
-...
+With this patch :-
+linux-block (for-next) # git log -1 
+commit c8966006a0971d2b4bf94c0426eb7e4407c6853f (HEAD -> for-next)
+Author: Chaitanya Kulkarni <ckulkarnilinux@gmail.com>
+Date:   Mon Oct 27 19:26:53 2025 -0700
 
-~ # cat /sys/kernel/tracing/instances/boot_map/trace 
-# tracer: nop
-#
-# entries-in-buffer/entries-written: 16/16   #P:1
-#
-#                                _-----=> irqs-off/BH-disabled
-#                               / _----=> need-resched
-#                              | / _---=> hardirq/softirq
-#                              || / _--=> preempt-depth
-#                              ||| / _-=> migrate-disable
-#                              |||| /     delay
-#           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
-#              | |         |   |||||     |         |
-           <...>-63      [000] .....    21.065038: register_wide_hw_breakpoint: Creating wide hw breakpoint on CPU 0
-           <...>-63      [000] .....    21.079678: perf_event_create_kernel_counter: Creating kernel counter on CPU 0 for event type 5
-           <...>-63      [000] .....    21.080051: perf_install_in_context: perf_install_in_context: event 000000000b3ac4d3 ctx 00000000097d6337 cpu 0
-           <...>-63      [000] .....    21.080140: perf_install_in_context: perf_install_in_context2: event 000000000b3ac4d3 ctx set to 00000000097d6337
-           <...>-63      [000] .....    21.080939: cpu_function_call: cpu_function_call: calling function on CPU 0, func: __perf_install_in_context+0x0/0x2f0
-           <...>-63      [000] .....    21.080966: smp_call_function_single: smp_call_function_single: calling function on CPU 0, func: remote_function+0x0/0x78, wait=1
-           <...>-63      [000] ...1.    21.080973: smp_call_function_single: smp_call_function_single: running on CPU 0, call CPU 0
-           <...>-63      [000] ...1.    21.081099: smp_call_function_single: smp_call_function_single: checking for potential deadlock conditions
-           <...>-63      [000] ...1.    21.081259: generic_exec_single: generic_exec_single: preparing to call function on CPU 0, func: remote_function+0x0/0x78
-           <...>-63      [000] ...1.    21.081269: generic_exec_single: Executing smp_call_function_single on self CPU 0, func: remote_function+0x0/0x78
-           <...>-63      [000] d..1.    21.081289: csd_do_func: csd_do_func: CPU 0 executing func remote_function+0x0/0x78
-           <...>-63      [000] d..1.    21.081429: __perf_install_in_context: __perf_install_in_context: event 000000000b3ac4d3 ctx 00000000097d6337
-           <...>-63      [000] d..2.    21.083211: hw_breakpoint_control: hw_breakpoint_control: ops=0
-           <...>-63      [000] d..1.    21.084191: __perf_install_in_context: __perf_install_in_context: event 000000000b3ac4d3 done, ret=0
-           <...>-63      [000] d..1.    21.084237: csd_do_func: csd_do_func: CPU 0 finished func remote_function+0x0/0x78
-           <...>-63      [000] d..1.    21.084243: generic_exec_single: Finished csd_lock_record(NULL)
-~ # 
+    blktrace: use debug print to report dropped events
+linux-block (for-next) # cdblktests
+blktests (master) # ./check blktrace
+blktrace/001 (blktrace zone management command tracing)      [passed]
+    runtime  3.805s  ...  3.889s
+blktests (master) # dmesg  -c
+blktests (master) #  echo "file kernel/trace/blktrace.c +p" > /sys/kernel/debug/dynamic_debug/control
+blktests (master) # ./check blktrace
+blktrace/001 (blktrace zone management command tracing)      [passed]
+    runtime  3.889s  ...  3.881s
+blktests (master) # dmesg  -c
+[   77.826237] blktrace: blktrace v1 cannot trace zone operation 0x1000190001
+[   77.826260] blktrace: blktrace v1 cannot trace zone operation 0x1000190004
+[   77.826282] blktrace: blktrace v1 cannot trace zone operation 0x1001490007
+[   77.826288] blktrace: blktrace v1 cannot trace zone operation 0x1001890008
+[   77.826343] blktrace: blktrace v1 cannot trace zone operation 0x1000190001
+[   77.826347] blktrace: blktrace v1 cannot trace zone operation 0x1000190004
+[   77.826350] blktrace: blktrace v1 cannot trace zone operation 0x1001490007
+[   77.826354] blktrace: blktrace v1 cannot trace zone operation 0x1001890008
+[   77.826373] blktrace: blktrace v1 cannot trace zone operation 0x1000190001
+[   77.826377] blktrace: blktrace v1 cannot trace zone operation 0x1000190004
+blktests (master) #  echo "file kernel/trace/blktrace.c -p" > /sys/kernel/debug/dynamic_debug/control
+blktests (master) # ./check blktrace
+blktrace/001 (blktrace zone management command tracing)      [passed]
+    runtime  3.881s  ...  3.824s
+blktests (master) # dmesg  -c 
+blktests (master) # 
 
+Reported-by: syzbot+153e64c0aa875d7e4c37@syzkaller.appspotmail.com
+Fixes: f9ee38bbf70f ("blktrace: add block trace commands for zone operations")
+Signed-off-by: Chaitanya Kulkarni <ckulkarnilinux@gmail.com>
+---
+ kernel/trace/blktrace.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-So the last message is right before the local_irq_restore() in
-generic_exec_single().
-
-static int generic_exec_single(int cpu, call_single_data_t *csd)
-{
-	...
-		csd_lock_record(csd);
-		csd_unlock(csd);
-		local_irq_save(flags);
-		csd_do_func(func, info, NULL);
-		csd_lock_record(NULL);
-		trace_printk("Finished csd_lock_record(NULL)\n"); <- 
-		local_irq_restore(flags);
-		return 0;
-
-Actually, I added another trace_printk() right after generic_exec_single().
-
-	err = generic_exec_single(cpu, csd);
-	trace_printk("generic_exec_single returned %d for CPU %d, func: %pS\n",
-		err, cpu, func);
-
-This means after setting the hw_breakpoint, when enabing the IRQ,
-the machine is frozen - but qemu is running busy.
-
-Can we specify the kernel memory address to HW breakpoint on arm64?
-
-Thank you,
+diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
+index 6ad3807a5b73..776ae4190f36 100644
+--- a/kernel/trace/blktrace.c
++++ b/kernel/trace/blktrace.c
+@@ -364,9 +364,12 @@ static void __blk_add_trace(struct blk_trace *bt, sector_t sector, int bytes,
+ 		break;
+ 	}
+ 
+-	if (WARN_ON_ONCE(bt->version == 1 &&
+-		     (what >> BLK_TC_SHIFT) > BLK_TC_END_V1))
++	/* Drop trace events for zone operations with blktrace v1 */
++	if (bt->version == 1 && (what >> BLK_TC_SHIFT) > BLK_TC_END_V1) {
++		pr_debug_ratelimited("blktrace v1 cannot trace zone operation 0x%llx\n",
++				(unsigned long long)what);
+ 		return;
++	}
+ 
+ 	if (cgid)
+ 		what |= __BLK_TA_CGROUP;
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.40.0
+
