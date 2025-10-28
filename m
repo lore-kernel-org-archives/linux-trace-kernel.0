@@ -1,70 +1,70 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74FC017C9E;
-	Tue, 28 Oct 2025 19:00:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AAB934F47C;
+	Tue, 28 Oct 2025 19:08:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761678029; cv=fail; b=VkYa66MRBqaf9R4I8Iy9DUrA25Ozt+oosW//rU2TZaBVXj+xKQd+rNUODtdrKIdCKLrpJCWHfjA/8spbEoAz6VzLBVkyAeh+SXxd4LAUP9C7A/9OWyZjrEixk7eV2j3M3csTLOFJiqDg4YUVTSiTWbcNDxPHDUx9YDOhrCTJiR8=
+	t=1761678536; cv=fail; b=Lpzg8wk55/CoR/nuqUKNBxOWm3qMrlblMm6M0X7vE8wK/+8RkkFRylIq6xY6eKRAwdDwlQb8/Tp9xdq3k+Oc2X8npF2TXHBDVQiNBOLUsA8gO5HtVC9AlHNfAoSeb/V6+oIQUFb6jXqM1W9UDCz5FY3jTHOpUDo6DOmER5mL0/A=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761678029; c=relaxed/simple;
-	bh=NLWOEaiUplS1HDo9vxzd1HioXYOMYOfL90BR4x5MpgU=;
+	s=arc-20240116; t=1761678536; c=relaxed/simple;
+	bh=qTTSfENgMbdhXHjhLIHCqsU5XB7JsXBQsM/F26omSFs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Hd8DCKscaOq/vPBf/hEIofRcwBtjjP9NpgjScO9P+NpjpkAI4eXIfQ9U96fRT71jdLtJ0Tu1M0XFeE0mc60ORK3tps5xgoQ23PFiiROPCKHzzqSAkbD7sQ6DiDCGjiU3xsdRYq7jT/n64v+C+uQK+acuwaJL56lbVmpek+EuXus=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=dXlmrmbT; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=ASh+90rK; arc=fail smtp.client-ip=205.220.165.32
+	 Content-Disposition:In-Reply-To:MIME-Version; b=A+cU66bcJfKMXqaIfpZgcJHwl34JOOsahlGvf8/StIYm9pYqCaprES00wwN6cFH2QRpIsP9bE7fQSev+qrLBxytqplmAJ/dsrBs7JqcylvE9Ol1ZYhz8jR7S31h1JCaDcu/7FkAZHCKfohITWKVF4PjhvQAjsXa7hNiba1N1fRQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=cF8Devgv; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=bp2Mp9vs; arc=fail smtp.client-ip=205.220.177.32
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="dXlmrmbT";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="ASh+90rK"
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59SHecWq015518;
-	Tue, 28 Oct 2025 18:59:41 GMT
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="cF8Devgv";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="bp2Mp9vs"
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59SHNlMU029271;
+	Tue, 28 Oct 2025 19:08:13 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
 	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2025-04-25; bh=/27a6cDSIq89UiNiQ2
-	7Lo7Pv2RvZE+2pIXst16y0d6Q=; b=dXlmrmbTFqwxEDuMETgPco+s0MVGgQZZWw
-	YX0XPqAx0dQPojy8rwCDnwIuOUrJ9yRH5b1FUC/mwyg+HF/XI0Bsu8qni2upeYo0
-	5z3CI7gY8T0dfQQyg1ykpSjNnZUZcL6b44AChMr1i1nn+4LJQeBWQ7zTbZTMUlkI
-	bZSMLGusDwt/1A3Al4mOXUX+6Fi4NbpMg92CYAp3y6fJrDNSzRoDxdSXPiXdIfri
-	7+1XgeLqf9c2PpwQYh+b9YQGMwPo0Psi5So1itYH2YQPQQ9ynjXhxBWBRNNK2YZD
-	ZHs/bwvdAWXIouGmPZUZWW1pB4YWt50xhp89WFYTf47PZVsiZMQw==
+	:references:subject:to; s=corp-2025-04-25; bh=qTTSfENgMbdhXHjhLI
+	HCqsU5XB7JsXBQsM/F26omSFs=; b=cF8Devgv6MX/YZefh/ar+3hH7HdN7r2NwG
+	3DABmwbTi+hv0Hp+iTkaPvI8jjlJDAK8+YYmKzKomN9+az8szirv162h8t6PI915
+	7W58C/HHVEOjvjI8UrEEVHFhCfNZbNy52jx2iOGNl8NxjjDGkGO/HCWhaFpVZo2O
+	3q5y9ddX/+O8ynxrqIKPHrsQZMAFc4X/yg/Jl8MU2GMRpU4PP6KcU7Ukr9lphF38
+	Mt6A2njij4bGp38pBgj+TEYmo4nKezarNFyawyWx32xB7+a5Q0mXfvPbExk3nSFX
+	bvG9wJKbfP+2UJZGmu7OWxC4qBw+pSMhbjGrSP1OZR1C9xHiSGZg==
 Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4a0n4yq2jt-1
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4a22uucdqv-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 28 Oct 2025 18:59:40 +0000 (GMT)
+	Tue, 28 Oct 2025 19:08:13 +0000 (GMT)
 Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 59SHqtPr037435;
-	Tue, 28 Oct 2025 18:59:40 GMT
-Received: from ph8pr06cu001.outbound.protection.outlook.com (mail-westus3azon11012049.outbound.protection.outlook.com [40.107.209.49])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 4a0n08mm04-1
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 59SIIQGG037502;
+	Tue, 28 Oct 2025 19:08:12 GMT
+Received: from bl2pr02cu003.outbound.protection.outlook.com (mail-eastusazon11011029.outbound.protection.outlook.com [52.101.52.29])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 4a0n08mxds-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 28 Oct 2025 18:59:40 +0000
+	Tue, 28 Oct 2025 19:08:12 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=iGb4tO3kGAVB87RQlwgeg8LkiGWHUIjv9iUZacKHYRzIa1/5VLUpq1Wbjnb+xu1HQP4SH5q0/eNOWq0F5YLRt1EvmmtBu8ZqjLYqM1Ju91I+QizUK24rjV11AmvcMvIBhodV6smZoeFMyfb2c5leG9IfwwvDQAKNzmbHJ0DJhHoNZvrou+9kwMq7k6Atd8/mh1Aud6ZQNjdnDjvh9F/U/1Nh29Mcuh0LXPiKCVJdSYHnxl+z/A3SP944JcMwOoRBL1eprfx4t+nDJNrkPgJkPbOTd9miFDj18JigIqU1RHsokpMZL7pzzI1EkkAiMQOoUWY9lkychcp5N6P/icijRg==
+ b=qZRL1ayKscWPEquqI9U0FLs2H8aGKvmwJs0A6RvPqQUIfAv2mHo8AHLB7gQBUwKM7LM6yB/jYgs6J3Q8PzQo2ZR8q0X34KaOdGVnPneyZXVb4ySuFe4IIvqRhIndBHNAUU2AYNczX92zYXC2aDXiG5QT846rZPN3sq26in9iGCpave3WXp2/ECLdg5TmKygHNksJnUexHaOtAcs+1qqaDeBHd0twpbeBP7AjdiVrorkTEMblb3dIFiHBZSOwS3Py+j+g1/Ka2bUvWowzZ9BGOS8GoXN7qHzAQobjrZdXAexn6+nP3nrrT7tMCZThr/w/i2Ui+JnROKpOvB7MV0XuxQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/27a6cDSIq89UiNiQ27Lo7Pv2RvZE+2pIXst16y0d6Q=;
- b=BLk/UELahnTE4k8MwQdpWWMSSNkf6kz+G9fUa2/5lrBJukFUOitNXlSrKvgxis6a4kNw8USflmsj8FU1YgJrCO0iXQcVLqZJJfpx4mIX2rzAcxCIap4bU5qYOEjJZpukB9l1vBtX/tvsSNmQEOrWMlpcNo5HDlstFtO1v3Zti0CwcjI3f0TSDUTefiPROaJbeIYxI6+tnU25nSwvVcwAN1Z1/C8tV4otCFK3TEkkKgNfMl0SdkQid6suAuGaoDiei5gI402yBfyDNwENL6PIwY2OlRqcMiQBRl+3xcVzt65N8zWV1r77jb9fMlgZjV9nw2SNYdJ3JpjEsn8huY5XHw==
+ bh=qTTSfENgMbdhXHjhLIHCqsU5XB7JsXBQsM/F26omSFs=;
+ b=oEaI4u/Gr/TzdZ8vlJ9MJjktVzsqijGx6h2zRL9VHP2cmAXEswoif+WVy8XoXclYcTDfnpUT1HCVwsY4IFEeRQXHs7qO2OMTPiphMImD8uSbXy97Csqqi3Bnti5xEpnSVbQDWkUlffnVUnIyO+qN/7+L4S51i8aeZd9fvqhW5VtWp8FM4OVssg6CGI7HXfn71ha3YURPau5J+mgznTXHlfy1mcIgaHowFaVj7Q5WDmYOJhaguv3GrqyTOzxzIcv2Z3BvOJQkeNxL4bI7hKwRMO/wUHSbbTmAavk/W+gU2YADCAUD/A8Iwbkxhmeayl9Ra+UCdlXIXk1MygZxcTVpDA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/27a6cDSIq89UiNiQ27Lo7Pv2RvZE+2pIXst16y0d6Q=;
- b=ASh+90rKfqwgR7h4dDm+jjuhTjASCIYnWPZoDnwLgmvHdmaj7tVHxGXH+vlUhECeUECKwjye93g0dOJ8gOoDpjBgTW9+BNxSRGgsDp65dgX319VQytRXBHJPpwiqExwqUCl/75i1cBpiC5FuJILj22zM7rLXVfO5F0kq6KeJ1Eo=
+ bh=qTTSfENgMbdhXHjhLIHCqsU5XB7JsXBQsM/F26omSFs=;
+ b=bp2Mp9vsBmsMhYN1UfsKAJNMJrgomnQgzJKo0wjnoE54OBRXlo0PoIqqwJgVDWJskboRpdPFVQfg1U46jzPdkt00jBGwVkQXVjoHWtQBbkRbyACvKomjEkjfrgFyRIisfm09I/Eeq+kmjmlUiSB5Wf/huHIBoygzuH0GajqhYLg=
 Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
- by IA0PR10MB6889.namprd10.prod.outlook.com (2603:10b6:208:433::15) with
+ by DS0PR10MB6271.namprd10.prod.outlook.com (2603:10b6:8:d1::15) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9253.19; Tue, 28 Oct
- 2025 18:59:34 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9275.12; Tue, 28 Oct
+ 2025 19:08:07 +0000
 Received: from DM4PR10MB8218.namprd10.prod.outlook.com
  ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
  ([fe80::2650:55cf:2816:5f2%2]) with mapi id 15.20.9253.018; Tue, 28 Oct 2025
- 18:59:34 +0000
-Date: Tue, 28 Oct 2025 18:59:31 +0000
+ 19:08:07 +0000
+Date: Tue, 28 Oct 2025 19:08:05 +0000
 From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 To: David Hildenbrand <david@redhat.com>
 Cc: Nico Pache <npache@redhat.com>, linux-kernel@vger.kernel.org,
@@ -88,7 +88,7 @@ Cc: Nico Pache <npache@redhat.com>, linux-kernel@vger.kernel.org,
         rppt@kernel.org, jannh@google.com, pfalcato@suse.de
 Subject: Re: [PATCH v12 mm-new 06/15] khugepaged: introduce
  collapse_max_ptes_none helper function
-Message-ID: <3dc6b17f-a3e0-4b2c-9348-c75257b0e7f6@lucifer.local>
+Message-ID: <a1ff622a-fd73-4707-bae8-84706a1fc2ac@lucifer.local>
 References: <20251022183717.70829-1-npache@redhat.com>
  <20251022183717.70829-7-npache@redhat.com>
  <5f8c69c1-d07b-4957-b671-b37fccf729f1@lucifer.local>
@@ -96,11 +96,12 @@ References: <20251022183717.70829-1-npache@redhat.com>
  <e69acbc5-0824-4b07-8744-8d5145e2580b@redhat.com>
  <e66b671f-c6df-48c1-8045-903631a8eb85@lucifer.local>
  <74583699-bd9e-496c-904c-ce6a8e1b42d9@redhat.com>
+ <3dc6b17f-a3e0-4b2c-9348-c75257b0e7f6@lucifer.local>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <74583699-bd9e-496c-904c-ce6a8e1b42d9@redhat.com>
-X-ClientProxiedBy: LO2P265CA0311.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:a5::35) To DM4PR10MB8218.namprd10.prod.outlook.com
+In-Reply-To: <3dc6b17f-a3e0-4b2c-9348-c75257b0e7f6@lucifer.local>
+X-ClientProxiedBy: LO4P123CA0074.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:190::7) To DM4PR10MB8218.namprd10.prod.outlook.com
  (2603:10b6:8:1cc::16)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -109,334 +110,135 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|IA0PR10MB6889:EE_
-X-MS-Office365-Filtering-Correlation-Id: 10f06630-bf36-4483-93a6-08de1654220f
+X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|DS0PR10MB6271:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9c1ca6de-2af3-4e1b-2ac6-08de1655543b
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?815DI1ItGHAhmH+4cjkw/8okrtnan7qJbanDYIzg0y80SREr6+CxapwxfH+m?=
- =?us-ascii?Q?Z1zXFs3XpmhHb9+hrXhGzCYLaqAHYgXuWP8FWKWoRBMdNo6APgP9Hzw9XMWd?=
- =?us-ascii?Q?6GQBTtwhjCcfFbDQOjeyRnQmktX1AFjwIWxacSs/CaERgDngOoyVFzWMiF9y?=
- =?us-ascii?Q?IgCZhK3TgkZP5iknzjcNoSCwdpzwvKUXO97SsDoi3FH2NuKBmWNQgFrUM4tg?=
- =?us-ascii?Q?LnfX+BofC5Ap4XMVZ9iBFh7j0QFb4AZrYaNw6iB1BYI7yaS1B2rFLj6AHDwZ?=
- =?us-ascii?Q?CZi81NEYs4S3XPTzIgkHbotd4AN17LrCi0G+XTPhXe+Oz2sq6MXNLoccMoAl?=
- =?us-ascii?Q?lgcCohf005E5N7kMlWUoFt5+jyC8wyeaaZkULpkkUpHhJc+mmRArjX3U+/mm?=
- =?us-ascii?Q?ecSpVrbzp6tf1gBd67kyvBWJfIuMMzIqqSSFSU0z7kN5KiHddX2a1/teHeRf?=
- =?us-ascii?Q?we+IbIBquPI0Ag4tn4/AeA6Vfd6MF0avbXJVGsiHod5oqfhhZ+2S4sHoOuqc?=
- =?us-ascii?Q?J5Wmd6N875fCKAt55RaZ7ELDKpKDKRlC7vzHEbBqqkKp5WFjvEeygbzhjpON?=
- =?us-ascii?Q?3KGamn9L7XdiiTACdsiHjbgm3RmLe5phxalSI5OLItGTUp3cKLxb78GQdCTm?=
- =?us-ascii?Q?EUQ6iorn3euZi8xA1RcVVpJpLKBl5Rpx13DjNnk8yrjRc7zi62aY50qRkEOT?=
- =?us-ascii?Q?nUAXERas7vB5JTfiXIgd3Knx//OpL7Ko28aJl9JMCp74lXPRuceSSzv3/8x1?=
- =?us-ascii?Q?g/X9x6R3Y6JeQ4BWggKXsq6GY5yr1ZnyGj+L5oJoWsQ0+6/FvnfjD2LGzmkI?=
- =?us-ascii?Q?GADVPjHCZMVqQmPXtctHJ/hURTqoLkzf7W9JXyiNqKPYuJDvqPerKBSnn5V/?=
- =?us-ascii?Q?x4mXKEpx3Qo0RlQxUpGvXN+VnJbPPitQugL7GG1KrFUgGOsSo4VV5N2P+Baa?=
- =?us-ascii?Q?xXV+Rzkhqra7QppscSmfDeEvOKHUnp9CoB7Lb+A+kFfVwNY2Ko1ujXoXL1eI?=
- =?us-ascii?Q?aBXkPdDF23bCY/WMxDB/7BBZnuoPI91BsyYrGKCz6SXwIA5jYlyqnAmE8oNO?=
- =?us-ascii?Q?FL0Y0+Vtfryzak54oODPhtZ05TvQlrEV8/TfbqniPEI/syxkh5xWb2ECh1iA?=
- =?us-ascii?Q?SiXBV3Ct/FK1d2eqNGspzkDxcwKnQXvsVeLG478HV4sguMq3VrEyg5+qs4N4?=
- =?us-ascii?Q?9mLhpHGzms1gHSi9Wp85VCQcv1xXvTOhnrL7N3bCKvJWS4o0sBm6Wo6W7agF?=
- =?us-ascii?Q?Jw3pu2SfYyCG0dY8oqvQ8ewlwgxBFZppGVjTA/9Jqs1ZWS/Gbq7zJeo35R4I?=
- =?us-ascii?Q?jJODrV0XTJo+lzKddY0jcRdDgHuMSv3gv33C4hDa1ma3WPbCij/paUNm5kQS?=
- =?us-ascii?Q?v5cr+BM/t+RSmfFGkwZTmoItNjXLl5yXYPkc+EqULcFwAAb2pmBobpXOEwz7?=
- =?us-ascii?Q?V9ml79JwX11lE3yEQ1bNHqvnwK7Ivytb?=
+	=?us-ascii?Q?y8uego6helQtbK0ULNfvk/Vn6ZX2V+iI3PSN30GdFnbICsfqny2/xOCqNhvf?=
+ =?us-ascii?Q?gnvoFHdvQoBguaWN4qoQVuyedLRllSN4JMtxYRgBOqbfpyaDnkCq78BGdGEp?=
+ =?us-ascii?Q?ACsHO5ryJAW7zIn7lR3G6FUxETKdxKxBe2jXClQB34J2y9Is2w8hc1tY7Tp2?=
+ =?us-ascii?Q?Wdx4K1tmkM7ODKiReEaBrRD8IJaSiUurfSCkW22kQQhnzQjtjz391DUSOCBF?=
+ =?us-ascii?Q?DHYgSDnyy3/+yfsifjY8vioZVXkOA9IhLSItMRWc1SgGiJB79Kd1rgh338+U?=
+ =?us-ascii?Q?3rAoLrnQr21r7im5mdewmoZQRlLKJQ59ABZBSZtu1pKVNNV5IGTSSb+5GpKB?=
+ =?us-ascii?Q?F0T0IW3I/9GImtCDG8Ro/WSnH/HsqJy2w8qKIAKErURs2JE8ZqwaIPcdY8IY?=
+ =?us-ascii?Q?d7BTli9+q3cjljlSUdW32eWlWvJAAPVuqb/isuRTJRd42P0WSYZSgMYdXQuR?=
+ =?us-ascii?Q?hzBce6QvhJ23a2rHto8UqjcMzSHoW/58UAArfLo/jtPQEiLwP3WhsOHtvX3C?=
+ =?us-ascii?Q?FgZIoWauOAQdZgJTaUEMlaJEp28PZvBv5SComuVzT58ricP7KureHOfytOiB?=
+ =?us-ascii?Q?N9iOtjQmm+syXyTSL+pYwI6MGfipV8LQf5di/oNEEMww6jxDXwiWomp+STDj?=
+ =?us-ascii?Q?mgrWF6aKDtCw9VMVc9rXf+K6ZzuogTkEQdluAvII38uBuSlW5IYaMx1AEIv0?=
+ =?us-ascii?Q?NNuj5c6GvqjjwFPkPs0QgKLK6DAuSJj0vWm5E7jJaDqllOPcDyUrsEm6Qrzo?=
+ =?us-ascii?Q?hUryYxgMaXi1LA60ISI/vJ+Dna5Y7JBPBtBtme9PG3joHyLUnU+yDIkMwqAt?=
+ =?us-ascii?Q?n2ibNQUrKU++6J1MK9ow0fSCqPMeW4UO4G0vJ1LQDjKfNcHDk7ubqns8JDt6?=
+ =?us-ascii?Q?5DZmzhGX2qba/xBfkopdVGfy+hNDvxLSXQoUZd4F6FhVm1Ve6XWRACQdzuzj?=
+ =?us-ascii?Q?9m0wLmns0oSbvyecfIwj8EgHmYCgtS3ux4r0lJaRAql2xOB8QC3MZCM7mZmX?=
+ =?us-ascii?Q?B6xQ/DmUmoJAimLyftWQaUrx2GlPf6Q6tUB86ezNoxVzYKbWlGBgA5pWhZyK?=
+ =?us-ascii?Q?YFNgJN5ALe1yRn8CRWLokvJFWmAGtqPIJQNSqRlGIQA/SSYttZ1n57ypNS2P?=
+ =?us-ascii?Q?kP/90zINcMKXduEkt/0EMf+lbFN+njICG5/H5zpvqWgQasA/pkuqYfWsP1wo?=
+ =?us-ascii?Q?1IW2onMpEW2iZXOw6UJqkKOHRAdKKFcSEYDg30OedQzlBppZmwBEw+V8mx8H?=
+ =?us-ascii?Q?ZXWI2tS7P93A33xnRU19BnaoQ8uDe0cKG0raCFAhdE29/C4UrR1A45ge+xbw?=
+ =?us-ascii?Q?RMRL/cRyv3fYmb435OmPHDO910jneZoqoyR1ntNh1a7cwEedcKDxb+R83dQS?=
+ =?us-ascii?Q?eXtf8N3n2sqXVkyn+Sp4/54i9KN4CwCY1Piu9hYnMW+MULZ4/ROx6JZ+ENz9?=
+ =?us-ascii?Q?gtiK080ViYsPJDL8DHDA4wmPcQmMtvs8?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?dR3jelqkENANnK7G0SZSr0HKRwEnrxXImsjGc80OXmfdEEKZs7lMjMoJxTxN?=
- =?us-ascii?Q?ltho1P9eLAIwEBPEBhMuekHK0u5qjFr3xgCaUorJ2QPx5kVMwvtgIHOibvdy?=
- =?us-ascii?Q?bI1jI+QIO2+faN+Jm//2hYGUChbk+jOjJT/xYB3om/Zyz1Ex+ra8627fKtsw?=
- =?us-ascii?Q?fp1V991lWrWepqgF+VOhg/M0dtjI8qMDIQFeucdRG3Ia8IVgEBe4qRLZyELW?=
- =?us-ascii?Q?8fGFFJvaGsiTJDg9mjTF7EWvIVvR16tZUrjwTDKOej0Wkth6h6dxKD6jMQYx?=
- =?us-ascii?Q?T1+ZJnZ3KAfhM9cYxyzEn2dlcZw1xiQXTlGh54jFPy2fB4r9QHNsvUe9BBnW?=
- =?us-ascii?Q?Ba5/cU0jIwM3AmJNX4imS20TE4oCexC/lqKelbD3Y9EdX0T2wWu9umy1FelJ?=
- =?us-ascii?Q?aLzkWKoavOak9+wSxmzVrJTCXCfD30xZ5LJV7/mYNtBN5gD8NOeTKNM5BVBk?=
- =?us-ascii?Q?AxnflB4sxUiELIxBuArjxu4w97kg5hIy1gHJxda6vX3X1mDJAISSqDbbx6R6?=
- =?us-ascii?Q?r2d6ZNE7bFDBUjDXDeZplMH/T5Rl1F4WV5Vvwt126cTz8Yra313WCuDCzaiN?=
- =?us-ascii?Q?HjJku1ekERtqPIswNO6OZuSu6IZSgqEVb9hoeK927VZWcnsza2KfUIbtxJEx?=
- =?us-ascii?Q?nBuqLghy9k39BOI+wd8LF7XSg2A22DtqkTpbtBYHScUDDbJM7nyAuSA8Iw44?=
- =?us-ascii?Q?Knab1rndunm8tBTb/uvPmLTQnzqoRrXcA6NKiXXkdSNEWFCn64ds3negAMUd?=
- =?us-ascii?Q?2mVLLN0kfoyiIjJnRxUFC+VEVHUlMM5UTUOsyw8Put8JTYuxXQs3jHBBOsp+?=
- =?us-ascii?Q?7fPlsY6ECzwQE6bDenPnJ/gIUp/NDfCk6DAxXCB2+8KNDx7umln4qQhZhx+y?=
- =?us-ascii?Q?DrpoqeLrMKOAybNeiTh7Ni2taVDuH5AN59+zMQN2pGm15RcA9iBcR+KdNkCt?=
- =?us-ascii?Q?kOSJuOGr1PNviDHBVwE8ZyMeng2itmYTiAl84xJYqiZOZ6N5UNNLXvvApCIj?=
- =?us-ascii?Q?Mc9tdXjPXQMLB2vHmZuBtIEMxkazfhuxmskosxmAwnNEoY9ovUS1hK0X24zK?=
- =?us-ascii?Q?K6zSd9OpWyQtV8LU9NK/W43NTHRWgkXMRtTH4JOVQYTlcAs0SJdbmGFJomVV?=
- =?us-ascii?Q?iFjcdrUbVoTttfH3kfMAmikiKAwqkMqASyKvYStiNMYnYgzjvSi4Fu8rB3y/?=
- =?us-ascii?Q?aQ5JIyq4dHo4KgTPiOAf5jfnm8k0G77EbgnhWZkcZop+WyNHs5ZLqzHRHaIF?=
- =?us-ascii?Q?G/khPYGo2wdhlMxIeif7uY8cM4WxfPfQsjypCtWdI7GddQASzxW21j/0HHf0?=
- =?us-ascii?Q?LvrRpmO0dpSeiQNffKBS2jYNq/ecdQbPDutnrO7MQdnoRnHks//CMgeElvxL?=
- =?us-ascii?Q?XhpJp89pAYppK7/P28WnR2MBQPLeuVkHZuxoDr+9uAxZfKqDk5qryqPFtm3K?=
- =?us-ascii?Q?AhvfWH87JHuDwh+985A+Pb5ng1kQ4LEBjqtpjliern1LyehxuFGvHyu6swH/?=
- =?us-ascii?Q?wCfGNNiNFC1aPVXRf1g4x5SCTvUHyyHfUWjfKZQsJhkHZDVi+lH4586uCowT?=
- =?us-ascii?Q?cyBUeY5IJ6ETB+B7XqHgZuMVQiJCN/eXRZ7/zLcojmM1a7Z/nu5mH07415gr?=
- =?us-ascii?Q?VA=3D=3D?=
+	=?us-ascii?Q?bKMqwwthASuVkIZ6tHUu1uM0Ym8i6dV4yqKG+xII892wK9FHL10HSY2YUSZo?=
+ =?us-ascii?Q?HEeFYWQ3IJL4csca0QoLn4lEtW8M/rzQ3b55fLjcA2pAinunEnBFXOtnLWBP?=
+ =?us-ascii?Q?zpkh/RXfmtNIXTa7HNzx07aac68jHfG6Ga7S9NdANaWNFn8IEg9uE0XmBfH9?=
+ =?us-ascii?Q?qg6be185eRW5JwC9NWvO0QAmnXG0jcqx+miF7MEB/LvjNm3Ijo4bYdPdiXgy?=
+ =?us-ascii?Q?22DTATjqUXEbwXh61Ytjll9LGGWFLfzytNiTAvF+c9uwrqUPfXZKayC29dV/?=
+ =?us-ascii?Q?cJa96YEnAVL7TSzWAXWQ4Fy7Po/wpeFX29u9uQ8pPg5wQ2yDuMx5py0ujjp3?=
+ =?us-ascii?Q?GxjkdDuV+orMKrS7znZ6E5RNXxyOwQPDiZ4V69WUF27RYGguPVHidmrpet3V?=
+ =?us-ascii?Q?BPn0Irs16vuZS1a3GolSe1pLp7ecQLevIu7Nbora+3NiMTUfwvYRC7NhFfsL?=
+ =?us-ascii?Q?V68KmhYFXJpNFktoWZZQYp22mAHa6wtQI1quzUQiZTkMOKFn9H6GePmcf4wS?=
+ =?us-ascii?Q?qJu0Tnblbhy7BGc/hf2shwo+mOW2OXMinB3XKOxCVs7aiutRLH9Tvd9Di23G?=
+ =?us-ascii?Q?2x1rxzvE0KLXg2JvjZlBc1DeXGHOoaoP/3Flz0jnptlkxrnLBDXxKnxF3Xuc?=
+ =?us-ascii?Q?ITW7aKWPXphY4HmBNGuGKMP+jbxPMHspNFePTrDSXWYZ7F3Z7XGa22c2uWIh?=
+ =?us-ascii?Q?8VXDNY3VQBpw3icwzEEdtG3pYeiZpilXDNlN9ykhs8hF5MB2PQL1Ii2hubsM?=
+ =?us-ascii?Q?RlnXSnoSbqoyWfvqGqb7kuLuOYtVBMgCj9MieVL6ZuDjql8SBlz3/hU0kA3m?=
+ =?us-ascii?Q?RhdRRul8HdZRd59Exp9A48eiOkc3LSdwPiY8dc9iLRXV1ZorOws5TEDEQqsG?=
+ =?us-ascii?Q?D/PgVRmpgcnC6Ryts2w4WezZD+fGyS5I/5MbV6hsGTt/7yNSJCaD0iiYxrnX?=
+ =?us-ascii?Q?CjpzQJYErTf8VzmlFKv/T2pOGtkBNPEw37ussjpmRrDF7qcCKdKQgTldH22m?=
+ =?us-ascii?Q?DdXXTzJMv+4FBF4vmrgsIevMyPTaMvhWxjWaa0kkG9obN9lSaOAEF5MWoPXV?=
+ =?us-ascii?Q?bJryLsbL0m4o4JyzTUk1oiClJlafuCWHPyrbE7mqGh+SEHyUTurnUkiL/wX3?=
+ =?us-ascii?Q?NOb8lj5W8xL8B3QhzU83qh5HKgng1tlAd8+2aH0WvY1mkSTigrWzggFt/VGd?=
+ =?us-ascii?Q?gSneyt+UWPZfu1UwaW5AF8hPIEAG86CF5YbLb9MlA1iYhQREPQn5XsyxG1ef?=
+ =?us-ascii?Q?8FvvJdPJiBhmbedGlRZulLxgurcF1/JYNK8/aAxg06IjZDWMFVnb6i9vpCkp?=
+ =?us-ascii?Q?JkjT6UWj+M02Fxw4pCtB6XU8CfNQIjmuJ3eBNPHjr43Cdbn10f5vv7TqJJiT?=
+ =?us-ascii?Q?edWz+S35TZCQtQYxpthvpJxrRWuSIfP8l29cNkaQX5SNT+MO3BrI5jeYH8C5?=
+ =?us-ascii?Q?DH1eOQATfJHDmstNis1w6zicR+6ppIVirZm27L+5EEbAFu+RvcVSkw3NZyoq?=
+ =?us-ascii?Q?EH/EgqeeWfTaJEZVERry0IgJse+XPhxQ+7TP2FOT3WAZUNd7hb81uvDj1wyC?=
+ =?us-ascii?Q?tQttdEnfxfh8gwq11e4ea087W+fjp47G4g1sAGiWPXfWK6VbUBGx94eu5+K1?=
+ =?us-ascii?Q?aQ=3D=3D?=
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	Ph/p25nL1klXqLHyQJcfD+deNqb5Ce2G0nhg/mXIQDZr1E+8upzCT9EBABY5EdIWEhKeiyTAgQXnGzPQYUFAUpVZsC77RvLlmIp+/Jff0ZivIJ+AjvjROlsobOSTCIYrM/I42+4o1XsdjauQidweeR9v4K2tzbsWyLUHtUv5FQtBmhit9M0hCi0Bdt//wlp2VGVCvfOOzgKKaYScyePUvT9gJjUo3HQZYhQZlFpEqfpdmTYLdsoqQBypNG6guzemQPxPPcOUGsNZ5QtS2ZPZJA4SsHYeHPsUsQbGMZ1Zxovj+wl9kKneetiTE1TW9sH+ZvkImd764eucL57dcRuglWBsqwWVtC4tMSbnVGJcWKL3Zi3J/Ks9flaCAwvIHDE8NnAWR+KCdGhsn8mlUlQPc3ZoPDWRaMONNb33naXe5NweDs8Y5y6POezIjYwfaQuoW+OZkrGmFTTveHOzHBQm26elldd25fuYXXpMe2/LfYf+QIrVLYO70KSJj+ITXS2wIP5JJnYkF9gHA5f6w20KxtL4ff2MurphNolSJDhbWqDsfoF1pQ41ryTUBUGxbr0VMnMUB9nCwTjcY3Rk2KMHPHtMazUHmmAxF1iGG9u4HSE=
+	DrGyQV1FhNyYx9be6k9JSvDLSJwy9FCXSGhwCHi2hZv15TCt6Pm8907BftljnZNiKvqKVmYAJoK8gpoNGtGE303//5neYVqVG5NOyXbjd7pQiy27U1WBAq0AKOIAGmOvb/Ynw7Ik+BoRnpvYbGEuAwaDahScpj11aXqT3ewdLGJCqv/rXmY9UZR9PfJ4w3+k/KOGHunAA02T6l78u8CfFgES7aAgVZPwMUFqADrm5UbT7jYVTwKSQScaLpwvHuN2+8D+soDKqKZkOVhC2qYj7Ju2v12hW0xG165abn5XNADNwGaWsoIvuo/grk4AOkV3sdCgOAyBZx6imNmU8P9fb4r41uy6LPOYl3Aq4uAr+lMY+7kPw+7OxVzGPz1AYhka5gRw5CMve6QkLK3823Py7itnvudMIEeT9ZkYlKAvJIDQmGTFnI+/aTMIqWUfw3egOJ+xpXAzN6g0P2YrvG3bctG9MixwjhlnvCqrxpW1LLNcT5UdV96XJuQGVNetsvLA//BH3HCd/K+ofybZ5f5MuL1jbcTwTgRSEsEZWteCs/hpKlllxXxQ+mNhh3kAl65K6Uj9Lz5JG2/Gb1WIsbcdrQAT6oqbVTQRfX+pKd7TxW0=
 X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 10f06630-bf36-4483-93a6-08de1654220f
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9c1ca6de-2af3-4e1b-2ac6-08de1655543b
 X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Oct 2025 18:59:33.9320
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Oct 2025 19:08:07.5047
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 694rZ74ynLjiqXCAYYawCdE8fVqYd8xvxrPVHU/899WPZt/O9yu0+Xa2Gcni/EfoHUC//XpgKye7MBsYN0Jjh3YNscpGh9ZkVoVLszpjzjQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR10MB6889
+X-MS-Exchange-CrossTenant-UserPrincipalName: tXmaLWel0XcTlIRHZKXMWUkPdErJhVrPDbjoXbuaHrBjTZnoPaBlQNgIVgsYM7yerTMDYc6EAq91UjfRImgUHN5KHt2j+FsZIvkGsX35s8M=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR10MB6271
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.80.40
  definitions=2025-10-28_07,2025-10-22_01,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 suspectscore=0
- malwarescore=0 adultscore=0 mlxscore=0 mlxlogscore=999 bulkscore=0
+ malwarescore=0 adultscore=0 mlxscore=0 mlxlogscore=866 bulkscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2510020000
  definitions=main-2510280161
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDI1MDAxMyBTYWx0ZWRfX/0//m80uwbup
- Pi/+sWgRRbX/Rm0r0yV4D4mWTAKQszdLo3BUWrgP0VnNQNHw+lIICdJq+u1cDIbjawD1MJ4xPWG
- UZMrGPWDTvyBl1Vh5d3rtUDMkl8JTwgBO0h4BzwCKK0fTIGudvnI4qnf5bJBsBN89R3f2FNe7mc
- d4vaHs8nUXA1brydH85w3mtOtNyp6Io/ZV/owZljHFXzInnzTlqvBsF+Myo9zC/zaxlVjpV3UYc
- 35L3vKVSao8cGwLb1id9jHTq7uOtDCAavzAgyf0ul84UeJjkpYT39B7BnycA6bHyJXqrR0BCiX0
- NFW5FyKetbyYM40X/0+7RYlUHCxk3pTfFuTrad1tXTID2JD73/jVS0M8mmBBzojcZpMoMD9v1uj
- 8UTUCw4J6UVjmNwE7CTdD2vBNiIm0g==
-X-Authority-Analysis: v=2.4 cv=Z9vh3XRA c=1 sm=1 tr=0 ts=6901129d cx=c_pps
+X-Proofpoint-GUID: WaZkx5uOGoYoJRttS_Sdbpn_NAnC8NOB
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDI3MDA1MSBTYWx0ZWRfX35eWoKgrQQzB
+ IT2Tlbi45z+hfboVkL2bsUGrGPQejrmaQov4CTXm2KJAXu1gHOJ9zTSEvyej+hMcVjnT83DZ3c8
+ YqpssSCJlJJy2UpgkC7DQLzMXR7ulykyu89yK1yfBxlKxkVccTEB5cWL0jFmf0eJfqwmiRBBTsG
+ 9f38OVcYSiXcXFVAMO8I8k/mP86eUfj0MGW0gS2PgB3rnHdH1yUvc+NmLYbRgLhBBaIPDxyVtt7
+ 3xaoRXvaI/h3/Zz0iXKdHF8HD9zR/xOcNe0/pbokwztYu7F+2j41m2Mt/+rddWy8s/LaoXVUJdl
+ kyB+CU/rm4RvA4FuEMH+VFAoqdJFfYDXzpqA9RiSRnGp/isw00KhQja/0LNBiSvfwROrvXnV+Qw
+ QKjVaV+xdNJzcr7KkYmcZXUT0WK7xA==
+X-Authority-Analysis: v=2.4 cv=Xe+EDY55 c=1 sm=1 tr=0 ts=6901149d cx=c_pps
  a=OOZaFjgC48PWsiFpTAqLcw==:117 a=OOZaFjgC48PWsiFpTAqLcw==:17
  a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
  a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
  a=x6icFKpwvdMA:10 a=GoEa3M9JfhUA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=lm_c3_3Ww6B06y51cfgA:9 a=CjuIK1q_8ugA:10 a=UhEZJTgQB8St2RibIkdl:22
+ a=mJtke1EV2wqAupp9RccA:9 a=CjuIK1q_8ugA:10 a=UhEZJTgQB8St2RibIkdl:22
  a=Z5ABNNGmrOfJ6cZ5bIyy:22 a=QOGEsqRv6VhmHaoFNykA:22
-X-Proofpoint-ORIG-GUID: ScB-zABZ6c2PmpD_fO9reB0nWc9wU9Ow
-X-Proofpoint-GUID: ScB-zABZ6c2PmpD_fO9reB0nWc9wU9Ow
+X-Proofpoint-ORIG-GUID: WaZkx5uOGoYoJRttS_Sdbpn_NAnC8NOB
 
-On Tue, Oct 28, 2025 at 07:08:38PM +0100, David Hildenbrand wrote:
->
-> > > > Hey Lorenzo,
-> > > >
-> > > > > I mean not to beat a dead horse re: v11 commentary, but I thought we were going
-> > > > > to implement David's idea re: the new 'eagerness' tunable, and again we're now just
-> > > > > implementing the capping at HPAGE_PMD_NR/2 - 1 thing again?
-> > > >
-> > > > I spoke to David and he said to continue forward with this series; the
-> > > > "eagerness" tunable will take some time, and may require further
-> > > > considerations/discussion.
+On Tue, Oct 28, 2025 at 06:59:31PM +0000, Lorenzo Stoakes wrote:
+> On Tue, Oct 28, 2025 at 07:08:38PM +0100, David Hildenbrand wrote:
 > > >
-> > > Right, after talking to Johannes it got clearer that what we envisioned with
-> >
-> > I'm not sure that you meant to say go ahead with the series as-is with this
-> > silent capping?
->
-> No, "go ahead" as in "let's find some way forward that works for all and is
-> not too crazy".
-
-Right we clearly needed to discuss that further at the time but that's moot now,
-we're figuring it out now :)
-
->
-> [...]
->
-> > > "eagerness" would not be like swappiness, and we will really have to be
-> > > careful here. I don't know yet when I will have time to look into that.
-> >
-> > I guess I missed this part of the converastion, what do you mean?
->
-> Johannes raised issues with that on the list and afterwards we had an
-> offline discussion about some of the details and why something unpredictable
-> is not good.
-
-Could we get these details on-list so we can discuss them? This doesn't have to
-be urgent, but I would like to have a say in this or at least be part of the
-converastion please.
-
->
-> >
-> > The whole concept is that we have a paramaeter whose value is _abstracted_ and
-> > which we control what it means.
-> >
-> > I'm not sure exactly why that would now be problematic? The fundamental concept
-> > seems sound no? Last I remember of the conversation this was the case.
->
-> The basic idea was to do something abstracted as swappiness. Turns out
-> "swappiness" is really something predictable, not something we can randomly
-> change how it behaves under the hood.
->
-> So we'd have to find something similar for "eagerness", and that's where it
-> stops being easy.
-
-I think we shouldn't be too stuck on
-
->
-> >
+> > > The whole concept is that we have a paramaeter whose value is _abstracted_ and
+> > > which we control what it means.
 > > >
-> > > If we want to avoid the implicit capping, I think there are the following
-> > > possible approaches
-> > >
-> > > (1) Tolerate creep for now, maybe warning if the user configures it.
+> > > I'm not sure exactly why that would now be problematic? The fundamental concept
+> > > seems sound no? Last I remember of the conversation this was the case.
 > >
-> > I mean this seems a viable option if there is pressure to land this series
-> > before we have a viable uAPI for configuring this.
+> > The basic idea was to do something abstracted as swappiness. Turns out
+> > "swappiness" is really something predictable, not something we can randomly
+> > change how it behaves under the hood.
 > >
-> > A part of me thinks we shouldn't rush series in for that reason though and
-> > should require that we have a proper control here.
-> >
-> > But I guess this approach is the least-worst as it leaves us with the most
-> > options moving forwards.
+> > So we'd have to find something similar for "eagerness", and that's where it
+> > stops being easy.
 >
-> Yes. There is also the alternative of respecting only 0 / 511 for mTHP
-> collapse for now as discussed in the other thread.
-
-Yes I guess let's carry that on over there.
-
-I mean this is why I said it's better to try to keep things in one thread :) but
-anyway, we've forked and can't be helped now.
-
-To be clear that was a criticism of - email development - not you.
-
-It's _extremely easy_ to have this happen because one thread naturally leads to
-a broader discussion of a given topic, whereas another has questions from
-somebody else about the same topic, to which people reply and then... you have a
-fork and it can't be helped.
-
-I guess I'm saying it'd be good if we could say 'ok let's move this to X'.
-
-But that's also broken in its own way, you can't stop people from replying in
-the other thread still and yeah. It's a limitation of this model :)
-
->
-> >
-> > > (2) Avoid creep by counting zero-filled pages towards none_or_zero.
-> >
-> > Would this really make all that much difference?
->
-> It solves the creep problem I think, but it's a bit nasty IMHO.
-
-Ah because you'd end up wtih a bunch of zeroed pages from the prior mTHP
-collapses, interesting...
-
-Scanning for that does seem a bit nasty though yes...
-
->
-> >
-> > > (3) Have separate toggles for each THP size. Doesn't quite solve the
-> > >      problem, only shifts it.
-> >
-> > Yeah I did wonder about this as an alternative solution. But of course it then
-> > makes it vague what the parent values means in respect of the individual levels,
-> > unless we have an 'inherit' mode there too (possible).
-> >
-> > It's going to be confusing though as max_ptes_none sits at the root khugepaged/
-> > level and I don't think any other parameter from khugepaged/ is exposed at
-> > individual page size levels.
-> >
-> > And of course doing this means we
-> >
-> > >
-> > > Anything else?
-> >
-> > Err... I mean I'm not sure if you missed it but I suggested an approach in the
-> > sub-thread - exposing mthp_max_ptes_none as a _READ-ONLY_ field at:
-> >
-> > /sys/kernel/mm/transparent_hugepage/khugepaged/max_mthp_ptes_none
-> >
-> > Then we allow the capping, but simply document that we specify what the capped
-> > value will be here for mTHP.
->
-> I did not have time to read the details on that so far.
-
-OK. It is a bit nasty, yes. The idea is to find something that allows the
-capping to work.
-
->
-> It would be one solution forward. I dislike it because I think the whole
-> capping is an intermediate thing that can be (and likely must be, when
-> considering mTHP underused shrinking I think) solved in the future
-> differently. That's why I would prefer adding this only if there is no
-> other, simpler, way forward.
-
-Yes I agree that if we could avoid it it'd be great.
-
-Really I proposed this solution on the basis that we were somehow ok with the
-capping.
-
-If we can avoid that'd be ideal as it reduces complexity and 'unexpected'
-behaviour.
-
-We'll clarify on the other thread, but the 511/0 was compelling to me before as
-a simplification, and if we can have a straightforward model of how mTHP
-collapse across none/zero page PTEs behaves this is ideal.
-
-The only question is w.r.t. warnings etc. but we can handle details there.
-
->
-> >
-> > That struck me as the simplest way of getting this series landed without
-> > necessarily violating any future eagerness which:
-> >
-> > a. Must still support khugepaged/max_ptes_none - we aren't getting away from
-> >     this, it's uAPI.
-> >
-> > b. Surely must want to do different things for mTHP in eagerness, so if we're
-> >     exposing some PTE value in max_ptes_none doing so in
-> >     khugepaged/mthp_max_ptes_none wouldn't be problematic (note again - it's
-> >     readonly so unlike max_ptes_none we don't have to worry about the other
-> >     direction).
-> >
-> > HOWEVER, eagerness might want want to change this behaviour per-mTHP size, in
-> > which case perhaps mthp_max_ptes_none would be problematic in that it is some
-> > kind of average.
-> >
-> > Then again we could always revert to putting this parameter as in (3) in that
-> > case, ugly but kinda viable.
-> >
-> > >
-> > > IIUC, creep is less of a problem when we have the underused shrinker
-> > > enabled: whatever we over-allocated can (unless longterm-pinned etc) get
-> > > reclaimed again.
-> > >
-> > > So maybe having underused-shrinker support for mTHP as well would be a
-> > > solution to tackle (1) later?
-> >
-> > How viable is this in the short term?
->
-> I once started looking into it, but it will require quite some work, because
-> the lists will essentially include each and every (m)THP in the system ...
-> so i think we will need some redesign.
-
-Ack.
-
-This aligns with non-0/511 settings being non-functional for mTHP atm anyway.
-
->
-> >
-> > Another possible solution:
-> >
-> > If mthp_max_ptes_none is not workable, we could have a toggle at, e.g.:
-> >
-> > /sys/kernel/mm/transparent_hugepage/khugepaged/mthp_cap_collapse_none
-> >
-> > As a simple boolean. If switched on then we document that it caps mTHP as
-> > per Nico's suggestion.
-> >
-> > That way we avoid the 'silent' issue I have with all this and it's an
-> > explicit setting.
->
-> Right, but it's another toggle I wish we wouldn't need. We could of course
-> also make it some compile-time option, but not sure if that's really any
-> better.
->
-> I'd hope we find an easy way forward that doesn't require new toggles, at
-> least for now ...
-
-Right, well I agree if we can make this 0/511 thing work, let's do that.
-
-Toggle are just 'least worst' workarounds on assumption of the need for capping.
-
->
-> --
-> Cheers
->
-> David / dhildenb
+> I think we shouldn't be too stuck on
 >
 
-Thanks, Lorenzo
+I really am the master of the unfinished sentence :)
+
+I was going to say we shouldn't be too stuck on the analogy to swappiness and
+just maintain the broad concept that eagerness is abstracted and we get to
+determine what that looks like.
+
+But absolutely I accept that it's highly sensitive and likely embodies a great
+many moving parts and we must be cautious absolutely.
+
+This is something that can be deferred for later.
+
+Cheers, Lorenzo
