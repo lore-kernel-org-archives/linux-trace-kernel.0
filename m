@@ -1,134 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2FCB27B4E1;
-	Tue, 28 Oct 2025 16:25:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA6CF286415;
+	Tue, 28 Oct 2025 16:26:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761668713; cv=none; b=YFM1QDdwfBxFSZDhaJtUEzD24qYuRVU4GiEAX+gsU2HJZY7e1KdZEFUR6AAHJhB15FzOXUecytFSvxTFP/tm479JhaGhSJIQpG+cbiYPp4jjm2xt0Jhtp5t8J0oCV8ureVHAgYzipa0KtYoDts5jPuGcCr1yybUU0w5AWyC+Kl4=
+	t=1761668817; cv=none; b=JsWfhcxgshq0lhuZzIvXmYPvujI04zjmHWmVvFsMKxEKzNPfIB+IJ53tT7XPYZ16TqIdA99RFqLeS7xby3Ibdr9TIdB5VXY1Ek6vpo6K4sNnTNuFHKfiDaCd/fq4dB1y+zPUmxGWbHRGzlUS8zGS2B7hAIV0fndRcKUYTzPppoQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761668713; c=relaxed/simple;
-	bh=g+HYr74fOIJBF8//IeX1u6hGkpfR/MyO8jpC8AyplAs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O2D2fUGFBAk5AyDSjceTQvtH6vrBhia2jZIq3qc8XVJdL09x04qU2tNpsVXrUhZMnbKPgaDZsJUKPo1dlMA+TB1pQ3bQVOs0pZGcY1R0ReratD875aLst3NlXV0bpJfwX6gs03tiF0Ggir7uKa0fv2B2TrW1bKkL8gluQj/iUK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gT6/ILOP; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gT6/ILOP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDDAFC4CEE7;
-	Tue, 28 Oct 2025 16:25:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761668710;
-	bh=g+HYr74fOIJBF8//IeX1u6hGkpfR/MyO8jpC8AyplAs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gT6/ILOPpDox4LIC0P6mrQkn27cKKS8sqA59JphgtIkj6muwgaA3Fo1qkj+3hwr0x
-	 Lec8ctwO62yUgf5b+f8NOys9+imyW63Awoi+zjDc6vUMX7ItNvFhAbXVixsle20+AM
-	 DCYjg9wWsW+BmN8WmVOnXKeoK7KRXl7UfDuM55FDXrP20wubQGruqEIuyl7uN1vem3
-	 z1RjIXGmQ+jItDnSIQZ94NMGu9r4D1Cc2Yx7w4rRGmNHf87sUEhnNQJTnZxj1eJJBt
-	 Bp2v2DXxUkTbIAPy+fj+FmsmIlW78U0n3bUpKvn+IC4BArPQhxPUJb7TwK5EWFOiU5
-	 OFSj9z0ZySqFA==
-Date: Tue, 28 Oct 2025 17:25:07 +0100
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Valentin Schneider <vschneid@redhat.com>, Phil Auld <pauld@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, rcu@vger.kernel.org,
-	x86@kernel.org, linux-arm-kernel@lists.infradead.org,
-	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
-	linux-arch@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Paolo Bonzini <pbonzini@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Jason Baron <jbaron@akamai.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Mel Gorman <mgorman@suse.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Han Shen <shenhan@google.com>, Rik van Riel <riel@surriel.com>,
-	Jann Horn <jannh@google.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Oleg Nesterov <oleg@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
-	Clark Williams <williams@redhat.com>,
-	Yair Podemsky <ypodemsk@redhat.com>,
-	Marcelo Tosatti <mtosatti@redhat.com>,
-	Daniel Wagner <dwagner@suse.de>, Petr Tesarik <ptesarik@suse.com>
-Subject: Re: [PATCH v6 00/29] context_tracking,x86: Defer some IPIs until a
- user->kernel transition
-Message-ID: <aQDuY3rgOK-L8D04@localhost.localdomain>
-References: <20251010153839.151763-1-vschneid@redhat.com>
+	s=arc-20240116; t=1761668817; c=relaxed/simple;
+	bh=LD8MvwssQiWl+d/QuJEg48Vu0A8s87sdWrIEIaRyjDE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=mgVtVjLy8Yug/yu2oRicQmrJZZmQr9OPVGMCBusoHEGL1nTBN7G6NNsayy7RtE9Q6xx5yi9wqXQ41JUS+7mTqFNKy3e7lFOYNBToGU6+/yT5rOoyKbV9y3LgvI6+Tipf9nFcgdy6+CELpSQbM62ADF854+XFTGpDrEv+PZXqfwc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf11.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay04.hostedemail.com (Postfix) with ESMTP id DB42C1A04A7;
+	Tue, 28 Oct 2025 16:26:47 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf11.hostedemail.com (Postfix) with ESMTPA id 0DBE320029;
+	Tue, 28 Oct 2025 16:26:45 +0000 (UTC)
+Date: Tue, 28 Oct 2025 12:27:24 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, linux-kselftest@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Shuah Khan <skhan@linuxfoundation.org>
+Subject: [PATCH] selftests/tracing: Run sample events to clear page cache
+ events
+Message-ID: <20251028122724.4bff9853@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20251010153839.151763-1-vschneid@redhat.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout04
+X-Rspamd-Queue-Id: 0DBE320029
+X-Stat-Signature: b36zitz545bo1f7atp3fc8wgkt9t5493
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18R6uyl0b4N+ahRu51ICAPV7bHwLuirGLs=
+X-HE-Tag: 1761668805-879148
+X-HE-Meta: U2FsdGVkX19I+UxyGmayQcgJ8Z8VBodmygjMeDUKs3dReRKuwuLxvZMB9zs2N2V9p/JK1ziWs2hGK+WDWcjBqaz9qZ+zEmmvTasVi5jzoA0N2PHLE+c9uuoQXqkDpcFjCba3uE/H7W8HACjxdOjHBoeDNZjsNfVCeufPJd4aTwVmbbeo6+CFHe/H5jBQ+wR5ClUpi5tcCSKPztIy1carw/LY8RqyJUThUWzK0Ay5VQF28OY1JMPkZNVXC5Pi4QuIVJu6k/hTovvRJ2zR+mb9i2GIlWpexUv7Znn3mbvM9S1Y9mzlF3P7S9qBv1ZHoReaOqq821T7dnjqdmBwRGzqf1vaKzLs2Ou2hVPthDigzUcOMf/Dd/IUTWwAF74uZCu5E5QwbLMclSitHAEKZtIqGQ==
 
-+Cc Phil Auld
+From: Steven Rostedt <rostedt@goodmis.org>
 
-Le Fri, Oct 10, 2025 at 05:38:10PM +0200, Valentin Schneider a écrit :
-> Patches
-> =======
-> 
-> o Patches 1-2 are standalone objtool cleanups.
+The tracing selftest "event-filter-function.tc" was failing because it
+first runs the "sample_events" function that triggers the kmem_cache_free
+event and it looks at what function was used during a call to "ls".
 
-Would be nice to get these merged.
+But the first time it calls this, it could trigger events that are used to
+pull pages into the page cache.
 
-> o Patches 3-4 add an RCU testing feature.
+The rest of the test uses the function it finds during that call to see if
+it will be called in subsequent "sample_events" calls. But if there's no
+need to pull pages into the page cache, it will not trigger that function
+and the test will fail.
 
-I'm taking this one.
+Call the "sample_events" twice to trigger all the page cache work before
+it calls it to find a function to use in subsequent checks.
 
-> 
-> o Patches 5-6 add infrastructure for annotating static keys and static calls
->   that may be used in noinstr code (courtesy of Josh).
-> o Patches 7-20 use said annotations on relevant keys / calls.
-> o Patch 21 enforces proper usage of said annotations (courtesy of Josh).
-> 
-> o Patch 22 deals with detecting NOINSTR text in modules
+Cc: stable@vger.kernel.org
+Fixes: eb50d0f250e96 ("selftests/ftrace: Choose target function for filter test from samples")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ .../selftests/ftrace/test.d/filter/event-filter-function.tc   | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Not sure how to route those. If we wait for each individual subsystem,
-this may take a while.
-
-> o Patches 23-24 deal with kernel text sync IPIs
-
-I would be fine taking those (the concerns I had are just details)
-but they depend on all the annotations. Alternatively I can take the whole
-thing but then we'll need some acks.
+diff --git a/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc b/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc
+index c62165fabd0c..003f612f57b0 100644
+--- a/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc
++++ b/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc
+@@ -20,6 +20,10 @@ sample_events() {
+ echo 0 > tracing_on
+ echo 0 > events/enable
  
-> o Patches 25-29 deal with kernel range TLB flush IPIs
-
-I'll leave these more time for now ;o)
-And if they ever go somewhere, it should be through x86 tree.
-
-Also, here is another candidate usecase for this deferral thing.
-I remember Phil Auld complaining that stop_machine() on CPU offlining was
-a big problem for nohz_full. Especially while we are working on
-a cpuset interface to toggle nohz_full but this will require the CPUs
-to be offline.
-
-So my point is that when a CPU goes offline, stop_machine() puts all
-CPUs into a loop with IRQs disabled. CPUs in userspace could possibly
-escape that since they don't touch the kernel anyway. But as soon as
-they enter the kernel, they should either acquire the final state of
-stop_machine if completed or join the global loop if in the middle.
-
-Thanks.
-
++# Clear functions caused by page cache; run sample_events twice
++sample_events
++sample_events
++
+ echo "Get the most frequently calling function"
+ echo > trace
+ sample_events
 -- 
-Frederic Weisbecker
-SUSE Labs
+2.51.0
+
