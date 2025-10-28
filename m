@@ -1,34 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7E3D315D33;
-	Tue, 28 Oct 2025 11:58:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE2F531960D;
+	Tue, 28 Oct 2025 11:58:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761652693; cv=none; b=kWBYSdmxx5V3PhkEjdPw/G93eNhgez1HmRiKLA+/tmZZG2RCZIQ0tFFtVhKcfV0jA8pcJjNKVIRtgpQv22qbXA0Bz79Y2oENUE+tSfvfGXFiSLYzU4+s06UdoSoLvaUwfSJZptNMqn1zCwJeVJhmRW2ALJqxQufmsNgwrkCW22o=
+	t=1761652699; cv=none; b=o6D5rpgk7HbREGBNv54gmEUOajQqRjLZUfBWgHHKfn0Etc7QYTEDYcSbNfXb3UHN9DvCNlqTPF6ejvhdR/6iFqB6J31GKn1nddVhb80/fQkZNknlqN1LFOq3VNoM1NzBkKDPsGf/pev9NtAHmrjgYGi8AqWdWAX57jNMTZ17O1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761652693; c=relaxed/simple;
-	bh=sHoW21+AGDUkdQ6DaRFEDfNq+q5/ZNLb3IRxX1Wvf1o=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ONc6zzfzg/U2yuTO1WViw6Hs68paT+upA6F+EU+hh7PxTEBV0gxfW/GKrmoGoYKx0VJ5Sv3AAtGJtbtazZaFgOlT7BSJ4PIZEL2TLw9+ciIr+OT/A0UPKg6oq97r6mitMN85lUUE936epJNG3efFrz5KJfkBsQ99j5Sab5sfOSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bm3opNR4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1761652699; c=relaxed/simple;
+	bh=qGYs0DLzW08coKCc8jkFrJyAxhu+Nf/cV/UOBJyzkN8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=gJADO93iq4nYTQYpmmznJH2PRzGPajbaMhfK37w65JDkmq6DUZ5p3FKL2gEXE36xGX4o1ZzkW3WgQrMqj37ar+jh2eenNjPTbb1zguoWDrJc12Ou04vjxDZ81wd66saK181SjKPsGMvAap2/q1TRpSWotohg9Hy1nKbZPmiiSLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MUgj8yP0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bm3opNR4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 520C9C4CEE7;
-	Tue, 28 Oct 2025 11:58:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MUgj8yP0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 628A4C4CEE7;
+	Tue, 28 Oct 2025 11:58:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761652693;
-	bh=sHoW21+AGDUkdQ6DaRFEDfNq+q5/ZNLb3IRxX1Wvf1o=;
-	h=From:Subject:Date:To:Cc:From;
-	b=bm3opNR4FmbN8/IlfdmxaVn4h4U5MyZLRy24F+L843qoyev2W3J84KXOhdwJnfTW4
-	 oNaQGBMtKADHYPL2tjavuzdcxPd0DoS89/wHKYz71kXEbSRXEDZ1xyLA35yLiw8GsD
-	 xlBkOPGh7M9bSpXFiYYBuuad/8Iav1ZBBn2rhO1yvLf9nTTtzya06VF4ib9h0ALeSb
-	 jBCTDUKn+pNxRYNcj6qM4RVEV00RVWS039Y0Cu7LyIO5WWhES8VD0kRnn5j0q8yzkR
-	 X7i84cqFBi5ifqXnz7WA0/+T0mx1g8FuL5ekYJ+J2+FOXBQwhfzDImUHIdPMuzcfAa
-	 t6QrlLf8Ck8+w==
+	s=k20201202; t=1761652699;
+	bh=qGYs0DLzW08coKCc8jkFrJyAxhu+Nf/cV/UOBJyzkN8=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=MUgj8yP0ESwX62sPUlJnZpYSqp1/Ih36ePZ01jMxGmS6EG3o1ef8rb+s2EoFfoqRd
+	 GOl3Nn9ktJKWvsNOylaQJNbDS9blnQQTHXK+dwcZaX5rUkbK0FM21z/Sgg+61dp5dx
+	 glz9wJtVwAm1P++cevqERdLYyDpuvqWz2pWpn32gZqWPDXuA15RpabWjN6HvrcKpgf
+	 /wexZEL6CqmbUj7XHZ/iTl2okvf5lb4YTQhCVYoKYGdyVEOITSwfMnW/x4NW9f0iGX
+	 EEfEX1UEKyBLWmVASYPlSyD7FDZnUAHulJ7mmUle0VQHvJA4s61HFPgiXm0mQO1vWX
+	 mz7zyKpzZWC/g==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Subject: [PATCH net v3 0/4] tcp: fix receive autotune again
-Date: Tue, 28 Oct 2025 12:57:58 +0100
-Message-Id: <20251028-net-tcp-recv-autotune-v3-0-74b43ba4c84c@kernel.org>
+Date: Tue, 28 Oct 2025 12:58:00 +0100
+Subject: [PATCH net v3 2/4] trace: tcp: add three metrics to
+ trace_tcp_rcvbuf_grow()
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -37,11 +38,9 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAMevAGkC/02MQQ6DIBAAv2L23DWAVbCn/qPpgcCKJBUMoGlq/
- HtJTz3OJDMHZEqeMtyaAxLtPvsYKnSXBsysgyP0tjIIJnrOhMJABYtZMZHZUW8lli0Q9koOdrC
- qt0pDbddEk3//vg+oCTyrnFJcsMyJ9P9SMtkpNraCc3EdFXIkuy36Q+XuYnQvak1c4Dy/lkfHN
- 6sAAAA=
-X-Change-ID: 20251028-net-tcp-recv-autotune-5876d6d85d8a
+Message-Id: <20251028-net-tcp-recv-autotune-v3-2-74b43ba4c84c@kernel.org>
+References: <20251028-net-tcp-recv-autotune-v3-0-74b43ba4c84c@kernel.org>
+In-Reply-To: <20251028-net-tcp-recv-autotune-v3-0-74b43ba4c84c@kernel.org>
 To: Eric Dumazet <edumazet@google.com>, 
  Neal Cardwell <ncardwell@google.com>, Kuniyuki Iwashima <kuniyu@google.com>, 
  "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
@@ -54,70 +53,77 @@ Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
  linux-trace-kernel@vger.kernel.org
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2128; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=sHoW21+AGDUkdQ6DaRFEDfNq+q5/ZNLb3IRxX1Wvf1o=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDIZ1p9p/SB23j+pccOqsMUttZtDTAr/bHvgu3D9e6eVu
- VEC5o+6O0pZGMS4GGTFFFmk2yLzZz6v4i3x8rOAmcPKBDKEgYtTACbyToSR4ZSI1dnLTOFX9knz
- 3F2wZLGUdMnbX2qnbnz+/qzsCucy5l+MDO9e7Xn85Lz5u0teNhzRS+coSSo6aJay5zvo2f8P/Xc
- ngREA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3122; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=FKVsH/2wDJdmfPbL8tB+fxeV7oTsmdA5vp27hpF0BUE=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDIZ1p/3izRN77R4K/Nhc6tPq3qFl8XfN+vWbeGQa3+su
+ sAy18O5o5SFQYyLQVZMkUW6LTJ/5vMq3hIvPwuYOaxMIEMYuDgFYCKfXjMyfGg/43dANe180/Y5
+ kav/mC2oVC4Rzl9wQ+eg3TTZ0DPdJQz/9KZtZ7jbln7AtTqkTO6YaorgiqsbxZScQxSXCy4R7T3
+ LCgA=
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Neal Cardwell found that recent kernels were having RWIN limited
-issues, even when net.ipv4.tcp_rmem[2] was set to a very big value like
-512MB.
+From: Eric Dumazet <edumazet@google.com>
 
-He suspected that tcp_stream default buffer size (64KB) was triggering
-heuristic added in ea33537d8292 ("tcp: add receive queue awareness
-in tcp_rcv_space_adjust()").
+While chasing yet another receive autotuning bug,
+I found useful to add rcv_ssthresh, window_clamp and rcv_wnd.
 
-After more testing, it turns out the bug was added earlier
-with commit 65c5287892e9 ("tcp: fix sk_rcvbuf overshoot").
-
-I forgot once again that DRS has one RTT latency.
-
-MPTCP also got the same issue.
-
-This series :
-
-- Prevent calling tcp_rcvbuf_grow() on some MPTCP subflows.
-- adds rcv_ssthresh, window_clamp and rcv_wnd to trace_tcp_rcvbuf_grow().
-- Refactors code in a patch with no functional changes.
-- Fixes the issue in the final patch.
+tcp_stream 40597 [068]  2172.978198: tcp:tcp_rcvbuf_grow: time=50307 rtt_us=50179 copied=77824 inq=0 space=40960 ooo=0 scaling_ratio=219 rcvbuf=131072 rcv_ssthresh=107474 window_clamp=112128 rcv_wnd=110592
+tcp_stream 40597 [068]  2173.028528: tcp:tcp_rcvbuf_grow: time=50336 rtt_us=50206 copied=110592 inq=0 space=77824 ooo=0 scaling_ratio=219 rcvbuf=509444 rcv_ssthresh=328658 window_clamp=435813 rcv_wnd=331776
+tcp_stream 40597 [068]  2173.078830: tcp:tcp_rcvbuf_grow: time=50305 rtt_us=50070 copied=270336 inq=0 space=110592 ooo=0 scaling_ratio=219 rcvbuf=509444 rcv_ssthresh=431159 window_clamp=435813 rcv_wnd=434176
+tcp_stream 40597 [068]  2173.129137: tcp:tcp_rcvbuf_grow: time=50313 rtt_us=50118 copied=434176 inq=0 space=270336 ooo=0 scaling_ratio=219 rcvbuf=2457847 rcv_ssthresh=1299511 window_clamp=2102611 rcv_wnd=1302528
+tcp_stream 40597 [068]  2173.179451: tcp:tcp_rcvbuf_grow: time=50318 rtt_us=50041 copied=1019904 inq=0 space=434176 ooo=0 scaling_ratio=219 rcvbuf=2457847 rcv_ssthresh=2087445 window_clamp=2102611 rcv_wnd=2088960
 
 Signed-off-by: Eric Dumazet <edumazet@google.com>
-[ Added patch 1/4. ]
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-Changes in v3:
-- Fix warnings at build time by moving 'oldval' declaration (Matthieu)
-- Prevent possible divide by zero issue in mptcp_rcv_space_adjust() (Paolo)
-- Note: this v3 is not being sent by Eric because he is unavailable.
-- Link to v2: https://patch.msgid.link/20251027073809.2112498-1-edumazet@google.com
-Changes in v2:
-- Rebased to net tree
-- Changed mptcp_rcvbuf_grow() to read/write msk->rcvq_space.space (Paolo)
-- Link to v1: https://patch.msgid.link/20251024075027.3178786-1-edumazet@google.com
-
+To: Steven Rostedt <rostedt@goodmis.org>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: linux-trace-kernel@vger.kernel.org
 ---
-Eric Dumazet (3):
-      trace: tcp: add three metrics to trace_tcp_rcvbuf_grow()
-      tcp: add newval parameter to tcp_rcvbuf_grow()
-      tcp: fix too slow tcp_rcvbuf_grow() action
+ include/trace/events/tcp.h | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-Paolo Abeni (1):
-      mptcp: fix subflow rcvbuf adjust
+diff --git a/include/trace/events/tcp.h b/include/trace/events/tcp.h
+index 9d2c36c6a0ed..6757233bd064 100644
+--- a/include/trace/events/tcp.h
++++ b/include/trace/events/tcp.h
+@@ -218,6 +218,9 @@ TRACE_EVENT(tcp_rcvbuf_grow,
+ 		__field(__u32, space)
+ 		__field(__u32, ooo_space)
+ 		__field(__u32, rcvbuf)
++		__field(__u32, rcv_ssthresh)
++		__field(__u32, window_clamp)
++		__field(__u32, rcv_wnd)
+ 		__field(__u8, scaling_ratio)
+ 		__field(__u16, sport)
+ 		__field(__u16, dport)
+@@ -245,6 +248,9 @@ TRACE_EVENT(tcp_rcvbuf_grow,
+ 				     tp->rcv_nxt;
+ 
+ 		__entry->rcvbuf = sk->sk_rcvbuf;
++		__entry->rcv_ssthresh = tp->rcv_ssthresh;
++		__entry->window_clamp = tp->window_clamp;
++		__entry->rcv_wnd = tp->rcv_wnd;
+ 		__entry->scaling_ratio = tp->scaling_ratio;
+ 		__entry->sport = ntohs(inet->inet_sport);
+ 		__entry->dport = ntohs(inet->inet_dport);
+@@ -264,11 +270,14 @@ TRACE_EVENT(tcp_rcvbuf_grow,
+ 	),
+ 
+ 	TP_printk("time=%u rtt_us=%u copied=%u inq=%u space=%u ooo=%u scaling_ratio=%u rcvbuf=%u "
++		  "rcv_ssthresh=%u window_clamp=%u rcv_wnd=%u "
+ 		  "family=%s sport=%hu dport=%hu saddr=%pI4 daddr=%pI4 "
+ 		  "saddrv6=%pI6c daddrv6=%pI6c skaddr=%p sock_cookie=%llx",
+ 		  __entry->time, __entry->rtt_us, __entry->copied,
+ 		  __entry->inq, __entry->space, __entry->ooo_space,
+ 		  __entry->scaling_ratio, __entry->rcvbuf,
++		  __entry->rcv_ssthresh, __entry->window_clamp,
++		  __entry->rcv_wnd,
+ 		  show_family_name(__entry->family),
+ 		  __entry->sport, __entry->dport,
+ 		  __entry->saddr, __entry->daddr,
 
- include/net/tcp.h          |  2 +-
- include/trace/events/tcp.h |  9 +++++++++
- net/ipv4/tcp_input.c       | 21 ++++++++++++++-------
- net/mptcp/protocol.c       | 26 +++++++++++++++++---------
- 4 files changed, 41 insertions(+), 17 deletions(-)
----
-base-commit: 210b35d6a7ea415494ce75490c4b43b4e717d935
-change-id: 20251028-net-tcp-recv-autotune-5876d6d85d8a
-
-Best regards,
 -- 
-Matthieu Baerts (NGI0) <matttbe@kernel.org>
+2.51.0
 
