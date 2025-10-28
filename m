@@ -1,42 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EB94304BD6;
-	Tue, 28 Oct 2025 11:17:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7E3D315D33;
+	Tue, 28 Oct 2025 11:58:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761650268; cv=none; b=AEkKj+G+uQJkEY7ugg9PIlAJGbu9LIN+jJH1SjTJVzXyZ9UhLyXTPjOTmxK7JeEtuLDnmQIIILly7NdrhjXmbKaJvtoyB6UMsGyVIv81Edo0ROUd1GawexlC9tPY65J4b/pMgnXvmZ1rP+CCR2nBH9Mxp48+S768OIRJojI/09I=
+	t=1761652693; cv=none; b=kWBYSdmxx5V3PhkEjdPw/G93eNhgez1HmRiKLA+/tmZZG2RCZIQ0tFFtVhKcfV0jA8pcJjNKVIRtgpQv22qbXA0Bz79Y2oENUE+tSfvfGXFiSLYzU4+s06UdoSoLvaUwfSJZptNMqn1zCwJeVJhmRW2ALJqxQufmsNgwrkCW22o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761650268; c=relaxed/simple;
-	bh=7/gLkLB9h8o5ZKJgKkpth0iLEEKFQq7O8xx3oW7AAXo=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=TpLdWRra01Xh9rtkFS/H8Xrk1+aplqlu9Iy8kJmA0SCu7z9mr/hb8dP+DHnuWFsS5IwWuyb+M948x5bS4rPAgJg2efwSWtL/Jp8JFpLjVDf2SuhpK/JvvOy75V+xxUONqM3z2nPSD6QH6i0gnzpfY43ODpn+ie/BVykQbFmaTd8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mMkSgG2R; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1761652693; c=relaxed/simple;
+	bh=sHoW21+AGDUkdQ6DaRFEDfNq+q5/ZNLb3IRxX1Wvf1o=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ONc6zzfzg/U2yuTO1WViw6Hs68paT+upA6F+EU+hh7PxTEBV0gxfW/GKrmoGoYKx0VJ5Sv3AAtGJtbtazZaFgOlT7BSJ4PIZEL2TLw9+ciIr+OT/A0UPKg6oq97r6mitMN85lUUE936epJNG3efFrz5KJfkBsQ99j5Sab5sfOSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bm3opNR4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mMkSgG2R"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54D9FC4CEF7;
-	Tue, 28 Oct 2025 11:17:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bm3opNR4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 520C9C4CEE7;
+	Tue, 28 Oct 2025 11:58:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761650266;
-	bh=7/gLkLB9h8o5ZKJgKkpth0iLEEKFQq7O8xx3oW7AAXo=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=mMkSgG2RfNTVpgY2YF0nRq6t16KEuVxybvn1sIi+I0Zs4WJsUR3g4kcAjKze62N87
-	 3NnKIRcgPaKdUTdsrv5erOQqeyiDQOLsJwEGQqP/KzTJpvVfzocOLATO5Bni0xjawM
-	 zaHAKsuMnroM35C9w69RcciXW8RXrvkrmWqY9ULIIusRQ6FNuiyNN6zC5J6afiuNMD
-	 WIbNDABSs4WnJXx5I0b/+85Qe+PJTtvdk5+BvpxU6ckd/ysZ++wCuXX3o+Uv53ljuW
-	 Abii+v/6TmtwjBwqDG9vdf/EYlRP39tWQW+Pp9gzv30J4unNaylLv5QzRQ6ujbztl0
-	 PySwQy2JrALlA==
-From: Mark Brown <broonie@kernel.org>
-To: linux-spi@vger.kernel.org, Sean Anderson <sean.anderson@linux.dev>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
- linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, 
- linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20251021144702.1582397-1-sean.anderson@linux.dev>
-References: <20251021144702.1582397-1-sean.anderson@linux.dev>
-Subject: Re: [PATCH v2] spi: spi-mem: Trace exec_op
-Message-Id: <176165026507.34697.13320313092856106918.b4-ty@kernel.org>
-Date: Tue, 28 Oct 2025 11:17:45 +0000
+	s=k20201202; t=1761652693;
+	bh=sHoW21+AGDUkdQ6DaRFEDfNq+q5/ZNLb3IRxX1Wvf1o=;
+	h=From:Subject:Date:To:Cc:From;
+	b=bm3opNR4FmbN8/IlfdmxaVn4h4U5MyZLRy24F+L843qoyev2W3J84KXOhdwJnfTW4
+	 oNaQGBMtKADHYPL2tjavuzdcxPd0DoS89/wHKYz71kXEbSRXEDZ1xyLA35yLiw8GsD
+	 xlBkOPGh7M9bSpXFiYYBuuad/8Iav1ZBBn2rhO1yvLf9nTTtzya06VF4ib9h0ALeSb
+	 jBCTDUKn+pNxRYNcj6qM4RVEV00RVWS039Y0Cu7LyIO5WWhES8VD0kRnn5j0q8yzkR
+	 X7i84cqFBi5ifqXnz7WA0/+T0mx1g8FuL5ekYJ+J2+FOXBQwhfzDImUHIdPMuzcfAa
+	 t6QrlLf8Ck8+w==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH net v3 0/4] tcp: fix receive autotune again
+Date: Tue, 28 Oct 2025 12:57:58 +0100
+Message-Id: <20251028-net-tcp-recv-autotune-v3-0-74b43ba4c84c@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -45,46 +37,87 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-88d78
+X-B4-Tracking: v=1; b=H4sIAMevAGkC/02MQQ6DIBAAv2L23DWAVbCn/qPpgcCKJBUMoGlq/
+ HtJTz3OJDMHZEqeMtyaAxLtPvsYKnSXBsysgyP0tjIIJnrOhMJABYtZMZHZUW8lli0Q9koOdrC
+ qt0pDbddEk3//vg+oCTyrnFJcsMyJ9P9SMtkpNraCc3EdFXIkuy36Q+XuYnQvak1c4Dy/lkfHN
+ 6sAAAA=
+X-Change-ID: 20251028-net-tcp-recv-autotune-5876d6d85d8a
+To: Eric Dumazet <edumazet@google.com>, 
+ Neal Cardwell <ncardwell@google.com>, Kuniyuki Iwashima <kuniyu@google.com>, 
+ "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+ David Ahern <dsahern@kernel.org>, Matthieu Baerts <matttbe@kernel.org>, 
+ Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ mptcp@lists.linux.dev, Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ linux-trace-kernel@vger.kernel.org
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2128; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=sHoW21+AGDUkdQ6DaRFEDfNq+q5/ZNLb3IRxX1Wvf1o=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDIZ1p9p/SB23j+pccOqsMUttZtDTAr/bHvgu3D9e6eVu
+ VEC5o+6O0pZGMS4GGTFFFmk2yLzZz6v4i3x8rOAmcPKBDKEgYtTACbyToSR4ZSI1dnLTOFX9knz
+ 3F2wZLGUdMnbX2qnbnz+/qzsCucy5l+MDO9e7Xn85Lz5u0teNhzRS+coSSo6aJay5zvo2f8P/Xc
+ ngREA
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-On Tue, 21 Oct 2025 10:47:03 -0400, Sean Anderson wrote:
-> The spi subsystem has tracing, which is very convenient when debugging
-> problems. Add tracing for spi-mem too so that accesses that skip the spi
-> subsystem can still be seen.
-> 
-> The format is roughly based on the existing spi tracing. We don't bother
-> tracing the op's address because the tracing happens while the memory is
-> locked, so there can be no confusion about the matching of start and
-> stop. The conversion of cmd/addr/dummy to an array is directly analogous
-> to the conversion in the latter half of spi_mem_exec_op.
-> 
-> [...]
+Neal Cardwell found that recent kernels were having RWIN limited
+issues, even when net.ipv4.tcp_rmem[2] was set to a very big value like
+512MB.
 
-Applied to
+He suspected that tcp_stream default buffer size (64KB) was triggering
+heuristic added in ea33537d8292 ("tcp: add receive queue awareness
+in tcp_rcv_space_adjust()").
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+After more testing, it turns out the bug was added earlier
+with commit 65c5287892e9 ("tcp: fix sk_rcvbuf overshoot").
 
-Thanks!
+I forgot once again that DRS has one RTT latency.
 
-[1/1] spi: spi-mem: Trace exec_op
-      commit: 77a58ba7c64ccca20616aa03599766ccb0d1a330
+MPTCP also got the same issue.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+This series :
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+- Prevent calling tcp_rcvbuf_grow() on some MPTCP subflows.
+- adds rcv_ssthresh, window_clamp and rcv_wnd to trace_tcp_rcvbuf_grow().
+- Refactors code in a patch with no functional changes.
+- Fixes the issue in the final patch.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+[ Added patch 1/4. ]
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Changes in v3:
+- Fix warnings at build time by moving 'oldval' declaration (Matthieu)
+- Prevent possible divide by zero issue in mptcp_rcv_space_adjust() (Paolo)
+- Note: this v3 is not being sent by Eric because he is unavailable.
+- Link to v2: https://patch.msgid.link/20251027073809.2112498-1-edumazet@google.com
+Changes in v2:
+- Rebased to net tree
+- Changed mptcp_rcvbuf_grow() to read/write msk->rcvq_space.space (Paolo)
+- Link to v1: https://patch.msgid.link/20251024075027.3178786-1-edumazet@google.com
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+---
+Eric Dumazet (3):
+      trace: tcp: add three metrics to trace_tcp_rcvbuf_grow()
+      tcp: add newval parameter to tcp_rcvbuf_grow()
+      tcp: fix too slow tcp_rcvbuf_grow() action
 
-Thanks,
-Mark
+Paolo Abeni (1):
+      mptcp: fix subflow rcvbuf adjust
+
+ include/net/tcp.h          |  2 +-
+ include/trace/events/tcp.h |  9 +++++++++
+ net/ipv4/tcp_input.c       | 21 ++++++++++++++-------
+ net/mptcp/protocol.c       | 26 +++++++++++++++++---------
+ 4 files changed, 41 insertions(+), 17 deletions(-)
+---
+base-commit: 210b35d6a7ea415494ce75490c4b43b4e717d935
+change-id: 20251028-net-tcp-recv-autotune-5876d6d85d8a
+
+Best regards,
+-- 
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
