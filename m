@@ -1,260 +1,132 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6097E330B2B
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 28 Oct 2025 13:37:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACCD623ABBD
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 28 Oct 2025 13:54:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761658658; cv=none; b=DtywZ9ir+oxSuEm6yj2UERIN4LwRRyAUgxTBBMPVDWjYiDcQ51tAvg+cR8I1cUsteFSufEVDGNZVCX5zeSeaDXr6b3iT/fldPxoX5KYkqwaWzwXZ//yN6bJlZS1rqrx+rH8wJxlMVl5TiSGVBsfIwBBybmcafriJc/tqUpC+sVE=
+	t=1761659682; cv=none; b=iJdJX0ZoTzwuHCwrFLAOYcJ4OvGM2gaiJlPv74h9xszpqq2sa9I+CdOftZ/H4j6aouXT+O6UPes0DWVzu0yDweAGryBOfYBcVmwbcUcmaONvPvCFmyGMnK31B+Wnjn5XaoYu687hAVigEluVwySgC6ZVdP7XjxC08g4K3T4wCsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761658658; c=relaxed/simple;
-	bh=iI1dQYUcLDLsvExCrEZOOSIuT6HyPYHdpTI6JcB9SLQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=o5KdmtSt0/XDj5jHNxsZT59pLFDm2Ou1EERcev1Cgx0gMSjGqAQiTV2ZjGdjZw+cplgg6edcn2uS/lxlkCpTBVGXqhBCUdnMLvJjPC2R1cMdSR2RKh915PPPg5+1DLy6HxggHmXPYLIVfSFtgIK01Cl2RVM3G99Vpe3vg/BOjhE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Bmt8Y89v; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1761659682; c=relaxed/simple;
+	bh=jSd4hcS7xop9ZuK0NsOQ84M/HWN04CoJ1NRFNJlY0hM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=L4H5k98MctlyM1DaTDP0gLWY+z3VA9ulT9sNODMrxMR9OEtAqLQWbxQclfJNAm5/zk5WXr7hD3ALmYbxRQQyB7bLr1z0VmOfh98UgixgY+wqVNb3BVNiHxR1lgDOtzhABYAYdRx6+aLwky6gJlhoXYSPUV6Y+yxAuA+R7VkJg/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=3cBvKpa9; arc=none smtp.client-ip=209.85.166.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Bmt8Y89v"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1761658646;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=391BPTjMq7U4Si7/L0Y5C310VmT6EKvmZL7j8j+OpFA=;
-	b=Bmt8Y89vDdDhMNLQEizpyKcy4kp2u4kHR9UCCENHkhrkVs6E8em48dCgu+GBH+Y7oR1siT
-	LUl+LcEmx9so6i+VZEdkFIsJpKx288uEY/E09A0xguYWvK8iC3NDHN8c6Rjs8dD+EXQL9L
-	f3VnPSVzOi45fp8HrhX6iw9+gaYrlQo=
-Received: from mail-yw1-f197.google.com (mail-yw1-f197.google.com
- [209.85.128.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-3-MIdwMvV_MwulkmOmeWbuQQ-1; Tue, 28 Oct 2025 09:37:22 -0400
-X-MC-Unique: MIdwMvV_MwulkmOmeWbuQQ-1
-X-Mimecast-MFC-AGG-ID: MIdwMvV_MwulkmOmeWbuQQ_1761658641
-Received: by mail-yw1-f197.google.com with SMTP id 00721157ae682-782c219f163so83192387b3.3
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 28 Oct 2025 06:37:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="3cBvKpa9"
+Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-430d7638d27so59812975ab.3
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 28 Oct 2025 06:54:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1761659679; x=1762264479; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Vr99gX2aBwJu7kf6ztY22NIa238ykp6XTngN2e+Qruc=;
+        b=3cBvKpa9JmgeLjstIEf+J/VUZ+v0sbh9Er8gI1w4+8Q95yZzgczN8xaEoY1ncvyGsK
+         XUjrLualq1Dm5pPztchhu5EkbdRzfjp8QxMUOKAj38j1SO1efb/KJIEPYWErTMCQFKfA
+         cinidTqquiqSeFnJaL6ktSVgHHGqFKMc/Zk385jllWtLi/z4vNJSFhTCcfosOyx3vlb/
+         6U132VumGnwSDsj9jWKHsjBl7s+JmPoQkhXzJ2tshpMQ8YRPqKzM1lJzN8A7gy2jXaVI
+         BA27vVLbCS8rnZ8CFbL7mWhwlojx5XOu/ufsOfv+kETNR9zNKOQr4PhVYUK9N3H4x1+A
+         PRdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761658641; x=1762263441;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=391BPTjMq7U4Si7/L0Y5C310VmT6EKvmZL7j8j+OpFA=;
-        b=dPiSDbQS3KHy0UnmEwnNMfsR6Ysrvv3DNmb3fX4Rf/XYvxeHQZ9pqPNdeTaI0peQaG
-         tSgDqB25xfk/NwGKFPw/51N7I50SlDIkzqygjvMnqnz92ya1275Tsy4VChla7CCBp22P
-         ve7VZFD5jTOR/2CX5ki/3Tca4XrkokynHi8G3h5IpETIsyY8ubUYh1cFAfhCX2H5RK+W
-         4F5fj5nvKtPzqltWvTeN8oZS4ouI1JZuuZgpglf3Cff5xCpIRthA+ZIWRYQrvwm5AMJ6
-         yecZJtyvPjwK8Hj6ep0FVz71aIc9CCi1k/CITypNNmn2g/tRq6omYDFnUrECeYPfgGV8
-         goNQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV39RMIe3UOjEljO9e3CQkIXsksWq40ucJiYvkYvd+tgGuzJQH855Mi+PTS7j9oZIUuBGxDvbVqvXJ8lo3Rosrq0OE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx308CZcB55KII2eV9UOWPUrjWTmMJUllxF76FcXlOcheEncMjr
-	L6gZN+lYxMMPe1fDcx0ilcvzzbTIjZGKmgukpEBq3HFuXMUELoztACYr9vXVoyRPTU2TM62mwxc
-	bbPqBOcZiN7fSFCCKewhTNGZhq80cIiwK+ldNad5DK5uV3E2tCqh7P0VjJk2S5sX6JkQEbXrtAe
-	Rm66jQSkQ0d73GMEgtBIlISzgfTsf0fW4tH66k2kpmqD+GFcyG1KCKNQPHKF/Weg==
-X-Gm-Gg: ASbGnctEQNmMRmtc4JDXZRxxfM/HWiMPNYnzqOLKe2xM06w3IPDfWx6/9neCuB4sPmo
-	rOX0kdsT5P9NA/i7XH10QaoQdhoQ0exFnID3HN3xmOKB1Fpodk/weCvAFGybwEsEg10nHQoboo/
-	akUS7rV3akjYRxgrTcb3kdgibRwL1jlH/blv7sVEtGLGN8e+BRmVG7bfM1Ng6TULWZLgsGXw==
-X-Received: by 2002:a53:cd41:0:b0:63c:f5a6:f2ef with SMTP id 956f58d0204a3-63f6bab5662mr2132928d50.65.1761658641289;
-        Tue, 28 Oct 2025 06:37:21 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHI5+9/fHp4gwqVR+X5FCEMvrHe+GcwlBX4w2Wql+/7C/fl5yLGrv62o9V5yeHttxzVZEf22GwHT7NBFpcz7XM=
-X-Received: by 2002:a53:cd41:0:b0:63c:f5a6:f2ef with SMTP id
- 956f58d0204a3-63f6bab5662mr2132906d50.65.1761658640837; Tue, 28 Oct 2025
- 06:37:20 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1761659679; x=1762264479;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Vr99gX2aBwJu7kf6ztY22NIa238ykp6XTngN2e+Qruc=;
+        b=tYZWxmu+8Mvbqum1p9Jo8GKy79YIrDH4ApYL8x0WWV1gDcxPxMXS3+6HLwA56HEj4r
+         18OFpXWbaMD1x+E7fg7ArJcq6UxSrBnhPUuor6QtqLna5GWhFqVBpnpTtXbRm/p0lx0O
+         RSLfkp18tYELSwFCG18YsKHhz7BzZeb/s+LBsCjYSzeaMXsOTwy7T8MQfzadSW4EO3vf
+         JLSabxspJmTvAYXR9Q5t0y8lp/EzlhooFU1yBVri6l7VDsxc5kMei6gnhrq+OMOlq1nH
+         4fP8GG5IkPm9kG4/ftGbizfsv7dZPKTZoKUqcEGKh4RWaiyC5VCF/hkDDd28Tok3wp6r
+         frng==
+X-Forwarded-Encrypted: i=1; AJvYcCWcfsG6Qkv1x0AXiVN6Qn61rAwNwj41wFrhQnMdQrMK0xHRiyTS2LMi9e3bRQifhLFU/YeyJDBMu+6pRUNxpDTB2bU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzMqJ/2C6IM+pUMkfXHaAA20GsvKXoLLOm0i9HKhEXUkhNhTzTV
+	pzsCaOBl8LmYsLjB08ttGlOCUjaTl/vz73fLL+UnB4exgubGZ9HZkY2quvtHLtaNP6HE/AjIfFf
+	+M0jJq70=
+X-Gm-Gg: ASbGncsJXrXgZtJHTu3tU+542JQIG6ROH22RVEb0HnTwKLgjim6rYwCSzL+ys+z+qQY
+	+yq+0jflIMPfJeezGbjOjwcZjvobwvHp7PBj8+816U0SugGT2owUBKPJYqtBRy9uBpGnrNBUZn0
+	eJx0LkvBvNPuT6zaY/M3cJMMzP9xaRuBZL0/0XPX8rU+g49ZmTIe68xovfqUFnd0XRpw17Tg72R
+	KkXgfubZSWF1I5HwoNpoH7GkkuSW+MkIzX3SNuuJCcjZBYDd++1qjSkksSpcJQC4ahw8sKch7oE
+	C6ZO9jz6/b8XDSp2Y/4Y57F5D1dF2rlYFotBd03kT2GrBSW2T0CNT+jeULFrDvAp/xK1sD7OoRV
+	bY+gSqAQsf5BF7fajLnW7UsSSwa0F4A22SUWyPTgJmJMTOpKhslvBvk7hEbGnos8HGx3A2mcW
+X-Google-Smtp-Source: AGHT+IGCC24xLu0YPxPJqjvvOdQHxuwTrOmVY7UuZn98v9qWq2D9d2x55e3Zpz42GT5EFXIAara3Iw==
+X-Received: by 2002:a05:6e02:330d:b0:430:a538:25e7 with SMTP id e9e14a558f8ab-4320f7af6cdmr54831985ab.29.1761659679547;
+        Tue, 28 Oct 2025 06:54:39 -0700 (PDT)
+Received: from [192.168.1.116] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-5aea995d420sm4405918173.43.2025.10.28.06.54.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Oct 2025 06:54:38 -0700 (PDT)
+Message-ID: <ce30aa10-4138-4c25-857f-f1a2ea1c91f4@kernel.dk>
+Date: Tue, 28 Oct 2025 07:54:38 -0600
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251022183717.70829-1-npache@redhat.com> <20251022183717.70829-7-npache@redhat.com>
- <5f8c69c1-d07b-4957-b671-b37fccf729f1@lucifer.local>
-In-Reply-To: <5f8c69c1-d07b-4957-b671-b37fccf729f1@lucifer.local>
-From: Nico Pache <npache@redhat.com>
-Date: Tue, 28 Oct 2025 07:36:55 -0600
-X-Gm-Features: AWmQ_bmW8XylmR-fGz7b8D2DLOax1IHPOfKa83653zAJ0iAfVZ2XGu7NC_3nK0A
-Message-ID: <CAA1CXcA4AcHrw18JfAoVygRgUZW3EzsN6RPZVrC=OJwSNu_9HA@mail.gmail.com>
-Subject: Re: [PATCH v12 mm-new 06/15] khugepaged: introduce
- collapse_max_ptes_none helper function
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, linux-doc@vger.kernel.org, david@redhat.com, 
-	ziy@nvidia.com, baolin.wang@linux.alibaba.com, Liam.Howlett@oracle.com, 
-	ryan.roberts@arm.com, dev.jain@arm.com, corbet@lwn.net, rostedt@goodmis.org, 
-	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
-	akpm@linux-foundation.org, baohua@kernel.org, willy@infradead.org, 
-	peterx@redhat.com, wangkefeng.wang@huawei.com, usamaarif642@gmail.com, 
-	sunnanyong@huawei.com, vishal.moola@gmail.com, 
-	thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com, kas@kernel.org, 
-	aarcange@redhat.com, raquini@redhat.com, anshuman.khandual@arm.com, 
-	catalin.marinas@arm.com, tiwai@suse.de, will@kernel.org, 
-	dave.hansen@linux.intel.com, jack@suse.cz, cl@gentwo.org, jglisse@google.com, 
-	surenb@google.com, zokeefe@google.com, hannes@cmpxchg.org, 
-	rientjes@google.com, mhocko@suse.com, rdunlap@infradead.org, hughd@google.com, 
-	richard.weiyang@gmail.com, lance.yang@linux.dev, vbabka@suse.cz, 
-	rppt@kernel.org, jannh@google.com, pfalcato@suse.de
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: p_17I_6aPfGjRt0B07VTGujcD3_FYPQ0cAzmQycnaX4_1761658641
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] blktrace: log dropped REQ_OP_ZONE_XXX events ver1
+To: Chaitanya Kulkarni <ckulkarnilinux@gmail.com>, Johannes.Thumshirn@wdc.com
+Cc: linux-block@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ martin.petersen@oracle.com, dlemoal@kernel.org,
+ mathieu.desnoyers@efficios.com, mhiramat@kernel.org, rostedt@goodmis.org
+References: <20251028043248.2873-1-ckulkarnilinux@gmail.com>
+Content-Language: en-US
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <20251028043248.2873-1-ckulkarnilinux@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Oct 27, 2025 at 11:54=E2=80=AFAM Lorenzo Stoakes
-<lorenzo.stoakes@oracle.com> wrote:
->
-> On Wed, Oct 22, 2025 at 12:37:08PM -0600, Nico Pache wrote:
-> > The current mechanism for determining mTHP collapse scales the
-> > khugepaged_max_ptes_none value based on the target order. This
-> > introduces an undesirable feedback loop, or "creep", when max_ptes_none
-> > is set to a value greater than HPAGE_PMD_NR / 2.
-> >
-> > With this configuration, a successful collapse to order N will populate
-> > enough pages to satisfy the collapse condition on order N+1 on the next
-> > scan. This leads to unnecessary work and memory churn.
-> >
-> > To fix this issue introduce a helper function that caps the max_ptes_no=
-ne
-> > to HPAGE_PMD_NR / 2 - 1 (255 on 4k page size). The function also scales
-> > the max_ptes_none number by the (PMD_ORDER - target collapse order).
-> >
-> > The limits can be ignored by passing full_scan=3Dtrue, this is useful f=
-or
-> > madvise_collapse (which ignores limits), or in the case of
-> > collapse_scan_pmd(), allows the full PMD to be scanned when mTHP
-> > collapse is available.
-> >
-> > Signed-off-by: Nico Pache <npache@redhat.com>
-> > ---
-> >  mm/khugepaged.c | 35 ++++++++++++++++++++++++++++++++++-
-> >  1 file changed, 34 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> > index 4ccebf5dda97..286c3a7afdee 100644
-> > --- a/mm/khugepaged.c
-> > +++ b/mm/khugepaged.c
-> > @@ -459,6 +459,39 @@ void __khugepaged_enter(struct mm_struct *mm)
-> >               wake_up_interruptible(&khugepaged_wait);
-> >  }
-> >
-> > +/**
-> > + * collapse_max_ptes_none - Calculate maximum allowed empty PTEs for c=
-ollapse
-> > + * @order: The folio order being collapsed to
-> > + * @full_scan: Whether this is a full scan (ignore limits)
-> > + *
-> > + * For madvise-triggered collapses (full_scan=3Dtrue), all limits are =
-bypassed
-> > + * and allow up to HPAGE_PMD_NR - 1 empty PTEs.
-> > + *
-> > + * For PMD-sized collapses (order =3D=3D HPAGE_PMD_ORDER), use the con=
-figured
-> > + * khugepaged_max_ptes_none value.
-> > + *
-> > + * For mTHP collapses, scale down the max_ptes_none proportionally to =
-the folio
-> > + * order, but caps it at HPAGE_PMD_NR/2-1 to prevent a collapse feedba=
-ck loop.
-> > + *
-> > + * Return: Maximum number of empty PTEs allowed for the collapse opera=
-tion
-> > + */
-> > +static unsigned int collapse_max_ptes_none(unsigned int order, bool fu=
-ll_scan)
-> > +{
-> > +     unsigned int max_ptes_none;
-> > +
-> > +     /* ignore max_ptes_none limits */
-> > +     if (full_scan)
-> > +             return HPAGE_PMD_NR - 1;
-> > +
-> > +     if (order =3D=3D HPAGE_PMD_ORDER)
-> > +             return khugepaged_max_ptes_none;
-> > +
-> > +     max_ptes_none =3D min(khugepaged_max_ptes_none, HPAGE_PMD_NR/2 - =
-1);
->
+On 10/27/25 10:32 PM, Chaitanya Kulkarni wrote:
+> Add informational messages during blktrace setup when version 1 tools
+> are used on kernels with CONFIG_BLK_DEV_ZONED enabled. This alerts users
+> that REQ_OP_ZONE_* events will be dropped and suggests upgrading to
+> blktrace tools version 2 or later.
+> 
+> The warning is printed once during trace setup to inform users about
+> the limitation without spamming the logs during tracing operations.
+> Version 2 blktrace tools properly handle zone management operations
+> (zone reset, zone open, zone close, zone finish, zone append) that
+> were added for zoned block devices.
+> 
+> Example output:
+> blktests (master) # ./check blktrace
+> blktrace/001 (blktrace zone management command tracing)      [passed]
+>     runtime  3.882s  ...  3.866s
+> blktests (master) # dmesg -c
+> [   95.874361] blktrace: nullb0:blktrace events for REQ_OP_ZONE_XXX will be dropped
+> [   95.874372] blktrace: use blktrace tools version >= 2 to track REQ_OP_ZONE_XXX
+> blktests (master) # 
+> 
+> This helps users understand why zone operation traces may be missing
+> when using older blktrace tool versions with modern kernels that
+> support REQ_OP_ZONE_XXX in blktrace.
+> 
+> Signed-off-by: Chaitanya Kulkarni <ckulkarnilinux@gmail.com>
+> ---
+>  kernel/trace/blktrace.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
+> index 776ae4190f36..200d0deb6c90 100644
+> --- a/kernel/trace/blktrace.c
+> +++ b/kernel/trace/blktrace.c
+> @@ -690,6 +690,12 @@ static void blk_trace_setup_finalize(struct request_queue *q,
+>  	 */
+>  	strreplace(buts->name, '/', '_');
+>  
+> +	if (version == 1 && (IS_ENABLED(CONFIG_BLK_DEV_ZONED))) {
 
-Hey Lorenzo,
+Redundant parens around IS_ENABLED() here.
 
-> I mean not to beat a dead horse re: v11 commentary, but I thought we were=
- going
-> to implement David's idea re: the new 'eagerness' tunable, and again we'r=
-e now just
-> implementing the capping at HPAGE_PMD_NR/2 - 1 thing again?
+> +		pr_info("%s:blktrace events for REQ_OP_ZONE_XXX will be dropped\n",
+> +				name);
 
-I spoke to David and he said to continue forward with this series; the
-"eagerness" tunable will take some time, and may require further
-considerations/discussion.
+%s: blktrace events [...]? Seems weird not to have a space there.
 
->
-> I'm still really quite uncomfortable with us silently capping this value.
->
-> If we're putting forward theoretical ideas that are to be later built upo=
-n, this
-> series should be an RFC.
->
-> But if we really intend to silently ignore user input the problem is that=
- then
-> becomes established uAPI.
->
-> I think it's _sensible_ to avoid this mTHP escalation problem, but the is=
-sue is
-> visibility I think.
->
-> I think people are going to find it odd that you set it to something, but=
- then
-> get something else.
-
-The alternative solution is to not support max_ptes_none for mTHP
-collapse and not allow none/zero pages. This is essentially "capping"
-the value too.
-
->
-> As an alternative we could have a new sysfs field:
->
-> /sys/kernel/mm/transparent_hugepage/khugepaged/max_mthp_ptes_none
->
-> That shows the cap clearly.
->
-> In fact, it could be read-only... and just expose it to the user. That re=
-duces
-> complexity.
-
-I agree with Baolin here; adding another tunable will only increase
-the complexity for our future goals, and also provides needless
-insight into the internals when they can not be customized.
-
-Cheers,
--- Nico
-
->
-> We can then bring in eagerness later and have the same situation of
-> max_ptes_none being a parameter that exists (plus this additional read-on=
-ly
-> parameter).
->
-> > +
-> > +     return max_ptes_none >> (HPAGE_PMD_ORDER - order);
-> > +
-> > +}
-> > +
-> >  void khugepaged_enter_vma(struct vm_area_struct *vma,
-> >                         vm_flags_t vm_flags)
-> >  {
-> > @@ -546,7 +579,7 @@ static int __collapse_huge_page_isolate(struct vm_a=
-rea_struct *vma,
-> >       pte_t *_pte;
-> >       int none_or_zero =3D 0, shared =3D 0, result =3D SCAN_FAIL, refer=
-enced =3D 0;
-> >       const unsigned long nr_pages =3D 1UL << order;
-> > -     int max_ptes_none =3D khugepaged_max_ptes_none >> (HPAGE_PMD_ORDE=
-R - order);
-> > +     int max_ptes_none =3D collapse_max_ptes_none(order, !cc->is_khuge=
-paged);
-> >
-> >       for (_pte =3D pte; _pte < pte + nr_pages;
-> >            _pte++, addr +=3D PAGE_SIZE) {
-> > --
-> > 2.51.0
-> >
->
+-- 
+Jens Axboe
 
