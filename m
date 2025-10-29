@@ -1,119 +1,115 @@
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1CDA2D8DA6
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 29 Oct 2025 13:42:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45EB732C8B
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 29 Oct 2025 13:58:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761745327; cv=none; b=ejzoZ/QYQ9ZYbcZ8rpf/cbVVVjOx/nLo3BQKkbD8g6xlbtwL3RQOQLYJVKViD/8X22u2vJVEjmsAV7OVzfAcXhmJTtx7e9qSSkBzrcNKIej2NYd23brIlNgOMGeW1vSjlsrtNO9NqyjGSegnjw/l6i9eVbvLd525cN9Fv7FWh9M=
+	t=1761746306; cv=none; b=iTUzfSkQkGe35fkA6ELnS1oTYI1y5AOwaGCHoFgtEygbwUbXxyZg6LigaRPrdmNSqgbzap6ZOp/C/2J7cvFU96qdYS31XZQgsjQXN0LUcG/NIgYHEtAQcejAP1c8IF0IjmG9lRl1KeOTwhRRCRAv3OFHBPRKRaOdD66cn/bSAjo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761745327; c=relaxed/simple;
-	bh=zbMOoAZx7RYNx6TmQte8UME/DXY5NFfuty2hcf87lug=;
+	s=arc-20240116; t=1761746306; c=relaxed/simple;
+	bh=eb/lecgSj7pZ4dVPEsUUj8TIQ+srrjC8ULRf0Jm2+SA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TKai3q3vpAnLGNGmiOS4jH2NhOgTM1axqa52EBFTmooOSol9Wlg/Co4zTYXpfzp7fRYKbAtWKJ7jMJUHhQSdcjFiGEi4+KP1wqgIWylaKwIWG/wpnmLvGXBA8i4OokfgHbsFjjiOnPGyqcVfzTLncJSdLbXFQ0HNx0CZ6bEwa9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YK0rm6No; arc=none smtp.client-ip=209.85.160.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=gu5xHIinpNPq1ZZqk/f0ocA+kgWU/NOUnlwbZNEurDbgpEI6uGf/+Or1V6ise2060Y+huh42dnZ0nMNX9NCDRpL+GjpUYNAM6NwT1QGfel+sf4YkPg5uKS7J+6MK8D5kvZlCAAznGQHnnOrEiR6+1CxSV/1dPjCgHjNrzJ0EylA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DAFHdm8g; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YK0rm6No"
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-4eccff716f4so349351cf.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 29 Oct 2025 06:42:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1761745324; x=1762350124; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JR9rxo2u79GKDjnzL8I5WnLfCVj8XfqRuf1RDu5qxZQ=;
-        b=YK0rm6No9KRbzuf/URWqKnByLSVQRYT2bE9JhVyRFfQsg3/c1kQwOfw16OsR5C5Rzt
-         0FUM9oz5FYLvNjs/0z9hbh/wzNlx3pgVhQyDD305Nr83w0uAneWHAG5eBfNy4PlL4TYo
-         M88hIKNbQ7htu1BrRLF0hbyLkQM/upYNZXsRnC8UuI/ZgoIlHZb7JZbcod98HW1x6i6i
-         GyV3k1bGV1jyPUOcE5V3o6jdNsT3lqRYur3nZj9j5VSIN9E4baG5bAg4XQ10qsjXsZv4
-         mK9OFme9K7P/8eB5+qvn5u6UzzZ2X3jO0icWBNLd/DhCcgBxAyDGyb9PinWDf5fLYNZJ
-         36vQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DAFHdm8g"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1761746300;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YzNMOzms2O5d2a24CLqvGn9BwifdwOkeEqcANjalJ2g=;
+	b=DAFHdm8gXd3EQrmZiNtBnh6bVl2+Y7OQzxOpb2NUVlxJYAHIcq57kPA94+Hy3ezAxnD5ij
+	GX+k1dPkNdDEF8AvDIzvptgtnTLDMJ6NRh0Ef9zWoeZ5o9tq9WxCA6g93/TiPjr4x5F7jA
+	j0Vpf4gGzJTb4ylSddCxyE2UTrPF8UI=
+Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
+ [209.85.167.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-573-sKXrvDZYMWqo-oXPQR2v-Q-1; Wed, 29 Oct 2025 09:58:18 -0400
+X-MC-Unique: sKXrvDZYMWqo-oXPQR2v-Q-1
+X-Mimecast-MFC-AGG-ID: sKXrvDZYMWqo-oXPQR2v-Q_1761746297
+Received: by mail-lf1-f71.google.com with SMTP id 2adb3069b0e04-592bd7da031so3711804e87.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 29 Oct 2025 06:58:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761745324; x=1762350124;
+        d=1e100.net; s=20230601; t=1761746297; x=1762351097;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=JR9rxo2u79GKDjnzL8I5WnLfCVj8XfqRuf1RDu5qxZQ=;
-        b=vpfrskh15YRwRIYf+mfAggyHAd6Zeq6LBmgp0YCVFC3HsQ/1wh/m99MvItXO4kHM+M
-         uueoy9fC25Fn5RZROIfoiaszolM02GOidVFJpPqx40SiRyniVTlimdpun+GAZz59qDX+
-         7N/HKsuY/dIQerkf3gwEEOO7TN2V4n1JlO1JpA/3E/pJqG8VCnqpGmKTK2N3ZoHnqE2U
-         dpjowc1pudwpcIY1lOtDjCv460hwb1Mm+e7HcKj+VHpaBP6G+VpvJh1g8l5z92X0//E0
-         O14Z4gIXKuZIEQFp57inIyp36zkgYvWvuC1UpU+HjWo5KjLATAfNg9GOmcQqq/5KSI4Q
-         Vuqw==
-X-Forwarded-Encrypted: i=1; AJvYcCXHAyzIsWl/ovVRlMzVSDoiPtwAz2i1Q0Xo5eiUE7X2lmBC78s6t/N5JslMYaAetOgwlxXcpV1afYcfm+bIGLQJIbs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz5RJ594EX9fN9khIoLs+ggtv2WLhkFZLb9kVWhYE4i+9vvauHJ
-	ddtD22ezf8hRSa2+cwG635W8aTO1h/4AqtI3S8+0A9T4fi6W7LtNEnP9a5TXK8FRLPckh6tLSmm
-	CYsqhU/uyDpVLKDHxQq71QtmsThZ63CR2rIkNh43H
-X-Gm-Gg: ASbGncugnOA9QuGIkH7jE5dAYAn6oHKjC43WpX+8h5lWcLlJ1QnXBtaN3tdJ5lMj7H2
-	OEPrnJvTlMWeK2X0sNQQ+5INaKUwQgNIRozA6GeThP8b5/GcbxdNFNOHbHfODG9Er43NhcBbamh
-	3CA+px2gutg7KK/F7PM1QiFnS3OU6FQRN2RRfFs/pFEzRZ7PLbZsZ8qK3fJKKsloYPIRYRJTx4s
-	6FW8I1DDMoG6DmRF4zyzZ9olfUoc6u2+R6uXWp4bwAaZ7KXv+UGLcdZo1eztdZ07nrhrOYoyXd3
-	z7p0ICA1rLMSVeGA/vsvm8fhr5fwk9PemSFylCIDDTnCmvT0oQ==
-X-Google-Smtp-Source: AGHT+IGOZDQAj/TycBpf1oLko6kxdZqBO2Sk3hT4y5SfEx6uw5mwTcmg8Z7NahmZfp18PPYf1PTqZO5h2SskSugGe9E=
-X-Received: by 2002:a05:622a:5a97:b0:4b7:8de4:52d6 with SMTP id
- d75a77b69052e-4ed157cfd4cmr6757411cf.2.1761745324169; Wed, 29 Oct 2025
- 06:42:04 -0700 (PDT)
+        bh=YzNMOzms2O5d2a24CLqvGn9BwifdwOkeEqcANjalJ2g=;
+        b=ljtdJRb8DlTt20R/rS0zr0VUy102Zl4KoIk2CkpwBhBQH9mTmhXU1R3nu2MMZLGMnm
+         nfbNnH6QCtI41xKsndc69gBfRftxSIV0LjgbPQPCmjGlcEAT4oV2IfqOb+33VL2SHfh2
+         D1RxhZcxqGEISsFicldgsAlBvxv6o4VsJfkkEvMPk152sPGAZ39ptqX6NFURROgqAHyX
+         no74jm6SaDYDq8X7HGu8GKAP56msFkIN/kQ2OHp8PkSkbtHgIJDkZRHACPPwfkTBoPGh
+         hj7C2jhBy/2wkfCKvAzOL9XyY83C4vkAinVu5oR+Cyxrpv7RCICuTDICXgzxqUmmas6Q
+         UDSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVsvKMGqOQCZbx8fA+5RTrW/3vRNari11Gv5wAocDj1FKhScUiBJovNK2erttzeXkVHEXdNgr7v51QHnHrnwpebfAI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxchWuYeWL0LYH3wi+F34V+u7IhuqfDHAJVTHRoA1beBNueQc3c
+	BtWewSuUUj3F61I5Lfn5JFo8W9OdMRiEK7QjZRjENCrpd1yXXgPR/s5Agt/XR6CDFVoZaUW0uyR
+	+QHVrN3yNcdFtVLdxUBiGkfnKWxxkBWJ0PdT67a2Omqrch64erTT5M4nu4JBKAPnwpbVQ1pRwA2
+	Agi5y2HIIEragV4sLfFm1skly8D//9sF4VuNKfGv5iSys9MySC
+X-Gm-Gg: ASbGncvovzqzvIrjYReMUhv+nZd0A7TeKT2YNzZkVHZli/pwLe7Euh/W+nZgQsrp1fD
+	sllYQkCjNid2TCpiuoOTfMfLpFrBSmypK2AChvVfcP0PKlvKQllFKCFbZj60p/69r6RTWJ5TaSb
+	tHRsGppFTn4nST6x2Vx937XzWBbRVeNA1G1MnAvbdcFt/jzs3b+yy4hA+1EDT72VJqIfFgEy5Lh
+	+/mxeZmJpMLPA==
+X-Received: by 2002:a05:6512:238f:b0:591:ec59:2d4e with SMTP id 2adb3069b0e04-594128bfbc2mr948410e87.33.1761746296962;
+        Wed, 29 Oct 2025 06:58:16 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHENcild87oyJavKrMajfFtJmvIPZWqbmuIDtqlYAc21RXT91r25XmwlhMpaWQmY1koiPE7JQjfkX6UdmNgtqU=
+X-Received: by 2002:a05:6512:238f:b0:591:ec59:2d4e with SMTP id
+ 2adb3069b0e04-594128bfbc2mr948391e87.33.1761746296236; Wed, 29 Oct 2025
+ 06:58:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251028-net-tcp-recv-autotune-v3-0-74b43ba4c84c@kernel.org> <20251028-net-tcp-recv-autotune-v3-2-74b43ba4c84c@kernel.org>
-In-Reply-To: <20251028-net-tcp-recv-autotune-v3-2-74b43ba4c84c@kernel.org>
-From: Neal Cardwell <ncardwell@google.com>
-Date: Wed, 29 Oct 2025 09:41:47 -0400
-X-Gm-Features: AWmQ_bkzo-mReBBs6WU6490vxEeqlXsoSqmYJljmFEdRABTFs0x5o3xtvuTei8g
-Message-ID: <CADVnQy=NBw3RL+yS4=4AusooKkiMx9Wr+20dj-14fK+jPNw8pw@mail.gmail.com>
-Subject: Re: [PATCH net v3 2/4] trace: tcp: add three metrics to trace_tcp_rcvbuf_grow()
-To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Cc: Eric Dumazet <edumazet@google.com>, Kuniyuki Iwashima <kuniyu@google.com>, 
-	"David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Simon Horman <horms@kernel.org>, David Ahern <dsahern@kernel.org>, 
-	Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, mptcp@lists.linux.dev, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, linux-trace-kernel@vger.kernel.org
+References: <20251002170846.437888-1-costa.shul@redhat.com>
+In-Reply-To: <20251002170846.437888-1-costa.shul@redhat.com>
+From: Tomas Glozar <tglozar@redhat.com>
+Date: Wed, 29 Oct 2025 14:58:04 +0100
+X-Gm-Features: AWmQ_bk_Pa7PjTlfBu4mI5xpRQYogtwTJ-LtD_tM-yThYPQIs4QykeGaTsRutv0
+Message-ID: <CAP4=nvT5WTKBfeihWy-FAc4hKFuJj45Be=P4U2Acs-jVnRv9oA@mail.gmail.com>
+Subject: Re: [PATCH v1] tools/rtla: Fix unassigned nr_cpus
+To: Costa Shulyupin <costa.shul@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Crystal Wood <crwood@redhat.com>, 
+	John Kacur <jkacur@redhat.com>, linux-trace-kernel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: v0Fk0RCsflHh_4pXwZ3QkgeXI_zut-stgQoeFxGRWUA_1761746297
+X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Oct 28, 2025 at 7:58=E2=80=AFAM Matthieu Baerts (NGI0)
-<matttbe@kernel.org> wrote:
+=C4=8Dt 2. 10. 2025 v 19:09 odes=C3=ADlatel Costa Shulyupin
+<costa.shul@redhat.com> napsal:
 >
-> From: Eric Dumazet <edumazet@google.com>
+> In recently introduced timerlat_free(),
+> the variable 'nr_cpus' is not assigned.
 >
-> While chasing yet another receive autotuning bug,
-> I found useful to add rcv_ssthresh, window_clamp and rcv_wnd.
+> Assign it with sysconf(_SC_NPROCESSORS_CONF) as done elsewhere.
+> Remove the culprit: -Wno-maybe-uninitialized. The rest of the
+> code is clean.
+
+I suspected that the warning was disabled because of issues with an
+old version of GCC, but that is not the case: I tried building RTLA on
+RHEL 7 with GCC 4.8, and got no warnings, beside the real bug that you
+fix here.
+
+Therefore, it can be removed, so that such bugs are caught in the future.
+
 >
-> tcp_stream 40597 [068]  2172.978198: tcp:tcp_rcvbuf_grow: time=3D50307 rt=
-t_us=3D50179 copied=3D77824 inq=3D0 space=3D40960 ooo=3D0 scaling_ratio=3D2=
-19 rcvbuf=3D131072 rcv_ssthresh=3D107474 window_clamp=3D112128 rcv_wnd=3D11=
-0592
-> tcp_stream 40597 [068]  2173.028528: tcp:tcp_rcvbuf_grow: time=3D50336 rt=
-t_us=3D50206 copied=3D110592 inq=3D0 space=3D77824 ooo=3D0 scaling_ratio=3D=
-219 rcvbuf=3D509444 rcv_ssthresh=3D328658 window_clamp=3D435813 rcv_wnd=3D3=
-31776
-> tcp_stream 40597 [068]  2173.078830: tcp:tcp_rcvbuf_grow: time=3D50305 rt=
-t_us=3D50070 copied=3D270336 inq=3D0 space=3D110592 ooo=3D0 scaling_ratio=
-=3D219 rcvbuf=3D509444 rcv_ssthresh=3D431159 window_clamp=3D435813 rcv_wnd=
-=3D434176
-> tcp_stream 40597 [068]  2173.129137: tcp:tcp_rcvbuf_grow: time=3D50313 rt=
-t_us=3D50118 copied=3D434176 inq=3D0 space=3D270336 ooo=3D0 scaling_ratio=
-=3D219 rcvbuf=3D2457847 rcv_ssthresh=3D1299511 window_clamp=3D2102611 rcv_w=
-nd=3D1302528
-> tcp_stream 40597 [068]  2173.179451: tcp:tcp_rcvbuf_grow: time=3D50318 rt=
-t_us=3D50041 copied=3D1019904 inq=3D0 space=3D434176 ooo=3D0 scaling_ratio=
-=3D219 rcvbuf=3D2457847 rcv_ssthresh=3D2087445 window_clamp=3D2102611 rcv_w=
-nd=3D2088960
->
-> Signed-off-by: Eric Dumazet <edumazet@google.com>
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
 > ---
+>  tools/tracing/rtla/Makefile.rtla  | 2 +-
+>  tools/tracing/rtla/src/timerlat.c | 3 ++-
+>  2 files changed, 3 insertions(+), 2 deletions(-)
+>
 
-Reviewed-by: Neal Cardwell <ncardwell@google.com>
+Reviewed-by: Tomas Glozar <tglozar@redhat.com>
 
-Thanks, Eric and Matthieu!
+Tomas
 
-neal
