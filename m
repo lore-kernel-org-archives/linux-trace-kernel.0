@@ -1,214 +1,142 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C13DF19D08F
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 29 Oct 2025 14:50:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F5C52DF3D1;
+	Wed, 29 Oct 2025 14:53:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761749458; cv=none; b=I5bJ6qVZ4BJHTmvG6xCYRkTwGM2V6TzzmWFxNpgIraaJqkz6hcYSVdbkeQ/Txwrk16ITxjATD/Nh8lU732z9w4sLM+/aSJUvXSNGFtUbt6y4+xKDRbshlaTDmpvDAcY5e85ibcDSH+KTvOwHXfmnm/ZdO7nWHu1PiHPxU6E6Vsg=
+	t=1761749582; cv=none; b=dtPxPV7qGJyyV727+Xluoj57YIJ9IWRzmmLzHRx2SIH68Akz1zr2srgpexL4+WLM1CYFU5CL4mptaINPL/0V1FvteC5OCB/9OVQLgIEBmo4Jq3CxfmieQlsr3hSu893eKIe/w7cFXWNSn8K7XwTHCg6vEnkcRRU+CyWJ2frUoUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761749458; c=relaxed/simple;
-	bh=4jDnpiNa5vbDQniS7C9yLyN0Nt34xAnHa+GBFlsVZP4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Mj+lIzpYX/tQWLWVLD+lglPKL/zvErOKriNArS7lsgDoTXlhzwhlkw79WhsCwnuzkvW6ace3nCfp9IU0VAhm03efTZHotvrxbmRvEMMcMGd/TyW1Gd+x/Pa8VvBeDSNJah5Vztyjde99lrYI/rquS0k89PB/GVAHVILP3FI2plA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=a7EepXCN; arc=none smtp.client-ip=209.85.160.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1761749582; c=relaxed/simple;
+	bh=DycaBBkGuqgEIP5677gSgx8QDJGofxkMNPMcP3M730o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WUbBIM8BERGoI2Unr0pZKxDvnePgw0lAZXEnrm8/QAJ6Ls3FNKtBF+iKeIWtRM9SvGjGeob26NpirhjVb+zdaNknnIbJ/3S9KW6UhAebzCSv82oPKW/yCAxAVe7IVz0HGURl8Nzx9JIp5h5e5skMwd0OIsCRiA/x0urxnvn3QF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NbRDLF5b; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="a7EepXCN"
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-4ea12242d2eso335601cf.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 29 Oct 2025 07:50:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1761749455; x=1762354255; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=t2GCr3HjnIb/dxyIVffNrVApa0qBSUzyDC5g+dFTLPA=;
-        b=a7EepXCNBGQVU1Uf1JxPgjdBD0SLTP+To5jO1xwFEQwJuIuvDJZNpwO4xWQHLWGRVj
-         fVyOqr70qtstT+EKneLoB+Wx17eR+DqdsT5g7D1K8I4g5aqI6QJGQW0fRqweENq6RXoM
-         uK/T1XIInRGj2MQfqkIGOofJJGAsYp9gXVR3KwzngnGpxnP7PSIkMBbWjSXy9TD8QVU6
-         Yndl4RquacOI7hHBGSMPWeU7j+J/mTvNcgIUZCvgRAs18Ow2L2ETPPk7EASSxm4r3Cyy
-         NF7GJcx6D/BB1Y1dscQTlP9HeGVr81nM1aXYgEVb8b+vZtFWgu5kGWkbbWFXejBPitSX
-         0xvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761749455; x=1762354255;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=t2GCr3HjnIb/dxyIVffNrVApa0qBSUzyDC5g+dFTLPA=;
-        b=brgKdrtAx/71CpOZebWoMG/z0sp6sUUNZXLPBGLL3afFsm35AumOIrkoSH9F5MTGGx
-         kxcAkvfxa1AHZ32JS8QsqkmB9tK25w4GNpPaLFFvLhU/Jh+vG9mrxbB8oCBccchl0pHW
-         deZKG29l10Bq2lY4flUPPKG3BaYnJi2ezdz2gHC1pS3jc+rcvG2ofFA4I9CPTfnOUpDK
-         ACi4laoXmc+RteAysSbYPR2wkz5IJPcS50SVTmJ0FzriGEdARMbtJwOebb1yt3UYsVB8
-         3x8z+VND/naYCDhvy2MTOaS1cltUzXKGnUOK1QpJAbUrZVqH52fQYJGiR8FxzTbAM7B/
-         Xykg==
-X-Forwarded-Encrypted: i=1; AJvYcCUf3Z7up/pUhN7FcKm0Sbdkey4gmurt1mf8N/uKWqciFoOURko6I6DdB5RHZI8Cyy6/EYj+StXcGFGounBAjCwBMhM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxzYv9lGmoCdA1WLdfTVGBbCDX6QLpJrCBuEYq9LinBbAZujR4a
-	otFzajCsw1dxvoZwipkrLRC05TZkzlvSTp831iXkPs4ZE7v7S80CdO4qT+sSlId1p99JGVveRxg
-	hDsPShQWCu3iFLKBkXPZF2ACtoLlG3M95PVaszgZjMSLB2bP96Bme/ONu
-X-Gm-Gg: ASbGncvoF6Y221k1zEGfXpEmVeKhLdhBcRpCNmNch5+gUN7PT8F6+IHEyYmGP7f4yDQ
-	yzPAnw5F7TQHaK//M8K6tPSBmEb2nNN84PmTspusGfynM5StWg2qPr/6D5msQ+uHoSerDnC8F+V
-	HHozQ1OTzpXOgQpbmDrQZNH3JQlUZ5qWCy3W+hAhWDIyfHR7ubWCRpiGIm1wqDPG81f0504bOhW
-	/JqY31VKug2/Fo/C/04ouzMgw697aQNaLTDdyCvaxa1wNWUt8zlTWusGPQAXrvUB5G4b8GakCom
-	DxadzjWYVRKRujU=
-X-Google-Smtp-Source: AGHT+IGcOdn9pM+HsKz6/HPyK4Wssb1I6KCFZrss7CNVm3EJz7jqpksJBJFyetZbqo0GJdRvVDAHhYRJiYcnTEIRG7s=
-X-Received: by 2002:a05:622a:4c0c:b0:4e6:eaea:af3f with SMTP id
- d75a77b69052e-4ed1657e953mr6438561cf.3.1761749454320; Wed, 29 Oct 2025
- 07:50:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NbRDLF5b"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39C64C19423;
+	Wed, 29 Oct 2025 14:53:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761749581;
+	bh=DycaBBkGuqgEIP5677gSgx8QDJGofxkMNPMcP3M730o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NbRDLF5bQ+u4J4hiySQAVpBuc86Gn1rrbceqZEKYNWpKF9yoAhVdLiG/Nu9SRzin5
+	 ddwOS2DAvBL0w6K59co5lqXWGrpHXdyA3+e94n4XKlatrRRprHxYDEy/DFtpqcJYjz
+	 jGBmveuocLom0Tr99M8s/YfJisMETw3u7WfPV8VPmObP73KGTMrcXJF2ZKhuh5kL4K
+	 FNZiQ5jjE+Qy5WcINDDA3sOHLfgNQyF9ljeM8CBlvKWvkNPOMLvSsJkY31UBeqPnRr
+	 epdow2onJrow0Coha3Tk5/8X8R1mpOEWDHWRuB0t8h2sykd3/evOgK+UEPDUs1Kui5
+	 FM7cF5Ys9ZgFA==
+Date: Wed, 29 Oct 2025 15:52:58 +0100
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Valentin Schneider <vschneid@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, rcu@vger.kernel.org,
+	x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+	linux-arch@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	Nicolas Saenz Julienne <nsaenzju@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Paolo Bonzini <pbonzini@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Jason Baron <jbaron@akamai.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Mel Gorman <mgorman@suse.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Han Shen <shenhan@google.com>, Rik van Riel <riel@surriel.com>,
+	Jann Horn <jannh@google.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Oleg Nesterov <oleg@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+	Clark Williams <williams@redhat.com>,
+	Yair Podemsky <ypodemsk@redhat.com>,
+	Marcelo Tosatti <mtosatti@redhat.com>,
+	Daniel Wagner <dwagner@suse.de>, Petr Tesarik <ptesarik@suse.com>
+Subject: Re: [PATCH v6 23/29] context-tracking: Introduce work deferral
+ infrastructure
+Message-ID: <aQIqSq2FWyHg0Y3p@localhost.localdomain>
+References: <20251010153839.151763-1-vschneid@redhat.com>
+ <20251010153839.151763-24-vschneid@redhat.com>
+ <aQDMfu0tzecFzoGr@localhost.localdomain>
+ <xhsmh5xbyqas1.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250929014227.430-1-xuewen.yan@unisoc.com> <CAJuCfpE_aZKFB8O=KPq5uTv=WeJf6TCmneMnr8pp88SNWy3K-Q@mail.gmail.com>
- <CAB8ipk8oC2UKJu6f6qun3PYFwrzGZUT=YjQhfNGaVrF4GM2wdA@mail.gmail.com>
-In-Reply-To: <CAB8ipk8oC2UKJu6f6qun3PYFwrzGZUT=YjQhfNGaVrF4GM2wdA@mail.gmail.com>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Wed, 29 Oct 2025 07:50:42 -0700
-X-Gm-Features: AWmQ_bnCUdUZHMVJ1c32YJT4uabxF-Awnj_KVPGmYQ_uHFarqcy7EANdQw094Fo
-Message-ID: <CAJuCfpF6sakmsDeqrVTxwqUjRtid-7oG9KjGSQYmb0R=BCp9zw@mail.gmail.com>
-Subject: Re: [RFC PATCH V4] sched: psi: Add psi events trace point
-To: peterz@infradead.org, hannes@cmpxchg.org, 
-	Xuewen Yan <xuewen.yan94@gmail.com>
-Cc: Xuewen Yan <xuewen.yan@unisoc.com>, mathieu.desnoyers@efficios.com, 
-	mhiramat@kernel.org, rostedt@goodmis.org, mingo@redhat.com, 
-	juri.lelli@redhat.com, vincent.guittot@linaro.org, dietmar.eggemann@arm.com, 
-	bsegall@google.com, mgorman@suse.de, vschneid@redhat.com, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	ke.wang@unisoc.com, yuming.han@unisoc.com, 
-	Roman Gushchin <roman.gushchin@linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <xhsmh5xbyqas1.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 
-On Wed, Oct 29, 2025 at 1:53=E2=80=AFAM Xuewen Yan <xuewen.yan94@gmail.com>=
- wrote:
->
-> Gentle ping....
->
-> Sorry to ask, but may I know if this patch can be merged into the mainlin=
-e?
+Le Wed, Oct 29, 2025 at 11:09:50AM +0100, Valentin Schneider a écrit :
+> On 28/10/25 15:00, Frederic Weisbecker wrote:
+> > Le Fri, Oct 10, 2025 at 05:38:33PM +0200, Valentin Schneider a écrit :
+> >> +	old = atomic_read(&ct->state);
+> >> +
+> >> +	/*
+> >> +	 * The work bit must only be set if the target CPU is not executing
+> >> +	 * in kernelspace.
+> >> +	 * CT_RCU_WATCHING is used as a proxy for that - if the bit is set, we
+> >> +	 * know for sure the CPU is executing in the kernel whether that be in
+> >> +	 * NMI, IRQ or process context.
+> >> +	 * Set CT_RCU_WATCHING here and let the cmpxchg do the check for us;
+> >> +	 * the state could change between the atomic_read() and the cmpxchg().
+> >> +	 */
+> >> +	old |= CT_RCU_WATCHING;
+> >
+> > Most of the time, the task should be either idle or in userspace. I'm still not
+> > sure why you start with a bet that the CPU is in the kernel with RCU watching.
+> >
+> 
+> Right I think I got that the wrong way around when I switched to using
+> CT_RCU_WATCHING vs CT_STATE_KERNEL. That wants to be
+> 
+>   old &= ~CT_RCU_WATCHING;
+> 
+> i.e. bet the CPU is NOHZ-idle, if it's not the cmpxchg fails and we don't
+> store the work bit.
 
-Hi Peter,
-If you have no objections to this patch, could you please accept it
-into your tree?
-Thanks,
-Suren.
+Right.
 
->
-> Thanks!
->
-> On Tue, Sep 30, 2025 at 7:17=E2=80=AFAM Suren Baghdasaryan <surenb@google=
-.com> wrote:
+> 
+> >> +	/*
+> >> +	 * Try setting the work until either
+> >> +	 * - the target CPU has entered kernelspace
+> >> +	 * - the work has been set
+> >> +	 */
+> >> +	do {
+> >> +		ret = atomic_try_cmpxchg(&ct->state, &old, old | (work << CT_WORK_START));
+> >> +	} while (!ret && !(old & CT_RCU_WATCHING));
 > >
-> > On Sun, Sep 28, 2025 at 6:43=E2=80=AFPM Xuewen Yan <xuewen.yan@unisoc.c=
-om> wrote:
-> > >
-> > > Add trace point to psi triggers. This is useful to
-> > > observe the psi events in the kernel space.
-> > >
-> > > One use of this is to monitor memory pressure.
-> > > When the pressure is too high, we can kill the process
-> > > in the kernel space to prevent OOM.
+> > So this applies blindly to idle as well, right? It should work but note that
+> > idle entry code before RCU watches is also fragile.
 > >
-> > Just FYI, Roman is working on a BPF-based oom-killer solution [1]
-> > which might be also interesting for you and this tracepoint might be
-> > useful for Roman as well. CC'ing him here.
-> >
-> > [1] https://lore.kernel.org/all/20250818170136.209169-1-roman.gushchin@=
-linux.dev/
-> > >
-> > > Signed-off-by: Xuewen Yan <xuewen.yan@unisoc.com>
-> >
-> > Acked-by: Suren Baghdasaryan <surenb@google.com>
-> >
-> > > ---
-> > > V4:
-> > > -generate the event only after cmpxchg() passes the check
-> > > ---
-> > > V3:
-> > > -export it in the tracefs;
-> > > ---
-> > > v2:
-> > > -fix compilation error;
-> > > -export the tp;
-> > > -add more commit message;
-> > > ---
-> > >  include/trace/events/sched.h | 27 +++++++++++++++++++++++++++
-> > >  kernel/sched/psi.c           |  5 +++++
-> > >  2 files changed, 32 insertions(+)
-> > >
-> > > diff --git a/include/trace/events/sched.h b/include/trace/events/sche=
-d.h
-> > > index 7b2645b50e78..db8b8f25466e 100644
-> > > --- a/include/trace/events/sched.h
-> > > +++ b/include/trace/events/sched.h
-> > > @@ -826,6 +826,33 @@ TRACE_EVENT(sched_wake_idle_without_ipi,
-> > >         TP_printk("cpu=3D%d", __entry->cpu)
-> > >  );
-> > >
-> > > +#ifdef CONFIG_PSI
-> > > +TRACE_EVENT(psi_event,
-> > > +
-> > > +       TP_PROTO(int aggregator, int state, u64 threshold, u64 win_si=
-ze),
-> > > +
-> > > +       TP_ARGS(aggregator, state, threshold, win_size),
-> > > +
-> > > +       TP_STRUCT__entry(
-> > > +               __field(int,    aggregator)
-> > > +               __field(int,    state)
-> > > +               __field(u64,    threshold)
-> > > +               __field(u64,    win_size)
-> > > +       ),
-> > > +
-> > > +       TP_fast_assign(
-> > > +               __entry->aggregator     =3D aggregator;
-> > > +               __entry->state          =3D state;
-> > > +               __entry->threshold      =3D threshold;
-> > > +               __entry->win_size       =3D win_size;
-> > > +       ),
-> > > +
-> > > +       TP_printk("aggregator=3D%d state=3D%d threshold=3D%llu window=
-_size=3D%llu",
-> > > +               __entry->aggregator, __entry->state, __entry->thresho=
-ld,
-> > > +               __entry->win_size)
-> > > +);
-> > > +#endif /* CONFIG_PSI */
-> > > +
-> > >  /*
-> > >   * Following tracepoints are not exported in tracefs and provide hoo=
-king
-> > >   * mechanisms only for testing and debugging purposes.
-> > > diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
-> > > index 59fdb7ebbf22..e8a7fd04ba9f 100644
-> > > --- a/kernel/sched/psi.c
-> > > +++ b/kernel/sched/psi.c
-> > > @@ -141,6 +141,8 @@
-> > >  #include <linux/psi.h>
-> > >  #include "sched.h"
-> > >
-> > > +EXPORT_TRACEPOINT_SYMBOL_GPL(psi_event);
-> > > +
-> > >  static int psi_bug __read_mostly;
-> > >
-> > >  DEFINE_STATIC_KEY_FALSE(psi_disabled);
-> > > @@ -515,6 +517,9 @@ static void update_triggers(struct psi_group *gro=
-up, u64 now,
-> > >                                 kernfs_notify(t->of->kn);
-> > >                         else
-> > >                                 wake_up_interruptible(&t->event_wait)=
-;
-> > > +
-> > > +                       trace_psi_event(aggregator, t->state, t->thre=
-shold,
-> > > +                                       t->win.size);
-> > >                 }
-> > >                 t->last_event_time =3D now;
-> > >                 /* Reset threshold breach flag once event got generat=
-ed */
-> > > --
-> > > 2.25.1
-> > >
-> > >
+> 
+> Yeah I remember losing some hair trying to grok the idle entry situation;
+> we could keep this purely NOHZ_FULL and have the deferral condition be:
+> 
+>   (ct->state & CT_STATE_USER) && !(ct->state & CT_RCU_WATCHING)
+
+Well, after all what works for NOHZ_FULL should also work for idle. It's
+preceded by entry code as well (or rather __cpuidle).
+
+Thanks.
+
+-- 
+Frederic Weisbecker
+SUSE Labs
