@@ -1,114 +1,223 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from localhost.localdomain (unknown [147.136.157.2])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3BB732AAD6
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 29 Oct 2025 11:12:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B80062139CE;
+	Wed, 29 Oct 2025 13:23:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=147.136.157.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761736374; cv=none; b=pk5g+E3PkZilrAoeD5dIcUDPU5YKIWCbPlyU2CjJh+705FHpYDfPfviGh2y0/oKUtwE9P4YWV6rDW8xL5xCbzHjj01u7zrvXc9kDd8d3dszXSfuhi4vxlvLampJ3Ku5bz4uje2ocygivS4oriF9KPTrv1nS0QGSgjkZzWiTtE2k=
+	t=1761744201; cv=none; b=bD88G4KXyAxddKx1SxVooGVvbNqpIbh66MX1kNOiS/VkMJFVoEFyfyFLGl5wqB4YIEREICI6lg41GlklDLP2nUk3OhsWcH547CaYj3+2PuxTTDaDqLLEvXn38Qw8FXGEJ4r9FnnKm5Ww44s1e8gMucM1PSl19BB5LoqIiwJfQrE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761736374; c=relaxed/simple;
-	bh=txYqixNO6O28xR4452cP0BY2EHTTPB9PgBzEP6ff4y8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=G6WenOsDYyO5gbGbDZiqsd3C22p+wrRurzDI9ug+ZYwkjk9KgiJzgX3OZeS3QIbgjuuZrxU/2FQdrv4vjTGzE2eMKGzbUE7I+8mxK4PbyzHINxhDPjkR3m8qHTgWkgcD/5p/E70eaLfDRPU9012gwFwvhQ9xpIEz32teUIdaUyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SUE0tBwo; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SUE0tBwo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1761736371;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HcF2lGOd9L3XLehT3KxyGHuSIDfXwNtuZ/zp8nK6cv4=;
-	b=SUE0tBwo8mnHPjKso8NZXIrwKzR9dE1l1U/rYxA+56JE2wmkRxG4Gpj+7Lm+wyPt/46sjt
-	7HGr8NefUWDqO+jBeR9s8jFsv6HT3qyId9JvZzAY6Y9Vuc0wH/SiCUJVP13+vrZY1qjQLB
-	u77/J3iPciAsjevT+NtE3qQDEBLtL+8=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-672-87fXCCwxOHCEB-RMPa3DVQ-1; Wed, 29 Oct 2025 07:12:50 -0400
-X-MC-Unique: 87fXCCwxOHCEB-RMPa3DVQ-1
-X-Mimecast-MFC-AGG-ID: 87fXCCwxOHCEB-RMPa3DVQ_1761736369
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-b6d40007ea1so580428066b.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 29 Oct 2025 04:12:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761736369; x=1762341169;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HcF2lGOd9L3XLehT3KxyGHuSIDfXwNtuZ/zp8nK6cv4=;
-        b=AZwth4E31bd6INWf5FQFvFV85mBi+GXUCEnQaG3zu0mRA+AnvgpR3xdCOCiHsvBHdK
-         G56o3oovyr+I/L6G5F1IIXrHDMW8j2UPpnnAEOoL3k4HCNvuSeV4ZetYlFV9uX84oeKx
-         tKoLtKZ2Q55jwc3LyxHJPslmOvdUdMQs0iNzPzK4GKrD3FcyMfeCHu2gZGoMXT+jg4s3
-         8pxc24JM6FbUx31OeRsKLWugfMxMtqi+jtG5A4X+K7aVi6CBSqX7QPlMCjiGz/4+Y5af
-         Z8SV8l9nDrk4WLUzvpeQoItffOZGZAIZF9Zbip8T30eGMAQqNTHq3RhLivPOUPuPDIIl
-         UQXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXqT1ooRV6NMtPFpPm5QPAWdd5+LzWs6BFMnJtXBcoshPFFSlBfM+6r1ZHcxj+tnCxebIhmz8IXoXLtn7sLRGl6hok=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYuk2i6WFGFULHtF8hc0fvPVL0YiSPMNJ2YaPHiddXlaFRO+a4
-	82PYCzCPy33ok3dyF/z+N5ArtdQTfayX9FeRTrPp35zLiKNHBLIOg89M5M9SiyxSmBJjDZbVUAo
-	o08i3az/oR+N820f5S3Uhvo0eZNpe4+eZMSH0RPDlwI5TuYs6Yqk/cXR6lM6nN557YjVbbfeStP
-	deepcnn5vbcYAUwN6O1wkJp+LiL8qYplDDHUiLZ6h6uk45BVg4
-X-Gm-Gg: ASbGncvsiDgt7HUjM+itB0UD7CCOpMd1cmNc3FnrkRLiYrZTjzpPf2gUI04SY95aFzI
-	6iif2einOWphEq0MHQ9zIQwX8o4lRmerRz7mXwHmO1j5lZbBPmostyFU279vS5A1YwGPNjz6KTA
-	aIvsFEsdq3SvHS3m0ayXuVKfQ2ciTCZ+l4FL3AUazR/kQ6ufabotEgmNJz1Zdyb6Kt2wh+qZ2cr
-	oJ8HC3+OoXCog==
-X-Received: by 2002:a17:907:7f8e:b0:b6d:5c52:638d with SMTP id a640c23a62f3a-b703d2ccb05mr206470566b.6.1761736369397;
-        Wed, 29 Oct 2025 04:12:49 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGZ4TUvAVJAh6t7ae1chMAhVBwMYOsQISU+eVER7/+hsriMK5kCCdBk10LppB1XbmdsZmpRLLCeisbkxubg9E4=
-X-Received: by 2002:a17:907:7f8e:b0:b6d:5c52:638d with SMTP id
- a640c23a62f3a-b703d2ccb05mr206468966b.6.1761736369045; Wed, 29 Oct 2025
- 04:12:49 -0700 (PDT)
+	s=arc-20240116; t=1761744201; c=relaxed/simple;
+	bh=pchtt63Oh3F2HNObMqsCdLZ8QHoH/Yw2B2nuwJg8ogw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bhYN8eZkSShuhX7e0xjZPKg5MjOObLSpD01JQ59DBMa4TXcjvRDrXa8qYg/WRzS6lG8gRO+K6juevPOvCeg0x3AzFBPuvapYzq4QiIcGU8GaxkjCFLyPP5m6rJs08M9sXX06TYbDYR9A/CAP/Mq68F0Ek5GwBeYDFtEj2SfAZPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.dev; spf=none smtp.mailfrom=localhost.localdomain; arc=none smtp.client-ip=147.136.157.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=localhost.localdomain
+Received: by localhost.localdomain (Postfix, from userid 1007)
+	id C6E1F8B2A0E; Wed, 29 Oct 2025 21:23:11 +0800 (+08)
+From: Jiayuan Chen <jiayuan.chen@linux.dev>
+To: linux-kernel@vger.kernel.org
+Cc: Jiayuan Chen <jiayuan.chen@linux.dev>,
+	Jiayuan Chen <jiayuan.chen@shopee.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ben Segall <bsegall@google.com>,
+	Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Gabriele Monaco <gmonaco@redhat.com>,
+	Libo Chen <libo.chen@oracle.com>,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH v1] sched/numa: Add tracepoint to track NUMA migration cost
+Date: Wed, 29 Oct 2025 21:22:55 +0800
+Message-ID: <20251029132300.23519-1-jiayuan.chen@linux.dev>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251002123553.389467-1-costa.shul@redhat.com> <20251002123553.389467-2-costa.shul@redhat.com>
-In-Reply-To: <20251002123553.389467-2-costa.shul@redhat.com>
-From: Tomas Glozar <tglozar@redhat.com>
-Date: Wed, 29 Oct 2025 12:12:38 +0100
-X-Gm-Features: AWmQ_bkp5cNRfZSU0z7x09yirtzGsD82ZgctqjzDcm70-9HfXgEx10dvOZAk1ts
-Message-ID: <CAP4=nvRN1Svi5UxN=FxSSFH6JaKTy_nUcz0ARzbaY3-9HSh44A@mail.gmail.com>
-Subject: Re: [PATCH v1 2/2] tools/rtla: Remove unused optional option_index
-To: Costa Shulyupin <costa.shul@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Crystal Wood <crwood@redhat.com>, 
-	John Kacur <jkacur@redhat.com>, Eder Zulian <ezulian@redhat.com>, 
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: GctwgrXqEWy_0BdjaWD8sqB10MCxW3mpSmcooQkT05k_1761736369
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-=C4=8Dt 2. 10. 2025 v 14:36 odes=C3=ADlatel Costa Shulyupin
-<costa.shul@redhat.com> napsal:
->
-> The longindex argument of getopt_long() is optional
-> and tied to the unused local variable option_index.
->
-> Remove it to shorten the four longest functions
-> and make the code neater.
->
+From: Jiayuan Chen <jiayuan.chen@shopee.com>
 
-Yes, this is documented in the manpage:
+In systems with multiple NUMA nodes, memory imbalance between nodes often
+occurs.  To address this, we typically tune parameters like scan_size_mb or
+scan_period_{min,max}_ms to allow processes to migrate pages between NUMA
+nodes.
 
-"If longindex is not NULL, it points to a variable which is set to the
-index of the long option relative to longopts."
+Currently, the migration task task_numa_work() holds the mmap_lock during
+the entire migration process, which can significantly impact process
+performance, especially for memory operations. This patch introduces a new
+tracepoint that records the migration duration, along with the number of
+scanned pages and migrated pages. These metrics can be used to calculate
+efficiency metrics similar to %vmeff in 'sar -B'.
 
-> Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
-> ---
->  tools/tracing/rtla/src/osnoise_hist.c  | 5 +----
->  tools/tracing/rtla/src/osnoise_top.c   | 5 +----
->  tools/tracing/rtla/src/timerlat_hist.c | 5 +----
->  tools/tracing/rtla/src/timerlat_top.c  | 5 +----
->  4 files changed, 4 insertions(+), 16 deletions(-)
->
+These metrics help evaluate whether the adjusted NUMA balancing parameters
+are properly tuned.
 
-Reviewed-by: Tomas Glozar <tglozar@redhat.com>
+Here's an example bpftrace script:
+```bash
 
-Tomas
+bpftrace -e '
+tracepoint:sched:sched_numa_balance_start
+{
+    @start_time[cpu] = nsecs;
+}
+
+tracepoint:sched:sched_numa_balance_end {
+    if (@start_time[cpu] > 0) {
+        $cost = nsecs - @start_time[cpu];
+        printf("task '%s' migrate cost %lu, scanned %lu, migrated %lu\n",
+               args.comm, $cost, args.scanned, args.migrated);
+    }
+}
+'
+```
+Sample output:
+Attaching 2 probes...
+task 'rs:main Q:Reg' migrate cost 5584655, scanned 24516, migrated 22373
+task 'systemd-journal' migrate cost 123191, scanned 6308, migrated 0
+task 'wrk' migrate cost 894026, scanned 5842, migrated 5841
+
+Signed-off-by: Jiayuan Chen <jiayuan.chen@shopee.com>
+---
+ include/trace/events/sched.h | 60 ++++++++++++++++++++++++++++++++++++
+ kernel/sched/fair.c          | 14 +++++++--
+ 2 files changed, 72 insertions(+), 2 deletions(-)
+
+diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
+index 7b2645b50e78..e24bf700a614 100644
+--- a/include/trace/events/sched.h
++++ b/include/trace/events/sched.h
+@@ -804,6 +804,66 @@ TRACE_EVENT(sched_skip_cpuset_numa,
+ 		  __entry->ngid,
+ 		  MAX_NUMNODES, __entry->mem_allowed)
+ );
++
++TRACE_EVENT(sched_numa_balance_start,
++
++	TP_PROTO(struct task_struct *tsk),
++
++	TP_ARGS(tsk),
++
++	TP_STRUCT__entry(
++		__array(char,	comm, TASK_COMM_LEN)
++		__field(pid_t,	pid)
++		__field(pid_t,	tgid)
++		__field(pid_t,	ngid)
++	),
++
++	TP_fast_assign(
++		memcpy(__entry->comm, tsk->comm, TASK_COMM_LEN);
++		__entry->pid		 = task_pid_nr(tsk);
++		__entry->tgid		 = task_tgid_nr(tsk);
++		__entry->ngid		 = task_numa_group_id(tsk);
++	),
++
++	TP_printk("comm=%s pid=%d tgid=%d ngid=%d",
++		  __entry->comm,
++		  __entry->pid,
++		  __entry->tgid,
++		  __entry->ngid)
++);
++
++TRACE_EVENT(sched_numa_balance_end,
++
++	TP_PROTO(struct task_struct *tsk, unsigned long scanned, unsigned long migrated),
++
++	TP_ARGS(tsk, scanned, migrated),
++
++	TP_STRUCT__entry(
++		__array(char,		comm, TASK_COMM_LEN)
++		__field(pid_t,		pid)
++		__field(pid_t,		tgid)
++		__field(pid_t,		ngid)
++		__field(unsigned long,	migrated)
++		__field(unsigned long,	scanned)
++	),
++
++	TP_fast_assign(
++		memcpy(__entry->comm, tsk->comm, TASK_COMM_LEN);
++		__entry->pid		 = task_pid_nr(tsk);
++		__entry->tgid		 = task_tgid_nr(tsk);
++		__entry->ngid		 = task_numa_group_id(tsk);
++		__entry->migrated	 = migrated;
++		__entry->scanned	 = scanned;
++	),
++
++	TP_printk("comm=%s pid=%d tgid=%d ngid=%d scanned=%lu migrated=%lu",
++		  __entry->comm,
++		  __entry->pid,
++		  __entry->tgid,
++		  __entry->ngid,
++		  __entry->scanned,
++		  __entry->migrated)
++);
+ #endif /* CONFIG_NUMA_BALANCING */
+ 
+ /*
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 25970dbbb279..173c9c8397e2 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -3294,6 +3294,9 @@ static void task_numa_work(struct callback_head *work)
+ 	struct vm_area_struct *vma;
+ 	unsigned long start, end;
+ 	unsigned long nr_pte_updates = 0;
++	unsigned long nr_scanned = 0;
++	unsigned long total_migrated = 0;
++	unsigned long total_scanned = 0;
+ 	long pages, virtpages;
+ 	struct vma_iterator vmi;
+ 	bool vma_pids_skipped;
+@@ -3359,6 +3362,7 @@ static void task_numa_work(struct callback_head *work)
+ 	if (!mmap_read_trylock(mm))
+ 		return;
+ 
++	trace_sched_numa_balance_start(p);
+ 	/*
+ 	 * VMAs are skipped if the current PID has not trapped a fault within
+ 	 * the VMA recently. Allow scanning to be forced if there is no
+@@ -3477,6 +3481,10 @@ static void task_numa_work(struct callback_head *work)
+ 			end = min(end, vma->vm_end);
+ 			nr_pte_updates = change_prot_numa(vma, start, end);
+ 
++			nr_scanned = (end - start) >> PAGE_SHIFT;
++			total_migrated += nr_pte_updates;
++			total_scanned += nr_scanned;
++
+ 			/*
+ 			 * Try to scan sysctl_numa_balancing_size worth of
+ 			 * hpages that have at least one present PTE that
+@@ -3486,8 +3494,8 @@ static void task_numa_work(struct callback_head *work)
+ 			 * areas faster.
+ 			 */
+ 			if (nr_pte_updates)
+-				pages -= (end - start) >> PAGE_SHIFT;
+-			virtpages -= (end - start) >> PAGE_SHIFT;
++				pages -= nr_scanned;
++			virtpages -= nr_scanned;
+ 
+ 			start = end;
+ 			if (pages <= 0 || virtpages <= 0)
+@@ -3528,6 +3536,8 @@ static void task_numa_work(struct callback_head *work)
+ 		mm->numa_scan_offset = start;
+ 	else
+ 		reset_ptenuma_scan(p);
++
++	trace_sched_numa_balance_end(p, total_scanned, total_migrated);
+ 	mmap_read_unlock(mm);
+ 
+ 	/*
+-- 
+2.43.0
 
