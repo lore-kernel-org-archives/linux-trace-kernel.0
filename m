@@ -1,142 +1,195 @@
-Received: from mail-pf1-f195.google.com (mail-pf1-f195.google.com [209.85.210.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B972718DB26
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 29 Oct 2025 02:15:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56A42283129;
+	Wed, 29 Oct 2025 02:43:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761704123; cv=none; b=nK2wLeB+ontAOW8VCuCntmdYzA+6QpASVzo3yGh2EpdmLO07+oYPHGbgIRqt5LA88kWPsM6I/N9YpUZKws0bOSIaWEOnI5VUcitU1o2WCmRC1AeLDzjkRWQCDJHscKH9e/Re850+QeQoTXsN4UOVCUsVOPec4Ae9mm56de6FOjY=
+	t=1761705805; cv=none; b=RaWX7XtEkUpuXRZ2V9Nix61N1v8L4lemEBGXzC8j5JZ1X9nGXdc+08Cx82/UlHhjXQG2VnsBLFEDqHkARklu26HAhHCDfsg5sI1TmUs7migPpGb9hYRLJzo0tHSww0OxN/atXoembwB0Kf+w7vAyLeBxhQ5gmqxj+6NlYHvJvLw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761704123; c=relaxed/simple;
-	bh=CEvAhyPYCG+T++r8yJdAAsbzjdXegc+nM5rNng/jC1Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YfPEdsnQyobfqe2DwgKyhHYQgG9scN8KK/L9UlWnQt6Z8xqwp2kzO8ID2Qb/0kz4TAZiTAIfBHlOjhuFG6maRlutpyi9/v0ccl01IR+5iprmfpbkg0/9bIhO+h/N10dpyYhuIZsPixaXFzpi1us6g6dK/DEl8wJQ4xHWVZz3R6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=faZ2750Z; arc=none smtp.client-ip=209.85.210.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1761705805; c=relaxed/simple;
+	bh=Km83RPcsFyOOaHMC0IXrd8w/TKJKJjJESuj/zLlhIeY=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=L5jHV1QfkAXxFGpqAJDDqAVDLvSUSDnR7gqwVVYv0//WVYwxlhVo709xV8QuVZz8+T+Fqybiprx6sXgzeXNYnWy/a+Sj9C0z2bAUOY/L9uF6yNe+mm2PZKHYe1dmEAA4XqOA9Q4NLaUps65RnnKWvuij93Tfpjt5kshsHv6Qyjc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bUez+F0C; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="faZ2750Z"
-Received: by mail-pf1-f195.google.com with SMTP id d2e1a72fcca58-78af743c232so6190530b3a.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 28 Oct 2025 19:15:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1761704121; x=1762308921; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ktlh/43BHkPq4CFdjDK0hsgcK6sJG2dQbSUlBR4d9/E=;
-        b=faZ2750Zrl+eNv3NGWVEaGwepo6Zkz4kH2odDlkpwNMF9pJDYkx3DC666E4WWeCqY7
-         CMzxrs00jWOJyeoYLi5SlTpjAw+ji2QH0SiG2YkfjGM5IbA/fdC68WORkSRRbQINHPRd
-         JRzOek2lFeRKJgWRwBtGEGQ2mrrQOjrv25NDjWEVn8VzKGEjIzM6QDKV/IrJc0YkAOAS
-         jC5TALIDom5EX54a/hrkHf0s1dUvL7YyrFcFMmL+rH45AxnSB47LwgSJg2pi/uW2RsIC
-         Zf8Ue7ZWRrz3v5FVHUBBe3KMLI3FUAy++EDIHou9a8zcXqS5Da6IsMD1vfgLmAbl0ZIE
-         pL0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761704121; x=1762308921;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Ktlh/43BHkPq4CFdjDK0hsgcK6sJG2dQbSUlBR4d9/E=;
-        b=dRGnWdve8DcJcWiLEd3rA4azjHPeFIwyCtNDYJV+2oWt0qDYEDbz+GKy0l/EKmUZVZ
-         +76CaNFzoHJTOm4KgGRgQ5/uhpAlqMfoxlB2au5vmi+U5KozrM3JA8+d+z3fBieHn4HU
-         zh/g8obaj1nPcqTbeaYsfxgUzKrbPDKI5jE8ZyYVivhfM0OTRnHWU8doEW8g4Lb66bSi
-         AjZBXnQWA1RVhM9NDxP+rhKlMXtaDZieRPeV04wTyjsu1Q09NLcumaHT/7/a46aofa9b
-         M0NRT+vdf4CmjuVl0v7k8E4XYTvX7zjN5WIIAGHQekf7qGxcJFFOt9s6erZRZqtOwJdT
-         I9qg==
-X-Forwarded-Encrypted: i=1; AJvYcCWTMs1DwDhVNuNCiavRnD0i/bIQzBocBwI+VqcGKF/rgpHupme6cPa9ucjjo7x7mxe5MDh9jRWdPSCjDQmM4oYcf3I=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzaiz6n3qQtP/GXRxYlYUpqUm2nwOIDsVa8AAc5sQAN/AvLWpBZ
-	+jurqjXjNWg/2yIhqKMPFvybm+lhVzWc6n92d9IY2fvlshCR5W2gcBcNyWWKWchkYxk=
-X-Gm-Gg: ASbGncsKzB4vedlpOor+hjfIrv56dp+DjhncD8oWAVyAqQjJwSH35AN9qgdc6UVfIZA
-	3wn/GQALJVQebPuVLRa47jwzR/GlxPgXmPY3ehRJtmklrLS8Nh/Ykl93FI4GxffBurXZt1PT0ER
-	jiQ33vVMlNP1uQc+g8m6fOGMcY2Haxe0Q8ym6CvqiPUkFFqolAsXu07LNT5bGBNaRSp/RUdbUyc
-	RqhTDZ/XwGo+JbAdscSeQTCP5hoZwgaBPQVB3aic6uQZgjBa31reNS1cco1pV7Sj0yjcLsyIw2l
-	zF9c4tmscirUe53uX/FrycCe+KuQpO50QBUWm8P8SjQkhOzgeG4xLxu5YmqlHhEisvlk114mvCh
-	KZca3w4q3PhfOQY4sO0O4kCnnqK1c/M6u4GLew9zEn0+GH9GMa9YTljWdrMXJCgnV/SWunZb5Bz
-	6V
-X-Google-Smtp-Source: AGHT+IH/g79Ujfibd+JTMvUkBpYFAQJiqZkOLBJGhObxS6FSqfhAX6RVRxRENNGWr6hg43128FBG8Q==
-X-Received: by 2002:a05:6a20:7d8b:b0:344:a607:5548 with SMTP id adf61e73a8af0-346558e31a1mr1592301637.58.1761704120749;
-        Tue, 28 Oct 2025 19:15:20 -0700 (PDT)
-Received: from 7950hx ([43.129.244.20])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b712d024aaasm12124442a12.26.2025.10.28.19.15.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Oct 2025 19:15:20 -0700 (PDT)
-From: Menglong Dong <menglong8.dong@gmail.com>
-X-Google-Original-From: Menglong Dong <dongml2@chinatelecom.cn>
-To: mhiramat@kernel.org
-Cc: rostedt@goodmis.org,
-	jolsa@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	jiang.biao@linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH] tracing: fprobe: use ftrace if CONFIG_DYNAMIC_FTRACE_WITH_ARGS
-Date: Wed, 29 Oct 2025 10:15:14 +0800
-Message-ID: <20251029021514.25076-1-dongml2@chinatelecom.cn>
-X-Mailer: git-send-email 2.51.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bUez+F0C"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14C86C4CEFD;
+	Wed, 29 Oct 2025 02:43:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761705804;
+	bh=Km83RPcsFyOOaHMC0IXrd8w/TKJKJjJESuj/zLlhIeY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=bUez+F0C+mbjixIPs6/hVqz+YUV9Qv8Ide9LxpNZCNtWbDQEsiBKA62iBhXhbzk0g
+	 ODpTKlZqPCDwcv/xiA7X8ZJ0fMnsRlopbFUvy4vq7kNFdqHYPkfuJhy3EmguhCfi6F
+	 XCT04x95a5UA4+NLvTN+Cf8LK9Gc5jkmdsH+GBkHIFuvz8j1KOnBVkwD11+CUTipqC
+	 FsvJFlX6jT/D7ahOc48XZxT6tUKBIhJ/AhPqyr9gPBI/o8LFlQVls1C1YJewS+Gr4P
+	 oadJoD3Fjf/B93KcYjVDaw+vOpMA25ElW1/Hu1mO8bfhnpY5LoHMpuu6gIOhKYhI61
+	 avwMqaX3fP4rg==
+Date: Wed, 29 Oct 2025 11:43:17 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon
+ <will@kernel.org>, Mark Brown <broonie@kernel.org>, Steven Rostedt
+ <rostedt@goodmis.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar
+ <mingo@kernel.org>, x86@kernel.org, Jinchao Wang
+ <wangjinchao600@gmail.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H . Peter Anvin" <hpa@zytor.com>, Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, Aishwarya.TCV@arm.com
+Subject: Re: [PATCH v5 6/8] selftests: tracing: Add a basic testcase for
+ wprobe
+Message-Id: <20251029114317.167b7d908533385c1c9e6782@kernel.org>
+In-Reply-To: <20251029004219.dc9cda0eb56ae46c55855844@kernel.org>
+References: <175859019940.374439.7398451124225791618.stgit@devnote2>
+	<175859026716.374439.14852239332989324292.stgit@devnote2>
+	<aPvwGhMBJqMKcC9D@finisterre.sirena.org.uk>
+	<20251027224347.4c887cc956df63602f377550@kernel.org>
+	<20251028084222.a3c1ae97d125d9bd88fc565b@kernel.org>
+	<20251028105549.ae94e8eeb42f4efc183d2807@kernel.org>
+	<20251029004219.dc9cda0eb56ae46c55855844@kernel.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-For now, we will use ftrace for the fprobe if fp->exit_handler not exists
-and CONFIG_DYNAMIC_FTRACE_WITH_REGS is enabled.
+On Wed, 29 Oct 2025 00:42:19 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-However, CONFIG_DYNAMIC_FTRACE_WITH_REGS is not supported by some arch,
-such as arm. What we need in the fprobe is the function arguments, so we
-can use ftrace for fprobe if CONFIG_DYNAMIC_FTRACE_WITH_ARGS is enabled.
+> On Tue, 28 Oct 2025 10:55:49 +0900
+> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+> 
+> > On Tue, 28 Oct 2025 08:42:22 +0900
+> > Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+> > 
+> > > ~ # cd /sys/kernel/tracing/
+> > > /sys/kernel/tracing # echo 'w:my_wprobe w@jiffies' >> dynamic_events 
+> > > /sys/kernel/tracing # echo 1 > events/wprobes/my_wprobe/enable 
+> > > [   54.942288] trace_wprobe: enable_trace_wprobe called
+> > > [   54.945306] trace_wprobe: trying to register wprobes
+> > > [   54.947367] trace_wprobe: __register_trace_wprobe called
+> > > [   54.949586] trace_wprobe: registering wprobe at addr: 0xffffb6ce429fb200, len: 4, type: 2
+> > > [   54.951639] Creating wide hw breakpoint on CPU 0
+> > > [   54.966390] Creating kernel counter on CPU 0 for event type 5
+> > > [   54.967758] perf_install_in_context: event 00000000736da1d9 ctx 000000005d4db900 cpu 0
+> > > [   54.972015] perf_install_in_context2: event 00000000736da1d9 ctx set to 000000005d4db900
+> > > [   54.976697] cpu_function_call: calling function on CPU 0, func: __perf_install_in_context+0x0/0x2c8
+> > > 
+> > > What happen if the cpu calls function on itself by
+> > > smp_call_function_single() on arm64?
+> > > 
+> > >   smp_call_function_single(this_cpu, remote_function, &data, 1);
+> > 
+> > Sorry, that was printk buffering issue. I used trace_printk() instead
+> > and persistent ring buffer[1] to trace it.
+> > 
+> > [1] https://docs.kernel.org/trace/debugging.html#persistent-buffers-across-boots
+> > 
+> > ~ # echo 1 > /sys/kernel/tracing/instances/boot_map/options/trace_printk_dest
+> > ~ # echo 'w:my_wprobe w@jiffies' >> /sys/kernel/tracing/dynamic_events 
+> > ~ # echo 1 > /sys/kernel/tracing/events/wprobes/my_wprobe/enable 
+> > QEMU 8.2.2 monitor - type 'help' for more information
+> > (qemu) system_reset
+> > ...
+> > 
+> > ~ # cat /sys/kernel/tracing/instances/boot_map/trace 
+> > # tracer: nop
+> > #
+> > # entries-in-buffer/entries-written: 16/16   #P:1
+> > #
+> > #                                _-----=> irqs-off/BH-disabled
+> > #                               / _----=> need-resched
+> > #                              | / _---=> hardirq/softirq
+> > #                              || / _--=> preempt-depth
+> > #                              ||| / _-=> migrate-disable
+> > #                              |||| /     delay
+> > #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
+> > #              | |         |   |||||     |         |
+> >            <...>-63      [000] .....    21.065038: register_wide_hw_breakpoint: Creating wide hw breakpoint on CPU 0
+> >            <...>-63      [000] .....    21.079678: perf_event_create_kernel_counter: Creating kernel counter on CPU 0 for event type 5
+> >            <...>-63      [000] .....    21.080051: perf_install_in_context: perf_install_in_context: event 000000000b3ac4d3 ctx 00000000097d6337 cpu 0
+> >            <...>-63      [000] .....    21.080140: perf_install_in_context: perf_install_in_context2: event 000000000b3ac4d3 ctx set to 00000000097d6337
+> >            <...>-63      [000] .....    21.080939: cpu_function_call: cpu_function_call: calling function on CPU 0, func: __perf_install_in_context+0x0/0x2f0
+> >            <...>-63      [000] .....    21.080966: smp_call_function_single: smp_call_function_single: calling function on CPU 0, func: remote_function+0x0/0x78, wait=1
+> >            <...>-63      [000] ...1.    21.080973: smp_call_function_single: smp_call_function_single: running on CPU 0, call CPU 0
+> >            <...>-63      [000] ...1.    21.081099: smp_call_function_single: smp_call_function_single: checking for potential deadlock conditions
+> >            <...>-63      [000] ...1.    21.081259: generic_exec_single: generic_exec_single: preparing to call function on CPU 0, func: remote_function+0x0/0x78
+> >            <...>-63      [000] ...1.    21.081269: generic_exec_single: Executing smp_call_function_single on self CPU 0, func: remote_function+0x0/0x78
+> >            <...>-63      [000] d..1.    21.081289: csd_do_func: csd_do_func: CPU 0 executing func remote_function+0x0/0x78
+> >            <...>-63      [000] d..1.    21.081429: __perf_install_in_context: __perf_install_in_context: event 000000000b3ac4d3 ctx 00000000097d6337
+> >            <...>-63      [000] d..2.    21.083211: hw_breakpoint_control: hw_breakpoint_control: ops=0
+> >            <...>-63      [000] d..1.    21.084191: __perf_install_in_context: __perf_install_in_context: event 000000000b3ac4d3 done, ret=0
+> >            <...>-63      [000] d..1.    21.084237: csd_do_func: csd_do_func: CPU 0 finished func remote_function+0x0/0x78
+> >            <...>-63      [000] d..1.    21.084243: generic_exec_single: Finished csd_lock_record(NULL)
+> > ~ # 
+> > 
+> > 
+> > So the last message is right before the local_irq_restore() in
+> > generic_exec_single().
+> > 
+> > static int generic_exec_single(int cpu, call_single_data_t *csd)
+> > {
+> > 	...
+> > 		csd_lock_record(csd);
+> > 		csd_unlock(csd);
+> > 		local_irq_save(flags);
+> > 		csd_do_func(func, info, NULL);
+> > 		csd_lock_record(NULL);
+> > 		trace_printk("Finished csd_lock_record(NULL)\n"); <- 
+> > 		local_irq_restore(flags);
+> > 		return 0;
+> > 
+> > Actually, I added another trace_printk() right after generic_exec_single().
+> > 
+> > 	err = generic_exec_single(cpu, csd);
+> > 	trace_printk("generic_exec_single returned %d for CPU %d, func: %pS\n",
+> > 		err, cpu, func);
+> > 
+> > This means after setting the hw_breakpoint, when enabing the IRQ,
+> > the machine is frozen - but qemu is running busy.
+> > 
+> > Can we specify the kernel memory address to HW breakpoint on arm64?
+> 
+> Hmm, it seems that jiffies related things are updated frequently
+> and it may cause interrupt storm or infinit recursive call.
 
-Therefore, use ftrace if CONFIG_DYNAMIC_FTRACE_WITH_REGS or
-CONFIG_DYNAMIC_FTRACE_WITH_ARGS enabled.
+I added another trace_printk() in el1_watchpt(). It seems el1_watchpt()
+takes too long and there is no time to do any other things.
+(Note the interval shown below is only within the el1_watchpt function,
+ and in reality various processes (save/restore registers etc) for
+ exception handling will be inserted before and after.)
 
-Signed-off-by: Menglong Dong <dongml2@chinatelecom.cn>
----
- kernel/trace/fprobe.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+   kworker/u32:3-75      [001] d.h2.    43.216706: el1_watchpt: FAR=0xjiffies+0x0/0x40, ESR=0xd6000062, WP index=0, n
+est=0
+   kworker/u32:3-75      [001] d.h2.    43.216750: el1_watchpt: returning to EL1: nest=0
+   kworker/u32:3-75      [001] d.h2.    43.216816: el1_watchpt: FAR=0xjiffies+0x0/0x40, ESR=0xd6000062, WP index=0, n
+est=0
+   kworker/u32:3-75      [001] d.h2.    43.216860: el1_watchpt: returning to EL1: nest=0
+   kworker/u32:3-75      [001] d.h2.    43.216927: el1_watchpt: FAR=0xjiffies+0x0/0x40, ESR=0xd6000062, WP index=0, n
+est=0
+   kworker/u32:3-75      [001] d.h2.    43.216971: el1_watchpt: returning to EL1: nest=0
+   kworker/u32:3-75      [001] d.h2.    43.217058: el1_watchpt: FAR=0xjiffies+0x0/0x40, ESR=0xd6000062, WP index=0, n
+est=0
+   kworker/u32:3-75      [001] d.h2.    43.217106: el1_watchpt: returning to EL1: nest=0
+   kworker/u32:3-75      [001] d.h2.    43.217175: el1_watchpt: FAR=0xjiffies+0x0/0x40, ESR=0xd6000062, WP index=0, n
+est=0
+   kworker/u32:3-75      [001] d.h2.    43.217219: el1_watchpt: returning to EL1: nest=0
 
-diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-index ecd623eef68b..9fad0569f521 100644
---- a/kernel/trace/fprobe.c
-+++ b/kernel/trace/fprobe.c
-@@ -254,7 +254,11 @@ static inline int __fprobe_kprobe_handler(unsigned long ip, unsigned long parent
- 	return ret;
- }
- 
--#ifdef CONFIG_DYNAMIC_FTRACE_WITH_REGS
-+#if defined(CONFIG_DYNAMIC_FTRACE_WITH_ARGS) || defined(CONFIG_DYNAMIC_FTRACE_WITH_REGS)
-+#define FPROBE_USE_FTRACE
-+#endif
-+
-+#ifdef FPROBE_USE_FTRACE
- /* ftrace_ops callback, this processes fprobes which have only entry_handler. */
- static void fprobe_ftrace_entry(unsigned long ip, unsigned long parent_ip,
- 	struct ftrace_ops *ops, struct ftrace_regs *fregs)
-@@ -295,7 +299,7 @@ NOKPROBE_SYMBOL(fprobe_ftrace_entry);
- 
- static struct ftrace_ops fprobe_ftrace_ops = {
- 	.func	= fprobe_ftrace_entry,
--	.flags	= FTRACE_OPS_FL_SAVE_REGS,
-+	.flags	= FTRACE_OPS_FL_SAVE_ARGS,
- };
- static int fprobe_ftrace_active;
- 
-@@ -349,7 +353,7 @@ static bool fprobe_is_ftrace(struct fprobe *fp)
- {
- 	return false;
- }
--#endif
-+#endif /* !FPROBE_USE_FTRACE */
- 
- /* fgraph_ops callback, this processes fprobes which have exit_handler. */
- static int fprobe_fgraph_entry(struct ftrace_graph_ent *trace, struct fgraph_ops *gops,
-@@ -599,7 +603,7 @@ static int fprobe_module_callback(struct notifier_block *nb,
- 	if (alist.index > 0) {
- 		ftrace_set_filter_ips(&fprobe_graph_ops.ops,
- 				      alist.addrs, alist.index, 1, 0);
--#ifdef CONFIG_DYNAMIC_FTRACE_WITH_REGS
-+#ifdef FPROBE_USE_FTRACE
- 		ftrace_set_filter_ips(&fprobe_ftrace_ops,
- 				      alist.addrs, alist.index, 1, 0);
- #endif
+So watching any variables which is frequently updated will
+almost freeze the system. Hmmm, the handler should check the
+interval and if it is too frequently, it should disable the
+wprobe.
+
+Thank you,
+
 -- 
-2.51.1
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
