@@ -1,115 +1,93 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45EB732C8B
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 29 Oct 2025 13:58:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4B1F2F85B;
+	Wed, 29 Oct 2025 14:00:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761746306; cv=none; b=iTUzfSkQkGe35fkA6ELnS1oTYI1y5AOwaGCHoFgtEygbwUbXxyZg6LigaRPrdmNSqgbzap6ZOp/C/2J7cvFU96qdYS31XZQgsjQXN0LUcG/NIgYHEtAQcejAP1c8IF0IjmG9lRl1KeOTwhRRCRAv3OFHBPRKRaOdD66cn/bSAjo=
+	t=1761746416; cv=none; b=JDUpvwRlmQCrb0pka0hpucfasgGsFKn9w8eRm4MCkYd7aaMBefeVpKV3r8Y9X5IFIn4bw9yqujjMQxAF6VYBHtO5orGWoyq0jgAfJc1RYQH0oKBKR2H5binXxqIXOGJfeHIjVpznuVy7m6iVralsR0hk1ANWJAb2zfUpmHDftxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761746306; c=relaxed/simple;
-	bh=eb/lecgSj7pZ4dVPEsUUj8TIQ+srrjC8ULRf0Jm2+SA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gu5xHIinpNPq1ZZqk/f0ocA+kgWU/NOUnlwbZNEurDbgpEI6uGf/+Or1V6ise2060Y+huh42dnZ0nMNX9NCDRpL+GjpUYNAM6NwT1QGfel+sf4YkPg5uKS7J+6MK8D5kvZlCAAznGQHnnOrEiR6+1CxSV/1dPjCgHjNrzJ0EylA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DAFHdm8g; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DAFHdm8g"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1761746300;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YzNMOzms2O5d2a24CLqvGn9BwifdwOkeEqcANjalJ2g=;
-	b=DAFHdm8gXd3EQrmZiNtBnh6bVl2+Y7OQzxOpb2NUVlxJYAHIcq57kPA94+Hy3ezAxnD5ij
-	GX+k1dPkNdDEF8AvDIzvptgtnTLDMJ6NRh0Ef9zWoeZ5o9tq9WxCA6g93/TiPjr4x5F7jA
-	j0Vpf4gGzJTb4ylSddCxyE2UTrPF8UI=
-Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
- [209.85.167.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-573-sKXrvDZYMWqo-oXPQR2v-Q-1; Wed, 29 Oct 2025 09:58:18 -0400
-X-MC-Unique: sKXrvDZYMWqo-oXPQR2v-Q-1
-X-Mimecast-MFC-AGG-ID: sKXrvDZYMWqo-oXPQR2v-Q_1761746297
-Received: by mail-lf1-f71.google.com with SMTP id 2adb3069b0e04-592bd7da031so3711804e87.2
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 29 Oct 2025 06:58:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761746297; x=1762351097;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YzNMOzms2O5d2a24CLqvGn9BwifdwOkeEqcANjalJ2g=;
-        b=ljtdJRb8DlTt20R/rS0zr0VUy102Zl4KoIk2CkpwBhBQH9mTmhXU1R3nu2MMZLGMnm
-         nfbNnH6QCtI41xKsndc69gBfRftxSIV0LjgbPQPCmjGlcEAT4oV2IfqOb+33VL2SHfh2
-         D1RxhZcxqGEISsFicldgsAlBvxv6o4VsJfkkEvMPk152sPGAZ39ptqX6NFURROgqAHyX
-         no74jm6SaDYDq8X7HGu8GKAP56msFkIN/kQ2OHp8PkSkbtHgIJDkZRHACPPwfkTBoPGh
-         hj7C2jhBy/2wkfCKvAzOL9XyY83C4vkAinVu5oR+Cyxrpv7RCICuTDICXgzxqUmmas6Q
-         UDSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVsvKMGqOQCZbx8fA+5RTrW/3vRNari11Gv5wAocDj1FKhScUiBJovNK2erttzeXkVHEXdNgr7v51QHnHrnwpebfAI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxchWuYeWL0LYH3wi+F34V+u7IhuqfDHAJVTHRoA1beBNueQc3c
-	BtWewSuUUj3F61I5Lfn5JFo8W9OdMRiEK7QjZRjENCrpd1yXXgPR/s5Agt/XR6CDFVoZaUW0uyR
-	+QHVrN3yNcdFtVLdxUBiGkfnKWxxkBWJ0PdT67a2Omqrch64erTT5M4nu4JBKAPnwpbVQ1pRwA2
-	Agi5y2HIIEragV4sLfFm1skly8D//9sF4VuNKfGv5iSys9MySC
-X-Gm-Gg: ASbGncvovzqzvIrjYReMUhv+nZd0A7TeKT2YNzZkVHZli/pwLe7Euh/W+nZgQsrp1fD
-	sllYQkCjNid2TCpiuoOTfMfLpFrBSmypK2AChvVfcP0PKlvKQllFKCFbZj60p/69r6RTWJ5TaSb
-	tHRsGppFTn4nST6x2Vx937XzWBbRVeNA1G1MnAvbdcFt/jzs3b+yy4hA+1EDT72VJqIfFgEy5Lh
-	+/mxeZmJpMLPA==
-X-Received: by 2002:a05:6512:238f:b0:591:ec59:2d4e with SMTP id 2adb3069b0e04-594128bfbc2mr948410e87.33.1761746296962;
-        Wed, 29 Oct 2025 06:58:16 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHENcild87oyJavKrMajfFtJmvIPZWqbmuIDtqlYAc21RXT91r25XmwlhMpaWQmY1koiPE7JQjfkX6UdmNgtqU=
-X-Received: by 2002:a05:6512:238f:b0:591:ec59:2d4e with SMTP id
- 2adb3069b0e04-594128bfbc2mr948391e87.33.1761746296236; Wed, 29 Oct 2025
- 06:58:16 -0700 (PDT)
+	s=arc-20240116; t=1761746416; c=relaxed/simple;
+	bh=MKQq55ffHbZomesotqaC2+T2E7XA/LvPpVshKS2Y8fI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ETzVIxZ30l13bgDJulWfDCJ8cSOwkRkbeqyp2f4o9I04uPPTM7Tf/jGMuEZc3xdCJF/LztryJZrSK7mugkNciDF9LKxLXT3cxO8v0FdX4fuBoMSPPT+0stRDpxoHIBQrcLU/nMCFhH42JP/oI19GAtMMqlQncfBGFfWG7CZOdpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf13.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay10.hostedemail.com (Postfix) with ESMTP id 0DACDC084B;
+	Wed, 29 Oct 2025 14:00:07 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf13.hostedemail.com (Postfix) with ESMTPA id 192B420012;
+	Wed, 29 Oct 2025 14:00:05 +0000 (UTC)
+Date: Wed, 29 Oct 2025 10:00:45 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Menglong Dong <menglong8.dong@gmail.com>
+Cc: mhiramat@kernel.org, jolsa@kernel.org, mathieu.desnoyers@efficios.com,
+ jiang.biao@linux.dev, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing: fprobe: use ftrace if
+ CONFIG_DYNAMIC_FTRACE_WITH_ARGS
+Message-ID: <20251029100045.1bacc491@gandalf.local.home>
+In-Reply-To: <20251029021514.25076-1-dongml2@chinatelecom.cn>
+References: <20251029021514.25076-1-dongml2@chinatelecom.cn>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251002170846.437888-1-costa.shul@redhat.com>
-In-Reply-To: <20251002170846.437888-1-costa.shul@redhat.com>
-From: Tomas Glozar <tglozar@redhat.com>
-Date: Wed, 29 Oct 2025 14:58:04 +0100
-X-Gm-Features: AWmQ_bk_Pa7PjTlfBu4mI5xpRQYogtwTJ-LtD_tM-yThYPQIs4QykeGaTsRutv0
-Message-ID: <CAP4=nvT5WTKBfeihWy-FAc4hKFuJj45Be=P4U2Acs-jVnRv9oA@mail.gmail.com>
-Subject: Re: [PATCH v1] tools/rtla: Fix unassigned nr_cpus
-To: Costa Shulyupin <costa.shul@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Crystal Wood <crwood@redhat.com>, 
-	John Kacur <jkacur@redhat.com>, linux-trace-kernel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: v0Fk0RCsflHh_4pXwZ3QkgeXI_zut-stgQoeFxGRWUA_1761746297
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: z7rpo5c7jcywest3ncr4scx6t4pbdug7
+X-Rspamd-Server: rspamout07
+X-Rspamd-Queue-Id: 192B420012
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/iopvWcwJewjP7InqAmXGwM7w53r6524s=
+X-HE-Tag: 1761746404-15532
+X-HE-Meta: U2FsdGVkX1/QiFkVbLx24yZ41mTDIew/bJCIE3tfRblFRdOYdz0fzf5YiFCfjVxJZbtFHJGAWctLPtdJfhySOrgZ027T9FkczZpMYfePKJu/mpnAoVtsq3oGGSfCjJ45BR2AptVzjwm2M9Xajbi/6bt/WBqEyc/E5VsPx//4VXgO7C3oOPeOtXTdW9xVjdqL84brOh6parSeaJb7zBmRTbODTUnQIokNNdtzQQvYj3yA9GwoueCszgDfpuzCLQ0vzoGaD3nsKN25FX+ZlVMZ+17gf49UHrKzcU37bNmT6vCPv0KGsZHBgEQQq2be3IYJzwbGhK/fXfBjMR/5t9+zSZIed+JCOk5Q
 
-=C4=8Dt 2. 10. 2025 v 19:09 odes=C3=ADlatel Costa Shulyupin
-<costa.shul@redhat.com> napsal:
->
-> In recently introduced timerlat_free(),
-> the variable 'nr_cpus' is not assigned.
->
-> Assign it with sysconf(_SC_NPROCESSORS_CONF) as done elsewhere.
-> Remove the culprit: -Wno-maybe-uninitialized. The rest of the
-> code is clean.
+On Wed, 29 Oct 2025 10:15:14 +0800
+Menglong Dong <menglong8.dong@gmail.com> wrote:
 
-I suspected that the warning was disabled because of issues with an
-old version of GCC, but that is not the case: I tried building RTLA on
-RHEL 7 with GCC 4.8, and got no warnings, beside the real bug that you
-fix here.
+> -#ifdef CONFIG_DYNAMIC_FTRACE_WITH_REGS
+> +#if defined(CONFIG_DYNAMIC_FTRACE_WITH_ARGS) || defined(CONFIG_DYNAMIC_FTRACE_WITH_REGS)
+> +#define FPROBE_USE_FTRACE
+> +#endif
+> +
+> +#ifdef FPROBE_USE_FTRACE
+>  /* ftrace_ops callback, this processes fprobes which have only entry_handler. */
+>  static void fprobe_ftrace_entry(unsigned long ip, unsigned long parent_ip,
+>  	struct ftrace_ops *ops, struct ftrace_regs *fregs)
+> @@ -295,7 +299,7 @@ NOKPROBE_SYMBOL(fprobe_ftrace_entry);
+>  
+>  static struct ftrace_ops fprobe_ftrace_ops = {
+>  	.func	= fprobe_ftrace_entry,
+> -	.flags	= FTRACE_OPS_FL_SAVE_REGS,
+> +	.flags	= FTRACE_OPS_FL_SAVE_ARGS,
 
-Therefore, it can be removed, so that such bugs are caught in the future.
+If an arch defines DYNAMIC_FTRACE_WITH_REGS but not
+DYNAMIC_FTRACE_WITH_ARGS, then this will fail to build.
 
->
-> Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
-> ---
->  tools/tracing/rtla/Makefile.rtla  | 2 +-
->  tools/tracing/rtla/src/timerlat.c | 3 ++-
->  2 files changed, 3 insertions(+), 2 deletions(-)
->
+>  };
+>  static int fprobe_ftrace_active;
+>  
 
-Reviewed-by: Tomas Glozar <tglozar@redhat.com>
+Perhaps do:
 
-Tomas
+#ifdef CONFIG_DYNAMIC_FTRACE_WITH_ARGS
+# define FPROBE_FTRACE_TYPE FTRACE_OPS_FL_SAVE_ARGS
+#elif defined(CONFIG_DYNAMIC_FTRACE_WITH_REGS)
+# define FPROBE_FTRACE_TYPE FTRACE_OPS_FL_SAVE_REGS,
+#endif
 
+#ifdef FPROBE_FTRACE_TYPE
+[..]
+static struct ftrace_ops fprobe_ftrace_ops = {
+	.func	= fprobe_ftrace_entry,
+	.flags	= FTRACE_FTRACE_TYPE,
+
+
+?
+
+-- Steve
