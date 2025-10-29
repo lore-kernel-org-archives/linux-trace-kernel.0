@@ -1,110 +1,89 @@
-Received: from unicom146.biz-email.net (unicom146.biz-email.net [210.51.26.146])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90F771AA1D2;
-	Wed, 29 Oct 2025 07:17:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.51.26.146
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D80EF3128A6;
+	Wed, 29 Oct 2025 08:20:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761722276; cv=none; b=P66cRWQeFEmIDV+95s4C6OyZsZNGgrRSHbMY+rZNe+th3V+zd5ZtaMM1yi/nJvW9jbuUZUn1T4SdOifuPM0GhmEUvtAcPr+B7+criPMgHEjOkBduo2WfcUMDVRdM0atuJpQJDbfjl04bsXujUyywrNyKQGMYUBXw+flnYHZAFHU=
+	t=1761726013; cv=none; b=qk95LacpAE7P6Euu97cBVx/nJ3uFJAQQHvA057C2mpA7aF8BrZRbEw4BaJXKzG+eiZ3CV36vKItNnzrYzzt5Mw+ngG6Avtbyptlp97zvxH6JLxWEfJC25LISONrriLqRA7LOCAkjhwD1VcSeh7vCtXbDdgVIiOr+NndPjPb4q/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761722276; c=relaxed/simple;
-	bh=nHrYKnq0A3RI6YrxImuLci6NbNAExaip2UClgnU6Hng=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Py+q17WPqhtjI8N6EMU9JgzFtYyeTZwNbcAraPtoBxkGvxXyLD7akR8XTKGBBQADXKtbS1+05HfbGdg4iKFdqErZcjFWSutHGczoevt1SB943n4O6olXFuVPgwdSeDiy/AEeC53fOHuZFnykckFsDoh7Nztc6Ac/1zCkGFb/tjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com; spf=pass smtp.mailfrom=inspur.com; arc=none smtp.client-ip=210.51.26.146
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inspur.com
-Received: from jtjnmail201620.home.langchao.com
-        by unicom146.biz-email.net ((D)) with ASMTP (SSL) id 202510291517433647;
-        Wed, 29 Oct 2025 15:17:43 +0800
-Received: from jtjnmailAR01.home.langchao.com (10.100.2.42) by
- jtjnmail201620.home.langchao.com (10.100.2.20) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.58; Wed, 29 Oct 2025 15:17:44 +0800
-Received: from inspur.com (10.100.2.113) by jtjnmailAR01.home.langchao.com
- (10.100.2.42) with Microsoft SMTP Server id 15.1.2507.58 via Frontend
- Transport; Wed, 29 Oct 2025 15:17:44 +0800
-Received: from localhost.localdomain.com (unknown [10.94.19.60])
-	by app9 (Coremail) with SMTP id cQJkCsDwSHmXvwFpdDgHAA--.5676S2;
-	Wed, 29 Oct 2025 15:17:44 +0800 (CST)
-From: Bo Liu <liubo03@inspur.com>
-To: <rostedt@goodmis.org>, <mhiramat@kernel.org>, <catalin.marinas@arm.com>,
-	<will@kernel.org>, <maz@kernel.org>, <oliver.upton@linux.dev>
-CC: <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <kvmarm@lists.linux.dev>, Bo Liu
-	<liubo03@inspur.com>
-Subject: [PATCH] arm64: Fix double word in comments
-Date: Wed, 29 Oct 2025 15:17:42 +0800
-Message-ID: <20251029071742.17732-1-liubo03@inspur.com>
-X-Mailer: git-send-email 2.43.7
+	s=arc-20240116; t=1761726013; c=relaxed/simple;
+	bh=2KtQfpwXxBgRt5H6xF9pV7eRjqbrJ70Ux995ibkvkWI=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=cqbMweYympypwE760PzejCdjrE27LKhCuTcsrxR91Ku3bI5YD4nA5mn6xfv5SrXsQcJ1/i6P/0QViMPFKM2C3J535ErvsQftziuR+iCx/b59KSK5/1nmjqr0JURHdtkCoRIt+ItiCnB0knJENDzU+JssjJVR5P+H1/LOrHVih8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QzzWL/h0; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QzzWL/h0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 629B0C4CEF7;
+	Wed, 29 Oct 2025 08:20:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761726011;
+	bh=2KtQfpwXxBgRt5H6xF9pV7eRjqbrJ70Ux995ibkvkWI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=QzzWL/h0ApZ2tjPgLdIF2nyFUg5JHfMCUSLlS6lKzOcpR26PScHzwympwMCN0jO6x
+	 EwuMCtMNmiP0X1hjllNwTmVPgsM6kSDrIQcRTbkx9EsSN45Pscam7mMNXA94ykKBsd
+	 D4lGQYtee13ZjrBFr42AWF3CngaOnvEObnKLIav8/AUImxRYO8ov+XYpzYxXd74dO+
+	 Sg7nsxp2Uv++lx+nVgsb8SHyz641ddSSFPe4jRP608YnhnBRrMPVHcsGfRvFq0fJRN
+	 +J0jfXg2eNnqHW9g3B3CK/3Lh88dJrs7e2K6XvbQU0UFbtAopv2eBBDAfg/j7U1XMl
+	 J7JqyDxHnNjYg==
+Date: Wed, 29 Oct 2025 17:20:04 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon
+ <will@kernel.org>, Mark Brown <broonie@kernel.org>, Steven Rostedt
+ <rostedt@goodmis.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar
+ <mingo@kernel.org>, x86@kernel.org, Jinchao Wang
+ <wangjinchao600@gmail.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H . Peter Anvin" <hpa@zytor.com>, Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, Aishwarya.TCV@arm.com
+Subject: Re: [PATCH v5 6/8] selftests: tracing: Add a basic testcase for
+ wprobe
+Message-Id: <20251029172004.a0aca144735f20a6a59d2aa6@kernel.org>
+In-Reply-To: <20251029114317.167b7d908533385c1c9e6782@kernel.org>
+References: <175859019940.374439.7398451124225791618.stgit@devnote2>
+	<175859026716.374439.14852239332989324292.stgit@devnote2>
+	<aPvwGhMBJqMKcC9D@finisterre.sirena.org.uk>
+	<20251027224347.4c887cc956df63602f377550@kernel.org>
+	<20251028084222.a3c1ae97d125d9bd88fc565b@kernel.org>
+	<20251028105549.ae94e8eeb42f4efc183d2807@kernel.org>
+	<20251029004219.dc9cda0eb56ae46c55855844@kernel.org>
+	<20251029114317.167b7d908533385c1c9e6782@kernel.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: cQJkCsDwSHmXvwFpdDgHAA--.5676S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7AF4DGFyfAw47Zr1ftryDAwb_yoW8Grykp3
-	4DurykAw4kC3WYka4DCwsxXFs8A395trWUGw1UZrWrtr90k348Wrn2vr1Y9rWrXrWrXayf
-	uFyqyr15W3WkArDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUBY14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26rxl
-	6s0DM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
-	0DM2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
-	64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8Jw
-	Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAG
-	YxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7V
-	AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
-	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6x
-	IIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAI
-	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x
-	0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VU122NtUUUUU==
-X-CM-SenderInfo: xolxu0iqt6x0hvsx2hhfrp/
-X-CM-DELIVERINFO: =?B?073cd2LVRuiwy3Lqe5bb/wL3YD0Z3+qys2oM3YyJaJDj+48qHwuUARU7xYOAI0q1Re
-	KIpW5E45D/ppzVTEP3m+j7VajTAnWQJGywx+S+ZzlAJpWdDBKU+9ND03LjUKXr5WWebhqV
-	UxgGA21U09ARJ3pXvdw=
-Content-Type: text/plain
-tUid: 2025102915174356467725e5a955cb26b5d87bf08cd158
-X-Abuse-Reports-To: service@corp-email.com
-Abuse-Reports-To: service@corp-email.com
-X-Complaints-To: service@corp-email.com
-X-Report-Abuse-To: service@corp-email.com
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Remove the repeated word "the" in comments.
+On Wed, 29 Oct 2025 11:43:17 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-Signed-off-by: Bo Liu <liubo03@inspur.com>
----
- arch/arm64/kernel/entry-ftrace.S | 2 +-
- arch/arm64/kvm/arm.c             | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+> > Hmm, it seems that jiffies related things are updated frequently
+> > and it may cause interrupt storm or infinit recursive call.
+> 
+> I added another trace_printk() in el1_watchpt(). It seems el1_watchpt()
+> takes too long and there is no time to do any other things.
+> (Note the interval shown below is only within the el1_watchpt function,
+>  and in reality various processes (save/restore registers etc) for
+>  exception handling will be inserted before and after.)
 
-diff --git a/arch/arm64/kernel/entry-ftrace.S b/arch/arm64/kernel/entry-ftrace.S
-index 169ccf600066..025140caafe7 100644
---- a/arch/arm64/kernel/entry-ftrace.S
-+++ b/arch/arm64/kernel/entry-ftrace.S
-@@ -94,7 +94,7 @@ SYM_CODE_START(ftrace_caller)
- 	stp	x29, x30, [sp, #FREGS_SIZE]
- 	add	x29, sp, #FREGS_SIZE
- 
--	/* Prepare arguments for the the tracer func */
-+	/* Prepare arguments for the tracer func */
- 	sub	x0, x30, #AARCH64_INSN_SIZE		// ip (callsite's BL insn)
- 	mov	x1, x9					// parent_ip (callsite's LR)
- 	mov	x3, sp					// regs
-diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
-index 870953b4a8a7..9886bebc7263 100644
---- a/arch/arm64/kvm/arm.c
-+++ b/arch/arm64/kvm/arm.c
-@@ -2448,7 +2448,7 @@ static void kvm_hyp_init_symbols(void)
- 	kvm_nvhe_sym(__icache_flags) = __icache_flags;
- 	kvm_nvhe_sym(kvm_arm_vmid_bits) = kvm_arm_vmid_bits;
- 
--	/* Propagate the FGT state to the the nVHE side */
-+	/* Propagate the FGT state to the nVHE side */
- 	kvm_nvhe_sym(hfgrtr_masks)  = hfgrtr_masks;
- 	kvm_nvhe_sym(hfgwtr_masks)  = hfgwtr_masks;
- 	kvm_nvhe_sym(hfgitr_masks)  = hfgitr_masks;
+Forget about this. I found the root cause. The x86 watchpoint exception
+happens after the instruction is executed, the arm64 happens before.
+
+Thus what we need is to emulate or do single step the hooked instruction
+and restart from the next instruction from the watchpoint exception on
+arm64. I thought hw_breakpoint does that, but doesn't. Should we do this
+in do_watchpoint() or in user_handler?
+
+Thank you,
+
 -- 
-2.31.1
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
