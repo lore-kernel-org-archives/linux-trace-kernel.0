@@ -1,65 +1,65 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E26713C914
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 29 Oct 2025 21:10:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 711B93191DE
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 29 Oct 2025 21:14:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761772254; cv=none; b=Ru1HGxgFP/2sF4dRp4+cOiSYFwngwNszULwSo5XdKg2yz2KOKZuzrJByVJfzkbXAq9a60lWGqaZt/5PKD8xbYPqMyvsfqT/Emy46FOQJLlxEPgKhPritci1TkyKBXYGwKeFSNq6fQXN5phbyMBsuJ8WcCcqzhPI5I+KmloUgz/E=
+	t=1761772484; cv=none; b=Z9h4yXa9oRFwZAvI3MN8Lm3d93WwG7ATWi4Hi+Dk5j/7rsZQATQUo3rMjAEp1OlXo9PUiiRuvHKQwlt9sgbCMTRTcZ+6/neoCH9xxshtBotOidId+ibaJKACvRIIWKFT0pwBspR9qKVakxvz8EVIOOXfmp4YdkHivDgcLPAOapo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761772254; c=relaxed/simple;
-	bh=DEqsM77RjN9n8i/CaQqgFXbPhwvjxKLUi4ap91xbIDw=;
+	s=arc-20240116; t=1761772484; c=relaxed/simple;
+	bh=uA4o4s1QUU1aUgd+6IuizO22+dL/AjztreXwnzDIJOc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=szXQwN2esyvr+8RvylA1EjrbmGJveLvv5JwC4A7fvflOGHEVpBkrWtK9fP0svUMZC9mUMs0S8z6aN9WyoQz7MAFmZV7nx30LWSFtQraADRR6ZiiWW8cwwCJEb6fpdVmnwCxMsE8bYCSswSf7Hx4S0lb93KFpRiXoxmI+tgN5o1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=E76BLHf+; arc=none smtp.client-ip=170.10.129.124
+	 To:Cc:Content-Type; b=EKz1AV+VScYRc504c2FIqo89uTjE4LfwauXQIvTIPb7FGwED2zyPgf8l3e4Ls9Zim68+eUr3EDXYzUwqvnoIeOm/0j3DrbVtE2MpzfZmXtkNIhiepDIS9QpOo/4n028sZUYPg85+9P6x33i2fDNOxjAd7XK3p6ArhRzz97KRPvw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=E1DbXeuC; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E76BLHf+"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E1DbXeuC"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1761772251;
+	s=mimecast20190719; t=1761772482;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=avdi1SDxRzcVG3w1/eurHaCf3/7WeJ6JAjuETAbD6Cs=;
-	b=E76BLHf+bvADBBBpVQsl0YdGwO3j4MBz3jN/bk9JtFc7898gnlQ/KWUDvxazY3CGlbHQ43
-	gvQFZuxj19C1X5sEWcBJYH7yK3W5ySLkGQNUOi23bOrFMU4YzNgNxvOl4a8qQFdM4dQL+v
-	aYmQsIlJcvtvvHVhAOIwNYFf8d1Wok8=
-Received: from mail-lj1-f198.google.com (mail-lj1-f198.google.com
- [209.85.208.198]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=YPTTtw8BTZD1fn+qIBXIK1gjHXor2Nf0ItE5USDfdEk=;
+	b=E1DbXeuC6tFAca0iR9b4vjcYrkMSifmOxcPwg1evTydD2Acwre//YK3hLNyBCrlnM3y+g6
+	GetOqy+PHo7vHq7Or6PtgeDoMs1y1HPwws/aBzFddmNGf7fx8C7T7bBXxUtU3x5SQJJ0Ys
+	bCFREHAolTigBwuPHW5XgXme+iptwFA=
+Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
+ [209.85.208.200]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-361-gHPs94OiNeixbWvM-g7pHg-1; Wed, 29 Oct 2025 17:10:50 -0400
-X-MC-Unique: gHPs94OiNeixbWvM-g7pHg-1
-X-Mimecast-MFC-AGG-ID: gHPs94OiNeixbWvM-g7pHg_1761772248
-Received: by mail-lj1-f198.google.com with SMTP id 38308e7fff4ca-37773b477c6so1073241fa.2
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 29 Oct 2025 14:10:48 -0700 (PDT)
+ us-mta-659-MYO8nWVlMheRzQPIzSWwXQ-1; Wed, 29 Oct 2025 17:14:40 -0400
+X-MC-Unique: MYO8nWVlMheRzQPIzSWwXQ-1
+X-Mimecast-MFC-AGG-ID: MYO8nWVlMheRzQPIzSWwXQ_1761772479
+Received: by mail-lj1-f200.google.com with SMTP id 38308e7fff4ca-378ccb2cd05so1034501fa.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 29 Oct 2025 14:14:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761772247; x=1762377047;
+        d=1e100.net; s=20230601; t=1761772479; x=1762377279;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=avdi1SDxRzcVG3w1/eurHaCf3/7WeJ6JAjuETAbD6Cs=;
-        b=Bdkc3ku54MQGsvPXFdJX8zdRCD0B+3J4GjQ8vYLDgXOXo5lbRmstFVWbBRVYRDh1XY
-         qx9cPzrh4FGizZ82KBUAWmQVJ/lprSO8fhXwe5Hy/w4HNo2TAKUy2YMBuKaVYGaq3Fva
-         /z9i4wabKSlhw/a6yhqEidRcv1WdZ4NuwP6Bf3YtaeiDo9H84jfpM5eDKGB8+InM+k8C
-         N/LQXGnopdzHlOT1VdNzK+8UqSfwCAMPiS3/HufX4seyXuFczAlg0PrXgE63rMSfNdUk
-         VnU9HO/FL9qNLB9zQFk95XMR2is7qol6MQkf4gazJT8a391pVjnBuXvw4i1R6IieHYD3
-         LTyA==
-X-Forwarded-Encrypted: i=1; AJvYcCU2Kn/kpqBLSkwLpVb6cZdAOHhAJnf99+sEHLRwwleNYZrk0tRykUGcN71h52LDFp1P9ubizVLKZ15Glw3LIa067Hc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzA/m//wjgsyF5hgvI5+zoxQht6FkyYcCzQs1TwgghnxO8xGn1C
-	XwOb8EsWSGAmpE5KLzTSvKslYRQgmPrg8VtbYs6FV7c44KUoVyTNu8JUe2cbD9ginlDH3ybZD0u
-	ep5Yb5NA6/2LYxGuVy4+BtRkMkTE+wHLtu/MAAf5S9HFiz+78yNJQomKbjlmtoy3vcFVapx/Wvh
-	g/soMznXjiWhmw/sAMQ9JZV7bHQOaujn++vvSOQifwbcL96QWu
-X-Gm-Gg: ASbGncuRPdhJxYKPUZM2MEiMpTNnYEeyZE3sRR3Av7ieGs+GXbj0ax4ZZAeI1jNnjl/
-	udiWg9ah72+1A85F0r7+BMUqpuk52pr5AAh+K78BsKw8pnDLvGIdEi6OZfPQpcGlWMhHWJD1Ymw
-	UkIi9UFBr0J/92fArdsyZ07TTf8S41xotYx4Ubb9+YKelAr4ZJEFXxL19j8IuqIzHxdYdVEg==
-X-Received: by 2002:a05:651c:1107:10b0:36f:4c94:b583 with SMTP id 38308e7fff4ca-37a052cfe5emr11314141fa.16.1761772247355;
-        Wed, 29 Oct 2025 14:10:47 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHx30FcSE7653NJNEG/awVid+z8H5190kU3yQFYjauIhANLUFAhYgtBHdEMhlV44DmBq+JFhA98wGc4dv9PI4Y=
-X-Received: by 2002:a05:651c:1107:10b0:36f:4c94:b583 with SMTP id
- 38308e7fff4ca-37a052cfe5emr11314031fa.16.1761772246842; Wed, 29 Oct 2025
- 14:10:46 -0700 (PDT)
+        bh=YPTTtw8BTZD1fn+qIBXIK1gjHXor2Nf0ItE5USDfdEk=;
+        b=dJi7OIrnjQMQk1DRAKpaqfe7JVbzI5/GpzcMPThUYoVzQvA8uD/+yO/kDROhSkWh3q
+         /5XtK1abaNgmsHqr/W4a0/tXXAFRiJLSlaYY2hZUr3TF+E5etkh8nuO8SVbN7uYVeKgZ
+         sXHl4i7PjiNgFcLtezmxzvcTZYjwga7PDuKrIT4gL1xCSvP594rscZ1sPB6cff/jCgui
+         YLOuAOCifoJUv2FjA+VeUCDCmRcNel5QcdTGzj8IadLPWufs4BbQ9xQm5PP6kKC/nAPv
+         DN6A/ZJoixexaQQ5S6a9tJf4xZFAf3N8FKQ/YoXAc3hXlBb49oKuKVDVVPcf6Gulk7V1
+         JV4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVnFY8kaNVEMAx7ozpbyE0JVDGdc3Yfh15O2j6u8stoMaVKJbsSCpcoKmTIDb1xWSa4nSgkjuDkZ6T9SPBHn5mIi80=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxfrnLhJskYZeGFa+Zs4FpwU3bEHaktktRuIpIEYBPaEr5Mb37s
+	L8A+0nYzMLVwLnIDaF8FJUjigyL0NW5DVyJVPZsk6Q6p+MmaYUTt1kE2bWhTHcyLeV8pKZI93TB
+	YpoBE7QlO8eh6CpQdQfbM6uSY/gaODGRHBvHlFHuZkDcg0vPbFbmGQegKOcEqYULSoFGheTrho9
+	QUEA73P7XaAGQT2Tw5z84iWGwRC3F9x2VUYJxbtsDsC4LA5Brg
+X-Gm-Gg: ASbGncs00/ONqDU7yJ8bj2fAX4lW3fgoEKdHiXjB55Bcr2td68nqkSjdb4g86azs5XG
+	xiLgy14VsxxCflpN7rB7iXEVhAg02CcjeawTCdJX0u5OkOH/m6o/XrfEiRh63+ci+ABFgmOVPtC
+	b5MA1EoGha9CpFwjci3+OUIKsG5gn6TfbvVzD3OOV+PUhUrU2AQKMYXSzQTOPa+Jvj7Tb0cw==
+X-Received: by 2002:a05:651c:543:b0:378:dde4:7987 with SMTP id 38308e7fff4ca-37a05332c83mr15015411fa.28.1761772479002;
+        Wed, 29 Oct 2025 14:14:39 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHT1rpy4gMrS8nShcIS4YGFz4w4G6pxRpfpNR82D/AUm8kkZFUHf+ArcjvP3FnX+a05XWhgXcWN2srFJMdzGAg=
+X-Received: by 2002:a05:651c:543:b0:378:dde4:7987 with SMTP id
+ 38308e7fff4ca-37a05332c83mr15015071fa.28.1761772478459; Wed, 29 Oct 2025
+ 14:14:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -67,20 +67,19 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20251022183717.70829-1-npache@redhat.com> <20251022183717.70829-7-npache@redhat.com>
- <5f8c69c1-d07b-4957-b671-b37fccf729f1@lucifer.local> <063f8369-96c7-4345-ab28-7265ed7214cb@linux.alibaba.com>
- <9a3f2d8d-abd1-488c-8550-21cd12efff3e@lucifer.local> <e2a89e74-1533-4a83-8d0f-3f4821750e25@redhat.com>
- <64b9a6cd-d2e4-4142-bf41-abe80bf1f61a@lucifer.local> <dc002ef9-53ee-4466-b963-baadfd5162b7@redhat.com>
- <a97780ab-6256-43b7-8c0a-80ecbdc3d52d@lucifer.local> <2d8ed924-6d06-42e4-a876-381fb331f926@redhat.com>
- <3d6c013c-5592-4bb8-b438-e29787b1ab48@lucifer.local>
-In-Reply-To: <3d6c013c-5592-4bb8-b438-e29787b1ab48@lucifer.local>
+ <5f8c69c1-d07b-4957-b671-b37fccf729f1@lucifer.local> <CAA1CXcA4AcHrw18JfAoVygRgUZW3EzsN6RPZVrC=OJwSNu_9HA@mail.gmail.com>
+ <e69acbc5-0824-4b07-8744-8d5145e2580b@redhat.com> <e66b671f-c6df-48c1-8045-903631a8eb85@lucifer.local>
+ <74583699-bd9e-496c-904c-ce6a8e1b42d9@redhat.com> <3dc6b17f-a3e0-4b2c-9348-c75257b0e7f6@lucifer.local>
+ <b1f8c5e3-0849-4c04-9ee3-5a0183d3af9b@linux.alibaba.com> <2ab547d2-584b-48fe-9f43-7c14caa7ab05@lucifer.local>
+In-Reply-To: <2ab547d2-584b-48fe-9f43-7c14caa7ab05@lucifer.local>
 From: Nico Pache <npache@redhat.com>
-Date: Wed, 29 Oct 2025 15:10:19 -0600
-X-Gm-Features: AWmQ_bkZvIDA2jjMvnu1DvkEOw51bJxTkNORzbWV2_C6vMtJ7P55tMuec_GXDEA
-Message-ID: <CAA1CXcCtrgCqYg+WzJv9ZJs1FKcpRWLy3QL3T2E4_5m-CRT9zQ@mail.gmail.com>
+Date: Wed, 29 Oct 2025 15:14:11 -0600
+X-Gm-Features: AWmQ_bkBHBsKVE1DM6K6PiXjxwYzk9VLBdKL8XAwMrrsQLZy0gtm_M8PLuoLaxI
+Message-ID: <CAA1CXcA1nqt_f+zSOF66eTNWJACCE84hSQn4uNF8CjcBUZ_1oA@mail.gmail.com>
 Subject: Re: [PATCH v12 mm-new 06/15] khugepaged: introduce
  collapse_max_ptes_none helper function
 To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: David Hildenbrand <david@redhat.com>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
+Cc: Baolin Wang <baolin.wang@linux.alibaba.com>, David Hildenbrand <david@redhat.com>, 
 	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
 	linux-mm@kvack.org, linux-doc@vger.kernel.org, ziy@nvidia.com, 
 	Liam.Howlett@oracle.com, ryan.roberts@arm.com, dev.jain@arm.com, 
@@ -97,266 +96,99 @@ Cc: David Hildenbrand <david@redhat.com>, Baolin Wang <baolin.wang@linux.alibaba
 	richard.weiyang@gmail.com, lance.yang@linux.dev, vbabka@suse.cz, 
 	rppt@kernel.org, jannh@google.com, pfalcato@suse.de
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: LuhUdjmhOkkMzvTb2EflmIahsvUbPFlCwptoOZLsRF4_1761772248
+X-Mimecast-MFC-PROC-ID: TDjox_lIAkNN_eAJsSnBmC1BdtorpMvx4BgvBcSycbM_1761772479
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Oct 29, 2025 at 12:42=E2=80=AFPM Lorenzo Stoakes
+On Wed, Oct 29, 2025 at 12:56=E2=80=AFPM Lorenzo Stoakes
 <lorenzo.stoakes@oracle.com> wrote:
 >
-> On Wed, Oct 29, 2025 at 04:04:06PM +0100, David Hildenbrand wrote:
-> > > >
-> > > > No creep, because you'll always collapse.
-> > >
-> > > OK so in the 511 scenario, do we simply immediately collapse to the l=
-argest
-> > > possible _mTHP_ page size if based on adjacent none/zero page entries=
- in the
-> > > PTE, and _never_ collapse to PMD on this basis even if we do have suf=
-ficient
-> > > none/zero PTE entries to do so?
-> >
-> > Right. And if we fail to allocate a PMD, we would collapse to smaller s=
-izes,
-> > and later, once a PMD is possible, collapse to a PMD.
-> >
-> > But there is no creep, as we would have collapsed a PMD right from the =
-start
-> > either way.
->
-> Hmm, would this mean at 511 mTHP collapse _across zero entries_ would onl=
-y
-> ever collapse to PMD, except in cases where, for instance, PTE entries
-> belong to distinct VMAs and so you have to collapse to mTHP as a result?
-
-There are a few failure cases, like exceeding thresholds, or
-allocations failures, but yes your assessment is correct.
-
-At 511, the PMD collapse will be satisfied by a single PTE. If the
-collapse fails we will try both sides of the PMD (1024kb , 1024kb).
-the one that contains the non-none PTE will collapse
-
-This is where the (HPAGE_PMD_ORDER - order) comes from.
-imagine the 511 case above
-511 >> HPAGE_PMD_ORDER - 9 =3D=3D 511 >> 0 =3D 511 max ptes none
-511 >> PMD_ORDER - 8 (1024kb) =3D=3D 511 >> 1 =3D 255 max_ptes_none
-
-both of these align to the orders size minus 1.
-
->
-> Or IOW 'always collapse to the largest size you can I don't care if it
-> takes up more memory'
->
-> And at 0, we'd never collapse anything across zero entries, and only when
-> adjacent present entries can be collapse to mTHP/PMD do we do so?
-
-Yep!
-
-max_pte_none =3D0 + all mTHP sizes enabled, gives you a really good
-distribution of mTHP sizes in the systems, as zero memory will be
-wasted and the most optimal size (space wise) will eb found. At least
-for the memory allocated through khugepaged. The Defer patchset I had
-on top of this series was exactly for that purpose-- Allow khugepaged
-to determine all the THP usage in the system (other than madvise), and
-allow granular control of memory waste.
-
->
-> >
-> > >
-> > > And only collapse to PMD size if we have sufficient adjacent PTE entr=
-ies that
-> > > are populated?
-> > >
-> > > Let's really nail this down actually so we can be super clear what th=
-e issue is
-> > > here.
-> > >
-> >
-> > I hope what I wrote above made sense.
->
-> Asking some q's still, probably more a me thing :)
->
-> >
-> > >
-> > > >
-> > > > Creep only happens if you wouldn't collapse a PMD without prior mTH=
-P
-> > > > collapse, but suddenly would in the same scenario simply because yo=
-u had
-> > > > prior mTHP collapse.
-> > > >
-> > > > At least that's my understanding.
-> > >
-> > > OK, that makes sense, is the logic (this may be part of the bit I hav=
-en't
-> > > reviewed yet tbh) then that for khugepaged mTHP we have the system wh=
-ere we
-> > > always require prior mTHP collapse _first_?
-> >
-> > So I would describe creep as
-> >
-> > "we would not collapse a PMD THP because max_ptes_none is violated, but
-> > because we collapsed smaller mTHP THPs before, we essentially suddenly =
-have
-> > more PTEs that are not none-or-zero, making us suddenly collapse a PMD =
-THP
-> > at the same place".
->
-> Yeah that makes sense.
->
-> >
-> > Assume the following: max_ptes_none =3D 256
-> >
-> > This means we would only collapse if at most half (256/512) of the PTEs=
- are
-> > none-or-zero.
-> >
-> > But imagine the (simplified) PTE layout with PMD =3D 8 entries to simpl=
-ify:
-> >
-> > [ P Z P Z P Z Z Z ]
-> >
-> > 3 Present vs. 5 Zero -> do not collapse a PMD (8)
->
-> OK I'm thinking this is more about /ratio/ than anything else.
->
-> PMD - <=3D50% - ok 5/8 =3D 62.5% no collapse.
-
-                < 50%*.
-
-At 50% it's 256 which is actually the worst case scenario. But I read
-further, and it seems like you grasped the issue.
-
->
-> >
-> > But sssume we collapse smaller mTHP (2 entries) first
-> >
-> > [ P P P P P P Z Z ]
->
-> ...512 KB mTHP (2 entries) - <=3D 50% means we can do...
->
-> >
-> > We collapsed 3x "P Z" into "P P" because the ratio allowed for it.
->
-> Yes so that's:
->
-> [ P Z P Z P Z Z Z ]
->
-> ->
->
-> [ P P P P P P Z Z ]
->
-> Right?
->
-> >
-> > Suddenly we have
-> >
-> > 6 Present vs 2 Zero and we collapse a PMD (8)
-> >
-> > [ P P P P P P P P ]
-> >
-> > That's the "creep" problem.
->
-> I guess we try PMD collapse first then mTHP, but the worry is another pas=
-s
-> will collapse to PMD right?
->
->
-> Whereas < 50% ratio means we never end up 'propagating' or 'creeping' lik=
+> On Wed, Oct 29, 2025 at 10:09:43AM +0800, Baolin Wang wrote:
+> > I finally finished reading through the discussions across multiple
+> > threads:), and it looks like we've reached a preliminary consensus (mak=
 e
-> this because each collapse never provides enough reduction in zero entrie=
-s
-> to allow for higher order collapse.
+> > 0/511 work). Great and thanks!
 >
-> Hence the idea of capping at 255
+> Yes we're getting there :) it's a sincere effort to try to find a way to =
+move
+> forwards.
+>
+> >
+> > IIUC, the strategy is, configuring it to 511 means always enabling mTHP
+> > collapse, configuring it to 0 means collapsing mTHP only if all PTEs ar=
+e
+> > non-none/zero, and for other values, we issue a warning and prohibit mT=
+HP
+> > collapse (avoid Lorenzo's concern about silently changing max_ptes_none=
+).
+> > Then the implementation for collapse_max_ptes_none() should be as follo=
+ws:
+> >
+> > static int collapse_max_ptes_none(unsigned int order, bool full_scan)
+> > {
+> >         /* ignore max_ptes_none limits */
+> >         if (full_scan)
+> >                 return HPAGE_PMD_NR - 1;
+> >
+> >         if (order =3D=3D HPAGE_PMD_ORDER)
+> >                 return khugepaged_max_ptes_none;
+> >
+> >         /*
+> >          * To prevent creeping towards larger order collapses for mTHP
+> > collapse,
+> >          * we restrict khugepaged_max_ptes_none to only 511 or 0,
+> > simplifying the
+> >          * logic. This means:
+> >          * max_ptes_none =3D=3D 511 -> collapse mTHP always
+> >          * max_ptes_none =3D=3D 0 -> collapse mTHP only if we all PTEs =
+are
+> > non-none/zero
+> >          */
+> >         if (!khugepaged_max_ptes_none || khugepaged_max_ptes_none =3D=
+=3D
+> > HPAGE_PMD_NR - 1)
+> >                 return khugepaged_max_ptes_none >> (HPAGE_PMD_ORDER -
+> > order);
+> >
+> >         pr_warn_once("mTHP collapse only supports khugepaged_max_ptes_n=
+one
+> > configured as 0 or %d\n", HPAGE_PMD_NR - 1);
+> >         return -EINVAL;
+> > }
+> >
+> > So what do you think?
+>
+> Yeah I think something like this.
+>
+> Though I'd implement it more explicitly like:
+>
+>         /* Zero/non-present collapse disabled. */
+>         if (!khugepaged_max_ptes_none)
+>            return 0;
+>
+>         /* Collapse the maximum number of zero/non-present PTEs. */
+>         if (khugepaged_max_ptes_none =3D=3D HPAGE_PMD_NR - 1)
+>                 return (1 << order) - 1;
+>
+> Then we can do away with this confusing (HPAGE_PMD_ORDER - order) stuff.
 
-Yep! We've discussed other solutions, like tracking collapsed pages,
-or the solutions brought up by David. But this seemed like the most
-logical to me, as it keeps some of the tunability. I now understand
-the concern wasnt so much the capping, but rather the silent nature of
-it, and the uAPI expectations surrounding enforcing such a limit (for
-both past and future behavioral expectations).
+This looks cleaner/more explicit given the limits we are enforcing!
+
+I'll go for something like that.
 
 >
-> >
-> > >
-> > > >
-> > > > >
-> > > > > > max_ptes_none =3D=3D 0 -> collapse mTHP only if all non-none/ze=
-ro
-> > > > > >
-> > > > > > And for the intermediate values
-> > > > > >
-> > > > > > (1) pr_warn() when mTHPs are enabled, stating that mTHP collaps=
-e is not
-> > > > > > supported yet with other values
-> > > > >
-> > > > > It feels a bit much to issue a kernel warning every time somebody=
- twiddles that
-> > > > > value, and it's kind of against user expectation a bit.
-> > > >
-> > > > pr_warn_once() is what I meant.
-> > >
-> > > Right, but even then it feels a bit extreme, warnings are pretty seri=
-ous
-> > > things. Then again there's precedent for this, and it may be the leas=
-t worse
-> > > solution.
-> > >
-> > > I just picture a cloud provider turning this on with mTHP then gettin=
-g their
-> > > monitoring team reporting some urgent communication about warnings in=
- dmesg :)
-> >
-> > I mean, one could make the states mutually, maybe?
-> >
-> > Disallow enabling mTHP with max_ptes_none set to unsupported values and=
- the
-> > other way around.
-> >
-> > That would probably be cleanest, although the implementation might get =
-a bit
-> > more involved (but it's solvable).
-> >
-> > But the concern could be that there are configs that could suddenly bre=
-ak:
-> > someone that set max_ptes_none and enabled mTHP.
->
-> Yeah we could always return an error on setting to an unsupported value.
->
-> I mean pr_warn() is nasty but maybe necessary.
->
-> >
-> >
-> > I'll note that we could also consider only supporting "max_ptes_none =
-=3D 511"
-> > (default) to start with.
-> >
-> > The nice thing about that value is that it us fully supported with the
-> > underused shrinker, because max_ptes_none=3D511 -> never shrink.
->
-> It feels like =3D 0 would be useful though?
+> A quick check in google sheets suggests my maths is ok here but do correc=
+t me if
+> I'm wrong :)
 
-I personally think the default of 511 is wrong and should be on the
-lower end of the scale. The exception being thp=3Dalways, where I
-believe the kernel should treat it as 511.
+LGTM!
 
-But the second part of that would also violate the users max_ptes_none
-setting, so it's probably much harder in practice, and also not really
-part of this series, just my opinion.
+Thanks for all the reviews! I'm glad we were able to find a solution :)
 
-Cheers.
 -- Nico
 
 >
-> >
-> > --
-> > Cheers
-> >
-> > David / dhildenb
-> >
->
-> Thanks, Lorenzo
+> Cheers, Lorenzo
 >
 
