@@ -1,120 +1,117 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02D00340293
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 30 Oct 2025 09:10:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D25052F12A0;
+	Thu, 30 Oct 2025 09:25:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761815455; cv=none; b=ZUqP7y3sZeuPtCbVvGRZIEbanz5LkLLP3VSUntxzJlFGOeEnys/KRndjyTfh1/QuAfN7Qvv/vJlvLX8BOwDn9QWuFMTsWshNM18b5ZuVzhByNkbuThokJIclD3shUT5Tvgkq9sPlyT34ugDRjXCx6jkvBv0sWQtodAQvI08Kujw=
+	t=1761816312; cv=none; b=Ttdo6yOPmzciCp+c6iBLkCsv0CFT/WcIWGrs3pNIg7nD7E8pF01yIlg8ibyGJzo0pzqTNk76qtHLFNRZsFiyoqQ02/0BAA2uVjuy4EgNvsmeFtah5JWcssY428e1RVjb1yqHbYksOqeWxKh8D7SA7WRhGdxD8dzLoetV8lVUTbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761815455; c=relaxed/simple;
-	bh=troghh+EtnIk9h397iUL1P5hBgqhBFYUDWJNFG20LX4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=N4/RHOeYDcrrl2Tqp2EVWqqTbI/tF980lyUe/76U0zCpDV+gzkQ0KcNI14294ypTqd4UZPOtBDlSeOye/thNzt+y1x+wc/4xKio6HdldqtqCh+3VLqO+lVDng0CB9a/BxMo7O9XQDVaLPVpNiSsk6mBnf0r4nBte/KYBMLzr46o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aJgg06X2; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aJgg06X2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1761815451;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oMeWelBTpKLjORlzb8BUx/v9zk9wij4ZcdP7B2QI6to=;
-	b=aJgg06X28JcS+mdgjINFv2nq80B/Iv6fGuUzXJwgJIcREoCkMCMpPmHAu5e2kmAo7X8uNl
-	sEUb8OICZ6fUbQwvL+BgGta72iUVRghnZto7MfTtqNCMtXX4n5TJjiBKhXtlpmIFSeImlF
-	g24qVi/L/jLG/pzFXl1qkTslCDIOeCw=
-Received: from mail-lf1-f69.google.com (mail-lf1-f69.google.com
- [209.85.167.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-661-04f2MteqNGK15c2UGehMHA-1; Thu, 30 Oct 2025 05:10:49 -0400
-X-MC-Unique: 04f2MteqNGK15c2UGehMHA-1
-X-Mimecast-MFC-AGG-ID: 04f2MteqNGK15c2UGehMHA_1761815448
-Received: by mail-lf1-f69.google.com with SMTP id 2adb3069b0e04-59307b95006so406768e87.2
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 30 Oct 2025 02:10:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761815448; x=1762420248;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oMeWelBTpKLjORlzb8BUx/v9zk9wij4ZcdP7B2QI6to=;
-        b=siCJu06jJzFub+tlRJDzYNlMu5JPPTtjtzs6tbKjFvfxiufFkVe/E2MfkXykurkRKc
-         /eupUeXkZ00rW1JEWoQkjHXmURlkPLZnqq73gKFXhsXxwv4dbSAf/26Gd8+gucN7ZCxi
-         WpX0jS3Ui89gFL8KMSGVkmJH/ekrrERkj50eUZNQ6ZU7agQyxLwcvICqGz2NPw/31XM5
-         55DNxF/0DhdOsYdjX3dujf3GS4n6hsNMReA8oxMQ2VLYzaUHCkWptCjUpoWkTpSopEBT
-         ZB40DVzaY3IiUIoSuIHGLz7SZsktwVVIQ8WM/FTkFpcEl80eh9BK0ehcrpPyaX6RcYmJ
-         /9+g==
-X-Forwarded-Encrypted: i=1; AJvYcCU0PgYgh4GoK+i4P1Yn14EwjNBrDwUIvzVhoYtlFaiAij2hfXg1/7U/LstbLDtqiTZmFmMG8qQOSPp04F8BgHxJFY4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwkeLrf0SXOToREP///rc2sAf2M8gbla44Xs8xtZgd51hAxE+3f
-	FXZwFUU964NF5r/UHLBkqA1su0EZ5xgHfBIOm/dsOcXsVygUSghiDlnCwqcXUWf8O4Kxm5XFIPy
-	++JXzxmYIyz/1uGYz0NpJwW98qWFdtPXZRDOxZTzxnJlq1wdHZiIAgLCYCZmiVVsgkvQocPPKXY
-	zfWtL+M049dljWrwFinm5/CDHLHrigpP2TlvLV2ILIa7eEBXMd
-X-Gm-Gg: ASbGncsN3Y6oMyefjbnWaPFwbSXyX10Hgfz2hQNsLvV0V3l8ayHi5dcBTiUIF+hrlw3
-	RFPxyzkrRrleLw2l3qELPqykV5LhyMga8Bnup39fGZRZP742WiYlM9KQqXlMQjNODmaHq7567Mx
-	A2x0esjVD5iQ0JFzkGRvKK1jKsUhbHZsHj8ywSUJqXJi2jMfwB0+ct1g==
-X-Received: by 2002:a05:6512:2391:b0:591:d7e1:7859 with SMTP id 2adb3069b0e04-59416ef3b0dmr833630e87.56.1761815448060;
-        Thu, 30 Oct 2025 02:10:48 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGP/kQzE0RNM76fJcR4JF1n9agyalrVPw4P+d/1DyMASGn27+BCcr/ZMHo4k0Nu5jckBVa+UTheLuwKQaCsORU=
-X-Received: by 2002:a05:6512:2391:b0:591:d7e1:7859 with SMTP id
- 2adb3069b0e04-59416ef3b0dmr833623e87.56.1761815447591; Thu, 30 Oct 2025
- 02:10:47 -0700 (PDT)
+	s=arc-20240116; t=1761816312; c=relaxed/simple;
+	bh=DpFpHz03fndgc3c3a2wxOlEQygIJTifzb1pJ8dcuoEI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OskIxO2Gf2q0qsSQ6QLL74s0R6oCk60b6lGN2IeKKr0rk1jRYPTIDloQ6TisBdlJ1SXmkdbG64d7cDxRn7LiRQOZGzqXkyhGXA0ZFEfGJF5sX6CzV2+Nl6cUIUVXM/Je4dD8RznvKG9sCP/zhe2knzl3Kkjf7QSaCMSXfDCD6B4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf14.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay02.hostedemail.com (Postfix) with ESMTP id 6014213C065;
+	Thu, 30 Oct 2025 09:25:08 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf14.hostedemail.com (Postfix) with ESMTPA id 5D1D62D;
+	Thu, 30 Oct 2025 09:25:06 +0000 (UTC)
+Date: Thu, 30 Oct 2025 05:25:48 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 0/2] tracing: Add an option to show symbols in
+ _text+offset for function profiler
+Message-ID: <20251030052548.31130e33@gandalf.local.home>
+In-Reply-To: <176179500583.960652.5730113001091388258.stgit@devnote2>
+References: <176179500583.960652.5730113001091388258.stgit@devnote2>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251002170846.437888-1-costa.shul@redhat.com>
-In-Reply-To: <20251002170846.437888-1-costa.shul@redhat.com>
-From: Tomas Glozar <tglozar@redhat.com>
-Date: Thu, 30 Oct 2025 10:10:36 +0100
-X-Gm-Features: AWmQ_bmQbxEjDPYY78CtDBSW88IHSLgudrACU9vS2dpfYk6ZJl9LPEG1O4-mr68
-Message-ID: <CAP4=nvTZP+=_hALnW2VB35KWwu5TNJ9m4FS8pLfk3hxFLTTtGg@mail.gmail.com>
-Subject: Re: [PATCH v1] tools/rtla: Fix unassigned nr_cpus
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Costa Shulyupin <costa.shul@redhat.com>, Crystal Wood <crwood@redhat.com>, 
-	John Kacur <jkacur@redhat.com>, linux-trace-kernel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: FZjhZkia7gHNF4d6GVwpWlLejb6ESahcgXFA4bsEgXY_1761815448
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: hew37fn8857yrgqumogco8a64jydhi4p
+X-Rspamd-Server: rspamout07
+X-Rspamd-Queue-Id: 5D1D62D
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+XngP3+g5kU6Rih6QlNW7S74dhrSuOaYs=
+X-HE-Tag: 1761816306-243772
+X-HE-Meta: U2FsdGVkX18qE+Zdxv77pGAyBq4Y81FS+xkgunEdYQ5p1sEoqtM67K36eNvyLryb8eE8v3+Oo13xGcUL1xObQsqCF58zKZRXkjNK2Ispz6Nv2Azbjj877sxIxG8e2GD9++UsM6xyGxAq8Zd1s/1puqNTs6PAUo19UXrl69m5cpMenJ9ZSeabKLewqsjzr3898Vs1hj6MTZemvFZ92jCnlX9Er3PlkX+JaY8CfvYtMb9uFChJ8bY9/zeDxVOeUNHA4ZVVdKuVg8BOI2UQNCMMqSHyKGdmxA23HVQ/+dbSNBMgDqvtJ+Jtn8ldcPjcJtHXrLXMVAbC/bOIgStMfkjkeEgzSKwLdWpx
 
-Hi Steven,
+On Thu, 30 Oct 2025 12:30:05 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-=C4=8Dt 2. 10. 2025 v 19:09 odes=C3=ADlatel Costa Shulyupin
-<costa.shul@redhat.com> napsal:
->
-> In recently introduced timerlat_free(),
-> the variable 'nr_cpus' is not assigned.
->
-> Assign it with sysconf(_SC_NPROCESSORS_CONF) as done elsewhere.
-> Remove the culprit: -Wno-maybe-uninitialized. The rest of the
-> code is clean.
->
-> Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
-> ---
->  tools/tracing/rtla/Makefile.rtla  | 2 +-
->  tools/tracing/rtla/src/timerlat.c | 3 ++-
->  2 files changed, 3 insertions(+), 2 deletions(-)
->
+>  kernel/trace/blktrace.c              |    6 +
+>  kernel/trace/ftrace.c                |   26 ++++++
+>  kernel/trace/trace.c                 |  154 +++++++++++++++++-----------------
+>  kernel/trace/trace.h                 |   40 +++++----
+>  kernel/trace/trace_events.c          |    4 -
+>  kernel/trace/trace_events_synth.c    |    2 
+>  kernel/trace/trace_fprobe.c          |    6 +
+>  kernel/trace/trace_functions_graph.c |   18 ++--
+>  kernel/trace/trace_irqsoff.c         |   30 +++----
+>  kernel/trace/trace_kdb.c             |    2 
+>  kernel/trace/trace_kprobe.c          |    6 +
+>  kernel/trace/trace_output.c          |   18 ++--
+>  kernel/trace/trace_sched_wakeup.c    |   24 +++--
+>  kernel/trace/trace_syscalls.c        |    4 -
+>  kernel/trace/trace_wprobe.c          |    2 
 
-This is another fix of a bug introduced in the 6.18-v1 RTLA code
-consolidation [1], this time affecting the resetting of idle states
-set through --deepest-idle-state. Could you please also add it to your
-RTLA fix queue?
+I didn't realize this affected your branch too. Which means I can't apply
+this to any branch.
 
-Also, this should have:
+Also, could you make a helper function...
 
-Fixes: 2f3172f9dd58 ("tools/rtla: Consolidate code between
-osnoise/timerlat and hist/top")
++++ b/kernel/trace/trace_wprobe.c
+@@ -260,7 +260,7 @@ print_wprobe_event(struct trace_iterator *iter, int flags,
+ 
+        trace_seq_printf(s, "%s: (", trace_probe_name(tp));
+ 
+-       if (!seq_print_ip_sym(s, field->ip, flags | TRACE_ITER_SYM_OFFSET))
++       if (!seq_print_ip_sym(s, field->ip, flags | TRACE_ITER(SYM_OFFSET)))
+                goto out;
+ 
+        trace_seq_putc(s, ')');
 
-[1] https://lore.kernel.org/linux-trace-kernel/20250907022325.243930-1-crwo=
-od@redhat.com/T/
+that both fprobe and wprobe use? And then you don't need to have this open
+coded everywhere.
 
-Thanks,
-Tomas
+That is, add this patch:
 
+diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
+index 591adc9bb1e9..bd26004cc320 100644
+--- a/kernel/trace/trace_probe.h
++++ b/kernel/trace/trace_probe.h
+@@ -598,3 +598,9 @@ struct uprobe_dispatch_data {
+ 	struct trace_uprobe	*tu;
+ 	unsigned long		bp_addr;
+ };
++
++static inline int probe_print_ip_sym(struct trace_seq *s, unsigned long ip,
++				     int flags)
++{
++	retun seq_print_ip_sym(s, field->ip, flags | TRACE_ITER_SYM_OFFSET);
++}
+
+And use that instead.
+
+So, new plan. Base this patch on top of v6.18-rc3 and send that.
+
+Then what we can do is merge this branch into your branch and my branch and
+add on top of it.
+
+Note, you should have rebased your probe branch on top of one of the
+v6.18-rc releases. It's still based on top of 6.17-rc6, which can cause
+other issues.
+
+
+-- Steve
