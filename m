@@ -1,97 +1,111 @@
 Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7670D2E6CDA;
-	Thu, 30 Oct 2025 16:44:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A334A1548C;
+	Thu, 30 Oct 2025 18:04:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761842695; cv=fail; b=XCAHe0sZHAN/Gf6SnYov4C/UgpNj7GfmUCiXXo8cDK62/2+xIsXd+k4i3ZudPJW+ysQ50+P5adhtPDGW9Z9urxbKgSG4b7N4zMTsXoJBY/GP6/8jHi+wk2Eteq/dB9gV36VzUjpxVE144dQrKhQTOXOceaYsjmYO5/4OWoJRt3E=
+	t=1761847491; cv=fail; b=nSFeoGyyO63NhsXtZk0OZ/V8nFww3FIXPexxtfZVdR4DUV9HHZR+k7nb2vatJCpvQAYUmcequ/x5Jc6hdKRBrWx1M30FxTNHirU768eBZmh7crIHTOwxPYlFGVHGOR+C/92mrLVRyZauKZNHt+PPF7g8s7bx3eFpJoyW+rBlGLA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761842695; c=relaxed/simple;
-	bh=fd9p+LZvkb5bf6cGrJTRMr/Ot5QDN86u0iMBhVkl4u0=;
+	s=arc-20240116; t=1761847491; c=relaxed/simple;
+	bh=1j8tdSSLKFRPeMdHMJEkf6NqSpZfXnilNTM4t45I7gc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=YYUSjBKyIgU3qVVR3bgXLq9XMkkwV4h4OQDS0t4yb1BbHQrYDNtnObho9RrT+N2rnJdNGcJlUXvaM0Mu2k4heWO4ENwMwwwE8vSncjTORHM5N28rBIS8RnaWzxCFSzgjEebwyMR6FUKcHpD3F3DxgRMnWX2M+5HbSC3IJqgBQ+4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=X5vONgJ3; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=EXtA9u+3; arc=fail smtp.client-ip=205.220.177.32
+	 Content-Disposition:In-Reply-To:MIME-Version; b=nEv2kTaE66OTsjpILuvxDStDEV1xvY1N+8JlESJEevz2ZmkjGxjgM4O9/8EGvqKJm77XauFnpPZf1GhO7WUrerGXXRpi6TYr7IJs29gBnfmjxXFFILfgpZnGtBCTbXHOkbkQjkh12DAt2IBgCKsiQDZxYcl3rdmG8zhA8LkBnBQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=OI3agrfF; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=q4AgMjr0; arc=fail smtp.client-ip=205.220.177.32
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="X5vONgJ3";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="EXtA9u+3"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="OI3agrfF";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="q4AgMjr0"
 Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59UFsXMA002052;
-	Thu, 30 Oct 2025 16:44:06 GMT
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59UGuHPI007360;
+	Thu, 30 Oct 2025 18:03:56 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2025-04-25; bh=fd9p+LZvkb5bf6cGrJ
-	TRMr/Ot5QDN86u0iMBhVkl4u0=; b=X5vONgJ3n1YKARLYW8KC8DtPKwOUZjE79W
-	EEMC6hmuBJ6gMhBL/bkpVReko/JxuExClX0XRbFcMcIiKGAPAl3gtnhbuzD9NJ0e
-	UPuZX27Hic2N2TkxHcB/3MeAstjzXK+75+x0X+XJKHdVZ3vikY8Udf5p7VFymqr2
-	fRsUkwhpOI+nZe4oTvOq4N1Jqp8y9DKFcokqnRpn1fhQARgRfqyIAMLsMJY6bB31
-	XpyDkPF2ByC5LUkLUm/JpHidVPKfoNboRgDDXU3iA5lowopLqiF46/5dOPA2K4EN
-	FTTyhmf434YK70XsJyns4ZLHQNE8gTjPyaz9jr5aY/MuyvQJ8T/Q==
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4a4b2qg4w3-1
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2025-04-25; bh=bx5jETt2cNe8qJfaNnd5JBE2Yl+wOnbhqdRVzO1iu78=; b=
+	OI3agrfF2f/RhnKc3VDFx/xd2I6p7uUIIifz+zCDqIe3/XUINSqVkP7evaZr1UXh
+	jo+qRVpS9R1KdOvJcDzGKf1SN1sjhi7UpFkyx+Ye5KucuEQzEn9O7b9HrAcRs++2
+	DJplwbIlGnawU2sjI9gyMA16xJ+SO9MwG101H9hG0TJpZpbVWZtIFkrLmSlgMXv4
+	7eB+WUMq+x74QJ2baCzWDsPn7q8l6BTqJR6RGNSmPkgsV1GGl9P31FIC/cBpW1ZS
+	QiK9kamzOGke0y0iTAPvsyc1dh+TjOBKKcxNzaH91HA6YBSWpO3G6MzYTQ363SbM
+	PQxw2u7JVi/T7NfTlQ4VXA==
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4a4b2qgbqd-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 30 Oct 2025 16:44:06 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 59UGLmtu034068;
-	Thu, 30 Oct 2025 16:44:05 GMT
-Received: from bl0pr03cu003.outbound.protection.outlook.com (mail-eastusazon11012002.outbound.protection.outlook.com [52.101.53.2])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 4a34edm0b3-1
+	Thu, 30 Oct 2025 18:03:55 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 59UGPWdg007872;
+	Thu, 30 Oct 2025 18:03:50 GMT
+Received: from cy7pr03cu001.outbound.protection.outlook.com (mail-westcentralusazon11010061.outbound.protection.outlook.com [40.93.198.61])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 4a359vn399-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 30 Oct 2025 16:44:05 +0000
+	Thu, 30 Oct 2025 18:03:50 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=IoH46PaeECQEqwbfHmNiKG6pFolb4ClW8tH/IYj/D2INz6ldvW5ZdQ1C7+zjIepeUAgeRCnFdKZm95lnYu6foOX9xvco9xrIUzUbx619jjkyiF3g4w4m+6N/+obHuUguy9WSg9xA9rbbxH17n5xXCoO/WIokNXnpUfJgjJnww3V28K6BX6rzOT6PWJoGvCbgyVU7z1arhjNANfNUalt+bLGA8GaGvNEE7g5pk8G7ecO5fOJ+MwerxxuLl+iJt5nHg2+imuldege/6i/FdKf3BptPwmQHGIC8PlnoiZt21wlZZrDJArVas2NSg28UUTr/Nj7YodX8ZfoKRCIJbxosiQ==
+ b=qwtDRh6hU+HNBuxGpSHzOS0pal11cJVjngBb3TgfTRPyCtgW43+sXIufRP9uawm4yfi1ah0x/TU9eV9Me4Uee0nRK+au7K/+RsdStPZfT6eYDZWJsbwQ7u9651XwuelvMVSJul1boQOdNsgVj374Qk084wndgonhulvjQTkfo/ILdKEvmnZNJMLwljFZzWalpW/iWkx6e9PRrFJszdGFeod9c5Ox+LjsFFEuJSu7OnkCxyOavLwW/MYtAetCL2T2GMQEICwj3g1N3ylwqW4nBqZJfZ3MlqFtdIQd1No9ADQgTxWVergGJWl5Iz/ypj+4klFO4ung39h7L50QPdUkIg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=fd9p+LZvkb5bf6cGrJTRMr/Ot5QDN86u0iMBhVkl4u0=;
- b=PDtllTZ3ZBPLxP32HR9zM58rtdBMXJ1QXAfLzGxSwWkMefGAWkwJ/omR4+JePNuKF8onNsfHSAqvREGll98E28aI3sB1yEt99dywXDM6KsJan9CeRQRIuAGstxTzsPG7MaqVMVTa7qGt7kOwmSS4nSDRWqKWFdPL1ZF64Xjlcx8FF//Ik4s4TG09TDw4CcG8xttW9aHwYdVrRr4FGWM+g8NjC7hX6CdZ7Z9C0hOGX/U6t+ESkDePrfuYPcmSfvHCWk9zYliGcQAJimhV3AWWjPoxHfuMKiQsQBP137bUH20I5W8CyqAryYe0Q47vL4ys2BBXW4WeMa0vhsjFYEUcxA==
+ bh=bx5jETt2cNe8qJfaNnd5JBE2Yl+wOnbhqdRVzO1iu78=;
+ b=I+MhdrqLlE8nDVQzAwmkET1ENFPw6eauqbc87RNpPiQiehVB+rDkhVAOy5QngbmvWnxdHlDOTBu1VSWmK0LcJvh7s83EG2V0etfP+uI4lcTBpTGbVjpYYbD85nmE+pXGSmccPqRmo4ODo5H+gQi/pd1Z+DVfCrON2ZsWwKKFtyW7aGnwzJB+c5+qOvq7zeHW9n2r2skH9ZO+Wp/T0Mx6BeYkfsu8Wrt18RTrgGDuF2uuNyqS0s1BtMQmHQtIgJ6KqArZK+o0K/YMYW2CBFZHYRY3adiM/6BSkJyyEVE6qQRpFg87QVO1V1Ry1SthTwJaoLunxsHcOaDnu664NKzLhQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fd9p+LZvkb5bf6cGrJTRMr/Ot5QDN86u0iMBhVkl4u0=;
- b=EXtA9u+3XLYnvDzum4oN4EZztQ4qU3aWAQDus4L93Hcg0i0AtQosnmAFJq4ERfKSIiiWg5dQm5oWEBnqV+P8yVUUbG5rLb9vFrAhr0dpQfKZffKN9TZGlQLuNbzpx2OgaTyUzGhhUYNI+/oFc9XSVt5l3qUpBV01x8uN4VH/CLM=
+ bh=bx5jETt2cNe8qJfaNnd5JBE2Yl+wOnbhqdRVzO1iu78=;
+ b=q4AgMjr0RxI7Xd5y2H9lawEX+jJywjkwli6HDEJ1+B6KAVuUhlnhmjfMZhvcL4BgLjgxUgEfDTO85WM2AFz2oWa/v4KLDgwySyktBg+l6i7XBTNojkGNlKLJAjK2+MCbZnmNhmqT3liztBlHm7S6iLl8xjWC+AziGP3HNu/mM+8=
 Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
- by IA3PR10MB8516.namprd10.prod.outlook.com (2603:10b6:208:57d::12) with
+ by LV8PR10MB7941.namprd10.prod.outlook.com (2603:10b6:408:1fc::19) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9275.14; Thu, 30 Oct
- 2025 16:44:00 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9253.19; Thu, 30 Oct
+ 2025 18:03:44 +0000
 Received: from DM4PR10MB8218.namprd10.prod.outlook.com
  ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
  ([fe80::2650:55cf:2816:5f2%2]) with mapi id 15.20.9253.018; Thu, 30 Oct 2025
- 16:43:59 +0000
-Date: Thu, 30 Oct 2025 16:43:57 +0000
+ 18:03:44 +0000
+Date: Thu, 30 Oct 2025 18:03:41 +0000
 From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-To: Pedro Falcato <pfalcato@suse.de>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-        Jonathan Corbet <corbet@lwn.net>, David Hildenbrand <david@redhat.com>,
-        "Liam R . Howlett" <Liam.Howlett@oracle.com>,
-        Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
-        Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Jann Horn <jannh@google.com>, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, Andrei Vagin <avagin@gmail.com>
-Subject: Re: [PATCH 1/3] mm: introduce VM_MAYBE_GUARD and make visible for
- guard regions
-Message-ID: <053f3a04-9195-4f8d-8959-42e0c3ba077b@lucifer.local>
-References: <cover.1761756437.git.lorenzo.stoakes@oracle.com>
- <7de40603015dee82970f5d37332a6d5af7532063.1761756437.git.lorenzo.stoakes@oracle.com>
- <xnsn5rfqigbm5ryjtbf2rtfotneiwygzesvyfdxiqrzlyzljdr@tmbht4ggnjcv>
- <61ae955e-310d-488e-b350-59bb809f06e1@lucifer.local>
- <c736tssdw3z57kamh6eqc23gr575q375n2o2nnszih64afnaf7@zwbqremsbhwf>
-Content-Type: text/plain; charset=us-ascii
+To: Nico Pache <npache@redhat.com>
+Cc: David Hildenbrand <david@redhat.com>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-doc@vger.kernel.org, ziy@nvidia.com,
+        Liam.Howlett@oracle.com, ryan.roberts@arm.com, dev.jain@arm.com,
+        corbet@lwn.net, rostedt@goodmis.org, mhiramat@kernel.org,
+        mathieu.desnoyers@efficios.com, akpm@linux-foundation.org,
+        baohua@kernel.org, willy@infradead.org, peterx@redhat.com,
+        wangkefeng.wang@huawei.com, usamaarif642@gmail.com,
+        sunnanyong@huawei.com, vishal.moola@gmail.com,
+        thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com,
+        kas@kernel.org, aarcange@redhat.com, raquini@redhat.com,
+        anshuman.khandual@arm.com, catalin.marinas@arm.com, tiwai@suse.de,
+        will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz,
+        cl@gentwo.org, jglisse@google.com, surenb@google.com,
+        zokeefe@google.com, hannes@cmpxchg.org, rientjes@google.com,
+        mhocko@suse.com, rdunlap@infradead.org, hughd@google.com,
+        richard.weiyang@gmail.com, lance.yang@linux.dev, vbabka@suse.cz,
+        rppt@kernel.org, jannh@google.com, pfalcato@suse.de
+Subject: Re: [PATCH v12 mm-new 06/15] khugepaged: introduce
+ collapse_max_ptes_none helper function
+Message-ID: <b1115232-01a8-4799-9ea0-2d6f8fd95a62@lucifer.local>
+References: <5f8c69c1-d07b-4957-b671-b37fccf729f1@lucifer.local>
+ <063f8369-96c7-4345-ab28-7265ed7214cb@linux.alibaba.com>
+ <9a3f2d8d-abd1-488c-8550-21cd12efff3e@lucifer.local>
+ <e2a89e74-1533-4a83-8d0f-3f4821750e25@redhat.com>
+ <64b9a6cd-d2e4-4142-bf41-abe80bf1f61a@lucifer.local>
+ <dc002ef9-53ee-4466-b963-baadfd5162b7@redhat.com>
+ <a97780ab-6256-43b7-8c0a-80ecbdc3d52d@lucifer.local>
+ <2d8ed924-6d06-42e4-a876-381fb331f926@redhat.com>
+ <3d6c013c-5592-4bb8-b438-e29787b1ab48@lucifer.local>
+ <CAA1CXcCtrgCqYg+WzJv9ZJs1FKcpRWLy3QL3T2E4_5m-CRT9zQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <c736tssdw3z57kamh6eqc23gr575q375n2o2nnszih64afnaf7@zwbqremsbhwf>
-X-ClientProxiedBy: LO4P123CA0473.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:1a8::10) To DM4PR10MB8218.namprd10.prod.outlook.com
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAA1CXcCtrgCqYg+WzJv9ZJs1FKcpRWLy3QL3T2E4_5m-CRT9zQ@mail.gmail.com>
+X-ClientProxiedBy: LO4P123CA0459.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:1aa::14) To DM4PR10MB8218.namprd10.prod.outlook.com
  (2603:10b6:8:1cc::16)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -100,196 +114,386 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|IA3PR10MB8516:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0c7e2ee4-492d-43b6-fc41-08de17d38699
+X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|LV8PR10MB7941:EE_
+X-MS-Office365-Filtering-Correlation-Id: bc7ff69c-6d6b-4f1d-9c40-08de17deaa2d
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?iibl83KRTuEYSrnIrMsmuVssYNH7CYpTvUw8hB6lRXignkjmH7S4RqCwYjex?=
- =?us-ascii?Q?b+YI4ymnoPp9wlttCLGaZUCqqb8rnOk1kQfYpXRloSxrB8Jrnjm+YvA0+zw8?=
- =?us-ascii?Q?jdELUUmNUqkLrByw6uHpJrkc4dwQLPuYzdfUl0Cm4SOcKAkWOQRWiJsqIrjQ?=
- =?us-ascii?Q?Y7GXUg/yOwfR4Cgf89d47tHN3nrBKiDKPzsZ4j4S8w8p7A6lD2KXtlsj6X/i?=
- =?us-ascii?Q?UdlpqG/w39JMVVqP9b7RNb+pt7KDiqeSXm2rR5eyXwW/Xkj8ZuBHjd2IRjhz?=
- =?us-ascii?Q?cmWnu6KnP022OShtzLbYm86Aq94KgjEQ0rllXR+qFusNtSRa1Gcd+wy4V2m9?=
- =?us-ascii?Q?9ghBxxxsdeAWPKP4QhLqvlZwf9d+dFOZxnmvk5v/SPu4LuAGmAKDFrKhsqdy?=
- =?us-ascii?Q?DAtN1lb0V1ndSQFm75WRpAc0zR/aDAzF+/kx9Wy2BtfPW62H/TmPOBGRDjLH?=
- =?us-ascii?Q?S1P/VWLfPuVKBPBlNy/BDOrmjmzwUaaSx/VDsP+72hbLWdk3KCNZVYurSvpu?=
- =?us-ascii?Q?r4xxzWs6uiWoz/VC0rewz/5snPIZKJ6DLQ9MFbfleBsohX/xG/OfR9+dUZSz?=
- =?us-ascii?Q?Qst21lm82nIr9GVop17Acoue55CItstFGNwb9Gg2FECyJxSKp03DYYgpmeue?=
- =?us-ascii?Q?jpX5uj66IMRpVhEtl+pYP/WUugZnv9uDKaJUw1SSAbN5w10aMT4ugFTTSNcv?=
- =?us-ascii?Q?+G30bnNdKQQ1HIReHn67yfd+WYqZ4/27K2fR9b+nXmusuUHNGU0/PTTB8jl4?=
- =?us-ascii?Q?kRMwrvLnrjwrSd/Ifn9+AFx33P6Tt49G+zB4K9whdvwzyoiOrV8ddy++N+1p?=
- =?us-ascii?Q?gqf35tGM/XTbssiZ7cuxMyfFG0JPJwM1il7ChqEHI02ISdak9RF+DATb8Wco?=
- =?us-ascii?Q?AfSAkQ/bZtThScWJyxIWB6JQ4IJDjbFdD7R5MkG6zTN+Q/gE/jGKwn/KOf9S?=
- =?us-ascii?Q?saGWlQ4t2y+xHr9q1aVaw3DQzBK28sFAr8oxWXQf1aJGhT1Q6tQlnu2gJxcf?=
- =?us-ascii?Q?lXxTFsGmJbK52lcbSXvxe1UQZ7IJ/hnbA76uNb5/Bwb5fdPyIIlE5e28jEjK?=
- =?us-ascii?Q?2Q12AlDdZrgnyHz3ucgB6+X9chPc8jNtua4t8067Ypg3dRS9q2YEoMdAJKWO?=
- =?us-ascii?Q?A/AuiZyCt6KOZaSHWKPVFQH62e+avf+mX0vHvoyZJIDZcrQFYPVMgFeht+3O?=
- =?us-ascii?Q?0DlnDEjCG9/vx7NSNOPaA4qXQGK2uajKY5jYgV5Auu9/UqhqTIhqPRw8baRW?=
- =?us-ascii?Q?JuQL5sWB9F+TNctT5VOSz9/VWSFIzLo9oVHYf8Q28jdlNwtZTpHVGXaNk2PU?=
- =?us-ascii?Q?IerPlPC4w6x57zcF3yClYN8YZzhkjCvqonJhkSkOMs9bjz052n4h+QYwz5B1?=
- =?us-ascii?Q?wqQJtfZ4JsUL6CMDvwHsV826i7/4rVkzSEQj4WxrVrqyIJG3pMY3VOecY/op?=
- =?us-ascii?Q?nfEsOjsIOWNunL5CbSiS2TYymjUDU42V?=
+	=?utf-8?B?ekltbEYydWJQVXRmdVNPbUxKcW9hMldTcHR2L01xaEkrR0FpT1FGcVFhbURX?=
+ =?utf-8?B?bU5aSkVScE1lQUg1SnUxR3JYVEhaQnhIYWg3Snc4bzAwaDFxTmxyRCt3emNw?=
+ =?utf-8?B?L3BpQXJGZ3RLTk9RWjlzZVdHRndsUlJBd3ZyQWF3K0ZheGc2YjNXMlBxZXYr?=
+ =?utf-8?B?QlNCdm5pTFlMWEs5NXhodC9CTmJFZ2ZDQWpqMXI5U25Rc3VWZ2QybGJWNzYy?=
+ =?utf-8?B?SVRkLzg2NlU5TDBuekxNYnNPV0lOSlB0SmFNbFAyVXFuYlZLZHA1SXFjcG92?=
+ =?utf-8?B?MjR5UDdQT3FBZ0oyZzdTTHAzYytzSjVZd21DendOTUttM1AxSkJBNld3Ui9Q?=
+ =?utf-8?B?M2dnWHNXck5SQWpreEtydThhL1lFMDZhS05wSHBZNGI2cE83ZnVxU1NsWjhC?=
+ =?utf-8?B?TUpvekRRWlU3bngwTTdQOGMrUWZFdFJPZGMyYUhEUk1ZSnUvTmhsbHlnd2pa?=
+ =?utf-8?B?VEd5MmY4R0I1a09GUGxlaHplVXpkZGpkbEdPVTIrVWUrYXBGV01acTFJalpI?=
+ =?utf-8?B?MWFsSHQvMndjOFFoNUdkMGRBOU9xWCsvTW1za1VSRTNSQ3hsUWFxWjM3aEF6?=
+ =?utf-8?B?czRhbC8zNzVRL2s5VnZ6SVBNbHdvK0dYeTJKcVg3ZnNEclNrb3RMK3ZjQ1ow?=
+ =?utf-8?B?OUE1S1JENWJ4ZW9sbW9CWUt2d3ZRTzM5Q1NBQ0RDM1dvRW5DR05aQXg3QTZr?=
+ =?utf-8?B?ODFLSkZveEJCd0RJNENvZHU3K2FkbDhYYjhYTngyc3lKWVVzZ2oxbXNjdjZu?=
+ =?utf-8?B?S1N0ZXVHVTcrWTgvaG1LV0pUdDZIeWdnS3hjNDA3QzFyOFovcTZRRnhua1ZK?=
+ =?utf-8?B?K3QzcHU2ZVN4YWhmY1JDWmNyYytUdlR3QXVLQ3dUczNkQmtaazdWNGNBL0h6?=
+ =?utf-8?B?S0dWWUJvMjVrUmY2WmVEa01FR3p3bE4ra3NJNG9YdDhDWFhscFhHRTNzbVcv?=
+ =?utf-8?B?amE0RHBlbFA0VXJ3RHhndUJaUzNEanF1OHJoeVpKa1JYdEY5TEZ2RFQxWkhX?=
+ =?utf-8?B?NGMyNTNWL0pqRDZyWXdObHNySkhKMVU1N0NnTWp6aUs1ME5sTDh6SmptYWQv?=
+ =?utf-8?B?cEpERmw0eVk2aS9XQ2NSQXZjNzI0OVR6eXRsUUN0dE54Qzc5S0JRRkVwb1cr?=
+ =?utf-8?B?UDNSTVd1YkkzdUFXelgyMXZhMkdHakRhTTVVUlBzZ1JaVWl4ZWVUTVpsVEdn?=
+ =?utf-8?B?cmIzZGRvaEY5aWNtaXhKdkFpNC9LVEpiSWg5NVVzR3ZscWszNTF0d3hRZi96?=
+ =?utf-8?B?dmdrbGtzSVNoS1cvVlIxWUl3QUtXS3Q1MW1OZGd1V1Z6RW1QRkwxUWRLcGJE?=
+ =?utf-8?B?NjZ2d1NlOGdqUmdNRzB0Ui8reThmR05kZ1RqM3BFRVlwT3JYL2dFMXk3S05T?=
+ =?utf-8?B?UnNKWXpnd2JGVDBFRVhZZzdLTStYUTluYlo3R2FON21HZTh2cW9ubmk1WGtw?=
+ =?utf-8?B?VjJ4WW9iR0s1NVFyNUZIUk93cmovNnpVWldtWSszSkkyczg5ZTR2bXlBampO?=
+ =?utf-8?B?QU5ScDJXOTBxUFNHenV2YkRFTXhkNWFTNGpLb1NZZmVlMFBZN2p5bVc2ZFZi?=
+ =?utf-8?B?NXQ0OWFQV0ZyVERhdnE1QkRFTWZoOEFyV25mSTZldlBFMzlmd3RReEFvQjNq?=
+ =?utf-8?B?OWFMNVpDeUFlT3BJck1QVVZrQ1VMYXN3ZVlZZFBBUDU4R0gvSElxMlNJajBj?=
+ =?utf-8?B?S0Z4cEtPdFRuV0s5WUFaZHh3NzRYZWJ4ZU1BUkV3YU9mTzBGRmhqb244Rk1z?=
+ =?utf-8?B?R1c2UThzUUp1c2p6YW00dnNpRHhiZHp1RzViaDhWQUZ3UnROQi9LWXp2bmZZ?=
+ =?utf-8?B?T2ppQTJxbnRsd3ZYS0xpcVJnL3JqdzlZNkdEMktJU0hXRUo1dXJSMm03ZW44?=
+ =?utf-8?B?YmU4S3M4UHVrUDRMVXNSRC94djFvaWJnQWg0aEZhWkZGNzl5eVJ5NWVTaVdC?=
+ =?utf-8?Q?fdRBCfiLVezMYEHTe+Z4sb/f0aJrtmkQ?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?wGSppetnz9/IkY7y6jQGRij6mZrOYK8gWGRD3+rKFaG/KpirqWX/Ws+WdjyL?=
- =?us-ascii?Q?qX7C19R3GGMnxbtU6+3FlIOfoVEikeNc5D7jTM4E64hEr5ipPXI1jrsv8U+O?=
- =?us-ascii?Q?ctmCaSk8cev7p+BRL8H/W+WhSNGOlrol4fAIfTMAK9cPLToxYGTg4GxBT/eq?=
- =?us-ascii?Q?tJR3ipNRRGx7d621IzXkSG00gtOqBcHBktF/h5M187ShQxSNOlw0qgvtW0ed?=
- =?us-ascii?Q?cmhn755Fatri22aHvwgAL56pnXe9HT2Pl8/Tqj0dHLLx6wVd4Edrf1UFhz0E?=
- =?us-ascii?Q?zsEAPhe0XgR+cNO/llcU+fxitoo0PUROqxEPJRl2eb3037YaWv6fyqrFpiqe?=
- =?us-ascii?Q?4ym9DMvc4yz/Ac02rl5PCtk37sptk5pPUzE08thwC4Q2FXMKlWjHSwcGz9cL?=
- =?us-ascii?Q?zoGdPV5XnrGaYsSZgp7W2k5Wq/pdtZAkoAjuemeld3aKGhNlXJ//6ff9Wijt?=
- =?us-ascii?Q?oqybulG2zkukcoaZOOOHkCFvWKtzFIo+ivRxiuTZ1jurYQ1p8Efy139u85dD?=
- =?us-ascii?Q?oOpKI2lFTUCTTlgxjDbIXfBtlYcj/9u8HEg2FEQPxbnoAMBHiwp80uvGDfJS?=
- =?us-ascii?Q?I27V+clkuMbsU22BDpp0qd3Y8iJpR52KY5NDMKtAPBLySCK4zz8/C1i315Wa?=
- =?us-ascii?Q?UaZiBjBr/ChcftlfF3a3iWrvj8gqZkarewYo5H5HyHckkQx1QaMGOr9FSbB8?=
- =?us-ascii?Q?pP0HTPge6MpukW0ZQj6LUgFKGVzZDvTzXSml9v4w150WVhLPay3Ox9wWDMXL?=
- =?us-ascii?Q?5MjQWV4pBWHQfqtp98p+CCGN/clz89/ngKma9DwJWySnKk84oCJv10Y/2yvo?=
- =?us-ascii?Q?Qa4egQ/jzw+flOO0tKDeV7I32P0g/DF9vlhb/NHtxugou6b//JpdygJcSsuv?=
- =?us-ascii?Q?QDguB3oLP/uQaAi94LP4L9b0MwY6WhRbyjZ/hz2IGRo5lquQhqBgm8au2ysp?=
- =?us-ascii?Q?1bis+kaCV1ohsuMdbNMOBYhl1XtkOY9/E6E/OIDFUGkcE6CvvFbtM8kiTVus?=
- =?us-ascii?Q?q/7lcKpAo/tuNO9+myeGUeDKMP5A6TtjEppj5j+fQNelgXwUGNaZzHKAdMgE?=
- =?us-ascii?Q?yPC79FvzRYPevOR0sM7wMi5DcNa/lregc+bsbagIAW/GQCkFcBYBVRLg5Jsh?=
- =?us-ascii?Q?EHVu6Ta6wRBd5hu3FXtK1t/HwbN7NhX+tQWKmtM9q7PaxcC6H3CjmQW5h5CE?=
- =?us-ascii?Q?3s2UCby394hXbTrHwuIuOLwoTc60fCHWBW1aUWS8ZOaZHeIEiKtYDET8U4Qq?=
- =?us-ascii?Q?pg+vbxmG0FdFNlHxyVg99nARrnfnJJkgj5ecZD7ktATuvUq1E7kuwX8IFEti?=
- =?us-ascii?Q?eNH1RVj7TUNwB+SU0R6GyvIPaYndUhaarEQL3RDObkiDUNM81sSCHF/nd5OS?=
- =?us-ascii?Q?5XETFxTHgUGbsxGo6vgwHcmkyMwXfTq1DKm9E5Nbpr/deApD6u8GBMdt2Ukg?=
- =?us-ascii?Q?vc6kHoPokaWTN9ywU9LGsHNYSagGNuY5yAZk7Zw2zs24I4vb3sbaIiVFpvot?=
- =?us-ascii?Q?jBsA2skddRl7j5qfbqqyhme+WvXFW9RV0uXemwEx02HW/BSzafiIXXjTsM5I?=
- =?us-ascii?Q?134U+V6Ebnl8SjFsxRZEp5653+5jMENjfOz7EZ/L3usqW24kuGhbxR5CX+bS?=
- =?us-ascii?Q?Ow=3D=3D?=
+	=?utf-8?B?dHYzNFQrM3drM2FLaWpIN2lNaG1tb2lORFdBSFQxeURnVjQvQWl2OU1QOFc5?=
+ =?utf-8?B?ZXI0dVFqS0pMT21pUU8zTE43K0VvVzMwTmxpSDdIbGJ4WkU1aDYwVTJHczBz?=
+ =?utf-8?B?Z3dlcVpmd0l1QW9YVm9tSWc3TUQwM0pnMkV1NlJLRGEycWJmSkh2QkNhRm5K?=
+ =?utf-8?B?cVMrNERNUzMweVpOeGg5UHdQQjJNYU9NZHE1YnZ4RUF2QlhhS29GbnFIRnRy?=
+ =?utf-8?B?dVV4MktlWVVzelg1QnpLaCtiVEtmWEVrOVhPanlrMTJ4VlpJVWlXRWtzdVZw?=
+ =?utf-8?B?bGNmUjRSd1J6eWpBSmtxdGlPU3hjV3NxRUhUdEhCS3ZFQStwTElINlFoVzli?=
+ =?utf-8?B?K283bm1Xem1hS1RZSDlvWm5GRUpXbmZsWFlFNmgxVjlQVEVHeXQ4T1BVTnk1?=
+ =?utf-8?B?K2dDVFkzd1UxVUl0L2huSkh5T0xzTkVuSkpIVTBOc3h4UVYrYUtvTXBFd0Nh?=
+ =?utf-8?B?ZEJDblRjZHl5K0VwMDhyMjFKbVF0K0VLSVduUWJyc0pSNnpYMUR3K0NSL3dS?=
+ =?utf-8?B?R1FvclJOYU53VjN4V0x6dW9Nck9CbE5VVXZ5ZzhhQ3dxcWFFdDF4V0ZEaHRS?=
+ =?utf-8?B?a0VUOFN0Z2JPZ3dkKzJPejloK1gvOEZqYmluOUh5R0JtNUpwNllsQVZSR3Vu?=
+ =?utf-8?B?WkxKTXgzdzRLQnZmcjJjUDdYcXZ2bkl1cmxGd3ZTWWpwZ1kxbUpoRkFYVFFZ?=
+ =?utf-8?B?SzhpbEFIRDJ4M28rUUJJNlU1cnlXNjlOdzNWTmR3NnVuNXJQelFZUTJtdTVm?=
+ =?utf-8?B?T0JVL1phcTR0ZjFXVERxVUZzK05DRXlhUXB5OHlwaFR0ZlMyM0h1RVZMS1g1?=
+ =?utf-8?B?YnE0TnJNMVlWRVlYS1Z3SDlZNU5IblQ2eHNlNERicDRqZTMzOTFFLzVodE85?=
+ =?utf-8?B?OWRkQ0NVOWZqcjl3Q3prSzM0THh0Q0E3RWVKdmxxMGk5ek9JSnhDeGgwK1Vp?=
+ =?utf-8?B?MjN6MHY5dDc2NGd2ZU82SkdMMGt5Z3lPLzBoYkRTa1BwWDNKT1lhUXlZN05E?=
+ =?utf-8?B?SGZJaG9TeGRpMjBEUlBMZURYMTFoRENFUmQrdDFDRnFKamVEM0NWZmNiejZK?=
+ =?utf-8?B?Mkc2NVNZWmt6bnMvVTFlazlsUGJ1R3YvZVZiUEdhZHBlb1A1Q1ZmZkNabjBa?=
+ =?utf-8?B?MWQ0UmRMcXV4UndxR1IrUlZmMGdlczhyTzhGc0JHRXUrUFBuLzZsRzZSdmJQ?=
+ =?utf-8?B?bndmcm44YWRXSjRzRnUyMTdhbTk0QnVOYjNzbHpXSlhxcHk4TFl1bmx1Yk1Q?=
+ =?utf-8?B?dE9NRTM0OW9QOUlwT25TeXFZR3N3RmZTbUwybExmaEE5UGt3bUExeE9qTU5j?=
+ =?utf-8?B?L1JVSi92UTRRb2lEZlFCTlNPcC9zaGRPVFpYVWdYYTdmV3V4MFd5TXZScnZv?=
+ =?utf-8?B?empJVWZ2M2hDM1JCVUI5ZkNMWHZwR2dwV2NJSTZEOW5pcFRQM3ErNWtSb3Zn?=
+ =?utf-8?B?c1d4Z2VIbGducVcvVUNiVU5jNDJDd0Jzbk44aWc3WjdrMUczSGtVbXBRYm9W?=
+ =?utf-8?B?cm1TdUNZaTBKeklxOUxEVVErUjZRdUdEU2pxOTNHNGJ6emtBTnZFWDNMSXNt?=
+ =?utf-8?B?dnNLYiszS3A1YnVmSjhsTkcwMEk5aU5DdlV3RjBXNlhmM05PZFFpTWpkR1FC?=
+ =?utf-8?B?SHdsSWxUN2VNYldHQ2xLL3JBN0FqaU84d3liTC9sdE5MdWJGU1o0aHYyQUJh?=
+ =?utf-8?B?RWZQclNVVitzZDJsOHFLV3FZcFN1SkdBYlhaYnhvbVZ6SUJsbTB6SlV4RGNX?=
+ =?utf-8?B?VldpK3dwRTQ2MFN3TE94b0U5S2ZvdWt6WkhnMVVOai9YVktiK3dOSUhLYTdH?=
+ =?utf-8?B?MnZ2bGNkWEVuRDlDUHIrSTQ3YlZ2SUIzUDlaQlNYcTlENHhpS2NxNU1vWDE4?=
+ =?utf-8?B?QVo4aHAzS1NJS0pPVnduVTc3V3dSenVEN0xCUC9YbjhDTSt5M29LcDFxbUJN?=
+ =?utf-8?B?T2RsVjFXNFo4VTZoMkdKSTVFNDVobE1rbFBHUFRWYzVQdjZiWVl4QWo2cGxH?=
+ =?utf-8?B?bEp0N0w4bE45VS9jS0RIVEpldU1XeERqWllnRTBJV2w4RTFpZHoyOThOU1Rx?=
+ =?utf-8?B?NVlxYXN3cXpRVDJPTVlDVnBKd0NndjFvQTNGTlF0T1pGNFBGZGdZQy9SbDVH?=
+ =?utf-8?B?cDZPbTNyeHZ4ZzdPdkxZL3BMV3dtRWxET2x2emxCY3NCR0ZFVFpyNDFxbGFH?=
+ =?utf-8?B?Q1E9PQ==?=
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	3KoGhKGHAiaIE2SPUk9Xa5BRL1kVpt9TRncVEA0zsLbXUUYe73r9dAW9aTGgF81N2LNnzGTABZx/Zd152epjxCIMEUDfO+MdFnP3aryzLSZ64sKOy2UteFI3jC7If10wNi3ssCqHDN8oB+AsUd3HqrkCAUVtekd+NPDuCeInKlUNAcr7V8DTqN3qQWoVcqqFBLEbRLQtUe3Iv9iAkARtNqhU+BeChNnE3d3GNTal4v0s/ZSuM7bt+G9HXcDdBVEanyQn9eeDR3+qJMbiKIdsJg5D5mkZFWAYDQrCxCSSIhG6WyEhvPGkGdBtGser3XvqSzW614V5snJFO9hDc7pgzOmw4DGYkeSVww3kg4VK934tm14lwrqqYbUUUdzVFhrGx1ZUfDu7JKjjLs3+Z59nL1AE9FaVZVXTY+VBDpa7ja4ZNAxkVuGy1asdibPLbXnfklcrGz7AuKSkKZ57ygnLSXQJ7fxOnXEDaAQdpSmw2GTYx4lYOmPO47VCrltd4oosBBpeUxNR4rlXuBJxJWiZb4FefDDDchqeiOQn/NxRIYEyjXXuPlk3/eTV/zf1YgDGFqmOxOJA7dY/uGrzj8vsgZh+lH1/OX/d5p1f0RCSW3I=
+	EIAEL0u9ocKa6LD9Dr/uDM7zeAsMY4hLsvgJQWkyJEd0Q+FauR7F1qjy17iqV9++GYJsF48pSybr6iDiiljA/4DcZ134SZeZ2XMKkEKqswlHbs6/3WKMzk0aqnHn6wxO0eN1L4gSubhOhk/cXelGEWkE5Cs6FpDlXe3HqpmSZhcbEvBfowJ/J/8BKxFaZNzeFhrtJCIOM7AFtdF3iaVfIDn+8xQByRyQQpT2i+lzxCuc966j2IDnEqor5pQYGd2Jx9oo1a7FTp8e8xvC21KKr1j2dMJZf7IMXJ5FL8nYMGJ6QkT398Tfu99uqhunw47hrKP/vF4s/LqENxP8D6/rh3Zzmvgwg78kplfhTzxeryKKizAGuQ+GQFvRtYFM4iOyHv+kPFTuHMnhuX7lNdatVdDgh7zL203UZWYXkbhmuZV7GFeZZa49rzr0ldnC+XSqs0g5rQyjXqoT6TudWPKa79jXTWllSyMNc1N89CwBmc8rSUyDHAhhCI9AgKGGr87unBdLQZLU3LQ5Qrm79dJIUcACKMnDn2QFApscWKKPrzgdikBjw5ffKnyOxgx/CC4PPVB7ARh3yhGWSQUFIWe8ewr7aabMymnpHw3siZtCMOU=
 X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0c7e2ee4-492d-43b6-fc41-08de17d38699
+X-MS-Exchange-CrossTenant-Network-Message-Id: bc7ff69c-6d6b-4f1d-9c40-08de17deaa2d
 X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Oct 2025 16:43:59.7586
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Oct 2025 18:03:44.0288
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: reDnLhiNouJHkVSBU1WxMZ2C1RzvycRGqfhRn296YqfKzRTBnw3DOwAnT+HzujX8Jw+YBy2SljFxKmFj19bAgFxCarRZC6wR0jND7h+BtRo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA3PR10MB8516
+X-MS-Exchange-CrossTenant-UserPrincipalName: MQTypVoGUsG2eL3YEl8fAxbKafn4OV2PoS7KW4YkQZNcZHm8J31pXvYSyE9L2QXXGxpadr9lOdBu2nlz6LZIl2KfZdq7Wf4jhl5gX0eUhks=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR10MB7941
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-10-30_05,2025-10-29_03,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 malwarescore=0
- mlxscore=0 phishscore=0 mlxlogscore=999 spamscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2510240000
- definitions=main-2510300138
-X-Authority-Analysis: v=2.4 cv=MYVhep/f c=1 sm=1 tr=0 ts=690395d6 b=1 cx=c_pps
- a=e1sVV491RgrpLwSTMOnk8w==:117 a=e1sVV491RgrpLwSTMOnk8w==:17
+ definitions=2025-10-30_06,2025-10-29_03,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=999
+ malwarescore=0 bulkscore=0 suspectscore=0 phishscore=0 spamscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2510240000 definitions=main-2510300150
+X-Authority-Analysis: v=2.4 cv=MYVhep/f c=1 sm=1 tr=0 ts=6903a88b b=1 cx=c_pps
+ a=zPCbziy225d3KhSqZt3L1A==:117 a=zPCbziy225d3KhSqZt3L1A==:17
  a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
- a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
  a=x6icFKpwvdMA:10 a=GoEa3M9JfhUA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=T5IFE8nSnVq3Yj-IeCkA:9 a=CjuIK1q_8ugA:10 cc=ntf awl=host:13657
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDMwMDEzMCBTYWx0ZWRfXwN0HgDCtOPuW
- vDC2KuCP6RgO7ZzXwL3qkxMpj6NL0B10TeFwiWxwlXDN2iOfLRNepKLk0nuAYrwkapB746OH+le
- 4vTuQEXOSGH0aR845t6Jy3bMCj+irZ3Pne5pbCLKFnl7/yBS2nrnaRzpwZX8jw7qs7YhjFnc2Dy
- SJNGml3RZxakE7oRiHmxBO65GteJiSwD79FaT4rNNWThXmMZxUY741hRSApwtrCRKj3hGLqo8qX
- vvlzrKw4CqFKMxgjMYk137sPtfBg4UwLmTzRd2eCXcaBrn8V8bqEAe6Jy5nQ4sUiJ1gkiMWdF93
- fddxZc4yJYB8ioWVBiIU/FFuJZ+S+PrPVjrAGN7Nj87cn7XshoTv1WYXZOWePioutVrKHynUHIP
- TwqdvNttFbpBcYTSKJ/Nnn822UvO80DvMu2hAo7zs+RqnOhMbWM=
-X-Proofpoint-ORIG-GUID: -23-ZMy76qWmtx4BbXml7mbGwT1GXMLV
-X-Proofpoint-GUID: -23-ZMy76qWmtx4BbXml7mbGwT1GXMLV
+ a=yPCof4ZbAAAA:8 a=pEr0iLtFLARa-EweITUA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ cc=ntf awl=host:12123
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDMwMDEzMCBTYWx0ZWRfX5z3+9nuT2LGy
+ sZuTsmyxoZM+Rd2yBfD3zIhgOiNPcxcvYS52oVymDxTHWT5paE6vVQm7MRESBsKbtlAe0Ki8dDM
+ fkoXWmQ9dQIhaxlPKq4A5RHxwjvco3r0iNY2uhQCBqawTIR9YIblpl1GLAeY6SKZsVhKRKMC6fj
+ dKvnhU6NhbF6AWsYkYyxu3OG6/xm/sQe6vzQuiwghvh2y7WcB/gRA1onNpVsYsvv7PhlWSF48ZR
+ fbZpT5iymDy6V3VnD+HYwQykfDQRMfQtYXtSHZ67eIlvGbx6sM2zIqir9Qfu86ILrVMU05X2bz3
+ OdNEKB6fjOY0YCrhW8RxtFNaotrouAEcymTq8UPgtvSpy/+4B0dufmQCUZmY3MaLWt128L/Rt1G
+ ujDP8XuJL2aBQ5JnjEgxDCELyEu9JEnH0yxjmCUm3gouD6Xu+Ds=
+X-Proofpoint-ORIG-GUID: xM5qWyG5fC5jEVDnvfVA6aFeK_hnAZp2
+X-Proofpoint-GUID: xM5qWyG5fC5jEVDnvfVA6aFeK_hnAZp2
 
-On Thu, Oct 30, 2025 at 04:31:56PM +0000, Pedro Falcato wrote:
-> On Thu, Oct 30, 2025 at 04:23:58PM +0000, Lorenzo Stoakes wrote:
-> > On Thu, Oct 30, 2025 at 04:16:20PM +0000, Pedro Falcato wrote:
-> > > On Wed, Oct 29, 2025 at 04:50:31PM +0000, Lorenzo Stoakes wrote:
-> > > > Currently, if a user needs to determine if guard regions are present in a
-> > > > range, they have to scan all VMAs (or have knowledge of which ones might
-> > > > have guard regions).
+On Wed, Oct 29, 2025 at 03:10:19PM -0600, Nico Pache wrote:
+> On Wed, Oct 29, 2025 at 12:42 PM Lorenzo Stoakes
+> <lorenzo.stoakes@oracle.com> wrote:
+> >
+> > On Wed, Oct 29, 2025 at 04:04:06PM +0100, David Hildenbrand wrote:
+> > > > >
+> > > > > No creep, because you'll always collapse.
 > > > >
-> > > > Since commit 8e2f2aeb8b48 ("fs/proc/task_mmu: add guard region bit to
-> > > > pagemap") and the related commit a516403787e0 ("fs/proc: extend the
-> > > > PAGEMAP_SCAN ioctl to report guard regions"), users can use either
-> > > > /proc/$pid/pagemap or the PAGEMAP_SCAN functionality to perform this
-> > > > operation at a virtual address level.
-> > > >
-> > > > This is not ideal, and it gives no visibility at a /proc/$pid/smaps level
-> > > > that guard regions exist in ranges.
-> > > >
-> > > > This patch remedies the situation by establishing a new VMA flag,
-> > > > VM_MAYBE_GUARD, to indicate that a VMA may contain guard regions (it is
-> > > > uncertain because we cannot reasonably determine whether a
-> > > > MADV_GUARD_REMOVE call has removed all of the guard regions in a VMA, and
-> > > > additionally VMAs may change across merge/split).
-> > > >
-> > > > We utilise 0x800 for this flag which makes it available to 32-bit
-> > > > architectures also, a flag that was previously used by VM_DENYWRITE, which
-> > > > was removed in commit 8d0920bde5eb ("mm: remove VM_DENYWRITE") and hasn't
-> > > > bee reused yet.
-> > > >
-> > > > The MADV_GUARD_INSTALL madvise() operation now must take an mmap write
-> > > > lock (and also VMA write lock) whereas previously it did not, but this
-> > > > seems a reasonable overhead.
+> > > > OK so in the 511 scenario, do we simply immediately collapse to the largest
+> > > > possible _mTHP_ page size if based on adjacent none/zero page entries in the
+> > > > PTE, and _never_ collapse to PMD on this basis even if we do have sufficient
+> > > > none/zero PTE entries to do so?
 > > >
-> > > Do you though? Could it be possible to simply atomically set the flag with
-> > > the read lock held? This would make it so we can't split the VMA (and tightly
+> > > Right. And if we fail to allocate a PMD, we would collapse to smaller sizes,
+> > > and later, once a PMD is possible, collapse to a PMD.
+> > >
+> > > But there is no creep, as we would have collapsed a PMD right from the start
+> > > either way.
 > >
-> > VMA flags are not accessed atomically so no I don't think we can do that in any
-> > workable way.
+> > Hmm, would this mean at 511 mTHP collapse _across zero entries_ would only
+> > ever collapse to PMD, except in cases where, for instance, PTE entries
+> > belong to distinct VMAs and so you have to collapse to mTHP as a result?
+>
+> There are a few failure cases, like exceeding thresholds, or
+> allocations failures, but yes your assessment is correct.
+
+Yeah of course being mm there are thorny edge cases :) we do love those...
+
+>
+> At 511, the PMD collapse will be satisfied by a single PTE. If the
+> collapse fails we will try both sides of the PMD (1024kb , 1024kb).
+> the one that contains the non-none PTE will collapse
+
+Right yes.
+
+>
+> This is where the (HPAGE_PMD_ORDER - order) comes from.
+> imagine the 511 case above
+> 511 >> HPAGE_PMD_ORDER - 9 == 511 >> 0 = 511 max ptes none
+> 511 >> PMD_ORDER - 8 (1024kb) == 511 >> 1 = 255 max_ptes_none
+>
+> both of these align to the orders size minus 1.
+
+Right.
+
+>
+> >
+> > Or IOW 'always collapse to the largest size you can I don't care if it
+> > takes up more memory'
+> >
+> > And at 0, we'd never collapse anything across zero entries, and only when
+> > adjacent present entries can be collapse to mTHP/PMD do we do so?
+>
+> Yep!
+>
+> max_pte_none =0 + all mTHP sizes enabled, gives you a really good
+> distribution of mTHP sizes in the systems, as zero memory will be
+> wasted and the most optimal size (space wise) will eb found. At least
+> for the memory allocated through khugepaged. The Defer patchset I had
+> on top of this series was exactly for that purpose-- Allow khugepaged
+> to determine all the THP usage in the system (other than madvise), and
+> allow granular control of memory waste.
+
+Yeah, well it's a trade off really isn't it on 'eagerness' to collapse
+non-present entries :)
+
+But we'll come back to that when David has time :)
+
+>
+> >
+> > >
+> > > >
+> > > > And only collapse to PMD size if we have sufficient adjacent PTE entries that
+> > > > are populated?
+> > > >
+> > > > Let's really nail this down actually so we can be super clear what the issue is
+> > > > here.
+> > > >
+> > >
+> > > I hope what I wrote above made sense.
+> >
+> > Asking some q's still, probably more a me thing :)
+> >
+> > >
+> > > >
+> > > > >
+> > > > > Creep only happens if you wouldn't collapse a PMD without prior mTHP
+> > > > > collapse, but suddenly would in the same scenario simply because you had
+> > > > > prior mTHP collapse.
+> > > > >
+> > > > > At least that's my understanding.
+> > > >
+> > > > OK, that makes sense, is the logic (this may be part of the bit I haven't
+> > > > reviewed yet tbh) then that for khugepaged mTHP we have the system where we
+> > > > always require prior mTHP collapse _first_?
+> > >
+> > > So I would describe creep as
+> > >
+> > > "we would not collapse a PMD THP because max_ptes_none is violated, but
+> > > because we collapsed smaller mTHP THPs before, we essentially suddenly have
+> > > more PTEs that are not none-or-zero, making us suddenly collapse a PMD THP
+> > > at the same place".
+> >
+> > Yeah that makes sense.
+> >
+> > >
+> > > Assume the following: max_ptes_none = 256
+> > >
+> > > This means we would only collapse if at most half (256/512) of the PTEs are
+> > > none-or-zero.
+> > >
+> > > But imagine the (simplified) PTE layout with PMD = 8 entries to simplify:
+> > >
+> > > [ P Z P Z P Z Z Z ]
+> > >
+> > > 3 Present vs. 5 Zero -> do not collapse a PMD (8)
+> >
+> > OK I'm thinking this is more about /ratio/ than anything else.
+> >
+> > PMD - <=50% - ok 5/8 = 62.5% no collapse.
+>
+>                 < 50%*.
+>
+> At 50% it's 256 which is actually the worst case scenario. But I read
+> further, and it seems like you grasped the issue.
+
+Yeah this is < 50% vs. <= 50% which are fundamentally different obviously :)
+
+>
+> >
+> > >
+> > > But sssume we collapse smaller mTHP (2 entries) first
+> > >
+> > > [ P P P P P P Z Z ]
+> >
+> > ...512 KB mTHP (2 entries) - <= 50% means we can do...
+> >
+> > >
+> > > We collapsed 3x "P Z" into "P P" because the ratio allowed for it.
+> >
+> > Yes so that's:
+> >
+> > [ P Z P Z P Z Z Z ]
+> >
+> > ->
+> >
+> > [ P P P P P P Z Z ]
+> >
+> > Right?
+> >
+> > >
+> > > Suddenly we have
+> > >
+> > > 6 Present vs 2 Zero and we collapse a PMD (8)
+> > >
+> > > [ P P P P P P P P ]
+> > >
+> > > That's the "creep" problem.
+> >
+> > I guess we try PMD collapse first then mTHP, but the worry is another pass
+> > will collapse to PMD right?
+> >
+> >
+> > Whereas < 50% ratio means we never end up 'propagating' or 'creeping' like
+> > this because each collapse never provides enough reduction in zero entries
+> > to allow for higher order collapse.
+> >
+> > Hence the idea of capping at 255
+>
+> Yep! We've discussed other solutions, like tracking collapsed pages,
+> or the solutions brought up by David. But this seemed like the most
+> logical to me, as it keeps some of the tunability. I now understand
+> the concern wasnt so much the capping, but rather the silent nature of
+> it, and the uAPI expectations surrounding enforcing such a limit (for
+> both past and future behavioral expectations).
+
+Yes, that's the primary concern on my side.
+
+>
+> >
+> > >
+> > > >
+> > > > >
+> > > > > >
+> > > > > > > max_ptes_none == 0 -> collapse mTHP only if all non-none/zero
+> > > > > > >
+> > > > > > > And for the intermediate values
+> > > > > > >
+> > > > > > > (1) pr_warn() when mTHPs are enabled, stating that mTHP collapse is not
+> > > > > > > supported yet with other values
+> > > > > >
+> > > > > > It feels a bit much to issue a kernel warning every time somebody twiddles that
+> > > > > > value, and it's kind of against user expectation a bit.
+> > > > >
+> > > > > pr_warn_once() is what I meant.
+> > > >
+> > > > Right, but even then it feels a bit extreme, warnings are pretty serious
+> > > > things. Then again there's precedent for this, and it may be the least worse
+> > > > solution.
+> > > >
+> > > > I just picture a cloud provider turning this on with mTHP then getting their
+> > > > monitoring team reporting some urgent communication about warnings in dmesg :)
+> > >
+> > > I mean, one could make the states mutually, maybe?
+> > >
+> > > Disallow enabling mTHP with max_ptes_none set to unsupported values and the
+> > > other way around.
+> > >
+> > > That would probably be cleanest, although the implementation might get a bit
+> > > more involved (but it's solvable).
+> > >
+> > > But the concern could be that there are configs that could suddenly break:
+> > > someone that set max_ptes_none and enabled mTHP.
+> >
+> > Yeah we could always return an error on setting to an unsupported value.
+> >
+> > I mean pr_warn() is nasty but maybe necessary.
+> >
+> > >
+> > >
+> > > I'll note that we could also consider only supporting "max_ptes_none = 511"
+> > > (default) to start with.
+> > >
+> > > The nice thing about that value is that it us fully supported with the
+> > > underused shrinker, because max_ptes_none=511 -> never shrink.
+> >
+> > It feels like = 0 would be useful though?
+>
+> I personally think the default of 511 is wrong and should be on the
+> lower end of the scale. The exception being thp=always, where I
+> believe the kernel should treat it as 511.
+
+I think that'd be confusing to have different behaviour for thp=always, and I'd
+rather we didn't do that.
+
+But ultimately it's all moot I think as these are all uAPI things now.
+
+It was a mistake to even export this IMO, but that can't be helped now :)
+
+>
+> But the second part of that would also violate the users max_ptes_none
+> setting, so it's probably much harder in practice, and also not really
+> part of this series, just my opinion.
+
+I'm confused what you mean here?
+
+In any case I think the 511/0 solution is the way forwards.
+
+>
+> Cheers.
+> -- Nico
+>
+> >
+> > >
+> > > --
+> > > Cheers
+> > >
+> > > David / dhildenb
+> > >
+> >
+> > Thanks, Lorenzo
 > >
 >
-> FWIW I think you could work it as an atomic flag and treat those races as benign
-> (this one, at least).
-
-It's not benign as we need to ensure that page tables are correctly propagated
-on fork.
-
->
-> > I also don't think it's at all necessary, see below.
-> >
-> > > define what "may have a guard page"), but it sounds much better than introducing
-> > > lock contention. I don't think it is reasonable to add a write lock to a feature
-> > > that may be used by such things as thread stack allocation, malloc, etc.
-> >
-> > What lock contention? It's per-VMA so the contention is limited to the VMA in
-> > question, and only over the span of time you are setting the gaurd region.
->
-> Don't we always need to take the mmap write lock when grabbing a VMA write
-> lock as well?
-
-Yup. But at the same time you're doing the kind of operations that'd use this
-you'd already be taking the lock anyway.
-
-You don't hold it for long and you won't be doing this any more often than you'd
-be doing other write operations, which you're also not going to be holding up
-faults on other VMAs either (they can access other VMAs despite mmap write lock
-being held), so I don't think there's ay issue here.
-
->
-> > When allocating thread stacks you'll be mapping things into memory which... take
-> > the write lock. malloc() if it goes to the kernel will also take the write lock.
-> >
->
-> But yes, good point, you're already serializing anyway. I don't think this is
-> a big deal.
-
-Indeed
-
->
-> > So I think you're overly worried about an operation that a. isn't going to be
-> > something that happens all that often, b. when it does, it's at a time when
-> > you'd be taking write locks anyway and c. won't contend important stuff like
-> > page faults for any VMA other than the one having the the guard region
-> > installed.
->
-> Yep, thanks.
-
-No problemo, you can get yourself into sticky situations with lock contention
-but I think this is not one! :)
-
->
-> --
-> Pedro
 
 Cheers, Lorenzo
