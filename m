@@ -1,110 +1,97 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E13072264DC;
-	Thu, 30 Oct 2025 03:27:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2930F23E33D;
+	Thu, 30 Oct 2025 03:29:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761794845; cv=none; b=fq1zzA2aLtwbGsky7DxmrxIP/qL8uPlfq/DTE/TWbH6jdBfl4ZtfPx6ox2IQduo4a8dpP1Kswh3nNnxpxlfe4KTrFktLcjpyRwnh0kzLvxSOh5Sbm2kieessAIrfxMU5i+tQZjxS//WHXogVr6eaKpS3FFWio6bj0Gw/y0VMsgE=
+	t=1761794949; cv=none; b=tbbhg8MbMbxZSly9colIB8bb/5ArJJVQVplBASo2RFb1dj8qWifcxpYJs4LGYrtIvM8TqXt+5IO3tW8+hHpEbM9BqoxY0sRZ3iP7+3K1Cd1Qa47xug1zvZ6waT3XmN0h5ypgpwSqKq3QMrORKGAT/U4nxNZ03Gl2L5Axk8LPc/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761794845; c=relaxed/simple;
-	bh=jJ98GA8lXMZB+PEb4XMuc+DVI+yBUyfVXN3flVjshBI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GxJbja+Ib7siGkKv3buQbbjPVQK19VSTHtytAKcLgyWUMMlg6Fy0mfg5m5eyrE8FmiocyKXPBVarKC22c2BeEylA5LLIhkV/3occP/qcu6lfpIHm7Kd8gjXbz62EScMxtfmv8KcZF2e7rlVhQOSv84QR+LGEp/sB4ZeQRUoIsPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bPhrbrJK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1761794949; c=relaxed/simple;
+	bh=9YGk7nC5zxruIR9JOvTtGAvEO338uvKvfB3Fx9gx+u0=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=be9vKYQkw429JHhJ0iR5uRdFw0sxULFBpLOkLUaoWyW1e+itplQp/xyckyxFluoBEF0VU2xGCeyz3KcDfN0gZ69maEgqVl4z2YjHG/teP7QY7FXEdfDnBseZLC2w1vX7T/1FFsJCe6tqiaIx/Q8OuSOlFVq5l84buTDmhzqbPcY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cuFLiSEx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bPhrbrJK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67336C4CEF7;
-	Thu, 30 Oct 2025 03:27:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cuFLiSEx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1A58C4CEF7;
+	Thu, 30 Oct 2025 03:29:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761794844;
-	bh=jJ98GA8lXMZB+PEb4XMuc+DVI+yBUyfVXN3flVjshBI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bPhrbrJKxNk4PO3YGKRuaN44F7Ub0QfEnH8eiksF0Qmd1qeAp/bp+iKaa1pcD/lEY
-	 umPyzuyB31d/ubl88s5JEMbkoarzZf+ZEYo6jQDoafKfTKOjD44Z6rt0Y5ygQpnuK4
-	 u7xolnYjGGpFv3E+2nNZkFROqo4NmRTzcvHA65hpWsJmeGIIE+MIgK9JgF7TBvzA3N
-	 LM8lHyfkURqAMHsWD8LAOLEX5NDX3my6BbmsqmEYmcf7KV/DVk4S+K80AKVqhhSUjD
-	 DQy64zffDRyTIHq9zO4iQYwS3FR/aYIh3DYB06HDJpPRPBLoF368p/YMsYNwspdUOf
-	 uCbSt1wrwDG6Q==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>
-Cc: Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Will Deacon <will@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 2/2] tracing: wprobe: Make wprobe_handler default overflow_handler compatible
-Date: Thu, 30 Oct 2025 12:27:19 +0900
-Message-ID: <176179483888.959775.5748906728818431150.stgit@devnote2>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <176179481538.959775.12326313742393696258.stgit@devnote2>
-References: <176179481538.959775.12326313742393696258.stgit@devnote2>
-User-Agent: StGit/0.19
+	s=k20201202; t=1761794945;
+	bh=9YGk7nC5zxruIR9JOvTtGAvEO338uvKvfB3Fx9gx+u0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=cuFLiSExx29MvGAti99VsaK1b3zwEUsWh7/BrMy3PqWxZFHV0QgNq4maFTWVa5JI0
+	 U/ylEeqZezYCjMSCEwUYS6VrZkTRHVipWhUOFr5PWRJC003wPQIdl7frKiVRxjHA7Y
+	 zitqtjrxrzgEXW4ZXbrhtz+ukriSSt0ovR6rbSZW21H58T+8b1GGoQb1GaQuxCRWvf
+	 RPpxoS+tVWc80LVRhX5/wTDNKFp8O1YbuWsYDvMNi6xlSf7u/1S8f4FAvgp/AWcRTJ
+	 5DeZ9QTpUkPLppnzAY4fT74tIQGEps6a+StVIxC4Wswcey2DnYIOjrw0gsZWKBOb5D
+	 tnM+Zkz5Z9XGQ==
+Date: Thu, 30 Oct 2025 12:29:01 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Mark Rutland
+ <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 0/2] tracing: Add an option to show symbols in
+ _text+offset for function profiler
+Message-Id: <20251030122901.46a51bfe643daa9910ad4110@kernel.org>
+In-Reply-To: <176179330871.957820.2367690308433599462.stgit@devnote2>
+References: <176179330871.957820.2367690308433599462.stgit@devnote2>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Oops, I missed to update the version in the subject. Let me update it.
 
-To fix arm64 repeating watchpoint exception on the same instruction
-bug, markthe wprobe handler as compatible with the default overflow
-handler.
+On Thu, 30 Oct 2025 12:01:48 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-Since do_watchpoint() on arm64 does not configure the single step
-execution correctly if the overflow_handler is not compatible with
-default perf overflow handlers, custom handler will loop on the
-same instruction by repeating watchpoint exception. But if the
-overflow handler is compatible with the default handlers, it
-configures the single step. So set the compatible flag since
-wprobe_handler will not care arch-dependent case.
+> Hi,
+> 
+> This series implements an option to show symbols in _text+OFFSET
+> format instead of symbol name in the function profiler.
+> This is the 6th version, the previous one is here;
+> 
+> https://lore.kernel.org/all/176114747153.315239.6863821259073466010.stgit@devnote2/
+> 
+> This version is rebased on top of linux-trace/for-next branch
+> and modify offset format to hex.
+> 
+> Thank you,
+> 
+> ---
+> 
+> Masami Hiramatsu (Google) (2):
+>       tracing: Allow tracer to add more than 32 options
+>       tracing: Add an option to show symbols in _text+offset for function profiler
+> 
+> 
+>  kernel/trace/blktrace.c              |    6 +
+>  kernel/trace/ftrace.c                |   26 ++++++
+>  kernel/trace/trace.c                 |  154 +++++++++++++++++-----------------
+>  kernel/trace/trace.h                 |   40 +++++----
+>  kernel/trace/trace_events.c          |    4 -
+>  kernel/trace/trace_events_synth.c    |    2 
+>  kernel/trace/trace_fprobe.c          |    6 +
+>  kernel/trace/trace_functions_graph.c |   18 ++--
+>  kernel/trace/trace_irqsoff.c         |   30 +++----
+>  kernel/trace/trace_kdb.c             |    2 
+>  kernel/trace/trace_kprobe.c          |    6 +
+>  kernel/trace/trace_output.c          |   18 ++--
+>  kernel/trace/trace_sched_wakeup.c    |   24 +++--
+>  kernel/trace/trace_syscalls.c        |    4 -
+>  kernel/trace/trace_wprobe.c          |    2 
+>  15 files changed, 187 insertions(+), 155 deletions(-)
+> 
+> --
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Reported-by: Mark Brown <broonie@kernel.org>
-Closes: https://lore.kernel.org/all/aPvwGhMBJqMKcC9D@finisterre.sirena.org.uk/
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- kernel/trace/trace_wprobe.c |    7 +++++++
- 1 file changed, 7 insertions(+)
 
-diff --git a/kernel/trace/trace_wprobe.c b/kernel/trace/trace_wprobe.c
-index 98605b207f43..f2c2f26fd668 100644
---- a/kernel/trace/trace_wprobe.c
-+++ b/kernel/trace/trace_wprobe.c
-@@ -163,6 +163,8 @@ static void wprobe_perf_handler(struct perf_event *bp,
- static int __register_trace_wprobe(struct trace_wprobe *tw)
- {
- 	struct perf_event_attr attr;
-+	struct perf_event *bp;
-+	int cpu;
- 
- 	if (tw->bp_event)
- 		return -EINVAL;
-@@ -179,6 +181,11 @@ static int __register_trace_wprobe(struct trace_wprobe *tw)
- 		tw->bp_event = NULL;
- 		return ret;
- 	}
-+	/* Mark wprobe_perf_handler is compatible with default one. */
-+	for_each_online_cpu(cpu) {
-+		bp = per_cpu(*tw->bp_event, cpu);
-+		bp->default_overflow_compatible = true;
-+	}
- 
- 	return 0;
- }
-
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
