@@ -1,143 +1,100 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7DFE1494CC;
-	Fri, 31 Oct 2025 01:29:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E17882571D8;
+	Fri, 31 Oct 2025 01:37:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761874193; cv=none; b=HDnDUqEdaw++NSSJHXZ67ZPJ/qJzNkmKqlVmLGr8o5gVajdzvU52uJgYbw8p2HPgHCrwJVgOr/Te9ov61Fe8hZIeG8jVtFARbslSGZmR01UFHeZJtUbZUuRZxwJYMmifc5hMUYhLO8VVhTIBbvgVurYYRmDo9NF6EI6Fs3YA13o=
+	t=1761874645; cv=none; b=X9jLIm6WEw1y+NAAnNJTfrVHORwCj+InT6cdTZl1qws/yQ+0qWCc/VfzahWjZUQtCjZAgT0tgWL6Fr5MBJLYZYFUHi/8aBk7mqNgrhLF3MjYXP0D9t9AvI3roN9DaRkI3pmmjWbt/cLUCPwaswP6BSFpn3VRXwO+MLNpdWdTQMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761874193; c=relaxed/simple;
-	bh=M2Ki4xBbuTViRC6kYySgCoDnEUoVz5i4+1wnPnoG+Gg=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=d7HwGyJ2Ib2mTtT8vwYVIAoEMSxSHQsqn64S5ftVCCkv3uXxTJsMO5tdow7yZqDchPuoe8P5rnUGhT0WQsUmtXCGUkkNmwOqXh8EB8HwtVkpXYxW8qLt2OHEAHblz8ncfwjCe2JDncuCwKPxxItS8DpwOZ4OllNO0g9uHzosNSo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MNMhgEjU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1761874645; c=relaxed/simple;
+	bh=U8YTuGdh18iR8KmdYXdav4TUIVWnv9Aoas40Um4CdjI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fIzVElnHQYE5EBR+e4FALMqrbPP+rUVpIEApVUEBW7X0U34hcwVokQ2v6FTCync8/cXW0LK9XcxCGYrL+kjukVEoIfx3Rg0mhWu/+GD1vX0mtCQqicLI4WSqftmNPDxEBk+ZF4fULw2iSiRAgEWMqyFNPFv2N1n+f5UsUaMZ658=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i8Rk8bZw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MNMhgEjU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD75BC4CEF1;
-	Fri, 31 Oct 2025 01:29:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i8Rk8bZw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 149E1C4CEFD;
+	Fri, 31 Oct 2025 01:37:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761874191;
-	bh=M2Ki4xBbuTViRC6kYySgCoDnEUoVz5i4+1wnPnoG+Gg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=MNMhgEjUHRERuAORKQ9LsOLRqftrR9+lbdz4YrmsXgGPyfH70S81Q/yxXFXrR/EWV
-	 o6xuColzeWwKVE5v7cqOXV8IiEoBpOLcPlOQzEZj8cAusqqBWRDqF3LgIPBG4un/WC
-	 1UrrHpmdRV9gpihKhzJ451soLqpWXUcHk2QFo0ppxR2q75g9QpGaPFJ+9EpVhRUqfs
-	 1TyLMyWniSqypsti7GdeKbdZT5jQPHQG/r51YzK7PCLBzCOgZUvOunm7p1BRDPSDVb
-	 AE71b4lINlu8ljn3emHM7isFT37XHMrFs0gsa2bhB+KDlYeyAPGXHRNpHeOsE6liCy
-	 9H3+bZLifyIFg==
-Date: Fri, 31 Oct 2025 10:29:47 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 0/2] tracing: Add an option to show symbols in
- _text+offset for function profiler
-Message-Id: <20251031102947.c2cc7f437db1399c7ebc1863@kernel.org>
-In-Reply-To: <20251030052548.31130e33@gandalf.local.home>
-References: <176179500583.960652.5730113001091388258.stgit@devnote2>
-	<20251030052548.31130e33@gandalf.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=k20201202; t=1761874644;
+	bh=U8YTuGdh18iR8KmdYXdav4TUIVWnv9Aoas40Um4CdjI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=i8Rk8bZwPIPnM4mrNa5IDzAlTq2nuLPVZjcalnn9lX8z4FxP9+pXNOWhhdOfaO4F7
+	 2xn+3trSiwclg0pwceq+tLQ8gjr18MG4RSVErXcj2m+1ALmJv0kbn5/4qDN89FcXOR
+	 owNziqo8HlV2DTFXjlCkQt3vWHK2RU8afnfg1MIb3dIjdFq4jjBl08o0I2st5+OQRR
+	 xr+K9coBMerx5Ki2fsFGhiaMw8Qorf7pR5UCawsOG7npC9BiSZ7ti8VeFL/Fegamki
+	 7+rLN57QfcoHGkdAqCCFv1lKRDTOaapepB1XDkIvgZHKSPZ70DAkV4HYQqMQKp3zn6
+	 K95pq7AjyQTbA==
+Date: Thu, 30 Oct 2025 18:37:21 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: bot+bpf-ci@kernel.org, mhiramat@kernel.org, rostedt@goodmis.org, 
+	song@kernel.org, peterz@infradead.org, bpf@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, x86@kernel.org, yhs@fb.com, songliubraving@fb.com, 
+	andrii@kernel.org, ast@kernel.org, daniel@iogearbox.net, martin.lau@kernel.org, 
+	eddyz87@gmail.com, yonghong.song@linux.dev, clm@meta.com, ihor.solodrai@linux.dev
+Subject: Re: [PATCH 1/3] Revert "perf/x86: Always store regs->ip in
+ perf_callchain_kernel()"
+Message-ID: <ktinqbxzim73avzfldtpva4ipj65z5iyi4vyzrqjkay4xucqnl@2bd2qvpsai3c>
+References: <20251027131354.1984006-2-jolsa@kernel.org>
+ <8227ad3af501bb982231ef00ac5e970a0a12c9d64e07ea3f3d37100ec7e3f1cc@mail.kernel.org>
+ <v53j2leswscyunqmrj5zvr3bsdafxlze5z3yp4hvsd6epbvdvm@njx4yhpkqoiz>
+ <aP_0eh7TH2f_ykhz@krava>
+ <xnx66p7w3qstst4ixj356dnzexrpsjy52tfwthp5kytv5yagcf@4ngtq5rrgqzj>
+ <aQG_calHM0E7ou67@krava>
+ <aQPdE7_yPO8HOwMC@krava>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <aQPdE7_yPO8HOwMC@krava>
 
-On Thu, 30 Oct 2025 05:25:48 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> On Thu, 30 Oct 2025 12:30:05 +0900
-> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+On Thu, Oct 30, 2025 at 10:48:03PM +0100, Jiri Olsa wrote:
+> On Wed, Oct 29, 2025 at 08:17:05AM +0100, Jiri Olsa wrote:
+> > On Tue, Oct 28, 2025 at 08:39:33PM -0700, Josh Poimboeuf wrote:
+> > > On Mon, Oct 27, 2025 at 11:38:50PM +0100, Jiri Olsa wrote:
+> > > > On Mon, Oct 27, 2025 at 01:19:52PM -0700, Josh Poimboeuf wrote:
+> > > > > On Mon, Oct 27, 2025 at 01:52:18PM +0000, bot+bpf-ci@kernel.org wrote:
+> > > > > > Does this revert re-introduce the BPF selftest failure that was fixed in
+> > > > > > 2019? The test tools/testing/selftests/bpf/prog_tests/stacktrace_map_raw_tp.c
+> > > > > > still exists in the kernel tree.
+> > > > > 
+> > > > > I have the same question.  And note there may be subtle differences
+> > > > > between the frame pointer and ORC unwinders.  The testcase would need to
+> > > > > pass for both.
+> > > > 
+> > > > as I wrote in the other email that test does not check ips directly,
+> > > > it just compare stacks taken from bpf_get_stackid and bpf_get_stack
+> > > > helpers.. so it passes for both orc and frame pointer unwinder
+> > > 
+> > > Ok.  So the original fix wasn't actually a fix at all?  It would be good
+> > > to understand that and mention it in the commit log.  Otherwise it's not
+> > > clear why it's ok to revert a fix with no real explanation.
+> > 
+> > I think it was a fix when it was pushed 6 years ago, but some
+> > unwind change along that time made it redundant, I'll try to
+> > find what the change was
 > 
-> >  kernel/trace/blktrace.c              |    6 +
-> >  kernel/trace/ftrace.c                |   26 ++++++
-> >  kernel/trace/trace.c                 |  154 +++++++++++++++++-----------------
-> >  kernel/trace/trace.h                 |   40 +++++----
-> >  kernel/trace/trace_events.c          |    4 -
-> >  kernel/trace/trace_events_synth.c    |    2 
-> >  kernel/trace/trace_fprobe.c          |    6 +
-> >  kernel/trace/trace_functions_graph.c |   18 ++--
-> >  kernel/trace/trace_irqsoff.c         |   30 +++----
-> >  kernel/trace/trace_kdb.c             |    2 
-> >  kernel/trace/trace_kprobe.c          |    6 +
-> >  kernel/trace/trace_output.c          |   18 ++--
-> >  kernel/trace/trace_sched_wakeup.c    |   24 +++--
-> >  kernel/trace/trace_syscalls.c        |    4 -
-> >  kernel/trace/trace_wprobe.c          |    2 
+> hum I can't tell what changed since v5.2 (kernel version when [1] landed)
+> that reverted the behaviour which the [1] commit was fixing
 > 
-> I didn't realize this affected your branch too. Which means I can't apply
-> this to any branch.
-
-Ah, I rebased it on the linux-trace/for-next, the auto merged branch.
-Let me rebase it on trace/for-next.
-
+> I did the test for both orc and framepointer unwind with and without the
+> fix (revert of [1]) and except for the initial entry it does not seem to
+> change the rest of the unwind ... though I'd expect orc unwind to have
+> more entries
 > 
-> Also, could you make a helper function...
+> please check results below
 > 
-> +++ b/kernel/trace/trace_wprobe.c
-> @@ -260,7 +260,7 @@ print_wprobe_event(struct trace_iterator *iter, int flags,
->  
->         trace_seq_printf(s, "%s: (", trace_probe_name(tp));
->  
-> -       if (!seq_print_ip_sym(s, field->ip, flags | TRACE_ITER_SYM_OFFSET))
-> +       if (!seq_print_ip_sym(s, field->ip, flags | TRACE_ITER(SYM_OFFSET)))
->                 goto out;
->  
->         trace_seq_putc(s, ')');
-> 
-> that both fprobe and wprobe use? And then you don't need to have this open
-> coded everywhere.
+> any idea? thanks,
+> jirka
 
-Yeah, OK.
-
-> 
-> That is, add this patch:
-> 
-> diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
-> index 591adc9bb1e9..bd26004cc320 100644
-> --- a/kernel/trace/trace_probe.h
-> +++ b/kernel/trace/trace_probe.h
-> @@ -598,3 +598,9 @@ struct uprobe_dispatch_data {
->  	struct trace_uprobe	*tu;
->  	unsigned long		bp_addr;
->  };
-> +
-> +static inline int probe_print_ip_sym(struct trace_seq *s, unsigned long ip,
-> +				     int flags)
-> +{
-> +	retun seq_print_ip_sym(s, field->ip, flags | TRACE_ITER_SYM_OFFSET);
-> +}
-> 
-> And use that instead.
-
-Shouldn't we make it trace-wide function ? 
-
-> 
-> So, new plan. Base this patch on top of v6.18-rc3 and send that.
-> 
-
-OK.
-
-> Then what we can do is merge this branch into your branch and my branch and
-> add on top of it.
-> 
-> Note, you should have rebased your probe branch on top of one of the
-> v6.18-rc releases. It's still based on top of 6.17-rc6, which can cause
-> other issues.
-
-OK.
-
-Thank you,
-
-> 
-> 
-> -- Steve
-
+The "missing" ORC entries are probably fine, they're likely caused by
+the compiler generating more tail calls with FP disabled.
 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Josh
