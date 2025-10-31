@@ -1,120 +1,140 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B48CB2367DF
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 31 Oct 2025 05:37:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31CAA333728
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 31 Oct 2025 09:55:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761889037; cv=none; b=oYDw2ETxkVCaN/ftWC2Bg4DytfUg0iULapHVRtvSYvlkGChq/jNeyRcTsWOAY4LOwVFgX0Qa6PETjdzlJJnnvkBqQscIyCTohFFftLVELIGDtH11bTiClb/bvKpWrJio59Q1w5MzXRpAn0KSqT+bCi4AO2R3a6D0+Eay14uMlac=
+	t=1761904546; cv=none; b=vD05zaHLZ17DaKCpN4oMfFLB/hdiB4BhqVYjuGYOLjZ56z720q8LRFf16OQ7hhcYbwdGi/TYD5rMUoKHlH0dVHPI9yVQ3IU+aWWDheka+mdl3W7uxBSd1lr3VLz7ad4MtBcRNxE8aIJ2dpYrs0K1MhJMuuBqw8BsaSrVmiEiVps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761889037; c=relaxed/simple;
-	bh=lPDfYflv3IYSjUyPurz357kPpROg3ph60HnwVeSDGmY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=egz0OgbgruecAKcKxNvLwlPXs15EANC4K/WIFAwBpvfcxT1T3rcbEuh4ZJgrCEY+6OX0wTX8zlnhHG8iIlMauKlzytr1XhpUZX2fNmQAQpJ1VF4TP2PnkyHAywINCf5XpYrl7b1bogIqD7NhEHjA8j6cAPiVceQcptfcHyk6/x4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qHjPFw9T; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1761904546; c=relaxed/simple;
+	bh=3tkSelHNNZtYzi5EY8XsAlaXp+ewc844ITqqtJnf0nc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=QkbfYmttmjU32tCIudxZg8WIDVqpYVTzU3zlXKXFoyJcIm8rNy5YVGPxDTuOv17NHSER2IHkRRp6GEFoSvwbYEqClVX7uz6Ury1tIX06KnkQZg3dMbo/MfY4FRFkmxFkYxh7CFyJ8srSeYjr682Uh7BekgOS4aZPkWk66SaV1gQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bpBBqzgz; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qHjPFw9T"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4770c34ca8eso16266465e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 30 Oct 2025 22:37:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1761889033; x=1762493833; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=afDYIcBtolcFuYg2njws4kwhh8xv1xPHYCskh73iz7M=;
-        b=qHjPFw9Tb8k0tmR7UJ72BrIPYVVguysfvcZgS+5f89FhR3MZ6jyr2Dsd6oX8xMxbtu
-         rI7oHaAXnHvNOyHeXJPQjjd0tVBaZHAEgiUy53mHtdQ5IXgL9nel9sNZO+9G8M/2j96m
-         ANDcs/4Bo+F8noirQ0J0UZ15jsuRXT7dTsIqrWQO1uNX2wQzsuGom30vslV5s1LI9g4w
-         zzw3WV16baaoW4MDt3mGHvwlPuDnwC2Rp1+SFY6LU1B4/TlRXaIcrSzaOJFl74wjIHiw
-         O6aPRBkVvBoKU5RjHISknNp1QMSKC0EnKpXd+meX4izXQHVs6Um8RJ4L/y5b+aBdukIl
-         z4ug==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bpBBqzgz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1761904544;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3tkSelHNNZtYzi5EY8XsAlaXp+ewc844ITqqtJnf0nc=;
+	b=bpBBqzgzyBPK/o1+KI7xY2Hdl23T1HrQlMCltBf2NUq8qpOltbMBUOS818/SuRG744qQZk
+	lokwwn0n59QrntvBa/EqWrwlnViS4Jh2FWjPSArTH54VrpG7sQgUw+KETRQR19jrY5p2Ur
+	PoMst+vhP6HzcM+zMnc/hQomP6p4GfA=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-619-4aILenCfPT2oK9lIx6_mgg-1; Fri, 31 Oct 2025 05:55:40 -0400
+X-MC-Unique: 4aILenCfPT2oK9lIx6_mgg-1
+X-Mimecast-MFC-AGG-ID: 4aILenCfPT2oK9lIx6_mgg_1761904539
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-429a7f1ed1bso933020f8f.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 31 Oct 2025 02:55:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761889033; x=1762493833;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=afDYIcBtolcFuYg2njws4kwhh8xv1xPHYCskh73iz7M=;
-        b=M3Zr+3jQiOHrjlCVxO3kNrTerlEOfg3q3QREW+9y12UOFy2OFE8znul5c98eMN1cIW
-         xhqnxS9cCLEfsGNwxGimALZoD1/z7jA/XH7mtiCa9x+jrBtq/4LKY/zqtS2ZZBdqaep8
-         BDLH/aJMDCSCa3ZLx58K47SXYQqvOiFwEe10vV2jRPAnLTzacPipbtWm4eGi/Odldtmw
-         Cui/Mtn8pTEvr53H9fUoDSsyXrGnRGnyMPESl4BQo8xzyVp6Ll0uhGjiGH1W9f/SB027
-         PMlEf8T5SoYkzj3AVVQQFploTq/Him8radQj6CmCn9XM2eu8l9gh7qkeG/ftK4OOgMcY
-         O5yQ==
-X-Gm-Message-State: AOJu0Yy09/IedfC8VejZnACyOt/dvlg+p81uD46Ocw5ckgpOzyWgMdt5
-	ESCY0nutXAaSkj1AGvn5VB++NFp4zTW1t1GruGlcoLB12u1DzyzEEthGeziI2Mf3kW0K2unBgS0
-	mw/fy
-X-Gm-Gg: ASbGncvLLST67E7rhdqMLXqgAMtVENXs6blHEYCQSBHBFckXrunv+o3Hai5ItS7Rg+L
-	XUUQGQFpjv06qLS92CLliGeYkEHgVl6YBWQRquAbp5s66dgVdXRJLT+8drZCS/gbyBVUnVcT8+U
-	WvEO3AogNn0+U7RcG6DR/fro7Tj/Wi26Ms0vs2152VmvJ1AdBpb9qkTFEVW2FA+TTie4/hv63h6
-	Wo9X1xjqLeoqr9+gv2IedCO1ig0nsJgQQB7BdgfAAxxfOXqZnGAtGV1LIm9osdGv4D2Q1NTku2n
-	9MVYpLI8WTPfm6Qw90O/4aaezshIghvBfQyPT9XkX4OTE5UEmGisXGATxKXx6qGQQ0cCgjKC4p/
-	cHusNAfs5PKeUwsnYAUMXhgmwQ1KkT7Et8jSW4qtji7cliJ8xv9I3EDEa5VqSeGzCyjm2QdNar6
-	DQTD4pljFofWsk0f4V
-X-Google-Smtp-Source: AGHT+IH1hUtTRzmAeobeC/O19VIKw+fC2l2XCskT+JRLve7vbUHaa8ygf+h7zi4RoKOEUdefVbwThg==
-X-Received: by 2002:a05:600c:8b66:b0:45d:f83b:96aa with SMTP id 5b1f17b1804b1-477307c1f31mr20002135e9.7.1761889032852;
-        Thu, 30 Oct 2025 22:37:12 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-47728a96897sm75672485e9.11.2025.10.30.22.37.11
+        d=1e100.net; s=20230601; t=1761904539; x=1762509339;
+        h=content-transfer-encoding:mime-version:message-id:date:references
+         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kTCg+N3NYwBLqF+pIITZOoHrF01dYEOCOu0+H1nRDT0=;
+        b=ev9UAQn7ln79TQam6EHFaIqagubTl8cCL3Us6u8b+VM8QDZ8g/NWJRqlbv4oN85pKi
+         tWS0+KDVE3NWjMSV3RHJDTv62L0fCrheI3N8+SvSP0iAxIIRh16Rs7KT04wsfgE0h7p2
+         zBuHiRirlfxhAmN3RPhFBfiSLL3yN3epgy+5xTeEPZTR7Pw0PNAAJNUiP/VgQqVKFY6F
+         GSjLZW8gpaME1mlaIc00RQxP9pen17c6vSsN7+1bdgoh3lRqPhMFH3WzBTpIjEChjPs7
+         mBmvdBfetltyow9g89TGSRY4qUeSNpRAyucXwJVyKQYDcJXc8QtWbZgbhcopw4gW9HKU
+         l4xQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWxuNUUu1eXGPror9TtAFPckB/g8mLxyPsRGmyxFU4nTi8hv8JaR8/S97l+K5blmeWe93ycju04ETjgLzpGdG4R/8o=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz+trMkgNweDPc5rWgMxOB2L0dHg0wz/JJ2kxWxCI5a4FSflFXL
+	AY9Yy44PEoaxdgjh8kOrbnPYcGNeEASBAe2MgRdcst1YZ82bWbXTWFOqQxfS9MOPY/rvnbbQCXt
+	kCrMxKV7FQn/cW0PT6HWvNPeHbO3xBO+BUrA+aeiUUEZz1K78CQg3+y8gHyGFICyaIzhmKr94yQ
+	==
+X-Gm-Gg: ASbGnctjuIlq5egiUNd1ZRyDiUZX7hNemN9Og9zRtKtBC8kVy2D5yo+JHtL+bqCrxNZ
+	A2XR2qJW0K2GLmgKrOdzanXOQn+2Bt/oYBsBFkcH6sJpcaJfDouzm6txBAdKSKEOdCbWAshJtVn
+	p9HLJm3B5pNP7MNfbiTQMqSrD5NFCZY/RWepaqhn1xcORmoMXFUVes3JL5cLojUNVq8/Gi0DbMS
+	Qs7B341BmBKF54tEJ0zZcjC14oKWNZQb6pZreHu0eFWNKJNgFMEQG1IqggKI4+3mBvE8kckRogY
+	m6xJkdnyfJLRJEVQXmqaMeN96jbODWFw8odPHjaguAQhAfTbyH6MHCvvGrD4zs6xtC8bDPZ3vfp
+	g46e6kKbNxCbx+zpw2N2JIvsidWUDhJ6LW76Noa4JZl4JU0pFNaWfn1bj+bXb
+X-Received: by 2002:a05:6000:310f:b0:40f:5eb7:f24a with SMTP id ffacd0b85a97d-429bd68869amr2437815f8f.12.1761904539498;
+        Fri, 31 Oct 2025 02:55:39 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGbUxApmJAOYlrcJigfNqaTRZ7Pz52J94NiUAhMgZ/Qwj+7BmCVMNCnPqwOLJ11D9kpjdgFWQ==
+X-Received: by 2002:a05:6000:310f:b0:40f:5eb7:f24a with SMTP id ffacd0b85a97d-429bd68869amr2437793f8f.12.1761904539055;
+        Fri, 31 Oct 2025 02:55:39 -0700 (PDT)
+Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-135-146.abo.bbox.fr. [213.44.135.146])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-429c1406a45sm2624895f8f.47.2025.10.31.02.55.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Oct 2025 22:37:12 -0700 (PDT)
-Date: Fri, 31 Oct 2025 08:37:09 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-trace-kernel@vger.kernel.org
-Subject: [bug report] tracing: Have persistent ring buffer print syscalls
- normally
-Message-ID: <aQRLBV_KzDHaaYiG@stanley.mountain>
+        Fri, 31 Oct 2025 02:55:38 -0700 (PDT)
+From: Valentin Schneider <vschneid@redhat.com>
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, rcu@vger.kernel.org,
+ x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+ loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+ linux-arch@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Thomas
+ Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav
+ Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, "H.
+ Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, Peter
+ Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo
+ <acme@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>, Paolo Bonzini
+ <pbonzini@redhat.com>, Arnd Bergmann <arnd@arndb.de>, "Paul E. McKenney"
+ <paulmck@kernel.org>, Jason Baron <jbaron@akamai.com>, Steven Rostedt
+ <rostedt@goodmis.org>, Ard Biesheuvel <ardb@kernel.org>, Sami Tolvanen
+ <samitolvanen@google.com>, "David S. Miller" <davem@davemloft.net>, Neeraj
+ Upadhyay <neeraj.upadhyay@kernel.org>, Joel Fernandes
+ <joelagnelf@nvidia.com>, Josh Triplett <josh@joshtriplett.org>, Boqun Feng
+ <boqun.feng@gmail.com>, Uladzislau Rezki <urezki@gmail.com>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Mel Gorman <mgorman@suse.de>,
+ Andrew Morton <akpm@linux-foundation.org>, Masahiro Yamada
+ <masahiroy@kernel.org>, Han Shen <shenhan@google.com>, Rik van Riel
+ <riel@surriel.com>, Jann Horn <jannh@google.com>, Dan Carpenter
+ <dan.carpenter@linaro.org>, Oleg Nesterov <oleg@redhat.com>, Juri Lelli
+ <juri.lelli@redhat.com>, Clark Williams <williams@redhat.com>, Yair
+ Podemsky <ypodemsk@redhat.com>, Marcelo Tosatti <mtosatti@redhat.com>,
+ Daniel Wagner <dwagner@suse.de>, Petr Tesarik <ptesarik@suse.com>
+Subject: Re: [RFC PATCH v6 27/29] x86/mm/pti: Implement a TLB flush
+ immediately after a switch to kernel CR3
+In-Reply-To: <aQIpXyX-z8ltB1i5@localhost.localdomain>
+References: <20251010153839.151763-1-vschneid@redhat.com>
+ <20251010153839.151763-28-vschneid@redhat.com>
+ <aQDoVAs5UZwQo-ds@localhost.localdomain>
+ <xhsmh3472qah4.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <aQHtBudA4aw4a3gT@localhost.localdomain>
+ <xhsmhwm4dpzh4.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <aQIpXyX-z8ltB1i5@localhost.localdomain>
+Date: Fri, 31 Oct 2025 10:55:36 +0100
+Message-ID: <xhsmhtszfpf8n.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: fgDTZtWMNhGTD9_pDks-PrFnpYEdJl3-FytZhw-Rgpc_1761904539
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hello Steven Rostedt,
+On 29/10/25 15:49, Frederic Weisbecker wrote:
+> Le Wed, Oct 29, 2025 at 03:13:59PM +0100, Valentin Schneider a =C3=A9crit=
+ :
+>> Given we have ALTERNATIVE's in there I assume something like a
+>> boot-time-driven static key could do, but I haven't found out yet if and
+>> how that can be shoved in an ASM file.
+>
+> Right, I thought I had seen static keys in ASM already but I can't find i=
+t
+> anymore. arch/x86/include/asm/jump_label.h is full of reusable magic
+> though.
+>
 
-Commit 25bd47a59275 ("tracing: Have persistent ring buffer print
-syscalls normally") from Oct 28, 2025 (linux-next), leads to the
-following Smatch static checker warning:
+I got something ugly that /seems/ to work, now to spend twice the time to
+clean it up :-)
 
-	kernel/trace/trace.c:4273 print_trace_fmt()
-	warn: if statement not indented
+> Thanks.
+>
+> --
+> Frederic Weisbecker
+> SUSE Labs
 
-kernel/trace/trace.c
-    4260         if (trace_seq_has_overflowed(s))
-    4261                 return TRACE_TYPE_PARTIAL_LINE;
-    4262 
-    4263         if (event) {
-    4264                 if (tr->trace_flags & TRACE_ITER_FIELDS)
-    4265                         return print_event_fields(iter, event);
-    4266                 /*
-    4267                  * For TRACE_EVENT() events, the print_fmt is not
-    4268                  * safe to use if the array has delta offsets
-    4269                  * Force printing via the fields.
-    4270                  */
-    4271                 if ((tr->text_delta)) {
-    4272                         /* ftrace and system call events are still OK */
---> 4273                         if ((event->type > __TRACE_LAST_TYPE) &&
-    4274                             !is_syscall_event(event))
-
-I feel like there was a line of code here that was accidentally left out
-of the commit.
-
-    4275                         return print_event_fields(iter, event);
-
-Or we could add another tab here, but my guess is there is a missing
-statement.
-
-    4276                 }
-    4277                 return event->funcs->trace(iter, sym_flags, event);
-    4278         }
-    4279 
-    4280         trace_seq_printf(s, "Unknown type %d\n", entry->type);
-    4281 
-    4282         return trace_handle_return(s);
-    4283 }
-
-regards,
-dan carpenter
