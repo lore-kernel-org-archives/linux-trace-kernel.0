@@ -1,126 +1,147 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtpout.efficios.com (smtpout.efficios.com [158.69.130.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C07BF241679
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 31 Oct 2025 13:49:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94383284B29;
+	Fri, 31 Oct 2025 14:49:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=158.69.130.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761918554; cv=none; b=kzt9tYME9jGRHwl1TEyWv+WfZxqmmtT613E8TNxOsu+L9ZNRNbv+9/nNPNAclen9bKrBSAx/ddTCmKhG2kSOPUX8F3tkngMJic+clhbWm/udhyE62OLlgDdpOag2krSM9AbCf0xN8l7B+hnszLHxKZ5TsGLm6LXktSkfzlLKlPY=
+	t=1761922150; cv=none; b=AsPyjF9gFqtmbe+S9TUufnxsNY09e9L+cMNrOylXnKcx5qG9nfIMAOJFtsLjScRK8IEN92WUDCywHUgHouYueg0wFSmC50wCO5/Wl8c0JTlcWw5+6B1lLLq4z0kOmmqiDyt5o8LPC8gGW57eXXj0YO5Nw1WB4IoLzKgfiOF3vj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761918554; c=relaxed/simple;
-	bh=otBBx4wfl85EDYap2Atk5K5Z77gwvTZrcdqKjrD7Hz4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oaa8zMrFVIqaoQF6eewcBU423hKjk38LxiGYKMNNHQP1ESUL5FcB36Qf322jgRPWZL1T5eznU6mw+eicBvrZ5al0snMFFmwjm8tLHWk7sx6ds2PtOWiLR9W+poMAfcmy7VnEeQTtvSejBVWmQR7xA9YToU6V13TCK5zuJcxispI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ihczWjKN; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1761922150; c=relaxed/simple;
+	bh=zELbUNvODsjEk+Mru2ftqbAJE3XgDtge+h5wiOsMAEo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=a23qMuAHJw1lgwskIK+sT7QHX9RyP/rQKGJELAmBM36gdz6V3q4Jl7DHc6KhdN07yWmFovps2XkOvIgQ3OwncjPyzaF4BmuhV6Mqz1c5KuzzEFjMqjvGAgd6JD8nCiTCjXpUUJqPZP/qBes4N3YL+YIghCsWAhPWXptx2odPUKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=vrYl1tBn; arc=none smtp.client-ip=158.69.130.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ihczWjKN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1761918551;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=otBBx4wfl85EDYap2Atk5K5Z77gwvTZrcdqKjrD7Hz4=;
-	b=ihczWjKNiFmNjlwfAwPElxjjAunTWjpo2PjnC/X9ftJEcBfqQqo/A6lAHTLD+u+nu+4di0
-	wobj8VZ7oPmfx/V+UKhbOYsfKHB7iZsblTrnvMLjYv2ya3ZzXqWTz1NquJLkBzB6fxNe9W
-	Xo7eYR5Yz+A9pxJDIlHQXXJ8qUvuVN8=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-613-D9O5KLcSN9exZ4F3u6oUWw-1; Fri, 31 Oct 2025 09:49:10 -0400
-X-MC-Unique: D9O5KLcSN9exZ4F3u6oUWw-1
-X-Mimecast-MFC-AGG-ID: D9O5KLcSN9exZ4F3u6oUWw_1761918550
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-88041f9e686so5786516d6.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 31 Oct 2025 06:49:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761918550; x=1762523350;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=otBBx4wfl85EDYap2Atk5K5Z77gwvTZrcdqKjrD7Hz4=;
-        b=lJ6qm9ZqHWnhZxdYBG9MlztbDlrLRJSODQ74V1kmqAZJ2H7iLQEpLdTBAOw5OaILhQ
-         BM51U7GjI8KaGkFLsVM2lcs6irGzjaIWlcQhoz9eJbytirfVHd8wcXe2Wl5vVTH/tNJd
-         UpHq0kpK6U2huRfSv2MGslWYbGS9CsxU9BZAlll5SX7IC+2/iirlCeCxndylQKl7qjXA
-         zeM79DaW7c4DWZV4GxEvcrjkFtBVANAS400Llqy//IXEyly/DeBzWPaeV+zh8TW+4paW
-         8hhvQN8+e6ijAQsPn25r0kmAbpibQZurlVV8tgoQDy+eD3bCnvmRVxDlbm3Pb6JwY5N0
-         SfTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVniO0hidIC3WQHoiHnD769JvQxP1zPdOrJ4coSY3TTTGpxMBfqGpIEfWHDvUTIT677T62bxyYjGOTXt/qO3FyObSk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyr2DNhmxOMfnt78N2J1cUNSw7h0U7h6TJLEhrPHsSB9G4x6oXf
-	6T0tvKNCwCfNh2XqqaAuVJdN/7lBFWB7ebrsAtbo0TLmGekz7GsTVhyjjDLcv1pEILrLPqd1aHh
-	XTs2aSIqBESvuGEs96EMhcQ+8AiSuehYQnWZqReNZB8thuDVOQmxbn9nfPSsz9m/R4QV89gXaFA
-	==
-X-Gm-Gg: ASbGncucvrMUPFfhsuUH0n2J6hDYQT6V/syF23FOEdhQTJXhFkF9UCKemVPHABbOvCR
-	P24ZMppQYuVR3wAaSYM8e6dd7DDUHOzCdwtV2Et7bU7qF4exhMkUEaUwEJT5kwMDJtSmngC9gDR
-	ozR0XiaawDtg/zOlELeq9xyRE5WIhN2YDf4eaQLfyXcUUOb9VOCMsmd2+XL4AI+O6FGZtxN+tgs
-	heAhgAYb+ePgMv93J5TSkrIspmDVOxGIYW+//IG4fSFl95n2vpRd1WaRgWIm0RAW6uDVhGXCZGT
-	cz3upnxj8DKB5CftuFXDaClbDHfzdYMgaZ56Bnrbe6w2MgDSIUKlbIWxgtj4fqJfjXOixEQ6Hwx
-	pS9Y1dtTK/7yu+CD+B8JJc5Flk0bqRGPCqRh7zvb23HK2QihNSZO0tAeOlrF9n7Wz
-X-Received: by 2002:a05:6214:29c8:b0:87c:67a:ca69 with SMTP id 6a1803df08f44-8802f521df4mr38809446d6.61.1761918549838;
-        Fri, 31 Oct 2025 06:49:09 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEMIRsRVAV5K6QvCw1eHulx31J7vhSYenLFXxOs2TXmvIp5Ub3MJu5pl3+ly4k6nuAEmbzZzg==
-X-Received: by 2002:a05:6214:29c8:b0:87c:67a:ca69 with SMTP id 6a1803df08f44-8802f521df4mr38809106d6.61.1761918549454;
-        Fri, 31 Oct 2025 06:49:09 -0700 (PDT)
-Received: from crwood-thinkpadp16vgen1.minnmso.csb (syn-050-074-019-099.biz.spectrum.com. [50.74.19.99])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-880360ffca8sm11630206d6.27.2025.10.31.06.49.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Oct 2025 06:49:09 -0700 (PDT)
-Message-ID: <a0e34d41214dd6d98e3c7b7ec37be7ad0e1812e0.camel@redhat.com>
-Subject: Re: [PATCH v3 0/7] rtla/timerlat: Add --bpf-action option
-From: Crystal Wood <crwood@redhat.com>
-To: Tomas Glozar <tglozar@redhat.com>, Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel	
- <linux-trace-kernel@vger.kernel.org>, John Kacur <jkacur@redhat.com>, Luis
- Goncalves <lgoncalv@redhat.com>, Costa Shulyupin <costa.shul@redhat.com>,
- Wander Lairson Costa	 <wander@redhat.com>, Arnaldo Carvalho de Melo
- <acme@kernel.org>
-Date: Fri, 31 Oct 2025 09:49:08 -0400
-In-Reply-To: <20251027153401.1039217-1-tglozar@redhat.com>
-References: <20251027153401.1039217-1-tglozar@redhat.com>
-User-Agent: Evolution 3.56.2 (3.56.2-2.fc42)
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="vrYl1tBn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+	s=smtpout1; t=1761921761;
+	bh=mn4Rixq7zXBuMBlaqQmjCKrD+qIqVw6PlXV4D24CrIA=;
+	h=From:To:Cc:Subject:Date:From;
+	b=vrYl1tBnleKUc4qHluXabp2KWvP7tFw41yKB5QTaottntuaQHyecL2vgW+tfXF4gz
+	 darLlhPDsAeHo6IkH5oZ4g1u4DCfVlN4rz2N1IhzSND/lFNGYQQskYOgsNer6VoZ8b
+	 tKgvQ7MwI2+LrvpgEwtUjYIsB//ERgHd+dUnJv4u6aZbr/Ixk7R9fa59XS6vK41wBl
+	 eaEnB0Sa+VLgsEfaJ8w4tTbi25BuQQOn+cyNcpXZXstZxTwCNsFJ1roNAUU6LYq2zp
+	 sGulXKyqQ8oHirybdrD4cWYv2jjkjSe5HBj19iZSXoBeqlsiszvMtXmfnqnI3uub4S
+	 cYsNGocmld9Ig==
+Received: from thinkos.internal.efficios.com (mtl.efficios.com [216.120.195.104])
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4cykGn4jKfzGXX;
+	Fri, 31 Oct 2025 10:42:41 -0400 (EDT)
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To: Mateusz Guzik <mjguzik@gmail.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Sweet Tea Dorminy <sweettea@google.com>
+Cc: linux-kernel@vger.kernel.org,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Dennis Zhou <dennis@kernel.org>,
+	Tejun Heo <tj@kernel.org>,
+	Christoph Lameter <cl@linux.com>,
+	Martin Liu <liumartin@google.com>,
+	David Rientjes <rientjes@google.com>,
+	christian.koenig@amd.com,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	SeongJae Park <sj@kernel.org>,
+	Michal Hocko <mhocko@suse.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R . Howlett" <liam.howlett@oracle.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Christian Brauner <brauner@kernel.org>,
+	Wei Yang <richard.weiyang@gmail.com>,
+	David Hildenbrand <david@redhat.com>,
+	Miaohe Lin <linmiaohe@huawei.com>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org,
+	Yu Zhao <yuzhao@google.com>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Matthew Wilcox <willy@infradead.org>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Aboorva Devarajan <aboorvad@linux.ibm.com>
+Subject: [RFC PATCH v7 0/2] mm: Fix OOM killer inaccuracy on large many-core systems
+Date: Fri, 31 Oct 2025 10:42:30 -0400
+Message-Id: <20251031144232.15284-1-mathieu.desnoyers@efficios.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 1WiE1ujb929icTXrtRkHtidnFL9imLxoKx2f0MaPtxo_1761918550
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, 2025-10-27 at 16:33 +0100, Tomas Glozar wrote:
-> This patchset extends rtla-timerlat's BPF support with the option of
-> executing a user-supplied BPF program on latency threshold overflow.
->=20
-> See the supplied example and documentation for how to create a program.
-> bpf_tail_call() is used to chain the program with the built-in BPF
-> sample collection program, if the threshold is hit.
->=20
-> The feature can be used for both in-kernel data collection and sending
-> signals to userspace directly from the kernel, if the kernel version
-> allows it.
->=20
-> Note: The patchset will have to be rebased on top of [1], or vice versa,
-> since they both touch stop_tracing() ([1] adds one call of it, and this
-> patchset adds an extra argument to it).
+Introduce hierarchical per-cpu counters and use them for rss tracking to
+fix the per-mm RSS tracking which has become too inaccurate for OOM
+killer purposes on large many-core systems.
 
-Probably best to add an updated version of that patch to this patchset.
+The approach proposed here is to replace this by the hierarchical
+per-cpu counters, which bounds the inaccuracy based on the system
+topology with O(N*logN).
 
+Relevant delta since v6: Rebase to v6.18-rc3 and implement
+get_mm_counter_sum() as percpu_counter_tree_precise_sum().
 
-> v3 changes:
-> - Add tests/bpf/bpf_action_map.c to test commit (forgot to run
-> git add before).
+Testing and feedback are welcome!
 
-Might be nice to build that as part of "all", for the sake of people
-running the tests directly (FWIW, I still don't see anything in the
-makefile or engine.sh documenting how to satisfy that dependency).
+Thanks,
 
-In any case:
-Reviewed-by: Crystal Wood <crwood@redhat.com>
+Mathieu
 
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Dennis Zhou <dennis@kernel.org>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: Martin Liu <liumartin@google.com>
+Cc: David Rientjes <rientjes@google.com>
+Cc: christian.koenig@amd.com
+Cc: Shakeel Butt <shakeel.butt@linux.dev>
+Cc: SeongJae Park <sj@kernel.org>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Sweet Tea Dorminy <sweettea@google.com>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: "Liam R . Howlett" <liam.howlett@oracle.com>
+Cc: Mike Rapoport <rppt@kernel.org>
+Cc: Suren Baghdasaryan <surenb@google.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Christian Brauner <brauner@kernel.org>
+Cc: Wei Yang <richard.weiyang@gmail.com>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Miaohe Lin <linmiaohe@huawei.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: linux-mm@kvack.org
+Cc: linux-trace-kernel@vger.kernel.org
+Cc: Yu Zhao <yuzhao@google.com>
+Cc: Roman Gushchin <roman.gushchin@linux.dev>
+Cc: Mateusz Guzik <mjguzik@gmail.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Baolin Wang <baolin.wang@linux.alibaba.com>
+Cc: Aboorva Devarajan <aboorvad@linux.ibm.com>
 
--Crystal
+Mathieu Desnoyers (2):
+  lib: Introduce hierarchical per-cpu counters
+  mm: Fix OOM killer inaccuracy on large many-core systems
 
+ include/linux/mm.h                  |  10 +-
+ include/linux/mm_types.h            |   4 +-
+ include/linux/percpu_counter_tree.h | 203 ++++++++++++++
+ include/trace/events/kmem.h         |   2 +-
+ kernel/fork.c                       |  32 ++-
+ lib/Makefile                        |   1 +
+ lib/percpu_counter_tree.c           | 394 ++++++++++++++++++++++++++++
+ 7 files changed, 627 insertions(+), 19 deletions(-)
+ create mode 100644 include/linux/percpu_counter_tree.h
+ create mode 100644 lib/percpu_counter_tree.c
+
+-- 
+2.39.5
