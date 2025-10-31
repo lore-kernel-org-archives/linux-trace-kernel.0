@@ -1,185 +1,120 @@
-Received: from mail-yw1-f194.google.com (mail-yw1-f194.google.com [209.85.128.194])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B86026F28D
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 31 Oct 2025 03:36:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B48CB2367DF
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 31 Oct 2025 05:37:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761881812; cv=none; b=DF5w+q3DIihzaVocssPGzdm/kMsZCi1vCfqtUyfNigGL/ZmKy52SzGtGjlXq5fjbM4DWn+m00ywbsoAM37wKoWDkfZ8RHOTj+oqQjOMst+qmeq4XytotxJyuNWMyJr7tCcpm8pr98ccgPjZmMhYVIDjK7FvOqy6Z+uxhjDb23G8=
+	t=1761889037; cv=none; b=oYDw2ETxkVCaN/ftWC2Bg4DytfUg0iULapHVRtvSYvlkGChq/jNeyRcTsWOAY4LOwVFgX0Qa6PETjdzlJJnnvkBqQscIyCTohFFftLVELIGDtH11bTiClb/bvKpWrJio59Q1w5MzXRpAn0KSqT+bCi4AO2R3a6D0+Eay14uMlac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761881812; c=relaxed/simple;
-	bh=l3mm+lBFPHAks+LwRIC7KHR/F6NM7jW/PvnGW725S5Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QLuCMDyLf7mXLkNtYgDn0UDJSKb7Nxhh77kr+/NFqkP5V9ISmkMnRmjgWN9xzObQvyu8djPTgSN5PRn8TJjELQSB0959c0X64TXJyYLx7IjuKlLpqfZFvHQqp9SBAgurTYEJLZ3e/eYjuH+QyKP83t+E7nDKAryuV9Q9fUjJBuo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W6oinO+d; arc=none smtp.client-ip=209.85.128.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1761889037; c=relaxed/simple;
+	bh=lPDfYflv3IYSjUyPurz357kPpROg3ph60HnwVeSDGmY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=egz0OgbgruecAKcKxNvLwlPXs15EANC4K/WIFAwBpvfcxT1T3rcbEuh4ZJgrCEY+6OX0wTX8zlnhHG8iIlMauKlzytr1XhpUZX2fNmQAQpJ1VF4TP2PnkyHAywINCf5XpYrl7b1bogIqD7NhEHjA8j6cAPiVceQcptfcHyk6/x4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qHjPFw9T; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W6oinO+d"
-Received: by mail-yw1-f194.google.com with SMTP id 00721157ae682-7864ab69f01so2779707b3.3
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 30 Oct 2025 20:36:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qHjPFw9T"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4770c34ca8eso16266465e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 30 Oct 2025 22:37:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1761881809; x=1762486609; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=I+gv0KDSDdRFFvN+HUcCWv1GSnQA5FAvdjB0Eum3nw4=;
-        b=W6oinO+dev/uST9GryQXsNDZkQLWI+P1zPNa6uPlW/4Vro55I7i65zLbLnOcci4GNR
-         ECTTBqmct0snFh5q2aFKWrmSybVASZuLJzdb+vXuz/PVpMeqrw1YVSzQikIOgcWLLWSu
-         5Bik3dxYMaUiFYALKvG+CbuhYSftjGt2BRz9wYypB/FjZXau9v55ut+ZUcIDp7VILH7c
-         1h5CLdS/Uy3TOQzUGeIaxvvCPwyZ9mhfaqr/otNE/ejcO20zknCXRxTnyxD419qHfSaV
-         RGueWlhNjm5x5HwgBxNZDSPeo7VITJTNwxK57a1Uy8nEqQykNYq+Vy68wY1LUWfDWUzM
-         AICQ==
+        d=linaro.org; s=google; t=1761889033; x=1762493833; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=afDYIcBtolcFuYg2njws4kwhh8xv1xPHYCskh73iz7M=;
+        b=qHjPFw9Tb8k0tmR7UJ72BrIPYVVguysfvcZgS+5f89FhR3MZ6jyr2Dsd6oX8xMxbtu
+         rI7oHaAXnHvNOyHeXJPQjjd0tVBaZHAEgiUy53mHtdQ5IXgL9nel9sNZO+9G8M/2j96m
+         ANDcs/4Bo+F8noirQ0J0UZ15jsuRXT7dTsIqrWQO1uNX2wQzsuGom30vslV5s1LI9g4w
+         zzw3WV16baaoW4MDt3mGHvwlPuDnwC2Rp1+SFY6LU1B4/TlRXaIcrSzaOJFl74wjIHiw
+         O6aPRBkVvBoKU5RjHISknNp1QMSKC0EnKpXd+meX4izXQHVs6Um8RJ4L/y5b+aBdukIl
+         z4ug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761881809; x=1762486609;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=I+gv0KDSDdRFFvN+HUcCWv1GSnQA5FAvdjB0Eum3nw4=;
-        b=oJsjumRyC9+pj7Iu3sA76o+fOCDIUBnb0GfhgMFBGzINtUZ7vhMIaNx/hbsaZLFTm8
-         Y4YofUY3jMUs0ocrhgh02GuHAQc/4Ww/Lcim2ZuhaSDiPxvaNga1uT+PXAgo3lhpXmT3
-         5pmP5Co6hZtir+W1tRpH2OMvdKkNOzi5XTuQ7jGuwJnqlPJbEoKfLdXeKoI85JSCzdhZ
-         1d9m1DK6rgnz7wTFOGMIMzjX6/yaLJpmK4ctPdkWOsMFb9hINEpu89cihMTn5TQlTXog
-         U1DMXR78dqTLVirQccKg9xcUav9BIvOzDu1rACxlUTQR76cby7XhxpVR5RnhFG23nEMj
-         Efog==
-X-Forwarded-Encrypted: i=1; AJvYcCUmGARnqmQCfrOiuu9BUz4+b4CYpMFu6lcMX+wCKCvtsV8zhfp/LAP3qtpAhtCXV9bXoq+KRBKbbCMa5OE4PSAUt5I=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz0ko0GC1xYLjFWY4rQrZVIeOrx52TTgiAZAqnLbfKao3NG9xI5
-	qk+//u39Xd+ukPtpZ+6+Qe9wGskT2optx7mpBsOsWeOmzyHaqOG9vV5DLVcO3l2XAJy7V242e9v
-	maxhJkaJnYb6jiMoJ6CSvkrVU34HmsWg=
-X-Gm-Gg: ASbGncumTbphCRffnV8D0BkBMKWQBtDKcvDu3n2G929sNa3TOwjy87EEOEDOxk2Hvj6
-	Emh1LQ1co8y/FSuJe2Bf0JVf9/vgbBRrv4mYdmekmSkJIJKNZ4uCnQHPUe5kg71Qajx54c2kVof
-	9DQFXv8Lw3jUUpNWO6b4Yl5za5HJbBifPuIBnIxcY+XQ4buGtVKFbyZn4RvvakpEhs4QpKmkFJ1
-	vZCaRtYhuiHoOkT6f7N0va8RjjVY0NTl19Bfj/ZLc+P0c3XxiKyHLDKWVWlJRTS
-X-Google-Smtp-Source: AGHT+IHBmFr/f7KUXhuoC5VAA8WBA2v3pQ2OxS/qFztuZcGPw4PY9FleCBb81VjY5kGRmzystYJN7lAr1Uhl6zn6/9s=
-X-Received: by 2002:a05:690c:6011:b0:785:cbf4:7534 with SMTP id
- 00721157ae682-786484164f5mr18054737b3.29.1761881809184; Thu, 30 Oct 2025
- 20:36:49 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1761889033; x=1762493833;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=afDYIcBtolcFuYg2njws4kwhh8xv1xPHYCskh73iz7M=;
+        b=M3Zr+3jQiOHrjlCVxO3kNrTerlEOfg3q3QREW+9y12UOFy2OFE8znul5c98eMN1cIW
+         xhqnxS9cCLEfsGNwxGimALZoD1/z7jA/XH7mtiCa9x+jrBtq/4LKY/zqtS2ZZBdqaep8
+         BDLH/aJMDCSCa3ZLx58K47SXYQqvOiFwEe10vV2jRPAnLTzacPipbtWm4eGi/Odldtmw
+         Cui/Mtn8pTEvr53H9fUoDSsyXrGnRGnyMPESl4BQo8xzyVp6Ll0uhGjiGH1W9f/SB027
+         PMlEf8T5SoYkzj3AVVQQFploTq/Him8radQj6CmCn9XM2eu8l9gh7qkeG/ftK4OOgMcY
+         O5yQ==
+X-Gm-Message-State: AOJu0Yy09/IedfC8VejZnACyOt/dvlg+p81uD46Ocw5ckgpOzyWgMdt5
+	ESCY0nutXAaSkj1AGvn5VB++NFp4zTW1t1GruGlcoLB12u1DzyzEEthGeziI2Mf3kW0K2unBgS0
+	mw/fy
+X-Gm-Gg: ASbGncvLLST67E7rhdqMLXqgAMtVENXs6blHEYCQSBHBFckXrunv+o3Hai5ItS7Rg+L
+	XUUQGQFpjv06qLS92CLliGeYkEHgVl6YBWQRquAbp5s66dgVdXRJLT+8drZCS/gbyBVUnVcT8+U
+	WvEO3AogNn0+U7RcG6DR/fro7Tj/Wi26Ms0vs2152VmvJ1AdBpb9qkTFEVW2FA+TTie4/hv63h6
+	Wo9X1xjqLeoqr9+gv2IedCO1ig0nsJgQQB7BdgfAAxxfOXqZnGAtGV1LIm9osdGv4D2Q1NTku2n
+	9MVYpLI8WTPfm6Qw90O/4aaezshIghvBfQyPT9XkX4OTE5UEmGisXGATxKXx6qGQQ0cCgjKC4p/
+	cHusNAfs5PKeUwsnYAUMXhgmwQ1KkT7Et8jSW4qtji7cliJ8xv9I3EDEa5VqSeGzCyjm2QdNar6
+	DQTD4pljFofWsk0f4V
+X-Google-Smtp-Source: AGHT+IH1hUtTRzmAeobeC/O19VIKw+fC2l2XCskT+JRLve7vbUHaa8ygf+h7zi4RoKOEUdefVbwThg==
+X-Received: by 2002:a05:600c:8b66:b0:45d:f83b:96aa with SMTP id 5b1f17b1804b1-477307c1f31mr20002135e9.7.1761889032852;
+        Thu, 30 Oct 2025 22:37:12 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-47728a96897sm75672485e9.11.2025.10.30.22.37.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Oct 2025 22:37:12 -0700 (PDT)
+Date: Fri, 31 Oct 2025 08:37:09 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-trace-kernel@vger.kernel.org
+Subject: [bug report] tracing: Have persistent ring buffer print syscalls
+ normally
+Message-ID: <aQRLBV_KzDHaaYiG@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251026030143.23807-1-dongml2@chinatelecom.cn>
- <20251026030143.23807-5-dongml2@chinatelecom.cn> <CAADnVQLfxjOUqbbexFvvVJ4JTUQ2TKL0wvUn3iHv6vXvGfitoQ@mail.gmail.com>
-In-Reply-To: <CAADnVQLfxjOUqbbexFvvVJ4JTUQ2TKL0wvUn3iHv6vXvGfitoQ@mail.gmail.com>
-From: Menglong Dong <menglong8.dong@gmail.com>
-Date: Fri, 31 Oct 2025 11:36:37 +0800
-X-Gm-Features: AWmQ_bmKglPpjYeN8wPTAXBHJxvfdd8Q3ML6kp5pKVrlzSQxwPJihOrL8DGnJA4
-Message-ID: <CADxym3Y4nc2Qaq00Pp7XwmCXJHn0SsEoOejK8ZxhydepcbB8kQ@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v3 4/7] bpf,x86: add tracing session supporting
- for x86_64
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Alexei Starovoitov <ast@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>, 
-	Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
-	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Matt Bobrowski <mattbobrowski@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Leon Hwang <leon.hwang@linux.dev>, jiang.biao@linux.dev, 
-	bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Fri, Oct 31, 2025 at 9:42=E2=80=AFAM Alexei Starovoitov
-<alexei.starovoitov@gmail.com> wrote:
->
-> On Sat, Oct 25, 2025 at 8:02=E2=80=AFPM Menglong Dong <menglong8.dong@gma=
-il.com> wrote:
-> >
-> > Add BPF_TRACE_SESSION supporting to x86_64. invoke_bpf_session_entry an=
-d
-> > invoke_bpf_session_exit is introduced for this purpose.
-> >
-> > In invoke_bpf_session_entry(), we will check if the return value of the
-> > fentry is 0, and set the corresponding session flag if not. And in
-> > invoke_bpf_session_exit(), we will check if the corresponding flag is
-> > set. If set, the fexit will be skipped.
-> >
-> > As designed, the session flags and session cookie address is stored aft=
-er
-> > the return value, and the stack look like this:
-> >
-> >   cookie ptr    -> 8 bytes
-> >   session flags -> 8 bytes
-> >   return value  -> 8 bytes
-> >   argN          -> 8 bytes
-> >   ...
-> >   arg1          -> 8 bytes
-> >   nr_args       -> 8 bytes
-> >   ...
-> >   cookieN       -> 8 bytes
-> >   cookie1       -> 8 bytes
-> >
-> > In the entry of the session, we will clear the return value, so the fen=
-try
-> > will always get 0 with ctx[nr_args] or bpf_get_func_ret().
-> >
-> > Before the execution of the BPF prog, the "cookie ptr" will be filled w=
-ith
-> > the corresponding cookie address, which is done in
-> > invoke_bpf_session_entry() and invoke_bpf_session_exit().
->
-> ...
->
-> > +       if (session->nr_links) {
-> > +               for (i =3D 0; i < session->nr_links; i++) {
-> > +                       if (session->links[i]->link.prog->call_session_=
-cookie)
-> > +                               stack_size +=3D 8;
-> > +               }
-> > +       }
-> > +       cookies_off =3D stack_size;
->
-> This is not great. It's all root and such,
-> but if somebody attaches 64 progs that use session cookies
-> then the trampoline will consume 64*8 of stack space just for
-> these cookies. Plus more for args, cookie, ptr, session_flag, etc.
+Hello Steven Rostedt,
 
-The session cookie stuff does take a lot of stack memory.
-For fprobe, it will store the cookie into its shadow stack, which
-can free the stack.
+Commit 25bd47a59275 ("tracing: Have persistent ring buffer print
+syscalls normally") from Oct 28, 2025 (linux-next), leads to the
+following Smatch static checker warning:
 
-How about we remove the session cookie stuff? Therefore,
-only 8-bytes(session flags) are used on the stack. And if we reuse
-the nr_regs slot, no stack will be consumed. However, it will make
-thing complex, which I don't think we should do.
+	kernel/trace/trace.c:4273 print_trace_fmt()
+	warn: if statement not indented
 
-> Sigh.
-> I understand that cookie from one session shouldn't interfere
-> with another, but it's all getting quite complex
-> especially when everything is in assembly.
-> And this is just x86 JIT. Other JITs would need to copy
-> this complex logic :(
+kernel/trace/trace.c
+    4260         if (trace_seq_has_overflowed(s))
+    4261                 return TRACE_TYPE_PARTIAL_LINE;
+    4262 
+    4263         if (event) {
+    4264                 if (tr->trace_flags & TRACE_ITER_FIELDS)
+    4265                         return print_event_fields(iter, event);
+    4266                 /*
+    4267                  * For TRACE_EVENT() events, the print_fmt is not
+    4268                  * safe to use if the array has delta offsets
+    4269                  * Force printing via the fields.
+    4270                  */
+    4271                 if ((tr->text_delta)) {
+    4272                         /* ftrace and system call events are still OK */
+--> 4273                         if ((event->type > __TRACE_LAST_TYPE) &&
+    4274                             !is_syscall_event(event))
 
-Without the session cookie, it will be much easier to implement
-in another arch. And with the hepler of AI(such as cursor), it can
-be done easily ;)
+I feel like there was a line of code here that was accidentally left out
+of the commit.
 
-> At this point I'm not sure that "symmetry with kprobe_multi_session"
-> is justified as a reason to add all that.
-> We don't have a kprobe_session for individual kprobes after all.
+    4275                         return print_event_fields(iter, event);
 
-As for my case, the tracing session can make my code much
-simpler, as I always use the fentry+fexit to hook a function. And
-the fexit skipping according to the return value of fentry can also
-achieve better performance.
+Or we could add another tab here, but my guess is there is a missing
+statement.
 
-AFAIT, the mast usage of session cookie in kprobe is passing the
-function arguments to the exit. For tracing, we can get the args
-in the fexit. So the session cookie in tracing is not as important as
-in kprobe.
+    4276                 }
+    4277                 return event->funcs->trace(iter, sym_flags, event);
+    4278         }
+    4279 
+    4280         trace_seq_printf(s, "Unknown type %d\n", entry->type);
+    4281 
+    4282         return trace_handle_return(s);
+    4283 }
 
-What do you think?
-
-Thanks!
-Menglong Dong
-
-> I think we better spend the energy designing a mechanism to
-> connect existing fentry prog with fexit prog without hacking
-> it through a stack in the bpf trampoline.
->
-> Sorry.
->
-> pw-bot: cr
+regards,
+dan carpenter
