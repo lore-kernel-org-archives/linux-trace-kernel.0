@@ -1,81 +1,75 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2F641C84CB
-	for <linux-trace-kernel@vger.kernel.org>; Sun,  2 Nov 2025 17:38:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D41828479;
+	Sun,  2 Nov 2025 23:39:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762105084; cv=none; b=Z9WSir6KaKFE/3g+Z7j7wL9VJEWKvmFgiKdwc6uMmQf+cuoAp/h4CJKnKD8SWbM27+kW9lpUXLJsQcByzJk5VdUBvH4X20vrJHza1Oz5JZe1S5UBev7JkOiXrMUhD4SJrKvP34XDjIeoMyYeIzdx+W8ofqgi4YdGd7+GMqgkDLc=
+	t=1762126772; cv=none; b=N1mq1gI+zSZ09Zu3T/HBpGLC43NkkRFHYyddej84YGoSHk6BrL4rw0S10x3t/NRpw7FPawendIySOLW1ntQJQZanYTqHNNeov4Fh+m4Wx7CBpij3CYbwg9Sen+JYP8+k2pTnpKiAg1lsXuhCczlvpR80RFv/g8GGIRaxB7LC75c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762105084; c=relaxed/simple;
-	bh=o0FIdqFREk++l3J1v2J3tW9h4pt95Mr7/7IG2Ece5Aw=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=g7G4pRLgJkIY3oKTRvx00gZwRJXlRHI9b23b/PM+OzI56CvfQuVL/e9fRwX0P6iPAbrGcx+wkQyDpjDDt/klhMKSJoaoSNqMGaiDSvj9YHv8jo+aMSKSkFjUyJsJW/1eJ7lTnOA55eWpyAYhWGrS/1GzVi15vveWTK618vBMvsk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-4330ead8432so24087155ab.0
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 02 Nov 2025 09:38:02 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762105082; x=1762709882;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=r/wAEv9GIPrwh1+x/pr00cLookNh43MVdSe1H945Cxs=;
-        b=BSK+InaX4YxQkxXVoblDU6kutD0b7QaiKf2aohWMhudqavk/Zf6Dol6w+MMJT1fbeY
-         sLBY2UAxxCqtYq85jp0htFTDyJRECkfPT0v5a9kKbOFbRVxE+i1BeeSy46YZJuGR6o9b
-         3lm/sBZ+7NPFsjpUt+K8t8LW4YMo23B4DZO5JgNJWWpJhhq8/nTpF7pbePv0DJw1YfBK
-         Se6iZRakC6Shz0CEfbwscHStHa6Yw65Rd7NBbYsJvcVve7E0kSmWumVZVFE4NS+IXtdn
-         RbB/awXs4LTNwrUGm8fWTedUKDiPnHv4dqBryyrfxz9jmxeeUpHJCKYc/XxvrpmGUtlQ
-         qF9g==
-X-Forwarded-Encrypted: i=1; AJvYcCU+sNJ0O6a2v1C0MBAZJI2+JZqCxfq6yhdzavdYGaE8Ov3QfgWpdJDokO/acO0dThnRq4qAnp+iODhaCeLCvYboGzY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxzu7giJfVqIfsMOOAsGCgAyvBfiIQa1lO7Qxe+AGBdL9Bf5sAA
-	mKbQb69QZkHnGGpSkzHiUyJwiFPj7Xwph7YObk3wDTyKBu9NolmXjNw+sK90inbrKgqtyUuQUSK
-	uk4FeI9XlkoEV+rt9uXy9vulZcQoG/xQwrO9hORC7PkLeujNo3aifXfodrAA=
-X-Google-Smtp-Source: AGHT+IG1zgigFckBfcGNeJaiPbJX6Gh9TmGX80g1LSF0Ct9iysgCECfpHX/faSxFEexyhP9Nc8O6trkMpNHWl4XussCMo5cabh/D
+	s=arc-20240116; t=1762126772; c=relaxed/simple;
+	bh=JTfg5wvOSSMbGw1iWuRfnXsinP4kfZYRB9vwpqILAaU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=b3M2zeMz8+TVuw/Uinr60Iz8a/DiKA5dahyyWcvKLFxZhNUm5DzVI2wWRe9bZDBMGS84JgBo29pCpPQXGjpT0GwFVaWAF/q8bKaMVXlzIYdRjzxR5OEDY2CXc0g9Ns9eR3Xx8rzkQs8FaIi8arQYkZuVO3vt2SUBGEol7VHKPfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf02.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id BD1D6BC356;
+	Sun,  2 Nov 2025 23:39:21 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf02.hostedemail.com (Postfix) with ESMTPA id 294328000F;
+	Sun,  2 Nov 2025 23:39:19 +0000 (UTC)
+Date: Sun, 2 Nov 2025 18:39:21 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Song Liu <song@kernel.org>, bpf <bpf@vger.kernel.org>,
+ linux-trace-kernel <linux-trace-kernel@vger.kernel.org>,
+ live-patching@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>, Daniel
+ Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ Andrey Grodzovsky <andrey.grodzovsky@crowdstrike.com>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Kernel Team <kernel-team@meta.com>, Jiri Olsa
+ <olsajiri@gmail.com>
+Subject: Re: [PATCH v4 bpf 0/3] Fix ftrace for livepatch + BPF fexit
+ programs
+Message-ID: <20251102183921.795946be@gandalf.local.home>
+In-Reply-To: <20251101091116.763638e5@batman.local.home>
+References: <20251027175023.1521602-1-song@kernel.org>
+	<CAADnVQ+azh4iUmq4_RHYatphAaZUGsW0Zo8=vGOT1_fv-UYOaA@mail.gmail.com>
+	<20251101091116.763638e5@batman.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:3e8c:b0:430:ab63:69d6 with SMTP id
- e9e14a558f8ab-4330d1c9e60mr128484625ab.21.1762105082195; Sun, 02 Nov 2025
- 09:38:02 -0800 (PST)
-Date: Sun, 02 Nov 2025 09:38:02 -0800
-In-Reply-To: <67b454d4.050a0220.173698.0051.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <690796fa.a70a0220.37351b.000b.GAE@google.com>
-Subject: Re: [syzbot] [kernfs?] [netfs?] INFO: task hung in pipe_write (6)
-From: syzbot <syzbot+5984e31a805252b3b40a@syzkaller.appspotmail.com>
-To: asmadeus@codewreck.org, brauner@kernel.org, ceph-devel@vger.kernel.org, 
-	dhowells@redhat.com, gregkh@linuxfoundation.org, idryomov@gmail.com, 
-	jack@suse.cz, jlayton@kernel.org, kprateek.nayak@amd.com, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com, 
-	mhiramat@kernel.org, netfs@lists.linux.dev, oleg@redhat.com, 
-	rostedt@goodmis.org, syzkaller-bugs@googlegroups.com, tj@kernel.org, 
-	viro@zeniv.linux.org.uk, xiubli@redhat.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: 7hjd5wcb3154th1rxqr7wftcoqzt44rm
+X-Rspamd-Server: rspamout01
+X-Rspamd-Queue-Id: 294328000F
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+MZt+rdSRgoLOtePwqldmbMJy0Z1jMA4A=
+X-HE-Tag: 1762126759-668126
+X-HE-Meta: U2FsdGVkX19mfh72onqb0owf+ocMTCDYMD3aP0mt79d0BWncj7+ru83fkYRqz9nfVJPRGPSqpVgAsjW5MDKSSH44tlZUIowwrsiIi9w1Pgv6eegWJVZzLbRPv4tl+n9T7GsKNHejqyRlMbA1hd5txjIia1wcuwWku5NEgoagozrJ5KBwUNUkr1HsB/pa9JTqkoD0AhexbY82WXbhq+p5cGhiXj5EyXve1iPnw6iHH5tnE/pVoe4psS4z4vb0PvYmcyVceS3Q5c/nU/Iku3FRAKGGBocuLboNkSj3DYCil3qe/J1MVhhvSmbvbgiuEIWOt4t748JQIYdK8D6Xx0x0APo2mdTcTHR+sUTiW8CjoMLd56H7KBtOFAM/cUMRNSAUAtl4Ofb7iUhz0dpry6F+Xg==
 
-syzbot suspects this issue was fixed by commit:
+On Sat, 1 Nov 2025 09:11:16 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-commit e8fe3f07a357c39d429e02ca34f740692d88967a
-Author: Oleg Nesterov <oleg@redhat.com>
-Date:   Tue Aug 19 16:10:13 2025 +0000
+> On Fri, 31 Oct 2025 17:19:54 -0700
+> Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
+> 
+> > can you apply the fixes or should I take them ?
+> > If so, pls ack.  
+> 
+> Let me run them through my full test suite. It takes up to 13 hours to
+> run. Then I'll give a ack for you to take them.
+> 
 
-    9p/trans_fd: p9_fd_request: kick rx thread if EPOLLIN
+They passed my tests.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=154ba342580000
-start commit:   ad1b832bf1cf Merge tag 'devicetree-fixes-for-6.14-1' of gi..
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=e55cabe422b4fcaf
-dashboard link: https://syzkaller.appspot.com/bug?extid=5984e31a805252b3b40a
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=170d57df980000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12df35a4580000
+Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-If the result looks correct, please mark the issue as fixed by replying with:
+Feel free to send them through the BPF tree.
 
-#syz fix: 9p/trans_fd: p9_fd_request: kick rx thread if EPOLLIN
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+-- Steve
