@@ -1,183 +1,235 @@
-Received: from mail-pj1-f65.google.com (mail-pj1-f65.google.com [209.85.216.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82363221DB5
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  3 Nov 2025 06:34:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51773277C81;
+	Mon,  3 Nov 2025 08:33:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762151683; cv=none; b=Rt8aic24wux6ZTk7COHCYoBogxfrcbe2n8zhmx5TxsyzEk0Bg3UoFbpTl+j5gDAZEGnhcED+WyOL3hBf0LB/xv75EckcAkHtrqriFlF3nFbgTIaOMAYS4k+dXs799M/73clEqK0z/R0+eQ7xK+QkHn0ZyBUPKA8clz97IQ99tLA=
+	t=1762158840; cv=none; b=ir/tMIcCo5eUcWLUN7lCJTODuJq4+3qnppCCF2SXIz1HWs7GPs8eGxLfSfsypupupY/TgPUIblOFw0+jEeyz+i4qyjvrBBQWnRz/PLr96nqvq+QtJ0+gOEgvruCRCuMCYxwcgwNwpr4P7qHnooO6QK4mSkRsE4r9MnzVsf8suGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762151683; c=relaxed/simple;
-	bh=l3X8/HCu2jjhNwfqprnRXqlwt8o4gif9BBGKVwAZJ08=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WPFxgEtdjv+Q/5i7ppSPRAZ3N76ZU03nCwzyzGRbdYrqXdRg5QvBRahI6hE5T7tW0xmqLHEtv7XtKI1s4VPATR9OQbnVKL2wlGuyIaZ6f/7LEnt52jKIpcojeavmfRBKiDvwWjADW723rsLFAhAlby5XxOmdKcyJ8Yzdkl0mqqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=csO3V6h3; arc=none smtp.client-ip=209.85.216.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1762158840; c=relaxed/simple;
+	bh=YWu2XM7OXAN7C4pR9dsSPVi0rznxl/ZiAMYDWxHsIlc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZguvQDWaQL4vNquhxVy+43MGM8WxHAaLUbKzNWmpqcJTftUkh/eZ3ncg3Oa2+SXOQ/TjAFcll7gU16XmBPONudKFKVPb3R16ep0X0zwU4x1OOMQR245t4gO0+Wsx9NgADIvqXuiJ26UEw4sc7R4QSAG+qCfAu55qklIKSysJQMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=SIJzn+1B; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="csO3V6h3"
-Received: by mail-pj1-f65.google.com with SMTP id 98e67ed59e1d1-340bcc92c7dso1407523a91.0
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 02 Nov 2025 22:34:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762151682; x=1762756482; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=y0cklwjYFWwcH/zJRyQ1Tmvs7zr5qVecrRqFbTLGTgg=;
-        b=csO3V6h3o3x15USzxQ5voMe3noUZam+etJBf4n4K3FD9VM7PZVpmgizgDpd++bHvc+
-         I3Y5ulJV0hHyiFnYDmJXYXEIGZTAsVcOqTbOGMKJDUKtwrpd1FD+8PjCK1tMDxaOzbxD
-         l92/SZllYLZb5kJuBsOhG1d4TVaw7UQYnxg3HBHZqSadeT4FmWzUrE5pt719+0AHCWAx
-         yIJLk8jT8iz3zfsQm3nep7Hf6nuFwiB6CaZUpG2cAOvaBtp+tJENb4vDqQnRDpk/kQDK
-         T11t2gndNwgcN7lFe506tcWowAPP7qovAuJIF4AGtw1W4Dxr8cpF152W/PKIGbeJhGia
-         I/rQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762151682; x=1762756482;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=y0cklwjYFWwcH/zJRyQ1Tmvs7zr5qVecrRqFbTLGTgg=;
-        b=CGtlW9Y9jmQkZa+EHhW1Y0f/5JqpNPa+zYB0xCS1bewnmHg0rU1tgjxuh2RNYyDOaV
-         tQ0liMF3a+vZqqTEg3TwvPEvikjOvxdNXRcBmW8ooX1YBKELQhW/gCeopJp1X2Jgs6Z+
-         BhIxEdmiCaIYYK6BNvYJqVW2gRYJPKAs1x/8RyrYyLiOC9CycA0gozfTRxZ2PO6sg5Zi
-         m28FWmr7SzD0yuWyJCMrT62IIB+GbIdeEbUvuWPxKCW9iV+kwrkf7uY4JL9zjlhjCWg1
-         hNSVVemumpj2tv3rnwOPqpbRswTnpx5INx3tcBBpwX4ocNBruWOpbjyG9gxFkCCvTcKs
-         gUHA==
-X-Forwarded-Encrypted: i=1; AJvYcCWqteL/XzEaFGXFZ8T1w9d80sKg209ST5dfnCLEA0k2b4sbjny4K+FN3jxW7yanRz7c+IJc4G7i/uya0dXYUVgtD2A=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzvt3Y4+31SBSwyvEmpyjtfcoSacIf9OpXh7Ue40e0hj5U+4fwG
-	OtP2xZ2fsMUIjbimyQ7l+5803WKX6+F7aHMUmTLimJgeEZIsdiw+qPvr
-X-Gm-Gg: ASbGncvsNxT50Yx25dKPyjACSz977PpVzQHcEUozdcYRkp1gkKIWfSvbaPUvQnJ+Vu/
-	K0MGfhdujGEUQqyFsLTNxB/WAde2al+ung72y7WLRzSFbcOZsCp/rCMp2kV/QwZVhFSlomtPRmF
-	hpuLiDjuTSkJxI14rynLqcmZrjodEskJQWLs8GU++wgfEvxOwIvuxqO4vjwf/1cYf/vjEtvn4PV
-	I42GC0W2d/gJbdDBG/WsUHTD/YQVAlHTerNX6i6XUeM5vrM7W9opHspgdT/WzK+EIEpkGcvhSkZ
-	J/jcvx3K7D+LsUc0Z2yQ+z5xWKqGeAGcLCeXYI6mxp7G+nsast9qJUG8gj3o8jfsai320TBrKUc
-	qXwqDS7aF25iPq+24WuYMqy9gL59P+OpVlMJmxr5KBcFLuVF19xlYmnQQCmNqsjcBUUX3WpmHh5
-	pS
-X-Google-Smtp-Source: AGHT+IGdj6Fh9qiNLzROwa+IJ6zR12Ju+TaxMNk+532E7LVd24e4IdXGR46tFBhnzHEeLr0aBGl4vA==
-X-Received: by 2002:a17:90b:6cd:b0:340:e8ce:7569 with SMTP id 98e67ed59e1d1-340e8ce7685mr5427076a91.12.1762151681569;
-        Sun, 02 Nov 2025 22:34:41 -0800 (PST)
-Received: from 7950hx ([43.129.244.20])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7ab5ee9fde6sm1777415b3a.45.2025.11.02.22.34.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Nov 2025 22:34:41 -0800 (PST)
-From: Menglong Dong <menglong8.dong@gmail.com>
-X-Google-Original-From: Menglong Dong <dongml2@chinatelecom.cn>
-To: mhiramat@kernel.org
-Cc: rostedt@goodmis.org,
-	jolsa@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	jiang.biao@linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v3] tracing: fprobe: use ftrace if CONFIG_DYNAMIC_FTRACE_WITH_ARGS
-Date: Mon,  3 Nov 2025 14:34:34 +0800
-Message-ID: <20251103063434.47388-1-dongml2@chinatelecom.cn>
-X-Mailer: git-send-email 2.51.2
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="SIJzn+1B"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5A2KFI8K004420;
+	Mon, 3 Nov 2025 08:32:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=6kvXeg
+	tnHGH2dvhngivPl8vSn9VVnbxianx2ml6At6Q=; b=SIJzn+1B6W9oM2eaoy/YHg
+	eBBigTFYyvOI9FqFVbAxNQBJk7OsJkIcL71Bfna6VZUkqh40c7GapUFYZ5iF8sRv
+	Gr8dTXMymRtZJ8s++yexWv1ij7wo6VYhShrZhVDq41yj75ph0JeGVCKADK/YHtTq
+	GX3MIMDZ/N5qqAEIbGF00Q5htF6MOC+XL4hF518BX18l+iJjxcQbmu4bDG1zmjC4
+	JaRrWPwAdwUgpIOYFdxBzdZMRCWUzsW/HgM451x3+JWx1KfcwQmlDNOkYt4NhTIW
+	gRD9YIaV0/uJm8zB4i1DBFMoHs18pKBmB/HXGu5E8lZ+lxXr3R2rXIwqr6iKj5Pg
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4a59xbnkvs-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 03 Nov 2025 08:32:27 +0000 (GMT)
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 5A38WQmQ029518;
+	Mon, 3 Nov 2025 08:32:27 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4a59xbnkvq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 03 Nov 2025 08:32:26 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5A34SfIE012891;
+	Mon, 3 Nov 2025 08:32:25 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4a5y81mbvw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 03 Nov 2025 08:32:25 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5A38WNYw44106174
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 3 Nov 2025 08:32:23 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C27F220040;
+	Mon,  3 Nov 2025 08:32:23 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 16F2220043;
+	Mon,  3 Nov 2025 08:32:13 +0000 (GMT)
+Received: from [9.109.215.252] (unknown [9.109.215.252])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon,  3 Nov 2025 08:32:12 +0000 (GMT)
+Message-ID: <dee4dc13-b187-42df-93ce-f738cfab32ea@linux.ibm.com>
+Date: Mon, 3 Nov 2025 14:02:11 +0530
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 23/29] context-tracking: Introduce work deferral
+ infrastructure
+To: Valentin Schneider <vschneid@redhat.com>
+Cc: Nicolas Saenz Julienne <nsaenzju@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Jason Baron <jbaron@akamai.com>, Steven Rostedt <rostedt@goodmis.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+        Joel Fernandes <joelagnelf@nvidia.com>,
+        Josh Triplett
+ <josh@joshtriplett.org>,
+        Boqun Feng <boqun.feng@gmail.com>, Uladzislau Rezki <urezki@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Mel Gorman <mgorman@suse.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masahiro Yamada <masahiroy@kernel.org>, Han Shen <shenhan@google.com>,
+        Rik van Riel <riel@surriel.com>, Jann Horn <jannh@google.com>,
+        Dan Carpenter <dan.carpenter@linaro.org>,
+        Oleg Nesterov <oleg@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+        Clark Williams <williams@redhat.com>,
+        Yair Podemsky <ypodemsk@redhat.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>, Daniel Wagner <dwagner@suse.de>,
+        Petr Tesarik <ptesarik@suse.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, rcu@vger.kernel.org, x86@kernel.org,
+        linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+        linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org
+References: <20251010153839.151763-1-vschneid@redhat.com>
+ <20251010153839.151763-24-vschneid@redhat.com>
+Content-Language: en-US
+From: Shrikanth Hegde <sshegde@linux.ibm.com>
+In-Reply-To: <20251010153839.151763-24-vschneid@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTAxMDAyMSBTYWx0ZWRfXyZF7uxWMbR9h
+ eLK/nkDGQm3o/vMS6b4dMArF21TNJ6CaqoI+fi7VPIcu7OWjh13TfAaGOyTxh1gnwQIWiBKHjJa
+ 4uMwIrzLslo+qUygbHd9488ZCjL6vK5iXuiWUNX6ThTOzJBP1PKCUz5zZmvloNgyToR45jE2irN
+ a4EYP7E5d99vyLe0EnPUaY+AWXCKsxBO2ENMsQJ0K7+9kC0+hwsMybY4fCkeMcwmUxF0SvKxntf
+ G1Y18toiIF/maL5RFi7povbdJ4FJNPvHT8auC2LdGyFW5VpJAL0soYtskChjteGM2wfpc+kcC7y
+ KDSiIb0W+R7wCTgyXcXkjXUndM3ScPyUHlasPD5janXDgGwLZxidSrdWYD0Sch6Yd3oNTOJv1+T
+ flE5Wy2KQc8LqVOKJgn3Dc1iG4Hf4Q==
+X-Proofpoint-GUID: U84lOeDC5Q0AhrPIqcAHknHeCkhsE8rA
+X-Authority-Analysis: v=2.4 cv=OdCVzxTY c=1 sm=1 tr=0 ts=6908689b cx=c_pps
+ a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
+ a=IkcTkHD0fZMA:10 a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=VwQbUJbxAAAA:8 a=JfrnYn6hAAAA:8 a=20KFwNOVAAAA:8 a=e3ynTO8eh5RAdg4_BR0A:9
+ a=QEXdDO2ut3YA:10 a=1CNFftbPRP8L7MoqJWF3:22 a=UhEZJTgQB8St2RibIkdl:22
+ a=Z5ABNNGmrOfJ6cZ5bIyy:22 a=QOGEsqRv6VhmHaoFNykA:22
+X-Proofpoint-ORIG-GUID: Yw4-ly9gm_lGmLrDsIj0uqTuFktFQQKI
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-11-02_02,2025-10-29_03,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 adultscore=0 spamscore=0 suspectscore=0 impostorscore=0
+ lowpriorityscore=0 priorityscore=1501 clxscore=1011 phishscore=0 bulkscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2510240000 definitions=main-2511010021
 
-For now, we will use ftrace for the fprobe if fp->exit_handler not exists
-and CONFIG_DYNAMIC_FTRACE_WITH_REGS is enabled.
+Hi Valentin.
 
-However, CONFIG_DYNAMIC_FTRACE_WITH_REGS is not supported by some arch,
-such as arm. What we need in the fprobe is the function arguments, so we
-can use ftrace for fprobe if CONFIG_DYNAMIC_FTRACE_WITH_ARGS is enabled.
+On 10/10/25 9:08 PM, Valentin Schneider wrote:
+> smp_call_function() & friends have the unfortunate habit of sending IPIs to
+> isolated, NOHZ_FULL, in-userspace CPUs, as they blindly target all online
+> CPUs.
+> 
+> Some callsites can be bent into doing the right, such as done by commit:
+> 
+>    cc9e303c91f5 ("x86/cpu: Disable frequency requests via aperfmperf IPI for nohz_full CPUs")
+> 
+> Unfortunately, not all SMP callbacks can be omitted in this
+> fashion. However, some of them only affect execution in kernelspace, which
+> means they don't have to be executed *immediately* if the target CPU is in
+> userspace: stashing the callback and executing it upon the next kernel entry
+> would suffice. x86 kernel instruction patching or kernel TLB invalidation
+> are prime examples of it.
+> 
+> Reduce the RCU dynticks counter width to free up some bits to be used as a
+> deferred callback bitmask. Add some build-time checks to validate that
+> setup.
+> 
+> Presence of CT_RCU_WATCHING in the ct_state prevents queuing deferred work.
+> 
+> Later commits introduce the bit:callback mappings.
+> 
+> Link: https://lore.kernel.org/all/20210929151723.162004989@infradead.org/
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzju@redhat.com>
+> Signed-off-by: Valentin Schneider <vschneid@redhat.com>
+> ---
+>   arch/Kconfig                                 |  9 +++
+>   arch/x86/Kconfig                             |  1 +
+>   arch/x86/include/asm/context_tracking_work.h | 16 +++++
+>   include/linux/context_tracking.h             | 21 ++++++
+>   include/linux/context_tracking_state.h       | 30 ++++++---
+>   include/linux/context_tracking_work.h        | 26 ++++++++
+>   kernel/context_tracking.c                    | 69 +++++++++++++++++++-
+>   kernel/time/Kconfig                          |  5 ++
+>   8 files changed, 165 insertions(+), 12 deletions(-)
+>   create mode 100644 arch/x86/include/asm/context_tracking_work.h
+>   create mode 100644 include/linux/context_tracking_work.h
+> 
+> diff --git a/include/linux/context_tracking_work.h b/include/linux/context_tracking_work.h
+> new file mode 100644
+> index 0000000000000..c68245f8d77c5
+> --- /dev/null
+> +++ b/include/linux/context_tracking_work.h
+> @@ -0,0 +1,26 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _LINUX_CONTEXT_TRACKING_WORK_H
+> +#define _LINUX_CONTEXT_TRACKING_WORK_H
+> +
+> +#include <linux/bitops.h>
+> +
+> +enum {
+> +	CT_WORK_n_OFFSET,
+> +	CT_WORK_MAX_OFFSET
+> +};
+> +
+> +enum ct_work {
+> +	CT_WORK_n        = BIT(CT_WORK_n_OFFSET),
+> +	CT_WORK_MAX      = BIT(CT_WORK_MAX_OFFSET)
+> +};
+> +
+> +#include <asm/context_tracking_work.h>
+> +
 
-Therefore, use ftrace if CONFIG_DYNAMIC_FTRACE_WITH_REGS or
-CONFIG_DYNAMIC_FTRACE_WITH_ARGS enabled.
+It fails to compile on powerpc (likey any arch other than x86)
 
-Signed-off-by: Menglong Dong <dongml2@chinatelecom.cn>
----
-v3:
-- fix the build warning when CONFIG_MODULES not enabled
+In file included from ./include/linux/context_tracking_state.h:8,
+                  from ./include/linux/hardirq.h:5,
+                  from ./include/linux/interrupt.h:11,
+                  from ./include/linux/kernel_stat.h:8,
+                  from ./include/linux/cgroup.h:27,
+                  from ./include/linux/memcontrol.h:13,
+                  from ./include/linux/swap.h:9,
+                  from ./include/linux/suspend.h:5,
+                  from arch/powerpc/kernel/asm-offsets.c:21:
+./include/linux/context_tracking_work.h:17:10: fatal error: 
+asm/context_tracking_work.h: No such file or directory
+    17 | #include <asm/context_tracking_work.h>
+       |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-v2:
-- remove the definition of FPROBE_USE_FTRACE
----
- kernel/trace/fprobe.c | 32 ++++++++++++++++++++++----------
- 1 file changed, 22 insertions(+), 10 deletions(-)
 
-diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-index ecd623eef68b..0b1ee8e585f2 100644
---- a/kernel/trace/fprobe.c
-+++ b/kernel/trace/fprobe.c
-@@ -44,6 +44,7 @@
- static struct hlist_head fprobe_table[FPROBE_TABLE_SIZE];
- static struct rhltable fprobe_ip_table;
- static DEFINE_MUTEX(fprobe_mutex);
-+static struct fgraph_ops fprobe_graph_ops;
- 
- static u32 fprobe_node_hashfn(const void *data, u32 len, u32 seed)
- {
-@@ -254,7 +255,7 @@ static inline int __fprobe_kprobe_handler(unsigned long ip, unsigned long parent
- 	return ret;
- }
- 
--#ifdef CONFIG_DYNAMIC_FTRACE_WITH_REGS
-+#if defined(CONFIG_DYNAMIC_FTRACE_WITH_ARGS) || defined(CONFIG_DYNAMIC_FTRACE_WITH_REGS)
- /* ftrace_ops callback, this processes fprobes which have only entry_handler. */
- static void fprobe_ftrace_entry(unsigned long ip, unsigned long parent_ip,
- 	struct ftrace_ops *ops, struct ftrace_regs *fregs)
-@@ -295,7 +296,7 @@ NOKPROBE_SYMBOL(fprobe_ftrace_entry);
- 
- static struct ftrace_ops fprobe_ftrace_ops = {
- 	.func	= fprobe_ftrace_entry,
--	.flags	= FTRACE_OPS_FL_SAVE_REGS,
-+	.flags	= FTRACE_OPS_FL_SAVE_ARGS,
- };
- static int fprobe_ftrace_active;
- 
-@@ -335,6 +336,15 @@ static bool fprobe_is_ftrace(struct fprobe *fp)
- {
- 	return !fp->exit_handler;
- }
-+
-+#ifdef CONFIG_MODULES
-+static void fprobe_set_ips(unsigned long *ips, unsigned int cnt, int remove,
-+			   int reset)
-+{
-+	ftrace_set_filter_ips(&fprobe_graph_ops.ops, ips, cnt, remove, reset);
-+	ftrace_set_filter_ips(&fprobe_ftrace_ops, ips, cnt, remove, reset);
-+}
+Gating works for compile, but no benefit of the series.
+
++#ifdef HAVE_CONTEXT_TRACKING_WORK
+  #include <asm/context_tracking_work.h>
 +#endif
- #else
- static int fprobe_ftrace_add_ips(unsigned long *addrs, int num)
- {
-@@ -349,7 +359,15 @@ static bool fprobe_is_ftrace(struct fprobe *fp)
- {
- 	return false;
- }
-+
-+#ifdef CONFIG_MODULES
-+static void fprobe_set_ips(unsigned long *ips, unsigned int cnt, int remove,
-+			   int reset)
-+{
-+	ftrace_set_filter_ips(&fprobe_graph_ops.ops, ips, cnt, remove, reset);
-+}
- #endif
-+#endif /* !CONFIG_DYNAMIC_FTRACE_WITH_ARGS && !CONFIG_DYNAMIC_FTRACE_WITH_REGS */
- 
- /* fgraph_ops callback, this processes fprobes which have exit_handler. */
- static int fprobe_fgraph_entry(struct ftrace_graph_ent *trace, struct fgraph_ops *gops,
-@@ -596,14 +614,8 @@ static int fprobe_module_callback(struct notifier_block *nb,
- 	} while (node == ERR_PTR(-EAGAIN));
- 	rhashtable_walk_exit(&iter);
- 
--	if (alist.index > 0) {
--		ftrace_set_filter_ips(&fprobe_graph_ops.ops,
--				      alist.addrs, alist.index, 1, 0);
--#ifdef CONFIG_DYNAMIC_FTRACE_WITH_REGS
--		ftrace_set_filter_ips(&fprobe_ftrace_ops,
--				      alist.addrs, alist.index, 1, 0);
--#endif
--	}
-+	if (alist.index > 0)
-+		fprobe_set_ips(alist.addrs, alist.index, 1, 0);
- 	mutex_unlock(&fprobe_mutex);
- 
- 	kfree(alist.addrs);
--- 
-2.51.2
 
+
+I have been trying to debug/understand the issue seen with isolcpus= and
+nohz_full=. system is idle, even then it occasionally woken up to do 
+some work. So I was interesting if this series can help.
