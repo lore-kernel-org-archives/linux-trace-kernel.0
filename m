@@ -1,62 +1,64 @@
-Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A71CC1A3165
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  3 Nov 2025 16:19:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A14C2315D45
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  3 Nov 2025 16:19:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762186781; cv=none; b=n4GYX5njekYRxtwmrRJuFPXie8rSFSy8auf2zmdY27cLEaDwrsVAj1S3aLu7MPoyKAo4M1xiSXAf32ffldzmQ689d4qQZnHU0Z5WpvA1dROd3qNLDQs8MzIsgPeuQGzhuqzyQTUl+00Z0QL25J7PpCGxaP0BB0dJuTX0ZBVJ52g=
+	t=1762186793; cv=none; b=ZZakW8Q/m09Cw+AOGBFvslwMjhjlRbGCTeZpuzW6Ok4M0UHxPMQJvbpHuaImXUmPTSGJ4ENj/ytViBI/iOXyoePL5KMJbIhBkiaatizJzrjp42QN+X72U2Uv3dNyQZRZGK/gA7vKbzvT8q7IaQSyNn0ZblzJ7QW1UCagLPoxqss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762186781; c=relaxed/simple;
-	bh=SA8YBwX6UV/exj69CxLhHvYltiFC6wLWEhuIydTpxus=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Abcx5hcIsn1iMG0omiEd5V5yzL6E68bocOsR96q295LTT6vGm6K2fQxKp69+bhlJiJOnHZY//NU7MX1BF0BOfNYCiriVSq+8CQijl7cBQEpYQFs/ila9h67uyJkZ5htvmTZ0rEjyBUELbSY2ABxv+HyViPYtE6dFFkIOKjTin1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DW2D3EZL; arc=none smtp.client-ip=209.85.219.53
+	s=arc-20240116; t=1762186793; c=relaxed/simple;
+	bh=tNCtfZXrwra07r6TPtCLq3FKK/mpUzFwvZ2s9FeejDs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=mGDgFryazIVZK//rwN7j9OQFutBvWuvOV7MRldqfJvuIo/zejZvN1+9Z2rWT4IjYdHEum+q8KwYuCPI8nMbhmORaDyXM5nfVh+sJ3r3oE4rIADXsEgY/z9HOm76XVuYFRweK/Mdq+o6npd8ScIxpXjg8Yg+tY0FfnYNBk5Z2j7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mH8Vi8sR; arc=none smtp.client-ip=209.85.160.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DW2D3EZL"
-Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-88056cab4eeso7682746d6.2
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 03 Nov 2025 08:19:38 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mH8Vi8sR"
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-4ed59386345so4084171cf.3
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 03 Nov 2025 08:19:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762186777; x=1762791577; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ncd8iftKarOftKagzkM1Xq0zcBakpgViOG8SqvFntD8=;
-        b=DW2D3EZLMhCYEg7/WUS5CDUC8gjTNM77YeaSHNPHUGPmxLJ98Q0DFehyVSoO3JivoN
-         k0FlfzsySn9uA6UBAmIz7qyz36z1xm94/1AswpDGs42TuGUegAQ9BEI1imKM94qQ4L6x
-         zvsuXPMS3ICQR5zuYTxwWcfgoA0RT8JjkedoGFY7RH3tjVgmmlWPisRWKr1ofVHbI77g
-         qYdTQSlcAd4ZGqJU/LnP1rVbSe2Bgv6TUxUAeLqIWmFhF5RBiLqgOUw4uazwICjAWERq
-         17n/rS2C628cz1fr1vBKUat4a/Z91YugnM1twYt/rCfeX3Shm8Ee0VwSw/E0CP0nq17M
-         +QrQ==
+        d=gmail.com; s=20230601; t=1762186790; x=1762791590; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CkQnkfhKVZ2WiQWF8dIRcSRecJlwiFQZcKoAtHOZptI=;
+        b=mH8Vi8sRhBm8+DlnEFic4H143eELnwSjJOqObtMyt33urOV4qVpN+kbOAhG6ErovmB
+         rahMmHzIpaZx4vmQBl4VQJQBh08LKSwv+V1KvU5xZro8F7GxnwJmiEuHDxJc8H/nf6AL
+         PpxbstlJxcDqhcjYA4i5DE98qWnJO2by9O2sxLclFODGif4Imab7S3zoCXtjM/UrXDCZ
+         s6+WCQn++dKY9P9Pfm679OFyuAVzI76LLldEZcHGVbO0h4tEvjoVakVZOl+nh8JZcz8d
+         929Qo3Oky3jRD/Ey5OYIqZjAH70JMu2lPlzgteXO5D4WKXGJzHpVm9Onpe1il/Ebck+J
+         A6dw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762186777; x=1762791577;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Ncd8iftKarOftKagzkM1Xq0zcBakpgViOG8SqvFntD8=;
-        b=i18smiVN4wQXOdGoCwWwlvFiSG/TpxXNFtJ68ecbWQB+iCoOKuxl3eMXjxYhh1IzIV
-         UWmzE5QegaOy3Hf+IaExPJ1VVXq4mkQHxGZQHc0AmyiZRvAmCxNQmqO5SwEjDX7fhw4b
-         YpTMxdksfCX62iE+PULQ/U1zlGTStAGC1GuNyQwycaGdHph8XcX9w0wApyfz9AXCchT3
-         o7Aw27/z4avOwccDJ/NhApDsUy9w72d9IMU5prRnvubKXCn+DhbKAiPhGWZ27zcgXuVo
-         A5AA1CCIYE0GCmP/tCzzEfFAKDg5hXS/EgXNMHYATqYBKEsbO66weDB2tRQukqBF+yxQ
-         QsYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWbIi5zigIIV1l+3N6GWGDSdfRpr7fXf8q6sFZt9WtVxvVnZnbUtuJsumVUUHbzV1NjI2cXDjCjDN7WxcUq9+YqQX8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxeKxRHFm2Tazzu5jCxWYf0QkCHwA5OnJtkaJ1IkfqxKkAK0+AI
-	3UIrdnnjAaLGvegTBYsvWdmsv4H+cSPHuo2BRzb/Izunuv/rzTD8O/Zu
-X-Gm-Gg: ASbGnctCw6SVI4+TvrOfxFBGqxQoqOBPKf7Jj/pkr9wOdk18j5OiiZAmV8QXLNXtXFZ
-	ltyWM7KI5rp0G4dV67eSUJb7HabJ0gHzSLTLyvYdIrJfx7MLa/3J16nHxQ/wR9VkhsbTRvzcWzq
-	ei4Jwo1BjGY65eAspzy+/nezXSqcLZNmLAchCNv5hppUDz0Es6NBc/wglyuAflhtTC6OzgxHdZ5
-	8z+fRRxyKl5Jlu4PosfX7dmcOc/3T2gfEVLO9pUqd3bQCoHABEgtGsLT2hreqPdCIDNEi/YxXbD
-	9agtWtuESBHpDBRhJNXgEOx51yYDrPC17eQOzK0D8/g1KoNa4oHUJH3KewHH5aSP/mEtxxZb7Ro
-	/82uXJ4lnbAQWXFzYB1DcRUDCrvmqA5RNGW+n6i2ZyVHAd9VpoAbFLWDRNQTsr1UzFOp7FC1HTZ
-	ZTyxjfcY3JXFTI708=
-X-Google-Smtp-Source: AGHT+IEAQfamPC/d0ofEW4bGHVEQ9HHMtZbp4Q8HmqPZCWRtg8LnyQJ/AkABfg86VcVL9UWlrv5V2w==
-X-Received: by 2002:a05:6214:f01:b0:785:aa57:b5bb with SMTP id 6a1803df08f44-8802f44b4b4mr155355746d6.43.1762186777421;
-        Mon, 03 Nov 2025 08:19:37 -0800 (PST)
+        d=1e100.net; s=20230601; t=1762186790; x=1762791590;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CkQnkfhKVZ2WiQWF8dIRcSRecJlwiFQZcKoAtHOZptI=;
+        b=bu/zn6ZEN+sle1v3zj8O1gikYHlzv8aqTLfF5L5oJ6RSo/4S3AmXNHMJtqKvJ4rzSJ
+         pYDHm8SVwVdG6K8tO6BTNa6vq6K5nRPYAtw21m1vedZN8vRMs/MJd42VxEKJOisihFE7
+         WL6W+kPs2AQiS0Z6GRi0NdAjld2QlS/u1akBhdqMo0vD16fAShOslCb2HXhUdKF3xYIv
+         LgMPDBI9hMTZ9fReZV11jAX8IhQLXtOm0oZCuDuDpf4oah8wvMQS3m/O7aqmcqhVM3L4
+         nvJdKmKLwGTSJd7+Ezh9ipcKrbZyQ1sRfHywCWYghrSYq5NjbhUiBdRfwhb2bGhxqthr
+         omAQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW+1/12S7UVBF/HCN8dbcCBdMIeznn51KJTk5WLDUGYqxp9qTijQ8FFKJFPkHxNQo5z15iMsWeWKG0smP37/uV3GXE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzCgmZ9yNQaMl5HxGFZ9H9OPe5rZpz28itVZqCcqETe/8vsiJx1
+	mReIM+vog1DUVf1GBP+nn4lL50FqM6e91rc+ANedRaQQyRZ42Oy4ZUUI
+X-Gm-Gg: ASbGncuHT+hgtp39tbCYzWxZzA62htEf8Meu4Mxl7kRdTyYTcu5eT3LQQYxpfj0Jb/x
+	3CqDritFfYok8S3dHvz+cDILjcpb4N/7Up66urR5YDob8jGVQjDKjQwhRnFkrnbVU4Ydlvd+CoS
+	NeYVsiTNTdeYAZeYhKzlhjC5KsziujDuMVNwh/oIxInY352sGiclVUfSGA0Ms2EDRhz17253MhJ
+	2QlhHUxOMo1u5BaT5RE4W2iWNPjBHqWy02qNe93CUY+yHiVI2Yvvi5TyNXCr9Ph5McZc1bxXOj6
+	2tV2IdgKZSNW8ajcLyT1jSKdQU4MI3v2k8s4US7ZeBVdoHp9oJlGDbfzq4a4QRH2pOYZXlmAxEW
+	emQofyIp7mP5urrZnHOZKOk6l/z8u+yBDNfgHx2DNNC/0FuhWoXf4QCxSyoc2R6BUjUdUkWuZzR
+	7EBEvlqq0WJQ04bG0=
+X-Google-Smtp-Source: AGHT+IHNny3yWX9Yruit30c3eoP5E3WSUhPB8beHmWP8SSKoUCVna0DGoPW+Gvy7mNaqrpx2giRstw==
+X-Received: by 2002:ac8:7e8f:0:b0:4e8:9f2e:cfde with SMTP id d75a77b69052e-4ed30fd5f6dmr186515471cf.52.1762186790193;
+        Mon, 03 Nov 2025 08:19:50 -0800 (PST)
 Received: from ideapad.tufts.edu ([130.64.64.35])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-88060eb3332sm4273556d6.60.2025.11.03.08.19.36
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-88060eb3332sm4273556d6.60.2025.11.03.08.19.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Nov 2025 08:19:37 -0800 (PST)
+        Mon, 03 Nov 2025 08:19:49 -0800 (PST)
 From: Ivan Pravdin <ipravdin.official@gmail.com>
 To: rostedt@goodmis.org,
 	tglozar@redhat.com,
@@ -64,10 +66,12 @@ To: rostedt@goodmis.org,
 	linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Ivan Pravdin <ipravdin.official@gmail.com>
-Subject: [PATCH v5 0/2] rtla: fix cgroup and trace options parsing
-Date: Mon,  3 Nov 2025 11:19:04 -0500
-Message-ID: <cover.1762186418.git.ipravdin.official@gmail.com>
+Subject: [PATCH v5 1/2] rtla: fix -C/--cgroup interface
+Date: Mon,  3 Nov 2025 11:19:06 -0500
+Message-ID: <16132f1565cf5142b5fbd179975be370b529ced7.1762186418.git.ipravdin.official@gmail.com>
 X-Mailer: git-send-email 2.48.1
+In-Reply-To: <cover.1762186418.git.ipravdin.official@gmail.com>
+References: <cover.1762186418.git.ipravdin.official@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -76,63 +80,341 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This series fixes 2 issue in rtla timerlat and osnoise parsing.
+Currently, user can only specify cgroup to the tracer's thread the
+following ways:
 
-1. Make -C/--cgroup option more user-friendly. Currently rtla timerlat
-   and osnoise parses does not allow to specify tracer's threads cgroup
-   name as `-C [cgroup]` or `--cgroup [cgroup]`. Second patch fixes this
-   by allowing users to specify cgroup in the aforementioned manner.
+    `-C[cgroup]`
+    `-C[=cgroup]`
+    `--cgroup[=cgroup]`
 
-2. When specifying `-t/--trace` before `-a/--auto`, trace filename is
-   override to default <osnoise|timerlat>_trace.txt. For example, when
-   running rtla as
+If user tries to specify cgroup as `-C [cgroup]` or `--cgroup [cgroup]`,
+the parser silently fails and rtla's cgroup is used for the tracer
+threads.
 
-       `rtla timerlat top -t custom_file.txt -a 100`
+To make interface more user-friendly, allow user to specify cgroup in
+the aforementioned way, i.e. `-C [cgroup]` and `--cgroup [cgroup]`.
 
-   when the threshold is reached, timerlat_trace.txt file is created
-   instead of specified custom_file.txt. Third patch addresses this
-   issue.
-   
-changes v4 -> v5:
-   - Removed setting trace_output before checking if it's NULL in
-     `fix -a overriding -t argument` patch
+Refactor identical logic between -t/--trace and -C/--cgroup into a
+common function.
 
-changes v3 -> v4:
-   - Removed patch [1] as it has been mainlined
-   - Resolved merge conflicts with [2]
+Change documentation to reflect this user interface change.
 
-changes v2 -> v3:
-   - Combined common logic into a utility function to parse optional
-     argument value
-   - Removed change that removed `clear_terminal` 
-
-changes v1 -> v2:
-   - Moved removing clear_terminal from `fix -C/--cgroup interface`
-     patch to `fix -a overriding -t argument` patch
-   - Added clarification why to remove clear_terminal
-   - Added `Fixes:` tag to the `fix -C/--cgroup interface` patch
-
-v4: https://lore.kernel.org/all/cover.1760791697.git.ipravdin.official@gmail.com/
-v3: https://lore.kernel.org/all/cover.1757034919.git.ipravdin.official@gmail.com/
-v2: https://lore.kernel.org/all/cover.1755018581.git.ipravdin.official@gmail.com/
-v1: https://lore.kernel.org/all/cover.1755014784.git.ipravdin.official@gmail.com/
-
-[1] https://lore.kernel.org/all/164ffc2ec8edacaf1295789dad82a07817b6263d.1757034919.git.ipravdin.official@gmail.com/
-[2] https://patchwork.kernel.org/project/linux-trace-kernel/list/?series=999703
-
-Ivan Pravdin (2):
-  rtla: fix -C/--cgroup interface
-  rtla: fix -a overriding -t argument
-
+Fixes: a957cbc02531 ("rtla: Add -C cgroup support")
+Signed-off-by: Ivan Pravdin <ipravdin.official@gmail.com>
+Reviewed-by: Tomas Glozar <tglozar@redhat.com>
+---
  Documentation/tools/rtla/common_options.rst |  2 +-
- tools/tracing/rtla/src/osnoise_hist.c       | 29 +++++++--------------
- tools/tracing/rtla/src/osnoise_top.c        | 29 +++++++--------------
- tools/tracing/rtla/src/timerlat_hist.c      | 29 +++++++--------------
- tools/tracing/rtla/src/timerlat_top.c       | 29 +++++++--------------
- tools/tracing/rtla/src/utils.c              | 26 ++++++++++++++++++
+ tools/tracing/rtla/src/osnoise_hist.c       | 26 ++++++---------------
+ tools/tracing/rtla/src/osnoise_top.c        | 26 ++++++---------------
+ tools/tracing/rtla/src/timerlat_hist.c      | 26 ++++++---------------
+ tools/tracing/rtla/src/timerlat_top.c       | 26 ++++++---------------
+ tools/tracing/rtla/src/utils.c              | 26 +++++++++++++++++++++
  tools/tracing/rtla/src/utils.h              |  1 +
- 7 files changed, 64 insertions(+), 81 deletions(-)
+ 7 files changed, 56 insertions(+), 77 deletions(-)
 
+diff --git a/Documentation/tools/rtla/common_options.rst b/Documentation/tools/rtla/common_options.rst
+index 77ef35d3f831..edc8e850f5d0 100644
+--- a/Documentation/tools/rtla/common_options.rst
++++ b/Documentation/tools/rtla/common_options.rst
+@@ -42,7 +42,7 @@
+         - *f:prio* - use SCHED_FIFO with *prio*;
+         - *d:runtime[us|ms|s]:period[us|ms|s]* - use SCHED_DEADLINE with *runtime* and *period* in nanoseconds.
+ 
+-**-C**, **--cgroup**\[*=cgroup*]
++**-C**, **--cgroup** \[*cgroup*]
+ 
+         Set a *cgroup* to the tracer's threads. If the **-C** option is passed without arguments, the tracer's thread will inherit **rtla**'s *cgroup*. Otherwise, the threads will be placed on the *cgroup* passed to the option.
+ 
+diff --git a/tools/tracing/rtla/src/osnoise_hist.c b/tools/tracing/rtla/src/osnoise_hist.c
+index dffb6d0a98d7..8b12d8803998 100644
+--- a/tools/tracing/rtla/src/osnoise_hist.c
++++ b/tools/tracing/rtla/src/osnoise_hist.c
+@@ -428,9 +428,9 @@ static void osnoise_hist_usage(char *usage)
+ 	static const char * const msg[] = {
+ 		"",
+ 		"  usage: rtla osnoise hist [-h] [-D] [-d s] [-a us] [-p us] [-r us] [-s us] [-S us] \\",
+-		"	  [-T us] [-t[file]] [-e sys[:event]] [--filter <filter>] [--trigger <trigger>] \\",
++		"	  [-T us] [-t [file]] [-e sys[:event]] [--filter <filter>] [--trigger <trigger>] \\",
+ 		"	  [-c cpu-list] [-H cpu-list] [-P priority] [-b N] [-E N] [--no-header] [--no-summary] \\",
+-		"	  [--no-index] [--with-zeros] [-C[=cgroup_name]] [--warm-up]",
++		"	  [--no-index] [--with-zeros] [-C [cgroup_name]] [--warm-up]",
+ 		"",
+ 		"	  -h/--help: print this menu",
+ 		"	  -a/--auto: set automatic trace mode, stopping the session if argument in us sample is hit",
+@@ -441,10 +441,10 @@ static void osnoise_hist_usage(char *usage)
+ 		"	  -T/--threshold us: the minimum delta to be considered a noise",
+ 		"	  -c/--cpus cpu-list: list of cpus to run osnoise threads",
+ 		"	  -H/--house-keeping cpus: run rtla control threads only on the given cpus",
+-		"	  -C/--cgroup[=cgroup_name]: set cgroup, if no cgroup_name is passed, the rtla's cgroup will be inherited",
++		"	  -C/--cgroup [cgroup_name]: set cgroup, if no cgroup_name is passed, the rtla's cgroup will be inherited",
+ 		"	  -d/--duration time[s|m|h|d]: duration of the session",
+ 		"	  -D/--debug: print debug info",
+-		"	  -t/--trace[file]: save the stopped trace to [file|osnoise_trace.txt]",
++		"	  -t/--trace [file]: save the stopped trace to [file|osnoise_trace.txt]",
+ 		"	  -e/--event <sys:event>: enable the <sys:event> in the trace instance, multiple -e are allowed",
+ 		"	     --filter <filter>: enable a trace event filter to the previous -e event",
+ 		"	     --trigger <trigger>: enable a trace event trigger to the previous -e event",
+@@ -574,13 +574,7 @@ static struct common_params
+ 			break;
+ 		case 'C':
+ 			params->common.cgroup = 1;
+-			if (!optarg) {
+-				/* will inherit this cgroup */
+-				params->common.cgroup_name = NULL;
+-			} else if (*optarg == '=') {
+-				/* skip the = */
+-				params->common.cgroup_name = ++optarg;
+-			}
++			params->common.cgroup_name = parse_optional_arg(argc, argv);
+ 			break;
+ 		case 'D':
+ 			config_debug = 1;
+@@ -646,14 +640,8 @@ static struct common_params
+ 			params->threshold = get_llong_from_str(optarg);
+ 			break;
+ 		case 't':
+-			if (optarg) {
+-				if (optarg[0] == '=')
+-					trace_output = &optarg[1];
+-				else
+-					trace_output = &optarg[0];
+-			} else if (optind < argc && argv[optind][0] != '0')
+-				trace_output = argv[optind];
+-			else
++			trace_output = parse_optional_arg(argc, argv);
++			if (!trace_output)
+ 				trace_output = "osnoise_trace.txt";
+ 			break;
+ 		case '0': /* no header */
+diff --git a/tools/tracing/rtla/src/osnoise_top.c b/tools/tracing/rtla/src/osnoise_top.c
+index 95418f7ecc96..0be400666c05 100644
+--- a/tools/tracing/rtla/src/osnoise_top.c
++++ b/tools/tracing/rtla/src/osnoise_top.c
+@@ -263,8 +263,8 @@ static void osnoise_top_usage(struct osnoise_params *params, char *usage)
+ 
+ 	static const char * const msg[] = {
+ 		" [-h] [-q] [-D] [-d s] [-a us] [-p us] [-r us] [-s us] [-S us] \\",
+-		"	  [-T us] [-t[file]] [-e sys[:event]] [--filter <filter>] [--trigger <trigger>] \\",
+-		"	  [-c cpu-list] [-H cpu-list] [-P priority] [-C[=cgroup_name]] [--warm-up s]",
++		"	  [-T us] [-t [file]] [-e sys[:event]] [--filter <filter>] [--trigger <trigger>] \\",
++		"	  [-c cpu-list] [-H cpu-list] [-P priority] [-C [cgroup_name]] [--warm-up s]",
+ 		"",
+ 		"	  -h/--help: print this menu",
+ 		"	  -a/--auto: set automatic trace mode, stopping the session if argument in us sample is hit",
+@@ -275,10 +275,10 @@ static void osnoise_top_usage(struct osnoise_params *params, char *usage)
+ 		"	  -T/--threshold us: the minimum delta to be considered a noise",
+ 		"	  -c/--cpus cpu-list: list of cpus to run osnoise threads",
+ 		"	  -H/--house-keeping cpus: run rtla control threads only on the given cpus",
+-		"	  -C/--cgroup[=cgroup_name]: set cgroup, if no cgroup_name is passed, the rtla's cgroup will be inherited",
++		"	  -C/--cgroup [cgroup_name]: set cgroup, if no cgroup_name is passed, the rtla's cgroup will be inherited",
+ 		"	  -d/--duration time[s|m|h|d]: duration of the session",
+ 		"	  -D/--debug: print debug info",
+-		"	  -t/--trace[file]: save the stopped trace to [file|osnoise_trace.txt]",
++		"	  -t/--trace [file]: save the stopped trace to [file|osnoise_trace.txt]",
+ 		"	  -e/--event <sys:event>: enable the <sys:event> in the trace instance, multiple -e are allowed",
+ 		"	     --filter <filter>: enable a trace event filter to the previous -e event",
+ 		"	     --trigger <trigger>: enable a trace event trigger to the previous -e event",
+@@ -408,13 +408,7 @@ struct common_params *osnoise_top_parse_args(int argc, char **argv)
+ 			break;
+ 		case 'C':
+ 			params->common.cgroup = 1;
+-			if (!optarg) {
+-				/* will inherit this cgroup */
+-				params->common.cgroup_name = NULL;
+-			} else if (*optarg == '=') {
+-				/* skip the = */
+-				params->common.cgroup_name = ++optarg;
+-			}
++			params->common.cgroup_name = parse_optional_arg(argc, argv);
+ 			break;
+ 		case 'D':
+ 			config_debug = 1;
+@@ -474,14 +468,8 @@ struct common_params *osnoise_top_parse_args(int argc, char **argv)
+ 			params->common.stop_total_us = get_llong_from_str(optarg);
+ 			break;
+ 		case 't':
+-			if (optarg) {
+-				if (optarg[0] == '=')
+-					trace_output = &optarg[1];
+-				else
+-					trace_output = &optarg[0];
+-			} else if (optind < argc && argv[optind][0] != '-')
+-				trace_output = argv[optind];
+-			else
++			trace_output = parse_optional_arg(argc, argv);
++			if (!trace_output)
+ 				trace_output = "osnoise_trace.txt";
+ 			break;
+ 		case 'T':
+diff --git a/tools/tracing/rtla/src/timerlat_hist.c b/tools/tracing/rtla/src/timerlat_hist.c
+index 606c1688057b..16416192e432 100644
+--- a/tools/tracing/rtla/src/timerlat_hist.c
++++ b/tools/tracing/rtla/src/timerlat_hist.c
+@@ -717,9 +717,9 @@ static void timerlat_hist_usage(char *usage)
+ 	char *msg[] = {
+ 		"",
+ 		"  usage: [rtla] timerlat hist [-h] [-q] [-d s] [-D] [-n] [-a us] [-p us] [-i us] [-T us] [-s us] \\",
+-		"         [-t[file]] [-e sys[:event]] [--filter <filter>] [--trigger <trigger>] [-c cpu-list] [-H cpu-list]\\",
++		"         [-t [file]] [-e sys[:event]] [--filter <filter>] [--trigger <trigger>] [-c cpu-list] [-H cpu-list]\\",
+ 		"	  [-P priority] [-E N] [-b N] [--no-irq] [--no-thread] [--no-header] [--no-summary] \\",
+-		"	  [--no-index] [--with-zeros] [--dma-latency us] [-C[=cgroup_name]] [--no-aa] [--dump-task] [-u|-k]",
++		"	  [--no-index] [--with-zeros] [--dma-latency us] [-C [cgroup_name]] [--no-aa] [--dump-task] [-u|-k]",
+ 		"	  [--warm-up s] [--deepest-idle-state n]",
+ 		"",
+ 		"	  -h/--help: print this menu",
+@@ -730,11 +730,11 @@ static void timerlat_hist_usage(char *usage)
+ 		"	  -s/--stack us: save the stack trace at the IRQ if a thread latency is higher than the argument in us",
+ 		"	  -c/--cpus cpus: run the tracer only on the given cpus",
+ 		"	  -H/--house-keeping cpus: run rtla control threads only on the given cpus",
+-		"	  -C/--cgroup[=cgroup_name]: set cgroup, if no cgroup_name is passed, the rtla's cgroup will be inherited",
++		"	  -C/--cgroup [cgroup_name]: set cgroup, if no cgroup_name is passed, the rtla's cgroup will be inherited",
+ 		"	  -d/--duration time[m|h|d]: duration of the session in seconds",
+ 		"	     --dump-tasks: prints the task running on all CPUs if stop conditions are met (depends on !--no-aa)",
+ 		"	  -D/--debug: print debug info",
+-		"	  -t/--trace[file]: save the stopped trace to [file|timerlat_trace.txt]",
++		"	  -t/--trace [file]: save the stopped trace to [file|timerlat_trace.txt]",
+ 		"	  -e/--event <sys:event>: enable the <sys:event> in the trace instance, multiple -e are allowed",
+ 		"	     --filter <filter>: enable a trace event filter to the previous -e event",
+ 		"	     --trigger <trigger>: enable a trace event trigger to the previous -e event",
+@@ -889,13 +889,7 @@ static struct common_params
+ 			break;
+ 		case 'C':
+ 			params->common.cgroup = 1;
+-			if (!optarg) {
+-				/* will inherit this cgroup */
+-				params->common.cgroup_name = NULL;
+-			} else if (*optarg == '=') {
+-				/* skip the = */
+-				params->common.cgroup_name = ++optarg;
+-			}
++			params->common.cgroup_name = parse_optional_arg(argc, argv);
+ 			break;
+ 		case 'b':
+ 			params->common.hist.bucket_size = get_llong_from_str(optarg);
+@@ -968,14 +962,8 @@ static struct common_params
+ 			params->common.stop_total_us = get_llong_from_str(optarg);
+ 			break;
+ 		case 't':
+-			if (optarg) {
+-				if (optarg[0] == '=')
+-					trace_output = &optarg[1];
+-				else
+-					trace_output = &optarg[0];
+-			} else if (optind < argc && argv[optind][0] != '-')
+-				trace_output = argv[optind];
+-			else
++			trace_output = parse_optional_arg(argc, argv);
++			if (!trace_output)
+ 				trace_output = "timerlat_trace.txt";
+ 			break;
+ 		case 'u':
+diff --git a/tools/tracing/rtla/src/timerlat_top.c b/tools/tracing/rtla/src/timerlat_top.c
+index fc479a0dcb59..fe4f4e69e00f 100644
+--- a/tools/tracing/rtla/src/timerlat_top.c
++++ b/tools/tracing/rtla/src/timerlat_top.c
+@@ -483,8 +483,8 @@ static void timerlat_top_usage(char *usage)
+ 	static const char *const msg[] = {
+ 		"",
+ 		"  usage: rtla timerlat [top] [-h] [-q] [-a us] [-d s] [-D] [-n] [-p us] [-i us] [-T us] [-s us] \\",
+-		"	  [[-t[file]] [-e sys[:event]] [--filter <filter>] [--trigger <trigger>] [-c cpu-list] [-H cpu-list]\\",
+-		"	  [-P priority] [--dma-latency us] [--aa-only us] [-C[=cgroup_name]] [-u|-k] [--warm-up s] [--deepest-idle-state n]",
++		"	  [[-t [file]] [-e sys[:event]] [--filter <filter>] [--trigger <trigger>] [-c cpu-list] [-H cpu-list]\\",
++		"	  [-P priority] [--dma-latency us] [--aa-only us] [-C [cgroup_name]] [-u|-k] [--warm-up s] [--deepest-idle-state n]",
+ 		"",
+ 		"	  -h/--help: print this menu",
+ 		"	  -a/--auto: set automatic trace mode, stopping the session if argument in us latency is hit",
+@@ -495,11 +495,11 @@ static void timerlat_top_usage(char *usage)
+ 		"	  -s/--stack us: save the stack trace at the IRQ if a thread latency is higher than the argument in us",
+ 		"	  -c/--cpus cpus: run the tracer only on the given cpus",
+ 		"	  -H/--house-keeping cpus: run rtla control threads only on the given cpus",
+-		"	  -C/--cgroup[=cgroup_name]: set cgroup, if no cgroup_name is passed, the rtla's cgroup will be inherited",
++		"	  -C/--cgroup [cgroup_name]: set cgroup, if no cgroup_name is passed, the rtla's cgroup will be inherited",
+ 		"	  -d/--duration time[s|m|h|d]: duration of the session",
+ 		"	  -D/--debug: print debug info",
+ 		"	     --dump-tasks: prints the task running on all CPUs if stop conditions are met (depends on !--no-aa)",
+-		"	  -t/--trace[file]: save the stopped trace to [file|timerlat_trace.txt]",
++		"	  -t/--trace [file]: save the stopped trace to [file|timerlat_trace.txt]",
+ 		"	  -e/--event <sys:event>: enable the <sys:event> in the trace instance, multiple -e are allowed",
+ 		"	     --filter <command>: enable a trace event filter to the previous -e event",
+ 		"	     --trigger <command>: enable a trace event trigger to the previous -e event",
+@@ -653,13 +653,7 @@ static struct common_params
+ 			break;
+ 		case 'C':
+ 			params->common.cgroup = 1;
+-			if (!optarg) {
+-				/* will inherit this cgroup */
+-				params->common.cgroup_name = NULL;
+-			} else if (*optarg == '=') {
+-				/* skip the = */
+-				params->common.cgroup_name = ++optarg;
+-			}
++			params->common.cgroup_name = optarg;
+ 			break;
+ 		case 'D':
+ 			config_debug = 1;
+@@ -722,14 +716,8 @@ static struct common_params
+ 			params->common.stop_total_us = get_llong_from_str(optarg);
+ 			break;
+ 		case 't':
+-			if (optarg) {
+-				if (optarg[0] == '=')
+-					trace_output = &optarg[1];
+-				else
+-					trace_output = &optarg[0];
+-			} else if (optind < argc && argv[optind][0] != '-')
+-				trace_output = argv[optind];
+-			else
++			trace_output = parse_optional_arg(argc, argv);
++			if (!trace_output)
+ 				trace_output = "timerlat_trace.txt";
+ 			break;
+ 		case 'u':
+diff --git a/tools/tracing/rtla/src/utils.c b/tools/tracing/rtla/src/utils.c
+index d6ab15dcb490..bd5f34b44648 100644
+--- a/tools/tracing/rtla/src/utils.c
++++ b/tools/tracing/rtla/src/utils.c
+@@ -959,3 +959,29 @@ int auto_house_keeping(cpu_set_t *monitored_cpus)
+ 
+ 	return 1;
+ }
++
++/**
++ * parse_optional_arg - Parse optional argument value
++ *
++ * Parse optional argument value, which can be in the form of:
++ * -sarg, -s/--long=arg, -s/--long arg
++ *
++ * Returns arg value if found, NULL otherwise.
++ */
++char *parse_optional_arg(int argc, char **argv)
++{
++	if (optarg) {
++		if (optarg[0] == '=') {
++			/* skip the = */
++			return &optarg[1];
++		} else {
++			return optarg;
++		}
++	/* parse argument of form -s [arg] and --long [arg]*/
++	} else if (optind < argc && argv[optind][0] != '-') {
++		/* consume optind */
++		return argv[optind++];
++	} else {
++		return NULL;
++	}
++}
+diff --git a/tools/tracing/rtla/src/utils.h b/tools/tracing/rtla/src/utils.h
+index a2a6f89f342d..d8d83abf0f0d 100644
+--- a/tools/tracing/rtla/src/utils.h
++++ b/tools/tracing/rtla/src/utils.h
+@@ -24,6 +24,7 @@ long parse_seconds_duration(char *val);
+ void get_duration(time_t start_time, char *output, int output_size);
+ 
+ int parse_cpu_list(char *cpu_list, char **monitored_cpus);
++char *parse_optional_arg(int argc, char **argv);
+ long long get_llong_from_str(char *start);
+ 
+ static inline void
 -- 
 2.48.1
 
