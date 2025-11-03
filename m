@@ -1,162 +1,183 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04AE42737E1;
-	Mon,  3 Nov 2025 13:52:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFC9D2459C6
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  3 Nov 2025 14:24:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762177952; cv=none; b=jtZhU3VDoIpXQWSn+cBKoKG726tsN1G24jMMrSXa0zc6gka0Q6Xr2qOf43SJliQIJ+uLL0gYMatoC4pT2iCLgzGWEKNtie4AFyPxU7z/at6ptBkvPmhQ5tdxrBOYzgkP6C4FTuaRyTe9ms0gO4APQVhEMqF69Ch/LpvBmmxNRCQ=
+	t=1762179850; cv=none; b=nGke43SviLraWkuwWyPgpQPscv/+zHJmS7GJ2t27EydQlPgIqY6RRqt4KcaoE72j3mVMw4NwWVawHkAFmt5/jMxEV3kennGgfOLv6FTdQIxPQg0HrpM3/xLh1/tM6l9ZpgJniQDSmuQun6JiBYkqo/VBWZjP8ouBIswo0M4So04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762177952; c=relaxed/simple;
-	bh=LnIXWhB4Cj25CtLtbkxdXBEJn5oy2Pmquj/q2xJaGeo=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=Z+aObB7anfmqP1ndS6jswf8akQKsUytcMEHk8CUT0JV0rfueuHG94n+nLOmRf/eVwvO7zsqVBXknnPLnX25cEi7lxPSnf3FchEIO7XdqhKxY+v1Eze9Gm9PTwT5TCPipswwyks1iaaIMx++Vc9MxhB5d6AbP1+JXu9L+vpTYh58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N1evdoJB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762179850; c=relaxed/simple;
+	bh=3YCSoTTCO6yCWGmiep6fmJxEdfQK32XhDAT5MUPalJo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=o8WEDBWYXB7KkY8bkrWtwwX8Uuq03C4jmZH7Oh2u6LNJaQcrHyiCRMkvAy4tSv24Tzp/cerKOepmjIa94SWyDt2I9UuWfGVKciTME9zdOG/vRFyzExlNcnRmEm9JyWfwzzeeyJDGpKCHi9KP1x7GhPd02cnCDmiAOzAF/4h7PLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KTcCNyLS; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N1evdoJB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A049BC4CEE7;
-	Mon,  3 Nov 2025 13:52:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762177951;
-	bh=LnIXWhB4Cj25CtLtbkxdXBEJn5oy2Pmquj/q2xJaGeo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=N1evdoJBP+xR1+ihgvW3cL4M+Y3RsyN60QP/c06iS/qtugdx74TT5UAaHwJd4nfv1
-	 bsAe25z7oj3H2G2M2lfXI2x9m5o4ZtCxURAPkQ6KdFs+UkbvP9pESRy8O67ls+x4vg
-	 TyfsyaxA2IiWcgJ8htc6uSpEmjad/l8dAKZWkXyfWhmv6aG9kys6wJmehTKDe7Wjhj
-	 IOYQU5zuxHM1UIK83qYLVvcGLX86j82UhxhSCgdMsyhbYdgl/9tvWO/jrzbilszPuM
-	 O7qePIubGKo34dTbn6FzjwFJ2/8KaNFZ/t3Sp/pKb9tE0EkV+EAAm/TMtzEaZGTIWJ
-	 o7IfKFZVF60Ew==
-Date: Mon, 3 Nov 2025 22:52:27 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Menglong Dong <menglong8.dong@gmail.com>
-Cc: rostedt@goodmis.org, jolsa@kernel.org, mathieu.desnoyers@efficios.com,
- jiang.biao@linux.dev, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] tracing: fprobe: use ftrace if
- CONFIG_DYNAMIC_FTRACE_WITH_ARGS
-Message-Id: <20251103225227.b8a44e718ddd9515a9960e51@kernel.org>
-In-Reply-To: <20251103063434.47388-1-dongml2@chinatelecom.cn>
-References: <20251103063434.47388-1-dongml2@chinatelecom.cn>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KTcCNyLS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1762179848;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=65jXSeMKSZYnQFCjONKvkkryS9O5MQBveQ8USpiQYy8=;
+	b=KTcCNyLS4HgJGSuhsnyoop/pyhLVdvtKEX3KhlFnd9bZVtEzeS7djMdMOq9gVhX3AXFfF1
+	/btck+Ous+ndgbed7gn2gzqkAxz/mmr9DvUACBWmqVqSumjgD/7UMO95jGWAcuVNOIINnt
+	/D2NtSRfBThcEtM502asuOf43CFmcVM=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-607-mPi14YyKOcmbQImyjdjzcQ-1; Mon,
+ 03 Nov 2025 09:24:05 -0500
+X-MC-Unique: mPi14YyKOcmbQImyjdjzcQ-1
+X-Mimecast-MFC-AGG-ID: mPi14YyKOcmbQImyjdjzcQ_1762179844
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C881B1800742;
+	Mon,  3 Nov 2025 14:24:03 +0000 (UTC)
+Received: from wcosta-thinkpadt14gen4.rmtbr.csb (unknown [10.22.88.143])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 630CF1800576;
+	Mon,  3 Nov 2025 14:23:59 +0000 (UTC)
+Date: Mon, 3 Nov 2025 11:23:57 -0300
+From: Wander Lairson Costa <wander@redhat.com>
+To: Tomas Glozar <tglozar@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, 
+	LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>, 
+	John Kacur <jkacur@redhat.com>, Luis Goncalves <lgoncalv@redhat.com>, 
+	Costa Shulyupin <costa.shul@redhat.com>, Crystal Wood <crwood@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: [PATCH v3 1/7] rtla/timerlat: Support tail call from BPF program
+Message-ID: <ijizcoufpxwtrutqpurumsx7zls2dixyanlcn6oshvhpon5osd@aeuzrsmkidrz>
+References: <20251027153401.1039217-1-tglozar@redhat.com>
+ <20251027153401.1039217-2-tglozar@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251027153401.1039217-2-tglozar@redhat.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On Mon,  3 Nov 2025 14:34:34 +0800
-Menglong Dong <menglong8.dong@gmail.com> wrote:
-
-> For now, we will use ftrace for the fprobe if fp->exit_handler not exists
-> and CONFIG_DYNAMIC_FTRACE_WITH_REGS is enabled.
+On Mon, Oct 27, 2025 at 04:33:55PM +0100, Tomas Glozar wrote:
+> Add a map to the rtla-timerlat BPF program that holds a file descriptor
+> of another BPF program, to be executed on threshold overflow.
 > 
-> However, CONFIG_DYNAMIC_FTRACE_WITH_REGS is not supported by some arch,
-> such as arm. What we need in the fprobe is the function arguments, so we
-> can use ftrace for fprobe if CONFIG_DYNAMIC_FTRACE_WITH_ARGS is enabled.
+> timerlat_bpf_set_action() is added as an interface to set the program.
 > 
-> Therefore, use ftrace if CONFIG_DYNAMIC_FTRACE_WITH_REGS or
-> CONFIG_DYNAMIC_FTRACE_WITH_ARGS enabled.
-> 
-
-Looks good to me. Thanks!
-
-> Signed-off-by: Menglong Dong <dongml2@chinatelecom.cn>
+> Signed-off-by: Tomas Glozar <tglozar@redhat.com>
 > ---
-> v3:
-> - fix the build warning when CONFIG_MODULES not enabled
+>  tools/tracing/rtla/src/timerlat.bpf.c | 23 ++++++++++++++++++++---
+>  tools/tracing/rtla/src/timerlat_bpf.c | 13 +++++++++++++
+>  tools/tracing/rtla/src/timerlat_bpf.h |  1 +
+>  3 files changed, 34 insertions(+), 3 deletions(-)
 > 
-> v2:
-> - remove the definition of FPROBE_USE_FTRACE
-> ---
->  kernel/trace/fprobe.c | 32 ++++++++++++++++++++++----------
->  1 file changed, 22 insertions(+), 10 deletions(-)
-> 
-> diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-> index ecd623eef68b..0b1ee8e585f2 100644
-> --- a/kernel/trace/fprobe.c
-> +++ b/kernel/trace/fprobe.c
-> @@ -44,6 +44,7 @@
->  static struct hlist_head fprobe_table[FPROBE_TABLE_SIZE];
->  static struct rhltable fprobe_ip_table;
->  static DEFINE_MUTEX(fprobe_mutex);
-> +static struct fgraph_ops fprobe_graph_ops;
+> diff --git a/tools/tracing/rtla/src/timerlat.bpf.c b/tools/tracing/rtla/src/timerlat.bpf.c
+> index 084cd10c21fc..19ccd9abf8d4 100644
+> --- a/tools/tracing/rtla/src/timerlat.bpf.c
+> +++ b/tools/tracing/rtla/src/timerlat.bpf.c
+> @@ -40,6 +40,17 @@ struct {
+>  	__uint(max_entries, 1);
+>  } signal_stop_tracing SEC(".maps");
 >  
->  static u32 fprobe_node_hashfn(const void *data, u32 len, u32 seed)
->  {
-> @@ -254,7 +255,7 @@ static inline int __fprobe_kprobe_handler(unsigned long ip, unsigned long parent
->  	return ret;
+> +struct {
+> +	__uint(type, BPF_MAP_TYPE_PROG_ARRAY);
+> +	__uint(key_size, sizeof(unsigned int));
+> +	__uint(max_entries, 1);
+> +	__array(values, unsigned int (void *));
+> +} bpf_action SEC(".maps") = {
+> +	.values = {
+> +		[0] = 0
+> +	},
+> +};
+> +
+>  /* Params to be set by rtla */
+>  const volatile int bucket_size = 1;
+>  const volatile int output_divisor = 1000;
+> @@ -109,7 +120,7 @@ nosubprog void update_summary(void *map,
+>  	map_set(map, SUMMARY_SUM, map_get(map, SUMMARY_SUM) + latency);
 >  }
 >  
-> -#ifdef CONFIG_DYNAMIC_FTRACE_WITH_REGS
-> +#if defined(CONFIG_DYNAMIC_FTRACE_WITH_ARGS) || defined(CONFIG_DYNAMIC_FTRACE_WITH_REGS)
->  /* ftrace_ops callback, this processes fprobes which have only entry_handler. */
->  static void fprobe_ftrace_entry(unsigned long ip, unsigned long parent_ip,
->  	struct ftrace_ops *ops, struct ftrace_regs *fregs)
-> @@ -295,7 +296,7 @@ NOKPROBE_SYMBOL(fprobe_ftrace_entry);
+> -nosubprog void set_stop_tracing(void)
+> +nosubprog void set_stop_tracing(struct trace_event_raw_timerlat_sample *tp_args)
+>  {
+>  	int value = 0;
 >  
->  static struct ftrace_ops fprobe_ftrace_ops = {
->  	.func	= fprobe_ftrace_entry,
-> -	.flags	= FTRACE_OPS_FL_SAVE_REGS,
-> +	.flags	= FTRACE_OPS_FL_SAVE_ARGS,
+> @@ -118,6 +129,12 @@ nosubprog void set_stop_tracing(void)
+>  
+>  	/* Signal to userspace */
+>  	bpf_ringbuf_output(&signal_stop_tracing, &value, sizeof(value), 0);
+> +
+> +	/*
+> +	 * Call into BPF action program, if attached.
+> +	 * Otherwise, just silently fail.
+> +	 */
+> +	bpf_tail_call(tp_args, &bpf_action, 0);
+>  }
+>  
+>  SEC("tp/osnoise/timerlat_sample")
+> @@ -138,13 +155,13 @@ int handle_timerlat_sample(struct trace_event_raw_timerlat_sample *tp_args)
+>  		update_summary(&summary_irq, latency, bucket);
+>  
+>  		if (irq_threshold != 0 && latency_us >= irq_threshold)
+> -			set_stop_tracing();
+> +			set_stop_tracing(tp_args);
+>  	} else if (tp_args->context == 1) {
+>  		update_main_hist(&hist_thread, bucket);
+>  		update_summary(&summary_thread, latency, bucket);
+>  
+>  		if (thread_threshold != 0 && latency_us >= thread_threshold)
+> -			set_stop_tracing();
+> +			set_stop_tracing(tp_args);
+>  	} else {
+>  		update_main_hist(&hist_user, bucket);
+>  		update_summary(&summary_user, latency, bucket);
+> diff --git a/tools/tracing/rtla/src/timerlat_bpf.c b/tools/tracing/rtla/src/timerlat_bpf.c
+> index e97d16646bcd..1d619e502c65 100644
+> --- a/tools/tracing/rtla/src/timerlat_bpf.c
+> +++ b/tools/tracing/rtla/src/timerlat_bpf.c
+> @@ -59,6 +59,19 @@ int timerlat_bpf_init(struct timerlat_params *params)
+>  	return 0;
+>  }
+>  
+> +/*
+> + * timerlat_bpf_set_action - set action on threshold executed on BPF side
+> + */
+> +static int timerlat_bpf_set_action(struct bpf_program *prog)
+> +{
+> +	unsigned int key = 0, value = bpf_program__fd(prog);
+> +
+> +	return bpf_map__update_elem(bpf->maps.bpf_action,
+> +				    &key, sizeof(key),
+> +				    &value, sizeof(value),
+> +				    BPF_ANY);
+> +}
+> +
+
+I believe it makes more sense to add the definition of this function to
+the patch where it is called.
+
+>  /*
+>   * timerlat_bpf_attach - attach BPF program to collect timerlat data
+>   */
+> diff --git a/tools/tracing/rtla/src/timerlat_bpf.h b/tools/tracing/rtla/src/timerlat_bpf.h
+> index 118487436d30..b5009092c7a3 100644
+> --- a/tools/tracing/rtla/src/timerlat_bpf.h
+> +++ b/tools/tracing/rtla/src/timerlat_bpf.h
+> @@ -12,6 +12,7 @@ enum summary_field {
 >  };
->  static int fprobe_ftrace_active;
 >  
-> @@ -335,6 +336,15 @@ static bool fprobe_is_ftrace(struct fprobe *fp)
->  {
->  	return !fp->exit_handler;
->  }
-> +
-> +#ifdef CONFIG_MODULES
-> +static void fprobe_set_ips(unsigned long *ips, unsigned int cnt, int remove,
-> +			   int reset)
-> +{
-> +	ftrace_set_filter_ips(&fprobe_graph_ops.ops, ips, cnt, remove, reset);
-> +	ftrace_set_filter_ips(&fprobe_ftrace_ops, ips, cnt, remove, reset);
-> +}
-> +#endif
->  #else
->  static int fprobe_ftrace_add_ips(unsigned long *addrs, int num)
->  {
-> @@ -349,7 +359,15 @@ static bool fprobe_is_ftrace(struct fprobe *fp)
->  {
->  	return false;
->  }
-> +
-> +#ifdef CONFIG_MODULES
-> +static void fprobe_set_ips(unsigned long *ips, unsigned int cnt, int remove,
-> +			   int reset)
-> +{
-> +	ftrace_set_filter_ips(&fprobe_graph_ops.ops, ips, cnt, remove, reset);
-> +}
->  #endif
-> +#endif /* !CONFIG_DYNAMIC_FTRACE_WITH_ARGS && !CONFIG_DYNAMIC_FTRACE_WITH_REGS */
->  
->  /* fgraph_ops callback, this processes fprobes which have exit_handler. */
->  static int fprobe_fgraph_entry(struct ftrace_graph_ent *trace, struct fgraph_ops *gops,
-> @@ -596,14 +614,8 @@ static int fprobe_module_callback(struct notifier_block *nb,
->  	} while (node == ERR_PTR(-EAGAIN));
->  	rhashtable_walk_exit(&iter);
->  
-> -	if (alist.index > 0) {
-> -		ftrace_set_filter_ips(&fprobe_graph_ops.ops,
-> -				      alist.addrs, alist.index, 1, 0);
-> -#ifdef CONFIG_DYNAMIC_FTRACE_WITH_REGS
-> -		ftrace_set_filter_ips(&fprobe_ftrace_ops,
-> -				      alist.addrs, alist.index, 1, 0);
-> -#endif
-> -	}
-> +	if (alist.index > 0)
-> +		fprobe_set_ips(alist.addrs, alist.index, 1, 0);
->  	mutex_unlock(&fprobe_mutex);
->  
->  	kfree(alist.addrs);
+>  #ifndef __bpf__
+> +#include <bpf/libbpf.h>
+>  #ifdef HAVE_BPF_SKEL
+>  int timerlat_bpf_init(struct timerlat_params *params);
+>  int timerlat_bpf_attach(void);
 > -- 
-> 2.51.2
+> 2.51.0
 > 
 
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
