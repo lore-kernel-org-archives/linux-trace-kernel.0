@@ -1,145 +1,199 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECD622FABF7;
-	Tue,  4 Nov 2025 21:54:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF35E34B186;
+	Tue,  4 Nov 2025 23:47:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762293298; cv=none; b=sBs0584TC2m85Ig0s76k4xlz2z4CFJigt/NMM7r7CN3WXhG8m8DJvfMeKo9V8JJB5ecxU17xgGiZhJi+xfrtK/3XzIhZS8LD/dwZfcjK8D6kfqbaymuWcJIhXKiqzoj1GTi+7Zpnmj+dP3M+DtQvyjXgW6vPlNyvO6xc+ys8dQA=
+	t=1762300073; cv=none; b=SE9yHuXH0s06MjgoBpDNhwXWO9k6Y1i9UyGw0rPp0lyIZyL4Ya8G2Y1S/E5Q23Ngl7bauTXNRSGt48UsJ7jjgzuVtntejNlWxav1wk2wNFmtbYHPFTnOiqHWkpDPfdv70BSru93af7hFg91P3UNOg/CtW35qPDNakjy1OnEUIEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762293298; c=relaxed/simple;
-	bh=INngzCagyASBga4I+f+q6Xk8A/qGU3KnC77T+Drm3Yc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pj+oe4n9MesRoKau2I4hqYIQrBAoTbOXNBqyPjAlLvIKG2m64PmviqNfp3ZEzduDvTvJkmaq+zmu3aIrXhUVPHt96BgORuuag4uJgtwMQAyAk0DCtfsCOlRgp5n06MEyvTcdnSeeNWqUT6jqmiHqYVl4XmM/7gYOv5RyzHmoEJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rweLj4q5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762300073; c=relaxed/simple;
+	bh=fEsn3jOrCN93c6qUqNl2qj5zUfUGbA4A30+4VyWcL6o=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=efrz6WCdt7jm5495H3m3TsARF0PKsah0TEZ4xytsODC6zp3wDJa+X3mO3DGd9jNTHO+Wd54s0mCwyQQLeODhQ1Uw4wy36aik7jBlye9O6VemWMWp0xbSmZvjI4OoTcrFatMRAWntqfYspsOYY4sjK+7ax7VqdF5ooHhjAPThZnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GifgasKw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rweLj4q5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9908CC116B1;
-	Tue,  4 Nov 2025 21:54:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GifgasKw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2E2FC4CEF7;
+	Tue,  4 Nov 2025 23:47:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762293297;
-	bh=INngzCagyASBga4I+f+q6Xk8A/qGU3KnC77T+Drm3Yc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rweLj4q5NWL8QbS5ncki/D2TWohWzDadqvh9+cXva3fVDDAedQVDv9FBS90t7dgQd
-	 TgTP7EjfC1mCVrzhX1izbbvIbxGqA1w70jFwoAASw6lbl0rkx5ltgMfuijzczOnmfH
-	 KJKp9Pbz5XT6zNkUs48LWtnwNDh8/0zOspjjCPRDtYhLcxVl1gHjHgsj7Wo4rJLpys
-	 CCYnAflM/xQBCj3/oRz9wrJ1rg5dbei2eNH3tqNqqVwspVs+C2AfO/kWPS1iUsOBki
-	 pmcoE215jhFNtAxOMfNbhnbdeRqRbryN1kEQ8y4w+kRz4p0m58Pbboo4WNS5ESsyxQ
-	 LsQyeBAHTJvGQ==
-From: Jiri Olsa <jolsa@kernel.org>
-To: Masami Hiramatsu <mhiramat@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	bpf@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	x86@kernel.org,
-	Yonghong Song <yhs@fb.com>,
-	Song Liu <songliubraving@fb.com>,
-	Andrii Nakryiko <andrii@kernel.org>
-Subject: [PATCHv3 4/4] selftests/bpf: Add stacktrace ips test for raw_tp
-Date: Tue,  4 Nov 2025 22:54:05 +0100
-Message-ID: <20251104215405.168643-5-jolsa@kernel.org>
-X-Mailer: git-send-email 2.51.1
-In-Reply-To: <20251104215405.168643-1-jolsa@kernel.org>
-References: <20251104215405.168643-1-jolsa@kernel.org>
+	s=k20201202; t=1762300072;
+	bh=fEsn3jOrCN93c6qUqNl2qj5zUfUGbA4A30+4VyWcL6o=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=GifgasKwjeePbhflYlgd4hJiKOTL0PN8UFtOLFGNE50PA7Md4557Iix92WelIc1Jd
+	 B/+JIEV4c+OiRNjG35DM22q0ZKcwRokM6vBxdNth1Tg62rGSMSuBz/IgVHssX2RmPo
+	 WpZk/VmI4dYdYjihKj8ExggTH1olkoqD8WC127noU3KnSicUXgZDwr5BQFGe+oOS4l
+	 dn1qL+ZuszUWMtnEyEWr8VvTlouP4mVmhYmqBUitVqNmNGfei6O9MFRfsAh0UkS4uc
+	 p23ZfDJa8L32R8s6OAIwS6FqPcjgLXsJc/FHQWNeotIC3s9/5XN+BnGOkbgNPfDDiS
+	 zHuf30b9LyG9Q==
+Date: Wed, 5 Nov 2025 08:47:48 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, linux-kselftest@vger.kernel.org,
+ Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Shuah Khan <skhan@linuxfoundation.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH] selftests/tracing: Add basic test for trace_marker_raw
+ file
+Message-Id: <20251105084748.f34e1efec291d420a50a7b62@kernel.org>
+In-Reply-To: <20251014145149.3e3c1033@gandalf.local.home>
+References: <20251014145149.3e3c1033@gandalf.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Adding test that verifies we get expected initial 2 entries from
-stacktrace for rawtp probe via ORC unwind.
+On Tue, 14 Oct 2025 14:51:49 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- .../selftests/bpf/prog_tests/stacktrace_ips.c | 46 +++++++++++++++++++
- .../selftests/bpf/progs/stacktrace_ips.c      |  8 ++++
- 2 files changed, 54 insertions(+)
+> From: Steven Rostedt <rostedt@goodmis.org>
+> 
+> Commit 64cf7d058a00 ("tracing: Have trace_marker use per-cpu data to read
+> user space") made an update that fixed both trace_marker and
+> trace_marker_raw. But the small difference made to trace_marker_raw had a
+> blatant bug in it that any basic testing would have uncovered.
+> Unfortunately, the self tests have tests for trace_marker but nothing for
+> trace_marker_raw which allowed the bug to get upstream.
+> 
+> Add basic selftests to test trace_marker_raw so that this doesn't happen
+> again.
+> 
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/stacktrace_ips.c b/tools/testing/selftests/bpf/prog_tests/stacktrace_ips.c
-index 6fca459ba550..c9efdd2a5b18 100644
---- a/tools/testing/selftests/bpf/prog_tests/stacktrace_ips.c
-+++ b/tools/testing/selftests/bpf/prog_tests/stacktrace_ips.c
-@@ -84,12 +84,58 @@ static void test_stacktrace_ips_kprobe_multi(bool retprobe)
- 	stacktrace_ips__destroy(skel);
- }
- 
-+static void test_stacktrace_ips_raw_tp(void)
-+{
-+	__u32 info_len = sizeof(struct bpf_prog_info);
-+	LIBBPF_OPTS(bpf_test_run_opts, topts);
-+	struct bpf_prog_info info = {};
-+	struct stacktrace_ips *skel;
-+	__u64 bpf_prog_ksym = 0;
-+	int err;
-+
-+	skel = stacktrace_ips__open_and_load();
-+	if (!ASSERT_OK_PTR(skel, "stacktrace_ips__open_and_load"))
-+		return;
-+
-+	if (!skel->kconfig->CONFIG_UNWINDER_ORC) {
-+		test__skip();
-+		goto cleanup;
-+	}
-+
-+	skel->links.rawtp_test = bpf_program__attach_raw_tracepoint(
-+							skel->progs.rawtp_test,
-+							"bpf_testmod_test_read");
-+	if (!ASSERT_OK_PTR(skel->links.rawtp_test, "bpf_program__attach_raw_tracepoint"))
-+		goto cleanup;
-+
-+	/* get bpf program address */
-+	info.jited_ksyms = ptr_to_u64(&bpf_prog_ksym);
-+	info.nr_jited_ksyms = 1;
-+	err = bpf_prog_get_info_by_fd(bpf_program__fd(skel->progs.rawtp_test),
-+				      &info, &info_len);
-+	if (!ASSERT_OK(err, "bpf_prog_get_info_by_fd"))
-+		goto cleanup;
-+
-+	trigger_module_test_read(1);
-+
-+	load_kallsyms();
-+
-+	check_stacktrace_ips(bpf_map__fd(skel->maps.stackmap), skel->bss->stack_key, 2,
-+			     bpf_prog_ksym,
-+			     ksym_get_addr("bpf_trace_run2"));
-+
-+cleanup:
-+	stacktrace_ips__destroy(skel);
-+}
-+
- static void __test_stacktrace_ips(void)
- {
- 	if (test__start_subtest("kprobe_multi"))
- 		test_stacktrace_ips_kprobe_multi(false);
- 	if (test__start_subtest("kretprobe_multi"))
- 		test_stacktrace_ips_kprobe_multi(true);
-+	if (test__start_subtest("raw_tp"))
-+		test_stacktrace_ips_raw_tp();
- }
- #else
- static void __test_stacktrace_ips(void)
-diff --git a/tools/testing/selftests/bpf/progs/stacktrace_ips.c b/tools/testing/selftests/bpf/progs/stacktrace_ips.c
-index e2eb30945c1b..a96c8150d7f5 100644
---- a/tools/testing/selftests/bpf/progs/stacktrace_ips.c
-+++ b/tools/testing/selftests/bpf/progs/stacktrace_ips.c
-@@ -38,4 +38,12 @@ int kprobe_multi_test(struct pt_regs *ctx)
- 	return 0;
- }
- 
-+SEC("raw_tp/bpf_testmod_test_read")
-+int rawtp_test(void *ctx)
-+{
-+	/* Skip ebpf program entry in the stack. */
-+	stack_key = bpf_get_stackid(ctx, &stackmap, 0);
-+	return 0;
-+}
-+
- char _license[] SEC("license") = "GPL";
+Looks good to me.
+
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+Thanks!
+
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+>  .../ftrace/test.d/00basic/trace_marker_raw.tc | 107 ++++++++++++++++++
+>  1 file changed, 107 insertions(+)
+>  create mode 100644 tools/testing/selftests/ftrace/test.d/00basic/trace_marker_raw.tc
+> 
+> diff --git a/tools/testing/selftests/ftrace/test.d/00basic/trace_marker_raw.tc b/tools/testing/selftests/ftrace/test.d/00basic/trace_marker_raw.tc
+> new file mode 100644
+> index 000000000000..7daf7292209e
+> --- /dev/null
+> +++ b/tools/testing/selftests/ftrace/test.d/00basic/trace_marker_raw.tc
+> @@ -0,0 +1,107 @@
+> +#!/bin/sh
+> +# SPDX-License-Identifier: GPL-2.0
+> +# description: Basic tests on writing to trace_marker_raw
+> +# requires: trace_marker_raw
+> +# flags: instance
+> +
+> +is_little_endian() {
+> +	if lscpu | grep -q 'Little Endian'; then
+> +		echo 1;
+> +	else
+> +		echo 0;
+> +	fi
+> +}
+> +
+> +little=`is_little_endian`
+> +
+> +make_str() {
+> +	id=$1
+> +	cnt=$2
+> +
+> +	if [ $little -eq 1 ]; then
+> +		val=`printf "\\%03o\\%03o\\%03o\\%03o" \
+> +			$(($id & 0xff)) \
+> +			$((($id >> 8) & 0xff)) \
+> +			$((($id >> 16) & 0xff)) \
+> +			$((($id >> 24) & 0xff))`
+> +	else
+> +		val=`printf "\\%03o\\%03o\\%03o\\%03o" \
+> +			$((($id >> 24) & 0xff)) \
+> +			$((($id >> 16) & 0xff)) \
+> +			$((($id >> 8) & 0xff)) \
+> +			$(($id & 0xff))`
+> +	fi
+> +
+> +	data=`printf -- 'X%.0s' $(seq $cnt)`
+> +
+> +	printf "${val}${data}"
+> +}
+> +
+> +write_buffer() {
+> +	id=$1
+> +	size=$2
+> +
+> +	# write the string into the raw marker
+> +	make_str $id $size > trace_marker_raw
+> +}
+> +
+> +
+> +test_multiple_writes() {
+> +
+> +	# Write a bunch of data where the id is the count of
+> +	# data to write
+> +	for i in `seq 1 10` `seq 101 110` `seq 1001 1010`; do
+> +		write_buffer $i $i
+> +	done
+> +
+> +	# add a little buffer
+> +	echo stop > trace_marker
+> +
+> +	# Check to make sure the number of entries is the id (rounded up by 4)
+> +	awk '/.*: # [0-9a-f]* / {
+> +			print;
+> +			cnt = -1;
+> +			for (i = 0; i < NF; i++) {
+> +				# The counter is after the "#" marker
+> +				if ( $i == "#" ) {
+> +					i++;
+> +					cnt = strtonum("0x" $i);
+> +					num = NF - (i + 1);
+> +					# The number of items is always rounded up by 4
+> +					cnt2 = int((cnt + 3) / 4) * 4;
+> +					if (cnt2 != num) {
+> +						exit 1;
+> +					}
+> +					break;
+> +				}
+> +			}
+> +		}
+> +	// { if (NR > 30) { exit 0; } } ' trace_pipe;
+> +}
+> +
+> +
+> +get_buffer_data_size() {
+> +	sed -ne 's/^.*data.*size:\([0-9][0-9]*\).*/\1/p' events/header_page
+> +}
+> +
+> +test_buffer() {
+> +
+> +	# The id must be four bytes, test that 3 bytes fails a write
+> +	if echo -n abc > ./trace_marker_raw ; then
+> +		echo "Too small of write expected to fail but did not"
+> +		exit_fail
+> +	fi
+> +
+> +	size=`get_buffer_data_size`
+> +	echo size = $size
+> +
+> +	# Now add a little more than what it can handle
+> +
+> +	if write_buffer 0xdeadbeef $size ; then
+> +		echo "Too big of write expected to fail but did not"
+> +		exit_fail
+> +	fi
+> +}
+> +
+> +test_buffer
+> +test_multiple_writes
+> -- 
+> 2.51.0
+> 
+
+
 -- 
-2.51.0
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
