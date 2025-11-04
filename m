@@ -1,79 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36B8E221FCC;
-	Tue,  4 Nov 2025 14:11:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8B4724A06A
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  4 Nov 2025 15:29:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762265510; cv=none; b=fTX9gwsNq+NLJxNl942BmTi90pjx+2uFTyp3vGGwHrNXMOczi+ZtsRJohZU1wkLb2KSg8y9UeE8FHzJrbjQSmIIjBF0ZP15jNfCepPD+of0srduxWUhXs8zcnmomRFaJb0FuPH2XAwS9++OW63rXlaPLIl8zo28xflXZOvjytBo=
+	t=1762270172; cv=none; b=ZkIEYraGxHTIONlmUc7d+bMbW2gEyA7MiuRnuQ1NlzFi+m3zyiBhpo6MkZuFScFTeuD36VbkXh0o3uGUhV9VhucM1a09ix9BdCzpThPUoOWeblssEwIW5evLN0WVEwjeCmeOGmJfHa/y6kjuqmWcuD76K0uQoGid4JI4su7slR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762265510; c=relaxed/simple;
-	bh=vgSAFsQ5mZtcfbqCzL1HWndwd6MsJi2B5H4Sz4vaoL8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=MmEvuSS6J9EGuvH3PRupMHtU8kQG6T3w12OAAOM4FiAA9YsFMDi0X97U+mRh+Q8Atr5GMMnyfMrNBL9pwY8Bt5lcyVdiRuhTleJcl7HWplO8QKJUTny2O7kDhlVBjssvtZcEoEaGrbljw5s+fjdARTsOO5edCUinUxsy5b4GM9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Aou8+SmF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762270172; c=relaxed/simple;
+	bh=8GNMbexAGe1nKqMzzLVClEkNd7j6DVDRkgcdOMp8ajQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iqo3CllkY/b9Q8yWn1hIGrvfd8by2SAxn5EdMUNIqlOmjlhdd7vFefHVW8Ls32abXPZvroQw8ZFQvyvPjza4XX93r05s/4mBMJQRd8qbjFKWgn8cp50qhqmTfhM0vEgwHgWAvVAkawe1HExtdl8Hyg/lBJxpCEyBTpo/xbV29S4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=komXz4R+; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Aou8+SmF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D24DC16AAE;
-	Tue,  4 Nov 2025 14:11:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762265509;
-	bh=vgSAFsQ5mZtcfbqCzL1HWndwd6MsJi2B5H4Sz4vaoL8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Aou8+SmFjcXv0N0O8cd9sQpvjqjWIKdE3vZlQgVDm6Gy508fQUvweIo5+O81cjcgn
-	 6+XR2w3DNF2ETPRt9/UQLqm5XVC1YJQY+Wvd2FT/cGBw9BgKSxm6dvsuYNobYYqx1G
-	 XRVXGXyEXqrHH7sXE/fOMsW8czm7mdGItWVoc7AmfnME3czKVji/v7XuBNL3boESE+
-	 t5UjULcuSVqM6ajksDvJhVp/8CD/xjHkWg3iFjok87ru3Ot0qlRB3fLTpgNmP3xDaN
-	 OYgBK5AMipdGAL1QwsvAt1BWjNJApHZbQyPnYgcZ5FFfuw1MTannsL87lHxy0IjNC6
-	 CblGWJI5iFoBA==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH] tracing: wprobe: Use a new seq_print_ip_sym_offset() wrapper
-Date: Tue,  4 Nov 2025 23:11:46 +0900
-Message-ID: <176226550596.59499.18020648957674458755.stgit@devnote2>
-X-Mailer: git-send-email 2.43.0
-User-Agent: StGit/0.19
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="komXz4R+"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2959197b68eso195695ad.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 04 Nov 2025 07:29:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1762270170; x=1762874970; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8GNMbexAGe1nKqMzzLVClEkNd7j6DVDRkgcdOMp8ajQ=;
+        b=komXz4R+41dzT/XSiGVn89xk28v1lVjn5ZUX4+R3Vry1fRFm0on3hzx47TViArkgsV
+         64igP4q74IHlHGz/e6WNOhIzO4NoXFVpzWZY5PT6xsU5aMt5urG5Tmgum3HpayNNAR7W
+         qMgE5xpOgsKWwcZiD/HiON3MyShaU7sEGd9iKE/mhwXRZZth+xK/SZMi8eNiy6M2u/JN
+         mu5mOt3DcNFAVsM5g7HUMIvWJa2e7uJ6jJGTK7/tdfqn1iuKZ03YmvQ6604ISnoZsI6F
+         EwQrKMGUNWm7ChO2CPB+o/p4InWbwf4bs/Ew38x9e09dHaSp+1R2iw0gthCKjcs7qe3Y
+         ZcNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762270170; x=1762874970;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8GNMbexAGe1nKqMzzLVClEkNd7j6DVDRkgcdOMp8ajQ=;
+        b=fAIWCPGniPJT5dgs4J5hrcNOlnC87i3hwmU80jt+3MeaAk3rrE845LQhEjLAWITPQD
+         P0Na/yInptAHjEG4og/ktIAdF1T2VuqbL8IMz1Vbwni14eHeTSsRicvVd/OTxcQCC3+u
+         8b/vgch4yI9aqggQIMr1MENN/Fvpwol9hg60TGkAK1g8QkwtscdOsE4W3BlatUdtsHRr
+         3WUWUCVSwASbH8rpExwIzU3jhoRY74pMIxavmjuQsV7//HDrx1bt9DXW3dgwYWtbta5z
+         4JGynT/6dUT8Kel8q/8CDQOMYrE1OCG2Crbkyt6ry7Cyoj0uKs/Xne+qBHhS83YvvzsE
+         LoJw==
+X-Forwarded-Encrypted: i=1; AJvYcCUVnGq4MJsnC+clCauFSBacgfZDF0MLFo9w24KOLuIwyj6GUGSvkOIWkYHR1J6HzH4XbDZQG84d7iFyCXb5CfnFSmE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxwFUJhhjRrOzchYGBXN8dwYGmnY1thiSjkW2t6LUiLwgtbCF6L
+	apF/fob44aayUgxUF5ew1nlu1uQYCVUkIC5UE/ZAQ/G2/nX+7UDA7VgYTQQlDT/QhJ2dLGkPGP6
+	Jpyxx1Pp3MZNZ3+IVBeDwi1MvqUlsHJrqK1cI9LJz
+X-Gm-Gg: ASbGncvnVhcSOTcDmXshd/7nhBLzLaNV5b/EkHqze7LWSu8tWTB9lf24Pv5FDZKx8Ea
+	n7GhEtXW03OnlEmKShDT4w1KRNrNpYWEZ0NCNqLx82Zsr9Cz+OuMVQ5xu0wRziQWqhET9o0peul
+	qckEEugQxgJ8OXjgF/FlH8G2sS3SFw4TiMJs68GxiVl8JBCdyxbjgtpdDD9laiEWCaBULVXVGzR
+	1V5NFEx5fy1NJ4Tu2KoXJ3boN5PZoJtrprtw90qjIGsjwU/wM1L3QiGEoebl0JjLyGsD/Tuc3iH
+	OKkP3GtPTx8H0GCZbQ==
+X-Google-Smtp-Source: AGHT+IH4UAJnle8ScuJWqynVoBOWdaJhxSn6rAs6bqvidoqyAcb3/mjW+zeWXvxPSrbgnMnIJK48J8HHgBswCtIjjHM=
+X-Received: by 2002:a17:902:c412:b0:294:d42c:ca0f with SMTP id
+ d9443c01a7336-295fd276d54mr4970305ad.2.1762270169379; Tue, 04 Nov 2025
+ 07:29:29 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <cover.1760731772.git.ackerleytng@google.com> <5a4dfc265a46959953e6c24730d22584972b1179.1760731772.git.ackerleytng@google.com>
+ <aQnGJ5agTohMijj8@yzhao56-desk.sh.intel.com>
+In-Reply-To: <aQnGJ5agTohMijj8@yzhao56-desk.sh.intel.com>
+From: Vishal Annapurve <vannapurve@google.com>
+Date: Tue, 4 Nov 2025 07:29:14 -0800
+X-Gm-Features: AWmQ_bl_ayCFfhnMsugNyyrAbP6HSGsNUxGOugUtPG7U3zm3zMrinB0nHoIiMMY
+Message-ID: <CAGtprH9cajbGWrU9PAZWNKMeKJ9DyhoV=nEYk_DnYnR8Fyapww@mail.gmail.com>
+Subject: Re: [RFC PATCH v1 11/37] KVM: guest_memfd: Add support for KVM_SET_MEMORY_ATTRIBUTES
+To: Yan Zhao <yan.y.zhao@intel.com>
+Cc: Ackerley Tng <ackerleytng@google.com>, cgroups@vger.kernel.org, kvm@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, x86@kernel.org, 
+	akpm@linux-foundation.org, binbin.wu@linux.intel.com, bp@alien8.de, 
+	brauner@kernel.org, chao.p.peng@intel.com, chenhuacai@kernel.org, 
+	corbet@lwn.net, dave.hansen@intel.com, dave.hansen@linux.intel.com, 
+	david@redhat.com, dmatlack@google.com, erdemaktas@google.com, 
+	fan.du@intel.com, fvdl@google.com, haibo1.xu@intel.com, hannes@cmpxchg.org, 
+	hch@infradead.org, hpa@zytor.com, hughd@google.com, ira.weiny@intel.com, 
+	isaku.yamahata@intel.com, jack@suse.cz, james.morse@arm.com, 
+	jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com, jhubbard@nvidia.com, 
+	jroedel@suse.de, jthoughton@google.com, jun.miao@intel.com, 
+	kai.huang@intel.com, keirf@google.com, kent.overstreet@linux.dev, 
+	liam.merwick@oracle.com, maciej.wieczor-retman@intel.com, 
+	mail@maciej.szmigiero.name, maobibo@loongson.cn, 
+	mathieu.desnoyers@efficios.com, maz@kernel.org, mhiramat@kernel.org, 
+	mhocko@kernel.org, mic@digikod.net, michael.roth@amd.com, mingo@redhat.com, 
+	mlevitsk@redhat.com, mpe@ellerman.id.au, muchun.song@linux.dev, 
+	nikunj@amd.com, nsaenz@amazon.es, oliver.upton@linux.dev, palmer@dabbelt.com, 
+	pankaj.gupta@amd.com, paul.walmsley@sifive.com, pbonzini@redhat.com, 
+	peterx@redhat.com, pgonda@google.com, prsampat@amd.com, pvorel@suse.cz, 
+	qperret@google.com, richard.weiyang@gmail.com, rick.p.edgecombe@intel.com, 
+	rientjes@google.com, rostedt@goodmis.org, roypat@amazon.co.uk, 
+	rppt@kernel.org, seanjc@google.com, shakeel.butt@linux.dev, shuah@kernel.org, 
+	steven.price@arm.com, steven.sistare@oracle.com, suzuki.poulose@arm.com, 
+	tabba@google.com, tglx@linutronix.de, thomas.lendacky@amd.com, vbabka@suse.cz, 
+	viro@zeniv.linux.org.uk, vkuznets@redhat.com, wei.w.wang@intel.com, 
+	will@kernel.org, willy@infradead.org, wyihan@google.com, xiaoyao.li@intel.com, 
+	yilun.xu@intel.com, yuzenghui@huawei.com, zhiquan1.li@intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Tue, Nov 4, 2025 at 1:27=E2=80=AFAM Yan Zhao <yan.y.zhao@intel.com> wrot=
+e:
+>
+> On Fri, Oct 17, 2025 at 01:11:52PM -0700, Ackerley Tng wrote:
+> > For shared to private conversions, if refcounts on any of the folios
+> > within the range are elevated, fail the conversion with -EAGAIN.
+> >
+> > At the point of shared to private conversion, all folios in range are
+> > also unmapped. The filemap_invalidate_lock() is held, so no faulting
+> > can occur. Hence, from that point on, only transient refcounts can be
+> > taken on the folios associated with that guest_memfd.
+> >
+> > Hence, it is safe to do the conversion from shared to private.
+> >
+> > After conversion is complete, refcounts may become elevated, but that
+> > is fine since users of transient refcounts don't actually access
+> > memory.
+> >
+> > For private to shared conversions, there are no refcount checks. any
+> > transient refcounts are expected to drop their refcounts soon. The
+> > conversion process will spin waiting for these transient refcounts to
+> > go away.
+> Where's the code to spin?
 
-Use a new seq_print_ip_sym_offset() wrapper function instead of
-using TRACE_ITER(SYM_OFFSET) mask directly.
-
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- kernel/trace/trace_wprobe.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/trace/trace_wprobe.c b/kernel/trace/trace_wprobe.c
-index 98605b207f43..eae952a4f9e9 100644
---- a/kernel/trace/trace_wprobe.c
-+++ b/kernel/trace/trace_wprobe.c
-@@ -20,6 +20,7 @@
- #include <asm/ptrace.h>
- 
- #include "trace_dynevent.h"
-+#include "trace_output.h"
- #include "trace_probe.h"
- #include "trace_probe_kernel.h"
- #include "trace_probe_tmpl.h"
-@@ -260,7 +261,7 @@ print_wprobe_event(struct trace_iterator *iter, int flags,
- 
- 	trace_seq_printf(s, "%s: (", trace_probe_name(tp));
- 
--	if (!seq_print_ip_sym(s, field->ip, flags | TRACE_ITER_SYM_OFFSET))
-+	if (!seq_print_ip_sym_offset(s, field->ip, flags))
- 		goto out;
- 
- 	trace_seq_putc(s, ')');
-
+When dealing with 4k pages, I think we don't need to spin waiting for
+transient refcounts to drop, that logic will be needed when dealing
+with huge folios in order to restructure them while handling
+conversion. So the specific part can be safely dropped from the commit
+message.
