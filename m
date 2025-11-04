@@ -1,65 +1,65 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7513236435
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  4 Nov 2025 08:35:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0868E223DDA
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  4 Nov 2025 09:27:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762245347; cv=none; b=UKtMSsUQ7X3RvgLC82lcD9sKO0zuA27M3Irn669wjsEpAlEieaW4ZEswQ9plp2YZXEw72UOBwTHjUldeMHZLxiOb5yjiblYgMn2R9S8v0FIuQz6sHdWhvKhAVLlhXeP7jzYyNgnVcTDg18hYBnQvTJnBTLcqhUv9KQksXjF2Xig=
+	t=1762248446; cv=none; b=m8I8iIZXBdZgVH+Y+KKnIRb3owocteSzo/SidwruybpA3Jnr0Ql2690ExIHXf3gt3uUypSVrIqWHLVjlSRFEUekH0IWpiV7WLVrVfnejXBWKJlaZ3oP4l16+yvI9OqwmncOWUXsJu7n6BJx30ivOcrfZ+jY3hSJYy9bMk/JsPzk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762245347; c=relaxed/simple;
-	bh=N490/TG3XtRjts6kYFyxHc4CGDHNZTtWIrxRlPC+beY=;
+	s=arc-20240116; t=1762248446; c=relaxed/simple;
+	bh=VIL05nHFT4N6JAG/H2iMRz7OrtDZbp13GR+Lkr9m0m4=;
 	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YMa9LP8czTnDOi4mbGK0j7+AhjXnFrVIvtYoGdntpZEwRaWsSKHK7x0Uz0Sv6rcLV9N/WwOb4vmG0hw+9IBLqfiQErlcwygGZJ992mHNP8iGjAwtZ2207Bgk9Dwsb1u4sX1xIu5T7nqefp27sSkGUEks2gvZFRUzBG0RGzk/pY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=APiNfiQl; arc=none smtp.client-ip=209.85.221.43
+	 Content-Type:Content-Disposition:In-Reply-To; b=Kee3WqaYOfu+aABlv9FGBOZZ+pLVG2RKZYP4SJgGWzhw1JnGycdPInF0EZ8Nbq78EPeSYEl8YqgU+lsn0OHYw0Z9w4naOU0susAsCrsvGAsj9YyNgGTg66fLwUzz7pk8lg8Q0RKY1HJy7XA4bmo3st8schTS/Wv7qQ4osmomwQ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K4IhtWMC; arc=none smtp.client-ip=209.85.221.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="APiNfiQl"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-429c7e438a8so223578f8f.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 04 Nov 2025 00:35:45 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K4IhtWMC"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-429bf011e6cso3814362f8f.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 04 Nov 2025 01:27:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762245344; x=1762850144; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1762248443; x=1762853243; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=2iRqZFu43lXJnLAXLjzrSZx/jk9otyggnor3WZ2EbNM=;
-        b=APiNfiQl7NquLOVU/0OHmV00YbaxTltwrSz6kAhBrPe+ZLuryf0HyZsGRJ6xzmBili
-         gMyNhvEklXMs0VWXm6WIKTY3NWINg7hiL023IKpSWuLgX5dhNLROaysj81/oi++zhJn/
-         lw8rrqSKW5JzQT91MONXhEvbxyTNjY6b5s6Kic8Uf+FpSU8dFW+dcODWOjJVPkZ2eJHm
-         XOl1pXojpAGl9CLAKTLQAQFNvfC2+g8WxO787swnv6lXjCuoHYU5P5LAkIrHSaYkdKY2
-         dYS6jybsCCpcfdIZXNsNRzkN3iml15OTVVSK9RHpgn/gYSpXkK1gjgdCzZffqx3fpL4s
-         8B1Q==
+        bh=oAiC86qBA7A39iWQR2bMUkqXVWA4G10ZvXba/KKkMyI=;
+        b=K4IhtWMCtKLxMSMUCxBB4qWgLuSWTpzCT12alYZRcv4KDgzm7rz/ezkL79TgPc9cdN
+         X4S/9WQThRupWvuEN5VYqQXHXyxoHHsIL1+nPrXv8g8PRmkJhC8ylBG5mPWthm6And69
+         q/YHnxLQVkrvTkW9n2AuTGoamQqxtp/yvkHje++WYSzQ4YnWg9pvZJvdj69kWA5GcGYE
+         oSOCIyJ4h9R9gABKW7tCkU3fu8V4G6KQpoxNKkf78akoCNLmOexow4EHR9Nn3jwc500X
+         cDBFf/TffiDhObbufEB9KNMDhiuJURctJeXoRITDpwlwhDx8CsADckLs0T8t8UY8f0a/
+         +sig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762245344; x=1762850144;
+        d=1e100.net; s=20230601; t=1762248443; x=1762853243;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=2iRqZFu43lXJnLAXLjzrSZx/jk9otyggnor3WZ2EbNM=;
-        b=Z99yjKaHrR+1Yl2NMRevhBkGzoIcC8Bmhbug0+4YPwI1ScTBxXtn4csqfFW6aP+XgZ
-         n+zeqK25674RRYXWinVymQOoh9Y6uXfTleufd99eij3dJuor0gz71UkTLA4JdsrXPovR
-         LUcF0kMztNcLa/5Sd9hQbl8qMCALGVWqtFjVd+Re8pN2SHd+iWsvBbbyfYpNxMHICQDz
-         F9Ghz5dBuPdDkroDi9RUFWHOyU/TsTJqJ/hOCSPD7f9KWdnJDzArHWq5eOUFrDN8DQ4l
-         HvkDF2+HAcQyxj36ESDsoWodQi5VaMg+W8qANRLrH0/eYLBYnxh0AicBjRvji+0xlEOB
-         Xodw==
-X-Forwarded-Encrypted: i=1; AJvYcCXaCec6SR9XKf+0ZgugofCpPifYFPE1KhjdpdyzliydJDAkt20pfp90fYJQUyxVW+vypXQGM3rSIugwASDUCV7X3H8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxOW8t4eq5ik691cT1xPeEGWi1YQJfqJ4PXlCd6msrfJcaGFq5r
-	fHWWUxtjWCeImM92q5wgYPd8+sbOiE3QPm7X5J29L5U3JMwXYibcImbZ
-X-Gm-Gg: ASbGncsLDRe6b8rmS26BSA8CqGnOx/YfP8cWcGTyKQv0dYGWHpuP2xqBdXL/ZBfLQwW
-	lEN4LiLpyyLXPox9mPIM3VfZAFimfbag3PAYeCwPdXzWDnGRRgLzyu3ekupBiiahXIH50ua1tl4
-	oS4NIUhD/gQon19XSASmczQ1wxi5UPJM8WQTZaKkaQMNY4zxkvyh49QAUe0y/RSFy6M94BFuWRN
-	Vb4Ri+QWxMhY1W7lZHCVQCShhhKSWzpjpuRtfwhSEOkFbksn0hGG2xjkitGRekTjhKRzRLtaKa2
-	riZsRfQF8Hg8Z2Yb9JqcfZ3lK5BKxRhu+t1p14BE/S++/emjL/8GeA6qxpd9EjpQ+V8xjMayt7B
-	rV48o1AkVVefqowO7rUjTfrKCS+ixqGOMjaLpLIK3GXTMh6fl6g==
-X-Google-Smtp-Source: AGHT+IHu1BecoN7hPPRpZX/FIuxI3kKqiebd5/P0sYSuyDaOBlEppzCMNxt5Ft9U6yUF8ua9knS0tQ==
-X-Received: by 2002:a5d:584a:0:b0:429:cda2:9ffd with SMTP id ffacd0b85a97d-429cda2a24dmr5997729f8f.9.1762245343780;
-        Tue, 04 Nov 2025 00:35:43 -0800 (PST)
+        bh=oAiC86qBA7A39iWQR2bMUkqXVWA4G10ZvXba/KKkMyI=;
+        b=lCegMEXmmM0OwRPDt/OBALcDdjITnklhTF731kKz3KqltTezeT4VoCPbrAaKQ8mDC0
+         lsYsIuWjzDmAGNsrY2tlr77bbfUhhkVhNTPOtcyVSaF0VPY92qo3CWlTFlamgoE5BNFn
+         QxsfMBEiXF/V18dvezp36bhNm3OVIocfIMSYg1iDEi8InV/EH2pLQJvJYHQvr4BrHb4n
+         CRxIMo/LVVhhKiBssWqfK+2f/s7ZAku6cLm3G7Zyq2iOR7/Jvx2GWwyFoJnDkwmM/XIk
+         ZfDuW1yaKyA+O4/JTPEGzfWac3bp3pBC8mch3vI88Mw9rLYnPOLr7tsultWzZoLPrFKW
+         MRRg==
+X-Forwarded-Encrypted: i=1; AJvYcCUdyQ0iiJb4EaBI4YPmnv+wcfopDtjCXQIwZPZbxFzBUj5bkVVMvf3uWOZsJoV2nSr/bX2b8scldSswEntUZbK39cw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzTTysDR53QzyBlW0RqRkUJlixLlOknYS6dVERpFq7T8jgEt7Ep
+	UefiIGRsi/L0FfQCL4fR2ZOEhB4urWRtS1MOEQuZVWrnKlHFFwe7lhyk
+X-Gm-Gg: ASbGnctlC4DDKsKrUlzg/KD//PXIXr1orehcJ86epA39PMu8HxML5SFnM1K0OFwHkMT
+	oH5r/VGUWg0S03U3XjZsuIAuMw1LEJs4BuTLWLs21mddWRZrveESi+GC6EWTGyKCo9x3we/u9Uh
+	8Xu4EZXf2QdJQkwkbSLk5fAsDom1z1mCoqCK25WJhmoPkzLXTayhH8QZpYVWwLydZzaoTgiP3OR
+	0giYDA1Ojdk+kyGLTtA58dl88ahKjYL9UNgkOFa/4UzcWqI6yKxf5kEmQyi+Wa2oWXM6FUU6Wz2
+	R+WKPPZFaq0rnl/EpvTSCXCk7T5sutAeG5V/LKdNsjBib6J0ULPt8Yy9L/zEb7WsHWx7OPksCdB
+	HMY/98Q1VXy6Sa8AZXNVDRz3x0PK6naSFFUQFKFt56jGoTBIthQ==
+X-Google-Smtp-Source: AGHT+IG1Iz02Do8vk/OkUauhbzeE1XTOlKai6jAIc/dx9gUu7tjggesIQloqaLtajEfFQGe39i3EMQ==
+X-Received: by 2002:a05:6000:400d:b0:3f7:b7ac:f3d2 with SMTP id ffacd0b85a97d-429bd6be4e8mr13062531f8f.43.1762248443219;
+        Tue, 04 Nov 2025 01:27:23 -0800 (PST)
 Received: from krava ([2a02:8308:a00c:e200::b44f])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-429dc1fdae2sm3322788f8f.41.2025.11.04.00.35.42
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-429dc18f41bsm3393650f8f.9.2025.11.04.01.27.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Nov 2025 00:35:43 -0800 (PST)
+        Tue, 04 Nov 2025 01:27:22 -0800 (PST)
 From: Jiri Olsa <olsajiri@gmail.com>
 X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Tue, 4 Nov 2025 09:35:41 +0100
+Date: Tue, 4 Nov 2025 10:27:20 +0100
 To: bot+bpf-ci@kernel.org
 Cc: mhiramat@kernel.org, rostedt@goodmis.org, jpoimboe@kernel.org,
 	peterz@infradead.org, bpf@vger.kernel.org,
@@ -67,10 +67,11 @@ Cc: mhiramat@kernel.org, rostedt@goodmis.org, jpoimboe@kernel.org,
 	songliubraving@fb.com, andrii@kernel.org, ast@kernel.org,
 	daniel@iogearbox.net, martin.lau@kernel.org, eddyz87@gmail.com,
 	yonghong.song@linux.dev, clm@meta.com, ihor.solodrai@linux.dev
-Subject: Re: [PATCHv2 4/4] selftests/bpf: Add stacktrace ips test for raw_tp
-Message-ID: <aQm63ZvtqzEWvRfE@krava>
-References: <20251103220924.36371-5-jolsa@kernel.org>
- <0fc522195058f867d14c8a652b6b698d03751d0d179fcffdf20a44bf4293039a@mail.kernel.org>
+Subject: Re: [PATCHv2 2/4] x86/fgraph,bpf: Fix stack ORC unwind from
+ kprobe_multi return probe
+Message-ID: <aQnG-D8O8Jco9_4X@krava>
+References: <20251103220924.36371-3-jolsa@kernel.org>
+ <bb44afd60873d171a8482032e466d2827018486ecd13b4047df74632d2df4950@mail.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -79,70 +80,59 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0fc522195058f867d14c8a652b6b698d03751d0d179fcffdf20a44bf4293039a@mail.kernel.org>
+In-Reply-To: <bb44afd60873d171a8482032e466d2827018486ecd13b4047df74632d2df4950@mail.kernel.org>
 
-On Mon, Nov 03, 2025 at 11:47:36PM +0000, bot+bpf-ci@kernel.org wrote:
-> > diff --git a/tools/testing/selftests/bpf/prog_tests/stacktrace_ips.c b/tools/testing/selftests/bpf/prog_tests/stacktrace_ips.c
-> > index 6fca459ba..282a068d2 100644
-> > --- a/tools/testing/selftests/bpf/prog_tests/stacktrace_ips.c
-> > +++ b/tools/testing/selftests/bpf/prog_tests/stacktrace_ips.c
-> > @@ -84,12 +84,58 @@ static void test_stacktrace_ips_kprobe_multi(bool retprobe)
-> >  	stacktrace_ips__destroy(skel);
+On Mon, Nov 03, 2025 at 11:47:37PM +0000, bot+bpf-ci@kernel.org wrote:
+> > diff --git a/arch/x86/include/asm/ftrace.h b/arch/x86/include/asm/ftrace.h
+> > index 93156ac4f..b08c95872 100644
+> > --- a/arch/x86/include/asm/ftrace.h
+> > +++ b/arch/x86/include/asm/ftrace.h
+> > @@ -56,6 +56,11 @@ arch_ftrace_get_regs(struct ftrace_regs *fregs)
+> >  	return &arch_ftrace_regs(fregs)->regs;
 > >  }
 > >
-> > +static void test_stacktrace_ips_raw_tp(void)
-> > +{
+> > +#define arch_ftrace_partial_regs(regs) do {	\
+> > +	regs->flags &= ~X86_EFLAGS_FIXED;	\
+> > +	regs->cs = __KERNEL_CS;			\
+> > +} while (0)
+> > +
 > 
-> [ ... ]
+> Can arch_ftrace_partial_regs read uninitialized regs->flags?
 > 
-> > +	/* get bpf program address */
-> > +	info.jited_ksyms = ptr_to_u64(&bpf_prog_ksym);
-> > +	info.nr_jited_ksyms = 1;
-> > +	err = bpf_prog_get_info_by_fd(bpf_program__fd(skel->progs.rawtp_test),
-> > +				      &info, &info_len);
-> > +	if (ASSERT_OK(err, "bpf_prog_get_info_by_fd"))
-> > +		goto cleanup;
->              ^^^^^^^^^^^^^^
+> In return_to_handler, the ftrace_regs structure is allocated on the
+> stack but only a few fields are initialized (RAX, RDX, RBP, RSP).
+> The EFLAGS/flags field is never written before
+> arch_ftrace_partial_regs reads it:
 > 
-> Is the error check inverted in test_stacktrace_ips_raw_tp()?
+> arch/x86/kernel/ftrace_64.S return_to_handler:
+>     subq $(FRAME_SIZE), %rsp    # Allocate ftrace_regs on stack
+>     movq %rax, RAX(%rsp)
+>     movq %rdx, RDX(%rsp)
+>     movq %rbp, RBP(%rsp)
+>     movq %rsp, RSP(%rsp)
+>     # No initialization of EFLAGS field
+> 
+> Then ftrace_partial_regs()->arch_ftrace_partial_regs() executes:
+>     regs->flags &= ~X86_EFLAGS_FIXED;
+> 
+> This reads the uninitialized flags field. Stack allocations contain
+> garbage, so regs->flags will have whatever data was previously on
+> the stack. The &= operation produces undefined results when operating
+> on uninitialized memory.
+> 
+> For comparison, ftrace_regs_caller explicitly initializes EFLAGS:
+>     movq MCOUNT_REG_SIZE(%rsp), %rcx
+>     movq %rcx, EFLAGS(%rsp)
+> 
+> Should return_to_handler initialize regs->flags to 0 (or another
+> appropriate value) before arch_ftrace_partial_regs modifies it?
 
-ugh, it is.. will fix it in next version
+yes, that was in the initial version [1] but Stephen did not like that,
+so I moved the flags init to later where it needs to take into account
+other callers (that have meaningful flags) and just zeros the X86_EFLAGS_FIXED,
+so we go through !perf_hw_regs leg in perf_callchain_kernel
 
-thanks,
 jirka
 
-> 
-> The ASSERT_OK macro returns true when err == 0 (success), so the code
-> jumps to cleanup on success and continues on failure. Comparing with
-> test_stacktrace_ips_kprobe_multi() at line 70, the pattern should be:
-> 
->   if (!ASSERT_OK_PTR(...))
->       goto cleanup;
-> 
-> With the current code, bpf_prog_get_info_by_fd() success skips the test
-> (trigger_module_test_read and check_stacktrace_ips), while failure
-> continues with invalid bpf_prog_ksym data.
-> 
-> > +
-> > +	trigger_module_test_read(1);
-> > +
-> > +	load_kallsyms();
-> > +
-> > +	check_stacktrace_ips(bpf_map__fd(skel->maps.stackmap), skel->bss->stack_key, 2,
-> > +			     bpf_prog_ksym,
-> > +			     ksym_get_addr("bpf_trace_run2"));
-> > +
-> > +cleanup:
-> > +	stacktrace_ips__destroy(skel);
-> > +}
-> > +
-> 
-> [ ... ]
-> 
-> 
-> ---
-> AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
-> See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
-> 
-> CI run summary: https://github.com/kernel-patches/bpf/actions/runs/19051288274
 
+[1] https://lore.kernel.org/bpf/aObSyt3qOnS_BMcy@krava/
