@@ -1,101 +1,148 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F077B1DFF0;
-	Tue,  4 Nov 2025 04:57:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7513236435
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  4 Nov 2025 08:35:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762232270; cv=none; b=Flu4tJE2vfa8a2iS0zR8rXSWtNLWEQpVF3lL2R6c6hkTzDawZQPp16QlL9lm4AiQP8PRm4vQmHfeaJ9Cp2litjYVfMjwQLX/cXtm1mlGpajwS3eZ0h3EZlRD9n1hoSO+NRzF0ZvzyDE6nb32dlqmo5GDiUtIg/mE5t5WvpIeYFI=
+	t=1762245347; cv=none; b=UKtMSsUQ7X3RvgLC82lcD9sKO0zuA27M3Irn669wjsEpAlEieaW4ZEswQ9plp2YZXEw72UOBwTHjUldeMHZLxiOb5yjiblYgMn2R9S8v0FIuQz6sHdWhvKhAVLlhXeP7jzYyNgnVcTDg18hYBnQvTJnBTLcqhUv9KQksXjF2Xig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762232270; c=relaxed/simple;
-	bh=CINvRsRn/Cl5sObyLZwIhUY3ZoPdcJ6V3VPzduSzFwg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mvoyqaNihkgFsDW/fVNCRRwwDvGaHUSZIvfmUr5GULz0V5vS41h+PW0Q9z6OLZbbr9nBrFyDANglF9bC/CCwY/dd/bJ+0U5zqTBSypa+jiYfQuTlV5L5TYnsJgJh/xhNu2V4XHWX+EhQvzv1qrOJM5eSaDyEGq7/0xRWN1iMje4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: c91cece2b93a11f0a38c85956e01ac42-20251104
-X-CTIC-Tags:
-	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CC_NO_NAME, HR_CTE_8B
-	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
-	HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE
-	HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT, HR_TO_NAME
-	IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_EXISTED, SN_EXISTED
-	SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS, CIE_GOOD, CIE_GOOD_SPF
-	GTI_FG_BS, GTI_RG_INFO, GTI_C_BU, AMN_GOOD, ABX_MISS_RDNS
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.6,REQID:8fe78762-560f-4e92-b705-5ed91c0172bb,IP:10,U
-	RL:0,TC:0,Content:-5,EDM:25,RT:0,SF:-30,FILE:0,BULK:0,RULE:Release_Ham,ACT
-	ION:release,TS:0
-X-CID-INFO: VERSION:1.3.6,REQID:8fe78762-560f-4e92-b705-5ed91c0172bb,IP:10,URL
-	:0,TC:0,Content:-5,EDM:25,RT:0,SF:-30,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:0
-X-CID-META: VersionHash:a9d874c,CLOUDID:1b4c901fb95263d686a28f094659186f,BulkI
-	D:251104125739V6UO0J4G,BulkQuantity:0,Recheck:0,SF:10|66|78|102|850,TC:nil
-	,Content:0|15|50,EDM:5,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil
-	,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 2,SSN|SDN
-X-CID-BAS: 2,SSN|SDN,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: c91cece2b93a11f0a38c85956e01ac42-20251104
-X-User: hehuiwen@kylinos.cn
-Received: from localhost.localdomain [(116.128.244.169)] by mailgw.kylinos.cn
-	(envelope-from <hehuiwen@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 1906036543; Tue, 04 Nov 2025 12:57:38 +0800
-From: Huiwen He <hehuiwen@kylinos.cn>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Huiwen He <hehuiwen@kylinos.cn>
-Subject: [PATCH] tracing/hist: make err_text array fully const
-Date: Tue,  4 Nov 2025 12:55:58 +0800
-Message-Id: <20251104045558.1644671-1-hehuiwen@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1762245347; c=relaxed/simple;
+	bh=N490/TG3XtRjts6kYFyxHc4CGDHNZTtWIrxRlPC+beY=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YMa9LP8czTnDOi4mbGK0j7+AhjXnFrVIvtYoGdntpZEwRaWsSKHK7x0Uz0Sv6rcLV9N/WwOb4vmG0hw+9IBLqfiQErlcwygGZJ992mHNP8iGjAwtZ2207Bgk9Dwsb1u4sX1xIu5T7nqefp27sSkGUEks2gvZFRUzBG0RGzk/pY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=APiNfiQl; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="APiNfiQl"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-429c7e438a8so223578f8f.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 04 Nov 2025 00:35:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1762245344; x=1762850144; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2iRqZFu43lXJnLAXLjzrSZx/jk9otyggnor3WZ2EbNM=;
+        b=APiNfiQl7NquLOVU/0OHmV00YbaxTltwrSz6kAhBrPe+ZLuryf0HyZsGRJ6xzmBili
+         gMyNhvEklXMs0VWXm6WIKTY3NWINg7hiL023IKpSWuLgX5dhNLROaysj81/oi++zhJn/
+         lw8rrqSKW5JzQT91MONXhEvbxyTNjY6b5s6Kic8Uf+FpSU8dFW+dcODWOjJVPkZ2eJHm
+         XOl1pXojpAGl9CLAKTLQAQFNvfC2+g8WxO787swnv6lXjCuoHYU5P5LAkIrHSaYkdKY2
+         dYS6jybsCCpcfdIZXNsNRzkN3iml15OTVVSK9RHpgn/gYSpXkK1gjgdCzZffqx3fpL4s
+         8B1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762245344; x=1762850144;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2iRqZFu43lXJnLAXLjzrSZx/jk9otyggnor3WZ2EbNM=;
+        b=Z99yjKaHrR+1Yl2NMRevhBkGzoIcC8Bmhbug0+4YPwI1ScTBxXtn4csqfFW6aP+XgZ
+         n+zeqK25674RRYXWinVymQOoh9Y6uXfTleufd99eij3dJuor0gz71UkTLA4JdsrXPovR
+         LUcF0kMztNcLa/5Sd9hQbl8qMCALGVWqtFjVd+Re8pN2SHd+iWsvBbbyfYpNxMHICQDz
+         F9Ghz5dBuPdDkroDi9RUFWHOyU/TsTJqJ/hOCSPD7f9KWdnJDzArHWq5eOUFrDN8DQ4l
+         HvkDF2+HAcQyxj36ESDsoWodQi5VaMg+W8qANRLrH0/eYLBYnxh0AicBjRvji+0xlEOB
+         Xodw==
+X-Forwarded-Encrypted: i=1; AJvYcCXaCec6SR9XKf+0ZgugofCpPifYFPE1KhjdpdyzliydJDAkt20pfp90fYJQUyxVW+vypXQGM3rSIugwASDUCV7X3H8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxOW8t4eq5ik691cT1xPeEGWi1YQJfqJ4PXlCd6msrfJcaGFq5r
+	fHWWUxtjWCeImM92q5wgYPd8+sbOiE3QPm7X5J29L5U3JMwXYibcImbZ
+X-Gm-Gg: ASbGncsLDRe6b8rmS26BSA8CqGnOx/YfP8cWcGTyKQv0dYGWHpuP2xqBdXL/ZBfLQwW
+	lEN4LiLpyyLXPox9mPIM3VfZAFimfbag3PAYeCwPdXzWDnGRRgLzyu3ekupBiiahXIH50ua1tl4
+	oS4NIUhD/gQon19XSASmczQ1wxi5UPJM8WQTZaKkaQMNY4zxkvyh49QAUe0y/RSFy6M94BFuWRN
+	Vb4Ri+QWxMhY1W7lZHCVQCShhhKSWzpjpuRtfwhSEOkFbksn0hGG2xjkitGRekTjhKRzRLtaKa2
+	riZsRfQF8Hg8Z2Yb9JqcfZ3lK5BKxRhu+t1p14BE/S++/emjL/8GeA6qxpd9EjpQ+V8xjMayt7B
+	rV48o1AkVVefqowO7rUjTfrKCS+ixqGOMjaLpLIK3GXTMh6fl6g==
+X-Google-Smtp-Source: AGHT+IHu1BecoN7hPPRpZX/FIuxI3kKqiebd5/P0sYSuyDaOBlEppzCMNxt5Ft9U6yUF8ua9knS0tQ==
+X-Received: by 2002:a5d:584a:0:b0:429:cda2:9ffd with SMTP id ffacd0b85a97d-429cda2a24dmr5997729f8f.9.1762245343780;
+        Tue, 04 Nov 2025 00:35:43 -0800 (PST)
+Received: from krava ([2a02:8308:a00c:e200::b44f])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-429dc1fdae2sm3322788f8f.41.2025.11.04.00.35.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Nov 2025 00:35:43 -0800 (PST)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Tue, 4 Nov 2025 09:35:41 +0100
+To: bot+bpf-ci@kernel.org
+Cc: mhiramat@kernel.org, rostedt@goodmis.org, jpoimboe@kernel.org,
+	peterz@infradead.org, bpf@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, x86@kernel.org, yhs@fb.com,
+	songliubraving@fb.com, andrii@kernel.org, ast@kernel.org,
+	daniel@iogearbox.net, martin.lau@kernel.org, eddyz87@gmail.com,
+	yonghong.song@linux.dev, clm@meta.com, ihor.solodrai@linux.dev
+Subject: Re: [PATCHv2 4/4] selftests/bpf: Add stacktrace ips test for raw_tp
+Message-ID: <aQm63ZvtqzEWvRfE@krava>
+References: <20251103220924.36371-5-jolsa@kernel.org>
+ <0fc522195058f867d14c8a652b6b698d03751d0d179fcffdf20a44bf4293039a@mail.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0fc522195058f867d14c8a652b6b698d03751d0d179fcffdf20a44bf4293039a@mail.kernel.org>
 
-The err_text array contains string literals that are never modified.
-Previously it was declared as:
+On Mon, Nov 03, 2025 at 11:47:36PM +0000, bot+bpf-ci@kernel.org wrote:
+> > diff --git a/tools/testing/selftests/bpf/prog_tests/stacktrace_ips.c b/tools/testing/selftests/bpf/prog_tests/stacktrace_ips.c
+> > index 6fca459ba..282a068d2 100644
+> > --- a/tools/testing/selftests/bpf/prog_tests/stacktrace_ips.c
+> > +++ b/tools/testing/selftests/bpf/prog_tests/stacktrace_ips.c
+> > @@ -84,12 +84,58 @@ static void test_stacktrace_ips_kprobe_multi(bool retprobe)
+> >  	stacktrace_ips__destroy(skel);
+> >  }
+> >
+> > +static void test_stacktrace_ips_raw_tp(void)
+> > +{
+> 
+> [ ... ]
+> 
+> > +	/* get bpf program address */
+> > +	info.jited_ksyms = ptr_to_u64(&bpf_prog_ksym);
+> > +	info.nr_jited_ksyms = 1;
+> > +	err = bpf_prog_get_info_by_fd(bpf_program__fd(skel->progs.rawtp_test),
+> > +				      &info, &info_len);
+> > +	if (ASSERT_OK(err, "bpf_prog_get_info_by_fd"))
+> > +		goto cleanup;
+>              ^^^^^^^^^^^^^^
+> 
+> Is the error check inverted in test_stacktrace_ips_raw_tp()?
 
-    static const char *err_text[]
+ugh, it is.. will fix it in next version
 
-which makes the strings themselves const but allows the pointers
-in the array to be changed.
+thanks,
+jirka
 
-Change it to:
-
-    static const char * const err_text[]
-
-This prevents accidental modification of the array pointers,
-fixes checkpatch warnings, and allows the compiler to place the
-entire array in the read-only data section (.rodata).
-
-Signed-off-by: Huiwen He <hehuiwen@kylinos.cn>
----
- kernel/trace/trace_events_hist.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index 1d536219b624..3be35ebdaa62 100644
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -80,7 +80,7 @@ enum { ERRORS };
- #undef C
- #define C(a, b)		b
- 
--static const char *err_text[] = { ERRORS };
-+static const char * const err_text[] = { ERRORS };
- 
- struct hist_field;
- 
--- 
-2.25.1
+> 
+> The ASSERT_OK macro returns true when err == 0 (success), so the code
+> jumps to cleanup on success and continues on failure. Comparing with
+> test_stacktrace_ips_kprobe_multi() at line 70, the pattern should be:
+> 
+>   if (!ASSERT_OK_PTR(...))
+>       goto cleanup;
+> 
+> With the current code, bpf_prog_get_info_by_fd() success skips the test
+> (trigger_module_test_read and check_stacktrace_ips), while failure
+> continues with invalid bpf_prog_ksym data.
+> 
+> > +
+> > +	trigger_module_test_read(1);
+> > +
+> > +	load_kallsyms();
+> > +
+> > +	check_stacktrace_ips(bpf_map__fd(skel->maps.stackmap), skel->bss->stack_key, 2,
+> > +			     bpf_prog_ksym,
+> > +			     ksym_get_addr("bpf_trace_run2"));
+> > +
+> > +cleanup:
+> > +	stacktrace_ips__destroy(skel);
+> > +}
+> > +
+> 
+> [ ... ]
+> 
+> 
+> ---
+> AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
+> See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
+> 
+> CI run summary: https://github.com/kernel-patches/bpf/actions/runs/19051288274
 
