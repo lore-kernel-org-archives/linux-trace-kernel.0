@@ -1,134 +1,90 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8B4724A06A
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  4 Nov 2025 15:29:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AB47346786;
+	Tue,  4 Nov 2025 21:54:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762270172; cv=none; b=ZkIEYraGxHTIONlmUc7d+bMbW2gEyA7MiuRnuQ1NlzFi+m3zyiBhpo6MkZuFScFTeuD36VbkXh0o3uGUhV9VhucM1a09ix9BdCzpThPUoOWeblssEwIW5evLN0WVEwjeCmeOGmJfHa/y6kjuqmWcuD76K0uQoGid4JI4su7slR4=
+	t=1762293255; cv=none; b=JRt3J8qWR3YIzerS6njNhVf2K3Arho57A1m9X3xeRfpp9SNhNIw9b/mvb8BXNcettnmxgpV6UpdXi56CzEH5r/eAurekCxi2AZ7qeC18n1sVdc62YiZTZQwEjSulgnHrtlY66mNm7y3E4UVVW786Qkm9EjDP3FlgE3huZa66yg0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762270172; c=relaxed/simple;
-	bh=8GNMbexAGe1nKqMzzLVClEkNd7j6DVDRkgcdOMp8ajQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iqo3CllkY/b9Q8yWn1hIGrvfd8by2SAxn5EdMUNIqlOmjlhdd7vFefHVW8Ls32abXPZvroQw8ZFQvyvPjza4XX93r05s/4mBMJQRd8qbjFKWgn8cp50qhqmTfhM0vEgwHgWAvVAkawe1HExtdl8Hyg/lBJxpCEyBTpo/xbV29S4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=komXz4R+; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1762293255; c=relaxed/simple;
+	bh=Op2pC1JDl8mx3DWTCZ3ftO5dFMbBcYhpWeHtIc78JKg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fPRb53/f7cO4EGpLZmsp4PZCjwSYtjuB1R4qcAsMMWqWFmOCyBaVoMVtHtMLrHsiHTBAxefX5+vcXTn+tf+hJ7p+faIn3R5OTEpmUFdckAPHwh1jADU5aluNacWm1Are4ZjEAAuifpcA/jOCz3RK+Y8vCj6+l0k/pcGd/1OYv34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kb6/a0fl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="komXz4R+"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2959197b68eso195695ad.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 04 Nov 2025 07:29:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1762270170; x=1762874970; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8GNMbexAGe1nKqMzzLVClEkNd7j6DVDRkgcdOMp8ajQ=;
-        b=komXz4R+41dzT/XSiGVn89xk28v1lVjn5ZUX4+R3Vry1fRFm0on3hzx47TViArkgsV
-         64igP4q74IHlHGz/e6WNOhIzO4NoXFVpzWZY5PT6xsU5aMt5urG5Tmgum3HpayNNAR7W
-         qMgE5xpOgsKWwcZiD/HiON3MyShaU7sEGd9iKE/mhwXRZZth+xK/SZMi8eNiy6M2u/JN
-         mu5mOt3DcNFAVsM5g7HUMIvWJa2e7uJ6jJGTK7/tdfqn1iuKZ03YmvQ6604ISnoZsI6F
-         EwQrKMGUNWm7ChO2CPB+o/p4InWbwf4bs/Ew38x9e09dHaSp+1R2iw0gthCKjcs7qe3Y
-         ZcNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762270170; x=1762874970;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8GNMbexAGe1nKqMzzLVClEkNd7j6DVDRkgcdOMp8ajQ=;
-        b=fAIWCPGniPJT5dgs4J5hrcNOlnC87i3hwmU80jt+3MeaAk3rrE845LQhEjLAWITPQD
-         P0Na/yInptAHjEG4og/ktIAdF1T2VuqbL8IMz1Vbwni14eHeTSsRicvVd/OTxcQCC3+u
-         8b/vgch4yI9aqggQIMr1MENN/Fvpwol9hg60TGkAK1g8QkwtscdOsE4W3BlatUdtsHRr
-         3WUWUCVSwASbH8rpExwIzU3jhoRY74pMIxavmjuQsV7//HDrx1bt9DXW3dgwYWtbta5z
-         4JGynT/6dUT8Kel8q/8CDQOMYrE1OCG2Crbkyt6ry7Cyoj0uKs/Xne+qBHhS83YvvzsE
-         LoJw==
-X-Forwarded-Encrypted: i=1; AJvYcCUVnGq4MJsnC+clCauFSBacgfZDF0MLFo9w24KOLuIwyj6GUGSvkOIWkYHR1J6HzH4XbDZQG84d7iFyCXb5CfnFSmE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxwFUJhhjRrOzchYGBXN8dwYGmnY1thiSjkW2t6LUiLwgtbCF6L
-	apF/fob44aayUgxUF5ew1nlu1uQYCVUkIC5UE/ZAQ/G2/nX+7UDA7VgYTQQlDT/QhJ2dLGkPGP6
-	Jpyxx1Pp3MZNZ3+IVBeDwi1MvqUlsHJrqK1cI9LJz
-X-Gm-Gg: ASbGncvnVhcSOTcDmXshd/7nhBLzLaNV5b/EkHqze7LWSu8tWTB9lf24Pv5FDZKx8Ea
-	n7GhEtXW03OnlEmKShDT4w1KRNrNpYWEZ0NCNqLx82Zsr9Cz+OuMVQ5xu0wRziQWqhET9o0peul
-	qckEEugQxgJ8OXjgF/FlH8G2sS3SFw4TiMJs68GxiVl8JBCdyxbjgtpdDD9laiEWCaBULVXVGzR
-	1V5NFEx5fy1NJ4Tu2KoXJ3boN5PZoJtrprtw90qjIGsjwU/wM1L3QiGEoebl0JjLyGsD/Tuc3iH
-	OKkP3GtPTx8H0GCZbQ==
-X-Google-Smtp-Source: AGHT+IH4UAJnle8ScuJWqynVoBOWdaJhxSn6rAs6bqvidoqyAcb3/mjW+zeWXvxPSrbgnMnIJK48J8HHgBswCtIjjHM=
-X-Received: by 2002:a17:902:c412:b0:294:d42c:ca0f with SMTP id
- d9443c01a7336-295fd276d54mr4970305ad.2.1762270169379; Tue, 04 Nov 2025
- 07:29:29 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kb6/a0fl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 395C1C4CEF7;
+	Tue,  4 Nov 2025 21:54:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762293254;
+	bh=Op2pC1JDl8mx3DWTCZ3ftO5dFMbBcYhpWeHtIc78JKg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=kb6/a0flhl0KuPo/JNjKP1E8tOzo+5tZzLT7uIe9TVGb0T7sDjVS7iyDA9yNW2rO9
+	 eoSRKF/AamoP424O/HoSrJ7vMyNEm1sG/m7s0PKYZHtxrUAjjxTfqPZ52un6EuaGps
+	 0zoVXso9fFLXkTlIy3tkv8drb4U0npKhMMbPKVhtuEbcbk1YW+t1LzgXdJvLr6L2JT
+	 /P0ngMEaVZtRl4CGMlIrKpH7dtpXVB9hd/2rEUUCf5IMTQ5C3sh9QxnUWDx0fadRQn
+	 U9b0Zn4AQmov1IZds+khTGa/Qk6SU56PgxZAxz+2R73XMsgkY16/nat9pt/V+viuhS
+	 W4cqIqJ0LDWsQ==
+From: Jiri Olsa <jolsa@kernel.org>
+To: Masami Hiramatsu <mhiramat@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	bpf@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	x86@kernel.org,
+	Yonghong Song <yhs@fb.com>,
+	Song Liu <songliubraving@fb.com>,
+	Andrii Nakryiko <andrii@kernel.org>
+Subject: [PATCHv3 0/4] x86/fgraph,bpf: Fix ORC stack unwind from return probe
+Date: Tue,  4 Nov 2025 22:54:01 +0100
+Message-ID: <20251104215405.168643-1-jolsa@kernel.org>
+X-Mailer: git-send-email 2.51.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1760731772.git.ackerleytng@google.com> <5a4dfc265a46959953e6c24730d22584972b1179.1760731772.git.ackerleytng@google.com>
- <aQnGJ5agTohMijj8@yzhao56-desk.sh.intel.com>
-In-Reply-To: <aQnGJ5agTohMijj8@yzhao56-desk.sh.intel.com>
-From: Vishal Annapurve <vannapurve@google.com>
-Date: Tue, 4 Nov 2025 07:29:14 -0800
-X-Gm-Features: AWmQ_bl_ayCFfhnMsugNyyrAbP6HSGsNUxGOugUtPG7U3zm3zMrinB0nHoIiMMY
-Message-ID: <CAGtprH9cajbGWrU9PAZWNKMeKJ9DyhoV=nEYk_DnYnR8Fyapww@mail.gmail.com>
-Subject: Re: [RFC PATCH v1 11/37] KVM: guest_memfd: Add support for KVM_SET_MEMORY_ATTRIBUTES
-To: Yan Zhao <yan.y.zhao@intel.com>
-Cc: Ackerley Tng <ackerleytng@google.com>, cgroups@vger.kernel.org, kvm@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, x86@kernel.org, 
-	akpm@linux-foundation.org, binbin.wu@linux.intel.com, bp@alien8.de, 
-	brauner@kernel.org, chao.p.peng@intel.com, chenhuacai@kernel.org, 
-	corbet@lwn.net, dave.hansen@intel.com, dave.hansen@linux.intel.com, 
-	david@redhat.com, dmatlack@google.com, erdemaktas@google.com, 
-	fan.du@intel.com, fvdl@google.com, haibo1.xu@intel.com, hannes@cmpxchg.org, 
-	hch@infradead.org, hpa@zytor.com, hughd@google.com, ira.weiny@intel.com, 
-	isaku.yamahata@intel.com, jack@suse.cz, james.morse@arm.com, 
-	jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com, jhubbard@nvidia.com, 
-	jroedel@suse.de, jthoughton@google.com, jun.miao@intel.com, 
-	kai.huang@intel.com, keirf@google.com, kent.overstreet@linux.dev, 
-	liam.merwick@oracle.com, maciej.wieczor-retman@intel.com, 
-	mail@maciej.szmigiero.name, maobibo@loongson.cn, 
-	mathieu.desnoyers@efficios.com, maz@kernel.org, mhiramat@kernel.org, 
-	mhocko@kernel.org, mic@digikod.net, michael.roth@amd.com, mingo@redhat.com, 
-	mlevitsk@redhat.com, mpe@ellerman.id.au, muchun.song@linux.dev, 
-	nikunj@amd.com, nsaenz@amazon.es, oliver.upton@linux.dev, palmer@dabbelt.com, 
-	pankaj.gupta@amd.com, paul.walmsley@sifive.com, pbonzini@redhat.com, 
-	peterx@redhat.com, pgonda@google.com, prsampat@amd.com, pvorel@suse.cz, 
-	qperret@google.com, richard.weiyang@gmail.com, rick.p.edgecombe@intel.com, 
-	rientjes@google.com, rostedt@goodmis.org, roypat@amazon.co.uk, 
-	rppt@kernel.org, seanjc@google.com, shakeel.butt@linux.dev, shuah@kernel.org, 
-	steven.price@arm.com, steven.sistare@oracle.com, suzuki.poulose@arm.com, 
-	tabba@google.com, tglx@linutronix.de, thomas.lendacky@amd.com, vbabka@suse.cz, 
-	viro@zeniv.linux.org.uk, vkuznets@redhat.com, wei.w.wang@intel.com, 
-	will@kernel.org, willy@infradead.org, wyihan@google.com, xiaoyao.li@intel.com, 
-	yilun.xu@intel.com, yuzenghui@huawei.com, zhiquan1.li@intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Nov 4, 2025 at 1:27=E2=80=AFAM Yan Zhao <yan.y.zhao@intel.com> wrot=
-e:
->
-> On Fri, Oct 17, 2025 at 01:11:52PM -0700, Ackerley Tng wrote:
-> > For shared to private conversions, if refcounts on any of the folios
-> > within the range are elevated, fail the conversion with -EAGAIN.
-> >
-> > At the point of shared to private conversion, all folios in range are
-> > also unmapped. The filemap_invalidate_lock() is held, so no faulting
-> > can occur. Hence, from that point on, only transient refcounts can be
-> > taken on the folios associated with that guest_memfd.
-> >
-> > Hence, it is safe to do the conversion from shared to private.
-> >
-> > After conversion is complete, refcounts may become elevated, but that
-> > is fine since users of transient refcounts don't actually access
-> > memory.
-> >
-> > For private to shared conversions, there are no refcount checks. any
-> > transient refcounts are expected to drop their refcounts soon. The
-> > conversion process will spin waiting for these transient refcounts to
-> > go away.
-> Where's the code to spin?
+hi,
+sending fix for ORC stack unwind issue reported in here [1], where
+the ORC unwinder won't go pass the return_to_handler function and
+we get no stacktrace.
 
-When dealing with 4k pages, I think we don't need to spin waiting for
-transient refcounts to drop, that logic will be needed when dealing
-with huge folios in order to restructure them while handling
-conversion. So the specific part can be safely dropped from the commit
-message.
+Sending fix for that together with unrelated stacktrace fix (patch 1),
+so the attached test can work properly.
+
+It's based on:
+  https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
+  probes/for-next
+
+v1: https://lore.kernel.org/bpf/20251027131354.1984006-1-jolsa@kernel.org/
+v2: https://lore.kernel.org/bpf/20251103220924.36371-3-jolsa@kernel.org/
+
+v3 changes:
+- fix assert condition in test
+
+thanks,
+jirka
+
+
+[1] https://lore.kernel.org/bpf/aObSyt3qOnS_BMcy@krava/
+---
+Jiri Olsa (4):
+      Revert "perf/x86: Always store regs->ip in perf_callchain_kernel()"
+      x86/fgraph,bpf: Fix stack ORC unwind from kprobe_multi return probe
+      selftests/bpf: Add stacktrace ips test for kprobe_multi/kretprobe_multi
+      selftests/bpf: Add stacktrace ips test for raw_tp
+
+ arch/x86/events/core.c                                  |  10 +++----
+ arch/x86/include/asm/ftrace.h                           |   5 ++++
+ arch/x86/kernel/ftrace_64.S                             |   8 +++++-
+ include/linux/ftrace.h                                  |  10 ++++++-
+ tools/testing/selftests/bpf/prog_tests/stacktrace_ips.c | 150 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ tools/testing/selftests/bpf/progs/stacktrace_ips.c      |  49 +++++++++++++++++++++++++++++++
+ tools/testing/selftests/bpf/test_kmods/bpf_testmod.c    |  26 +++++++++++++++++
+ 7 files changed, 251 insertions(+), 7 deletions(-)
+ create mode 100644 tools/testing/selftests/bpf/prog_tests/stacktrace_ips.c
+ create mode 100644 tools/testing/selftests/bpf/progs/stacktrace_ips.c
