@@ -1,143 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A57C334C3F;
-	Wed,  5 Nov 2025 16:19:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBA3133B6E7;
+	Wed,  5 Nov 2025 16:22:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762359567; cv=none; b=P28J3+8W5LBUnPwnGMJzXw8yeX4yY/I6R2ir1i5XG9IYY2Z4IOY68FdONh/iTKaEposKp0vxPsF3YR9irkvtSLJhEAYA/CPSfO6Ekq2wNIfmoiTDqP2PaTXE08fe14NjiIyVf4FhNVJEWV1/Ph7PlyxSY4Hi90vnqOrrrR6IMEs=
+	t=1762359730; cv=none; b=gJqOkyxgJzxdqNEuCKGh1YnFsxBDw6U989w/Tw1HOa2jEqXhuUNsy0zb5QA6HaYcbC2cuRXoof23LNm70PfNkP2FiaxC3gXMvzcWpfkuPWZzUH7mbd3bfeaypHmihMAJDO/HuDUFGDADS4Ykc+dfwO2DY2ftnTXOR4zCfX40ExM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762359567; c=relaxed/simple;
-	bh=OUFFj9AZqHaaEQJANSjC5PFp63yqEirX5OV3P3nO7UQ=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=JiTRZz8L9jKh0nU6gahWsW5gQmZ/GleBTScKyOYU+P8RVWmfQxd+ZRH6KOY1/nAzbKcQ6DYRrOJLAXHINDu+LlUD3SFNhFH6uEPJ5cVDeQ1IIowmFA5n/xow5vt9u8SVxBhNP1FGS+9E2UDKuiBHRXH1xt97gI3mp+t/KPzB/fI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KVDPBOrx; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KVDPBOrx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08385C116B1;
-	Wed,  5 Nov 2025 16:19:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762359567;
-	bh=OUFFj9AZqHaaEQJANSjC5PFp63yqEirX5OV3P3nO7UQ=;
-	h=Date:From:To:Cc:Subject:References:From;
-	b=KVDPBOrxwkwjVktm7dQqrTaSvKPiswILANUHekUFvIB9wxFKAvBfHgviIug/xhc3l
-	 c3kdOagj2fDVoihPlULMlDlrWCNyTYHYaIcX26mFVJ99b9E2veGobDOKvjY4o2vFz0
-	 SCmlHoZjTwnX//Izhn5oEraEn/g/R+v/qTmEC+9y1PobAlBw2ffd9DZSkhyjp2A5ZO
-	 e+mKeBNbVBXVIWTcHcgwD1QjDTiE3/WEWYkEThIU5z+7PL72n+dXSqpaU0u8U7unIl
-	 hC2aMn9UHb+z0R9MfqHVGxmSjxQ4FUFNsNgZXpYHUDDK5BMaTMpKGH+ns/lNnAdjyq
-	 KGF/WRHlP5kMQ==
-Received: from rostedt by gandalf with local (Exim 4.98.2)
-	(envelope-from <rostedt@kernel.org>)
-	id 1vGgER-00000000pWf-3bHP;
-	Wed, 05 Nov 2025 11:19:35 -0500
-Message-ID: <20251105161935.712544514@kernel.org>
-User-Agent: quilt/0.68
-Date: Wed, 05 Nov 2025 11:19:13 -0500
-From: Steven Rostedt <rostedt@kernel.org>
-To: linux-kernel@vger.kernel.org,
+	s=arc-20240116; t=1762359730; c=relaxed/simple;
+	bh=tPUBcz6wnYsgnuiwKCaxQWvpoQSY/3aWfVi03XYff9o=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dN315qH5+zVNfbvRLbzHfV8C2Cha8cNver/dP1wE6Y46E87YojqYTWl5fk+LDk7q9yHL6ti1cd17HGGlPYNlKr8jT8Yk5QgT4sbqxQ4MLaS6wThjKHDegheLQzQQLDsJvoZZ/e4Q+EwiA1vLxucBC0au2SHCdVLRKlTYBPM+Cfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf15.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay07.hostedemail.com (Postfix) with ESMTP id 4225C1601A6;
+	Wed,  5 Nov 2025 16:21:59 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf15.hostedemail.com (Postfix) with ESMTPA id 4094C1D;
+	Wed,  5 Nov 2025 16:21:56 +0000 (UTC)
+Date: Wed, 5 Nov 2025 11:22:04 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Petr Mladek <pmladek@suse.com>
+Cc: Petr Pavlu <petr.pavlu@suse.com>, Alexei Starovoitov <ast@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, John Fastabend
+ <john.fastabend@gmail.com>, Masami Hiramatsu <mhiramat@kernel.org>, Mark
+ Rutland <mark.rutland@arm.com>, Luis Chamberlain <mcgrof@kernel.org>,
+ Daniel Gomez <da.gomez@kernel.org>, Sami Tolvanen
+ <samitolvanen@google.com>, linux-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, linux-modules@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH 4/5] tracing: Have function tracer define options per instance
-References: <20251105161909.590008129@kernel.org>
+Subject: Re: [PATCH 4/6] kallsyms/ftrace: Set module buildid in
+ ftrace_mod_address_lookup()
+Message-ID: <20251105112204.4b0ab3d9@gandalf.local.home>
+In-Reply-To: <20251105142319.1139183-5-pmladek@suse.com>
+References: <20251105142319.1139183-1-pmladek@suse.com>
+	<20251105142319.1139183-5-pmladek@suse.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 4094C1D
+X-Stat-Signature: 77sznrhaz1sftejznges1tjcrx55jmnc
+X-Rspamd-Server: rspamout06
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18roVEuMlC6V+iO6y3+SEQU7Yq4Z2pL21E=
+X-HE-Tag: 1762359716-106494
+X-HE-Meta: U2FsdGVkX1+aGzgUQI5G7y6JzBPfxwADzqKUMXneejcwqgPP46obC+lPX4V0xiEOkCLpBcNjwK+bKksvmylU8bQYG52nKUZjEwQDwPA2JZ+/WjRQqjuzOdtqbamz/4lR7pk2J+4EwPxUZYUCAZklOa12kN5uobqf/wMhBoV8nIsvKPT2JNarVZPJEtYlLutKySecvjo8gaYYdMEY/XgtSNZnjLpt/L/qI1NRSWSMRooMO3f6LvYWh6lutIqqPHlqzAsB+2ah9eQY8V2rVBTbcnHm0J2rq8ftFcFSJr121qIUc0wqNtkvlApxxmmmitHVl1/tRitcjhinehRLG+/gXkSqSiKcC28y8LOuu2YWR7WinDBea39co4BP0Sh1HX8EUMXE03McZ0YN2e0CRVaKm2Z32aelwJK+OYIT8YiDOFs4oP5jC+fskMg/HFZ7YwJeP22ND09KsvO6ujutXtQsmA==
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Wed,  5 Nov 2025 15:23:16 +0100
+Petr Mladek <pmladek@suse.com> wrote:
 
-Currently the function tracer's options are saved via a global mask when
-it should be per instance. Use the new infrastructure to define a
-"default_flags" field in the tracer structure that is used for the top
-level instance as well as new ones.
+> __sprint_symbol() might access an invalid pointer when
+> kallsyms_lookup_buildid() returns a symbol found by
+> ftrace_mod_address_lookup().
+> 
+> The ftrace lookup function must set both @modname and @modbuildid
+> the same way as module_address_lookup().
+> 
+> Fixes: 9294523e3768 ("module: add printk formats to add module build ID to stacktraces")
+> Signed-off-by: Petr Mladek <pmladek@suse.com>
+> ---
+>  include/linux/ftrace.h | 6 ++++--
+>  kernel/kallsyms.c      | 4 ++--
+>  kernel/trace/ftrace.c  | 5 ++++-
+>  3 files changed, 10 insertions(+), 5 deletions(-)
 
-Currently the global mask causes confusion:
+Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-  # cd /sys/kernel/tracing
-  # mkdir instances/foo
-  # echo function > instances/foo/current_tracer
-  # echo 1 > options/func-args
-  # echo function > current_tracer
-  # cat trace
-[..]
-  <idle>-0       [005] d..3.  1050.656187: rcu_needs_cpu() <-tick_nohz_next_event
-  <idle>-0       [005] d..3.  1050.656188: get_next_timer_interrupt(basej=0x10002dbad, basem=0xf45fd7d300) <-tick_nohz_next_event
-  <idle>-0       [005] d..3.  1050.656189: _raw_spin_lock(lock=0xffff8944bdf5de80) <-__get_next_timer_interrupt
-  <idle>-0       [005] d..4.  1050.656190: do_raw_spin_lock(lock=0xffff8944bdf5de80) <-__get_next_timer_interrupt
-  <idle>-0       [005] d..4.  1050.656191: _raw_spin_lock_nested(lock=0xffff8944bdf5f140, subclass=1) <-__get_next_timer_interrupt
- # cat instances/foo/options/func-args
- 1
- # cat instances/foo/trace
-[..]
-  kworker/4:1-88      [004] ...1.   298.127735: next_zone <-refresh_cpu_vm_stats
-  kworker/4:1-88      [004] ...1.   298.127736: first_online_pgdat <-refresh_cpu_vm_stats
-  kworker/4:1-88      [004] ...1.   298.127738: next_online_pgdat <-refresh_cpu_vm_stats
-  kworker/4:1-88      [004] ...1.   298.127739: fold_diff <-refresh_cpu_vm_stats
-  kworker/4:1-88      [004] ...1.   298.127741: round_jiffies_relative <-vmstat_update
-[..]
-
-The above shows that updating the "func-args" option at the top level
-instance also updates the "func-args" option in the instance but because
-the update is only done by the instance that gets changed (as it should),
-it's confusing to see that the option is already set in the other instance.
-
-Fixes: f20a580627f43 ("ftrace: Allow instances to use function tracing")
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/trace_functions.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/kernel/trace/trace_functions.c b/kernel/trace/trace_functions.c
-index d17c18934445..c12795c2fb39 100644
---- a/kernel/trace/trace_functions.c
-+++ b/kernel/trace/trace_functions.c
-@@ -154,11 +154,11 @@ static int function_trace_init(struct trace_array *tr)
- 	if (!tr->ops)
- 		return -ENOMEM;
- 
--	func = select_trace_function(func_flags.val);
-+	func = select_trace_function(tr->current_trace_flags->val);
- 	if (!func)
- 		return -EINVAL;
- 
--	if (!handle_func_repeats(tr, func_flags.val))
-+	if (!handle_func_repeats(tr, tr->current_trace_flags->val))
- 		return -ENOMEM;
- 
- 	ftrace_init_array_ops(tr, func);
-@@ -459,14 +459,14 @@ func_set_flag(struct trace_array *tr, u32 old_flags, u32 bit, int set)
- 	u32 new_flags;
- 
- 	/* Do nothing if already set. */
--	if (!!set == !!(func_flags.val & bit))
-+	if (!!set == !!(tr->current_trace_flags->val & bit))
- 		return 0;
- 
- 	/* We can change this flag only when not running. */
- 	if (tr->current_trace != &function_trace)
- 		return 0;
- 
--	new_flags = (func_flags.val & ~bit) | (set ? bit : 0);
-+	new_flags = (tr->current_trace_flags->val & ~bit) | (set ? bit : 0);
- 	func = select_trace_function(new_flags);
- 	if (!func)
- 		return -EINVAL;
-@@ -491,7 +491,7 @@ static struct tracer function_trace __tracer_data =
- 	.init		= function_trace_init,
- 	.reset		= function_trace_reset,
- 	.start		= function_trace_start,
--	.flags		= &func_flags,
-+	.default_flags	= &func_flags,
- 	.set_flag	= func_set_flag,
- 	.allow_instances = true,
- #ifdef CONFIG_FTRACE_SELFTEST
--- 
-2.51.0
-
-
+-- Steve
