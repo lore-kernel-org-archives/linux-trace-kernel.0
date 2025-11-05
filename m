@@ -1,183 +1,81 @@
-Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A3DB25785E
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  5 Nov 2025 03:48:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6149726F289
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  5 Nov 2025 05:48:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762314536; cv=none; b=clfV0YWajuT6a7xlh/i3ZdYVHmN+VXjivIgkZjfxjBAf+OaI6PLGO+fW2bRbMQ2GGUcJ0LLoAQUCjUQQndzt7Rv85FraFwJZHF8z+IiakFCyoU6mq9R7nKsWHIBErx8l34hCfx892Ve5qHkMvliQvfXn0wRUdCk3L6XDe60Mj+0=
+	t=1762321686; cv=none; b=cZRl4IlavP29aYEs2ZDUaWMjW4vdWpSVIbkDl0GJQG1crKEqnofcJZ19w0QSITd2WApy5lIoLt4lG6J8LysyELsi/n9B3+syCMO4N4WgLR6tnBodQqK5lclSHua5/8FgRGhUoxbXMlcxJ9+PbgbhGydQoFFwWtQH9wLt7D6cLZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762314536; c=relaxed/simple;
-	bh=lprbrqeDCWBBKYZswyl5JnNTLCbN4xBuZvfW1guI8/U=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OonSCPlBTeZPkvJ0vRMlQlbOf0e3p5+N8oMvo3uELqZN9T9Mt7Tg+jJp7Bm5GcL1bY8zJjXdwi4V9I6nwoiA8Q84yPlJQl2+EP8XH7qGI8rOueaM9wS3oaCrwGIie2ivWWvAv+MQ7gf4oiQlOHcjjVMdz4mYK4+LzvX0phyDBDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=FVw/zyN3; arc=none smtp.client-ip=91.218.175.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="FVw/zyN3"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1762314522;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kLgfXQlNwClqEIZ980jRLCrkzhFoUxSQggGknTOmJw0=;
-	b=FVw/zyN3BWn6LKvr9d6JUlvchkmjPPA6kvl7pij6s/oQFuTFeneHUImkduUFa85Y0yJ0qC
-	juQLlfVb+ZW4GuChQaFNuIiDj2XiBZXyFRUDrWp8NoRj2pb0+sIyPjs1MJIZMfLRJHNynb
-	4F3u/lLNhQQVj7mOxZihSk/uzhOCWI0=
-From: Menglong Dong <menglong.dong@linux.dev>
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
- Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Menglong Dong <menglong8.dong@gmail.com>,
- Alexei Starovoitov <ast@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>,
- John Fastabend <john.fastabend@gmail.com>,
- Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>,
- Eduard <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
- Matt Bobrowski <mattbobrowski@google.com>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- Leon Hwang <leon.hwang@linux.dev>, jiang.biao@linux.dev,
- bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
- linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
-Subject:
- Re: [PATCH bpf-next v3 4/7] bpf,x86: add tracing session supporting for
- x86_64
-Date: Wed, 05 Nov 2025 11:48:27 +0800
-Message-ID: <2328886.iZASKD2KPV@7950hx>
-In-Reply-To:
- <CAADnVQKV_a7NxvWwXDgRab_gakwJ=VadZ0=eC5sHwutVyM0rmg@mail.gmail.com>
-References:
- <20251026030143.23807-1-dongml2@chinatelecom.cn>
- <CAEf4Bzas7Or4yPzqdHqEcgVpTDx2j26dR5oRnSg7bepr-uDqHw@mail.gmail.com>
- <CAADnVQKV_a7NxvWwXDgRab_gakwJ=VadZ0=eC5sHwutVyM0rmg@mail.gmail.com>
+	s=arc-20240116; t=1762321686; c=relaxed/simple;
+	bh=GlQIhOpVt8G+BVYMy665LNIo97/TwQy9Ja+ALJ1AUDo=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=W+yNlQlJBJEHCrZPbY14ZEHesQEzzKscR1QSqAZnVw6TmZa8Rj1PtFW2G44UQOxBjRg145GDpp1CxZhrN8Qtbx24D9CxksEjQncInGv19x0BJM23M7Zgvl0JqEB2gtv31lgK2T4LEZqUKWbduCqE35luYOd6cXB5H67oZ8eET20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-93e7b0584c9so534844639f.0
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 04 Nov 2025 21:48:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762321683; x=1762926483;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=g4XDLXqrEs29g4qhc4+ZUYTByJ5LUyYE6CBWzXLnGEU=;
+        b=X+EUr5tLawFdujaZjUUD+hXQR9qQ35xMCqziQQ1g7ToAlOoRABd/dzyLK6x2wBagNt
+         MmbWFltUWmrWb0pL0enmbQPPi0RLV6rw7Ldi+VvPrUf2z/H4J/YBFbXKZ7SadXsjHZAh
+         6FoiMZQ+dX6f7AtunGfXbMiN8fJmDU1YkWYVBZTdsuFDpbvBLlcRHZvkL6+rrF3mPHLv
+         /sQLpcAYxEK8d0IqMfFad8rcrlb7nICLxkwDgM67rygHcsj/3WMPWW9NihCybAIZsXa7
+         bmGudtHVzolURj9+1nmwPET/I8oNunRP9ddTi07iYuupNeNhQ0m0xJj0ZB3ESkbJy14E
+         Ovqg==
+X-Forwarded-Encrypted: i=1; AJvYcCWKpP9xmdLZKFVq3fXjCqRC+uOfFOyX0qJWRpaitNVb7RaeBq9cxsrMkuMuEkduw/VkpCC18fdhcu6LGGqoSrmRjrI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw8CyDchUjR+EArl9plbzzhiK3UgQE1TMfIrUaLq44Btp3vyR64
+	MkizauZe1HA5kG05WaU1b7Ltr1XRxLSuDiEQTLx9EpCPjJsH5biByeLf7OHEOKW2SJf40YTLHnB
+	2ekGCstB3W6kchk2A0CAegiDqHXMqDjnu0RmoeYDkGK7xKkTFGa7OT4FRso8=
+X-Google-Smtp-Source: AGHT+IFp+75P9fzMNP6tFwZqfyhcKVqnVaql1CMi2hGDeHUR9fDxpaS8IRIyJ/54rHYeSSnjNRL0DzJ+OpUzQhVJDknW+FXvnEk4
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
-X-Migadu-Flow: FLOW_OUT
+X-Received: by 2002:a05:6602:29c9:b0:945:9f2d:592f with SMTP id
+ ca18e2360f4ac-94869ebc957mr295259839f.17.1762321683439; Tue, 04 Nov 2025
+ 21:48:03 -0800 (PST)
+Date: Tue, 04 Nov 2025 21:48:03 -0800
+In-Reply-To: <68132c08.050a0220.14dd7d.0007.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <690ae513.050a0220.baf87.0009.GAE@google.com>
+Subject: Re: [syzbot] [nfs?] [netfs?] INFO: task hung in anon_pipe_write
+From: syzbot <syzbot+ef2c1c404cbcbcc66453@syzkaller.appspotmail.com>
+To: asmadeus@codewreck.org, brauner@kernel.org, ceph-devel@vger.kernel.org, 
+	dhowells@redhat.com, ericvh@kernel.org, idryomov@gmail.com, jack@suse.cz, 
+	jlayton@kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux_oss@crudebyte.com, lucho@ionkov.net, 
+	m@maowtm.org, mathieu.desnoyers@efficios.com, mhiramat@kernel.org, 
+	netfs@lists.linux.dev, rostedt@goodmis.org, syzkaller-bugs@googlegroups.com, 
+	v9fs@lists.linux.dev, viro@zeniv.linux.org.uk, xiubli@redhat.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 2025/11/5 10:43, Alexei Starovoitov wrote:
-> On Tue, Nov 4, 2025 at 4:40=E2=80=AFPM Andrii Nakryiko
-> <andrii.nakryiko@gmail.com> wrote:
-> >
-> > On Mon, Nov 3, 2025 at 3:29=E2=80=AFAM Menglong Dong <menglong.dong@lin=
-ux.dev> wrote:
-> > >
-> > > On 2025/11/1 01:57, Alexei Starovoitov wrote:
-> > > > On Thu, Oct 30, 2025 at 8:36=E2=80=AFPM Menglong Dong <menglong8.do=
-ng@gmail.com> wrote:
-> > > > >
-> > > > > On Fri, Oct 31, 2025 at 9:42=E2=80=AFAM Alexei Starovoitov
-> > > > > <alexei.starovoitov@gmail.com> wrote:
-> > > > > >
-> > > > > > On Sat, Oct 25, 2025 at 8:02=E2=80=AFPM Menglong Dong <menglong=
-8.dong@gmail.com> wrote:
-> > > > > > >
-> > > > > > > Add BPF_TRACE_SESSION supporting to x86_64. invoke_bpf_sessio=
-n_entry and
-> > > > > > > invoke_bpf_session_exit is introduced for this purpose.
-> > > > > > >
-> > > > > > > In invoke_bpf_session_entry(), we will check if the return va=
-lue of the
-> > > > > > > fentry is 0, and set the corresponding session flag if not. A=
-nd in
-> > > > > > > invoke_bpf_session_exit(), we will check if the corresponding=
- flag is
-> > > > > > > set. If set, the fexit will be skipped.
-> > > > > > >
-> > > > > > > As designed, the session flags and session cookie address is =
-stored after
-> > > > > > > the return value, and the stack look like this:
-> > > > > > >
-> > > > > > >   cookie ptr    -> 8 bytes
-> > > > > > >   session flags -> 8 bytes
-> > > > > > >   return value  -> 8 bytes
-> > > > > > >   argN          -> 8 bytes
-> > > > > > >   ...
-> > > > > > >   arg1          -> 8 bytes
-> > > > > > >   nr_args       -> 8 bytes
-> >
-> > Let's look at "cookie ptr", "session flags", and "nr_args". We can
-> > combine all of them into a single 8 byte slot: assign each session
-> > program index 0, 1, ..., Nsession. 1 bit for entry/exit flag, few bits
-> > for session prog index, and few more bits for nr_args, and we still
-> > will have tons of space for some other additions in the future. From
-> > that session program index you can calculate cookieN address to return
-> > to user.
+syzbot suspects this issue was fixed by commit:
 
-Yeah, it should work, and I thought this way too. I didn't do it
-this way, because I have to adopt the usage of "nr_args" in all the
-arch, which makes this series looks complicated. We can do it this
-way if we still use this solution.
+commit 290434474c332a2ba9c8499fe699c7f2e1153280
+Author: Tingmao Wang <m@maowtm.org>
+Date:   Sun Apr 6 16:18:42 2025 +0000
 
-> >
-> > And we should look whether moving nr_args into bpf_run_ctx would
-> > actually minimize amount of trampoline assembly code, as we can
-> > implement a bunch of stuff in pure C. (well, BPF verifier inlining is
-> > a separate thing, but it can be mostly arch-independent, right?)
+    fs/9p: Refresh metadata in d_revalidate for uncached mode too
 
-If we still on this way, it worth a try.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10be532f980000
+start commit:   5bc1018675ec Merge tag 'pci-v6.15-fixes-3' of git://git.ke..
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=9f5bd2a76d9d0b4e
+dashboard link: https://syzkaller.appspot.com/bug?extid=ef2c1c404cbcbcc66453
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15631270580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12a0b0d4580000
 
->=20
-> Instead of all that I have a different suggestion...
->=20
-> how about we introduce this "session" attach type,
-> but won't mess with trampoline and whole new session->nr_links.
-> Instead the same prog can be added to 'fentry' list
-> and 'fexit' list.
-> We lose the ability to skip fexit, but I'm still not convinced
-> it's necessary.
-> The biggest benefit is that it will work for existing JITs and trampoline=
-s.
-> No new complex asm will be necessary.
-> As far as writable session_cookie ...
-> let's add another 8 byte space to bpf_tramp_run_ctx
+If the result looks correct, please mark the issue as fixed by replying with:
 
-I'm OK with this approach too. In fact, the session cookie can
-also be used to store the information that if skip the fexit, and
-the user can do the skipping by themselves.
+#syz fix: fs/9p: Refresh metadata in d_revalidate for uncached mode too
 
-However, we need to implement bpf_session_is_return() to tell
-if the current prog is fexit, as we attach the prog to both the
-entry and exit of the target function. And it still need to be done
-in the trampoline, and maybe we can reuse the nr_args for this
-purpose :/
-
-If we don't want to modify the trampoline, I think a way
-is that we don't introduce tracing session, and simply add the
-"session cookie", and all the fentry and fexit is able to read/write
-it.
-
-Wait a minutes......we can directly make the attach cookie writable?
-Things become weird now........
-
-> and only allow single 'fsession' prog for a given kernel function.
-
-Maybe we don't need to limit it to give the user more choice?
-=46or example, progA use the first 4-bytes, and progB use the
-last 4-bytes. Hmm...it's a little dangerous, things may mess up
-if they don't talk it over beforehand.
-
-Thanks!
-Menglong Dong
-
-> Again to avoid changing all trampolines.
-> This way the feature can be implemented purely in C and no arch
-> specific changes.
-> It's more limited, but doesn't sound that the use case for multiple
-> fsession-s exist. All this is on/off tracing. Not something
-> that will be attached 24/7.
->=20
->=20
-
-
-
-
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
