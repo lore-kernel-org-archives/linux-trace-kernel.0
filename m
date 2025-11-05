@@ -1,199 +1,207 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF35E34B186;
-	Tue,  4 Nov 2025 23:47:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9B582940D
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  5 Nov 2025 00:40:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762300073; cv=none; b=SE9yHuXH0s06MjgoBpDNhwXWO9k6Y1i9UyGw0rPp0lyIZyL4Ya8G2Y1S/E5Q23Ngl7bauTXNRSGt48UsJ7jjgzuVtntejNlWxav1wk2wNFmtbYHPFTnOiqHWkpDPfdv70BSru93af7hFg91P3UNOg/CtW35qPDNakjy1OnEUIEg=
+	t=1762303260; cv=none; b=cN9JTJjb+8bTzj/60woY+WG1T/qYBGNIlHg1LoIMhMN8Z0lOqs48sefsk3tcZNRQj+5vsCr27zGKyPTjJ0wirMzHtgw8it3N64TBshNDV8jQkjO26kSvM3wVSOvPpZ1xfPCg7C2q9QnIlA5aUWRc6KexK1uJu5UHjnt4DZWUJ48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762300073; c=relaxed/simple;
-	bh=fEsn3jOrCN93c6qUqNl2qj5zUfUGbA4A30+4VyWcL6o=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=efrz6WCdt7jm5495H3m3TsARF0PKsah0TEZ4xytsODC6zp3wDJa+X3mO3DGd9jNTHO+Wd54s0mCwyQQLeODhQ1Uw4wy36aik7jBlye9O6VemWMWp0xbSmZvjI4OoTcrFatMRAWntqfYspsOYY4sjK+7ax7VqdF5ooHhjAPThZnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GifgasKw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762303260; c=relaxed/simple;
+	bh=eQSojdtgLVR7/Kw+4EOTYx2+5jfhiuoErGVSlDeTdfw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=moUWL4fdX0bwybVGNLuiEBwjyu/rYkvJ9bnLuausY1ruMNau4pSDyFROrB8Kl9vohu2dgYjy3Blgtpnls/c6lQODFm5XjQBkFhEbE7DIqJiYVFLOzjltR37ZMtOYqFXZ+Pq/r9GZAgESyh2dqqdWKYKRRAammycTQN4T5U+IDNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hCrTr+VL; arc=none smtp.client-ip=209.85.216.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GifgasKw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2E2FC4CEF7;
-	Tue,  4 Nov 2025 23:47:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762300072;
-	bh=fEsn3jOrCN93c6qUqNl2qj5zUfUGbA4A30+4VyWcL6o=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=GifgasKwjeePbhflYlgd4hJiKOTL0PN8UFtOLFGNE50PA7Md4557Iix92WelIc1Jd
-	 B/+JIEV4c+OiRNjG35DM22q0ZKcwRokM6vBxdNth1Tg62rGSMSuBz/IgVHssX2RmPo
-	 WpZk/VmI4dYdYjihKj8ExggTH1olkoqD8WC127noU3KnSicUXgZDwr5BQFGe+oOS4l
-	 dn1qL+ZuszUWMtnEyEWr8VvTlouP4mVmhYmqBUitVqNmNGfei6O9MFRfsAh0UkS4uc
-	 p23ZfDJa8L32R8s6OAIwS6FqPcjgLXsJc/FHQWNeotIC3s9/5XN+BnGOkbgNPfDDiS
-	 zHuf30b9LyG9Q==
-Date: Wed, 5 Nov 2025 08:47:48 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, linux-kselftest@vger.kernel.org,
- Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Shuah Khan <skhan@linuxfoundation.org>,
- Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH] selftests/tracing: Add basic test for trace_marker_raw
- file
-Message-Id: <20251105084748.f34e1efec291d420a50a7b62@kernel.org>
-In-Reply-To: <20251014145149.3e3c1033@gandalf.local.home>
-References: <20251014145149.3e3c1033@gandalf.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hCrTr+VL"
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-33ff5149ae8so4569763a91.3
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 04 Nov 2025 16:40:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1762303258; x=1762908058; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5pH0elYSV9fHZGweJNo1sTUp7pNpnKPw4ARHFUWVRcc=;
+        b=hCrTr+VLmiTyWWxf6FlbvFe6pvIUqN1fl8qyvENNvzJW43XoxRUkF3rl77i93W0IY/
+         DBh53vLNtNvNgXBfl+Hw40h1W/FTCSDBMb9HCdIgLElz1UlApf0qGNBIjDZRTOAJa9VM
+         uErApLM7Yj6XyAOKcjusa0QEvC8J76VdjVHyMppwTekG/hqazKOMVqk4BASx82fb1HtC
+         2XhxCIVqTXEEy7DR0EeBmKWyzCaR5/YwQkeEp26uafbx7JgzwIZEp7uRWxkWzB7yzwLm
+         wz8Bxyu2DxAGZ0zS0W8d06ui4s8+W2xKPndTkjbM8urpXnHQIbAHJEGsPfW19Hd25Tg6
+         ZDFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762303258; x=1762908058;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5pH0elYSV9fHZGweJNo1sTUp7pNpnKPw4ARHFUWVRcc=;
+        b=CIXlgRNoQc2gPcoY3JB/ibuDws49ADczK5fqbtrwvx/wdZm1pDFKrMAW3mBcTd8ZWd
+         jJ7INvoYoABnP9h/29Ur2Pp2DBaXVe3vpQxjQq/F5hKUdxN218pAVGXsAbie0whkFI63
+         9kIGTesF/S/IOld9vnKA2wMj4l8+clL726bVxGWZK6ig5msCTtcNi0i2rk2uAdQEv98A
+         Nb1czJPorUS+bgCp1I6g82kr8rmLKiSyPjUbG3e8TlBGnCqINoHTo4JYiCwRFMjrpt3V
+         tRJd16sAPTZurEGx3UKpMH1BdyY7z8vj2TLEcytIjvEIgrCYShtpb7ARWkPn1INJBJUa
+         mPug==
+X-Forwarded-Encrypted: i=1; AJvYcCUfuKZRlIr/hrGj3yctqUvLVbNVereG4T0Dfu0RL76J2rMIQvXIt+Y33V5aqw/KNcnJTQ97U44rDGUsGa+JrmLXPgU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YziFW5cupsx8x6BejnZQMAMhwcWqfzSvj4zgO35WXBwdcW0ZF71
+	fYssy3cxV1d/EtTxIpcilc8jYgy7jbzU5KBdxnReoWaq5G2j6foanJkxqT9AuzuwCoWKcaQ2FV3
+	U7N8Q6hZFuioiWCvnJDtfKQA5L5U6snA=
+X-Gm-Gg: ASbGncuEPcq2qXRn3ggNKokvQSxuarK/6XTOqGjaJhAcXHdy0hajFdqVjg0/lsE/B+m
+	iPNyqjCcZqR4CCEIdKPJg8uH5MQ45UzhhOkWno8Lw/px4WP+BsI0s7u0cyNW/XGqbzjSjaJ2uw6
+	FDmHQt1YZMWfkGyA10iXvXDckh3jVTkVTBDyMt+QEn8aiE9JRNKDW1zohJLQPq+dbk66Frh5vDK
+	rnFq8zSEvZ9AU6aAllvjsMeULiWRHCaLl8OHjOmMiwxUuwW9FPVMdOgdolrnCJP551tLoxKCWpv
+X-Google-Smtp-Source: AGHT+IH9I9hiPSdGirkpxUD9Q91UxnbQt7srf4hv2bz+O5oUIH8hTOKqw/mh5p6X8l4L3pU16XyWHwFeTmNF35qvvNc=
+X-Received: by 2002:a17:90b:5281:b0:340:5b6a:5bb0 with SMTP id
+ 98e67ed59e1d1-341a6def359mr1525214a91.26.1762303258061; Tue, 04 Nov 2025
+ 16:40:58 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+References: <20251026030143.23807-1-dongml2@chinatelecom.cn>
+ <CADxym3Y4nc2Qaq00Pp7XwmCXJHn0SsEoOejK8ZxhydepcbB8kQ@mail.gmail.com>
+ <CAADnVQKDza_ueBFRkZS8rmUVJriynWi_0FqsZE8=VbTzQYuM4w@mail.gmail.com> <3577705.QJadu78ljV@7950hx>
+In-Reply-To: <3577705.QJadu78ljV@7950hx>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Tue, 4 Nov 2025 16:40:43 -0800
+X-Gm-Features: AWmQ_blJIoxjnat4nYQEP4--m4bEcKCdlXG0h1PFwD7EYD3Nc5RBayfWiCPvzpA
+Message-ID: <CAEf4Bzas7Or4yPzqdHqEcgVpTDx2j26dR5oRnSg7bepr-uDqHw@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v3 4/7] bpf,x86: add tracing session supporting
+ for x86_64
+To: Menglong Dong <menglong.dong@linux.dev>
+Cc: Menglong Dong <menglong8.dong@gmail.com>, 
+	Alexei Starovoitov <alexei.starovoitov@gmail.com>, Alexei Starovoitov <ast@kernel.org>, 
+	Jiri Olsa <jolsa@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	John Fastabend <john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
+	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Matt Bobrowski <mattbobrowski@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Leon Hwang <leon.hwang@linux.dev>, jiang.biao@linux.dev, 
+	bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 14 Oct 2025 14:51:49 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Mon, Nov 3, 2025 at 3:29=E2=80=AFAM Menglong Dong <menglong.dong@linux.d=
+ev> wrote:
+>
+> On 2025/11/1 01:57, Alexei Starovoitov wrote:
+> > On Thu, Oct 30, 2025 at 8:36=E2=80=AFPM Menglong Dong <menglong8.dong@g=
+mail.com> wrote:
+> > >
+> > > On Fri, Oct 31, 2025 at 9:42=E2=80=AFAM Alexei Starovoitov
+> > > <alexei.starovoitov@gmail.com> wrote:
+> > > >
+> > > > On Sat, Oct 25, 2025 at 8:02=E2=80=AFPM Menglong Dong <menglong8.do=
+ng@gmail.com> wrote:
+> > > > >
+> > > > > Add BPF_TRACE_SESSION supporting to x86_64. invoke_bpf_session_en=
+try and
+> > > > > invoke_bpf_session_exit is introduced for this purpose.
+> > > > >
+> > > > > In invoke_bpf_session_entry(), we will check if the return value =
+of the
+> > > > > fentry is 0, and set the corresponding session flag if not. And i=
+n
+> > > > > invoke_bpf_session_exit(), we will check if the corresponding fla=
+g is
+> > > > > set. If set, the fexit will be skipped.
+> > > > >
+> > > > > As designed, the session flags and session cookie address is stor=
+ed after
+> > > > > the return value, and the stack look like this:
+> > > > >
+> > > > >   cookie ptr    -> 8 bytes
+> > > > >   session flags -> 8 bytes
+> > > > >   return value  -> 8 bytes
+> > > > >   argN          -> 8 bytes
+> > > > >   ...
+> > > > >   arg1          -> 8 bytes
+> > > > >   nr_args       -> 8 bytes
 
-> From: Steven Rostedt <rostedt@goodmis.org>
-> 
-> Commit 64cf7d058a00 ("tracing: Have trace_marker use per-cpu data to read
-> user space") made an update that fixed both trace_marker and
-> trace_marker_raw. But the small difference made to trace_marker_raw had a
-> blatant bug in it that any basic testing would have uncovered.
-> Unfortunately, the self tests have tests for trace_marker but nothing for
-> trace_marker_raw which allowed the bug to get upstream.
-> 
-> Add basic selftests to test trace_marker_raw so that this doesn't happen
-> again.
-> 
+Let's look at "cookie ptr", "session flags", and "nr_args". We can
+combine all of them into a single 8 byte slot: assign each session
+program index 0, 1, ..., Nsession. 1 bit for entry/exit flag, few bits
+for session prog index, and few more bits for nr_args, and we still
+will have tons of space for some other additions in the future. From
+that session program index you can calculate cookieN address to return
+to user.
 
-Looks good to me.
+And we should look whether moving nr_args into bpf_run_ctx would
+actually minimize amount of trampoline assembly code, as we can
+implement a bunch of stuff in pure C. (well, BPF verifier inlining is
+a separate thing, but it can be mostly arch-independent, right?)
 
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > > > >   ...
+> > > > >   cookieN       -> 8 bytes
+> > > > >   cookie1       -> 8 bytes
+> > > > >
+> > > > > In the entry of the session, we will clear the return value, so t=
+he fentry
+> > > > > will always get 0 with ctx[nr_args] or bpf_get_func_ret().
+> > > > >
+> > > > > Before the execution of the BPF prog, the "cookie ptr" will be fi=
+lled with
+> > > > > the corresponding cookie address, which is done in
+> > > > > invoke_bpf_session_entry() and invoke_bpf_session_exit().
+> > > >
 
-Thanks!
+[...]
 
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->  .../ftrace/test.d/00basic/trace_marker_raw.tc | 107 ++++++++++++++++++
->  1 file changed, 107 insertions(+)
->  create mode 100644 tools/testing/selftests/ftrace/test.d/00basic/trace_marker_raw.tc
-> 
-> diff --git a/tools/testing/selftests/ftrace/test.d/00basic/trace_marker_raw.tc b/tools/testing/selftests/ftrace/test.d/00basic/trace_marker_raw.tc
-> new file mode 100644
-> index 000000000000..7daf7292209e
-> --- /dev/null
-> +++ b/tools/testing/selftests/ftrace/test.d/00basic/trace_marker_raw.tc
-> @@ -0,0 +1,107 @@
-> +#!/bin/sh
-> +# SPDX-License-Identifier: GPL-2.0
-> +# description: Basic tests on writing to trace_marker_raw
-> +# requires: trace_marker_raw
-> +# flags: instance
-> +
-> +is_little_endian() {
-> +	if lscpu | grep -q 'Little Endian'; then
-> +		echo 1;
-> +	else
-> +		echo 0;
-> +	fi
-> +}
-> +
-> +little=`is_little_endian`
-> +
-> +make_str() {
-> +	id=$1
-> +	cnt=$2
-> +
-> +	if [ $little -eq 1 ]; then
-> +		val=`printf "\\%03o\\%03o\\%03o\\%03o" \
-> +			$(($id & 0xff)) \
-> +			$((($id >> 8) & 0xff)) \
-> +			$((($id >> 16) & 0xff)) \
-> +			$((($id >> 24) & 0xff))`
-> +	else
-> +		val=`printf "\\%03o\\%03o\\%03o\\%03o" \
-> +			$((($id >> 24) & 0xff)) \
-> +			$((($id >> 16) & 0xff)) \
-> +			$((($id >> 8) & 0xff)) \
-> +			$(($id & 0xff))`
-> +	fi
-> +
-> +	data=`printf -- 'X%.0s' $(seq $cnt)`
-> +
-> +	printf "${val}${data}"
-> +}
-> +
-> +write_buffer() {
-> +	id=$1
-> +	size=$2
-> +
-> +	# write the string into the raw marker
-> +	make_str $id $size > trace_marker_raw
-> +}
-> +
-> +
-> +test_multiple_writes() {
-> +
-> +	# Write a bunch of data where the id is the count of
-> +	# data to write
-> +	for i in `seq 1 10` `seq 101 110` `seq 1001 1010`; do
-> +		write_buffer $i $i
-> +	done
-> +
-> +	# add a little buffer
-> +	echo stop > trace_marker
-> +
-> +	# Check to make sure the number of entries is the id (rounded up by 4)
-> +	awk '/.*: # [0-9a-f]* / {
-> +			print;
-> +			cnt = -1;
-> +			for (i = 0; i < NF; i++) {
-> +				# The counter is after the "#" marker
-> +				if ( $i == "#" ) {
-> +					i++;
-> +					cnt = strtonum("0x" $i);
-> +					num = NF - (i + 1);
-> +					# The number of items is always rounded up by 4
-> +					cnt2 = int((cnt + 3) / 4) * 4;
-> +					if (cnt2 != num) {
-> +						exit 1;
-> +					}
-> +					break;
-> +				}
-> +			}
-> +		}
-> +	// { if (NR > 30) { exit 0; } } ' trace_pipe;
-> +}
-> +
-> +
-> +get_buffer_data_size() {
-> +	sed -ne 's/^.*data.*size:\([0-9][0-9]*\).*/\1/p' events/header_page
-> +}
-> +
-> +test_buffer() {
-> +
-> +	# The id must be four bytes, test that 3 bytes fails a write
-> +	if echo -n abc > ./trace_marker_raw ; then
-> +		echo "Too small of write expected to fail but did not"
-> +		exit_fail
-> +	fi
-> +
-> +	size=`get_buffer_data_size`
-> +	echo size = $size
-> +
-> +	# Now add a little more than what it can handle
-> +
-> +	if write_buffer 0xdeadbeef $size ; then
-> +		echo "Too big of write expected to fail but did not"
-> +		exit_fail
-> +	fi
-> +}
-> +
-> +test_buffer
-> +test_multiple_writes
-> -- 
-> 2.51.0
-> 
+> I have to maintain a hash table "m_context" to check if
+> the exit of skb_clone() is what I want. It works, but it has
+> extra overhead in the hash table lookup and deleting. What's
+> more, it's not stable on some complex case.
+>
+> The problem is that we don't has a way to pair the
+> fentry/fexit on the stack(do we?).
+>
+> >
+> > > AFAIT, the mast usage of session cookie in kprobe is passing the
+> > > function arguments to the exit. For tracing, we can get the args
+> > > in the fexit. So the session cookie in tracing is not as important as
+> > > in kprobe.
+> >
+> > Since kprobe_multi was introduced, retsnoop and tetragon adopted
+> > it to do mass attach, and both use bpf_get_attach_cookie().
+> > While both don't use bpf_session_cookie().
+> > Searching things around I also didn't find a single real user
+> > of bpf_session_cookie() other than selftests/bpf and Jiri's slides :)
+> >
+> > So, doing all this work in trampoline for bpf_session_cookie()
+> > doesn't seem warranted, but with that doing session in trampoline
+> > also doesn't look useful, since the only benefit vs a pair
+> > of fentry/fexit is skip of fexit, which can be done already.
+> > Plus complexity in all JITs... so, I say, let's shelve the whole thing =
+for now.
+>
+> Yeah, the session cookie is not useful in my case too, I'm OK to
+> skip it.
 
+hmm, in my view session cookie is one of the main reasons why
+"session" concept is useful :) that's certainly the case for
+multi-kprobe session, IMO (and yes, I haven't yet used it in retsnoop,
+but it's just because I'm lazy, not because it's not useful... )
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+>
+> The pair of fentry/fexit have some use cases(my nettrace and
+> Leon's bpfsnoop, at least). Not sure if the reason above is sufficient,
+> please ignore the message if it is not :)
+>
+> The way we implement the trampoline makes it arch related and
+> complex. I tried to rewrite it with C code, but failed. It's too difficul=
+t
+> and I suspect it's impossible :/
+>
+> Thanks!
+> Menglong Dong
+>
+> >
+> >
+>
+>
+>
+>
