@@ -1,173 +1,158 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D48B324B1D
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  5 Nov 2025 17:29:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16169239E88;
+	Wed,  5 Nov 2025 17:46:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762363800; cv=none; b=pJUZxq8DcejzFyPDNekh50Uc+1Qwv0RyYgVbpw9nu+irK5ng44aQa5YOF1lH0lS3x5zpu7RLBIgclapF3vwThDQhogigdtNEzjHT2Ng26b3oRmG06ef3wq1kLOlQDPkKFQK9X9bMyeRrh3rkqFhkvKTkOaCZPf0Zb8QhsrFHR8g=
+	t=1762364792; cv=none; b=Vq09r7z4GTrmB6srJ89qtod2uxtJGGmFzdNRAOvsd9NAOIBV3Srda7wlTNpscHhNRKnCKyDKzPh9v/x+TUfI5CGlJx76RXFz+F4ThjwFQQaUm23op1RlXxfYbWCZeDI4MuwlIewG7UpThnd7lX0I7yHfITvYHM/y86+RQwvP27o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762363800; c=relaxed/simple;
-	bh=RvSfWVZfvt6ZvxqcXys/+zepByojWnev0+IFDvJvzak=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pta+pl5o53rSZOqW+5S3QWmk5CUwWVmeOI3+yTBm4fQ616XYgEZH9h0Tnuu0F3GR4YJU08VyfrjM6USouS0E4BcIrDtnExXP5J2DsKd8jA7CGqurjQD5/45xuzREB5bCI7zXy22LLLMH4d+Qdq5wk7NkTXKuoYjHqseKpop95c4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RQNBG1NE; arc=none smtp.client-ip=209.85.216.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1762364792; c=relaxed/simple;
+	bh=woawi0pKo/kryyYybe6UTBTWMoVsh5qziqijASjnREk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Bvz8rShcpQbPzWdjrT7/BwbIt492YUOY5iCXSQyaUdsoPc3VH7Ix3IGdSAgimoUIztvsKiV1T89l4wb98+21lezcizqcIeSZtoQWFVG8Zof6+YhGrQvE8B+/KNd+Q0ANpK4EJKzfRkuQhqtgA1/7CoYC1x52te/UWdH6gs+kTI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X7Mf6l0a; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RQNBG1NE"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-3418ad69672so91163a91.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 05 Nov 2025 09:29:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762363799; x=1762968599; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=T2hQIMYQG3Hf6nYd9wO88tObbD60jSpKwJAfmQ0sEW4=;
-        b=RQNBG1NEJPSwLEnYZj1C9N2ryyjY5yZTyipLqw2liAucEx0iNOabw/9sp+SSjX6HCJ
-         Mnfwvynj/kPqm0ctoICyvamvjGiG9V6qcpqrpN8xf3u23kqIE39lsnL2fExB1pU4mqzB
-         GcoVzZfSJeuqgOCufONYBTKlgWXOfCBovtX3FzVQED1vaDyzcJAKYOG6JUKq4pu/Mr1W
-         we3cDA6XNa3wHmn1HIMh/2Widk/TB4Zyq/Q7LzQzCGg04XqKaHtzJfd9YEX+jFMRX1Br
-         M2ri8BUf1dagz/wdZxHQXPEVEUzHWPNEseIWFCRTENP46YFsOHIBMW7EGb1eOdtMwHpr
-         fHTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762363799; x=1762968599;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=T2hQIMYQG3Hf6nYd9wO88tObbD60jSpKwJAfmQ0sEW4=;
-        b=ZZ5JWY96vXrQX9Og+y4f53k8/B5A3iwpd3UgOYy8W77IzovXYQ3HSu5SViXpLLOQXf
-         HvloJJI+9lYuFXgn85mujYMuyjpPe1oLTkjBy8QoztaEsSwryJEsKlNFFIa2XmsitHJq
-         cGhTiTZMJOCG8ahbECaSgOtG1T6VajrnCUdGxxvXu/AOQOGOLgMpv7R8oopiltTHhCPn
-         DnE7X6lb240pQC7VtcL1IF3IrthP95kWhCliqtreCDjvMt5bv2MtuBWty1YfH/S6Ywjg
-         A296nwdx8c/ZiuImI2f8P1K/Fcvz135Il9RuU2JveRGeWjBxmiKzSy6LXgTOCxh8ldLZ
-         EaLg==
-X-Forwarded-Encrypted: i=1; AJvYcCVunmQllEDQI96KhXt+PADpfmElm23lkKpRYFi4N8IgojFlsoQRpcIZ0kwn//JTyyK+1ywktr5KEvUZ5cxBd1nSlf4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz9KJ6nd2+yFq8814Fun/bA4/EGhIrNcTsSKr6XBOAap9Se8eL3
-	5+PLD8XOR/xG9k7O4rNIdalaUkuGvQp0wQoAM3kunKrWHd1pSWGJP4YbMO9nF4Pq1QOByp6OpBz
-	eq++GgRUyFfj5xZt9ysnnCIXbwFJLMA4=
-X-Gm-Gg: ASbGncssEPidA85zowdpx0sAx5rymzRdw9/W36bvh4GNbL2qSAQw1Pc3rb1+b4Y7uOG
-	KQrocm5IRhXN9Jx8S3I7yyE9xkb9OGjcsoKu8KmMmUHU2Br0567fP+4+Cd8chES3USGGh8rNqBA
-	n7xlfKqF65iCU8DXXpiNsHU5F+4VrJ0vPmM2scCPmiCSMTTxPUD5sFbnY48fe4klJ9VtAEGOtGK
-	HbMdzYD8RTA1edMfzN2v6URobW04vdHJE/gJtCYOifsFy7Pz8pr/TKcqc7WMFkruem3XQE=
-X-Google-Smtp-Source: AGHT+IFgAXJJOk7ORU5o6YIKB0A34EpEk1PJ4V+J9E6KEas3UShp7DR4vAS7t6oA1ZcaWPHA1qFEfxUfiKX3z6blJOE=
-X-Received: by 2002:a17:902:f647:b0:295:ceaf:8d76 with SMTP id
- d9443c01a7336-2962add07f1mr53423145ad.47.1762363798567; Wed, 05 Nov 2025
- 09:29:58 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X7Mf6l0a"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1533CC4CEF5;
+	Wed,  5 Nov 2025 17:46:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762364791;
+	bh=woawi0pKo/kryyYybe6UTBTWMoVsh5qziqijASjnREk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=X7Mf6l0akmdIq5iKgqrPQJacdZIwvZNDplWJ7ZFAiTj1m5jo/r4RZiwBnuufL7FJz
+	 rvjLuH5kIUsBewW58/KIJ4AtGpjFM65vgcq5Mq40hqFViVaFYaMO3B+3S2DJBgREr8
+	 Ydhgli/Ewi5GXUbKU7XplIRtFLKzGALUr+LrfoBKdNnCob1uuo8LERCMDso+bO1Ogb
+	 2kFxvq6vNnlZJHsASSZyjiY4DFFHKnlLj9M1sIw8Xs7M5lI6s7rwKH+tP57RLGeYQo
+	 I7shlbbDQcR6rzKbVlqZcx0moVDvOcKmF1aICmG6LscQYeQvqFcaYK64Yfrix1vGrk
+	 oPe9jn359SAFw==
+Date: Wed, 5 Nov 2025 18:46:28 +0100
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Valentin Schneider <vschneid@redhat.com>
+Cc: Phil Auld <pauld@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, rcu@vger.kernel.org, x86@kernel.org,
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+	linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Paolo Bonzini <pbonzini@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Jason Baron <jbaron@akamai.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Mel Gorman <mgorman@suse.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Han Shen <shenhan@google.com>, Rik van Riel <riel@surriel.com>,
+	Jann Horn <jannh@google.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Oleg Nesterov <oleg@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+	Clark Williams <williams@redhat.com>,
+	Yair Podemsky <ypodemsk@redhat.com>,
+	Marcelo Tosatti <mtosatti@redhat.com>,
+	Daniel Wagner <dwagner@suse.de>, Petr Tesarik <ptesarik@suse.com>
+Subject: Re: [PATCH v6 00/29] context_tracking,x86: Defer some IPIs until a
+ user->kernel transition
+Message-ID: <aQuNdOEmPYkI03my@localhost.localdomain>
+References: <20251010153839.151763-1-vschneid@redhat.com>
+ <aQDuY3rgOK-L8D04@localhost.localdomain>
+ <xhsmhzf9aov51.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <aQJLpSYz3jdazzdb@localhost.localdomain>
+ <xhsmh8qgk5txe.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251026030143.23807-1-dongml2@chinatelecom.cn>
- <CADxym3Y4nc2Qaq00Pp7XwmCXJHn0SsEoOejK8ZxhydepcbB8kQ@mail.gmail.com>
- <CAADnVQKDza_ueBFRkZS8rmUVJriynWi_0FqsZE8=VbTzQYuM4w@mail.gmail.com>
- <3577705.QJadu78ljV@7950hx> <CAEf4Bzas7Or4yPzqdHqEcgVpTDx2j26dR5oRnSg7bepr-uDqHw@mail.gmail.com>
- <CAADnVQKV_a7NxvWwXDgRab_gakwJ=VadZ0=eC5sHwutVyM0rmg@mail.gmail.com>
-In-Reply-To: <CAADnVQKV_a7NxvWwXDgRab_gakwJ=VadZ0=eC5sHwutVyM0rmg@mail.gmail.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Wed, 5 Nov 2025 09:29:46 -0800
-X-Gm-Features: AWmQ_bnteJmeSonAy7_JuZJ4InwEV7gR1gsgI7sE1YVD_mQPjGGbTjZoahh0RKQ
-Message-ID: <CAEf4BzZcrWCyC3DhNoefJsWNUhE46_yu0d3XyJZttQ8sRRpyag@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v3 4/7] bpf,x86: add tracing session supporting
- for x86_64
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Menglong Dong <menglong.dong@linux.dev>, Menglong Dong <menglong8.dong@gmail.com>, 
-	Alexei Starovoitov <ast@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>, 
-	Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
-	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Matt Bobrowski <mattbobrowski@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Leon Hwang <leon.hwang@linux.dev>, jiang.biao@linux.dev, 
-	bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <xhsmh8qgk5txe.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 
-On Tue, Nov 4, 2025 at 6:43=E2=80=AFPM Alexei Starovoitov
-<alexei.starovoitov@gmail.com> wrote:
->
-> On Tue, Nov 4, 2025 at 4:40=E2=80=AFPM Andrii Nakryiko
-> <andrii.nakryiko@gmail.com> wrote:
+Le Wed, Nov 05, 2025 at 05:24:29PM +0100, Valentin Schneider a écrit :
+> On 29/10/25 18:15, Frederic Weisbecker wrote:
+> > Le Wed, Oct 29, 2025 at 11:32:58AM +0100, Valentin Schneider a écrit :
+> >> I need to have a think about that one; one pain point I see is the context
+> >> tracking work has to be NMI safe since e.g. an NMI can take us out of
+> >> userspace. Another is that NOHZ-full CPUs need to be special cased in the
+> >> stop machine queueing / completion.
+> >>
+> >> /me goes fetch a new notebook
 > >
-> > On Mon, Nov 3, 2025 at 3:29=E2=80=AFAM Menglong Dong <menglong.dong@lin=
-ux.dev> wrote:
-> > >
-> > > On 2025/11/1 01:57, Alexei Starovoitov wrote:
-> > > > On Thu, Oct 30, 2025 at 8:36=E2=80=AFPM Menglong Dong <menglong8.do=
-ng@gmail.com> wrote:
-> > > > >
-> > > > > On Fri, Oct 31, 2025 at 9:42=E2=80=AFAM Alexei Starovoitov
-> > > > > <alexei.starovoitov@gmail.com> wrote:
-> > > > > >
-> > > > > > On Sat, Oct 25, 2025 at 8:02=E2=80=AFPM Menglong Dong <menglong=
-8.dong@gmail.com> wrote:
-> > > > > > >
-> > > > > > > Add BPF_TRACE_SESSION supporting to x86_64. invoke_bpf_sessio=
-n_entry and
-> > > > > > > invoke_bpf_session_exit is introduced for this purpose.
-> > > > > > >
-> > > > > > > In invoke_bpf_session_entry(), we will check if the return va=
-lue of the
-> > > > > > > fentry is 0, and set the corresponding session flag if not. A=
-nd in
-> > > > > > > invoke_bpf_session_exit(), we will check if the corresponding=
- flag is
-> > > > > > > set. If set, the fexit will be skipped.
-> > > > > > >
-> > > > > > > As designed, the session flags and session cookie address is =
-stored after
-> > > > > > > the return value, and the stack look like this:
-> > > > > > >
-> > > > > > >   cookie ptr    -> 8 bytes
-> > > > > > >   session flags -> 8 bytes
-> > > > > > >   return value  -> 8 bytes
-> > > > > > >   argN          -> 8 bytes
-> > > > > > >   ...
-> > > > > > >   arg1          -> 8 bytes
-> > > > > > >   nr_args       -> 8 bytes
+> > Something like the below (untested) ?
 > >
-> > Let's look at "cookie ptr", "session flags", and "nr_args". We can
-> > combine all of them into a single 8 byte slot: assign each session
-> > program index 0, 1, ..., Nsession. 1 bit for entry/exit flag, few bits
-> > for session prog index, and few more bits for nr_args, and we still
-> > will have tons of space for some other additions in the future. From
-> > that session program index you can calculate cookieN address to return
-> > to user.
-> >
-> > And we should look whether moving nr_args into bpf_run_ctx would
-> > actually minimize amount of trampoline assembly code, as we can
-> > implement a bunch of stuff in pure C. (well, BPF verifier inlining is
-> > a separate thing, but it can be mostly arch-independent, right?)
->
-> Instead of all that I have a different suggestion...
->
-> how about we introduce this "session" attach type,
-> but won't mess with trampoline and whole new session->nr_links.
-> Instead the same prog can be added to 'fentry' list
-> and 'fexit' list.
-> We lose the ability to skip fexit, but I'm still not convinced
-> it's necessary.
-> The biggest benefit is that it will work for existing JITs and trampoline=
-s.
-> No new complex asm will be necessary.
-> As far as writable session_cookie ...
-> let's add another 8 byte space to bpf_tramp_run_ctx
-> and only allow single 'fsession' prog for a given kernel function.
-> Again to avoid changing all trampolines.
-> This way the feature can be implemented purely in C and no arch
-> specific changes.
-> It's more limited, but doesn't sound that the use case for multiple
-> fsession-s exist. All this is on/off tracing. Not something
-> that will be attached 24/7.
+> 
+> Some minor nits below but otherwise that looks promising.
+> 
+> One problem I'm having however is reasoning about the danger zone; what
+> forbidden actions could a NO_HZ_FULL CPU take when entering the kernel
+> while take_cpu_down() is happening?
+> 
+> I'm actually not familiar with why we actually use stop_machine() for CPU
+> hotplug; I see things like CPUHP_AP_SMPCFD_DYING::smpcfd_dying_cpu() or
+> CPUHP_AP_TICK_DYING::tick_cpu_dying() expect other CPUs to be patiently
+> spinning in multi_cpu_stop(), and I *think* nothing in the entry code up to
+> context_tracking entry would disrupt that, but it's not a small thing to
+> reason about.
+> 
+> AFAICT we need to reason about every .teardown callback from
+> CPUHP_TEARDOWN_CPU to CPUHP_AP_OFFLINE and their explicit & implicit
+> dependencies on other CPUs being STOP'd.
 
-I'd rather not have a feature at all, than have a feature that might
-or might not work depending on circumstances I don't control. If
-someone happens to be using fsession program on the same kernel
-function I happen to be tracing (e.g., with retsnoop), random failure
-to attach would be maddening to debug.
+You're raising a very interesting question. The initial point of stop_machine()
+is to synchronize this:
 
-If we can't implement this properly, let's just put it on hold instead
-of adding crippled implementation.
+    set_cpu_online(cpu, 0)
+    migrate timers;
+    migrate hrtimers;
+    flush IPIs;
+    etc...
+
+against this pattern:
+
+    preempt_disable()
+    if (cpu_online(cpu))
+        queue something; // could be timer, IPI, etc...
+    preempt_enable()
+
+There have been attempts:
+
+      https://lore.kernel.org/all/20241218171531.2217275-1-costa.shul@redhat.com/
+
+And really it should be fine to just do:
+
+    set_cpu_online(cpu, 0)
+    synchronize_rcu()
+    migrate / flush stuff
+
+Probably we should try that instead of the busy loop I proposed
+which only papers over the problem.
+
+Of course there are other assumptions. For example the tick
+timekeeper is migrated easily knowing that all online CPUs are
+not idle (cf: tick_cpu_dying()). So I expect a few traps, with RCU
+for example and indeed all these hotplug callbacks must be audited
+one by one.
+
+I'm not entirely unfamiliar with many of them. Let me see what I can do...
+
+Thanks.
+
+-- 
+Frederic Weisbecker
+SUSE Labs
