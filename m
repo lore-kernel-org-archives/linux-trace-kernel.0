@@ -1,65 +1,98 @@
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9F7F224AF0;
-	Wed,  5 Nov 2025 23:04:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 954122D0631;
+	Wed,  5 Nov 2025 23:06:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762383874; cv=none; b=NR55UjfZOhcf/UUfm8QIy9GgSqqvhTSSppFRvW0dsusozdRo4C60Rs/rNKu8cMNFNflzLimR4j8LD62DFGAWv1jv8WcMipzy7lYJktTWg9inZOiTLxhwmbsND9r19bYZf07TUZpfNTozIwLdXvQTU6lrhUVRgxCHyN2BCUMa6I8=
+	t=1762383982; cv=none; b=EcgfClwabjmisAMi9YJQuvIKlOZZLhkb04m+v8GpYMZugzAROAfJeXVp2DDUsPp83UGjjDu1/fc33ZEDUKPU5OkQVWrqxGhH2zVc/PcZMkj1ymKVO636huOl1P3yKmVCuJO1yBgIJddcij9BvVELfM3+VMEBlCl6Vr4C1sDScZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762383874; c=relaxed/simple;
-	bh=0rrqmkaj7x0Q7F33qcN3GD0vfzlYAbXLBOiEHfYEpko=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CrFo1JvuIag61svTdimT040YqkkMiTWCX5xzX4rE+9hHNiGrIdrcnuIvv3W/CnZmHZh91+F+/kZ24w3OS8QDw3OqMmvAgdsCWl4qWAK+6E7eqoBYpFBmwwni9PfhiEhV5lq1FZTge8WIafQjPRomVaPjuKslVsV/McJhvDGA2Sc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf03.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay08.hostedemail.com (Postfix) with ESMTP id D74B31404A6;
-	Wed,  5 Nov 2025 23:04:29 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf03.hostedemail.com (Postfix) with ESMTPA id 69A3E6000C;
-	Wed,  5 Nov 2025 23:04:27 +0000 (UTC)
-Date: Wed, 5 Nov 2025 18:04:36 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Jiri Olsa <jolsa@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra
- <peterz@infradead.org>, bpf <bpf@vger.kernel.org>, linux-trace-kernel
- <linux-trace-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>, Yonghong
- Song <yhs@fb.com>, Song Liu <songliubraving@fb.com>, Andrii Nakryiko
- <andrii@kernel.org>
-Subject: Re: [PATCHv3 0/4] x86/fgraph,bpf: Fix ORC stack unwind from return
- probe
-Message-ID: <20251105180436.369bef64@gandalf.local.home>
-In-Reply-To: <20251105100359.2e6eeae5@gandalf.local.home>
-References: <20251104215405.168643-1-jolsa@kernel.org>
-	<CAADnVQJRv+2NT2TGd7nXbOtx_Cnsg=kOJuikOtL9aEdUVmwvag@mail.gmail.com>
-	<20251105100359.2e6eeae5@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1762383982; c=relaxed/simple;
+	bh=xjJJrRt/+YaNT/AFTKVY7ybcWTD2NtqQCre1H1sURRQ=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=OraU26C+wObOJ9NX9U8W5bLIh8FRQSc9aDou4DjLufNg1ir4z5SibUUaOL1T3FApf0jRDvxPgewTdKMe0YnHq75gnl6GoLbdYNKezQ9/HDwvWJd1JafIBZg5AqWsU6JYfagbS6IM9R5e0FEHR99uHSS/VCGbsQM1T/EcUpi4VeE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Iy0PAjcw; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Iy0PAjcw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A9B5C4CEF5;
+	Wed,  5 Nov 2025 23:06:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762383981;
+	bh=xjJJrRt/+YaNT/AFTKVY7ybcWTD2NtqQCre1H1sURRQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Iy0PAjcwB/iUQJOaIA2ZxK3STWDIHc2MJBw0VBufU9PN6mLNVikWgwHJvlrtrK5yI
+	 CSAqf0wOfV/dgcKIZMnYDfKeTdyLJHj38NXmiI5b/pHTdSFYzzHfCHOn32b55zqG5H
+	 BJ6DLDqbT8JNB+s9dVaiqAW2f9NetuTMykGYboYHAuNzBA9ukHC/bY0lDpmVO0J8/9
+	 Z8sXAjeSYpR9NUhVS4jswVHaSD+qOhqhdW3050yCp15IdIh6HKqxzV1y4jAHgF5dsu
+	 b7kf608Z/J8s6IGX/iqyKQj3HLNRef3fUKuRr/0+mSib78U7htsMHVcCCCTQExrImA
+	 deSl9jBxyzz2w==
+Date: Thu, 6 Nov 2025 08:06:16 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Lukas Bulwahn <lbulwahn@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-trace-kernel@vger.kernel.org,
+ kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org, Lukas
+ Bulwahn <lukas.bulwahn@redhat.com>
+Subject: Re: [PATCH] MAINTAINERS: add tracepoint core-api doc files to
+ TRACING
+Message-Id: <20251106080616.a46ca1c46b4034ce9757e5c9@kernel.org>
+In-Reply-To: <20251105092428.153378-1-lukas.bulwahn@redhat.com>
+References: <20251105092428.153378-1-lukas.bulwahn@redhat.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: fgdzzmbqw9dj5pxx7p4m7ohnpwpt4iw5
-X-Rspamd-Server: rspamout05
-X-Rspamd-Queue-Id: 69A3E6000C
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+oy1W0um2quqCXqqxlNLP0Hbx46cfeda4=
-X-HE-Tag: 1762383867-273358
-X-HE-Meta: U2FsdGVkX1+bX4KGoqi+xgbCt1eN32WVAtoZBIPbE9XYJ/rkQ5vTzIhgis70s/yyjpKmn5VgSO13yDIYIfKlyng7dkD59VNfTO3OYvoIsnJ1laKTiaPMzs2rkCAa9rfOg8S8nWKMPrhT843r66+f1zF8eqakxCOhJryaP+JcLNIafOqW9QrnXsr/TgAKpRqEKIuvoz3fhzIlQTuu6FCfmWgS5ceau6rjtuDFuxmG3UxPW2EKq/YpbJxSZNoyI6id9tRwYotfi6o7+1W4xieBqDIYqAMF3rRTwJcJZ9IeT/fKeK9Qp7rZph52UBeW6WHSQ4C2u77sA4SRTCF5yXYOUb0TU/jt1hWBzBmgR90eCNybrTT9eoq1uvlMTog6s8qGogD6zIq/PsW5GkEMaOQw+w==
 
-On Wed, 5 Nov 2025 10:03:59 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Wed,  5 Nov 2025 10:24:28 +0100
+Lukas Bulwahn <lbulwahn@redhat.com> wrote:
 
-> Let me run this through my tests and then I'll give you an Acked-by and you
-> can take it through your tree.
+> From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+> 
+> The files in Documentation/core-api/ are by virtue of their top-level
+> directory part of the Documentation section in MAINTAINERS. Each file in
+> Documentation/core-api/ should however also have a further section in
+> MAINTAINERS it belongs to, which fits to the technical area of the
+> documented API in that file.
+> 
+> The tracepoint.rst provides some explanation to tracepoints defined in
+> selected files under include/trace/events/, which itself is part of the
+> TRACING section.
+> 
+> So, add this core-api document to TRACING.
+> 
 
-It passed.
+Yeah, that should be maintained by us.
 
-Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
--- Steve
+Thanks!
+
+> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+> ---
+>  MAINTAINERS | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 499b52d7793f..297358d26bbb 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -26197,6 +26197,7 @@ L:	linux-trace-kernel@vger.kernel.org
+>  S:	Maintained
+>  Q:	https://patchwork.kernel.org/project/linux-trace-kernel/list/
+>  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
+> +F:	Documentation/core-api/tracepoint.rst
+>  F:	Documentation/trace/*
+>  F:	fs/tracefs/
+>  F:	include/linux/trace*.h
+> -- 
+> 2.51.1
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
