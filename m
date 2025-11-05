@@ -1,98 +1,78 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 954122D0631;
-	Wed,  5 Nov 2025 23:06:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E9C42F290B;
+	Wed,  5 Nov 2025 23:25:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762383982; cv=none; b=EcgfClwabjmisAMi9YJQuvIKlOZZLhkb04m+v8GpYMZugzAROAfJeXVp2DDUsPp83UGjjDu1/fc33ZEDUKPU5OkQVWrqxGhH2zVc/PcZMkj1ymKVO636huOl1P3yKmVCuJO1yBgIJddcij9BvVELfM3+VMEBlCl6Vr4C1sDScZo=
+	t=1762385109; cv=none; b=qZj//LBHO0RxlCdjPxj7QekppWLXq28FDtFD8W1Mx31scWkdVDh8e+rxZO+XdDGxVXYtzDkkOZ7O/eYO7EikVtli0r04en9LebVp60+l9s7j9pAs8DPJ36PbV3AQx3Q5m0Io8oNdV3ii2G6PZSJPeftWjYpUvUP4L8zYcANLzR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762383982; c=relaxed/simple;
-	bh=xjJJrRt/+YaNT/AFTKVY7ybcWTD2NtqQCre1H1sURRQ=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=OraU26C+wObOJ9NX9U8W5bLIh8FRQSc9aDou4DjLufNg1ir4z5SibUUaOL1T3FApf0jRDvxPgewTdKMe0YnHq75gnl6GoLbdYNKezQ9/HDwvWJd1JafIBZg5AqWsU6JYfagbS6IM9R5e0FEHR99uHSS/VCGbsQM1T/EcUpi4VeE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Iy0PAjcw; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Iy0PAjcw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A9B5C4CEF5;
-	Wed,  5 Nov 2025 23:06:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762383981;
-	bh=xjJJrRt/+YaNT/AFTKVY7ybcWTD2NtqQCre1H1sURRQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Iy0PAjcwB/iUQJOaIA2ZxK3STWDIHc2MJBw0VBufU9PN6mLNVikWgwHJvlrtrK5yI
-	 CSAqf0wOfV/dgcKIZMnYDfKeTdyLJHj38NXmiI5b/pHTdSFYzzHfCHOn32b55zqG5H
-	 BJ6DLDqbT8JNB+s9dVaiqAW2f9NetuTMykGYboYHAuNzBA9ukHC/bY0lDpmVO0J8/9
-	 Z8sXAjeSYpR9NUhVS4jswVHaSD+qOhqhdW3050yCp15IdIh6HKqxzV1y4jAHgF5dsu
-	 b7kf608Z/J8s6IGX/iqyKQj3HLNRef3fUKuRr/0+mSib78U7htsMHVcCCCTQExrImA
-	 deSl9jBxyzz2w==
-Date: Thu, 6 Nov 2025 08:06:16 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Lukas Bulwahn <lbulwahn@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers
+	s=arc-20240116; t=1762385109; c=relaxed/simple;
+	bh=0PbFZYo/huWPHytJNGIJHR5vXA4bX9Qa1ZarjHpXrh8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dYSU7Mf+ftLtzQZqGytNpqe8pe4G41yx939PITw2ko5s2Ay4LKz3Vcpn7ncGSZ35McZy7GRXA6KsXf8vc/fOMOEFrabqeIbx5V7UnHPgr/1xl9fXz2fjWzYOsDYrX2uU3VvUH+tacZFTZ63vddUwh8k0Uu4nUcJSdjnfEO8DN5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf12.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay08.hostedemail.com (Postfix) with ESMTP id 250E81404B4;
+	Wed,  5 Nov 2025 23:24:58 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf12.hostedemail.com (Postfix) with ESMTPA id 450D51B;
+	Wed,  5 Nov 2025 23:24:56 +0000 (UTC)
+Date: Wed, 5 Nov 2025 18:25:05 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Lukas Bulwahn <lbulwahn@redhat.com>, Mathieu Desnoyers
  <mathieu.desnoyers@efficios.com>, linux-trace-kernel@vger.kernel.org,
  kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org, Lukas
  Bulwahn <lukas.bulwahn@redhat.com>
 Subject: Re: [PATCH] MAINTAINERS: add tracepoint core-api doc files to
  TRACING
-Message-Id: <20251106080616.a46ca1c46b4034ce9757e5c9@kernel.org>
-In-Reply-To: <20251105092428.153378-1-lukas.bulwahn@redhat.com>
+Message-ID: <20251105182505.6efad861@gandalf.local.home>
+In-Reply-To: <20251106080616.a46ca1c46b4034ce9757e5c9@kernel.org>
 References: <20251105092428.153378-1-lukas.bulwahn@redhat.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	<20251106080616.a46ca1c46b4034ce9757e5c9@kernel.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Stat-Signature: 1c3jrrfjqttyzebwumctc4a8m3cop3rn
+X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: 450D51B
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/CLPqo8xoLUUfECe5hmX416Fvy/gJRGPk=
+X-HE-Tag: 1762385096-718870
+X-HE-Meta: U2FsdGVkX18Z0Q8/rIwk6t81gvakes4pp0x/KmmKYdzq/PkWl3klhqZBXpf5eiIW1JCUpPcafstlnhGWxDRyV61eZuhDSl6NQWtZ9I6zt9lPDAtYyetIIdQX3lHYZobMw5kjx720yu2RWsopXMlNghia3DqBy6wDyFcD3ZcmwrUqq+BJ4DdlDiwLCKQ7m5Cyd4hSJe+NKLIPtHFt0wOKqR18fFhN/s+LXWaMtIOlzdoybxTXvaMAyCfV1UZSoTODDuw+f81KMuj9v31kcp63lBkZl77XCj/HOwd1LHHlIf3fo1oBCPig0gUCk611Fq9bQ94H3YPKNO8g1r4XAfw5pftrrZtDeAarAHV74J8IFfgrEKosGGNlS1LdTZlUD0rCYtGHyQx/StHW5Y4dGr6WYRoJL8vugylZoOVx66K809A=
 
-On Wed,  5 Nov 2025 10:24:28 +0100
-Lukas Bulwahn <lbulwahn@redhat.com> wrote:
+On Thu, 6 Nov 2025 08:06:16 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-> From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+> > From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+> > 
+> > The files in Documentation/core-api/ are by virtue of their top-level
+> > directory part of the Documentation section in MAINTAINERS. Each file in
+> > Documentation/core-api/ should however also have a further section in
+> > MAINTAINERS it belongs to, which fits to the technical area of the
+> > documented API in that file.
+> > 
+> > The tracepoint.rst provides some explanation to tracepoints defined in
+> > selected files under include/trace/events/, which itself is part of the
+> > TRACING section.
+> > 
+> > So, add this core-api document to TRACING.
+> >   
 > 
-> The files in Documentation/core-api/ are by virtue of their top-level
-> directory part of the Documentation section in MAINTAINERS. Each file in
-> Documentation/core-api/ should however also have a further section in
-> MAINTAINERS it belongs to, which fits to the technical area of the
-> documented API in that file.
+> Yeah, that should be maintained by us.
 > 
-> The tracepoint.rst provides some explanation to tracepoints defined in
-> selected files under include/trace/events/, which itself is part of the
-> TRACING section.
-> 
-> So, add this core-api document to TRACING.
-> 
+> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Yeah, that should be maintained by us.
+Agreed:
 
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-Thanks!
-
-> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@redhat.com>
-> ---
->  MAINTAINERS | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 499b52d7793f..297358d26bbb 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -26197,6 +26197,7 @@ L:	linux-trace-kernel@vger.kernel.org
->  S:	Maintained
->  Q:	https://patchwork.kernel.org/project/linux-trace-kernel/list/
->  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
-> +F:	Documentation/core-api/tracepoint.rst
->  F:	Documentation/trace/*
->  F:	fs/tracefs/
->  F:	include/linux/trace*.h
-> -- 
-> 2.51.1
-> 
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+-- Steve
