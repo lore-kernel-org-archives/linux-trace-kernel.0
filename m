@@ -1,113 +1,224 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from localhost.localdomain (unknown [147.136.157.0])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 096FC2BE7C3;
-	Wed,  5 Nov 2025 10:06:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BBCC298CC7;
+	Wed,  5 Nov 2025 11:42:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=147.136.157.0
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762337166; cv=none; b=MOCqJ3jBT3Fm5LKwu98jtz+N53WXuMmxEMY1u8h/yswL7DqPhlciiFfJWUjrANEKHGq/t5VsmghyIQqm0NAp0hZ6uC+s6l5/atJBgr5ACNdkVPsfGDt5rPZwcSGwwOuI3LLw3JqS5YnA13hVNdwi5NWWx9nV+DQyFfUM9KkXI6U=
+	t=1762342968; cv=none; b=taKV1ZkSdmH0VPJ5+DicDNZuLKLLHBq3ju2UQHV0pyKxb9bhDjileJYsgL3OYR5ZkhsU2Y1bQbOxwerdyaesgHs649C8+0pgDx5dNy+mgGh1qUeyRDZfl8L4C3NAOWECQVwr7ciKoGgJrynFDYE1+tASiMtlTvmBRSv22f26Jng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762337166; c=relaxed/simple;
-	bh=rhnNMaNldpuuY6bLfPKspqW4HOto/k+qhHYtxszFafw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q4/wF9MhK0HDU69/huTer9YTi/wMsxtVK4J5tDZDnew+5nzqCOzKQcTxmMR/Su5/fpKWtNays9NNjUzJXwpRYFe4zPM6iWa8LA1zFtEs00n1W+KAztYfRMobOnIQsEuM9ENV0rHrP2Kd4IYdyKEImY8g/Nu6CJoV6MqZ+hjOokI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fp4OO9+7; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fp4OO9+7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762337164; x=1793873164;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=rhnNMaNldpuuY6bLfPKspqW4HOto/k+qhHYtxszFafw=;
-  b=fp4OO9+7zOHu4z1plVbSbxu+5Uqv4e++whK9hCJJb5GQ0WPdZfc8shmu
-   j2nDkQQzxOBk192b2Z33enSBQuv1ekA5vxbOl80xaB8Wpeeo1i3z/6hCt
-   nxzXLamWIK6tol2Q80wkziJfR35q9Q9cqB6aDWZK+7LA9CyDoi4PjDxG0
-   sMEsZusI03TuSDMPs9FHRF4DVygXyKmrJy2iIkeEsXD3NQ8MCYmKYSwEZ
-   x3lc8onwIP7Twanj0IttO0t6FSPZto9jVSFjBIduVeDOUjfmJF1Au7g/M
-   cEYX5ZooRiJi/dbUr+02iTqvpymPE/ocPVSBI/hQK6AxZuPvwcvjQoEbb
-   A==;
-X-CSE-ConnectionGUID: Y+oPjlIeRl2QjaaNldLQFw==
-X-CSE-MsgGUID: BO6ccbxzRxGnRzPFI9+mXQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11603"; a="87076076"
-X-IronPort-AV: E=Sophos;i="6.19,281,1754982000"; 
-   d="scan'208";a="87076076"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2025 02:06:04 -0800
-X-CSE-ConnectionGUID: eGsYSZUDTvuiBTUsFe/q/w==
-X-CSE-MsgGUID: YEUFJmhwQw6HC3yWhgzY/g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,281,1754982000"; 
-   d="scan'208";a="218059658"
-Received: from lkp-server02.sh.intel.com (HELO 66d7546c76b2) ([10.239.97.151])
-  by orviesa002.jf.intel.com with ESMTP; 05 Nov 2025 02:06:02 -0800
-Received: from kbuild by 66d7546c76b2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1vGaOt-000SP4-1E;
-	Wed, 05 Nov 2025 10:05:59 +0000
-Date: Wed, 5 Nov 2025 18:05:41 +0800
-From: kernel test robot <lkp@intel.com>
-To: Huiwen He <hehuiwen@kylinos.cn>, Steven Rostedt <rostedt@goodmis.org>
-Cc: oe-kbuild-all@lists.linux.dev, Masami Hiramatsu <mhiramat@kernel.org>,
+	s=arc-20240116; t=1762342968; c=relaxed/simple;
+	bh=pchtt63Oh3F2HNObMqsCdLZ8QHoH/Yw2B2nuwJg8ogw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=S0o046JchdM5x3ezOXBEr9kUHRoYtqMQs7wxbTe9lCunD8/KjsfPpiXEpleTR/e8tM55snW40/wumZ4FdHXzKyP5Yr7Oni/493uIOqKQ5SXpkSq19TNtwofGSVyX7BnxJU93elN9hHIf9UQWyMfkjhAEGtGG6aXIzBOqXhsXxcQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.dev; spf=none smtp.mailfrom=localhost.localdomain; arc=none smtp.client-ip=147.136.157.0
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=localhost.localdomain
+Received: by localhost.localdomain (Postfix, from userid 1007)
+	id 961088B2A0F; Wed,  5 Nov 2025 19:42:44 +0800 (+08)
+From: Jiayuan Chen <jiayuan.chen@linux.dev>
+To: mingo@redhat.com,
+	peterz@infradead.org,
+	juri.lelli@redhat.com,
+	vincent.guittot@linaro.org
+Cc: Jiayuan Chen <jiayuan.chen@linux.dev>,
+	Jiayuan Chen <jiayuan.chen@shopee.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	Huiwen He <hehuiwen@kylinos.cn>
-Subject: Re: [PATCH] tracing/hist: make err_text array fully const
-Message-ID: <202511051755.CU1HPYCx-lkp@intel.com>
-References: <20251104045558.1644671-1-hehuiwen@kylinos.cn>
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ben Segall <bsegall@google.com>,
+	Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Gabriele Monaco <gmonaco@redhat.com>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+	Libo Chen <libo.chen@oracle.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [RESEND PATCH v1] sched/numa: Add tracepoint to track NUMA migration cost
+Date: Wed,  5 Nov 2025 19:42:15 +0800
+Message-ID: <20251105114220.150467-1-jiayuan.chen@linux.dev>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251104045558.1644671-1-hehuiwen@kylinos.cn>
+Content-Transfer-Encoding: 8bit
 
-Hi Huiwen,
+From: Jiayuan Chen <jiayuan.chen@shopee.com>
 
-kernel test robot noticed the following build warnings:
+In systems with multiple NUMA nodes, memory imbalance between nodes often
+occurs.  To address this, we typically tune parameters like scan_size_mb or
+scan_period_{min,max}_ms to allow processes to migrate pages between NUMA
+nodes.
 
-[auto build test WARNING on trace/for-next]
-[also build test WARNING on linus/master v6.18-rc4 next-20251105]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Currently, the migration task task_numa_work() holds the mmap_lock during
+the entire migration process, which can significantly impact process
+performance, especially for memory operations. This patch introduces a new
+tracepoint that records the migration duration, along with the number of
+scanned pages and migrated pages. These metrics can be used to calculate
+efficiency metrics similar to %vmeff in 'sar -B'.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Huiwen-He/tracing-hist-make-err_text-array-fully-const/20251104-125932
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace for-next
-patch link:    https://lore.kernel.org/r/20251104045558.1644671-1-hehuiwen%40kylinos.cn
-patch subject: [PATCH] tracing/hist: make err_text array fully const
-config: sh-randconfig-r121-20251105 (https://download.01.org/0day-ci/archive/20251105/202511051755.CU1HPYCx-lkp@intel.com/config)
-compiler: sh4-linux-gcc (GCC) 15.1.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251105/202511051755.CU1HPYCx-lkp@intel.com/reproduce)
+These metrics help evaluate whether the adjusted NUMA balancing parameters
+are properly tuned.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202511051755.CU1HPYCx-lkp@intel.com/
+Here's an example bpftrace script:
+```bash
 
-sparse warnings: (new ones prefixed by >>)
->> kernel/trace/trace_events_hist.c:808:53: sparse: sparse: incorrect type in argument 4 (different modifiers) @@     expected char const **errs @@     got char const *const * @@
-   kernel/trace/trace_events_hist.c:808:53: sparse:     expected char const **errs
-   kernel/trace/trace_events_hist.c:808:53: sparse:     got char const *const *
+bpftrace -e '
+tracepoint:sched:sched_numa_balance_start
+{
+    @start_time[cpu] = nsecs;
+}
 
-vim +808 kernel/trace/trace_events_hist.c
+tracepoint:sched:sched_numa_balance_end {
+    if (@start_time[cpu] > 0) {
+        $cost = nsecs - @start_time[cpu];
+        printf("task '%s' migrate cost %lu, scanned %lu, migrated %lu\n",
+               args.comm, $cost, args.scanned, args.migrated);
+    }
+}
+'
+```
+Sample output:
+Attaching 2 probes...
+task 'rs:main Q:Reg' migrate cost 5584655, scanned 24516, migrated 22373
+task 'systemd-journal' migrate cost 123191, scanned 6308, migrated 0
+task 'wrk' migrate cost 894026, scanned 5842, migrated 5841
 
-4b147936fa5096 Tom Zanussi      2018-01-15  802  
-edfeed318d59ff Tom Zanussi      2022-01-28  803  static void hist_err(struct trace_array *tr, u8 err_type, u16 err_pos)
-7bbab38d07f318 Masami Hiramatsu 2018-11-05  804  {
-edfeed318d59ff Tom Zanussi      2022-01-28  805  	if (!last_cmd)
-edfeed318d59ff Tom Zanussi      2022-01-28  806  		return;
-edfeed318d59ff Tom Zanussi      2022-01-28  807  
-726721a51838e3 Tom Zanussi      2020-05-28 @808  	tracing_log_err(tr, last_cmd_loc, last_cmd, err_text,
-726721a51838e3 Tom Zanussi      2020-05-28  809  			err_type, err_pos);
-7bbab38d07f318 Masami Hiramatsu 2018-11-05  810  }
-7bbab38d07f318 Masami Hiramatsu 2018-11-05  811  
+Signed-off-by: Jiayuan Chen <jiayuan.chen@shopee.com>
+---
+ include/trace/events/sched.h | 60 ++++++++++++++++++++++++++++++++++++
+ kernel/sched/fair.c          | 14 +++++++--
+ 2 files changed, 72 insertions(+), 2 deletions(-)
 
+diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
+index 7b2645b50e78..e24bf700a614 100644
+--- a/include/trace/events/sched.h
++++ b/include/trace/events/sched.h
+@@ -804,6 +804,66 @@ TRACE_EVENT(sched_skip_cpuset_numa,
+ 		  __entry->ngid,
+ 		  MAX_NUMNODES, __entry->mem_allowed)
+ );
++
++TRACE_EVENT(sched_numa_balance_start,
++
++	TP_PROTO(struct task_struct *tsk),
++
++	TP_ARGS(tsk),
++
++	TP_STRUCT__entry(
++		__array(char,	comm, TASK_COMM_LEN)
++		__field(pid_t,	pid)
++		__field(pid_t,	tgid)
++		__field(pid_t,	ngid)
++	),
++
++	TP_fast_assign(
++		memcpy(__entry->comm, tsk->comm, TASK_COMM_LEN);
++		__entry->pid		 = task_pid_nr(tsk);
++		__entry->tgid		 = task_tgid_nr(tsk);
++		__entry->ngid		 = task_numa_group_id(tsk);
++	),
++
++	TP_printk("comm=%s pid=%d tgid=%d ngid=%d",
++		  __entry->comm,
++		  __entry->pid,
++		  __entry->tgid,
++		  __entry->ngid)
++);
++
++TRACE_EVENT(sched_numa_balance_end,
++
++	TP_PROTO(struct task_struct *tsk, unsigned long scanned, unsigned long migrated),
++
++	TP_ARGS(tsk, scanned, migrated),
++
++	TP_STRUCT__entry(
++		__array(char,		comm, TASK_COMM_LEN)
++		__field(pid_t,		pid)
++		__field(pid_t,		tgid)
++		__field(pid_t,		ngid)
++		__field(unsigned long,	migrated)
++		__field(unsigned long,	scanned)
++	),
++
++	TP_fast_assign(
++		memcpy(__entry->comm, tsk->comm, TASK_COMM_LEN);
++		__entry->pid		 = task_pid_nr(tsk);
++		__entry->tgid		 = task_tgid_nr(tsk);
++		__entry->ngid		 = task_numa_group_id(tsk);
++		__entry->migrated	 = migrated;
++		__entry->scanned	 = scanned;
++	),
++
++	TP_printk("comm=%s pid=%d tgid=%d ngid=%d scanned=%lu migrated=%lu",
++		  __entry->comm,
++		  __entry->pid,
++		  __entry->tgid,
++		  __entry->ngid,
++		  __entry->scanned,
++		  __entry->migrated)
++);
+ #endif /* CONFIG_NUMA_BALANCING */
+ 
+ /*
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 25970dbbb279..173c9c8397e2 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -3294,6 +3294,9 @@ static void task_numa_work(struct callback_head *work)
+ 	struct vm_area_struct *vma;
+ 	unsigned long start, end;
+ 	unsigned long nr_pte_updates = 0;
++	unsigned long nr_scanned = 0;
++	unsigned long total_migrated = 0;
++	unsigned long total_scanned = 0;
+ 	long pages, virtpages;
+ 	struct vma_iterator vmi;
+ 	bool vma_pids_skipped;
+@@ -3359,6 +3362,7 @@ static void task_numa_work(struct callback_head *work)
+ 	if (!mmap_read_trylock(mm))
+ 		return;
+ 
++	trace_sched_numa_balance_start(p);
+ 	/*
+ 	 * VMAs are skipped if the current PID has not trapped a fault within
+ 	 * the VMA recently. Allow scanning to be forced if there is no
+@@ -3477,6 +3481,10 @@ static void task_numa_work(struct callback_head *work)
+ 			end = min(end, vma->vm_end);
+ 			nr_pte_updates = change_prot_numa(vma, start, end);
+ 
++			nr_scanned = (end - start) >> PAGE_SHIFT;
++			total_migrated += nr_pte_updates;
++			total_scanned += nr_scanned;
++
+ 			/*
+ 			 * Try to scan sysctl_numa_balancing_size worth of
+ 			 * hpages that have at least one present PTE that
+@@ -3486,8 +3494,8 @@ static void task_numa_work(struct callback_head *work)
+ 			 * areas faster.
+ 			 */
+ 			if (nr_pte_updates)
+-				pages -= (end - start) >> PAGE_SHIFT;
+-			virtpages -= (end - start) >> PAGE_SHIFT;
++				pages -= nr_scanned;
++			virtpages -= nr_scanned;
+ 
+ 			start = end;
+ 			if (pages <= 0 || virtpages <= 0)
+@@ -3528,6 +3536,8 @@ static void task_numa_work(struct callback_head *work)
+ 		mm->numa_scan_offset = start;
+ 	else
+ 		reset_ptenuma_scan(p);
++
++	trace_sched_numa_balance_end(p, total_scanned, total_migrated);
+ 	mmap_read_unlock(mm);
+ 
+ 	/*
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.43.0
+
