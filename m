@@ -1,82 +1,107 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF468340DA6;
-	Thu,  6 Nov 2025 16:52:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8E0F145B3E;
+	Thu,  6 Nov 2025 17:01:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762447948; cv=none; b=sTjRDKSqd+ac5jEnD9T4MJ9lI2/45avYnzsAXjSOfwv0/c4CSMgYgJlU/Diqx1iViPz3aRQS68ZPxpsbQzLW2OIOk5u5QlhARO0NtzC6OTj6Mub+WoY+rs+pASfU+0lTui2ZdXXYyJGmrJnVoQqfd9rS3bYKVioAp2uuCmMZQSc=
+	t=1762448469; cv=none; b=Qk04lyK2WCyvYGGHZowczh/A6tXOt3kwy1Ox+cj0cXxVUwNBgVyZa+CaPRWuNe9uJzCXyj6uEABzyFJqCnI9I9UBm00IoOHuSTQ8BgOdwYwixHvT5WcgbUWnHfjFghyQM73YGUtFwd/Dee/Ty5wN9VwnmS3VU+o+cmSU+9Ji9QY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762447948; c=relaxed/simple;
-	bh=weAJhuC10feYNFY9qthmfAnotjPTt4YAJNN9S5QOm8A=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=P3ZgpBUjxf+BW9EpAjgOOBP6CnGscUzlNQ/MEYLmvNOk/9tOaVeLPAMUbqiRF8wvxM81DNJeQ7gwMr7Lule7G2uD55VGbQILSF4gLA19mvGqBzzhYx/ivs8JxD+B5T+EQ9sKqOpa2yh+MyyRAL6dbg98vs066vcB3FH9QJQdU8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FB++twEG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762448469; c=relaxed/simple;
+	bh=1xmd/cakKix3IcCYvRr7/Y4fa9JwaDq2p+/Ah1ZkYzA=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=GWVP5y357Q6nY5uUoMRhMoWvlqr/PFKJLgumBJHxIxa5msVasTPeHD9Sp3pTLqWxVXbZt4aBif4zfSdJn0c/nFZaUEkn8WjYAZxQlUH2j4wCizEAxd+mIiCZKkTWunree/QwhzGzPtr/4o+3QViygZaZ+AWQwOoRptENCEqTD2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nOS97Tpq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FB++twEG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 095FBC4CEF7;
-	Thu,  6 Nov 2025 16:52:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nOS97Tpq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EBFBC116C6;
+	Thu,  6 Nov 2025 17:01:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762447948;
-	bh=weAJhuC10feYNFY9qthmfAnotjPTt4YAJNN9S5QOm8A=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=FB++twEG02v+nfF4QL6n85ODQ4n+KyfojrKIciWLD3sdv3+w8WtswouXkw3K63Ewq
-	 0kKzVRZn2wtumnviRWCasm2NVBJXSDnsBd7K49dV28brz7tKD3hdrGTngnDnircnGv
-	 JCqaf9EZUtVsO4a36/kRvMaeDUMmQbbz8X6iswcPWbkCuaitZ7vO4B9umBh/tGdmFt
-	 h+dX5bKy3FUiESKkn/D9q6ZPUJcgTH2HMtycnj7+rjUKgAj2e5CSvzW/I22iONe8kN
-	 IbQ3IGhhXKMXyF8kxSP2RiBFpKOheDfMSlzjl/DCD+6CnCYf7HrbHZZarhdCe1O2i+
-	 9t8euNK/dptpg==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Beau Belgrave <beaub@linux.microsoft.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH 2/2] tracing: tprobe-events: Fix to put tracepoint_user when disable the tprobe
-Date: Fri,  7 Nov 2025 01:52:24 +0900
-Message-ID: <176244794466.155515.3971904050506100243.stgit@devnote2>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <176244792552.155515.3285089581362758469.stgit@devnote2>
-References: <176244792552.155515.3285089581362758469.stgit@devnote2>
-User-Agent: StGit/0.19
+	s=k20201202; t=1762448468;
+	bh=1xmd/cakKix3IcCYvRr7/Y4fa9JwaDq2p+/Ah1ZkYzA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=nOS97TpqsElKTaldl0ip8xAa71AH3oUDx090eUgrcWJKZ/kSb5IuWR04hs9aMHwoe
+	 r/GjLD69WMar97AYMEDA1LdQ6Vm1/4m2dCDWhYT3HkNL3BELhyq5NnVYQYacn663rA
+	 XEMwmoR90VFlh1ejGAU+e0sZRlddluRnYmR9boro6LrfvV3kxfc0QmHOmpCpPa4vG7
+	 6Df2JIBUTXdMJ7eMb7j+q85v1nLfVXSivWualE8AUI2tyMq8zs4IRWETTEthzB2EWa
+	 oQxbC+9g8bjaStFUSFcabaSDiXRAoqGzRMcVWgemjNKh9QTfBwT3qvDZhWvqw868eM
+	 6iHxkwQ1CTzhQ==
+Date: Fri, 7 Nov 2025 02:01:04 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH] tracing: Hide __NR_utimensat and _NR_mq_timedsend when
+ not defined
+Message-Id: <20251107020104.fd7f43772d3b0ce5b28474bd@kernel.org>
+In-Reply-To: <20251104205310.00a1db9a@batman.local.home>
+References: <20251104205310.00a1db9a@batman.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Tue, 4 Nov 2025 20:53:10 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-__unregister_trace_fprobe() checks tf->tuser to put it when removing
-tprobe. However, disable_trace_fprobe() does not use it and only calls
-unregister_fprobe(). Thus it forgets to disable tracepoint_user.
+> From: Steven Rostedt <rostedt@goodmis.org>
+> 
+> Some architectures (riscv-32) do not define __NR_utimensat and
+> _NR_mq_timedsend, and fails to build when they are used.
+> 
+> Hide them in "ifdef"s.
 
-If the trace_fprobe has tuser, put it for unregistering the tracepoint
-callbacks when disabling tprobe correctly.
+(I wonder we can expect that other __NR_* also defined on every
+architecture?)
+Anyway, this looks good to me.
 
-Fixes: 2867495dea86 ("tracing: tprobe-events: Register tracepoint when enable tprobe event")
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- kernel/trace/trace_fprobe.c |    4 ++++
- 1 file changed, 4 insertions(+)
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-diff --git a/kernel/trace/trace_fprobe.c b/kernel/trace/trace_fprobe.c
-index d4e78d1ace12..62420eec677f 100644
---- a/kernel/trace/trace_fprobe.c
-+++ b/kernel/trace/trace_fprobe.c
-@@ -1512,6 +1512,10 @@ static int disable_trace_fprobe(struct trace_event_call *call,
- 	if (!trace_probe_is_enabled(tp)) {
- 		list_for_each_entry(tf, trace_probe_probe_list(tp), tp.list) {
- 			unregister_fprobe(&tf->fp);
-+			if (tf->tuser) {
-+				tracepoint_user_put(tf->tuser);
-+				tf->tuser = NULL;
-+			}
- 		}
- 	}
- 
+Thanks,
 
+> 
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202511031239.ZigDcWzY-lkp@intel.com/
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+>  kernel/trace/trace_syscalls.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/kernel/trace/trace_syscalls.c b/kernel/trace/trace_syscalls.c
+> index e07c5a3cc7ab..e96d0063cbcf 100644
+> --- a/kernel/trace/trace_syscalls.c
+> +++ b/kernel/trace/trace_syscalls.c
+> @@ -1072,7 +1072,9 @@ static void check_faultable_syscall(struct trace_event_call *call, int nr)
+>  	switch (nr) {
+>  	/* user arg 1 with size arg at 2 */
+>  	case __NR_write:
+> +#ifdef __NR_mq_timedsend
+>  	case __NR_mq_timedsend:
+> +#endif
+>  	case __NR_pwrite64:
+>  		sys_data->user_mask = BIT(1);
+>  		sys_data->user_arg_size = 2;
+> @@ -1186,7 +1188,9 @@ static void check_faultable_syscall(struct trace_event_call *call, int nr)
+>  	case __NR_syslog:
+>  	case __NR_statx:
+>  	case __NR_unlinkat:
+> +#ifdef __NR_utimensat
+>  	case __NR_utimensat:
+> +#endif
+>  		sys_data->user_mask = BIT(1);
+>  		break;
+>  	/* user arg at position 2 */
+> -- 
+> 2.51.0
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
