@@ -1,157 +1,165 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91EF2274B46;
-	Thu,  6 Nov 2025 15:29:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E31B137932;
+	Thu,  6 Nov 2025 16:52:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762442974; cv=none; b=HtPas3g/N2waq4Slp8LKYmU0GyP+EoZIYfpScSofBakYz6AGbzKBfSFERzo2BJGLzl4JocqG8GFPOjF2NICwBqQopSZ+l0kQhW6kihFTgdPLOhm1Gv3lnKNRMWXx8JYY70f02F0Ty1ST24KF4kS9YWloM0gClUrOLP9OyKXL4AI=
+	t=1762447930; cv=none; b=Hz7kWHBgvr8Ma6hEWhn0fTyyA9cfT5WFi1+slzq/EnTGDOACQDNqOgSJPexz5nMzktrYtc6Gmd9Edsz/I4zA7NiEA697wMljtrA/OGy+Ovt+FySnxJtFsQHB+o2ZPvMKBfQKbKwPZX5HQ9u8A8qr+mwu8P8JwRnmELLWuwoYpG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762442974; c=relaxed/simple;
-	bh=Fy5kb+xSEe8CuLReHJSiSgwCvjIGVD2dswSaWqR9TqU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IOhQ+JaEJeAgorAD22zuFa5Vb1nh8wOOof/KO63wNSmpL1fBuTzKLs8FUXrusNyHqgR4jmSUb/L8BNwbU1mWjmrP2XK+aA/r0DqqvO7/0gm5RCbfouLfp9iMv+eTUjNgM1xdeJwpsUhTxsB6zftiEsm7sAnYAaadUxSecnzEUfU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VAUigxDO; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1762447930; c=relaxed/simple;
+	bh=oN3GXkIarMfXtltrEnr18z/wQu882uSM+visD53ptdI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Ctz1gYr3mC+ZhgLKELpbcUoXIz9T7F4cVdecV/ivDEDAzb+MCzXHLVb5LAeooFKcz7YUucyF/nt84M4xhDq4AIwKiqYovH6lunScFA6Fx1jqRAoQLzl8q8miAX2befAEJSYTViujJGYz03aIgjZuPI14IiwBmnVj2gXONvTVupw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PrgWgGW1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VAUigxDO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762442972; x=1793978972;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Fy5kb+xSEe8CuLReHJSiSgwCvjIGVD2dswSaWqR9TqU=;
-  b=VAUigxDONSSAJbxzBvT7LYmTDUgr8gucwo2MBR+WtMh63FPGrxujaT1p
-   htgtG4HkDE0ZBC4srRKelBOdqhTjFtXiHVieg3qqnpEePIL58C3KMVXb6
-   KYwW0rwbIvaWweMYeWoc4s/NFQlJvoTowvwZn9tqrlpX3w7qRsR5ZAIBU
-   hgdjOLV5HfYTcGPM5/th8c1VM+K+8vfKFtxFy+hUIbGTX8X6sCt5XAJqJ
-   8G7DdgJ2I71eJ0e7R9F5Tsvk0qk4F0wUJK509N4KO4KOkwg6FqvzeK0L6
-   xwNdeu84roHYlRzIt11SFUgitYIUGMl2qB7uKBVb3pEJ9seI84CdX5O/I
-   A==;
-X-CSE-ConnectionGUID: NnrMhdUBQ6CJ1iZWTBN18Q==
-X-CSE-MsgGUID: 3z8XjBKvTcOQy1+dAHKhbg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11604"; a="64465758"
-X-IronPort-AV: E=Sophos;i="6.19,284,1754982000"; 
-   d="scan'208";a="64465758"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2025 07:29:31 -0800
-X-CSE-ConnectionGUID: sZfJMlAgRIG2UQxuqDCZKQ==
-X-CSE-MsgGUID: Sny0jVoXSGuME85WdEfqVQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,284,1754982000"; 
-   d="scan'208";a="188502501"
-Received: from lkp-server02.sh.intel.com (HELO 66d7546c76b2) ([10.239.97.151])
-  by fmviesa010.fm.intel.com with ESMTP; 06 Nov 2025 07:29:28 -0800
-Received: from kbuild by 66d7546c76b2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1vH1vS-000U5A-0r;
-	Thu, 06 Nov 2025 15:29:26 +0000
-Date: Thu, 6 Nov 2025 23:29:25 +0800
-From: kernel test robot <lkp@intel.com>
-To: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PrgWgGW1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FE43C4CEF7;
+	Thu,  6 Nov 2025 16:52:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762447929;
+	bh=oN3GXkIarMfXtltrEnr18z/wQu882uSM+visD53ptdI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=PrgWgGW1fAZBBSn7TU15fO93nXWJSPOGIZdCd34rodOjYwIxcBGhdafh/DB7+lpIe
+	 eNU+lIHrUeBq0Bx8nx3f0RPtavjnQoFaxYKf6IX6UE6IHyaNlI5CNo0keA0qvC5F55
+	 8OcuW2fIEN0gOMWthL2yXHcmMBO1UAsVF/3d/clViYo08wuWVoF0zt+LQK+hG+BYIQ
+	 5c0J+fj95Jf9BDjnKFXfFzeWxWRdCnNv8hEfEMG7C01D4QTo6kIWD5NSODZKv7EQTb
+	 B7rBWhMYQeqh+uRSjOxH5Z1TKVJPxhbcYgD8xLMC9/eNHF19CM2ECLkr/dHWSlS3HM
+	 nEc/+WvXK4GRQ==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Beau Belgrave <beaub@linux.microsoft.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Linux Memory Management List <linux-mm@kvack.org>
-Subject: Re: [PATCH 3/5] tracing: Have tracer option be instance specific
-Message-ID: <202511062257.TSJTBQ2c-lkp@intel.com>
-References: <20251105161935.545400234@kernel.org>
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH 0/2] tracing: tprobe-events: Fixes for tprobe events
+Date: Fri,  7 Nov 2025 01:52:05 +0900
+Message-ID: <176244792552.155515.3285089581362758469.stgit@devnote2>
+X-Mailer: git-send-email 2.43.0
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251105161935.545400234@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Steven,
+Hi,
 
-kernel test robot noticed the following build errors:
+Beau reported tprobe example in the document does not work on 6.17
+kernel.
 
-[auto build test ERROR on trace/for-next]
-[cannot apply to linus/master v6.18-rc4 next-20251106]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+---
+echo "t sched_switch preempt prev_pid=prev->pid next_pid=next->pid" > /sys/kernel/tracing/dynamic_events
+echo 1 > /sys/kernel/tracing/events/tracepoints/sched_switch/enable
+cat /sys/kernel/tracing/trace_pipe
+---
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Steven-Rostedt/tracing-Remove-dummy-options-and-flags/20251106-010511
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace for-next
-patch link:    https://lore.kernel.org/r/20251105161935.545400234%40kernel.org
-patch subject: [PATCH 3/5] tracing: Have tracer option be instance specific
-config: i386-buildonly-randconfig-004-20251106 (https://download.01.org/0day-ci/archive/20251106/202511062257.TSJTBQ2c-lkp@intel.com/config)
-compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251106/202511062257.TSJTBQ2c-lkp@intel.com/reproduce)
+It seems that the tracepoint callback is not correctly set. So I tried
+to trace the actual function calls and the local variables.
+(I need to enable CONFIG_KPROBE_EVENTS_ON_NOTRACE for tracing ftrace
+code itself.)
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202511062257.TSJTBQ2c-lkp@intel.com/
+With the below commands, I got some probe definitions for debug:
 
-All errors (new ones prefixed by >>):
+ $ perf probe -k vmlinux -D "tracepoint_user_find_get name:string"
+ $ perf probe -k vmlinux -D '__regsiter_tracepoint_fprobe:13 tuser tuser->tpoint'
+ $ perf probe -k vmlinux -D 'register_fprobe_ips addrs[1]'
+ $ perf probe -k vmlinux -D 'register_fprobe_ips%return ret=$retval'
+ $ perf probe -k vmlinux -D '__regsiter_tracepoint_fprobe tf->tprobe'
+ $ perf probe -k vmlinux -D 'tracepoint_probe_register_prio_may_exist tp'
+ $ perf probe -k vmlinux -D 'tracepoint_probe_register_prio_may_exist%return ret=$retval'
+ $ perf probe -k vmlinux -D '__tracepoint_user_init name:string'
 
->> kernel/trace/trace.c:2174:23: error: redefinition of 'type' with a different type: 'struct trace_tracer *' vs 'struct tracer *'
-    2174 |         struct trace_tracer *type = tracers->trace;
-         |                              ^
-   kernel/trace/trace.c:2171:47: note: previous definition is here
-    2171 | static int run_tracer_selftest(struct tracer *type)
-         |                                               ^
->> kernel/trace/trace.c:2174:30: error: use of undeclared identifier 'tracers'
-    2174 |         struct trace_tracer *type = tracers->trace;
-         |                                     ^
-   kernel/trace/trace.c:5172:17: warning: variable 'trace' set but not used [-Wunused-but-set-variable]
-    5172 |         struct tracer *trace;
-         |                        ^
-   1 warning and 2 errors generated.
+And run below commands on the machine:
+
+-----
+ $ cat > /sys/kernel/tracing/dynamic_events << EOF
+p:probe/tracepoint_user_find_get enable_trace_fprobe+271 name_string=+0(%bp):string
+p:probe/regsiter_tracepoint_fprobe_L13 enable_trace_fprobe+692 tuser=%r13 tpoint=+24(%r13)
+p:probe/regsiter_tracepoint_fprobe_L13_1 enable_trace_fprobe+685 tuser=%r13 tpoint=+24(%r13)
+p:probe/register_fprobe_ips register_fprobe_ips+0 addrs=+8(%si):u64
+r:probe/register_fprobe_ips__return register_fprobe_ips+0 ret=\$retval
+p:probe/regsiter_tracepoint_fprobe enable_trace_fprobe+247 tprobe=+80(-96(%r14)):u8
+p:probe/tracepoint_probe_register_prio_may_exist tracepoint_probe_register_prio_may_exist+0 tp=%di
+r:probe/tracepoint_probe_register_prio_may_exist__return tracepoint_probe_register_prio_may_exist+0 ret=\$retval
+p:probe/tracepoint_user_init enable_trace_fprobe+440 name_string=+0(%bp):string
+EOF
+ $ echo 1 > /sys/kernel/tracing/events/probe/enable
+
+ $ echo "t sched_switch preempt prev_pid=prev->pid next_pid=next->pid" >> /sys/kernel/tracing/dynamic_events
+ $ echo 1 > /sys/kernel/tracing/events/tracepoints/sched_switch/enable
+ $ cat /sys/kernel/tracing/trace
+-----
+
+And I got below trace data:
+
+-----
+#           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
+#              | |         |   |||||     |         |
+              sh-107     [005] ..Zff     7.290496: regsiter_tracepoint_fprobe: (enable_trace_fprobe+0xf7/0x3a0) tprobe=0
+              sh-107     [005] ..Zff     7.290547: tracepoint_user_find_get: (enable_trace_fprobe+0x10f/0x3a0) name_string="sched_switch"
+              sh-107     [005] ..Zff     7.290680: tracepoint_user_init: (enable_trace_fprobe+0x1b8/0x3a0) name_string="sched_switch"
+              sh-107     [005] ..Zff     7.290727: regsiter_tracepoint_fprobe_L13_1: (enable_trace_fprobe+0x2ad/0x3a0) tuser=0xffff88800538b280 tpoint=0xffffffff82a4ac10
+              sh-107     [005] ..Zff     7.290730: regsiter_tracepoint_fprobe_L13: (enable_trace_fprobe+0x2b4/0x3a0) tuser=0xffff88800538b280 tpoint=0xffffffff82a4ac10
+              sh-107     [005] ..Zff     7.290735: register_fprobe_ips: (register_fprobe_ips+0x4/0x310) addrs=18446612682157410880
+              sh-107     [005] .....     7.311345: register_fprobe_ips__return: (enable_trace_fprobe+0x2f6/0x3a0 <- register_fprobe_ips) ret=0
+-----
+
+No tracepoint_probe_register_prio_may_exist event is recorded, but 
+tracepoint_user_init and regsiter_tracepoint_fprobe_L13_1 (call-site
+of tracepoint_user_init()) are recorded and `tuser` and `tpoint`
+are not NULL or error.
+
+This means when the tprobe is enabled, the register_tracepoint_fprobe()
+eventually calls tracepoint_user_init() correctly. However, it does not
+call tracepoint_probe_register_prio_may_exist() to register tracepoint
+callback. So the bug is inside tracepoint_user_init(), not NULL return
+path.
+
+-----
+static struct tracepoint_user *__tracepoint_user_init(const char *name, struct tracepoint *tpoint)
+{
+	struct tracepoint_user *tuser __free(tuser_free) = NULL;
+	int ret;
+
+	tuser = kzalloc(sizeof(*tuser), GFP_KERNEL);
+	if (!tuser)
+		return NULL;
+	tuser->name = kstrdup(name, GFP_KERNEL);
+	if (!tuser->name)
+		return NULL;
+
+	if (tpoint) {
+		ret = tracepoint_user_register(tuser); /* forgot to set tuser->tpoint */
+		if (ret)
+			return ERR_PTR(ret);
+	}
+-----
+
+And found it forgot to set tuser->tpoint before calling
+tracepoint_user_register() which calls
+tracepoint_probe_register_prio_may_exist(tuser->tpoint).
+To fix that, I just moved the tuser->tpoint setting line
+right before tracepoint_user_register() call [1/2].
+
+I also found another issue when I switched enable and disable[2/2].
+
+I hope this report will help someone to do similar debug by tracing.
+
+Thank you,
+
+---
+
+Masami Hiramatsu (Google) (2):
+      tracing: tprobe-events: Fix to register tracepoint correctly
+      tracing: tprobe-events: Fix to put tracepoint_user when disable the tprobe
 
 
-vim +2174 kernel/trace/trace.c
+ kernel/trace/trace_fprobe.c |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-  2170	
-  2171	static int run_tracer_selftest(struct tracer *type)
-  2172	{
-  2173		struct trace_array *tr = &global_trace;
-> 2174		struct trace_tracer *type = tracers->trace;
-  2175		struct tracer_flags *saved_flags = tr->current_trace_flags;
-  2176		struct tracer_flags *flags;
-  2177		struct tracer *saved_tracer = tr->current_trace;
-  2178		int ret;
-  2179	
-  2180		if (!type->selftest || tracing_selftest_disabled)
-  2181			return 0;
-  2182	
-  2183		/*
-  2184		 * If a tracer registers early in boot up (before scheduling is
-  2185		 * initialized and such), then do not run its selftests yet.
-  2186		 * Instead, run it a little later in the boot process.
-  2187		 */
-  2188		if (!selftests_can_run)
-  2189			return save_selftest(type);
-  2190	
-  2191		if (!tracing_is_on()) {
-  2192			pr_warn("Selftest for tracer %s skipped due to tracing disabled\n",
-  2193				type->name);
-  2194			return 0;
-  2195		}
-  2196	
-  2197		/*
-  2198		 * Run a selftest on this tracer.
-  2199		 * Here we reset the trace buffer, and set the current
-  2200		 * tracer to be this tracer. The tracer can then run some
-  2201		 * internal tracing to verify that everything is in order.
-  2202		 * If we fail, we do not register this tracer.
-  2203		 */
-  2204		tracing_reset_online_cpus(&tr->array_buffer);
-  2205	
-  2206		tr->current_trace = type;
-  2207		tr->current_trace_flags = type->flags ? : type->default_flags;
-  2208	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+--
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
