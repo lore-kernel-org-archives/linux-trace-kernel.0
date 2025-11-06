@@ -1,134 +1,70 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AC3A32AAB1;
-	Thu,  6 Nov 2025 12:29:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D99132B98E;
+	Thu,  6 Nov 2025 12:54:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762432184; cv=none; b=OG9iOtd0MqXHfmi4VBA87ihSl3E6oLVEa/aRfsPxG2TLGzupSBgK7ZhjV5f823i90QySJrGlpHTNKUeAylvjOD/KshCuCkbRlvP/gVfZaCVMP+DTTy4UZvnlDl8iLFMTYKYz7p+be/m9uI+wgLV49kelRcBMX8u5sZCiQ/TpVBY=
+	t=1762433688; cv=none; b=hQIrZXpza8cuOTpp7TpitTXLX+cyaDa8lKs5jFhChPUTeEgfeXJwyjnQKMGlzxB6nlInczNnUlaAVzGLriVaE8mC3YLOagXXj+ILtxwJWLdFKbTfXkm08SiDcH37b22Wds4v6t9J0o4VyCGrFpEOp7rRz200iWMLPEFzbak1kmQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762432184; c=relaxed/simple;
-	bh=tA/9M3ARi9alo/ypAVAeWDUjilXQBiFkWC2MawbGD6I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G9iFMtBelOY0vlj6FRNd1uLrJ+8glAWvAAxEufuV24v8RE5CzH8skCxdhQRPs7b+N6gkEmRrZTCarO+0NllqaYx7RrhE2y/KF6ugCic8MOegWcz6aQdTB29tz4/HdTf1C1TRGqqXtbqh6B+luknp9C/62ONrIDspQonCr0U0jXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=TJ417h+t; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1762433688; c=relaxed/simple;
+	bh=W28dHcSlN8qh6sPyfIcXqe07mVpPpIojIVRYU4wG5xM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UFoa+Vl2u3W0UTFd097TNyBJFgyb5VaWZUPrJdNi3VDCRRogQvPlQSRh5VE2JOZDHN/J4bz58P/J5zhxNV3Mvhg4LC9VEaE0ittdauQc9Z1QckrnM+Bc4HRwUoZlCkvHfxGCGc2ccWKsTe/l3qHOKV16dODXTUD0ha1IPlE8DM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cyOt8O6C; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TJ417h+t"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=nPqBbMUpCv5pTCYTP8O6tM3Iga00IspR1junwdyt1zs=; b=TJ417h+tcI06ZEgaOT1NLNNoy+
-	CpJdWI0I60n9Gkb+MR5ugJCoVdd0iHoSvZn7nXcnRRYYe9cfxlsy/ANSvEwRjPX5HDXB8Skc5Cpck
-	B4RTbeK4BV5dr2ierYmk66qGXx3E9/joRIMZnNoJ0KLpDoFXu73fjiMNSzki/MZPx0dKdeq0UTq/E
-	kjy2/Gpab2i6qbFTk8wyMTuoMGYMLYsE3sBj2vqOCnAoFSUfYcEYiU+kBZxuihll08SArfd37QLFU
-	lQKBKRZiyyr58inYkw0MaL8FB2/Q5b3C6P2ha9ReX6fYxgoyQYmCIxIOI6BT3tvqaP3KtPOjs/JNV
-	59dwYK5A==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vGyFh-00000004G1l-2SOg;
-	Thu, 06 Nov 2025 11:34:08 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 75DD730023C; Thu, 06 Nov 2025 13:29:33 +0100 (CET)
-Date: Thu, 6 Nov 2025 13:29:33 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>, bpf@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, x86@kernel.org,
-	Yonghong Song <yhs@fb.com>, Song Liu <songliubraving@fb.com>,
-	Andrii Nakryiko <andrii@kernel.org>
-Subject: Re: [PATCHv2 2/4] x86/fgraph,bpf: Fix stack ORC unwind from
- kprobe_multi return probe
-Message-ID: <20251106122933.GW4067720@noisy.programming.kicks-ass.net>
-References: <20251103220924.36371-1-jolsa@kernel.org>
- <20251103220924.36371-3-jolsa@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cyOt8O6C"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD443C4CEF7;
+	Thu,  6 Nov 2025 12:54:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762433688;
+	bh=W28dHcSlN8qh6sPyfIcXqe07mVpPpIojIVRYU4wG5xM=;
+	h=Date:Reply-To:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=cyOt8O6CBj0lf63GmmTG4Xi61GHtdsG5/GzAEuoyENSLpetQFbvQAhT/+x7e+LwLk
+	 qRVRb9eCVFXp6yyeGkC+gwZRb+PYWlmqVX3KmOKbHCUHGmHs98Mue/Z7Hx1H4OWIx8
+	 Z7b/V2Olmi80MNC0ZAUZPKS33yaSpn2da/DsZRjaBPPfuLr6vhX5NKMz2f8Jt5a6Pj
+	 aw7ZJe+x2NNGnV1Vf7Ok680zC/t18J16rVxsYIt1jJsfNIkDiJG7WpPqHImsLv4LFP
+	 kDQpG33bh9PpaM/bzVc0MWCsAI0CnbALaPSOXYSL6Evx2xne+uM8x4cuLPL85fbkcd
+	 G9tfzh1MbqL/A==
+Message-ID: <56a75d5e-1864-425b-876a-2636c4cd2ed9@kernel.org>
+Date: Thu, 6 Nov 2025 13:54:42 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251103220924.36371-3-jolsa@kernel.org>
+User-Agent: Mozilla Thunderbird
+Reply-To: Daniel Gomez <da.gomez@kernel.org>
+Subject: Re: [PATCH 1/6] module: Add helper function for reading
+ module_buildid()
+To: Petr Mladek <pmladek@suse.com>, Petr Pavlu <petr.pavlu@suse.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Alexei Starovoitov <ast@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>,
+ John Fastabend <john.fastabend@gmail.com>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Luis Chamberlain <mcgrof@kernel.org>, Sami Tolvanen
+ <samitolvanen@google.com>, linux-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, linux-modules@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+References: <20251105142319.1139183-1-pmladek@suse.com>
+ <20251105142319.1139183-2-pmladek@suse.com>
+Content-Language: en-US
+From: Daniel Gomez <da.gomez@kernel.org>
+Organization: kernel.org
+In-Reply-To: <20251105142319.1139183-2-pmladek@suse.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Nov 03, 2025 at 11:09:22PM +0100, Jiri Olsa wrote:
-> Currently we don't get stack trace via ORC unwinder on top of fgraph exit
-> handler. We can see that when generating stacktrace from kretprobe_multi
-> bpf program which is based on fprobe/fgraph.
+On 05/11/2025 15.23, Petr Mladek wrote:
+> Add a helper function for reading the optional "build_id" member
+> of struct module. It is going to be used also in
+> ftrace_mod_address_lookup().
 > 
-> The reason is that the ORC unwind code won't get pass the return_to_handler
-> callback installed by fgraph return probe machinery.
+> Use "#ifdef" instead of "#if IS_ENABLED()" to match the declaration
+> of the optional field in struct module.
 > 
-> Solving this by creating stack frame in return_to_handler expected by
-> ftrace_graph_ret_addr function to recover original return address and
-> continue with the unwind.
-> 
-> Also updating the pt_regs data with cs/flags/rsp which are needed for
-> successful stack retrieval from ebpf bpf_get_stackid helper.
->  - in get_perf_callchain we check user_mode(regs) so CS has to be set
->  - in perf_callchain_kernel we call perf_hw_regs(regs), so EFLAGS/FIXED
->     has to be unset
-> 
-> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> ---
->  arch/x86/include/asm/ftrace.h |  5 +++++
->  arch/x86/kernel/ftrace_64.S   |  8 +++++++-
->  include/linux/ftrace.h        | 10 +++++++++-
->  3 files changed, 21 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/ftrace.h b/arch/x86/include/asm/ftrace.h
-> index 93156ac4ffe0..b08c95872eed 100644
-> --- a/arch/x86/include/asm/ftrace.h
-> +++ b/arch/x86/include/asm/ftrace.h
-> @@ -56,6 +56,11 @@ arch_ftrace_get_regs(struct ftrace_regs *fregs)
->  	return &arch_ftrace_regs(fregs)->regs;
->  }
->  
-> +#define arch_ftrace_partial_regs(regs) do {	\
-> +	regs->flags &= ~X86_EFLAGS_FIXED;	\
-> +	regs->cs = __KERNEL_CS;			\
-> +} while (0)
+> Signed-off-by: Petr Mladek <pmladek@suse.com>
 
-I lost the plot. Why here and not in asm below?
-
->  #define arch_ftrace_fill_perf_regs(fregs, _regs) do {	\
->  		(_regs)->ip = arch_ftrace_regs(fregs)->regs.ip;		\
->  		(_regs)->sp = arch_ftrace_regs(fregs)->regs.sp;		\
-> diff --git a/arch/x86/kernel/ftrace_64.S b/arch/x86/kernel/ftrace_64.S
-> index 367da3638167..823dbdd0eb41 100644
-> --- a/arch/x86/kernel/ftrace_64.S
-> +++ b/arch/x86/kernel/ftrace_64.S
-> @@ -354,12 +354,17 @@ SYM_CODE_START(return_to_handler)
->  	UNWIND_HINT_UNDEFINED
->  	ANNOTATE_NOENDBR
->  
-> +	/* Restore return_to_handler value that got eaten by previous ret instruction. */
-> +	subq $8, %rsp
-> +	UNWIND_HINT_FUNC
-> +
->  	/* Save ftrace_regs for function exit context  */
->  	subq $(FRAME_SIZE), %rsp
->  
->  	movq %rax, RAX(%rsp)
->  	movq %rdx, RDX(%rsp)
->  	movq %rbp, RBP(%rsp)
-> +	movq %rsp, RSP(%rsp)
->  	movq %rsp, %rdi
->  
->  	call ftrace_return_to_handler
-> @@ -368,7 +373,8 @@ SYM_CODE_START(return_to_handler)
->  	movq RDX(%rsp), %rdx
->  	movq RAX(%rsp), %rax
->  
-> -	addq $(FRAME_SIZE), %rsp
-> +	addq $(FRAME_SIZE) + 8, %rsp
-> +
->  	/*
->  	 * Jump back to the old return address. This cannot be JMP_NOSPEC rdi
->  	 * since IBT would demand that contain ENDBR, which simply isn't so for
+Reviewed-by: Daniel Gomez <da.gomez@samsung.com>
