@@ -1,113 +1,111 @@
-Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88F6D26ED29
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  6 Nov 2025 22:25:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B042923B632;
+	Thu,  6 Nov 2025 22:28:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762467944; cv=none; b=cc2GJ13xPA861Yn4ERHntWAxpFXiWjmspOsXc2/oD9WwdhxcQIbp2gJMnWyXvRNo5QI+9nD9n7un2MivRNe72Fhf+FYUzL2R7/VfNCEYHhy5geAMO+C2QXFlicSSGyC3P9h8n4roT1rrl7VR98YFaWfEP8yn38pHho3B6XiqIBY=
+	t=1762468115; cv=none; b=oCEMKNQiBrK6YgEHc8vucWLk3wKdxSCjcg0PUTUVs9AU36opPwsoUAOVsO3ImrDOUt5MYygqJZLTzo3owMDgfd6hQrpze2CRnGbi+/V1u3Vyf4ml9r9poIbCmaQ5UCQRigQFlWzyAytSp2L9HCDql7oXjboBGRSQ4BsXzjNldTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762467944; c=relaxed/simple;
-	bh=c3Lbyug0B8LC1SBsLJoiXKtGPHiW/sjp9Vcgo1geYE0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=peAXLnxQU6QZ4O4pEIWThbiogXmc7TLvp9SLOtHyd+Uk2AnpTg3byw3zdhi5MGRbpoU4jX0cHA5SDR1696rugkkFrfMUN0vBlou+lE6O8vV0hLOdR5j4EUsYeUgicdGrDqnN4zJdvUQpYVXrHUQQheW2NTYs3d+V5Maz84jHg7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=cJLY+pre; arc=none smtp.client-ip=209.85.166.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1762468115; c=relaxed/simple;
+	bh=vOasg1vu4TSAI/iaAWfwlVZOlX3SdhTIegJguJYs6sQ=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=VADWNGZlPb65/1D6CnYAP6JN6XfcxX1Y2v7BakEwVEYNbGlwtlMK9Gj5o1xtrrcy2t+3neTYcJl5wXQLwgmUGQIMhg//rEppLxUdRcMkocVGiKWO+Gb8j0mWOiWvzga8i3mqqq962xlFu163xW4a0zH56eFLd1eGx2STl76VTws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RYEuS70f; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="cJLY+pre"
-Received: by mail-io1-f45.google.com with SMTP id ca18e2360f4ac-9486d008fdbso5012039f.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 06 Nov 2025 14:25:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1762467940; x=1763072740; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=nojW/UFZn0qbslE6OPGihe1YdAm5O0z1Y/2QE55GUN8=;
-        b=cJLY+preBPJZGlZ3bZLeWjLc3o+HaU47ziG3X/uFLhgBj5kWfPQ5mnUz+Lhfv6xlXt
-         YSwSPoHW0q+h21J0GQ5vJKj2GMcOZajq8Vh9+p54Z1v7G+urMj6SXnlXdRmAMY9RUpSP
-         8r0LG8SO2rtl06djLxZwPqibigGRqk+Jqi7jA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762467940; x=1763072740;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=nojW/UFZn0qbslE6OPGihe1YdAm5O0z1Y/2QE55GUN8=;
-        b=Bj6DNEFTikZxfNYTEOj6+AsKLwzH8TD0WWsaPQ2S6AX7hrU49wlUFw8cPRf8hzgrGF
-         UpE9QVx3jBw9Kb1ncpMlQQbkXtfim20s30hadEEYtdhg6wkIPx4Ek3SJHD9qrtH9zPIO
-         eHnO8tDEkuxNaYIDsn6Iw+Bf2+Hgec16f341n7PEBfdoVmpdpD6gRU1BYXAnhcutIbI+
-         rmwA9qU3BxGsMsc1BErWHZIT1wJYxqkbGHF72PKwKEN5gUoKk2k2eNiWY/Jk143WP1Ri
-         Bp8+AjH2yv7UAlal2eZbxNCID4pOkmU9cfsVeRE/TPt/G9nRBiyKEkOTdY6VeCOEb9ym
-         CeGA==
-X-Forwarded-Encrypted: i=1; AJvYcCWOfIZHnmYwYQKQ7yFdgajoX5dOL9L9PtDpCfcFP7FUZ+BCJ8TzRzimEQb9C88dxjoyIzOvkY4LAHVnFS95Dy/b2Tc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2RtndTWa8UY9J4iLWVPIEJa1zb6clz7FOetujkSOAdKaR0b+z
-	wLZzjU1XiNn8BBRdw1rqeQRMQJpjUww5CJJ09dYyUmAd88UBZS107j+g5oPtXG7VCm+vfYI3RO5
-	ulKcr
-X-Gm-Gg: ASbGncv7q7yit7V+VTgIoyYL3gXCXm+2QIjs9RhYBzsyl1aRah+lVUrZ16s4I0y6O4C
-	w5FqODZJ+FyD3SwP+yTvZGV9iDEw9NV6WgYoxQZi9WrkNB8NUpNTo5nWIa1Kl/6LWX7Qu8KfUy8
-	JWRPqnwRLO1GQv6LCkplxOmGIoxmxExA+60d0vWMYFAoUW/hV01dYzp4OzJ7zXxSlbMuvA4vb2T
-	B3/xj894VWnxSy48UZzBR5cRcotR3vMkxFC9LL6YWLin1UJQIvgKDJlKw/FzT4YyQTxVG3FKNKf
-	wm0VApfkRKOQPd+YGyD/RBl2rjzkd4wzJicf/Hr5GJn75aA4mQ5axIKM2+zY/Ini5yWpH+VIIFg
-	rTxECFgouE+gusO7A1NXCtqaa3L+Do++V+l1YCivgQXodg3CtwToqJh4K8jKKwDDFrNVS972xk2
-	WxhFZiEEzwGOOe
-X-Google-Smtp-Source: AGHT+IH0/3GJ4ianQvzZFggnE+5AVLuBjfhvBYg0/6brP9mgyD+T6dTbpZArnCJ/fgMPmOmGaPjq4Q==
-X-Received: by 2002:a05:6602:13ce:b0:945:aa01:bab7 with SMTP id ca18e2360f4ac-9488870ec4emr224804139f.5.1762467940613;
-        Thu, 06 Nov 2025 14:25:40 -0800 (PST)
-Received: from [192.168.1.14] ([38.175.187.108])
-        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-948889fae8dsm32195239f.0.2025.11.06.14.25.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Nov 2025 14:25:39 -0800 (PST)
-Message-ID: <0abf9a34-232b-4840-b592-672aa277509f@linuxfoundation.org>
-Date: Thu, 6 Nov 2025 15:25:38 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RYEuS70f"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C786DC4CEF7;
+	Thu,  6 Nov 2025 22:28:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762468115;
+	bh=vOasg1vu4TSAI/iaAWfwlVZOlX3SdhTIegJguJYs6sQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=RYEuS70fCfC04DY3wS8GsIv1D2SGndcdn0qdQT7XC8JXy18RAOwrCMI5nwNNV0IbI
+	 5eYfWbUU6F0Ntf0cAwBhZ8Zfk9ckvhOJMrGmqqshhqeegepRL0XsZcc1DnOJQrRtje
+	 DJ8ic3n4b3YShSntFBdI/EcDgcy96XOEOiIrhJHtJaxnpU15geXGrkWBZGO1g0uMzn
+	 43uON7qw0dMwsHneCGdUOsAk9N2npNs5eiTmvP7JwRiUz1BPyiE5Z6gWacLTVRQxRB
+	 foTwoxqFuh668pT8sd/jbVIrsXyC+6KDRuYDV8/ZaliiBe//yD8EhkKP4ZuLr70Wk9
+	 ADELuiM6r3s0w==
+Date: Fri, 7 Nov 2025 07:28:31 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Beau Belgrave <beaub@linux.microsoft.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] tracing: tprobe-events: Fixes for tprobe events
+Message-Id: <20251107072831.0bab75f9f2f95dd6d5a025ba@kernel.org>
+In-Reply-To: <20251106175513.GA174-beaub@linux.microsoft.com>
+References: <176244792552.155515.3285089581362758469.stgit@devnote2>
+	<20251106175513.GA174-beaub@linux.microsoft.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] selftests/tracing: Add basic test for trace_marker_raw
- file
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
- Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
- linux-kselftest@vger.kernel.org,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Shuah Khan <skhan@linuxfoundation.org>
-References: <20251014145149.3e3c1033@gandalf.local.home>
- <20251105084748.f34e1efec291d420a50a7b62@kernel.org>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20251105084748.f34e1efec291d420a50a7b62@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On 11/4/25 16:47, Masami Hiramatsu (Google) wrote:
-> On Tue, 14 Oct 2025 14:51:49 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
-> 
->> From: Steven Rostedt <rostedt@goodmis.org>
->>
->> Commit 64cf7d058a00 ("tracing: Have trace_marker use per-cpu data to read
->> user space") made an update that fixed both trace_marker and
->> trace_marker_raw. But the small difference made to trace_marker_raw had a
->> blatant bug in it that any basic testing would have uncovered.
->> Unfortunately, the self tests have tests for trace_marker but nothing for
->> trace_marker_raw which allowed the bug to get upstream.
->>
->> Add basic selftests to test trace_marker_raw so that this doesn't happen
->> again.
->>
-> 
-> Looks good to me.
-> 
-> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
+On Thu, 6 Nov 2025 17:55:13 +0000
+Beau Belgrave <beaub@linux.microsoft.com> wrote:
 
-Thanks. Applied to ksleftest next for 6.19-rc1.
+> On Fri, Nov 07, 2025 at 01:52:05AM +0900, Masami Hiramatsu (Google) wrote:
+> > Hi,
+> > 
+> > Beau reported tprobe example in the document does not work on 6.17
+> > kernel.
+> > 
+> 
+> Thanks! I've applied this series locally and tested this. Everything
+> works well in our environment.
 
-thanks,
--- Shuah
+Great!
+
+> 
+> > 
+> > And found it forgot to set tuser->tpoint before calling
+> > tracepoint_user_register() which calls
+> > tracepoint_probe_register_prio_may_exist(tuser->tpoint).
+> > To fix that, I just moved the tuser->tpoint setting line
+> > right before tracepoint_user_register() call [1/2].
+> > 
+> > I also found another issue when I switched enable and disable[2/2].
+> > 
+> 
+> Thanks! I've validated no bad dmesg, etc. and can delete the tprobe
+> without issues after we disable it.
+> 
+> > I hope this report will help someone to do similar debug by tracing.
+> > 
+> 
+> I will reference this, it's very useful.
+> 
+> For the series:
+> Tested-by: Beau Belgrave <beaub@linux.microsoft.com>
+> Reviewed-by: Beau Belgrave <beaub@linux.microsoft.com>
+
+Thanks!
+
+
+> 
+> Thanks,
+> -Beau
+> > Thank you,
+> > 
+> > ---
+> > 
+> > Masami Hiramatsu (Google) (2):
+> >       tracing: tprobe-events: Fix to register tracepoint correctly
+> >       tracing: tprobe-events: Fix to put tracepoint_user when disable the tprobe
+> > 
+> > 
+> >  kernel/trace/trace_fprobe.c |    7 ++++++-
+> >  1 file changed, 6 insertions(+), 1 deletion(-)
+> > 
+> > --
+> > Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
