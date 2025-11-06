@@ -1,79 +1,95 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37A5233A01E;
-	Thu,  6 Nov 2025 17:11:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95A0C34DCDE;
+	Thu,  6 Nov 2025 17:17:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762449114; cv=none; b=qMr7TcprMFVI/LF9JKyuW4U+WgFGtjZDGfnvR+ng0bQIKeZMNwLg4n7P97hopy3fObmSicUL2A0hB7ckn//leLucqGBsV3Uf8oaPC1Jk58fv7Nl/dTUbvxWgKFv+tdFXQ3DGX+Ms56mnarf6FSD73yzaGgYDaPhBWj9ehOFXr0Q=
+	t=1762449435; cv=none; b=nZbyxFH+M3oAgRMU/RUVw2KrHyNh+6Shv9IU0ea+9JDiSt0zKd3+ZJ0n4UxCfBU/C+e4DDSQw2NstuJaQn0nOD+LGkezZyEi9DVSPVFlHpm1xqB7N5+TVlR92TpSVx/iMTXe+2WPQo7W0TyVpWT1jmJDsHE9vtPMjgCJlx+DN8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762449114; c=relaxed/simple;
-	bh=xIVqNeX2vQl98nDZX5EYVxD9pnztau4qp782rYVbNtQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BmEyxbPELh5hD6r+n3Mkwa7v05zk8gy+iwmbgcnWpmTs73U02Y/HHXJtZ0Vj/PwuBmTtSrkipZZYXK9PcDod4Ar94lEu08+/qx1yc1mgWQVnXHi23ozHAtE6jDxkPqhRunxEIOVIrq2OdedKuLLdS8Fibdv6WShT+Yh/N1W6Bhc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf08.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay10.hostedemail.com (Postfix) with ESMTP id EBE89C01EB;
-	Thu,  6 Nov 2025 17:11:50 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id 38AEC2002A;
-	Thu,  6 Nov 2025 17:11:49 +0000 (UTC)
-Date: Thu, 6 Nov 2025 12:11:48 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH] tracing: Hide __NR_utimensat and _NR_mq_timedsend when
- not defined
-Message-ID: <20251106121148.20d14b47@gandalf.local.home>
-In-Reply-To: <20251107020104.fd7f43772d3b0ce5b28474bd@kernel.org>
-References: <20251104205310.00a1db9a@batman.local.home>
-	<20251107020104.fd7f43772d3b0ce5b28474bd@kernel.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1762449435; c=relaxed/simple;
+	bh=SA4V/ZR6NhYj5Ik5HVw5Qk4xRM67KxmOYySM+YaJR2o=;
+	h=Message-ID:Date:From:To:Cc:Subject; b=Two6FfkyL3RQ7HkM3+STRbZZMtCYOmaP289QmaIY0e3xZTpGEiycUPd6NkTt4U/gwk/oAncYIQ46A8C3hR80P1Jy5DyJr0EvtI7c2paYcORGztILggwFSqnMQgcOzFUuHAEEaC29+R6LnPQMdsMcibm1nSpeCB/Pdal0OzkUAAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hLTO5bHc; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hLTO5bHc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22864C4CEFB;
+	Thu,  6 Nov 2025 17:17:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762449435;
+	bh=SA4V/ZR6NhYj5Ik5HVw5Qk4xRM67KxmOYySM+YaJR2o=;
+	h=Date:From:To:Cc:Subject:From;
+	b=hLTO5bHcbO0nCWMmG0+COx6iFQCRAGkAhQavU7yfuZxC1F20F5GuTKEDHl7a04bPJ
+	 9Rr8OV+zZD51pkTf2mqnsqns5nP7gF4JavZQA8qSdrVFixiuGR3BekTRjljUXdCGIM
+	 xaYlKItU+oEy3uLV5vkpPZPmR4gMA+oEgjncp3p4SCt8id/ftjmFxAtvO9gJ7N99rv
+	 POqU4z5H6odWSPkV7Jp0spqShdfOsc7wIjDVENJQaVLIlb8aq1HV9a1RfO4rEzpd7c
+	 cZQuzMc0u2OaJgfPXe/AKkF3i0SmRxrOQzS/NkIX0mBwAOb5AIaz6XVCxcX+bbZWTn
+	 WPGFxvGPjKXjg==
+Received: from rostedt by gandalf with local (Exim 4.98.2)
+	(envelope-from <rostedt@kernel.org>)
+	id 1vH3bm-000000005Gt-1NOh;
+	Thu, 06 Nov 2025 12:17:14 -0500
+Message-ID: <20251106171557.011333928@kernel.org>
+User-Agent: quilt/0.68
+Date: Thu, 06 Nov 2025 12:15:57 -0500
+From: Steven Rostedt <rostedt@kernel.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH v2 0/3] tracing: Fix tracer options per instance
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 38AEC2002A
-X-Stat-Signature: tc3dfsinbeej7xia6t4co15p1naaqhkk
-X-Rspamd-Server: rspamout06
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+Y4Y/6tu+DGQCEsDJC1TYzwtpYv6c9FZs=
-X-HE-Tag: 1762449109-524249
-X-HE-Meta: U2FsdGVkX18yUNTfi/XCuHrwoNB8TpxA1IiQdoGKKgdzAChU4cDd81UqIgT22DEGvrf00b+XNFp571FAhQ0tqKTZMKfBfkF/mnoF4ZqD9hgb71cxoIh9maQwJCrFoOisbiK4WZFZEWKT4CM6SKgkc/7xiB7tXU3fYVMY02fCCHcUui06Mierywqc3XnCzt113S2hGGOuZwMN1i2ZUc7KoAskZDPgxM7E4/Z3YCJB3SwESk0vr7CiCrH6NXv/1yraK3eFo57Tiedmk+COIVlse5Ymt1kQoMNcVmdUYSuAEl/i1BBtHuN0pJy7nZP70ADJr7tCboMaIaIa2einbyvRUiUDGq7ItZh5DXahxSoAVM+PElVZw6BZWfep5fQ2ZZqmGUenekTa4QUKfHFSw48gyg==
 
-On Fri, 7 Nov 2025 02:01:04 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-> On Tue, 4 Nov 2025 20:53:10 -0500
-> Steven Rostedt <rostedt@goodmis.org> wrote:
-> 
-> > From: Steven Rostedt <rostedt@goodmis.org>
-> > 
-> > Some architectures (riscv-32) do not define __NR_utimensat and
-> > _NR_mq_timedsend, and fails to build when they are used.
-> > 
-> > Hide them in "ifdef"s.  
-> 
-> (I wonder we can expect that other __NR_* also defined on every
-> architecture?)
-> Anyway, this looks good to me.
+The tracers (like function and function_graph) have options that modify
+how they behave or how they are shown in the trace file. As these options
+were created before instances (multiple buffers), the flags variable that
+represent these options were global for the tracer.
 
-I built every arch when I did the first update. It just happened that my
-scripts to build riscv-32 was actually building riscv-64 :-p
+Now that a tracer may exist in multiple instances, having a global flags
+that kinda affect every instance of that tracer does not make sense.
+The reason it "kinda" affects them, is that the code that updates an option
+for an instance, only does the change for the tracer running in that instance.
+If a tracer is already running in another instance, it will not be affected.
+But because the option is saved in a global variable, if the tracer is stopped
+and restarted in the instance, then the option will take affect.
 
-So it's now all tested.
+Since each instance has its own interface to modify the options, the effect
+of an option should only affect the tracer for the given instance. This means
+that the state of the options for each tracer must be saved for each instance
+separately.
 
-> 
-> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
+Add a new struct tracers field in the trace_array (instance descriptor) that
+holds a descriptor that points to a tracer and contains its flags values. This
+will be used to see what tracers are available for an instance.
 
-Thanks!
+Now when a tracer option is modified for an instance, it only affects the
+tracer in that instance and not semi-effects the tracers in other instances.
 
--- Steve
+Changes since v1: https://lore.kernel.org/linux-trace-kernel/20251105161935.206093132@kernel.org/
+
+- Fixed build error for mistakes when selftests are configured in.
+  My initial tests didn't enable the self tests, and there was obvious
+  bugs in that part of the code.
+
+- The first two patches were fine, so I pulled them in and they were
+  clean ups for this series. They are not part of v2 (as I already have
+  them applied).
+
+Steven Rostedt (3):
+      tracing: Have tracer option be instance specific
+      tracing: Have function tracer define options per instance
+      tracing: Have function graph tracer define options per instance
+
+----
+ kernel/trace/trace.c                 | 219 ++++++++++++++++++++++++-----------
+ kernel/trace/trace.h                 |   3 +
+ kernel/trace/trace_functions.c       |  10 +-
+ kernel/trace/trace_functions_graph.c |  18 +--
+ 4 files changed, 168 insertions(+), 82 deletions(-)
