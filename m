@@ -1,80 +1,66 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DF7423BF91
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  6 Nov 2025 07:34:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7B6B305044
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  6 Nov 2025 08:52:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762414457; cv=none; b=Ok31dCiOJMYWYzhRiABTu/LArE4vEoN/+1X8oLK9ZVyaeXfOasPljCS70Ut4I/uVQbsiWMr2OsdKpqUKJDr8AAiJS8olJOcXzjQ2swWluMU6imLCMotWsITSaM6VjaGp7YUtcjbmyzL7dNVMGpVayQp3nK1Qak099dJIcASQmXg=
+	t=1762419139; cv=none; b=VnuoCuPjoeUSY00BMh9BH4wVuhy83owI1y/jjxW+Sb5FJlOktKR57vXdCqkvJi2uZqJhHYx3BpFWEVAd4LWlASoY4j7aRk5uM7mgD0x+xS1qc95mASOLYMhW8J0vP6Vn7zIpGDeCe3Ia0kR4n45iM+7r/qvdkEqde/QHleqHgz0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762414457; c=relaxed/simple;
-	bh=MsGtyMIowS4+C9cuRUXFotBKKtmy07vqEh5p7yblnu0=;
+	s=arc-20240116; t=1762419139; c=relaxed/simple;
+	bh=uZWUHAju2MgIXw9KZYZtVjROBBtGB95ey+E8B9tXjfs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ChObBV0lsZSX0VJHRgiqnHz7L+wrkF5pRKOKTGXtIVJbSEomA/9SVyJEw3oNRBuxJLcY0iGeVD7QYwpTnVYh/aQWEOYdnDuscU3JJ4fgRNCViYpmPpMb5cBTE8/L727fXskhsrxmc0v0w2zqfo6xj1TxyV7GZQhaB04q+hdckmw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=m/l+Gbcu; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=byERnwAU; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=m/l+Gbcu; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=byERnwAU; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 In-Reply-To:Content-Type; b=orxfBjGNFYGJw+DHCRN3SDcSyp6RKg6srG1AVlIciczS6hGYN1RZlxnAR8trSIHKxf5369WZJa4OcflTLiwKI0FWBYrHdNb3wli5CTXo5urfRfHmhgmmJjqMhujJnT8JA58eJ5Hmt2u1HBP3H1EYOHs//4Tcdis2LcuP+PPUf8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=esRVAz9Y; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="m/l+Gbcu";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="byERnwAU";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="m/l+Gbcu";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="byERnwAU"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 99BD71F393;
-	Thu,  6 Nov 2025 07:34:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1762414453; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=VDBJRtTvoCnnOc0aiPTPEM1lLCwtVnhfL4wKNZCuctQ=;
-	b=m/l+Gbcu99dJ1KN2hEmwymQtbmXYX6lN4C6ipStWtJkRQwTSS7/dS0fhwI7Ft1cnCaK2JF
-	Tz5hPEpQj+FPpBSKqruZvPGf+AtVo0XqyfV0SGLPQZpRz0GxVhWWkVB/Yleqmcgz5uCrC3
-	gA2bTfKoVK4Ixtoi5TKKSSQE3WXnOHE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1762414453;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=VDBJRtTvoCnnOc0aiPTPEM1lLCwtVnhfL4wKNZCuctQ=;
-	b=byERnwAUdy0WQaNPyPB6BUOm4kMKhlAKOQYUCBFfWWZPQ7yqz8SPAXTkWOhBAIxqGjvBqx
-	qGvvBQPdWO3oNlAw==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1762414453; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=VDBJRtTvoCnnOc0aiPTPEM1lLCwtVnhfL4wKNZCuctQ=;
-	b=m/l+Gbcu99dJ1KN2hEmwymQtbmXYX6lN4C6ipStWtJkRQwTSS7/dS0fhwI7Ft1cnCaK2JF
-	Tz5hPEpQj+FPpBSKqruZvPGf+AtVo0XqyfV0SGLPQZpRz0GxVhWWkVB/Yleqmcgz5uCrC3
-	gA2bTfKoVK4Ixtoi5TKKSSQE3WXnOHE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1762414453;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=VDBJRtTvoCnnOc0aiPTPEM1lLCwtVnhfL4wKNZCuctQ=;
-	b=byERnwAUdy0WQaNPyPB6BUOm4kMKhlAKOQYUCBFfWWZPQ7yqz8SPAXTkWOhBAIxqGjvBqx
-	qGvvBQPdWO3oNlAw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 69122139A9;
-	Thu,  6 Nov 2025 07:34:13 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 6P2pGHVPDGmHIgAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Thu, 06 Nov 2025 07:34:13 +0000
-Message-ID: <62fd6161-ea8f-4608-a536-b5b1baa19b7f@suse.cz>
-Date: Thu, 6 Nov 2025 08:34:13 +0100
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="esRVAz9Y"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-4298b865f84so337406f8f.3
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 06 Nov 2025 00:52:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1762419135; x=1763023935; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=kYov8Dro2WY5QRaXiqC8LkQqfmaaDXZFDPXwFxciwfo=;
+        b=esRVAz9Yygt3hCuqZcxTgYQDNVH6rKsFXX/4Qdu3oBhnLt2qzJ+mSipYUGcLYg96O3
+         8uvzXBlsvQCMvhD5Ld7pw5FxjXpmOdgC7TcgAeywG6sE+OloGd7nmuTdzPcUYrRuBmlW
+         vtd9IBArDUsG/hN2uL1WoUmzRVETiKq5jfKW3yW4kzHed9AqSpoWQ3R44gZ7PJXVq1ER
+         3U7T98Vo5pt4Ify0M8ja8o/LPdROBqF0i3UyHuva97V0lDQAIUEeXYiiNNQ8mz85rXaE
+         QSCb494oJZIVwv9z0sGV4fR1SJf5F/OuHxuiJTAcHHpyKKn3NPiGTswpLIC9OfN8+eFf
+         ESOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762419135; x=1763023935;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=kYov8Dro2WY5QRaXiqC8LkQqfmaaDXZFDPXwFxciwfo=;
+        b=JoLPhzdZ05PUgFPcXmhR+MNT950xm/1TYoMOG4ZHGVQ22eRWL1twtoAotfJgzIbwO2
+         mAxQiBtk1hZn+uSFDBWjiQwbu3KKbW4DQXwUq/h5OQCMKdZLDbxHVqnfKsxXrhPkkhch
+         gz15cvjh2EtQuqtXk7JxpTbOokcywdrBaHs1hsBnftF91BTMTVsXFM/i42MMJP4gTAWE
+         hTMh/ipq0nF5IQlBccvYx2dRUaTBTSfl5T7XbiWyR+Nu9QBhBLJt209lMVr/+q26S6sc
+         MBNhtdzv9E6+5xhLp9FAV107JeXUsiMWuZZwWm3feqGFu5G1UtrGQaneJum1FLJiPsUA
+         bQEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV+6R9W7JDNg4Tbofuq6HMH8f7L5lxFcLscOS+1AgvsFSRSCiBKc57Bzetja0lBggRel+mhGOHAAzL1NWVZ2SVKedc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwKIrMOgKXPmIeLnPeMHIp1/9Mk530NE5l8FauHwf1nGFgjrkVR
+	Wm7ZBIY7s/xRFfnz6WIfx+Tpp1myBrwc2KXofldMrGQ7sw1V3K1Xw41U6OwQmRua6Mk=
+X-Gm-Gg: ASbGncs7FMKMReCTn6WWX/gvRgmrwX447qw+u1Ahhnp7FoZOVfTqQtpG2jnA0ix94FV
+	qhRSjlObGtpwUctbo9QiQ3/DkSdPu9rZX1809k4LniEMi8Q5un1VZ7ioni+nNZ5ph6+FM64Qc9C
+	PhjYlxQx5doCHn0mPcww5e/hnwdSOJdecycc7oSu95q3hT39GZZNpD/JWU99sDQ63pHs3Fqax8K
+	NbdcnOWZI4ejD9UnRaNv7gD+qixDSd2etkSpyBuceGNxapOWc+cM8s1wXaXbILWaT3scui8hRbI
+	vPxaug/sWsQT/3XqQRYCznoKNZGd4tFqM0TY59QAIrRfsGl0oOv0X9swqWwWRNeQZQnRQOJJW+Q
+	pquWQfalGScvNB799a6yU6jb14rKqybPUGKkwZmrXl6uiBDJtgoGLt4v+x1901RH2CFaTbip6kc
+	OqWYPuc4dS8BAXvSrBWEM5yr8Jk3NeqIoZe4oirXfirqA=
+X-Google-Smtp-Source: AGHT+IE4MYS5Wr19GhmhPW/lBh+nmvHM2VktPve27rlVGZM2YL1NCWMjNGClTXGoBm0OuhF858f5xQ==
+X-Received: by 2002:a05:6000:22ca:b0:429:d4e1:cbb5 with SMTP id ffacd0b85a97d-429e32c4b31mr4414987f8f.8.1762419135296;
+        Thu, 06 Nov 2025 00:52:15 -0800 (PST)
+Received: from [10.100.51.209] (nat2.prg.suse.com. [195.250.132.146])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-429eb4771cfsm3584100f8f.30.2025.11.06.00.52.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Nov 2025 00:52:14 -0800 (PST)
+Message-ID: <1b7d3311-764f-4e73-94ca-74dd508d1113@suse.com>
+Date: Thu, 6 Nov 2025 09:52:13 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -82,153 +68,37 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] mm: introduce VM_MAYBE_GUARD and make visible for
- guard regions
+Subject: Re: [PATCH 1/6] module: Add helper function for reading
+ module_buildid()
+To: Petr Mladek <pmladek@suse.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Alexei Starovoitov
+ <ast@kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
+ Kees Cook <kees@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ John Fastabend <john.fastabend@gmail.com>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Luis Chamberlain <mcgrof@kernel.org>, Daniel Gomez <da.gomez@kernel.org>,
+ Sami Tolvanen <samitolvanen@google.com>, linux-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, linux-modules@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+References: <20251105142319.1139183-1-pmladek@suse.com>
+ <20251105142319.1139183-2-pmladek@suse.com>
 Content-Language: en-US
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Pedro Falcato <pfalcato@suse.de>,
- Andrew Morton <akpm@linux-foundation.org>, Jonathan Corbet <corbet@lwn.net>,
- David Hildenbrand <david@redhat.com>,
- "Liam R . Howlett" <Liam.Howlett@oracle.com>, Mike Rapoport
- <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Jann Horn <jannh@google.com>, linux-kernel@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, Andrei Vagin <avagin@gmail.com>,
- Barry Song <21cnbao@gmail.com>
-References: <cover.1761756437.git.lorenzo.stoakes@oracle.com>
- <7de40603015dee82970f5d37332a6d5af7532063.1761756437.git.lorenzo.stoakes@oracle.com>
- <xnsn5rfqigbm5ryjtbf2rtfotneiwygzesvyfdxiqrzlyzljdr@tmbht4ggnjcv>
- <61ae955e-310d-488e-b350-59bb809f06e1@lucifer.local>
- <c736tssdw3z57kamh6eqc23gr575q375n2o2nnszih64afnaf7@zwbqremsbhwf>
- <053f3a04-9195-4f8d-8959-42e0c3ba077b@lucifer.local>
- <72ee2324-d599-44b6-92ce-ed0afafed78f@suse.cz>
- <3ae457cd-6c18-4870-a617-7f937b107cb4@suse.cz>
- <29c388b0-df71-4905-b434-ad7c3d5030ce@lucifer.local>
-From: Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; keydata=
- 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
- m6M14QORSWTLRg==
-In-Reply-To: <29c388b0-df71-4905-b434-ad7c3d5030ce@lucifer.local>
+From: Petr Pavlu <petr.pavlu@suse.com>
+In-Reply-To: <20251105142319.1139183-2-pmladek@suse.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[21];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[suse.de,linux-foundation.org,lwn.net,redhat.com,oracle.com,kernel.org,google.com,suse.com,goodmis.org,efficios.com,vger.kernel.org,kvack.org,gmail.com];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:mid,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Flag: NO
-X-Spam-Score: -4.30
 
-On 11/5/25 20:48, Lorenzo Stoakes wrote:
-> On Thu, Oct 30, 2025 at 07:47:34PM +0100, Vlastimil Babka wrote:
->> On 10/30/25 19:31, Vlastimil Babka wrote:
->> > On 10/30/25 17:43, Lorenzo Stoakes wrote:
->> >
->> > Could we use MADVISE_VMA_READ_LOCK mode (would be actually an improvement
->> > over the current MADVISE_MMAP_READ_LOCK), together with the atomic flag
->> > setting? I think the places that could race with us to cause RMW use vma
->> > write lock so that would be excluded. Fork AFAICS unfortunately doesn't (for
->> > the oldmm) and it probably would't make sense to start doing it. Maybe we
->> > could think of something to deal with this special case...
->>
->> During discussion with Pedro off-list I realized fork takes mmap lock for
->> write on the old mm, so if we kept taking mmap sem for read, then vma lock
->> for read in addition (which should be cheap enough, also we'd only need it
->> in case VM_MAYBE_GUARD is not yet set), and set the flag atomicaly, perhaps
->> that would cover all non-bening races?
->>
->>
+On 11/5/25 3:23 PM, Petr Mladek wrote:
+> Add a helper function for reading the optional "build_id" member
+> of struct module. It is going to be used also in
+> ftrace_mod_address_lookup().
 > 
-> So thinking about this again, taking mmap read lock will exclude any VMA write
-> locks (which must hold mmap write lock), so no need to additionally take VMA
-> read lock.
+> Use "#ifdef" instead of "#if IS_ENABLED()" to match the declaration
+> of the optional field in struct module.
+> 
+> Signed-off-by: Petr Mladek <pmladek@suse.com>
+Reviewed-by: Petr Pavlu <petr.pavlu@suse.com>
 
-Right. Of course it would be nice if we could later also replace the mmap
-read lock with vma read lock. Hopefully should be feasible because
-MADV_DONTNEED can do it and guard ranges perform similar kind of operations
-(with more complex page table handling necessary, IIRC but that should
-hopefully be still fine with vma read lock).
-
-It's obviously not in scope of the series here, maybe just to keep in mind
-if that next step will be compatible with anything done here.
-> Also as mentioned later in thread, the invocation of vma_needs_copy() is
-> performed under VMA write lock (and this mmap write lock) so no need to read
-> atomically there either.
-> 
-> As per Pedro, we can treat other races as benign.
-> 
-> Merge/Split etc. are done under VMA write lock so there's no race that matters
-> there.
-> 
-> The only other place we even care about this flag in is for /proc/$pid/smaps,
-> but there it'd be benign as you'd happen not to observe the flag being set up at
-> the point at which a concurrent guard region install is happening - something
-> that you could race with _anyway_.
-
-Right.
-
-> As Pedro says, remaining cases where you read flags would be benign, as the
-> readers should never observe a meaningful torn read being a bitmap and given
-> this flag only matters on fork and smaps.
-> 
-> So I think just having something that sets atomically with an allow list is
-> fine, but making that very strict so literally just this flag is allowed
-> (currently).
-Ack.
+-- 
+Thanks,
+Petr
