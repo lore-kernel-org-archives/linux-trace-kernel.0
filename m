@@ -1,91 +1,150 @@
-Received: from mail-m155101.qiye.163.com (mail-m155101.qiye.163.com [101.71.155.101])
+Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D586531B132;
-	Thu,  6 Nov 2025 12:01:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.71.155.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39D43326D75
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  6 Nov 2025 12:15:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762430507; cv=none; b=pXSxpqSPdYP6mHAYjsNm7diNTidFum7aYtqebW97zxd4OUBZtjYS3aB09U4xrpu14EnYfcI8OlYarj4mH55a/eyZMLkhK/xAjeNN+qMNpkEJtkNn1fKoIfNIQuL87WbP311y477fDM4Fl4/lKWQWVXB8JkrjoiBgcstJyrolsRY=
+	t=1762431315; cv=none; b=uY6/RiW4yQ9B/kxyk40AGdj+ah5RV7xYg3uWakxenbNVqLYKsH21X3BeRrQXWqJUpk9vRmk6wgmrFAyl7/0RtxdaXy+O3LHzDEE3TKuHeGZDqcQjrLqTKSAMrV/6YbC3lhu9itQRKScxo/crn376pilw1JhFUFxePsauqsPW3uE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762430507; c=relaxed/simple;
-	bh=H/Vp3jGJtE3T3rZp+6TX08PYprQhv3Yxrwcst2nUeQI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZNwX5KV5D3z7OBtzxld3nJ+X3le0P5qgZB2fQ2/TusWi0l9XLucjYIoFCwTzgND48/Q50hoHA/9ZBX9UB8sWh0ncNs+n4cs1uf2x/YSEfgPbKWnhthA+SI0GzfhiiNssaRuMuq9S6AA8lnJCW+PiALOgFKx7vN4+7SHAnxsntKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=seu.edu.cn; spf=pass smtp.mailfrom=seu.edu.cn; dkim=pass (1024-bit key) header.d=seu.edu.cn header.i=@seu.edu.cn header.b=E+7TssNw; arc=none smtp.client-ip=101.71.155.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=seu.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=seu.edu.cn
+	s=arc-20240116; t=1762431315; c=relaxed/simple;
+	bh=eesYonv8VDWpDiw9NEHAmnwjEfPu25SCd58POVgRTe4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bNY8pqLOWDOaDG2KRXqUkVpxqXhhLgiR0Xd3lSGchRvcDMac2O+LfPUhuwlWcdQjAn+RCM+NfYzL0pAmMzIXKFOAunDqn8rfW79t5lqc5NTeKcvFp6gjsPXh1JKz/nL/ds4+PFTzr7nx+y28Nt5t/WJBRpdM/zeGm42IrS4TM0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=tnWSirdF; arc=none smtp.client-ip=95.215.58.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=seu.edu.cn header.i=@seu.edu.cn header.b="E+7TssNw"
-Received: from LAPTOP-N070L597.localdomain (unknown [223.112.146.162])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 28a5e7f1a;
-	Thu, 6 Nov 2025 20:01:35 +0800 (GMT+08:00)
-From: Zilin Guan <zilin@seu.edu.cn>
-To: rostedt@goodmis.org
-Cc: mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	jianhao.xu@seu.edu.cn,
-	Zilin Guan <zilin@seu.edu.cn>
-Subject: [PATCH] tracing: Fix memory leaks in create_field_var()
-Date: Thu,  6 Nov 2025 12:01:32 +0000
-Message-Id: <20251106120132.3639920-1-zilin@seu.edu.cn>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="tnWSirdF"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1762431301;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eesYonv8VDWpDiw9NEHAmnwjEfPu25SCd58POVgRTe4=;
+	b=tnWSirdFFSVXM/0R3H3QU2mNgbWL80tcOOVOs8i481KTTl14rVX3G6d67N2+maOdHGRIIx
+	bxVqPvb1fPzBnZjlNde5Sr8T1phS2vyLE/mnE9B+pKq/U0EhlbG+YQAk5hvmlQIiu9/B7l
+	BXPCfJ1/R/BxJgace2+tqyfM5djOovU=
+From: Menglong Dong <menglong.dong@linux.dev>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+ Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Menglong Dong <menglong8.dong@gmail.com>,
+ Alexei Starovoitov <ast@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>,
+ John Fastabend <john.fastabend@gmail.com>,
+ Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>,
+ Eduard <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
+ Matt Bobrowski <mattbobrowski@google.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Leon Hwang <leon.hwang@linux.dev>, jiang.biao@linux.dev,
+ bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+ linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
+Subject:
+ Re: [PATCH bpf-next v3 4/7] bpf,x86: add tracing session supporting for
+ x86_64
+Date: Thu, 06 Nov 2025 20:14:46 +0800
+Message-ID: <3660175.iIbC2pHGDl@7950hx>
+In-Reply-To:
+ <CAADnVQ+ZuQS_RSFL8ThrDkZwSygX2Rx49LBAcMpiv3y4nnYunQ@mail.gmail.com>
+References:
+ <20251026030143.23807-1-dongml2@chinatelecom.cn>
+ <CAEf4BzZcrWCyC3DhNoefJsWNUhE46_yu0d3XyJZttQ8sRRpyag@mail.gmail.com>
+ <CAADnVQ+ZuQS_RSFL8ThrDkZwSygX2Rx49LBAcMpiv3y4nnYunQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Tid: 0a9a590b291d03a1kunm10bc8d337a49e4
-X-HM-MType: 10
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCTktJVhpMGR1CSENNGkIaTFYeHw5VEwETFhoSFy
-	QUDg9ZV1kYEgtZQVlJSUhVSkpJVUpPTVVKTUlZV1kWGg8SFR0UWUFZT0tIVUpLSUJDQ0xVSktLVU
-	tZBg++
-DKIM-Signature: a=rsa-sha256;
-	b=E+7TssNwR6IXuCuiKe6G8nGJej7TbG8x9gxapdOpVKf/WWslRFK0ItNXac43H0zYYJVT6fUire15FZlU8INSxfP5OPT5e7edQx///atee3ZgGYuljFsiQqZXn2zATkbfUQBqUVQWEZq4GNB2RsAwBhKxRTy5YgOCS+JJUOl1y6s=; s=default; c=relaxed/relaxed; d=seu.edu.cn; v=1;
-	bh=YVMR0g0cDtjX+fzNvdLc7QoWgdFkMrlNlCpeZgAOK/k=;
-	h=date:mime-version:subject:message-id:from;
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+X-Migadu-Flow: FLOW_OUT
 
-The function create_field_var() allocates memory for 'val' through
-create_hist_field() inside parse_atom(), and for 'var' through
-create_var(), which in turn allocates var->type and var->var.name
-internally. Simply calling kfree() to release these structures will
-result in memory leaks.
+On 2025/11/6 06:00, Alexei Starovoitov wrote:
+> On Wed, Nov 5, 2025 at 9:30=E2=80=AFAM Andrii Nakryiko
+> <andrii.nakryiko@gmail.com> wrote:
+> >
+> > On Tue, Nov 4, 2025 at 6:43=E2=80=AFPM Alexei Starovoitov
+> > <alexei.starovoitov@gmail.com> wrote:
+> > >
+> > > On Tue, Nov 4, 2025 at 4:40=E2=80=AFPM Andrii Nakryiko
+> > > <andrii.nakryiko@gmail.com> wrote:
+> > > >
+[......]
+> > >
+> > > Instead of all that I have a different suggestion...
+> > >
+> > > how about we introduce this "session" attach type,
+> > > but won't mess with trampoline and whole new session->nr_links.
+> > > Instead the same prog can be added to 'fentry' list
+> > > and 'fexit' list.
+> > > We lose the ability to skip fexit, but I'm still not convinced
+> > > it's necessary.
+> > > The biggest benefit is that it will work for existing JITs and trampo=
+lines.
+> > > No new complex asm will be necessary.
+> > > As far as writable session_cookie ...
+> > > let's add another 8 byte space to bpf_tramp_run_ctx
+> > > and only allow single 'fsession' prog for a given kernel function.
+> > > Again to avoid changing all trampolines.
+> > > This way the feature can be implemented purely in C and no arch
+> > > specific changes.
+> > > It's more limited, but doesn't sound that the use case for multiple
+> > > fsession-s exist. All this is on/off tracing. Not something
+> > > that will be attached 24/7.
+> >
+> > I'd rather not have a feature at all, than have a feature that might
+> > or might not work depending on circumstances I don't control. If
+> > someone happens to be using fsession program on the same kernel
+> > function I happen to be tracing (e.g., with retsnoop), random failure
+> > to attach would be maddening to debug.
+>=20
+> fentry won't conflict with fsession. I'm proposing
+> the limit of fsession-s to 1. Due to stack usage there gotta be
 
-Use destroy_hist_field() to properly free 'val', and explicitly release
-the memory of var->type and var->var.name before freeing 'var' itself.
+I think Andrii means that the problem is the limiting the fsession to
+1, which can make we attach fail if someone else has already attach
+it.
 
-Fixes: 02205a6752f22 ("tracing: Add support for 'field variables'")
-Signed-off-by: Zilin Guan <zilin@seu.edu.cn>
----
- kernel/trace/trace_events_hist.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+If we want to limit the stack usage, I think what we should limit is
+the count of the fsession progs that use session cookie, rather the
+count of the fsessions.
 
-diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index 1d536219b624..6bfaf1210dd2 100644
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -3272,14 +3272,16 @@ static struct field_var *create_field_var(struct hist_trigger_data *hist_data,
- 	var = create_var(hist_data, file, field_name, val->size, val->type);
- 	if (IS_ERR(var)) {
- 		hist_err(tr, HIST_ERR_VAR_CREATE_FIND_FAIL, errpos(field_name));
--		kfree(val);
-+		destroy_hist_field(val, 0);
- 		ret = PTR_ERR(var);
- 		goto err;
- 	}
- 
- 	field_var = kzalloc(sizeof(struct field_var), GFP_KERNEL);
- 	if (!field_var) {
--		kfree(val);
-+		destroy_hist_field(val, 0);
-+		kfree_const(var->type);
-+		kfree(var->var.name);
- 		kfree(var);
- 		ret =  -ENOMEM;
- 		goto err;
--- 
-2.34.1
+I understand your idea that add the prog to both fentry and fexit list
+instead of introducing a BPF_TRAMP_SESSION in the progs_hlist.
+However, we still have to modify the arch stuff, as we need to store the
+"bpf_fsession_return". What's more, it's a little complex to add a prog
+to both fentry and fexit list, as bpf_tramp_link doesn't support such
+operation.
+
+So I think it's more clear to keep current logic. As Andrii suggested,
+we can reuse the nr_args, and no more room will be used on the
+stack, except the session cookies.
+
+As for the session cookies, how about we limit its number? For example,
+only 4 session cookies are allowed to be used on a target, which
+I think should be enough.
+
+I can remove the "fexit skipping" part to make the trampoline simpler
+if you prefer, which I'm OK, considering the optimization I'm making
+to the origin call in x86_64.
+
+Therefore, the logic won't be complex, just reserve the room for the
+session cookies and the call to invoke_bpf().
+
+Thanks!
+Menglong Dong
+
+> a limit anyway. I say, 32 is really the max. which is 256 bytes
+> for cookies plus all the stack usage for args, nr_args, run_ctx, etc.
+> Total of under 512 is ok.
+> So tooling would have to deal with the limit regardless.
+>=20
+
+
+
 
