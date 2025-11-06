@@ -1,165 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B996C16D9C2;
-	Thu,  6 Nov 2025 00:34:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 565FB1E3DF2
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  6 Nov 2025 01:16:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762389292; cv=none; b=lEB1akVzS3TtgVvaw2EtnNikS5cSdlQIYdoUFnqt5YW0CWV7G8xxN/Y/t0VEFQ7TNhzjo3x99hEZ3xlRc9iBY5QHnbzfdq6Ef4gpr49oMWgtHCPzPDM1bofGCwt/x52HAA+DxnaoWwstX8IX7om0iTE0Za0EfYSPP9P1KhXcwjs=
+	t=1762391764; cv=none; b=nKbGk3hZhnhTmP/Y2pMxavMptqYWoScgDzyQBXYTPPbxLyYmLRupWzf3Kxh9/ncHLmD2GQYrw2WdIG6V0oQbBN9sF4pdid7u2TDnuif6QFL+atxUKXv2wRiQWrdVNdZgjyi5E5CNaqN3Ez1XTe7BU7zspiOCmLI+Fjz73wXgc7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762389292; c=relaxed/simple;
-	bh=Ql+H8A5+GMaJkE7Zpv0T+FJ4Id1te48MhyUNdLkw2bg=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=aGxySezGCLFrjRdXrKqewujuk5E3W8xMTGX0buQRGCUZekmGHLdSK4fz1B3mzs4EaaRqkqIVQ3xXvUpooD4vsJge+CnZnTHDpiRfWcfznEJwkAKK31+DMx9UA00XLT1nEVid4x5nEcCWFHUD9HWzG/L5T1NEc9p+3iT9O72CmlQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XJdfXsBf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762391764; c=relaxed/simple;
+	bh=sScwC5J9gcWja5lx4I7NtcSR1bu3zkgvzjbBKH7PL+w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SlUbYZEZocu9YgP3/2FB9fZiZI2IjauxEAG5rHSVf91OkvUEQMIT3fi6HILGripQ+pjUAzc0SOVH3fDpO5HxzNWz9GHmWCPs7kSQ9QKB5vYnEyq6y7nyObXqo22FTlpALVHu+qT8/mrTx6hTR0npaHKVX5H/a1LmBJdMFLQ+spE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jzHhomhd; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XJdfXsBf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A231C116D0;
-	Thu,  6 Nov 2025 00:34:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762389292;
-	bh=Ql+H8A5+GMaJkE7Zpv0T+FJ4Id1te48MhyUNdLkw2bg=;
-	h=Date:From:To:Cc:Subject:References:From;
-	b=XJdfXsBfMyWba9m8O6tTXKDOt+ytO0b+ClVo6ci4aPOsR402kL9boqh9dZrbQaUNu
-	 820+AaZ7WqAc97BCKM8rjOG6NburzUeFZ/NF9oQiAN0Ukfma3jsGERnEk+4eP2JCyF
-	 Lj9HEjT4EumBTV+KICYB5lRuAjAYNsVXHLrOfpMjgIcSeZS8AgtI90RqJIbDfg6Z10
-	 hFmayU4NLGA6uttJj250xPjwsklTp/S829OnWhlKDWNq6rOBRar8s/rhjpqax7jKMs
-	 vMir1Yi8mbLTiJnS9QrM8NTjY1ez1g/OdRuQpPgYj13PejDBf6ns54gxbfY2ciARPv
-	 RyTg13yMxw1YQ==
-Received: from rostedt by gandalf with local (Exim 4.98.2)
-	(envelope-from <rostedt@kernel.org>)
-	id 1vGnxu-000000019J6-0744;
-	Wed, 05 Nov 2025 19:35:02 -0500
-Message-ID: <20251106003501.890298562@kernel.org>
-User-Agent: quilt/0.68
-Date: Wed, 05 Nov 2025 19:33:26 -0500
-From: Steven Rostedt <rostedt@kernel.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH 2/2] tracing: Use switch statement instead of ifs in set_tracer_flag()
-References: <20251106003324.964761749@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jzHhomhd"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3ed20bdfdffso385621f8f.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 05 Nov 2025 17:16:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1762391761; x=1762996561; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sScwC5J9gcWja5lx4I7NtcSR1bu3zkgvzjbBKH7PL+w=;
+        b=jzHhomhdlmEYwqLjhmAXzuXfkTf5v4CSwXo//4ZyBq9xVNkM9vpS9ew4ydjmLEf9B3
+         d8aj9kpMsDkNgGmHARrjtdHUix3Yk6wtNOiTI4RxPtkQFlF72KWeAE15CqXRzuF8KbFU
+         UTEW+BibjFbqAOZ1+eN03eR/grg0rabxwhVlQ2jo3J+zxLFfsMpovouJ1TjbQJ8wyaff
+         oYueo90g+4bws/ncaFTcMngKGAyUApM3e8otzBk75txVwSmobTxHM5C6Y55Ce31IZerQ
+         D0XDYNWhJzAvNpg/jw6M0N52MAyiCmdch43TKcpoPDIqwIhmx9uKWJxHmnBs1+5opBph
+         Tgcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762391761; x=1762996561;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sScwC5J9gcWja5lx4I7NtcSR1bu3zkgvzjbBKH7PL+w=;
+        b=Uf9kLJMhCjqQYNqRgR4R2MEnZ64reNazebBVESoLbrVz4G4zpHZSlc7xmXeNB6D69/
+         MdTxTa5ALvXNs2T71p664dpHYszSUfKZQUsi7QKlUhy320nlmzQdoNJHTLL1RqNJMt1l
+         J8tFgWg2RYy9wwxYakDsSI/hr0XyDmWUXDLy15gSdOIo7ZP6eUE2aUnsNO6BDxmwC0C3
+         unUIBhqi4iV65lUjNMX359UMBrZrcUzjbljJh+Q7DSORNnT0bd8upO8dzS6oTDF4/+AE
+         Gj7ecnBKAKUzqrvS3bLgrvsJEYqKgOpnwNtesFK0tMYd5pl5e2rpWU6hD1zLP9v6qODr
+         ednw==
+X-Forwarded-Encrypted: i=1; AJvYcCVPhOWFa8NJiBGe9XQnGPwYuYfrRZgxUU5/15+dJ2C806dlPtiq5IdjOJlRZtzY1zgC9TWAJ/zbBB8Ij9/aCf7gibo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxxfn5xtalpcXXltAhDoO7NV8o3NiOpb8NuvRimZjGm24YYM/hc
+	L9h9d/6COFtuwc1OeOsaCBjOpQ8hhs4hDAzQinJtpe/Uq36fwFie42gQU4IzS+BG1n0laciJk0b
+	sYODmnaytsZUqlfiIXXzvg6rKyUYzb+I=
+X-Gm-Gg: ASbGncvx/Du2r+3ReFDkQHCbPwAFfPoYpAOzDmZRWQ0/5EGfr1Zd82OixQm9hRFoZpu
+	SGZz+rkPnymeScXFZiXzvsIHOdL7I8/qKhDQ4bW5SSRx+sXjQO9PnsQRlJvOKs9OHrri84imv4L
+	Fc2j0qvfuYxhUD961S/+vC1GXM7brEIJZ1ziYR/gQe+IfFxbJcJhN7tCC6GpJGARRP5Sxl2LtBq
+	Q9gwzBKO0Qy24Uujd+yd6cmmgFnfrHbrA0DQnvn54PkBCjVmcVG91ye5sOY/2dR3lmDLe5RigBV
+	lNtdmlxgyYPXp4WH9w==
+X-Google-Smtp-Source: AGHT+IHh2sDshLNmqDEmy7BbJ5cTdAvuAOdPqoxaY2sjpbctDzSymGzC6WNsncDo/8BxKIayC4E9em6MkxZeBSmo1Ts=
+X-Received: by 2002:a05:6000:258a:b0:427:526:16aa with SMTP id
+ ffacd0b85a97d-429e3311c0dmr4604870f8f.58.1762391760385; Wed, 05 Nov 2025
+ 17:16:00 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+References: <20251104215405.168643-1-jolsa@kernel.org> <CAADnVQJRv+2NT2TGd7nXbOtx_Cnsg=kOJuikOtL9aEdUVmwvag@mail.gmail.com>
+ <20251105100359.2e6eeae5@gandalf.local.home> <20251105180436.369bef64@gandalf.local.home>
+In-Reply-To: <20251105180436.369bef64@gandalf.local.home>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Wed, 5 Nov 2025 17:15:49 -0800
+X-Gm-Features: AWmQ_bm6CvZzMiP5kwn6kO1G2SRE_SOftXbYCMJwbyDdpH0jhvVrL384rgUxlOc
+Message-ID: <CAADnVQLHz5dwn=m5XeA7qc=jvD7Nf96drmKGDsx+o7zK9-GHWg@mail.gmail.com>
+Subject: Re: [PATCHv3 0/4] x86/fgraph,bpf: Fix ORC stack unwind from return probe
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Jiri Olsa <jolsa@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>, bpf <bpf@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>, 
+	Yonghong Song <yhs@fb.com>, Song Liu <songliubraving@fb.com>, Andrii Nakryiko <andrii@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Wed, Nov 5, 2025 at 3:04=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org>=
+ wrote:
+>
+> On Wed, 5 Nov 2025 10:03:59 -0500
+> Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> > Let me run this through my tests and then I'll give you an Acked-by and=
+ you
+> > can take it through your tree.
+>
+> It passed.
+>
+> Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-The "mask" passed in to set_trace_flag() has a single bit set. The
-function then checks if the mask is equal to one of the option masks and
-performs the appropriate function associated to that option.
-
-Instead of having a bunch of "if ()" statement, use a "switch ()"
-statement instead to make it cleaner and a bit more optimal.
-
-No function changes.
-
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/trace.c | 38 +++++++++++++++++++++++---------------
- 1 file changed, 23 insertions(+), 15 deletions(-)
-
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 07bd10808277..8460bec9f263 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -5251,11 +5251,13 @@ int trace_keep_overwrite(struct tracer *tracer, u64 mask, int set)
- 
- int set_tracer_flag(struct trace_array *tr, u64 mask, int enabled)
- {
--	if ((mask == TRACE_ITER(RECORD_TGID)) ||
--	    (mask == TRACE_ITER(RECORD_CMD)) ||
--	    (mask == TRACE_ITER(TRACE_PRINTK)) ||
--	    (mask == TRACE_ITER(COPY_MARKER)))
-+	switch (mask) {
-+	case TRACE_ITER(RECORD_TGID):
-+	case TRACE_ITER(RECORD_CMD):
-+	case TRACE_ITER(TRACE_PRINTK):
-+	case TRACE_ITER(COPY_MARKER):
- 		lockdep_assert_held(&event_mutex);
-+	}
- 
- 	/* do nothing if flag is already set */
- 	if (!!(tr->trace_flags & mask) == !!enabled)
-@@ -5266,7 +5268,8 @@ int set_tracer_flag(struct trace_array *tr, u64 mask, int enabled)
- 		if (tr->current_trace->flag_changed(tr, mask, !!enabled))
- 			return -EINVAL;
- 
--	if (mask == TRACE_ITER(TRACE_PRINTK)) {
-+	switch (mask) {
-+	case TRACE_ITER(TRACE_PRINTK):
- 		if (enabled) {
- 			update_printk_trace(tr);
- 		} else {
-@@ -5283,9 +5286,9 @@ int set_tracer_flag(struct trace_array *tr, u64 mask, int enabled)
- 			if (printk_trace == tr)
- 				update_printk_trace(&global_trace);
- 		}
--	}
-+		break;
- 
--	if (mask == TRACE_ITER(COPY_MARKER)) {
-+	case TRACE_ITER(COPY_MARKER):
- 		update_marker_trace(tr, enabled);
- 		/* update_marker_trace updates the tr->trace_flags */
- 		return 0;
-@@ -5296,10 +5299,12 @@ int set_tracer_flag(struct trace_array *tr, u64 mask, int enabled)
- 	else
- 		tr->trace_flags &= ~mask;
- 
--	if (mask == TRACE_ITER(RECORD_CMD))
-+	switch (mask) {
-+	case TRACE_ITER(RECORD_CMD):
- 		trace_event_enable_cmd_record(enabled);
-+		break;
- 
--	if (mask == TRACE_ITER(RECORD_TGID)) {
-+	case TRACE_ITER(RECORD_TGID):
- 
- 		if (trace_alloc_tgid_map() < 0) {
- 			tr->trace_flags &= ~TRACE_ITER(RECORD_TGID);
-@@ -5307,24 +5312,27 @@ int set_tracer_flag(struct trace_array *tr, u64 mask, int enabled)
- 		}
- 
- 		trace_event_enable_tgid_record(enabled);
--	}
-+		break;
- 
--	if (mask == TRACE_ITER(EVENT_FORK))
-+	case TRACE_ITER(EVENT_FORK):
- 		trace_event_follow_fork(tr, enabled);
-+		break;
- 
--	if (mask == TRACE_ITER(FUNC_FORK))
-+	case TRACE_ITER(FUNC_FORK):
- 		ftrace_pid_follow_fork(tr, enabled);
-+		break;
- 
--	if (mask == TRACE_ITER(OVERWRITE)) {
-+	case TRACE_ITER(OVERWRITE):
- 		ring_buffer_change_overwrite(tr->array_buffer.buffer, enabled);
- #ifdef CONFIG_TRACER_MAX_TRACE
- 		ring_buffer_change_overwrite(tr->max_buffer.buffer, enabled);
- #endif
--	}
-+		break;
- 
--	if (mask == TRACE_ITER(PRINTK)) {
-+	case TRACE_ITER(PRINTK):
- 		trace_printk_start_stop_comm(enabled);
- 		trace_printk_control(enabled);
-+		break;
- 	}
- 
- 	return 0;
--- 
-2.51.0
-
-
+Thanks. Applied.
+Will send to Linus in a day or two.
