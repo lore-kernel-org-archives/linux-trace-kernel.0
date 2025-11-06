@@ -1,85 +1,159 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55F041D516C;
-	Thu,  6 Nov 2025 01:20:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C94CA2264A0
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  6 Nov 2025 02:53:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762392052; cv=none; b=UMXiJ5vCuFH6icTA3AaA81O2K+cJMX/ynO9/8PEQEkpaLaFtypr6FQB+8U4of1KR/jzZjg9OkZ2+yuf6g0xmOsfWRNnt+pei7l3S4tBrVc6w+vYnU22IbhrAOxbtOpAUSIC+nQajWLUFXs+aveHnI1vMsEknpfnGRAYWXbHa1pU=
+	t=1762397618; cv=none; b=dOJqlx1mEbG2cZXAkAEZf1GD0/58gixdIX1KyJuc9h+3KX8A3KYMcVu7JUzuO0vFw+kWMoGCe8EYX6XUgNIY7PwC1a8DBXCObiD5GGprwFNIwAaWIoRIvcNUTq6Uw08byQD8eAIzINZcraxMNxNE4YQibJ7z0VWv8gDCL5qspv0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762392052; c=relaxed/simple;
-	bh=fnCJ3fHkf39nF5QDMGMpREHRnkfR2a4jDBxy5ufe7nw=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=flfYww3M7pTcEHm7r7V1gNrCHJMz4YW68amwJX97Nl3S65dSc2ZdBuM/HIVG4gprPa4UShXkBLi0SCoN/Xtcmyyw8Rm//pNBWA47bT5SfYAJBBnthx4WmEURXQ+sBtH2ZuARjEufP/m0nqvrALs12VPs1uMhxWasSQ3Ilr2kVAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aU+6w9wW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762397618; c=relaxed/simple;
+	bh=qmfm4nTYXj4d67e/ZFdu+FoHVdOEgEHWQ62Qb0rfoMs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KI6LkCTyZ8n2vmvLeWpNuJYpshcRHdWRgV/GAI1yun2Szgrqfz/FlfGY8jDtYdjbP8KrEqR3UPmpGd8AzH3eTVlWSI6gnH9yNJye34kex/01T7rpXO809E7WL1re3XbPLsgZzeNm8jZHTYFTqepPwuiDXmVjpx+NjbdhCfCBnVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=llymclVl; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aU+6w9wW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE7D0C4CEF5;
-	Thu,  6 Nov 2025 01:20:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762392051;
-	bh=fnCJ3fHkf39nF5QDMGMpREHRnkfR2a4jDBxy5ufe7nw=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=aU+6w9wWtKBfeaOgn6feoeov7w6UYveEPZVhWb9x3PXuh6RwkTyUU/vud6NYJF68V
-	 xOGClbqPB9M+5e8O2fWXf9kxPzimeg2XB9amWEdBYqUEifG1oCTxj485bQRcIxQ7dl
-	 KlFkB1qinwRzn9vRziNEQW6BZq4YyHxDr15L+ZhZ3Sxxg+MiMZE8J4bvMwPrB+Hh4t
-	 I7KwmPR7pjfsTK9JSPL+knizURIBeGbNyiRWGoAgWPzXOyiC5kKswiZbU+nbznOxLp
-	 4QFxBg9PZBGiW5JNtiM8Pc5D43d64XmDEstblqS7KQy2EgXBxFByrYG1B1ANUMbjY9
-	 hHgE/EyHkHsAA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33CEF380AAF5;
-	Thu,  6 Nov 2025 01:20:26 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="llymclVl"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3f99ac9acc4so343982f8f.3
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 05 Nov 2025 18:53:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1762397615; x=1763002415; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bcQMsNO0O8rvC7OlsNCiFi+ASZdXsyJZBbfNsI/gMNY=;
+        b=llymclVl7fm/bsXzFmbKyOsGMBeHkOZJpK10Os23fNjfC7kLtvFM9tWARrgkeKb3GG
+         4yu581xERMKR8xG61CvdBkK4jam/0CVFFrNXi/lkk0HSG+ttOugnDFEPTm/quU2T2RS5
+         CAqpIAjTYFNSXeEmQi4i4Nh5y436lKmNPelwCvW5iPh8q7h4eQWPFJKl0Xozzyx6K6ts
+         9f8CNiot6umhp2+q8g9HASs0wlH0AFdZKYQUbSuJnt63t2e15ruhFwvOPRtlWrO3HnJL
+         ExL3xT3ovg/jH+poCfgbaLAewhpktYOMPwv1fKBcetcXDPQQeXlgI1dwUrQrJmd6KWrv
+         qdDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762397615; x=1763002415;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bcQMsNO0O8rvC7OlsNCiFi+ASZdXsyJZBbfNsI/gMNY=;
+        b=B8mHZYxGZo+Q6jjlYqXap7si13m5ZpCK+MlENnJ3HaBcrk53FGeCHmaKEAtq1m0X0Q
+         tb37F8KmTc15tnpk7JTQzAuR8CDQovZmg/I7cV/7Rwty96gOyWJrKNFL9sUTNK4bM/UA
+         2pz6GEtqkM10BHTlYYDngFofokgL/SNAnOo6fPzlfld9okE7p7agfipV0+7Dn8X+Npgc
+         nWydaZYHOhRbQ0qXb2hHDYdUbKwUcFZZf3/aVEf4JULkw5LS4zISYk/t0RcGFAcOn0nk
+         TMNuzab9kyXJhfQOWKwg02QJeTuavSAcINz+opUVzWULUwEUVqV28aRdqtiaEa/YOzS4
+         VFhw==
+X-Forwarded-Encrypted: i=1; AJvYcCWi7SW67gieSdeGO3+XT17JP/dY2OWAKNZwL5N822dc417gLhk/hXiOCEDUT/j8dzc7/S+QE2a/Ci/ymOGA27FKoOo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/+OVV2WcV2dv8c1Q3oulsvyTqNrTsFwCpxn5R+gWqE8wKY+XS
+	nwlGT4xYji5zJQVc5qBmp66F9R7Imww258QlJvmIrXIgUZAGwTdYnF4qmeMcxiKU5p1HMvTOzqV
+	WA4CYzbdyhVYrtMByKkwuHsS1zg+pAvI=
+X-Gm-Gg: ASbGncuXFvJMvUrqMMsq30niBlM09sXIxTlrl45DRgXb/B90uBwClPDHviaffToia0e
+	Tksq7IRttaf1J3AIRZO+vsguNOGPnRPDxo8vyA9WpwydV/Qn3gC1vmp5TVcQm4vqLX0VoIX79MV
+	npVz1iOAflsJLYvMwDXrXouB0qU5jBsKxq6x+C0SNQcbYcX1TWtyvTyf3UGdYqKZWN4nHZW3NJY
+	kl+WWgtfBVHO09CAITWg9EDvaX3KYjm0tTy1+qxppaquykNEGP5lbwIsSUDYAfsWroc6s7LBjJc
+	dESwH2GsrZ9fd6sExqMDvn4OMmD6
+X-Google-Smtp-Source: AGHT+IFgHo9WZJKTS4D4CZPHMvUuqKgcTvl9SJ9/dfT8HptvgBagea4p9NuA+sU2B75qOpkO7ninSQ0FH88nOttOqyg=
+X-Received: by 2002:a05:6000:2287:b0:429:d6dc:ae3e with SMTP id
+ ffacd0b85a97d-429e3313344mr4775045f8f.49.1762397614770; Wed, 05 Nov 2025
+ 18:53:34 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCHv3 0/4] x86/fgraph,bpf: Fix ORC stack unwind from return
- probe
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <176239202500.3822711.7940487908688704004.git-patchwork-notify@kernel.org>
-Date: Thu, 06 Nov 2025 01:20:25 +0000
-References: <20251104215405.168643-1-jolsa@kernel.org>
-In-Reply-To: <20251104215405.168643-1-jolsa@kernel.org>
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: mhiramat@kernel.org, rostedt@goodmis.org, jpoimboe@kernel.org,
- peterz@infradead.org, bpf@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, x86@kernel.org, yhs@fb.com,
- songliubraving@fb.com, andrii@kernel.org
+References: <20251105142319.1139183-1-pmladek@suse.com> <20251105142319.1139183-4-pmladek@suse.com>
+In-Reply-To: <20251105142319.1139183-4-pmladek@suse.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Wed, 5 Nov 2025 18:53:23 -0800
+X-Gm-Features: AWmQ_bmqzU40z-SC7k7ETvJcX5sVEBdPvjsWiXW7M4e2QXc-RoIMyuEO7uyuVL0
+Message-ID: <CAADnVQ+kbQ4uwtKjD1DRCf702v0rEthy6hU4COAU9CyU53wTHg@mail.gmail.com>
+Subject: Re: [PATCH 3/6] kallsyms/bpf: Set module buildid in bpf_address_lookup()
+To: Petr Mladek <pmladek@suse.com>
+Cc: Petr Pavlu <petr.pavlu@suse.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Luis Chamberlain <mcgrof@kernel.org>, Daniel Gomez <da.gomez@kernel.org>, 
+	Sami Tolvanen <samitolvanen@google.com>, LKML <linux-kernel@vger.kernel.org>, 
+	bpf <bpf@vger.kernel.org>, linux-modules@vger.kernel.org, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello:
+On Wed, Nov 5, 2025 at 6:24=E2=80=AFAM Petr Mladek <pmladek@suse.com> wrote=
+:
+>
+> Make bpf_address_lookup() compatible with module_address_lookup()
+> and clear the pointer to @modbuildid together with @modname.
+>
+> It is not strictly needed because __sprint_symbol() reads @modbuildid
+> only when @modname is set. But better be on the safe side and make
+> the API more safe.
+>
+> Fixes: 9294523e3768 ("module: add printk formats to add module build ID t=
+o stacktraces")
+> Signed-off-by: Petr Mladek <pmladek@suse.com>
+> ---
+>  include/linux/filter.h | 15 +++++++++++----
+>  kernel/kallsyms.c      |  4 ++--
+>  2 files changed, 13 insertions(+), 6 deletions(-)
+>
+> diff --git a/include/linux/filter.h b/include/linux/filter.h
+> index f5c859b8131a..b7b95840250a 100644
+> --- a/include/linux/filter.h
+> +++ b/include/linux/filter.h
+> @@ -1362,12 +1362,18 @@ struct bpf_prog *bpf_prog_ksym_find(unsigned long=
+ addr);
+>
+>  static inline int
+>  bpf_address_lookup(unsigned long addr, unsigned long *size,
+> -                  unsigned long *off, char **modname, char *sym)
+> +                  unsigned long *off, char **modname,
+> +                  const unsigned char **modbuildid, char *sym)
+>  {
+>         int ret =3D __bpf_address_lookup(addr, size, off, sym);
+>
+> -       if (ret && modname)
+> -               *modname =3D NULL;
+> +       if (ret) {
+> +               if (modname)
+> +                       *modname =3D NULL;
+> +               if (modbuildid)
+> +                       *modbuildid =3D NULL;
+> +       }
+> +
+>         return ret;
+>  }
+>
+> @@ -1433,7 +1439,8 @@ static inline struct bpf_prog *bpf_prog_ksym_find(u=
+nsigned long addr)
+>
+>  static inline int
+>  bpf_address_lookup(unsigned long addr, unsigned long *size,
+> -                  unsigned long *off, char **modname, char *sym)
+> +                  unsigned long *off, char **modname,
+> +                  const unsigned char **modbuildid, char *sym)
+>  {
+>         return 0;
+>  }
+> diff --git a/kernel/kallsyms.c b/kernel/kallsyms.c
+> index 9455e3bb07fc..efb12b077220 100644
+> --- a/kernel/kallsyms.c
+> +++ b/kernel/kallsyms.c
+> @@ -374,8 +374,8 @@ static int kallsyms_lookup_buildid(unsigned long addr=
+,
+>         ret =3D module_address_lookup(addr, symbolsize, offset,
+>                                     modname, modbuildid, namebuf);
+>         if (!ret)
+> -               ret =3D bpf_address_lookup(addr, symbolsize,
+> -                                        offset, modname, namebuf);
+> +               ret =3D bpf_address_lookup(addr, symbolsize, offset,
+> +                                        modname, modbuildid, namebuf);
 
-This series was applied to bpf/bpf.git (master)
-by Alexei Starovoitov <ast@kernel.org>:
-
-On Tue,  4 Nov 2025 22:54:01 +0100 you wrote:
-> hi,
-> sending fix for ORC stack unwind issue reported in here [1], where
-> the ORC unwinder won't go pass the return_to_handler function and
-> we get no stacktrace.
-> 
-> Sending fix for that together with unrelated stacktrace fix (patch 1),
-> so the attached test can work properly.
-> 
-> [...]
-
-Here is the summary with links:
-  - [PATCHv3,1/4] Revert "perf/x86: Always store regs->ip in perf_callchain_kernel()"
-    https://git.kernel.org/bpf/bpf/c/6d08340d1e35
-  - [PATCHv3,2/4] x86/fgraph,bpf: Fix stack ORC unwind from kprobe_multi return probe
-    https://git.kernel.org/bpf/bpf/c/20a0bc10272f
-  - [PATCHv3,3/4] selftests/bpf: Add stacktrace ips test for kprobe_multi/kretprobe_multi
-    https://git.kernel.org/bpf/bpf/c/c9e208fa93cd
-  - [PATCHv3,4/4] selftests/bpf: Add stacktrace ips test for raw_tp
-    https://git.kernel.org/bpf/bpf/c/3490d29964bd
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+The initial bpf_address_lookup() 8 years ago was trying
+to copy paste args and style of kallsyms_lookup().
+It was odd back then. This change is doubling down on the wrong thing.
+It's really odd to pass a pointer into bpf_address_lookup()
+so it zero initializes it.
+bpf ksyms are in the core kernel. They're never in modules.
+Just call __bpf_address_lookup() here and remove the wrapper.
