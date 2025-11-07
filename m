@@ -1,33 +1,34 @@
 Received: from smtpout.efficios.com (smtpout.efficios.com [158.69.130.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0EFD320385;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0F7C334368;
 	Fri,  7 Nov 2025 17:22:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=158.69.130.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762536152; cv=none; b=H76u4TkTP+UAF8cUPpJun49hakrw/mCfBz9RbfAzFb+zYPudUjT02ZBBcU2PDpC2NJuHaSZzeMdyEX5N0Kg89LH4cAEuV/hU+1yVKzsrS6xzq0hOi8POiJttNrytkQ3bjs0o/9Mo5cjU5yYnzn0ckAZx+l87X2FuvrNZH5C0xEg=
+	t=1762536153; cv=none; b=jy5ShCdLVzMDfvQYCtCF6Q/+KG1pjHoyj3QikBdo1Ia6A+Nfb7y2US3L4ukvc5Ih4rx4v7UrjMjM5nuGvO7wcBiLL+2Vev+7DgEGQxM/IFIGnI792Jg4U02RySt0fChfFt6/NQtRpA30qOJNYTGlTZjoowMayN1z5JPt143t5u4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762536152; c=relaxed/simple;
-	bh=R+lSyLXFW2u75JqNLAnL3NcWWk2deJimJ56WaUWleNA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Hz3tIeH+bl7CP8E4tAMiawFhDFBrbr7WL+5scfnA5TM/XLbQVHpXwjorSiyNmT3Wtp3YViNGqbPJjLpa30tQY1n8CxQWxkz4LFcj24dlGQrMzjjCeoRtpsRBspNwStIXuZTmFOj2aEWgEqYZBxt6uj1mmkRBKTHxrJOXGkyVhDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=ODiVoDZH; arc=none smtp.client-ip=158.69.130.18
+	s=arc-20240116; t=1762536153; c=relaxed/simple;
+	bh=Bblux92M5/0KYDmi4f5bxJWtGn77rTnGjWs+Nth9KrM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ZV0q6Ia1BppMu2fdD6umagC78exiLNMeHelTkOyPSbV61CDnKpSqXsPWz/J1wkY0ABBmOQNyhDeupX/2mxGGl+L8xKwqlSLGHMP4Z5LTVa0jLgDt+ATu1m5uWxrl8nLh4IUTvrB/cWJNm9vxWSyHkoJwfEhHIGMlaxrfs36jsZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=I/M1e6C0; arc=none smtp.client-ip=158.69.130.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="ODiVoDZH"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="I/M1e6C0"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-	s=smtpout1; t=1762536143;
-	bh=wcANZRjMX6eDeb9g7LnxYqx3PUgZNlqK6yxyYeMGIZw=;
-	h=From:To:Cc:Subject:Date:From;
-	b=ODiVoDZHi1ShVyo4MfksyRzqOOGsV+QFDx9HmO2x0gJAku4KgQXSlfV/3bCIm+Rmz
-	 w+sAgGUx19M9VBk2S/gib9z9Cs9DTYzAVB7fU3DFMCdSbu/S+ycLP3ddMFq5vvJmgz
-	 rlAKyuypbjFbmpxY2+/8ryaNqrIfOV7WczJfRGaSbdaXUhjl/tLW66ulphgWoXzwmJ
-	 cJfBJdIEU+DiUV2CmtqgJEa+kaZg10AryGai/xuXrw97OqPzWLf0vFgGPB6cdNm8h+
-	 YsTARl4pJ9ZTglFho9wqBxUQ9Khjsz/Imuygqf8Z9q4jo4WsALDv7/VthFOGnrv0Uj
-	 6+S4vcLTDwyUw==
+	s=smtpout1; t=1762536144;
+	bh=26XTliWJQALV0nAIFdTB4ISdGV5rnIP0dpWzQxw2eGI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=I/M1e6C0LmKENIfdQOD0lBMbNXArenQdfNXNHXduSMUa6KfP2S7PCmBlYmAFCWA8p
+	 Jr8M9IrGBWstMO0TIN960Z2I24Zw4L8XJ5QZDtJBBm5cy2l9vowaWYrCdC4LK6Drmd
+	 KVmbCjcG3TYRLvZXs14eB/dB423n26pkp7tz0G0owmcwQdPYuwSTv/VhXiraQe9rPJ
+	 r2HhXlYUJ75DrlCmz+fu5N3RlEHznn9qhjBiP9v2bcy2mGK05yg/uz7M7Xa6ByI8tZ
+	 QFofzq/U2I5XXDlfeofloZeAAEtVhLrMHQ4cST2X4fSHPNkzoY7SzZKEGdPjppewCj
+	 vDwE+adyreoTQ==
 Received: from thinkos.internal.efficios.com (unknown [IPv6:2606:6d00:100:4000:cacb:9855:de1f:ded2])
-	by smtpout.efficios.com (Postfix) with ESMTPSA id 4d35Tq5MmHzHX4;
-	Fri, 07 Nov 2025 12:22:23 -0500 (EST)
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4d35Tr34nFzKQy;
+	Fri, 07 Nov 2025 12:22:24 -0500 (EST)
 From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 To: Shakeel Butt <shakeel.butt@linux.dev>,
 	Mateusz Guzik <mjguzik@gmail.com>,
@@ -64,10 +65,12 @@ Cc: linux-kernel@vger.kernel.org,
 	Matthew Wilcox <willy@infradead.org>,
 	Baolin Wang <baolin.wang@linux.alibaba.com>,
 	Aboorva Devarajan <aboorvad@linux.ibm.com>
-Subject: [RFC PATCH v8 0/2] mm: Fix OOM killer inaccuracy on large many-core systems
-Date: Fri,  7 Nov 2025 12:22:14 -0500
-Message-Id: <20251107172216.515754-1-mathieu.desnoyers@efficios.com>
+Subject: [RFC PATCH v8 2/2] mm: Fix OOM killer inaccuracy on large many-core systems
+Date: Fri,  7 Nov 2025 12:22:16 -0500
+Message-Id: <20251107172216.515754-3-mathieu.desnoyers@efficios.com>
 X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20251107172216.515754-1-mathieu.desnoyers@efficios.com>
+References: <20251107172216.515754-1-mathieu.desnoyers@efficios.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -76,26 +79,60 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Introduce hierarchical per-cpu counters and use them for rss tracking to
-fix the per-mm RSS tracking which has become too inaccurate for OOM
-killer purposes on large many-core systems.
+Use hierarchical per-cpu counters for rss tracking to fix the per-mm RSS
+tracking which has become too inaccurate for OOM killer purposes on
+large many-core systems.
+
+The following rss tracking issues were noted by Sweet Tea Dorminy [1],
+which lead to picking wrong tasks as OOM kill target:
+
+  Recently, several internal services had an RSS usage regression as part of a
+  kernel upgrade. Previously, they were on a pre-6.2 kernel and were able to
+  read RSS statistics in a backup watchdog process to monitor and decide if
+  they'd overrun their memory budget. Now, however, a representative service
+  with five threads, expected to use about a hundred MB of memory, on a 250-cpu
+  machine had memory usage tens of megabytes different from the expected amount
+  -- this constituted a significant percentage of inaccuracy, causing the
+  watchdog to act.
+
+  This was a result of f1a7941243c1 ("mm: convert mm's rss stats into
+  percpu_counter") [1].  Previously, the memory error was bounded by
+  64*nr_threads pages, a very livable megabyte. Now, however, as a result of
+  scheduler decisions moving the threads around the CPUs, the memory error could
+  be as large as a gigabyte.
+
+  This is a really tremendous inaccuracy for any few-threaded program on a
+  large machine and impedes monitoring significantly. These stat counters are
+  also used to make OOM killing decisions, so this additional inaccuracy could
+  make a big difference in OOM situations -- either resulting in the wrong
+  process being killed, or in less memory being returned from an OOM-kill than
+  expected.
+
+Here is a (possibly incomplete) list of the prior approaches that were
+used or proposed, along with their downside:
+
+1) Per-thread rss tracking: large error on many-thread processes.
+
+2) Per-CPU counters: up to 12% slower for short-lived processes and 9%
+   increased system time in make test workloads [1]. Moreover, the
+   inaccuracy increases with O(n^2) with the number of CPUs.
+
+3) Per-NUMA-node counters: requires atomics on fast-path (overhead),
+   error is high with systems that have lots of NUMA nodes (32 times
+   the number of NUMA nodes).
 
 The approach proposed here is to replace this by the hierarchical
 per-cpu counters, which bounds the inaccuracy based on the system
 topology with O(N*logN).
 
-Relevant delta since v7: Initialize the subsystem earlier in
-start_kernel() so it is ready before any mm is created. Introduce and
-use a precise sum positive API to cover the scenario where an unlucky
-precise sum iteration happens concurrently with a sequence of counter
-updates that makes it observe a negative sum.
+commit 82241a83cd15 ("Baolin Wang <baolin.wang@linux.alibaba.com>")
+introduced get_mm_counter_sum() for precise /proc memory status queries.
+Implement it with percpu_counter_tree_precise_sum() since it is not a
+fast path and precision is preferred over speed.
 
-Testing and feedback are welcome!
-
-Thanks,
-
-Mathieu
-
+Link: https://lore.kernel.org/lkml/20250331223516.7810-2-sweettea-kernel@dorminy.me/ # [1]
+Link: https://lore.kernel.org/lkml/20250704150226.47980-1-mathieu.desnoyers@efficios.com/
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: "Paul E. McKenney" <paulmck@kernel.org>
 Cc: Steven Rostedt <rostedt@goodmis.org>
@@ -130,22 +167,195 @@ Cc: Mateusz Guzik <mjguzik@gmail.com>
 Cc: Matthew Wilcox <willy@infradead.org>
 Cc: Baolin Wang <baolin.wang@linux.alibaba.com>
 Cc: Aboorva Devarajan <aboorvad@linux.ibm.com>
+---
+Changes since v7:
+- Use precise sum positive API to handle a scenario where an unlucky
+  precise sum iteration would observe negative counter values due to
+  concurrent updates.
 
-Mathieu Desnoyers (2):
-  lib: Introduce hierarchical per-cpu counters
-  mm: Fix OOM killer inaccuracy on large many-core systems
+Changes since v6:
+- Rebased on v6.18-rc3.
+- Implement get_mm_counter_sum as percpu_counter_tree_precise_sum for
+  /proc virtual files memory state queries.
 
- include/linux/mm.h                  |  10 +-
- include/linux/mm_types.h            |   4 +-
- include/linux/percpu_counter_tree.h | 217 +++++++++++++++
- include/trace/events/kmem.h         |   2 +-
- init/main.c                         |   2 +
- kernel/fork.c                       |  32 ++-
- lib/Makefile                        |   1 +
- lib/percpu_counter_tree.c           | 392 ++++++++++++++++++++++++++++
- 8 files changed, 641 insertions(+), 19 deletions(-)
- create mode 100644 include/linux/percpu_counter_tree.h
- create mode 100644 lib/percpu_counter_tree.c
+Changes since v5:
+- Use percpu_counter_tree_approximate_sum_positive.
 
+Change since v4:
+- get_mm_counter needs to return 0 or a positive value.
+
+get_mm_counter_sum -> precise sum positive
+---
+ include/linux/mm.h          | 10 +++++-----
+ include/linux/mm_types.h    |  4 ++--
+ include/trace/events/kmem.h |  2 +-
+ kernel/fork.c               | 32 +++++++++++++++++++++-----------
+ 4 files changed, 29 insertions(+), 19 deletions(-)
+
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index d16b33bacc32..987069c0dccc 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -2679,33 +2679,33 @@ static inline bool get_user_page_fast_only(unsigned long addr,
+  */
+ static inline unsigned long get_mm_counter(struct mm_struct *mm, int member)
+ {
+-	return percpu_counter_read_positive(&mm->rss_stat[member]);
++	return percpu_counter_tree_approximate_sum_positive(&mm->rss_stat[member]);
+ }
+ 
+ static inline unsigned long get_mm_counter_sum(struct mm_struct *mm, int member)
+ {
+-	return percpu_counter_sum_positive(&mm->rss_stat[member]);
++	return percpu_counter_tree_precise_sum_positive(&mm->rss_stat[member]);
+ }
+ 
+ void mm_trace_rss_stat(struct mm_struct *mm, int member);
+ 
+ static inline void add_mm_counter(struct mm_struct *mm, int member, long value)
+ {
+-	percpu_counter_add(&mm->rss_stat[member], value);
++	percpu_counter_tree_add(&mm->rss_stat[member], value);
+ 
+ 	mm_trace_rss_stat(mm, member);
+ }
+ 
+ static inline void inc_mm_counter(struct mm_struct *mm, int member)
+ {
+-	percpu_counter_inc(&mm->rss_stat[member]);
++	percpu_counter_tree_add(&mm->rss_stat[member], 1);
+ 
+ 	mm_trace_rss_stat(mm, member);
+ }
+ 
+ static inline void dec_mm_counter(struct mm_struct *mm, int member)
+ {
+-	percpu_counter_dec(&mm->rss_stat[member]);
++	percpu_counter_tree_add(&mm->rss_stat[member], -1);
+ 
+ 	mm_trace_rss_stat(mm, member);
+ }
+diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+index 90e5790c318f..adb2f227bac7 100644
+--- a/include/linux/mm_types.h
++++ b/include/linux/mm_types.h
+@@ -18,7 +18,7 @@
+ #include <linux/page-flags-layout.h>
+ #include <linux/workqueue.h>
+ #include <linux/seqlock.h>
+-#include <linux/percpu_counter.h>
++#include <linux/percpu_counter_tree.h>
+ #include <linux/types.h>
+ #include <linux/bitmap.h>
+ 
+@@ -1119,7 +1119,7 @@ struct mm_struct {
+ 		unsigned long saved_e_flags;
+ #endif
+ 
+-		struct percpu_counter rss_stat[NR_MM_COUNTERS];
++		struct percpu_counter_tree rss_stat[NR_MM_COUNTERS];
+ 
+ 		struct linux_binfmt *binfmt;
+ 
+diff --git a/include/trace/events/kmem.h b/include/trace/events/kmem.h
+index 7f93e754da5c..91c81c44f884 100644
+--- a/include/trace/events/kmem.h
++++ b/include/trace/events/kmem.h
+@@ -442,7 +442,7 @@ TRACE_EVENT(rss_stat,
+ 		__entry->mm_id = mm_ptr_to_hash(mm);
+ 		__entry->curr = !!(current->mm == mm);
+ 		__entry->member = member;
+-		__entry->size = (percpu_counter_sum_positive(&mm->rss_stat[member])
++		__entry->size = (percpu_counter_tree_approximate_sum_positive(&mm->rss_stat[member])
+ 							    << PAGE_SHIFT);
+ 	),
+ 
+diff --git a/kernel/fork.c b/kernel/fork.c
+index 3da0f08615a9..e3dd00809cf3 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -133,6 +133,11 @@
+  */
+ #define MAX_THREADS FUTEX_TID_MASK
+ 
++/*
++ * Batch size of rss stat approximation
++ */
++#define RSS_STAT_BATCH_SIZE	32
++
+ /*
+  * Protected counters by write_lock_irq(&tasklist_lock)
+  */
+@@ -583,14 +588,12 @@ static void check_mm(struct mm_struct *mm)
+ 			 "Please make sure 'struct resident_page_types[]' is updated as well");
+ 
+ 	for (i = 0; i < NR_MM_COUNTERS; i++) {
+-		long x = percpu_counter_sum(&mm->rss_stat[i]);
+-
+-		if (unlikely(x)) {
+-			pr_alert("BUG: Bad rss-counter state mm:%p type:%s val:%ld Comm:%s Pid:%d\n",
+-				 mm, resident_page_types[i], x,
++		if (unlikely(percpu_counter_tree_precise_compare_value(&mm->rss_stat[i], 0) != 0))
++			pr_alert("BUG: Bad rss-counter state mm:%p type:%s val:%d Comm:%s Pid:%d\n",
++				 mm, resident_page_types[i],
++				 percpu_counter_tree_precise_sum(&mm->rss_stat[i]),
+ 				 current->comm,
+ 				 task_pid_nr(current));
+-		}
+ 	}
+ 
+ 	if (mm_pgtables_bytes(mm))
+@@ -673,6 +676,8 @@ static void cleanup_lazy_tlbs(struct mm_struct *mm)
+  */
+ void __mmdrop(struct mm_struct *mm)
+ {
++	int i;
++
+ 	BUG_ON(mm == &init_mm);
+ 	WARN_ON_ONCE(mm == current->mm);
+ 
+@@ -688,8 +693,8 @@ void __mmdrop(struct mm_struct *mm)
+ 	put_user_ns(mm->user_ns);
+ 	mm_pasid_drop(mm);
+ 	mm_destroy_cid(mm);
+-	percpu_counter_destroy_many(mm->rss_stat, NR_MM_COUNTERS);
+-
++	for (i = 0; i < NR_MM_COUNTERS; i++)
++		percpu_counter_tree_destroy(&mm->rss_stat[i]);
+ 	free_mm(mm);
+ }
+ EXPORT_SYMBOL_GPL(__mmdrop);
+@@ -1030,6 +1035,8 @@ static void mmap_init_lock(struct mm_struct *mm)
+ static struct mm_struct *mm_init(struct mm_struct *mm, struct task_struct *p,
+ 	struct user_namespace *user_ns)
+ {
++	int i;
++
+ 	mt_init_flags(&mm->mm_mt, MM_MT_FLAGS);
+ 	mt_set_external_lock(&mm->mm_mt, &mm->mmap_lock);
+ 	atomic_set(&mm->mm_users, 1);
+@@ -1083,15 +1090,18 @@ static struct mm_struct *mm_init(struct mm_struct *mm, struct task_struct *p,
+ 	if (mm_alloc_cid(mm, p))
+ 		goto fail_cid;
+ 
+-	if (percpu_counter_init_many(mm->rss_stat, 0, GFP_KERNEL_ACCOUNT,
+-				     NR_MM_COUNTERS))
+-		goto fail_pcpu;
++	for (i = 0; i < NR_MM_COUNTERS; i++) {
++		if (percpu_counter_tree_init(&mm->rss_stat[i], RSS_STAT_BATCH_SIZE, GFP_KERNEL_ACCOUNT))
++			goto fail_pcpu;
++	}
+ 
+ 	mm->user_ns = get_user_ns(user_ns);
+ 	lru_gen_init_mm(mm);
+ 	return mm;
+ 
+ fail_pcpu:
++	for (i--; i >= 0; i--)
++		percpu_counter_tree_destroy(&mm->rss_stat[i]);
+ 	mm_destroy_cid(mm);
+ fail_cid:
+ 	destroy_context(mm);
 -- 
 2.39.5
+
