@@ -1,201 +1,135 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D44082BDC34
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  7 Nov 2025 13:08:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F7352D3EF6
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  7 Nov 2025 13:15:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762520926; cv=none; b=b5y6x1ZfFuCu5Nlgp4zTzrFmkdBoSPic5Z+B4qWIMt9k9J6FTTXzIcib5U9RvR9XlchxkcR4CG/1+EB8Xfe2xGBtKoESpnjUUUj/VNN/FVk5oLv1vDZlKnBrI5SEryvQZ9JPPmLE1SACwQEW7+ReOOdP6Cw5ja1xWtsTYOjG9nc=
+	t=1762521305; cv=none; b=NbGJHQF2t/ewEwRQNEGio3uoTS3WHwS/VYaSBFNPsULD/x4VtUxuocOdSEBwtqglzepHtGmH+ZWj8d5CAAFE6+UpQtj52trKI0NMdgsXq5vsB9KUH3nbCDJgnHovJi+6Gu1WQHLFTV7pqaEmlnVevskPV6+Yx3lGvH+PlFtCa9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762520926; c=relaxed/simple;
-	bh=OWiEd8XbPv8RdYmPKuplSxpJVZGnRYjpmY5XLgep+8c=;
+	s=arc-20240116; t=1762521305; c=relaxed/simple;
+	bh=0mPhFFV27EI4HWkCT/K0CutZwM23pABS/zg6xhegD68=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n9wghAN7vEWHtetF9ra7Fk6D5JnNvQUaxzQp2KqF+x5fJ0oQVyxJYjDQR0BVBx7+Hf0sma+VB8QTC8HsVVLnA0o4ls+kCnA3NYTTpI6jKV3Q/ZzI0ipNclez3KrqUs7fvwavnVDIjBSVGBJxkRSNpQBfueIF91NxqD0Eg+eTw9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=BupN8VM9; arc=none smtp.client-ip=209.85.208.48
+	 Content-Type:Content-Disposition:In-Reply-To; b=CDZUUj7GyQsFCrI1Dgn9Q2wbLpd/nWsoRz9PDaX0s+DZGOltrFRzU+EDr0bvw5tGze9PYjZ+RhDEKgQvQPDdZ9h3GLeIRfc8O1722ht4OTonO1lrjxjps0Ofx0KFzbA35t54Isqw6sMrYm0cDOiLbKMjzo/8A5KfuvVteh6Zu74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=BlHoPCu3; arc=none smtp.client-ip=209.85.208.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="BupN8VM9"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-64080ccf749so1243912a12.2
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 07 Nov 2025 05:08:44 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="BlHoPCu3"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-64088c6b309so1273106a12.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 07 Nov 2025 05:15:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1762520923; x=1763125723; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=C1ywOlu3fOSK5EDS/96Lv9KyExdYs4hdjZJBrhwyZV0=;
-        b=BupN8VM9+coHpMkoRAxsJOTc5Rp4vj4FXlg+/oDipm87kfldmi9RZo4b2Ib1OXVSQb
-         E2avwPk3CHm88DmnhQAv6bB2WJFQqU6BDKEdzvMfoLwAuKNpCbsiiN3DCQPUN1NRVCjh
-         qa5SMJQh27m+8e1VL9EkmxPaPO3eoqVCvdfqGQAxswXjGAk2wGZTI1El88FuMAw+N1RX
-         y7CrHujXk5aTA1cbkBVPZvvHKXeXc5fWp8ezWBQXzi2LEC6MG2molG4R2me7EBjYz+qd
-         37ej3/IY4jqzfUZqZCfTDlIM71qH9EDqJPxhXEEobynZdXxUrlnI5xUq8r8T67mmoevH
-         os+w==
+        d=suse.com; s=google; t=1762521300; x=1763126100; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=8HZ8kO1EbOdno/Z6LWKvw9cCt6xKTq52Mcwxm+AjrMQ=;
+        b=BlHoPCu3NqtLtozYF0ZyHTBdobJJ/cANVGnsDwuY6T8dx2F6BpG8CLWuG2V1KWCPn9
+         rJqzhFhR33ZMV++LnBz96/RuLoQJElQKD/XgdMcwXWV7h9QKhE6GKnV5S15pYGxSNGqu
+         KqaXf2ahPz1ifbkNBO7u8j2yiZH6M0K6PrgMzHi6k6ovXdGBxghrOCwCc/pEwIl/Eo01
+         Pk2HH4fQOf3Bw6VYHGk0nxbI0DXzJSh5ufcLRQ9l6RwgF98tgxr22FjT0cjpknUAGNCF
+         BA2TawykZDjdpivWUQQk7vyA0EjOpZxziWhEOwjmij06OkYHzpG2iI9J48haI79hsRab
+         cxqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762520923; x=1763125723;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=C1ywOlu3fOSK5EDS/96Lv9KyExdYs4hdjZJBrhwyZV0=;
-        b=JgiJ7P79BxzbJSccIz+l32zbtZyg1bUog/bnEiUwxV40R2Q3ayAFWk04rcsqiCCT0Y
-         gmr9cp+AgJWIQAr2IvNjgKhXjJj4dQgsWnqWCTSAYXbbRk5dP3p6X8mKJreHuteZcbiq
-         +0ke7dBrP+ztvc6cTjk678mXjQqtddsltSOG6GMU88eoIqaE39kCiwlHt70h7wgkE6p0
-         3PcEOuDrN4hpBIoXKIh3PcjpM5XpLIQRNFrQHsUU935oQfQo4maPrgkdR6lmnwkLOGRY
-         zxvS+Sc6Ic+fkKxLAAIrIeewGrQk3NIcYUjWbd6yEQbiTG/v1ogHefoG47kGhxd1StQc
-         YcKg==
-X-Forwarded-Encrypted: i=1; AJvYcCUMuIFNylEVVIzZBxx8DDPv2aEb9yhK0izjyTttMAtPXvANHU+4b0c52t6bWy/9isznH1e9ttN8qizlUNr9sQzsef0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxjYsPOsgZJJqfGrhg0JfFBlyJ5vBbAmN894Q40no3vx0vkbF+9
-	ZfthcYp6YrcAi+DYMfJesxnG834Vx4N5JvOdc8t+UOedl2MrrjVs3o6KM1o8k+Xbtkk=
-X-Gm-Gg: ASbGncuk/rORi7XeSeRZ0hvz+rA28Q1l0rQrHV2ceRrtdU50y0ALXrbVfNlec1gsCBF
-	ubPVQR3oIZdDJ1UVtztpzG4+p63fVdPLNpQdhDA3wy0BgdZ/Y9YMS3ovrnJpn2i7KDUvb3GW9Fo
-	r+BZVMxgybrMgYSLEn63ptuRoJABWvoqLmvRYXIxg+HSySaYeGqr+1v0iglHIQcVZ3ZkX9ZPQbV
-	LB71YxAa1oJe2haRz3jb7UjI5O8ESeCHR65Sw5uPlVRUWyIYtijoCyxe9DotCQt7bV6dvQ8qptf
-	vxihVTknYIYsBfjWBk2/QMgp0PCbcpUg0KvuS9UgnEhU0z6FgISwMoRORtSbOBBr/h1nyZoj3S2
-	mFxy/ZEVlyuw24dQdXxypmnzLhlQj+kXPYG2+k2DFMoVHBx4HU86d9e2z43Uj55e2yh3Jd76eGp
-	DFXvn0SBoTy72xKw==
-X-Google-Smtp-Source: AGHT+IEouSTBDMcG/tchDfHpDvHcGOn021q8OTyah/7d7vm3vufHhiqKNCiTpyQWqwWHE044VaVj4Q==
-X-Received: by 2002:a05:6402:90a:b0:640:9b11:5d65 with SMTP id 4fb4d7f45d1cf-6413f061d7fmr2900743a12.24.1762520923128;
-        Fri, 07 Nov 2025 05:08:43 -0800 (PST)
+        d=1e100.net; s=20230601; t=1762521300; x=1763126100;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8HZ8kO1EbOdno/Z6LWKvw9cCt6xKTq52Mcwxm+AjrMQ=;
+        b=VwWiTHU7hCD/6wN9X7VpL/AVXJBlkPbXuJ4E5f4N2R9FqvL/n2MdRJ/wWPqAvpPTDi
+         llQpxLGyDvpyHSFB4jub1ULlW8nU1sp8EbwFm6jla4cXVO/3RYlCSEZjYqZ+ndVKL1Jy
+         xs+jqoFfD02UiMHtzThG0lDUaIkiaQ6gXAsE7t7jGFsj/aWnBPXWdmtjMXUUt5b8Xlic
+         1c01EV3GLK9udOOTw92deCvNBnSCj6RYmzqOBFNmGKb7E6JG3OXizNsCSfhOpTkFni3m
+         CdW1C8AEvQjTnNz39/ATkOpgyzQXQoz0ZAovziLz/WzCRkzp6aagmopI/PV8yD2vwBhT
+         0jYw==
+X-Forwarded-Encrypted: i=1; AJvYcCX7ifyWq7fnuGJQnGW+Lur8H8ptXpo3y56GxAa6b7Hy1MENkeGzLvh2rtvNLL2uHykpWo3JC3y7WAJ2/86JKNUKP+A=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5Ryppng4rQEPbr0Cgk4x4lZLGjbFMZDftdpv+2PO9qo0ApqPq
+	iGfRM7nL3Nwf0am6EfidHOVKW446VmnUygQqMqENmt9VhsL10bVluhuFq5TKQvFxPVw=
+X-Gm-Gg: ASbGncuUSQsq+A4VoHTwx2iTVMVlcCYoViOht1Whh1nYTcsQHlza6GO/NLdH50FpZ5u
+	TcZ4MPIqiW4phOyTmG+r5glyBBpL3VP1QEIquaZVpZ4eG6TLbpqLBQVN48xnf6mOL4qD9ROQb61
+	3m9XMXPo2SoD4RHSoz1XTq5Wt23wXHvgkXMYjYIoeSiozQv4HUzg9RwvP4AddLk+jHr28+MzXNK
+	K5WaUf73a979wg2BrIVU24vTUvTGF/gSg7XWgFuu9HAkZVZw/VYjfWvpJ/XcZQ9Dk+10ChlWA4w
+	mod5XHFQ9RCtSNGQeaINYD5/6Mm8Vag/GTKgdkzH1/lErxSaW+q88Yg0jqRjVFVir2HDwx3Bqmv
+	75QjDSPkncNEv9vUYkR5tCiFxP9GB5BN6d2uQgRfyf+43Kj8P7V5546Dpca4iqdQBzRytQHGaBN
+	Q2opQ=
+X-Google-Smtp-Source: AGHT+IFE2eYy0+Px5WausE/jRL0XZhUzH9bbFk8nsiudCpX/vMQhbSO5rZNKcgvz0+P/IDwF6D5asw==
+X-Received: by 2002:a17:907:2da2:b0:b6d:5914:30c with SMTP id a640c23a62f3a-b72c090e4b7mr299535266b.34.1762521300369;
+        Fri, 07 Nov 2025 05:15:00 -0800 (PST)
 Received: from pathway.suse.cz ([176.114.240.130])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6411f71394csm3968988a12.6.2025.11.07.05.08.42
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b72bfa24d1fsm233492666b.73.2025.11.07.05.14.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Nov 2025 05:08:42 -0800 (PST)
-Date: Fri, 7 Nov 2025 14:08:40 +0100
+        Fri, 07 Nov 2025 05:14:59 -0800 (PST)
+Date: Fri, 7 Nov 2025 14:14:57 +0100
 From: Petr Mladek <pmladek@suse.com>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Petr Pavlu <petr.pavlu@suse.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Kees Cook <kees@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Daniel Gomez <da.gomez@kernel.org>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-	linux-modules@vger.kernel.org,
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/6] kallsyms/bpf: Set module buildid in
- bpf_address_lookup()
-Message-ID: <aQ3vWIqG31BgE4YD@pathway.suse.cz>
-References: <20251105142319.1139183-1-pmladek@suse.com>
- <20251105142319.1139183-4-pmladek@suse.com>
- <CAADnVQ+kbQ4uwtKjD1DRCf702v0rEthy6hU4COAU9CyU53wTHg@mail.gmail.com>
+To: bot+bpf-ci@kernel.org
+Cc: petr.pavlu@suse.com, rostedt@goodmis.org, ast@kernel.org,
+	akpm@linux-foundation.org, kees@kernel.org, daniel@iogearbox.net,
+	john.fastabend@gmail.com, mhiramat@kernel.org, mark.rutland@arm.com,
+	mcgrof@kernel.org, da.gomez@kernel.org, samitolvanen@google.com,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	andrii@kernel.org, martin.lau@kernel.org, eddyz87@gmail.com,
+	yonghong.song@linux.dev, clm@meta.com, ihor.solodrai@linux.dev
+Subject: Re: [PATCH 2/6] kallsyms: Cleanup code for appending the module
+ buildid
+Message-ID: <aQ3w0awU61mrS_AF@pathway.suse.cz>
+References: <20251105142319.1139183-3-pmladek@suse.com>
+ <451acb410ee1ce42f7fb2da9f3b8162708f40788cb849cc0f50851ad16813349@mail.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAADnVQ+kbQ4uwtKjD1DRCf702v0rEthy6hU4COAU9CyU53wTHg@mail.gmail.com>
+In-Reply-To: <451acb410ee1ce42f7fb2da9f3b8162708f40788cb849cc0f50851ad16813349@mail.kernel.org>
 
-On Wed 2025-11-05 18:53:23, Alexei Starovoitov wrote:
-> On Wed, Nov 5, 2025 at 6:24 AM Petr Mladek <pmladek@suse.com> wrote:
-> >
-> > Make bpf_address_lookup() compatible with module_address_lookup()
-> > and clear the pointer to @modbuildid together with @modname.
-> >
-> > It is not strictly needed because __sprint_symbol() reads @modbuildid
-> > only when @modname is set. But better be on the safe side and make
-> > the API more safe.
-> >
-> > Fixes: 9294523e3768 ("module: add printk formats to add module build ID to stacktraces")
-> > Signed-off-by: Petr Mladek <pmladek@suse.com>
-> > ---
-> >  include/linux/filter.h | 15 +++++++++++----
-> >  kernel/kallsyms.c      |  4 ++--
-> >  2 files changed, 13 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/include/linux/filter.h b/include/linux/filter.h
-> > index f5c859b8131a..b7b95840250a 100644
-> > --- a/include/linux/filter.h
-> > +++ b/include/linux/filter.h
-> > @@ -1362,12 +1362,18 @@ struct bpf_prog *bpf_prog_ksym_find(unsigned long addr);
-> >
-> >  static inline int
-> >  bpf_address_lookup(unsigned long addr, unsigned long *size,
-> > -                  unsigned long *off, char **modname, char *sym)
-> > +                  unsigned long *off, char **modname,
-> > +                  const unsigned char **modbuildid, char *sym)
-> >  {
-> >         int ret = __bpf_address_lookup(addr, size, off, sym);
-> >
-> > -       if (ret && modname)
-> > -               *modname = NULL;
-> > +       if (ret) {
-> > +               if (modname)
-> > +                       *modname = NULL;
-> > +               if (modbuildid)
-> > +                       *modbuildid = NULL;
-> > +       }
-> > +
-> >         return ret;
-> >  }
-> >
-> > @@ -1433,7 +1439,8 @@ static inline struct bpf_prog *bpf_prog_ksym_find(unsigned long addr)
-> >
-> >  static inline int
-> >  bpf_address_lookup(unsigned long addr, unsigned long *size,
-> > -                  unsigned long *off, char **modname, char *sym)
-> > +                  unsigned long *off, char **modname,
-> > +                  const unsigned char **modbuildid, char *sym)
-> >  {
-> >         return 0;
-> >  }
+On Wed 2025-11-05 14:59:53, bot+bpf-ci@kernel.org wrote:
 > > diff --git a/kernel/kallsyms.c b/kernel/kallsyms.c
-> > index 9455e3bb07fc..efb12b077220 100644
+> > index 1e7635864..9455e3bb0 100644
 > > --- a/kernel/kallsyms.c
 > > +++ b/kernel/kallsyms.c
-> > @@ -374,8 +374,8 @@ static int kallsyms_lookup_buildid(unsigned long addr,
-> >         ret = module_address_lookup(addr, symbolsize, offset,
-> >                                     modname, modbuildid, namebuf);
-> >         if (!ret)
-> > -               ret = bpf_address_lookup(addr, symbolsize,
-> > -                                        offset, modname, namebuf);
-> > +               ret = bpf_address_lookup(addr, symbolsize, offset,
-> > +                                        modname, modbuildid, namebuf);
+> > @@ -423,6 +423,37 @@ int lookup_symbol_name(unsigned long addr, char *symname)
+> >  	return lookup_module_symbol_name(addr, symname);
+> >  }
+> >
+> > +#ifdef CONFIG_STACKTRACE_BUILD_ID
+> > +
+> > +static int append_buildid(char *buffer,  const char *modname,
+> > +			  const unsigned char *buildid)
+> > +{
+> > +	if (!modname)
+> > +		return 0;
+> > +
+> > +	if (!buildid) {
+> > +		pr_warn_once("Undefined buildid for the module %s\n", modname);
+> > +		return 0;
+> > +	}
 > 
-> The initial bpf_address_lookup() 8 years ago was trying
-> to copy paste args and style of kallsyms_lookup().
-> It was odd back then. This change is doubling down on the wrong thing.
-> It's really odd to pass a pointer into bpf_address_lookup()
-> so it zero initializes it.
-> bpf ksyms are in the core kernel. They're never in modules.
-> Just call __bpf_address_lookup() here and remove the wrapper.
+> When ftrace_mod_address_lookup() succeeds in kallsyms_lookup_buildid(),
+> it sets *modname but doesn't initialize *modbuildid. This leaves the
+> buildid variable uninitialized when __sprint_symbol() calls
+> append_buildid().
 
-I agree that it is ugly. It would make sense to initialize the
-pointers in kallsyms_lookup_buildid and call there
-__bpf_address_lookup() variant. Something like:
+Just for record. This is a great analyze. This patchset is fixing
+this bug in a later patch. ;-)
 
-static int kallsyms_lookup_buildid(unsigned long addr,
-			unsigned long *symbolsize,
-			unsigned long *offset, char **modname,
-			const unsigned char **modbuildid, char *namebuf)
-{
-	int ret;
+> Can the check above read uninitialized memory?> 
+> Looking at kallsyms_lookup_buildid():
+> - module_address_lookup() properly initializes both modname and
+>   modbuildid
+> - bpf_address_lookup() sets modname=NULL (so append_buildid isn't
+>   called)
+> - ftrace_mod_address_lookup() sets modname=mod_map->mod->name but has
+>   no modbuildid parameter
+> 
+> The commit message mentions wanting to catch when lookup functions don't
+> handle buildid, but shouldn't kallsyms_lookup_buildid() initialize
+> *modbuildid=NULL before calling the lookup functions to avoid undefined
+> behavior?
 
-	if (modname)
-		*modname = NULL;
-	if (modbuildid)
-		*modbuildid = NULL;
-	namebuf[0] = 0;
-[...]
-	if (!ret)
-		ret = __bpf_address_lookup(addr, symbolsize, offset, namebuf);
-
-}
-
-As a result bpf_address_lookup() won't have any caller.
-And __bpf_address_lookup() would have two callers.
-
-It would make sense to remove bpf_address_lookup() and
-rename __bpf_address_lookup() to bpf_address_lookup().
-
-How does that sound?
-Would you prefer to do this in one patch or in two steps, please?
+It seems that we are going this way, see
+https://lore.kernel.org/all/aQ3vWIqG31BgE4YD@pathway.suse.cz/
 
 Best Regards,
 Petr
