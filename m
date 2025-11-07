@@ -1,85 +1,210 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7EADC2AF1B;
-	Fri,  7 Nov 2025 03:09:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7C0F31813F
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  7 Nov 2025 09:13:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762484963; cv=none; b=opuLrHI9OpCc9P5GMHUWPA0QKhckV9M5DY/K+3W5d4FMaFJRuD2Qe3/JNB6+IpCK33OwLNruyOWSBaAE3JaMJvHjmxqFrYpl9qaVxXyj52D+yF7axPLwik38I+o9yZ39sYIdd+s3qKFTyL/hvGmsMAwns/y0lCjZhDgog8FIiBY=
+	t=1762506785; cv=none; b=lH4Lx39EQm83vOL1f6Xm+DeS6EmZP5Ylmozo0ngmw0k/Py1vjb/yknFd1AGniA0Ofa8iJIUfk4ogJVSaRz7EscKTRyrEz5w7QXl9DL/NUiR2k6gXugFamxtW7LTBsqG257qzDo9u26yL8Gn88MeWJg2jD/FsVwv3Gxjf7kSja78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762484963; c=relaxed/simple;
-	bh=ClcAAJTTbFRg4nNGcEwjH09m1GfJy+3ADIF1d5aIvrE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QV/f7tgLMhIQm7hI/LOdJt2kagkdvZ8mcfdYboucCtJ3cmx3qp361hxRiSDVm5C53Qp/Tgq/K8dCjB6pybsgp0hSI+onlAzIKUoKz5Cj96GmtEbJln9mA1X2vaXpS9xl2qYU7hVKwSAhK4Vk2MK3m3OioEWFg297fgyXSmSmiAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A435514BF;
-	Thu,  6 Nov 2025 19:09:12 -0800 (PST)
-Received: from [10.164.136.34] (unknown [10.164.136.34])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 316A13F63F;
-	Thu,  6 Nov 2025 19:09:05 -0800 (PST)
-Message-ID: <1c05c28a-a4f7-4562-8799-6f08a03bd3eb@arm.com>
-Date: Fri, 7 Nov 2025 08:39:03 +0530
+	s=arc-20240116; t=1762506785; c=relaxed/simple;
+	bh=+R07ubDuBhff2ujrABNBpUwsrjtH0A9CyxuTQ0jmk/4=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=FGro05gIxqvJ8Fj4LqKwnOsHllxNTAiYY83iCuUHVbMHXawL9QPMe3SLpCLPtO9+lHw0b21Lgn9ZGYi/mTBCBrdUC90lKWqOPgU5wA2jLSO+jZ9/A7qdWIDgqU71YV1PnGI543p3NCqeY2gJ3kH2NWHnWyVA+zcD9qlrOqqGx/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=o+8kokxi; arc=none smtp.client-ip=209.85.128.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="o+8kokxi"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-47769a0a13bso5152215e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 07 Nov 2025 01:13:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1762506781; x=1763111581; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=h6hr5KyHBQ4i3KpvRUNSLwzvnbvgDhJcoWyAtNcMbQg=;
+        b=o+8kokxiq8sV7eembw85qpl/iqp7HCScn0Plv9OSCqxXkMrZYV5YYb3pHXCsGn/VwQ
+         DbRpL6BeW6hgXoFdsJJSgzf6HRL9m3pyCfDp+zJNQbfbp0KsRAsz/sxoHzXCDZ55L0BL
+         xigvoBUKNvmYrRNu3QOGd6GzT/GB/1XrdjgE3nKBIhyVfJlm+DZqsn1/SxMEw83Sz8TD
+         o4X8EBshU6VrvdtW2TBXu9FAeNR8qc4sJXcAc+zFGKB/eYpXo6ac3uLqCO/zWmTZ+pQ5
+         hGUZsyjSoSeehI8uXQ7jYGwplcBaxCzxjYEt4SBAfTNUGjx2PE40cTpZPH+quhq0Wx6L
+         +9vg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762506781; x=1763111581;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=h6hr5KyHBQ4i3KpvRUNSLwzvnbvgDhJcoWyAtNcMbQg=;
+        b=Qe/HZClFaPfQSTbDp2QmYY767pYayevKBIVo07q5SRzdxqhKqRmTx6RGxYv458WZe/
+         kycDHl9b+lI0LHl1n5ZW0Il4PtE9CTa9cWaLU8wut07d/i8/KbHMXWF6PaYeFmwWYvFR
+         fRwkHaQBCFm3goHpqEyLZs8pvjL36hDsjKGOrpQEEKQ/g9u0UM++zOfmiZw7k/OpABoJ
+         BTMQE6fmk54eHmq5qOhPKwYHw1y7Cgk5XFh8DSbPhKBqTsDQ3yknoCAam7+QALpiD6P8
+         i+YxgjDzh+lHAWi9dbc7skg7LxvMcT0/sjWByTApnKkwkR3V7F5EYJQACjVQ5MvtQrhp
+         Oyjg==
+X-Forwarded-Encrypted: i=1; AJvYcCXu7S2DLeCGaPSN8wQm3Jt4HepZpAzUFBtao02EkzB5Zjps1cu/BnWkjt6wK1TFyJCifvGLgs1kwBsoYRyJAwSkF0U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxSKooBod1k3OX1V5uehKylepzU0hWIbW0yKea55l6Kb2sLoNue
+	TZ95FODN2isnQZ87sxxszPv8kATT3pd6n+YuMK77PmI46uDgK4SlP2rw8z8548dj7kI+OJGeBCw
+	myKLkE5GYyDgm9G6Yug==
+X-Google-Smtp-Source: AGHT+IHUZEz+bT2nDPlYtV/C/QNEpv2U8khomuJk8Z2Iy1Z4Tlg4ge5tYPMjbGtCECv4gTvvdLMJU3QqC9ERcYo=
+X-Received: from wmcu6.prod.google.com ([2002:a7b:c046:0:b0:476:4b14:2edf])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:4592:b0:477:3e07:217a with SMTP id 5b1f17b1804b1-4776bcc9c7emr20623525e9.36.1762506781268;
+ Fri, 07 Nov 2025 01:13:01 -0800 (PST)
+Date: Fri, 7 Nov 2025 09:13:00 +0000
+In-Reply-To: <043dcbdb-e069-46e7-8f79-8fdaf354fb44@lucifer.local>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12 mm-new 07/15] khugepaged: generalize
- collapse_huge_page for mTHP collapse
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Nico Pache <npache@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-mm@kvack.org, linux-doc@vger.kernel.org, david@redhat.com,
- ziy@nvidia.com, baolin.wang@linux.alibaba.com, Liam.Howlett@oracle.com,
- ryan.roberts@arm.com, corbet@lwn.net, rostedt@goodmis.org,
- mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- akpm@linux-foundation.org, baohua@kernel.org, willy@infradead.org,
- peterx@redhat.com, wangkefeng.wang@huawei.com, usamaarif642@gmail.com,
- sunnanyong@huawei.com, vishal.moola@gmail.com,
- thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com,
- kas@kernel.org, aarcange@redhat.com, raquini@redhat.com,
- anshuman.khandual@arm.com, catalin.marinas@arm.com, tiwai@suse.de,
- will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz, cl@gentwo.org,
- jglisse@google.com, surenb@google.com, zokeefe@google.com,
- hannes@cmpxchg.org, rientjes@google.com, mhocko@suse.com,
- rdunlap@infradead.org, hughd@google.com, richard.weiyang@gmail.com,
- lance.yang@linux.dev, vbabka@suse.cz, rppt@kernel.org, jannh@google.com,
- pfalcato@suse.de
-References: <20251022183717.70829-1-npache@redhat.com>
- <20251022183717.70829-8-npache@redhat.com>
- <7b6b5c6b-0298-47c1-ae48-17d603401bac@lucifer.local>
-Content-Language: en-US
-From: Dev Jain <dev.jain@arm.com>
-In-Reply-To: <7b6b5c6b-0298-47c1-ae48-17d603401bac@lucifer.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <cover.1762422915.git.lorenzo.stoakes@oracle.com>
+ <fe38b1a43364f72d1ce7a6217e53a33c9c0bb0c5.1762422915.git.lorenzo.stoakes@oracle.com>
+ <yja2mhwa4bzatbthjjq5rolqlkfgcbmppic3caaiwi6jc63rbc@cims6rqnotvj> <043dcbdb-e069-46e7-8f79-8fdaf354fb44@lucifer.local>
+Message-ID: <aQ24HAAxYLhIvV5U@google.com>
+Subject: Re: [PATCH v2 1/5] mm: introduce VM_MAYBE_GUARD and make visible in /proc/$pid/smaps
+From: Alice Ryhl <aliceryhl@google.com>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Pedro Falcato <pfalcato@suse.de>, Andrew Morton <akpm@linux-foundation.org>, 
+	Jonathan Corbet <corbet@lwn.net>, David Hildenbrand <david@redhat.com>, 
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
+	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Jann Horn <jannh@google.com>, 
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-mm@kvack.org, 
+	linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	Andrei Vagin <avagin@gmail.com>
+Content-Type: text/plain; charset="utf-8"
 
-> ----------[snip]------------
->
->> +
->> +		spin_lock(pmd_ptl);
-> We're duplicating this in both branches, why not do outside if/else?
->
->> +		WARN_ON_ONCE(!pmd_none(*pmd));
-> Hmm so the PMD entry will still always be empty on mTHP collapse? Surely we
-> could be collapsing more than one mTHP into an existing PTE table no? I may
-> be missing something here/confused :)
+On Thu, Nov 06, 2025 at 02:54:33PM +0000, Lorenzo Stoakes wrote:
+> +cc Alice for rust stuff
+> 
+> On Thu, Nov 06, 2025 at 02:27:56PM +0000, Pedro Falcato wrote:
+> > On Thu, Nov 06, 2025 at 10:46:12AM +0000, Lorenzo Stoakes wrote:
+> > > Currently, if a user needs to determine if guard regions are present in a
+> > > range, they have to scan all VMAs (or have knowledge of which ones might
+> > > have guard regions).
+> > >
+> > > Since commit 8e2f2aeb8b48 ("fs/proc/task_mmu: add guard region bit to
+> > > pagemap") and the related commit a516403787e0 ("fs/proc: extend the
+> > > PAGEMAP_SCAN ioctl to report guard regions"), users can use either
+> > > /proc/$pid/pagemap or the PAGEMAP_SCAN functionality to perform this
+> > > operation at a virtual address level.
+> > >
+> > > This is not ideal, and it gives no visibility at a /proc/$pid/smaps level
+> > > that guard regions exist in ranges.
+> > >
+> > > This patch remedies the situation by establishing a new VMA flag,
+> > > VM_MAYBE_GUARD, to indicate that a VMA may contain guard regions (it is
+> > > uncertain because we cannot reasonably determine whether a
+> > > MADV_GUARD_REMOVE call has removed all of the guard regions in a VMA, and
+> > > additionally VMAs may change across merge/split).
+> > >
+> > > We utilise 0x800 for this flag which makes it available to 32-bit
+> > > architectures also, a flag that was previously used by VM_DENYWRITE, which
+> > > was removed in commit 8d0920bde5eb ("mm: remove VM_DENYWRITE") and hasn't
+> > > bee reused yet.
+> > >
+> > > We also update the smaps logic and documentation to identify these VMAs.
+> > >
+> > > Another major use of this functionality is that we can use it to identify
+> > > that we ought to copy page tables on fork.
+> > >
+> > > We do not actually implement usage of this flag in mm/madvise.c yet as we
+> > > need to allow some VMA flags to be applied atomically under mmap/VMA read
+> > > lock in order to avoid the need to acquire a write lock for this purpose.
+> > >
+> > > Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> > > ---
+> > >  Documentation/filesystems/proc.rst | 1 +
+> > >  fs/proc/task_mmu.c                 | 1 +
+> > >  include/linux/mm.h                 | 3 +++
+> > >  include/trace/events/mmflags.h     | 1 +
+> > >  mm/memory.c                        | 4 ++++
+> > >  tools/testing/vma/vma_internal.h   | 3 +++
+> > >  6 files changed, 13 insertions(+)
+> > >
+> > > diff --git a/Documentation/filesystems/proc.rst b/Documentation/filesystems/proc.rst
+> > > index 0b86a8022fa1..b8a423ca590a 100644
+> > > --- a/Documentation/filesystems/proc.rst
+> > > +++ b/Documentation/filesystems/proc.rst
+> > > @@ -591,6 +591,7 @@ encoded manner. The codes are the following:
+> > >      sl    sealed
+> > >      lf    lock on fault pages
+> > >      dp    always lazily freeable mapping
+> > > +    gu    maybe contains guard regions (if not set, definitely doesn't)
+> > >      ==    =======================================
+> >
+> > The nittiest
+> > of nits:     =============================================================
+> 
+> Sigh :) OK will fix.
+> 
+> >
+> >
+> > >
+> > >  Note that there is no guarantee that every flag and associated mnemonic will
+> > > diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+> > > index 8a9894aefbca..a420dcf9ffbb 100644
+> > > --- a/fs/proc/task_mmu.c
+> > > +++ b/fs/proc/task_mmu.c
+> > > @@ -1147,6 +1147,7 @@ static void show_smap_vma_flags(struct seq_file *m, struct vm_area_struct *vma)
+> > >  		[ilog2(VM_MAYSHARE)]	= "ms",
+> > >  		[ilog2(VM_GROWSDOWN)]	= "gd",
+> > >  		[ilog2(VM_PFNMAP)]	= "pf",
+> > > +		[ilog2(VM_MAYBE_GUARD)]	= "gu",
+> > >  		[ilog2(VM_LOCKED)]	= "lo",
+> > >  		[ilog2(VM_IO)]		= "io",
+> > >  		[ilog2(VM_SEQ_READ)]	= "sr",
+> > > diff --git a/include/linux/mm.h b/include/linux/mm.h
+> > > index 6e5ca5287e21..2a5516bff75a 100644
+> > > --- a/include/linux/mm.h
+> > > +++ b/include/linux/mm.h
+> > > @@ -271,6 +271,8 @@ extern struct rw_semaphore nommu_region_sem;
+> > >  extern unsigned int kobjsize(const void *objp);
+> > >  #endif
+> > >
+> > > +#define VM_MAYBE_GUARD_BIT 11
+> > > +
+> > >  /*
+> > >   * vm_flags in vm_area_struct, see mm_types.h.
+> > >   * When changing, update also include/trace/events/mmflags.h
+> > > @@ -296,6 +298,7 @@ extern unsigned int kobjsize(const void *objp);
+> > >  #define VM_UFFD_MISSING	0
+> > >  #endif /* CONFIG_MMU */
+> > >  #define VM_PFNMAP	0x00000400	/* Page-ranges managed without "struct page", just pure PFN */
+> > > +#define VM_MAYBE_GUARD	BIT(VM_MAYBE_GUARD_BIT)	/* The VMA maybe contains guard regions. */
+> >
+> > Don't we also need an adjustment on the rust side for this BIT()? Like we
+> > for f04aad36a07c ("mm/ksm: fix flag-dropping behavior in ksm_madvise").
+> 
+> That's a bit unhelpful if rust can't cope with extremely basic assignments like
+> that and we just have to know to add helpers :/
+> 
+> We do BIT() stuff for e.g. VM_HIGH_ARCH_n, VM_UFFD_MINOR_BIT,
+> VM_ALLOW_ANY_UNCACHED_BIT, VM_DROPPABLE_BIT and VM_SEALED_BIT too and no such
+> helpers there, So not sure if this is required?
+> 
+> Alice - why is it these 'non-trivial' defines were fine but VM_MERGEABLE was
+> problematic? That seems strange.
+> 
+> I see [0], so let me build rust here and see if it moans, if it moans I'll add
+> it.
+> 
+> [0]:https://lore.kernel.org/oe-kbuild-all/CANiq72kOhRdGtQe2UVYmDLdbw6VNkiMtdFzkQizsfQV0gLY1Hg@mail.gmail.com/
 
-After this code path isolates the PTE table, we don't want any other code path
-doing "Hey, I see an empty PMD, let's install a PTE table here". One of the
-reasons why all the heavy locking is required here.
+When you use #define to declare a constant whose right-hand-side
+contains a function-like macro such as BIT(), bindgen does not define a
+Rust version of that constant. However, VM_MAYBE_GUARD is not referenced
+in Rust anywhere, so that isn't a problem.
 
-Also, I want to ask a question about WARN vs BUG_ON: suppose that the
-race I described above occurs. After khugepaged isolates the PTE table, someone
-faults in a PTE table there, and eventually writes data in the underlying folios.
-Then the buggy khugepaged nukes out that table and installs a new one, installing
-an mTHP folio which had old data. How do we decide whether such a condition is
-worthy of a BUG_ON (leading to system crash) vs letting this pass with WARN?
+It was a problem with VM_MERGEABLE because rust/kernel/mm/virt.rs
+references it.
 
+Note that it's only the combination of #define and function-like macro
+that triggers this condition. If the constant is defined using another
+mechanism such as enum {}, then bindgen will generate the constant no
+matter how complex the right-hand-side is. The problem is that bindgen
+can't tell whether a #define is just a constant or not.
 
->
-> ------------[snip]----------
->
+Alice
