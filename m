@@ -1,55 +1,55 @@
-Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+Received: from mail-wr1-f74.google.com (mail-wr1-f74.google.com [209.85.221.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD45F3016EB
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  7 Nov 2025 09:38:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A9FB3019DE
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  7 Nov 2025 09:38:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762508335; cv=none; b=tjYqVKRRyOfkqiCZFM9txROuEYhgeKn+ysbF3PCbMQK4VLMb+CKQ++XnHQ5U8af7hCLclMPDaxubM37gUsqUSsGeOeqhR31uGpWi3KIIXuqq0nrAQ+BhclW4csANUXnO2ndruHGyVcBcZ8bTPQN1hJiM/u+aLsn8KyZ3xQNGJlE=
+	t=1762508335; cv=none; b=BgyJrmIeK9Sg9XCFtXJ2HsDGbRfhzRRFX9bJwXMxAtPiipYyK6y2j1swKIJZA/0OyPyGCWJvd4lWP8XyhZlmDOot93h2QIdnDqTUW7lqhoM8gMClZJ6nfJiafwA917Cd1PDHrv2QjrAD+Uw+mmQoGsZMASFxyVmw4UpT9q302/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1762508335; c=relaxed/simple;
-	bh=gnj5YPQgyww+GAjgd+2k0HXOfRk5jK0g1YAjC8/tjao=;
+	bh=sj8G0CUoartcPxXFAdQJrVtMlCMU5/QlpoX3U8XHqGw=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=N+7xgGETryCmXd0JLMJM17zIgt3sl+TDH9N9D1/UH25btKj2dkAAsSqq2oHcDx+7sldrqgMsIH+YdXr1ip4E3Fgs3kaZIojPYWiVY8QlONK74lXFFEi7nL4wGUVCuDJn5xMNtbadEBCQ3IKQlLrwM2y3moI6AM8gOPeX34octeU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sW+LARVh; arc=none smtp.client-ip=209.85.128.73
+	 To:Cc:Content-Type; b=foeOov6OzhA48HueHrTgqN+znOOVKpv1Ve120o7w1tsAyTq1oYYojimDZOIOK+ob2PsCW8vTz52RWWThnophl0NJ6PBa9vHApIXuEzU/1tyWfGVaN4xf2qog3qeI2v1ib4tJlSJQINfOFHnc+/LIKquq5ifSctQgA+cnUL2mVBc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TqQV60Md; arc=none smtp.client-ip=209.85.221.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sW+LARVh"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-47754e6bddbso3884725e9.3
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 07 Nov 2025 01:38:52 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TqQV60Md"
+Received: by mail-wr1-f74.google.com with SMTP id ffacd0b85a97d-429cceeeb96so298492f8f.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 07 Nov 2025 01:38:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1762508331; x=1763113131; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1762508330; x=1763113130; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=9VxbCb+Kg6U0rUkZ3VVmnp/SSISDQljDIPQcB5fnLr4=;
-        b=sW+LARVhQQq0vsyQ7JBlG0k7zZOPgJxIBuJWOboiZAIc9YC8nqDxlUxAyumSnWGb/K
-         jHE6AVQenJ1Vx3EwTCDa8WJ4XuwYEs3qdTXVz0QuHr2ZkI8P1vz16lgfqIZweMYkFonO
-         9SrlFRa/Lu9RIpWICpBrETBb9Wa4h50tlvtHbdo+1oKIy5SE+mKLp5D5BueVapxcwpWM
-         Z1unerrdqNZAROZx/htYbnzlFL0xq7NTILEOGdSKJFCM/qykz1iz/EF+wiKxMhM431Qj
-         N/XAGq3YI9Bak4mG49dPhFhtNh3mGPOyd+/JK9czhC6EaG7oTvITTAO8QCPrakzpzRlZ
-         P8xQ==
+        bh=dE9bbheCp9V2aFuRlDh4WDEP/Ei7sW5/5LGgdkpufdc=;
+        b=TqQV60Md5nBw5TlQDHMV6FZrFU+LKzKXNlnwgP0Hf7SDtvyP7p7Zmm8+2QebmcU/D3
+         RSjbN1ixaDqy7iO3XQ/I4aVm3hMut2V/BpEuGKqI/t+qnGFc2pWB4IM0WGn5VYqewSBa
+         ibWqwnTldQc/m+iq4EXn/d0IxV0CedkOlVObNMKb9RosW+CMrNT9L6ZTTklLLuEPCZEf
+         4fjfud7PMfH3gWSHc27qJ51KjQ+Ugp1z6OfL6lNnbfUuWP2gH+wXVCdqbda0JcdV+oU/
+         Cp0bO5K9OwtNW/vqXzrbGoS6+yLVpQ1RhSBrB2IIYZzocc/a4gck5/6RtpePweKbeH06
+         sAUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762508331; x=1763113131;
+        d=1e100.net; s=20230601; t=1762508330; x=1763113130;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9VxbCb+Kg6U0rUkZ3VVmnp/SSISDQljDIPQcB5fnLr4=;
-        b=BmXZE/9B+vDx2cEvULKJpF88/XLRfL1yeHk7ISTeCFPX/Ta/H9xf+XF/4fwZU6d2eU
-         KOBjNQ6xBi0lSdP5DKgFntbfOKGZOwF25Sa4NgU9M71kYNgHlqht6yMbkiqvLJ1okG+U
-         tu1Xj1mLi9laQzdLR+FYYuspXVSFUWm9cs9kaUjn/1AcSCaQHupBIGKexYFI5iP9bSHf
-         F1lF/cqLZ9tn4dItS7E7FgpLnLbe0U5kaiz+ABDbkQbV37cb16tVgRHs6v4lHblEXlwu
-         Im2bwCB35FN9dTCb7SK7LDDLOAQdxqnYgcPh4XzJhwWrXvjVLr36+1J5saybMbaK7Aad
-         thnA==
-X-Forwarded-Encrypted: i=1; AJvYcCUR7HBK4Wktk04wdeoCQIV3H7GvY2PNLgYNnZ10yf0johbBn3Dksdm7v9OmF5xymsbdYOhIHV8+vO1Ck770T8Jh8bA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy00Gq0a9CxMA/7ettKfBbC5m7ZiEdGIygfLYJtXff2Vww4ACdt
-	mhFyst2EJ3JXP0SmsSMohpSC964dcbrnY4me93aoJd+8aERKNt/6AIatz9uNtwSi/WgCJdqVAIC
-	llztws9s8qNBNR/PNuN96aA==
-X-Google-Smtp-Source: AGHT+IHLE2aMwvTwA4gEKe4rnkMrA8UQFJzrhH8USk+Up8tFECYOrzsDxCHW71XzpsCA817tCNmkN/S38dRWuYgh
-X-Received: from wmbet5.prod.google.com ([2002:a05:600c:8185:b0:46e:32f2:9964])
+        bh=dE9bbheCp9V2aFuRlDh4WDEP/Ei7sW5/5LGgdkpufdc=;
+        b=MRhuQMmKuYLK3OM0xjppTstD4SJ60EmgAejNtL5OPijnPsSJEpcC1S9NwbZrro+hVs
+         sn3Lvx2RiJc130pTWC/Zn2WxZsxFLBKZB6W6q0dOaK4EKPd5TCwvkBvVQpngGuS5vC9t
+         rFKOJHBl9u3S0IsAsHuylXT/nPJwoGv6qy0VqIMa/Mdp0oy3ItX8UUOvQycxjf83qJgi
+         44QK8FH6h53pVLr/jEbf0rRBB3jDAqAe35L167jnqvEbTWcjP8z6p3DSox1xzjH1j8wy
+         Jkq2T7IW/Xi25eDVDsBxHOJe/Ji/wyNkMf4gXcDnbLgfbWqS7h1hyyDZeJck5LTjlRyR
+         /qTw==
+X-Forwarded-Encrypted: i=1; AJvYcCXAWudCyiF7PkGBG7fQa0ZMZc8zRZ8ntAf4fBrYVFeLHtJ181PpA5kyhCDGGDaCcjtqbOLulmfqGFAJ6gHemyx+7Uo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy2yu0mFYORVSb+M3SvjiE6j8aFZXKhihc94TG0nj//GqMe3PsD
+	zrGph+LAU7mhgq/+JqlKfZXUyasGzYrL7TPGP7GRoOkGKhB+Guddq9fXIth+BmOlsOHUMuQ1O6H
+	vUI9pmkZhLlVryQWC+gycmA==
+X-Google-Smtp-Source: AGHT+IHJKQcuTuHVy5lW9/pddPtXEWrJkUHRKDzcCdWDYQlwal5t/VwhJiu80ev0kYlXjbKdm3HJXTGh6pg8IuqO
+X-Received: from wmim9.prod.google.com ([2002:a7b:cb89:0:b0:46e:1f26:9212])
  (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:4fd5:b0:477:557b:6926 with SMTP id 5b1f17b1804b1-4776bc8d908mr19700605e9.10.1762508331254;
- Fri, 07 Nov 2025 01:38:51 -0800 (PST)
-Date: Fri,  7 Nov 2025 09:38:15 +0000
+ 2002:a05:600c:4512:b0:471:114e:5894 with SMTP id 5b1f17b1804b1-4776bce1ae8mr18497205e9.25.1762508330429;
+ Fri, 07 Nov 2025 01:38:50 -0800 (PST)
+Date: Fri,  7 Nov 2025 09:38:14 +0000
 In-Reply-To: <20251107093840.3779150-1-vdonnefort@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20251107093840.3779150-1-vdonnefort@google.com>
 X-Mailer: git-send-email 2.51.2.1041.gc1ab5b90ca-goog
-Message-ID: <20251107093840.3779150-4-vdonnefort@google.com>
-Subject: [PATCH v8 03/28] ring-buffer: Introduce ring-buffer remotes
+Message-ID: <20251107093840.3779150-3-vdonnefort@google.com>
+Subject: [PATCH v8 02/28] ring-buffer: Store bpage pointers into subbuf_ids
 From: Vincent Donnefort <vdonnefort@google.com>
 To: rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
 	linux-trace-kernel@vger.kernel.org, maz@kernel.org, oliver.upton@linux.dev, 
@@ -71,492 +71,98 @@ Cc: kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org, Vincent Donnefort <vdonnefort@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-A ring-buffer remote is an entity outside of the kernel (most likely a
-firmware or a hypervisor) capable of writing events in a ring-buffer
-following the same format as the tracefs ring-buffer.
-
-To setup the ring-buffer on the kernel side, a description of the pages
-forming the ring-buffer (struct trace_buffer_desc) must be given.
-Callbacks (swap_reader_page and reset) must also be provided.
-
-It is expected from the remote to keep the meta-page updated.
+The subbuf_ids field allows to point to a specific page from the
+ring-buffer based on its ID. As a preparation or the upcoming
+ring-buffer remote support, point this array to the buffer_page instead
+of the buffer_data_page.
 
 Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 
-diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
-index 876358cfe1b1..41193c5b0d28 100644
---- a/include/linux/ring_buffer.h
-+++ b/include/linux/ring_buffer.h
-@@ -250,4 +250,62 @@ int ring_buffer_map(struct trace_buffer *buffer, int cpu,
- 		    struct vm_area_struct *vma);
- int ring_buffer_unmap(struct trace_buffer *buffer, int cpu);
- int ring_buffer_map_get_reader(struct trace_buffer *buffer, int cpu);
-+
-+struct ring_buffer_desc {
-+	int		cpu;
-+	unsigned int	nr_page_va; /* excludes the meta page */
-+	unsigned long	meta_va;
-+	unsigned long	page_va[] __counted_by(nr_page_va);
-+};
-+
-+struct trace_buffer_desc {
-+	int		nr_cpus;
-+	size_t		struct_len;
-+	char		__data[]; /* list of ring_buffer_desc */
-+};
-+
-+static inline struct ring_buffer_desc *__next_ring_buffer_desc(struct ring_buffer_desc *desc)
-+{
-+	size_t len = struct_size(desc, page_va, desc->nr_page_va);
-+
-+	return (struct ring_buffer_desc *)((void *)desc + len);
-+}
-+
-+static inline struct ring_buffer_desc *__first_ring_buffer_desc(struct trace_buffer_desc *desc)
-+{
-+	return (struct ring_buffer_desc *)(&desc->__data[0]);
-+}
-+
-+static inline size_t trace_buffer_desc_size(size_t buffer_size, unsigned int nr_cpus)
-+{
-+	unsigned int nr_pages = max(DIV_ROUND_UP(buffer_size, PAGE_SIZE), 2UL) + 1;
-+	struct ring_buffer_desc *rbdesc;
-+
-+	return size_add(offsetof(struct trace_buffer_desc, __data),
-+			size_mul(nr_cpus, struct_size(rbdesc, page_va, nr_pages)));
-+}
-+
-+#define for_each_ring_buffer_desc(__pdesc, __cpu, __trace_pdesc)		\
-+	for (__pdesc = __first_ring_buffer_desc(__trace_pdesc), __cpu = 0;	\
-+	     (__cpu) < (__trace_pdesc)->nr_cpus;				\
-+	     (__cpu)++, __pdesc = __next_ring_buffer_desc(__pdesc))
-+
-+struct ring_buffer_remote {
-+	struct trace_buffer_desc	*desc;
-+	int				(*swap_reader_page)(unsigned int cpu, void *priv);
-+	int				(*reset)(unsigned int cpu, void *priv);
-+	void				*priv;
-+};
-+
-+int ring_buffer_poll_remote(struct trace_buffer *buffer, int cpu);
-+
-+struct trace_buffer *
-+__ring_buffer_alloc_remote(struct ring_buffer_remote *remote,
-+			   struct lock_class_key *key);
-+
-+#define ring_buffer_alloc_remote(remote)			\
-+({								\
-+	static struct lock_class_key __key;			\
-+	__ring_buffer_alloc_remote(remote, &__key);		\
-+})
- #endif /* _LINUX_RING_BUFFER_H */
 diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 80099a8b2495..1d300189f261 100644
+index 6e912527e44f..80099a8b2495 100644
 --- a/kernel/trace/ring_buffer.c
 +++ b/kernel/trace/ring_buffer.c
-@@ -523,6 +523,8 @@ struct ring_buffer_per_cpu {
+@@ -519,7 +519,7 @@ struct ring_buffer_per_cpu {
+ 	unsigned int			mapped;
+ 	unsigned int			user_mapped;	/* user space mapping */
+ 	struct mutex			mapping_lock;
+-	unsigned long			*subbuf_ids;	/* ID to subbuf VA */
++	struct buffer_page		**subbuf_ids;	/* ID to subbuf VA */
  	struct trace_buffer_meta	*meta_page;
  	struct ring_buffer_cpu_meta	*ring_meta;
  
-+	struct ring_buffer_remote	*remote;
-+
- 	/* ring buffer pages to update, > 0 to add, < 0 to remove */
- 	long				nr_pages_to_update;
- 	struct list_head		new_pages; /* new pages to add */
-@@ -545,6 +547,8 @@ struct trace_buffer {
- 
- 	struct ring_buffer_per_cpu	**buffers;
- 
-+	struct ring_buffer_remote	*remote;
-+
- 	struct hlist_node		node;
- 	u64				(*clock)(void);
- 
-@@ -2197,6 +2201,40 @@ static void rb_meta_buffer_update(struct ring_buffer_per_cpu *cpu_buffer,
- 	}
+@@ -7002,7 +7002,7 @@ static void rb_free_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
  }
  
-+static struct ring_buffer_desc *ring_buffer_desc(struct trace_buffer_desc *trace_desc, int cpu)
-+{
-+	struct ring_buffer_desc *desc, *end;
-+	size_t len;
-+	int i;
-+
-+	if (!trace_desc)
-+		return NULL;
-+
-+	if (cpu >= trace_desc->nr_cpus)
-+		return NULL;
-+
-+	end = (struct ring_buffer_desc *)((void *)trace_desc + trace_desc->struct_len);
-+	desc = __first_ring_buffer_desc(trace_desc);
-+	len = struct_size(desc, page_va, desc->nr_page_va);
-+	desc = (struct ring_buffer_desc *)((void *)desc + (len * cpu));
-+
-+	if (desc < end && desc->cpu == cpu)
-+		return desc;
-+
-+	/* Missing CPUs, need to linear search */
-+	for_each_ring_buffer_desc(desc, i, trace_desc) {
-+		if (desc->cpu == cpu)
-+			return desc;
-+	}
-+
-+	return NULL;
-+}
-+
-+static void *ring_buffer_desc_page(struct ring_buffer_desc *desc, int page_id)
-+{
-+	return page_id > desc->nr_page_va ? NULL : (void *)desc->page_va[page_id];
-+}
-+
- static int __rb_allocate_pages(struct ring_buffer_per_cpu *cpu_buffer,
- 		long nr_pages, struct list_head *pages)
+ static void rb_setup_ids_meta_page(struct ring_buffer_per_cpu *cpu_buffer,
+-				   unsigned long *subbuf_ids)
++				   struct buffer_page **subbuf_ids)
  {
-@@ -2204,6 +2242,7 @@ static int __rb_allocate_pages(struct ring_buffer_per_cpu *cpu_buffer,
- 	struct ring_buffer_cpu_meta *meta = NULL;
- 	struct buffer_page *bpage, *tmp;
- 	bool user_thread = current->mm != NULL;
-+	struct ring_buffer_desc *desc = NULL;
- 	gfp_t mflags;
- 	long i;
+ 	struct trace_buffer_meta *meta = cpu_buffer->meta_page;
+ 	unsigned int nr_subbufs = cpu_buffer->nr_pages + 1;
+@@ -7011,7 +7011,7 @@ static void rb_setup_ids_meta_page(struct ring_buffer_per_cpu *cpu_buffer,
+ 	int id = 0;
  
-@@ -2240,6 +2279,12 @@ static int __rb_allocate_pages(struct ring_buffer_per_cpu *cpu_buffer,
- 	if (buffer->range_addr_start)
- 		meta = rb_range_meta(buffer, nr_pages, cpu_buffer->cpu);
+ 	id = rb_page_id(cpu_buffer, cpu_buffer->reader_page, id);
+-	subbuf_ids[id++] = (unsigned long)cpu_buffer->reader_page->page;
++	subbuf_ids[id++] = cpu_buffer->reader_page;
+ 	cnt++;
  
-+	if (buffer->remote) {
-+		desc = ring_buffer_desc(buffer->remote->desc, cpu_buffer->cpu);
-+		if (!desc || WARN_ON(desc->nr_page_va != (nr_pages + 1)))
-+			return -EINVAL;
-+	}
-+
- 	for (i = 0; i < nr_pages; i++) {
+ 	first_subbuf = subbuf = rb_set_head_page(cpu_buffer);
+@@ -7021,7 +7021,7 @@ static void rb_setup_ids_meta_page(struct ring_buffer_per_cpu *cpu_buffer,
+ 		if (WARN_ON(id >= nr_subbufs))
+ 			break;
+ 
+-		subbuf_ids[id] = (unsigned long)subbuf->page;
++		subbuf_ids[id] = subbuf;
+ 
+ 		rb_inc_page(&subbuf);
+ 		id++;
+@@ -7030,7 +7030,7 @@ static void rb_setup_ids_meta_page(struct ring_buffer_per_cpu *cpu_buffer,
+ 
+ 	WARN_ON(cnt != nr_subbufs);
+ 
+-	/* install subbuf ID to kern VA translation */
++	/* install subbuf ID to bpage translation */
+ 	cpu_buffer->subbuf_ids = subbuf_ids;
+ 
+ 	meta->meta_struct_len = sizeof(*meta);
+@@ -7186,13 +7186,15 @@ static int __rb_map_vma(struct ring_buffer_per_cpu *cpu_buffer,
+ 	}
+ 
+ 	while (p < nr_pages) {
++		struct buffer_page *subbuf;
  		struct page *page;
+ 		int off = 0;
  
-@@ -2266,6 +2311,16 @@ static int __rb_allocate_pages(struct ring_buffer_per_cpu *cpu_buffer,
- 				rb_meta_buffer_update(cpu_buffer, bpage);
- 			bpage->range = 1;
- 			bpage->id = i + 1;
-+		} else if (desc) {
-+			void *p = ring_buffer_desc_page(desc, i + 1);
-+
-+			if (WARN_ON(!p))
-+				goto free_pages;
-+
-+			bpage->page = p;
-+			bpage->range = 1; /* bpage->page can't be freed */
-+			bpage->id = i + 1;
-+			cpu_buffer->subbuf_ids[i + 1] = bpage;
- 		} else {
- 			page = alloc_pages_node(cpu_to_node(cpu_buffer->cpu),
- 						mflags | __GFP_COMP | __GFP_ZERO,
-@@ -2369,6 +2424,30 @@ rb_allocate_cpu_buffer(struct trace_buffer *buffer, long nr_pages, int cpu)
- 		if (cpu_buffer->ring_meta->head_buffer)
- 			rb_meta_buffer_update(cpu_buffer, bpage);
- 		bpage->range = 1;
-+	} else if (buffer->remote) {
-+		struct ring_buffer_desc *desc = ring_buffer_desc(buffer->remote->desc, cpu);
-+
-+		if (!desc)
-+			goto fail_free_reader;
-+
-+		cpu_buffer->remote = buffer->remote;
-+		cpu_buffer->meta_page = (struct trace_buffer_meta *)(void *)desc->meta_va;
-+		cpu_buffer->nr_pages = nr_pages;
-+		cpu_buffer->subbuf_ids = kcalloc(cpu_buffer->nr_pages + 1,
-+						 sizeof(*cpu_buffer->subbuf_ids), GFP_KERNEL);
-+		if (!cpu_buffer->subbuf_ids)
-+			goto fail_free_reader;
-+
-+		/* Remote buffers are read-only and immutable */
-+		atomic_inc(&cpu_buffer->record_disabled);
-+		atomic_inc(&cpu_buffer->resize_disabled);
-+
-+		bpage->page = ring_buffer_desc_page(desc, cpu_buffer->meta_page->reader.id);
-+		if (!bpage->page)
-+			goto fail_free_reader;
-+
-+		bpage->range = 1;
-+		cpu_buffer->subbuf_ids[0] = bpage;
- 	} else {
- 		page = alloc_pages_node(cpu_to_node(cpu),
- 					GFP_KERNEL | __GFP_COMP | __GFP_ZERO,
-@@ -2431,6 +2510,9 @@ static void rb_free_cpu_buffer(struct ring_buffer_per_cpu *cpu_buffer)
+ 		if (WARN_ON_ONCE(s >= nr_subbufs))
+ 			return -EINVAL;
  
- 	irq_work_sync(&cpu_buffer->irq_work.work);
+-		page = virt_to_page((void *)cpu_buffer->subbuf_ids[s]);
++		subbuf = cpu_buffer->subbuf_ids[s];
++		page = virt_to_page((void *)subbuf->page);
  
-+	if (cpu_buffer->remote)
-+		kfree(cpu_buffer->subbuf_ids);
-+
- 	free_buffer_page(cpu_buffer->reader_page);
- 
- 	if (head) {
-@@ -2453,7 +2535,8 @@ static struct trace_buffer *alloc_buffer(unsigned long size, unsigned flags,
- 					 int order, unsigned long start,
- 					 unsigned long end,
- 					 unsigned long scratch_size,
--					 struct lock_class_key *key)
-+					 struct lock_class_key *key,
-+					 struct ring_buffer_remote *remote)
+ 		for (; off < (1 << (subbuf_order)); off++, page++) {
+ 			if (p >= nr_pages)
+@@ -7219,7 +7221,8 @@ int ring_buffer_map(struct trace_buffer *buffer, int cpu,
+ 		    struct vm_area_struct *vma)
  {
- 	struct trace_buffer *buffer __free(kfree) = NULL;
- 	long nr_pages;
-@@ -2493,6 +2576,8 @@ static struct trace_buffer *alloc_buffer(unsigned long size, unsigned flags,
- 	if (!buffer->buffers)
- 		goto fail_free_cpumask;
- 
-+	cpu = raw_smp_processor_id();
-+
- 	/* If start/end are specified, then that overrides size */
- 	if (start && end) {
- 		unsigned long buffers_start;
-@@ -2548,6 +2633,15 @@ static struct trace_buffer *alloc_buffer(unsigned long size, unsigned flags,
- 		buffer->range_addr_end = end;
- 
- 		rb_range_meta_init(buffer, nr_pages, scratch_size);
-+	} else if (remote) {
-+		struct ring_buffer_desc *desc = ring_buffer_desc(remote->desc, cpu);
-+
-+		buffer->remote = remote;
-+		/* The writer is remote. This ring-buffer is read-only */
-+		atomic_inc(&buffer->record_disabled);
-+		nr_pages = desc->nr_page_va - 1;
-+		if (nr_pages < 2)
-+			goto fail_free_buffers;
- 	} else {
- 
- 		/* need at least two pages */
-@@ -2556,7 +2650,6 @@ static struct trace_buffer *alloc_buffer(unsigned long size, unsigned flags,
- 			nr_pages = 2;
- 	}
- 
--	cpu = raw_smp_processor_id();
- 	cpumask_set_cpu(cpu, buffer->cpumask);
- 	buffer->buffers[cpu] = rb_allocate_cpu_buffer(buffer, nr_pages, cpu);
- 	if (!buffer->buffers[cpu])
-@@ -2598,7 +2691,7 @@ struct trace_buffer *__ring_buffer_alloc(unsigned long size, unsigned flags,
- 					struct lock_class_key *key)
- {
- 	/* Default buffer page size - one system page */
--	return alloc_buffer(size, flags, 0, 0, 0, 0, key);
-+	return alloc_buffer(size, flags, 0, 0, 0, 0, key, NULL);
- 
- }
- EXPORT_SYMBOL_GPL(__ring_buffer_alloc);
-@@ -2625,7 +2718,18 @@ struct trace_buffer *__ring_buffer_alloc_range(unsigned long size, unsigned flag
- 					       struct lock_class_key *key)
- {
- 	return alloc_buffer(size, flags, order, start, start + range_size,
--			    scratch_size, key);
-+			    scratch_size, key, NULL);
-+}
-+
-+/**
-+ * __ring_buffer_alloc_remote - allocate a new ring_buffer from a remote
-+ * @remote: Contains a description of the ring-buffer pages and remote callbacks.
-+ * @key: ring buffer reader_lock_key.
-+ */
-+struct trace_buffer *__ring_buffer_alloc_remote(struct ring_buffer_remote *remote,
-+						struct lock_class_key *key)
-+{
-+	return alloc_buffer(0, 0, 0, 0, 0, 0, key, remote);
- }
- 
- void *ring_buffer_meta_scratch(struct trace_buffer *buffer, unsigned int *size)
-@@ -5233,6 +5337,16 @@ unsigned long ring_buffer_overruns(struct trace_buffer *buffer)
- }
- EXPORT_SYMBOL_GPL(ring_buffer_overruns);
- 
-+static bool rb_read_remote_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
-+{
-+	local_set(&cpu_buffer->entries, READ_ONCE(cpu_buffer->meta_page->entries));
-+	local_set(&cpu_buffer->overrun, READ_ONCE(cpu_buffer->meta_page->overrun));
-+	local_set(&cpu_buffer->pages_touched, READ_ONCE(cpu_buffer->meta_page->pages_touched));
-+	local_set(&cpu_buffer->pages_lost, READ_ONCE(cpu_buffer->meta_page->pages_lost));
-+
-+	return rb_num_of_entries(cpu_buffer);
-+}
-+
- static void rb_iter_reset(struct ring_buffer_iter *iter)
- {
- 	struct ring_buffer_per_cpu *cpu_buffer = iter->cpu_buffer;
-@@ -5387,7 +5501,43 @@ rb_update_iter_read_stamp(struct ring_buffer_iter *iter,
- }
- 
- static struct buffer_page *
--rb_get_reader_page(struct ring_buffer_per_cpu *cpu_buffer)
-+__rb_get_reader_page_from_remote(struct ring_buffer_per_cpu *cpu_buffer)
-+{
-+	struct buffer_page *new_reader, *prev_reader;
-+
-+	if (!rb_read_remote_meta_page(cpu_buffer))
-+		return NULL;
-+
-+	/* More to read on the reader page */
-+	if (cpu_buffer->reader_page->read < rb_page_size(cpu_buffer->reader_page)) {
-+		if (!cpu_buffer->reader_page->read)
-+			cpu_buffer->read_stamp = cpu_buffer->reader_page->page->time_stamp;
-+		return cpu_buffer->reader_page;
-+	}
-+
-+	prev_reader = cpu_buffer->subbuf_ids[cpu_buffer->meta_page->reader.id];
-+
-+	WARN_ON_ONCE(cpu_buffer->remote->swap_reader_page(cpu_buffer->cpu,
-+							  cpu_buffer->remote->priv));
-+	/* nr_pages doesn't include the reader page */
-+	if (WARN_ON_ONCE(cpu_buffer->meta_page->reader.id > cpu_buffer->nr_pages))
-+		return NULL;
-+
-+	new_reader = cpu_buffer->subbuf_ids[cpu_buffer->meta_page->reader.id];
-+
-+	WARN_ON_ONCE(prev_reader == new_reader);
-+
-+	cpu_buffer->reader_page->page = new_reader->page;
-+	cpu_buffer->reader_page->id = new_reader->id;
-+	cpu_buffer->reader_page->read = 0;
-+	cpu_buffer->read_stamp = cpu_buffer->reader_page->page->time_stamp;
-+	cpu_buffer->lost_events = cpu_buffer->meta_page->reader.lost_events;
-+
-+	return rb_page_size(cpu_buffer->reader_page) ? cpu_buffer->reader_page : NULL;
-+}
-+
-+static struct buffer_page *
-+__rb_get_reader_page(struct ring_buffer_per_cpu *cpu_buffer)
- {
- 	struct buffer_page *reader = NULL;
- 	unsigned long bsize = READ_ONCE(cpu_buffer->buffer->subbuf_size);
-@@ -5557,6 +5707,13 @@ rb_get_reader_page(struct ring_buffer_per_cpu *cpu_buffer)
- 	return reader;
- }
- 
-+static struct buffer_page *
-+rb_get_reader_page(struct ring_buffer_per_cpu *cpu_buffer)
-+{
-+	return cpu_buffer->remote ? __rb_get_reader_page_from_remote(cpu_buffer) :
-+				    __rb_get_reader_page(cpu_buffer);
-+}
-+
- static void rb_advance_reader(struct ring_buffer_per_cpu *cpu_buffer)
- {
- 	struct ring_buffer_event *event;
-@@ -5957,7 +6114,7 @@ ring_buffer_read_start(struct trace_buffer *buffer, int cpu, gfp_t flags)
  	struct ring_buffer_per_cpu *cpu_buffer;
- 	struct ring_buffer_iter *iter;
- 
--	if (!cpumask_test_cpu(cpu, buffer->cpumask))
-+	if (!cpumask_test_cpu(cpu, buffer->cpumask) || buffer->remote)
- 		return NULL;
- 
- 	iter = kzalloc(sizeof(*iter), flags);
-@@ -6125,6 +6282,23 @@ rb_reset_cpu(struct ring_buffer_per_cpu *cpu_buffer)
- {
- 	struct buffer_page *page;
- 
-+	if (cpu_buffer->remote) {
-+		if (!cpu_buffer->remote->reset)
-+			return;
-+
-+		cpu_buffer->remote->reset(cpu_buffer->cpu, cpu_buffer->remote->priv);
-+		rb_read_remote_meta_page(cpu_buffer);
-+
-+		/* Read related values, not covered by the meta-page */
-+		local_set(&cpu_buffer->pages_read, 0);
-+		cpu_buffer->read = 0;
-+		cpu_buffer->read_bytes = 0;
-+		cpu_buffer->last_overrun = 0;
-+		cpu_buffer->reader_page->read = 0;
-+
-+		return;
-+	}
-+
- 	rb_head_page_deactivate(cpu_buffer);
- 
- 	cpu_buffer->head_page
-@@ -6355,6 +6529,48 @@ bool ring_buffer_empty_cpu(struct trace_buffer *buffer, int cpu)
- }
- EXPORT_SYMBOL_GPL(ring_buffer_empty_cpu);
- 
-+int ring_buffer_poll_remote(struct trace_buffer *buffer, int cpu)
-+{
-+	struct ring_buffer_per_cpu *cpu_buffer;
-+
-+	if (cpu != RING_BUFFER_ALL_CPUS) {
-+		if (!cpumask_test_cpu(cpu, buffer->cpumask))
-+			return -EINVAL;
-+
-+		cpu_buffer = buffer->buffers[cpu];
-+
-+		guard(raw_spinlock)(&cpu_buffer->reader_lock);
-+		if (rb_read_remote_meta_page(cpu_buffer))
-+			rb_wakeups(buffer, cpu_buffer);
-+
-+		return 0;
-+	}
-+
-+	cpus_read_lock();
-+
-+	/*
-+	 * Make sure all the ring buffers are up to date before we start reading
-+	 * them.
-+	 */
-+	for_each_buffer_cpu(buffer, cpu) {
-+		cpu_buffer = buffer->buffers[cpu];
-+
-+		guard(raw_spinlock)(&cpu_buffer->reader_lock);
-+		rb_read_remote_meta_page(cpu_buffer);
-+	}
-+
-+	for_each_buffer_cpu(buffer, cpu) {
-+		cpu_buffer = buffer->buffers[cpu];
-+
-+		if (rb_num_of_entries(cpu_buffer))
-+			rb_wakeups(buffer, cpu_buffer);
-+	}
-+
-+	cpus_read_unlock();
-+
-+	return 0;
-+}
-+
- #ifdef CONFIG_RING_BUFFER_ALLOW_SWAP
- /**
-  * ring_buffer_swap_cpu - swap a CPU buffer between two ring buffers
-@@ -6600,6 +6816,7 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
- 	unsigned int commit;
- 	unsigned int read;
- 	u64 save_timestamp;
-+	bool force_memcpy;
- 
- 	if (!cpumask_test_cpu(cpu, buffer->cpumask))
- 		return -1;
-@@ -6637,6 +6854,8 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
- 	/* Check if any events were dropped */
- 	missed_events = cpu_buffer->lost_events;
- 
-+	force_memcpy = cpu_buffer->mapped || cpu_buffer->remote;
-+
- 	/*
- 	 * If this page has been partially read or
- 	 * if len is not big enough to read the rest of the page or
-@@ -6646,7 +6865,7 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
- 	 */
- 	if (read || (len < (commit - read)) ||
- 	    cpu_buffer->reader_page == cpu_buffer->commit_page ||
--	    cpu_buffer->mapped) {
-+	    force_memcpy) {
- 		struct buffer_data_page *rpage = cpu_buffer->reader_page->page;
- 		unsigned int rpos = read;
- 		unsigned int pos = 0;
-@@ -7225,7 +7444,7 @@ int ring_buffer_map(struct trace_buffer *buffer, int cpu,
- 	unsigned long flags;
+-	unsigned long flags, *subbuf_ids;
++	struct buffer_page **subbuf_ids;
++	unsigned long flags;
  	int err;
  
--	if (!cpumask_test_cpu(cpu, buffer->cpumask))
-+	if (!cpumask_test_cpu(cpu, buffer->cpumask) || buffer->remote)
- 		return -EINVAL;
+ 	if (!cpumask_test_cpu(cpu, buffer->cpumask))
+@@ -7243,7 +7246,7 @@ int ring_buffer_map(struct trace_buffer *buffer, int cpu,
+ 	if (err)
+ 		return err;
  
- 	cpu_buffer = buffer->buffers[cpu];
+-	/* subbuf_ids include the reader while nr_pages does not */
++	/* subbuf_ids includes the reader while nr_pages does not */
+ 	subbuf_ids = kcalloc(cpu_buffer->nr_pages + 1, sizeof(*subbuf_ids), GFP_KERNEL);
+ 	if (!subbuf_ids) {
+ 		rb_free_meta_page(cpu_buffer);
 -- 
 2.51.2.1041.gc1ab5b90ca-goog
 
