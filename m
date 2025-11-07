@@ -1,127 +1,212 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D89C335561
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  7 Nov 2025 17:41:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84216339704
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  7 Nov 2025 18:02:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762537273; cv=none; b=G4R2VNu3Ij/GcXBpCwg+qxcKzRLmYllE9YNs3kyPVeyXOjK6mb9ouDw5BCD3ARa/Vt2SGSK5vyWGfqlb+NV+XMxcfF6tPrNDZXosaghr3gtfowmPKqRE1traPlGspre+C9MVvlm26Rf1vW1V3eCffis/F4aiGyQMo6do8r9vlWE=
+	t=1762538524; cv=none; b=VKCPncsJIuSY5jOtL54UusmyblWAcmT2Nnh5EMQPCm5qlTlWcOERVCN0EqHa28o0adnvi0+joslf2mfhTMXE0Vyi3166fCcAS3/RooEMIQIrPYAJpa0DW4IElZBQFS79ce03efRruI53WECkfjSIu3CuI9qOVza5LdjdySvYRX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762537273; c=relaxed/simple;
-	bh=di5HYt605tX16tZ8/vaKsRinUBUUoU5Lq1QfVdIXGog=;
+	s=arc-20240116; t=1762538524; c=relaxed/simple;
+	bh=mgm8qxjZEYmIZNBjWTRuwvARGl9cfquNJwY3c7URdeo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fbkXPEaLo65pCbhINHUdgGEnnlcJVp2pUMWzCnbKAt8XXlnHLVqnj0CgNQKmcmF+Fp5D0TDd9tW1P9UPQ7B7M8NkTYMurwvs7/67H8XkOWiURUHx+d58gtCk1WQe4AV4Yz+6+eCvJ9dyayn7TBwEDj2+9yOSO8F3pjHdLCmagq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CMcgFpqZ; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=rFNJV+kotq5t7iAXH2i45+fiihDIOYOERsm5AQk79qykaclpu3BmuGd/XvQB4YFhAQxgRGdtf/ZA0TfS+UPk+Gs6w5QZ+qzti1vL3tkxlHQ+XtlVA3tulOLOMTMflmRhGtciaAiiXyfxVrq/dBNhiEhoiBqkXz0vBOd6iVbNtGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fPSGrrv+; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CMcgFpqZ"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-429eb7fafc7so790029f8f.2
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 07 Nov 2025 09:41:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762537270; x=1763142070; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ebrs+wN1ScAdbwQrebQQor/ad4bv1DpNTmTftSXcwN0=;
-        b=CMcgFpqZe/oxgipDhf5hoioX1i0DHFYgpYL4pOb7pz9GohREbu/y1fGOeFcqWZp2/a
-         n05PmIsDwnh78FeiTT3/N+rMHOF2X6Yb7XlI1umdnQb5V4AOYofJEDKUnPtgwR2DGpFa
-         R1L76mW/bU3F92g6U74j7K1Z1yDnP/B8lPFSPvB9iJ/VBu+N0ymdZu3w5Hki2sCrNCTq
-         y+g2bYLDYeXeJ8WY1pBd4QkHkJCo+ilve0qV9f3MqthChSCso5ohUBsBiNjuiEcuL9mM
-         vSHCpLOsyHoBrHEJJBfEpRdeAPYiPtm4MTg2WU9yRamhmvHS2Jum7zvmMhwAZJZqN7qi
-         eFOQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fPSGrrv+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1762538521;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=o03EPvkF1Ee4HFaXHVj6CmMYvciS5SYoQDAqRDI5EK0=;
+	b=fPSGrrv+ltOSknZKq3nDkoJGUd6mAdWKL6GTqVlxDDuOSwNEJU5bzldL29BbwpAX0cRl9g
+	tuQ15AYD1GFxfhY1yArwscs0Y19al7YVfUJJM9PDRC6BCWs+UvlZguxv443Rzinlktz+ae
+	z1mldcKqOdzaU8hN8bfLSqNnsIs9zYg=
+Received: from mail-yx1-f69.google.com (mail-yx1-f69.google.com
+ [74.125.224.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-552-ccUHvOQdNnC-YOfdlrxBfw-1; Fri, 07 Nov 2025 13:01:53 -0500
+X-MC-Unique: ccUHvOQdNnC-YOfdlrxBfw-1
+X-Mimecast-MFC-AGG-ID: ccUHvOQdNnC-YOfdlrxBfw_1762538513
+Received: by mail-yx1-f69.google.com with SMTP id 956f58d0204a3-63e324b2fd0so1398809d50.2
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 07 Nov 2025 10:01:53 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762537270; x=1763142070;
+        d=1e100.net; s=20230601; t=1762538513; x=1763143313;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=ebrs+wN1ScAdbwQrebQQor/ad4bv1DpNTmTftSXcwN0=;
-        b=OjztVL+R4aRRcRpUvE7V5I5nGRg+NUglwT9XVY/7o+Xq9xeXqCXHbbWRrlpp4pGCfs
-         VUfTwu80Q+TrMIcU/7qfeBVmsWvoOqxE5rn38MFOsDB+Z9/8nNl9WjhM49wBiGj4lt2M
-         NGCEG1iQkYUgKONWr5TgvHq//C6c3nxHRxjbqk3gF8N/Z018dPtIcJ5qNqZAdymb2MVm
-         TMcLLqZMLrDo41CpAStbArdg6C8jbompVx5eLEIlYGig1LxJIuEpzQ3XMdbcanCarXNB
-         CkrJSwWps60+1Y37uz042JhaCWxiMxEDQf5O4vYvvR55jDv2OsKWXG4876/U6R0wJZkr
-         rtow==
-X-Forwarded-Encrypted: i=1; AJvYcCXI2QfkS8+oeKprbt3B1wZx5KQb4nb+GiQdahU8LohgQnOeAPEEhLqeGgJn2gnQB8YbZIOqTgTZ33+VcZ5gr68Xl+o=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz1Yn/JC+Moh5lHceQJbt8Po3qoD+kPSBLZTLenz982Ukuq/JEF
-	x6LpCQE9XuwwlMtr4aMbgqxc6fhC5f1+qSj9dzkO6b9wsnF3SBS2Is9La2dzVOcGA8DaOA5WP68
-	LYOSMcs1lRhDi2PP9fvmkXf6FQzNiTlY=
-X-Gm-Gg: ASbGncv3cHp3I3wfIuZWRFRJzFMg+UJzFOXB+LmDJf9DFzfjhnZvAMc2RW6Y7KHuK6+
-	MtdVH5sWmcpobaOu/OlvKVybh81jPKuuOgootYZYMGsfCXOtIdtn9wu7KEW8OYJY4gHviaQQL/d
-	YIkGmIjXStiEdQqobiHa3APeVqIyxxhsff7f1mPesHzuSWeyj+ufImgNSUpN0vcMD3P7b0c5Z7F
-	vXpsPT0xjBXD+skWpkLCdpfx2+ejsAD63lz1/Ol+Fbfy8cRC/dRGTgWnJiqUBl3gjFHoMmLsE23
-	X7XS7OkTvUs/Ar9kaSh4wdikhkeYV3M7dg5pML0=
-X-Google-Smtp-Source: AGHT+IGp7kJ7DPn6W1TJBQil5AyrS3gfjJGyOVkoIQA+7AMrhZauVz76TN8srDIORbwUd/LWwQX0PHgCg3hdmEyhYfc=
-X-Received: by 2002:a05:6000:184b:b0:429:c989:ceaf with SMTP id
- ffacd0b85a97d-42aefb436c6mr3589088f8f.46.1762537269792; Fri, 07 Nov 2025
- 09:41:09 -0800 (PST)
+        bh=o03EPvkF1Ee4HFaXHVj6CmMYvciS5SYoQDAqRDI5EK0=;
+        b=JMLxKMcZnulGLgMNegqgg7qn0YIpq/IXynFut7Wuc0+P2+hnhJFXMqoTRf/VpLDyVZ
+         GxeD+BykPIu02vljb6BqPOvUCBnZLsiI2M488oE5PBZbqQXrF4G6UNRgdRChcXpdD1sz
+         Dexn3pRPaF6HTdeMn9rAl4BxjCPUIebSgr1zya7iuaSrDE3p2Pmpot5Cw6YlpfFyeCOK
+         gzrunj92UjaXRNiYDOzGNqhXxwJ6D8HpePwek48jP5yEh4gCK5W8embFNswh8bmRH5gH
+         fBJYtAlN7YcxJv9i6oCnguEmxeWKA0hsrgucGJGDUCOrI5wProgbhPUjWphnUYexX5Qe
+         Mt+A==
+X-Forwarded-Encrypted: i=1; AJvYcCV+rfK0JOpiZ8Jz8yVmrazv/EoI4riyP1DQG78wG32QXDj805VpJ9PZsWvAvEurZi5i/ANcWKdDV7BOD1DvR3MT20I=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywpaq7FOx6m66dZeAGN+B8GFKEyHExkY9iErjvvvnhbKYWq0kFs
+	R1/utoq+VqcqSjJ/5cZs3rAqhnJmPGd8un6BVq6VkWHLN9dJBYjKdD/ZOeyumhrTcCCLXjn9bJu
+	zAk7PyKcU3ykdQtsuzJB7aTCQaL4gzACoruH0l8sT03o5UIY/6KJUauGYmmPsv6K6OnRI/YZH/F
+	H7TRbiEEoUJsKl1kmZCayrklE6QawnSpnUTZHzb3Wez0KTL6fu
+X-Gm-Gg: ASbGncsWphhats20doTTdH6ItShmoisJaf6FIpsG1bM6+X6z431MAMgxx4m5HuNGwgx
+	VrJokIDc30UuT8omVc8gz3/sqylkmkWDDGE57wbArlsm6b/exGL/mCPLYr87vGwIO35WzBtHexK
+	p/8WT1yQGVEBqhs98VzaVgeAj1T24GIzvUOBZLCeeoR89Pv/jAcpPsujqofB+mrYQxSMcqPw==
+X-Received: by 2002:a05:690e:2417:b0:63f:b4d8:1f3c with SMTP id 956f58d0204a3-640c42dac2dmr2587364d50.35.1762538512622;
+        Fri, 07 Nov 2025 10:01:52 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGjLDv5pucIrLunFcmpT5DImh7xOQHAmSWOhb/WF5swQ3zC4ISlOHgSzClnhRgLhl4xOKSEVGJksfqOFQroVQk=
+X-Received: by 2002:a05:690e:2417:b0:63f:b4d8:1f3c with SMTP id
+ 956f58d0204a3-640c42dac2dmr2587310d50.35.1762538511869; Fri, 07 Nov 2025
+ 10:01:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251105142319.1139183-3-pmladek@suse.com> <451acb410ee1ce42f7fb2da9f3b8162708f40788cb849cc0f50851ad16813349@mail.kernel.org>
- <aQ3w0awU61mrS_AF@pathway.suse.cz>
-In-Reply-To: <aQ3w0awU61mrS_AF@pathway.suse.cz>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Fri, 7 Nov 2025 09:40:58 -0800
-X-Gm-Features: AWmQ_blok1LYmBhcs5jqmjitBnxB1MxfCx6dTvXIZc5Oxu7WIxc0TZwB0cXRC_A
-Message-ID: <CAADnVQ+tbHC25R_qwJsZL2G9VM1kseOviQ8mAsaTNg68-2nWBw@mail.gmail.com>
-Subject: Re: [PATCH 2/6] kallsyms: Cleanup code for appending the module buildid
-To: Petr Mladek <pmladek@suse.com>
-Cc: bot+bpf-ci@kernel.org, Petr Pavlu <petr.pavlu@suse.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Alexei Starovoitov <ast@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	"Luis R. Rodriguez" <mcgrof@kernel.org>, Daniel Gomez <da.gomez@kernel.org>, 
-	Sami Tolvanen <samitolvanen@google.com>, LKML <linux-kernel@vger.kernel.org>, 
-	bpf <bpf@vger.kernel.org>, linux-modules@vger.kernel.org, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, Andrii Nakryiko <andrii@kernel.org>, 
-	Martin KaFai Lau <martin.lau@kernel.org>, Eduard <eddyz87@gmail.com>, 
-	Yonghong Song <yonghong.song@linux.dev>, Chris Mason <clm@meta.com>, 
-	Ihor Solodrai <ihor.solodrai@linux.dev>
+References: <20251022183717.70829-1-npache@redhat.com> <20251022183717.70829-12-npache@redhat.com>
+ <5b2dbd05-094f-452a-8067-d342b2819af9@lucifer.local>
+In-Reply-To: <5b2dbd05-094f-452a-8067-d342b2819af9@lucifer.local>
+From: Nico Pache <npache@redhat.com>
+Date: Fri, 7 Nov 2025 11:01:23 -0700
+X-Gm-Features: AWmQ_bnZCljbkWgTreWCIKIWGk5V1YSCEzkc_26ghNPznQVbhA9Vnvap7t_CMZI
+Message-ID: <CAA1CXcDG8=89uPcptkRv23JfmczAGp6_KQMQOFhQ6Uivo-33kw@mail.gmail.com>
+Subject: Re: [PATCH v12 mm-new 11/15] khugepaged: introduce
+ collapse_allowable_orders helper function
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, linux-doc@vger.kernel.org, david@redhat.com, 
+	ziy@nvidia.com, baolin.wang@linux.alibaba.com, Liam.Howlett@oracle.com, 
+	ryan.roberts@arm.com, dev.jain@arm.com, corbet@lwn.net, rostedt@goodmis.org, 
+	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
+	akpm@linux-foundation.org, baohua@kernel.org, willy@infradead.org, 
+	peterx@redhat.com, wangkefeng.wang@huawei.com, usamaarif642@gmail.com, 
+	sunnanyong@huawei.com, vishal.moola@gmail.com, 
+	thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com, kas@kernel.org, 
+	aarcange@redhat.com, raquini@redhat.com, anshuman.khandual@arm.com, 
+	catalin.marinas@arm.com, tiwai@suse.de, will@kernel.org, 
+	dave.hansen@linux.intel.com, jack@suse.cz, cl@gentwo.org, jglisse@google.com, 
+	surenb@google.com, zokeefe@google.com, hannes@cmpxchg.org, 
+	rientjes@google.com, mhocko@suse.com, rdunlap@infradead.org, hughd@google.com, 
+	richard.weiyang@gmail.com, lance.yang@linux.dev, vbabka@suse.cz, 
+	rppt@kernel.org, jannh@google.com, pfalcato@suse.de
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: sP_ifQXn_jPLRYLW9ncgkkUDXGr7ZV0J-Ug7B8AGWvg_1762538513
+X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Nov 7, 2025 at 5:15=E2=80=AFAM Petr Mladek <pmladek@suse.com> wrote=
-:
+On Thu, Nov 6, 2025 at 11:51=E2=80=AFAM Lorenzo Stoakes
+<lorenzo.stoakes@oracle.com> wrote:
 >
-> On Wed 2025-11-05 14:59:53, bot+bpf-ci@kernel.org wrote:
-> > > diff --git a/kernel/kallsyms.c b/kernel/kallsyms.c
-> > > index 1e7635864..9455e3bb0 100644
-> > > --- a/kernel/kallsyms.c
-> > > +++ b/kernel/kallsyms.c
-> > > @@ -423,6 +423,37 @@ int lookup_symbol_name(unsigned long addr, char =
-*symname)
-> > >     return lookup_module_symbol_name(addr, symname);
-> > >  }
-> > >
-> > > +#ifdef CONFIG_STACKTRACE_BUILD_ID
-> > > +
-> > > +static int append_buildid(char *buffer,  const char *modname,
-> > > +                     const unsigned char *buildid)
-> > > +{
-> > > +   if (!modname)
-> > > +           return 0;
-> > > +
-> > > +   if (!buildid) {
-> > > +           pr_warn_once("Undefined buildid for the module %s\n", mod=
-name);
-> > > +           return 0;
-> > > +   }
+> On Wed, Oct 22, 2025 at 12:37:13PM -0600, Nico Pache wrote:
+> > Add collapse_allowable_orders() to generalize THP order eligibility. Th=
+e
+> > function determines which THP orders are permitted based on collapse
+> > context (khugepaged vs madv_collapse).
 > >
-> > When ftrace_mod_address_lookup() succeeds in kallsyms_lookup_buildid(),
-> > it sets *modname but doesn't initialize *modbuildid. This leaves the
-> > buildid variable uninitialized when __sprint_symbol() calls
-> > append_buildid().
+> > This consolidates collapse configuration logic and provides a clean
+> > interface for future mTHP collapse support where the orders may be
+> > different.
+> >
+> > Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+> > Signed-off-by: Nico Pache <npache@redhat.com>
 >
-> Just for record. This is a great analyze. This patchset is fixing
-> this bug in a later patch. ;-)
+> With nits below adddressed, LGTM so:
+>
+> Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 
-Currently AI analyses one patch at a time and comments on what it
-understands the way humans would do if they read and comment
-as they go.
-Teaching AI to understand the whole series is on todo list.
-Chris may comment on how feasible that is.
+Thank you!
+
+> > ---
+> >  mm/khugepaged.c | 15 ++++++++++++---
+> >  1 file changed, 12 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+> > index 0dbbe04c31fe..89a105124790 100644
+> > --- a/mm/khugepaged.c
+> > +++ b/mm/khugepaged.c
+> > @@ -489,7 +489,16 @@ static unsigned int collapse_max_ptes_none(unsigne=
+d int order, bool full_scan)
+> >       max_ptes_none =3D min(khugepaged_max_ptes_none, HPAGE_PMD_NR/2 - =
+1);
+> >
+> >       return max_ptes_none >> (HPAGE_PMD_ORDER - order);
+> > +}
+> > +
+> > +/* Check what orders are allowed based on the vma and collapse type */
+> > +static unsigned long collapse_allowable_orders(struct vm_area_struct *=
+vma,
+> > +                     vm_flags_t vm_flags, bool is_khugepaged)
+> > +{
+> > +     enum tva_type tva_flags =3D is_khugepaged ? TVA_KHUGEPAGED : TVA_=
+FORCED_COLLAPSE;
+> > +     unsigned long orders =3D BIT(HPAGE_PMD_ORDER);
+>
+> Nit, but can const-ify.
+
+It becomes a function of is_khugepaged in a later patch.
+
+>
+> >
+> > +     return thp_vma_allowable_orders(vma, vm_flags, tva_flags, orders)=
+;
+> >  }
+> >
+> >  void khugepaged_enter_vma(struct vm_area_struct *vma,
+> > @@ -497,7 +506,7 @@ void khugepaged_enter_vma(struct vm_area_struct *vm=
+a,
+> >  {
+> >       if (!mm_flags_test(MMF_VM_HUGEPAGE, vma->vm_mm) &&
+> >           hugepage_pmd_enabled()) {
+> > -             if (thp_vma_allowable_order(vma, vm_flags, TVA_KHUGEPAGED=
+, PMD_ORDER))
+> > +             if (collapse_allowable_orders(vma, vm_flags, true))
+>
+> If we have a 'mystery meat' boolean parameter can we always use the conve=
+ntion of:
+>
+> collapse_allowable_orders(vma, vm_flags, /*is_khugepaged=3D*/true)
+>
+> Please? Same goes for other invocations obviously.
+
+Sounds good! I'll fix those up.
+
+Thanks,
+-- Nico
+
+>
+>
+> >                       __khugepaged_enter(vma->vm_mm);
+> >       }
+> >  }
+> > @@ -2567,7 +2576,7 @@ static unsigned int collapse_scan_mm_slot(unsigne=
+d int pages, int *result,
+> >                       progress++;
+> >                       break;
+> >               }
+> > -             if (!thp_vma_allowable_order(vma, vma->vm_flags, TVA_KHUG=
+EPAGED, PMD_ORDER)) {
+> > +             if (!collapse_allowable_orders(vma, vma->vm_flags, true))=
+ {
+> >  skip:
+> >                       progress++;
+> >                       continue;
+> > @@ -2873,7 +2882,7 @@ int madvise_collapse(struct vm_area_struct *vma, =
+unsigned long start,
+> >       BUG_ON(vma->vm_start > start);
+> >       BUG_ON(vma->vm_end < end);
+> >
+> > -     if (!thp_vma_allowable_order(vma, vma->vm_flags, TVA_FORCED_COLLA=
+PSE, PMD_ORDER))
+> > +     if (!collapse_allowable_orders(vma, vma->vm_flags, false))
+> >               return -EINVAL;
+> >
+> >       cc =3D kmalloc(sizeof(*cc), GFP_KERNEL);
+> > --
+> > 2.51.0
+> >
+>
+
