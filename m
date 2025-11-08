@@ -1,110 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0470B28E9;
-	Sat,  8 Nov 2025 10:56:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0BFC28750F
+	for <linux-trace-kernel@vger.kernel.org>; Sat,  8 Nov 2025 21:04:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762599392; cv=none; b=GBNYF49eTo1kiIJvuMXOh2mwvddJUCkQGpdnAmoKXruS/dvA1cP1pJVMWcnj6T0jRC4IzxMRC/niidQSk7T09GATHkywrG3+bLQLCPlLQFjusuBOo4lyu5cTjuGoQMq6i0zM1LoxngWDnDkJ0moR93MWy1i4WDI4rlgm4THyEPE=
+	t=1762635879; cv=none; b=Us2ZuEYuF5RxOCjEiGCHpF7Np210HBqXtWce/GpdTM23NHRfw7vhg9rxTBL7Q4OKKlXwgw6K1yz3fm9bUlTVJ0e4Metan782Kc8xNqZuKKbstlDXYdl8DPmpUSI342u3o+plH6NQImQrkvwqXkUooJMg1Z7gV5htJnEgfdLVvJ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762599392; c=relaxed/simple;
-	bh=1/zPj/GOtEGOtvxhfaLOwbvXmNML0Pp716jOkeAfyK0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=G8/aGT0L9XebCxA+Tw804/ZZ3ACOIu1pZ6XZcCiI1x0AwXNOv75JU6mjImULH00CnAvNc/1wuMxanTLnp6SMksMoHrivTNeZncFPMetSOGHadGSarFKEq1vYBKWZdATa2xYZvsWJdM0RYJqA6gpSGDVFvhxx6QxM+ITNdebBM9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RMiVNLhy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762635879; c=relaxed/simple;
+	bh=6x43yjS02aypwGuqbdmoq7YWGLThPTGKiQei+aVXqtY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BLZUG0F/hdgVz9x9CX9Cw0zLPwYSl6IQQIgRYkigXYTCvPoPRalxjTHXroYr9YiNdRJZZNHyadIKuWg7acoYC5CdFboxRnAIPfiuv29fsJuXfjbKrxKx/P5aC4mSYfIU1JV1cUI3xtTg5DU8aYo83EWSXdoi64JGwWtF9RcQY6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=GeudyQRz; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RMiVNLhy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5194BC19422;
-	Sat,  8 Nov 2025 10:56:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762599391;
-	bh=1/zPj/GOtEGOtvxhfaLOwbvXmNML0Pp716jOkeAfyK0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=RMiVNLhy1cVf0zyYPggyz+mjVDwnUlbn4QjL2O0XQ5d7EZ+ht/eEXiXx9m5ebdG/X
-	 in4GdaNT3fgyuQTzkxBD/Cp1OV2yiBnFHJQMmK2sbtoWya3blTpcHDhs4D05rjiHFq
-	 Ximewn8F/GTf7uHIBByhfMwXQ/idDYdYPDIZh9omj0hcPwm9ehFZ6R0hsN2Bghji8P
-	 lW4iPbrsZORB+ua4NU/5BH3PdvNPf0NonQfkSz4FDNUgOB4YCrAa4XmbZTP9ynmudI
-	 kOwDibqNqQ1wI45rTkWAOUQzSl9Vboqorc+Iq9KO9OgwTRXkDvNXeCUh1sdMSU5GRW
-	 W6cwUkk75yerw==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH] tracing: Report wrong dynamic event command
-Date: Sat,  8 Nov 2025 19:56:27 +0900
-Message-ID: <176259938768.261465.10714633393722227911.stgit@devnote2>
-X-Mailer: git-send-email 2.43.0
-User-Agent: StGit/0.19
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="GeudyQRz"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5A8IjeaU031047;
+	Sat, 8 Nov 2025 21:04:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=r/C1clVn2kNhUfme3gLJloJ7m1Sg4mdeJO/aSpmZh
+	l4=; b=GeudyQRzkAOWPjbmni0KBK8PEE7jCOxJce9u88J/at0sbGrJCiqwJcjqe
+	u9H+G7dFcOYMR0lYueOefDjaXnUoMYZ1XxHI5L5YxVlW4JR6ANipLik5o1Jxtz1S
+	HUy+j8DP1zEDaB7A11F3QAeTChBKOsVl2BlQCHauAWw1tTSY0t8TrUlpobl0DBoR
+	EQPeZ1et1YSY1aMtyEIadv03csrg9uLaZ1g9SbyDBMkRGhQtsSmQ1p1bSlsGX0fe
+	dbXyW49XrEWnYyaD45hT+TTUNIBPcCXxgQoeQ7QwGU0n5YJ2tVsGjnae/iojoK74
+	wpc8n3EZUP/lNgCDq9x1ouG+0JU4Q==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4a9wgwj2fn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 08 Nov 2025 21:04:14 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5A8I0qWu012875;
+	Sat, 8 Nov 2025 21:04:13 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4a5y82g4ur-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 08 Nov 2025 21:04:13 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5A8L49qR28377348
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 8 Nov 2025 21:04:09 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 49B042004D;
+	Sat,  8 Nov 2025 21:04:09 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B2C4620040;
+	Sat,  8 Nov 2025 21:04:06 +0000 (GMT)
+Received: from li-bd3f974c-2712-11b2-a85c-df1cec4d728e.ibm.com.com (unknown [9.43.99.186])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Sat,  8 Nov 2025 21:04:06 +0000 (GMT)
+From: Hari Bathini <hbathini@linux.ibm.com>
+To: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Cc: Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        "Naveen N. Rao" <naveen@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linux-trace-kernel@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>, llvm@lists.linux.dev,
+        Maryam Moghadas <maryammo@ca.ibm.com>
+Subject: [PATCH 0/3] powerpc64/ftrace: fixes clang build issues
+Date: Sun,  9 Nov 2025 02:34:02 +0530
+Message-ID: <20251108210405.2375472-1-hbathini@linux.ibm.com>
+X-Mailer: git-send-email 2.51.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: wc92Ckzux93t2Jw3GDjJdetmD-I3piLP
+X-Proofpoint-ORIG-GUID: wc92Ckzux93t2Jw3GDjJdetmD-I3piLP
+X-Authority-Analysis: v=2.4 cv=VMPQXtPX c=1 sm=1 tr=0 ts=690fb04e cx=c_pps
+ a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
+ a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=NEAV23lmAAAA:8
+ a=Ew1Gq7sKqn5lxjvi_p4A:9 a=cPQSjfK2_nFv0Q5t_7PE:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTA4MDAyMiBTYWx0ZWRfXxpLUAX8Wgi9p
+ JYub1skAWOGD2Vy/vMP2Hr4aZc3Z3V79cFe7+wrPEgOJGnyd0GIgdCO8XjHvoHHkD8XcC65MyWI
+ HKHvw6bNtFVD4ySEDJkJjK1RPo2z13iFxdv7YCK3tdLn5+e7KR523yDW4ADqg7AnoWIsJbTdU0G
+ J7tH6CBMaga+wSsxNcjs4cSZwxlIoVny8r3TDRlOAJgGHJ8PgpXe7jUR+e5Pp4H3PpGUOT4ZD+F
+ 6HWXPTyYR5aJ8mus2E4dUlI/nR72HxUTZqiJ/keNmtu/Xl1isAtofZYGfjl9WM7qmss6QypaR/e
+ gIPEYCiX+9PmxM+h/rbFLo6Athi1gEY1cgyrE4YWFF8/G5ZDR25qZufdniafmpz6fJJPpn+XNVY
+ NjWsUqrczYoCPYUk4+IzLrk7P6Z23A==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-11-08_06,2025-11-06_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 priorityscore=1501 lowpriorityscore=0 bulkscore=0
+ clxscore=1011 phishscore=0 spamscore=0 malwarescore=0 adultscore=0
+ suspectscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2510240000
+ definitions=main-2511080022
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Support for -fpatchable-function-entry on ppc64le was added in Clang
+with [1]. Faced a couple of issues while building the linux kernel
+with Clang though. Patches 1 & 2 address those issues. The last patch
+provides workaround to ensure, an open issue [2] in Clang with
+-fpatchable-function-entry support, does not impact the linux
+ftrace subsystem.
 
-Report wrong dynamic event command via error_log.
----
- # echo "z hoge" > /sys/kernel/tracing/dynamic_events
- sh: write error: Invalid argument
- # cat /sys/kernel/tracing/error_log
- [   73.371714] dynevent: error: Invalid dynamic event command
-  Command: z hoge
-           ^
----
+[1] https://github.com/llvm/llvm-project/pull/151569
+[2] https://github.com/llvm/llvm-project/issues/163706
 
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- kernel/trace/trace_dynevent.c |   11 +++++++++--
- kernel/trace/trace_probe.h    |    3 ++-
- 2 files changed, 11 insertions(+), 3 deletions(-)
+Hari Bathini (3):
+  powerpc64: make clang cross-build friendly
+  powerpc64/ftrace: fix OOL stub count with clang
+  powerpc64/ftrace: workaround clang recording GEP in
+    __patchable_function_entries
 
-diff --git a/kernel/trace/trace_dynevent.c b/kernel/trace/trace_dynevent.c
-index d06854bd32b3..536a7704abfd 100644
---- a/kernel/trace/trace_dynevent.c
-+++ b/kernel/trace/trace_dynevent.c
-@@ -14,6 +14,7 @@
- 
- #include "trace.h"
- #include "trace_output.h"	/* for trace_event_sem */
-+#include "trace_probe.h"
- #include "trace_dynevent.h"
- 
- DEFINE_MUTEX(dyn_event_ops_mutex);
-@@ -144,9 +145,15 @@ static int create_dyn_event(const char *raw_command)
- 		if (!ret || ret != -ECANCELED)
- 			break;
- 	}
--	mutex_unlock(&dyn_event_ops_mutex);
--	if (ret == -ECANCELED)
-+	if (ret == -ECANCELED) {
-+		/* Wrong dynamic event. Leave an error message. */
-+		trace_probe_log_init("dynevent", 1, &raw_command);
-+		trace_probe_log_err(0, BAD_DYN_EVENT);
-+		trace_probe_log_clear();
- 		ret = -EINVAL;
-+	}
-+
-+	mutex_unlock(&dyn_event_ops_mutex);
- 
- 	return ret;
- }
-diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
-index 591adc9bb1e9..e6e5c884e60a 100644
---- a/kernel/trace/trace_probe.h
-+++ b/kernel/trace/trace_probe.h
-@@ -567,7 +567,8 @@ extern int traceprobe_define_arg_fields(struct trace_event_call *event_call,
- 	C(BAD_ACCESS_FMT,	"Access memory address requires @"),	\
- 	C(BAD_ACCESS_TYPE,	"Bad memory access type"),	\
- 	C(BAD_ACCESS_LEN,	"This memory access length is not supported"), \
--	C(BAD_ACCESS_ADDR,	"Invalid access memory address"),
-+	C(BAD_ACCESS_ADDR,	"Invalid access memory address"),	\
-+	C(BAD_DYN_EVENT,	"Invalid dynamic event command"),
- 
- #undef C
- #define C(a, b)		TP_ERR_##a
+ arch/powerpc/Kconfig                          |  5 ++--
+ arch/powerpc/kernel/trace/ftrace.c            | 26 ++++++++++++++++---
+ ....sh => check-fpatchable-function-entry.sh} |  0
+ arch/powerpc/tools/ftrace-gen-ool-stubs.sh    |  4 +--
+ 4 files changed, 27 insertions(+), 8 deletions(-)
+ rename arch/powerpc/tools/{gcc-check-fpatchable-function-entry.sh => check-fpatchable-function-entry.sh} (100%)
+
+-- 
+2.51.1
 
