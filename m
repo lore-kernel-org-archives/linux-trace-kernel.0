@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A37DC2F745E;
-	Mon, 10 Nov 2025 23:20:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0AC92BE7B8;
+	Mon, 10 Nov 2025 23:22:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762816839; cv=none; b=b16YgMo2YvzBvhzmK9oh4fztAcLXJTYIPUs0mcWei/PIqS107ugAmlbwDehwRU3HRB42lkFY5wZuIIHO2mwMORXooufdRQIyLwDYXyzBwaeUWwK5DsjYGtQMcjLLQUz678j53LorOpTxetqnz/SBS9EWUlaQfkmQ2460rWtMAaM=
+	t=1762816977; cv=none; b=COTkaXlFR2pUz3dbmJkz4T9Pr4T/JH6i/FSjDY4ZxBOih6CGg4WEQYXcJDGw2HeYHDYX9dzTQEQqiuwQbyE3AYhmtL0fFn/nq5gEP9HKaD1Itx5XTv50fHQMCW4v2VB0YTXNAWfheLW4djMxaTY9JQO57wtoGuPfkMy4pLShiTk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762816839; c=relaxed/simple;
-	bh=FIeaS0AVxWNe9gMVVor1LhTI7CIaaVmn2VWhVMDjN9E=;
+	s=arc-20240116; t=1762816977; c=relaxed/simple;
+	bh=QGYurX67GhE6LJ4m/le6ChiewTr24IY3HUNN+0ZWht4=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=ra1h2UlArmpUbbZBAJx3VsUisUb97poZzW9grIofmetEbiSlkZBsNNZ4PMQ1hhGIIWwaHGMFAXqVJl5gm19IZ11h9H5VD+VHKtawr3T78LE0w411DLA0izfGUqYTzFSn/NG0jV8WGl4trwG98rP0A2mbCQPq56wYDx7Kx9nwJj0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TJB3kG+Z; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=AAkadJNPMjoEUL8qWI+J6iBTnK8UWrmDKRCGu7+SdW4yb33sktD5HSL6qyISxhBuD4EP4ofGl2XqWl1Usd7Ge1rn1urQehG5HrnT6EncXHW0lRw+kf1DZ5eJ/4+Kwk/kO9APq0Xm9+SUhKqG8W9PcshkTIdXCJ+RWJZrzlBV9nE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qd+O2xi3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TJB3kG+Z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6B6FC4CEF5;
-	Mon, 10 Nov 2025 23:20:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qd+O2xi3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 597A0C4CEFB;
+	Mon, 10 Nov 2025 23:22:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762816839;
-	bh=FIeaS0AVxWNe9gMVVor1LhTI7CIaaVmn2VWhVMDjN9E=;
+	s=k20201202; t=1762816976;
+	bh=QGYurX67GhE6LJ4m/le6ChiewTr24IY3HUNN+0ZWht4=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=TJB3kG+Zfq5iwiqyKCdKsPXVEpen8pNtMx1TpJNY677D/p9HXUqytmIoyfw2aYscH
-	 K7YQWtOu9yqE6d2z7J7fd3Lyc5Wp7ucnDxmythM4AIUL6PGmGBABqOuHs/Ve6dHW0n
-	 Wnz9DbUyuCIvYmReUCRRPMeZDJpjBJEP/YNT2eWmDh/ot9g7k9DMCqLBeZemTr7ko0
-	 tRUVyGM5kcqa5gbhUlB8eBgJUYoPehwelf3je6qEOH4UZk8vSccsotb+dQsz5xzEkM
-	 jkEW3aJs8GNV7Td09B8ZlyqZFxz1g9e6u0gnkSlK1ethw+Zn4oLWqKrp7xSGlC5bOl
-	 nwqN27UzeABLQ==
-Date: Tue, 11 Nov 2025 08:20:33 +0900
+	b=Qd+O2xi3mC33ydo3Nrk2NFszrdqEdSKFTyqsYZ2F3KMDF09vK0wITKmUNXG2wYui+
+	 wJ02C1xG9NOdrf1UzyNGY9+GEzIun8HKNqGilIJweqrG7AE7TsRgPHjU7BqSt4WGhx
+	 ufX/mVqIYIFPFgfzAOGoYSzWlOnwOUyoX95WUib9JeooG11s4ZDkXO9NhmIEmQRL0z
+	 Hb815eW9WurD9/p+yCnuwE5Wz7BQpQn/yjmotbGvRKB/f8dvXpKTVfNDdfK6awwdtT
+	 zm6fWZiXfV6uTQk9/K8sshx2cBC5+LyGkBP+TYXMl7OxUuZZsWV2W1ag4vT4V2mZae
+	 gZz3rVLyZ/zZA==
+Date: Tue, 11 Nov 2025 08:22:51 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Menglong Dong <menglong8.dong@gmail.com>
-Cc: rostedt@goodmis.org, jolsa@redhat.com, mhiramat@kernel.org,
- mark.rutland@arm.com, mathieu.desnoyers@efficios.com, jiang.biao@linux.dev,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org
-Subject: Re: [PATCH] ftrace: avoid redundant initialization in
- register_ftrace_direct
-Message-Id: <20251111082033.32f65dec4f8d3ddc417b2b0b@kernel.org>
-In-Reply-To: <20251110121808.1559240-1-dongml2@chinatelecom.cn>
-References: <20251110121808.1559240-1-dongml2@chinatelecom.cn>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, linux-kselftest@vger.kernel.org,
+ Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Shuah Khan <skhan@linuxfoundation.org>
+Subject: Re: [PATCH] selftests/tracing: Run sample events to clear page
+ cache events
+Message-Id: <20251111082251.2496db7c20b28184cd8cb759@kernel.org>
+In-Reply-To: <20251028122724.4bff9853@gandalf.local.home>
+References: <20251028122724.4bff9853@gandalf.local.home>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -48,16 +48,26 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 10 Nov 2025 20:18:08 +0800
-Menglong Dong <menglong8.dong@gmail.com> wrote:
+On Tue, 28 Oct 2025 12:27:24 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> The FTRACE_OPS_FL_INITIALIZED flag is cleared in register_ftrace_direct,
-> which can make it initialized by ftrace_ops_init() even if it is already
-> initialized. It seems that there is no big deal here, but let's still fix
-> it.
+> From: Steven Rostedt <rostedt@goodmis.org>
 > 
-> Fixes: f64dd4627ec6 ("ftrace: Add multi direct register/unregister interface")
-> Signed-off-by: Menglong Dong <dongml2@chinatelecom.cn>
+> The tracing selftest "event-filter-function.tc" was failing because it
+> first runs the "sample_events" function that triggers the kmem_cache_free
+> event and it looks at what function was used during a call to "ls".
+> 
+> But the first time it calls this, it could trigger events that are used to
+> pull pages into the page cache.
+> 
+> The rest of the test uses the function it finds during that call to see if
+> it will be called in subsequent "sample_events" calls. But if there's no
+> need to pull pages into the page cache, it will not trigger that function
+> and the test will fail.
+> 
+> Call the "sample_events" twice to trigger all the page cache work before
+> it calls it to find a function to use in subsequent checks.
+> 
 
 Looks good to me.
 
@@ -65,25 +75,30 @@ Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
 Thanks,
 
+> Cc: stable@vger.kernel.org
+> Fixes: eb50d0f250e96 ("selftests/ftrace: Choose target function for filter test from samples")
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 > ---
->  kernel/trace/ftrace.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  .../selftests/ftrace/test.d/filter/event-filter-function.tc   | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
-> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> index 42bd2ba68a82..efb5ce32298f 100644
-> --- a/kernel/trace/ftrace.c
-> +++ b/kernel/trace/ftrace.c
-> @@ -6043,7 +6043,7 @@ int register_ftrace_direct(struct ftrace_ops *ops, unsigned long addr)
->  	new_hash = NULL;
+> diff --git a/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc b/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc
+> index c62165fabd0c..003f612f57b0 100644
+> --- a/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc
+> +++ b/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc
+> @@ -20,6 +20,10 @@ sample_events() {
+>  echo 0 > tracing_on
+>  echo 0 > events/enable
 >  
->  	ops->func = call_direct_funcs;
-> -	ops->flags = MULTI_FLAGS;
-> +	ops->flags |= MULTI_FLAGS;
->  	ops->trampoline = FTRACE_REGS_ADDR;
->  	ops->direct_call = addr;
->  
+> +# Clear functions caused by page cache; run sample_events twice
+> +sample_events
+> +sample_events
+> +
+>  echo "Get the most frequently calling function"
+>  echo > trace
+>  sample_events
 > -- 
-> 2.51.2
+> 2.51.0
 > 
 
 
