@@ -1,64 +1,64 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B64531B836
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 10 Nov 2025 16:37:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B109C31CA59
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 10 Nov 2025 16:37:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762792675; cv=none; b=WkGsrIxkoobbdDmiMHOs6Vfci/PCbOzpMoZVO1oX01B8K4qdnObgUV6k7pEo4loCvljGMKct+6mjMas5GPSCh5+IHxl8MZh+6iaAZFndMGRpA+0jn2MoWjLTXOqBGoIwFJWA/FOTU8ynBMmUHDgtc+Z1PnWbO8qLn+oSmnTpWKk=
+	t=1762792680; cv=none; b=ri5nr2s84C/pbQWlGge2S380tySYGUvV+XN59Un9KTbLR14vPbxA1qic3h8y8wsMSlpawQ/JAP08GLFO27DTex4ZToxZTCzMlL8Pexm8AJmHaSQ7htwaXODdMpufqSaWWm4rGz8Qv0SxDjRdmi8u5JvGhN56DTVqOiErhQqtnHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762792675; c=relaxed/simple;
-	bh=wQ1McUxBvOQybWZtkihRRIOMW2MyuqP74EGicbjl+yY=;
+	s=arc-20240116; t=1762792680; c=relaxed/simple;
+	bh=u5rYMDHG15I/cQVc25duuIIeZNrf7utvrw96eXmgPSk=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=t/ybs9snnIJN3kVh1XbR4nPeXsjK9JiQC4mfAgwz9XMEE4ezzg9RAcmC/AQfg0wi/BCRHldU5gGGej2elHKP9JlPuNEdcLU3V/yuQmmImTBW+H4lE8rajVq8Hu/HYEpH6dLxpTOFaO5Gabxyow00N0ChRYghr3fOhgH9GJqf7r4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=akYXr6hT; arc=none smtp.client-ip=209.85.216.42
+	 MIME-Version; b=kMfBzw0VDe3hC/QgMRd9NjNNI3Al2E7mSdtC2hztVR6C7V5S23yTxOze4/hv5SgorpdlEJCZ2BuoQSnLfCd3uF2eKx53R9LzlQ3mGHTEmn+JmDwzWDoiZRW81xYTzZ6XyyVNNT84r8CJojlklzbraJbMvOjvrGT2gRN+nee9TzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jgN9V9tb; arc=none smtp.client-ip=209.85.215.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="akYXr6hT"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-3434700be69so4345179a91.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 10 Nov 2025 08:37:53 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jgN9V9tb"
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-b6ce6d1d3dcso1875343a12.3
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 10 Nov 2025 08:37:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762792673; x=1763397473; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1762792678; x=1763397478; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Z475VFvVTEIt4JwZ3YGODDVB/J4Mi7oiMRjRIDfUacs=;
-        b=akYXr6hTTmKYO6bD/KyxeV16JXOYZWQ8DwCYDA0t0jVp3SHPE27q3tvfZErkdMW+lP
-         2RSaYGsAM7BXt3NSMeS5cAQRjuQpwMA1lYXTG8f3TGbIxwGNhq9vEREUVVFEbCM5/x2m
-         jE+91qFsxS+7OvZ2hTW0lIbLdO1VAcYE0ZVtpQTqaHlTLykJpl/uu5XWg/0LVEeSXk2+
-         X7l3snS2OX6ralC067tjX44SbtnYJ77M2S5ykFuDV4JPGuxZ7YXw+WH+AbMxw6YSuoN0
-         O5NWHDIWyPS2lY5FBZ+Wy1RAEhJBG69v0RXKnAHaaSLBwzfwkMXLuJFtazFI5aE/WXfR
-         wuiA==
+        bh=IoYSCz9IZK+WTJVuSJ5kdqWuXYPyBcWSfVrsNGbuyIk=;
+        b=jgN9V9tb1u2tX7EcLEJaOx8wVnAL8EdgrCnutPFBySuBe8TpcwF87l5bJQ05kv654B
+         cRBwwUb7OcQ7aIzhsfrlsliFBLo+mwAO5bOIlAw7pABQSI22M5im1O7UsvfKKD3WPfIJ
+         59xFuyiMRLSjUHiX/zWvMP2hKOzl+W18Lnibp77oIjYHMuf3ocBNME5HXl/QBIR8TG38
+         z5fbBv+NGAXzYegr+TiiKlsjv9X0bCCDte2sTBJoL0gQAW8uoroPTAyGJq+iDottAPrO
+         tUBL6mSsNOp2nUNd7s6m6GAnbNxJn8IRlo3LS6O248uqL8YUtliE1kDCunYS4RDkHcgr
+         1YwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762792673; x=1763397473;
+        d=1e100.net; s=20230601; t=1762792678; x=1763397478;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=Z475VFvVTEIt4JwZ3YGODDVB/J4Mi7oiMRjRIDfUacs=;
-        b=PA1EputIOEgTdZ6yt3ofGjrR5B9ywfCDUzlBiG5v5s6/KZLrKQG7RUqhOjcNY1SD4M
-         AQT9FNBNytDUEXnOPr60KBp5Mk5IAa9iCVzj8A/NUIgejZKaa2NqQuKJzySqOTaTGEbM
-         4PorzLuUeFObVjIqiCiumlTqiYWId23nC5VlW7wuvQmzaAuWWYfBlYxyGC5jEEjULcxf
-         H51S7xVdpOyk1BMkwJy0BgIoJH+k0b3U+5E7mKr/cJbDSrgb47xI88gGfCJTB3Y4T0xE
-         wn64GXucxiWSemmiQHaTVqIEVpeLjRcfLl75KaRlsMcwaabkdpbSXT4Eonp0LEh/ZW41
-         0JRA==
-X-Forwarded-Encrypted: i=1; AJvYcCWKU4hd0HZA9AwiWC3blgHVteUhvL2tBpKuoSRVwZPhvJyTvG5byjTv8XeqMkkPrB/srsANMv00kZ74c7qnLesagu4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YybzwuhaUqBXqyb3gcrWKFbugXJhDGDo5JtPjBXEIiGuMjJFmiW
-	xJs0uDewAVmtMsZZRQkIzeX9JX8cb0Ck6uE5WE1MK6JREiw/jvKnl/AM
-X-Gm-Gg: ASbGncuYI66/y14dH33Ki8PShHPhrubJ5DO2JB/cj3Da9L1SuLfazWwPg7f4g3kBKTW
-	uAklG14Ar1yHykJix7D0i/Ui7B74vDVLZE+DSwWJnVeI6MNaL27g4DazXAjSpvhoG4DQr49MPGh
-	4yjYhAAbPRSkS4/OphksqmXzfNuWRkPM/1mZAWCUWHG7ilemf8b98qk+LVGhKij72ULRzrfUKgW
-	EmJW2u45WHKxGnh1V2MYyRB4nTgTRjm0QyO+yEVMDGK9bgky5v9wHFOyaxa000V00h5JFRNH0yn
-	k/klF+Hl8X6fSqLtSZknHxGZyzioFJKbpEDQCSFeL2jmoqxLYAHOJ2KQ6dT5Aq5xubxx73UGoLI
-	HJb6vgWQDDdbUHtAh1YHDmiZAcILU+PmgSX5HbC85osnazYaDLp4iDU2wQYIOeDmCHDve1g8dOe
-	PxMgZALSn6jmg=
-X-Google-Smtp-Source: AGHT+IFMkp6mzspl/QeVRsUZzdmIZ1SaB55q2G1mEh95QyGe2qx8u+PVoYkCuCMgJ33eu6H6IlXxoQ==
-X-Received: by 2002:a17:90b:2d0d:b0:341:d326:7354 with SMTP id 98e67ed59e1d1-3436cbda0e8mr11097915a91.37.1762792672604;
-        Mon, 10 Nov 2025 08:37:52 -0800 (PST)
+        bh=IoYSCz9IZK+WTJVuSJ5kdqWuXYPyBcWSfVrsNGbuyIk=;
+        b=TEJJoiHm6jJa8awjWXkQRhYJ037MIkWJw6/pL/GXwUs2b2KTD8U9XEtQvfQYLmTmgz
+         oJlg+dpupIUKNvIPLibPcYevcrJSpXXbQ8UPU2UivvSpuF0Ub3JgQ9AKCqeKXAf+gXp4
+         nPTBUKrQIOztXbcS+D9w4jM51QZ6nynqzu5kTIx8HsDxPQmTbbTelicgktH+1+aiua4E
+         6H69e5SOo4rmLSsgWWhkcOZiSN3vEj6pZaOrmGZEv2gDbjD/zDyfCVPh/lOPD5QjV9YV
+         m/sD3oMfkfESBcZS9Eeb9ZZm7zTXKnfb1YcD6EDWNdQwTPjsonBpKIQgD202w5eFX1yS
+         S/Ag==
+X-Forwarded-Encrypted: i=1; AJvYcCW7MvjkCtwlA28Yfvwdtt1t9Kp/d0jnfcT3vnvW142Dvij7WSeUSNztLmQhRQEVy2EEMgEiCM8Ujr9OlJAW5f7rvpk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxcVB73yq3Dji7gPId55rQZl8+pLroltjeJTamzBH8oD0jsc2GU
+	bpbsFUx8qXM7Tfl4w9zAL8krcNuz1ctD2VNN749gF49pn5uiVf0g6Sui
+X-Gm-Gg: ASbGncuQ/vq/SUbJotFOK6/iXmYmlpY1sVr4liBM2Nj6tw6p/DZkivKmvDQ5O4u70nS
+	jF6n83aNRpcsOmoUgHPSmloeigHcWNQN+0cx+Xyq68jGnAEUiGl0A/obJ9joQSUpbx9BzBf8o6s
+	GehpD20T9BQfaJATwb5SBCICS9Oz2uMRjZPofsX1p5r/2iw5J64vz4dO9HmjObazsA/DMPramx4
+	7PFgkVB0/7Km6Urb6R4pJ2R70AeZHEDNZHye0YDX4IWei+dHaHGm8RdNSTI49HvlTqpOd/Gji5I
+	e+TZ2MWTQc3nODkPHUOGlxg85pL/hvR9jX8vdnTbZBPamfPE7w/sgauNFURjcKJZUZC6KGAX7Zo
+	bia7L5bOGDKFVRes+5Svscfyv1uvDb/B/yRqKHsSZj+ef+NjCaEtVjXUhDkuiImANEu47CWlJpq
+	zNGRQ0UHBSur0=
+X-Google-Smtp-Source: AGHT+IGNkULY4KbMreL+r3C6zKYa6LAZ6HejhCC3QQjkk4WrB7CidoZ7O068kW/SdXYru/ivG/AiRg==
+X-Received: by 2002:a17:902:e80e:b0:271:479d:3de2 with SMTP id d9443c01a7336-297e5624c9fmr126791755ad.13.1762792677804;
+        Mon, 10 Nov 2025 08:37:57 -0800 (PST)
 Received: from localhost ([103.88.46.62])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-341a68ad143sm18023453a91.3.2025.11.10.08.37.51
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29651ccec88sm150510135ad.107.2025.11.10.08.37.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Nov 2025 08:37:51 -0800 (PST)
+        Mon, 10 Nov 2025 08:37:57 -0800 (PST)
 From: Jinchao Wang <wangjinchao600@gmail.com>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
@@ -132,9 +132,9 @@ To: Andrew Morton <akpm@linux-foundation.org>,
 	Will Deacon <will@kernel.org>,
 	workflows@vger.kernel.org,
 	x86@kernel.org
-Subject: [PATCH v8 16/27] mm/ksw: manage probe and HWBP lifecycle via procfs
-Date: Tue, 11 Nov 2025 00:36:11 +0800
-Message-ID: <20251110163634.3686676-17-wangjinchao600@gmail.com>
+Subject: [PATCH v8 17/27] mm/ksw: add KSTACKWATCH_PROFILING to measure probe cost
+Date: Tue, 11 Nov 2025 00:36:12 +0800
+Message-ID: <20251110163634.3686676-18-wangjinchao600@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20251110163634.3686676-1-wangjinchao600@gmail.com>
 References: <20251110163634.3686676-1-wangjinchao600@gmail.com>
@@ -146,106 +146,301 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Allow dynamic enabling/disabling of KStackWatch through user input of proc.
-With this patch, the entire system becomes functional.
+CONFIG_KSTACKWATCH_PROFILING enables runtime measurement of KStackWatch
+probe latencies. When profiling is enabled, KStackWatch collects
+entry/exit latencies in its probe callbacks. When KStackWatch is
+disabled by clearing its config file, the previously collected statistics
+are printed.
 
 Signed-off-by: Jinchao Wang <wangjinchao600@gmail.com>
 ---
- mm/kstackwatch/kernel.c | 60 +++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 58 insertions(+), 2 deletions(-)
+ mm/kstackwatch/Kconfig |  10 +++
+ mm/kstackwatch/stack.c | 185 ++++++++++++++++++++++++++++++++++++++---
+ 2 files changed, 183 insertions(+), 12 deletions(-)
 
-diff --git a/mm/kstackwatch/kernel.c b/mm/kstackwatch/kernel.c
-index 87fef139f494..a0e676e60692 100644
---- a/mm/kstackwatch/kernel.c
-+++ b/mm/kstackwatch/kernel.c
-@@ -14,6 +14,43 @@ static struct ksw_config *ksw_config;
- static struct dentry *dbgfs_config;
- static struct dentry *dbgfs_dir;
+diff --git a/mm/kstackwatch/Kconfig b/mm/kstackwatch/Kconfig
+index 496caf264f35..3c9385a15c33 100644
+--- a/mm/kstackwatch/Kconfig
++++ b/mm/kstackwatch/Kconfig
+@@ -12,3 +12,13 @@ config KSTACKWATCH
+ 	  introduce minor overhead during runtime monitoring.
  
-+static bool watching_active;
+ 	  If unsure, say N.
 +
-+static int ksw_start_watching(void)
++config KSTACKWATCH_PROFILING
++	bool "KStackWatch profiling"
++	depends on KSTACKWATCH
++	help
++	  Measure probe latency and overhead in KStackWatch. It records
++	  entry/exit probe times (ns and cycles) and shows statistics when
++	  stopping. Useful for performance tuning, not for production use.
++
++	  If unsure, say N.
+diff --git a/mm/kstackwatch/stack.c b/mm/kstackwatch/stack.c
+index 3455d1e70db9..72ae2d3adeec 100644
+--- a/mm/kstackwatch/stack.c
++++ b/mm/kstackwatch/stack.c
+@@ -6,7 +6,10 @@
+ #include <linux/kprobes.h>
+ #include <linux/kstackwatch.h>
+ #include <linux/kstackwatch_types.h>
++#include <linux/ktime.h>
++#include <linux/percpu.h>
+ #include <linux/printk.h>
++#include <linux/timex.h>
+ 
+ #define MAX_CANARY_SEARCH_STEPS 128
+ static struct kprobe entry_probe;
+@@ -15,6 +18,120 @@ static struct fprobe exit_probe;
+ static bool probe_enable;
+ static u16 probe_generation;
+ 
++#ifdef CONFIG_KSTACKWATCH_PROFILING
++struct measure_data {
++	u64 total_entry_with_watch_ns;
++	u64 total_entry_with_watch_cycles;
++	u64 total_entry_without_watch_ns;
++	u64 total_entry_without_watch_cycles;
++	u64 total_exit_with_watch_ns;
++	u64 total_exit_with_watch_cycles;
++	u64 total_exit_without_watch_ns;
++	u64 total_exit_without_watch_cycles;
++	u64 entry_with_watch_count;
++	u64 entry_without_watch_count;
++	u64 exit_with_watch_count;
++	u64 exit_without_watch_count;
++};
++
++static DEFINE_PER_CPU(struct measure_data, measure_stats);
++
++struct measure_ctx {
++	u64 ns_start;
++	u64 cycles_start;
++};
++
++static __always_inline void measure_start(struct measure_ctx *ctx)
 +{
-+	int ret;
-+
-+	/*
-+	 * Watch init will preallocate the HWBP,
-+	 * so it must happen before stack init
-+	 */
-+	ret = ksw_watch_init();
-+	if (ret) {
-+		pr_err("ksw_watch_init ret: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = ksw_stack_init();
-+	if (ret) {
-+		pr_err("ksw_stack_init ret: %d\n", ret);
-+		ksw_watch_exit();
-+		return ret;
-+	}
-+	watching_active = true;
-+
-+	pr_info("start watching: %s\n", ksw_config->user_input);
-+	return 0;
++	ctx->ns_start = ktime_get_ns();
++	ctx->cycles_start = get_cycles();
 +}
 +
-+static void ksw_stop_watching(void)
++static __always_inline void measure_end(struct measure_ctx *ctx, u64 *total_ns,
++					u64 *total_cycles, u64 *count)
 +{
-+	ksw_stack_exit();
-+	ksw_watch_exit();
-+	watching_active = false;
++	u64 ns_end = ktime_get_ns();
++	u64 c_end = get_cycles();
 +
-+	pr_info("stop watching: %s\n", ksw_config->user_input);
++	*total_ns += ns_end - ctx->ns_start;
++	*total_cycles += c_end - ctx->cycles_start;
++	(*count)++;
 +}
 +
- struct param_map {
- 	const char *name;       /* long name */
- 	const char *short_name; /* short name (2 letters) */
-@@ -119,8 +156,18 @@ static int ksw_parse_config(char *buf, struct ksw_config *config)
- static ssize_t ksw_dbgfs_read(struct file *file, char __user *buf, size_t count,
- 			      loff_t *ppos)
++static void show_measure_stats(void)
++{
++	int cpu;
++	struct measure_data sum = {};
++
++	for_each_possible_cpu(cpu) {
++		struct measure_data *md = per_cpu_ptr(&measure_stats, cpu);
++
++		sum.total_entry_with_watch_ns += md->total_entry_with_watch_ns;
++		sum.total_entry_with_watch_cycles +=
++			md->total_entry_with_watch_cycles;
++		sum.total_entry_without_watch_ns +=
++			md->total_entry_without_watch_ns;
++		sum.total_entry_without_watch_cycles +=
++			md->total_entry_without_watch_cycles;
++
++		sum.total_exit_with_watch_ns += md->total_exit_with_watch_ns;
++		sum.total_exit_with_watch_cycles +=
++			md->total_exit_with_watch_cycles;
++		sum.total_exit_without_watch_ns +=
++			md->total_exit_without_watch_ns;
++		sum.total_exit_without_watch_cycles +=
++			md->total_exit_without_watch_cycles;
++
++		sum.entry_with_watch_count += md->entry_with_watch_count;
++		sum.entry_without_watch_count += md->entry_without_watch_count;
++		sum.exit_with_watch_count += md->exit_with_watch_count;
++		sum.exit_without_watch_count += md->exit_without_watch_count;
++	}
++
++#define AVG(ns, cnt) ((cnt) ? ((ns) / (cnt)) : 0ULL)
++
++	pr_info("entry (with watch):    %llu ns, %llu cycles (%llu samples)\n",
++		AVG(sum.total_entry_with_watch_ns, sum.entry_with_watch_count),
++		AVG(sum.total_entry_with_watch_cycles,
++		    sum.entry_with_watch_count),
++		sum.entry_with_watch_count);
++
++	pr_info("entry (without watch): %llu ns, %llu cycles (%llu samples)\n",
++		AVG(sum.total_entry_without_watch_ns,
++		    sum.entry_without_watch_count),
++		AVG(sum.total_entry_without_watch_cycles,
++		    sum.entry_without_watch_count),
++		sum.entry_without_watch_count);
++
++	pr_info("exit (with watch):     %llu ns, %llu cycles (%llu samples)\n",
++		AVG(sum.total_exit_with_watch_ns, sum.exit_with_watch_count),
++		AVG(sum.total_exit_with_watch_cycles,
++		    sum.exit_with_watch_count),
++		sum.exit_with_watch_count);
++
++	pr_info("exit (without watch):  %llu ns, %llu cycles (%llu samples)\n",
++		AVG(sum.total_exit_without_watch_ns,
++		    sum.exit_without_watch_count),
++		AVG(sum.total_exit_without_watch_cycles,
++		    sum.exit_without_watch_count),
++		sum.exit_without_watch_count);
++}
++
++static void reset_measure_stats(void)
++{
++	int cpu;
++
++	for_each_possible_cpu(cpu) {
++		struct measure_data *md = per_cpu_ptr(&measure_stats, cpu);
++
++		memset(md, 0, sizeof(*md));
++	}
++
++	pr_info("measure stats reset.\n");
++}
++
++#endif
++
+ static void ksw_reset_ctx(void)
  {
--	return simple_read_from_buffer(buf, count, ppos, ksw_config->user_input,
--		ksw_config->user_input ? strlen(ksw_config->user_input) : 0);
-+	const char *out;
-+	size_t len;
+ 	struct ksw_ctx *ctx = &current->ksw_ctx;
+@@ -159,25 +276,28 @@ static void ksw_stack_entry_handler(struct kprobe *p, struct pt_regs *regs,
+ 				    unsigned long flags)
+ {
+ 	struct ksw_ctx *ctx = &current->ksw_ctx;
+-	ulong stack_pointer;
+-	ulong watch_addr;
++	ulong stack_pointer, watch_addr;
+ 	u16 watch_len;
+ 	int ret;
++#ifdef CONFIG_KSTACKWATCH_PROFILING
++	struct measure_ctx m;
++	struct measure_data *md = this_cpu_ptr(&measure_stats);
++	bool watched = false;
 +
-+	if (watching_active && ksw_config->user_input) {
-+		out = ksw_config->user_input;
-+		len = strlen(out);
-+	} else {
-+		out = "not watching\n";
-+		len = strlen(out);
-+	}
-+
-+	return simple_read_from_buffer(buf, count, ppos, out, len);
- }
++	measure_start(&m);
++#endif
  
- static ssize_t ksw_dbgfs_write(struct file *file, const char __user *buffer,
-@@ -135,6 +182,9 @@ static ssize_t ksw_dbgfs_write(struct file *file, const char __user *buffer,
- 	if (copy_from_user(input, buffer, count))
- 		return -EFAULT;
+ 	stack_pointer = kernel_stack_pointer(regs);
  
-+	if (watching_active)
-+		ksw_stop_watching();
-+
- 	input[count] = '\0';
- 	strim(input);
+-	/*
+-	 * triggered more than once, may be in a loop
+-	 */
+ 	if (ctx->wp && ctx->sp == stack_pointer)
+-		return;
++		goto out;
  
-@@ -149,6 +199,12 @@ static ssize_t ksw_dbgfs_write(struct file *file, const char __user *buffer,
- 		return ret;
+ 	if (!ksw_stack_check_ctx(true))
+-		return;
++		goto out;
+ 
+ 	ret = ksw_watch_get(&ctx->wp);
+ 	if (ret)
+-		return;
++		goto out;
+ 
+ 	ret = ksw_stack_prepare_watch(regs, ksw_get_config(), &watch_addr,
+ 				      &watch_len);
+@@ -185,17 +305,32 @@ static void ksw_stack_entry_handler(struct kprobe *p, struct pt_regs *regs,
+ 		ksw_watch_off(ctx->wp);
+ 		ctx->wp = NULL;
+ 		pr_err("failed to prepare watch target: %d\n", ret);
+-		return;
++		goto out;
  	}
  
-+	ret = ksw_start_watching();
-+	if (ret) {
-+		pr_err("Failed to start watching with %d\n", ret);
-+		return ret;
-+	}
+ 	ret = ksw_watch_on(ctx->wp, watch_addr, watch_len);
+ 	if (ret) {
+ 		pr_err("failed to watch on depth:%d addr:0x%lx len:%u %d\n",
+ 		       ksw_get_config()->depth, watch_addr, watch_len, ret);
+-		return;
++		goto out;
+ 	}
+ 
+ 	ctx->sp = stack_pointer;
++#ifdef CONFIG_KSTACKWATCH_PROFILING
++	watched = true;
++#endif
 +
- 	return count;
++out:
++#ifdef CONFIG_KSTACKWATCH_PROFILING
++	if (watched)
++		measure_end(&m, &md->total_entry_with_watch_ns,
++			    &md->total_entry_with_watch_cycles,
++			    &md->entry_with_watch_count);
++	else
++		measure_end(&m, &md->total_entry_without_watch_ns,
++			    &md->total_entry_without_watch_cycles,
++			    &md->entry_without_watch_count);
++#endif
  }
  
+ static void ksw_stack_exit_handler(struct fprobe *fp, unsigned long ip,
+@@ -203,15 +338,36 @@ static void ksw_stack_exit_handler(struct fprobe *fp, unsigned long ip,
+ 				   struct ftrace_regs *regs, void *data)
+ {
+ 	struct ksw_ctx *ctx = &current->ksw_ctx;
++#ifdef CONFIG_KSTACKWATCH_PROFILING
++	struct measure_ctx m;
++	struct measure_data *md = this_cpu_ptr(&measure_stats);
++	bool watched = false;
+ 
++	measure_start(&m);
++#endif
+ 	if (!ksw_stack_check_ctx(false))
+-		return;
++		goto out;
+ 
+ 	if (ctx->wp) {
+ 		ksw_watch_off(ctx->wp);
+ 		ctx->wp = NULL;
+ 		ctx->sp = 0;
++#ifdef CONFIG_KSTACKWATCH_PROFILING
++		watched = true;
++#endif
+ 	}
++
++out:
++#ifdef CONFIG_KSTACKWATCH_PROFILING
++	if (watched)
++		measure_end(&m, &md->total_exit_with_watch_ns,
++			    &md->total_exit_with_watch_cycles,
++			    &md->exit_with_watch_count);
++	else
++		measure_end(&m, &md->total_exit_without_watch_ns,
++			    &md->total_exit_without_watch_cycles,
++			    &md->exit_without_watch_count);
++#endif
+ }
+ 
+ int ksw_stack_init(void)
+@@ -239,7 +395,9 @@ int ksw_stack_init(void)
+ 		unregister_kprobe(&entry_probe);
+ 		return ret;
+ 	}
+-
++#ifdef CONFIG_KSTACKWATCH_PROFILING
++	reset_measure_stats();
++#endif
+ 	WRITE_ONCE(probe_generation, READ_ONCE(probe_generation) + 1);
+ 	WRITE_ONCE(probe_enable, true);
+ 
+@@ -252,4 +410,7 @@ void ksw_stack_exit(void)
+ 	WRITE_ONCE(probe_generation, READ_ONCE(probe_generation) + 1);
+ 	unregister_fprobe(&exit_probe);
+ 	unregister_kprobe(&entry_probe);
++#ifdef CONFIG_KSTACKWATCH_PROFILING
++	show_measure_stats();
++#endif
+ }
 -- 
 2.43.0
 
