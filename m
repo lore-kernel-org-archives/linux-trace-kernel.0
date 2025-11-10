@@ -1,321 +1,356 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38494279DCA
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 10 Nov 2025 16:17:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762791438; cv=none; b=jNmEpfFvX00B0/WJF8kRh0iYp2cxLk9OL/e3lqQ722b/hWfWrW4zTEKfvZFGiHqwfgMUe8LdHfOctgzPQUDFqOvdKEmxOBC4c5G9oL90eym+/v6G2vvEItsf8++nJXNnkAGxcL3ZaoK/CiK0bOOzK5dkLHGY0mmWeafgZD3/3jk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762791438; c=relaxed/simple;
-	bh=BOICJgjEM8TZaqRMVH1oCsKEHOrwjoYHghZGGNdXB40=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mDz4Cy4A4F2drkx/V5DuC7meK6Cxnyn5DDaE+VCDQbcYGLu7F7Sa/E/00vEzQvIIyoEAsYOsjRGo27DRoetpcCL3QKJur2uWbv/53UTBxsedP/4cflnz8W7ddn+zcUe2yD0WAsla6PJLtXpHUH+9UuLynhgl5PT8Xdx4UcWazKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=WRlZN1Dt; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=HtQdFl7J; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=WRlZN1Dt; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=HtQdFl7J; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 705B3254AE1;
+	Mon, 10 Nov 2025 16:31:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1762792275; cv=fail; b=WHj2oKEnfcaHUOmvfyp9Qs/7xn9KcoSHH5Tz6N5zcEJ9npqt+WmWVgRvAT7U+STODBoJ+coTya/ySOESHE3VpB3hGz6aD795uS8yUdRMnnHZyA08V4rsp2z+OQLf0Ahg1Cy64WQli9+/TcW3+Q9lMCgm3DYMOO4Sk+33l+ZW7wc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1762792275; c=relaxed/simple;
+	bh=UMTwXGEuiYiFREZwDJCQ4dc+FQsRpkqE4Dw7BKXwCDQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=KtpGKDcMsMKo0iNYQ2n/9FDFkF1FUKsbLH0sSuPiFuYSxNRMWT+NVo2PfEBIUOLb/dESRuirIWnRuUAvYQ/X3c+mSgRW1bX7in3tPxCeH+b8Kz8EQwVYlKz3ACcmQzWmrPy5LFBmMlHt89nZW4iGSQy8CtVg3SuE8zcPAbGCOmY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=a70K6I8Z; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=qKNhKPCc; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="WRlZN1Dt";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="HtQdFl7J";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="WRlZN1Dt";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="HtQdFl7J"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 56DAF1F81C;
-	Mon, 10 Nov 2025 16:17:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1762791434; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=YrOBspxCbbKPnxtqzlAEE5iWqhCmDcU42GABocD1amU=;
-	b=WRlZN1DtAqT+PMxHhs21FZZKglAss9orVBCok9BiUdcNVF4BWPbgREkiQMWHjTRr9M0jhB
-	YfXTlaczmrbDJb2qkrIxWTTPohaYFMZDzP/Exu8cPjZTFfov/RQwflcvIWIlsbRXt+Y/b4
-	yBQqeggkkz8kar6oqBcLfhkKGVlMZPA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1762791434;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=YrOBspxCbbKPnxtqzlAEE5iWqhCmDcU42GABocD1amU=;
-	b=HtQdFl7J5kPMtvohpN3txIm0DYVUFWOXvTD07pOuox8uLKCNTa0lKyC3EF5/ttsrd6zbNJ
-	3m9tkwg2kKysFpAw==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1762791434; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=YrOBspxCbbKPnxtqzlAEE5iWqhCmDcU42GABocD1amU=;
-	b=WRlZN1DtAqT+PMxHhs21FZZKglAss9orVBCok9BiUdcNVF4BWPbgREkiQMWHjTRr9M0jhB
-	YfXTlaczmrbDJb2qkrIxWTTPohaYFMZDzP/Exu8cPjZTFfov/RQwflcvIWIlsbRXt+Y/b4
-	yBQqeggkkz8kar6oqBcLfhkKGVlMZPA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1762791434;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=YrOBspxCbbKPnxtqzlAEE5iWqhCmDcU42GABocD1amU=;
-	b=HtQdFl7J5kPMtvohpN3txIm0DYVUFWOXvTD07pOuox8uLKCNTa0lKyC3EF5/ttsrd6zbNJ
-	3m9tkwg2kKysFpAw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1885C144A2;
-	Mon, 10 Nov 2025 16:17:14 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id wEKnBQoQEmmDewAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Mon, 10 Nov 2025 16:17:14 +0000
-Message-ID: <2bbccc79-d64e-4ace-a528-37295e3f8a4d@suse.cz>
-Date: Mon, 10 Nov 2025 17:17:13 +0100
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="a70K6I8Z";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="qKNhKPCc"
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5AAGAhL9029259;
+	Mon, 10 Nov 2025 16:30:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=corp-2025-04-25; bh=FWiXt+1CXFJwKQ6zsd
+	P3bpQZuj2IrhcbQSbfXkJPmfA=; b=a70K6I8ZsYX3W+Sjj1fWbdFav0oA7y5fZc
+	TPjEM7FpUd7JwfdbjFRJ/TXpG9sGjzoTzOH0+oeuiqV0nYlDwv4fJDCGYlOOC5vp
+	GuHCA/qgxr7K+zFjw0eyb8hotGEEIriPlNaK76DTbodeL9oT95VgCKcFQ+UEUKVa
+	GAZqr215ksMrfW9KSwR0EwWUFNvj8kHnQ17jU+Uoz4vQiTeDgUNvX8P0+TvwJQsS
+	7iFwrb9pTOCJD4omnyIEDxAJBv1/7TiZoaJ2SQ2xWj9K/Uhj0omSXrQX/yoBQcRV
+	neLaRRIIGW+ppSVA5NVQwPPgFlNK9/EI9DbPSWXLSs2BXpENXSxQ==
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4abkb6g1pw-5
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 10 Nov 2025 16:30:49 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 5AAFKmqZ012658;
+	Mon, 10 Nov 2025 16:06:45 GMT
+Received: from dm5pr21cu001.outbound.protection.outlook.com (mail-centralusazon11011018.outbound.protection.outlook.com [52.101.62.18])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 4a9vabu680-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 10 Nov 2025 16:06:45 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=r10nZRgex1qSdpqmPc2ynFpq0Y8Ryf+X7HQMAUgiDvsPxBRu9mK5J4XBML1E9DGQir140tFin9Tyo9mbm7IBP7X0M5voRtPs8yIenScS4BBYWUQJYoOZliQT+5dAC1GsO8HoS2mqWPAcLrARza72uvryNdxQY0YMtSqywm9eL6N1kbmBUxAGLMnjgOAd9+OYEuJI20tlxMLHoTDh1rhx3+mzoSqYTouM/IaSe67n2jali+xTA/Zhvy7qs514UkRH29znzD0d6J5xi73ll/DPRSOXycpBMWp+EhFq4rQBjphpOlF0+ERmWt4UCD6fBRQJAuM+LLZDuSDyQ0Jd2zGfmg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=FWiXt+1CXFJwKQ6zsdP3bpQZuj2IrhcbQSbfXkJPmfA=;
+ b=VnDNIyR7lKOvo2lBS6sL0SKd7RI8NS2bVyUx7FXZ1qxA0q2uoDU1WXAV8FNkETNOlw8KhH+tEmVtJemodVa2O/QQ3VrLWQu4F8FkAGBQNRi9EA6aXYayJAfqG1sEpp0cEukH6g+VO5Bd/qdeEJgGFrxUxnxpHyrP06BV4EQTc4z6M7sid3LbGQzexQP1/rz0oX+jV6yxbnA5GAl+N3ctHYyDISBXcuTXVvQrBIGdvFZhoYfbXQ0HKRNw5i1/f+5KSioNyNXDzXD4j1k4DWZcpMDp7wPCZD6g1zQstC+BUHBAWXy6Ne++p9Nne8AE0axNBX0MWz2ChbvmIqI5mT6vPg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FWiXt+1CXFJwKQ6zsdP3bpQZuj2IrhcbQSbfXkJPmfA=;
+ b=qKNhKPCcTW4GLeQecDlcU/SqJSwFBilyVg4KfBwZbBszUvGfBWJ2Pty06mZNJvDkBgS7qXjCIXn8OEBuI5xeXEMxufrI2bkPghf1pF717g+8aljQrx6iIaOJU+INs4o1ryi7T1xlYbHRYT/s1MHOrPVcNEdEnvY50uYdlS7uoeA=
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
+ by MW4PR10MB6371.namprd10.prod.outlook.com (2603:10b6:303:1ea::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9298.16; Mon, 10 Nov
+ 2025 16:06:38 +0000
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2%7]) with mapi id 15.20.9298.010; Mon, 10 Nov 2025
+ 16:06:38 +0000
+Date: Mon, 10 Nov 2025 16:06:36 +0000
+From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+To: "Garg, Shivank" <shivankg@amd.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>, Zi Yan <ziy@nvidia.com>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+        Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+        Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
+        Lance Yang <lance.yang@linux.dev>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Zach O'Keefe <zokeefe@google.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        Branden Moore <Branden.Moore@amd.com>
+Subject: Re: [PATCH 1/2] mm/khugepaged: do synchronous writeback for
+ MADV_COLLAPSE
+Message-ID: <e9a0ec60-6e8c-474f-931e-2f97e5bb60c0@lucifer.local>
+References: <20251110113254.77822-1-shivankg@amd.com>
+ <f21b37bb-7a2b-412b-be76-e8968b4c375d@lucifer.local>
+ <3b10d11a-3c75-4c37-8810-e238113ce75d@amd.com>
+ <bc07aa10-d8d1-435f-9393-6c4ab63cc179@lucifer.local>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bc07aa10-d8d1-435f-9393-6c4ab63cc179@lucifer.local>
+X-ClientProxiedBy: LO4P265CA0031.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:2ae::7) To DM4PR10MB8218.namprd10.prod.outlook.com
+ (2603:10b6:8:1cc::16)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 5/8] mm: set the VM_MAYBE_GUARD flag on guard region
- install
-Content-Language: en-US
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Jonathan Corbet <corbet@lwn.net>, David Hildenbrand <david@redhat.com>,
- "Liam R . Howlett" <Liam.Howlett@oracle.com>, Mike Rapoport
- <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>,
- Zi Yan <ziy@nvidia.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
- Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
- Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
- Lance Yang <lance.yang@linux.dev>, linux-kernel@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, Andrei Vagin <avagin@gmail.com>
-References: <cover.1762531708.git.lorenzo.stoakes@oracle.com>
- <99ce6131e27592c92b43ac866da48b4c2a568298.1762531708.git.lorenzo.stoakes@oracle.com>
-From: Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; keydata=
- xsFNBFZdmxYBEADsw/SiUSjB0dM+vSh95UkgcHjzEVBlby/Fg+g42O7LAEkCYXi/vvq31JTB
- KxRWDHX0R2tgpFDXHnzZcQywawu8eSq0LxzxFNYMvtB7sV1pxYwej2qx9B75qW2plBs+7+YB
- 87tMFA+u+L4Z5xAzIimfLD5EKC56kJ1CsXlM8S/LHcmdD9Ctkn3trYDNnat0eoAcfPIP2OZ+
- 9oe9IF/R28zmh0ifLXyJQQz5ofdj4bPf8ecEW0rhcqHfTD8k4yK0xxt3xW+6Exqp9n9bydiy
- tcSAw/TahjW6yrA+6JhSBv1v2tIm+itQc073zjSX8OFL51qQVzRFr7H2UQG33lw2QrvHRXqD
- Ot7ViKam7v0Ho9wEWiQOOZlHItOOXFphWb2yq3nzrKe45oWoSgkxKb97MVsQ+q2SYjJRBBH4
- 8qKhphADYxkIP6yut/eaj9ImvRUZZRi0DTc8xfnvHGTjKbJzC2xpFcY0DQbZzuwsIZ8OPJCc
- LM4S7mT25NE5kUTG/TKQCk922vRdGVMoLA7dIQrgXnRXtyT61sg8PG4wcfOnuWf8577aXP1x
- 6mzw3/jh3F+oSBHb/GcLC7mvWreJifUL2gEdssGfXhGWBo6zLS3qhgtwjay0Jl+kza1lo+Cv
- BB2T79D4WGdDuVa4eOrQ02TxqGN7G0Biz5ZLRSFzQSQwLn8fbwARAQABzSBWbGFzdGltaWwg
- QmFia2EgPHZiYWJrYUBzdXNlLmN6PsLBlAQTAQoAPgIbAwULCQgHAwUVCgkICwUWAgMBAAIe
- AQIXgBYhBKlA1DSZLC6OmRA9UCJPp+fMgqZkBQJnyBr8BQka0IFQAAoJECJPp+fMgqZkqmMQ
- AIbGN95ptUMUvo6aAdhxaOCHXp1DfIBuIOK/zpx8ylY4pOwu3GRe4dQ8u4XS9gaZ96Gj4bC+
- jwWcSmn+TjtKW3rH1dRKopvC07tSJIGGVyw7ieV/5cbFffA8NL0ILowzVg8w1ipnz1VTkWDr
- 2zcfslxJsJ6vhXw5/npcY0ldeC1E8f6UUoa4eyoskd70vO0wOAoGd02ZkJoox3F5ODM0kjHu
- Y97VLOa3GG66lh+ZEelVZEujHfKceCw9G3PMvEzyLFbXvSOigZQMdKzQ8D/OChwqig8wFBmV
- QCPS4yDdmZP3oeDHRjJ9jvMUKoYODiNKsl2F+xXwyRM2qoKRqFlhCn4usVd1+wmv9iLV8nPs
- 2Db1ZIa49fJet3Sk3PN4bV1rAPuWvtbuTBN39Q/6MgkLTYHb84HyFKw14Rqe5YorrBLbF3rl
- M51Dpf6Egu1yTJDHCTEwePWug4XI11FT8lK0LNnHNpbhTCYRjX73iWOnFraJNcURld1jL1nV
- r/LRD+/e2gNtSTPK0Qkon6HcOBZnxRoqtazTU6YQRmGlT0v+rukj/cn5sToYibWLn+RoV1CE
- Qj6tApOiHBkpEsCzHGu+iDQ1WT0Idtdynst738f/uCeCMkdRu4WMZjteQaqvARFwCy3P/jpK
- uvzMtves5HvZw33ZwOtMCgbpce00DaET4y/UzsBNBFsZNTUBCACfQfpSsWJZyi+SHoRdVyX5
- J6rI7okc4+b571a7RXD5UhS9dlVRVVAtrU9ANSLqPTQKGVxHrqD39XSw8hxK61pw8p90pg4G
- /N3iuWEvyt+t0SxDDkClnGsDyRhlUyEWYFEoBrrCizbmahOUwqkJbNMfzj5Y7n7OIJOxNRkB
- IBOjPdF26dMP69BwePQao1M8Acrrex9sAHYjQGyVmReRjVEtv9iG4DoTsnIR3amKVk6si4Ea
- X/mrapJqSCcBUVYUFH8M7bsm4CSxier5ofy8jTEa/CfvkqpKThTMCQPNZKY7hke5qEq1CBk2
- wxhX48ZrJEFf1v3NuV3OimgsF2odzieNABEBAAHCwXwEGAEKACYCGwwWIQSpQNQ0mSwujpkQ
- PVAiT6fnzIKmZAUCZ8gcVAUJFhTonwAKCRAiT6fnzIKmZLY8D/9uo3Ut9yi2YCuASWxr7QQZ
- lJCViArjymbxYB5NdOeC50/0gnhK4pgdHlE2MdwF6o34x7TPFGpjNFvycZqccSQPJ/gibwNA
- zx3q9vJT4Vw+YbiyS53iSBLXMweeVV1Jd9IjAoL+EqB0cbxoFXvnjkvP1foiiF5r73jCd4PR
- rD+GoX5BZ7AZmFYmuJYBm28STM2NA6LhT0X+2su16f/HtummENKcMwom0hNu3MBNPUOrujtW
- khQrWcJNAAsy4yMoJ2Lw51T/5X5Hc7jQ9da9fyqu+phqlVtn70qpPvgWy4HRhr25fCAEXZDp
- xG4RNmTm+pqorHOqhBkI7wA7P/nyPo7ZEc3L+ZkQ37u0nlOyrjbNUniPGxPxv1imVq8IyycG
- AN5FaFxtiELK22gvudghLJaDiRBhn8/AhXc642/Z/yIpizE2xG4KU4AXzb6C+o7LX/WmmsWP
- Ly6jamSg6tvrdo4/e87lUedEqCtrp2o1xpn5zongf6cQkaLZKQcBQnPmgHO5OG8+50u88D9I
- rywqgzTUhHFKKF6/9L/lYtrNcHU8Z6Y4Ju/MLUiNYkmtrGIMnkjKCiRqlRrZE/v5YFHbayRD
- dJKXobXTtCBYpLJM4ZYRpGZXne/FAtWNe4KbNJJqxMvrTOrnIatPj8NhBVI0RSJRsbilh6TE
- m6M14QORSWTLRg==
-In-Reply-To: <99ce6131e27592c92b43ac866da48b4c2a568298.1762531708.git.lorenzo.stoakes@oracle.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	MIME_TRACE(0.00)[0:+];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[27];
-	RCVD_TLS_ALL(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[lwn.net,redhat.com,oracle.com,kernel.org,google.com,suse.com,goodmis.org,efficios.com,suse.de,nvidia.com,linux.alibaba.com,arm.com,linux.dev,vger.kernel.org,kvack.org,gmail.com];
-	R_RATELIMIT(0.00)[to_ip_from(RL37wz1aou84on4nnr4peu14t5)];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
-X-Spam-Flag: NO
-X-Spam-Score: -4.30
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|MW4PR10MB6371:EE_
+X-MS-Office365-Filtering-Correlation-Id: c1b4778a-e8ff-48e1-985a-08de2073216d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?nGI6Lq+Sqw6W5YIpgC3e89tYdP0o0bbSaetzpGW2ho8ez7CHaswLtwZy15hF?=
+ =?us-ascii?Q?1oJwUDSYv3MCBKoO79+jgC5OCWv99VSfhiVfI9G76NBZlOwbWwzM8Qu6fFDx?=
+ =?us-ascii?Q?0bicjb8NbcTXvH2Ykr4rrwdPn41p2duBaRUGISW1ZdElIqDJPcRGEx8DaZ9R?=
+ =?us-ascii?Q?n4PFdx7OACAR2fYYkmAlcSxK2UpUG3skZ4lGzam4ZvVN5kWQo3KVKnVaa5Sx?=
+ =?us-ascii?Q?qarR7zTrpRvBW7CsSbn3Fga1mtob86Amoo4QXtdgfin3gKYF5mQ4B4Z9nEOO?=
+ =?us-ascii?Q?rMlu4kN9VBzLThzTC3KtK2B3NaPlTBqDpAQ74B7vzaEpsJyUE4BHP1ueTNap?=
+ =?us-ascii?Q?JwiCYuVSBsxNlVQpUyV2MX9MAwimJ6IvBc0rrjEKnmvB8xYWRDDnNqbSwVUJ?=
+ =?us-ascii?Q?1v79u/+Vqb/BOyziYXkzMTMFMVu3UwwZdv+LfMo+ACYAf5nCw4Ft5F9+uPf5?=
+ =?us-ascii?Q?t8RvhSPP8m/AXmcAm8+i8d+ETJZAKiuenNyPSdT/dzav4inrF1EXQo4Ekehh?=
+ =?us-ascii?Q?JhXhy17hLsRoL7I+PFUs6OSG3POfvf/2Pcs7TabSqxyR64Gyu5p12kQBBW9u?=
+ =?us-ascii?Q?MaFeZROGZ2C5/glP8AvxSPMEB2x1laSzlZGirjpNIkIcwt0e23b+4jQI43ud?=
+ =?us-ascii?Q?LLpsTL/kTdMBnj7FttVkRsW3xcygy3cFteyDHKzHvZyF4S18P/CvMpemo2LR?=
+ =?us-ascii?Q?hSNFg3TnCb1+fOCOxBk9acehkf+tkM+ZvEQQZLyfWIIJ1fSMNipFOXVzP8Oj?=
+ =?us-ascii?Q?QoSks3LlGhnPIYikAU/ZVCQnZoTG7zRHZuG53APdpoyhaJGV2csDciE2mspq?=
+ =?us-ascii?Q?zsC07/IzJP4KXXVDP7a8a2h5X731oi3wMSk86YubnxLlt1PCXcj1VJkZHpYK?=
+ =?us-ascii?Q?rFcFVa1YzfJrBPm6t/Dbq7VLWeVu1J2Yw1Xz5pwns0MT2iR3sH0xhBOLbrJN?=
+ =?us-ascii?Q?5z0Pnzpw9q49h7nZHRZXNpiM6iBh7ezSUQ42DGyMyYbXy/Nb8shviPqGPeqc?=
+ =?us-ascii?Q?bZmkGWZ3pbYnUR+BqDqsRR7hKv2HWOdt/2BNXnOyc3T+fH4LXvZNeSG0gOXr?=
+ =?us-ascii?Q?wexggFX6NCm04FeTt5po4WDv7UH0xm4rIVGwNa0tMAEHIl2QUuz3kgJpimzJ?=
+ =?us-ascii?Q?oPZFzlLX9eJaWArMxYjI8OrDAtnvPjptg35oNjTbCXih2pyrEcdjv8wJ2e12?=
+ =?us-ascii?Q?CxoBY0JhTZqVnxzLWcHAe+gsmpsrZTGxuRTFLL1kJNVx0ebJUfPxYMhRMH88?=
+ =?us-ascii?Q?MPF7aG6yJFsMao5VErl164nqZPFE3OVr6Sp+ApXmIgffNnPmGuGMMyROR4jy?=
+ =?us-ascii?Q?XiOuDgquStlcmyNlnpOAixnUHexIxJVeeY5iRk7o9Eo1Z4YFQqctHfn7LBjd?=
+ =?us-ascii?Q?GMPGpGRBUCsYQi7IBCvPtOIAdA/uctEPLr1xb+jNk6XQxKWVpl+1ME+tWt6H?=
+ =?us-ascii?Q?D955xJlK8eFug1YI6WBIyuqp0tpPCV90?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?yoiYSRzXAujpl4D19Uamkgt0tP6P0VFeSMEnR5aZaZWffR6oTRN5pQsGF4ja?=
+ =?us-ascii?Q?M4ptIVW9stkGgqa0SZ/9e0lP84astkl7JMl9bba6OZVaiioFH4zo2JmePbnu?=
+ =?us-ascii?Q?OpNp12pkbn55/eT713bV+snN3p7RytgcsuAPa4AzNum/0lG8JfoHY4rJUwBt?=
+ =?us-ascii?Q?BdW69IOmo7CG05+lYKQXAPBqiN8SFQSZOLeT+dd87GHEAxYSv74LxdRsF/Nj?=
+ =?us-ascii?Q?1NkjnIHJ6YktzsJ6MekNIhLxKlxsFU2IxilsEiL4Sq49Su9xZnhIiC8uGRVW?=
+ =?us-ascii?Q?Df/0/y5AzLgdrK+8Z+dfIijmI3Lq4yDFpycIVRoj8kqT+yc1T3sqiHUUF+dN?=
+ =?us-ascii?Q?MI5rZgH32syN2DHwwEJyFj9LkuEMQd7I+7RDuREb/jaZIPNpxMIZZoY5G0yP?=
+ =?us-ascii?Q?VsuGXeQ6ne6cjWEJhucKS1ZH+OEFE3lMwDRLA5UXapPIgESA3eIMbv67tJh/?=
+ =?us-ascii?Q?v+k8AgkCFHnTdWyWpwGfUMABLZIbc+QvNdZPo8tDV6/GlDtc7XSbLgoMv5Bh?=
+ =?us-ascii?Q?+1GvPJAhJMU+bt6jMy8X2ImZ8FXvESfgZRXS898cpcIo3XqdELLUJZcDCLNc?=
+ =?us-ascii?Q?Xon5Wh39es+lZjR5Prn/ggxoEezwUVAVwqPBrsWLuSBaKQIfGy/9TwXS+/Rr?=
+ =?us-ascii?Q?1hk/YfvApsdf9liZjEc6stpGlbAwk2kmYuVzdSMCxvw3JZUzbulUAHW6vsCw?=
+ =?us-ascii?Q?zeoAay5cMf4yEg5iDHgrTXOVYytABblAEPVjh2voqOVUmypugqhXxNCHmpqI?=
+ =?us-ascii?Q?0EFcc6KvsotugFpybEV6Zo0L1Q5F1ZFl3jiYxxA1kRtnftuj8Nvk+3NZf1vM?=
+ =?us-ascii?Q?3zzU5UBy7jv9Fa7ROanFArXrkyTdkrFiWq9DefVGuRshJednxWqAxkjCt3Xp?=
+ =?us-ascii?Q?ptxkqX/6+k9ir8k0AgeK1quBauURshuyWfhVpvk4DxwT8WL2JUgz/x2oSW1B?=
+ =?us-ascii?Q?SCMV7g9OH19250mNkv6DnbLyKEoJXs24J/S2CWk0WexZYEbrvV8Ob59wQbYf?=
+ =?us-ascii?Q?riwZZ1khX5338OdD+94f05WQfMKRqhvogR5UJQzinaw0a0A7GqabWT2eW/r1?=
+ =?us-ascii?Q?CA9r4MXyQkKCYNL29RVfcnt+1j4Ldkx9qHRQZIe8w0hO+7au/7Fz46KCA9QY?=
+ =?us-ascii?Q?UBTIyu9MtOkiMN9uLZW/HNdsQkb+l91CxTZHMLDv/2w7wFqmQPNeldZx1HIx?=
+ =?us-ascii?Q?41ObQLAzC7gYYUCaE7YwaluIdpt88nADKeprC6yybTtqgEEg77e/S/3lPWi+?=
+ =?us-ascii?Q?vxyXotpMK7lgPyDHi34nPpL/3yekhPS63qBrWhFmqnf+Ri4nEqKoKfDV4bph?=
+ =?us-ascii?Q?P70RAYENelJ1QO/HjtM6mcseX3uXkcQYPD/vBFA2NcBCQCNws5uv2iuu3OHu?=
+ =?us-ascii?Q?GmvEWoNIVHOI+cXrJ4Y7UVieBjtSF/Pyslyf0G0/jL4tMdrZvgLowQKmtp0z?=
+ =?us-ascii?Q?mUL8itD4IN/7uSR8KnbbBKByAM7x+ShujypO5cy/YaHPWDXSJjCm4Q8Kx2Dm?=
+ =?us-ascii?Q?SYidDWwxbAO9r6ubGCoQJnP1wVxXmSFpl5ECQcRB1dRUGB5Pr5Vb9Fqcjhvy?=
+ =?us-ascii?Q?7eVdcMMbKaVyxZEfKul5ql3G/h7d/dTvWp1666lWWHLSZVParm68s6BAZL2C?=
+ =?us-ascii?Q?hQ=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	HQWZ4k1zb6L4jhhnCem++V0G5XxNrGiEasSCoEVC8QO30+4VPh+imRcZCXyVGS4vewBNGQN+GVbb14lgrdZZnjdxiZbgcif0fLCIAHREJFESvUdaMc/u3nTsLGeBtGPouTPM3ZNjhg2E0gfywPKqzS6NaYcwPD1U8k2arMQ1injG51d++bI7ACacoCXY6itReTLt5Qm0GGsqgys7UdRpUvj0XcH1ONlpnf/Bc5AP3O6KdpVoB3eYMOGz4UugsXD/zMU9PhL5sqLCqpr4pUVY3fHKHkMbqKWN2G4nHtfzdsJBAHiElFsDjae62B6F71UkkV/v8Gk2l1FKYnfHbDkL9tzOl535vFeH6XwXFE9YLYmVjD2JtN8IXFBI8+1eTJMf2WMdgYUkRmVNgeEXQce2T+mdRr3pvV3Pwb4cwE0gBnITb+eVz2Q2o5KL6DIuRWJqTuBUUtVub/KESVpV6/PwOS4eeIe5DYm/bKzt79Pk9bVBp4+qHeevXG9lb6B44E3W/n0EuXtQtliasvJB6c+4SZGn8a3rcJEJ3Nqn1YiKAT93LVGjCPkxVJB/YxtY/3Kq/MHlb8OCxS4pXXSbdaONqoYMTEXZMM5hanX6dLwa5lE=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c1b4778a-e8ff-48e1-985a-08de2073216d
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Nov 2025 16:06:38.8075
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 7osOm7d8nrNhHIxd8BAYNhUcRv8QzpHGtVq4b9FamEjD1IXGDF6Qe/8iny3gOQf/hIEAeFA8t8Ys2LbumPkmlkrGG+znY+hoeEtNuHz8Mxo=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR10MB6371
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-11-10_05,2025-11-10_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 mlxscore=0 spamscore=0
+ phishscore=0 suspectscore=0 adultscore=0 bulkscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2510240000
+ definitions=main-2511100135
+X-Proofpoint-GUID: uwZTgltdUWl5igTLL1b790BBfhn9TFUB
+X-Authority-Analysis: v=2.4 cv=ZLXaWH7b c=1 sm=1 tr=0 ts=6912133a b=1 cx=c_pps
+ a=zPCbziy225d3KhSqZt3L1A==:117 a=zPCbziy225d3KhSqZt3L1A==:17
+ a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
+ a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=6UeiqGixMTsA:10 a=GoEa3M9JfhUA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=8wza7qE0RQA3soKfRpgA:9 a=CjuIK1q_8ugA:10 cc=ntf awl=host:12099
+X-Proofpoint-ORIG-GUID: uwZTgltdUWl5igTLL1b790BBfhn9TFUB
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTEwMDEzNiBTYWx0ZWRfX1ngWw0DCICmz
+ C2Db1bm7gl0B0cAVaKj+RGCzkPur/f7js1rKaRYsVlNh4gN8RvGU0gHp7RDrXdTxTwi2wGH3mWO
+ M24APHALlRlM2vJX+pFYE7Z/Nl8LfHuLF9DIw9TNiolVhOxCaJgs7icnIKdE7UDXdy5ojU8SFe7
+ KKj57fzFt1yvKu5Q6jWVahfweapOtlxUiqBa2yTFqsx+cV6/il4OcT+ScD6ej2UDUfTZddl0W0M
+ M4moAnBRawn1iRwGzpB3rkbhD6t3Xo8GkAjCB0egwnNeaOesYZkwOBejIveAPX8NEi9ee+6Wm4V
+ v88fMfEQaakxVN7i3OUE6umMolqNY5wP2HjOxYZCASTK6Nlw5d6Avpdp9T/kyaC9C8YVaB4v/kz
+ 5qks5QyJ2rYA6n5vBzdMxKVGw3GXJhznxzE423K1DntIkySpIqk=
 
-On 11/7/25 17:11, Lorenzo Stoakes wrote:
-> Now we have established the VM_MAYBE_GUARD flag and added the capacity to
-> set it atomically, do so upon MADV_GUARD_INSTALL.
-> 
-> The places where this flag is used currently and matter are:
-> 
-> * VMA merge - performed under mmap/VMA write lock, therefore excluding
->   racing writes.
-> 
-> * /proc/$pid/smaps - can race the write, however this isn't meaningful as
->   the flag write is performed at the point of the guard region being
->   established, and thus an smaps reader can't reasonably expect to avoid
->   races. Due to atomicity, a reader will observe either the flag being set
->   or not. Therefore consistency will be maintained.
-> 
-> In all other cases the flag being set is irrelevant and atomicity
-> guarantees other flags will be read correctly.
-> 
-> Note that non-atomic updates of unrelated flags do not cause an issue with
-> this flag being set atomically, as writes of other flags are performed
-> under mmap/VMA write lock, and these atomic writes are performed under
-> mmap/VMA read lock, which excludes the write, avoiding RMW races.
-> 
-> Note that we do not encounter issues with KCSAN by adjusting this flag
-> atomically, as we are only updating a single bit in the flag bitmap and
-> therefore we do not need to annotate these changes.
-> 
-> We intentionally set this flag in advance of actually updating the page
-> tables, to ensure that any racing atomic read of this flag will only return
-> false prior to page tables being updated, to allow for serialisation via
-> page table locks.
-> 
-> Note that we set vma->anon_vma for anonymous mappings. This is because the
-> expectation for anonymous mappings is that an anon_vma is established
-> should they possess any page table mappings. This is also consistent with
-> what we were doing prior to this patch (unconditionally setting anon_vma on
-> guard region installation).
-> 
-> We also need to update retract_page_tables() to ensure that madvise(...,
-> MADV_COLLAPSE) doesn't incorrectly collapse file-backed ranges contain
-> guard regions.
-> 
-> This was previously guarded by anon_vma being set to catch MAP_PRIVATE
-> cases, but the introduction of VM_MAYBE_GUARD necessitates that we check
-> this flag instead.
-> 
-> We utilise vma_flag_test_atomic() to do so - we first perform an optimistic
-> check, then after the PTE page table lock is held, we can check again
-> safely, as upon guard marker install the flag is set atomically prior to
-> the page table lock being taken to actually apply it.
-> 
-> So if the initial check fails either:
-> 
-> * Page table retraction acquires page table lock prior to VM_MAYBE_GUARD
->   being set - guard marker installation will be blocked until page table
->   retraction is complete.
-> 
-> OR:
-> 
-> * Guard marker installation acquires page table lock after setting
->   VM_MAYBE_GUARD, which raced and didn't pick this up in the initial
->   optimistic check, blocking page table retraction until the guard regions
->   are installed - the second VM_MAYBE_GUARD check will prevent page table
->   retraction.
-> 
-> Either way we're safe.
-> 
-> We refactor the retraction checks into a single
-> file_backed_vma_is_retractable(), there doesn't seem to be any reason that
-> the checks were separated as before.
-> 
-> Note that VM_MAYBE_GUARD being set atomically remains correct as
-> vma_needs_copy() is invoked with the mmap and VMA write locks held,
-> excluding any race with madvise_guard_install().
-> 
-> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+On Mon, Nov 10, 2025 at 01:22:16PM +0000, Lorenzo Stoakes wrote:
+> On Mon, Nov 10, 2025 at 06:37:58PM +0530, Garg, Shivank wrote:
+> >
+> >
+> > On 11/10/2025 5:31 PM, Lorenzo Stoakes wrote:
+> > > On Mon, Nov 10, 2025 at 11:32:53AM +0000, Shivank Garg wrote:
+> > >> When MADV_COLLAPSE is called on file-backed mappings (e.g., executable
+> >
+> > >> ---
+> > >> Applies cleanly on:
+> > >> 6.18-rc5
+> > >> mm-stable:e9a6fb0bc
+> > >
+> > > Please base on mm-unstable. mm-stable is usually out of date until very close to
+> > > merge window.
+> >
+> > I'm observing issues when testing with kselftest on mm-unstable and mm-new branches that prevent
+> > proper testing for my patches:
+> >
+> > On mm-unstable (without my patches):
+> >
+> > # # running ./transhuge-stress -d 20
+> > # # --------------------------------
+> > # # TAP version 13
+> > # # 1..1
+> > # # transhuge-stress: allocate 220271 transhuge pages, using 440543 MiB virtual memory and 1720 MiB of ram
+> >
+> >
+> > [  367.225667] RIP: 0010:swap_cache_get_folio+0x2d/0xc0
+> > [  367.230635] Code: 00 00 48 89 f9 49 89 f9 48 89 fe 48 c1 e1 06 49 c1 e9 3a 48 c1 e9 0f 48 c1 e1 05 4a 8b 04 cd c0 2e 5b 99 48 8b 78 60 48 01 cf <48> 8b 47 08 48 85 c0 74 20 48 89 f2 81 e2 ff 01 00 00 48 8d 04 d0
+> > [  367.249378] RSP: 0000:ffffcde32943fba8 EFLAGS: 00010282
+> > [  367.254605] RAX: ffff8bd1668fdc00 RBX: 00007ffc15df5000 RCX: 00003fffffffffe0
+> > [  367.261736] RDX: ffffffff995cb530 RSI: 0003ffffffffffff RDI: ffffcbd1560dffe0
+> > [  367.268862] RBP: 0003ffffffffffff R08: ffffcde32943fc47 R09: 0000000000000000
+> > [  367.275994] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+> > [  367.283129] R13: 0000000000000000 R14: ffff8bd1668fdc00 R15: 0000000000100cca
+> > [  367.290260] FS:  00007ff600af5b80(0000) GS:ffff8c4e9ec7e000(0000) knlGS:0000000000000000
+> > [  367.298344] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > [  367.304083] CR2: ffffcbd1560dffe8 CR3: 00000001280e9001 CR4: 0000000000770ef0
+> > [  367.311216] PKRU: 55555554
+> > [  367.313929] Call Trace:
+> > [  367.316375]  <TASK>
+> > [  367.318479]  __read_swap_cache_async+0x8e/0x1b0
+> > [  367.323014]  swap_vma_readahead+0x23d/0x430
+> > [  367.327198]  swapin_readahead+0xb0/0xc0
+> > [  367.331039]  do_swap_page+0x5bc/0x1260
+> > [  367.334789]  ? rseq_ip_fixup+0x6f/0x190
+> > [  367.338631]  ? __pfx_default_wake_function+0x10/0x10
+> > [  367.343596]  __handle_mm_fault+0x49a/0x760
+> > [  367.347696]  handle_mm_fault+0x188/0x300
+> > [  367.351620]  do_user_addr_fault+0x15b/0x6c0
+> > [  367.355807]  exc_page_fault+0x60/0x100
+> > [  367.359562]  asm_exc_page_fault+0x22/0x30
+> > [  367.363574] RIP: 0033:0x7ff60091ba99
+> > [  367.367153] Code: f7 d8 64 89 02 b8 ff ff ff ff eb bd e8 40 c4 01 00 f3 0f 1e fa 80 3d b5 f5 0e 00 00 74 13 31 c0 0f 05 48 3d 00 f0 ff ff 77 4f <c3> 66 0f 1f 44 00 00 55 48 89 e5 48 83 ec 20 48 89 55 e8 48 89 75
+> > [  367.385897] RSP: 002b:00007ffc15df1118 EFLAGS: 00010203
+> > [  367.391124] RAX: 0000000000000001 RBX: 000055941fb672a0 RCX: 00007ff60091ba91
+> > [  367.398256] RDX: 0000000000000001 RSI: 000055941fb813e0 RDI: 0000000000000000
+> > [  367.405387] RBP: 00007ffc15df21e0 R08: 0000000000000000 R09: 0000000000000007
+> > [  367.412513] R10: 000055941fb97cb0 R11: 0000000000000246 R12: 000055941fb813e0
+> > [  367.419646] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+> > [  367.426781]  </TASK>
+> > [  367.428970] Modules linked in: xfrm_user xfrm_algo xt_addrtype xt_CHECKSUM xt_MASQUERADE xt_conntrack ipt_REJECT nf_reject_ipv4 nft_compat nft_chain_nat nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 nf_tables overlay bridge stp llc cfg80211 rfkill binfmt_misc ipmi_ssif amd_atl intel_rapl_msr intel_rapl_common wmi_bmof amd64_edac edac_mce_amd mgag200 rapl drm_client_lib i2c_algo_bit drm_shmem_helper drm_kms_helper acpi_cpufreq i2c_piix4 ptdma k10temp i2c_smbus wmi acpi_power_meter ipmi_si acpi_ipmi ipmi_devintf ipmi_msghandler sg dm_multipath drm fuse dm_mod nfnetlink ext4 crc16 mbcache jbd2 raid10 raid456 async_raid6_recov async_memcpy async_pq async_xor xor async_tx raid6_pq raid1 raid0 kvm_amd sd_mod ahci nvme libahci kvm libata nvme_core tg3 ccp megaraid_sas irqbypass
+> > [  367.497528] CR2: ffffcbd1560dffe8
+> > [  367.500846] ---[ end trace 0000000000000000 ]---
+>
+> Yikes, oopsies!
+>
+> I'll try running tests locally on threadripper, but ran tests against yours
+> previously and seemed fine, strange. Maybe fixed since but let me try, maybe
+> because swap is not enabled locally for me?
+>
+> Likely this actually...
 
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+I have tried on swap-enabled setup and no issue with mm-unstable.
 
-Small nit below:
+So this is odd, I know you have limited time (_totally sympathise_) but is it at
+all possible if you get a moment to bisect against tip mm-unstable/mm-new?
 
-> @@ -1778,15 +1801,16 @@ static void retract_page_tables(struct address_space *mapping, pgoff_t pgoff)
->  			spin_lock_nested(ptl, SINGLE_DEPTH_NESTING);
->  
->  		/*
-> -		 * Huge page lock is still held, so normally the page table
-> -		 * must remain empty; and we have already skipped anon_vma
-> -		 * and userfaultfd_wp() vmas.  But since the mmap_lock is not
-> -		 * held, it is still possible for a racing userfaultfd_ioctl()
-> -		 * to have inserted ptes or markers.  Now that we hold ptlock,
-> -		 * repeating the anon_vma check protects from one category,
-> -		 * and repeating the userfaultfd_wp() check from another.
-> +		 * Huge page lock is still held, so normally the page table must
-> +		 * remain empty; and we have already skipped anon_vma and
-> +		 * userfaultfd_wp() vmas.  But since the mmap_lock is not held,
-> +		 * it is still possible for a racing userfaultfd_ioctl() or
-> +		 * madvise() to have inserted ptes or markers.  Now that we hold
-> +		 * ptlock, repeating the anon_vma check protects from one
-> +		 * category, and repeating the userfaultfd_wp() check from
-> +		 * another.
+Obviously we want to make sure buggy swap code doesn't get merged to mainline!
 
-The last part of the comment is unchanged and mentions anon_vma check and
-userfaultfd_wp() check which were there explicitly originally, but now it's
-a file_backed_vma_is_retractable() check that also includes the guard region
-check, so maybe could be updated?
+>
+> >
+> >
+> >
+> > -----------------
+> > On mm-new (without my patches):
+> >
+> > [  394.144770] get_swap_device: Bad swap offset entry 3ffffffffffff
+> >
+> > dmesg | grep "get_swap_device: Bad swap offset entry" | wc -l
+> > 359
+> >
+> >
+> > Additionally, kexec triggers an oops and crash during swapoff:
+> >
+> >
+> >          Deactivating swap   704.854238] BUG: unable to handle page fault for address: ffffcbe2de8dffe8
+> > [  704.861524] #PF: supervisor read access in kernel mode
+> > ;39mswap.img.swa[  704.866666] #PF: error_code(0x0000) - not-present page
+> > [  704.873253] PGD 0 P4D 0
+> > p - /swap.im[  704.875790] Oops: Oops: 0000 [#1] SMP NOPTI
+> > g...
+> > [  704.881354] CPU: 122 UID: 0 PID: 107680 Comm: swapoff Kdump: loaded Not tainted 6.18.0-rc5+ #11 NONE
+> > [  704.891283] Hardware name: Dell Inc. PowerEdge R6525/024PW1, BIOS 2.16.2 07/09/2024
+> > [  704.898930] RIP: 0010:swap_cache_get_folio+0x2d/0xc0
+> > [  704.903907] Code: 00 00 48 89 f9 49 89 f9 48 89 fe 48 c1 e1 06 49 c1 e9 3a 48 c1 e9 0f 48 c1 e1 05 4a 8b 04 cd c0 2e 7b 95 48 8b 78 60 48 01 cf <48> 8b 47 08 48 85 c0 74 20 48 89 f2 81 e2 ff 01 00 00 48 8d 04 d0
+> > [  704.922720] RSP: 0018:ffffcf1227b1fc08 EFLAGS: 00010282
+> > [  704.928035] RAX: ffff8be2cefb3c00 RBX: 0000555c65a5c000 RCX: 00003fffffffffe0
+> > [  704.928036] RDX: 0003ffffffffffff RSI: 0003ffffffffffff RDI: ffffcbe2de8dffe0
+> > [  704.928037] RBP: 0000000000000000 R08: ffff8be2de8e0520 R09: 0000000000000000
+> >          Unmount[  704.928038] R10: 000000000000ffff R11: ffffcf12236f4000 R12: ffff8be2d5b8d968
+> > [  704.928039] R13: 0003ffffffffffff R14: fffff3eec85eb000 R15: 0000555c65a51000
+> > [  704.928039] FS:  00007f41fcab3800(0000) GS:ffff8c602b6fe000(0000) knlGS:0000000000000000
+> > [  704.928040] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > [  704.928041] CR2: ffffcbe2de8dffe8 CR3: 00000074981af004 CR4: 0000000000770ef0
+> > [  704.928041] PKRU: 55555554
+> > [  704.928042] Call Trace:
+> > [  704.928043]  <TASK>
+> > [  704.928044]  unuse_pte_range+0x10b/0x290
+> > [  704.928047]  unuse_pud_range.isra.0+0x149/0x190
+> > [  704.928048]  unuse_vma+0x1a6/0x220
+> > [  704.928050]  unuse_mm+0x9b/0x110
+> > [  704.928052]  try_to_unuse+0xc5/0x260
+> > [  704.928053]  __do_sys_swapoff+0x244/0x670
+> > ing boo[  705.016662]  do_syscall_64+0x67/0xc50
+> > [  705.016667]  ? do_user_addr_fault+0x15b/0x6c0
+> > t.mount - /b[  705.026100]  ? exc_page_fault+0x60/0x100
+> > [  705.031498]  ? irqentry_exit_to_user_mode+0x20/0xe0
+> > oot...
+> > [  705.036377]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> > [  705.042200] RIP: 0033:0x7f41fc9271bb
+> > [  705.045780] Code: 0f 1e fa 48 83 fe 01 48 8b 15 59 bc 0d 00 19 c0 83 e0 f0 83 c0 26 64 89 02 b8 ff ff ff ff c3 f3 0f 1e fa b8 a8 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 2d bc 0d 00 f7 d8 64 89 01 48
+> > [  705.064807] RSP: 002b:00007ffd14b5b6e8 EFLAGS: 00000202 ORIG_RAX: 00000000000000a8
+> > [  705.064809] RAX: ffffffffffffffda RBX: 00007ffd14b5cf30 RCX: 00007f41fc9271bb
+> > [  705.064810] RDX: 0000000000000001 RSI: 0000000000000c00 RDI: 000055d48f533a40
+> > [  705.064810] RBP: 00007ffd14b5b750 R08: 00007f41fca03b20 R09: 0000000000000000
+> > [  705.064811] R10: 0000000000000001 R11: 0000000000000202 R12: 0000000000000000
+> > [  705.064811] R13: 0000000000000000 R14: 000055d4584f1479 R15: 000055d4584f2b20
+> > [  705.064813]  </TASK>
+> > [  705.064814] Modules linked in: xfrm_user xfrm_algo xt_addrtype xt_CHECKSUM xt_MASQUERADE xt_conntrack ipt_REJECT nf_reject_ipv4 nft_compat nft_chain_nat nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 nf_tables overlay bridge stp llc cfg80211 rfkill binfmt_misc ipmi_ssif amd_atl intel_rapl_msr intel_rapl_common wmi_bmof amd64_edac edac_mce_amd rapl mgag200 drm_client_lib i2c_algo_bit drm_shmem_helper drm_kms_helper acpi_cpufreq i2c_piix4 ptdma ipmi_si k10temp i2c_smbus acpi_power_meter wmi acpi_ipmi ipmi_msghandler sg dm_multipath fuse drm dm_mod nfnetlink ext4 crc16 mbcache jbd2 raid10 raid456 async_raid6_recov async_memcpy async_pq async_xor xor async_tx raid6_pq raid1 raid0 sd_mod kvm_amd ahci libahci kvm nvme tg3 libata ccp irqbypass nvme_core megaraid_sas [last unloaded: ipmi_devintf]
+> > [  705.180420] CR2: ffffcbe2de8dffe8
+> > [  705.183852] ---[ end trace 0000000000000000 ]---
+> >
+> >
+> > I haven't had cycles to dig into this yet and been swamped with other things.
+>
+> Fully understand, I'm _very_ familiar with this situation :)
+>
+> I need more cores... ;)
 
->  		 */
-> -		if (likely(!vma->anon_vma && !userfaultfd_wp(vma))) {
-> +		if (likely(file_backed_vma_is_retractable(vma))) {
->  			pgt_pmd = pmdp_collapse_flush(vma, addr, pmd);
->  			pmdp_get_lockless_sync();
->  			success = true;
-> diff --git a/mm/madvise.c b/mm/madvise.c
-> index 67bdfcb315b3..de918b107cfc 100644
-> --- a/mm/madvise.c
-> +++ b/mm/madvise.c
-> @@ -1139,15 +1139,21 @@ static long madvise_guard_install(struct madvise_behavior *madv_behavior)
->  		return -EINVAL;
->  
->  	/*
-> -	 * If we install guard markers, then the range is no longer
-> -	 * empty from a page table perspective and therefore it's
-> -	 * appropriate to have an anon_vma.
-> -	 *
-> -	 * This ensures that on fork, we copy page tables correctly.
-> +	 * Set atomically under read lock. All pertinent readers will need to
-> +	 * acquire an mmap/VMA write lock to read it. All remaining readers may
-> +	 * or may not see the flag set, but we don't care.
-> +	 */
-> +	vma_flag_set_atomic(vma, VM_MAYBE_GUARD_BIT);
-> +
-> +	/*
-> +	 * If anonymous and we are establishing page tables the VMA ought to
-> +	 * have an anon_vma associated with it.
->  	 */
-> -	err = anon_vma_prepare(vma);
-> -	if (err)
-> -		return err;
-> +	if (vma_is_anonymous(vma)) {
-> +		err = anon_vma_prepare(vma);
-> +		if (err)
-> +			return err;
-> +	}
->  
->  	/*
->  	 * Optimistically try to install the guard marker pages first. If any
+Oh it's nice to have more :) I am bankrupt now, but it's nice to have more ;)
 
+Cheers, Lorenzo
