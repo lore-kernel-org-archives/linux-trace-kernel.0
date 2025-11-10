@@ -1,64 +1,64 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1287288C34
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 10 Nov 2025 16:37:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDEFF314B7F
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 10 Nov 2025 16:37:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762792652; cv=none; b=luBKJTHzw85pBqfWRZ0UgFkj+NDXczIO+9S0adGcEg03QbJ7PDxAjHpW0e7J6sjY+5YkLQkdBpJZ78ClJAbuuhkddEYX1SfFX1SEtexlt3/M0mHOTxqgRDoP62HLBdUngkn4Ib7wLN+31MGyR3BNE26iTj3y44t2vzvJ0P18+AU=
+	t=1762792654; cv=none; b=mBVZsn5BlsRgSln/MfPlc2ESI443pdASsr3VD2EvJ+b1xp975iFxpUEJpLJqxHXAKpox6FQK9T7oor9NolHhm4nH6BMAa67/w36R4Aqr9oMVscL/HD09A61/+wadr2zBaIuf5N6Fdoect3ToM8U1yOLjizZ2ImGX3C5FWFtkzn4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762792652; c=relaxed/simple;
-	bh=HNu7Dcd5vvNfh2oB/9//HT00PJ8dhROTfKt08npi0Xo=;
+	s=arc-20240116; t=1762792654; c=relaxed/simple;
+	bh=/b/zOktEwqAjI5HJj6uEpLQ11BHnYeMx0oURGuRUTjs=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Xb2tpc13KPztmOfK747RTtdStbXOEePslwmAraCSiyBBMa6X7JHm5JfIxJaYqyQPFmLevbQGRmMVmzmjMbCReSDGQ1k3nliDewezEWsOuDhBr/Z1fmQwFn9BQrlfao+Z4A6ZYmf+rU6B/NfdKrKApQktcoWKkcYtEOBNX+fEAPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BkxQVfEk; arc=none smtp.client-ip=209.85.214.170
+	 MIME-Version; b=tVTaftP5yca8e7MFTa9Lb5FAe9Xis9VIYVVPYOHRQA7GC4IqX/6Q4KBiHggcA8N9tgJ9FCtUwsisqBOzn0zgVGA7+eZdX8Feggy7dLk93I061E36SyF/2ZWfGJuPOPuZOnhff7fMeZ6H5bHQTdhFeym1b5AyaKd8e5TNSxkMQ7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y1SLqfyD; arc=none smtp.client-ip=209.85.210.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BkxQVfEk"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-297f8c26dc7so15259175ad.2
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 10 Nov 2025 08:37:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y1SLqfyD"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-7a9fb6fccabso2598793b3a.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 10 Nov 2025 08:37:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762792646; x=1763397446; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1762792650; x=1763397450; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=NvOciuVeFDrZI28wwbDFkVg+RFkidCZi4q1TH1/mApw=;
-        b=BkxQVfEkEBOYEpCeUBV842In3TXrZSeDm6WTzj4dnhlJnM/V9G58u2nYPa/Knffz1U
-         6Sy/ftr0I4ErZmavti+TsQOhwPBv2DFSW37bpJoP53In1JSYftTGImWiVtiBsQ2ORN47
-         MCtLtxT1bidHRtJveRiETAElwfMJt+wiOLmV8za6EJ4sxmeGzyPTx42LXlH/oVmWpdpu
-         8Q8ZKqD2Cf5esbgYH3GHQRNwJviYlHsamyt0H/EcrG1ewtc0sTUyHpgeo53KexFSmBxC
-         D2AnvxOe9DAEcB0yGOEe4o7YPl0fkn5C0HAJC9CRr+lr/zjPEjRd7v23NsEMoKX3nHrH
-         wP0A==
+        bh=zmTHCnPEb0OVb2q4c4fHcn++Nk34I0DPY6dUiFoe4Xs=;
+        b=Y1SLqfyDfR8ppi0EnhB5ihICf/DW8etj06fLjMr71E7TRvRl2e2hEpaly2M5h5KEYb
+         +30JYjqd6vMFwoX6PLbUgi4uiVEBLehaoK++cGI0AF+7ptsbbCN5DIL2wRTIyfY31xj8
+         zRSi1+Zw5Rg/Jc9DW6cXZOe0qOjpVijNAKDgElrCirdv4w28YiVkB+H/8x2eh6nHc1Br
+         +1MIm7SvPnJTrTFjwzp/FUERRF6HopdhqqRcrMDxJa9X0WGxd1HdcyBXo8s6YgrWMVMB
+         a6e0K2286aeD036eGmVxme/1fILqXivvLNDXy/BoZxfaiPntVpPoeVD3MQotC1wXu9E/
+         t5Cg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762792646; x=1763397446;
+        d=1e100.net; s=20230601; t=1762792650; x=1763397450;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=NvOciuVeFDrZI28wwbDFkVg+RFkidCZi4q1TH1/mApw=;
-        b=hJBI4pSmIoubQZEALjt0sOia28Ema+i/Pxcr9Panle8/46Rv3LwZHg75kKvYgzcZHL
-         jbqnPPxnsuE3MTQIjg1YrLuWZXIe6C42yvch/OVvxMJlhOppHTGWsRj28DXrTFxegpOx
-         PT/zR2IeCSL4hIXoKVYsQLQLD2RzsJ60vTOyHYuCO6byftI7nOt4WuHjUti6wi9aDTJu
-         CnvfKOxF/hRSeMP+GhdPMuGAPKw6khdXcjiiym+sfF/ozVWlm3MxnkqM7h9U9IW9Z1fP
-         UshtVAFklXNbdBJZ9qZpfKvG/hTu3fP+CuMi8k7O8F4L8oLvhgrlKkP0FwCMSTNdPiyv
-         A7TQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXaNhG3EpS4CZ1C3a83NySeTh2uzfbMm+aaz8XO6TyI1gmCi826ASX5LbmELYIgL0XEWRoGOsUxR1g530S1WnIr5TI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz3FPL3ivXc63c8D/xY9vcnWB9O6A9DK+t6E54ak3n/6et1NW6x
-	BXo0n19vWw9Wv2S0YA3rsHY5BG4rHekQCUB9vothUG2vyLeaCXqChsSo
-X-Gm-Gg: ASbGncsFB6u1nUxm5N688qAyCExy+hJFyD+J3wYinvE1AQcf0zcrQhIphPg/KcLN6UT
-	Y7uKkArorPN9C5vFYHsDWUFMflGuc0uYJBqmGaGQmViX6V7ijn5VcYlN4w9JXlV9KwPSF9xJ1Kd
-	BPZmY2p4iLcoi0pH55bVL4fKNLiSjfChkMfTnXVGgkyJGtSLs62QEMXiwTGolXY4XST3pYcu6cf
-	NXUdXyXv0Kfi3kIUbAHCWsXEhqPG7c9yZxaK17rRfM2MrPTP1WgaYq2Phfboj6tXt6M+2nZGhgC
-	zWXXelF0iJQzUMpkxUF81mXd2nu8TcYvpA8j4qM0Mcfkav/9+fVgsa72hEFcPT2uD19bI2L9vKr
-	VYfYF4ybbRy8jC4zBwTk2DhSER/UWj6Xc8+AAp74lQI0J6vg6hc2v4AOGyG/yNgckomRx6CE0WC
-	9AVbvN5xb7RXo=
-X-Google-Smtp-Source: AGHT+IHgMULgC+DBrIvta4Gt30Ay5gyo7asjfOY4+q2Dbpcc5OVehm1NQ3FiY7ELdv1UD5aLJGKDyg==
-X-Received: by 2002:a17:902:da4b:b0:27e:f018:d2fb with SMTP id d9443c01a7336-297e540dbf8mr108586355ad.6.1762792645676;
-        Mon, 10 Nov 2025 08:37:25 -0800 (PST)
+        bh=zmTHCnPEb0OVb2q4c4fHcn++Nk34I0DPY6dUiFoe4Xs=;
+        b=giNcEpFbsp0vheooFISPDTd9TAQ8vpi1gvkx7VBdZ+RZbYiefkH4FaaWmsW6fM6m17
+         iKRdxNg0kE1ZaLnLfJdefj4q5JDOLAitKPCDrb553OPZXDYWGwRxx4Q4eaYb1AOwjcH3
+         RdrsrLHk+jqxI0y8xmrrRpuwFpni6NlhoOwRK0el2EdZ5RuuJ6DboUJppEvk0N4LBQdK
+         LkGjDlCkTqsS+AvRJk5FZj5zb30NPT5oFlUKjX1TMe4lIyiG+5EFtyuUER+61ao5A8FJ
+         spSCF6Ia23cw3NBzNQJZP1+Nw+vVIiOYR6i8JCLVu+PcoSbD7qfF2ZwvxBO4xgFsDsfI
+         C3IA==
+X-Forwarded-Encrypted: i=1; AJvYcCXbfMFxKGwdGIn4pCNuuHIFHVhy904WMAsrN2oupAvIqITZo3kIoFiumf+ieBdLkf7jAzqFoSzuXQTr6KiiI4sSC+0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxG4dTdABP47dh9EKaGSx470EsrBXjnPV+jcztGPOWawIV3X+gH
+	NiN9idYxFELDn2zsvGwyubFVf2+sLzEXmyHR/fSWcMRTbE9eQkfWWWQx
+X-Gm-Gg: ASbGncve6Oi36w0SAGfBDQDjUDl8VdDoYdPJS5htmdlmpHgQ/0BKKw5zW78SpxV17TB
+	7JP0ypXR/yEn/4I1UA/nZamXRE3kB4PkOiUvIUyPMmhjhbvWXZrBnggJ6pCKnYWfFubPTs/Wwc4
+	PB11zJv2R6GvDKJfbxdMm0ERaWfUkq6r4pVa7VA6ggM89XKEhuHrzGyMMmjJXSrpLiyKFm7qnbY
+	zqGmwzQz/r41Ilh/ygukv32drHs1N/v7l+QOp/cErZ1bOfCL/GVLENpq+ox21I1rwG5aepqcEma
+	Yz0NnZLab2u5wZnUSwwOIBjfWqsEcALIs7DrXFF8Nhw+b+hUoo3/M+MUGTMYQsZyMkPrdG1i0Oh
+	fWNzYS+vhNe847MNQb5BRgPPyFK2ueWVbOpKyQlqmhUmxu4dDff3HiHFTVoVPiJ5VKoZpRM8+Ch
+	m9fL+c970CuRhr4qN+sVs0Hw==
+X-Google-Smtp-Source: AGHT+IFq15Zr3Z90Q0MMFQV+lAVCnrHviaSI2/PKIFU3mj11pJDvw+OMCcvtXWZk8em43woe/8IelQ==
+X-Received: by 2002:a17:903:944:b0:296:3f23:b910 with SMTP id d9443c01a7336-297e5619f92mr100007215ad.9.1762792650184;
+        Mon, 10 Nov 2025 08:37:30 -0800 (PST)
 Received: from localhost ([103.88.46.62])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29650c5ce87sm150078775ad.29.2025.11.10.08.37.24
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2965096b801sm154506025ad.7.2025.11.10.08.37.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Nov 2025 08:37:25 -0800 (PST)
+        Mon, 10 Nov 2025 08:37:29 -0800 (PST)
 From: Jinchao Wang <wangjinchao600@gmail.com>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
@@ -132,9 +132,9 @@ To: Andrew Morton <akpm@linux-foundation.org>,
 	Will Deacon <will@kernel.org>,
 	workflows@vger.kernel.org,
 	x86@kernel.org
-Subject: [PATCH v8 10/27] mm/ksw: support CPU hotplug
-Date: Tue, 11 Nov 2025 00:36:05 +0800
-Message-ID: <20251110163634.3686676-11-wangjinchao600@gmail.com>
+Subject: [PATCH v8 11/27] sched/ksw: add per-task context
+Date: Tue, 11 Nov 2025 00:36:06 +0800
+Message-ID: <20251110163634.3686676-12-wangjinchao600@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20251110163634.3686676-1-wangjinchao600@gmail.com>
 References: <20251110163634.3686676-1-wangjinchao600@gmail.com>
@@ -146,89 +146,60 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Register CPU online/offline callbacks via cpuhp_setup_state_nocalls()
-so stack watches are installed/removed dynamically as CPUs come online
-or go offline.
-
-When a new CPU comes online, register a hardware breakpoint for the holder,
-avoiding races with watch_on()/watch_off() that may run on another CPU. The
-watch address will be updated the next time watch_on() is called.
+Introduce struct ksw_ctx to enable lockless per-task state
+tracking. This is required because KStackWatch operates in NMI context
+(via kprobe handler) where traditional locking is unsafe.
 
 Signed-off-by: Jinchao Wang <wangjinchao600@gmail.com>
 ---
- mm/kstackwatch/watch.c | 52 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 52 insertions(+)
+ include/linux/kstackwatch_types.h | 14 ++++++++++++++
+ include/linux/sched.h             |  5 +++++
+ 2 files changed, 19 insertions(+)
+ create mode 100644 include/linux/kstackwatch_types.h
 
-diff --git a/mm/kstackwatch/watch.c b/mm/kstackwatch/watch.c
-index f922b4164be5..99184f63d7e3 100644
---- a/mm/kstackwatch/watch.c
-+++ b/mm/kstackwatch/watch.c
-@@ -85,6 +85,48 @@ static void ksw_watch_on_local_cpu(void *info)
- 	WARN(ret, "fail to reinstall HWBP on CPU%d ret %d", cpu, ret);
- }
- 
-+static int ksw_watch_cpu_online(unsigned int cpu)
-+{
-+	struct perf_event_attr attr;
+diff --git a/include/linux/kstackwatch_types.h b/include/linux/kstackwatch_types.h
+new file mode 100644
+index 000000000000..8c4e9b0f0c6a
+--- /dev/null
++++ b/include/linux/kstackwatch_types.h
+@@ -0,0 +1,14 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _LINUX_KSTACKWATCH_TYPES_H
++#define _LINUX_KSTACKWATCH_TYPES_H
++#include <linux/types.h>
++
++struct ksw_watchpoint;
++struct ksw_ctx {
 +	struct ksw_watchpoint *wp;
-+	call_single_data_t *csd;
-+	struct perf_event *bp;
++	ulong sp;
++	u16 depth;
++	u16 generation;
++};
 +
-+	mutex_lock(&all_wp_mutex);
-+	list_for_each_entry(wp, &all_wp_list, list) {
-+		attr = wp->attr;
-+		attr.bp_addr = (u64)&holder;
-+		bp = perf_event_create_kernel_counter(&attr, cpu, NULL,
-+						      ksw_watch_handler, wp);
-+		if (IS_ERR(bp)) {
-+			pr_warn("%s failed to create watch on CPU %d: %ld\n",
-+				__func__, cpu, PTR_ERR(bp));
-+			continue;
-+		}
-+
-+		per_cpu(*wp->event, cpu) = bp;
-+		csd = per_cpu_ptr(wp->csd, cpu);
-+		INIT_CSD(csd, ksw_watch_on_local_cpu, wp);
-+	}
-+	mutex_unlock(&all_wp_mutex);
-+	return 0;
-+}
-+
-+static int ksw_watch_cpu_offline(unsigned int cpu)
-+{
-+	struct ksw_watchpoint *wp;
-+	struct perf_event *bp;
-+
-+	mutex_lock(&all_wp_mutex);
-+	list_for_each_entry(wp, &all_wp_list, list) {
-+		bp = per_cpu(*wp->event, cpu);
-+		if (bp)
-+			unregister_hw_breakpoint(bp);
-+	}
-+	mutex_unlock(&all_wp_mutex);
-+	return 0;
-+}
-+
- static void ksw_watch_update(struct ksw_watchpoint *wp, ulong addr, u16 len)
- {
- 	call_single_data_t *csd;
-@@ -206,6 +248,16 @@ int ksw_watch_init(void)
- 	if (ret <= 0)
- 		return -EBUSY;
++#endif /* _LINUX_KSTACKWATCH_TYPES_H */
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index b469878de25c..db49325428b3 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -22,6 +22,7 @@
+ #include <linux/sem_types.h>
+ #include <linux/shm.h>
+ #include <linux/kmsan_types.h>
++#include <linux/kstackwatch_types.h>
+ #include <linux/mutex_types.h>
+ #include <linux/plist_types.h>
+ #include <linux/hrtimer_types.h>
+@@ -1487,6 +1488,10 @@ struct task_struct {
+ 	struct kmsan_ctx		kmsan_ctx;
+ #endif
  
-+	ret = cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN,
-+					"kstackwatch:online",
-+					ksw_watch_cpu_online,
-+					ksw_watch_cpu_offline);
-+	if (ret < 0) {
-+		ksw_watch_free();
-+		pr_err("Failed to register CPU hotplug notifier\n");
-+		return ret;
-+	}
++#if IS_ENABLED(CONFIG_KSTACKWATCH)
++	struct ksw_ctx		ksw_ctx;
++#endif
 +
- 	return 0;
- }
- 
+ #if IS_ENABLED(CONFIG_KUNIT)
+ 	struct kunit			*kunit_test;
+ #endif
 -- 
 2.43.0
 
