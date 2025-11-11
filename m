@@ -1,206 +1,180 @@
-Received: from mail-oa1-f66.google.com (mail-oa1-f66.google.com [209.85.160.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CWXP265CU010.outbound.protection.outlook.com (mail-ukwestazon11022074.outbound.protection.outlook.com [52.101.101.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B1BE306B15
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 11 Nov 2025 01:17:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.66
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762823866; cv=none; b=MnPQFi5PbXWacjEjBZDtFhBcCG7jID9AxScKSUO4O+z6KHc51LnVJ6NQNMnzAEoTZWyqyhnyh+ZrpqVRUiziyWotldgOJW3HCSdzDlLyDB7oqpV5vQxIrWeH6Tjnwr9CIpiVLyj+6nAtOaNeJred66oE/EEfmGbuCBMBahX3vvY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762823866; c=relaxed/simple;
-	bh=/awKTS4VkDV7YyuY2XqMrgn1/FWXuaIp1CGhvSR3qsg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YI6l9m1sDbedQg3nGWIUOR9bvWk4YRBA/9e/wn8nbsd0IvN3Ctz8tsrfgv5GFi+1Uo0tj3EzGh7iE65JXDOjoSktDn6V/dBstUa6RggUesCNUmhU4nNI15i+psa5kWqubnRYXXYtgYL/64WhQUXXeWoWCFgKbeCVD4/E5bEA/wg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=minyard.net; spf=none smtp.mailfrom=minyard.net; dkim=pass (2048-bit key) header.d=minyard-net.20230601.gappssmtp.com header.i=@minyard-net.20230601.gappssmtp.com header.b=1X0bIYLP; arc=none smtp.client-ip=209.85.160.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=minyard.net
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=minyard.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=minyard-net.20230601.gappssmtp.com header.i=@minyard-net.20230601.gappssmtp.com header.b="1X0bIYLP"
-Received: by mail-oa1-f66.google.com with SMTP id 586e51a60fabf-3e7f68df436so207954fac.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 10 Nov 2025 17:17:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=minyard-net.20230601.gappssmtp.com; s=20230601; t=1762823863; x=1763428663; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IjPKo3ybe4fdml1XQE+jQ3G55BcDMlVXlR9cl8yZWH4=;
-        b=1X0bIYLPg5FTcJXhMNg4pxmUb76wfaApB+l+loii0/FgtqX/HWlaE6aNarA3fA9Js9
-         Cwr/pnjVw/q3j5GgfUcYJJmUxw/jTInjI6MeuuAxCyfd67UbKjFyQTJeeL68hCUtpCgv
-         FiR1iNbtgqjlwBPrj2nm0cbbtIsbIvO0nK++V7ByOhJx2aJAFWsu3V+P7WutbzH2gkaJ
-         CBY9dbIIANg6ZmHz/nZ3ngHXtPb7Hj43JsC/t5rIl7DR3aQwyV19mNxAMyhHyzknHFLy
-         qjd9pzDGh7fMH3dh49XFDtb87Ae4NleYzlXTxHYnKhEGBfrmvt+33yPlDBX1ApO1D4i7
-         ip+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762823863; x=1763428663;
-        h=in-reply-to:content-disposition:mime-version:references:reply-to
-         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=IjPKo3ybe4fdml1XQE+jQ3G55BcDMlVXlR9cl8yZWH4=;
-        b=BlduLieRr4h1zp+OeHzI9sBX+FZz0qGWUOIYw0Mbly3VbwcL24kq+Ih5TzDOvES4iG
-         Yw4YGCg3gYGrWcG85lm8AWBQREPoh/iCqZ/65qonm4DKgXp06/ycmMkbpz2nP4cmYq05
-         e70edkAn6jKvUqn3uGSza4o3jIJUbPTKjPxCWQ9iuDfAk3ef7v/AmI4TD8XEgWHurRRp
-         ofTfIz4Fyg86FU2xy2Zy5jdP7O5U+z9zb03vrpOfnATmGjTglwpeE1GQR48nsIMVmPLj
-         7vQvF59d1Chd8mz7ys0gZ5B3uyST+7LHQuYPpPomtPqTUBxEiqELIaiFw/LmBI1reRPh
-         ZtbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXRG1sVpPP1/kAP+iuV1VmNmCdZVh9aZKC8/CrJFa9gISSxhLwLhAFB8yI+1mce9rhh1PL6RszkwwLZ7dN+3z6q8Zg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyS7+H2isBzFr6/NDMP++lTOUWRBZMjt41BFmooOFUMO1OJ+HzF
-	aUfGXomTJzVYo8eyFLYtYmO956nJmgRIEn8D/kG6qkD7+80qqb84JigRMMflLE+NhDU=
-X-Gm-Gg: ASbGnctk6WVdtsTAKIvILhzdHsqNjFDM6OnXmaK5Lu6tVkNHc8GluUA3n8FV9SqHQCA
-	BcDigwx9gnAThQjW9ThoQDzgncpapJkYB2k1YVgO+QxP8WfLX2hl5BqNsvIXWS3YQwDiu8LjgWZ
-	Jt7fElcAFNco95KR3e7HaoDFQkCZV9K2pE6Q3hX0rXsbu5Qn0RWBye8RU2AM9fw0kkRXvOPsPgJ
-	0v3TNttcqrjNlFzZq9NYvO3jrFl9DniccXfIJP5VKhNJ/ykpWxv4J4Ajuj/2Cmfvu0w8lRLNyRo
-	9bUl+6ZnMRwCOEgtDRui4Z/fwo2rf7IOrmUa27ZCfCXSlqTPT30y8Cmc5OTmGwOgzXuyThNaEV7
-	IWLIZQXTPFlJGHHVx5D7QTWInF1AUQnqsMpY0VWdInheBlc39oqPxcUbdEXEKa6OkLB0Nyp7xHh
-	OeXYR2i4USjHLyjw==
-X-Google-Smtp-Source: AGHT+IHYqlJ/DqUior2uObKb688W9mKskJnwhdBfDC1sLOPoqWKjn2HRpxRv5pN7HFxTPVj3Axvofg==
-X-Received: by 2002:a05:6870:46a8:b0:3e1:d34:4283 with SMTP id 586e51a60fabf-3e815aaa2a3mr850172fac.19.1762823862970;
-        Mon, 10 Nov 2025 17:17:42 -0800 (PST)
-Received: from mail.minyard.net ([2001:470:b8f6:1b:b4e9:19a3:cdaf:7174])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-3e7d6f7a27dsm4076840fac.0.2025.11.10.17.17.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Nov 2025 17:17:41 -0800 (PST)
-Date: Mon, 10 Nov 2025 19:17:35 -0600
-From: Corey Minyard <corey@minyard.net>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Christian K??nig <christian.koenig@amd.com>,
-	"Dr. David Alan Gilbert" <linux@treblig.org>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-	Rob Clark <robin.clark@oss.qualcomm.com>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Hans Verkuil <hverkuil@kernel.org>,
-	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Vitaly Lifshits <vitaly.lifshits@intel.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Niklas Cassel <cassel@kernel.org>, Calvin Owens <calvin@wbinvd.org>,
-	Sagi Maimon <maimon.sagi@gmail.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Karan Tilak Kumar <kartilak@cisco.com>,
-	Casey Schaufler <casey@schaufler-ca.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Petr Mladek <pmladek@suse.com>,
-	Max Kellermann <max.kellermann@ionos.com>,
-	Takashi Iwai <tiwai@suse.de>, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	openipmi-developer@lists.sourceforge.net,
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org, amd-gfx@lists.freedesktop.org,
-	linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
-	intel-xe@lists.freedesktop.org, linux-mmc@vger.kernel.org,
-	netdev@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
-	linux-pci@vger.kernel.org, linux-s390@vger.kernel.org,
-	linux-scsi@vger.kernel.org, linux-staging@lists.linux.dev,
-	ceph-devel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-sound@vger.kernel.org,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Gustavo Padovan <gustavo@padovan.org>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Dmitry Baryshkov <lumag@kernel.org>,
-	Abhinav Kumar <abhinav.kumar@linux.dev>,
-	Jessica Zhang <jesszhan0024@gmail.com>, Sean Paul <sean@poorly.run>,
-	Marijn Suijten <marijn.suijten@somainline.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Lucas De Marchi <lucas.demarchi@intel.com>,
-	Thomas Hellstr??m <thomas.hellstrom@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Vladimir Oltean <olteanv@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Krzysztof Wilczy??ski <kwilczynski@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Rodolfo Giometti <giometti@enneenne.com>,
-	Jonathan Lemon <jonathan.lemon@gmail.com>,
-	Vadim Fedorenko <vadim.fedorenko@linux.dev>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Stefan Haberland <sth@linux.ibm.com>,
-	Jan Hoeppner <hoeppner@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Satish Kharat <satishkh@cisco.com>,
-	Sesidhar Baddela <sebaddel@cisco.com>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Xiubo Li <xiubli@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Subject: Re: [PATCH v1 12/23] ipmi: Switch to use %ptSp
-Message-ID: <aRKOr2hyoqTnh85-@mail.minyard.net>
-Reply-To: corey@minyard.net
-References: <20251110184727.666591-1-andriy.shevchenko@linux.intel.com>
- <20251110184727.666591-13-andriy.shevchenko@linux.intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81781286A4;
+	Tue, 11 Nov 2025 02:05:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.101.74
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1762826709; cv=fail; b=lI0t2duba0rx/3A1wDaMPEKBmVCib1fVq5eMnpAk8ejVK6NcSd3BQ22i0EF9FQ7EVFUNH+Si701foeQRHa3pfgfssxp0GBMHMB+ljDqflSsyA1cdfvMnmbp2GW4L+ENKN+AEHuTw2pt2ByhBnNi9xLersWGBGulRrDB3zmQlzV4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1762826709; c=relaxed/simple;
+	bh=rpAJy+ea4k5TAN49s/jEdRtgoJCTw85Nz8c26DWQfDM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=QJ6F3lbvWBfiyq0JiOLK8Fq0a7JXYyUePZ5BzblHyVmDTznc+EmdPstIB+UUhIMf/v+NmmreSCmC02Pe5WA1P85RIw/HWqRfGe3+hy2US8vBXIiJavH5UzpDPGxfEvKA0KgSs0LAf0a/sda7Qnt2Xk/CEPE63Fraatl1qosQz6E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com; spf=pass smtp.mailfrom=atomlin.com; arc=fail smtp.client-ip=52.101.101.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atomlin.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=viDc6Vx35xnyE5LgrbfVyFXyS0SdI19I4wc2AF3G2mp6nYgQl9m5J+hSGekXsF9+GMAG5do94VZcV9w2xtlYoAB1QWiyD4f1sYcKj3Y65wBWkFkQ7ggpVrMPuvNbitxugaW4Memnle/a/hopmiS2F7Lx/qZLEG5OQ99WahorVWoN5lJCiOk6/8A2/+m6o0X9s2Wm5oRIex5TLe4/emJ3xahGca08vqXcaOYCxNCvO5HLQJfjIOEo6imptXFuOmr60Aye4lL4e1pv4DXcgIfVVMZ9mHXZES3YpT21Uyhs2nxXp1q2P560qBGJlBiOvTHZ68Ua0ZdLucC1rHuj797alQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=wMDRTRpyfTXBG5qVZBlcKPm07N7AiqtFdhVAhDYYpms=;
+ b=Poo7qT6obY3eCOjDCc/oAvdh37acjgvI9xsO3ZO4dqi/kHPkI3a1rD+qSonc5vLIF1m6L0mRR6/vYDN4Dj71I22qD/OzfxmQGeplL5/ZWOok2CgI+D0RQHRseNY6iXdQMMFkAx8iySkhaDnqBk/jDP6aZ8fgu4fgxOcUbv23C+5N3j8hQWEMqZsdu+mAo3+u5fycWR9sk1/izm1JRCY15oXUbkUOK71Nbw/OC4bqEbjqI+U07/7FYqvnlunEh01SApgU4OQmWLKAFMwXHYroxNeIJxyXRcAVFp1UP/uJCeKqTYCC9HwNlMRZTqGeXkmd3Csw1/b6e8hTHKAmX2p//w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
+ dkim=pass header.d=atomlin.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=atomlin.com;
+Received: from CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:70::10)
+ by LO0P123MB6672.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:2ce::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9298.16; Tue, 11 Nov
+ 2025 02:05:00 +0000
+Received: from CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM
+ ([fe80::de8e:2e4f:6c6:f3bf]) by CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM
+ ([fe80::de8e:2e4f:6c6:f3bf%5]) with mapi id 15.20.9298.015; Tue, 11 Nov 2025
+ 02:04:59 +0000
+Date: Mon, 10 Nov 2025 21:04:55 -0500
+From: Aaron Tomlin <atomlin@atomlin.com>
+To: Petr Mladek <pmladek@suse.com>
+Cc: Petr Pavlu <petr.pavlu@suse.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Kees Cook <kees@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	John Fastabend <john.fastabend@gmail.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Luis Chamberlain <mcgrof@kernel.org>, 
+	Daniel Gomez <da.gomez@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, 
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, linux-modules@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 6/6] kallsyms: Prevent module removal when printing
+ module name and buildid
+Message-ID: <tmmraksbs6ollwmp3amhdqfajvenjhtxraeywyq3smvmsqydpj@dmvrbkiai5cd>
+References: <20251105142319.1139183-1-pmladek@suse.com>
+ <20251105142319.1139183-7-pmladek@suse.com>
+ <kubk2a4ydmja45dfnwxkkhpdbov27m6errnenc6eljbgdmidzl@is24eqefukit>
+ <aRHoHMJYAhSoEh1e@pathway.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <aRHoHMJYAhSoEh1e@pathway.suse.cz>
+X-ClientProxiedBy: BN9PR03CA0442.namprd03.prod.outlook.com
+ (2603:10b6:408:113::27) To CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:400:70::10)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251110184727.666591-13-andriy.shevchenko@linux.intel.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CWLP123MB3523:EE_|LO0P123MB6672:EE_
+X-MS-Office365-Filtering-Correlation-Id: 06bfc027-65ee-4762-2d5b-08de20c6b7ff
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?cGR5RGlNNk1kYzl1c2RWLzU2V1BDNFBZUmIralNGM29hYS9kWllBLzM5OFVC?=
+ =?utf-8?B?UE0zd0tZTkY3djZqL2xRb0ZsdDNuQ3lFWHh1RmZUN0cxL2d3dmdldlJPT3Vk?=
+ =?utf-8?B?U05ZaUV5bllwaHloYzRNOHJlRzNCZk55QUtpMXo0b2Y2K2VvRHI5SWxiS3NS?=
+ =?utf-8?B?STMzTU5nMmJ3dThKd2E0SGZjQ0pHZXMrN3pYdTNrZnBCMTFadmMrVEhzSXhn?=
+ =?utf-8?B?YjZFRVgydmx6bFFOckE3S1ZMNVJ1SGNkZERMZVpIakRBcEo0WDgwOWlMK1VW?=
+ =?utf-8?B?MkhNTXVHQ3BWTE1VTkwrc3hKVkJZcWNKN0tVc202bFVoK3VLcXIyd1VHWnRE?=
+ =?utf-8?B?NjZ2SUd6TXF3UUdNcng5VjRNaEhKMEZyMFdjS09xR3h5cjFBQlVlMXd2Zi9l?=
+ =?utf-8?B?VU1DSnhYSk1haVhkRi9vZFVSbndlOXgvMDhpRmhhY29nK2Nmdkl4MTNVMWxi?=
+ =?utf-8?B?b3pKb2RESXIwdVhZUzJWY1FmKzdKWGVOWjJTS0lkTzF5SEFteVR6a0JqMitK?=
+ =?utf-8?B?RWd1MXRnTXNoRmtXN0oyMHlIYVViRVZlWHJod0NmeGpiOFhDUDdjS0hpSGls?=
+ =?utf-8?B?Q0U2MGRVMjJ6Sm5QemUzNytPdmlyUWlhMk03dXhON1dUcDFGa0laYTlNd1JI?=
+ =?utf-8?B?Rk1OMS9sc2lGNGZFTEJpQUxCZGUzdW5pb051Q0s3cGNqZitQSFdrbjFvQnN0?=
+ =?utf-8?B?STNKSzhDNFRvcENnVSsxNlQwaEFZbFhUN0VxT2VaNWxULzBCS29OWVlTNDBU?=
+ =?utf-8?B?Y1cvUWxUSEZUaW83MG9oWWVHS3JxVG9NYm5mUlN6KzdvZDQ2dlRVTDk5NjJq?=
+ =?utf-8?B?dWp6cnZjRFhMS3gvWmx5dUlvK0hUNVJLQ1Q3MU42TUVLY2UyYmMyWm42cUd5?=
+ =?utf-8?B?Q1N2akFTMUhjL25tTmtrNlZtUy9GbWxmaWNRbTRFRDdvcXdFdEErQ1JZdjd0?=
+ =?utf-8?B?S0R1Tkt5NG05dE81a0pYU1lXcHhKdHh4c1dkaFBWTjNhNDVTRlFncWVrb2l0?=
+ =?utf-8?B?TWJZVmEyNytwbDIrOVN0dTBoVWpTRExmTjFUZWkrcklodnQ5cUdDL1JJRWxl?=
+ =?utf-8?B?bTlwcHR0UmFKbWRrTTU3bm54VmQvMmV5ekVrSS9ZSnFKQjdXUlpBMFFuTTcv?=
+ =?utf-8?B?VDRsUXNsS0xKQ1U1cjBPTU9JL3ZlY0JyWFVSREJSKzVCVW5WQzhuMTRKSDJj?=
+ =?utf-8?B?bUF4ZXAzTzhjYTRCMlNFdjh3L2hxdUNHS1lLRW5rOFBXdmFHWmdqa3FUdVNE?=
+ =?utf-8?B?SFNzSE5teTREUlJvSGhKcUtPc3F3cW5jVEtoWk43WkdGOENNaHRDR0lOQ3Vw?=
+ =?utf-8?B?bTMwZS9zZjBnV25BV044TDZsY3RURkxyTGkwQUxYeCsyaEZPV0ZHS21YcVJT?=
+ =?utf-8?B?KzhQc3A2Wm9GL2NJTXo2eHFtbk16V1FWNG5hZ1Z4d0pxVE5Da0FPZWxXSHh0?=
+ =?utf-8?B?NnUrZkVBNTlhWXdndmhXL3gyOUgrNUdPYmxweHVQWTlvTU03cVlHLzRHZmNh?=
+ =?utf-8?B?SGFueHU3dHJSK3VRWlJnZU5qdlhRWFdHZFh0UEIwTmFHcEhPOUVRM1QwNFFU?=
+ =?utf-8?B?ZmFxa25rTVNWRk5MQVhncjJPYk54UWFGTE1zTm8rOTI2RnpQVHVyeVdGOVdz?=
+ =?utf-8?B?ZkVPcDRFTGpDWGFkeGhlYmJuWG1RdS8zWmpBWmFNQi9Jblc4R2VpVXpnVmRa?=
+ =?utf-8?B?aG1IU0R1bkQ0b2JYTURnRnQ1RnRpTFJvN2gxUWh1RU1FWU0zTzZWU2d6a2s2?=
+ =?utf-8?B?TFd5VUVyOEVTMVdKTFhwTGpxQXB5OS9sblljUlRuQ29WdzJmYTNNc2RtaWVy?=
+ =?utf-8?B?UXNmVGxPazd0RmhXOHVFTDZ3anRhSUxVWFhYTVl1V0tiQ3VnTEMzYzRyVVY1?=
+ =?utf-8?B?cS9TcVNrTmU1WVZGT1pBdElXQlcyVlJhaHlRTU1nVkU2c1ROelRNTFo3OWxV?=
+ =?utf-8?Q?rLFW131urDJfhbHBflNsqrZgy1mJkspN?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?RTNZMjNSNThVcks4UmJIVWMyRVVFM2tLQUplaFpZMXFISndHWmNpYXJidmxM?=
+ =?utf-8?B?YmxlVjQwZGViUWFHTWp3U01wS1p0QUxFUFlSTHpDU294akV6VVRta3gzRHl1?=
+ =?utf-8?B?ZldRcVJBUVVmelRuN1kxclgxZHZIVG5vQlZyNnltNDhFSkhVYmdSZ3NyVDls?=
+ =?utf-8?B?THlYdlRSMmNMb3ovdjJ6ZmZtRkRLWCtkNmhicmhBdDMreU41WURWaFg3OGsv?=
+ =?utf-8?B?UkUrY3NHcUFiRHEzVXVnWHEvanlhMlMxaFlLaW1ZWU04NGcxUXE3TzhtMWx2?=
+ =?utf-8?B?a0cyZzVhWENsdVZUa2xvdFFtVlAyMnJIakdkV25kbFN5TjgxUEhEODVYWGls?=
+ =?utf-8?B?TitrazRzOGpuOGY3TnBib2tBZit2WnQ3eHdrV2JRWUdlYkNOejM3M3JxV3dN?=
+ =?utf-8?B?eEI0c3NHVTJCOXA4YXBlQVhNSG1SOGZkT3FDWmxLV3Foa2U2QTc5L3oydlBL?=
+ =?utf-8?B?amhabGRNUktMeDBvcUhhUGp4MmRCY2hGVlp3MWkxdmFGSjBZdkV6UWwzczNj?=
+ =?utf-8?B?YkZySW5MaW9ab3RCMDBxTEN5TGxFRW5rMC9KWnkrRFphTUdUQWNPNElGZUhP?=
+ =?utf-8?B?bHVBQXpScXg1NWFqeWF4eDA0bjZPd05IZDdXU2tPMnlLZ0lqakEra0RnY2JJ?=
+ =?utf-8?B?ZjJXdEl1R1AxRGxReWRKbnFFdm8xMWRUQXErYXU4ME1tVFZNZzVTNUI4NGNm?=
+ =?utf-8?B?bHpqeVZNSGsxRmRBV09Ba3JmMzZLWXZOeTV5akphU2FqMjV0VVR2T3dlSitI?=
+ =?utf-8?B?ZnNKUFFLUGZOdzBsVjhiMTRWd21SUjNCNlUxMzJWdE1KMmVRNW1TRml2SFYw?=
+ =?utf-8?B?NDB1bnRaMXZKbzM5QTlLd0NvcThqRit3cGRYRnhNcktwWUZ6YW9MTzlEb1hq?=
+ =?utf-8?B?aGRUUG84VzluY3h0MFlLVWFoNE1NVXc1WnNiU09lOTVsdG5UYzhPY0h6eGZS?=
+ =?utf-8?B?cVQ4a05jY1A4bDBKNzNTTXN5dzNnbDVnZmtKd093dTRYTEV1M2tOcXg0WmVh?=
+ =?utf-8?B?UE44akhIUk1QRUNSNVI5V0NzMWUwR0s5LzBSSllDcFhuN2FyWnBSVjVnUU8v?=
+ =?utf-8?B?VVdwYXFEWE12MExoS1ZYemtxaGpXT2MxNnp6THBXRzM3ekg2bUtkUVZPRVZS?=
+ =?utf-8?B?Z1N6a2ZaU1ZZWHVpT1Z3Q3BGc3lLSDJsR2NHZS9sSHpkSE1DNmJQVWQ2L1hV?=
+ =?utf-8?B?eVRYZEhLeC8ySC9hekRBSkhMemZVcGVkNUtZY2dULzRWWnQ4cFlVQWFGVDVz?=
+ =?utf-8?B?VXRIYmJmTkJZRWV0Uk1Na0FGWDJ4bHBXT3FxazV5K21OWnNYeDNGVW91Si9P?=
+ =?utf-8?B?TFVNZGxocThhSmdoRXp4MHdTZUxWWjBGeTNlOFppWkJXK1BKeFBzVGVsQkl4?=
+ =?utf-8?B?RWFmN3MyOGNsMWhVdGpmdUFIb2k2SmNkTUJMZ0xGamRNZTdHTWUzVEpOSXQ1?=
+ =?utf-8?B?ZFdYRHRyWVFrYktGeFk4K2dGd0l5WjEzWUtCQ3Uvdno1Y0xENkJXMFkyRlZq?=
+ =?utf-8?B?aEpHSDEyM0JyUFB6OG54RERaWCtZNmtWNFV4amtKMlp5bUt0aWQvRWxSOTNj?=
+ =?utf-8?B?MlVBam9TTDBYNkVyM1E5U1ViYlRQVGdsSSsvaVMyWG9MMjl6ZVo4OVhNeEs0?=
+ =?utf-8?B?S012MVFzQi9tWVNyTVRGMHZ1Q0wrVlVFRWM2Z1ZKU1VCYnRMTVFuWmFUMWpR?=
+ =?utf-8?B?MWI0NXd3Y3pCcCtSVk9rOURsbkFwNWx4bWtIVk05M2lOVzFOaFhJbXFyZjcx?=
+ =?utf-8?B?RmRlY010dmQvTUNtaXoyL0pwOFZ4b2xYTHE5dTBTUWsycm0wbFBLSG5LWGxt?=
+ =?utf-8?B?bWdGbHhVUTN5UlNhYjUwRlRuWmRERWUvU2RaQ0h2ay9FRTQ4cEdiK3g4RXht?=
+ =?utf-8?B?WDJBVjFnc00zR2RiWWhXK0VYcllISUFpSElqR1ZobTFFbkd6WUQvcHJLcFg4?=
+ =?utf-8?B?bi9xTGM0UzVhRDY2QmZ0dW14SWdSTEFvcXFnZjlUTThXU09MbkNpeHZvdUh4?=
+ =?utf-8?B?d3Faa0VDWExiUGoycjNSYlZhWW9DVExhbzNhczBNYjNCbXF5RjhCOHk3bmFF?=
+ =?utf-8?B?YVpHWFRkejI5QisrOENVL0YzdmNma3FFbFdVMzczYVMyMGFjSnlJSEwwVU53?=
+ =?utf-8?Q?sjDHQHF31QCG+87je8uzT18j4?=
+X-OriginatorOrg: atomlin.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 06bfc027-65ee-4762-2d5b-08de20c6b7ff
+X-MS-Exchange-CrossTenant-AuthSource: CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Nov 2025 02:04:59.8466
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 6FAWXk+WYX+DigBbbCmbKsHYJKAbDgoT1j564rM8PMPdfjm5Q+kpV+nlzIahWvf4CC678SgG+YBy4YrQWD/EzA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO0P123MB6672
 
-On Mon, Nov 10, 2025 at 07:40:31PM +0100, Andy Shevchenko wrote:
-> Use %ptSp instead of open coded variants to print content of
-> struct timespec64 in human readable format.
+On Mon, Nov 10, 2025 at 02:26:52PM +0100, Petr Mladek wrote:
+> > Hi Petr,
+> > 
+> > If I am not mistaken, this is handled safely within the context of
+> > module_address_lookup() since f01369239293e ("module: Use RCU in
+> > find_kallsyms_symbol()."), no?
 > 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-Quite a bit neater, yes.
-
-Acked-by: Corey Minyard <cminyard@mvista.com>
-
-> ---
->  drivers/char/ipmi/ipmi_si_intf.c | 3 +--
->  drivers/char/ipmi/ipmi_ssif.c    | 6 ++----
->  2 files changed, 3 insertions(+), 6 deletions(-)
+> The above mention commit fixed an API which is looking only for
+> the symbol name. It seems to be used, for example, in kprobe
+> or ftrace code.
 > 
-> diff --git a/drivers/char/ipmi/ipmi_si_intf.c b/drivers/char/ipmi/ipmi_si_intf.c
-> index 70e55f5ff85e..5459ffdde8dc 100644
-> --- a/drivers/char/ipmi/ipmi_si_intf.c
-> +++ b/drivers/char/ipmi/ipmi_si_intf.c
-> @@ -275,8 +275,7 @@ void debug_timestamp(struct smi_info *smi_info, char *msg)
->  	struct timespec64 t;
->  
->  	ktime_get_ts64(&t);
-> -	dev_dbg(smi_info->io.dev, "**%s: %lld.%9.9ld\n",
-> -		msg, t.tv_sec, t.tv_nsec);
-> +	dev_dbg(smi_info->io.dev, "**%s: %ptSp\n", msg, &t);
->  }
->  #else
->  #define debug_timestamp(smi_info, x)
-> diff --git a/drivers/char/ipmi/ipmi_ssif.c b/drivers/char/ipmi/ipmi_ssif.c
-> index 1b63f7d2fcda..ef1582a029f4 100644
-> --- a/drivers/char/ipmi/ipmi_ssif.c
-> +++ b/drivers/char/ipmi/ipmi_ssif.c
-> @@ -1083,10 +1083,8 @@ static int sender(void *send_info, struct ipmi_smi_msg *msg)
->  		struct timespec64 t;
->  
->  		ktime_get_real_ts64(&t);
-> -		dev_dbg(&ssif_info->client->dev,
-> -			"**Enqueue %02x %02x: %lld.%6.6ld\n",
-> -			msg->data[0], msg->data[1],
-> -			(long long)t.tv_sec, (long)t.tv_nsec / NSEC_PER_USEC);
-> +		dev_dbg(&ssif_info->client->dev, "**Enqueue %02x %02x: %ptSp\n",
-> +			msg->data[0], msg->data[1], &t);
->  	}
->  	return IPMI_CC_NO_ERROR;
->  }
-> -- 
-> 2.50.1
-> 
+> This patch is fixing another API which is used in vsprintf() for
+> printing backtraces. It looks for more information: symbol name,
+> module name, and buildid. It needs its own RCU read protection.
+
+Hi Petr,
+
+I see and agree.
+
+-- 
+Aaron Tomlin
