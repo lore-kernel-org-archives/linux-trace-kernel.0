@@ -1,205 +1,205 @@
-Received: from CO1PR03CU002.outbound.protection.outlook.com (mail-westus2azon11010029.outbound.protection.outlook.com [52.101.46.29])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD2CD277CAB;
-	Tue, 11 Nov 2025 05:59:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.46.29
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762840752; cv=fail; b=dtOvTAjxCVimcsSY75TuepdgOGruWg3eOmXejU0pXyM7ib4+S3PAo/dbhLJGB+k+ibS9oLHJwNiH5w52D8dtQIQ8eCBiSRTR9X2ZVhBQvI6Uqpus/mMQah/xg12JAs8hnzJ7oa9RUNwy1bfsZact3tlIQoKRO1cu/sh+KTkDgA8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762840752; c=relaxed/simple;
-	bh=p/90sDFKqosD9fl4w4Fei15LtROb2f1HRtWr1aH5/LM=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=JPmVAwTTXp3+mDYtgLx3lhckqu295GHIf2HOZC03CsWynILsPTXy+7cTyMDa9CF9LBj80ZQL0CgfQsz5A2/New3pOEXahGbNvQ1ZBO1w7qnlGtUU66tSxY08ITzJ4K3VHKafV3xXCrBR5cHMBmlcvaR6b9+AzNoAQ8cVuOjM0AU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=WTUQbT0s; arc=fail smtp.client-ip=52.101.46.29
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97BE5315D21
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 11 Nov 2025 06:42:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1762843352; cv=none; b=RmGYfSY3QT4ILlcZ+IIJVUsmL62t1RP25BBNs/Kkdm1BYujzidqBhwyvge3Y5GOVDuAmrlKWf1wenYPuSdgtq3NWkHf0gZEssvD2kkysBcU7By4dafYz5YUrtYQKCrrTk/xk78xZyGQMt7oXgAWc3s5DaK6MvRfYzIbsYWsfc54=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1762843352; c=relaxed/simple;
+	bh=ATNN5RmueLox2IC+5BDEXAgaIglCENc+yF4ZTPMaIZg=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=D37tmT06YejQIKSPkw67uuVUUuV5ejXcozBuxvYBaXwvw2tnnLbLhffpHJI4GVJcAiDUaaRM76Ioy7d/HfyvucFVGpqHGFkado3AJLsVoSjQYSfaK33GpBB0qpcox4p50BMpwyOkwlPNJn3ezpcA5TFc0eSULa+O1VOeHAF8dF0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=MJJifpxj; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=XOVf1gy9; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=MJJifpxj; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=XOVf1gy9; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="WTUQbT0s"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=elq1WNqsm7J04W8iSOHNUUq3o+28S5emYLNQWijjSjDJfLisFwybmVXqE710L+orbNExvenQ1fDAwru+spbnUxHjVIAwYc539Hv6gxvqtg8ZQkf2ZctGTkqz//Sz4c5eiR5eag/C8H7A4oCiTAyPqrotpahzKf5NHqJmoqQi9rzVGvOJ/5Q+rRHrCxzDhw5cGgUtEAhFkJGeCwWENPbqj1/3LzUHwiuT0eARKnJcDnfwiaWxEhmMgdEG9sPiZTip/qNLMSViCa9j0NMpEHRQ+XbzmZGBqn0rNYldmCAhlfYPhRStgxHyKZrtxNooX4uwQlLZjl9CvdIZ/oCEcGDaMQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7Ff+p2tzGhD9rj8pxwbwXPcYA4tfjOvixLAVdAdKAWc=;
- b=OwDIrArMB1QpEWBN07nkFW8fm24rwxGQwmqgU3eLPp3q4ERY57Z5yjbbBkKQ0xJxCmT5nFBWdhJFS8EF9MSA3QPC4YFMCHzqyErwFfMOpYQtloyrtfpQPc/Q0ea41DWpPEQUiFNwWzt7b+L5S5OCd754B6ozlDK57NMgSDwJoONjx8K+7Q7TUMjtmzASW/JY7fRr07Kdn44iw/CcNkUCFGr8rsSBUjNR4oAGAy8nawwXIm9RnXW4S66diqq90rbsv7skWeRzKwNK2JRthWhFxrinBAPQQzLSGjGy7hBzsj6cGjcp68aZoYEyzoSRx97Przzd530TmCk940ogSkFVSQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7Ff+p2tzGhD9rj8pxwbwXPcYA4tfjOvixLAVdAdKAWc=;
- b=WTUQbT0sLDw2thUODg+Q0pcXu9op/nYQTfurH2FkHeaxQaEudhssLdgX0WTiMSTNeSthjkWRJENNRleEtLwxMx35Wy56UocV802DxB13z6qe8aceixzdd/CvE1lL6Ngo3LFNBVQLeru0zxHVL5dUYdLQsLPxo3x3vdMIooSzoi0=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from SJ0PR12MB7458.namprd12.prod.outlook.com (2603:10b6:a03:48d::13)
- by IA1PR12MB8467.namprd12.prod.outlook.com (2603:10b6:208:448::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9298.16; Tue, 11 Nov
- 2025 05:59:01 +0000
-Received: from SJ0PR12MB7458.namprd12.prod.outlook.com
- ([fe80::83e7:e6cf:26ed:2f3d]) by SJ0PR12MB7458.namprd12.prod.outlook.com
- ([fe80::83e7:e6cf:26ed:2f3d%6]) with mapi id 15.20.9298.015; Tue, 11 Nov 2025
- 05:59:01 +0000
-Message-ID: <e38e8059-a62b-4ad5-8316-5af02a0cc1b6@amd.com>
-Date: Tue, 11 Nov 2025 11:28:52 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] mm/khugepaged: do synchronous writeback for
- MADV_COLLAPSE
-To: Matthew Wilcox <willy@infradead.org>
-Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- David Hildenbrand <david@redhat.com>, Zi Yan <ziy@nvidia.com>,
- Baolin Wang <baolin.wang@linux.alibaba.com>,
- "Liam R . Howlett" <Liam.Howlett@oracle.com>, Nico Pache
- <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
- Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
- Lance Yang <lance.yang@linux.dev>, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Zach O'Keefe <zokeefe@google.com>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- Branden Moore <Branden.Moore@amd.com>
-References: <20251110113254.77822-1-shivankg@amd.com>
- <aRHs3pA2kOr_uD3k@casper.infradead.org>
- <b7313a45-c36e-4390-a0b8-46f412474f86@lucifer.local>
- <39c8a4ed-53b5-48e3-baea-f67cc1e8be4f@amd.com>
- <aRH2pdhMBQ-20IC9@casper.infradead.org>
-Content-Language: en-US
-From: "Garg, Shivank" <shivankg@amd.com>
-In-Reply-To: <aRH2pdhMBQ-20IC9@casper.infradead.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MA5PR01CA0153.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a01:1ac::14) To SJ0PR12MB7458.namprd12.prod.outlook.com
- (2603:10b6:a03:48d::13)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="MJJifpxj";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="XOVf1gy9";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="MJJifpxj";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="XOVf1gy9"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 003E121D96;
+	Tue, 11 Nov 2025 06:42:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1762843347; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fnn8buj3dz2cAu1lwnMV3wmGOQAis/X/NnrYyJhRgpI=;
+	b=MJJifpxj0d+JjXgZOzmxMDpQDTSyIadrJYsNIbJl+ULZfRSkA1F3QRigpspAqsE+66Rhp4
+	Shn7meUxG5KGJZOHhOahRAQKGy6Nb5TLhqjOSRo1AsBLy8kaYN8yBZmHfsJ+Bw3No+qv6Y
+	5wW5dT7W11nmHzpKpr6zOoTnHE6LBoQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1762843347;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fnn8buj3dz2cAu1lwnMV3wmGOQAis/X/NnrYyJhRgpI=;
+	b=XOVf1gy9U5gZVwTjF3TZLqMUlzKAS6MC5EfTBJRYyS+0eMhaSrKs4ZKyZxOlsKibNkjCP/
+	7jvcMdxbfbH3qxAQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1762843347; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fnn8buj3dz2cAu1lwnMV3wmGOQAis/X/NnrYyJhRgpI=;
+	b=MJJifpxj0d+JjXgZOzmxMDpQDTSyIadrJYsNIbJl+ULZfRSkA1F3QRigpspAqsE+66Rhp4
+	Shn7meUxG5KGJZOHhOahRAQKGy6Nb5TLhqjOSRo1AsBLy8kaYN8yBZmHfsJ+Bw3No+qv6Y
+	5wW5dT7W11nmHzpKpr6zOoTnHE6LBoQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1762843347;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fnn8buj3dz2cAu1lwnMV3wmGOQAis/X/NnrYyJhRgpI=;
+	b=XOVf1gy9U5gZVwTjF3TZLqMUlzKAS6MC5EfTBJRYyS+0eMhaSrKs4ZKyZxOlsKibNkjCP/
+	7jvcMdxbfbH3qxAQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id EAC3E14805;
+	Tue, 11 Nov 2025 06:42:24 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id OZMhONDaEmkhSgAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Tue, 11 Nov 2025 06:42:24 +0000
+Date: Tue, 11 Nov 2025 07:42:24 +0100
+Message-ID: <87jyzx2hpr.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Corey Minyard <corey@minyard.net>,	Christian =?ISO-8859-1?Q?K=F6nig?=
+ <christian.koenig@amd.com>,	"Dr. David Alan Gilbert" <linux@treblig.org>,
+	Alex Deucher <alexander.deucher@amd.com>,	Thomas Zimmermann
+ <tzimmermann@suse.de>,	Dmitry Baryshkov
+ <dmitry.baryshkov@oss.qualcomm.com>,	Rob Clark
+ <robin.clark@oss.qualcomm.com>,	Matthew Brost <matthew.brost@intel.com>,
+	Hans Verkuil <hverkuil@kernel.org>,	Laurent Pinchart
+ <laurent.pinchart+renesas@ideasonboard.com>,	Ulf Hansson
+ <ulf.hansson@linaro.org>,	Vitaly Lifshits <vitaly.lifshits@intel.com>,
+	Manivannan Sadhasivam <mani@kernel.org>,	Niklas Cassel <cassel@kernel.org>,
+	Calvin Owens <calvin@wbinvd.org>,	Sagi Maimon <maimon.sagi@gmail.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,	Karan Tilak Kumar
+ <kartilak@cisco.com>,	Casey Schaufler <casey@schaufler-ca.com>,	Steven
+ Rostedt <rostedt@goodmis.org>,	Petr Mladek <pmladek@suse.com>,	Max
+ Kellermann <max.kellermann@ionos.com>,	Takashi Iwai <tiwai@suse.de>,
+	linux-doc@vger.kernel.org,	linux-kernel@vger.kernel.org,
+	openipmi-developer@lists.sourceforge.net,	linux-media@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,	linaro-mm-sig@lists.linaro.org,
+	amd-gfx@lists.freedesktop.org,	linux-arm-msm@vger.kernel.org,
+	freedreno@lists.freedesktop.org,	intel-xe@lists.freedesktop.org,
+	linux-mmc@vger.kernel.org,	netdev@vger.kernel.org,
+	intel-wired-lan@lists.osuosl.org,	linux-pci@vger.kernel.org,
+	linux-s390@vger.kernel.org,	linux-scsi@vger.kernel.org,
+	linux-staging@lists.linux.dev,	ceph-devel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,	linux-sound@vger.kernel.org,	Rasmus
+ Villemoes <linux@rasmusvillemoes.dk>,	Sergey Senozhatsky
+ <senozhatsky@chromium.org>,	Jonathan Corbet <corbet@lwn.net>,	Sumit Semwal
+ <sumit.semwal@linaro.org>,	Gustavo Padovan <gustavo@padovan.org>,	David
+ Airlie <airlied@gmail.com>,	Simona Vetter <simona@ffwll.ch>,	Maarten
+ Lankhorst <maarten.lankhorst@linux.intel.com>,	Maxime Ripard
+ <mripard@kernel.org>,	Dmitry Baryshkov <lumag@kernel.org>,	Abhinav Kumar
+ <abhinav.kumar@linux.dev>,	Jessica Zhang <jesszhan0024@gmail.com>,	Sean
+ Paul <sean@poorly.run>,	Marijn Suijten <marijn.suijten@somainline.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,	Lucas De Marchi
+ <lucas.demarchi@intel.com>,	Thomas =?ISO-8859-1?Q?Hellstr=F6m?=
+ <thomas.hellstrom@linux.intel.com>,	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,	Vladimir Oltean
+ <olteanv@gmail.com>,	Andrew Lunn <andrew@lunn.ch>,	"David S. Miller"
+ <davem@davemloft.net>,	Eric Dumazet <edumazet@google.com>,	Jakub Kicinski
+ <kuba@kernel.org>,	Paolo Abeni <pabeni@redhat.com>,	Tony Nguyen
+ <anthony.l.nguyen@intel.com>,	Przemek Kitszel
+ <przemyslaw.kitszel@intel.com>,	Krzysztof =?ISO-8859-2?Q?Wilczy=F1ski?=
+ <kwilczynski@kernel.org>,	Kishon Vijay Abraham I <kishon@kernel.org>,	Bjorn
+ Helgaas <bhelgaas@google.com>,	Rodolfo Giometti <giometti@enneenne.com>,
+	Jonathan Lemon <jonathan.lemon@gmail.com>,	Vadim Fedorenko
+ <vadim.fedorenko@linux.dev>,	Richard Cochran <richardcochran@gmail.com>,
+	Stefan Haberland <sth@linux.ibm.com>,	Jan Hoeppner
+ <hoeppner@linux.ibm.com>,	Heiko Carstens <hca@linux.ibm.com>,	Vasily Gorbik
+ <gor@linux.ibm.com>,	Alexander Gordeev <agordeev@linux.ibm.com>,	Christian
+ Borntraeger <borntraeger@linux.ibm.com>,	Sven Schnelle
+ <svens@linux.ibm.com>,	Satish Kharat <satishkh@cisco.com>,	Sesidhar Baddela
+ <sebaddel@cisco.com>,	"James E.J. Bottomley"
+ <James.Bottomley@HansenPartnership.com>,	Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>,	Xiubo Li <xiubli@redhat.com>,	Ilya Dryomov
+ <idryomov@gmail.com>,	Masami Hiramatsu <mhiramat@kernel.org>,	Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>,	Andrew Morton
+ <akpm@linux-foundation.org>,	Jaroslav Kysela <perex@perex.cz>,	Takashi Iwai
+ <tiwai@suse.com>
+Subject: Re: [PATCH v1 02/23] ALSA: seq: Switch to use %ptSp
+In-Reply-To: <20251110184727.666591-3-andriy.shevchenko@linux.intel.com>
+References: <20251110184727.666591-1-andriy.shevchenko@linux.intel.com>
+	<20251110184727.666591-3-andriy.shevchenko@linux.intel.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ0PR12MB7458:EE_|IA1PR12MB8467:EE_
-X-MS-Office365-Filtering-Correlation-Id: 124d3d93-f1df-46f1-f829-08de20e7690f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?dUw0Vm9PcUxUQmxIV1VjelpvVFdLZHByanZNeHVLNSs4N2hJanZXQ2lOK3J3?=
- =?utf-8?B?VjZlZXluclY4V29UK1VxdjJjT0kwUjVHZ0ZkSVUzckJ3ZTZ5OFQwR05PNVhJ?=
- =?utf-8?B?WFlFcXlFZitDUklEdmF3WXBNNkZsejltLzBMMUl1NlFiWXZCQ3h1SE5pVnMy?=
- =?utf-8?B?Y3dJTnY4ZDBaaG9aQXh1SXlFTnBCWTNJQnQ2ellaaE1FY0VDSDZZbHhTU2ts?=
- =?utf-8?B?QTRhL2lwbnU4RE1jb01kRmRaVFVERlhkRDBxOVhIZ2NRT0N1eEFxZStQL1FY?=
- =?utf-8?B?bjdFWU9QOW11WDUrRit2a2dxRWlSWWhWaE41dTl2STA2bFpDcm5Bd3VVampt?=
- =?utf-8?B?RVJLRnBDYTdCcmFnNUFndnBhZ2xmMkEzYVMzcDR0OGFVdGt3QU5ZcDJ4WmZO?=
- =?utf-8?B?QnlKMlZFMXZoRHc4Y2tlMHc3WnRvb3ZTYXlDRnI3SnpFSU1wMWVGOHRIYkZJ?=
- =?utf-8?B?TlF3ME1ldVF4N2IwNGxnK0I5WkpydldrNGtxZXVyM1BldEp6MHJJZjB2YXZn?=
- =?utf-8?B?bkJSb01LZGVoLzN3VkE4VjRJVFgrclVOOFNOaHNvOExnRk03QU5iUUZNNEw5?=
- =?utf-8?B?SUQxeitaSkV2SnF3WE95VnBaQ3ptUnltNDRiaWJDT0Y0QWRaN2NZbk8vSGd2?=
- =?utf-8?B?RnVENzhJWlJpbU53SVBZSHRicHdmNEVrN1Z4N0JGbmZBYnBRZHZ4dTR4Q0Mw?=
- =?utf-8?B?ZFNzMlFMQ0d3ajhQYUxrcExnTStMM3NhT3VZU0dvUFFkVEtDVi8vUVVaejU4?=
- =?utf-8?B?VTdBbTYzMkZLeGNlRE5iRklzTTViaXczVmE0WXgrTVpVeEM3b3lEdlhHSjNC?=
- =?utf-8?B?aUFXQXpSZnREaXNZZ0tMdW9Id3VoOGdWaUw4MWRnRzc1d3BCZWJJSkF2dHR5?=
- =?utf-8?B?UGJXanNLbDh6VG1RN3MrN3U3RDRmejM5eGRJQjdMMURpZ0szU3M5ZjBFQXNE?=
- =?utf-8?B?Z2tFRUxkSDIrRXVSWkVuekNmZW95b1N1OFJhS0E5emRXVndqTWl3cHQxR1p3?=
- =?utf-8?B?K1hMS3RjdjU5d1U3d3FSekJldEVjU2E0d0dSNjZNdVQvTGVLRWZyMlFpYnRN?=
- =?utf-8?B?cXBrd0h6UUk3U0dkeGkrVmN6cU5IMDRVMTJqcGtsS0xjeTdSa29KZHlkSmJ2?=
- =?utf-8?B?MlBNVSs0L0NTNDFCYy8xWGVjQnJuVDVPOFA0MmhpclZjamVNWGVlbVVmZU1B?=
- =?utf-8?B?MzZFd1ZybzhwZFBuWmgvRW9tVjBGamxkTHh4alBDNDVheDdYTWVNWURSc3hp?=
- =?utf-8?B?Q2VKSk5RaU9yZmlkRU16Sm91K2xQSURqQ0xxWFpnUlFQcWQ2QlB5V3NXdW5G?=
- =?utf-8?B?Ky9MMnAwMnAxWDFEVGYyMG5TQkZZMUNPd3ZGSExZTlRzYnZ4dkNHdHFuMTUr?=
- =?utf-8?B?SzBOcExqckRYNHNjakZPdDVWbnhxalp0ZTlJRmJKMXlhR3hWRDl6cnF5bUs3?=
- =?utf-8?B?L000ZDZaSXo4ZVE3c25GcnVQWTFPSlBMZ0RxMGR6citNYlR3REdsb01WMHNw?=
- =?utf-8?B?b0gxTzFOK2RlME9TaTFsdXg3TC8zSXA5Vkk0M24vMUo1SnhWUGxUZFBWZUlE?=
- =?utf-8?B?L242V2Q4S3Ryb2Z2cVdKazMyc3k5UEdIUHppNjBGMElIbS9pRFlhTnNvUlp1?=
- =?utf-8?B?OHM2dnYxTThxbXRMeXN2SDI0MytONnZXSFp4Z1R3a0ZtWXBacUg2TWFvelJu?=
- =?utf-8?B?U0huSXhNT1dpQmZUUE1vRzk3aGhmRUxFY2FJb1B1OWk3Wkd1V3oxWGViREhW?=
- =?utf-8?B?THNxN3lTOEtNVmt4bFRCTEVzQTJzeVpHbXJyMXBiSUIrSzEwWVBKUnlXM0px?=
- =?utf-8?B?Y3lGOEVvbG5LMEswMlZyMlpmQ0pPcW5rMnlPKzluQitWNmwweTRrT2MrRGRQ?=
- =?utf-8?B?NEVwYk9rWHJsaVhPMWZNdkJqTVZEYWcyUGN3QzJjdmg3Y2swSmdZMGhuKzc2?=
- =?utf-8?Q?k/c6CKTk1CZfQfutd9Uucii+EOYff9Dc?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR12MB7458.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Mjg4Y1BUN0t5TER4QWExd2EwcFZsdGpvU0tWelFkWms0VklmZVV1bHBJc1Ba?=
- =?utf-8?B?eXRGU0pDNVNiZVFZMjhTWFlzeUhRMTNzZjArUk5rOXRwLzNqNVdYbThJcTZu?=
- =?utf-8?B?aFBiZG1Da0p4aWtiemY3NkdHRk5Pb1B0SmtVZTZOWW40Yy9CWmpyVisvUzc4?=
- =?utf-8?B?amRnTS9kQUJhNjVmMnN5RXpqamZOeEQway8vN2h5NEhCYTBBbEVJRUQxQm0w?=
- =?utf-8?B?TXFxY0c1VFhFYXRpMkxpdzhqbTJUZjgwVm1aWnNXdkxWWVErTDVTbnIyR2wy?=
- =?utf-8?B?UmU5THp1SnZSTjlTT0xzYTNSV1Z4c3duWHp2RVpyUnZ3UFY5N1lTY3BBcDVD?=
- =?utf-8?B?eGo4T3lPMGl6UnAzazdsckNwdDVjMzY0NDNERjdZVC9NYXRIb044OXZ5dTNj?=
- =?utf-8?B?bG4vWGFpTU45OXByVGx3MFZQS3lzY2FwTW1jYXdwSFNqY3c4YkI4QWJLMXhI?=
- =?utf-8?B?dXV0RU83TklvYjhLY3N0cG90WXQzdFRUb2tKMVIvZ2pXendIeWZhVitTWUxW?=
- =?utf-8?B?RHJLVFd0NHlhMHQzODBsWTZrVWxNVWFWTDJuMXNKV0E3SG5hUXFJeGNoTTdU?=
- =?utf-8?B?ZmZYblBVV2JkNWcxMy9pZC95azFaRWJiYWRZbllram1nMlN2dGgwbWM3VEpB?=
- =?utf-8?B?RkgwVWlsQTZONDBGMFF4TzlLRXk0ajRYYTBOQ2g3dUtYODZtZ0VpTGRXRXdu?=
- =?utf-8?B?VWpsOGJ3VFVibGNpOW9zRDVtZzRVdHl5TGFPWjJWNjYwdE83NzNFMm1oZUo2?=
- =?utf-8?B?NFJmUVB3aHdNMEFkcS9XdHFLaFRQK2dVeWQ5OEtoUkZDeDdHOUF2Q1lNeEpF?=
- =?utf-8?B?dytqY2NwZm13YldRbHF5MjNFUmRxaVl2V2cyTy8yTTBqTFJ6MzdCeEY2L1cr?=
- =?utf-8?B?NWxOY29kdWZaelVYT1JJNnJFME9UVm0vampjOGF5Y1FtRGx4cnFvVEU1MHI2?=
- =?utf-8?B?Uk1LUit1VnR0TFNma2RzQVIxMFoyTzBLRjEyeWUzaGxGVEx5eEhGMXJpeWVz?=
- =?utf-8?B?WVE2bmd1MzRZaTZ1cEtwWXZFU240dEYySkJPR1hYZlhXa0g0RGE4ODJYMit5?=
- =?utf-8?B?My80aVlOa1FNU3dtclNnaHBkdFZ2RTV1RUpuNHBNWUo4ZWVMWmhPb051dzlS?=
- =?utf-8?B?NGdFcGU3RW1qUGlrN0hPdGhSVTB2Z2lHdlZnaXRFN3k4MkJ1Syt5eUZheWJB?=
- =?utf-8?B?aWNsYkJHMnRPTVJpRDlyM1NYSHZVMFZma0FUTGxwdUF2UDFzQmVIWXAxdGFP?=
- =?utf-8?B?dkNLbkovZnRzeThYVWtKY2drSUVLOWVHdlhLR2l1OVVCTHpBYytHdThkdHRM?=
- =?utf-8?B?VjEwK24yOUhjOWpzVzZBdXlHbTJlMklMZ3F6dTRQUEszOVovWktYSTNWSlNF?=
- =?utf-8?B?enNZL0t1MzJuUTBJd3FLanUzUWVOdU1TRlJFWnNCZFN3UGZEOWMvbGxJUDBF?=
- =?utf-8?B?cm1Sb2dhUS9FMVVKbEdoNXZEdDBuUmlIRC9pZmxLWXhRUTJ1TkNpZE53N0Fl?=
- =?utf-8?B?REZ2S3gwbS8vTjBYVHNvN3BibXJaZlEwWFR5bmJETnYwb042dDRlVFhMc0R0?=
- =?utf-8?B?RGcrdXJnbkZHdnh0czdVNFV0RFoxVHhVRUZjOTBZTkw0SnJqd0MzcmdNSXpC?=
- =?utf-8?B?aktVS2pMS1JlbXhxNkIrNkhXazJzQXQ0aFhiM0ZlZ1FoZVJRTTU4SHIyTHhy?=
- =?utf-8?B?YXdtRTJjME01S1l3SnlFNktTdS9xRGJONlB4Q0NwajJhR0pTNXN0VVFEQVZs?=
- =?utf-8?B?cU1HT3lxZ2djZk8wZXVnRkFpeEpUWXEyeS8xbWxwZUxvbWtyNStEU2NqbCti?=
- =?utf-8?B?OUszbzVxYnhpbHBCclE1Q0VlS1ZJVkgxaTFscnV4Y2hRcHlBOXdOQ0xQQmFK?=
- =?utf-8?B?UU9ncExFUUh2WHNKN1hRMDRiNHZ4dDVQcGxhNkNXNE5mWmhra29YMDdOQ1F0?=
- =?utf-8?B?MElFQkNoMHhCSitmQ3ZJcGpLQTV2WHdTNE51MUZDTlNOeXlrQjBQclAxRFdV?=
- =?utf-8?B?azFnTHlvOC9LKytnUTRCZDh0b3MwVVZtdU5yMVl6bHA3NHJlc0pzM1lhK0dX?=
- =?utf-8?B?VVJYYWF2TEtQeHNLU21PdkZXdCtZSDFPZzFyQVBDZ1JsQWNCZGpVbzdqR2FC?=
- =?utf-8?Q?P5vxSd6lo5l/b2yBthIxBuugx?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 124d3d93-f1df-46f1-f829-08de20e7690f
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR12MB7458.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Nov 2025 05:59:00.9977
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: XJArNAPeLj9poMpxcRKJIMcaUZuI9pcOODj/L8wtQCQvyUW+OtC+Pjj29jB4MfwjtiJignh+IEkVKkA7SZQEbg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8467
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Level: 
+X-Spamd-Result: default: False [-1.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	TO_DN_SOME(0.00)[];
+	TAGGED_RCPT(0.00)[renesas];
+	MIME_TRACE(0.00)[0:+];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[minyard.net,amd.com,treblig.org,suse.de,oss.qualcomm.com,intel.com,kernel.org,ideasonboard.com,linaro.org,wbinvd.org,gmail.com,oracle.com,cisco.com,schaufler-ca.com,goodmis.org,suse.com,ionos.com,vger.kernel.org,lists.sourceforge.net,lists.freedesktop.org,lists.linaro.org,lists.osuosl.org,lists.linux.dev,rasmusvillemoes.dk,chromium.org,lwn.net,padovan.org,ffwll.ch,linux.intel.com,linux.dev,poorly.run,somainline.org,lunn.ch,davemloft.net,google.com,redhat.com,enneenne.com,linux.ibm.com,HansenPartnership.com,linuxfoundation.org,efficios.com,linux-foundation.org,perex.cz];
+	R_RATELIMIT(0.00)[to_ip_from(RLmdkd3ei8pyzuqshpsr74qwzu)];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_SOME(0.00)[];
+	RCPT_COUNT_GT_50(0.00)[96];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Flag: NO
+X-Spam-Score: -1.80
 
-
-
-On 11/10/2025 7:58 PM, Matthew Wilcox wrote:
-> On Mon, Nov 10, 2025 at 07:50:17PM +0530, Garg, Shivank wrote:
->> The issue is copying those binary to a freshly mounted filesystem.
->> The page cache folios remain dirty until background writeback completes.
->>
->> Reproduces 100% for me: fresh XFS/EXT4 mount -> copy binary -> execute -> MADV_COLLAPSE fails.
+On Mon, 10 Nov 2025 19:40:21 +0100,
+Andy Shevchenko wrote:
 > 
-> Yes, but this is an uncommon thing to do.  Really, it's the kind of
-> thing you do when you're testing something (like, whether ext4 supports
-> large folios, and whether that yields a performance improvement).
-> It's more reasonable to change userspace than the kernel to solve this
-> problem you're having.
+> Use %ptSp instead of open coded variants to print content of
+> struct timespec64 in human readable format.
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  sound/core/seq/seq_queue.c | 2 +-
+>  sound/core/seq/seq_timer.c | 6 +++---
+>  2 files changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/sound/core/seq/seq_queue.c b/sound/core/seq/seq_queue.c
+> index f5c0e401c8ae..f6e86cbf38bc 100644
+> --- a/sound/core/seq/seq_queue.c
+> +++ b/sound/core/seq/seq_queue.c
+> @@ -699,7 +699,7 @@ void snd_seq_info_queues_read(struct snd_info_entry *entry,
+>  		snd_iprintf(buffer, "current tempo      : %d\n", tmr->tempo);
+>  		snd_iprintf(buffer, "tempo base         : %d ns\n", tmr->tempo_base);
+>  		snd_iprintf(buffer, "current BPM        : %d\n", bpm);
+> -		snd_iprintf(buffer, "current time       : %d.%09d s\n", tmr->cur_time.tv_sec, tmr->cur_time.tv_nsec);
+> +		snd_iprintf(buffer, "current time       : %ptSp s\n", &tmr->cur_time);
+>  		snd_iprintf(buffer, "current tick       : %d\n", tmr->tick.cur_tick);
+>  		snd_iprintf(buffer, "\n");
+>  	}
 
-Fair point.
+tmr->cur_time isn't struct timespec64, but it's struct
+tmr->snd_seq_real_time.
 
-You're right that this is primarily a testing scenario, though it may also
-potentially affect JIT compilers writing executables (also uncommon) but more
-research is needed.
 
-For userspace workarounds, calling fsync() before MADV_COLLAPSE works.
+thanks,
 
-Synchronous writeback in MADV_COLLAPSE seems reasonable given it's already
-a blocking operation. Alternatively, dropping this patch and keeping only
-patch 2 also works for me. As for user sanity, returning -EAGAIN instead
-of -EINVAL and some documentation would be beneficial.
-
-Happy to go with whichever approach you think is most appropriate.
-
-Thanks,
-Shivank
+Takashi
