@@ -1,186 +1,320 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BEFC361DCC;
-	Tue, 11 Nov 2025 12:28:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F6BE342537
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 11 Nov 2025 13:47:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762864098; cv=none; b=tQCzpeGYSxq52vkT2PBfpLvW0J/qkzH8pVr1F1B2RNpZXoZuvgmjj92brH18SlCyY/qhFvo7ZNecxPl0k6AR2Q9R1+HVkfIsGJuNR+PX1OGUiFg5tkTIIFo2emzWQigFfoYWXS7BveSvzVztYnhqiVuMCA/xexnJESe0L59GAac=
+	t=1762868865; cv=none; b=i208ukJQz/8OEqELBfU7HXBayR0PJ0Y2ZkOGT8iylAPhGJsUf2fttYkqBGm113hXCY9scVZ4Pwlog0hzcTcKz/H2CO7QzINg8SIDwrr/tRaGsblC5IfI+odnbHcxszvBtVAZP8WSr6Mt1LDWuP9oPyljE5EEOpOk9w/jQC04bgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762864098; c=relaxed/simple;
-	bh=OtFs4nYXEH1ThWKykhpKfwgYG7osOn2qi/Z49bIrWUw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bowNWiOjJhq+gQkmnAlgGKjlhyo81omPuMooKC4spaOIfs2w8wmDgM5K9tuiZr2onDxYAbjMnkAafQi2PQNEknUe/07gkYaxdcouRBZFOiI5du0wVN9TtI0UdP/WCGeXyFA7VG9oMaQT5esL2FAIaqluKxH8zMC1hxdqcb7qgHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BYVFL/wa; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1762868865; c=relaxed/simple;
+	bh=haChyGDwKRZ9L+wSPxgovAlg+vrVWqA+m8tlPgoIgUI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ChlJtXo25sm/tOMibSAvq5w5Prjf2vTK3Aho+zc+DxoE8oE8vdv4nMKZN5BAujh2n1smnfhZW2nXhPG516S29/siBUyyC3S+fx64rHnStArIEVUvMMX5sV3e+FHbJufXLbF52PINkLhWK0PulHcdcq6eOYLPm5KY4ANltv1+8dI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PA8pv61W; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BYVFL/wa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762864096; x=1794400096;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=OtFs4nYXEH1ThWKykhpKfwgYG7osOn2qi/Z49bIrWUw=;
-  b=BYVFL/waIEA8DYye86BSPQEDB9l2CJ+IICWo51yTstEGSP4HUzXiH1fY
-   KnvkL4MZ70TyyrJeESLb+5Orcm8pxk1h0eyMHLjXreWmYeu+D4TJRYInm
-   +k8Yh/P4ZhyXfqOMws3ckgjny/7sZS4mfxTIAn4CkN1722UTT0GJCeTUH
-   DsEQ6xMJq9uqcS/cTW2T5dMZnJJojPjrtuuShoDunOqaK5zOuqcX58TGJ
-   lXtyKKU1CwGO1oi4C3ckk7yBlVnctVdFH+u9hLbtAXwx+xuwfOo2MIz29
-   jc5wUM32tfXbQBlBgkhEPv5YnojKF5LM/AyXCtUFf+U95xoahPHCAwNCH
-   A==;
-X-CSE-ConnectionGUID: HOShL0rVTROT+/juwYNR/g==
-X-CSE-MsgGUID: 6nLtbYHKQdObDHEGzxpnxA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11609"; a="75607210"
-X-IronPort-AV: E=Sophos;i="6.19,296,1754982000"; 
-   d="scan'208";a="75607210"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2025 04:28:13 -0800
-X-CSE-ConnectionGUID: tMUh47YlR0iztmLUL7ZOeg==
-X-CSE-MsgGUID: n8CanOcvRy2xvoMOm6Z2iA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,296,1754982000"; 
-   d="scan'208";a="188592937"
-Received: from black.igk.intel.com ([10.91.253.5])
-  by fmviesa007.fm.intel.com with ESMTP; 11 Nov 2025 04:28:05 -0800
-Received: by black.igk.intel.com (Postfix, from userid 1003)
-	id 5E57DAB; Tue, 11 Nov 2025 13:27:38 +0100 (CET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Corey Minyard <corey@minyard.net>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	"Dr. David Alan Gilbert" <linux@treblig.org>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-	Rob Clark <robin.clark@oss.qualcomm.com>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Vitaly Lifshits <vitaly.lifshits@intel.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Niklas Cassel <cassel@kernel.org>,
-	Calvin Owens <calvin@wbinvd.org>,
-	Vadim Fedorenko <vadim.fedorenko@linux.dev>,
-	Sagi Maimon <maimon.sagi@gmail.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Karan Tilak Kumar <kartilak@cisco.com>,
-	Hans Verkuil <hverkuil+cisco@kernel.org>,
-	Casey Schaufler <casey@schaufler-ca.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Petr Mladek <pmladek@suse.com>,
-	Viacheslav Dubeyko <Slava.Dubeyko@ibm.com>,
-	Max Kellermann <max.kellermann@ionos.com>,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	openipmi-developer@lists.sourceforge.net,
-	linux-media@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org,
-	amd-gfx@lists.freedesktop.org,
-	linux-arm-msm@vger.kernel.org,
-	freedreno@lists.freedesktop.org,
-	intel-xe@lists.freedesktop.org,
-	linux-mmc@vger.kernel.org,
-	netdev@vger.kernel.org,
-	intel-wired-lan@lists.osuosl.org,
-	linux-pci@vger.kernel.org,
-	linux-s390@vger.kernel.org,
-	linux-scsi@vger.kernel.org,
-	linux-staging@lists.linux.dev,
-	ceph-devel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Gustavo Padovan <gustavo@padovan.org>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Dmitry Baryshkov <lumag@kernel.org>,
-	Abhinav Kumar <abhinav.kumar@linux.dev>,
-	Jessica Zhang <jesszhan0024@gmail.com>,
-	Sean Paul <sean@poorly.run>,
-	Marijn Suijten <marijn.suijten@somainline.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Lucas De Marchi <lucas.demarchi@intel.com>,
-	=?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Rodolfo Giometti <giometti@enneenne.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Jonathan Lemon <jonathan.lemon@gmail.com>,
-	Stefan Haberland <sth@linux.ibm.com>,
-	Jan Hoeppner <hoeppner@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Satish Kharat <satishkh@cisco.com>,
-	Sesidhar Baddela <sebaddel@cisco.com>,
-	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Xiubo Li <xiubli@redhat.com>,
-	Ilya Dryomov <idryomov@gmail.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v2 21/21] tracing: Switch to use %ptSp
-Date: Tue, 11 Nov 2025 13:20:21 +0100
-Message-ID: <20251111122735.880607-22-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.50.1
-In-Reply-To: <20251111122735.880607-1-andriy.shevchenko@linux.intel.com>
-References: <20251111122735.880607-1-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PA8pv61W"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-64312565c10so22882a12.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 11 Nov 2025 05:47:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1762868861; x=1763473661; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MBzO+mXtLSjzlqpu0X8GUg0PfYd6eR/HUmvEOL2AIZg=;
+        b=PA8pv61WO1KTmC/IsRvGQr339IuAy+aOlkmSMgfBHL0yiSSvlMBD1nujD8OouWNOw7
+         Tyzg2Xbrai46SR3zjpujLAOiuAS268pxffmvRMEWSnXBdUAfy180FplJm3lutS1KiezA
+         gpj3RKfbR7ttYWBzGJQICky78Kb6an0SCt+i5yibSfn+IhlwTTgCqjJDzXGw09COys2M
+         PtmkSswJeWixM2NY4AZq0yZQjTY9z3gdW60FkNwsLlSVFpkEvVBDvXoL7pvtDMV78DJ0
+         J0LmsSLci9G41VPTXDUMQ2I0ZurIKYJNnpDp1q9/yQAjnHkJDt48BJvm83skccFg/b+W
+         /LDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762868861; x=1763473661;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=MBzO+mXtLSjzlqpu0X8GUg0PfYd6eR/HUmvEOL2AIZg=;
+        b=R4CrgvUPWSMCAfT2VB+X2i2uYkFWFU1FTUjmRDq+x6BHDEWxbrD8X1yHTYcyc/rvpq
+         deSeOAImq3ntJoP10tVZm53cb8F2oGtRVfMC7zoW/drIi7nA1qUbobBmG+oGoTH51DB7
+         InM0oAQFmptXkAui09KV+6x7n/xJA9vbEf+iEnSn9tPYePQo02znbgAV5c5Ho1QVLHYu
+         RDtWxv7YRtcQhcBDV+EXuBJc+f0yTx0ftmPSL0UACVe8gCtVuWYtNSegai6Od7AzEg4n
+         8fCFtT2As4MLDfgAsm1IcFZ1gVIS4eGhKADG3G+ZqkNxDQNheJWgGaKRGWsJYCM30xT3
+         KRRA==
+X-Forwarded-Encrypted: i=1; AJvYcCVgSS15roM5QNNTZvnff1d16r/v3k1oXSaigArePbScgglJJ+aKu8YSCVSbAjT2Qg1aeMzRwLiTWJCHReGq45dWYTY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx1nL4mNTh+oNQCOn8ywwG47p+sauLo7UCVrmYj3XqZpCJ3JXQl
+	ktNCfrrCuVH73fxmgOIqQbDiOVkCU4mDrZ/eU2j16LaOIqPeASNaqw8ZzyQZjuLQ1Z/g3UE9rHc
+	KGKZdywssg6Oey5Gh6dy1KmszGdpnjHg=
+X-Gm-Gg: ASbGncunjXPcrefYwgnQE/StBEkoUMLxx8MDus3QWu3h1dUGlvRfwdKZ7eyVX67G29o
+	WSP7hm8fQrRKnSLBP0Xs5OJQXAOC9f7nlO+3B+kny3LRpsnZWg6yLieTtprYAPhDSlar8stggZt
+	Db+5aeeVlduhCGk68jFC9XXTAdnja4N0EJNDf1/Fk36OK7dsMAN8nMlsr2dWoY/srorfbDo76fa
+	fVowYXw8nnQdmvXg3EVjV4Ey0gp0Qoqb6O8QnldPqrW6n8KkcfyEBrQ5I5BRw==
+X-Google-Smtp-Source: AGHT+IFP0FuqM0yhKHSoBdPjP97vvll1I7DWDIDzF8bj+ZIcWBz1zQIEqx5YwoSccS6mBD4f8xI5cM+023m9whJuzpo=
+X-Received: by 2002:a17:907:7203:b0:b70:b661:cfcb with SMTP id
+ a640c23a62f3a-b72e0410257mr1371826066b.31.1762868861200; Tue, 11 Nov 2025
+ 05:47:41 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20251011164156.3678012-1-dolinux.peng@gmail.com> <20251110154337.774db22f@gandalf.local.home>
+In-Reply-To: <20251110154337.774db22f@gandalf.local.home>
+From: Donglin Peng <dolinux.peng@gmail.com>
+Date: Tue, 11 Nov 2025 21:47:29 +0800
+X-Gm-Features: AWmQ_bmmgh4pGUV55tc_XDOjeHyzORXKIv19acRME2IKux_0Vl_lB60OtcS1XOI
+Message-ID: <CAErzpmtjuq7nrrLPd=Av3p_5TzWD8HwEU1FMNmYZxiBgfZRaFQ@mail.gmail.com>
+Subject: Re: [PATCH] function_graph: Enable funcgraph-args and
+ funcgraph-retaddr to work simultaneously
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Sven Schnelle <svens@linux.ibm.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	pengdonglin <pengdonglin@xiaomi.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Use %ptSp instead of open coded variants to print content of
-struct timespec64 in human readable format.
+On Tue, Nov 11, 2025 at 4:43=E2=80=AFAM Steven Rostedt <rostedt@goodmis.org=
+> wrote:
+>
+> On Sun, 12 Oct 2025 00:41:56 +0800
+> pengdonglin <dolinux.peng@gmail.com> wrote:
+>
+> > From: pengdonglin <pengdonglin@xiaomi.com>
+>
+> Sorry for the late reply. I finally got around to looking at this.
+>
+> >
+> > Currently, funcgraph-args and funcgraph-retaddr cannot be used together=
+. This patch
+> > resolves the conflict by having funcgraph-retaddr reuse the implementat=
+ion of
+> > funcgraph-args -- specifically, storing the return address in the last =
+entry of the
+> > args array.
+> >
+> > As a result, both features now coexist seamlessly and function as inten=
+ded.
+> >
+> > To verify the change, use perf to trace vfs_write with both options ena=
+bled:
+> >
+> >  # perf_6_17 ftrace -G vfs_write --graph-opts args,retaddr
+> >  ......
+> >  0)               |  down_read(sem=3D0xffff8880100bea78) { /* <-n_tty_w=
+rite+0xa3/0x540 */
+> >  0)   0.075 us    |    __cond_resched(); /* <-down_read+0x12/0x160 */
+> >  0)   0.079 us    |    preempt_count_add(val=3D1); /* <-down_read+0x3b/=
+0x160 */
+> >  0)   0.077 us    |    preempt_count_sub(val=3D1); /* <-down_read+0x8b/=
+0x160 */
+> >  0)   0.754 us    |  }
+> >
+> > Cc: Steven Rostedt (Google) <rostedt@goodmis.org>
+> > Cc: Sven Schnelle <svens@linux.ibm.com>
+> > Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> > Signed-off-by: pengdonglin <pengdonglin@xiaomi.com>
+> > Signed-off-by: pengdonglin <dolinux.peng@gmail.com>
+> > ---
+> >  include/linux/ftrace.h               |  11 --
+> >  kernel/trace/trace.h                 |   7 --
+> >  kernel/trace/trace_entries.h         |  29 +-----
+> >  kernel/trace/trace_functions_graph.c | 148 +++++++++++----------------
+> >  kernel/trace/trace_selftest.c        |   1 -
+> >  5 files changed, 58 insertions(+), 138 deletions(-)
+> >
+> > diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+> > index 7ded7df6e9b5..88cb54d73bdb 100644
+> > --- a/include/linux/ftrace.h
+> > +++ b/include/linux/ftrace.h
+> > @@ -1129,17 +1129,6 @@ struct ftrace_graph_ent {
+> >       int depth;
+> >  } __packed;
+> >
+> > -/*
+> > - * Structure that defines an entry function trace with retaddr.
+> > - * It's already packed but the attribute "packed" is needed
+> > - * to remove extra padding at the end.
+> > - */
+> > -struct fgraph_retaddr_ent {
+> > -     unsigned long func; /* Current function */
+> > -     int depth;
+> > -     unsigned long retaddr;  /* Return address */
+> > -} __packed;
+>
+> I really like the clean up, but unfortunately, this breaks user space.
+>
+> We still need the retaddr event, as that is what user space expects.
+>
+> That said, this could do the same thing as the func-args. That is, it can
+> add the function arguments after the retaddr field.
 
-Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- kernel/trace/trace_output.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Thanks, will do in v2.
 
-diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
-index ebbab3e9622b..cc2d3306bb60 100644
---- a/kernel/trace/trace_output.c
-+++ b/kernel/trace/trace_output.c
-@@ -1490,12 +1490,12 @@ trace_hwlat_print(struct trace_iterator *iter, int flags,
- 
- 	trace_assign_type(field, entry);
- 
--	trace_seq_printf(s, "#%-5u inner/outer(us): %4llu/%-5llu ts:%lld.%09ld count:%d",
-+	trace_seq_printf(s, "#%-5u inner/outer(us): %4llu/%-5llu ts:%ptSp count:%d",
- 			 field->seqnum,
- 			 field->duration,
- 			 field->outer_duration,
--			 (long long)field->timestamp.tv_sec,
--			 field->timestamp.tv_nsec, field->count);
-+			 &field->timestamp,
-+			 field->count);
- 
- 	if (field->nmi_count) {
- 		/*
--- 
-2.50.1
+Thanks,
+Donglin
 
+>
+> >       TRACE_GRAPH_RET,
+> > diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_=
+functions_graph.c
+> > index a7f4b9a47a71..b618b6a673b7 100644
+> > --- a/kernel/trace/trace_functions_graph.c
+> > +++ b/kernel/trace/trace_functions_graph.c
+> > @@ -16,6 +16,12 @@
+> >  #include "trace.h"
+> >  #include "trace_output.h"
+> >
+> > +#ifdef CONFIG_FUNCTION_GRAPH_RETADDR
+> > +#define  STORE_RETADDR  1
+> > +#else
+> > +#define  STORE_RETADDR  0
+> > +#endif
+> > +
+> >  /* When set, irq functions will be ignored */
+> >  static int ftrace_graph_skip_irqs;
+> >
+> > @@ -29,19 +35,17 @@ struct fgraph_cpu_data {
+> >
+> >  struct fgraph_ent_args {
+> >       struct ftrace_graph_ent_entry   ent;
+> > -     /* Force the sizeof of args[] to have FTRACE_REGS_MAX_ARGS entrie=
+s */
+> > -     unsigned long                   args[FTRACE_REGS_MAX_ARGS];
+> > +     /* Force the sizeof of args[] to have (FTRACE_REGS_MAX_ARGS+STORE=
+_RETADDR) entries,
+> > +      * and the last entry is used to store the retaddr
+> > +      */
+> > +     unsigned long                   args[FTRACE_REGS_MAX_ARGS + STORE=
+_RETADDR];
+>
+> I'm thinking, if it is a different event, then it can still use the same
+> array. But retaddr will be first, and not last.
+
+Thanks, will do in v2.
+
+Thanks,
+Donglin
+
+>
+> >  };
+> >
+> >  struct fgraph_data {
+> >       struct fgraph_cpu_data __percpu *cpu_data;
+> >
+> >       /* Place to preserve last processed entry. */
+> > -     union {
+> > -             struct fgraph_ent_args          ent;
+> > -             /* TODO allow retaddr to have args */
+> > -             struct fgraph_retaddr_ent_entry rent;
+> > -     };
+> > +     struct fgraph_ent_args          ent;
+>
+> Where this could still be the same.
+>
+> >       struct ftrace_graph_ret_entry   ret;
+> >       int                             failed;
+> >       int                             cpu;
+> > @@ -127,11 +131,19 @@ static int __graph_entry(struct trace_array *tr, =
+struct ftrace_graph_ent *trace,
+> >       struct ring_buffer_event *event;
+> >       struct trace_buffer *buffer =3D tr->array_buffer.buffer;
+> >       struct ftrace_graph_ent_entry *entry;
+> > +     unsigned long retaddr =3D 0;
+> >       int size;
+> > +     int i =3D 0;
+> >
+> >       /* If fregs is defined, add FTRACE_REGS_MAX_ARGS long size words =
+*/
+> >       size =3D sizeof(*entry) + (FTRACE_REGS_MAX_ARGS * !!fregs * sizeo=
+f(long));
+> >
+> > +     if (IS_ENABLED(CONFIG_FUNCTION_GRAPH_RETADDR) &&
+> > +         tracer_flags_is_set(TRACE_GRAPH_PRINT_RETADDR)) {
+> > +             retaddr =3D ftrace_graph_top_ret_addr(current);
+> > +             size +=3D sizeof(long);
+> > +     }
+> > +
+> >       event =3D trace_buffer_lock_reserve(buffer, TRACE_GRAPH_ENT, size=
+, trace_ctx);
+> >       if (!event)
+> >               return 0;
+> > @@ -141,11 +153,17 @@ static int __graph_entry(struct trace_array *tr, =
+struct ftrace_graph_ent *trace,
+> >
+> >  #ifdef CONFIG_HAVE_FUNCTION_ARG_ACCESS_API
+> >       if (fregs) {
+> > -             for (int i =3D 0; i < FTRACE_REGS_MAX_ARGS; i++)
+> > +             for (; i < FTRACE_REGS_MAX_ARGS; i++)
+> >                       entry->args[i] =3D ftrace_regs_get_argument(fregs=
+, i);
+> >       }
+> >  #endif
+> >
+> > +     /*
+> > +      * Store retaddr to [0] if fregs is NULL, else to [FTRACE_REGS_MA=
+X_ARGS]
+> > +      */
+> > +     if (retaddr)
+> > +             entry->args[i] =3D retaddr;
+> > +
+>
+> Move this up before the args.
+
+Thanks, will do in v2.
+
+Thanks,
+Donglin
+
+>
+> >       trace_buffer_unlock_commit_nostack(buffer, event);
+> >
+> >       return 1;
+> > @@ -158,38 +176,6 @@ int __trace_graph_entry(struct trace_array *tr,
+> >       return __graph_entry(tr, trace, trace_ctx, NULL);
+> >  }
+> >
+> > -#ifdef CONFIG_FUNCTION_GRAPH_RETADDR
+> > -int __trace_graph_retaddr_entry(struct trace_array *tr,
+> > -                             struct ftrace_graph_ent *trace,
+> > -                             unsigned int trace_ctx,
+> > -                             unsigned long retaddr)
+> > -{
+> > -     struct ring_buffer_event *event;
+> > -     struct trace_buffer *buffer =3D tr->array_buffer.buffer;
+> > -     struct fgraph_retaddr_ent_entry *entry;
+> > -
+> > -     event =3D trace_buffer_lock_reserve(buffer, TRACE_GRAPH_RETADDR_E=
+NT,
+> > -                                       sizeof(*entry), trace_ctx);
+>
+> The reserve would need to use TRACE_GRAPH_RETADDR_ENT if retaddr is set.
+> But I still think you can consolidate the code.
+>
+> -- Steve
+>
+> > -     if (!event)
+> > -             return 0;
+> > -     entry   =3D ring_buffer_event_data(event);
+> > -     entry->graph_ent.func =3D trace->func;
+> > -     entry->graph_ent.depth =3D trace->depth;
+> > -     entry->graph_ent.retaddr =3D retaddr;
+> > -     trace_buffer_unlock_commit_nostack(buffer, event);
+> > -
+> > -     return 1;
+> > -}
+> > -#else
+> > -int __trace_graph_retaddr_entry(struct trace_array *tr,
+> > -                             struct ftrace_graph_ent *trace,
+> > -                             unsigned int trace_ctx,
+> > -                             unsigned long retaddr)
+> > -{
+> > -     return 1;
+> > -}
+> > -#endif
+> > -
+> >  static inline int ftrace_graph_ignore_irqs(void)
+> >  {
+> >       if (!ftrace_graph_skip_irqs || trace_recursion_test(TRACE_IRQ_BIT=
+))
