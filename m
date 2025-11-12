@@ -1,116 +1,67 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F47B262FC7
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Nov 2025 15:51:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02D113396E5;
+	Wed, 12 Nov 2025 15:56:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762962691; cv=none; b=XUecwlZQSixv8f4/ABVTVVJPZhiHp1715Aw5qzrPae2iRhhdezGw9a5om2MxTFY/qPT2+i/MUbNnICdnVUkaeY7TmLcRIvCOOvN1DjZMrHzFtKhau0EnEP0KdStYIJD5yF9p9nuUvBIJepDIZVoUhJUufof8SMTH3w4ccgAizuQ=
+	t=1762962991; cv=none; b=jkOUVsfUvP8NR1AcDTZhE/5N/ZxJZVZoBInDe7cwFrUempSeISsRqymQhfy2t9xVvmwcW5A52knhngOyP3DzkVU+udWD/0USg9saHx4vBSpnAPPImRAgjBeIbT1AI+UN9B9Wl2QAJ5lo3a7tWENFaUkVu6PfpPVL0/2d/bfUbl4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762962691; c=relaxed/simple;
-	bh=RtjA44yZHNRS0kFnDDXuQqTB/tfgoZjwkeL9/Dk+NHs=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RsZv6kw+KK5tLTQL90O07iI4S703E3ZXLHmaQOJer0+apGvrjZUPsxj/7q2oXK+lq1pn4IyOapNEzSW4bOPQZVJV1mD1wi1lBct8ZYMcbCl0oh5hmWwshHnB8nz1g3pg1++72+bHFrCjPmmErR1B+chY80m5G9xPGNdG7HT7Q+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TYw986C7; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1762962991; c=relaxed/simple;
+	bh=uLDieheKOzLy4GDpWlq07ziKepek+0aifH9IiDXeUXE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KeLwRADB4okkxMOWQzKQZcD2kjjzjfHUgiI1NqY0M9Xsh2y2c5w/5kP0FOfGgsAcV7lQv4rVpunZKiJ7gzbQiZ7O5JL9iqAncv4x/h33v2GfPG9OXM1srhIK33y/aEOe2cS5tEiH23a+B+aFJTjfBBACAgRoLZj7cJneLfHwiZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=MI7on72x; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TYw986C7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1762962688;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=H6SbkVI3Yk0stVlEf+upYuCduL1ZMW+aTOIq962Ce9Q=;
-	b=TYw986C7zZdGG5PMXxXsHbl0L6sD2/lgC1kDfKk+r73YJkTGo/5kDPZogloK1luGueoVVz
-	9WhGVY6AfzIlP8A5H9pobioeA2Rmfj+Cjt4ycLanMO3VWE1PN1fWtEkLiUNAoNMrMPEiop
-	EU1waCm1R0hGsbNsTRzj/9stASvlRAU=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-661-aD0_HZHLMo6pGbQnhOJnBQ-1; Wed, 12 Nov 2025 10:51:27 -0500
-X-MC-Unique: aD0_HZHLMo6pGbQnhOJnBQ-1
-X-Mimecast-MFC-AGG-ID: aD0_HZHLMo6pGbQnhOJnBQ_1762962687
-Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-882381f2092so48512596d6.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Nov 2025 07:51:27 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762962687; x=1763567487;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=H6SbkVI3Yk0stVlEf+upYuCduL1ZMW+aTOIq962Ce9Q=;
-        b=oa96kP9CltKtoXFLr7EF/HYHFhxN2qLEtG+Bdtnmx/bEknKtmu4bLuZOAEkEvLwoMC
-         vSZjHPwTEnfWhfHPdxK9jPIjbYEtvM3STbY0tboBB8md69sNYcddLo/amd997eHAQxOO
-         7oZmQ0XNGawvEkII3KI2+6mDIa8UrSgScuKNLehjwwIb4Fdzu6si0Tgc6+nTLWI/X1a7
-         9ekf1NfEA6YYS2ldJTZuyXWOz/6W2eEI5j5AyudHeuOuNXtFPu1hDTh/nObLsYFgKmrW
-         3aRrMd6+xAp1XZYP8gFLjJzXB8jPc78cxPhBrOLOgAsNPcmZ7hlYCaFLfahyNYoYpeDa
-         R6nw==
-X-Gm-Message-State: AOJu0YwnajVkMeLSDjHfIGLlNG+bGvj4oChdYdvCiCSpd/nvn3yqdN6b
-	INkWU9Qz1gmony1AS37Ex7q2xoWWNOaByrFCVA3i+d6zYh28lLOEhkWbuVo/9BnDlbur0bejCKq
-	8R3/BqEdTA7e26J+4DToAxxzutzFSuc2xiahKw/wqxibRVPz2qZTLsrOdZh8wAhSV7R40isnbDg
-	==
-X-Gm-Gg: ASbGncvB0L9yrf7LNQNljDBWej+3gakH5cavXKRC2dFDARwNd5mHDHV1cITGD/8Lznv
-	L32fBNfi3l30J7wQZbnyNgtamXFkpZi5w0rRu8uDVyrsRW0X20nD5C1Xp9vWBfe8f2LEChzNkq5
-	lTW3Apo7MUzo/bcI3eHLZb+iSLMoT1I7PI31OepM2Ff6f01P3H1st6XwsltNJR251Hok5UJ2r0w
-	47AHZMXtqChaE1jo+JmPccqcexABj7Le+gLU/XbAtKY9kGsdxEFd+MHZ/z7WkmXicma8myJzQ8Q
-	2Q/elTJ8cajZyjVXRzAVgAjr2i6EQ1wEflInwMEpZOhjvDF3XvtdM1PLDeGAaGO0pQd3uLefBWG
-	6/SCpr8jT5s/vjShzvi/VyWjP8V/cuCA=
-X-Received: by 2002:a05:622a:5a09:b0:4ed:e4b3:f154 with SMTP id d75a77b69052e-4ede4b3f60fmr15513521cf.79.1762962687077;
-        Wed, 12 Nov 2025 07:51:27 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IH2O5WOQoQmjZihHMDNVPZAEtJPCfBoGTaLokSzagp7NlP+UqfxzDgKXHSqM91D4BHkajvEZg==
-X-Received: by 2002:a05:622a:5a09:b0:4ed:e4b3:f154 with SMTP id d75a77b69052e-4ede4b3f60fmr15513211cf.79.1762962686742;
-        Wed, 12 Nov 2025 07:51:26 -0800 (PST)
-Received: from crwood-thinkpadp16vgen1.minnmso.csb ([2601:447:c680:2b50:ee6f:85c2:7e3e:ee98])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4eda561a030sm86883231cf.3.2025.11.12.07.51.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Nov 2025 07:51:26 -0800 (PST)
-Message-ID: <776f5024499738fcc4fa1d6e8322a2ae9eb38d0a.camel@redhat.com>
-Subject: Re: [PATCH 0/5] rtla, osnoise: Fixes to address intermittent test
- issues
-From: Crystal Wood <crwood@redhat.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-trace-kernel@vger.kernel.org, John Kacur <jkacur@redhat.com>, 
- Tomas Glozar <tglozar@redhat.com>, Costa Shulyupin <costa.shul@redhat.com>,
- Wander Lairson Costa	 <wander@redhat.com>
-Date: Wed, 12 Nov 2025 09:51:25 -0600
-In-Reply-To: <20251112152529.956778-1-crwood@redhat.com>
-References: <20251112152529.956778-1-crwood@redhat.com>
-User-Agent: Evolution 3.56.2 (3.56.2-2.fc42)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MI7on72x"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=unTZnhIKbo/kPjktubhrqmYbcE5u2DsI4RiHT1r059I=; b=MI7on72xw2kf/B0fnp/Td1CmSV
+	cU9dbT/g+mZGa1UNpCIHupjk46WxBL+uRHMUEeWxwLRSkXz17Be9Hne9VcX6KQdww6djkwn9ioHUy
+	aH17QCGTqVUWDLtpdaZdhL2ibY70RahsDhZ47uDJKzVCKDXDHtAIkciT+X+oZPq2xGTQKnUjSXAt9
+	XcJ5YUbQ5SdLn0wYzI1hCu+1eqmst/T2SVkPRcnqOc56dc7Cpc1aK9cytD0hdTWtwVmewWHNt5GAY
+	CqXjbe2HM5IMYV/N8UWZhtq+Jn4qR3w4265TBNhvAI2OMRzWsEptBnvVN11hXrCNrX7VeS64P/vMI
+	ednyePxw==;
+Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vJDCh-000000068nw-2KVV;
+	Wed, 12 Nov 2025 15:56:15 +0000
+Date: Wed, 12 Nov 2025 15:56:15 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: Ojaswin Mujoo <ojaswin@linux.ibm.com>
+Cc: Christian Brauner <brauner@kernel.org>, djwong@kernel.org,
+	ritesh.list@gmail.com, john.g.garry@oracle.com, tytso@mit.edu,
+	dchinner@redhat.com, hch@lst.de, linux-xfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-ext4@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, jack@suse.cz,
+	nilay@linux.ibm.com, martin.petersen@oracle.com,
+	rostedt@goodmis.org, axboe@kernel.dk, linux-block@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 2/8] mm: Add PG_atomic
+Message-ID: <aRSuH82gM-8BzPCU@casper.infradead.org>
+References: <cover.1762945505.git.ojaswin@linux.ibm.com>
+ <5f0a7c62a3c787f2011ada10abe3826a94f99e17.1762945505.git.ojaswin@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: V2enZG7AohvOaqfQ7k7J63Ios4UGSMjdpQ78VwZ5glA_1762962687
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5f0a7c62a3c787f2011ada10abe3826a94f99e17.1762945505.git.ojaswin@linux.ibm.com>
 
-On Wed, 2025-11-12 at 09:25 -0600, Crystal Wood wrote:
-> With these fixes, I'm able to run the tests in a loop overnight with no
-> failures.
->=20
-> Crystal Wood (5):
->   rtla/tests: Don't rely on matching ^1ALL
->   tracing/osnoise: Dump stack on timerlat uret threshold event
->   tracing/osnoise: Array printk init and cleanup
->   rtla/timerlat: Exit top main loop on any non-zero wait_retval
->   rtla: Set stop threshold after all instances are enabled
->=20
->  kernel/trace/trace_osnoise.c          | 46 +++++++++++++++++----------
->  tools/tracing/rtla/src/common.c       | 20 ++++++++++++
->  tools/tracing/rtla/src/common.h       |  4 +++
->  tools/tracing/rtla/src/osnoise.c      | 17 +++-------
->  tools/tracing/rtla/src/osnoise.h      |  5 ---
->  tools/tracing/rtla/src/timerlat.c     | 29 ++++++-----------
->  tools/tracing/rtla/src/timerlat_top.c |  2 +-
->  tools/tracing/rtla/tests/timerlat.t   |  2 +-
->  8 files changed, 69 insertions(+), 56 deletions(-)
+On Wed, Nov 12, 2025 at 04:36:05PM +0530, Ojaswin Mujoo wrote:
+> From: John Garry <john.g.garry@oracle.com>
+> 
+> Add page flag PG_atomic, meaning that a folio needs to be written back
+> atomically. This will be used by for handling RWF_ATOMIC buffered IO
+> in upcoming patches.
 
-Oh, forgot to mention that this is on top of Tomas's pending patches.
-
--Crystal
-
+Page flags are a precious resource.  I'm not thrilled about allocating one
+to this rather niche usecase.  Wouldn't this be more aptly a flag on the
+address_space rather than the folio?  ie if we're doing this kind of write
+to a file, aren't most/all of the writes to the file going to be atomic?
