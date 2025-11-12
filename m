@@ -1,61 +1,61 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B120221FF30
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Nov 2025 09:27:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 339981E25F9
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Nov 2025 09:37:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762939634; cv=none; b=JbEukxT4x7fak/sOp8wt8N05hwSPnFoVIK7zf4oK27RzDKlaUHp8SHCYMSiaVi7R+KENRQT7QwDiBasAh2fPBPLoBb0Ow7lST/2RkXU0FgypzJ9X4kvPOCovL5iNHs3biJuTf36Jo5LV943UwT1j0f1yR/psA44AOGXLl79+g7A=
+	t=1762940250; cv=none; b=GQtabDeFO0ZTqMUbkFQYCB0CZu23o4t4x+0NlwIcao9GhoxJT6WmrmLIwJDRZQ1/9iJUjbtPO88nM4fQqsoeu34CwRszyAdERAmzkmzYJfJRYXTP23dcVcajrZSzTp2uUHnze/gL3nVaYM2kzZNsJnbLTmQ5ZGJ/G/4x3XTf4hc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762939634; c=relaxed/simple;
-	bh=HqNPMcGO41VMVWfbXlY485k9jz8TxTTHPVr26oTdcfA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=F6DIi6g6yDKtkuuit+bpQU5jZyM5hc0KUvyagGRQWkQ9fYiCbKD6FmQAgmXVI1L5Go2aFFBBqgx7c/uGsIekkBdFimINlwWeHIXm2GRDRXLgWCcaM1D40oVbGti+hBLel9HkX2MipWJUoDxhPUGrSoDFmYrnuTQNiMDT1Wq5B7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BKuEhHGz; arc=none smtp.client-ip=209.85.210.171
+	s=arc-20240116; t=1762940250; c=relaxed/simple;
+	bh=ug2Z8XOpXQ4NKdv1KzgnXz5mHtPCswc7VbH4EsbyHBU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=suKFeFplUwGe+F5dzWz5XObg4a9DeN9v7/51HzVoOp38Ny9KbuV7wF1N6SWR4BBHdGB5hryNGIDJ+UOromerUT+NRHH6WD4l0Y5y6CkdcSY/tCyxT2cNXOP24xzCE9mvvfaqzhGQ44Sf0jmMKfN02l2ZWR2QIUHRysdEPKGq3O4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QryrbctB; arc=none smtp.client-ip=209.85.215.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BKuEhHGz"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-7b86e0d9615so42499b3a.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Nov 2025 01:27:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QryrbctB"
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-b996c8db896so597946a12.3
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Nov 2025 01:37:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762939632; x=1763544432; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1762940247; x=1763545047; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=jWAF+DcIzKVsqUgqpqYnDQaKPe3mFgq/8tqp38w38N0=;
-        b=BKuEhHGzeO5/R22NtFdmHPXKwdGhwhGkr8+BebMg7UMMP+yn+mt9NHQyBqnj3Spgsf
-         xw2jwF+PuvxkBa85/EHDR4jewW21oX/oChXHW1o1ZmU8sqHiFmYzLys7qxytDGkaucoU
-         Nzqoq4AXsPaznYfo5P7nYNK8sDDIjY0O9oWWfYqhpXQyWChMcMvkyD+OfUY7p26BlzeW
-         Jqe+VhcxYUUcyqpobRGhjeC+h6dXXIqMAyQq5vUgcCz0H4S88vB/pelzF2QVWPAsxZ7E
-         Vhwiy83G79oWb8ReNCzYKuRgQ/JKVbLDdeO4Oyj7i115mMeQWyf01VTcfBJdpTw4c9Ls
-         t5gw==
+        bh=Gx8PfouBPRS+HtUDtYuHkSsHr59PtkuTVkc1DxEZ8jc=;
+        b=QryrbctBnzHCb5ojkAzQtx9s8Tg64NnRfNpu8jh5Zoaf9Xuv8KWTQR5HjJIJPW97/y
+         qJHWO0TVFEd6ZZMLZSJGx+rtSqWYh3ExcMxIjheDY1Pohxy5QzU7lsZatUSYH6i+5Gdp
+         vHwFFNGYPqVl53wwxSPzmFCj8j/7YI4bqeqEztUGYYn8qVc4PvNhhXbdIvlJZY//ZbYa
+         MaHM5sGa16hhCFXQT72x0SQxD2rnVv2NxaN2mX0sc5B/1nv3Rq3/P/PqEElZus3yv6G+
+         5BpO9bN8lVzJnSOpcUXPUMnkfQOvgw8Gc+uRXwZgQHkyScJuSP5cQsfyVCGLbClFpMzm
+         QBWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762939632; x=1763544432;
+        d=1e100.net; s=20230601; t=1762940247; x=1763545047;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=jWAF+DcIzKVsqUgqpqYnDQaKPe3mFgq/8tqp38w38N0=;
-        b=XKteehYBxOBnLHBDX0wEggzf4LgowofRiUIP6878KuDT53xfs7Ee2oBFxg4/MH4bBw
-         BQRXtN6iHAURacLe+ZJlX2EmpFR0cEG0tMCSoF8OlPfFOdzLj5fTRABO9EQW+RasypxX
-         cKt3f82vT8cFNEJ51z7m9hjiEbwVk7ZFth6k1+GXLbxNP+0+PlswRIcsZNI0v81kMRS7
-         JIPwpu3OsqB1oqEwtYsBbZUDNAXiFdUSnlBFezhfsXs0qicfaHSeN4eeocZFAsqVwXYW
-         ce7AOdy8btn3zZw1is01nZZ//brlJt2af23XLE6VZuyJgSsKySaB1f4T/dvXf1S+qzxK
-         L70g==
-X-Gm-Message-State: AOJu0Yx1Ib7wLQ70nJ0O+uRwgg646eYaSUlQjC1S+yP6iMKpgn7Z4eSH
-	M1/BH66i43hDWpAxSODGw4vz6rbNSXV3pjGc+WDaA9LQNIgXB4urq286
-X-Gm-Gg: ASbGncs2eLGApIB7f0wvZr0Hg5ZPZcWI2Xx3DCOim5Rarft9uCfVF17mCvvbCus1jfi
-	Y2Eqtt2z2xtLv2cO/zoqEaQBCkzOEWA3vtzg0oIUlBH2Qbkf4lHEEeuizkGUcOG8VQs4NrA3phF
-	VqScnVhZc3bNkpeKnG22YqIbcNgBJpCyZi4n3azyHmAy7iCXrkHVAGEsTeus6ZeESqXJImdfl1e
-	l9MDO2reVeVaJLJ9WzpiLKwhrD5/4ZzKV+fD2SGi6m4Uc093A2YCyYM+zzsGxkybTN9x778xBdn
-	qf6xySFKAJ41jzkOLB2tNPoQximVbsHbnKwlu3NdhArtkOul06/wZwTNoY0p/rtfa3w1WqyI1o2
-	HymM+YR/A4pYEGFxzBCmewqM/n4BVd29CsDqa1nFVNcY8eblmEmWDY2wBbsR/XB6nXawyTefLiT
-	MDn+xb4Td7xVZdnPyw
-X-Google-Smtp-Source: AGHT+IFxcPyPy6rxGmvjgfbLQgrlYXX5a5VU+olbz9t9p7JEyYDvqx2roqdHDsi2nX9SXHbsAZVq3A==
-X-Received: by 2002:a17:90b:53cf:b0:340:d1a1:af8e with SMTP id 98e67ed59e1d1-343ddef4c14mr3077208a91.37.1762939631861;
-        Wed, 12 Nov 2025 01:27:11 -0800 (PST)
+        bh=Gx8PfouBPRS+HtUDtYuHkSsHr59PtkuTVkc1DxEZ8jc=;
+        b=Ok2E6XCIwIAV9PoZ8A0cKJDQgwRQhaIyGliVtkFPRcKCSfMHUEAO5Zz6EHho60Or+V
+         ZyO8GghvpyBFIfRUD9XgtJJ90AnQmcuHC23msFfonIc6ST5Kn8I5AcmfhNBHUHFnNxJu
+         tpT1FM5BA1tQsbxEYa1i6G8MZ7QKlYZwo7P12qOOumOmekCSXY0p4OjtM4ZZmNsjO6aL
+         cSqlPmoGrR3lkLdX2a3yc8WMaUVyik6j9DmXn82/6h1/qDD1BkHVE1OoPvcr4K4f1tqQ
+         7CAVzTcTa3cqly42nUhyXU3OJ6bN5RaKusrhZn2p45jerxkPVsOO60QGw1KkjrYCFisb
+         uM9w==
+X-Gm-Message-State: AOJu0YwqHazHC2QYWHe700UWpVtPePBFh+PkQhJN03PQcdaJ8IwJLaMq
+	NFqfyiN51lTdFUDQu4jjNquTAkCvxV30Tb0dDsdycmfv7Bx+wkyZGecg6QW98YKDUTI=
+X-Gm-Gg: ASbGncv/5I8YxzaU+NKAZURLqLmQc7VH3+51H0kk+ahN6yH8uCXhgyzPYkVjLhKOtdh
+	QDJ1DDJIdsrvOK6cz/xYeTQR758dA03Cc9wr3x5Qb7qKBna0OVUPmgsv1PFYFkkfWdtBABQormq
+	rC6j0MtJs02fqsdymUW6UFizuhex+4sXxHkVwt5qqK/YhIroZwf5ug5rmkOwlmQoU43D+KcFjmI
+	EHsd5nEqHxlmys9Mdj8PFzn8x2XFdNJulkS/unbVA3bpts3SZhdgFwjAx2Dqqmj2kGX08nnOej7
+	GfqHJamHwloD6dJkYW0nf6O0+mcXMBKBjNOYwIvuZEeryBdRhTzAn56uEabxvw1SIEUN4QfGyt1
+	pevlhjQ02Xb4mQzfD2noRwde7E0hky5cyaI7pr/UOPjlZz5E+VJ49axYpYAj96zKlRYvrYKsugq
+	A35tgc4jIVO7nL0QdE
+X-Google-Smtp-Source: AGHT+IEqUh1XCwTY9ImmiDn4MV7yjhwpvml61JZIjauqiRmJLaLXP2gZAwryndWRCkk1tjr8FOlQrA==
+X-Received: by 2002:a17:903:41d1:b0:295:5da6:600c with SMTP id d9443c01a7336-2984ed3425dmr36424935ad.2.1762940247319;
+        Wed, 12 Nov 2025 01:37:27 -0800 (PST)
 Received: from pengdl-pc.mioffice.cn ([43.224.245.249])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-343e1ab45e4sm780286a91.0.2025.11.12.01.27.09
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2984dcd09easm24046685ad.91.2025.11.12.01.37.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Nov 2025 01:27:10 -0800 (PST)
+        Wed, 12 Nov 2025 01:37:26 -0800 (PST)
 From: Donglin Peng <dolinux.peng@gmail.com>
 To: rostedt@goodmis.org
 Cc: linux-trace-kernel@vger.kernel.org,
@@ -63,9 +63,9 @@ Cc: linux-trace-kernel@vger.kernel.org,
 	Donglin Peng <pengdonglin@xiaomi.com>,
 	Sven Schnelle <svens@linux.ibm.com>,
 	Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [PATCH v4] function_graph: Enable funcgraph-args and funcgraph-retaddr to work simultaneously
-Date: Wed, 12 Nov 2025 17:27:01 +0800
-Message-Id: <20251112092701.3335601-1-dolinux.peng@gmail.com>
+Subject: [PATCH v4 RESEND] function_graph: Enable funcgraph-args and funcgraph-retaddr to work simultaneously
+Date: Wed, 12 Nov 2025 17:36:50 +0800
+Message-Id: <20251112093650.3345108-1-dolinux.peng@gmail.com>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -111,10 +111,12 @@ Cc: Steven Rostedt (Google) <rostedt@goodmis.org>
 Cc: Sven Schnelle <svens@linux.ibm.com>
 Cc: Masami Hiramatsu <mhiramat@kernel.org>
 Signed-off-by: Donglin Peng <pengdonglin@xiaomi.com>
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
 v4:
 - Remove redundant TRACE_GRAPH_ARGS flag check
 - Eliminate unnecessary retaddr initialization
+- Resend to add missing add Acked-by tags
 
 v3:
 - Replace min() with min_t() to improve type safety and maintainability
