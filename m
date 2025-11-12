@@ -1,129 +1,68 @@
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C873931B11E;
-	Wed, 12 Nov 2025 18:29:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B42E7343D6A;
+	Wed, 12 Nov 2025 18:33:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762972183; cv=none; b=Ok0cl04HjqfWFQWEeSz4SrA8GMl1L6T9RvyxBEpKrVMUDGxgVtcgcv/3fQHIolnk9rYOSrdLpW0Q5rK6uIGN32ipq1KJwC3239kbHijEtryI5XNg7bPvsOSDAO9Jq5u8EVoiN7Wwc/kY8QlHpDnciNhVH/YSBS9Unl17uoKprBM=
+	t=1762972396; cv=none; b=QcefIoM5Ov+rDPTethK/u5Rg8hccmiiBKMAzXoJfwOg55PW+e47X/+MJBpuMQe1UWpxxIYZvszdue718Gla2Xt3LJ+j8Bxe4OCsO9QD5aNjYt1W+KDM04gtelRaZMXYnfqMuJB5Pmz62ChdY2qUrd7OpiA+Zul1xrx1VjsGvEJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762972183; c=relaxed/simple;
-	bh=3utautM/I1JvEJAAbf+4rjrS0aJiSSOCpsXk7us/aJ0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eAonEimcnhtn+Dm9cX+kb7DfzRqC7iTEWoeUbkVyAKCwGW9/Fb+vg3wIOQp1VMqEj+YUWGA8s6BJpL7zEmi76SZXJNhw0yBAgM4WnoPMHGLRogNaUl46L3g9GXlTD6XG0e39vNbpB4inG/szgk2pv8Vn+A4rF70SwNf/Shp8LbA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf05.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id 00AC659DC6;
-	Wed, 12 Nov 2025 18:29:38 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf05.hostedemail.com (Postfix) with ESMTPA id D6F222000E;
-	Wed, 12 Nov 2025 18:29:36 +0000 (UTC)
-Date: Wed, 12 Nov 2025 13:29:50 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Yongliang Gao <leonylgao@gmail.com>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- bigeasy@linutronix.de, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, frankjpliu@tencent.com, Yongliang Gao
- <leonylgao@tencent.com>, Huang Cun <cunhuang@tencent.com>
-Subject: Re: [PATCH v2] trace/pid_list: optimize pid_list->lock contention
-Message-ID: <20251112132950.60a165f9@gandalf.local.home>
-In-Reply-To: <20251112181456.473864-1-leonylgao@gmail.com>
-References: <20251112181456.473864-1-leonylgao@gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1762972396; c=relaxed/simple;
+	bh=YaM4MitBaEoWYE2OAO4lEQ4UZhqNzLI+jlRBaovkzmg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qdmQJKfLn6ywYxsVzJF6no6t037ZaJXki4pMdKrMFmEwXx+9pKAN2Nc/TgfKwM5SkW5GiYsoTVH50R83R3ZbRbwrItZ9AA67pdjII562qf26Rr3fwqgq1/vmKWl3QV6rxHlDGfWLC8792G40i09UOfM4yhLIkilns4jb7skIJiY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hoXrSCZS; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hoXrSCZS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05000C4AF09;
+	Wed, 12 Nov 2025 18:33:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762972396;
+	bh=YaM4MitBaEoWYE2OAO4lEQ4UZhqNzLI+jlRBaovkzmg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=hoXrSCZS9Xf3fBk2X+DXNK8EP3lPIENztViVu3zCYEb/92xGlmw1je8RnrgQHKPut
+	 f2/vW474pdSQZbkzFol/e0IrvRm2QZOlbxlQ72NQZyOJCrHwErPjOb1y6ARFmgdBM9
+	 HVRo5UDuOEZT2Mju3v+TcGJqHJEx/j2zTu7Ad14+wormbA5LhfTG5jRka7PO2Wg9OA
+	 o6L3Vy4ZPldDQldQXxcj1D4dX0EP1hP8tUHh/D5g3IJsJkzwTIXxlo87rqBBbkHcRC
+	 b/aNs2Ha02pL14WnO8vO92lPNgR5pAkwrpDcF8E1E94ZqGoyKF/jHgybtZCS7bV0ea
+	 /evGeUraqX40g==
+From: Catalin Marinas <cmarinas@kernel.org>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	will@kernel.org,
+	maz@kernel.org,
+	oliver.upton@linux.dev,
+	Bo Liu <liubo03@inspur.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev
+Subject: Re: [PATCH] arm64: Fix double word in comments
+Date: Wed, 12 Nov 2025 18:33:00 +0000
+Message-ID: <176297238094.2053466.1065029098279843692.b4-ty@arm.com>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20251029071742.17732-1-liubo03@inspur.com>
+References: <20251029071742.17732-1-liubo03@inspur.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: 84pj5zx7gpkheb4jsc96i8gxanm7sb6f
-X-Rspamd-Server: rspamout03
-X-Rspamd-Queue-Id: D6F222000E
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19pMuM56FwXwSkiKEKvUXe3kiOkGV1dz6U=
-X-HE-Tag: 1762972176-932112
-X-HE-Meta: U2FsdGVkX1+l0Pvk6Yn4iRM92dGnSiTjk7RpdIewBn6pmUd/xn2zETqRUBtnfIodVkk7Jcf+IpOb37V8mzLF2Pnr2TiO9A726yTiNg9/lKxUaMesEdrlQvw2xdJVRDtCNmV7TLo0SyJgJrbUuSsmHWogVKaIEn5rFW++WXdJHHyP516WbbcYp05+qVJOVuvguv3MmjniEjDw/hjSGqvgtPyCj0Ir7S9hhfueUf9bantCdNELM/W/5bevF4uIGJdb/liESJHZR0uZhA8waEbZNaU87IgL+dPEYUZcznD2EHK9IgnbYYe3Iauc6lF8aEw8z2OpN3TiqcV+Rb/aQRsR82vtdE8bpTvWHdGB9FktByFIYTSdHwzsFFEqSX1UACOX
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Thu, 13 Nov 2025 02:14:56 +0800
-Yongliang Gao <leonylgao@gmail.com> wrote:
+From: Catalin Marinas <catalin.marinas@arm.com>
 
-> @@ -271,7 +277,6 @@ int trace_pid_list_next(struct trace_pid_list *pid_list, unsigned int pid,
->  {
->  	union upper_chunk *upper_chunk;
->  	union lower_chunk *lower_chunk;
-> -	unsigned long flags;
->  	unsigned int upper1;
->  	unsigned int upper2;
->  	unsigned int lower;
-> @@ -282,27 +287,44 @@ int trace_pid_list_next(struct trace_pid_list *pid_list, unsigned int pid,
->  	if (pid_split(pid, &upper1, &upper2, &lower) < 0)
->  		return -EINVAL;
->  
-> -	raw_spin_lock_irqsave(&pid_list->lock, flags);
-> -	for (; upper1 <= UPPER_MASK; upper1++, upper2 = 0) {
-> -		upper_chunk = pid_list->upper[upper1];
-> +	do {
-> +		unsigned int start_upper1 = upper1;
-> +		unsigned int start_upper2 = upper2;
-> +		unsigned int start_lower = lower;
-> +		unsigned int seq;
->  
-> -		if (!upper_chunk)
-> -			continue;
-> +		seq = read_seqcount_begin(&pid_list->seqcount);
->  
-> -		for (; upper2 <= UPPER_MASK; upper2++, lower = 0) {
-> -			lower_chunk = upper_chunk->data[upper2];
-> -			if (!lower_chunk)
-> +		for (; upper1 <= UPPER_MASK; upper1++, upper2 = 0) {
-> +			upper_chunk = pid_list->upper[upper1];
-> +
-> +			if (!upper_chunk)
->  				continue;
->  
-> -			lower = find_next_bit(lower_chunk->data, LOWER_MAX,
-> -					    lower);
-> -			if (lower < LOWER_MAX)
-> -				goto found;
-> +			for (; upper2 <= UPPER_MASK; upper2++, lower = 0) {
-> +				lower_chunk = upper_chunk->data[upper2];
-> +				if (!lower_chunk)
-> +					continue;
-> +
-> +				lower = find_next_bit(lower_chunk->data, LOWER_MAX,
-> +						    lower);
-> +				if (lower < LOWER_MAX)
-> +					goto found;
-> +			}
->  		}
-> -	}
->  
-> +		upper1 = UPPER_MASK + 1; /* Mark as not found */
->   found:
-> -	raw_spin_unlock_irqrestore(&pid_list->lock, flags);
-> +		if (read_seqcount_retry(&pid_list->seqcount, seq)) {
-> +			/* Retry if write happened during read */
-> +			upper1 = start_upper1;
-> +			upper2 = start_upper2;
-> +			lower = start_lower;
-> +			continue;
-> +		}
-> +		break;
-> +	} while (1);
-> +
->  	if (upper1 > UPPER_MASK)
->  		return -1;
+On Wed, 29 Oct 2025 15:17:42 +0800, Bo Liu wrote:
+> Remove the repeated word "the" in comments.
 
-Honestly, I wouldn't modify trace_pid_list_next(). It is simply used for
-printing of the pids in /sys/kernel/tracing/set_*_pid files. It's not a
-critical section, and it shouldn't affect scheduling like
-trace_pid_list_is_set() does.
+Applied to arm64 (for-next/typos), thanks!
 
-Just keep it taking the raw spin lock, as that will keep it from being
-modified by the writers. It also keeps the code from becoming more complex.
+[1/1] arm64: Fix double word in comments
+      https://git.kernel.org/arm64/c/337f7e3a4b4d
 
--- Steve
+-- 
+Catalin
 
