@@ -1,68 +1,70 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC01628CF5F
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Nov 2025 15:25:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DE221339A4
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Nov 2025 15:25:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762961139; cv=none; b=aKv41Rsik2wz6BcV0XI03+Hz4JjUx6t6vozg2q9EHJfvs2hZYy0lJN+Ev+ZBM4xTAPQbfP3HqGOB1OaKt9b3VdCLLgDjmqt+oIMdPSHAEpeU5dvXM3aCErByuMNmoIhTaEZ+PPJyAYoit0MsKG8hxS5IOBUiWcFDnnjkFZCon5Q=
+	t=1762961143; cv=none; b=ZZNLma/UalmcgAQjPz6K1TQfAMgGm4VT/juIoPEgllsxkkXJNywynjxzAx1aOiHIoFjt9JOBsBBYMjD3ZalC/c+oDrReHvdNmbxXWcqqYuTFkj2bpax60P9Cgv1xe2ZU0A8UqSiO500zQ1/r+vFS1LdBid9dvhsv7MXsIo1I90E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762961139; c=relaxed/simple;
-	bh=hIlbGlcIYFOlEj82NKOpaOaAnPhcR+e/jBqkVZam/wI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:content-type; b=Q7pzXQFdwsB1Xl2U5sA7bhCDSh+DJNAAMPoA7kQdsaTZAcit9UpYR+GEbllMao9yoPymiGCgKA7bphb6QrhyIjCtW104qowrmn9bQmFy91N1Y39l6tyxfvIR9IejJh9lHXHaOPVUXpCPRBJavNvKcVdtOaB7ZvjcS9MXv4+Vu+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QEpaC9rY; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1762961143; c=relaxed/simple;
+	bh=xU/CYcczb1t/SRGa70EwVJLymnEX/VSvsN35aX9fljI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:content-type; b=oa2pD+hV7gtO3Nx2sQGacE1wy60e0ad+iWc6lCsBgAI89G4bFZjtY5UKTHOTLWRlib5LLeaJ6SyQl+u9gQjZK6VSvst0V8T9wMT9yFfCzLtMji7RtjCLAhBpcLn4HGVse5BNzTi6LBQfrFMMR+60Wb+uygSCZfQ0tcuetj5gFm4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=f4uW6cLh; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QEpaC9rY"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f4uW6cLh"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1762961136;
+	s=mimecast20190719; t=1762961140;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=pSW/Yc+wEQijlEL7jfxDnPeAQ2zhUWulmV6d+AWSPak=;
-	b=QEpaC9rYmZf03q9G91pidpxFIvvQN7HPCLDA6sDY7qm3xOpsQXzlGy9VJEd3zQBoxYgJLP
-	JLKsVTCVU6JMqyO6jQ7hS+6kq8O2xT7kYXdmtdA5DdvpmlORghom2yAkuMUrBDLpeQyjog
-	IO7TJLLAp+oNNVPvouG78jc+LJTLkZM=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vGwuEN8aOuWPdDIt2i3fXlP/T19sf+V0wzBi8VPQDDE=;
+	b=f4uW6cLh/LeeHEFgbwuLmXQEi88/YWBW3Bj+JbSDpeE5Tge9wvJCcKDYXbya5wRkh44NDU
+	Qti52vSXDm+rGTzRvYbuZ8mAIyjZPb915j2CGnYReYUfSxYZyak4UPPCKK/DTi3JndTuaH
+	Nxl8cIOro3rjE6sHU0QEFcT8XEMK1EY=
 Received: from mail-il1-f199.google.com (mail-il1-f199.google.com
  [209.85.166.199]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-244-AWZ-UvSBNuaQnoWecN4slQ-1; Wed, 12 Nov 2025 10:25:35 -0500
-X-MC-Unique: AWZ-UvSBNuaQnoWecN4slQ-1
-X-Mimecast-MFC-AGG-ID: AWZ-UvSBNuaQnoWecN4slQ_1762961135
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-433783ff82aso27939085ab.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Nov 2025 07:25:35 -0800 (PST)
+ us-mta-359-M9-VNQlvOWak8vZnduys9g-1; Wed, 12 Nov 2025 10:25:38 -0500
+X-MC-Unique: M9-VNQlvOWak8vZnduys9g-1
+X-Mimecast-MFC-AGG-ID: M9-VNQlvOWak8vZnduys9g_1762961137
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-4347bc50df4so112345ab.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Nov 2025 07:25:38 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762961135; x=1763565935;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pSW/Yc+wEQijlEL7jfxDnPeAQ2zhUWulmV6d+AWSPak=;
-        b=BcZVu//Hh2sYQL1KvUVQPFb32oLPGc06Z+BbvdfjfQp3SMPRDTZ2W4wrc39JTVROa0
-         8d1B2eHsa3BoUfj0HQ36zytoJ7w75y3VOH3jhNIxsVGgciQI86RBynNwlLQyi9GFecXl
-         +YYUQByxEUcNEhVzWcRWh3XnScN/C5jiJVyYFu5KXSLyUK/8dRqpB1BubUPdmQP3yREU
-         DEs6wnbc4bSkB1VP1RiWdHNn3+zjl7mFDTuMi2Y4BUw3icxEKgXv0Jm/0OcuWijfQsGI
-         U/ZA2gFHccTo8F6VcK4klPXllSjyYQZmOUlcPFIn4ee0mO6oeDGihehdVR8BC9UU0350
-         ifWQ==
-X-Gm-Message-State: AOJu0YyTLHfvttm/yH4ubQqqmMakOJUJxDlkyiJcpGU/NXLjS3g+9BwK
-	TIor49yL2LD8ESgx9LJCdu9C/VL/BdOEiAagBoMp9kBNsA6BXq4M4PKPqSCtSTSo3Rjc1cnnLz3
-	O4JEa1eTN2+WnAAjyHVUFm4qxj+rkqxJ2kmAhCtje3OTxMdwkHvzEa7E+84iQWcR/cDSZ4r4/Jg
+        d=1e100.net; s=20230601; t=1762961137; x=1763565937;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=vGwuEN8aOuWPdDIt2i3fXlP/T19sf+V0wzBi8VPQDDE=;
+        b=TBswHRP6w/AtMeIAvhFEpqMY1jeVN6USg2D5/KMijV8KG+pTNmRa+23dlun5Z9g1M0
+         zmT9j//uQRnzxyKMJvCgIo7yFABH00n2IJQl3adXMHBbVEEuiLAuJN3nDgE0DtielvJu
+         EAL7zEm4X39PDaeIiFOzJfegJ9ZMh5cJlcrAlS/m9lL+KWIdd+M5AdidxoCUQY5YfVZ7
+         6OnY2o5N6V57lcqxBaHHO7ss/6mpHu5PLoj84nWFE6w2leU3JVc0aPLdW1iL4G2kAB4O
+         RBinVIrkZug5tLUwm3ZnL8yUHvyvCsWo5jXfOeQB3e5hPNiu7fO/b8QhpEz904sRVhNa
+         GrFA==
+X-Gm-Message-State: AOJu0YwsyEQ1pDUHtx5NJQQxV3KE+j1wvR1euw1nq1yqSx3qQjyv5jvC
+	rt1VXswB2AeDLgr1mAGxY40YagbPN2j+1j0sxmbrym4NHnNVut2hPfXPTidbzuJWZb7WEiYjVWd
+	3opu1FCS8EB6zJLZSTQhhEuOdzK24PyWzRUyCbkD4YT/aXUaslTFqlsATM+0XPNiJNsbKhkCQuQ
 	==
-X-Gm-Gg: ASbGncvf773fOAUeAfYD8fJnHVNM/xuwxCJM9RWlFaFoAQ+LFtwtJJrDfMCegJA9ykV
-	IbOoGec6mDhZBlSWUjbazsmSkVRKS6+ocg8XCQZMnZSvJ/FjbnvPnvX3A8nO9xPy90LEm/7FG5O
-	H8zRJRKTPbMCsbhl5xFF5Sqc9u4ONDFNDAlAteMM9JGiDWUiHkuYUR+BLBSReHQYa8uOg2X2l0B
-	e97u7tpjxHl7yWoRQBVsw7v0jPvmqCuIX0S1CW0oHWbAx+h+TWC+e1o+1MVxmv9IE9OKLAgdp4U
-	UnpFWwwldK1Y2X8W+OmSTJIRZgfJRTYk5Au0+NQyOl/InAb0KKLBwEc1meJUUW9yhwLS9wI06fZ
-	rf9gGz/Gq86e0eGHi022TGCt0KdWmAcs=
-X-Received: by 2002:a05:6e02:1646:b0:433:78b8:9456 with SMTP id e9e14a558f8ab-43473d0ba3emr43436605ab.2.1762961134895;
-        Wed, 12 Nov 2025 07:25:34 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEFk7QNigbBZWYI2smskpaw+yeHl3g3llYYspv4bwprWljONLuoZaSkpNL59+PFeECG8BN2kQ==
-X-Received: by 2002:a05:6e02:1646:b0:433:78b8:9456 with SMTP id e9e14a558f8ab-43473d0ba3emr43436305ab.2.1762961134527;
-        Wed, 12 Nov 2025 07:25:34 -0800 (PST)
+X-Gm-Gg: ASbGncv2I4EvkcTzbKO7djP2k2zilF9ChEi4OvH42FRJ3PGyG1cvVBckvhWNkcOKFfO
+	/LzdXRyleT5fgS6f9yEmhn1xabXeKif47m+PCTqXUAqBDcmX9LOA7wVzemLzxuyzwp4IpMaVD/g
+	XMePuRzwWmvNNoCuPwh0OyruiwsFTkrRtb66kvs8Niigg98o9ZpXfC1JDJyPOq/xZVA4tiRX72p
+	4hQ8LJ9MLG8mKAxFWWZibD+/qt4sJCWfE4YVmZkAu0YLTk6dDfHc43805+VKfB8BwpqKgcvcXb7
+	/Cqjby3FGjqD8nCJ4BJx67xqfnVTdC5+ImMNm5tvurvU88+VqKRF4yKYztNNlPPrJ4ultM1IFBs
+	YxRhzb14ZLGG2OVV0OvPSCWP9MXZrxEA=
+X-Received: by 2002:a05:6e02:19c8:b0:433:2400:2eef with SMTP id e9e14a558f8ab-43473998689mr49488995ab.13.1762961137291;
+        Wed, 12 Nov 2025 07:25:37 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFlHKxd08pHIvAbc/GL3gNPI3lt3l5Xq/NhiSJ+YC2xVebaLRoHTM/GawjW0Pux59gjueVbCQ==
+X-Received: by 2002:a05:6e02:19c8:b0:433:2400:2eef with SMTP id e9e14a558f8ab-43473998689mr49488565ab.13.1762961136852;
+        Wed, 12 Nov 2025 07:25:36 -0800 (PST)
 Received: from crwood-thinkpadp16vgen1.minnmso.csb ([2601:447:c680:2b50:ee6f:85c2:7e3e:ee98])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-4347327f820sm11680325ab.0.2025.11.12.07.25.33
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-4347327f820sm11680325ab.0.2025.11.12.07.25.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Nov 2025 07:25:34 -0800 (PST)
+        Wed, 12 Nov 2025 07:25:36 -0800 (PST)
 From: Crystal Wood <crwood@redhat.com>
 To: Steven Rostedt <rostedt@goodmis.org>
 Cc: linux-trace-kernel@vger.kernel.org,
@@ -71,10 +73,12 @@ Cc: linux-trace-kernel@vger.kernel.org,
 	Costa Shulyupin <costa.shul@redhat.com>,
 	Wander Lairson Costa <wander@redhat.com>,
 	Crystal Wood <crwood@redhat.com>
-Subject: [PATCH 0/5] rtla, osnoise: Fixes to address intermittent test issues
-Date: Wed, 12 Nov 2025 09:25:24 -0600
-Message-ID: <20251112152529.956778-1-crwood@redhat.com>
+Subject: [PATCH 1/5] rtla/tests: Don't rely on matching ^1ALL
+Date: Wed, 12 Nov 2025 09:25:25 -0600
+Message-ID: <20251112152529.956778-2-crwood@redhat.com>
 X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20251112152529.956778-1-crwood@redhat.com>
+References: <20251112152529.956778-1-crwood@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -82,31 +86,37 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: uUOQk7gfrZqhb8W6R7napOBR27BGxVPklypJr2Ls79Q_1762961135
+X-Mimecast-MFC-PROC-ID: HWwINkbAn_Qotfploe8L5YA2Ab3N1G_7vuYts9mA5Ss_1762961137
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
-With these fixes, I'm able to run the tests in a loop overnight with no
-failures.
+The timerlat "top stop at failed action" test was relying on "ALL" being
+printed immediately after the "1" from the threshold action.  Besides being
+fragile, this depends on stdbuf behavior, which is easy to miss when
+recreating the test outside of the framework for debugging purposes.
 
-Crystal Wood (5):
-  rtla/tests: Don't rely on matching ^1ALL
-  tracing/osnoise: Dump stack on timerlat uret threshold event
-  tracing/osnoise: Array printk init and cleanup
-  rtla/timerlat: Exit top main loop on any non-zero wait_retval
-  rtla: Set stop threshold after all instances are enabled
+Instead, use the expected/unexpected text mechanism from the
+corresponding osnoise test.
 
- kernel/trace/trace_osnoise.c          | 46 +++++++++++++++++----------
- tools/tracing/rtla/src/common.c       | 20 ++++++++++++
- tools/tracing/rtla/src/common.h       |  4 +++
- tools/tracing/rtla/src/osnoise.c      | 17 +++-------
- tools/tracing/rtla/src/osnoise.h      |  5 ---
- tools/tracing/rtla/src/timerlat.c     | 29 ++++++-----------
- tools/tracing/rtla/src/timerlat_top.c |  2 +-
- tools/tracing/rtla/tests/timerlat.t   |  2 +-
- 8 files changed, 69 insertions(+), 56 deletions(-)
+Signed-off-by: Crystal Wood <crwood@redhat.com>
+---
+ tools/tracing/rtla/tests/timerlat.t | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/tools/tracing/rtla/tests/timerlat.t b/tools/tracing/rtla/tests/timerlat.t
+index d1cc7106ae26..fd4935fd7b49 100644
+--- a/tools/tracing/rtla/tests/timerlat.t
++++ b/tools/tracing/rtla/tests/timerlat.t
+@@ -58,7 +58,7 @@ check "multiple actions" \
+ check "hist stop at failed action" \
+ 	"timerlat hist -T 2 --on-threshold shell,command='echo -n 1; false' --on-threshold shell,command='echo -n 2'" 2 "^1# RTLA timerlat histogram$"
+ check "top stop at failed action" \
+-	"timerlat top -T 2 --on-threshold shell,command='echo -n 1; false' --on-threshold shell,command='echo -n 2'" 2 "^1ALL"
++	"timerlat top -T 2 --on-threshold shell,command='echo -n abc; false' --on-threshold shell,command='echo -n defgh'" 2 "^abc" "defgh"
+ check "hist with continue" \
+ 	"timerlat hist -T 2 -d 5s --on-threshold shell,command='echo TestOutput' --on-threshold continue" 0 "^TestOutput$"
+ check "top with continue" \
 -- 
 2.48.1
 
