@@ -1,212 +1,116 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 235E433D6E6
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Nov 2025 15:50:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F47B262FC7
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Nov 2025 15:51:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762962611; cv=none; b=ugp3X/x71mCgXq7gSNRny6p/0jpOUJr+gVXucC0rsu/Qa6NrUIyxLYFCua4G39uro2eo2RCZR/NDYaekGjcU25ITnzrEBCK0KDdRMJx4Eyg0kSSTTiQVf5IL6ioK9aNC9SnxQA7TFP+fiF6JTSFZyZD0LTov7y9vPM0fTbtnvwE=
+	t=1762962691; cv=none; b=XUecwlZQSixv8f4/ABVTVVJPZhiHp1715Aw5qzrPae2iRhhdezGw9a5om2MxTFY/qPT2+i/MUbNnICdnVUkaeY7TmLcRIvCOOvN1DjZMrHzFtKhau0EnEP0KdStYIJD5yF9p9nuUvBIJepDIZVoUhJUufof8SMTH3w4ccgAizuQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762962611; c=relaxed/simple;
-	bh=06stUVdVrCwvUplAh76gT2K++oQBpkVUJo5TM4Bsguw=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:Cc:
-	 Content-Type; b=PZRTwNkviiMzQCqkFuWyNDOl62jDCij4HLsWkWaUexQlLVOU5JriEKScm+bJEapGDKgFUwxUJowD/YYwvBxybK6PGXUGZuISfQgPZOzgChum5tr25KdGoWbebebIL71dDbm7A79xm+ujLhnNn9egsEGlotu18xQYB5VSmKUl1Uo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-43478a7659bso4675755ab.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Nov 2025 07:50:09 -0800 (PST)
+	s=arc-20240116; t=1762962691; c=relaxed/simple;
+	bh=RtjA44yZHNRS0kFnDDXuQqTB/tfgoZjwkeL9/Dk+NHs=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RsZv6kw+KK5tLTQL90O07iI4S703E3ZXLHmaQOJer0+apGvrjZUPsxj/7q2oXK+lq1pn4IyOapNEzSW4bOPQZVJV1mD1wi1lBct8ZYMcbCl0oh5hmWwshHnB8nz1g3pg1++72+bHFrCjPmmErR1B+chY80m5G9xPGNdG7HT7Q+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TYw986C7; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TYw986C7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1762962688;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=H6SbkVI3Yk0stVlEf+upYuCduL1ZMW+aTOIq962Ce9Q=;
+	b=TYw986C7zZdGG5PMXxXsHbl0L6sD2/lgC1kDfKk+r73YJkTGo/5kDPZogloK1luGueoVVz
+	9WhGVY6AfzIlP8A5H9pobioeA2Rmfj+Cjt4ycLanMO3VWE1PN1fWtEkLiUNAoNMrMPEiop
+	EU1waCm1R0hGsbNsTRzj/9stASvlRAU=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-661-aD0_HZHLMo6pGbQnhOJnBQ-1; Wed, 12 Nov 2025 10:51:27 -0500
+X-MC-Unique: aD0_HZHLMo6pGbQnhOJnBQ-1
+X-Mimecast-MFC-AGG-ID: aD0_HZHLMo6pGbQnhOJnBQ_1762962687
+Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-882381f2092so48512596d6.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Nov 2025 07:51:27 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762962608; x=1763567408;
-        h=cc:to:from:subject:message-id:in-reply-to:date:mime-version
+        d=1e100.net; s=20230601; t=1762962687; x=1763567487;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3zTsXzAL2O8FBHRHQuZTZdGfLgKf82AqMuTf8WBrX6k=;
-        b=UoC3qCrgK6bzFSTtrn5dGv+aYIYCVo4B40IFdFTAoe3G3O5LvU57yff5Y/W5AnOFva
-         VrmybWUcO71OuiuGjRiKS2x36hw/dObSDyDzoEcabosRfrBGW0cTP+W76pbxLoF/ze9C
-         72kFBb/C1OcPFQH7Rljxr4s75/eva/F8Wc3CIPBhd1145LsqlnsMMuyz9XUfLLRL+5m7
-         Bcax/81NtwihRCD8I3W83wIu27Wk+JjLde2r/PGDfmA1ov2ZnnNi1mX95vSAPH6vzD+/
-         eWBzdJk2BcNaxfq2xsawGTvMa2igIkqvKCkWHwPYjQGXYWteIzMA/fcw3AQNnKs8ukuh
-         TupA==
-X-Forwarded-Encrypted: i=1; AJvYcCU00uBW9kW4QtJAq27a/g/4F6u1hqQ6epLRt9ncwwtqi+FfnIV80IqockFU4pqB1Y8MfMaBJgqZDo1tz9z7mG9BjAM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJn8SQJe4yS8vOX/D8Is2gE5jV7IDOQl8X8ap3cvCKMNERZpAl
-	WBI7ImZAcmS09HGWFY5GMKX6mW+kx5Uarb6F8va/uuHy443l0MStYgsp9qUGpj9gL4HvTVB+Syw
-	z+NiQaqrUWn8G223TtW3fq0nzN+Vp3eVf5O0s1sxGbGtdPvei0Kybf69EdfQ=
-X-Google-Smtp-Source: AGHT+IHmXHfyTAC7o3gX451a5IIahr28v38z8/NoQnIggiwkPwHCChNJsSaHf6XMCJZzy1ZplwASB2f9wVZN0PHDzjagie+boMEe
+        bh=H6SbkVI3Yk0stVlEf+upYuCduL1ZMW+aTOIq962Ce9Q=;
+        b=oa96kP9CltKtoXFLr7EF/HYHFhxN2qLEtG+Bdtnmx/bEknKtmu4bLuZOAEkEvLwoMC
+         vSZjHPwTEnfWhfHPdxK9jPIjbYEtvM3STbY0tboBB8md69sNYcddLo/amd997eHAQxOO
+         7oZmQ0XNGawvEkII3KI2+6mDIa8UrSgScuKNLehjwwIb4Fdzu6si0Tgc6+nTLWI/X1a7
+         9ekf1NfEA6YYS2ldJTZuyXWOz/6W2eEI5j5AyudHeuOuNXtFPu1hDTh/nObLsYFgKmrW
+         3aRrMd6+xAp1XZYP8gFLjJzXB8jPc78cxPhBrOLOgAsNPcmZ7hlYCaFLfahyNYoYpeDa
+         R6nw==
+X-Gm-Message-State: AOJu0YwnajVkMeLSDjHfIGLlNG+bGvj4oChdYdvCiCSpd/nvn3yqdN6b
+	INkWU9Qz1gmony1AS37Ex7q2xoWWNOaByrFCVA3i+d6zYh28lLOEhkWbuVo/9BnDlbur0bejCKq
+	8R3/BqEdTA7e26J+4DToAxxzutzFSuc2xiahKw/wqxibRVPz2qZTLsrOdZh8wAhSV7R40isnbDg
+	==
+X-Gm-Gg: ASbGncvB0L9yrf7LNQNljDBWej+3gakH5cavXKRC2dFDARwNd5mHDHV1cITGD/8Lznv
+	L32fBNfi3l30J7wQZbnyNgtamXFkpZi5w0rRu8uDVyrsRW0X20nD5C1Xp9vWBfe8f2LEChzNkq5
+	lTW3Apo7MUzo/bcI3eHLZb+iSLMoT1I7PI31OepM2Ff6f01P3H1st6XwsltNJR251Hok5UJ2r0w
+	47AHZMXtqChaE1jo+JmPccqcexABj7Le+gLU/XbAtKY9kGsdxEFd+MHZ/z7WkmXicma8myJzQ8Q
+	2Q/elTJ8cajZyjVXRzAVgAjr2i6EQ1wEflInwMEpZOhjvDF3XvtdM1PLDeGAaGO0pQd3uLefBWG
+	6/SCpr8jT5s/vjShzvi/VyWjP8V/cuCA=
+X-Received: by 2002:a05:622a:5a09:b0:4ed:e4b3:f154 with SMTP id d75a77b69052e-4ede4b3f60fmr15513521cf.79.1762962687077;
+        Wed, 12 Nov 2025 07:51:27 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IH2O5WOQoQmjZihHMDNVPZAEtJPCfBoGTaLokSzagp7NlP+UqfxzDgKXHSqM91D4BHkajvEZg==
+X-Received: by 2002:a05:622a:5a09:b0:4ed:e4b3:f154 with SMTP id d75a77b69052e-4ede4b3f60fmr15513211cf.79.1762962686742;
+        Wed, 12 Nov 2025 07:51:26 -0800 (PST)
+Received: from crwood-thinkpadp16vgen1.minnmso.csb ([2601:447:c680:2b50:ee6f:85c2:7e3e:ee98])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4eda561a030sm86883231cf.3.2025.11.12.07.51.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Nov 2025 07:51:26 -0800 (PST)
+Message-ID: <776f5024499738fcc4fa1d6e8322a2ae9eb38d0a.camel@redhat.com>
+Subject: Re: [PATCH 0/5] rtla, osnoise: Fixes to address intermittent test
+ issues
+From: Crystal Wood <crwood@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-trace-kernel@vger.kernel.org, John Kacur <jkacur@redhat.com>, 
+ Tomas Glozar <tglozar@redhat.com>, Costa Shulyupin <costa.shul@redhat.com>,
+ Wander Lairson Costa	 <wander@redhat.com>
+Date: Wed, 12 Nov 2025 09:51:25 -0600
+In-Reply-To: <20251112152529.956778-1-crwood@redhat.com>
+References: <20251112152529.956778-1-crwood@redhat.com>
+User-Agent: Evolution 3.56.2 (3.56.2-2.fc42)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:3521:b0:433:481d:fd61 with SMTP id
- e9e14a558f8ab-43473d92995mr43099555ab.18.1762962608328; Wed, 12 Nov 2025
- 07:50:08 -0800 (PST)
-Date: Wed, 12 Nov 2025 07:50:08 -0800
-In-Reply-To: <cover.1762945505.git.ojaswin@linux.ibm.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6914acb0.050a0220.3565dc.0004.GAE@google.com>
-Subject: [syzbot ci] Re: xfs: single block atomic writes for buffered IO
-From: syzbot ci <syzbot+cie14707853a77f22b@syzkaller.appspotmail.com>
-To: axboe@kernel.dk, brauner@kernel.org, dchinner@redhat.com, 
-	djwong@kernel.org, hch@lst.de, jack@suse.cz, john.g.garry@oracle.com, 
-	linux-block@vger.kernel.org, linux-ext4@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, 
-	linux-xfs@vger.kernel.org, martin.petersen@oracle.com, nilay@linux.ibm.com, 
-	ojaswin@linux.ibm.com, ritesh.list@gmail.com, rostedt@goodmis.org, 
-	tytso@mit.edu, willy@infradead.org
-Cc: syzbot@lists.linux.dev, syzkaller-bugs@googlegroups.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: V2enZG7AohvOaqfQ7k7J63Ios4UGSMjdpQ78VwZ5glA_1762962687
+X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-syzbot ci has tested the following series
+On Wed, 2025-11-12 at 09:25 -0600, Crystal Wood wrote:
+> With these fixes, I'm able to run the tests in a loop overnight with no
+> failures.
+>=20
+> Crystal Wood (5):
+>   rtla/tests: Don't rely on matching ^1ALL
+>   tracing/osnoise: Dump stack on timerlat uret threshold event
+>   tracing/osnoise: Array printk init and cleanup
+>   rtla/timerlat: Exit top main loop on any non-zero wait_retval
+>   rtla: Set stop threshold after all instances are enabled
+>=20
+>  kernel/trace/trace_osnoise.c          | 46 +++++++++++++++++----------
+>  tools/tracing/rtla/src/common.c       | 20 ++++++++++++
+>  tools/tracing/rtla/src/common.h       |  4 +++
+>  tools/tracing/rtla/src/osnoise.c      | 17 +++-------
+>  tools/tracing/rtla/src/osnoise.h      |  5 ---
+>  tools/tracing/rtla/src/timerlat.c     | 29 ++++++-----------
+>  tools/tracing/rtla/src/timerlat_top.c |  2 +-
+>  tools/tracing/rtla/tests/timerlat.t   |  2 +-
+>  8 files changed, 69 insertions(+), 56 deletions(-)
 
-[v1] xfs: single block atomic writes for buffered IO
-https://lore.kernel.org/all/cover.1762945505.git.ojaswin@linux.ibm.com
-* [RFC PATCH 1/8] fs: Rename STATX{_ATTR}_WRITE_ATOMIC -> STATX{_ATTR}_WRITE_ATOMIC_DIO
-* [RFC PATCH 2/8] mm: Add PG_atomic
-* [RFC PATCH 3/8] fs: Add initial buffered atomic write support info to statx
-* [RFC PATCH 4/8] iomap: buffered atomic write support
-* [RFC PATCH 5/8] iomap: pin pages for RWF_ATOMIC buffered write
-* [RFC PATCH 6/8] xfs: Report atomic write min and max for buf io as well
-* [RFC PATCH 7/8] iomap: Add bs<ps buffered atomic writes support
-* [RFC PATCH 8/8] xfs: Lift the bs == ps restriction for HW buffered atomic writes
+Oh, forgot to mention that this is on top of Tomas's pending patches.
 
-and found the following issue:
-KASAN: slab-out-of-bounds Read in __bitmap_clear
+-Crystal
 
-Full report is available here:
-https://ci.syzbot.org/series/430a088a-50e2-46d3-87ff-a1f0fa67b66c
-
-***
-
-KASAN: slab-out-of-bounds Read in __bitmap_clear
-
-tree:      linux-next
-URL:       https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next
-base:      ab40c92c74c6b0c611c89516794502b3a3173966
-arch:      amd64
-compiler:  Debian clang version 20.1.8 (++20250708063551+0c9f909b7976-1~exp1~20250708183702.136), Debian LLD 20.1.8
-config:    https://ci.syzbot.org/builds/02d3e137-5d7e-4c95-8f32-43b8663d95df/config
-C repro:   https://ci.syzbot.org/findings/92a3582f-40a6-4936-8fcd-dc55c447a432/c_repro
-syz repro: https://ci.syzbot.org/findings/92a3582f-40a6-4936-8fcd-dc55c447a432/syz_repro
-
-==================================================================
-BUG: KASAN: slab-out-of-bounds in __bitmap_clear+0x155/0x180 lib/bitmap.c:395
-Read of size 8 at addr ffff88816ced7cd0 by task kworker/0:1/10
-
-CPU: 0 UID: 0 PID: 10 Comm: kworker/0:1 Not tainted syzkaller #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
-Workqueue: xfs-conv/loop0 xfs_end_io
-Call Trace:
- <TASK>
- dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
- print_address_description mm/kasan/report.c:378 [inline]
- print_report+0xca/0x240 mm/kasan/report.c:482
- kasan_report+0x118/0x150 mm/kasan/report.c:595
- __bitmap_clear+0x155/0x180 lib/bitmap.c:395
- bitmap_clear include/linux/bitmap.h:496 [inline]
- ifs_clear_range_atomic fs/iomap/buffered-io.c:241 [inline]
- iomap_clear_range_atomic+0x25c/0x630 fs/iomap/buffered-io.c:268
- iomap_finish_folio_write+0x2f0/0x410 fs/iomap/buffered-io.c:1971
- iomap_finish_ioend_buffered+0x223/0x5e0 fs/iomap/ioend.c:58
- iomap_finish_ioends+0x116/0x2b0 fs/iomap/ioend.c:295
- xfs_end_ioend+0x50b/0x690 fs/xfs/xfs_aops.c:168
- xfs_end_io+0x253/0x2d0 fs/xfs/xfs_aops.c:205
- process_one_work+0x94a/0x15d0 kernel/workqueue.c:3267
- process_scheduled_works kernel/workqueue.c:3350 [inline]
- worker_thread+0x9b0/0xee0 kernel/workqueue.c:3431
- kthread+0x711/0x8a0 kernel/kthread.c:463
- ret_from_fork+0x599/0xb30 arch/x86/kernel/process.c:158
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
-
-Allocated by task 5952:
- kasan_save_stack mm/kasan/common.c:56 [inline]
- kasan_save_track+0x3e/0x80 mm/kasan/common.c:77
- poison_kmalloc_redzone mm/kasan/common.c:397 [inline]
- __kasan_kmalloc+0x93/0xb0 mm/kasan/common.c:414
- kasan_kmalloc include/linux/kasan.h:262 [inline]
- __do_kmalloc_node mm/slub.c:5672 [inline]
- __kmalloc_noprof+0x41d/0x800 mm/slub.c:5684
- kmalloc_noprof include/linux/slab.h:961 [inline]
- kzalloc_noprof include/linux/slab.h:1094 [inline]
- ifs_alloc+0x1e4/0x530 fs/iomap/buffered-io.c:356
- iomap_writeback_folio+0x81c/0x26a0 fs/iomap/buffered-io.c:2084
- iomap_writepages+0x162/0x2d0 fs/iomap/buffered-io.c:2168
- xfs_vm_writepages+0x28a/0x300 fs/xfs/xfs_aops.c:701
- do_writepages+0x32e/0x550 mm/page-writeback.c:2598
- filemap_writeback mm/filemap.c:387 [inline]
- filemap_fdatawrite_range mm/filemap.c:412 [inline]
- file_write_and_wait_range+0x23e/0x340 mm/filemap.c:786
- xfs_file_fsync+0x195/0x800 fs/xfs/xfs_file.c:137
- generic_write_sync include/linux/fs.h:2639 [inline]
- xfs_file_buffered_write+0x723/0x8a0 fs/xfs/xfs_file.c:1015
- do_iter_readv_writev+0x623/0x8c0 fs/read_write.c:-1
- vfs_writev+0x31a/0x960 fs/read_write.c:1057
- do_pwritev fs/read_write.c:1153 [inline]
- __do_sys_pwritev2 fs/read_write.c:1211 [inline]
- __se_sys_pwritev2+0x179/0x290 fs/read_write.c:1202
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xfa/0xfa0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-The buggy address belongs to the object at ffff88816ced7c80
- which belongs to the cache kmalloc-96 of size 96
-The buggy address is located 0 bytes to the right of
- allocated 80-byte region [ffff88816ced7c80, ffff88816ced7cd0)
-
-The buggy address belongs to the physical page:
-page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x16ced7
-flags: 0x57ff00000000000(node=1|zone=2|lastcpupid=0x7ff)
-page_type: f5(slab)
-raw: 057ff00000000000 ffff888100041280 dead000000000100 dead000000000122
-raw: 0000000000000000 0000000080200020 00000000f5000000 0000000000000000
-page dumped because: kasan: bad access detected
-page_owner tracks the page as allocated
-page last allocated via order 0, migratetype Unmovable, gfp_mask 0x252800(GFP_NOWAIT|__GFP_NORETRY|__GFP_COMP|__GFP_THISNODE), pid 1, tgid 1 (swapper/0), ts 12041529441, free_ts 0
- set_page_owner include/linux/page_owner.h:32 [inline]
- post_alloc_hook+0x240/0x2a0 mm/page_alloc.c:1851
- prep_new_page mm/page_alloc.c:1859 [inline]
- get_page_from_freelist+0x2365/0x2440 mm/page_alloc.c:3920
- __alloc_frozen_pages_noprof+0x181/0x370 mm/page_alloc.c:5209
- alloc_slab_page mm/slub.c:3086 [inline]
- allocate_slab+0x71/0x350 mm/slub.c:3257
- new_slab mm/slub.c:3311 [inline]
- ___slab_alloc+0xf56/0x1990 mm/slub.c:4671
- __slab_alloc+0x65/0x100 mm/slub.c:4794
- __slab_alloc_node mm/slub.c:4870 [inline]
- slab_alloc_node mm/slub.c:5266 [inline]
- __kmalloc_cache_node_noprof+0x4b7/0x6f0 mm/slub.c:5799
- kmalloc_node_noprof include/linux/slab.h:983 [inline]
- alloc_node_nr_active kernel/workqueue.c:4908 [inline]
- __alloc_workqueue+0x6a9/0x1b80 kernel/workqueue.c:5762
- alloc_workqueue_noprof+0xd4/0x210 kernel/workqueue.c:5822
- nbd_dev_add+0x4f1/0xae0 drivers/block/nbd.c:1961
- nbd_init+0x168/0x1f0 drivers/block/nbd.c:2691
- do_one_initcall+0x25a/0x860 init/main.c:1378
- do_initcall_level+0x104/0x190 init/main.c:1440
- do_initcalls+0x59/0xa0 init/main.c:1456
- kernel_init_freeable+0x334/0x4b0 init/main.c:1688
- kernel_init+0x1d/0x1d0 init/main.c:1578
-page_owner free stack trace missing
-
-Memory state around the buggy address:
- ffff88816ced7b80: 00 00 00 00 00 00 00 00 00 00 fc fc fc fc fc fc
- ffff88816ced7c00: 00 00 00 00 00 00 00 00 00 00 fc fc fc fc fc fc
->ffff88816ced7c80: 00 00 00 00 00 00 00 00 00 00 fc fc fc fc fc fc
-                                                 ^
- ffff88816ced7d00: fa fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
- ffff88816ced7d80: 00 00 00 00 00 00 00 00 00 00 fc fc fc fc fc fc
-==================================================================
-
-
-***
-
-If these findings have caused you to resend the series or submit a
-separate fix, please add the following tag to your commit message:
-  Tested-by: syzbot@syzkaller.appspotmail.com
-
----
-This report is generated by a bot. It may contain errors.
-syzbot ci engineers can be reached at syzkaller@googlegroups.com.
