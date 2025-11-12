@@ -1,488 +1,212 @@
-Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 339981E25F9
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Nov 2025 09:37:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20DAD2FD1D5;
+	Wed, 12 Nov 2025 10:06:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762940250; cv=none; b=GQtabDeFO0ZTqMUbkFQYCB0CZu23o4t4x+0NlwIcao9GhoxJT6WmrmLIwJDRZQ1/9iJUjbtPO88nM4fQqsoeu34CwRszyAdERAmzkmzYJfJRYXTP23dcVcajrZSzTp2uUHnze/gL3nVaYM2kzZNsJnbLTmQ5ZGJ/G/4x3XTf4hc=
+	t=1762942020; cv=none; b=KrKg6jTbOlPl+n2H2Nqw4nrpqxyoljFZjGuyKgt/gsbcEI6mVpWC0g5iMClw2yNIeaKHTbbJHAJPOTqaWygCX7J0OF0x9Puj1zOqVguNI2fLYyFmJp+jRbKYLmvVfpCkNVMCBCui/exftxO7A0/HMR5w6/7OGVGbiPc7qplBQvs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762940250; c=relaxed/simple;
-	bh=ug2Z8XOpXQ4NKdv1KzgnXz5mHtPCswc7VbH4EsbyHBU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=suKFeFplUwGe+F5dzWz5XObg4a9DeN9v7/51HzVoOp38Ny9KbuV7wF1N6SWR4BBHdGB5hryNGIDJ+UOromerUT+NRHH6WD4l0Y5y6CkdcSY/tCyxT2cNXOP24xzCE9mvvfaqzhGQ44Sf0jmMKfN02l2ZWR2QIUHRysdEPKGq3O4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QryrbctB; arc=none smtp.client-ip=209.85.215.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1762942020; c=relaxed/simple;
+	bh=hTysW8ldnhzhr1+7+t+schbzT3i7HS0zbqEdHYIEosg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uq26eWTBGkPaY61F6XyctzArByFELThLcH1Poi4px+Ea68BbaC4wWuzT5Pg+f3GUHtGIsrz1JPQg9pLlXs/OV/MrrujKS2XmA25zrOp4umjWX5z4fZKci1tmRMFiVVD9YpZW2S+DCcK1I6+/kluaNdfxiHBkQCAGtisLhfMURCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=EP9mZzAw; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QryrbctB"
-Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-b996c8db896so597946a12.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Nov 2025 01:37:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762940247; x=1763545047; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Gx8PfouBPRS+HtUDtYuHkSsHr59PtkuTVkc1DxEZ8jc=;
-        b=QryrbctBnzHCb5ojkAzQtx9s8Tg64NnRfNpu8jh5Zoaf9Xuv8KWTQR5HjJIJPW97/y
-         qJHWO0TVFEd6ZZMLZSJGx+rtSqWYh3ExcMxIjheDY1Pohxy5QzU7lsZatUSYH6i+5Gdp
-         vHwFFNGYPqVl53wwxSPzmFCj8j/7YI4bqeqEztUGYYn8qVc4PvNhhXbdIvlJZY//ZbYa
-         MaHM5sGa16hhCFXQT72x0SQxD2rnVv2NxaN2mX0sc5B/1nv3Rq3/P/PqEElZus3yv6G+
-         5BpO9bN8lVzJnSOpcUXPUMnkfQOvgw8Gc+uRXwZgQHkyScJuSP5cQsfyVCGLbClFpMzm
-         QBWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762940247; x=1763545047;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Gx8PfouBPRS+HtUDtYuHkSsHr59PtkuTVkc1DxEZ8jc=;
-        b=Ok2E6XCIwIAV9PoZ8A0cKJDQgwRQhaIyGliVtkFPRcKCSfMHUEAO5Zz6EHho60Or+V
-         ZyO8GghvpyBFIfRUD9XgtJJ90AnQmcuHC23msFfonIc6ST5Kn8I5AcmfhNBHUHFnNxJu
-         tpT1FM5BA1tQsbxEYa1i6G8MZ7QKlYZwo7P12qOOumOmekCSXY0p4OjtM4ZZmNsjO6aL
-         cSqlPmoGrR3lkLdX2a3yc8WMaUVyik6j9DmXn82/6h1/qDD1BkHVE1OoPvcr4K4f1tqQ
-         7CAVzTcTa3cqly42nUhyXU3OJ6bN5RaKusrhZn2p45jerxkPVsOO60QGw1KkjrYCFisb
-         uM9w==
-X-Gm-Message-State: AOJu0YwqHazHC2QYWHe700UWpVtPePBFh+PkQhJN03PQcdaJ8IwJLaMq
-	NFqfyiN51lTdFUDQu4jjNquTAkCvxV30Tb0dDsdycmfv7Bx+wkyZGecg6QW98YKDUTI=
-X-Gm-Gg: ASbGncv/5I8YxzaU+NKAZURLqLmQc7VH3+51H0kk+ahN6yH8uCXhgyzPYkVjLhKOtdh
-	QDJ1DDJIdsrvOK6cz/xYeTQR758dA03Cc9wr3x5Qb7qKBna0OVUPmgsv1PFYFkkfWdtBABQormq
-	rC6j0MtJs02fqsdymUW6UFizuhex+4sXxHkVwt5qqK/YhIroZwf5ug5rmkOwlmQoU43D+KcFjmI
-	EHsd5nEqHxlmys9Mdj8PFzn8x2XFdNJulkS/unbVA3bpts3SZhdgFwjAx2Dqqmj2kGX08nnOej7
-	GfqHJamHwloD6dJkYW0nf6O0+mcXMBKBjNOYwIvuZEeryBdRhTzAn56uEabxvw1SIEUN4QfGyt1
-	pevlhjQ02Xb4mQzfD2noRwde7E0hky5cyaI7pr/UOPjlZz5E+VJ49axYpYAj96zKlRYvrYKsugq
-	A35tgc4jIVO7nL0QdE
-X-Google-Smtp-Source: AGHT+IEqUh1XCwTY9ImmiDn4MV7yjhwpvml61JZIjauqiRmJLaLXP2gZAwryndWRCkk1tjr8FOlQrA==
-X-Received: by 2002:a17:903:41d1:b0:295:5da6:600c with SMTP id d9443c01a7336-2984ed3425dmr36424935ad.2.1762940247319;
-        Wed, 12 Nov 2025 01:37:27 -0800 (PST)
-Received: from pengdl-pc.mioffice.cn ([43.224.245.249])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2984dcd09easm24046685ad.91.2025.11.12.01.37.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Nov 2025 01:37:26 -0800 (PST)
-From: Donglin Peng <dolinux.peng@gmail.com>
-To: rostedt@goodmis.org
-Cc: linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Donglin Peng <pengdonglin@xiaomi.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [PATCH v4 RESEND] function_graph: Enable funcgraph-args and funcgraph-retaddr to work simultaneously
-Date: Wed, 12 Nov 2025 17:36:50 +0800
-Message-Id: <20251112093650.3345108-1-dolinux.peng@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="EP9mZzAw"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5AC3V5lS007136;
+	Wed, 12 Nov 2025 10:06:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=TfObaI
+	bP9JQo5NnryYlf8giRFUtoQnidA+p6jOSi7ME=; b=EP9mZzAw73DpsHbsLG++k/
+	xXfWO4ScFdBcq5TQPrUeFfE/+gRILlrK5tbMQhTE/IpYXzCNIcpbeWPMDryjoVzC
+	jeMH5Nm0ufUz7Nhpm0S7PDb8eSNcdSZXGMLvGss1bOET6NcOxaZVXyDUUKduMGBO
+	xoz2236w1LtOlpyrDse9LkFlSQMHL9Hfpm3ay7zO2YGbytauaEcGAYzATT9Ytpsj
+	XxKc9KgYQc5N5a/2oE9YE6XJGURT9DcZMvJ08I6byeNUAFHeXqnlf4I1uaFVwNnM
+	Evx3UkqlXVmx27lAqBcaAyOv7V7jZpfU/pjYo+laDo4rlUweQ/NqAdAUa9O+EN6w
+	==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4a9wgx0fhu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 12 Nov 2025 10:06:03 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5AC6LvA6014755;
+	Wed, 12 Nov 2025 10:06:02 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4aahpk7ged-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 12 Nov 2025 10:06:02 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5ACA605039125464
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 12 Nov 2025 10:06:00 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B178B20076;
+	Wed, 12 Nov 2025 10:06:00 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1550220074;
+	Wed, 12 Nov 2025 10:06:00 +0000 (GMT)
+Received: from [9.155.200.37] (unknown [9.155.200.37])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 12 Nov 2025 10:06:00 +0000 (GMT)
+Message-ID: <f543231e-a71c-4600-9cf3-f999ca104d86@linux.ibm.com>
+Date: Wed, 12 Nov 2025 11:05:59 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v16 4/4] perf tools: Merge deferred user callchains
+To: Namhyung Kim <namhyung@kernel.org>, Steven Rostedt <rostedt@goodmis.org>
+Cc: Steven Rostedt <rostedt@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        x86@kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Indu Bhagat <indu.bhagat@oracle.com>,
+        "Jose E. Marchesi" <jemarch@gnu.org>,
+        Beau Belgrave <beaub@linux.microsoft.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Florian Weimer <fweimer@redhat.com>, Sam James <sam@gentoo.org>,
+        Kees Cook <kees@kernel.org>, "Carlos O'Donell" <codonell@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+References: <20250908175319.841517121@kernel.org>
+ <20250908175430.639412649@kernel.org>
+ <20251002134938.756db4ef@gandalf.local.home>
+ <20251024130203.GC3245006@noisy.programming.kicks-ass.net>
+Content-Language: en-US
+From: Jens Remus <jremus@linux.ibm.com>
+Organization: IBM Deutschland Research & Development GmbH
+In-Reply-To: <20251024130203.GC3245006@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: L_7sfh61mwnig6fGCcLLmEZrHnaQHDuI
+X-Proofpoint-ORIG-GUID: L_7sfh61mwnig6fGCcLLmEZrHnaQHDuI
+X-Authority-Analysis: v=2.4 cv=VMPQXtPX c=1 sm=1 tr=0 ts=69145c0b cx=c_pps
+ a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+ a=IkcTkHD0fZMA:10 a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=VnNF1IyMAAAA:8 a=VwQbUJbxAAAA:8 a=Vs_kanKWfxrV1IkLjT4A:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10 a=nl4s5V0KI7Kw-pW0DWrs:22 a=pHzHmUro8NiASowvMSCR:22
+ a=xoEH_sTeL_Rfw54TyV31:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTA4MDAyMiBTYWx0ZWRfX9yuxxvyN78Og
+ 69SPfChu8C26Ui7EH/rN9p/nPA8ApOGKgjl3fx4SMJtdZ0NkHEHvL573DxDpej4bUkc6Vw25+pC
+ xFy74vg0QORXjXqQekG6shZ5IPcDavRtDxY/8MtXSt4ph69AFwTGBPpqT6yzyfdRmFR01xD2Gtv
+ bk0il8sBGlxnJURQW0pvPa4JYOnzSlYKi4e+WVOxwIPof/1+ziwe4hQvuofMRrwzPdyglHF3H02
+ IchSUpkPcjvPuZbbO3veyqynNcwRL0bm3Wu5qtA3YPJdvmMdQvF/je4LMDkPbF3wDpGNVt1fWrZ
+ sbc6etbnf9FULaU1o/N91tHnSOrqVYnzRNOuF4b3hG4lU8ye/hYDRu+qvgNNY8Oefwg8OiQEFjA
+ Y60tXmEVofdQJHIkppKmjPZhQv8f5w==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-11-12_03,2025-11-11_03,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 priorityscore=1501 lowpriorityscore=0 bulkscore=0
+ clxscore=1015 phishscore=0 spamscore=0 malwarescore=0 adultscore=0
+ suspectscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2510240000
+ definitions=main-2511080022
 
-From: Donglin Peng <pengdonglin@xiaomi.com>
+Hello Namhyung,
 
-Currently, the funcgraph-args and funcgraph-retaddr features are
-mutually exclusive. This patch resolves this limitation by modifying
-funcgraph-retaddr to adopt the same implementation approach as
-funcgraph-args, specifically by storing the return address in the
-first entry of the args array.
+could you please adapt your patches from this series to Peter's latest
+changes to unwind user and related perf support, especially his new
+version c69993ecdd4d ("perf: Support deferred user unwind") available
+at:
 
-As a result, both features now coexist seamlessly and function as
-intended.
+git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf/core
 
-To verify the change, use perf to trace vfs_write with both options
-enabled:
+On 10/24/2025 3:02 PM, Peter Zijlstra wrote:
+> On Thu, Oct 02, 2025 at 01:49:38PM -0400, Steven Rostedt wrote:
+>> On Mon, 08 Sep 2025 13:53:23 -0400
+>> Steven Rostedt <rostedt@kernel.org> wrote:
+>>
+>>> +static int evlist__deliver_deferred_samples(struct evlist *evlist,
+>>> +					    const struct perf_tool *tool,
+>>> +					    union  perf_event *event,
+>>> +					    struct perf_sample *sample,
+>>> +					    struct machine *machine)
+>>> +{
+>>> +	struct deferred_event *de, *tmp;
+>>> +	struct evsel *evsel;
+>>> +	int ret = 0;
+>>> +
+>>> +	if (!tool->merge_deferred_callchains) {
+>>> +		evsel = evlist__id2evsel(evlist, sample->id);
+>>> +		return tool->callchain_deferred(tool, event, sample,
+>>> +						evsel, machine);
+>>> +	}
+>>> +
+>>> +	list_for_each_entry_safe(de, tmp, &evlist->deferred_samples, list) {
+>>> +		struct perf_sample orig_sample;
+>>
+>> orig_sample is not initialized and can then contain junk.
+>>
+>>> +
+>>> +		ret = evlist__parse_sample(evlist, de->event, &orig_sample);
+>>> +		if (ret < 0) {
+>>> +			pr_err("failed to parse original sample\n");
+>>> +			break;
+>>> +		}
+>>> +
+>>> +		if (sample->tid != orig_sample.tid)
+>>> +			continue;
+>>> +
+>>> +		if (event->callchain_deferred.cookie == orig_sample.deferred_cookie)
+>>> +			sample__merge_deferred_callchain(&orig_sample, sample);
+>>
+>> The sample__merge_deferred_callchain() initializes both
+>> orig_sample.deferred_callchain and the callchain. But now that it's not
+>> being called, it can cause the below free to happen with junk as the
+>> callchain. This needs:
+>>
+>> 		else
+>> 			orig_sample.deferred_callchain = false;
+> 
+> Ah, so I saw crashes from here and just deleted both free()s and got on
+> with things ;-)
 
-Before:
- # perf ftrace -G vfs_write --graph-opts args,retaddr
-   ......
-   down_read() { /* <-n_tty_write+0xa3/0x540 */
-     __cond_resched(); /* <-down_read+0x12/0x160 */
-     preempt_count_add(); /* <-down_read+0x3b/0x160 */
-     preempt_count_sub(); /* <-down_read+0x8b/0x160 */
-   }
+This needs to be properly resolved.  In the meantime I am using Steven's
+suggestion above to continue my work on unwind user sframe (s390).
 
-After:
- # perf ftrace -G vfs_write --graph-opts args,retaddr
-   ......
-   down_read(sem=0xffff8880100bea78) { /* <-n_tty_write+0xa3/0x540 */
-     __cond_resched(); /* <-down_read+0x12/0x160 */
-     preempt_count_add(val=1); /* <-down_read+0x3b/0x160 */
-     preempt_count_sub(val=1); /* <-down_read+0x8b/0x160 */
-   }
+> 
+>>> +
+>>> +		evsel = evlist__id2evsel(evlist, orig_sample.id);
+>>> +		ret = evlist__deliver_sample(evlist, tool, de->event,
+>>> +					     &orig_sample, evsel,> machine); +
+>>> +		if (orig_sample.deferred_callchain)
+>>> +			free(orig_sample.callchain);
+>>> +
+>>> +		list_del(&de->list);
+>>> +		free(de);
+>>> +
+>>> +		if (ret)
+>>> +			break;
+>>> +	}
+>>> +	return ret;
+>>> +}
+>>
+>> -- Steve
 
-Cc: Steven Rostedt (Google) <rostedt@goodmis.org>
-Cc: Sven Schnelle <svens@linux.ibm.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Donglin Peng <pengdonglin@xiaomi.com>
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
-v4:
-- Remove redundant TRACE_GRAPH_ARGS flag check
-- Eliminate unnecessary retaddr initialization
-- Resend to add missing add Acked-by tags
-
-v3:
-- Replace min() with min_t() to improve type safety and maintainability
-- Keep only one Signed-off-by for cleaner attribution
-- Code refactoring for improved readability
-
-v2:
-- Preserve retaddr event functionality (suggested by Steven)
-- Store the retaddr in args[0] (suggested by Steven)
-- Refactor implementation logic and commit message clarity
----
- include/linux/ftrace.h               |  11 ---
- kernel/trace/trace.h                 |   4 -
- kernel/trace/trace_entries.h         |   6 +-
- kernel/trace/trace_functions_graph.c | 141 ++++++++++++---------------
- 4 files changed, 65 insertions(+), 97 deletions(-)
-
-diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-index 7ded7df6e9b5..88cb54d73bdb 100644
---- a/include/linux/ftrace.h
-+++ b/include/linux/ftrace.h
-@@ -1129,17 +1129,6 @@ struct ftrace_graph_ent {
- 	int depth;
- } __packed;
- 
--/*
-- * Structure that defines an entry function trace with retaddr.
-- * It's already packed but the attribute "packed" is needed
-- * to remove extra padding at the end.
-- */
--struct fgraph_retaddr_ent {
--	unsigned long func; /* Current function */
--	int depth;
--	unsigned long retaddr;  /* Return address */
--} __packed;
--
- /*
-  * Structure that defines a return function trace.
-  * It's already packed but the attribute "packed" is needed
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 85eabb454bee..9fac291b913a 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -955,10 +955,6 @@ extern void graph_trace_close(struct trace_iterator *iter);
- extern int __trace_graph_entry(struct trace_array *tr,
- 			       struct ftrace_graph_ent *trace,
- 			       unsigned int trace_ctx);
--extern int __trace_graph_retaddr_entry(struct trace_array *tr,
--				struct ftrace_graph_ent *trace,
--				unsigned int trace_ctx,
--				unsigned long retaddr);
- extern void __trace_graph_return(struct trace_array *tr,
- 				 struct ftrace_graph_ret *trace,
- 				 unsigned int trace_ctx,
-diff --git a/kernel/trace/trace_entries.h b/kernel/trace/trace_entries.h
-index de294ae2c5c5..593a74663c65 100644
---- a/kernel/trace/trace_entries.h
-+++ b/kernel/trace/trace_entries.h
-@@ -95,14 +95,14 @@ FTRACE_ENTRY_PACKED(fgraph_retaddr_entry, fgraph_retaddr_ent_entry,
- 	TRACE_GRAPH_RETADDR_ENT,
- 
- 	F_STRUCT(
--		__field_struct(	struct fgraph_retaddr_ent,	graph_ent	)
-+		__field_struct(	struct ftrace_graph_ent,	graph_ent	)
- 		__field_packed(	unsigned long,	graph_ent,	func		)
- 		__field_packed(	unsigned int,	graph_ent,	depth		)
--		__field_packed(	unsigned long,	graph_ent,	retaddr		)
-+		__dynamic_array(unsigned long,	args				)
- 	),
- 
- 	F_printk("--> %ps (%u) <- %ps", (void *)__entry->func, __entry->depth,
--		(void *)__entry->retaddr)
-+		(void *)__entry->args[0])
- );
- 
- #else
-diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
-index a7f4b9a47a71..8c018886d4d2 100644
---- a/kernel/trace/trace_functions_graph.c
-+++ b/kernel/trace/trace_functions_graph.c
-@@ -16,6 +16,15 @@
- #include "trace.h"
- #include "trace_output.h"
- 
-+#ifdef CONFIG_FUNCTION_GRAPH_RETADDR
-+#define HAVE_RETADDR	1
-+#define ARGS_OFFS(args_size) \
-+	((args_size) > FTRACE_REGS_MAX_ARGS * sizeof(long) ? 1 : 0)
-+#else
-+#define HAVE_RETADDR	0
-+#define ARGS_OFFS(args_size)	0
-+#endif
-+
- /* When set, irq functions will be ignored */
- static int ftrace_graph_skip_irqs;
- 
-@@ -27,21 +36,25 @@ struct fgraph_cpu_data {
- 	unsigned long	enter_funcs[FTRACE_RETFUNC_DEPTH];
- };
- 
-+/*
-+ * fgraph_retaddr_ent_entry and ftrace_graph_ent_entry share layout, ent
-+ * member repurposed for storage
-+ */
- struct fgraph_ent_args {
- 	struct ftrace_graph_ent_entry	ent;
--	/* Force the sizeof of args[] to have FTRACE_REGS_MAX_ARGS entries */
--	unsigned long			args[FTRACE_REGS_MAX_ARGS];
-+	/*
-+	 * Force the sizeof of args[] to have (FTRACE_REGS_MAX_ARGS + HAVE_RETADDR)
-+	 * entries with the first entry storing the return address for
-+	 * TRACE_GRAPH_RETADDR_ENT.
-+	 */
-+	unsigned long		args[FTRACE_REGS_MAX_ARGS + HAVE_RETADDR];
- };
- 
- struct fgraph_data {
- 	struct fgraph_cpu_data __percpu *cpu_data;
- 
- 	/* Place to preserve last processed entry. */
--	union {
--		struct fgraph_ent_args		ent;
--		/* TODO allow retaddr to have args */
--		struct fgraph_retaddr_ent_entry	rent;
--	};
-+	struct fgraph_ent_args		ent;
- 	struct ftrace_graph_ret_entry	ret;
- 	int				failed;
- 	int				cpu;
-@@ -127,22 +140,39 @@ static int __graph_entry(struct trace_array *tr, struct ftrace_graph_ent *trace,
- 	struct ring_buffer_event *event;
- 	struct trace_buffer *buffer = tr->array_buffer.buffer;
- 	struct ftrace_graph_ent_entry *entry;
--	int size;
-+	unsigned long retaddr;
-+	int size = sizeof(*entry);
-+	int type = TRACE_GRAPH_ENT;
-+	int nr_args = 0, args_offs = 0;
-+
-+	if (tracer_flags_is_set(TRACE_GRAPH_PRINT_RETADDR)) {
-+		retaddr = ftrace_graph_top_ret_addr(current);
-+		type = TRACE_GRAPH_RETADDR_ENT;
-+		nr_args += 1;
-+	}
- 
- 	/* If fregs is defined, add FTRACE_REGS_MAX_ARGS long size words */
--	size = sizeof(*entry) + (FTRACE_REGS_MAX_ARGS * !!fregs * sizeof(long));
-+	if (!!fregs)
-+		nr_args += FTRACE_REGS_MAX_ARGS;
- 
--	event = trace_buffer_lock_reserve(buffer, TRACE_GRAPH_ENT, size, trace_ctx);
-+	size += nr_args * sizeof(long);
-+	event = trace_buffer_lock_reserve(buffer, type, size, trace_ctx);
- 	if (!event)
- 		return 0;
- 
- 	entry = ring_buffer_event_data(event);
- 	entry->graph_ent = *trace;
- 
-+	/* Store the retaddr in args[0] */
-+	if (type == TRACE_GRAPH_RETADDR_ENT) {
-+		entry->args[0] = retaddr;
-+		args_offs += 1;
-+	}
-+
- #ifdef CONFIG_HAVE_FUNCTION_ARG_ACCESS_API
--	if (fregs) {
-+	if (nr_args >= FTRACE_REGS_MAX_ARGS) {
- 		for (int i = 0; i < FTRACE_REGS_MAX_ARGS; i++)
--			entry->args[i] = ftrace_regs_get_argument(fregs, i);
-+			entry->args[i + args_offs] = ftrace_regs_get_argument(fregs, i);
- 	}
- #endif
- 
-@@ -158,38 +188,6 @@ int __trace_graph_entry(struct trace_array *tr,
- 	return __graph_entry(tr, trace, trace_ctx, NULL);
- }
- 
--#ifdef CONFIG_FUNCTION_GRAPH_RETADDR
--int __trace_graph_retaddr_entry(struct trace_array *tr,
--				struct ftrace_graph_ent *trace,
--				unsigned int trace_ctx,
--				unsigned long retaddr)
--{
--	struct ring_buffer_event *event;
--	struct trace_buffer *buffer = tr->array_buffer.buffer;
--	struct fgraph_retaddr_ent_entry *entry;
--
--	event = trace_buffer_lock_reserve(buffer, TRACE_GRAPH_RETADDR_ENT,
--					  sizeof(*entry), trace_ctx);
--	if (!event)
--		return 0;
--	entry	= ring_buffer_event_data(event);
--	entry->graph_ent.func = trace->func;
--	entry->graph_ent.depth = trace->depth;
--	entry->graph_ent.retaddr = retaddr;
--	trace_buffer_unlock_commit_nostack(buffer, event);
--
--	return 1;
--}
--#else
--int __trace_graph_retaddr_entry(struct trace_array *tr,
--				struct ftrace_graph_ent *trace,
--				unsigned int trace_ctx,
--				unsigned long retaddr)
--{
--	return 1;
--}
--#endif
--
- static inline int ftrace_graph_ignore_irqs(void)
- {
- 	if (!ftrace_graph_skip_irqs || trace_recursion_test(TRACE_IRQ_BIT))
-@@ -211,7 +209,6 @@ static int graph_entry(struct ftrace_graph_ent *trace,
- 	struct trace_array *tr = gops->private;
- 	struct fgraph_times *ftimes;
- 	unsigned int trace_ctx;
--	int ret = 0;
- 
- 	if (*task_var & TRACE_GRAPH_NOTRACE)
- 		return 0;
-@@ -262,15 +259,7 @@ static int graph_entry(struct ftrace_graph_ent *trace,
- 		return 1;
- 
- 	trace_ctx = tracing_gen_ctx();
--	if (IS_ENABLED(CONFIG_FUNCTION_GRAPH_RETADDR) &&
--	    tracer_flags_is_set(TRACE_GRAPH_PRINT_RETADDR)) {
--		unsigned long retaddr = ftrace_graph_top_ret_addr(current);
--		ret = __trace_graph_retaddr_entry(tr, trace, trace_ctx, retaddr);
--	} else {
--		ret = __graph_entry(tr, trace, trace_ctx, fregs);
--	}
--
--	return ret;
-+	return __graph_entry(tr, trace, trace_ctx, fregs);
- }
- 
- int trace_graph_entry(struct ftrace_graph_ent *trace,
-@@ -634,13 +623,9 @@ get_return_for_leaf(struct trace_iterator *iter,
- 			 * Save current and next entries for later reference
- 			 * if the output fails.
- 			 */
--			if (unlikely(curr->ent.type == TRACE_GRAPH_RETADDR_ENT)) {
--				data->rent = *(struct fgraph_retaddr_ent_entry *)curr;
--			} else {
--				int size = min((int)sizeof(data->ent), (int)iter->ent_size);
-+			int size = min_t(int, sizeof(data->ent), iter->ent_size);
- 
--				memcpy(&data->ent, curr, size);
--			}
-+			memcpy(&data->ent, curr, size);
- 			/*
- 			 * If the next event is not a return type, then
- 			 * we only care about what type it is. Otherwise we can
-@@ -811,21 +796,21 @@ print_graph_duration(struct trace_array *tr, unsigned long long duration,
- 
- #ifdef CONFIG_FUNCTION_GRAPH_RETADDR
- #define __TRACE_GRAPH_PRINT_RETADDR TRACE_GRAPH_PRINT_RETADDR
--static void print_graph_retaddr(struct trace_seq *s, struct fgraph_retaddr_ent_entry *entry,
--				u32 trace_flags, bool comment)
-+static void print_graph_retaddr(struct trace_seq *s, unsigned long retaddr, u32 trace_flags,
-+				bool comment)
- {
- 	if (comment)
- 		trace_seq_puts(s, " /*");
- 
- 	trace_seq_puts(s, " <-");
--	seq_print_ip_sym(s, entry->graph_ent.retaddr, trace_flags | TRACE_ITER_SYM_OFFSET);
-+	seq_print_ip_sym(s, retaddr, trace_flags | TRACE_ITER_SYM_OFFSET);
- 
- 	if (comment)
- 		trace_seq_puts(s, " */");
- }
- #else
- #define __TRACE_GRAPH_PRINT_RETADDR 0
--#define print_graph_retaddr(_seq, _entry, _tflags, _comment)		do { } while (0)
-+#define print_graph_retaddr(_seq, _retaddr, _tflags, _comment)		do { } while (0)
- #endif
- 
- #if defined(CONFIG_FUNCTION_GRAPH_RETVAL) || defined(CONFIG_FUNCTION_GRAPH_RETADDR)
-@@ -869,10 +854,12 @@ static void print_graph_retval(struct trace_seq *s, struct ftrace_graph_ent_entr
- 		trace_seq_printf(s, "%ps", func);
- 
- 		if (args_size >= FTRACE_REGS_MAX_ARGS * sizeof(long)) {
--			print_function_args(s, entry->args, (unsigned long)func);
-+			print_function_args(s, entry->args + ARGS_OFFS(args_size),
-+					    (unsigned long)func);
- 			trace_seq_putc(s, ';');
--		} else
-+		} else {
- 			trace_seq_puts(s, "();");
-+		}
- 
- 		if (print_retval || print_retaddr)
- 			trace_seq_puts(s, " /*");
-@@ -882,8 +869,7 @@ static void print_graph_retval(struct trace_seq *s, struct ftrace_graph_ent_entr
- 	}
- 
- 	if (print_retaddr)
--		print_graph_retaddr(s, (struct fgraph_retaddr_ent_entry *)entry,
--				    trace_flags, false);
-+		print_graph_retaddr(s, entry->args[0], trace_flags, false);
- 
- 	if (print_retval) {
- 		if (hex_format || (err_code == 0))
-@@ -964,10 +950,12 @@ print_graph_entry_leaf(struct trace_iterator *iter,
- 		trace_seq_printf(s, "%ps", (void *)ret_func);
- 
- 		if (args_size >= FTRACE_REGS_MAX_ARGS * sizeof(long)) {
--			print_function_args(s, entry->args, ret_func);
-+			print_function_args(s, entry->args + ARGS_OFFS(args_size),
-+					    ret_func);
- 			trace_seq_putc(s, ';');
--		} else
-+		} else {
- 			trace_seq_puts(s, "();");
-+		}
- 	}
- 	trace_seq_putc(s, '\n');
- 
-@@ -1016,7 +1004,7 @@ print_graph_entry_nested(struct trace_iterator *iter,
- 	args_size = iter->ent_size - offsetof(struct ftrace_graph_ent_entry, args);
- 
- 	if (args_size >= FTRACE_REGS_MAX_ARGS * sizeof(long))
--		print_function_args(s, entry->args, func);
-+		print_function_args(s, entry->args + ARGS_OFFS(args_size), func);
- 	else
- 		trace_seq_puts(s, "()");
- 
-@@ -1024,8 +1012,7 @@ print_graph_entry_nested(struct trace_iterator *iter,
- 
- 	if (flags & __TRACE_GRAPH_PRINT_RETADDR  &&
- 		entry->ent.type == TRACE_GRAPH_RETADDR_ENT)
--		print_graph_retaddr(s, (struct fgraph_retaddr_ent_entry *)entry,
--			tr->trace_flags, true);
-+		print_graph_retaddr(s, entry->args[0], tr->trace_flags, true);
- 	trace_seq_putc(s, '\n');
- 
- 	if (trace_seq_has_overflowed(s))
-@@ -1202,7 +1189,7 @@ print_graph_entry(struct ftrace_graph_ent_entry *field, struct trace_seq *s,
- 	 * it can be safely saved at the stack.
- 	 */
- 	struct ftrace_graph_ent_entry *entry;
--	u8 save_buf[sizeof(*entry) + FTRACE_REGS_MAX_ARGS * sizeof(long)];
-+	u8 save_buf[sizeof(*entry) + (FTRACE_REGS_MAX_ARGS + HAVE_RETADDR) * sizeof(long)];
- 
- 	/* The ent_size is expected to be as big as the entry */
- 	if (iter->ent_size > sizeof(save_buf))
-@@ -1429,16 +1416,12 @@ print_graph_function_flags(struct trace_iterator *iter, u32 flags)
- 		trace_assign_type(field, entry);
- 		return print_graph_entry(field, s, iter, flags);
- 	}
--#ifdef CONFIG_FUNCTION_GRAPH_RETADDR
- 	case TRACE_GRAPH_RETADDR_ENT: {
--		struct fgraph_retaddr_ent_entry saved;
- 		struct fgraph_retaddr_ent_entry *rfield;
- 
- 		trace_assign_type(rfield, entry);
--		saved = *rfield;
--		return print_graph_entry((struct ftrace_graph_ent_entry *)&saved, s, iter, flags);
-+		return print_graph_entry((typeof(field))rfield, s, iter, flags);
- 	}
--#endif
- 	case TRACE_GRAPH_RET: {
- 		struct ftrace_graph_ret_entry *field;
- 		trace_assign_type(field, entry);
+Thanks and regards,
+Jens
 -- 
-2.34.1
+Jens Remus
+Linux on Z Development (D3303)
++49-7031-16-1128 Office
+jremus@de.ibm.com
+
+IBM
+
+IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Böblingen; Registergericht: Amtsgericht Stuttgart, HRB 243294
+IBM Data Privacy Statement: https://www.ibm.com/privacy/
 
