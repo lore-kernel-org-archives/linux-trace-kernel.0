@@ -1,170 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4214C2EA755;
-	Wed, 12 Nov 2025 22:38:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71B4A2E2DEF
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Nov 2025 23:53:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762987119; cv=none; b=uqiH2podZwTa/mQEtktnFKy5In7hoYUzEHOMuYO48jlIMTufyr+6LBHdQVgfZ1YrEWCDIzAnoFoCjX+LoAayyoDOhna7nlMp2pED8pInoWL+ztHOg86Q9kIdssjfNd6i4J9VzFABTpbSU4Zk0JNN7OoIjAD7HhvzxEPgJ7XgY2g=
+	t=1762991621; cv=none; b=IZmrqfLypNAaJSryNoSxkAKau1+4Ur/VGpC0iXYyjnx4LjvqnzSfvXxGLN1e4Y4xRmMbaKSmq/jm+MhCaMf8xHjP3T082LYRlMV37NJgsjq0QOuEBbxHf4qNssJSA6OQuj8hk7KrPEGox9GwJE9NLNDEK4v0dOz+jhMnqzL8v+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762987119; c=relaxed/simple;
-	bh=o2EQqaZZAsWkT6r39TusYsLK6a8IzHKn3703XsIxWpg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g8qOjSJlXdNv452/O3+c7Ov8j2LcEYPQi41xPI2NsnxNTaRpMe1mu9C74GfutDvO4BrWCVFgC48/ot5nZdfTWXyIiyKgtAeraaUiqJVKI/eSmMaWJgQ8ccEKIuy6Vz95COQAHb5Bxtb0iBhZEFyZqyGf1oeYKld/BEUDrn5+yQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YTY/Rh8K; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762991621; c=relaxed/simple;
+	bh=ENGPD0aIdY+2YhPwx5lnx6WYkkApmZ92GCEve7RFK/U=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=hGlR7cNc4B9Qo4KNAnRnbXc0YUKBp8TL5LnB6oDj9DFuN6UCg8Ke/eFtfBMOyet4CXs7sY1sFyx6v8FqDqx91a+UEqobhhxQhAZH79SXAO4t/2y4A45nod+aCPy3eVpDwKIH4SQY2ozqI4TTvKf03eNpgmdvjVOmHBj7vJyVsUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--wusamuel.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pY/vjHJ4; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--wusamuel.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YTY/Rh8K"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A849C4CEF1;
-	Wed, 12 Nov 2025 22:38:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762987118;
-	bh=o2EQqaZZAsWkT6r39TusYsLK6a8IzHKn3703XsIxWpg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YTY/Rh8KpY36C75hev3BjCBZb7EDXufixbscLxlLsHG9ueTWZLz9RvIRjIs0W7sMY
-	 CfW4QMJD3/t1m2IoJqkP9lMlYBdXMyjuMG4ONpEyfwvAg9RTH1udFhHm6hX9zDM52b
-	 vyZBzLupt+h9QBFd+9D21T9dNPjCMiznKczjhzE36fxVjLg0yQwW1nPVvuh3SjoudI
-	 7DNDpWX5/3NswF/LWKpj9UmCf4uwHFNATj7b71XaZ3QezG/6heLgzBJL+mWWsLEHke
-	 sT1/5knwSEb13gskvno39Yvhv7QeU8WrgOKbIWDD+UC+xAcKTfpJO5Yrv6JNZiq7qJ
-	 qOAdTkPnBbyZA==
-Date: Wed, 12 Nov 2025 14:38:34 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Jens Remus <jremus@linux.ibm.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Steven Rostedt <rostedt@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	x86@kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Indu Bhagat <indu.bhagat@oracle.com>,
-	"Jose E. Marchesi" <jemarch@gnu.org>,
-	Beau Belgrave <beaub@linux.microsoft.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Florian Weimer <fweimer@redhat.com>, Sam James <sam@gentoo.org>,
-	Kees Cook <kees@kernel.org>, Carlos O'Donell <codonell@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH v16 4/4] perf tools: Merge deferred user callchains
-Message-ID: <aRUMauhbs_jJ6-3P@google.com>
-References: <20250908175319.841517121@kernel.org>
- <20250908175430.639412649@kernel.org>
- <20251002134938.756db4ef@gandalf.local.home>
- <20251024130203.GC3245006@noisy.programming.kicks-ass.net>
- <f543231e-a71c-4600-9cf3-f999ca104d86@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pY/vjHJ4"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-297e1cf9aedso5226565ad.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Nov 2025 15:53:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1762991620; x=1763596420; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=G2fCelaOXaY0hKXLaw4yZFPLF+MlvdQQ3DNLXys3oQE=;
+        b=pY/vjHJ4muuy7ZFlb6oiGwKk8ICttYUPvsz7POoLuJpNFI4/Fd4kJY+JuPbdz4+oGW
+         e9jcl4jvBnctL6ab1Uw6ABTDhd/R0L5kx6nvzzrFxvtMymt1CjBOzwuc4TbcUtVkrXce
+         wfqjPm+Xo8dBZD09GCwvfMZ8ah9NkOS9z8JL6w8Oz5RYKDQForv4sL78EMwJYwHsZ7O6
+         6vM/OFw4wj+hetN66DLNy3jw1nXKlEtZIDQmfo3h/l9nQyA5DkY0gGDMUOjyObYruaqi
+         mArdCH8XcXHP42eu2WQDRPYRJY9/eYihFlq9IHAO76Z0mhPdHDSf1millzriK6vvu+3K
+         9dpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762991620; x=1763596420;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=G2fCelaOXaY0hKXLaw4yZFPLF+MlvdQQ3DNLXys3oQE=;
+        b=H2EYTpa/I89GjdM1jl6SUnn3HN1l6CVxGsgrWVbCgBUkG0WuX7BFUkrGfcrlQomVNX
+         qFSTc6kSD4jJQeMnrQ55nR/8sbB/qewd2x/YZgSoQGVnlGnrnzdHk6iCNDAX9w1Nv35W
+         1Z8jVGx81QnkfeP3T/AyTo1zHpGpdbSf4yMenHg4gTRFUEkYD5UjsMuLMJGPtGYGZgnu
+         Y9GjGjRhWsibFaKydak/drEwSHDGzYthxJMj0M9KYsNvzacN8OkWuH4shXalm2TRpahs
+         ouodQdFWpfJVLN2x7cjtB4P4lIjyLhxjUrSY5XrcC9WZUMp40TuAaceBwxNMAiIsi9eq
+         fgUA==
+X-Forwarded-Encrypted: i=1; AJvYcCV1iR8f2MMRg3t8cjOXkdVvEX2/uCmgEDkrQ03+s/M6doAAtrTHKBk+YwY5qApNBBadceTdEw7DhqufQtOY37w6/L8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxxYptIvhd/attgliiS44QKtIgAFLczSe9Xyd8owuhHiSOeIgbG
+	9gqNIwXHpMNWbxO19gveY3/qSfBk6IKw1r9sLKK/bOmh2o0LFGniHUrp3eX1vgcRsuNTo9Drmdd
+	jDn4fN5aFWwDHdA==
+X-Google-Smtp-Source: AGHT+IF7hTHhrm0qYbt1kdGgwC2gzoDhVXbYo4QhlWXJhezRX7mAL/XfnnuESy82/pQJzT4cXDYe7+WHmgieIA==
+X-Received: from dlbur14.prod.google.com ([2002:a05:7022:ea4e:b0:119:49ca:6b9c])
+ (user=wusamuel job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:902:d4c3:b0:28e:756c:707e with SMTP id d9443c01a7336-2984eda94d4mr59926575ad.33.1762991619647;
+ Wed, 12 Nov 2025 15:53:39 -0800 (PST)
+Date: Wed, 12 Nov 2025 15:51:53 -0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <f543231e-a71c-4600-9cf3-f999ca104d86@linux.ibm.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.51.2.1041.gc1ab5b90ca-goog
+Message-ID: <20251112235154.2974902-1-wusamuel@google.com>
+Subject: [PATCH v1] cpufreq: Add policy_frequency trace event
+From: Samuel Wu <wusamuel@google.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Samuel Wu <wusamuel@google.com>, kernel-team@android.com, linux-pm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hello,
+The existing cpu_frequency trace_event can be verbose, emitting an event
+for every CPU in the policy even when their frequencies are identical.
 
-On Wed, Nov 12, 2025 at 11:05:59AM +0100, Jens Remus wrote:
-> Hello Namhyung,
-> 
-> could you please adapt your patches from this series to Peter's latest
-> changes to unwind user and related perf support, especially his new
-> version c69993ecdd4d ("perf: Support deferred user unwind") available
-> at:
-> 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf/core
+This patch adds a new policy_frequency trace event, which provides a
+more efficient alternative to cpu_frequency trace event. This option
+allows users who only need frequency at a policy level more concise logs
+with simpler analysis.
 
-Sure, will take a look.
+Signed-off-by: Samuel Wu <wusamuel@google.com>
+---
+ drivers/cpufreq/cpufreq.c    |  2 ++
+ include/trace/events/power.h | 21 +++++++++++++++++++++
+ 2 files changed, 23 insertions(+)
 
-Thanks,
-Namhyung
+diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+index 4472bb1ec83c..b65534a4fd9a 100644
+--- a/drivers/cpufreq/cpufreq.c
++++ b/drivers/cpufreq/cpufreq.c
+@@ -345,6 +345,7 @@ static void cpufreq_notify_transition(struct cpufreq_policy *policy,
+ 		pr_debug("FREQ: %u - CPUs: %*pbl\n", freqs->new,
+ 			 cpumask_pr_args(policy->cpus));
+ 
++		trace_policy_frequency(freqs->new, policy->cpu);
+ 		for_each_cpu(cpu, policy->cpus)
+ 			trace_cpu_frequency(freqs->new, cpu);
+ 
+@@ -2214,6 +2215,7 @@ unsigned int cpufreq_driver_fast_switch(struct cpufreq_policy *policy,
+ 			    arch_scale_freq_ref(policy->cpu));
+ 	cpufreq_stats_record_transition(policy, freq);
+ 
++	trace_policy_frequency(freq, policy->cpu);
+ 	if (trace_cpu_frequency_enabled()) {
+ 		for_each_cpu(cpu, policy->cpus)
+ 			trace_cpu_frequency(freq, cpu);
+diff --git a/include/trace/events/power.h b/include/trace/events/power.h
+index 82904291c2b8..87dbd53c8ea1 100644
+--- a/include/trace/events/power.h
++++ b/include/trace/events/power.h
+@@ -188,6 +188,27 @@ DEFINE_EVENT(cpu, cpu_frequency,
+ 	TP_ARGS(frequency, cpu_id)
+ );
+ 
++TRACE_EVENT(policy_frequency,
++
++	TP_PROTO(unsigned int frequency, unsigned int policy_cpu),
++
++	TP_ARGS(frequency, policy_cpu),
++
++	TP_STRUCT__entry(
++		__field(u32, frequency)
++		__field(u32, policy_cpu)
++	),
++
++	TP_fast_assign(
++		__entry->frequency = frequency;
++		__entry->policy_cpu = policy_cpu;
++	),
++
++	TP_printk("frequency=%lu policy_cpu=%lu",
++		  (unsigned long)__entry->frequency,
++		  (unsigned long)__entry->policy_cpu)
++);
++
+ TRACE_EVENT(cpu_frequency_limits,
+ 
+ 	TP_PROTO(struct cpufreq_policy *policy),
+-- 
+2.51.2.1041.gc1ab5b90ca-goog
 
-> 
-> On 10/24/2025 3:02 PM, Peter Zijlstra wrote:
-> > On Thu, Oct 02, 2025 at 01:49:38PM -0400, Steven Rostedt wrote:
-> >> On Mon, 08 Sep 2025 13:53:23 -0400
-> >> Steven Rostedt <rostedt@kernel.org> wrote:
-> >>
-> >>> +static int evlist__deliver_deferred_samples(struct evlist *evlist,
-> >>> +					    const struct perf_tool *tool,
-> >>> +					    union  perf_event *event,
-> >>> +					    struct perf_sample *sample,
-> >>> +					    struct machine *machine)
-> >>> +{
-> >>> +	struct deferred_event *de, *tmp;
-> >>> +	struct evsel *evsel;
-> >>> +	int ret = 0;
-> >>> +
-> >>> +	if (!tool->merge_deferred_callchains) {
-> >>> +		evsel = evlist__id2evsel(evlist, sample->id);
-> >>> +		return tool->callchain_deferred(tool, event, sample,
-> >>> +						evsel, machine);
-> >>> +	}
-> >>> +
-> >>> +	list_for_each_entry_safe(de, tmp, &evlist->deferred_samples, list) {
-> >>> +		struct perf_sample orig_sample;
-> >>
-> >> orig_sample is not initialized and can then contain junk.
-> >>
-> >>> +
-> >>> +		ret = evlist__parse_sample(evlist, de->event, &orig_sample);
-> >>> +		if (ret < 0) {
-> >>> +			pr_err("failed to parse original sample\n");
-> >>> +			break;
-> >>> +		}
-> >>> +
-> >>> +		if (sample->tid != orig_sample.tid)
-> >>> +			continue;
-> >>> +
-> >>> +		if (event->callchain_deferred.cookie == orig_sample.deferred_cookie)
-> >>> +			sample__merge_deferred_callchain(&orig_sample, sample);
-> >>
-> >> The sample__merge_deferred_callchain() initializes both
-> >> orig_sample.deferred_callchain and the callchain. But now that it's not
-> >> being called, it can cause the below free to happen with junk as the
-> >> callchain. This needs:
-> >>
-> >> 		else
-> >> 			orig_sample.deferred_callchain = false;
-> > 
-> > Ah, so I saw crashes from here and just deleted both free()s and got on
-> > with things ;-)
-> 
-> This needs to be properly resolved.  In the meantime I am using Steven's
-> suggestion above to continue my work on unwind user sframe (s390).
-> 
-> > 
-> >>> +
-> >>> +		evsel = evlist__id2evsel(evlist, orig_sample.id);
-> >>> +		ret = evlist__deliver_sample(evlist, tool, de->event,
-> >>> +					     &orig_sample, evsel,> machine); +
-> >>> +		if (orig_sample.deferred_callchain)
-> >>> +			free(orig_sample.callchain);
-> >>> +
-> >>> +		list_del(&de->list);
-> >>> +		free(de);
-> >>> +
-> >>> +		if (ret)
-> >>> +			break;
-> >>> +	}
-> >>> +	return ret;
-> >>> +}
-> >>
-> >> -- Steve
-> 
-> Thanks and regards,
-> Jens
-> -- 
-> Jens Remus
-> Linux on Z Development (D3303)
-> +49-7031-16-1128 Office
-> jremus@de.ibm.com
-> 
-> IBM
-> 
-> IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Böblingen; Registergericht: Amtsgericht Stuttgart, HRB 243294
-> IBM Data Privacy Statement: https://www.ibm.com/privacy/
-> 
