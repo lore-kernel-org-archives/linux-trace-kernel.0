@@ -1,278 +1,619 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 550DF1F3B87
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Nov 2025 05:27:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D67D41E3DCD
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Nov 2025 06:03:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762925245; cv=none; b=A7GDC28BHduncoUNauRK6ilGzIXwKfCi7SUUTzU3rprpepIqhvOhy6Jgt7VigdQDHXmqD5SovXpJKTRl5GaWfY+bqrUZOsGUKJnvl0uV/Xwf6hWd4PnQw7vyIu0dzTSzLTYR7t5qxDUviXqzml2ZpHMKtC5Ey0ukWJe1o4obW3A=
+	t=1762927427; cv=none; b=dkNgQuxNiauZRAvt5YMiODM3axaHMHpvBuaArkIc+JTgNV+fIsDqbx0773Ty7z+AM7PORW+AMw+abXe8Kgts5XpbvBR9RFG3WsZ/7ssVnBr6aQA38gB8E1wfV+hfO5xsHpTKARLN5r6E94RnvVbGGGpNy0RLsQVKp0jkXyO7eVE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762925245; c=relaxed/simple;
-	bh=CwgHrpQttJ9JEif/wCfZWfWACrIIISVZ0PQBMV+bREA=;
+	s=arc-20240116; t=1762927427; c=relaxed/simple;
+	bh=y6nkNUmEZ/AVV/mjdHesn9kd7C4EqoIrMS9+yEKVQno=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YvOrXdmc2hHjp5BPbZDWQnwR6YbBi8y9i2bKbwpGT8SQXiQY8INkN9sNZqW28B4wZS68PD/dwVX8I04ngl3DKJ0z2MExsMoiPrHruHz3EDYKqQAiKmrDEFAMgSx4L9LDwR51FX/14Bxy3z4xR1/Ao3M3vryOLRoCUkiXeWII5+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aQYU7e/J; arc=none smtp.client-ip=209.85.208.45
+	 To:Cc:Content-Type; b=qs6OZ3Fbf+1S5RGMP1O5eqCWUzzN0HBq1m55eHymgL2PPTwOoMvUKEsu7H2eGFAx9qneGUKrIm0r9uHMbcTK9s1A0QjF11XgN43ms+7n4iJn1AlmE15AUgKYlc4rjtTPzS+NVUAQNoppfmvONgIHJIU96zVJE084OgaX2N83lW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hdXKv64V; arc=none smtp.client-ip=209.85.218.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aQYU7e/J"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-640aa1445c3so639390a12.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 11 Nov 2025 21:27:23 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hdXKv64V"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-b72134a5125so73558166b.0
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 11 Nov 2025 22:03:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762925242; x=1763530042; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1762927423; x=1763532223; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=HCo98k5zVGcrJMaFgGPWpScUCs9iIxNEITQOsVqAKIo=;
-        b=aQYU7e/Jj+pjc7T9IOjCFn7lDzn3Dgs9gou/855HzmcAChrQcOB1U/amdNVscpXywS
-         8tw8YurZh62DxviWXJ+158ESkoX9eowl/kCYgmQDrQ5pHY1j346+BmijVErQ9Onw0HCL
-         XQpzt5QMZ5fN8oUXcxdE17IVm5JIKk9VA3boAn08vNkvMNV8F8av+rQQJZjNB39O0YJY
-         Ix8blMjV5FUdDCuOmDx5iqek6PPhBAxZt7/jJhCHlHLNnBv+We3/ub1v1k48HNNBbhh8
-         LlwLHtUuCpp2DDc0M0uiRDu5yQak9ri79qId8bqQBbpcmCXj+0bAjDUopBOr8yjNWPjx
-         ME2Q==
+        bh=PEbKE/w68+CKyUzqPpaRs64jkS2Y533jKnFD34BCDeM=;
+        b=hdXKv64VX3k1Jr6GLqOGnBPuzzbMtImzEEFichUWJQljN/Ti4YGiwxBF8keEzdSVcm
+         85hvT7PVRQob28hj9AqayMn2F8+Ggo41HiRlfCucsz/tFjORjIF9INAhnNG6H2Y9d2fx
+         72Qnp14gFy25RDzgcXhX07OI2GlLel/Sc2su7oqEL1vWVR5RKrAa5DC1FiZT/UYDGILw
+         fu3dO2IOSvwZ6VCRFzYGmVN+yLRyMTGok68+BYbh2+BDTebYPZLDrTvXTHQsXLm7aNkW
+         ErqPG6zB/B66kFeeVFQvkjNzqmmNujeta6At89z6B1gi47bECvqzQHLcDrYRosDrJpG+
+         TTuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762925242; x=1763530042;
+        d=1e100.net; s=20230601; t=1762927423; x=1763532223;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=HCo98k5zVGcrJMaFgGPWpScUCs9iIxNEITQOsVqAKIo=;
-        b=cSKzDEVmhF2/HHtykmBZh8IBFduQOrjBNtmIYaOT5cA1aW9stxmiU5Te+hX2k1b866
-         W01x8wxWalP0uDfx4Mpw0zxYyFvFRcXHBAwGLeQ8WwszmyofJJf0NCs79soEtDMN48xH
-         rURd/ACiuGaPDvxDwo6eN/da/Lqt0Pcd7ns9oVjQgsyRwhdikx+Xql+mvMEKCpNhNx0D
-         8aEoQBDL9jQ1anzywV9+6d/zKJhWcBRL/AYwdP06V3YiuP3mffsQl6Vurg1BwHeMzwV8
-         /9s1xf9qey078PpB4Xre0QxXKt/XlrDyDQXYgrPIv03rQ9we+OlOwoJE6YXdikmm1kyo
-         5WPg==
-X-Forwarded-Encrypted: i=1; AJvYcCXN7PZBt+Y9sg4jkgVb1HZNV2RyCB4UeHtzJCwiY51WQMa4M+I+Ln+lcsRascKXjWJLWPfLIU614aQwNQ/7r6giByQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyKqctNLyObCC99SKnvIvN+vJkYg4QGPxHCi+o7cJLfR+cx/kIh
-	CueK+zmwZzXCMkkySoeKgZKTEhfeAGCXPTosr7MLjvnuvGlUYXxHqJZqvRZGH8sgHJzH83yv9fY
-	TaxF8yRvsB79Ty08Nlt38vG+m3qYxebc=
-X-Gm-Gg: ASbGncvL1R0aM+pTBYvep9A9vmTYvmER2v5ukQyi0XXls27s8KEm38RuOJ7t6Wn+3sw
-	udJkcaG1pHTvX8mqrBBlvpe3KFl8f2NYrvTlWqRkOECvDbLqlYPpymGG+wMIscLOr1qC21HWt4F
-	1PTo7oVUClVsgjV/ZLe0u3gQp8zubzJQhEmSGc/sgk22kev5D5alridS0kSXOaig4+FTkzmR0S7
-	NHhmtJ9HuDTXdqe7MsGwimJv6R546cj96Py5U4Zd4vwSpxxyzmncnXvtrP1
-X-Google-Smtp-Source: AGHT+IFTh1AedixfwUaVcieQDb69lpIZKCzgYFFppt1bkt2eJhfVvzZzY1/8j+gyAXu2Ck/cIyuG9vJylgn49QZX6mk=
-X-Received: by 2002:a17:907:6d0d:b0:b70:b5b9:1f82 with SMTP id
- a640c23a62f3a-b7331a6ef31mr189013366b.31.1762925241289; Tue, 11 Nov 2025
- 21:27:21 -0800 (PST)
+        bh=PEbKE/w68+CKyUzqPpaRs64jkS2Y533jKnFD34BCDeM=;
+        b=HCTDdtAUMyjByrqQ21xeWKRai/EMBtZ6biqRLvQtVlEVVgAFZmLrMovY2CM00rQOph
+         QJz0UBVXKj0zKuC3H6h5+KhW/SX/s0bISPPPD0d0zfnKfdkktVVWQFUeR4I0YVW6Ed6Y
+         pkXVUsbdZidcwyLSKmTnvJZaCB+kGFjT87j0/h32hoeDFfWAmGxtcsojGze4Tt/ppHp8
+         tsZtGTjjQyXBt7PwcoOAuj2sOUjsDga/yLOQfTRw2ErWkd1oVmQeJnILDB6Dk02jMv21
+         6gCmrAMF3cjv0plxfSU5YQK1QJxrBdB4LrOUKN/4ViQAbf6mhuFQb/5GyC0Ye8SDB95o
+         VPRw==
+X-Forwarded-Encrypted: i=1; AJvYcCV/m3hNsTwmR5vjBYNLpVTV2SVitAyX53H+FXxCXgWhtb/y0GRsdvV7u0Ml9BdzjpXu57Gl6RAWE4KXRkbGFmDBdPs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwWaWs8S6L0G3BPwdLG3/7LT063ZVzzdxp30m5AxOgOL4aS+odE
+	zlBGQzwPK/g1GGtxsOahHSqEHWkSbE0bWxo0wc+V6+WaweZDEPhSIdF5H5ntwfAiiTt/eE6tteh
+	1IEgAh7OZU3q2Wk6arEKc4u2e8b3UGds=
+X-Gm-Gg: ASbGncsnb1FwtQiL8VvScoT1lOmbFkx+LxBu7MpclQaFXjcGHZzSoxxFDh+DGfAD3Ii
+	z5DF52WOzgVPqXxmh7ymGyPP8TU/+DKVAMdmlJtY3UAmB5NKiqqsPsl/DiNQk8nFh3VuZ3wWKU+
+	N6srh9IvlxrtCmLV+L9Rm4DqaGR9Fg8zsT/nQU5AdlKYDg354ifUa7j6fdOgA7LfmcdhmtEHYlg
+	qE2ofBDVk/xtuA++IpuUlZuIg+H4rdNaF0/BUUNfSSi6uvdUmofQ8tDHK7cbQ==
+X-Google-Smtp-Source: AGHT+IH0bjJk6eNMBSkAw+kMY9WytTdF9VBfBlVMm2Fn5JLPLJPV2kCiNjifYs0LqEJa8b+upRWr+cte+NUF/KmQi9k=
+X-Received: by 2002:a17:906:d554:b0:b1d:285c:e0ef with SMTP id
+ a640c23a62f3a-b733197ee63mr188626866b.26.1762927422954; Tue, 11 Nov 2025
+ 22:03:42 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251015114952.4014352-1-leonylgao@gmail.com> <20251110183854.48b33b50@gandalf.local.home>
- <20251111081314.j8CFfAD6@linutronix.de> <20251111102739.2a0a64cf@gandalf.local.home>
-In-Reply-To: <20251111102739.2a0a64cf@gandalf.local.home>
-From: Yongliang Gao <leonylgao@gmail.com>
-Date: Wed, 12 Nov 2025 13:27:10 +0800
-X-Gm-Features: AWmQ_bmnu2v8TbyZK6CGcTDW02AMhsuIyjYsDXPPjpZO667gKjMESzrWwoQr1Bw
-Message-ID: <CAJxhyqDCFRT_fPWHb67x-PUu+Om91UrbrQEifcF7m+dkZ35dqA@mail.gmail.com>
-Subject: Re: [PATCH] trace/pid_list: optimize pid_list->lock contention
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, mhiramat@kernel.org, 
-	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, Yongliang Gao <leonylgao@tencent.com>, 
-	Huang Cun <cunhuang@tencent.com>, frankjpliu@tencent.com
+References: <20251112034333.2901601-1-dolinux.peng@gmail.com> <20251112141705.a7f2f79f6d7b058201307e89@kernel.org>
+In-Reply-To: <20251112141705.a7f2f79f6d7b058201307e89@kernel.org>
+From: Donglin Peng <dolinux.peng@gmail.com>
+Date: Wed, 12 Nov 2025 14:03:30 +0800
+X-Gm-Features: AWmQ_blqb1_MPJKmnuWZojHSnkUWb5-DmI2kcKy9ZZjFGm2p5RfAbbf1kLkFNjU
+Message-ID: <CAErzpmsHNRzB2pBFVSAG4ii=VN98NEtehEbnYNQY-4TBWgM3ag@mail.gmail.com>
+Subject: Re: [PATCH v3 RESEND] function_graph: Enable funcgraph-args and
+ funcgraph-retaddr to work simultaneously
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: rostedt@goodmis.org, linux-trace-kernel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Donglin Peng <pengdonglin@xiaomi.com>, 
+	Sven Schnelle <svens@linux.ibm.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Steven,
+On Wed, Nov 12, 2025 at 1:17=E2=80=AFPM Masami Hiramatsu <mhiramat@kernel.o=
+rg> wrote:
+>
+> On Wed, 12 Nov 2025 11:43:33 +0800
+> Donglin Peng <dolinux.peng@gmail.com> wrote:
+>
+> > From: Donglin Peng <pengdonglin@xiaomi.com>
+> >
+> > Currently, the funcgraph-args and funcgraph-retaddr features are mutual=
+ly exclusive.
+> > This patch resolves this limitation by modifying funcgraph-retaddr to a=
+dopt the same
+> > implementation approach as funcgraph-args, specifically by storing the =
+return address
+> > in the first entry of the args array.
+> >
+> > As a result, both features now coexist seamlessly and function as inten=
+ded.
+> >
+> > To verify the change, use perf to trace vfs_write with both options ena=
+bled:
+> >
+> > Before:
+> >  # perf ftrace -G vfs_write --graph-opts args,retaddr
+> >  ......
+> >  0)               |  down_read() { /* <-n_tty_write+0xa3/0x540 */
+> >  0)   0.075 us    |    __cond_resched(); /* <-down_read+0x12/0x160 */
+> >  0)   0.079 us    |    preempt_count_add(); /* <-down_read+0x3b/0x160 *=
+/
+> >  0)   0.077 us    |    preempt_count_sub(); /* <-down_read+0x8b/0x160 *=
+/
+> >  0)   0.754 us    |  }
+> >
+> > After:
+> >  # perf ftrace -G vfs_write --graph-opts args,retaddr
+> >  ......
+> >  0)               |  down_read(sem=3D0xffff8880100bea78) { /* <-n_tty_w=
+rite+0xa3/0x540 */
+> >  0)   0.075 us    |    __cond_resched(); /* <-down_read+0x12/0x160 */
+> >  0)   0.079 us    |    preempt_count_add(val=3D1); /* <-down_read+0x3b/=
+0x160 */
+> >  0)   0.077 us    |    preempt_count_sub(val=3D1); /* <-down_read+0x8b/=
+0x160 */
+> >  0)   0.754 us    |  }
+> >
+> > Cc: Steven Rostedt (Google) <rostedt@goodmis.org>
+> > Cc: Sven Schnelle <svens@linux.ibm.com>
+> > Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> > Signed-off-by: Donglin Peng <pengdonglin@xiaomi.com>
+>
+> Looks good to me except for a few nits, but it's a style issue.
+>
+> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Thank you for your detailed response and the proposed RCU-like approach.
+Thank you for ack.
 
-I've looked into using a regular seqlock instead of the current
-implementation, but as you pointed out, the write side is indeed a
-critical path. More importantly, I found that even with seqlock, the
-write_seqlock() function internally uses spin_lock() which on
-PREEMPT_RT gets converted to an mutex. This would cause the same
-issues we're trying to avoid - potential sleep in atomic contexts.
+>
+> Thank you,
+>
+> > ---
+> > v3:
+> > - Replace min() with min_t() to improve type safety and maintainability
+> > - Keep only one Signed-off-by for cleaner attribution
+> > - Code refactoring for improved readability
+> >
+> > v2:
+> > - Preserve retaddr event functionality (suggested by Steven)
+> > - Store the retaddr in args[0] (suggested by Steven)
+> > - Refactor implementation logic and commit message clarity
+> > ---
+> >  include/linux/ftrace.h               |  11 --
+> >  kernel/trace/trace.h                 |   4 -
+> >  kernel/trace/trace_entries.h         |   6 +-
+> >  kernel/trace/trace_functions_graph.c | 145 ++++++++++++---------------
+> >  4 files changed, 69 insertions(+), 97 deletions(-)
+> >
+> > diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+> > index 7ded7df6e9b5..88cb54d73bdb 100644
+> > --- a/include/linux/ftrace.h
+> > +++ b/include/linux/ftrace.h
+> > @@ -1129,17 +1129,6 @@ struct ftrace_graph_ent {
+> >       int depth;
+> >  } __packed;
+> >
+> > -/*
+> > - * Structure that defines an entry function trace with retaddr.
+> > - * It's already packed but the attribute "packed" is needed
+> > - * to remove extra padding at the end.
+> > - */
+> > -struct fgraph_retaddr_ent {
+> > -     unsigned long func; /* Current function */
+> > -     int depth;
+> > -     unsigned long retaddr;  /* Return address */
+> > -} __packed;
+> > -
+> >  /*
+> >   * Structure that defines a return function trace.
+> >   * It's already packed but the attribute "packed" is needed
+> > diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+> > index 85eabb454bee..9fac291b913a 100644
+> > --- a/kernel/trace/trace.h
+> > +++ b/kernel/trace/trace.h
+> > @@ -955,10 +955,6 @@ extern void graph_trace_close(struct trace_iterato=
+r *iter);
+> >  extern int __trace_graph_entry(struct trace_array *tr,
+> >                              struct ftrace_graph_ent *trace,
+> >                              unsigned int trace_ctx);
+> > -extern int __trace_graph_retaddr_entry(struct trace_array *tr,
+> > -                             struct ftrace_graph_ent *trace,
+> > -                             unsigned int trace_ctx,
+> > -                             unsigned long retaddr);
+> >  extern void __trace_graph_return(struct trace_array *tr,
+> >                                struct ftrace_graph_ret *trace,
+> >                                unsigned int trace_ctx,
+> > diff --git a/kernel/trace/trace_entries.h b/kernel/trace/trace_entries.=
+h
+> > index de294ae2c5c5..593a74663c65 100644
+> > --- a/kernel/trace/trace_entries.h
+> > +++ b/kernel/trace/trace_entries.h
+> > @@ -95,14 +95,14 @@ FTRACE_ENTRY_PACKED(fgraph_retaddr_entry, fgraph_re=
+taddr_ent_entry,
+> >       TRACE_GRAPH_RETADDR_ENT,
+> >
+> >       F_STRUCT(
+> > -             __field_struct( struct fgraph_retaddr_ent,      graph_ent=
+       )
+> > +             __field_struct( struct ftrace_graph_ent,        graph_ent=
+       )
+> >               __field_packed( unsigned long,  graph_ent,      func     =
+       )
+> >               __field_packed( unsigned int,   graph_ent,      depth    =
+       )
+> > -             __field_packed( unsigned long,  graph_ent,      retaddr  =
+       )
+> > +             __dynamic_array(unsigned long,  args                     =
+       )
+> >       ),
+> >
+> >       F_printk("--> %ps (%u) <- %ps", (void *)__entry->func, __entry->d=
+epth,
+> > -             (void *)__entry->retaddr)
+> > +             (void *)__entry->args[0])
+> >  );
+> >
+> >  #else
+> > diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_=
+functions_graph.c
+> > index a7f4b9a47a71..f31eeeffbb2d 100644
+> > --- a/kernel/trace/trace_functions_graph.c
+> > +++ b/kernel/trace/trace_functions_graph.c
+> > @@ -16,6 +16,15 @@
+> >  #include "trace.h"
+> >  #include "trace_output.h"
+> >
+> > +#ifdef CONFIG_FUNCTION_GRAPH_RETADDR
+> > +#define HAVE_RETADDR 1
+> > +#define ARGS_OFFS(args_size) \
+> > +     ((args_size) > FTRACE_REGS_MAX_ARGS * sizeof(long) ? 1 : 0)
+> > +#else
+> > +#define HAVE_RETADDR 0
+> > +#define ARGS_OFFS(args_size) 0
+> > +#endif
+> > +
+> >  /* When set, irq functions will be ignored */
+> >  static int ftrace_graph_skip_irqs;
+> >
+> > @@ -27,21 +36,25 @@ struct fgraph_cpu_data {
+> >       unsigned long   enter_funcs[FTRACE_RETFUNC_DEPTH];
+> >  };
+> >
+> > +/*
+> > + * fgraph_retaddr_ent_entry and ftrace_graph_ent_entry share layout, e=
+nt
+> > + * member repurposed for storage
+> > + */
+> >  struct fgraph_ent_args {
+> >       struct ftrace_graph_ent_entry   ent;
+> > -     /* Force the sizeof of args[] to have FTRACE_REGS_MAX_ARGS entrie=
+s */
+> > -     unsigned long                   args[FTRACE_REGS_MAX_ARGS];
+> > +     /*
+> > +      * Force the sizeof of args[] to have (FTRACE_REGS_MAX_ARGS + HAV=
+E_RETADDR)
+> > +      * entries with the first entry storing the return address for
+> > +      * TRACE_GRAPH_RETADDR_ENT.
+> > +      */
+> > +     unsigned long           args[FTRACE_REGS_MAX_ARGS + HAVE_RETADDR]=
+;
+> >  };
+> >
+> >  struct fgraph_data {
+> >       struct fgraph_cpu_data __percpu *cpu_data;
+> >
+> >       /* Place to preserve last processed entry. */
+> > -     union {
+> > -             struct fgraph_ent_args          ent;
+> > -             /* TODO allow retaddr to have args */
+> > -             struct fgraph_retaddr_ent_entry rent;
+> > -     };
+> > +     struct fgraph_ent_args          ent;
+> >       struct ftrace_graph_ret_entry   ret;
+> >       int                             failed;
+> >       int                             cpu;
+> > @@ -127,22 +140,43 @@ static int __graph_entry(struct trace_array *tr, =
+struct ftrace_graph_ent *trace,
+> >       struct ring_buffer_event *event;
+> >       struct trace_buffer *buffer =3D tr->array_buffer.buffer;
+> >       struct ftrace_graph_ent_entry *entry;
+> > -     int size;
+> > +     unsigned long retaddr =3D 0;
+> > +     int size =3D sizeof(*entry);
+> > +     int type =3D TRACE_GRAPH_ENT;
+> > +     bool store_args =3D false;
+> > +     int nr_args =3D 0, args_offs =3D 0;
+> > +
+> > +     if (tracer_flags_is_set(TRACE_GRAPH_PRINT_RETADDR)) {
+> > +             retaddr =3D ftrace_graph_top_ret_addr(current);
+> > +             type =3D TRACE_GRAPH_RETADDR_ENT;
+> > +             nr_args +=3D 1;
+> > +     }
+> >
+> >       /* If fregs is defined, add FTRACE_REGS_MAX_ARGS long size words =
+*/
+> > -     size =3D sizeof(*entry) + (FTRACE_REGS_MAX_ARGS * !!fregs * sizeo=
+f(long));
+> > +     if (tracer_flags_is_set(TRACE_GRAPH_ARGS)) {
+> > +             store_args =3D !!fregs;
+> > +             if (store_args)
+> > +                     nr_args +=3D FTRACE_REGS_MAX_ARGS;
+> > +     }
+> >
+> > -     event =3D trace_buffer_lock_reserve(buffer, TRACE_GRAPH_ENT, size=
+, trace_ctx);
+> > +     size +=3D nr_args * sizeof(long);
+> > +     event =3D trace_buffer_lock_reserve(buffer, type, size, trace_ctx=
+);
+> >       if (!event)
+> >               return 0;
+> >
+> >       entry =3D ring_buffer_event_data(event);
+> >       entry->graph_ent =3D *trace;
+> >
+> > +     /* Store the retaddr in args[0] */
+> > +     if (type =3D=3D TRACE_GRAPH_RETADDR_ENT) {
+> > +             entry->args[0] =3D retaddr;
+> > +             args_offs +=3D 1;
+> > +     }
+> > +
+> >  #ifdef CONFIG_HAVE_FUNCTION_ARG_ACCESS_API
+> > -     if (fregs) {
+> > +     if (store_args) {
+> >               for (int i =3D 0; i < FTRACE_REGS_MAX_ARGS; i++)
+> > -                     entry->args[i] =3D ftrace_regs_get_argument(fregs=
+, i);
+> > +                     entry->args[i + args_offs] =3D ftrace_regs_get_ar=
+gument(fregs, i);
+> >       }
+> >  #endif
+> >
+> > @@ -158,38 +192,6 @@ int __trace_graph_entry(struct trace_array *tr,
+> >       return __graph_entry(tr, trace, trace_ctx, NULL);
+> >  }
+> >
+> > -#ifdef CONFIG_FUNCTION_GRAPH_RETADDR
+> > -int __trace_graph_retaddr_entry(struct trace_array *tr,
+> > -                             struct ftrace_graph_ent *trace,
+> > -                             unsigned int trace_ctx,
+> > -                             unsigned long retaddr)
+> > -{
+> > -     struct ring_buffer_event *event;
+> > -     struct trace_buffer *buffer =3D tr->array_buffer.buffer;
+> > -     struct fgraph_retaddr_ent_entry *entry;
+> > -
+> > -     event =3D trace_buffer_lock_reserve(buffer, TRACE_GRAPH_RETADDR_E=
+NT,
+> > -                                       sizeof(*entry), trace_ctx);
+> > -     if (!event)
+> > -             return 0;
+> > -     entry   =3D ring_buffer_event_data(event);
+> > -     entry->graph_ent.func =3D trace->func;
+> > -     entry->graph_ent.depth =3D trace->depth;
+> > -     entry->graph_ent.retaddr =3D retaddr;
+> > -     trace_buffer_unlock_commit_nostack(buffer, event);
+> > -
+> > -     return 1;
+> > -}
+> > -#else
+> > -int __trace_graph_retaddr_entry(struct trace_array *tr,
+> > -                             struct ftrace_graph_ent *trace,
+> > -                             unsigned int trace_ctx,
+> > -                             unsigned long retaddr)
+> > -{
+> > -     return 1;
+> > -}
+> > -#endif
+> > -
+> >  static inline int ftrace_graph_ignore_irqs(void)
+> >  {
+> >       if (!ftrace_graph_skip_irqs || trace_recursion_test(TRACE_IRQ_BIT=
+))
+> > @@ -211,7 +213,6 @@ static int graph_entry(struct ftrace_graph_ent *tra=
+ce,
+> >       struct trace_array *tr =3D gops->private;
+> >       struct fgraph_times *ftimes;
+> >       unsigned int trace_ctx;
+> > -     int ret =3D 0;
+> >
+> >       if (*task_var & TRACE_GRAPH_NOTRACE)
+> >               return 0;
+> > @@ -262,15 +263,7 @@ static int graph_entry(struct ftrace_graph_ent *tr=
+ace,
+> >               return 1;
+> >
+> >       trace_ctx =3D tracing_gen_ctx();
+> > -     if (IS_ENABLED(CONFIG_FUNCTION_GRAPH_RETADDR) &&
+> > -         tracer_flags_is_set(TRACE_GRAPH_PRINT_RETADDR)) {
+> > -             unsigned long retaddr =3D ftrace_graph_top_ret_addr(curre=
+nt);
+> > -             ret =3D __trace_graph_retaddr_entry(tr, trace, trace_ctx,=
+ retaddr);
+> > -     } else {
+> > -             ret =3D __graph_entry(tr, trace, trace_ctx, fregs);
+> > -     }
+> > -
+> > -     return ret;
+> > +     return __graph_entry(tr, trace, trace_ctx, fregs);
+> >  }
+> >
+> >  int trace_graph_entry(struct ftrace_graph_ent *trace,
+> > @@ -634,13 +627,9 @@ get_return_for_leaf(struct trace_iterator *iter,
+> >                        * Save current and next entries for later refere=
+nce
+> >                        * if the output fails.
+> >                        */
+> > -                     if (unlikely(curr->ent.type =3D=3D TRACE_GRAPH_RE=
+TADDR_ENT)) {
+> > -                             data->rent =3D *(struct fgraph_retaddr_en=
+t_entry *)curr;
+> > -                     } else {
+> > -                             int size =3D min((int)sizeof(data->ent), =
+(int)iter->ent_size);
+> > +                     int size =3D min_t(int, sizeof(data->ent), iter->=
+ent_size);
+> >
+> > -                             memcpy(&data->ent, curr, size);
+> > -                     }
+> > +                     memcpy(&data->ent, curr, size);
+> >                       /*
+> >                        * If the next event is not a return type, then
+> >                        * we only care about what type it is. Otherwise =
+we can
+> > @@ -811,21 +800,21 @@ print_graph_duration(struct trace_array *tr, unsi=
+gned long long duration,
+> >
+> >  #ifdef CONFIG_FUNCTION_GRAPH_RETADDR
+> >  #define __TRACE_GRAPH_PRINT_RETADDR TRACE_GRAPH_PRINT_RETADDR
+> > -static void print_graph_retaddr(struct trace_seq *s, struct fgraph_ret=
+addr_ent_entry *entry,
+> > -                             u32 trace_flags, bool comment)
+> > +static void print_graph_retaddr(struct trace_seq *s, unsigned long ret=
+addr, u32 trace_flags,
+> > +                             bool comment)
+> >  {
+> >       if (comment)
+> >               trace_seq_puts(s, " /*");
+> >
+> >       trace_seq_puts(s, " <-");
+> > -     seq_print_ip_sym(s, entry->graph_ent.retaddr, trace_flags | TRACE=
+_ITER_SYM_OFFSET);
+> > +     seq_print_ip_sym(s, retaddr, trace_flags | TRACE_ITER_SYM_OFFSET)=
+;
+> >
+> >       if (comment)
+> >               trace_seq_puts(s, " */");
+> >  }
+> >  #else
+> >  #define __TRACE_GRAPH_PRINT_RETADDR 0
+> > -#define print_graph_retaddr(_seq, _entry, _tflags, _comment)         d=
+o { } while (0)
+> > +#define print_graph_retaddr(_seq, _retaddr, _tflags, _comment)        =
+       do { } while (0)
+> >  #endif
+> >
+> >  #if defined(CONFIG_FUNCTION_GRAPH_RETVAL) || defined(CONFIG_FUNCTION_G=
+RAPH_RETADDR)
+> > @@ -869,10 +858,12 @@ static void print_graph_retval(struct trace_seq *=
+s, struct ftrace_graph_ent_entr
+> >               trace_seq_printf(s, "%ps", func);
+> >
+> >               if (args_size >=3D FTRACE_REGS_MAX_ARGS * sizeof(long)) {
+> > -                     print_function_args(s, entry->args, (unsigned lon=
+g)func);
+> > +                     print_function_args(s, entry->args + ARGS_OFFS(ar=
+gs_size),
+> > +                                         (unsigned long)func);
+> >                       trace_seq_putc(s, ';');
+> > -             } else
+> > +             } else {
+>
+> nit: you don't need to add braces for a single line block.
 
-bool trace_pid_list_is_set(struct trace_pid_list *pid_list, unsigned int pi=
-d)
-{
-    union upper_chunk *upper_chunk;
-    union lower_chunk *lower_chunk;
-    unsigned int seq;
-    unsigned long flags;
-    unsigned int upper1;
-    unsigned int upper2;
-    unsigned int lower;
-    bool ret =3D false;
+Thanks. I added the else braces for consistency with the
+multi-statement if branch,
+per coding-style.rst. Happy to remove if you prefer the
+single-statement exception.
 
-    if (!pid_list)
-        return false;
+https://elixir.bootlin.com/linux/v6.18-rc5/source/Documentation/process/cod=
+ing-style.rst#L213
 
-    if (pid_split(pid, &upper1, &upper2, &lower) < 0)
-        return false;
+Do not unnecessarily use braces where a single statement will do.
 
-    do {
-        local_irq_save(flags);
-        seq =3D read_seqbegin(&pid_list->lock);
-        ret =3D false;
-        upper_chunk =3D pid_list->upper[upper1];
-        if (upper_chunk) {
-            lower_chunk =3D upper_chunk->data[upper2];
-            if (lower_chunk)
-                ret =3D test_bit(lower, lower_chunk->data);
-        }
-        local_irq_restore(flags);
-    } while (read_seqretry(&pid_list->lock, seq));
+.. code-block:: c
 
-    return ret;
+if (condition)
+action();
+
+and
+
+.. code-block:: c
+
+if (condition)
+do_this();
+else
+do_that();
+
+This does not apply if only one branch of a conditional statement is a sing=
+le
+statement; in the latter case use braces in both branches:
+
+.. code-block:: c
+
+if (condition) {
+do_this();
+do_that();
+} else {
+otherwise();
 }
 
- BUG: sleeping function called from invalid context at
-kernel/locking/spinlock_rt.c:48
- in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 192, name: bash
- preempt_count: 1, expected: 0
- RCU nest depth: 0, expected: 0
- CPU: 3 UID: 0 PID: 192 Comm: bash Not tainted 6.18.0-rc5+ #84 PREEMPT_{RT,=
-LAZY}
- Hardware name: QEMU Standard PC (i440FX + PIIX, 1996)
- Call Trace:
-  <TASK>
-  dump_stack_lvl+0x4f/0x70
-  __might_resched+0x113/0x160
-  rt_spin_lock+0x41/0x130
-  trace_pid_list_set+0x52/0x150
-  ftrace_pid_follow_sched_process_fork+0x19/0x30
-  kernel_clone+0x1b8/0x3e0
-  __do_sys_clone+0x65/0x90
-  do_syscall_64+0x48/0xa60
-  entry_SYSCALL_64_after_hwframe+0x76/0x7e
-
-Your proposed solution using atomic counters and memory barriers
-should provide the lock-free read path we need while maintaining code
-correctness. However, to achieve this correctly requires careful
-consideration of all memory ordering scenarios, and I'm concerned
-about introducing subtle bugs given the complexity.
-
-Would you be willing to submit a patch implementing your approach?
-
-On Tue, Nov 11, 2025 at 11:27=E2=80=AFPM Steven Rostedt <rostedt@goodmis.or=
-g> wrote:
 >
-> On Tue, 11 Nov 2025 09:13:14 +0100
-> Sebastian Andrzej Siewior <bigeasy@linutronix.de> wrote:
+> >                       trace_seq_puts(s, "();");
+> > +             }
+> >
+> >               if (print_retval || print_retaddr)
+> >                       trace_seq_puts(s, " /*");
+> > @@ -882,8 +873,7 @@ static void print_graph_retval(struct trace_seq *s,=
+ struct ftrace_graph_ent_entr
+> >       }
+> >
+> >       if (print_retaddr)
+> > -             print_graph_retaddr(s, (struct fgraph_retaddr_ent_entry *=
+)entry,
+> > -                                 trace_flags, false);
+> > +             print_graph_retaddr(s, entry->args[0], trace_flags, false=
+);
+> >
+> >       if (print_retval) {
+> >               if (hex_format || (err_code =3D=3D 0))
+> > @@ -964,10 +954,12 @@ print_graph_entry_leaf(struct trace_iterator *ite=
+r,
+> >               trace_seq_printf(s, "%ps", (void *)ret_func);
+> >
+> >               if (args_size >=3D FTRACE_REGS_MAX_ARGS * sizeof(long)) {
+> > -                     print_function_args(s, entry->args, ret_func);
+> > +                     print_function_args(s, entry->args + ARGS_OFFS(ar=
+gs_size),
+> > +                                         ret_func);
+> >                       trace_seq_putc(s, ';');
+> > -             } else
+> > +             } else {
 >
-> > Nope, no read-write lock that can be used in atomic sections. Well,
-> > there is RCU.
+> Ditto.
 >
-> Well, it can't simply be replaced by RCU as the write side is also a
-> critical path. It happens when new tasks are spawned.
+> >                       trace_seq_puts(s, "();");
+> > +             }
+> >       }
+> >       trace_seq_putc(s, '\n');
+> >
+> > @@ -1016,7 +1008,7 @@ print_graph_entry_nested(struct trace_iterator *i=
+ter,
+> >       args_size =3D iter->ent_size - offsetof(struct ftrace_graph_ent_e=
+ntry, args);
+> >
+> >       if (args_size >=3D FTRACE_REGS_MAX_ARGS * sizeof(long))
+> > -             print_function_args(s, entry->args, func);
+> > +             print_function_args(s, entry->args + ARGS_OFFS(args_size)=
+, func);
+> >       else
+> >               trace_seq_puts(s, "()");
+> >
+> > @@ -1024,8 +1016,7 @@ print_graph_entry_nested(struct trace_iterator *i=
+ter,
+> >
+> >       if (flags & __TRACE_GRAPH_PRINT_RETADDR  &&
+> >               entry->ent.type =3D=3D TRACE_GRAPH_RETADDR_ENT)
+> > -             print_graph_retaddr(s, (struct fgraph_retaddr_ent_entry *=
+)entry,
+> > -                     tr->trace_flags, true);
+> > +             print_graph_retaddr(s, entry->args[0], tr->trace_flags, t=
+rue);
+> >       trace_seq_putc(s, '\n');
+> >
+> >       if (trace_seq_has_overflowed(s))
+> > @@ -1202,7 +1193,7 @@ print_graph_entry(struct ftrace_graph_ent_entry *=
+field, struct trace_seq *s,
+> >        * it can be safely saved at the stack.
+> >        */
+> >       struct ftrace_graph_ent_entry *entry;
+> > -     u8 save_buf[sizeof(*entry) + FTRACE_REGS_MAX_ARGS * sizeof(long)]=
+;
+> > +     u8 save_buf[sizeof(*entry) + (FTRACE_REGS_MAX_ARGS + HAVE_RETADDR=
+) * sizeof(long)];
+> >
+> >       /* The ent_size is expected to be as big as the entry */
+> >       if (iter->ent_size > sizeof(save_buf))
+> > @@ -1429,16 +1420,12 @@ print_graph_function_flags(struct trace_iterato=
+r *iter, u32 flags)
+> >               trace_assign_type(field, entry);
+> >               return print_graph_entry(field, s, iter, flags);
+> >       }
+> > -#ifdef CONFIG_FUNCTION_GRAPH_RETADDR
+> >       case TRACE_GRAPH_RETADDR_ENT: {
+> > -             struct fgraph_retaddr_ent_entry saved;
+> >               struct fgraph_retaddr_ent_entry *rfield;
+> >
+> >               trace_assign_type(rfield, entry);
+> > -             saved =3D *rfield;
+> > -             return print_graph_entry((struct ftrace_graph_ent_entry *=
+)&saved, s, iter, flags);
+> > +             return print_graph_entry((typeof(field))rfield, s, iter, =
+flags);
+> >       }
+> > -#endif
+> >       case TRACE_GRAPH_RET: {
+> >               struct ftrace_graph_ret_entry *field;
+> >               trace_assign_type(field, entry);
+> > --
+> > 2.34.1
+> >
 >
-> Now we could possibly do some RCU like magic, and remove the lock in the
-> read, but it would need some care with the writes.
 >
-> Something like this (untested):
->
-> bool trace_pid_list_is_set(struct trace_pid_list *pid_list, unsigned int =
-pid)
-> {
->         union upper_chunk *upper_chunk;
->         union lower_chunk *lower_chunk;
->         unsigned long flags;
->         unsigned int upper1;
->         unsigned int upper2;
->         unsigned int lower;
->         bool ret =3D false;
->
->         if (!pid_list)
->                 return false;
->
->         if (pid_split(pid, &upper1, &upper2, &lower) < 0)
->                 return false;
->
->         upper_chunk =3D READ_ONCE(pid_list->upper[upper1]);
->         if (upper_chunk) {
->                 lower_chunk =3D READ_ONCE(upper_chunk->data[upper2]);
->                 if (lower_chunk)
->                         ret =3D test_bit(lower, lower_chunk->data);
->         }
->
->         return ret;
-> }
->
-> Now when all the bits of a chunk is cleared, it goes to a free-list. And
-> when a new chunk is needed, it acquires it from that free-list. We need t=
-o
-> make sure that the chunk acquired in the read hasn't gone through the
-> free-list.
->
-> Now we could have an atomic counter in the pid_list and make this more of=
- a
-> seqcount? That is, have the counter updated when a chunk goes to the free
-> list and also when it is taken from the free list. We could then make thi=
-s:
->
->  again:
->         counter =3D atomic_read(&pid_list->counter);
->         smp_rmb();
->         upper_chunk =3D READ_ONCE(pid_list->upper[upper1]);
->         if (upper_chunk) {
->                 lower_chunk =3D READ_ONCE(upper_chunk->data[upper2]);
->                 if (lower_chunk) {
->                         ret =3D test_bit(lower, lower_chunk->data);
->                         smp_rmb();
->                         if (unlikely(counter !=3D atomic_read(&pid_list->=
-counter))) {
->                                 ret =3D false;
->                                 goto again;
->                         }
->                 }
->         }
->
->
-> And in the set we need:
->
->         upper_chunk =3D pid_list->upper[upper1];
->         if (!upper_chunk) {
->                 upper_chunk =3D get_upper_chunk(pid_list);
->                 if (!upper_chunk) {
->                         ret =3D -ENOMEM;
->                         goto out;
->                 }
->                 atomic_inc(&pid_list->counter);
->                 smp_wmb();
->                 WRITE_ONCE(pid_list->upper[upper1], upper_chunk);
->         }
->         lower_chunk =3D upper_chunk->data[upper2];
->         if (!lower_chunk) {
->                 lower_chunk =3D get_lower_chunk(pid_list);
->                 if (!lower_chunk) {
->                         ret =3D -ENOMEM;
->                         goto out;
->                 }
->                 atomic_inc(&pid_list->counter);
->                 smp_wmb();
->                 WRITE_ONCE(upper_chunk->data[upper2], lower_chunk);
->         }
->
-> and in the clear:
->
->         if (find_first_bit(lower_chunk->data, LOWER_MAX) >=3D LOWER_MAX) =
-{
->                 put_lower_chunk(pid_list, lower_chunk);
->                 WRITE_ONCE(upper_chunk->data[upper2], NULL);
->                 smp_wmb();
->                 atomic_inc(&pid_list->counter);
->                 if (upper_empty(upper_chunk)) {
->                         put_upper_chunk(pid_list, upper_chunk);
->                         WRITE_ONCE(pid_list->upper[upper1], NULL);
->                         smp_wmb();
->                         atomic_inc(&pid_list->counter);
->                 }
->         }
->
-> That is, the counter gets updated after setting the chunk to NULL and
-> before assigning it a new value. And reading it, the counter is read befo=
-re
-> looking at any of the chunks, and tested after getting the result. If the
-> value is the same, then the chunks are for the correct PID and haven't
-> swapped in a free/alloc swap where it's looking at a chunk for a differen=
-t
-> PID.
->
-> This would allow for the read to not take any locks.
->
-> -- Steve
+> --
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
