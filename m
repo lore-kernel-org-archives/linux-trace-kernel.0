@@ -1,138 +1,98 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2638C265CA8;
-	Thu, 13 Nov 2025 15:24:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFC2F7E792;
+	Thu, 13 Nov 2025 15:30:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763047477; cv=none; b=P84+aH1XCZsf0wbV+fk2/HWVZ9P28ecERmRSaX/B5BsVtONX0JsMsYmj+yFOKMIUXaBsSyH7l1W0jQKBi+3HpoM311vwyWnOreO+QjsJhGX3yOcvi6sfhMAiixMFv6iKDPpbCMELfe6eV+G0gGUnPOoo3ynVqIO6yvYPEnfvgOY=
+	t=1763047835; cv=none; b=RR7n2Okc/FdWX7zXEO2OvMKsEClQoyKICbd8xbCnObumtDgPIvy3XOFS2qlPOj0JPzJ75ANd9DK66CtFPEqKGfPqdtOMvdneIQsUf/Js63IfGTO4mGIEJWISDPE1q0Dxo2gF6gHmyxJPULoOtJO8egBTJ5JtDvGkwaSxnwqQTzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763047477; c=relaxed/simple;
-	bh=2It9o6JabpBJyviUFjHoEtWYMON2YRsbiX+X2ReFwXY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=o6To6wNrIsJR4URRlBO1LU8qRNJUzSlKxQ863o4Nlbc+tKJDQbaBiOmUrdD8Tx4cHm11sjAddRIVYS8Zy785WOiuesosZow//yMh9zEtzIcgC9veOH3O/dVe9qV7XIBMm7MwQjfAIeDweiBVUmCiUwdbH/5yXpAc5cZMafF/Eas=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf14.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay07.hostedemail.com (Postfix) with ESMTP id 6177E160A35;
-	Thu, 13 Nov 2025 15:24:32 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf14.hostedemail.com (Postfix) with ESMTPA id 26B6B2D;
-	Thu, 13 Nov 2025 15:24:30 +0000 (UTC)
-Date: Thu, 13 Nov 2025 10:24:45 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Yongliang Gao <leonylgao@gmail.com>, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, frankjpliu@tencent.com, Yongliang Gao
- <leonylgao@tencent.com>, Huang Cun <cunhuang@tencent.com>
-Subject: Re: [PATCH v3] trace/pid_list: optimize pid_list->lock contention
-Message-ID: <20251113102445.3e70c1ec@gandalf.local.home>
-In-Reply-To: <20251113151729.4Zky6d-t@linutronix.de>
-References: <20251113000252.1058144-1-leonylgao@gmail.com>
-	<20251113073420.yko6jYcI@linutronix.de>
-	<CAJxhyqCyB3-CyDKgPtP-EoC=G9cWAYgLvse003+i2n6U4Pgv1w@mail.gmail.com>
-	<20251113141515.iZSIDK0T@linutronix.de>
-	<20251113100524.5c5f6bdc@gandalf.local.home>
-	<20251113151729.4Zky6d-t@linutronix.de>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1763047835; c=relaxed/simple;
+	bh=tGGALCCjS204ssR6DDHUnCXjhFK8nMBYVU+owIpKMMg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZZVNAQvAcGGjyC7fyG9D5HO9Gib+cbG1YkZzZXYs3F1HsGt3alu0KmHIJMPbYYp+W/S0OOepM1fuaQsUXPk/2vybLE55gapxaDfBr0sjKIjv9IYGFfcY22gcJSDs3q/BkmqzlkAr5v97B6WUgGqiGYrCg65uvE+HHS65uxx+yVQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kpEFMGxf; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kpEFMGxf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B1AAC4CEF7;
+	Thu, 13 Nov 2025 15:30:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763047834;
+	bh=tGGALCCjS204ssR6DDHUnCXjhFK8nMBYVU+owIpKMMg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=kpEFMGxf0CQGJGG9BMrBulPuHLSsbaZmz2F10q+U5lQNVex6ThzpOGw7+DyIt2PnK
+	 JV0/5CVAlX2KfTg0ks5PYMUa+Oi5pyphqsK2EErkq7wlNXdUGarSi4HWS75zN5v+Qk
+	 G++EoGJzrq+W5oj0gLFTPGyJl7KOSGp9Es1OUOubdrYn6UDDO2ETHBHpwGs1MUe+Jz
+	 U8C+XjZX88rViP4mw8W8o3CedxRXAd6OP4hzOp370+Z18EJ7ZxaQk9jfZhrU9mNPmK
+	 OUuZT3OTj//qPL0mMpoarjHmHdDHd+blv1yaY7uZfsNvXE+QcomCJPrRBh6t1+NqdA
+	 Gy4FgH8ONHsZw==
+Message-ID: <0c9f5b83-10db-460f-bdee-897396b49838@kernel.org>
+Date: Thu, 13 Nov 2025 16:30:27 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] mm/khugepaged: do synchronous writeback for
+ MADV_COLLAPSE
+To: "Garg, Shivank" <shivankg@amd.com>, Matthew Wilcox <willy@infradead.org>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Zi Yan <ziy@nvidia.com>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>, Nico Pache
+ <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+ Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
+ Lance Yang <lance.yang@linux.dev>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Zach O'Keefe <zokeefe@google.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ Branden Moore <Branden.Moore@amd.com>
+References: <20251110113254.77822-1-shivankg@amd.com>
+ <aRHs3pA2kOr_uD3k@casper.infradead.org>
+ <b7313a45-c36e-4390-a0b8-46f412474f86@lucifer.local>
+ <39c8a4ed-53b5-48e3-baea-f67cc1e8be4f@amd.com>
+ <aRH2pdhMBQ-20IC9@casper.infradead.org>
+ <e38e8059-a62b-4ad5-8316-5af02a0cc1b6@amd.com>
+From: "David Hildenbrand (Red Hat)" <david@kernel.org>
+Content-Language: en-US
+In-Reply-To: <e38e8059-a62b-4ad5-8316-5af02a0cc1b6@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: nn86zzbryeh16jhya5sq9kjkaouuroup
-X-Rspamd-Server: rspamout01
-X-Rspamd-Queue-Id: 26B6B2D
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/k7+5HGHEXXge806eidABq3yIxNovnI0k=
-X-HE-Tag: 1763047470-513433
-X-HE-Meta: U2FsdGVkX1/R7pU2DyCLzS2PoGceG06boACnxiYi1H3EPyqXaWilg5TSyRTpqhm/zUeNiqmHfZe91Vkl/NKWVo52TdT4JiivfkQNODz9oj3aXwjwW6v5ZF1TkJd/wtPSt/R8OhqkkaNVYhC10cE/2YSnnU5GBy/fPeMo2WWWX/IhXGbEdS7SScA1diD6XB5wWrjjC8JUtupJ28LMjfGkRwifBu8+Nywm0n8M98U5Bs6dAXSmSszKS5ZL95VW5CvajJsyK7fKDnKabaH+/FTr6Mpesn1NYE+JO4e6Ev2drl7ObpJ8MXW3LVwk8Z5+d+SW
 
-On Thu, 13 Nov 2025 16:17:29 +0100
-Sebastian Andrzej Siewior <bigeasy@linutronix.de> wrote:
-
-> On 2025-11-13 10:05:24 [-0500], Steven Rostedt wrote:
-> > This means that the chunks are not being freed and we can't be doing
-> > synchronize_rcu() in every exit.  
+On 11.11.25 06:58, Garg, Shivank wrote:
 > 
-> You don't have to, you can do call_rcu().
-
-But the chunk isn't being freed. They may be used right away.
-
-
-> So if the kfree() is not an issue, it is just the use of the block from
-> the freelist which must not point to a wrong item? And therefore the
-> seqcount?
-
-Correct.
-
 > 
-> > > So I *think* the RCU approach should be doable and cover this.  
-> > 
-> > Where would you put the synchronize_rcu()? In do_exit()?  
+> On 11/10/2025 7:58 PM, Matthew Wilcox wrote:
+>> On Mon, Nov 10, 2025 at 07:50:17PM +0530, Garg, Shivank wrote:
+>>> The issue is copying those binary to a freshly mounted filesystem.
+>>> The page cache folios remain dirty until background writeback completes.
+>>>
+>>> Reproduces 100% for me: fresh XFS/EXT4 mount -> copy binary -> execute -> MADV_COLLAPSE fails.
+>>
+>> Yes, but this is an uncommon thing to do.  Really, it's the kind of
+>> thing you do when you're testing something (like, whether ext4 supports
+>> large folios, and whether that yields a performance improvement).
+>> It's more reasonable to change userspace than the kernel to solve this
+>> problem you're having.
 > 
-> simply call_rcu() and let it move to the freelist.
-
-A couple of issues. One, the chunks are fully used. There's no place to put
-a "rcu_head" in them. Well, we may be able to make use of them.
-
-Second, if there's a lot of tasks exiting and forking, we can easily run
-out of chunks that are waiting to be "freed" via call_rcu().
-
+> Fair point.
 > 
-> > Also understanding what this is used for helps in understanding the scope
-> > of protection needed.
-> > 
-> > The pid_list is created when you add anything into one of the pid files in
-> > tracefs. Let's use /sys/kernel/tracing/set_ftrace_pid:
-> > 
-> >   # cd /sys/kernel/tracing
-> >   # echo $$ > set_ftrace_pid
-> >   # echo 1 > options/function-fork
-> >   # cat set_ftrace_pid
-> >   2716
-> >   2936
-> >   # cat set_ftrace_pid
-> >   2716
-> >   2945
-> > 
-> > What the above did was to create a pid_list for the function tracer. I
-> > added the bash process pid using $$ (2716). Then when I cat the file, it
-> > showed the pid for the bash process as well as the pid for the cat process,
-> > as the cat process is a child of the bash process. The function-fork option
-> > means to add any child process to the set_ftrace_pid if the parent is
-> > already in the list. It also means to remove the pid if a process in the
-> > list exits.  
+> You're right that this is primarily a testing scenario, though it may also
+> potentially affect JIT compilers writing executables (also uncommon) but more
+> research is needed.
 > 
-> This adding/ add-on-fork, removing and remove-on-exit is the only write
-> side?
+> For userspace workarounds, calling fsync() before MADV_COLLAPSE works.
 
-That and manual writes to the set_ftrace_pid file.
+Right. But do we want document that any caller of MADV_COLLAPSE should 
+issue an fsync() if MADV_COLLAPSE fails to try again?
 
-> > What we are protecting against is when one chunk is freed, but then
-> > allocated again for a different set of PIDs. Where the reader has the chunk,
-> > it was freed and re-allocated and the bit that is about to be checked
-> > doesn't represent the bit it is checking for.  
-> 
-> This I assumed.
-> And the kfree() at the end can not happen while there is still a reader?
+IMHO this just reveals a problem that might also be triggered in a 
+container that just got downloaded or after upgrading a package, no?
 
-Correct. That's done by the pid_list user:
+-- 
+Cheers
 
-In clear_ftrace_pids():
-
-	/* Wait till all users are no longer using pid filtering */
-	synchronize_rcu();
-
-	if ((type & TRACE_PIDS) && pid_list)
-		trace_pid_list_free(pid_list);
-
-	if ((type & TRACE_NO_PIDS) && no_pid_list)
-		trace_pid_list_free(no_pid_list);
-
--- Steve
-
+David
