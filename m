@@ -1,152 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF780351FD3;
-	Thu, 13 Nov 2025 13:02:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C9FC1946C8;
+	Thu, 13 Nov 2025 14:15:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763038941; cv=none; b=QS+KhB4Zya3ZaQNx1vy/ei55kkwrLJYbQJDasSHDQzpgqMB1EPRvIp6ZYLf6/j9PDD+SKCZgoMt8Bq7ui8/Xpzw5PnDtzFneXcFDETIusYuo+K/pAqQ8sn8vwLGOzC0b0nMqXe99F2yDn48Ae15hDPPEpm1GakDUaH0DJSwYf7U=
+	t=1763043319; cv=none; b=pGve/p52pdwhvKgGGzsXyPsMFiTiA/qgNQFA4IaBJlSTPl+CY3iRMPaZiRkRHGTnJPhmCatsakBeIMrez70xDUENVo6LQIZ3D+fQ3jFiArheHVzhf2GNIDmea2HkDjdq+Nk1tivFfFbF6gvowpeWoetCM79nUyFZsRt4JEa+Lyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763038941; c=relaxed/simple;
-	bh=DAkhzIUlG7glLtApG0JL3Nzp/VCQH1OHCGnfSmY2w+A=;
-	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
-	 Subject:From:To:Cc:Date; b=DtW/hOtYYk+heNLrIPw3LZqlHnRRVT13wQeVOMxSW4n/VXbmz+EX/v5c366lnI5LYo0OTEQ05lONfbw1M8gTc8g89I1ob5MA6Lf8RJcKl/FHRk8+C0MHxd57UpkuFg45XfwvYdIap5uHp9dYjh0IBXD6LQOSHZwHNM7P5PVxp0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lvk+IzY+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763043319; c=relaxed/simple;
+	bh=nWMhQRjakyXKC4rTkqBZ5NopTYYleHzJwHoDbpGBUhU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jomwyN6LHOgZgMmkz4DNUA+n/N5rrs8pjwqcBuU5RPBGwrqbnUrs1XBUdQL/yU1PXWAZ+sSk+PqujNZ36wE1C3nUHZAltFwgo0FO9Vn9RamI2w+/XHpKGnaG8RAXXD6+FAHXbFX9Iqk9ZSB/RVkwkRN2a82o6AbtaMKLot21mc0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dbT+ZjWl; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZFw0neMO; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lvk+IzY+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AB07C4CEF8;
-	Thu, 13 Nov 2025 13:02:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763038941;
-	bh=DAkhzIUlG7glLtApG0JL3Nzp/VCQH1OHCGnfSmY2w+A=;
-	h=In-Reply-To:References:Subject:From:To:Cc:Date:From;
-	b=Lvk+IzY+lB1vXAiV3KiK/Dl+SooaiijPPGGZX7BqCq5K/P6OhksFdbSdOhWHl5Jby
-	 Cxk9xl9C2WaNalvHvFdPt9cQKgHflLxl5xFQ507KNhLAFLDIQSZN9KhwryG07WM4uk
-	 C/ObKhgdZFKgSMdPKHLif6IOYcdWY8YHOlW9aNSozldLaOoN1DjzXNU5wfo27lDzCR
-	 w8U7r4/EpeYxGXBMuWMeUl7X6xVabSWoz1Eofc20iBbz//jBB4vy1hG9yzv8PqxFKf
-	 w962dj6qYhXTQhb3iMg+WL/iV0ErG8t1OfR7C+Txk/JbA0BWOvKnfmJIS+S019Fbtj
-	 M+cyXHOjQGlog==
-Content-Type: multipart/mixed; boundary="===============2663991294437569515=="
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dbT+ZjWl";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZFw0neMO"
+Date: Thu, 13 Nov 2025 15:15:15 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1763043316;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SiruBdR++j5tVUStoBtH3b0TZxEBb9tGVfS5KkiuCyE=;
+	b=dbT+ZjWlYzH5DvbWfZBk0lM29niWzWpkLhd5TAZTyazT7jTMK05q9XW0SVidJ1RYxdPYOc
+	J6daknsORyW7fzzbuWSagl/+IqGBdFWarF+BSarXCnmunLGsbodITAbA8s1CBcEadDiNXh
+	tDpSgHHUMz0KajgXELIrq+UucEvsFbKWn1UmAPPzKrHQLeaYXqjI3BHKDYbf5zpuCVYihV
+	kIKVKf7rn6qUPHb2yztp/Vp85csuNEZbm5IEo1nNE5+iIe7C8NKZXbFrE05ghGVVl3jvgJ
+	hD3JKRSCwUttqJ2ZuVnMnx2ZK9NhGWN4v80hrRKrG3E5eDaM0ORwzOUkPXF+Fg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1763043316;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SiruBdR++j5tVUStoBtH3b0TZxEBb9tGVfS5KkiuCyE=;
+	b=ZFw0neMO1x/Ijtzi3YWRMDCsFa9VFqudEboNgWo3fl/iHGKJfYw6j72TYKcY4imSyDy9n6
+	NjAuh4j1z5y40OCQ==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Yongliang Gao <leonylgao@gmail.com>
+Cc: rostedt@goodmis.org, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, frankjpliu@tencent.com,
+	Yongliang Gao <leonylgao@tencent.com>,
+	Huang Cun <cunhuang@tencent.com>
+Subject: Re: [PATCH v3] trace/pid_list: optimize pid_list->lock contention
+Message-ID: <20251113141515.iZSIDK0T@linutronix.de>
+References: <20251113000252.1058144-1-leonylgao@gmail.com>
+ <20251113073420.yko6jYcI@linutronix.de>
+ <CAJxhyqCyB3-CyDKgPtP-EoC=G9cWAYgLvse003+i2n6U4Pgv1w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <367c6cc9ffa12937ce18f37fc1271e3d17a3f7aa6ea6d1152cc8a41539994865@mail.kernel.org>
-In-Reply-To: <20251113123750.2507435-5-jolsa@kernel.org>
-References: <20251113123750.2507435-5-jolsa@kernel.org>
-Subject: Re: [PATCHv2 bpf-next 4/8] ftrace: Add update_ftrace_direct_del function
-From: bot+bpf-ci@kernel.org
-To: jolsa@kernel.org,rostedt@kernel.org,revest@google.com,mark.rutland@arm.com
-Cc: bpf@vger.kernel.org,linux-kernel@vger.kernel.org,linux-trace-kernel@vger.kernel.org,linux-arm-kernel@lists.infradead.org,ast@kernel.org,daniel@iogearbox.net,andrii@kernel.org,menglong8.dong@gmail.com,song@kernel.org,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,clm@meta.com,ihor.solodrai@linux.dev
-Date: Thu, 13 Nov 2025 13:02:21 +0000 (UTC)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAJxhyqCyB3-CyDKgPtP-EoC=G9cWAYgLvse003+i2n6U4Pgv1w@mail.gmail.com>
 
---===============2663991294437569515==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+On 2025-11-13 19:13:23 [+0800], Yongliang Gao wrote:
+> Hi Sebastian,
+Hi Yongliang,
 
-> diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-> index ded3a306a..433c36c3a 100644
-> --- a/include/linux/ftrace.h
-> +++ b/include/linux/ftrace.h
-> @@ -543,6 +543,7 @@ int modify_ftrace_direct(struct ftrace_ops *ops, unsigned long addr);
->  int modify_ftrace_direct_nolock(struct ftrace_ops *ops, unsigned long addr);
->
->  int update_ftrace_direct_add(struct ftrace_ops *ops, struct ftrace_hash *hash);
-> +int update_ftrace_direct_del(struct ftrace_ops *ops, struct ftrace_hash *hash);
->
->  void ftrace_stub_direct_tramp(void);
+> Thank you for your review and the thoughtful questions.
+> 
+> 1. Performance Data
+> We encountered this issue in a production environment with 288 cores
+> where enabling set_ftrace_pid caused system CPU usage (sys%) to
+> increase from 10% to over 90%. In our 92-core VM test environment:
+> 
+> Before patch (spinlock):
+> - Without filtering: cs=2395401/s, sys%=7%
+> - With filtering: cs=1828261/s, sys%=40%
+> 
+> After patch (seqlock):
+> - Without filtering: cs=2397032/s, sys%=6%
+> - With filtering: cs=2398922/s, sys%=6%
+> 
+> The seqlock approach eliminates the pid_list->lock contention that was
+> previously causing sys% to increase from 7% to 40%.
+> 
+> 2. Reader Retry Behavior
+> Yes, if the write side is continuously busy, the reader might spin and
+> retry. However, in practice:
+> - Writes are infrequent (only when setting ftrace_pid filter or during
+> task fork/exit with function-fork enabled)
+> - For readers, trace_pid_list_is_set() is called on every task switch,
+> which can occur at a very high frequency.
 
-[ ... ]
+See.
 
-> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> index 311ce6406..345f3fdd2 100644
-> --- a/kernel/trace/ftrace.c
-> +++ b/kernel/trace/ftrace.c
+> 3. Result Accuracy
+> You're correct that the result might change immediately after the
+> read. For trace_ignore_this_task(), we don't require absolute
+> accuracy. Slight race conditions (where a task might be traced or not
+> in borderline cases) are acceptable.
 
-[ ... ]
+I don't see why RCU work shouldn't work here.
+If a pid is removed then it might result that a chunk cleared/ removed
+then upper_chunk/ lower_chunk can become NULL. The buffer itself can be
+reused and point to something else. It could lear to a false outcome in
+test_bit(). This is handled by read_seqcount_retry().
 
-> +int update_ftrace_direct_del(struct ftrace_ops *ops, struct ftrace_hash *hash)
-> +{
-> +	struct ftrace_hash *new_hash = NULL, *filter_hash = NULL, *free_hash = NULL;
-> +	struct ftrace_func_entry *del, *entry;
-> +	unsigned long size, i;
-> +	int err = -EINVAL;
-> +
-> +	if (!hash_count(hash))
-> +		return 0;
-> +	if (check_direct_multi(ops))
-> +		return -EINVAL;
-> +	if (!(ops->flags & FTRACE_OPS_FL_ENABLED))
-> +		return -EINVAL;
-> +	if (direct_functions == EMPTY_HASH)
-> +		return -EINVAL;
-> +
-> +	mutex_lock(&direct_mutex);
-> +
-> +	/* Make sure requested entries are already registered. */
-> +	size = 1 << hash->size_bits;
-> +	for (i = 0; i < size; i++) {
-> +		hlist_for_each_entry(entry, &hash->buckets[i], hlist) {
-> +			del = __ftrace_lookup_ip(direct_functions, entry->ip);
-> +			if (!del || del->direct != entry->direct)
-> +				goto out_unlock;
-> +		}
-> +	}
-> +
-> +	err = -ENOMEM;
-> +	filter_hash = hash_sub(ops->func_hash->filter_hash, hash);
-> +	if (!filter_hash)
-> +		goto out_unlock;
-> +
-> +	new_hash = hash_sub(direct_functions, hash);
-> +	if (!new_hash)
-> +		goto out_unlock;
+You could assign upper1, upper2, to NULL/ buffer as now and the removal
+(in put_lower_chunk(), put_upper_chunk()) delay to RCU so it happens
+after the grace period. That would allow you to iterate over it in
+trace_pid_list_is_set() lockless since the buffer will not disappear and
+will not be reused for another task until after all reader left.
 
-Can this leak new_hash?  If hash_sub() succeeds for both filter_hash
-and new_hash, but then either unregister_ftrace_function() or
-ftrace_update_ops() fails below, we goto out_unlock without freeing
-new_hash.  The cleanup code only frees filter_hash:
+Additionally it would guarantee that the buffer is not released in
+trace_pid_list_free(). I don't see how the seqcount ensures that the
+buffer is not gone. I mean you could have a reader and the retry would
+force you to do another loop but before that happens you dereference the
+upper_chunk pointer which could be reused.
 
-> +
-> +	/* If there's nothing left, we need to unregister the ops. */
-> +	if (ftrace_hash_empty(filter_hash)) {
-> +		err = unregister_ftrace_function(ops);
-> +		/* cleanup for possible another register call */
-> +		ops->func = NULL;
-> +		ops->trampoline = 0;
-> +		ftrace_free_filter(ops);
-> +		ops->func_hash->filter_hash = NULL;
-> +	} else {
-> +		err = ftrace_update_ops(ops, filter_hash, EMPTY_HASH);
-> +	}
-> +
-> +	if (!err) {
-> +		free_hash = direct_functions;
-> +		rcu_assign_pointer(direct_functions, new_hash);
-> +	}
-> +
-> + out_unlock:
-> +	mutex_unlock(&direct_mutex);
-> +
-> +	if (free_hash && free_hash != EMPTY_HASH)
-> +		call_rcu_tasks(&free_hash->rcu, register_ftrace_direct_cb);
-> +	if (filter_hash)
-> +		free_ftrace_hash(filter_hash);
-> +
-> +	return err;
-> +}
+So I *think* the RCU approach should be doable and cover this.
 
-If err != 0, new_hash remains allocated but is never freed.  Should the
-cleanup code add free_ftrace_hash(new_hash) when it's non-NULL?
+> Best regards,
+> Yongliang
 
-
----
-AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
-See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
-
-CI run summary: https://github.com/kernel-patches/bpf/actions/runs/19332026793
-
---===============2663991294437569515==--
+Sebastian
