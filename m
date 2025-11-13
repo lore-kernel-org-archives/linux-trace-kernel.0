@@ -1,154 +1,186 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D74EF2309B2;
-	Thu, 13 Nov 2025 17:41:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CD18357736
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Nov 2025 17:57:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763055709; cv=none; b=inum6gJgKRXOtHsu2JdYW4Y+45O1TM98Dzu9PMqwptqj6G8LEP/riakWBX+y4we4IBPGJbQr/fT4pAuvz88yhbtn+5BwksZcoPAd2D1aR8ceEVJGwW3J2bOd1UY1NTMV/2joFfVsPmvoxW31C/gssvCsvrlELHGNCoOcqTwMG+o=
+	t=1763056643; cv=none; b=OmjjgWtdpRs8XKwi3EPkTKdsEqRB2YiBjjxBgJ+rnkrHQj8eQHck+RQYL65PR/9bIVRxi3WfSiVZiOudgeJfEzBXoKUNuH0vZvrY+SSeSzPeGaK8zDl9hUwiLRP33n4FU3R1pyBd/qQkZMLsh8/szBA4bxuUsv0T8OTJ5CEw5nQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763055709; c=relaxed/simple;
-	bh=9u/9wooimg78LZNZgyo2Be9GSJ/iR3xJ38ZAqHeLh+E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sAAaW5/WdVQxyndNptC481eF5hLiXM74MfyNfyNt/WnC16Ummo/nsE9cL1w87QXm0lIJBT7NyBltmJCedm8oifobkE9qptdRASJSdoxPG7yrqt2qgi+/2Lx9DcNw/gsid8C8bn1vvGckP0/OqWq1Lv8rAtjMi7oJS1GlTNlHCaE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z2vw0zV2; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1763056643; c=relaxed/simple;
+	bh=kvDK0kyHBLsRLqo/xqfgjRnH1mILL5tzYr3RBtYpY5s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WPG9zZWnfD7ksFAqVg9GJ9Y61Cb6xtRKU8VxWGKucXpl7Jvt9xdj+ktLC6HkODCjce4Jd4dLJwY4kJa7dfwAHaa+N0amEWMkBLII6Ok+6qX9SQAJTLJcovncXonVfMOYZH7BpoHJVveqxi0asMkJmUqnkermrlkGTbrH8BaqAgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gqqB+O3a; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z2vw0zV2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763055708; x=1794591708;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=9u/9wooimg78LZNZgyo2Be9GSJ/iR3xJ38ZAqHeLh+E=;
-  b=Z2vw0zV2bo+Toe+12vwe9nTk7khj+L36wMvo+QGa0WBPFVijLObGL5ve
-   Fi6NiED+uInccZcxNtEpj96eJ8/W2qn+HKfuUhaf+aiJicrogOaIIL4lm
-   +5pctOZV4cP1cG+QE/7Gy92agl33hwP/0EMxsKHMb3p56oV4ct7SaxUjy
-   w19qYEFL0DssXv8Aca82MQwb2+x6iOtra5qhs2ESbd6hPqRQhIY7z8j3S
-   sSDUPbXLBghhmNl050Rl4MuI4TxNoafbdJmGmJ9IUQyqSWODZGsF3ZK2F
-   8hj0e3mRc3NAIa+MBqLLHJqmzB+KNFYc8dsnom1Ku864YRcvWcLMpmaF/
-   g==;
-X-CSE-ConnectionGUID: sIt4NjY5R3OgCclEv1fLkg==
-X-CSE-MsgGUID: 2f1PLN7OQDWYNmpNB8F7NQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11612"; a="76488335"
-X-IronPort-AV: E=Sophos;i="6.19,302,1754982000"; 
-   d="scan'208";a="76488335"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2025 09:41:47 -0800
-X-CSE-ConnectionGUID: GdtCnl6YSxmYdb/L1VHP6Q==
-X-CSE-MsgGUID: 2Vd9XJXVRSmzNxAHEaOoMQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,302,1754982000"; 
-   d="scan'208";a="193996578"
-Received: from lkp-server01.sh.intel.com (HELO 7b01c990427b) ([10.239.97.150])
-  by orviesa004.jf.intel.com with ESMTP; 13 Nov 2025 09:41:44 -0800
-Received: from kbuild by 7b01c990427b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1vJbKI-0005fl-0d;
-	Thu, 13 Nov 2025 17:41:42 +0000
-Date: Fri, 14 Nov 2025 01:41:08 +0800
-From: kernel test robot <lkp@intel.com>
-To: Donglin Peng <dolinux.peng@gmail.com>, rostedt@goodmis.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Donglin Peng <pengdonglin@xiaomi.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH v5] function_graph: Enable funcgraph-args and
- funcgraph-retaddr to work simultaneously
-Message-ID: <202511140111.X1AImPQE-lkp@intel.com>
-References: <20251113072938.333657-1-dolinux.peng@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gqqB+O3a"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-475ca9237c2so6728595e9.3
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Nov 2025 09:57:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1763056640; x=1763661440; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YI6SwLVxaeWge12jpv+g65IL6HLVUJJ6dHq74rzDBFI=;
+        b=gqqB+O3as26Es4StwpMjNr7sXODvZxhjRDPhnWWK6BV8QBa600NpcoqYwpw+UtCN5W
+         e8jNkZZPVeTriwboCCSG8z1qN4nc4qJWzUeSGoFp2AOtLJq825w0moZoqc0dSXogewr7
+         k19CDwiDZ3BJP+mNW58NMVJ1iUBqJdq/GOspUIx+LHR37YCkZgK8H9Mwg2M7szLfIccd
+         TiUqa8tYahcq0xl+8UCgE/UViZN9SA9nff5IaAJiQ+ie5KWU/wqVVfFCafn08Vj5B0Pe
+         1arYXm9FWx/4FTS3V+Bg6/EJZ6p5aAQrr48Vdx+XztJf2Uopyb2/23laN6kkRgCHygyx
+         cWGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763056640; x=1763661440;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=YI6SwLVxaeWge12jpv+g65IL6HLVUJJ6dHq74rzDBFI=;
+        b=IebswCi5OzBUTt/tMkV2+aAsxXZ/DFF7MpB3bcmABcZX0NjqMyTZHV3tSm3zK/9jjV
+         zOCJG0THqEuBB7HxJ1D6946FQEuODy1XaXG1JHrXRQES6sdDvj9U1PUiHldZ+nnOyN+P
+         8KeG7tdELuVjfNGD/UHzOW5vQAUuw36zVF/t9R0dHHkwKyI5L9E4owdcigVPXbueZoj1
+         XPdkJJm9/SdDgXQoj15SUv+et/AMnGPhGMe84gKTl6o8dkCCnPgHKQW2mD+51OPTrCpB
+         azdtykyPZghbyhmVl3omum6bH1TsNXbIaWAESq9OUNuR1uVQFXbHQy6Ycm8qFCGqtsYC
+         nfHA==
+X-Forwarded-Encrypted: i=1; AJvYcCUSjiWKMJ+xHLqC6OgWOW3nwZjzPTj8gZHeHSJpqU4DgnO7zHrmkLHlhpjUzTUoEvne3k4ICQeXFJUTWgQBPVk7USw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyqTXcLldq6+uIE/YiAEiQeT6yScSycKGmgxhavdLN1m0zBOsn7
+	DQJbIP3eyPacKt8Bk7TWJkkiNXggIH8J7KKv8pqwbV6SU17GMam8ALh8w+bhycxAD72tlKjp+Fc
+	/spaf8fjNmVYjuIPHVq83h96T6oYFZQc=
+X-Gm-Gg: ASbGncvkrh0rqGluQzLnOi+9YHYjHLojBUDBmoGhtNC6j2UoghqkJpolBqgMv6X+MRV
+	lGriaM3bOpNXAGBpJHF/G6UUNkwpgQTV/bUZSZtgtUFaj4CmWCRP8vcFNasPE6Sb5ifLLHXc/6X
+	jegdXHGZuZ4HkgxFZAUk0xfnoYE89Errj2iOGOqzikbWFOYT7CsS4bABQF0vKr/nKUznM2oF/AZ
+	M+oip0w2GgDKFXLAGkoO6Y+3qBeGUjm0L6Gmpq7k8ZprGv/9YLMTlQ8ta6Ez8DMgaPgj0ginL1E
+	vfiaCuNHbUA=
+X-Google-Smtp-Source: AGHT+IHbO+ZGBFXO5ge0ijkSwdvqQcv57wZTtQs6YNPPselRxjdniZ7ynd75vfty+uOIzSWSgkGQqLyBXVlxsfcb078=
+X-Received: by 2002:a05:600c:3b84:b0:476:a25f:6a4d with SMTP id
+ 5b1f17b1804b1-4778fe4f3d1mr4281155e9.1.1763056639666; Thu, 13 Nov 2025
+ 09:57:19 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251113072938.333657-1-dolinux.peng@gmail.com>
+References: <20251113123750.2507435-6-jolsa@kernel.org> <c3260fe9e3d8ad79c75a6e8281f9fae5580beb3fcdd08e2015f417e11ec0a1b2@mail.kernel.org>
+ <aRYAhDqGsOHZzTL-@krava>
+In-Reply-To: <aRYAhDqGsOHZzTL-@krava>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Thu, 13 Nov 2025 09:57:05 -0800
+X-Gm-Features: AWmQ_bljz9ERUrLpgXYFmwgFdNYuQjEZ9EECbJhv0IrVw392banlmrLNtGinfI0
+Message-ID: <CAADnVQKnnZkODUUDDJQNJ7tVnoGreggw5NuvaP81=rpUYXwd7g@mail.gmail.com>
+Subject: Re: [PATCHv2 bpf-next 5/8] ftrace: Add update_ftrace_direct_mod function
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: bot+bpf-ci@kernel.org, rostedt@kernel.org, 
+	Florent Revest <revest@google.com>, Mark Rutland <mark.rutland@arm.com>, bpf <bpf@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, 
+	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+	Menglong Dong <menglong8.dong@gmail.com>, Song Liu <song@kernel.org>, 
+	Martin KaFai Lau <martin.lau@kernel.org>, Eduard <eddyz87@gmail.com>, 
+	Yonghong Song <yonghong.song@linux.dev>, Chris Mason <clm@meta.com>, 
+	Ihor Solodrai <ihor.solodrai@linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Donglin,
+On Thu, Nov 13, 2025 at 8:00=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> wrot=
+e:
+>
+> On Thu, Nov 13, 2025 at 01:02:17PM +0000, bot+bpf-ci@kernel.org wrote:
+> > > diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+> > > index 433c36c3a..bacb6d9ab 100644
+> > > --- a/include/linux/ftrace.h
+> > > +++ b/include/linux/ftrace.h
+> > > @@ -544,6 +544,7 @@ int modify_ftrace_direct_nolock(struct ftrace_ops=
+ *ops, unsigned long addr);
+> > >
+> > >  int update_ftrace_direct_add(struct ftrace_ops *ops, struct ftrace_h=
+ash *hash);
+> > >  int update_ftrace_direct_del(struct ftrace_ops *ops, struct ftrace_h=
+ash *hash);
+> > > +int update_ftrace_direct_mod(struct ftrace_ops *ops, struct ftrace_h=
+ash *hash, bool do_direct_lock);
+> > >
+> > >  void ftrace_stub_direct_tramp(void);
+> > >
+> > > @@ -581,6 +582,11 @@ int update_ftrace_direct_del(struct ftrace_ops *=
+ops, struct ftrace_hash *hash)
+> > >     return -ENODEV;
+> > >  }
+> > >
+> > > +int modify_ftrace_direct_hash(struct ftrace_ops *ops, struct ftrace_=
+hash *hash, bool do_direct_lock)
+> >                 ^^^^^^^^^^^^^^^^^^^^^^^^^^
+> > The stub function name doesn't match the declaration. Should this be
+> > update_ftrace_direct_mod() instead of modify_ftrace_direct_hash()?
+>
+> it should, my bad
+>
+> >
+> > > +{
+> > > +   return -ENODEV;
+> > > +}
+> > > +
+> >
+> > [ ... ]
+> >
+> > > diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> > > index 345f3fdd2..627d05b57 100644
+> > > --- a/kernel/trace/ftrace.c
+> > > +++ b/kernel/trace/ftrace.c
+> > > @@ -6445,6 +6445,74 @@ int update_ftrace_direct_del(struct ftrace_ops=
+ *ops, struct ftrace_hash *hash)
+> > >     return err;
+> > >  }
+> > >
+> > > +int update_ftrace_direct_mod(struct ftrace_ops *ops, struct ftrace_h=
+ash *hash, bool do_direct_lock)
+> > > +{
+> > > +   struct ftrace_hash *orig_hash =3D ops->func_hash->filter_hash;
+> > > +   struct ftrace_func_entry *entry, *tmp;
+> > > +   static struct ftrace_ops tmp_ops =3D {
+> > > +           .func           =3D ftrace_stub,
+> > > +           .flags          =3D FTRACE_OPS_FL_STUB,
+> > > +   };
+> > > +   unsigned long size, i;
+> > > +   int err;
+> > > +
+> > > +   if (!hash_count(hash))
+> > > +           return 0;
+> > > +   if (check_direct_multi(ops))
+> > > +           return -EINVAL;
+> > > +   if (!(ops->flags & FTRACE_OPS_FL_ENABLED))
+> > > +           return -EINVAL;
+> > > +   if (direct_functions =3D=3D EMPTY_HASH)
+> > > +           return -EINVAL;
+> > > +
+> > > +   if (do_direct_lock)
+> > > +           mutex_lock(&direct_mutex);
+> > > +
+> > > +   /* Enable the tmp_ops to have the same functions as the direct op=
+s */
+> > > +   ftrace_ops_init(&tmp_ops);
+> > > +   tmp_ops.func_hash =3D ops->func_hash;
+> > > +
+> > > +   err =3D register_ftrace_function_nolock(&tmp_ops);
+> > > +   if (err)
+> > > +           goto unlock;
+> > > +
+> > > +   /*
+> > > +    * Call __ftrace_hash_update_ipmodify() here, so that we can call
+> > > +    * ops->ops_func for the ops. This is needed because the above
+> > > +    * register_ftrace_function_nolock() worked on tmp_ops.
+> > > +    */
+> > > +   err =3D __ftrace_hash_update_ipmodify(ops, orig_hash, orig_hash, =
+true);
+> >                                                                        =
+ ^^^^
+> > Does __ftrace_hash_update_ipmodify() accept a fourth argument? The
+> > function signature shows it only takes three parameters (ops, old_hash,
+> > new_hash). This looks like a compilation error.
+>
+> the whole patchset is based on bpf-next/master plus Song's livepatch
+> fixes which change modify_ftrace_direct_hash function, it's mentioned
+> in the cover letter
 
-kernel test robot noticed the following build warnings:
-
-[auto build test WARNING on v6.18-rc5]
-[also build test WARNING on linus/master]
-[cannot apply to trace/for-next next-20251113]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Donglin-Peng/function_graph-Enable-funcgraph-args-and-funcgraph-retaddr-to-work-simultaneously/20251113-153332
-base:   v6.18-rc5
-patch link:    https://lore.kernel.org/r/20251113072938.333657-1-dolinux.peng%40gmail.com
-patch subject: [PATCH v5] function_graph: Enable funcgraph-args and funcgraph-retaddr to work simultaneously
-config: x86_64-kexec (https://download.01.org/0day-ci/archive/20251114/202511140111.X1AImPQE-lkp@intel.com/config)
-compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251114/202511140111.X1AImPQE-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202511140111.X1AImPQE-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> kernel/trace/trace_functions_graph.c:169:20: warning: variable 'retaddr' is uninitialized when used here [-Wuninitialized]
-     169 |                 entry->args[0] = retaddr;
-         |                                  ^~~~~~~
-   kernel/trace/trace_functions_graph.c:143:23: note: initialize the variable 'retaddr' to silence this warning
-     143 |         unsigned long retaddr;
-         |                              ^
-         |                               = 0
-   1 warning generated.
-
-
-vim +/retaddr +169 kernel/trace/trace_functions_graph.c
-
-   132	
-   133	static void
-   134	print_graph_duration(struct trace_array *tr, unsigned long long duration,
-   135			     struct trace_seq *s, u32 flags);
-   136	
-   137	static int __graph_entry(struct trace_array *tr, struct ftrace_graph_ent *trace,
-   138				 unsigned int trace_ctx, struct ftrace_regs *fregs)
-   139	{
-   140		struct ring_buffer_event *event;
-   141		struct trace_buffer *buffer = tr->array_buffer.buffer;
-   142		struct ftrace_graph_ent_entry *entry;
-   143		unsigned long retaddr;
-   144		int size = sizeof(*entry);
-   145		int type = TRACE_GRAPH_ENT;
-   146		int nr_args = 0, args_offs = 0;
-   147	
-   148		if (IS_ENABLED(CONFIG_FUNCTION_GRAPH_RETADDR) &&
-   149			tracer_flags_is_set(TRACE_GRAPH_PRINT_RETADDR)) {
-   150			retaddr = ftrace_graph_top_ret_addr(current);
-   151			type = TRACE_GRAPH_RETADDR_ENT;
-   152			nr_args += 1;
-   153		}
-   154	
-   155		/* If fregs is defined, add FTRACE_REGS_MAX_ARGS long size words */
-   156		if (!!fregs)
-   157			nr_args += FTRACE_REGS_MAX_ARGS;
-   158	
-   159		size += nr_args * sizeof(long);
-   160		event = trace_buffer_lock_reserve(buffer, type, size, trace_ctx);
-   161		if (!event)
-   162			return 0;
-   163	
-   164		entry = ring_buffer_event_data(event);
-   165		entry->graph_ent = *trace;
-   166	
-   167		/* Store the retaddr in args[0] */
-   168		if (type == TRACE_GRAPH_RETADDR_ENT) {
- > 169			entry->args[0] = retaddr;
-   170			args_offs += 1;
-   171		}
-   172	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Ohh. Will send bpf PR to Linus today and merge into bpf-next afterwards.
