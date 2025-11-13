@@ -1,150 +1,154 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18AD62877C3;
-	Thu, 13 Nov 2025 01:42:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 991C2296BA8
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Nov 2025 01:49:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762998168; cv=none; b=R7wEYqHrRdrjXMJ3YzZauOk3JWOY5ueEo8SvwUcjEoEG+f+1u/m69Mjb8nYOMvIQYUKhoErqL02JbmrhfW3BxhMj0aonpVKJCRJWk35N0lxfpPDH7shOLweTYNcloXtOTZNHyscN3ASKwkTbYvayxyule/ruXTglZzwkrTU8dCA=
+	t=1762998548; cv=none; b=YA3DSwNLGtG4lDp0Cd4Gu6J2/aiPkYTeqIEgrk1FmPPSke4M2Vf7TMCt+iKaDeMa46SROQs4IyTBwqqFa2Fl05HTD8NZUWxGopgm+KwXdx73wPOnNhyklb/QOV8GcqGzjgE+kfoy676VFNVpurnmseUHdKLirPWmSgIRs3mKabU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762998168; c=relaxed/simple;
-	bh=J6kO8MinoWEoGkaYJTyrYhudby1TwSS/GObHrnk96Qk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GUtTbyWl0vrKUboXkgcuTQx7XicOPauO3YV2a2b+YnCe/4SS2jlor3atLzeat6SkrqmmY/FdUiZ9aOxYPCs9QBkJMyXOghaw1wsO/mZgP5aZr4X21HYxOuTiIWYXcQdRca95V6VZmtKE/urTvwxiOa71EviGrJdGvY0NtoY2MfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q4lsqY4V; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1762998548; c=relaxed/simple;
+	bh=/BXa76nBAYuWd/9wvqfbPPw7zbjbNNpN6F7iPGRfgtg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DXWeqMGuo5A5rWG8DH5Vo2MqpoF9T9HXeaUr/MqySuhoWOuIb3NCM+4ss840ZD0A/6SLfoT6KdOAlFbTvzBbXNFabEQIjxCVV2lg115GbXBiocMDLUFbEo4c7JvcMSzPQv/ALTO2AlwrO9cjG22edHWT9gOK4un0sv9ryFEaFs0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mOW+ZxaO; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q4lsqY4V"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762998166; x=1794534166;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=J6kO8MinoWEoGkaYJTyrYhudby1TwSS/GObHrnk96Qk=;
-  b=Q4lsqY4VXX4igiIgshReZkyUtIgsWlt/3ol98tkOjnkpawdgTu7G5CZs
-   ui2RzS6wPdpnMFN5iQwFkR6HzGCOAvOImdiATC+7tjwBI6hazPLiI+O8U
-   vco0brm5UgrvCLxkxVX/HgaayuGOiKrVyjjFKdib+jDANbt3wA71Css7t
-   bED2XTfJw2/jut2ror+uN0nfcIbKFEuM5AOQlnqVR6sUNJj2f1WGfWLRp
-   psQh/cKHiTwf/rR2pW5orMcOlFlwkDYJeqtOfJluCvGbCmXkGuISNgTmY
-   dvUotlKOeO8l+bWEcYAfFtKtQjMZ1Elge6cFzjB1RnIJEA3JToTFh4COU
-   g==;
-X-CSE-ConnectionGUID: ms54yoDPST6qWb+fTNQQCw==
-X-CSE-MsgGUID: DlDyKHUuRdmHr1puybNetg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11611"; a="65225859"
-X-IronPort-AV: E=Sophos;i="6.19,300,1754982000"; 
-   d="scan'208";a="65225859"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2025 17:42:44 -0800
-X-CSE-ConnectionGUID: UV41EMOGRgSJ6IjRZ/og6g==
-X-CSE-MsgGUID: cb9xlMdyS3Cqc07OKTsBXg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,300,1754982000"; 
-   d="scan'208";a="188618989"
-Received: from yinghaoj-desk.ccr.corp.intel.com (HELO [10.238.1.225]) ([10.238.1.225])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2025 17:42:25 -0800
-Message-ID: <f2bfa5ad-4c74-4b6d-baa7-d0d01d5d9b15@linux.intel.com>
-Date: Thu, 13 Nov 2025 09:42:22 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mOW+ZxaO"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-b3e7cc84b82so43331666b.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Nov 2025 17:49:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1762998545; x=1763603345; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/BXa76nBAYuWd/9wvqfbPPw7zbjbNNpN6F7iPGRfgtg=;
+        b=mOW+ZxaOIb1Eut2DwNyQaEOe+GAfe1E51sL91ZgLlHGt+PrA7Jd0l3bsFU+EVLYogf
+         oyolsb4l0daYwhvV3B6YgKZzyahMhgwnBPkpfu8UerMk3fShYUiX4F/q1X1yi8r97oX9
+         LtmjmOENZqCHCYszWQETlxHXk6CIuZhMe6l8TRwGJlSQZuzi9MMA8jJm/FEN3Gd/y5iD
+         IrevKtM1Y7jvCe6ZPZX3BGUMWplUIEBPsZ8MWbF7WPZ2FR4D4FAWUQgVLkyPsXicJDhW
+         HcL9dIDTwhRS7H0EaJvMKz5i/F456QZXKaxE8on2a7WgYYF9ussF48izj6KWKrwH+tZB
+         mm9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762998545; x=1763603345;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=/BXa76nBAYuWd/9wvqfbPPw7zbjbNNpN6F7iPGRfgtg=;
+        b=svFnCd1rOpZ9WUh1KfckLkq50+AG5U8Ij4RMnyglG/EnvqgeS4cqMoxqYgxJ6OkcSY
+         lmv8kFlPq+/Z3L+/nGpL04Tzn0zjddqRCHAfOAOichtxz+9KJg5Y5XXexervwpW1Z5H6
+         gV9duzDf3jpWM3/1Ryzyt9VTcOLt7RSpyOVegaBNx6D4UWTw+gmRD+GDLm/kimql1zUb
+         ToRJdSll46LXrm9MenXa1fQYDsmmWPgCjBVY2X0SdkPRUqITSwY6iAXeAMleqBL4xUcm
+         x6dKSGq4MS70uUitEBJg0xbJFkl2PqPZNqVbk8SDBxVjkHf4BGEkXITbWqrYMxTwMEH3
+         j4yA==
+X-Forwarded-Encrypted: i=1; AJvYcCUh2QFueyNF8TYihEhuwyZ5lop5sJ1fDOoBShNHvW8XTrjnJAGLW1eX5L83Ktvw494HO+1OPkh8JeovUvdBME+2WkQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyWk62VzkBpj2mcMUECy2xWB//zcBBrZkfstiOHMFXTBVRvqHTd
+	+zAue28GS23GEK+r5cNIFkoYqiVHcyv+iHDvOu3YoF9iVx6ZgU7pz4fTH1FNrx67htUCl+flXC4
+	1zMx7UMBX/V31NufLJYKowXcwQfKQxQE=
+X-Gm-Gg: ASbGnct7mNU3gKoVvfioc0zlgCL6wPCBL2wlSLmWyrm57yAze05/jThnLRoUpD6I8wf
+	vo9V7sSuWFqgzJxRLeNihyVQPfxvRFJaBYaP5tbwtW5NI4WvSpv90bQlqYk26PRTj8pzEexvpY2
+	2nQFgsOTgXFl/5/5oS61hXukXxmlAb4lRUL52tfSzDgMTQ6Qbm8e83inoO6YrXLJyoXzvnJscum
+	R8zC8KJO8i21kelgkmM4H0h2xUvW6eKBTNr314eMmJwjgXxlomGGkjR/J98RbddEYXJ/lNU
+X-Google-Smtp-Source: AGHT+IHqPrXkwwUDap0ca9SLlYtO97n9ztGxu1x6wVw4xsLvIfW4MVbyJ3ujywmUi0PiOUwK6qabcxMBYdhHwV+o39I=
+X-Received: by 2002:a17:907:3f23:b0:b72:b6ae:266 with SMTP id
+ a640c23a62f3a-b7331970a45mr560470666b.10.1762998544691; Wed, 12 Nov 2025
+ 17:49:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v1 03/37] KVM: Enumerate support for PRIVATE memory
- iff kvm_arch_has_private_mem is defined
-To: Ackerley Tng <ackerleytng@google.com>
-Cc: cgroups@vger.kernel.org, kvm@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
- linux-trace-kernel@vger.kernel.org, x86@kernel.org,
- akpm@linux-foundation.org, bp@alien8.de, brauner@kernel.org,
- chao.p.peng@intel.com, chenhuacai@kernel.org, corbet@lwn.net,
- dave.hansen@intel.com, dave.hansen@linux.intel.com, david@redhat.com,
- dmatlack@google.com, erdemaktas@google.com, fan.du@intel.com,
- fvdl@google.com, haibo1.xu@intel.com, hannes@cmpxchg.org, hch@infradead.org,
- hpa@zytor.com, hughd@google.com, ira.weiny@intel.com,
- isaku.yamahata@intel.com, jack@suse.cz, james.morse@arm.com,
- jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com, jhubbard@nvidia.com,
- jroedel@suse.de, jthoughton@google.com, jun.miao@intel.com,
- kai.huang@intel.com, keirf@google.com, kent.overstreet@linux.dev,
- liam.merwick@oracle.com, maciej.wieczor-retman@intel.com,
- mail@maciej.szmigiero.name, maobibo@loongson.cn,
- mathieu.desnoyers@efficios.com, maz@kernel.org, mhiramat@kernel.org,
- mhocko@kernel.org, mic@digikod.net, michael.roth@amd.com, mingo@redhat.com,
- mlevitsk@redhat.com, mpe@ellerman.id.au, muchun.song@linux.dev,
- nikunj@amd.com, nsaenz@amazon.es, oliver.upton@linux.dev,
- palmer@dabbelt.com, pankaj.gupta@amd.com, paul.walmsley@sifive.com,
- pbonzini@redhat.com, peterx@redhat.com, pgonda@google.com, prsampat@amd.com,
- pvorel@suse.cz, qperret@google.com, richard.weiyang@gmail.com,
- rick.p.edgecombe@intel.com, rientjes@google.com, rostedt@goodmis.org,
- roypat@amazon.co.uk, rppt@kernel.org, seanjc@google.com,
- shakeel.butt@linux.dev, shuah@kernel.org, steven.price@arm.com,
- steven.sistare@oracle.com, suzuki.poulose@arm.com, tabba@google.com,
- tglx@linutronix.de, thomas.lendacky@amd.com, vannapurve@google.com,
- vbabka@suse.cz, viro@zeniv.linux.org.uk, vkuznets@redhat.com,
- wei.w.wang@intel.com, will@kernel.org, willy@infradead.org,
- wyihan@google.com, xiaoyao.li@intel.com, yan.y.zhao@intel.com,
- yilun.xu@intel.com, yuzenghui@huawei.com, zhiquan1.li@intel.com
-References: <cover.1760731772.git.ackerleytng@google.com>
- <405686bacd68ce6c76aa5e6ef40f0a5324983c5b.1760731772.git.ackerleytng@google.com>
-Content-Language: en-US
-From: Binbin Wu <binbin.wu@linux.intel.com>
-In-Reply-To: <405686bacd68ce6c76aa5e6ef40f0a5324983c5b.1760731772.git.ackerleytng@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20251112034333.2901601-1-dolinux.peng@gmail.com>
+ <CAErzpms8oRkqJhxk1R6LMUq1GeZT3TqkPOm2yRAfY1ph_F2YNw@mail.gmail.com> <20251112103804.4a43591a@gandalf.local.home>
+In-Reply-To: <20251112103804.4a43591a@gandalf.local.home>
+From: Donglin Peng <dolinux.peng@gmail.com>
+Date: Thu, 13 Nov 2025 09:48:52 +0800
+X-Gm-Features: AWmQ_bmfsBpIDeSjzAUhCej7Cw2PwEc1ZTHTzRB4GUxjSqLSY-cAbHgULGIT7O4
+Message-ID: <CAErzpmt8Dsq3f6ZUvtmc25hvy0NH6uRxBHPSxeZhkFfzkdJ04g@mail.gmail.com>
+Subject: Re: [PATCH v3 RESEND] function_graph: Enable funcgraph-args and
+ funcgraph-retaddr to work simultaneously
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, linux-trace-kernel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Donglin Peng <pengdonglin@xiaomi.com>, 
+	Sven Schnelle <svens@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-
-On 10/18/2025 4:11 AM, Ackerley Tng wrote:
-> From: Sean Christopherson <seanjc@google.com>
+On Wed, Nov 12, 2025 at 11:37=E2=80=AFPM Steven Rostedt <rostedt@goodmis.or=
+g> wrote:
 >
-> Explicitly guard reporting support for KVM_MEMORY_ATTRIBUTE_PRIVATE based
-> on kvm_arch_has_private_mem being #defined in anticipation of decoupling
-> kvm_supported_mem_attributes() from CONFIG_KVM_VM_MEMORY_ATTRIBUTES.
-> guest_memfd support for memory attributes will be unconditional to avoid
-> yet more macros (all architectures that support guest_memfd are expect to
-  expect -> expected
-
-> user per-gmem attributes at some point), at which point enumerating support
-    ^
-   use
-> KVM_MEMORY_ATTRIBUTE_PRIVATE based solely on memory attributes being
-> supported _somewhere_ would result in KVM over-reporting support on arm64.
+> On Wed, 12 Nov 2025 17:00:10 +0800
+> Donglin Peng <dolinux.peng@gmail.com> wrote:
 >
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> ---
->   include/linux/kvm_host.h | 2 +-
->   virt/kvm/kvm_main.c      | 2 ++
->   2 files changed, 3 insertions(+), 1 deletion(-)
+> > I have a question regarding the behavior of the funcgraph-args option.
+> >
+> > Currently, when the funcgraph-args flag is set, the function arguments
+> > are saved.
+> > However, when the flag is cleared, the trace output still displays the =
+function
+> > arguments unconditionally.
 >
-> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-> index fddb373fcbaaf..21bf30e8d3cc1 100644
-> --- a/include/linux/kvm_host.h
-> +++ b/include/linux/kvm_host.h
-> @@ -721,7 +721,7 @@ static inline int kvm_arch_vcpu_memslots_id(struct kvm_vcpu *vcpu)
->   }
->   #endif
->   
-> -#ifndef CONFIG_KVM_VM_MEMORY_ATTRIBUTES
-> +#ifndef kvm_arch_has_private_mem
->   static inline bool kvm_arch_has_private_mem(struct kvm *kvm)
->   {
->   	return false;
-> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> index f73047ea4333e..591795a3fa124 100644
-> --- a/virt/kvm/kvm_main.c
-> +++ b/virt/kvm/kvm_main.c
-> @@ -2428,8 +2428,10 @@ static int kvm_vm_ioctl_clear_dirty_log(struct kvm *kvm,
->   #ifdef CONFIG_KVM_VM_MEMORY_ATTRIBUTES
->   static u64 kvm_supported_mem_attributes(struct kvm *kvm)
->   {
-> +#ifdef kvm_arch_has_private_mem
->   	if (!kvm || kvm_arch_has_private_mem(kvm))
->   		return KVM_MEMORY_ATTRIBUTE_PRIVATE;
-> +#endif
->   
->   	return 0;
->   }
+> Yes. The flag affects the behavior of the recording and not the displayin=
+g
+> of the arguments. There's no reason *not* to show them if they have alrea=
+dy
+> been recorded. Recording the arguments causes a noticeable overhead which
+> is why it is optional.
 
+Thank you for the clarification.
+
+I noticed that when funcgraph-args is enabled, it registers
+trace_graph_entry_args
+to replace trace_graph_entry. The only difference is whether a valid
+fregs pointer
+is passed.
+
+To reduce overhead, I propose consolidating the two entry functions. We cou=
+ld
+maintain only trace_graph_entry and pass the fregs parameter to graph_entry=
+.
+Within __graph_entry, we can then conditionally record arguments based on
+'TRACE_GRAPH_ARGS && !!fregs'.
+
+Additionally, I've confirmed that trace_graph_entry is exclusively used by =
+the
+function_graph tracer. Other tracers like irqsoff and wakeup directly call
+__trace_graph_entry with a NULL fregs pointer. Therefore, this consolidatio=
+n
+would not impact those tracers.
+
+What are your thoughts on this approach?
+
+Thanks,
+Donglin
+
+
+>
+> >
+> > I expected that the flag would control both saving and displaying the a=
+rguments.
+> > But it seems that the current design only controls the saving. This
+> > behavior seems
+> > inconsistent.
+>
+> Not at all. The option is only for the recording. Otherwise, one might
+> expect than they could do the recording and then after the fact enable
+> "func-args" and expect to see them. That would be more inconsistent.
+>
+> >
+> > I think we should add a check for the flag in the display part,
+> > specifically before
+> > calling print_function_args, to ensure that the arguments are only
+> > displayed when
+> > the flag is set.
+> >
+> > What are your thoughts?
+>
+> Big nope!
+>
+> The retaddr is different, as the information is somewhat redundant to the
+> call chain and may cause more noise then needed.
+>
+> -- Steve
