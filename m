@@ -1,98 +1,168 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 928B07262D
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Nov 2025 12:44:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2616734EEE8;
+	Thu, 13 Nov 2025 13:02:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763037876; cv=none; b=scCezH+S8VSRnJGfeXFhiZUFdZ1S+AG64MlrU2WDdrf1Ge8TYtK3a2/EH/wsgZntV3iZo3iPfJZhIEW/0nEXXCK3Qw3nZHra7rlXNNVfB9atswo1RcAQ6kr5sdnBno25+mHFZxMN4ykpUxm3Hqj0s9NloFOhwpiQRkU4wfajP5A=
+	t=1763038938; cv=none; b=PNwOQshYWcpgtTUg8LNrdP4e3TGbWjgz+z1VQd/2tRrr6RMbdMWBAbLQiwE6ZgaqIbfpRukp1ytNDlLxn1OdFSb8c6Mfw3uudSF/IaDW8I51YHaF/kM88+fxyLxjKaGp3+5gMF47DHIcdSRwwMtnLftUf2C056CHNoaFNMgzRBU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763037876; c=relaxed/simple;
-	bh=dnhYb190v8aOLjAoddug3EWP0Pv7uFkraOgvgLYO0yM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=us5YlHNVOH+uk93lnfhX1iNS6t92H86A/C2i9oNuXzNXIq3kBsljx8VIn08zbRRGbQNAqtl21HJaNsChYbSWm/Tih9EyKqgYQ7NSjv1Ma1PnSCyRUOvPZrn0iL0wODvVFgLdAvSqyhmid08GN6zUDd9STE0qwOlFEcJm2svdGJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JnV4Onfi; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1763038938; c=relaxed/simple;
+	bh=bUt+qNmjwdJ7gVejc5aNxtgCj7fJkFVLsF+93X0SgNw=;
+	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
+	 Subject:From:To:Cc:Date; b=V3pv2pwsq9mw+YzdmlEqOMYd4OjMj6XMV0Jf/St3cwFFUie5W/A6Z6Ej/62GlMmoSoSLDGJq/AyZ9UneUJb1Oen3DGe1OAaBJIdqlrQRA3jYnB97Fdhgv+3fpKYlaglpfKCHZdvMUsELeAL8RoNNt58KUBvc2J2QzTntERrP0ck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LiqKhseE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JnV4Onfi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1763037873;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kS5Nm7H1pNOZzdn0uGUVqC+gzBZ9oH1EpURjYTJP/4s=;
-	b=JnV4Onfi8hCpdf0rdZhvM38bOpCFlPDkT+Gmr9OrqxTR3atUhITzG8XAWZTGUMqNs8A51P
-	BPv9QmYWKojt4bhVGzCUQg9SpGzVtnVIMrorc254qpxI+BsdSSt8uWpdtS7/y3KcnXqVxD
-	p9z75relWsKSAmVLjBHR9esvXzGbYCo=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-237-SUS8M_ILNlO4h0a9VFBNng-1; Thu,
- 13 Nov 2025 07:44:32 -0500
-X-MC-Unique: SUS8M_ILNlO4h0a9VFBNng-1
-X-Mimecast-MFC-AGG-ID: SUS8M_ILNlO4h0a9VFBNng_1763037871
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6161A18002C2;
-	Thu, 13 Nov 2025 12:44:31 +0000 (UTC)
-Received: from wcosta-thinkpadt14gen4.rmtbr.csb (unknown [10.22.80.152])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 41C50300018D;
-	Thu, 13 Nov 2025 12:44:27 +0000 (UTC)
-Date: Thu, 13 Nov 2025 09:44:26 -0300
-From: Wander Lairson Costa <wander@redhat.com>
-To: Crystal Wood <crwood@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, 
-	linux-trace-kernel@vger.kernel.org, John Kacur <jkacur@redhat.com>, 
-	Tomas Glozar <tglozar@redhat.com>, Costa Shulyupin <costa.shul@redhat.com>
-Subject: Re: [PATCH 0/5] rtla, osnoise: Fixes to address intermittent test
- issues
-Message-ID: <huyshuvt7ztuvmjwgetxah6agfasrneqjrtusy4r4lsrpjhe6d@2y45svtyifvn>
-References: <20251112152529.956778-1-crwood@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LiqKhseE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57F68C16AAE;
+	Thu, 13 Nov 2025 13:02:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763038937;
+	bh=bUt+qNmjwdJ7gVejc5aNxtgCj7fJkFVLsF+93X0SgNw=;
+	h=In-Reply-To:References:Subject:From:To:Cc:Date:From;
+	b=LiqKhseE0ZjpKS3SHSmWzPRqgP937v6AY4LeZnP+KIPvP+UZ2rOH1rws/j6FxkNkb
+	 EtIprRU7GTxCbIvwhETrdRO0FXpwgmLXL5cbx5y1dJllSYEQKDK8Q7vt1Krud9Vn3E
+	 EgXPVlWeOfRyP4x9DElh4/lUP26erBP0mqdpoSE1w6EH/TRjpTZ8ad5aWjyfdh+HM+
+	 Z60F55ydiIe0KHPUq7Zzjl+u9TJqitqalySBBfykuNTEIa7X3UQLjpG8Wg7p2k6471
+	 CmOEtx8T4t/IaV/ZlwElGm+NwprmW4PKcdcLoqopYXqgLL8Q5tpXdYMdsngkPUumbe
+	 GR2SYNl2UBvoQ==
+Content-Type: multipart/mixed; boundary="===============0521505570487395101=="
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20251112152529.956778-1-crwood@redhat.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: Wevk4WOuaBdFoEbvMqKmj7nQg4KbnRL6iVLiB5qW1D4_1763037871
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Message-Id: <c3260fe9e3d8ad79c75a6e8281f9fae5580beb3fcdd08e2015f417e11ec0a1b2@mail.kernel.org>
+In-Reply-To: <20251113123750.2507435-6-jolsa@kernel.org>
+References: <20251113123750.2507435-6-jolsa@kernel.org>
+Subject: Re: [PATCHv2 bpf-next 5/8] ftrace: Add update_ftrace_direct_mod function
+From: bot+bpf-ci@kernel.org
+To: jolsa@kernel.org,rostedt@kernel.org,revest@google.com,mark.rutland@arm.com
+Cc: bpf@vger.kernel.org,linux-kernel@vger.kernel.org,linux-trace-kernel@vger.kernel.org,linux-arm-kernel@lists.infradead.org,ast@kernel.org,daniel@iogearbox.net,andrii@kernel.org,menglong8.dong@gmail.com,song@kernel.org,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,clm@meta.com,ihor.solodrai@linux.dev
+Date: Thu, 13 Nov 2025 13:02:17 +0000 (UTC)
 
-On Wed, Nov 12, 2025 at 09:25:24AM -0600, Crystal Wood wrote:
-> With these fixes, I'm able to run the tests in a loop overnight with no
-> failures.
-> 
-> Crystal Wood (5):
->   rtla/tests: Don't rely on matching ^1ALL
->   tracing/osnoise: Dump stack on timerlat uret threshold event
->   tracing/osnoise: Array printk init and cleanup
->   rtla/timerlat: Exit top main loop on any non-zero wait_retval
->   rtla: Set stop threshold after all instances are enabled
-> 
->  kernel/trace/trace_osnoise.c          | 46 +++++++++++++++++----------
->  tools/tracing/rtla/src/common.c       | 20 ++++++++++++
->  tools/tracing/rtla/src/common.h       |  4 +++
->  tools/tracing/rtla/src/osnoise.c      | 17 +++-------
->  tools/tracing/rtla/src/osnoise.h      |  5 ---
->  tools/tracing/rtla/src/timerlat.c     | 29 ++++++-----------
->  tools/tracing/rtla/src/timerlat_top.c |  2 +-
->  tools/tracing/rtla/tests/timerlat.t   |  2 +-
->  8 files changed, 69 insertions(+), 56 deletions(-)
-> 
-> -- 
-> 2.48.1
-> 
+--===============0521505570487395101==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 
-On patch 3 the commit message says that osnoise_print() is implemented
-as a macro, but it is actually implemented as a function. But that isn't
-a blocker.
+> diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+> index 433c36c3a..bacb6d9ab 100644
+> --- a/include/linux/ftrace.h
+> +++ b/include/linux/ftrace.h
+> @@ -544,6 +544,7 @@ int modify_ftrace_direct_nolock(struct ftrace_ops *ops, unsigned long addr);
+>
+>  int update_ftrace_direct_add(struct ftrace_ops *ops, struct ftrace_hash *hash);
+>  int update_ftrace_direct_del(struct ftrace_ops *ops, struct ftrace_hash *hash);
+> +int update_ftrace_direct_mod(struct ftrace_ops *ops, struct ftrace_hash *hash, bool do_direct_lock);
+>
+>  void ftrace_stub_direct_tramp(void);
+>
+> @@ -581,6 +582,11 @@ int update_ftrace_direct_del(struct ftrace_ops *ops, struct ftrace_hash *hash)
+>  	return -ENODEV;
+>  }
+>
+> +int modify_ftrace_direct_hash(struct ftrace_ops *ops, struct ftrace_hash *hash, bool do_direct_lock)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^
+The stub function name doesn't match the declaration. Should this be
+update_ftrace_direct_mod() instead of modify_ftrace_direct_hash()?
 
-Reviewed-by: Wander Lairson Costa <wander@redhat.com>
+> +{
+> +	return -ENODEV;
+> +}
+> +
 
+[ ... ]
+
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index 345f3fdd2..627d05b57 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -6445,6 +6445,74 @@ int update_ftrace_direct_del(struct ftrace_ops *ops, struct ftrace_hash *hash)
+>  	return err;
+>  }
+>
+> +int update_ftrace_direct_mod(struct ftrace_ops *ops, struct ftrace_hash *hash, bool do_direct_lock)
+> +{
+> +	struct ftrace_hash *orig_hash = ops->func_hash->filter_hash;
+> +	struct ftrace_func_entry *entry, *tmp;
+> +	static struct ftrace_ops tmp_ops = {
+> +		.func		= ftrace_stub,
+> +		.flags		= FTRACE_OPS_FL_STUB,
+> +	};
+> +	unsigned long size, i;
+> +	int err;
+> +
+> +	if (!hash_count(hash))
+> +		return 0;
+> +	if (check_direct_multi(ops))
+> +		return -EINVAL;
+> +	if (!(ops->flags & FTRACE_OPS_FL_ENABLED))
+> +		return -EINVAL;
+> +	if (direct_functions == EMPTY_HASH)
+> +		return -EINVAL;
+> +
+> +	if (do_direct_lock)
+> +		mutex_lock(&direct_mutex);
+> +
+> +	/* Enable the tmp_ops to have the same functions as the direct ops */
+> +	ftrace_ops_init(&tmp_ops);
+> +	tmp_ops.func_hash = ops->func_hash;
+> +
+> +	err = register_ftrace_function_nolock(&tmp_ops);
+> +	if (err)
+> +		goto unlock;
+> +
+> +	/*
+> +	 * Call __ftrace_hash_update_ipmodify() here, so that we can call
+> +	 * ops->ops_func for the ops. This is needed because the above
+> +	 * register_ftrace_function_nolock() worked on tmp_ops.
+> +	 */
+> +	err = __ftrace_hash_update_ipmodify(ops, orig_hash, orig_hash, true);
+                                                                        ^^^^
+Does __ftrace_hash_update_ipmodify() accept a fourth argument? The
+function signature shows it only takes three parameters (ops, old_hash,
+new_hash). This looks like a compilation error.
+
+> +	if (err)
+> +		goto out;
+
+[ ... ]
+
+> +
+> +out:
+> +	/* Removing the tmp_ops will add the updated direct callers to the functions */
+> +	unregister_ftrace_function(&tmp_ops);
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Can this deadlock when do_direct_lock is true? Looking at the code:
+
+  update_ftrace_direct_mod() with do_direct_lock=true
+    -> mutex_lock(&direct_mutex)
+    -> register_ftrace_function_nolock(&tmp_ops) succeeds
+    -> __ftrace_hash_update_ipmodify() fails
+    -> goto out (still holding direct_mutex)
+    -> unregister_ftrace_function(&tmp_ops)
+       -> cleanup_direct_functions_after_ipmodify()
+          -> mutex_lock(&direct_mutex) /* deadlock */
+
+The unregister path tries to reacquire direct_mutex that we're already
+holding.
+
+> +
+> +unlock:
+> +	if (do_direct_lock)
+> +		mutex_unlock(&direct_mutex);
+> +	return err;
+> +}
+> +
+>  #endif /* CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS */
+
+
+---
+AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
+See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
+
+CI run summary: https://github.com/kernel-patches/bpf/actions/runs/19332026793
+
+--===============0521505570487395101==--
