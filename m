@@ -1,132 +1,159 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F50D3321BD
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Nov 2025 10:32:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85093334C19
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Nov 2025 11:13:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763029939; cv=none; b=QGyCDA3pNaCASixCkOZfdcgpFZhB+9Xa19TNQvTN3UlflV2oSWMsUvB3KAtfLTYbrzHYhLRmkqGglPRAU7bv8PKjlyjmB3WjKjqJQgSyGVaf8MS30+iWriyvPEbtAsPfecGdAFY04X3YtRKgFXwI0c+kJ8hMmUoJuNVgo7XMoE4=
+	t=1763032418; cv=none; b=YPv5BWEyIhH0LPYxW+lpHSmD56h44et7Hl3ztpYTYuyPRHOhRx+3lzk7tWFlgb8Q4rqR5pN6ol0QgjmfdQmxwwN5jhhgJj6XfbWGoCgDHSgYee0Y1c91EPfnHrv0NhYi8vaot62nYb4qTs1RBnvPG0j1GJyiQqxbWIjiTkIvyJI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763029939; c=relaxed/simple;
-	bh=/ez4viGQxwKl6xh/PPq/TWsOWmDT70HNbDNx4QUOYcw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GQCfcuuLUTrq9O4xmxsMo+PlvO/dHsuupTySPbVEs4cXCYn8tpZ2TAjxk9S9OfpjpzoowTmVWOx6cAS8/v/2GBlOqtICCBaBBQE/36IcZiqtak+2YtE1iGy9XjimSj5Lskry8o1YqEJsbjmwwcuzDL8duAwXuR2+ImUPaLpFEvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=tSNZuhly; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
+	s=arc-20240116; t=1763032418; c=relaxed/simple;
+	bh=2nfkUFEyeTPvY9nyDt6tV6x7gYKP6WCBqWyd9cTqSH0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nxc4+jFPPXiNHy1Awcvc4iWe96JuDINt+JREHng1zrszlvdC+xE/dj8vwIvYFAk8fAXUHqILQ9uTgczCVt77twawFp5fSawNEMTTly95iTh6myr1iwO+Ai82INFPVwsZdQC85C0Q1+RhSLJilgCGMRGnk0eE+s5SDu5xBHtP8KI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=it6B1BcO; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="tSNZuhly"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-297d4ac44fbso13317475ad.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Nov 2025 02:32:15 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="it6B1BcO"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-b734fcbf1e3so110341066b.3
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Nov 2025 03:13:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1763029935; x=1763634735; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=QURbCPhZLgDFuDO50oTy4YxAU/M/cxLF0F1zsVf26eM=;
-        b=tSNZuhlyAsQdCBROny1W2LKQ+njhOt2F7hJrDAVykMsiBZA2MsD9NPFanFer8ixnfI
-         sdkBrAmS0uqU6umEqeHqPVbTAle0GYtByJLkmItLMttKPO8XRDP73qkQbC6Fk/Juwqd1
-         shoafwuSzT7epdC6vUtw6oapaYnkQHyTNmWSRjPCqiEXdnAjgW6Z0qCiCt54EKdDGzRE
-         pJp7ktXn2HGrXD+4hBvWl7fl6rjgS8nluU/PbinBDE7EejqbotPO8fLloqqISnl6HC23
-         kq69ahcD1dtQNS+fzxbMp8d7RWVFJAwOohDH7u01gS0lzSvXcx7xY14NndQNP7hqGl34
-         wiNQ==
+        d=gmail.com; s=20230601; t=1763032415; x=1763637215; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kIw7Xm3oDNehlEieN5CtSC8W4YrmGX9W6qbpU2/TpUo=;
+        b=it6B1BcOlwT+csQp4mzT4lztS3UMlTvZYho1Z+xzXsWMa035KmBnBYc+/tUbNNFpTo
+         EhsXZKz8heee4+ikTnHYva8qqNU8EgUQUTgi1BBKEQgDRBiT5rR36VpzLBFvGYprMrbf
+         G7ELN1PelbmNO5X3AB+KIxq1AulOdq7JI7xi7PY8opm7LClJzDaZ1A59+d2h7Rez9q0B
+         uoe44DI1fPv6lvDWkW3o64pTGBoTeDWSGUWZnMqhILC83IuzrPrNRHOyYW5Q9Y0yKFLo
+         b5umvjSx6AUQ8Yiwag7bYZNl61MJUq0Zcw56EayKndNZkmmG59xtX/B9SXycAL/llBoW
+         Q1Iw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763029935; x=1763634735;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QURbCPhZLgDFuDO50oTy4YxAU/M/cxLF0F1zsVf26eM=;
-        b=PzT5zruOFU+N9ElLcaTEb1XRT2UlLD12LqCxvnzvVgYjMF2SrigOhXwbIxbVFFC2+c
-         cjCmK8gNAYyr3U73YsxW5NOof36CeR/YsdRk1GJKEOS3aMUJ7fon4RRo61qKXh4jSdgc
-         dEJoI4GCC6zKsXN6+pUBzPm7a+ukMeLu1Jctg0/u3j4kwHB/hLvP6TN/51b4hQqYUMTe
-         VMmw1KBSHdkV39AJZpOBvyoixWT0as7EhR5Def3PXQtCx8Ef8tGalhhqNdyzsfpP4yQ/
-         kfvH4/0kAY7r8Xuc9GPoeyA71pDmdYnbS1uwXqHj0P/sLUjSDaQIpd6ymhVaBsmDFvLX
-         jclw==
-X-Forwarded-Encrypted: i=1; AJvYcCV25Wx1qACwPm4HUMwbB7Arl/BIMiAi6w7p5GNOzk00VWtSmGzoq5NM6H42qnJ/QazBQ/2813xA2zWC2J/mQ6khQRk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy6w7jDHmXCKBFk5JtWUq4qHBjEDbP0yxPCRi8I+zOguE56UpjL
-	cNRqWnFChI5IHDCPHvjgk/W95xrgq3bXvuh8/JcOvQE65egilARYmDeW0ZHm9b3vwMY=
-X-Gm-Gg: ASbGncvBJwxusXgofz94IgB1B6cy08huQwx8nMkTY0B/Inj3655BrEE4gE5O0azihkL
-	syLL6WHfDzL6EZY9z8+vGFByinTKrmY7m4fD4FNLM9ljaEAtdoJT/Nl3JP3wvSbtGtbXfoiW5/a
-	3Xy23B3lx3CCaPjcZYZMQFXE7JlDqr9lwHO91MMzkyAIIZdqFA28jSogzs25tiSJBYK1K8SfHym
-	yOes9uY1/Dqhc1QmNQscadcYuBgtGDeyVdEVSLuH6XUrQ0fe6nTiI7UG4z11d6jQrU3Y3feF6Im
-	eemguJ0cosem5Xheh4KVA5Acz2VCnUusxEinjqJL/IhebETlftpD3EImbKGNNJnnISPyuoPDngN
-	kXvcqzr1FVQtjFV9eiVxy4BKZcM1v76hCRLGySKhjM7yFbZZGZ9twj2F4rrGXbtUaxMLcWM6rtP
-	1tzYWbTJUjac0vMNAE8MXbODe7IUAbRrXCBkGqjXceRIZNVXPhpGs=
-X-Google-Smtp-Source: AGHT+IHZRVqKk3Xf4AoXPh3RQ9USehQ1ClsNRN+oJOsjTDjAvAY9LII/LH2yTXr91VjJoLaVXeTfMQ==
-X-Received: by 2002:a17:903:1af0:b0:267:912b:2b36 with SMTP id d9443c01a7336-2985a51863emr28237365ad.23.1763029934984;
-        Thu, 13 Nov 2025 02:32:14 -0800 (PST)
-Received: from dread.disaster.area (pa49-181-58-136.pa.nsw.optusnet.com.au. [49.181.58.136])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2985c2b0fe9sm20457965ad.65.2025.11.13.02.32.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Nov 2025 02:32:14 -0800 (PST)
-Received: from dave by dread.disaster.area with local (Exim 4.98.2)
-	(envelope-from <david@fromorbit.com>)
-	id 1vJUcd-0000000ADSS-414B;
-	Thu, 13 Nov 2025 21:32:11 +1100
-Date: Thu, 13 Nov 2025 21:32:11 +1100
-From: Dave Chinner <david@fromorbit.com>
-To: Ritesh Harjani <ritesh.list@gmail.com>
-Cc: Christoph Hellwig <hch@lst.de>, Ojaswin Mujoo <ojaswin@linux.ibm.com>,
-	Christian Brauner <brauner@kernel.org>, djwong@kernel.org,
-	john.g.garry@oracle.com, tytso@mit.edu, willy@infradead.org,
-	dchinner@redhat.com, linux-xfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-ext4@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, jack@suse.cz,
-	nilay@linux.ibm.com, martin.petersen@oracle.com,
-	rostedt@goodmis.org, axboe@kernel.dk, linux-block@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 0/8] xfs: single block atomic writes for buffered IO
-Message-ID: <aRWzq_LpoJHwfYli@dread.disaster.area>
-References: <cover.1762945505.git.ojaswin@linux.ibm.com>
- <aRUCqA_UpRftbgce@dread.disaster.area>
- <20251113052337.GA28533@lst.de>
- <87frai8p46.ritesh.list@gmail.com>
+        d=1e100.net; s=20230601; t=1763032415; x=1763637215;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=kIw7Xm3oDNehlEieN5CtSC8W4YrmGX9W6qbpU2/TpUo=;
+        b=eoA2MRBgRrRhHE/N3fu27/JMIdKhgdoC0H+fjE9AK+3Pq3coQpcVq7Rimbu9FS+7Mm
+         0LBnHT+YVu+S49/yXMtEWFwGRTbdwDrpkr19gCUKyEHOmQaJXl1rdiTDR/fq2gdl95wP
+         uuG9loQa17iTimc0KYn809f2LxYGsPxgFb2qmHIqhvLTh23JWa9rKaLck+Vnb2qkFp8P
+         PzKMbDOVWP7Gl+qEznflojFoR5wl0Ybyh+YRLg+bcdzPw1D94qBfUSc53ue5CoPXFXkn
+         Uks7zlMQOJZonOFSNj+837ThzAJPiyfxXoMafJGOP+8CroZGK0ThUz14CLC7IZLcVsW8
+         Tz+w==
+X-Forwarded-Encrypted: i=1; AJvYcCX6hxotfGhadalxFSQBXfADB05assakKjsw8EhgyJmsSKw/q54zbLkJR//HS8b7YOfh2Ys5wUMCKeNQr0wfytrUpd0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw01eAc49WNjtSy5UbNoc1XJpJdOz1OQUlQHRTXSKA8wI+J7UuY
+	fvzLZ3NpWeDWrX8kKiwO6L/gTER/f1j7kJIDow6KvSvZD35uWx/4EMR2SFAXGwZOvUv8QcT0LMN
+	f7o04lqhjyXg1MQELSVv0aMyZuAdGrEA=
+X-Gm-Gg: ASbGnctOENfE6MTaV8pcdF3T9iSskqF/NCGEY7WBa/buyMqsLQASmuaTUByWaK8/wU9
+	ugMXDXlViXfMHDuhQrPaNZvrx4CZndUlcqT+EevEjgk7Nqymbx/AiQQlimCvrL8hDcQ2mfD6I4J
+	FlEq/VmxMQ0r3dGWNMTxPByMRs4xxVq2k7u7Ibo0GIN3eWWMXeaIqJE9NC1m4NJMtFdy9MVMWAx
+	wztjjF/AOclD9mxgGokEhppWd+VkRQVxI0CZgVKygsOe2MMaAjvyC7ZE7kM
+X-Google-Smtp-Source: AGHT+IHvFGA7lSHeo8GRvWzOeGJiPitXnORSPqfM76SMDFCtJZ8hIWpC2PXuxziMqg/v11vbGAIbG+FbSNi74bIYsiY=
+X-Received: by 2002:a17:907:7e8e:b0:b73:5d8c:dd0d with SMTP id
+ a640c23a62f3a-b735d8ce04amr8301266b.52.1763032414634; Thu, 13 Nov 2025
+ 03:13:34 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87frai8p46.ritesh.list@gmail.com>
+References: <20251113000252.1058144-1-leonylgao@gmail.com> <20251113073420.yko6jYcI@linutronix.de>
+In-Reply-To: <20251113073420.yko6jYcI@linutronix.de>
+From: Yongliang Gao <leonylgao@gmail.com>
+Date: Thu, 13 Nov 2025 19:13:23 +0800
+X-Gm-Features: AWmQ_bmPe1Dsb6l-Cx025fplW4DeFTdGrd-P4g6FieNkHhLzgmlN9OMB1pIU8i0
+Message-ID: <CAJxhyqCyB3-CyDKgPtP-EoC=G9cWAYgLvse003+i2n6U4Pgv1w@mail.gmail.com>
+Subject: Re: [PATCH v3] trace/pid_list: optimize pid_list->lock contention
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	frankjpliu@tencent.com, Yongliang Gao <leonylgao@tencent.com>, 
+	Huang Cun <cunhuang@tencent.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Nov 13, 2025 at 11:12:49AM +0530, Ritesh Harjani wrote:
-> Christoph Hellwig <hch@lst.de> writes:
-> 
-> > On Thu, Nov 13, 2025 at 08:56:56AM +1100, Dave Chinner wrote:
-> >> On Wed, Nov 12, 2025 at 04:36:03PM +0530, Ojaswin Mujoo wrote:
-> >> > This patch adds support to perform single block RWF_ATOMIC writes for
-> >> > iomap xfs buffered IO. This builds upon the inital RFC shared by John
-> >> > Garry last year [1]. Most of the details are present in the respective 
-> >> > commit messages but I'd mention some of the design points below:
-> >> 
-> >> What is the use case for this functionality? i.e. what is the
-> >> reason for adding all this complexity?
+Hi Sebastian,
+
+Thank you for your review and the thoughtful questions.
+
+1. Performance Data
+We encountered this issue in a production environment with 288 cores
+where enabling set_ftrace_pid caused system CPU usage (sys%) to
+increase from 10% to over 90%. In our 92-core VM test environment:
+
+Before patch (spinlock):
+- Without filtering: cs=3D2395401/s, sys%=3D7%
+- With filtering: cs=3D1828261/s, sys%=3D40%
+
+After patch (seqlock):
+- Without filtering: cs=3D2397032/s, sys%=3D6%
+- With filtering: cs=3D2398922/s, sys%=3D6%
+
+The seqlock approach eliminates the pid_list->lock contention that was
+previously causing sys% to increase from 7% to 40%.
+
+2. Reader Retry Behavior
+Yes, if the write side is continuously busy, the reader might spin and
+retry. However, in practice:
+- Writes are infrequent (only when setting ftrace_pid filter or during
+task fork/exit with function-fork enabled)
+- For readers, trace_pid_list_is_set() is called on every task switch,
+which can occur at a very high frequency.
+
+3. Result Accuracy
+You're correct that the result might change immediately after the
+read. For trace_ignore_this_task(), we don't require absolute
+accuracy. Slight race conditions (where a task might be traced or not
+in borderline cases) are acceptable.
+
+Best regards,
+Yongliang
+
+On Thu, Nov 13, 2025 at 3:34=E2=80=AFPM Sebastian Andrzej Siewior
+<bigeasy@linutronix.de> wrote:
+>
+> On 2025-11-13 08:02:52 [+0800], Yongliang Gao wrote:
+> > --- a/kernel/trace/pid_list.c
+> > +++ b/kernel/trace/pid_list.c
+> > @@ -138,14 +139,16 @@ bool trace_pid_list_is_set(struct trace_pid_list =
+*pid_list, unsigned int pid)
+> >       if (pid_split(pid, &upper1, &upper2, &lower) < 0)
+> >               return false;
 > >
-> > Seconded.  The atomic code has a lot of complexity, and further mixing
-> > it with buffered I/O makes this even worse.  We'd need a really important
-> > use case to even consider it.
-> 
-> I agree this should have been in the cover letter itself. 
-> 
-> I believe the reason for adding this functionality was also discussed at
-> LSFMM too...  
-> 
-> For e.g. https://lwn.net/Articles/974578/ goes in depth and talks about
-> Postgres folks looking for this, since PostgreSQL databases uses
-> buffered I/O for their database writes.
-
-Pointing at a discussion about how "this application has some ideas
-on how it can maybe use it someday in the future" isn't a
-particularly good justification. This still sounds more like a
-research project than something a production system needs right now.
-
-Why didn't you use the existing COW buffered write IO path to
-implement atomic semantics for buffered writes? The XFS
-functionality is already all there, and it doesn't require any
-changes to the page cache or iomap to support...
-
--Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+> > -     raw_spin_lock_irqsave(&pid_list->lock, flags);
+> > -     upper_chunk =3D pid_list->upper[upper1];
+> > -     if (upper_chunk) {
+> > -             lower_chunk =3D upper_chunk->data[upper2];
+> > -             if (lower_chunk)
+> > -                     ret =3D test_bit(lower, lower_chunk->data);
+> > -     }
+> > -     raw_spin_unlock_irqrestore(&pid_list->lock, flags);
+> > +     do {
+> > +             seq =3D read_seqcount_begin(&pid_list->seqcount);
+> > +             ret =3D false;
+> > +             upper_chunk =3D pid_list->upper[upper1];
+> > +             if (upper_chunk) {
+> > +                     lower_chunk =3D upper_chunk->data[upper2];
+> > +                     if (lower_chunk)
+> > +                             ret =3D test_bit(lower, lower_chunk->data=
+);
+> > +             }
+> > +     } while (read_seqcount_retry(&pid_list->seqcount, seq));
+>
+> How is this better? Any numbers?
+> If the write side is busy and the lock is handed over from one CPU to
+> another then it is possible that the reader spins here and does several
+> loops, right?
+> And in this case, how accurate would it be? I mean the result could
+> change right after the sequence here is completed because the write side
+> got active again. How bad would it be if there would be no locking and
+> RCU ensures that the chunks (and data) don't disappear while looking at
+> it?
+>
+> >       return ret;
+> >  }
+>
+> Sebastian
