@@ -1,66 +1,66 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A1AA35502F
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Nov 2025 16:00:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C13E73570C9
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Nov 2025 16:00:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763049615; cv=none; b=gqu0d3dK53rThAB5iomAmmulNdYsdoLh5+twOB/bZbvdryX5Wt/XyF3CUiyMX78+xNHYP7Ppxxlk5RuWixS2k853w8oaRNaJSEU0fCVPhjexEclzhXD3krMQ3EUKSn/whtmomn+SBe7v547/e641RxTHrxfbdR8EJCl8zBSl24Q=
+	t=1763049628; cv=none; b=hwVuBvFHOpEgPzFZSHPQUY6BI4SDwKYi6rs2QxABO3JUl6Geh3/1wXKFPh2cdMloAQAqmJ5RLX//U8HicHzc+tLfvUplA0pQYjApkh6ngTthMMaffol1VQbwS9vGbyX/EEK0Bdwc2KSrqWJqg3u/HGui5TLefYIedjo3f8kig1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763049615; c=relaxed/simple;
-	bh=Bk2Yi8IlMVkK5Th/TKv8hz5GIBxMcnyGwmnSkYoCwfw=;
+	s=arc-20240116; t=1763049628; c=relaxed/simple;
+	bh=Vp4rIQGpH9tuhUx6e8f2LGfVf7+ePCFWdukgjpjRGmU=;
 	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l0vniSf8lG2wntXY3zYUG1GzHSIIf+pezoih5ctPswPJpOCI6QIh6n3n/gMQsHRBcsWG2OORB1TGOQ9TnyPjPC/01DCqsIl+anjrgXSIfKTdrSwoS71EMnxhY0nABBlPGs7+rNW5Sk2CeY1MbKvY9s5UbMiU/iJHNaSkhc0yIBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RAFvYIks; arc=none smtp.client-ip=209.85.208.46
+	 Content-Type:Content-Disposition:In-Reply-To; b=mP420Xon5n5bJIn8WnVC11PmYH4oe4kFU5iggpLxeD2dPwaiwfIO62E2Bu8g3DT4WR22ytwf1whcio1Weu/rQ20kCKlqAOmB+u2e10oXV64zxtuUDiPkvdcMX0zMEXkGmLszRjbWvrfQ3h9EDSYKyrewz2baQXuCxGtUZq6dAoE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fgRUwT5/; arc=none smtp.client-ip=209.85.208.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RAFvYIks"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-64320b9bb4bso2194276a12.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Nov 2025 08:00:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fgRUwT5/"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-6418738efa0so1660503a12.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Nov 2025 08:00:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763049612; x=1763654412; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1763049623; x=1763654423; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=gzb4D1GabgQR1ju/bq7TjXAWkIanxQvrQtrf25MzCcs=;
-        b=RAFvYIksFbTcUElygENb+Rgi/N0hwx9HIVP71lQAko8IjJtyIMOnWhmNIZ5NhbChgv
-         R5yIGtSRkfczmDEsT0LzriM7tby5CY+yriDqWoI1I1NHOc7Wi5zmdfdOhf2c1D1ZEONz
-         NigaCZ3q55/AojXH8pQiQGKTrjHsAU91shyPbTfkWJyuxvCTarPGsVaTlerywzAC6PC1
-         3IJFaKPDjQN9P/GcHp4Vb11GC9zKf2HTHxEAzEfzNUoHQbVsofM1vLcT1uzGy6G/yWug
-         l6yEkYl/mqZLvznZ+wAvz2WuyHAWhQaYcSr6+e03bnu05v3HL7/Mw6b3lDUGCVkG6j+r
-         +dSw==
+        bh=80JtMfsdtaRpjMfo2AMqSTwjIMkYXc61RQPSQzuIeBo=;
+        b=fgRUwT5/p68gBWLmI0vm/DxZ9ZnZwegJAJqt70st2v2DyXfi0Hxmm3MHpT3/wRaV0e
+         G5mLPO7XExYeRJL98zPXE63vAIzBjNtfdeMWua+pgMO/7Em0Hgk9adSgPf7tuqew7ReY
+         wjsrgnq7ETdTcp7fAjd8JvW4XddE1Ro/shNMCBbqiXX+FetwyVCczBClrRL4Y4mQ8wVH
+         08+dD0hke5uVDdUKRQIJ/56JjiKUQ/gyCQrT+L0eTtKmentHGtkC1wmP1QfsJ1jnZKol
+         4FfWZ9IN9kWklUq3obJqghy7KP8HIw3ZWhw1Ltq/V3CjkXK3k7rU7wFx3ErUvLA95Buc
+         ot0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763049612; x=1763654412;
+        d=1e100.net; s=20230601; t=1763049623; x=1763654423;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=gzb4D1GabgQR1ju/bq7TjXAWkIanxQvrQtrf25MzCcs=;
-        b=Ldod+OL0cLjitwv3JyDTjdKrtYmS1q/oTk160wI3Edu2HbpKBEfAeY40/ZQJtt952s
-         SIJsw1lMl3lcD82ipWt8kUHb5ndyu39xI0C+xSP0957Ns1lqYc2WjJCa75fEMAxbjAnr
-         bRzk2ao6UuLCzYIoOP75cwnJoyI5oljTqOg6m3+C5GPs9V2pjjYP7lG+ELx6GB7VpPYx
-         ggT2kVIUHcf/gtfSHYadyCzV7iugRP72MzCPDhk/1acGcIyF+NzjhVm5NWBFnvTvkpFG
-         A1M1HTdzDU6v5gWall9ISvIcpaKE4TBNo2KrWtVvU1Mw9xGuExTu+/lIOFJYuDJ3gjdD
-         dXGg==
-X-Forwarded-Encrypted: i=1; AJvYcCXQ4Zx/tyUbzqtZNOZpvFPC3L/pgRvFHn3zWDAs3L8OfYQmWNuOEI2i7jiThI+Z9VDQFdHYJBvD1Aai4HZZlQc/4f0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyr+UpdVSgffZC15lRDW592VV7tcFf/9NW6yHRdbEMkoBM95vWC
-	0v160NkYdl32WR7flm+senF5YO/Q954pobUmccDyt/onjg/d5hcZyIO+
-X-Gm-Gg: ASbGnculye5dGcm7xTW5Lt0G/9Gk9LOTLa4UdFK8/pkm25M8PhbuypExdRLRGYU8bQk
-	m0iFEMS+tL17p7FisSwLNdPEgZROk0FgCy/qDG+wgdd3Nr3OgG7dp/Tbi2BxuV6/2jqf/RmIEng
-	BjfOGiNyfz+maeNpXdWcSQmhNaJ6Nz7ujUfWvb+gGefMaNCgRThD8sb+JvaxyAZoXEMob9omzPN
-	xzFntYjSO4yyptOllTaD4KH0hLX/qL3UjC7oVI1htWw4Vod4Pm595yi+8pLDoqYxm7Aq8OhYZyG
-	22B8eZ2K/4voqj5RHSEgmilJKP7UwU8FBqnj33uUvefzdt50UYfyu2rOhE4PQ35T/2QFlvCk/KB
-	sivCI1AuUYOERixL+VZIp+L3AoSNuoB8H7lm/PxHMtdQOXvujfFlTZVUGEXm2hDmg+h8Yq6C2F2
-	IRw8h2WnjYsXoLBSVXT1P/qpA=
-X-Google-Smtp-Source: AGHT+IHUg8m5nO6prqhXXrSop0u0iR1DdBAnMZvxLkNNj0vJkvj5xpmWgf1HYEe7mOE2U9QwaFpzYw==
-X-Received: by 2002:a05:6402:4544:b0:640:9bed:85a5 with SMTP id 4fb4d7f45d1cf-6434f82b24dmr70380a12.8.1763049611134;
-        Thu, 13 Nov 2025 08:00:11 -0800 (PST)
+        bh=80JtMfsdtaRpjMfo2AMqSTwjIMkYXc61RQPSQzuIeBo=;
+        b=Yi9SmVAUx81uB+UQRisUoHzXQqYS945W5FS50Yr72UnFHhrL5VoMEgPeoIP0mynkOg
+         ssdpi3rsKruIFpLyHNxlqb8q1JVETdllOIBJydlZ/xNTfJngRZzrzztzyLV4CNBt//NE
+         CiJ4WT8ID2PXnV+qCbUIjfR3JyFZH3o6Lbc5PPQ+vv58X9E+JWOoo/vGOzFyxUThsndH
+         fXf+P89fsOGTyHpadqUpUNa/UyUnQ9j+6z9mM6cTHo1c8WKEN1d5oUDb5jn5nuNkZ2jk
+         CPDgoRQtNJQXJDh/vT9M6iLugswHIuehxF4gq4Fr64XDJdcWv+4KgqWAjlbaUpsz59+H
+         qWIg==
+X-Forwarded-Encrypted: i=1; AJvYcCW8gFoWpKZujxsKeJI2+eZPZ3rgwLpRMtlMWFCJPUvJPIbTXhACnWpSL4N3CBd/40T9Mpu7nAAlHet4XctMp/I0Sg4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw8uQ7Rf/LXZmbgXWQf/bknXOLclDoXt2YLbKeC87wRwRsAGpcC
+	BfWNNpGUTppYGJ+zkU9c2x5RUoJDNxXO396dQ9a/mysAJgrwPeylHAxI
+X-Gm-Gg: ASbGnct/o8PAdE8lVdMFboOiBB12p/qYsUp5fqeqqe6Rg1IlB6MnwGQYCg5Pm0MRoqz
+	4AHvN8kCuFn+g9lCuTHL+le/p/zq/fQWtkdVFrUH8vbdCYWKwyA/wQ7saaetkurg28loBRVtaYL
+	vAzOdOO+KyYlQIqnjYRijuAHErC2YiJtBIIZ+s4dLaTPllVfBWB5Hp0JOBfAIXSIwBrqVUGjbgD
+	xYjMwwa8dYOIQawqVJeGMYDajiMiTZuCSu9w/3L7TJgEwLCx4j36CCpgKcPQwOuCtXN2P5RncCj
+	xmTzZyOO5nTMepP5Zi3jZ3PG/xu6jD1xfx3Al1yCifl619NmTwU1iY3UabhF5f8XeCz3ulujVyW
+	j387r0S39njYfMXl5WuEdPOioj+rqnbbugfRg0Iljr9Wp3vLdZaiZ86nKT/CPHcx5Nd6w6WXoj4
+	mOI9sTrRtnuaN5hFtzpNDvp8M=
+X-Google-Smtp-Source: AGHT+IHxWTR+gxCCm5O+QnaZgcQbkYMnHS+HofPNLwkm1lurpI4br2sYZn3D0vg/6s301g3YrvxytA==
+X-Received: by 2002:a17:907:6d0b:b0:b72:d309:5337 with SMTP id a640c23a62f3a-b7331b4c280mr700851766b.65.1763049622904;
+        Thu, 13 Nov 2025 08:00:22 -0800 (PST)
 Received: from krava (37-188-200-155.red.o2.cz. [37.188.200.155])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6433a3d8775sm1729153a12.5.2025.11.13.08.00.07
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b734fed90c0sm189439066b.65.2025.11.13.08.00.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Nov 2025 08:00:10 -0800 (PST)
+        Thu, 13 Nov 2025 08:00:22 -0800 (PST)
 From: Jiri Olsa <olsajiri@gmail.com>
 X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Thu, 13 Nov 2025 17:00:04 +0100
+Date: Thu, 13 Nov 2025 17:00:16 +0100
 To: bot+bpf-ci@kernel.org
 Cc: rostedt@kernel.org, revest@google.com, mark.rutland@arm.com,
 	bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -69,11 +69,11 @@ Cc: rostedt@kernel.org, revest@google.com, mark.rutland@arm.com,
 	daniel@iogearbox.net, andrii@kernel.org, menglong8.dong@gmail.com,
 	song@kernel.org, martin.lau@kernel.org, eddyz87@gmail.com,
 	yonghong.song@linux.dev, clm@meta.com, ihor.solodrai@linux.dev
-Subject: Re: [PATCHv2 bpf-next 5/8] ftrace: Add update_ftrace_direct_mod
+Subject: Re: [PATCHv2 bpf-next 4/8] ftrace: Add update_ftrace_direct_del
  function
-Message-ID: <aRYAhDqGsOHZzTL-@krava>
-References: <20251113123750.2507435-6-jolsa@kernel.org>
- <c3260fe9e3d8ad79c75a6e8281f9fae5580beb3fcdd08e2015f417e11ec0a1b2@mail.kernel.org>
+Message-ID: <aRYAkKc2uQyofL1i@krava>
+References: <20251113123750.2507435-5-jolsa@kernel.org>
+ <367c6cc9ffa12937ce18f37fc1271e3d17a3f7aa6ea6d1152cc8a41539994865@mail.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -82,58 +82,36 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c3260fe9e3d8ad79c75a6e8281f9fae5580beb3fcdd08e2015f417e11ec0a1b2@mail.kernel.org>
+In-Reply-To: <367c6cc9ffa12937ce18f37fc1271e3d17a3f7aa6ea6d1152cc8a41539994865@mail.kernel.org>
 
-On Thu, Nov 13, 2025 at 01:02:17PM +0000, bot+bpf-ci@kernel.org wrote:
+On Thu, Nov 13, 2025 at 01:02:21PM +0000, bot+bpf-ci@kernel.org wrote:
 > > diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-> > index 433c36c3a..bacb6d9ab 100644
+> > index ded3a306a..433c36c3a 100644
 > > --- a/include/linux/ftrace.h
 > > +++ b/include/linux/ftrace.h
-> > @@ -544,6 +544,7 @@ int modify_ftrace_direct_nolock(struct ftrace_ops *ops, unsigned long addr);
+> > @@ -543,6 +543,7 @@ int modify_ftrace_direct(struct ftrace_ops *ops, unsigned long addr);
+> >  int modify_ftrace_direct_nolock(struct ftrace_ops *ops, unsigned long addr);
 > >
 > >  int update_ftrace_direct_add(struct ftrace_ops *ops, struct ftrace_hash *hash);
-> >  int update_ftrace_direct_del(struct ftrace_ops *ops, struct ftrace_hash *hash);
-> > +int update_ftrace_direct_mod(struct ftrace_ops *ops, struct ftrace_hash *hash, bool do_direct_lock);
+> > +int update_ftrace_direct_del(struct ftrace_ops *ops, struct ftrace_hash *hash);
 > >
 > >  void ftrace_stub_direct_tramp(void);
-> >
-> > @@ -581,6 +582,11 @@ int update_ftrace_direct_del(struct ftrace_ops *ops, struct ftrace_hash *hash)
-> >  	return -ENODEV;
-> >  }
-> >
-> > +int modify_ftrace_direct_hash(struct ftrace_ops *ops, struct ftrace_hash *hash, bool do_direct_lock)
->                 ^^^^^^^^^^^^^^^^^^^^^^^^^^
-> The stub function name doesn't match the declaration. Should this be
-> update_ftrace_direct_mod() instead of modify_ftrace_direct_hash()?
-
-it should, my bad
-
-> 
-> > +{
-> > +	return -ENODEV;
-> > +}
-> > +
 > 
 > [ ... ]
 > 
 > > diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> > index 345f3fdd2..627d05b57 100644
+> > index 311ce6406..345f3fdd2 100644
 > > --- a/kernel/trace/ftrace.c
 > > +++ b/kernel/trace/ftrace.c
-> > @@ -6445,6 +6445,74 @@ int update_ftrace_direct_del(struct ftrace_ops *ops, struct ftrace_hash *hash)
-> >  	return err;
-> >  }
-> >
-> > +int update_ftrace_direct_mod(struct ftrace_ops *ops, struct ftrace_hash *hash, bool do_direct_lock)
+> 
+> [ ... ]
+> 
+> > +int update_ftrace_direct_del(struct ftrace_ops *ops, struct ftrace_hash *hash)
 > > +{
-> > +	struct ftrace_hash *orig_hash = ops->func_hash->filter_hash;
-> > +	struct ftrace_func_entry *entry, *tmp;
-> > +	static struct ftrace_ops tmp_ops = {
-> > +		.func		= ftrace_stub,
-> > +		.flags		= FTRACE_OPS_FL_STUB,
-> > +	};
+> > +	struct ftrace_hash *new_hash = NULL, *filter_hash = NULL, *free_hash = NULL;
+> > +	struct ftrace_func_entry *del, *entry;
 > > +	unsigned long size, i;
-> > +	int err;
+> > +	int err = -EINVAL;
 > > +
 > > +	if (!hash_count(hash))
 > > +		return 0;
@@ -144,77 +122,65 @@ it should, my bad
 > > +	if (direct_functions == EMPTY_HASH)
 > > +		return -EINVAL;
 > > +
-> > +	if (do_direct_lock)
-> > +		mutex_lock(&direct_mutex);
+> > +	mutex_lock(&direct_mutex);
 > > +
-> > +	/* Enable the tmp_ops to have the same functions as the direct ops */
-> > +	ftrace_ops_init(&tmp_ops);
-> > +	tmp_ops.func_hash = ops->func_hash;
+> > +	/* Make sure requested entries are already registered. */
+> > +	size = 1 << hash->size_bits;
+> > +	for (i = 0; i < size; i++) {
+> > +		hlist_for_each_entry(entry, &hash->buckets[i], hlist) {
+> > +			del = __ftrace_lookup_ip(direct_functions, entry->ip);
+> > +			if (!del || del->direct != entry->direct)
+> > +				goto out_unlock;
+> > +		}
+> > +	}
 > > +
-> > +	err = register_ftrace_function_nolock(&tmp_ops);
-> > +	if (err)
-> > +		goto unlock;
+> > +	err = -ENOMEM;
+> > +	filter_hash = hash_sub(ops->func_hash->filter_hash, hash);
+> > +	if (!filter_hash)
+> > +		goto out_unlock;
 > > +
-> > +	/*
-> > +	 * Call __ftrace_hash_update_ipmodify() here, so that we can call
-> > +	 * ops->ops_func for the ops. This is needed because the above
-> > +	 * register_ftrace_function_nolock() worked on tmp_ops.
-> > +	 */
-> > +	err = __ftrace_hash_update_ipmodify(ops, orig_hash, orig_hash, true);
->                                                                         ^^^^
-> Does __ftrace_hash_update_ipmodify() accept a fourth argument? The
-> function signature shows it only takes three parameters (ops, old_hash,
-> new_hash). This looks like a compilation error.
+> > +	new_hash = hash_sub(direct_functions, hash);
+> > +	if (!new_hash)
+> > +		goto out_unlock;
+> 
+> Can this leak new_hash?  If hash_sub() succeeds for both filter_hash
+> and new_hash, but then either unregister_ftrace_function() or
+> ftrace_update_ops() fails below, we goto out_unlock without freeing
+> new_hash.  The cleanup code only frees filter_hash:
+> 
+> > +
+> > +	/* If there's nothing left, we need to unregister the ops. */
+> > +	if (ftrace_hash_empty(filter_hash)) {
+> > +		err = unregister_ftrace_function(ops);
+> > +		/* cleanup for possible another register call */
+> > +		ops->func = NULL;
+> > +		ops->trampoline = 0;
+> > +		ftrace_free_filter(ops);
+> > +		ops->func_hash->filter_hash = NULL;
+> > +	} else {
+> > +		err = ftrace_update_ops(ops, filter_hash, EMPTY_HASH);
+> > +	}
+> > +
+> > +	if (!err) {
+> > +		free_hash = direct_functions;
+> > +		rcu_assign_pointer(direct_functions, new_hash);
+> > +	}
+> > +
+> > + out_unlock:
+> > +	mutex_unlock(&direct_mutex);
+> > +
+> > +	if (free_hash && free_hash != EMPTY_HASH)
+> > +		call_rcu_tasks(&free_hash->rcu, register_ftrace_direct_cb);
+> > +	if (filter_hash)
+> > +		free_ftrace_hash(filter_hash);
+> > +
+> > +	return err;
+> > +}
+> 
+> If err != 0, new_hash remains allocated but is never freed.  Should the
+> cleanup code add free_ftrace_hash(new_hash) when it's non-NULL?
 
-the whole patchset is based on bpf-next/master plus Song's livepatch
-fixes which change modify_ftrace_direct_hash function, it's mentioned
-in the cover letter
-
-> 
-> > +	if (err)
-> > +		goto out;
-> 
-> [ ... ]
-> 
-> > +
-> > +out:
-> > +	/* Removing the tmp_ops will add the updated direct callers to the functions */
-> > +	unregister_ftrace_function(&tmp_ops);
->          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> Can this deadlock when do_direct_lock is true? Looking at the code:
-> 
->   update_ftrace_direct_mod() with do_direct_lock=true
->     -> mutex_lock(&direct_mutex)
->     -> register_ftrace_function_nolock(&tmp_ops) succeeds
->     -> __ftrace_hash_update_ipmodify() fails
->     -> goto out (still holding direct_mutex)
->     -> unregister_ftrace_function(&tmp_ops)
->        -> cleanup_direct_functions_after_ipmodify()
->           -> mutex_lock(&direct_mutex) /* deadlock */
-> 
-> The unregister path tries to reacquire direct_mutex that we're already
-> holding.
-
-I don't think this can happen because tmp_ops does not have
-FTRACE_OPS_FL_IPMODIFY flag set
+yep, that's a miss, will fix
 
 thanks,
 jirka
-
-> 
-> > +
-> > +unlock:
-> > +	if (do_direct_lock)
-> > +		mutex_unlock(&direct_mutex);
-> > +	return err;
-> > +}
-> > +
-> >  #endif /* CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS */
-> 
-> 
-> ---
-> AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
-> See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
-> 
-> CI run summary: https://github.com/kernel-patches/bpf/actions/runs/19332026793
-
