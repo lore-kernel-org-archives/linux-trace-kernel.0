@@ -1,96 +1,156 @@
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04AD62FCC04;
-	Thu, 13 Nov 2025 15:35:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A5363112BB;
+	Thu, 13 Nov 2025 15:35:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763048110; cv=none; b=NsVOBYGnkE0IGPfYAGFcoHseaG1Bn7q2qzf0n8L9qgc38ElSqsDTpk6dNtum8zx3h7UyznvPcVHkVcUKDCMSM1NsT9Qq/3R4uRzRDNP5GKiJVdbiAOn6K818gROCtNRj1fWiI4cLPbv/p6zZG/OX+06m9WlMadSjEWkNkU2muJA=
+	t=1763048112; cv=none; b=JUPhV4CktS+ogkfO8OYSQfKVMLn060bkY+cT0VE0FcpiNnb5DtA1JnTnzSWx9okwYv6l2Km4ob1UWbDxVoH0e3KtIlo5DFtEQQMMxR+WI6kTuSLQue08OR5SLc6ysLpdEZhbE7BCumas9IWkFuiiwsDEn4ZjWuBRtVyNyUuyDkg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763048110; c=relaxed/simple;
-	bh=sGsUrBxKaUcMUEDWs3RWnDG9pcyCi3/cWvE3uyosF8U=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NSHIYASjNrpFNwYVfxNOjmHeRjf3FU01+dSaU9s49s4VpUg5zq0xs+7jhP6pWPtGiA9OtJlk/4AdIoz5xIaxraEpZQM7YnDjTkx3Vvd+09fifgYoVz/7alQas9aZAReJePmH9n+OiTv3QEZyn1epwEWq4fv2iVyM/56YNS6du/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf10.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay06.hostedemail.com (Postfix) with ESMTP id 7203112E880;
-	Thu, 13 Nov 2025 15:34:59 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf10.hostedemail.com (Postfix) with ESMTPA id 3496642;
-	Thu, 13 Nov 2025 15:34:57 +0000 (UTC)
-Date: Thu, 13 Nov 2025 10:35:12 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+	s=arc-20240116; t=1763048112; c=relaxed/simple;
+	bh=x0fuzI6YRP3PTZsgW3tQ/n7GZ7E7kPR1ddm5RqYDeyU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=toajjGEsYHK5N4xLzHuO9gFGfQL3p5Vcqtn9hfO47dzw3OBRX8mwi5bEJyDAkJiltqJ/dO+I1zitwMIi1F6Pu6IxNVvjQFx/LP7Evt7HJAdjiDKsHrhO1p/CsT1T6f4fAQSymH0y84d6taZWO4a6gQxlyIuN6v9jBpkOTUhBSws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=WR1hTpvD; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jqemhNOF; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WR1hTpvD";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jqemhNOF"
+Date: Thu, 13 Nov 2025 16:35:08 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1763048109;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AgWbF0s9rqqAq6d5nm/n6NPP01/SAB2lh3emYsdDdyI=;
+	b=WR1hTpvDz3V68Vatk3WsX7G46aKoG+UyCVkh4KfFtRBctoDfY+BQ42FdtNi+XpF5h4UDLy
+	chKfh+wmOc/xgtSR/bd0RlH24UhNzZdrals49rUajKqGDhADMcF/kIYAaTniwhN5GzrRf/
+	jjm87GcwWJQSrPjrGip+qqKvQG3XpBjN3D4VfLJRXQiEQk4s+qf7JE4eaq6kVwycT+IWQ9
+	Si06o7lkFe9ctUCk+b0+vYMPf56SdVf3IxpyPG0DEvqikk3WuhvJ3KsTibBCSPJSIirp38
+	F0b/vGnAkS7sTtzTSXAbTnIoPyDPh/T4vQELbJ0rvMOp0WlHw7Yjw0tRjrrhyg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1763048109;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AgWbF0s9rqqAq6d5nm/n6NPP01/SAB2lh3emYsdDdyI=;
+	b=jqemhNOFpx9+448NsBzy/OfzpN3nsk+Y5+id2E7h7F38r3weYCUR0hZ8UmAs86ZVj8gs1/
+	ybt+JP5PmBnu9mAA==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Steven Rostedt <rostedt@goodmis.org>
 Cc: Yongliang Gao <leonylgao@gmail.com>, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, frankjpliu@tencent.com, Yongliang Gao
- <leonylgao@tencent.com>, Huang Cun <cunhuang@tencent.com>
+	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, frankjpliu@tencent.com,
+	Yongliang Gao <leonylgao@tencent.com>,
+	Huang Cun <cunhuang@tencent.com>
 Subject: Re: [PATCH v3] trace/pid_list: optimize pid_list->lock contention
-Message-ID: <20251113103512.18e7bb03@gandalf.local.home>
-In-Reply-To: <20251113073420.yko6jYcI@linutronix.de>
+Message-ID: <20251113153508.9mYBNQlL@linutronix.de>
 References: <20251113000252.1058144-1-leonylgao@gmail.com>
-	<20251113073420.yko6jYcI@linutronix.de>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+ <20251113073420.yko6jYcI@linutronix.de>
+ <CAJxhyqCyB3-CyDKgPtP-EoC=G9cWAYgLvse003+i2n6U4Pgv1w@mail.gmail.com>
+ <20251113141515.iZSIDK0T@linutronix.de>
+ <20251113100524.5c5f6bdc@gandalf.local.home>
+ <20251113151729.4Zky6d-t@linutronix.de>
+ <20251113102445.3e70c1ec@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 3496642
-X-Stat-Signature: wp6ewwb7ig78q5mk1hftxuoh7afw3mxr
-X-Rspamd-Server: rspamout02
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+RRL0pBoBitY5GJUxNSksZFm0Ijjh4dTc=
-X-HE-Tag: 1763048097-196843
-X-HE-Meta: U2FsdGVkX18eSdJGVsNqxmespPieagfFW34r1f3N+aZ8swXRuH8jdnT5UhL4CMPd/vNPlPL6YVv5kBXvPAhsZsSQa2bqmzgyV/bFmG0+7+aaONXEJl3UdBZgyIt9LbiupluNf6VpC2S65Hgj6PhdCPLGSp4K4PctDRvnOnGp0S8GzhBSRlL9l7hUcQXhe+l97EIX578g8mEoYv/qNtiudPLHCZ2Gm8CqwQe99nYEBVC2dInp2jFRgaIebUx4FNdiW9aKUh+Kz+/sw9T6Eig5s2Nehkf3L+VcbYZaYkQMccWVG7dFzE+HiOFBUikxvKgd
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20251113102445.3e70c1ec@gandalf.local.home>
 
-On Thu, 13 Nov 2025 08:34:20 +0100
-Sebastian Andrzej Siewior <bigeasy@linutronix.de> wrote:
-
-> > +	do {
-> > +		seq = read_seqcount_begin(&pid_list->seqcount);
-> > +		ret = false;
-> > +		upper_chunk = pid_list->upper[upper1];
-> > +		if (upper_chunk) {
-> > +			lower_chunk = upper_chunk->data[upper2];
-> > +			if (lower_chunk)
-> > +				ret = test_bit(lower, lower_chunk->data);
-> > +		}
-> > +	} while (read_seqcount_retry(&pid_list->seqcount, seq));  
+On 2025-11-13 10:24:45 [-0500], Steven Rostedt wrote:
+> On Thu, 13 Nov 2025 16:17:29 +0100
+> Sebastian Andrzej Siewior <bigeasy@linutronix.de> wrote:
 > 
-> How is this better? Any numbers?
-> If the write side is busy and the lock is handed over from one CPU to
-> another then it is possible that the reader spins here and does several
-> loops, right?
+> > On 2025-11-13 10:05:24 [-0500], Steven Rostedt wrote:
+> > > This means that the chunks are not being freed and we can't be doing
+> > > synchronize_rcu() in every exit.  
+> > 
+> > You don't have to, you can do call_rcu().
+> 
+> But the chunk isn't being freed. They may be used right away.
 
-I think the chances of that is very slim. The writes are at fork and exit
-and manually writing to one of the set_*_pid files.
+Not if you avoid using it until after the rcu callback.
 
-The readers are at every sched_switch. Currently we just use
-raw_spin_locks. But that forces a serialization of every sched_switch!
-Which on big machines could cause a huge latency.
+> > > > So I *think* the RCU approach should be doable and cover this.  
+> > > 
+> > > Where would you put the synchronize_rcu()? In do_exit()?  
+> > 
+> > simply call_rcu() and let it move to the freelist.
+> 
+> A couple of issues. One, the chunks are fully used. There's no place to put
+> a "rcu_head" in them. Well, we may be able to make use of them.
 
-This approach allows multiple sched_switches to happen at the same time.
+This could be the first (16?) bytes of the memory chunk.
 
+> Second, if there's a lot of tasks exiting and forking, we can easily run
+> out of chunks that are waiting to be "freed" via call_rcu().
 
-> And in this case, how accurate would it be? I mean the result could
-> change right after the sequence here is completed because the write side
-> got active again. How bad would it be if there would be no locking and
-> RCU ensures that the chunks (and data) don't disappear while looking at
-> it?
+but this is a general RCU problem and not new here. The task_struct and
+everything around it (including stack) is RCU freed.
 
-As I mentioned the use case for this, it is very accurate. That's because
-the writers are updating the pid bits for themselves. If you are checking
-for pid 123, that means task 123 is about to run. If bit 123 is being added
-or removed, it would only be done by task 123 or its parent.
+> > 
+> > > Also understanding what this is used for helps in understanding the scope
+> > > of protection needed.
+> > > 
+> > > The pid_list is created when you add anything into one of the pid files in
+> > > tracefs. Let's use /sys/kernel/tracing/set_ftrace_pid:
+> > > 
+> > >   # cd /sys/kernel/tracing
+> > >   # echo $$ > set_ftrace_pid
+> > >   # echo 1 > options/function-fork
+> > >   # cat set_ftrace_pid
+> > >   2716
+> > >   2936
+> > >   # cat set_ftrace_pid
+> > >   2716
+> > >   2945
+> > > 
+> > > What the above did was to create a pid_list for the function tracer. I
+> > > added the bash process pid using $$ (2716). Then when I cat the file, it
+> > > showed the pid for the bash process as well as the pid for the cat process,
+> > > as the cat process is a child of the bash process. The function-fork option
+> > > means to add any child process to the set_ftrace_pid if the parent is
+> > > already in the list. It also means to remove the pid if a process in the
+> > > list exits.  
+> > 
+> > This adding/ add-on-fork, removing and remove-on-exit is the only write
+> > side?
+> 
+> That and manual writes to the set_ftrace_pid file.
 
-The exception to this rule is if a user manually adds or removes a pid from
-the set_*_pid file. But that has other races that we don't really care
-about. It's known that the update made there may take some milliseconds to
-update.
+This looks like minimal. I miss understood then that context switch can
+also contribute to it.
 
--- Steve
+> > > What we are protecting against is when one chunk is freed, but then
+> > > allocated again for a different set of PIDs. Where the reader has the chunk,
+> > > it was freed and re-allocated and the bit that is about to be checked
+> > > doesn't represent the bit it is checking for.  
+> > 
+> > This I assumed.
+> > And the kfree() at the end can not happen while there is still a reader?
+> 
+> Correct. That's done by the pid_list user:
+> 
+> In clear_ftrace_pids():
+> 
+> 	/* Wait till all users are no longer using pid filtering */
+> 	synchronize_rcu();
+> 
+> 	if ((type & TRACE_PIDS) && pid_list)
+> 		trace_pid_list_free(pid_list);
+> 
+> 	if ((type & TRACE_NO_PIDS) && no_pid_list)
+> 		trace_pid_list_free(no_pid_list);
+
+And the callers of trace_pid_list_is_set() are always in the RCU read
+section then? I assume so, since it wouldn't make sense otherwise.
+
+> -- Steve
+
+Sebastian
