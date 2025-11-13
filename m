@@ -1,97 +1,209 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [160.30.148.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F4D82FF66A
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Nov 2025 05:53:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CB0523EAB7;
+	Thu, 13 Nov 2025 05:56:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=160.30.148.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763013239; cv=none; b=bdV2DpnmgUh9W5/rRFx0kNOEh7SDdJ3vIjjAEj9y1F1jcWSRfXoxj/vRzgsb3H3VHzeHpv38XzC5Om7DKzF+62XQEUvCa0AJwHCch4NR1913Y6jkNeKWf6FfIG9JDa8aue0KKIY6hhu8epXbbFPlX6cjSa7yuzpsGnRwl2WaeFU=
+	t=1763013398; cv=none; b=GQ266SVXNGc+0fSnK7Fk5YGIUCvu45T/X5oeOsjMwp9wfKq4vFzFLp251T/c+p+VK0m9Vry2zgIJ0MFfqzFJowInQAp5Twzt8/VpAy/vTBbdzFhJ0K6XoTb6DSpQk/dZJtEz5BVo51NPhsr/L+KrSbmjwpQbWszSXwLPHK9tp8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763013239; c=relaxed/simple;
-	bh=G5i5DL7xw9uVAkYcjg+MHuhn04UdAZgfzYJ3MKANfAw=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References; b=CasPIxGt0/jXFPHUqmxUENcuz0ViTmXuQoKjP5IsslV+3pbvK5CsM2Z9QJyZiEkRLTKIDobI9zFp9EUTXrdSdMp5fwNYyWpgsX27FxlLNQuhfNNA2pxhH6SvQCD5nuyROAqCDNjKr358ygQbR6Sbb09Efktlx4nUQfv4rZHhIdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R2VYgd/g; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R2VYgd/g"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-7aab061e7cbso432232b3a.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Nov 2025 21:53:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763013237; x=1763618037; darn=vger.kernel.org;
-        h=references:message-id:date:in-reply-to:subject:cc:to:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=2UyP0ogKxI9Y1Qsu6mcA+/ZagVf5oyFn5jJYg/5sVy4=;
-        b=R2VYgd/gSHShdVYxRp1tmwr1qySTws7MYLV3MWarXUOXzL3OIEjH8caB0NQOWdPYZD
-         rI3PEDELbZyWeK8hNOoaFsXuipZ7cUygFQhnburJc/0kXmYkgHkTGng8bR8SBHOCJj4E
-         53fFaNXd2UkmKbycleogi0lqdBIGUfboc0LRIWEsaZ9Oh0wvWlt8hscCEmIncrfv1W0c
-         kZCvsqDmdF9hsYo9Ktk8Hrozc8ik0cPhfTAYrszTmXMWzfB+v9LtAeLW9mh5wbGMVKe+
-         RhWd8Gl2Gs+A3e0gB5cLb9fUP77n32C7fyxbKmkblnInmAdmF4ZwCtQs09PbiAaYjm/G
-         KNFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763013237; x=1763618037;
-        h=references:message-id:date:in-reply-to:subject:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2UyP0ogKxI9Y1Qsu6mcA+/ZagVf5oyFn5jJYg/5sVy4=;
-        b=SdPwzm179odQ4ZPoPizZdB3nzI3EEYDjKveUvzcviHUJK4LaYLwb4yMtUILixA7Vgd
-         Q6g95UipFeiWxU0nbGNJA4TGys3n3gijk38pchbPTaV0QhPvddg5zeHvrClE/ufv4S2c
-         EKL6a10V+jkoZL8hAwwF3K3rsXU1IpOwZEiy/+LlcVQOg+5b8J4gATazQZE3CbJ+mhvr
-         9KSdSMdRqUVFNP3WAc/O/b2Noe5kVX+/mfOFSdRGJr9PB4jdk/y6R9Ud4921JhN0Zy3q
-         6bOCLhiE/Slgq90sEkBa1S9WNOmSauXOeNUGR+0wFmp1YbRJrPvO1ErstQvBw6ZdcRPT
-         5wnA==
-X-Forwarded-Encrypted: i=1; AJvYcCVKyoOJEWV3TZQhS7y+ve8Jexp6bPh5bQszoKR+iFH6OH5rzJXok4edMOjrlg244zx57COoIuWGyIxORieLHD4qTaE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPOmgANQTrKxTh71midWHYrluueZPf6uqAUvsPiMAuKpzFDlWV
-	Br/fjXKhYlmx3PI5pJ6W3hBvbWZYn2ofvJDgGcbeQOH9FciG24FyJmjeEbdJA3Y2
-X-Gm-Gg: ASbGncuR+IT6cqCzst7aqkeC22JMpF+qmBNkxtqBhHCFKYhnwLIafR4DZnKzb5WpfJD
-	inBkFNNTClMqcLV/SUHZGh8KyjYxFG6xcyjaUSU5nXWEATYUkiIUOH+j157MRBCsHmEurJvurc6
-	1dwHhNA3vNeVBWEeuzAgzm06vo9e/+vmNtiQMV4qBSi8WMEry9M9f1s85STnAvwNibnS+a8VJb0
-	Jjj2GNheTWjptqTwbxHB+kNXqbLJo/NP4pvldvZx3WfMz5wN42ZKMwQMeNIIDmKPXKXmJCLI1CR
-	LvXLn2LV9d2lj0iml9DoMbkgVX9aF/Cv6Dc/0zakOcokVpJk+/8tA/lWpiVaXwaauYIzWnw3a2o
-	VH9/N7+j9J3sTYK/9TtnMYaDVqWRkbLCj6wEx6zAQ//ZWny6TP3Y5VGipXpYSobAqDKMrplo=
-X-Google-Smtp-Source: AGHT+IFlsnZ0k8muJSrddDRx8GFRERSbeF4nDY6yspGg9WIg4wg50amrL5Z1QtXjRUhp3wNQXmZujQ==
-X-Received: by 2002:a05:6a20:3d89:b0:2ef:1d19:3d3 with SMTP id adf61e73a8af0-3590968f3ffmr7213716637.14.1763013237233;
-        Wed, 12 Nov 2025 21:53:57 -0800 (PST)
-Received: from dw-tp ([49.207.219.162])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-bc365da0191sm937384a12.0.2025.11.12.21.53.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Nov 2025 21:53:56 -0800 (PST)
-From: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
-To: Christoph Hellwig <hch@lst.de>, Dave Chinner <david@fromorbit.com>
-Cc: Ojaswin Mujoo <ojaswin@linux.ibm.com>, Christian Brauner <brauner@kernel.org>, djwong@kernel.org, john.g.garry@oracle.com, tytso@mit.edu, willy@infradead.org, dchinner@redhat.com, hch@lst.de, linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org, linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, jack@suse.cz, nilay@linux.ibm.com, martin.petersen@oracle.com, rostedt@goodmis.org, axboe@kernel.dk, linux-block@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 0/8] xfs: single block atomic writes for buffered IO
-In-Reply-To: <20251113052337.GA28533@lst.de>
-Date: Thu, 13 Nov 2025 11:12:49 +0530
-Message-ID: <87frai8p46.ritesh.list@gmail.com>
-References: <cover.1762945505.git.ojaswin@linux.ibm.com> <aRUCqA_UpRftbgce@dread.disaster.area> <20251113052337.GA28533@lst.de>
+	s=arc-20240116; t=1763013398; c=relaxed/simple;
+	bh=6WGz9Kqg6eyW6tMj7qhCcRCbkyOl4odWeRrUrxE2nZo=;
+	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=aLttFWbOlwu7U2Wv31AHP0kuyDJi9JQxiUqWSk978PVdyptow87sqC44nt6qaZAPMgsvjQhcMgXbqPca3X2vN8hb/stvv0BL14119fPcMnIX/T44oDph0D0WF67bHQD9DUCabIJO01HoHU0G4s1FJOqqy2hKVtR0QQ/MWN80ESA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=160.30.148.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
+Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4d6Tzh4Ylvz5PM32;
+	Thu, 13 Nov 2025 13:56:32 +0800 (CST)
+Received: from xaxapp04.zte.com.cn ([10.99.98.157])
+	by mse-fl1.zte.com.cn with SMTP id 5AD5uPD6088235;
+	Thu, 13 Nov 2025 13:56:25 +0800 (+08)
+	(envelope-from wang.yaxin@zte.com.cn)
+Received: from mapi (xaxapp01[null])
+	by mapi (Zmail) with MAPI id mid32;
+	Thu, 13 Nov 2025 13:56:27 +0800 (CST)
+Date: Thu, 13 Nov 2025 13:56:27 +0800 (CST)
+X-Zmail-TransId: 2af96915730bb14-1bcca
+X-Mailer: Zmail v1.0
+Message-ID: <20251113135627439rGwzvG7JzdmnN8VMHAfMs@zte.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+From: <wang.yaxin@zte.com.cn>
+To: <rostedt@goodmis.org>, <mhiramat@kernel.org>, <mark.rutland@arm.com>,
+        <mathieu.desnoyers@efficios.com>
+Cc: <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+        <hu.shengming@zte.com.cn>, <hang.run@zte.com.cn>,
+        <yang.yang29@zte.com.cn>
+Subject: =?UTF-8?B?W1BBVENIIGxpbnV4LW5leHRdIGZncmFwaDogRml4IGFuZCB0aWdodGVuIFBJRCBmaWx0ZXJpbmcgc3VwcG9ydA==?=
+Content-Type: text/plain;
+	charset="UTF-8"
+X-MAIL:mse-fl1.zte.com.cn 5AD5uPD6088235
+X-TLS: YES
+X-SPF-DOMAIN: zte.com.cn
+X-ENVELOPE-SENDER: wang.yaxin@zte.com.cn
+X-SPF: None
+X-SOURCE-IP: 10.5.228.132 unknown Thu, 13 Nov 2025 13:56:32 +0800
+X-Fangmail-Anti-Spam-Filtered: true
+X-Fangmail-MID-QID: 69157310.000/4d6Tzh4Ylvz5PM32
 
-Christoph Hellwig <hch@lst.de> writes:
+From: Shengming Hu <hu.shengming@zte.com.cn>
 
-> On Thu, Nov 13, 2025 at 08:56:56AM +1100, Dave Chinner wrote:
->> On Wed, Nov 12, 2025 at 04:36:03PM +0530, Ojaswin Mujoo wrote:
->> > This patch adds support to perform single block RWF_ATOMIC writes for
->> > iomap xfs buffered IO. This builds upon the inital RFC shared by John
->> > Garry last year [1]. Most of the details are present in the respective 
->> > commit messages but I'd mention some of the design points below:
->> 
->> What is the use case for this functionality? i.e. what is the
->> reason for adding all this complexity?
->
-> Seconded.  The atomic code has a lot of complexity, and further mixing
-> it with buffered I/O makes this even worse.  We'd need a really important
-> use case to even consider it.
+Function graph tracing did not honor set_ftrace_pid() rules properly.
 
-I agree this should have been in the cover letter itself. 
+The root cause is that for fgraph_ops, the underlying ftrace_ops->private
+was left uninitialized. As a result, ftrace_pids_enabled(op) always
+returned false, effectively disabling PID filtering in the function graph
+tracer.
 
-I believe the reason for adding this functionality was also discussed at
-LSFMM too...  
+PID filtering seemed to "work" only because graph_entry() performed an
+extra coarse-grained check via ftrace_trace_task(). Specifically,
+ftrace_ignore_pid is updated by ftrace_filter_pid_sched_switch_probe
+during sched_switch events. Under the original logic, when the intent
+is to trace only PID A, a context switch from task B to A sets 
+ftrace_ignore_pid to A’s PID. However, there remains a window
+where B’s functions are still captured by the function-graph tracer. 
+The following trace demonstrates this leakage
+(B = haveged-213, A = test.sh-385):
 
-For e.g. https://lwn.net/Articles/974578/ goes in depth and talks about
-Postgres folks looking for this, since PostgreSQL databases uses
-buffered I/O for their database writes.
+ 4)  test.sh-385   |               |    set_next_entity() {
+ 4)  test.sh-385   |   2.108 us    |      __dequeue_entity();
+ 4)  test.sh-385   |   1.526 us    |      __update_load_avg_se();
+ 4)  test.sh-385   |   1.363 us    |      __update_load_avg_cfs_rq();
+ 4)  test.sh-385   | + 14.144 us   |    }
+ 4)  test.sh-385   |   1.417 us    |    __set_next_task_fair.part.0();
+ 4)  test.sh-385   | + 77.877 us   |  }
+ 4)  test.sh-385   |               |  __traceiter_sched_switch() {
+ 4)  test.sh-385   |   2.097 us    |    _raw_spin_lock_irqsave();
+ 4)  test.sh-385   |   1.483 us    |    _raw_spin_unlock_irqrestore();
+ 4)  test.sh-385   | + 14.014 us   |  }
+ ------------------------------------------
+ 4)  test.sh-385   =>  haveged-213  
+ ------------------------------------------
 
--ritesh
+ 4)  haveged-213   |               |  switch_mm_irqs_off() {
+ 4)  haveged-213   |   2.387 us    |    choose_new_asid();
+ 4)  haveged-213   | + 12.462 us   |    switch_ldt();
+ 4)  haveged-213   | + 45.288 us   |  }
+ 4)  haveged-213   |   1.639 us    |  x86_task_fpu();
+ 4)  haveged-213   |               |  save_fpregs_to_fpstate() {
+ 4)  haveged-213   |   1.888 us    |    xfd_validate_state();
+ 4)  haveged-213   |   6.995 us    |  }
+ ------------------------------------------
+ 4)  haveged-213   =>  test.sh-385  
+ ------------------------------------------
+
+ 4)  test.sh-385   |               |    finish_task_switch.isra.0() {
+ 4)  test.sh-385   |   1.857 us    |      _raw_spin_unlock();
+ 4)  test.sh-385   |   5.618 us    |    }
+ 4)  test.sh-385   | ! 446.226 us  |  }
+ 4)  test.sh-385   |               |  __pte_offset_map_lock() {
+ 4)  test.sh-385   |               |    ___pte_offset_map() {
+ 4)  test.sh-385   |   1.933 us    |      __rcu_read_lock();
+ 4)  test.sh-385   |   6.271 us    |    }
+ 4)  test.sh-385   |   2.056 us    |    _raw_spin_lock();
+ 4)  test.sh-385   | + 14.281 us   |  }
+
+Fix this by:
+  1. Properly initializing gops->ops->private so that
+     ftrace_pids_enabled() works as expected.
+  2. Removing the imprecise fallback check in graph_entry().
+  3. Updating register_ftrace_graph() to set gops->entryfunc =
+     fgraph_pid_func whenever PID filtering is active, so the correct
+     per-task filtering is enforced at entry time.
+
+With this change, function graph tracing will respect the configured
+PID filter list consistently, and the redundant coarse check is no
+longer needed.
+
+Signed-off-by: Shengming Hu <hu.shengming@zte.com.cn>
+---
+ kernel/trace/fgraph.c                | 9 +++++++--
+ kernel/trace/trace.h                 | 9 ---------
+ kernel/trace/trace_functions_graph.c | 3 ---
+ 3 files changed, 7 insertions(+), 14 deletions(-)
+
+diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
+index 484ad7a18..00df3d4ac 100644
+--- a/kernel/trace/fgraph.c
++++ b/kernel/trace/fgraph.c
+@@ -1019,6 +1019,7 @@ void fgraph_init_ops(struct ftrace_ops *dst_ops,
+ 		mutex_init(&dst_ops->local_hash.regex_lock);
+ 		INIT_LIST_HEAD(&dst_ops->subop_list);
+ 		dst_ops->flags |= FTRACE_OPS_FL_INITIALIZED;
++		dst_ops->private = src_ops->private;
+ 	}
+ #endif
+ }
+@@ -1375,6 +1376,12 @@ int register_ftrace_graph(struct fgraph_ops *gops)
+ 	gops->idx = i;
+
+ 	ftrace_graph_active++;
++	/* Always save the function, and reset at unregistering */
++	gops->saved_func = gops->entryfunc;
++#ifdef CONFIG_DYNAMIC_FTRACE
++	if (ftrace_pids_enabled(&gops->ops))
++		gops->entryfunc = fgraph_pid_func;
++#endif
+
+ 	if (ftrace_graph_active == 2)
+ 		ftrace_graph_disable_direct(true);
+@@ -1395,8 +1402,6 @@ int register_ftrace_graph(struct fgraph_ops *gops)
+ 	} else {
+ 		init_task_vars(gops->idx);
+ 	}
+-	/* Always save the function, and reset at unregistering */
+-	gops->saved_func = gops->entryfunc;
+
+ 	gops->ops.flags |= FTRACE_OPS_FL_GRAPH;
+
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index a3a15cfab..048a53282 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -1162,11 +1162,6 @@ struct ftrace_func_command {
+ 					char *params, int enable);
+ };
+ extern bool ftrace_filter_param __initdata;
+-static inline int ftrace_trace_task(struct trace_array *tr)
+-{
+-	return this_cpu_read(tr->array_buffer.data->ftrace_ignore_pid) !=
+-		FTRACE_PID_IGNORE;
+-}
+ extern int ftrace_is_dead(void);
+ int ftrace_create_function_files(struct trace_array *tr,
+ 				 struct dentry *parent);
+@@ -1184,10 +1179,6 @@ void ftrace_clear_pids(struct trace_array *tr);
+ int init_function_trace(void);
+ void ftrace_pid_follow_fork(struct trace_array *tr, bool enable);
+ #else
+-static inline int ftrace_trace_task(struct trace_array *tr)
+-{
+-	return 1;
+-}
+ static inline int ftrace_is_dead(void) { return 0; }
+ static inline int
+ ftrace_create_function_files(struct trace_array *tr,
+diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
+index fe9607edc..0efe831e4 100644
+--- a/kernel/trace/trace_functions_graph.c
++++ b/kernel/trace/trace_functions_graph.c
+@@ -232,9 +232,6 @@ static int graph_entry(struct ftrace_graph_ent *trace,
+ 		return 1;
+ 	}
+
+-	if (!ftrace_trace_task(tr))
+-		return 0;
+-
+ 	if (ftrace_graph_ignore_func(gops, trace))
+ 		return 0;
+
+-- 
+2.25.1
