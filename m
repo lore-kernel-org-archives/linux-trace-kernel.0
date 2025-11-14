@@ -1,176 +1,152 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f195.google.com (mail-pl1-f195.google.com [209.85.214.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93BA12F6164;
-	Fri, 14 Nov 2025 09:21:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 873AD302CB6
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 14 Nov 2025 09:24:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763112074; cv=none; b=aeGOfFJiKGG+eWrcUKVS5QVPDslDuBf5ircc5/TSycO17zmrIXiuGgFD/5Yf6FTd6Lo8v7qcjvbQFGVMDuhdIrTof2C8MAufafAyU72RN+09XZD7ewS7wMOx+hiVSePmofqHvgnbeWdRGqFkR5FP/M0ajSGsxuY9uSz0gz6mnVs=
+	t=1763112301; cv=none; b=BNGvUfm6onMedAsU9/vf1adIx/cfziuKqNnuD+2mJpHKdxppMJkv0SKesh2w0EBFKRsLWjrPCOOXF6sgJNe02F6Bzo9h0VbtmMie/Xa2PD/oGi9ekgP/fzjt59ayRj4T878zGKvarWc0ccq4155rgGjHbkwiTuX0f4Gu1+EdEsU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763112074; c=relaxed/simple;
-	bh=tLXs6QGR6tyfdtQa9CRonCTGW8w8q5P9WL7FJ71aNiA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tBFEwZ2+kZTfRviPCqAzbZ5UPp4dZMUTW73ba9kY22+vTQc5r8EIBhRE57WXzvMnHLKHxFx/mr74lJhffn1ErB/Rmk8VUIQeQTR/C8CEL0M5UvJHIh1k38Og9shvYlCqpeacwecU1eMGQ+FX5yBjV1rHUir2qGVUdPm0W6QUD78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=O23AHUJz; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1763112301; c=relaxed/simple;
+	bh=+9RQ5SYWcNd1cbzkAGMGzwz/84lSrZPPq5qPr6vkn4c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=O4LeIcHz4w6bF2c+2LrZqBGIsf/+yqEfTKveVfaCGpxjWrbn2HH7B5oSxl0CktI/RxBV6BgAwlFIITHXrsZXfh5YJJZokDFJr5pXuNMZDfHpvGBqJtfPy7g6dfDxBhwenKzKgEkfOAw1xddPrphCHZWxIUWXlw3LF9QUnYn65xE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W+my3Y+n; arc=none smtp.client-ip=209.85.214.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="O23AHUJz"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5ADMlP0P000482;
-	Fri, 14 Nov 2025 09:20:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=qeHXUYMFSy8eRy5hcdz09NbECVSzhU
-	F3RPksa1OX55Y=; b=O23AHUJz7ranXNGFgaqbiPJtfqqV1CiruQIzwI/JynZgWW
-	a579AwNYFprV3BVB3XZXRk2K7mQpx4Rj77oF/JDot6EjlcIqCW2AVD2zHXyZ1FMT
-	yVHGyq+vCOUiF/TaBZ20Xism4LSu2geobF55yMydsG7EgsAMdc/1YycnUlfATfrB
-	YR2tKE2Qgbfq/qWFPGDJCUab9xCXx4A1kJ03/vwsRnqnVuGYGRgehbyHXqmnEUXl
-	gnwcWVijQ9oEgVcuqArSQlB8U6Hfe6rKUZ1xEsl6cj/EzfUm4w4ihsPrBepInGRD
-	BSIaGCr6XMAzRyXxBhwNnBmiXzI9KzjaxkqcdTcA==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4adrechv90-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 14 Nov 2025 09:20:35 +0000 (GMT)
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 5AE9CBA8001006;
-	Fri, 14 Nov 2025 09:20:35 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4adrechv8u-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 14 Nov 2025 09:20:35 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5AE8tXwm011441;
-	Fri, 14 Nov 2025 09:20:34 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4aajw1t53e-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 14 Nov 2025 09:20:33 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5AE9KWVK58327466
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 14 Nov 2025 09:20:32 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 100F620040;
-	Fri, 14 Nov 2025 09:20:32 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9F74420043;
-	Fri, 14 Nov 2025 09:20:27 +0000 (GMT)
-Received: from li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com (unknown [9.124.212.173])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Fri, 14 Nov 2025 09:20:27 +0000 (GMT)
-Date: Fri, 14 Nov 2025 14:50:25 +0530
-From: Ojaswin Mujoo <ojaswin@linux.ibm.com>
-To: Dave Chinner <david@fromorbit.com>
-Cc: Ritesh Harjani <ritesh.list@gmail.com>, Christoph Hellwig <hch@lst.de>,
-        Christian Brauner <brauner@kernel.org>, djwong@kernel.org,
-        john.g.garry@oracle.com, tytso@mit.edu, willy@infradead.org,
-        dchinner@redhat.com, linux-xfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, jack@suse.cz,
-        nilay@linux.ibm.com, martin.petersen@oracle.com, rostedt@goodmis.org,
-        axboe@kernel.dk, linux-block@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 0/8] xfs: single block atomic writes for buffered IO
-Message-ID: <aRb0WQJi4rQQ-Zmo@li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com>
-References: <cover.1762945505.git.ojaswin@linux.ibm.com>
- <aRUCqA_UpRftbgce@dread.disaster.area>
- <20251113052337.GA28533@lst.de>
- <87frai8p46.ritesh.list@gmail.com>
- <aRWzq_LpoJHwfYli@dread.disaster.area>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W+my3Y+n"
+Received: by mail-pl1-f195.google.com with SMTP id d9443c01a7336-2958db8ae4fso17412475ad.2
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 14 Nov 2025 01:24:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1763112299; x=1763717099; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=j9SsUCl/7bEhicMcDwyeLe+NHqi3g02wXIdTa14uJ8Y=;
+        b=W+my3Y+n5olYkTaDnXUuhnD01ZXhZqudCA+hZ53hbOf70wgTGCCsJeDlT4oIBp8d8J
+         VXRbthXIjxV7QTs5zkKdtQBSAChYZVM8mfNmV94DfqxgQvuBGKBeCuzkNA8JhwYRpQYj
+         +LQ9LIybK6KkIG7EMmWgSyaqapjX+5RJPthRe+dzno9S8eUoyNKNbtp9LzbbWRD3K7lm
+         v9Bwrm7F+SyrUv7/5J4gun8mRzRJ2AENicnTI9J7znmaMmhbm9tC/ulp39z21N5Xage7
+         nRzZsw/xt3aUqRvoH077FiFNFqgeLStdcfuIkkAQ9zq4oBau8uA5XpgkdR6XOQRe3g3n
+         hE5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763112299; x=1763717099;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=j9SsUCl/7bEhicMcDwyeLe+NHqi3g02wXIdTa14uJ8Y=;
+        b=BzsEOXXg3w/V+jK2vzfeUoL4Jrzxmn94dQU1FHmLM594cel9q0454wdbNexUp9Xs2o
+         T90GI2LctzrunsfIEp4YDI/vhZWnpzPILNkYky62ZrKp3xIuFgA08b3VYlQJPbgUhKz4
+         48Oc22XSx6dTKEp9gO98jMCUyOIw0/NIQR+OzfLa4ASBKWIC9ad4HwJtbYfGj53TfpQu
+         6TyUgoPQgdvZ3o4wWDSb6ggP1aguGXnEtCJBywNq4l1L+yVoSYxhPEdkAXGEhdmfrbmh
+         hOs0Z/rmimdamC7vA/Md79ewG/OlXqdZkaPZPmaA+NCMtMXK6hAS85619uLeeh4KbnJX
+         20IQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWs5qAubP7eNKMOdLA5Lk8nsJwar8Ya7oM44WmcaOT0JBu9WVVcT58E6DZ1OvnUvvqFAeUh7DwTHrw5r23OW0jelFw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwTCZfcdV779x6SIv2WAXU6tw5jj2iz5muHdiSLt4KFpeg6TJY5
+	pAmqyrVOY8rn/hDFNF2fS4N29qiQHOI80zg9b6j3nuhAoX7ub8i5FKdQ
+X-Gm-Gg: ASbGncviYo/uSws4GwZAD1eieh0kqb1Cqi5KEm59S4wgJAcH03Z0906+7cTH4ZfffOh
+	j/T8Rrg2aWoX3Qwjot5tXBXqGgGubd8LV/w6DvnA2QY6JEzZKukm6SYpaFoTVlIR88F4t4Z+A1y
+	iLNFiJs6EcuyaWA/+JbaudtW4PcUiNXHyCfzeQFGMESKUexgAdGzegU/XdauMpq5A+g6Ni3mEYc
+	zEJc77LR8caBn0JbZ01zjtXwjkxx1w3Trqn4NWspPz5kI9UsNsXCIJtGzU+6FXj7VLmR5wx9zqR
+	2UyHZx5DVk32WStQM8c/f5P3DWsIev2RGiV+efCYe8Egbzu+n8IiaTX+Kwo3yAbYefGY5uc3bGs
+	pdzivRL9jcRXIGwWMZZ5Hfrg4b6pNWtjc6pjbdut0KJ2Q6aehaGjsVtx0I9e3bOicaa1Rd4TdqG
+	hKFwpo19TwxTY=
+X-Google-Smtp-Source: AGHT+IGGH96fiP4Mtc9aNQbmVe0Ea4kytDhImVoRCMVSUzVPcH6o18mB6xdLlzUY/ylcw8DGmsc9sQ==
+X-Received: by 2002:a17:903:1b08:b0:295:20c5:5453 with SMTP id d9443c01a7336-2986a73b26bmr26556915ad.29.1763112298644;
+        Fri, 14 Nov 2025 01:24:58 -0800 (PST)
+Received: from 7950hx ([43.129.244.20])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2985c2346dasm50451525ad.7.2025.11.14.01.24.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Nov 2025 01:24:58 -0800 (PST)
+From: Menglong Dong <menglong8.dong@gmail.com>
+X-Google-Original-From: Menglong Dong <dongml2@chinatelecom.cn>
+To: ast@kernel.org,
+	rostedt@goodmis.org
+Cc: daniel@iogearbox.net,
+	john.fastabend@gmail.com,
+	andrii@kernel.org,
+	martin.lau@linux.dev,
+	eddyz87@gmail.com,
+	song@kernel.org,
+	yonghong.song@linux.dev,
+	kpsingh@kernel.org,
+	sdf@fomichev.me,
+	haoluo@google.com,
+	jolsa@kernel.org,
+	mhiramat@kernel.org,
+	mark.rutland@arm.com,
+	mathieu.desnoyers@efficios.com,
+	bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH RFC bpf-next 0/7] bpf trampoline support "jmp" mode
+Date: Fri, 14 Nov 2025 17:24:43 +0800
+Message-ID: <20251114092450.172024-1-dongml2@chinatelecom.cn>
+X-Mailer: git-send-email 2.51.2
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aRWzq_LpoJHwfYli@dread.disaster.area>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: rsuUkEddEYzblp7K82O2A1ALKBX7yvA8
-X-Proofpoint-ORIG-GUID: Hwgk37d6V1PX3jo4iq9ZXuUVV9Bmk7Vr
-X-Authority-Analysis: v=2.4 cv=RrzI7SmK c=1 sm=1 tr=0 ts=6916f463 cx=c_pps
- a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
- a=kj9zAlcOel0A:10 a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=07d9gI8wAAAA:8 a=7-415B0cAAAA:8 a=wh1SXWFTCzeTCxTICb8A:9 a=CjuIK1q_8ugA:10
- a=e2CUPOnPG4QKp8I52DXD:22 a=biEYGPWJfzWAr4FL6Ov7:22 a=cPQSjfK2_nFv0Q5t_7PE:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTEzMDE3OSBTYWx0ZWRfX150420s1nCiX
- 7qQ5hJedJunqCODNeKz66X70QQJ0LdWGXEnS/cA0XqkCNH2SP6XgX8Za4MDcxPoAWtbbtILRwcB
- tw/ZL5uast4uLcZwLLG/LC/BW7p0HDcasm4eXCM3ZODuI6iR+lslaRCML7uH/FD39jel9jU+9FL
- hxRGc0iBPZWU19T7ldVHN6v42CtZsIUo6FnMu9EBibki21TQwsg9b4Vq8WtHn1xtyJhuYevVf5n
- 8N2BBPcReUx/ag+siORfb773p08hMhPx3PIMzKnbsWnTVLVvR78TAdhnbyzCV3z2QU/e/R4Vas+
- TRC30GJfiU9nnGT4eYsKgornUKStXENev/cBPIBjMh5EVNLqnIP2VrJhouYE8IhZoU05bs+iYN3
- NI9ZnxRP9FjDNvPYlI1m0afTz8CgOw==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-11-14_02,2025-11-13_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 clxscore=1011 malwarescore=0 priorityscore=1501 suspectscore=0
- lowpriorityscore=0 adultscore=0 bulkscore=0 impostorscore=0 spamscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2510240000 definitions=main-2511130179
+Content-Transfer-Encoding: 8bit
 
-On Thu, Nov 13, 2025 at 09:32:11PM +1100, Dave Chinner wrote:
-> On Thu, Nov 13, 2025 at 11:12:49AM +0530, Ritesh Harjani wrote:
-> > Christoph Hellwig <hch@lst.de> writes:
-> > 
-> > > On Thu, Nov 13, 2025 at 08:56:56AM +1100, Dave Chinner wrote:
-> > >> On Wed, Nov 12, 2025 at 04:36:03PM +0530, Ojaswin Mujoo wrote:
-> > >> > This patch adds support to perform single block RWF_ATOMIC writes for
-> > >> > iomap xfs buffered IO. This builds upon the inital RFC shared by John
-> > >> > Garry last year [1]. Most of the details are present in the respective 
-> > >> > commit messages but I'd mention some of the design points below:
-> > >> 
-> > >> What is the use case for this functionality? i.e. what is the
-> > >> reason for adding all this complexity?
-> > >
-> > > Seconded.  The atomic code has a lot of complexity, and further mixing
-> > > it with buffered I/O makes this even worse.  We'd need a really important
-> > > use case to even consider it.
-> > 
-> > I agree this should have been in the cover letter itself. 
-> > 
-> > I believe the reason for adding this functionality was also discussed at
-> > LSFMM too...  
-> > 
-> > For e.g. https://lwn.net/Articles/974578/ goes in depth and talks about
-> > Postgres folks looking for this, since PostgreSQL databases uses
-> > buffered I/O for their database writes.
-> 
-> Pointing at a discussion about how "this application has some ideas
-> on how it can maybe use it someday in the future" isn't a
-> particularly good justification. This still sounds more like a
-> research project than something a production system needs right now.
+For now, the bpf trampoline is called by the "call" instruction. However,
+it break the RSB and introduce extra overhead in x86_64 arch.
 
-Hi Dave, Christoph,
+For example, we hook the function "foo" with fexit, the call and return
+logic will be like this:
+  call foo -> call trampoline -> call foo-body ->
+  return foo-body -> return foo
 
-There were some discussions around use cases for buffered atomic writes
-in the previous LSFMM covered by LWN here [1]. AFAIK, there are 
-databases that recommend/prefer buffered IO over direct IO. As mentioned
-in the article, MongoDB being one that supports both but recommends
-buffered IO. Further, many DBs support both direct IO and buffered IO
-well and it may not be fair to force them to stick to direct IO to get
-the benefits of atomic writes.
+As we can see above, there are 3 call, but 2 return, which break the RSB
+balance. We can pseudo a "return" here, but it's not the best choice,
+as it will still cause once RSB miss:
+  call foo -> call trampoline -> call foo-body ->
+  return foo-body -> return dummy -> return foo
 
-[1] https://lwn.net/Articles/1016015/
-> 
-> Why didn't you use the existing COW buffered write IO path to
-> implement atomic semantics for buffered writes? The XFS
-> functionality is already all there, and it doesn't require any
-> changes to the page cache or iomap to support...
+The "return dummy" doesn't pair the "call trampoline", which can also
+cause the RSB miss.
 
-This patch set focuses on HW accelerated single block atomic writes with
-buffered IO, to get some early reviews on the core design.
+Therefore, we introduce the "jmp" mode for bpf trampoline, as advised by
+Alexei in [1]. And the logic will become this:
+  call foo -> jmp trampoline -> call foo-body ->
+  return foo-body -> return foo
 
-Just like we did for direct IO atomic writes, the software fallback with
-COW and multi block support can be added eventually.
+As we can see above, the RSB is totally balanced. After the modification,
+the performance of fexit increases from 76M/s to 130M/s.
 
-Regards,
-ojaswin
+In this series, we introduce the FTRACE_OPS_FL_JMP for ftrace to make it
+use the "jmp" instruction instead of "call".
 
-> 
-> -Dave.
-> -- 
-> Dave Chinner
-> david@fromorbit.com
+And we introduce the bpf_arch_text_poke_type(), which is able to specify
+both the current and new opcode.
+
+Not sure if I should split the first 2 patches into a separate series and
+send to the ftrace tree.
+
+Link: https://lore.kernel.org/bpf/CAADnVQLX54sVi1oaHrkSiLqjJaJdm3TQjoVrgU-LZimK6iDcSA@mail.gmail.com/[1]
+Menglong Dong (7):
+  ftrace: introduce FTRACE_OPS_FL_JMP
+  x86/ftrace: implement DYNAMIC_FTRACE_WITH_JMP
+  bpf: fix the usage of BPF_TRAMP_F_SKIP_FRAME
+  bpf,x86: adjust the "jmp" mode for bpf trampoline
+  bpf: introduce bpf_arch_text_poke_type
+  bpf,x86: implement bpf_arch_text_poke_type for x86_64
+  bpf: implement "jmp" mode for trampoline
+
+ arch/riscv/net/bpf_jit_comp64.c |  2 +-
+ arch/x86/Kconfig                |  1 +
+ arch/x86/kernel/ftrace.c        |  7 ++++-
+ arch/x86/kernel/ftrace_64.S     | 12 +++++++-
+ arch/x86/net/bpf_jit_comp.c     | 45 ++++++++++++++++++++--------
+ include/linux/bpf.h             | 22 ++++++++++++++
+ include/linux/ftrace.h          | 48 +++++++++++++++++++++++++++++
+ kernel/bpf/core.c               | 10 +++++++
+ kernel/bpf/trampoline.c         | 53 +++++++++++++++++++++++++++------
+ kernel/trace/Kconfig            | 12 ++++++++
+ kernel/trace/ftrace.c           |  9 +++++-
+ 11 files changed, 195 insertions(+), 26 deletions(-)
+
+-- 
+2.51.2
+
