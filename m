@@ -1,242 +1,106 @@
-Received: from mail-pl1-f195.google.com (mail-pl1-f195.google.com [209.85.214.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8CAF30C360
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 14 Nov 2025 09:25:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5256C2DC78C;
+	Fri, 14 Nov 2025 10:20:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763112336; cv=none; b=sa0i5z+Rfvqw8cvwe7c7433p//fIfWuIdnABnE+yTDxT9fk60+RBVBbw++yz9Jyd6YRmUHpuQ2d5EEbxFClPj4ru95nydSQKXOlnPL/ILjEW9pyHAz7y6U8JzT0tPQtxRfdBHdrxPOj7A7xfztM55uWx3qH54GBuTFOMZRYs6Sc=
+	t=1763115625; cv=none; b=URewSm/bfVGvk8BIrKf4mzKZuSeaF7Uuu6XaiX6CrIKAB6ez6kGa53h0s6RtQQnk30GNmQqc+ggHeUqjHf5ETC9d5cp50seAvu/noSIz2pufgYUeBXxB2NmnrAAK8hJM6FhR8x1HgNRHCg1cE5EGweg/zTsZfvCT9pfNN25X+wM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763112336; c=relaxed/simple;
-	bh=TIjsGgErGjhnsODM1Ph/ITY27XoQ96fhmRIiGKpLPac=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TO42TdBSwp981Bpo/DLUT0WXegCSbqDNtVOQ3TJfL7K1rukuEMBViDEdl4jItitJwmSanQMPQT/QiHtgw+vPfEsyfa3s3jqTJEuHhhZoCabM6/UCMBbCsIaahqIqP0XJLqnmYlr5UpIMLU2J4m5LifncU7Y8p9qHoAxzk3cGcfc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Yzd8SLfN; arc=none smtp.client-ip=209.85.214.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1763115625; c=relaxed/simple;
+	bh=fSO6pWTAU9fX5LrPb4jxanlzKRjhj3oVdw0B+ORFeA4=;
+	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
+	 Subject:From:To:Cc:Date; b=V3g6e9zfHW46EH6kemv19JVbnV2LJQIBK/8GwgKWmlE43sPNTpUr+XeJtfwErOgYXzYXeWs79oTFt5dJ6WGuW4h6jiCY/hnHjn6oqwAwOMYjugDDd1hyBjYrcXWJmyGkzGOewHw8HmgN5gJKqD5wNiXEUAfyr/KaqEQSWL/Gg9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ces3QwLP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yzd8SLfN"
-Received: by mail-pl1-f195.google.com with SMTP id d9443c01a7336-297e982506fso19959395ad.2
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 14 Nov 2025 01:25:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763112334; x=1763717134; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0GH1XgjhxGvH7eOvtS78BjGizHMW/kgqOUJowiQXUBA=;
-        b=Yzd8SLfNYUGICSEwn2XJUh+BrNTaUlFEeE2/2izq4OQlev4UEVBlmPG9MumotdLadi
-         6VfjXjDSQtHlJpcq7X9DfD6RQt4PBKeNr5+xBQmZEVu+GADo1eM3CdM89Rxk9tZsWo5m
-         vIndcC9wXByLWG44c9AUDHCCOOXcQ2QDcXCN17zaEzR0mz3IYugeTpppNXpL+Hn2vdyF
-         84Si5QUrCjnhR5Tumgz2lSCWvv/6vMXr3e5OQwqcTGQ7MzN7aDbjkWMQhphMMVawxged
-         8gb6dUxrsi7tKKyvjaMvSK3SUV+W6jASh/7AzvpcqCyx2dbUBzfOZvWdCJBeTWEwqTgi
-         PMxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763112334; x=1763717134;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=0GH1XgjhxGvH7eOvtS78BjGizHMW/kgqOUJowiQXUBA=;
-        b=sRwdVBHXijjOFZo52Jn0Y5IlazuhHb84Xzt5I4JwDeFWFF3TNFFUoAd3GTkDKHpO0z
-         KSn3mMDl0qT63mr+91VD/93iGzqdFTc/Cl+8Nr+8HTMxx0fqp0ROb8mJm9qdXtU48g/Y
-         g5FvrvTbh5ECzrvoJWKryncxVDH78duZ9QslTE5ilTvitCD1uRAdRcL9rwpcUSCWWXKc
-         14fUcUaBp58SEa0qH+B8EmI6B6mtjv89jo76z2naH5ckns5SH9EAgBZvzybNaLi+DxXX
-         euZxYO4fphCPlpgro7yVKaw6IgqnhWWyqAgqEoXU9OqpFT/PG5SLRU1wUBsBX7gPx3fj
-         YABQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVUm2cijQE5PVgiTE/xKmWHwxdi2WjjCZ8n8uCwDoXkxDwzdH/Y72mxK7xh7hiVIrouzY42DMZsUyeNK/DiIlfgbTk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx9GKtJLEdZrGuxLokjFG8B8UttmFpE2iLWukvds2rWJ8GbkKRZ
-	BDXwGNi8EbmnkHsEFaKpVBRPCGX8t10qmpaABSQqoUvQj7ShVX1488Cs
-X-Gm-Gg: ASbGncuKNlAgimCXGneKiq6ffnyCkf0f8mcAiDF0wymn7CczaJyx6FdzVT0AmT+zwoY
-	AXclTH7cgrCMjSqtpnLzzEnLiphQDBLLtVo/7waUqD0cxzR4KW0sjoNFRMVLRQDouBWfdBELnR1
-	zwF0m/TUhAKVbWvUyPKjJ1zpLiQFkSHdM9AhiFuVs+Pw2t8ariYxDttkimCsK/374HFkWxqOwMf
-	KaPplj+3GyBTD3rgWcyZ9J22pD/M8g65FDFbpnzJhOvt2YUgFEyeUTaE9IiXiLCVmZD02/Ckc5/
-	5+ZgXWfI8N3/O4iMKvXW+QOoDE+Ntojd6a7o2Mq+/nFMxJ8j4ks3faVhQd+BhM6H7vBTs3o4R0W
-	fpr4FwcX++ipZcHiHxDmirSwaJFP8mAWXqpbfvAb5UdYsf0RS6n2c03ZxiDPRZdwj72XnsCLBD/
-	XC
-X-Google-Smtp-Source: AGHT+IH8JdBL4kgG2wlYs/vtfYVs3OXl9lPqSBwJDQ1zGrYP08Gk8O6hyA6D59Y+JlLxX9WZiLPJ4w==
-X-Received: by 2002:a17:903:2f0e:b0:295:8c51:64ff with SMTP id d9443c01a7336-2986a7420ebmr27102945ad.29.1763112334321;
-        Fri, 14 Nov 2025 01:25:34 -0800 (PST)
-Received: from 7950hx ([43.129.244.20])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2985c2346dasm50451525ad.7.2025.11.14.01.25.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Nov 2025 01:25:33 -0800 (PST)
-From: Menglong Dong <menglong8.dong@gmail.com>
-X-Google-Original-From: Menglong Dong <dongml2@chinatelecom.cn>
-To: ast@kernel.org,
-	rostedt@goodmis.org
-Cc: daniel@iogearbox.net,
-	john.fastabend@gmail.com,
-	andrii@kernel.org,
-	martin.lau@linux.dev,
-	eddyz87@gmail.com,
-	song@kernel.org,
-	yonghong.song@linux.dev,
-	kpsingh@kernel.org,
-	sdf@fomichev.me,
-	haoluo@google.com,
-	jolsa@kernel.org,
-	mhiramat@kernel.org,
-	mark.rutland@arm.com,
-	mathieu.desnoyers@efficios.com,
-	bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH RFC bpf-next 7/7] bpf: implement "jmp" mode for trampoline
-Date: Fri, 14 Nov 2025 17:24:50 +0800
-Message-ID: <20251114092450.172024-8-dongml2@chinatelecom.cn>
-X-Mailer: git-send-email 2.51.2
-In-Reply-To: <20251114092450.172024-1-dongml2@chinatelecom.cn>
-References: <20251114092450.172024-1-dongml2@chinatelecom.cn>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ces3QwLP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62477C4CEF8;
+	Fri, 14 Nov 2025 10:20:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763115624;
+	bh=fSO6pWTAU9fX5LrPb4jxanlzKRjhj3oVdw0B+ORFeA4=;
+	h=In-Reply-To:References:Subject:From:To:Cc:Date:From;
+	b=ces3QwLP8RPLWdkIOjd8Iq2quinCayJyyGK3Nt0JbLctMdoBbAEsyu1dlG52IC/Je
+	 LCfEBrrxm1uKNvzxgpeR3hFM9EEfQW7FSCOCxVcL97ONTMK1Y7XtJ0hkvJ6++QFp4i
+	 7XXgq43HC4lpn74fDYdxCedQwvhAw/ufEPHwa0Yxwm6UXewZ6LrpwmG22tqEpyfHgX
+	 CT3vlOd7rriC4ErJ1xbr4oKPTPmTjlLbBU49L15quhqJpBZZLhMfHTm7y/dxiE+uFZ
+	 1b/IYqLybiNHl/WKsD0zIkI1IsGSPTRCws4MV1CxOJ1clIf6rq9FZTkICdsMvKdBUl
+	 zr8EVX6Cz62xA==
+Content-Type: multipart/mixed; boundary="===============7891569904405583792=="
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-Id: <cf34d9e768db2261565112341daaf39d6b3cb5f75b405b04e07186ed27e76520@mail.kernel.org>
+In-Reply-To: <20251114092450.172024-6-dongml2@chinatelecom.cn>
+References: <20251114092450.172024-6-dongml2@chinatelecom.cn>
+Subject: Re: [PATCH RFC bpf-next 5/7] bpf: introduce bpf_arch_text_poke_type
+From: bot+bpf-ci@kernel.org
+To: menglong8.dong@gmail.com,ast@kernel.org,rostedt@goodmis.org
+Cc: daniel@iogearbox.net,john.fastabend@gmail.com,andrii@kernel.org,martin.lau@linux.dev,eddyz87@gmail.com,song@kernel.org,yonghong.song@linux.dev,kpsingh@kernel.org,sdf@fomichev.me,haoluo@google.com,jolsa@kernel.org,mhiramat@kernel.org,mark.rutland@arm.com,mathieu.desnoyers@efficios.com,bpf@vger.kernel.org,linux-kernel@vger.kernel.org,linux-trace-kernel@vger.kernel.org,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,clm@meta.com,ihor.solodrai@linux.dev
+Date: Fri, 14 Nov 2025 10:20:24 +0000 (UTC)
 
-Implement the "jmp" mode for the bpf trampoline. For the ftrace_managed
-case, we need only to set the FTRACE_OPS_FL_JMP on the tr->fops if "jmp"
-is needed.
+--===============7891569904405583792==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 
-For the bpf poke case, the new flag BPF_TRAMP_F_JMPED is introduced to
-store and check if the trampoline is in the "jmp" mode.
+> diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+> index 8fb8c9bbd..975930e10 100644
+> --- a/include/linux/bpf.h
+> +++ b/include/linux/bpf.h
+> @@ -3712,6 +3712,10 @@ enum bpf_text_poke_type {
+>  	BPF_MOD_JUMP,
+>  };
+>
+> +int bpf_arch_text_poke_type(void *ip, enum bpf_text_poke_type old_t,
+> +			    enum bpf_text_poke_type new_t, void *addr1,
+> +			    void *addr2);
+                                                          ^^^^^^^^^^^^
 
-Signed-off-by: Menglong Dong <dongml2@chinatelecom.cn>
+The header declaration uses parameter names addr1 and addr2, but the
+implementation in kernel/bpf/core.c uses old_addr and new_addr. Should
+these match? When developers implement arch-specific versions, they'll
+see addr1/addr2 in the header but old_addr/new_addr in the weak default
+implementation. The existing bpf_arch_text_poke() uses addr1/addr2, but
+the x86 implementation of that function semantically treats them as
+old_addr and new_addr. Would it be clearer to use old_addr/new_addr
+consistently, or addr1/addr2 to match the existing function?
+
+> +
+>  int bpf_arch_text_poke(void *ip, enum bpf_text_poke_type t,
+>  		       void *addr1, void *addr2);
+>
+> diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
+> index ef4448f18..400eb70fd 100644
+> --- a/kernel/bpf/core.c
+> +++ b/kernel/bpf/core.c
+> @@ -3156,6 +3156,16 @@ int __weak bpf_arch_text_poke(void *ip, enum bpf_text_poke_type t,
+>  	return -ENOTSUPP;
+>  }
+>
+> +int __weak bpf_arch_text_poke_type(void *ip, enum bpf_text_poke_type old_t,
+> +				   enum bpf_text_poke_type new_t, void *old_addr,
+> +				   void *new_addr)
+                                       ^^^^^^^^^^^^^^^^^^^^^^
+> +{
+> +	if (old_t == new_t)
+> +		return bpf_arch_text_poke(ip, old_t, old_addr, new_addr);
+> +
+> +	return -EOPNOTSUPP;
+> +}
+> +
+>  void * __weak bpf_arch_text_copy(void *dst, void *src, size_t len)
+>  {
+>  	return ERR_PTR(-ENOTSUPP);
+
+
 ---
- include/linux/bpf.h     |  6 +++++
- kernel/bpf/trampoline.c | 53 ++++++++++++++++++++++++++++++++++-------
- 2 files changed, 50 insertions(+), 9 deletions(-)
+AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
+See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
 
-diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-index aec7c65539f5..3598785ac8d1 100644
---- a/include/linux/bpf.h
-+++ b/include/linux/bpf.h
-@@ -1201,6 +1201,12 @@ struct btf_func_model {
-  */
- #define BPF_TRAMP_F_INDIRECT		BIT(8)
- 
-+/*
-+ * Indicate that the trampoline is using "jmp" instead of "call". This flag
-+ * is only used in the !ftrace_managed case.
-+ */
-+#define BPF_TRAMP_F_JMPED		BIT(9)
-+
- /* Each call __bpf_prog_enter + call bpf_func + call __bpf_prog_exit is ~50
-  * bytes on x86.
-  */
-diff --git a/kernel/bpf/trampoline.c b/kernel/bpf/trampoline.c
-index 5949095e51c3..02a9f33d8f6c 100644
---- a/kernel/bpf/trampoline.c
-+++ b/kernel/bpf/trampoline.c
-@@ -175,15 +175,37 @@ static struct bpf_trampoline *bpf_trampoline_lookup(u64 key)
- 	return tr;
- }
- 
--static int unregister_fentry(struct bpf_trampoline *tr, void *old_addr)
-+static int bpf_text_poke(struct bpf_trampoline *tr, void *old_addr,
-+			 void *new_addr)
- {
-+	enum bpf_text_poke_type new_t = BPF_MOD_CALL, old_t = BPF_MOD_CALL;
- 	void *ip = tr->func.addr;
- 	int ret;
- 
-+	if (bpf_trampoline_need_jmp(tr->flags))
-+		new_t = BPF_MOD_JUMP;
-+	if (tr->flags & BPF_TRAMP_F_JMPED)
-+		old_t = BPF_MOD_JUMP;
-+
-+	ret = bpf_arch_text_poke_type(ip, old_t, new_t, old_addr, new_addr);
-+	if (!ret) {
-+		if (new_t == BPF_MOD_JUMP)
-+			tr->flags |= BPF_TRAMP_F_JMPED;
-+		else
-+			tr->flags &= ~BPF_TRAMP_F_JMPED;
-+	}
-+
-+	return ret;
-+}
-+
-+static int unregister_fentry(struct bpf_trampoline *tr, void *old_addr)
-+{
-+	int ret;
-+
- 	if (tr->func.ftrace_managed)
- 		ret = unregister_ftrace_direct(tr->fops, (long)old_addr, false);
- 	else
--		ret = bpf_arch_text_poke(ip, BPF_MOD_CALL, old_addr, NULL);
-+		ret = bpf_text_poke(tr, old_addr, NULL);
- 
- 	return ret;
- }
-@@ -191,7 +213,6 @@ static int unregister_fentry(struct bpf_trampoline *tr, void *old_addr)
- static int modify_fentry(struct bpf_trampoline *tr, void *old_addr, void *new_addr,
- 			 bool lock_direct_mutex)
- {
--	void *ip = tr->func.addr;
- 	int ret;
- 
- 	if (tr->func.ftrace_managed) {
-@@ -200,7 +221,7 @@ static int modify_fentry(struct bpf_trampoline *tr, void *old_addr, void *new_ad
- 		else
- 			ret = modify_ftrace_direct_nolock(tr->fops, (long)new_addr);
- 	} else {
--		ret = bpf_arch_text_poke(ip, BPF_MOD_CALL, old_addr, new_addr);
-+		ret = bpf_text_poke(tr, old_addr, new_addr);
- 	}
- 	return ret;
- }
-@@ -223,7 +244,7 @@ static int register_fentry(struct bpf_trampoline *tr, void *new_addr)
- 		ftrace_set_filter_ip(tr->fops, (unsigned long)ip, 0, 1);
- 		ret = register_ftrace_direct(tr->fops, (long)new_addr);
- 	} else {
--		ret = bpf_arch_text_poke(ip, BPF_MOD_CALL, NULL, new_addr);
-+		ret = bpf_text_poke(tr, NULL, new_addr);
- 	}
- 
- 	return ret;
-@@ -415,7 +436,8 @@ static int bpf_trampoline_update(struct bpf_trampoline *tr, bool lock_direct_mut
- 	}
- 
- 	/* clear all bits except SHARE_IPMODIFY and TAIL_CALL_CTX */
--	tr->flags &= (BPF_TRAMP_F_SHARE_IPMODIFY | BPF_TRAMP_F_TAIL_CALL_CTX);
-+	tr->flags &= (BPF_TRAMP_F_SHARE_IPMODIFY | BPF_TRAMP_F_TAIL_CALL_CTX |
-+		      BPF_TRAMP_F_JMPED);
- 
- 	if (tlinks[BPF_TRAMP_FEXIT].nr_links ||
- 	    tlinks[BPF_TRAMP_MODIFY_RETURN].nr_links) {
-@@ -432,9 +454,17 @@ static int bpf_trampoline_update(struct bpf_trampoline *tr, bool lock_direct_mut
- 
- #ifdef CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
- again:
--	if ((tr->flags & BPF_TRAMP_F_SHARE_IPMODIFY) &&
--	    (tr->flags & BPF_TRAMP_F_CALL_ORIG))
--		tr->flags |= BPF_TRAMP_F_ORIG_STACK;
-+	if (tr->flags & BPF_TRAMP_F_CALL_ORIG) {
-+		if (tr->flags & BPF_TRAMP_F_SHARE_IPMODIFY) {
-+			tr->flags |= BPF_TRAMP_F_ORIG_STACK;
-+		} else if (IS_ENABLED(CONFIG_DYNAMIC_FTRACE_WITH_JMP)) {
-+			/* Use "jmp" instead of "call" for the trampoline
-+			 * in the origin call case, and we don't need to
-+			 * skip the frame.
-+			 */
-+			tr->flags &= ~BPF_TRAMP_F_SKIP_FRAME;
-+		}
-+	}
- #endif
- 
- 	size = arch_bpf_trampoline_size(&tr->func.model, tr->flags,
-@@ -465,6 +495,11 @@ static int bpf_trampoline_update(struct bpf_trampoline *tr, bool lock_direct_mut
- 	if (err)
- 		goto out_free;
- 
-+	if (bpf_trampoline_need_jmp(tr->flags))
-+		tr->fops->flags |= FTRACE_OPS_FL_JMP;
-+	else
-+		tr->fops->flags &= ~FTRACE_OPS_FL_JMP;
-+
- 	WARN_ON(tr->cur_image && total == 0);
- 	if (tr->cur_image)
- 		/* progs already running at this address */
--- 
-2.51.2
+CI run summary: https://github.com/kernel-patches/bpf/actions/runs/19360353328
 
+--===============7891569904405583792==--
