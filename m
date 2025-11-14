@@ -1,138 +1,151 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CEBB2DF3F9
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 14 Nov 2025 18:49:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEDF72DCF5B
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 14 Nov 2025 18:50:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763146173; cv=none; b=LKY/WH2zmkSU3XR28trhr9hRNrbrc9v2irqiIZ0r2wqDIiXXJK+yw0lr6+YrmiRJelRdKHJGQiT58WSqCx04Eou2p1yblKhsYDnNs2d17kUjj5P7WLDbW8hX/D2HpE21XgO1S7dYwgLgx/6Xk/hN8KP+ROKlFUT15YyGUAAgrA8=
+	t=1763146239; cv=none; b=U81TXIsknYou9V2bwKqenJuhWiO2jDXf6INqh+H+A8hqyaUXMNV8dKliTwTzXkEtr6KJh75sLNxLgyPUieC3rfFy0Wx+wENsORyEOi48oWCUaI3D4gMP74NGBebWFWeBIQDqpMoB9YRr3qntKVTgM8XaEkMv+fk0fGkIow58A7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763146173; c=relaxed/simple;
-	bh=rz7j/UJDrxKMl9ZSMZkRQVVJppyfO9y7PO+WsuJt37w=;
+	s=arc-20240116; t=1763146239; c=relaxed/simple;
+	bh=o0nLiDeidi8bShLqc7QiSgoWOOat4ecSduM/jrvRCEw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uTwLgmxZ7FRyzsczwBIW25ak1FIdEx4QHXLmTL9zmrZ1T86VTv5yROJMGZOUxvPmOyRmntC00F+Lgcho9As6WljPsvTUCeGOtlsj9gqCV2jXjeOUm7ZvltbD8VfKLIHy70EoWd+cPVVzlzF+VXZbFcsmpuvB2xsYXWuQzFebUWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SmtuPXN9; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=TwuaIOwZFriez2++iCldZjXqQnGF4DP6LvhEcGlp1IMscigdOfnI/Qa7xFa+kMVyhY/dYGKwTtVnd17S+A3xFcHW5/wQ+uQHeT8i128IV0GfwdZAxD9DdKsrWm3qIFHTkOoBzQVnuEva2Qb1k44GkEzQlL+CLMZ5cVbZYhYM6BY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S8Mrt357; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SmtuPXN9"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-29852dafa7dso18905ad.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 14 Nov 2025 10:49:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S8Mrt357"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-42b3b29153fso1357675f8f.3
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 14 Nov 2025 10:50:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1763146168; x=1763750968; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1763146236; x=1763751036; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=TufH33LR1+FbRs5TTnZXWGBvkJzQgtKHJFV9C+DmjZs=;
-        b=SmtuPXN9lT50bmplyfK+KKmC4YIptJhG9JQ4YT9SvprMWMdlCLlM2FKSCjFGrivQTy
-         BRWeGcbMPAF2DEg8XyAQ/bctDrRCm7r1OoluNYVFbOv5oHCbxDLXoJD2R1fw02a9Lezk
-         7miOM6qpOwA6xPqQG4E65l1nD8uQBvo9e53QqnixeFSik1fkQ/kH02SbR4a0PswptrPd
-         9KYLRD9tQSO3jGCYFGKK/+QuaOWzD/GexNeSQevUxKHJzls9BH1NFq7zGR6Omw+hLkAH
-         uvOm6igutCmYIC0yydHztE+cCF7zapjwqSgO7at1RadJgeO/iyreSn40ta8cWFeC22dO
-         SGiQ==
+        bh=iBpBjbDRIyJkrgomva9hexctIJ4oacfAhoOAaqcQACM=;
+        b=S8Mrt357vHGkl+2r9/RbrV1xKEX+Jxk+2rXFHdX7dX7zzliVtmm97RhEMxyp1xRMWi
+         KaxTno5m5ltdnC2QLEdBfiR2JtQ2ny52Dyq5euNTCig6xzs4jg8BFOwc+IKzRkwc4lV4
+         Y9K6US/LNouo2GU513IZRnEDLU7AOyCWWoMzV8hKB7PuE2IrqA4uD2Mwc6DvMwqTtOWv
+         4s7LO5mck+fgsFKL7/uV9ZxXBathjBicDr70asdSVcRZ+VpbI/Mdyr6hKsfv67O3Tnpu
+         m9bv2zy8qbhLtTnJ93bdk4MA9nQNFQEIludEpW+LxoSFq8W/eRX5rIYPfY2VkqY0sJ1o
+         HJaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763146168; x=1763750968;
+        d=1e100.net; s=20230601; t=1763146236; x=1763751036;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=TufH33LR1+FbRs5TTnZXWGBvkJzQgtKHJFV9C+DmjZs=;
-        b=SIJVepOkU0weC0BO7351s0GQc/gnMHtRYwvKCxAoV/fWCuRxq/n55EoabAE1UiSUH3
-         ucmlLhMlUVe5BJZxUHf87h3sgsXcLPUBzCklDRjPUzqzC/SsaHdSP2L2m59yOIh7DTuV
-         sNv5AgR64tFgk8OJZ3shqHg+1llxEyuYJgUQBANe5EK1xYGnI6vfBwkdFYtYjqhrF8WH
-         cAWSj4BEcmIbrnygeQ4BFyLk4RHv4SUEK4vhG7XdTepNJSDu8Fy3QDgX/2WaW/PDUZeP
-         PiZ4gbTQkrhjF+Z3zMJwhmgidTO+xeadAwGIYaotI8Cj8jKe6E/bPTcTY8mIxXgbQA7r
-         Z5FA==
-X-Forwarded-Encrypted: i=1; AJvYcCXd2BzlnMEo5xPy+fuTFI4v+Hmfoagh4epae/wv5Mw6/olcEuNJN4eyRj/113KywrAReQT1FYsvFdgSkMS1Esu7NHw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHOcOBuXLW8kPtvt/eElA2ciem2WiX1AV887jDBzQVH6upd5bJ
-	WatkoKIKEpD2mImzlWO9WqOeGj3Fo+CXxM/jWD3/FxGjcp/BD6yRNA+W/dclQYUA/rrasLDygkB
-	cpyLvLswhQMAhqMPGddlpEBD+49E93mvZ/FqusWQx
-X-Gm-Gg: ASbGncvC4hTh/ArnZ4BOtkh3OOwiZsrYS4H0ECgIk++gZViVb9iO3W1iF4rNeslQia6
-	7fkTvVEgU1/aYu1BxiqYWxzV9y3cZjvI9M0bu3kBEM4mKk9WrxS8zIrvPzKAz8lq9j/+NhhtQiw
-	N377LQdAQ7S1qDwcd8NQHXxYGGdrAx69f70wwuVKTYbWpVO/7KlAG3bIXcjALpW11WtSBqEyl0A
-	8UqMSJtMFJsLtXuRNX4Jn+eR9evwMpbgBmu0CDNbq99aLiLTKya20HbaxOSi1RUeLWtLdXpaWym
-	ih2/2GTTtgLXZhJRZwHVh+nzLgZhP7pb11k=
-X-Google-Smtp-Source: AGHT+IGgLMzFBg4dvat4vkWEc7+bSgPYzKPBYdw5lt+7F4/qZIFGnBSHgtP2NlwkFQJ5dDAQrZRX0fSaUJ3hA4n2Fk4=
-X-Received: by 2002:a17:903:41c3:b0:295:1351:f63e with SMTP id
- d9443c01a7336-299c6b2473dmr179205ad.10.1763146167172; Fri, 14 Nov 2025
- 10:49:27 -0800 (PST)
+        bh=iBpBjbDRIyJkrgomva9hexctIJ4oacfAhoOAaqcQACM=;
+        b=UyGyV466pQ4PB5KWhvQ99AUjaA33UnBvXBk4Itl8KL4vvQEyO5dOcfbzIyo6foG8U3
+         LI+eAIxUMs7pzn851leOjLoTO/4MNrcy0wgxoU3naRWeKV8ZkbTuP4HgjJEkFJzuxNgt
+         AJYKehhyNtKwEL8ucYqGwsFIU4E9eC/5rD6zOmrRGeupwS77ZM5erzu+7Q+2UG9mskqv
+         Drf/VYY6vll7IuN2r3lOcnyS9o6yL3VcJUS6tt5PyDmItdGmRdhtwX+a6Ce2GFRXboxR
+         6zfqI2Vtsut66j7dubhmbg4IWulH+u9qRQX4CqEejh8Nmq/7tGzYuCxkICqkL2qbTchY
+         vB3A==
+X-Forwarded-Encrypted: i=1; AJvYcCWtjTxNAQiuCyIHfAVo2DBkFHucupuVsP0VYZeF3UDO/z/N/9CEPnv8ozs8rdQN3Zdz9claXeRdDuAFmPt0KDSfj1M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNzsE+uqwubD9fDH5AmYW/VUe70GAYbgNBymoIsdjH424jUYB9
+	hdyFc+Eh+lixz0IYTkN4mbYlXGggMM7LnW78gWHeY9bvue6JOAOlbvWrtj+F28z63DMNdMpP8UP
+	azY2E0RpE1b0xMkk+XAu2iyoPoTGPVu0=
+X-Gm-Gg: ASbGncuxY3Qs5ElXJ5zZ4g+qUWPXzXDoFhMHFEM57eg1y4p5UaK7WZRoI01eBSrp2ro
+	HVhMlTOKjPij+YELTGzWcUE0L5FaBf7+OTDwj8MjWVaTR6IUFA02f7nIzGVuRxMeaYyIasAoqOm
+	6aVjH1W1XybXeeZelDyE7ojslNPAeLEhgL8eF/p9JAlStf8DiDniLjERem4k2F7SxE2hp/My4qZ
+	6IKRzGN8XoezX1WYUbXNhVgumLzIEC8S1D5WFMNr8EP4GpljSIqe62fypMmPaprlWzKGkAT+3eZ
+	lYLOZoRpAN+OLQU1+MJ3haqjGuje
+X-Google-Smtp-Source: AGHT+IGYhqPBpY4BJBIp8RjCMead5TIvpDutH+yTfcNB9BHfNZ+5V7WN+ZKMp2dP7zDyYxsGjavBXh77aTreE8DjD7k=
+X-Received: by 2002:a05:6000:1845:b0:42b:3aee:429e with SMTP id
+ ffacd0b85a97d-42b5938a9d7mr3914945f8f.56.1763146236195; Fri, 14 Nov 2025
+ 10:50:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251114070018.160330-1-namhyung@kernel.org> <20251114070018.160330-4-namhyung@kernel.org>
- <CAP-5=fVEuYXw+P-+Z7bU7Z-+7dsHPPfABh5pdnPtfvH-23u4Qw@mail.gmail.com>
- <CAP-5=fU33sEARn0tc1hSMahBVCvs0cy+Cu-J6+BG0Cm-nuwKnA@mail.gmail.com> <20251114133009.7dd97625@gandalf.local.home>
-In-Reply-To: <20251114133009.7dd97625@gandalf.local.home>
-From: Ian Rogers <irogers@google.com>
-Date: Fri, 14 Nov 2025 10:49:15 -0800
-X-Gm-Features: AWmQ_blrNkkumPpA1qnlt2x-BsuC-2KXfWdvtWTL6qKsCtowllFahNliI9kmH3k
-Message-ID: <CAP-5=fUF78K6TVnqa7gZoriTzymm1yjSY=jVuocZBn4t5aXS-g@mail.gmail.com>
-Subject: Re: [PATCH v3 3/5] perf record: Enable defer_callchain for user callchains
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-perf-users@vger.kernel.org, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Indu Bhagat <indu.bhagat@oracle.com>, Jens Remus <jremus@linux.ibm.com>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, linux-trace-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org
+References: <20251114092450.172024-1-dongml2@chinatelecom.cn> <20251114092450.172024-8-dongml2@chinatelecom.cn>
+In-Reply-To: <20251114092450.172024-8-dongml2@chinatelecom.cn>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Fri, 14 Nov 2025 10:50:25 -0800
+X-Gm-Features: AWmQ_bkpZsCajzZsBWMsfYKPkyzLLgDuVad6krgXnJLzbvVnTeqidHufIZ_sf2E
+Message-ID: <CAADnVQKw9PtRYooO+qKQ70xgNusEn8qusBFfzU+bZ7WXRg3-3A@mail.gmail.com>
+Subject: Re: [PATCH RFC bpf-next 7/7] bpf: implement "jmp" mode for trampoline
+To: Menglong Dong <menglong8.dong@gmail.com>
+Cc: Alexei Starovoitov <ast@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>, 
+	Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
+	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, bpf <bpf@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Nov 14, 2025 at 10:29=E2=80=AFAM Steven Rostedt <rostedt@goodmis.or=
-g> wrote:
+On Fri, Nov 14, 2025 at 1:25=E2=80=AFAM Menglong Dong <menglong8.dong@gmail=
+.com> wrote:
 >
-> On Fri, 14 Nov 2025 10:09:26 -0800
-> Ian Rogers <irogers@google.com> wrote:
+> Implement the "jmp" mode for the bpf trampoline. For the ftrace_managed
+> case, we need only to set the FTRACE_OPS_FL_JMP on the tr->fops if "jmp"
+> is needed.
 >
-> > Just to be clear. I don't think the behavior of using frame pointers
-> > should change. Deferral has downsides, for example:
-> >
-> >   $ perf record -g -a sleep 1
+> For the bpf poke case, the new flag BPF_TRAMP_F_JMPED is introduced to
+> store and check if the trampoline is in the "jmp" mode.
 >
-> The biggest advantage of the deferred callstack is that there's much less
-> duplication of data in the ring buffer. Especially when you have deep
-> stacks and long system calls.
-
-I've never had anybody raise this as a concern with fp stack traces,
-especially given the stack snapshot approach being far more space
-consuming - but okay.
-
-> Now, if we have frame pointers enabled, we could possibly add a feature t=
-o
-> the deferred unwinder where it could try to do the deferred immediately a=
-nd
-> if it faults it then waits until going back to user space. This means tha=
-t
-> the frame pointer version should work (unless the user space stack was
-> swapped out).
+> Signed-off-by: Menglong Dong <dongml2@chinatelecom.cn>
+> ---
+>  include/linux/bpf.h     |  6 +++++
+>  kernel/bpf/trampoline.c | 53 ++++++++++++++++++++++++++++++++++-------
+>  2 files changed, 50 insertions(+), 9 deletions(-)
 >
-> >
-> > Without deferral kernel stack traces will contain both kernel and user
-> > traces. With deferral the user stack trace is only generated when the
-> > system call returns and so there is a chance for kernel stack traces
-> > to be missing their user part. An obvious behavioral change. I think
-> > for what you are doing here we can have an option something like:
-> >
-> >   $ perf record --call-graph fp-deferred -a sleep 1
+> diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+> index aec7c65539f5..3598785ac8d1 100644
+> --- a/include/linux/bpf.h
+> +++ b/include/linux/bpf.h
+> @@ -1201,6 +1201,12 @@ struct btf_func_model {
+>   */
+>  #define BPF_TRAMP_F_INDIRECT           BIT(8)
 >
-> I would be OK with this but I would prefer a much shorter name. Adding 20
-> characters to the command line will likely keep people from using it.
+> +/*
+> + * Indicate that the trampoline is using "jmp" instead of "call". This f=
+lag
+> + * is only used in the !ftrace_managed case.
+> + */
+> +#define BPF_TRAMP_F_JMPED              BIT(9)
+> +
+>  /* Each call __bpf_prog_enter + call bpf_func + call __bpf_prog_exit is =
+~50
+>   * bytes on x86.
+>   */
+> diff --git a/kernel/bpf/trampoline.c b/kernel/bpf/trampoline.c
+> index 5949095e51c3..02a9f33d8f6c 100644
+> --- a/kernel/bpf/trampoline.c
+> +++ b/kernel/bpf/trampoline.c
+> @@ -175,15 +175,37 @@ static struct bpf_trampoline *bpf_trampoline_lookup=
+(u64 key)
+>         return tr;
+>  }
+>
+> -static int unregister_fentry(struct bpf_trampoline *tr, void *old_addr)
+> +static int bpf_text_poke(struct bpf_trampoline *tr, void *old_addr,
+> +                        void *new_addr)
 
-Fwiw, with buildid-mmap we just (v6.18) flipped the default when the
-kernel has the feature to use it. The kernel feature was added in
-v5.12.
-https://lore.kernel.org/r/20250724163302.596743-9-irogers@google.com
-I don't oppose a shorter name, callchain option, .. Unfortunately with
-`perf record` -d is taken for saying record data mmaps, -D is taken
-for a start-up delay option, and -G is a cgroup option. Perhaps '-f'
-for "frame" and have it mirror '-g' except that deferred is default
-true rather than false.
+The bpf_text_poke is a generic name. It really doesn't fit here.
+Use bpf_trampoline_update_fentry() or something along those lines.
 
-Thanks,
-Ian
+>  {
+> +       enum bpf_text_poke_type new_t =3D BPF_MOD_CALL, old_t =3D BPF_MOD=
+_CALL;
+>         void *ip =3D tr->func.addr;
+>         int ret;
+>
+> +       if (bpf_trampoline_need_jmp(tr->flags))
+> +               new_t =3D BPF_MOD_JUMP;
+> +       if (tr->flags & BPF_TRAMP_F_JMPED)
+> +               old_t =3D BPF_MOD_JUMP;
 
-> -- Steve
+Now I see why you picked _need_jmp().. to alternate with F_JMPED ?
+_uses_jmp() suggestions isn't quite right.
+
+How about bpf_trampoline_must_jmp() ?
+and drop if (!ret) fallback and BPF_TRAMP_F_JMPED bit.
+It doesn't look to be necessary.
