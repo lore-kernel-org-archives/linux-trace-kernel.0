@@ -1,268 +1,361 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDC972D594A;
-	Fri, 14 Nov 2025 17:22:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05740340280
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 14 Nov 2025 17:52:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763140979; cv=none; b=Vv07bG8no8eLsclLswk+yKGsLPhLB0NK+XQypyuDBLwy/DQJCYYOnblkr+CQharSJj9RlpRJJqHjx9JGOqnOIJN6HVRe+CNEHs2D7XZzgD32c0oYaEa+fr43THgdEB9lneHWcfkeSJEvx6IdbjztATXKD9rh4WS2Q7CudkV7K1Y=
+	t=1763142775; cv=none; b=sbeb1/wTuzw+8nextK2w5oZHv3mnnCdUMXjDi57dDAHmDU0tFMaocgsvrqvQiNZSl2GbdTfvrKhvYzyNKpey5SjikIjMIMF826dXkCgybhYf0S3t0FoAufZlQkfjHibJZWk0ZNFRaulMnF2x9HXkvNImSWtHwU0nmtgCtEdvz5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763140979; c=relaxed/simple;
-	bh=Wn21IOPfie55Agjgm4yTzq64wt8lPfqbNjOydlIl3ks=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=a5WAR+MeXYZiaDGei7Z6woVvfC9A7FdbYi/t9nqXzz8YcYJ1Htfr01w3U1eLIJB9JgVTHlZQjHcC1zlPfOekNJUMQ7iRU+8w2duGL1gzeYDJA0IGk0MY9pKnEr3R5MdGAMDWWIllbqP+dZOzu3LepELSVcwOjVlR++Zqyio8C6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SilCQx3X; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763142775; c=relaxed/simple;
+	bh=V1epEisfHuHh3GtAuTvBst8wMo+m1iJsb0zXvqB0HL0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HFD3pdMcv5WMnyY6SVtYBnOxyL537bEVa4oEdPaXjL4CsYjIL7XzBvKzOa/emCqcAIkJT2TEUbiWgo6NuL3LDdXawtxRZ7LWl+lXQwMGnBkkw+ooOL0gmCiii2rjouju/oi6nZrvu7rCKV8NaJCAFqqDlJHycHLhCi5FeH4Bzco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LPoSB3nr; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SilCQx3X"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3554C2BCAF;
-	Fri, 14 Nov 2025 17:22:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763140979;
-	bh=Wn21IOPfie55Agjgm4yTzq64wt8lPfqbNjOydlIl3ks=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=SilCQx3XmZ/NT8jwjxoviXOlaW0MBhdKaK6ghe5sIAgoz9gNP5gqiGgaBzCDfxJZ2
-	 uwfxVWw9QqMQf3GbzhmEL3u6qpm8JOKoFwj8Q7DAuUncFSOrJM/hzT6qwnHvwqvbfQ
-	 oDrzf/fHlG/2xevvDVaAtI02uGwk1Pv+dAR79Ks1zmz/u3yWKFR5UOt0JXli8z4LnR
-	 KTi5T+TeAhz1F5mjqdf98BKqgS8vj9Tp0ZwQoPoleNSgSmWtvgvTrEfi11mRoMfNNI
-	 SSI1qvuG5BkP5bBCd95C1BWlAQl3+FrhQcJj8NmGaoz0snW0FJ6l60v4DX0whLV1QC
-	 pJGqjk8r/bbPA==
-Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 89FE8F4007E;
-	Fri, 14 Nov 2025 12:22:56 -0500 (EST)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-01.internal (MEProxy); Fri, 14 Nov 2025 12:22:56 -0500
-X-ME-Sender: <xms:cGUXabwEqVEpa1Pu5wTjk4joAbVQryrNMlkH96m6Rqbgt7emLRj7LA>
-    <xme:cGUXaeG_FuBKBhhpWNSN54290UOZDu1nnTWl9eTRn5OyT5oiOC7K0UK5QkLRFRCCH
-    _hZOI__w0Gxd-nD_URIR5GlTla4_kE-BTWFle1bK4W2HQwmeUxvlA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddvuddtgedtucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehnugih
-    ucfnuhhtohhmihhrshhkihdfuceolhhuthhosehkvghrnhgvlhdrohhrgheqnecuggftrf
-    grthhtvghrnhepkefhieejfedvueejheehiefgvdfhjeefjeelvdfghfelgeejudevleej
-    uddvvefgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
-    eprghnugihodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduudeiudekheei
-    fedvqddvieefudeiiedtkedqlhhuthhopeepkhgvrhhnvghlrdhorhhgsehlihhnuhigrd
-    hluhhtohdruhhspdhnsggprhgtphhtthhopeegkedpmhhouggvpehsmhhtphhouhhtpdhr
-    tghpthhtohepjhgsrghrohhnsegrkhgrmhgrihdrtghomhdprhgtphhtthhopegsphesrg
-    hlihgvnhekrdguvgdprhgtphhtthhopegrrhhnugesrghrnhgusgdruggvpdhrtghpthht
-    ohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopehmrghthhhivg
-    hurdguvghsnhhohigvrhhssegvfhhfihgtihhoshdrtghomhdprhgtphhtthhopegsohhq
-    uhhnrdhfvghnghesghhmrghilhdrtghomhdprhgtphhtthhopehurhgviihkihesghhmrg
-    hilhdrtghomhdprhgtphhtthhopehrohhsthgvughtsehgohhoughmihhsrdhorhhgpdhr
-    tghpthhtohepjhgrnhhnhhesghhoohhglhgvrdgtohhm
-X-ME-Proxy: <xmx:cGUXaUDpJ_uK79SK7Sbacr87uFV8wZEsIf2pIISOfwTkBCtvWlzrEw>
-    <xmx:cGUXae5Y61eVBcZCaJHzDtO62XxeGCqtc9VUtRcQqNlU6sq2BPHPDw>
-    <xmx:cGUXaR33ueH3p4j58OA_EkrtZ_VytmnamzZ896qedlQfrBIvZjLmpg>
-    <xmx:cGUXafVOzTzxUTLUMYvZY7NoWG8psGhITslD4bm_amg0iRE7ssFf3w>
-    <xmx:cGUXaWk7Pm5SeQEG2tIMjhRAiJsTdItwmKq4_ZH92byZlKEjJy-RgVcM>
-Feedback-ID: ieff94742:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 490B2700063; Fri, 14 Nov 2025 12:22:56 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LPoSB3nr"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2980343d9d1so3725ad.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 14 Nov 2025 09:52:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1763142773; x=1763747573; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xnNP7vbm7JYBVaxggMbpoWY+2JUFe2coayxhYGSXe/Y=;
+        b=LPoSB3nrqyaVMjoa/7GabjY3ZJaYADsTKXxJP5FbrUyRHFUQpJWhXNxbOhKsBJAYk4
+         2rSsvOy7JBQFPgPBytMVE5sePyqeR/uYP1j9rR8hcXhBrwwGSBB8Pu97fzQm4I0PYMSn
+         6TJHBA/2nudoPdRMzHFzERxxzrBVG0rouI750npgD30NN0xhYEPmxN4dO35vXQjDMXJW
+         EYbEs49tIW1QZoB0mnLC/dFf+n7rS2ZbYavMs7LkZUdOZ8IIPol7+7fbOyt/GyB7CaXK
+         YB72O0BDlJDCRD/yRhdvLzh0OECD2OjG/6aKPYsbKUmKFgVEkY7JzADFuqO3ub8IhbFe
+         VfgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763142773; x=1763747573;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=xnNP7vbm7JYBVaxggMbpoWY+2JUFe2coayxhYGSXe/Y=;
+        b=LwNmOuM7yuLYUsmYBnoGoD2l5jhjhBgUW0PB7RTaZBm+YR20DQwwOs4khlPYgFyPXg
+         i5greHfxfEkPhUCVqU9DMpPwJ21OGpO4GbgxJ/j+gkxkNDORTBfOOv+K4verwwDCsGJ/
+         iq8kSx1AatUQXN0lCpp985sf9fOBsDvJN1bPxDfIoR/mvnAz6KPkmnJR56lwB/PblINr
+         rr0PceAE9WV5VcAJs4xwnCQfhIDVphrozCKkBsF6ubzX6jRPOJiTCxFnmHDlP8hpNtvW
+         h/mYXrnhYS2sdt9/3WRIJt0jT9jYv1spg4aUHWm8cv1feLSSrryW13no3KTb+BVXx0p8
+         Hvuw==
+X-Forwarded-Encrypted: i=1; AJvYcCVqPe8phdCaEzbwpLvGftyFL60zaJhbyPCg8ojq9sES3m3uhVFBb1ycH8IKi7go2Op1QD/+EVqkvVrXqnGHNQL8/g4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYaf9UZ23U1sqFyKBmCazjEH29V55vBvc8UsRvZ27lJnu6LeIX
+	kTwvpTPjQIYY1t1Ttp1aybF54aNnzYMCN+1Lv7HD97KbNVRsDRMsVY6pMEZB8DlI1EnR/AmQxDo
+	dO+9dfEaS2yVCQWNc7PpqYsCmKOBfChiSQQafjFa3
+X-Gm-Gg: ASbGncuxHsklsCibZAKqk8t/sftMMjm4ht8WFhPbfyq8jOWR9oNEuMvZCWmgPL2LG3K
+	XNCEE0et3g5IeBco+dOdk9OwWjDRxJiKWgwUp37s0vGS1SO3SpRb+bjiUHZVlkQFjO7LNYrNaKK
+	t5Nhco2TM7TkGuiUt8z0vIdFPlpUXvCu9LGNt9WlrzJ6pKQUlFjCPl8xY7BvoPEWPvBrE42FQY8
+	HTaWzWVrEZak80dUPNrXH2ZTWJS3Zq0uCE0PeLqxg/6zAjavGYEyfdKjoVdOo4sxlXXqSDbaCyj
+	kclxkFkbX+Ch43SRrrIyFe2soyQhKX/vooQ=
+X-Google-Smtp-Source: AGHT+IH4VOL76R+JyUKRf639P+v7AoPi16fK/WxEWiO6lMJIJ6uvR79aLULzbCNDdcV01UkKQ3j5z3JAEF6kokhdmDE=
+X-Received: by 2002:a17:902:d2cd:b0:295:5405:46be with SMTP id
+ d9443c01a7336-2986be0e61fmr3852445ad.1.1763142772658; Fri, 14 Nov 2025
+ 09:52:52 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: ATddxb8eqn9V
-Date: Fri, 14 Nov 2025 09:22:35 -0800
-From: "Andy Lutomirski" <luto@kernel.org>
-To: "Valentin Schneider" <vschneid@redhat.com>,
- "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
- linux-mm@kvack.org, rcu@vger.kernel.org,
- "the arch/x86 maintainers" <x86@kernel.org>,
- linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
- linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: "Thomas Gleixner" <tglx@linutronix.de>, "Ingo Molnar" <mingo@redhat.com>,
- "Borislav Petkov" <bp@alien8.de>,
- "Dave Hansen" <dave.hansen@linux.intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>,
- "Peter Zijlstra (Intel)" <peterz@infradead.org>,
- "Arnaldo Carvalho de Melo" <acme@kernel.org>,
- "Josh Poimboeuf" <jpoimboe@kernel.org>,
- "Paolo Bonzini" <pbonzini@redhat.com>, "Arnd Bergmann" <arnd@arndb.de>,
- "Frederic Weisbecker" <frederic@kernel.org>,
- "Paul E. McKenney" <paulmck@kernel.org>,
- "Jason Baron" <jbaron@akamai.com>,
- "Steven Rostedt" <rostedt@goodmis.org>,
- "Ard Biesheuvel" <ardb@kernel.org>,
- "Sami Tolvanen" <samitolvanen@google.com>,
- "David S. Miller" <davem@davemloft.net>,
- "Neeraj Upadhyay" <neeraj.upadhyay@kernel.org>,
- "Joel Fernandes" <joelagnelf@nvidia.com>,
- "Josh Triplett" <josh@joshtriplett.org>,
- "Boqun Feng" <boqun.feng@gmail.com>,
- "Uladzislau Rezki" <urezki@gmail.com>,
- "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>,
- "Mel Gorman" <mgorman@suse.de>,
- "Andrew Morton" <akpm@linux-foundation.org>,
- "Masahiro Yamada" <masahiroy@kernel.org>,
- "Han Shen" <shenhan@google.com>, "Rik van Riel" <riel@surriel.com>,
- "Jann Horn" <jannh@google.com>,
- "Dan Carpenter" <dan.carpenter@linaro.org>,
- "Oleg Nesterov" <oleg@redhat.com>, "Juri Lelli" <juri.lelli@redhat.com>,
- "Clark Williams" <williams@redhat.com>,
- "Yair Podemsky" <ypodemsk@redhat.com>,
- "Marcelo Tosatti" <mtosatti@redhat.com>,
- "Daniel Wagner" <dwagner@suse.de>, "Petr Tesarik" <ptesarik@suse.com>,
- "Shrikanth Hegde" <sshegde@linux.ibm.com>
-Message-Id: <beb46a02-b902-438b-8b6d-b5f0d7ad0ae6@app.fastmail.com>
-In-Reply-To: <c4768cf3-f131-44e6-9b25-ebeb633f32ee@app.fastmail.com>
-References: <20251114150133.1056710-1-vschneid@redhat.com>
- <c4768cf3-f131-44e6-9b25-ebeb633f32ee@app.fastmail.com>
-Subject: Re: [PATCH v7 00/31] context_tracking,x86: Defer some IPIs until a
- user->kernel transition
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+References: <20251114070018.160330-1-namhyung@kernel.org> <20251114070018.160330-3-namhyung@kernel.org>
+In-Reply-To: <20251114070018.160330-3-namhyung@kernel.org>
+From: Ian Rogers <irogers@google.com>
+Date: Fri, 14 Nov 2025 09:52:41 -0800
+X-Gm-Features: AWmQ_blKOLfyQZQt3UerNOhiuI5xURsF-2q5TNn5cV4-yzgW-aZKwwVZjnno628
+Message-ID: <CAP-5=fVrpBjsJ7=BZQmhXKcaN+OYTY5_gOVj-Qs+33cH0gft7Q@mail.gmail.com>
+Subject: Re: [PATCH v3 2/5] perf tools: Minimal DEFERRED_CALLCHAIN support
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, James Clark <james.clark@linaro.org>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
+	Steven Rostedt <rostedt@goodmis.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Indu Bhagat <indu.bhagat@oracle.com>, Jens Remus <jremus@linux.ibm.com>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, linux-trace-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-
-On Fri, Nov 14, 2025, at 8:20 AM, Andy Lutomirski wrote:
-> On Fri, Nov 14, 2025, at 7:01 AM, Valentin Schneider wrote:
->> Context
->> =======
->>
->> We've observed within Red Hat that isolated, NOHZ_FULL CPUs running a
->> pure-userspace application get regularly interrupted by IPIs sent from
->> housekeeping CPUs. Those IPIs are caused by activity on the housekeeping CPUs
->> leading to various on_each_cpu() calls, e.g.:
->>
+On Thu, Nov 13, 2025 at 11:00=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
+ wrote:
 >
->> The heart of this series is the thought that while we cannot remove NOHZ_FULL
->> CPUs from the list of CPUs targeted by these IPIs, they may not have to execute
->> the callbacks immediately. Anything that only affects kernelspace can wait
->> until the next user->kernel transition, providing it can be executed "early
->> enough" in the entry code.
->>
+> Add a new event type for deferred callchains and a new callback for the
+> struct perf_tool.  For now it doesn't actually handle the deferred
+> callchains but it just marks the sample if it has the PERF_CONTEXT_
+> USER_DEFFERED in the callchain array.
 >
-> I want to point out that there's another option here, although anyone 
-> trying to implement it would be fighting against quite a lot of history.
+> At least, perf report can dump the raw data with this change.  Actually
+> this requires the next commit to enable attr.defer_callchain, but if you
+> already have a data file, it'll show the following result.
 >
-> Logically, each CPU is in one of a handful of states: user mode, idle, 
-> normal kernel mode (possibly subdivided into IRQ, etc), and a handful 
-> of very narrow windows, hopefully uninstrumented and not accessing any 
-> PTEs that might be invalid, in the entry and exit paths where any state 
-> in memory could be out of sync with actual CPU state.  (The latter 
-> includes right after the CPU switches to kernel mode, for example.)  
-> And NMI and MCE and whatever weird "security" entry types that Intel 
-> and AMD love to add.
+>   $ perf report -D
+>   ...
+>   0x2158@perf.data [0x40]: event: 22
+>   .
+>   . ... raw event: size 64 bytes
+>   .  0000:  16 00 00 00 02 00 40 00 06 00 00 00 0b 00 00 00  ......@.....=
+....
+>   .  0010:  03 00 00 00 00 00 00 00 a7 7f 33 fe 18 7f 00 00  ..........3.=
+....
+>   .  0020:  0f 0e 33 fe 18 7f 00 00 48 14 33 fe 18 7f 00 00  ..3.....H.3.=
+....
+>   .  0030:  08 09 00 00 08 09 00 00 e6 7a e7 35 1c 00 00 00  .........z.5=
+....
 >
-> The way the kernel *currently* deals with this has two big historical oddities:
+>   121163447014 0x2158 [0x40]: PERF_RECORD_CALLCHAIN_DEFERRED(IP, 0x2): 23=
+12/2312: 0xb00000006
+>   ... FP chain: nr:3
+>   .....  0: 00007f18fe337fa7
+>   .....  1: 00007f18fe330e0f
+>   .....  2: 00007f18fe331448
+>   : unhandled!
 >
-> 1. The entry and exit code cares about ti_flags, which is per-*task*, 
-> which means that atomically poking it from other CPUs involves the 
-> runqueue lock or other shenanigans (see the idle nr_polling code for 
-> example), and also that it's not accessible from the user page tables 
-> if PTI is on.
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/lib/perf/include/perf/event.h       |  8 ++++++++
+>  tools/perf/util/event.c                   |  1 +
+>  tools/perf/util/evsel.c                   | 19 +++++++++++++++++++
+>  tools/perf/util/machine.c                 |  1 +
+>  tools/perf/util/perf_event_attr_fprintf.c |  2 ++
+>  tools/perf/util/sample.h                  |  2 ++
+>  tools/perf/util/session.c                 | 20 ++++++++++++++++++++
+>  tools/perf/util/tool.c                    |  1 +
+>  tools/perf/util/tool.h                    |  3 ++-
+>  9 files changed, 56 insertions(+), 1 deletion(-)
 >
-> 2. The actual heavyweight atomic part (context tracking) was built for 
-> RCU, and it's sort or bolted on, and, as you've observed in this 
-> series, it's really quite awkward to do things that aren't RCU using 
-> context tracking.
+> diff --git a/tools/lib/perf/include/perf/event.h b/tools/lib/perf/include=
+/perf/event.h
+> index aa1e91c97a226e1a..769bc48ca85c0eb8 100644
+> --- a/tools/lib/perf/include/perf/event.h
+> +++ b/tools/lib/perf/include/perf/event.h
+> @@ -151,6 +151,13 @@ struct perf_record_switch {
+>         __u32                    next_prev_tid;
+>  };
 >
-> If this were a greenfield project, I think there's a straightforward 
-> approach that's much nicer: stick everything into a single percpu flags 
-> structure.  Imagine we have cpu_flags, which tracks both the current 
-> state of the CPU and what work needs to be done on state changes.  On 
-> exit to user mode, we would atomically set the mode to USER and make 
-> sure we don't touch anything like vmalloc space after that.  On entry 
-> back to kernel mode, we would avoid vmalloc space, etc, then atomically 
-> switch to kernel mode and read out whatever deferred work is needed.  
-> As an optimization, if nothing in the current configuration needs 
-> atomic state tracking, the state could be left at USER_OR_KERNEL and 
-> the overhead of an extra atomic op at entry and exit could be avoided.
+> +struct perf_record_callchain_deferred {
+> +       struct perf_event_header header;
+> +       __u64                    cookie;
+
+Could we add a comment that this value is used to match user and
+kernel stack traces together? I don't believe that intent is
+immediately obvious from the word "cookie".
+
+> +       __u64                    nr;
+> +       __u64                    ips[];
+> +};
+> +
+>  struct perf_record_header_attr {
+>         struct perf_event_header header;
+>         struct perf_event_attr   attr;
+> @@ -523,6 +530,7 @@ union perf_event {
+>         struct perf_record_read                 read;
+>         struct perf_record_throttle             throttle;
+>         struct perf_record_sample               sample;
+> +       struct perf_record_callchain_deferred   callchain_deferred;
+>         struct perf_record_bpf_event            bpf;
+>         struct perf_record_ksymbol              ksymbol;
+>         struct perf_record_text_poke_event      text_poke;
+> diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
+> index fcf44149feb20c35..4c92cc1a952c1d9f 100644
+> --- a/tools/perf/util/event.c
+> +++ b/tools/perf/util/event.c
+> @@ -61,6 +61,7 @@ static const char *perf_event__names[] =3D {
+>         [PERF_RECORD_CGROUP]                    =3D "CGROUP",
+>         [PERF_RECORD_TEXT_POKE]                 =3D "TEXT_POKE",
+>         [PERF_RECORD_AUX_OUTPUT_HW_ID]          =3D "AUX_OUTPUT_HW_ID",
+> +       [PERF_RECORD_CALLCHAIN_DEFERRED]        =3D "CALLCHAIN_DEFERRED",
+>         [PERF_RECORD_HEADER_ATTR]               =3D "ATTR",
+>         [PERF_RECORD_HEADER_EVENT_TYPE]         =3D "EVENT_TYPE",
+>         [PERF_RECORD_HEADER_TRACING_DATA]       =3D "TRACING_DATA",
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index 989c56d4a23f74f4..244b3e44d090d413 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -3089,6 +3089,20 @@ int evsel__parse_sample(struct evsel *evsel, union=
+ perf_event *event,
+>         data->data_src =3D PERF_MEM_DATA_SRC_NONE;
+>         data->vcpu =3D -1;
 >
-> And RCU would hook into *that* instead of having its own separate set of hooks.
+> +       if (event->header.type =3D=3D PERF_RECORD_CALLCHAIN_DEFERRED) {
+> +               const u64 max_callchain_nr =3D UINT64_MAX / sizeof(u64);
+> +
+> +               data->callchain =3D (struct ip_callchain *)&event->callch=
+ain_deferred.nr;
+> +               if (data->callchain->nr > max_callchain_nr)
+> +                       return -EFAULT;
+> +
+> +               data->deferred_cookie =3D event->callchain_deferred.cooki=
+e;
+> +
+> +               if (evsel->core.attr.sample_id_all)
+> +                       perf_evsel__parse_id_sample(evsel, event, data);
+> +               return 0;
+> +       }
+> +
+>         if (event->header.type !=3D PERF_RECORD_SAMPLE) {
+>                 if (!evsel->core.attr.sample_id_all)
+>                         return 0;
+> @@ -3219,6 +3233,11 @@ int evsel__parse_sample(struct evsel *evsel, union=
+ perf_event *event,
+>                 if (data->callchain->nr > max_callchain_nr)
+>                         return -EFAULT;
+>                 sz =3D data->callchain->nr * sizeof(u64);
+> +               if (evsel->core.attr.defer_callchain && data->callchain->=
+nr >=3D 2 &&
+> +                   data->callchain->ips[data->callchain->nr - 2] =3D=3D =
+PERF_CONTEXT_USER_DEFERRED) {
+> +                       data->deferred_cookie =3D data->callchain->ips[da=
+ta->callchain->nr - 1];
+> +                       data->deferred_callchain =3D true;
+> +               }
+
+It'd be nice to have a comment saying what is going on here. I can see
+that if there are 2 stack slots and the 2nd is a magic value then the
+first should be read as the "cookie". At a first look this code is
+difficult to parse so a comment would add value.
+
+Thanks,
+Ian
+
+>                 OVERFLOW_CHECK(array, sz, max_size);
+>                 array =3D (void *)array + sz;
+>         }
+> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+> index b5dd42588c916d91..841b711d970e9457 100644
+> --- a/tools/perf/util/machine.c
+> +++ b/tools/perf/util/machine.c
+> @@ -2124,6 +2124,7 @@ static int add_callchain_ip(struct thread *thread,
+>                                 *cpumode =3D PERF_RECORD_MISC_KERNEL;
+>                                 break;
+>                         case PERF_CONTEXT_USER:
+> +                       case PERF_CONTEXT_USER_DEFERRED:
+>                                 *cpumode =3D PERF_RECORD_MISC_USER;
+>                                 break;
+>                         default:
+> diff --git a/tools/perf/util/perf_event_attr_fprintf.c b/tools/perf/util/=
+perf_event_attr_fprintf.c
+> index 66b666d9ce649dd7..741c3d657a8b6ae7 100644
+> --- a/tools/perf/util/perf_event_attr_fprintf.c
+> +++ b/tools/perf/util/perf_event_attr_fprintf.c
+> @@ -343,6 +343,8 @@ int perf_event_attr__fprintf(FILE *fp, struct perf_ev=
+ent_attr *attr,
+>         PRINT_ATTRf(inherit_thread, p_unsigned);
+>         PRINT_ATTRf(remove_on_exec, p_unsigned);
+>         PRINT_ATTRf(sigtrap, p_unsigned);
+> +       PRINT_ATTRf(defer_callchain, p_unsigned);
+> +       PRINT_ATTRf(defer_output, p_unsigned);
 >
-> I think that actually doing this would be a big improvement and would 
-> also be a serious project.  There's a lot of code that would get 
-> touched, and the existing context tracking code is subtle and 
-> confusing.  And, as mentioned, ti_flags has the wrong scope.
+>         PRINT_ATTRn("{ wakeup_events, wakeup_watermark }", wakeup_events,=
+ p_unsigned, false);
+>         PRINT_ATTRf(bp_type, p_unsigned);
+> diff --git a/tools/perf/util/sample.h b/tools/perf/util/sample.h
+> index fae834144ef42105..a8307b20a9ea8066 100644
+> --- a/tools/perf/util/sample.h
+> +++ b/tools/perf/util/sample.h
+> @@ -107,6 +107,8 @@ struct perf_sample {
+>         /** @weight3: On x86 holds retire_lat, on powerpc holds p_stage_c=
+yc. */
+>         u16 weight3;
+>         bool no_hw_idx;         /* No hw_idx collected in branch_stack */
+> +       bool deferred_callchain;        /* Has deferred user callchains *=
+/
+> +       u64 deferred_cookie;
+>         char insn[MAX_INSN];
+>         void *raw_data;
+>         struct ip_callchain *callchain;
+> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+> index 4b0236b2df2913e1..361e15c1f26a96d0 100644
+> --- a/tools/perf/util/session.c
+> +++ b/tools/perf/util/session.c
+> @@ -720,6 +720,7 @@ static perf_event__swap_op perf_event__swap_ops[] =3D=
+ {
+>         [PERF_RECORD_CGROUP]              =3D perf_event__cgroup_swap,
+>         [PERF_RECORD_TEXT_POKE]           =3D perf_event__text_poke_swap,
+>         [PERF_RECORD_AUX_OUTPUT_HW_ID]    =3D perf_event__all64_swap,
+> +       [PERF_RECORD_CALLCHAIN_DEFERRED]  =3D perf_event__all64_swap,
+>         [PERF_RECORD_HEADER_ATTR]         =3D perf_event__hdr_attr_swap,
+>         [PERF_RECORD_HEADER_EVENT_TYPE]   =3D perf_event__event_type_swap=
+,
+>         [PERF_RECORD_HEADER_TRACING_DATA] =3D perf_event__tracing_data_sw=
+ap,
+> @@ -854,6 +855,9 @@ static void callchain__printf(struct evsel *evsel,
+>         for (i =3D 0; i < callchain->nr; i++)
+>                 printf("..... %2d: %016" PRIx64 "\n",
+>                        i, callchain->ips[i]);
+> +
+> +       if (sample->deferred_callchain)
+> +               printf("...... (deferred)\n");
+>  }
 >
-> It's *possible* that one could avoid making ti_flags percpu either by 
-> extensive use of the runqueue locks or by borrowing a kludge from the 
-> idle code.  For the latter, right now, the reason that the 
-> wake-from-idle code works is that the optimized path only happens if 
-> the idle thread/cpu is "polling", and it's impossible for the idle 
-> ti_flags to be polling while the CPU isn't actually idle.  We could 
-> similarly observe that, if a ti_flags says it's in USER mode *and* is 
-> on, say, cpu 3, then cpu 3 is most definitely in USER mode.  So someone 
-> could try shoving the CPU number into ti_flags :-p   (USER means 
-> actually user or in the late exit / early entry path.)
+>  static void branch_stack__printf(struct perf_sample *sample,
+> @@ -1123,6 +1127,19 @@ static void dump_sample(struct evsel *evsel, union=
+ perf_event *event,
+>                 sample_read__printf(sample, evsel->core.attr.read_format)=
+;
+>  }
 >
-> Anyway, benefits of this whole approach would include considerably 
-> (IMO) increased comprehensibility compared to the current tangled ct 
-> code and much more straightforward addition of new things that happen 
-> to a target CPU conditionally depending on its mode.  And, if the flags 
-> word was actually per cpu, it could be mapped such that 
-> SWITCH_TO_KERNEL_CR3 would use it -- there could be a single CR3 write 
-> (and maybe CR4/invpcid depending on whether a zapped mapping is global) 
-> and the flush bit could depend on whether a flush is needed.  And there 
-> would be basically no chance that a bug that accessed 
-> invalidated-but-not-flushed kernel data could be undetected -- in PTI 
-> mode, any such access would page fault!  Similarly, if kernel text 
-> pokes deferred the flush and serialization, the only code that could 
-> execute before noticing the deferred flush would be the user-CR3 code.
+> +static void dump_deferred_callchain(struct evsel *evsel, union perf_even=
+t *event,
+> +                                   struct perf_sample *sample)
+> +{
+> +       if (!dump_trace)
+> +               return;
+> +
+> +       printf("(IP, 0x%x): %d/%d: %#" PRIx64 "\n",
+> +              event->header.misc, sample->pid, sample->tid, sample->defe=
+rred_cookie);
+> +
+> +       if (evsel__has_callchain(evsel))
+> +               callchain__printf(evsel, sample);
+> +}
+> +
+>  static void dump_read(struct evsel *evsel, union perf_event *event)
+>  {
+>         struct perf_record_read *read_event =3D &event->read;
+> @@ -1353,6 +1370,9 @@ static int machines__deliver_event(struct machines =
+*machines,
+>                 return tool->text_poke(tool, event, sample, machine);
+>         case PERF_RECORD_AUX_OUTPUT_HW_ID:
+>                 return tool->aux_output_hw_id(tool, event, sample, machin=
+e);
+> +       case PERF_RECORD_CALLCHAIN_DEFERRED:
+> +               dump_deferred_callchain(evsel, event, sample);
+> +               return tool->callchain_deferred(tool, event, sample, evse=
+l, machine);
+>         default:
+>                 ++evlist->stats.nr_unknown_events;
+>                 return -1;
+> diff --git a/tools/perf/util/tool.c b/tools/perf/util/tool.c
+> index 22a8a4ffe05f778e..f732d33e7f895ed4 100644
+> --- a/tools/perf/util/tool.c
+> +++ b/tools/perf/util/tool.c
+> @@ -287,6 +287,7 @@ void perf_tool__init(struct perf_tool *tool, bool ord=
+ered_events)
+>         tool->read =3D process_event_sample_stub;
+>         tool->throttle =3D process_event_stub;
+>         tool->unthrottle =3D process_event_stub;
+> +       tool->callchain_deferred =3D process_event_sample_stub;
+>         tool->attr =3D process_event_synth_attr_stub;
+>         tool->event_update =3D process_event_synth_event_update_stub;
+>         tool->tracing_data =3D process_event_synth_tracing_data_stub;
+> diff --git a/tools/perf/util/tool.h b/tools/perf/util/tool.h
+> index 88337cee1e3e2be3..9b9f0a8cbf3de4b5 100644
+> --- a/tools/perf/util/tool.h
+> +++ b/tools/perf/util/tool.h
+> @@ -44,7 +44,8 @@ enum show_feature_header {
 >
-> Oh, any another primitive would be possible: one CPU could plausibly 
-> execute another CPU's interrupts or soft-irqs or whatever by taking a 
-> special lock that would effectively pin the remote CPU in user mode -- 
-> you'd set a flag in the target cpu_flags saying "pin in USER mode" and 
-> the transition on that CPU to kernel mode would then spin on entry to 
-> kernel mode and wait for the lock to be released.  This could plausibly 
-> get a lot of the on_each_cpu callers to switch over in one fell swoop: 
-> anything that needs to synchronize to the remote CPU but does not need 
-> to poke its actual architectural state could be executed locally while 
-> the remote CPU is pinned.
-
-Following up, I think that x86 can do this all with a single atomic (in the common case) per usermode round trip.  Imagine:
-
-struct fancy_cpu_state {
-  u32 work; // <-- writable by any CPU
-  u32 status; // <-- readable anywhere; writable locally
-};
-
-status includes KERNEL, USER, and maybe INDETERMINATE.  (INDETERMINATE means USER but we're not committing to doing work.)
-
-Exit to user mode:
-
-atomic_set(&my_state->status, USER);
-
-(or, in the lazy case, set to INDETERMINATE instead.)
-
-Entry from user mode, with IRQs off, before switching to kernel CR3:
-
-if (my_state->status == INDETERMINATE) {
-  // we were lazy and we never promised to do work atomically.
-  atomic_set(&my_state->status, KERNEL);
-  this_entry_work = 0;
-} else {
-  // we were not lazy and we promised we would do work atomically
-  atomic exchange the entire state to { .work = 0, .status = KERNEL }
-  this_entry_work = (whatever we just read);
-}
-
-if (PTI) {
-  switch to kernel CR3 *and flush if this_entry_work says to flush*
-} else {
-  flush if this_entry_work says to flush;
-}
-
-do the rest of the work;
-
-
-
-I suppose that a lot of the stuff in ti_flags could merge into here, but it could be done one bit at a time when people feel like doing so.  And I imagine, but I'm very far from confident, that RCU could use this instead of the current context tracking code.
-
-
-The idea behind INDETERMINATE is that there are plenty of workloads that frequently switch between user and kernel mode and that would rather accept a few IPIs to avoid the heavyweight atomic operation on user -> kernel transitions.  So the default behavior could be to do KERNEL -> INDETERMINATE instead of KERNEL -> USER, but code that wants to be in user mode for a long time could go all the way to USER.  We could make it sort of automatic by noticing that we're returning from an IRQ without a context switch and go to USER (so we would get at most one unneeded IPI per normal user entry), and we could have some nice API for a program that intends to hang out in user mode for a very long time (cpu isolation users, for example) to tell the kernel to go immediately into USER mode.  (Don't we already have something that could be used for this purpose?)
-
-Hmm, now I wonder if it would make sense for the default behavior of Linux to be like that.  We could call it ONEHZ.  It's like NOHZ_FULL except that user threads that don't do syscalls get one single timer tick instead of many or none.
-
-
-Anyway, I think my proposal is pretty good *if* RCU could be made to use it -- the existing context tracking code is fairly expensive, and I don't think we want to invent a new context-tracking-like mechanism if we still need to do the existing thing.
-
---Andy
+>  struct perf_tool {
+>         event_sample    sample,
+> -                       read;
+> +                       read,
+> +                       callchain_deferred;
+>         event_op        mmap,
+>                         mmap2,
+>                         comm,
+> --
+> 2.52.0.rc1.455.g30608eb744-goog
+>
