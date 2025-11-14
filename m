@@ -1,296 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8B1E2DC34E
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 14 Nov 2025 18:45:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CEBB2DF3F9
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 14 Nov 2025 18:49:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763145933; cv=none; b=fP5LFMsMJ5MZZSjQfSI4OBMXw/vhl40MVRAtQN7S0P1wdd12LGvjjARBkRxJSszLsE0DLCykwwlOinkcuGJDVndc2n5IxgoTC8hrFRPZX0jkP43Qdy5DOC6COlyshypLGdM32kZ1OzKE5/lOjP03r2TcaMNYBxusBju2oXiIEhY=
+	t=1763146173; cv=none; b=LKY/WH2zmkSU3XR28trhr9hRNrbrc9v2irqiIZ0r2wqDIiXXJK+yw0lr6+YrmiRJelRdKHJGQiT58WSqCx04Eou2p1yblKhsYDnNs2d17kUjj5P7WLDbW8hX/D2HpE21XgO1S7dYwgLgx/6Xk/hN8KP+ROKlFUT15YyGUAAgrA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763145933; c=relaxed/simple;
-	bh=byi20PYOU8Ug3I3+51VizebbpMY1mRuELhMsy/6viIU=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=uXkPyMx1z/PUGJKLDrFhTjk3+YiRt+VHMhVhiWB3b7UiYHFGIaiDGLw70evH+H4piocbaRUcaR9lai1EiB5OXXG9eJZKvsuctF+L46evVp2Cz04qwIpoN5MM2nz8Y2/4L/2x2MbTPk9obK7p9WYvIjNrSUAxUqjHdv0OruqBvZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S8GsaMpZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763146173; c=relaxed/simple;
+	bh=rz7j/UJDrxKMl9ZSMZkRQVVJppyfO9y7PO+WsuJt37w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uTwLgmxZ7FRyzsczwBIW25ak1FIdEx4QHXLmTL9zmrZ1T86VTv5yROJMGZOUxvPmOyRmntC00F+Lgcho9As6WljPsvTUCeGOtlsj9gqCV2jXjeOUm7ZvltbD8VfKLIHy70EoWd+cPVVzlzF+VXZbFcsmpuvB2xsYXWuQzFebUWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SmtuPXN9; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S8GsaMpZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51B54C4AF09;
-	Fri, 14 Nov 2025 18:45:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763145932;
-	bh=byi20PYOU8Ug3I3+51VizebbpMY1mRuELhMsy/6viIU=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=S8GsaMpZKMaybiEVTCv6qX4MxBngNjWZQhiBd/P6ZWueNVMJAU5tmxuavDBX+Gez+
-	 5/vmg+4jtoiHb/ECXTkbi1N9QTewxlXM7NRLb6If2FV65+/9GSkb4qk5Hr5ouq7P/o
-	 A3hEvimGDVJFJtf81xGA/SyzJlDfE7iKa3W9drptj1Dm/+gpgiPrc7t8aogdzBGsnq
-	 2hyW2xc7i9HteEE7ZegVj/G30Qo+hMusRQAndWKDOZXWKTmtcSA7qJMmmJLofFlmsv
-	 4GWujoA3TTHJiRV7ljBOeuALudhDNi+XYYsN2vkGcz0xX/Di2Hn6lN0tT2C3hE9A2x
-	 tVq9oFCyJo31g==
-Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 50DBCF4006F;
-	Fri, 14 Nov 2025 13:45:30 -0500 (EST)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-01.internal (MEProxy); Fri, 14 Nov 2025 13:45:30 -0500
-X-ME-Sender: <xms:yngXadYa0d5cGbI-GF27_Y3pl_K-ec-CVH--mkPcMfKEgwOILovMhg>
-    <xme:yngXafOE--nfoTeI9aWy7-fbugqx7rmlOuCEE3dYBVwWTBO-badPGuh_s45x1wnix
-    Oi3npe4N7AfqfBC4gOKUs6WYsXR3j9tWRiWpCjYgSurMl_MUI916Q>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddvuddtheejucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehnugih
-    ucfnuhhtohhmihhrshhkihdfuceolhhuthhosehkvghrnhgvlhdrohhrgheqnecuggftrf
-    grthhtvghrnhepkefhieejfedvueejheehiefgvdfhjeefjeelvdfghfelgeejudevleej
-    uddvvefgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
-    eprghnugihodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduudeiudekheei
-    fedvqddvieefudeiiedtkedqlhhuthhopeepkhgvrhhnvghlrdhorhhgsehlihhnuhigrd
-    hluhhtohdruhhspdhnsggprhgtphhtthhopeegkedpmhhouggvpehsmhhtphhouhhtpdhr
-    tghpthhtohepjhgsrghrohhnsegrkhgrmhgrihdrtghomhdprhgtphhtthhopegsphesrg
-    hlihgvnhekrdguvgdprhgtphhtthhopegrrhhnugesrghrnhgusgdruggvpdhrtghpthht
-    ohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopehmrghthhhivg
-    hurdguvghsnhhohigvrhhssegvfhhfihgtihhoshdrtghomhdprhgtphhtthhopegsohhq
-    uhhnrdhfvghnghesghhmrghilhdrtghomhdprhgtphhtthhopehurhgviihkihesghhmrg
-    hilhdrtghomhdprhgtphhtthhopehrohhsthgvughtsehgohhoughmihhsrdhorhhgpdhr
-    tghpthhtohepjhgrnhhnhhesghhoohhglhgvrdgtohhm
-X-ME-Proxy: <xmx:yngXaXq2XXGoOWrpdOjpYOBRQDp11eBfIxc6YeBd6D1nb4uB7cT_jQ>
-    <xmx:yngXaaDWrYDEpEG1p36aT7lISmWaPBkuGN6A-UDoJkiqQR5_EvMgdA>
-    <xmx:yngXaednjzX0ow_radpTUVZupSfYw5vqqcxnghR2QSQFD71g1qZlAw>
-    <xmx:yngXaffQO9hD5bLFULufQL4IF3d4av7lzmsksPXFe5ORmlbBQdgyiQ>
-    <xmx:yngXaUNi8XrrLOoC45OykpNR3g_sQA-aTfSX-Ry-GROO-iHzIaWFxhCy>
-Feedback-ID: ieff94742:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 042D5700054; Fri, 14 Nov 2025 13:45:30 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SmtuPXN9"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-29852dafa7dso18905ad.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 14 Nov 2025 10:49:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1763146168; x=1763750968; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TufH33LR1+FbRs5TTnZXWGBvkJzQgtKHJFV9C+DmjZs=;
+        b=SmtuPXN9lT50bmplyfK+KKmC4YIptJhG9JQ4YT9SvprMWMdlCLlM2FKSCjFGrivQTy
+         BRWeGcbMPAF2DEg8XyAQ/bctDrRCm7r1OoluNYVFbOv5oHCbxDLXoJD2R1fw02a9Lezk
+         7miOM6qpOwA6xPqQG4E65l1nD8uQBvo9e53QqnixeFSik1fkQ/kH02SbR4a0PswptrPd
+         9KYLRD9tQSO3jGCYFGKK/+QuaOWzD/GexNeSQevUxKHJzls9BH1NFq7zGR6Omw+hLkAH
+         uvOm6igutCmYIC0yydHztE+cCF7zapjwqSgO7at1RadJgeO/iyreSn40ta8cWFeC22dO
+         SGiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763146168; x=1763750968;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=TufH33LR1+FbRs5TTnZXWGBvkJzQgtKHJFV9C+DmjZs=;
+        b=SIJVepOkU0weC0BO7351s0GQc/gnMHtRYwvKCxAoV/fWCuRxq/n55EoabAE1UiSUH3
+         ucmlLhMlUVe5BJZxUHf87h3sgsXcLPUBzCklDRjPUzqzC/SsaHdSP2L2m59yOIh7DTuV
+         sNv5AgR64tFgk8OJZ3shqHg+1llxEyuYJgUQBANe5EK1xYGnI6vfBwkdFYtYjqhrF8WH
+         cAWSj4BEcmIbrnygeQ4BFyLk4RHv4SUEK4vhG7XdTepNJSDu8Fy3QDgX/2WaW/PDUZeP
+         PiZ4gbTQkrhjF+Z3zMJwhmgidTO+xeadAwGIYaotI8Cj8jKe6E/bPTcTY8mIxXgbQA7r
+         Z5FA==
+X-Forwarded-Encrypted: i=1; AJvYcCXd2BzlnMEo5xPy+fuTFI4v+Hmfoagh4epae/wv5Mw6/olcEuNJN4eyRj/113KywrAReQT1FYsvFdgSkMS1Esu7NHw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHOcOBuXLW8kPtvt/eElA2ciem2WiX1AV887jDBzQVH6upd5bJ
+	WatkoKIKEpD2mImzlWO9WqOeGj3Fo+CXxM/jWD3/FxGjcp/BD6yRNA+W/dclQYUA/rrasLDygkB
+	cpyLvLswhQMAhqMPGddlpEBD+49E93mvZ/FqusWQx
+X-Gm-Gg: ASbGncvC4hTh/ArnZ4BOtkh3OOwiZsrYS4H0ECgIk++gZViVb9iO3W1iF4rNeslQia6
+	7fkTvVEgU1/aYu1BxiqYWxzV9y3cZjvI9M0bu3kBEM4mKk9WrxS8zIrvPzKAz8lq9j/+NhhtQiw
+	N377LQdAQ7S1qDwcd8NQHXxYGGdrAx69f70wwuVKTYbWpVO/7KlAG3bIXcjALpW11WtSBqEyl0A
+	8UqMSJtMFJsLtXuRNX4Jn+eR9evwMpbgBmu0CDNbq99aLiLTKya20HbaxOSi1RUeLWtLdXpaWym
+	ih2/2GTTtgLXZhJRZwHVh+nzLgZhP7pb11k=
+X-Google-Smtp-Source: AGHT+IGgLMzFBg4dvat4vkWEc7+bSgPYzKPBYdw5lt+7F4/qZIFGnBSHgtP2NlwkFQJ5dDAQrZRX0fSaUJ3hA4n2Fk4=
+X-Received: by 2002:a17:903:41c3:b0:295:1351:f63e with SMTP id
+ d9443c01a7336-299c6b2473dmr179205ad.10.1763146167172; Fri, 14 Nov 2025
+ 10:49:27 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: ATddxb8eqn9V
-Date: Fri, 14 Nov 2025 10:45:08 -0800
-From: "Andy Lutomirski" <luto@kernel.org>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: "Valentin Schneider" <vschneid@redhat.com>,
- "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
- linux-mm@kvack.org, rcu@vger.kernel.org,
- "the arch/x86 maintainers" <x86@kernel.org>,
- linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
- linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org,
- "Thomas Gleixner" <tglx@linutronix.de>, "Ingo Molnar" <mingo@redhat.com>,
- "Borislav Petkov" <bp@alien8.de>,
- "Dave Hansen" <dave.hansen@linux.intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>,
- "Peter Zijlstra (Intel)" <peterz@infradead.org>,
- "Arnaldo Carvalho de Melo" <acme@kernel.org>,
- "Josh Poimboeuf" <jpoimboe@kernel.org>,
- "Paolo Bonzini" <pbonzini@redhat.com>, "Arnd Bergmann" <arnd@arndb.de>,
- "Frederic Weisbecker" <frederic@kernel.org>,
- "Jason Baron" <jbaron@akamai.com>,
- "Steven Rostedt" <rostedt@goodmis.org>,
- "Ard Biesheuvel" <ardb@kernel.org>,
- "Sami Tolvanen" <samitolvanen@google.com>,
- "David S. Miller" <davem@davemloft.net>,
- "Neeraj Upadhyay" <neeraj.upadhyay@kernel.org>,
- "Joel Fernandes" <joelagnelf@nvidia.com>,
- "Josh Triplett" <josh@joshtriplett.org>,
- "Boqun Feng" <boqun.feng@gmail.com>,
- "Uladzislau Rezki" <urezki@gmail.com>,
- "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>,
- "Mel Gorman" <mgorman@suse.de>,
- "Andrew Morton" <akpm@linux-foundation.org>,
- "Masahiro Yamada" <masahiroy@kernel.org>,
- "Han Shen" <shenhan@google.com>, "Rik van Riel" <riel@surriel.com>,
- "Jann Horn" <jannh@google.com>,
- "Dan Carpenter" <dan.carpenter@linaro.org>,
- "Oleg Nesterov" <oleg@redhat.com>, "Juri Lelli" <juri.lelli@redhat.com>,
- "Clark Williams" <williams@redhat.com>,
- "Yair Podemsky" <ypodemsk@redhat.com>,
- "Marcelo Tosatti" <mtosatti@redhat.com>,
- "Daniel Wagner" <dwagner@suse.de>, "Petr Tesarik" <ptesarik@suse.com>,
- "Shrikanth Hegde" <sshegde@linux.ibm.com>
-Message-Id: <1a911310-4ca5-45a4-b9bf-5f37c6ab238e@app.fastmail.com>
-In-Reply-To: <89398bdf-4dad-4976-8eb9-1e86032c8794@paulmck-laptop>
-References: <20251114150133.1056710-1-vschneid@redhat.com>
- <c4768cf3-f131-44e6-9b25-ebeb633f32ee@app.fastmail.com>
- <beb46a02-b902-438b-8b6d-b5f0d7ad0ae6@app.fastmail.com>
- <89398bdf-4dad-4976-8eb9-1e86032c8794@paulmck-laptop>
-Subject: Re: [PATCH v7 00/31] context_tracking,x86: Defer some IPIs until a
- user->kernel transition
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+References: <20251114070018.160330-1-namhyung@kernel.org> <20251114070018.160330-4-namhyung@kernel.org>
+ <CAP-5=fVEuYXw+P-+Z7bU7Z-+7dsHPPfABh5pdnPtfvH-23u4Qw@mail.gmail.com>
+ <CAP-5=fU33sEARn0tc1hSMahBVCvs0cy+Cu-J6+BG0Cm-nuwKnA@mail.gmail.com> <20251114133009.7dd97625@gandalf.local.home>
+In-Reply-To: <20251114133009.7dd97625@gandalf.local.home>
+From: Ian Rogers <irogers@google.com>
+Date: Fri, 14 Nov 2025 10:49:15 -0800
+X-Gm-Features: AWmQ_blrNkkumPpA1qnlt2x-BsuC-2KXfWdvtWTL6qKsCtowllFahNliI9kmH3k
+Message-ID: <CAP-5=fUF78K6TVnqa7gZoriTzymm1yjSY=jVuocZBn4t5aXS-g@mail.gmail.com>
+Subject: Re: [PATCH v3 3/5] perf record: Enable defer_callchain for user callchains
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-perf-users@vger.kernel.org, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Indu Bhagat <indu.bhagat@oracle.com>, Jens Remus <jremus@linux.ibm.com>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, linux-trace-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-
-On Fri, Nov 14, 2025, at 10:14 AM, Paul E. McKenney wrote:
-> On Fri, Nov 14, 2025 at 09:22:35AM -0800, Andy Lutomirski wrote:
->> 
-
->> > Oh, any another primitive would be possible: one CPU could plausibly 
->> > execute another CPU's interrupts or soft-irqs or whatever by taking a 
->> > special lock that would effectively pin the remote CPU in user mode -- 
->> > you'd set a flag in the target cpu_flags saying "pin in USER mode" and 
->> > the transition on that CPU to kernel mode would then spin on entry to 
->> > kernel mode and wait for the lock to be released.  This could plausibly 
->> > get a lot of the on_each_cpu callers to switch over in one fell swoop: 
->> > anything that needs to synchronize to the remote CPU but does not need 
->> > to poke its actual architectural state could be executed locally while 
->> > the remote CPU is pinned.
+On Fri, Nov 14, 2025 at 10:29=E2=80=AFAM Steven Rostedt <rostedt@goodmis.or=
+g> wrote:
 >
-> It would be necessary to arrange for the remote CPU to remain pinned
-> while the local CPU executed on its behalf.  Does the above approach
-> make that happen without re-introducing our current context-tracking
-> overhead and complexity?
-
-Using the pseudo-implementation farther down, I think this would be like:
-
-if (my_state->status == INDETERMINATE) {
-   // we were lazy and we never promised to do work atomically.
-   atomic_set(&my_state->status, KERNEL);
-   this_entry_work = 0;
-   /* we are definitely not pinned in this path */
-} else {
-   // we were not lazy and we promised we would do work atomically
-   atomic exchange the entire state to { .work = 0, .status = KERNEL }
-   this_entry_work = (whatever we just read);
-   if (this_entry_work & PINNED) {
-     u32 this_cpu_pin_count = this_cpu_ptr(pin_count);
-     while (atomic_read(&this_cpu_pin_count)) {
-       cpu_relax();
-     }
-   }
- }
-
-and we'd have something like:
-
-bool try_pin_remote_cpu(int cpu)
-{
-    u32 *remote_pin_count = ...;
-    struct fancy_cpu_state *remote_state = ...;
-    atomic_inc(remote_pin_count);  // optimistic
-
-    // Hmm, we do not want that read to get reordered with the inc, so we probably
-    // need a full barrier or seq_cst.  How does Linux spell that?  C++ has atomic::load
-    // with seq_cst and maybe the optimizer can do the right thing.  Maybe it's:
-    smp_mb__after_atomic();
-
-    if (atomic_read(&remote_state->status) == USER) {
-      // Okay, it's genuinely pinned.
-      return true;
-
-      // egads, if this is some arch with very weak ordering,
-      // do we need to be concerned that we just took a lock but we
-      // just did a relaxed read and therefore a subsequent access
-      // that thinks it's locked might appear to precede the load and therefore
-      // somehow get surprisingly seen out of order by the target cpu?
-      // maybe we wanted atomic_read_acquire above instead?
-    } else {
-      // We might not have successfully pinned it
-      atomic_dec(remote_pin_count);
-    }
-}
-
-void unpin_remote_cpu(int cpu)
-{
-    atomic_dec(remote_pin_count();
-}
-
-and we'd use it like:
-
-if (try_pin_remote_cpu(cpu)) {
-  // do something useful
-} else {
-  send IPI;
-}
-
-but we'd really accumulate the set of CPUs that need the IPIs and do them all at once.
-
-I ran the theorem prover that lives inside my head on this code using the assumption that the machine is a well-behaved x86 system and it said "yeah, looks like it might be correct".  I trust an actual formalized system or someone like you who is genuinely very good at this stuff much more than I trust my initial impression :)
-
+> On Fri, 14 Nov 2025 10:09:26 -0800
+> Ian Rogers <irogers@google.com> wrote:
 >
->> Following up, I think that x86 can do this all with a single atomic (in the common case) per usermode round trip.  Imagine:
->> 
->> struct fancy_cpu_state {
->>   u32 work; // <-- writable by any CPU
->>   u32 status; // <-- readable anywhere; writable locally
->> };
->> 
->> status includes KERNEL, USER, and maybe INDETERMINATE.  (INDETERMINATE means USER but we're not committing to doing work.)
->> 
->> Exit to user mode:
->> 
->> atomic_set(&my_state->status, USER);
+> > Just to be clear. I don't think the behavior of using frame pointers
+> > should change. Deferral has downsides, for example:
+> >
+> >   $ perf record -g -a sleep 1
 >
-> We need ordering in the RCU nohz_full case.  If the grace-period kthread
-> sees the status as USER, all the preceding KERNEL code's effects must
-> be visible to the grace-period kthread.
+> The biggest advantage of the deferred callstack is that there's much less
+> duplication of data in the ring buffer. Especially when you have deep
+> stacks and long system calls.
 
-Sorry, I'm speaking lazy x86 programmer here.  Maybe I mean atomic_set_release.  I want, roughly, the property that anyone who remotely observes USER can rely on the target cpu subsequently going through the atomic exchange path above.  I think even relaxed ought to be good enough for that one most architectures, but there are some potentially nasty complications involving that fact that this mixes operations on a double word and a single word that's part of the double word.
+I've never had anybody raise this as a concern with fp stack traces,
+especially given the stack snapshot approach being far more space
+consuming - but okay.
 
+> Now, if we have frame pointers enabled, we could possibly add a feature t=
+o
+> the deferred unwinder where it could try to do the deferred immediately a=
+nd
+> if it faults it then waits until going back to user space. This means tha=
+t
+> the frame pointer version should work (unless the user space stack was
+> swapped out).
 >
->> (or, in the lazy case, set to INDETERMINATE instead.)
->> 
->> Entry from user mode, with IRQs off, before switching to kernel CR3:
->> 
->> if (my_state->status == INDETERMINATE) {
->>   // we were lazy and we never promised to do work atomically.
->>   atomic_set(&my_state->status, KERNEL);
->>   this_entry_work = 0;
->> } else {
->>   // we were not lazy and we promised we would do work atomically
->>   atomic exchange the entire state to { .work = 0, .status = KERNEL }
->>   this_entry_work = (whatever we just read);
->> }
+> >
+> > Without deferral kernel stack traces will contain both kernel and user
+> > traces. With deferral the user stack trace is only generated when the
+> > system call returns and so there is a chance for kernel stack traces
+> > to be missing their user part. An obvious behavioral change. I think
+> > for what you are doing here we can have an option something like:
+> >
+> >   $ perf record --call-graph fp-deferred -a sleep 1
 >
-> If this atomic exchange is fully ordered (as opposed to, say, _relaxed),
-> then this works in that if the grace-period kthread sees USER, its prior
-> references are guaranteed not to see later kernel-mode references from
-> that CPU.
+> I would be OK with this but I would prefer a much shorter name. Adding 20
+> characters to the command line will likely keep people from using it.
 
-Yep, that's the intent of my pseudocode.  On x86 this would be a plain 64-bit lock xchg -- I don't think cmpxchg is needed.  (I like to write lock even when it's implicit to avoid needing to trust myself to remember precisely which instructions imply it.)
+Fwiw, with buildid-mmap we just (v6.18) flipped the default when the
+kernel has the feature to use it. The kernel feature was added in
+v5.12.
+https://lore.kernel.org/r/20250724163302.596743-9-irogers@google.com
+I don't oppose a shorter name, callchain option, .. Unfortunately with
+`perf record` -d is taken for saying record data mmaps, -D is taken
+for a start-up delay option, and -G is a cgroup option. Perhaps '-f'
+for "frame" and have it mirror '-g' except that deferred is default
+true rather than false.
 
->
->> if (PTI) {
->>   switch to kernel CR3 *and flush if this_entry_work says to flush*
->> } else {
->>   flush if this_entry_work says to flush;
->> }
->> 
->> do the rest of the work;
->> 
->> 
->> 
->> I suppose that a lot of the stuff in ti_flags could merge into here, but it could be done one bit at a time when people feel like doing so.  And I imagine, but I'm very far from confident, that RCU could use this instead of the current context tracking code.
->
-> RCU currently needs pretty heavy-duty ordering to reliably detect the
-> other CPUs' quiescent states without needing to wake them from idle, or,
-> in the nohz_full case, interrupt their userspace execution.  Not saying
-> it is impossible, but it will need extreme care.
+Thanks,
+Ian
 
-Is the thingy above heavy-duty enough?  Perhaps more relevantly, could RCU do this *instead* of the current CT hooks on architectures that implement it, and/or could RCU arrange for the ct hooks to be cheap no-ops on architectures that support the thingy above.  By "could" I mean "could be done without absolutely massive refactoring and without the resulting code being an unmaintainable disaster?  I'm sure any sufficiently motivated human or LLM could pull off the unmaintainable disaster version.  I bet I could even do it myself!)
-
->
->> The idea behind INDETERMINATE is that there are plenty of workloads that frequently switch between user and kernel mode and that would rather accept a few IPIs to avoid the heavyweight atomic operation on user -> kernel transitions.  So the default behavior could be to do KERNEL -> INDETERMINATE instead of KERNEL -> USER, but code that wants to be in user mode for a long time could go all the way to USER.  We could make it sort of automatic by noticing that we're returning from an IRQ without a context switch and go to USER (so we would get at most one unneeded IPI per normal user entry), and we could have some nice API for a program that intends to hang out in user mode for a very long time (cpu isolation users, for example) to tell the kernel to go immediately into USER mode.  (Don't we already have something that could be used for this purpose?)
->
-> RCU *could* do an smp_call_function_single() when the CPU failed
-> to respond, perhaps in a manner similar to how it already forces a
-> given CPU out of nohz_full state if that CPU has been executing in the
-> kernel for too long.  The real-time guys might not be amused, though.
-> Especially those real-time guys hitting sub-microsecond latencies.
-
-It wouldn't be outrageous to have real-time imply the full USER transition.
-
->
->> Hmm, now I wonder if it would make sense for the default behavior of Linux to be like that.  We could call it ONEHZ.  It's like NOHZ_FULL except that user threads that don't do syscalls get one single timer tick instead of many or none.
->> 
->> 
->> Anyway, I think my proposal is pretty good *if* RCU could be made to use it -- the existing context tracking code is fairly expensive, and I don't think we want to invent a new context-tracking-like mechanism if we still need to do the existing thing.
->
-> If you build with CONFIG_NO_HZ_FULL=n, do you still get the heavyweight
-> operations when transitioning between kernel and user execution?
-
-No.  And I even tested approximately this a couple weeks ago for unrelated reasons.  The only unnecessary heavy-weight thing we're doing in a syscall loop with mitigations off is the RDTSC for stack randomization.
-
-But I did that test on a machine that would absolutely benefit from the IPI suppression that the OP is talking about here, and I think it would be really quite nice if a default distro kernel with a more or less default distribution could be easily convinced to run a user thread without interrupting it.  It's a little bit had that NO_HZ_FULL is still an exotic non-default thing, IMO.
-
---Andy
+> -- Steve
