@@ -1,109 +1,72 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D91C2DC34D;
-	Fri, 14 Nov 2025 19:20:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCECA2F0C49;
+	Fri, 14 Nov 2025 19:23:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763148040; cv=none; b=XbqEmJZOIOI1cWqxD2rtjpwKSgLRsfrWIKCFbynmQKCtIuLrc4pNjm7KNBfBVpJcDYxXHF6JkuK0kXbOP2eZbcaLi4m4nFW8ahWnLRkjsLulznZbDMLtZ0sfxo3Ma8L0w22cX/uLQx8Dm4dfphWPlCesr8PHKvdxjvkU1JbWr1Y=
+	t=1763148180; cv=none; b=AVE+bWlPP2XOgx9FzNo8EckcgVXFonrTDTVZMBda1rZDEa4nuLSx2oYCaOm+QTRrRxPghY3puVIlCGra8dNmxRlHXVqEbRDoox+gkHF8B65klgBayfmgonOyBompByf9gf+FPukbSgw7qkav/ZksLrvseWG0+4xnyiBqR5F2sXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763148040; c=relaxed/simple;
-	bh=6OZwm3/vATkgmrObf611KQsaycSWIREGTponHLVPn08=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Adagqt7OLBjIXVZ8PQbcsfoBf0DjeGvWKEA7h4OcQZS8+y70do5R2pPAzknbZ2plsctTlryXjI1fufrIhw4DVGrSFTJ61o9MiJpJ/UQ1KM7kOtJ03Zbma0ZB0ItGMBS4YOHIqtU11bwVR4babcyW9DwMliEdJ76xzqOtMkqUtvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=STZRA6MN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763148180; c=relaxed/simple;
+	bh=wqppwOtA8IOh/F/MxSeFA0aCK+EkQ/ZAYyt6w2wpB4A=;
+	h=Message-ID:Date:From:To:Cc:Subject; b=jeZE8s8c6rz94oHJ7w8vKsHIEaTbSRkZekLvAM9ClICUNXknRmf0xNie7av0xP5UdPJ8oVuYaqvx+CmlHlZ1GMH0xB+XHHkTJiA5FgKTlp76zNSOTskNsQ42+EqDQEr64XJ18BfFiBm/RYqk0PiiRHja4nnhbkmDMXpS+cFoKRY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y1vIbZ39; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="STZRA6MN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0A02C2BC9E;
-	Fri, 14 Nov 2025 19:20:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y1vIbZ39"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65F47C116B1;
+	Fri, 14 Nov 2025 19:23:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763148039;
-	bh=6OZwm3/vATkgmrObf611KQsaycSWIREGTponHLVPn08=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=STZRA6MNvMe3Ql1fhy76l4MlejPt8w+uha4e2biEHS6lGMeCZPOV5dJKIJeRYNG4j
-	 L6ES+p0IQ0dfUfg0f4e1LsR7OiW7JkH0JF9l9JmHAwKPs+vKhxYtewpRDc0TD+/Zk2
-	 teDDYQk/PRtewJ4qYl3u5wXMFOKs7nJ4CFJUEnMQ/Fgpb2fpTF7FeNSt9muclTX4Os
-	 1lMdHM5k1sER4xB1P34HxYN8c9q88bpWJkzj34YBNDR+Ym7JLyiMJImT3iHOPpNu34
-	 86LwvZ4qU0K94iEO8LPtNOGZvypcLB4BVC/Y2tWLk1ZUoijt5Z5Rv1SRP1ysMfp6Bi
-	 Zrz+CeeYo+BzQ==
-Date: Fri, 14 Nov 2025 11:20:37 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Ian Rogers <irogers@google.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Indu Bhagat <indu.bhagat@oracle.com>,
-	Jens Remus <jremus@linux.ibm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH v3 3/5] perf record: Enable defer_callchain for user
- callchains
-Message-ID: <aReBBQAhnto3RZ2d@google.com>
-References: <20251114070018.160330-1-namhyung@kernel.org>
- <20251114070018.160330-4-namhyung@kernel.org>
- <CAP-5=fVEuYXw+P-+Z7bU7Z-+7dsHPPfABh5pdnPtfvH-23u4Qw@mail.gmail.com>
- <CAP-5=fU33sEARn0tc1hSMahBVCvs0cy+Cu-J6+BG0Cm-nuwKnA@mail.gmail.com>
- <20251114133009.7dd97625@gandalf.local.home>
+	s=k20201202; t=1763148180;
+	bh=wqppwOtA8IOh/F/MxSeFA0aCK+EkQ/ZAYyt6w2wpB4A=;
+	h=Date:From:To:Cc:Subject:From;
+	b=Y1vIbZ39fD5QewpNbHyviKQhm95KHISwbKBsSeVR1FFyillA88DSkLtMU1nkAQPkd
+	 BIF4jcOiUMc895fmeZB7JVeGlCP6utLPsvoOog0mxDgV567uLi01z+Tjo4XEmfReXJ
+	 iciAqS1kOCPp8Gs77bC6j5KU740Izkc2mF7flgU8jLjnpN25/24qrzCxDeEZ3+MOSw
+	 o1d8R1S++GjRCKj6rJLlROLxnDoCTjNGSp67z1VaWGbhSJSjK485a7VOx8L8W7PogH
+	 wvuj5ZqfUzZTgtD5GojaiDFW9EReqAp7FvQMGEn8pbreiBmIhyuGGeZvHIaAmHgjtM
+	 OgQr5ju/9+G5g==
+Received: from rostedt by gandalf with local (Exim 4.98.2)
+	(envelope-from <rostedt@kernel.org>)
+	id 1vJzOA-00000001p7Y-2PDK;
+	Fri, 14 Nov 2025 14:23:18 -0500
+Message-ID: <20251114192229.829042264@kernel.org>
+User-Agent: quilt/0.68
+Date: Fri, 14 Nov 2025 14:22:29 -0500
+From: Steven Rostedt <rostedt@kernel.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH 0/4] tracing: Make more function graph tracer options per-instance
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20251114133009.7dd97625@gandalf.local.home>
-
-On Fri, Nov 14, 2025 at 01:30:09PM -0500, Steven Rostedt wrote:
-> On Fri, 14 Nov 2025 10:09:26 -0800
-> Ian Rogers <irogers@google.com> wrote:
-> 
-> > Just to be clear. I don't think the behavior of using frame pointers
-> > should change. Deferral has downsides, for example:
-> > 
-> >   $ perf record -g -a sleep 1
-> 
-> The biggest advantage of the deferred callstack is that there's much less
-> duplication of data in the ring buffer. Especially when you have deep
-> stacks and long system calls.
-> 
-> Now, if we have frame pointers enabled, we could possibly add a feature to
-> the deferred unwinder where it could try to do the deferred immediately and
-> if it faults it then waits until going back to user space.
-
-This would be great if it can share the callstack with later samples
-before going to user space.
 
 
-> This means that
-> the frame pointer version should work (unless the user space stack was
-> swapped out).
-> 
-> > 
-> > Without deferral kernel stack traces will contain both kernel and user
-> > traces. With deferral the user stack trace is only generated when the
-> > system call returns and so there is a chance for kernel stack traces
-> > to be missing their user part. An obvious behavioral change.
+Convert the function graph tracer options sleep-time and funcgraph-irqs
+into per instance options (as they currently are not consistent in
+affecting all instances).
 
-Right, this is one of my concerns too.  For system-wide profiling, the
-chances are high it can have some tasks sleeping in the kernel and perf
-finishes the profiling before they return to user space.
+Also make graph-time a top level option only, as it only affects the
+function profiler and not the function graph tracer itself.
 
-Thanks,
-Namhyung
+Clean up the function graph tracer set_flags() to use a switch instead
+of a bunch of if statements.
 
+Steven Rostedt (4):
+      tracing: Have function graph tracer option funcgraph-irqs be per instance
+      tracing: Move graph-time out of function graph options
+      tracing: Have function graph tracer option sleep-time be per instance
+      tracing: Convert function graph set_flags() to use a switch() statement
 
-> > I think
-> > for what you are doing here we can have an option something like:
-> > 
-> >   $ perf record --call-graph fp-deferred -a sleep 1
-> 
-> I would be OK with this but I would prefer a much shorter name. Adding 20
-> characters to the command line will likely keep people from using it.
-> 
-> -- Steve
+----
+ kernel/trace/fgraph.c                |  10 +--
+ kernel/trace/ftrace.c                |   4 +-
+ kernel/trace/trace.c                 |  14 +++--
+ kernel/trace/trace.h                 |  18 ++++--
+ kernel/trace/trace_functions_graph.c | 115 ++++++++++++++++++++++++++---------
+ 5 files changed, 115 insertions(+), 46 deletions(-)
