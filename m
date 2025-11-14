@@ -1,181 +1,175 @@
-Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1BF13054F8
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 14 Nov 2025 10:58:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E3522459CF
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 14 Nov 2025 12:59:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763117894; cv=none; b=bcEHemgXCSMbRf6LbBcLu1Ew3a9GXOK4efrZvXbtuLIMmslR0EnYsgrr8yebky9YsE3/eAjhXwmMq+KFAKZ0LCxpSFcOecrNY3pgvZX2X6jQEQTN8moKh8pOEr+gj+hrehUbplr5WLUSSj4WXxPGsmf08+i2FQFjBQ29Y/14yQE=
+	t=1763125188; cv=none; b=XUlU9CdtFXLgUDixTn2j+WTYIi9o2fpQO4TLo2Z4Ni2exjeczld+zDlCXEWZFu2tRzXosdlf9qfA43zCXWkmC45Mlf3J9rUzaxR32XxhI0WIa6aH3Pse00eEKi7B1hrPJOztZ22lKygURXCANB0Amoesw379sxQuz3CIJweuqNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763117894; c=relaxed/simple;
-	bh=RStJmHuPeKnwSf6qoYdAdwLaQyI68rQLlSFSnWyWriE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BAeu4A1HCLzAcS45t8KohcsdE9ZWcEkBGSP8bvj3eSmCB7UH06D75rHjRvmkm4nF71SP7rH1hzUXT0L1VXRlfRz3xLVMIj96r6uAMmcipWGYI5nzPeQ2qpwzZNJQYYlU3Lc/jY1qL1TegNkBPN/T9mF5tifuLs36Qlb8TedwxxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=fPJZIzVS; arc=none smtp.client-ip=95.215.58.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1763125188; c=relaxed/simple;
+	bh=OwXqaVYjP+AYjhrqdV/iUf65lNBgi6i65jcAVuzkims=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oQd+XvAAn0Cz5i6vGb9Rq2EeTYa25pTrXN8uznBLdS5VoOYnI+SIFWwAe53eS9b56/G866JcD909VuVxqE9dkd7RBp3A9H3hKh0rv1MMBp97l/PRiqskgsBj8J632ku1fWfFWQvV46H4Ba2bUViJSoWfMo5FBjmQ8n/CTHgp9SY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=ZbqfK4m0; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="fPJZIzVS"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1763117878;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=X+lmYwQfG04D3EvuE1U4vVsaclhafeMzmv/psDlOmVs=;
-	b=fPJZIzVS5MDVtAmbfnnHH3nqT0GDTJgSdU879m0hLLlopE1xMkE+mp5SRPDOvEZaW/qYKE
-	hXDzGxQiQYRGIGYzW2qbGM4uzwRRECW/KPJH1OflDJEX4NIQLowO7KLblo8yk255n8eIbv
-	sApHAqsWznVNZus/KHK5NkAHQW2HN7U=
-From: Menglong Dong <menglong.dong@linux.dev>
-To: menglong8.dong@gmail.com, ast@kernel.org, rostedt@goodmis.org,
- bot+bpf-ci@kernel.org
-Cc: daniel@iogearbox.net, john.fastabend@gmail.com, andrii@kernel.org,
- martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org,
- yonghong.song@linux.dev, kpsingh@kernel.org, sdf@fomichev.me,
- haoluo@google.com, jolsa@kernel.org, mhiramat@kernel.org,
- mark.rutland@arm.com, mathieu.desnoyers@efficios.com, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- ast@kernel.org, andrii@kernel.org, daniel@iogearbox.net,
- martin.lau@kernel.org, eddyz87@gmail.com, yonghong.song@linux.dev,
- clm@meta.com, ihor.solodrai@linux.dev
-Subject: Re: [PATCH RFC bpf-next 1/7] ftrace: introduce FTRACE_OPS_FL_JMP
-Date: Fri, 14 Nov 2025 18:57:39 +0800
-Message-ID: <1946607.CQOukoFCf9@7950hx>
-In-Reply-To:
- <aa9a271384d9850c42f9331b03d736b2fd1dd7c00446460f0ecc19cb32e9f117@mail.kernel.org>
-References:
- <20251114092450.172024-2-dongml2@chinatelecom.cn>
- <aa9a271384d9850c42f9331b03d736b2fd1dd7c00446460f0ecc19cb32e9f117@mail.kernel.org>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="ZbqfK4m0"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-64180bd67b7so2729606a12.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 14 Nov 2025 04:59:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1763125183; x=1763729983; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=lIa30kEZfIOzXn6c2Ch+jzSexECrPYWXzGffwwy3r9Q=;
+        b=ZbqfK4m0Vk3QZZMUhnZ65dzeU/GFengPpj80uV976TTNT6cF3kLVFLU8dNGFNmtTBM
+         4qOp9/GpfWs9OKiNwe0QHH/jcW19OTYlr1meSgMwyMFng3k0InkVtUKHBwfo5BNYqFr+
+         4lFMJhMGNriMqn3fozHBGzFjOKEU5kUtemJ7mYPxBLflIyzVat1J4pYAXgbN4B2YnyYG
+         82UWE3kzLCNGqMlMm3yvbYBMH3F7S7iX89IYp4nrzQpu+C75oEGN3b+p3276ZuRBY6eY
+         kmTlfbRGGr9zKGdLcC+V/1s+Tfa76MlJmsfSuKTulTxUlUvcI4E9GKJuCGZhh00S7xuu
+         FnVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763125183; x=1763729983;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lIa30kEZfIOzXn6c2Ch+jzSexECrPYWXzGffwwy3r9Q=;
+        b=REeg4ijmfnmw2sFyX9rfybQaE6o+TWn6GIYVDk2QoFrdksqM+pKpjW4RHpEBzvUArW
+         9cCIdhQSvhEEF/QA06cY1uzIBkxYUZGx0Qv/z8IjCJmWN64IN1AA/Oqhelt7a6MuS5kf
+         r45yg1JXs6f3G0Aq+Xt5Ly0EkJeIpF1K/5miDSPeS3dq3BDys6RQE6DNs+jrTtmM+YGX
+         TWdUkBuc3yWFFUBJNVklJWRsYudsaGPAQm5PSeB4FKg2qCtFpNQ1DaL2JCM9rrVUCf1C
+         Yb1I7rtpGipmzpZ56Ku6e4xGsyCntfa8vU0jrnVFmNLJxPCY08R1cM8lDK8qWjHtkcBX
+         KkSw==
+X-Forwarded-Encrypted: i=1; AJvYcCVPonUGGLNsHNWwrbAAg0oCSXLmzkcYd4yPxBEK6JSy1QyP67esHZnlDmleTvcjfzAho5BDM8V3mo1Hyr63DRxztl4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywwcyjsp3ZmukKa/RbSVnhx/F5dhiSj3rcwqwFVUWZtx+Vf8LMy
+	q16wrSKOVFp3+grgu/tXAkYaAs89Naad4S5laUMMxcqW93P2ls0S9sbMe5AzOAUMeJU=
+X-Gm-Gg: ASbGncuPc+X9LXgTnZdoQBOxS2KmC3l99jogWsJADCxbjkO2TedS1T6INvtYQEVYJWs
+	ejdqOjQvPjuxzEteWz7YSkr1/tQBeLkzuFMOFDMmz4ez3cF4VPZ8mIpqtn/QfpzljlZ87B5opOZ
+	+qc2yLUZr2OulvWhY0N+/zXD8s7B5uc/bQGoHjz+OiaakItwIMsi0I6rsK7NeE2Ddt+NOHUjWjg
+	tb9zB84QLPPHlBdLnAGpE60mx9O8K2kOgZ/+lP0gbLfMxw8bAlDHm4Z+uln8dyAtkO7y6tyfmpF
+	pc0LZ/vnUzcN0oXvuzuAQqsKuU3bmz2Fj+5cn7UKpUS1wbaIZVao3YVZpQHiH1W8KiMg9pE+Y6i
+	0GW+s5W5mOjGmeBhNrkR60jiFxQgAJJgCrekK3P1edn6vXf2Q0ywtLFatUfsw9lmMD81wtmHlY1
+	kiXKg=
+X-Google-Smtp-Source: AGHT+IH6H5eoyoDiGCawX8hcyfAIsFqjcgfKx5GqQ3M5ZUeRqB23EXgoQaPPEhXoJ1r2rQPfP0tLQA==
+X-Received: by 2002:a17:906:f105:b0:b73:7652:ef9e with SMTP id a640c23a62f3a-b737652f76bmr38125366b.55.1763125183501;
+        Fri, 14 Nov 2025 04:59:43 -0800 (PST)
+Received: from pathway.suse.cz ([176.114.240.130])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b734fd80a3asm382714666b.37.2025.11.14.04.59.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Nov 2025 04:59:42 -0800 (PST)
+Date: Fri, 14 Nov 2025 13:59:38 +0100
+From: Petr Mladek <pmladek@suse.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Corey Minyard <corey@minyard.net>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	"Dr. David Alan Gilbert" <linux@treblig.org>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+	Rob Clark <robin.clark@oss.qualcomm.com>,
+	Matthew Brost <matthew.brost@intel.com>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Aleksandr Loktionov <aleksandr.loktionov@intel.com>,
+	Vitaly Lifshits <vitaly.lifshits@intel.com>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>, Calvin Owens <calvin@wbinvd.org>,
+	Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+	Sagi Maimon <maimon.sagi@gmail.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Karan Tilak Kumar <kartilak@cisco.com>,
+	Hans Verkuil <hverkuil+cisco@kernel.org>,
+	Casey Schaufler <casey@schaufler-ca.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Viacheslav Dubeyko <Slava.Dubeyko@ibm.com>,
+	Max Kellermann <max.kellermann@ionos.com>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	openipmi-developer@lists.sourceforge.net,
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linaro-mm-sig@lists.linaro.org, amd-gfx@lists.freedesktop.org,
+	linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
+	intel-xe@lists.freedesktop.org, linux-mmc@vger.kernel.org,
+	netdev@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
+	linux-pci@vger.kernel.org, linux-s390@vger.kernel.org,
+	linux-scsi@vger.kernel.org, linux-staging@lists.linux.dev,
+	ceph-devel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Gustavo Padovan <gustavo@padovan.org>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Dmitry Baryshkov <lumag@kernel.org>,
+	Abhinav Kumar <abhinav.kumar@linux.dev>,
+	Jessica Zhang <jesszhan0024@gmail.com>, Sean Paul <sean@poorly.run>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Lucas De Marchi <lucas.demarchi@intel.com>,
+	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Vladimir Oltean <olteanv@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Rodolfo Giometti <giometti@enneenne.com>,
+	Jonathan Lemon <jonathan.lemon@gmail.com>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Stefan Haberland <sth@linux.ibm.com>,
+	Jan Hoeppner <hoeppner@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Satish Kharat <satishkh@cisco.com>,
+	Sesidhar Baddela <sebaddel@cisco.com>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Xiubo Li <xiubli@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v3 01/21] lib/vsprintf: Add specifier for printing struct
+ timespec64
+Message-ID: <aRcnug35DOZ3IGNi@pathway.suse.cz>
+References: <20251113150217.3030010-1-andriy.shevchenko@linux.intel.com>
+ <20251113150217.3030010-2-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251113150217.3030010-2-andriy.shevchenko@linux.intel.com>
 
-On 2025/11/14 18:20, bot+bpf-ci@kernel.org wrote:
-> > diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-> > index 7ded7df6e..14705dec1 100644
-> > --- a/include/linux/ftrace.h
-> > +++ b/include/linux/ftrace.h
-> > @@ -351,6 +351,7 @@ enum {
-> >  	FTRACE_OPS_FL_DIRECT			= BIT(17),
-> >  	FTRACE_OPS_FL_SUBOP			= BIT(18),
-> >  	FTRACE_OPS_FL_GRAPH			= BIT(19),
-> > +	FTRACE_OPS_FL_JMP			= BIT(20),
-> >  };
-> >
-> >  #ifndef CONFIG_DYNAMIC_FTRACE_WITH_ARGS
+On Thu 2025-11-13 15:32:15, Andy Shevchenko wrote:
+> A handful drivers want to print a content of the struct timespec64
+> in a format of %lld:%09ld. In order to make their lives easier, add
+> the respecting specifier directly to the printf() implementation.
 > 
-> [ ... ]
-> 
-> > +#ifdef CONFIG_DYNAMIC_FTRACE_WITH_JMP
-> > +static inline bool ftrace_is_jmp(unsigned long addr)
-> > +{
-> > +	return addr & 1;
-> > +}
-> > +
-> > +static inline unsigned long ftrace_jmp_set(unsigned long addr)
-> > +{
-> > +	return addr | 1UL;
-> > +}
-> > +
-> > +static inline unsigned long ftrace_jmp_get(unsigned long addr)
-> > +{
-> > +	return addr & ~1UL;
-> > +}
-> 
-> [ ... ]
-> 
-> > diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> > index 42bd2ba68..b143a79e6 100644
-> > --- a/kernel/trace/ftrace.c
-> > +++ b/kernel/trace/ftrace.c
-> > @@ -5938,7 +5938,8 @@ static void remove_direct_functions_hash(struct ftrace_hash *hash, unsigned long
-> >  	for (i = 0; i < size; i++) {
-> >  		hlist_for_each_entry(entry, &hash->buckets[i], hlist) {
-> >  			del = __ftrace_lookup_ip(direct_functions, entry->ip);
-> > -			if (del && del->direct == addr) {
-> > +			if (del && ftrace_jmp_get(del->direct) ==
-> > +				   ftrace_jmp_get(addr)) {
-> >  				remove_hash_entry(direct_functions, del);
-> >  				kfree(del);
-> >  			}
-> 
-> [ ... ]
-> 
-> > @@ -5994,6 +5995,9 @@ int register_ftrace_direct(struct ftrace_ops *ops, unsigned long addr)
-> >
-> >  	mutex_lock(&direct_mutex);
-> >
-> > +	if (ops->flags & FTRACE_OPS_FL_JMP)
-> > +		addr = ftrace_jmp_set(addr);
-> > +
-> 
-> When FTRACE_OPS_FL_JMP is set, this encodes the flag into the last bit
-> of addr. The modified addr is then stored in entry->direct and
-> ops->direct_call. However, this flagged address later flows through
-> ftrace_find_rec_direct()->ftrace_get_addr_new()->ftrace_make_call()->
-> ftrace_call_replace() without being masked.
-> 
-> Can ftrace_call_replace() generate correct CALL instructions when addr
-> has the LSB set? On x86, ftrace_call_replace() calls text_gen_insn()
-> with the raw address to generate a relative CALL instruction. If addr
-> has bit 0 set to 1, this would generate a CALL to an odd address,
-> causing execution to skip the first instruction byte at the trampoline.
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-If DYNAMIC_FTRACE_WITH_JMP is not enabled, ftrace_jmp_set() will
-return the addr directly, so it's OK on this case. When
-DYNAMIC_FTRACE_WITH_JMP is enabled, take x86_64 for example
-in the next patch, it will get the real address in ftrace_call_replace()
-with ftrace_jmp_get().
+Looks goor to me:
 
-The arch-specification things is split to the next patch.
+Reviewed-by: Petr Mladek <pmladek@suse.com>
+Tested-by: Petr Mladek <pmladek@suse.com>
 
-> 
-> Similarly, at runtime call_direct_funcs() reads ops->direct_call and
-> passes it to arch_ftrace_set_direct_caller() without masking. The x86
-> assembly then does RET to this address, which would jump to addr+1 if
-> the LSB is set.
-> 
-> The commit message says "we can tell if we should use 'jmp' for the
-> callback in ftrace_call_replace()" but ftrace_call_replace() isn't
-> modified to check or mask the bit. Are there missing changes to handle
-> the encoded address in these paths?
+I wonder how to move forward. I could take the whole patchset via
+printk tree. There is no conflict with linux-next at the moment.
 
-It is modified in the next patch. And in order to reduce the risk, we
-can wrap the code here with CONFIG_DYNAMIC_FTRACE_WITH_JMP.
+It seems that only 3 patches haven't got any ack yet. I am going
+to wait for more feedback and push it later the following week
+(Wednesday or so) unless anyone complains.
 
-> 
-> >  	/* Make sure requested entries are not already registered.. */
-> >  	size = 1 << hash->size_bits;
-> >  	for (i = 0; i < size; i++) {
-> 
-> [ ... ]
-> 
-> > @@ -6117,6 +6121,9 @@ __modify_ftrace_direct(struct ftrace_ops *ops, unsigned long addr)
-> >
-> >  	lockdep_assert_held_once(&direct_mutex);
-> >
-> > +	if (ops->flags & FTRACE_OPS_FL_JMP)
-> > +		addr = ftrace_jmp_set(addr);
-> > +
-> 
-> Same issue here - the flagged addr is stored but downstream consumers
-> don't mask it before using as a jump target.
-> 
-> 
-> ---
-> AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
-> See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
-> 
-> CI run summary: https://github.com/kernel-patches/bpf/actions/runs/19360353328
-> 
-
-
-
-
+Best Regards,
+Petr
