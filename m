@@ -1,61 +1,61 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41BC82264B0
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 14 Nov 2025 02:35:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E65BB27456
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 14 Nov 2025 02:55:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763087704; cv=none; b=hXXdRs484oJmwBkDwit56BORZ9s/CJa+10oDHazYr+QaBsscSBuTMLeFVflhYMMwoSkho03nNM1RFHgbKwTIhMDLWxPCxX5s3HC19sYtDm/NCW6Leb/otiEJjKBFccqmcOoXUbp7Ouf7NbyzwjsIw3T1hUzE0/0TTwucKkFB2aU=
+	t=1763088933; cv=none; b=a7nkDh9D4gWpwc60qInDnf6ysGubb15EXWsD+X04ovuaLvddIH6y/WINV2wxuiuc0PAr2jq7NXKOjYdwlUnuhgAFdkPEwoZGtzOmqZfbQ90vLEu6Zxd3ZHUrKnyLa64L6itZq4jDOt9D520HbqSCtzw3tiTmRrJ56eLfV3HQaII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763087704; c=relaxed/simple;
-	bh=bL2tkp8aVagkPSd+uMqR/OspdrAStWcX36s4cyZGUfM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mlQ6ZIhMF4CgjBzncDb4lyqh6hj9xZvLHfTxFll0h1e3BFJdL6TboILLIbI0e/DHJroU+1ncEiUc6aiFUM92qO/u0lhAxHtogKuDjzPnPCVBWUu75xzKe4i1tPRx7LdC8LuItD6P8rDpyUjam+KNPtfJL10QfjbzoaQbPSDYKSs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cxDvRWqB; arc=none smtp.client-ip=209.85.214.178
+	s=arc-20240116; t=1763088933; c=relaxed/simple;
+	bh=fI0rIZyVxQFQ6/HqLuOMm+2OvH4S28Xhk9P1ne+davk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sNMUztLfRIESPKE3P6uHNxGO/eYk/aS8d6LlyTTaPJJUydJ1t1mkg2zb0nz3Ne01GWM7n1xXkeXZJGnrOUhAHmBV/wcfU/WPc6py9I45c2i4AbhUVeFHCUc24G8UydZUPvvp0GJGKKT5Wx5N7qwEInhVyarrgMyhG3zc1Me2XHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Co8hFqxY; arc=none smtp.client-ip=209.85.210.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cxDvRWqB"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2953ad5517dso17683515ad.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Nov 2025 18:35:00 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Co8hFqxY"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-7b991081160so1279925b3a.2
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Nov 2025 18:55:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763087699; x=1763692499; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1763088931; x=1763693731; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=4F8IOennc/6nwX58Y2JVB+ghX/cgMrKcOsvuROLQZ7I=;
-        b=cxDvRWqBi95lvTUHMmUPt5vAT0bBHRbfiQFZAbeB3CS/3SDXYisB0hHv+0otXTe0rx
-         9dJPigkrAnWMr32/1mYdE9znzptS6TuAUrxZqojxcpwvQcxdC+fEAKN7dzsc64NbvVEO
-         AIq7P0E4wVljIO1UVQHyHT7YbdaCSFvrdIaJUZYFk5jdamcuvdRKuxlGMljfZ35quK6+
-         Co7yfo4G8GSnqPYTpXLXfi2TvAR0bwofrFxvFaEx+CD7XSoI5YmgcwKRROgGmK3lci5m
-         sP1kxl1DOcfgwbx76fKLtM9E57mHajcaT4R8JCg4QaGsd5kbBAD4vXDETWBbsV+w547Q
-         1MNA==
+        bh=v37eCbakcwuAvGLWP6SkDqrWN2mB2BAA/YBGPG5AFmo=;
+        b=Co8hFqxYbdZhP1PxnY1bKLcyO27MBWDrkvB4B5cLacLTaWnU+BJ8q5nbwFuDJrFmrw
+         SDzpo4pLZeHC3VM6DYrXhaU+OQmFnHVikqWB9A9K5tMx//ziGPgNfuIH9KMvGgqk43Ys
+         bfm7mapmQH0xaFMYmVKSbJDlfjmh5I5N3CRKArYzc1sb8r46Rb+iCDdo9WsF/7Dw11zM
+         ZEdojzT4JrZtQO2LSUfqY7mFqpg5Uq5k1J2AZjb4OnZnjgSTlN1pBt1jNPkN8qD42REt
+         YiCaNrTiU4afQEsfM0KNEyJEGJUmz4txdUthKvfPTpL1lvfEZybWBWFiEflIU5qKXIzg
+         7cBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763087699; x=1763692499;
+        d=1e100.net; s=20230601; t=1763088931; x=1763693731;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4F8IOennc/6nwX58Y2JVB+ghX/cgMrKcOsvuROLQZ7I=;
-        b=v/P8kEVGQdyK/kl43cMvah16fbLbeZfhiQmFvrcN8rhaJ8cqjJNp5EOT3rEY3Uiq+l
-         8AXzMlnNQSg2s2PMN7TaS9HJzrMcf4dXDFQ2YvKFEr63gRYBDQv+H9WepOvnzde4kYTa
-         RoktsAHoXWlQV51ukw4Zkt2+PLxMK2WCTjJA11l1+kvshIF/gwHXooWI5bDvn6kv31VG
-         z9rBF4piggCVbxs5X9g24nA+e3l7mu7PPudhuihp7cDguz3deN9EG5Uu2xpG4Bq822YQ
-         jI2s6laHosu0XxFwQCf0pfbsFN9M+PrB8fQXw9SJMAX2P9gHotpR+/eIOi96ctdH38d+
-         dzvw==
-X-Gm-Message-State: AOJu0YxaRb7QMtk1Xyuv2lXkI+v1xH7SnyzTqlRNBPa5L3bK/8iOzYPn
-	0Ng51eiFy5rLaHt3fav/RxsFAVmIu4d4UpKAzxYGmvcfszD/+v1mKBH5
-X-Gm-Gg: ASbGncvxlfre+rWywnaCXejaJAY9UKnHuVrfad3jjUIJTkg3aB8D+v/TN+5cEXREgDj
-	82JUROVlhX5DZqVu0WI02d0i42ERlJ5dVeZw0OxJ/0gPn4Lq17Fuqx4TTMzmaO4UgJdIjE3DpuO
-	HGtwJlOdZ+aP4DHIKnjtmSijOFbOSMffx8hY/R9jeb19FYlvKCWMvHjvCPW7IK9RINgu/xSolM2
-	S+KLta7ImBUHKEDFxBYtERrdHy/BOCBk3M/vNMkzeBF1jmHHwQDBfKMWZwJQ5XrARpzdQHoedIE
-	YO6dwzpYDlCLZ3lm3qq+DSTQPLhN3Ebd2w+FGqs/Ijqonh+BThVLdLHc9JK3cMcqUx6DK+CIISL
-	0KZko3xqRp03Dx7VFxLhqd734WgxDzhXYa+Euc9rEwQyriS67KMp3zJV8/A00+VssCKZPCNkUxh
-	5t34sg3/d6KHfrkxuzsjxvL2+f4dM=
-X-Google-Smtp-Source: AGHT+IHyVVA+R6xtvrQwp7C4TndbfV5OCK5o1Ykq5UAOOmPDejHGM2eRpGrHKj36qgvXZE7QGrGTmA==
-X-Received: by 2002:a17:902:fc86:b0:295:c2e7:7199 with SMTP id d9443c01a7336-2986a73b764mr15305785ad.29.1763087699431;
-        Thu, 13 Nov 2025 18:34:59 -0800 (PST)
+        bh=v37eCbakcwuAvGLWP6SkDqrWN2mB2BAA/YBGPG5AFmo=;
+        b=JXOeU2vwN5BL1dIdjyJuS9YQixSE9ASgLZVEXY6rdtH9Tt2WKFvfZQgRs2dmNCj8MY
+         pKTuDYAtguWR9qHzh6+m0pgIOzzCvUcOdL2KAMEPrHvfS3wup2YT+BrhTQWb8K+RbjUA
+         TBTx+EO2Ge+E01qhZl8os6B/7PlKBZGu4EhQvJ6IiXSK0akKi0OMp3puhkvxORO84XDP
+         OWLobuXGFO4E07RVufs0CEyJzz6Fb7BAzu9l5bKsx68/mxjUIb12FeLLhM9Sy3iV0rm2
+         JdjoB52bKWaMDTHEeTif5H1CqlBWDjqtL7qmU6IRNnfrPQrDfqLm4I9xrj4ajew1zyWo
+         HJSA==
+X-Gm-Message-State: AOJu0YyKGTbCxnL2ywKIOH+09ASZfM55Pt+Fkr+p+p+i+KeD/sGM/Pf7
+	hOcpM88ANI6sGvlGhmATvCK7KpLqmPLOIUlUkUo8uywetXWmJQAxOf5Gxpd5KH9niJg=
+X-Gm-Gg: ASbGncvFtWpHpNrn4bQumUujMSI9C1eWa8fPnsaGNjH7rKf/J8lcMcPP/7N/M5g5w+t
+	hlICUEhe8cu46B4FSITyTrI9Z1xJpZVNQ/OoGDRLQXoas8G6WMFrjjzt3e5CL1B0ZTohZeVV8bg
+	oQpyPPsIcZ8vmI7YxUgsaqUU3qK+cMANfgf580pjdC3Cs/+HXeSFkHJRzgq/bCdN4aVJhvXNKix
+	8LLBmIU37DR8MSIXyqzrx/Ov0pPlcWuMfORwsfSWlIl+ccHmbHdqjFOFsZOT6GqA56TLinJo80E
+	6xkYWITZwWcD+ncwNx+xKDas5Rk/LICtXJTZ8yeuCLzkE3DlYnPRSTDEk9xOV0us8mSKcuZrjbm
+	VdJIVP+REqLaAnX9WhWRXxZzc6WWmK9HFUA4Cmy/IkD9V3BUFazPaIOTVaFyVl7X3sbyacsyA9f
+	ibmtIJGNWdcuOdTWaWoOmJB9gUAzer7FaMDpkq6A==
+X-Google-Smtp-Source: AGHT+IF1JRqnMMjNOthJDc90h1x7rQ3zelcCgJxNN0jxYHmR5j0eOmsKZfKR9yq3ifaZDhDR0EjGbQ==
+X-Received: by 2002:a05:6a21:6d99:b0:353:ec70:30dd with SMTP id adf61e73a8af0-35ba259aab2mr2450969637.51.1763088931133;
+        Thu, 13 Nov 2025 18:55:31 -0800 (PST)
 Received: from pengdl-pc.mioffice.cn ([43.224.245.249])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2985c2b0d17sm39085735ad.72.2025.11.13.18.34.56
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-bc36ed72cd1sm3279807a12.11.2025.11.13.18.55.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Nov 2025 18:34:58 -0800 (PST)
+        Thu, 13 Nov 2025 18:55:30 -0800 (PST)
 From: Donglin Peng <dolinux.peng@gmail.com>
 To: rostedt@goodmis.org
 Cc: linux-trace-kernel@vger.kernel.org,
@@ -63,9 +63,9 @@ Cc: linux-trace-kernel@vger.kernel.org,
 	Donglin Peng <pengdonglin@xiaomi.com>,
 	Sven Schnelle <svens@linux.ibm.com>,
 	Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [PATCH v6] function_graph: Enable funcgraph-args and funcgraph-retaddr to work simultaneously
-Date: Fri, 14 Nov 2025 10:34:53 +0800
-Message-Id: <20251114023453.2061590-1-dolinux.peng@gmail.com>
+Subject: [PATCH v7] function_graph: Enable funcgraph-args and funcgraph-retaddr to work simultaneously
+Date: Fri, 14 Nov 2025 10:55:22 +0800
+Message-Id: <20251114025522.2115359-1-dolinux.peng@gmail.com>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -113,6 +113,10 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>
 Signed-off-by: Donglin Peng <pengdonglin@xiaomi.com>
 Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
+v7:
+- Remove nr_args to eliminate a multiplication instruction
+- Link to v6: https://lore.kernel.org/all/20251114023453.2061590-1-dolinux.peng@gmail.com/
+
 v6:
 - Initialize retaddr to NULL to silence uninitialized variable warning.
 - Use ARGS_OFFS(size) macro instead of args_offs variable to eliminate
@@ -146,8 +150,8 @@ v2:
  include/linux/ftrace.h               |  11 ---
  kernel/trace/trace.h                 |   4 -
  kernel/trace/trace_entries.h         |   6 +-
- kernel/trace/trace_functions_graph.c | 142 ++++++++++++---------------
- 4 files changed, 66 insertions(+), 97 deletions(-)
+ kernel/trace/trace_functions_graph.c | 140 ++++++++++++---------------
+ 4 files changed, 64 insertions(+), 97 deletions(-)
 
 diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
 index 7ded7df6e9b5..88cb54d73bdb 100644
@@ -209,7 +213,7 @@ index de294ae2c5c5..593a74663c65 100644
  
  #else
 diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
-index a7f4b9a47a71..31dfede72368 100644
+index a7f4b9a47a71..18babcd66227 100644
 --- a/kernel/trace/trace_functions_graph.c
 +++ b/kernel/trace/trace_functions_graph.c
 @@ -16,6 +16,15 @@
@@ -261,7 +265,7 @@ index a7f4b9a47a71..31dfede72368 100644
  	struct ftrace_graph_ret_entry	ret;
  	int				failed;
  	int				cpu;
-@@ -127,22 +140,40 @@ static int __graph_entry(struct trace_array *tr, struct ftrace_graph_ent *trace,
+@@ -127,22 +140,38 @@ static int __graph_entry(struct trace_array *tr, struct ftrace_graph_ent *trace,
  	struct ring_buffer_event *event;
  	struct trace_buffer *buffer = tr->array_buffer.buffer;
  	struct ftrace_graph_ent_entry *entry;
@@ -269,22 +273,20 @@ index a7f4b9a47a71..31dfede72368 100644
 +	unsigned long retaddr = 0;
 +	int size = sizeof(*entry);
 +	int type = TRACE_GRAPH_ENT;
-+	int nr_args = 0;
 +
 +	if (IS_ENABLED(CONFIG_FUNCTION_GRAPH_RETADDR) &&
 +		tracer_flags_is_set(TRACE_GRAPH_PRINT_RETADDR)) {
 +		retaddr = ftrace_graph_top_ret_addr(current);
 +		type = TRACE_GRAPH_RETADDR_ENT;
-+		nr_args += 1;
++		size += sizeof(long);
 +	}
  
  	/* If fregs is defined, add FTRACE_REGS_MAX_ARGS long size words */
 -	size = sizeof(*entry) + (FTRACE_REGS_MAX_ARGS * !!fregs * sizeof(long));
 +	if (!!fregs)
-+		nr_args += FTRACE_REGS_MAX_ARGS;
++		size += FTRACE_REGS_MAX_ARGS * sizeof(long);
  
 -	event = trace_buffer_lock_reserve(buffer, TRACE_GRAPH_ENT, size, trace_ctx);
-+	size += nr_args * sizeof(long);
 +	event = trace_buffer_lock_reserve(buffer, type, size, trace_ctx);
  	if (!event)
  		return 0;
@@ -307,7 +309,7 @@ index a7f4b9a47a71..31dfede72368 100644
  	}
  #endif
  
-@@ -158,38 +189,6 @@ int __trace_graph_entry(struct trace_array *tr,
+@@ -158,38 +187,6 @@ int __trace_graph_entry(struct trace_array *tr,
  	return __graph_entry(tr, trace, trace_ctx, NULL);
  }
  
@@ -346,7 +348,7 @@ index a7f4b9a47a71..31dfede72368 100644
  static inline int ftrace_graph_ignore_irqs(void)
  {
  	if (!ftrace_graph_skip_irqs || trace_recursion_test(TRACE_IRQ_BIT))
-@@ -211,7 +210,6 @@ static int graph_entry(struct ftrace_graph_ent *trace,
+@@ -211,7 +208,6 @@ static int graph_entry(struct ftrace_graph_ent *trace,
  	struct trace_array *tr = gops->private;
  	struct fgraph_times *ftimes;
  	unsigned int trace_ctx;
@@ -354,7 +356,7 @@ index a7f4b9a47a71..31dfede72368 100644
  
  	if (*task_var & TRACE_GRAPH_NOTRACE)
  		return 0;
-@@ -262,15 +260,7 @@ static int graph_entry(struct ftrace_graph_ent *trace,
+@@ -262,15 +258,7 @@ static int graph_entry(struct ftrace_graph_ent *trace,
  		return 1;
  
  	trace_ctx = tracing_gen_ctx();
@@ -371,7 +373,7 @@ index a7f4b9a47a71..31dfede72368 100644
  }
  
  int trace_graph_entry(struct ftrace_graph_ent *trace,
-@@ -634,13 +624,9 @@ get_return_for_leaf(struct trace_iterator *iter,
+@@ -634,13 +622,9 @@ get_return_for_leaf(struct trace_iterator *iter,
  			 * Save current and next entries for later reference
  			 * if the output fails.
  			 */
@@ -387,7 +389,7 @@ index a7f4b9a47a71..31dfede72368 100644
  			/*
  			 * If the next event is not a return type, then
  			 * we only care about what type it is. Otherwise we can
-@@ -811,21 +797,21 @@ print_graph_duration(struct trace_array *tr, unsigned long long duration,
+@@ -811,21 +795,21 @@ print_graph_duration(struct trace_array *tr, unsigned long long duration,
  
  #ifdef CONFIG_FUNCTION_GRAPH_RETADDR
  #define __TRACE_GRAPH_PRINT_RETADDR TRACE_GRAPH_PRINT_RETADDR
@@ -413,7 +415,7 @@ index a7f4b9a47a71..31dfede72368 100644
  #endif
  
  #if defined(CONFIG_FUNCTION_GRAPH_RETVAL) || defined(CONFIG_FUNCTION_GRAPH_RETADDR)
-@@ -869,10 +855,12 @@ static void print_graph_retval(struct trace_seq *s, struct ftrace_graph_ent_entr
+@@ -869,10 +853,12 @@ static void print_graph_retval(struct trace_seq *s, struct ftrace_graph_ent_entr
  		trace_seq_printf(s, "%ps", func);
  
  		if (args_size >= FTRACE_REGS_MAX_ARGS * sizeof(long)) {
@@ -428,7 +430,7 @@ index a7f4b9a47a71..31dfede72368 100644
  
  		if (print_retval || print_retaddr)
  			trace_seq_puts(s, " /*");
-@@ -882,8 +870,7 @@ static void print_graph_retval(struct trace_seq *s, struct ftrace_graph_ent_entr
+@@ -882,8 +868,7 @@ static void print_graph_retval(struct trace_seq *s, struct ftrace_graph_ent_entr
  	}
  
  	if (print_retaddr)
@@ -438,7 +440,7 @@ index a7f4b9a47a71..31dfede72368 100644
  
  	if (print_retval) {
  		if (hex_format || (err_code == 0))
-@@ -964,10 +951,12 @@ print_graph_entry_leaf(struct trace_iterator *iter,
+@@ -964,10 +949,12 @@ print_graph_entry_leaf(struct trace_iterator *iter,
  		trace_seq_printf(s, "%ps", (void *)ret_func);
  
  		if (args_size >= FTRACE_REGS_MAX_ARGS * sizeof(long)) {
@@ -453,7 +455,7 @@ index a7f4b9a47a71..31dfede72368 100644
  	}
  	trace_seq_putc(s, '\n');
  
-@@ -1016,7 +1005,7 @@ print_graph_entry_nested(struct trace_iterator *iter,
+@@ -1016,7 +1003,7 @@ print_graph_entry_nested(struct trace_iterator *iter,
  	args_size = iter->ent_size - offsetof(struct ftrace_graph_ent_entry, args);
  
  	if (args_size >= FTRACE_REGS_MAX_ARGS * sizeof(long))
@@ -462,7 +464,7 @@ index a7f4b9a47a71..31dfede72368 100644
  	else
  		trace_seq_puts(s, "()");
  
-@@ -1024,8 +1013,7 @@ print_graph_entry_nested(struct trace_iterator *iter,
+@@ -1024,8 +1011,7 @@ print_graph_entry_nested(struct trace_iterator *iter,
  
  	if (flags & __TRACE_GRAPH_PRINT_RETADDR  &&
  		entry->ent.type == TRACE_GRAPH_RETADDR_ENT)
@@ -472,7 +474,7 @@ index a7f4b9a47a71..31dfede72368 100644
  	trace_seq_putc(s, '\n');
  
  	if (trace_seq_has_overflowed(s))
-@@ -1202,7 +1190,7 @@ print_graph_entry(struct ftrace_graph_ent_entry *field, struct trace_seq *s,
+@@ -1202,7 +1188,7 @@ print_graph_entry(struct ftrace_graph_ent_entry *field, struct trace_seq *s,
  	 * it can be safely saved at the stack.
  	 */
  	struct ftrace_graph_ent_entry *entry;
@@ -481,7 +483,7 @@ index a7f4b9a47a71..31dfede72368 100644
  
  	/* The ent_size is expected to be as big as the entry */
  	if (iter->ent_size > sizeof(save_buf))
-@@ -1429,16 +1417,12 @@ print_graph_function_flags(struct trace_iterator *iter, u32 flags)
+@@ -1429,16 +1415,12 @@ print_graph_function_flags(struct trace_iterator *iter, u32 flags)
  		trace_assign_type(field, entry);
  		return print_graph_entry(field, s, iter, flags);
  	}
