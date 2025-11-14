@@ -1,147 +1,51 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E3522459CF
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 14 Nov 2025 12:59:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F405030F52B;
+	Fri, 14 Nov 2025 13:16:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763125188; cv=none; b=XUlU9CdtFXLgUDixTn2j+WTYIi9o2fpQO4TLo2Z4Ni2exjeczld+zDlCXEWZFu2tRzXosdlf9qfA43zCXWkmC45Mlf3J9rUzaxR32XxhI0WIa6aH3Pse00eEKi7B1hrPJOztZ22lKygURXCANB0Amoesw379sxQuz3CIJweuqNg=
+	t=1763126222; cv=none; b=W4Mkx9/DGkwCF+SWm3GFdWJjnmNywXMFrkGJc5vAbzr2PWfvENq4+Etu5B5zawMsWD9mbVb9Jl2ZfuQYIxVw96MNi3DWlMwtR159El0mmqUYV//y5lGgS7DxQPdQuR9HBbkx+jhBocIwCNTdKTTuuCSeeAaYwthKPGV7R76Ty9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763125188; c=relaxed/simple;
-	bh=OwXqaVYjP+AYjhrqdV/iUf65lNBgi6i65jcAVuzkims=;
+	s=arc-20240116; t=1763126222; c=relaxed/simple;
+	bh=m25Ht5MJmYjNkEujCtZhivVNuoNdHi2llzCoTBXzsv0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oQd+XvAAn0Cz5i6vGb9Rq2EeTYa25pTrXN8uznBLdS5VoOYnI+SIFWwAe53eS9b56/G866JcD909VuVxqE9dkd7RBp3A9H3hKh0rv1MMBp97l/PRiqskgsBj8J632ku1fWfFWQvV46H4Ba2bUViJSoWfMo5FBjmQ8n/CTHgp9SY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=ZbqfK4m0; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=faUkkKPVboDcIKTbVRyNDVNV+gOsPDgykr0FSJfNDA5MzLQMFQj2kEqhBOzktZr8z43/4l9tuxeEOawYJh7Gn0EWxTs047MgRGs4jpV+sPeV3zg1VxqVMEDgvOT7bAu/ayCi4RAgg581gDbhYSdZ+Afh2QBqmMoXjIpklJHlLVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=uhTAacUV; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="ZbqfK4m0"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-64180bd67b7so2729606a12.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 14 Nov 2025 04:59:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1763125183; x=1763729983; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=lIa30kEZfIOzXn6c2Ch+jzSexECrPYWXzGffwwy3r9Q=;
-        b=ZbqfK4m0Vk3QZZMUhnZ65dzeU/GFengPpj80uV976TTNT6cF3kLVFLU8dNGFNmtTBM
-         4qOp9/GpfWs9OKiNwe0QHH/jcW19OTYlr1meSgMwyMFng3k0InkVtUKHBwfo5BNYqFr+
-         4lFMJhMGNriMqn3fozHBGzFjOKEU5kUtemJ7mYPxBLflIyzVat1J4pYAXgbN4B2YnyYG
-         82UWE3kzLCNGqMlMm3yvbYBMH3F7S7iX89IYp4nrzQpu+C75oEGN3b+p3276ZuRBY6eY
-         kmTlfbRGGr9zKGdLcC+V/1s+Tfa76MlJmsfSuKTulTxUlUvcI4E9GKJuCGZhh00S7xuu
-         FnVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763125183; x=1763729983;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lIa30kEZfIOzXn6c2Ch+jzSexECrPYWXzGffwwy3r9Q=;
-        b=REeg4ijmfnmw2sFyX9rfybQaE6o+TWn6GIYVDk2QoFrdksqM+pKpjW4RHpEBzvUArW
-         9cCIdhQSvhEEF/QA06cY1uzIBkxYUZGx0Qv/z8IjCJmWN64IN1AA/Oqhelt7a6MuS5kf
-         r45yg1JXs6f3G0Aq+Xt5Ly0EkJeIpF1K/5miDSPeS3dq3BDys6RQE6DNs+jrTtmM+YGX
-         TWdUkBuc3yWFFUBJNVklJWRsYudsaGPAQm5PSeB4FKg2qCtFpNQ1DaL2JCM9rrVUCf1C
-         Yb1I7rtpGipmzpZ56Ku6e4xGsyCntfa8vU0jrnVFmNLJxPCY08R1cM8lDK8qWjHtkcBX
-         KkSw==
-X-Forwarded-Encrypted: i=1; AJvYcCVPonUGGLNsHNWwrbAAg0oCSXLmzkcYd4yPxBEK6JSy1QyP67esHZnlDmleTvcjfzAho5BDM8V3mo1Hyr63DRxztl4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywwcyjsp3ZmukKa/RbSVnhx/F5dhiSj3rcwqwFVUWZtx+Vf8LMy
-	q16wrSKOVFp3+grgu/tXAkYaAs89Naad4S5laUMMxcqW93P2ls0S9sbMe5AzOAUMeJU=
-X-Gm-Gg: ASbGncuPc+X9LXgTnZdoQBOxS2KmC3l99jogWsJADCxbjkO2TedS1T6INvtYQEVYJWs
-	ejdqOjQvPjuxzEteWz7YSkr1/tQBeLkzuFMOFDMmz4ez3cF4VPZ8mIpqtn/QfpzljlZ87B5opOZ
-	+qc2yLUZr2OulvWhY0N+/zXD8s7B5uc/bQGoHjz+OiaakItwIMsi0I6rsK7NeE2Ddt+NOHUjWjg
-	tb9zB84QLPPHlBdLnAGpE60mx9O8K2kOgZ/+lP0gbLfMxw8bAlDHm4Z+uln8dyAtkO7y6tyfmpF
-	pc0LZ/vnUzcN0oXvuzuAQqsKuU3bmz2Fj+5cn7UKpUS1wbaIZVao3YVZpQHiH1W8KiMg9pE+Y6i
-	0GW+s5W5mOjGmeBhNrkR60jiFxQgAJJgCrekK3P1edn6vXf2Q0ywtLFatUfsw9lmMD81wtmHlY1
-	kiXKg=
-X-Google-Smtp-Source: AGHT+IH6H5eoyoDiGCawX8hcyfAIsFqjcgfKx5GqQ3M5ZUeRqB23EXgoQaPPEhXoJ1r2rQPfP0tLQA==
-X-Received: by 2002:a17:906:f105:b0:b73:7652:ef9e with SMTP id a640c23a62f3a-b737652f76bmr38125366b.55.1763125183501;
-        Fri, 14 Nov 2025 04:59:43 -0800 (PST)
-Received: from pathway.suse.cz ([176.114.240.130])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b734fd80a3asm382714666b.37.2025.11.14.04.59.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Nov 2025 04:59:42 -0800 (PST)
-Date: Fri, 14 Nov 2025 13:59:38 +0100
-From: Petr Mladek <pmladek@suse.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Corey Minyard <corey@minyard.net>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	"Dr. David Alan Gilbert" <linux@treblig.org>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-	Rob Clark <robin.clark@oss.qualcomm.com>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Aleksandr Loktionov <aleksandr.loktionov@intel.com>,
-	Vitaly Lifshits <vitaly.lifshits@intel.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Niklas Cassel <cassel@kernel.org>, Calvin Owens <calvin@wbinvd.org>,
-	Vadim Fedorenko <vadim.fedorenko@linux.dev>,
-	Sagi Maimon <maimon.sagi@gmail.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Karan Tilak Kumar <kartilak@cisco.com>,
-	Hans Verkuil <hverkuil+cisco@kernel.org>,
-	Casey Schaufler <casey@schaufler-ca.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Viacheslav Dubeyko <Slava.Dubeyko@ibm.com>,
-	Max Kellermann <max.kellermann@ionos.com>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	openipmi-developer@lists.sourceforge.net,
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org, amd-gfx@lists.freedesktop.org,
-	linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
-	intel-xe@lists.freedesktop.org, linux-mmc@vger.kernel.org,
-	netdev@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
-	linux-pci@vger.kernel.org, linux-s390@vger.kernel.org,
-	linux-scsi@vger.kernel.org, linux-staging@lists.linux.dev,
-	ceph-devel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Gustavo Padovan <gustavo@padovan.org>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Dmitry Baryshkov <lumag@kernel.org>,
-	Abhinav Kumar <abhinav.kumar@linux.dev>,
-	Jessica Zhang <jesszhan0024@gmail.com>, Sean Paul <sean@poorly.run>,
-	Marijn Suijten <marijn.suijten@somainline.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Lucas De Marchi <lucas.demarchi@intel.com>,
-	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Vladimir Oltean <olteanv@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Rodolfo Giometti <giometti@enneenne.com>,
-	Jonathan Lemon <jonathan.lemon@gmail.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Stefan Haberland <sth@linux.ibm.com>,
-	Jan Hoeppner <hoeppner@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Satish Kharat <satishkh@cisco.com>,
-	Sesidhar Baddela <sebaddel@cisco.com>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Xiubo Li <xiubli@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v3 01/21] lib/vsprintf: Add specifier for printing struct
- timespec64
-Message-ID: <aRcnug35DOZ3IGNi@pathway.suse.cz>
-References: <20251113150217.3030010-1-andriy.shevchenko@linux.intel.com>
- <20251113150217.3030010-2-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uhTAacUV"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=Vo+N5YbzZDjZeiNvAhfJhGp+deegDT8E/3cOAOwzUvY=; b=uhTAacUV/flhXWxNQV5FeR3HnC
+	dbisfExygmslgLyDpvLG+2/Hlg/pmt0VQFR60ENfWSheMwZ71gSfJvn5cpAz3jQ4C8GbW22mGZnvr
+	IAvWXV16IcxEqXlj9aGECgc6jWa+TYNslUF/UG5UZnNeVmX9uCBtHkF3/PhZqpKloo53DY7lQjfBs
+	aJlrIOpHrSuxqQ5zFLrpzFxS0hDURfOE1mKKnlaxrFAzISnDVMx2YoDYjEeGrpZfA+xmHgA5z4Aqa
+	ikMn5lzxyvLtVuWvtU3KSheAYA6RnH67j72rXcCqX5yw2ewTbxE7qcEs/APRhRTTgydkga2huH2E1
+	f93tK/uw==;
+Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vJtfX-00000009Mru-0lqh;
+	Fri, 14 Nov 2025 13:16:51 +0000
+Date: Fri, 14 Nov 2025 13:16:50 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: Ritesh Harjani <ritesh.list@gmail.com>
+Cc: Ojaswin Mujoo <ojaswin@linux.ibm.com>,
+	Christian Brauner <brauner@kernel.org>, djwong@kernel.org,
+	john.g.garry@oracle.com, tytso@mit.edu, dchinner@redhat.com,
+	hch@lst.de, linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org, jack@suse.cz, nilay@linux.ibm.com,
+	martin.petersen@oracle.com, rostedt@goodmis.org, axboe@kernel.dk,
+	linux-block@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 2/8] mm: Add PG_atomic
+Message-ID: <aRcrwgxV6cBu2_RH@casper.infradead.org>
+References: <cover.1762945505.git.ojaswin@linux.ibm.com>
+ <5f0a7c62a3c787f2011ada10abe3826a94f99e17.1762945505.git.ojaswin@linux.ibm.com>
+ <aRSuH82gM-8BzPCU@casper.infradead.org>
+ <87ecq18azq.ritesh.list@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -150,26 +54,32 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251113150217.3030010-2-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <87ecq18azq.ritesh.list@gmail.com>
 
-On Thu 2025-11-13 15:32:15, Andy Shevchenko wrote:
-> A handful drivers want to print a content of the struct timespec64
-> in a format of %lld:%09ld. In order to make their lives easier, add
-> the respecting specifier directly to the printf() implementation.
+On Fri, Nov 14, 2025 at 10:30:09AM +0530, Ritesh Harjani wrote:
+> Matthew Wilcox <willy@infradead.org> writes:
 > 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > On Wed, Nov 12, 2025 at 04:36:05PM +0530, Ojaswin Mujoo wrote:
+> >> From: John Garry <john.g.garry@oracle.com>
+> >> 
+> >> Add page flag PG_atomic, meaning that a folio needs to be written back
+> >> atomically. This will be used by for handling RWF_ATOMIC buffered IO
+> >> in upcoming patches.
+> >
+> > Page flags are a precious resource.  I'm not thrilled about allocating one
+> > to this rather niche usecase.  Wouldn't this be more aptly a flag on the
+> > address_space rather than the folio?  ie if we're doing this kind of write
+> > to a file, aren't most/all of the writes to the file going to be atomic?
+> 
+> As of today the atomic writes functionality works on the per-write
+> basis (given it's a per-write characteristic). 
+> 
+> So, we can have two types of dirty folios sitting in the page cache of
+> an inode. Ones which were done using atomic buffered I/O flag
+> (RWF_ATOMIC) and the other ones which were non-atomic writes. Hence a
+> need of a folio flag to distinguish between the two writes.
 
-Looks goor to me:
-
-Reviewed-by: Petr Mladek <pmladek@suse.com>
-Tested-by: Petr Mladek <pmladek@suse.com>
-
-I wonder how to move forward. I could take the whole patchset via
-printk tree. There is no conflict with linux-next at the moment.
-
-It seems that only 3 patches haven't got any ack yet. I am going
-to wait for more feedback and push it later the following week
-(Wednesday or so) unless anyone complains.
-
-Best Regards,
-Petr
+I know, but is this useful?  AFAIK, the files where Postgres wants to
+use this functionality are the log files, and all writes to the log
+files will want to use the atomic functionality.  What's the usecase
+for "I want to mix atomic and non-atomic buffered writes to this file"?
