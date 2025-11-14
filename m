@@ -1,176 +1,71 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3F4632BF5D
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 14 Nov 2025 15:17:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0BDC330319;
+	Fri, 14 Nov 2025 16:17:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763133461; cv=none; b=cXgrHlfFszvAtRQNSt6NdbSFaj+AzEGyYbzCI3V0+cVNKVqCCC3cAhCGfJty0kef6y+gx9+ymqhhhailXfj3WJIvzEsqRx0Bf1trt+h2ySLWhDz6Glt+UmCdjBNnsme25l/1spiwXYB+HuBcyT5Zu8KT6wVXLYHLWNTV956W1LI=
+	t=1763137034; cv=none; b=j9CT0t7TGrwqekcrYso0CeNHumIXMpIRFmesYWHXFARhLoHO7z8Ca3/UnNsTzAZhrghLGHu0AaWhBMoarvFAt5uMrXudtp5KFkA5S7/lhofVXr7/8ry6HIN4LA6OTG3+U/clZMyECi1YcJVqlLly5ceQlpE8TsjsJfXZ8RMd/jo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763133461; c=relaxed/simple;
-	bh=k4QzhlWoFW0nKlX+gCLSWARw5LDdpUWLbvAWfPBN+UA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Dyy8iZexTV541Ie2y92Sc2H4LALRy21j2fU12epJ2pf/W7a549Of/LA8NiK9oY9jTIfEn0ForTVye4/Ck7P/YcP3txVfwA+Km3FSf8UeG8m0R42qJ+HImpJLxqtiafO9JKUS3l26cfQPmRNwMkmTT/YYeqTaHLPuV5Z9D+CsPYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=H4ZHlWAt; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1763137034; c=relaxed/simple;
+	bh=Px3lKZdUS5rdr+F3zZSev4T8mg958AG9l4kRlO2wCqE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=u3GZYZtepM7wQrdVwGSvK3uBo5r3MWdIMJ51YX9aeepaUE+LMD272fUPuog51qv4hP5YZKBcy0wmYKIkS8h7cjUiBzdRiYFPI9J8Xxy7qP4S/GuY1U2gd2YnTynaQEdlbjz/6A5HjZ9OOVHfjSZFKYEXG7Uw5+UnXzE2MPmko0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EBPYejEz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H4ZHlWAt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1763133459;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YHbOf6w5rlj656BCFSOxLzgqhHO7ycdTLJssDuPvEBo=;
-	b=H4ZHlWAtFWfqQpYAaQE+D1y4t71cCMT7IpvWhzWTk6HqrlaASftXtFZOfUTbuonwpP60Wi
-	cpxxhRz0Jr+2YYXLWPtzsmCT+7q6MgdDGoLEK73gHZ1CL0O6iNq1JOCY+W9nToXSyIMqWi
-	RIunFr32P4ZRXEZEbpksmBRYUOFHwIg=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-531--Ii0M5UDM1-LvTUINdpoDg-1; Fri,
- 14 Nov 2025 10:17:37 -0500
-X-MC-Unique: -Ii0M5UDM1-LvTUINdpoDg-1
-X-Mimecast-MFC-AGG-ID: -Ii0M5UDM1-LvTUINdpoDg_1763133453
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2DC7C1956096;
-	Fri, 14 Nov 2025 15:17:33 +0000 (UTC)
-Received: from vschneid-thinkpadt14sgen2i.remote.csb (unknown [10.45.226.10])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A94EB180049F;
-	Fri, 14 Nov 2025 15:17:18 +0000 (UTC)
-From: Valentin Schneider <vschneid@redhat.com>
-To: linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	rcu@vger.kernel.org,
-	x86@kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	loongarch@lists.linux.dev,
-	linux-riscv@lists.infradead.org,
-	linux-arch@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EBPYejEz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 343EBC4CEFB;
+	Fri, 14 Nov 2025 16:17:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763137033;
+	bh=Px3lKZdUS5rdr+F3zZSev4T8mg958AG9l4kRlO2wCqE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EBPYejEzrwCn4Zb5hqGfAGsRuk9RtKOvK6DJboD4IPKftcJOdg4oRRU5uT8NPBLE+
+	 OCllQlduZ42OJyJUua2necJE+0YSdMcHbdeLObYCCvkrn/QwTZwzPnKXqb38rWi4fx
+	 mw+gUSWQ6/Z3DVBAUUf3g6ei/hgWhfp7oWapApA7/2onlPDePp296sVo1FRqC2qZLi
+	 VseGB5u3t8eCfXy0RDuL7FaQz+qNhJB6BR4RzMRRyHWBM8G63G1zF6mSYIYV2yixgW
+	 x5bf4nJawh3kaT0tOsY4WlKO02LdPnsxSPRrLeRVJEoXJ4IYeL7vJVSz00VvRSHbOa
+	 FVxXdc/8ggRbw==
+Date: Fri, 14 Nov 2025 16:17:06 +0000
+From: Will Deacon <will@kernel.org>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Jason Baron <jbaron@akamai.com>,
+	Namhyung Kim <namhyung@kernel.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Uladzislau Rezki <urezki@gmail.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Mel Gorman <mgorman@suse.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Han Shen <shenhan@google.com>,
-	Rik van Riel <riel@surriel.com>,
-	Jann Horn <jannh@google.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Clark Williams <williams@redhat.com>,
-	Yair Podemsky <ypodemsk@redhat.com>,
-	Marcelo Tosatti <mtosatti@redhat.com>,
-	Daniel Wagner <dwagner@suse.de>,
-	Petr Tesarik <ptesarik@suse.com>,
-	Shrikanth Hegde <sshegde@linux.ibm.com>
-Subject: [RFC PATCH v7 31/31] x86/entry: Add an option to coalesce TLB flushes
-Date: Fri, 14 Nov 2025 16:14:28 +0100
-Message-ID: <20251114151428.1064524-11-vschneid@redhat.com>
-In-Reply-To: <20251114150133.1056710-1-vschneid@redhat.com>
-References: <20251114150133.1056710-1-vschneid@redhat.com>
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 0/2] tracing/wprobe: Fix to avoid inifinite watchpoint
+ exception on arm64
+Message-ID: <aRdWAshGkWjgXW3L@willie-the-truck>
+References: <176179481538.959775.12326313742393696258.stgit@devnote2>
+ <20251104223735.4164f224790ea0aea267dff1@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251104223735.4164f224790ea0aea267dff1@kernel.org>
 
-Previous patches have introduced a mechanism to prevent kernel text updates
-from inducing interference on isolated CPUs. A similar action is required
-for kernel-range TLB flushes in order to silence the biggest remaining
-cause of isolated CPU IPI interference.
+On Tue, Nov 04, 2025 at 10:37:35PM +0900, Masami Hiramatsu wrote:
+> Gently ping.
+> 
+> There is a bugfix (or strange behavior) on arm64 hw breakpoint but
+> to fix it cleanly, it should change the perf itself (but I'm not
+> sure why arm64 changes the behavior only for the default overflow
+> handlers.) Anyone knows it?
 
-These flushes are mostly caused by vmalloc manipulations - e.g. on x86 with
-CONFIG_VMAP_STACK, spawning enough processes will easily trigger
-flushes. Unfortunately, the newly added context_tracking IPI deferral
-mechanism cannot be leveraged for TLB flushes, as the deferred work would
-be executed too late. Consider the following execution flow:
+It's because GDB expects to handle the stepping itself when using the
+ptrace interface (with a custom overflow handler to deliver SIGTRAP).
 
-  <userspace>
-
-  !interrupt!
-
-  SWITCH_TO_KERNEL_CR3 // vmalloc range becomes accessible
-
-  idtentry_func_foo()
-    irqentry_enter()
-      irqentry_enter_from_user_mode()
-	enter_from_user_mode()
-	  [...]
-	    ct_kernel_enter_state()
-	      ct_work_flush() // deferred flush would be done here
-
-Since there is no sane way to assert no stale entry is accessed during
-kernel entry, any code executed between SWITCH_TO_KERNEL_CR3 and
-ct_work_flush() is at risk of accessing a stale entry. Dave had suggested
-hacking up something within SWITCH_TO_KERNEL_CR3 itself, which is what has
-been implemented in the previous patches.
-
-Make kernel-range TLB flush deferral available via CONFIG_COALESCE_TLBI.
-
-Signed-off-by: Valentin Schneider <vschneid@redhat.com>
----
- arch/x86/Kconfig | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
-
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index fa9229c0e0939..04f9d6496bbbc 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -2189,6 +2189,23 @@ config ADDRESS_MASKING
-	  The capability can be used for efficient address sanitizers (ASAN)
-	  implementation and for optimizations in JITs.
-
-+config COALESCE_TLBI
-+       def_bool n
-+       prompt "Coalesce kernel TLB flushes for NOHZ-full CPUs"
-+       depends on X86_64 && MITIGATION_PAGE_TABLE_ISOLATION && NO_HZ_FULL
-+       help
-+	 TLB flushes for kernel addresses can lead to IPIs being sent to
-+	 NOHZ-full CPUs, thus kicking them out of userspace.
-+
-+	 This option coalesces kernel-range TLB flushes for NOHZ-full CPUs into
-+	 a single flush executed at kernel entry, right after switching to the
-+	 kernel page table. Note that this flush is unconditionnal, even if no
-+	 remote flush was issued during the previous userspace execution window.
-+
-+	 This obviously makes the user->kernel transition overhead even worse.
-+
-+	 If unsure, say N.
-+
- config HOTPLUG_CPU
-	def_bool y
-	depends on SMP
---
-2.51.0
-
+Will
