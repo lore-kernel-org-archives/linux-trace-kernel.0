@@ -1,161 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C87133321A3;
-	Fri, 14 Nov 2025 16:21:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BF35283CBF;
+	Fri, 14 Nov 2025 16:28:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763137267; cv=none; b=fV2OkPPrLPYEqzs3lzYNLqi61iPTWNGm3EsMf2Xsn/otc2RvLf2cr/MHysJtxEHJPkkB2ojYHl5n0ul2XcyAZPETlpyGtnmdk6+NkjIM1Tby7FF/YYiHHBgXU85nIf7qQUIljCjxse/oog4P2s5lQsI/xP0BDvuTUPHo5bEmQvE=
+	t=1763137692; cv=none; b=u7OaXYkDZYhQMDOiSu+4V2WyUnrgf1Gvy818MRadHNaLZcLrHnqGoJ6T2+/92p0krkaDCUGUBDGUuzeNekT2QWqLPYpPAFMed9ZGosEckEcnKTCzBK2h60Zao3LsRLr9GA2BrylZK/m5dLl4q0yAs+PAPIXiIvmmIQsqPyhgcJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763137267; c=relaxed/simple;
-	bh=sdAOBvzBQbQ58hWdafyr1VicSS+CMEqs0nYJg4IbVNc=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=rlaREvJG/TnbnFFwqICeiVApXVc2ImXezU26qnjE+kb0lrKI8opdBJmgK1iQX8N1pU/KxuxKtMczY+GCmonv5aiHzW0ToHOt6MR35mr4o0/7gAACtfvsdZm88/GT09v/R3N1l0KbMWqUOeOPKyYH1geLBFD1OEs14xC9sSyEg1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HFKJbFmP; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HFKJbFmP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23A91C4CEFB;
-	Fri, 14 Nov 2025 16:21:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763137267;
-	bh=sdAOBvzBQbQ58hWdafyr1VicSS+CMEqs0nYJg4IbVNc=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=HFKJbFmP9Ujt3AKc7/UDrJzlJi7JumxeosLUkWEyPeklpq5OZZt72yyohcI3A8DjR
-	 Q5Vh2zAeFMd2IiCnte0N/XnGK6DNbDRQ/7YvQ5lhwqg9RolCuYDSpfKJqS1B0vZukv
-	 WRM5Cfpv4s2uQBT9XQpMmVhLg7RU2QrLO7TehZVkVvfsiLOIriL0AHuR7xxhksMb0r
-	 rQ1Xr54dcBhj8eF/NMqOjBRjmPKn9v4PpWEBURevuz0YH6yMHvvs4zxmhQOC1HiZt1
-	 eaXuznue691T9OUZ0Tb36FWCOYcv7m6yoU4B67wWFVQhqHzZSTrRZF2fY0n7ubjqfK
-	 3ELPPESaDQuog==
-Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 2A926F4006D;
-	Fri, 14 Nov 2025 11:21:05 -0500 (EST)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-01.internal (MEProxy); Fri, 14 Nov 2025 11:21:05 -0500
-X-ME-Sender: <xms:8FYXaX1xeo7cwPzIqK0lN7OWVpvdACGCH0_QR-xqptpdj06yrqDiMg>
-    <xme:8FYXaQ5044wGZzeghlvmdCODRvYE2agaizWczUnN-jUKKWRJl7iq7FAPf_6mDi1Nk
-    _cq58VZC_S-DwQ4rAg_2zGQMltJ_hj7flJjkLTIUdudS5euDrsHNIs>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddvuddtvdelucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehnugih
-    ucfnuhhtohhmihhrshhkihdfuceolhhuthhosehkvghrnhgvlhdrohhrgheqnecuggftrf
-    grthhtvghrnhepkefhieejfedvueejheehiefgvdfhjeefjeelvdfghfelgeejudevleej
-    uddvvefgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
-    eprghnugihodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduudeiudekheei
-    fedvqddvieefudeiiedtkedqlhhuthhopeepkhgvrhhnvghlrdhorhhgsehlihhnuhigrd
-    hluhhtohdruhhspdhnsggprhgtphhtthhopeegkedpmhhouggvpehsmhhtphhouhhtpdhr
-    tghpthhtohepjhgsrghrohhnsegrkhgrmhgrihdrtghomhdprhgtphhtthhopegsphesrg
-    hlihgvnhekrdguvgdprhgtphhtthhopegrrhhnugesrghrnhgusgdruggvpdhrtghpthht
-    ohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopehmrghthhhivg
-    hurdguvghsnhhohigvrhhssegvfhhfihgtihhoshdrtghomhdprhgtphhtthhopegsohhq
-    uhhnrdhfvghnghesghhmrghilhdrtghomhdprhgtphhtthhopehurhgviihkihesghhmrg
-    hilhdrtghomhdprhgtphhtthhopehrohhsthgvughtsehgohhoughmihhsrdhorhhgpdhr
-    tghpthhtohepjhgrnhhnhhesghhoohhglhgvrdgtohhm
-X-ME-Proxy: <xmx:8VYXaavy2Rcw5_KExroGJoSP4RswQNujNsiylB0Zboj1MLJmYGXRMQ>
-    <xmx:8VYXaZY6rZhPaBTbMRdgxZfVoWO_tE57Uf8RTZRFKYMUkM6OhPqO7w>
-    <xmx:8VYXaXq_i9JHyksMPvKjGa4dS9KQQoAc-nePruIhtsmCgMAuL00tWQ>
-    <xmx:8VYXaQqiB1qrgBqZ3MW1P6T2OaapMG_gHq2V-9XZpin12vZyrdLMFw>
-    <xmx:8VYXaUXaaOeVLlHat2d5uQs_qjo-uL7EhSwfZcFtiahVbx-tqC236JT4>
-Feedback-ID: ieff94742:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id D4A0C700054; Fri, 14 Nov 2025 11:21:04 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1763137692; c=relaxed/simple;
+	bh=QIK9ItLTIk6pAbhauY0sm3JqkjFNJ/8GidbIVaT4+kU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XkmPihnNF00nHyrIkbEZ6RnHvfHjOFVvEH8ogNbZHyTAB5H+BojjTQmhL5XQV1E6kTi4SSBLHEk164qUCGTzZedNY2j072TR0L3ZBVdfh59Yg6tttnVcY89qW8anK/EPIvkcGzIYTK2uqSEk71lyHuS0UW37VhMRzh70wC5cepk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf07.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay06.hostedemail.com (Postfix) with ESMTP id 8160012DA72;
+	Fri, 14 Nov 2025 16:28:07 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf07.hostedemail.com (Postfix) with ESMTPA id 5F2B52002D;
+	Fri, 14 Nov 2025 16:28:03 +0000 (UTC)
+Date: Fri, 14 Nov 2025 11:28:21 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Menglong Dong <menglong.dong@linux.dev>
+Cc: Menglong Dong <menglong8.dong@gmail.com>, ast@kernel.org,
+ daniel@iogearbox.net, john.fastabend@gmail.com, andrii@kernel.org,
+ martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org,
+ yonghong.song@linux.dev, kpsingh@kernel.org, sdf@fomichev.me,
+ haoluo@google.com, jolsa@kernel.org, mhiramat@kernel.org,
+ mark.rutland@arm.com, mathieu.desnoyers@efficios.com, bpf@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC bpf-next 0/7] bpf trampoline support "jmp" mode
+Message-ID: <20251114112821.39da4d91@gandalf.local.home>
+In-Reply-To: <117548898.nniJfEyVGO@7950hx>
+References: <20251114092450.172024-1-dongml2@chinatelecom.cn>
+	<20251114083835.553c9480@gandalf.local.home>
+	<117548898.nniJfEyVGO@7950hx>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: ATddxb8eqn9V
-Date: Fri, 14 Nov 2025 08:20:42 -0800
-From: "Andy Lutomirski" <luto@kernel.org>
-To: "Valentin Schneider" <vschneid@redhat.com>,
- "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
- linux-mm@kvack.org, rcu@vger.kernel.org,
- "the arch/x86 maintainers" <x86@kernel.org>,
- linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
- linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: "Thomas Gleixner" <tglx@linutronix.de>, "Ingo Molnar" <mingo@redhat.com>,
- "Borislav Petkov" <bp@alien8.de>,
- "Dave Hansen" <dave.hansen@linux.intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>,
- "Peter Zijlstra (Intel)" <peterz@infradead.org>,
- "Arnaldo Carvalho de Melo" <acme@kernel.org>,
- "Josh Poimboeuf" <jpoimboe@kernel.org>,
- "Paolo Bonzini" <pbonzini@redhat.com>, "Arnd Bergmann" <arnd@arndb.de>,
- "Frederic Weisbecker" <frederic@kernel.org>,
- "Paul E. McKenney" <paulmck@kernel.org>,
- "Jason Baron" <jbaron@akamai.com>,
- "Steven Rostedt" <rostedt@goodmis.org>,
- "Ard Biesheuvel" <ardb@kernel.org>,
- "Sami Tolvanen" <samitolvanen@google.com>,
- "David S. Miller" <davem@davemloft.net>,
- "Neeraj Upadhyay" <neeraj.upadhyay@kernel.org>,
- "Joel Fernandes" <joelagnelf@nvidia.com>,
- "Josh Triplett" <josh@joshtriplett.org>,
- "Boqun Feng" <boqun.feng@gmail.com>,
- "Uladzislau Rezki" <urezki@gmail.com>,
- "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>,
- "Mel Gorman" <mgorman@suse.de>,
- "Andrew Morton" <akpm@linux-foundation.org>,
- "Masahiro Yamada" <masahiroy@kernel.org>,
- "Han Shen" <shenhan@google.com>, "Rik van Riel" <riel@surriel.com>,
- "Jann Horn" <jannh@google.com>,
- "Dan Carpenter" <dan.carpenter@linaro.org>,
- "Oleg Nesterov" <oleg@redhat.com>, "Juri Lelli" <juri.lelli@redhat.com>,
- "Clark Williams" <williams@redhat.com>,
- "Yair Podemsky" <ypodemsk@redhat.com>,
- "Marcelo Tosatti" <mtosatti@redhat.com>,
- "Daniel Wagner" <dwagner@suse.de>, "Petr Tesarik" <ptesarik@suse.com>,
- "Shrikanth Hegde" <sshegde@linux.ibm.com>
-Message-Id: <c4768cf3-f131-44e6-9b25-ebeb633f32ee@app.fastmail.com>
-In-Reply-To: <20251114150133.1056710-1-vschneid@redhat.com>
-References: <20251114150133.1056710-1-vschneid@redhat.com>
-Subject: Re: [PATCH v7 00/31] context_tracking,x86: Defer some IPIs until a
- user->kernel transition
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Stat-Signature: 9f44huoa574et3k15s3wmm36yz7rhnz5
+X-Rspamd-Server: rspamout03
+X-Rspamd-Queue-Id: 5F2B52002D
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+jFbLuHIU+RkS1gAzenJzlgDHwvz8NYxA=
+X-HE-Tag: 1763137683-354947
+X-HE-Meta: U2FsdGVkX1/DDua1XMkXhw0u/ANwjsYw00a0sFfg6t+38jP+gJZtEPRMjIzJ5PX6fcBb8VTlLlWqKrgQwhvLmD51WXExn90fhVJBBzlsAp4SiYKjjB8RHb8zQ4O05smIua7aP/n41DeTTlN0swrxTYgwyJ1hF/W7HM3W4TiQ/It3DIPGf2sUc7EEcie5KRLazKLBE9WoZ6vI1ioaCGOc8D485rlu9/jDtoMDAdsy2Sl5Z9AMUTmAuae2I8v3DtSTLy4mdnbUJWqiB4bV3o/7miLn9DL1RJM9TA6ILgfiK8TxEjYSTa3Z0dGMcN1PvEhB2AiltLjnzrqtdH58g5IvZS5HoQHSUCON
+
+On Fri, 14 Nov 2025 21:58:34 +0800
+Menglong Dong <menglong.dong@linux.dev> wrote:
+
+> On 2025/11/14 21:38, Steven Rostedt wrote:
+> > On Fri, 14 Nov 2025 17:24:43 +0800
+> > Menglong Dong <menglong8.dong@gmail.com> wrote:
+> >   
+> > > Therefore, we introduce the "jmp" mode for bpf trampoline, as advised by
+> > > Alexei in [1]. And the logic will become this:
+> > >   call foo -> jmp trampoline -> call foo-body ->
+> > >   return foo-body -> return foo  
+> > 
+> > This obviously only works when there's a single function used by that
+> > trampoline. It also doesn't allow tracing of the return side (it's
+> > basically just the function tracer for a single function).  
+> 
+> Hi, Steven. I think you misunderstand something? For the fentry/fexit,
+> the whole process is:
+
+Yeah, I got a bit confused by the notation above.
+
+> 
+> call foo -> jmp trampoline -> call all the fentry bpf progs ->
+> call foo-body -> return foo-body -> call all the fexit bpf progs
+> -> return foo.  
+> 
+> The "call foo-body" means "origin call", and it will store the
+> return value of the traced function to the stack, therefore the
+> fexit progs can get it.
+> 
+> So it can trace the return side with the "fexit". And it's almost the
+> same as the origin logic of the bpf trampoline:
+
+OK, so this is just the way it always works.
+
+> 
+> call foo -> call trampoline -> call all the fentry bpf progs ->
+> call foo-body -> return foo-body -> call all the fexit bpf progs
+> -> skip the rip -> return foo.  
+> 
+> What I did here is just replace the "call trampoline" to
+> "jmp trampoline".
+> 
+> > 
+> > Is there any mechanism to make sure that the trampoline being called is
+> > only used by that one function? I haven't looked at the code yet, but
+> > should there be a test that makes sure a trampoline isn't registered for
+> > two or more different functions?  
+> 
+> As for now, the bpf trampoline is per-function. Every trampoline
+> has a unique key, and we find the trampoline for the target function
+> by that key. So it can't be used by two or more different functions.
+> 
+> If the trampoline need to get the ip of the origin call from the stack,
+> such as BPF_TRAMP_F_SHARE_IPMODIFY case, we will fallback to the
+> "call" mode, as we can't get the rip from the stack in the "jmp" mode.
+> And I think this is what you mean "only work for a single function"?
+> Yeah, we fallback on such case.
 
 
+OK, I got lost in the notation. It doesn't need a "call" because each
+trampoline is only for a single function. Hence it doesn't need to know the
+return address.
 
-On Fri, Nov 14, 2025, at 7:01 AM, Valentin Schneider wrote:
-> Context
-> =======
->
-> We've observed within Red Hat that isolated, NOHZ_FULL CPUs running a
-> pure-userspace application get regularly interrupted by IPIs sent from
-> housekeeping CPUs. Those IPIs are caused by activity on the housekeeping CPUs
-> leading to various on_each_cpu() calls, e.g.:
->
+-- Steve
 
-> The heart of this series is the thought that while we cannot remove NOHZ_FULL
-> CPUs from the list of CPUs targeted by these IPIs, they may not have to execute
-> the callbacks immediately. Anything that only affects kernelspace can wait
-> until the next user->kernel transition, providing it can be executed "early
-> enough" in the entry code.
->
-
-I want to point out that there's another option here, although anyone trying to implement it would be fighting against quite a lot of history.
-
-Logically, each CPU is in one of a handful of states: user mode, idle, normal kernel mode (possibly subdivided into IRQ, etc), and a handful of very narrow windows, hopefully uninstrumented and not accessing any PTEs that might be invalid, in the entry and exit paths where any state in memory could be out of sync with actual CPU state.  (The latter includes right after the CPU switches to kernel mode, for example.)  And NMI and MCE and whatever weird "security" entry types that Intel and AMD love to add.
-
-The way the kernel *currently* deals with this has two big historical oddities:
-
-1. The entry and exit code cares about ti_flags, which is per-*task*, which means that atomically poking it from other CPUs involves the runqueue lock or other shenanigans (see the idle nr_polling code for example), and also that it's not accessible from the user page tables if PTI is on.
-
-2. The actual heavyweight atomic part (context tracking) was built for RCU, and it's sort or bolted on, and, as you've observed in this series, it's really quite awkward to do things that aren't RCU using context tracking.
-
-If this were a greenfield project, I think there's a straightforward approach that's much nicer: stick everything into a single percpu flags structure.  Imagine we have cpu_flags, which tracks both the current state of the CPU and what work needs to be done on state changes.  On exit to user mode, we would atomically set the mode to USER and make sure we don't touch anything like vmalloc space after that.  On entry back to kernel mode, we would avoid vmalloc space, etc, then atomically switch to kernel mode and read out whatever deferred work is needed.  As an optimization, if nothing in the current configuration needs atomic state tracking, the state could be left at USER_OR_KERNEL and the overhead of an extra atomic op at entry and exit could be avoided.
-
-And RCU would hook into *that* instead of having its own separate set of hooks.
-
-I think that actually doing this would be a big improvement and would also be a serious project.  There's a lot of code that would get touched, and the existing context tracking code is subtle and confusing.  And, as mentioned, ti_flags has the wrong scope.
-
-It's *possible* that one could avoid making ti_flags percpu either by extensive use of the runqueue locks or by borrowing a kludge from the idle code.  For the latter, right now, the reason that the wake-from-idle code works is that the optimized path only happens if the idle thread/cpu is "polling", and it's impossible for the idle ti_flags to be polling while the CPU isn't actually idle.  We could similarly observe that, if a ti_flags says it's in USER mode *and* is on, say, cpu 3, then cpu 3 is most definitely in USER mode.  So someone could try shoving the CPU number into ti_flags :-p   (USER means actually user or in the late exit / early entry path.)
-
-Anyway, benefits of this whole approach would include considerably (IMO) increased comprehensibility compared to the current tangled ct code and much more straightforward addition of new things that happen to a target CPU conditionally depending on its mode.  And, if the flags word was actually per cpu, it could be mapped such that SWITCH_TO_KERNEL_CR3 would use it -- there could be a single CR3 write (and maybe CR4/invpcid depending on whether a zapped mapping is global) and the flush bit could depend on whether a flush is needed.  And there would be basically no chance that a bug that accessed invalidated-but-not-flushed kernel data could be undetected -- in PTI mode, any such access would page fault!  Similarly, if kernel text pokes deferred the flush and serialization, the only code that could execute before noticing the deferred flush would be the user-CR3 code.
-
-Oh, any another primitive would be possible: one CPU could plausibly execute another CPU's interrupts or soft-irqs or whatever by taking a special lock that would effectively pin the remote CPU in user mode -- you'd set a flag in the target cpu_flags saying "pin in USER mode" and the transition on that CPU to kernel mode would then spin on entry to kernel mode and wait for the lock to be released.  This could plausibly get a lot of the on_each_cpu callers to switch over in one fell swoop: anything that needs to synchronize to the remote CPU but does not need to poke its actual architectural state could be executed locally while the remote CPU is pinned.
-
---Andy
