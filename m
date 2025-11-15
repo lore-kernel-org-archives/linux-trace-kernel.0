@@ -1,278 +1,211 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C106086337
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 15 Nov 2025 00:29:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D64C42048
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 15 Nov 2025 00:46:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763166594; cv=none; b=ctvtmLV7HBSkQFx+IPN4oIPDQSWZuPv80/Hb9+fcskogQVfHxHNtdeiaY1FDq0mnmyxFCSquToA+33X8vPdnxUIygMmxs1G6fEpR7yiCxqRjrdXHEednuxRab4bPRnMcNNbX/upWMOwPXUA589NXgq1MFgv1V2WAm7UhZWVpwnI=
+	t=1763167619; cv=none; b=pmo6Iyot2qhjS6BJFWF8Kder7hhlvpPXIX+q/5UQq9XapRas4XDFF7DD3fKMCsnAFD5fiWfaq9YrVss8Y8/U7xMuzKrtyWpqOiJIsXrMlZTRv7ls9zdik76kuI3b6pU+A89EU0Xrm4/pnz5EeL5obdChcWT2xvSqL/24osoIxIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763166594; c=relaxed/simple;
-	bh=e9NLv0KhLEFdWRUZrMQNfpFyoR5NzFBMcL2BU/txkvI=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=Hly6SDQzj2i26EaF+kJsnH3sVrBFtltI0xvmzN/yNZvgiyas1W5Z63SYuJBQf+hvycNdv48HfmGUFbpQctZEfOHNcQtroMxPEYGSDK7aRsfE+150FhFh9/4aNR+fcULr3jej7G9Irroef1lwVPCEOMP/cx794hH5z0S1mx28mmU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tjbGuUVi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763167619; c=relaxed/simple;
+	bh=1/rD70ZHFrBNjJjci45pfQlAUENF4SO4u3lc/h6C+Zc=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=W7olQUEeowKLbqvuDr1jaOFhORAL5+s3WdgpaFPZVmIYxlO2dzti76yLwcFSWh7M+azdeRSWc3I26v6ZoQGi3/+DCkkwFyAg9SJGllOCbvMXbzeadOYRq3f5qi5TV//YxTNcVhguLebKd3C3lqkFLabMIfXPHUPFpAANST0X2H4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BQPKiKh1; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tjbGuUVi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FC31C113D0;
-	Sat, 15 Nov 2025 00:29:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763166594;
-	bh=e9NLv0KhLEFdWRUZrMQNfpFyoR5NzFBMcL2BU/txkvI=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=tjbGuUViIgE8DbMZEqvvASWk22Ni8F2yyswXkq6ljN6JvxrW3LFA/cXgdKIhjshwv
-	 5/9jA/0uwS2ugAqIxC2BaJDM2tO0CiEmXz2mcy8jnmS6X0mmaG1nDcHzqUrLVNzakx
-	 BgvHlPs92olV5IsIPCCaNWqu4BPLPQBD6PsM0s7FpPgyPeTZGPiudKEe5uzsKYV5XI
-	 G/dxssAg1GP1k3M3mFYQF+YHp4XRS2uczH5SFdZ10lvHLqUWaaxkYbqrAkLE2/OLHg
-	 xv0VGimI/uOfyV9+JEyvBH2GjHu6v5E/SMVQCilSpA5PNVN8y9cOaJu5c9lOyDxCkB
-	 p4wIy2YL1Sgrw==
-Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 20E59F4007C;
-	Fri, 14 Nov 2025 19:29:52 -0500 (EST)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-01.internal (MEProxy); Fri, 14 Nov 2025 19:29:52 -0500
-X-ME-Sender: <xms:f8kXaYP_QFfIS1oOUOKZZl5jFHrPEcMk6RblzeoOcC2iEVuq3WeuhQ>
-    <xme:f8kXaZxQj47DKupgm51V26LsD93iRUKgXXFU3lyHHR4mps6LrHRMzy6DcQoYOOMmj
-    bJHCpDSv2hVfdh8z8WXIWBymfLTwSeaqxLXuFfEZ0taW3jWjhuJUw8>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddvudduvdeiucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehnugih
-    ucfnuhhtohhmihhrshhkihdfuceolhhuthhosehkvghrnhgvlhdrohhrgheqnecuggftrf
-    grthhtvghrnhepkefhieejfedvueejheehiefgvdfhjeefjeelvdfghfelgeejudevleej
-    uddvvefgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
-    eprghnugihodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduudeiudekheei
-    fedvqddvieefudeiiedtkedqlhhuthhopeepkhgvrhhnvghlrdhorhhgsehlihhnuhigrd
-    hluhhtohdruhhspdhnsggprhgtphhtthhopeegkedpmhhouggvpehsmhhtphhouhhtpdhr
-    tghpthhtohepjhgsrghrohhnsegrkhgrmhgrihdrtghomhdprhgtphhtthhopegsphesrg
-    hlihgvnhekrdguvgdprhgtphhtthhopegrrhhnugesrghrnhgusgdruggvpdhrtghpthht
-    ohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopehmrghthhhivg
-    hurdguvghsnhhohigvrhhssegvfhhfihgtihhoshdrtghomhdprhgtphhtthhopegsohhq
-    uhhnrdhfvghnghesghhmrghilhdrtghomhdprhgtphhtthhopehurhgviihkihesghhmrg
-    hilhdrtghomhdprhgtphhtthhopehrohhsthgvughtsehgohhoughmihhsrdhorhhgpdhr
-    tghpthhtohepjhgrnhhnhhesghhoohhglhgvrdgtohhm
-X-ME-Proxy: <xmx:gMkXabdoCbTfms0FoEg_GJgl6FgXa5xQx_ty6BJZoh6HyeHV5zrznA>
-    <xmx:gMkXaZmIJ1z3KZvXB3KL6adMbSKrCf3nXuKgoqv8kqEf-6skVjaHFQ>
-    <xmx:gMkXaezk0f0oemBqCDivfz47Om-NPp3ENuY_X0n1HwPUOft4614Pww>
-    <xmx:gMkXaRiKeW_eNhYM6aVpR3mABUUm9mTwMaFvY-zCwmH8IiYGX7h-JQ>
-    <xmx:gMkXaVDb-JyrtuYINK607hAYSCZPkXpuh5uYtLwpret1M2npo3x_xlzw>
-Feedback-ID: ieff94742:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id D1DF5700063; Fri, 14 Nov 2025 19:29:51 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BQPKiKh1"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-340c261fb38so5141529a91.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 14 Nov 2025 16:46:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1763167617; x=1763772417; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Mr/52DwIA8Vew8AuO0L8R6bm0vR8dQ+5A9WA+WG6t/s=;
+        b=BQPKiKh1yfHcIrDSW59IH51D2rhvPkgu8emslDNrXmC7gsCFmyIVKyaXPuUky4qISc
+         +19Up0qR7WWgxb5rLlc/vAvyxEK+7xSgmw20NRkuvhsi2uNabtm3xwQFagWK4bxGDqS/
+         7gYj1dgRY4Qz6cyLqfB+LbbJ8hPrpBmmNQPY/qOHjAjqEqdl2m5Gvwe2rcSO1iFrvHaC
+         9swHyDubrt6x4xbkszwVPYZjC8xoJlQCUauEvdXnHkEai5Ya/mUGIPDi/aaxO3ZaLOIy
+         FiDZnjit3RNrnR++7shFiwMTsNlkRDSDa1Av00GMtGH845Ycpd83v1N/4tK/TCeKiRf/
+         xCOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763167617; x=1763772417;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Mr/52DwIA8Vew8AuO0L8R6bm0vR8dQ+5A9WA+WG6t/s=;
+        b=wBxg9mCc26GgJpGaohe9unBRgQ5IiWKLNDqkQela1lQGVn/GkW75qTrnIytbq7MO5U
+         M/LzabUfXKGZP6suIV0BG1FsDyFu/WmKBm5BYSwiWDcfr+idJN8f2+5Kho7em/rHsyb7
+         R2LHsN01L95HjafOkUE7jQOEuB+hvNp+iJThgoAD8phPxukyIocaIaoiUyalZtNYaxqC
+         +k4/teFX9iv2BkBGoZVQabA6KEAYfBJZf1FBB0x9Y5s7bxDf2HA0H4swcswaM7dbNn7W
+         KExe4R5XqeVfCq7v8oCczHUETeqiShOFOuOyMKl7r2x4LlyYL3gUiycy5ig1j1lqQQJC
+         0HrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVm6IywdYua90KOL2Ems4wL4iu/Tem4R+h1d/LhsB7QEo/Ou15ydLn6tRyYpaYvtBfZKj05NymuCUcF5aKt8yxBCOU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxTbhVBoDx35DVUc4F6ZsA9krjrDau0Jos5kGWtJtqqhzHKVvWm
+	+aqe1UmjmvlEMp8CBdZekfMu47nYyYg2ljXFr8VkWt95V+SMcT3nOfvd1I4oka9aSjo5JX90MP4
+	U/WSs9ZIhI1+oUsKTaWZsHb+E+Q==
+X-Google-Smtp-Source: AGHT+IHPDsoGUhVWbmh0UerKKIaGr6kr4KuHT3qBmIvhj2MnXtnNCORQphwRQGqEcjJQnhvfFDaRm0g88w6S7pk3mw==
+X-Received: from pjbdb8.prod.google.com ([2002:a17:90a:d648:b0:343:5c2:dd74])
+ (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:90b:1dc9:b0:340:29a1:1b0c with SMTP id 98e67ed59e1d1-343f9e93781mr5917746a91.7.1763167617416;
+ Fri, 14 Nov 2025 16:46:57 -0800 (PST)
+Date: Fri, 14 Nov 2025 16:46:56 -0800
+In-Reply-To: <aQnGJ5agTohMijj8@yzhao56-desk.sh.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-ThreadId: ATddxb8eqn9V
-Date: Fri, 14 Nov 2025 16:29:31 -0800
-From: "Andy Lutomirski" <luto@kernel.org>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: "Valentin Schneider" <vschneid@redhat.com>,
- "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
- linux-mm@kvack.org, rcu@vger.kernel.org,
- "the arch/x86 maintainers" <x86@kernel.org>,
- linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
- linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org,
- "Thomas Gleixner" <tglx@linutronix.de>, "Ingo Molnar" <mingo@redhat.com>,
- "Borislav Petkov" <bp@alien8.de>,
- "Dave Hansen" <dave.hansen@linux.intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>,
- "Peter Zijlstra (Intel)" <peterz@infradead.org>,
- "Arnaldo Carvalho de Melo" <acme@kernel.org>,
- "Josh Poimboeuf" <jpoimboe@kernel.org>,
- "Paolo Bonzini" <pbonzini@redhat.com>, "Arnd Bergmann" <arnd@arndb.de>,
- "Frederic Weisbecker" <frederic@kernel.org>,
- "Jason Baron" <jbaron@akamai.com>,
- "Steven Rostedt" <rostedt@goodmis.org>,
- "Ard Biesheuvel" <ardb@kernel.org>,
- "Sami Tolvanen" <samitolvanen@google.com>,
- "David S. Miller" <davem@davemloft.net>,
- "Neeraj Upadhyay" <neeraj.upadhyay@kernel.org>,
- "Joel Fernandes" <joelagnelf@nvidia.com>,
- "Josh Triplett" <josh@joshtriplett.org>,
- "Boqun Feng" <boqun.feng@gmail.com>,
- "Uladzislau Rezki" <urezki@gmail.com>,
- "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>,
- "Mel Gorman" <mgorman@suse.de>,
- "Andrew Morton" <akpm@linux-foundation.org>,
- "Masahiro Yamada" <masahiroy@kernel.org>,
- "Han Shen" <shenhan@google.com>, "Rik van Riel" <riel@surriel.com>,
- "Jann Horn" <jannh@google.com>,
- "Dan Carpenter" <dan.carpenter@linaro.org>,
- "Oleg Nesterov" <oleg@redhat.com>, "Juri Lelli" <juri.lelli@redhat.com>,
- "Clark Williams" <williams@redhat.com>,
- "Yair Podemsky" <ypodemsk@redhat.com>,
- "Marcelo Tosatti" <mtosatti@redhat.com>,
- "Daniel Wagner" <dwagner@suse.de>, "Petr Tesarik" <ptesarik@suse.com>,
- "Shrikanth Hegde" <sshegde@linux.ibm.com>
-Message-Id: <4f1a7b15-cfdc-478e-8e43-98750608866c@app.fastmail.com>
-In-Reply-To: <b3472cb3-86fa-4687-bfce-3b9a1bf4ff36@paulmck-laptop>
-References: <20251114150133.1056710-1-vschneid@redhat.com>
- <c4768cf3-f131-44e6-9b25-ebeb633f32ee@app.fastmail.com>
- <beb46a02-b902-438b-8b6d-b5f0d7ad0ae6@app.fastmail.com>
- <89398bdf-4dad-4976-8eb9-1e86032c8794@paulmck-laptop>
- <1a911310-4ca5-45a4-b9bf-5f37c6ab238e@app.fastmail.com>
- <b3472cb3-86fa-4687-bfce-3b9a1bf4ff36@paulmck-laptop>
-Subject: Re: [PATCH v7 00/31] context_tracking,x86: Defer some IPIs until a
- user->kernel transition
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <cover.1760731772.git.ackerleytng@google.com> <5a4dfc265a46959953e6c24730d22584972b1179.1760731772.git.ackerleytng@google.com>
+ <aQnGJ5agTohMijj8@yzhao56-desk.sh.intel.com>
+Message-ID: <diqz346gcebj.fsf@google.com>
+Subject: Re: [RFC PATCH v1 11/37] KVM: guest_memfd: Add support for KVM_SET_MEMORY_ATTRIBUTES
+From: Ackerley Tng <ackerleytng@google.com>
+To: Yan Zhao <yan.y.zhao@intel.com>
+Cc: cgroups@vger.kernel.org, kvm@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
+	linux-trace-kernel@vger.kernel.org, x86@kernel.org, akpm@linux-foundation.org, 
+	binbin.wu@linux.intel.com, bp@alien8.de, brauner@kernel.org, 
+	chao.p.peng@intel.com, chenhuacai@kernel.org, corbet@lwn.net, 
+	dave.hansen@intel.com, dave.hansen@linux.intel.com, david@redhat.com, 
+	dmatlack@google.com, erdemaktas@google.com, fan.du@intel.com, fvdl@google.com, 
+	haibo1.xu@intel.com, hannes@cmpxchg.org, hch@infradead.org, hpa@zytor.com, 
+	hughd@google.com, ira.weiny@intel.com, isaku.yamahata@intel.com, jack@suse.cz, 
+	james.morse@arm.com, jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com, 
+	jhubbard@nvidia.com, jroedel@suse.de, jthoughton@google.com, 
+	jun.miao@intel.com, kai.huang@intel.com, keirf@google.com, 
+	kent.overstreet@linux.dev, liam.merwick@oracle.com, 
+	maciej.wieczor-retman@intel.com, mail@maciej.szmigiero.name, 
+	maobibo@loongson.cn, mathieu.desnoyers@efficios.com, maz@kernel.org, 
+	mhiramat@kernel.org, mhocko@kernel.org, mic@digikod.net, michael.roth@amd.com, 
+	mingo@redhat.com, mlevitsk@redhat.com, mpe@ellerman.id.au, 
+	muchun.song@linux.dev, nikunj@amd.com, nsaenz@amazon.es, 
+	oliver.upton@linux.dev, palmer@dabbelt.com, pankaj.gupta@amd.com, 
+	paul.walmsley@sifive.com, pbonzini@redhat.com, peterx@redhat.com, 
+	pgonda@google.com, prsampat@amd.com, pvorel@suse.cz, qperret@google.com, 
+	richard.weiyang@gmail.com, rick.p.edgecombe@intel.com, rientjes@google.com, 
+	rostedt@goodmis.org, roypat@amazon.co.uk, rppt@kernel.org, seanjc@google.com, 
+	shakeel.butt@linux.dev, shuah@kernel.org, steven.price@arm.com, 
+	steven.sistare@oracle.com, suzuki.poulose@arm.com, tabba@google.com, 
+	tglx@linutronix.de, thomas.lendacky@amd.com, vannapurve@google.com, 
+	vbabka@suse.cz, viro@zeniv.linux.org.uk, vkuznets@redhat.com, 
+	wei.w.wang@intel.com, will@kernel.org, willy@infradead.org, wyihan@google.com, 
+	xiaoyao.li@intel.com, yilun.xu@intel.com, yuzenghui@huawei.com, 
+	zhiquan1.li@intel.com
+Content-Type: text/plain; charset="UTF-8"
 
+Yan Zhao <yan.y.zhao@intel.com> writes:
 
-
-On Fri, Nov 14, 2025, at 12:03 PM, Paul E. McKenney wrote:
-> On Fri, Nov 14, 2025 at 10:45:08AM -0800, Andy Lutomirski wrote:
+> On Fri, Oct 17, 2025 at 01:11:52PM -0700, Ackerley Tng wrote:
+>> For shared to private conversions, if refcounts on any of the folios
+>> within the range are elevated, fail the conversion with -EAGAIN.
 >> 
+>> At the point of shared to private conversion, all folios in range are
+>> also unmapped. The filemap_invalidate_lock() is held, so no faulting
+>> can occur. Hence, from that point on, only transient refcounts can be
+>> taken on the folios associated with that guest_memfd.
 >> 
->> On Fri, Nov 14, 2025, at 10:14 AM, Paul E. McKenney wrote:
->> > On Fri, Nov 14, 2025 at 09:22:35AM -0800, Andy Lutomirski wrote:
->> >> 
+>> Hence, it is safe to do the conversion from shared to private.
 >> 
->> >> > Oh, any another primitive would be possible: one CPU could plausibly 
->> >> > execute another CPU's interrupts or soft-irqs or whatever by taking a 
->> >> > special lock that would effectively pin the remote CPU in user mode -- 
->> >> > you'd set a flag in the target cpu_flags saying "pin in USER mode" and 
->> >> > the transition on that CPU to kernel mode would then spin on entry to 
->> >> > kernel mode and wait for the lock to be released.  This could plausibly 
->> >> > get a lot of the on_each_cpu callers to switch over in one fell swoop: 
->> >> > anything that needs to synchronize to the remote CPU but does not need 
->> >> > to poke its actual architectural state could be executed locally while 
->> >> > the remote CPU is pinned.
->> >
->> > It would be necessary to arrange for the remote CPU to remain pinned
->> > while the local CPU executed on its behalf.  Does the above approach
->> > make that happen without re-introducing our current context-tracking
->> > overhead and complexity?
+>> After conversion is complete, refcounts may become elevated, but that
+>> is fine since users of transient refcounts don't actually access
+>> memory.
 >> 
->> Using the pseudo-implementation farther down, I think this would be like:
->> 
->> if (my_state->status == INDETERMINATE) {
->>    // we were lazy and we never promised to do work atomically.
->>    atomic_set(&my_state->status, KERNEL);
->>    this_entry_work = 0;
->>    /* we are definitely not pinned in this path */
->> } else {
->>    // we were not lazy and we promised we would do work atomically
->>    atomic exchange the entire state to { .work = 0, .status = KERNEL }
->>    this_entry_work = (whatever we just read);
->>    if (this_entry_work & PINNED) {
->>      u32 this_cpu_pin_count = this_cpu_ptr(pin_count);
->>      while (atomic_read(&this_cpu_pin_count)) {
->>        cpu_relax();
->>      }
->>    }
->>  }
->> 
->> and we'd have something like:
->> 
->> bool try_pin_remote_cpu(int cpu)
->> {
->>     u32 *remote_pin_count = ...;
->>     struct fancy_cpu_state *remote_state = ...;
->>     atomic_inc(remote_pin_count);  // optimistic
->> 
->>     // Hmm, we do not want that read to get reordered with the inc, so we probably
->>     // need a full barrier or seq_cst.  How does Linux spell that?  C++ has atomic::load
->>     // with seq_cst and maybe the optimizer can do the right thing.  Maybe it's:
->>     smp_mb__after_atomic();
->> 
->>     if (atomic_read(&remote_state->status) == USER) {
->>       // Okay, it's genuinely pinned.
->>       return true;
->> 
->>       // egads, if this is some arch with very weak ordering,
->>       // do we need to be concerned that we just took a lock but we
->>       // just did a relaxed read and therefore a subsequent access
->>       // that thinks it's locked might appear to precede the load and therefore
->>       // somehow get surprisingly seen out of order by the target cpu?
->>       // maybe we wanted atomic_read_acquire above instead?
->>     } else {
->>       // We might not have successfully pinned it
->>       atomic_dec(remote_pin_count);
->>     }
->> }
->> 
->> void unpin_remote_cpu(int cpu)
->> {
->>     atomic_dec(remote_pin_count();
->> }
->> 
->> and we'd use it like:
->> 
->> if (try_pin_remote_cpu(cpu)) {
->>   // do something useful
->> } else {
->>   send IPI;
->> }
->> 
->> but we'd really accumulate the set of CPUs that need the IPIs and do them all at once.
->> 
->> I ran the theorem prover that lives inside my head on this code using the assumption that the machine is a well-behaved x86 system and it said "yeah, looks like it might be correct".  I trust an actual formalized system or someone like you who is genuinely very good at this stuff much more than I trust my initial impression :)
+>> For private to shared conversions, there are no refcount checks. any
+>> transient refcounts are expected to drop their refcounts soon. The
+>> conversion process will spin waiting for these transient refcounts to
+>> go away.
+> Where's the code to spin?
 >
-> Let's start with requirements, non-traditional though that might be. ;-)
 
-That's ridiculous! :-)
+Thanks, I will fix the commit message for the next revision.
 
+>> +/*
+>> + * Preallocate memory for attributes to be stored on a maple tree, pointed to
+>> + * by mas.  Adjacent ranges with attributes identical to the new attributes
+>> + * will be merged.  Also sets mas's bounds up for storing attributes.
+>> + *
+>> + * This maintains the invariant that ranges with the same attributes will
+>> + * always be merged.
+>> + */
+>> +static int kvm_gmem_mas_preallocate(struct ma_state *mas, u64 attributes,
+>> +				    pgoff_t start, size_t nr_pages)
+>> +{
+>> +	pgoff_t end = start + nr_pages;
+>> +	pgoff_t last = end - 1;
+>> +	void *entry;
+>> +
+>> +	/* Try extending range. entry is NULL on overflow/wrap-around. */
+>> +	mas_set_range(mas, end, end);
+>> +	entry = mas_find(mas, end);
+>> +	if (entry && xa_to_value(entry) == attributes)
+>> +		last = mas->last;
+>> +
+>> +	mas_set_range(mas, start - 1, start - 1);
+> Check start == 0 ?
 >
-> An "RCU idle" CPU is either in deep idle or executing in nohz_full
-> userspace.
->
-> 1.	If the RCU grace-period kthread sees an RCU-idle CPU, then:
->
-> 	a.	Everything that this CPU did before entering RCU-idle
-> 		state must be visible to sufficiently later code executed
-> 		by the grace-period kthread, and:
->
-> 	b.	Everything that the CPU will do after exiting RCU-idle
-> 		state must *not* have been visible to the grace-period
-> 		kthread sufficiently prior to having sampled this
-> 		CPU's state.
->
-> 2.	If the RCU grace-period kthread sees an RCU-nonidle CPU, then
-> 	it depends on whether this is the same nonidle sojourn as was
-> 	initially seen.  (If the kthread initially saw the CPU in an
-> 	RCU-idle state, it would not have bothered resampling.)
->
-> 	a.	If this is the same nonidle sojourn, then there are no
-> 		ordering requirements.	RCU must continue to wait on
-> 		this CPU.
->
-> 	b.	Otherwise, everything that this CPU did before entering
-> 		its last RCU-idle state must be visible to sufficiently
-> 		later code executed by the grace-period kthread.
-> 		Similar to (1a) above.
->
-> 3.	If a given CPU quickly switches into and out of RCU-idle
-> 	state, and it is always in RCU-nonidle state whenever the RCU
-> 	grace-period kthread looks, RCU must still realize that this
-> 	CPU has passed through at least one quiescent state.
->
-> 	This is why we have a counter for RCU rather than just a
-> 	simple state.
 
-...
+Thanks!
 
-> I am not seeing how the third requirement above is met, though.  I have
-> not verified the sampling code that the RCU grace-period kthread is
-> supposed to use because I am not seeing it right off-hand.
-
-This is ct_rcu_watching_cpu_acquire, right?  Lemme think.  Maybe there's even a way to do everything I'm suggesting without changing that interface.
-
-
->> It wouldn't be outrageous to have real-time imply the full USER transition.
+>> +	entry = mas_find(mas, start - 1);
+>> +	if (entry && xa_to_value(entry) == attributes)
+>> +		start = mas->index;
+>> +
+>> +	mas_set_range(mas, start, last);
+>> +	return mas_preallocate(mas, xa_mk_value(attributes), GFP_KERNEL);
+>> +}
+> ...
 >
-> We could have special code for RT, but this of course increases the
-> complexity.  Which might be justified by sufficient speedup.
-
-I'm thinking that the code would be arranged so that going to user mode in the USER or the INTERMEDIATE state would be fully valid and would just have different performance characteristics.  So the only extra complexity here would be the actual logic to choose which state to go to. and...
+>> +static long kvm_gmem_set_attributes(struct file *file, void __user *argp)
+>> +{
+>> +	struct gmem_file *f = file->private_data;
+>> +	struct inode *inode = file_inode(file);
+>> +	struct kvm_memory_attributes2 attrs;
+>> +	pgoff_t err_index;
+>> +	size_t nr_pages;
+>> +	pgoff_t index;
+>> +	int r;
+>> +
+>> +	if (copy_from_user(&attrs, argp, sizeof(attrs)))
+>> +		return -EFAULT;
+>> +
+>> +	if (attrs.flags)
+>> +		return -EINVAL;
+>> +	if (attrs.attributes & ~kvm_supported_mem_attributes(f->kvm))
+>> +		return -EINVAL;
+>> +	if (attrs.size == 0 || attrs.offset + attrs.size < attrs.offset)
+>> +		return -EINVAL;
+>> +	if (!PAGE_ALIGNED(attrs.offset) || !PAGE_ALIGNED(attrs.offset))
+> Should be
+> if (!PAGE_ALIGNED(attrs.offset) || !PAGE_ALIGNED(attrs.size))
+> ?
 >
-> And yes, many distros enable NO_HZ_FULL by default.  I will refrain from
-> suggesting additional static branches.  ;-)
 
-I'm not even suggesting a static branch.  I think the potential performance wins are big enough to justify a bona fide ordinary if statement or two :)  I'm also contemplating whether it could make sense to make this whole thing be unconditionally configured in if the performance in the case where no one uses it (i.e. everything is INTERMEDIATE instead of USER) is good enough.
+Thanks!
 
-I will ponder.
+>> +		return -EINVAL;
+>> +
+>> +	if (attrs.offset > inode->i_size ||
+> Should be
+> if (attrs.offset >= inode->i_size ||
+> ?
+
+Thanks!
+>> +	    attrs.offset + attrs.size > inode->i_size)
+>> +		return -EINVAL;
+>> +
+>> +	nr_pages = attrs.size >> PAGE_SHIFT;
+>> +	index = attrs.offset >> PAGE_SHIFT;
+>> +	r = __kvm_gmem_set_attributes(inode, index, nr_pages, attrs.attributes,
+>> +				      &err_index);
+>> +	if (r) {
+>> +		attrs.error_offset = err_index << PAGE_SHIFT;
+>> +
+>> +		if (copy_to_user(argp, &attrs, sizeof(attrs)))
+>> +			return -EFAULT;
+>> +	}
+>> +
+>> +	return r;
+>> +}
