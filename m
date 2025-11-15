@@ -1,266 +1,177 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f196.google.com (mail-yw1-f196.google.com [209.85.128.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0944B35CBD3;
-	Sat, 15 Nov 2025 02:30:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B7ED19EEC2
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 15 Nov 2025 02:39:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763173835; cv=none; b=jP1Xk6vxH+c6T/q4yOtm4WHD0xIQpELNr9kwVCfJAJLB8hOi8kRWn1p83boWMf1dnY0pfnQviKXhsTyesI/7LQ6q4zf4Krm8S2aG8prs+uwbvkmaPDrxR/EoTLYmax0vzUSTn8j2ZEv9blYnEbJYVIu4weka7IAs/rCVvm2t9o0=
+	t=1763174392; cv=none; b=Ra+hmI4QYR4KJfByEMva5SndUpknEODCh/IioPmWtKK5iEu8Y6TzncgZ5+1OdK2WTEMcTWO99kI0T76WyIjRZMpy6VliIpbupulCKSDxX1qjhls9hliK4v5mtUgBVM/idfJBh/I7Ez9SBxTF1LXsE8ZY9Y24P5tUC597YUkjcbU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763173835; c=relaxed/simple;
-	bh=mO1ZdVZnWjsvWJthzELzsTV32Ev+RejyUQceGtcadCA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SeagNI07tT+V0RDHBd/vPRuvk5/B/DZYuFmkfX3E1AT6cF949NlrEvxlXWPq5jTeDjXhtAQRlE3jec1UInxq7dE/1mdTcpeCgP5QGB75V4mqTCoy4SeLx2LWEvAntKqxZ3uInv1PnQFTbTdJK/t78EENwBc31ufuNcFuSK2yZ7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bKvI9iwP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763174392; c=relaxed/simple;
+	bh=gqysG4ug2z8wG5aRkdFy1JFZ/fXY6FPON2mpAtQGFfE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tYkokhai6g6mmnA2E/v4V8NYKztW65flni18B0ZQZEpyIItruC4pRZQXF80Ykn1Fj1S0PCPENcO4O8a54IkuEwL79G4Rol0UitgasKDm2ilvWufxXICFYBn5/higcznCNiI4lMSPeqjjE2z9HyK8tq+sO8dVBaIIYU5RJJtgdL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CsaboFvS; arc=none smtp.client-ip=209.85.128.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bKvI9iwP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE408C4CEF1;
-	Sat, 15 Nov 2025 02:30:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763173834;
-	bh=mO1ZdVZnWjsvWJthzELzsTV32Ev+RejyUQceGtcadCA=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=bKvI9iwPxt7jGyJN+/x9h4ABAVqnNOF8evCkTmxLgPaWLBC6Ai3FhrHhZEqRb/5XD
-	 QA2Jig8hSw0xPK6ir9azDHHkQ0jC4lmwGDZ53debIQxLdruXb0T5lPwISi80LoxuC/
-	 bbp1DdK3JauP007kkx1bbZycMyMytGcLMKamg/GulHKHyfrz1F2xg7qAp60T4GNG8x
-	 HvpXkxoKkv0RInCGzmjCQlVI/R5oG9XopzTEevjYqHGKbUQKcRXpxajPPDlWnkUbDu
-	 i5cyl95DWHBmB9eKL9g3qXut0V58Gvfz97MDTZVIuDRPU6PZcgK6pyn5KonKeWab9e
-	 Ss/NL0GhoEv5Q==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 4DC2BCE09CC; Fri, 14 Nov 2025 18:30:34 -0800 (PST)
-Date: Fri, 14 Nov 2025 18:30:34 -0800
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Andy Lutomirski <luto@kernel.org>
-Cc: Valentin Schneider <vschneid@redhat.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	linux-mm@kvack.org, rcu@vger.kernel.org,
-	the arch/x86 maintainers <x86@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
-	linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Paolo Bonzini <pbonzini@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Jason Baron <jbaron@akamai.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Mel Gorman <mgorman@suse.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Han Shen <shenhan@google.com>, Rik van Riel <riel@surriel.com>,
-	Jann Horn <jannh@google.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Oleg Nesterov <oleg@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
-	Clark Williams <williams@redhat.com>,
-	Yair Podemsky <ypodemsk@redhat.com>,
-	Marcelo Tosatti <mtosatti@redhat.com>,
-	Daniel Wagner <dwagner@suse.de>, Petr Tesarik <ptesarik@suse.com>,
-	Shrikanth Hegde <sshegde@linux.ibm.com>
-Subject: Re: [PATCH v7 00/31] context_tracking,x86: Defer some IPIs until a
- user->kernel transition
-Message-ID: <ecc0201e-2fde-4344-9254-89bf29e5054f@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20251114150133.1056710-1-vschneid@redhat.com>
- <c4768cf3-f131-44e6-9b25-ebeb633f32ee@app.fastmail.com>
- <beb46a02-b902-438b-8b6d-b5f0d7ad0ae6@app.fastmail.com>
- <89398bdf-4dad-4976-8eb9-1e86032c8794@paulmck-laptop>
- <1a911310-4ca5-45a4-b9bf-5f37c6ab238e@app.fastmail.com>
- <b3472cb3-86fa-4687-bfce-3b9a1bf4ff36@paulmck-laptop>
- <4f1a7b15-cfdc-478e-8e43-98750608866c@app.fastmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CsaboFvS"
+Received: by mail-yw1-f196.google.com with SMTP id 00721157ae682-71d6014810fso21279927b3.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 14 Nov 2025 18:39:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1763174389; x=1763779189; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TpFfOEHt1yzt3Q9cYV8WgHC2Py1Yh2XlB5O8fzKjYvE=;
+        b=CsaboFvSBfWSYNRWkJ03ywp0+jhckhLxX3NnUe7qTZQfYMFWbSXu2M5x+aw5vSjKgJ
+         hxMs0jsHVnAZMc/j/ABjHxa8HefZVQoXaOjub8oOe728XUJwy0pdOds0Dv+L5Q4mR8nI
+         LQH3R0sbCF4BVEb2jhQP8wdtFNphjeoAn6htq3bEI5gNIPVOOOhfxV+mu9VGtJVg1JQd
+         xnmRgaYEZsoTJY6QLUDPb6wrdYbbtN01F0sbtgC9KT3AtiXIiZorYkbKNmkqd0LpZBDf
+         sNrERBr9M1wDuLqQW0c8ZFCkCluF0CkJisn0ygOV7h4mj8DwHSAsvMlR0ZtIV531hFIt
+         234g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763174389; x=1763779189;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=TpFfOEHt1yzt3Q9cYV8WgHC2Py1Yh2XlB5O8fzKjYvE=;
+        b=Z82/z8NPFZiF8DKabH1q9UXAEilEKGfEfO16OL8FkiVEYL+I9vj0VeN1MridgrC2Qf
+         Y69ont2LdBzE6jZU7x5l0b8oG0OBXjTGlZSzvRAaNcR35pBjWT8eZOcZdnrd3loE0/wI
+         Y+YOp4qPpZoVY0bUeywo7PoJzc4+08GwgEKgkTtvSnoyPV5l+xKphP4ymfA68xQAG0JR
+         cV0tyJ3/d+Hu3OyIP/XC06LtJLAfOYNdL+cWuiqo5g2MTafbBxn1VcGP4sfhGstIUeP8
+         WfZE5kpsn3BNi4223IP5nSjLVJWZSEW9pGwtbWt1GnAYXfgGBwLZZNejPRfJYoaEZviX
+         1qQA==
+X-Forwarded-Encrypted: i=1; AJvYcCUd+TKbjO/fNCwC0Sbj0DMIrxyhbZfHYAfh0WQ6VanW77iok7I/my+NhWL6NwCfFMriM83YjY/5GvRsh4/hQgb4mNk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyA/ci5RwNbN34pHTv8fGuyA59SKymFVU6rAHUeGV9PLANmQAWy
+	Ao2M6FEdnMc2v/oc0eGKBOoZITXvA5EKzbJSsbr1nPGeV03LrGFmgf+3gGpCHztnH08KCAQSMtm
+	gtoCKYUN7SfJ44206TDPFQl/94B4uHfQ=
+X-Gm-Gg: ASbGncsmpkR5wGpx4tfHac0rTMPVyl1sXNNmUzaZ3tq0kelbXkKlu7E15LzO8ziMwb1
+	izTEvdobk6cGzMyjax+JsO4qqKuFTmdOPSaHnLuAqqFKiureyUe4Pezk+6dD2faPrnvinSp0MSu
+	gw03JBZNWekJyhR65QGb65OOsC0T1LZO+kgiUWh1pWfxSiCcKWOjbDeoro5wQWICLECbpnWETcu
+	rnJRxYixbnnoMKPzrUjpcHQ3i1S0gD31GVBDBxIProMRf9s4v+bnaZNAVKtINL1xpRUWiA=
+X-Google-Smtp-Source: AGHT+IH9DYY1lEwS+EOIcaPqX+5gOOxWet3rXc5XuQvWVm1J+6hFlHeq5NVMW5p3eQdYscXliQ3No3u/mXn51VBFNwI=
+X-Received: by 2002:a05:690c:724a:b0:786:7aaa:a04f with SMTP id
+ 00721157ae682-78929e01443mr47780157b3.8.1763174389288; Fri, 14 Nov 2025
+ 18:39:49 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4f1a7b15-cfdc-478e-8e43-98750608866c@app.fastmail.com>
+References: <20251114092450.172024-1-dongml2@chinatelecom.cn>
+ <20251114092450.172024-8-dongml2@chinatelecom.cn> <CAADnVQKw9PtRYooO+qKQ70xgNusEn8qusBFfzU+bZ7WXRg3-3A@mail.gmail.com>
+In-Reply-To: <CAADnVQKw9PtRYooO+qKQ70xgNusEn8qusBFfzU+bZ7WXRg3-3A@mail.gmail.com>
+From: Menglong Dong <menglong8.dong@gmail.com>
+Date: Sat, 15 Nov 2025 10:39:38 +0800
+X-Gm-Features: AWmQ_bmgLFOwAJbHNJYZ4FX17GgYxKCY245TEOD8ciu-UCZuXrVOg-cZbkoq6oI
+Message-ID: <CADxym3bKsw=mrG+wNErLouhPSeobuqY7sTZRS=HrNeQ=0=p4Jg@mail.gmail.com>
+Subject: Re: [PATCH RFC bpf-next 7/7] bpf: implement "jmp" mode for trampoline
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Alexei Starovoitov <ast@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>, 
+	Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
+	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, bpf <bpf@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Nov 14, 2025 at 04:29:31PM -0800, Andy Lutomirski wrote:
-> 
-> 
-> On Fri, Nov 14, 2025, at 12:03 PM, Paul E. McKenney wrote:
-> > On Fri, Nov 14, 2025 at 10:45:08AM -0800, Andy Lutomirski wrote:
-> >> 
-> >> 
-> >> On Fri, Nov 14, 2025, at 10:14 AM, Paul E. McKenney wrote:
-> >> > On Fri, Nov 14, 2025 at 09:22:35AM -0800, Andy Lutomirski wrote:
-> >> >> 
-> >> 
-> >> >> > Oh, any another primitive would be possible: one CPU could plausibly 
-> >> >> > execute another CPU's interrupts or soft-irqs or whatever by taking a 
-> >> >> > special lock that would effectively pin the remote CPU in user mode -- 
-> >> >> > you'd set a flag in the target cpu_flags saying "pin in USER mode" and 
-> >> >> > the transition on that CPU to kernel mode would then spin on entry to 
-> >> >> > kernel mode and wait for the lock to be released.  This could plausibly 
-> >> >> > get a lot of the on_each_cpu callers to switch over in one fell swoop: 
-> >> >> > anything that needs to synchronize to the remote CPU but does not need 
-> >> >> > to poke its actual architectural state could be executed locally while 
-> >> >> > the remote CPU is pinned.
-> >> >
-> >> > It would be necessary to arrange for the remote CPU to remain pinned
-> >> > while the local CPU executed on its behalf.  Does the above approach
-> >> > make that happen without re-introducing our current context-tracking
-> >> > overhead and complexity?
-> >> 
-> >> Using the pseudo-implementation farther down, I think this would be like:
-> >> 
-> >> if (my_state->status == INDETERMINATE) {
-> >>    // we were lazy and we never promised to do work atomically.
-> >>    atomic_set(&my_state->status, KERNEL);
-> >>    this_entry_work = 0;
-> >>    /* we are definitely not pinned in this path */
-> >> } else {
-> >>    // we were not lazy and we promised we would do work atomically
-> >>    atomic exchange the entire state to { .work = 0, .status = KERNEL }
-> >>    this_entry_work = (whatever we just read);
-> >>    if (this_entry_work & PINNED) {
-> >>      u32 this_cpu_pin_count = this_cpu_ptr(pin_count);
-> >>      while (atomic_read(&this_cpu_pin_count)) {
-> >>        cpu_relax();
-> >>      }
-> >>    }
-> >>  }
-> >> 
-> >> and we'd have something like:
-> >> 
-> >> bool try_pin_remote_cpu(int cpu)
-> >> {
-> >>     u32 *remote_pin_count = ...;
-> >>     struct fancy_cpu_state *remote_state = ...;
-> >>     atomic_inc(remote_pin_count);  // optimistic
-> >> 
-> >>     // Hmm, we do not want that read to get reordered with the inc, so we probably
-> >>     // need a full barrier or seq_cst.  How does Linux spell that?  C++ has atomic::load
-> >>     // with seq_cst and maybe the optimizer can do the right thing.  Maybe it's:
-> >>     smp_mb__after_atomic();
-> >> 
-> >>     if (atomic_read(&remote_state->status) == USER) {
-> >>       // Okay, it's genuinely pinned.
-> >>       return true;
-> >> 
-> >>       // egads, if this is some arch with very weak ordering,
-> >>       // do we need to be concerned that we just took a lock but we
-> >>       // just did a relaxed read and therefore a subsequent access
-> >>       // that thinks it's locked might appear to precede the load and therefore
-> >>       // somehow get surprisingly seen out of order by the target cpu?
-> >>       // maybe we wanted atomic_read_acquire above instead?
-> >>     } else {
-> >>       // We might not have successfully pinned it
-> >>       atomic_dec(remote_pin_count);
-> >>     }
-> >> }
-> >> 
-> >> void unpin_remote_cpu(int cpu)
-> >> {
-> >>     atomic_dec(remote_pin_count();
-> >> }
-> >> 
-> >> and we'd use it like:
-> >> 
-> >> if (try_pin_remote_cpu(cpu)) {
-> >>   // do something useful
-> >> } else {
-> >>   send IPI;
-> >> }
-> >> 
-> >> but we'd really accumulate the set of CPUs that need the IPIs and do them all at once.
-> >> 
-> >> I ran the theorem prover that lives inside my head on this code using the assumption that the machine is a well-behaved x86 system and it said "yeah, looks like it might be correct".  I trust an actual formalized system or someone like you who is genuinely very good at this stuff much more than I trust my initial impression :)
+On Sat, Nov 15, 2025 at 2:50=E2=80=AFAM Alexei Starovoitov
+<alexei.starovoitov@gmail.com> wrote:
+>
+> On Fri, Nov 14, 2025 at 1:25=E2=80=AFAM Menglong Dong <menglong8.dong@gma=
+il.com> wrote:
 > >
-> > Let's start with requirements, non-traditional though that might be. ;-)
-> 
-> That's ridiculous! :-)
-
-;-) ;-) ;-)
-
-> > An "RCU idle" CPU is either in deep idle or executing in nohz_full
-> > userspace.
+> > Implement the "jmp" mode for the bpf trampoline. For the ftrace_managed
+> > case, we need only to set the FTRACE_OPS_FL_JMP on the tr->fops if "jmp=
+"
+> > is needed.
 > >
-> > 1.	If the RCU grace-period kthread sees an RCU-idle CPU, then:
+> > For the bpf poke case, the new flag BPF_TRAMP_F_JMPED is introduced to
+> > store and check if the trampoline is in the "jmp" mode.
 > >
-> > 	a.	Everything that this CPU did before entering RCU-idle
-> > 		state must be visible to sufficiently later code executed
-> > 		by the grace-period kthread, and:
+> > Signed-off-by: Menglong Dong <dongml2@chinatelecom.cn>
+> > ---
+> >  include/linux/bpf.h     |  6 +++++
+> >  kernel/bpf/trampoline.c | 53 ++++++++++++++++++++++++++++++++++-------
+> >  2 files changed, 50 insertions(+), 9 deletions(-)
 > >
-> > 	b.	Everything that the CPU will do after exiting RCU-idle
-> > 		state must *not* have been visible to the grace-period
-> > 		kthread sufficiently prior to having sampled this
-> > 		CPU's state.
+> > diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+> > index aec7c65539f5..3598785ac8d1 100644
+> > --- a/include/linux/bpf.h
+> > +++ b/include/linux/bpf.h
+> > @@ -1201,6 +1201,12 @@ struct btf_func_model {
+> >   */
+> >  #define BPF_TRAMP_F_INDIRECT           BIT(8)
 > >
-> > 2.	If the RCU grace-period kthread sees an RCU-nonidle CPU, then
-> > 	it depends on whether this is the same nonidle sojourn as was
-> > 	initially seen.  (If the kthread initially saw the CPU in an
-> > 	RCU-idle state, it would not have bothered resampling.)
+> > +/*
+> > + * Indicate that the trampoline is using "jmp" instead of "call". This=
+ flag
+> > + * is only used in the !ftrace_managed case.
+> > + */
+> > +#define BPF_TRAMP_F_JMPED              BIT(9)
+> > +
+> >  /* Each call __bpf_prog_enter + call bpf_func + call __bpf_prog_exit i=
+s ~50
+> >   * bytes on x86.
+> >   */
+> > diff --git a/kernel/bpf/trampoline.c b/kernel/bpf/trampoline.c
+> > index 5949095e51c3..02a9f33d8f6c 100644
+> > --- a/kernel/bpf/trampoline.c
+> > +++ b/kernel/bpf/trampoline.c
+> > @@ -175,15 +175,37 @@ static struct bpf_trampoline *bpf_trampoline_look=
+up(u64 key)
+> >         return tr;
+> >  }
 > >
-> > 	a.	If this is the same nonidle sojourn, then there are no
-> > 		ordering requirements.	RCU must continue to wait on
-> > 		this CPU.
+> > -static int unregister_fentry(struct bpf_trampoline *tr, void *old_addr=
+)
+> > +static int bpf_text_poke(struct bpf_trampoline *tr, void *old_addr,
+> > +                        void *new_addr)
+>
+> The bpf_text_poke is a generic name. It really doesn't fit here.
+> Use bpf_trampoline_update_fentry() or something along those lines.
+
+ACK.
+
+>
+> >  {
+> > +       enum bpf_text_poke_type new_t =3D BPF_MOD_CALL, old_t =3D BPF_M=
+OD_CALL;
+> >         void *ip =3D tr->func.addr;
+> >         int ret;
 > >
-> > 	b.	Otherwise, everything that this CPU did before entering
-> > 		its last RCU-idle state must be visible to sufficiently
-> > 		later code executed by the grace-period kthread.
-> > 		Similar to (1a) above.
-> >
-> > 3.	If a given CPU quickly switches into and out of RCU-idle
-> > 	state, and it is always in RCU-nonidle state whenever the RCU
-> > 	grace-period kthread looks, RCU must still realize that this
-> > 	CPU has passed through at least one quiescent state.
-> >
-> > 	This is why we have a counter for RCU rather than just a
-> > 	simple state.
+> > +       if (bpf_trampoline_need_jmp(tr->flags))
+> > +               new_t =3D BPF_MOD_JUMP;
+> > +       if (tr->flags & BPF_TRAMP_F_JMPED)
+> > +               old_t =3D BPF_MOD_JUMP;
+>
+> Now I see why you picked _need_jmp().. to alternate with F_JMPED ?
+> _uses_jmp() suggestions isn't quite right.
 
-Sigh...
+Ah, some kind. The flags BPF_TRAMP_F_CALL_ORIG and
+BPF_TRAMP_F_SKIP_FRAME are reset during the trampoline update,
+and they are not stored. So the "_need_jmp" means that use "jmp"
+for the new trampoline that we are going to update.
 
-4.	Entering and exiting either idle or nohz_full usermode execution
-	at task level can race with interrupts and NMIs attempting to
-	make this same transition.  (And you had much to do with the
-	current code that mediates the NMI races!)
+The BPF_TRAMP_F_JMPED is used to store if the current trampoline
+is in "jmp" mode.
 
-> ...
-> 
-> > I am not seeing how the third requirement above is met, though.  I have
-> > not verified the sampling code that the RCU grace-period kthread is
-> > supposed to use because I am not seeing it right off-hand.
-> 
-> This is ct_rcu_watching_cpu_acquire, right?  Lemme think.  Maybe there's even a way to do everything I'm suggesting without changing that interface.
+>
+> How about bpf_trampoline_must_jmp() ?
+> and drop if (!ret) fallback and BPF_TRAMP_F_JMPED bit.
+> It doesn't look to be necessary.
 
-Yes.
+I think you are right. We can check if current trampoline is in "jmp"
+mode with the "orig_flags" instead, and remove the
+BPF_TRAMP_F_JMPED. That means that I need to pass the
+"orig_flags" to
+modify_fentry -> bpf_trampoline_update_fentry(bpf_text_poke).
 
-Also, the ordering can sometimes be implemnted at a distance, but it
-really does have to be there.
-
-> >> It wouldn't be outrageous to have real-time imply the full USER transition.
-> >
-> > We could have special code for RT, but this of course increases the
-> > complexity.  Which might be justified by sufficient speedup.
-> 
-> I'm thinking that the code would be arranged so that going to user mode in the USER or the INTERMEDIATE state would be fully valid and would just have different performance characteristics.  So the only extra complexity here would be the actual logic to choose which state to go to. and...
-> >
-> > And yes, many distros enable NO_HZ_FULL by default.  I will refrain from
-> > suggesting additional static branches.  ;-)
-> 
-> I'm not even suggesting a static branch.  I think the potential performance wins are big enough to justify a bona fide ordinary if statement or two :)  I'm also contemplating whether it could make sense to make this whole thing be unconditionally configured in if the performance in the case where no one uses it (i.e. everything is INTERMEDIATE instead of USER) is good enough.
-
-Both sound like they would be nice to have...
-
-> I will ponder.
-
-...give or take feasibility, of course!  ;-)
-
-							Thanx, Paul
+Thanks!
+Menglong Dong
