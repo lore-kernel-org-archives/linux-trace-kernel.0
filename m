@@ -1,141 +1,78 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F6CD27F724;
-	Mon, 17 Nov 2025 15:11:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2256132D422;
+	Mon, 17 Nov 2025 15:20:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763392316; cv=none; b=MTdIJ7RQnfbeU5ojGYRleb1EpGH1fVob/ELPyomd7WejQ9KhesIvzGwuPAqOiEK3TBU0WStQ5BPZTL49njaTRWIUNmT5prTCcpv9yHVIcawmg5caT5Rfyg7HXI3nmX5UG8C3ctJgbPkL3ssHDXnVmPnaj40H8ItJozE5QwpupYg=
+	t=1763392827; cv=none; b=NB0wWHJlmiHo5YE3pGNJ+F7OGEsxXPAf09YbZdSWjWNkr7RfZfbJefDsDhS/g1XTZv3LB4JYbDV5fXEIaMzHhzHD1vD3JUlXcO+L/6Z4IvgPClRQXWK71yklhcf+4mkgktTY3czBJEzJIhKjhP/GDCKwj6hzMNJFbjZrDEL22Io=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763392316; c=relaxed/simple;
-	bh=TwfGBepi2IUAU/4JFAvHJYTM1sRw3y0VTMA2H2PFuPQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RoFe4gctnLOUMMyB4Jimv0yv8Un5NaEsFMlEsgJlL92PqFQmVsrPLSzj8SUNm23p4fezKlr+SkBgRHtm/nje6HQvCzcSu/EMPH8Eps00CLHW0o9+KqdzmQOG78S0lc6eLAsWqbUYYnd8/LVqDgqg5EBLWy1w9fboqXOimsoo174=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fYFQfp98; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763392827; c=relaxed/simple;
+	bh=U4HGRPJm3Z90274kUDYelEyG+c9qpjOgBxd3TkWvcxA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=WHAMRfWRg/UVpixz0rLNDRZG4v0i2IarZn5C94mLPY9Gj/EL31doK6RBZqCpN+oK5ssyA7eO7MAn8Owq0d3dK4pAT2ch/iARMutgOdMviKl8243iJaspWe7G3nJmINvhzbEDUjBFxowZLzppwRj4zQ1f/7g3HQKUEt+OMhHBpGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1Rig1aWO; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=VNl/ftej; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fYFQfp98"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D213C113D0;
-	Mon, 17 Nov 2025 15:11:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763392316;
-	bh=TwfGBepi2IUAU/4JFAvHJYTM1sRw3y0VTMA2H2PFuPQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=fYFQfp98q8CZPq2D3/1HwhNKfQ02GOU/p/lXsiGElTjPUzEmC11RUcdhfE0uh+LZe
-	 hkTadqxNsT86x26pV78yE9cHtXOZohKJc0CnrhNLYiIZQceAFHoqFiPE78DidXhXLN
-	 tFAKq7VHPXZt3xIHdv8rlwuvCmnXJCirwhXCPCvCDSY+GaHO9QVUWndBeMs4LtVKhB
-	 vXQzJeyLQ5i7XRjJafFG+RpCQs24WSu+XrfAhKl64rdC/PRf63+PQQaFX6cPXenQKt
-	 k5jwAq/pMGJUEEMPjo9TEaBxkVgMEBH/vcGjv4clAdluHxZE2X66gZlaSyNyJg/OV1
-	 zEIIjPZilJmXA==
-Message-ID: <9e617d7b-afd7-465b-b075-32b02257b90b@kernel.org>
-Date: Mon, 17 Nov 2025 16:11:47 +0100
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1Rig1aWO";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VNl/ftej"
+From: Nam Cao <namcao@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1763392824;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Okc2tOhfNMOvJaBEghCnnpcNvAiizNtd+a2AMZGZHuw=;
+	b=1Rig1aWOcaNyRlsyx70uXULScn7IGLRCIwT34ZPCJi2B8VGDNvjeJGUhCmNg/KBSdBq3x0
+	uPc0br1jIhbWi2qwXoAudOFhJXMd81YrS4xYaorEUjcw1zExRFf1u9xZAMnCbFd6j9TJjc
+	rUKdkGYJhNXsXPN5a/Jz61j+Y27ho+c5bPGpebaWWfv7NO0aEPaVCKYgQuPfoQDbtL0PYK
+	ELfeVFGprDKLsVH+uBhqJ1pE3gxeHShwkMAP2mu9iTpl6Y82ZijHq06899wJU10cNbUTkP
+	whIrF8TRXT445UeFr+z9EkJEo7fV8DeZs1Sc4Z8IAzcjkOwtoN188aIhGxVT1g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1763392824;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Okc2tOhfNMOvJaBEghCnnpcNvAiizNtd+a2AMZGZHuw=;
+	b=VNl/ftejbMyQ5nz2gj5GHjk7Ks8P+gw2cqUoNxSiwollEaGH8fZbP4RNcSRKVYNZiV9x4s
+	MZtm8pUJdGhMDODw==
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Gabriele Monaco <gmonaco@redhat.com>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] rv: Convert to use __free
+In-Reply-To: <20251117100735.71466d12@gandalf.local.home>
+References: <cover.1763306824.git.namcao@linutronix.de>
+ <6b2a618815b45ac4ac09976ef4fb0bd3635c143d.1763306824.git.namcao@linutronix.de>
+ <20251117100735.71466d12@gandalf.local.home>
+Date: Mon, 17 Nov 2025 16:20:23 +0100
+Message-ID: <87o6p0heiw.fsf@yellow.woof>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/8] mm: introduce VM_MAYBE_GUARD and make visible in
- /proc/$pid/smaps
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Jonathan Corbet <corbet@lwn.net>,
- "Liam R . Howlett" <Liam.Howlett@oracle.com>,
- Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>,
- Zi Yan <ziy@nvidia.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
- Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
- Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
- Lance Yang <lance.yang@linux.dev>, linux-kernel@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, Andrei Vagin <avagin@gmail.com>
-References: <cover.1762531708.git.lorenzo.stoakes@oracle.com>
- <94d1e9c6c6dd8a4de1f2a8022ca92e2e320730ff.1762531708.git.lorenzo.stoakes@oracle.com>
-From: "David Hildenbrand (Red Hat)" <david@kernel.org>
-Content-Language: en-US
-In-Reply-To: <94d1e9c6c6dd8a4de1f2a8022ca92e2e320730ff.1762531708.git.lorenzo.stoakes@oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-On 07.11.25 17:11, Lorenzo Stoakes wrote:
-> Currently, if a user needs to determine if guard regions are present in a
-> range, they have to scan all VMAs (or have knowledge of which ones might
-> have guard regions).
-> 
-> Since commit 8e2f2aeb8b48 ("fs/proc/task_mmu: add guard region bit to
-> pagemap") and the related commit a516403787e0 ("fs/proc: extend the
-> PAGEMAP_SCAN ioctl to report guard regions"), users can use either
-> /proc/$pid/pagemap or the PAGEMAP_SCAN functionality to perform this
-> operation at a virtual address level.
-> 
-> This is not ideal, and it gives no visibility at a /proc/$pid/smaps level
-> that guard regions exist in ranges.
-> 
-> This patch remedies the situation by establishing a new VMA flag,
-> VM_MAYBE_GUARD, to indicate that a VMA may contain guard regions (it is
-> uncertain because we cannot reasonably determine whether a
-> MADV_GUARD_REMOVE call has removed all of the guard regions in a VMA, and
-> additionally VMAs may change across merge/split).
-> 
-> We utilise 0x800 for this flag which makes it available to 32-bit
-> architectures also, a flag that was previously used by VM_DENYWRITE, which
-> was removed in commit 8d0920bde5eb ("mm: remove VM_DENYWRITE") and hasn't
-> bee reused yet.
-> 
-> We also update the smaps logic and documentation to identify these VMAs.
-> 
-> Another major use of this functionality is that we can use it to identify
-> that we ought to copy page tables on fork.
-> 
-> We do not actually implement usage of this flag in mm/madvise.c yet as we
-> need to allow some VMA flags to be applied atomically under mmap/VMA read
-> lock in order to avoid the need to acquire a write lock for this purpose.
-> 
-> Reviewed-by: Pedro Falcato <pfalcato@suse.de>
-> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
-> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> ---
->   Documentation/filesystems/proc.rst | 5 +++--
->   fs/proc/task_mmu.c                 | 1 +
->   include/linux/mm.h                 | 3 +++
->   include/trace/events/mmflags.h     | 1 +
->   mm/memory.c                        | 4 ++++
->   tools/testing/vma/vma_internal.h   | 1 +
->   6 files changed, 13 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/filesystems/proc.rst b/Documentation/filesystems/proc.rst
-> index 0b86a8022fa1..8256e857e2d7 100644
-> --- a/Documentation/filesystems/proc.rst
-> +++ b/Documentation/filesystems/proc.rst
-> @@ -553,7 +553,7 @@ otherwise.
->   kernel flags associated with the particular virtual memory area in two letter
->   encoded manner. The codes are the following:
->   
-> -    ==    =======================================
-> +    ==    =============================================================
->       rd    readable
->       wr    writeable
->       ex    executable
-> @@ -591,7 +591,8 @@ encoded manner. The codes are the following:
->       sl    sealed
->       lf    lock on fault pages
->       dp    always lazily freeable mapping
-> -    ==    =======================================
-> +    gu    maybe contains guard regions (if not set, definitely doesn't)
-> +    ==    =============================================================
+Steven Rostedt <rostedt@goodmis.org> writes:
+> On Sun, 16 Nov 2025 15:35:12 +0000
+> Nam Cao <namcao@linutronix.de> wrote:
+>> +	mon->root_d = dir;
+>> +	retain_and_null_ptr(dir);
+>>  	return 0;
+>
+> Why the "retain_and_null_ptr() and not just:
+>
+> 	mon->root-d = no_free_ptr(dir);
+> 	return 0;
+>
+> As from my understanding is that the retain_and_null_ptr() is for use of
+> passing the variable to a function that will consume it. But for assigning
+> to a variable, I usually just use the no_free_ptr().
 
+I wasn't aware that no_free_ptr() exists. Gabriele has pointed this out,
+and I fixed it up in v2.
 
-In general LGTM, BUT in the context of this patch where the flag is 
-never set, that's not entirely correct ;) It made sense after staring at 
-patch #5.
-
-Acked-by: David Hildenbrand (Red Hat) <david@kernel.org>
-
--- 
-Cheers
-
-David
+Nam
