@@ -1,62 +1,62 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00FF63376B8
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 17 Nov 2025 18:56:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76DF9337BAC
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 17 Nov 2025 18:56:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763405807; cv=none; b=IHQuIdFP7pZ4mOLVwYAM7ZqukiAKx86rlMxm1zV1ZZwbCzmAZGOLwQXzFBUEqd+a5oWEly4O1UHHxYafGrIGEoSr84iseiMdflCCdgnTMRk3yIrc9r7fb2Bf0lWlGb5gCvZ2NnXMjwHhjBzhK9a/vIWU/al1FtJFjZT2XwfJI5I=
+	t=1763405821; cv=none; b=ezXgCxhBwoRiKQcvLy+448DpQzzCke03Xpgm6/LiKEoPmhojUI1rOduTLLuC+3EEdBIwpNNRiAemw1REH4qokAcJ7I2PkHWDXSDgGRfi+8E6QN2Bh0/F7Km1cCW7NW/+7T5OO59eOOstfxRbFD42su+qodkvPFSi/UWXuihD4X0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763405807; c=relaxed/simple;
-	bh=TGCoCAcq2y7OxivunBKMIbeWuNFR98CZQ62cm5S07F4=;
+	s=arc-20240116; t=1763405821; c=relaxed/simple;
+	bh=dKoUYxM8LL9t2vzI/PpW0eLOO45rOCFrE/qFP2Mf2do=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jMHakskNfXcQ5RbT8INkq3RFJQhVNw66hCiiqgHo93MhtIwm9IWqEgflbc/v4DYzExhhWSYRAFonR41lcC1eWXA4zNOpQHLG8tuS/p9SaE7eQdvSvUH2j/yzvQ1nEsayDcWmpfycy0vOgG/Xi9b6Vl3QEhypf3GPd0YF6ThHegM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WDaNxqeH; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=haU2UmlixvRf6ChjH+d2+OQ3+uDTKMlD6JqmVXvKTdsM0V1yuLLWZjsfwiA2NjVoJeedw2ie2QryqaWmHJ9ZJpFJ+tolQt/DBFLuLVuJZ+97XTz8oZ8IP4BYhg8RgbbUJOJ9wRQuls2rXZYJ6/Wf5ooctLqHck60ZuTeVWSmeHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dic/6yfV; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WDaNxqeH"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dic/6yfV"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1763405804;
+	s=mimecast20190719; t=1763405818;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=8aE5DbYVi2HZztUMg23QDXtKPFVnuO/XlPsKz1PiYi4=;
-	b=WDaNxqeHkzAVjSXVqe/GSv8KsjL061ZQGHUFEYjv+04EfZGiJEMiMWbFaHmxqRXcmIVTDP
-	OCBvuBVUlO9ePDCQ4my31BN+7rNkUfWBGTlodfhH/bW5GheoQU54w95p5a91TKnYDrMhFR
-	EJPrjPwiURfPYCW5jG6brRiiST0/ETY=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+	bh=W92+hDsPlnWwpf3RV+flsE4eFQLqmU6MxoptDwLVLG4=;
+	b=dic/6yfVAf4nWZDPPLjDikWlnTj4tlnnzlEClFdYPtcYgSEBJMRPyuco9JRCMc9b7/KSRr
+	6XTJIN+KPvyhbqK39lu1uxQYZ98XTNypBugJsOXqx/MNVIJmf2NLuQkyEnr2JZ/Pg0VQs8
+	y01wJis4QUFB9jtQuMT7HEAYk/nivWw=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-634-gB1xQUfCP9WI-rotCyQuxA-1; Mon,
- 17 Nov 2025 13:56:39 -0500
-X-MC-Unique: gB1xQUfCP9WI-rotCyQuxA-1
-X-Mimecast-MFC-AGG-ID: gB1xQUfCP9WI-rotCyQuxA_1763405798
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-544-WJFHpT6FO62vQGJQD6W6Rw-1; Mon,
+ 17 Nov 2025 13:56:55 -0500
+X-MC-Unique: WJFHpT6FO62vQGJQD6W6Rw-1
+X-Mimecast-MFC-AGG-ID: WJFHpT6FO62vQGJQD6W6Rw_1763405814
 Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5C0371956096;
-	Mon, 17 Nov 2025 18:56:38 +0000 (UTC)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3962E1956094;
+	Mon, 17 Nov 2025 18:56:54 +0000 (UTC)
 Received: from wcosta-thinkpadt14gen4.rmtbr.csb (unknown [10.22.81.153])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 4173B180049F;
-	Mon, 17 Nov 2025 18:56:33 +0000 (UTC)
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 1FB8D180049F;
+	Mon, 17 Nov 2025 18:56:49 +0000 (UTC)
 From: Wander Lairson Costa <wander@redhat.com>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Wander Lairson Costa <wander@redhat.com>,
 	Tomas Glozar <tglozar@redhat.com>,
-	Crystal Wood <crwood@redhat.com>,
 	Ivan Pravdin <ipravdin.official@gmail.com>,
+	Crystal Wood <crwood@redhat.com>,
 	John Kacur <jkacur@redhat.com>,
 	Costa Shulyupin <costa.shul@redhat.com>,
 	Tiezhu Yang <yangtiezhu@loongson.cn>,
 	linux-trace-kernel@vger.kernel.org (open list:Real-time Linux Analysis (RTLA) tools),
 	linux-kernel@vger.kernel.org (open list),
 	bpf@vger.kernel.org (open list:BPF [MISC]:Keyword:(?:\b|_)bpf(?:\b|_))
-Subject: [rtla 10/13] rtla: Remove redundant memset after calloc
-Date: Mon, 17 Nov 2025 15:41:17 -0300
-Message-ID: <20251117184409.42831-11-wander@redhat.com>
+Subject: [rtla 11/13] rtla: Replace magic number with MAX_PATH
+Date: Mon, 17 Nov 2025 15:41:18 -0300
+Message-ID: <20251117184409.42831-12-wander@redhat.com>
 In-Reply-To: <20251117184409.42831-1-wander@redhat.com>
 References: <20251117184409.42831-1-wander@redhat.com>
 Precedence: bulk
@@ -68,28 +68,159 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-The actions struct is allocated using calloc, which already returns
-zeroed memory. The subsequent memset call to zero the 'present' member
-is therefore redundant.
+The trace functions use a buffer to manipulate strings that will be
+written to tracefs files. These buffers are defined with a magic number
+of 1024, which is a common source of vulnerabilities.
+
+Replace the magic number 1024 with the MAX_PATH macro to make the code
+safer and more readable. While at it, replace other instances of the
+magic number with ARRAY_SIZE() when the buffer is locally defined.
 
 Signed-off-by: Wander Lairson Costa <wander@redhat.com>
 ---
- tools/tracing/rtla/src/actions.c | 2 --
- 1 file changed, 2 deletions(-)
+ tools/tracing/rtla/src/osnoise.c    |  4 ++--
+ tools/tracing/rtla/src/timerlat_u.c |  4 ++--
+ tools/tracing/rtla/src/trace.c      | 20 ++++++++++----------
+ 3 files changed, 14 insertions(+), 14 deletions(-)
 
-diff --git a/tools/tracing/rtla/src/actions.c b/tools/tracing/rtla/src/actions.c
-index 2a01ece78454c..2d153d5efdea2 100644
---- a/tools/tracing/rtla/src/actions.c
-+++ b/tools/tracing/rtla/src/actions.c
-@@ -21,8 +21,6 @@ actions_init(struct actions *self)
- 	self->len = 0;
- 	self->continue_flag = false;
+diff --git a/tools/tracing/rtla/src/osnoise.c b/tools/tracing/rtla/src/osnoise.c
+index 5075e0f485c77..d502cbbcea91b 100644
+--- a/tools/tracing/rtla/src/osnoise.c
++++ b/tools/tracing/rtla/src/osnoise.c
+@@ -52,7 +52,7 @@ char *osnoise_get_cpus(struct osnoise_context *context)
+ int osnoise_set_cpus(struct osnoise_context *context, char *cpus)
+ {
+ 	char *orig_cpus = osnoise_get_cpus(context);
+-	char buffer[1024];
++	char buffer[MAX_PATH];
+ 	int retval;
  
--	memset(&self->present, 0, sizeof(self->present));
--
- 	/* This has to be set by the user */
- 	self->trace_output_inst = NULL;
- 	return 0;
+ 	if (!orig_cpus)
+@@ -62,7 +62,7 @@ int osnoise_set_cpus(struct osnoise_context *context, char *cpus)
+ 	if (!context->curr_cpus)
+ 		return -1;
+ 
+-	snprintf(buffer, 1024, "%s\n", cpus);
++	snprintf(buffer, ARRAY_SIZE(buffer), "%s\n", cpus);
+ 
+ 	debug_msg("setting cpus to %s from %s", cpus, context->orig_cpus);
+ 
+diff --git a/tools/tracing/rtla/src/timerlat_u.c b/tools/tracing/rtla/src/timerlat_u.c
+index 01dbf9a6b5a51..52977e725c79c 100644
+--- a/tools/tracing/rtla/src/timerlat_u.c
++++ b/tools/tracing/rtla/src/timerlat_u.c
+@@ -32,7 +32,7 @@
+ static int timerlat_u_main(int cpu, struct timerlat_u_params *params)
+ {
+ 	struct sched_param sp = { .sched_priority = 95 };
+-	char buffer[1024];
++	char buffer[MAX_PATH];
+ 	int timerlat_fd;
+ 	cpu_set_t set;
+ 	int retval;
+@@ -87,7 +87,7 @@ static int timerlat_u_main(int cpu, struct timerlat_u_params *params)
+ 
+ 	/* add should continue with a signal handler */
+ 	while (true) {
+-		retval = read(timerlat_fd, buffer, 1024);
++		retval = read(timerlat_fd, buffer, ARRAY_SIZE(buffer));
+ 		if (retval < 0)
+ 			break;
+ 	}
+diff --git a/tools/tracing/rtla/src/trace.c b/tools/tracing/rtla/src/trace.c
+index 813f4368f104b..658a6e94edfba 100644
+--- a/tools/tracing/rtla/src/trace.c
++++ b/tools/tracing/rtla/src/trace.c
+@@ -330,7 +330,7 @@ int trace_event_add_trigger(struct trace_events *event, char *trigger)
+ static void trace_event_disable_filter(struct trace_instance *instance,
+ 				       struct trace_events *tevent)
+ {
+-	char filter[1024];
++	char filter[MAX_PATH];
+ 	int retval;
+ 
+ 	if (!tevent->filter)
+@@ -342,7 +342,7 @@ static void trace_event_disable_filter(struct trace_instance *instance,
+ 	debug_msg("Disabling %s:%s filter %s\n", tevent->system,
+ 		  tevent->event ? : "*", tevent->filter);
+ 
+-	snprintf(filter, 1024, "!%s\n", tevent->filter);
++	snprintf(filter, ARRAY_SIZE(filter), "!%s\n", tevent->filter);
+ 
+ 	retval = tracefs_event_file_write(instance->inst, tevent->system,
+ 					  tevent->event, "filter", filter);
+@@ -361,7 +361,7 @@ static void trace_event_save_hist(struct trace_instance *instance,
+ {
+ 	int retval, index, out_fd;
+ 	mode_t mode = 0644;
+-	char path[1024];
++	char path[MAX_PATH];
+ 	char *hist;
+ 
+ 	if (!tevent)
+@@ -376,7 +376,7 @@ static void trace_event_save_hist(struct trace_instance *instance,
+ 	if (retval)
+ 		return;
+ 
+-	snprintf(path, 1024, "%s_%s_hist.txt", tevent->system, tevent->event);
++	snprintf(path, ARRAY_SIZE(path), "%s_%s_hist.txt", tevent->system, tevent->event);
+ 
+ 	printf("  Saving event %s:%s hist to %s\n", tevent->system, tevent->event, path);
+ 
+@@ -408,7 +408,7 @@ static void trace_event_save_hist(struct trace_instance *instance,
+ static void trace_event_disable_trigger(struct trace_instance *instance,
+ 					struct trace_events *tevent)
+ {
+-	char trigger[1024];
++	char trigger[MAX_PATH];
+ 	int retval;
+ 
+ 	if (!tevent->trigger)
+@@ -422,7 +422,7 @@ static void trace_event_disable_trigger(struct trace_instance *instance,
+ 
+ 	trace_event_save_hist(instance, tevent);
+ 
+-	snprintf(trigger, 1024, "!%s\n", tevent->trigger);
++	snprintf(trigger, ARRAY_SIZE(trigger), "!%s\n", tevent->trigger);
+ 
+ 	retval = tracefs_event_file_write(instance->inst, tevent->system,
+ 					  tevent->event, "trigger", trigger);
+@@ -461,7 +461,7 @@ void trace_events_disable(struct trace_instance *instance,
+ static int trace_event_enable_filter(struct trace_instance *instance,
+ 				     struct trace_events *tevent)
+ {
+-	char filter[1024];
++	char filter[MAX_PATH];
+ 	int retval;
+ 
+ 	if (!tevent->filter)
+@@ -473,7 +473,7 @@ static int trace_event_enable_filter(struct trace_instance *instance,
+ 		return 1;
+ 	}
+ 
+-	snprintf(filter, 1024, "%s\n", tevent->filter);
++	snprintf(filter, ARRAY_SIZE(filter), "%s\n", tevent->filter);
+ 
+ 	debug_msg("Enabling %s:%s filter %s\n", tevent->system,
+ 		  tevent->event ? : "*", tevent->filter);
+@@ -496,7 +496,7 @@ static int trace_event_enable_filter(struct trace_instance *instance,
+ static int trace_event_enable_trigger(struct trace_instance *instance,
+ 				      struct trace_events *tevent)
+ {
+-	char trigger[1024];
++	char trigger[MAX_PATH];
+ 	int retval;
+ 
+ 	if (!tevent->trigger)
+@@ -508,7 +508,7 @@ static int trace_event_enable_trigger(struct trace_instance *instance,
+ 		return 1;
+ 	}
+ 
+-	snprintf(trigger, 1024, "%s\n", tevent->trigger);
++	snprintf(trigger, ARRAY_SIZE(trigger), "%s\n", tevent->trigger);
+ 
+ 	debug_msg("Enabling %s:%s trigger %s\n", tevent->system,
+ 		  tevent->event ? : "*", tevent->trigger);
 -- 
 2.51.1
 
