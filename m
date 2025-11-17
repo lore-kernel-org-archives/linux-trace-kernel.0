@@ -1,86 +1,83 @@
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D32D2DFF04;
-	Mon, 17 Nov 2025 17:06:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 457DA2673AF;
+	Mon, 17 Nov 2025 17:22:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763399178; cv=none; b=bPrHFgKebxoQ/b0Fit6tas3ga8sRtpir/AUpzvM59S0dXXTw0TCHkqFuPyLFfXMl0Z0SA6+O3Fi8/YmQUSr9Z5gkn0i71jvhEM/25L0Q4fhHk9ehuPFLeq2LDAKS5sysYKfnNlJhmg4LhORHC/GPHLbR7gGExiJJFqP8Zp4x8ps=
+	t=1763400167; cv=none; b=fDA9hSS3a2uz9eYt4SIdvbUXE3mjDpPIJpKfSspEYHAhO0zl7774bMZa+yT7ctvSIKb5Tv1v/0rC7+zK+VHNNpv8+epURIeM0EarKexZGYStNgGVdKs4qTJzaDrQQPXs2Th8vWEiQb8cZesuKIqD4RSk/b2OWMqhpd7QZvQow3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763399178; c=relaxed/simple;
-	bh=S/drtOn2gb6+LvBIK4wwwD5Oo3YANnIxfIMHFOLZ5EM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=cbtrGspXWLPuNd5gSiFFCerkq87X0C4+8ciItAc4+kgwU52qtv+T3wippCZa+pHMGQ+9dvjZhBakdWWkHxnZvfuFt/NQbnEHB+WflVt7gj2PRsH18WWNiahWe+n0N6SFQhfc6fVyma/9B3e68TOyfWoYI6FNhCqE7WdLN18fEfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf03.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id 2CB6B573BF;
-	Mon, 17 Nov 2025 17:06:14 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf03.hostedemail.com (Postfix) with ESMTPA id 5F0E86000B;
-	Mon, 17 Nov 2025 17:06:12 +0000 (UTC)
-Date: Mon, 17 Nov 2025 12:06:37 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Andy Shevchenko
- <andriy.shevchenko@intel.com>
-Subject: [PATCH] tracing: Remove unused variable in
+	s=arc-20240116; t=1763400167; c=relaxed/simple;
+	bh=B1t58Otc4cDW71gTgWrBk8K8gGYASS2yKO7Ldgw2rY4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K+EZjiwRwbk0QEz2xvg0ibWo4OESXEU0IOZ+XejcYX1gvqqdndJfC0Ut34CO3kOrQVPfNcSofOiuuOkAciNhn02gJcN03YgovBtWs8egYIbSIOv51wJAxk9onjX/BNgrpwminuB1ymqSUBEyG/15ga11lsOSD+HVjbKjN7PBE3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XyroqlHI; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XyroqlHI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1763400166; x=1794936166;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=B1t58Otc4cDW71gTgWrBk8K8gGYASS2yKO7Ldgw2rY4=;
+  b=XyroqlHIvFdSLnTlldR3HJS1hhnk3woFnJy17PLDIn1Sa7jOOB0P8kcO
+   KxUpkhGW8dUTsxkxKZfwtghbS0BZrouZnesjfITfZPjzf530/OYbk6rQu
+   k75+sYB9X2/4MW6RNPIPk/iRkkFwSR4qUOsK87zVXzaKrRP+W/1bOJf7i
+   oKKMwA+XfCHWM1QW3Fgs1qcLTieUebLL+v6fIzgpkssyfRzfludWc6Hs8
+   ZKEcg9s1SI/or+eIrFcM3XWfVr3BL5S6d4up6KdUX9uSoOKxR+bPiMcvl
+   bVwJysdrBDN1ZlXdAxN2vLOL0ITr8OSgZMmWVfH35kTIYyqqCNLVR8Tdu
+   Q==;
+X-CSE-ConnectionGUID: gxzzzMORTLazekKhhHm8QQ==
+X-CSE-MsgGUID: 0w8mq54yThOJ6hqjyMDH1Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11616"; a="76085686"
+X-IronPort-AV: E=Sophos;i="6.19,312,1754982000"; 
+   d="scan'208";a="76085686"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2025 09:22:45 -0800
+X-CSE-ConnectionGUID: 2b5VHv5mSWe5EO803RONyA==
+X-CSE-MsgGUID: G3hDGjWATai74ohgr+adWg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,312,1754982000"; 
+   d="scan'208";a="189766215"
+Received: from black.igk.intel.com ([10.91.253.5])
+  by orviesa006.jf.intel.com with ESMTP; 17 Nov 2025 09:22:44 -0800
+Received: by black.igk.intel.com (Postfix, from userid 1003)
+	id 385D396; Mon, 17 Nov 2025 18:22:43 +0100 (CET)
+Date: Mon, 17 Nov 2025 18:22:43 +0100
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH] tracing: Remove unused variable in
  tracing_trace_options_show()
-Message-ID: <20251117120637.43ef995d@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Message-ID: <aRtZ4-BdixI-it-o@black.igk.intel.com>
+References: <20251117120637.43ef995d@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout04
-X-Rspamd-Queue-Id: 5F0E86000B
-X-Stat-Signature: n59fajnwnbep8fhs7pyt4b66f1xyu7gr
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19mpJ8CdsKHAzE29AoR3uFYvIJNXtvTg/g=
-X-HE-Tag: 1763399172-498585
-X-HE-Meta: U2FsdGVkX1+1fbQ1HL57qXLluUvZvLNCw7yYmkD+QHCB/p1/iN1x9cXn89bHWwfz8Xjh8Fm89kfs12fobj4NspPdWL8NWGgROmiApTo4J+7TdLfdT4YtS3j3tiGYFlp9wB/g+kLx0oWzbIA2AobJ2t6pvBp9qwUI9zGL16izGcRAVpwYJStR+XtjJAQpmnCJtTaOWqOcyD9ueUqSf5PScmzd5ws4vRQXFN+uUfX1yCN8HUC++sVtk32no63h8Eq2RyGFSd/oCOXWi9H2G+t3L8g4kVJ+ZnOFqnMkTRGZ5v3nODpqIYPBaO+k2dCWyVAmPplCTjy+CdLS5xhpo3TFK2tegxJLjNv/WSddoGxlvsgZxIk8hpN5O+YHInTgnFvmY2Cc564LTy4usJbyMJW++sh6qdBXeBRN7iwjy6akPvk=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251117120637.43ef995d@gandalf.local.home>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Mon, Nov 17, 2025 at 12:06:37PM -0500, Steven Rostedt wrote:
 
-The flags and opts used in tracing_trace_options_show() now come directly
-from the trace array "current_trace_flags" and not the current_trace. The
-variable "trace" was still being assigned to tr->current_trace but never
-used. This caused a warning in clang.
+> The flags and opts used in tracing_trace_options_show() now come directly
+> from the trace array "current_trace_flags" and not the current_trace. The
+> variable "trace" was still being assigned to tr->current_trace but never
+> used. This caused a warning in clang.
 
-Reported-by: Andy Shevchenko <andriy.shevchenko@intel.com>
-Closes: https://lore.kernel.org/all/aRtHWXzYa8ijUIDa@black.igk.intel.com/
-Fixes: 428add559b692 ("tracing: Have tracer option be instance specific")
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/trace.c | 3 ---
- 1 file changed, 3 deletions(-)
+Tested-by: Andy Shevchenko <andriy.shevchenko@intel.com>
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 8ae95800592d..59cd4ed8af6d 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -5167,7 +5167,6 @@ static int tracing_trace_options_show(struct seq_file *m, void *v)
- 	struct tracer_opt *trace_opts;
- 	struct trace_array *tr = m->private;
- 	struct tracer_flags *flags;
--	struct tracer *trace;
- 	u32 tracer_flags;
- 	int i;
- 
-@@ -5184,8 +5183,6 @@ static int tracing_trace_options_show(struct seq_file *m, void *v)
- 	if (!flags || !flags->opts)
- 		return 0;
- 
--	trace = tr->current_trace;
--
- 	tracer_flags = flags->val;
- 	trace_opts = flags->opts;
- 
 -- 
-2.51.0
+With Best Regards,
+Andy Shevchenko
+
 
