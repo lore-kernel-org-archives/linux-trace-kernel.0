@@ -1,127 +1,70 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0129F33C197
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 18 Nov 2025 17:31:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 575B135FF5D;
+	Tue, 18 Nov 2025 17:33:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763487079; cv=none; b=nX7TI/LziI8q6cHPGuv1HSjmkfQNvtVFV7F4HNNmqoEumV8lczACEe1ry40gCnv4J1lXgcbyT8zDiEGKyYHh+o2dbQD876pV1DueI9hUInplGtEunQFgBWELvYGlYLH/z+5bit8EY8IOQDa9CvH6fLYWCxek5btmzr1SUxHAzP0=
+	t=1763487233; cv=none; b=L5C2AOpODPSNp7OCzmY7Z+hbDcfR3SeB5uq6FQ02gWwGgQS6apR7N65IkiA2zM2QPySrRj2KlEuu0wmdKtHc/lSB1QHEKyQkb3ApoOsG7R5Twb+XubaaEcmvqnxoNABpuVRJGdef4WNXH5g9g1xZ5ctO0TVg9fIGme0JuGzzW8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763487079; c=relaxed/simple;
-	bh=nhASVdDt4OdAwVAANU2bomnv6+IJT33HttvU1MpH8Lo=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References; b=S+3NhLQKarjWN5yfzHJ/oj9oLciHQF5hOF9vyIsPCnZa8WerkHunsr+DT/PUnWcKKXTXGFDgmkSh5om7swYB2v83WdCrh2QA3KKSMt12XfFuTXmPc7wwmw03LjXo+aMU99kvevMuervcgCzqL4TAWl9Md39/1B8SUQZSYbZQkRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NLoGzHJf; arc=none smtp.client-ip=209.85.216.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1763487233; c=relaxed/simple;
+	bh=lMCMay4OPV+EPmMwOUTyyXs4Bv2SJ+rfqLlyshkGMVk=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=kmhxMENE8ODGS3d9d1gK8/5HWoiqFltXzGrTFFHcLCKZE9tbj3/RAbDHg9Z59eaVTWFExuYm+vPNXZ1FbaGznWQRSaisRxs3nmZWEWaBBjJ9MpQzkucCsI+y50wKUfLf1ZuelaM+mnpmzWSnJoPspot9iCd4iG7x57NycV3hBoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=fxn7giCz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NLoGzHJf"
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-34361025290so4413006a91.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 18 Nov 2025 09:31:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763487076; x=1764091876; darn=vger.kernel.org;
-        h=references:message-id:date:in-reply-to:subject:cc:to:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=jJZHPmpfAYK3kOvAYzdDDouNFc3+GX3mg/4dP4wkGpE=;
-        b=NLoGzHJfgXsbAIpeLOuT6H6thcbOWsDrkYUlxHE9fk3EaW4cGSmISVyDK/gU6ynD88
-         N14Z9t/iBYvcVGGUJmeap1tNlmbkLAjhKlO+R0Dgqq2Is/zEvq+xKgVPOz5ZG5yPGTNM
-         ubaLmhdYov6TNgBBIgKY995lAQtqIcbwfnFAi76HWg7vURciDFf/clqnmsX/E6xwn9ys
-         HhzeJjSb/w6tbMbCjRS5qTE6A3g4D5uSTi50vWEpjslAIkTDywlrFQRmUKQfGoaiFbgV
-         Yoju0NimoDihKurn/a1/7eNFWW7gMu4HWdBJazse1O9QWcZTXqRrQHyNqfB+W5W3kNjs
-         8KRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763487076; x=1764091876;
-        h=references:message-id:date:in-reply-to:subject:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jJZHPmpfAYK3kOvAYzdDDouNFc3+GX3mg/4dP4wkGpE=;
-        b=EHgQR6jN5N7p//AtoiWyGS8WVCp9STj558MGmpfSsi4ZmCthA8pJBBQpL2n5wlobPY
-         iQINNHJFQDD3PoRyZRK8zoMRYAJAc9mToQYp2U+n787yNr6QAvDBA1r6LufonUsxNYNj
-         33VolfUltB8pHNhaKs0IabNEsp2N/73045jm3y//XvElTkbDu+aqJT77cJotXbBjZib8
-         b9Yds6CI9eagm5/FfNnCH4btATpndAisYm/ZYcY9j8Eszxf7D3sY6phtKQ9cVoNzjceQ
-         1PPhDDfGNmJ3SKXgdb786wBZ0EPAQfQb0GCCnblCXp+4vRbqKtGcGerUB7CQnS8dQkd1
-         hcnA==
-X-Forwarded-Encrypted: i=1; AJvYcCXK9470z0HToI5vdXKJh5g4/6C7tspFapT46SlfWrF5+GcgWrn8Row3bE2Bz6y1V6Owq3o1NiLqRz4S0MQO4k52UGg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxqcpbY7mpjMdPDienuMFupGKMf2nLjLZnKIjXy0cJ9H31Om50q
-	RHzRlFHteXOpLdfPFE9eIvqtOazzXP+QO1U0J2zfnrL8DNIaQIE1X5+qMpNAZw==
-X-Gm-Gg: ASbGncvQXflOKizx/Vs3D/ob1LyLPVwi8k6KG+5XH9H1TZ3udrwwXAz0N0RYud3CmGL
-	FAodXSnUTDaP8Ri6KSMoVTPXpi94+1eBOIamUKhDc/95HGqKG8epdsU7XQ03Zd4kd8z7f7GwYRQ
-	yXjprtNBrZqMreNbAlC6qdNaGracS0JEY0OdM/rxAI76CiNSAiNcPz0iikeOTNOIt2cyv8S1GDY
-	S/9yYd+H3nPftkQWw2sNMCTX0QmLcHX7oDQpEQrpI15mcyzN6KDfFS6438p2Nc1JZEprPjCoWJJ
-	SHycjk5zMwH4dnp6QWO3s+upaT28r26Jgwgf+QiHJpCn343FhUwSnNx8Btpzkdfnp1+oh5dIhFw
-	OmSbkAPOaPaimuxch8wG9WkOwwObp/kg6wr8u/VlXT5B+OWLiHT6VBl9c96S2KXRg9T1XNBg=
-X-Google-Smtp-Source: AGHT+IEQrU5uwPDP3B0D60MQHHmGXSAeXE5fv7FgIePf1xPikPaNbxxiXR2fp/Zl+qVssNoTrpyjFQ==
-X-Received: by 2002:a17:90b:3843:b0:330:7a32:3290 with SMTP id 98e67ed59e1d1-343fa751ad3mr18844371a91.37.1763487075532;
-        Tue, 18 Nov 2025 09:31:15 -0800 (PST)
-Received: from dw-tp ([49.207.232.208])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-345af0fcc0csm1694884a91.0.2025.11.18.09.31.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Nov 2025 09:31:13 -0800 (PST)
-From: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: Ojaswin Mujoo <ojaswin@linux.ibm.com>, Christian Brauner <brauner@kernel.org>, djwong@kernel.org, john.g.garry@oracle.com, tytso@mit.edu, dchinner@redhat.com, hch@lst.de, linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org, linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, jack@suse.cz, nilay@linux.ibm.com, martin.petersen@oracle.com, rostedt@goodmis.org, axboe@kernel.dk, linux-block@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 2/8] mm: Add PG_atomic
-In-Reply-To: <aRcrwgxV6cBu2_RH@casper.infradead.org>
-Date: Tue, 18 Nov 2025 21:47:42 +0530
-Message-ID: <878qg32u3d.ritesh.list@gmail.com>
-References: <cover.1762945505.git.ojaswin@linux.ibm.com> <5f0a7c62a3c787f2011ada10abe3826a94f99e17.1762945505.git.ojaswin@linux.ibm.com> <aRSuH82gM-8BzPCU@casper.infradead.org> <87ecq18azq.ritesh.list@gmail.com> <aRcrwgxV6cBu2_RH@casper.infradead.org>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="fxn7giCz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62976C4AF12;
+	Tue, 18 Nov 2025 17:33:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1763487231;
+	bh=lMCMay4OPV+EPmMwOUTyyXs4Bv2SJ+rfqLlyshkGMVk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=fxn7giCzujVYHabc0Viil4nTOhRJkJImVxhMvBoYAZm8UMdE8WkL0IEmq48z8t4q/
+	 2L2usb0jNNPAQ+9QHlFn7d61iFAcqDEi0YpMl75gJrIP88ywm+ohXHafRwoO1KPuzV
+	 5JyBNmd4VcM+XKpcGhTJV6aTZoOgXDRyNa8YOa2A=
+Date: Tue, 18 Nov 2025 09:33:48 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, David Hildenbrand <david@redhat.com>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
+ <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan
+ <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Steven Rostedt
+ <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Jann Horn <jannh@google.com>,
+ Pedro Falcato <pfalcato@suse.de>, Zi Yan <ziy@nvidia.com>, Baolin Wang
+ <baolin.wang@linux.alibaba.com>, Nico Pache <npache@redhat.com>, Ryan
+ Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Barry Song
+ <baohua@kernel.org>, Lance Yang <lance.yang@linux.dev>,
+ linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-mm@kvack.org,
+ linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, Andrei
+ Vagin <avagin@gmail.com>
+Subject: Re: [PATCH v4 0/9] introduce VM_MAYBE_GUARD and make it sticky
+Message-Id: <20251118093348.9dac5d7142dc6df182833612@linux-foundation.org>
+In-Reply-To: <cover.1763460113.git.lorenzo.stoakes@oracle.com>
+References: <cover.1763460113.git.lorenzo.stoakes@oracle.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Matthew Wilcox <willy@infradead.org> writes:
+On Tue, 18 Nov 2025 10:17:42 +0000 Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
 
-> On Fri, Nov 14, 2025 at 10:30:09AM +0530, Ritesh Harjani wrote:
->> Matthew Wilcox <willy@infradead.org> writes:
->> 
->> > On Wed, Nov 12, 2025 at 04:36:05PM +0530, Ojaswin Mujoo wrote:
->> >> From: John Garry <john.g.garry@oracle.com>
->> >> 
->> >> Add page flag PG_atomic, meaning that a folio needs to be written back
->> >> atomically. This will be used by for handling RWF_ATOMIC buffered IO
->> >> in upcoming patches.
->> >
->> > Page flags are a precious resource.  I'm not thrilled about allocating one
->> > to this rather niche usecase.  Wouldn't this be more aptly a flag on the
->> > address_space rather than the folio?  ie if we're doing this kind of write
->> > to a file, aren't most/all of the writes to the file going to be atomic?
->> 
->> As of today the atomic writes functionality works on the per-write
->> basis (given it's a per-write characteristic). 
->> 
->> So, we can have two types of dirty folios sitting in the page cache of
->> an inode. Ones which were done using atomic buffered I/O flag
->> (RWF_ATOMIC) and the other ones which were non-atomic writes. Hence a
->> need of a folio flag to distinguish between the two writes.
->
-> I know, but is this useful?  AFAIK, the files where Postgres wants to
-> use this functionality are the log files, and all writes to the log
-> files will want to use the atomic functionality.  What's the usecase
-> for "I want to mix atomic and non-atomic buffered writes to this file"?
+> Currently, guard regions are not visible to users except through
+> /proc/$pid/pagemap, with no explicit visibility at the VMA level.
+> 
+> This makes the feature less useful, as it isn't entirely apparent which
+> VMAs may have these entries present, especially when performing actions
+> which walk through memory regions such as those performed by CRIU.
+> 
+> This series addresses this issue by introducing the VM_MAYBE_GUARD flag
+> which fulfils this role, updating the smaps logic to display an entry for
+> these.
 
-Actually this goes back to the design of how we added support of atomic
-writes during DIO. So during the initial design phase we decided that
-this need not be a per-inode attribute or an open flag, but this is a
-per write I/O characteristic.
-
-So as per the current design, we don't have any open flag or a
-persistent inode attribute which says kernel should permit _only_ atomic
-writes I/O to this file. Instead what we support today is DIO atomic
-writes using RWF_ATOMIC flag in pwritev2 syscall.
-
-Having said that there can be several policy decision that could still be
-discussed e.g. make sure any previous dirty data is flushed to disk when a
-buffered atomic write request is made to an inode. 
-Maybe that would allow us to just keep a flag at the address space level
-because we would never have a mix of atomic and non-atomic page cache
-pages.
-
-IMO, I agree that folio flag is a scarce resource, but I guess the
-initial goal of this patch series is mainly to discuss the initial
-design of the core feature i.e. how buffered atomic writes should look
-in Linux kernel. I agree and point taken that we should be careful with
-using folio flags, but let's see how the design shapes up maybe? - that
-will help us understand whether a folio flag is really required or maybe
-an address space flag would do. 
-
--ritesh
+I updated mm-unstable to this version.
