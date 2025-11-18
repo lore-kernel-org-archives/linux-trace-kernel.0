@@ -1,229 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BAB01D61A3;
-	Tue, 18 Nov 2025 13:25:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AF6935580A;
+	Tue, 18 Nov 2025 13:42:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763472307; cv=none; b=E4Bycwz2I9Co35A9oIkSBhZpkLbPg7uTE7S4BZ1lPHmhbRkpIVsN7jAGqDxfaEOvszgBk0kJHsP0VJdTDComVcSq5FPAQn7ejQk5ZdTsl9JilC0Ogocq+8YOAfq0bSEyIBMymTPqID7S1B4YcIvxJrjYojNsWyQkmwJKt00rTaU=
+	t=1763473334; cv=none; b=Nds9FU9HYKA4EimYrDRKi+uLWkP9AbSdFCYy2K8sGCjFyA/+nsNGH/Wywmb6jvd4CfLborQRiCgkBSMPFIqXiXV9Nc+ajKXJcKEXsB+xHN4f/eKIkwTvK50zQPEXU9ZbNeNiDGeIwk6qfiQGQdp6jzwxEmsfpNwheSmI1t0bXm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763472307; c=relaxed/simple;
-	bh=F5W+P0I3YFJHta4PTmiymq7vv23UWVkLDdd8del4PDA=;
-	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
-	 Subject:From:To:Cc:Date; b=p9Mgs9zxSyVtmr/9pQh4qPnVlnR/jQ/zjXYHS6mavGJJfFvXhrmjw7k1ZIe1ylYEKcCPnmn/wn2uRw9l6VaPBCpSkTdhdSXUCBf0h9FtmnWgnrk17f+uKDDmRLbTYRTGbIX9QCh+oqo2PIE5Rcq/pko6jmY0BiJdIgbntsEDfmU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pDgKmdfJ; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pDgKmdfJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92180C19425;
-	Tue, 18 Nov 2025 13:25:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763472306;
-	bh=F5W+P0I3YFJHta4PTmiymq7vv23UWVkLDdd8del4PDA=;
-	h=In-Reply-To:References:Subject:From:To:Cc:Date:From;
-	b=pDgKmdfJMGU7ptY98gy55Bju3+TsbaUDRLfhPB2yzMB+PMEfiyQAqC/CuxMb7IzTM
-	 0YIu8ZT/SJfZJ0rqA6R63ZK3Hjb72JDZeLqJFH762L36IZRrcvzXql8tXpB85MXntF
-	 6dITIVlUsKHM4/I2V2nwBuvvYoc4VnCnsP38koVIrCJMxyaJkjYh+gbU5bqFFWRRjP
-	 J5OKZVGHVbblqiUiN23F9oUz4BjRvO1ldsyAzlVZ9GOA1Yis8jvZxMxnvb5sZ7NX7y
-	 E0VFCw8gEwHY9qnJmc9WaxxR5gB+naRIiYPWn+u+LGW9AzV693T3uHoYDmB4cO+32+
-	 P9t5IPpQ9lzlg==
-Content-Type: multipart/mixed; boundary="===============3617201011509474706=="
+	s=arc-20240116; t=1763473334; c=relaxed/simple;
+	bh=Um04pVU7wsUE982wDvPeRRijkwcDQcIfgXubQOjBSMY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rj/pMWGvomUfT3X9Ew31eKDLZhiwcyhVsToRDuYdfpL66p18dL1jpUHFiWTMpU7l+3ewh38sJCpcwNw26g7W/s9D1i7OhPw7PHeu/99YAIV4kq/pX1x0qU3yqJ2Dah/udVZX1yAyVq2OkH9Paashg1HrqIkb4ehepzmMmJ4MA5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf15.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay10.hostedemail.com (Postfix) with ESMTP id C7E2DC0552;
+	Tue, 18 Nov 2025 13:42:03 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf15.hostedemail.com (Postfix) with ESMTPA id 133351A;
+	Tue, 18 Nov 2025 13:42:00 +0000 (UTC)
+Date: Tue, 18 Nov 2025 08:42:26 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Steven Rostedt <rostedt@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Thomas Gleixner <tglx@linutronix.de>, Ian
+ Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>, Arnaldo
+ Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Douglas
+ Raillard <douglas.raillard@arm.com>
+Subject: Re: [POC][RFC][PATCH 1/3] tracing: Add perf events
+Message-ID: <20251118084226.1e531c4b@gandalf.local.home>
+In-Reply-To: <20251118083510.GI3245006@noisy.programming.kicks-ass.net>
+References: <20251118002950.680329246@kernel.org>
+	<20251118003531.644484343@kernel.org>
+	<20251118083510.GI3245006@noisy.programming.kicks-ass.net>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <83e39931f7cb3894d6fd3537550448b89a5aa60fb2e3757b56d6e8db91496e3d@mail.kernel.org>
-In-Reply-To: <20251118123639.688444-2-dongml2@chinatelecom.cn>
-References: <20251118123639.688444-2-dongml2@chinatelecom.cn>
-Subject: Re: [PATCH bpf-next v3 1/6] ftrace: introduce FTRACE_OPS_FL_JMP
-From: bot+bpf-ci@kernel.org
-To: menglong8.dong@gmail.com,ast@kernel.org,rostedt@goodmis.org
-Cc: daniel@iogearbox.net,john.fastabend@gmail.com,andrii@kernel.org,martin.lau@linux.dev,eddyz87@gmail.com,song@kernel.org,yonghong.song@linux.dev,kpsingh@kernel.org,sdf@fomichev.me,haoluo@google.com,jolsa@kernel.org,mhiramat@kernel.org,mark.rutland@arm.com,mathieu.desnoyers@efficios.com,jiang.biao@linux.dev,bpf@vger.kernel.org,linux-kernel@vger.kernel.org,linux-trace-kernel@vger.kernel.org,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,clm@meta.com,ihor.solodrai@linux.dev
-Date: Tue, 18 Nov 2025 13:25:04 +0000 (UTC)
-
---===============3617201011509474706==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout08
+X-Rspamd-Queue-Id: 133351A
+X-Stat-Signature: aeb1soab6d7rawe8asosexj7k1c1thm6
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/B+CQkLgTlVRE55r//DwkLri7yWbR0H9E=
+X-HE-Tag: 1763473320-650899
+X-HE-Meta: U2FsdGVkX1+eDlRh1IDLMVEp5KpbMIrSr7EXuynOECOUejEx2Hy77n5rMpmWfTEaZZozla0ppcO1uUJdaq0oJ+g4Pe8/9vJWZHwj2sA4YOW8bkQhhtqu6+WIogIo11rvcpJcHvwPVxovrA2h4zFH4oomqXUlHoElCrhwbnkxYTv6cJOqdsvl2KmHuoD05gvP5CqzXUSNtJZH4joPSat6lZhUvcIf9JrcMWNXQEVSCmjhK+QGLOsfdJGckkGr9CzU00k9wxMTM2QLeQ2gryhzti1W1DwZTCu4C9RgG/lItwLWwwr9WhDPl7HPBVL36JzOUF1sXlerHTlMSaBKi6rmwtPtpAKngcW6rH34Gu8TTvsLQlWc1Hh11r4swrUMQv1E
 
-> diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-> index 07f8c309e..015dd1049 100644
-> --- a/include/linux/ftrace.h
-> +++ b/include/linux/ftrace.h
+On Tue, 18 Nov 2025 09:35:10 +0100
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-[ ... ]
+> > +	cpu = smp_processor_id();
+> > +
+> > +	e = per_cpu_ptr(events, cpu)->event;
+> > +	if (!e)
+> > +		return 0;
+> > +
+> > +	e->pmu->read(e);
+> > +	return local64_read(&e->count);
+> > +}  
+> 
+> NAK, wtf do you think its okay to use internal stuff like that? And
+> wrongly while at it.
 
-> @@ -577,6 +578,38 @@ static inline void arch_ftrace_set_direct_caller(struct ftrace_regs *fregs,
->  						 unsigned long addr) { }
->  #endif /* CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS */
->
-> +#ifdef CONFIG_DYNAMIC_FTRACE_WITH_JMP
-> +static inline bool ftrace_is_jmp(unsigned long addr)
-> +{
-> +	return addr & 1;
-> +}
-> +
-> +static inline unsigned long ftrace_jmp_set(unsigned long addr)
-> +{
-> +	return addr | 1UL;
-> +}
-> +
-> +static inline unsigned long ftrace_jmp_get(unsigned long addr)
-> +{
-> +	return addr & ~1UL;
-> +}
-> +#else
-> +static inline bool ftrace_is_jmp(unsigned long addr)
-> +{
-> +	return false;
-> +}
-> +
-> +static inline unsigned long ftrace_jmp_set(unsigned long addr)
-> +{
-> +	return addr;
-> +}
-> +
-> +static inline unsigned long ftrace_jmp_get(unsigned long addr)
-> +{
-> +	return addr;
-> +}
-> +#endif /* CONFIG_DYNAMIC_FTRACE_WITH_JMP */
+Peter, this is a PROOF-OF-CONCEPT. It means I'm showing the concept and not
+the implementation. I'm hoping the NAK is on the implementation and not the
+concept.
 
-[ ... ]
+> 
+> What you wanted to use was perf_event_read_local().
 
-> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> index 59cfacb8a..bbb37c0f8 100644
-> --- a/kernel/trace/ftrace.c
-> +++ b/kernel/trace/ftrace.c
+Great! I didn't know about that. Which is why I posted this as a
+PROOF-OF-CONCEPT and not even a normal RFC, so that I could learn about the
+proper way of doing this.
 
-[ ... ]
-
-> @@ -5951,7 +5951,8 @@ static void remove_direct_functions_hash(struct ftrace_hash *hash, unsigned long
->  	for (i = 0; i < size; i++) {
->  		hlist_for_each_entry(entry, &hash->buckets[i], hlist) {
->  			del = __ftrace_lookup_ip(direct_functions, entry->ip);
-> -			if (del && del->direct == addr) {
-> +			if (del && ftrace_jmp_get(del->direct) ==
-> +				   ftrace_jmp_get(addr)) {
->  				remove_hash_entry(direct_functions, del);
->  				kfree(del);
->  			}
-
-[ ... ]
-
-> @@ -6016,8 +6017,15 @@ int register_ftrace_direct(struct ftrace_ops *ops, unsigned long addr)
->  	if (ftrace_hash_empty(hash))
->  		return -EINVAL;
->
-> +	/* This is a "raw" address, and this should never happen. */
-> +	if (WARN_ON_ONCE(ftrace_is_jmp(addr)))
-> +		return -EINVAL;
-> +
->  	mutex_lock(&direct_mutex);
->
-> +	if (ops->flags & FTRACE_OPS_FL_JMP)
-> +		addr = ftrace_jmp_set(addr);
-> +
->  	/* Make sure requested entries are not already registered.. */
-
-[ ... ]
-
->  	/* ... and add the new entries */
->  	size = 1 << hash->size_bits;
->  	for (i = 0; i < size; i++) {
->  		hlist_for_each_entry(entry, &hash->buckets[i], hlist) {
->  			new = add_hash_entry(new_hash, entry->ip);
->  			if (!new)
->  				goto out_unlock;
->  			/* Update both the copy and the hash entry */
->  			new->direct = addr;
->  			entry->direct = addr;
->  		}
->  	}
-
-After addr is potentially encoded with ftrace_jmp_set(), it gets stored in
-entry->direct. However, ftrace_find_rec_direct() returns entry->direct
-without masking:
-
-unsigned long ftrace_find_rec_direct(unsigned long ip)
-{
-	struct ftrace_func_entry *entry;
-
-	entry = __ftrace_lookup_ip(direct_functions, ip);
-	if (!entry)
-		return 0;
-
-	return entry->direct;
-}
-
-This encoded address flows to two consumers:
-
-1. ftrace_get_addr_new() and ftrace_get_addr_curr() return it directly,
-   which eventually reaches architecture-specific ftrace_call_replace().
-   Can the architecture code handle addresses with LSB set?
-
-2. The debug output at kernel/trace/ftrace.c in ftrace_enabled_show():
-   seq_printf(m, "\n\tdirect-->%pS", (void *)direct);
-
-   Won't this print the wrong symbol due to the LSB being set?
-
->  	ops->func = call_direct_funcs;
->  	ops->flags = MULTI_FLAGS;
->  	ops->trampoline = FTRACE_REGS_ADDR;
->  	ops->direct_call = addr;
-
-Similarly, ops->direct_call stores the encoded address. In
-call_direct_funcs():
-
-static void call_direct_funcs(unsigned long ip, unsigned long pip,
-			      struct ftrace_ops *ops, struct ftrace_regs *fregs)
-{
-	unsigned long addr = READ_ONCE(ops->direct_call);
-
-	if (!addr)
-		return;
-
-	arch_ftrace_set_direct_caller(fregs, addr);
-}
-
-The encoded address is passed directly to arch_ftrace_set_direct_caller()
-without masking. Looking at arch implementations like x86:
-
-static inline void
-__arch_ftrace_set_direct_caller(struct pt_regs *regs, unsigned long addr)
-{
-	/* Emulate a call */
-	regs->orig_ax = addr;
-}
-
-Does arch_ftrace_set_direct_caller() expect addresses with the LSB set?
-The implementations directly store the address into registers without any
-masking.
-
-The commit message says "we can tell if we should use 'jmp' for the
-callback in ftrace_call_replace()", but no architecture code is updated
-to check the LSB. Should ftrace_find_rec_direct() and call_direct_funcs()
-mask the JMP bit before returning addresses to architecture code?
-
-> @@ -6136,8 +6146,13 @@ __modify_ftrace_direct(struct ftrace_ops *ops, unsigned long addr)
->
->  	lockdep_assert_held_once(&direct_mutex);
->
-> +	/* This is a "raw" address, and this should never happen. */
-> +	if (WARN_ON_ONCE(ftrace_is_jmp(addr)))
-> +		return -EINVAL;
-> +
-> +	if (ops->flags & FTRACE_OPS_FL_JMP)
-> +		addr = ftrace_jmp_set(addr);
-
-Same encoding happens here with the same flow issues.
-
-
----
-AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
-See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
-
-CI run summary: https://github.com/kernel-patches/bpf/actions/runs/19466635856
-
---===============3617201011509474706==--
+-- Steve
