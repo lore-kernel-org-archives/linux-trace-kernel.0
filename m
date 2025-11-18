@@ -1,181 +1,174 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1564239E7D;
-	Mon, 17 Nov 2025 22:50:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 169EE1FBCA7;
+	Tue, 18 Nov 2025 00:35:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763419811; cv=none; b=kFEFWm9w1p4HQt9GV2e169f9X9a8f0r86XhqJyyZQ1M8QXhlpGV5xnH+W3nE5yI0tuEEuDz8q0pYeLNaP4cZ/wppcMJyQptivKPO/2dlkbpwyGaMVG31ufN0HrkuKA2AdV4V15tmL+88oDxRFGfVdiONrvFIeaEIq4sZgiRyeh4=
+	t=1763426108; cv=none; b=UOM5soOKrSK0QwInGeIBEtqLFBNrqZZSsbxVtfqecJwkdZg65l7vutsKBNL8a4qjeI+OFx9hGlptiqJnnceBxzFlmMZmTitXWhumMA1LLwzMQWrHvD5JeRUcBeuJ3URFIkCnDpUvznVCpoEAf4upVfXk5/ptgSebw6x49PpmGro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763419811; c=relaxed/simple;
-	bh=ho1p3QGA7T1hhyD52Dd36WHe1Q9s1Ct6l/6u2zLQ20A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UJTDGRxe7dJyb6kNQKoDTis94IfMBnf4zBNJpkafAxjeJpd1kqqtUA1vH3HTGmdjQldVt85ZCwCXIrzmJqDXhXR69zNc0Iy2BHZvBY59EADaWieP89KIYfKmjtyupsyeALJXRQAar9D1WQKOalUHdZOrnsy9wFrkHcT2V5Fr/L4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dzgI7Myr; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1763426108; c=relaxed/simple;
+	bh=eTJwxCzJzW3WfIGlWU8WtCDcH7+6niDwAKzH4ggLapE=;
+	h=Message-ID:Date:From:To:Cc:Subject; b=JwhAhpM2XQubukqG0f8Ri7Dn3UwJdDu1owUNxIQKRlMA8HF7UHHT9x7aOEunPRypL2ixRWhdu79/8OzVVqBXxhT86fBeu+LiRJg3HtNjVDtLPuXeW0MHQt5sGqkCsVKpze685fdTGbw0Ou+b+pwfGn3BF8+yTFfFC+2y95ecfa8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D9l5QmVw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dzgI7Myr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763419808; x=1794955808;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ho1p3QGA7T1hhyD52Dd36WHe1Q9s1Ct6l/6u2zLQ20A=;
-  b=dzgI7MyrWYItYeDkjZaBwIvNEErQBlmBlpHmwutKQn8crtMRBZA2zWlC
-   0Ag46fAjYolxFc2YJFEBrKlYKkJLnb/M5hFj0t9S4r3P8I/pcbcFfVH6f
-   aepgZGiUQ5TvQT8GEOC3tiF4phMFfKQTpRnBG8zMfY4ceCau/JdiVf8SN
-   BXLcILPBEsOZP7JAmai9FtX6V5i/5D5nRyEdcUXLYlmm5wJarVUWM1lH6
-   CZPXETVnGwA/iyeCMxa2C8VMEJCsN0oOii5biWBhfP7jKjrmBv0LkBsTq
-   5c9k5b6MvcG5vWrk5nhDqY9onJcCO/UgToNOh9Wvr2uaKhrAlcGL/RLoD
-   g==;
-X-CSE-ConnectionGUID: YTQrUMVnSKC6TYAUPlMyeg==
-X-CSE-MsgGUID: JAXOd9kMRX2XwFpq5iVGjQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11616"; a="76533893"
-X-IronPort-AV: E=Sophos;i="6.19,313,1754982000"; 
-   d="scan'208";a="76533893"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2025 14:50:05 -0800
-X-CSE-ConnectionGUID: xK3yYl6ATSG32EPXWS2EjQ==
-X-CSE-MsgGUID: WhMk9VMjQ+eqOU4N8nUaFw==
-X-ExtLoop1: 1
-Received: from lkp-server01.sh.intel.com (HELO adf6d29aa8d9) ([10.239.97.150])
-  by fmviesa003.fm.intel.com with ESMTP; 17 Nov 2025 14:50:01 -0800
-Received: from kbuild by adf6d29aa8d9 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1vL82n-00017f-37;
-	Mon, 17 Nov 2025 22:49:57 +0000
-Date: Tue, 18 Nov 2025 06:49:40 +0800
-From: kernel test robot <lkp@intel.com>
-To: Menglong Dong <menglong8.dong@gmail.com>, ast@kernel.org,
-	rostedt@goodmis.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	daniel@iogearbox.net, john.fastabend@gmail.com, andrii@kernel.org,
-	martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org,
-	yonghong.song@linux.dev, kpsingh@kernel.org, sdf@fomichev.me,
-	haoluo@google.com, jolsa@kernel.org, mhiramat@kernel.org,
-	mark.rutland@arm.com, mathieu.desnoyers@efficios.com,
-	jiang.biao@linux.dev, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH bpf-next v2 6/6] bpf: implement "jmp" mode for trampoline
-Message-ID: <202511180613.Om7k1nP1-lkp@intel.com>
-References: <20251117034906.32036-7-dongml2@chinatelecom.cn>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D9l5QmVw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4514DC2BCB7;
+	Tue, 18 Nov 2025 00:35:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763426106;
+	bh=eTJwxCzJzW3WfIGlWU8WtCDcH7+6niDwAKzH4ggLapE=;
+	h=Date:From:To:Cc:Subject:From;
+	b=D9l5QmVwK5jBvkC0Oeyv1MJqxcVv2VJXaQ6BmAc6EQ3T+ywpoXQsdVQEE0o5gMK56
+	 QSPqrLz4lS0l6w4at6ZCX7JMJK1wBLN9rVvUfoZDvHlxz/ScWUCfH4ZuITjqrLJvw8
+	 cszXl0xlGn3EE/A7tZ1HG6hp2dxkFzlaqhQQAjngt889gAZeNm6NdMBT2TPdINrZY/
+	 aFH97lK8XNZfY4ZkM8Pv4lvwSX7eIMUNGx5EK4W0g2WoL/nh6v3xJc55PRnML23R0I
+	 zAmfvbFi06iOGhzK1g9dlUSn/wnXR6VxloYGt7exgTEQsQhqgj9eDQa0RsxqLU3Ox4
+	 xDL1tJfP+XxFA==
+Received: from rostedt by gandalf with local (Exim 4.98.2)
+	(envelope-from <rostedt@kernel.org>)
+	id 1vL9gx-00000002zJU-2are;
+	Mon, 17 Nov 2025 19:35:31 -0500
+Message-ID: <20251118002950.680329246@kernel.org>
+User-Agent: quilt/0.68
+Date: Mon, 17 Nov 2025 19:29:50 -0500
+From: Steven Rostedt <rostedt@kernel.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Ian Rogers <irogers@google.com>,
+ Namhyung Kim <namhyung@kernel.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Jiri Olsa <jolsa@kernel.org>,
+ Douglas Raillard <douglas.raillard@arm.com>
+Subject: [POC][RFC][PATCH 0/3] tracing: Add perf events to trace buffer
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251117034906.32036-7-dongml2@chinatelecom.cn>
-
-Hi Menglong,
-
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on bpf-next/master]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Menglong-Dong/ftrace-introduce-FTRACE_OPS_FL_JMP/20251117-115243
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git master
-patch link:    https://lore.kernel.org/r/20251117034906.32036-7-dongml2%40chinatelecom.cn
-patch subject: [PATCH bpf-next v2 6/6] bpf: implement "jmp" mode for trampoline
-config: arm64-randconfig-002-20251118 (https://download.01.org/0day-ci/archive/20251118/202511180613.Om7k1nP1-lkp@intel.com/config)
-compiler: clang version 22.0.0git (https://github.com/llvm/llvm-project 0bba1e76581bad04e7d7f09f5115ae5e2989e0d9)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251118/202511180613.Om7k1nP1-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202511180613.Om7k1nP1-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   kernel/bpf/trampoline.c:500:11: error: incomplete definition of type 'struct ftrace_ops'
-     500 |                 tr->fops->flags |= FTRACE_OPS_FL_JMP;
-         |                 ~~~~~~~~^
-   include/linux/ftrace.h:40:8: note: forward declaration of 'struct ftrace_ops'
-      40 | struct ftrace_ops;
-         |        ^
->> kernel/bpf/trampoline.c:500:22: error: use of undeclared identifier 'FTRACE_OPS_FL_JMP'
-     500 |                 tr->fops->flags |= FTRACE_OPS_FL_JMP;
-         |                                    ^~~~~~~~~~~~~~~~~
-   kernel/bpf/trampoline.c:502:11: error: incomplete definition of type 'struct ftrace_ops'
-     502 |                 tr->fops->flags &= ~FTRACE_OPS_FL_JMP;
-         |                 ~~~~~~~~^
-   include/linux/ftrace.h:40:8: note: forward declaration of 'struct ftrace_ops'
-      40 | struct ftrace_ops;
-         |        ^
-   kernel/bpf/trampoline.c:502:23: error: use of undeclared identifier 'FTRACE_OPS_FL_JMP'
-     502 |                 tr->fops->flags &= ~FTRACE_OPS_FL_JMP;
-         |                                     ^~~~~~~~~~~~~~~~~
-   kernel/bpf/trampoline.c:534:12: error: incomplete definition of type 'struct ftrace_ops'
-     534 |                         tr->fops->flags |= FTRACE_OPS_FL_JMP;
-         |                         ~~~~~~~~^
-   include/linux/ftrace.h:40:8: note: forward declaration of 'struct ftrace_ops'
-      40 | struct ftrace_ops;
-         |        ^
-   kernel/bpf/trampoline.c:534:23: error: use of undeclared identifier 'FTRACE_OPS_FL_JMP'
-     534 |                         tr->fops->flags |= FTRACE_OPS_FL_JMP;
-         |                                            ^~~~~~~~~~~~~~~~~
-   kernel/bpf/trampoline.c:536:12: error: incomplete definition of type 'struct ftrace_ops'
-     536 |                         tr->fops->flags &= ~FTRACE_OPS_FL_JMP;
-         |                         ~~~~~~~~^
-   include/linux/ftrace.h:40:8: note: forward declaration of 'struct ftrace_ops'
-      40 | struct ftrace_ops;
-         |        ^
-   kernel/bpf/trampoline.c:536:24: error: use of undeclared identifier 'FTRACE_OPS_FL_JMP'
-     536 |                         tr->fops->flags &= ~FTRACE_OPS_FL_JMP;
-         |                                             ^~~~~~~~~~~~~~~~~
-   8 errors generated.
 
 
-vim +/FTRACE_OPS_FL_JMP +500 kernel/bpf/trampoline.c
+This series adds a perf event to the ftrace ring buffer.
+It is currently a proof of concept as I'm not happy with the interface
+and I also think the recorded perf event format may be changed too.
 
-   470	
-   471		size = arch_bpf_trampoline_size(&tr->func.model, tr->flags,
-   472						tlinks, tr->func.addr);
-   473		if (size < 0) {
-   474			err = size;
-   475			goto out;
-   476		}
-   477	
-   478		if (size > PAGE_SIZE) {
-   479			err = -E2BIG;
-   480			goto out;
-   481		}
-   482	
-   483		im = bpf_tramp_image_alloc(tr->key, size);
-   484		if (IS_ERR(im)) {
-   485			err = PTR_ERR(im);
-   486			goto out;
-   487		}
-   488	
-   489		err = arch_prepare_bpf_trampoline(im, im->image, im->image + size,
-   490						  &tr->func.model, tr->flags, tlinks,
-   491						  tr->func.addr);
-   492		if (err < 0)
-   493			goto out_free;
-   494	
-   495		err = arch_protect_bpf_trampoline(im->image, im->size);
-   496		if (err)
-   497			goto out_free;
-   498	
-   499		if (bpf_trampoline_use_jmp(tr->flags))
- > 500			tr->fops->flags |= FTRACE_OPS_FL_JMP;
-   501		else
-   502			tr->fops->flags &= ~FTRACE_OPS_FL_JMP;
-   503	
-   504		WARN_ON(tr->cur_image && total == 0);
-   505		if (tr->cur_image)
-   506			/* progs already running at this address */
-   507			err = modify_fentry(tr, orig_flags, tr->cur_image->image,
-   508					    im->image, lock_direct_mutex);
-   509		else
-   510			/* first time registering */
-   511			err = register_fentry(tr, im->image);
-   512	
+This proof-of-concept interface (which I have no plans on using), currently
+just adds 6 new trace options.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+  event_cache_misses
+  event_cpu_cycles
+  func-cache-misses
+  func-cpu-cycles
+  funcgraph-cache-misses
+  funcgraph-cpu-cycles
+
+The first two trigger a perf event after every event, the second two trigger
+a perf event after every function and the last two trigger a perf event
+right after the start of a function and again at the end of the function.
+
+As this will eventual work with many more perf events than just cache-misses
+and cpu-cycles , using options is not appropriate. Especially since the
+options are limited to a 64 bit bitmask, and that can easily go much higher.
+I'm thinking about having a file instead that will act as a way to enable
+perf events for events, function and function graph tracing.
+
+  set_event_perf, set_ftrace_perf, set_fgraph_perf
+
+And an available_perf_events that show what can be written into these files,
+(similar to how set_ftrace_filter works). But for now, it was just easier to
+implement them as options.
+
+As for the perf event that is triggered. It currently is a dynamic array of
+64 bit values. Each value is broken up into 8 bits for what type of perf
+event it is, and 56 bits for the counter. It only writes a per CPU raw
+counter and does not do any math. That would be needed to be done by any
+post processing.
+
+Since the values are for user space to do the subtraction to figure out the
+difference between events, for example, the function_graph tracer may have:
+
+             is_vmalloc_addr() {
+               /* cpu_cycles: 5582263593 cache_misses: 2869004572 */
+               /* cpu_cycles: 5582267527 cache_misses: 2869006049 */
+             }
+
+User space would subtract 2869006049 - 2869004572 = 1477
+
+Then 56 bits should be plenty.
+
+  2^55 / 1,000,000,000 / 60 / 60 / 24 = 416
+  416 / 4 = 104
+
+If you have a 4GHz machine, the cpu-cycles will overflow the 55 bits in 104
+days. This tooling is not for seeing how many cycles run over 104 days.
+User space tooling would just need to be aware that the vale is 56 bits and
+when calculating the difference between start and end do something like:
+
+  if (start > end)
+      end |= 1ULL << 56;
+
+  delta = end - start;
+
+The next question is how to label the perf events to be in the 8 bit
+portion. It could simply be a value that is registered, and listed in the
+available_perf_events file.
+
+  cpu_cycles:1
+  cach_misses:2
+  [..]
+
+And this would need to be recorded by any tooling reading the events
+so that it knows how to map the events with their attached ids.
+
+But again, this is just a proof-of-concept. How this will eventually be
+implemented is yet to be determined.
+
+But to test these patches (which are based on top of my linux-next branch,
+which should now be in linux-next):
+
+  # cd /sys/kernel/tracing
+  # echo 1 > options/event_cpu_cycles
+  # echo 1 > options/event_cache_misses
+  # echo 1 > events/syscalls/enable
+  # cat trace
+[..]
+            bash-995     [007] .....    98.255252: sys_write -> 0x2
+            bash-995     [007] .....    98.255257: cpu_cycles: 1557241774 cache_misses: 449901166
+            bash-995     [007] .....    98.255284: sys_dup2(oldfd: 0xa, newfd: 1)
+            bash-995     [007] .....    98.255285: cpu_cycles: 1557260057 cache_misses: 449902679
+            bash-995     [007] .....    98.255305: sys_dup2 -> 0x1
+            bash-995     [007] .....    98.255305: cpu_cycles: 1557280203 cache_misses: 449906196
+            bash-995     [007] .....    98.255343: sys_fcntl(fd: 0xa, cmd: 1, arg: 0)
+            bash-995     [007] .....    98.255344: cpu_cycles: 1557322304 cache_misses: 449915522
+            bash-995     [007] .....    98.255352: sys_fcntl -> 0x1
+            bash-995     [007] .....    98.255353: cpu_cycles: 1557327809 cache_misses: 449916844
+            bash-995     [007] .....    98.255361: sys_close(fd: 0xa)
+            bash-995     [007] .....    98.255362: cpu_cycles: 1557335383 cache_misses: 449918232
+            bash-995     [007] .....    98.255369: sys_close -> 0x0
+
+
+
+Comments welcomed.
+
+
+Steven Rostedt (3):
+      tracing: Add perf events
+      ftrace: Add perf counters to function tracing
+      fgraph: Add perf counters to function graph tracer
+
+----
+ include/linux/trace_recursion.h      |   5 +-
+ kernel/trace/trace.c                 | 153 ++++++++++++++++++++++++++++++++-
+ kernel/trace/trace.h                 |  38 ++++++++
+ kernel/trace/trace_entries.h         |  13 +++
+ kernel/trace/trace_event_perf.c      | 162 +++++++++++++++++++++++++++++++++++
+ kernel/trace/trace_functions.c       | 124 +++++++++++++++++++++++++--
+ kernel/trace/trace_functions_graph.c | 117 +++++++++++++++++++++++--
+ kernel/trace/trace_output.c          |  70 +++++++++++++++
+ 8 files changed, 670 insertions(+), 12 deletions(-)
