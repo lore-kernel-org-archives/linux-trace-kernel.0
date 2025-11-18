@@ -1,170 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D901D243954;
-	Tue, 18 Nov 2025 02:09:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D82F1749C;
+	Tue, 18 Nov 2025 03:06:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763431793; cv=none; b=hC00BxjAxLt2UdYjcxIqqghG0+K0iQEUubEbNrcPsyWEfNrV6csj5gI85+LurAFgr+1ZlGFFy32mHFM+3g6Co0wdIHvOG/zmCJEiNKCUrwiQEDCUPQR/dNp3ckEvMIZiuet7LQzQ/Dv6eR4DIUsNSeGOwXypCX9dYJ5OoMcQirc=
+	t=1763435183; cv=none; b=UlG01VEjrxMrZaqNB4vDP36X0O38+cKZfa3Q8GXduB5JOF+M4H4gHakGm8zaN/vPovjdxY92suSN8+LAA7j4QoeH8ul1Tr+WF8QOZxE3y5qfAiCnMBu3F6OMPqGeTC3I+cfuKJ5UYypWUjJVrWzI6YzW1/54Jmbq+2SPtSz2utU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763431793; c=relaxed/simple;
-	bh=WW99lHBxpZW1iRW+EUshaaol52KfCnDwjzxBleNBscA=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=dOQh1XqTxDgMnpy3heYubzZBYT5KYIRWmp5qOhp4GAqbn+uk8QaAMByMHIRZDF6e8rygh4KB0kU7bS/TVC1SS+Pe0mJBtAHIpwn+6TNGiG628vZYcwa2p67LlZTCMbgNdIHqUP4MEfWjhiIhGZugAm1qsDXorE32NyHjiQj7iHg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iak9aBMG; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iak9aBMG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06876C2BC87;
-	Tue, 18 Nov 2025 02:09:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763431791;
-	bh=WW99lHBxpZW1iRW+EUshaaol52KfCnDwjzxBleNBscA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=iak9aBMGQgdL6X1JA81G5bTx3eh5kxMHeKJLzjx5x5BugkYwf8QZawYedba2IVVyc
-	 KS8xNYDuMrQTuYOqkcO0nvryzYj/Kfb/UoAhWMHyQtSiSNrJ1SoMmDNZzAsb3LcmPB
-	 wvwzH1Thz8jJnwlzuSChvMIMPKTPNfKZhkPZL5EFEsJzBdYAyDvYFtd53OHP9Or4Cu
-	 LnYPUnPjtqL6rub58FT9EDSzoNYN2on0T0jrFnHUVHngucaJrnT+FjfH673tUc/WkO
-	 AK8gdmanU4vYTSPhQMM+Hi4MLZafJBs3Rl/H05U4p9y7MbvxONOnDNHBlzugO1B2NY
-	 E8dbfoKbfcgTg==
-Date: Tue, 18 Nov 2025 11:09:46 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Wander Lairson Costa <wander@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Tomas Glozar <tglozar@redhat.com>,
- Ivan Pravdin <ipravdin.official@gmail.com>, Crystal Wood
- <crwood@redhat.com>, John Kacur <jkacur@redhat.com>, Costa Shulyupin
+	s=arc-20240116; t=1763435183; c=relaxed/simple;
+	bh=zC1huWH/fM5jeKOAKnLlB/GiaJs8JnRRXh1qVSl+Y2s=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=eEg0stGyob+4ZEV3XJ31CzHGoxFSYKJtpqr7VG3ONoUdPU4zz0yjAPxP1qXWUOpon7zc27fwOWQ6AZIjWZXPq6cn3e4qwh7IyNvs/oVzgMkQm7x8fxPM7TdqjbzkfYclaCDHHstN27ECDkQpKZNxZL2ud6p/LzBrSuE+qdVCKwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf05.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay09.hostedemail.com (Postfix) with ESMTP id 1D2FF85C87;
+	Tue, 18 Nov 2025 03:06:19 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf05.hostedemail.com (Postfix) with ESMTPA id AC1992000E;
+	Tue, 18 Nov 2025 03:06:16 +0000 (UTC)
+Date: Mon, 17 Nov 2025 22:06:15 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Wander Lairson Costa <wander@redhat.com>, Tomas Glozar
+ <tglozar@redhat.com>, Ivan Pravdin <ipravdin.official@gmail.com>, Crystal
+ Wood <crwood@redhat.com>, John Kacur <jkacur@redhat.com>, Costa Shulyupin
  <costa.shul@redhat.com>, Tiezhu Yang <yangtiezhu@loongson.cn>,
  linux-trace-kernel@vger.kernel.org (open list:Real-time Linux Analysis
  (RTLA) tools), linux-kernel@vger.kernel.org (open list),
  bpf@vger.kernel.org (open list:BPF [MISC]:Keyword:(?:\b|_)bpf(?:\b|_))
 Subject: Re: [rtla 01/13] rtla: Check for memory allocation failures
-Message-Id: <20251118110946.2e154e8c88b3edd31cc3113a@kernel.org>
-In-Reply-To: <20251117184409.42831-2-wander@redhat.com>
+Message-ID: <20251117220615.079bce82@batman.local.home>
+In-Reply-To: <20251118110946.2e154e8c88b3edd31cc3113a@kernel.org>
 References: <20251117184409.42831-1-wander@redhat.com>
 	<20251117184409.42831-2-wander@redhat.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	<20251118110946.2e154e8c88b3edd31cc3113a@kernel.org>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Stat-Signature: pfie39ukxujs5p1kodawzaorg7f584m6
+X-Rspamd-Server: rspamout03
+X-Rspamd-Queue-Id: AC1992000E
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18dqX27kvBQms8GFtqrVkHdUy8PwIr+4lo=
+X-HE-Tag: 1763435176-718230
+X-HE-Meta: U2FsdGVkX1+zv7+u5MK9ZyC9ZmB5U2QlOYl+MqXubg6FQEzoKZTAhoCxWR+038GztktLFUI2LvfHqpuqykRzEFNyYIK8hdZYeOq5ttBWgfDynAsd6MV8Ydu1zPEtij7chOOTPLOM4iREsqLMHx3fqMxzWKlkHXfi8Z1T3Hhs8Jyy7aFKl/VBgxXCAHdXV8fvWNDbA7cTsm3PVi/j/LytG1e1dn1Kbw1QyuVgv/xRbMCR46JeDsmKMAcXNuQArZsmEwX/S5zsA+aYYDXGg0GF7/lIXth/ldL427NchSzs+WBFZdqjSqzrgRGwKhsJuALSZdol0jOMZgx4I9yntFcr4SUA6vaXfQKfxQn2pf+WjwT3CC3eqm8ITg==
 
-On Mon, 17 Nov 2025 15:41:08 -0300
-Wander Lairson Costa <wander@redhat.com> wrote:
+On Tue, 18 Nov 2025 11:09:46 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-> The actions_init() and actions_new() functions did not check the
-> return value of calloc() and realloc() respectively. In a low
-> memory situation, this could lead to a NULL pointer dereference.
+> On Mon, 17 Nov 2025 15:41:08 -0300
+> Wander Lairson Costa <wander@redhat.com> wrote:
 > 
-> Add checks for the return value of memory allocation functions
-> and return an error in case of failure. Update the callers to
-> handle the error properly.
+> > The actions_init() and actions_new() functions did not check the
+> > return value of calloc() and realloc() respectively. In a low
+> > memory situation, this could lead to a NULL pointer dereference.
+> > 
+> > Add checks for the return value of memory allocation functions
+> > and return an error in case of failure. Update the callers to
+> > handle the error properly.
+> > 
+> > Signed-off-by: Wander Lairson Costa <wander@redhat.com>
+> > ---
+> >  tools/tracing/rtla/src/actions.c       | 26 +++++++++++++++++++++++---
+> >  tools/tracing/rtla/src/actions.h       |  2 +-
+> >  tools/tracing/rtla/src/timerlat_hist.c |  7 +++++--
+> >  tools/tracing/rtla/src/timerlat_top.c  |  7 +++++--
+> >  4 files changed, 34 insertions(+), 8 deletions(-)
+> > 
+> > diff --git a/tools/tracing/rtla/src/actions.c b/tools/tracing/rtla/src/actions.c
+> > index 8945aee58d511..01648a1425c10 100644
+> > --- a/tools/tracing/rtla/src/actions.c
+> > +++ b/tools/tracing/rtla/src/actions.c
+> > @@ -11,11 +11,13 @@
+> >  /*
+> >   * actions_init - initialize struct actions
+> >   */
+> > -void
+> > +int
+> >  actions_init(struct actions *self)
+> >  {
+> >  	self->size = action_default_size;
+> >  	self->list = calloc(self->size, sizeof(struct action));
+> > +	if (!self->list)
+> > +		return -1;  
 > 
-> Signed-off-by: Wander Lairson Costa <wander@redhat.com>
-> ---
->  tools/tracing/rtla/src/actions.c       | 26 +++++++++++++++++++++++---
->  tools/tracing/rtla/src/actions.h       |  2 +-
->  tools/tracing/rtla/src/timerlat_hist.c |  7 +++++--
->  tools/tracing/rtla/src/timerlat_top.c  |  7 +++++--
->  4 files changed, 34 insertions(+), 8 deletions(-)
-> 
-> diff --git a/tools/tracing/rtla/src/actions.c b/tools/tracing/rtla/src/actions.c
-> index 8945aee58d511..01648a1425c10 100644
-> --- a/tools/tracing/rtla/src/actions.c
-> +++ b/tools/tracing/rtla/src/actions.c
-> @@ -11,11 +11,13 @@
->  /*
->   * actions_init - initialize struct actions
->   */
-> -void
-> +int
->  actions_init(struct actions *self)
->  {
->  	self->size = action_default_size;
->  	self->list = calloc(self->size, sizeof(struct action));
-> +	if (!self->list)
-> +		return -1;
+> Can you return -ENOMEM?
 
-Can you return -ENOMEM?
+Does it need to? This is user space not the kernel. Errno is already
+set by calloc() failing.
 
->  	self->len = 0;
->  	self->continue_flag = false;
->  
-> @@ -23,6 +25,7 @@ actions_init(struct actions *self)
->  
->  	/* This has to be set by the user */
->  	self->trace_output_inst = NULL;
-> +	return 0;
->  }
->  
->  /*
-> @@ -50,8 +53,13 @@ static struct action *
->  actions_new(struct actions *self)
->  {
->  	if (self->len >= self->size) {
-> -		self->size *= 2;
-> -		self->list = realloc(self->list, self->size * sizeof(struct action));
-> +		const size_t new_size = self->size * 2;
-> +		void *p = reallocarray(self->list, new_size, sizeof(struct action));
-> +
-> +		if (!p)
-> +			return NULL;
-> +		self->list = p;
-> +		self->size = new_size;
->  	}
->  
->  	return &self->list[self->len++];
-> @@ -65,6 +73,9 @@ actions_add_trace_output(struct actions *self, const char *trace_output)
->  {
->  	struct action *action = actions_new(self);
->  
-> +	if (!action)
-> +		return -1;
-
-I think !action should return -ENOMEM too.
-
-> +
->  	self->present[ACTION_TRACE_OUTPUT] = true;
->  	action->type = ACTION_TRACE_OUTPUT;
->  	action->trace_output = calloc(strlen(trace_output) + 1, sizeof(char));
-> @@ -83,6 +94,9 @@ actions_add_signal(struct actions *self, int signal, int pid)
->  {
->  	struct action *action = actions_new(self);
->  
-> +	if (!action)
-> +		return -1;
-> +
->  	self->present[ACTION_SIGNAL] = true;
->  	action->type = ACTION_SIGNAL;
->  	action->signal = signal;
-> @@ -99,6 +113,9 @@ actions_add_shell(struct actions *self, const char *command)
->  {
->  	struct action *action = actions_new(self);
->  
-> +	if (!action)
-> +		return -1;
-> +
->  	self->present[ACTION_SHELL] = true;
->  	action->type = ACTION_SHELL;
->  	action->command = calloc(strlen(command) + 1, sizeof(char));
-> @@ -117,6 +134,9 @@ actions_add_continue(struct actions *self)
->  {
->  	struct action *action = actions_new(self);
->  
-> +	if (!action)
-> +		return -1;
-> +
->  	self->present[ACTION_CONTINUE] = true;
->  	action->type = ACTION_CONTINUE;
->  
-
-The above same patterns too.
-
-Thank you,
-
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+-- Steve
