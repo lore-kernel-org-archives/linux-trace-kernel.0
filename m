@@ -1,34 +1,35 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B211D2D9ED7;
-	Tue, 18 Nov 2025 05:19:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EBC22DCC01
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 18 Nov 2025 06:14:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763443181; cv=none; b=POC5JmOLuOcmd0+HKxExu05s84C7J60T0qKAyF7x9EB3mVVX3lSYc/QrhpM6rAWBPwdRdr1JtOP8Dl9SbWU8RcdkAFdVdcOdqO9ww+DdJ4apkl9x7x1C5+giCruajDEkbNRc7CaGilE0wybGXdXwAkJZKs0tAvyUUzT9gG6fasA=
+	t=1763446498; cv=none; b=o+as3RU9J4DIx4zbke+ZFUnIo/QPKQ8YwEMb8X+8fASikjFR/Zut9zF26uzmHoDB3n3r/utsAfWJMIl9LEJmLiNbg+USd6k4Xtmyevh/yEoRYSapjShtbcB039XtIV2+lLP2BhFNTp63PSOCIdZaM/GgHEQYzoGnr9dTb0FSQq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763443181; c=relaxed/simple;
-	bh=/YPyjtmS64rqD8F/37sAXvIOgLg0opOwbtldDJY85/w=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=BalYTGPeWcoFzQRh+SKQOO7X4z/ThF+rYZmZcxsg523wMA0mTQwafrYW9O6/dhJlq1Vw9HHkwXl6YG06HPVBAH87UWtcJbZHOXqmjZkX3dUAptozZOR7JXF576a/1Q3r0dncK0qM2xZDc47J/ZgKyJtV1iAQlzpjJXIAFLMVCp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TDiebEdZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763446498; c=relaxed/simple;
+	bh=bZKhC/9pHM2OhW9A8oqEw1f724OyL72cSiaQ5mv6xfE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NxsLkLdRWErQWhY9ihXoPFA/cjib2kEw1W40op4c5Gz7Tc9oIVl2T7hGBZFyvT7BJ5iOwpCBRHMGgCrxennq3pMJRIdKEMheN9xgyImBWfV2w82cChQN9znE1RNCU/l+C7H1Z/ciEl8rlYEzSUz3Wrc9bi8O7Enmgx3rAwWRNyA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=iRXD9yL+; arc=none smtp.client-ip=91.218.175.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TDiebEdZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88228C4CEF1;
-	Tue, 18 Nov 2025 05:19:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763443181;
-	bh=/YPyjtmS64rqD8F/37sAXvIOgLg0opOwbtldDJY85/w=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=TDiebEdZoU4qXG0Nhd8ffcMViKp2wgqy+xh2/9cssPBEZiDYOeD/76J56TH2C8gUO
-	 QZavxwl304j5vLz9b5DG/OkATMV/6x080MUrL3WX3TqJrFdLM0v2oRps+jQtHtIhrY
-	 fJxk6rh6d443TfCpeem9b3sJ3IM3hZ+usY/2Hmux0bZG9jaUmCeETYrueWkFlauBbU
-	 eZ9JCRDSFXRV3mCWaxTHvk5sreOYyI3DY+b0G1tiIWV4rxTyorTz0uVTZY46RoQS++
-	 z2HKKHlJq0Y4YQprRW9MIO6kRl7maqvjg3piENKgbwXpD3eDudEzENONDeA0HQxb2Y
-	 MtBOuh0FNVtUA==
-Date: Tue, 18 Nov 2025 14:19:34 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Menglong Dong <menglong8.dong@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="iRXD9yL+"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1763446482;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+uJWaOSYPKggGl3M3hqwySeOMhBjwZn0c/x2/Zzb4JM=;
+	b=iRXD9yL+FFqXZWeZA2HtW0dPUQR9fnJcgmdGr3Dnh53y1dP/xbnVmpE7m5lnVn5c8gRjI+
+	v5y0WPwbxpqgP3vIhqZrfGtBrXsAu4JTpcNlQInGg3HuN9Gdb52WJo0SCwuXpGPdQYBFxP
+	fCz7duZ5E9V/mAMKrF9wdeRNzZtYW9k=
+From: Menglong Dong <menglong.dong@linux.dev>
+To: Menglong Dong <menglong8.dong@gmail.com>,
+ Masami Hiramatsu <mhiramat@kernel.org>
 Cc: ast@kernel.org, rostedt@goodmis.org, daniel@iogearbox.net,
  john.fastabend@gmail.com, andrii@kernel.org, martin.lau@linux.dev,
  eddyz87@gmail.com, song@kernel.org, yonghong.song@linux.dev,
@@ -37,168 +38,185 @@ Cc: ast@kernel.org, rostedt@goodmis.org, daniel@iogearbox.net,
  jiang.biao@linux.dev, bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
 Subject: Re: [PATCH bpf-next v2 1/6] ftrace: introduce FTRACE_OPS_FL_JMP
-Message-Id: <20251118141934.ddf14aabf371d0939415b588@kernel.org>
-In-Reply-To: <20251117034906.32036-2-dongml2@chinatelecom.cn>
-References: <20251117034906.32036-1-dongml2@chinatelecom.cn>
-	<20251117034906.32036-2-dongml2@chinatelecom.cn>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Date: Tue, 18 Nov 2025 14:14:32 +0800
+Message-ID: <4693872.LvFx2qVVIh@7950hx>
+In-Reply-To: <20251118141934.ddf14aabf371d0939415b588@kernel.org>
+References:
+ <20251117034906.32036-1-dongml2@chinatelecom.cn>
+ <20251117034906.32036-2-dongml2@chinatelecom.cn>
+ <20251118141934.ddf14aabf371d0939415b588@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, 17 Nov 2025 11:49:01 +0800
-Menglong Dong <menglong8.dong@gmail.com> wrote:
-
-> For now, the "nop" will be replaced with a "call" instruction when a
-> function is hooked by the ftrace. However, sometimes the "call" can break
-> the RSB and introduce extra overhead. Therefore, introduce the flag
-> FTRACE_OPS_FL_JMP, which indicate that the ftrace_ops should be called
-> with a "jmp" instead of "call". For now, it is only used by the direct
-> call case.
+On 2025/11/18 13:19, Masami Hiramatsu wrote:
+> On Mon, 17 Nov 2025 11:49:01 +0800
+> Menglong Dong <menglong8.dong@gmail.com> wrote:
 > 
-> When a direct ftrace_ops is marked with FTRACE_OPS_FL_JMP, the last bit of
-> the ops->direct_call will be set to 1. Therefore, we can tell if we should
-> use "jmp" for the callback in ftrace_call_replace().
+> > For now, the "nop" will be replaced with a "call" instruction when a
+> > function is hooked by the ftrace. However, sometimes the "call" can break
+> > the RSB and introduce extra overhead. Therefore, introduce the flag
+> > FTRACE_OPS_FL_JMP, which indicate that the ftrace_ops should be called
+> > with a "jmp" instead of "call". For now, it is only used by the direct
+> > call case.
+> > 
+> > When a direct ftrace_ops is marked with FTRACE_OPS_FL_JMP, the last bit of
+> > the ops->direct_call will be set to 1. Therefore, we can tell if we should
+> > use "jmp" for the callback in ftrace_call_replace().
+> > 
+> 
+> nit: Is it sure the last bit is always 0?
+
+AFAIK, the function address is 16-bytes aligned for x86_64, and
+8-bytes aligned for arm64, so I guess it is.
+
+In the feature, if there is a exception, we can make ftrace_jmp_set,
+ftrace_jmp_get arch-specification.
+
+> At least register_ftrace_direct() needs to reject if @addr
+> parameter has the last bit.
+
+That make sense, I'll add such checking in the next version.
+
+Thanks!
+Menglong Dong
+
+> 
+> Thanks,
+> 
+> 
+> > Signed-off-by: Menglong Dong <dongml2@chinatelecom.cn>
+> > ---
+> >  include/linux/ftrace.h | 33 +++++++++++++++++++++++++++++++++
+> >  kernel/trace/Kconfig   | 12 ++++++++++++
+> >  kernel/trace/ftrace.c  |  9 ++++++++-
+> >  3 files changed, 53 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+> > index 07f8c309e432..015dd1049bea 100644
+> > --- a/include/linux/ftrace.h
+> > +++ b/include/linux/ftrace.h
+> > @@ -359,6 +359,7 @@ enum {
+> >  	FTRACE_OPS_FL_DIRECT			= BIT(17),
+> >  	FTRACE_OPS_FL_SUBOP			= BIT(18),
+> >  	FTRACE_OPS_FL_GRAPH			= BIT(19),
+> > +	FTRACE_OPS_FL_JMP			= BIT(20),
+> >  };
+> >  
+> >  #ifndef CONFIG_DYNAMIC_FTRACE_WITH_ARGS
+> > @@ -577,6 +578,38 @@ static inline void arch_ftrace_set_direct_caller(struct ftrace_regs *fregs,
+> >  						 unsigned long addr) { }
+> >  #endif /* CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS */
+> >  
+> > +#ifdef CONFIG_DYNAMIC_FTRACE_WITH_JMP
+> > +static inline bool ftrace_is_jmp(unsigned long addr)
+> > +{
+> > +	return addr & 1;
+> > +}
+> > +
+> > +static inline unsigned long ftrace_jmp_set(unsigned long addr)
+> > +{
+> > +	return addr | 1UL;
+> > +}
+> > +
+> > +static inline unsigned long ftrace_jmp_get(unsigned long addr)
+> > +{
+> > +	return addr & ~1UL;
+> > +}
+> > +#else
+> > +static inline bool ftrace_is_jmp(unsigned long addr)
+> > +{
+> > +	return false;
+> > +}
+> > +
+> > +static inline unsigned long ftrace_jmp_set(unsigned long addr)
+> > +{
+> > +	return addr;
+> > +}
+> > +
+> > +static inline unsigned long ftrace_jmp_get(unsigned long addr)
+> > +{
+> > +	return addr;
+> > +}
+> > +#endif /* CONFIG_DYNAMIC_FTRACE_WITH_JMP */
+> > +
+> >  #ifdef CONFIG_STACK_TRACER
+> >  
+> >  int stack_trace_sysctl(const struct ctl_table *table, int write, void *buffer,
+> > diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+> > index d2c79da81e4f..4661b9e606e0 100644
+> > --- a/kernel/trace/Kconfig
+> > +++ b/kernel/trace/Kconfig
+> > @@ -80,6 +80,12 @@ config HAVE_DYNAMIC_FTRACE_NO_PATCHABLE
+> >  	  If the architecture generates __patchable_function_entries sections
+> >  	  but does not want them included in the ftrace locations.
+> >  
+> > +config HAVE_DYNAMIC_FTRACE_WITH_JMP
+> > +	bool
+> > +	help
+> > +	  If the architecture supports to replace the __fentry__ with a
+> > +	  "jmp" instruction.
+> > +
+> >  config HAVE_SYSCALL_TRACEPOINTS
+> >  	bool
+> >  	help
+> > @@ -330,6 +336,12 @@ config DYNAMIC_FTRACE_WITH_ARGS
+> >  	depends on DYNAMIC_FTRACE
+> >  	depends on HAVE_DYNAMIC_FTRACE_WITH_ARGS
+> >  
+> > +config DYNAMIC_FTRACE_WITH_JMP
+> > +	def_bool y
+> > +	depends on DYNAMIC_FTRACE
+> > +	depends on DYNAMIC_FTRACE_WITH_DIRECT_CALLS
+> > +	depends on HAVE_DYNAMIC_FTRACE_WITH_JMP
+> > +
+> >  config FPROBE
+> >  	bool "Kernel Function Probe (fprobe)"
+> >  	depends on HAVE_FUNCTION_GRAPH_FREGS && HAVE_FTRACE_GRAPH_FUNC
+> > diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> > index 59cfacb8a5bb..a6c060a4f50b 100644
+> > --- a/kernel/trace/ftrace.c
+> > +++ b/kernel/trace/ftrace.c
+> > @@ -5951,7 +5951,8 @@ static void remove_direct_functions_hash(struct ftrace_hash *hash, unsigned long
+> >  	for (i = 0; i < size; i++) {
+> >  		hlist_for_each_entry(entry, &hash->buckets[i], hlist) {
+> >  			del = __ftrace_lookup_ip(direct_functions, entry->ip);
+> > -			if (del && del->direct == addr) {
+> > +			if (del && ftrace_jmp_get(del->direct) ==
+> > +				   ftrace_jmp_get(addr)) {
+> >  				remove_hash_entry(direct_functions, del);
+> >  				kfree(del);
+> >  			}
+> > @@ -6018,6 +6019,9 @@ int register_ftrace_direct(struct ftrace_ops *ops, unsigned long addr)
+> >  
+> >  	mutex_lock(&direct_mutex);
+> >  
+> > +	if (ops->flags & FTRACE_OPS_FL_JMP)
+> > +		addr = ftrace_jmp_set(addr);
+> > +
+> >  	/* Make sure requested entries are not already registered.. */
+> >  	size = 1 << hash->size_bits;
+> >  	for (i = 0; i < size; i++) {
+> > @@ -6138,6 +6142,9 @@ __modify_ftrace_direct(struct ftrace_ops *ops, unsigned long addr)
+> >  
+> >  	lockdep_assert_held_once(&direct_mutex);
+> >  
+> > +	if (ops->flags & FTRACE_OPS_FL_JMP)
+> > +		addr = ftrace_jmp_set(addr);
+> > +
+> >  	/* Enable the tmp_ops to have the same functions as the direct ops */
+> >  	ftrace_ops_init(&tmp_ops);
+> >  	tmp_ops.func_hash = ops->func_hash;
+> 
+> 
 > 
 
-nit: Is it sure the last bit is always 0?
-At least register_ftrace_direct() needs to reject if @addr
-parameter has the last bit.
-
-Thanks,
 
 
-> Signed-off-by: Menglong Dong <dongml2@chinatelecom.cn>
-> ---
->  include/linux/ftrace.h | 33 +++++++++++++++++++++++++++++++++
->  kernel/trace/Kconfig   | 12 ++++++++++++
->  kernel/trace/ftrace.c  |  9 ++++++++-
->  3 files changed, 53 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-> index 07f8c309e432..015dd1049bea 100644
-> --- a/include/linux/ftrace.h
-> +++ b/include/linux/ftrace.h
-> @@ -359,6 +359,7 @@ enum {
->  	FTRACE_OPS_FL_DIRECT			= BIT(17),
->  	FTRACE_OPS_FL_SUBOP			= BIT(18),
->  	FTRACE_OPS_FL_GRAPH			= BIT(19),
-> +	FTRACE_OPS_FL_JMP			= BIT(20),
->  };
->  
->  #ifndef CONFIG_DYNAMIC_FTRACE_WITH_ARGS
-> @@ -577,6 +578,38 @@ static inline void arch_ftrace_set_direct_caller(struct ftrace_regs *fregs,
->  						 unsigned long addr) { }
->  #endif /* CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS */
->  
-> +#ifdef CONFIG_DYNAMIC_FTRACE_WITH_JMP
-> +static inline bool ftrace_is_jmp(unsigned long addr)
-> +{
-> +	return addr & 1;
-> +}
-> +
-> +static inline unsigned long ftrace_jmp_set(unsigned long addr)
-> +{
-> +	return addr | 1UL;
-> +}
-> +
-> +static inline unsigned long ftrace_jmp_get(unsigned long addr)
-> +{
-> +	return addr & ~1UL;
-> +}
-> +#else
-> +static inline bool ftrace_is_jmp(unsigned long addr)
-> +{
-> +	return false;
-> +}
-> +
-> +static inline unsigned long ftrace_jmp_set(unsigned long addr)
-> +{
-> +	return addr;
-> +}
-> +
-> +static inline unsigned long ftrace_jmp_get(unsigned long addr)
-> +{
-> +	return addr;
-> +}
-> +#endif /* CONFIG_DYNAMIC_FTRACE_WITH_JMP */
-> +
->  #ifdef CONFIG_STACK_TRACER
->  
->  int stack_trace_sysctl(const struct ctl_table *table, int write, void *buffer,
-> diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-> index d2c79da81e4f..4661b9e606e0 100644
-> --- a/kernel/trace/Kconfig
-> +++ b/kernel/trace/Kconfig
-> @@ -80,6 +80,12 @@ config HAVE_DYNAMIC_FTRACE_NO_PATCHABLE
->  	  If the architecture generates __patchable_function_entries sections
->  	  but does not want them included in the ftrace locations.
->  
-> +config HAVE_DYNAMIC_FTRACE_WITH_JMP
-> +	bool
-> +	help
-> +	  If the architecture supports to replace the __fentry__ with a
-> +	  "jmp" instruction.
-> +
->  config HAVE_SYSCALL_TRACEPOINTS
->  	bool
->  	help
-> @@ -330,6 +336,12 @@ config DYNAMIC_FTRACE_WITH_ARGS
->  	depends on DYNAMIC_FTRACE
->  	depends on HAVE_DYNAMIC_FTRACE_WITH_ARGS
->  
-> +config DYNAMIC_FTRACE_WITH_JMP
-> +	def_bool y
-> +	depends on DYNAMIC_FTRACE
-> +	depends on DYNAMIC_FTRACE_WITH_DIRECT_CALLS
-> +	depends on HAVE_DYNAMIC_FTRACE_WITH_JMP
-> +
->  config FPROBE
->  	bool "Kernel Function Probe (fprobe)"
->  	depends on HAVE_FUNCTION_GRAPH_FREGS && HAVE_FTRACE_GRAPH_FUNC
-> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> index 59cfacb8a5bb..a6c060a4f50b 100644
-> --- a/kernel/trace/ftrace.c
-> +++ b/kernel/trace/ftrace.c
-> @@ -5951,7 +5951,8 @@ static void remove_direct_functions_hash(struct ftrace_hash *hash, unsigned long
->  	for (i = 0; i < size; i++) {
->  		hlist_for_each_entry(entry, &hash->buckets[i], hlist) {
->  			del = __ftrace_lookup_ip(direct_functions, entry->ip);
-> -			if (del && del->direct == addr) {
-> +			if (del && ftrace_jmp_get(del->direct) ==
-> +				   ftrace_jmp_get(addr)) {
->  				remove_hash_entry(direct_functions, del);
->  				kfree(del);
->  			}
-> @@ -6018,6 +6019,9 @@ int register_ftrace_direct(struct ftrace_ops *ops, unsigned long addr)
->  
->  	mutex_lock(&direct_mutex);
->  
-> +	if (ops->flags & FTRACE_OPS_FL_JMP)
-> +		addr = ftrace_jmp_set(addr);
-> +
->  	/* Make sure requested entries are not already registered.. */
->  	size = 1 << hash->size_bits;
->  	for (i = 0; i < size; i++) {
-> @@ -6138,6 +6142,9 @@ __modify_ftrace_direct(struct ftrace_ops *ops, unsigned long addr)
->  
->  	lockdep_assert_held_once(&direct_mutex);
->  
-> +	if (ops->flags & FTRACE_OPS_FL_JMP)
-> +		addr = ftrace_jmp_set(addr);
-> +
->  	/* Enable the tmp_ops to have the same functions as the direct ops */
->  	ftrace_ops_init(&tmp_ops);
->  	tmp_ops.func_hash = ops->func_hash;
-> -- 
-> 2.51.2
-> 
 
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
