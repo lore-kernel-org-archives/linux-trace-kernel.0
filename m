@@ -1,181 +1,163 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EC6525D546;
-	Tue, 18 Nov 2025 03:42:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51FC31B4257;
+	Tue, 18 Nov 2025 05:10:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763437364; cv=none; b=mdY3yy9uFXAsXwMF1ooC3ygbr9bmyRMXGh4dDvd1NhQTmrclqjNhQdr1N9e9CAP3UcW2E9vGI57VwYTWGq5VETuxdKqvipjN3k9LaAMEaeOi7CTx9q2DsyL0SeuoRTo6OEK2v6C6iZ92OBoFpZ86HoBNsbAiOKKV2F33/LXPPak=
+	t=1763442649; cv=none; b=kmoA3Kjb/1ION1zfOq1bf8J713TdDpExDNYVQ0dXmSWPchDLXNqkDDJVnJ3CBHeXSR/nNyGu2KCNOkRG/3jIV2NMZHeQkwC+GFocqot/NUSCxD4lC/ZEHxrNwARL0RxmxmDTeqaAh4g0ZCD3Dj9H0LNAl+v8OBRLNQNBpKSDHW4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763437364; c=relaxed/simple;
-	bh=2XzxuITua8aghT0mcX76gXnjbdcLrh8Bg7jSkhii7mQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NeA4z3oc1+Jk8/tFx9p5WCKzOpsSM/tELwcdLfmv4zzpYBWkUPArNkPBlYojCzsil80VsZukteKohe5UFPSM2tWstgFJyCSUTKxg4/tWOq86ygot/UE/8YOlJas9/Kd5lOH1si0ivLM/vN05TgBlJjwgtLS2m3HQaLFreWcGVk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LUMEazAQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763442649; c=relaxed/simple;
+	bh=nysuNHsnjzYweFkpkBcFz9Cfx4ziANgAATwL2AHh0qg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tKjPUCmulASbkubAAoU9KR1CaKhF4hFwmpsXqqkZYUNH/O8CuLXtdKgX3kTBQhEJeSFZJhXUSB5N4grepLk8gvNuNPR8dmYA27eieBmokr0TphnlZzHGWDtt4jos2SzBWWemK0eZToLn4q+ken25GmIHuKS/Nn3wtdLOUU7GnlY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QR8MtWW/; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LUMEazAQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B430C2BCC4;
-	Tue, 18 Nov 2025 03:42:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763437363;
-	bh=2XzxuITua8aghT0mcX76gXnjbdcLrh8Bg7jSkhii7mQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=LUMEazAQy2NXfUyEQVz1yPi3zU+Vi5AiUK2jEmFBb3MDcCTY21Xu0vipTDhUqyvMI
-	 24VVGhdblf9JX6fOmTUbOQA4YY4zR+NL2QiNewLNnwoQ/9h+UAA/GIgYOUww0YPouS
-	 eROYwYCJEXsSbgcrhyyRD/F2szWoRTkCHCuZjtKSuNf7SrFq9Jn+bsJuh3fqQRv9Wh
-	 toToZ/OPqE9kZFgBPK9LPavn7L732qU61/OeNWCPPZiVMassHlV+DQHO7rAA9PnsiJ
-	 Sec0g1MKXTRpjnA4mbAcsFV3SAfGl63HddYET3BUJ4RfdmY8A7TipXAVPxzXtX7z/l
-	 XrAq+KipLEAHw==
-Date: Mon, 17 Nov 2025 22:42:27 -0500
-From: Steven Rostedt <rostedt@kernel.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Mark
- Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>, Thomas
- Gleixner <tglx@linutronix.de>, Ian Rogers <irogers@google.com>, Namhyung
- Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri
- Olsa <jolsa@kernel.org>, Douglas Raillard <douglas.raillard@arm.com>
-Subject: Re: [POC][RFC][PATCH 0/3] tracing: Add perf events to trace buffer
-Message-ID: <20251117224227.782f6eab@batman.local.home>
-In-Reply-To: <20251118120821.0c47ef684b53d5d9a2d6dc83@kernel.org>
-References: <20251118002950.680329246@kernel.org>
-	<20251118120821.0c47ef684b53d5d9a2d6dc83@kernel.org>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QR8MtWW/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1763442647; x=1794978647;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=nysuNHsnjzYweFkpkBcFz9Cfx4ziANgAATwL2AHh0qg=;
+  b=QR8MtWW/WsSQPRmMMqfKEsqzXKIh3r55ETVmktI2hwic+htcGqjtMysw
+   JtIHS751p0uXaXElJt6g2JUHSb9peT3R/DwXc8RSsDARZfw78QncnL0Ud
+   2qY5InVnXdYJTdR+Yt8iALWM43J/m49d6daYWdMD+yhayV8bcrZULrK1k
+   fTO/HluykJDOGMK2t/GOj8yctggQ6Dg07Se3GBnxxYzC3UQ4wPXZNRkSS
+   Fjy7URPt5nJkWCV3DHq0eke0S6Dbu4o7YSG9uL6c6qwkPZRARPja+31Mc
+   EcUHbne4VPzC9/giOo3R6H9w0WE9Pr1DeLoYSO+fbBMtS0GDZHZ7vkClg
+   A==;
+X-CSE-ConnectionGUID: iMWpEZqOSSOWAnkbF3FFRA==
+X-CSE-MsgGUID: +rEeyqMYQUeHLPlB/lr0Gg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11616"; a="69323200"
+X-IronPort-AV: E=Sophos;i="6.19,313,1754982000"; 
+   d="scan'208";a="69323200"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2025 21:10:46 -0800
+X-CSE-ConnectionGUID: dDs7TSpnSxqn3XQFrQ60SQ==
+X-CSE-MsgGUID: rreijx+8Q2CY6PwtnA0rsQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,313,1754982000"; 
+   d="scan'208";a="189917362"
+Received: from lkp-server01.sh.intel.com (HELO adf6d29aa8d9) ([10.239.97.150])
+  by orviesa006.jf.intel.com with ESMTP; 17 Nov 2025 21:10:41 -0800
+Received: from kbuild by adf6d29aa8d9 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1vLDzC-0001Lr-0k;
+	Tue, 18 Nov 2025 05:10:38 +0000
+Date: Tue, 18 Nov 2025 13:09:39 +0800
+From: kernel test robot <lkp@intel.com>
+To: Menglong Dong <menglong8.dong@gmail.com>, ast@kernel.org,
+	rostedt@goodmis.org
+Cc: oe-kbuild-all@lists.linux.dev, daniel@iogearbox.net,
+	john.fastabend@gmail.com, andrii@kernel.org, martin.lau@linux.dev,
+	eddyz87@gmail.com, song@kernel.org, yonghong.song@linux.dev,
+	kpsingh@kernel.org, sdf@fomichev.me, haoluo@google.com,
+	jolsa@kernel.org, mhiramat@kernel.org, mark.rutland@arm.com,
+	mathieu.desnoyers@efficios.com, jiang.biao@linux.dev,
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH bpf-next v2 6/6] bpf: implement "jmp" mode for trampoline
+Message-ID: <202511181238.cVO5ERaA-lkp@intel.com>
+References: <20251117034906.32036-7-dongml2@chinatelecom.cn>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251117034906.32036-7-dongml2@chinatelecom.cn>
 
-On Tue, 18 Nov 2025 12:08:21 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+Hi Menglong,
 
-> Hi Steve,
-> 
-> Thanks for the great idea!
+kernel test robot noticed the following build errors:
 
-Thanks!
+[auto build test ERROR on bpf-next/master]
 
-> > 
-> > As this will eventual work with many more perf events than just cache-misses
-> > and cpu-cycles , using options is not appropriate. Especially since the
-> > options are limited to a 64 bit bitmask, and that can easily go much higher.
-> > I'm thinking about having a file instead that will act as a way to enable
-> > perf events for events, function and function graph tracing.
-> > 
-> >   set_event_perf, set_ftrace_perf, set_fgraph_perf  
-> 
-> What about adding a global `trigger` action file so that user can
-> add these "perf" actions to write into it. It is something like
-> stacktrace for events. (Maybe we can move stacktrace/user-stacktrace
-> into it too)
-> 
-> For pre-defined/software counters:
-> # echo "perf:cpu_cycles" >> /sys/kernel/tracing/trigger
+url:    https://github.com/intel-lab-lkp/linux/commits/Menglong-Dong/ftrace-introduce-FTRACE_OPS_FL_JMP/20251117-115243
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git master
+patch link:    https://lore.kernel.org/r/20251117034906.32036-7-dongml2%40chinatelecom.cn
+patch subject: [PATCH bpf-next v2 6/6] bpf: implement "jmp" mode for trampoline
+config: riscv-randconfig-001-20251118 (https://download.01.org/0day-ci/archive/20251118/202511181238.cVO5ERaA-lkp@intel.com/config)
+compiler: riscv64-linux-gcc (GCC) 10.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251118/202511181238.cVO5ERaA-lkp@intel.com/reproduce)
 
-For events, it would make more sense to put it into the events directory:
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202511181238.cVO5ERaA-lkp@intel.com/
 
- # echo "perf:cpu_cycles" >> /sys/kernel/tracing/events/trigger
+All errors (new ones prefixed by >>):
 
-As there is already a events/enable
-
-Heck we could even add it per system:
-
- # echo "perf:cpu_cycles" >> /sys/kernel/tracing/events/syscalls/trigger
-
-> 
-> For some hardware event sources (see /sys/bus/event_source/devices/):
-> # echo "perf:cstate_core.c3-residency" >> /sys/kernel/tracing/trigger
-> 
-> echo "perf:my_counter=pmu/config=M,config1=N" >> /sys/kernel/tracing/trigger
-
-Still need a way to add an identifier list. Currently, if the size of
-the type identifier is one byte, then it can only support up to 256 events.
-
-Do we need every event for this? Or just have a subset of events that
-would be supported?
+   kernel/bpf/trampoline.c: In function 'bpf_trampoline_update':
+>> kernel/bpf/trampoline.c:500:11: error: invalid use of undefined type 'struct ftrace_ops'
+     500 |   tr->fops->flags |= FTRACE_OPS_FL_JMP;
+         |           ^~
+>> kernel/bpf/trampoline.c:500:22: error: 'FTRACE_OPS_FL_JMP' undeclared (first use in this function)
+     500 |   tr->fops->flags |= FTRACE_OPS_FL_JMP;
+         |                      ^~~~~~~~~~~~~~~~~
+   kernel/bpf/trampoline.c:500:22: note: each undeclared identifier is reported only once for each function it appears in
+   kernel/bpf/trampoline.c:502:11: error: invalid use of undefined type 'struct ftrace_ops'
+     502 |   tr->fops->flags &= ~FTRACE_OPS_FL_JMP;
+         |           ^~
+   kernel/bpf/trampoline.c:534:12: error: invalid use of undefined type 'struct ftrace_ops'
+     534 |    tr->fops->flags |= FTRACE_OPS_FL_JMP;
+         |            ^~
+   kernel/bpf/trampoline.c:536:12: error: invalid use of undefined type 'struct ftrace_ops'
+     536 |    tr->fops->flags &= ~FTRACE_OPS_FL_JMP;
+         |            ^~
 
 
-> 
-> If we need to set those counters for tracers and events separately,
-> we can add `events/trigger` and `tracer-trigger` files.
+vim +500 kernel/bpf/trampoline.c
 
-As I mentioned, the trigger for events should be in the events directory.
+   470	
+   471		size = arch_bpf_trampoline_size(&tr->func.model, tr->flags,
+   472						tlinks, tr->func.addr);
+   473		if (size < 0) {
+   474			err = size;
+   475			goto out;
+   476		}
+   477	
+   478		if (size > PAGE_SIZE) {
+   479			err = -E2BIG;
+   480			goto out;
+   481		}
+   482	
+   483		im = bpf_tramp_image_alloc(tr->key, size);
+   484		if (IS_ERR(im)) {
+   485			err = PTR_ERR(im);
+   486			goto out;
+   487		}
+   488	
+   489		err = arch_prepare_bpf_trampoline(im, im->image, im->image + size,
+   490						  &tr->func.model, tr->flags, tlinks,
+   491						  tr->func.addr);
+   492		if (err < 0)
+   493			goto out_free;
+   494	
+   495		err = arch_protect_bpf_trampoline(im->image, im->size);
+   496		if (err)
+   497			goto out_free;
+   498	
+   499		if (bpf_trampoline_use_jmp(tr->flags))
+ > 500			tr->fops->flags |= FTRACE_OPS_FL_JMP;
+   501		else
+   502			tr->fops->flags &= ~FTRACE_OPS_FL_JMP;
+   503	
+   504		WARN_ON(tr->cur_image && total == 0);
+   505		if (tr->cur_image)
+   506			/* progs already running at this address */
+   507			err = modify_fentry(tr, orig_flags, tr->cur_image->image,
+   508					    im->image, lock_direct_mutex);
+   509		else
+   510			/* first time registering */
+   511			err = register_fentry(tr, im->image);
+   512	
 
-We could add a ftrace_trigger that can affect both function and
-function graph tracer.
-
-> 
-> echo "perf:cpu_cycles" >> /sys/kernel/tracing/events/trigger
-> 
-> To disable counters, we can use '!' as same as event triggers.
-> 
-> echo !perf:cpu_cycles > trigger
-
-Yes, it would follow the current way to disable a trigger.
-
-> 
-> To add more than 2 counters, connect it with ':'.
-> (or, we will allow to append new perf counters)
-> This allows user to set perf counter options for each events.
-> 
-> Maybe we also should move 'stacktrace'/'userstacktrace' option
-> flags to it too eventually.
-
-We can add them, but may never be able to remove them due to backward
-compatibility.
-
-> > 
-> > And an available_perf_events that show what can be written into these files,
-> > (similar to how set_ftrace_filter works). But for now, it was just easier to
-> > implement them as options.
-> > 
-> > As for the perf event that is triggered. It currently is a dynamic array of
-> > 64 bit values. Each value is broken up into 8 bits for what type of perf
-> > event it is, and 56 bits for the counter. It only writes a per CPU raw
-> > counter and does not do any math. That would be needed to be done by any
-> > post processing.
-> > 
-> > Since the values are for user space to do the subtraction to figure out the
-> > difference between events, for example, the function_graph tracer may have:
-> > 
-> >              is_vmalloc_addr() {
-> >                /* cpu_cycles: 5582263593 cache_misses: 2869004572 */
-> >                /* cpu_cycles: 5582267527 cache_misses: 2869006049 */
-> >              }  
-> 
-> Just a style question: Would this mean the first line is for function entry
-> and the second one is function return?
-
-Yes.
-
-Perhaps we could add field to the perf event to allow for annotation,
-so the above could look like:
-
-              is_vmalloc_addr() {
-               /* --> cpu_cycles: 5582263593 cache_misses: 2869004572 */
-               /* <-- cpu_cycles: 5582267527 cache_misses: 2869006049 */
-             }  
-
-Or something similar?
-
-
-
-> > The next question is how to label the perf events to be in the 8 bit
-> > portion. It could simply be a value that is registered, and listed in the
-> > available_perf_events file.
-> > 
-> >   cpu_cycles:1
-> >   cach_misses:2
-> >   [..]  
-> 
-> Looks good to me. I think pre-definied events of `perf list`
-> will be there and have fixed numbers.
-
-Thanks for looking at this,
-
--- Steve
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
