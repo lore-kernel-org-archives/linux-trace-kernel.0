@@ -1,54 +1,42 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6EC82E1F02;
-	Tue, 18 Nov 2025 19:26:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F33D43002A7;
+	Tue, 18 Nov 2025 20:24:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763493977; cv=none; b=XT2JXwlFUPhVMNXPjwjmt6vAtgHibFFFL3pBwo1EG0FN1MfrZM8vqS/7uuAjezWRcJaSqWEPqYFozl4lWNibRAriGYjL4O67hFi1ei6WIrP9uwdarbH5B5tWefBJWtMeMPQfnPSuseD2v3iQCMW2ln4uLRWNk+pWXpDJT0QsX0o=
+	t=1763497451; cv=none; b=kCOw8JE5aKfAwPzmBdHRwTMPjPU3uW39/YWGq9PxRsWZJ9MpbzsvL8QZHfhgxWGdOH14XhU16A7TFAoI00ajCQ/bAy/lL5G9Y2JYx9eZaakResbXRI4I3glEGWSa6M8kMKq0Iseu24kLxdxWWC/+T+vA1OiC7GP8AzL2ygVvXIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763493977; c=relaxed/simple;
-	bh=TdE/U+7RQXi4SqrRnPOBPwoC1Yp2VMYbtN8CNa8ePG8=;
+	s=arc-20240116; t=1763497451; c=relaxed/simple;
+	bh=gbbX7/BOui2VKT6AvjbLXaKvC8C6+AJQ1G27NgC6SAk=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GFnNJumle5f8wapKgYWHAtUj1BXgO2n3FEmFGjsJat5Cw6aR6aeLdBy8Q1TqfYS1ChutZ3oxsFqG1CHc0g4fAM6Cuusbrel2ZhHME2C9o7p/8/h1rYuSZfM5uN1nVl8rh0LcfOcThgAdTnWdqoPDGpClj779EBCw3BAMMW2mwY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
+	 MIME-Version:Content-Type; b=uG1Kf7oRBw7w9M24Q98KJU09Ee45YZGEE+hBgCTIljWZYrxiMe3xrjIOrA4zzE91lFQRaRIDU1GHpvMHVGCcGPY2x8E41xbbgMR9FqPzR/9bedH3xY8qWpXER+ElfDRMABEK0d5OBnAur8GL59yBMsUndr0q6wu4uslow5tTleA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf04.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay04.hostedemail.com (Postfix) with ESMTP id 49FED1A01AD;
-	Tue, 18 Nov 2025 19:26:05 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf04.hostedemail.com (Postfix) with ESMTPA id 6318220030;
-	Tue, 18 Nov 2025 19:25:56 +0000 (UTC)
-Date: Tue, 18 Nov 2025 14:26:23 -0500
+Received: from omf17.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id 9ED34B6AFF;
+	Tue, 18 Nov 2025 20:24:00 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf17.hostedemail.com (Postfix) with ESMTPA id C2BA217;
+	Tue, 18 Nov 2025 20:23:57 +0000 (UTC)
+Date: Tue, 18 Nov 2025 15:24:25 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Jens Remus <jremus@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org, x86@kernel.org, linux-mm@kvack.org, Steven Rostedt
- <rostedt@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>, Masami
- Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Arnaldo
- Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>,
- Indu Bhagat <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>,
- Beau Belgrave <beaub@linux.microsoft.com>, Linus Torvalds
- <torvalds@linux-foundation.org>, Andrew Morton <akpm@linux-foundation.org>,
- Florian Weimer <fweimer@redhat.com>, Kees Cook <kees@kernel.org>, "Carlos
- O'Donell" <codonell@redhat.com>, Sam James <sam@gentoo.org>, Borislav
- Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, David
- Hildenbrand <david@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, "Liam R.
- Howlett" <Liam.Howlett@oracle.com>, Lorenzo Stoakes
- <lorenzo.stoakes@oracle.com>, Michal Hocko <mhocko@suse.com>, Mike Rapoport
- <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Vlastimil Babka
- <vbabka@suse.cz>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik
- <gor@linux.ibm.com>
-Subject: Re: [PATCH v11 03/15] unwind_user/sframe: Add support for reading
- .sframe headers
-Message-ID: <20251118142623.57a60a62@gandalf.local.home>
-In-Reply-To: <e5c5e17f-1efd-4f9e-be2d-c6f65003ba3d@linux.ibm.com>
-References: <20251022144326.4082059-1-jremus@linux.ibm.com>
-	<20251022144326.4082059-4-jremus@linux.ibm.com>
-	<e5c5e17f-1efd-4f9e-be2d-c6f65003ba3d@linux.ibm.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Steven Rostedt <rostedt@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Thomas Gleixner <tglx@linutronix.de>, Ian
+ Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>, Arnaldo
+ Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Douglas
+ Raillard <douglas.raillard@arm.com>
+Subject: Re: [POC][RFC][PATCH 1/3] tracing: Add perf events
+Message-ID: <20251118152425.6b3bee21@gandalf.local.home>
+In-Reply-To: <20251118084226.1e531c4b@gandalf.local.home>
+References: <20251118002950.680329246@kernel.org>
+	<20251118003531.644484343@kernel.org>
+	<20251118083510.GI3245006@noisy.programming.kicks-ass.net>
+	<20251118084226.1e531c4b@gandalf.local.home>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -58,41 +46,52 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: tbzdfz6xijjf1nsx9rf5cecaz6t1797w
-X-Rspamd-Server: rspamout03
-X-Rspamd-Queue-Id: 6318220030
+X-Rspamd-Server: rspamout08
+X-Rspamd-Queue-Id: C2BA217
+X-Stat-Signature: xseauqs67nqm6o6wewxg7nq1ag64xyy9
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18kMxDuWA1tAF9m0DoMD/Jf6AhXJD9G9Y4=
-X-HE-Tag: 1763493956-237256
-X-HE-Meta: U2FsdGVkX187IrvkH90ckrHBgaHws/CDDckN7oWOSHQjYNUrMmyzebyXREW0G5QsO8LWPgB7KUXrlIl53TbVunkyTH7yH6013m9YXFffYOwssCNgJobXZ42EzqvfFBlvuBf1bDwTdo/cPGPnxjh7EcAhSP0F1bNcPPsTwG6CxpKVWybID+0QFOB0gq1aLVm1YKfNghJNuA7rARi3zkYltVvQULz7rE1Ewqmd0/GNKcO+e3P9xl+9pGtp+4dSugY0O4tKiekgg3+E9xuViKe0/aJvKMAdftbtsFgOa2PIxhuKrghkQmTozwPhe97I/b8vgxn0XYhcL7DlbF/TRMZC+t+3ihZyz2MU
+X-Session-ID: U2FsdGVkX191Dnu6RCNbNSxwlmFMlwGsQjIPIVb2lC0=
+X-HE-Tag: 1763497437-128984
+X-HE-Meta: U2FsdGVkX18uHeVyqDnFOZ+9GeGnqHiVNyPbYYkD/Qv97ei1JiRtKyd4sKTJNtMdfqWNJUjof8O6iU6zSST4Eh0w3bK/f/c7mMiCxmT350HpEZEuJtMeIIsUNC+2nMBt/6Fu5vIQAFljTsChOLzKNMtznaSTFMXP1amgyydNL5Vgj36Exfq4BuFf0dKlcsqHwCli4VftqW+ZfBIt/ufbBO/42YEL0EPJWVBWBdNEHTwwfPzzEIBTOcovKdiGdXYZ2xY2rd957CSypmkzOVmo+L772KxHzXqarv7BabtVHIXhPu8MmkriWpkP2QGGLeEzAMqsoqKocrfSBMSVjoIXXu9MkB3Ds/d1GnzKdSoiTNpieN7XuRyy3ycZE3Kmf5Og
 
-On Tue, 18 Nov 2025 18:04:27 +0100
-Jens Remus <jremus@linux.ibm.com> wrote:
+On Tue, 18 Nov 2025 08:42:26 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> I wonder whether the series should be restructured as follows:
+> > 
+> > What you wanted to use was perf_event_read_local().  
 > 
-> unwind_user/sframe: Store .sframe section data in per-mm maple tree
-> unwind_user/sframe: Detect .sframe sections in executables
-> unwind_user/sframe: Add support for reading .sframe headers
-> unwind_user/sframe: Add support for reading .sframe contents
-> unwind_user/sframe: Wire up unwind_user to sframe
-> x86/uaccess: Add unsafe_copy_from_user() implementation
-> unwind_user/sframe/x86: Enable sframe unwinding on x86
-> unwind_user: Stop when reaching an outermost frame
-> unwind_user/sframe: Add support for outermost frame indication
-> unwind_user/sframe: Remove .sframe section on detected corruption
-> unwind_user/sframe: Show file name in debug output
-> unwind_user/sframe: Add .sframe validation option
-> unwind_user/sframe: Add prctl() interface for registering .sframe sections
-> 
-> While moving sframe_add_section() and sframe_remove_section() from
-> "unwind_user/sframe: Add support for reading .sframe headers" to
-> "unwind_user/sframe: Store .sframe section data in per-mm maple tree" or
-> into a new second patch, as they depend on the first and are required
-> by the third.
-> 
-> What are your thoughts?  The reordering might be wasted effort.
+> Great! I didn't know about that. Which is why I posted this as a
+> PROOF-OF-CONCEPT and not even a normal RFC, so that I could learn about the
+> proper way of doing this.
 
-If you feel it makes it better, sure, go ahead and do it.
+I folded in this change:
+
+diff --git a/kernel/trace/trace_event_perf.c b/kernel/trace/trace_event_perf.c
+index ff864d300251..34962f80dce1 100644
+--- a/kernel/trace/trace_event_perf.c
++++ b/kernel/trace/trace_event_perf.c
+@@ -478,6 +478,7 @@ u64 do_trace_perf_event(int type)
+ 	struct trace_perf_event __percpu **pevents;
+ 	struct trace_perf_event __percpu *events;
+ 	struct perf_event *e;
++	u64 val;
+ 	int *count;
+ 	int cpu;
+ 
+@@ -499,8 +500,10 @@ u64 do_trace_perf_event(int type)
+ 	if (!e)
+ 		return 0;
+ 
+-	e->pmu->read(e);
+-	return local64_read(&e->count);
++	if (perf_event_read_local(e, &val, NULL, NULL) < 0)
++		return 0;
++
++	return val;
+ }
+ 
+ static void __free_trace_perf_events(struct trace_perf_event __percpu *events)
+
+Thanks!
 
 -- Steve
