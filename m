@@ -1,64 +1,64 @@
-Received: from mail-pf1-f195.google.com (mail-pf1-f195.google.com [209.85.210.195])
+Received: from mail-pf1-f194.google.com (mail-pf1-f194.google.com [209.85.210.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FD1F34DCEA
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 18 Nov 2025 12:36:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0648345CB9
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 18 Nov 2025 12:37:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763469418; cv=none; b=JjjhbISbar0WAuP7NZ16sZJ55x92cqywhDS37gTaAKuwGFTio7y8Tmb3dcOOTi6ViSaHJaw5J+8dBoN+wRe+c00W3Y0HXhI0Ohu7+jEmKh2GttBRR5e6eDVtUYWfG+FDV5FqRQYj5jSGh3Rk1u8ycvpN7PVcKs92D5QAQOBVR6A=
+	t=1763469425; cv=none; b=oNk5qWJ4k/U3LbXL3tDuCkXmlQZQfPB9tCGq2FtsJ+Z7IUh/wFHY5U9GINjNcoY4b2iuBmCvu6EUelavsnGehMwNBoTC1Sp2nf567noghIkHif+WJAeInU/hwoinCxE9cLi7rln0+n+ZTHkceo8BgVP9Y8KSQdSaoOejA/gXD+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763469418; c=relaxed/simple;
-	bh=HfdqWCvCXsXMTJZ0UXs4yz02O0KD4yDebfnbUfc9UBI=;
+	s=arc-20240116; t=1763469425; c=relaxed/simple;
+	bh=yw0+14vG3MTkylBTsNGEjI1rTbbl51z2DrBpLhZnx4s=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=duGZzwBIX77MMhtnYuNkO44EYF5RVzJxCPBHr4MTtrEFzw7nZZFlnUAhnsrCl/lsZsuw3Tw5VOygvh8natrWwEs9/peELF8mPTcQ48+Fg41KFPxxOr5EqsnsRwad2Jjz9LncGd/BO/PWyzYk9SepwyyHnEHwGEyQuSkPwqEKnOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LBSSvhsI; arc=none smtp.client-ip=209.85.210.195
+	 MIME-Version; b=mJw6ZIWWJwyoDoNxMgMnEu88LEzub3FTBkhD5yBXwCQwRI7XT3bYRoHFKMTmxVhcrR0R112+a4y2GKV/pb3LEpNk6CYQXPaukweyI+KcS9+KpS1orOLqhXtJR1Vq+dWA8JB3o/s/IG5qtGZ73YhyzX8uzbhtIndN3ZMCtWyvEN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XJ6PDHPU; arc=none smtp.client-ip=209.85.210.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LBSSvhsI"
-Received: by mail-pf1-f195.google.com with SMTP id d2e1a72fcca58-7b89c1ce9easo5441230b3a.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 18 Nov 2025 04:36:55 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XJ6PDHPU"
+Received: by mail-pf1-f194.google.com with SMTP id d2e1a72fcca58-7b22ffa2a88so4465460b3a.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 18 Nov 2025 04:37:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763469415; x=1764074215; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1763469421; x=1764074221; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=cGjFhDeMxWrGazpljFY/Z83jYWiFR4RMAA/Pm2GV6ZI=;
-        b=LBSSvhsI1sqOJPY7QAQUtWmbtl419gPdfOjJSFQDG6LzPdUeCnZqt0Mf4xYV//cBD+
-         puymsRS1DcZlug9FKhG2mm+2fGhbW7Gb4Jh9k5lFzhjv5ROnlPyhcjOviVE3aPW/Cci7
-         C3lMqFQ1tzBX0hy/1668QvsDO1Zq+D/WvtsFlO1Tpe9NUDgBEnAUEmaHCgGqzfTndGTq
-         N3uAOPb4hsRbuHGFo2hNwj1ooD7aBMMK/kxhWGsURSO0NpyAecmstap2hNjRWpxhIlBF
-         UBtd51TxmKFBDpMwsGD2D+QGb19nxsUFGv/9RcbaJKZPRilhTgRFoRE0zzQ8ZToW7EzM
-         /9eQ==
+        bh=KRkWsGzjZIg7j77yjUEwdtDGoZTowRE1mWBAeLLFj3U=;
+        b=XJ6PDHPU/43Hl58ZLURBIl0aD1bLDiWd/ZXkuC7Ivd8A5Xl6SCaLUOPPzeOFplUUmY
+         8bdgrxGb8WfYWTclxDAQadta7nXpRXIwXDQTojnC1jqxEMU68wqJQ263XQShenChUM2l
+         6cY5SqlwkYbQ2xeOB9OsVEK7X8hle3Dngo6TttlwgMW/uQp8iFcRoUXDOVfJMRP1iNgZ
+         GgAATu4QyyiSv9E8Tkzh/Ppl+O17bRcDTfESNfST2L7t+gjZNYRcAnH5imdeQLjno5AH
+         RDbezKUFs2Kw5vxcwS6UHhnxV6MZfGHt/YwH9RkE4CZqlBNBiYKkpESBmKuFcFEIq/Na
+         AQmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763469415; x=1764074215;
+        d=1e100.net; s=20230601; t=1763469421; x=1764074221;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=cGjFhDeMxWrGazpljFY/Z83jYWiFR4RMAA/Pm2GV6ZI=;
-        b=kUqbe18F2+RItE9xFd6lV6+RpGIVyDjX3C3tzc4nltul6snxEJIrAStYrwUTc9USbe
-         CtLr0HRnUnmNv51JA60I9FZgVsQB2pIwgmz3VlQu+VaWYMu4gfAQlw73SE7OjUmmltnh
-         fX1/f7MTerThY+7xzMCN4vGuCbhqpjeDXPOpQsS1sQcTxpSJZgN3lPeoRlEmvtW0TeNn
-         8OiIYGxqhxbrCbIlpr6Gib2GIINtY5fCn5qjIYpgHnwfwVMDzBFULYVXpUpMFQUmR0Ir
-         sHSCt6uEIOJDZlX247+MP3sWXoZ9SiiIzTIMOaGshJRhfSoNHeveb57gPsZWf6N03Dvj
-         b+Dg==
-X-Forwarded-Encrypted: i=1; AJvYcCWdulwR78hyDNVWi8xkJfh2EgD4NBwJmHLb1mYQCLvp/reZfE1qOwFpOCASxlsyYvngFHb2HHMfFxPeh8VoIFhytg8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YywRJ3mLfBBTpPvz9AQ+3tOnnYRE5Tbq7P0XJzgaMhG7Jz+LmBj
-	YE3/Ze14CbYceJ4VxJoEVG2Mnleif/vtgGYLzKnB/RQVarV4uNu50uC+
-X-Gm-Gg: ASbGncske+ubB8TmyJ/T34W4NiSCXBXQQcN5EXJfEei1dGt8oTB1fUOe6wd9/Un6Zuy
-	hq/CVt3r9XI2C24Lh4bF8OwNY7lv/RIKlp9WnEP/gpUv1jbCA+dAA0S4YVYJ9VI2mLXPNia2ywr
-	LsRqa2PTlrw1hB3DEZFkL6CIrNrPmvN8iYJWG+NxnBON6seq7SL8Cf/UGdibiM7OR+Iv0Rdo3iB
-	vk88sT2G0o4+5XnufUjY+yVveityK8hgGQQXFqb/bXgILFRHd6HMwYoE104fVrtLhB/iL5rOmNo
-	itVnmP65na7HxCTbFOhx55iWKPIMIGCLDsabampiAal3FBx9I0r/Gvbcr/MZ8G9YtYUm9CtGFu9
-	iYykEmb+rQNTpK43fU3fqdkxXGYNoN6uxqdI2GcL57obJonA/iYq7BAw2XL+5a1m7dnNqs9trCw
-	8kIERrRbB8gK4=
-X-Google-Smtp-Source: AGHT+IHzC6fTh7q+8Nly65oI1W6f1opZTTs/1Rfi00Y9lq9IK/uPekC1SfgGQME1iV9wmsttAbLwug==
-X-Received: by 2002:a05:6a00:21c5:b0:7ad:f6e8:d013 with SMTP id d2e1a72fcca58-7ba3cd668d4mr21966720b3a.32.1763469415307;
-        Tue, 18 Nov 2025 04:36:55 -0800 (PST)
+        bh=KRkWsGzjZIg7j77yjUEwdtDGoZTowRE1mWBAeLLFj3U=;
+        b=fLy82jw7EA2NGAG4+hNUbFyczKwzUakE0Dtvm2hPOQfo5ngJ4qsJnPEhYpbAzpcAsn
+         psgN+LRPvBArhuSXbQjfjX6azeutb4NS6ZUByytKiKkM26pfuje/sD9071Fk03zj/8DW
+         ugY9d7vBfXLl+dTsXgP9/vnDHAn5oSQE239n7Q0MTuRPCfxVUQxgld9zTNccrIJc65qp
+         5piVvA0YLMtBgC3K2i7dfknTxba5Vu315EDTKCGpnxfJFg8d+OxR8sOyNwdBQedoE6K+
+         wNoXax2eMq8GqKJqJyV8R7UO8oXQRUj3ngNlLP8CS10ZVleME6DJfFr/Kpfa4ipnGrlk
+         i/rw==
+X-Forwarded-Encrypted: i=1; AJvYcCXIjwr86wZsQzSjvDMqraJXj2HnSgMr35KNq/AXpQEVMnzB9+CPFv3c+PDA1ruGx8u5qzTyCKWMdkqT6UDtN1T8Hoc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwhS24clbcSKNdIjI4Pkoz9LHQP6m+ZRtB+fb/5dChpbWUaQswF
+	8XZtzlZrs2db/6CvW9qTZ0dDnocx+RixcllibNOR7r2ZscWUUw0w8XKn
+X-Gm-Gg: ASbGncsVjnva9+UjgRnOLUX8WSD7z6Gs2dC3vW532ci3GdXr+DYH9SVa0TfqjaduFO1
+	AnJSxV4Q3MKef0NLB8HVFaWMS51IWdRTanzQ7cg0lhMj14P82RgFaE+1hC13/i3MwQhfAk46YAi
+	IiiBfZ+9oUm7JdNSZFSUx95YP71JyJSKFP39JXSicmAr2ZGkJJyIcskrieWJ1W5X58Gwo7ueKqX
+	RW00pajqxyAp+fPfTEZeWSk/QeD2cRoDOSexevHziFmLCtngn2fk0Q7WfHqOpcXzate2+IwLsRJ
+	mPBysxax0DMkNGumbBXoI6MxZwkYY3K6x4KkRYeytdc8VIGixRyyufzlS3WoYlFN1QtKq9X23CM
+	MkY0xCJ5Cqjl3Zq6c69fhdfx33oPwrsKy04FbR1dkoSpZS59+Z2YHPsVrnKFYcrlT8qaExCrys8
+	LkzsQ+QzbO0wk=
+X-Google-Smtp-Source: AGHT+IHLeC9ZWRL2VLtRiE54fQ6H+bxg9/eru6ZBoKg3v7IDmaLDmUU9coK6XPoveKCEmhT4BZJJbA==
+X-Received: by 2002:aa7:888c:0:b0:77f:2dc4:4c16 with SMTP id d2e1a72fcca58-7ba3be8c664mr17780783b3a.21.1763469421399;
+        Tue, 18 Nov 2025 04:37:01 -0800 (PST)
 Received: from 7950hx ([43.129.244.20])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7b92772e7f2sm16331496b3a.57.2025.11.18.04.36.50
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7b92772e7f2sm16331496b3a.57.2025.11.18.04.36.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Nov 2025 04:36:55 -0800 (PST)
+        Tue, 18 Nov 2025 04:37:01 -0800 (PST)
 From: Menglong Dong <menglong8.dong@gmail.com>
 X-Google-Original-From: Menglong Dong <dongml2@chinatelecom.cn>
 To: ast@kernel.org,
@@ -81,9 +81,9 @@ Cc: daniel@iogearbox.net,
 	bpf@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH bpf-next v3 1/6] ftrace: introduce FTRACE_OPS_FL_JMP
-Date: Tue, 18 Nov 2025 20:36:29 +0800
-Message-ID: <20251118123639.688444-2-dongml2@chinatelecom.cn>
+Subject: [PATCH bpf-next v3 2/6] x86/ftrace: implement DYNAMIC_FTRACE_WITH_JMP
+Date: Tue, 18 Nov 2025 20:36:30 +0800
+Message-ID: <20251118123639.688444-3-dongml2@chinatelecom.cn>
 X-Mailer: git-send-email 2.51.2
 In-Reply-To: <20251118123639.688444-1-dongml2@chinatelecom.cn>
 References: <20251118123639.688444-1-dongml2@chinatelecom.cn>
@@ -95,153 +95,88 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-For now, the "nop" will be replaced with a "call" instruction when a
-function is hooked by the ftrace. However, sometimes the "call" can break
-the RSB and introduce extra overhead. Therefore, introduce the flag
-FTRACE_OPS_FL_JMP, which indicate that the ftrace_ops should be called
-with a "jmp" instead of "call". For now, it is only used by the direct
-call case.
+Implement the DYNAMIC_FTRACE_WITH_JMP for x86_64. In ftrace_call_replace,
+we will use JMP32_INSN_OPCODE instead of CALL_INSN_OPCODE if the address
+should use "jmp".
 
-When a direct ftrace_ops is marked with FTRACE_OPS_FL_JMP, the last bit of
-the ops->direct_call will be set to 1. Therefore, we can tell if we should
-use "jmp" for the callback in ftrace_call_replace().
+Meanwhile, adjust the direct call in the ftrace_regs_caller. The RSB is
+balanced in the "jmp" mode. Take the function "foo" for example:
+
+ original_caller:
+ call foo -> foo:
+         call fentry -> fentry:
+                 [do ftrace callbacks ]
+                 move tramp_addr to stack
+                 RET -> tramp_addr
+                         tramp_addr:
+                         [..]
+                         call foo_body -> foo_body:
+                                 [..]
+                                 RET -> back to tramp_addr
+                         [..]
+                         RET -> back to original_caller
 
 Signed-off-by: Menglong Dong <dongml2@chinatelecom.cn>
 ---
-v3:
-- reject if the addr is already "jmp" in register_ftrace_direct() and
-  __modify_ftrace_direct()
----
- include/linux/ftrace.h | 33 +++++++++++++++++++++++++++++++++
- kernel/trace/Kconfig   | 12 ++++++++++++
- kernel/trace/ftrace.c  | 17 ++++++++++++++++-
- 3 files changed, 61 insertions(+), 1 deletion(-)
+ arch/x86/Kconfig            |  1 +
+ arch/x86/kernel/ftrace.c    |  7 ++++++-
+ arch/x86/kernel/ftrace_64.S | 12 +++++++++++-
+ 3 files changed, 18 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-index 07f8c309e432..015dd1049bea 100644
---- a/include/linux/ftrace.h
-+++ b/include/linux/ftrace.h
-@@ -359,6 +359,7 @@ enum {
- 	FTRACE_OPS_FL_DIRECT			= BIT(17),
- 	FTRACE_OPS_FL_SUBOP			= BIT(18),
- 	FTRACE_OPS_FL_GRAPH			= BIT(19),
-+	FTRACE_OPS_FL_JMP			= BIT(20),
- };
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index fa3b616af03a..462250a20311 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -230,6 +230,7 @@ config X86
+ 	select HAVE_DYNAMIC_FTRACE_WITH_ARGS	if X86_64
+ 	select HAVE_FTRACE_REGS_HAVING_PT_REGS	if X86_64
+ 	select HAVE_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
++	select HAVE_DYNAMIC_FTRACE_WITH_JMP	if X86_64
+ 	select HAVE_SAMPLE_FTRACE_DIRECT	if X86_64
+ 	select HAVE_SAMPLE_FTRACE_DIRECT_MULTI	if X86_64
+ 	select HAVE_EBPF_JIT
+diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
+index 4450acec9390..0543b57f54ee 100644
+--- a/arch/x86/kernel/ftrace.c
++++ b/arch/x86/kernel/ftrace.c
+@@ -74,7 +74,12 @@ static const char *ftrace_call_replace(unsigned long ip, unsigned long addr)
+ 	 * No need to translate into a callthunk. The trampoline does
+ 	 * the depth accounting itself.
+ 	 */
+-	return text_gen_insn(CALL_INSN_OPCODE, (void *)ip, (void *)addr);
++	if (ftrace_is_jmp(addr)) {
++		addr = ftrace_jmp_get(addr);
++		return text_gen_insn(JMP32_INSN_OPCODE, (void *)ip, (void *)addr);
++	} else {
++		return text_gen_insn(CALL_INSN_OPCODE, (void *)ip, (void *)addr);
++	}
+ }
  
- #ifndef CONFIG_DYNAMIC_FTRACE_WITH_ARGS
-@@ -577,6 +578,38 @@ static inline void arch_ftrace_set_direct_caller(struct ftrace_regs *fregs,
- 						 unsigned long addr) { }
- #endif /* CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS */
+ static int ftrace_verify_code(unsigned long ip, const char *old_code)
+diff --git a/arch/x86/kernel/ftrace_64.S b/arch/x86/kernel/ftrace_64.S
+index 823dbdd0eb41..a132608265f6 100644
+--- a/arch/x86/kernel/ftrace_64.S
++++ b/arch/x86/kernel/ftrace_64.S
+@@ -285,8 +285,18 @@ SYM_INNER_LABEL(ftrace_regs_caller_end, SYM_L_GLOBAL)
+ 	ANNOTATE_NOENDBR
+ 	RET
  
-+#ifdef CONFIG_DYNAMIC_FTRACE_WITH_JMP
-+static inline bool ftrace_is_jmp(unsigned long addr)
-+{
-+	return addr & 1;
-+}
++1:
++	testb	$1, %al
++	jz	2f
++	andq $0xfffffffffffffffe, %rax
++	movq %rax, MCOUNT_REG_SIZE+8(%rsp)
++	restore_mcount_regs
++	/* Restore flags */
++	popfq
++	RET
 +
-+static inline unsigned long ftrace_jmp_set(unsigned long addr)
-+{
-+	return addr | 1UL;
-+}
-+
-+static inline unsigned long ftrace_jmp_get(unsigned long addr)
-+{
-+	return addr & ~1UL;
-+}
-+#else
-+static inline bool ftrace_is_jmp(unsigned long addr)
-+{
-+	return false;
-+}
-+
-+static inline unsigned long ftrace_jmp_set(unsigned long addr)
-+{
-+	return addr;
-+}
-+
-+static inline unsigned long ftrace_jmp_get(unsigned long addr)
-+{
-+	return addr;
-+}
-+#endif /* CONFIG_DYNAMIC_FTRACE_WITH_JMP */
-+
- #ifdef CONFIG_STACK_TRACER
+ 	/* Swap the flags with orig_rax */
+-1:	movq MCOUNT_REG_SIZE(%rsp), %rdi
++2:	movq MCOUNT_REG_SIZE(%rsp), %rdi
+ 	movq %rdi, MCOUNT_REG_SIZE-8(%rsp)
+ 	movq %rax, MCOUNT_REG_SIZE(%rsp)
  
- int stack_trace_sysctl(const struct ctl_table *table, int write, void *buffer,
-diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-index d2c79da81e4f..4661b9e606e0 100644
---- a/kernel/trace/Kconfig
-+++ b/kernel/trace/Kconfig
-@@ -80,6 +80,12 @@ config HAVE_DYNAMIC_FTRACE_NO_PATCHABLE
- 	  If the architecture generates __patchable_function_entries sections
- 	  but does not want them included in the ftrace locations.
- 
-+config HAVE_DYNAMIC_FTRACE_WITH_JMP
-+	bool
-+	help
-+	  If the architecture supports to replace the __fentry__ with a
-+	  "jmp" instruction.
-+
- config HAVE_SYSCALL_TRACEPOINTS
- 	bool
- 	help
-@@ -330,6 +336,12 @@ config DYNAMIC_FTRACE_WITH_ARGS
- 	depends on DYNAMIC_FTRACE
- 	depends on HAVE_DYNAMIC_FTRACE_WITH_ARGS
- 
-+config DYNAMIC_FTRACE_WITH_JMP
-+	def_bool y
-+	depends on DYNAMIC_FTRACE
-+	depends on DYNAMIC_FTRACE_WITH_DIRECT_CALLS
-+	depends on HAVE_DYNAMIC_FTRACE_WITH_JMP
-+
- config FPROBE
- 	bool "Kernel Function Probe (fprobe)"
- 	depends on HAVE_FUNCTION_GRAPH_FREGS && HAVE_FTRACE_GRAPH_FUNC
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 59cfacb8a5bb..bbb37c0f8c6c 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -5951,7 +5951,8 @@ static void remove_direct_functions_hash(struct ftrace_hash *hash, unsigned long
- 	for (i = 0; i < size; i++) {
- 		hlist_for_each_entry(entry, &hash->buckets[i], hlist) {
- 			del = __ftrace_lookup_ip(direct_functions, entry->ip);
--			if (del && del->direct == addr) {
-+			if (del && ftrace_jmp_get(del->direct) ==
-+				   ftrace_jmp_get(addr)) {
- 				remove_hash_entry(direct_functions, del);
- 				kfree(del);
- 			}
-@@ -6016,8 +6017,15 @@ int register_ftrace_direct(struct ftrace_ops *ops, unsigned long addr)
- 	if (ftrace_hash_empty(hash))
- 		return -EINVAL;
- 
-+	/* This is a "raw" address, and this should never happen. */
-+	if (WARN_ON_ONCE(ftrace_is_jmp(addr)))
-+		return -EINVAL;
-+
- 	mutex_lock(&direct_mutex);
- 
-+	if (ops->flags & FTRACE_OPS_FL_JMP)
-+		addr = ftrace_jmp_set(addr);
-+
- 	/* Make sure requested entries are not already registered.. */
- 	size = 1 << hash->size_bits;
- 	for (i = 0; i < size; i++) {
-@@ -6138,6 +6146,13 @@ __modify_ftrace_direct(struct ftrace_ops *ops, unsigned long addr)
- 
- 	lockdep_assert_held_once(&direct_mutex);
- 
-+	/* This is a "raw" address, and this should never happen. */
-+	if (WARN_ON_ONCE(ftrace_is_jmp(addr)))
-+		return -EINVAL;
-+
-+	if (ops->flags & FTRACE_OPS_FL_JMP)
-+		addr = ftrace_jmp_set(addr);
-+
- 	/* Enable the tmp_ops to have the same functions as the direct ops */
- 	ftrace_ops_init(&tmp_ops);
- 	tmp_ops.func_hash = ops->func_hash;
 -- 
 2.51.2
 
