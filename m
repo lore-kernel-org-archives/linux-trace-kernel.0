@@ -1,227 +1,273 @@
-Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 198C228C866;
-	Tue, 18 Nov 2025 01:20:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AACB8320CAC
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 18 Nov 2025 02:00:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763428854; cv=none; b=tYMsKwIuTUzMM+lH+e8ETWa6fCugaACp5Mz15gBv+yyf7TR3CB/GlxA1FS9cmCHCge2bOqze9xE0EgTixtnzO67B7nwWW85DKhR9KSFt2rA0u4TvZhoIyeKe6zgaQqHFTh6tG/v7B4rEfSD7FU6CGB1iNHuENuT9G0Xx4KwFBUs=
+	t=1763431243; cv=none; b=Uz2VBXYCvLu2XJIwaR2erdNpQn85OOVMEEDFvkBWqn7ifxaJJW5Og3lEh+5lltE9c3Id4NtQmGgkwLqVALO4ACUakZK14H/ayKMOt9PWRRHhs3DIDG5MDzJh/flGmF10OAMSIe0TUx1VmKGMRoF5smF9LAABoH8YGxjlH11DpYs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763428854; c=relaxed/simple;
-	bh=ksPhFiYiWAS4Howtkeo3jSAl6Eyjb9vtA0YhuMynw8g=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EVBggHUWb4jhSzyBDfMRlhZqcIr5+EsIxoNFrSn7Exg7v2JcTqz+A/p1H1xWz0Hqv3MTyB9wCOMHj6bf69uZnBgtHaPSD2B+L+HYbtGpAfbCvxNG9vyiZlOkpcA1qbyTYL87Whe0YDYDGqYKQeyrKIbprkqkTJ8JcfwS2GnCKLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=O69nt2gG; arc=none smtp.client-ip=95.215.58.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1763431243; c=relaxed/simple;
+	bh=kaylDlwQl1VqEc/tlQkL21uVVJ3iIahDpahKHEmXXhk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WMqN4BENXtGCrJW1v2ltdL4/PXLyNAscHGOYdG7fTEIIhUkkSBJ+5FeZtRivO0KPH0wFURJsQLZCgSvpQoOUtTlRlwvLkr0hcSFj8kPElE60RI7M8pdWivV4SCrg6+XxtI22SKJqA0ymRLim2V3kJZ9l/zsL8BqvHnszAqnOptM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gzr1Exz2; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="O69nt2gG"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1763428845;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WLsdv85RrOb9Dlejp4arhbuTs7ghpPeNtpFV4Kv4wj8=;
-	b=O69nt2gG+mFmtdnQbfYxYQUsgL2cpVE/3wz1NMKwcvhIzw392QdO0BMklx0TCL8uO18T6I
-	IFQj7/sxxwnCzBIP7ILFiRm+BRu2zVORlbXwpNH57ru10WGVVMbzg7EKtAJM/or88KSAzR
-	abNQD7zavFZHcd9PvGwfZ9UrqluY04Y=
-From: Menglong Dong <menglong.dong@linux.dev>
-To: ast@kernel.org, rostedt@goodmis.org,
- Menglong Dong <menglong8.dong@gmail.com>
-Cc: daniel@iogearbox.net, john.fastabend@gmail.com, andrii@kernel.org,
- martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org,
- yonghong.song@linux.dev, kpsingh@kernel.org, sdf@fomichev.me,
- haoluo@google.com, jolsa@kernel.org, mhiramat@kernel.org,
- mark.rutland@arm.com, mathieu.desnoyers@efficios.com, jiang.biao@linux.dev,
- bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH bpf-next v2 6/6] bpf: implement "jmp" mode for trampoline
-Date: Tue, 18 Nov 2025 09:20:32 +0800
-Message-ID: <12782324.O9o76ZdvQC@7950hx>
-In-Reply-To: <20251117034906.32036-7-dongml2@chinatelecom.cn>
-References:
- <20251117034906.32036-1-dongml2@chinatelecom.cn>
- <20251117034906.32036-7-dongml2@chinatelecom.cn>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gzr1Exz2"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-b7373fba6d1so519031466b.3
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 17 Nov 2025 18:00:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1763431237; x=1764036037; darn=vger.kernel.org;
+        h=user-agent:in-reply-to:content-transfer-encoding
+         :content-disposition:mime-version:references:reply-to:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=PjtZZ70/Qu6YbmmA5LKoN6Z9gQ7S03ZL5L4ASTauTjE=;
+        b=Gzr1Exz2UtCbx9H8bYllUE7F8FfsmpCgPHLF3mH8yNdxr4DqsLcSrrh8ZZFlqzWia5
+         TqBH56SKYbDyYwN5DF1HaRggjz5d7baptmy0NZMDlUtyf5prJ8DD9zZssUnw/SvXIjPn
+         jiQSlv/hSF09d7ycR9rRAxojY8gUvBofMOPSslLEYQ2LmzXS98s3csbtsbp6ANPdiLDI
+         0B+3RDBBPddzP+Qoj8Fv79+TsC2CR4tR9tGIjYuEbtcOXKr53QhsoFfGNhN7mDrcAuGv
+         hTYUUUrdXwRIQoo+reliu54M3GAQDH37YuO1mSZUq3R/AVxiWXBhGX1Kg4hHPrf+MX28
+         dr6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763431237; x=1764036037;
+        h=user-agent:in-reply-to:content-transfer-encoding
+         :content-disposition:mime-version:references:reply-to:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PjtZZ70/Qu6YbmmA5LKoN6Z9gQ7S03ZL5L4ASTauTjE=;
+        b=LeYb6IE8UoAvPL0mtyCIr3yvTooxJo+mhjNKsKUhvrSq5AnUNUz6NX5K/PQCFIJfkE
+         6d/5yCiIUv5pXtpXNevg1PIg+dpL66YDl1PwG8MKdSgzECubE9ufr98dZY93asK+bvO6
+         3+oeDU9dpvFQQfqxXWsW9MZtpkLrMGRSc3pOdGCk9AdfeZ9A8dtIKEfQ6Iqm8FNLSi3z
+         OtDVvl1AAedXPxZec/ngI51e21VpFUqxHbjld9Fn2n9cT2L7v4SMf2rqsBQ+GeN0lLxT
+         GcieO8MomXy6XA9cfsSJX+Bsxlm3Oisu0E4pbAEoKAC7MC9S8k+TeNc3qklRcokNEVpG
+         01pA==
+X-Forwarded-Encrypted: i=1; AJvYcCXjlT/gmP2Dw0J6HYiXdqTKmNtB0KHQSwyoJDeygVPcwJiDoL/D4KnyjcD9DAtS849CW3UAZtqnyp3whzbTL90Ckyg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZWb6XneHDMTgZ2VaxYr6f2RRKsv6kbz1lxw2wIl4dgetxPFP5
+	ohWFMSdWiV8FVUZZWFwnb/Jj1H1vZpe01uiiplHhJ+tIrgeOtQEwRjuW
+X-Gm-Gg: ASbGncuisf7i6TEdfvO3lVHrbk0k8LVaqi14fBWhS2a/MMuYbkio9lQHbftJZZ/0gAn
+	LYY06gqoC4vR5csLCjr/16J1FjjzzrkYHgquh+Vgz3hT+Z58oQaTy33VrMisSL3nPgQoxE5nU+3
+	nnOwU9p+woz48vwM+dpJwon9AZP8XjmT/wtbl8uUa5e1khx9C/hbc3lKn8PruDUjqZdbCOAMQiU
+	IZUQJeuymY8aeZgdXRLMg8NgX7BeQtX98u1CF6XKJUbjYzl5/f2JCeFFKGuQL+rBl+isk8wAiLj
+	WzWcL0NbYJcBKqAOzyy/ZaKjWqQ1X8YyKFkCeGfiNQHVZRqeSm26mzrPKsNHGHQxRUlMp8/pxKJ
+	7QHEVDjjW+pVybP4VAF8cmgd6/Upiv6B0FuzaMXDaVXUGaacsEOKsmJSHnPMDfuaoxxyl3nmg8V
+	5E+TAuaXrz7YZHCg==
+X-Google-Smtp-Source: AGHT+IEIbHsmAR4qI1U7kAkJFbuJ0gMBeLqnpNcnfrzyBKIrXirysQ6AKJVPv8sKWVks0bFN76WI/A==
+X-Received: by 2002:a17:907:d18:b0:b73:9b4a:5c02 with SMTP id a640c23a62f3a-b739b4a5cb6mr723067766b.49.1763431237209;
+        Mon, 17 Nov 2025 18:00:37 -0800 (PST)
+Received: from localhost ([185.92.221.13])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b734fd7f37bsm1199178666b.35.2025.11.17.18.00.35
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 17 Nov 2025 18:00:35 -0800 (PST)
+Date: Tue, 18 Nov 2025 02:00:34 +0000
+From: Wei Yang <richard.weiyang@gmail.com>
+To: Nico Pache <npache@redhat.com>
+Cc: Wei Yang <richard.weiyang@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org,
+	linux-doc@vger.kernel.org, david@redhat.com, ziy@nvidia.com,
+	baolin.wang@linux.alibaba.com, lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com, ryan.roberts@arm.com, dev.jain@arm.com,
+	corbet@lwn.net, rostedt@goodmis.org, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, akpm@linux-foundation.org,
+	baohua@kernel.org, willy@infradead.org, peterx@redhat.com,
+	wangkefeng.wang@huawei.com, usamaarif642@gmail.com,
+	sunnanyong@huawei.com, vishal.moola@gmail.com,
+	thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com,
+	kas@kernel.org, aarcange@redhat.com, raquini@redhat.com,
+	anshuman.khandual@arm.com, catalin.marinas@arm.com, tiwai@suse.de,
+	will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz,
+	cl@gentwo.org, jglisse@google.com, surenb@google.com,
+	zokeefe@google.com, hannes@cmpxchg.org, rientjes@google.com,
+	mhocko@suse.com, rdunlap@infradead.org, hughd@google.com,
+	lance.yang@linux.dev, vbabka@suse.cz, rppt@kernel.org,
+	jannh@google.com, pfalcato@suse.de
+Subject: Re: [PATCH v12 mm-new 13/15] khugepaged: avoid unnecessary mTHP
+ collapse attempts
+Message-ID: <20251118020034.rdgisvkqs53lwabz@master>
+Reply-To: Wei Yang <richard.weiyang@gmail.com>
+References: <20251022183717.70829-1-npache@redhat.com>
+ <20251022183717.70829-14-npache@redhat.com>
+ <20251109024013.fzt7xxpmxwi75xgr@master>
+ <CAA1CXcA9zaGqLPHnJWH=fKPUjb02dV+rKgfmsRZOGdeukiC8eg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAA1CXcA9zaGqLPHnJWH=fKPUjb02dV+rKgfmsRZOGdeukiC8eg@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 
-On 2025/11/17 11:49, Menglong Dong wrote:
-> Implement the "jmp" mode for the bpf trampoline. For the ftrace_managed
-> case, we need only to set the FTRACE_OPS_FL_JMP on the tr->fops if "jmp"
-> is needed.
-> 
-> For the bpf poke case, we will check the origin poke type with the
-> "origin_flags", and current poke type with "tr->flags". The function
-> bpf_trampoline_update_fentry() is introduced to do the job.
-> 
-> The "jmp" mode will only be enabled with CONFIG_DYNAMIC_FTRACE_WITH_JMP
-> enabled and BPF_TRAMP_F_SHARE_IPMODIFY is not set. With
-> BPF_TRAMP_F_SHARE_IPMODIFY, we need to get the origin call ip from the
-> stack, so we can't use the "jmp" mode.
-> 
-> Signed-off-by: Menglong Dong <dongml2@chinatelecom.cn>
-> ---
-> v2:
-> - rename bpf_text_poke to bpf_trampoline_update_fentry
-> - remove the BPF_TRAMP_F_JMPED and check the current mode with the origin
->   flags instead.
-> ---
->  kernel/bpf/trampoline.c | 68 ++++++++++++++++++++++++++++++-----------
->  1 file changed, 51 insertions(+), 17 deletions(-)
-> 
-> diff --git a/kernel/bpf/trampoline.c b/kernel/bpf/trampoline.c
-> index 2dcc999a411f..80ab435d6e00 100644
-> --- a/kernel/bpf/trampoline.c
-> +++ b/kernel/bpf/trampoline.c
-> @@ -175,24 +175,42 @@ static struct bpf_trampoline *bpf_trampoline_lookup(u64 key)
->  	return tr;
->  }
->  
-> -static int unregister_fentry(struct bpf_trampoline *tr, void *old_addr)
-> +static int bpf_trampoline_update_fentry(struct bpf_trampoline *tr, u32 orig_flags,
-> +					void *old_addr, void *new_addr)
->  {
-> +	enum bpf_text_poke_type new_t = BPF_MOD_CALL, old_t = BPF_MOD_CALL;
->  	void *ip = tr->func.addr;
-> +
-> +	if (!new_addr)
-> +		new_t = BPF_MOD_NOP;
-> +	else if (bpf_trampoline_use_jmp(tr->flags))
-> +		new_t = BPF_MOD_JUMP;
-> +
-> +	if (!old_addr)
-> +		old_t = BPF_MOD_NOP;
-> +	else if (bpf_trampoline_use_jmp(orig_flags))
-> +		old_t = BPF_MOD_JUMP;
-> +
-> +	return bpf_arch_text_poke(ip, old_t, new_t, old_addr, new_addr);
-> +}
-> +
-> +static int unregister_fentry(struct bpf_trampoline *tr, u32 orig_flags,
-> +			     void *old_addr)
-> +{
->  	int ret;
->  
->  	if (tr->func.ftrace_managed)
->  		ret = unregister_ftrace_direct(tr->fops, (long)old_addr, false);
->  	else
-> -		ret = bpf_arch_text_poke(ip, BPF_MOD_CALL, BPF_MOD_NOP,
-> -					 old_addr, NULL);
-> +		ret = bpf_trampoline_update_fentry(tr, orig_flags, old_addr, NULL);
->  
->  	return ret;
->  }
->  
-> -static int modify_fentry(struct bpf_trampoline *tr, void *old_addr, void *new_addr,
-> +static int modify_fentry(struct bpf_trampoline *tr, u32 orig_flags,
-> +			 void *old_addr, void *new_addr,
->  			 bool lock_direct_mutex)
->  {
-> -	void *ip = tr->func.addr;
->  	int ret;
->  
->  	if (tr->func.ftrace_managed) {
-> @@ -201,10 +219,8 @@ static int modify_fentry(struct bpf_trampoline *tr, void *old_addr, void *new_ad
->  		else
->  			ret = modify_ftrace_direct_nolock(tr->fops, (long)new_addr);
->  	} else {
-> -		ret = bpf_arch_text_poke(ip,
-> -					 old_addr ? BPF_MOD_CALL : BPF_MOD_NOP,
-> -					 new_addr ? BPF_MOD_CALL : BPF_MOD_NOP,
-> -					 old_addr, new_addr);
-> +		ret = bpf_trampoline_update_fentry(tr, orig_flags, old_addr,
-> +						   new_addr);
->  	}
->  	return ret;
->  }
-> @@ -229,8 +245,7 @@ static int register_fentry(struct bpf_trampoline *tr, void *new_addr)
->  			return ret;
->  		ret = register_ftrace_direct(tr->fops, (long)new_addr);
->  	} else {
-> -		ret = bpf_arch_text_poke(ip, BPF_MOD_NOP, BPF_MOD_CALL,
-> -					 NULL, new_addr);
-> +		ret = bpf_trampoline_update_fentry(tr, 0, NULL, new_addr);
->  	}
->  
->  	return ret;
-> @@ -416,7 +431,7 @@ static int bpf_trampoline_update(struct bpf_trampoline *tr, bool lock_direct_mut
->  		return PTR_ERR(tlinks);
->  
->  	if (total == 0) {
-> -		err = unregister_fentry(tr, tr->cur_image->image);
-> +		err = unregister_fentry(tr, orig_flags, tr->cur_image->image);
->  		bpf_tramp_image_put(tr->cur_image);
->  		tr->cur_image = NULL;
->  		goto out;
-> @@ -440,9 +455,17 @@ static int bpf_trampoline_update(struct bpf_trampoline *tr, bool lock_direct_mut
->  
->  #ifdef CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
->  again:
-> -	if ((tr->flags & BPF_TRAMP_F_SHARE_IPMODIFY) &&
-> -	    (tr->flags & BPF_TRAMP_F_CALL_ORIG))
-> -		tr->flags |= BPF_TRAMP_F_ORIG_STACK;
-> +	if (tr->flags & BPF_TRAMP_F_CALL_ORIG) {
-> +		if (tr->flags & BPF_TRAMP_F_SHARE_IPMODIFY) {
-> +			tr->flags |= BPF_TRAMP_F_ORIG_STACK;
-> +		} else if (IS_ENABLED(CONFIG_DYNAMIC_FTRACE_WITH_JMP)) {
-> +			/* Use "jmp" instead of "call" for the trampoline
-> +			 * in the origin call case, and we don't need to
-> +			 * skip the frame.
-> +			 */
-> +			tr->flags &= ~BPF_TRAMP_F_SKIP_FRAME;
-> +		}
-> +	}
->  #endif
->  
->  	size = arch_bpf_trampoline_size(&tr->func.model, tr->flags,
-> @@ -473,10 +496,16 @@ static int bpf_trampoline_update(struct bpf_trampoline *tr, bool lock_direct_mut
->  	if (err)
->  		goto out_free;
->  
-> +	if (bpf_trampoline_use_jmp(tr->flags))
-> +		tr->fops->flags |= FTRACE_OPS_FL_JMP;
-> +	else
-> +		tr->fops->flags &= ~FTRACE_OPS_FL_JMP;
+On Mon, Nov 17, 2025 at 11:16:53AM -0700, Nico Pache wrote:
+>On Sat, Nov 8, 2025 at 7:40 PM Wei Yang <richard.weiyang@gmail.com> wrote:
+>>
+>> On Wed, Oct 22, 2025 at 12:37:15PM -0600, Nico Pache wrote:
+>> >There are cases where, if an attempted collapse fails, all subsequent
+>> >orders are guaranteed to also fail. Avoid these collapse attempts by
+>> >bailing out early.
+>> >
+>> >Signed-off-by: Nico Pache <npache@redhat.com>
+>> >---
+>> > mm/khugepaged.c | 31 ++++++++++++++++++++++++++++++-
+>> > 1 file changed, 30 insertions(+), 1 deletion(-)
+>> >
+>> >diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+>> >index e2319bfd0065..54f5c7888e46 100644
+>> >--- a/mm/khugepaged.c
+>> >+++ b/mm/khugepaged.c
+>> >@@ -1431,10 +1431,39 @@ static int collapse_scan_bitmap(struct mm_struct *mm, unsigned long address,
+>> >                       ret = collapse_huge_page(mm, address, referenced,
+>> >                                                unmapped, cc, mmap_locked,
+>> >                                                order, offset);
+>> >-                      if (ret == SCAN_SUCCEED) {
+>> >+
+>> >+                      /*
+>> >+                       * Analyze failure reason to determine next action:
+>> >+                       * - goto next_order: try smaller orders in same region
+>> >+                       * - continue: try other regions at same order
+>> >+                       * - break: stop all attempts (system-wide failure)
+>> >+                       */
+>> >+                      switch (ret) {
+>> >+                      /* Cases were we should continue to the next region */
+>> >+                      case SCAN_SUCCEED:
+>> >                               collapsed += 1UL << order;
+>> >+                              fallthrough;
+>> >+                      case SCAN_PTE_MAPPED_HUGEPAGE:
+>> >                               continue;
+>> >+                      /* Cases were lower orders might still succeed */
+>> >+                      case SCAN_LACK_REFERENCED_PAGE:
+>> >+                      case SCAN_EXCEED_NONE_PTE:
+>> >+                      case SCAN_EXCEED_SWAP_PTE:
+>> >+                      case SCAN_EXCEED_SHARED_PTE:
+>> >+                      case SCAN_PAGE_LOCK:
+>> >+                      case SCAN_PAGE_COUNT:
+>> >+                      case SCAN_PAGE_LRU:
+>> >+                      case SCAN_PAGE_NULL:
+>> >+                      case SCAN_DEL_PAGE_LRU:
+>> >+                      case SCAN_PTE_NON_PRESENT:
+>> >+                      case SCAN_PTE_UFFD_WP:
+>> >+                      case SCAN_ALLOC_HUGE_PAGE_FAIL:
+>> >+                              goto next_order;
+>> >+                      /* All other cases should stop collapse attempts */
+>> >+                      default:
+>> >+                              break;
+>> >                       }
+>> >+                      break;
+>>
+>> One question here:
+>
+>Hi Wei Yang,
+>
+>Sorry I forgot to get back to this email.
+>
 
-This should be wrapped by "#ifdef CONFIG_DYNAMIC_FTRACE_WITH_JMP".
-I'll change it in v3 after more human comments.
+No problem, thanks for taking a look.
 
-> +
->  	WARN_ON(tr->cur_image && total == 0);
->  	if (tr->cur_image)
->  		/* progs already running at this address */
-> -		err = modify_fentry(tr, tr->cur_image->image, im->image, lock_direct_mutex);
-> +		err = modify_fentry(tr, orig_flags, tr->cur_image->image,
-> +				    im->image, lock_direct_mutex);
->  	else
->  		/* first time registering */
->  		err = register_fentry(tr, im->image);
-> @@ -499,8 +528,13 @@ static int bpf_trampoline_update(struct bpf_trampoline *tr, bool lock_direct_mut
->  	tr->cur_image = im;
->  out:
->  	/* If any error happens, restore previous flags */
-> -	if (err)
-> +	if (err) {
->  		tr->flags = orig_flags;
-> +		if (bpf_trampoline_use_jmp(tr->flags))
-> +			tr->fops->flags |= FTRACE_OPS_FL_JMP;
-> +		else
-> +			tr->fops->flags &= ~FTRACE_OPS_FL_JMP;
-> +	}
->  	kfree(tlinks);
->  	return err;
->  
-> 
+>>
+>> Suppose we have iterated several orders and not collapse successfully yet. So
+>> the mthp_bitmap_stack[] would look like this:
+>>
+>> [8 7 6 6]
+>>        ^
+>>        |
+>
+>so we always pop before pushing. So it would go
+>
+>[9]
+>pop
+>if (collapse fails)
+>[8 8]
+>lets say we pop and successfully collapse a order 8
+>[8]
+>Then we fail the other order 8
+>[7 7]
+>now if we succeed the first order 7
+>[7 6 6]
+>I believe we are now in the state you wanted to describe.
+>
+>>
+>> Now we found this one pass the threshold check, but it fails with other
+>> result.
+>
+>ok lets say we pass the threshold checks, but the collapse fails for
+>any reason that is described in the
+>/* Cases were lower orders might still succeed */
+>In this case we would continue to order 5 (or lower). Once we are done
+>with this branch of the tree we go back to the other order 6 collapse.
+>and eventually the order 7.
+>
+>>
+>> Current code looks it would give up at all, but we may still have a chance to
+>> collapse the above 3 range?
+>
+>for cases under /* All other cases should stop collapse attempts */
+>Yes we would bail out and skip some collapses. I tried to think about
+>all the cases were we would still want to continue trying, vs cases
+>where the system is probably out of resources or hitting some major
+>failure, and we should just break out (as others will probably fail
+>too).
+>
 
+Thanks, your explanation is very clear.
 
+>But this is also why I separated this patch out on its own. I was
+>hoping to have some more focus on the different cases, and make sure I
+>handled them in the best possible way. So I really appreciate the
+>question :)
+>
+>* I did some digging through old message to find this *
+>
+>I believe these are the remaining cases. If these are hit I figured
+>it's better to abort.
+>
 
+I agree we need to take care of those cases.
 
+>/* cases where we must stop collapse attempts */
+>case SCAN_CGROUP_CHARGE_FAIL:
+>case SCAN_COPY_MC:
+>case SCAN_ADDRESS_RANGE:
+>case SCAN_PMD_NULL:
+>case SCAN_ANY_PROCESS:
+>case SCAN_VMA_NULL:
+>case SCAN_VMA_CHECK:
+>case SCAN_SCAN_ABORT:
+>case SCAN_PMD_NONE:
+>case SCAN_PAGE_ANON:
+>case SCAN_PMD_MAPPED:
+>case SCAN_FAIL:
+>
+>Please let me know if you think we should move these to either the
+>`continue` or `next order` cases.
+
+Take a look into these cases, it looks good to me now.
+
+Also one of my concern is this coding style is a little hard to maintain. In
+case we introduce a new result, we should remember to add it here. Otherwise
+we may stop the collapse too early.
+
+While it maybe a separate work after this patch set merged.
+
+>
+>Cheers,
+>-- Nico
+>
+>>
+>> >               }
+>> >
+>> > next_order:
+>> >--
+>> >2.51.0
+>>
+>> --
+>> Wei Yang
+>> Help you, Help me
+>>
+
+-- 
+Wei Yang
+Help you, Help me
