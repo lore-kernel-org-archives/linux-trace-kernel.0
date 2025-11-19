@@ -1,170 +1,379 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9022E26A1B5
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Nov 2025 16:36:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACCE22FC01C
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Nov 2025 16:48:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763570187; cv=none; b=FqSvE1XZzBQE44gbqyGmOuCA8UFNSwQBPKyrG0hGQjSnip+KsfdU0Ox9OShHvurf2C4J3ORfKM+Vf0lNVgofWbAp3O6R3eDbMdNDVzm5IDVeouAS/tN9iiVb3bYFXh41LuhaR0/D95EQwfnEoe2Lod/ov+qoIvg0RCsfa7ghCiQ=
+	t=1763570932; cv=none; b=OGXSTtdua2LIMLH6R3UsFsW48/Z6nyE0yJbUMWoic9fsreJt7nKA2XTC0UeW1kPeSiy76LtRZOSMKhlmLITKAO1IPUgFBCmT8HUsSPyVPbB7XpuU0O6HuvVEHIpJmIQirA44rAb1ZfhIP90XwIGMn7Eu/gPAXqWvZeuBcuGTSZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763570187; c=relaxed/simple;
-	bh=MiYcdi2tQ+2r1RMplxVS9eAgA9bD8miiom4S+yzOduA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oteLIYAHnfeeiCWME5r1T/NsFTpisuZhAFkCEaDreDD9kYBDx4odpjwgQKEvBrdGbS6IUCJSQUsY8ztCHMSQb6bltE724DNz4mUwTPXIG6cNrnR6Ta/xpo74G+wsKdz35csqx6QPspjG9lZ5fc0wW2gW7yjHMa5D0jxBWvMIhp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=QoyUzQy0; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=qKhmmQci; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Vc917aBD; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=EhVk9XM6; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1763570932; c=relaxed/simple;
+	bh=MJJrzh/lvET1pwPjNp+Lsx/u+zZq+XCrwMxodgKh26o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CG7v27jvf2Gswp17P2pBDjgIX5vrffzUqkVCt7WR5aKTS1duGRFohv24V9fZQZcK7mYb8Xk1J0vTosQGcI/ZUSGRcnefxEh1czkBLyFXrOUWxzL45Tw396xU9TbZEmxo17HSNk5wEivYFyZ0qNRfA/abcY33LFS9kUQEbtnymJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TScAFr6g; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="QoyUzQy0";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="qKhmmQci";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Vc917aBD";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="EhVk9XM6"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id CDBEC20595;
-	Wed, 19 Nov 2025 16:36:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1763570178; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UaJrljRuHzsSahjPRFPX05pBvERQqP62JHa1SezYFP4=;
-	b=QoyUzQy0kfEnmwEH9C+WMNmv2fIw6SyxdCjQ48Vph6uLgnt2FyRgxRi+IrojladgxuGPqF
-	lgOx9Sp0Tpe3VQugorn8fo9va7mWPEshkF5wl7IVuODe649vFAspPCCre792HbRoNJzDIp
-	Zsj6cN0scu/Ujuuk/8iqe7SUORJ33/g=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1763570178;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UaJrljRuHzsSahjPRFPX05pBvERQqP62JHa1SezYFP4=;
-	b=qKhmmQci2mtPc1l8hRYQoJB2MunsPpcPUwoTjghLy0f/8UeUoZhRpC1t2aDUlTvlNwmWKY
-	fYhvv+/I+Q/GNeDg==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=Vc917aBD;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=EhVk9XM6
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1763570173; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UaJrljRuHzsSahjPRFPX05pBvERQqP62JHa1SezYFP4=;
-	b=Vc917aBDIOVnaGybQq9G9o6Sw5JDPY9DXNjg0SB3wCL9/7z05/g3dtOdqldVWKeio8A1fU
-	wT1TjOnfdFdWRvoysS8piGh9prn0ffObfab8alRHuZuoxYbw9OSLk+320MTkYfLmaGZQRy
-	BHalF4F3Bja+m/sVwTPFNLNMHeB6gLY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1763570173;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UaJrljRuHzsSahjPRFPX05pBvERQqP62JHa1SezYFP4=;
-	b=EhVk9XM63H+CBv9exjU6w0Z1ugfyJBtkpRPI4mnv+0FmkorsOQ8RVVkrkiFOGJk/Vx4DlA
-	9BIe0uuvHC5zHVBw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2DD143EA62;
-	Wed, 19 Nov 2025 16:36:12 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id Kx8ECPzxHWl4cgAAD6G6ig
-	(envelope-from <pfalcato@suse.de>); Wed, 19 Nov 2025 16:36:12 +0000
-Date: Wed, 19 Nov 2025 16:36:10 +0000
-From: Pedro Falcato <pfalcato@suse.de>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Jonathan Corbet <corbet@lwn.net>, David Hildenbrand <david@redhat.com>, 
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Michal Hocko <mhocko@suse.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Jann Horn <jannh@google.com>, Zi Yan <ziy@nvidia.com>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, Nico Pache <npache@redhat.com>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>, 
-	Lance Yang <lance.yang@linux.dev>, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, Andrei Vagin <avagin@gmail.com>
-Subject: Re: [PATCH v4 3/9] mm: update vma_modify_flags() to handle residual
- flags, document
-Message-ID: <vr45iyduvak3wpzmos5l4jfpzticerlnxuhnpvbzb7fpsvanqx@rsuogv5s6brh>
-References: <cover.1763460113.git.lorenzo.stoakes@oracle.com>
- <23b5b549b0eaefb2922625626e58c2a352f3e93c.1763460113.git.lorenzo.stoakes@oracle.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TScAFr6g"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-29852dafa7dso219405ad.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Nov 2025 08:48:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1763570928; x=1764175728; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LmUedJZMzPHmIoVLK9Vn/VbmzAeTizXGbxXJBOgniG4=;
+        b=TScAFr6g1ouA4j35Xzuh3pavDfkKK612XirYn+9BfD5tOZoEyEe0H6gWzJA91noXyI
+         ZL3kDT2TCGPXvA+bqSAYROtFRCwJvHpGSMMdyc6Di7YMuzBTBwctKcpQrftSTtt9sHG+
+         7xeTBwrq0bVoJXqrj2dCo/Iso2XO+Y4stSTJsumReqz4Rd8AHd0bVD5gmrzENNtXFCdm
+         HoCyBP7TvToAevbBwOwm23mi2YJ5J0YHXQoc0e/VHBTyLxjpTO4VH+4JjN3RyRLcoi4V
+         P6ITDzTtVdkxvSnpKPi+4V8Y7fagDSznIeFfy9dC2YXB3e4tcekjSzqyXzJM2KoKgPMg
+         GeMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763570928; x=1764175728;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=LmUedJZMzPHmIoVLK9Vn/VbmzAeTizXGbxXJBOgniG4=;
+        b=FDeEVGxOLDpj5MuQxpRHs3BJF1V8Cz0SiILaN74dRd7TAejIeC/BJFtyj21s0g7Aey
+         HgLqiPWTGLvyWhApFNJ4Nr6xpQXIgMIAzf/p7bz70RcFnK1CCTYAcuYdEqQxzn/ZC3bL
+         shHgwgSGLj3sItxtZQ9r2T/uPQndd0Rz068qYcX+t6pfVt9Q1WFcqks0XUSXP+yMiGrh
+         U2Oc7sTL6Mx1cKk0GMG86uUVda+w1Eo6U4NRTvBHChzKW8t0da622vim3Y1yF7bZo3yJ
+         hSABaWZNvoRSuO/1N1yAcBJsgAwDspoEr/PHnbBfbtnAHJkrY5b2UUM8d5LW7+PG/hBo
+         Ry0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUNouERUubgyZ3sy5GBHgu0pv1qXA0cihP3NYPu2xI2bAtY/up2EBbm/FnQ7VZN19XlUF5tzFPnqboV5uDEBlA8Rs4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQZLA/BE/3hNZQ2v1nlghfeBleFdTFFXY/70J/W1RNeq3m9jji
+	XfHI903iQjUslbJCy7CGe18+JXbJ8SEEdEPVZaL6/YzoDNJUqDEWZ1Mx78Q5zE+U8h5xDb83X9o
+	iw/ZUpwxz8YXxXBCGpgCxlAFGlq93O71Fn9w4f9zF
+X-Gm-Gg: ASbGnct37RvXE9Tt0L1px9IOghh4ClIPJFEH/enL3PHDkWW1B/cpZ0fbTk3fm6mKe10
+	nAXAixph72HUdyU6n4PIfUgM921ukqfOuP9rouXi8XfjVqWDmWYAYEnAOucFKPgQRO/GMPNIJDZ
+	BAm1Ut702KoDroMaQrNVkhOhXjeGeP7TT7eLodt65d5Y57EA/rJNnWEieMfdsZr7zB7Gnjs9QMb
+	XbDWioNsJ3J5WTmSSwD9vh1gWImiS+rSjkGehj+WDSY6zST74s5BAICToH2zVguVB4GiILzetSO
+	jU28Ne1KIgKPtY7wrDDXs9hrtu4YUFMsBVAuRZ5HKuHMXhk=
+X-Google-Smtp-Source: AGHT+IHLouDOVDonPxwLEOsUkZsb6Yjv7xtK5UC6zBAxgH5sryutzOSINtUXyQX6k5ulnmqlHtoZ2uWl/UKA+lsPusk=
+X-Received: by 2002:a05:7022:618f:b0:11a:b4dc:7773 with SMTP id
+ a92af1059eb24-11c8d5f4605mr156908c88.12.1763570927107; Wed, 19 Nov 2025
+ 08:48:47 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <23b5b549b0eaefb2922625626e58c2a352f3e93c.1763460113.git.lorenzo.stoakes@oracle.com>
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: CDBEC20595
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-4.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCPT_COUNT_TWELVE(0.00)[27];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	FREEMAIL_CC(0.00)[linux-foundation.org,lwn.net,redhat.com,oracle.com,suse.cz,kernel.org,google.com,suse.com,goodmis.org,efficios.com,nvidia.com,linux.alibaba.com,arm.com,linux.dev,vger.kernel.org,kvack.org,gmail.com];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	BLOCKLISTDE_FAIL(0.00)[2a07:de40:b281:106:10:150:64:167:query timed out,2a07:de40:b281:104:10:150:64:97:query timed out];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,suse.de:dkim,suse.de:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Score: -4.01
+References: <20251115234106.348571-1-namhyung@kernel.org> <20251115234106.348571-3-namhyung@kernel.org>
+In-Reply-To: <20251115234106.348571-3-namhyung@kernel.org>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 19 Nov 2025 08:48:35 -0800
+X-Gm-Features: AWmQ_bnPPpppTissu_PKU0qX7CdQi9vFJxMLEIPfLo2Ch-nrbGnmAdbtgjQgGZc
+Message-ID: <CAP-5=fW0D3A5kZ8xKgH8rzczk5ezQGrymddE5_EszarQG--TtQ@mail.gmail.com>
+Subject: Re: [PATCH v4 2/5] perf tools: Minimal DEFERRED_CALLCHAIN support
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, James Clark <james.clark@linaro.org>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
+	Steven Rostedt <rostedt@goodmis.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Indu Bhagat <indu.bhagat@oracle.com>, Jens Remus <jremus@linux.ibm.com>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, linux-trace-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Nov 18, 2025 at 10:17:45AM +0000, Lorenzo Stoakes wrote:
-> The vma_modify_*() family of functions each either perform splits, a merge
-> or no changes at all in preparation for the requested modification to
-> occur.
-> 
-> When doing so for a VMA flags change, we currently don't account for any
-> flags which may remain (for instance, VM_SOFTDIRTY) despite the requested
-> change in the case that a merge succeeded.
-> 
-> This is made more important by subsequent patches which will introduce the
-> concept of sticky VMA flags which rely on this behaviour.
-> 
-> This patch fixes this by passing the VMA flags parameter as a pointer and
-> updating it accordingly on merge and updating callers to accommodate for
-> this.
-> 
-> Additionally, while we are here, we add kdocs for each of the
-> vma_modify_*() functions, as the fact that the requested modification is
-> not performed is confusing so it is useful to make this abundantly
-> clear.
-> 
-> We also update the VMA userland tests to account for this change.
-> 
-> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+On Sat, Nov 15, 2025 at 3:41=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> Add a new event type for deferred callchains and a new callback for the
+> struct perf_tool.  For now it doesn't actually handle the deferred
+> callchains but it just marks the sample if it has the PERF_CONTEXT_
+> USER_DEFFERED in the callchain array.
+>
+> At least, perf report can dump the raw data with this change.  Actually
+> this requires the next commit to enable attr.defer_callchain, but if you
+> already have a data file, it'll show the following result.
+>
+>   $ perf report -D
+>   ...
+>   0x2158@perf.data [0x40]: event: 22
+>   .
+>   . ... raw event: size 64 bytes
+>   .  0000:  16 00 00 00 02 00 40 00 06 00 00 00 0b 00 00 00  ......@.....=
+....
+>   .  0010:  03 00 00 00 00 00 00 00 a7 7f 33 fe 18 7f 00 00  ..........3.=
+....
+>   .  0020:  0f 0e 33 fe 18 7f 00 00 48 14 33 fe 18 7f 00 00  ..3.....H.3.=
+....
+>   .  0030:  08 09 00 00 08 09 00 00 e6 7a e7 35 1c 00 00 00  .........z.5=
+....
+>
+>   121163447014 0x2158 [0x40]: PERF_RECORD_CALLCHAIN_DEFERRED(IP, 0x2): 23=
+12/2312: 0xb00000006
+>   ... FP chain: nr:3
+>   .....  0: 00007f18fe337fa7
+>   .....  1: 00007f18fe330e0f
+>   .....  2: 00007f18fe331448
+>   : unhandled!
+>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/lib/perf/include/perf/event.h       | 13 ++++++++++
+>  tools/perf/util/event.c                   |  1 +
+>  tools/perf/util/evsel.c                   | 31 +++++++++++++++++++++--
+>  tools/perf/util/machine.c                 |  1 +
+>  tools/perf/util/perf_event_attr_fprintf.c |  2 ++
+>  tools/perf/util/sample.h                  |  2 ++
+>  tools/perf/util/session.c                 | 20 +++++++++++++++
+>  tools/perf/util/tool.c                    |  1 +
+>  tools/perf/util/tool.h                    |  3 ++-
+>  9 files changed, 71 insertions(+), 3 deletions(-)
+>
+> diff --git a/tools/lib/perf/include/perf/event.h b/tools/lib/perf/include=
+/perf/event.h
+> index aa1e91c97a226e1a..43a8cb04994fa033 100644
+> --- a/tools/lib/perf/include/perf/event.h
+> +++ b/tools/lib/perf/include/perf/event.h
+> @@ -151,6 +151,18 @@ struct perf_record_switch {
+>         __u32                    next_prev_tid;
+>  };
+>
+> +struct perf_record_callchain_deferred {
+> +       struct perf_event_header header;
+> +       /*
+> +        * This is to match kernel and (deferred) user stacks together.
+> +        * The kernel part will be in the sample callchain array after
+> +        * the PERF_CONTEXT_USER_DEFERRED entry.
+> +        */
+> +       __u64                    cookie;
+> +       __u64                    nr;
+> +       __u64                    ips[];
+> +};
+> +
+>  struct perf_record_header_attr {
+>         struct perf_event_header header;
+>         struct perf_event_attr   attr;
+> @@ -523,6 +535,7 @@ union perf_event {
+>         struct perf_record_read                 read;
+>         struct perf_record_throttle             throttle;
+>         struct perf_record_sample               sample;
+> +       struct perf_record_callchain_deferred   callchain_deferred;
+>         struct perf_record_bpf_event            bpf;
+>         struct perf_record_ksymbol              ksymbol;
+>         struct perf_record_text_poke_event      text_poke;
+> diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
+> index fcf44149feb20c35..4c92cc1a952c1d9f 100644
+> --- a/tools/perf/util/event.c
+> +++ b/tools/perf/util/event.c
+> @@ -61,6 +61,7 @@ static const char *perf_event__names[] =3D {
+>         [PERF_RECORD_CGROUP]                    =3D "CGROUP",
+>         [PERF_RECORD_TEXT_POKE]                 =3D "TEXT_POKE",
+>         [PERF_RECORD_AUX_OUTPUT_HW_ID]          =3D "AUX_OUTPUT_HW_ID",
+> +       [PERF_RECORD_CALLCHAIN_DEFERRED]        =3D "CALLCHAIN_DEFERRED",
+>         [PERF_RECORD_HEADER_ATTR]               =3D "ATTR",
+>         [PERF_RECORD_HEADER_EVENT_TYPE]         =3D "EVENT_TYPE",
+>         [PERF_RECORD_HEADER_TRACING_DATA]       =3D "TRACING_DATA",
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index 989c56d4a23f74f4..5ee3e7dee93fbbcb 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -3089,6 +3089,20 @@ int evsel__parse_sample(struct evsel *evsel, union=
+ perf_event *event,
+>         data->data_src =3D PERF_MEM_DATA_SRC_NONE;
+>         data->vcpu =3D -1;
+>
+> +       if (event->header.type =3D=3D PERF_RECORD_CALLCHAIN_DEFERRED) {
+> +               const u64 max_callchain_nr =3D UINT64_MAX / sizeof(u64);
+> +
+> +               data->callchain =3D (struct ip_callchain *)&event->callch=
+ain_deferred.nr;
+> +               if (data->callchain->nr > max_callchain_nr)
+> +                       return -EFAULT;
+> +
+> +               data->deferred_cookie =3D event->callchain_deferred.cooki=
+e;
+> +
+> +               if (evsel->core.attr.sample_id_all)
+> +                       perf_evsel__parse_id_sample(evsel, event, data);
+> +               return 0;
+> +       }
+> +
+>         if (event->header.type !=3D PERF_RECORD_SAMPLE) {
+>                 if (!evsel->core.attr.sample_id_all)
+>                         return 0;
+> @@ -3213,12 +3227,25 @@ int evsel__parse_sample(struct evsel *evsel, unio=
+n perf_event *event,
+>
+>         if (type & PERF_SAMPLE_CALLCHAIN) {
+>                 const u64 max_callchain_nr =3D UINT64_MAX / sizeof(u64);
+> +               u64 callchain_nr;
+>
+>                 OVERFLOW_CHECK_u64(array);
+>                 data->callchain =3D (struct ip_callchain *)array++;
+> -               if (data->callchain->nr > max_callchain_nr)
+> +               callchain_nr =3D data->callchain->nr;
+> +               if (callchain_nr > max_callchain_nr)
+>                         return -EFAULT;
+> -               sz =3D data->callchain->nr * sizeof(u64);
+> +               sz =3D callchain_nr * sizeof(u64);
+> +               /*
+> +                * Save the cookie for the deferred user callchain.  The =
+last 2
+> +                * entries in the callchain should be the context marker =
+and the
+> +                * cookie.  The cookie will be used to match PERF_RECORD_
+> +                * CALLCHAIN_DEFERRED later.
+> +                */
+> +               if (evsel->core.attr.defer_callchain && callchain_nr >=3D=
+ 2 &&
+> +                   data->callchain->ips[callchain_nr - 2] =3D=3D PERF_CO=
+NTEXT_USER_DEFERRED) {
+> +                       data->deferred_cookie =3D data->callchain->ips[ca=
+llchain_nr - 1];
+> +                       data->deferred_callchain =3D true;
+> +               }
+>                 OVERFLOW_CHECK(array, sz, max_size);
+>                 array =3D (void *)array + sz;
+>         }
+> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+> index b5dd42588c916d91..841b711d970e9457 100644
+> --- a/tools/perf/util/machine.c
+> +++ b/tools/perf/util/machine.c
+> @@ -2124,6 +2124,7 @@ static int add_callchain_ip(struct thread *thread,
+>                                 *cpumode =3D PERF_RECORD_MISC_KERNEL;
+>                                 break;
+>                         case PERF_CONTEXT_USER:
+> +                       case PERF_CONTEXT_USER_DEFERRED:
+>                                 *cpumode =3D PERF_RECORD_MISC_USER;
+>                                 break;
+>                         default:
+> diff --git a/tools/perf/util/perf_event_attr_fprintf.c b/tools/perf/util/=
+perf_event_attr_fprintf.c
+> index 66b666d9ce649dd7..741c3d657a8b6ae7 100644
+> --- a/tools/perf/util/perf_event_attr_fprintf.c
+> +++ b/tools/perf/util/perf_event_attr_fprintf.c
+> @@ -343,6 +343,8 @@ int perf_event_attr__fprintf(FILE *fp, struct perf_ev=
+ent_attr *attr,
+>         PRINT_ATTRf(inherit_thread, p_unsigned);
+>         PRINT_ATTRf(remove_on_exec, p_unsigned);
+>         PRINT_ATTRf(sigtrap, p_unsigned);
+> +       PRINT_ATTRf(defer_callchain, p_unsigned);
+> +       PRINT_ATTRf(defer_output, p_unsigned);
+>
+>         PRINT_ATTRn("{ wakeup_events, wakeup_watermark }", wakeup_events,=
+ p_unsigned, false);
+>         PRINT_ATTRf(bp_type, p_unsigned);
+> diff --git a/tools/perf/util/sample.h b/tools/perf/util/sample.h
+> index fae834144ef42105..a8307b20a9ea8066 100644
+> --- a/tools/perf/util/sample.h
+> +++ b/tools/perf/util/sample.h
+> @@ -107,6 +107,8 @@ struct perf_sample {
+>         /** @weight3: On x86 holds retire_lat, on powerpc holds p_stage_c=
+yc. */
+>         u16 weight3;
+>         bool no_hw_idx;         /* No hw_idx collected in branch_stack */
+> +       bool deferred_callchain;        /* Has deferred user callchains *=
+/
+> +       u64 deferred_cookie;
+>         char insn[MAX_INSN];
+>         void *raw_data;
+>         struct ip_callchain *callchain;
+> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+> index 4b0236b2df2913e1..361e15c1f26a96d0 100644
+> --- a/tools/perf/util/session.c
+> +++ b/tools/perf/util/session.c
+> @@ -720,6 +720,7 @@ static perf_event__swap_op perf_event__swap_ops[] =3D=
+ {
+>         [PERF_RECORD_CGROUP]              =3D perf_event__cgroup_swap,
+>         [PERF_RECORD_TEXT_POKE]           =3D perf_event__text_poke_swap,
+>         [PERF_RECORD_AUX_OUTPUT_HW_ID]    =3D perf_event__all64_swap,
+> +       [PERF_RECORD_CALLCHAIN_DEFERRED]  =3D perf_event__all64_swap,
+>         [PERF_RECORD_HEADER_ATTR]         =3D perf_event__hdr_attr_swap,
+>         [PERF_RECORD_HEADER_EVENT_TYPE]   =3D perf_event__event_type_swap=
+,
+>         [PERF_RECORD_HEADER_TRACING_DATA] =3D perf_event__tracing_data_sw=
+ap,
+> @@ -854,6 +855,9 @@ static void callchain__printf(struct evsel *evsel,
+>         for (i =3D 0; i < callchain->nr; i++)
+>                 printf("..... %2d: %016" PRIx64 "\n",
+>                        i, callchain->ips[i]);
+> +
+> +       if (sample->deferred_callchain)
+> +               printf("...... (deferred)\n");
+>  }
+>
+>  static void branch_stack__printf(struct perf_sample *sample,
+> @@ -1123,6 +1127,19 @@ static void dump_sample(struct evsel *evsel, union=
+ perf_event *event,
+>                 sample_read__printf(sample, evsel->core.attr.read_format)=
+;
+>  }
+>
+> +static void dump_deferred_callchain(struct evsel *evsel, union perf_even=
+t *event,
+> +                                   struct perf_sample *sample)
+> +{
+> +       if (!dump_trace)
+> +               return;
+> +
+> +       printf("(IP, 0x%x): %d/%d: %#" PRIx64 "\n",
+> +              event->header.misc, sample->pid, sample->tid, sample->defe=
+rred_cookie);
+> +
+> +       if (evsel__has_callchain(evsel))
+> +               callchain__printf(evsel, sample);
+> +}
+> +
+>  static void dump_read(struct evsel *evsel, union perf_event *event)
+>  {
+>         struct perf_record_read *read_event =3D &event->read;
+> @@ -1353,6 +1370,9 @@ static int machines__deliver_event(struct machines =
+*machines,
+>                 return tool->text_poke(tool, event, sample, machine);
+>         case PERF_RECORD_AUX_OUTPUT_HW_ID:
+>                 return tool->aux_output_hw_id(tool, event, sample, machin=
+e);
+> +       case PERF_RECORD_CALLCHAIN_DEFERRED:
+> +               dump_deferred_callchain(evsel, event, sample);
+> +               return tool->callchain_deferred(tool, event, sample, evse=
+l, machine);
+>         default:
+>                 ++evlist->stats.nr_unknown_events;
+>                 return -1;
+> diff --git a/tools/perf/util/tool.c b/tools/perf/util/tool.c
+> index 22a8a4ffe05f778e..f732d33e7f895ed4 100644
+> --- a/tools/perf/util/tool.c
+> +++ b/tools/perf/util/tool.c
+> @@ -287,6 +287,7 @@ void perf_tool__init(struct perf_tool *tool, bool ord=
+ered_events)
+>         tool->read =3D process_event_sample_stub;
+>         tool->throttle =3D process_event_stub;
+>         tool->unthrottle =3D process_event_stub;
+> +       tool->callchain_deferred =3D process_event_sample_stub;
 
-Reviewed-by: Pedro Falcato <pfalcato@suse.de>
+nit: there's a similar change needed to delegate_tool__init, that code
+is currently unused.
 
-Quite ugly change, but for the sake of brevity I think we can live it
-Temporarily(tm).
+Reviewed-by: Ian Rogers <irogers@google.com>
 
--- 
-Pedro
+Thanks,
+Ian
+
+>         tool->attr =3D process_event_synth_attr_stub;
+>         tool->event_update =3D process_event_synth_event_update_stub;
+>         tool->tracing_data =3D process_event_synth_tracing_data_stub;
+> diff --git a/tools/perf/util/tool.h b/tools/perf/util/tool.h
+> index 88337cee1e3e2be3..9b9f0a8cbf3de4b5 100644
+> --- a/tools/perf/util/tool.h
+> +++ b/tools/perf/util/tool.h
+> @@ -44,7 +44,8 @@ enum show_feature_header {
+>
+>  struct perf_tool {
+>         event_sample    sample,
+> -                       read;
+> +                       read,
+> +                       callchain_deferred;
+>         event_op        mmap,
+>                         mmap2,
+>                         comm,
+> --
+> 2.52.0.rc1.455.g30608eb744-goog
+>
