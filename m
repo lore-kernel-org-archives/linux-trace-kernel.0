@@ -1,215 +1,167 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30D9C2DCBFA;
-	Wed, 19 Nov 2025 15:44:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 101BB2E6CB2
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Nov 2025 15:45:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763567068; cv=none; b=soJxyhmnpRER442dXz7dNKOVWLEmsLZLWZhvoVWAFFR2n+wn53N1pQjy8x9Y9ez/H7/Tuw9F6pfE4lRUF6+Eub4dV5L5U6AIVF5UT+0HoVpKbm4k71KcZc7VQXYqh3drJUesd79K/H9pz04gyEVn+r7ySTnKIbZRN9LI6S7P4gg=
+	t=1763567102; cv=none; b=UY5WZ3cfMaow1nVKyuAUOLNxjqme28iySWTnsGW1hTu/wTqsBxw8pjBoJCBRL/gEQiz0fvI+irRcaiDJPQe6kYdTa1HdPAeUQAf1pUd7RfMbO7NfmWLmrHPCpG2DtSRSlA715iCbIgZYXcY4kpEQLsjsUNKqw0p4K6SttG+4ag8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763567068; c=relaxed/simple;
-	bh=QGmtI/N5Qrm3baU32/IWSmS0i0iTNplBH0bTCMUaMN8=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DNkiyBm7xLMLwgSvoUtueMaXq1mh3Cdbq3wVNaq3mfNO8AuJ9gBTiX6CaWwbAVpTrpCXZzNVg3CkZNM23pbhuBKBlcJ0XNNHCjTrFuDipCySUV/ETPtcKKrtUC2QmoPy1lzgCFEDSMtQ1JSzOAstFZMBsWI1wY4SpRhf1yXO5/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ilfjC4nT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763567102; c=relaxed/simple;
+	bh=QL7KRLmdJkHYNOg+NNX2LL57E4h9RRUgMfoI/vTkpME=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=HCYP9TK3Autqa+H+vtup+I9b+eMom9XmGE1h4g+emeNhMWh0mFl/qBwNENQ6oroWllpjJpRASypPQnOOLuIBXL1b6yCWU55+cMdNn0rpTSFfMsRJrg8OlQWPwBDw49mK6YyWjGjQVr++qOxI0VZawvKyfFNUJfyxnV3c7xTtwLQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AeYttVC1; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ilfjC4nT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 146BBC4AF0B;
-	Wed, 19 Nov 2025 15:44:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763567067;
-	bh=QGmtI/N5Qrm3baU32/IWSmS0i0iTNplBH0bTCMUaMN8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ilfjC4nTMZAZmo+Dgc4Sa/r7hErsQvNOBLUE25mtapxZK3kk3VCMPcstd6/ULn9qF
-	 Wzlz3eybCTjqbBLT4SZqqDY0XQpQ+jfJF4Poe94d7HaG/ftsuJKgrupYiO15O0SU2k
-	 NrHeCsJJKSMq1YdFlGuiFiWZ5qLTdZUcQEXtnl2AKFUbgcovbdq6xm7BMljBaLPlj0
-	 ZIISPpG9TFdvmdsh24+W4vL1k9MQgQM5li3Rf3vjtP+/4L7NmoKUuZEoHQ4Ah8VKnu
-	 pHvAD42wFhDNbOeydXe+W9yn9J0Qrd3TfInV5sjjYaRvZix3A6jAgwn2Y/CYLkemPf
-	 9Eu5kT1iHjsDA==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.98.2)
-	(envelope-from <maz@kernel.org>)
-	id 1vLkM3-00000006bKb-36CG;
-	Wed, 19 Nov 2025 15:44:23 +0000
-Date: Wed, 19 Nov 2025 15:44:23 +0000
-Message-ID: <86cy5erprc.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Vincent Donnefort <vdonnefort@google.com>
-Cc: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	linux-trace-kernel@vger.kernel.org,
-	oliver.upton@linux.dev,
-	joey.gouly@arm.com,
-	suzuki.poulose@arm.com,
-	yuzenghui@huawei.com,
-	kvmarm@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	jstultz@google.com,
-	qperret@google.com,
-	will@kernel.org,
-	aneesh.kumar@kernel.org,
-	kernel-team@android.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 20/28] KVM: arm64: Add clock support for the pKVM hyp
-In-Reply-To: <20251107093840.3779150-21-vdonnefort@google.com>
-References: <20251107093840.3779150-1-vdonnefort@google.com>
-	<20251107093840.3779150-21-vdonnefort@google.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AeYttVC1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1763567099;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8+2RMibk5qCZlj/6zmvcs/X6W3gfpL9YpQv70ggfokw=;
+	b=AeYttVC174L81fsSZCyrXbteruGobwH11N4VmTsj1LnLTBvGEfqKc5QUQdnF/cAOHKnku7
+	VVFSf0XD48X+Q28ADTsihAeuFxwsvXdZfoJ0Vto3wS4n/5OX6w13FGA8Bti+B5MYKsq34z
+	NFPKA4k39ov/fgx73H/KqrRffdW7j6s=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-558-NMWkxh_6NKyBNrXfyFxt3w-1; Wed, 19 Nov 2025 10:44:57 -0500
+X-MC-Unique: NMWkxh_6NKyBNrXfyFxt3w-1
+X-Mimecast-MFC-AGG-ID: NMWkxh_6NKyBNrXfyFxt3w_1763567096
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4775d110fabso53013065e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Nov 2025 07:44:57 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763567096; x=1764171896;
+        h=content-transfer-encoding:mime-version:message-id:date:references
+         :in-reply-to:subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=kk13dNEBENY1o2hkoOmhPMN6DaHaKFtT0pxiR0fZhjU=;
+        b=bpRssSeAoDTFVf1ShehsDGRDi2n9BgWjTwKoK3BjOdwQloJXGwW3Nwtn1n4dUU3+yn
+         6yiTDFzU4Yx0DF6QMeAVmd7APaqjnqu5wVQaoXXzvvvNE/aXjKllFvX9hUnOhnxB67gA
+         2T8PCLnJHeHbPJ0EDDK1Ce3vk0r7irSmqrNTUgDNoF/6je0z63wmqGXtoC58xh+szXSS
+         /x2ooVexXRe3/rt2XSsc08wc60/PA0nVe00M/FZz691b3XNQK9t87j4cCTlMmxMcuDO+
+         an497m08FUEsdel1dDR5ATyKoRnm6xyO+OxtckCxg92fPTEtUkln1arq7ncRQXKL2HZO
+         dCUg==
+X-Forwarded-Encrypted: i=1; AJvYcCUxcbXf5NtTHjDMoFKpRqk/48q7lSzFz2v5ZxMzH6KsZWf8ppBGhy05kqsYIalTmX1Utv26hd3S16Y+0bdMWfyrbxU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxMcok7thlnUab6SD/Tl046cDwgAtBjtPvVrC3NtZmybbeFNq5C
+	Yoo8nG3C/g1c2DR/2/GJn5QM7XB1c5NuJKKy3M03x+dsY44Z/jHbZJvSV//DCD/w5eN6MfDPwWF
+	6tfbkrD7fo+xKaVzpK5DNyTur9D688pvojI0gWY3CBLzgspptAaDwLAR2EH2vGIF5lV7VcpYy6g
+	==
+X-Gm-Gg: ASbGncv67Hzj676kD2NmRhKGc4cJnx5VdPs/twrKmb+CznR5n03wM2N5MmDl1H7MhVf
+	emiAuCqOeqwZ1EIvo1NS7iR7vzZ2OpK3xb1ecaqiHlVh78WlvbJQ2RtZ0aLMV5b3DA4yhu/Zelc
+	11cHiV25Lw6PM8WlnNUpF27tpumy7yaF+HD4uyOVJPGn4YpLCgEeRnNEwLZfLqzvE+C1wCIiABJ
+	giDL3GNGpUauujBbwAXD2JApKdvXO8tBYb+DVeKpzrdGlg8QYYryyT56yfC1WvB7zLLs7j/i/7Y
+	kxV6fbO6eUo0GG7eAb5Esqqv4jTVMswa9ao/UTgdpQMxqpu6BGFbGqaKQM6KKs50IQ2Y7MGqnuY
+	zbxoXdfVMyCQqsCQLEU2zfKwYQ5UVtCfsu3Abi95OkZXJ/0TWsmbaimiCZxEd4mDlTt8yme4=
+X-Received: by 2002:a05:600c:1d0e:b0:477:9cc3:7971 with SMTP id 5b1f17b1804b1-4779cc37a15mr119020875e9.20.1763567096258;
+        Wed, 19 Nov 2025 07:44:56 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEkP+NxoN8NdgRlSeWXCmLJ99Tn2hRpBffdqlJtKvc6mMNR3Hn0LkbgzbfrqY0lLueiMZLQiA==
+X-Received: by 2002:a05:600c:1d0e:b0:477:9cc3:7971 with SMTP id 5b1f17b1804b1-4779cc37a15mr119020335e9.20.1763567095710;
+        Wed, 19 Nov 2025 07:44:55 -0800 (PST)
+Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-135-146.abo.bbox.fr. [213.44.135.146])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-477b10260adsm53340155e9.7.2025.11.19.07.44.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Nov 2025 07:44:54 -0800 (PST)
+From: Valentin Schneider <vschneid@redhat.com>
+To: Andy Lutomirski <luto@kernel.org>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, linux-mm@kvack.org, rcu@vger.kernel.org,
+ the arch/x86 maintainers <x86@kernel.org>,
+ linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+ linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, "Peter Zijlstra (Intel)"
+ <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Josh
+ Poimboeuf <jpoimboe@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, Arnd
+ Bergmann <arnd@arndb.de>, Frederic Weisbecker <frederic@kernel.org>, "Paul
+ E. McKenney" <paulmck@kernel.org>, Jason Baron <jbaron@akamai.com>, Steven
+ Rostedt <rostedt@goodmis.org>, Ard Biesheuvel <ardb@kernel.org>, Sami
+ Tolvanen <samitolvanen@google.com>, "David S. Miller"
+ <davem@davemloft.net>, Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, Joel
+ Fernandes <joelagnelf@nvidia.com>, Josh Triplett <josh@joshtriplett.org>,
+ Boqun Feng <boqun.feng@gmail.com>, Uladzislau Rezki <urezki@gmail.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Mel Gorman
+ <mgorman@suse.de>, Andrew Morton <akpm@linux-foundation.org>, Masahiro
+ Yamada <masahiroy@kernel.org>, Han Shen <shenhan@google.com>, Rik van Riel
+ <riel@surriel.com>, Jann Horn <jannh@google.com>, Dan Carpenter
+ <dan.carpenter@linaro.org>, Oleg Nesterov <oleg@redhat.com>, Juri Lelli
+ <juri.lelli@redhat.com>, Clark Williams <williams@redhat.com>, Yair
+ Podemsky <ypodemsk@redhat.com>, Marcelo Tosatti <mtosatti@redhat.com>,
+ Daniel Wagner <dwagner@suse.de>, Petr Tesarik <ptesarik@suse.com>,
+ Shrikanth Hegde <sshegde@linux.ibm.com>
+Subject: Re: [RFC PATCH v7 29/31] x86/mm/pti: Implement a TLB flush
+ immediately after a switch to kernel CR3
+In-Reply-To: <65ae9404-5d7d-42a3-969e-7e2ceb56c433@app.fastmail.com>
+References: <20251114150133.1056710-1-vschneid@redhat.com>
+ <20251114151428.1064524-9-vschneid@redhat.com>
+ <65ae9404-5d7d-42a3-969e-7e2ceb56c433@app.fastmail.com>
+Date: Wed, 19 Nov 2025 16:44:53 +0100
+Message-ID: <xhsmhecpukowa.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: vdonnefort@google.com, rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, linux-trace-kernel@vger.kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org, jstultz@google.com, qperret@google.com, will@kernel.org, aneesh.kumar@kernel.org, kernel-team@android.com, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: 1Ei6AgCZ7HXnBUVmJmskx6XGv9ZLOl8M6KzDwsir6Pg_1763567096
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 07 Nov 2025 09:38:32 +0000,
-Vincent Donnefort <vdonnefort@google.com> wrote:
-> 
-> By default, the arm64 host kernel is using the arch timer as a source
-> for sched_clock. Conveniently, EL2 has access to that same counter,
-> allowing to generate clock values that are synchronized.
-> 
-> The clock needs nonetheless to be setup with the same slope values as
-> the kernel. Introducing at the same time trace_clock() which is expected
-> to be later configured by the hypervisor tracing.
-> 
-> Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
-> 
-> diff --git a/arch/arm64/include/asm/kvm_hyp.h b/arch/arm64/include/asm/kvm_hyp.h
-> index e6be1f5d0967..d46621d936e3 100644
-> --- a/arch/arm64/include/asm/kvm_hyp.h
-> +++ b/arch/arm64/include/asm/kvm_hyp.h
-> @@ -146,5 +146,4 @@ extern u64 kvm_nvhe_sym(id_aa64smfr0_el1_sys_val);
->  extern unsigned long kvm_nvhe_sym(__icache_flags);
->  extern unsigned int kvm_nvhe_sym(kvm_arm_vmid_bits);
->  extern unsigned int kvm_nvhe_sym(kvm_host_sve_max_vl);
-> -
->  #endif /* __ARM64_KVM_HYP_H__ */
-> diff --git a/arch/arm64/kvm/hyp/include/nvhe/clock.h b/arch/arm64/kvm/hyp/include/nvhe/clock.h
-> new file mode 100644
-> index 000000000000..9e152521f345
-> --- /dev/null
-> +++ b/arch/arm64/kvm/hyp/include/nvhe/clock.h
-> @@ -0,0 +1,16 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef __ARM64_KVM_HYP_NVHE_CLOCK_H
-> +#define __ARM64_KVM_HYP_NVHE_CLOCK_H
-> +#include <linux/types.h>
-> +
-> +#include <asm/kvm_hyp.h>
-> +
-> +#ifdef CONFIG_PKVM_TRACING
-> +void trace_clock_update(u32 mult, u32 shift, u64 epoch_ns, u64 epoch_cyc);
-> +u64 trace_clock(void);
-> +#else
-> +static inline void
-> +trace_clock_update(u32 mult, u32 shift, u64 epoch_ns, u64 epoch_cyc) { }
-> +static inline u64 trace_clock(void) { return 0; }
-> +#endif
-> +#endif
-> diff --git a/arch/arm64/kvm/hyp/nvhe/Makefile b/arch/arm64/kvm/hyp/nvhe/Makefile
-> index a244ec25f8c5..f55a9a17d38f 100644
-> --- a/arch/arm64/kvm/hyp/nvhe/Makefile
-> +++ b/arch/arm64/kvm/hyp/nvhe/Makefile
-> @@ -17,7 +17,7 @@ ccflags-y += -fno-stack-protector	\
->  hostprogs := gen-hyprel
->  HOST_EXTRACFLAGS += -I$(objtree)/include
->  
-> -lib-objs := clear_page.o copy_page.o memcpy.o memset.o
-> +lib-objs := clear_page.o copy_page.o memcpy.o memset.o tishift.o
->  lib-objs := $(addprefix ../../../lib/, $(lib-objs))
->  
->  CFLAGS_switch.nvhe.o += -Wno-override-init
-> @@ -29,6 +29,7 @@ hyp-obj-y += ../vgic-v3-sr.o ../aarch32.o ../vgic-v2-cpuif-proxy.o ../entry.o \
->  	 ../fpsimd.o ../hyp-entry.o ../exception.o ../pgtable.o
->  hyp-obj-y += ../../../kernel/smccc-call.o
->  hyp-obj-$(CONFIG_LIST_HARDENED) += list_debug.o
-> +hyp-obj-$(CONFIG_PKVM_TRACING) += clock.o
->  hyp-obj-y += $(lib-objs)
->  
->  ##
-> diff --git a/arch/arm64/kvm/hyp/nvhe/clock.c b/arch/arm64/kvm/hyp/nvhe/clock.c
-> new file mode 100644
-> index 000000000000..600a300bece7
-> --- /dev/null
-> +++ b/arch/arm64/kvm/hyp/nvhe/clock.c
-> @@ -0,0 +1,65 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2025 Google LLC
-> + * Author: Vincent Donnefort <vdonnefort@google.com>
-> + */
-> +
-> +#include <nvhe/clock.h>
-> +
-> +#include <asm/arch_timer.h>
-> +#include <asm/div64.h>
-> +
-> +static struct clock_data {
-> +	struct {
-> +		u32 mult;
-> +		u32 shift;
-> +		u64 epoch_ns;
-> +		u64 epoch_cyc;
-> +		u64 cyc_overflow64;
-> +	} data[2];
-> +	u64 cur;
-> +} trace_clock_data;
-> +
-> +static u64 __clock_mult_uint128(u64 cyc, u32 mult, u32 shift)
-> +{
-> +	__uint128_t ns = (__uint128_t)cyc * mult;
-> +
-> +	ns >>= shift;
-> +
-> +	return (u64)ns;
-> +}
-> +
-> +/* Does not guarantee no reader on the modified bank. */
-> +void trace_clock_update(u32 mult, u32 shift, u64 epoch_ns, u64 epoch_cyc)
-> +{
-> +	struct clock_data *clock = &trace_clock_data;
-> +	u64 bank = clock->cur ^ 1;
-> +
-> +	clock->data[bank].mult			= mult;
-> +	clock->data[bank].shift			= shift;
-> +	clock->data[bank].epoch_ns		= epoch_ns;
-> +	clock->data[bank].epoch_cyc		= epoch_cyc;
-> +	clock->data[bank].cyc_overflow64	= ULONG_MAX / mult;
-> +
-> +	smp_store_release(&clock->cur, bank);
-> +}
-> +
-> +/* Using host provided data. Do not use for anything else than debugging. */
-> +u64 trace_clock(void)
-> +{
-> +	struct clock_data *clock = &trace_clock_data;
-> +	u64 bank = smp_load_acquire(&clock->cur);
-> +	u64 cyc, ns;
-> +
-> +	cyc = __arch_counter_get_cntpct() - clock->data[bank].epoch_cyc;
+On 19/11/25 06:31, Andy Lutomirski wrote:
+> On Fri, Nov 14, 2025, at 7:14 AM, Valentin Schneider wrote:
+>> Deferring kernel range TLB flushes requires the guarantee that upon
+>> entering the kernel, no stale entry may be accessed. The simplest way to
+>> provide such a guarantee is to issue an unconditional flush upon switchi=
+ng
+>> to the kernel CR3, as this is the pivoting point where such stale entrie=
+s
+>> may be accessed.
+>>
+>
+> Doing this together with the PTI CR3 switch has no actual benefit: MOV CR=
+3 doesn=E2=80=99t flush global pages. And doing this in asm is pretty gross=
+.  We don=E2=80=99t even get a free sync_core() out of it because INVPCID i=
+s not documented as being serializing.
+>
+> Why can=E2=80=99t we do it in C?  What=E2=80=99s the actual risk?  In ord=
+er to trip over a stale TLB entry, we would need to deference a pointer to =
+newly allocated kernel virtual memory that was not valid prior to our entry=
+ into user mode. I can imagine BPF doing this, but plain noinstr C in the e=
+ntry path?  Especially noinstr C *that has RCU disabled*?  We already can=
+=E2=80=99t follow an RCU pointer, and ISTM the only style of kernel code th=
+at might do this would use RCU to protect the pointer, and we are already d=
+oomed if we follow an RCU pointer to any sort of memory.
+>
 
-I can only imagine that you don't care about the broken systems that
-do not have a monotonic counter, and that will happily have their
-counter swing back and forth?
+So v4 and earlier had the TLB flush faff done in C in the context_tracking =
+entry
+just like sync_core().
 
-Also, you may want to document why you are using the physical counter
-instead of the virtual one. I guess that you don't want CNTVOFF_EL2 to
-apply when HCR_EL2.E2H==0, but given that you never allow anything
-else for pKVM, this is slightly odd.
+My biggest issue with it was that I couldn't figure out a way to instrument
+memory accesses such that I would get an idea of where vmalloc'd accesses
+happen - even with a hackish thing just to survey the landscape. So while I
+agree with your reasoning wrt entry noinstr code, I don't have any way to
+prove it.
+That's unlike the text_poke sync_core() deferral for which I have all of
+that nice objtool instrumentation.
 
-Thanks,
+Dave also pointed out that the whole stale entry flush deferral is a risky
+move, and that the sanest thing would be to execute the deferred flush just
+after switching to the kernel CR3.
 
-	M.
+See the thread surrounding:
+  https://lore.kernel.org/lkml/20250114175143.81438-30-vschneid@redhat.com/
 
--- 
-Without deviation from the norm, progress is not possible.
+mainly Dave's reply and subthread:
+  https://lore.kernel.org/lkml/352317e3-c7dc-43b4-b4cb-9644489318d0@intel.c=
+om/
+
+> We do need to watch out for NMI/MCE hitting before we flush.
+
