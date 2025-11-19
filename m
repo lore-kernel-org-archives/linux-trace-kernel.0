@@ -1,71 +1,100 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E249830BBB6;
-	Wed, 19 Nov 2025 22:05:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71E0720C48A
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Nov 2025 22:16:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763589953; cv=none; b=oDyhVv9+eLgXXG5JEorZH0KBcAIr+JOnkJmrctVMY8VHrfBX+a8k62WPdbqZqd7ScnEc/w3Z/0Pki9z8AAoS2DrG1Ysp6xOrz7cdoe+NvM4zQwmxqG10FHQrOnf59P8gfEKfGhSIX2X+Cn53shUPIHAzfAD/RjZHp2VJXESVnTM=
+	t=1763590568; cv=none; b=QbpJEqsEXPbf8JlD7s6eee5CzcOnA/1A/Dl/v+Gp8HKoN4hb0cff7WCXL9WqQpiesdg/eMmj+R2QrajxqRCr1VAJVNbkxczK82xOpwX5/J/cHBpiOWIPRMEBgvwNnkjKBUUN/t3XTjiJuMzOIXrOPbTA1u+piYs1cga2Wu3qAdU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763589953; c=relaxed/simple;
-	bh=c4Gl/Qk3XtUmWlC6heIvb9j7SNwat+sUFYe1uSfb+vE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dTv56AAFu0MsaPAaYgZCRMrExjxW2/2lCiJf26ZINufIjHsDM8a+JPzpJMUNu2GBD3jIhV9JqlN/NdK/1OdvMSd5QbDpDHqdBor+TJ6g91Di6gUFNS8GWmm3NEAc7ky4rjA18zVWueWiEN1aa4WX/nW85oXrn5NMEfVKxhmRzpM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf04.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id 4D7D913B7F0;
-	Wed, 19 Nov 2025 22:05:43 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf04.hostedemail.com (Postfix) with ESMTPA id 5F97A2002B;
-	Wed, 19 Nov 2025 22:05:41 +0000 (UTC)
-Date: Wed, 19 Nov 2025 17:06:11 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Shuah Khan <skhan@linuxfoundation.org>
-Cc: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Shuah Khan
- <shuah@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH] selftests: tracing: Add tprobe enable/disable testcase
-Message-ID: <20251119170611.6eff8df7@gandalf.local.home>
-In-Reply-To: <f5f272e1-e164-4bb1-bfd0-42edd5a125c5@linuxfoundation.org>
-References: <176252610176.214996.3978515319000806265.stgit@devnote2>
-	<f5f272e1-e164-4bb1-bfd0-42edd5a125c5@linuxfoundation.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1763590568; c=relaxed/simple;
+	bh=8yQKhB8cDwXTanOKPCM8whTN+PBOthIJtZK31gPpfOY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nBtBnCnWRUp/mT/6sNkwtSGz8uOe/ldKqh/3ShCBSPlgw6xWvTndiCpgnS6xceruZRdV5yw3k8zP/+EC4QgYMRo+M3KKS4KPWU/vhsDqLde/1Uo5uK2aNcGYMncrPQxaTYk06GJ/Xd7v1Z9UQIgzV0vStB+6RpS7YWyApKK6Hao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=EyOcpRdo; arc=none smtp.client-ip=209.85.166.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="EyOcpRdo"
+Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-4332ae0635fso1131995ab.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Nov 2025 14:16:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1763590565; x=1764195365; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=B+5oVO7Fj+kTc9HFM5rezv6tYzXM5pbpAjlYLPbZLSo=;
+        b=EyOcpRdoN08OXFfKBDYy0ugilUBukj092T34EKW9z0IeGSdDXNrNdUJiRoco/hOMzd
+         1UmJ1jykn4TK+w74hU8IEZFXNY1i1EFEQBl1aP8hPsTSGt/Ow8f3x5AfDJ4HzQtQAJSv
+         snW4E2iCcndozpaOwynHCh/nbH68za+iVMrQE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763590565; x=1764195365;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=B+5oVO7Fj+kTc9HFM5rezv6tYzXM5pbpAjlYLPbZLSo=;
+        b=dLJWe3X9LbXyMZ7j4iA/wDw57gfv3vzYeAOC/t/6abXscvAvoG4Rx+Rqs+OokSXc/U
+         AYkxfw9FS5BmR57249r051hMP0omt3JPR1hh91RbsaTJYoiINzePAJfrN7loZCRMLfJy
+         K1L990ZnEi1qep8EyRKPc0GJHFpVsuD7Pc3j1BQfnw/2H6z5jvnYl+3Nmh7hrMTJkSuY
+         sy+XVyBKLn9FovOQGqQV7cflxiDUHFQ/ufTwVRyqp6+2xXuHU16rBrcWEJl4fwIbCYCe
+         o9FSuPavsIQZgEG39amJ1REXYvWcYHkk/YKqYutL/p5KqYXOJ8lX+ZFQJSeOMW9+z44Z
+         uq/g==
+X-Forwarded-Encrypted: i=1; AJvYcCWGKd2KlDf/g2Koev5bk4FOU4xQJazOZcKPEUyFg48E7T+c+TnQyDaKVEJsz/wlHSoOUuyGdHITvLYiAJeamh1GsTw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZ/VWeUovLfyaDFoTbU4zXBawKvO3LobHp3bc5NPPxAeRExm76
+	U5icoxWljUwvWazeIB9ISOnKZev5/EPGCGBxgq0kKb+ruG4Iv0qwWsKtPGtNMV4lk0w=
+X-Gm-Gg: ASbGncuK4OrkYJcQgR1VWy7akOKd+eaWDaEJsMX9EvL9ZlJ2L3XsKdqoofQkc5bXPhS
+	oz0U4oe/WF9l917rCvVpYwzZfO4YaWGInjL3IouNHkufndT/d6dnOZ5pt4nZzMyKIjYPxJySkfW
+	4o5NEieRnHSpCE8bXF0hif+uBQ4tjLJYwPuurA8YFQjqOZLkn8nIWe695PmuCEZ0ypf33BkIlJ5
+	0QU0qYhlPVBlmB23kF3FHCFwgozKx+vBV7PDvJjMpgZi5JBAjYCUty9FLrLjwtqZRGMpqMaaJTB
+	4iOjciaATpNFrQVh7EH2pgF8zGgGJOmYHOHGlY353hiEYQZaMcNCpSth4OYxXJ+g4joMZ/N1f15
+	vfYa8L0WL9FF0DHNHw8qHjJ8te1RfvZm+/uKmeUCLNgPZpTYY8bHar4RQfLzppdUiDiEZ+wpqOj
+	lpITNRPvkA5IOZ0U6Z9EHFOuccWmzFqSVR7w==
+X-Google-Smtp-Source: AGHT+IEb7sFMium6Qlegeyb4ntAkPNGU2yaln5lmSa5i7P8rdF+g/+/084yxEnhSPqDWQXjYUWLDJg==
+X-Received: by 2002:a05:6e02:2501:b0:433:2b02:af4d with SMTP id e9e14a558f8ab-435a902d62dmr11116195ab.12.1763590565591;
+        Wed, 19 Nov 2025 14:16:05 -0800 (PST)
+Received: from [192.168.1.14] ([38.175.187.108])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-5b954a44d60sm210907173.20.2025.11.19.14.16.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Nov 2025 14:16:05 -0800 (PST)
+Message-ID: <f6831d9a-4ea6-4100-9b1b-716ac93e1cdd@linuxfoundation.org>
+Date: Wed, 19 Nov 2025 15:16:04 -0700
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] selftests: tracing: Update fprobe selftest for ftrace
+ based fprobe
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Shuah Khan <shuah@kernel.org>,
+ Heiko Carstens <hca@linux.ibm.com>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
+References: <176295318112.431538.11780280333728368327.stgit@devnote2>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <176295318112.431538.11780280333728368327.stgit@devnote2>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: qt3nbt7m3zn5eaybzkwdrdu8jrwhxoi9
-X-Rspamd-Server: rspamout01
-X-Rspamd-Queue-Id: 5F97A2002B
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+f8S3NzMYk8N3vwEo5RroqOMT1VLK5F1U=
-X-HE-Tag: 1763589941-370316
-X-HE-Meta: U2FsdGVkX18zFYJhiaqMjDmgbovDsrdOHb0EyB6OL1dU0/UXnacLXq2hjKSA6Ixx6rvpu3i1bdIIo89Aj7NtHR7K89XY0Qoyx6zeoI+qiqKQLIXqGWrOal5vEC4Hw9vDaBCgohSx4PvEzoa0pOi6Mr2mWhzEpOHC+Nr6X4Mo/Df7jTeoyNjPaQajUEWDzxCyCbHQnhWU9RB2OAPb8QvQw0RJrXvJx3Tr6/L95J+p3lsSNoKefLqAivS9Haj4dKFqFRqTHRwfmwfD6fiwOpAMsgo80LTjLX6KLs1MZ948pSZXBWPVXz7Y3NCsA/uKSeb2UHg3bsRkIjIxXMMgn/N5VUgxljK4RYDgD2Fa+kI6Lo82YJEqcfdx5UtitgfKXERrv/pFpn/ieoiNAwmVOZOd2g==
 
-On Wed, 19 Nov 2025 14:44:22 -0700
-Shuah Khan <skhan@linuxfoundation.org> wrote:
-
-> On 11/7/25 07:35, Masami Hiramatsu (Google) wrote:
-> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > 
-> > Commit 2867495dea86 ("tracing: tprobe-events: Register tracepoint when
-> > enable tprobe event") caused regression bug and tprobe did not work.
-> > To prevent similar problems, add a testcase which enables/disables a
-> > tprobe and check the results.
-> > 
-> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>  
+On 11/12/25 06:13, Masami Hiramatsu (Google) wrote:
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > 
-> Steve, do you want me to take this through my tree?
+> Since the ftrace fprobe is both fgraph and ftrace based implemented,
+> the selftest needs to be updated. This does not count the actual
+> number of lines, but just check the differences.
+> 
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> ---
+>   .../ftrace/test.d/dynevent/add_remove_fprobe.tc    |   18 ++++--------------
+>   1 file changed, 4 insertions(+), 14 deletions(-)
+>
 
-Yes please. Masami's an official maintainer and mostly handles all things
-"probe" related. This is his domain ;-)
+Steve, do you want me to take this through my tree?
 
-Thanks,
-
--- Steve
+thanks,
+-- Shuah
