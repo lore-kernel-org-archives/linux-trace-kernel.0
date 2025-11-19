@@ -1,101 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B8181DDC1B;
-	Wed, 19 Nov 2025 00:21:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 641271EF09B
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Nov 2025 00:28:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763511702; cv=none; b=I5hCaFwIXZu9CQ1TTr5hVG4vmea+XDu4RK5ZmPcxLT+JUWEYapTD9tu8uGhxFqSxAiI57oxKeaXoKUMsVX71jFcO4pjSH4YmAzqYMmlI4opgQMyQBiz0KMt7oPhJaWYc6xc3fVW2CGnLg8vVlHL+mAOTYUA2ghlq8o3sQt/kfgQ=
+	t=1763512122; cv=none; b=GXxuAa0RraWMU6m5sIhQO4Q2VwigDbCQYUaB/Y5+n2Hngy+SXHQRPwmfBvmxZOqRdTFTJE4UCfteUQp1pTrKgnTKVYXsEy89Bn7hvRbeaspuKB2W+ySEBZQpwQmGZNII/7xsspEOuRmGd+S6/uAb63ftjTQHpq34PfVB+m9pXmw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763511702; c=relaxed/simple;
-	bh=Xamqltl9I93urByq8l6HdNFbrifOItmvbJjAoJlor/U=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=JddAxe0RJdbdXGx+UoR9WBO4w9vdXVGPC6IthCV8dwruzZ9uvMEXuuU4OHV3YoofzVIW2n/4c6dAQS9LNZa60H/uSwQz06MQFHNGy8QN+q4p3MhvIvD2QJgXzRMxcGmVts3iYINqUIZHeu9fBzJP7gAih/pY/zKIQMbc9zNyVFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W7TofsGg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763512122; c=relaxed/simple;
+	bh=NJnfUWnY5NDX6X9yU9/E+VI1sDN/7wt8IydZzwtVu3s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CS9o6UQWKrF2BABgPA88Kz+I6wOqRa4OkIg/XzAQNfuJ3l0r37TnoP2WOShHENZmB6uzsUz6NKAEvBlL5aM0Kg89XYVFL1EqwushAY8qiBBqsFxLKnXuvGXXD8e28o3nhlFT9TMdOcphP4cW9SnH8GOu0W1TaqYLb6LOkjT+fGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ezNCD/gU; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W7TofsGg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C4E8C4CEF5;
-	Wed, 19 Nov 2025 00:21:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763511701;
-	bh=Xamqltl9I93urByq8l6HdNFbrifOItmvbJjAoJlor/U=;
-	h=From:To:Cc:Subject:Date:From;
-	b=W7TofsGgOvMhtJID2EPIWaUqGN9FmDzAOr6LQqHoPu1Cksdp4wUsIPMLOubOO2kd+
-	 FohTWK/674jhm0XX32oAfgwOO8P0lPSUkJrTxGLLlrQHAzHQ8lRvmQ0Yp6w0lXzElg
-	 9GqpdLYkkx9FiR23TkA3lA1WDIXV/Md8cfVEDSQx7wpbXE5+JqeX/6ChVgArJ+aBG9
-	 8jP+YcOMlnAFFldR65XhYTP31oZfeE31vYjEoW7wbZv7AFp8k8nwq6os416RgLFIIq
-	 BeBjPc+yZzpgFqulPHjoaTIeBHFEtiKSVKFHMlRkE6SkBjreqYalZ1j7t9DTsoluGj
-	 75DzBPjGkSP1w==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v2] tracing: Show the tracer options in boot-time created instance
-Date: Wed, 19 Nov 2025 09:21:34 +0900
-Message-ID:  <176351169375.1795430.7653862896005389480.stgit@mhiramat.tok.corp.google.com>
-X-Mailer: git-send-email 2.52.0.rc1.455.g30608eb744-goog
-User-Agent: StGit/0.19
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ezNCD/gU"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-42b3108f41fso3755820f8f.3
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 18 Nov 2025 16:28:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1763512119; x=1764116919; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NJnfUWnY5NDX6X9yU9/E+VI1sDN/7wt8IydZzwtVu3s=;
+        b=ezNCD/gUC2spltJ57Bc+E9bSwOTkhcaA6tTueGWUJqSFK+VJMDUW2dWZSrKN/YlNZ5
+         tUfKAzKaSXtMnP+KZseO06tPJoPXS/YlrTEmpmLIdCTgmOVoju19bopeQOWP+xbutnlp
+         zWrCLeMEJvRbLDALN7oJhkLyv4HdEo+gCAPX7WZgxO00hypRU+lSV+TYbD1FAlOr2goN
+         JLV2+kjEz/SysFfK0cID+NKMjB9mpboJ3WYX/2XLY1Hz9XHjq9M5drU4VuDmBM341N7z
+         yWCkCDRFIJMRxG2vw3NZjK71LiU4zSdLPAxJ1pg51adWSc/5L+eGewChWFQwX5lxXOOx
+         bIdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763512119; x=1764116919;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=NJnfUWnY5NDX6X9yU9/E+VI1sDN/7wt8IydZzwtVu3s=;
+        b=lYlqP8OTMvyVULL4EbkkQ9oO5PgP5L9v35YBojL4PHHXch2qz9iLIcBNKLHBDloFK+
+         GBKh4D3+pXHHmNUSq4iht/gQtfnRTln4XWtM2Zu3n5chN1DkSzV1NHAm1q9rstaUJZ7u
+         wByVJSWyxM2m6dgN3sF3evQGfu/ddOq14Ser8V1/ur5qPcfu0I+umBxZoPQZq8TiRFIG
+         JHqeufaUeGONirr3DCqvTBYuHcG3fuMVoQwRFvOB822M7ojzIgzKqbVe3+Ohl1VrrFLW
+         fJH6UIXtuAaLJx63+kWoK9TZP9sKjW6VJrdR5CH3qgYVHKJMGdOtBc0RXmWi5CW7JYaG
+         iWPg==
+X-Forwarded-Encrypted: i=1; AJvYcCVXC/4borfriXxOGjyU5+/AC+aJ7hoylYRgE8lJTV2Owut/s4kphWyzwmNCOHbqXOLYdmwySjCuNeI7O1vvBJYY9js=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyUKHmerh/E+nGvRHCltfavHFU1F8GJ0TFw0Nygk0NgxpXmpGxY
+	joCJ49cPPxPvdWkhQ52m2fDuemNqA3/yIv/4Ps5Zk3ILw2A8Mqsf1GAYewiVvLjPDaiIlgv6IFA
+	PLSOFyWWm8W2iGMc/UIh3ra32uUl+bXfszfpJ
+X-Gm-Gg: ASbGncvoTvxwfnlSIUKHuDyWq7MLimXTMyh7NqGXWDEC7viVXh/utx07EVFCDFcHwnW
+	ydYwCHNrsFYBEhmSI4S0ikCtMu7GUAtIvSxQABsblKi1U0C697S+Vv0GM+2K3IU6XVlhrVWTa37
+	hznUnBSnw/2DDiIZv+Mku4f6vAoUppeslA+Im7a0Gm+a12O/D9vfFjPinIb27mItWnnzM6FDs9s
+	c6wVWxbusjzRAaNa7xuDMn9T73mcPQkWKdiwpWWoJc/U9+bSUE3R0xTFtXaN/KAt06wureuroPy
+	PIUH6rzSpwQ=
+X-Google-Smtp-Source: AGHT+IE+7v5U5qPSQsuyK0qJPxKYCeoXmJh73/zJxk9L1skLVtv/ZQhS7MGenNDtVvfmUkOeAtq6OoIFg1ghzGih+UY=
+X-Received: by 2002:a05:6000:1846:b0:42b:41dc:1b5f with SMTP id
+ ffacd0b85a97d-42b593742b1mr15717740f8f.32.1763512118638; Tue, 18 Nov 2025
+ 16:28:38 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20251118123639.688444-1-dongml2@chinatelecom.cn>
+In-Reply-To: <20251118123639.688444-1-dongml2@chinatelecom.cn>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Tue, 18 Nov 2025 16:28:27 -0800
+X-Gm-Features: AWmQ_blZW4T58g1lw-VuDswVQ34aw1FRr8D1Zp23NABA3RPJtCBLTMXkxs5M2qY
+Message-ID: <CAADnVQJF5qkT8J=VJW00pPX7=hVdwn2545BzZPEi=mPwFouThw@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v3 0/6] bpf trampoline support "jmp" mode
+To: Menglong Dong <menglong8.dong@gmail.com>
+Cc: Alexei Starovoitov <ast@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>, 
+	Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
+	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, jiang.biao@linux.dev, 
+	bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Tue, Nov 18, 2025 at 4:36=E2=80=AFAM Menglong Dong <menglong8.dong@gmail=
+.com> wrote:
+>
+> As we can see above, the performance of fexit increase from 80.544M/s to
+> 136.540M/s, and the "fmodret" increase from 78.301M/s to 159.248M/s.
 
-Since tracer_init_tracefs_work_func() only updates the tracer options
-for the global_trace, the instances created by the kernel cmdline
-do not have those options.
+Nice! Now we're talking.
 
-Fix to update tracer options for those boot-time created instances
-to show those options.
-
-Fixes: 428add559b69 ("tracing: Have tracer option be instance specific")
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
-  Change in v2:
-   - Fix update_tracer_options() to update all instances.
-   - Update tracer_options_updated after update all instances.
----
- kernel/trace/trace.c |   11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
-
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 8ae95800592d..4a6784057855 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -10231,11 +10231,16 @@ static __init int __update_tracer_options(struct trace_array *tr)
- 	return ret;
- }
- 
--static __init void update_tracer_options(struct trace_array *tr)
-+static __init void update_tracer_options(void)
- {
-+	struct trace_array *tr;
-+
- 	guard(mutex)(&trace_types_lock);
-+
-+	list_for_each_entry(tr, &ftrace_trace_arrays, list)
-+		__update_tracer_options(tr);
-+
- 	tracer_options_updated = true;
--	__update_tracer_options(tr);
- }
- 
- /* Must have trace_types_lock held */
-@@ -10937,7 +10942,7 @@ static __init void tracer_init_tracefs_work_func(struct work_struct *work)
- 
- 	create_trace_instances(NULL);
- 
--	update_tracer_options(&global_trace);
-+	update_tracer_options();
- }
- 
- static __init int tracer_init_tracefs(void)
-
+I think arm64 CPUs have a similar RSB-like return address predictor.
+Do we need to do something similar there?
+The question is not targeted to you, Menglong,
+just wondering.
