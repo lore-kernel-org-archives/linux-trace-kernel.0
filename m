@@ -1,365 +1,263 @@
-Received: from canpmsgout12.his.huawei.com (canpmsgout12.his.huawei.com [113.46.200.227])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23B0233B6F1;
-	Wed, 19 Nov 2025 10:00:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.227
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51A47346FA2
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Nov 2025 10:09:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763546414; cv=none; b=lTBmqrKrKuCb8k+LmoJIii2vKmp11asK7tL7bpw8XjKz/oq52GM22g7ygJRoQI0n1Ov6R0V+RTBhpGRwYwP6BvWv4BKfKtDqa7dl8ICuxOxSn1SX1Hjntbx4xSmdYfN6z0CTwgGf2H9mw0pP/GaVmNSxVaiQRlxN3g1CFpiA4Vg=
+	t=1763546968; cv=none; b=VR0i+okhBLKu+CqI/DRmAVlm9Ug4lFZ9rj4AFa1J4ULYnqO5/xKBV3UUcR/1iBtKHd90zHDDJFb6U9u3CAn3XCl7L7fvBOhuT6hs6KECXs8JjiPVWPYt4xzdNVX9+VYj4hZS5Nn26vPNro92Tbnw/U64pH+Z1rl6N5BRIRPeWpc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763546414; c=relaxed/simple;
-	bh=QX8AWgDyHlyTUAKqwQ8fej+X7jBQ6YdJOZjiEhyDVQI=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jtSZyit/vcNUSSoGGrY7w5T+n6BJS2lmubhyAOM7xCbRpxnyBfXGfQCSrDuwyuNEEnr495yWzC50cZrrFsHcBH2LXOTkJY/IX0sgsGYV/9oNljsK6G4+Q7zjAXRvdaK2c40d9Efc8Ob0x+zo04dLjOe8o5dvtVe3YzE5UjLya+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=tVgeMTXm; arc=none smtp.client-ip=113.46.200.227
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+	s=arc-20240116; t=1763546968; c=relaxed/simple;
+	bh=OJvuqh8SyRe//eizJsEe1K247PQ8bD47X5Q22nudA1U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ltg0GgXHs9fzUEgRMb/hYtR7qZEbnZljslpM3YiPsjimJqC//r3qIHj0sF93zoZgdPv8jPkUxcZawdiro7Bn3UMY1rFyw8z9PGubx0IBI0g+xTsvE4z9xLFDPAgr459ptBp7CDA72Dxtc0jaaU1q9Qt+pPwWtm2gCO74L1AE7+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Me68I3F7; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="tVgeMTXm"
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=D4O0opZ/OFA/+IIFkS92viMctiZDX4MAOGWcfGTkr+w=;
-	b=tVgeMTXmNU0Njc1cg5QPWH5pPTLf2rIOcUS3j8WiU7UV2Z/MxTlhmSb/tTBVPMAWpxGAAowu1
-	Qf1SYectQSTFwasuEG5G6HGwV1q3zs7kNTA5I4RF9wncMjX713KyvA6lPKvZ+erz9kD8yclY9CB
-	LDn8k4q0lKWlcz5CaF6FRYU=
-Received: from mail.maildlp.com (unknown [172.19.163.44])
-	by canpmsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4dBH4B0JNdznTWH;
-	Wed, 19 Nov 2025 17:58:34 +0800 (CST)
-Received: from kwepemj100009.china.huawei.com (unknown [7.202.194.3])
-	by mail.maildlp.com (Postfix) with ESMTPS id 84908140135;
-	Wed, 19 Nov 2025 18:00:01 +0800 (CST)
-Received: from DESKTOP-A37P9LK.huawei.com (10.67.109.17) by
- kwepemj100009.china.huawei.com (7.202.194.3) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 19 Nov 2025 18:00:00 +0800
-From: Xie Yuanbin <xieyuanbin1@huawei.com>
-To: <david@redhat.com>, <tony.luck@intel.com>, <bp@alien8.de>,
-	<linmiaohe@huawei.com>, <nao.horiguchi@gmail.com>, <rostedt@goodmis.org>,
-	<mhiramat@kernel.org>, <mathieu.desnoyers@efficios.com>,
-	<akpm@linux-foundation.org>, <david@kernel.org>,
-	<lorenzo.stoakes@oracle.com>, <Liam.Howlett@oracle.com>, <vbabka@suse.cz>,
-	<rppt@kernel.org>, <surenb@google.com>, <mhocko@suse.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-edac@vger.kernel.org>,
-	<linux-mm@kvack.org>, <linux-trace-kernel@vger.kernel.org>,
-	<will@kernel.org>, <liaohua4@huawei.com>, <lilinjie8@huawei.com>, Xie Yuanbin
-	<xieyuanbin1@huawei.com>
-Subject: [PATCH v3] mm/memory-failure: remove the selection of RAS
-Date: Wed, 19 Nov 2025 17:59:43 +0800
-Message-ID: <20251119095943.67125-1-xieyuanbin1@huawei.com>
-X-Mailer: git-send-email 2.51.0
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Me68I3F7"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-b72b495aa81so839077766b.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Nov 2025 02:09:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1763546963; x=1764151763; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=mZmwnZeJsVmH4Emd6Sk7OTkRxBmCW6aXF7g1I/Zjods=;
+        b=Me68I3F7En431raJbedjbBOoq/VSyrLNPSHh1NDSm7hS35yUH6C/wWOVtLpKfCtyKl
+         pgezovtS+J6QjL9ajtb55htcb981QToFRQ+otMIJfwMjjV11g4S/+ihLcnAz/y8U6bMQ
+         vvXmi1cN/61t0y6wCN8KE5mqZ1KQunNOGGjztAYvEIM9rtm2yLoN1BWHaoGQB0l04TCm
+         cnIlJieWZmh52VixvgLDVLIKN7Oy65N1tNxRLoCQ5ndqdmyKOMCwQZUDSWQdLd5mGVUn
+         Hr8IR746a3flbusR85EkV3KQPqkp5ZhtLalhLau2pCQSTiay13R7j/1/SFqpcCg/+jVE
+         uPQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763546963; x=1764151763;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mZmwnZeJsVmH4Emd6Sk7OTkRxBmCW6aXF7g1I/Zjods=;
+        b=rBwwGsPiRpMo8UshoMtKUVCcZQP533tWdgJ2UDagY+GXjJkwOYwT58TA4fu0qsK6ia
+         s+gicbz5h/b+Y1EkpEWcItzrWvSA7EFll2YZWQEpIidg3Sl/NS137Z2oedrT2v3g6x5p
+         /qqEpPJfLDdnkhUQxGil4gJ5mkLcMGO71dnxxI/8IQabb5pJT6JAlB2gxr6nkLR7uwj6
+         MnzjrSFmSV2LfvqD+PWwug33Nnh0KnEiK7gtR/k/0T3u9lg2HZNo9G0zuizGLbuxmnaO
+         sG8ZGL8/uNI3PujTbDN5dc5DuLuCDWd3+2g1sQGM9gz26BAFJtq0hMAvwNNBRFScIN94
+         TGcg==
+X-Forwarded-Encrypted: i=1; AJvYcCWI6qO6yEw6GQ+otB2V/ICHCCoOH0C/xg40h69qp/J8gaHTW2mtfDKaabu0lmPkUT5S0TkwZ2owL+WB1xyMShPpg1I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwSBiT1twychLHbeEjd8MhuXqesw5SYZkluf3WfR/rAIYBXXb6x
+	jNPz2RDIoGjcUkY00M5lYHTYB4oNorKBvR77xTAezS8jQ10Zq/i1RUrhqIuaf+sGPGA=
+X-Gm-Gg: ASbGncuMiMMMA9gwmNkM5XRw9eqplx271rkeOWsebqdoE310jMklnHi77OTiEXwryoC
+	5bB2xOj/voRoqkYv3yPOkGHLLR/GRmpEnh+2vPfRwihmHqp4EsZ4s7FW0oZZAO5diwiWK6R59hH
+	bU7g9SlfsXQQl19nzHuI9IHVmsx7CqO7pexWC/ahfbioMpB0LABDpvAdq9hJvW/PcJejEXiMyAx
+	TihxHLInN1FK7pJHKSqfenx5dR8c8RV7KgyDBtwR52TkRH6/2Om4lfVb18VWFsmkiDZMauKqIk9
+	VgPijZe3NmMWlwI6gIazxCm0GDsOyezRpS0+T4xPdtBwg7y6TJO7zIrGT9fUxP3HA3QQKO5xJPC
+	BsSoKJiXocxEPVxMq56L1EY5feHZ1b6qvdjoj4UdNmDmSk+CTi6/fz2l2j1zHIb/NSZVaCnILyI
+	k0OoHNmYTuiWIQseVm0ClzvxFF
+X-Google-Smtp-Source: AGHT+IHL60A5nBupA1OyvdeZdvK8rVJqcdAj2UJ8GMSSqilZDEkvpcYDaNSL65+yyn9lVOsemK499g==
+X-Received: by 2002:a17:907:1c81:b0:b72:d2df:641c with SMTP id a640c23a62f3a-b736795d498mr2006941666b.49.1763546963352;
+        Wed, 19 Nov 2025 02:09:23 -0800 (PST)
+Received: from pathway.suse.cz ([176.114.240.130])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b734fda8bc8sm1594056066b.49.2025.11.19.02.09.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Nov 2025 02:09:22 -0800 (PST)
+Date: Wed, 19 Nov 2025 11:08:01 +0100
+From: Petr Mladek <pmladek@suse.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Corey Minyard <corey@minyard.net>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	"Dr. David Alan Gilbert" <linux@treblig.org>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+	Rob Clark <robin.clark@oss.qualcomm.com>,
+	Matthew Brost <matthew.brost@intel.com>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Aleksandr Loktionov <aleksandr.loktionov@intel.com>,
+	Vitaly Lifshits <vitaly.lifshits@intel.com>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>, Calvin Owens <calvin@wbinvd.org>,
+	Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+	Sagi Maimon <maimon.sagi@gmail.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Karan Tilak Kumar <kartilak@cisco.com>,
+	Hans Verkuil <hverkuil+cisco@kernel.org>,
+	Casey Schaufler <casey@schaufler-ca.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Viacheslav Dubeyko <Slava.Dubeyko@ibm.com>,
+	Max Kellermann <max.kellermann@ionos.com>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	openipmi-developer@lists.sourceforge.net,
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linaro-mm-sig@lists.linaro.org, amd-gfx@lists.freedesktop.org,
+	linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
+	intel-xe@lists.freedesktop.org, linux-mmc@vger.kernel.org,
+	netdev@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
+	linux-pci@vger.kernel.org, linux-s390@vger.kernel.org,
+	linux-scsi@vger.kernel.org, linux-staging@lists.linux.dev,
+	ceph-devel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Gustavo Padovan <gustavo@padovan.org>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Dmitry Baryshkov <lumag@kernel.org>,
+	Abhinav Kumar <abhinav.kumar@linux.dev>,
+	Jessica Zhang <jesszhan0024@gmail.com>, Sean Paul <sean@poorly.run>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Lucas De Marchi <lucas.demarchi@intel.com>,
+	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Vladimir Oltean <olteanv@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Rodolfo Giometti <giometti@enneenne.com>,
+	Jonathan Lemon <jonathan.lemon@gmail.com>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Stefan Haberland <sth@linux.ibm.com>,
+	Jan Hoeppner <hoeppner@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Satish Kharat <satishkh@cisco.com>,
+	Sesidhar Baddela <sebaddel@cisco.com>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Xiubo Li <xiubli@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v3 19/21] scsi: fnic: Switch to use %ptSp
+Message-ID: <aR2XAYWTEgMZu_Mx@pathway.suse.cz>
+References: <20251113150217.3030010-1-andriy.shevchenko@linux.intel.com>
+ <20251113150217.3030010-20-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
- kwepemj100009.china.huawei.com (7.202.194.3)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251113150217.3030010-20-andriy.shevchenko@linux.intel.com>
 
-The commit 97f0b13452198290799f ("tracing: add trace event for
-memory-failure") introduces the selection of RAS in memory-failure.
-This commit is just a tracing feature; in reality, there is no dependency
-between memory-failure and RAS. RAS increases the size of the bzImage
-image by 8k, which is very valuable for embedded devices.
+On Thu 2025-11-13 15:32:33, Andy Shevchenko wrote:
+> Use %ptSp instead of open coded variants to print content of
+> struct timespec64 in human readable format.
 
-Move the memory-failure traceing code from ras_event.h to
-memory-failure.h and remove the selection of RAS.
+I was about to commit the changes into printk/linux.git and
+found a mistake during the final double check, see below.
 
-v2->v3: https://lore.kernel.org/20251104072306.100738-3-xieyuanbin1@huawei.com
-  - Change define TRACE_SYSTEM from ras to memory_failure
-  - Add include/trace/events/memory-failure.h to
-    "HWPOISON MEMORY FAILURE HANDLING" section in MAINTAINERS
-  - Rebase to latest linux-next source
+> diff --git a/drivers/scsi/fnic/fnic_trace.c b/drivers/scsi/fnic/fnic_trace.c
+> index cdc6b12b1ec2..0a849a195a8e 100644
+> --- a/drivers/scsi/fnic/fnic_trace.c
+> +++ b/drivers/scsi/fnic/fnic_trace.c
+> @@ -215,30 +213,26 @@ int fnic_get_stats_data(struct stats_debug_info *debug,
+>  {
+>  	int len = 0;
+>  	int buf_size = debug->buf_size;
+> -	struct timespec64 val1, val2;
+> +	struct timespec64 val, val1, val2;
+>  	int i = 0;
+>  
+> -	ktime_get_real_ts64(&val1);
+> +	ktime_get_real_ts64(&val);
+>  	len = scnprintf(debug->debug_buffer + len, buf_size - len,
+>  		"------------------------------------------\n"
+>  		 "\t\tTime\n"
+>  		"------------------------------------------\n");
+>  
+> +	val1 = timespec64_sub(val, stats->stats_timestamps.last_reset_time);
+> +	val2 = timespec64_sub(val, stats->stats_timestamps.last_read_time);
+>  	len += scnprintf(debug->debug_buffer + len, buf_size - len,
+> -		"Current time :          [%lld:%ld]\n"
+> -		"Last stats reset time:  [%lld:%09ld]\n"
+> -		"Last stats read time:   [%lld:%ld]\n"
+> -		"delta since last reset: [%lld:%ld]\n"
+> -		"delta since last read:  [%lld:%ld]\n",
+> -	(s64)val1.tv_sec, val1.tv_nsec,
+> -	(s64)stats->stats_timestamps.last_reset_time.tv_sec,
+> -	stats->stats_timestamps.last_reset_time.tv_nsec,
+> -	(s64)stats->stats_timestamps.last_read_time.tv_sec,
+> -	stats->stats_timestamps.last_read_time.tv_nsec,
+> -	(s64)timespec64_sub(val1, stats->stats_timestamps.last_reset_time).tv_sec,
+> -	timespec64_sub(val1, stats->stats_timestamps.last_reset_time).tv_nsec,
+> -	(s64)timespec64_sub(val1, stats->stats_timestamps.last_read_time).tv_sec,
+> -	timespec64_sub(val1, stats->stats_timestamps.last_read_time).tv_nsec);
+> +			 "Current time :          [%ptSp]\n"
+> +			 "Last stats reset time:  [%ptSp]\n"
+> +			 "Last stats read time:   [%ptSp]\n"
+> +			 "delta since last reset: [%ptSp]\n"
+> +			 "delta since last read:  [%ptSp]\n",
 
-v1->v2: https://lore.kernel.org/20251103033536.52234-2-xieyuanbin1@huawei.com
-  - Move the memory-failure traceing code from ras_event.h to
-    memory-failure.h
+Both delta times are printed at the end.
 
-Signed-off-by: Xie Yuanbin <xieyuanbin1@huawei.com>
-Cc: David Hildenbrand (Red Hat) <david@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Miaohe Lin <linmiaohe@huawei.com>
----
- MAINTAINERS                           |  1 +
- include/ras/ras_event.h               | 87 ------------------------
- include/trace/events/memory-failure.h | 98 +++++++++++++++++++++++++++
- mm/Kconfig                            |  1 -
- mm/memory-failure.c                   |  5 +-
- 5 files changed, 103 insertions(+), 89 deletions(-)
- create mode 100644 include/trace/events/memory-failure.h
+> +			 &val,
+> +			 &stats->stats_timestamps.last_reset_time, &val1,
+> +			 &stats->stats_timestamps.last_read_time, &val2);
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 7310d9ca0370..43d6eb95fb05 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11631,10 +11631,11 @@ R:	Naoya Horiguchi <nao.horiguchi@gmail.com>
- L:	linux-mm@kvack.org
- S:	Maintained
- F:	include/linux/memory-failure.h
- F:	mm/hwpoison-inject.c
- F:	mm/memory-failure.c
-+F:	include/trace/events/memory-failure.h
- 
- HYCON HY46XX TOUCHSCREEN SUPPORT
- M:	Giulio Benetti <giulio.benetti@benettiengineering.com>
- L:	linux-input@vger.kernel.org
- S:	Maintained
-diff --git a/include/ras/ras_event.h b/include/ras/ras_event.h
-index fecfeb7c8be7..1e5e87020eef 100644
---- a/include/ras/ras_event.h
-+++ b/include/ras/ras_event.h
-@@ -10,11 +10,10 @@
- #include <linux/edac.h>
- #include <linux/ktime.h>
- #include <linux/pci.h>
- #include <linux/aer.h>
- #include <linux/cper.h>
--#include <linux/mm.h>
- 
- /*
-  * MCE Extended Error Log trace event
-  *
-  * These events are generated when hardware detects a corrected or
-@@ -337,95 +336,9 @@ TRACE_EVENT(aer_event,
- 		__entry->tlp_header_valid ?
- 			__print_array(__entry->tlp_header, PCIE_STD_MAX_TLP_HEADERLOG, 4) :
- 			"Not available")
- );
- #endif /* CONFIG_PCIEAER */
--
--/*
-- * memory-failure recovery action result event
-- *
-- * unsigned long pfn -	Page Frame Number of the corrupted page
-- * int type	-	Page types of the corrupted page
-- * int result	-	Result of recovery action
-- */
--
--#ifdef CONFIG_MEMORY_FAILURE
--#define MF_ACTION_RESULT	\
--	EM ( MF_IGNORED, "Ignored" )	\
--	EM ( MF_FAILED,  "Failed" )	\
--	EM ( MF_DELAYED, "Delayed" )	\
--	EMe ( MF_RECOVERED, "Recovered" )
--
--#define MF_PAGE_TYPE		\
--	EM ( MF_MSG_KERNEL, "reserved kernel page" )			\
--	EM ( MF_MSG_KERNEL_HIGH_ORDER, "high-order kernel page" )	\
--	EM ( MF_MSG_HUGE, "huge page" )					\
--	EM ( MF_MSG_FREE_HUGE, "free huge page" )			\
--	EM ( MF_MSG_GET_HWPOISON, "get hwpoison page" )			\
--	EM ( MF_MSG_UNMAP_FAILED, "unmapping failed page" )		\
--	EM ( MF_MSG_DIRTY_SWAPCACHE, "dirty swapcache page" )		\
--	EM ( MF_MSG_CLEAN_SWAPCACHE, "clean swapcache page" )		\
--	EM ( MF_MSG_DIRTY_MLOCKED_LRU, "dirty mlocked LRU page" )	\
--	EM ( MF_MSG_CLEAN_MLOCKED_LRU, "clean mlocked LRU page" )	\
--	EM ( MF_MSG_DIRTY_UNEVICTABLE_LRU, "dirty unevictable LRU page" )	\
--	EM ( MF_MSG_CLEAN_UNEVICTABLE_LRU, "clean unevictable LRU page" )	\
--	EM ( MF_MSG_DIRTY_LRU, "dirty LRU page" )			\
--	EM ( MF_MSG_CLEAN_LRU, "clean LRU page" )			\
--	EM ( MF_MSG_TRUNCATED_LRU, "already truncated LRU page" )	\
--	EM ( MF_MSG_BUDDY, "free buddy page" )				\
--	EM ( MF_MSG_DAX, "dax page" )					\
--	EM ( MF_MSG_UNSPLIT_THP, "unsplit thp" )			\
--	EM ( MF_MSG_ALREADY_POISONED, "already poisoned" )		\
--	EM ( MF_MSG_PFN_MAP, "non struct page pfn" )                    \
--	EMe ( MF_MSG_UNKNOWN, "unknown page" )
--
--/*
-- * First define the enums in MM_ACTION_RESULT to be exported to userspace
-- * via TRACE_DEFINE_ENUM().
-- */
--#undef EM
--#undef EMe
--#define EM(a, b) TRACE_DEFINE_ENUM(a);
--#define EMe(a, b)	TRACE_DEFINE_ENUM(a);
--
--MF_ACTION_RESULT
--MF_PAGE_TYPE
--
--/*
-- * Now redefine the EM() and EMe() macros to map the enums to the strings
-- * that will be printed in the output.
-- */
--#undef EM
--#undef EMe
--#define EM(a, b)		{ a, b },
--#define EMe(a, b)	{ a, b }
--
--TRACE_EVENT(memory_failure_event,
--	TP_PROTO(unsigned long pfn,
--		 int type,
--		 int result),
--
--	TP_ARGS(pfn, type, result),
--
--	TP_STRUCT__entry(
--		__field(unsigned long, pfn)
--		__field(int, type)
--		__field(int, result)
--	),
--
--	TP_fast_assign(
--		__entry->pfn	= pfn;
--		__entry->type	= type;
--		__entry->result	= result;
--	),
--
--	TP_printk("pfn %#lx: recovery action for %s: %s",
--		__entry->pfn,
--		__print_symbolic(__entry->type, MF_PAGE_TYPE),
--		__print_symbolic(__entry->result, MF_ACTION_RESULT)
--	)
--);
--#endif /* CONFIG_MEMORY_FAILURE */
- #endif /* _TRACE_HW_EVENT_MC_H */
- 
- /* This part must be outside protection */
- #include <trace/define_trace.h>
-diff --git a/include/trace/events/memory-failure.h b/include/trace/events/memory-failure.h
-new file mode 100644
-index 000000000000..aa57cc8f896b
---- /dev/null
-+++ b/include/trace/events/memory-failure.h
-@@ -0,0 +1,98 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM memory_failure
-+#define TRACE_INCLUDE_FILE memory-failure
-+
-+#if !defined(_TRACE_MEMORY_FAILURE_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_MEMORY_FAILURE_H
-+
-+#include <linux/tracepoint.h>
-+#include <linux/mm.h>
-+
-+/*
-+ * memory-failure recovery action result event
-+ *
-+ * unsigned long pfn -	Page Frame Number of the corrupted page
-+ * int type	-	Page types of the corrupted page
-+ * int result	-	Result of recovery action
-+ */
-+
-+#define MF_ACTION_RESULT	\
-+	EM ( MF_IGNORED, "Ignored" )	\
-+	EM ( MF_FAILED,  "Failed" )	\
-+	EM ( MF_DELAYED, "Delayed" )	\
-+	EMe ( MF_RECOVERED, "Recovered" )
-+
-+#define MF_PAGE_TYPE		\
-+	EM ( MF_MSG_KERNEL, "reserved kernel page" )			\
-+	EM ( MF_MSG_KERNEL_HIGH_ORDER, "high-order kernel page" )	\
-+	EM ( MF_MSG_HUGE, "huge page" )					\
-+	EM ( MF_MSG_FREE_HUGE, "free huge page" )			\
-+	EM ( MF_MSG_GET_HWPOISON, "get hwpoison page" )			\
-+	EM ( MF_MSG_UNMAP_FAILED, "unmapping failed page" )		\
-+	EM ( MF_MSG_DIRTY_SWAPCACHE, "dirty swapcache page" )		\
-+	EM ( MF_MSG_CLEAN_SWAPCACHE, "clean swapcache page" )		\
-+	EM ( MF_MSG_DIRTY_MLOCKED_LRU, "dirty mlocked LRU page" )	\
-+	EM ( MF_MSG_CLEAN_MLOCKED_LRU, "clean mlocked LRU page" )	\
-+	EM ( MF_MSG_DIRTY_UNEVICTABLE_LRU, "dirty unevictable LRU page" )	\
-+	EM ( MF_MSG_CLEAN_UNEVICTABLE_LRU, "clean unevictable LRU page" )	\
-+	EM ( MF_MSG_DIRTY_LRU, "dirty LRU page" )			\
-+	EM ( MF_MSG_CLEAN_LRU, "clean LRU page" )			\
-+	EM ( MF_MSG_TRUNCATED_LRU, "already truncated LRU page" )	\
-+	EM ( MF_MSG_BUDDY, "free buddy page" )				\
-+	EM ( MF_MSG_DAX, "dax page" )					\
-+	EM ( MF_MSG_UNSPLIT_THP, "unsplit thp" )			\
-+	EM ( MF_MSG_ALREADY_POISONED, "already poisoned" )		\
-+	EM ( MF_MSG_PFN_MAP, "non struct page pfn" )                    \
-+	EMe ( MF_MSG_UNKNOWN, "unknown page" )
-+
-+/*
-+ * First define the enums in MM_ACTION_RESULT to be exported to userspace
-+ * via TRACE_DEFINE_ENUM().
-+ */
-+#undef EM
-+#undef EMe
-+#define EM(a, b) TRACE_DEFINE_ENUM(a);
-+#define EMe(a, b)	TRACE_DEFINE_ENUM(a);
-+
-+MF_ACTION_RESULT
-+MF_PAGE_TYPE
-+
-+/*
-+ * Now redefine the EM() and EMe() macros to map the enums to the strings
-+ * that will be printed in the output.
-+ */
-+#undef EM
-+#undef EMe
-+#define EM(a, b)		{ a, b },
-+#define EMe(a, b)	{ a, b }
-+
-+TRACE_EVENT(memory_failure_event,
-+	TP_PROTO(unsigned long pfn,
-+		 int type,
-+		 int result),
-+
-+	TP_ARGS(pfn, type, result),
-+
-+	TP_STRUCT__entry(
-+		__field(unsigned long, pfn)
-+		__field(int, type)
-+		__field(int, result)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->pfn	= pfn;
-+		__entry->type	= type;
-+		__entry->result	= result;
-+	),
-+
-+	TP_printk("pfn %#lx: recovery action for %s: %s",
-+		__entry->pfn,
-+		__print_symbolic(__entry->type, MF_PAGE_TYPE),
-+		__print_symbolic(__entry->result, MF_ACTION_RESULT)
-+	)
-+);
-+#endif /* _TRACE_MEMORY_FAILURE_H */
-+
-+/* This part must be outside protection */
-+#include <trace/define_trace.h>
-diff --git a/mm/Kconfig b/mm/Kconfig
-index d548976d0e0a..bd0ea5454af8 100644
---- a/mm/Kconfig
-+++ b/mm/Kconfig
-@@ -738,11 +738,10 @@ config ARCH_SUPPORTS_MEMORY_FAILURE
- 
- config MEMORY_FAILURE
- 	depends on MMU
- 	depends on ARCH_SUPPORTS_MEMORY_FAILURE
- 	bool "Enable recovery from hardware memory errors"
--	select RAS
- 	select INTERVAL_TREE
- 	help
- 	  Enables code to recover from some memory failures on systems
- 	  with MCA recovery. This allows a system to continue running
- 	  even when some of its memory has uncorrected errors. This requires
-diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-index 7f908ad795ad..fbc5a01260c8 100644
---- a/mm/memory-failure.c
-+++ b/mm/memory-failure.c
-@@ -59,13 +59,16 @@
- #include <linux/kfifo.h>
- #include <linux/ratelimit.h>
- #include <linux/pagewalk.h>
- #include <linux/shmem_fs.h>
- #include <linux/sysctl.h>
-+
-+#define CREATE_TRACE_POINTS
-+#include <trace/events/memory-failure.h>
-+
- #include "swap.h"
- #include "internal.h"
--#include "ras/ras_event.h"
- 
- static int sysctl_memory_failure_early_kill __read_mostly;
- 
- static int sysctl_memory_failure_recovery __read_mostly = 1;
- 
--- 
-2.51.0
+I think that this should be:
 
+			 &stats->stats_timestamps.last_reset_time,
+			 &stats->stats_timestamps.last_read_time,
+			 &val1, &val2);
+
+>  	stats->stats_timestamps.last_read_time = val1;
+
+The original code stored the current time in "val1". This should be:
+
+	stats->stats_timestamps.last_read_time = val;
+
+> @@ -416,8 +410,8 @@ int fnic_get_stats_data(struct stats_debug_info *debug,
+>  	jiffies_to_timespec64(stats->misc_stats.last_ack_time, &val2);
+
+Just for record. Another values are stored into @val1 and @val2 at
+this point.
+
+>  	len += scnprintf(debug->debug_buffer + len, buf_size - len,
+> -		  "Last ISR time: %llu (%8llu.%09lu)\n"
+> -		  "Last ACK time: %llu (%8llu.%09lu)\n"
+> +		  "Last ISR time: %llu (%ptSp)\n"
+> +		  "Last ACK time: %llu (%ptSp)\n"
+>  		  "Max ISR jiffies: %llu\n"
+>  		  "Max ISR time (ms) (0 denotes < 1 ms): %llu\n"
+>  		  "Corr. work done: %llu\n"
+> @@ -437,10 +431,8 @@ int fnic_get_stats_data(struct stats_debug_info *debug,
+>  		  "Number of rport not ready: %lld\n"
+>  		 "Number of receive frame errors: %lld\n"
+>  		 "Port speed (in Mbps): %lld\n",
+> -		  (u64)stats->misc_stats.last_isr_time,
+> -		  (s64)val1.tv_sec, val1.tv_nsec,
+> -		  (u64)stats->misc_stats.last_ack_time,
+> -		  (s64)val2.tv_sec, val2.tv_nsec,
+> +		  (u64)stats->misc_stats.last_isr_time, &val1,
+> +		  (u64)stats->misc_stats.last_ack_time, &val2,
+
+So, this is correct!
+
+>  		  (u64)atomic64_read(&stats->misc_stats.max_isr_jiffies),
+>  		  (u64)atomic64_read(&stats->misc_stats.max_isr_time_ms),
+>  		  (u64)atomic64_read(&stats->misc_stats.corr_work_done),
+
+
+Now, I think that there is no need to resend the entire huge patchset.
+
+I could either fix this when comitting or commit the rest and
+you could send only this patch for review.
+
+Best Regards,
+Petr
+
+PS: All other patches look good. Well, nobody acked 7th patch yet.
+    But I think that the change is pretty straightforward and
+    we could do it even without an ack.
