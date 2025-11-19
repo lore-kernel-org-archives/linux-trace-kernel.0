@@ -1,39 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A19CF2D97BA;
-	Wed, 19 Nov 2025 15:38:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30D9C2DCBFA;
+	Wed, 19 Nov 2025 15:44:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763566716; cv=none; b=J6oTVAnTFfN0RvlnKS984rcKAB+b06VFCvHnS/nKO34ViiE5FNzg4p4MeWy3xEVYftdbBD/JcM5VI3G5IIpad/K+yjSYoEnFw2o7HnBpxoxlozEmi5co1jRM4IkGzd7YCIMRDMhQY+xwEtePbpWmUfmzmD5menioXfW/9TrLV7w=
+	t=1763567068; cv=none; b=soJxyhmnpRER442dXz7dNKOVWLEmsLZLWZhvoVWAFFR2n+wn53N1pQjy8x9Y9ez/H7/Tuw9F6pfE4lRUF6+Eub4dV5L5U6AIVF5UT+0HoVpKbm4k71KcZc7VQXYqh3drJUesd79K/H9pz04gyEVn+r7ySTnKIbZRN9LI6S7P4gg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763566716; c=relaxed/simple;
-	bh=tDvM/osjxXgqZcn8Pbd6iKpnBr1NSfDmq5IFWml4eu8=;
+	s=arc-20240116; t=1763567068; c=relaxed/simple;
+	bh=QGmtI/N5Qrm3baU32/IWSmS0i0iTNplBH0bTCMUaMN8=;
 	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nzVX2f8xZNiWD4POFdqH2q8tC2vowXaVLq9PK0IJbSYDeJlDb8sZUKgij7KsNZczjo4XK0gMD04Ik1177iSgqQD4GzzjpC5+6joW7Kq8/8eg8MlHmorDicwrOaR1tEBiPqRji2HkcesNo0jJ8onISIt+WHXPqMwcGUGraIOSL9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nxa1MaKh; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=DNkiyBm7xLMLwgSvoUtueMaXq1mh3Cdbq3wVNaq3mfNO8AuJ9gBTiX6CaWwbAVpTrpCXZzNVg3CkZNM23pbhuBKBlcJ0XNNHCjTrFuDipCySUV/ETPtcKKrtUC2QmoPy1lzgCFEDSMtQ1JSzOAstFZMBsWI1wY4SpRhf1yXO5/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ilfjC4nT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nxa1MaKh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E2B7C4CEF5;
-	Wed, 19 Nov 2025 15:38:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ilfjC4nT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 146BBC4AF0B;
+	Wed, 19 Nov 2025 15:44:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763566716;
-	bh=tDvM/osjxXgqZcn8Pbd6iKpnBr1NSfDmq5IFWml4eu8=;
+	s=k20201202; t=1763567067;
+	bh=QGmtI/N5Qrm3baU32/IWSmS0i0iTNplBH0bTCMUaMN8=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=nxa1MaKh4sUUB9UX5NANcxpHz6HSRQqS7RrVdzU+feZF/oC1h03b+p/RyzYsTo+V5
-	 EnoDPlb13ySEJ/5+kl0ldw+VG/5ok+J/Pzze7M44TiZXMhdNJPAe1lBvIIDhf/ZpDS
-	 v7UZ4bvTH3xuG3FIm4E6EQg7ORh3U6rZKZE1sCOZypFNrWQDxVilbGXANXKNjmtNDM
-	 8CkLY2eFzzotijauxl+aFgr14BZKO0N7zva43QxLeCssZSX+5NAfOWMPTte+O8BBRD
-	 odbdzEoRGADd2BTwTYQLJYo/y4IkxewQAu6QBxMM2y5pctxzGfJPw8uz+vdtDJ/PiU
-	 dvyXeOa8SAgbQ==
+	b=ilfjC4nTMZAZmo+Dgc4Sa/r7hErsQvNOBLUE25mtapxZK3kk3VCMPcstd6/ULn9qF
+	 Wzlz3eybCTjqbBLT4SZqqDY0XQpQ+jfJF4Poe94d7HaG/ftsuJKgrupYiO15O0SU2k
+	 NrHeCsJJKSMq1YdFlGuiFiWZ5qLTdZUcQEXtnl2AKFUbgcovbdq6xm7BMljBaLPlj0
+	 ZIISPpG9TFdvmdsh24+W4vL1k9MQgQM5li3Rf3vjtP+/4L7NmoKUuZEoHQ4Ah8VKnu
+	 pHvAD42wFhDNbOeydXe+W9yn9J0Qrd3TfInV5sjjYaRvZix3A6jAgwn2Y/CYLkemPf
+	 9Eu5kT1iHjsDA==
 Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
 	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.98.2)
 	(envelope-from <maz@kernel.org>)
-	id 1vLkGO-00000006b9m-3Xsy;
-	Wed, 19 Nov 2025 15:38:32 +0000
-Date: Wed, 19 Nov 2025 15:38:32 +0000
-Message-ID: <86ecpurq13.wl-maz@kernel.org>
+	id 1vLkM3-00000006bKb-36CG;
+	Wed, 19 Nov 2025 15:44:23 +0000
+Date: Wed, 19 Nov 2025 15:44:23 +0000
+Message-ID: <86cy5erprc.wl-maz@kernel.org>
 From: Marc Zyngier <maz@kernel.org>
 To: Vincent Donnefort <vdonnefort@google.com>
 Cc: rostedt@goodmis.org,
@@ -52,10 +52,10 @@ Cc: rostedt@goodmis.org,
 	aneesh.kumar@kernel.org,
 	kernel-team@android.com,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 19/28] KVM: arm64: Support unaligned fixmap in the pKVM hyp
-In-Reply-To: <20251107093840.3779150-20-vdonnefort@google.com>
+Subject: Re: [PATCH v8 20/28] KVM: arm64: Add clock support for the pKVM hyp
+In-Reply-To: <20251107093840.3779150-21-vdonnefort@google.com>
 References: <20251107093840.3779150-1-vdonnefort@google.com>
-	<20251107093840.3779150-20-vdonnefort@google.com>
+	<20251107093840.3779150-21-vdonnefort@google.com>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
  FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
  (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
@@ -71,31 +71,141 @@ X-SA-Exim-Rcpt-To: vdonnefort@google.com, rostedt@goodmis.org, mhiramat@kernel.o
 X-SA-Exim-Mail-From: maz@kernel.org
 X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Fri, 07 Nov 2025 09:38:31 +0000,
+On Fri, 07 Nov 2025 09:38:32 +0000,
 Vincent Donnefort <vdonnefort@google.com> wrote:
 > 
-> Return the fixmap VA with the page offset, instead of the page base
-> address. This allows to use hyp_fixmap_map() seamlessly regardless of
-> the address alignment.
+> By default, the arm64 host kernel is using the arch timer as a source
+> for sched_clock. Conveniently, EL2 has access to that same counter,
+> allowing to generate clock values that are synchronized.
+> 
+> The clock needs nonetheless to be setup with the same slope values as
+> the kernel. Introducing at the same time trace_clock() which is expected
+> to be later configured by the hypervisor tracing.
 > 
 > Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 > 
-> diff --git a/arch/arm64/kvm/hyp/nvhe/mm.c b/arch/arm64/kvm/hyp/nvhe/mm.c
-> index ae8391baebc3..75014dc7d82e 100644
-> --- a/arch/arm64/kvm/hyp/nvhe/mm.c
-> +++ b/arch/arm64/kvm/hyp/nvhe/mm.c
-> @@ -239,7 +239,7 @@ static void *fixmap_map_slot(struct hyp_fixmap_slot *slot, phys_addr_t phys)
->  	WRITE_ONCE(*ptep, pte);
->  	dsb(ishst);
+> diff --git a/arch/arm64/include/asm/kvm_hyp.h b/arch/arm64/include/asm/kvm_hyp.h
+> index e6be1f5d0967..d46621d936e3 100644
+> --- a/arch/arm64/include/asm/kvm_hyp.h
+> +++ b/arch/arm64/include/asm/kvm_hyp.h
+> @@ -146,5 +146,4 @@ extern u64 kvm_nvhe_sym(id_aa64smfr0_el1_sys_val);
+>  extern unsigned long kvm_nvhe_sym(__icache_flags);
+>  extern unsigned int kvm_nvhe_sym(kvm_arm_vmid_bits);
+>  extern unsigned int kvm_nvhe_sym(kvm_host_sve_max_vl);
+> -
+>  #endif /* __ARM64_KVM_HYP_H__ */
+> diff --git a/arch/arm64/kvm/hyp/include/nvhe/clock.h b/arch/arm64/kvm/hyp/include/nvhe/clock.h
+> new file mode 100644
+> index 000000000000..9e152521f345
+> --- /dev/null
+> +++ b/arch/arm64/kvm/hyp/include/nvhe/clock.h
+> @@ -0,0 +1,16 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef __ARM64_KVM_HYP_NVHE_CLOCK_H
+> +#define __ARM64_KVM_HYP_NVHE_CLOCK_H
+> +#include <linux/types.h>
+> +
+> +#include <asm/kvm_hyp.h>
+> +
+> +#ifdef CONFIG_PKVM_TRACING
+> +void trace_clock_update(u32 mult, u32 shift, u64 epoch_ns, u64 epoch_cyc);
+> +u64 trace_clock(void);
+> +#else
+> +static inline void
+> +trace_clock_update(u32 mult, u32 shift, u64 epoch_ns, u64 epoch_cyc) { }
+> +static inline u64 trace_clock(void) { return 0; }
+> +#endif
+> +#endif
+> diff --git a/arch/arm64/kvm/hyp/nvhe/Makefile b/arch/arm64/kvm/hyp/nvhe/Makefile
+> index a244ec25f8c5..f55a9a17d38f 100644
+> --- a/arch/arm64/kvm/hyp/nvhe/Makefile
+> +++ b/arch/arm64/kvm/hyp/nvhe/Makefile
+> @@ -17,7 +17,7 @@ ccflags-y += -fno-stack-protector	\
+>  hostprogs := gen-hyprel
+>  HOST_EXTRACFLAGS += -I$(objtree)/include
 >  
-> -	return (void *)slot->addr;
-> +	return (void *)slot->addr + offset_in_page(phys);
->  }
+> -lib-objs := clear_page.o copy_page.o memcpy.o memset.o
+> +lib-objs := clear_page.o copy_page.o memcpy.o memset.o tishift.o
+>  lib-objs := $(addprefix ../../../lib/, $(lib-objs))
 >  
->  void *hyp_fixmap_map(phys_addr_t phys)
+>  CFLAGS_switch.nvhe.o += -Wno-override-init
+> @@ -29,6 +29,7 @@ hyp-obj-y += ../vgic-v3-sr.o ../aarch32.o ../vgic-v2-cpuif-proxy.o ../entry.o \
+>  	 ../fpsimd.o ../hyp-entry.o ../exception.o ../pgtable.o
+>  hyp-obj-y += ../../../kernel/smccc-call.o
+>  hyp-obj-$(CONFIG_LIST_HARDENED) += list_debug.o
+> +hyp-obj-$(CONFIG_PKVM_TRACING) += clock.o
+>  hyp-obj-y += $(lib-objs)
+>  
+>  ##
+> diff --git a/arch/arm64/kvm/hyp/nvhe/clock.c b/arch/arm64/kvm/hyp/nvhe/clock.c
+> new file mode 100644
+> index 000000000000..600a300bece7
+> --- /dev/null
+> +++ b/arch/arm64/kvm/hyp/nvhe/clock.c
+> @@ -0,0 +1,65 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2025 Google LLC
+> + * Author: Vincent Donnefort <vdonnefort@google.com>
+> + */
+> +
+> +#include <nvhe/clock.h>
+> +
+> +#include <asm/arch_timer.h>
+> +#include <asm/div64.h>
+> +
+> +static struct clock_data {
+> +	struct {
+> +		u32 mult;
+> +		u32 shift;
+> +		u64 epoch_ns;
+> +		u64 epoch_cyc;
+> +		u64 cyc_overflow64;
+> +	} data[2];
+> +	u64 cur;
+> +} trace_clock_data;
+> +
+> +static u64 __clock_mult_uint128(u64 cyc, u32 mult, u32 shift)
+> +{
+> +	__uint128_t ns = (__uint128_t)cyc * mult;
+> +
+> +	ns >>= shift;
+> +
+> +	return (u64)ns;
+> +}
+> +
+> +/* Does not guarantee no reader on the modified bank. */
+> +void trace_clock_update(u32 mult, u32 shift, u64 epoch_ns, u64 epoch_cyc)
+> +{
+> +	struct clock_data *clock = &trace_clock_data;
+> +	u64 bank = clock->cur ^ 1;
+> +
+> +	clock->data[bank].mult			= mult;
+> +	clock->data[bank].shift			= shift;
+> +	clock->data[bank].epoch_ns		= epoch_ns;
+> +	clock->data[bank].epoch_cyc		= epoch_cyc;
+> +	clock->data[bank].cyc_overflow64	= ULONG_MAX / mult;
+> +
+> +	smp_store_release(&clock->cur, bank);
+> +}
+> +
+> +/* Using host provided data. Do not use for anything else than debugging. */
+> +u64 trace_clock(void)
+> +{
+> +	struct clock_data *clock = &trace_clock_data;
+> +	u64 bank = smp_load_acquire(&clock->cur);
+> +	u64 cyc, ns;
+> +
+> +	cyc = __arch_counter_get_cntpct() - clock->data[bank].epoch_cyc;
 
-This looks slightly odd. fixmap_map_slot() should return *a slot*, not
-something in it. Can't hyp_fixmap_map() do that instead?
+I can only imagine that you don't care about the broken systems that
+do not have a monotonic counter, and that will happily have their
+counter swing back and forth?
+
+Also, you may want to document why you are using the physical counter
+instead of the virtual one. I guess that you don't want CNTVOFF_EL2 to
+apply when HCR_EL2.E2H==0, but given that you never allow anything
+else for pKVM, this is slightly odd.
 
 Thanks,
 
