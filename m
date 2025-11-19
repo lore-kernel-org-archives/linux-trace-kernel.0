@@ -1,348 +1,122 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B373221FDA;
-	Wed, 19 Nov 2025 12:19:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763554779; cv=fail; b=SCUrrKLMtTfUrH99mu47pEuGINN6PJOmST05UBVrU130TYsMY/8tMUz2ClARBDIwgQpHlfIBD98dMGklZ1k+FVunazM0nMwx6NqcD3HGygEPBOG5CklSYwSDn36jxOk1fr7fRzYLTglwgIjIlfN2oTVPMmrLXvy5x0yVVRJc1tU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763554779; c=relaxed/simple;
-	bh=HVVmdyzhv/xGJQjue59MxibQ8DzeRHqmp2LCNTpbITk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=mOUTunwoPFJsHr2i6/tNA5W+Mfquv5Dxw3YXhg9kY0DUowDqm+0oEaOhKkYfd4ZEg3ZfysPqniDxn4zfc1ClPPANOAUgTq20BqLpZnuXOT+PGijaIeSHAxBZMn18XUiaGkGjQZ31JcVY/7lQ5ttQuGWrDeCkTRIWs92i4Xv7g7M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=TVNVHiQ0; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=UdMePwfJ; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TVNVHiQ0";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="UdMePwfJ"
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5AJ9QQ8i028460;
-	Wed, 19 Nov 2025 12:13:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2025-04-25; bh=G5NpZTGnPT8QsnqvvL
-	dCpRg422vll3CuelGSXHQbpJs=; b=TVNVHiQ0aDrLHeefkUapMKBCwBL4IoiIdI
-	rohvX1zQ7pe/iTg06bPima3+PoIn+y6DUTSbWs7D7qmCx7+4GdQIEJHZ7rXYleAG
-	7rPrDWepxbZuYK5Iwc4jfR5H9+aU3iixJAewIc9j6L4s4Z+x7jN96DzGToqmDQXb
-	0a4ih6JXtkMQNWzFdHmpfPAixYaiY1dg85bAco/njiJJ+1fARsDquQJBzfP7q6tF
-	S+1MAtOsVB8QHE+jDAK7nk1+dykWe2NEwrgrKxfwiGUn65sx51WdXBvvKaOeDn8t
-	OVmarWJ2FrhgjBfEh9eP2O0LNVMesddEDCJVavam/UUIln19zBzA==
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4aej966tq4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 19 Nov 2025 12:13:30 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 5AJC0juu007188;
-	Wed, 19 Nov 2025 12:13:29 GMT
-Received: from bn1pr04cu002.outbound.protection.outlook.com (mail-eastus2azon11010029.outbound.protection.outlook.com [52.101.56.29])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 4aefyagrt9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 19 Nov 2025 12:13:29 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=iI9RVocIbOYTxKc5DXFKeRv605pBwDjOYMiAJW2uQvyoXFDpDcGxvKr2FIYT5z1syYbR7II3kqzaOv039RkQJ0f+43//Smu6v5YnsmdUUTbRAyEBB250P2en7D06pWTc6M6yMh1t6JUHUa2RRgRUNKKUIqlusmPnSPXXzm0QF5pn0wqsmmCxQ18rl/FkfnSYNVr/Ul6l9GK93buCECH/+h4eSluZLeF1a4dRODc5SDdlXn9OambcCuDkrmMVtiplwSeVsfg6y/E7bUQORbi8u5yjik1bfD5LqfLYyXBKMVOphGi47sI78qUdvvtoDhJUkJPSRyPdCk+Z5aQ0SUnh3Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=G5NpZTGnPT8QsnqvvLdCpRg422vll3CuelGSXHQbpJs=;
- b=sfZG+hemJYUbfRQvdAf/mIHYzJIGqq/xxk9vYbds4R1A3XdyShp+pMW+IRWOeeeOfJRF96CMr9Ig7youicFLbHM+YhjmDY4FGjUlxB4UVd5waSDO5P+3DJthkzz0mObz40Xt1feUJM+yeaYSPMcBn+tUhuVbNiW/t1r8XTvl2m91OoVtprzqYoBiVmv0ajK/7MgxIQtRdpGxjOQhTLtFGcXdCkobCmal0XqWRYEIIDJJU6y1UJA+FUcKmeuApSIdcFBVucl/Os2N7Pxx7kUJrPeu/LpkmU+oNjHrY0WZayvoa5Yx48mmlad7MFTO8bs7WIrxD9tJpU4ZlZUz3YBu9A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G5NpZTGnPT8QsnqvvLdCpRg422vll3CuelGSXHQbpJs=;
- b=UdMePwfJ9bQndWiYrv3nAerotsaL+iNUGvkGrcrSFqDO72PAeOAhTj99Ku5V/hdnKan5KdYp0velNoxUnWhn8BXSA4b8LWTi/FAjPBuqGG/xxJnUjf9aEqTvDfP82ZEriQtb8EPre5k7agDScao7pfEPeV9mI56nSc4z2Yly6Qk=
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
- by SJ0PR10MB4750.namprd10.prod.outlook.com (2603:10b6:a03:2d5::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9343.10; Wed, 19 Nov
- 2025 12:13:02 +0000
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2%7]) with mapi id 15.20.9343.009; Wed, 19 Nov 2025
- 12:13:02 +0000
-Date: Wed, 19 Nov 2025 12:13:00 +0000
-From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-To: Nico Pache <npache@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-doc@vger.kernel.org, david@redhat.com,
-        ziy@nvidia.com, baolin.wang@linux.alibaba.com, Liam.Howlett@oracle.com,
-        ryan.roberts@arm.com, dev.jain@arm.com, corbet@lwn.net,
-        rostedt@goodmis.org, mhiramat@kernel.org,
-        mathieu.desnoyers@efficios.com, akpm@linux-foundation.org,
-        baohua@kernel.org, willy@infradead.org, peterx@redhat.com,
-        wangkefeng.wang@huawei.com, usamaarif642@gmail.com,
-        sunnanyong@huawei.com, vishal.moola@gmail.com,
-        thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com,
-        kas@kernel.org, aarcange@redhat.com, raquini@redhat.com,
-        anshuman.khandual@arm.com, catalin.marinas@arm.com, tiwai@suse.de,
-        will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz,
-        cl@gentwo.org, jglisse@google.com, surenb@google.com,
-        zokeefe@google.com, hannes@cmpxchg.org, rientjes@google.com,
-        mhocko@suse.com, rdunlap@infradead.org, hughd@google.com,
-        richard.weiyang@gmail.com, lance.yang@linux.dev, vbabka@suse.cz,
-        rppt@kernel.org, jannh@google.com, pfalcato@suse.de
-Subject: Re: [PATCH v12 mm-new 14/15] khugepaged: run khugepaged for all
- orders
-Message-ID: <2f1cdad3-6ac4-4502-a599-5bef9dbe0847@lucifer.local>
-References: <20251022183717.70829-1-npache@redhat.com>
- <20251022183717.70829-15-npache@redhat.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251022183717.70829-15-npache@redhat.com>
-X-ClientProxiedBy: LO4P123CA0344.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:18d::7) To DM4PR10MB8218.namprd10.prod.outlook.com
- (2603:10b6:8:1cc::16)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9311F1A7AE3;
+	Wed, 19 Nov 2025 12:36:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1763555769; cv=none; b=Pp1RWT04dAHEfec2Fom0kdlR/zxCO2qfiDCdf07h5e+Q+ls2mCYoPV/K8Ja6G0fMcVNEa7gJf4SWGroSIMqWXsYj6mNMokm9aNvg6lYZ9zgPjWTKOxhvYjmPWt7CljPFoWI+RTCgLng1l3Sirn0qEiVfcTnRNMM7c6YDsYhJSdA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1763555769; c=relaxed/simple;
+	bh=JxKNgjOuwxD41VzXOAYAfjTnv/LNJPKYzm3Ou1xeJYk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ayqKUadOwMksCriH0GGwnELLqYAoScjEsCXxzi8AsO4pInLSh2wJIWFRejGL+EWDgGpnJV472lfj9giACv3iGOj6Q0hgTxVGYEHo0Qlxew4j41DcU61tgaJySvX4AORHCqzSAu+NtIw5DMXXJQCNNoEXyH+OQooz0AqqNw5nlTM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4dBLYK5GkRzKHMk5;
+	Wed, 19 Nov 2025 20:35:33 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id D9D4B1A0359;
+	Wed, 19 Nov 2025 20:36:01 +0800 (CST)
+Received: from [10.67.111.192] (unknown [10.67.111.192])
+	by APP4 (Coremail) with SMTP id gCh0CgA3YV6wuR1pZBQqBQ--.21495S2;
+	Wed, 19 Nov 2025 20:36:01 +0800 (CST)
+Message-ID: <5f4d0bf9-9c74-44ce-8f29-c43fa5e8810a@huaweicloud.com>
+Date: Wed, 19 Nov 2025 20:36:00 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|SJ0PR10MB4750:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8d6fb7b9-f107-4e2a-ffdb-08de2764fc98
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|7416014|366016|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?sdxRcXTlmFDjPB32d0JMeCG/U6JnyeNVmW/0lhk/ymCJvRFyAMZ0LpKcUY5u?=
- =?us-ascii?Q?FwFOn+n91nfsU7273MM6UeskVELSrDyHS3rhIAvNDBz6+52uMH2qDBa8yo4R?=
- =?us-ascii?Q?Wd+YDp2oIwr9+bnUAR3Jqy+EIMymje8D2z63Ny2aHYFtPZGt9tflorvt9r8I?=
- =?us-ascii?Q?jedC1TPypnapWTEOkocqlp0i3rLF9QVnbMdA+A/h4Awm4sNKqmlXsbcgj29D?=
- =?us-ascii?Q?WGVDzje2KC5wdeqn81ZdlE/l/MXoPtjaa+wB6rg68ITpDxZVIfzV0UzLUSKZ?=
- =?us-ascii?Q?X28VilbEMKCRV7GxUop6mm9Tos/egja7JNy5e3lNmD78p21gq35bjjFPL74a?=
- =?us-ascii?Q?N1qhwMz70trj0c76OGKoAoN6g8LSBdEogtr44LG6bbMi6BuLs/2mAB24zHj5?=
- =?us-ascii?Q?rzM828wJ8F+5JLgrrnygccgSQn9VkE2rOymRs7eyFdJHUdfrtbb6599wSr3K?=
- =?us-ascii?Q?L1h22IVXfUZf6YvXEeHV2g0LCS5SmMiYo34IXTKft7v1YX49o5jSiaxqW+2M?=
- =?us-ascii?Q?+HD9R9Cw/XnPoplBwfLGvA7YQ/qKtGfQ/PwmFUd5oF8r83/fr2vdvFxiOvUl?=
- =?us-ascii?Q?3QxHBen0eOciMYhAs/zXBqxIkZqFll80P96madYHewqRUPzTo2qI7tUjWBqA?=
- =?us-ascii?Q?0esJ0eeTezufpRK04IcNzOghNFEVJt9CdbkAQobVbsX1WbFEfeh8F5KQ2k+M?=
- =?us-ascii?Q?HCggx4G7HWiA5leMbriOM9TrD42mP+f4ahgHk93/SevsaLV+X3XnkRsHX9QL?=
- =?us-ascii?Q?8vb82GKzseF4Auaag2ZO+FB1/g8CIEWiC9zGxYJ1iV1CBxf+n+oyOR8I0rd4?=
- =?us-ascii?Q?+KA3lq2Rp78XtT/UdWHLiTXB3MZ9xPVSedkN0InTwbBT0KCaToAAAybD6hp6?=
- =?us-ascii?Q?1h+q13n8OeCVvu4vMBTBftBNn4rWpOUy7PSEjfxcvXwTW9mgZntEGtM+UAyg?=
- =?us-ascii?Q?dxKeLnHjkmqrsr1yTiX/gxEj/3gLbrDJClT68ayIgcCGZpfKrH4deYOfIxLw?=
- =?us-ascii?Q?TiKZ3my62PG6Xn9zzk+ZV4aNSFw9QPJAxxpYxA2e+O8dW5XP06q6WCfrkz5E?=
- =?us-ascii?Q?COmrJjLHBraQMRP4BGWdqiAJLr8At04lA7hxkcX3Df8miJCJaHHYUixJHlHJ?=
- =?us-ascii?Q?OHl0ItRznfVENNS9NrRRY7wPVw51xuTC+8NVL85sWtx4wXhUkFeIzN5SXQ5k?=
- =?us-ascii?Q?wdKpjA+pNSHKaYQDz1Pw1caUrzS5GRhhCncoXtIfqU7k01hupb+5yBgmsm9g?=
- =?us-ascii?Q?fsq81YNuRKk5SQANy12kue9b46FQNpUmX7+h/SAwzGApHXQf8OCsPGJZMFOW?=
- =?us-ascii?Q?cnPZgzkBkB0BSHbqLWozFRJ565bfENaenUpCEZ4bZ/By/UitVCeZGkmwhDzy?=
- =?us-ascii?Q?+6PqeafzfvDd+L09DE7BgPtsAicm3oOUl/349GJWGUr/oyJKicluUrhJE43X?=
- =?us-ascii?Q?DIJAll/sjonP/m2AkOxMOCjhr1/hXIe1?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?rUXsZMT8RAhZPhFkGrFEerEQ480T7gCmeXWI0S0ksAfvB2tjpDfUF2g/NKdM?=
- =?us-ascii?Q?iSD5X+SwKDQDC7dCPWSK4cKX2dRxP6L+2+O8ocVdMKsreFZx21A39MgKkpBx?=
- =?us-ascii?Q?7isa5ec1numXi+EHiNSLWblpuqwuDQ4ih7AcbNPg6yE/AQU6HM+kv3n8+zQB?=
- =?us-ascii?Q?wxftCOVWvIHahZXW310ygmpzv18cLtzkHFSR7A2M4bY1h3Q+zigHdEJJwVPN?=
- =?us-ascii?Q?Y32viUY9xw9tz6IhCwkbUfd2nFvzKOsign1B/g/7D5qPHqz/1HNuQjOlupLK?=
- =?us-ascii?Q?d5BZqzESN6kP+3PEwY8HJ6sbKKFE2zZag4fz2gvGYAKzK1A6AX81HRTX+zvh?=
- =?us-ascii?Q?ayKEOA6bYOSzUCWN1NsoBHE9XkqvXuR1/J8AA17zYdLtGElL1IG725KBfEiv?=
- =?us-ascii?Q?IjuIKRw1lWZiYKhn8tOkrgAHvw6zDz4GlkvgPPvmr2NcrRCCuV1evxrtVKgR?=
- =?us-ascii?Q?J1AeIJBoaByN/rsULP9jBeA2GL5uvLewNldabQyepLQg9p8e4CaV89/uuLJi?=
- =?us-ascii?Q?RSceCyFJNYmAJ+vqLGlaYWchsZgz5/24lLIIs+kyT7JT3e2LN1NV9GOxxyIN?=
- =?us-ascii?Q?F7Mdr/Q/kwGHo/VeBpOL4KtouwC9/xQjbY5mJREgcqxf6jyyaEMdHCspc4/d?=
- =?us-ascii?Q?4cqMn94iWL5u2Np5g58pB+xkIFkQUqYEEgNNxzwmn3SqYQ+UkvrdkDL1Youq?=
- =?us-ascii?Q?4wtZFsGo9r4kNeU1EljpCecMV8HhPdosDfCLwGMhioQ8xyFuvDEk4cmyHEna?=
- =?us-ascii?Q?11Nlz+ChXEOdPm/1rEx0LrzjQqPX7aOjn98vBFQzTVB2Adyz3/yfvyWoHXKV?=
- =?us-ascii?Q?9rYo5HeGOx/mny4p6+v8S0qyllSNRKczwEBkvqcSWrqe3bamby59zVt2O3Gx?=
- =?us-ascii?Q?UWrwdm4074UFPGlO5m6C/Wgi4pe/Ek+rC0Rhh46Z36qUadxf6NOqmfVQ+aYX?=
- =?us-ascii?Q?PwGE65i1SmZz5fnftdOpdGxwB2ASdEiyoD09nEkhlTtsXxqAxfXi6n0OHB8v?=
- =?us-ascii?Q?mx8cRC+pDJwFHz7F2HItcFih8N/F744lZ5M1Pw9D6OWN8qC+ipcNo/UGqbj+?=
- =?us-ascii?Q?ur9FwFoZMqAvtawdwETQY/OoOXiHU/bX3w1sW0d8DtnhOFu+GeXXKd91Ex42?=
- =?us-ascii?Q?KZzueW3oBFmnW8IcvoT0JMywzheBXtsk1ARiZdozOJD1/gAMLxgHBaA2Nt9y?=
- =?us-ascii?Q?E5XxLcGKwDYb18e2Hzky3hauCUvknPSbOU4cPWMuPVBndAovFM9KQzreOuJR?=
- =?us-ascii?Q?AMa99C1WdJcKQMJyV2HvurHCTWVuoI7uEudnRqV90f4J2yJ9lrLfdiWEPcSC?=
- =?us-ascii?Q?4wCde0InnnGUGzTQV9oT1AmjXrbGf68imzGqv8WE/R9BcA8YLA94remrrfsM?=
- =?us-ascii?Q?wWWZSxPUYsCIDz5bTEa/wu8Mu6kCcL4wjGADVMyNT3r5Y5LQTOGd0JqUW3ZQ?=
- =?us-ascii?Q?+lUk2weprMlkTK0PtYYAFopx7b3VtrjYdBv68PxticqABte3UQTEoxc80mJK?=
- =?us-ascii?Q?VHssAnUNj1F5BtOrVmdD1bcVPOfA9CLpC9LzhOILBb/3oZFKzqwdV83qMgGk?=
- =?us-ascii?Q?ghzSIoVqO8uDYsONOQZ1yfYOIeEYHMmUWyRsvkOyNMbys0z5lAVf3Tpu7u8G?=
- =?us-ascii?Q?xg=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	VX0ulvnvsnhr9m4P8Q3oUVCUAo1f7zgM80sPyOrFjtdmbcWcheQPqfmR3Wr5SgRHUyz4GKl1G7ljluPc7qxDnX7Uti2iKTTOZMNAGOfkC/zDAUaTwsPn/Ei48o8jdXJ5bzicpBRd4IwP1wU0XSFEWB5rJLfeJ8as63i8a0tmO+RME9bk7drgbdZhFv+KJjSohRcpcMmwIdjGZooUYtvcouYARJFvhs4K9QMUZpq64n+ooSBhhrq37QfHi0GlqhOFGEEayvIh1jdo3b7vwSlJaYtVDueDW9rbw3tQRflLiJ4X4tOuo59bezgPSrAvPpE9NkcI65xncCmag14nAETHZFnyW7Gpes+mLjtA37+0ktB58oRZsm8xRzQkXcEvt/ACUJzQI4CaCDf3w/m5178goaAO3o9+MHB2MCMaqLPdbZNdBv//4xSkoYF0uv4tV2uOD62Uo4d/8V3TXvwf6Qs1cxjm5PTS04hHb1rrqhQgQUZoOwKILNABQeRDuCGQWuccGVMdyqXblcpYpRvaJDt+x/NTE238jTGN9yy4SQVHLjqg7BigBUWsO4x+nJ+LHGDLRGq8wnQv9FnFOnh4OFWbJ7t1AqiD2pzE+dU4on5M4bI=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8d6fb7b9-f107-4e2a-ffdb-08de2764fc98
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Nov 2025 12:13:02.3184
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Awx8O9jshyzklC0VCDqeEzvqsUb14W2EeFcfkamsbqHmNb/MMJ7smhOjX61dCjWL4iwJpipLMkw9+ltKoUUqQwbjhGs8CrPMw9jotU31r6k=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB4750
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-11-19_03,2025-11-18_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 bulkscore=0
- mlxscore=0 malwarescore=0 adultscore=0 mlxlogscore=999 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2510240000
- definitions=main-2511190097
-X-Authority-Analysis: v=2.4 cv=DYoaa/tW c=1 sm=1 tr=0 ts=691db46a cx=c_pps
- a=OOZaFjgC48PWsiFpTAqLcw==:117 a=OOZaFjgC48PWsiFpTAqLcw==:17
- a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
- a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=6UeiqGixMTsA:10 a=GoEa3M9JfhUA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=SRrdq9N9AAAA:8 a=20KFwNOVAAAA:8 a=qDWtwT-RVvwK0_lMGGMA:9 a=CjuIK1q_8ugA:10
-X-Proofpoint-GUID: dEJVJZgIgKuW1IDJw2hS0tk05j2IJYFd
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTE1MDAzMSBTYWx0ZWRfXykcOp0Byyd9J
- 1vw/VmdneRAYAlXhiJKO1IgPF/7bt0tk5iItSq7wfugIQu3d/bi79noiaA/C/We/i2uATM57lKf
- VFmFpGPXTiJ2bkTCUPYAFAtWEfUiyZXA3vDse9hOnu/ciGuooqc5OMlTO3E43hdO3b0hRkROze1
- u6DM44iWvNPzXEVxtEl5dYJARO4FgrUYcyG7I9KZBPSKkr2S+ziaDobGFKL/GfL9ygIn1agExZv
- 2Z5L2H1d0K/avPE/G9R5V7iQb3CarNxtVaENxSGEGuKf99kuAMTWtIpvoocJDx3vhRf9nYAmk+A
- GFMWg1Zxh+9vUygKoZus69ZfgW+Lg85BH1zK5k0Q0yAnfvalPTJVTy/VFWUcFO7nAMwyCNLZkB2
- TI4PLIqRRmvjIo6z6kRkyfq5Ty4rUA==
-X-Proofpoint-ORIG-GUID: dEJVJZgIgKuW1IDJw2hS0tk05j2IJYFd
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH bpf-next v3 0/6] bpf trampoline support "jmp" mode
+Content-Language: en-US
+To: Leon Hwang <leon.hwang@linux.dev>, Menglong Dong
+ <menglong.dong@linux.dev>, Menglong Dong <menglong8.dong@gmail.com>,
+ Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Alexei Starovoitov <ast@kernel.org>, Steven Rostedt
+ <rostedt@goodmis.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ John Fastabend <john.fastabend@gmail.com>,
+ Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau
+ <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>,
+ Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>,
+ KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+ Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, jiang.biao@linux.dev,
+ bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+ linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
+References: <20251118123639.688444-1-dongml2@chinatelecom.cn>
+ <CAADnVQJF5qkT8J=VJW00pPX7=hVdwn2545BzZPEi=mPwFouThw@mail.gmail.com>
+ <8606158.T7Z3S40VBb@7950hx> <97c8e49c-ca27-40ec-8ff6-18b1b9061240@linux.dev>
+From: Xu Kuohai <xukuohai@huaweicloud.com>
+In-Reply-To: <97c8e49c-ca27-40ec-8ff6-18b1b9061240@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgA3YV6wuR1pZBQqBQ--.21495S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7tw1fXr4rWryfCFyUury8Krg_yoW8Gr45pa
+	y5JayqkF4kZrs5A3ZxKw47XF1Sy3yfKrs8Wrn5Jr47Cas0vr9rKF42krWj9Fy3uryFgF4a
+	vrWUu343XF4rArDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
+	14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
+	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWr
+	XwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
+	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
+	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0
+	s2-5UUUUU==
+X-CM-SenderInfo: 50xn30hkdlqx5xdzvxpfor3voofrz/
 
-On Wed, Oct 22, 2025 at 12:37:16PM -0600, Nico Pache wrote:
-> From: Baolin Wang <baolin.wang@linux.alibaba.com>
+On 11/19/2025 10:55 AM, Leon Hwang wrote:
+> 
+> 
+> On 19/11/25 10:47, Menglong Dong wrote:
+>> On 2025/11/19 08:28, Alexei Starovoitov wrote:
+>>> On Tue, Nov 18, 2025 at 4:36 AM Menglong Dong <menglong8.dong@gmail.com> wrote:
+>>>>
+>>>> As we can see above, the performance of fexit increase from 80.544M/s to
+>>>> 136.540M/s, and the "fmodret" increase from 78.301M/s to 159.248M/s.
+>>>
+>>> Nice! Now we're talking.
+>>>
+>>> I think arm64 CPUs have a similar RSB-like return address predictor.
+>>> Do we need to do something similar there?
+>>> The question is not targeted to you, Menglong,
+>>> just wondering.
+>>
+>> I did some research before, and I find that most arch
+>> have such RSB-like stuff. I'll have a look at the loongarch
+>> later(maybe after the LPC, as I'm forcing on the English practice),
+>> and Leon is following the arm64.
+> 
+> Yep, happy to take this on.
+> 
+> I'm reviewing the arm64 JIT code now and will experiment with possible
+> approaches to handle this as well.
 >
-> If any order (m)THP is enabled we should allow running khugepaged to
-> attempt scanning and collapsing mTHPs. In order for khugepaged to operate
-> when only mTHP sizes are specified in sysfs, we must modify the predicate
-> function that determines whether it ought to run to do so.
->
-> This function is currently called hugepage_pmd_enabled(), this patch
-> renames it to hugepage_enabled() and updates the logic to check to
-> determine whether any valid orders may exist which would justify
-> khugepaged running.
->
-> We must also update collapse_allowable_orders() to check all orders if
-> the vma is anonymous and the collapse is khugepaged.
->
-> After this patch khugepaged mTHP collapse is fully enabled.
->
-> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-> Signed-off-by: Nico Pache <npache@redhat.com>
-> ---
->  mm/khugepaged.c | 25 +++++++++++++------------
->  1 file changed, 13 insertions(+), 12 deletions(-)
->
-> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> index 54f5c7888e46..8ed9f8e2d376 100644
-> --- a/mm/khugepaged.c
-> +++ b/mm/khugepaged.c
-> @@ -418,23 +418,23 @@ static inline int collapse_test_exit_or_disable(struct mm_struct *mm)
->  		mm_flags_test(MMF_DISABLE_THP_COMPLETELY, mm);
->  }
->
-> -static bool hugepage_pmd_enabled(void)
-> +static bool hugepage_enabled(void)
->  {
->  	/*
->  	 * We cover the anon, shmem and the file-backed case here; file-backed
->  	 * hugepages, when configured in, are determined by the global control.
-> -	 * Anon pmd-sized hugepages are determined by the pmd-size control.
-> +	 * Anon hugepages are determined by its per-size mTHP control.
->  	 * Shmem pmd-sized hugepages are also determined by its pmd-size control,
->  	 * except when the global shmem_huge is set to SHMEM_HUGE_DENY.
->  	 */
->  	if (IS_ENABLED(CONFIG_READ_ONLY_THP_FOR_FS) &&
->  	    hugepage_global_enabled())
->  		return true;
-> -	if (test_bit(PMD_ORDER, &huge_anon_orders_always))
-> +	if (READ_ONCE(huge_anon_orders_always))
->  		return true;
-> -	if (test_bit(PMD_ORDER, &huge_anon_orders_madvise))
-> +	if (READ_ONCE(huge_anon_orders_madvise))
->  		return true;
-> -	if (test_bit(PMD_ORDER, &huge_anon_orders_inherit) &&
-> +	if (READ_ONCE(huge_anon_orders_inherit) &&
->  	    hugepage_global_enabled())
->  		return true;
->  	if (IS_ENABLED(CONFIG_SHMEM) && shmem_hpage_pmd_enabled())
-> @@ -508,7 +508,8 @@ static unsigned long collapse_allowable_orders(struct vm_area_struct *vma,
->  			vm_flags_t vm_flags, bool is_khugepaged)
->  {
->  	enum tva_type tva_flags = is_khugepaged ? TVA_KHUGEPAGED : TVA_FORCED_COLLAPSE;
-> -	unsigned long orders = BIT(HPAGE_PMD_ORDER);
-> +	unsigned long orders = is_khugepaged && vma_is_anonymous(vma) ?
-> +				THP_ORDERS_ALL_ANON : BIT(HPAGE_PMD_ORDER);
 
-Why are we doing this? If this is explicitly enabling mTHP for anon, which it
-seems to be, can we please make this a little more explicit :)
+Unfortunately, the arm64 trampoline uses a tricky approach to bypass BTI
+by using ret instruction to invoke the patched function. This conflicts
+with the current approach, and seems there is no straightforward solution.
 
-I'd prefer this not to be a horribly squashed ternary, rather:
+> Thanks,
+> Leon
+> 
+>>
+>> For the other arch, we don't have the machine, and I think
+>> it needs some else help.
+>>
+>> Thanks!
+>> Menglong Dong
+> 
+> 
+> 
 
-	unsigned long orders;
-
-	/* We explicitly allow mTHP collapse for anonymous khugepaged ONLY. */
-	if (is_khugepaged && vma_is_anonymous(vma))
-		orders = THP_ORDERS_ALL_ANON;
-	else
-		orders = BIT(HPAGE_PMD_ORDER);
-
-
-Also, does THP_ORDERS_ALL_ANON account for KHUGEPAGED_MIN_MTHP_ORDER? It's weird
-to say that an order is allowed that isn't permitted by mTHP (e.g. order-0).
-
->
->  	return thp_vma_allowable_orders(vma, vm_flags, tva_flags, orders);
->  }
-> @@ -517,7 +518,7 @@ void khugepaged_enter_vma(struct vm_area_struct *vma,
->  			  vm_flags_t vm_flags)
->  {
->  	if (!mm_flags_test(MMF_VM_HUGEPAGE, vma->vm_mm) &&
-> -	    hugepage_pmd_enabled()) {
-> +	    hugepage_enabled()) {
->  		if (collapse_allowable_orders(vma, vm_flags, true))
->  			__khugepaged_enter(vma->vm_mm);
->  	}
-> @@ -2791,7 +2792,7 @@ static unsigned int collapse_scan_mm_slot(unsigned int pages, int *result,
->
->  static int khugepaged_has_work(void)
->  {
-> -	return !list_empty(&khugepaged_scan.mm_head) && hugepage_pmd_enabled();
-> +	return !list_empty(&khugepaged_scan.mm_head) && hugepage_enabled();
->  }
->
->  static int khugepaged_wait_event(void)
-> @@ -2864,7 +2865,7 @@ static void khugepaged_wait_work(void)
->  		return;
->  	}
->
-> -	if (hugepage_pmd_enabled())
-> +	if (hugepage_enabled())
->  		wait_event_freezable(khugepaged_wait, khugepaged_wait_event());
->  }
->
-> @@ -2895,7 +2896,7 @@ static void set_recommended_min_free_kbytes(void)
->  	int nr_zones = 0;
->  	unsigned long recommended_min;
->
-> -	if (!hugepage_pmd_enabled()) {
-> +	if (!hugepage_enabled()) {
->  		calculate_min_free_kbytes();
->  		goto update_wmarks;
->  	}
-> @@ -2945,7 +2946,7 @@ int start_stop_khugepaged(void)
->  	int err = 0;
->
->  	mutex_lock(&khugepaged_mutex);
-> -	if (hugepage_pmd_enabled()) {
-> +	if (hugepage_enabled()) {
->  		if (!khugepaged_thread)
->  			khugepaged_thread = kthread_run(khugepaged, NULL,
->  							"khugepaged");
-> @@ -2971,7 +2972,7 @@ int start_stop_khugepaged(void)
->  void khugepaged_min_free_kbytes_update(void)
->  {
->  	mutex_lock(&khugepaged_mutex);
-> -	if (hugepage_pmd_enabled() && khugepaged_thread)
-> +	if (hugepage_enabled() && khugepaged_thread)
->  		set_recommended_min_free_kbytes();
->  	mutex_unlock(&khugepaged_mutex);
->  }
-> --
-> 2.51.0
->
