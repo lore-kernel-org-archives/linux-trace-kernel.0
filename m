@@ -1,173 +1,131 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93A14288522
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 18 Nov 2025 23:30:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5526F4A07;
+	Wed, 19 Nov 2025 00:06:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763508640; cv=none; b=jnejFifSXTr1XE1mRs7DxiGroDMYHhQEnCfAoqHXUtap7DWAzeU3wEP34nGD9/U8Dw28IHtpluX1HpUIG8A3jEpj4qMl83FT745lm1jafeULDI7Ug3zrKU4o3PrKkK5WzHs4UV/G/BCH1ZatAyvNJntmYgQMcFhGkCcwPMkLurI=
+	t=1763510769; cv=none; b=GTewa9nQwRwqXrjf6FdSvUwFd8R/huSpelKvlts8j+TaeNWLplyZpklP9Le4GdZrYxxxKtzghnIrUHVwrCtB/ozo3fJZncFloKeBNb5a5lBn6H4AOoXFqo9C0XugPHejsxLTEDaRblbQRTLJKOGDQfMSO4VVShdhv9EPrPl5H+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763508640; c=relaxed/simple;
-	bh=Ll890/m+4oA95x8d4X0J/e5b2OUfoKs6Dh9eC3XMaNc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SwnxRrR/HYFQi3lXUgeUgzgejtRbyRMWufS3Wsa8LBj9X80ucwD+0nAvm7DJiKymYP6bjoSwzt6AA+DqNNTz+OEGqfdLivKf5nqaaIl5xqPNB/1m8behTafwWgIovUVgsthpjbG20PMcszGwDICaBKUdgYoEr/8kM1FHhrnp7TU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=rKdfUEVi; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
+	s=arc-20240116; t=1763510769; c=relaxed/simple;
+	bh=5qlAftSRqnozlJxCziItMsKaLob0o7k1YAr0YJ8qRb4=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=GGctOE61oPBAJBhj8N/mzP5zRccp4WM/gUz5MF2nijZiaNF59ZWQEewYp4piJZdVvtXEF41+aL7DYDtSgHdSBjXi9pxA+I35zlXu0tHaZqNImF/R/0szlSiwU03UgXxoqti08zkfRu4hKSY7CeIVefIkuPe4KNFyt3S/8WOqhiU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lcu9PERR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="rKdfUEVi"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-3438d4ae152so7261834a91.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 18 Nov 2025 15:30:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1763508638; x=1764113438; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=MnIQ5czAIlDUTiRSsv9UfW61iWVDuRBQUnVcKZcJB1w=;
-        b=rKdfUEViRk2eHns7ezpaBZ3rb6Xn7WELhxhLp9wibrXP37D45/opfQ8U/2wzneLYhX
-         DQ+7yJTZg1ollHP+oUfyBZI59oSSk0ZNaittOqb35qxXB7TYcwqyWkl1mYc3GH5zdQQj
-         DBpmc+wvoeVu45KKzzbWmimB+UiESiDxNl68cfSl0iCRpfZbmCZ8i37HM/G/rrPHkoNc
-         GMinkDCJSMinucjmFt4pUg2qsRFxSAU+W1DBOcCF0bnw6eLIV3AFU5OOtcI2d0+EaLtZ
-         UtHj0jNUF+ADLSBs01d3xl6rmfbMzWVob0j+RJIPAkZcpFOe85R2CIvTuWMo5/rNgalN
-         KFXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763508638; x=1764113438;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MnIQ5czAIlDUTiRSsv9UfW61iWVDuRBQUnVcKZcJB1w=;
-        b=PktrE2mP0Y94gQ4XHJTAxksxAuvhPKayYxbsqezuPvOwaRBzpep50VUcTwROCFmlxd
-         JyJKtWUgABYmvubGig1Zv+N41VKccc55FHkNLmdfkvORtwHKvTxwffvi+S/j9AtqTmS+
-         7jjpUI0k6H/IQ4qyTF8VQ67y4vKAxlyqyeFvmRYvqPERRjiq2cYhhLcFy4kPSp75VxkG
-         feFDa0St60wxQ0HTIXwiMS4qtbkjT2Phu9oa1EHPzegytgQuWfDr+wnYX1MtVYh8K4rW
-         X1No1aBJeYj45wgA3sQUrSsGtM0E/9WXdVSspAGR2AlzcTiHgjeNM1z2UBuPnFzWNwRq
-         xEmw==
-X-Forwarded-Encrypted: i=1; AJvYcCU67hoG8NaEa6p4vbbNMmmfD1ltx+F0fHvCPdWXwWMSVeWqDTgv6beOCF2abaXXsuZ+ZRBJBhiIc+twAFQi4FfwfZQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxuGV2CKUiwwbdUJ8Z2MZSId7uBpFEiRJglVe2ydzOMDiVZ/owY
-	eAQQX9hSQP7Ake+jg1OwJxDKrDLbbtzLk4n6vAk1u9bXH++qPtiTVtvQDg5ZHHEn1YA=
-X-Gm-Gg: ASbGncumSMTMhs+FrjFJHuFU2svPl1fKYtf2Zs0WkL108N7bdVSvt/MrOuuVowpIoNQ
-	5OcpP5Apq3Lkbe/0tvA+F/xuq6eRZnkaEwGPud+aFZiiB527hPLMxSGQ02lzfJEYHehivG6J1Lo
-	TkIDJYb6LKsHdBgnOTESw/NYmLgnJxHc3xX33TL5BIIxovf/8EWJ5GlN0uJWNBa5DawuFMvaBH0
-	smqmWXRyiHjDM+D0gZs3+aSO8Le2CcnsBVuzAKBe7Eqzg9nnMIH4zuNG3Wb6TvnaEiXsqFelEhF
-	sFLL5ZAUzjV3KcC0+2fIzI3elhDWfIqEE4j9Cx2wNC1bfGeKMzta/rOzUxR3oIMtqXJr0Zy5zNV
-	9eucROte7Cq9gZbxq5Tiy/uDsG56qz3vm7PhXlpLnRM/zCjzO+gOHnmqX6p3JgAcHzwq1CuNOFn
-	aQVv3Iofo/mthq1+7DF1dbRoCJAIsqyt3ydu+R8EXBB+WLaUg/ECuVDTJUHv9goJEA9A905MmZI
-	2w/veqV0AU=
-X-Google-Smtp-Source: AGHT+IG0xrV617/K2Q2zctZIX2rlkSw5B1Jp1MywYakVFhxJ0IxXfb/aHGJIAHe675+ap1LI/Djfwg==
-X-Received: by 2002:a17:90b:570c:b0:340:cb39:74cd with SMTP id 98e67ed59e1d1-345bd413f51mr358384a91.32.1763508637774;
-        Tue, 18 Nov 2025 15:30:37 -0800 (PST)
-Received: from dread.disaster.area (pa49-181-58-136.pa.nsw.optusnet.com.au. [49.181.58.136])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-345bc110a6dsm560282a91.14.2025.11.18.15.30.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Nov 2025 15:30:37 -0800 (PST)
-Received: from dave by dread.disaster.area with local (Exim 4.98.2)
-	(envelope-from <david@fromorbit.com>)
-	id 1vLV9e-0000000Ceqh-0jNc;
-	Wed, 19 Nov 2025 10:30:34 +1100
-Date: Wed, 19 Nov 2025 10:30:34 +1100
-From: Dave Chinner <david@fromorbit.com>
-To: Ritesh Harjani <ritesh.list@gmail.com>
-Cc: Matthew Wilcox <willy@infradead.org>,
-	Ojaswin Mujoo <ojaswin@linux.ibm.com>,
-	Christian Brauner <brauner@kernel.org>, djwong@kernel.org,
-	john.g.garry@oracle.com, tytso@mit.edu, dchinner@redhat.com,
-	hch@lst.de, linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org, jack@suse.cz, nilay@linux.ibm.com,
-	martin.petersen@oracle.com, rostedt@goodmis.org, axboe@kernel.dk,
-	linux-block@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 2/8] mm: Add PG_atomic
-Message-ID: <aR0BmpbQe0s4B80S@dread.disaster.area>
-References: <cover.1762945505.git.ojaswin@linux.ibm.com>
- <5f0a7c62a3c787f2011ada10abe3826a94f99e17.1762945505.git.ojaswin@linux.ibm.com>
- <aRSuH82gM-8BzPCU@casper.infradead.org>
- <87ecq18azq.ritesh.list@gmail.com>
- <aRcrwgxV6cBu2_RH@casper.infradead.org>
- <878qg32u3d.ritesh.list@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lcu9PERR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0024FC4CEF1;
+	Wed, 19 Nov 2025 00:06:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763510766;
+	bh=5qlAftSRqnozlJxCziItMsKaLob0o7k1YAr0YJ8qRb4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=lcu9PERRaVxYFpGWv97l6RGtvEAE0t7wYo0Y8zwRLA6MLNiRBqyrEyT2mOQpbWo+f
+	 anP0Df00I7gB+cF+GTFNPunSz3oJPvYFwpeqaRKSmw5oCdQtLDzl7cKJKUHzeE35nD
+	 pRry1r2rNUTHnDWECMNczcg6o3vz+MCHl0DQICfZWdOa6niq7uXBr2lnPexfw0QTOp
+	 tBgJNluQxMOITMYI1mLTw3+MMbdlaKvt8Y7nSEDDEBHCDGV6ziTE/aXjl7PjlBWOn/
+	 xy/ilxosaoWYl+OMKjEXCQzvz0GT9fORbGgC3YzGOclIfXErpJlhOqfO+HAHCFkGic
+	 SIUpflzReYZkw==
+Date: Wed, 19 Nov 2025 09:06:02 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing: Show the tracer options in boot-time created
+ instance
+Message-Id: <20251119090602.7605a36b3fbc9184abad7a59@kernel.org>
+In-Reply-To: <20251118133434.67def626@gandalf.local.home>
+References: <176345219055.1127138.4292126981726580037.stgit@mhiramat.tok.corp.google.com>
+	<20251118133434.67def626@gandalf.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <878qg32u3d.ritesh.list@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Nov 18, 2025 at 09:47:42PM +0530, Ritesh Harjani wrote:
-> Matthew Wilcox <willy@infradead.org> writes:
+On Tue, 18 Nov 2025 13:34:34 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
+
+> On Tue, 18 Nov 2025 16:49:50 +0900
+> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 > 
-> > On Fri, Nov 14, 2025 at 10:30:09AM +0530, Ritesh Harjani wrote:
-> >> Matthew Wilcox <willy@infradead.org> writes:
-> >> 
-> >> > On Wed, Nov 12, 2025 at 04:36:05PM +0530, Ojaswin Mujoo wrote:
-> >> >> From: John Garry <john.g.garry@oracle.com>
-> >> >> 
-> >> >> Add page flag PG_atomic, meaning that a folio needs to be written back
-> >> >> atomically. This will be used by for handling RWF_ATOMIC buffered IO
-> >> >> in upcoming patches.
-> >> >
-> >> > Page flags are a precious resource.  I'm not thrilled about allocating one
-> >> > to this rather niche usecase.  Wouldn't this be more aptly a flag on the
-> >> > address_space rather than the folio?  ie if we're doing this kind of write
-> >> > to a file, aren't most/all of the writes to the file going to be atomic?
-> >> 
-> >> As of today the atomic writes functionality works on the per-write
-> >> basis (given it's a per-write characteristic). 
-> >> 
-> >> So, we can have two types of dirty folios sitting in the page cache of
-> >> an inode. Ones which were done using atomic buffered I/O flag
-> >> (RWF_ATOMIC) and the other ones which were non-atomic writes. Hence a
-> >> need of a folio flag to distinguish between the two writes.
-> >
-> > I know, but is this useful?  AFAIK, the files where Postgres wants to
-> > use this functionality are the log files, and all writes to the log
-> > files will want to use the atomic functionality.  What's the usecase
-> > for "I want to mix atomic and non-atomic buffered writes to this file"?
+> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > 
+> > Since tracer_init_tracefs_work_func() only updates the tracer options
+> > for the global_trace, the instances created by the kernel cmdline
+> > do not have those options.
+> > 
+> > Fix to update tracer options for those boot-time created instances
+> > to show those options.
+> > 
+> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > Fixes: f20a580627f43 ("ftrace: Allow instances to use function tracing")
 > 
-> Actually this goes back to the design of how we added support of atomic
-> writes during DIO. So during the initial design phase we decided that
-> this need not be a per-inode attribute or an open flag, but this is a
-> per write I/O characteristic.
+> Actually, I think this should be:
 > 
-> So as per the current design, we don't have any open flag or a
-> persistent inode attribute which says kernel should permit _only_ atomic
-> writes I/O to this file. Instead what we support today is DIO atomic
-> writes using RWF_ATOMIC flag in pwritev2 syscall.
+> Fixes: 428add559b69 ("tracing: Have tracer option be instance specific")
+> 
+> As it broke when we made function tracer options no longer global.
+> 
 
-Which, if we can't do with REQ_ATOMIC IO, we fall back to the
-filesystem COW IO path to provide RWF_ATOMIC semantics without
-needing to involve the page cache.
+OK, let me change it.
 
-IOWs, DIO REQ_ATOMIC writes are simply a fast path for the atomic
-COW IO path inherent in COW-capable filesystems.
+> > ---
+> >  kernel/trace/trace.c |    4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> > index 8ae95800592d..2e87060e1d5a 100644
+> > --- a/kernel/trace/trace.c
+> > +++ b/kernel/trace/trace.c
+> > @@ -10903,6 +10903,7 @@ static struct notifier_block trace_module_nb = {
+> >  
+> >  static __init void tracer_init_tracefs_work_func(struct work_struct *work)
+> >  {
+> > +	struct trace_array *tr;
+> >  
+> >  	event_trace_init();
+> >  
+> > @@ -10937,7 +10938,8 @@ static __init void tracer_init_tracefs_work_func(struct work_struct *work)
+> >  
+> >  	create_trace_instances(NULL);
+> >  
+> > -	update_tracer_options(&global_trace);
+> > +	list_for_each_entry(tr, &ftrace_trace_arrays, list)
+> > +		update_tracer_options(tr);
+> >  }
+> >  
+> >  static __init int tracer_init_tracefs(void)
+> 
+> Since update_trace_options() is only called by this function, instead of
+> doing the loop here, change the function to be:
+> 
+> static __init void update_tracer_options(void)
+> {
+> 	struct trace_array *tr;
+> 
+> 	guard(mutex)(&trace_types_lock);
+> 	tracer_options_updated = true;
+> 	list_for_each_entry(tr, &ftrace_trace_arrays, list)
+> 		__update_tracer_options(tr);
+> }
 
-This is no different for buffered RWF_ATOMIC writes. We need to
-ingest the data into the page cache as a COW operation, then at
-writeback time we optimise away the COW operations if REQ_ATOMIC IO
-can be performed instead.
+OK. Let me send v2.
 
-Using COW for buffered RWF_ATOMIC writes means don't need to involve
-the page caceh at all - this can all be implemented at the
-filesystem extent mapping and iomap layers....
+Thanks,
 
-> Having said that there can be several policy decision that could still be
-> discussed e.g. make sure any previous dirty data is flushed to disk when a
-> buffered atomic write request is made to an inode. 
+> 
+> Thanks,
+> 
+> -- Steve
+> 
 
-We don't need to care about mixed dirty non-atomic/atomic data on the
-same file if REQ_ATOMIC is used as an optimisation for COW-based
-atomic IO.  Filesystems like XFS naturally separate COW and non-COW
-extents. If we combine non-atomic and atomic data into a single
-atomic update at writeback(be it COW or REQ_ATOMIC IO), then we
-have still honoured the requested atomic semantics required to
-persist the data. It just doesn't matter.
 
-IMO, trying to hack atomic physical IO semantics through the page
-cache creates all sorts of issues that simply don't exist when we
-use the atomic overwrite paths present in modern COW capable
-filesystems....
-
--Dave.
 -- 
-Dave Chinner
-david@fromorbit.com
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
