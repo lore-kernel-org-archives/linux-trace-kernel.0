@@ -1,64 +1,64 @@
-Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
+Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E8AE2EF652
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Nov 2025 22:56:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 579AA2D481F
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Nov 2025 22:56:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763593004; cv=none; b=rsbFwmrOoLwuIyerKE8gM21h3Q8WxbwIUbE4niqew3u9VVF1ATVQD93Lb011ECqxodqPM3KMviwqKv5EAc4xdYK7hYgYdGvthRNQF7ZxhztUFNCNX6rnNq1cnVhNJYmBTlYdCUwBH7s3R6cfqbkfN6tMt/YeAy5k7KY47iiNbyg=
+	t=1763593021; cv=none; b=fyjx3JW8UaPW/FCGcBdhBbax0xCq+wAFvu1bYnGS2I7KhJ6zipss6o7y/5E4KadhbGMvV/jk+q7X/2dE8bUqaZjXodneCVaccEthPKQSMqBJqnd1zLFDpRf1iZuHpWUu5g18MkFsLtRPMatB/02IdJO0KMwo10p64IomFNH6giA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763593004; c=relaxed/simple;
-	bh=8PxQRRGbRQ8tSgOLa+iJvnsNLzWFk5wnVUDy0F4fD7c=;
+	s=arc-20240116; t=1763593021; c=relaxed/simple;
+	bh=yOCbSOXUcf42hI7Et0TY2otuu3AGTL7xxB5sc17Aou8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rSIEWQgmaFe5wgkMFErTMLC4Q9xYoT05MvkKLIJi2JHMGY5QXgbPd4hqA2AmSurQGgYdBcNV6YBoWbcVp/QhHYYdhfhMtsP+XOBEMDCCfq2W4mADR3ERr9nHTLryRjD0mSL7CrOTsIG9UP85oiz/tSrHzQsuXpHv36w8pgrFOXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=UupqrxhD; arc=none smtp.client-ip=209.85.166.44
+	 In-Reply-To:Content-Type; b=fMNbLMmE7dhfugW7eolbde9FVOdgbcLRsbmNx1z90MlODEJzIOgiso8V8ve6K2DTulkNXqB6gP9jrxvdPr9Co+wbJQcoPAO3XUwFb1OY7IsNHcNzjE58a/jhRXdEVCHwwbkRU8wS2Vw3vaPAg8gNIDjRbrn9XMdZGIU67CGb8Nk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=S92gXX6p; arc=none smtp.client-ip=209.85.166.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="UupqrxhD"
-Received: by mail-io1-f44.google.com with SMTP id ca18e2360f4ac-949022f1c85so11008539f.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Nov 2025 14:56:41 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="S92gXX6p"
+Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-4332381ba9bso1546305ab.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Nov 2025 14:56:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1763593000; x=1764197800; darn=vger.kernel.org;
+        d=linuxfoundation.org; s=google; t=1763593018; x=1764197818; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=9wMUH8JcfJUm5VqcHHrATjM5Cu9rxqYCl3FUJ90RvcM=;
-        b=UupqrxhDQk2sfQuQGCRVaVJymkBO0gK7LIqQo8ZQFZUtGTc1jG5j0J6NjZxPE/WwJ/
-         c2DzKDhzFwuzWQ731eFgfs/WtgS3C3NiPb7vFaLlgbOc68UTjXYVpB5aDO0eS+PH3bOD
-         b348yOsPIp0bN5QvIMLBylpRD/sydPrEz//Ik=
+        bh=d9Cihjz4mIMaTQdMejOmpXxdqpfNp4ZNHdlB1PDzoK8=;
+        b=S92gXX6pxAQBeagLbG3zFH8hEM2F5YtHeVvGCQT13Ri+OdtVfNlS67Wo1mgTHsY8iQ
+         OPEjX6pVj1bTMjH4xZnx3XYXHCIrwYvbLXoDEzMWZVJe2U5ugqjBj9gn2N4hnLz0Gc+S
+         mtjAM0A1q4Zqi2RMw6I3/yI0LIgEunrYnljb0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763593000; x=1764197800;
+        d=1e100.net; s=20230601; t=1763593018; x=1764197818;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=9wMUH8JcfJUm5VqcHHrATjM5Cu9rxqYCl3FUJ90RvcM=;
-        b=iEPaEkzZb/RfR4p76y/aLDdqPZhWR1K+I9j0WmH3jKr4AWxFwPLyrsmkDEuUDXqdVM
-         nk3at4lvJmx7W+xuGtH4EMh/HO7flTSoAOGYp5kome3Nb9XEPMkvqTZRhiQ+PKUoQNmu
-         ePA4+9ZJ3DBe3cGp5QJp8sWwq8EYCR5L9AvFQ5jwlXASiOs/LUjglkrPvTtWaozXI875
-         I+96G8U9ZN1+8X+8f+Mie2f2M0bUniWI0VZvU2AfqCmPhPW6MLPTF8G1PvCRjkVcPG6F
-         oLXXssBl4o0NDItLDtfKJb826JgvgNcMoqMFLQlCG6WJllULVw81h0Hw0Wecu26qaQ7Y
-         rB9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUiP/lkKIywgEUAMumHEIYxWh4Dxpz3PLJtarDaBcr3iCgIPRMjwKn4oikAIKq1dOQVy+ec4T3iNuSz5OiEdEDYbHI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YweWnfnc6+Z0dhyzPg2WLGNZv/mVSk4n96r5sdtgG6FVzQ3BdJo
-	UVErvg5O1mvqsd4zeNnWiQ6PxV+BF/O9iE00ZbnWv+mxNXqd169e74mIGkYCkTuj6ck=
-X-Gm-Gg: ASbGncvYZuzCvPUGWTiF3H/L+WGqIiIUs3uqMbN5Z1Fr75viTDCcWqBceSMSE/wQ9eH
-	5SAivUgGj4cqEIoggqP1PnNOJ6WgEeHrxQuaUK0BbDFL/yybjnIb3SWJC+mpPXQIAV+o72I4S1e
-	GFmHhYrQWHZIKpFl0TfcDXCNkkbkJe9qIhizr9OrH02l+ofr6CJuUP3ffyTSVZiY19NBkk/b/Fs
-	VOA+5C99b1XBwI61PY9N5coEZ10XQpuQWnkYtUEPeka8VQPlQDTjw6thf3TKYUb/QlZkn4eIACz
-	FJE1aJGrPeHrE+Y4cNxPBehHxSrSm3Fqzxi1p5zS5Lfp8D0TcErwxC+/zVCtnmVrODBhN4BqluY
-	U31jvWdlD2gt7ko2FpZCDzL80mMZG8QuZ0MVrgx0Kl748C0rQmzEbapG64p3a5KRNgzfRnqo8oo
-	pYaslZq793dYZzThAoH7c8ownoOIBuWVUUow==
-X-Google-Smtp-Source: AGHT+IG4tDZ4F/fO1HiCiZs9PvKdwalM+q64M6x5lrXzcVzNi5nKpIozkdFoGwtK8Z0gwdmZmTuSaw==
-X-Received: by 2002:a05:6602:8211:b0:948:a37f:6eb6 with SMTP id ca18e2360f4ac-94938a1bcdbmr58375239f.4.1763593000456;
-        Wed, 19 Nov 2025 14:56:40 -0800 (PST)
+        bh=d9Cihjz4mIMaTQdMejOmpXxdqpfNp4ZNHdlB1PDzoK8=;
+        b=qruH1CuvYVZgnjFttzy9ZpWfTltUJPOb6FyENEIlLImcLUUAHQRqutlTEE30kyEg2D
+         0Kanrrd81Y02aAPvDwd0sAU4B5pXrBzptC/+1PuesGFdIzEZXUxLGJ1JNMCdwel38KlR
+         QiZGIF6xmApsSzTq3ZpcoDoWsziQ+KdBubHJlS6RkUxuWa/yAQpxL9odz7ac4n/+2cly
+         jD5bx0BLoMHFs/UGvq2N5hH9qTY7eI9KiN9BhNvWEZHH1xccKM5lekzc+nQxf695ca4y
+         5hQqzMjQ71/5uR4+Etd5Y5v9C+H6lsk0wp0K3g7wBbZ/3vCiDpfryTJeLF8XDynbZubz
+         YVGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXQJ6aST04wqEq4FcibwOcTxuf+jrmONLcVVA2M/baSHBhnxY7REjxm0jlCAygokmlx+t0EGmx+ftmCCJop1BAV63Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwFQIePJtJAXqhDwgRwORgDjee97cWQ/SL+EycJZl2C+PRz2GXG
+	qo3Cwj69dvtFf7Hdzlt/UqcY4ZgCciyucgC9YRMNFHGcoxuEGavT/pgWEKuIsrOVEBM=
+X-Gm-Gg: ASbGncv9wYGerBNl/o+rL52AswNjLLS0IQ3KONwIFuujsbOZW40/UvsMRflYZPH/ic3
+	AgUwrKW2HmfVetsrBY9IPTFK1DwtM8iR2Ro6+kKtHsVGAMNWTUfpjFombhiMJPPnLUNfCz0Ir4q
+	vGP2zdt2TfAP311SBHWw84t8957ptRY06qbOm8EPPl7R+QfrHAPyNPALndfyaoh7mPBeXLYf7PB
+	4EEedH6WGKmDrFKs0Ilcr+Qyv1cPUI24+XdqrExdjboNZf+PYpj2DvgRZx2EKJ/3MPsAftvVy1z
+	SgYWXlcNX6U2ZDrHn1RgliUmnvlUyp5Xnczq3UxQplIru/c2HnsllbnWuZVw8MdtBNkh9ryTFJL
+	sz7lP57CtOA9kqhOybLx3niWnYxblaiH36WIfFC7Yy04qtBfgjauqgeTz1OCpLmrBfTpfVQlpt5
+	priDAtef1C0jYB7JF/h7JMm2E=
+X-Google-Smtp-Source: AGHT+IF0n9luN6uLPUD0+qtd91vv8ozpZWFR5sEp2+lnlFuJPZGmT1NL1+Q7O5k6hfud7//ALyWKHw==
+X-Received: by 2002:a05:6e02:156d:b0:433:7310:f5bf with SMTP id e9e14a558f8ab-435a9077da8mr13911545ab.22.1763593018248;
+        Wed, 19 Nov 2025 14:56:58 -0800 (PST)
 Received: from [192.168.1.14] ([38.175.187.108])
-        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-949386912a9sm27794539f.15.2025.11.19.14.56.39
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-435a90e707dsm3627275ab.30.2025.11.19.14.56.57
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Nov 2025 14:56:39 -0800 (PST)
-Message-ID: <9f6f5434-3650-465a-9f67-eeab11954c30@linuxfoundation.org>
-Date: Wed, 19 Nov 2025 15:56:38 -0700
+        Wed, 19 Nov 2025 14:56:57 -0800 (PST)
+Message-ID: <b61a339e-f80f-4ecd-861e-e9bb834d5101@linuxfoundation.org>
+Date: Wed, 19 Nov 2025 15:56:57 -0700
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -66,45 +66,44 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] selftests: tracing: Update fprobe selftest for ftrace
- based fprobe
+Subject: Re: [PATCH] selftests: tracing: Add tprobe enable/disable testcase
 To: Steven Rostedt <rostedt@goodmis.org>
 Cc: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
- Shuah Khan <shuah@kernel.org>, Heiko Carstens <hca@linux.ibm.com>,
+ Shuah Khan <shuah@kernel.org>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
  linux-kselftest@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
-References: <176295318112.431538.11780280333728368327.stgit@devnote2>
- <f6831d9a-4ea6-4100-9b1b-716ac93e1cdd@linuxfoundation.org>
- <20251119173441.3aa33415@gandalf.local.home>
+References: <176252610176.214996.3978515319000806265.stgit@devnote2>
+ <f5f272e1-e164-4bb1-bfd0-42edd5a125c5@linuxfoundation.org>
+ <20251119170611.6eff8df7@gandalf.local.home>
 Content-Language: en-US
 From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20251119173441.3aa33415@gandalf.local.home>
+In-Reply-To: <20251119170611.6eff8df7@gandalf.local.home>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 11/19/25 15:34, Steven Rostedt wrote:
-> On Wed, 19 Nov 2025 15:16:04 -0700
+On 11/19/25 15:06, Steven Rostedt wrote:
+> On Wed, 19 Nov 2025 14:44:22 -0700
 > Shuah Khan <skhan@linuxfoundation.org> wrote:
 > 
->> On 11/12/25 06:13, Masami Hiramatsu (Google) wrote:
+>> On 11/7/25 07:35, Masami Hiramatsu (Google) wrote:
 >>> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 >>>
->>> Since the ftrace fprobe is both fgraph and ftrace based implemented,
->>> the selftest needs to be updated. This does not count the actual
->>> number of lines, but just check the differences.
+>>> Commit 2867495dea86 ("tracing: tprobe-events: Register tracepoint when
+>>> enable tprobe event") caused regression bug and tprobe did not work.
+>>> To prevent similar problems, add a testcase which enables/disables a
+>>> tprobe and check the results.
 >>>
 >>> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
->>> ---
->>>    .../ftrace/test.d/dynevent/add_remove_fprobe.tc    |   18 ++++--------------
->>>    1 file changed, 4 insertions(+), 14 deletions(-)
->>>   
 >>
 >> Steve, do you want me to take this through my tree?
 > 
-> Yes please, unless Masami thinks otherwise.
+> Yes please. Masami's an official maintainer and mostly handles all things
+> "probe" related. This is his domain ;-)
 > 
-
+> Thanks,
+> 
+> -- Steve
 Applied to linux-kselftest next for Linux 6.19-rc1.
 
 thanks,
