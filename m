@@ -1,73 +1,73 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1E422FFDDB
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Nov 2025 16:49:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1E532FCBF0
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Nov 2025 16:50:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763570960; cv=none; b=Q0qyeKTPlAiMfEi8np1uLcnwh4ousq2k2r9yh1TOgat7QrCwMUY8moxcjEHFFnoT/4YUHSUU/hNZud6JOFRWTVWuV1kWJrqS8ptLO/KRW6bW9NtxaKMeMcnP1NkUw/dSWDqUtCXNWsIKRNC4+gS5JmIhGf4+gLgYjU/+IoDyRU8=
+	t=1763571023; cv=none; b=rmJSMeOIQTbVyQp5J9UWou7Qr/fAl3/AlcA+K5D7zeQRh8zOTxurg4uHTBRZzZGaz3+jWkVBbwO6L69WwNRcU5Ps2bf5irqpMs8vq99HnuojXFYLBZWFGAOmXQTMTS3/d1XFH0A6pDeEhCmPPDs0IfCtIeUSErdmNfRsM1T82i8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763570960; c=relaxed/simple;
-	bh=Ntu79LxvHkkLpbqi13VepeqzmJSPf4zQKMOz7mKoU6c=;
+	s=arc-20240116; t=1763571023; c=relaxed/simple;
+	bh=O9JFz3qyS53bqmLU9nQY1FOT5EXxDiLOVx9MZNEHaA0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Rkc5geYIpkGdmEH4Kp2PYeGHoI6K0OXaGkA9r8ezk1VP9HHoTbsazxYFt0r3LNymYLCbp90+bg1KmGy7eHeB4reAHx2q1NjoBwvUF/OlGXgMQhjkIM/adkol2s9iusxtstdorhZiavQk4X0OVE1qsy1YcIWXLmWheITIBmSX02U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=N/Z7EAfl; arc=none smtp.client-ip=209.85.214.169
+	 To:Cc:Content-Type; b=fVRGlRXl6J1ehqMcL7GVC4rPzSQzZl6Hi0HPX0tWebKAQOZJ+uFtS5XW/RVCp/+3RaN3tm/4cQJECWnVtkcNGl05bSMAYgrafUZMJo6e5EX1PJQ9kt1Rma4fW0sneoIqGglWt3VUzSrzgBdAyHv4u3oL6y2SwGdDPOCcsBlZ2sw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=f4Ntf/oO; arc=none smtp.client-ip=209.85.214.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N/Z7EAfl"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-297e13bf404so233315ad.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Nov 2025 08:49:18 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="f4Ntf/oO"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2980343d9d1so191125ad.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Nov 2025 08:50:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1763570958; x=1764175758; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1763571021; x=1764175821; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=sMXsqgKysW6m2FrQa3pYXbUBYKL4TuiIPv4CnNvKLAM=;
-        b=N/Z7EAflTrqkSa+dBTG00mPJcJj10qpHqDUcXhnWgiUdD7VA9XqflFc7mZhDTYENhY
-         3/fXZrtoxHNjGROS8ZtfNr/Ba1ruzOh2CTr+TLDKy5fsztwK9PTEht9xy82c49hQ/DNt
-         0q10JSXzEQpzs3DG61sERP1Z3ikTunZ1v7h0R/PfgUFEXuTGidRdGB+OPeix7nCcz5YX
-         HmSReT19XnvcxLHETPaRo4xVHc7LBgAqTmxJsq+5cyHN9AbcybeVUB0MJA2ut4Ajlj2p
-         pDu5KTBAeAL2cqWvJ/o4YUD2Uv4TiLGe4cQDhe91tNq/KEVH69zh68lT6zZkmTMoksRC
-         yjtQ==
+        bh=DQBnHYw0VSBBj4j2L4MqTo6j0WkJfPfTKwzmJoktb9M=;
+        b=f4Ntf/oOxqQLW5CsePNSC6nzrd49ZoXGWU7eDGSMNhSLiWvTnXYvcq8cmuEO7SsGiO
+         TYqcc7orlMcZea7SzeAaFdk/GDmX7EaA98Bbc6vU4cgTb1D8JGJu7YpwEkV/ZKBccuXf
+         iKVzwuv7daIBnYZeMd3OitoHaxDQHPSXvsRN0bvM3PKnakP1vMA/4VC1MOd//PD/StUG
+         BqSuFnzK6YlH3MPAuitoIKo7J8x3AAF8233vtrr3xYldyJCHD5IgS+6TrD3Qx2n+WiUY
+         NhZSzzvCFTw3GPpPJuVAFuElfbf4fjLCDSXv8X1VxFOGDRp2WnEeEsYXyTKub8s8xmzr
+         7OrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763570958; x=1764175758;
+        d=1e100.net; s=20230601; t=1763571021; x=1764175821;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=sMXsqgKysW6m2FrQa3pYXbUBYKL4TuiIPv4CnNvKLAM=;
-        b=G64N0pNQ23h3eIN7w8R+OnZ3Dua8nXXKDC3vwEL7E8bnwuC6HNIvvuAl6JsKz1YyGA
-         U8UGwP+WGij08HvxqZAX658j5DtbmiB32y4Z5YuObfn4nZHk6IP7Cfk8gQzTSNwmoQDM
-         45cZ3IfnW/MOb7jQfXfq1trFvMRduyhSGILHLgK2G8mUXXCMTWTNdpOxHCuAWwnNahH5
-         4uB/wnvQraHWZA+g/kO7gUnBc9szzalwhHBUdZYzHY7KS9yKqS8JHW3hsG9vE4SoRzTx
-         Iq/lgJk6TDHEzRnJ8NF8ggfbyGS8itfGU9Y9Xb3RBAZS7rDlJMGFk43GNmVJPbiASgb4
-         LoEA==
-X-Forwarded-Encrypted: i=1; AJvYcCVPFejHsa1IUOuMfm8Mbni8LWVaRdUpDAn0Tway9lq31R7ALluCUyScP14+5RhlbyCcwKPO8deVwhXjV1ycx1c8Dec=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwqIdhKw7p+i4/le6bYuvCZBfSItp95EmU4mDUDJZNzp0+nUVRd
-	6jaz5X4ufZrhk5XUufBDIskdnzG0xrtpHZh1i/UugL96eTDrl3MscAmFH7sruYOfDpwz7ryGflY
-	B2etMmTNrxnb9NCfQnQuelfxxXRsbuOajIMbAcBsM
-X-Gm-Gg: ASbGnctAyfn9J269wVk55BlTW1mNSTGRYx94ESWKqj+M3Vqc2ZQCyZTBaFFFumhYl3j
-	uTzx1AIk6nw+TRrRKK7P949Ewiyylxn8Ta1Itvcjtk714hUp7JAa2too4b3Zvk0GcQEq4MvPBuP
-	XsqyXu5vAqtiYu4v3wP64aMruTk2mgQVq1gaub9ry6W8wVmLion+lWK5bbzHaM9PPKLoKazU2RB
-	4k1dK9TpAP3Y8UzF2OpzmS7szv+EXo2vSmVc1c9WiVI0/yGvt0QSQoMbaWDyOUblsVrbrT/V+as
-	Gcwz9kKpgnu7aeKKholTHheFRQ==
-X-Google-Smtp-Source: AGHT+IFwgAnkLR0jx5LdmWn3kQVmzzBqFc3ZBGwWcfrEixV6e2Vn8lfZW5HJjzboKiJOREeEKIkahsDPoO/Vh1R3le4=
-X-Received: by 2002:a05:7022:e01:b0:119:e55a:808c with SMTP id
- a92af1059eb24-11c8ddae890mr119358c88.9.1763570957615; Wed, 19 Nov 2025
- 08:49:17 -0800 (PST)
+        bh=DQBnHYw0VSBBj4j2L4MqTo6j0WkJfPfTKwzmJoktb9M=;
+        b=nCQHRsO5cxbbxbA6s3rFd80wKJ1j/xGjo90LtQlS1NYpmjVEHL25cqJvp+aF6CxsmG
+         0J3hGYZPP3+BgpLgpcjTqIunYGSepLDMBCjAJ5rxkHOeGpUK9vUybYrhSwO0cR9lCR78
+         jg6U86/qKFW6aYA8vm+1Qr57eK6wRZtyvAmNEvKpGBdLFPUM7/pgzkdS4is7xbZ1b34f
+         tRqXS9rMusBpu5zgPi3XB+6Fx0dHDLSCzPBIAa/0AQ2oWMcEqNaksDOVPfKU8yQUIZgf
+         wuGmEQ6geN3cA4upc1UAHKpVQdnbcJ9vnYS2kuZ/iOrz+hqnibIZK2h0xIIHorYkCW06
+         edyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWNkAx3FloYGznHYuvjAbyXqu/LXIaGwwvj4Ee6SJ/ZtNOChAA1S87DnkZsiWsXZ/85aqH57s4oRAsIciFhbtnShiY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxamHJovmtTiKKO2AHrCBu43v9MHhDAOL7/xHXx5ItRKKqjhtc7
+	WYCkO+lUh87lttgYp6hCXfDhNCqRkJbxNybIyCyuOMTB4bEVN54xRp3anNfqN38PwjclWP6qmkl
+	qZIiRZ+cizEIuR/LJ50jKKKNQAVUyuN+IC22hSDy4
+X-Gm-Gg: ASbGncsDaiISXiNj8ROWwL9B4qLhoFxF0k/kRknwzdXdIYrV0GOSt4MHPXi0xpaL4xa
+	M2VDxkzQRrJ8+/iuDb0UUumr9xHoDZ81HFCKa9KgWIol12RVoTydkxh7Z3RGOrJiFqt7o2KVZDF
+	BOUugdELH75jrwneRioKT+PI9AHIuKCeAa8qxJUZjCF2xddgwQQ0WMJrxzkqil0t82sw35Izdkv
+	m1qkdq9g92/sdGYKreked21M38Gifu9QqTgL6bwqP2kJauNBBz0y1+KfiLzagI0PcFkFIGMiJxM
+	H2TqxGNXoBi4W2csgTiqYDOG9w==
+X-Google-Smtp-Source: AGHT+IEICHjk33fXEW+hyxHU8aTmZdnV/O+AHUpf/mOXU8tiARf5WeMbTWR+rSjeKJAnzTruCuAluI0+rTOTjLbj29U=
+X-Received: by 2002:a05:7022:6b98:b0:119:e56b:c1dc with SMTP id
+ a92af1059eb24-11c8dda9816mr145267c88.7.1763571020624; Wed, 19 Nov 2025
+ 08:50:20 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251115234106.348571-1-namhyung@kernel.org> <20251115234106.348571-2-namhyung@kernel.org>
-In-Reply-To: <20251115234106.348571-2-namhyung@kernel.org>
+References: <20251115234106.348571-1-namhyung@kernel.org> <20251115234106.348571-4-namhyung@kernel.org>
+In-Reply-To: <20251115234106.348571-4-namhyung@kernel.org>
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 19 Nov 2025 08:49:05 -0800
-X-Gm-Features: AWmQ_bmWEG9oywEpm1PC44iobFk4gdVnk4-eYJda-DCWGCTGZHFeOLwBPXQD-Lg
-Message-ID: <CAP-5=fU135iJV72o6tLEBj2GW-uMsQdnnbE=hTAz3rDbmSnBEg@mail.gmail.com>
-Subject: Re: [PATCH v4 1/5] tools headers UAPI: Sync linux/perf_event.h for
+Date: Wed, 19 Nov 2025 08:50:08 -0800
+X-Gm-Features: AWmQ_bly3STldTS6YUBz9binx1C6MJzkuz8EvLWSHaE9ZthT7K55gqE8MmJZAdI
+Message-ID: <CAP-5=fXX_h8q=0uTGkU89Z_r6Rw30oMfxyJw5p-O45t0OSppJw@mail.gmail.com>
+Subject: Re: [PATCH v4 3/5] perf record: Add --call-graph fp,defer option for
  deferred callchains
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, James Clark <james.clark@linaro.org>, 
@@ -84,8 +84,40 @@ Content-Transfer-Encoding: quoted-printable
 On Sat, Nov 15, 2025 at 3:41=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
 wrote:
 >
-> It needs to sync with the kernel to support user space changes for the
-> deferred callchains.
+> Add a new callchain record mode option for deferred callchains.  For now
+> it only works with FP (frame-pointer) mode.
+>
+> And add the missing feature detection logic to clear the flag on old
+> kernels.
+>
+>   $ perf record --call-graph fp,defer -vv true
+>   ...
+>   ------------------------------------------------------------
+>   perf_event_attr:
+>     type                             0 (PERF_TYPE_HARDWARE)
+>     size                             136
+>     config                           0 (PERF_COUNT_HW_CPU_CYCLES)
+>     { sample_period, sample_freq }   4000
+>     sample_type                      IP|TID|TIME|CALLCHAIN|PERIOD
+>     read_format                      ID|LOST
+>     disabled                         1
+>     inherit                          1
+>     mmap                             1
+>     comm                             1
+>     freq                             1
+>     enable_on_exec                   1
+>     task                             1
+>     sample_id_all                    1
+>     mmap2                            1
+>     comm_exec                        1
+>     ksymbol                          1
+>     bpf_event                        1
+>     defer_callchain                  1
+>     defer_output                     1
+>   ------------------------------------------------------------
+>   sys_perf_event_open: pid 162755  cpu 0  group_fd -1  flags 0x8
+>   sys_perf_event_open failed, error -22
+>   switching off deferred callchain support
 >
 > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
@@ -95,63 +127,185 @@ Thanks,
 Ian
 
 > ---
->  tools/include/uapi/linux/perf_event.h | 21 ++++++++++++++++++++-
->  1 file changed, 20 insertions(+), 1 deletion(-)
+>  tools/perf/Documentation/perf-config.txt |  3 +++
+>  tools/perf/Documentation/perf-record.txt |  4 ++++
+>  tools/perf/util/callchain.c              | 16 +++++++++++++---
+>  tools/perf/util/callchain.h              |  1 +
+>  tools/perf/util/evsel.c                  | 19 +++++++++++++++++++
+>  tools/perf/util/evsel.h                  |  1 +
+>  6 files changed, 41 insertions(+), 3 deletions(-)
 >
-> diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/l=
-inux/perf_event.h
-> index 78a362b8002776e5..d292f96bc06f86bc 100644
-> --- a/tools/include/uapi/linux/perf_event.h
-> +++ b/tools/include/uapi/linux/perf_event.h
-> @@ -463,7 +463,9 @@ struct perf_event_attr {
->                                 inherit_thread :  1, /* children only inh=
-erit if cloned with CLONE_THREAD */
->                                 remove_on_exec :  1, /* event is removed =
-from task on exec */
->                                 sigtrap        :  1, /* send synchronous =
-SIGTRAP on event */
-> -                               __reserved_1   : 26;
-> +                               defer_callchain:  1, /* request PERF_RECO=
-RD_CALLCHAIN_DEFERRED records */
-> +                               defer_output   :  1, /* output PERF_RECOR=
-D_CALLCHAIN_DEFERRED records */
-> +                               __reserved_1   : 24;
+> diff --git a/tools/perf/Documentation/perf-config.txt b/tools/perf/Docume=
+ntation/perf-config.txt
+> index c6f33565966735fe..642d1c490d9e3bcd 100644
+> --- a/tools/perf/Documentation/perf-config.txt
+> +++ b/tools/perf/Documentation/perf-config.txt
+> @@ -452,6 +452,9 @@ Variables
+>                 kernel space is controlled not by this option but by the
+>                 kernel config (CONFIG_UNWINDER_*).
 >
->         union {
->                 __u32           wakeup_events;    /* wake up every n even=
-ts */
-> @@ -1239,6 +1241,22 @@ enum perf_event_type {
->          */
->         PERF_RECORD_AUX_OUTPUT_HW_ID            =3D 21,
->
-> +       /*
-> +        * This user callchain capture was deferred until shortly before
-> +        * returning to user space.  Previous samples would have kernel
-> +        * callchains only and they need to be stitched with this to make=
- full
-> +        * callchains.
-> +        *
-> +        * struct {
-> +        *      struct perf_event_header        header;
-> +        *      u64                             cookie;
-> +        *      u64                             nr;
-> +        *      u64                             ips[nr];
-> +        *      struct sample_id                sample_id;
-> +        * };
-> +        */
-> +       PERF_RECORD_CALLCHAIN_DEFERRED          =3D 22,
+> +               The 'defer' mode can be used with 'fp' mode to enable def=
+erred
+> +               user callchains (like 'fp,defer').
 > +
->         PERF_RECORD_MAX,                        /* non-ABI */
+>         call-graph.dump-size::
+>                 The size of stack to dump in order to do post-unwinding. =
+Default is 8192 (byte).
+>                 When using dwarf into record-mode, the default size will =
+be used if omitted.
+> diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Docume=
+ntation/perf-record.txt
+> index 067891bd7da6edc8..e8b9aadbbfa50574 100644
+> --- a/tools/perf/Documentation/perf-record.txt
+> +++ b/tools/perf/Documentation/perf-record.txt
+> @@ -325,6 +325,10 @@ OPTIONS
+>         by default.  User can change the number by passing it after comma
+>         like "--call-graph fp,32".
+>
+> +       Also "defer" can be used with "fp" (like "--call-graph fp,defer")=
+ to
+> +       enable deferred user callchain which will collect user-space call=
+chains
+> +       when the thread returns to the user space.
+> +
+>  -q::
+>  --quiet::
+>         Don't print any warnings or messages, useful for scripting.
+> diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
+> index d7b7eef740b9d6ed..2884187ccbbecfdc 100644
+> --- a/tools/perf/util/callchain.c
+> +++ b/tools/perf/util/callchain.c
+> @@ -275,9 +275,13 @@ int parse_callchain_record(const char *arg, struct c=
+allchain_param *param)
+>                         if (tok) {
+>                                 unsigned long size;
+>
+> -                               size =3D strtoul(tok, &name, 0);
+> -                               if (size < (unsigned) sysctl__max_stack()=
+)
+> -                                       param->max_stack =3D size;
+> +                               if (!strncmp(tok, "defer", sizeof("defer"=
+))) {
+> +                                       param->defer =3D true;
+> +                               } else {
+> +                                       size =3D strtoul(tok, &name, 0);
+> +                                       if (size < (unsigned) sysctl__max=
+_stack())
+> +                                               param->max_stack =3D size=
+;
+> +                               }
+>                         }
+>                         break;
+>
+> @@ -314,6 +318,12 @@ int parse_callchain_record(const char *arg, struct c=
+allchain_param *param)
+>         } while (0);
+>
+>         free(buf);
+> +
+> +       if (param->defer && param->record_mode !=3D CALLCHAIN_FP) {
+> +               pr_err("callchain: deferred callchain only works with FP\=
+n");
+> +               return -EINVAL;
+> +       }
+> +
+>         return ret;
+>  }
+>
+> diff --git a/tools/perf/util/callchain.h b/tools/perf/util/callchain.h
+> index 86ed9e4d04f9ee7b..d5ae4fbb7ce5fa44 100644
+> --- a/tools/perf/util/callchain.h
+> +++ b/tools/perf/util/callchain.h
+> @@ -98,6 +98,7 @@ extern bool dwarf_callchain_users;
+>
+>  struct callchain_param {
+>         bool                    enabled;
+> +       bool                    defer;
+>         enum perf_call_graph_mode record_mode;
+>         u32                     dump_size;
+>         enum chain_mode         mode;
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index 5ee3e7dee93fbbcb..7772ee9cfe3ac1c7 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -1065,6 +1065,9 @@ static void __evsel__config_callchain(struct evsel =
+*evsel, struct record_opts *o
+>                 pr_info("Disabling user space callchains for function tra=
+ce event.\n");
+>                 attr->exclude_callchain_user =3D 1;
+>         }
+> +
+> +       if (param->defer && !attr->exclude_callchain_user)
+> +               attr->defer_callchain =3D 1;
+>  }
+>
+>  void evsel__config_callchain(struct evsel *evsel, struct record_opts *op=
+ts,
+> @@ -1511,6 +1514,7 @@ void evsel__config(struct evsel *evsel, struct reco=
+rd_opts *opts,
+>         attr->mmap2    =3D track && !perf_missing_features.mmap2;
+>         attr->comm     =3D track;
+>         attr->build_id =3D track && opts->build_id;
+> +       attr->defer_output =3D track && callchain->defer;
+>
+>         /*
+>          * ksymbol is tracked separately with text poke because it needs =
+to be
+> @@ -2199,6 +2203,10 @@ static int __evsel__prepare_open(struct evsel *evs=
+el, struct perf_cpu_map *cpus,
+>
+>  static void evsel__disable_missing_features(struct evsel *evsel)
+>  {
+> +       if (perf_missing_features.defer_callchain && evsel->core.attr.def=
+er_callchain)
+> +               evsel->core.attr.defer_callchain =3D 0;
+> +       if (perf_missing_features.defer_callchain && evsel->core.attr.def=
+er_output)
+> +               evsel->core.attr.defer_output =3D 0;
+>         if (perf_missing_features.inherit_sample_read && evsel->core.attr=
+.inherit &&
+>             (evsel->core.attr.sample_type & PERF_SAMPLE_READ))
+>                 evsel->core.attr.inherit =3D 0;
+> @@ -2473,6 +2481,13 @@ static bool evsel__detect_missing_features(struct =
+evsel *evsel, struct perf_cpu
+>
+>         /* Please add new feature detection here. */
+>
+> +       attr.defer_callchain =3D true;
+> +       if (has_attr_feature(&attr, /*flags=3D*/0))
+> +               goto found;
+> +       perf_missing_features.defer_callchain =3D true;
+> +       pr_debug2("switching off deferred callchain support\n");
+> +       attr.defer_callchain =3D false;
+> +
+>         attr.inherit =3D true;
+>         attr.sample_type =3D PERF_SAMPLE_READ | PERF_SAMPLE_TID;
+>         if (has_attr_feature(&attr, /*flags=3D*/0))
+> @@ -2584,6 +2599,10 @@ static bool evsel__detect_missing_features(struct =
+evsel *evsel, struct perf_cpu
+>         errno =3D old_errno;
+>
+>  check:
+> +       if ((evsel->core.attr.defer_callchain || evsel->core.attr.defer_o=
+utput) &&
+> +           perf_missing_features.defer_callchain)
+> +               return true;
+> +
+>         if (evsel->core.attr.inherit &&
+>             (evsel->core.attr.sample_type & PERF_SAMPLE_READ) &&
+>             perf_missing_features.inherit_sample_read)
+> diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+> index 3ae4ac8f9a37e009..a08130ff2e47a887 100644
+> --- a/tools/perf/util/evsel.h
+> +++ b/tools/perf/util/evsel.h
+> @@ -221,6 +221,7 @@ struct perf_missing_features {
+>         bool branch_counters;
+>         bool aux_action;
+>         bool inherit_sample_read;
+> +       bool defer_callchain;
 >  };
 >
-> @@ -1269,6 +1287,7 @@ enum perf_callchain_context {
->         PERF_CONTEXT_HV                         =3D (__u64)-32,
->         PERF_CONTEXT_KERNEL                     =3D (__u64)-128,
->         PERF_CONTEXT_USER                       =3D (__u64)-512,
-> +       PERF_CONTEXT_USER_DEFERRED              =3D (__u64)-640,
->
->         PERF_CONTEXT_GUEST                      =3D (__u64)-2048,
->         PERF_CONTEXT_GUEST_KERNEL               =3D (__u64)-2176,
+>  extern struct perf_missing_features perf_missing_features;
 > --
 > 2.52.0.rc1.455.g30608eb744-goog
 >
