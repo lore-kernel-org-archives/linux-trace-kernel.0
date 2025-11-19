@@ -1,159 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9919931B114;
-	Wed, 19 Nov 2025 18:33:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2893B2FB0AE
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Nov 2025 21:44:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763577238; cv=none; b=rcNSpTX4MUVwOMdDjm8FRUHxRFRrLdPTvMuYNicbat4dvmMM8BwW4HXuVXt9N5m8Gnd9qTYrUTjCfv10yfII2QZxj2+i6mlJRxtFqmlmvz/a4VXOO6PUjrvsjMLgWA0A76BzYieRgR0TgXoC7SWKh3t33Q1lRrKJAjNc8PPPNr4=
+	t=1763588667; cv=none; b=TCCXspLcMyOPD03jh3YSRxjsE9LvDDu+ftDrL4kB7w1KWxHPBVYXM4NtfItO8BzUrkK+ZWrApVRbtxoQGdA5CW3XxFb4tHvKlxGBdkn4B/bp7rc+sSiBHyiz4raqIbr23GMLEfkdDPiKV0AUAMO5RzrrBur+NE54gE7w1myDZCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763577238; c=relaxed/simple;
-	bh=isuSe0vHAL4pBqh4kPYeDqNJgvukP3SkbC0ClCMHi/U=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=dNZYyqiDB8qSiI8PHqiv/4BDhX3N/9XCokamk8WP+I2r7JFjzcc4HNSccObgYArzyZh3o7zUmvubaX2eNSLkRDAOInexWOJ9MkOH99EetmFMLGT1G7ZxUHSKTxOzx1WqNRI+t16343f/sbKXkd1MCSKT+9E7D6rmWFaNHqDfhhw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Oj6dh3QF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763588667; c=relaxed/simple;
+	bh=wAWPerYA174M4j9byJCSFLMsKyW5NX85WcFSUMI8ETk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QJUFGCoNZLZ/wLxVa1aY6dwfyVhWmbKKVO/NpfQp4LKuzIHiVq9DSZWZPvNEhNuPMn3Q+q94zahSy0IIPtgxJRUnrxL53T9UbKLzNCPGzq5Er+PBT6bhpoVnyzwTdFdPXu0ZrNNINUJXkkjLBK2HooemG5WFj95aLE7dvcLTtvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=PaZObKwT; arc=none smtp.client-ip=209.85.166.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Oj6dh3QF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CCBDC4AF09;
-	Wed, 19 Nov 2025 18:33:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763577238;
-	bh=isuSe0vHAL4pBqh4kPYeDqNJgvukP3SkbC0ClCMHi/U=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=Oj6dh3QF2+yqHgZl00hjnXzhiNz+Kd5gYv4Mj4vHnoLuipqptSvCQU/ENuPdlJrkM
-	 QCZqRhvmmZXjGd/NFfGhOlECLddt5EAF6gsnDbdre02U3ZehF2T2bdHQYrvGRRjZRI
-	 KIUnyGtdsfnJYxILq0DcK0YYT7H1xJuQ214CUgOUoDfVAz3tSQPe6BZ8jeuzAcBm1p
-	 wXft2yGvOtlxxVS/f2uFljuXnVnBuAEiQdQEuRS49EJQ/cQJ3m8lwZTWNnHhaozgGs
-	 apJhTg7BHqj7YbEppl1GoT03u3M/p2wK2rr8z7Rl1f58PwIPr+i0ClaOfchr52lQVa
-	 yxyq/528F3qvw==
-Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 8AE21F40084;
-	Wed, 19 Nov 2025 13:33:55 -0500 (EST)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-01.internal (MEProxy); Wed, 19 Nov 2025 13:33:55 -0500
-X-ME-Sender: <xms:kw0eaXtHW_hPzTjGGcVhcydgSpeOMQsuqt-CDQ2ce8lXwh_2XkBDew>
-    <xme:kw0eaTTFCCwjUA8kF8nkRRywEr7igPyQ-OlA6aLIu76kha6OTU-uEILXGlFKbpWmH
-    l1XsdpwdhUBo5Q6bK0a2g_fD9owfX20pc_Ddgru3Du8XugMOTSVRBE>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddvvdegledvucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtqhertdertdejnecuhfhrohhmpedftehnugih
-    ucfnuhhtohhmihhrshhkihdfuceolhhuthhosehkvghrnhgvlhdrohhrgheqnecuggftrf
-    grthhtvghrnhepjeejvddvtdehffdtgfejjeefgefgjeeggfeuteeiuedvtefgfffhvdej
-    iefguedtnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
-    eprghnugihodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduudeiudekheei
-    fedvqddvieefudeiiedtkedqlhhuthhopeepkhgvrhhnvghlrdhorhhgsehlihhnuhigrd
-    hluhhtohdruhhspdhnsggprhgtphhtthhopeegledpmhhouggvpehsmhhtphhouhhtpdhr
-    tghpthhtohepjhgsrghrohhnsegrkhgrmhgrihdrtghomhdprhgtphhtthhopegsphesrg
-    hlihgvnhekrdguvgdprhgtphhtthhopegrrhhnugesrghrnhgusgdruggvpdhrtghpthht
-    ohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopehmrghthhhivg
-    hurdguvghsnhhohigvrhhssegvfhhfihgtihhoshdrtghomhdprhgtphhtthhopegsohhq
-    uhhnrdhfvghnghesghhmrghilhdrtghomhdprhgtphhtthhopehurhgviihkihesghhmrg
-    hilhdrtghomhdprhgtphhtthhopehrohhsthgvughtsehgohhoughmihhsrdhorhhgpdhr
-    tghpthhtohepjhgrnhhnhhesghhoohhglhgvrdgtohhm
-X-ME-Proxy: <xmx:kw0eaUKcvBX6ZqDb2Zfz2lS6ZTPn-nXSDUpeDQirQ9WsFITs37m1FA>
-    <xmx:kw0eadq2-jmwILaPpoRuPfN2N1yM3Y8zfKpCUT6xaUllbcz1l4r_ww>
-    <xmx:kw0eaY_jsr-_Ab2g_NL1wFjttUgbqyW25dTE8Gwsk4BL2Ms0a7Nw1g>
-    <xmx:kw0eaY-o7o-_VANLMjD5K5xLI3aUCtOQ36zJ9mu52nOwG5c_vbE8HA>
-    <xmx:kw0eaT6PvxdLshew8G6EsocVLck8YE1dY0HQ7jptKjjUdBShZ13KNOpC>
-Feedback-ID: ieff94742:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 4771A700054; Wed, 19 Nov 2025 13:33:55 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="PaZObKwT"
+Received: by mail-io1-f43.google.com with SMTP id ca18e2360f4ac-9486248f01bso8119739f.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Nov 2025 13:44:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1763588664; x=1764193464; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=WzlXhKld4nT0xL82yzn50M+W55+QbiWaolCWYFDzktY=;
+        b=PaZObKwTabxWASocyEhxxg7gUxqtsZEf+i64JBSFw/dMY9LCheCySmew+ECflQxTBZ
+         +S+h6uWFaPB6YZfUhs3FthI0bdqku3e+uJkVnxKnLaWGa5vxXVTCOPG3HkXO5dqIMcIM
+         bG0kdhX8NdA4vkaz/CDke3L6kXRnRcro85e7g=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763588664; x=1764193464;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WzlXhKld4nT0xL82yzn50M+W55+QbiWaolCWYFDzktY=;
+        b=rTRwqXeiFKCwEdPPRDcYKp8X3g9YmjInT4/X96Qo8vE680kTqGlhzQt82kZ/K+rZQB
+         7SDZmlKmlP4+023dtUXJrZLg35aWIMZpJnKdchFttsmiQ8RoqDb3VrgjFgpK72PmD5Ku
+         m54zcYQYlcCK5a6L+eEGTXNXTN80RH86kDn46SL3HJxuPH/VAGxzXiDQqYnaf35EK/YD
+         IsFv19eoVMunKV48OF8XhdHMytuQPW9GCw2tvFC/XKdfnG7oOScFBkgWa+WcD8Oxw+i2
+         eNbBVPb0UWX17gB8rzV23HlDe7BPzWbOWh3ehZQ4S23Pmk7t4o14QZN3rruF9zbgFKfA
+         l9eA==
+X-Forwarded-Encrypted: i=1; AJvYcCU02Dc0r9ZgmVmANtjmxb075jRBL5LrgeXKucTcd23006FGvVIWVEcwfhd4k+yY+sb+xPk/ZV8DK8BuNWSrgNYbJiU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yza8EoomcLMi5bNZGfRvNj7fZPyy0CASWDi3Cowkf7snSqO5dBY
+	+aODVZI5xmuWHXmCN4kxaNoRtvat009NmZp8h9J/B8A/sj8Zq8NroFYKpQ86pS50pAk=
+X-Gm-Gg: ASbGnctX0ryiwKpKEw40r6jrbGL2zUcKb2BVhPav8tIquuQBxJXFBRQIrKz8AUOeI+P
+	okWvr77NCkCKQXvC84xEk2GKllMYM14+ha4TEhRPFatdK4kl8i/Cj7CUrmqP4nKsq228LXfbw3H
+	R9dw0XIY6aPlIaZopKT/rdt+UGiZEp1+POWNIGiSRwpjwgYX6hiTjl7fHs6/jo9hkpeCU5JFPLH
+	/sRqkcLPS/lyayp9rxdVwHgurF19oFcr9FSujh6QYGJ5OgwT2Noj3JamX/jO0RYK1C7iGv6KOaR
+	yXoEAf8/EpB6HjgCu6omXhkUfbi9ziTeTKoiAABG2hYAljfwXhghen5EA3Jhb//au2lpbzUC0YU
+	fL84uYTmENSzyGRyq20va9kne3vIcNu0sseH+/YxJc3SUtRi03+VeCLZV5eGU1UKIHJhjano1Se
+	CInGBmofynshShRehMY8GbOwxaNmpXkPaNog==
+X-Google-Smtp-Source: AGHT+IEYqeylwrGRDCIwfcCgECknaWrcBPocfi4nhpOHNSC1ufLbnIci76b9Bf4WGIE5CVi73ijqlw==
+X-Received: by 2002:a05:6638:292a:b0:5b7:b997:ffce with SMTP id 8926c6da1cb9f-5b954043c72mr566133173.10.1763588664058;
+        Wed, 19 Nov 2025 13:44:24 -0800 (PST)
+Received: from [192.168.1.14] ([38.175.187.108])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-5b954b207d7sm172340173.33.2025.11.19.13.44.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Nov 2025 13:44:23 -0800 (PST)
+Message-ID: <f5f272e1-e164-4bb1-bfd0-42edd5a125c5@linuxfoundation.org>
+Date: Wed, 19 Nov 2025 14:44:22 -0700
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: A1wO5D87xXUg
-Date: Wed, 19 Nov 2025 10:33:35 -0800
-From: "Andy Lutomirski" <luto@kernel.org>
-To: "Dave Hansen" <dave.hansen@intel.com>,
- "Valentin Schneider" <vschneid@redhat.com>,
- "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
- linux-mm@kvack.org, rcu@vger.kernel.org,
- "the arch/x86 maintainers" <x86@kernel.org>,
- linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
- linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: "Thomas Gleixner" <tglx@linutronix.de>, "Ingo Molnar" <mingo@redhat.com>,
- "Borislav Petkov" <bp@alien8.de>,
- "Dave Hansen" <dave.hansen@linux.intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>,
- "Peter Zijlstra (Intel)" <peterz@infradead.org>,
- "Arnaldo Carvalho de Melo" <acme@kernel.org>,
- "Josh Poimboeuf" <jpoimboe@kernel.org>,
- "Paolo Bonzini" <pbonzini@redhat.com>, "Arnd Bergmann" <arnd@arndb.de>,
- "Frederic Weisbecker" <frederic@kernel.org>,
- "Paul E. McKenney" <paulmck@kernel.org>,
- "Jason Baron" <jbaron@akamai.com>,
- "Steven Rostedt" <rostedt@goodmis.org>,
- "Ard Biesheuvel" <ardb@kernel.org>,
- "Sami Tolvanen" <samitolvanen@google.com>,
- "David S. Miller" <davem@davemloft.net>,
- "Neeraj Upadhyay" <neeraj.upadhyay@kernel.org>,
- "Joel Fernandes" <joelagnelf@nvidia.com>,
- "Josh Triplett" <josh@joshtriplett.org>,
- "Boqun Feng" <boqun.feng@gmail.com>,
- "Uladzislau Rezki" <urezki@gmail.com>,
- "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>,
- "Mel Gorman" <mgorman@suse.de>,
- "Andrew Morton" <akpm@linux-foundation.org>,
- "Masahiro Yamada" <masahiroy@kernel.org>,
- "Han Shen" <shenhan@google.com>, "Rik van Riel" <riel@surriel.com>,
- "Jann Horn" <jannh@google.com>,
- "Dan Carpenter" <dan.carpenter@linaro.org>,
- "Oleg Nesterov" <oleg@redhat.com>, "Juri Lelli" <juri.lelli@redhat.com>,
- "Clark Williams" <williams@redhat.com>,
- "Yair Podemsky" <ypodemsk@redhat.com>,
- "Marcelo Tosatti" <mtosatti@redhat.com>,
- "Daniel Wagner" <dwagner@suse.de>, "Petr Tesarik" <ptesarik@suse.com>,
- "Shrikanth Hegde" <sshegde@linux.ibm.com>
-Message-Id: <292ebf6a-4a7a-43b2-a670-ea53728f2c06@app.fastmail.com>
-In-Reply-To: <bad9eaaa-561a-498a-90d1-fe3a3ab8ba37@intel.com>
-References: <20251114150133.1056710-1-vschneid@redhat.com>
- <20251114151428.1064524-10-vschneid@redhat.com>
- <bad9eaaa-561a-498a-90d1-fe3a3ab8ba37@intel.com>
-Subject: Re: [RFC PATCH v7 30/31] x86/mm, mm/vmalloc: Defer kernel TLB flush IPIs under
- CONFIG_COALESCE_TLBI=y
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] selftests: tracing: Add tprobe enable/disable testcase
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Shuah Khan <shuah@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
+References: <176252610176.214996.3978515319000806265.stgit@devnote2>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <176252610176.214996.3978515319000806265.stgit@devnote2>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+On 11/7/25 07:35, Masami Hiramatsu (Google) wrote:
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> Commit 2867495dea86 ("tracing: tprobe-events: Register tracepoint when
+> enable tprobe event") caused regression bug and tprobe did not work.
+> To prevent similar problems, add a testcase which enables/disables a
+> tprobe and check the results.
+> 
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
+Steve, do you want me to take this through my tree?
 
-On Wed, Nov 19, 2025, at 10:31 AM, Dave Hansen wrote:
-> On 11/14/25 07:14, Valentin Schneider wrote:
->> +static bool flush_tlb_kernel_cond(int cpu, void *info)
->> +{
->> +	return housekeeping_cpu(cpu, HK_TYPE_KERNEL_NOISE) ||
->> +	       per_cpu(kernel_cr3_loaded, cpu);
->> +}
->
-> Is it OK that 'kernel_cr3_loaded' can be be stale? Since it's not part
-> of the instruction that actually sets CR3, there's a window between wh=
-en
-> 'kernel_cr3_loaded' is set (or cleared) and CR3 is actually written.
->
-> Is that OK?
->
-> It seems like it could lead to both unnecessary IPIs being sent and for
-> IPIs to be missed.
-
-I read the code earlier today and I *think* it=E2=80=99s maybe okay. It=E2=
-=80=99s quite confusing that this thing is split among multiple patches,=
- and the memory ordering issues need comments.
-
-The fact that the big flush is basically unconditional at this point hel=
-ps. The fact that it=E2=80=99s tangled up with CR3 even though the curre=
-nt implementation has nothing to do with CR3 does not help.
-
-I=E2=80=99m kind of with dhansen though =E2=80=94 the fact that the impl=
-ementation is so nasty coupled with the fact that modern CPUs can do thi=
-s in hardware makes the whole thing kind of unpalatable.
-
->
-> I still _really_ wish folks would be willing to get newer CPUs to get
-> this behavior rather than going through all this complexity. RAR in
-> particular was *specifically* designed to keep TLB flushing IPIs from
-> blipping userspace for too long.
+thanks,
+-- Shuah
