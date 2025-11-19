@@ -1,70 +1,70 @@
 Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAB01341ADD;
-	Wed, 19 Nov 2025 12:11:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B373221FDA;
+	Wed, 19 Nov 2025 12:19:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763554297; cv=fail; b=Hoy/pCac5wGcAphY7NJu4z2QDSTeFAx7OvmuUFsLf6cOKvtZquvdyBJM3G3nR65wg474aImy0mrWmzlvBNTaGFmdE2qxeAd3RITAEWX1dxOnaBy+JsRhbLNNlY7loimPmaj6uR5owEg2IJPQ7/3J/TbNY8CY8rh9nIXZfvNhCgE=
+	t=1763554779; cv=fail; b=SCUrrKLMtTfUrH99mu47pEuGINN6PJOmST05UBVrU130TYsMY/8tMUz2ClARBDIwgQpHlfIBD98dMGklZ1k+FVunazM0nMwx6NqcD3HGygEPBOG5CklSYwSDn36jxOk1fr7fRzYLTglwgIjIlfN2oTVPMmrLXvy5x0yVVRJc1tU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763554297; c=relaxed/simple;
-	bh=NuwI9SSt9vWs0/58rmE0BxXHMIWlVaE23CdoVTSV12M=;
+	s=arc-20240116; t=1763554779; c=relaxed/simple;
+	bh=HVVmdyzhv/xGJQjue59MxibQ8DzeRHqmp2LCNTpbITk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=pQbsX4OgAdTFb16GB3DvxRx2eWQMxtjaLLlQWiBMkFuZMdQqXxh7u1dPQQD0m7XdUWqz/7vcwuBHpnHXufqvtZm507XWlJl3AbbdPNXWUioXmO0yKs0ZIcdCOWbZwts1C+rDcNV5YU/lGAePZn9XqHUP2YZlGBb01qQ8Bdz734I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=gmAuYx8T; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=X61Ox7wf; arc=fail smtp.client-ip=205.220.165.32
+	 Content-Disposition:In-Reply-To:MIME-Version; b=mOUTunwoPFJsHr2i6/tNA5W+Mfquv5Dxw3YXhg9kY0DUowDqm+0oEaOhKkYfd4ZEg3ZfysPqniDxn4zfc1ClPPANOAUgTq20BqLpZnuXOT+PGijaIeSHAxBZMn18XUiaGkGjQZ31JcVY/7lQ5ttQuGWrDeCkTRIWs92i4Xv7g7M=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=TVNVHiQ0; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=UdMePwfJ; arc=fail smtp.client-ip=205.220.165.32
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="gmAuYx8T";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="X61Ox7wf"
-Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5AJBovfL000433;
-	Wed, 19 Nov 2025 12:08:53 GMT
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TVNVHiQ0";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="UdMePwfJ"
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5AJ9QQ8i028460;
+	Wed, 19 Nov 2025 12:13:30 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
 	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2025-04-25; bh=+3J36bIF80QoYDZ/vo
-	8AbRG6UZqKRTzVmd7W8fQMi7k=; b=gmAuYx8TG38ueF3eRNw8C8cA6Gh4OvR1Fa
-	EBRlE8zBFbHaTNFgjgigHiJnfTmI3DCbokm8mhP8ZtuqYOJnpZX4D8kC1YAB/CqO
-	vD13HODJgFV25a2+oJbssLEKGzxzZLxZbUtNmxQb0FxbfcuSp8NtvucX5DtfJ0c4
-	X0xETGj5VQXjFU+uFlza6xxYp5Qcj44kIaqvCBhKz+buj1cWbHc84UGHCvnMfYLe
-	naB1oD7u/nWCu/taZnT6+U/1pPQ1nBSaavM3ZtLY6YtKtShxx6/mGEVjCIBzTdVm
-	R6pdRFcFf5ZQr5wLWNXepsyj65hSVRqJ+femy0ngxsYSTc4LMwxg==
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4aejbuprxd-1
+	:references:subject:to; s=corp-2025-04-25; bh=G5NpZTGnPT8QsnqvvL
+	dCpRg422vll3CuelGSXHQbpJs=; b=TVNVHiQ0aDrLHeefkUapMKBCwBL4IoiIdI
+	rohvX1zQ7pe/iTg06bPima3+PoIn+y6DUTSbWs7D7qmCx7+4GdQIEJHZ7rXYleAG
+	7rPrDWepxbZuYK5Iwc4jfR5H9+aU3iixJAewIc9j6L4s4Z+x7jN96DzGToqmDQXb
+	0a4ih6JXtkMQNWzFdHmpfPAixYaiY1dg85bAco/njiJJ+1fARsDquQJBzfP7q6tF
+	S+1MAtOsVB8QHE+jDAK7nk1+dykWe2NEwrgrKxfwiGUn65sx51WdXBvvKaOeDn8t
+	OVmarWJ2FrhgjBfEh9eP2O0LNVMesddEDCJVavam/UUIln19zBzA==
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4aej966tq4-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 19 Nov 2025 12:08:52 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 5AJBM5TM009745;
-	Wed, 19 Nov 2025 12:08:51 GMT
-Received: from bl0pr03cu003.outbound.protection.outlook.com (mail-eastusazon11012060.outbound.protection.outlook.com [52.101.53.60])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 4aefyehs7j-1
+	Wed, 19 Nov 2025 12:13:30 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 5AJC0juu007188;
+	Wed, 19 Nov 2025 12:13:29 GMT
+Received: from bn1pr04cu002.outbound.protection.outlook.com (mail-eastus2azon11010029.outbound.protection.outlook.com [52.101.56.29])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 4aefyagrt9-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 19 Nov 2025 12:08:50 +0000
+	Wed, 19 Nov 2025 12:13:29 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=wvpDRScEl6BTiu/+V5dK/B8mMdlAHCIDM5HuNCCLiKmww62f+X2B9Nb5u+cpcBRSQ1q2x5/r3eOSgUf3q9TwEwJLo7gwyTrv26MMk8kiZahfCkzOMgAYGvrieWUnVe2INmc7xax9j3roVQJhqMk5WKR6AWdNA77GPyVPq6pLD8GA1X6NR3e9r3OFLnKRAGyRlhYlOLtGpo/ybDLc0NOM2Zk7mC3vBrYRF2Gr1+7wRDd3yCKQ9gl9wvp5SHCrBS2qIXLrBnCy7nZWVMBu3aMUJEjisetYbQX9xAu8g3y10UVPIELRNF5kVyNQpEJI+IxrVMeIFzHma7B5cmWQeamzqQ==
+ b=iI9RVocIbOYTxKc5DXFKeRv605pBwDjOYMiAJW2uQvyoXFDpDcGxvKr2FIYT5z1syYbR7II3kqzaOv039RkQJ0f+43//Smu6v5YnsmdUUTbRAyEBB250P2en7D06pWTc6M6yMh1t6JUHUa2RRgRUNKKUIqlusmPnSPXXzm0QF5pn0wqsmmCxQ18rl/FkfnSYNVr/Ul6l9GK93buCECH/+h4eSluZLeF1a4dRODc5SDdlXn9OambcCuDkrmMVtiplwSeVsfg6y/E7bUQORbi8u5yjik1bfD5LqfLYyXBKMVOphGi47sI78qUdvvtoDhJUkJPSRyPdCk+Z5aQ0SUnh3Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+3J36bIF80QoYDZ/vo8AbRG6UZqKRTzVmd7W8fQMi7k=;
- b=syN245glGCa+CrGN1doQrRhAvwpvONIrIAbejr+9pa+offY8+QFUY4wrZqh/8NYetjL6PAJxcRU7ztCm/scdu4uBWeq1Akh8fjqAYBS3QI38MMwitVJ97YHTe1mZ+etV0eMVcT4nnwRGpvMMX8V9iiZXbw7uiI6ysa6zPOFGBCRrYhBuMf16zyGCJgw8KRYNkkXPkA4hh6Ho5ziA+RTIBGKb6PvpC4p6q/quupgDlNdfx0jmh/akTlEmPt5U9kNWm6fXi6EkVub4gbNK56cBVeOGXdybg6tvsOL0/06Qw6T/ieoMCIKyW8Nh6LWVpZ1Vb5vSdhfwjrQ4McMh6ESxag==
+ bh=G5NpZTGnPT8QsnqvvLdCpRg422vll3CuelGSXHQbpJs=;
+ b=sfZG+hemJYUbfRQvdAf/mIHYzJIGqq/xxk9vYbds4R1A3XdyShp+pMW+IRWOeeeOfJRF96CMr9Ig7youicFLbHM+YhjmDY4FGjUlxB4UVd5waSDO5P+3DJthkzz0mObz40Xt1feUJM+yeaYSPMcBn+tUhuVbNiW/t1r8XTvl2m91OoVtprzqYoBiVmv0ajK/7MgxIQtRdpGxjOQhTLtFGcXdCkobCmal0XqWRYEIIDJJU6y1UJA+FUcKmeuApSIdcFBVucl/Os2N7Pxx7kUJrPeu/LpkmU+oNjHrY0WZayvoa5Yx48mmlad7MFTO8bs7WIrxD9tJpU4ZlZUz3YBu9A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+3J36bIF80QoYDZ/vo8AbRG6UZqKRTzVmd7W8fQMi7k=;
- b=X61Ox7wfIn7ewFOEn+iN9hWcnbw24PAHF5kocLOpc7Y7wkI0tDXZV1T3s3YeMv6c1l/AF24ETtpbgK69Nje/BCL8stO64Iu3XtrpI+ZUhtk/13jl01L44DFBxS2UqJbRIhrTO8nv9NybwitfCXERRAn4iKd5LpWy+Lae4y4m4YA=
+ bh=G5NpZTGnPT8QsnqvvLdCpRg422vll3CuelGSXHQbpJs=;
+ b=UdMePwfJ9bQndWiYrv3nAerotsaL+iNUGvkGrcrSFqDO72PAeOAhTj99Ku5V/hdnKan5KdYp0velNoxUnWhn8BXSA4b8LWTi/FAjPBuqGG/xxJnUjf9aEqTvDfP82ZEriQtb8EPre5k7agDScao7pfEPeV9mI56nSc4z2Yly6Qk=
 Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
- by SJ5PPF0687F9010.namprd10.prod.outlook.com (2603:10b6:a0f:fc02::786) with
+ by SJ0PR10MB4750.namprd10.prod.outlook.com (2603:10b6:a03:2d5::7) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9343.10; Wed, 19 Nov
- 2025 12:08:46 +0000
+ 2025 12:13:02 +0000
 Received: from DM4PR10MB8218.namprd10.prod.outlook.com
  ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
  ([fe80::2650:55cf:2816:5f2%7]) with mapi id 15.20.9343.009; Wed, 19 Nov 2025
- 12:08:46 +0000
-Date: Wed, 19 Nov 2025 12:08:44 +0000
+ 12:13:02 +0000
+Date: Wed, 19 Nov 2025 12:13:00 +0000
 From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 To: Nico Pache <npache@redhat.com>
 Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
@@ -85,17 +85,16 @@ Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
         mhocko@suse.com, rdunlap@infradead.org, hughd@google.com,
         richard.weiyang@gmail.com, lance.yang@linux.dev, vbabka@suse.cz,
         rppt@kernel.org, jannh@google.com, pfalcato@suse.de
-Subject: Re: [PATCH v12 mm-new 12/15] khugepaged: Introduce mTHP collapse
- support
-Message-ID: <a01349f5-a870-4a13-a4cc-00aba007348f@lucifer.local>
+Subject: Re: [PATCH v12 mm-new 14/15] khugepaged: run khugepaged for all
+ orders
+Message-ID: <2f1cdad3-6ac4-4502-a599-5bef9dbe0847@lucifer.local>
 References: <20251022183717.70829-1-npache@redhat.com>
- <20251022183717.70829-13-npache@redhat.com>
- <d03e079f-35c0-4fc1-8856-44fe33fabb2f@lucifer.local>
+ <20251022183717.70829-15-npache@redhat.com>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d03e079f-35c0-4fc1-8856-44fe33fabb2f@lucifer.local>
-X-ClientProxiedBy: LO2P265CA0082.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:8::22) To DM4PR10MB8218.namprd10.prod.outlook.com
+In-Reply-To: <20251022183717.70829-15-npache@redhat.com>
+X-ClientProxiedBy: LO4P123CA0344.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:18d::7) To DM4PR10MB8218.namprd10.prod.outlook.com
  (2603:10b6:8:1cc::16)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -104,838 +103,246 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|SJ5PPF0687F9010:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8e268cd4-3aad-4c24-da04-08de27646447
+X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|SJ0PR10MB4750:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8d6fb7b9-f107-4e2a-ffdb-08de2764fc98
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024;
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|7416014|366016|7053199007;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?Lzzn8zyEF3XAigo3QvZqgXCijiGj5Y9gzQxQ9hCxNlqZBJjsLL2JBqVG23b+?=
- =?us-ascii?Q?yahwEvyTwJYqir7K5mWQ5xEKx+H6HKolgEQ20qUhfmi570Fis2eHD2c6YuiQ?=
- =?us-ascii?Q?pnmG4T3nadDFbdz0b4JYcdFCbyxQQdW5NsBISNIDI/e3GoRyxfbOGrlYr4GN?=
- =?us-ascii?Q?KXJtVuhSMesuhp0BEVF9gHgu6okmnGk5g+DWwwysEhuL8euUuT14ErluIVFb?=
- =?us-ascii?Q?qu3NuPMp5Cm1o87bduGbB3gNGX4JQvcHDwON9VX5zB5CQADN6BcLZMrl/iTL?=
- =?us-ascii?Q?x0j7+3tgrlStYqr2d5WfPRxjNRbOqzMvwQ93U/KwyOMu5hwRTeTmbWOEoorK?=
- =?us-ascii?Q?kj5HwIqvI+TF2MNNWD0i2+9nq3mnfGkHmavktDJz0aQv9oP5IsGoEAdF58mk?=
- =?us-ascii?Q?/r9Phgj/Aq6QBhFvM0wigQACwH6PJStKNOfujDxKbVpdxE8tbgAkhHNA64A4?=
- =?us-ascii?Q?BKlgqaJFDub9lGME+XFPJ7TtE0i6cntR41effmBE5HWC7wqksizqYfN0qVVt?=
- =?us-ascii?Q?2AW00H4EowYKidGpxRdII9YKCkRaAiuZzAcYNqZTaP5s2RpT5jGDmMJrYM9Q?=
- =?us-ascii?Q?lwyI4KOisXwN4j5lZcZu8/RmhdvRb/Hp9w7Az/29Ki4MMMA5P607YzV6Y2K6?=
- =?us-ascii?Q?kRpiqN5t5TKLLTn1Ud6vldOI9knyqyOHzdIuCF2gridVJPgDQW8VSkiAAQG7?=
- =?us-ascii?Q?ekYgRbHMjfpj0T/1fnvzozkLq3gH3VZpk7YGahm5Kxhm0tEulN7oAXDSiF9A?=
- =?us-ascii?Q?Fa3huDk9+45eOsVeHNeVQSAyybSBKBWhgGbKqjD1WE1PML8UQgYLssB0FAH4?=
- =?us-ascii?Q?ZLzfZou8eaJQqos98axOrfQOwYmGrcRZDnxgwZzJH0RICLjIFkSkCpAwOlWN?=
- =?us-ascii?Q?PBnrETBLjVJdB2cf0GQPmGWxNf1y91qBspcAQU67etFpXDsxF9WcP/As/FAX?=
- =?us-ascii?Q?LFtPkE8VzqytBr2yYRuxKCt1mQ/YzX7SiAJK/T1qmMWNwTRGIPOxGzQaY8xY?=
- =?us-ascii?Q?+FDNlcvACryaBFqISfdw7aB5+uSF59DekR5u0ea+KOkCDUyklgoB77w0J9E1?=
- =?us-ascii?Q?7dLAgWb1DWnAWyW8+gq4giwdgxo8hqLv2U17GHUnT9QJrYsNuj01mDyjA5/b?=
- =?us-ascii?Q?71YabZcYip3mbqNBtlTCdWYEcn7aSXdMQs25KXAd/8A3lBx5VaO1Dw/+wvW9?=
- =?us-ascii?Q?gBUA5MUjr4ixtPlxFsDTt+4b7wOB0DjPYMU7Vuf+PuA7emsBEDjwn00bSNbC?=
- =?us-ascii?Q?9FrLox0EmXzytKPs/lCpsrYrvUTMhCP5vUIKNcTuAUtSTUU1pT9lzfwtiyfL?=
- =?us-ascii?Q?Lzi/ddf4bKTBCSOevFkyDhY3yETK5l99rp5GcpTqRkjxhadBsVl/t6HyQgGY?=
- =?us-ascii?Q?c83f++hePh0epnLA6qPWIL+ag/FIESDHWr+rO8Nn/jIkfwyv37fZIkKQz9Fc?=
- =?us-ascii?Q?ZwH3e1q0rKfXcW+t7iJNbQE2xjmQmTrK?=
+	=?us-ascii?Q?sdxRcXTlmFDjPB32d0JMeCG/U6JnyeNVmW/0lhk/ymCJvRFyAMZ0LpKcUY5u?=
+ =?us-ascii?Q?FwFOn+n91nfsU7273MM6UeskVELSrDyHS3rhIAvNDBz6+52uMH2qDBa8yo4R?=
+ =?us-ascii?Q?Wd+YDp2oIwr9+bnUAR3Jqy+EIMymje8D2z63Ny2aHYFtPZGt9tflorvt9r8I?=
+ =?us-ascii?Q?jedC1TPypnapWTEOkocqlp0i3rLF9QVnbMdA+A/h4Awm4sNKqmlXsbcgj29D?=
+ =?us-ascii?Q?WGVDzje2KC5wdeqn81ZdlE/l/MXoPtjaa+wB6rg68ITpDxZVIfzV0UzLUSKZ?=
+ =?us-ascii?Q?X28VilbEMKCRV7GxUop6mm9Tos/egja7JNy5e3lNmD78p21gq35bjjFPL74a?=
+ =?us-ascii?Q?N1qhwMz70trj0c76OGKoAoN6g8LSBdEogtr44LG6bbMi6BuLs/2mAB24zHj5?=
+ =?us-ascii?Q?rzM828wJ8F+5JLgrrnygccgSQn9VkE2rOymRs7eyFdJHUdfrtbb6599wSr3K?=
+ =?us-ascii?Q?L1h22IVXfUZf6YvXEeHV2g0LCS5SmMiYo34IXTKft7v1YX49o5jSiaxqW+2M?=
+ =?us-ascii?Q?+HD9R9Cw/XnPoplBwfLGvA7YQ/qKtGfQ/PwmFUd5oF8r83/fr2vdvFxiOvUl?=
+ =?us-ascii?Q?3QxHBen0eOciMYhAs/zXBqxIkZqFll80P96madYHewqRUPzTo2qI7tUjWBqA?=
+ =?us-ascii?Q?0esJ0eeTezufpRK04IcNzOghNFEVJt9CdbkAQobVbsX1WbFEfeh8F5KQ2k+M?=
+ =?us-ascii?Q?HCggx4G7HWiA5leMbriOM9TrD42mP+f4ahgHk93/SevsaLV+X3XnkRsHX9QL?=
+ =?us-ascii?Q?8vb82GKzseF4Auaag2ZO+FB1/g8CIEWiC9zGxYJ1iV1CBxf+n+oyOR8I0rd4?=
+ =?us-ascii?Q?+KA3lq2Rp78XtT/UdWHLiTXB3MZ9xPVSedkN0InTwbBT0KCaToAAAybD6hp6?=
+ =?us-ascii?Q?1h+q13n8OeCVvu4vMBTBftBNn4rWpOUy7PSEjfxcvXwTW9mgZntEGtM+UAyg?=
+ =?us-ascii?Q?dxKeLnHjkmqrsr1yTiX/gxEj/3gLbrDJClT68ayIgcCGZpfKrH4deYOfIxLw?=
+ =?us-ascii?Q?TiKZ3my62PG6Xn9zzk+ZV4aNSFw9QPJAxxpYxA2e+O8dW5XP06q6WCfrkz5E?=
+ =?us-ascii?Q?COmrJjLHBraQMRP4BGWdqiAJLr8At04lA7hxkcX3Df8miJCJaHHYUixJHlHJ?=
+ =?us-ascii?Q?OHl0ItRznfVENNS9NrRRY7wPVw51xuTC+8NVL85sWtx4wXhUkFeIzN5SXQ5k?=
+ =?us-ascii?Q?wdKpjA+pNSHKaYQDz1Pw1caUrzS5GRhhCncoXtIfqU7k01hupb+5yBgmsm9g?=
+ =?us-ascii?Q?fsq81YNuRKk5SQANy12kue9b46FQNpUmX7+h/SAwzGApHXQf8OCsPGJZMFOW?=
+ =?us-ascii?Q?cnPZgzkBkB0BSHbqLWozFRJ565bfENaenUpCEZ4bZ/By/UitVCeZGkmwhDzy?=
+ =?us-ascii?Q?+6PqeafzfvDd+L09DE7BgPtsAicm3oOUl/349GJWGUr/oyJKicluUrhJE43X?=
+ =?us-ascii?Q?DIJAll/sjonP/m2AkOxMOCjhr1/hXIe1?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(7053199007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Az7tXHN4jFSdWX8zGBBUk6Qqj2pnWrpaE67wOhRMa0xUU4LBKitWqnT+RV+R?=
- =?us-ascii?Q?m5zdlZHfT2PPEENv3SKq2vYLv5R8Y7Rk06cxhe8oz9hHFio6VYnl8nkjmWS4?=
- =?us-ascii?Q?JoQ5S6+aJx6OgzfiwOBcpN30ny3cNqYyxWmcmEckALK/1mlqjhNE6vUacVoJ?=
- =?us-ascii?Q?gD5IMeZAe8Z7QkBEXHz5lmT3fRB5ins87t68q1GfG5I9aZg8jEvOlkvToOX/?=
- =?us-ascii?Q?zpp+q/VuMQBK22/FdUJACGd1RnCuIp0Gc+vHJZkVgYChKOaqGM1RhWEX2N3O?=
- =?us-ascii?Q?bzN7oqmCTg/s4Yj4JlyIkm5JxEBfVZqWAcewW1sVEW4WVQyD5WY3ATVUF+xs?=
- =?us-ascii?Q?hi7GCWPzhvrkpJxlNa8Gq+vVW2pvVkjH7T4kpOyCoa7yX5wQ8+uLE2S+abiY?=
- =?us-ascii?Q?qFFx1DfYXqTQE9saKVJPBWdhqb/gy0cJG3Ff5EA5sZOhT/EDqTCU4U5VqNCe?=
- =?us-ascii?Q?AlQqa3SEGNshjG9WZEGK+0Lz/CCqxxDAbUyMYYjesdB5VnlcxoX8miorkJYY?=
- =?us-ascii?Q?N4o+XYPu/8uLfR1GYtmdqsC3zcUr6N+cmpOxAol+tS5PQOQx0gvVfEqNnAgq?=
- =?us-ascii?Q?DmvmYG3LRDlqDqWK708jVxnpdYED+SkXRH2vi/JUNXVyyS40wE82nIzmTBJ6?=
- =?us-ascii?Q?+guX6S1oKrjHsJl3bEfNHpepVkD3H/8xsFk/6+QtBYry8v6R7Z+06SZgqRFO?=
- =?us-ascii?Q?tV8HBg+yiFsa1MfB7HaxPKGMx8kqDPv1A6gbpLrrwrZz8ti5qz4/XpKUxsJH?=
- =?us-ascii?Q?ot+29ztoKWVZKNqBaN3tOD1dnYMg1zbeh0juudzUg/O371cO2IRVB0fKNORh?=
- =?us-ascii?Q?VWABUBlY+BPtTv2E52W/qutg+SJYI34DSf9sEcXWhVKIg3YykADTbtESkhBg?=
- =?us-ascii?Q?TI1y0fjNJOks/P2Xgdf0uG33WMxwCBJngrC/Z8+u4Xf1OXa7Zt5luLY5n1Vo?=
- =?us-ascii?Q?XGOltnaaH9zMkH3VevG5GuSC9PUjjJM5dliTKC2XNOV/ZAGem7WMqeGF10Rg?=
- =?us-ascii?Q?LB84NLpw13LpbhXABTb4CoO0iQUtLuubKd/xNO9z8ZDjxfZtyD1qkH2xm562?=
- =?us-ascii?Q?dHRqsfYATpPV3ypUN5KNyq8KtFS26WH1+IXpBuMDeL/6edFDNyqtfFwz/4sL?=
- =?us-ascii?Q?fZpkE2quyzT3waTFVcQtZt64Hu4CiTbHDDAH9EWyyuXPFhmsU1v/LQuzG1Vp?=
- =?us-ascii?Q?jOPvjWQ0ipV/hSWIJf2KlYARsToZKO4mQaBY+wZZoVA/CLUUeBhHqFNPLGNl?=
- =?us-ascii?Q?oG3BpdeXPfVwHA1vH4budGf0riip+dEJrQSA2wAq+/7z012EeTVGZuiP6puS?=
- =?us-ascii?Q?JQFuUQ/+x90Qj76SI/kYz7yZdXDn4IFkIR4gaP3x8+JuDR7fuCF1e4a+pspf?=
- =?us-ascii?Q?gS8lWKZevCKFTanTUU0SKTDOu19lc18+XUvqNXnEBHU7Kr7NrsySQG5Eni79?=
- =?us-ascii?Q?i7NcnmX17m13V/nglug9IHpGxY1HvQeBh7aN0k9hzRQ2YTUJdt353TufYyCP?=
- =?us-ascii?Q?I1gNVQ4vgTS6C0yGCsD6rNwIpwXjRVkPLRuyW3E8wCX3nmJn8kNbpPfWYCjK?=
- =?us-ascii?Q?WSI7uNHFXhIabTVmY8H5Ygc4cA+fH77r/ha8pu39uw2iZGknJS9XN9U5rwJj?=
- =?us-ascii?Q?4A=3D=3D?=
+	=?us-ascii?Q?rUXsZMT8RAhZPhFkGrFEerEQ480T7gCmeXWI0S0ksAfvB2tjpDfUF2g/NKdM?=
+ =?us-ascii?Q?iSD5X+SwKDQDC7dCPWSK4cKX2dRxP6L+2+O8ocVdMKsreFZx21A39MgKkpBx?=
+ =?us-ascii?Q?7isa5ec1numXi+EHiNSLWblpuqwuDQ4ih7AcbNPg6yE/AQU6HM+kv3n8+zQB?=
+ =?us-ascii?Q?wxftCOVWvIHahZXW310ygmpzv18cLtzkHFSR7A2M4bY1h3Q+zigHdEJJwVPN?=
+ =?us-ascii?Q?Y32viUY9xw9tz6IhCwkbUfd2nFvzKOsign1B/g/7D5qPHqz/1HNuQjOlupLK?=
+ =?us-ascii?Q?d5BZqzESN6kP+3PEwY8HJ6sbKKFE2zZag4fz2gvGYAKzK1A6AX81HRTX+zvh?=
+ =?us-ascii?Q?ayKEOA6bYOSzUCWN1NsoBHE9XkqvXuR1/J8AA17zYdLtGElL1IG725KBfEiv?=
+ =?us-ascii?Q?IjuIKRw1lWZiYKhn8tOkrgAHvw6zDz4GlkvgPPvmr2NcrRCCuV1evxrtVKgR?=
+ =?us-ascii?Q?J1AeIJBoaByN/rsULP9jBeA2GL5uvLewNldabQyepLQg9p8e4CaV89/uuLJi?=
+ =?us-ascii?Q?RSceCyFJNYmAJ+vqLGlaYWchsZgz5/24lLIIs+kyT7JT3e2LN1NV9GOxxyIN?=
+ =?us-ascii?Q?F7Mdr/Q/kwGHo/VeBpOL4KtouwC9/xQjbY5mJREgcqxf6jyyaEMdHCspc4/d?=
+ =?us-ascii?Q?4cqMn94iWL5u2Np5g58pB+xkIFkQUqYEEgNNxzwmn3SqYQ+UkvrdkDL1Youq?=
+ =?us-ascii?Q?4wtZFsGo9r4kNeU1EljpCecMV8HhPdosDfCLwGMhioQ8xyFuvDEk4cmyHEna?=
+ =?us-ascii?Q?11Nlz+ChXEOdPm/1rEx0LrzjQqPX7aOjn98vBFQzTVB2Adyz3/yfvyWoHXKV?=
+ =?us-ascii?Q?9rYo5HeGOx/mny4p6+v8S0qyllSNRKczwEBkvqcSWrqe3bamby59zVt2O3Gx?=
+ =?us-ascii?Q?UWrwdm4074UFPGlO5m6C/Wgi4pe/Ek+rC0Rhh46Z36qUadxf6NOqmfVQ+aYX?=
+ =?us-ascii?Q?PwGE65i1SmZz5fnftdOpdGxwB2ASdEiyoD09nEkhlTtsXxqAxfXi6n0OHB8v?=
+ =?us-ascii?Q?mx8cRC+pDJwFHz7F2HItcFih8N/F744lZ5M1Pw9D6OWN8qC+ipcNo/UGqbj+?=
+ =?us-ascii?Q?ur9FwFoZMqAvtawdwETQY/OoOXiHU/bX3w1sW0d8DtnhOFu+GeXXKd91Ex42?=
+ =?us-ascii?Q?KZzueW3oBFmnW8IcvoT0JMywzheBXtsk1ARiZdozOJD1/gAMLxgHBaA2Nt9y?=
+ =?us-ascii?Q?E5XxLcGKwDYb18e2Hzky3hauCUvknPSbOU4cPWMuPVBndAovFM9KQzreOuJR?=
+ =?us-ascii?Q?AMa99C1WdJcKQMJyV2HvurHCTWVuoI7uEudnRqV90f4J2yJ9lrLfdiWEPcSC?=
+ =?us-ascii?Q?4wCde0InnnGUGzTQV9oT1AmjXrbGf68imzGqv8WE/R9BcA8YLA94remrrfsM?=
+ =?us-ascii?Q?wWWZSxPUYsCIDz5bTEa/wu8Mu6kCcL4wjGADVMyNT3r5Y5LQTOGd0JqUW3ZQ?=
+ =?us-ascii?Q?+lUk2weprMlkTK0PtYYAFopx7b3VtrjYdBv68PxticqABte3UQTEoxc80mJK?=
+ =?us-ascii?Q?VHssAnUNj1F5BtOrVmdD1bcVPOfA9CLpC9LzhOILBb/3oZFKzqwdV83qMgGk?=
+ =?us-ascii?Q?ghzSIoVqO8uDYsONOQZ1yfYOIeEYHMmUWyRsvkOyNMbys0z5lAVf3Tpu7u8G?=
+ =?us-ascii?Q?xg=3D=3D?=
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	+hYAOJKMzKDcqQ0E/BiDBZonMgsOUb+J10EVdCnLdBRviJuCR8wUjNxSt9bAK0449vSDc+C7JFquFSU/MkE57DTpudWzdAWmUb8LVRBj7XzJ2Q5IJzFRS9hfDqhlZJ9ux+MpudOGYM9cXmOulGM5IWQl9em4ns8syfYbrxB9cty35y6ccaqCwC2bBPk1Prb7DszPVTr+8yJetSFGFfIQvWtSfi36UHSV+8BUtSOIQ+mTdJCzddXDe6RxURWM+ipDwlCXYCdZwV2T70xVacEJMCYCB3359DyORrscb1TQ46JPAGesnK1pAv2/uHGc16YPEHgb/knmFkV9aKdiB4u7ojnXXvbnKRPmX1qKPJvePSuF3iui2Ta383wAbigEMIMV+cQlZHpjgj994CTzx7YhMFNDtbR+81i6+Z6eTrZ7YZimDpasTtaeu0qTZchUXl3pBuXsl3g6nxr6VbbcJwYoFRWchbyxhUfzrnlzA4TxalrD3lSWPCE0nw/xsW7tfsdcz0wbVj/ge26FUm8r+gNUj9eMLKwnBzhM9AZw40ZWKTwGYClzGRByDGE9BhkvlmryaGVsJ0Jg40YwJFhg3Nk/yMADluRDI2FxJl9EGSdvlk8=
+	VX0ulvnvsnhr9m4P8Q3oUVCUAo1f7zgM80sPyOrFjtdmbcWcheQPqfmR3Wr5SgRHUyz4GKl1G7ljluPc7qxDnX7Uti2iKTTOZMNAGOfkC/zDAUaTwsPn/Ei48o8jdXJ5bzicpBRd4IwP1wU0XSFEWB5rJLfeJ8as63i8a0tmO+RME9bk7drgbdZhFv+KJjSohRcpcMmwIdjGZooUYtvcouYARJFvhs4K9QMUZpq64n+ooSBhhrq37QfHi0GlqhOFGEEayvIh1jdo3b7vwSlJaYtVDueDW9rbw3tQRflLiJ4X4tOuo59bezgPSrAvPpE9NkcI65xncCmag14nAETHZFnyW7Gpes+mLjtA37+0ktB58oRZsm8xRzQkXcEvt/ACUJzQI4CaCDf3w/m5178goaAO3o9+MHB2MCMaqLPdbZNdBv//4xSkoYF0uv4tV2uOD62Uo4d/8V3TXvwf6Qs1cxjm5PTS04hHb1rrqhQgQUZoOwKILNABQeRDuCGQWuccGVMdyqXblcpYpRvaJDt+x/NTE238jTGN9yy4SQVHLjqg7BigBUWsO4x+nJ+LHGDLRGq8wnQv9FnFOnh4OFWbJ7t1AqiD2pzE+dU4on5M4bI=
 X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8e268cd4-3aad-4c24-da04-08de27646447
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8d6fb7b9-f107-4e2a-ffdb-08de2764fc98
 X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Nov 2025 12:08:46.7671
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Nov 2025 12:13:02.3184
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: A2xnNYcnt4Q+qnq5fPagZj4q+IlRbWs/QpMegGUMsJVDU1oZUaxrWANXcED7bKtW/WWTep8RlIS5Yj6BtnS+HJkRqfkvLLfkqzXSlgeO4Zc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ5PPF0687F9010
+X-MS-Exchange-CrossTenant-UserPrincipalName: Awx8O9jshyzklC0VCDqeEzvqsUb14W2EeFcfkamsbqHmNb/MMJ7smhOjX61dCjWL4iwJpipLMkw9+ltKoUUqQwbjhGs8CrPMw9jotU31r6k=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB4750
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
  definitions=2025-11-19_03,2025-11-18_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 bulkscore=0
- suspectscore=0 mlxscore=0 mlxlogscore=999 spamscore=0 malwarescore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 bulkscore=0
+ mlxscore=0 malwarescore=0 adultscore=0 mlxlogscore=999 suspectscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2510240000
- definitions=main-2511190096
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTE1MDAzMiBTYWx0ZWRfXy+vYOVrxLrX+
- jEPHn5Yxzi3QenBJwKPR4ELy+tqfXai13dMW3bO5IxfnGwxmmIL9EA9zGosDWukYkaAqtS7erMe
- UwRaOJqKjKK5nCeXHnCr/mFUn2hd6Erd2LP6OqmL4P86JpUqPV375ZIFEfeUbg3m17eTz7W7Y15
- 5ZZ1kN9KY3NyNTcbl5yuyN+MZSY/kUx4hUG7GNx/cSiCzMWPoULHR7uBewXJFvUxEkZDVUBXthA
- u82BZFFPEz8jblwjXXBQUasrMBfnfMhpv+6Sc8cDdcjtvEKL6GALBQn3bBgfiMvxHha1hnlq4mW
- zYpEVNcySBRowS2H+UxchDBQyTpEIVBQ/M+Wgu45Ii+rOUG0p410E4xdVYS9KeRlyLcFtfx/jZk
- eDK5gfVDp+pZQv7f7XPm5y33SP29geFtD46VheZkDkBa1i06Ndw=
-X-Proofpoint-GUID: mNF21wQpswwDe9GT_UFBMxciwH0uxSGm
-X-Proofpoint-ORIG-GUID: mNF21wQpswwDe9GT_UFBMxciwH0uxSGm
-X-Authority-Analysis: v=2.4 cv=Rdydyltv c=1 sm=1 tr=0 ts=691db354 b=1 cx=c_pps
- a=e1sVV491RgrpLwSTMOnk8w==:117 a=e1sVV491RgrpLwSTMOnk8w==:17
+ definitions=main-2511190097
+X-Authority-Analysis: v=2.4 cv=DYoaa/tW c=1 sm=1 tr=0 ts=691db46a cx=c_pps
+ a=OOZaFjgC48PWsiFpTAqLcw==:117 a=OOZaFjgC48PWsiFpTAqLcw==:17
  a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
  a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
  a=6UeiqGixMTsA:10 a=GoEa3M9JfhUA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=20KFwNOVAAAA:8 a=KHyt6t-CTgoUCxz-I2AA:9 a=CjuIK1q_8ugA:10 cc=ntf
- awl=host:13643
+ a=SRrdq9N9AAAA:8 a=20KFwNOVAAAA:8 a=qDWtwT-RVvwK0_lMGGMA:9 a=CjuIK1q_8ugA:10
+X-Proofpoint-GUID: dEJVJZgIgKuW1IDJw2hS0tk05j2IJYFd
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTE1MDAzMSBTYWx0ZWRfXykcOp0Byyd9J
+ 1vw/VmdneRAYAlXhiJKO1IgPF/7bt0tk5iItSq7wfugIQu3d/bi79noiaA/C/We/i2uATM57lKf
+ VFmFpGPXTiJ2bkTCUPYAFAtWEfUiyZXA3vDse9hOnu/ciGuooqc5OMlTO3E43hdO3b0hRkROze1
+ u6DM44iWvNPzXEVxtEl5dYJARO4FgrUYcyG7I9KZBPSKkr2S+ziaDobGFKL/GfL9ygIn1agExZv
+ 2Z5L2H1d0K/avPE/G9R5V7iQb3CarNxtVaENxSGEGuKf99kuAMTWtIpvoocJDx3vhRf9nYAmk+A
+ GFMWg1Zxh+9vUygKoZus69ZfgW+Lg85BH1zK5k0Q0yAnfvalPTJVTy/VFWUcFO7nAMwyCNLZkB2
+ TI4PLIqRRmvjIo6z6kRkyfq5Ty4rUA==
+X-Proofpoint-ORIG-GUID: dEJVJZgIgKuW1IDJw2hS0tk05j2IJYFd
 
-Oh I forgot to add -
+On Wed, Oct 22, 2025 at 12:37:16PM -0600, Nico Pache wrote:
+> From: Baolin Wang <baolin.wang@linux.alibaba.com>
+>
+> If any order (m)THP is enabled we should allow running khugepaged to
+> attempt scanning and collapsing mTHPs. In order for khugepaged to operate
+> when only mTHP sizes are specified in sysfs, we must modify the predicate
+> function that determines whether it ought to run to do so.
+>
+> This function is currently called hugepage_pmd_enabled(), this patch
+> renames it to hugepage_enabled() and updates the logic to check to
+> determine whether any valid orders may exist which would justify
+> khugepaged running.
+>
+> We must also update collapse_allowable_orders() to check all orders if
+> the vma is anonymous and the collapse is khugepaged.
+>
+> After this patch khugepaged mTHP collapse is fully enabled.
+>
+> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+> Signed-off-by: Nico Pache <npache@redhat.com>
+> ---
+>  mm/khugepaged.c | 25 +++++++++++++------------
+>  1 file changed, 13 insertions(+), 12 deletions(-)
+>
+> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+> index 54f5c7888e46..8ed9f8e2d376 100644
+> --- a/mm/khugepaged.c
+> +++ b/mm/khugepaged.c
+> @@ -418,23 +418,23 @@ static inline int collapse_test_exit_or_disable(struct mm_struct *mm)
+>  		mm_flags_test(MMF_DISABLE_THP_COMPLETELY, mm);
+>  }
+>
+> -static bool hugepage_pmd_enabled(void)
+> +static bool hugepage_enabled(void)
+>  {
+>  	/*
+>  	 * We cover the anon, shmem and the file-backed case here; file-backed
+>  	 * hugepages, when configured in, are determined by the global control.
+> -	 * Anon pmd-sized hugepages are determined by the pmd-size control.
+> +	 * Anon hugepages are determined by its per-size mTHP control.
+>  	 * Shmem pmd-sized hugepages are also determined by its pmd-size control,
+>  	 * except when the global shmem_huge is set to SHMEM_HUGE_DENY.
+>  	 */
+>  	if (IS_ENABLED(CONFIG_READ_ONLY_THP_FOR_FS) &&
+>  	    hugepage_global_enabled())
+>  		return true;
+> -	if (test_bit(PMD_ORDER, &huge_anon_orders_always))
+> +	if (READ_ONCE(huge_anon_orders_always))
+>  		return true;
+> -	if (test_bit(PMD_ORDER, &huge_anon_orders_madvise))
+> +	if (READ_ONCE(huge_anon_orders_madvise))
+>  		return true;
+> -	if (test_bit(PMD_ORDER, &huge_anon_orders_inherit) &&
+> +	if (READ_ONCE(huge_anon_orders_inherit) &&
+>  	    hugepage_global_enabled())
+>  		return true;
+>  	if (IS_ENABLED(CONFIG_SHMEM) && shmem_hpage_pmd_enabled())
+> @@ -508,7 +508,8 @@ static unsigned long collapse_allowable_orders(struct vm_area_struct *vma,
+>  			vm_flags_t vm_flags, bool is_khugepaged)
+>  {
+>  	enum tva_type tva_flags = is_khugepaged ? TVA_KHUGEPAGED : TVA_FORCED_COLLAPSE;
+> -	unsigned long orders = BIT(HPAGE_PMD_ORDER);
+> +	unsigned long orders = is_khugepaged && vma_is_anonymous(vma) ?
+> +				THP_ORDERS_ALL_ANON : BIT(HPAGE_PMD_ORDER);
 
-In collapse_scan_pmd() there are casees where you just bail out altogether.
+Why are we doing this? If this is explicitly enabling mTHP for anon, which it
+seems to be, can we please make this a little more explicit :)
 
-E.g.: pte_uffd_wp() for _any_ PTE entry in the range.
+I'd prefer this not to be a horribly squashed ternary, rather:
 
-Or !folio_test_anon() for _any_ PTE entry in the range.
+	unsigned long orders;
 
-Etc.
-
-Surely these are cases where an mTHP scan on part of the range might still
-succeed?
-
-You then in the subseuqent patch seem to check for collapse failures
-specifically due to some of these, but surely you will never hit them as you
-already discarded the whole PTE page table?
-
-I'm not sure you've updated collapse_scan_pmd() sufficiently to account for the
-mTHP logic.
-
-Cheers, Lorenzo
+	/* We explicitly allow mTHP collapse for anonymous khugepaged ONLY. */
+	if (is_khugepaged && vma_is_anonymous(vma))
+		orders = THP_ORDERS_ALL_ANON;
+	else
+		orders = BIT(HPAGE_PMD_ORDER);
 
 
-On Wed, Nov 19, 2025 at 11:53:16AM +0000, Lorenzo Stoakes wrote:
-> On Wed, Oct 22, 2025 at 12:37:14PM -0600, Nico Pache wrote:
-> > During PMD range scanning, track occupied pages in a bitmap. If mTHPs are
-> > enabled we remove the restriction of max_ptes_none during the scan phase
-> > to avoid missing potential mTHP candidates.
+Also, does THP_ORDERS_ALL_ANON account for KHUGEPAGED_MIN_MTHP_ORDER? It's weird
+to say that an order is allowed that isn't permitted by mTHP (e.g. order-0).
+
+>
+>  	return thp_vma_allowable_orders(vma, vm_flags, tva_flags, orders);
+>  }
+> @@ -517,7 +518,7 @@ void khugepaged_enter_vma(struct vm_area_struct *vma,
+>  			  vm_flags_t vm_flags)
+>  {
+>  	if (!mm_flags_test(MMF_VM_HUGEPAGE, vma->vm_mm) &&
+> -	    hugepage_pmd_enabled()) {
+> +	    hugepage_enabled()) {
+>  		if (collapse_allowable_orders(vma, vm_flags, true))
+>  			__khugepaged_enter(vma->vm_mm);
+>  	}
+> @@ -2791,7 +2792,7 @@ static unsigned int collapse_scan_mm_slot(unsigned int pages, int *result,
+>
+>  static int khugepaged_has_work(void)
+>  {
+> -	return !list_empty(&khugepaged_scan.mm_head) && hugepage_pmd_enabled();
+> +	return !list_empty(&khugepaged_scan.mm_head) && hugepage_enabled();
+>  }
+>
+>  static int khugepaged_wait_event(void)
+> @@ -2864,7 +2865,7 @@ static void khugepaged_wait_work(void)
+>  		return;
+>  	}
+>
+> -	if (hugepage_pmd_enabled())
+> +	if (hugepage_enabled())
+>  		wait_event_freezable(khugepaged_wait, khugepaged_wait_event());
+>  }
+>
+> @@ -2895,7 +2896,7 @@ static void set_recommended_min_free_kbytes(void)
+>  	int nr_zones = 0;
+>  	unsigned long recommended_min;
+>
+> -	if (!hugepage_pmd_enabled()) {
+> +	if (!hugepage_enabled()) {
+>  		calculate_min_free_kbytes();
+>  		goto update_wmarks;
+>  	}
+> @@ -2945,7 +2946,7 @@ int start_stop_khugepaged(void)
+>  	int err = 0;
+>
+>  	mutex_lock(&khugepaged_mutex);
+> -	if (hugepage_pmd_enabled()) {
+> +	if (hugepage_enabled()) {
+>  		if (!khugepaged_thread)
+>  			khugepaged_thread = kthread_run(khugepaged, NULL,
+>  							"khugepaged");
+> @@ -2971,7 +2972,7 @@ int start_stop_khugepaged(void)
+>  void khugepaged_min_free_kbytes_update(void)
+>  {
+>  	mutex_lock(&khugepaged_mutex);
+> -	if (hugepage_pmd_enabled() && khugepaged_thread)
+> +	if (hugepage_enabled() && khugepaged_thread)
+>  		set_recommended_min_free_kbytes();
+>  	mutex_unlock(&khugepaged_mutex);
+>  }
+> --
+> 2.51.0
 >
-> It's a bit odd to open the commit message with a very specific
-> implementation detail, I think we should instead open with a broad
-> description of what we intend here, e.g. to permit mTHP collapse, before:
->
-> - Discussing the algorithm used (in more detail than below!)
-> - How and under what circumstances this algorithm is invoked
-> - (Mention MADV_COLLAPSE not supporting mTHP as of yet)
-> - THEN super-specific details like this.
->
-> >
-> > Implement collapse_scan_bitmap() to perform binary recursion on the bitmap
-> > and determine the best eligible order for the collapse. A stack struct is
-> > used instead of traditional recursion. The algorithm splits the bitmap
-> > into smaller chunks to find the best fit mTHP.  max_ptes_none is scaled by
-> > the attempted collapse order to determine how "full" an order must be
-> > before being considered for collapse.
->
-> I feel this is a _very_ brief description of a complicated algorithm. I
-> think we should go into a lot more detail here. 'Binary recursion' is pretty
-> hand-wavey, and you go from hand waving that to being super-specific about
-> max_ptes_none before handwaving about 'fullness' of an order.
->
-> All in all I find it super confusing - so I think you need to take a step
-> back and 'explain it to me like I'm 5' here :)
->
-> >
-> > Once we determine what mTHP sizes fits best in that PMD range a collapse
-> > is attempted. A minimum collapse order of 2 is used as this is the lowest
-> > order supported by anon memory.
->
-> I don't know what 'lowest order supported by anon memory' means?
->
-> I guess really this is the minimum order contptes support for arm64 right?
->
-> >
-> > mTHP collapses reject regions containing swapped out or shared pages.
-> > This is because adding new entries can lead to new none pages, and these
-> > may lead to constant promotion into a higher order (m)THP. A similar
-> > issue can occur with "max_ptes_none > HPAGE_PMD_NR/2" due to a collapse
-> > introducing at least 2x the number of pages, and on a future scan will
-> > satisfy the promotion condition once again. This issue is prevented via
-> > the collapse_allowable_orders() function.
->
-> Obviously this has been discussed to death, but you should update this to
-> reflect the decided upon course (0, 511 + warning, etc.).
->
-> >
-> > Currently madv_collapse is not supported and will only attempt PMD
-> > collapse.
->
-> Good to highlight this.
->
-> >
-> > We can also remove the check for is_khugepaged inside the PMD scan as
-> > the collapse_max_ptes_none() function handles this logic now.
->
-> Again we're kind of leaping from mega handwaving to super-specific details
-> :) let's make it all a lot more specific + clear, and then put the really
-> niche details like this at the end of the commit msg (I mean this one is
-> fine where it is ofc as a result :)
->
-> >
-> > Signed-off-by: Nico Pache <npache@redhat.com>
-> > ---
-> >  include/linux/khugepaged.h |   2 +
-> >  mm/khugepaged.c            | 128 ++++++++++++++++++++++++++++++++++---
-> >  2 files changed, 122 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/include/linux/khugepaged.h b/include/linux/khugepaged.h
-> > index eb1946a70cff..179ce716e769 100644
-> > --- a/include/linux/khugepaged.h
-> > +++ b/include/linux/khugepaged.h
-> > @@ -1,6 +1,8 @@
-> >  /* SPDX-License-Identifier: GPL-2.0 */
-> >  #ifndef _LINUX_KHUGEPAGED_H
-> >  #define _LINUX_KHUGEPAGED_H
-> > +#define KHUGEPAGED_MIN_MTHP_ORDER	2
-> > +#define MAX_MTHP_BITMAP_STACK	(1UL << (ilog2(MAX_PTRS_PER_PTE) - KHUGEPAGED_MIN_MTHP_ORDER))
->
-> This is an internal implementation detail, I don't think we need this in a
-> header do we? I think this define should be in khugepaged.c.
->
-> Also this is a really fiddly and confusing value, I don't think it's a good idea
-> to just put this here without explanation.
->
-> It's not even clear what it is. I'd probably rename it to MTHP_STACK_SIZE?
->
-> We need a comment that explains how you're deriving this, something like:
->
-> /*
->  * In order to determine mTHP order, we consider every possible mTHP size
->  * starting with MAX_PTRS_PER_PTE PTE entries and stopping at
->  * 2^KHUGEPAGED_MIN_THP_ORDER.
->  *
->  * We store (offset, order) pairs on the stack to do so, each describing a
->  * candidate mTHP collapse.
->  *
->  * For each (offset, order) candidate mTHP range that we consider, we must
->  * also consider candiate mTHPs at (offset, order - 1), and (offset + (1 <<
->  * order), order - 1).
->  *
->  *
->  * This is because each order can be split into two (an order expresses the
->  * power-of-two size), so we examine each half of the next lower order
->  * mTHP:
->  *
->  *                offset   mid_offset
->  *                  .          |
->  *                  .          v
->  *  |---------------.-------------------|
->  *  |           PTE page table          |
->  *  |---------------.-------------------|
->  *                   <--------><-------->
->  *                     order-1   order-1
->  *
->  * Given we must consider the range of KHUGEPAGED_MIN_MTHP_ORDER to
->  * MAX_PTRS_PER_PTE number of PTE entries, this is the same as saying we
->  * must consider KHUGEPAGED_MIN_MTHP_ORDER to lg2(MAX_PTRS_PER_PTE) mTHP
->  * orders.
->  *
->  * As we must consider 2 possible mTHP ranges for each order, this requires
->  * our stack to be 2^n, where n is the number of orders we must consider.
->  *
->  * And thus MTHP_STACK_SIZE is 2^(lg2(MAX_PTRS_PER_PTE) -
->  * KHUGEPAGED_MIN_MTHP_ORDER).
->  */
->
-> This may seem (very) long-winded, but this is all really non-obvious.
->
-> You can additionally rephrase this and utilise it in the commit message,
-> description of the iterative recursion function and possibly elsewhere to
-> describe the algorithm more clearly.
->
-> In fact, since this should really be declared in khugepaged.c, and since
-> you can place it just before the mthp collapse function, you could expand
-> this to describe the algorithm as a whole and simply put the define and the
-> function immediately next to each other after the comment?
->
-> >
-> >  #include <linux/mm.h>
-> >
-> > diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> > index 89a105124790..e2319bfd0065 100644
-> > --- a/mm/khugepaged.c
-> > +++ b/mm/khugepaged.c
-> > @@ -93,6 +93,11 @@ static DEFINE_READ_MOSTLY_HASHTABLE(mm_slots_hash, MM_SLOTS_HASH_BITS);
-> >
-> >  static struct kmem_cache *mm_slot_cache __ro_after_init;
-> >
-> > +struct scan_bit_state {
->
-> Scan bit state is a bit of a weird name. Scanning what? What bit? State is
-> kind of implied?
->
-> struct order_offset_pair?
->
-> struct mthp_range?
->
-> > +	u8 order;
-> > +	u16 offset;
->
-> Real mega nit, but feels more natural to put offset first here. As
-> (position, size) seems more naturally the way to view this than (size,
-> position).
->
-> > +};
-> > +
->
-> Also needs comments...? Order of what? Offset in what?
->
-> >  struct collapse_control {
-> >  	bool is_khugepaged;
-> >
-> > @@ -101,6 +106,13 @@ struct collapse_control {
-> >
-> >  	/* nodemask for allocation fallback */
-> >  	nodemask_t alloc_nmask;
-> > +
-> > +	/*
-> > +	 * bitmap used to collapse mTHP sizes.
-> > +	 */
->
-> Nit but this should be on one line /* Bitmap used to collapse mTHP sizes */.
->
-> But we're not storing sizes though are we? And we're declaring two bitmaps?
->
-> > +	 DECLARE_BITMAP(mthp_bitmap, HPAGE_PMD_NR);
->
-> Really this is more of a PTE table bitmap but probably fine to call it this.
->
-> > +	 DECLARE_BITMAP(mthp_bitmap_mask, HPAGE_PMD_NR);
->
-> You've added random whitespace after the tab twice here? [tab][space]DECLARE_...
->
-> > +	struct scan_bit_state mthp_bitmap_stack[MAX_MTHP_BITMAP_STACK];
-> >  };
-> >
-> >  /**
-> > @@ -1357,6 +1369,85 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long pmd_address,
-> >  	return result;
-> >  }
-> >
-> > +static void push_mthp_bitmap_stack(struct collapse_control *cc, int *top,
-> > +				   u8 order, u16 offset)
->
-> Not sure we need to say mthp_bitmap_stack everywhere. This is a local
-> static function we can be a little more succinct.
->
-> mthp_stack_push()?
->
-> > +{
-> > +	cc->mthp_bitmap_stack[++*top] = (struct scan_bit_state)
-> > +		{ order, offset };
->
-> This feels rather difficult to read, cc->mthp_bitmap_stack[++*top] in
-> particular is rather too succinct.
->
-> This would be better more broken out, e.g.:
->
-> static void mthp_stack_push(struct collapse_control *cc, int *sizep,
-> 	    u8 order, u16 offset)
-> {
-> 	const int size = *sizep;
-> 	struct scan_bit_state *stack = &cc->mthp_bitmap_stack[size];
->
-> 	VM_WARN_ON_ONCE(idx >= MAX_MTHP_BITMAP_STACK);
-> 	stack->order = order;
-> 	stack->offset = offset;
-> 	*sizep++;
-> }
->
-> (Note this requires the change I suggest below re: not defaulting top to -1
-> but instead renaming it to stack_size and starting at 0, see below).
->
-> Re: below comment having pop as a helper too, that can be:
->
-> static struct scan_bit_state mthp_stack_pop(struct collapse_control *cc,
-> 		int *sizep)
-> {
-> 	const int size = *sizep;
->
-> 	VM_WARN_ON_ONCE(size <= 0);
-> 	*sizep--;
-> 	return cc->mthp_bitmap_stack[size - 1];
-> }
->
-> > +}
-> > +
-> > +/*
-> > + * collapse_scan_bitmap() consumes the bitmap that is generated during
-> > + * collapse_scan_pmd() to determine what regions and mTHP orders fit best.
-> > + *
-> > + * Each bit in the bitmap represents a single occupied (!none/zero) page.
->
-> In which bitmap? There are 2 that are declared. Be specific - cc->mthp_bitmap.
->
-> > + * A stack structure cc->mthp_bitmap_stack is used to check different regions
->
-> > + * of the bitmap for collapse eligibility. We start at the PMD order and
-> > + * check if it is eligible for collapse; if not, we add two entries to the
->
-> I questioned this since you start at HPAGE_PMD_ORDER -
-> KHUGEPAGED_MIN_MTHP_ORDER, but then realised you're intentionally
-> offsetting like that.
->
-> See comments below about changing this.
->
-> > + * stack at a lower order to represent the left and right halves of the region.
-> > + *
-> > + * For each region, we calculate the number of set bits and compare it
-> > + * against a threshold derived from collapse_max_ptes_none(). A region is
-> > + * eligible if the number of set bits exceeds this threshold.
-> > + */
->
-> I think we could be clearer here. Something like:
->
-> ...
->  * stack at a lower order to represent the left and right halves of the
->  * portion of the PTE page table we are examining.
->  *
->
->  * For each of these, we determine how many PTE entries are occupied in the
->  * range of PTE entries we propose to collapse, then compare this to the
->  * number of PTE entries which would need to be set for a collapse to be
->  * permitted at that order (accounting for max_ptes_none).
->  *
->  * If a collapse is permissible, we attempt to perform one. We do so for
->  * every possible mTHP in the PTE page table.
->  */
->
-> > +static int collapse_scan_bitmap(struct mm_struct *mm, unsigned long address,
->
-> Really inconsistent naming going on here, we're collapsing and scanning and
-> what's the bitmap?
->
-> How about mthp_collapse()?
->
-> > +		int referenced, int unmapped, struct collapse_control *cc,
-> > +		bool *mmap_locked, unsigned long enabled_orders)
-> > +{
-> > +	u8 order, next_order;
-> > +	u16 offset, mid_offset;
-> > +	int num_chunks;
-> > +	int bits_set, threshold_bits;
-> > +	int top = -1;
->
-> This seems unnecessary and confusing. Just start at 0 and treat this as the
-> exclusive end of the stack.
->
-> You can rename this stack_size to make that clear. Have commented above
-> about adjustments to push function and introducing pop helper.
->
->
-> > +	int collapsed = 0;
-> > +	int ret;
-> > +	struct scan_bit_state state;
-> > +	unsigned int max_none_ptes;
->
-> Everywhere else we say max_ptes_none, let's maintain that convention here
-> please.
->
-> > +
-> > +	push_mthp_bitmap_stack(cc, &top, HPAGE_PMD_ORDER - KHUGEPAGED_MIN_MTHP_ORDER, 0);
->
-> See below re: order here, we should change this.
->
-> > +
-> > +	while (top >= 0) {
-> > +		state = cc->mthp_bitmap_stack[top--];
->
-> I hate that we have a push helper but then do pop manually. See above.
->
-> > +		order = state.order + KHUGEPAGED_MIN_MTHP_ORDER;
->
-> OK so now the order isn't state.order but is instead state.order +
-> KHUGEPAGED_MIN_MTHP_ORDER? :/ this is extremely confusing.
->
-> We shouldn't call this field order if you're doing a hack where state.order
-> isn't the order but instead is order - KHUGEPAGED_MIN_MTHP_ORDER.
->
-> Just have state.order be the actual order? And change the below condition
-> as mentioned there.
->
-> > +		offset = state.offset;
-> > +		num_chunks = 1UL << order;
->
-> What's a chunk? You do need to clarify these things. This is a new term not
-> used elsewhere in THP code as far as I can tell?
->
-> This is the number of pte entries no?
->
-> nr_entries? nr_pte_entries?
->
-> > +
-> > +		/* Skip mTHP orders that are not enabled */
->
-> Note we're also considering PMD here :) Probably we can just delete this
-> comment, the code below makes it clear what you're doing.
->
-> > +		if (!test_bit(order, &enabled_orders))
-> > +			goto next_order;
-> > +
-> > +		max_none_ptes = collapse_max_ptes_none(order, !cc->is_khugepaged);
->
-> OK so this is going to be scaled to order.
->
-> > +
-> > +		/* Calculate weight of the range */
->
-> What's the weight of a range? This isn't a very helpful comment. You're
-> counting the Hamming weight or much more clearly - the number of set bits.
->
-> So it seems you're simply counting the number of bits you have accumulated
-> so far in cc->mthp_bitmap, adding in the latest offset.
->
-> So I'd say add a comment saying something like:
->
-> /*
->  * Determine how many PTE entries are populated in the range in which we
->  * propose to collapse this mTHP.
->  */
->
-> > +		bitmap_zero(cc->mthp_bitmap_mask, HPAGE_PMD_NR);
-> > +		bitmap_set(cc->mthp_bitmap_mask, offset, num_chunks);
-> > +		bits_set = bitmap_weight_and(cc->mthp_bitmap,
->
-> I think this variable name is pretty horrible, we don't care that it's the
-> number of bits set, we care about what it _means_ - that is the number of
-> PTE occupied entries.
->
-> So nr_occupied_pte_entries? Or nr_occupied_ptes?
->
-> > +					     cc->mthp_bitmap_mask, HPAGE_PMD_NR);
->
-> Frustrating there isn't a bitmap_weight_offset() or something, as you could
-> do that in one go then...
->
-> I think this could be made clearer by separating out the gnarly bitmap
-> stuff into a helper function:
->
-> static int mthp_nr_occupied_pte_entries(struct collapse_control *cc,
-> 		struct scan_bit_state state)
-> {
-> 	const int nr_pte_entries = 1 << state.order;
->
-> 	/* Setup cc->mthp_bitmap_mask to contain mask for candidate mTHP. */
-> 	bitmap_zero(cc->mthp_bitmap_mask, HPAGE_PMD_NR);
-> 	bitmap_set(cc->mthp_bitmap_mask, state.offset, nr_pte_entries);
-> 	/* Mask against actually occupied PTE entries in PTE table. */
-> 	return bitmap_weight_and(cc->mthp_bitmap,
-> 				 cc->mthp_bitmap_mask, HPAGE_PMD_NR);
-> }
->
-> > +
-> > +		threshold_bits = (1UL << order) - max_none_ptes - 1;
->
-> We defined num_chunks to 1UL << order then don't use here? :)
->
-> I'm not sure we need this to be a separate value, and I don't think we need
-> the -1 either, which only confuses matter more.
->
-> How about just changing the below conditional to (assuming we've renamed
-> num_chunks to something sensible like nr_pte_entries and bits_set to
-> nr_occupied_pte_entries):
->
-> if (nr_occupied_pte_entries >= nr_pte_entries - max_none_ptes) {
-> 	...
-> }
->
-> > +
-> > +		/* Check if the region is eligible based on the threshold */
->
-> Probalby don't need this comment with the change above.
->
-> > +		if (bits_set > threshold_bits) {
-> > +			ret = collapse_huge_page(mm, address, referenced,
-> > +						 unmapped, cc, mmap_locked,
-> > +						 order, offset);
->
-> We declare ret at the top of the function scope, then only use it
-> here. That's confusing and unnecessary, just declare it in block scope
-> here.
->
-> > +			if (ret == SCAN_SUCCEED) {
-> > +				collapsed += 1UL << order;
->
-> Again we have defined num_chunks or rather nr_pte_entries but then
-> open-code 1UL << order, let's just use the value we declared here.
->
-> > +				continue;
->
-> This is kinda subtle, we don't bother considering lower orders any longer
-> *in this range*, but do continue to consider mTHP collapse in other
-> portions of the PTE page table.
->
-> This shouldn't just be a 'continue' :) we need a comment here to explain
-> that.
->
-> E.g.:
->
-> 	/*
-> 	 * We have collapsed an mTHP in this range at the maximum order we
-> 	 * could, so we do not push lower orders on to the stack.
-> 	 */
-> 	 continue;
->
->
-> > +			}
-> > +		}
-> > +
-> > +next_order:
-> > +		if (state.order > 0) {
->
-> This is a great example of how this is confusing by making state.order not
-> actually be the order but the order - KHUGEPAGED_MIN_MTHP_ORDER.
->
-> Just make the order correct and change this to > KHUGEPAGED_MIN_MTHP_ORDER.
->
-> > +			next_order = state.order - 1;
->
-> Not sure we should have a label and a variable be the same thing.
->
-> Also why are we decl'ing next_order at the top of the function but only using here?
->
-> Just declare this here, like:
->
-> 	if (state.order > KHUGEPAGED_MIN_MTHP_ORDER) {
-> 		const u16 new_order = state.order - 1;
->
-> 		...
-> 	}
->
-> > +			mid_offset = offset + (num_chunks / 2);
-> > +			push_mthp_bitmap_stack(cc, &top, next_order, mid_offset);
-> > +			push_mthp_bitmap_stack(cc, &top, next_order, offset);
->
-> I guess one subtlety that wouldn't be obvious at first glance is that
-> num_chunks (oh so badly needs a rename :) is a power-of-2 so we never get
-> weird 'what if num_chunks is odd' scenarios to worry about.
->
-> Probably doesn't really need a comment though. But this _does_ badly needs
-> an ASCII diagram :):
->
-> 	/*
-> 	 * The next lowest mTHP order possesses half the number of PTE
-> 	 * entries of the current one. We therefore must consider both
-> 	 * halves of the current mTHP:
-> 	 *
-> 	 *                offset   mid_offset
-> 	 *                  .          |
-> 	 *                  .          v
-> 	 *  |---------------.-------------------|
-> 	 *  |           PTE page table          |
-> 	 *  |---------------.-------------------|
-> 	 *                   <--------><-------->
-> 	 *                     order-1   order-1
-> 	 */
->
-> Since writing this I copied this above in another suggestion :P so you
-> could always say 'see comment above for details' or something.
->
-> > +		}
-> > +	}
-> > +	return collapsed;
-> > +}
->
-> I've commented this function to death here, but a few more things to note.
->
-> (BTW - I'm sorry I personally _hate_ repeated iterations of review when
-> there's stuff you could have commented in prior iterations BUT I think I
-> may end up having to once we respin due to the subtleties here.)
->
-> - I wonder if we could just use a helper struct to make this all a little
->   easier. Perhaps as it's realtively short code not so necesary, but a bit
->   horrid to pass around all these paramters all the time. Maybe something
->   for later THP rework.
->
-> - Could we exit early if it's obvious that we won't be able to collapse due
->   to max_ptes_none? I mean for one, we could at least check if the next
->   lowest order is empty. If max_ptes_none was 511, then we would have
->   already collapsed so can surely throw that out?
->
->   I was thinking we could go 'upwards', starting with the lowest order and
->   increasing order (essentially reverse things) then not collapsing until
->   we can't collapse at a given order (so collapse at next lowest). That
->   might be less efficient though.
->
-> - Given that we're going to be only permitting max_ptes_none of 0 and 511
->   for mTHP to start with, maybe things can be simplified - either all bits
->   have to 1 or we don't care what they are we attempt colalpse anyway?
->
->   But then again, maybe it's worth having the generic algorithm in place
->   for future flexibility? Thoughts?
->
-> - How much have you tested this? This is pretty subtle stuff... it _seems_
->   correct to me logically, but this is crying out for some userland testing
->   that exhaustively throws every possible permutation of state at this
->   function and asserts it's all correct.
->
-> - Are we not missing a bunch of stat counts? Didn't we add a bunch but now
->   are actually setting them? E.g. if we reject mTHP candidates due to
->   pte_max_none?
->
-> > +
-> >  static int collapse_scan_pmd(struct mm_struct *mm,
-> >  			     struct vm_area_struct *vma,
-> >  			     unsigned long start_addr, bool *mmap_locked,
-> > @@ -1364,11 +1455,15 @@ static int collapse_scan_pmd(struct mm_struct *mm,
-> >  {
-> >  	pmd_t *pmd;
-> >  	pte_t *pte, *_pte;
-> > +	int i;
-> >  	int result = SCAN_FAIL, referenced = 0;
-> > -	int none_or_zero = 0, shared = 0;
-> > +	int none_or_zero = 0, shared = 0, nr_collapsed = 0;
-> >  	struct page *page = NULL;
-> > +	unsigned int max_ptes_none;
->
-> Correct spelling of this :)
->
-> >  	struct folio *folio = NULL;
-> >  	unsigned long addr;
-> > +	unsigned long enabled_orders;
-> > +	bool full_scan = true;
-> >  	spinlock_t *ptl;
-> >  	int node = NUMA_NO_NODE, unmapped = 0;
-> >
-> > @@ -1378,16 +1473,29 @@ static int collapse_scan_pmd(struct mm_struct *mm,
-> >  	if (result != SCAN_SUCCEED)
-> >  		goto out;
-> >
-> > +	bitmap_zero(cc->mthp_bitmap, HPAGE_PMD_NR);
-> >  	memset(cc->node_load, 0, sizeof(cc->node_load));
-> >  	nodes_clear(cc->alloc_nmask);
-> > +
-> > +	enabled_orders = collapse_allowable_orders(vma, vma->vm_flags, cc->is_khugepaged);
-> > +
-> > +	/*
-> > +	 * If PMD is the only enabled order, enforce max_ptes_none, otherwise
-> > +	 * scan all pages to populate the bitmap for mTHP collapse.
-> > +	 */
->
-> Ugh this is quite ugly. I don't really love that we've converted this from
-> doing the actual work to _mostly_ just populating the bitmap for the mthp
-> logic.
->
-> Then again it's only a couple places where this is checked, but it's pretty
-> horrible that what once was _the logic that determines what is being
-> considered for THP collapse' is now turned into 'the logic that populates a
-> bitmap'.
->
-> > +	if (cc->is_khugepaged && enabled_orders == _BITUL(HPAGE_PMD_ORDER))
->
-> I think this should be BIT(HPAGE_PMD_ORDER), I realise I reviewed the
-> opposite before (or think I did) but as per David we prefer BIT() :)
->
-> > +		full_scan = false;
-> > +	max_ptes_none = collapse_max_ptes_none(HPAGE_PMD_ORDER, full_scan);
->
-> Again really quite nasty, this may as well be:
->
-> 	if (cc->is_khugepaged && enabled_orders == BIT(HPAGE_PMD_ORDER))
-> 		max_ptes_none = khugepaged_max_ptes_none;
-> 	else
-> 		max_ptes_none = HPAGE_PMD_NR - 1;
->
-> It makes this hack a lot more obvious.
->
-> But also, what if !cc->is_khugepaged? We're going to scan everything even
-> if we only have PMD? I thought we only considered PMD size for MADV_COLLAPSE?
->
-> > +
-> >  	pte = pte_offset_map_lock(mm, pmd, start_addr, &ptl);
-> >  	if (!pte) {
-> >  		result = SCAN_PMD_NULL;
-> >  		goto out;
-> >  	}
-> >
-> > -	for (addr = start_addr, _pte = pte; _pte < pte + HPAGE_PMD_NR;
-> > -	     _pte++, addr += PAGE_SIZE) {
-> > +	for (i = 0; i < HPAGE_PMD_NR; i++) {
-> > +		_pte = pte + i;
-> > +		addr = start_addr + i * PAGE_SIZE;
->
-> That's nicer. I still hate _pte...
->
-> >  		pte_t pteval = ptep_get(_pte);
-> >  		if (is_swap_pte(pteval)) {
-> >  			++unmapped;
-> > @@ -1412,8 +1520,7 @@ static int collapse_scan_pmd(struct mm_struct *mm,
-> >  		if (pte_none_or_zero(pteval)) {
-> >  			++none_or_zero;
-> >  			if (!userfaultfd_armed(vma) &&
-> > -			    (!cc->is_khugepaged ||
-> > -			     none_or_zero <= khugepaged_max_ptes_none)) {
-> > +			    none_or_zero <= max_ptes_none) {
->
-> Why are we dropping !cc->is_khugepaged?
->
-> >  				continue;
-> >  			} else {
-> >  				result = SCAN_EXCEED_NONE_PTE;
-> > @@ -1461,6 +1568,8 @@ static int collapse_scan_pmd(struct mm_struct *mm,
-> >  			}
-> >  		}
-> >
-> > +		/* Set bit for occupied pages */
-> > +		bitmap_set(cc->mthp_bitmap, i, 1);
->
-> Maybe worth highlighting this is now _the entire point_ of the loop.
->
-> I wonder if we shouldn't just separate this logic out and name it
-> apppropriately? As we're into realms of real confusion here.
->
-> >  		/*
-> >  		 * Record which node the original page is from and save this
-> >  		 * information to cc->node_load[].
-> > @@ -1517,9 +1626,12 @@ static int collapse_scan_pmd(struct mm_struct *mm,
-> >  out_unmap:
-> >  	pte_unmap_unlock(pte, ptl);
-> >  	if (result == SCAN_SUCCEED) {
-> > -		result = collapse_huge_page(mm, start_addr, referenced,
-> > -					    unmapped, cc, mmap_locked,
-> > -					    HPAGE_PMD_ORDER, 0);
->
-> Hmm... what's actually enforcing that MADV_COLLAPSE isn't using this?
-> You've not done any cc->khugepaged checks afaict?
->
-> It seems that you _are_ enabling this for MADV_COLLAPSE unless I've missed
-> something?
->
-> > +		nr_collapsed = collapse_scan_bitmap(mm, start_addr, referenced, unmapped,
-> > +					      cc, mmap_locked, enabled_orders);
-> > +		if (nr_collapsed > 0)
-> > +			result = SCAN_SUCCEED;
-> > +		else
-> > +			result = SCAN_FAIL;
-> >  	}
-> >  out:
-> >  	trace_mm_khugepaged_scan_pmd(mm, folio, referenced,
-> > --
-> > 2.51.0
-> >
->
-> Thanks, Lorenzo
