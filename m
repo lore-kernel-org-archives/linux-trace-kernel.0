@@ -1,101 +1,91 @@
-Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40A4E271A9A
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Nov 2025 02:55:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 008452E7631;
+	Wed, 19 Nov 2025 03:15:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763520945; cv=none; b=Ja/BARXks5xX9PqxpTSrVvMgaesH9XArStEJ0oY1KCXhhPWPNxClWd+C7Ta0+z8SzF8nQcb1DRuPrPgZ8sDWM1gBy9f54p4fYZTaIB/H6E0fNThNuB0lgz8E4vPzIerl3qVlMjKiJm4JCH46LheVo+hEoaPXQwoIYcfT8iybfDc=
+	t=1763522136; cv=none; b=drXiVRYxuCHvmv4VW8T2OWAI+Re2hRn506rXr8ZyAUvs7D8fcMLGpptmwO1ZyB8DBOkrqfNuXv3TiCfIKdKkRo38dCBqbFxD+CunnErTU3ylVnR9FiM+lupn8zkqKLnqx5Z6Abe4Fh7VFLJnU40Ch6Z/3NUNGrAM/6Bx6Gh7AOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763520945; c=relaxed/simple;
-	bh=dVSDNy+DPQdDSMwW6icZnlkNgzbJHoHYB4a8VWDsAaU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kwKBpUlyooRciddyGx/Pzde7REbnxOKtR7obK/s2/YuWhsbrPMXV/dXcyINhwojRNDLY7trkucLlXmz1bA7ruRdj2hcWTLjQUpKlWOBPj/nth8/AfG4SNNhkyapZlljQphkgRbzaDh0nTkY4YPKzjDD+t5ybywMZRf4xrocaTto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=iI0K4CF8; arc=none smtp.client-ip=91.218.175.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1763522136; c=relaxed/simple;
+	bh=WSBXNTz/5SKZ3v9NkEu6THbuCzQ7JFwtAwUTX0liLys=;
+	h=Message-ID:Date:From:To:Cc:Subject; b=XGTDkDAWBtttrIqVEJxXgW/FrlDilvCh9/AQ+A5NBD0kZ0Xw++GXLeWys6C7ojnV3kogHVWfBc5zTLn6WLICzJ5Hu5lTPWfc3O0N4WFSuTEj1XpfXfYGEXfrfE/bNYu8zPJA53DB2foiYS/7ei7WUZ6Bvt0BgxCib2H6CYLUb54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DYnbE9Bc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="iI0K4CF8"
-Message-ID: <97c8e49c-ca27-40ec-8ff6-18b1b9061240@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1763520931;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YYOi8yKGJknMfqscK3XJCAosx9iyRQ0/XGaFEVpfjzk=;
-	b=iI0K4CF8Yr+i4/s9Pl3AduYCV/WxD98Z+hw06/lA6hsyefYszHcJLJjA4oPzsOYmlxI4Lm
-	hB8pq7oi6iV3gbGzt1q+EngKeY+IKHYZ87cl5KySiGKSs/GxeOp7C9NaTRMdZvM+dfQzoP
-	OQv/BxKHxn7r5OUp+DL3zZX8e7CysLU=
-Date: Wed, 19 Nov 2025 10:55:19 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DYnbE9Bc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A10EC2BCB0;
+	Wed, 19 Nov 2025 03:15:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763522135;
+	bh=WSBXNTz/5SKZ3v9NkEu6THbuCzQ7JFwtAwUTX0liLys=;
+	h=Date:From:To:Cc:Subject:From;
+	b=DYnbE9BcQeba2YRdQmn8wTCrRPs2ImsqoLpS1AeCG9piiMqFDtiiIqhpZuceeeAsE
+	 dmAhEeOxifv+JSSfqIoCE14p7L2p6DOfxmwl+PrMJGb24yr1RhXWLc/iPgGQBuHZZc
+	 S78+vtylDeaiWWswtDh1O3mDBa0peTorPb8qvYYoGetSIwmX4gU9bhK/B3hI+INyq7
+	 DIPDMk6WOr8wU/evAQuJRKxiNnRzC1cK97aIFlAJlUCzf4zU51+44i9UKEQDkehHQ0
+	 gq+SOi6mvNpJOT5y4WVarcAJLnZ7SNnVjCXodqprk43jzKjoE7Ad0zqo3tMDNnDtUR
+	 UD9WvuoVfEc5A==
+Received: from rostedt by gandalf with local (Exim 4.98.2)
+	(envelope-from <rostedt@kernel.org>)
+	id 1vLYfr-00000003Ndm-1wUD;
+	Tue, 18 Nov 2025 22:16:03 -0500
+Message-ID: <20251119031042.328864818@kernel.org>
+User-Agent: quilt/0.68
+Date: Tue, 18 Nov 2025 22:10:42 -0500
+From: Steven Rostedt <rostedt@kernel.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Tom Zanussi <zanussi@kernel.org>
+Subject: [PATCH 0/2] tracing: Clean up trigger code my merging structures
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Subject: Re: [PATCH bpf-next v3 0/6] bpf trampoline support "jmp" mode
-Content-Language: en-US
-To: Menglong Dong <menglong.dong@linux.dev>,
- Menglong Dong <menglong8.dong@gmail.com>,
- Alexei Starovoitov <alexei.starovoitov@gmail.com>,
- Leon Hwang <leon.hwang@linux.dev>
-Cc: Alexei Starovoitov <ast@kernel.org>, Steven Rostedt
- <rostedt@goodmis.org>, Daniel Borkmann <daniel@iogearbox.net>,
- John Fastabend <john.fastabend@gmail.com>,
- Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau
- <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>,
- Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>,
- KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
- Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
- Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, jiang.biao@linux.dev,
- bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
- linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
-References: <20251118123639.688444-1-dongml2@chinatelecom.cn>
- <CAADnVQJF5qkT8J=VJW00pPX7=hVdwn2545BzZPEi=mPwFouThw@mail.gmail.com>
- <8606158.T7Z3S40VBb@7950hx>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Leon Hwang <leon.hwang@linux.dev>
-In-Reply-To: <8606158.T7Z3S40VBb@7950hx>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
 
+The struct event_command has a callback function called get_trigger_ops().
+This callback returns the "trigger_ops" to use for the trigger. These ops
+define the trigger function, how to init the trigger, how to print the
+trigger and how to free it.
 
-On 19/11/25 10:47, Menglong Dong wrote:
-> On 2025/11/19 08:28, Alexei Starovoitov wrote:
->> On Tue, Nov 18, 2025 at 4:36 AM Menglong Dong <menglong8.dong@gmail.com> wrote:
->>>
->>> As we can see above, the performance of fexit increase from 80.544M/s to
->>> 136.540M/s, and the "fmodret" increase from 78.301M/s to 159.248M/s.
->>
->> Nice! Now we're talking.
->>
->> I think arm64 CPUs have a similar RSB-like return address predictor.
->> Do we need to do something similar there?
->> The question is not targeted to you, Menglong,
->> just wondering.
-> 
-> I did some research before, and I find that most arch
-> have such RSB-like stuff. I'll have a look at the loongarch
-> later(maybe after the LPC, as I'm forcing on the English practice),
-> and Leon is following the arm64.
+The only reason there's a callback function to get these ops is because
+some triggers have two types of operations. One is an "always on"
+operation, and the other is a "count down" operation. If a user passes in
+a parameter to say how many times the trigger should execute. For example:
 
-Yep, happy to take this on.
+  echo stacktrace:5 > events/kmem/kmem_cache_alloc/trigger
 
-I'm reviewing the arm64 JIT code now and will experiment with possible
-approaches to handle this as well.
+It will trigger the stacktrace for the first 5 times the kmem_cache_alloc
+event is hit.
 
-Thanks,
-Leon
+Instead of having two different trigger_ops since the only difference
+between them is the tigger itself (the print, init and free functions are
+all the same), just use a single ops that the event_command points to and
+add a function field to the trigger_ops to have a count_func.
 
-> 
-> For the other arch, we don't have the machine, and I think
-> it needs some else help.
-> 
-> Thanks!
-> Menglong Dong
+When a trigger is added to an event, if there's a count attached to it and
+the trigger ops has the count_func field, the data allocated to represent
+this trigger will have a new flag set called COUNT.
 
+Then when the trigger executes, it will check if the COUNT data flag is
+set, and if so, it will call the ops count_func(). If that returns false,
+it returns without executing the trigger.
 
+After making the struct event_trigger_ops be mapped one to one with the
+struct event_command, merge the former into the latter.
+
+Steven Rostedt (2):
+      tracing: Remove get_trigger_ops() and add count_func() from trigger ops
+      tracing: Merge struct event_trigger_ops into struct event_command
+
+----
+ kernel/trace/trace.h                | 124 ++++++-------
+ kernel/trace/trace_eprobe.c         |  19 +-
+ kernel/trace/trace_events_hist.c    | 143 +++++----------
+ kernel/trace/trace_events_trigger.c | 344 +++++++++++++-----------------------
+ 4 files changed, 231 insertions(+), 399 deletions(-)
