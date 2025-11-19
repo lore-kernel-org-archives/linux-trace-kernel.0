@@ -1,153 +1,80 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6B952139C9
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Nov 2025 07:31:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 755ED2E973C;
+	Wed, 19 Nov 2025 08:31:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763537485; cv=none; b=soTqMm4bDNBnRuZGQgNNi0A4/fW31bnNhjA++E0PvUHT/kJlG5YZH2E6k8CyQWYTBBLo3va6xoIgOMrr65xstRLlEazKY8QfNFlwzSnPmTGhf6GNZchOdbnc9Lsxg8GRB+fW32vWf0Mgf2eAsqUjiSs1yWYiW1FLT6ZiOo4DMN0=
+	t=1763541102; cv=none; b=m2E31ls0QJ2SGLnxg31tPUXHqvgNytim1RMuiYn5ZxmhhebfGIyxBlQWK7u16Mi2k7vLrVOM6R69HMXhwWFkaN8d3XSDbTc069aZNxyqyAYEeG3QeKymG4cprpgxvpuOLYDZeqwScpXXtghfz46e2fD2ux05TmsalsinFoRrsmg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763537485; c=relaxed/simple;
-	bh=MIIwdEfgxTBBJrtLkK9DHcPCyyFXDL4Yjb+eXljNAWo=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=O+v3oMnnryMApOgabIPnr8J4G1CnQOikfHsC4GBDjNcivph7vD2uARj+sPwVvQbK6J29EnKBBVWnOhPLEo7cMHtJAgFNNopCBQwxzRZJE9wXlE6KCEftaO1YB99COiFDHyIuxOkWvocgQy6zEu9HelJmtn/XJi+D3wqkhLWzyUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=h1eLGONM; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1763541102; c=relaxed/simple;
+	bh=Dvbqcf9hfganalC/hcvYvlYK1RQeake3mZnp8JYG1Gc=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=B533Z74Aw3XVMQMN0n8LlYjA5f8xQ9p8+/a0acVnD4g9NMpcGsXsjTxkCyiOMmYaeZu2McYPDz5pyTWuSYM/crYEGJcw6v8q7TQ7cLxO5FJ3JMbMU6WOvZ7ZBFCAjUcBUhmzBZ8rubwjPUIjT0i8UeCqojMSh3nnebJnGc6JU+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=chAgeaEP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="h1eLGONM"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-42b2e9ac45aso4078357f8f.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 18 Nov 2025 23:31:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1763537482; x=1764142282; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=YRb1WQ0gqk3VesjUw9X2idRsKQUF4vLOpbuptNdXlks=;
-        b=h1eLGONMrdQGV+1UkVEgRHz8+vQc9vMIfEhY/LaZkHxuzGP50t+k1hjxZHjVX0iRjm
-         dBOi92trQmcQSlYUFmZad2fdG61y7jqfJVFRjhIZLiV3sXg7snesf3MGTiTYGDFfHHEO
-         v9VBMTEmt33rSwstgPbjeHnM4c7rnZjzSRxSp1wem+p47LXrTsNye1gwFWz8/ytYLzUW
-         JYyfCCGgZ+ZXIAVVKVfjJGAA48nxzs5ivVaIr4LOot9cQytmloDrj0wk40Z47v2Uwjq6
-         u/aW0h25EV2ABrnY8yxRHituUPCmRUsSWkGoe9kYSizVoirA87OxIpCyXKzH5LQIBpOP
-         89Mw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763537482; x=1764142282;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=YRb1WQ0gqk3VesjUw9X2idRsKQUF4vLOpbuptNdXlks=;
-        b=KVlKCP4oKlYE7Y23Oasen+lsA0fSCltMSg2dcatJ6uCZcdgzEWiaZ33vN8qykVhPve
-         TY94z7ybaHlAu4L3BsZiW1De0qDlz2+ifemZaeoO3us8VRrNNwhKh6cVErW57nNAHqcl
-         FQnW+ib4Y1gAaEVME5+vALdMdzOvxSOeWr9P/W11VbaF+YAt9V3AFBnaTZaSAaLtMuNa
-         irJ9Vkku3uuVmYKdlI15KFh6zhJ9L4zTJr8VH4sw8ZiSKMCMq8lIDBRMzF4Sbokv9ytQ
-         Uxq0Z7/sujjZJaOxLjEywzZh0uNdAgeUScKx7LeTo8iA+m9+FIWWX1jgcEHPgJuP+eUo
-         FjcA==
-X-Gm-Message-State: AOJu0YwC1ruW8GCPnEamZjhAEY9/saaxqiWhQWxFNrioVAG6KA97k6kK
-	fjDZipEafN2xZlW9M8mtm4eD9A5Y+XFoptfLw8PJWIydGKsozg0bBm40whSOVPT8HQM=
-X-Gm-Gg: ASbGncurIQb3It4tcBORVHjfiG6gY0GlFe32QA7jG0DgCEUMcanJJoePZMYVdPMcl9v
-	HYypP3dEN0Y/DkStFmzjLNvrRvxoxxNtPDGmLMjSiiY+qXXS4cgN+MRErQs2CK65W3PYwtuITwR
-	XfEMZwusUn4yqpnuSxkPWCX9lHA5LbRaE0iVyqUDSiPD3YZH6ulwC+r+CxD25ZuhZ81uonH1yO3
-	718IOYeBa8V+t60OhWkVpeES/UsqSypvUBDIougi1C0+9cK3QZ6L+daOhByywGe/7lRQKIete2a
-	kaX6pYydKEGRFMIy3BOMK+UfDTyoeVenjBX6wn5MZ6wRnSMFga9cz6yEBHVzG7dn+jb8hyX1dkh
-	vvt2ZzKSZ0AqZdZy1VxeDxoNyKPhOrd8A5GP02R3xjNhZLdB+0lN39qtuZYIlWYTawdNwfdoxqZ
-	1GZxkv13IlGgOIhjjV
-X-Google-Smtp-Source: AGHT+IEKvffO+RboFuODPFbn2QrrbHcQOwtFRiaWeooXOuryeN0jhZ5Eqr6/P304qOPm5fMH02u1jw==
-X-Received: by 2002:a05:6000:2dca:b0:429:b1e4:1f79 with SMTP id ffacd0b85a97d-42b5959eb99mr19973831f8f.58.1763537480617;
-        Tue, 18 Nov 2025 23:31:20 -0800 (PST)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-42b53f19664sm37589944f8f.36.2025.11.18.23.31.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Nov 2025 23:31:20 -0800 (PST)
-Date: Wed, 19 Nov 2025 10:31:17 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-trace-kernel@vger.kernel.org
-Subject: [bug report] tracing: Have function graph tracer option sleep-time
- be per instance
-Message-ID: <aR1yRQxDmlfLZzoo@stanley.mountain>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="chAgeaEP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C0A1C19423;
+	Wed, 19 Nov 2025 08:31:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763541101;
+	bh=Dvbqcf9hfganalC/hcvYvlYK1RQeake3mZnp8JYG1Gc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=chAgeaEPbwEofU+p+g5W9njohfSVR96Wrlw0MChK0fBEzbBbR5/zA1EkJ86jzs+cB
+	 70lbfFV7woSSWsciOUVp25ntCLT2IZaIzC0CqcTOKaV7inkNwZKunY2s74kUE2XzzX
+	 Gup3NsZFqaQqrNh4kyhTKnBR4m8wjI3L8WvyP3uF2nPwgXUYqiI0hdPc24ihuATLY8
+	 5T4F9v1Dc33d3X3P9P9cc5pzXn5NCpMEr7XaARO7S6IfKWDnMa5ZuHrHk23c/2IU6B
+	 p07IT8M37cDPXtSoAyqg7d4sH30Xwa7d+s2Nbof5sSO1+geVrKpDtMTkXSphYq5t5S
+	 C5gQ6d07UqU8A==
+Date: Wed, 19 Nov 2025 17:31:37 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Mark Rutland
+ <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] tracing: Show the tracer options in boot-time
+ created instance
+Message-Id: <20251119173137.c7e489c079e942eedd48b249@kernel.org>
+In-Reply-To: <20251119133942.df3ee2c01ccd40055cf139a4@kernel.org>
+References: <176351169375.1795430.7653862896005389480.stgit@mhiramat.tok.corp.google.com>
+	<20251119133942.df3ee2c01ccd40055cf139a4@kernel.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello Steven Rostedt,
+On Wed, 19 Nov 2025 13:39:42 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+> > diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> > index 8ae95800592d..4a6784057855 100644
+> > --- a/kernel/trace/trace.c
+> > +++ b/kernel/trace/trace.c
+> > @@ -10231,11 +10231,16 @@ static __init int __update_tracer_options(struct trace_array *tr)
+> >  	return ret;
+> >  }
+> >  
+> > -static __init void update_tracer_options(struct trace_array *tr)
+> > +static __init void update_tracer_options(void)
+> >  {
+> > +	struct trace_array *tr;
+> > +
+> >  	guard(mutex)(&trace_types_lock);
+> > +
+> > +	list_for_each_entry(tr, &ftrace_trace_arrays, list)
+> > +		__update_tracer_options(tr);
+> > +
+> >  	tracer_options_updated = true;
 
-Commit 5abb6ccb58f0 ("tracing: Have function graph tracer option
-sleep-time be per instance") from Nov 14, 2025 (linux-next), leads to
-the following Smatch static checker warning:
+Oops, I misunderstood this flag. This should be set *before* calling
+__update_tracer_options(). Not updated.
 
-    kernel/trace/trace_functions_graph.c:1649 func_graph_set_flag()
-    warn: unsigned 'fgraph_no_sleep_time' is never less than zero.
+Thanks,
 
-    kernel/trace/trace_functions_graph.c:1671 func_graph_set_flag()
-    warn: unsigned 'fgraph_no_sleep_time' is never less than zero.
-
-kernel/trace/trace_functions_graph.c
-    1637 static int
-    1638 func_graph_set_flag(struct trace_array *tr, u32 old_flags, u32 bit, int set)
-    1639 {
-    1640 /*
-    1641  * The function profiler gets updated even if function graph
-    1642  * isn't the current tracer. Handle it separately.
-    1643  */
-    1644 #ifdef CONFIG_FUNCTION_PROFILER
-    1645         if (bit == TRACE_GRAPH_SLEEP_TIME && (tr->flags & TRACE_ARRAY_FL_GLOBAL) &&
-    1646             !!set == fprofile_no_sleep_time) {
-    1647                 if (set) {
-    1648                         fgraph_no_sleep_time--;
---> 1649                         if (WARN_ON_ONCE(fgraph_no_sleep_time < 0))
-                                                  ^^^^^^^^^^^^^^^^^^^^^^^^
-Impossible.  Unsigned.
-
-    1650                                 fgraph_no_sleep_time = 0;
-    1651                         fprofile_no_sleep_time = false;
-    1652                 } else {
-    1653                         fgraph_no_sleep_time++;
-    1654                         fprofile_no_sleep_time = true;
-    1655                 }
-    1656         }
-    1657 #endif
-    1658 
-    1659         /* Do nothing if the current tracer is not this tracer */
-    1660         if (tr->current_trace != &graph_trace)
-    1661                 return 0;
-    1662 
-    1663         /* Do nothing if already set. */
-    1664         if (!!set == !!(tr->current_trace_flags->val & bit))
-    1665                 return 0;
-    1666 
-    1667         switch (bit) {
-    1668         case TRACE_GRAPH_SLEEP_TIME:
-    1669                 if (set) {
-    1670                         fgraph_no_sleep_time--;
-    1671                         if (WARN_ON_ONCE(fgraph_no_sleep_time < 0))
-                                                  ^^^^^^^^^^^^^^^^^^^^^^^^
-Same.
-
-    1672                                 fgraph_no_sleep_time = 0;
-    1673                 } else {
-    1674                         fgraph_no_sleep_time++;
-    1675                 }
-    1676                 break;
-    1677 
-    1678         case TRACE_GRAPH_PRINT_IRQS:
-    1679                 if (set)
-    1680                         ftrace_graph_skip_irqs--;
-    1681                 else
-    1682                         ftrace_graph_skip_irqs++;
-    1683                 if (WARN_ON_ONCE(ftrace_graph_skip_irqs < 0))
-    1684                         ftrace_graph_skip_irqs = 0;
-    1685                 break;
-    1686 
-    1687         case TRACE_GRAPH_ARGS:
-    1688                 return ftrace_graph_trace_args(tr, set);
-    1689         }
-    1690 
-    1691         return 0;
-    1692 }
-
-regards,
-dan carpenter
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
