@@ -1,448 +1,535 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E2303043AE
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Nov 2025 16:54:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D2CE302164;
+	Wed, 19 Nov 2025 17:06:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763571280; cv=none; b=OCNkkCZNtFMzNt65kUKFLVVmntcl3EjmKSuWJXjjRuy3wekeIMXyDGFI1vDeFPWN+iAxQ/tbwFhV+jnZlJDaoOpqj1gG7hZ6RLwn5y04mlwx5jNU2W6F9OvZoG5qJ/Uo3VXkaIXpgSOgf08MRo31jz6hlrE6j1FgATzss2+g26g=
+	t=1763572002; cv=none; b=XtJKWAe12CgR/55pxuFKzzuzaqCJ9b4F5ijBvzlMyDUnnmrf1/Yxqjm6UZxg6SHuUA75am1TVgWnsXVWFKMHvAvNL1WoEn2WpX3RQ7QwBRz8akvNsDdqIl7EXk7w9cOJ/OxDnNoKx4qhYLlZ0/wpn14sk+x6g5W2VnT4gPj2wZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763571280; c=relaxed/simple;
-	bh=jhkyeEDqW4tlWxuMpEJ76v1FpdOWlpnQbXT8ql/aNXw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NFZb0yFXK6T2eTEo3YGvxfe+A4rO2d1H/3Z7ZfNb3P/y1LF1ikaTfyLZj91RPJZE03z1s1m0TATjrqv7+a9RXHePZ+b6qq5hEo5G/0MOaGpuFlwjP5yp6AZIHNjDVGGghoVUk3fH2JHx1YSxQn81zIxW1b3luDRSpxOxbtkvW2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ndx0tjvB; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1763572002; c=relaxed/simple;
+	bh=woNh5JEEMkAdN+vfrrrsu6WoTN/klukjySz4Ay7pPwA=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OHojqDowXUsRVMDgmkvvN7RK4VXEzvhTsGeZjBeu7Z79RmqzcbIlOlbt68TbKg41jh1E24DUMoUcCbZ+ICnOQ6RwG1h7axiLiyMGzzfTZtBfsj1+ajc9YVo9iZSIgCkTmvQVs+YmWsxllKVH/Ya6i+LwZUU1Df0gZnoInZomJnY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WSQ1gRVt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ndx0tjvB"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-295c64cb951so266535ad.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Nov 2025 08:54:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1763571278; x=1764176078; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HT3OMqxJH7s/PONrg9KShT6qvoV2gN1KmFktP31fzqk=;
-        b=Ndx0tjvB/EFXwQulzFoKZ8wFmzYmxbUVnerV1a/ffITXXh5CI1JeSSRbIOipoAHJML
-         8ml+CaijcsvvvIfY7UOl1Kq8vFT2omG773WZNUSJuXp0UYSTV0Keaj/tiY7qtnsYKGHA
-         0l2UnqJ0fRm/OX7+n0Ltn4BMij4xo1n6py6vA/tBAKNs8G7/0oOI/uV0PYNCC3+mKUse
-         Qt/eBkVW1OvkGMvBZF8fg2S5/NYP3EYUBoRlJfZliEluJoQuSwRZ32Qks8h4sDn/GO6Z
-         Or8TjYw2ZoehTSB0fQbY4Pl3XH5BC2JmCXIpFKWXeveX/fnxz2eqpEtVNVXiLZPyYBzp
-         CLQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763571278; x=1764176078;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=HT3OMqxJH7s/PONrg9KShT6qvoV2gN1KmFktP31fzqk=;
-        b=jgoh0zZMGW5CAk7oDHE5lAEaedvm7drGqzjLX9hJ3rqkYfMGRZI3Ag2EiXutDtN9/X
-         aNdnCJv+asTdNfF/0X8WhaFG2H1+Sxtsmr7Q7LcY058J4uggzr2mkXguAYb/qyTwZceg
-         OwEM0cjekatkmceNSiAZmxROAMhu+EnMxOPTN9Jb+Rg9qhE9fGmF7fPNWAXtb8nlD1Nh
-         K8bdAyWZUOi/j9pRh7Qqm+22OkraLU7WH4ITduEavA88JWQPPAGi38/N9VVJ7T/uQy2j
-         VNaBmkCkZx1meEeIwKyzckt+KAiA1mD2inCT7DFziY1aFIlWgaE6B7j4PuaVZo5u4785
-         7WJg==
-X-Forwarded-Encrypted: i=1; AJvYcCVnagvrbX9Zk/4ti6e0vKlB1XXARebCNIicHLg6HwT2ZcNHLqrJf6XMi5deOU8Yfu1qZ7FuG9EblpESrE+U4AbNsjo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJ2nEta4jOKnDUzP1+r8GZ09P7G/5Wj6s87C/nlqkEsSD1Mz+Y
-	aRyz3sIaUsEYNDZZHbH8/QSnd7v1PLV6FCigwx4NXsWdiviE1sAlcMZCWQUkk3Y9VhZgRJTJaJd
-	qzRCkFbOcC3/jO35QgVc82ozMnNhwm+zENgd9I2Fe
-X-Gm-Gg: ASbGncvk/3XCzVP0ZJ5z6Kbh8PNmzFaBP8JKgy7but2uzWdWPe/0YSwn4mLWhkh0gpu
-	JIvEoV4FPOyKzVMYPfNit4zbQpx26g0EeLRv/8GrHrUWXsJ3sxZVp3SSlCdFTi5+jR3p6te42uM
-	pJc5IK5hWUhsozjdha0CA/DY8wz/ge+geXBAw07tbHB4F1Pwv3JaZrdGa3d0KBZ9LwusJCywKr1
-	TddqVThKHhLgpIOHhT4rDSnHOAwqgFY6+u0u/dR/4zyOo9jyccfGOFdglGpHR2fAPxeAX+HhD0G
-	Jq2zX+Vl8Z3DJS73XVoPm62pqTn4PnfYoARF
-X-Google-Smtp-Source: AGHT+IGL2aUTgoEDz+e2CZiIvy6DL6EnVNS86TKmRAEEpVDKzLg2uXqwv/ykRm5IZkphcs9U8PwCjxdUAMlRLefYwGY=
-X-Received: by 2002:a17:902:c947:b0:292:b6a0:80df with SMTP id
- d9443c01a7336-29a052426a2mr3617505ad.10.1763571277439; Wed, 19 Nov 2025
- 08:54:37 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WSQ1gRVt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FE7FC113D0;
+	Wed, 19 Nov 2025 17:06:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763572001;
+	bh=woNh5JEEMkAdN+vfrrrsu6WoTN/klukjySz4Ay7pPwA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=WSQ1gRVtxv6UXCd31HIq6Eh1eEv1fYJrOHMjVCdVGZImTqa4M0QWku4WgOHaI6t9J
+	 bemN7fXO9y3W7EQh5ZDxi7qJa3D+s0w+OaOsiUCpGQoXUVfk5KlPAxFQg+bJ4l31u5
+	 AylhoizcT7sOvO0q4FufbMqCFvYievKVGrstRab7wo81UqefvhlNPM4Jljp9CEBjgU
+	 FNlVrq1O+vo7vxhL1PgD+WQ6rrqk+HTQDrDKeWA47I3yulXrhUQMVgvGKYl6znGr92
+	 DD9LygtLLeS36eZzBmVbSDfR14VTj8b7he52RnqUU+wM7Qs1kiwnbdAi3plDuP1Uvs
+	 x9vrDJdLLnpKw==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.98.2)
+	(envelope-from <maz@kernel.org>)
+	id 1vLlde-00000006dSZ-3ZPO;
+	Wed, 19 Nov 2025 17:06:38 +0000
+Date: Wed, 19 Nov 2025 17:06:38 +0000
+Message-ID: <86bjkyrly9.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	linux-trace-kernel@vger.kernel.org,
+	oliver.upton@linux.dev,
+	joey.gouly@arm.com,
+	suzuki.poulose@arm.com,
+	yuzenghui@huawei.com,
+	kvmarm@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	jstultz@google.com,
+	qperret@google.com,
+	will@kernel.org,
+	aneesh.kumar@kernel.org,
+	kernel-team@android.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 21/28] KVM: arm64: Add tracing capability for the pKVM hyp
+In-Reply-To: <20251107093840.3779150-22-vdonnefort@google.com>
+References: <20251107093840.3779150-1-vdonnefort@google.com>
+	<20251107093840.3779150-22-vdonnefort@google.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20251115234106.348571-1-namhyung@kernel.org> <20251115234106.348571-6-namhyung@kernel.org>
-In-Reply-To: <20251115234106.348571-6-namhyung@kernel.org>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 19 Nov 2025 08:54:26 -0800
-X-Gm-Features: AWmQ_bmuXVqzJG8k6iFG3rBra-pvA2ab1qa4cxW_U8vY5d6oxGfclXdpsGg1O6Y
-Message-ID: <CAP-5=fVWVHzJ6uzfPpM37p6ZNbFC2D51nmdJzmnyKXy4COwB_Q@mail.gmail.com>
-Subject: Re: [PATCH v4 5/5] perf tools: Merge deferred user callchains
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, James Clark <james.clark@linaro.org>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
-	Steven Rostedt <rostedt@goodmis.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Indu Bhagat <indu.bhagat@oracle.com>, Jens Remus <jremus@linux.ibm.com>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, linux-trace-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: vdonnefort@google.com, rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, linux-trace-kernel@vger.kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org, jstultz@google.com, qperret@google.com, will@kernel.org, aneesh.kumar@kernel.org, kernel-team@android.com, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Sat, Nov 15, 2025 at 3:41=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> Save samples with deferred callchains in a separate list and deliver
-> them after merging the user callchains.  If users don't want to merge
-> they can set tool->merge_deferred_callchains to false to prevent the
-> behavior.
->
-> With previous result, now perf script will show the merged callchains.
->
->   $ perf script
->   ...
->   pwd    2312   121.163435:     249113 cpu/cycles/P:
->           ffffffff845b78d8 __build_id_parse.isra.0+0x218 ([kernel.kallsym=
-s])
->           ffffffff83bb5bf6 perf_event_mmap+0x2e6 ([kernel.kallsyms])
->           ffffffff83c31959 mprotect_fixup+0x1e9 ([kernel.kallsyms])
->           ffffffff83c31dc5 do_mprotect_pkey+0x2b5 ([kernel.kallsyms])
->           ffffffff83c3206f __x64_sys_mprotect+0x1f ([kernel.kallsyms])
->           ffffffff845e6692 do_syscall_64+0x62 ([kernel.kallsyms])
->           ffffffff8360012f entry_SYSCALL_64_after_hwframe+0x76 ([kernel.k=
-allsyms])
->               7f18fe337fa7 mprotect+0x7 (/lib/x86_64-linux-gnu/ld-linux-x=
-86-64.so.2)
->               7f18fe330e0f _dl_sysdep_start+0x7f (/lib/x86_64-linux-gnu/l=
-d-linux-x86-64.so.2)
->               7f18fe331448 _dl_start_user+0x0 (/lib/x86_64-linux-gnu/ld-l=
-inux-x86-64.so.2)
->   ...
->
-> The old output can be get using --no-merge-callchain option.
-> Also perf report can get the user callchain entry at the end.
->
->   $ perf report --no-children --stdio -q -S __build_id_parse.isra.0
->   # symbol: __build_id_parse.isra.0
->        8.40%  pwd      [kernel.kallsyms]
->               |
->               ---__build_id_parse.isra.0
->                  perf_event_mmap
->                  mprotect_fixup
->                  do_mprotect_pkey
->                  __x64_sys_mprotect
->                  do_syscall_64
->                  entry_SYSCALL_64_after_hwframe
->                  mprotect
->                  _dl_sysdep_start
->                  _dl_start_user
->
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/Documentation/perf-script.txt |  5 ++
->  tools/perf/builtin-inject.c              |  1 +
->  tools/perf/builtin-report.c              |  1 +
->  tools/perf/builtin-script.c              |  4 ++
->  tools/perf/util/callchain.c              | 29 ++++++++++
->  tools/perf/util/callchain.h              |  3 ++
->  tools/perf/util/evlist.c                 |  1 +
->  tools/perf/util/evlist.h                 |  2 +
->  tools/perf/util/session.c                | 67 +++++++++++++++++++++++-
->  tools/perf/util/tool.c                   |  1 +
->  tools/perf/util/tool.h                   |  1 +
->  11 files changed, 114 insertions(+), 1 deletion(-)
->
-> diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Docume=
-ntation/perf-script.txt
-> index 28bec7e78bc858ba..03d1129606328d6d 100644
-> --- a/tools/perf/Documentation/perf-script.txt
-> +++ b/tools/perf/Documentation/perf-script.txt
-> @@ -527,6 +527,11 @@ include::itrace.txt[]
->         The known limitations include exception handing such as
->         setjmp/longjmp will have calls/returns not match.
->
-> +--merge-callchains::
-> +       Enable merging deferred user callchains if available.  This is th=
-e
-> +       default behavior.  If you want to see separate CALLCHAIN_DEFERRED
-> +       records for some reason, use --no-merge-callchains explicitly.
-> +
->  :GMEXAMPLECMD: script
->  :GMEXAMPLESUBCMD:
->  include::guest-files.txt[]
-> diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-> index bd9245d2dd41aa48..51d2721b6db9dccb 100644
-> --- a/tools/perf/builtin-inject.c
-> +++ b/tools/perf/builtin-inject.c
-> @@ -2527,6 +2527,7 @@ int cmd_inject(int argc, const char **argv)
->         inject.tool.auxtrace            =3D perf_event__repipe_auxtrace;
->         inject.tool.bpf_metadata        =3D perf_event__repipe_op2_synth;
->         inject.tool.dont_split_sample_group =3D true;
-> +       inject.tool.merge_deferred_callchains =3D false;
->         inject.session =3D __perf_session__new(&data, &inject.tool,
->                                              /*trace_event_repipe=3D*/inj=
-ect.output.is_pipe,
->                                              /*host_env=3D*/NULL);
-> diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-> index 2bc269f5fcef8023..add6b1c2aaf04270 100644
-> --- a/tools/perf/builtin-report.c
-> +++ b/tools/perf/builtin-report.c
-> @@ -1614,6 +1614,7 @@ int cmd_report(int argc, const char **argv)
->         report.tool.event_update         =3D perf_event__process_event_up=
-date;
->         report.tool.feature              =3D process_feature_event;
->         report.tool.ordering_requires_timestamps =3D true;
-> +       report.tool.merge_deferred_callchains =3D !dump_trace;
->
->         session =3D perf_session__new(&data, &report.tool);
->         if (IS_ERR(session)) {
-> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> index 85b42205a71b3993..62e43d3c5ad731a0 100644
-> --- a/tools/perf/builtin-script.c
-> +++ b/tools/perf/builtin-script.c
-> @@ -4009,6 +4009,7 @@ int cmd_script(int argc, const char **argv)
->         bool header_only =3D false;
->         bool script_started =3D false;
->         bool unsorted_dump =3D false;
-> +       bool merge_deferred_callchains =3D true;
->         char *rec_script_path =3D NULL;
->         char *rep_script_path =3D NULL;
->         struct perf_session *session;
-> @@ -4162,6 +4163,8 @@ int cmd_script(int argc, const char **argv)
->                     "Guest code can be found in hypervisor process"),
->         OPT_BOOLEAN('\0', "stitch-lbr", &script.stitch_lbr,
->                     "Enable LBR callgraph stitching approach"),
-> +       OPT_BOOLEAN('\0', "merge-callchains", &merge_deferred_callchains,
-> +                   "Enable merge deferred user callchains"),
->         OPTS_EVSWITCH(&script.evswitch),
->         OPT_END()
->         };
-> @@ -4418,6 +4421,7 @@ int cmd_script(int argc, const char **argv)
->         script.tool.throttle             =3D process_throttle_event;
->         script.tool.unthrottle           =3D process_throttle_event;
->         script.tool.ordering_requires_timestamps =3D true;
-> +       script.tool.merge_deferred_callchains =3D merge_deferred_callchai=
-ns;
->         session =3D perf_session__new(&data, &script.tool);
->         if (IS_ERR(session))
->                 return PTR_ERR(session);
-> diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
-> index 2884187ccbbecfdc..71dc5a070065dd2a 100644
-> --- a/tools/perf/util/callchain.c
-> +++ b/tools/perf/util/callchain.c
-> @@ -1838,3 +1838,32 @@ int sample__for_each_callchain_node(struct thread =
-*thread, struct evsel *evsel,
->         }
->         return 0;
->  }
-> +
-> +int sample__merge_deferred_callchain(struct perf_sample *sample_orig,
-> +                                    struct perf_sample *sample_callchain=
-)
-> +{
-> +       u64 nr_orig =3D sample_orig->callchain->nr - 1;
-> +       u64 nr_deferred =3D sample_callchain->callchain->nr;
-> +       struct ip_callchain *callchain;
-> +
-> +       if (sample_orig->callchain->nr < 2) {
-> +               sample_orig->deferred_callchain =3D false;
-> +               return -EINVAL;
-> +       }
-> +
-> +       callchain =3D calloc(1 + nr_orig + nr_deferred, sizeof(u64));
-> +       if (callchain =3D=3D NULL) {
-> +               sample_orig->deferred_callchain =3D false;
-> +               return -ENOMEM;
-> +       }
-> +
-> +       callchain->nr =3D nr_orig + nr_deferred;
-> +       /* copy original including PERF_CONTEXT_USER_DEFERRED (but the co=
-okie) */
-> +       memcpy(callchain->ips, sample_orig->callchain->ips, nr_orig * siz=
-eof(u64));
-> +       /* copy deferred user callchains */
-> +       memcpy(&callchain->ips[nr_orig], sample_callchain->callchain->ips=
-,
-> +              nr_deferred * sizeof(u64));
-> +
-> +       sample_orig->callchain =3D callchain;
-> +       return 0;
-> +}
-> diff --git a/tools/perf/util/callchain.h b/tools/perf/util/callchain.h
-> index d5ae4fbb7ce5fa44..2a52af8c80ace33c 100644
-> --- a/tools/perf/util/callchain.h
-> +++ b/tools/perf/util/callchain.h
-> @@ -318,4 +318,7 @@ int sample__for_each_callchain_node(struct thread *th=
-read, struct evsel *evsel,
->                                     struct perf_sample *sample, int max_s=
-tack,
->                                     bool symbols, callchain_iter_fn cb, v=
-oid *data);
->
-> +int sample__merge_deferred_callchain(struct perf_sample *sample_orig,
-> +                                    struct perf_sample *sample_callchain=
-);
-> +
->  #endif /* __PERF_CALLCHAIN_H */
-> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-> index e8217efdda5323c6..03674d2cbd015e4f 100644
-> --- a/tools/perf/util/evlist.c
-> +++ b/tools/perf/util/evlist.c
-> @@ -85,6 +85,7 @@ void evlist__init(struct evlist *evlist, struct perf_cp=
-u_map *cpus,
->         evlist->ctl_fd.pos =3D -1;
->         evlist->nr_br_cntr =3D -1;
->         metricgroup__rblist_init(&evlist->metric_events);
-> +       INIT_LIST_HEAD(&evlist->deferred_samples);
->  }
->
->  struct evlist *evlist__new(void)
-> diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-> index 5e71e3dc60423079..911834ae7c2a6f76 100644
-> --- a/tools/perf/util/evlist.h
-> +++ b/tools/perf/util/evlist.h
-> @@ -92,6 +92,8 @@ struct evlist {
->          * of struct metric_expr.
->          */
->         struct rblist   metric_events;
-> +       /* samples with deferred_callchain would wait here. */
-> +       struct list_head deferred_samples;
+On Fri, 07 Nov 2025 09:38:33 +0000,
+Vincent Donnefort <vdonnefort@google.com> wrote:
+> 
+> When running with protected mode, the host has very little knowledge
+> about what is happening in the hypervisor. Of course this is an
+> essential feature for security but nonetheless, that piece of code
+> growing with more responsibilities, we need now a way to debug and
+> profile it. Tracefs by its reliability, versatility and support for
+> user-space is the perfect tool.
+> 
+> There's no way the hypervisor could log events directly into the host
+> tracefs ring-buffers. So instead let's use our own, where the hypervisor
+> is the writer and the host the reader.
+> 
+> Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+> 
+> diff --git a/arch/arm64/include/asm/kvm_asm.h b/arch/arm64/include/asm/kvm_asm.h
+> index 9da54d4ee49e..ad02dee140d3 100644
+> --- a/arch/arm64/include/asm/kvm_asm.h
+> +++ b/arch/arm64/include/asm/kvm_asm.h
+> @@ -89,6 +89,10 @@ enum __kvm_host_smccc_func {
+>  	__KVM_HOST_SMCCC_FUNC___pkvm_vcpu_load,
+>  	__KVM_HOST_SMCCC_FUNC___pkvm_vcpu_put,
+>  	__KVM_HOST_SMCCC_FUNC___pkvm_tlb_flush_vmid,
+> +	__KVM_HOST_SMCCC_FUNC___pkvm_load_tracing,
+> +	__KVM_HOST_SMCCC_FUNC___pkvm_unload_tracing,
+> +	__KVM_HOST_SMCCC_FUNC___pkvm_enable_tracing,
+> +	__KVM_HOST_SMCCC_FUNC___pkvm_swap_reader_tracing,
 >  };
->
->  struct evsel_str_handler {
-> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-> index 361e15c1f26a96d0..2e777fd1bcf6707b 100644
-> --- a/tools/perf/util/session.c
-> +++ b/tools/perf/util/session.c
-> @@ -1285,6 +1285,60 @@ static int evlist__deliver_sample(struct evlist *e=
-vlist, const struct perf_tool
->                                             per_thread);
+>  
+>  #define DECLARE_KVM_VHE_SYM(sym)	extern char sym[]
+> diff --git a/arch/arm64/include/asm/kvm_hyptrace.h b/arch/arm64/include/asm/kvm_hyptrace.h
+> new file mode 100644
+> index 000000000000..9c30a479bc36
+> --- /dev/null
+> +++ b/arch/arm64/include/asm/kvm_hyptrace.h
+> @@ -0,0 +1,13 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +#ifndef __ARM64_KVM_HYPTRACE_H_
+> +#define __ARM64_KVM_HYPTRACE_H_
+> +
+> +#include <linux/ring_buffer.h>
+> +
+> +struct hyp_trace_desc {
+> +	unsigned long			bpages_backing_start;
+
+Why is this an integer type? You keep casting it all over the place,
+which tells me that's not the ideal type.
+
+> +	size_t				bpages_backing_size;
+> +	struct trace_buffer_desc	trace_buffer_desc;
+> +
+> +};
+> +#endif
+> diff --git a/arch/arm64/kvm/Kconfig b/arch/arm64/kvm/Kconfig
+> index 4f803fd1c99a..580426cdbe77 100644
+> --- a/arch/arm64/kvm/Kconfig
+> +++ b/arch/arm64/kvm/Kconfig
+> @@ -83,4 +83,11 @@ config PTDUMP_STAGE2_DEBUGFS
+>  
+>  	  If in doubt, say N.
+>  
+> +config PKVM_TRACING
+> +	bool
+> +	depends on KVM
+> +	depends on TRACING
+> +	select SIMPLE_RING_BUFFER
+> +	default y
+
+I'd rather this is made to depend on NVHE_EL2_DEBUG, just like the
+other debug options.
+
+> +
+>  endif # VIRTUALIZATION
+> diff --git a/arch/arm64/kvm/hyp/include/nvhe/trace.h b/arch/arm64/kvm/hyp/include/nvhe/trace.h
+> new file mode 100644
+> index 000000000000..996e90c0974f
+> --- /dev/null
+> +++ b/arch/arm64/kvm/hyp/include/nvhe/trace.h
+> @@ -0,0 +1,23 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +#ifndef __ARM64_KVM_HYP_NVHE_TRACE_H
+> +#define __ARM64_KVM_HYP_NVHE_TRACE_H
+> +#include <asm/kvm_hyptrace.h>
+> +
+> +#ifdef CONFIG_PKVM_TRACING
+> +void *tracing_reserve_entry(unsigned long length);
+> +void tracing_commit_entry(void);
+> +
+> +int __pkvm_load_tracing(unsigned long desc_va, size_t desc_size);
+> +void __pkvm_unload_tracing(void);
+> +int __pkvm_enable_tracing(bool enable);
+> +int __pkvm_swap_reader_tracing(unsigned int cpu);
+> +#else
+> +static inline void *tracing_reserve_entry(unsigned long length) { return NULL; }
+> +static inline void tracing_commit_entry(void) { }
+> +
+> +static inline int __pkvm_load_tracing(unsigned long desc_va, size_t desc_size) { return -ENODEV; }
+> +static inline void __pkvm_unload_tracing(void) { }
+> +static inline int __pkvm_enable_tracing(bool enable) { return -ENODEV; }
+> +static inline int __pkvm_swap_reader_tracing(unsigned int cpu) { return -ENODEV; }
+> +#endif
+> +#endif
+> diff --git a/arch/arm64/kvm/hyp/nvhe/Makefile b/arch/arm64/kvm/hyp/nvhe/Makefile
+> index f55a9a17d38f..504c3b9caef8 100644
+> --- a/arch/arm64/kvm/hyp/nvhe/Makefile
+> +++ b/arch/arm64/kvm/hyp/nvhe/Makefile
+> @@ -29,7 +29,7 @@ hyp-obj-y += ../vgic-v3-sr.o ../aarch32.o ../vgic-v2-cpuif-proxy.o ../entry.o \
+>  	 ../fpsimd.o ../hyp-entry.o ../exception.o ../pgtable.o
+>  hyp-obj-y += ../../../kernel/smccc-call.o
+>  hyp-obj-$(CONFIG_LIST_HARDENED) += list_debug.o
+> -hyp-obj-$(CONFIG_PKVM_TRACING) += clock.o
+> +hyp-obj-$(CONFIG_PKVM_TRACING) += clock.o trace.o ../../../../../kernel/trace/simple_ring_buffer.o
+
+Can we get something less awful here? Surely there is a way to get an
+absolute path from the kbuild infrastructure? $(objtree) springs to
+mind...
+
+>  hyp-obj-y += $(lib-objs)
+>  
+>  ##
+> diff --git a/arch/arm64/kvm/hyp/nvhe/hyp-main.c b/arch/arm64/kvm/hyp/nvhe/hyp-main.c
+> index 29430c031095..6381e50ff531 100644
+> --- a/arch/arm64/kvm/hyp/nvhe/hyp-main.c
+> +++ b/arch/arm64/kvm/hyp/nvhe/hyp-main.c
+> @@ -18,6 +18,7 @@
+>  #include <nvhe/mem_protect.h>
+>  #include <nvhe/mm.h>
+>  #include <nvhe/pkvm.h>
+> +#include <nvhe/trace.h>
+>  #include <nvhe/trap_handler.h>
+>  
+>  DEFINE_PER_CPU(struct kvm_nvhe_init_params, kvm_init_params);
+> @@ -585,6 +586,35 @@ static void handle___pkvm_teardown_vm(struct kvm_cpu_context *host_ctxt)
+>  	cpu_reg(host_ctxt, 1) = __pkvm_teardown_vm(handle);
 >  }
->
-> +struct deferred_event {
-> +       struct list_head list;
-> +       union perf_event *event;
-
-What's going on with the memory here? Doesn't the event need to be a
-copy to avoid the memory going away in between processing events? It
-is definitely worth commenting. Note, I don't see a copy being made
-for the event here in machines__deliver_event.
-
-Thanks,
-Ian
-
+>  
+> +static void handle___pkvm_load_tracing(struct kvm_cpu_context *host_ctxt)
+> +{
+> +	 DECLARE_REG(unsigned long, desc_hva, host_ctxt, 1);
+> +	 DECLARE_REG(size_t, desc_size, host_ctxt, 2);
+> +
+> +	 cpu_reg(host_ctxt, 1) = __pkvm_load_tracing(desc_hva, desc_size);
+> +}
+> +
+> +static void handle___pkvm_unload_tracing(struct kvm_cpu_context *host_ctxt)
+> +{
+> +	__pkvm_unload_tracing();
+> +
+> +	cpu_reg(host_ctxt, 1) = 0;
+> +}
+> +
+> +static void handle___pkvm_enable_tracing(struct kvm_cpu_context *host_ctxt)
+> +{
+> +	DECLARE_REG(bool, enable, host_ctxt, 1);
+> +
+> +	cpu_reg(host_ctxt, 1) = __pkvm_enable_tracing(enable);
+> +}
+> +
+> +static void handle___pkvm_swap_reader_tracing(struct kvm_cpu_context *host_ctxt)
+> +{
+> +	DECLARE_REG(unsigned int, cpu, host_ctxt, 1);
+> +
+> +	cpu_reg(host_ctxt, 1) = __pkvm_swap_reader_tracing(cpu);
+> +}
+> +
+>  typedef void (*hcall_t)(struct kvm_cpu_context *);
+>  
+>  #define HANDLE_FUNC(x)	[__KVM_HOST_SMCCC_FUNC_##x] = (hcall_t)handle_##x
+> @@ -626,6 +656,10 @@ static const hcall_t host_hcall[] = {
+>  	HANDLE_FUNC(__pkvm_vcpu_load),
+>  	HANDLE_FUNC(__pkvm_vcpu_put),
+>  	HANDLE_FUNC(__pkvm_tlb_flush_vmid),
+> +	HANDLE_FUNC(__pkvm_load_tracing),
+> +	HANDLE_FUNC(__pkvm_unload_tracing),
+> +	HANDLE_FUNC(__pkvm_enable_tracing),
+> +	HANDLE_FUNC(__pkvm_swap_reader_tracing),
+>  };
+>  
+>  static void handle_host_hcall(struct kvm_cpu_context *host_ctxt)
+> diff --git a/arch/arm64/kvm/hyp/nvhe/trace.c b/arch/arm64/kvm/hyp/nvhe/trace.c
+> new file mode 100644
+> index 000000000000..def5cbc75722
+> --- /dev/null
+> +++ b/arch/arm64/kvm/hyp/nvhe/trace.c
+> @@ -0,0 +1,257 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (C) 2025 Google LLC
+> + * Author: Vincent Donnefort <vdonnefort@google.com>
+> + */
+> +
+> +#include <nvhe/clock.h>
+> +#include <nvhe/mem_protect.h>
+> +#include <nvhe/mm.h>
+> +#include <nvhe/trace.h>
+> +
+> +#include <asm/percpu.h>
+> +#include <asm/kvm_mmu.h>
+> +#include <asm/local.h>
+> +
+> +#include <linux/simple_ring_buffer.h>
+> +
+> +static DEFINE_PER_CPU(struct simple_rb_per_cpu, __simple_rbs);
+> +
+> +static struct hyp_trace_buffer {
+> +	struct simple_rb_per_cpu __percpu	*simple_rbs;
+> +	unsigned long				bpages_backing_start;
+> +	size_t					bpages_backing_size;
+> +	hyp_spinlock_t				lock;
+> +} trace_buffer = {
+> +	.simple_rbs = &__simple_rbs,
+> +	.lock = __HYP_SPIN_LOCK_UNLOCKED,
 > +};
 > +
-> +static int evlist__deliver_deferred_samples(struct evlist *evlist,
-> +                                           const struct perf_tool *tool,
-> +                                           union  perf_event *event,
-> +                                           struct perf_sample *sample,
-> +                                           struct machine *machine)
+> +static bool hyp_trace_buffer_loaded(struct hyp_trace_buffer *trace_buffer)
 > +{
-> +       struct deferred_event *de, *tmp;
-> +       struct evsel *evsel;
-> +       int ret =3D 0;
-> +
-> +       if (!tool->merge_deferred_callchains) {
-> +               evsel =3D evlist__id2evsel(evlist, sample->id);
-> +               return tool->callchain_deferred(tool, event, sample,
-> +                                               evsel, machine);
-> +       }
-> +
-> +       list_for_each_entry_safe(de, tmp, &evlist->deferred_samples, list=
-) {
-> +               struct perf_sample orig_sample;
-> +
-> +               ret =3D evlist__parse_sample(evlist, de->event, &orig_sam=
-ple);
-> +               if (ret < 0) {
-> +                       pr_err("failed to parse original sample\n");
-> +                       break;
-> +               }
-> +
-> +               if (sample->tid !=3D orig_sample.tid)
-> +                       continue;
-> +
-> +               if (event->callchain_deferred.cookie =3D=3D orig_sample.d=
-eferred_cookie)
-> +                       sample__merge_deferred_callchain(&orig_sample, sa=
-mple);
-> +               else
-> +                       orig_sample.deferred_callchain =3D false;
-> +
-> +               evsel =3D evlist__id2evsel(evlist, orig_sample.id);
-> +               ret =3D evlist__deliver_sample(evlist, tool, de->event,
-> +                                            &orig_sample, evsel, machine=
-);
-> +
-> +               if (orig_sample.deferred_callchain)
-> +                       free(orig_sample.callchain);
-> +
-> +               list_del(&de->list);
-> +               free(de);
-> +
-> +               if (ret)
-> +                       break;
-> +       }
-> +       return ret;
+> +	return trace_buffer->bpages_backing_size > 0;
 > +}
 > +
->  static int machines__deliver_event(struct machines *machines,
->                                    struct evlist *evlist,
->                                    union perf_event *event,
-> @@ -1313,6 +1367,16 @@ static int machines__deliver_event(struct machines=
- *machines,
->                         return 0;
->                 }
->                 dump_sample(evsel, event, sample, perf_env__arch(machine-=
->env));
-> +               if (sample->deferred_callchain && tool->merge_deferred_ca=
-llchains) {
-> +                       struct deferred_event *de =3D malloc(sizeof(*de))=
-;
+> +void *tracing_reserve_entry(unsigned long length)
+> +{
+> +	return simple_ring_buffer_reserve(this_cpu_ptr(trace_buffer.simple_rbs), length,
+> +					  trace_clock());
+> +}
 > +
-> +                       if (de =3D=3D NULL)
-> +                               return -ENOMEM;
+> +void tracing_commit_entry(void)
+> +{
+> +	simple_ring_buffer_commit(this_cpu_ptr(trace_buffer.simple_rbs));
+> +}
 > +
-> +                       de->event =3D event;
-> +                       list_add_tail(&de->list, &evlist->deferred_sample=
-s);
-> +                       return 0;
-> +               }
->                 return evlist__deliver_sample(evlist, tool, event, sample=
-, evsel, machine);
->         case PERF_RECORD_MMAP:
->                 return tool->mmap(tool, event, sample, machine);
-> @@ -1372,7 +1436,8 @@ static int machines__deliver_event(struct machines =
-*machines,
->                 return tool->aux_output_hw_id(tool, event, sample, machin=
-e);
->         case PERF_RECORD_CALLCHAIN_DEFERRED:
->                 dump_deferred_callchain(evsel, event, sample);
-> -               return tool->callchain_deferred(tool, event, sample, evse=
-l, machine);
-> +               return evlist__deliver_deferred_samples(evlist, tool, eve=
-nt,
-> +                                                       sample, machine);
->         default:
->                 ++evlist->stats.nr_unknown_events;
->                 return -1;
-> diff --git a/tools/perf/util/tool.c b/tools/perf/util/tool.c
-> index f732d33e7f895ed4..c5d3b464b2a433b3 100644
-> --- a/tools/perf/util/tool.c
-> +++ b/tools/perf/util/tool.c
-> @@ -266,6 +266,7 @@ void perf_tool__init(struct perf_tool *tool, bool ord=
-ered_events)
->         tool->cgroup_events =3D false;
->         tool->no_warn =3D false;
->         tool->show_feat_hdr =3D SHOW_FEAT_NO_HEADER;
-> +       tool->merge_deferred_callchains =3D true;
->
->         tool->sample =3D process_event_sample_stub;
->         tool->mmap =3D process_event_stub;
-> diff --git a/tools/perf/util/tool.h b/tools/perf/util/tool.h
-> index 9b9f0a8cbf3de4b5..e96b69d25a5b737d 100644
-> --- a/tools/perf/util/tool.h
-> +++ b/tools/perf/util/tool.h
-> @@ -90,6 +90,7 @@ struct perf_tool {
->         bool            cgroup_events;
->         bool            no_warn;
->         bool            dont_split_sample_group;
-> +       bool            merge_deferred_callchains;
->         enum show_feature_header show_feat_hdr;
->  };
->
-> --
-> 2.52.0.rc1.455.g30608eb744-goog
->
+> +static int hyp_trace_buffer_load_bpage_backing(struct hyp_trace_buffer *trace_buffer,
+> +					       struct hyp_trace_desc *desc)
+> +{
+> +	unsigned long start = kern_hyp_va(desc->bpages_backing_start);
+> +	size_t size = desc->bpages_backing_size;
+> +	int ret;
+> +
+> +	if (!PAGE_ALIGNED(start) || !PAGE_ALIGNED(size))
+> +		return -EINVAL;
+> +
+> +	ret = __pkvm_host_donate_hyp(hyp_virt_to_pfn((void *)start), size >> PAGE_SHIFT);
+> +	if (ret)
+> +		return ret;
+> +
+> +	memset((void *)start, 0, size);
+> +
+> +	trace_buffer->bpages_backing_start = start;
+> +	trace_buffer->bpages_backing_size = size;
+> +
+> +	return 0;
+> +}
+> +
+> +static void hyp_trace_buffer_unload_bpage_backing(struct hyp_trace_buffer *trace_buffer)
+> +{
+> +	unsigned long start = trace_buffer->bpages_backing_start;
+> +	size_t size = trace_buffer->bpages_backing_size;
+> +
+> +	if (!size)
+> +		return;
+> +
+> +	memset((void *)start, 0, size);
+> +
+> +	WARN_ON(__pkvm_hyp_donate_host(hyp_virt_to_pfn(start), size >> PAGE_SHIFT));
+> +
+> +	trace_buffer->bpages_backing_start = 0;
+> +	trace_buffer->bpages_backing_size = 0;
+> +}
+> +
+> +static void *__pin_shared_page(unsigned long kern_va)
+> +{
+> +	void *va = kern_hyp_va((void *)kern_va);
+> +
+> +	return hyp_pin_shared_mem(va, va + PAGE_SIZE) ? NULL : va;
+> +}
+> +
+> +static void __unpin_shared_page(void *va)
+> +{
+> +	hyp_unpin_shared_mem(va, va + PAGE_SIZE);
+> +}
+> +
+> +static void hyp_trace_buffer_unload(struct hyp_trace_buffer *trace_buffer)
+> +{
+> +	int cpu;
+> +
+> +	hyp_assert_lock_held(&trace_buffer->lock);
+> +
+> +	if (!hyp_trace_buffer_loaded(trace_buffer))
+> +		return;
+> +
+> +	for (cpu = 0; cpu < hyp_nr_cpus; cpu++)
+> +		__simple_ring_buffer_unload(per_cpu_ptr(trace_buffer->simple_rbs, cpu),
+> +					    __unpin_shared_page);
+> +
+> +	hyp_trace_buffer_unload_bpage_backing(trace_buffer);
+> +}
+> +
+> +static int hyp_trace_buffer_load(struct hyp_trace_buffer *trace_buffer,
+> +				 struct hyp_trace_desc *desc)
+> +{
+> +	struct simple_buffer_page *bpages;
+> +	struct ring_buffer_desc *rb_desc;
+> +	int ret, cpu;
+> +
+> +	hyp_assert_lock_held(&trace_buffer->lock);
+> +
+> +	if (hyp_trace_buffer_loaded(trace_buffer))
+> +		return -EINVAL;
+> +
+> +	ret = hyp_trace_buffer_load_bpage_backing(trace_buffer, desc);
+> +	if (ret)
+> +		return ret;
+> +
+> +	bpages = (struct simple_buffer_page *)trace_buffer->bpages_backing_start;
+> +	for_each_ring_buffer_desc(rb_desc, cpu, &desc->trace_buffer_desc) {
+> +		ret = __simple_ring_buffer_init(per_cpu_ptr(trace_buffer->simple_rbs, cpu),
+> +						bpages, rb_desc, __pin_shared_page,
+> +						__unpin_shared_page);
+> +		if (ret)
+> +			break;
+> +
+> +		bpages += rb_desc->nr_page_va;
+> +	}
+> +
+> +	if (ret)
+> +		hyp_trace_buffer_unload(trace_buffer);
+> +
+> +	return ret;
+> +}
+> +
+> +static bool hyp_trace_desc_validate(struct hyp_trace_desc *desc, size_t desc_size)
+> +{
+> +	struct simple_buffer_page *bpages = (struct simple_buffer_page *)desc->bpages_backing_start;
+> +	struct ring_buffer_desc *rb_desc;
+> +	void *bpages_end, *desc_end;
+> +	unsigned int cpu;
+> +
+> +	desc_end = (void *)desc + desc_size; /* __pkvm_host_donate_hyp validates desc_size */
+> +
+> +	bpages_end = (void *)desc->bpages_backing_start + desc->bpages_backing_size;
+> +	if (bpages_end < (void *)desc->bpages_backing_start)
+> +		return false;
+> +
+> +	for_each_ring_buffer_desc(rb_desc, cpu, &desc->trace_buffer_desc) {
+> +		/* Can we read nr_page_va? */
+> +		if ((void *)rb_desc + struct_size(rb_desc, page_va, 0) > desc_end)
+> +			return false;
+> +
+> +		/* Overflow desc? */
+> +		if ((void *)rb_desc + struct_size(rb_desc, page_va, rb_desc->nr_page_va) > desc_end)
+> +			return false;
+> +
+> +		/* Overflow bpages backing memory? */
+> +		if ((void *)(bpages + rb_desc->nr_page_va) > bpages_end)
+> +			return false;
+> +
+> +		if (cpu >= hyp_nr_cpus)
+> +			return false;
+> +
+> +		if (cpu != rb_desc->cpu)
+> +			return false;
+> +
+> +		bpages += rb_desc->nr_page_va;
+> +	}
+> +
+> +	return true;
+> +}
+> +
+> +int __pkvm_load_tracing(unsigned long desc_hva, size_t desc_size)
+> +{
+> +	struct hyp_trace_desc *desc = (struct hyp_trace_desc *)kern_hyp_va(desc_hva);
+> +	int ret;
+> +
+> +	if (!desc_size || !PAGE_ALIGNED(desc_hva) || !PAGE_ALIGNED(desc_size))
+> +		return -EINVAL;
+> +
+> +	ret = __pkvm_host_donate_hyp(hyp_virt_to_pfn((void *)desc),
+> +				     desc_size >> PAGE_SHIFT);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (!hyp_trace_desc_validate(desc, desc_size))
+> +		goto err_donate_desc;
+> +
+> +	hyp_spin_lock(&trace_buffer.lock);
+> +
+> +	ret = hyp_trace_buffer_load(&trace_buffer, desc);
+> +
+> +	hyp_spin_unlock(&trace_buffer.lock);
+> +
+> +err_donate_desc:
+> +	WARN_ON(__pkvm_hyp_donate_host(hyp_virt_to_pfn((void *)desc),
+> +				       desc_size >> PAGE_SHIFT));
+
+That's basically a guaranteed panic if anything goes wrong. Are you
+sure you want to do that?
+
+> +	return ret;
+> +}
+> +
+> +void __pkvm_unload_tracing(void)
+> +{
+> +	hyp_spin_lock(&trace_buffer.lock);
+> +	hyp_trace_buffer_unload(&trace_buffer);
+> +	hyp_spin_unlock(&trace_buffer.lock);
+> +}
+> +
+> +int __pkvm_enable_tracing(bool enable)
+> +{
+> +	int cpu, ret = enable ? -EINVAL : 0;
+> +
+> +	hyp_spin_lock(&trace_buffer.lock);
+> +
+> +	if (!hyp_trace_buffer_loaded(&trace_buffer))
+> +		goto unlock;
+> +
+> +	for (cpu = 0; cpu < hyp_nr_cpus; cpu++)
+> +		simple_ring_buffer_enable_tracing(per_cpu_ptr(trace_buffer.simple_rbs, cpu),
+> +						  enable);
+> +
+> +	ret = 0;
+> +
+> +unlock:
+> +	hyp_spin_unlock(&trace_buffer.lock);
+> +
+> +	return ret;
+> +}
+> +
+> +int __pkvm_swap_reader_tracing(unsigned int cpu)
+> +{
+> +	int ret;
+> +
+> +	if (cpu >= hyp_nr_cpus)
+> +		return -EINVAL;
+> +
+> +	hyp_spin_lock(&trace_buffer.lock);
+> +
+> +	if (hyp_trace_buffer_loaded(&trace_buffer))
+> +		ret = simple_ring_buffer_swap_reader_page(
+> +				per_cpu_ptr(trace_buffer.simple_rbs, cpu));
+
+Please keep these things on a single line. I don't care what people
+(of checkpatch) say.
+
+> +	else
+> +		ret = -ENODEV;
+> +
+> +	hyp_spin_unlock(&trace_buffer.lock);
+> +
+> +	return ret;
+> +}
+> -- 
+> 2.51.2.1041.gc1ab5b90ca-goog
+> 
+> 
+
+Thanks,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
