@@ -1,542 +1,145 @@
-Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
+Received: from smtpout.efficios.com (smtpout.efficios.com [158.69.130.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE36D3644D0;
-	Thu, 20 Nov 2025 20:59:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FDEF253958;
+	Thu, 20 Nov 2025 21:09:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=158.69.130.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763672382; cv=none; b=CkoikjSIRIUUJ2RRtXeprStlBFrIvCAe4ogTX4L/wqcxiTCx+MQiWNSJPcLPofeE9AHE9tgQXx1qgnNQzt1tDEtMf//uRnocvK0usmPdmgrLnLA2Ev2SsD8yBBIztlJNML9YLDQwavrH3SrCJzdmzApf1Mm9bQm8+jYZOrPEf0A=
+	t=1763672960; cv=none; b=VTZEIqjMGGeW5k8LuckeCRt6vQTLVHnLm4reL9Q0OyrzKMQ+6UG4BLmTngrC9OLu8vH0r3089zXuIfpsBn0Iuo5M2SYuj7xAmRq9rMxglZ78NE4dgkoOrsosfPtsTY4tzezIBnvD1msvBqDYei3Rq8qFBEM9XOpYMZ6bE7DxtFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763672382; c=relaxed/simple;
-	bh=WlzoWGzr4k62SfK72pI+1345VJM+Mfa2pC4edAtC+rk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=mfbyhmxgkgvJ1L/xfSUYf/kbkpnHv2wKtTlv93ri7OM5MiYU999ozLncNok80JxjDlEm/v3cyIuEfFjZiV+PEcQTbHLA70SLrVOx5c8joADyB9nloTw4RRTHv7fxidysHfwY36r7LEULwdBGNOapmgTW33rvfRBqbKPI96Qa28c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf12.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay06.hostedemail.com (Postfix) with ESMTP id 81DE512F9EA;
-	Thu, 20 Nov 2025 20:59:32 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf12.hostedemail.com (Postfix) with ESMTPA id D71A919;
-	Thu, 20 Nov 2025 20:59:30 +0000 (UTC)
-Date: Thu, 20 Nov 2025 16:00:03 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Tom Zanussi <zanussi@kernel.org>
-Subject: [PATCH] tracing: Add system trigger file to enable triggers for all
- the system's events
-Message-ID: <20251120160003.2fa33d80@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1763672960; c=relaxed/simple;
+	bh=mgovFCgOkXXcRXjBDmBlQa4nl6g3oS4T8VqX7baHTyA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VY0anHw0YMYV9O18KyStbSO2A7n/Q9JJRorJYkd6B/Ge1CSQGIHQlSrdoHpe/rVPdPyQa2lTDfahl+PygBXnx+g4DS0H46GZLZe/HZ2pSr/qdUeMlscvkjIleFy6h/yUTyBDZXCY2alZrCvsKxRArkGOwni1U0pOZMNGyonryB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=lS1I1mgB; arc=none smtp.client-ip=158.69.130.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="lS1I1mgB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+	s=smtpout1; t=1763672639;
+	bh=v1+iPRnl2CJz3Y6EOfGCbzApG9MSnpiujyLXIhkhEIs=;
+	h=From:To:Cc:Subject:Date:From;
+	b=lS1I1mgB0/MTUHG/NX1LUQLm4Ho2ZFEsstTyaYZAyLg+9D/deFZSDJivA28INgblv
+	 1mcpvlpEyNPURDN6SUqHhdxKbNDX/hEgwHS4BuerLMMdkFX5LX7mSj1ThpGoFqtjjn
+	 ZvKLuSlOgAAUbaC26H4+35DxTOWJ18U/eu+7IR5UM0jdv7u71jM9+e0FXF7Wdh0zLQ
+	 NVeUpxu4MsTPXHj/OHxGIqLnhMugepLBcjow/56yzarqtMtwd2AEErere5G21zBOOQ
+	 UaI3Xq8YEh34icjkknLAEawShi5wUPBpG+vhdwbazI47WYZkcnrP2esAebC/DDfbV0
+	 4a6kGh75dNt1Q==
+Received: from thinkos.internal.efficios.com (mtl.efficios.com [216.120.195.104])
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4dC9nW5NGnzNVP;
+	Thu, 20 Nov 2025 16:03:59 -0500 (EST)
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Dennis Zhou <dennis@kernel.org>,
+	Tejun Heo <tj@kernel.org>,
+	Christoph Lameter <cl@linux.com>,
+	Martin Liu <liumartin@google.com>,
+	David Rientjes <rientjes@google.com>,
+	christian.koenig@amd.com,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	SeongJae Park <sj@kernel.org>,
+	Michal Hocko <mhocko@suse.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Sweet Tea Dorminy <sweettea-kernel@dorminy.me>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R . Howlett" <liam.howlett@oracle.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Christian Brauner <brauner@kernel.org>,
+	Wei Yang <richard.weiyang@gmail.com>,
+	David Hildenbrand <david@redhat.com>,
+	Miaohe Lin <linmiaohe@huawei.com>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org,
+	Yu Zhao <yuzhao@google.com>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Mateusz Guzik <mjguzik@gmail.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Aboorva Devarajan <aboorvad@linux.ibm.com>
+Subject: [PATCH v9 0/2] mm: Fix OOM killer inaccuracy on large many-core systems
+Date: Thu, 20 Nov 2025 16:03:52 -0500
+Message-Id: <20251120210354.1233994-1-mathieu.desnoyers@efficios.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: xdbt4qpeijjeu47oxsy9df9p4swm58s5
-X-Rspamd-Server: rspamout05
-X-Rspamd-Queue-Id: D71A919
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX192jPvVCHsqpds5mqn3XZL9C+ARLRks49U=
-X-HE-Tag: 1763672370-106480
-X-HE-Meta: U2FsdGVkX19blOucnjSdLhrOP9DKIkYHhPfwQhBzko5PHh+bfI+sFEO2I3NWyVWQcGLoWm1zVmMiCfcez9XUL2eBqtjokXgc7oMzfT51Wa4ljvZnx2e2rDxeRJm9Evsv4Pczi9nlGTxWMbpqmTtpZVKIS/B1nvtG3Z9P2LmTICnVfBNiLbX2qIfXPbL/2EDCoCtVRGPabsYwa1wqN6ZvXZbeWRvFRiV5t0kJej0K1oE1GPjxJdKXljsAK/UsTyafj3DM/Qr0d1xU7sm8yqhiJ1GQDQY+Mvbl04Z++Wby6IndF6jAK7XEl9GoQ1xHixh+uuL7e5FqY/UyyHRGqqpWxXqowgkwIDLEzeGKX/OfKKNfc1ADRXqTGPDqSE3xjkTZj2zLGXUCRGvIuOGaadQVDA==
+Content-Transfer-Encoding: 8bit
 
-From: Steven Rostedt <rostedt@goodmis.org>
+Introduce hierarchical per-cpu counters and use them for rss tracking to
+fix the per-mm RSS tracking which has become too inaccurate for OOM
+killer purposes on large many-core systems.
 
-Currently a trigger can only be added to individual events. Some triggers
-(like stacktrace) can be useful to add as a bulk trigger for a set of
-system events (like interrupt or scheduling).
+The approach proposed here is to replace this by the hierarchical
+per-cpu counters, which bounds the inaccuracy based on the system
+topology with O(N*logN).
 
-Add a trigger file to the system directories:
+Testing and feedback are welcome!
 
-   /sys/kernel/tracing/events/*/trigger
+Thanks,
 
-And allow stacktrace trigger to be enabled for all those events.
+Mathieu
 
-Writing into the system/trigger file acts the same as writing into each of
-the system event's trigger files individually.
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Dennis Zhou <dennis@kernel.org>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: Martin Liu <liumartin@google.com>
+Cc: David Rientjes <rientjes@google.com>
+Cc: christian.koenig@amd.com
+Cc: Shakeel Butt <shakeel.butt@linux.dev>
+Cc: SeongJae Park <sj@kernel.org>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Sweet Tea Dorminy <sweettea-kernel@dorminy.me>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: "Liam R . Howlett" <liam.howlett@oracle.com>
+Cc: Mike Rapoport <rppt@kernel.org>
+Cc: Suren Baghdasaryan <surenb@google.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Christian Brauner <brauner@kernel.org>
+Cc: Wei Yang <richard.weiyang@gmail.com>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Miaohe Lin <linmiaohe@huawei.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: linux-mm@kvack.org
+Cc: linux-trace-kernel@vger.kernel.org
+Cc: Yu Zhao <yuzhao@google.com>
+Cc: Roman Gushchin <roman.gushchin@linux.dev>
+Cc: Mateusz Guzik <mjguzik@gmail.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Baolin Wang <baolin.wang@linux.alibaba.com>
+Cc: Aboorva Devarajan <aboorvad@linux.ibm.com>
 
-This also allows to remove a trigger from all events in a subsystem (even
-if it's not a subsystem trigger!).
+Mathieu Desnoyers (2):
+  lib: Introduce hierarchical per-cpu counters
+  mm: Fix OOM killer inaccuracy on large many-core systems
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
-Note, this is based on top of:
+ include/linux/mm.h                  |  28 +-
+ include/linux/mm_types.h            |   4 +-
+ include/linux/percpu_counter_tree.h | 239 +++++++++++++++
+ include/trace/events/kmem.h         |   2 +-
+ init/main.c                         |   2 +
+ kernel/fork.c                       |  24 +-
+ lib/Makefile                        |   1 +
+ lib/percpu_counter_tree.c           | 443 ++++++++++++++++++++++++++++
+ 8 files changed, 725 insertions(+), 18 deletions(-)
+ create mode 100644 include/linux/percpu_counter_tree.h
+ create mode 100644 lib/percpu_counter_tree.c
 
-  https://patchwork.kernel.org/project/linux-trace-kernel/cover/20251120205600.570673392@kernel.org/
-
- Documentation/trace/events.rst      |  25 ++++
- kernel/trace/trace.c                |  11 +-
- kernel/trace/trace.h                |  15 +-
- kernel/trace/trace_events.c         |  70 +++++-----
- kernel/trace/trace_events_trigger.c | 205 +++++++++++++++++++++++++++-
- 5 files changed, 284 insertions(+), 42 deletions(-)
-
-diff --git a/Documentation/trace/events.rst b/Documentation/trace/events.rst
-index 18d112963dec..caa4958af43a 100644
---- a/Documentation/trace/events.rst
-+++ b/Documentation/trace/events.rst
-@@ -416,6 +416,31 @@ way, so beware about making generalizations between the two.
-      can also enable triggers that are written into
-      /sys/kernel/tracing/events/ftrace/print/trigger
- 
-+The system directory also has a trigger file that allows some triggers to be
-+set for all the system's events. This is limited to only a small subset of the
-+triggers and does not allow for the count parameter. But it does allow for
-+filters. Writing into this file is the same as writing into each of the
-+system's event's trigger files individually. Although only a subset of
-+triggers may use this file for enabling, all triggers may use this file for
-+disabling::
-+
-+	cd /sys/kernel/tracing
-+	cat events/sched/trigger
-+	# Available system triggers:
-+	# stacktrace
-+
-+	echo stacktrace > events/sched/trigger
-+	cat events/sched/sched_switch/trigger
-+	stacktrace:unlimited
-+
-+	echo snapshot > events/sched/sched_waking/trigger
-+	cat events/sched/sched_waking/trigger
-+	snapshot:unlimited
-+	echo '!snapshot' > events/sched/trigger
-+	cat events/sched/sched_waking/trigger
-+	# Available triggers:
-+	# traceon traceoff snapshot stacktrace enable_event disable_event enable_hist disable_hist hist
-+
- 6.1 Expression syntax
- ---------------------
- 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 59cd4ed8af6d..d400c013d42b 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -592,11 +592,12 @@ void trace_set_ring_buffer_expanded(struct trace_array *tr)
- 
- LIST_HEAD(ftrace_trace_arrays);
- 
--int trace_array_get(struct trace_array *this_tr)
-+int __trace_array_get(struct trace_array *this_tr)
- {
- 	struct trace_array *tr;
- 
--	guard(mutex)(&trace_types_lock);
-+	lockdep_assert_held(&trace_types_lock);
-+
- 	list_for_each_entry(tr, &ftrace_trace_arrays, list) {
- 		if (tr == this_tr) {
- 			tr->ref++;
-@@ -607,6 +608,12 @@ int trace_array_get(struct trace_array *this_tr)
- 	return -ENODEV;
- }
- 
-+int trace_array_get(struct trace_array *tr)
-+{
-+	guard(mutex)(&trace_types_lock);
-+	return __trace_array_get(tr);
-+}
-+
- static void __trace_array_put(struct trace_array *this_tr)
- {
- 	WARN_ON(!this_tr->ref);
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index fd5a6daa6c25..7379763a057d 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -469,10 +469,14 @@ extern struct list_head ftrace_trace_arrays;
- extern struct mutex trace_types_lock;
- 
- extern int trace_array_get(struct trace_array *tr);
-+extern int __trace_array_get(struct trace_array *tr);
- extern int tracing_check_open_get_tr(struct trace_array *tr);
- extern struct trace_array *trace_array_find(const char *instance);
- extern struct trace_array *trace_array_find_get(const char *instance);
- 
-+extern struct trace_subsystem_dir *trace_get_system_dir(struct inode *inode);
-+void trace_put_system_dir(struct trace_subsystem_dir *dir);
-+
- extern u64 tracing_event_time_stamp(struct trace_buffer *buffer, struct ring_buffer_event *rbe);
- extern int tracing_set_filter_buffering(struct trace_array *tr, bool set);
- extern int tracing_set_clock(struct trace_array *tr, const char *clockstr);
-@@ -1774,6 +1778,7 @@ static inline struct trace_event_file *event_file_file(struct file *filp)
- }
- 
- extern const struct file_operations event_trigger_fops;
-+extern const struct file_operations event_system_trigger_fops;
- extern const struct file_operations event_hist_fops;
- extern const struct file_operations event_hist_debug_fops;
- extern const struct file_operations event_inject_fops;
-@@ -2057,10 +2062,16 @@ struct event_command {
-  *	regardless of whether or not it has a filter associated with
-  *	it (filters make a trigger require access to the trace record
-  *	but are not always present).
-+ *
-+ * @SYSTEM: A flag that says whether or not this command can be used
-+ *	at the event system level. For example, can it be written into
-+ *	events/sched/trigger file where it will be enabled for all
-+ *	sched events?
-  */
- enum event_command_flags {
--	EVENT_CMD_FL_POST_TRIGGER	= 1,
--	EVENT_CMD_FL_NEEDS_REC		= 2,
-+	EVENT_CMD_FL_POST_TRIGGER	= BIT(1),
-+	EVENT_CMD_FL_NEEDS_REC		= BIT(2),
-+	EVENT_CMD_FL_SYSTEM		= BIT(3),
- };
- 
- static inline bool event_command_post_trigger(struct event_command *cmd_ops)
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 9b07ad9eb284..f00b41f73fc2 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -2168,51 +2168,52 @@ event_filter_write(struct file *filp, const char __user *ubuf, size_t cnt,
- 
- static LIST_HEAD(event_subsystems);
- 
--static int subsystem_open(struct inode *inode, struct file *filp)
-+struct trace_subsystem_dir *trace_get_system_dir(struct inode *inode)
- {
--	struct trace_subsystem_dir *dir = NULL, *iter_dir;
--	struct trace_array *tr = NULL, *iter_tr;
--	struct event_subsystem *system = NULL;
--	int ret;
-+	struct trace_subsystem_dir *dir;
-+	struct trace_array *tr = NULL;
- 
--	if (tracing_is_disabled())
--		return -ENODEV;
-+	guard(mutex)(&event_mutex);
-+	guard(mutex)(&trace_types_lock);
- 
- 	/* Make sure the system still exists */
--	mutex_lock(&event_mutex);
--	mutex_lock(&trace_types_lock);
--	list_for_each_entry(iter_tr, &ftrace_trace_arrays, list) {
--		list_for_each_entry(iter_dir, &iter_tr->systems, list) {
--			if (iter_dir == inode->i_private) {
-+	list_for_each_entry(tr, &ftrace_trace_arrays, list) {
-+		list_for_each_entry(dir, &tr->systems, list) {
-+			if (dir == inode->i_private) {
- 				/* Don't open systems with no events */
--				tr = iter_tr;
--				dir = iter_dir;
--				if (dir->nr_events) {
--					__get_system_dir(dir);
--					system = dir->subsystem;
--				}
--				goto exit_loop;
-+				if (!dir->nr_events)
-+					return NULL;
-+				if (__trace_array_get(tr) < 0)
-+					return NULL;
-+				__get_system_dir(dir);
-+				return dir;
- 			}
- 		}
- 	}
-- exit_loop:
--	mutex_unlock(&trace_types_lock);
--	mutex_unlock(&event_mutex);
-+	return NULL;
-+}
- 
--	if (!system)
-+void trace_put_system_dir(struct trace_subsystem_dir *dir)
-+{
-+	trace_array_put(dir->tr);
-+	put_system(dir);
-+}
-+
-+static int subsystem_open(struct inode *inode, struct file *filp)
-+{
-+	struct trace_subsystem_dir *dir;
-+	int ret;
-+
-+	if (tracing_is_disabled())
- 		return -ENODEV;
- 
--	/* Still need to increment the ref count of the system */
--	if (trace_array_get(tr) < 0) {
--		put_system(dir);
-+	dir = trace_get_system_dir(inode);
-+	if (!dir)
- 		return -ENODEV;
--	}
- 
- 	ret = tracing_open_generic(inode, filp);
--	if (ret < 0) {
--		trace_array_put(tr);
--		put_system(dir);
--	}
-+	if (ret < 0)
-+		trace_put_system_dir(dir);
- 
- 	return ret;
- }
-@@ -2761,6 +2762,9 @@ static int system_callback(const char *name, umode_t *mode, void **data,
- 	else if (strcmp(name, "enable") == 0)
- 		*fops = &ftrace_system_enable_fops;
- 
-+	else if (strcmp(name, "trigger") == 0)
-+		*fops = &event_system_trigger_fops;
-+
- 	else
- 		return 0;
- 
-@@ -2784,6 +2788,10 @@ event_subsystem_dir(struct trace_array *tr, const char *name,
- 		{
- 			.name		= "enable",
- 			.callback	= system_callback,
-+		},
-+		{
-+			.name		= "trigger",
-+			.callback	= system_callback,
- 		}
- 	};
- 
-diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
-index 1dfe69146a81..b621406054b7 100644
---- a/kernel/trace/trace_events_trigger.c
-+++ b/kernel/trace/trace_events_trigger.c
-@@ -329,21 +329,28 @@ int trigger_process_regex(struct trace_event_file *file, char *buff)
- 	return -EINVAL;
- }
- 
-+static char *get_user_buf(const char __user *ubuf, size_t cnt)
-+{
-+	if (!cnt)
-+		return NULL;
-+
-+	if (cnt >= PAGE_SIZE)
-+		return ERR_PTR(-EINVAL);
-+
-+	return memdup_user_nul(ubuf, cnt);
-+}
-+
- static ssize_t event_trigger_regex_write(struct file *file,
- 					 const char __user *ubuf,
- 					 size_t cnt, loff_t *ppos)
- {
- 	struct trace_event_file *event_file;
- 	ssize_t ret;
--	char *buf __free(kfree) = NULL;
-+	char *buf __free(kfree) = get_user_buf(ubuf, cnt);
- 
--	if (!cnt)
-+	if (!buf)
- 		return 0;
- 
--	if (cnt >= PAGE_SIZE)
--		return -EINVAL;
--
--	buf = memdup_user_nul(ubuf, cnt);
- 	if (IS_ERR(buf))
- 		return PTR_ERR(buf);
- 
-@@ -397,6 +404,190 @@ const struct file_operations event_trigger_fops = {
- 	.release = event_trigger_release,
- };
- 
-+static ssize_t
-+event_system_trigger_read(struct file *filp, char __user *ubuf,
-+			  size_t count, loff_t *ppos)
-+{
-+	char *buf __free(kfree) = kmalloc(SZ_4K, GFP_KERNEL);
-+	struct event_command *p;
-+	struct seq_buf s;
-+	int len;
-+
-+	if (!buf)
-+		return -ENOMEM;
-+
-+	seq_buf_init(&s, buf, SZ_4K);
-+
-+	seq_buf_puts(&s, "# Available system triggers:\n");
-+	seq_buf_putc(&s, '#');
-+
-+	guard(mutex)(&trigger_cmd_mutex);
-+	list_for_each_entry_reverse(p, &trigger_commands, list) {
-+		if (p->flags & EVENT_CMD_FL_SYSTEM)
-+			seq_buf_printf(&s, " %s", p->name);
-+	}
-+	seq_buf_putc(&s, '\n');
-+
-+	len = seq_buf_used(&s);
-+
-+	if (*ppos >= len)
-+		return 0;
-+
-+	len -= *ppos;
-+
-+	if (count > len)
-+		count = len;
-+
-+	if (copy_to_user(ubuf, buf + *ppos, count))
-+		return -EFAULT;
-+
-+	*ppos += count;
-+
-+	return count;
-+}
-+
-+static int process_system_events(struct trace_subsystem_dir *dir,
-+				 struct event_command *p, char *buff,
-+				 char *command, char *next)
-+{
-+	struct event_subsystem *system = dir->subsystem;
-+	struct trace_event_file *file;
-+	struct trace_array *tr = dir->tr;
-+	bool remove = false;
-+	int ret = 0;
-+
-+	if (buff[0] == '!')
-+		remove = true;
-+
-+	lockdep_assert_held(&event_mutex);
-+
-+	list_for_each_entry(file, &tr->events, list) {
-+
-+		if (strcmp(system->name, file->event_call->class->system) != 0)
-+			continue;
-+
-+		ret = p->parse(p, file, buff, command, next);
-+
-+		/* Removals and existing events do not error */
-+		if (ret < 0 && ret != -EEXIST && !remove) {
-+			pr_warn("Failed adding trigger %s on %s\n",
-+				command, trace_event_name(file->event_call));
-+		}
-+	}
-+	return 0;
-+}
-+
-+static ssize_t
-+event_system_trigger_write(struct file *filp, const char __user *ubuf,
-+		    size_t cnt, loff_t *ppos)
-+{
-+	struct trace_subsystem_dir *dir = filp->private_data;
-+	struct event_command *p;
-+	char *command, *next;
-+	char *buf __free(kfree) = get_user_buf(ubuf, cnt);
-+	bool remove = false;
-+	bool found = false;
-+	ssize_t ret;
-+	int len;
-+
-+	if (!buf)
-+		return 0;
-+
-+	if (IS_ERR(buf))
-+		return PTR_ERR(buf);
-+
-+	/* system triggers are not allowed to have counters */
-+	if (strchr(buf, ':'))
-+		return -EINVAL;
-+
-+	/* If opened for read too, dir is in the seq_file descriptor */
-+	if (filp->f_mode & FMODE_READ) {
-+		struct seq_file *m = filp->private_data;
-+		dir = m->private;
-+	}
-+
-+	/* Skip added space at beginning of buf */
-+	next = buf;
-+	strim(next);
-+
-+	command = strsep(&next, " \t");
-+	if (next) {
-+		next = skip_spaces(next);
-+		if (!*next)
-+			next = NULL;
-+	}
-+	if (command[0] == '!') {
-+		remove = true;
-+		command++;
-+	}
-+
-+	len = strlen(command);
-+	if (next)
-+		len += strlen(next) + 1;
-+
-+	guard(mutex)(&event_mutex);
-+	guard(mutex)(&trigger_cmd_mutex);
-+
-+	list_for_each_entry(p, &trigger_commands, list) {
-+		/* Allow to remove any trigger */
-+		if (!remove && !(p->flags & EVENT_CMD_FL_SYSTEM))
-+			continue;
-+		if (strcmp(p->name, command) == 0) {
-+			found = true;
-+			ret = process_system_events(dir, p, buf, command, next);
-+			break;
-+		}
-+	}
-+
-+	if (!found)
-+		ret = -ENODEV;
-+
-+	if (!ret)
-+		*ppos += cnt;
-+
-+	if (remove || ret < 0)
-+		return ret ? : cnt;
-+
-+	return cnt;
-+}
-+
-+static int
-+event_system_trigger_open(struct inode *inode, struct file *file)
-+{
-+	struct trace_subsystem_dir *dir;
-+	int ret;
-+
-+	ret = security_locked_down(LOCKDOWN_TRACEFS);
-+	if (ret)
-+		return ret;
-+
-+	dir = trace_get_system_dir(inode);
-+	if (!dir)
-+		return -ENODEV;
-+
-+	file->private_data = dir;
-+
-+	return ret;
-+}
-+
-+static int
-+event_system_trigger_release(struct inode *inode, struct file *file)
-+{
-+	struct trace_subsystem_dir *dir = inode->i_private;
-+
-+	trace_put_system_dir(dir);
-+
-+	return 0;
-+}
-+
-+const struct file_operations event_system_trigger_fops = {
-+	.open = event_system_trigger_open,
-+	.read = event_system_trigger_read,
-+	.write = event_system_trigger_write,
-+	.llseek = tracing_lseek,
-+	.release = event_system_trigger_release,
-+};
-+
- /*
-  * Currently we only register event commands from __init, so mark this
-  * __init too.
-@@ -1587,7 +1778,7 @@ stacktrace_trigger_print(struct seq_file *m, struct event_trigger_data *data)
- static struct event_command trigger_stacktrace_cmd = {
- 	.name			= "stacktrace",
- 	.trigger_type		= ETT_STACKTRACE,
--	.flags			= EVENT_CMD_FL_POST_TRIGGER,
-+	.flags			= EVENT_CMD_FL_POST_TRIGGER | EVENT_CMD_FL_SYSTEM,
- 	.parse			= event_trigger_parse,
- 	.reg			= register_trigger,
- 	.unreg			= unregister_trigger,
 -- 
-2.51.0
-
+2.39.5
