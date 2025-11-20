@@ -1,213 +1,298 @@
-Received: from BL0PR03CU003.outbound.protection.outlook.com (mail-eastusazon11012031.outbound.protection.outlook.com [52.101.53.31])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A36912FFFA8;
-	Thu, 20 Nov 2025 07:03:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.53.31
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763622235; cv=fail; b=ZPzqdqHafivM2JGVV8+hUTrQe9Tcjs6WkAgtoIBtwSBL2Uv/Jhew5TMpM0VYuVjkBdiOiTSPlzJfBBErSY3rO0xP7L7LziKDGxy1Zpfn+NhxMIGDRN7W2U/FVuRs7cLrcIqd8/zXUA6wy4YzjzJe01eq4wALGgDzE4ccrHHBTx4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763622235; c=relaxed/simple;
-	bh=uTo61hmdhH01hINQZNgAEriwroKMnBFtJoNLCBOiLxE=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=LeDGW66JLLjwBMCA5lpLbyda4bN8N+2Jlpo/CbBv1fpblB8P9Ko8bn/dQ09ABy/KmJQHlBrKLAKc2GcDJmtXzb2mDofq/Om5v23CRXyQjZ8kUfL7sHAwTGOX+E0RNGG1sZ/IRb1I/UEJVWk9Tto6cxeWCSBucQqhJrmak8fGAJY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=hfrbk/an; arc=fail smtp.client-ip=52.101.53.31
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DAB1302CBD
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 20 Nov 2025 07:21:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1763623309; cv=none; b=UeRbs+JxWumdFT/b9iAp7fzGV6yQjbmw63znlaeATjg8lJsN1i3PqN4vlzLVp3xJ9pzqil+AvX6uEskNgRR6m9QYj1itPvnfepp9sPR4IxSIMxwfsiRx/E/PtNjB9flEvWqMIJhv09WE/qcfiUBa3fbFBPv8mJ/tW+bjjJX7pzQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1763623309; c=relaxed/simple;
+	bh=PoZzKooldyS09F0DrQHNQlOyt/QzIA7zHB/LjzFuNHc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BSfzwZTC1yAJEPKokq00Tk2+djJalSw0m6OKaOQMbAw/+/Np/sIjPMneoTjQqWXiXLuZGHmy9N8i8IOSgQHBrYTbhOZUsc3PX678iU1CPgCPAx5yamuv1TJrg+DY6k73tebUravgTFIR1X9lJ7rUBIgKXv30SoUdm7LGDO/g4x0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=knUuKfk3; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="hfrbk/an"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=sbfiCb0bipNq1yBOAPXaPhpN1+twmcuSTS7PkGId8Qd+eY9txfUQgYzPC8r7lsGYOUkV1MYgVQjeP8899bqKRaN8xGoPXAuVj4pZWn1cYHzkc76t6Ta+IUAyJn9258jITD6QqX9yz4ZbKPaP6rzIL0A9EW45wY6IS5V1wjZw5auWqjh1tuPw/4u181MW3bAr1EX4vhFFqpT3pqdCuVzTjnllenJW4Sl+25UH40A9TEGA0O7E2pRK2s4vybmyJ4A8flL+gGoTKQH3+tNlmauj59nozVhIBA6tFHkpM1lm0wIUMOIXuYv+QOAl2aZyYKlGZy5l1V8jzxMkT9UX5zT9Og==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0SfkkoRCEOwaMC7ReeVNzaXuvFPXYVs30uu8MW8yWuE=;
- b=nVoJA8bIA6gCxJYncZjh2dJJEQSdtG3l6gEA/uHFUXLoUBR3/SjaY07Oupxdm8MSZkp0s25ZoX9Kvob9riong0dxMPEuZ6T4FqxnfRjPuxvn+YU/rF8hl/XUay2XQ+VdHlmz2H4p9W2B8eVNcY+cE2FNSoKOYQtrxs5bssy9+RIKEF+eVafzskicAdlK1eXs+MSOUuiQVUvQzYq4QCyJa0WdP2dQFFQ5ZDxWXfAOiguM2AQjgQtBA2VyJelB9IC+KcMDB7OuRxgl7XsMw1Exap3zx3XlE+V5ts+jI7x1BP2j+ofj+J6/F0k3Sih6h7jHxNwWzO6wzaIDNRYxXomKSQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0SfkkoRCEOwaMC7ReeVNzaXuvFPXYVs30uu8MW8yWuE=;
- b=hfrbk/anHouTDfyBpdPXMSOP540OTOZG+GI3px3RAJVOaYg79ssm1IlqrEalJYpVPNibyFRBy216RepetOUSp54zjKlzn+BIJpxebFpcbtFx0lX89sTAoEajvrMHEgIadOClXxavf28/R/SSZ0vvTH6fm9MgBTlM16Zan8EZwwc=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from SJ0PR12MB7458.namprd12.prod.outlook.com (2603:10b6:a03:48d::13)
- by DM4PR12MB6012.namprd12.prod.outlook.com (2603:10b6:8:6c::5) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9343.10; Thu, 20 Nov 2025 07:03:50 +0000
-Received: from SJ0PR12MB7458.namprd12.prod.outlook.com
- ([fe80::83e7:e6cf:26ed:2f3d]) by SJ0PR12MB7458.namprd12.prod.outlook.com
- ([fe80::83e7:e6cf:26ed:2f3d%6]) with mapi id 15.20.9343.009; Thu, 20 Nov 2025
- 07:03:50 +0000
-Message-ID: <91b218db-a9b2-4560-a946-3236947f228d@amd.com>
-Date: Thu, 20 Nov 2025 12:33:41 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] mm/khugepaged: return EAGAIN for transient dirty
- pages in MADV_COLLAPSE
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- David Hildenbrand <david@redhat.com>, Zi Yan <ziy@nvidia.com>,
- Baolin Wang <baolin.wang@linux.alibaba.com>,
- "Liam R . Howlett" <Liam.Howlett@oracle.com>, Nico Pache
- <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
- Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
- Lance Yang <lance.yang@linux.dev>, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Zach O'Keefe <zokeefe@google.com>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-References: <20251110113254.77822-1-shivankg@amd.com>
- <20251110113254.77822-3-shivankg@amd.com>
- <67325651-b7d5-40d0-a9f1-3009b61c8d3a@lucifer.local>
- <a2770a50-5732-4483-b958-4693f0f08c7e@amd.com>
- <0efa89a3-2080-4daa-a190-2ced8e14ed9d@lucifer.local>
-Content-Language: en-US
-From: "Garg, Shivank" <shivankg@amd.com>
-In-Reply-To: <0efa89a3-2080-4daa-a190-2ced8e14ed9d@lucifer.local>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN3PR01CA0082.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:9a::17) To SJ0PR12MB7458.namprd12.prod.outlook.com
- (2603:10b6:a03:48d::13)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="knUuKfk3"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2980343d9d1so95635ad.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Nov 2025 23:21:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1763623307; x=1764228107; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZHaicfDQ+Iz0AxGWxfn1Oe/AWnMqn2B/ceLG3l5DP4g=;
+        b=knUuKfk3B4zUoyDB7P59AxJ4GjTKDh6nYPwfi96fNtrqzBYMH9XkorqIsZO8W6maOL
+         enxpHWf7P7UBi0JlrNPKt3ySVn/HYTUKHJ+L7O44lrrI8H8IdNdhLJyIXhuL6vv5V1+Q
+         11NNC0SQaevc3jwxjabwu9TxEW8jVGYrlK/50aPem9GAy6hDw+Wa1BILIJJiu7+6utgm
+         Dqc7ujEjfPNuNfPqCxGLrDByHweu42jUURtfZVil9NHXNlJkXN6QMbv0xwVFi2aU8q78
+         4kzzExZ32O5y9OH4NjauDkIXZIJVP4xUXvq0u3kzCP2JIXtBxENEhOKnKUAeIy5GfcSV
+         iGXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763623307; x=1764228107;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=ZHaicfDQ+Iz0AxGWxfn1Oe/AWnMqn2B/ceLG3l5DP4g=;
+        b=wlh9vHpBb4yHhtQpMXIgBqRYOvh4AwNhyyeao5NIEwgoIedMO2DxgQLksOJL8bGbiu
+         MF7lFCnqaWlwr8R65F1LYd0phSwtLYeWlfbbs90bLMmTZ7vjeF5Ja9fXxhwvj47nNI9R
+         RRHHST37mDUkQXOb2QdkVg39cYBthO5cRVAUnSwdKJHZkkZuJjMLM/25cKrQufapUz0N
+         Prue/tB1phdN0u4rX+Xf6/vaj9UeZG56A0oRP2T3Pzfe2qIyaV5wFqvBia3cxgvJcXDO
+         jsibwmunTrBAGV3ftny1gRuVUQm+uv3o30XlDkB3l4bbQb2LKYiIVXUrLN2NQXxNYwO2
+         OkJw==
+X-Forwarded-Encrypted: i=1; AJvYcCUPgz3H+IbvUHKLzSGI834/FZ2DUTYavdHFcUcIrFVrDlOkyCvNGLBb30h/wcb2B5ohMD1jHlkiW/K05siPsywD4Y0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzM7RejDwUEAwrGGTQIvWXrppDk5EJ6crlMTh+B6TlaRDZlU/yT
+	JEp0wtCYZcJooVmiaZaA+Zc4hO8v/fPP0v9J63qsVlZTvZjIfESNCllu3lS5RsCbn9diHDWqshP
+	nN+fN0u7SzUZjPDEPuRcAseufPi3fMlBp7+kvjELt
+X-Gm-Gg: ASbGnctRNFWV5t3WZhzgL1yJalvI5a/YZK1z8vqrP4SwQSg+V2V0Qb8zvwTwGCm89Yp
+	ZkLElaYlWMFhtMZL/isWFV+AU4wgkgy6bAYmp+HtyLUs0TkDCuQ3JntzK8Uu2opUt4KC0dB8fj1
+	K+fOZvT2ODSgEzA4mFKqGqLAodVc5DPcILEQ9nBTMnX6vMmS8xwkJWJHmXizLU4t2Im82XKpnU4
+	5623HGJV3h0Df0Y30iBlh65l52+JS2ih24V1OR5GI1dF6DxApk3HiUmRxfb/QTWy1HpQYqY
+X-Google-Smtp-Source: AGHT+IHZH4dzJYbP+6JEJU146TqIYwgbwYu6L37DmUR2kDQlrP4kcGeYX6edRL7L67kQOFBusvYY8AdC2i6auLcPlzk=
+X-Received: by 2002:a17:902:d48a:b0:295:30bc:458e with SMTP id
+ d9443c01a7336-29b5da68247mr1398075ad.3.1763623306956; Wed, 19 Nov 2025
+ 23:21:46 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ0PR12MB7458:EE_|DM4PR12MB6012:EE_
-X-MS-Office365-Filtering-Correlation-Id: 95952cae-4b12-482d-8c45-08de2802f529
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|7416014|376014|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?TzhMRmNwRFU0UE5BRGZ0cldmSU9ERHIxdzVhMXNSdEVGT2JUY2ZYVnlIMUVs?=
- =?utf-8?B?ZTNNSkNLQTVEWjFZR21lRXVUTFRnY28yTnJFNXFHdDB4S3dlbjBuUVFQN3pt?=
- =?utf-8?B?RHc3cEJJVXJLQ3ZaTFBJN2kwREp1WER5SEMyczV0YzdtWmJYczVBT0dJeDFw?=
- =?utf-8?B?c1dhNEliNm9rNndabHV3S0VBWFB1VFJwTCt4aUxqcDhuM1F5M3dQQ2d4Z1M0?=
- =?utf-8?B?OTNpUzZOYXIyOGxVVDNxZ0lYYlZyMVJuOW0yZytmVFFCMlQ2VXF3Q2JGTjNX?=
- =?utf-8?B?WXJjcEgyZHJyUk1GOEtPQ1pqN0tsNXVLa2lTQ2NJbzhUQUJsMFFaQjAxdTJL?=
- =?utf-8?B?V1NscjJ5QjZIT0NoYm4yMmh3TjlydHNpMThvWkoxUEFFOGJYLys5NU9DWlhu?=
- =?utf-8?B?UFZmdngyU3Z1TmhGa2VqRGxMZ29sRUdCVWRscnpaVmN2MFdLWlpTRWczbE0r?=
- =?utf-8?B?TnpLNWZKamZ1UjdsdDlqQ2taMU9yaDdPdHhOdWtZY2p3TTRPRm1RdWxSU3Z3?=
- =?utf-8?B?cTloekVNdzdmMkxTcXZjNjlUTFNXKzZiL2k3QXNsMmNoWHZidklabGw5d3F5?=
- =?utf-8?B?c3hTSVA0Znk1UEFoZGZteGViaENGbWZ3ck00NXczNHBCYlNaMWdhN29WWnRP?=
- =?utf-8?B?ZlZleVk2ZWxKV0V6alg5SEd2anJTRE1PTHlMMVZCSGw3M2pOalZUYzNOVFRx?=
- =?utf-8?B?Vm5kSisreXBGMmZ6UlF5TE9HSWNGb3ZraWJVZjMwaTgvaWNKTk1DYWNoWkZM?=
- =?utf-8?B?SWxFaXBoVmdxQlFyem5ZNXZCM3p5NEVoa3Nha1B3SUxHdXNndWhwM3ZjNWdp?=
- =?utf-8?B?bUZ0SXMvV2ZIM2p5cXVDNmU1dTltbzJoNmh0Zm92NzJ2eGtDZ2lzc3c4NjI2?=
- =?utf-8?B?RzIxcm5JRGhlanhabExkUUxydXg1NXUxaEJsOXpVc0g2dko3MVYxeTY1R2N5?=
- =?utf-8?B?WkxWVW1TRjVnOEFRRHZ6RlZ3OGEwSjdRbFd2OThySUY2QVZWVlVHYVh6Tysv?=
- =?utf-8?B?K2t3UFNXa3l0UzJvUzhYNkNPcFM0VE42VWx3RDhMNnhTZHRFMU1CWFAwdS9J?=
- =?utf-8?B?bXZiVEcySE9iTWpvN01HTE9nREpZNTlKOGVWSllHR1Bqd1c5MlZZRlBDNGI3?=
- =?utf-8?B?RjEwOURpWlBaMHJBQnlYQVUvcm84QkZLR2pIWktaS3hrY2pMV0pUbGhuU2ha?=
- =?utf-8?B?bDY1OGRsRktOUE44YTN0MTNIVE5NRVJhWUFsMEVZVm10Sld0Slptamhxb3hO?=
- =?utf-8?B?ak81QkxFNjY4Sndnb0pMdVJ2WGlxTmtrYzdkMldSYnFqeXNDcFoxVWRwbzIv?=
- =?utf-8?B?eGVmMmIwbnFmKzRoWWhSOElVTEloSy9WVW8wZ2tjME13N2xKRjYrc1RpQmNJ?=
- =?utf-8?B?L2k4TmxMSTRKWGVGdlBrVlRvNVN3c0hJV2taUVBMU1F5NlZGSGFHTElZZ2E1?=
- =?utf-8?B?ZXVnVzJzNE1uS0NlU0crSkJYQWJ0WG5KN0dRa3I0ZXJqa01ZN2llb1JYaFE3?=
- =?utf-8?B?NkhoYnJ1K0lPcDZXaitXUDZySlZjc2pZRUpXTnVqam91VXkvM01IWFZtbktS?=
- =?utf-8?B?U3dMYkxqSnJCcEZBUzRqcWh5Y3ZJVG1HZ3MraFRkd2o2NVVJR1FjOWFUVURS?=
- =?utf-8?B?SXcxQzlBcVNzK0Jid0ZzU3dpNWV6RXZqakVVaWxtQndZWW1vcWVpSTIrYVhs?=
- =?utf-8?B?TjRlNFlhVnp2dFpibFJLOTI0TGhlczRFbDhCbVhQSGY1bEFORzNMU0t5dTJP?=
- =?utf-8?B?RFV6Q09ETFl4OUNBd1ZDR2drQXIvU0szU25hMWFwT2hHcVMwVWFZMEl3N2dG?=
- =?utf-8?B?c2pRamF3ejB5YkVsd1dXUUc1MHUrVTZSa0RlZ1V1MU5WWjMyUHpwdGVtUGpk?=
- =?utf-8?B?QXNyRmpwOHBpd3N6My9Fb1FUbUtyQk5mUzZHMnZnMlBLdGtUalRYZ042SjlN?=
- =?utf-8?Q?zYhNj2wEWS32VUBy5hqw+b9dou9/8F8K?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR12MB7458.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?eXFOWXBnMWsrNnl4amlMWG1na3N0ZkEzcUl1SllRUU1SZXQ4ZDdLYnQ1ZXNF?=
- =?utf-8?B?bFQwN05Jc1hRRm9vUmJ4K0hiRmprQTJjMVRYZDlXYytJeTYxcXpaaEVjQnIv?=
- =?utf-8?B?VWU0MkZ6V1RSb0F6Ty9nck5QbDZrWTBXMVRnRTJhWGdiUktOejVMS2J4bmFC?=
- =?utf-8?B?a1dldkRLSE44WGhqMGR1azRKTjBVWStFa091dDI5OVM5azQxUWxZc2VsYXZW?=
- =?utf-8?B?NHRFWVI5M1F0Sk1tRmJTNUs1M0p3OXQwVUhJMWo5QVNRWmFTT2s2Mi9OSjRL?=
- =?utf-8?B?U3A2MFR1Um5kZzR3WjVLU3FBd3FrN1BOdmtKMW1aVm5PdHpmbmI1YnRBajR0?=
- =?utf-8?B?MFJpaTZvQVYrVGtZcTVmR0pZNWxibzR2dHNaVll6eWNtVEpmTldqMlVRVThU?=
- =?utf-8?B?SStYblF2TXZ1dmhINWNaaEpveE1SeFJhQVFIdXRiczBQdyt6TGJic0tGSnpG?=
- =?utf-8?B?YzNlL0dnS0hFNjM2QlpYSlowcTNmK2VVV0RQSTVMUUpJVk1Bdjl1VDFaNjNz?=
- =?utf-8?B?Vk9lNG1MMWtiZlJja2Mvem01bTlZUmFxdnVVQlBlZ1dxRWI5UnJhN3pOUjg5?=
- =?utf-8?B?ZUxBNFdKY0h2SlFsaHZBWUVGa3BIQUhWdEVYVS9hOFd5REdUVEQ1Rjl0YWFD?=
- =?utf-8?B?TGJqWGRrVkM5UFIrM2laNjRrMTVmbjhJam5pWEZhSjYvTnhLUkFhNWQzZk0y?=
- =?utf-8?B?TVROSkVBa1RGQlRPQ0Q5SmdPMzJHbE4xK0VQME9LdFBEMWhtakRXQm1mbnR5?=
- =?utf-8?B?VEFFb0RCVjU2RkZxbHhCQzFzdC9kRG05aDF3cnptOWljL0hrcVBWK2NxaUlY?=
- =?utf-8?B?Q0dDUzQvell0LzZValplRE8rVkxNL2tuZzdvU3JIeEhyV1lSQ2FIVnZMcVdZ?=
- =?utf-8?B?WTNuWS80MHhWWkUwbEcyaHQ1K1hWc2NFL2lzVGpYNnM4VVJaZmVpbUw4ZmRj?=
- =?utf-8?B?Z3JsMXdlQldKVjRRamVOTXc0Wk9Na0ZmQ09rU0xYVDNROC9CenNaK2hDVWQv?=
- =?utf-8?B?MDViUmFrSFpjSGJGMG9aU3BKOEovMG91bTJOcUIybmRNdTNWaVRhZmxwQ0NE?=
- =?utf-8?B?TzlHd2dReWhGaFN0VmttZUV3cXU0VUNmeU5QbXFHTmsvKy9zY2YreVJvdmRp?=
- =?utf-8?B?bGhyUmNPSFhSVEZiVGk2SUFCL3FqK0JQTFJVLzlOZ0pWb2hZL0RvTnYwK2tu?=
- =?utf-8?B?eC9rcGxwL1dtNjcrY0hIYkFyaUhuQnp1aUZaOFgrRlgrZTlkK1Q2VFBMRFJt?=
- =?utf-8?B?dDRzekFYcFFCV1hLa2liMjB3d2hudGdNYUxsVDBhN1FjdUx5UlBQemJwVkwx?=
- =?utf-8?B?M0VGV0dIdGZ4bjZVa1gwUk4xalU3dEp4WXFoTWlNQm54RmhmSUhHNkg3U290?=
- =?utf-8?B?MExmbFNySDNER0EvY1QrTThvM3JYSDBDSTR6dzEyUVdGc2JTWS9aN1M1RkpJ?=
- =?utf-8?B?bmZSNjd5ZW9DMVRPbHkrbHNnajNpRDdEMVh4WWRVL29CbTNlWCtveE9DN3dE?=
- =?utf-8?B?WlZZTE0vaUp4YW14M2RLWXd6dThCUE03eXQxcFBIYmhlTTh2V1RLS2paWkhX?=
- =?utf-8?B?Mysxb3NCR3ZDYkhRNnV6SW4rMmFKQUNFSC90OHlqazhMemxZdHhUSzRSdUc2?=
- =?utf-8?B?QWFod2xRK1hyNDR1Zk1ZNEJhTDBvU1hML0Q0SXJ4RGFWbUFnZkJQME9OUnVZ?=
- =?utf-8?B?SnRvSWtETWJNL3F4UHNUT2ZMdVlVZXNEYVNiZUxqcjQwemg2RkdteTJ4SmVt?=
- =?utf-8?B?ZVpzL3dianNWR3N0SnZ3Q1gvM3pxdTl1K1NOdjBpb244TFNFNUh5V3BLeVhn?=
- =?utf-8?B?ejkxRUxsYmM5WFB3VnlpSy82K1VrcnNyNCtTZ1dob0Fub1Ezb3hMRklIM0Nm?=
- =?utf-8?B?eVNVUXhHeEpFdEJYdjRWaGtaU0NPMXkrU2IraS92bENnTUpSQmRTdWZPZjBP?=
- =?utf-8?B?S1MrbTVHZXcxTkRJR0VGY3JjZVJ2N3ZMS2F2QkhUMmNRdEhab1J3M2cyazZQ?=
- =?utf-8?B?Tm9NV3ZlUE52TTdTN0pTZUJ0UndobXBmMkovYzRGSjhuNTNDdE1yWEppZlRX?=
- =?utf-8?B?a1BCaGNaanV4eFpEWWN3TXFYdHhIczNKaUhKU0cxUmRyVzZnMU1YeThCdGZt?=
- =?utf-8?Q?zjCk7mlLE+AlsvCjFezzDm9D0?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 95952cae-4b12-482d-8c45-08de2802f529
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR12MB7458.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Nov 2025 07:03:50.5111
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: AQCtM4hsKOra1HLdC2JH2wvRbPKZ3Os4oMgLVdbK3jqq1boc0BJ/ISGheG7Yw4aHeN/xEON5aQIZ9650tRJl1Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6012
+References: <20251120021046.94490-1-namhyung@kernel.org> <20251120021046.94490-7-namhyung@kernel.org>
+ <CAP-5=fVZcmYgyRJVNbet9ZLjihAiXNy7D8cX+QqHe8EKqJ1qOQ@mail.gmail.com>
+In-Reply-To: <CAP-5=fVZcmYgyRJVNbet9ZLjihAiXNy7D8cX+QqHe8EKqJ1qOQ@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 19 Nov 2025 23:21:35 -0800
+X-Gm-Features: AWmQ_bmGj70-yG8VRXForCVD3RpZbxAbDk1gJJ-fwwQ4WqyQsrq4dL6vbbcFGRk
+Message-ID: <CAP-5=fUmoxMw9UkptfoMZUaSbLSnZ2hxJvYejMabyugLk_qYKQ@mail.gmail.com>
+Subject: Re: [PATCH v5 6/6] perf tools: Flush remaining samples w/o deferred callchains
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, James Clark <james.clark@linaro.org>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
+	Steven Rostedt <rostedt@goodmis.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Indu Bhagat <indu.bhagat@oracle.com>, Jens Remus <jremus@linux.ibm.com>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, linux-trace-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Nov 19, 2025 at 9:29=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
+>
+> On Wed, Nov 19, 2025 at 6:11=E2=80=AFPM Namhyung Kim <namhyung@kernel.org=
+> wrote:
+> >
+> > It's possible that some kernel samples don't have matching deferred
+> > callchain records when the profiling session was ended before the
+> > threads came back to userspace.  Let's flush the samples before
+> > finish the session.
+> >
+> > Also 32-bit systems can see partial mmap for the data.  In that case,
+> > deferred samples won't point to the correct data once the mapping moves
+> > to the next portion of the file.  Copy the original sample before it
+> > unmaps the current data.
+>
+> I think it is simpler to always copy. We may have events from
+> synthesis, inject, .. and not the reader. Relying on callers to know
+> that someone made a copy of the event and to make a defensive copy on
+> their behalf just feels error prone.
+>
+> In the python session API I need to deal with the lifetime of events.
+> Currently the events are copied:
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.=
+git/tree/tools/perf/util/python.c?h=3Dperf-tools-next#n507
+> and I'm doing this for session tool callbacks:
+> https://lore.kernel.org/lkml/20251029053413.355154-12-irogers@google.com/
+> I think it can be made lazier by knowing the tool callback can assume
+> the event and sample are valid. We can delay the copying of the
+> event/sample for if the pyevent has a reference count >1 and we're
+> returning out of the tool callback. Doing some kind of global
+> knowledge in the reader for maintaining the correctness of memory, I'm
+> just not clear on how to make it always work.
 
+I believe we always reuse the memory for the event, per event, in pipe mode=
+:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/util/session.c?h=3Dperf-tools-next#n1868
+so a lazy copy will be broken for the pipe mode case.
 
-On 11/19/2025 11:46 PM, Lorenzo Stoakes wrote:
-> On Wed, Nov 19, 2025 at 03:55:29PM +0530, Garg, Shivank wrote:
+Thanks,
+Ian
 
->>>
->>> With comments below addressed, LGTM so:
->>>
->>> Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
->>
->> Thank you for the review.
-
->>
->> Looking at the code, the dirty/writeback checks where I'm making changes
->> are all in the !is_shmem branch, so it only affects regular files, not
->> shmem.
-> 
-> Yeah sorry I think I was being somehow blind to the fact that each
-> dirty/writeback test has !is_shmem, esp. given I literally quote it there :)
-> 
-> So err ignore me I think here haha
-> 
->>
->> Should I mention in the commit message that these changes are limited
->> to regular files and don't affect shmem?
-> 
-> No that's fine.
-> 
->>
->> I'm not sure I fully understood your concern on shmem. Could you please elaborate?
-> 
-> Yeah I think I just misread the code after a long day :P
-> 
->>
-
-Thanks for clarifying!
-
-I held off adding your Reviewed-by tag to v2 since there were some more changes
-from v1. Let me know if you're still happy with it and I can add it for v3.
-
-Best Regards,
-Shivank
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > ---
+> >  tools/perf/util/session.c | 98 +++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 98 insertions(+)
+> >
+> > diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+> > index 2e777fd1bcf6707b..b781e01ddcb4876b 100644
+> > --- a/tools/perf/util/session.c
+> > +++ b/tools/perf/util/session.c
+> > @@ -1288,8 +1288,13 @@ static int evlist__deliver_sample(struct evlist =
+*evlist, const struct perf_tool
+> >  struct deferred_event {
+> >         struct list_head list;
+> >         union perf_event *event;
+> > +       bool allocated;
+> >  };
+> >
+> > +/*
+> > + * This is called when a deferred callchain record comes up.  Find all=
+ matching
+> > + * samples, merge the callchains and process them.
+> > + */
+> >  static int evlist__deliver_deferred_samples(struct evlist *evlist,
+> >                                             const struct perf_tool *too=
+l,
+> >                                             union  perf_event *event,
+> > @@ -1331,6 +1336,86 @@ static int evlist__deliver_deferred_samples(stru=
+ct evlist *evlist,
+> >                         free(orig_sample.callchain);
+> >
+> >                 list_del(&de->list);
+> > +               if (de->allocated)
+> > +                       free(de->event);
+> > +               free(de);
+> > +
+> > +               if (ret)
+> > +                       break;
+> > +       }
+> > +       return ret;
+> > +}
+> > +
+> > +/*
+> > + * This is called when the backing mmap is about to go away.  It needs=
+ to save
+> > + * the original sample data until it finds the matching deferred callc=
+hains.
+> > + */
+> > +static void evlist__copy_deferred_samples(struct evlist *evlist,
+> > +                                         const struct perf_tool *tool,
+> > +                                         struct machine *machine)
+> > +{
+> > +       struct deferred_event *de, *tmp;
+> > +       struct evsel *evsel;
+> > +       int ret =3D 0;
+> > +
+> > +       list_for_each_entry_safe(de, tmp, &evlist->deferred_samples, li=
+st) {
+> > +               struct perf_sample sample;
+> > +               size_t sz =3D de->event->header.size;
+> > +               void *buf;
+> > +
+> > +               if (de->allocated)
+> > +                       continue;
+> > +
+> > +               buf =3D malloc(sz);
+> > +               if (buf) {
+> > +                       memcpy(buf, de->event, sz);
+> > +                       de->event =3D buf;
+> > +                       de->allocated =3D true;
+> > +                       continue;
+> > +               }
+> > +
+> > +               /* The allocation failed, flush the sample now */
+> > +               ret =3D evlist__parse_sample(evlist, de->event, &sample=
+);
+> > +               if (ret =3D=3D 0) {
+> > +                       evsel =3D evlist__id2evsel(evlist, sample.id);
+> > +                       evlist__deliver_sample(evlist, tool, de->event,
+> > +                                              &sample, evsel, machine)=
+;
+> > +               }
+> > +
+> > +               list_del(&de->list);
+> > +               BUG_ON(de->allocated);
+> > +               free(de);
+> > +       }
+> > +}
+> > +
+> > +/*
+> > + * This is called at the end of the data processing for the session.  =
+Flush the
+> > + * remaining samples as there's no hope for matching deferred callchai=
+ns.
+> > + */
+> > +static int evlist__flush_deferred_samples(struct evlist *evlist,
+> > +                                         const struct perf_tool *tool,
+> > +                                         struct machine *machine)
+> > +{
+> > +       struct deferred_event *de, *tmp;
+> > +       struct evsel *evsel;
+> > +       int ret =3D 0;
+> > +
+> > +       list_for_each_entry_safe(de, tmp, &evlist->deferred_samples, li=
+st) {
+> > +               struct perf_sample sample;
+> > +
+> > +               ret =3D evlist__parse_sample(evlist, de->event, &sample=
+);
+> > +               if (ret < 0) {
+> > +                       pr_err("failed to parse original sample\n");
+> > +                       break;
+> > +               }
+> > +
+> > +               evsel =3D evlist__id2evsel(evlist, sample.id);
+> > +               ret =3D evlist__deliver_sample(evlist, tool, de->event,
+> > +                                            &sample, evsel, machine);
+> > +
+> > +               list_del(&de->list);
+> > +               if (de->allocated)
+> > +                       free(de->event);
+> >                 free(de);
+> >
+> >                 if (ret)
+> > @@ -1374,6 +1459,7 @@ static int machines__deliver_event(struct machine=
+s *machines,
+> >                                 return -ENOMEM;
+> >
+> >                         de->event =3D event;
+> > +                       de->allocated =3D false;
+> >                         list_add_tail(&de->list, &evlist->deferred_samp=
+les);
+> >                         return 0;
+> >                 }
+> > @@ -2218,6 +2304,8 @@ reader__mmap(struct reader *rd, struct perf_sessi=
+on *session)
+> >         }
+> >
+> >         if (mmaps[rd->mmap_idx]) {
+> > +               evlist__copy_deferred_samples(session->evlist, session-=
+>tool,
+> > +                                             &session->machines.host);
+> >                 munmap(mmaps[rd->mmap_idx], rd->mmap_size);
+> >                 mmaps[rd->mmap_idx] =3D NULL;
+> >         }
+> > @@ -2372,6 +2460,11 @@ static int __perf_session__process_events(struct=
+ perf_session *session)
+> >         if (err)
+> >                 goto out_err;
+> >         err =3D auxtrace__flush_events(session, tool);
+> > +       if (err)
+> > +               goto out_err;
+> > +       err =3D evlist__flush_deferred_samples(session->evlist,
+> > +                                            session->tool,
+> > +                                            &session->machines.host);
+> >         if (err)
+> >                 goto out_err;
+> >         err =3D perf_session__flush_thread_stacks(session);
+> > @@ -2494,6 +2587,11 @@ static int __perf_session__process_dir_events(st=
+ruct perf_session *session)
+> >         if (ret)
+> >                 goto out_err;
+> >
+> > +       ret =3D evlist__flush_deferred_samples(session->evlist, tool,
+> > +                                            &session->machines.host);
+> > +       if (ret)
+> > +               goto out_err;
+> > +
+> >         ret =3D perf_session__flush_thread_stacks(session);
+> >  out_err:
+> >         ui_progress__finish();
+> > --
+> > 2.52.0.rc1.455.g30608eb744-goog
+> >
