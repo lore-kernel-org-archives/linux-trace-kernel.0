@@ -1,298 +1,134 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DAB1302CBD
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 20 Nov 2025 07:21:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B96528C2DD;
+	Thu, 20 Nov 2025 08:04:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763623309; cv=none; b=UeRbs+JxWumdFT/b9iAp7fzGV6yQjbmw63znlaeATjg8lJsN1i3PqN4vlzLVp3xJ9pzqil+AvX6uEskNgRR6m9QYj1itPvnfepp9sPR4IxSIMxwfsiRx/E/PtNjB9flEvWqMIJhv09WE/qcfiUBa3fbFBPv8mJ/tW+bjjJX7pzQ=
+	t=1763625852; cv=none; b=eejrdyIXzzStG16twM3Dn2LaH10MQS476pPgg9Kx4OVObVyAog85YXki0cVPBV91x//rT92Bbb2+MRD8I/CPc9/1j130aC3NXzrkLpeBkBQhvy0+eceG75cyeOzFf6cYtXl+SBfdUsNFFa5lERCV3lNbMs5DfeH3Sr56dvOEJII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763623309; c=relaxed/simple;
-	bh=PoZzKooldyS09F0DrQHNQlOyt/QzIA7zHB/LjzFuNHc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BSfzwZTC1yAJEPKokq00Tk2+djJalSw0m6OKaOQMbAw/+/Np/sIjPMneoTjQqWXiXLuZGHmy9N8i8IOSgQHBrYTbhOZUsc3PX678iU1CPgCPAx5yamuv1TJrg+DY6k73tebUravgTFIR1X9lJ7rUBIgKXv30SoUdm7LGDO/g4x0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=knUuKfk3; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="knUuKfk3"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2980343d9d1so95635ad.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Nov 2025 23:21:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1763623307; x=1764228107; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZHaicfDQ+Iz0AxGWxfn1Oe/AWnMqn2B/ceLG3l5DP4g=;
-        b=knUuKfk3B4zUoyDB7P59AxJ4GjTKDh6nYPwfi96fNtrqzBYMH9XkorqIsZO8W6maOL
-         enxpHWf7P7UBi0JlrNPKt3ySVn/HYTUKHJ+L7O44lrrI8H8IdNdhLJyIXhuL6vv5V1+Q
-         11NNC0SQaevc3jwxjabwu9TxEW8jVGYrlK/50aPem9GAy6hDw+Wa1BILIJJiu7+6utgm
-         Dqc7ujEjfPNuNfPqCxGLrDByHweu42jUURtfZVil9NHXNlJkXN6QMbv0xwVFi2aU8q78
-         4kzzExZ32O5y9OH4NjauDkIXZIJVP4xUXvq0u3kzCP2JIXtBxENEhOKnKUAeIy5GfcSV
-         iGXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763623307; x=1764228107;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=ZHaicfDQ+Iz0AxGWxfn1Oe/AWnMqn2B/ceLG3l5DP4g=;
-        b=wlh9vHpBb4yHhtQpMXIgBqRYOvh4AwNhyyeao5NIEwgoIedMO2DxgQLksOJL8bGbiu
-         MF7lFCnqaWlwr8R65F1LYd0phSwtLYeWlfbbs90bLMmTZ7vjeF5Ja9fXxhwvj47nNI9R
-         RRHHST37mDUkQXOb2QdkVg39cYBthO5cRVAUnSwdKJHZkkZuJjMLM/25cKrQufapUz0N
-         Prue/tB1phdN0u4rX+Xf6/vaj9UeZG56A0oRP2T3Pzfe2qIyaV5wFqvBia3cxgvJcXDO
-         jsibwmunTrBAGV3ftny1gRuVUQm+uv3o30XlDkB3l4bbQb2LKYiIVXUrLN2NQXxNYwO2
-         OkJw==
-X-Forwarded-Encrypted: i=1; AJvYcCUPgz3H+IbvUHKLzSGI834/FZ2DUTYavdHFcUcIrFVrDlOkyCvNGLBb30h/wcb2B5ohMD1jHlkiW/K05siPsywD4Y0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzM7RejDwUEAwrGGTQIvWXrppDk5EJ6crlMTh+B6TlaRDZlU/yT
-	JEp0wtCYZcJooVmiaZaA+Zc4hO8v/fPP0v9J63qsVlZTvZjIfESNCllu3lS5RsCbn9diHDWqshP
-	nN+fN0u7SzUZjPDEPuRcAseufPi3fMlBp7+kvjELt
-X-Gm-Gg: ASbGnctRNFWV5t3WZhzgL1yJalvI5a/YZK1z8vqrP4SwQSg+V2V0Qb8zvwTwGCm89Yp
-	ZkLElaYlWMFhtMZL/isWFV+AU4wgkgy6bAYmp+HtyLUs0TkDCuQ3JntzK8Uu2opUt4KC0dB8fj1
-	K+fOZvT2ODSgEzA4mFKqGqLAodVc5DPcILEQ9nBTMnX6vMmS8xwkJWJHmXizLU4t2Im82XKpnU4
-	5623HGJV3h0Df0Y30iBlh65l52+JS2ih24V1OR5GI1dF6DxApk3HiUmRxfb/QTWy1HpQYqY
-X-Google-Smtp-Source: AGHT+IHZH4dzJYbP+6JEJU146TqIYwgbwYu6L37DmUR2kDQlrP4kcGeYX6edRL7L67kQOFBusvYY8AdC2i6auLcPlzk=
-X-Received: by 2002:a17:902:d48a:b0:295:30bc:458e with SMTP id
- d9443c01a7336-29b5da68247mr1398075ad.3.1763623306956; Wed, 19 Nov 2025
- 23:21:46 -0800 (PST)
+	s=arc-20240116; t=1763625852; c=relaxed/simple;
+	bh=sQj137RYX863daG1yGxeBAlV+j8TQLeg1yICfM4nJH0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KIzGFJGOq9PS5I2hcRuzWX+s9kQvCGiZG5kXjMtbpJx9SsTIu9co9R5ZYeoQf5FKZgIT7RXOoqW5FDLaZmEp339VPO/YLCkLjLz851xe3O2pJgcMEK5no2VEW7xvJUNtBAbt3EQPR7XfRvqvWJhZ+lOe0IXQEsiI0z1OY/Z10Ec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5E68A2B;
+	Thu, 20 Nov 2025 00:03:59 -0800 (PST)
+Received: from [10.164.18.59] (MacBook-Pro.blr.arm.com [10.164.18.59])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9AD1C3F740;
+	Thu, 20 Nov 2025 00:04:01 -0800 (PST)
+Message-ID: <6c1d6b80-d290-4110-9a49-53e7404136bc@arm.com>
+Date: Thu, 20 Nov 2025 13:33:58 +0530
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251120021046.94490-1-namhyung@kernel.org> <20251120021046.94490-7-namhyung@kernel.org>
- <CAP-5=fVZcmYgyRJVNbet9ZLjihAiXNy7D8cX+QqHe8EKqJ1qOQ@mail.gmail.com>
-In-Reply-To: <CAP-5=fVZcmYgyRJVNbet9ZLjihAiXNy7D8cX+QqHe8EKqJ1qOQ@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 19 Nov 2025 23:21:35 -0800
-X-Gm-Features: AWmQ_bmGj70-yG8VRXForCVD3RpZbxAbDk1gJJ-fwwQ4WqyQsrq4dL6vbbcFGRk
-Message-ID: <CAP-5=fUmoxMw9UkptfoMZUaSbLSnZ2hxJvYejMabyugLk_qYKQ@mail.gmail.com>
-Subject: Re: [PATCH v5 6/6] perf tools: Flush remaining samples w/o deferred callchains
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, James Clark <james.clark@linaro.org>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
-	Steven Rostedt <rostedt@goodmis.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Indu Bhagat <indu.bhagat@oracle.com>, Jens Remus <jremus@linux.ibm.com>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, linux-trace-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V2 2/2] mm/khugepaged: map dirty/writeback pages failures
+ to EAGAIN
+To: Shivank Garg <shivankg@amd.com>, Andrew Morton
+ <akpm@linux-foundation.org>, David Hildenbrand <david@kernel.org>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Zi Yan <ziy@nvidia.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>, Nico Pache
+ <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+ Barry Song <baohua@kernel.org>, Lance Yang <lance.yang@linux.dev>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Zach O'Keefe <zokeefe@google.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+References: <20251120065043.41738-6-shivankg@amd.com>
+ <20251120065043.41738-10-shivankg@amd.com>
+Content-Language: en-US
+From: Dev Jain <dev.jain@arm.com>
+In-Reply-To: <20251120065043.41738-10-shivankg@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Nov 19, 2025 at 9:29=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
+
+On 20/11/25 12:20 pm, Shivank Garg wrote:
+> When collapse_file encounters dirty or writeback pages in file-backed
+> mappings, it currently SCAN_FAIL which maps to -EINVAL. This is
+> misleading as EINVAL suggests invalid arguments, whereas dirty/writeback
+> pages represent transient conditions that may resolve on retry.
 >
-> On Wed, Nov 19, 2025 at 6:11=E2=80=AFPM Namhyung Kim <namhyung@kernel.org=
-> wrote:
-> >
-> > It's possible that some kernel samples don't have matching deferred
-> > callchain records when the profiling session was ended before the
-> > threads came back to userspace.  Let's flush the samples before
-> > finish the session.
-> >
-> > Also 32-bit systems can see partial mmap for the data.  In that case,
-> > deferred samples won't point to the correct data once the mapping moves
-> > to the next portion of the file.  Copy the original sample before it
-> > unmaps the current data.
+> Introduce SCAN_PAGE_NOT_CLEAN to cover both dirty and writeback states,
+> mapping it to -EAGAIN. For MADV_COLLAPSE, this provides userspace with
+> a clear signal that retry may succeed after writeback completes, making
+> -EAGAIN semantically correct. For khugepaged, this is harmless as it
+> will naturally revisit the range during periodic scans after async
+> writeback completes.
 >
-> I think it is simpler to always copy. We may have events from
-> synthesis, inject, .. and not the reader. Relying on callers to know
-> that someone made a copy of the event and to make a defensive copy on
-> their behalf just feels error prone.
+> Signed-off-by: Shivank Garg <shivankg@amd.com>
+> ---
+>   include/trace/events/huge_memory.h | 3 ++-
+>   mm/khugepaged.c                    | 8 +++++---
+>   2 files changed, 7 insertions(+), 4 deletions(-)
 >
-> In the python session API I need to deal with the lifetime of events.
-> Currently the events are copied:
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.=
-git/tree/tools/perf/util/python.c?h=3Dperf-tools-next#n507
-> and I'm doing this for session tool callbacks:
-> https://lore.kernel.org/lkml/20251029053413.355154-12-irogers@google.com/
-> I think it can be made lazier by knowing the tool callback can assume
-> the event and sample are valid. We can delay the copying of the
-> event/sample for if the pyevent has a reference count >1 and we're
-> returning out of the tool callback. Doing some kind of global
-> knowledge in the reader for maintaining the correctness of memory, I'm
-> just not clear on how to make it always work.
+> diff --git a/include/trace/events/huge_memory.h b/include/trace/events/huge_memory.h
+> index 4cde53b45a85..1caf24b951e1 100644
+> --- a/include/trace/events/huge_memory.h
+> +++ b/include/trace/events/huge_memory.h
+> @@ -37,7 +37,8 @@
+>   	EM( SCAN_PAGE_HAS_PRIVATE,	"page_has_private")		\
+>   	EM( SCAN_STORE_FAILED,		"store_failed")			\
+>   	EM( SCAN_COPY_MC,		"copy_poisoned_page")		\
+> -	EMe(SCAN_PAGE_FILLED,		"page_filled")
+> +	EM( SCAN_PAGE_FILLED,		"page_filled")			\
+> +	EMe(SCAN_PAGE_NOT_CLEAN,	"page_not_clean")
+>   
+>   #undef EM
+>   #undef EMe
+> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+> index 066a332c76ad..282b413d17e8 100644
+> --- a/mm/khugepaged.c
+> +++ b/mm/khugepaged.c
+> @@ -59,6 +59,7 @@ enum scan_result {
+>   	SCAN_STORE_FAILED,
+>   	SCAN_COPY_MC,
+>   	SCAN_PAGE_FILLED,
+> +	SCAN_PAGE_NOT_CLEAN,
+>   };
+>   
+>   #define CREATE_TRACE_POINTS
+> @@ -1968,11 +1969,11 @@ static int collapse_file(struct mm_struct *mm, unsigned long addr,
+>   				 */
+>   				xas_unlock_irq(&xas);
+>   				filemap_flush(mapping);
+> -				result = SCAN_FAIL;
+> +				result = SCAN_PAGE_NOT_CLEAN;
+>   				goto xa_unlocked;
+>   			} else if (folio_test_writeback(folio)) {
+>   				xas_unlock_irq(&xas);
+> -				result = SCAN_FAIL;
+> +				result = SCAN_PAGE_NOT_CLEAN;
+>   				goto xa_unlocked;
+>   			} else if (folio_trylock(folio)) {
+>   				folio_get(folio);
+> @@ -2019,7 +2020,7 @@ static int collapse_file(struct mm_struct *mm, unsigned long addr,
+>   			 * folio is dirty because it hasn't been flushed
+>   			 * since first write.
+>   			 */
+> -			result = SCAN_FAIL;
+> +			result = SCAN_PAGE_NOT_CLEAN;
+>   			goto out_unlock;
+>   		}
+>   
+> @@ -2748,6 +2749,7 @@ static int madvise_collapse_errno(enum scan_result r)
+>   	case SCAN_PAGE_LRU:
+>   	case SCAN_DEL_PAGE_LRU:
+>   	case SCAN_PAGE_FILLED:
+> +	case SCAN_PAGE_NOT_CLEAN:
+>   		return -EAGAIN;
+>   	/*
+>   	 * Other: Trying again likely not to succeed / error intrinsic to
 
-I believe we always reuse the memory for the event, per event, in pipe mode=
-:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/util/session.c?h=3Dperf-tools-next#n1868
-so a lazy copy will be broken for the pipe mode case.
+SCAN_PAGE_NOT_CLEAN is confusing - NOT_CLEAN literally means dirty, so why not SCAN_PAGE_DIRTY?
+Or SCAN_PAGE_DIRTY_OR_UNDER_WRITEBACK? Since folio_test_writeback() is true as a result of
+the folio being dirty, maybe just SCAN_PAGE_DIRTY can do.
 
-Thanks,
-Ian
+Reviewed-by: Dev Jain <dev.jain@arm.com>
 
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > ---
-> >  tools/perf/util/session.c | 98 +++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 98 insertions(+)
-> >
-> > diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-> > index 2e777fd1bcf6707b..b781e01ddcb4876b 100644
-> > --- a/tools/perf/util/session.c
-> > +++ b/tools/perf/util/session.c
-> > @@ -1288,8 +1288,13 @@ static int evlist__deliver_sample(struct evlist =
-*evlist, const struct perf_tool
-> >  struct deferred_event {
-> >         struct list_head list;
-> >         union perf_event *event;
-> > +       bool allocated;
-> >  };
-> >
-> > +/*
-> > + * This is called when a deferred callchain record comes up.  Find all=
- matching
-> > + * samples, merge the callchains and process them.
-> > + */
-> >  static int evlist__deliver_deferred_samples(struct evlist *evlist,
-> >                                             const struct perf_tool *too=
-l,
-> >                                             union  perf_event *event,
-> > @@ -1331,6 +1336,86 @@ static int evlist__deliver_deferred_samples(stru=
-ct evlist *evlist,
-> >                         free(orig_sample.callchain);
-> >
-> >                 list_del(&de->list);
-> > +               if (de->allocated)
-> > +                       free(de->event);
-> > +               free(de);
-> > +
-> > +               if (ret)
-> > +                       break;
-> > +       }
-> > +       return ret;
-> > +}
-> > +
-> > +/*
-> > + * This is called when the backing mmap is about to go away.  It needs=
- to save
-> > + * the original sample data until it finds the matching deferred callc=
-hains.
-> > + */
-> > +static void evlist__copy_deferred_samples(struct evlist *evlist,
-> > +                                         const struct perf_tool *tool,
-> > +                                         struct machine *machine)
-> > +{
-> > +       struct deferred_event *de, *tmp;
-> > +       struct evsel *evsel;
-> > +       int ret =3D 0;
-> > +
-> > +       list_for_each_entry_safe(de, tmp, &evlist->deferred_samples, li=
-st) {
-> > +               struct perf_sample sample;
-> > +               size_t sz =3D de->event->header.size;
-> > +               void *buf;
-> > +
-> > +               if (de->allocated)
-> > +                       continue;
-> > +
-> > +               buf =3D malloc(sz);
-> > +               if (buf) {
-> > +                       memcpy(buf, de->event, sz);
-> > +                       de->event =3D buf;
-> > +                       de->allocated =3D true;
-> > +                       continue;
-> > +               }
-> > +
-> > +               /* The allocation failed, flush the sample now */
-> > +               ret =3D evlist__parse_sample(evlist, de->event, &sample=
-);
-> > +               if (ret =3D=3D 0) {
-> > +                       evsel =3D evlist__id2evsel(evlist, sample.id);
-> > +                       evlist__deliver_sample(evlist, tool, de->event,
-> > +                                              &sample, evsel, machine)=
-;
-> > +               }
-> > +
-> > +               list_del(&de->list);
-> > +               BUG_ON(de->allocated);
-> > +               free(de);
-> > +       }
-> > +}
-> > +
-> > +/*
-> > + * This is called at the end of the data processing for the session.  =
-Flush the
-> > + * remaining samples as there's no hope for matching deferred callchai=
-ns.
-> > + */
-> > +static int evlist__flush_deferred_samples(struct evlist *evlist,
-> > +                                         const struct perf_tool *tool,
-> > +                                         struct machine *machine)
-> > +{
-> > +       struct deferred_event *de, *tmp;
-> > +       struct evsel *evsel;
-> > +       int ret =3D 0;
-> > +
-> > +       list_for_each_entry_safe(de, tmp, &evlist->deferred_samples, li=
-st) {
-> > +               struct perf_sample sample;
-> > +
-> > +               ret =3D evlist__parse_sample(evlist, de->event, &sample=
-);
-> > +               if (ret < 0) {
-> > +                       pr_err("failed to parse original sample\n");
-> > +                       break;
-> > +               }
-> > +
-> > +               evsel =3D evlist__id2evsel(evlist, sample.id);
-> > +               ret =3D evlist__deliver_sample(evlist, tool, de->event,
-> > +                                            &sample, evsel, machine);
-> > +
-> > +               list_del(&de->list);
-> > +               if (de->allocated)
-> > +                       free(de->event);
-> >                 free(de);
-> >
-> >                 if (ret)
-> > @@ -1374,6 +1459,7 @@ static int machines__deliver_event(struct machine=
-s *machines,
-> >                                 return -ENOMEM;
-> >
-> >                         de->event =3D event;
-> > +                       de->allocated =3D false;
-> >                         list_add_tail(&de->list, &evlist->deferred_samp=
-les);
-> >                         return 0;
-> >                 }
-> > @@ -2218,6 +2304,8 @@ reader__mmap(struct reader *rd, struct perf_sessi=
-on *session)
-> >         }
-> >
-> >         if (mmaps[rd->mmap_idx]) {
-> > +               evlist__copy_deferred_samples(session->evlist, session-=
->tool,
-> > +                                             &session->machines.host);
-> >                 munmap(mmaps[rd->mmap_idx], rd->mmap_size);
-> >                 mmaps[rd->mmap_idx] =3D NULL;
-> >         }
-> > @@ -2372,6 +2460,11 @@ static int __perf_session__process_events(struct=
- perf_session *session)
-> >         if (err)
-> >                 goto out_err;
-> >         err =3D auxtrace__flush_events(session, tool);
-> > +       if (err)
-> > +               goto out_err;
-> > +       err =3D evlist__flush_deferred_samples(session->evlist,
-> > +                                            session->tool,
-> > +                                            &session->machines.host);
-> >         if (err)
-> >                 goto out_err;
-> >         err =3D perf_session__flush_thread_stacks(session);
-> > @@ -2494,6 +2587,11 @@ static int __perf_session__process_dir_events(st=
-ruct perf_session *session)
-> >         if (ret)
-> >                 goto out_err;
-> >
-> > +       ret =3D evlist__flush_deferred_samples(session->evlist, tool,
-> > +                                            &session->machines.host);
-> > +       if (ret)
-> > +               goto out_err;
-> > +
-> >         ret =3D perf_session__flush_thread_stacks(session);
-> >  out_err:
-> >         ui_progress__finish();
-> > --
-> > 2.52.0.rc1.455.g30608eb744-goog
-> >
